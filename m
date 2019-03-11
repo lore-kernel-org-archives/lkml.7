@@ -2,149 +2,166 @@ Return-Path: <SRS0=FxTY=RO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.8 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5176DC43381
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 Mar 2019 06:35:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6E9EDC43381
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 Mar 2019 06:35:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1E461206DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 Mar 2019 06:35:48 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="fhoMfBr6"
+	by mail.kernel.org (Postfix) with ESMTP id 3BE30206DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 Mar 2019 06:35:51 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726920AbfCKGfq (ORCPT
+        id S1726899AbfCKGfp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 11 Mar 2019 02:35:46 -0400
-Received: from mail-pg1-f195.google.com ([209.85.215.195]:46962 "EHLO
-        mail-pg1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726881AbfCKGfp (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
         Mon, 11 Mar 2019 02:35:45 -0400
-Received: by mail-pg1-f195.google.com with SMTP id a22so3257694pgg.13
-        for <linux-kernel@vger.kernel.org>; Sun, 10 Mar 2019 23:35:44 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=amWzEjgHdVBWDvoM3DRy4nnRCJepbtnQhM8Z904O2e0=;
-        b=fhoMfBr6c9UHQxhKuHbKRYvWNGfQvtqBP0MRmlpHjT9c+PVqG6h7nWWgY7YNRYCJK2
-         1vcV5LH7FLLmNGckxwav9xcmYmEdjJggQpdNxFICPnBbihP02QCof7omJhKWBZ+PEE5R
-         qM8Il38EM8ajB3J1hYxN/VD5CkguiBnyVMxpw=
+Received: from mail-qk1-f193.google.com ([209.85.222.193]:34163 "EHLO
+        mail-qk1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726843AbfCKGfl (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 11 Mar 2019 02:35:41 -0400
+Received: by mail-qk1-f193.google.com with SMTP id n6so2071950qkf.1
+        for <linux-kernel@vger.kernel.org>; Sun, 10 Mar 2019 23:35:40 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=amWzEjgHdVBWDvoM3DRy4nnRCJepbtnQhM8Z904O2e0=;
-        b=Zcu0G7jQxjSg8osBVWsnDXxbutF5et6V7XJ/RJs9a64+RWsHN7ix3Gg/aYqgHOuXjM
-         sk5g1L91uvWe/F/2z7uVOVfHu9jitjL4me6IwAxx536Xs5/m01/uE+SLDh1VCpiF3JT2
-         uUO3v/q9AHhYNCZQWGwLHjcwNxigxInRyWaktwA/z6h0rW1qHjam3KscB0bNoeZW/dtj
-         ZrRqPQCcJthTVo3Q5mSD3/IbQn70xw7/u97CFQ5gUt5rGw/6++Ij4YBgFa3sA5XtOUq2
-         /eQVu+n9mYPUpdxq75gSr+FIJokdDrfjuSvoCp0bBk8dNkVg0J5Z+243Gxxam2xColhL
-         3mBQ==
-X-Gm-Message-State: APjAAAXu7cQRnTa+V3qprnBkqEDeY37UbiJg66cDTb+wMT5vXsb5QnFG
-        XENS83K5HnuzL6Q6ngLtfkxSOQ==
-X-Google-Smtp-Source: APXvYqytdIldk4pAiuWeu0vh1CBnjTqbPit62ESx3USpEOSPnJEmN60nue6a8CvVv/zEoP13cEfgXQ==
-X-Received: by 2002:a65:63cd:: with SMTP id n13mr17580659pgv.193.1552286144027;
-        Sun, 10 Mar 2019 23:35:44 -0700 (PDT)
-Received: from pihsun-z840.tpe.corp.google.com ([2401:fa00:1:10:7889:7a43:f899:134c])
-        by smtp.googlemail.com with ESMTPSA id p5sm6573040pfn.154.2019.03.10.23.35.42
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Sun, 10 Mar 2019 23:35:43 -0700 (PDT)
-From:   Pi-Hsun Shih <pihsun@chromium.org>
-Cc:     Pi-Hsun Shih <pihsun@chromium.org>,
-        Lee Jones <lee.jones@linaro.org>,
-        Benson Leung <bleung@chromium.org>,
-        Enric Balletbo i Serra <enric.balletbo@collabora.com>,
-        Guenter Roeck <groeck@chromium.org>,
-        linux-kernel@vger.kernel.org (open list)
-Subject: [PATCH v6 7/7] cros_ec: differentiate SCP from EC by feature bit.
-Date:   Mon, 11 Mar 2019 14:34:58 +0800
-Message-Id: <20190311063458.137473-8-pihsun@chromium.org>
-X-Mailer: git-send-email 2.21.0.360.g471c308f928-goog
-In-Reply-To: <20190311063458.137473-1-pihsun@chromium.org>
-References: <20190311063458.137473-1-pihsun@chromium.org>
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=ppnUNtoVofXw8guLPBJl52X8/zGgDfLf4oBnOEjgSdk=;
+        b=snELPTce/fE9UkyUoq+BAFgrzpYQU9xVgChb/rGoluXm0S1WsH8OaFZ6bVXtRltlYO
+         2s3sICtLnUkaI8KBUyNxnnXGH3D5yJYjUkFBNOZ+8nEsEbaUJyN+at2XM5YtuELDAyfs
+         VkJvgIvAjqLbJakuNU2FQodCoe8sIUnekWn0OaPcGz7bcXC18tNHy4jX9iKRpNLuN69K
+         fvihoL4HUpMNd1QmHJP6SE6niLRkSqZxmhyRvpoUUsZoIJ+eOeNDRQq0SnNKNdaZyeRj
+         UOY5tpfYoagpexA8lQdRnrwmo1YVYRK2hNUUzNboAtgCdyx84oLgN5nvHPjJU+NKbeoc
+         9Y6g==
+X-Gm-Message-State: APjAAAX1GYk9qdxsE46Oq2wWYwN6s/Lqvr9f07lsfwDqm4a1bzK0Jkwu
+        TDPkfUTqP6LxmgPnuoZPZNkX1g==
+X-Google-Smtp-Source: APXvYqws2evYDM+2DD8ln9oUz3Si8+UCQJ6+63Wqy681IOzUtOOPh0cqpDNWOg9mpUik66zRa4HVNg==
+X-Received: by 2002:a37:5ac1:: with SMTP id o184mr22884801qkb.216.1552286140526;
+        Sun, 10 Mar 2019 23:35:40 -0700 (PDT)
+Received: from redhat.com (pool-173-76-246-42.bstnma.fios.verizon.net. [173.76.246.42])
+        by smtp.gmail.com with ESMTPSA id 14sm2832025qkf.23.2019.03.10.23.35.38
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Sun, 10 Mar 2019 23:35:39 -0700 (PDT)
+Date:   Mon, 11 Mar 2019 02:35:37 -0400
+From:   "Michael S. Tsirkin" <mst@redhat.com>
+To:     Pankaj Gupta <pagupta@redhat.com>
+Cc:     linux-kernel@vger.kernel.org,
+        virtualization@lists.linux-foundation.org, amit@kernel.org,
+        arnd@arndb.de, gregkh@linuxfoundation.org, xiaohli@redhat.com,
+        Gal Hammer <ghammer@redhat.com>
+Subject: Re: [PATCH] virtio_console: free unused buffers with virtio port
+Message-ID: <20190311023154-mutt-send-email-mst@kernel.org>
+References: <20190304130511.14450-1-pagupta@redhat.com>
+ <20190304142506-mutt-send-email-mst@kernel.org>
+ <444210313.9669582.1551769746169.JavaMail.zimbra@redhat.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-To:     unlisted-recipients:; (no To-header on input)
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <444210313.9669582.1551769746169.JavaMail.zimbra@redhat.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Since a SCP and EC would both exist on a system, and use the cros_ec_dev
-driver, we need to differentiate between them for the userspace, or they
-would both be registered at /dev/cros_ec, causing a conflict.
+On Tue, Mar 05, 2019 at 02:09:06AM -0500, Pankaj Gupta wrote:
+> 
+> Hello Michael,
+> 
+> Thanks for your reply.
+> 
+> > 
+> > On Mon, Mar 04, 2019 at 06:35:11PM +0530, Pankaj Gupta wrote:
+> > >   The commit a7a69ec0d8e4 ("virtio_console: free buffers after reset")
+> > >   deffered detaching of unused buffer to virtio device unplug time.
+> > > 
+> > >   This causes unplug/replug of single port in virtio device with an
+> > >   error "Error allocating inbufs\n". As we don't free the unused buffers
+> > >   attached with the port. Re-plug the same port tries to allocate new
+> > >   buffers in virtqueue and results in this error if queue is full.
 
-Signed-off-by: Pi-Hsun Shih <pihsun@chromium.org>
----
-Changes from v5:
- - No change.
+That's the basic issue, isn't it? Why aren't we
+reusing buffers that are already there?
 
-Changes from v4:
- - No change.
 
-Changes from v3:
- - No change.
+> > > 
+> > >   This patch removes the unused buffers in vq's when we unplug the port.
+> > >   This is the best we can do as we cannot call device_reset because virtio
+> > >   device is still active. This was the working behaviour before the change
+> > >   introduced in commit b3258ff1d6.
+> > > 
+> > >   Reported-by: Xiaohui Li <xiaohli@redhat.com>
+> > >   Fixes: b3258ff1d6 ("virtio_console: free buffers after reset")
+> > >   Signed-off-by: Pankaj Gupta <pagupta@redhat.com>
+> > 
+> > I think if you do this you need to add support
+> > in the packed ring.
+> 
+> o.k. I will look at the implementation details for "support
+> of packed ring" for virtio_console. This will take some time.
+> 
+> Meanwhile "virtio_console" port hotplug/unplug is broken in upstream.
+> Can we accept this patch as it fixes the upstream and together
+> with parent patch(b3258ff1d6) does nice cleanups as well.
+> 
+> Thanks,
+> Pankaj  
 
-Changes from v2:
- - No change.
+Sorry, no - I don't think we should fix one configuration by breaking the other.
+If you want to go back, then that's a spec violation, but I guess we can
+fix the spec to match.  OK, but code-wise if you call
+virtqueue_detach_unused_buf without device reset then you need to teach
+packed ring code to support that.
 
-Changes from v1:
- - New patch extracted from Patch 5.
----
- drivers/mfd/cros_ec_dev.c            | 9 +++++++++
- include/linux/mfd/cros_ec.h          | 1 +
- include/linux/mfd/cros_ec_commands.h | 2 ++
- 3 files changed, 12 insertions(+)
 
-diff --git a/drivers/mfd/cros_ec_dev.c b/drivers/mfd/cros_ec_dev.c
-index d275deaecb12..7fb81b11791f 100644
---- a/drivers/mfd/cros_ec_dev.c
-+++ b/drivers/mfd/cros_ec_dev.c
-@@ -418,6 +418,15 @@ static int ec_device_probe(struct platform_device *pdev)
- 	device_initialize(&ec->class_dev);
- 	cdev_init(&ec->cdev, &fops);
- 
-+	if (cros_ec_check_features(ec, EC_FEATURE_SCP)) {
-+		dev_info(dev, "SCP detected.\n");
-+		/*
-+		 * Help userspace differentiating ECs from SCP,
-+		 * regardless of the probing order.
-+		 */
-+		ec_platform->ec_name = CROS_EC_DEV_SCP_NAME;
-+	}
-+
- 	/*
- 	 * Add the class device
- 	 * Link to the character device for creating the /dev entry
-diff --git a/include/linux/mfd/cros_ec.h b/include/linux/mfd/cros_ec.h
-index 8f2a8918bfa3..a971399bad82 100644
---- a/include/linux/mfd/cros_ec.h
-+++ b/include/linux/mfd/cros_ec.h
-@@ -24,6 +24,7 @@
- 
- #define CROS_EC_DEV_NAME "cros_ec"
- #define CROS_EC_DEV_PD_NAME "cros_pd"
-+#define CROS_EC_DEV_SCP_NAME "cros_scp"
- 
- /*
-  * The EC is unresponsive for a time after a reboot command.  Add a
-diff --git a/include/linux/mfd/cros_ec_commands.h b/include/linux/mfd/cros_ec_commands.h
-index fc91082d4c35..3e5da6e93b2f 100644
---- a/include/linux/mfd/cros_ec_commands.h
-+++ b/include/linux/mfd/cros_ec_commands.h
-@@ -856,6 +856,8 @@ enum ec_feature_code {
- 	EC_FEATURE_RTC = 27,
- 	/* EC supports CEC commands */
- 	EC_FEATURE_CEC = 35,
-+	/* The MCU exposes a SCP */
-+	EC_FEATURE_SCP = 39,
- };
- 
- #define EC_FEATURE_MASK_0(event_code) (1UL << (event_code % 32))
--- 
-2.21.0.360.g471c308f928-goog
 
+> > 
+> > > ---
+> > >  drivers/char/virtio_console.c | 14 +++++++++++---
+> > >  1 file changed, 11 insertions(+), 3 deletions(-)
+> > > 
+> > > diff --git a/drivers/char/virtio_console.c b/drivers/char/virtio_console.c
+> > > index fbeb71953526..5fbf2ac73111 100644
+> > > --- a/drivers/char/virtio_console.c
+> > > +++ b/drivers/char/virtio_console.c
+> > > @@ -1506,15 +1506,25 @@ static void remove_port(struct kref *kref)
+> > >          kfree(port);
+> > >  }
+> > >  
+> > > +static void remove_unused_bufs(struct virtqueue *vq)
+> > > +{
+> > > +        struct port_buffer *buf;
+> > > +
+> > > +        while ((buf = virtqueue_detach_unused_buf(vq)))
+> > > +                free_buf(buf, true);
+> > > +}
+> > > +
+> > >  static void remove_port_data(struct port *port)
+> > >  {
+> > >          spin_lock_irq(&port->inbuf_lock);
+> > >          /* Remove unused data this port might have received. */
+> > >          discard_port_data(port);
+> > > +        remove_unused_bufs(port->in_vq);
+> > >          spin_unlock_irq(&port->inbuf_lock);
+> > >  
+> > >          spin_lock_irq(&port->outvq_lock);
+> > >          reclaim_consumed_buffers(port);
+> > > +        remove_unused_bufs(port->out_vq);
+> > >          spin_unlock_irq(&port->outvq_lock);
+> > >  }
+> > >  
+> > > @@ -1950,11 +1960,9 @@ static void remove_vqs(struct ports_device *portdev)
+> > >          struct virtqueue *vq;
+> > >  
+> > >          virtio_device_for_each_vq(portdev->vdev, vq) {
+> > > -                struct port_buffer *buf;
+> > >  
+> > >                  flush_bufs(vq, true);
+> > > -                while ((buf = virtqueue_detach_unused_buf(vq)))
+> > > -                        free_buf(buf, true);
+> > > +                remove_unused_bufs(vq);
+> > >          }
+> > >          portdev->vdev->config->del_vqs(portdev->vdev);
+> > >          kfree(portdev->in_vqs);
+> > > --
+> > > 2.20.1
+> > 
