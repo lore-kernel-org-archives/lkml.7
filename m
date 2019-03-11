@@ -2,105 +2,180 @@ Return-Path: <SRS0=FxTY=RO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_MUTT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_PASS,URIBL_BLOCKED autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CFAD1C43381
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 Mar 2019 03:35:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 08593C43381
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 Mar 2019 03:40:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9B7B520657
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 Mar 2019 03:35:16 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="keehgDIX"
+	by mail.kernel.org (Postfix) with ESMTP id C34E620657
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 Mar 2019 03:40:30 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727233AbfCKDfP (ORCPT
+        id S1727326AbfCKDk3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 10 Mar 2019 23:35:15 -0400
-Received: from bombadil.infradead.org ([198.137.202.133]:49904 "EHLO
-        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726758AbfCKDfP (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 10 Mar 2019 23:35:15 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
-        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=G0UV+6QfJ8G1Ev3WxxjVfXJfM2E9oz/BceVfJ2Bztyo=; b=keehgDIXv/bay5VQbyo0DH6Re
-        2gqSiuaS2ZbNPKNHOxy0S1dq+CWO9BM3Ql7jCzgOBtErhQCOA9Gm10zg/Y1LnlFjThTEZWv4QVFi8
-        aF+JoczA/30GAvPwvcnKxV9tszxAlRaZcm+mxtZME6NfxOMb86Tsgc3Pw0v+5l4NbWx/QQqrZz0/g
-        k4JMO/7+HSF0lsOuWhTNNGPvUSh/PEojYjLfmnxtGcmiWI1pikJzLS/MxWNJrAg1hsw7QLJF4Hxs9
-        wlkEJuDeaa8WausdaIubXdg70olEF1nBeCF5t0K2awJTXNm5Mptztkaf2WTuLdeomTvAQ5eHHtovk
-        AmbcvY3Xw==;
-Received: from willy by bombadil.infradead.org with local (Exim 4.90_1 #2 (Red Hat Linux))
-        id 1h3BiY-00069z-Np; Mon, 11 Mar 2019 03:35:10 +0000
-Date:   Sun, 10 Mar 2019 20:35:10 -0700
-From:   Matthew Wilcox <willy@infradead.org>
-To:     Waiman Long <longman@redhat.com>
-Cc:     Andrew Morton <akpm@linux-foundation.org>,
-        "Luis R. Rodriguez" <mcgrof@kernel.org>,
-        Kees Cook <keescook@chromium.org>,
-        Jonathan Corbet <corbet@lwn.net>, linux-kernel@vger.kernel.org,
-        linux-fsdevel@vger.kernel.org, linux-doc@vger.kernel.org,
-        Al Viro <viro@zeniv.linux.org.uk>,
-        "Eric W . Biederman" <ebiederm@xmission.com>,
-        Takashi Iwai <tiwai@suse.de>, Davidlohr Bueso <dbueso@suse.de>,
-        Manfred Spraul <manfred@colorfullife.com>
-Subject: Re: [PATCH-next] ipc: Fix race condition in ipc_idr_alloc()
-Message-ID: <20190311033510.GB19508@bombadil.infradead.org>
-References: <20190311012536.21747-1-longman@redhat.com>
+        Sun, 10 Mar 2019 23:40:29 -0400
+Received: from mail.kernel.org ([198.145.29.99]:60568 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727099AbfCKDk2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 10 Mar 2019 23:40:28 -0400
+Received: from oasis.local.home (unknown [12.208.205.2])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 431DF20657;
+        Mon, 11 Mar 2019 03:40:27 +0000 (UTC)
+Date:   Sun, 10 Mar 2019 23:40:19 -0400
+From:   Steven Rostedt <rostedt@goodmis.org>
+To:     Linus Torvalds <torvalds@linux-foundation.org>
+Cc:     LKML <linux-kernel@vger.kernel.org>,
+        Ingo Molnar <mingo@kernel.org>,
+        Andrew Morton <akpm@linux-foundation.org>
+Subject: [GIT PULL] tracing: Updates for v5.1
+Message-ID: <20190310234019.64da3b0b@oasis.local.home>
+X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190311012536.21747-1-longman@redhat.com>
-User-Agent: Mutt/1.9.2 (2017-12-15)
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sun, Mar 10, 2019 at 09:25:36PM -0400, Waiman Long wrote:
-> @@ -221,15 +221,34 @@ static inline int ipc_idr_alloc(struct ipc_ids *ids, struct kern_ipc_perm *new)
->  	 */
->  
->  	if (next_id < 0) { /* !CHECKPOINT_RESTORE or next_id is unset */
-> +		/*
-> +		 * It is possible that another thread of the same
-> +		 * kern_ipc_perm may have called ipc_obtain_object_check()
-> +		 * concurrently with a recently deleted IPC id (idx|seq).
-> +		 * If idr_alloc() happens to allocate this deleted idx value,
-> +		 * the other thread may incorrectly get a handle to the new
-> +		 * IPC id.
-> +		 *
-> +		 * To prevent this race condition from happening, we will
-> +		 * always store a new sequence number into the kern_ipc_perm
-> +		 * object before calling idr_alloc(). If we find out that we
-> +		 * don't need to change seq, we write back the right value.
-> +		 */
-> +		new->seq = ids->seq + 1;
-> +		if (new->seq > IPCID_SEQ_MAX)
-> +			new->seq = 0;
-> +
->  		if (ipc_mni_extended)
->  			idx = idr_alloc_cyclic(&ids->ipcs_idr, new, 0, ipc_mni,
->  						GFP_NOWAIT);
->  		else
->  			idx = idr_alloc(&ids->ipcs_idr, new, 0, 0, GFP_NOWAIT);
->  
-> -		if ((idx <= ids->last_idx) && (++ids->seq > IPCID_SEQ_MAX))
-> -			ids->seq = 0;
-> -		new->seq = ids->seq;
-> +		/* Make ids->seq and new->seq stay in sync */
-> +		if (idx <= ids->last_idx)
-> +			ids->seq = new->seq;
-> +		else
-> +			new->seq = ids->seq;
 
-This can't possibly be right.  It's no better to occasionally find the
-wrong ID than to find an uninitialised ID.
+Linus,
 
-The normal pattern for solving this kind of problem is to idr_alloc()
-a NULL pointer, initialise new->seq, then call idr_replace() to turn
-that NULL pointer into the actual pointer you want.
+The biggest change for this release is in the histogram code.
+
+ - Add "onchange(var)" histogram handler that executes a action when $var
+   changes.
+
+ - Add new "snapshot()" action for histogram handlers, that causes a
+   snapshot of the ring buffer when triggered.
+   ie. onchange(var).snapshot() will trigger a snapshot if var changes.
+
+ - Add alternative for "trace()" action.
+   Currently, to trigger a synthetic event, the name of that event is used
+   as the handler name, which is inconsistent with the other actions.
+   onchange(var).synthetic(param) where it can now be
+   onchange(var).trace(synthetic, param). The older method will still be
+   allowed, as long as the synthetic events do not overlap with other
+   handler names.
+
+ - The histogram documentation at testcases were updated for the new
+   changes.
+
+Added a quicker way to enable set_ftrace_filter files, that will make
+it much quicker to bisect tracing a function that shouldn't be traced and
+crashes the kernel. (You can echo in numbers to set_ftrace_filter, and it
+will select the corresponding function that is in
+available_filter_functions).
+
+Some better displaying of the tracing data (and more information was added).
+
+The rest are small fixes and more clean ups to the code.
+
+
+Please pull the latest trace-v5.1 tree, which can be found at:
+
+
+  git://git.kernel.org/pub/scm/linux/kernel/git/rostedt/linux-trace.git
+trace-v5.1
+
+Tag SHA1: 7560451df55a0e5dfacc2e6cf9e3602fbf9e22a9
+Head SHA1: 85f726a35e504418607b77c5e7da165dc1ea63ce
+
+
+Changbin Du (6):
+      function_graph: Support displaying relative timestamp
+      tracing: Show more info for funcgraph wakeup tracers
+      tracing: Put a margin between flags and duration for wakeup tracers
+      tracing/doc: Add latency tracer funcgraph example
+      tracing: Show stacktrace for wakeup tracers
+      tracing: Change the function format to display function names by perf
+
+Colin Ian King (1):
+      tracing: Fix spelling mistake: "analagous" -> "analogous"
+
+Elena Reshetova (1):
+      uprobes: convert uprobe.ref to refcount_t
+
+Jann Horn (1):
+      tracing/perf: Use strndup_user() instead of buggy open-coded version
+
+Mathieu Malaterre (2):
+      tracing: Annotate implicit fall through in parse_probe_arg()
+      tracing: Annotate implicit fall through in predicate_parse()
+
+Miroslav Benes (1):
+      ring-buffer: Remove unused function ring_buffer_page_len()
+
+Srikar Dronamraju (1):
+      doc: trace: Fix documentation for uprobe_profile
+
+Steven Rostedt (VMware) (4):
+      tracing: Add comment to predicate_parse() about "&&" or "||"
+      ftrace: Allow enabling of filters via index of available_filter_functions
+      tracing: Comment why cond_snapshot is checked outside of max_lock protection
+      x86/ftrace: Fix warning and considate ftrace_jmp_replace() and ftrace_call_replace()
+
+Tom Zanussi (19):
+      tracing: Refactor hist trigger action code
+      tracing: Make hist trigger Documentation better reflect actions/handlers
+      tracing: Split up onmatch action data
+      tracing: Generalize hist trigger onmax and save action
+      tracing: Add conditional snapshot
+      tracing: Add hist trigger snapshot() action
+      tracing: Add hist trigger snapshot() action Documentation
+      tracing: Add hist trigger onchange() handler
+      tracing: Add hist trigger onchange() handler Documentation
+      tracing: Add alternative synthetic event trace action syntax
+      tracing: Add SPDX license GPL-2.0 license identifier to inter-event testcases
+      tracing: Add hist trigger snapshot() action test case
+      tracing: Add hist trigger onchange() handler test case
+      tracing: Add alternative synthetic event trace action test case
+      tracing: Add hist trigger action 'expected fail' test case
+      tracing: Use str_has_prefix() in synth_event_create()
+      tracing: Use strncpy instead of memcpy for string keys in hist triggers
+      tracing: Use strncpy instead of memcpy when copying comm for hist triggers
+      tracing: Use strncpy instead of memcpy when copying comm in trace.c
+
+zhangyi (F) (1):
+      tracing: Do not free iter->trace in fail path of tracing_open_pipe()
+
+----
+ Documentation/trace/ftrace.rst                     |   89 ++
+ Documentation/trace/histogram.rst                  |  316 +++++-
+ Documentation/trace/uprobetracer.rst               |    7 +-
+ arch/x86/kernel/ftrace.c                           |   42 +-
+ include/linux/ring_buffer.h                        |    2 -
+ kernel/events/uprobes.c                            |    8 +-
+ kernel/trace/ftrace.c                              |   30 +
+ kernel/trace/ring_buffer.c                         |   14 -
+ kernel/trace/trace.c                               |  223 ++++-
+ kernel/trace/trace.h                               |   66 +-
+ kernel/trace/trace_entries.h                       |   41 +-
+ kernel/trace/trace_event_perf.c                    |   16 +-
+ kernel/trace/trace_events_filter.c                 |    7 +
+ kernel/trace/trace_events_hist.c                   | 1059 ++++++++++++++------
+ kernel/trace/trace_functions_graph.c               |   30 +-
+ kernel/trace/trace_irqsoff.c                       |    2 +-
+ kernel/trace/trace_probe.c                         |    1 +
+ kernel/trace/trace_sched_wakeup.c                  |   11 +-
+ .../inter-event/trigger-action-hist-xfail.tc       |   30 +
+ .../inter-event/trigger-extended-error-support.tc  |    1 +
+ .../inter-event/trigger-field-variable-support.tc  |    1 +
+ .../trigger-inter-event-combined-hist.tc           |    1 +
+ .../inter-event/trigger-multi-actions-accept.tc    |    1 +
+ .../inter-event/trigger-onchange-action-hist.tc    |   28 +
+ .../inter-event/trigger-onmatch-action-hist.tc     |    1 +
+ .../trigger-onmatch-onmax-action-hist.tc           |    1 +
+ .../inter-event/trigger-onmax-action-hist.tc       |    1 +
+ .../inter-event/trigger-snapshot-action-hist.tc    |   43 +
+ .../trigger-synthetic-event-createremove.tc        |    1 +
+ .../inter-event/trigger-trace-action-hist.tc       |   42 +
+ 30 files changed, 1695 insertions(+), 420 deletions(-)
+ create mode 100644 tools/testing/selftests/ftrace/test.d/trigger/inter-event/trigger-action-hist-xfail.tc
+ create mode 100644 tools/testing/selftests/ftrace/test.d/trigger/inter-event/trigger-onchange-action-hist.tc
+ create mode 100644 tools/testing/selftests/ftrace/test.d/trigger/inter-event/trigger-snapshot-action-hist.tc
+ create mode 100644 tools/testing/selftests/ftrace/test.d/trigger/inter-event/trigger-trace-action-hist.tc
+---------------------------
