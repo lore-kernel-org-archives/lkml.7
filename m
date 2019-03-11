@@ -2,272 +2,133 @@ Return-Path: <SRS0=FxTY=RO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_MUTT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9C6E5C43381
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 Mar 2019 22:10:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A2265C43381
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 Mar 2019 22:10:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5B39D2087C
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 Mar 2019 22:10:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6A2BC214AE
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 Mar 2019 22:10:34 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=amdcloud.onmicrosoft.com header.i=@amdcloud.onmicrosoft.com header.b="03DSC6Hy"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728408AbfCKWKH (ORCPT
+        id S1728423AbfCKWKd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 11 Mar 2019 18:10:07 -0400
-Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:43130 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1728313AbfCKWKH (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 11 Mar 2019 18:10:07 -0400
-Received: from pps.filterd (m0098396.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x2BM9iAM122257
-        for <linux-kernel@vger.kernel.org>; Mon, 11 Mar 2019 18:10:05 -0400
-Received: from e12.ny.us.ibm.com (e12.ny.us.ibm.com [129.33.205.202])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 2r5uemn37k-1
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
-        for <linux-kernel@vger.kernel.org>; Mon, 11 Mar 2019 18:10:05 -0400
-Received: from localhost
-        by e12.ny.us.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
-        for <linux-kernel@vger.kernel.org> from <paulmck@linux.vnet.ibm.com>;
-        Mon, 11 Mar 2019 22:10:04 -0000
-Received: from b01cxnp22033.gho.pok.ibm.com (9.57.198.23)
-        by e12.ny.us.ibm.com (146.89.104.199) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
-        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
-        Mon, 11 Mar 2019 22:10:00 -0000
-Received: from b01ledav003.gho.pok.ibm.com (b01ledav003.gho.pok.ibm.com [9.57.199.108])
-        by b01cxnp22033.gho.pok.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x2BM9xqg25165980
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Mon, 11 Mar 2019 22:09:59 GMT
-Received: from b01ledav003.gho.pok.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 2D416B2087;
-        Mon, 11 Mar 2019 22:09:59 +0000 (GMT)
-Received: from b01ledav003.gho.pok.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id F353DB2080;
-        Mon, 11 Mar 2019 22:09:58 +0000 (GMT)
-Received: from paulmck-ThinkPad-W541 (unknown [9.70.82.188])
-        by b01ledav003.gho.pok.ibm.com (Postfix) with ESMTP;
-        Mon, 11 Mar 2019 22:09:58 +0000 (GMT)
-Received: by paulmck-ThinkPad-W541 (Postfix, from userid 1000)
-        id E67B616C34A1; Mon, 11 Mar 2019 15:10:00 -0700 (PDT)
-Date:   Mon, 11 Mar 2019 15:10:00 -0700
-From:   "Paul E. McKenney" <paulmck@linux.ibm.com>
-To:     NeilBrown <neilb@suse.com>
-Cc:     Herbert Xu <herbert@gondor.apana.org.au>,
-        Thomas Graf <tgraf@suug.ch>, netdev@vger.kernel.org,
-        linux-kernel@vger.kernel.org, rcu@vger.kernel.org,
-        neeraju@codeaurora.org
-Subject: Re: [PATCH 2/5] rhashtable: don't hold lock on first table
- throughout insertion.
-Reply-To: paulmck@linux.ibm.com
-References: <20180725152250.GN12945@linux.vnet.ibm.com>
- <87r2jpmqu2.fsf@notabene.neil.brown.name>
- <20180727031815.GW24813@linux.vnet.ibm.com>
- <20180727145731.GA2780@linux.vnet.ibm.com>
- <87zhy8s05i.fsf@notabene.neil.brown.name>
- <20180731041425.GI24813@linux.vnet.ibm.com>
- <87lg9sro5r.fsf@notabene.neil.brown.name>
- <20180731144429.GM24813@linux.vnet.ibm.com>
- <20190311152752.GA10700@linux.ibm.com>
- <874l89qdwy.fsf@notabene.neil.brown.name>
+        Mon, 11 Mar 2019 18:10:33 -0400
+Received: from mail-eopbgr820047.outbound.protection.outlook.com ([40.107.82.47]:25024
+        "EHLO NAM01-SN1-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1727548AbfCKWKc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 11 Mar 2019 18:10:32 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=amdcloud.onmicrosoft.com; s=selector1-amd-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=MAnNgiFaDw5m3upNh+8V1GqRxhwCoIjZ+6k4vbBNRAs=;
+ b=03DSC6HyezPpMWbC1JI1NrQTZ8CFs3tVBa8n13cXKDqTnThRbJzD+b4oJB4hEs7A5Az6rNMqLp0qGO9eJMng0dHvv/Rk+Y7KKHWB11lOqvRPrg/K8Vr8jfQadU8M6a69rB2aW7FBRKs6fTUYQFyySZ6uI3BcYoAhR2VSHGpzOxg=
+Received: from SN6PR12MB2639.namprd12.prod.outlook.com (52.135.103.16) by
+ SN6PR12MB2814.namprd12.prod.outlook.com (52.135.107.151) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.1686.20; Mon, 11 Mar 2019 22:10:30 +0000
+Received: from SN6PR12MB2639.namprd12.prod.outlook.com
+ ([fe80::d49d:a1ee:9bcf:20e2]) by SN6PR12MB2639.namprd12.prod.outlook.com
+ ([fe80::d49d:a1ee:9bcf:20e2%5]) with mapi id 15.20.1686.021; Mon, 11 Mar 2019
+ 22:10:29 +0000
+From:   "Ghannam, Yazen" <Yazen.Ghannam@amd.com>
+To:     "Luck, Tony" <tony.luck@intel.com>
+CC:     Borislav Petkov <bp@alien8.de>, "x86@kernel.org" <x86@kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Ashok Raj <ashok.raj@intel.com>
+Subject: RE: [PATCH] x86, mce: Fix machine_check_poll() tests for which errors
+ to log
+Thread-Topic: [PATCH] x86, mce: Fix machine_check_poll() tests for which
+ errors to log
+Thread-Index: AQHU2DtsQDXo+RWhv0y/sb6komHrxqYG4DzQgAAFIYCAABe+UA==
+Date:   Mon, 11 Mar 2019 22:10:29 +0000
+Message-ID: <SN6PR12MB2639C9CC6B5BA0A1F1FE771DF8480@SN6PR12MB2639.namprd12.prod.outlook.com>
+References: <20190311185118.32667-1-tony.luck@intel.com>
+ <SN6PR12MB26399CBAEFB6C500D456255DF8480@SN6PR12MB2639.namprd12.prod.outlook.com>
+ <20190311204217.GA1810@agluck-desk>
+In-Reply-To: <20190311204217.GA1810@agluck-desk>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=Yazen.Ghannam@amd.com; 
+x-originating-ip: [165.204.84.17]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: 86ed4bca-a114-4951-9cdd-08d6a66e5f97
+x-ms-office365-filtering-ht: Tenant
+x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600127)(711020)(4605104)(4618075)(2017052603328)(7153060)(7193020);SRVR:SN6PR12MB2814;
+x-ms-traffictypediagnostic: SN6PR12MB2814:
+x-microsoft-exchange-diagnostics: 1;SN6PR12MB2814;20:kYz6hOL/fYMb9M8vzBY6lGfXfYj8mx/H40jGO8k3QwASlP2HcUA9rmEgJ7TrXJoCy7l7kbmBwdX8YlBZ8uRPCZYm92k23XOkhi4NEo8mGVUms6MxbhWFM0MPcKblvwno99V4oHwxmBxmcNLhXebJU+ajHxQAkJb1m5t0v4TbaQgCbG+/sQegZLt5rnmClr79oGguKTYdfKwn+udasyFwYycuQOoe+xCw4f6aV9FgczqdZiJpAHHFEOQjvmyP/n74
+x-microsoft-antispam-prvs: <SN6PR12MB28147C1873808BABC9FE3341F8480@SN6PR12MB2814.namprd12.prod.outlook.com>
+x-forefront-prvs: 09730BD177
+x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(346002)(376002)(39860400002)(136003)(366004)(396003)(189003)(199004)(13464003)(54906003)(6436002)(2906002)(106356001)(316002)(6246003)(7736002)(486006)(476003)(9686003)(305945005)(55016002)(4326008)(97736004)(53936002)(105586002)(86362001)(25786009)(6116002)(3846002)(229853002)(52536013)(66066001)(14454004)(478600001)(33656002)(71200400001)(71190400001)(72206003)(446003)(256004)(26005)(8676002)(81156014)(81166006)(74316002)(186003)(8936002)(6916009)(102836004)(68736007)(6506007)(53546011)(76176011)(7696005)(5660300002)(99286004)(11346002);DIR:OUT;SFP:1101;SCL:1;SRVR:SN6PR12MB2814;H:SN6PR12MB2639.namprd12.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
+received-spf: None (protection.outlook.com: amd.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam-message-info: zLh2MzKXicnh56gkiRb8xHq9aDnyUBj1drsE88qeXAQS06Cwu2vH4hLtAE1PK6kpeEAA7a0jm+nFqN75BTOnv4JNCvGKQDs5EB+OZRu/HmzyZ26A0PBadIrY0uyBePpDOhh8ia0EUNz2hQQWbbINp23wxJb4BeBcssnJT3Edbml0VfKuCdzJoTkueJH2vXisqLo1ROvhRqFhXQX1PYRm8DfYJKyUz7+ISTBwIa+VwdQjgv50Q79gJP/toGnm9nCIhco9ngyX+9jM0CVjxYfSuumRoauq7eawtGn5uIAIzs5rKoaeoFZEfynfLqM2dsam31N5GxnTDj6yqninBOgYSrTpjST4rmPe0afFd0q0asqRiboA0muFkNR4lqV4LK39jnM7UgLXeaDPsVwCzMJbqR1nLiWUkv6Y2Lb6fM/p9Sc=
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <874l89qdwy.fsf@notabene.neil.brown.name>
-User-Agent: Mutt/1.5.21 (2010-09-15)
-X-TM-AS-GCONF: 00
-x-cbid: 19031122-0060-0000-0000-0000031A81E6
-X-IBM-SpamModules-Scores: 
-X-IBM-SpamModules-Versions: BY=3.00010741; HX=3.00000242; KW=3.00000007;
- PH=3.00000004; SC=3.00000281; SDB=6.01172997; UDB=6.00613254; IPR=6.00953652;
- MB=3.00025936; MTD=3.00000008; XFM=3.00000015; UTC=2019-03-11 22:10:02
-X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
-x-cbparentid: 19031122-0061-0000-0000-00004893D96F
-Message-Id: <20190311221000.GO13351@linux.ibm.com>
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-03-11_16:,,
- signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
- malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
- clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
- mlxlogscore=999 adultscore=0 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.0.1-1810050000 definitions=main-1903110151
+X-OriginatorOrg: amd.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 86ed4bca-a114-4951-9cdd-08d6a66e5f97
+X-MS-Exchange-CrossTenant-originalarrivaltime: 11 Mar 2019 22:10:29.8077
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 3dd8961f-e488-4e60-8e11-a82d994e183d
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: SN6PR12MB2814
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Mar 12, 2019 at 08:50:05AM +1100, NeilBrown wrote:
-> On Mon, Mar 11 2019, Paul E. McKenney wrote:
-> 
-> > On Tue, Jul 31, 2018 at 07:44:29AM -0700, Paul E. McKenney wrote:
-> >> On Tue, Jul 31, 2018 at 03:04:48PM +1000, NeilBrown wrote:
-> >> > On Mon, Jul 30 2018, Paul E. McKenney wrote:
-> >> > 
-> >> > > On Tue, Jul 31, 2018 at 10:45:45AM +1000, NeilBrown wrote:
-> >> > >> On Fri, Jul 27 2018, Paul E. McKenney wrote:
-> >> > >> 
-> >> > >> > On Thu, Jul 26, 2018 at 08:18:15PM -0700, Paul E. McKenney wrote:
-> >> > >> >> On Fri, Jul 27, 2018 at 11:04:37AM +1000, NeilBrown wrote:
-> >> > >> >> > On Wed, Jul 25 2018, Paul E. McKenney wrote:
-> >> > >> >> > >> 
-> >> > >> >> > >> Looks good ... except ... naming is hard.
-> >> > >> >> > >> 
-> >> > >> >> > >>  is_after_call_rcu_init()  asserts where in the lifecycle we are,
-> >> > >> >> > >>  is_after_call_rcu() tests where in the lifecycle we are.
-> >> > >> >> > >> 
-> >> > >> >> > >>  The names are similar but the purpose is quite different.
-> >> > >> >> > >>  Maybe s/is_after_call_rcu_init/call_rcu_init/ ??
-> >> > >> >> > >
-> >> > >> >> > > How about rcu_head_init() and rcu_head_after_call_rcu()?
-> >> > >> >> 
-> >> > >> >> Very well, I will pull this change in on my next rebase.
-> >> > >> >
-> >> > >> > Like this?
-> >> > >> 
-> >> > >> Hard to say - unwinding white-space damage in my head is too challenging
-> >> > >> when newlines have been deleted :-(
-> >> > >
-> >> > > What???  Don't you like block-structured code?
-> >> > >
-> >> > > All kidding aside, how about the following more conventionally formatted
-> >> > > version?
-> >> > 
-> >> > Wow - it's like I just got new glasses!
-> >> > Yes - nice an clear and now flaws to be found.  Thanks a lot.
-> >> 
-> >> Now that flaws are to be found, please feel free to report them.  ;-)
+> -----Original Message-----
+> From: Luck, Tony <tony.luck@intel.com>
+> Sent: Monday, March 11, 2019 3:42 PM
+> To: Ghannam, Yazen <Yazen.Ghannam@amd.com>
+> Cc: Borislav Petkov <bp@alien8.de>; x86@kernel.org; linux-kernel@vger.ker=
+nel.org; Ashok Raj <ashok.raj@intel.com>
+> Subject: Re: [PATCH] x86, mce: Fix machine_check_poll() tests for which e=
+rrors to log
+>=20
+> On Mon, Mar 11, 2019 at 08:25:53PM +0000, Ghannam, Yazen wrote:
+> > > +		if (!(m.status & MCI_STATUS_PCC) && !(m.status & MCI_STATUS_S))
+> > > +			goto log_it;
+> > > +
 > >
-> > Hello, Neil,
-> >
-> > Any plans to use these functions?  There are still no upstream uses.
-> > On the other hand, if they proved unuseful, I will remove them.  If I
-> > don't hear otherwise from you, I will pull them in v5.2.
-> 
-> Hi Paul,
->  yes, I do still have plans for them.  I've got quite a few things I
->  want to add to rhashtables including this, but got stalled late last
->  year and I haven't managed to get back to it.
->  Thanks for your prompting - I'll make an effort to post some patches
->  soon, particularly the one that makes use of this new functionality.
+> > Can you please include a vendor check with this? MCi_STATUS[56] is
+> > not defined the same way on AMD systems.
+>=20
+> Original code also looked at MCi_STATUS[56] without a vendor
+> check:
+>=20
+> > > -               (m.status & (mca_cfg.ser ? MCI_STATUS_S : MCI_STATUS_=
+UC)))
+>=20
+> Was this OK because you don't set mca_cfg.ser?
+>=20
+> If so, my new code will also skip out before getting to this test. But
+> should probably have a better comment. Something like:
+>=20
+>=20
+> 		/*
+> 		 * Newer Intel systems that support software error
+> 		 * recovery need to make some extra checks. Other
+> 		 * CPUs should skip over uncorrected errors, but log
+> 		 * everything else
+> 		 */
+> 		if (!mca_cfg.ser) {
+> 			if (m.status & MCI_STATUS_UC)
+> 				continue;
+> 			goto log_it;
+> 		}
+>=20
 
-OK, I won't remove it.  Not just yet, anyway.  ;-)
+Yes, you're right. Thanks for pointing that out.
 
-							Thanx, Paul
-
-> Thanks,
-> NeilBrown
-> 
-> 
-> >
-> > 							Thanx, Paul
-> >
-> >> > NeilBrown
-> >> > 
-> >> > >
-> >> > > 							Thanx, Paul
-> >> > >
-> >> > > ------------------------------------------------------------------------
-> >> > >
-> >> > > commit e3408141ed7d702995b2fdc94703af88aadd226b
-> >> > > Author: Paul E. McKenney <paulmck@linux.vnet.ibm.com>
-> >> > > Date:   Tue Jul 24 15:28:09 2018 -0700
-> >> > >
-> >> > >     rcu: Provide functions for determining if call_rcu() has been invoked
-> >> > >     
-> >> > >     This commit adds rcu_head_init() and rcu_head_after_call_rcu() functions
-> >> > >     to help RCU users detect when another CPU has passed the specified
-> >> > >     rcu_head structure and function to call_rcu().  The rcu_head_init()
-> >> > >     should be invoked before making the structure visible to RCU readers,
-> >> > >     and then the rcu_head_after_call_rcu() may be invoked from within
-> >> > >     an RCU read-side critical section on an rcu_head structure that
-> >> > >     was obtained during a traversal of the data structure in question.
-> >> > >     The rcu_head_after_call_rcu() function will return true if the rcu_head
-> >> > >     structure has already been passed (with the specified function) to
-> >> > >     call_rcu(), otherwise it will return false.
-> >> > >     
-> >> > >     If rcu_head_init() has not been invoked on the rcu_head structure
-> >> > >     or if the rcu_head (AKA callback) has already been invoked, then
-> >> > >     rcu_head_after_call_rcu() will do WARN_ON_ONCE().
-> >> > >     
-> >> > >     Reported-by: NeilBrown <neilb@suse.com>
-> >> > >     Signed-off-by: Paul E. McKenney <paulmck@linux.vnet.ibm.com>
-> >> > >     [ paulmck: Apply neilb naming feedback. ]
-> >> > >
-> >> > > diff --git a/include/linux/rcupdate.h b/include/linux/rcupdate.h
-> >> > > index e4f821165d0b..4db8bcacc51a 100644
-> >> > > --- a/include/linux/rcupdate.h
-> >> > > +++ b/include/linux/rcupdate.h
-> >> > > @@ -857,6 +857,46 @@ static inline notrace void rcu_read_unlock_sched_notrace(void)
-> >> > >  #endif /* #else #ifdef CONFIG_ARCH_WEAK_RELEASE_ACQUIRE */
-> >> > >  
-> >> > >  
-> >> > > +/* Has the specified rcu_head structure been handed to call_rcu()? */
-> >> > > +
-> >> > > +/*
-> >> > > + * rcu_head_init - Initialize rcu_head for rcu_head_after_call_rcu()
-> >> > > + * @rhp: The rcu_head structure to initialize.
-> >> > > + *
-> >> > > + * If you intend to invoke rcu_head_after_call_rcu() to test whether a
-> >> > > + * given rcu_head structure has already been passed to call_rcu(), then
-> >> > > + * you must also invoke this rcu_head_init() function on it just after
-> >> > > + * allocating that structure.  Calls to this function must not race with
-> >> > > + * calls to call_rcu(), rcu_head_after_call_rcu(), or callback invocation.
-> >> > > + */
-> >> > > +static inline void rcu_head_init(struct rcu_head *rhp)
-> >> > > +{
-> >> > > +	rhp->func = (rcu_callback_t)~0L;
-> >> > > +}
-> >> > > +
-> >> > > +/*
-> >> > > + * rcu_head_after_call_rcu - Has this rcu_head been passed to call_rcu()?
-> >> > > + * @rhp: The rcu_head structure to test.
-> >> > > + * @func: The function passed to call_rcu() along with @rhp.
-> >> > > + *
-> >> > > + * Returns @true if the @rhp has been passed to call_rcu() with @func,
-> >> > > + * and @false otherwise.  Emits a warning in any other case, including
-> >> > > + * the case where @rhp has already been invoked after a grace period.
-> >> > > + * Calls to this function must not race with callback invocation.  One way
-> >> > > + * to avoid such races is to enclose the call to rcu_head_after_call_rcu()
-> >> > > + * in an RCU read-side critical section that includes a read-side fetch
-> >> > > + * of the pointer to the structure containing @rhp.
-> >> > > + */
-> >> > > +static inline bool
-> >> > > +rcu_head_after_call_rcu(struct rcu_head *rhp, rcu_callback_t f)
-> >> > > +{
-> >> > > +	if (READ_ONCE(rhp->func) == f)
-> >> > > +		return true;
-> >> > > +	WARN_ON_ONCE(READ_ONCE(rhp->func) != (rcu_callback_t)~0L);
-> >> > > +	return false;
-> >> > > +}
-> >> > > +
-> >> > > +
-> >> > >  /* Transitional pre-consolidation compatibility definitions. */
-> >> > >  
-> >> > >  static inline void synchronize_rcu_bh(void)
-> >> > > diff --git a/kernel/rcu/rcu.h b/kernel/rcu/rcu.h
-> >> > > index 5dec94509a7e..4c56c1d98fb3 100644
-> >> > > --- a/kernel/rcu/rcu.h
-> >> > > +++ b/kernel/rcu/rcu.h
-> >> > > @@ -224,6 +224,7 @@ void kfree(const void *);
-> >> > >   */
-> >> > >  static inline bool __rcu_reclaim(const char *rn, struct rcu_head *head)
-> >> > >  {
-> >> > > +	rcu_callback_t f;
-> >> > >  	unsigned long offset = (unsigned long)head->func;
-> >> > >  
-> >> > >  	rcu_lock_acquire(&rcu_callback_map);
-> >> > > @@ -234,7 +235,9 @@ static inline bool __rcu_reclaim(const char *rn, struct rcu_head *head)
-> >> > >  		return true;
-> >> > >  	} else {
-> >> > >  		RCU_TRACE(trace_rcu_invoke_callback(rn, head);)
-> >> > > -		head->func(head);
-> >> > > +		f = head->func;
-> >> > > +		WRITE_ONCE(head->func, (rcu_callback_t)0L);
-> >> > > +		f(head);
-> >> > >  		rcu_lock_release(&rcu_callback_map);
-> >> > >  		return false;
-> >> > >  	}
-> >> 
-> >> 
-
-
+-Yazen
