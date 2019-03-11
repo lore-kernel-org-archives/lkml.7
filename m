@@ -7,56 +7,45 @@ X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8B5E6C43381
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 Mar 2019 20:07:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 16C7CC43381
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 Mar 2019 20:07:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 585BE2064A
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 Mar 2019 20:07:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CDCD72064A
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 Mar 2019 20:07:43 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1552334858;
-	bh=R5OPx04TONxcgD5j44BsYo7XZLnqnY8hKVlQGhnD224=;
+	s=default; t=1552334863;
+	bh=uRVOipWAcziKozJ3kRcBRLEnpoqHr1yw0T/FXsdIG2Q=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=ttP9fpImpZl3a/RZg/01GkFOQ1hyDga0UPJz16/huSIQJKFdn6iD14e8AQpxZAu6z
-	 m/DRbiXZOt4SgqUjkhgTTpfB/XDbv+BTEsuH/Cr2Jqt4azzH6fBrjXz+Xs0Hg6G2BV
-	 yehMpcMUXEBapqgsGZelEdcXR+NB0USKdaiO7fmk=
+	b=bc+Gc73SHLEAEUxYvvEK/p2Rp8vOx88KgcHoTUIhou4UmuCzbhxryXxEMEizNBJXA
+	 alLsZndl/G23eKgQSwN9tkOCAp4aFO3ESWPgMA7BTHl8sKFSEPP+gzYkbLcJJlJKrw
+	 xWC3ANQSWI9DK6eG92WS+zpy7O+xzvDQA34uEWoo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729069AbfCKT51 (ORCPT
+        id S1729120AbfCKUHm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 11 Mar 2019 15:57:27 -0400
-Received: from mail.kernel.org ([198.145.29.99]:34814 "EHLO mail.kernel.org"
+        Mon, 11 Mar 2019 16:07:42 -0400
+Received: from mail.kernel.org ([198.145.29.99]:34840 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729051AbfCKT50 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 11 Mar 2019 15:57:26 -0400
+        id S1728345AbfCKT51 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 11 Mar 2019 15:57:27 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id CDF6C2171F;
-        Mon, 11 Mar 2019 19:57:23 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id CB1D3214AE;
+        Mon, 11 Mar 2019 19:57:25 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1552334245;
-        bh=R5OPx04TONxcgD5j44BsYo7XZLnqnY8hKVlQGhnD224=;
+        s=default; t=1552334246;
+        bh=uRVOipWAcziKozJ3kRcBRLEnpoqHr1yw0T/FXsdIG2Q=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=wTM13r+Raf/0/7uQTT1ljB1LNiw+Up9pRVjmxi4T2l0cKWGFlN31rhKJLu/fiQWLU
-         Usd4yW+qIz+NkaMJbOGkpU3JKiDCSTI/QSDs2HZ+u3toLq9WhEEUm3BThmETTJmO5Y
-         wiK0WaL08PWqqWzWMcrqmuduEUmyqZQ8jamgINiE=
+        b=vlk+cb42hvSopQiJNSN+8ot/VGLqE+kuKDvpJ6DfLViYV0xdLo+v9codzFP7ZLsRW
+         k16Torond1zvkCDdm9a5oR+qx8Tjlq3RPzjOpl14jVV8XeqMuav0yBmPZF0jT23P3E
+         F/MPQUGO/xP9zkJmJ1Suevcb+rcERBBCg6DSZiwI=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Tony Lindgren <tony@atomide.com>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        Daniel Lezcano <daniel.lezcano@linaro.org>,
-        "H . Nikolaus Schaller" <hns@goldelico.com>,
-        Keerthy <j-keerthy@ti.com>,
-        Ladislav Michl <ladis@linux-mips.org>,
-        Pavel Machek <pavel@ucw.cz>,
-        Sebastian Reichel <sre@kernel.org>,
-        Tero Kristo <t-kristo@ti.com>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Sasha Levin <sashal@kernel.org>, linux-omap@vger.kernel.org,
-        devicetree@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.19 12/44] ARM: dts: Configure clock parent for pwm vibra
-Date:   Mon, 11 Mar 2019 15:56:28 -0400
-Message-Id: <20190311195700.138462-12-sashal@kernel.org>
+Cc:     Yizhuo <yzhai003@ucr.edu>, Tony Lindgren <tony@atomide.com>,
+        Sasha Levin <sashal@kernel.org>, linux-omap@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.19 13/44] ARM: OMAP2+: Variable "reg" in function omap4_dsi_mux_pads() could be uninitialized
+Date:   Mon, 11 Mar 2019 15:56:29 -0400
+Message-Id: <20190311195700.138462-13-sashal@kernel.org>
 X-Mailer: git-send-email 2.19.1
 In-Reply-To: <20190311195700.138462-1-sashal@kernel.org>
 References: <20190311195700.138462-1-sashal@kernel.org>
@@ -68,58 +57,47 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Tony Lindgren <tony@atomide.com>
+From: Yizhuo <yzhai003@ucr.edu>
 
-[ Upstream commit 0840242e887586268f665bf58d5e1a7d6ebf35ed ]
+[ Upstream commit dc30e70391376ba3987aeb856ae6d9c0706534f1 ]
 
-Commit 84badc5ec5fc ("ARM: dts: omap4: Move l4 child devices to probe
-them with ti-sysc") moved some omap4 timers to probe with ti-sysc
-interconnect target module. Turns out this broke pwm-omap-dmtimer
-for reparenting of the timer clock.
+In function omap4_dsi_mux_pads(), local variable "reg" could
+be uninitialized if function regmap_read() returns -EINVAL.
+However, it will be used directly in the later context, which
+is potentially unsafe.
 
-With ti-sysc, we can now configure the clock sources in the dts with
-assigned-clocks and assigned-clock-parents.
-
-Fixes: 84badc5ec5fc ("ARM: dts: omap4: Move l4 child devices to probe them with ti-sysc")
-Cc: Bartosz Golaszewski <bgolaszewski@baylibre.com>
-Cc: Daniel Lezcano <daniel.lezcano@linaro.org>
-Cc: H. Nikolaus Schaller <hns@goldelico.com>
-Cc: Keerthy <j-keerthy@ti.com>
-Cc: Ladislav Michl <ladis@linux-mips.org>
-Cc: Pavel Machek <pavel@ucw.cz>
-Cc: Sebastian Reichel <sre@kernel.org>
-Cc: Tero Kristo <t-kristo@ti.com>
-Cc: Thierry Reding <thierry.reding@gmail.com>
-Cc: Thomas Gleixner <tglx@linutronix.de>
-Reported-by: H. Nikolaus Schaller <hns@goldelico.com>
+Signed-off-by: Yizhuo <yzhai003@ucr.edu>
 Signed-off-by: Tony Lindgren <tony@atomide.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/arm/boot/dts/omap4-droid4-xt894.dts | 11 +++++++++++
- 1 file changed, 11 insertions(+)
+ arch/arm/mach-omap2/display.c | 7 ++++++-
+ 1 file changed, 6 insertions(+), 1 deletion(-)
 
-diff --git a/arch/arm/boot/dts/omap4-droid4-xt894.dts b/arch/arm/boot/dts/omap4-droid4-xt894.dts
-index 04758a2a87f0..67d77eee9433 100644
---- a/arch/arm/boot/dts/omap4-droid4-xt894.dts
-+++ b/arch/arm/boot/dts/omap4-droid4-xt894.dts
-@@ -644,6 +644,17 @@
- 	};
- };
+diff --git a/arch/arm/mach-omap2/display.c b/arch/arm/mach-omap2/display.c
+index 9500b6e27380..5d73f2c0b117 100644
+--- a/arch/arm/mach-omap2/display.c
++++ b/arch/arm/mach-omap2/display.c
+@@ -83,6 +83,7 @@ static int omap4_dsi_mux_pads(int dsi_id, unsigned lanes)
+ 	u32 enable_mask, enable_shift;
+ 	u32 pipd_mask, pipd_shift;
+ 	u32 reg;
++	int ret;
  
-+/* Configure pwm clock source for timers 8 & 9 */
-+&timer8 {
-+	assigned-clocks = <&abe_clkctrl OMAP4_TIMER8_CLKCTRL 24>;
-+	assigned-clock-parents = <&sys_clkin_ck>;
-+};
-+
-+&timer9 {
-+	assigned-clocks = <&l4_per_clkctrl OMAP4_TIMER9_CLKCTRL 24>;
-+	assigned-clock-parents = <&sys_clkin_ck>;
-+};
-+
- /*
-  * As uart1 is wired to mdm6600 with rts and cts, we can use the cts pin for
-  * uart1 wakeirq.
+ 	if (dsi_id == 0) {
+ 		enable_mask = OMAP4_DSI1_LANEENABLE_MASK;
+@@ -98,7 +99,11 @@ static int omap4_dsi_mux_pads(int dsi_id, unsigned lanes)
+ 		return -ENODEV;
+ 	}
+ 
+-	regmap_read(omap4_dsi_mux_syscon, OMAP4_DSIPHY_SYSCON_OFFSET, &reg);
++	ret = regmap_read(omap4_dsi_mux_syscon,
++					  OMAP4_DSIPHY_SYSCON_OFFSET,
++					  &reg);
++	if (ret)
++		return ret;
+ 
+ 	reg &= ~enable_mask;
+ 	reg &= ~pipd_mask;
 -- 
 2.19.1
 
