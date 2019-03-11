@@ -2,86 +2,79 @@ Return-Path: <SRS0=FxTY=RO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_MUTT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 50360C43381
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 Mar 2019 11:04:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3E1E4C10F06
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 Mar 2019 11:05:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 20B51204EC
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 Mar 2019 11:04:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 154AB206BA
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 Mar 2019 11:05:13 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727331AbfCKLE0 (ORCPT
+        id S1727353AbfCKLFL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 11 Mar 2019 07:04:26 -0400
-Received: from atrey.karlin.mff.cuni.cz ([195.113.26.193]:57010 "EHLO
-        atrey.karlin.mff.cuni.cz" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725839AbfCKLE0 (ORCPT
+        Mon, 11 Mar 2019 07:05:11 -0400
+Received: from magratgarlick.emantor.de ([78.46.208.201]:40532 "EHLO
+        margratgarlick.emantor.de" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1725839AbfCKLFL (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 11 Mar 2019 07:04:26 -0400
-Received: by atrey.karlin.mff.cuni.cz (Postfix, from userid 512)
-        id 1E4EF807EB; Mon, 11 Mar 2019 12:04:17 +0100 (CET)
-Date:   Mon, 11 Mar 2019 12:04:23 +0100
-From:   Pavel Machek <pavel@ucw.cz>
-To:     Alexey Dobriyan <adobriyan@gmail.com>
-Cc:     akpm@linux-foundation.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 1/4] elf: don't be afraid of overflow
-Message-ID: <20190311110423.GC14118@amd>
-References: <20190204202715.GA27482@avx2>
+        Mon, 11 Mar 2019 07:05:11 -0400
+X-Greylist: delayed 365 seconds by postgrey-1.27 at vger.kernel.org; Mon, 11 Mar 2019 07:05:10 EDT
+Received: by margratgarlick.emantor.de (Postfix, from userid 114)
+        id 16B3FCD31F; Mon, 11 Mar 2019 11:59:05 +0100 (CET)
+Received: from localhost (unknown [IPv6:2001:67c:670:202:7ba8:5e41:1591:d723])
+        by margratgarlick.emantor.de (Postfix) with ESMTPSA id 7A98FCCB32;
+        Mon, 11 Mar 2019 11:59:02 +0100 (CET)
+From:   Rouven Czerwinski <r.czerwinski@pengutronix.de>
+To:     Herbert Xu <herbert@gondor.apana.org.au>
+Cc:     kernel@pengutronix.de,
+        Rouven Czerwinski <r.czerwinski@pengutronix.de>,
+        Deepak Saxena <dsaxena@plexity.net>,
+        Matt Mackall <mpm@selenic.com>, Arnd Bergmann <arnd@arndb.de>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        linux-crypto@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [PATCH] hwrng: omap - Set default quality
+Date:   Mon, 11 Mar 2019 11:58:57 +0100
+Message-Id: <20190311105857.30792-1-r.czerwinski@pengutronix.de>
+X-Mailer: git-send-email 2.21.0
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-        protocol="application/pgp-signature"; boundary="ALfTUftag+2gvp1h"
-Content-Disposition: inline
-In-Reply-To: <20190204202715.GA27482@avx2>
-User-Agent: Mutt/1.5.23 (2014-03-12)
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Newer combinations of the glibc, kernel and openssh can result in long initial
+startup times on OMAP devices:
 
---ALfTUftag+2gvp1h
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+[    6.671425] systemd-rc-once[102]: Creating ED25519 key; this may take some time ...
+[  142.652491] systemd-rc-once[102]: Creating ED25519 key; done.
 
-On Mon 2019-02-04 23:27:15, Alexey Dobriyan wrote:
-> Number of ELF program headers is 16-bit by spec, so total size
-> comfortably fits into "unsigned int".
+due to the blocking getrandom(2) system call:
 
-If it can't overflow, gcc should know too, and optimize checks
-out... right?
+[  142.610335] random: crng init done
 
-> @@ -429,13 +430,9 @@ static struct elf_phdr *load_elf_phdrs(struct elfhdr=
- *elf_ex,
->  		goto out;
-> =20
->  	/* Sanity check the number of program headers... */
-> -	if (elf_ex->e_phnum < 1 ||
-> -		elf_ex->e_phnum > 65536U / sizeof(struct elf_phdr))
-> -		goto out;
-> -
->  	/* ...and their total size. */
+Set the quality level for the omap hwrng driver allowing the kernel to use the
+hwrng as an entropy source at boot.
 
-This is just wrong. You removed check for zero, and I'm pretty sure
-sizeof() is not 1, so this one can trigger, too.
-									Pavel
---=20
-(english) http://www.livejournal.com/~pavelmachek
-(cesky, pictures) http://atrey.karlin.mff.cuni.cz/~pavel/picture/horses/blo=
-g.html
+Signed-off-by: Rouven Czerwinski <r.czerwinski@pengutronix.de>
+---
+ drivers/char/hw_random/omap-rng.c | 1 +
+ 1 file changed, 1 insertion(+)
 
---ALfTUftag+2gvp1h
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
+diff --git a/drivers/char/hw_random/omap-rng.c b/drivers/char/hw_random/omap-rng.c
+index b65ff6962899..e9b6ac61fb7f 100644
+--- a/drivers/char/hw_random/omap-rng.c
++++ b/drivers/char/hw_random/omap-rng.c
+@@ -443,6 +443,7 @@ static int omap_rng_probe(struct platform_device *pdev)
+ 	priv->rng.read = omap_rng_do_read;
+ 	priv->rng.init = omap_rng_init;
+ 	priv->rng.cleanup = omap_rng_cleanup;
++	priv->rng.quality = 900;
+ 
+ 	priv->rng.priv = (unsigned long)priv;
+ 	platform_set_drvdata(pdev, priv);
+-- 
+2.21.0
 
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1
-
-iEUEARECAAYFAlyGQLcACgkQMOfwapXb+vI3mwCgw9lSJuIZfUlaqX8/r0ddjAJ5
-YQEAli6e4zYRH89oPhuuPiDn3HIcEjs=
-=ZGfu
------END PGP SIGNATURE-----
-
---ALfTUftag+2gvp1h--
