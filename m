@@ -2,181 +2,138 @@ Return-Path: <SRS0=FxTY=RO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT autolearn=ham
+X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F237AC43381
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 Mar 2019 23:19:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 28D37C43381
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 Mar 2019 23:20:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B36E32148D
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 Mar 2019 23:19:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E79972148D
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 Mar 2019 23:20:11 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=vmware.com header.i=@vmware.com header.b="g9exUhDm"
+	dkim=pass (2048-bit key) header.d=umn.edu header.i=@umn.edu header.b="hS7wkKnD"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726747AbfCKXTy (ORCPT
+        id S1726779AbfCKXUK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 11 Mar 2019 19:19:54 -0400
-Received: from mail-eopbgr680087.outbound.protection.outlook.com ([40.107.68.87]:31459
-        "EHLO NAM04-BN3-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726444AbfCKXTy (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 11 Mar 2019 19:19:54 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=vmware.com;
- s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=fD1nkT8V4e7dLbND8rjNt/U4wHlOjY1/Pagk4T94SwI=;
- b=g9exUhDmBoteH3fLSXIN/vGbMDmophBTqGV1Enak3Ix9KuDCx0zdAj9K4xeK2IeCBBpN+GF/UouX6qundS0XRl97P0G5Wtc7asZ4/1LVnLuTZBiq9csJpFIGPg6oHE2Uh+K24ERLqDBmRlSr9vLxQ8t/JezScmojQiNS17q7KV0=
-Received: from BYAPR05MB5048.namprd05.prod.outlook.com (20.177.230.218) by
- BYAPR05MB4981.namprd05.prod.outlook.com (20.177.230.159) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.1709.8; Mon, 11 Mar 2019 23:19:42 +0000
-Received: from BYAPR05MB5048.namprd05.prod.outlook.com
- ([fe80::b542:165c:d3da:244]) by BYAPR05MB5048.namprd05.prod.outlook.com
- ([fe80::b542:165c:d3da:244%6]) with mapi id 15.20.1709.011; Mon, 11 Mar 2019
- 23:19:42 +0000
-From:   Vishnu DASA <vdasa@vmware.com>
-To:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "virtualization@lists.linux-foundation.org" 
-        <virtualization@lists.linux-foundation.org>,
-        "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>,
-        "rdunlap@infradead.org" <rdunlap@infradead.org>
-CC:     Vishnu DASA <vdasa@vmware.com>, Pv-drivers <Pv-drivers@vmware.com>
-Subject: [PATCH v2] VMCI: Use BIT() macro for bit definitions
-Thread-Topic: [PATCH v2] VMCI: Use BIT() macro for bit definitions
-Thread-Index: AQHU2GDoWJhkI29GYU+8unSsHPJZ2g==
-Date:   Mon, 11 Mar 2019 23:19:42 +0000
-Message-ID: <20190311231925.14014-1-vdasa@vmware.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-clientproxiedby: BYAPR03CA0009.namprd03.prod.outlook.com
- (2603:10b6:a02:a8::22) To BYAPR05MB5048.namprd05.prod.outlook.com
- (2603:10b6:a03:9d::26)
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=vdasa@vmware.com; 
-x-ms-exchange-messagesentrepresentingtype: 1
-x-mailer: git-send-email 2.19.1
-x-originating-ip: [66.170.99.1]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: 975920f5-28a0-4fc0-93f8-08d6a6780a87
-x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600127)(711020)(4605104)(2017052603328)(7153060)(7193020);SRVR:BYAPR05MB4981;
-x-ms-traffictypediagnostic: BYAPR05MB4981:
-x-ld-processed: b39138ca-3cee-4b4a-a4d6-cd83d9dd62f0,ExtAddr
-x-microsoft-antispam-prvs: <BYAPR05MB498167D8757AC03D523ABCF3CE480@BYAPR05MB4981.namprd05.prod.outlook.com>
-x-forefront-prvs: 09730BD177
-x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(136003)(346002)(39860400002)(366004)(396003)(376002)(189003)(199004)(53936002)(2616005)(256004)(4326008)(2201001)(26005)(476003)(86362001)(14444005)(14454004)(486006)(186003)(478600001)(6116002)(25786009)(6436002)(52116002)(71190400001)(99286004)(81156014)(8676002)(71200400001)(81166006)(386003)(6506007)(6512007)(305945005)(316002)(2906002)(3846002)(106356001)(107886003)(97736004)(7736002)(102836004)(105586002)(54906003)(5660300002)(110136005)(6486002)(68736007)(1076003)(2501003)(36756003)(66066001)(8936002)(50226002);DIR:OUT;SFP:1101;SCL:1;SRVR:BYAPR05MB4981;H:BYAPR05MB5048.namprd05.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
-received-spf: None (protection.outlook.com: vmware.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam-message-info: opsLldaBadLmqALTWb0x97rtNbtgQoZYrau3E0VD2K/EcBhuWEbqqLNaAnlXQ7zgHmjPF9McRGWwQNg0i5e4SgAWx/au2JMpXemHEIcAU3d3AjURK0rcBRVQTg2zo8YDloGKWTcZs0NLyxmUsHSqszx1hTO7Sd/IQS946+GLJ3tzRAyc9Kn9sKlKgVKfLpZYUnyxpaAu55qpL1r8nvWyvQjQFJgXcmtNq8p+usspIPb8xgWOwFyjfF7YWtO0TLWH4NRXYNl7TkBUnbuvNGIFjoIEpAHNnrzy7aWm+40W7WWvVHe3jCG8cIzeQxYFu/osiZGWTfxddzjvt4cwGGG+mXItR+8YsLsGQ304ltgGBCfMYWKUxabKDRck50pRIheyhLesTCBZXSoCBvpKfnYCy5ohxrGjkgS012MYXhFRq4s=
-Content-Type: text/plain; charset="iso-8859-1"
-Content-Transfer-Encoding: quoted-printable
-MIME-Version: 1.0
-X-OriginatorOrg: vmware.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 975920f5-28a0-4fc0-93f8-08d6a6780a87
-X-MS-Exchange-CrossTenant-originalarrivaltime: 11 Mar 2019 23:19:42.5719
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: b39138ca-3cee-4b4a-a4d6-cd83d9dd62f0
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: BYAPR05MB4981
+        Mon, 11 Mar 2019 19:20:10 -0400
+Received: from mta-p7.oit.umn.edu ([134.84.196.207]:48058 "EHLO
+        mta-p7.oit.umn.edu" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726670AbfCKXUJ (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 11 Mar 2019 19:20:09 -0400
+Received: from localhost (unknown [127.0.0.1])
+        by mta-p7.oit.umn.edu (Postfix) with ESMTP id C1186938
+        for <linux-kernel@vger.kernel.org>; Mon, 11 Mar 2019 23:20:07 +0000 (UTC)
+X-Virus-Scanned: amavisd-new at umn.edu
+Received: from mta-p7.oit.umn.edu ([127.0.0.1])
+        by localhost (mta-p7.oit.umn.edu [127.0.0.1]) (amavisd-new, port 10024)
+        with ESMTP id lRnLSKJqxj_u for <linux-kernel@vger.kernel.org>;
+        Mon, 11 Mar 2019 18:20:07 -0500 (CDT)
+Received: from mail-it1-f199.google.com (mail-it1-f199.google.com [209.85.166.199])
+        (using TLSv1.2 with cipher AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mta-p7.oit.umn.edu (Postfix) with ESMTPS id 896446E8
+        for <linux-kernel@vger.kernel.org>; Mon, 11 Mar 2019 18:20:07 -0500 (CDT)
+Received: by mail-it1-f199.google.com with SMTP id 190so599841itv.3
+        for <linux-kernel@vger.kernel.org>; Mon, 11 Mar 2019 16:20:07 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=umn.edu; s=google;
+        h=from:to:cc:subject:date:message-id;
+        bh=q3CdnuMQy0ShWWsmGLLstnXz29N0wkvNqXI8ARE0Z/Y=;
+        b=hS7wkKnD2MVBlF/utd7/cPL5quV4KbNUt0laVpApIyn6IodQ7WzkIq9FC9cO+bGaic
+         JoovTGFo++RPoGMxuA23fOu6EW1BBDaxD04WJLMQNRaNg5bC8RnIzgcoDsjYSNNYXv60
+         gNfDBhtNQJs/Wp7UClj91eYN6OzJ2tPQYZz3lKuQDJQZMUwnnGUJCTwPD+SuFwNf7bhH
+         78bSU2IUIjHnFgae10FlrM3Mx482PgcgteAibDfJvioWPlR2VOTrxOcMAuQyZ54pmLXd
+         4wbefSnmSM4TSjfF877RnxdTrO4BunMUD74UDCOAwtU5gKiwt3sny5nLVJWUF71A+9L+
+         oYvw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=q3CdnuMQy0ShWWsmGLLstnXz29N0wkvNqXI8ARE0Z/Y=;
+        b=e7jD820SPTz9UQe38MZkHozCPUfAyTCuH44iTBhdx9ZWLrqlOsZb/bLOOqdB3rrP5n
+         B7XhUm1veE0GnDYNTOmtn6zFh1undcFwxAelJTYwZIFtoGduC5Rn342DIlM4wGvbXhox
+         PtkCogSWkXJhFzI0NmTarjorwIgIK6XHiKjpXYlUrYi+BNsRrYp3N7v+OTfC5N5Ku4cf
+         DTJ8hx3N4njqYXGfhwi+++ailkIXfFJevYIO05O49w+FL9MXsa/2/IAOmPF4gLR1Anb4
+         ByezYkWTDL+QhUwTJVP+hHaR02QUBUO3HZsr2CjLBCPUVNBYI9PHxT+oBUdxpM4/4UND
+         BAiw==
+X-Gm-Message-State: APjAAAWAK225utliDU65b99olCbWFlJnybWyGynhpWJy82qWvUnudaX5
+        KbL0//oAoO88QXNpQQZ9hrVfqathIK0LzGq8893Egu5NNuOOBabf6je9lAA6rebFkJ82YLujl+V
+        kZmFBydGmdfdUfl9KGG0bhd3ZyO9a
+X-Received: by 2002:a6b:7718:: with SMTP id n24mr18015369iom.299.1552346406933;
+        Mon, 11 Mar 2019 16:20:06 -0700 (PDT)
+X-Google-Smtp-Source: APXvYqw/631QgHOU6QwPo2m2Zr15jCD7IUbj0ajS6h6Z4VC5owymdYUM2Yfrae6IV3QkDQHjkcMomg==
+X-Received: by 2002:a6b:7718:: with SMTP id n24mr18015357iom.299.1552346406709;
+        Mon, 11 Mar 2019 16:20:06 -0700 (PDT)
+Received: from cs-u-syssec1.dtc.umn.edu (cs-u-syssec1.cs.umn.edu. [128.101.106.66])
+        by smtp.gmail.com with ESMTPSA id f17sm382100itb.36.2019.03.11.16.20.05
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Mon, 11 Mar 2019 16:20:06 -0700 (PDT)
+From:   Aditya Pakki <pakki001@umn.edu>
+To:     pakki001@umn.edu
+Cc:     kjlu@umn.edu, Pablo Neira Ayuso <pablo@netfilter.org>,
+        Jozsef Kadlecsik <kadlec@blackhole.kfki.hu>,
+        Florian Westphal <fw@strlen.de>,
+        "David S. Miller" <davem@davemloft.net>,
+        Alexey Kuznetsov <kuznet@ms2.inr.ac.ru>,
+        Hideaki YOSHIFUJI <yoshfuji@linux-ipv6.org>,
+        netfilter-devel@vger.kernel.org, coreteam@netfilter.org,
+        netdev@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [PATCH] netfilter: ip6t_srh: Fix potential NULL pointer dereference
+Date:   Mon, 11 Mar 2019 18:19:20 -0500
+Message-Id: <20190311231920.26514-1-pakki001@umn.edu>
+X-Mailer: git-send-email 2.17.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-No functional changes, cleanup only.
+skb_header_pointer in srh_mt6 may return a NULL pointer that is
+dereferenced in ipv6_masked_addr_cmp. This patch avoids such a scenario.
 
-Reviewed-by: Adit Ranadive <aditr@vmware.com>
-Reviewed-by: Jorgen Hansen <jhansen@vmware.com>
-Signed-off-by: Vishnu Dasa <vdasa@vmware.com>
+Signed-off-by: Aditya Pakki <pakki001@umn.edu>
 ---
+ net/ipv6/netfilter/ip6t_srh.c | 11 +++++++----
+ 1 file changed, 7 insertions(+), 4 deletions(-)
 
-v1 -> v2:
-- Add #include <linux/bits.h>
----
- include/linux/vmw_vmci_defs.h | 35 ++++++++++++++++++-----------------
- 1 file changed, 18 insertions(+), 17 deletions(-)
-
-diff --git a/include/linux/vmw_vmci_defs.h b/include/linux/vmw_vmci_defs.h
-index eaa1e762bf06..0c06178e4985 100644
---- a/include/linux/vmw_vmci_defs.h
-+++ b/include/linux/vmw_vmci_defs.h
-@@ -17,6 +17,7 @@
- #define _VMW_VMCI_DEF_H_
-=20
- #include <linux/atomic.h>
-+#include <linux/bits.h>
-=20
- /* Register offsets. */
- #define VMCI_STATUS_ADDR      0x00
-@@ -33,27 +34,27 @@
- #define VMCI_MAX_DEVICES 1
-=20
- /* Status register bits. */
--#define VMCI_STATUS_INT_ON     0x1
-+#define VMCI_STATUS_INT_ON     BIT(0)
-=20
- /* Control register bits. */
--#define VMCI_CONTROL_RESET        0x1
--#define VMCI_CONTROL_INT_ENABLE   0x2
--#define VMCI_CONTROL_INT_DISABLE  0x4
-+#define VMCI_CONTROL_RESET        BIT(0)
-+#define VMCI_CONTROL_INT_ENABLE   BIT(1)
-+#define VMCI_CONTROL_INT_DISABLE  BIT(2)
-=20
- /* Capabilities register bits. */
--#define VMCI_CAPS_HYPERCALL     0x1
--#define VMCI_CAPS_GUESTCALL     0x2
--#define VMCI_CAPS_DATAGRAM      0x4
--#define VMCI_CAPS_NOTIFICATIONS 0x8
--#define VMCI_CAPS_PPN64         0x10
-+#define VMCI_CAPS_HYPERCALL     BIT(0)
-+#define VMCI_CAPS_GUESTCALL     BIT(1)
-+#define VMCI_CAPS_DATAGRAM      BIT(2)
-+#define VMCI_CAPS_NOTIFICATIONS BIT(3)
-+#define VMCI_CAPS_PPN64         BIT(4)
-=20
- /* Interrupt Cause register bits. */
--#define VMCI_ICR_DATAGRAM      0x1
--#define VMCI_ICR_NOTIFICATION  0x2
-+#define VMCI_ICR_DATAGRAM      BIT(0)
-+#define VMCI_ICR_NOTIFICATION  BIT(1)
-=20
- /* Interrupt Mask register bits. */
--#define VMCI_IMR_DATAGRAM      0x1
--#define VMCI_IMR_NOTIFICATION  0x2
-+#define VMCI_IMR_DATAGRAM      BIT(0)
-+#define VMCI_IMR_NOTIFICATION  BIT(1)
-=20
- /* Maximum MSI/MSI-X interrupt vectors in the device. */
- #define VMCI_MAX_INTRS 2
-@@ -463,9 +464,9 @@ struct vmci_datagram {
-  * datagram callback is invoked in a delayed context (not interrupt contex=
-t).
-  */
- #define VMCI_FLAG_DG_NONE          0
--#define VMCI_FLAG_WELLKNOWN_DG_HND 0x1
--#define VMCI_FLAG_ANYCID_DG_HND    0x2
--#define VMCI_FLAG_DG_DELAYED_CB    0x4
-+#define VMCI_FLAG_WELLKNOWN_DG_HND BIT(0)
-+#define VMCI_FLAG_ANYCID_DG_HND    BIT(1)
-+#define VMCI_FLAG_DG_DELAYED_CB    BIT(2)
-=20
- /*
-  * Maximum supported size of a VMCI datagram for routable datagrams.
-@@ -694,7 +695,7 @@ struct vmci_qp_detach_msg {
- };
-=20
- /* VMCI Doorbell API. */
--#define VMCI_FLAG_DELAYED_CB 0x01
-+#define VMCI_FLAG_DELAYED_CB BIT(0)
-=20
- typedef void (*vmci_callback) (void *client_data);
-=20
---=20
-2.19.1
+diff --git a/net/ipv6/netfilter/ip6t_srh.c b/net/ipv6/netfilter/ip6t_srh.c
+index 1059894a6f4c..5a1c0437f74b 100644
+--- a/net/ipv6/netfilter/ip6t_srh.c
++++ b/net/ipv6/netfilter/ip6t_srh.c
+@@ -210,9 +210,10 @@ static bool srh1_mt6(const struct sk_buff *skb, struct xt_action_param *par)
+ 		psidoff = srhoff + sizeof(struct ipv6_sr_hdr) +
+ 			  ((srh->segments_left + 1) * sizeof(struct in6_addr));
+ 		psid = skb_header_pointer(skb, psidoff, sizeof(_psid), &_psid);
+-		if (NF_SRH_INVF(srhinfo, IP6T_SRH_INV_PSID,
++		if (psid &&
++		    NF_SRH_INVF(srhinfo, IP6T_SRH_INV_PSID,
+ 				ipv6_masked_addr_cmp(psid, &srhinfo->psid_msk,
+-						     &srhinfo->psid_addr)))
++							&srhinfo->psid_addr)))
+ 			return false;
+ 	}
+ 
+@@ -223,7 +224,8 @@ static bool srh1_mt6(const struct sk_buff *skb, struct xt_action_param *par)
+ 		nsidoff = srhoff + sizeof(struct ipv6_sr_hdr) +
+ 			  ((srh->segments_left - 1) * sizeof(struct in6_addr));
+ 		nsid = skb_header_pointer(skb, nsidoff, sizeof(_nsid), &_nsid);
+-		if (NF_SRH_INVF(srhinfo, IP6T_SRH_INV_NSID,
++		if (nsid &&
++		    NF_SRH_INVF(srhinfo, IP6T_SRH_INV_NSID,
+ 				ipv6_masked_addr_cmp(nsid, &srhinfo->nsid_msk,
+ 						     &srhinfo->nsid_addr)))
+ 			return false;
+@@ -233,7 +235,8 @@ static bool srh1_mt6(const struct sk_buff *skb, struct xt_action_param *par)
+ 	if (srhinfo->mt_flags & IP6T_SRH_LSID) {
+ 		lsidoff = srhoff + sizeof(struct ipv6_sr_hdr);
+ 		lsid = skb_header_pointer(skb, lsidoff, sizeof(_lsid), &_lsid);
+-		if (NF_SRH_INVF(srhinfo, IP6T_SRH_INV_LSID,
++		if (lsid &&
++		    NF_SRH_INVF(srhinfo, IP6T_SRH_INV_LSID,
+ 				ipv6_masked_addr_cmp(lsid, &srhinfo->lsid_msk,
+ 						     &srhinfo->lsid_addr)))
+ 			return false;
+-- 
+2.17.1
 
