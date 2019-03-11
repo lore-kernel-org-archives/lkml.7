@@ -2,95 +2,99 @@ Return-Path: <SRS0=FxTY=RO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=FREEMAIL_FORGED_FROMDOMAIN,
-	FREEMAIL_FROM,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1D99EC10F06
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 Mar 2019 14:57:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8F0FCC43381
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 Mar 2019 14:57:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E06232075C
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 Mar 2019 14:56:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 690F42075C
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 Mar 2019 14:57:28 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727868AbfCKO47 (ORCPT
+        id S1727883AbfCKO51 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 11 Mar 2019 10:56:59 -0400
-Received: from smtp3-g21.free.fr ([212.27.42.3]:48399 "EHLO smtp3-g21.free.fr"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727320AbfCKO46 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 11 Mar 2019 10:56:58 -0400
-Received: from [192.168.108.8] (unknown [213.36.7.13])
-        (Authenticated sender: marc.w.gonzalez)
-        by smtp3-g21.free.fr (Postfix) with ESMTPSA id C871713F895;
-        Mon, 11 Mar 2019 15:56:36 +0100 (CET)
-To:     Bjorn Helgaas <bhelgaas@google.com>
-Cc:     Andy Gross <andy.gross@linaro.org>,
-        David Brown <david.brown@linaro.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Stanimir Varbanov <stanimir.varbanov@linaro.org>,
-        PCI <linux-pci@vger.kernel.org>,
-        MSM <linux-arm-msm@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Jeffrey Hugo <jhugo@codeaurora.org>
-From:   Marc Gonzalez <marc.w.gonzalez@free.fr>
-Subject: [RFC PATCH v1] PCI: qcom: Use quirk to override incorrect device
- class
-Message-ID: <94bb3f22-c5a7-1891-9d89-42a520e9a592@free.fr>
-Date:   Mon, 11 Mar 2019 15:56:36 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.5.1
+        Mon, 11 Mar 2019 10:57:27 -0400
+Received: from mail-qt1-f195.google.com ([209.85.160.195]:34218 "EHLO
+        mail-qt1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727412AbfCKO50 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 11 Mar 2019 10:57:26 -0400
+Received: by mail-qt1-f195.google.com with SMTP id x20so5357751qto.1
+        for <linux-kernel@vger.kernel.org>; Mon, 11 Mar 2019 07:57:26 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=7ftwafbUdfi8At6dXwjpWqHbsdOL+nGx1QxQTVsHPjs=;
+        b=BP09uspVuoNAJtiJPxTamG0m3m0t9zLTpBgOpGp7Hm8PDKMnwtn7WCgwIU7ZXaLM9b
+         USmZTiRnWX5iPU2kouZoV9DPL5egEDHL4sKhcumdaOrt4T9LcnMS6v2frLe4aPDX1utC
+         SIvUixVDCW7w0ArC/GpRY3ttJP690dVMNYPt111GdDG4MpTeuYFvbiEz/elbb64g3DRU
+         qGqLy+lfpHweRWKRn6GK1fp49gaW2tr/y4opdh3Xrx/+fPpPUp9q+XvF01c8hQt34i/+
+         EMT6l6OXeB53MSudjrBWUGb9LKapHVhopDMquwdxsscng6hDgqxd3K+SyZ2ITvR7NxaU
+         tFTQ==
+X-Gm-Message-State: APjAAAURPb4iLDSYPRm0CvNHAtMGlihlZoyLcM5rM0rP0W1diEqjG8uw
+        yabgduTfFMgdlw38+CyJo84q/TTGsLDWpHcDFLgmLS0OLeo=
+X-Google-Smtp-Source: APXvYqw5QVuLk7JovF4dObQUDTE9+0sWQecpeafvAAfMSAkMA9cTtZjg9q8RJMWUi1pVYU2BONHIKE4tL93MHB48bwg=
+X-Received: by 2002:a0c:d963:: with SMTP id t32mr25842882qvj.231.1552316245634;
+ Mon, 11 Mar 2019 07:57:25 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+References: <20190304195536.1019650-1-arnd@arndb.de>
+In-Reply-To: <20190304195536.1019650-1-arnd@arndb.de>
+From:   Benjamin Tissoires <benjamin.tissoires@redhat.com>
+Date:   Mon, 11 Mar 2019 15:57:14 +0100
+Message-ID: <CAO-hwJLRq-0dXyAS+gg8yasqQuvR82EOeLPb+duj22tpBstKNw@mail.gmail.com>
+Subject: Re: [PATCH] HID: hid-asus: select CONFIG_POWER_SUPPLY
+To:     Arnd Bergmann <arnd@arndb.de>
+Cc:     Jiri Kosina <jikos@kernel.org>,
+        NOGUCHI Hiroshi <drvlabo@gmail.com>,
+        "open list:HID CORE LAYER" <linux-input@vger.kernel.org>,
+        lkml <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Some chips report an incorrect device class. Override the incorrect
-value using a quirk, instead of code in the read function.
+On Mon, Mar 4, 2019 at 8:55 PM Arnd Bergmann <arnd@arndb.de> wrote:
+>
+> The newly added power supply code fails to link when the power supply core
+> code is disabled:
+>
+> drivers/hid/hid-asus.o: In function `asus_battery_get_property':
+> hid-asus.c:(.text+0x11de): undefined reference to `power_supply_get_drvdata'
+> drivers/hid/hid-asus.o: In function `asus_probe':
+> hid-asus.c:(.text+0x170c): undefined reference to `devm_power_supply_register'
+> hid-asus.c:(.text+0x1734): undefined reference to `power_supply_powers'
+> drivers/hid/hid-asus.o: In function `asus_raw_event':
+> hid-asus.c:(.text+0x1914): undefined reference to `power_supply_changed'
+>
+> Select the subsystem from Kconfig as we do for other hid drivers already.
+>
+> Fixes: 6311d329e12a ("HID: hid-asus: Add BT keyboard dock battery monitoring support")
+> Signed-off-by: Arnd Bergmann <arnd@arndb.de>
+> ---
 
-Signed-off-by: Marc Gonzalez <marc.w.gonzalez@free.fr>
----
-FWIW, this quirk is no longer required on recent chips:
-msm8996 (tested by Stanimir), msm8998 (tested by me), sdm845 (untested) are unaffected
-apq/ipq8064 is affected => what is the device ID for these chips?
-others?
+Applied to for-5.1/upstream-fixes
 
-Stanimir added: "this will become a real problem (now we use the driver as RC)
-when someone decide to use it as an endpoint"
----
- drivers/pci/controller/dwc/pcie-qcom.c | 14 ++++++--------
- 1 file changed, 6 insertions(+), 8 deletions(-)
+Cheers,
+Benjamin
 
-diff --git a/drivers/pci/controller/dwc/pcie-qcom.c b/drivers/pci/controller/dwc/pcie-qcom.c
-index 3de5510fd3d5..94da2c9c2ad5 100644
---- a/drivers/pci/controller/dwc/pcie-qcom.c
-+++ b/drivers/pci/controller/dwc/pcie-qcom.c
-@@ -1136,17 +1136,15 @@ static int qcom_pcie_rd_own_conf(struct pcie_port *pp, int where, int size,
- {
- 	struct dw_pcie *pci = to_dw_pcie_from_pp(pp);
- 
--	/* the device class is not reported correctly from the register */
--	if (where == PCI_CLASS_REVISION && size == 4) {
--		*val = readl(pci->dbi_base + PCI_CLASS_REVISION);
--		*val &= 0xff;	/* keep revision id */
--		*val |= PCI_CLASS_BRIDGE_PCI << 16;
--		return PCIBIOS_SUCCESSFUL;
--	}
--
- 	return dw_pcie_read(pci->dbi_base + where, size, val);
- }
- 
-+static void qcom_fixup_class(struct pci_dev *dev)
-+{
-+	dev->class = PCI_CLASS_BRIDGE_PCI << 8;
-+}
-+DECLARE_PCI_FIXUP_EARLY(PCI_VENDOR_ID_QCOM, PCI_ANY_ID, qcom_fixup_class);
-+
- static const struct dw_pcie_host_ops qcom_pcie_dw_ops = {
- 	.host_init = qcom_pcie_host_init,
- 	.rd_own_conf = qcom_pcie_rd_own_conf,
--- 
-2.17.1
+>  drivers/hid/Kconfig | 1 +
+>  1 file changed, 1 insertion(+)
+>
+> diff --git a/drivers/hid/Kconfig b/drivers/hid/Kconfig
+> index 6ca8d322b487..4ca0cdfa6b33 100644
+> --- a/drivers/hid/Kconfig
+> +++ b/drivers/hid/Kconfig
+> @@ -150,6 +150,7 @@ config HID_ASUS
+>         tristate "Asus"
+>         depends on LEDS_CLASS
+>         depends on ASUS_WMI || ASUS_WMI=n
+> +       select POWER_SUPPLY
+>         ---help---
+>         Support for Asus notebook built-in keyboard and touchpad via i2c, and
+>         the Asus Republic of Gamers laptop keyboard special keys.
+> --
+> 2.20.0
+>
