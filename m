@@ -2,147 +2,114 @@ Return-Path: <SRS0=FxTY=RO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,UNPARSEABLE_RELAY,
-	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 145BCC43381
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 Mar 2019 05:33:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 80431C43381
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 Mar 2019 05:34:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DF02E2075C
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 Mar 2019 05:33:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4A1522075C
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 Mar 2019 05:34:59 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=umn.edu header.i=@umn.edu header.b="J/qyMzkt"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726077AbfCKFdQ (ORCPT
+        id S1726471AbfCKFe5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 11 Mar 2019 01:33:16 -0400
-Received: from Mailgw01.mediatek.com ([1.203.163.78]:8173 "EHLO
-        mailgw01.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1725823AbfCKFdQ (ORCPT
+        Mon, 11 Mar 2019 01:34:57 -0400
+Received: from mta-p6.oit.umn.edu ([134.84.196.206]:38964 "EHLO
+        mta-p6.oit.umn.edu" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725831AbfCKFe5 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 11 Mar 2019 01:33:16 -0400
-X-UUID: b57cb2a48c9746af95c7555c4a6958ec-20190311
-X-UUID: b57cb2a48c9746af95c7555c4a6958ec-20190311
-Received: from mtkcas34.mediatek.inc [(172.27.4.253)] by mailgw01.mediatek.com
-        (envelope-from <chunfeng.yun@mediatek.com>)
-        (mailgw01.mediatek.com ESMTP with TLS)
-        with ESMTP id 785341383; Mon, 11 Mar 2019 13:33:05 +0800
-Received: from MTKCAS36.mediatek.inc (172.27.4.186) by MTKMBS31N1.mediatek.inc
- (172.27.4.69) with Microsoft SMTP Server (TLS) id 15.0.1395.4; Mon, 11 Mar
- 2019 13:33:04 +0800
-Received: from [10.17.3.153] (172.27.4.253) by MTKCAS36.mediatek.inc
- (172.27.4.170) with Microsoft SMTP Server id 15.0.1395.4 via Frontend
- Transport; Mon, 11 Mar 2019 13:33:03 +0800
-Message-ID: <1552282383.10179.21.camel@mhfsdcap03>
-Subject: Re: [PATCH 1/5] dt-bindings: connector: add optional properties for
- Type-B
-From:   Chunfeng Yun <chunfeng.yun@mediatek.com>
-To:     Hans de Goede <hdegoede@redhat.com>
-CC:     Rob Herring <robh+dt@kernel.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Heikki Krogerus <heikki.krogerus@linux.intel.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        Adam Thomson <Adam.Thomson.Opensource@diasemi.com>,
-        Li Jun <jun.li@nxp.com>,
-        "Badhri Jagan Sridharan" <badhri@google.com>,
-        Andy Shevchenko <andy.shevchenko@gmail.com>,
-        Min Guo <min.guo@mediatek.com>, <devicetree@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>, <linux-usb@vger.kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <linux-mediatek@lists.infradead.org>
-Date:   Mon, 11 Mar 2019 13:33:03 +0800
-In-Reply-To: <693b11e7-fa9e-ab1f-561a-beb758b1872f@redhat.com>
-References: <1552025622-15582-1-git-send-email-chunfeng.yun@mediatek.com>
-         <1552025622-15582-2-git-send-email-chunfeng.yun@mediatek.com>
-         <693b11e7-fa9e-ab1f-561a-beb758b1872f@redhat.com>
-Content-Type: text/plain; charset="UTF-8"
-X-Mailer: Evolution 3.2.3-0ubuntu6 
-Content-Transfer-Encoding: 7bit
-MIME-Version: 1.0
-X-MTK:  N
+        Mon, 11 Mar 2019 01:34:57 -0400
+Received: from localhost (unknown [127.0.0.1])
+        by mta-p6.oit.umn.edu (Postfix) with ESMTP id 875B5A93
+        for <linux-kernel@vger.kernel.org>; Mon, 11 Mar 2019 05:34:55 +0000 (UTC)
+X-Virus-Scanned: amavisd-new at umn.edu
+Received: from mta-p6.oit.umn.edu ([127.0.0.1])
+        by localhost (mta-p6.oit.umn.edu [127.0.0.1]) (amavisd-new, port 10024)
+        with ESMTP id Tk4cXPJltSqP for <linux-kernel@vger.kernel.org>;
+        Mon, 11 Mar 2019 00:34:55 -0500 (CDT)
+Received: from mail-it1-f200.google.com (mail-it1-f200.google.com [209.85.166.200])
+        (using TLSv1.2 with cipher AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mta-p6.oit.umn.edu (Postfix) with ESMTPS id 5C87A87A
+        for <linux-kernel@vger.kernel.org>; Mon, 11 Mar 2019 00:34:55 -0500 (CDT)
+Received: by mail-it1-f200.google.com with SMTP id 190so4106036itv.3
+        for <linux-kernel@vger.kernel.org>; Sun, 10 Mar 2019 22:34:55 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=umn.edu; s=google;
+        h=from:to:cc:subject:date:message-id;
+        bh=IIwBByuKrGjNRZJQLNi5VG3nQ6wnw8s3N/1S/7GaWeI=;
+        b=J/qyMzkteoC/rGJXtgjdxmkuVxtxQ4E7hIempYBbETG+qtz5U1InPMnL03hDYB2hRb
+         3iDiUk7ZOeD94ltQUKLrjvhMBoBdlbQ+hf0iYgb+7J2uYlX+qJOA7kc+MAeQbjHIboqT
+         3UNyx0DCOUtstdZxA3XnFtGKkYS6usfIS+GCc2R4Jg4fhbz+eUqdRdn05DngB/A9bvgs
+         oyt/gZaxwNfEuxokh1O8l22sd4lMqDnLNYvWo31i9sZtmVOWFFQMDECRceNjTXKEGW9D
+         coMGAeGonEHnvZGkVS2JnUaiN9kKste/sIFALGGL8YAzWiqjZqWFrITwj89j6zVAnC80
+         pGDQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=IIwBByuKrGjNRZJQLNi5VG3nQ6wnw8s3N/1S/7GaWeI=;
+        b=N+clLCsRewNqiwthgxd24SQ4j0vOBh/Zn4myA2gRVkX+ZEPtfjOdnfAGeBZfsPCfzy
+         9R3V4HkxtCONCkhijtJtId3TQ8n1aDEZpg2zPGE5Bhb8RddiN++NRHz0wNGQUDwI9Wgr
+         977sAyiEVZO4/Rd9v2Wyup/qoBdjvzQOztBjfy7auzBHKqCRHF6EuHOEZaXeTONzCt8Q
+         l2tn591YZiJE2MXyu0Eg+zvWyEw+w9+XtbGQY4CHoHyWOxyhwavQ5hs3MGsI+UaZIo+7
+         mbWxfDMY0xUwpTI9BBH1kFXP8SEze4vUAJNh2D+b7qSWZ3LaTbScrJdeJFTcMhVFbqfv
+         gDvA==
+X-Gm-Message-State: APjAAAV1qQL6olrUfmWs3/n+RA8wyFfKkezcN7zKYUBVUTL7XFWem6w8
+        Y/uD+L7aSs1llGmOl0mVceTT4JB+SKhGMxK/Htp2RbCjGxboh3HEvNC6epTTdDduWWCR9Nw9Wv9
+        cMg0ZHnOFDYm7fI2xOBlZ/VFr9LbX
+X-Received: by 2002:a6b:6003:: with SMTP id r3mr11269784iog.231.1552282494936;
+        Sun, 10 Mar 2019 22:34:54 -0700 (PDT)
+X-Google-Smtp-Source: APXvYqw8zfvzgTkjoQuoBSj+nkc+iCrh0FAx5SKv7ukL66qsizQPzzRTi/64iFgdCEuwb0N5+p8xtQ==
+X-Received: by 2002:a6b:6003:: with SMTP id r3mr11269778iog.231.1552282494683;
+        Sun, 10 Mar 2019 22:34:54 -0700 (PDT)
+Received: from bee.dtc.umn.edu (cs-bee-u.cs.umn.edu. [128.101.106.63])
+        by smtp.gmail.com with ESMTPSA id 14sm7636013ity.24.2019.03.10.22.34.53
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Sun, 10 Mar 2019 22:34:53 -0700 (PDT)
+From:   Kangjie Lu <kjlu@umn.edu>
+To:     kjlu@umn.edu
+Cc:     pakki001@umn.edu, Karsten Keil <isdn@linux-pingi.de>,
+        "David S. Miller" <davem@davemloft.net>,
+        "Gustavo A. R. Silva" <gustavo@embeddedor.com>,
+        Jia-Ju Bai <baijiaju1990@gmail.com>, netdev@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH v2] isdn: hfcpci: fix potential NULL pointer dereference
+Date:   Mon, 11 Mar 2019 00:34:34 -0500
+Message-Id: <20190311053436.10747-1-kjlu@umn.edu>
+X-Mailer: git-send-email 2.17.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi,
+In case ioremap fails, the fix releases resources and returns.
 
-On Fri, 2019-03-08 at 13:07 +0100, Hans de Goede wrote:
-> Hi,
-> 
-> On 08-03-19 07:13, Chunfeng Yun wrote:
-> > Add id-gpios, vbus-gpios, vbus-supply and pinctrl properties for
-> > usb-b-connector
-> > 
-> > Signed-off-by: Chunfeng Yun <chunfeng.yun@mediatek.com>
-> > ---
-> >   .../devicetree/bindings/connector/usb-connector.txt    | 10 ++++++++++
-> >   1 file changed, 10 insertions(+)
-> > 
-> > diff --git a/Documentation/devicetree/bindings/connector/usb-connector.txt b/Documentation/devicetree/bindings/connector/usb-connector.txt
-> > index a9a2f2fc44f2..7a07b0f4f973 100644
-> > --- a/Documentation/devicetree/bindings/connector/usb-connector.txt
-> > +++ b/Documentation/devicetree/bindings/connector/usb-connector.txt
-> > @@ -17,6 +17,16 @@ Optional properties:
-> >   - self-powered: Set this property if the usb device that has its own power
-> >     source.
-> >   
-> > +Optional properties for usb-b-connector:
-> > +- id-gpios: gpio for USB ID pin.
-> 
-> What about boards where the ID pin is *not* connected to a GPIO,
-> but e.g. to a special pin on the PMIC which can also detect
-> an ACA adapter ? Currently this case is handled by extcon
-> drivers, but we have no way to set e.g. vbus-supply for the
-> connector. Maybe in this case the usb-connector node should
-> be a child of the PMIC node ?
-Yes, it would be, PMIC is in charger of detecting the status of ID pin
-> 
-> And in many cases there also is a mux to switch the datalines
-> between the host and device(gadget) controllers, how should
-> that be described in this model?  See the new usb-role-switch
-> code under drivers/usb/roles
-> 
-> In some cases the mux is controlled through a gpio, so we
-> may want to add a "mux-gpios" here in which case we also
-> need to define what 0/1 means.
-I'm not sure, the mux seems not belong to this connector,
-and may need another driver to register usb-role-switch,
-similar to:
+Signed-off-by: Kangjie Lu <kjlu@umn.edu>
+---
+ drivers/isdn/hardware/mISDN/hfcpci.c | 6 ++++++
+ 1 file changed, 6 insertions(+)
 
-[v2,2/2] usb: typec: add typec switch via GPIO control
-https://patchwork.kernel.org/patch/10834327/
-
-
-> 
-> > +- vbus-gpios: gpio for USB VBUS pin.
-> > +  see gpio/gpio.txt.
-> > +- vbus-supply: reference to the VBUS regulator, needed when supports
-> > +  dual-role mode.
-> 
-> I think this needs some text that there can be either a vbus-gpio or
-> a vbus-supply. Oh wait reading:
-> 
-> https://patchwork.kernel.org/patch/10819377/
-> 
-> I see that this GPIO is for detecting vbus presence, not for driving/enabling
-> 5v to Vbus from the board, that needs to be described more clearly.
-Ok
-
-Thanks a lot
-> 
-> > +- pinctrl-names : a pinctrl state named "default" is optional
-> > +- pinctrl-0 : pin control group
-> > +  see pinctrl/pinctrl-bindings.txt
-> > +
-> >   Optional properties for usb-c-connector:
-> >   - power-role: should be one of "source", "sink" or "dual"(DRP) if typec
-> >     connector has power support.
-> > 
-> 
-> 
-> Regards,
-> 
-> Hans
-
+diff --git a/drivers/isdn/hardware/mISDN/hfcpci.c b/drivers/isdn/hardware/mISDN/hfcpci.c
+index ebb3fa2e1d00..d1d53c5de3c0 100644
+--- a/drivers/isdn/hardware/mISDN/hfcpci.c
++++ b/drivers/isdn/hardware/mISDN/hfcpci.c
+@@ -2036,6 +2036,12 @@ setup_hw(struct hfc_pci *hc)
+ 	       "HFC-PCI: defined at mem %#lx fifo %#lx(%#lx) IRQ %d HZ %d\n",
+ 	       (u_long) hc->hw.pci_io, (u_long) hc->hw.fifos,
+ 	       (u_long) hc->hw.dmahandle, hc->irq, HZ);
++	if (unlikely(!hc->hw.pci_io)) {
++		pci_free_consistent(hc->pdev, 0x8000, hc->hw.fifos,
++				    hc->hw.dmahandle);
++		return 1;
++	}
++
+ 	/* enable memory mapped ports, disable busmaster */
+ 	pci_write_config_word(hc->pdev, PCI_COMMAND, PCI_ENA_MEMIO);
+ 	hc->hw.int_m2 = 0;
+-- 
+2.17.1
 
