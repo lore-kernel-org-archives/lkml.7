@@ -2,148 +2,226 @@ Return-Path: <SRS0=FxTY=RO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_MUTT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E201CC43381
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 Mar 2019 16:22:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4D74DC4360F
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 Mar 2019 16:22:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AE7F12084F
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 Mar 2019 16:22:46 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="LxGSrXXQ"
+	by mail.kernel.org (Postfix) with ESMTP id 18AEE2087C
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 Mar 2019 16:22:59 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727715AbfCKQWp (ORCPT
+        id S1727753AbfCKQW5 convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 11 Mar 2019 12:22:45 -0400
-Received: from userp2130.oracle.com ([156.151.31.86]:40266 "EHLO
-        userp2130.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726977AbfCKQWo (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 11 Mar 2019 12:22:44 -0400
-Received: from pps.filterd (userp2130.oracle.com [127.0.0.1])
-        by userp2130.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x2BGJUhe074981;
-        Mon, 11 Mar 2019 16:22:39 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=date : from : to : cc
- : subject : message-id : references : mime-version : content-type :
- in-reply-to; s=corp-2018-07-02;
- bh=s7zGIMa5AEoPjrPSibSej+mAq+5pXsqzD0NpryLQzuA=;
- b=LxGSrXXQon/hEEbyRYz4PzvPHC72bWe32chRVwv7vOb7QWo4H8sfPIwxkJkNc12bz7fz
- d2KzsVxOqFdocKPu+7R4DI8vPDaSnpk7dlHqsXT4kmgAdfOObEe0oAPyHgJrx5m2Zr9l
- glzT9EKaTC5/p0nKM36SgB/rhYodzXa/SUEOLilqe9qa1r9LfmZFi66gv6OP1D+RZGoH
- ji/GCYhN5g5tqduSDUMAostMJQsfwTeFjD7PLdF0xrqI/h79Z1X4BYpw8OUtc7GCd84s
- 62jkx5fickpIE0DtlXfsXTGTp5DV3E5mlkJ1WdRWJS9s4BS9RriJhYakd/u8+MZtDaKP mw== 
-Received: from aserv0022.oracle.com (aserv0022.oracle.com [141.146.126.234])
-        by userp2130.oracle.com with ESMTP id 2r44wtyhhx-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Mon, 11 Mar 2019 16:22:39 +0000
-Received: from userv0121.oracle.com (userv0121.oracle.com [156.151.31.72])
-        by aserv0022.oracle.com (8.14.4/8.14.4) with ESMTP id x2BGMcbg015954
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Mon, 11 Mar 2019 16:22:38 GMT
-Received: from abhmp0013.oracle.com (abhmp0013.oracle.com [141.146.116.19])
-        by userv0121.oracle.com (8.14.4/8.13.8) with ESMTP id x2BGMbKD002283;
-        Mon, 11 Mar 2019 16:22:37 GMT
-Received: from localhost (/10.159.224.240)
-        by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Mon, 11 Mar 2019 09:22:37 -0700
-Date:   Mon, 11 Mar 2019 09:22:32 -0700
-From:   "Darrick J. Wong" <darrick.wong@oracle.com>
-To:     linux-xfs@vger.kernel.org
-Cc:     Nathan Chancellor <natechancellor@gmail.com>,
-        linux-kernel@vger.kernel.org,
-        Nick Desaulniers <ndesaulniers@google.com>,
-        clang-built-linux@googlegroups.com
-Subject: [PATCH 2/2] xfs: clean up xfs_dir2_leaf_addname
-Message-ID: <20190311162232.GD4359@magnolia>
-References: <20190311161948.GC4359@magnolia>
+        Mon, 11 Mar 2019 12:22:57 -0400
+Received: from mail-oln040092254090.outbound.protection.outlook.com ([40.92.254.90]:6183
+        "EHLO APC01-PU1-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726977AbfCKQW5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 11 Mar 2019 12:22:57 -0400
+Received: from HK2APC01FT058.eop-APC01.prod.protection.outlook.com
+ (10.152.248.56) by HK2APC01HT068.eop-APC01.prod.protection.outlook.com
+ (10.152.249.215) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.1686.19; Mon, 11 Mar
+ 2019 16:22:48 +0000
+Received: from PS2P216MB0642.KORP216.PROD.OUTLOOK.COM (10.152.248.58) by
+ HK2APC01FT058.mail.protection.outlook.com (10.152.249.150) with Microsoft
+ SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.1686.19 via Frontend Transport; Mon, 11 Mar 2019 16:22:48 +0000
+Received: from PS2P216MB0642.KORP216.PROD.OUTLOOK.COM
+ ([fe80::88f1:49d3:6e90:a74e]) by PS2P216MB0642.KORP216.PROD.OUTLOOK.COM
+ ([fe80::88f1:49d3:6e90:a74e%5]) with mapi id 15.20.1686.021; Mon, 11 Mar 2019
+ 16:22:48 +0000
+From:   Nicholas Johnson <nicholas.johnson-opensource@outlook.com.au>
+To:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+CC:     "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
+        "bhelgaas@google.com" <bhelgaas@google.com>,
+        "mika.westerberg@linux.intel.com" <mika.westerberg@linux.intel.com>,
+        "corbet@lwn.net" <corbet@lwn.net>,
+        Nicholas Johnson <nicholas.johnson-opensource@outlook.com.au>
+Subject: [PATCH v2 0/4] PCI: Patch series to support Thunderbolt without any
+ BIOS support
+Thread-Topic: [PATCH v2 0/4] PCI: Patch series to support Thunderbolt without
+ any BIOS support
+Thread-Index: AQHU2CaqdQa6071WSkmqU0Pc1jpj/g==
+Date:   Mon, 11 Mar 2019 16:22:47 +0000
+Message-ID: <PS2P216MB0642DA40B66B36581A238EF580480@PS2P216MB0642.KORP216.PROD.OUTLOOK.COM>
+Accept-Language: en-AU, en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-clientproxiedby: SG2PR06CA0204.apcprd06.prod.outlook.com (2603:1096:4:1::36)
+ To PS2P216MB0642.KORP216.PROD.OUTLOOK.COM (2603:1096:300:1c::16)
+x-incomingtopheadermarker: OriginalChecksum:AC7D3C2EAD036E9F636AA8A703C3DE4CB6D83A6E11E139C19C6ED4FA4948EA35;UpperCasedChecksum:8644C89A79B8E13145DB4DB9E919588550328DB20CA09FF1CCD37FE48D1C1E6D;SizeAsReceived:7811;Count:49
+x-ms-exchange-messagesentrepresentingtype: 1
+x-mailer: git-send-email 2.19.1
+x-tmn:  [AV71UNgpAW4wQERF5pLRYrHjuvPv1g9l+TtL4gG7MmNxPZFBLa33hSuBNlRYXF4wXe9otEFFH/Q=]
+x-microsoft-original-message-id: <20190311162154.3852-1-nicholas.johnson-opensource@outlook.com.au>
+x-ms-publictraffictype: Email
+x-incomingheadercount: 49
+x-eopattributedmessage: 0
+x-ms-exchange-slblob-mailprops: =?iso-8859-1?Q?h70CqCTTlEGA/A4FN9C4MOCOMhnQuzId1ib/i/lwdiNmG0dGZoYG7k9hYV?=
+ =?iso-8859-1?Q?3FTcCRgXJgXVe/AeXbtaZvzgAfzCEH8p3kfYr8wZ4bl9RPA0bJ8ouB6PcJ?=
+ =?iso-8859-1?Q?8k7TaOrOEj0eJRjf6M4F0rp+yNDg/si2yojcFskXwL3wfnf8h7hOFn0TLl?=
+ =?iso-8859-1?Q?bUxeQhROrgXtppisRq3JCm/IUP+TZII3LjmKnYeUh95ZcPSfXqmu1OzPSD?=
+ =?iso-8859-1?Q?17TztBLlDIBo/MSz5lxgoIGktlzYP9NZcM23jjcxs8A5s7aFXGRMq1V/+b?=
+ =?iso-8859-1?Q?+KiLmqcjwhQs0aUQc3QgbANHgNmQY5diS/tfkZJzW1gk3EiN8hfMd47UPW?=
+ =?iso-8859-1?Q?vTmvxY+srwBQaWi4QGtNV455FsilG/RYjx4NGnUKnRmcpJjEsi9UfqvZjM?=
+ =?iso-8859-1?Q?0ARxrSOvY8clMRPeyEAOVNfVaeLJy5W33YDkcX3O3qkyBNG4LJhLtK7M6u?=
+ =?iso-8859-1?Q?Azv97Med01DlUwyYIET6NynUqGBC6468uphMpxmUtlNAwOxJZaUi0+5YH/?=
+ =?iso-8859-1?Q?209Gy8hRwoPdgbKzKkMbr29IoU8l/zH6J28ClSR/lcNjk33Z7WKFafbzq2?=
+ =?iso-8859-1?Q?U3fx5CpHw/1J5Nhgqx34qRNL5YTIVX5+U1EIy8yFC8+NZq14DdH5FcnDah?=
+ =?iso-8859-1?Q?si3zi+SiVjtAnUDVD5XpCIKHjiJwKBEwrMtaFgLcrNxnWJafO+54gzkvRq?=
+ =?iso-8859-1?Q?YDg1Lw+M6gj/z162WjSWRfoBUtcVRX4xt/WTyjTGYT1Dnl2Y9sUlF9/s95?=
+ =?iso-8859-1?Q?hMOUR6UESgXhOeesnQvTnhml8dp3VuE1uKSOJUXqbxNBG6rd/yQwvJorE/?=
+ =?iso-8859-1?Q?Eq7nSrmGsTLMl2Fks7AkXd51ZG8H+3KhOgdiE3UDqpGbk2jRIx8XTmsS9S?=
+ =?iso-8859-1?Q?7dbYJqL++hN41bVPvkVWZcw0/Vqei4rC7j/9qDyV0+VUR+xqfzUHTWEKp3?=
+ =?iso-8859-1?Q?w1OvDvR+dvqsAc8GdxhPSSJCS2aL/Hj+7PuriBhnnJyPj8afZ8KPaHyqHs?=
+ =?iso-8859-1?Q?o9nKBqjYpML67mITx2HE6UnenoAyEvu2UA+Cgl8mvthc75lql4zRfGFDyU?=
+ =?iso-8859-1?Q?zQgmkfG8KC4p4hWDAxz2du7V1or/GHfLua7gXwuzzDXW?=
+x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(20181119110)(201702061078)(5061506573)(5061507331)(1603103135)(2017031320274)(2017031322404)(201702181274)(2017031323274)(2017031324274)(1601125500)(1603101475)(1701031045);SRVR:HK2APC01HT068;
+x-ms-traffictypediagnostic: HK2APC01HT068:
+x-microsoft-antispam-message-info: FofRrx84laREHdvrFWsilq8P/Y19uRqBWEX24munOxCS22a2jWCGltb/cZ5Ebmk8
+Content-Type: text/plain; charset="iso-8859-1"
+Content-Transfer-Encoding: 8BIT
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190311161948.GC4359@magnolia>
-User-Agent: Mutt/1.9.4 (2018-02-28)
-X-Proofpoint-Virus-Version: vendor=nai engine=5900 definitions=9192 signatures=668685
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
- suspectscore=3 phishscore=0 bulkscore=0 spamscore=0 clxscore=1015
- lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=600 adultscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1810050000
- definitions=main-1903110117
+X-OriginatorOrg: outlook.com
+X-MS-Exchange-CrossTenant-RMS-PersistedConsumerOrg: 00000000-0000-0000-0000-000000000000
+X-MS-Exchange-CrossTenant-Network-Message-Id: b167e0b6-ea15-4fd5-489e-08d6a63dcc11
+X-MS-Exchange-CrossTenant-rms-persistedconsumerorg: 00000000-0000-0000-0000-000000000000
+X-MS-Exchange-CrossTenant-originalarrivaltime: 11 Mar 2019 16:22:48.3479
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Internet
+X-MS-Exchange-CrossTenant-id: 84df9e7f-e9f6-40af-b435-aaaaaaaaaaaa
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: HK2APC01HT068
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Darrick J. Wong <darrick.wong@oracle.com>
+_________________________________________________________________
 
-Remove typedefs and consolidate local variable initialization.
+If possible, please try to include this in the upcoming release. I have 
+been slow in getting PATCH v2 out but overall, it should not be too much 
+to do.
 
-Signed-off-by: Darrick J. Wong <darrick.wong@oracle.com>
----
- fs/xfs/libxfs/xfs_dir2_leaf.c |   33 +++++++++++++++------------------
- 1 file changed, 15 insertions(+), 18 deletions(-)
+You have seen the first patch before, which is the most complicated. It 
+is based entirely on Mika Westerberg's code and he was happy that the 
+changes are fine. So this should help a little in getting it through.
 
-diff --git a/fs/xfs/libxfs/xfs_dir2_leaf.c b/fs/xfs/libxfs/xfs_dir2_leaf.c
-index 2abf945e5844..9c2a0a13ed61 100644
---- a/fs/xfs/libxfs/xfs_dir2_leaf.c
-+++ b/fs/xfs/libxfs/xfs_dir2_leaf.c
-@@ -563,43 +563,40 @@ xfs_dir3_leaf_find_entry(
-  */
- int						/* error */
- xfs_dir2_leaf_addname(
--	xfs_da_args_t		*args)		/* operation arguments */
-+	struct xfs_da_args	*args)		/* operation arguments */
- {
-+	struct xfs_dir3_icleaf_hdr leafhdr;
-+	struct xfs_trans	*tp = args->trans;
- 	__be16			*bestsp;	/* freespace table in leaf */
--	int			compact;	/* need to compact leaves */
--	xfs_dir2_data_hdr_t	*hdr;		/* data block header */
-+	__be16			*tagp;		/* end of data entry */
- 	struct xfs_buf		*dbp;		/* data block buffer */
--	xfs_dir2_data_entry_t	*dep;		/* data block entry */
--	xfs_inode_t		*dp;		/* incore directory inode */
--	xfs_dir2_data_unused_t	*dup;		/* data unused entry */
-+	struct xfs_buf		*lbp;		/* leaf's buffer */
-+	struct xfs_dir2_leaf	*leaf;		/* leaf structure */
-+	struct xfs_inode	*dp = args->dp;	/* incore directory inode */
-+	struct xfs_dir2_data_hdr *hdr;		/* data block header */
-+	struct xfs_dir2_data_entry *dep;	/* data block entry */
-+	struct xfs_dir2_leaf_entry *lep;	/* leaf entry table pointer */
-+	struct xfs_dir2_leaf_entry *ents;
-+	struct xfs_dir2_data_unused *dup;	/* data unused entry */
-+	struct xfs_dir2_leaf_tail *ltp;		/* leaf tail pointer */
-+	struct xfs_dir2_data_free *bf;		/* bestfree table */
-+	int			compact;	/* need to compact leaves */
- 	int			error;		/* error return value */
- 	int			grown;		/* allocated new data block */
- 	int			highstale = 0;	/* index of next stale leaf */
- 	int			i;		/* temporary, index */
- 	int			index;		/* leaf table position */
--	struct xfs_buf		*lbp;		/* leaf's buffer */
--	xfs_dir2_leaf_t		*leaf;		/* leaf structure */
- 	int			length;		/* length of new entry */
--	xfs_dir2_leaf_entry_t	*lep;		/* leaf entry table pointer */
- 	int			lfloglow;	/* low leaf logging index */
- 	int			lfloghigh;	/* high leaf logging index */
- 	int			lowstale = 0;	/* index of prev stale leaf */
--	xfs_dir2_leaf_tail_t	*ltp;		/* leaf tail pointer */
- 	int			needbytes;	/* leaf block bytes needed */
- 	int			needlog;	/* need to log data header */
- 	int			needscan;	/* need to rescan data free */
--	__be16			*tagp;		/* end of data entry */
--	xfs_trans_t		*tp;		/* transaction pointer */
- 	xfs_dir2_db_t		use_block;	/* data block number */
--	struct xfs_dir2_data_free *bf;		/* bestfree table */
--	struct xfs_dir2_leaf_entry *ents;
--	struct xfs_dir3_icleaf_hdr leafhdr;
- 
- 	trace_xfs_dir2_leaf_addname(args);
- 
--	dp = args->dp;
--	tp = args->trans;
--
- 	error = xfs_dir3_leaf_read(tp, dp, args->geo->leafblk, -1, &lbp);
- 	if (error)
- 		return error;
+The second is merely comments and no code - easy to inspect.
+
+The third has very few lines and should be easy to test and revert in 
+the worst case.
+
+The fourth brings the most changes functionally, but has nothing in it 
+algorithmically. It is just taking command line parameters and setting 
+the variables - hence it should be easy to visually inspect for 
+correctness.
+
+I have worked very hard on this and would be very appreciative if it 
+could make the merge window so that the next eight weeks can be spent by 
+me responding to any potential concerns about it.
+
+Thank you!
+_________________________________________________________________
+
+
+This new revision of my patches solves some small problems and tidies up 
+the commit notes, migrating background information into the cover 
+letter.
+
+Together, these patches allow for a Thunderbolt 3 Titan Ridge add-in 
+card to be supported on any system with a PCI bus, without an inkling of 
+firmware support. I have been using the following (somewhat overkill) 
+kernel arguments for many weeks now with two dual-port add-in cards:
+
+pci=assign-busses,hpbussize=0x33,realloc,hp_io_size=0,hp_mmio_size=256M,hp_mmio_pref_size=64G,nocrs 
+[required on some other platforms] pcie_ports=native
+
+This exceeds the official Intel Thunderbolt implementation in that 
+arbitrary memory may be easily assigned, allowing for cards like Xeon 
+Phi coprocessor with massive BARs (the size of their onboard RAM) to be 
+placed on Thunderbolt.
+
+PATCH 0001 solves the resource alignment bug here, which also applies to 
+external graphics: https://bugzilla.kernel.org/show_bug.cgi?id=199581 
+The resource alignment bug is not Thunderbolt-specific, and applies to 
+nested PCI hotplug bridges. Hence, it needed to be fixed regardless of 
+Thunderbolt. But Thunderbolt is the most likely use case affected by the 
+bug.
+
+PATCH 0002 is just comment clean-up and no code is changed. I noticed 
+that a lot of the block comments in drivers/pci/setup-bus.c did not meet 
+the kernel coding style guidelines so I fixed them all when I needed to 
+change a comment. This has been separated into its own patch upon 
+request of the maintainers.
+
+PATCH 0003 fixes a bug that is nasty, but rarely shows. This bugfix is 
+critical for that next Thunderbolt patch. I will provide the previously 
+requested dmesg output showing the bug in another email. For this, I 
+will be using an unmodified kernel and show how requesting 
+hpmemsize=256M on my machine results in 512M being allocated in MMIO 
+window, and hence the assignment failing because there is not enough 
+space. I can show it assigning 256M in MMIO successfully after my patch 
+is applied.
+
+Symptoms: When the kernel makes multiple passes at assigning resources, 
+it can sometimes assign double the hpmemsize specified in kernel 
+parameters into the MMIO bridge window.
+
+The cause: pbus_size_io() and pbus_size_mem() both call 
+find_free_bus_resource() to identify which bridge window of the bus 
+matches the required resource type. Because this function explicitly 
+skips resources with a parent, it will return NULL if the desired 
+resource has been successfully assigned in a previous pass. The 
+functions pbus_size_io() and pbus_size_mem() return -ENOSPC if 
+find_free_bus_resource() returns NULL, meaning an assigned resource is 
+interpreted as "out of space", which can result in 
+__pci_bus_size_bridges allocating the required size again in another 
+window.
+
+The solution: my proposed patch renames find_free_bus_resource() to 
+find_bus_resource_of_type() and modifies it to not skip resources with 
+r->parent. The name change is because returning an assigned resource 
+makes the resource potentially not "free". The calling functions, 
+pbus_size_io() and pbus_size_mem() have checks added for b_res->parent 
+and they return 0 (success) in this case. This is because a resource 
+with a parent is already assigned and should be interpreted as a 
+success, not a failure.
+
+Testing: I have been using this proposed patch for many weeks now and it 
+appears to work flawlessly. It has the added benefit of slashing the 
+number of attempts taken to assign a given BAR, meaning a much cleaner 
+dmesg. I am so confident in it that if it were not to be accepted, I 
+would continue to compile my own kernel each release with it included, 
+for my own use.
+
+PATCH 0004 allows MMIO and MMIO_PREF sizes to be requested independently 
+in kernel parameters. This is the user-facing patch that delivers the 
+functional requirement of being able to specify the resource sizes 
+independently. The other patches are prep-work for this patch, allowing 
+it to work flawlessly. This will also make at least one other person 
+very happy, providing a solution where none previously existed (if this 
+is accepted, I will be answering their question with this patch): 
+https://superuser.com/questions/1054657/how-can-i-reserve-hotplug-bridges-memory-only-for-prefetchable-memory-using-the
+
+Nicholas Johnson (4):
+  PCI: Consider alignment of hot-added bridges when distributing
+    available resources
+  PCI: Cleanup comments in setup-bus.c to meet kernel coding style
+    guidelines
+  PCI: Fix serious bug when sizing bridges with additional size
+  PCI: modify kernel parameters to differentiate between MMIO and
+    MMIO_PREF sizes
+
+ .../admin-guide/kernel-parameters.txt         |  21 +-
+ drivers/pci/pci.c                             |  39 +-
+ drivers/pci/setup-bus.c                       | 513 +++++++++---------
+ include/linux/pci.h                           |   3 +-
+ 4 files changed, 323 insertions(+), 253 deletions(-)
+
+-- 
+2.20.1
+
