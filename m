@@ -6,47 +6,45 @@ X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
 	SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5ACFEC43381
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 Mar 2019 20:11:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 318CEC43381
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 Mar 2019 20:11:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 225FB2087C
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 Mar 2019 20:11:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EE4332087C
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 Mar 2019 20:11:33 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1552335085;
-	bh=VD0DXGV3E5O++rimIXG/aJHcBmpV9GIikpsGdoU2kcE=;
+	s=default; t=1552335094;
+	bh=otW8F45s7IE1iN3/Uar5IhKqKxXYhscDYQKY8ikA9gE=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=EaePdP8ekpxg/NoZjxzKE2DueTLPbMGuWQHt6HCR1ClGeSLaOnykvnkbvcEqToy6L
-	 pNrHhiQvCrWfyI9cFcdHgfnwmueHVoanK3j+YyvgPOTUA+EspwmicrIreDMsXGW54c
-	 vAOOzlk4Xys0dfmqWcOuRopAClE/ISz5MpVTd47g=
+	b=YPsg8wbitFwx/Q5DxI4rD85hRt2ocYrVWVQKmGSwAMOERMKIe3Fq5SW0bfL+brmJk
+	 iCVQeGxKh9jJwqO+sg/iv/tJ3O9m7t22cJtbqhwELb3t7EYXckiflT8ST6pbD742Bb
+	 AOsHiOm5TJEK9yKbwie7F9UCzRGjyn4+O74z1AiM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728902AbfCKULY (ORCPT
+        id S1728911AbfCKULc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 11 Mar 2019 16:11:24 -0400
-Received: from mail.kernel.org ([198.145.29.99]:33556 "EHLO mail.kernel.org"
+        Mon, 11 Mar 2019 16:11:32 -0400
+Received: from mail.kernel.org ([198.145.29.99]:33502 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728554AbfCKT4U (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 11 Mar 2019 15:56:20 -0400
+        id S1728610AbfCKT4S (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 11 Mar 2019 15:56:18 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 6C197214AF;
-        Mon, 11 Mar 2019 19:56:19 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 383A62087C;
+        Mon, 11 Mar 2019 19:56:17 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1552334180;
-        bh=VD0DXGV3E5O++rimIXG/aJHcBmpV9GIikpsGdoU2kcE=;
+        s=default; t=1552334177;
+        bh=otW8F45s7IE1iN3/Uar5IhKqKxXYhscDYQKY8ikA9gE=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=HfO+AL9GHTi6q6CPrRiPmM0vSU+Cp5tkd4pN1YDJY4k9rTFmU2odWcWT/1upmmM65
-         7YH/UoAnuCn48sXLTzXb/NvqaOD+yMo3WK4e7AF6KPlSKidltkZWpOzeOsBXoA2nz3
-         5fwGlTcEphZGdkUHAPw4hJ8Y6r2A9qg98pujSxL4=
+        b=k/SWUNLlaczs2n4NxyV2kTG2WcWSDPqlDNG/e7l6CgPifN/tCna0v9m/P3GtOrYmp
+         +TON5gkqkX6nWKKUWumWylA+JmSIbVMqcUsjvsrIo0Ol/delQtpUYsMFA1AlYp41hT
+         Uih5mvoMswIpPfqSiyxSHp0ln3jYtzDSpijn/78s=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Nicolas Morey-Chaisemartin <nmoreychaisemartin@suse.com>,
-        Anna Schumaker <Anna.Schumaker@Netapp.com>,
-        Sasha Levin <sashal@kernel.org>, linux-nfs@vger.kernel.org,
-        netdev@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.20 35/52] xprtrdma: Make sure Send CQ is allocated on an existing compvec
-Date:   Mon, 11 Mar 2019 15:54:59 -0400
-Message-Id: <20190311195516.137772-35-sashal@kernel.org>
+Cc:     Yufen Yu <yuyufen@huawei.com>, Jens Axboe <axboe@kernel.dk>,
+        Sasha Levin <sashal@kernel.org>, linux-block@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.20 34/52] floppy: check_events callback should not return a negative number
+Date:   Mon, 11 Mar 2019 15:54:58 -0400
+Message-Id: <20190311195516.137772-34-sashal@kernel.org>
 X-Mailer: git-send-email 2.19.1
 In-Reply-To: <20190311195516.137772-1-sashal@kernel.org>
 References: <20190311195516.137772-1-sashal@kernel.org>
@@ -58,36 +56,41 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Nicolas Morey-Chaisemartin <nmoreychaisemartin@suse.com>
+From: Yufen Yu <yuyufen@huawei.com>
 
-[ Upstream commit a4cb5bdb754afe21f3e9e7164213e8600cf69427 ]
+[ Upstream commit 96d7cb932e826219ec41ac02e5af037ffae6098c ]
 
-Make sure the device has at least 2 completion vectors
-before allocating to compvec#1
+floppy_check_events() is supposed to return bit flags to say which
+events occured. We should return zero to say that no event flags are
+set.  Only BIT(0) and BIT(1) are used in the caller. And .check_events
+interface also expect to return an unsigned int value.
 
-Fixes: a4699f5647f3 (xprtrdma: Put Send CQ in IB_POLL_WORKQUEUE mode)
-Signed-off-by: Nicolas Morey-Chaisemartin <nmoreychaisemartin@suse.com>
-Reviewed-by: Chuck Lever <chuck.lever@oracle.com>
-Signed-off-by: Anna Schumaker <Anna.Schumaker@Netapp.com>
+However, after commit a0c80efe5956, it may return -EINTR (-4u).
+Here, both BIT(0) and BIT(1) are cleared. So this patch shouldn't
+affect runtime, but it obviously is still worth fixing.
+
+Reviewed-by: Dan Carpenter <dan.carpenter@oracle.com>
+Fixes: a0c80efe5956 ("floppy: fix lock_fdc() signal handling")
+Signed-off-by: Yufen Yu <yuyufen@huawei.com>
+Signed-off-by: Jens Axboe <axboe@kernel.dk>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- net/sunrpc/xprtrdma/verbs.c | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+ drivers/block/floppy.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/net/sunrpc/xprtrdma/verbs.c b/net/sunrpc/xprtrdma/verbs.c
-index dffedf1df02c..dd1839922f16 100644
---- a/net/sunrpc/xprtrdma/verbs.c
-+++ b/net/sunrpc/xprtrdma/verbs.c
-@@ -583,7 +583,8 @@ rpcrdma_ep_create(struct rpcrdma_ep *ep, struct rpcrdma_ia *ia,
+diff --git a/drivers/block/floppy.c b/drivers/block/floppy.c
+index fb23578e9a41..0cd5874ebb22 100644
+--- a/drivers/block/floppy.c
++++ b/drivers/block/floppy.c
+@@ -4081,7 +4081,7 @@ static unsigned int floppy_check_events(struct gendisk *disk,
  
- 	sendcq = ib_alloc_cq(ia->ri_device, NULL,
- 			     ep->rep_attr.cap.max_send_wr + 1,
--			     1, IB_POLL_WORKQUEUE);
-+			     ia->ri_device->num_comp_vectors > 1 ? 1 : 0,
-+			     IB_POLL_WORKQUEUE);
- 	if (IS_ERR(sendcq)) {
- 		rc = PTR_ERR(sendcq);
- 		dprintk("RPC:       %s: failed to create send CQ: %i\n",
+ 	if (time_after(jiffies, UDRS->last_checked + UDP->checkfreq)) {
+ 		if (lock_fdc(drive))
+-			return -EINTR;
++			return 0;
+ 		poll_drive(false, 0);
+ 		process_fd_request();
+ 	}
 -- 
 2.19.1
 
