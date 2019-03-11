@@ -2,120 +2,127 @@ Return-Path: <SRS0=FxTY=RO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_PASS autolearn=unavailable autolearn_force=no
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0AAEBC10F06
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 Mar 2019 16:55:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9E2CDC43381
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 Mar 2019 16:55:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DA39020828
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 Mar 2019 16:55:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6F1E720643
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 Mar 2019 16:55:26 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=arista.com header.i=@arista.com header.b="R7IychEJ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727611AbfCKQzC (ORCPT
+        id S1727796AbfCKQzY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 11 Mar 2019 12:55:02 -0400
-Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:54914 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726942AbfCKQzC (ORCPT
+        Mon, 11 Mar 2019 12:55:24 -0400
+Received: from mx.aristanetworks.com ([162.210.129.12]:33877 "EHLO
+        prod-mx.aristanetworks.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726675AbfCKQzY (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 11 Mar 2019 12:55:02 -0400
-Received: from pps.filterd (m0098419.ppops.net [127.0.0.1])
-        by mx0b-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x2BGn2QY021093
-        for <linux-kernel@vger.kernel.org>; Mon, 11 Mar 2019 12:55:00 -0400
-Received: from e06smtp02.uk.ibm.com (e06smtp02.uk.ibm.com [195.75.94.98])
-        by mx0b-001b2d01.pphosted.com with ESMTP id 2r5tsvtje9-1
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
-        for <linux-kernel@vger.kernel.org>; Mon, 11 Mar 2019 12:55:00 -0400
-Received: from localhost
-        by e06smtp02.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
-        for <linux-kernel@vger.kernel.org> from <zohar@linux.ibm.com>;
-        Mon, 11 Mar 2019 16:54:58 -0000
-Received: from b06cxnps3075.portsmouth.uk.ibm.com (9.149.109.195)
-        by e06smtp02.uk.ibm.com (192.168.101.132) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
-        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
-        Mon, 11 Mar 2019 16:54:54 -0000
-Received: from d06av25.portsmouth.uk.ibm.com (d06av25.portsmouth.uk.ibm.com [9.149.105.61])
-        by b06cxnps3075.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x2BGsrG952232348
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Mon, 11 Mar 2019 16:54:54 GMT
-Received: from d06av25.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id DE96811C05C;
-        Mon, 11 Mar 2019 16:54:53 +0000 (GMT)
-Received: from d06av25.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id CF7FC11C050;
-        Mon, 11 Mar 2019 16:54:52 +0000 (GMT)
-Received: from dhcp-9-31-103-153.watson.ibm.com (unknown [9.31.103.153])
-        by d06av25.portsmouth.uk.ibm.com (Postfix) with ESMTP;
-        Mon, 11 Mar 2019 16:54:52 +0000 (GMT)
-Subject: Re: [PATCH 3/3] x86/ima: retry detecting secure boot mode
-From:   Mimi Zohar <zohar@linux.ibm.com>
-To:     Matthew Garrett <mjg59@google.com>
-Cc:     Justin Forbes <jforbes@redhat.com>,
-        linux-integrity <linux-integrity@vger.kernel.org>,
-        LSM List <linux-security-module@vger.kernel.org>,
-        linux-efi <linux-efi@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        David Howells <dhowells@redhat.com>,
-        Seth Forshee <seth.forshee@canonical.com>,
-        kexec@lists.infradead.org, Nayna Jain <nayna@linux.ibm.com>
-Date:   Mon, 11 Mar 2019 12:54:52 -0400
-In-Reply-To: <CACdnJut3Y7CogvgtNsEcrEtA1WOxSb9OWP_wZ=3xNgCft2oeDw@mail.gmail.com>
-References: <1542657371-7019-1-git-send-email-zohar@linux.ibm.com>
-         <1542657371-7019-4-git-send-email-zohar@linux.ibm.com>
-         <CACdnJusqHZ1OLJD1baN=fXK9KE+bSqzB4OUbmLXH5-qZNrQXJg@mail.gmail.com>
-         <CAFbkSA39RwB+E4SaG_ueu-_B=y7JytEYKw1+eXNQ_eCuMfnv=g@mail.gmail.com>
-         <CACdnJuuHmK0qKjMxxonRYDUCatxqs930QGNQmREhRjimpNKzYw@mail.gmail.com>
-         <1551998897.31706.461.camel@linux.ibm.com>
-         <CACdnJusiLSCyqx7NX5bkpFr2N5YjBt_h3miOgkbey-Zndc3+Kg@mail.gmail.com>
-         <1552052377.4134.23.camel@linux.ibm.com>
-         <CACdnJut3Y7CogvgtNsEcrEtA1WOxSb9OWP_wZ=3xNgCft2oeDw@mail.gmail.com>
-Content-Type: text/plain; charset="UTF-8"
-X-Mailer: Evolution 3.20.5 (3.20.5-1.fc24) 
-Mime-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-TM-AS-GCONF: 00
-x-cbid: 19031116-0008-0000-0000-000002CB59EE
-X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
-x-cbparentid: 19031116-0009-0000-0000-000022377582
-Message-Id: <1552323292.6100.45.camel@linux.ibm.com>
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-03-11_12:,,
- signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
- malwarescore=0 suspectscore=3 phishscore=0 bulkscore=0 spamscore=0
- clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
- mlxlogscore=862 adultscore=0 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.0.1-1810050000 definitions=main-1903110120
+        Mon, 11 Mar 2019 12:55:24 -0400
+Received: from prod-mx.aristanetworks.com (localhost [127.0.0.1])
+        by prod-mx.aristanetworks.com (Postfix) with ESMTP id C3BA340BE71;
+        Mon, 11 Mar 2019 09:55:23 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=arista.com;
+        s=Arista-A; t=1552323323;
+        bh=DHH5awB9zq/a7XOQJV5bZGpNQON+S7ff3QxSGApIlsI=;
+        h=Date:To:Subject:From;
+        b=R7IychEJ3PErsyDffX0liCOhGL3Kmfn7iqHyrnTnaVkt1lHdQ7k6oUK/ouQC8Mgf5
+         DeHlckMZpB8kVlVPxd3HotKtqZGArw+D8ek665lsgTnSVmGKb87ZKe5yT54xirv0JG
+         cYAcVhIwmVLgXqlH5j2pBvVJcaJeuge+hVfFvSqbsecet3rPfyURUAnOT5rMl2DBVU
+         4khbgKpD9BsDjL3mDEltTzm3v0PM1LNnsU57+vQZ0XN2WRKOajMD1m5PKj/tCGaJ7a
+         mdfi7XG8pDq+kZAz632u0ONXYDxsCjIIrTbW4nlGQgxg8aozFaT0+VmbH++KPrNd/r
+         GBjl2MDyV/CAA==
+Received: from us180.sjc.aristanetworks.com (us180.sjc.aristanetworks.com [172.25.230.4])
+        by prod-mx.aristanetworks.com (Postfix) with ESMTP id C1A3140AC4F;
+        Mon, 11 Mar 2019 09:55:23 -0700 (PDT)
+Received: by us180.sjc.aristanetworks.com (Postfix, from userid 10189)
+        id AF79895C0449; Mon, 11 Mar 2019 09:55:23 -0700 (PDT)
+Date:   Mon, 11 Mar 2019 09:55:23 -0700
+To:     linux-kernel@vger.kernel.org, linux-fsdevel@vger.kernel.org,
+        viro@zeniv.linux.org.uk, dima@arista.com, fruggeri@arista.com
+Subject: [PATCH resend] block: fix inconsistent page index
+User-Agent: Heirloom mailx 12.5 7/5/10
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Transfer-Encoding: 7bit
+Message-Id: <20190311165523.AF79895C0449@us180.sjc.aristanetworks.com>
+From:   fruggeri@arista.com (Francesco Ruggeri)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, 2019-03-08 at 09:51 -0800, Matthew Garrett wrote:
-> On Fri, Mar 8, 2019 at 5:40 AM Mimi Zohar <zohar@linux.ibm.com> wrote:
-> >
-> > On Thu, 2019-03-07 at 14:50 -0800, Matthew Garrett wrote:
-> > > Is the issue that it gives incorrect results on the first read, or is
-> > > the issue that it gives incorrect results before ExitBootServices() is
-> > > called? If the former then we should read twice in the boot stub, if
-> > > the latter then we should figure out a way to do this immediately
-> > > after ExitBootServices() instead.
-> >
-> > Detecting the secure boot mode isn't the problem.  On boot, I am
-> > seeing "EFI stub: UEFI Secure Boot is enabled", but setup_arch() emits
-> > "Secure boot could not be determined".
-> >
-> > In efi_main() the secure_boot mode is initially unset, so
-> > efi_get_secureboot() is called.  efi_get_secureboot() returns the
-> > secure_boot mode correctly as enabled.  The problem seems to be in
-> > saving the secure_boot mode for later use.
-> 
-> Hm. And this only happens on certain firmware versions? If something's
-> stepping on boot_params then we have bigger problems.
+__find_get_block_slow() and grow_buffers() use different methods to compute
+a page index for a given block: __find_get_block_slow() computes it from
+bd_inode->i_blkbits, while grow_buffers() computes it from the block size
+argument.
+The two can get out of sync, for example if bd_inode->i_blkbits is modified
+while a isofs_fill_super() (in mount) is between sb_min_blocksize() and
+sb_read/__bread_gfp/__getblk_gfp/__getblk_slow.
+When this happens this can result in an infinite loop in __getblk_slow(),
+as grow_buffers() allocates a page but __find_get_block() keeps looking
+for a different one.
+I can often, but not consistently, reproduce this scenario with the
+script below.
+This patch changes __find_get_block_slow() to also use the block size.
+It implicitly relies on size being a power of 2 in the 256..PAGE_SIZE
+range.
 
-I was seeing this problem before and after updating the system
-firmware on my laptop last summer.  If updating the firmware had
-resolved the problem, I wouldn't have included this patch.
+FILE=/tmp/fsfile
+MNT=/tmp/fsmnt
+LOOP=`losetup -f`
 
-Mimi
+rm -rf $FILE $MNT
+
+mkdir $MNT
+dd if=/dev/zero of=$FILE count=32 bs=1MiB
+losetup $LOOP $FILE
+mkfs -t ext4 $LOOP
+while true; do losetup -D $LOOP; losetup $LOOP $FILE;done 2>&1 >/dev/null &
+for ((i=0; i<100; i++)); do echo ================== $i; \
+                            mount $LOOP $MNT; umount $MNT; done
+
+Signed-off-by: Francesco Ruggeri <fruggeri@arista.com>
+---
+ fs/buffer.c | 7 ++++---
+ 1 file changed, 4 insertions(+), 3 deletions(-)
+
+diff --git a/fs/buffer.c b/fs/buffer.c
+index 48318fb74938..447e8db2ff5f 100644
+--- a/fs/buffer.c
++++ b/fs/buffer.c
+@@ -190,7 +190,8 @@ EXPORT_SYMBOL(end_buffer_write_sync);
+  * succeeds, there is no need to take private_lock.
+  */
+ static struct buffer_head *
+-__find_get_block_slow(struct block_device *bdev, sector_t block)
++__find_get_block_slow(struct block_device *bdev, sector_t block,
++		      unsigned int size)
+ {
+ 	struct inode *bd_inode = bdev->bd_inode;
+ 	struct address_space *bd_mapping = bd_inode->i_mapping;
+@@ -202,7 +203,7 @@ __find_get_block_slow(struct block_device *bdev, sector_t block)
+ 	int all_mapped = 1;
+ 	static DEFINE_RATELIMIT_STATE(last_warned, HZ, 1);
+ 
+-	index = block >> (PAGE_SHIFT - bd_inode->i_blkbits);
++	index = block >> (PAGE_SHIFT - blksize_bits(size));
+ 	page = find_get_page_flags(bd_mapping, index, FGP_ACCESSED);
+ 	if (!page)
+ 		goto out;
+@@ -1292,7 +1293,7 @@ __find_get_block(struct block_device *bdev, sector_t block, unsigned size)
+ 
+ 	if (bh == NULL) {
+ 		/* __find_get_block_slow will mark the page accessed */
+-		bh = __find_get_block_slow(bdev, block);
++		bh = __find_get_block_slow(bdev, block, size);
+ 		if (bh)
+ 			bh_lru_install(bh);
+ 	} else
+-- 
+2.19.1
 
