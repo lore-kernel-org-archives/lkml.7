@@ -2,368 +2,170 @@ Return-Path: <SRS0=FxTY=RO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B14CBC43381
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 Mar 2019 10:41:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BB0B7C43381
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 Mar 2019 10:41:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 742C6206BA
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 Mar 2019 10:41:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8079E206BA
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 Mar 2019 10:41:47 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="haFvogwM"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727143AbfCKKlH (ORCPT
+        id S1727206AbfCKKlp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 11 Mar 2019 06:41:07 -0400
-Received: from foss.arm.com ([217.140.101.70]:52354 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726997AbfCKKlG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 11 Mar 2019 06:41:06 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.72.51.249])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id CA889374;
-        Mon, 11 Mar 2019 03:41:05 -0700 (PDT)
-Received: from [10.1.196.92] (usa-sjc-imap-foss1.foss.arm.com [10.72.51.249])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 06C413F703;
-        Mon, 11 Mar 2019 03:41:03 -0700 (PDT)
-Subject: Re: [PATCH v3 4/9] drivers: irqchip: add PDC irqdomain for wakeup
- capable GPIOs
-To:     Lina Iyer <ilina@codeaurora.org>, swboyd@chromium.org,
-        evgreen@chromium.org
-Cc:     linux-kernel@vger.kernel.org, rplsssn@codeaurora.org,
-        linux-arm-msm@vger.kernel.org, thierry.reding@gmail.com,
-        bjorn.andersson@linaro.org, dianders@chromium.org,
-        linus.walleij@linaro.org
-References: <20190222221850.26939-1-ilina@codeaurora.org>
- <20190222221850.26939-5-ilina@codeaurora.org>
-From:   Marc Zyngier <marc.zyngier@arm.com>
-Openpgp: preference=signencrypt
-Autocrypt: addr=marc.zyngier@arm.com; prefer-encrypt=mutual; keydata=
- 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
-Organization: ARM Ltd
-Message-ID: <e13021ca-c159-3fe1-8c56-820ccc26f71e@arm.com>
-Date:   Mon, 11 Mar 2019 10:41:00 +0000
-User-Agent: Mozilla/5.0 (X11; Linux aarch64; rv:60.0) Gecko/20100101
- Thunderbird/60.5.1
-MIME-Version: 1.0
-In-Reply-To: <20190222221850.26939-5-ilina@codeaurora.org>
-Content-Type: text/plain; charset=utf-8
+        Mon, 11 Mar 2019 06:41:45 -0400
+Received: from mail-eopbgr00044.outbound.protection.outlook.com ([40.107.0.44]:30083
+        "EHLO EUR02-AM5-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726826AbfCKKlp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 11 Mar 2019 06:41:45 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=fPh1j3RIgOMN9U4MQeYrhzAWxwt1dV5frmqk13pI/yw=;
+ b=haFvogwMv4mwKlJrteRdz06Z0VCnK0s42WHtUj9ij1dcT4tymhPRsIJBjlbO2r+mI99A4w0B5hNpy1osy2lTSCfj1DQ7/ImZ6z1i7gi5arxt/kX2jD/qJ3Q9T3skfZqecPNUDHI/oBG/ih+pI0wkcE69bC1Ly4UbljgunplwwLE=
+Received: from AM0PR04MB5779.eurprd04.prod.outlook.com (20.178.202.151) by
+ AM0PR04MB5235.eurprd04.prod.outlook.com (20.177.41.222) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.1686.18; Mon, 11 Mar 2019 10:41:41 +0000
+Received: from AM0PR04MB5779.eurprd04.prod.outlook.com
+ ([fe80::9579:32ab:898e:6769]) by AM0PR04MB5779.eurprd04.prod.outlook.com
+ ([fe80::9579:32ab:898e:6769%2]) with mapi id 15.20.1686.021; Mon, 11 Mar 2019
+ 10:41:41 +0000
+From:   Abel Vesa <abel.vesa@nxp.com>
+To:     Sascha Hauer <s.hauer@pengutronix.de>
+CC:     Michael Turquette <mturquette@baylibre.com>,
+        Stephen Boyd <sboyd@kernel.org>,
+        Sascha Hauer <kernel@pengutronix.de>,
+        Lucas Stach <l.stach@pengutronix.de>,
+        Shawn Guo <shawnguo@kernel.org>,
+        Aisheng Dong <aisheng.dong@nxp.com>,
+        Jacky Bai <ping.bai@nxp.com>,
+        Anson Huang <anson.huang@nxp.com>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        dl-linux-imx <linux-imx@nxp.com>,
+        Fabio Estevam <fabio.estevam@nxp.com>,
+        "linux-clk@vger.kernel.org" <linux-clk@vger.kernel.org>,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>
+Subject: Re: [RFC] clk: imx: Allow re-parenting by default on set rate
+Thread-Topic: [RFC] clk: imx: Allow re-parenting by default on set rate
+Thread-Index: AQHU1McGI7U/PNQmd0+BEjFYJ+Rc/6YGQMOAgAADtAA=
+Date:   Mon, 11 Mar 2019 10:41:40 +0000
+Message-ID: <20190311104140.n65jvamx76rzkonr@fsr-ub1664-175>
+References: <1551950425-7346-1-git-send-email-abel.vesa@nxp.com>
+ <20190311102825.g7d5mmorcltxnnzf@pengutronix.de>
+In-Reply-To: <20190311102825.g7d5mmorcltxnnzf@pengutronix.de>
+Accept-Language: en-US
 Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=abel.vesa@nxp.com; 
+x-originating-ip: [95.76.156.53]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: 083f4345-1380-407b-07d8-08d6a60e25a1
+x-ms-office365-filtering-ht: Tenant
+x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600127)(711020)(4605104)(4618075)(2017052603328)(7153060)(7193020);SRVR:AM0PR04MB5235;
+x-ms-traffictypediagnostic: AM0PR04MB5235:
+x-ms-exchange-purlcount: 1
+x-microsoft-exchange-diagnostics: =?us-ascii?Q?1;AM0PR04MB5235;23:F8K8odyvHgToQcAc+X8xEFyJUawdwlCaV7vCW21De?=
+ =?us-ascii?Q?Ec/LPEsTfDbzhQzAdb2iEC8biOsfEQhb7xz+03c0YUdMY1o25u6w5jzqd/Qu?=
+ =?us-ascii?Q?NQFfjcNd0PzAuy/1EnLBPJ3iCk83tVP9zGdSwvhuh9v5RnItbm/cLjAiCUJa?=
+ =?us-ascii?Q?LI6+urwmeBFlGYvkYY85OGxYFfBPbcZRbVd+Ba9thkUcZzGj9vqiLb2l6iTj?=
+ =?us-ascii?Q?ucMs0pZnwkVPQoBLtlUqW0eS6uqxL3CaMaackiOM5gshpOsf5ircQCZR+d88?=
+ =?us-ascii?Q?8hPA9BVjRgFr8tRVG8QYzRKhlIw/eVRXKucQwWZF/8Tq2WPlRmvXu4g9vCZY?=
+ =?us-ascii?Q?QXOdGso422epkOA9cXPjrvh1BGO3QJo6/a1sFHwHJCbV4PadZRTZGd1bpibH?=
+ =?us-ascii?Q?Qe6gguzubMI3iMtqJvApZmRaWEi/xu2qpIBTHzh8C/1nMUE+C3hUcasTbg9o?=
+ =?us-ascii?Q?E1ubUKmjwRelEW//507a0T0Gzw5jogf+zmsBhLXYxGMhWEoc7rp1BOA7oR+w?=
+ =?us-ascii?Q?kME5hXNTdqYY5uiRQybaD9rbE/zuO0L0WbuVtkBxpDtUQHJeW0/MiCXFvPna?=
+ =?us-ascii?Q?GR7+0Povl4c0JYC8CeizPg/Cby94h2bJkQkZqT2pdjRf6t5nAbCeK1qRlKo3?=
+ =?us-ascii?Q?pBbJ1VaThgMEb4xiQzubKlAkJzR0F4BBq19Vqmtvm5ked9QOYcT0uRAOBw3z?=
+ =?us-ascii?Q?pyaOS9tUnj5Uc4CrxwQ/G612+JeluygA8CRXFRRbd65GO/DBuaLbdYOxi7Hq?=
+ =?us-ascii?Q?5Kl83C0uzbJzhpUfDn9ksJ4EWVnDSuHtWEVX3QCoZztzxTSV5nOR29k02WmI?=
+ =?us-ascii?Q?jtpDXoA4u8hGZ4kluTuSKKhRi8K0md94+cAckpWwAqn2wr0LGrp/iAMfMJSm?=
+ =?us-ascii?Q?oRLUDBefebwPjreJ8LK2Qg2Z9ZgeJPR3AJoczzjUCwmDih7+zMcaDwNE1rrE?=
+ =?us-ascii?Q?9MFhy2IfeS35ZUyqKSimWz77xoUgfzZ/+t6BUlLx0KTVP6+p0ftimHqQCATE?=
+ =?us-ascii?Q?oubDBzjFqZpDWYDeyzSeHjOQbGgektzfbgXlOnBuPgXjEICEGRbPwrxWYvAH?=
+ =?us-ascii?Q?nKs88ET1xnfh9zIkALL87gExBT07QRU3xJZZo3+1d5M5P9QTWSfqc4zZt2uZ?=
+ =?us-ascii?Q?DmLNxqbt4MTSOTQFrdAq8xDFkRiU7HwoXjg2djOhI2656zfbcDmChEyzbJBX?=
+ =?us-ascii?Q?LoUxiU5+hA8TmQ/u/MV9WDZHKBg8xhwtMwJ+XtvV63K6z5Vt+5pEx6nFaf39?=
+ =?us-ascii?Q?0IM/6GTPwxmxxh4nbQLW81xqgqzU4BNYAPBjfntGZEt7o9XAYid2nPH/Npyi?=
+ =?us-ascii?Q?VegBxnsxtZSS2fwzJBe854=3D?=
+x-microsoft-antispam-prvs: <AM0PR04MB52353D5863959B138D8ED9D8F6480@AM0PR04MB5235.eurprd04.prod.outlook.com>
+x-forefront-prvs: 09730BD177
+x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(7916004)(136003)(366004)(396003)(39860400002)(376002)(346002)(199004)(189003)(76176011)(316002)(45080400002)(71190400001)(71200400001)(6246003)(11346002)(476003)(54906003)(486006)(53936002)(8936002)(3846002)(66066001)(446003)(14454004)(6116002)(4326008)(99286004)(86362001)(186003)(44832011)(6916009)(97736004)(33716001)(966005)(6486002)(26005)(9686003)(5660300002)(105586002)(68736007)(106356001)(478600001)(6512007)(25786009)(1076003)(6306002)(229853002)(6436002)(6506007)(53546011)(256004)(102836004)(8676002)(7736002)(305945005)(81156014)(2906002)(81166006);DIR:OUT;SFP:1101;SCL:1;SRVR:AM0PR04MB5235;H:AM0PR04MB5779.eurprd04.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
+received-spf: None (protection.outlook.com: nxp.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam-message-info: gYrHP6Iy7Rmci91nP5JA2qB09OGxasZbtALJYOclH80T3BRsArBsNYomLn6vm1hqCDrhP+GnBzdzlmlI5GjA8SmW//SOBI5rB5xdj+u3Vu5lvY5TM/SRgleb23uP3CvrtM0ZgKxlEKf2VExHtR7UM647iCSpVwmQsTqUbvcjAhPL8noko7dfnoO0ibh62Fm6Vo025tLqmCfAO+Ii4xQ7xt3/J6j8tXfsm3Sz9dw6uXwBXo0Wj4491jac+8iX94XRhYU1iDwzg6nncWT5uYXwVU3dKyCt3LnjFQrvo6ueNd8OMiv0wOv4Hpw/XwHIHMh0UJTQvdmQIkovJ55Sj9ufrYxmvqdPNhTpXKvUUPzNEm7Eqc9zsam/yRafSoe0OYt6ikBQTwGx79Hn8WHfakIEziSgGQiiiCIrv2OMPk2wvN8=
+Content-Type: text/plain; charset="us-ascii"
+Content-ID: <E70C3BCC02B7404296141FBA214DC5C2@eurprd04.prod.outlook.com>
+Content-Transfer-Encoding: quoted-printable
+MIME-Version: 1.0
+X-OriginatorOrg: nxp.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 083f4345-1380-407b-07d8-08d6a60e25a1
+X-MS-Exchange-CrossTenant-originalarrivaltime: 11 Mar 2019 10:41:40.9616
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: AM0PR04MB5235
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 22/02/2019 22:18, Lina Iyer wrote:
-> Introduce a new domain for wakeup capable GPIOs. The domain can be
-> requested using the bus token DOMAIN_BUS_WAKEUP. In the following
-> patches, we will specify PDC as the wakeup-parent for the TLMM GPIO
-> irqchip. Requesting a wakeup GPIO will setup the GPIO and the
-> corresponding PDC interrupt as its parent.
-> 
-> Co-developed-by: Stephen Boyd <swboyd@chromium.org>
-> Signed-off-by: Lina Iyer <ilina@codeaurora.org>
-> ---
-> Changes in v3:
-> 	- Remove PDC GPIO map data (moved to DT)
-> 	- hwirq passed in .alloc() is a PDC pin now
-> Changes in v2:
-> 	- Remove separate file for PDC GPIO map data
-> 	- Error checks and return
-> 	- Whitespace fixes
-> ---
->  drivers/irqchip/qcom-pdc.c   | 106 ++++++++++++++++++++++++++++++++---
->  include/linux/soc/qcom/irq.h |  23 ++++++++
->  2 files changed, 120 insertions(+), 9 deletions(-)
->  create mode 100644 include/linux/soc/qcom/irq.h
-> 
-> diff --git a/drivers/irqchip/qcom-pdc.c b/drivers/irqchip/qcom-pdc.c
-> index faa7d61b9d6c..5a64cbeec410 100644
-> --- a/drivers/irqchip/qcom-pdc.c
-> +++ b/drivers/irqchip/qcom-pdc.c
-> @@ -13,12 +13,13 @@
->  #include <linux/of.h>
->  #include <linux/of_address.h>
->  #include <linux/of_device.h>
-> +#include <linux/soc/qcom/irq.h>
->  #include <linux/spinlock.h>
-> -#include <linux/platform_device.h>
->  #include <linux/slab.h>
->  #include <linux/types.h>
->  
->  #define PDC_MAX_IRQS		126
-> +#define PDC_MAX_GPIO_IRQS	256
->  
->  #define CLEAR_INTR(reg, intr)	(reg & ~(1 << intr))
->  #define ENABLE_INTR(reg, intr)	(reg | (1 << intr))
-> @@ -32,6 +33,16 @@ struct pdc_pin_region {
->  	u32 cnt;
->  };
->  
-> +struct pdc_gpio_pin_map {
-> +	unsigned int gpio;
-> +	u32 pdc_pin;
-> +};
-> +
-> +struct pdc_gpio_pin_data {
-> +	size_t size;
-> +	const struct pdc_gpio_pin_map *map;
-> +};
+On 19-03-11 11:28:25, Sascha Hauer wrote:
+> Hi Abel,
+>=20
+> On Thu, Mar 07, 2019 at 09:20:37AM +0000, Abel Vesa wrote:
+> > By default, the muxes should re-parent on set_rate.
+> > This would allow the drivers to control only the leaf clock node,
+> > leaving the rest to the clock driver, that way simplifying the
+> > clock control.
+>=20
+> I am afraid of this change. Besides the rate there might be other
+> reasons to choose one mux input over another, consider for example low
+> power audio playback where we need one specific mux setting because it
+> provides a clock which runs at low power mode.
+> On the IPU on i.MX5/6 there are clocks being used as pixel clocks
+> derived from different muxes. I don't think you want to pick an input
+> clock just because it happens to deliver the best clock rate at that
+> point in time, but really is shared with some other clock that changes
+> its rate in the next moment.
+>=20
 
-I can't see this being used anywhere.
+> I have no concrete examples for things that break with this change, but
+> I would be more confident if we change the behaviour explicitly only for
+> the muxes that we have reviewed to cope with this change.
+>=20
 
-> +
->  static DEFINE_RAW_SPINLOCK(pdc_lock);
->  static void __iomem *pdc_base;
->  static struct pdc_pin_region *pdc_region;
-> @@ -47,9 +58,8 @@ static u32 pdc_reg_read(int reg, u32 i)
->  	return readl_relaxed(pdc_base + reg + i * sizeof(u32));
->  }
->  
-> -static void pdc_enable_intr(struct irq_data *d, bool on)
-> +static void pdc_enable_intr(irq_hw_number_t pin_out, bool on)
->  {
-> -	int pin_out = d->hwirq;
+Fair enough. We could replace all the imx_clk_mux with imx_clk_mux_norepare=
+nt
+and after that we can independently switch the clocks that are safe (to swi=
+tch)
+to imx_clk_mux (which would not have the noreparent flag set).
 
-Why do you need this change? As far as I can tell, you can always use
-the irq_data here, and it would reduce the size of the patch.
+The main idea is to simplify the clock control from drivers point of view.
 
->  	u32 index, mask;
->  	u32 enable;
->  
-> @@ -65,13 +75,23 @@ static void pdc_enable_intr(struct irq_data *d, bool on)
->  
->  static void qcom_pdc_gic_mask(struct irq_data *d)
->  {
-> -	pdc_enable_intr(d, false);
-> +	irq_hw_number_t hwirq = d->hwirq;
-> +
-> +	if (hwirq == ULONG_MAX)
+The end goal here would be to only have noreparent flag set for the clocks =
+that
+need specific mux control.
 
-Can you define a specific constant here? PDC_WAKEUP_IRQ? Or something?
-Also, I can't work out where d->hwirq gets set to such value.
-
-> +		return;
-> +
-> +	pdc_enable_intr(hwirq, false);
->  	irq_chip_mask_parent(d);
->  }
->  
->  static void qcom_pdc_gic_unmask(struct irq_data *d)
->  {
-> -	pdc_enable_intr(d, true);
-> +	irq_hw_number_t hwirq = d->hwirq;
-> +
-> +	if (hwirq == ULONG_MAX)
-> +		return;
-> +
-> +	pdc_enable_intr(hwirq, true);
->  	irq_chip_unmask_parent(d);
->  }
->  
-> @@ -111,9 +131,12 @@ enum pdc_irq_config_bits {
->   */
->  static int qcom_pdc_gic_set_type(struct irq_data *d, unsigned int type)
->  {
-> -	int pin_out = d->hwirq;
-> +	irq_hw_number_t pin_out = d->hwirq;
->  	enum pdc_irq_config_bits pdc_type;
->  
-> +	if (pin_out == ULONG_MAX)
-> +		return 0;
-> +
-
-It is quite odd that you're accepting any odd trigger, even if they are
-illegal. The API should be consistent, even if you're not applying any
-change.
-
->  	switch (type) {
->  	case IRQ_TYPE_EDGE_RISING:
->  		pdc_type = PDC_EDGE_RISING;
-> @@ -157,7 +180,7 @@ static struct irq_chip qcom_pdc_gic_chip = {
->  	.irq_set_affinity	= irq_chip_set_affinity_parent,
->  };
->  
-> -static irq_hw_number_t get_parent_hwirq(int pin)
-> +static irq_hw_number_t get_parent_hwirq(irq_hw_number_t pin)
->  {
->  	int i;
->  	struct pdc_pin_region *region;
-> @@ -169,7 +192,6 @@ static irq_hw_number_t get_parent_hwirq(int pin)
->  			return (region->parent_base + pin - region->pin_base);
->  	}
->  
-> -	WARN_ON(1);
->  	return ~0UL;
-
-Above, you're using ULONG_MAX, and here ~0UL. You need to make up your
-mind and use one single identifier. Or maybe these are not the same
-thing? In any case, you need to lift the ambiguity.
-
->  }
->  
-> @@ -232,6 +254,60 @@ static const struct irq_domain_ops qcom_pdc_ops = {
->  	.free		= irq_domain_free_irqs_common,
->  };
->  
-> +static int qcom_pdc_gpio_alloc(struct irq_domain *domain, unsigned int virq,
-> +			       unsigned int nr_irqs, void *data)
-> +{
-> +	struct qcom_irq_fwspec *qcom_fwspec = data;
-> +	struct irq_fwspec *fwspec = &qcom_fwspec->fwspec;
-> +	struct irq_fwspec parent_fwspec;
-> +	irq_hw_number_t hwirq, parent_hwirq;
-> +	unsigned int type;
-> +	int ret;
-> +
-> +	ret = qcom_pdc_translate(domain, fwspec, &hwirq, &type);
-> +	if (ret)
-> +		return -EINVAL;
-> +
-> +	parent_hwirq = get_parent_hwirq(hwirq);
-> +	if (parent_hwirq == ~0UL)
-> +		return -EINVAL;
-> +
-> +	ret = irq_domain_set_hwirq_and_chip(domain, virq, hwirq,
-> +					    &qcom_pdc_gic_chip, NULL);
-> +	if (ret)
-> +		return ret;
-> +
-> +	qcom_fwspec->mask = true;
-> +
-> +	if (type & IRQ_TYPE_EDGE_BOTH)
-> +		type = IRQ_TYPE_EDGE_RISING;
-> +
-> +	if (type & IRQ_TYPE_LEVEL_MASK)
-> +		type = IRQ_TYPE_LEVEL_HIGH;
-> +
-> +	parent_fwspec.fwnode      = domain->parent->fwnode;
-> +	parent_fwspec.param_count = 3;
-> +	parent_fwspec.param[0]    = 0;
-> +	parent_fwspec.param[1]    = parent_hwirq;
-> +	parent_fwspec.param[2]    = type;
-> +
-> +	return irq_domain_alloc_irqs_parent(domain, virq, nr_irqs,
-> +					    &parent_fwspec);
-> +}
-> +
-> +static int qcom_pdc_gpio_domain_select(struct irq_domain *d,
-> +				       struct irq_fwspec *fwspec,
-> +				       enum irq_domain_bus_token bus_token)
-> +{
-> +	return (bus_token == DOMAIN_BUS_WAKEUP);
-> +}
-> +
-> +static const struct irq_domain_ops qcom_pdc_gpio_ops = {
-> +	.select		= qcom_pdc_gpio_domain_select,
-> +	.alloc		= qcom_pdc_gpio_alloc,
-> +	.free		= irq_domain_free_irqs_common,
-> +};
-> +
->  static int pdc_setup_pin_mapping(struct device_node *np)
->  {
->  	int ret, n;
-> @@ -270,7 +346,7 @@ static int pdc_setup_pin_mapping(struct device_node *np)
->  
->  static int qcom_pdc_init(struct device_node *node, struct device_node *parent)
->  {
-> -	struct irq_domain *parent_domain, *pdc_domain;
-> +	struct irq_domain *parent_domain, *pdc_domain, *pdc_gpio_domain;
->  	int ret;
->  
->  	pdc_base = of_iomap(node, 0);
-> @@ -301,6 +377,18 @@ static int qcom_pdc_init(struct device_node *node, struct device_node *parent)
->  		goto fail;
->  	}
->  
-> +	pdc_gpio_domain = irq_domain_create_hierarchy(parent_domain, 0,
-> +						      PDC_MAX_GPIO_IRQS,
-> +						      of_fwnode_handle(node),
-> +						      &qcom_pdc_gpio_ops, NULL);
-> +	if (!pdc_gpio_domain) {
-> +		pr_err("%pOF: GIC domain add failed for GPIO domain\n", node);
-> +		ret = -ENOMEM;
-> +		goto fail;
-> +	}
-> +
-> +	irq_domain_update_bus_token(pdc_gpio_domain, DOMAIN_BUS_WAKEUP);
-> +
->  	return 0;
->  
->  fail:
-> diff --git a/include/linux/soc/qcom/irq.h b/include/linux/soc/qcom/irq.h
-> new file mode 100644
-> index 000000000000..bacc9edbce0d
-> --- /dev/null
-> +++ b/include/linux/soc/qcom/irq.h
-> @@ -0,0 +1,23 @@
-> +/* SPDX-License-Identifier: GPL-2.0 */
-> +
-> +#ifndef __QCOM_IRQ_H
-> +#define __QCOM_IRQ_H
-> +
-> +#include <linux/irqdomain.h>
-> +
-> +/**
-> + * struct qcom_irq_fwspec - qcom specific irq fwspec wrapper
-> + * @fwspec: irq fwspec
-> + * @mask: if true, keep the irq masked in the gpio controller
-> + *
-> + * Use this structure to communicate between the parent irq chip, MPM or PDC,
-> + * to the gpio chip, TLMM, about the gpio being allocated in the parent
-> + * and if the gpio chip should keep the line masked because the parent irq
-> + * chip is handling everything about the irq line.
-> + */
-> +struct qcom_irq_fwspec {
-> +	struct irq_fwspec fwspec;
-> +	bool mask;
-> +};
-> +
-> +#endif
-> 
-
-Thanks,
-
-	M.
--- 
-Jazz is not dead. It just smells funny...
+> Sascha
+>=20
+> --=20
+> Pengutronix e.K.                           |                             =
+|
+> Industrial Linux Solutions                 | https://emea01.safelinks.pro=
+tection.outlook.com/?url=3Dhttp%3A%2F%2Fwww.pengutronix.de%2F&amp;data=3D02=
+%7C01%7Cabel.vesa%40nxp.com%7Cde43ba7dcd774a3709df08d6a60c4d90%7C686ea1d3bc=
+2b4c6fa92cd99c5c301635%7C0%7C0%7C636878969100157679&amp;sdata=3D4eU6YmuXDhH=
+JZUKVKJhiRwlzq7b9XIrUfLSl2JFlRd8%3D&amp;reserved=3D0  |
+> Peiner Str. 6-8, 31137 Hildesheim, Germany | Phone: +49-5121-206917-0    =
+|
+> Amtsgericht Hildesheim, HRA 2686           | Fax:   +49-5121-206917-5555 =
+|=
