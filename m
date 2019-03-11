@@ -2,206 +2,122 @@ Return-Path: <SRS0=FxTY=RO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_PASS autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-4.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FSL_HELO_FAKE,HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 31BA9C43381
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 Mar 2019 17:24:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E4B37C43381
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 Mar 2019 17:24:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EDBAB214D8
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 Mar 2019 17:24:24 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1552325065;
-	bh=xw2/qTapePECwqWQahtP8GDFFygFckLQT51mkfxDEDw=;
-	h=From:To:Cc:Subject:In-Reply-To:Date:List-ID:From;
-	b=pY+7xT3EcgXxJtNoapUR3QDAJ18XvRD38ivMy+2WSBjsgYBCZjois0PO2NQ5hugvD
-	 ftTqsqah7rTif3qlZG+X8M4c4kgrxI7qJP7p2rXUtz+EXP907t9CPNZc/AeDSrlPCH
-	 S8YqefBsX8cu85PsxRjro/GLKO8sLfhxIGt1G9Kg=
+	by mail.kernel.org (Postfix) with ESMTP id B5C502063F
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 Mar 2019 17:24:28 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="a5K+ndER"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728222AbfCKRYX (ORCPT
+        id S1728247AbfCKRY1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 11 Mar 2019 13:24:23 -0400
-Received: from heliosphere.sirena.org.uk ([172.104.155.198]:51018 "EHLO
-        heliosphere.sirena.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727778AbfCKRYQ (ORCPT
+        Mon, 11 Mar 2019 13:24:27 -0400
+Received: from mail-pg1-f196.google.com ([209.85.215.196]:45948 "EHLO
+        mail-pg1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728226AbfCKRYZ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 11 Mar 2019 13:24:16 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=sirena.org.uk; s=20170815-heliosphere; h=Date:Message-Id:In-Reply-To:
-        Subject:Cc:To:From:Sender:Reply-To:MIME-Version:Content-Type:
-        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:References:
-        List-Id:List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:
-        List-Archive; bh=fopFGCtXNEBdeKtsnXb+sS4aQ15Gyklh0Tk9ehWpVWc=; b=IUu7CHsRGrV6
-        2wQEcDnGgoztOyTzXyeWz8AHwR2jABLU/KyWSVDKUHhN3/B7ymqp19NUW8bqaqEBeQwZ0zuHwG+dC
-        iXNFAN08nj0689DxaVGxSDwxcGYA6sdCwT99nIkCVLH8wn4HbjsjYlmjTCPeFgjJn2utpU6pvsQW6
-        Li/NQ=;
-Received: from cpc102320-sgyl38-2-0-cust46.18-2.cable.virginm.net ([82.37.168.47] helo=debutante.sirena.org.uk)
-        by heliosphere.sirena.org.uk with esmtpa (Exim 4.89)
-        (envelope-from <broonie@sirena.org.uk>)
-        id 1h3Oel-0005O4-LF; Mon, 11 Mar 2019 17:24:07 +0000
-Received: by debutante.sirena.org.uk (Postfix, from userid 1000)
-        id 2C00A1128896; Mon, 11 Mar 2019 17:24:07 +0000 (GMT)
-From:   Mark Brown <broonie@kernel.org>
-To:     Axel Lin <axel.lin@ingics.com>
-Cc:     Charles Keepax <ckeepax@opensource.cirrus.com>,
-        Mark Brown <broonie@kernel.org>, linux-kernel@vger.kernel.org
-Subject: Applied "regulator: wm8400: Get rid of wm8400_block_read/wm8400_set_bits functions" to the regulator tree
-In-Reply-To: 
-X-Patchwork-Hint: ignore
-Message-Id: <20190311172407.2C00A1128896@debutante.sirena.org.uk>
-Date:   Mon, 11 Mar 2019 17:24:07 +0000 (GMT)
+        Mon, 11 Mar 2019 13:24:25 -0400
+Received: by mail-pg1-f196.google.com with SMTP id 125so4524914pgc.12
+        for <linux-kernel@vger.kernel.org>; Mon, 11 Mar 2019 10:24:25 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=QhyIzGq/ucgEPNNC7oG+opioeqwiDPtQ6m2FI2GQUDo=;
+        b=a5K+ndERE1RPpLMCd07gDADVR/Fl4SBgMkpnJfv+gABtE1iSo3Agg0nYcpF08d2J6x
+         x0xVgOkgoy7HJ+oYyy9bFZweYZJflf2Rx/tJZT92O99eHCo/A3GH3bUCJko/tewpG3BF
+         ARECqFbaQa/NM7rZBL9NOH73NsfFpWWRfDoog=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=QhyIzGq/ucgEPNNC7oG+opioeqwiDPtQ6m2FI2GQUDo=;
+        b=QClWKDtohsmlqJK/H2WOhgxpoNLNCRKHOUMwm2AQxEGr6kH9yPfAVJXHIamglcXPcg
+         bAMPQ+uQ1nxdACt70iF5SpGX0RJep/IkuCwI52qMM5m3Wv37Zt3Ub/ujIEUthj9p+roi
+         zF9OJ9Tb0aYgy+CHn/WDcT/nRZpDopbaY4Qeo20XQS4C7jC78xlI7WuQAp3RybasnKB5
+         tnkuHGGrb2SY8njn2QiMZpUEenpR0uhnBwAyX05EvlmDksuNYt6NDwwALLtVH+j7ixCZ
+         qnysGKEqr/l8ioqnZS5m6OAS482BBJCrIj4HulbWZxvpQLn51jY+0Fl31RoxXFX9MY1l
+         4m8g==
+X-Gm-Message-State: APjAAAUxaIVcAxWy4IzRn89/gJNI4Xp6qfNf0kynkOmhvJvVnzxDTOBU
+        f1Ti4h4ML0Nn4/l+cenDhLBNMg==
+X-Google-Smtp-Source: APXvYqzpqJ5YcHlNl4s5jmobJWHFfc/L4k0bdNIPOi5LU34woUZhSnE74qd4z7EAD9n/yrG/TZTAEw==
+X-Received: by 2002:a17:902:403:: with SMTP id 3mr35194200ple.48.1552325064848;
+        Mon, 11 Mar 2019 10:24:24 -0700 (PDT)
+Received: from google.com ([2620:15c:202:1:534:b7c0:a63c:460c])
+        by smtp.gmail.com with ESMTPSA id z6sm22766374pgo.31.2019.03.11.10.24.23
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Mon, 11 Mar 2019 10:24:23 -0700 (PDT)
+Date:   Mon, 11 Mar 2019 10:24:21 -0700
+From:   Brian Norris <briannorris@chromium.org>
+To:     Kangjie Lu <kjlu@umn.edu>
+Cc:     pakki001@umn.edu, Amitkumar Karwar <amitkarwar@gmail.com>,
+        Nishant Sarmukadam <nishants@marvell.com>,
+        Ganapathi Bhat <gbhat@marvell.com>,
+        Xinming Hu <huxinming820@gmail.com>,
+        Kalle Valo <kvalo@codeaurora.org>,
+        "David S. Miller" <davem@davemloft.net>,
+        linux-wireless@vger.kernel.org, netdev@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] net: mwifiex: fix a NULL pointer dereference
+Message-ID: <20190311172419.GA133390@google.com>
+References: <20190311074347.32003-1-kjlu@umn.edu>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190311074347.32003-1-kjlu@umn.edu>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The patch
+On Mon, Mar 11, 2019 at 02:43:47AM -0500, Kangjie Lu wrote:
+> In case dev_alloc_skb fails, the fix returns -ENOMEM to avoid
+> NULL pointer dereference.
+> 
+> Signed-off-by: Kangjie Lu <kjlu@umn.edu>
+> ---
+>  drivers/net/wireless/marvell/mwifiex/cmdevt.c | 6 ++++++
+>  1 file changed, 6 insertions(+)
+> 
+> diff --git a/drivers/net/wireless/marvell/mwifiex/cmdevt.c b/drivers/net/wireless/marvell/mwifiex/cmdevt.c
+> index 60db2b969e20..5565f18039ab 100644
+> --- a/drivers/net/wireless/marvell/mwifiex/cmdevt.c
+> +++ b/drivers/net/wireless/marvell/mwifiex/cmdevt.c
+> @@ -341,6 +341,12 @@ static int mwifiex_dnld_sleep_confirm_cmd(struct mwifiex_adapter *adapter)
+>  		sleep_cfm_tmp =
+>  			dev_alloc_skb(sizeof(struct mwifiex_opt_sleep_confirm)
+>  				      + MWIFIEX_TYPE_LEN);
+> +		if (!sleep_cfm_tmp) {
+> +			mwifiex_dbg(adapter, ERROR, 
 
-   regulator: wm8400: Get rid of wm8400_block_read/wm8400_set_bits functions
+You have trailing whitespace. Please run your patches through
+scripts/checkpatch.pl.
 
-has been applied to the regulator tree at
+> +				    "SLEEP_CFM: dev_alloc_skb failed\n");
+> +			return -ENOMEM;
 
-   https://git.kernel.org/pub/scm/linux/kernel/git/broonie/regulator.git 
+It's not exactly a problem with your patch, but nobody really checks the
+return status of this function. I think in most (all?) cases, that's
+probably OK, because we also implicitly communicate the success/failure
+of this function by modifying the ->ps_state field (basically, a state
+machine). So this is probably OK.
 
-All being well this means that it will be integrated into the linux-next
-tree (usually sometime in the next 24 hours) and sent to Linus during
-the next merge window (or sooner if it is a bug fix), however if
-problems are discovered then the patch may be dropped or reverted.  
+Other than the whitespace:
 
-You may get further e-mails resulting from automated or manual testing
-and review of the tree, please engage with people reporting problems and
-send followup patches addressing any issues that are reported if needed.
+Reviewed-by: Brian Norris <briannorris@chromium.org>
 
-If any updates are required or you are submitting further changes they
-should be sent as incremental updates against current git, existing
-patches will not be replaced.
-
-Please add any relevant lists and maintainers to the CCs when replying
-to this mail.
-
-Thanks,
-Mark
-
-From e08abeca39673e1045ca1e5a90bd7fef69d0fe8f Mon Sep 17 00:00:00 2001
-From: Axel Lin <axel.lin@ingics.com>
-Date: Wed, 27 Feb 2019 09:30:53 +0800
-Subject: [PATCH] regulator: wm8400: Get rid of
- wm8400_block_read/wm8400_set_bits functions
-
-The only user of wm8400_block_read/wm8400_set_bits functions is the
-wm8400 regulator driver. At the context of all the callers, we can
-use regmap_bulk_read/regmap_update_bits directly.
-Thus remove wm8400_block_read/wm8400_set_bits functions.
-
-Signed-off-by: Axel Lin <axel.lin@ingics.com>
-Acked-by: Charles Keepax <ckeepax@opensource.cirrus.com>
-Signed-off-by: Mark Brown <broonie@kernel.org>
----
- drivers/mfd/wm8400-core.c            |  6 ------
- drivers/regulator/wm8400-regulator.c | 17 ++++++++---------
- include/linux/mfd/wm8400-private.h   |  8 --------
- 3 files changed, 8 insertions(+), 23 deletions(-)
-
-diff --git a/drivers/mfd/wm8400-core.c b/drivers/mfd/wm8400-core.c
-index 8a98a2fc74e1..7eab2bedad93 100644
---- a/drivers/mfd/wm8400-core.c
-+++ b/drivers/mfd/wm8400-core.c
-@@ -35,12 +35,6 @@ static bool wm8400_volatile(struct device *dev, unsigned int reg)
- 	}
- }
- 
--int wm8400_block_read(struct wm8400 *wm8400, u8 reg, int count, u16 *data)
--{
--	return regmap_bulk_read(wm8400->regmap, reg, data, count);
--}
--EXPORT_SYMBOL_GPL(wm8400_block_read);
--
- static int wm8400_register_codec(struct wm8400 *wm8400)
- {
- 	const struct mfd_cell cell = {
-diff --git a/drivers/regulator/wm8400-regulator.c b/drivers/regulator/wm8400-regulator.c
-index fb1837657b64..40c4e6628471 100644
---- a/drivers/regulator/wm8400-regulator.c
-+++ b/drivers/regulator/wm8400-regulator.c
-@@ -36,13 +36,12 @@ static const struct regulator_ops wm8400_ldo_ops = {
- 
- static unsigned int wm8400_dcdc_get_mode(struct regulator_dev *dev)
- {
--	struct wm8400 *wm8400 = rdev_get_drvdata(dev);
-+	struct regmap *rmap = rdev_get_regmap(dev);
- 	int offset = (rdev_get_id(dev) - WM8400_DCDC1) * 2;
- 	u16 data[2];
- 	int ret;
- 
--	ret = wm8400_block_read(wm8400, WM8400_DCDC1_CONTROL_1 + offset, 2,
--				data);
-+	ret = regmap_bulk_read(rmap, WM8400_DCDC1_CONTROL_1 + offset, data, 2);
- 	if (ret != 0)
- 		return 0;
- 
-@@ -63,36 +62,36 @@ static unsigned int wm8400_dcdc_get_mode(struct regulator_dev *dev)
- 
- static int wm8400_dcdc_set_mode(struct regulator_dev *dev, unsigned int mode)
- {
--	struct wm8400 *wm8400 = rdev_get_drvdata(dev);
-+	struct regmap *rmap = rdev_get_regmap(dev);
- 	int offset = (rdev_get_id(dev) - WM8400_DCDC1) * 2;
- 	int ret;
- 
- 	switch (mode) {
- 	case REGULATOR_MODE_FAST:
- 		/* Datasheet: active with force PWM */
--		ret = wm8400_set_bits(wm8400, WM8400_DCDC1_CONTROL_2 + offset,
-+		ret = regmap_update_bits(rmap, WM8400_DCDC1_CONTROL_2 + offset,
- 				      WM8400_DC1_FRC_PWM, WM8400_DC1_FRC_PWM);
- 		if (ret != 0)
- 			return ret;
- 
--		return wm8400_set_bits(wm8400, WM8400_DCDC1_CONTROL_1 + offset,
-+		return regmap_update_bits(rmap, WM8400_DCDC1_CONTROL_1 + offset,
- 				       WM8400_DC1_ACTIVE | WM8400_DC1_SLEEP,
- 				       WM8400_DC1_ACTIVE);
- 
- 	case REGULATOR_MODE_NORMAL:
- 		/* Datasheet: active */
--		ret = wm8400_set_bits(wm8400, WM8400_DCDC1_CONTROL_2 + offset,
-+		ret = regmap_update_bits(rmap, WM8400_DCDC1_CONTROL_2 + offset,
- 				      WM8400_DC1_FRC_PWM, 0);
- 		if (ret != 0)
- 			return ret;
- 
--		return wm8400_set_bits(wm8400, WM8400_DCDC1_CONTROL_1 + offset,
-+		return regmap_update_bits(rmap, WM8400_DCDC1_CONTROL_1 + offset,
- 				       WM8400_DC1_ACTIVE | WM8400_DC1_SLEEP,
- 				       WM8400_DC1_ACTIVE);
- 
- 	case REGULATOR_MODE_IDLE:
- 		/* Datasheet: standby */
--		return wm8400_set_bits(wm8400, WM8400_DCDC1_CONTROL_1 + offset,
-+		return regmap_update_bits(rmap, WM8400_DCDC1_CONTROL_1 + offset,
- 				       WM8400_DC1_ACTIVE | WM8400_DC1_SLEEP, 0);
- 	default:
- 		return -EINVAL;
-diff --git a/include/linux/mfd/wm8400-private.h b/include/linux/mfd/wm8400-private.h
-index 4ee908f5b834..43d0d307e2e3 100644
---- a/include/linux/mfd/wm8400-private.h
-+++ b/include/linux/mfd/wm8400-private.h
-@@ -923,12 +923,4 @@ struct wm8400 {
- #define WM8400_LINE_CMP_VTHD_SHIFT                   0  /* LINE_CMP_VTHD - [3:0] */
- #define WM8400_LINE_CMP_VTHD_WIDTH                   4  /* LINE_CMP_VTHD - [3:0] */
- 
--int wm8400_block_read(struct wm8400 *wm8400, u8 reg, int count, u16 *data);
--
--static inline int wm8400_set_bits(struct wm8400 *wm8400, u8 reg,
--				  u16 mask, u16 val)
--{
--	return regmap_update_bits(wm8400->regmap, reg, mask, val);
--}
--
- #endif
--- 
-2.20.1
-
+> +		}
+> +
+>  		skb_put(sleep_cfm_tmp, sizeof(struct mwifiex_opt_sleep_confirm)
+>  			+ MWIFIEX_TYPE_LEN);
+>  		put_unaligned_le32(MWIFIEX_USB_TYPE_CMD, sleep_cfm_tmp->data);
+> -- 
+> 2.17.1
+> 
