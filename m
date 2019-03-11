@@ -2,255 +2,259 @@ Return-Path: <SRS0=FxTY=RO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7B464C43381
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 Mar 2019 13:31:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BFBE1C43381
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 Mar 2019 13:31:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 44DBE22316
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 Mar 2019 13:31:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8AD302230D
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 Mar 2019 13:31:56 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727960AbfCKNbt (ORCPT
+        id S1728021AbfCKNby (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 11 Mar 2019 09:31:49 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:41448 "EHLO mx1.redhat.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727673AbfCKNbr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 11 Mar 2019 09:31:47 -0400
-Received: from smtp.corp.redhat.com (int-mx01.intmail.prod.int.phx2.redhat.com [10.5.11.11])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id 33339307E04C;
-        Mon, 11 Mar 2019 13:31:47 +0000 (UTC)
-Received: from [10.36.112.64] (ovpn-112-64.ams2.redhat.com [10.36.112.64])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id BFA146013A;
-        Mon, 11 Mar 2019 13:31:43 +0000 (UTC)
-Subject: Re: [PATCH v4 17/17] kvm: vmx: Emulate TEST_CTL MSR
-To:     Xiaoyao Li <xiaoyao.li@linux.intel.com>
-Cc:     linux-kernel <linux-kernel@vger.kernel.org>, x86 <x86@kernel.org>,
-        kvm@vger.kernel.org
-References: <1551494711-213533-1-git-send-email-fenghua.yu@intel.com>
- <1551494711-213533-18-git-send-email-fenghua.yu@intel.com>
- <58653d477d78b2a69927d8707522d91f091bcb52.camel@linux.intel.com>
-From:   Paolo Bonzini <pbonzini@redhat.com>
-Openpgp: preference=signencrypt
-Autocrypt: addr=pbonzini@redhat.com; prefer-encrypt=mutual; keydata=
- mQHhBFRCcBIBDqDGsz4K0zZun3jh+U6Z9wNGLKQ0kSFyjN38gMqU1SfP+TUNQepFHb/Gc0E2
- CxXPkIBTvYY+ZPkoTh5xF9oS1jqI8iRLzouzF8yXs3QjQIZ2SfuCxSVwlV65jotcjD2FTN04
- hVopm9llFijNZpVIOGUTqzM4U55sdsCcZUluWM6x4HSOdw5F5Utxfp1wOjD/v92Lrax0hjiX
- DResHSt48q+8FrZzY+AUbkUS+Jm34qjswdrgsC5uxeVcLkBgWLmov2kMaMROT0YmFY6A3m1S
- P/kXmHDXxhe23gKb3dgwxUTpENDBGcfEzrzilWueOeUWiOcWuFOed/C3SyijBx3Av/lbCsHU
- Vx6pMycNTdzU1BuAroB+Y3mNEuW56Yd44jlInzG2UOwt9XjjdKkJZ1g0P9dwptwLEgTEd3Fo
- UdhAQyRXGYO8oROiuh+RZ1lXp6AQ4ZjoyH8WLfTLf5g1EKCTc4C1sy1vQSdzIRu3rBIjAvnC
- tGZADei1IExLqB3uzXKzZ1BZ+Z8hnt2og9hb7H0y8diYfEk2w3R7wEr+Ehk5NQsT2MPI2QBd
- wEv1/Aj1DgUHZAHzG1QN9S8wNWQ6K9DqHZTBnI1hUlkp22zCSHK/6FwUCuYp1zcAEQEAAbQj
- UGFvbG8gQm9uemluaSA8cGJvbnppbmlAcmVkaGF0LmNvbT6JAg0EEwECACMFAlRCcBICGwMH
- CwkIBwMCAQYVCAIJCgsEFgIDAQIeAQIXgAAKCRB+FRAMzTZpsbceDp9IIN6BIA0Ol7MoB15E
- 11kRz/ewzryFY54tQlMnd4xxfH8MTQ/mm9I482YoSwPMdcWFAKnUX6Yo30tbLiNB8hzaHeRj
- jx12K+ptqYbg+cevgOtbLAlL9kNgLLcsGqC2829jBCUTVeMSZDrzS97ole/YEez2qFpPnTV0
- VrRWClWVfYh+JfzpXmgyhbkuwUxNFk421s4Ajp3d8nPPFUGgBG5HOxzkAm7xb1cjAuJ+oi/K
- CHfkuN+fLZl/u3E/fw7vvOESApLU5o0icVXeakfSz0LsygEnekDbxPnE5af/9FEkXJD5EoYG
- SEahaEtgNrR4qsyxyAGYgZlS70vkSSYJ+iT2rrwEiDlo31MzRo6Ba2FfHBSJ7lcYdPT7bbk9
- AO3hlNMhNdUhoQv7M5HsnqZ6unvSHOKmReNaS9egAGdRN0/GPDWr9wroyJ65ZNQsHl9nXBqE
- AukZNr5oJO5vxrYiAuuTSd6UI/xFkjtkzltG3mw5ao2bBpk/V/YuePrJsnPFHG7NhizrxttB
- nTuOSCMo45pfHQ+XYd5K1+Cv/NzZFNWscm5htJ0HznY+oOsZvHTyGz3v91pn51dkRYN0otqr
- bQ4tlFFuVjArBZcapSIe6NV8C4cEiSS5AQ0EVEJxcwEIAK+nUrsUz3aP2aBjIrX3a1+C+39R
- nctpNIPcJjFJ/8WafRiwcEuLjbvJ/4kyM6K7pWUIQftl1P8Woxwb5nqL7zEFHh5I+hKS3haO
- 5pgco//V0tWBGMKinjqntpd4U4Dl299dMBZ4rRbPvmI8rr63sCENxTnHhTECyHdGFpqSzWzy
- 97rH68uqMpxbUeggVwYkYihZNd8xt1+lf7GWYNEO/QV8ar/qbRPG6PEfiPPHQd/sldGYavmd
- //o6TQLSJsvJyJDt7KxulnNT8Q2X/OdEuVQsRT5glLaSAeVAABcLAEnNgmCIGkX7TnQF8a6w
- gHGrZIR9ZCoKvDxAr7RP6mPeS9sAEQEAAYkDEgQYAQIACQUCVEJxcwIbAgEpCRB+FRAMzTZp
- scBdIAQZAQIABgUCVEJxcwAKCRC/+9JfeMeug/SlCACl7QjRnwHo/VzENWD9G2VpUOd9eRnS
- DZGQmPo6Mp3Wy8vL7snGFBfRseT9BevXBSkxvtOnUUV2YbyLmolAODqUGzUI8ViF339poOYN
- i6Ffek0E19IMQ5+CilqJJ2d5ZvRfaq70LA/Ly9jmIwwX4auvXrWl99/2wCkqnWZI+PAepkcX
- JRD4KY2fsvRi64/aoQmcxTiyyR7q3/52Sqd4EdMfj0niYJV0Xb9nt8G57Dp9v3Ox5JeWZKXS
- krFqy1qyEIypIrqcMbtXM7LSmiQ8aJRM4ZHYbvgjChJKR4PsKNQZQlMWGUJO4nVFSkrixc9R
- Z49uIqQK3b3ENB1QkcdMg9cxsB0Onih8zR+Wp1uDZXnz1ekto+EivLQLqvTjCCwLxxJafwKI
- bqhQ+hGR9jF34EFur5eWt9jJGloEPVv0GgQflQaE+rRGe+3f5ZDgRe5Y/EJVNhBhKcafcbP8
- MzmLRh3UDnYDwaeguYmxuSlMdjFL96YfhRBXs8tUw6SO9jtCgBvoOIBDCxxAJjShY4KIvEpK
- b2hSNr8KxzelKKlSXMtB1bbHbQxiQcerAipYiChUHq1raFc3V0eOyCXK205rLtknJHhM5pfG
- 6taABGAMvJgm/MrVILIxvBuERj1FRgcgoXtiBmLEJSb7akcrRlqe3MoPTntSTNvNzAJmfWhd
- SvP0G1WDLolqvX0OtKMppI91AWVu72f1kolJg43wbaKpRJg1GMkKEI3H+jrrlTBrNl/8e20m
- TElPRDKzPiowmXeZqFSS1A6Azv0TJoo9as+lWF+P4zCXt40+Zhh5hdHO38EV7vFAVG3iuay6
- 7ToF8Uy7tgc3mdH98WQSmHcn/H5PFYk3xTP3KHB7b0FZPdFPQXBZb9+tJeZBi9gMqcjMch+Y
- R8dmTcQRQX14bm5nXlBF7VpSOPZMR392LY7wzAvRdhz7aeIUkdO7VelaspFk2nT7wOj1Y6uL
- nRxQlLkBDQRUQnHuAQgAx4dxXO6/Zun0eVYOnr5GRl76+2UrAAemVv9Yfn2PbDIbxXqLff7o
- yVJIkw4WdhQIIvvtu5zH24iYjmdfbg8iWpP7NqxUQRUZJEWbx2CRwkMHtOmzQiQ2tSLjKh/c
- HeyFH68xjeLcinR7jXMrHQK+UCEw6jqi1oeZzGvfmxarUmS0uRuffAb589AJW50kkQK9VD/9
- QC2FJISSUDnRC0PawGSZDXhmvITJMdD4TjYrePYhSY4uuIV02v028TVAaYbIhxvDY0hUQE4r
- 8ZbGRLn52bEzaIPgl1p/adKfeOUeMReg/CkyzQpmyB1TSk8lDMxQzCYHXAzwnGi8WU9iuE1P
- 0wARAQABiQHzBBgBAgAJBQJUQnHuAhsMAAoJEH4VEAzNNmmxp1EOoJy0uZggJm7gZKeJ7iUp
- eX4eqUtqelUw6gU2daz2hE/jsxsTbC/w5piHmk1H1VWDKEM4bQBTuiJ0bfo55SWsUNN+c9hh
- IX+Y8LEe22izK3w7mRpvGcg+/ZRG4DEMHLP6JVsv5GMpoYwYOmHnplOzCXHvmdlW0i6SrMsB
- Dl9rw4AtIa6bRwWLim1lQ6EM3PWifPrWSUPrPcw4OLSwFk0CPqC4HYv/7ZnASVkR5EERFF3+
- 6iaaVi5OgBd81F1TCvCX2BEyIDRZLJNvX3TOd5FEN+lIrl26xecz876SvcOb5SL5SKg9/rCB
- ufdPSjojkGFWGziHiFaYhbuI2E+NfWLJtd+ZvWAAV+O0d8vFFSvriy9enJ8kxJwhC0ECbSKF
- Y+W1eTIhMD3aeAKY90drozWEyHhENf4l/V+Ja5vOnW+gCDQkGt2Y1lJAPPSIqZKvHzGShdh8
- DduC0U3xYkfbGAUvbxeepjgzp0uEnBXfPTy09JGpgWbg0w91GyfT/ujKaGd4vxG2Ei+MMNDm
- S1SMx7wu0evvQ5kT9NPzyq8R2GIhVSiAd2jioGuTjX6AZCFv3ToO53DliFMkVTecLptsXaes
- uUHgL9dKIfvpm+rNXRn9wAwGjk0X/A==
-Message-ID: <7a10bb11-e9bf-f49c-6575-25c3da08cfac@redhat.com>
-Date:   Mon, 11 Mar 2019 14:31:38 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.4.0
-MIME-Version: 1.0
-In-Reply-To: <58653d477d78b2a69927d8707522d91f091bcb52.camel@linux.intel.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.11
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.42]); Mon, 11 Mar 2019 13:31:47 +0000 (UTC)
+        Mon, 11 Mar 2019 09:31:54 -0400
+Received: from mout.kundenserver.de ([212.227.17.10]:39249 "EHLO
+        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727435AbfCKNTa (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 11 Mar 2019 09:19:30 -0400
+Received: from orion.localdomain ([95.115.159.19]) by mrelayeu.kundenserver.de
+ (mreue109 [212.227.15.183]) with ESMTPSA (Nemesis) id
+ 1MYeV3-1hXm7o3pRr-00Vhhw for <linux-kernel@vger.kernel.org>; Mon, 11 Mar 2019
+ 14:19:27 +0100
+From:   "Enrico Weigelt, metux IT consult" <info@metux.net>
+To:     linux-kernel@vger.kernel.org
+Subject: [PATCH 003/114] drivers: input: Kconfig: pedantic formatting
+Date:   Mon, 11 Mar 2019 14:17:15 +0100
+Message-Id: <1552310346-7629-4-git-send-email-info@metux.net>
+X-Mailer: git-send-email 1.9.1
+In-Reply-To: <1552310346-7629-1-git-send-email-info@metux.net>
+References: <1552310346-7629-1-git-send-email-info@metux.net>
+X-Provags-ID: V03:K1:gVd7Z+s2o4jEpLuMSsh7OjrZ6t5x+m6KEEx2CKmSUpTJERBjQsJ
+ o7gYIx/MAqrjlMcdn4a455tpRAlKSgoeaQ3QZwYoHuZaVU+D5xpDgAh9l7XE2PNXWdrnQMQ
+ tt6flQ0ysdKP87vjiuc569VkRhHy+Hmm6JOtqF6c6WS/3paNMMaJa4NM9Q7bQPgo+iX7lwh
+ thUeXfbN82tybSwLnJqZg==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:7UKv2rJSYv8=:DPcrT0Gtbwib+0n//MoyJR
+ 2lFopdeUP/L/NuuKV5LV/kz3yddYx5AMIJ5pV6ygCH2wieaq3ZtR0Fh9lT/QToHmxCt7cEE5v
+ 8Z7MOTq1dL9rq8qoOKZ84AC/EV389hFAJOMu2FTjzKj32vO/fGiIeDHYi5OngHWmU2CZuTEiy
+ V5qJFix0VXk54DkRs8bKKwoYmb+RyIq3JlrJmnU9IixwY4Xw74lAfTHB3LqHV7vbwdHDAp+uT
+ lKDuDvukJSUmelcrFZ3o/exHxAS1uHY94xwXTc1s9bIpTyqcpl/gzbSGNk/JZCcjcKFB8WZTq
+ urpqUD6Tazfh+KqMVpzeJPRKnk06c3btHB/ThWuczn6kNtiyDv2QFBA9PMf8WH81qOONRb+5H
+ SmZUbaaZwKtSHbwnBg7JxMWtN6fIEgyo3NmOb82Y7p1VXh0BK6jRUnRokhZFTpgPUu3r25CJY
+ xXSYfFa3+it1O7jKGd4gp3ZEKldybhuW9zf9t2WonE+c4I891K3/HgfQ+ZPfWaNl+ouVN8PbU
+ xhVe43IwwnJOBxalhNxFw9/aJIVeCCC1Hv+QcafJbFRRNXIruuw8BO4cn4n+7v6i+CUKuIh1Y
+ znqFvna8uz88KOqq662fdVGSSFhwopl330cj8SIKcRZQRv+bx78tDSkMxIpSGOataLudtNgWP
+ h695UU0VW3yfYCn/X+A7HSedRvdHt3y/o1kVnc4Hnlduvd4hFZJ5tK+irGTLztm/MldlTzONS
+ Vw5hmyUFCPeOPVRLMB0nh0egZoGVSF/oNxMOsQ==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 09/03/19 03:31, Xiaoyao Li wrote:
-> Hi, Paolo,
-> 
-> Do you have any comments on this patch?
-> 
-> We are preparing v5 patches for split lock detection, if you have any comments
-> about this one, please let me know.
+Formatting of Kconfig files doesn't look so pretty, so let the
+Great White Handkerchief come around and clean it up.
 
-No, my only comment is that it should be placed _before_ the other two
-for bisectability.  I think I have already sent that small remark.
+Signed-off-by: Enrico Weigelt, metux IT consult <info@metux.net>
+---
+ drivers/input/keyboard/Kconfig    | 16 ++++++++--------
+ drivers/input/misc/Kconfig        | 26 +++++++++++++-------------
+ drivers/input/mouse/Kconfig       | 26 +++++++++++++-------------
+ drivers/input/serio/Kconfig       |  2 +-
+ drivers/input/tablet/Kconfig      | 20 ++++++++++----------
+ drivers/input/touchscreen/Kconfig |  2 +-
+ 6 files changed, 46 insertions(+), 46 deletions(-)
 
-Thanks,
-
-Paolo
-
-> Thanks,
-> Xiaoyao
-> 
-> On Fri, 2019-03-01 at 18:45 -0800, Fenghua Yu wrote:
->> From: Xiaoyao Li <xiaoyao.li@linux.intel.com>
->>
->> A control bit (bit 29) in TEST_CTL MSR 0x33 will be introduced in
->> future x86 processors. When bit 29 is set, the processor causes #AC
->> exception for split locked accesses at all CPL.
->>
->> Please check the latest Intel Software Developer's Manual
->> for more detailed information on the MSR and the split lock bit.
->>
->> 1. Since the kernel chooses to enable AC split lock by default, which
->> means if we don't emulate TEST_CTL MSR for guest, guest will run with
->> this feature enable while does not known it. Thus existing guests with
->> buggy firmware (like OVMF) and old kernels having the cross cache line
->> issues will fail the boot due to #AC.
->>
->> So we should emulate TEST_CTL MSR, and set it zero to disable AC split
->> lock by default. Whether and when to enable it is left to guest firmware
->> and guest kernel.
->>
->> 2. Host and guest can enable AC split lock independently, so using
->> msr autoload to switch it during VM entry/exit.
->>
->> Signed-off-by: Xiaoyao Li <xiaoyao.li@linux.intel.com>
->> Signed-off-by: Fenghua Yu <fenghua.yu@intel.com>
->> ---
->>  arch/x86/kvm/vmx/vmx.c | 35 +++++++++++++++++++++++++++++++++++
->>  arch/x86/kvm/vmx/vmx.h |  1 +
->>  2 files changed, 36 insertions(+)
->>
->> diff --git a/arch/x86/kvm/vmx/vmx.c b/arch/x86/kvm/vmx/vmx.c
->> index 3e03c6e1e558..c0c5e8621afa 100644
->> --- a/arch/x86/kvm/vmx/vmx.c
->> +++ b/arch/x86/kvm/vmx/vmx.c
->> @@ -1659,6 +1659,12 @@ static int vmx_get_msr(struct kvm_vcpu *vcpu, struct
->> msr_data *msr_info)
->>  	u32 index;
->>  
->>  	switch (msr_info->index) {
->> +	case MSR_TEST_CTL:
->> +		if (!msr_info->host_initiated &&
->> +		    !(vmx->core_capability & CORE_CAP_SPLIT_LOCK_DETECT))
->> +			return 1;
->> +		msr_info->data = vmx->msr_test_ctl;
->> +		break;
->>  #ifdef CONFIG_X86_64
->>  	case MSR_FS_BASE:
->>  		msr_info->data = vmcs_readl(GUEST_FS_BASE);
->> @@ -1805,6 +1811,14 @@ static int vmx_set_msr(struct kvm_vcpu *vcpu, struct
->> msr_data *msr_info)
->>  	u32 index;
->>  
->>  	switch (msr_index) {
->> +	case MSR_TEST_CTL:
->> +		if (!(vmx->core_capability & CORE_CAP_SPLIT_LOCK_DETECT))
->> +			return 1;
->> +
->> +		if (data & ~TEST_CTL_ENABLE_SPLIT_LOCK_DETECT)
->> +			return 1;
->> +		vmx->msr_test_ctl = data;
->> +		break;
->>  	case MSR_EFER:
->>  		ret = kvm_set_msr_common(vcpu, msr_info);
->>  		break;
->> @@ -4108,6 +4122,9 @@ static void vmx_vcpu_setup(struct vcpu_vmx *vmx)
->>  
->>  	vmx->arch_capabilities = kvm_get_arch_capabilities();
->>  
->> +	/* disable AC split lock by default */
->> +	vmx->msr_test_ctl = 0;
->> +
->>  	vm_exit_controls_init(vmx, vmx_vmexit_ctrl());
->>  
->>  	/* 22.2.1, 20.8.1 */
->> @@ -4145,6 +4162,7 @@ static void vmx_vcpu_reset(struct kvm_vcpu *vcpu, bool
->> init_event)
->>  
->>  	vmx->rmode.vm86_active = 0;
->>  	vmx->spec_ctrl = 0;
->> +	vmx->msr_test_ctl = 0;
->>  
->>  	vcpu->arch.microcode_version = 0x100000000ULL;
->>  	vmx->vcpu.arch.regs[VCPU_REGS_RDX] = get_rdx_init_val();
->> @@ -6344,6 +6362,21 @@ static void atomic_switch_perf_msrs(struct vcpu_vmx
->> *vmx)
->>  					msrs[i].host, false);
->>  }
->>  
->> +static void atomic_switch_msr_test_ctl(struct vcpu_vmx *vmx)
->> +{
->> +	u64 host_msr_test_ctl;
->> +
->> +	if (!boot_cpu_has(X86_FEATURE_SPLIT_LOCK_DETECT))
->> +		return;
->> +
->> +	rdmsrl(MSR_TEST_CTL, host_msr_test_ctl);
->> +	if (host_msr_test_ctl == vmx->msr_test_ctl)
->> +		clear_atomic_switch_msr(vmx, MSR_TEST_CTL);
->> +	else
->> +		add_atomic_switch_msr(vmx, MSR_TEST_CTL, vmx->msr_test_ctl,
->> +				      host_msr_test_ctl, false);
->> +}
->> +
->>  static void vmx_arm_hv_timer(struct vcpu_vmx *vmx, u32 val)
->>  {
->>  	vmcs_write32(VMX_PREEMPTION_TIMER_VALUE, val);
->> @@ -6585,6 +6618,8 @@ static void vmx_vcpu_run(struct kvm_vcpu *vcpu)
->>  
->>  	atomic_switch_perf_msrs(vmx);
->>  
->> +	atomic_switch_msr_test_ctl(vmx);
->> +
->>  	vmx_update_hv_timer(vcpu);
->>  
->>  	/*
->> diff --git a/arch/x86/kvm/vmx/vmx.h b/arch/x86/kvm/vmx/vmx.h
->> index cc22379991f3..e8831609c6c3 100644
->> --- a/arch/x86/kvm/vmx/vmx.h
->> +++ b/arch/x86/kvm/vmx/vmx.h
->> @@ -191,6 +191,7 @@ struct vcpu_vmx {
->>  	u64		      msr_guest_kernel_gs_base;
->>  #endif
->>  
->> +	u64		      msr_test_ctl;
->>  	u64		      core_capability;
->>  	u64		      arch_capabilities;
->>  	u64		      spec_ctrl;
-> 
+diff --git a/drivers/input/keyboard/Kconfig b/drivers/input/keyboard/Kconfig
+index a878351..ef39f5c 100644
+--- a/drivers/input/keyboard/Kconfig
++++ b/drivers/input/keyboard/Kconfig
+@@ -138,14 +138,14 @@ config KEYBOARD_ATKBD_RDI_KEYCODES
+ 	  left-hand column.
+ 
+ config KEYBOARD_QT1070
+-       tristate "Atmel AT42QT1070 Touch Sensor Chip"
+-       depends on I2C
+-       help
+-         Say Y here if you want to use Atmel AT42QT1070 QTouch
+-         Sensor chip as input device.
+-
+-         To compile this driver as a module, choose M here:
+-         the module will be called qt1070
++	tristate "Atmel AT42QT1070 Touch Sensor Chip"
++	depends on I2C
++	help
++	  Say Y here if you want to use Atmel AT42QT1070 QTouch
++	  Sensor chip as input device.
++
++	  To compile this driver as a module, choose M here:
++	  the module will be called qt1070
+ 
+ config KEYBOARD_QT2160
+ 	tristate "Atmel AT42QT2160 Touch Sensor Chip"
+diff --git a/drivers/input/misc/Kconfig b/drivers/input/misc/Kconfig
+index 279fb02..9cf3bac 100644
+--- a/drivers/input/misc/Kconfig
++++ b/drivers/input/misc/Kconfig
+@@ -240,13 +240,13 @@ config INPUT_APANEL
+ 	select INPUT_POLLDEV
+ 	select CHECK_SIGNATURE
+ 	help
+-	 Say Y here for support of the Application Panel buttons, used on
+-	 Fujitsu Lifebook. These are attached to the mainboard through
+-	 an SMBus interface managed by the I2C Intel ICH (i801) driver,
+-	 which you should also build for this kernel.
++	  Say Y here for support of the Application Panel buttons, used on
++	  Fujitsu Lifebook. These are attached to the mainboard through
++	  an SMBus interface managed by the I2C Intel ICH (i801) driver,
++	  which you should also build for this kernel.
+ 
+-	 To compile this driver as a module, choose M here: the module will
+-	 be called apanel.
++	  To compile this driver as a module, choose M here: the module will
++	  be called apanel.
+ 
+ config INPUT_GP2A
+ 	tristate "Sharp GP2AP002A00F I2C Proximity/Opto sensor driver"
+@@ -273,12 +273,12 @@ config INPUT_GPIO_DECODER
+ 	depends on GPIOLIB || COMPILE_TEST
+ 	select INPUT_POLLDEV
+ 	help
+-	 Say Y here if you want driver to read status of multiple GPIO
+-	 lines and report the encoded value as an absolute integer to
+-	 input subsystem.
++	  Say Y here if you want driver to read status of multiple GPIO
++	  lines and report the encoded value as an absolute integer to
++	  input subsystem.
+ 
+-	 To compile this driver as a module, choose M here: the module
+-	 will be called gpio_decoder.
++	  To compile this driver as a module, choose M here: the module
++	  will be called gpio_decoder.
+ 
+ config INPUT_IXP4XX_BEEPER
+ 	tristate "IXP4XX Beeper support"
+@@ -543,8 +543,8 @@ config INPUT_PCF50633_PMU
+ 	tristate "PCF50633 PMU events"
+ 	depends on MFD_PCF50633
+ 	help
+-	 Say Y to include support for delivering  PMU events via  input
+-	 layer on NXP PCF50633.
++	  Say Y to include support for delivering  PMU events via  input
++	  layer on NXP PCF50633.
+ 
+ config INPUT_PCF8574
+ 	tristate "PCF8574 Keypad input device"
+diff --git a/drivers/input/mouse/Kconfig b/drivers/input/mouse/Kconfig
+index 566a1e3..8b7a7e0 100644
+--- a/drivers/input/mouse/Kconfig
++++ b/drivers/input/mouse/Kconfig
+@@ -91,14 +91,14 @@ config MOUSE_PS2_SYNAPTICS_SMBUS
+ 	  If unsure, say Y.
+ 
+ config MOUSE_PS2_CYPRESS
+-       bool "Cypress PS/2 mouse protocol extension" if EXPERT
+-       default y
+-       depends on MOUSE_PS2
+-       help
+-         Say Y here if you have a Cypress PS/2 Trackpad connected to
+-         your system.
++	bool "Cypress PS/2 mouse protocol extension" if EXPERT
++	default y
++	depends on MOUSE_PS2
++	help
++	  Say Y here if you have a Cypress PS/2 Trackpad connected to
++	  your system.
+ 
+-         If unsure, say Y.
++	  If unsure, say Y.
+ 
+ config MOUSE_PS2_LIFEBOOK
+ 	bool "Fujitsu Lifebook PS/2 mouse protocol extension" if EXPERT
+@@ -285,19 +285,19 @@ config MOUSE_ELAN_I2C_I2C
+ 	depends on MOUSE_ELAN_I2C
+ 	default y
+ 	help
+-	   Say Y here if Elan Touchpad in your system is connected to
+-	   a standard I2C controller.
++	  Say Y here if Elan Touchpad in your system is connected to
++	  a standard I2C controller.
+ 
+-	   If unsure, say Y.
++	  If unsure, say Y.
+ 
+ config MOUSE_ELAN_I2C_SMBUS
+ 	bool "Enable SMbus support"
+ 	depends on MOUSE_ELAN_I2C
+ 	help
+-	   Say Y here if Elan Touchpad in your system is connected to
+-	   a SMbus adapter.
++	  Say Y here if Elan Touchpad in your system is connected to
++	  a SMbus adapter.
+ 
+-	   If unsure, say Y.
++	  If unsure, say Y.
+ 
+ config MOUSE_INPORT
+ 	tristate "InPort/MS/ATIXL busmouse"
+diff --git a/drivers/input/serio/Kconfig b/drivers/input/serio/Kconfig
+index c9c7224..b29cb49 100644
+--- a/drivers/input/serio/Kconfig
++++ b/drivers/input/serio/Kconfig
+@@ -7,7 +7,7 @@ config SERIO
+ 	help
+ 	  Say Yes here if you have any input device that uses serial I/O to
+ 	  communicate with the system. This includes the
+-	  		* standard AT keyboard and PS/2 mouse *
++	                * standard AT keyboard and PS/2 mouse *
+ 	  as well as serial mice, Sun keyboards, some joysticks and 6dof
+ 	  devices and more.
+ 
+diff --git a/drivers/input/tablet/Kconfig b/drivers/input/tablet/Kconfig
+index a2b9f97..df427d1 100644
+--- a/drivers/input/tablet/Kconfig
++++ b/drivers/input/tablet/Kconfig
+@@ -38,16 +38,16 @@ config TABLET_USB_AIPTEK
+ 	  module will be called aiptek.
+ 
+ config TABLET_USB_GTCO
+-        tristate "GTCO CalComp/InterWrite USB Support"
+-        depends on USB && INPUT
+-        help
+-          Say Y here if you want to use the USB version of the GTCO
+-          CalComp/InterWrite Tablet.  Make sure to say Y to "Mouse support"
+-          (CONFIG_INPUT_MOUSEDEV) and/or "Event interface support"
+-          (CONFIG_INPUT_EVDEV) as well.
+-
+-          To compile this driver as a module, choose M here: the
+-          module will be called gtco.
++	tristate "GTCO CalComp/InterWrite USB Support"
++	depends on USB && INPUT
++	help
++	  Say Y here if you want to use the USB version of the GTCO
++	  CalComp/InterWrite Tablet.  Make sure to say Y to "Mouse support"
++	  (CONFIG_INPUT_MOUSEDEV) and/or "Event interface support"
++	  (CONFIG_INPUT_EVDEV) as well.
++
++	  To compile this driver as a module, choose M here: the
++	  module will be called gtco.
+ 
+ config TABLET_USB_HANWANG
+ 	tristate "Hanwang Art Master III tablet support (USB)"
+diff --git a/drivers/input/touchscreen/Kconfig b/drivers/input/touchscreen/Kconfig
+index 068dbbc..11ca597 100644
+--- a/drivers/input/touchscreen/Kconfig
++++ b/drivers/input/touchscreen/Kconfig
+@@ -632,7 +632,7 @@ config TOUCHSCREEN_HP600
+ 	depends on SH_HP6XX && SH_ADC
+ 	help
+ 	  Say Y here if you have a HP Jornada 620/660/680/690 and want to
+-          support the built-in touchscreen.
++	  support the built-in touchscreen.
+ 
+ 	  To compile this driver as a module, choose M here: the
+ 	  module will be called hp680_ts_input.
+-- 
+1.9.1
 
