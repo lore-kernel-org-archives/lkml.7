@@ -4,47 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+	SPF_PASS,USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5D80EC43381
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 Mar 2019 19:56:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CFB58C43381
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 Mar 2019 19:56:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 245EE214D8
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 Mar 2019 19:56:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A2F3521738
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 Mar 2019 19:56:18 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1552334174;
-	bh=EpJP57YoT/YdMfcexnVjkst3eovynuTr87OP6EhcZH4=;
+	s=default; t=1552334178;
+	bh=d2Bgcs2belQVKRimstdtTzausWvXb8sIkcEQ0lrDXP0=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=VFhMyMDLljQu3/JhZYrvgIFO7zldUCdxrffN6bmuSjZ8jc9czbV3HTKtEWKLU2Ore
-	 wnXuArQ9NGZST7maqCy3ITOV2k994PqEwAjkYQKfVkmRuke5Vgx7oOIUpVa/79YnRS
-	 9w+kdHXzBKchj8mg4N5GmvG/bDvnWmduZlpM0f6w=
+	b=ygLOZwqNnzaz0gpZnKd4VMBX8qif5ENJKU0lSiwd6xWMYIXGdciDV6zTSLSJlaiox
+	 vwGbpELxk3scWR0yymKNwoo4GHE5NqtPhCBWqloH5dUA4fxvq3e6tXtwi4ykOonBFx
+	 KvqPru5N6YgfVRZIOyU/DHw8WP6qxpnYVnao0un8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728552AbfCKT4M (ORCPT
+        id S1728598AbfCKT4R (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 11 Mar 2019 15:56:12 -0400
-Received: from mail.kernel.org ([198.145.29.99]:33408 "EHLO mail.kernel.org"
+        Mon, 11 Mar 2019 15:56:17 -0400
+Received: from mail.kernel.org ([198.145.29.99]:33428 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728468AbfCKT4K (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 11 Mar 2019 15:56:10 -0400
+        id S1728468AbfCKT4N (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 11 Mar 2019 15:56:13 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E7805214D8;
-        Mon, 11 Mar 2019 19:56:08 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 3FC0E214AF;
+        Mon, 11 Mar 2019 19:56:12 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1552334169;
-        bh=EpJP57YoT/YdMfcexnVjkst3eovynuTr87OP6EhcZH4=;
+        s=default; t=1552334173;
+        bh=d2Bgcs2belQVKRimstdtTzausWvXb8sIkcEQ0lrDXP0=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=FXIW0NYV40q4td6W++sna63V2clG/7ZW6fBegfvfaFrh81T0j+fLGqnIq0q6Co5a+
-         NRV2D79gV+dje7kp9ajiJ55UGwA/VrSy683uvOJ+nS/CUgDjO/3hmDU/a/YBe8WG4Z
-         de/hi3RmF8GRxMZJVv/mYjCQlWAw8mugPgf+b3Zk=
+        b=JWIepKm1Nxjt/IBPwCAouoo6fGzURe1o2ipr+USXAbzfKo/XBZVD7YybhCyX1KR3h
+         lQy28tR6aDa6DS6WCWG5a9C0aaJDFIKF5PE+FNPKxknkpQy5fk9esCHKbLMo36C84+
+         yA8P5AGh6cm/FexaHOf8y8eoXBKQO1iVGAAozsyM=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Dmitry Torokhov <dmitry.torokhov@gmail.com>,
-        Sasha Levin <sashal@kernel.org>, linux-input@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.20 27/52] Input: matrix_keypad - use flush_delayed_work()
-Date:   Mon, 11 Mar 2019 15:54:51 -0400
-Message-Id: <20190311195516.137772-27-sashal@kernel.org>
+Cc:     Ilan Peer <ilan.peer@intel.com>,
+        Luca Coelho <luciano.coelho@intel.com>,
+        Johannes Berg <johannes.berg@intel.com>,
+        Sasha Levin <sashal@kernel.org>,
+        linux-wireless@vger.kernel.org, netdev@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.20 30/52] mac80211: Fix Tx aggregation session tear down with ITXQs
+Date:   Mon, 11 Mar 2019 15:54:54 -0400
+Message-Id: <20190311195516.137772-30-sashal@kernel.org>
 X-Mailer: git-send-email 2.19.1
 In-Reply-To: <20190311195516.137772-1-sashal@kernel.org>
 References: <20190311195516.137772-1-sashal@kernel.org>
@@ -56,34 +59,56 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Dmitry Torokhov <dmitry.torokhov@gmail.com>
+From: Ilan Peer <ilan.peer@intel.com>
 
-[ Upstream commit a342083abe576db43594a32d458a61fa81f7cb32 ]
+[ Upstream commit 6157ca0d6bfe437691b1e98a62e2efe12b6714da ]
 
-We should be using flush_delayed_work() instead of flush_work() in
-matrix_keypad_stop() to ensure that we are not missing work that is
-scheduled but not yet put in the workqueue (i.e. its delay timer has not
-expired yet).
+When mac80211 requests the low level driver to stop an ongoing
+Tx aggregation, the low level driver is expected to call
+ieee80211_stop_tx_ba_cb_irqsafe() to indicate that it is ready
+to stop the session. The callback in turn schedules a worker
+to complete the session tear down, which in turn also handles
+the relevant state for the intermediate Tx queue.
 
-Signed-off-by: Dmitry Torokhov <dmitry.torokhov@gmail.com>
+However, as this flow in asynchronous, the intermediate queue
+should be stopped and not continue servicing frames, as in
+such a case frames that are dequeued would be marked as part
+of an aggregation, although the aggregation is already been
+stopped.
+
+Fix this by stopping the intermediate Tx queue, before
+calling the low level driver to stop the Tx aggregation.
+
+Signed-off-by: Ilan Peer <ilan.peer@intel.com>
+Signed-off-by: Luca Coelho <luciano.coelho@intel.com>
+Signed-off-by: Johannes Berg <johannes.berg@intel.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/input/keyboard/matrix_keypad.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ net/mac80211/agg-tx.c | 4 +++-
+ 1 file changed, 3 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/input/keyboard/matrix_keypad.c b/drivers/input/keyboard/matrix_keypad.c
-index 403452ef00e6..3d1cb7bf5e35 100644
---- a/drivers/input/keyboard/matrix_keypad.c
-+++ b/drivers/input/keyboard/matrix_keypad.c
-@@ -222,7 +222,7 @@ static void matrix_keypad_stop(struct input_dev *dev)
- 	keypad->stopped = true;
- 	spin_unlock_irq(&keypad->lock);
+diff --git a/net/mac80211/agg-tx.c b/net/mac80211/agg-tx.c
+index 69e831bc317b..54821fb1a960 100644
+--- a/net/mac80211/agg-tx.c
++++ b/net/mac80211/agg-tx.c
+@@ -8,7 +8,7 @@
+  * Copyright 2007, Michael Wu <flamingice@sourmilk.net>
+  * Copyright 2007-2010, Intel Corporation
+  * Copyright(c) 2015-2017 Intel Deutschland GmbH
+- * Copyright (C) 2018 Intel Corporation
++ * Copyright (C) 2018 - 2019 Intel Corporation
+  *
+  * This program is free software; you can redistribute it and/or modify
+  * it under the terms of the GNU General Public License version 2 as
+@@ -366,6 +366,8 @@ int ___ieee80211_stop_tx_ba_session(struct sta_info *sta, u16 tid,
  
--	flush_work(&keypad->work.work);
-+	flush_delayed_work(&keypad->work);
- 	/*
- 	 * matrix_keypad_scan() will leave IRQs enabled;
- 	 * we should disable them now.
+ 	set_bit(HT_AGG_STATE_STOPPING, &tid_tx->state);
+ 
++	ieee80211_agg_stop_txq(sta, tid);
++
+ 	spin_unlock_bh(&sta->lock);
+ 
+ 	ht_dbg(sta->sdata, "Tx BA session stop requested for %pM tid %u\n",
 -- 
 2.19.1
 
