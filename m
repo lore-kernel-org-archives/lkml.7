@@ -2,129 +2,119 @@ Return-Path: <SRS0=FxTY=RO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_PASS,USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 83C47C43381
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 Mar 2019 22:06:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B6DC1C43381
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 Mar 2019 22:06:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 529FE2087C
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 Mar 2019 22:06:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 80E952087C
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 Mar 2019 22:06:34 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1552341994;
+	bh=nM3KQnBbqpIc2+gMCyMyh2uahYO2VlWfsXrh8CkNld8=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=mZdPWxacAc1CbJnzEePD9tnmti2FHYAnRJ868BysI6t5gI09yEicBwhDq+Xh3uUW2
+	 OY0sm1fF2gdjd8SZUooYXcQCqezcMw8MMxIytFOEyMRVrewDMHmvxyfARBMVaFJxrs
+	 DPQXKxvCEchRcrTGCci3bYd0ih0b7MCR0EFBcrWc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728176AbfCKWGW convert rfc822-to-8bit (ORCPT
+        id S1728275AbfCKWGd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 11 Mar 2019 18:06:22 -0400
-Received: from unicorn.mansr.com ([81.2.72.234]:37266 "EHLO unicorn.mansr.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727830AbfCKWGV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 11 Mar 2019 18:06:21 -0400
-Received: by unicorn.mansr.com (Postfix, from userid 51770)
-        id 1697114CEA; Mon, 11 Mar 2019 22:06:19 +0000 (GMT)
-From:   =?iso-8859-1?Q?M=E5ns_Rullg=E5rd?= <mans@mansr.com>
-To:     Arnd Bergmann <arnd@arndb.de>
-Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
-        Matt Turner <mattst88@gmail.com>,
-        Borislav Petkov <bp@alien8.de>,
-        Alan Cox <gnomes@lxorguk.ukuu.org.uk>,
-        Matthew Wilcox <willy@infradead.org>,
-        Jann Horn <jannh@google.com>,
-        Al Viro <viro@zeniv.linux.org.uk>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        kernel list <linux-kernel@vger.kernel.org>,
-        linux-fsdevel <linux-fsdevel@vger.kernel.org>,
-        "the arch\/x86 maintainers" <x86@kernel.org>,
-        Linux API <linux-api@vger.kernel.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Richard Weinberger <richard@nod.at>,
-        Anton Ivanov <anton.ivanov@cambridgegreys.com>,
-        linux-alpha <linux-alpha@vger.kernel.org>,
-        linux-m68k <linux-m68k@lists.linux-m68k.org>
-Subject: Re: [PATCH] x86: Deprecate a.out support
-References: <CAG48ez1RVd5mQ_Pb6eygQESaZhpQz765OAZYSoPE0kPqfZEXQg@mail.gmail.com>
-        <20190305091904.GB8256@zn.tnic>
-        <20190305122218.GD13380@bombadil.infradead.org>
-        <20190305134347.4be2449c@alans-desktop>
-        <20190305145717.GD8256@zn.tnic>
-        <CAHk-=wi2E4kugAW7BQwNSVwYHOr=B_9EgzBRMpQ2+1dxAqydDg@mail.gmail.com>
-        <20190305173134.GE8256@zn.tnic>
-        <CAHk-=wg0bY=RFhD4NW9x++fC0bME=_-9xM3kexGGM3gefHQTyQ@mail.gmail.com>
-        <20190305181138.GG8256@zn.tnic> <20190305181808.GH8256@zn.tnic>
-        <CAEdQ38G5M3vq9pGBV1iyEViO7JhFuXk5g+VCs-vUH+Z62kNqgQ@mail.gmail.com>
-        <CAHk-=wgt7M6yA5BJCJo0nF22WgPJnN8CvViL9CAJmd+S+Civ6w@mail.gmail.com>
-        <yw1xa7i14btw.fsf@mansr.com>
-        <CAHk-=whD1SumZUBQeuMT-GcciwPxg_jW_TsPAmokYp3sGGCGhA@mail.gmail.com>
-        <yw1x5zsp473a.fsf@mansr.com>
-        <CAHk-=wiU7xacTqDfm-x29-meyJWNd_X95K0T8FQMcDgy-yo3Qw@mail.gmail.com>
-        <yw1x1s3d42ia.fsf@mansr.com>
-        <CAK8P3a031d9mSOxVmCAGcrbdaCE8N3R4e2Smtxp-Z+cautTAvg@mail.gmail.com>
-Date:   Mon, 11 Mar 2019 22:06:19 +0000
-In-Reply-To: <CAK8P3a031d9mSOxVmCAGcrbdaCE8N3R4e2Smtxp-Z+cautTAvg@mail.gmail.com>
-        (Arnd Bergmann's message of "Mon, 11 Mar 2019 22:34:26 +0100")
-Message-ID: <yw1xwol52hic.fsf@mansr.com>
-User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/25.3 (gnu/linux)
+        Mon, 11 Mar 2019 18:06:33 -0400
+Received: from mail-ot1-f68.google.com ([209.85.210.68]:45425 "EHLO
+        mail-ot1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727527AbfCKWGc (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 11 Mar 2019 18:06:32 -0400
+Received: by mail-ot1-f68.google.com with SMTP id i12so621391otp.12;
+        Mon, 11 Mar 2019 15:06:32 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=KZfuW/QqHqpiwbbZDSR+JEf1pjvJkZeqOnESC9a6lwg=;
+        b=YTWN6FTsd4w8+IKiRgNy4lfMi/x6+66R9IocIW7xpi1dw2sWR8WrC6jjHaBadYqRkM
+         bahW0OIsovRFbpLasAl9bDcmX5vSwUQL7DKjqHe7LaIwE5SBzBC+SuRa1/5/MY7unmIb
+         GBKRZHR58mOADwSyyyXpg3NuiGQRxFkShiVQ+0hm0xO2eXZW23flTfisWxkIsTEyha1e
+         +vsbfRsrrL+a6h1hrF867EYBSMcGEq2RLsYJnvoDWXu9bTlh2hO/6qGKSSH5F4dXwbo0
+         zo/byCWj5wRtU4+TnH+XkgRsRh5nbP3xJn8ICAdwVhC/1WPMuAdVCo8cTvBWH/s4tQqB
+         toXQ==
+X-Gm-Message-State: APjAAAXkxvJt/TpMtvml+mMtaDgwRDQ/jPfuGRUJO8zZ08jDg7NbV9sK
+        InI4GmSVHgrFxYbqZOIibg==
+X-Google-Smtp-Source: APXvYqzlKrSBQCY0b1JmlCt33ZSwqW/5ziF1xsV/d+ZWhc+BTdGRAenpbmk8vKnC57O1WLGaABK06g==
+X-Received: by 2002:a05:6830:11c9:: with SMTP id v9mr8980767otq.288.1552341991779;
+        Mon, 11 Mar 2019 15:06:31 -0700 (PDT)
+Received: from localhost (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
+        by smtp.gmail.com with ESMTPSA id k15sm3031631otj.26.2019.03.11.15.06.30
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Mon, 11 Mar 2019 15:06:31 -0700 (PDT)
+Date:   Mon, 11 Mar 2019 17:06:30 -0500
+From:   Rob Herring <robh@kernel.org>
+To:     Sean Wang <sean.wang@kernel.org>
+Cc:     Hsin-Hsiung Wang <hsin-hsiung.wang@mediatek.com>,
+        Lee Jones <lee.jones@linaro.org>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        Mark Brown <broonie@kernel.org>,
+        Eddie Huang <eddie.huang@mediatek.com>,
+        linux-rtc@vger.kernel.org, devicetree@vger.kernel.org,
+        Alexandre Belloni <alexandre.belloni@bootlin.com>,
+        srv_heupstream <srv_heupstream@mediatek.com>,
+        Alessandro Zummo <a.zummo@towertech.it>,
+        Marc Zyngier <marc.zyngier@arm.com>,
+        Sean Wang <sean.wang@mediatek.com>,
+        linux-kernel@vger.kernel.org, Liam Girdwood <lgirdwood@gmail.com>,
+        linux-mediatek@lists.infradead.org,
+        Mark Rutland <mark.rutland@arm.com>,
+        linux-arm-kernel@lists.infradead.org
+Subject: Re: [PATCH v2 3/9] dt-bindings: mfd: Add compatible for the MediaTek
+ MT6358 PMIC
+Message-ID: <20190311220630.GA4082@bogus>
+References: <1552275991-34648-1-git-send-email-hsin-hsiung.wang@mediatek.com>
+ <1552275991-34648-4-git-send-email-hsin-hsiung.wang@mediatek.com>
+ <CAGp9LzrWawWy+mX5VpLeqdV85f0iEdRv6JtJbjS5pamN5xfKjA@mail.gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Transfer-Encoding: 8BIT
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAGp9LzrWawWy+mX5VpLeqdV85f0iEdRv6JtJbjS5pamN5xfKjA@mail.gmail.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Arnd Bergmann <arnd@arndb.de> writes:
+On Mon, Mar 11, 2019 at 12:19:32PM -0700, Sean Wang wrote:
+> Hi,
+> 
+> Always put the patches about dt-binding changes at the head of the
+> series to let the related maintainer more easily find them.
+> 
+> On Sun, Mar 10, 2019 at 8:48 PM Hsin-Hsiung Wang
+> <hsin-hsiung.wang@mediatek.com> wrote:
+> >
+> > This adds compatible for the MediaTek MT6358 PMIC.
+> >
+> > Signed-off-by: Hsin-Hsiung Wang <hsin-hsiung.wang@mediatek.com>
+> > ---
+> >  Documentation/devicetree/bindings/mfd/mt6397.txt | 11 ++++++++---
+> >  1 file changed, 8 insertions(+), 3 deletions(-)
+> >
+> > diff --git a/Documentation/devicetree/bindings/mfd/mt6397.txt b/Documentation/devicetree/bindings/mfd/mt6397.txt
+> > index 0ebd08a..62f1c17 100644
+> > --- a/Documentation/devicetree/bindings/mfd/mt6397.txt
+> > +++ b/Documentation/devicetree/bindings/mfd/mt6397.txt
+> > @@ -17,22 +17,27 @@ Documentation/devicetree/bindings/soc/mediatek/pwrap.txt
+> >  This document describes the binding for MFD device and its sub module.
+> >
+> >  Required properties:
+> > -compatible: "mediatek,mt6397" or "mediatek,mt6323"
+> > +compatible:
+> > +       "mediatek,mt6323" for PMIC MT6323
+> > +       "mediatek,mt6358" for PMIC MT6358
+> > +       "mediatek,mt6397" for PMIC MT6397
+> 
+> don't change anything not related MT6358
 
-> On Mon, Mar 11, 2019 at 8:47 PM Måns Rullgård <mans@mansr.com> wrote:
->> Linus Torvalds <torvalds@linux-foundation.org> writes:
->> > On Mon, Mar 11, 2019 at 11:08 AM Måns Rullgård <mans@mansr.com> wrote:
->> >>
->> >> The latest version I have is 5.1, and that uses ECOFF.
->> >
->> > ECOFF _is_ a.out as far as Linux is concerned.
->> >
->> > So Linux basically treats ECOFF as "regular a.out with just some
->> > header extensions".
->> >
->> > We don't have any specific support for ECOFF.
->> >
->> > I _think_. Again, it's been years and years.
->>
->> Right, which is why killing a.out entirely would have the unfortunate
->> effect of also removing the OSF/1 compatibility on Alpha.
->>
->> If we are to support Alpha as an architecture at all, it makes sense to
->> support the things people actually use it for.
->>
->> Now, personally I can live without it.  I just don't like to see
->> features removed without due consideration.
->
-> The main historic use case I've heard of was running Netscape
-> Navigator on Alpha Linux, before there was an open source version.
-> Doing this today to connect to the open internet is probably
-> a bit pointless, but there may be other use cases.
+Reformatting like this is preferred.
 
-Once upon a time, I used it to run Matlab.
-
-> Looking at the system call table in the kernel
-> (arch/alpha/kernel/syscalls/syscall.tbl), we seem to support a
-> specific subset that was required for a set of applications, and
-> not much more. Old system calls (osf_old_open, osf_execve,
-> osf_old_sigaction) are listed but not implemented, and the same
-> is true for most of the later calls (osf_fuser, osf_sigsendset,
-> osf_waitid, osf_signal, ...), just the ones in the middle are there.
-> This would also indicate that it never really worked as a
-> general-purpose emulation layer but was only there for a specific
-> set of applications.
-
-It works for many applications, though I did have to add a few syscalls
-myself (yes, I sent patches).
-
-> Another data point I have is that osf1 emulation was broken
-> between linux-4.13 and linux-4.16 without anyone noticing, see
-> 47669fb6b595 ("alpha: osf_sys.c: fix put_tv32 regression").
-
-That's interesting, but it doesn't mean nobody is using it.  I tend to
-run the LTS branches and switch to a new one only once it seems to have
-settled a bit, so when 4.16 was released, I was probably still running
-4.9.  I don't think I'm the only one using this strategy.
-
--- 
-Måns Rullgård
+Rob
