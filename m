@@ -3,51 +3,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D6B27C43381
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 Mar 2019 13:25:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C2BFFC43381
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 Mar 2019 13:25:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9DD32206BA
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 Mar 2019 13:25:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9DF672084F
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 Mar 2019 13:25:34 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728044AbfCKNZ1 (ORCPT
+        id S1728034AbfCKNZW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 11 Mar 2019 09:25:27 -0400
-Received: from mout.kundenserver.de ([217.72.192.73]:50631 "EHLO
+        Mon, 11 Mar 2019 09:25:22 -0400
+Received: from mout.kundenserver.de ([212.227.17.13]:44519 "EHLO
         mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727591AbfCKNTj (ORCPT
+        with ESMTP id S1727614AbfCKNTj (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Mon, 11 Mar 2019 09:19:39 -0400
 Received: from orion.localdomain ([95.115.159.19]) by mrelayeu.kundenserver.de
  (mreue109 [212.227.15.183]) with ESMTPSA (Nemesis) id
- 1N0X4c-1gp7uV2BqW-00wY5H for <linux-kernel@vger.kernel.org>; Mon, 11 Mar 2019
- 14:19:35 +0100
+ 1M2OEq-1h3trz1pHi-003txN for <linux-kernel@vger.kernel.org>; Mon, 11 Mar 2019
+ 14:19:37 +0100
 From:   "Enrico Weigelt, metux IT consult" <info@metux.net>
 To:     linux-kernel@vger.kernel.org
-Subject: [PATCH 060/114] drivers: pci: Kconfig: pedantic formatting
-Date:   Mon, 11 Mar 2019 14:18:12 +0100
-Message-Id: <1552310346-7629-61-git-send-email-info@metux.net>
+Subject: [PATCH 075/114] drivers: soc: Kconfig: pedantic formatting
+Date:   Mon, 11 Mar 2019 14:18:27 +0100
+Message-Id: <1552310346-7629-76-git-send-email-info@metux.net>
 X-Mailer: git-send-email 1.9.1
 In-Reply-To: <1552310346-7629-1-git-send-email-info@metux.net>
 References: <1552310346-7629-1-git-send-email-info@metux.net>
-X-Provags-ID: V03:K1:awYL8q6tUkHMyecssVHGDwCQcJR20gt7eES0GPoeLDAgO3uU0OG
- Yr0Zy2I9VHmBw5g4zZ+IxoK1iHuS3yTFKDUUjClgPq3Z0tIjffVt0oFVT3JsjbsR+k0UsTk
- mT/N3NuLMt3YNacbaDrm6ZpZsFYUFgtHdqeJG9bI8VKd0Qkr/lK31b1j03xfffnOOhe05Ee
- rls5YKKEbq26wB94JNMRA==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:SF4X7w1afeA=:HRNHGCxwmknJNs1Qx+ZiBv
- EolHxQ8b8vj04jAS4GRT+hsXvX3PThqtaK7Tg61r35QxLh345oNCK4VdSHxsd/M9IHfKB8dnh
- y3m6k1kMW4RhCPDC9D2r1PsfsYNvfjppA7DG1LIZ8KacuIkc+Sv5S/tELLlcYdL8BMMrIO/L/
- MxVxR19gz5YyBIrLJZEFRezE1F+z+X7AfsUJYd7TrujVlCXz/9cpOvkOvMk4krvIAfEghOki/
- 9tq2DcnDRU5FuB9rBOejxlWYf3QiOVvRJo3Z5kJFyOs/muB/xyoKwjvWubxnA+f02EEHmLMGW
- l/+0hSGyjBILVW6WZLgbQaZTG0e63EiLa63uQ7u5Zu4BOAEufebgZvvz7FjUPTKO/voEWhWFP
- QAbb1WC1Jh6d2f9FQNqehp4G7A1ShN0tzxFENprHHI7nA22A98mZdyV7saeu4xmnXtsJn2kyD
- 8NmMlG8JQA7rxyl7pn7DZHNCBpXzG6xko57A0CApVYvhP7gKJvBvaVik/YfyrOx327m173BRh
- tWjs9VwWRgG54oSmWIJcK2mAoeqYc/qQIQNOYDKO4y3LikDf68CPFrI1uHVbJb0RWDxdwAf5Q
- 6tDPzSGSCOJjarDPHmgjKbB7bxNFk+dBqaoLXrNVWyapirbKSRGSJR/8LtVLkUtOAn2Pi+VIW
- NIbFnFrKr9XSJ/U+gUPf+t7SNnaP/aTH0cS4lQlI1GBGx2aHAm/3J8xDZSkHS+fsBtpk2ZYiX
- rnHNsRJCXaL9cMj68OjT0QHLhCjbXl8iNU62Tw==
+X-Provags-ID: V03:K1:WNe5ajDCvAztfws4BppVvCQjFI/iGhfL3Wau5SgcQUwrLQOw3wS
+ o9Qs3UDjBfvn6MDFPm8piEwCfAIJQjV9xs4i7THmOhxbLXMFIT4iAFYSqxoOfPWoLt+qbAu
+ jx5U8ijZxKH14NY4FP1+XqthQWcrV2HHvnrQfREJZE08MMJ4cEmjndP0PxwpGk+jPsdFAm/
+ I1pIkWq31EG0V7NfPclvQ==
+X-UI-Out-Filterresults: notjunk:1;V03:K0://Ae+MnW+h0=:9xT2SJA9exnqPMYUmmtLlN
+ zJCOFY1qrBBvwj+slWWPLLI8EB+VK4xH2Okxlo5pdDpNiwojUQDu17u4Uo/6ytMpyvPKWpb7C
+ QxAFNV2LNFzUBBf2P1QL+FlrIwCKqNhHZTwB6yLkQvGiMCQy89FB7gwk9VtBdrycuRKcC281t
+ Z0JLdO4c1JD8HWPyyBfusKOglmq7Ru+lnyBdPTe4J+/A1QfjlIkZIJR34kHwdZXqdcGIUS3D6
+ TMhn/JZIVfZqOARJzbjHFGypt97kLz0vmUUS1WPUtH1l/CAQ+fwUCd2JPtYucpzapB58RVQrc
+ M5KK6vOeDa//eSRNv+i8BGh+GcBjePJK3Af4yLmM5z0vc0frMEU1jaRDmxsc2jTkEU6C6fY6e
+ fHMpZCjCWiwsfTsX8ff6RDU/DigeVrrLBeAjOpSs8lWTSkMPI+xvpuWzzt2AWcpqhlhinHKBO
+ ovDaf19NaKogOFfFyQuBe5LblPjsLTiXhQIwJuAklpqXyaL0fq4CMyPUymtZasvyzFF7n1w/d
+ W0xLMihU28Dr72JQy1DqVw9a5dt3YRgsXoArmkNDGs+Bzyl+uRoxbwo+no/hmkx7a0CQhdWI5
+ 11G05blpNcw5dDtu4Js2F/NDH2B7PVXAxtWCOmm61vn40TG/zpDY2ii9PIYwCVkyT7MF93nCp
+ 41peHRNY6o8FZhPktZzygQT41h0SQpGwp4P/ADpfhE4JUe7Y4LKpJ/+HA25P+wj2IKpsyA9Ig
+ mTGHgb8UlKC3rqWQUCxRtYHgqQcMO1EJV6zIKg==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
@@ -58,227 +58,102 @@ Great White Handkerchief come around and clean it up.
 
 Signed-off-by: Enrico Weigelt, metux IT consult <info@metux.net>
 ---
- drivers/pci/Kconfig                    | 40 +++++++++++++++++-----------------
- drivers/pci/controller/Kconfig         | 14 ++++++------
- drivers/pci/controller/dwc/Kconfig     |  6 ++---
- drivers/pci/endpoint/Kconfig           | 20 ++++++++---------
- drivers/pci/endpoint/functions/Kconfig |  6 ++---
- drivers/pci/hotplug/Kconfig            |  2 +-
- drivers/pci/switch/Kconfig             | 10 ++++-----
- 7 files changed, 49 insertions(+), 49 deletions(-)
+ drivers/soc/fsl/Kconfig      |  9 +++++----
+ drivers/soc/qcom/Kconfig     | 23 ++++++++++++-----------
+ drivers/soc/rockchip/Kconfig | 18 +++++++++---------
+ 3 files changed, 26 insertions(+), 24 deletions(-)
 
-diff --git a/drivers/pci/Kconfig b/drivers/pci/Kconfig
-index 2ab9240..cf27052 100644
---- a/drivers/pci/Kconfig
-+++ b/drivers/pci/Kconfig
-@@ -40,16 +40,16 @@ config PCI_MSI
- 	bool "Message Signaled Interrupts (MSI and MSI-X)"
- 	select GENERIC_MSI_IRQ
- 	help
--	   This allows device drivers to enable MSI (Message Signaled
--	   Interrupts).  Message Signaled Interrupts enable a device to
--	   generate an interrupt using an inbound Memory Write on its
--	   PCI bus instead of asserting a device IRQ pin.
-+	  This allows device drivers to enable MSI (Message Signaled
-+	  Interrupts).  Message Signaled Interrupts enable a device to
-+	  generate an interrupt using an inbound Memory Write on its
-+	  PCI bus instead of asserting a device IRQ pin.
+diff --git a/drivers/soc/fsl/Kconfig b/drivers/soc/fsl/Kconfig
+index 61f8e14..0db980a 100644
+--- a/drivers/soc/fsl/Kconfig
++++ b/drivers/soc/fsl/Kconfig
+@@ -20,13 +20,14 @@ config FSL_GUTS
+ 	  into this driver as well.
  
--	   Use of PCI MSI interrupts can be disabled at kernel boot time
--	   by using the 'pci=nomsi' option.  This disables MSI for the
--	   entire system.
-+	  Use of PCI MSI interrupts can be disabled at kernel boot time
-+	  by using the 'pci=nomsi' option.  This disables MSI for the
-+	  entire system.
- 
--	   If you don't know what to do here, say Y.
-+	  If you don't know what to do here, say Y.
- 
- config PCI_MSI_IRQ_DOMAIN
- 	def_bool ARC || ARM || ARM64 || X86
-@@ -106,14 +106,14 @@ config PCI_PF_STUB
- 	  When in doubt, say N.
- 
- config XEN_PCIDEV_FRONTEND
--        tristate "Xen PCI Frontend"
--        depends on X86 && XEN
--        select PCI_XEN
-+	tristate "Xen PCI Frontend"
-+	depends on X86 && XEN
-+	select PCI_XEN
- 	select XEN_XENBUS_FRONTEND
--        default y
+ config FSL_MC_DPIO
+-        tristate "QorIQ DPAA2 DPIO driver"
+-        depends on FSL_MC_BUS
+-        select SOC_BUS
 -        help
--          The PCI device frontend driver allows the kernel to import arbitrary
--          PCI devices from a PCI backend to support PCI driver domains.
-+	default y
++	tristate "QorIQ DPAA2 DPIO driver"
++	depends on FSL_MC_BUS
++	select SOC_BUS
 +	help
-+	  The PCI device frontend driver allows the kernel to import arbitrary
-+	  PCI devices from a PCI backend to support PCI driver domains.
- 
- config PCI_ATS
- 	bool
-@@ -180,11 +180,11 @@ config PCI_LABEL
- 	select NLS
- 
- config PCI_HYPERV
--        tristate "Hyper-V PCI Frontend"
--        depends on X86 && HYPERV && PCI_MSI && PCI_MSI_IRQ_DOMAIN && X86_64
--        help
--          The PCI device frontend driver allows the kernel to import arbitrary
--          PCI devices from a PCI backend to support PCI driver domains.
-+	tristate "Hyper-V PCI Frontend"
-+	depends on X86 && HYPERV && PCI_MSI && PCI_MSI_IRQ_DOMAIN && X86_64
-+	help
-+	  The PCI device frontend driver allows the kernel to import arbitrary
-+	  PCI devices from a PCI backend to support PCI driver domains.
- 
- source "drivers/pci/hotplug/Kconfig"
- source "drivers/pci/controller/Kconfig"
-diff --git a/drivers/pci/controller/Kconfig b/drivers/pci/controller/Kconfig
-index 6012f30..cf262b8 100644
---- a/drivers/pci/controller/Kconfig
-+++ b/drivers/pci/controller/Kconfig
-@@ -18,9 +18,9 @@ config PCI_AARDVARK
- 	depends on PCI_MSI_IRQ_DOMAIN
- 	select PCI_BRIDGE_EMUL
- 	help
--	 Add support for Aardvark 64bit PCIe Host Controller. This
--	 controller is part of the South Bridge of the Marvel Armada
--	 3700 SoC.
-+	  Add support for Aardvark 64bit PCIe Host Controller. This
-+	  controller is part of the South Bridge of the Marvel Armada
-+	  3700 SoC.
- 
- menu "Cadence PCIe controllers support"
- 
-@@ -55,10 +55,10 @@ config PCIE_XILINX_NWL
- 	depends on ARCH_ZYNQMP || COMPILE_TEST
- 	depends on PCI_MSI_IRQ_DOMAIN
- 	help
--	 Say 'Y' here if you want kernel support for Xilinx
--	 NWL PCIe controller. The controller can act as Root Port
--	 or End Point. The current option selection will only
--	 support root port enabling.
-+	  Say 'Y' here if you want kernel support for Xilinx
-+	  NWL PCIe controller. The controller can act as Root Port
-+	  or End Point. The current option selection will only
-+	  support root port enabling.
- 
- config PCI_FTPCI100
- 	bool "Faraday Technology FTPCI100 PCI controller"
-diff --git a/drivers/pci/controller/dwc/Kconfig b/drivers/pci/controller/dwc/Kconfig
-index 6ea74b1..5312377 100644
---- a/drivers/pci/controller/dwc/Kconfig
-+++ b/drivers/pci/controller/dwc/Kconfig
-@@ -7,9 +7,9 @@ config PCIE_DW
- 	bool
- 
- config PCIE_DW_HOST
--        bool
-+	bool
- 	depends on PCI_MSI_IRQ_DOMAIN
--        select PCIE_DW
-+	select PCIE_DW
- 
- config PCIE_DW_EP
- 	bool
-@@ -191,7 +191,7 @@ config PCIE_HISI_STB
- 	depends on PCI_MSI_IRQ_DOMAIN
- 	select PCIE_DW_HOST
- 	help
--          Say Y here if you want PCIe controller support on HiSilicon STB SoCs
-+	  Say Y here if you want PCIe controller support on HiSilicon STB SoCs
- 
- config PCI_MESON
- 	bool "MESON PCIe controller"
-diff --git a/drivers/pci/endpoint/Kconfig b/drivers/pci/endpoint/Kconfig
-index 17bbdc9..5cd41e8 100644
---- a/drivers/pci/endpoint/Kconfig
-+++ b/drivers/pci/endpoint/Kconfig
-@@ -9,24 +9,24 @@ config PCI_ENDPOINT
- 	bool "PCI Endpoint Support"
- 	depends on HAVE_PCI
- 	help
--	   Enable this configuration option to support configurable PCI
--	   endpoint. This should be enabled if the platform has a PCI
--	   controller that can operate in endpoint mode.
-+	  Enable this configuration option to support configurable PCI
-+	  endpoint. This should be enabled if the platform has a PCI
-+	  controller that can operate in endpoint mode.
- 
--	   Enabling this option will build the endpoint library, which
--	   includes endpoint controller library and endpoint function
--	   library.
-+	  Enabling this option will build the endpoint library, which
-+	  includes endpoint controller library and endpoint function
-+	  library.
- 
--	   If in doubt, say "N" to disable Endpoint support.
-+	  If in doubt, say "N" to disable Endpoint support.
- 
- config PCI_ENDPOINT_CONFIGFS
- 	bool "PCI Endpoint Configfs Support"
- 	depends on PCI_ENDPOINT
- 	select CONFIGFS_FS
- 	help
--	   This will enable the configfs entry that can be used to
--	   configure the endpoint function and used to bind the
--	   function with a endpoint controller.
-+	  This will enable the configfs entry that can be used to
-+	  configure the endpoint function and used to bind the
-+	  function with a endpoint controller.
- 
- source "drivers/pci/endpoint/functions/Kconfig"
- 
-diff --git a/drivers/pci/endpoint/functions/Kconfig b/drivers/pci/endpoint/functions/Kconfig
-index 8820d0f..5038da7 100644
---- a/drivers/pci/endpoint/functions/Kconfig
-+++ b/drivers/pci/endpoint/functions/Kconfig
-@@ -8,7 +8,7 @@ config PCI_EPF_TEST
- 	depends on PCI_ENDPOINT
- 	select CRC32
- 	help
--	   Enable this configuration option to enable the test driver
--	   for PCI Endpoint.
-+	  Enable this configuration option to enable the test driver
-+	  for PCI Endpoint.
- 
--	   If in doubt, say "N" to disable Endpoint test driver.
-+	  If in doubt, say "N" to disable Endpoint test driver.
-diff --git a/drivers/pci/hotplug/Kconfig b/drivers/pci/hotplug/Kconfig
-index e9f78eb..dad20d8 100644
---- a/drivers/pci/hotplug/Kconfig
-+++ b/drivers/pci/hotplug/Kconfig
-@@ -83,7 +83,7 @@ config HOTPLUG_PCI_CPCI_ZT5550
- 	depends on HOTPLUG_PCI_CPCI && X86
- 	help
- 	  Say Y here if you have an Performance Technologies (formerly Intel,
--          formerly just Ziatech) Ziatech ZT5550 CompactPCI system card.
-+	  formerly just Ziatech) Ziatech ZT5550 CompactPCI system card.
- 
- 	  To compile this driver as a module, choose M here: the
- 	  module will be called cpcihp_zt5550.
-diff --git a/drivers/pci/switch/Kconfig b/drivers/pci/switch/Kconfig
-index aee28a5..6d1d3a6 100644
---- a/drivers/pci/switch/Kconfig
-+++ b/drivers/pci/switch/Kconfig
-@@ -6,10 +6,10 @@ menu "PCI switch controller drivers"
- config PCI_SW_SWITCHTEC
- 	tristate "MicroSemi Switchtec PCIe Switch Management Driver"
- 	help
--	 Enables support for the management interface for the MicroSemi
--	 Switchtec series of PCIe switches. Supports userspace access
--	 to submit MRPC commands to the switch via /dev/switchtecX
--	 devices. See <file:Documentation/switchtec.txt> for more
--	 information.
-+	  Enables support for the management interface for the MicroSemi
-+	  Switchtec series of PCIe switches. Supports userspace access
-+	  to submit MRPC commands to the switch via /dev/switchtecX
-+	  devices. See <file:Documentation/switchtec.txt> for more
-+	  information.
- 
+ 	  Driver for the DPAA2 DPIO object.  A DPIO provides queue and
+ 	  buffer management facilities for software to interact with
+ 	  other DPAA2 objects. This driver does not expose the DPIO
+ 	  objects individually, but groups them under a service layer
+ 	  API.
++
  endmenu
+diff --git a/drivers/soc/qcom/Kconfig b/drivers/soc/qcom/Kconfig
+index 1ee298f..e885233 100644
+--- a/drivers/soc/qcom/Kconfig
++++ b/drivers/soc/qcom/Kconfig
+@@ -32,13 +32,13 @@ config QCOM_GLINK_SSR
+ 	  neighboring subsystems going up or down.
+ 
+ config QCOM_GSBI
+-        tristate "QCOM General Serial Bus Interface"
+-        depends on ARCH_QCOM || COMPILE_TEST
+-        select MFD_SYSCON
+-        help
+-          Say y here to enable GSBI support.  The GSBI provides control
+-          functions for connecting the underlying serial UART, SPI, and I2C
+-          devices to the output pins.
++	tristate "QCOM General Serial Bus Interface"
++	depends on ARCH_QCOM || COMPILE_TEST
++	select MFD_SYSCON
++	help
++	  Say y here to enable GSBI support.  The GSBI provides control
++	  functions for connecting the underlying serial UART, SPI, and I2C
++	  devices to the output pins.
+ 
+ config QCOM_LLCC
+ 	tristate "Qualcomm Technologies, Inc. LLCC driver"
+@@ -175,8 +175,9 @@ config QCOM_APR
+ 	depends on ARCH_QCOM || COMPILE_TEST
+ 	depends on RPMSG
+ 	help
+-          Enable APR IPC protocol support between
+-          application processor and QDSP6. APR is
+-          used by audio driver to configure QDSP6
+-          ASM, ADM and AFE modules.
++	  Enable APR IPC protocol support between
++	  application processor and QDSP6. APR is
++	  used by audio driver to configure QDSP6
++	  ASM, ADM and AFE modules.
++
+ endmenu
+diff --git a/drivers/soc/rockchip/Kconfig b/drivers/soc/rockchip/Kconfig
+index 20da55d..f468b79 100644
+--- a/drivers/soc/rockchip/Kconfig
++++ b/drivers/soc/rockchip/Kconfig
+@@ -14,15 +14,15 @@ config ROCKCHIP_GRF
+ 	  to make some of them conform to expectations of the kernel.
+ 
+ config ROCKCHIP_PM_DOMAINS
+-        bool "Rockchip generic power domain"
+-        depends on PM
+-        select PM_GENERIC_DOMAINS
+-        help
+-          Say y here to enable power domain support.
+-          In order to meet high performance and low power requirements, a power
+-          management unit is designed or saving power when RK3288 in low power
+-          mode. The RK3288 PMU is dedicated for managing the power of the whole chip.
++	bool "Rockchip generic power domain"
++	depends on PM
++	select PM_GENERIC_DOMAINS
++	help
++	  Say y here to enable power domain support.
++	  In order to meet high performance and low power requirements, a power
++	  management unit is designed or saving power when RK3288 in low power
++	  mode. The RK3288 PMU is dedicated for managing the power of the whole chip.
+ 
+-          If unsure, say N.
++	  If unsure, say N.
+ 
+ endif
 -- 
 1.9.1
 
