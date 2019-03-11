@@ -2,192 +2,125 @@ Return-Path: <SRS0=FxTY=RO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 959DAC43381
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 Mar 2019 14:29:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2E0BDC43381
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 Mar 2019 14:29:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 670762173C
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 Mar 2019 14:29:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 022542175B
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 Mar 2019 14:29:25 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727670AbfCKO3E (ORCPT
+        id S1727763AbfCKO3Y (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 11 Mar 2019 10:29:04 -0400
-Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:45180 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727462AbfCKO3D (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 11 Mar 2019 10:29:03 -0400
-Received: from pps.filterd (m0098393.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x2BESxqc012465
-        for <linux-kernel@vger.kernel.org>; Mon, 11 Mar 2019 10:29:02 -0400
-Received: from e32.co.us.ibm.com (e32.co.us.ibm.com [32.97.110.150])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 2r5rg13pcx-1
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
-        for <linux-kernel@vger.kernel.org>; Mon, 11 Mar 2019 10:29:01 -0400
-Received: from localhost
-        by e32.co.us.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
-        for <linux-kernel@vger.kernel.org> from <akrowiak@linux.ibm.com>;
-        Mon, 11 Mar 2019 14:28:55 -0000
-Received: from b03cxnp08027.gho.boulder.ibm.com (9.17.130.19)
-        by e32.co.us.ibm.com (192.168.1.132) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
-        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
-        Mon, 11 Mar 2019 14:28:53 -0000
-Received: from b03ledav002.gho.boulder.ibm.com (b03ledav002.gho.boulder.ibm.com [9.17.130.233])
-        by b03cxnp08027.gho.boulder.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x2BESnds59375856
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Mon, 11 Mar 2019 14:28:49 GMT
-Received: from b03ledav002.gho.boulder.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id B0E94136053;
-        Mon, 11 Mar 2019 14:28:49 +0000 (GMT)
-Received: from b03ledav002.gho.boulder.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 8CAA4136051;
-        Mon, 11 Mar 2019 14:28:48 +0000 (GMT)
-Received: from [9.60.75.235] (unknown [9.60.75.235])
-        by b03ledav002.gho.boulder.ibm.com (Postfix) with ESMTP;
-        Mon, 11 Mar 2019 14:28:48 +0000 (GMT)
-Subject: Re: [PATCH v3] zcrypt: handle AP Info notification from CHSC SEI
- command
-To:     linux-s390@vger.kernel.org, linux-kernel@vger.kernel.org
-Cc:     freude@de.ibm.com, borntraeger@de.ibm.com, cohuck@redhat.com,
-        pmorel@linux.vnet.ibm.com, pasic@linux.vnet.ibm.com,
-        akrowiak@linux.vnet.ibm.com, oberpar@linux.ibm.com,
-        sebott@linux.ibm.com
-References: <1550509295-1199-1-git-send-email-akrowiak@linux.ibm.com>
-From:   Tony Krowiak <akrowiak@linux.ibm.com>
-Date:   Mon, 11 Mar 2019 10:28:48 -0400
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.2.1
+        Mon, 11 Mar 2019 10:29:24 -0400
+Received: from szxga07-in.huawei.com ([45.249.212.35]:35292 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1727388AbfCKO3Y (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 11 Mar 2019 10:29:24 -0400
+Received: from DGGEMS408-HUB.china.huawei.com (unknown [172.30.72.59])
+        by Forcepoint Email with ESMTP id 9F6868F0676FB95C4DF9;
+        Mon, 11 Mar 2019 22:29:18 +0800 (CST)
+Received: from [127.0.0.1] (10.177.96.96) by DGGEMS408-HUB.china.huawei.com
+ (10.3.19.208) with Microsoft SMTP Server id 14.3.408.0; Mon, 11 Mar 2019
+ 22:29:16 +0800
+Subject: Re: [PATCH v2] serial: sh-sci: Missing uart_unregister_driver() on
+ error in sci_probe_single()
+To:     Dan Carpenter <dan.carpenter@oracle.com>
+References: <20190311095115.156774-1-maowenan@huawei.com>
+ <20190311124616.GE2412@kadam>
+CC:     <gregkh@linuxfoundation.org>, <jslaby@suse.com>,
+        <linux-serial@vger.kernel.org>, <kernel-janitors@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>
+From:   maowenan <maowenan@huawei.com>
+Message-ID: <50cd311c-651c-5c82-a3f4-8b1faf20110b@huawei.com>
+Date:   Mon, 11 Mar 2019 22:29:06 +0800
+User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:45.0) Gecko/20100101
+ Thunderbird/45.2.0
 MIME-Version: 1.0
-In-Reply-To: <1550509295-1199-1-git-send-email-akrowiak@linux.ibm.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
+In-Reply-To: <20190311124616.GE2412@kadam>
+Content-Type: text/plain; charset="windows-1252"
 Content-Transfer-Encoding: 7bit
-X-TM-AS-GCONF: 00
-x-cbid: 19031114-0004-0000-0000-000014ECA398
-X-IBM-SpamModules-Scores: 
-X-IBM-SpamModules-Versions: BY=3.00010739; HX=3.00000242; KW=3.00000007;
- PH=3.00000004; SC=3.00000281; SDB=6.01172844; UDB=6.00613161; IPR=6.00953498;
- MB=3.00025928; MTD=3.00000008; XFM=3.00000015; UTC=2019-03-11 14:28:54
-X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
-x-cbparentid: 19031114-0005-0000-0000-00008ADE12A6
-Message-Id: <9224eca6-6d2c-7089-1fb2-618a04d7286b@linux.ibm.com>
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-03-11_11:,,
- signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
- malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
- clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
- mlxlogscore=999 adultscore=0 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.0.1-1810050000 definitions=main-1903110105
+X-Originating-IP: [10.177.96.96]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2/18/19 12:01 PM, Tony Krowiak wrote:
-> The current AP bus implementation periodically polls the AP configuration
-> to detect changes. When the AP configuration is dynamically changed via the
-> SE or an SCLP instruction, the changes will not be reflected to sysfs until
-> the next time the AP configuration is polled. The CHSC architecture
-> provides a Store Event Information (SEI) command to make notification of an
-> AP configuration change. This patch introduces a handler to process
-> notification from the CHSC SEI command by immediately kicking off an AP bus
-> scan-after-event.
 
-Ping
 
+On 2019/3/11 20:46, Dan Carpenter wrote:
+> On Mon, Mar 11, 2019 at 05:51:15PM +0800, Mao Wenan wrote:
+>> Add the missing uart_unregister_driver() before return
+>> from sci_probe_single() in the error handling case.
+>>
+>> Signed-off-by: Mao Wenan <maowenan@huawei.com>
+>> ---
 > 
-> Signed-off-by: Tony Krowiak <akrowiak@linux.ibm.com>
-> Reviewed-by: Halil Pasic <pasic@linux.ibm.com>
-> Reviewed-by: Sebastian Ott <sebott@linux.ibm.com>
-> Reviewed-by: Harald Freudenberger <FREUDE@de.ibm.com>
-> Reviewed-by: Cornelia Huck <cohuck@redhat.com>
-> ---
->   arch/s390/include/asm/ap.h   | 11 +++++++++++
->   drivers/s390/cio/chsc.c      | 13 +++++++++++++
->   drivers/s390/crypto/ap_bus.c | 10 ++++++++++
->   3 files changed, 34 insertions(+)
+> Sorry, I didn't really look at the code when I saw the v1 patch.
 > 
-> diff --git a/arch/s390/include/asm/ap.h b/arch/s390/include/asm/ap.h
-> index 1a6a7092d942..e94a0a28b5eb 100644
-> --- a/arch/s390/include/asm/ap.h
-> +++ b/arch/s390/include/asm/ap.h
-> @@ -360,4 +360,15 @@ static inline struct ap_queue_status ap_dqap(ap_qid_t qid,
->   	return reg1;
->   }
->   
-> +/*
-> + * Interface to tell the AP bus code that a configuration
-> + * change has happened. The bus code should at least do
-> + * an ap bus resource rescan.
-> + */
-> +#if IS_ENABLED(CONFIG_ZCRYPT)
-> +void ap_bus_cfg_chg(void);
-> +#else
-> +static inline void ap_bus_cfg_chg(void){};
-> +#endif
-> +
->   #endif /* _ASM_S390_AP_H_ */
-> diff --git a/drivers/s390/cio/chsc.c b/drivers/s390/cio/chsc.c
-> index a0baee25134c..eaf4699be2c5 100644
-> --- a/drivers/s390/cio/chsc.c
-> +++ b/drivers/s390/cio/chsc.c
-> @@ -24,6 +24,7 @@
->   #include <asm/crw.h>
->   #include <asm/isc.h>
->   #include <asm/ebcdic.h>
-> +#include <asm/ap.h>
->   
->   #include "css.h"
->   #include "cio.h"
-> @@ -586,6 +587,15 @@ static void chsc_process_sei_scm_avail(struct chsc_sei_nt0_area *sei_area)
->   			      " failed (rc=%d).\n", ret);
->   }
->   
-> +static void chsc_process_sei_ap_cfg_chg(struct chsc_sei_nt0_area *sei_area)
-> +{
-> +	CIO_CRW_EVENT(3, "chsc: ap config changed\n");
-> +	if (sei_area->rs != 5)
-> +		return;
-> +
-> +	ap_bus_cfg_chg();
-> +}
-> +
->   static void chsc_process_sei_nt2(struct chsc_sei_nt2_area *sei_area)
->   {
->   	switch (sei_area->cc) {
-> @@ -612,6 +622,9 @@ static void chsc_process_sei_nt0(struct chsc_sei_nt0_area *sei_area)
->   	case 2: /* i/o resource accessibility */
->   		chsc_process_sei_res_acc(sei_area);
->   		break;
-> +	case 3: /* ap config changed */
-> +		chsc_process_sei_ap_cfg_chg(sei_area);
-> +		break;
->   	case 7: /* channel-path-availability information */
->   		chsc_process_sei_chp_avail(sei_area);
->   		break;
-> diff --git a/drivers/s390/crypto/ap_bus.c b/drivers/s390/crypto/ap_bus.c
-> index 5a699746c357..d0d415954142 100644
-> --- a/drivers/s390/crypto/ap_bus.c
-> +++ b/drivers/s390/crypto/ap_bus.c
-> @@ -861,6 +861,16 @@ void ap_bus_force_rescan(void)
->   EXPORT_SYMBOL(ap_bus_force_rescan);
->   
->   /*
-> +* A config change has happened, force an ap bus rescan.
-> +*/
-> +void ap_bus_cfg_chg(void)
-> +{
-> +	AP_DBF(DBF_INFO, "%s config change, forcing bus rescan\n", __func__);
-> +
-> +	ap_bus_force_rescan();
-> +}
-> +
-> +/*
->    * hex2bitmap() - parse hex mask string and set bitmap.
->    * Valid strings are "0x012345678" with at least one valid hex number.
->    * Rest of the bitmap to the right is padded with 0. No spaces allowed
+> There are other error paths, but actually the whole approach is wrong.
+> Please, read my google plus post about error handling:
+> 
+> https://plus.google.com/u/0/106378716002406849458/posts/1Ud9JbaYnPr
+> 
+OK.
+
+> But then the other rule I didn't mention in that post which applies
+> here is that the error handling should "mirror" the allocation code
+> so if you have:
+> 
+> 	if (foo) {
+> 		ret = allocate_one();
+> 		if (ret)
+> 			return ret;
+> 	}
+> 	ret = allocate_two();
+> 	if (ret)
+> 		goto free_one;
+> 
+> The error handling should mirror the "if (foo) " condition.  Like this:
+> 
+> free_one:
+> 	if (foo)
+> 		free_one();
+> 
+> Even if you can do extra analysis and find that the "if (foo) " can
+> be removed, you should leave there, because the mirroring helps human
+> readers.
+> 
+> In this case, the code is doing:
+> 
+> drivers/tty/serial/sh-sci.c
+>   3259                  return -EBUSY;
+>   3260  
+>   3261          mutex_lock(&sci_uart_registration_lock);
+>   3262          if (!sci_uart_driver.state) {
+>                     ^^^^^^^^^^^^^^^^^^^^^^
+>   3263                  ret = uart_register_driver(&sci_uart_driver);
+>   3264                  if (ret) {
+>   3265                          mutex_unlock(&sci_uart_registration_lock);
+>   3266                          return ret;
+>   3267                  }
+>   3268          }
+>   3269          mutex_unlock(&sci_uart_registration_lock);
+>   3270  
+> 
+> We would have to mirror the "if (!sci_uart_driver.state) {" code.
+> 
+> But actually, we can't.
+> 
+> The first driver to hit this code is supposed to load the
+> sci_uart_driver.  We can't know if we are the last driver to stop using
+> the sci_uart_driver so we can't know if we can free it.  This looks like
+> a very ugly hack to me.  It should probably be using ref counters.
+It seems something should be considered deeply.
+> 
+> regards,
+> an carpenter
+> 
+> .
 > 
 
