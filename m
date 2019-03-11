@@ -2,86 +2,122 @@ Return-Path: <SRS0=FxTY=RO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_MUTT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_PASS,USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A91FCC10F06
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 Mar 2019 20:29:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 45950C43381
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 Mar 2019 20:33:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7A04E2087C
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 Mar 2019 20:29:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0E7212087C
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 Mar 2019 20:33:09 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="keHDOb05"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728243AbfCKU3J (ORCPT
+        id S1728020AbfCKUdI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 11 Mar 2019 16:29:09 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:35952 "EHLO mx1.redhat.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726675AbfCKU3I (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 11 Mar 2019 16:29:08 -0400
-Received: from smtp.corp.redhat.com (int-mx08.intmail.prod.int.phx2.redhat.com [10.5.11.23])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id 9BED630642AA;
-        Mon, 11 Mar 2019 20:29:08 +0000 (UTC)
-Received: from sandy.ghostprotocols.net (ovpn-112-29.phx2.redhat.com [10.3.112.29])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id AB22519724;
-        Mon, 11 Mar 2019 20:29:07 +0000 (UTC)
-Received: by sandy.ghostprotocols.net (Postfix, from userid 1000)
-        id 6EDEE56B8; Mon, 11 Mar 2019 17:29:00 -0300 (BRT)
-Date:   Mon, 11 Mar 2019 17:29:00 -0300
-From:   Arnaldo Carvalho de Melo <acme@redhat.com>
-To:     Song Liu <songliubraving@fb.com>
-Cc:     bpf@vger.kernel.org, netdev@vger.kernel.org,
-        linux-kernel@vger.kernel.org, ast@kernel.org, daniel@iogearbox.net,
-        kernel-team@fb.com, peterz@infradead.org, jolsa@kernel.org,
-        namhyung@kernel.org, sdf@fomichev.me
-Subject: Re: [PATCH v8 perf,bpf 01/15] perf, bpf: consider events with
- attr.bpf_event as side-band events
-Message-ID: <20190311202900.GB3078@redhat.com>
-References: <20190311195555.889995-1-songliubraving@fb.com>
- <20190311195555.889995-2-songliubraving@fb.com>
+        Mon, 11 Mar 2019 16:33:08 -0400
+Received: from mail-qk1-f196.google.com ([209.85.222.196]:45871 "EHLO
+        mail-qk1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726675AbfCKUdI (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 11 Mar 2019 16:33:08 -0400
+Received: by mail-qk1-f196.google.com with SMTP id z76so91256qkb.12;
+        Mon, 11 Mar 2019 13:33:07 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:date:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=C4J8mq3az5sF9WMkjs/a8MHl/W1ZrLx/37ck5BZlRio=;
+        b=keHDOb052KsujBzpWvDBXJjpEz85u/wDtSLQfSULqYuTeQxBVp+UQpboR7hbesht9t
+         sW8aaHTHchcdckD2S0iCR/pRULRUGW5llIUz2610Ro3JjQqilOsLNsn0Qd9v4dObZffs
+         ycuAofQWOsSu73h21dU0MndTC1MPJDnNHssROpHzFBnImOn4yecqiCM7U5z0zfd37DOu
+         nFHc75aXTI7emU8F2gzhNnT2NHINbekeUhqwXamKS6keNNT4u6iqDpZpM1G23gvnc7hX
+         XYkwY4mmnIj2ld/HP8phDoDO5xXU3fVp6D/VtUX7WZFMTriBCQP1jV0xjYcRFwJUrZDc
+         gNAg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:date:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=C4J8mq3az5sF9WMkjs/a8MHl/W1ZrLx/37ck5BZlRio=;
+        b=a+MFI7c+98w6H+Nzz9xPUX/nW7jM8xXo9WAV9/PTg9O3+GEJmfyHLDiZ/L58s6219z
+         3OX9CbTYUwp+w6g3DHxudOMVnY41J+qY+edHp69j7Xz16TuDqctEBHdmbPj7wsBoLNCx
+         K3ZgitFHHJ3FYzC705gTx/yotQfMjfHTqzsLN/IfMJFPHPmLGJRIAmgjt6LQ0XaIbDXH
+         CtB/BNYtK4VcX6jKrAVLvbpNZPU6achyQljm7Ur3dbz90ymvgKscNWy3jh+QPRYgJvmV
+         CxX46JmwLQHfts6DNYvJURUJCU0Wg7Q/26lazohpQsrM7dBf0ec8xX4E4nRWv1GYjEVY
+         mg+A==
+X-Gm-Message-State: APjAAAVZwahN2A9agyduhzHWBeAjEStJI6ku6ZC1+vPFIta4P1Q2bpH/
+        zT3wGfueLAlBCrrkEKHYpkw=
+X-Google-Smtp-Source: APXvYqx7ajR/X9r3MNmjsn2f9qPa4N6x9vPT+INCzGLNL93a8l4x/RzQ+YBJPJkUl+TdDsxhJH1qTw==
+X-Received: by 2002:a37:508a:: with SMTP id e132mr25540293qkb.347.1552336386761;
+        Mon, 11 Mar 2019 13:33:06 -0700 (PDT)
+Received: from quaco.ghostprotocols.net (177.206.235.230.dynamic.adsl.gvt.net.br. [177.206.235.230])
+        by smtp.gmail.com with ESMTPSA id u25sm3876899qkj.96.2019.03.11.13.33.05
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Mon, 11 Mar 2019 13:33:05 -0700 (PDT)
+From:   Arnaldo Carvalho de Melo <arnaldo.melo@gmail.com>
+X-Google-Original-From: Arnaldo Carvalho de Melo <acme@kernel.org>
+Received: by quaco.ghostprotocols.net (Postfix, from userid 1000)
+        id 2D6154039C; Mon, 11 Mar 2019 17:33:02 -0300 (-03)
+Date:   Mon, 11 Mar 2019 17:33:02 -0300
+To:     Andi Kleen <andi@firstfloor.org>
+Cc:     jolsa@kernel.org, linux-perf-users@vger.kernel.org,
+        linux-kernel@vger.kernel.org, Andi Kleen <ak@linux.intel.com>
+Subject: Re: [PATCH v1 06/10] perf, tools, report: Print better message for
+ JITed code
+Message-ID: <20190311203302.GB10690@kernel.org>
+References: <20190311202446.10210-1-andi@firstfloor.org>
+ <20190311202446.10210-7-andi@firstfloor.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20190311195555.889995-2-songliubraving@fb.com>
+In-Reply-To: <20190311202446.10210-7-andi@firstfloor.org>
 X-Url:  http://acmel.wordpress.com
-User-Agent: Mutt/1.5.20 (2009-12-10)
-X-Scanned-By: MIMEDefang 2.84 on 10.5.11.23
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.49]); Mon, 11 Mar 2019 20:29:08 +0000 (UTC)
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Em Mon, Mar 11, 2019 at 12:55:41PM -0700, Song Liu escreveu:
-> Events with bpf_event should be considered as side-band event, as they
-> carry information about BPF programs.
+Em Mon, Mar 11, 2019 at 01:24:42PM -0700, Andi Kleen escreveu:
+> From: Andi Kleen <ak@linux.intel.com>
 > 
-> Fixes: 6ee52e2a3fe4 ("perf, bpf: Introduce PERF_RECORD_BPF_EVENT")
-> Signed-off-by: Song Liu <songliubraving@fb.com>
+> The message about missing /tmp/perf-* for JITed code is quite confusing
+> to users. Add a better error message, but only print it once.
+> 
+> Signed-off-by: Andi Kleen <ak@linux.intel.com>
+> ---
+>  tools/perf/util/map.c | 9 +++++++++
+>  1 file changed, 9 insertions(+)
+> 
+> diff --git a/tools/perf/util/map.c b/tools/perf/util/map.c
+> index fbeb0c6efaa6..d476b76abc6a 100644
+> --- a/tools/perf/util/map.c
+> +++ b/tools/perf/util/map.c
+> @@ -316,6 +316,15 @@ int map__load(struct map *map)
+>  
+>  	nr = dso__load(map->dso, map);
+>  	if (nr < 0) {
+> +		if (!strncmp(map->dso->name, "/tmp/perf-", 10)) {
+> +			static bool warned;
+> +			if (!warned) {
+> +				pr_err("Cannot find executable, JITed code present? May need agent.\n");
+> +				warned = true;
+> +			}
 
-This patch is also already merged upstream, its in torvalds/master.
+Please use WARN_ON_ONCE(), we have it in tools/include/asm/bug.h, just
+like the kernel.
+
+> +			return -1;
+> +		}
+> +
+>  		if (map->dso->has_build_id) {
+>  			char sbuild_id[SBUILD_ID_SIZE];
+>  
+> -- 
+> 2.20.1
+
+-- 
 
 - Arnaldo
-
-> ---
->  kernel/events/core.c | 3 ++-
->  1 file changed, 2 insertions(+), 1 deletion(-)
-> 
-> diff --git a/kernel/events/core.c b/kernel/events/core.c
-> index f1a26c8f15b3..4a59cb9b29ee 100644
-> --- a/kernel/events/core.c
-> +++ b/kernel/events/core.c
-> @@ -4238,7 +4238,8 @@ static bool is_sb_event(struct perf_event *event)
->  	if (attr->mmap || attr->mmap_data || attr->mmap2 ||
->  	    attr->comm || attr->comm_exec ||
->  	    attr->task || attr->ksymbol ||
-> -	    attr->context_switch)
-> +	    attr->context_switch ||
-> +	    attr->bpf_event)
->  		return true;
->  	return false;
->  }
-> -- 
-> 2.17.1
