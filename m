@@ -2,95 +2,128 @@ Return-Path: <SRS0=FxTY=RO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_PASS autolearn=ham
+X-Spam-Status: No, score=-4.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,UNPARSEABLE_RELAY autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9CF66C43381
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 Mar 2019 21:39:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E3CBFC43381
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 Mar 2019 21:40:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6BF07214AF
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 Mar 2019 21:39:50 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1552340390;
-	bh=qJ389/3UsXc8mtAhNABnV0nvJfu0cKsmvbw2lmxka6I=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=qrfIfm0CgIv/GRy6685tSXjPn/HmoDP+nYaaxFmNbaryoUGDiCMsQYTjAvKIli9+I
-	 bfCHWJ8AmXpjO8ItIoJH25Vu2wDaKWX7o+dybA8zqpgWtOuhVVlLvbVpHLKxb2XfZ6
-	 cWdCjolIMu7mvB9twq0IbiHAaMPPzxk9W9pljAkg=
+	by mail.kernel.org (Postfix) with ESMTP id BE59420657
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 Mar 2019 21:40:01 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728388AbfCKVjt (ORCPT
+        id S1728425AbfCKVkA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 11 Mar 2019 17:39:49 -0400
-Received: from mail.kernel.org ([198.145.29.99]:57692 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727008AbfCKVjs (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 11 Mar 2019 17:39:48 -0400
-Received: from mail-qt1-f179.google.com (mail-qt1-f179.google.com [209.85.160.179])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D74D62173C;
-        Mon, 11 Mar 2019 21:39:47 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1552340388;
-        bh=qJ389/3UsXc8mtAhNABnV0nvJfu0cKsmvbw2lmxka6I=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=dBjKI37zus/+FQTMXSAxAaUgc+cW5XmthvxFqPVESm00O0CYQa4uJ5b7MzBZmcjnI
-         FvCTc0a62EzYFtQSc+jyPHJYr2bGSvu5EqzHeHllUyBQp27TUOUTtMILaZXH64vjeH
-         QTyDYGEgXInlOAWveb98AdJmWort84/PpbhYywDo=
-Received: by mail-qt1-f179.google.com with SMTP id f11so309631qti.7;
-        Mon, 11 Mar 2019 14:39:47 -0700 (PDT)
-X-Gm-Message-State: APjAAAU/3wAZ8xVG4E/hJ51Ihb6BLgh0k3zDtkIP9oFNAM4ENfwqcG+t
-        vYZcPk97jYqOmFcQg28P3cQ6E+SzbQd5jDQn1g==
-X-Google-Smtp-Source: APXvYqxx6tG7XGb/BD8u1e5066p33ODLin8d61AiEQVNWFctsDB76A3HrH38SOs2v12qL96hOfedzgOg4OD8s9KHZ/A=
-X-Received: by 2002:ac8:5445:: with SMTP id d5mr440421qtq.38.1552340387060;
- Mon, 11 Mar 2019 14:39:47 -0700 (PDT)
-MIME-Version: 1.0
-References: <20190220085607.31582-1-peng.ma@nxp.com> <20190222143931.GA17132@bogus>
- <VI1PR04MB44312525A43E259CE9CC45F9ED480@VI1PR04MB4431.eurprd04.prod.outlook.com>
-In-Reply-To: <VI1PR04MB44312525A43E259CE9CC45F9ED480@VI1PR04MB4431.eurprd04.prod.outlook.com>
-From:   Rob Herring <robh@kernel.org>
-Date:   Mon, 11 Mar 2019 16:39:36 -0500
-X-Gmail-Original-Message-ID: <CAL_Jsq+tBSw0d6=A6CS3=tWn7k4WX-KAeLBaoJ6019uGc-PRUg@mail.gmail.com>
-Message-ID: <CAL_Jsq+tBSw0d6=A6CS3=tWn7k4WX-KAeLBaoJ6019uGc-PRUg@mail.gmail.com>
-Subject: Re: [v6 1/3] dt-bindings: ahci-fsl-qoriq: add lx2160a chip name to
- the list
-To:     Peng Ma <peng.ma@nxp.com>
-Cc:     "axboe@kernel.dk" <axboe@kernel.dk>,
-        "mark.rutland@arm.com" <mark.rutland@arm.com>,
-        "shawnguo@kernel.org" <shawnguo@kernel.org>,
-        Leo Li <leoyang.li@nxp.com>, Andy Tang <andy.tang@nxp.com>,
-        "linux-ide@vger.kernel.org" <linux-ide@vger.kernel.org>,
-        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>,
-        Mian Yousaf Kaukab <yousaf.kaukab@suse.com>
+        Mon, 11 Mar 2019 17:40:00 -0400
+Received: from mailgw01.mediatek.com ([210.61.82.183]:46482 "EHLO
+        mailgw01.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1727008AbfCKVkA (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 11 Mar 2019 17:40:00 -0400
+X-UUID: cd3f78b614104726bb095033a58e3d6b-20190312
+X-UUID: cd3f78b614104726bb095033a58e3d6b-20190312
+Received: from mtkcas06.mediatek.inc [(172.21.101.30)] by mailgw01.mediatek.com
+        (envelope-from <sean.wang@mediatek.com>)
+        (mhqrelay.mediatek.com ESMTP with TLS)
+        with ESMTP id 1910905085; Tue, 12 Mar 2019 05:39:54 +0800
+Received: from MTKMBS06N2.mediatek.inc (172.21.101.130) by
+ mtkmbs02n2.mediatek.inc (172.21.101.101) with Microsoft SMTP Server (TLS) id
+ 15.0.1395.4; Tue, 12 Mar 2019 05:39:47 +0800
+Received: from mtkcas08.mediatek.inc (172.21.101.126) by
+ mtkmbs06n2.mediatek.inc (172.21.101.130) with Microsoft SMTP Server (TLS) id
+ 15.0.1395.4; Tue, 12 Mar 2019 05:39:46 +0800
+Received: from [172.21.77.33] (172.21.77.33) by mtkcas08.mediatek.inc
+ (172.21.101.73) with Microsoft SMTP Server id 15.0.1395.4 via Frontend
+ Transport; Tue, 12 Mar 2019 05:39:46 +0800
+Message-ID: <1552340386.17993.2.camel@mtkswgap22>
+Subject: Re: [PATCH v1 2/2] Bluetooth: mediatek: add support for MediaTek
+ MT7663S and MT7668S SDIO devices
+From:   Sean Wang <sean.wang@mediatek.com>
+To:     Marcel Holtmann <marcel@holtmann.org>
+CC:     Johan Hedberg <johan.hedberg@gmail.com>,
+        Ulf Hansson <ulf.hansson@linaro.org>,
+        "open list:BLUETOOTH DRIVERS" <linux-bluetooth@vger.kernel.org>,
+        <linux-mediatek@lists.infradead.org>, <linux-mmc@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>
+Date:   Tue, 12 Mar 2019 05:39:46 +0800
+In-Reply-To: <71123002-4772-4BDC-BFEF-4C520F4459FE@holtmann.org>
+References: <cover.1552007058.git.sean.wang@mediatek.com>
+         <89776e11d742196e50e2d5f3ccc4336dc5aee134.1552007059.git.sean.wang@mediatek.com>
+         <71123002-4772-4BDC-BFEF-4C520F4459FE@holtmann.org>
 Content-Type: text/plain; charset="UTF-8"
+X-Mailer: Evolution 3.2.3-0ubuntu6 
+Content-Transfer-Encoding: 8bit
+MIME-Version: 1.0
+X-TM-SNTS-SMTP: 115C9E43CCC59B2A4FE23F016D10BF65EBF6D1327DA0B84E4116919A142611402000:8
+X-MTK:  N
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Mar 11, 2019 at 1:57 AM Peng Ma <peng.ma@nxp.com> wrote:
->
-> Hi Rob,
+On Mon, 2019-03-11 at 17:38 +0100, Marcel Holtmann wrote:
+> Hi Sean,
+> 
+> > This adds the support of enabling MT7663S and MT7668S SDIO-based
+> > Bluetooth function.
+> > 
+> > There are quite many differences between MT766[3,8]S and standard
+> > Bluetooth SDIO devices such as Type-A and Type-B devices. For example,
+> > MT766[3,8]S have its own SDIO registers layout, definition, SDIO packet
+> > format, and the specific flow should be programmed on them to complete
+> > the device initialization and low power control and so on.
+> > 
+> > Currently, there are many independent programming sequences from the
+> > transport which are exactly the same as the ones in btusb.c about MediaTek
+> > support [1] and btmtkuart.c. We can try to split the transport independent
+> > Bluetooth setups on the advance, place them into the common files and allow
+> > varous transport drivers to reuse them in the future.
+> > 
+> > [1] http://lists.infradead.org/pipermail/linux-mediatek/2019-January/017074.html
+> > 
+> > Signed-off-by: Sean Wang <sean.wang@mediatek.com>
+> > ---
+> > drivers/bluetooth/Kconfig     |  11 +
+> > drivers/bluetooth/Makefile    |   1 +
+> > drivers/bluetooth/btmtksdio.c | 979 ++++++++++++++++++++++++++++++++++
+> > 3 files changed, 991 insertions(+)
+> > create mode 100644 drivers/bluetooth/btmtksdio.c
+> 
+> patch has been applied to bluetooth-next tree.
+> 
+> You also need to send an extra patch providing a fix for this:
+> 
 
-Please don't top post to mail lists.
+Thanks for the reporting. I'll fix it up soon.
 
-A: Because it messes up the order in which people normally read text.
-Q: Why is top-posting such a bad thing?
-A: Top-posting.
-Q: What is the most annoying thing in e-mail?
+>   CC      drivers/bluetooth/btmtksdio.o
+> drivers/bluetooth/btmtksdio.c: In function ‘btmtksdio_interrupt’:
+> drivers/bluetooth/btmtksdio.c:470:2: warning: ‘old_len’ may be used uninitialized in this function [-Wmaybe-uninitialized]
+>   print_hex_dump(KERN_ERR, "err sdio rx: ", DUMP_PREFIX_NONE, 4, 1,
+>   ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+>           old_data, old_len, true);
+>           ~~~~~~~~~~~~~~~~~~~~~~~~
+> drivers/bluetooth/btmtksdio.c:376:15: note: ‘old_len’ was declared here
+>   unsigned int old_len;
+>                ^~~~~~~
+> drivers/bluetooth/btmtksdio.c:470:2: warning: ‘old_data’ may be used uninitialized in this function [-Wmaybe-uninitialized]
+>   print_hex_dump(KERN_ERR, "err sdio rx: ", DUMP_PREFIX_NONE, 4, 1,
+>   ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+>           old_data, old_len, true);
+>           ~~~~~~~~~~~~~~~~~~~~~~~~
+> drivers/bluetooth/btmtksdio.c:375:17: note: ‘old_data’ was declared here
+>   unsigned char *old_data;
+>                  ^~~~~~~~
+> 
+> And can we actually introduce module_sdio_driver similar to module_usb_driver.
+> 
 
->
-> Thanks for your comments, I don't understand what you said.
-> This patch is one of the series patchs(http://patchwork.ozlabs.org/project/linux-ide/list/?series=93099&archive=both&state=*) for review.
-> There is not changed for 6th version of this patch.
+Sure, I can add and apply module_sdio_driver on the driver and then see
+if Ulf like it.
 
-I reviewed v5 and gave my Reviewed-by. When you posted v6, you should
-have added the tag so the maintainer applying this series doesn't have
-to look at prior versions to collect tags and so I don't have to
-review this again and can ignore it.
+> Regards
+> 
+> Marcel
+> 
 
-Rob
+
