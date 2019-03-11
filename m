@@ -2,85 +2,169 @@ Return-Path: <SRS0=FxTY=RO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,
-	USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-12.0 required=3.0
+	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_PASS autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 52A69C43381
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 Mar 2019 22:54:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 81650C43381
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 Mar 2019 22:58:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1D6A62087C
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 Mar 2019 22:54:28 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1552344868;
-	bh=wJHxrGU541NfH2Casv1fX813sSdYrTv/v2dNj07H6VY=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=fZ8I040YOzT/Fg7MXzEwKPIhQYMrCPa/wvCq88Z1ARvui7u6dmto0lD9KfmILTxM5
-	 GPkfqZtpA+fZrh6jw+jqQVdOSPZ52eXoVWRl5tvz5vMTK7SPy4CLA+g0Q0HvvZ9gqc
-	 S9Vil+KpamSh1Q6Vw6Vbo/DBUqnoFIoFi5OCo7SE=
+	by mail.kernel.org (Postfix) with ESMTP id 52BA82087F
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 Mar 2019 22:58:16 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726562AbfCKWy0 (ORCPT
+        id S1726412AbfCKW6O (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 11 Mar 2019 18:54:26 -0400
-Received: from mail-oi1-f195.google.com ([209.85.167.195]:36790 "EHLO
-        mail-oi1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725830AbfCKWy0 (ORCPT
+        Mon, 11 Mar 2019 18:58:14 -0400
+Received: from cloudserver094114.home.pl ([79.96.170.134]:65439 "EHLO
+        cloudserver094114.home.pl" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725826AbfCKW6O (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 11 Mar 2019 18:54:26 -0400
-Received: by mail-oi1-f195.google.com with SMTP id t206so525135oib.3;
-        Mon, 11 Mar 2019 15:54:26 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=mQh9vdQEIsq8DvmmnZRLmJ/XuoNIs22AjkjdtNoVnfo=;
-        b=URHyc7hMEdx+x4MlEG+ohhRv7L5T0BL60baQnXVFsO2n9eEtsRM+a1WXplXNm/ux8E
-         3UudwTn7f6MDNE6qLgigQ6GAw5Gowv6SOx5irwdxtIw8zf8O6uXirqqTHmGIzd9IIzKa
-         1A4oWIV16aMlxT/qmw9Xv5uPZVtU6KifzWGhhQrJYXvoatpe0ULKhAXkbYNBRE1X2FQ4
-         xx0XKo0rC+tquUHAAAaPNgPTU0OmHmoLhX4JwUwqal+hYkqJdng8qzAB8TMuMsK2dKMT
-         b9EBw50ukFXSrxo+GBsDdAphA/WfTK/2d7oJ1LYctRiB4Yio8J6TQZVcIiRBVKy6ejtR
-         GiFA==
-X-Gm-Message-State: APjAAAWjBzRzRLzRTfT/5uiljed3eQ5Q3+tPRk45r7/Sr+n/ML8FbFwm
-        BrCXAi9yF68vIiVrPd3eaQ==
-X-Google-Smtp-Source: APXvYqzFMqR1XNHBNluAZxGs0qUUwT4ajCMK4P81GovVkE75s2CVPuVZJmdUmplWyjnWRnghXNp+kQ==
-X-Received: by 2002:aca:851:: with SMTP id 78mr18038oii.60.1552344865562;
-        Mon, 11 Mar 2019 15:54:25 -0700 (PDT)
-Received: from localhost (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
-        by smtp.gmail.com with ESMTPSA id g2sm2804727otq.24.2019.03.11.15.54.24
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Mon, 11 Mar 2019 15:54:25 -0700 (PDT)
-Date:   Mon, 11 Mar 2019 17:54:24 -0500
-From:   Rob Herring <robh@kernel.org>
-To:     Johan Jonker <jbx6244@gmail.com>
-Cc:     heiko@sntech.de, hjc@rock-chips.com, airlied@linux.ie,
-        daniel@ffwll.ch, robh+dt@kernel.org, mark.rutland@arm.com,
-        dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org,
-        linux-rockchip@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v4 4/4] dt-bindings: display: rockchip: add document for
- rk3066 hdmi
-Message-ID: <20190311225424.GA8922@bogus>
-References: <20190306224113.24853-1-jbx6244@gmail.com>
- <20190306224113.24853-5-jbx6244@gmail.com>
+        Mon, 11 Mar 2019 18:58:14 -0400
+Received: from 79.184.254.189.ipv4.supernova.orange.pl (79.184.254.189) (HELO aspire.rjw.lan)
+ by serwer1319399.home.pl (79.96.170.134) with SMTP (IdeaSmtpServer 0.83.213)
+ id bc8426080770e0a5; Mon, 11 Mar 2019 23:58:11 +0100
+From:   "Rafael J. Wysocki" <rjw@rjwysocki.net>
+To:     Nathan Chancellor <natechancellor@gmail.com>
+Cc:     Len Brown <lenb@kernel.org>, linux-acpi@vger.kernel.org,
+        linux-kernel@vger.kernel.org, clang-built-linux@googlegroups.com,
+        Nick Desaulniers <ndesaulniers@google.com>
+Subject: Re: [PATCH] ACPI / sysfs: Restructure get_status
+Date:   Mon, 11 Mar 2019 23:56:27 +0100
+Message-ID: <3133462.vhohJv2aGS@aspire.rjw.lan>
+In-Reply-To: <1766077.IDCbULq7Lr@aspire.rjw.lan>
+References: <20190307173802.3448-1-natechancellor@gmail.com> <1766077.IDCbULq7Lr@aspire.rjw.lan>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190306224113.24853-5-jbx6244@gmail.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Transfer-Encoding: 7Bit
+Content-Type: text/plain; charset="us-ascii"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed,  6 Mar 2019 23:41:13 +0100, Johan Jonker wrote:
-> This patch adds a binding that describes the HDMI controller for
-> rk3066.
+On Monday, March 11, 2019 11:46:14 PM CET Rafael J. Wysocki wrote:
+> On Thursday, March 7, 2019 6:38:02 PM CET Nathan Chancellor wrote:
+> > When building with -Wsometimes-uninitialized, Clang warns:
+> > 
+> > drivers/acpi/sysfs.c:667:13: warning: variable 'result' is used uninitialized whenever 'if' condition is false [-Wsometimes-uninitialized]
+> > 
+> > Clang can't determine that all cases are covered by the two separate if
+> > statements. We could combine then to look like this:
+> > 
+> >     int result;
+> > 
+> >     if (...) {
+> >         ...
+> >     } else if {
+> >         ...
+> >     } else {
+> >         result -EINVAL;
+> >     }
+> > 
+> >     return result;
+> > 
+> > However, at that point, we can further simplify this function by only
+> > using result when absolutely needed and just direct returning the value
+> > of the function.
+> > 
+> > Link: https://github.com/ClangBuiltLinux/linux/issues/388
+> > Suggested-by: Nick Desaulniers <ndesaulniers@google.com>
+> > Signed-off-by: Nathan Chancellor <natechancellor@gmail.com>
+> > ---
+> >  drivers/acpi/sysfs.c | 13 ++++---------
+> >  1 file changed, 4 insertions(+), 9 deletions(-)
+> > 
+> > diff --git a/drivers/acpi/sysfs.c b/drivers/acpi/sysfs.c
+> > index 41324f0b1bee..6ed785cadad9 100644
+> > --- a/drivers/acpi/sysfs.c
+> > +++ b/drivers/acpi/sysfs.c
+> > @@ -651,23 +651,18 @@ static void acpi_global_event_handler(u32 event_type, acpi_handle device,
+> >  static int get_status(u32 index, acpi_event_status *status,
+> >  		      acpi_handle *handle)
+> >  {
+> > -	int result;
+> > -
+> > -	if (index >= num_gpes + ACPI_NUM_FIXED_EVENTS)
+> > -		return -EINVAL;
+> > -
+> >  	if (index < num_gpes) {
+> > -		result = acpi_get_gpe_device(index, handle);
+> > +		int result = acpi_get_gpe_device(index, handle);
+> >  		if (result) {
+> >  			ACPI_EXCEPTION((AE_INFO, AE_NOT_FOUND,
+> >  					"Invalid GPE 0x%x", index));
+> >  			return result;
+> >  		}
+> > -		result = acpi_get_gpe_status(*handle, index, status);
+> > +		return acpi_get_gpe_status(*handle, index, status);
+> >  	} else if (index < (num_gpes + ACPI_NUM_FIXED_EVENTS))
 > 
-> Signed-off-by: Johan Jonker <jbx6244@gmail.com>
-> ---
->  .../display/rockchip/rockchip,rk3066-hdmi.txt      | 72 ++++++++++++++++++++++
->  1 file changed, 72 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/display/rockchip/rockchip,rk3066-hdmi.txt
+> In principle, it would suffice to replace the "else if (...)" with "else"
+> to fix the Clang warning AFAICS, but that's not the only issue with this
+> function.
 > 
+> > -		result = acpi_get_event_status(index - num_gpes, status);
+> > +		return acpi_get_event_status(index - num_gpes, status);
+> >  
+> > -	return result;
+> > +	return -EINVAL;
+> >  }
+> >  
+> >  static ssize_t counter_show(struct kobject *kobj,
+> 
+> Namely, it confuses errno with acpi_status and may cause the latter to be
+> returned to user space in certain situations which should never be done.
+> 
+> So, I'd prefer to apply something like the (untested so far) patch below.
 
-Reviewed-by: Rob Herring <robh@kernel.org>
+Actually, acpi_get_event_status() returns acpi_status too, so something like
+this rather:
+
+---
+ drivers/acpi/sysfs.c |   21 ++++++++++++---------
+ 1 file changed, 12 insertions(+), 9 deletions(-)
+
+Index: linux-pm/drivers/acpi/sysfs.c
+===================================================================
+--- linux-pm.orig/drivers/acpi/sysfs.c
++++ linux-pm/drivers/acpi/sysfs.c
+@@ -648,26 +648,29 @@ static void acpi_global_event_handler(u3
+ 	}
+ }
+ 
+-static int get_status(u32 index, acpi_event_status *status,
++static int get_status(u32 index, acpi_event_status *ret,
+ 		      acpi_handle *handle)
+ {
+-	int result;
++	acpi_status status;
+ 
+ 	if (index >= num_gpes + ACPI_NUM_FIXED_EVENTS)
+ 		return -EINVAL;
+ 
+ 	if (index < num_gpes) {
+-		result = acpi_get_gpe_device(index, handle);
+-		if (result) {
++		status = acpi_get_gpe_device(index, handle);
++		if (ACPI_FAILURE(status)) {
+ 			ACPI_EXCEPTION((AE_INFO, AE_NOT_FOUND,
+ 					"Invalid GPE 0x%x", index));
+-			return result;
++			return -ENXIO;
+ 		}
+-		result = acpi_get_gpe_status(*handle, index, status);
+-	} else if (index < (num_gpes + ACPI_NUM_FIXED_EVENTS))
+-		result = acpi_get_event_status(index - num_gpes, status);
++		status = acpi_get_gpe_status(*handle, index, ret);
++	} else {
++		status = acpi_get_event_status(index - num_gpes, ret);
++	}
++	if (ACPI_FAILURE(status))
++		return -EIO;
+ 
+-	return result;
++	return 0;
+ }
+ 
+ static ssize_t counter_show(struct kobject *kobj,
+
