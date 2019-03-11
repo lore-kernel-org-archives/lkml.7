@@ -4,48 +4,59 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 99AEAC10F06
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 Mar 2019 20:07:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8B5E6C43381
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 Mar 2019 20:07:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6BB2E2064A
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 Mar 2019 20:07:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 585BE2064A
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 Mar 2019 20:07:38 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1552334843;
-	bh=Zzz3v4sHotBCat0c1YeQ9Hc/8xed/y029hu4tXpl8So=;
+	s=default; t=1552334858;
+	bh=R5OPx04TONxcgD5j44BsYo7XZLnqnY8hKVlQGhnD224=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=AKUfiZmnSNb3P1SkXMzuR9kfhCh7jPZF1dPSKR/Uba84Bx3bBBfenmW51W7gXHGDR
-	 FYBGGDDTzzFQg0Cig6MukRv3dOFlrxlWEe8+skmb7EQKZyczHoeinxLDKQpEb3JDN9
-	 GjVxQ3f7Rzx/FRt0URVkufuBZtG8utiXmVdmkAD8=
+	b=ttP9fpImpZl3a/RZg/01GkFOQ1hyDga0UPJz16/huSIQJKFdn6iD14e8AQpxZAu6z
+	 m/DRbiXZOt4SgqUjkhgTTpfB/XDbv+BTEsuH/Cr2Jqt4azzH6fBrjXz+Xs0Hg6G2BV
+	 yehMpcMUXEBapqgsGZelEdcXR+NB0USKdaiO7fmk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728320AbfCKT5e (ORCPT
+        id S1729069AbfCKT51 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 11 Mar 2019 15:57:34 -0400
-Received: from mail.kernel.org ([198.145.29.99]:34926 "EHLO mail.kernel.org"
+        Mon, 11 Mar 2019 15:57:27 -0400
+Received: from mail.kernel.org ([198.145.29.99]:34814 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729095AbfCKT5b (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 11 Mar 2019 15:57:31 -0400
+        id S1729051AbfCKT50 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 11 Mar 2019 15:57:26 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E4E6E21734;
-        Mon, 11 Mar 2019 19:57:29 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id CDF6C2171F;
+        Mon, 11 Mar 2019 19:57:23 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1552334250;
-        bh=Zzz3v4sHotBCat0c1YeQ9Hc/8xed/y029hu4tXpl8So=;
+        s=default; t=1552334245;
+        bh=R5OPx04TONxcgD5j44BsYo7XZLnqnY8hKVlQGhnD224=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Pss12+D6ojsWWNltzmyw3ZZLzfmDq8fykP0PdqcWwfnJeGJj5GofuFhGIAuc9MuX5
-         QhIbGOhu1yPw2Q1Hl2KJilbAlo3CmEiSujMOY2dsHUVf5b5hucWDgHN83vStcBYDGJ
-         VLHgeSZ34bp/Rqe/W1qeZxYGh1NdI0mCPoky6oJw=
+        b=wTM13r+Raf/0/7uQTT1ljB1LNiw+Up9pRVjmxi4T2l0cKWGFlN31rhKJLu/fiQWLU
+         Usd4yW+qIz+NkaMJbOGkpU3JKiDCSTI/QSDs2HZ+u3toLq9WhEEUm3BThmETTJmO5Y
+         wiK0WaL08PWqqWzWMcrqmuduEUmyqZQ8jamgINiE=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Christoffer Dall <christoffer.dall@arm.com>,
-        Marc Zyngier <marc.zyngier@arm.com>,
-        Sasha Levin <sashal@kernel.org>, kvmarm@lists.cs.columbia.edu
-Subject: [PATCH AUTOSEL 4.19 16/44] KVM: arm/arm64: Reset the VCPU without preemption and vcpu state loaded
-Date:   Mon, 11 Mar 2019 15:56:32 -0400
-Message-Id: <20190311195700.138462-16-sashal@kernel.org>
+Cc:     Tony Lindgren <tony@atomide.com>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        Daniel Lezcano <daniel.lezcano@linaro.org>,
+        "H . Nikolaus Schaller" <hns@goldelico.com>,
+        Keerthy <j-keerthy@ti.com>,
+        Ladislav Michl <ladis@linux-mips.org>,
+        Pavel Machek <pavel@ucw.cz>,
+        Sebastian Reichel <sre@kernel.org>,
+        Tero Kristo <t-kristo@ti.com>,
+        Thierry Reding <thierry.reding@gmail.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Sasha Levin <sashal@kernel.org>, linux-omap@vger.kernel.org,
+        devicetree@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.19 12/44] ARM: dts: Configure clock parent for pwm vibra
+Date:   Mon, 11 Mar 2019 15:56:28 -0400
+Message-Id: <20190311195700.138462-12-sashal@kernel.org>
 X-Mailer: git-send-email 2.19.1
 In-Reply-To: <20190311195700.138462-1-sashal@kernel.org>
 References: <20190311195700.138462-1-sashal@kernel.org>
@@ -57,86 +68,58 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Christoffer Dall <christoffer.dall@arm.com>
+From: Tony Lindgren <tony@atomide.com>
 
-[ Upstream commit e761a927bc9a7ee6ceb7c4f63d5922dbced87f0d ]
+[ Upstream commit 0840242e887586268f665bf58d5e1a7d6ebf35ed ]
 
-We have two ways to reset a vcpu:
-- either through VCPU_INIT
-- or through a PSCI_ON call
+Commit 84badc5ec5fc ("ARM: dts: omap4: Move l4 child devices to probe
+them with ti-sysc") moved some omap4 timers to probe with ti-sysc
+interconnect target module. Turns out this broke pwm-omap-dmtimer
+for reparenting of the timer clock.
 
-The first one is easy to reason about. The second one is implemented
-in a more bizarre way, as it is the vcpu that handles PSCI_ON that
-resets the vcpu that is being powered-on. As we need to turn the logic
-around and have the target vcpu to reset itself, we must take some
-preliminary steps.
+With ti-sysc, we can now configure the clock sources in the dts with
+assigned-clocks and assigned-clock-parents.
 
-Resetting the VCPU state modifies the system register state in memory,
-but this may interact with vcpu_load/vcpu_put if running with preemption
-disabled, which in turn may lead to corrupted system register state.
-
-Address this by disabling preemption and doing put/load if required
-around the reset logic.
-
-Reviewed-by: Andrew Jones <drjones@redhat.com>
-Signed-off-by: Christoffer Dall <christoffer.dall@arm.com>
-Signed-off-by: Marc Zyngier <marc.zyngier@arm.com>
+Fixes: 84badc5ec5fc ("ARM: dts: omap4: Move l4 child devices to probe them with ti-sysc")
+Cc: Bartosz Golaszewski <bgolaszewski@baylibre.com>
+Cc: Daniel Lezcano <daniel.lezcano@linaro.org>
+Cc: H. Nikolaus Schaller <hns@goldelico.com>
+Cc: Keerthy <j-keerthy@ti.com>
+Cc: Ladislav Michl <ladis@linux-mips.org>
+Cc: Pavel Machek <pavel@ucw.cz>
+Cc: Sebastian Reichel <sre@kernel.org>
+Cc: Tero Kristo <t-kristo@ti.com>
+Cc: Thierry Reding <thierry.reding@gmail.com>
+Cc: Thomas Gleixner <tglx@linutronix.de>
+Reported-by: H. Nikolaus Schaller <hns@goldelico.com>
+Signed-off-by: Tony Lindgren <tony@atomide.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/arm64/kvm/reset.c | 26 ++++++++++++++++++++++++--
- 1 file changed, 24 insertions(+), 2 deletions(-)
+ arch/arm/boot/dts/omap4-droid4-xt894.dts | 11 +++++++++++
+ 1 file changed, 11 insertions(+)
 
-diff --git a/arch/arm64/kvm/reset.c b/arch/arm64/kvm/reset.c
-index e37c78bbe1ca..644dd0050766 100644
---- a/arch/arm64/kvm/reset.c
-+++ b/arch/arm64/kvm/reset.c
-@@ -99,16 +99,33 @@ int kvm_arch_dev_ioctl_check_extension(struct kvm *kvm, long ext)
-  * This function finds the right table above and sets the registers on
-  * the virtual CPU struct to their architecturally defined reset
-  * values.
-+ *
-+ * Note: This function can be called from two paths: The KVM_ARM_VCPU_INIT
-+ * ioctl or as part of handling a request issued by another VCPU in the PSCI
-+ * handling code.  In the first case, the VCPU will not be loaded, and in the
-+ * second case the VCPU will be loaded.  Because this function operates purely
-+ * on the memory-backed valus of system registers, we want to do a full put if
-+ * we were loaded (handling a request) and load the values back at the end of
-+ * the function.  Otherwise we leave the state alone.  In both cases, we
-+ * disable preemption around the vcpu reset as we would otherwise race with
-+ * preempt notifiers which also call put/load.
-  */
- int kvm_reset_vcpu(struct kvm_vcpu *vcpu)
- {
- 	const struct kvm_regs *cpu_reset;
-+	int ret = -EINVAL;
-+	bool loaded;
+diff --git a/arch/arm/boot/dts/omap4-droid4-xt894.dts b/arch/arm/boot/dts/omap4-droid4-xt894.dts
+index 04758a2a87f0..67d77eee9433 100644
+--- a/arch/arm/boot/dts/omap4-droid4-xt894.dts
++++ b/arch/arm/boot/dts/omap4-droid4-xt894.dts
+@@ -644,6 +644,17 @@
+ 	};
+ };
+ 
++/* Configure pwm clock source for timers 8 & 9 */
++&timer8 {
++	assigned-clocks = <&abe_clkctrl OMAP4_TIMER8_CLKCTRL 24>;
++	assigned-clock-parents = <&sys_clkin_ck>;
++};
 +
-+	preempt_disable();
-+	loaded = (vcpu->cpu != -1);
-+	if (loaded)
-+		kvm_arch_vcpu_put(vcpu);
- 
- 	switch (vcpu->arch.target) {
- 	default:
- 		if (test_bit(KVM_ARM_VCPU_EL1_32BIT, vcpu->arch.features)) {
- 			if (!cpu_has_32bit_el1())
--				return -EINVAL;
-+				goto out;
- 			cpu_reset = &default_regs_reset32;
- 		} else {
- 			cpu_reset = &default_regs_reset;
-@@ -131,5 +148,10 @@ int kvm_reset_vcpu(struct kvm_vcpu *vcpu)
- 		vcpu->arch.workaround_flags |= VCPU_WORKAROUND_2_FLAG;
- 
- 	/* Reset timer */
--	return kvm_timer_vcpu_reset(vcpu);
-+	ret = kvm_timer_vcpu_reset(vcpu);
-+out:
-+	if (loaded)
-+		kvm_arch_vcpu_load(vcpu, smp_processor_id());
-+	preempt_enable();
-+	return ret;
- }
++&timer9 {
++	assigned-clocks = <&l4_per_clkctrl OMAP4_TIMER9_CLKCTRL 24>;
++	assigned-clock-parents = <&sys_clkin_ck>;
++};
++
+ /*
+  * As uart1 is wired to mdm6600 with rts and cts, we can use the cts pin for
+  * uart1 wakeirq.
 -- 
 2.19.1
 
