@@ -2,123 +2,113 @@ Return-Path: <SRS0=FxTY=RO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=unavailable autolearn_force=no
+X-Spam-Status: No, score=-3.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DDAACC4360F
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 Mar 2019 22:15:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A6F9DC43381
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 Mar 2019 22:15:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A8D1A20657
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 Mar 2019 22:15:50 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="STIu7ueW"
+	by mail.kernel.org (Postfix) with ESMTP id 79ABE20657
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 Mar 2019 22:15:56 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727860AbfCKWPs (ORCPT
+        id S1728271AbfCKWPz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 11 Mar 2019 18:15:48 -0400
-Received: from mail-wr1-f66.google.com ([209.85.221.66]:35485 "EHLO
-        mail-wr1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727008AbfCKWPs (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 11 Mar 2019 18:15:48 -0400
-Received: by mail-wr1-f66.google.com with SMTP id t18so578602wrx.2
-        for <linux-kernel@vger.kernel.org>; Mon, 11 Mar 2019 15:15:47 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=GnI0fUcdzJqZU/DTruBcUGekoe8aZHTHc7dj/1D9pDo=;
-        b=STIu7ueW7L5p2TzqtAmcSxV3KguqBPhLN6KQwuyu1G/VOQH2p4moWrluTFiiebcZm1
-         2ophhi5lSUP4fDVmfI0KcWubjRj4LCAlzmeJpYEmsP8nYT5i/q68XwmRJFtefA3K0hda
-         59PwzZAiKgBJhKbu6DUDWiNTBR5KSaJ3JNjZLRz3uD2vNTvh2EwFVcQW1x/KYks26Me8
-         QAYi7AzGhCn/NCSVOfTrKslxmO1dYD4CN+rMR2EYg6sLjWKTb/33PHxfLgv3BOunhxmf
-         RnTqLJ618Y737n7uyVNi0p/Js7fLX03g6gLEgh7tXJqfFwPDOUwY9NPzq6Qblqg0aLsj
-         vSOA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=GnI0fUcdzJqZU/DTruBcUGekoe8aZHTHc7dj/1D9pDo=;
-        b=kPv75sWErRbQgPXpK9lddF72ZUxn41Dah/4X6TFa1n1DXK+aK8LIlNjbQ/cWfnRKwH
-         kHIqSVPD4ppu6Uen+hXkF/2+Y57q5xDlQM3zcaZer9G/wJCmxmDyBBPpofSwB2JkxOkv
-         mU6ZIV4mLsiDdnx7UkYumTlv0RRZ6P8VWvYrjLsWpFdfj0IKvMvboTf+0CUxQFasNXGm
-         LanQyNIGqqK34GHQu6H9e+62RNT3uGl7ZDdcYjbje50paxHrex6GvftB5nF8jUYE9e68
-         oZuj9+g+g/uL0DqnYm4/PsggTmkxTRGPTCya3DScd6zHzDyI+X3jg9pqgSa+sXHZ4Hhh
-         HXuA==
-X-Gm-Message-State: APjAAAVyN4rjyjKhYM4u9ZZX92bnSuIVsLax7md2YbDYEpNSg2ZcsdQs
-        UGv/tWxyjYbzXupOBCl5/q2HD8SpE09KcswsxjP9dA==
-X-Google-Smtp-Source: APXvYqzBPV7OZeaIUoX8OaAcEt5nnkBCXbML20FxMXjDLjGWNCMW1qTFcwXaA28SNy5pChjGUFMWmTrpLR8E9AbMQ+M=
-X-Received: by 2002:adf:f80c:: with SMTP id s12mr19405040wrp.150.1552342546588;
- Mon, 11 Mar 2019 15:15:46 -0700 (PDT)
-MIME-Version: 1.0
-References: <20190310203403.27915-1-sultan@kerneltoast.com>
- <20190311174320.GC5721@dhcp22.suse.cz> <20190311175800.GA5522@sultan-box.localdomain>
- <CAJuCfpHTjXejo+u--3MLZZj7kWQVbptyya4yp1GLE3hB=BBX7w@mail.gmail.com> <20190311204626.GA3119@sultan-box.localdomain>
-In-Reply-To: <20190311204626.GA3119@sultan-box.localdomain>
-From:   Suren Baghdasaryan <surenb@google.com>
-Date:   Mon, 11 Mar 2019 15:15:35 -0700
-Message-ID: <CAJuCfpGpBxofTT-ANEEY+dFCSdwkQswox3s8Uk9Eq0BnK9i0iA@mail.gmail.com>
-Subject: Re: [RFC] simple_lmk: Introduce Simple Low Memory Killer for Android
-To:     Sultan Alsawaf <sultan@kerneltoast.com>
-Cc:     Michal Hocko <mhocko@kernel.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        =?UTF-8?B?QXJ2ZSBIasO4bm5ldsOlZw==?= <arve@android.com>,
-        Todd Kjos <tkjos@android.com>,
-        Martijn Coenen <maco@android.com>,
-        Joel Fernandes <joel@joelfernandes.org>,
-        Christian Brauner <christian@brauner.io>,
-        Ingo Molnar <mingo@redhat.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        LKML <linux-kernel@vger.kernel.org>, devel@driverdev.osuosl.org,
-        linux-mm <linux-mm@kvack.org>, Tim Murray <timmurray@google.com>
-Content-Type: text/plain; charset="UTF-8"
+        Mon, 11 Mar 2019 18:15:55 -0400
+Received: from mga01.intel.com ([192.55.52.88]:33616 "EHLO mga01.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727898AbfCKWPy (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 11 Mar 2019 18:15:54 -0400
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga002.jf.intel.com ([10.7.209.21])
+  by fmsmga101.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 11 Mar 2019 15:15:54 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.58,468,1544515200"; 
+   d="scan'208";a="141133769"
+Received: from tthayer-hp-z620.an.intel.com ([10.122.105.146])
+  by orsmga002.jf.intel.com with ESMTP; 11 Mar 2019 15:15:52 -0700
+From:   thor.thayer@linux.intel.com
+To:     lee.jones@linaro.org, arnd@arndb.de, dinguyen@kernel.org,
+        linux@armlinux.org.uk, catalin.marinas@arm.com,
+        will.deacon@arm.com, peppe.cavallaro@st.com,
+        alexandre.torgue@st.com, joabreu@synopsys.com, olof@lixom.net
+Cc:     davem@davemloft.net, mcoquelin.stm32@gmail.com,
+        mchehab+samsung@kernel.org, mark.rutland@arm.com,
+        bjorn.andersson@linaro.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        netdev@vger.kernel.org, Thor Thayer <thor.thayer@linux.intel.com>
+Subject: [RESEND PATCHv4 0/6] Add SOCFPGA System Manager
+Date:   Mon, 11 Mar 2019 17:18:02 -0500
+Message-Id: <1552342688-6663-1-git-send-email-thor.thayer@linux.intel.com>
+X-Mailer: git-send-email 2.7.4
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Mar 11, 2019 at 1:46 PM Sultan Alsawaf <sultan@kerneltoast.com> wrote:
->
-> On Mon, Mar 11, 2019 at 01:10:36PM -0700, Suren Baghdasaryan wrote:
-> > The idea seems interesting although I need to think about this a bit
-> > more. Killing processes based on failed page allocation might backfire
-> > during transient spikes in memory usage.
->
-> This issue could be alleviated if tasks could be killed and have their pages
-> reaped faster. Currently, Linux takes a _very_ long time to free a task's memory
-> after an initial privileged SIGKILL is sent to a task, even with the task's
-> priority being set to the highest possible (so unwanted scheduler preemption
-> starving dying tasks of CPU time is not the issue at play here). I've
-> frequently measured the difference in time between when a SIGKILL is sent for a
-> task and when free_task() is called for that task to be hundreds of
-> milliseconds, which is incredibly long. AFAIK, this is a problem that LMKD
-> suffers from as well, and perhaps any OOM killer implementation in Linux, since
-> you cannot evaluate effect you've had on memory pressure by killing a process
-> for at least several tens of milliseconds.
+From: Thor Thayer <thor.thayer@linux.intel.com>
 
-Yeah, killing speed is a well-known problem which we are considering
-in LMKD. For example the recent LMKD change to assign process being
-killed to a cpuset cgroup containing big cores cuts the kill time
-considerably. This is not ideal and we are thinking about better ways
-to expedite the cleanup process.
+Add MFD driver for SOCFPGA System Manager to handle
+System Manager calls differently for ARM32 vs ARM64.
+The SOCFPGA System Manager includes registers from several
+SOC peripherals.
 
-> > AFAIKT the biggest issue with using this approach in userspace is that
-> > it's not practically implementable without heavy in-kernel support.
-> > How to implement such interaction between kernel and userspace would
-> > be an interesting discussion which I would be happy to participate in.
->
-> You could signal a lightweight userspace process that has maximum scheduler
-> priority and have it kill the tasks it'd like.
+On ARM32, syscon handles this aggregated register grouping.
+Implement System Manager calls as regmap_mmio similar to syscon
+for ARM32 SOCFPGA systems.
 
-This what LMKD currently is - a userspace RT process.
-My point was that this page allocation queue that you implemented
-can't be implemented in userspace, at least not without extensive
-communication with kernel.
+The ARM64 System Manager can only be accessed from priority
+level EL3 so this new MFD driver handles the calls to EL3.
 
-> Thanks,
-> Sultan
+v2 Changes:
+Change socfpga_is_s10() to check compatible string.
+Add new compatible string for Stratix10 in bindings
+    and add proper detection method.
+Replace base cast with resource_size_t member.
+Change s10_sysmgr_regmap_cfg to altr_sysmgr_regmap_cfg to
+    be generic.
+Always use 4 byte width.
+Initialize the .reg_read and .reg_write in S10 case only.
+Remove call to syscon in 32bit ARM case and handle both
+    ARM32 and ARM64 in of_sysmgr_register().
+Replace IS_ERR_OR_NULL() with IS_ERR().
+Remove compatible check functions except phandle function.
 
-Thanks,
-Suren.
+v3 Changes:
+Create and register regmap in probe().
+Lookup functions find registered regmap.
+Cleanup of header file.
+Fix copyright dates.
+Replace global pointer with traditional probe() methodology.
+
+v4 Changes:
+Add missing of_node_put().
+Add Reviewed-by from v2 for devicetree patch
+Add Acked-by for net patch
+
+Thor Thayer (6):
+  mfd: altera-sysmgr: Add SOCFPGA System Manager
+  Documentation: dt: socfpga: Add S10 System Manager binding
+  ARM: socfpga_defconfig: Enable CONFIG_MTD_ALTERA_SYSMGR
+  arm64: defconfig: Enable CONFIG_MTD_ALTERA_SYSMGR
+  net: stmmac: socfpga: Use shared System Manager driver
+  arm64: dts: stratix10: New System Manager compatible
+
+ .../bindings/arm/altera/socfpga-system.txt         |  12 ++
+ MAINTAINERS                                        |   6 +
+ arch/arm/configs/socfpga_defconfig                 |   1 +
+ arch/arm64/boot/dts/altera/socfpga_stratix10.dtsi  |   2 +-
+ arch/arm64/configs/defconfig                       |   1 +
+ drivers/mfd/Kconfig                                |  10 +
+ drivers/mfd/Makefile                               |   1 +
+ drivers/mfd/altera-sysmgr.c                        | 211 +++++++++++++++++++++
+ .../net/ethernet/stmicro/stmmac/dwmac-socfpga.c    |   5 +-
+ include/linux/mfd/altera-sysmgr.h                  |  29 +++
+ 10 files changed, 275 insertions(+), 3 deletions(-)
+ create mode 100644 drivers/mfd/altera-sysmgr.c
+ create mode 100644 include/linux/mfd/altera-sysmgr.h
+
+-- 
+2.7.4
+
