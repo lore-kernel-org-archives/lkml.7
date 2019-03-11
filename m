@@ -2,175 +2,109 @@ Return-Path: <SRS0=FxTY=RO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_PASS autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1AED6C43381
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 Mar 2019 17:02:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1640EC43381
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 Mar 2019 17:02:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E589B206BA
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 Mar 2019 17:02:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D911C206BA
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 Mar 2019 17:02:48 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="fIqdc4wp"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727674AbfCKRCC (ORCPT
+        id S1727722AbfCKRCr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 11 Mar 2019 13:02:02 -0400
-Received: from mga05.intel.com ([192.55.52.43]:21689 "EHLO mga05.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727008AbfCKRCB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 11 Mar 2019 13:02:01 -0400
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga007.jf.intel.com ([10.7.209.58])
-  by fmsmga105.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 11 Mar 2019 10:02:00 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.58,468,1544515200"; 
-   d="scan'208";a="121720581"
-Received: from lxy-dell.sh.intel.com ([10.239.159.147])
-  by orsmga007.jf.intel.com with ESMTP; 11 Mar 2019 10:01:59 -0700
-Message-ID: <b31a91e8e79673f6f547826caae37b329d72b5a3.camel@linux.intel.com>
-Subject: Re: [PATCH v4 17/17] kvm: vmx: Emulate TEST_CTL MSR
-From:   Xiaoyao Li <xiaoyao.li@linux.intel.com>
-To:     Paolo Bonzini <pbonzini@redhat.com>
-Cc:     linux-kernel <linux-kernel@vger.kernel.org>, x86 <x86@kernel.org>,
-        kvm@vger.kernel.org
-Date:   Tue, 12 Mar 2019 00:58:45 +0800
-In-Reply-To: <330cd5ec-813b-8835-2178-32e14190b9e6@redhat.com>
-References: <1551494711-213533-1-git-send-email-fenghua.yu@intel.com>
-         <1551494711-213533-18-git-send-email-fenghua.yu@intel.com>
-         <58653d477d78b2a69927d8707522d91f091bcb52.camel@linux.intel.com>
-         <7a10bb11-e9bf-f49c-6575-25c3da08cfac@redhat.com>
-         <b7a879103eb409bea3f2664d7e7a8b1787768cf2.camel@linux.intel.com>
-         <330cd5ec-813b-8835-2178-32e14190b9e6@redhat.com>
+        Mon, 11 Mar 2019 13:02:47 -0400
+Received: from mail-oi1-f193.google.com ([209.85.167.193]:45093 "EHLO
+        mail-oi1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726942AbfCKRCr (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 11 Mar 2019 13:02:47 -0400
+Received: by mail-oi1-f193.google.com with SMTP id t82so4225670oie.12
+        for <linux-kernel@vger.kernel.org>; Mon, 11 Mar 2019 10:02:46 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=3TbVtP0Cj4bmw2Da24wUcfs6Q5Qke3mMiEDs+Miru/A=;
+        b=fIqdc4wpO6StOLFT8oWU1XI7m5mw67XLkZVDuDPwHw0S2DD2mSb8MhdTVorY8XmJJ+
+         WQUwszYhD1W+ihS6vDgpuNvEJdn4aPY7dDRdzGwGHLDdAlkzDWSQaOyUzUfFuIHam4EN
+         V+RYcGvAyvH+7WqbFsdTD8XedCCWsfXiZlzq7ihL8ril1PUiW8yb4azifxmdiVoFJ3E/
+         3+79ouQbd8q3+/0fghDWaKyl16pecJqjHYuu93Tcyop8FG1jpizFSgBQeDF7jbeTAenp
+         JEA1jbWX6RMLRTgiq7nWoQF+kz8wqOmaPuRuN4gbflHIGy9W5c/5xQjKU+Yh7tHNuMKe
+         gU6Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=3TbVtP0Cj4bmw2Da24wUcfs6Q5Qke3mMiEDs+Miru/A=;
+        b=hX5oPsCPgEGQI4TB4ObwZgE+uUTJ+dnwTd+88qmGndDn+mo3CoRivz4+Ztvpxpvstx
+         n0YVZufvzNNGxEohggvqGAlNiLf7CvKN9n5W5TXNycnxhVC17nDLmxEoazsT/MOYhAlN
+         XDxUFksUtxThj52VDb/xve4AFZ0G5fy2obj+yfFX+rlSrI14uMtm6CHH/VjSqxmKuUH6
+         NSJ1O18DdbRTKm1JU7XLX8RFJJvuf6CrPwQ15Ber0YanXXOoUZT309Sy2Ci1tadIy7ME
+         93YAamdv3w96Ch1iwlRcKImFGqYdACUgRgA5yW8Mc4yPZBwJ9EV+xJJnc3Yvjz42sVIQ
+         fYTg==
+X-Gm-Message-State: APjAAAVvDLXHSrSAC2/jLk3mnLmmTGkiYJ580nZjRBSB4L017FAyKWVs
+        nq8SnqFs6fJKN2IuamIjkV/zPDjSEnZwZlnUeIs=
+X-Google-Smtp-Source: APXvYqyUJh5SwMWdRQjBfOgNTs3gt0ln9otGe2JA4zycV0jREnAjG8P4pCtKfnt4YWR2T/ntMd0kjU/yIteMt71lDDU=
+X-Received: by 2002:aca:5d0a:: with SMTP id r10mr41143oib.92.1552323765878;
+ Mon, 11 Mar 2019 10:02:45 -0700 (PDT)
+MIME-Version: 1.0
+References: <20190124201251.15159-1-TheSven73@googlemail.com>
+ <CAGngYiWFU-VnG=ODLWaUf0yp69qaU2GSd9exdHvyi6Ko1ib9qw@mail.gmail.com>
+ <20190208121916.GE23483@kroah.com> <CAGngYiVVNitd5SDLah-kxP69W6XHYHOQrOz=DnevuGnqoHD7HA@mail.gmail.com>
+ <20190208141400.GA22162@kroah.com>
+In-Reply-To: <20190208141400.GA22162@kroah.com>
+From:   Sven Van Asbroeck <thesven73@gmail.com>
+Date:   Mon, 11 Mar 2019 13:02:34 -0400
+Message-ID: <CAGngYiXZtNcqQ3JGgavBxypo75WtAT7T-X4DQFNWD8kQcifU8g@mail.gmail.com>
+Subject: Re: [PATCH v8 0/6] Add Fieldbus subsystem + support HMS Profinet card
+To:     Greg KH <gregkh@linuxfoundation.org>
+Cc:     robh+dt@kernel.org, Linus Walleij <linus.walleij@linaro.org>,
+        Lee Jones <lee.jones@linaro.org>, mark.rutland@arm.com,
+        =?UTF-8?Q?Andreas_F=C3=A4rber?= <afaerber@suse.de>,
+        treding@nvidia.com, David Lechner <david@lechnology.com>,
+        noralf@tronnes.org, johan@kernel.org,
+        Michal Simek <monstr@monstr.eu>, michal.vokac@ysoft.com,
+        Arnd Bergmann <arnd@arndb.de>, john.garry@huawei.com,
+        geert+renesas@glider.be, robin.murphy@arm.com,
+        Paul Gortmaker <paul.gortmaker@windriver.com>,
+        sebastien.bourdelin@savoirfairelinux.com, icenowy@aosc.io,
+        Stuart Yoder <stuyoder@gmail.com>, maxime.ripard@bootlin.com,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
 Content-Type: text/plain; charset="UTF-8"
-X-Mailer: Evolution 3.28.5 (3.28.5-2.el7) 
-Mime-Version: 1.0
-Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, 2019-03-11 at 16:21 +0100, Paolo Bonzini wrote:
-> On 11/03/19 16:10, Xiaoyao Li wrote:
-> > On Mon, 2019-03-11 at 14:31 +0100, Paolo Bonzini wrote:
-> > > On 09/03/19 03:31, Xiaoyao Li wrote:
-> > > > Hi, Paolo,
-> > > > 
-> > > > Do you have any comments on this patch?
-> > > > 
-> > > > We are preparing v5 patches for split lock detection, if you have any
-> > > > comments
-> > > > about this one, please let me know.
-> > > 
-> > > No, my only comment is that it should be placed _before_ the other two
-> > > for bisectability.  I think I have already sent that small remark.
-> > > 
-> > > Thanks,
-> > > 
-> > > Paolo
-> > 
-> > I cannot find the small remark you sent before. Maybe I missed something.
-> > But I'am confused why it should be placed _before_ the other two. This patch
-> > just use the vmx->core_capability that defined it the previous patch.
-> 
-> Because otherwise the guest can see core_capability != 0 and will #GP
-> when trying to use split lock detection.
-> 
-> But you are right, this patch must be the last.  Instead,
-> kvm-get_core_capability() should always return  0 until the previous
-> patch.  Then in this patch you add the rdmsr and boot_cpu_has() tests.
-> 
-> Paolo
+On Fri, Feb 8, 2019 at 9:14 AM Greg KH <gregkh@linuxfoundation.org> wrote:
+>
+> Well, who wants this code?  Who uses it?  Find those people and get them
+> to review it.  If no one wants it or uses it, that kind of implies that
+> it's not needed :)
 
-Hi, Paolo
+We have customers who (will) talk to this ABI from userspace, but they are
+not 'Linux-y' enough to come to the mailing list and meaningfully review
+the userspace ABI.
 
-Thanks a lot for your explanation. It makes me better understand the
-bisectability of a patchset. I really appreciate you and I love the community. I
-can learn a lot here and it makes me better.
+IMHO the current reality of Fieldbus on Linux is companies rolling their own
+proprietary out-of-tree interfaces and drivers. They do this partly because
+there is no existing community or infrastructure. So there is no incentive
+to be involved with mainline, which could also explain why no-one is commenting
+on this Fieldbus ABI.
 
-I will fix the bisectability issue following your comments.
+Chicken-and-egg problem ?
 
-> > > > > +		if (!(vmx->core_capability &
-> > > > > CORE_CAP_SPLIT_LOCK_DETECT))
-> > > > > +			return 1;
-> > > > > +
-> > > > > +		if (data & ~TEST_CTL_ENABLE_SPLIT_LOCK_DETECT)
-> > > > > +			return 1;
-> > > > > +		vmx->msr_test_ctl = data;
-> > > > > +		break;
-> > > > >  	case MSR_EFER:
-> > > > >  		ret = kvm_set_msr_common(vcpu, msr_info);
-> > > > >  		break;
-> > > > > @@ -4108,6 +4122,9 @@ static void vmx_vcpu_setup(struct vcpu_vmx *vmx)
-> > > > >  
-> > > > >  	vmx->arch_capabilities = kvm_get_arch_capabilities();
-> > > > >  
-> > > > > +	/* disable AC split lock by default */
-> > > > > +	vmx->msr_test_ctl = 0;
-> > > > > +
-> > > > >  	vm_exit_controls_init(vmx, vmx_vmexit_ctrl());
-> > > > >  
-> > > > >  	/* 22.2.1, 20.8.1 */
-> > > > > @@ -4145,6 +4162,7 @@ static void vmx_vcpu_reset(struct kvm_vcpu
-> > > > > *vcpu,
-> > > > > bool
-> > > > > init_event)
-> > > > >  
-> > > > >  	vmx->rmode.vm86_active = 0;
-> > > > >  	vmx->spec_ctrl = 0;
-> > > > > +	vmx->msr_test_ctl = 0;
-> > > > >  
-> > > > >  	vcpu->arch.microcode_version = 0x100000000ULL;
-> > > > >  	vmx->vcpu.arch.regs[VCPU_REGS_RDX] = get_rdx_init_val();
-> > > > > @@ -6344,6 +6362,21 @@ static void atomic_switch_perf_msrs(struct
-> > > > > vcpu_vmx
-> > > > > *vmx)
-> > > > >  					msrs[i].host, false);
-> > > > >  }
-> > > > >  
-> > > > > +static void atomic_switch_msr_test_ctl(struct vcpu_vmx *vmx)
-> > > > > +{
-> > > > > +	u64 host_msr_test_ctl;
-> > > > > +
-> > > > > +	if (!boot_cpu_has(X86_FEATURE_SPLIT_LOCK_DETECT))
-> > > > > +		return;
-> > > > > +
-> > > > > +	rdmsrl(MSR_TEST_CTL, host_msr_test_ctl);
-> > > > > +	if (host_msr_test_ctl == vmx->msr_test_ctl)
-> > > > > +		clear_atomic_switch_msr(vmx, MSR_TEST_CTL);
-> > > > > +	else
-> > > > > +		add_atomic_switch_msr(vmx, MSR_TEST_CTL, vmx-
-> > > > > >msr_test_ctl,
-> > > > > +				      host_msr_test_ctl, false);
-> > > > > +}
-> > > > > +
-> > > > >  static void vmx_arm_hv_timer(struct vcpu_vmx *vmx, u32 val)
-> > > > >  {
-> > > > >  	vmcs_write32(VMX_PREEMPTION_TIMER_VALUE, val);
-> > > > > @@ -6585,6 +6618,8 @@ static void vmx_vcpu_run(struct kvm_vcpu *vcpu)
-> > > > >  
-> > > > >  	atomic_switch_perf_msrs(vmx);
-> > > > >  
-> > > > > +	atomic_switch_msr_test_ctl(vmx);
-> > > > > +
-> > > > >  	vmx_update_hv_timer(vcpu);
-> > > > >  
-> > > > >  	/*
-> > > > > diff --git a/arch/x86/kvm/vmx/vmx.h b/arch/x86/kvm/vmx/vmx.h
-> > > > > index cc22379991f3..e8831609c6c3 100644
-> > > > > --- a/arch/x86/kvm/vmx/vmx.h
-> > > > > +++ b/arch/x86/kvm/vmx/vmx.h
-> > > > > @@ -191,6 +191,7 @@ struct vcpu_vmx {
-> > > > >  	u64		      msr_guest_kernel_gs_base;
-> > > > >  #endif
-> > > > >  
-> > > > > +	u64		      msr_test_ctl;
-> > > > >  	u64		      core_capability;
-> > > > >  	u64		      arch_capabilities;
-> > > > >  	u64		      spec_ctrl;
-> > > 
-> > > 
-> 
-> 
+Greg, could I convince you to take this Fieldbus subsystem in drivers/staging?
+Perhaps its presence may kickstart or seed a Linux Fieldbus community.
+Being in staging/ also means that we can tweak the userspace ABI to our
+heart's content if more people/requirements come in.
 
+If there's been no meaningful activity in, say, one year from now, you may
+decide to send this whole subsystem to /dev/null.
+
+Sven
