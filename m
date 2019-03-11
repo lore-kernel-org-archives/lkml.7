@@ -2,153 +2,116 @@ Return-Path: <SRS0=FxTY=RO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_MUTT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0CA35C43381
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 Mar 2019 07:46:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 92114C43381
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 Mar 2019 07:50:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CA88120643
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 Mar 2019 07:46:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 62B0620643
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 Mar 2019 07:50:05 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="DDa6w7Vh"
+	dkim=pass (2048-bit key) header.d=umn.edu header.i=@umn.edu header.b="VDNZtG59"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726978AbfCKHqe (ORCPT
+        id S1726770AbfCKHuD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 11 Mar 2019 03:46:34 -0400
-Received: from aserp2130.oracle.com ([141.146.126.79]:43954 "EHLO
-        aserp2130.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725943AbfCKHqe (ORCPT
+        Mon, 11 Mar 2019 03:50:03 -0400
+Received: from mta-p8.oit.umn.edu ([134.84.196.208]:58528 "EHLO
+        mta-p8.oit.umn.edu" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725839AbfCKHuD (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 11 Mar 2019 03:46:34 -0400
-Received: from pps.filterd (aserp2130.oracle.com [127.0.0.1])
-        by aserp2130.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x2B7haiR037717;
-        Mon, 11 Mar 2019 07:46:23 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=date : from : to : cc
- : subject : message-id : references : mime-version : content-type :
- in-reply-to; s=corp-2018-07-02;
- bh=0oeGOHSkq4ZTR3cR+0Il8c5iYY5aYYBzU38XFb6+LVQ=;
- b=DDa6w7Vhq0KhKnLaw16UBT94LKLAqa8F1XzSVuy+0uSsdXFmYrigKmIIGa6KOr7nwDLO
- /Om5RQ1JoFBjDkgNAV2cmt3SqBUanYt1T2fsze+ICk2YkgGm7XGM70HlxZzICGhrJMHN
- 9cL7+TdvZtRXTNlQVExEuqt9QLcGTj3KrW7u6wMsDRFRd8GWsg1cOpW66XUaElbeIjHJ
- HamVxJpoQMlHSAainTdxsLOxyogFv923uUy1sCG3JNyWZpfj93/fwiP23WUK8Cik7OEf
- +RXdsoE+muI8/GOkqVjVwC5OqvtJWC9NzdkEr+VHvU9E4ll/6trzCNeOonBFi8WiyqTe xA== 
-Received: from aserv0022.oracle.com (aserv0022.oracle.com [141.146.126.234])
-        by aserp2130.oracle.com with ESMTP id 2r430ed3xs-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Mon, 11 Mar 2019 07:46:23 +0000
-Received: from userv0121.oracle.com (userv0121.oracle.com [156.151.31.72])
-        by aserv0022.oracle.com (8.14.4/8.14.4) with ESMTP id x2B7kMLY023416
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Mon, 11 Mar 2019 07:46:22 GMT
-Received: from abhmp0007.oracle.com (abhmp0007.oracle.com [141.146.116.13])
-        by userv0121.oracle.com (8.14.4/8.13.8) with ESMTP id x2B7kLE0001915;
-        Mon, 11 Mar 2019 07:46:21 GMT
-Received: from kadam (/197.157.34.165)
-        by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Mon, 11 Mar 2019 00:46:20 -0700
-Date:   Mon, 11 Mar 2019 10:46:05 +0300
-From:   Dan Carpenter <dan.carpenter@oracle.com>
-To:     Mao Wenan <maowenan@huawei.com>
-Cc:     gregkh@linuxfoundation.org, jslaby@suse.com,
-        linux-serial@vger.kernel.org, linux-kernel@vger.kernel.org,
-        kernel-janitors@vger.kernel.org, vz@mleia.com
-Subject: Re: [PATCH serial v2] sc16is7xx: missing unregister/delete driver on
- error in sc16is7xx_init()
-Message-ID: <20190311074605.GB2434@kadam>
-References: <20190309025037.116449-1-maowenan@huawei.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190309025037.116449-1-maowenan@huawei.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
-X-Proofpoint-Virus-Version: vendor=nai engine=5900 definitions=9191 signatures=668685
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
- suspectscore=0 phishscore=0 bulkscore=0 spamscore=0 clxscore=1011
- lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=999 adultscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1810050000
- definitions=main-1903110059
+        Mon, 11 Mar 2019 03:50:03 -0400
+Received: from localhost (unknown [127.0.0.1])
+        by mta-p8.oit.umn.edu (Postfix) with ESMTP id 8CE109CC
+        for <linux-kernel@vger.kernel.org>; Mon, 11 Mar 2019 07:50:01 +0000 (UTC)
+X-Virus-Scanned: amavisd-new at umn.edu
+Received: from mta-p8.oit.umn.edu ([127.0.0.1])
+        by localhost (mta-p8.oit.umn.edu [127.0.0.1]) (amavisd-new, port 10024)
+        with ESMTP id CnuFJQi6ucRH for <linux-kernel@vger.kernel.org>;
+        Mon, 11 Mar 2019 02:50:01 -0500 (CDT)
+Received: from mail-it1-f198.google.com (mail-it1-f198.google.com [209.85.166.198])
+        (using TLSv1.2 with cipher AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mta-p8.oit.umn.edu (Postfix) with ESMTPS id 5ABF89BB
+        for <linux-kernel@vger.kernel.org>; Mon, 11 Mar 2019 02:50:01 -0500 (CDT)
+Received: by mail-it1-f198.google.com with SMTP id q184so4357440itd.6
+        for <linux-kernel@vger.kernel.org>; Mon, 11 Mar 2019 00:50:01 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=umn.edu; s=google;
+        h=from:to:cc:subject:date:message-id;
+        bh=Ad+Ht6iuPEK3V66itIO25xm2d2MmiWnk2HmclFaUdgw=;
+        b=VDNZtG59PFO7DSh0K1Jhd7J/P9sr1z5nGz5m24NANiVWhaC6/kijvsGQKeLD+9NTV/
+         RlsQoOio6SjU5DcZnFd5dqBdQYO1qDtjNDSHFVx6fZ4tZtElwS6uleVsLehsznLbEQiU
+         Az/VaVelJECl2hvDUu34Sj3sUVD6AL5uHhi/FSaTvucmJ8LTU0nxG7SNKLh9aEGQqM+Q
+         ErilQYuzOGronQY8OiIRExqvOvybK51e4xvuGMfAAC6FJjRaXk6J6APnVsZm9yZ9EjX6
+         KIOIJsRa+hkEhxsDzMBahiY5AoxjcL8VfYLhrcl7ZFG3I+AagOyewqzkEanrnA735PEQ
+         56AA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=Ad+Ht6iuPEK3V66itIO25xm2d2MmiWnk2HmclFaUdgw=;
+        b=FPLNMz9G/JODwNCvMYgMwwQ1lC66Iohxzljhldx6JtKkyKw0cZy5CsXwt5C5qvJqjg
+         Q0w7Dmu45ce/fzX8wUcSUTIDZ/vLzDBbG2vxtyXRTv/9TnXCWc36tfNGzrsKAUOjpa4f
+         w9ZdHnCNMexc4eWVLs9kCgtfR2tZBpp9z5X4C+c53nOBqQLBw+k8kseQDjIs8Z/ylv+S
+         v7OcnPgrdYqIVZldHRnphUL8KBhJV1NJiEtzrI49gnCywSFdepx6er5OZaS0RH3+YDEC
+         pYszRzovMTS0PCzpp+OQddCQC53/tm5AlyXqQo3T5yiyTm/mgmC6CUutCeywBbew226S
+         Hb/Q==
+X-Gm-Message-State: APjAAAWEDxayDM9XyWYNcNS7gYM9PTkIv8h6CjNw4pMpQuTil/5FGQU3
+        9ghJBaCeIKd2L9qKXA8kQ99aYPORvuzgOsAvfwGyE6zMLxv0iFDN3XmakV25HKhyY8ULLcuBtdU
+        dJMKL9qw9vRUV2aLxoXiNFzxG0u3s
+X-Received: by 2002:a24:1091:: with SMTP id 139mr15197826ity.110.1552290600964;
+        Mon, 11 Mar 2019 00:50:00 -0700 (PDT)
+X-Google-Smtp-Source: APXvYqxEcwbeVHeTUD0YZEey71JInwRH/jTEenqU6CZEUTD1zMNotqyC2OqmpD6lJpywuJsoIPrvZg==
+X-Received: by 2002:a24:1091:: with SMTP id 139mr15197810ity.110.1552290600647;
+        Mon, 11 Mar 2019 00:50:00 -0700 (PDT)
+Received: from bee.dtc.umn.edu (cs-bee-u.cs.umn.edu. [128.101.106.63])
+        by smtp.gmail.com with ESMTPSA id d6sm1852609ioc.44.2019.03.11.00.49.59
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Mon, 11 Mar 2019 00:49:59 -0700 (PDT)
+From:   Kangjie Lu <kjlu@umn.edu>
+To:     kjlu@umn.edu
+Cc:     pakki001@umn.edu,
+        Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Vladimir Zapolskiy <vladimir_zapolskiy@mentor.com>,
+        Geert Uytterhoeven <geert+renesas@glider.be>,
+        Simon Horman <horms+renesas@verge.net.au>,
+        Chris Brandt <chris.brandt@renesas.com>,
+        netdev@vger.kernel.org, linux-renesas-soc@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH v2] net: renesas: fix a missing check of of_get_phy_mode
+Date:   Mon, 11 Mar 2019 02:49:37 -0500
+Message-Id: <20190311074939.517-1-kjlu@umn.edu>
+X-Mailer: git-send-email 2.17.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat, Mar 09, 2019 at 10:50:37AM +0800, Mao Wenan wrote:
-> Add the missing uart_unregister_driver() and i2c_del_driver() before return
-> from sc16is7xx_init() in the error handling case.
-> 
-> Reviewed-by: Vladimir Zapolskiy <vz@mleia.com>
-> Signed-off-by: Mao Wenan <maowenan@huawei.com>
-> ---
->  v1->v2: fix compile warning if CONFIG_SERIAL_SC16IS7XX_SPI is not exist.
->  drivers/tty/serial/sc16is7xx.c | 14 ++++++++++++--
->  1 file changed, 12 insertions(+), 2 deletions(-)
-> 
-> diff --git a/drivers/tty/serial/sc16is7xx.c b/drivers/tty/serial/sc16is7xx.c
-> index 268098681856..b9e5941ce767 100644
-> --- a/drivers/tty/serial/sc16is7xx.c
-> +++ b/drivers/tty/serial/sc16is7xx.c
-> @@ -1509,7 +1509,7 @@ static int __init sc16is7xx_init(void)
->  	ret = i2c_add_driver(&sc16is7xx_i2c_uart_driver);
->  	if (ret < 0) {
->  		pr_err("failed to init sc16is7xx i2c --> %d\n", ret);
-> -		return ret;
-> +		goto err_i2c;
->  	}
->  #endif
->  
-> @@ -1517,10 +1517,20 @@ static int __init sc16is7xx_init(void)
->  	ret = spi_register_driver(&sc16is7xx_spi_uart_driver);
->  	if (ret < 0) {
->  		pr_err("failed to init sc16is7xx spi --> %d\n", ret);
-> -		return ret;
-> +		goto err_spi;
->  	}
->  #endif
->  	return ret;
-> +
-> +#ifdef CONFIG_SERIAL_SC16IS7XX_SPI
-> +err_spi:
-> +#endif
-> +#ifdef CONFIG_SERIAL_SC16IS7XX_I2C
-> +	i2c_del_driver(&sc16is7xx_i2c_uart_driver);
-> +err_i2c:
-> +#endif
-> +	uart_unregister_driver(&sc16is7xx_uart);
-> +	return ret;
+of_get_phy_mode may fail and return a negative error code;
+the fix checks the return value of of_get_phy_mode and
+returns NULL of it fails.
 
-This is quite ulgy.  Why not create two functions:
+Signed-off-by: Kangjie Lu <kjlu@umn.edu>
+---
+ drivers/net/ethernet/renesas/sh_eth.c | 2 ++
+ 1 file changed, 2 insertions(+)
 
-diff --git a/drivers/tty/serial/sc16is7xx.c b/drivers/tty/serial/sc16is7xx.c
-index 635178cf3eed..9986cb2479ad 100644
---- a/drivers/tty/serial/sc16is7xx.c
-+++ b/drivers/tty/serial/sc16is7xx.c
-@@ -1491,6 +1491,21 @@ static struct i2c_driver sc16is7xx_i2c_uart_driver = {
- 	.id_table	= sc16is7xx_i2c_id_table,
- };
+diff --git a/drivers/net/ethernet/renesas/sh_eth.c b/drivers/net/ethernet/renesas/sh_eth.c
+index 339b2eae2100..239eeafe1b2d 100644
+--- a/drivers/net/ethernet/renesas/sh_eth.c
++++ b/drivers/net/ethernet/renesas/sh_eth.c
+@@ -3187,6 +3187,8 @@ static struct sh_eth_plat_data *sh_eth_parse_dt(struct device *dev)
+ 		return NULL;
  
-+static int __init register_sc16is7xx_i2c(void)
-+{
-+	return i2c_add_driver(&sc16is7xx_i2c_uart_driver);
-+}
-+
-+static void __exit del_sc16is7xx_i2c(void)
-+{
-+	i2c_del_driver(&sc16is7xx_i2c_uart_driver);
-+}
-+
-+#else
-+
-+static int __init register_sc16is7xx_i2c(void) { return 0; }
-+static void __exit del_sc16is7xx_i2c(void) {}
-+
- #endif
+ 	pdata->phy_interface = of_get_phy_mode(np);
++	if (pdata->phy_interface < 0)
++		return NULL;
  
- static int __init sc16is7xx_init(void)
+ 	mac_addr = of_get_mac_address(np);
+ 	if (mac_addr)
+-- 
+2.17.1
 
-Then you can remove all the ifdefs.
-
-regards,
-dan carpenter
