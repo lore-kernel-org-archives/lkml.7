@@ -2,94 +2,90 @@ Return-Path: <SRS0=FxTY=RO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1AB60C43381
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 Mar 2019 19:58:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 66BFAC43381
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 Mar 2019 19:58:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D7B53214D8
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 Mar 2019 19:58:15 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1552334296;
-	bh=X1oppJNfwUc2ScPfniRvMe+j+iX78dxmg214MRw/Id0=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=g0fJ2rAsaVQq4MambTDLOFpmkd3S2nptgtxEDTNleieh4togiNTvqO7sq1GtjR2ge
-	 DDMx5PWHmkvqC08sJGUqp9mMpR1RX34bbwlwN9Jqof/dSDkeplrb3hmU21zpnmJ4A1
-	 Tet56CpnaTtfRUs+jMkIuZvz+n3O2+PKCTE6jnsU=
+	by mail.kernel.org (Postfix) with ESMTP id 3A8F2214D8
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 Mar 2019 19:58:18 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729326AbfCKT6O (ORCPT
+        id S1729343AbfCKT6R (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 11 Mar 2019 15:58:14 -0400
-Received: from mail.kernel.org ([198.145.29.99]:35568 "EHLO mail.kernel.org"
+        Mon, 11 Mar 2019 15:58:17 -0400
+Received: from mleia.com ([178.79.152.223]:48070 "EHLO mail.mleia.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729305AbfCKT6J (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 11 Mar 2019 15:58:09 -0400
-Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 12DDE214AF;
-        Mon, 11 Mar 2019 19:58:07 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1552334288;
-        bh=X1oppJNfwUc2ScPfniRvMe+j+iX78dxmg214MRw/Id0=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=aOuV1BigK0+Qfoy5Y/4JQ6oY36HVW4sXSwSS2qPeQ+gfinTfPJPdWMXF+T6orPmC1
-         grg/vwCe3ZW5Qssu5u11m+cdFCQ7jJ8IlWUgZWhpHrOxgawvKc2vgreSiIEQVQr6wf
-         Y1TZ6JbmndRWKXyyZ7MJxngt+ydq3FPq/HgbtLUo=
-From:   Sasha Levin <sashal@kernel.org>
-To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Dan Carpenter <dan.carpenter@oracle.com>,
-        "David S . Miller" <davem@davemloft.net>,
-        Sasha Levin <sashal@kernel.org>, netdev@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.19 37/44] net: dsa: bcm_sf2: potential array overflow in bcm_sf2_sw_suspend()
-Date:   Mon, 11 Mar 2019 15:56:53 -0400
-Message-Id: <20190311195700.138462-37-sashal@kernel.org>
-X-Mailer: git-send-email 2.19.1
-In-Reply-To: <20190311195700.138462-1-sashal@kernel.org>
-References: <20190311195700.138462-1-sashal@kernel.org>
+        id S1729294AbfCKT6O (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 11 Mar 2019 15:58:14 -0400
+Received: from mail.mleia.com (localhost [127.0.0.1])
+        by mail.mleia.com (Postfix) with ESMTP id A4090457CBF;
+        Mon, 11 Mar 2019 19:58:11 +0000 (GMT)
+Subject: Re: [PATCH 18/42] drivers: gpio: lpc18xx: use
+ devm_platform_ioremap_resource()
+To:     "Enrico Weigelt, metux IT consult" <info@metux.net>,
+        linux-kernel@vger.kernel.org
+Cc:     linus.walleij@linaro.org, bgolaszewski@baylibre.com,
+        andrew@aj.id.au, f.fainelli@gmail.com, sbranden@broadcom.com,
+        bcm-kernel-feedback-list@broadcom.com, hoan@os.amperecomputing.com,
+        orsonzhai@gmail.com, baolin.wang@linaro.org, zhang.lyra@gmail.com,
+        keguang.zhang@gmail.com, matthias.bgg@gmail.com,
+        thierry.reding@gmail.com, grygorii.strashko@ti.com,
+        ssantosh@kernel.org, khilman@kernel.org, robert.jarzmik@free.fr,
+        yamada.masahiro@socionext.com, jun.nie@linaro.org,
+        shawnguo@kernel.org, linux-gpio@vger.kernel.org,
+        linux-mips@vger.kernel.org, linux-pwm@vger.kernel.org,
+        linux-omap@vger.kernel.org, linux-tegra@vger.kernel.org
+References: <1552330521-4276-1-git-send-email-info@metux.net>
+ <1552330521-4276-18-git-send-email-info@metux.net>
+From:   Vladimir Zapolskiy <vz@mleia.com>
+Message-ID: <3a36e19b-05ef-2c0d-ce86-9422d6748b0c@mleia.com>
+Date:   Mon, 11 Mar 2019 21:58:09 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:52.0) Gecko/20100101
+ Thunderbird/52.6.0
 MIME-Version: 1.0
-X-Patchwork-Hint: Ignore
-Content-Transfer-Encoding: 8bit
+In-Reply-To: <1552330521-4276-18-git-send-email-info@metux.net>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.8.0 (BSD) ) MR-49551924 
+X-CRM114-CacheID: sfid-20190311_195811_744851_E739B33D 
+X-CRM114-Status: GOOD (  14.69  )
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Dan Carpenter <dan.carpenter@oracle.com>
+On 03/11/2019 08:54 PM, Enrico Weigelt, metux IT consult wrote:
+> Use the new helper that wraps the calls to platform_get_resource()
+> and devm_ioremap_resource() together.
+> 
+> Signed-off-by: Enrico Weigelt, metux IT consult <info@metux.net>
+> ---
+>  drivers/gpio/gpio-lpc18xx.c | 5 +----
+>  1 file changed, 1 insertion(+), 4 deletions(-)
+> 
+> diff --git a/drivers/gpio/gpio-lpc18xx.c b/drivers/gpio/gpio-lpc18xx.c
+> index d441dba..d711ae0 100644
+> --- a/drivers/gpio/gpio-lpc18xx.c
+> +++ b/drivers/gpio/gpio-lpc18xx.c
+> @@ -340,10 +340,7 @@ static int lpc18xx_gpio_probe(struct platform_device *pdev)
+>  	index = of_property_match_string(dev->of_node, "reg-names", "gpio");
+>  	if (index < 0) {
+>  		/* To support backward compatibility take the first resource */
+> -		struct resource *res;
+> -
+> -		res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
+> -		gc->base = devm_ioremap_resource(dev, res);
+> +		gc->base = devm_platform_ioremap_resource(pdev, 0);
+>  	} else {
+>  		struct resource res;
+>  
+> 
 
-[ Upstream commit 8d6ea932856c7087ce8c3d0e79494b7d5386f962 ]
+Acked-by: Vladimir Zapolskiy <vz@mleia.com>
 
-The value of ->num_ports comes from bcm_sf2_sw_probe() and it is less
-than or equal to DSA_MAX_PORTS.  The ds->ports[] array is used inside
-the dsa_is_user_port() and dsa_is_cpu_port() functions.  The ds->ports[]
-array is allocated in dsa_switch_alloc() and it has ds->num_ports
-elements so this leads to a static checker warning about a potential out
-of bounds read.
-
-Fixes: 8cfa94984c9c ("net: dsa: bcm_sf2: add suspend/resume callbacks")
-Signed-off-by: Dan Carpenter <dan.carpenter@oracle.com>
-Reviewed-by: Vivien Didelot <vivien.didelot@gmail.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
----
- drivers/net/dsa/bcm_sf2.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
-
-diff --git a/drivers/net/dsa/bcm_sf2.c b/drivers/net/dsa/bcm_sf2.c
-index fc8b48adf38b..bb26a193361e 100644
---- a/drivers/net/dsa/bcm_sf2.c
-+++ b/drivers/net/dsa/bcm_sf2.c
-@@ -692,7 +692,7 @@ static int bcm_sf2_sw_suspend(struct dsa_switch *ds)
- 	 * port, the other ones have already been disabled during
- 	 * bcm_sf2_sw_setup
- 	 */
--	for (port = 0; port < DSA_MAX_PORTS; port++) {
-+	for (port = 0; port < ds->num_ports; port++) {
- 		if (dsa_is_user_port(ds, port) || dsa_is_cpu_port(ds, port))
- 			bcm_sf2_port_disable(ds, port, NULL);
- 	}
--- 
-2.19.1
-
+--
+Best wishes,
+Vladimir
