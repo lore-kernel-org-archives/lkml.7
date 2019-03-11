@@ -2,148 +2,202 @@ Return-Path: <SRS0=FxTY=RO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EABE6C43381
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 Mar 2019 09:52:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 474C0C43381
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 Mar 2019 09:55:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AC7D4206BA
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 Mar 2019 09:52:46 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=microchiptechnology.onmicrosoft.com header.i=@microchiptechnology.onmicrosoft.com header.b="sy1ehUkh"
+	by mail.kernel.org (Postfix) with ESMTP id 0F570206BA
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 Mar 2019 09:55:53 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727041AbfCKJwp (ORCPT
+        id S1727070AbfCKJzw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 11 Mar 2019 05:52:45 -0400
-Received: from esa3.microchip.iphmx.com ([68.232.153.233]:7246 "EHLO
-        esa3.microchip.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726969AbfCKJwo (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 11 Mar 2019 05:52:44 -0400
-X-IronPort-AV: E=Sophos;i="5.58,467,1544511600"; 
-   d="scan'208";a="27960966"
-Received: from smtpout.microchip.com (HELO email.microchip.com) ([198.175.253.82])
-  by esa3.microchip.iphmx.com with ESMTP/TLS/DHE-RSA-AES256-SHA; 11 Mar 2019 02:52:43 -0700
-Received: from NAM03-DM3-obe.outbound.protection.outlook.com (10.10.215.89) by
- email.microchip.com (10.10.76.106) with Microsoft SMTP Server (TLS) id
- 14.3.352.0; Mon, 11 Mar 2019 02:52:43 -0700
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=microchiptechnology.onmicrosoft.com;
- s=selector1-microchiptechnology-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=pJe+ByDX3rOe07R2UI/KgYP2eiE8CoCF10qohVvuUy0=;
- b=sy1ehUkh9uwntzCBtF9JnxtqcFrwNQ83md6FVw8yIDcvoCfHSpZELiaPMaWr8QVlR0w3odn71q66vLdePjHtVVoSwcLfosP4r+c7TP9DDp5xnjxDOvaw+rjRviASE/SlxNHaf7dlhUMe8MCysQYdfmIhChXxOHRNKnHu7oKwTiE=
-Received: from MWHPR11MB1662.namprd11.prod.outlook.com (10.172.55.15) by
- MWHPR11MB1871.namprd11.prod.outlook.com (10.175.53.150) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.1686.22; Mon, 11 Mar 2019 09:52:41 +0000
-Received: from MWHPR11MB1662.namprd11.prod.outlook.com
- ([fe80::5413:49b5:8548:fe44]) by MWHPR11MB1662.namprd11.prod.outlook.com
- ([fe80::5413:49b5:8548:fe44%8]) with mapi id 15.20.1686.021; Mon, 11 Mar 2019
- 09:52:41 +0000
-From:   <Nicolas.Ferre@microchip.com>
-To:     <david.engraf@sysgo.com>, <robh+dt@kernel.org>,
-        <mark.rutland@arm.com>, <Ludovic.Desroches@microchip.com>,
-        <alexandre.belloni@bootlin.com>
-CC:     <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>
-Subject: Re: [PATCH] ARM: dts: at91: Fix typo in ISC_D0 on PC9
-Thread-Topic: [PATCH] ARM: dts: at91: Fix typo in ISC_D0 on PC9
-Thread-Index: AQHU1+FmKmRv5qHx8k2BLrHq+kz3oKYGMIcA
-Date:   Mon, 11 Mar 2019 09:52:41 +0000
-Message-ID: <48221283-f5c8-2c03-db40-11c581911434@microchip.com>
-References: <20190311075742.23320-1-david.engraf@sysgo.com>
-In-Reply-To: <20190311075742.23320-1-david.engraf@sysgo.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-clientproxiedby: LO2P265CA0384.GBRP265.PROD.OUTLOOK.COM
- (2603:10a6:600:a3::36) To MWHPR11MB1662.namprd11.prod.outlook.com
- (2603:10b6:301:e::15)
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=Nicolas.Ferre@microchip.com; 
-x-ms-exchange-messagesentrepresentingtype: 1
-x-originating-ip: [195.6.168.232]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: d2fd9c73-9ad1-4681-dd5c-08d6a6074d5e
-x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600127)(711020)(4605104)(2017052603328)(7153060)(7193020);SRVR:MWHPR11MB1871;
-x-ms-traffictypediagnostic: MWHPR11MB1871:
-x-microsoft-exchange-diagnostics: =?utf-8?B?MTtNV0hQUjExTUIxODcxOzIzOnZWQVBmWjhjNEZLN2VUNEdpcGJPUDAvckps?=
- =?utf-8?B?d3Y0TDNmNkFCR3VrdEJ3dzloczNHSmFoa0xVN3FoTGVwSHBkT3RjL0VTYUFi?=
- =?utf-8?B?MEpkNU1WYjZIL2MyNU5GOW1Sd3NtdFgrSW52aFpJRy80SDlvMEtpa0haT0c1?=
- =?utf-8?B?aVp1VDNLZUliZXhqWVlHZlhRSzY3YlM3Q2VWVEd0K1JDd0lNdXByYmpBWjc3?=
- =?utf-8?B?eVlITnYxMVMyNUtQQVQ1RXBjQTZLdFBpL1d1blk3YldxTm02OVpzdXM4NFdD?=
- =?utf-8?B?aGdIMmFQTWxMTFJMb3l6M1AraWhhQmlSS3pTRHdmbHAwUXFhMXpQZW5hUlV0?=
- =?utf-8?B?bjh3ZkxLYklzZjhocnlQa3pKR0pXSTF4cGRvUU5rcXk4ZnR4K1J5Q3pFSkcx?=
- =?utf-8?B?MDY1dWE0ZkVEeUhRSG1VK0xUc0RWUGNZczdNWHMzdUVPS25Ob1FNeExxUzZV?=
- =?utf-8?B?a1diTmNoMThxR25HTlU5dWpFbkhjNkhXbUFQak1nSklZeTR5VHhURWZ0QVV4?=
- =?utf-8?B?U005MWtsbzBtSGR2N1FLS1V6cVBzS1dpMTd6SmJPSkZIMVhMN2w1N3dyODFq?=
- =?utf-8?B?ZlBXTllSTVdSQmdNaWY0aHBvNjRNdzVSVlY4ZDA2djF2eTVkS3RnUldoMGRY?=
- =?utf-8?B?bXQ1ellXQTZlYWZMUmkyREYyQXZIYXZQQWEySXl6MklmZEdCa0Yrb3B6THlp?=
- =?utf-8?B?ZUtnenlybWREMWRGczNvRHhqVUNtMFZoTUhpOVR1Q3VKRGhtM2Y1djBVaVg2?=
- =?utf-8?B?b3RlVG9XekpXVlRiK21ZYUMvUmJNYmNOT2YrTXZLWWxVdVU4cVdYd290T0sv?=
- =?utf-8?B?RlBLOEkxMlA0Qm9tRVY1LzBhMmsrQXlqMkJPdlBQWFFLRUVpc25hWHBNMWta?=
- =?utf-8?B?b1JFalg1enNLYnh6azg2bXNZeFFJZXNQUG5makh1MVFCZ1RReERySWpuYVZW?=
- =?utf-8?B?RSsxMTR1MzBFT1oyVnNXVnBjTjgvYjkxMVRUU1hIYlM5dkV6ZDlaTzNjOXIx?=
- =?utf-8?B?TkdMdlpOeHpuNWVpbHg1WGZZQTR3SGcxZTR0MWZGSnphQVZucXk5UGNDMGE0?=
- =?utf-8?B?Y3VTNm9vVUxTNUxJREcrWExmSDlDU2VOc2JPMnpsc0RKMllXK3g1b1BsZzhT?=
- =?utf-8?B?RnlWQ09uY3RUa2tnTjBvbGhCcFY1U2pIU0RGZ1JXVGJmNkxrQVN3SGRHRTgw?=
- =?utf-8?B?WlNwbitGODFWZE9MaTRPMkI2ekpmWnhIV3J5Y3RabktwQnFOS3NiNzlGUUFz?=
- =?utf-8?B?UkFHY3J4SmpteEwyckxEOEZicmwwV0hKRjVBZVNRQWxXdHVvVUZyYWY2dnhD?=
- =?utf-8?B?d3F6cVZhVXRDOEVwNU9ZRkVZYmZuNEhiL3pBQjVKS3hkenFsQ0k5VUlMSUhU?=
- =?utf-8?B?STQ1VWgvOS9uL3YzM0txb1VaZHh4ZENvZmVCOUhuekJ5SFMxN1RlUmpvNWow?=
- =?utf-8?B?TCtycHp6VVZROVRjak1tREtPTmFyMlpzMVhRUWZSdWZEeFpVQVJ2L1l3Umhw?=
- =?utf-8?B?TDlPWExiYk9DMjdwMUQycThLMDB6aGZsc1NFSmE0L2J0R2FDY3k2TmxhWm9Z?=
- =?utf-8?B?VGtISDZCYmpRdHVyRE5raUJJUmliaVF6MnZ4aVhsandCV2ZzUDYyWDA2MnhB?=
- =?utf-8?B?eHJTbnRVUXRoUHFmckFsUnVEbW8valU5TURRYmN4cERXS2NOYzBZdFlFMGlS?=
- =?utf-8?B?YXZWRktVUTlURDllL2FxQzgyUDcxRHV6Q3dXd255YmRpakQ2cEpWR05oN3dE?=
- =?utf-8?B?dVNCN2xJSTR1ZSt5ZzVFUmd5WjlGQ3FOS3NoV08vdkd2eHp1MTBFUnRqem84?=
- =?utf-8?Q?QfHhhE19GfAW6?=
-x-microsoft-antispam-prvs: <MWHPR11MB18716271D23BEB8FD7255A6AE0480@MWHPR11MB1871.namprd11.prod.outlook.com>
-x-forefront-prvs: 09730BD177
-x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(346002)(376002)(39860400002)(366004)(396003)(136003)(189003)(199004)(66066001)(6436002)(8936002)(53546011)(6486002)(486006)(2616005)(11346002)(446003)(476003)(14454004)(86362001)(8676002)(54906003)(110136005)(316002)(2906002)(99286004)(68736007)(7736002)(305945005)(76176011)(386003)(52116002)(81166006)(6506007)(81156014)(102836004)(71190400001)(3846002)(5660300002)(6116002)(71200400001)(26005)(186003)(256004)(478600001)(105586002)(31696002)(106356001)(4326008)(72206003)(6246003)(229853002)(6512007)(14444005)(36756003)(97736004)(53936002)(31686004)(25786009)(2501003);DIR:OUT;SFP:1101;SCL:1;SRVR:MWHPR11MB1871;H:MWHPR11MB1662.namprd11.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
-received-spf: None (protection.outlook.com: microchip.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam-message-info: UnZ/jrLZL+1VFSL8S+wC21hvRXDWKTfX0RpqAf4h4FieKbMk9N/HE3ZO+fCNeE54cWPbTc6i8QVuwaEOC/SYMZLnYVRW0YaLvJ6tNGQ8VX/UNJ7mN7VxVJrAB/pBJpIHCztpEkjf0CGs5ItaILeqwDVc/0VkypcWo4egYZjx/KcrDO86dw/MZYwxvS0zDwp/l0HJWpV36My5CZFBhpUH3xAFlt2NSn7ajfM/oNV04Seou7r4+Nf26QTTinRWDih6cdmdmB828MAVE28bJ8MlcuSTEMCl52TTF9I5maeDtQu9LbYdESwAf5rMuLL17IkaCGkx1JpZWQlQoWbNH8+bOQ4sBbBGWm+0WZypllN6a/f6ilGNzMDiHdfIKPT+2voDoe5FV6NLwta0n7kKSQ/LTTm0tYwBRuntZ680baJOkuk=
-Content-Type: text/plain; charset="utf-8"
-Content-ID: <17D5149D6D1C4D45A281AFFF5AA264CC@namprd11.prod.outlook.com>
-Content-Transfer-Encoding: base64
+        Mon, 11 Mar 2019 05:55:52 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:56012 "EHLO mx1.redhat.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726989AbfCKJzv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 11 Mar 2019 05:55:51 -0400
+Received: from smtp.corp.redhat.com (int-mx05.intmail.prod.int.phx2.redhat.com [10.5.11.15])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id 3832CC057F3F;
+        Mon, 11 Mar 2019 09:55:50 +0000 (UTC)
+Received: from [10.36.117.207] (ovpn-117-207.ams2.redhat.com [10.36.117.207])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id CCD605D706;
+        Mon, 11 Mar 2019 09:55:41 +0000 (UTC)
+Subject: Re: [PATCH v2 3/8] kexec: export PG_offline to VMCOREINFO
+To:     Dave Young <dyoung@redhat.com>
+Cc:     linux-mm@kvack.org, linux-kernel@vger.kernel.org,
+        linux-doc@vger.kernel.org, devel@linuxdriverproject.org,
+        linux-fsdevel@vger.kernel.org, linux-pm@vger.kernel.org,
+        xen-devel@lists.xenproject.org,
+        kexec-ml <kexec@lists.infradead.org>, pv-drivers@vmware.com,
+        Andrew Morton <akpm@linux-foundation.org>,
+        "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>,
+        Baoquan He <bhe@redhat.com>, Omar Sandoval <osandov@fb.com>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Matthew Wilcox <willy@infradead.org>,
+        Michal Hocko <mhocko@suse.com>,
+        "Michael S. Tsirkin" <mst@redhat.com>,
+        Lianbo Jiang <lijiang@redhat.com>,
+        Borislav Petkov <bp@alien8.de>,
+        Kazuhito Hagio <k-hagio@ab.jp.nec.com>
+References: <20181122100627.5189-1-david@redhat.com>
+ <20181122100627.5189-4-david@redhat.com>
+ <20190311090402.GA12071@dhcp-128-65.nay.redhat.com>
+From:   David Hildenbrand <david@redhat.com>
+Openpgp: preference=signencrypt
+Autocrypt: addr=david@redhat.com; prefer-encrypt=mutual; keydata=
+ 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
+ SE+xAvmumFBY
+Organization: Red Hat GmbH
+Message-ID: <d9e578c3-5ae6-5e82-a0a8-14c7e12c729f@redhat.com>
+Date:   Mon, 11 Mar 2019 10:55:41 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.4.0
 MIME-Version: 1.0
-X-MS-Exchange-CrossTenant-Network-Message-Id: d2fd9c73-9ad1-4681-dd5c-08d6a6074d5e
-X-MS-Exchange-CrossTenant-originalarrivaltime: 11 Mar 2019 09:52:41.6882
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 3f4057f3-b418-4d4e-ba84-d55b4e897d88
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: MWHPR11MB1871
-X-OriginatorOrg: microchip.com
+In-Reply-To: <20190311090402.GA12071@dhcp-128-65.nay.redhat.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.15
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.32]); Mon, 11 Mar 2019 09:55:50 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-T24gMTEvMDMvMjAxOSBhdCAwODo1NywgRGF2aWQgRW5ncmFmIHdyb3RlOg0KPiBUaGUgZnVuY3Rp
-b24gYXJndW1lbnQgZm9yIHRoZSBJU0NfRDAgb24gUEM5IHdhcyBpbmNvcnJlY3QuIEFjY29yZGlu
-ZyB0bw0KPiB0aGUgZG9jdW1lbnRhdGlvbiBpdCBzaG91bGQgYmUgJ0MnIGFrYSAzLg0KPiANCj4g
-U2lnbmVkLW9mZi1ieTogRGF2aWQgRW5ncmFmIDxkYXZpZC5lbmdyYWZAc3lzZ28uY29tPg0KDQpS
-ZXZpZXdlZC1ieTogTmljb2xhcyBGZXJyZSA8bmljb2xhcy5mZXJyZUBtaWNyb2NoaXAuY29tPg0K
-DQpGaXhlczogN2YxNmNiNjc2YzAwICgiQVJNOiBhdDkxL2R0OiBhZGQgc2FtYTVkMiBwaW5tdXgi
-KQ0KQ2M6IDxzdGFibGVAdmdlci5rZXJuZWwub3JnPiAjIHY0LjQrDQoNCj4gLS0tDQo+ICAgYXJj
-aC9hcm0vYm9vdC9kdHMvc2FtYTVkMi1waW5mdW5jLmggfCAyICstDQo+ICAgMSBmaWxlIGNoYW5n
-ZWQsIDEgaW5zZXJ0aW9uKCspLCAxIGRlbGV0aW9uKC0pDQo+IA0KPiBkaWZmIC0tZ2l0IGEvYXJj
-aC9hcm0vYm9vdC9kdHMvc2FtYTVkMi1waW5mdW5jLmggYi9hcmNoL2FybS9ib290L2R0cy9zYW1h
-NWQyLXBpbmZ1bmMuaA0KPiBpbmRleCAxYzAxYTZmODQzZDguLjI4YTJlNDU3NTJmZSAxMDA2NDQN
-Cj4gLS0tIGEvYXJjaC9hcm0vYm9vdC9kdHMvc2FtYTVkMi1waW5mdW5jLmgNCj4gKysrIGIvYXJj
-aC9hcm0vYm9vdC9kdHMvc2FtYTVkMi1waW5mdW5jLmgNCj4gQEAgLTUxOCw3ICs1MTgsNyBAQA0K
-PiAgICNkZWZpbmUgUElOX1BDOV9fR1BJTwkJCVBJTk1VWF9QSU4oUElOX1BDOSwgMCwgMCkNCj4g
-ICAjZGVmaW5lIFBJTl9QQzlfX0ZJUQkJCVBJTk1VWF9QSU4oUElOX1BDOSwgMSwgMykNCj4gICAj
-ZGVmaW5lIFBJTl9QQzlfX0dUU1VDT01QCQlQSU5NVVhfUElOKFBJTl9QQzksIDIsIDEpDQo+IC0j
-ZGVmaW5lIFBJTl9QQzlfX0lTQ19EMAkJCVBJTk1VWF9QSU4oUElOX1BDOSwgMiwgMSkNCj4gKyNk
-ZWZpbmUgUElOX1BDOV9fSVNDX0QwCQkJUElOTVVYX1BJTihQSU5fUEM5LCAzLCAxKQ0KPiAgICNk
-ZWZpbmUgUElOX1BDOV9fVElPQTQJCQlQSU5NVVhfUElOKFBJTl9QQzksIDQsIDIpDQo+ICAgI2Rl
-ZmluZSBQSU5fUEMxMAkJCTc0DQo+ICAgI2RlZmluZSBQSU5fUEMxMF9fR1BJTwkJCVBJTk1VWF9Q
-SU4oUElOX1BDMTAsIDAsIDApDQo+IA0KDQoNCi0tIA0KTmljb2xhcyBGZXJyZQ0K
+On 11.03.19 10:04, Dave Young wrote:
+> Hi David,
+> On 11/22/18 at 11:06am, David Hildenbrand wrote:
+>> Right now, pages inflated as part of a balloon driver will be dumped
+>> by dump tools like makedumpfile. While XEN is able to check in the
+>> crash kernel whether a certain pfn is actuall backed by memory in the
+>> hypervisor (see xen_oldmem_pfn_is_ram) and optimize this case, dumps of
+>> other balloon inflated memory will essentially result in zero pages getting
+>> allocated by the hypervisor and the dump getting filled with this data.
+>>
+>> The allocation and reading of zero pages can directly be avoided if a
+>> dumping tool could know which pages only contain stale information not to
+>> be dumped.
+>>
+>> We now have PG_offline which can be (and already is by virtio-balloon)
+>> used for marking pages as logically offline. Follow up patches will
+>> make use of this flag also in other balloon implementations.
+>>
+>> Let's export PG_offline via PAGE_OFFLINE_MAPCOUNT_VALUE, so
+>> makedumpfile can directly skip pages that are logically offline and the
+>> content therefore stale. (we export is as a macro to match how it is
+>> done for PG_buddy. This way it is clearer that this is not actually a flag
+>> but only a very specific mapcount value to represent page types).
+>>
+>> Please note that this is also helpful for a problem we were seeing under
+>> Hyper-V: Dumping logically offline memory (pages kept fake offline while
+>> onlining a section via online_page_callback) would under some condicions
+>> result in a kernel panic when dumping them.
+>>
+>> Cc: Andrew Morton <akpm@linux-foundation.org>
+>> Cc: Dave Young <dyoung@redhat.com>
+>> Cc: "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>
+>> Cc: Baoquan He <bhe@redhat.com>
+>> Cc: Omar Sandoval <osandov@fb.com>
+>> Cc: Arnd Bergmann <arnd@arndb.de>
+>> Cc: Matthew Wilcox <willy@infradead.org>
+>> Cc: Michal Hocko <mhocko@suse.com>
+>> Cc: "Michael S. Tsirkin" <mst@redhat.com>
+>> Cc: Lianbo Jiang <lijiang@redhat.com>
+>> Cc: Borislav Petkov <bp@alien8.de>
+>> Cc: Kazuhito Hagio <k-hagio@ab.jp.nec.com>
+>> Acked-by: Michael S. Tsirkin <mst@redhat.com>
+>> Acked-by: Dave Young <dyoung@redhat.com>
+>> Signed-off-by: David Hildenbrand <david@redhat.com>
+>> ---
+>>  kernel/crash_core.c | 2 ++
+>>  1 file changed, 2 insertions(+)
+>>
+>> diff --git a/kernel/crash_core.c b/kernel/crash_core.c
+>> index 933cb3e45b98..093c9f917ed0 100644
+>> --- a/kernel/crash_core.c
+>> +++ b/kernel/crash_core.c
+>> @@ -464,6 +464,8 @@ static int __init crash_save_vmcoreinfo_init(void)
+>>  	VMCOREINFO_NUMBER(PAGE_BUDDY_MAPCOUNT_VALUE);
+>>  #ifdef CONFIG_HUGETLB_PAGE
+>>  	VMCOREINFO_NUMBER(HUGETLB_PAGE_DTOR);
+>> +#define PAGE_OFFLINE_MAPCOUNT_VALUE	(~PG_offline)
+>> +	VMCOREINFO_NUMBER(PAGE_OFFLINE_MAPCOUNT_VALUE);
+>>  #endif
+>>  
+>>  	arch_crash_save_vmcoreinfo();
+> 
+> The patch has been merged, would you mind to send a documentation patch
+> for the vmcoreinfo, which is added recently in Documentation/kdump/vmcoreinfo.txt
+> 
+> A brief description about how this vmcoreinfo field is used is good to
+> have.
+> 
+
+Turns out, it was already documented
+
+PG_lru|PG_private|PG_swapcache|PG_swapbacked|PG_slab|PG_hwpoision
+|PG_head_mask|PAGE_BUDDY_MAPCOUNT_VALUE(~PG_buddy)
+|PAGE_OFFLINE_MAPCOUNT_VALUE(~PG_offline)
+-----------------------------------------------------------------
+
+Page attributes. These flags are used to filter various unnecessary for
+dumping pages.
+
+
+Thanks!
+
+> Thanks
+> Dave
+> 
+
+
+-- 
+
+Thanks,
+
+David / dhildenb
