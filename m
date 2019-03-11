@@ -4,48 +4,59 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+	SPF_PASS,USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5DD4DC4360F
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 Mar 2019 19:58:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1540FC4360F
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 Mar 2019 19:58:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3029C214AF
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 Mar 2019 19:58:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E049D217F4
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 Mar 2019 19:58:08 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1552334286;
-	bh=1NBB3WLsM3p6uRGOplZg73mDiVeStTDgAgNckrrakDI=;
+	s=default; t=1552334289;
+	bh=PvDL5hfdTo39+081iHzkelRzGH/4i9a2+4eP8jFCCv4=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=a/qSNSPsPVDGwNx8bLlTROxFPUw8iNQgTmF+/TaxRNqCfYOpaLuuoGaiCYB4PPAly
-	 N03xPdhNBUvDIeyhE1f27h9amHoww4ypUOGkE2qu31qrWoTj03+tzxy/bahq91gY69
-	 aWzZ9S/86+3dvAiaPZt8VZ2f/58jBFHVAFoHwd+s=
+	b=TwGg/heVGqdy3AnngXv4W+B9sc7ebxm9YIQCAjKGCBuBqt5Z9vKECfk3OglbYv9QP
+	 FfcFq0pFUhEMpffWnIlJuGU1XmnQRuPzbE/khRZHMMqyBXyy44JFzmAkYnX+kUMd4A
+	 F4pytiyRt1pB7YrLM1CXhqg+uAn+XGGr/qO8n84c=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728444AbfCKT6F (ORCPT
+        id S1729298AbfCKT6H (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 11 Mar 2019 15:58:05 -0400
-Received: from mail.kernel.org ([198.145.29.99]:35368 "EHLO mail.kernel.org"
+        Mon, 11 Mar 2019 15:58:07 -0400
+Received: from mail.kernel.org ([198.145.29.99]:35428 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729267AbfCKT6A (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 11 Mar 2019 15:58:00 -0400
+        id S1728521AbfCKT6D (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 11 Mar 2019 15:58:03 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id CB5812087C;
-        Mon, 11 Mar 2019 19:57:58 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 1ACAA2084F;
+        Mon, 11 Mar 2019 19:58:01 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1552334279;
-        bh=1NBB3WLsM3p6uRGOplZg73mDiVeStTDgAgNckrrakDI=;
+        s=default; t=1552334282;
+        bh=PvDL5hfdTo39+081iHzkelRzGH/4i9a2+4eP8jFCCv4=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=iu8C7Z86FDZqtCauN9colb2BiGWG2bm2hZq9CvY7Pwfgtk9OUW6qDLu9nSg3Igj4A
-         LGEtVu/226dle7Dh/ulGvUSHFlE3tipbxp3foI9pfg5chXITO6gcaJHDaG9OL/xBHd
-         rJ25UREsqcQk18Uuk0/phxDuV22hsYY17GACl68w=
+        b=tqzFM3PxPRKFZ/5BwC0Lahcl49AXKVUkZk0bdiUCFf6ak/wSQp5LjcZDoRo/6w8ad
+         GsbbI5h3PMNX4KpTQ4toDZ8VpjVNzJRRKyiYdIaaf1qsylNnPQG7U0FqtBUaNxmlnI
+         OAxG6WijGYVRXQQQFIWJ3I7Ck4rk6J2Ky25a8rqA=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Benjamin Coddington <bcodding@redhat.com>,
-        Anna Schumaker <Anna.Schumaker@Netapp.com>,
-        Sasha Levin <sashal@kernel.org>, linux-nfs@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.19 33/44] NFS: Don't use page_file_mapping after removing the page
-Date:   Mon, 11 Mar 2019 15:56:49 -0400
-Message-Id: <20190311195700.138462-33-sashal@kernel.org>
+Cc:     Yu Zhao <yuzhao@google.com>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Huang Ying <ying.huang@intel.com>,
+        Matthew Wilcox <willy@infradead.org>,
+        Keith Busch <keith.busch@intel.com>,
+        "Michael S . Tsirkin" <mst@redhat.com>,
+        John Hubbard <jhubbard@nvidia.com>,
+        Wei Yang <richard.weiyang@gmail.com>,
+        Mike Rapoport <rppt@linux.ibm.com>,
+        Andrea Arcangeli <aarcange@redhat.com>,
+        "Kirill A . Shutemov" <kirill.shutemov@linux.intel.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Sasha Levin <sashal@kernel.org>, linux-mm@kvack.org
+Subject: [PATCH AUTOSEL 4.19 34/44] mm/gup: fix gup_pmd_range() for dax
+Date:   Mon, 11 Mar 2019 15:56:50 -0400
+Message-Id: <20190311195700.138462-34-sashal@kernel.org>
 X-Mailer: git-send-email 2.19.1
 In-Reply-To: <20190311195700.138462-1-sashal@kernel.org>
 References: <20190311195700.138462-1-sashal@kernel.org>
@@ -57,67 +68,48 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Benjamin Coddington <bcodding@redhat.com>
+From: Yu Zhao <yuzhao@google.com>
 
-[ Upstream commit d2ceb7e57086750ea6198a31fd942d98099a0786 ]
+[ Upstream commit 414fd080d125408cb15d04ff4907e1dd8145c8c7 ]
 
-If nfs_page_async_flush() removes the page from the mapping, then we can't
-use page_file_mapping() on it as nfs_updatepate() is wont to do when
-receiving an error.  Instead, push the mapping to the stack before the page
-is possibly truncated.
+For dax pmd, pmd_trans_huge() returns false but pmd_huge() returns true
+on x86.  So the function works as long as hugetlb is configured.
+However, dax doesn't depend on hugetlb.
 
-Fixes: 8fc75bed96bb ("NFS: Fix up return value on fatal errors in nfs_page_async_flush()")
-Signed-off-by: Benjamin Coddington <bcodding@redhat.com>
-Signed-off-by: Anna Schumaker <Anna.Schumaker@Netapp.com>
+Link: http://lkml.kernel.org/r/20190111034033.601-1-yuzhao@google.com
+Signed-off-by: Yu Zhao <yuzhao@google.com>
+Reviewed-by: Jan Kara <jack@suse.cz>
+Cc: Dan Williams <dan.j.williams@intel.com>
+Cc: Huang Ying <ying.huang@intel.com>
+Cc: Matthew Wilcox <willy@infradead.org>
+Cc: Keith Busch <keith.busch@intel.com>
+Cc: "Michael S . Tsirkin" <mst@redhat.com>
+Cc: John Hubbard <jhubbard@nvidia.com>
+Cc: Wei Yang <richard.weiyang@gmail.com>
+Cc: Mike Rapoport <rppt@linux.ibm.com>
+Cc: Andrea Arcangeli <aarcange@redhat.com>
+Cc: "Kirill A . Shutemov" <kirill.shutemov@linux.intel.com>
+Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
+Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- fs/nfs/write.c | 11 ++++++-----
- 1 file changed, 6 insertions(+), 5 deletions(-)
+ mm/gup.c | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
-diff --git a/fs/nfs/write.c b/fs/nfs/write.c
-index d790faff8e47..51d0b7913c04 100644
---- a/fs/nfs/write.c
-+++ b/fs/nfs/write.c
-@@ -238,9 +238,9 @@ static void nfs_grow_file(struct page *page, unsigned int offset, unsigned int c
- }
+diff --git a/mm/gup.c b/mm/gup.c
+index 1abc8b4afff6..0a5374e6e82d 100644
+--- a/mm/gup.c
++++ b/mm/gup.c
+@@ -1649,7 +1649,8 @@ static int gup_pmd_range(pud_t pud, unsigned long addr, unsigned long end,
+ 		if (!pmd_present(pmd))
+ 			return 0;
  
- /* A writeback failed: mark the page as bad, and invalidate the page cache */
--static void nfs_set_pageerror(struct page *page)
-+static void nfs_set_pageerror(struct address_space *mapping)
- {
--	nfs_zap_mapping(page_file_mapping(page)->host, page_file_mapping(page));
-+	nfs_zap_mapping(mapping->host, mapping);
- }
- 
- /*
-@@ -994,7 +994,7 @@ static void nfs_write_completion(struct nfs_pgio_header *hdr)
- 		nfs_list_remove_request(req);
- 		if (test_bit(NFS_IOHDR_ERROR, &hdr->flags) &&
- 		    (hdr->good_bytes < bytes)) {
--			nfs_set_pageerror(req->wb_page);
-+			nfs_set_pageerror(page_file_mapping(req->wb_page));
- 			nfs_context_set_write_error(req->wb_context, hdr->error);
- 			goto remove_req;
- 		}
-@@ -1330,7 +1330,8 @@ int nfs_updatepage(struct file *file, struct page *page,
- 		unsigned int offset, unsigned int count)
- {
- 	struct nfs_open_context *ctx = nfs_file_open_context(file);
--	struct inode	*inode = page_file_mapping(page)->host;
-+	struct address_space *mapping = page_file_mapping(page);
-+	struct inode	*inode = mapping->host;
- 	int		status = 0;
- 
- 	nfs_inc_stats(inode, NFSIOS_VFSUPDATEPAGE);
-@@ -1348,7 +1349,7 @@ int nfs_updatepage(struct file *file, struct page *page,
- 
- 	status = nfs_writepage_setup(ctx, page, offset, count);
- 	if (status < 0)
--		nfs_set_pageerror(page);
-+		nfs_set_pageerror(mapping);
- 	else
- 		__set_page_dirty_nobuffers(page);
- out:
+-		if (unlikely(pmd_trans_huge(pmd) || pmd_huge(pmd))) {
++		if (unlikely(pmd_trans_huge(pmd) || pmd_huge(pmd) ||
++			     pmd_devmap(pmd))) {
+ 			/*
+ 			 * NUMA hinting faults need to be handled in the GUP
+ 			 * slowpath for accounting purposes and so that they
 -- 
 2.19.1
 
