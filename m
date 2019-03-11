@@ -3,174 +3,270 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C8E14C43381
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 Mar 2019 20:10:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2390AC43381
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 Mar 2019 20:10:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 99E172064A
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 Mar 2019 20:10:39 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1552335039;
-	bh=96fweznMXPE/vh0EMoHo+TkT1UGQCGtN3rh9Yv7tpSo=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=o1u2yt0INYz32+JVw6At+aKc9Jsf1ObpomRfnbOF1uvZKYLmQ1Bb+uWL2BNbPDBgk
-	 SkKODe3u7TQP5hhnsCh68SawzGXqfEzfsM40jg/r0UPxeMDOaQpG1cX787Ye6gVaEk
-	 BaRGgYLl9t6ICs1ytIiHTBJ3vWes1/faLF4ynu0U=
+	by mail.kernel.org (Postfix) with ESMTP id DF73A2064A
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 Mar 2019 20:10:48 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=fb.com header.i=@fb.com header.b="I97NxV3l"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728733AbfCKT4b (ORCPT
+        id S1728715AbfCKT4a (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 11 Mar 2019 15:56:31 -0400
-Received: from mail.kernel.org ([198.145.29.99]:33754 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728688AbfCKT42 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 11 Mar 2019 15:56:30 -0400
+Received: from mx0b-00082601.pphosted.com ([67.231.153.30]:38954 "EHLO
+        mx0b-00082601.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1728679AbfCKT42 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
         Mon, 11 Mar 2019 15:56:28 -0400
-Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id BEC30217D9;
-        Mon, 11 Mar 2019 19:56:26 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1552334187;
-        bh=96fweznMXPE/vh0EMoHo+TkT1UGQCGtN3rh9Yv7tpSo=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Leoz/kHgmSSe5RpF1YxH3yBxxFzWIXP/BguDUFaqDMXvEd8opesJkwh/sSACwEMrC
-         OURQ7EAW4kYKWbawdjRelpXz1HOpSQG8ndLfra6oRnarIxyjOqmVbelhKIHTp1BGx9
-         lMqo6WbVfiSy7Qa7tdUUwYARmtmrznMtAHzbIWBw=
-From:   Sasha Levin <sashal@kernel.org>
-To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Qian Cai <cai@lca.pw>,
-        Pasha Tatashin <Pavel.Tatashin@microsoft.com>,
-        Mel Gorman <mgorman@techsingularity.net>,
-        Yang Shi <yang.shi@linaro.org>,
-        Joonsoo Kim <iamjoonsoo.kim@lge.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Sasha Levin <sashal@kernel.org>, linux-mm@kvack.org
-Subject: [PATCH AUTOSEL 4.20 38/52] Revert "mm: use early_pfn_to_nid in page_ext_init"
-Date:   Mon, 11 Mar 2019 15:55:02 -0400
-Message-Id: <20190311195516.137772-38-sashal@kernel.org>
-X-Mailer: git-send-email 2.19.1
-In-Reply-To: <20190311195516.137772-1-sashal@kernel.org>
-References: <20190311195516.137772-1-sashal@kernel.org>
+Received: from pps.filterd (m0148460.ppops.net [127.0.0.1])
+        by mx0a-00082601.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x2BJshJ8000497
+        for <linux-kernel@vger.kernel.org>; Mon, 11 Mar 2019 12:56:26 -0700
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=fb.com; h=from : to : cc : subject
+ : date : message-id : in-reply-to : references : mime-version :
+ content-type; s=facebook; bh=3f1/7dNVoU4JrPYZXuXMuxBJH9f0uYqRb7kWZjII/UI=;
+ b=I97NxV3lh5xv3z47ztUlqQ+U7QB2uJJbJiHRPiawioSMq5ShHCC+wpRYLNDXCWd14/cS
+ ChmboALXHkK1Edb0PQdMKompdptihb8xaX6s3mOoPY5MFANsSvmjKyMRfcu5Oguw1+Lt
+ qLydLoJU2zUEXGfxy6PyLkeNjC76dHWhIig= 
+Received: from maileast.thefacebook.com ([199.201.65.23])
+        by mx0a-00082601.pphosted.com with ESMTP id 2r5vwv0a9y-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-SHA384 bits=256 verify=NOT)
+        for <linux-kernel@vger.kernel.org>; Mon, 11 Mar 2019 12:56:26 -0700
+Received: from mx-out.facebook.com (2620:10d:c0a1:3::13) by
+ mail.thefacebook.com (2620:10d:c021:18::176) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA) id 15.1.1713.5;
+ Mon, 11 Mar 2019 12:56:26 -0700
+Received: by devbig006.ftw2.facebook.com (Postfix, from userid 4523)
+        id C8FF162E1B7E; Mon, 11 Mar 2019 12:56:25 -0700 (PDT)
+Smtp-Origin-Hostprefix: devbig
+From:   Song Liu <songliubraving@fb.com>
+Smtp-Origin-Hostname: devbig006.ftw2.facebook.com
+To:     <bpf@vger.kernel.org>, <netdev@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>
+CC:     <ast@kernel.org>, <daniel@iogearbox.net>, <kernel-team@fb.com>,
+        <peterz@infradead.org>, <acme@redhat.com>, <jolsa@kernel.org>,
+        <namhyung@kernel.org>, <sdf@fomichev.me>,
+        Song Liu <songliubraving@fb.com>
+Smtp-Origin-Cluster: ftw2c04
+Subject: [PATCH v8 perf,bpf 04/15] perf, bpf: synthesize bpf events with bpf_program__get_prog_info_linear()
+Date:   Mon, 11 Mar 2019 12:55:44 -0700
+Message-ID: <20190311195555.889995-5-songliubraving@fb.com>
+X-Mailer: git-send-email 2.17.1
+In-Reply-To: <20190311195555.889995-1-songliubraving@fb.com>
+References: <20190311195555.889995-1-songliubraving@fb.com>
+X-FB-Internal: Safe
 MIME-Version: 1.0
-X-Patchwork-Hint: Ignore
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-03-11_15:,,
+ signatures=0
+X-Proofpoint-Spam-Reason: safe
+X-FB-Internal: Safe
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Qian Cai <cai@lca.pw>
+With bpf_program__get_prog_info_linear, we can simplify the logic that
+synthesizes bpf events.
 
-[ Upstream commit 2f1ee0913ce58efe7f18fbd518bd54c598559b89 ]
+This patch doesn't change the behavior of the code.
 
-This reverts commit fe53ca54270a ("mm: use early_pfn_to_nid in
-page_ext_init").
-
-When booting a system with "page_owner=on",
-
-start_kernel
-  page_ext_init
-    invoke_init_callbacks
-      init_section_page_ext
-        init_page_owner
-          init_early_allocated_pages
-            init_zones_in_node
-              init_pages_in_zone
-                lookup_page_ext
-                  page_to_nid
-
-The issue here is that page_to_nid() will not work since some page flags
-have no node information until later in page_alloc_init_late() due to
-DEFERRED_STRUCT_PAGE_INIT.  Hence, it could trigger an out-of-bounds
-access with an invalid nid.
-
-  UBSAN: Undefined behaviour in ./include/linux/mm.h:1104:50
-  index 7 is out of range for type 'zone [5]'
-
-Also, kernel will panic since flags were poisoned earlier with,
-
-CONFIG_DEBUG_VM_PGFLAGS=y
-CONFIG_NODE_NOT_IN_PAGE_FLAGS=n
-
-start_kernel
-  setup_arch
-    pagetable_init
-      paging_init
-        sparse_init
-          sparse_init_nid
-            memblock_alloc_try_nid_raw
-
-It did not handle it well in init_pages_in_zone() which ends up calling
-page_to_nid().
-
-  page:ffffea0004200000 is uninitialized and poisoned
-  raw: ffffffffffffffff ffffffffffffffff ffffffffffffffff ffffffffffffffff
-  raw: ffffffffffffffff ffffffffffffffff ffffffffffffffff ffffffffffffffff
-  page dumped because: VM_BUG_ON_PAGE(PagePoisoned(p))
-  page_owner info is not active (free page?)
-  kernel BUG at include/linux/mm.h:990!
-  RIP: 0010:init_page_owner+0x486/0x520
-
-This means that assumptions behind commit fe53ca54270a ("mm: use
-early_pfn_to_nid in page_ext_init") are incomplete.  Therefore, revert
-the commit for now.  A proper way to move the page_owner initialization
-to sooner is to hook into memmap initialization.
-
-Link: http://lkml.kernel.org/r/20190115202812.75820-1-cai@lca.pw
-Signed-off-by: Qian Cai <cai@lca.pw>
-Acked-by: Michal Hocko <mhocko@kernel.org>
-Cc: Pasha Tatashin <Pavel.Tatashin@microsoft.com>
-Cc: Mel Gorman <mgorman@techsingularity.net>
-Cc: Yang Shi <yang.shi@linaro.org>
-Cc: Joonsoo Kim <iamjoonsoo.kim@lge.com>
-Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
-Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
+Signed-off-by: Song Liu <songliubraving@fb.com>
 ---
- init/main.c   | 3 ++-
- mm/page_ext.c | 4 +---
- 2 files changed, 3 insertions(+), 4 deletions(-)
+ tools/perf/util/bpf-event.c | 118 ++++++++++++------------------------
+ 1 file changed, 40 insertions(+), 78 deletions(-)
 
-diff --git a/init/main.c b/init/main.c
-index ee147103ba1b..5def2b073b9c 100644
---- a/init/main.c
-+++ b/init/main.c
-@@ -695,7 +695,6 @@ asmlinkage __visible void __init start_kernel(void)
- 		initrd_start = 0;
+diff --git a/tools/perf/util/bpf-event.c b/tools/perf/util/bpf-event.c
+index 796ef793f4ce..e6dfb95029e5 100644
+--- a/tools/perf/util/bpf-event.c
++++ b/tools/perf/util/bpf-event.c
+@@ -3,7 +3,9 @@
+ #include <stdlib.h>
+ #include <bpf/bpf.h>
+ #include <bpf/btf.h>
++#include <bpf/libbpf.h>
+ #include <linux/btf.h>
++#include <linux/err.h>
+ #include "bpf-event.h"
+ #include "debug.h"
+ #include "symbol.h"
+@@ -49,99 +51,62 @@ static int perf_event__synthesize_one_bpf_prog(struct perf_tool *tool,
+ {
+ 	struct ksymbol_event *ksymbol_event = &event->ksymbol_event;
+ 	struct bpf_event *bpf_event = &event->bpf_event;
+-	u32 sub_prog_cnt, i, func_info_rec_size = 0;
+-	u8 (*prog_tags)[BPF_TAG_SIZE] = NULL;
+-	struct bpf_prog_info info = { .type = 0, };
+-	u32 info_len = sizeof(info);
+-	void *func_infos = NULL;
+-	u64 *prog_addrs = NULL;
++	struct bpf_prog_info_linear *info_linear;
++	struct bpf_prog_info *info;
+ 	struct btf *btf = NULL;
+-	u32 *prog_lens = NULL;
+ 	bool has_btf = false;
+-	char errbuf[512];
++	u32 sub_prog_cnt, i;
+ 	int err = 0;
++	u64 arrays;
+ 
+-	/* Call bpf_obj_get_info_by_fd() to get sizes of arrays */
+-	err = bpf_obj_get_info_by_fd(fd, &info, &info_len);
++	arrays = 1UL << BPF_PROG_INFO_JITED_KSYMS;
++	arrays |= 1UL << BPF_PROG_INFO_JITED_FUNC_LENS;
++	arrays |= 1UL << BPF_PROG_INFO_FUNC_INFO;
++	arrays |= 1UL << BPF_PROG_INFO_PROG_TAGS;
+ 
+-	if (err) {
+-		pr_debug("%s: failed to get BPF program info: %s, aborting\n",
+-			 __func__, str_error_r(errno, errbuf, sizeof(errbuf)));
++	info_linear = bpf_program__get_prog_info_linear(fd, arrays);
++	if (IS_ERR_OR_NULL(info_linear)) {
++		info_linear = NULL;
++		pr_debug("%s: failed to get BPF program info. aborting\n", __func__);
+ 		return -1;
  	}
- #endif
--	page_ext_init();
- 	kmemleak_init();
- 	debug_objects_mem_init();
- 	setup_per_cpu_pageset();
-@@ -1147,6 +1146,8 @@ static noinline void __init kernel_init_freeable(void)
- 	sched_init_smp();
+-	if (info_len < offsetof(struct bpf_prog_info, prog_tags)) {
++
++	if (info_linear->info_len < offsetof(struct bpf_prog_info, prog_tags)) {
+ 		pr_debug("%s: the kernel is too old, aborting\n", __func__);
+ 		return -2;
+ 	}
  
- 	page_alloc_init_late();
-+	/* Initialize page ext after all struct pages are initialized. */
-+	page_ext_init();
++	info = &info_linear->info;
++
+ 	/* number of ksyms, func_lengths, and tags should match */
+-	sub_prog_cnt = info.nr_jited_ksyms;
+-	if (sub_prog_cnt != info.nr_prog_tags ||
+-	    sub_prog_cnt != info.nr_jited_func_lens)
++	sub_prog_cnt = info->nr_jited_ksyms;
++	if (sub_prog_cnt != info->nr_prog_tags ||
++	    sub_prog_cnt != info->nr_jited_func_lens)
+ 		return -1;
  
- 	do_basic_setup();
+ 	/* check BTF func info support */
+-	if (info.btf_id && info.nr_func_info && info.func_info_rec_size) {
++	if (info->btf_id && info->nr_func_info && info->func_info_rec_size) {
+ 		/* btf func info number should be same as sub_prog_cnt */
+-		if (sub_prog_cnt != info.nr_func_info) {
++		if (sub_prog_cnt != info->nr_func_info) {
+ 			pr_debug("%s: mismatch in BPF sub program count and BTF function info count, aborting\n", __func__);
+-			return -1;
+-		}
+-		if (btf__get_from_id(info.btf_id, &btf)) {
+-			pr_debug("%s: failed to get BTF of id %u, aborting\n", __func__, info.btf_id);
+-			return -1;
++			err = -1;
++			goto out;
+ 		}
+-		func_info_rec_size = info.func_info_rec_size;
+-		func_infos = calloc(sub_prog_cnt, func_info_rec_size);
+-		if (!func_infos) {
+-			pr_debug("%s: failed to allocate memory for func_infos, aborting\n", __func__);
+-			return -1;
++		if (btf__get_from_id(info->btf_id, &btf)) {
++			pr_debug("%s: failed to get BTF of id %u, aborting\n", __func__, info->btf_id);
++			err = -1;
++			btf = NULL;
++			goto out;
+ 		}
+ 		has_btf = true;
+ 	}
  
-diff --git a/mm/page_ext.c b/mm/page_ext.c
-index ae44f7adbe07..8c78b8d45117 100644
---- a/mm/page_ext.c
-+++ b/mm/page_ext.c
-@@ -398,10 +398,8 @@ void __init page_ext_init(void)
- 			 * We know some arch can have a nodes layout such as
- 			 * -------------pfn-------------->
- 			 * N0 | N1 | N2 | N0 | N1 | N2|....
--			 *
--			 * Take into account DEFERRED_STRUCT_PAGE_INIT.
- 			 */
--			if (early_pfn_to_nid(pfn) != nid)
-+			if (pfn_to_nid(pfn) != nid)
- 				continue;
- 			if (init_section_page_ext(pfn, nid))
- 				goto oom;
+-	/*
+-	 * We need address, length, and tag for each sub program.
+-	 * Allocate memory and call bpf_obj_get_info_by_fd() again
+-	 */
+-	prog_addrs = calloc(sub_prog_cnt, sizeof(u64));
+-	if (!prog_addrs) {
+-		pr_debug("%s: failed to allocate memory for prog_addrs, aborting\n", __func__);
+-		goto out;
+-	}
+-	prog_lens = calloc(sub_prog_cnt, sizeof(u32));
+-	if (!prog_lens) {
+-		pr_debug("%s: failed to allocate memory for prog_lens, aborting\n", __func__);
+-		goto out;
+-	}
+-	prog_tags = calloc(sub_prog_cnt, BPF_TAG_SIZE);
+-	if (!prog_tags) {
+-		pr_debug("%s: failed to allocate memory for prog_tags, aborting\n", __func__);
+-		goto out;
+-	}
+-
+-	memset(&info, 0, sizeof(info));
+-	info.nr_jited_ksyms = sub_prog_cnt;
+-	info.nr_jited_func_lens = sub_prog_cnt;
+-	info.nr_prog_tags = sub_prog_cnt;
+-	info.jited_ksyms = ptr_to_u64(prog_addrs);
+-	info.jited_func_lens = ptr_to_u64(prog_lens);
+-	info.prog_tags = ptr_to_u64(prog_tags);
+-	info_len = sizeof(info);
+-	if (has_btf) {
+-		info.nr_func_info = sub_prog_cnt;
+-		info.func_info_rec_size = func_info_rec_size;
+-		info.func_info = ptr_to_u64(func_infos);
+-	}
+-
+-	err = bpf_obj_get_info_by_fd(fd, &info, &info_len);
+-	if (err) {
+-		pr_debug("%s: failed to get BPF program info, aborting\n", __func__);
+-		goto out;
+-	}
+-
+ 	/* Synthesize PERF_RECORD_KSYMBOL */
+ 	for (i = 0; i < sub_prog_cnt; i++) {
++		u8 (*prog_tags)[BPF_TAG_SIZE] = (void *)(info->prog_tags);
++		__u32 *prog_lens = (__u32 *)(info->jited_func_lens);
++		__u64 *prog_addrs = (__u64 *)(info->jited_ksyms);
++		void *func_infos = (void *)(info->func_info);
+ 		const struct bpf_func_info *finfo;
+ 		const char *short_name = NULL;
+ 		const struct btf_type *t;
+@@ -163,13 +128,13 @@ static int perf_event__synthesize_one_bpf_prog(struct perf_tool *tool,
+ 					 KSYM_NAME_LEN - name_len,
+ 					 prog_tags[i], BPF_TAG_SIZE);
+ 		if (has_btf) {
+-			finfo = func_infos + i * info.func_info_rec_size;
++			finfo = func_infos + i * info->func_info_rec_size;
+ 			t = btf__type_by_id(btf, finfo->type_id);
+ 			short_name = btf__name_by_offset(btf, t->name_off);
+ 		} else if (i == 0 && sub_prog_cnt == 1) {
+ 			/* no subprog */
+-			if (info.name[0])
+-				short_name = info.name;
++			if (info->name[0])
++				short_name = info->name;
+ 		} else
+ 			short_name = "F";
+ 		if (short_name)
+@@ -195,9 +160,9 @@ static int perf_event__synthesize_one_bpf_prog(struct perf_tool *tool,
+ 			},
+ 			.type = PERF_BPF_EVENT_PROG_LOAD,
+ 			.flags = 0,
+-			.id = info.id,
++			.id = info->id,
+ 		};
+-		memcpy(bpf_event->tag, prog_tags[i], BPF_TAG_SIZE);
++		memcpy(bpf_event->tag, info->tag, BPF_TAG_SIZE);
+ 		memset((void *)event + event->header.size, 0, machine->id_hdr_size);
+ 		event->header.size += machine->id_hdr_size;
+ 		err = perf_tool__process_synth_event(tool, event,
+@@ -205,10 +170,7 @@ static int perf_event__synthesize_one_bpf_prog(struct perf_tool *tool,
+ 	}
+ 
+ out:
+-	free(prog_tags);
+-	free(prog_lens);
+-	free(prog_addrs);
+-	free(func_infos);
++	free(info_linear);
+ 	free(btf);
+ 	return err ? -1 : 0;
+ }
 -- 
-2.19.1
+2.17.1
 
