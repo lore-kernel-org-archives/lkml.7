@@ -2,170 +2,163 @@ Return-Path: <SRS0=FxTY=RO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.5 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_PASS,USER_AGENT_MUTT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 805B5C43381
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 Mar 2019 17:34:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E7DE1C43381
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 Mar 2019 17:38:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 542F32063F
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 Mar 2019 17:34:44 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1552325684;
-	bh=UWtPlmQaR7sliraYATCPtyacTIPkYHDDo6g3z7Ae5y4=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=KTAp8kcwwNNP8rAzOvWhSqiDgHfZjdAsYws9PjQN7tVZ+gVDYvocg1UsKjJSG8gXS
-	 BhrLopulmmeikyB7zHFwg1lZcOG8ywYUe0cWYsl7Y+qzADUdmAcq6TpIiJSUnp7a+L
-	 BTEfVtSyGNgSXwdm4JU/3T2WJCs9nF0sjD2ctmc8=
+	by mail.kernel.org (Postfix) with ESMTP id B4CE62063F
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 Mar 2019 17:38:30 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=cmpxchg-org.20150623.gappssmtp.com header.i=@cmpxchg-org.20150623.gappssmtp.com header.b="uvoNHu+n"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727945AbfCKRem (ORCPT
+        id S1727641AbfCKRi3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 11 Mar 2019 13:34:42 -0400
-Received: from mail.kernel.org ([198.145.29.99]:59596 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727387AbfCKRem (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 11 Mar 2019 13:34:42 -0400
-Received: from localhost (odyssey.drury.edu [64.22.249.253])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 98F112063F;
-        Mon, 11 Mar 2019 17:34:40 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1552325680;
-        bh=UWtPlmQaR7sliraYATCPtyacTIPkYHDDo6g3z7Ae5y4=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=YDzdVQQHeJh7nwyApH4FA64nn5k9aF9+stPGjn8AyPvjxGV8jp9MZ7VL5osRVHEDS
-         5rr3RH9T/8SfxM0GVpSftsYLJLxJBFBl1xe5f3KE6+V51yk9cu0kSpt0GDqeclwXAI
-         39kz/lOBNnGemQHSaHY0CgGPNmvUgNfaAFM1D+Dw=
-Date:   Mon, 11 Mar 2019 12:34:39 -0500
-From:   Bjorn Helgaas <helgaas@kernel.org>
-To:     "Z.q. Hou" <zhiqiang.hou@nxp.com>
-Cc:     "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>,
-        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "robh+dt@kernel.org" <robh+dt@kernel.org>,
-        "mark.rutland@arm.com" <mark.rutland@arm.com>,
-        "l.subrahmanya@mobiveil.co.in" <l.subrahmanya@mobiveil.co.in>,
-        "shawnguo@kernel.org" <shawnguo@kernel.org>,
-        Leo Li <leoyang.li@nxp.com>,
-        "lorenzo.pieralisi@arm.com" <lorenzo.pieralisi@arm.com>,
-        "catalin.marinas@arm.com" <catalin.marinas@arm.com>,
-        "will.deacon@arm.com" <will.deacon@arm.com>,
-        Mingkai Hu <mingkai.hu@nxp.com>,
-        "M.h. Lian" <minghuan.lian@nxp.com>,
-        Xiaowei Bao <xiaowei.bao@nxp.com>
-Subject: Re: [PATCHv4 26/28] PCI: mobiveil: ls_pcie_g4: add Workaround for
- A-011451
-Message-ID: <20190311173439.GH214730@google.com>
-References: <20190311093130.7209-1-Zhiqiang.Hou@nxp.com>
- <20190311093130.7209-27-Zhiqiang.Hou@nxp.com>
+        Mon, 11 Mar 2019 13:38:29 -0400
+Received: from mail-yw1-f67.google.com ([209.85.161.67]:39132 "EHLO
+        mail-yw1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726942AbfCKRi3 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 11 Mar 2019 13:38:29 -0400
+Received: by mail-yw1-f67.google.com with SMTP id z191so4570862ywa.6
+        for <linux-kernel@vger.kernel.org>; Mon, 11 Mar 2019 10:38:28 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=cmpxchg-org.20150623.gappssmtp.com; s=20150623;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=4oG4uCayIgWYZNRmmqdLLn+2j4kMq1tiq/9bPpXuwD0=;
+        b=uvoNHu+n+ofsYax2n2VYcXwbPB9A3egn/1//CzPHBUXHOyp0Fl6HK5v2VS3cnzwEgO
+         ToESLrILE6fVDPyQmGGifAsI6ccvNrXjwVg4yiMVMMIHJw/IZs/WepusApJFfRoHcVot
+         0aNoXaMYYfJ4PQBOlZSQnwPorOF6USCzPC+FjKvrD6eo3dQBWHNn1Woik3/o9/akR/if
+         FWfyJdUkRYgDWhmsRYzxKAL1/I80JNoGCj070il+ZR+U4yiy87BDNmWS+zTriFVEr/6u
+         N198aqSSyWYTH2puIMOx9GY+KOpaqyDs2e8Omh5qkvCF89HTixb4o7LWqugfV17TiqNS
+         +nKQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=4oG4uCayIgWYZNRmmqdLLn+2j4kMq1tiq/9bPpXuwD0=;
+        b=sTrP4g84/gqLzCBxsULVHafL/d3S06IMjFUetpgC4cYHi339Xr11IfIRiH8bcJHhCa
+         i2aNmA7gK0fcGfaW2ceIAi0hN0Kg8+LwY8K0w0ORpuSr6CUBkuH/sHaAEG+SX/+6qU94
+         tyDakAYmV6jC0L8xcl7VI4GTn8cQ30q56xjDQCov/ld86fxyoN2UoMTXu/QC3K+93C5f
+         MXC6NtTH7fKfyXyXQwhONVwxunfzSw1zEQ9M1kchpNa12A7AWhUFO/BmRKtjtV7z3p0B
+         KOpPHWV3pAh9cTR6XsnHLBqC3qijRX4rc/MhYn99ILOSUSEh63/+KQtg3lzq/PdZplqW
+         12ug==
+X-Gm-Message-State: APjAAAVgBUF5CqI5IbwDc7WcF6CojL+S2pmgvTWafi02yL6BfWzlNbTq
+        7qWh16Vcnru/KYWOeyl39ACrEQ==
+X-Google-Smtp-Source: APXvYqzIXaAlztXgyLzDw1doGyqIHYxIWXNOmebnA3qYLzj3f5vBWGOFMBwHZAiRBeiv2tR/lQ9LJw==
+X-Received: by 2002:a25:57c4:: with SMTP id l187mr22693216ybb.435.1552325907846;
+        Mon, 11 Mar 2019 10:38:27 -0700 (PDT)
+Received: from localhost ([2620:10d:c091:200::1:3c60])
+        by smtp.gmail.com with ESMTPSA id d9sm2385854ywd.82.2019.03.11.10.38.26
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Mon, 11 Mar 2019 10:38:26 -0700 (PDT)
+Date:   Mon, 11 Mar 2019 13:38:25 -0400
+From:   Johannes Weiner <hannes@cmpxchg.org>
+To:     Roman Gushchin <guroan@gmail.com>
+Cc:     linux-mm@kvack.org, kernel-team@fb.com,
+        linux-kernel@vger.kernel.org, Tejun Heo <tj@kernel.org>,
+        Rik van Riel <riel@surriel.com>,
+        Michal Hocko <mhocko@kernel.org>, Roman Gushchin <guro@fb.com>
+Subject: Re: [PATCH 5/5] mm: spill memcg percpu stats and events before
+ releasing
+Message-ID: <20190311173825.GE10823@cmpxchg.org>
+References: <20190307230033.31975-1-guro@fb.com>
+ <20190307230033.31975-6-guro@fb.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20190311093130.7209-27-Zhiqiang.Hou@nxp.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <20190307230033.31975-6-guro@fb.com>
+User-Agent: Mutt/1.11.3 (2019-02-01)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Mar 11, 2019 at 09:33:32AM +0000, Z.q. Hou wrote:
-> From: Hou Zhiqiang <Zhiqiang.Hou@nxp.com>
+On Thu, Mar 07, 2019 at 03:00:33PM -0800, Roman Gushchin wrote:
+> Spill percpu stats and events data to corresponding before releasing
+> percpu memory.
 > 
-> When LX2 PCIe controller is sending multiple split completions and
-> ACK latency expires indicating that ACK should be send at priority.
-> But because of large number of split completions and FC update DLLP,
-> the controller does not give priority to ACK transmission. This
-> results into ACK latency timer timeout error at the link partner and
-> the pending TLPs are replayed by the link partner again.
+> Although per-cpu stats are never exactly precise, dropping them on
+> floor regularly may lead to an accumulation of an error. So, it's
+> safer to sync them before releasing.
 > 
-> Workaround:
-> 1. Reduce the ACK latency timeout value to a very small value.
-> 2. Restrict the number of completions from the LX2 PCIe controller
->    to 1, by changing the Max Read Request Size (MRRS) of link partner
->    to the same value as Max Packet size (MPS).
+> To minimize the number of atomic updates, let's sum all stats/events
+> on all cpus locally, and then make a single update per entry.
 > 
-> This patch implemented part 1, the part 2 can be set by kernel parameter
-> 'pci=pcie_bus_perf'
-
-If I understand correctly, you're saying that LX2160A Rev1.0 will only
-work correctly if you have this patch applied AND you boot with
-"pci=pcie_bus_perf".
-
-That might be OK if these rev 1.0 parts are only used in the lab and
-are never shipped to customers.  But if these parts are ever shipped
-to customers, I don't think it's acceptable for them to have to figure
-out that they must boot with "pci=pcie_bus_perf".  Yes, you can
-document that in release notes, but it's still a poor user experience,
-and users will forget, and they will see mysterious hard-to-debug
-issues.
-
-Maybe there's a way for you to automatically set that pcie_bus_perf
-mode?  With a dmesg note to indicate that you're overriding any mode
-the user may have selected?
-
-> This ERRATA is only for LX2160A Rev1.0, and it will be fixed
-> in Rev2.0.
-> 
-> Signed-off-by: Hou Zhiqiang <Zhiqiang.Hou@nxp.com>
+> Signed-off-by: Roman Gushchin <guro@fb.com>
 > ---
-> V4:
->  - no change
+>  mm/memcontrol.c | 52 +++++++++++++++++++++++++++++++++++++++++++++++++
+>  1 file changed, 52 insertions(+)
 > 
->  .../pci/controller/mobiveil/pci-layerscape-gen4.c | 15 +++++++++++++++
->  drivers/pci/controller/mobiveil/pcie-mobiveil.h   |  4 ++++
->  2 files changed, 19 insertions(+)
-> 
-> diff --git a/drivers/pci/controller/mobiveil/pci-layerscape-gen4.c b/drivers/pci/controller/mobiveil/pci-layerscape-gen4.c
-> index d2c5dbbd5e3c..20ce146788ca 100644
-> --- a/drivers/pci/controller/mobiveil/pci-layerscape-gen4.c
-> +++ b/drivers/pci/controller/mobiveil/pci-layerscape-gen4.c
-> @@ -82,12 +82,27 @@ static bool ls_pcie_g4_is_bridge(struct ls_pcie_g4 *pcie)
->  	return header_type == PCI_HEADER_TYPE_BRIDGE;
->  }
->  
-> +static void workaround_A011451(struct ls_pcie_g4 *pcie)
-> +{
-> +	struct mobiveil_pcie *mv_pci = pcie->pci;
-> +	u32 val;
-> +
-> +	/* Set ACK latency timeout */
-> +	val = csr_readl(mv_pci, GPEX_ACK_REPLAY_TO);
-> +	val &= ~(ACK_LAT_TO_VAL_MASK << ACK_LAT_TO_VAL_SHIFT);
-> +	val |= (4 << ACK_LAT_TO_VAL_SHIFT);
-> +	csr_writel(mv_pci, val, GPEX_ACK_REPLAY_TO);
-> +}
-> +
->  static int ls_pcie_g4_host_init(struct mobiveil_pcie *pci)
->  {
->  	struct ls_pcie_g4 *pcie = to_ls_pcie_g4(pci);
->  
->  	pcie->rev = csr_readb(pci, PCI_REVISION_ID);
->  
-> +	if (pcie->rev == REV_1_0)
-> +		workaround_A011451(pcie);
-> +
+> diff --git a/mm/memcontrol.c b/mm/memcontrol.c
+> index 18e863890392..b7eb6fac735e 100644
+> --- a/mm/memcontrol.c
+> +++ b/mm/memcontrol.c
+> @@ -4612,11 +4612,63 @@ static int mem_cgroup_css_online(struct cgroup_subsys_state *css)
 >  	return 0;
 >  }
 >  
-> diff --git a/drivers/pci/controller/mobiveil/pcie-mobiveil.h b/drivers/pci/controller/mobiveil/pcie-mobiveil.h
-> index ab43de5e4b2b..f0e2e4ae09b5 100644
-> --- a/drivers/pci/controller/mobiveil/pcie-mobiveil.h
-> +++ b/drivers/pci/controller/mobiveil/pcie-mobiveil.h
-> @@ -85,6 +85,10 @@
->  #define PAB_AXI_AMAP_PEX_WIN_H(win)	PAB_REG_ADDR(0x0bac, win)
->  #define PAB_INTP_AXI_PIO_CLASS		0x474
->  
-> +#define GPEX_ACK_REPLAY_TO		0x438
-> +#define  ACK_LAT_TO_VAL_MASK		0x1fff
-> +#define  ACK_LAT_TO_VAL_SHIFT		0
+> +/*
+> + * Spill all per-cpu stats and events into atomics.
+> + * Try to minimize the number of atomic writes by gathering data from
+> + * all cpus locally, and then make one atomic update.
+> + * No locking is required, because no one has an access to
+> + * the offlined percpu data.
+> + */
+> +static void mem_cgroup_spill_offlined_percpu(struct mem_cgroup *memcg)
+> +{
+> +	struct memcg_vmstats_percpu __percpu *vmstats_percpu;
+> +	struct lruvec_stat __percpu *lruvec_stat_cpu;
+> +	struct mem_cgroup_per_node *pn;
+> +	int cpu, i;
+> +	long x;
 > +
->  #define PAB_PEX_AMAP_CTRL(win)		PAB_REG_ADDR(0x4ba0, win)
->  #define  AMAP_CTRL_EN_SHIFT		0
->  #define  AMAP_CTRL_TYPE_SHIFT		1
-> -- 
-> 2.17.1
-> 
+> +	vmstats_percpu = memcg->vmstats_percpu_offlined;
+> +
+> +	for (i = 0; i < MEMCG_NR_STAT; i++) {
+> +		int nid;
+> +
+> +		x = 0;
+> +		for_each_possible_cpu(cpu)
+> +			x += per_cpu(vmstats_percpu->stat[i], cpu);
+> +		if (x)
+> +			atomic_long_add(x, &memcg->vmstats[i]);
+> +
+> +		if (i >= NR_VM_NODE_STAT_ITEMS)
+> +			continue;
+> +
+> +		for_each_node(nid) {
+> +			pn = mem_cgroup_nodeinfo(memcg, nid);
+> +			lruvec_stat_cpu = pn->lruvec_stat_cpu_offlined;
+> +
+> +			x = 0;
+> +			for_each_possible_cpu(cpu)
+> +				x += per_cpu(lruvec_stat_cpu->count[i], cpu);
+> +			if (x)
+> +				atomic_long_add(x, &pn->lruvec_stat[i]);
+> +		}
+> +	}
+> +
+> +	for (i = 0; i < NR_VM_EVENT_ITEMS; i++) {
+> +		x = 0;
+> +		for_each_possible_cpu(cpu)
+> +			x += per_cpu(vmstats_percpu->events[i], cpu);
+> +		if (x)
+> +			atomic_long_add(x, &memcg->vmevents[i]);
+> +	}
+
+This looks good, but couldn't this be merged with the cpu offlining?
+It seems to be exactly the same code, except for the nesting of the
+for_each_possible_cpu() iteration here.
+
+This could be a function that takes a CPU argument and then iterates
+the cgroups and stat items to collect and spill the counters of that
+specified CPU; offlining would call it once, and this spill code here
+would call it for_each_possible_cpu().
+
+We shouldn't need the atomicity of this_cpu_xchg() during hotunplug,
+the scheduler isn't even active on that CPU anymore when it's called.
