@@ -6,48 +6,48 @@ X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7A739C43381
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 Mar 2019 13:24:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 55C59C43381
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 Mar 2019 13:24:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5136720449
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 Mar 2019 13:24:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2D6E2204EC
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 Mar 2019 13:24:22 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728080AbfCKNYO (ORCPT
+        id S1727897AbfCKNYV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 11 Mar 2019 09:24:14 -0400
-Received: from mout.kundenserver.de ([217.72.192.73]:60589 "EHLO
+        Mon, 11 Mar 2019 09:24:21 -0400
+Received: from mout.kundenserver.de ([212.227.17.13]:32795 "EHLO
         mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727644AbfCKNTl (ORCPT
+        with ESMTP id S1727641AbfCKNTl (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Mon, 11 Mar 2019 09:19:41 -0400
 Received: from orion.localdomain ([95.115.159.19]) by mrelayeu.kundenserver.de
  (mreue109 [212.227.15.183]) with ESMTPSA (Nemesis) id
- 1MEVBc-1hIB4j41t4-00FxAn for <linux-kernel@vger.kernel.org>; Mon, 11 Mar 2019
- 14:19:40 +0100
+ 1Mdvyi-1gSdFF2o3K-00b2uz for <linux-kernel@vger.kernel.org>; Mon, 11 Mar 2019
+ 14:19:39 +0100
 From:   "Enrico Weigelt, metux IT consult" <info@metux.net>
 To:     linux-kernel@vger.kernel.org
-Subject: [PATCH 093/114] arch: h8300: Kconfig: pedantic formatting
-Date:   Mon, 11 Mar 2019 14:18:45 +0100
-Message-Id: <1552310346-7629-94-git-send-email-info@metux.net>
+Subject: [PATCH 091/114] block: Kconfig: pedantic formatting
+Date:   Mon, 11 Mar 2019 14:18:43 +0100
+Message-Id: <1552310346-7629-92-git-send-email-info@metux.net>
 X-Mailer: git-send-email 1.9.1
 In-Reply-To: <1552310346-7629-1-git-send-email-info@metux.net>
 References: <1552310346-7629-1-git-send-email-info@metux.net>
-X-Provags-ID: V03:K1:vvZ4boBNPvtK3VXAVY7B7HtBd9Rp0oydiP978l6oPqBD8ZaiepQ
- uGDPUf39Otg6tUqBQT1sMisKLLxpmIgBvP2Qsj1SPSFCri4aaUP7Adk68w19RzuP7QcuvMS
- VaQzFL+594Ewcl/x/DFZz1hYBaS+EPfqg6D3JvSTqPELZC9xsSrlb9NOD2MOOYd5MgoxaH+
- +/RDQmCHz3faAFNksYFjg==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:3ftQ3JTFRb4=:XlteUeK0Et37nRTEmRnwmi
- i1EJ7dEljwAwgXTZljujpB1aJNXxq9RsmiWKmjKhvTJMLKwwjJxpT8wSdZrCEhZ7uHHSQPOec
- VEjcerGDHfx+UtgI7etZ720BsXxhKigK+ZnTM/HLPkKu+the/ievqT46t6Ev8+IpuH7NtWpcj
- doNnMXyZQJ0USz4Qeck1tC1HjqHnJoThn1eXQkIaSBwVRVRXBOHzOsoAGf3opakmwMFMC+315
- PfGcmkt2iGxNWmjMgCf1xE5D3LS4XSTCnskA0AjRFVJm2dD52EqGqoTNoJ7nrTTC6oAfdcTuE
- AHSaVcCV8i+nAU0OKA9jHj7CtAoe9j1j4m8bkkZCLYbkhpUuIsAkFeOLIMVK7Tw/0MoMCKdad
- FUJusxrKT/LrLBiQedpNpq8OrQP8B1IoVQXfqqIgaCkZNTp/qRbjSv5totHrVqMqLdTjF3gEf
- SyeDxANbXD/r8eh4DLbjYE30HWjnTg7wPNNLCfmF2sIseSNhBRvZAG3rb2cOZYXe2D3oHUoov
- wI8c+dTUiXfRCgn6rcm4ADgrrZf/W1fYbCUGDvAZzZj8wIRCq5MvGfXCxnuk4/SbqUzviCKY7
- 4Mg56PGSNiCTCiaBOiFkvlwJuW9DgvNuThxbjhxCmod5peAifIysV3ugPvIiS1GcCW4MWMQrd
- 59jxVglS8eCJfZuHyj++a7LkP1buE6mDDV1OpRStFXoDkStEUPrvU3imykmtGvMZNjIwe2NOL
- PBycYVaqwBHVnqH0CUEfvkor9AiH/9MI2f3Oag==
+X-Provags-ID: V03:K1:gzaKwmmNCaI0WKEM6KdClAvE5QLtFHen8RkBsOgj+a0aKic0Vie
+ Z/ZGOW0P1nPk5/Ny83MtakP+iye94cy5mv1ACF6LBkkO13BmmeH3oUAwU4O/m82iB8Ton1A
+ D8twH90nc3+kup53JYpvSUxKx67qCl473a9eBG5vCjjVIb7gUfBoaNudQ7iDYmCs4tvE2OW
+ AqfshkWQpU/avoopH2FMw==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:YFFXD76ycsE=:jG+g5kVuCCF1lk8xO29xTc
+ qLumvnLwVidZAfcDT2m8p0n9s/O+xYLyilk9vrbsKKPoKNU9lchareNnS1cRvohUI4UgM/nSy
+ zk+S1+I5G9yX1235/N3VxzPJChxp6UJvPQhXYIyaT1VnQ+R+Q51v8rf/BigurnTNvxsSkgkUc
+ 26NNZG+Lad9XFyDVFOXqgs3MOggPYwBHHoM+HKntcWEx4c0oZWw0UOVYT/AjKo0U8nSpA5ZXz
+ y87a2hYYjwWeAPyIP/Gj/JcviX4zyvhmCSN0x+kAsYb3IAUvu58KbxXS5pmLpPSjwHOdXJxCe
+ XQ0vAAO6Tf6dnqphLu95rEi3fHeStlCIZkvVOYDwhzInuIFw9n7892xHKwS2Av/5evIyQEooA
+ +t7apZWJ/BOfohBX2upfbLMyPm+2tOXRQ3T4UKPvmkhXkm3NM4+JLkY7GZV24V7/91HtcV8G+
+ lXeElSRl/Rnj41g0aATtgBHbO0FhpzyBETLiNws5DAwce5u52BX9HhWAMH4aaesLZstoj1hzt
+ mFSm3Ri6Gh6M45Ay1BafedQo6FzqvhZWigmW3r//ucMHkGB6P4DRwo9+44lkN8xfd61i25FJL
+ 7ERG6EiCWvRPFowZJ2ayqNhpKR2i2v3ybWSwspXvPmVfCdKCoIcDhIWANAlSsspoiBwgycwjq
+ 6vwI+tjxGrQWdYGegpCZp01rwHP2Fq6j8+EGJO2ew9qmBeTdzXuYkl2Wn0qe+i/rBUiaGKhpA
+ DC3RclC5QgCU2zW0S6LgVFHw/ci6cGQXYJtPSQ==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
@@ -58,30 +58,64 @@ Great White Handkerchief come around and clean it up.
 
 Signed-off-by: Enrico Weigelt, metux IT consult <info@metux.net>
 ---
- arch/h8300/Kconfig | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ block/Kconfig | 30 +++++++++++++++---------------
+ 1 file changed, 15 insertions(+), 15 deletions(-)
 
-diff --git a/arch/h8300/Kconfig b/arch/h8300/Kconfig
-index c071da3..eb6854d 100644
---- a/arch/h8300/Kconfig
-+++ b/arch/h8300/Kconfig
-@@ -1,6 +1,6 @@
- # SPDX-License-Identifier: GPL-2.0
- config H8300
--        def_bool y
-+	def_bool y
- 	select ARCH_32BIT_OFF_T
- 	select GENERIC_ATOMIC64
- 	select HAVE_UID16
-@@ -37,7 +37,7 @@ config NO_IOPORT_MAP
- 	def_bool y
+diff --git a/block/Kconfig b/block/Kconfig
+index 028bc08..eb7e1bf 100644
+--- a/block/Kconfig
++++ b/block/Kconfig
+@@ -3,26 +3,26 @@
+ # Block layer core configuration
+ #
+ menuconfig BLOCK
+-       bool "Enable the block layer" if EXPERT
+-       default y
+-       select SBITMAP
+-       select SRCU
+-       help
+-	 Provide block layer support for the kernel.
++	bool "Enable the block layer" if EXPERT
++	default y
++	select SBITMAP
++	select SRCU
++	help
++	  Provide block layer support for the kernel.
  
- config GENERIC_CSUM
--        def_bool y
-+	def_bool y
+-	 Disable this option to remove the block layer support from the
+-	 kernel. This may be useful for embedded devices.
++	  Disable this option to remove the block layer support from the
++	  kernel. This may be useful for embedded devices.
  
- config HZ
- 	int
+-	 If this option is disabled:
++	  If this option is disabled:
+ 
+ 	   - block device files will become unusable
+ 	   - some filesystems (such as ext3) will become unavailable.
+ 
+-	 Also, SCSI character devices and USB storage will be disabled since
+-	 they make use of various block layer definitions and facilities.
++	  Also, SCSI character devices and USB storage will be disabled since
++	  they make use of various block layer definitions and facilities.
+ 
+-	 Say Y here unless you know you really don't want to mount disks and
+-	 suchlike.
++	  Say Y here unless you know you really don't want to mount disks and
++	  suchlike.
+ 
+ if BLOCK
+ 
+@@ -177,8 +177,8 @@ config BLK_DEBUG_FS
+ 	say Y here.
+ 
+ config BLK_DEBUG_FS_ZONED
+-       bool
+-       default BLK_DEBUG_FS && BLK_DEV_ZONED
++	bool
++	default BLK_DEBUG_FS && BLK_DEV_ZONED
+ 
+ config BLK_SED_OPAL
+ 	bool "Logic for interfacing with Opal enabled SEDs"
 -- 
 1.9.1
 
