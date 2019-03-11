@@ -2,83 +2,98 @@ Return-Path: <SRS0=FxTY=RO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_MUTT autolearn=ham autolearn_force=no
+X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_PASS autolearn=unavailable autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BF4DCC43381
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 Mar 2019 20:42:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7859AC10F06
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 Mar 2019 20:45:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 987722064A
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 Mar 2019 20:42:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4FD2D214AF
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 Mar 2019 20:45:56 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728159AbfCKUmT (ORCPT
+        id S1727973AbfCKUpz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 11 Mar 2019 16:42:19 -0400
-Received: from mga04.intel.com ([192.55.52.120]:34403 "EHLO mga04.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726675AbfCKUmT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 11 Mar 2019 16:42:19 -0400
-X-Amp-Result: UNKNOWN
-X-Amp-Original-Verdict: FILE UNKNOWN
-X-Amp-File-Uploaded: False
-Received: from orsmga008.jf.intel.com ([10.7.209.65])
-  by fmsmga104.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 11 Mar 2019 13:42:18 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.58,468,1544515200"; 
-   d="scan'208";a="124576170"
-Received: from agluck-desk.sc.intel.com (HELO agluck-desk) ([10.3.52.160])
-  by orsmga008.jf.intel.com with ESMTP; 11 Mar 2019 13:42:18 -0700
-Date:   Mon, 11 Mar 2019 13:42:17 -0700
-From:   "Luck, Tony" <tony.luck@intel.com>
-To:     "Ghannam, Yazen" <Yazen.Ghannam@amd.com>
-Cc:     Borislav Petkov <bp@alien8.de>, "x86@kernel.org" <x86@kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Ashok Raj <ashok.raj@intel.com>
-Subject: Re: [PATCH] x86, mce: Fix machine_check_poll() tests for which
- errors to log
-Message-ID: <20190311204217.GA1810@agluck-desk>
-References: <20190311185118.32667-1-tony.luck@intel.com>
- <SN6PR12MB26399CBAEFB6C500D456255DF8480@SN6PR12MB2639.namprd12.prod.outlook.com>
+        Mon, 11 Mar 2019 16:45:55 -0400
+Received: from www62.your-server.de ([213.133.104.62]:58078 "EHLO
+        www62.your-server.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727304AbfCKUpy (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 11 Mar 2019 16:45:54 -0400
+Received: from [88.198.220.130] (helo=sslproxy01.your-server.de)
+        by www62.your-server.de with esmtpsa (TLSv1.2:DHE-RSA-AES256-GCM-SHA384:256)
+        (Exim 4.89_1)
+        (envelope-from <daniel@iogearbox.net>)
+        id 1h3Rnz-00065F-F5; Mon, 11 Mar 2019 21:45:51 +0100
+Received: from [178.197.248.21] (helo=linux.home)
+        by sslproxy01.your-server.de with esmtpsa (TLSv1.2:ECDHE-RSA-AES256-GCM-SHA384:256)
+        (Exim 4.89)
+        (envelope-from <daniel@iogearbox.net>)
+        id 1h3Rnz-0004mF-3B; Mon, 11 Mar 2019 21:45:51 +0100
+Subject: Re: [PATCH v7 perf,bpf 02/15] bpf: libbpf: introduce
+ bpf_program__get_prog_info_linear()
+To:     Arnaldo Carvalho de Melo <arnaldo.melo@gmail.com>,
+        Alexei Starovoitov <alexei.starovoitov@gmail.com>,
+        Song Liu <songliubraving@fb.com>
+Cc:     bpf@vger.kernel.org, netdev@vger.kernel.org,
+        linux-kernel@vger.kernel.org, ast@kernel.org, kernel-team@fb.com,
+        peterz@infradead.org, acme@redhat.com, jolsa@kernel.org,
+        namhyung@kernel.org
+References: <20190307175810.249857-1-songliubraving@fb.com>
+ <20190307175810.249857-3-songliubraving@fb.com>
+ <20190311182631.GX10690@kernel.org>
+From:   Daniel Borkmann <daniel@iogearbox.net>
+Message-ID: <b6fb25aa-5bfc-cf97-f960-5966154e5ef5@iogearbox.net>
+Date:   Mon, 11 Mar 2019 21:45:49 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:52.0) Gecko/20100101
+ Thunderbird/52.3.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <SN6PR12MB26399CBAEFB6C500D456255DF8480@SN6PR12MB2639.namprd12.prod.outlook.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <20190311182631.GX10690@kernel.org>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-Authenticated-Sender: daniel@iogearbox.net
+X-Virus-Scanned: Clear (ClamAV 0.100.2/25385/Mon Mar 11 08:43:35 2019)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Mar 11, 2019 at 08:25:53PM +0000, Ghannam, Yazen wrote:
-> > +		if (!(m.status & MCI_STATUS_PCC) && !(m.status & MCI_STATUS_S))
-> > +			goto log_it;
-> > +
+On 03/11/2019 07:26 PM, Arnaldo Carvalho de Melo wrote:
+> Em Thu, Mar 07, 2019 at 09:57:57AM -0800, Song Liu escreveu:
+>> Currently, bpf_prog_info includes 9 arrays. The user has the option to
+>> fetch any combination of these arrays. However, this requires a lot of
+>> handling of these arrays. This work becomes more tricky when we need to
+>> store bpf_prog_info to a file, because these arrays are allocated
+>> independently.
+>>
+>> This patch introduces struct bpf_prog_info_linear, which stores arrays
+>> of bpf_prog_info in continues memory. Helper functions are introduced
+>> to unify the work to get different information of bpf_prog_info.
+>> Specifically, bpf_program__get_prog_info_linear() allows the user to
+>> select which arrays to fetch, and handles details for the user.
+>>
+>> Plesae see the comments before enum bpf_prog_info_array for more details
+>> and examples.
+>>
+>> Cc: Daniel Borkmann <daniel@iogearbox.net>
+>> Cc: Alexei Starovoitov <ast@kernel.org>
 > 
-> Can you please include a vendor check with this? MCi_STATUS[56] is
-> not defined the same way on AMD systems.
+> Daniel, are you ok with these changes to libbpf and bpftool? Perhaps
+> those should be detached from this patchkit and submitted sooner,
+> eroding the size of this kit.
+> 
+> Alternatively, if you're ok with it, please provide your Acked-by and
+> I'll process as soon as I get back to it after Jiri is done reviewing.
 
-Original code also looked at MCi_STATUS[56] without a vendor
-check:
+Overall looks okay. Are you planning to get these in for 5.1 window? If
+yes, that would be great, otherwise we might need to cherry-pick the libbpf
+and bpftool ones from your tree into bpf-next as well since there's just
+too much going on in this area where we'd potentially run into complex
+merge conflicts. In the latter case, libbpf.map would need to be fixed up
+to LIBBPF_0.0.3 as convention is that this is in line with kernel release.
 
-> > -               (m.status & (mca_cfg.ser ? MCI_STATUS_S : MCI_STATUS_UC)))
+Thanks,
+Daniel
 
-Was this OK because you don't set mca_cfg.ser?
-
-If so, my new code will also skip out before getting to this test. But
-should probably have a better comment. Something like:
-
-
-		/*
-		 * Newer Intel systems that support software error
-		 * recovery need to make some extra checks. Other
-		 * CPUs should skip over uncorrected errors, but log
-		 * everything else
-		 */
-		if (!mca_cfg.ser) {
-			if (m.status & MCI_STATUS_UC)
-				continue;
-			goto log_it;
-		}
-
--Tony
+> - Arnaldo
