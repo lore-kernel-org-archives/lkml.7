@@ -2,86 +2,117 @@ Return-Path: <SRS0=FxTY=RO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_MUTT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.0 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6A017C43381
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 Mar 2019 20:48:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A75D8C43381
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 Mar 2019 20:49:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2E4DF2064A
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 Mar 2019 20:48:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 755312064A
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 Mar 2019 20:49:04 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=nelint-com.20150623.gappssmtp.com header.i=@nelint-com.20150623.gappssmtp.com header.b="SPNQcjCP"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728149AbfCKUs6 (ORCPT
+        id S1728224AbfCKUtD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 11 Mar 2019 16:48:58 -0400
-Received: from mga02.intel.com ([134.134.136.20]:23401 "EHLO mga02.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727883AbfCKUs5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 11 Mar 2019 16:48:57 -0400
-X-Amp-Result: UNSCANNABLE
-X-Amp-File-Uploaded: False
-Received: from orsmga005.jf.intel.com ([10.7.209.41])
-  by orsmga101.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 11 Mar 2019 13:48:56 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.58,468,1544515200"; 
-   d="scan'208";a="306308229"
-Received: from tassilo.jf.intel.com (HELO tassilo.localdomain) ([10.7.201.137])
-  by orsmga005.jf.intel.com with ESMTP; 11 Mar 2019 13:48:56 -0700
-Received: by tassilo.localdomain (Postfix, from userid 1000)
-        id 7E6BA301E30; Mon, 11 Mar 2019 13:48:56 -0700 (PDT)
-Date:   Mon, 11 Mar 2019 13:48:56 -0700
-From:   Andi Kleen <ak@linux.intel.com>
-To:     Arnaldo Carvalho de Melo <arnaldo.melo@gmail.com>
-Cc:     Andi Kleen <andi@firstfloor.org>, jolsa@kernel.org,
-        linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v1 06/10] perf, tools, report: Print better message for
- JITed code
-Message-ID: <20190311204856.GD29294@tassilo.jf.intel.com>
-References: <20190311202446.10210-1-andi@firstfloor.org>
- <20190311202446.10210-7-andi@firstfloor.org>
- <20190311203302.GB10690@kernel.org>
+        Mon, 11 Mar 2019 16:49:03 -0400
+Received: from mail-pf1-f180.google.com ([209.85.210.180]:39074 "EHLO
+        mail-pf1-f180.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727883AbfCKUs7 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 11 Mar 2019 16:48:59 -0400
+Received: by mail-pf1-f180.google.com with SMTP id i20so117679pfo.6
+        for <linux-kernel@vger.kernel.org>; Mon, 11 Mar 2019 13:48:58 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=nelint-com.20150623.gappssmtp.com; s=20150623;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=WC0fKHncCGHlop3Orl1Gn6WudNgRDIGVNP7Gj49CLnM=;
+        b=SPNQcjCPCfoldkt1TQLvSihBmENQkI1sQ9wHihpY6tTISYj3Are4vBYIMSMqPpM65o
+         fvL1+PyXV4pseijfwiYvFWh7JL0R+y8ETmAvUskl1JvUzhEjNZsdj9JMdpJezlZzKtus
+         aw+kjPcqxrUcUBp1t00KnsCEnyX2iz1VBiz9LMNPwV284OcuJK73PDEITGdY4onA0PTf
+         66J3kFFilA8qPP9MDx3BQwkysNC1FJzHTOgQt4zUAyISplArMmuhESJlivdHR/4Cf/Aq
+         pKkjbDc8ZYr1rnQqG/fOEoEkJyVGzGhAW1pMl6wguEmsDv5eU611NC25Dg+k8kpdnW+a
+         LKxA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=WC0fKHncCGHlop3Orl1Gn6WudNgRDIGVNP7Gj49CLnM=;
+        b=LvzlNj+m+D9/LNe0ELz5qGgMsRFEsUA0lZF/Gwdh+98mSWtBqXqyJrPUPP+yd6AKNB
+         2wODu0xuXI5TJ8E/vNZQO/nL+JBmGDXUTg86715zA1PuicdtPxwyCys35N/RNAAv5lh/
+         F6ariggPBbedmY/Xmw/aeX3O626LA4maLi8X0uohrMONQ0RyrRYbIAXiK9TPmRRrqWkz
+         Iwfw5rxFf5iY6f7Nok2d+ClhMIGfGiKBvssGDu9HTdpX6jaQ1DjL6GeMoAAoJW0itRaG
+         Wi4YW70vbUIEG8S4rTZVP5DbYjWrwVF49bN3IptxqdFMKVXuzdg+vGs8QFrt1XvkTd2P
+         7AxQ==
+X-Gm-Message-State: APjAAAVzVFygwM2pKbkogYwAenMUK/c76JHN+qiRAGfBB7CSDOZzaqA0
+        5Sa3XjYtnAK8Coqw8Vso6Nh3zg==
+X-Google-Smtp-Source: APXvYqxAhI3a6wkqxm7FIr7u2RYpFl/LfIajy5rdxx+8naAV1ZN+tcCvA15/NIUylreVsJQe78+z3g==
+X-Received: by 2002:a17:902:a612:: with SMTP id u18mr35416980plq.145.1552337338231;
+        Mon, 11 Mar 2019 13:48:58 -0700 (PDT)
+Received: from ?IPv6:2600:8800:1301:2190:cc32:ad00:b1c0:818c? ([2600:8800:1301:2190:cc32:ad00:b1c0:818c])
+        by smtp.gmail.com with ESMTPSA id e8sm8728199pfn.103.2019.03.11.13.48.56
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Mon, 11 Mar 2019 13:48:57 -0700 (PDT)
+Subject: Re: [V2 1/2] clk: imx6q: remove unsupported pll4_audio_div
+To:     devicetree@vger.kernel.org, linux-clk@vger.kernel.org
+Cc:     anson.huang@nxp.com, colin.didier@devialet.com, festevam@gmail.com,
+        kernel@pengutronix.de, l.stach@pengutronix.de,
+        linux-arm-kernel@lists.infradead.org, linux-imx@nxp.com,
+        linux-kernel@vger.kernel.org, mark.rutland@arm.com,
+        mturquette@baylibre.com, robh+dt@kernel.org,
+        s.hauer@pengutronix.de, sboyd@kernel.org, shawnguo@kernel.org,
+        tiny.windzz@gmail.com
+References: <1552304271.2453.12.camel@pengutronix.de>
+ <1552319997-24622-1-git-send-email-eric@nelint.com>
+ <1552319997-24622-2-git-send-email-eric@nelint.com>
+From:   Eric Nelson <eric@nelint.com>
+Message-ID: <0cf890a4-20b0-13ce-14d3-06f7c3227655@nelint.com>
+Date:   Mon, 11 Mar 2019 13:48:55 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.5.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190311203302.GB10690@kernel.org>
-User-Agent: Mutt/1.11.3 (2019-02-01)
+In-Reply-To: <1552319997-24622-2-git-send-email-eric@nelint.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Mar 11, 2019 at 05:33:02PM -0300, Arnaldo Carvalho de Melo wrote:
-> Em Mon, Mar 11, 2019 at 01:24:42PM -0700, Andi Kleen escreveu:
-> > From: Andi Kleen <ak@linux.intel.com>
-> > 
-> > The message about missing /tmp/perf-* for JITed code is quite confusing
-> > to users. Add a better error message, but only print it once.
-> > 
-> > Signed-off-by: Andi Kleen <ak@linux.intel.com>
-> > ---
-> >  tools/perf/util/map.c | 9 +++++++++
-> >  1 file changed, 9 insertions(+)
-> > 
-> > diff --git a/tools/perf/util/map.c b/tools/perf/util/map.c
-> > index fbeb0c6efaa6..d476b76abc6a 100644
-> > --- a/tools/perf/util/map.c
-> > +++ b/tools/perf/util/map.c
-> > @@ -316,6 +316,15 @@ int map__load(struct map *map)
-> >  
-> >  	nr = dso__load(map->dso, map);
-> >  	if (nr < 0) {
-> > +		if (!strncmp(map->dso->name, "/tmp/perf-", 10)) {
-> > +			static bool warned;
-> > +			if (!warned) {
-> > +				pr_err("Cannot find executable, JITed code present? May need agent.\n");
-> > +				warned = true;
-> > +			}
+ > On March 11, 2019, 6:35 p.m. UTC, Stephen Boyd wrote:
+ >
+> Quoting Eric Nelson (2019-03-11 08:59:56)
+>> diff --git a/include/dt-bindings/clock/imx6qdl-clock.h b/include/dt-bindings/clock/imx6qdl-clock.h
+>> index b3cef29..34bb14d 100644
+>> --- a/include/dt-bindings/clock/imx6qdl-clock.h
+>> +++ b/include/dt-bindings/clock/imx6qdl-clock.h
+>> @@ -213,7 +213,15 @@
+>>  #define IMX6QDL_CLK_CKO2                       200
+>>  #define IMX6QDL_CLK_CKO                                201
+>>  #define IMX6QDL_CLK_VDOA                       202
+>> -#define IMX6QDL_CLK_PLL4_AUDIO_DIV             203
+>> +
+>> +/* The PLL4_AUDIO_DIV divider only appeared in
+>> + * early versions of the reference manual.
+>> + *
+>> + * Renamed to _BROKEN to prevent inadvertent use,
+>> + * but reserved the array slot to maintain DT binary
+>> + * compatibility.
+>> + */
+>> +#define IMX6QDL_CLK_PLL4_AUDIO_DIV_BROKEN      203
 > 
-> Please use WARN_ON_ONCE(), we have it in tools/include/asm/bug.h, just
-> like the kernel.
+> But it breaks the build. I don't get it. Just add a comment indicating
+> it shouldn't be used? That breaks the cross-tree dependency chain and
+> lets clk tree merge the clk driver part and arm-soc merge the dts part.
+The device tree update also requires the update to clk-imx6q.c
+for proper run-time operation, so I don't see how these two parts
+can be separated.
 
-But that prints "assertation failed". This is not a perf bug, but can happen
-in normal operation.
-
--Andi
+I thought about leaving the PLL4_AUDIO_DIV clock in place but
+turning it into a dummy (placeholder), but that might lead others
+down the long path I traversed before I found out that my manual
+was old and the clock didn't function.
