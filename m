@@ -2,119 +2,168 @@ Return-Path: <SRS0=FxTY=RO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,
-	USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8759BC43381
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 Mar 2019 22:09:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 90E57C43381
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 Mar 2019 22:10:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 53A9A2087C
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 Mar 2019 22:09:56 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1552342196;
-	bh=/dZjf6rPJqnIAVCS+xXBMXJDJYRPWIhC47MN4IOonVo=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=kXXY/mVEoUIZHcNiBaebCMtQj237x5Y+eG24IMm4VnpDnIfqhWgLQCs76T6e+P6sE
-	 Q2vgSzli7NIJstZF5o7fwpXkV/gI+ScpPTlat+eoEJqwe54/JVSu+W2o+6kxdzx1GO
-	 KanTf3WLgEPUe+DL6MwsDV22GPGkdk+FWWbEN1uQ=
+	by mail.kernel.org (Postfix) with ESMTP id 427C6214D8
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 Mar 2019 22:10:05 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=vmware.com header.i=@vmware.com header.b="Yu8KfOF7"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728044AbfCKWJz (ORCPT
+        id S1728267AbfCKWKD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 11 Mar 2019 18:09:55 -0400
-Received: from mail-ot1-f66.google.com ([209.85.210.66]:45626 "EHLO
-        mail-ot1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727138AbfCKWJz (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 11 Mar 2019 18:09:55 -0400
-Received: by mail-ot1-f66.google.com with SMTP id i12so628948otp.12;
-        Mon, 11 Mar 2019 15:09:54 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=MJDwMs3RNVoaTah5AWixY+sI71+a+ReCOlP8rTchg/8=;
-        b=syoeqlN/e8Wz1t+hlupdv8AGgRo0dWRYxdsxhF+rFqL/SBLAwSQWg4rjehM2JMkXEp
-         HUeIzLk2qGQdMJjQlsOECbUtZn8fAAtxemu+tMaYYWy835S/4U8xVa7sSmSgv9dmjxeJ
-         rsUhb5obc9pHFu+P13R+RnPbq549dnD2wu/FZ+wFYEwV8DbfciA8TmDcojU9X6sYg9Fa
-         q7Oyl26mtBkej8867wd2casOADl+g0Q3YDvKBTSKBvv5ite7L3HVeBhKD0nnhnIuJiwS
-         cJjsaNtuGEcQmAFxMJUwC+GFLC78TpvVAW2daQyyx0nSusAecaFVxBCDzKdoQMwBUAyL
-         VgUQ==
-X-Gm-Message-State: APjAAAVPNdS94eOVL0wabStqVXg4b6MHKQ0su7yfEIM16iQG+rFYKK60
-        5Arazp1dZUHV0DV6EbyKPg==
-X-Google-Smtp-Source: APXvYqxd6HIAvhbhOVfAGev3OI2HzMBNq0bImEvk2Z4ceffIlebW57ydGIGypdYlPM2uHoiiuGl/Qw==
-X-Received: by 2002:a9d:4e84:: with SMTP id v4mr299717otk.27.1552342194087;
-        Mon, 11 Mar 2019 15:09:54 -0700 (PDT)
-Received: from localhost (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
-        by smtp.gmail.com with ESMTPSA id y37sm2952546ota.17.2019.03.11.15.09.53
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Mon, 11 Mar 2019 15:09:53 -0700 (PDT)
-Date:   Mon, 11 Mar 2019 17:09:53 -0500
-From:   Rob Herring <robh@kernel.org>
-To:     Pi-Hsun Shih <pihsun@chromium.org>
-Cc:     Pi-Hsun Shih <pihsun@chromium.org>, Erin Lo <erin.lo@mediatek.com>,
-        Ohad Ben-Cohen <ohad@wizery.com>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        "open list:REMOTE PROCESSOR (REMOTEPROC) SUBSYSTEM" 
-        <linux-remoteproc@vger.kernel.org>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>,
-        "moderated list:ARM/Mediatek SoC support" 
-        <linux-arm-kernel@lists.infradead.org>,
-        "moderated list:ARM/Mediatek SoC support" 
-        <linux-mediatek@lists.infradead.org>,
-        open list <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH v6 1/7] dt-bindings: Add a binding for Mediatek SCP
-Message-ID: <20190311220953.GA8432@bogus>
-References: <20190311063458.137473-1-pihsun@chromium.org>
- <20190311063458.137473-2-pihsun@chromium.org>
+        Mon, 11 Mar 2019 18:10:03 -0400
+Received: from mail-eopbgr740055.outbound.protection.outlook.com ([40.107.74.55]:7728
+        "EHLO NAM01-BN3-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1727138AbfCKWKD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 11 Mar 2019 18:10:03 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=vmware.com;
+ s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=p2iKpN8uFDCMyMnY/++1zj2+mhKMGq0jwvD8fD6TCOQ=;
+ b=Yu8KfOF7fGeHXyERPegEZ6PhIRuior8OBuTj0WoYWfTbaFnuOUk3gadrF8Ox3HNRaJWOB6EZ7qfX6zgorKRlF9tsqZSjfLcWIetP87rqNLD7xrc+OaG9i9KmgfSbsNgrllJZV2znSxfmHw2iDff7H8jxHUZ/EE4W3R4kx2Npwio=
+Received: from BYAPR05MB5048.namprd05.prod.outlook.com (20.177.230.218) by
+ BYAPR05MB5719.namprd05.prod.outlook.com (20.177.187.20) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.1709.11; Mon, 11 Mar 2019 22:09:56 +0000
+Received: from BYAPR05MB5048.namprd05.prod.outlook.com
+ ([fe80::b542:165c:d3da:244]) by BYAPR05MB5048.namprd05.prod.outlook.com
+ ([fe80::b542:165c:d3da:244%6]) with mapi id 15.20.1709.011; Mon, 11 Mar 2019
+ 22:09:56 +0000
+From:   Vishnu DASA <vdasa@vmware.com>
+To:     "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "virtualization@lists.linux-foundation.org" 
+        <virtualization@lists.linux-foundation.org>
+CC:     Vishnu DASA <vdasa@vmware.com>, Pv-drivers <Pv-drivers@vmware.com>
+Subject: [PATCH] VMCI: Use BIT() macro for bit definitions
+Thread-Topic: [PATCH] VMCI: Use BIT() macro for bit definitions
+Thread-Index: AQHU2Fco7mvuWBzPrk2iev2EOu8NqA==
+Date:   Mon, 11 Mar 2019 22:09:56 +0000
+Message-ID: <20190311220928.4560-1-vdasa@vmware.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-clientproxiedby: BYAPR07CA0068.namprd07.prod.outlook.com
+ (2603:10b6:a03:60::45) To BYAPR05MB5048.namprd05.prod.outlook.com
+ (2603:10b6:a03:9d::26)
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=vdasa@vmware.com; 
+x-ms-exchange-messagesentrepresentingtype: 1
+x-mailer: git-send-email 2.19.1
+x-originating-ip: [66.170.99.1]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: cf129130-739c-454d-c8b3-08d6a66e4b30
+x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600127)(711020)(4605104)(2017052603328)(7153060)(7193020);SRVR:BYAPR05MB5719;
+x-ms-traffictypediagnostic: BYAPR05MB5719:
+x-ld-processed: b39138ca-3cee-4b4a-a4d6-cd83d9dd62f0,ExtAddr
+x-microsoft-antispam-prvs: <BYAPR05MB571982F6EFECFA2DF42401F7CE480@BYAPR05MB5719.namprd05.prod.outlook.com>
+x-forefront-prvs: 09730BD177
+x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(366004)(39860400002)(376002)(136003)(396003)(346002)(189003)(199004)(4326008)(97736004)(14454004)(25786009)(476003)(106356001)(486006)(2616005)(71190400001)(105586002)(71200400001)(2906002)(1076003)(36756003)(478600001)(107886003)(305945005)(86362001)(2201001)(50226002)(386003)(53936002)(102836004)(6506007)(316002)(52116002)(256004)(26005)(99286004)(14444005)(3846002)(54906003)(110136005)(6116002)(6436002)(5660300002)(81156014)(81166006)(6512007)(68736007)(6486002)(8676002)(186003)(66066001)(2501003)(8936002)(7736002);DIR:OUT;SFP:1101;SCL:1;SRVR:BYAPR05MB5719;H:BYAPR05MB5048.namprd05.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
+received-spf: None (protection.outlook.com: vmware.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam-message-info: bBmk24bi17/w9kS7h5rs3fJuS00a3ipAvBjBsi5Nb61ESfCQ8TJM9t0QEiFLZt1F1dVJdkusPXepRKup0/qb+VSbb8CWAielYTyFpXIe2Tathppj9FyrCM6vHK3BSl6YdyNZ5xRTgYHGdBKydEVY6Zuhu+j0UNb8IjDKP5ZcfiGyCQb8B2aZ24Zg2RQXPtEVkQ6gTc70t+EMlY8PxfSzAdku6kjQq4OOnpWo1ocME8N1+W13mFwU+494c4TI4NOwFt5/4B1mEluTbgFiCbh3J374elMOr7K/Qz3N9OzJ1/xUFqCPzB/2tU1RxRaGpjGrgd773MSOk2Tp0E+N5kZpMY25pB2dBYr5VvCNB9Bq51gsBP6CvUHy4nI9J2+zYLNN20AXQHkc6zdgh3t8ZXBO57rR7lMT0fdaTgYi3n25jzU=
+Content-Type: text/plain; charset="iso-8859-1"
+Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190311063458.137473-2-pihsun@chromium.org>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+X-OriginatorOrg: vmware.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: cf129130-739c-454d-c8b3-08d6a66e4b30
+X-MS-Exchange-CrossTenant-originalarrivaltime: 11 Mar 2019 22:09:56.2639
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: b39138ca-3cee-4b4a-a4d6-cd83d9dd62f0
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: BYAPR05MB5719
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, 11 Mar 2019 14:34:52 +0800, Pi-Hsun Shih wrote:
-> From: Erin Lo <erin.lo@mediatek.com>
-> 
-> Add a DT binding documentation of SCP for the
-> MT8183 SoC from Mediatek.
-> 
-> Signed-off-by: Erin Lo <erin.lo@mediatek.com>
-> ---
-> Changes from v5:
->  - Remove dependency on CONFIG_RPMSG_MTK_SCP.
-> 
-> Changes from v4:
->  - Add detail of more properties.
->  - Document the usage of mtk,rpmsg-name in subnode from the new design.
-> 
-> Changes from v3:
->  - No change.
-> 
-> Changes from v2:
->  - No change. I realized that for this patch series, there's no need to
->    add anything under the mt8183-scp node (neither the mt8183-rpmsg or
->    the cros-ec-rpmsg) for them to work, since mt8183-rpmsg is added
->    directly as a rproc_subdev by code, and cros-ec-rpmsg is dynamically
->    created by SCP name service.
-> 
-> Changes from v1:
->  - No change.
-> ---
->  .../bindings/remoteproc/mtk,scp.txt           | 36 +++++++++++++++++++
->  1 file changed, 36 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/remoteproc/mtk,scp.txt
-> 
+No functional changes, cleanup only.
 
-Please add Acked-by/Reviewed-by tags when posting new versions. However,
-there's no need to repost patches *only* to add the tags. The upstream
-maintainer will do that for acks received on the version they apply.
+Reviewed-by: Adit Ranadive <aditr@vmware.com>
+Reviewed-by: Jorgen Hansen <jhansen@vmware.com>
+Signed-off-by: Vishnu Dasa <vdasa@vmware.com>
+---
+ include/linux/vmw_vmci_defs.h | 34 +++++++++++++++++-----------------
+ 1 file changed, 17 insertions(+), 17 deletions(-)
 
-If a tag was not added on purpose, please state why and what changed.
+diff --git a/include/linux/vmw_vmci_defs.h b/include/linux/vmw_vmci_defs.h
+index eaa1e762bf06..007e28053da8 100644
+--- a/include/linux/vmw_vmci_defs.h
++++ b/include/linux/vmw_vmci_defs.h
+@@ -33,27 +33,27 @@
+ #define VMCI_MAX_DEVICES 1
+=20
+ /* Status register bits. */
+-#define VMCI_STATUS_INT_ON     0x1
++#define VMCI_STATUS_INT_ON     BIT(0)
+=20
+ /* Control register bits. */
+-#define VMCI_CONTROL_RESET        0x1
+-#define VMCI_CONTROL_INT_ENABLE   0x2
+-#define VMCI_CONTROL_INT_DISABLE  0x4
++#define VMCI_CONTROL_RESET        BIT(0)
++#define VMCI_CONTROL_INT_ENABLE   BIT(1)
++#define VMCI_CONTROL_INT_DISABLE  BIT(2)
+=20
+ /* Capabilities register bits. */
+-#define VMCI_CAPS_HYPERCALL     0x1
+-#define VMCI_CAPS_GUESTCALL     0x2
+-#define VMCI_CAPS_DATAGRAM      0x4
+-#define VMCI_CAPS_NOTIFICATIONS 0x8
+-#define VMCI_CAPS_PPN64         0x10
++#define VMCI_CAPS_HYPERCALL     BIT(0)
++#define VMCI_CAPS_GUESTCALL     BIT(1)
++#define VMCI_CAPS_DATAGRAM      BIT(2)
++#define VMCI_CAPS_NOTIFICATIONS BIT(3)
++#define VMCI_CAPS_PPN64         BIT(4)
+=20
+ /* Interrupt Cause register bits. */
+-#define VMCI_ICR_DATAGRAM      0x1
+-#define VMCI_ICR_NOTIFICATION  0x2
++#define VMCI_ICR_DATAGRAM      BIT(0)
++#define VMCI_ICR_NOTIFICATION  BIT(1)
+=20
+ /* Interrupt Mask register bits. */
+-#define VMCI_IMR_DATAGRAM      0x1
+-#define VMCI_IMR_NOTIFICATION  0x2
++#define VMCI_IMR_DATAGRAM      BIT(0)
++#define VMCI_IMR_NOTIFICATION  BIT(1)
+=20
+ /* Maximum MSI/MSI-X interrupt vectors in the device. */
+ #define VMCI_MAX_INTRS 2
+@@ -463,9 +463,9 @@ struct vmci_datagram {
+  * datagram callback is invoked in a delayed context (not interrupt contex=
+t).
+  */
+ #define VMCI_FLAG_DG_NONE          0
+-#define VMCI_FLAG_WELLKNOWN_DG_HND 0x1
+-#define VMCI_FLAG_ANYCID_DG_HND    0x2
+-#define VMCI_FLAG_DG_DELAYED_CB    0x4
++#define VMCI_FLAG_WELLKNOWN_DG_HND BIT(0)
++#define VMCI_FLAG_ANYCID_DG_HND    BIT(1)
++#define VMCI_FLAG_DG_DELAYED_CB    BIT(2)
+=20
+ /*
+  * Maximum supported size of a VMCI datagram for routable datagrams.
+@@ -694,7 +694,7 @@ struct vmci_qp_detach_msg {
+ };
+=20
+ /* VMCI Doorbell API. */
+-#define VMCI_FLAG_DELAYED_CB 0x01
++#define VMCI_FLAG_DELAYED_CB BIT(0)
+=20
+ typedef void (*vmci_callback) (void *client_data);
+=20
+--=20
+2.19.1
+
