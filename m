@@ -4,53 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+	SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id ADF3FC43381
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 Mar 2019 19:57:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3ED70C43381
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 Mar 2019 19:57:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6E3A9214AE
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 Mar 2019 19:57:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0E08A2173C
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 Mar 2019 19:57:53 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1552334266;
-	bh=FUNfKDtCuuKG1liltAUT0dTNRRzBvcL5HRPRT4K8Qng=;
+	s=default; t=1552334273;
+	bh=tA7N63A3Y2XUWDydx2+AxIUi/zFZdphvUHYoBS0xL9Y=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=h8UAvFDNzr7qQkIa9XR7la6crH4BSurhQPm0eqtfsSgWPtd2ovKg/T0JmwUCqlE9N
-	 eEj7ap19AEiZRdUf+Qu320+o0o0opwal0xsnKm2xoH20pKdZwyM3TObFJX9NhpfSWt
-	 N541BcmjJsYC/MxkMPSHsA2HOgLYaWrtUHh41GkI=
+	b=c0yx+286lHdbC+AD9Y5TT+OxcGBUGVq2zkU9Cx7lUu5IH46ZAgCjFu7Ki//96PeDb
+	 //JTJ0jnTCw/doRIJH5MjsPBWXkIhYmz0w2zHn4iZU9hjbwXQZXH/jZN5ILY94hFJc
+	 TL3Gy76rNJIs/6BZnq3KLcxtc+M559g0LvccafWY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729169AbfCKT5o (ORCPT
+        id S1729214AbfCKT5v (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 11 Mar 2019 15:57:44 -0400
-Received: from mail.kernel.org ([198.145.29.99]:35118 "EHLO mail.kernel.org"
+        Mon, 11 Mar 2019 15:57:51 -0400
+Received: from mail.kernel.org ([198.145.29.99]:35172 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729150AbfCKT5k (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 11 Mar 2019 15:57:40 -0400
+        id S1729134AbfCKT5o (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 11 Mar 2019 15:57:44 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 92C54214AE;
-        Mon, 11 Mar 2019 19:57:38 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 20BBE21741;
+        Mon, 11 Mar 2019 19:57:42 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1552334259;
-        bh=FUNfKDtCuuKG1liltAUT0dTNRRzBvcL5HRPRT4K8Qng=;
+        s=default; t=1552334262;
+        bh=tA7N63A3Y2XUWDydx2+AxIUi/zFZdphvUHYoBS0xL9Y=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=mSZi5b/4LxeaGEmptTRkyrbZA/rNMREX9JdiqLQFglqdmi9MN7IavGioCkRGryqoz
-         CHrLlLUrmJWnY77rWOb1VieH0jA6/ODflNSzBYG0g1cjUun0IxkXpfoUogN4HqxRzV
-         zM42nZMGzNWwCG8G597ZB7pWaxTgozEN7JDTfg7s=
+        b=DNo004rfzAjPyB9QNE3z3JdOSjdXv+K25N0o7jWMbgOfJpEh/CZ+gbF3zCu7gePN6
+         AkZbTqFE7er7ktgS9gtZxTHBzSfQ5+qAVyOugONhHTrk0IC46WbRhOtaCo+JoHWBrM
+         P5RDxecHEkIe+DvVf72WbzJeVSSAu9XJSlNxq+3A=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Sylwester Nawrocki <s.nawrocki@samsung.com>,
-        Mark Brown <broonie@kernel.org>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH AUTOSEL 4.19 21/44] ASoC: samsung: Prevent clk_get_rate() calls in atomic context
-Date:   Mon, 11 Mar 2019 15:56:37 -0400
-Message-Id: <20190311195700.138462-21-sashal@kernel.org>
+Cc:     Dmitry Torokhov <dmitry.torokhov@gmail.com>,
+        Sasha Levin <sashal@kernel.org>, linux-input@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.19 23/44] Input: cap11xx - switch to using set_brightness_blocking()
+Date:   Mon, 11 Mar 2019 15:56:39 -0400
+Message-Id: <20190311195700.138462-23-sashal@kernel.org>
 X-Mailer: git-send-email 2.19.1
 In-Reply-To: <20190311195700.138462-1-sashal@kernel.org>
 References: <20190311195700.138462-1-sashal@kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
@@ -58,159 +56,101 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Sylwester Nawrocki <s.nawrocki@samsung.com>
+From: Dmitry Torokhov <dmitry.torokhov@gmail.com>
 
-[ Upstream commit 860b454c2c0cbda6892954f5cdbbb48931b3c8db ]
+[ Upstream commit 628442880af8c201d307a45f3862a7a17df8a189 ]
 
-This patch moves clk_get_rate() call from trigger() to hw_params()
-callback to avoid calling sleeping clk API from atomic context
-and prevent deadlock as indicated below.
+Updating LED state requires access to regmap and therefore we may sleep,
+so we could not do that directly form set_brightness() method.
+Historically we used private work to adjust the brightness, but with the
+introduction of set_brightness_blocking() we no longer need it.
 
-Before this change clk_get_rate() was being called with same
-spinlock held as the one passed to the clk API when registering
-clocks exposed by the I2S driver.
+As a bonus, not having our own work item means we do not have
+use-after-free issue as we neglected to cancel outstanding work on
+driver unbind.
 
-[   82.109780] BUG: sleeping function called from invalid context at kernel/locking/mutex.c:908
-[   82.117009] in_atomic(): 1, irqs_disabled(): 128, pid: 1554, name: speaker-test
-[   82.124235] 3 locks held by speaker-test/1554:
-[   82.128653]  #0: cc8c5328 (snd_pcm_link_rwlock){...-}, at: snd_pcm_stream_lock_irq+0x20/0x38
-[   82.137058]  #1: ec9eda17 (&(&substream->self_group.lock)->rlock){..-.}, at: snd_pcm_ioctl+0x900/0x1268
-[   82.146417]  #2: 6ac279bf (&(&pri_dai->spinlock)->rlock){..-.}, at: i2s_trigger+0x64/0x6d4
-[   82.154650] irq event stamp: 8144
-[   82.157949] hardirqs last  enabled at (8143): [<c0a0f574>] _raw_read_unlock_irq+0x24/0x5c
-[   82.166089] hardirqs last disabled at (8144): [<c0a0f6a8>] _raw_read_lock_irq+0x18/0x58
-[   82.174063] softirqs last  enabled at (8004): [<c01024e4>] __do_softirq+0x3a4/0x66c
-[   82.181688] softirqs last disabled at (7997): [<c012d730>] irq_exit+0x140/0x168
-[   82.188964] Preemption disabled at:
-[   82.188967] [<00000000>]   (null)
-[   82.195728] CPU: 6 PID: 1554 Comm: speaker-test Not tainted 5.0.0-rc5-00192-ga6e6caca8f03 #191
-[   82.204302] Hardware name: SAMSUNG EXYNOS (Flattened Device Tree)
-[   82.210376] [<c0111a54>] (unwind_backtrace) from [<c010d8f4>] (show_stack+0x10/0x14)
-[   82.218084] [<c010d8f4>] (show_stack) from [<c09ef004>] (dump_stack+0x90/0xc8)
-[   82.225278] [<c09ef004>] (dump_stack) from [<c0152980>] (___might_sleep+0x22c/0x2c8)
-[   82.232990] [<c0152980>] (___might_sleep) from [<c0a0a2e4>] (__mutex_lock+0x28/0xa3c)
-[   82.240788] [<c0a0a2e4>] (__mutex_lock) from [<c0a0ad80>] (mutex_lock_nested+0x1c/0x24)
-[   82.248763] [<c0a0ad80>] (mutex_lock_nested) from [<c04923dc>] (clk_prepare_lock+0x78/0xec)
-[   82.257079] [<c04923dc>] (clk_prepare_lock) from [<c049538c>] (clk_core_get_rate+0xc/0x5c)
-[   82.265309] [<c049538c>] (clk_core_get_rate) from [<c0766b18>] (i2s_trigger+0x490/0x6d4)
-[   82.273369] [<c0766b18>] (i2s_trigger) from [<c074fec4>] (soc_pcm_trigger+0x100/0x140)
-[   82.281254] [<c074fec4>] (soc_pcm_trigger) from [<c07378a0>] (snd_pcm_do_start+0x2c/0x30)
-[   82.289400] [<c07378a0>] (snd_pcm_do_start) from [<c07376cc>] (snd_pcm_action_single+0x38/0x78)
-[   82.298065] [<c07376cc>] (snd_pcm_action_single) from [<c073a450>] (snd_pcm_ioctl+0x910/0x1268)
-[   82.306734] [<c073a450>] (snd_pcm_ioctl) from [<c0292344>] (do_vfs_ioctl+0x90/0x9ec)
-[   82.314443] [<c0292344>] (do_vfs_ioctl) from [<c0292cd4>] (ksys_ioctl+0x34/0x60)
-[   82.321808] [<c0292cd4>] (ksys_ioctl) from [<c0101000>] (ret_fast_syscall+0x0/0x28)
-[   82.329431] Exception stack(0xeb875fa8 to 0xeb875ff0)
-[   82.334459] 5fa0:                   00033c18 b6e31000 00000004 00004142 00033d80 00033d80
-[   82.342605] 5fc0: 00033c18 b6e31000 00008000 00000036 00008000 00000000 beea38a8 00008000
-[   82.350748] 5fe0: b6e3142c beea384c b6da9a30 b6c9212c
-[   82.355789]
-[   82.357245] ======================================================
-[   82.363397] WARNING: possible circular locking dependency detected
-[   82.369551] 5.0.0-rc5-00192-ga6e6caca8f03 #191 Tainted: G        W
-[   82.376395] ------------------------------------------------------
-[   82.382548] speaker-test/1554 is trying to acquire lock:
-[   82.387834] 6d2007f4 (prepare_lock){+.+.}, at: clk_prepare_lock+0x78/0xec
-[   82.394593]
-[   82.394593] but task is already holding lock:
-[   82.400398] 6ac279bf (&(&pri_dai->spinlock)->rlock){..-.}, at: i2s_trigger+0x64/0x6d4
-[   82.408197]
-[   82.408197] which lock already depends on the new lock.
-[   82.416343]
-[   82.416343] the existing dependency chain (in reverse order) is:
-[   82.423795]
-[   82.423795] -> #1 (&(&pri_dai->spinlock)->rlock){..-.}:
-[   82.430472]        clk_mux_set_parent+0x34/0xb8
-[   82.434975]        clk_core_set_parent_nolock+0x1c4/0x52c
-[   82.440347]        clk_set_parent+0x38/0x6c
-[   82.444509]        of_clk_set_defaults+0xc8/0x308
-[   82.449186]        of_clk_add_provider+0x84/0xd0
-[   82.453779]        samsung_i2s_probe+0x408/0x5f8
-[   82.458376]        platform_drv_probe+0x48/0x98
-[   82.462879]        really_probe+0x224/0x3f4
-[   82.467037]        driver_probe_device+0x70/0x1c4
-[   82.471716]        bus_for_each_drv+0x44/0x8c
-[   82.476049]        __device_attach+0xa0/0x138
-[   82.480382]        bus_probe_device+0x88/0x90
-[   82.484715]        deferred_probe_work_func+0x6c/0xbc
-[   82.489741]        process_one_work+0x200/0x740
-[   82.494246]        worker_thread+0x2c/0x4c8
-[   82.498408]        kthread+0x128/0x164
-[   82.502131]        ret_from_fork+0x14/0x20
-[   82.506204]          (null)
-[   82.508976]
-[   82.508976] -> #0 (prepare_lock){+.+.}:
-[   82.514264]        __mutex_lock+0x60/0xa3c
-[   82.518336]        mutex_lock_nested+0x1c/0x24
-[   82.522756]        clk_prepare_lock+0x78/0xec
-[   82.527088]        clk_core_get_rate+0xc/0x5c
-[   82.531421]        i2s_trigger+0x490/0x6d4
-[   82.535494]        soc_pcm_trigger+0x100/0x140
-[   82.539913]        snd_pcm_do_start+0x2c/0x30
-[   82.544246]        snd_pcm_action_single+0x38/0x78
-[   82.549012]        snd_pcm_ioctl+0x910/0x1268
-[   82.553345]        do_vfs_ioctl+0x90/0x9ec
-[   82.557417]        ksys_ioctl+0x34/0x60
-[   82.561229]        ret_fast_syscall+0x0/0x28
-[   82.565477]        0xbeea384c
-[   82.568421]
-[   82.568421] other info that might help us debug this:
-[   82.568421]
-[   82.576394]  Possible unsafe locking scenario:
-[   82.576394]
-[   82.582285]        CPU0                    CPU1
-[   82.586792]        ----                    ----
-[   82.591297]   lock(&(&pri_dai->spinlock)->rlock);
-[   82.595977]                                lock(prepare_lock);
-[   82.601782]                                lock(&(&pri_dai->spinlock)->rlock);
-[   82.608975]   lock(prepare_lock);
-[   82.612268]
-[   82.612268]  *** DEADLOCK ***
-
-Fixes: 647d04f8e07a ("ASoC: samsung: i2s: Ensure the RCLK rate is properly determined")
-Reported-by: Krzysztof Kozłowski <krzk@kernel.org>
-Signed-off-by: Sylwester Nawrocki <s.nawrocki@samsung.com>
-Signed-off-by: Mark Brown <broonie@kernel.org>
+Reported-by: Sven Van Asbroeck <thesven73@gmail.com>
+Reviewed-by: Sven Van Asbroeck <TheSven73@googlemail.com>
+Acked-by: Jacek Anaszewski <jacek.anaszewski@gmail.com>
+Signed-off-by: Dmitry Torokhov <dmitry.torokhov@gmail.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- sound/soc/samsung/i2s.c | 10 +++++-----
- 1 file changed, 5 insertions(+), 5 deletions(-)
+ drivers/input/keyboard/cap11xx.c | 35 ++++++++++----------------------
+ 1 file changed, 11 insertions(+), 24 deletions(-)
 
-diff --git a/sound/soc/samsung/i2s.c b/sound/soc/samsung/i2s.c
-index d6c62aa13041..ce00fe2f6aae 100644
---- a/sound/soc/samsung/i2s.c
-+++ b/sound/soc/samsung/i2s.c
-@@ -700,6 +700,7 @@ static int i2s_hw_params(struct snd_pcm_substream *substream,
- {
- 	struct i2s_dai *i2s = to_info(dai);
- 	u32 mod, mask = 0, val = 0;
-+	struct clk *rclksrc;
- 	unsigned long flags;
+diff --git a/drivers/input/keyboard/cap11xx.c b/drivers/input/keyboard/cap11xx.c
+index 312916f99597..73686c2460ce 100644
+--- a/drivers/input/keyboard/cap11xx.c
++++ b/drivers/input/keyboard/cap11xx.c
+@@ -75,9 +75,7 @@
+ struct cap11xx_led {
+ 	struct cap11xx_priv *priv;
+ 	struct led_classdev cdev;
+-	struct work_struct work;
+ 	u32 reg;
+-	enum led_brightness new_brightness;
+ };
+ #endif
  
- 	WARN_ON(!pm_runtime_active(dai->dev));
-@@ -782,6 +783,10 @@ static int i2s_hw_params(struct snd_pcm_substream *substream,
- 
- 	i2s->frmclk = params_rate(params);
- 
-+	rclksrc = i2s->clk_table[CLK_I2S_RCLK_SRC];
-+	if (rclksrc && !IS_ERR(rclksrc))
-+		i2s->rclk_srcrate = clk_get_rate(rclksrc);
-+
- 	return 0;
+@@ -233,30 +231,21 @@ static void cap11xx_input_close(struct input_dev *idev)
  }
  
-@@ -886,11 +891,6 @@ static int config_setup(struct i2s_dai *i2s)
- 		return 0;
+ #ifdef CONFIG_LEDS_CLASS
+-static void cap11xx_led_work(struct work_struct *work)
++static int cap11xx_led_set(struct led_classdev *cdev,
++			    enum led_brightness value)
+ {
+-	struct cap11xx_led *led = container_of(work, struct cap11xx_led, work);
++	struct cap11xx_led *led = container_of(cdev, struct cap11xx_led, cdev);
+ 	struct cap11xx_priv *priv = led->priv;
+-	int value = led->new_brightness;
  
- 	if (!(i2s->quirks & QUIRK_NO_MUXPSR)) {
--		struct clk *rclksrc = i2s->clk_table[CLK_I2S_RCLK_SRC];
+ 	/*
+-	 * All LEDs share the same duty cycle as this is a HW limitation.
+-	 * Brightness levels per LED are either 0 (OFF) and 1 (ON).
++	 * All LEDs share the same duty cycle as this is a HW
++	 * limitation. Brightness levels per LED are either
++	 * 0 (OFF) and 1 (ON).
+ 	 */
+-	regmap_update_bits(priv->regmap, CAP11XX_REG_LED_OUTPUT_CONTROL,
+-				BIT(led->reg), value ? BIT(led->reg) : 0);
+-}
 -
--		if (rclksrc && !IS_ERR(rclksrc))
--			i2s->rclk_srcrate = clk_get_rate(rclksrc);
+-static void cap11xx_led_set(struct led_classdev *cdev,
+-			   enum led_brightness value)
+-{
+-	struct cap11xx_led *led = container_of(cdev, struct cap11xx_led, cdev);
 -
- 		psr = i2s->rclk_srcrate / i2s->frmclk / rfs;
- 		writel(((psr - 1) << 8) | PSR_PSREN, i2s->addr + I2SPSR);
- 		dev_dbg(&i2s->pdev->dev,
+-	if (led->new_brightness == value)
+-		return;
+-
+-	led->new_brightness = value;
+-	schedule_work(&led->work);
++	return regmap_update_bits(priv->regmap,
++				  CAP11XX_REG_LED_OUTPUT_CONTROL,
++				  BIT(led->reg),
++				  value ? BIT(led->reg) : 0);
+ }
+ 
+ static int cap11xx_init_leds(struct device *dev,
+@@ -299,7 +288,7 @@ static int cap11xx_init_leds(struct device *dev,
+ 		led->cdev.default_trigger =
+ 			of_get_property(child, "linux,default-trigger", NULL);
+ 		led->cdev.flags = 0;
+-		led->cdev.brightness_set = cap11xx_led_set;
++		led->cdev.brightness_set_blocking = cap11xx_led_set;
+ 		led->cdev.max_brightness = 1;
+ 		led->cdev.brightness = LED_OFF;
+ 
+@@ -312,8 +301,6 @@ static int cap11xx_init_leds(struct device *dev,
+ 		led->reg = reg;
+ 		led->priv = priv;
+ 
+-		INIT_WORK(&led->work, cap11xx_led_work);
+-
+ 		error = devm_led_classdev_register(dev, &led->cdev);
+ 		if (error) {
+ 			of_node_put(child);
 -- 
 2.19.1
 
