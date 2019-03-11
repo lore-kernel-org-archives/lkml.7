@@ -3,51 +3,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CE5E2C43381
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 Mar 2019 13:28:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 98111C43381
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 Mar 2019 13:28:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7DB4A20857
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 Mar 2019 13:28:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6643920857
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 Mar 2019 13:28:23 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728144AbfCKN2S (ORCPT
+        id S1727763AbfCKN2R (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 11 Mar 2019 09:28:18 -0400
-Received: from mout.kundenserver.de ([212.227.17.10]:34963 "EHLO
+        Mon, 11 Mar 2019 09:28:17 -0400
+Received: from mout.kundenserver.de ([217.72.192.74]:57917 "EHLO
         mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727526AbfCKNTf (ORCPT
+        with ESMTP id S1727558AbfCKNTg (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 11 Mar 2019 09:19:35 -0400
+        Mon, 11 Mar 2019 09:19:36 -0400
 Received: from orion.localdomain ([95.115.159.19]) by mrelayeu.kundenserver.de
  (mreue109 [212.227.15.183]) with ESMTPSA (Nemesis) id
- 1N3sZy-1guZPe2nXk-00zprH for <linux-kernel@vger.kernel.org>; Mon, 11 Mar 2019
- 14:19:30 +0100
+ 1M6DSo-1h9xcL18Om-006dmd for <linux-kernel@vger.kernel.org>; Mon, 11 Mar 2019
+ 14:19:33 +0100
 From:   "Enrico Weigelt, metux IT consult" <info@metux.net>
 To:     linux-kernel@vger.kernel.org
-Subject: [PATCH 023/114] drivers: video: fbdev: Kconfig: pedantic formatting
-Date:   Mon, 11 Mar 2019 14:17:35 +0100
-Message-Id: <1552310346-7629-24-git-send-email-info@metux.net>
+Subject: [PATCH 043/114] drivers: staging: Kconfig: pedantic formatting
+Date:   Mon, 11 Mar 2019 14:17:55 +0100
+Message-Id: <1552310346-7629-44-git-send-email-info@metux.net>
 X-Mailer: git-send-email 1.9.1
 In-Reply-To: <1552310346-7629-1-git-send-email-info@metux.net>
 References: <1552310346-7629-1-git-send-email-info@metux.net>
-X-Provags-ID: V03:K1:yvR28TY27hngpC/hAhwnGCLUbob+GcazjvmpLbUxHPrT7VZi4t7
- vzvkbkJE+UI0OuQ8UZXTNjAwRx3EIK6QvYyPI9+Ndzbf/OM4gTOU4/X9M99tEO0ptWG2WWE
- a6mtfOj8KF23n6reaOVFfnVKxW2qP5gMZe/CqO1Jh7MApEvyiwU+VslkaygWBRiCKi+aW2v
- hv2TYmCcUpMI19gMzRrKg==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:HE05nNLvHQw=:su2lENjcVNK7LLGmljKbWZ
- rq00lKQ9SUTSgZKVHWhmlNk3QGmJG73g2ke4No+h8kk+Xsw1e4b6OlkiIMVE22zdr7FgIyyBO
- Ot+kEvJv2vJ3JSP+R8AjevdoN1ZC+VG6QvytfmwIrr4+mjYPXgveswnmYRZsZRHtT4YXALX5G
- 4oUnKBwv2maQPEx0LO40WhK5uq5tvgThBnglGOaO9W0WsiarEj/C9LMBrixMGGfNafIiMe2vg
- P47Dx7JVPrY4Ut9ln7ro36zAOQ5hUarEyHPmlmD3lZTwut+XNYMFqca4W3dsI3J3fQSin8MzV
- LFnMlGZYu99cQ/A91WpGpwaTAw01Xmxmqt+HEH0CpwwgSOZn5qT/692Aj0SYi+sniJ0rRKOWY
- k5vsyE9ZGEDF2c1C1xsqsYT7CUNrFJtxBQT3QLv7cUTjgeDC5rDamgwyNiexgqQq2BXx7jvsL
- vxwVCrwkvBXnn5VjwNJY6bOm3Rq2Z8BbCxonIpm5IT4L4jwIpmJgOrZMuRwTjQMjFiU/tDCxD
- qcJb4gf5zj5h6Vs3zLIMZMLnRQZksLm3s7+JQ/bvguqHTFcwlSTH/BIrtpGg5vt5eKDyIHdJ3
- U4meygv3cghEjGDeMrw1Egr2Ed8dTaFram2sGAZ2sdprzz72h1HMXF5iKfTu0mOECugPNzNU5
- Yj8i8c7sMfajCvdSkp3JLoJInaBAAJUslIYRaUfDZ24nLkIxB8ammmvKF1kNXVyPlpllRDuXV
- EcfdrgiCcu23kXL3Kqlry55mJENIkMgQThqsUg==
+X-Provags-ID: V03:K1:46c7GgHvgbho6g6yK1N86lYIHnO5v/FSvgbwSbdThGOfxgoIxCB
+ Z8qnkA6kPeCtmhxBhTxWgOkHFlc4FB5uBAj+n5yM4kvbuw1XsFnY9qRKj9812Ud1hjVuae1
+ 7s6QdhWvCzOiOvsVTrGRiV0hwUy0Zxz8/yuO6/47dglr3iLHNOxSuxn8lD954gNzI7aoblX
+ Xkddsk73uhEU1eH9AcitQ==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:PK9tDskpZeY=:2m9eaIPAPbu8kaqwexhald
+ lDUcrV7v7ef6/fJfHHYCXa+5jTloWbKakLBUHjx6yWvJNiqMRubV/8w1rtvg3vtRKSHMD6mbW
+ ESE3Zu/N2Eaf2YF/9vfwj7r4MpbK8qp2djvVB+KvcSpjzO/n+bCGEemzii/msf/PMsv1lGMO5
+ 3xMgdl5QqIG4A0oCmv4dweWqCGfJ8a8SC+G99mO3++nKestBCwjacPsGYooDab1XPx3Pa4ztl
+ YV1FElChrXEqO33KnkkpNeHBGFIbZgHD0XTx/R3Z1IRO1MLehnHWLAvinl+6BNnBb94uPar7j
+ Xtce1FsFZ6MSdSwQY77lMHYswSHAkbqiC5NQN+WKvasGYqa20yweOlvpTMw337vqoPHtegS6D
+ JXqNh9yId5PHUXmQOJ9SLNZ3iXcpYRyZIvyeRj2X9nuQDgLkvUdI1p4HOXl868YUKu5a5MNhL
+ 80FTgXPhRWl/MO6iQ9J2/1etM21jq3cM3qR88Qs9yFpjaND6Gc6q1ewVxRYhRWYWoAWFSRQwH
+ fVa1uIuTHnVmGqcR6lNK8e6DQ4Yjwxm3S+ZBmhwT3tCCI3UwYlCbbGoTmPkW6x6bHqq345gXp
+ B4+MhKUoYX+UZT2J6kdNIhyVjqlJ1nKka6K22DdV6wE62VzkMvPPI8lnet73CB5+KqX+Bzam8
+ pV5j+Uv5jI3VHdz6RB9UXSPXSsinv/F3YzgdS+aY92UKZt1J6TknEz0lFFwsT/eJcqVdOqCML
+ mqhLQu93Mvfaj/OJumnr5+N3NyhLAHNSUSb0iA==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
@@ -58,740 +58,346 @@ Great White Handkerchief come around and clean it up.
 
 Signed-off-by: Enrico Weigelt, metux IT consult <info@metux.net>
 ---
- drivers/video/fbdev/Kconfig                       | 288 +++++++++++-----------
- drivers/video/fbdev/mmp/Kconfig                   |   6 +-
- drivers/video/fbdev/omap/Kconfig                  |  20 +-
- drivers/video/fbdev/omap2/omapfb/Kconfig          |  18 +-
- drivers/video/fbdev/omap2/omapfb/displays/Kconfig |  40 +--
- drivers/video/fbdev/omap2/omapfb/dss/Kconfig      |   6 +-
- 6 files changed, 188 insertions(+), 190 deletions(-)
+ drivers/staging/android/ion/Kconfig                |  2 +-
+ drivers/staging/emxx_udc/Kconfig                   | 10 ++++-----
+ drivers/staging/fbtft/Kconfig                      | 12 +++++-----
+ drivers/staging/fwserial/Kconfig                   | 26 +++++++++++-----------
+ drivers/staging/greybus/Kconfig                    |  4 ++--
+ drivers/staging/media/tegra-vde/Kconfig            |  4 ++--
+ drivers/staging/most/Kconfig                       | 10 ++++-----
+ drivers/staging/nvec/Kconfig                       | 19 +++++++---------
+ drivers/staging/pi433/Kconfig                      | 24 ++++++++++----------
+ drivers/staging/speakup/Kconfig                    |  8 +++----
+ .../staging/vc04_services/bcm2835-audio/Kconfig    | 13 +++++------
+ drivers/staging/vt6655/Kconfig                     |  9 ++++----
+ 12 files changed, 67 insertions(+), 74 deletions(-)
 
-diff --git a/drivers/video/fbdev/Kconfig b/drivers/video/fbdev/Kconfig
-index 58a9590..9026bdf 100644
---- a/drivers/video/fbdev/Kconfig
-+++ b/drivers/video/fbdev/Kconfig
-@@ -45,25 +45,25 @@ menuconfig FB
- 	  device-aware may cause unexpected results. If unsure, say N.
+diff --git a/drivers/staging/android/ion/Kconfig b/drivers/staging/android/ion/Kconfig
+index 0fdda6f..bba670c9 100644
+--- a/drivers/staging/android/ion/Kconfig
++++ b/drivers/staging/android/ion/Kconfig
+@@ -30,7 +30,7 @@ config ION_CHUNK_HEAP
+ 	bool "Ion chunk heap support"
+ 	depends on ION
+ 	help
+-          Choose this option to enable chunk heaps with Ion. This heap is
++	  Choose this option to enable chunk heaps with Ion. This heap is
+ 	  similar in function the carveout heap but memory is broken down
+ 	  into smaller chunk sizes, typically corresponding to a TLB size.
+ 	  Unless you know your system has these regions, you should say N here.
+diff --git a/drivers/staging/emxx_udc/Kconfig b/drivers/staging/emxx_udc/Kconfig
+index e50e722..15d99a6e 100644
+--- a/drivers/staging/emxx_udc/Kconfig
++++ b/drivers/staging/emxx_udc/Kconfig
+@@ -2,9 +2,9 @@ config USB_EMXX
+ 	tristate "EMXX USB Function Device Controller"
+ 	depends on USB_GADGET && (ARCH_RENESAS || (ARM && COMPILE_TEST))
+ 	help
+-	   The Emma Mobile series of SoCs from Renesas Electronics and
+-	   former NEC Electronics include USB Function hardware.
++	  The Emma Mobile series of SoCs from Renesas Electronics and
++	  former NEC Electronics include USB Function hardware.
  
- config FIRMWARE_EDID
--       bool "Enable firmware EDID"
--       depends on FB
--       ---help---
--         This enables access to the EDID transferred from the firmware.
--	 On the i386, this is from the Video BIOS. Enable this if DDC/I2C
--	 transfers do not work for your driver and if you are using
--	 nvidiafb, i810fb or savagefb.
--
--	 In general, choosing Y for this option is safe.  If you
--	 experience extremely long delays while booting before you get
--	 something on your display, try setting this to N.  Matrox cards in
--	 combination with certain motherboards and monitors are known to
--	 suffer from this problem.
-+	bool "Enable firmware EDID"
-+	depends on FB
-+	---help---
-+	  This enables access to the EDID transferred from the firmware.
-+	  On the i386, this is from the Video BIOS. Enable this if DDC/I2C
-+	  transfers do not work for your driver and if you are using
-+	  nvidiafb, i810fb or savagefb.
-+
-+	  In general, choosing Y for this option is safe.  If you
-+	  experience extremely long delays while booting before you get
-+	  something on your display, try setting this to N.  Matrox cards in
-+	  combination with certain motherboards and monitors are known to
-+	  suffer from this problem.
+-	   Say "y" to link the driver statically, or "m" to build a
+-	   dynamically linked module called "emxx_udc" and force all
+-	   gadget drivers to also be dynamically linked.
++	  Say "y" to link the driver statically, or "m" to build a
++	  dynamically linked module called "emxx_udc" and force all
++	  gadget drivers to also be dynamically linked.
+diff --git a/drivers/staging/fbtft/Kconfig b/drivers/staging/fbtft/Kconfig
+index 84b2e7e..3e504c6 100644
+--- a/drivers/staging/fbtft/Kconfig
++++ b/drivers/staging/fbtft/Kconfig
+@@ -94,8 +94,8 @@ config FB_TFT_PCD8544
+ 	  Generic Framebuffer support for PCD8544
  
- config FB_DDC
--       tristate
--       depends on FB
--       select I2C_ALGOBIT
--       select I2C
-+	tristate
-+	depends on FB
-+	select I2C_ALGOBIT
-+	select I2C
+ config FB_TFT_RA8875
+-        tristate "FB driver for the RA8875 LCD Controller"
+-        depends on FB_TFT
++	tristate "FB driver for the RA8875 LCD Controller"
++	depends on FB_TFT
+ 	help
+ 	  Generic Framebuffer support for RA8875
  
- config FB_BOOT_VESA_SUPPORT
- 	bool
-@@ -160,8 +160,8 @@ config FB_LITTLE_ENDIAN
- endchoice
+@@ -124,10 +124,10 @@ config FB_TFT_SSD1289
+ 	  Framebuffer support for SSD1289
  
- config FB_SYS_FOPS
--       tristate
--       depends on FB
-+	tristate
-+	depends on FB
+ config FB_TFT_SSD1305
+-        tristate "FB driver for the SSD1305 OLED Controller"
+-        depends on FB_TFT
+-        help
+-          Framebuffer support for SSD1305
++	tristate "FB driver for the SSD1305 OLED Controller"
++	depends on FB_TFT
++	help
++	  Framebuffer support for SSD1305
  
- config FB_DEFERRED_IO
- 	bool
-@@ -180,8 +180,8 @@ config FB_SVGALIB
- 	  cards.
- 
- config FB_MACMODES
--       tristate
--       depends on FB
-+	tristate
-+	depends on FB
- 
- config FB_BACKLIGHT
- 	tristate
-@@ -190,31 +190,31 @@ config FB_BACKLIGHT
- 	select BACKLIGHT_CLASS_DEVICE
- 
- config FB_MODE_HELPERS
--        bool "Enable Video Mode Handling Helpers"
--        depends on FB
-+	bool "Enable Video Mode Handling Helpers"
-+	depends on FB
- 	---help---
- 	  This enables functions for handling video modes using the
- 	  Generalized Timing Formula and the EDID parser. A few drivers rely
--          on this feature such as the radeonfb, rivafb, and the i810fb. If
-+	  on this feature such as the radeonfb, rivafb, and the i810fb. If
- 	  your driver does not take advantage of this feature, choosing Y will
- 	  just increase the kernel size by about 5K.
- 
- config FB_TILEBLITTING
--       bool "Enable Tile Blitting Support"
--       depends on FB
--       ---help---
--         This enables tile blitting.  Tile blitting is a drawing technique
--	 where the screen is divided into rectangular sections (tiles), whereas
--	 the standard blitting divides the screen into pixels. Because the
--	 default drawing element is a tile, drawing functions will be passed
--	 parameters in terms of number of tiles instead of number of pixels.
--	 For example, to draw a single character, instead of using bitmaps,
--	 an index to an array of bitmaps will be used.  To clear or move a
--	 rectangular section of a screen, the rectangle will be described in
--	 terms of number of tiles in the x- and y-axis.
--
--	 This is particularly important to one driver, matroxfb.  If
--	 unsure, say N.
-+	bool "Enable Tile Blitting Support"
-+	depends on FB
-+	---help---
-+	  This enables tile blitting.  Tile blitting is a drawing technique
-+	  where the screen is divided into rectangular sections (tiles), whereas
-+	  the standard blitting divides the screen into pixels. Because the
-+	  default drawing element is a tile, drawing functions will be passed
-+	  parameters in terms of number of tiles instead of number of pixels.
-+	  For example, to draw a single character, instead of using bitmaps,
-+	  an index to an array of bitmaps will be used.  To clear or move a
-+	  rectangular section of a screen, the rectangle will be described in
-+	  terms of number of tiles in the x- and y-axis.
-+
-+	  This is particularly important to one driver, matroxfb.  If
-+	  unsure, say N.
- 
- comment "Frame buffer hardware drivers"
- 	depends on FB
-@@ -226,7 +226,7 @@ config FB_GRVGA
- 	select FB_CFB_COPYAREA
- 	select FB_CFB_IMAGEBLIT
- 	---help---
--	This enables support for the SVGACTRL framebuffer in the GRLIB IP library from Aeroflex Gaisler.
-+	  This enables support for the SVGACTRL framebuffer in the GRLIB IP library from Aeroflex Gaisler.
- 
- config FB_CIRRUS
- 	tristate "Cirrus Logic support"
-@@ -655,17 +655,17 @@ config FB_EFI
- 	  using the EFI framebuffer as your console.
- 
- config FB_N411
--       tristate "N411 Apollo/Hecuba devkit support"
--       depends on FB && X86 && MMU
--       select FB_SYS_FILLRECT
--       select FB_SYS_COPYAREA
--       select FB_SYS_IMAGEBLIT
--       select FB_SYS_FOPS
--       select FB_DEFERRED_IO
--       select FB_HECUBA
+ config FB_TFT_SSD1306
+ 	tristate "FB driver for the SSD1306 OLED Controller"
+diff --git a/drivers/staging/fwserial/Kconfig b/drivers/staging/fwserial/Kconfig
+index 9c7c926..64cb277 100644
+--- a/drivers/staging/fwserial/Kconfig
++++ b/drivers/staging/fwserial/Kconfig
+@@ -1,8 +1,8 @@
+ config FIREWIRE_SERIAL
+-       tristate "TTY over Firewire"
+-       depends on FIREWIRE && TTY
 -       help
--         This enables support for the Apollo display controller in its
--         Hecuba form using the n411 devkit.
-+	tristate "N411 Apollo/Hecuba devkit support"
-+	depends on FB && X86 && MMU
-+	select FB_SYS_FILLRECT
-+	select FB_SYS_COPYAREA
-+	select FB_SYS_IMAGEBLIT
-+	select FB_SYS_FOPS
-+	select FB_DEFERRED_IO
-+	select FB_HECUBA
+-          This enables TTY over IEEE 1394, providing high-speed serial
++	tristate "TTY over Firewire"
++	depends on FIREWIRE && TTY
 +	help
-+	  This enables support for the Apollo display controller in its
-+	  Hecuba form using the n411 devkit.
++	  This enables TTY over IEEE 1394, providing high-speed serial
+ 	  connectivity to cabled peers. This driver implements a
+ 	  ad-hoc transport protocol and is currently limited to
+ 	  Linux-to-Linux communication.
+@@ -13,18 +13,18 @@ config FIREWIRE_SERIAL
+ if FIREWIRE_SERIAL
  
- config FB_HGA
- 	tristate "Hercules mono graphics support"
-@@ -685,7 +685,7 @@ config FB_GBE
- 	select FB_CFB_FILLRECT
- 	select FB_CFB_COPYAREA
- 	select FB_CFB_IMAGEBLIT
-- 	help
-+	help
- 	  This is the frame buffer device driver for SGI Graphics Backend.
- 	  This chip is used in SGI O2 and Visual Workstation 320/540.
- 
-@@ -897,10 +897,10 @@ config FB_NVIDIA
- 	  module will be called nvidiafb.
- 
- config FB_NVIDIA_I2C
--       bool "Enable DDC Support"
--       depends on FB_NVIDIA
--       select FB_DDC
+ config FWTTY_MAX_TOTAL_PORTS
+-       int "Maximum number of serial ports supported"
+-       default "64"
 -       help
-+	bool "Enable DDC Support"
-+	depends on FB_NVIDIA
-+	select FB_DDC
+-          Set this to the maximum number of serial ports you want the
++	int "Maximum number of serial ports supported"
++	default "64"
 +	help
- 	  This enables I2C support for nVidia Chipsets.  This is used
- 	  only for getting EDID information from the attached display
- 	  allowing for robust video mode handling and switching.
-@@ -943,10 +943,10 @@ config FB_RIVA
- 	  module will be called rivafb.
++	  Set this to the maximum number of serial ports you want the
+ 	  firewire-serial driver to support.
  
- config FB_RIVA_I2C
--       bool "Enable DDC Support"
--       depends on FB_RIVA
--       select FB_DDC
+ config FWTTY_MAX_CARD_PORTS
+-       int "Maximum number of serial ports supported per adapter"
+-       range 0 FWTTY_MAX_TOTAL_PORTS
+-       default "32"
 -       help
-+	bool "Enable DDC Support"
-+	depends on FB_RIVA
-+	select FB_DDC
+-          Set this to the maximum number of serial ports each firewire
++	int "Maximum number of serial ports supported per adapter"
++	range 0 FWTTY_MAX_TOTAL_PORTS
++	default "32"
 +	help
- 	  This enables I2C support for nVidia Chipsets.  This is used
- 	  only for getting EDID information from the attached display
- 	  allowing for robust video mode handling and switching.
-@@ -991,37 +991,37 @@ config FB_I810
- 	select FB_CFB_IMAGEBLIT
- 	select VGASTATE
++	  Set this to the maximum number of serial ports each firewire
+ 	  adapter supports. The actual number of serial ports registered
+ 	  is set with the module parameter "ttys".
+ 
+diff --git a/drivers/staging/greybus/Kconfig b/drivers/staging/greybus/Kconfig
+index b571e4e..ed1ce74 100644
+--- a/drivers/staging/greybus/Kconfig
++++ b/drivers/staging/greybus/Kconfig
+@@ -216,7 +216,7 @@ config GREYBUS_USB
+ 	  To compile this code as a module, chose M here: the module
+ 	  will be called gb-usb.ko
+ 
+-endif	# GREYBUS_BRIDGED_PHY
++endif # GREYBUS_BRIDGED_PHY
+ 
+ config GREYBUS_ARCHE
+ 	tristate "Greybus Arche Platform driver"
+@@ -227,4 +227,4 @@ config GREYBUS_ARCHE
+ 	  To compile this code as a module, chose M here: the module
+ 	  will be called gb-arche.ko
+ 
+-endif	# GREYBUS
++endif # GREYBUS
+diff --git a/drivers/staging/media/tegra-vde/Kconfig b/drivers/staging/media/tegra-vde/Kconfig
+index 5c49146..0c7d79f 100644
+--- a/drivers/staging/media/tegra-vde/Kconfig
++++ b/drivers/staging/media/tegra-vde/Kconfig
+@@ -4,5 +4,5 @@ config TEGRA_VDE
+ 	select DMA_SHARED_BUFFER
+ 	select SRAM
  	help
--	  This driver supports the on-board graphics built in to the Intel 810 
--          and 815 chipsets.  Say Y if you have and plan to use such a board.
-+	  This driver supports the on-board graphics built in to the Intel 810
-+	  and 815 chipsets.  Say Y if you have and plan to use such a board.
- 
--          To compile this driver as a module, choose M here: the
-+	  To compile this driver as a module, choose M here: the
- 	  module will be called i810fb.
- 
--          For more information, please read 
-+	  For more information, please read
- 	  <file:Documentation/fb/intel810.txt>
- 
- config FB_I810_GTF
- 	bool "use VESA Generalized Timing Formula"
- 	depends on FB_I810
- 	help
--	  If you say Y, then the VESA standard, Generalized Timing Formula 
--          or GTF, will be used to calculate the required video timing values
--	  per video mode.  Since the GTF allows nondiscrete timings 
--          (nondiscrete being a range of values as opposed to discrete being a
--          set of values), you'll be able to use any combination of horizontal 
-+	  If you say Y, then the VESA standard, Generalized Timing Formula
-+	  or GTF, will be used to calculate the required video timing values
-+	  per video mode.  Since the GTF allows nondiscrete timings
-+	  (nondiscrete being a range of values as opposed to discrete being a
-+	  set of values), you'll be able to use any combination of horizontal
- 	  and vertical resolutions, and vertical refresh rates without having
- 	  to specify your own timing parameters.  This is especially useful
--	  to maximize the performance of an aging display, or if you just 
--          have a display with nonstandard dimensions. A VESA compliant 
-+	  to maximize the performance of an aging display, or if you just
-+	  have a display with nonstandard dimensions. A VESA compliant
- 	  monitor is recommended, but can still work with non-compliant ones.
--	  If you need or want this, then select this option. The timings may 
--	  not be compliant with Intel's recommended values. Use at your own 
-+	  If you need or want this, then select this option. The timings may
-+	  not be compliant with Intel's recommended values. Use at your own
- 	  risk.
- 
--          If you say N, the driver will revert to discrete video timings 
-+	  If you say N, the driver will revert to discrete video timings
- 	  using a set recommended by Intel in their documentation.
--  
--          If unsure, say N.
-+
-+	  If unsure, say N.
- 
- config FB_I810_I2C
- 	bool "Enable DDC Support"
-@@ -1060,8 +1060,8 @@ config FB_INTEL
- 	depends on !DRM_I915
- 	help
- 	  This driver supports the on-board graphics built in to the Intel
--          830M/845G/852GM/855GM/865G/915G/915GM/945G/945GM/965G/965GM chipsets.
--          Say Y if you have and plan to use such a board.
-+	  830M/845G/852GM/855GM/865G/915G/915GM/945G/945GM/965G/965GM chipsets.
-+	  Say Y if you have and plan to use such a board.
- 
- 	  To make FB_INTEL=Y work you need to say AGP_INTEL=y too.
- 
-@@ -1142,10 +1142,10 @@ config FB_MATROX_G
- 	  G450/G550 secondary head and digital output are supported without
- 	  additional modules.
- 
--	  The driver starts in monitor mode. You must use the matroxset tool 
--	  (available at <ftp://platan.vc.cvut.cz/pub/linux/matrox-latest/>) to 
--	  swap primary and secondary head outputs, or to change output mode.  
--	  Secondary head driver always start in 640x480 resolution and you 
-+	  The driver starts in monitor mode. You must use the matroxset tool
-+	  (available at <ftp://platan.vc.cvut.cz/pub/linux/matrox-latest/>) to
-+	  swap primary and secondary head outputs, or to change output mode.
-+	  Secondary head driver always start in 640x480 resolution and you
- 	  must use fbset to change it.
- 
- 	  Do not forget that second head supports only 16 and 32 bpp
-@@ -1228,7 +1228,7 @@ config FB_RADEON_I2C
- 	select FB_DDC
- 	default y
- 	help
--	  Say Y here if you want DDC/I2C support for your Radeon board. 
-+	  Say Y here if you want DDC/I2C support for your Radeon board.
- 
- config FB_RADEON_BACKLIGHT
- 	bool "Support for backlight control"
-@@ -1357,10 +1357,10 @@ config FB_SAVAGE
- 	  will be called savagefb.
- 
- config FB_SAVAGE_I2C
--       bool "Enable DDC2 Support"
--       depends on FB_SAVAGE
--       select FB_DDC
--       help
-+	bool "Enable DDC2 Support"
-+	depends on FB_SAVAGE
-+	select FB_DDC
-+	help
- 	  This enables I2C support for S3 Savage Chipsets.  This is used
- 	  only for getting EDID information from the attached display
- 	  allowing for robust video mode handling and switching.
-@@ -1370,12 +1370,12 @@ config FB_SAVAGE_I2C
- 	  here.
- 
- config FB_SAVAGE_ACCEL
--       bool "Enable Console Acceleration"
--       depends on FB_SAVAGE
--       help
--          This option will compile in console acceleration support. If
--          the resulting framebuffer console has bothersome glitches, then
--          choose N here.
-+	bool "Enable Console Acceleration"
-+	depends on FB_SAVAGE
-+	help
-+	  This option will compile in console acceleration support. If
-+	  the resulting framebuffer console has bothersome glitches, then
-+	  choose N here.
- 
- config FB_SIS
- 	tristate "SiS/XGI display support"
-@@ -1408,17 +1408,17 @@ config FB_SIS_315
- 	  as XGI V3XT, V5, V8 and Z7.
- 
- config FB_VIA
--       tristate "VIA UniChrome (Pro) and Chrome9 display support"
--       depends on FB && PCI && GPIOLIB && I2C && (X86 || COMPILE_TEST)
--       select FB_CFB_FILLRECT
--       select FB_CFB_COPYAREA
--       select FB_CFB_IMAGEBLIT
--       select I2C_ALGOBIT
--       help
-+	tristate "VIA UniChrome (Pro) and Chrome9 display support"
-+	depends on FB && PCI && GPIOLIB && I2C && (X86 || COMPILE_TEST)
-+	select FB_CFB_FILLRECT
-+	select FB_CFB_COPYAREA
-+	select FB_CFB_IMAGEBLIT
-+	select I2C_ALGOBIT
-+	help
- 	  This is the frame buffer device driver for Graphics chips of VIA
- 	  UniChrome (Pro) Family (CLE266,PM800/CN400,P4M800CE/P4M800Pro/
- 	  CN700/VN800,CX700/VX700,P4M890) and Chrome9 Family (K8M890,CN896
-- 	  /P4M900,VX800)
-+	  /P4M900,VX800)
- 	  Say Y if you have a VIA UniChrome graphics board.
- 
- 	  To compile this driver as a module, choose M here: the
-@@ -1455,7 +1455,7 @@ config FB_NEOMAGIC
- 	select VGASTATE
- 	help
- 	  This driver supports notebooks with NeoMagic PCI chips.
--	  Say Y if you have such a graphics card. 
-+	  Say Y if you have such a graphics card.
- 
- 	  To compile this driver as a module, choose M here: the
- 	  module will be called neofb.
-@@ -1510,7 +1510,7 @@ config FB_VOODOO1
- 	select FB_CFB_COPYAREA
- 	select FB_CFB_IMAGEBLIT
- 	---help---
--	  Say Y here if you have a 3Dfx Voodoo Graphics (Voodoo1/sst1) or 
-+	  Say Y here if you have a 3Dfx Voodoo Graphics (Voodoo1/sst1) or
- 	  Voodoo2 (cvg) based graphics card.
- 
- 	  To compile this driver as a module, choose M here: the
-@@ -1679,9 +1679,9 @@ config FB_HIT
- config FB_PMAG_AA
- 	tristate "PMAG-AA TURBOchannel framebuffer support"
- 	depends on FB && TC
-- 	select FB_CFB_FILLRECT
-- 	select FB_CFB_COPYAREA
-- 	select FB_CFB_IMAGEBLIT
-+	select FB_CFB_FILLRECT
-+	select FB_CFB_COPYAREA
-+	select FB_CFB_IMAGEBLIT
- 	help
- 	  Support for the PMAG-AA TURBOchannel framebuffer card (1280x1024x1)
- 	  used mainly in the MIPS-based DECstation series.
-@@ -1689,9 +1689,9 @@ config FB_PMAG_AA
- config FB_PMAG_BA
- 	tristate "PMAG-BA TURBOchannel framebuffer support"
- 	depends on FB && TC
-- 	select FB_CFB_FILLRECT
-- 	select FB_CFB_COPYAREA
-- 	select FB_CFB_IMAGEBLIT
-+	select FB_CFB_FILLRECT
-+	select FB_CFB_COPYAREA
-+	select FB_CFB_IMAGEBLIT
- 	help
- 	  Support for the PMAG-BA TURBOchannel framebuffer card (1024x864x8)
- 	  used mainly in the MIPS-based DECstation series.
-@@ -1699,9 +1699,9 @@ config FB_PMAG_BA
- config FB_PMAGB_B
- 	tristate "PMAGB-B TURBOchannel framebuffer support"
- 	depends on FB && TC
-- 	select FB_CFB_FILLRECT
-- 	select FB_CFB_COPYAREA
-- 	select FB_CFB_IMAGEBLIT
-+	select FB_CFB_FILLRECT
-+	select FB_CFB_COPYAREA
-+	select FB_CFB_IMAGEBLIT
- 	help
- 	  Support for the PMAGB-B TURBOchannel framebuffer card used mainly
- 	  in the MIPS-based DECstation series. The card is currently only
-@@ -1710,9 +1710,9 @@ config FB_PMAGB_B
- config FB_MAXINE
- 	bool "Maxine (Personal DECstation) onboard framebuffer support"
- 	depends on (FB = y) && MACH_DECSTATION
-- 	select FB_CFB_FILLRECT
-- 	select FB_CFB_COPYAREA
-- 	select FB_CFB_IMAGEBLIT
-+	select FB_CFB_FILLRECT
-+	select FB_CFB_COPYAREA
-+	select FB_CFB_IMAGEBLIT
- 	help
- 	  Support for the onboard framebuffer (1024x768x8) in the Personal
- 	  DECstation series (Personal DECstation 5000/20, /25, /33, /50,
-@@ -1721,9 +1721,9 @@ config FB_MAXINE
- config FB_G364
- 	bool "G364 frame buffer support"
- 	depends on (FB = y) && (MIPS_MAGNUM_4000 || OLIVETTI_M700)
-- 	select FB_CFB_FILLRECT
-- 	select FB_CFB_COPYAREA
-- 	select FB_CFB_IMAGEBLIT
-+	select FB_CFB_FILLRECT
-+	select FB_CFB_COPYAREA
-+	select FB_CFB_IMAGEBLIT
- 	help
- 	  The G364 driver is the framebuffer used in MIPS Magnum 4000 and
- 	  Olivetti M700-10 systems.
-@@ -1731,9 +1731,9 @@ config FB_G364
- config FB_68328
- 	bool "Motorola 68328 native frame buffer support"
- 	depends on (FB = y) && (M68328 || M68EZ328 || M68VZ328)
-- 	select FB_CFB_FILLRECT
-- 	select FB_CFB_COPYAREA
-- 	select FB_CFB_IMAGEBLIT
-+	select FB_CFB_FILLRECT
-+	select FB_CFB_COPYAREA
-+	select FB_CFB_IMAGEBLIT
- 	help
- 	  Say Y here if you want to support the built-in frame buffer of
- 	  the Motorola 68328 CPU family.
-@@ -1812,13 +1812,13 @@ config FB_MBX
- 	  Accelerator
- 
- config FB_MBX_DEBUG
--       bool "Enable debugging info via debugfs"
--       depends on FB_MBX && DEBUG_FS
--       ---help---
--         Enable this if you want debugging information using the debug
--         filesystem (debugfs)
-+	bool "Enable debugging info via debugfs"
-+	depends on FB_MBX && DEBUG_FS
-+	---help---
-+	  Enable this if you want debugging information using the debug
-+	  filesystem (debugfs)
- 
--         If unsure, say N.
-+	  If unsure, say N.
- 
- config FB_FSL_DIU
- 	tristate "Freescale DIU framebuffer support"
-@@ -1834,9 +1834,9 @@ config FB_FSL_DIU
- config FB_W100
- 	tristate "W100 frame buffer support"
- 	depends on FB && ARCH_PXA
-- 	select FB_CFB_FILLRECT
-- 	select FB_CFB_COPYAREA
-- 	select FB_CFB_IMAGEBLIT
-+	select FB_CFB_FILLRECT
-+	select FB_CFB_COPYAREA
-+	select FB_CFB_IMAGEBLIT
- 	---help---
- 	  Frame buffer driver for the w100 as found on the Sharp SL-Cxx series.
- 	  It can also drive the w3220 chip found on iPAQ hx4700.
-@@ -1901,10 +1901,10 @@ config FB_S3C
- 	  Currently the support is only for the S3C6400 and S3C6410 SoCs.
- 
- config FB_S3C_DEBUG_REGWRITE
--       bool "Debug register writes"
--       depends on FB_S3C
--       ---help---
--         Show all register writes via pr_debug()
-+	bool "Debug register writes"
-+	depends on FB_S3C
-+	---help---
-+	  Show all register writes via pr_debug()
- 
- config FB_S3C2410
- 	tristate "S3C2410 LCD framebuffer support"
-@@ -1930,18 +1930,18 @@ config FB_S3C2410_DEBUG
- 	  through sysfs
- 
- config FB_NUC900
--        tristate "NUC900 LCD framebuffer support"
--        depends on FB && ARCH_W90X900
--        select FB_CFB_FILLRECT
--        select FB_CFB_COPYAREA
--        select FB_CFB_IMAGEBLIT
+-	    Say Y here to enable support for the NVIDIA Tegra video decoder
+-	    driver.
++	  Say Y here to enable support for the NVIDIA Tegra video decoder
++	  driver.
+diff --git a/drivers/staging/most/Kconfig b/drivers/staging/most/Kconfig
+index 20047ab..044fa4b 100644
+--- a/drivers/staging/most/Kconfig
++++ b/drivers/staging/most/Kconfig
+@@ -1,8 +1,8 @@
+ menuconfig MOST
+-        tristate "MOST support"
++	tristate "MOST support"
+ 	depends on HAS_DMA
+-        default n
 -        ---help---
--          Frame buffer driver for the built-in LCD controller in the Nuvoton
--          NUC900 processor
-+	tristate "NUC900 LCD framebuffer support"
-+	depends on FB && ARCH_W90X900
-+	select FB_CFB_FILLRECT
-+	select FB_CFB_COPYAREA
-+	select FB_CFB_IMAGEBLIT
++	default n
 +	---help---
-+	  Frame buffer driver for the built-in LCD controller in the Nuvoton
-+	  NUC900 processor
+ 	  Say Y here if you want to enable MOST support.
+ 	  This driver needs at least one additional component to enable the
+ 	  desired access from userspace (e.g. character devices) and one that
+@@ -11,9 +11,7 @@ menuconfig MOST
+ 	  To compile this driver as a module, choose M here: the
+ 	  module will be called most_core.
  
- config GPM1040A0_320X240
--        bool "Giantplus Technology GPM1040A0 320x240 Color TFT LCD"
--        depends on FB_NUC900
-+	bool "Giantplus Technology GPM1040A0 320x240 Color TFT LCD"
-+	depends on FB_NUC900
- 
- config FB_SM501
- 	tristate "Silicon Motion SM501 framebuffer support"
-diff --git a/drivers/video/fbdev/mmp/Kconfig b/drivers/video/fbdev/mmp/Kconfig
-index f56a7e2..1b5e80c 100644
---- a/drivers/video/fbdev/mmp/Kconfig
-+++ b/drivers/video/fbdev/mmp/Kconfig
-@@ -1,7 +1,7 @@
- menuconfig MMP_DISP
--        tristate "Marvell MMP Display Subsystem support"
--        depends on CPU_PXA910 || CPU_MMP2
--        help
-+	tristate "Marvell MMP Display Subsystem support"
-+	depends on CPU_PXA910 || CPU_MMP2
-+	help
- 	  Marvell Display Subsystem support.
- 
- if MMP_DISP
-diff --git a/drivers/video/fbdev/omap/Kconfig b/drivers/video/fbdev/omap/Kconfig
-index 29d250d..ca14793 100644
---- a/drivers/video/fbdev/omap/Kconfig
-+++ b/drivers/video/fbdev/omap/Kconfig
-@@ -6,7 +6,7 @@ config FB_OMAP
- 	select FB_CFB_COPYAREA
- 	select FB_CFB_IMAGEBLIT
- 	help
--          Frame buffer driver for OMAP based boards.
-+	  Frame buffer driver for OMAP based boards.
- 
- config FB_OMAP_LCDC_EXTERNAL
- 	bool "External LCD controller support"
-@@ -49,13 +49,11 @@ config FB_OMAP_LCD_H3
- 	  H3 board.
- 
- config FB_OMAP_DMA_TUNE
--        bool "Set DMA SDRAM access priority high"
--        depends on FB_OMAP
--        help
--          On systems in which video memory is in system memory
--          (SDRAM) this will speed up graphics DMA operations.
--          If you have such a system and want to use rotation
--          answer yes. Answer no if you have a dedicated video
--          memory, or don't use any of the accelerated features.
+-          If in doubt, say N here.
 -
 -
-+	bool "Set DMA SDRAM access priority high"
-+	depends on FB_OMAP
-+	help
-+	  On systems in which video memory is in system memory
-+	  (SDRAM) this will speed up graphics DMA operations.
-+	  If you have such a system and want to use rotation
-+	  answer yes. Answer no if you have a dedicated video
-+	  memory, or don't use any of the accelerated features.
-diff --git a/drivers/video/fbdev/omap2/omapfb/Kconfig b/drivers/video/fbdev/omap2/omapfb/Kconfig
-index 3bf154e..0410e07 100644
---- a/drivers/video/fbdev/omap2/omapfb/Kconfig
-+++ b/drivers/video/fbdev/omap2/omapfb/Kconfig
-@@ -2,23 +2,23 @@ config OMAP2_VRFB
- 	bool
++	  If in doubt, say N here.
  
- menuconfig FB_OMAP2
--        tristate "OMAP2+ frame buffer support"
--        depends on FB
--        depends on DRM_OMAP = n
-+	tristate "OMAP2+ frame buffer support"
-+	depends on FB
-+	depends on DRM_OMAP = n
- 	depends on GPIOLIB
+ if MOST
  
--        select FB_OMAP2_DSS
-+	select FB_OMAP2_DSS
- 	select OMAP2_VRFB if ARCH_OMAP2 || ARCH_OMAP3
--        select FB_CFB_FILLRECT
--        select FB_CFB_COPYAREA
--        select FB_CFB_IMAGEBLIT
--        help
-+	select FB_CFB_FILLRECT
-+	select FB_CFB_COPYAREA
-+	select FB_CFB_IMAGEBLIT
-+	help
- 	  Frame buffer driver for OMAP2+ based boards.
- 
- if FB_OMAP2
- 
- config FB_OMAP2_DEBUG_SUPPORT
--        bool "Debug support for OMAP2+ FB"
-+	bool "Debug support for OMAP2+ FB"
- 	default y
- 	depends on FB_OMAP2
+diff --git a/drivers/staging/nvec/Kconfig b/drivers/staging/nvec/Kconfig
+index e3a89fb..68636d3 100644
+--- a/drivers/staging/nvec/Kconfig
++++ b/drivers/staging/nvec/Kconfig
+@@ -3,11 +3,11 @@ config MFD_NVEC
+ 	depends on I2C && GPIOLIB && ARCH_TEGRA
+ 	select MFD_CORE
  	help
-diff --git a/drivers/video/fbdev/omap2/omapfb/displays/Kconfig b/drivers/video/fbdev/omap2/omapfb/displays/Kconfig
-index 08f1203..3df8736 100644
---- a/drivers/video/fbdev/omap2/omapfb/displays/Kconfig
-+++ b/drivers/video/fbdev/omap2/omapfb/displays/Kconfig
-@@ -1,5 +1,5 @@
- menu "OMAPFB Panel and Encoder Drivers"
--        depends on FB_OMAP2_DSS
-+	depends on FB_OMAP2_DSS
+-	    Say Y here to enable support for a nVidia compliant embedded
+-	    controller.
++	  Say Y here to enable support for a nVidia compliant embedded
++	  controller.
  
- config FB_OMAP2_ENCODER_OPA362
- 	tristate "OPA362 external analog amplifier"
-@@ -8,29 +8,29 @@ config FB_OMAP2_ENCODER_OPA362
- 	  through a GPIO.
+-	    To compile this driver as a module, say M here: the module will be
+-            called mfd-nvec
++	  To compile this driver as a module, say M here: the module will be
++	  called mfd-nvec
  
- config FB_OMAP2_ENCODER_TFP410
--        tristate "TFP410 DPI to DVI Encoder"
-+	tristate "TFP410 DPI to DVI Encoder"
- 	help
- 	  Driver for TFP410 DPI to DVI encoder.
+ config KEYBOARD_NVEC
+ 	tristate "Keyboard on nVidia compliant EC"
+@@ -17,7 +17,7 @@ config KEYBOARD_NVEC
+ 	  a nVidia compliant embedded controller.
  
- config FB_OMAP2_ENCODER_TPD12S015
--        tristate "TPD12S015 HDMI ESD protection and level shifter"
-+	tristate "TPD12S015 HDMI ESD protection and level shifter"
- 	help
- 	  Driver for TPD12S015, which offers HDMI ESD protection and level
- 	  shifting.
+ 	  To compile this driver as a module, say M here: the module will be
+-          called keyboard-nvec
++	  called keyboard-nvec
  
- config FB_OMAP2_CONNECTOR_DVI
--        tristate "DVI Connector"
-+	tristate "DVI Connector"
- 	depends on I2C
- 	help
- 	  Driver for a generic DVI connector.
+ config SERIO_NVEC_PS2
+ 	tristate "PS2 on nVidia EC"
+@@ -27,8 +27,7 @@ config SERIO_NVEC_PS2
+ 	  to a nVidia compliant embedded controller.
  
- config FB_OMAP2_CONNECTOR_HDMI
--        tristate "HDMI Connector"
-+	tristate "HDMI Connector"
- 	help
- 	  Driver for a generic HDMI connector.
+ 	  To compile this driver as a module, say M here: the module will be
+-          called serio-nvec-ps2
+-
++	  called serio-nvec-ps2
  
- config FB_OMAP2_CONNECTOR_ANALOG_TV
--        tristate "Analog TV Connector"
-+	tristate "Analog TV Connector"
- 	help
- 	  Driver for a generic analog TV connector.
+ config NVEC_POWER
+ 	tristate "NVEC charger and battery"
+@@ -38,8 +37,7 @@ config NVEC_POWER
+ 	  nVidia compliant embedded controllers.
  
-@@ -58,29 +58,29 @@ config FB_OMAP2_PANEL_LGPHILIPS_LB035Q02
- 	  LCD Panel used on the Gumstix Overo Palo35
+ 	  To compile this driver as a module, say M here: the module will be
+-          called nvec-power
+-
++	  called nvec-power
  
- config FB_OMAP2_PANEL_SHARP_LS037V7DW01
--        tristate "Sharp LS037V7DW01 LCD Panel"
--        depends on BACKLIGHT_CLASS_DEVICE
--        help
--          LCD Panel used in TI's SDP3430 and EVM boards
-+	tristate "Sharp LS037V7DW01 LCD Panel"
-+	depends on BACKLIGHT_CLASS_DEVICE
-+	help
-+	  LCD Panel used in TI's SDP3430 and EVM boards
+ config NVEC_PAZ00
+ 	tristate "Support for OEM specific functions on Compal PAZ00 based devices"
+@@ -49,5 +47,4 @@ config NVEC_PAZ00
+ 	  devices, e.g. Toshbia AC100 and Dynabooks AZ netbooks.
  
- config FB_OMAP2_PANEL_TPO_TD028TTEC1
--        tristate "TPO TD028TTEC1 LCD Panel"
+ 	  To compile this driver as a module, say M here: the module will be
+-          called nvec-paz00
+-
++	  called nvec-paz00
+diff --git a/drivers/staging/pi433/Kconfig b/drivers/staging/pi433/Kconfig
+index c734012..bdf50b1 100644
+--- a/drivers/staging/pi433/Kconfig
++++ b/drivers/staging/pi433/Kconfig
+@@ -1,16 +1,16 @@
+ config PI433
+-        tristate "Pi433 - a 433MHz radio module for Raspberry Pi"
 -        depends on SPI
 -        help
--          LCD panel used in Openmoko.
-+	tristate "TPO TD028TTEC1 LCD Panel"
+-          This option allows you to enable support for the radio module Pi433.
++	tristate "Pi433 - a 433MHz radio module for Raspberry Pi"
 +	depends on SPI
 +	help
-+	  LCD panel used in Openmoko.
++	  This option allows you to enable support for the radio module Pi433.
  
- config FB_OMAP2_PANEL_TPO_TD043MTEA1
--        tristate "TPO TD043MTEA1 LCD Panel"
--        depends on SPI
--        help
--          LCD Panel used in OMAP3 Pandora
-+	tristate "TPO TD043MTEA1 LCD Panel"
-+	depends on SPI
-+	help
-+	  LCD Panel used in OMAP3 Pandora
+-          Pi433 is a shield that fits onto the GPIO header of a Raspberry Pi
+-          or compatible. It extends the Raspberry Pi with the option, to
+-          send and receive data in the 433MHz ISM band - for example to
+-          communicate between two systems without using ethernet or bluetooth
+-          or for control or read sockets, actors, sensors, widely available
+-          for low price.
++	  Pi433 is a shield that fits onto the GPIO header of a Raspberry Pi
++	  or compatible. It extends the Raspberry Pi with the option, to
++	  send and receive data in the 433MHz ISM band - for example to
++	  communicate between two systems without using ethernet or bluetooth
++	  or for control or read sockets, actors, sensors, widely available
++	  for low price.
  
- config FB_OMAP2_PANEL_NEC_NL8048HL11
- 	tristate "NEC NL8048HL11 Panel"
- 	depends on SPI
- 	depends on BACKLIGHT_CLASS_DEVICE
+-          For details or the option to buy, please visit https://pi433.de/en.html
++	  For details or the option to buy, please visit https://pi433.de/en.html
+ 
+-          If in doubt, say N here, but saying yes most probably won't hurt
++	  If in doubt, say N here, but saying yes most probably won't hurt
+diff --git a/drivers/staging/speakup/Kconfig b/drivers/staging/speakup/Kconfig
+index d8ec780..c21f086 100644
+--- a/drivers/staging/speakup/Kconfig
++++ b/drivers/staging/speakup/Kconfig
+@@ -31,7 +31,6 @@ config SPEAKUP
+ 		used in conjunction with Speakup.  Think of them as
+ 		video cards for blind people.
+ 
+-
+ 		The Dectalk pc driver can only be built as a module, and
+ 		requires software to be pre-loaded on to the card before
+ 		the module can be loaded.  See the decpc choice below
+@@ -70,7 +69,7 @@ config SPEAKUP_SYNTH_AUDPTR
+ 	tristate "Audapter synthesizer support"
  	help
--		This NEC NL8048HL11 panel is TFT LCD used in the
--		Zoom2/3/3630 sdp boards.
-+	  This NEC NL8048HL11 panel is TFT LCD used in the
-+	  Zoom2/3/3630 sdp boards.
+ 		This is the Speakup driver for the Audapter synthesizer.
+-		 You can say y to build it into the kernel, or m to
++		You can say y to build it into the kernel, or m to
+ 		build it as a module.  See the configuration help on the
+ 		Speakup choice above for more info.
  
+@@ -172,7 +171,7 @@ config SPEAKUP_SYNTH_SPKOUT
+ 	help
+ 
+ 		This is the Speakup driver for the Speakout synthesizer.
+-		 You can say y to build it into the kernel, or m to
++		You can say y to build it into the kernel, or m to
+ 		build it as a module.  See the configuration help on the
+ 		Speakup choice above for more info.
+ 
+@@ -195,5 +194,6 @@ config SPEAKUP_SYNTH_DUMMY
+ 		the kernel, or m to build it as a module.  See the
+ 		configuration help on the Speakup choice above for more info.
+ 
+-endif	# SPEAKUP
++endif # SPEAKUP
++
  endmenu
-diff --git a/drivers/video/fbdev/omap2/omapfb/dss/Kconfig b/drivers/video/fbdev/omap2/omapfb/dss/Kconfig
-index 356b89b..a34820e 100644
---- a/drivers/video/fbdev/omap2/omapfb/dss/Kconfig
-+++ b/drivers/video/fbdev/omap2/omapfb/dss/Kconfig
-@@ -3,7 +3,7 @@ config FB_OMAP2_DSS_INIT
- 	bool
- 
- config FB_OMAP2_DSS
--        tristate
-+	tristate
- 	select VIDEOMODE_HELPERS
- 	select FB_OMAP2_DSS_INIT
- 	select HDMI
-@@ -53,7 +53,7 @@ config FB_OMAP2_DSS_RFBI
- 
- config FB_OMAP2_DSS_VENC
- 	bool "VENC support"
--        default y
-+	default y
- 	help
- 	  OMAP Video Encoder support for S-Video and composite TV-out.
- 
-@@ -62,7 +62,7 @@ config FB_OMAP2_DSS_HDMI_COMMON
- 
- config FB_OMAP4_DSS_HDMI
- 	bool "HDMI support for OMAP4"
--        default y
-+	default y
- 	select FB_OMAP2_DSS_HDMI_COMMON
- 	help
- 	  HDMI support for OMAP4 based SoCs.
+diff --git a/drivers/staging/vc04_services/bcm2835-audio/Kconfig b/drivers/staging/vc04_services/bcm2835-audio/Kconfig
+index 62c1c8b..eee68a6 100644
+--- a/drivers/staging/vc04_services/bcm2835-audio/Kconfig
++++ b/drivers/staging/vc04_services/bcm2835-audio/Kconfig
+@@ -1,8 +1,7 @@
+ config SND_BCM2835
+-        tristate "BCM2835 Audio"
+-        depends on (ARCH_BCM2835 || COMPILE_TEST) && SND
+-        select SND_PCM
+-        select BCM2835_VCHIQ
+-        help
+-          Say Y or M if you want to support BCM2835 built in audio
+-
++	tristate "BCM2835 Audio"
++	depends on (ARCH_BCM2835 || COMPILE_TEST) && SND
++	select SND_PCM
++	select BCM2835_VCHIQ
++	help
++	  Say Y or M if you want to support BCM2835 built in audio
+diff --git a/drivers/staging/vt6655/Kconfig b/drivers/staging/vt6655/Kconfig
+index 77cfc70..e45fdaf 100644
+--- a/drivers/staging/vt6655/Kconfig
++++ b/drivers/staging/vt6655/Kconfig
+@@ -1,6 +1,5 @@
+ config VT6655
+-   tristate "VIA Technologies VT6655 support"
+-   depends on PCI && MAC80211 && m
+-   ---help---
+-   This is a vendor-written driver for VIA VT6655.
+-
++	tristate "VIA Technologies VT6655 support"
++	depends on PCI && MAC80211 && m
++	---help---
++	  This is a vendor-written driver for VIA VT6655.
 -- 
 1.9.1
 
