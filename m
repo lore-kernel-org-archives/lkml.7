@@ -2,102 +2,190 @@ Return-Path: <SRS0=FxTY=RO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,
-	USER_AGENT_MUTT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 571BAC10F06
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 Mar 2019 17:22:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DD705C43381
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 Mar 2019 17:22:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 179042063F
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 Mar 2019 17:22:32 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1552324952;
-	bh=4WobMUYFGKGZdwYwZpQOeHolrobeK8r4wqoeuD1Qo9E=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=qLoLykt3X8xzlw0A0Wa5sViGhFVCyo02Y4EglNDxhWnT5vvcms2j4Ik8E/LgivrRY
-	 t8XDCUvAoV0+CFEnTq1q4zpNQCPkBBiM4fbFgQSpNSBN74GxZl3XFsnhBHh9m8FJbA
-	 TB1KYrE6VVzyqFHvaUXT86zZR2E5130j0+cNlpAQ=
+	by mail.kernel.org (Postfix) with ESMTP id 9A9622063F
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 Mar 2019 17:22:49 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="VINdJjca"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727868AbfCKRWa (ORCPT
+        id S1727903AbfCKRWs (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 11 Mar 2019 13:22:30 -0400
-Received: from mail.kernel.org ([198.145.29.99]:51186 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726641AbfCKRWa (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 11 Mar 2019 13:22:30 -0400
-Received: from localhost (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B7F962063F;
-        Mon, 11 Mar 2019 17:22:29 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1552324949;
-        bh=4WobMUYFGKGZdwYwZpQOeHolrobeK8r4wqoeuD1Qo9E=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=1Xo96x4v77CMe8V7cCCXdbHD5idyRn5RFwkks9XClEiw6KT1vRLAtMeIo65xj7IEp
-         V5XJ+5wv8mef2BKVJuaTYsoesqQT8OoAEK0i0xQc54Ln3ZhnuulhJ7s0J7amXu1bTJ
-         v54WOFhnB9ifBYbrhdDyImihjkZ14iWbCh2/2gpc=
-Date:   Mon, 11 Mar 2019 13:22:28 -0400
-From:   Sasha Levin <sashal@kernel.org>
-To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Subject: Re: [PATCH AUTOSEL 4.20 34/81] debugfs: return error values, not NULL
-Message-ID: <20190311172228.GG158926@sasha-vm>
-References: <20190228150813.10256-1-sashal@kernel.org>
- <20190228150813.10256-34-sashal@kernel.org>
- <20190228152501.GC8481@kroah.com>
+        Mon, 11 Mar 2019 13:22:48 -0400
+Received: from mail-wr1-f67.google.com ([209.85.221.67]:46026 "EHLO
+        mail-wr1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726641AbfCKRWs (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 11 Mar 2019 13:22:48 -0400
+Received: by mail-wr1-f67.google.com with SMTP id o7so6022675wrp.12;
+        Mon, 11 Mar 2019 10:22:46 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=3mAlpmirNnXcZcWzDnM5E4wH7BKrBluVsbQIwuEkfpg=;
+        b=VINdJjcaIADC9SQPgxKTQlHMFWypu25FWtwwaqHO8GSiStDIVX8tF7VvDK9fHMQsFq
+         tnYajwFmUlDV21sd3XKHggfJs9veCVW7M9CptXWJPJMOcp9LMOkfOKl9sj1ywjrm+UP3
+         RAZZCgJowxzEhbuODlMDIKwvpr0ypiTDOD1psn2Trg5FpYaWdH4DIjs6E6Hn/udiVGLu
+         LwyZlWsF1zcHpChpUSKyOdobHY7Ks3UZsjhOjFnQYYkg1QCD2YmMi91FQ1B+RRvgjsdU
+         6tHKX+NL6y/Y1Fh77qxqL2wuUgJpazhgffgoD4fclbPYyq/HTCPmstvFYjzXx/pgP81H
+         B6Xw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=3mAlpmirNnXcZcWzDnM5E4wH7BKrBluVsbQIwuEkfpg=;
+        b=qbzmMETt2Mkwa+PAe3bZCti8xJn/7AQJ7sYF4N7BtAQw9fatLbieu+IHPU4IS0Z4Vr
+         Qo+hmdYSy/l1EW0e7exmuthXhhtIrGju5jkPLCST+4LJctgJHXAg4AaFVa+Ie68ePzqu
+         1PYfTVqWOKrWa8+7ZArLhw42sN1O/JrGBRGZMU9QtPYt1ZfuVFdHEmSxEO5NLq8I+0Y6
+         4y1lZr+/DG6PQEE5wSAvBUeoAj6uM8GWwScC/Vy5zXD/ZLgzqrVfFM0BGZyRQvvyV0Z/
+         UZH7DdHonh1jVHhhADt/uKNPZMO3WV0vJzmr9QNt+8ohgJVhaZZY83msbQm4FU5pLT6v
+         WeWQ==
+X-Gm-Message-State: APjAAAUM1Mzz/sMbId4r9iDxwilNgTCNKbXQYeVxgBX73TnZuzykIaVj
+        hUcIiiHobttGMaaMIA883UnCSPqV
+X-Google-Smtp-Source: APXvYqwhTjb0tvzE4gg5X/Wu3lcAszXEnfCqqR3XfJx4XVWoU+sgXDsj1Cjp5YacQGK9JshQQ//xpw==
+X-Received: by 2002:adf:9103:: with SMTP id j3mr20623310wrj.236.1552324965939;
+        Mon, 11 Mar 2019 10:22:45 -0700 (PDT)
+Received: from [192.168.1.18] (cka136.neoplus.adsl.tpnet.pl. [83.31.76.136])
+        by smtp.gmail.com with ESMTPSA id l3sm7081680wrt.62.2019.03.11.10.22.44
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Mon, 11 Mar 2019 10:22:45 -0700 (PDT)
+Subject: Re: [PATCH 03/25] dt-bindings: leds: Add LED_FUNCTION definitions
+To:     Dan Murphy <dmurphy@ti.com>, linux-leds@vger.kernel.org
+Cc:     devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        pavel@ucw.cz, robh@kernel.org,
+        Baolin Wang <baolin.wang@linaro.org>,
+        Daniel Mack <daniel@zonque.org>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Oleh Kravchenko <oleg@kaa.org.ua>,
+        Sakari Ailus <sakari.ailus@linux.intel.com>,
+        Simon Shields <simon@lineageos.org>
+References: <20190310182836.20841-1-jacek.anaszewski@gmail.com>
+ <20190310182836.20841-4-jacek.anaszewski@gmail.com>
+ <ac860282-af12-8a1f-5d85-2f587856d669@ti.com>
+From:   Jacek Anaszewski <jacek.anaszewski@gmail.com>
+Message-ID: <9b02a7fd-3cec-f935-23e0-7c3b1263dbc4@gmail.com>
+Date:   Mon, 11 Mar 2019 18:22:43 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.5.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii; format=flowed
-Content-Disposition: inline
-In-Reply-To: <20190228152501.GC8481@kroah.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <ac860282-af12-8a1f-5d85-2f587856d669@ti.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Feb 28, 2019 at 04:25:01PM +0100, Greg Kroah-Hartman wrote:
->On Thu, Feb 28, 2019 at 10:07:26AM -0500, Sasha Levin wrote:
->> From: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Hi Dan,
+
+Thanks for the review.
+
+On 3/11/19 1:22 PM, Dan Murphy wrote:
+> Jacek
+> 
+> On 3/10/19 1:28 PM, Jacek Anaszewski wrote:
+>> Add common LED function definitions for use in Device Tree.
+>> The function names were extracted from existing dts files
+>> after eliminating oddities.
 >>
->> [ Upstream commit ff9fb72bc07705c00795ca48631f7fffe24d2c6b ]
->>
->> When an error happens, debugfs should return an error pointer value, not
->> NULL.  This will prevent the totally theoretical error where a debugfs
->> call fails due to lack of memory, returning NULL, and that dentry value
->> is then passed to another debugfs call, which would end up succeeding,
->> creating a file at the root of the debugfs tree, but would then be
->> impossible to remove (because you can not remove the directory NULL).
->>
->> So, to make everyone happy, always return errors, this makes the users
->> of debugfs much simpler (they do not have to ever check the return
->> value), and everyone can rest easy.
->>
->> Reported-by: Gary R Hook <ghook@amd.com>
->> Reported-by: Heiko Carstens <heiko.carstens@de.ibm.com>
->> Reported-by: Masami Hiramatsu <mhiramat@kernel.org>
->> Reported-by: Michal Hocko <mhocko@kernel.org>
->> Reported-by: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
->> Reported-by: Ulf Hansson <ulf.hansson@linaro.org>
->> Reviewed-by: Masami Hiramatsu <mhiramat@kernel.org>
->> Reviewed-by: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
->> Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
->> Signed-off-by: Sasha Levin <sashal@kernel.org>
+>> Signed-off-by: Jacek Anaszewski <jacek.anaszewski@gmail.com>
+>> Cc: Baolin Wang <baolin.wang@linaro.org>
+>> Cc: Daniel Mack <daniel@zonque.org>
+>> Cc: Dan Murphy <dmurphy@ti.com>
+>> Cc: Linus Walleij <linus.walleij@linaro.org>
+>> Cc: Oleh Kravchenko <oleg@kaa.org.ua>
+>> Cc: Sakari Ailus <sakari.ailus@linux.intel.com>
+>> Cc: Simon Shields <simon@lineageos.org>
 >> ---
->>  fs/debugfs/inode.c | 39 ++++++++++++++++++++++-----------------
->>  1 file changed, 22 insertions(+), 17 deletions(-)
->
->As much as I would love to backport this patch, no, please do not, I did
->not mark it for stable on purpose.  It can cause regressions with code
->that is not expecting this behavior (I have a fix that needs to go into
->5.0 for this very reason.)
->
->Please drop it from all queues.
+>>   include/dt-bindings/leds/common.h | 38 ++++++++++++++++++++++++++++++++++++++
+>>   1 file changed, 38 insertions(+)
+>>
+>> diff --git a/include/dt-bindings/leds/common.h b/include/dt-bindings/leds/common.h
+>> index e171d0a6beb2..ffcd46317307 100644
+>> --- a/include/dt-bindings/leds/common.h
+>> +++ b/include/dt-bindings/leds/common.h
+>> @@ -19,4 +19,42 @@
+>>   #define LEDS_BOOST_ADAPTIVE	1
+>>   #define LEDS_BOOST_FIXED	2
+>>   
+>> +/* Standard LED functions */
+>> +#define LED_FUNCTION_ACTIVITY "activity"
+>> +#define LED_FUNCTION_ADSL "adsl"
+>> +#define LED_FUNCTION_ALARM "alarm"
+>> +#define LED_FUNCTION_BACKLIGHT "backlight"
+>> +#define LED_FUNCTION_BLUETOOTH "bluetooth"
+>> +#define LED_FUNCTION_BOOT "boot"
+>> +#define LED_FUNCTION_CHRG "chrg"
+> 
+> Why not spell out charge?
 
-I've dropped this and the rest of the debugfs related patches you've
-pointed out, thank you.
+It was in one of existing dts files.
+I have no issue with that, will change it to "charge".
 
---
-Thanks,
-Sasha
+> 
+>> +#define LED_FUNCTION_DEBUG "debug"
+>> +#define LED_FUNCTION_DISK "disk"
+>> +#define LED_FUNCTION_DISK_READ "disk-read"
+>> +#define LED_FUNCTION_DISK_WRITE "disk-write"
+>> +#define LED_FUNCTION_FAULT "fault"
+>> +#define LED_FUNCTION_FLASH "flash"
+>> +#define LED_FUNCTION_HDDERR "hdderr"
+>> +#define LED_FUNCTION_HEARTBEAT "heartbeat"
+>> +#define LED_FUNCTION_INDICATOR "indicator"
+>> +#define LED_FUNCTION_INFO "info"
+>> +#define LED_FUNCTION_INTERNET "internet"
+> 
+> LEDs function can be for keyboards and keypads.
+> 
+> Keypad for hand held devices
+> 
+> #define LED_FUNCTION_KEYBOARD "keyboard"
+> #define LED_FUNCTION_KEYPAD "keypad"
+
+Ack.
+
+> 
+>> +#define LED_FUNCTION_LAN "lan"
+>> +#define LED_FUNCTION_MMC "mmc"
+>> +#define LED_FUNCTION_NAND "nand"
+>> +#define LED_FUNCTION_ON "on"
+>> +#define LED_FUNCTION_PROGRAMMING "programming"
+>> +#define LED_FUNCTION_PWR "pwr"
+> 
+> Same comment as above on chrg
+
+Ack.
+
+>> +#define LED_FUNCTION_RX "rx"
+>> +#define LED_FUNCTION_SD "sd"
+>> +#define LED_FUNCTION_SLEEP "sleep"
+>> +#define LED_FUNCTION_STANDBY "standby"
+>> +#define LED_FUNCTION_STATUS "status"
+>> +#define LED_FUNCTION_TORCH "torch"
+>> +#define LED_FUNCTION_TV "tv"
+>> +#define LED_FUNCTION_TX "tx"
+>> +#define LED_FUNCTION_USB "usb"
+>> +#define LED_FUNCTION_WAN "wan"
+>> +#define LED_FUNCTION_WLAN "wlan"
+>> +#define LED_FUNCTION_WPS "wps"
+>> +
+> 
+> Dan
+> 
+>>   #endif /* __DT_BINDINGS_LEDS_H */
+>>
+> 
+> 
+
+-- 
+Best regards,
+Jacek Anaszewski
