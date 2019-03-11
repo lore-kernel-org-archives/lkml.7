@@ -4,46 +4,59 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+	SPF_PASS,USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B1DCAC10F06
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 Mar 2019 20:10:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A9ABCC43381
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 Mar 2019 20:10:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 79E432087C
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 Mar 2019 20:10:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 707912064A
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 Mar 2019 20:10:29 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1552335017;
-	bh=NXNsVPfFa+GGcaGTQ6bhEVdP05rASOCee/t6OYtGLeE=;
+	s=default; t=1552335029;
+	bh=Re6qNmLU2QxAtKGU6SabD/4R5VKddgRzLOQzWVd+LBo=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=WfZVGrIJ5M6fQEUuX1Z5rrwV4/4i2XYvvx3UCEnbMTXfuIlFRyIgSWYUrJVWVSMxP
-	 KO7EUGOyWTVwNmuy0L+s4vdH9+nRlB3uiQjuwGCKLWoOVtpPxIipBUgj0zyeWVHr44
-	 tkWJ74Z32MjaINnHknxfHcjKJQqN23/rrH1pMnjE=
+	b=LFlp7XgVBKEcTIA5CctTN0RYdwDqgJuBpuephWGgBnAYi8Qf5hRDAVKdNgfIBeRFe
+	 AQEIP17YsVhyhvSvqjL/HhhnQunujl0zMAqM4vL5QLQ/OxUvZCMqXiwPab3aBUwDan
+	 TJZ5PRo9nuH5q22olKVBBMMrr7BuQU/gsKwV7jyQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728793AbfCKT4i (ORCPT
+        id S1728767AbfCKT4g (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 11 Mar 2019 15:56:38 -0400
-Received: from mail.kernel.org ([198.145.29.99]:33830 "EHLO mail.kernel.org"
+        Mon, 11 Mar 2019 15:56:36 -0400
+Received: from mail.kernel.org ([198.145.29.99]:33620 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728740AbfCKT4c (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 11 Mar 2019 15:56:32 -0400
+        id S1728637AbfCKT4Z (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 11 Mar 2019 15:56:25 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 68129214D8;
-        Mon, 11 Mar 2019 19:56:31 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id B3CC42087C;
+        Mon, 11 Mar 2019 19:56:22 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1552334191;
-        bh=NXNsVPfFa+GGcaGTQ6bhEVdP05rASOCee/t6OYtGLeE=;
+        s=default; t=1552334184;
+        bh=Re6qNmLU2QxAtKGU6SabD/4R5VKddgRzLOQzWVd+LBo=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=wA77/X+sgvcN8hyZ29Yh3h3wGSo51t7QZvbzuVHZWaElgmvDxzS10yZaopQntOaCM
-         GzI1FZGJlnPcfsNukoywFlYntF/OZqAELhGGzxq6K/valLbkJvZAr0GnxWA4ERqMM2
-         eMLucCVF8ojabquGR1PRMM0hasGbcfjGtBEet1W0=
+        b=Uw1olshVdYh2JKcpU47kkWGtrnRVAvClyq/D+AQerZX0aDc8lI2Zy4dYN5bb489QV
+         1giLaCPTolVQxJcWWDwPlWcWVzBiT1N/2yjYZEY1B0RvasxIkMVG6+65jrsrYStpNu
+         nPyP7btPBclwHv/jht3txWKaVg/XwYpaxKxbKM/U=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Guo Ren <ren_guo@c-sky.com>, Sasha Levin <sashal@kernel.org>
-Subject: [PATCH AUTOSEL 4.20 39/52] csky: Fixup _PAGE_GLOBAL bit for 610 tlb entry
-Date:   Mon, 11 Mar 2019 15:55:03 -0400
-Message-Id: <20190311195516.137772-39-sashal@kernel.org>
+Cc:     Yu Zhao <yuzhao@google.com>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Huang Ying <ying.huang@intel.com>,
+        Matthew Wilcox <willy@infradead.org>,
+        Keith Busch <keith.busch@intel.com>,
+        "Michael S . Tsirkin" <mst@redhat.com>,
+        John Hubbard <jhubbard@nvidia.com>,
+        Wei Yang <richard.weiyang@gmail.com>,
+        Mike Rapoport <rppt@linux.ibm.com>,
+        Andrea Arcangeli <aarcange@redhat.com>,
+        "Kirill A . Shutemov" <kirill.shutemov@linux.intel.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Sasha Levin <sashal@kernel.org>, linux-mm@kvack.org
+Subject: [PATCH AUTOSEL 4.20 37/52] mm/gup: fix gup_pmd_range() for dax
+Date:   Mon, 11 Mar 2019 15:55:01 -0400
+Message-Id: <20190311195516.137772-37-sashal@kernel.org>
 X-Mailer: git-send-email 2.19.1
 In-Reply-To: <20190311195516.137772-1-sashal@kernel.org>
 References: <20190311195516.137772-1-sashal@kernel.org>
@@ -55,34 +68,48 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Guo Ren <ren_guo@c-sky.com>
+From: Yu Zhao <yuzhao@google.com>
 
-[ Upstream commit 62eebea655d4be5a20fd563abfd7656724cdcd00 ]
+[ Upstream commit 414fd080d125408cb15d04ff4907e1dd8145c8c7 ]
 
-C-SKY CPU 8xx's _PAGE_GLOBAL is BIT(0), but 610's _PAGE_GLOBAL is
-BIT(6). Use _PAGE_GLOBAL macro instead of bad magic number.
+For dax pmd, pmd_trans_huge() returns false but pmd_huge() returns true
+on x86.  So the function works as long as hugetlb is configured.
+However, dax doesn't depend on hugetlb.
 
-Signed-off-by: Guo Ren <ren_guo@c-sky.com>
+Link: http://lkml.kernel.org/r/20190111034033.601-1-yuzhao@google.com
+Signed-off-by: Yu Zhao <yuzhao@google.com>
+Reviewed-by: Jan Kara <jack@suse.cz>
+Cc: Dan Williams <dan.j.williams@intel.com>
+Cc: Huang Ying <ying.huang@intel.com>
+Cc: Matthew Wilcox <willy@infradead.org>
+Cc: Keith Busch <keith.busch@intel.com>
+Cc: "Michael S . Tsirkin" <mst@redhat.com>
+Cc: John Hubbard <jhubbard@nvidia.com>
+Cc: Wei Yang <richard.weiyang@gmail.com>
+Cc: Mike Rapoport <rppt@linux.ibm.com>
+Cc: Andrea Arcangeli <aarcange@redhat.com>
+Cc: "Kirill A . Shutemov" <kirill.shutemov@linux.intel.com>
+Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
+Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/csky/include/asm/pgtable.h | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ mm/gup.c | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
-diff --git a/arch/csky/include/asm/pgtable.h b/arch/csky/include/asm/pgtable.h
-index edfcbb25fd9f..af7a7faa1010 100644
---- a/arch/csky/include/asm/pgtable.h
-+++ b/arch/csky/include/asm/pgtable.h
-@@ -45,8 +45,8 @@
- 	((pte_t *)page_address(pmd_page(*(dir))) + __pte_offset_t(address))
- #define pmd_page(pmd)	(pfn_to_page(pmd_phys(pmd) >> PAGE_SHIFT))
- #define pte_clear(mm, addr, ptep)	set_pte((ptep), \
--			(((unsigned int)addr&0x80000000)?__pte(1):__pte(0)))
--#define pte_none(pte)	(!(pte_val(pte)&0xfffffffe))
-+	(((unsigned int) addr & PAGE_OFFSET) ? __pte(_PAGE_GLOBAL) : __pte(0)))
-+#define pte_none(pte)		(!(pte_val(pte) & ~_PAGE_GLOBAL))
- #define pte_present(pte)	(pte_val(pte) & _PAGE_PRESENT)
- #define pte_pfn(x)	((unsigned long)((x).pte_low >> PAGE_SHIFT))
- #define pfn_pte(pfn, prot) __pte(((unsigned long long)(pfn) << PAGE_SHIFT) \
+diff --git a/mm/gup.c b/mm/gup.c
+index 8cb68a50dbdf..668f6570ee01 100644
+--- a/mm/gup.c
++++ b/mm/gup.c
+@@ -1674,7 +1674,8 @@ static int gup_pmd_range(pud_t pud, unsigned long addr, unsigned long end,
+ 		if (!pmd_present(pmd))
+ 			return 0;
+ 
+-		if (unlikely(pmd_trans_huge(pmd) || pmd_huge(pmd))) {
++		if (unlikely(pmd_trans_huge(pmd) || pmd_huge(pmd) ||
++			     pmd_devmap(pmd))) {
+ 			/*
+ 			 * NUMA hinting faults need to be handled in the GUP
+ 			 * slowpath for accounting purposes and so that they
 -- 
 2.19.1
 
