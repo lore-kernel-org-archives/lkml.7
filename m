@@ -7,34 +7,34 @@ X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 62B6EC43381
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 Mar 2019 09:33:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4CAA0C43381
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 Mar 2019 09:33:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2809A2086A
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 Mar 2019 09:33:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0DDD52086A
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 Mar 2019 09:33:50 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="c7yrVRe3"
+	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="HHfr8uvc"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727552AbfCKJdi (ORCPT
+        id S1727557AbfCKJds (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 11 Mar 2019 05:33:38 -0400
-Received: from mail-eopbgr70079.outbound.protection.outlook.com ([40.107.7.79]:62912
+        Mon, 11 Mar 2019 05:33:48 -0400
+Received: from mail-eopbgr70089.outbound.protection.outlook.com ([40.107.7.89]:55200
         "EHLO EUR04-HE1-obe.outbound.protection.outlook.com"
         rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1727141AbfCKJdh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 11 Mar 2019 05:33:37 -0400
+        id S1727091AbfCKJdq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 11 Mar 2019 05:33:46 -0400
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector1;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=nLvJkSyJEgQwdB3bjsAFqxbk/Ck/q1vQGqz79i97C7Q=;
- b=c7yrVRe3m5e9MeLrLJ/e2wNUdl7skodIu5GebepqZff7pZctcHlwEyig3Sh2LjXLNqFFybojpqUyvauRdp5wUDtMoCu424Ijgpyf/CqWI6HxOCG0yNv1KuQBIMuLGykpg3pfhYDU6Ox2NpP5aSpKtu2xT46p1N7HtpdAswPLOTE=
+ bh=wFq5S7SuaSi6j1HeK7buuJeG8wLjCiZSFq8eSwJLtys=;
+ b=HHfr8uvcqMkUjS4MPLZgRkGYJpR+6iWk32aUMCg0vDkrpj68GqAMUrJVO7b9GSNFzmtLicUJHwUK4xj8PIKNCAMnt9gDag+xCM3nCdoLG4MX1xJ4rXFenKQoI6n+r+XgYSN2YeiduicPeTtgv01FsBVAKwZ99CQW29t425JeVXc=
 Received: from AM6PR04MB5781.eurprd04.prod.outlook.com (20.179.3.19) by
  AM6PR04MB6150.eurprd04.prod.outlook.com (20.179.6.77) with Microsoft SMTP
  Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.1686.18; Mon, 11 Mar 2019 09:33:32 +0000
+ 15.20.1686.18; Mon, 11 Mar 2019 09:33:40 +0000
 Received: from AM6PR04MB5781.eurprd04.prod.outlook.com
  ([fe80::30cc:e034:1f7a:2cc7]) by AM6PR04MB5781.eurprd04.prod.outlook.com
  ([fe80::30cc:e034:1f7a:2cc7%2]) with mapi id 15.20.1686.021; Mon, 11 Mar 2019
- 09:33:32 +0000
+ 09:33:40 +0000
 From:   "Z.q. Hou" <zhiqiang.hou@nxp.com>
 To:     "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
         "linux-arm-kernel@lists.infradead.org" 
@@ -54,13 +54,12 @@ CC:     Mingkai Hu <mingkai.hu@nxp.com>,
         "M.h. Lian" <minghuan.lian@nxp.com>,
         Xiaowei Bao <xiaowei.bao@nxp.com>,
         "Z.q. Hou" <zhiqiang.hou@nxp.com>
-Subject: [PATCHv4 26/28] PCI: mobiveil: ls_pcie_g4: add Workaround for
- A-011451
-Thread-Topic: [PATCHv4 26/28] PCI: mobiveil: ls_pcie_g4: add Workaround for
- A-011451
-Thread-Index: AQHU1+1+Au0UBiXI7EyjDN9yTIIANA==
-Date:   Mon, 11 Mar 2019 09:33:32 +0000
-Message-ID: <20190311093130.7209-27-Zhiqiang.Hou@nxp.com>
+Subject: [PATCHv4 27/28] arm64: dts: freescale: lx2160a: add pcie DT nodes
+Thread-Topic: [PATCHv4 27/28] arm64: dts: freescale: lx2160a: add pcie DT
+ nodes
+Thread-Index: AQHU1+2DZMvSNaCO8UigSIZD6qGo0g==
+Date:   Mon, 11 Mar 2019 09:33:40 +0000
+Message-ID: <20190311093130.7209-28-Zhiqiang.Hou@nxp.com>
 References: <20190311093130.7209-1-Zhiqiang.Hou@nxp.com>
 In-Reply-To: <20190311093130.7209-1-Zhiqiang.Hou@nxp.com>
 Accept-Language: zh-CN, en-US
@@ -76,47 +75,47 @@ x-ms-exchange-messagesentrepresentingtype: 1
 x-mailer: git-send-email 2.17.1
 x-originating-ip: [119.31.174.73]
 x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: 73ffcf20-f27f-4173-ee58-08d6a604a04b
+x-ms-office365-filtering-correlation-id: 8a7c29d3-37a5-417d-3e8f-08d6a604a516
 x-ms-office365-filtering-ht: Tenant
 x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600127)(711020)(4605104)(4618075)(2017052603328)(7153060)(7193020);SRVR:AM6PR04MB6150;
 x-ms-traffictypediagnostic: AM6PR04MB6150:
-x-microsoft-exchange-diagnostics: =?iso-8859-1?Q?1;AM6PR04MB6150;23:EY5sy2vPsIXwcr4DE9RBaBbB3PSk0tGRCBxjTOd?=
- =?iso-8859-1?Q?UOdG9JzMkrfdWPLwB6oYOBBHrU48fJcZfzybIqxb2TpiZ5NcpUsOQMGr4J?=
- =?iso-8859-1?Q?rcAMvYpyjXkyhcSYZgEa7Zk4mvB/kVvLGevm7f+6HXHqYbAUW46UbmsNwE?=
- =?iso-8859-1?Q?Fq6u/LQ/MKdUuVyfyXvxac9MnSn5FVF0KfPkb5GR+j+1XCQOOP1Bf/O87l?=
- =?iso-8859-1?Q?iiKXdE22JUi6fPly0+BZ1qAemzjWBdborBedQ7RkXIOnFI1SvNiXOMwz/W?=
- =?iso-8859-1?Q?OpSTQ0GG4WfBo5jRSy+K8CivnnOg90lgceK2FZtTLeXH5kQzCH0OVRGMye?=
- =?iso-8859-1?Q?29kb2KqAO779yk7bpH4TPZSmXZiGvMK2DPF2Yl3mdB+i00us27wF7fLbwE?=
- =?iso-8859-1?Q?WadEzlHtBeNFwXZvEpismVKpReieJvG7Ng1fuQXsOl5aUN36w7DRcahUnj?=
- =?iso-8859-1?Q?w1b4oBci5zpn219zX5guIK8tAX5EUVEiHZ4y05SDWpERJeo8+VDKx5S8gc?=
- =?iso-8859-1?Q?NoxbHX8qiyrIEAv4w0NAnKiooASFwsojtr8hY7Lhy4JMRkjSn49ImOWnHp?=
- =?iso-8859-1?Q?VsTglVNgwEhUCQmWpG81Kt+ICDwJknbBzveFXdTFyog5RfHH0rEElYz5Fr?=
- =?iso-8859-1?Q?Yw4ZazpSGfDkmNo9iS3hutYimHsHwfXjKEbBLa84bfQ3ad2fpnFPtWQZp+?=
- =?iso-8859-1?Q?ayZQ3iRHmH6GqdgmCJ/uODTfQhh+8XuD2wPKzxzujGXb9LIHeIWG+LvOs+?=
- =?iso-8859-1?Q?8pUV9bSuCP7OT4jVP3y2oHhsovs+S9MC7txvSIRdiA9y739D9PazcvPeOo?=
- =?iso-8859-1?Q?0wfgkDEE9gXmxs+GaooJkR645rddmJg5zSoKhZHdC0Y9jqYOwJETyZZJv+?=
- =?iso-8859-1?Q?X5i39oGuTAQmS9sZysW7yQUrM6nYv3aQ4HNl6fhNWXDQ9P2loUY6tpfSRe?=
- =?iso-8859-1?Q?tUCJLfbgLfNzl8KxDJMuPRf4a9uE3t+sHgB/SreHjk8R9CsA+rFcB1nx+M?=
- =?iso-8859-1?Q?GQ5UjN7qIjapj5boF9B6+qMlysdyVgobqyeDlx/9C6WbWXeRPJ4oxE+/MZ?=
- =?iso-8859-1?Q?kEYYk6QjsT1JwTAZN0NN99Vle+p/ZTjo0n/cXxCTIy8QSVEqfK6nlVpSwk?=
- =?iso-8859-1?Q?73FmMHsG44e4w9mG5vol2GUSLvb9CBY6ZJm16rwEWh64DxdGvo4+lu+c/F?=
- =?iso-8859-1?Q?iXVJkWX/3ao9yv8p0Jd+Ble+PezAK+TzI9PNt7VAARVJalDkQ37d7+LodQ?=
- =?iso-8859-1?Q?L2FhUm/BT56Jtw5YVMAetsLgSXtneSe/HtC6pit1g3I0dlub5Q2kO03ogn?=
- =?iso-8859-1?Q?8/SdGaHQx8PA/gphSQ+hINp2SX8m/ucztuu7LqAmlbrim9KMn5SYgAHtNw?=
- =?iso-8859-1?Q?if3uwXOI=3D?=
-x-microsoft-antispam-prvs: <AM6PR04MB61501FFD701C5FFA1C6502CE84480@AM6PR04MB6150.eurprd04.prod.outlook.com>
+x-microsoft-exchange-diagnostics: =?iso-8859-1?Q?1;AM6PR04MB6150;23:+PKeJXscydKLxTgh458P3ap8al0ofnWaplnuDqQ?=
+ =?iso-8859-1?Q?M/Rm2Hf1kI1O/ZJaPN5tAsGDL9WZ9X4bskdouHUxUuliRHT+ZJuh92MDbE?=
+ =?iso-8859-1?Q?tJEev3vYovr6b3E2ImlRN9aji3oFYpvrDYifMGAHMjCkI6hRXmv+Z5mM5O?=
+ =?iso-8859-1?Q?0SNsx0umzHpFf+jKnKl4UASp9fN9w8TIDdQ7MjtyH9JtjqwNk0RCddmOMg?=
+ =?iso-8859-1?Q?EFTphjrmysm4kTmPOZ2UbAvvIfGDDISIhTNDqUtHYuU95l7+zs1JPq0z79?=
+ =?iso-8859-1?Q?HogDCMWIfU475PXi4EPnq+J82Epvt1TK73lx5DtRIqxFr4zp8IYxtWk0+f?=
+ =?iso-8859-1?Q?NhUq1gjokIZzmCnXexxuVC3qzikr1uagJWJmFlKFZIdCp7rHH6U5PU+vAU?=
+ =?iso-8859-1?Q?pEqUiBXUR0uFYL7/D2u1fwNIG02tmdEqB0acQaiRkQxqTFpSP3TvhxQkwM?=
+ =?iso-8859-1?Q?O3QwXm1rUqgQ2a+A4wrMMbXByhCS24htKY2M/4lbpWAHoYeZ701A1PTiXs?=
+ =?iso-8859-1?Q?4JzUXoVN1U00y20j1dCyOv3z4qMkLTdLnEG+wSLdMRPVwbLm5FMgEa+kVU?=
+ =?iso-8859-1?Q?qbG+oH8XMnkvaZBzIBMZv/gwplVHedJ58ekQPv6/u8eJGLyW+DoDWbhqfl?=
+ =?iso-8859-1?Q?XGTmeuuOFJJC29XqJ1bt0Xx/nkCks9rkEioRvq30+WCthFYX//ZRsDmSur?=
+ =?iso-8859-1?Q?OYwkncY4n+ktHpIFeuCHGMJbiROb5lgdbbMq9W/hJh7i7NVbAIGA0L493k?=
+ =?iso-8859-1?Q?jduXF2cBOFS3R6RHIi2+nfX6z4pWJ3jMvnCihkMuxpGNVBYLY+p+2of7nz?=
+ =?iso-8859-1?Q?urVr67aRU/Zwj+7+5Dhgci2UsG4tpd8psLgiIVX5+AHABRbCTxWze/EqcH?=
+ =?iso-8859-1?Q?7SSqtNddDYcX6WO7hqd8d4s2V2w1CWzfKJ4J7qtXRTwPPmTDRJ3v8l4m45?=
+ =?iso-8859-1?Q?wcolay63rna3uX6rTTbQJOyG8j9hqfFmq0o39FpdEt0AnHyGplCAgLe9in?=
+ =?iso-8859-1?Q?wbPlzzRKDk7zVaKD7Qs9s2Q/Errf/cal+k56VJQn2Tb0C+PDhecO1fAyp4?=
+ =?iso-8859-1?Q?GPhmTkntr1m69ql4NvXAS7mr2rSps8nXA/2vEBANpJL9MXiL0If9xaBp+w?=
+ =?iso-8859-1?Q?uc923qbh6joDuvi7g1/8Gfe+RrnfDxuewyVzXvh95fTSgDTfvnzlAOzCAL?=
+ =?iso-8859-1?Q?ccoMV+1M7OguOZiizIpd+BVsXKCLNbYksCc/5gp9ygMt5gdVgWtaVaD8eI?=
+ =?iso-8859-1?Q?HIuMEw7kDKHktdzpxwaELSQhOeY+D6yFJmDCgj9cbzCYf5xr/G2Ptl06yd?=
+ =?iso-8859-1?Q?Ls9thKGllQBAd0JW8WmDh+d/MjSK6jKnfohxfUl+2HG9jMYB+T7qeWdPBD?=
+ =?iso-8859-1?Q?Bs2KcghY=3D?=
+x-microsoft-antispam-prvs: <AM6PR04MB615062888B57C6DCF0F6BD8984480@AM6PR04MB6150.eurprd04.prod.outlook.com>
 x-forefront-prvs: 09730BD177
 x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(136003)(376002)(39860400002)(346002)(396003)(366004)(199004)(189003)(86362001)(54906003)(110136005)(6506007)(386003)(52116002)(99286004)(102836004)(316002)(4326008)(2201001)(50226002)(2501003)(97736004)(2906002)(66066001)(186003)(26005)(5660300002)(11346002)(76176011)(446003)(6486002)(36756003)(6436002)(25786009)(81166006)(81156014)(8676002)(478600001)(476003)(1076003)(7416002)(105586002)(305945005)(2616005)(71190400001)(71200400001)(3846002)(68736007)(6512007)(6116002)(8936002)(53936002)(7736002)(486006)(14454004)(14444005)(256004)(106356001)(921003)(1121003);DIR:OUT;SFP:1101;SCL:1;SRVR:AM6PR04MB6150;H:AM6PR04MB5781.eurprd04.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
 received-spf: None (protection.outlook.com: nxp.com does not designate
  permitted sender hosts)
 x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam-message-info: z0mPmf/7BZeKeIeeFBrej/Qv2bDJso0awLKYaIk/boeAT8hyEIkeRAG0iegwoorjRYaN19MZ3dtLd59h4vytHTyH7nQLd8SqIUWZlbZkXDdUFjfN0ICoVNvfH9QrLK8F8tjyG0Yi4xvSIqByYOQEsuhgQ/Kd6vHIu2qcPUhK4rLwgAbAfVU7Z/GKVqkkjqjNvoxJJtyALHyl6bdN+8FPauOeYclXP9r5XpFbM1TG0xf61ob69GZJs9nYCqYYZVo0NBuu5P7pgXrn6BWSC2GREp3bXsQ455pO8pWe7HU8mbQRBQ07DflaTLhL54DJiUvaSzwxtbh5nboXrMvnr3zAm9E/yU2GYrlu02L9TfYxPRCGadNl6RJxg73cSE3yoluLHSuyzBjdGVQ5ChdvDHuwi6CQhPuMp/mSgh6Rynw1mDo=
+x-microsoft-antispam-message-info: Eam34eUbrM0aUdLgcWoaaBw4gLHGcxbCum0e3jF0atbVNfUem71TIOVSiJ0+oq/IgjEa2kbH3+4hRHmBvjAeb4pkBFG8UGSUyg0iwPwawCxOAb5LE4QYi4iJoC6cW+/28dku9nmQjpRuDSbqEUL9z4ycBYb8Ih3YbHnwtSgspJbzuaHaP+D/zo5Db3HRKzKQWvcLU9fFKCpDQ3fgAyhrQquoTxMBmnD11y6YwFI1trjeeankiOKTvlpYxmglcozfgXocdyGas1pog28PJ3Glbzqr7E4q3hx0/2M72XUiNAyD5AQZ6p57RC9pgo3/O2AlC+DkOGGk2nFtgqOSX+gy2sfyrGgo6X4RFhloAe1Kb0ROdlgCJjYsfRS3pEO+1F0gkzx9lZE7UMKjsTJkkvg4rw3r38Knf2fK5uVaZvA6d5M=
 Content-Type: text/plain; charset="iso-8859-1"
 Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
 X-OriginatorOrg: nxp.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 73ffcf20-f27f-4173-ee58-08d6a604a04b
-X-MS-Exchange-CrossTenant-originalarrivaltime: 11 Mar 2019 09:33:32.2757
+X-MS-Exchange-CrossTenant-Network-Message-Id: 8a7c29d3-37a5-417d-3e8f-08d6a604a516
+X-MS-Exchange-CrossTenant-originalarrivaltime: 11 Mar 2019 09:33:40.7047
  (UTC)
 X-MS-Exchange-CrossTenant-fromentityheader: Hosted
 X-MS-Exchange-CrossTenant-id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
@@ -129,84 +128,203 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Hou Zhiqiang <Zhiqiang.Hou@nxp.com>
 
-When LX2 PCIe controller is sending multiple split completions and
-ACK latency expires indicating that ACK should be send at priority.
-But because of large number of split completions and FC update DLLP,
-the controller does not give priority to ACK transmission. This
-results into ACK latency timer timeout error at the link partner and
-the pending TLPs are replayed by the link partner again.
-
-Workaround:
-1. Reduce the ACK latency timeout value to a very small value.
-2. Restrict the number of completions from the LX2 PCIe controller
-   to 1, by changing the Max Read Request Size (MRRS) of link partner
-   to the same value as Max Packet size (MPS).
-
-This patch implemented part 1, the part 2 can be set by kernel parameter
-'pci=3Dpcie_bus_perf'
-
-This ERRATA is only for LX2160A Rev1.0, and it will be fixed
-in Rev2.0.
+The LX2160A integrated 6 PCIe Gen4 controllers.
 
 Signed-off-by: Hou Zhiqiang <Zhiqiang.Hou@nxp.com>
+Reviewed-by: Minghuan Lian <Minghuan.Lian@nxp.com>
 ---
 V4:
  - no change
 
- .../pci/controller/mobiveil/pci-layerscape-gen4.c | 15 +++++++++++++++
- drivers/pci/controller/mobiveil/pcie-mobiveil.h   |  4 ++++
- 2 files changed, 19 insertions(+)
+ .../arm64/boot/dts/freescale/fsl-lx2160a.dtsi | 163 ++++++++++++++++++
+ 1 file changed, 163 insertions(+)
 
-diff --git a/drivers/pci/controller/mobiveil/pci-layerscape-gen4.c b/driver=
-s/pci/controller/mobiveil/pci-layerscape-gen4.c
-index d2c5dbbd5e3c..20ce146788ca 100644
---- a/drivers/pci/controller/mobiveil/pci-layerscape-gen4.c
-+++ b/drivers/pci/controller/mobiveil/pci-layerscape-gen4.c
-@@ -82,12 +82,27 @@ static bool ls_pcie_g4_is_bridge(struct ls_pcie_g4 *pci=
-e)
- 	return header_type =3D=3D PCI_HEADER_TYPE_BRIDGE;
- }
-=20
-+static void workaround_A011451(struct ls_pcie_g4 *pcie)
-+{
-+	struct mobiveil_pcie *mv_pci =3D pcie->pci;
-+	u32 val;
+diff --git a/arch/arm64/boot/dts/freescale/fsl-lx2160a.dtsi b/arch/arm64/bo=
+ot/dts/freescale/fsl-lx2160a.dtsi
+index fe87204850b5..3a64f6eb8ce9 100644
+--- a/arch/arm64/boot/dts/freescale/fsl-lx2160a.dtsi
++++ b/arch/arm64/boot/dts/freescale/fsl-lx2160a.dtsi
+@@ -895,5 +895,168 @@
+ 				};
+ 			};
+ 		};
 +
-+	/* Set ACK latency timeout */
-+	val =3D csr_readl(mv_pci, GPEX_ACK_REPLAY_TO);
-+	val &=3D ~(ACK_LAT_TO_VAL_MASK << ACK_LAT_TO_VAL_SHIFT);
-+	val |=3D (4 << ACK_LAT_TO_VAL_SHIFT);
-+	csr_writel(mv_pci, val, GPEX_ACK_REPLAY_TO);
-+}
++		pcie@3400000 {
++			compatible =3D "fsl,lx2160a-pcie";
++			reg =3D <0x00 0x03400000 0x0 0x00100000   /* controller registers */
++			       0x80 0x00000000 0x0 0x00001000>; /* configuration space */
++			reg-names =3D "csr_axi_slave", "config_axi_slave";
++			interrupts =3D <GIC_SPI 108 IRQ_TYPE_LEVEL_HIGH>, /* AER interrupt */
++				     <GIC_SPI 108 IRQ_TYPE_LEVEL_HIGH>, /* PME interrupt */
++				     <GIC_SPI 108 IRQ_TYPE_LEVEL_HIGH>; /* controller interrupt */
++			interrupt-names =3D "aer", "pme", "intr";
++			#address-cells =3D <3>;
++			#size-cells =3D <2>;
++			device_type =3D "pci";
++			dma-coherent;
++			apio-wins =3D <8>;
++			ppio-wins =3D <8>;
++			bus-range =3D <0x0 0xff>;
++			ranges =3D <0x82000000 0x0 0x40000000 0x80 0x40000000 0x0 0x40000000>; =
+/* non-prefetchable memory */
++			msi-parent =3D <&its>;
++			#interrupt-cells =3D <1>;
++			interrupt-map-mask =3D <0 0 0 7>;
++			interrupt-map =3D <0000 0 0 1 &gic 0 0 GIC_SPI 109 IRQ_TYPE_LEVEL_HIGH>=
+,
++					<0000 0 0 2 &gic 0 0 GIC_SPI 110 IRQ_TYPE_LEVEL_HIGH>,
++					<0000 0 0 3 &gic 0 0 GIC_SPI 111 IRQ_TYPE_LEVEL_HIGH>,
++					<0000 0 0 4 &gic 0 0 GIC_SPI 112 IRQ_TYPE_LEVEL_HIGH>;
++			status =3D "disabled";
++		};
 +
- static int ls_pcie_g4_host_init(struct mobiveil_pcie *pci)
- {
- 	struct ls_pcie_g4 *pcie =3D to_ls_pcie_g4(pci);
-=20
- 	pcie->rev =3D csr_readb(pci, PCI_REVISION_ID);
-=20
-+	if (pcie->rev =3D=3D REV_1_0)
-+		workaround_A011451(pcie);
++		pcie@3500000 {
++			compatible =3D "fsl,lx2160a-pcie";
++			reg =3D <0x00 0x03500000 0x0 0x00100000   /* controller registers */
++			       0x88 0x00000000 0x0 0x00001000>; /* configuration space */
++			reg-names =3D "csr_axi_slave", "config_axi_slave";
++			interrupts =3D <GIC_SPI 113 IRQ_TYPE_LEVEL_HIGH>, /* AER interrupt */
++				     <GIC_SPI 113 IRQ_TYPE_LEVEL_HIGH>, /* PME interrupt */
++				     <GIC_SPI 113 IRQ_TYPE_LEVEL_HIGH>; /* controller interrupt */
++			interrupt-names =3D "aer", "pme", "intr";
++			#address-cells =3D <3>;
++			#size-cells =3D <2>;
++			device_type =3D "pci";
++			dma-coherent;
++			apio-wins =3D <8>;
++			ppio-wins =3D <8>;
++			bus-range =3D <0x0 0xff>;
++			ranges =3D <0x82000000 0x0 0x40000000 0x88 0x40000000 0x0 0x40000000>; =
+/* non-prefetchable memory */
++			msi-parent =3D <&its>;
++			#interrupt-cells =3D <1>;
++			interrupt-map-mask =3D <0 0 0 7>;
++			interrupt-map =3D <0000 0 0 1 &gic 0 0 GIC_SPI 114 IRQ_TYPE_LEVEL_HIGH>=
+,
++					<0000 0 0 2 &gic 0 0 GIC_SPI 115 IRQ_TYPE_LEVEL_HIGH>,
++					<0000 0 0 3 &gic 0 0 GIC_SPI 116 IRQ_TYPE_LEVEL_HIGH>,
++					<0000 0 0 4 &gic 0 0 GIC_SPI 117 IRQ_TYPE_LEVEL_HIGH>;
++			status =3D "disabled";
++		};
 +
- 	return 0;
- }
-=20
-diff --git a/drivers/pci/controller/mobiveil/pcie-mobiveil.h b/drivers/pci/=
-controller/mobiveil/pcie-mobiveil.h
-index ab43de5e4b2b..f0e2e4ae09b5 100644
---- a/drivers/pci/controller/mobiveil/pcie-mobiveil.h
-+++ b/drivers/pci/controller/mobiveil/pcie-mobiveil.h
-@@ -85,6 +85,10 @@
- #define PAB_AXI_AMAP_PEX_WIN_H(win)	PAB_REG_ADDR(0x0bac, win)
- #define PAB_INTP_AXI_PIO_CLASS		0x474
-=20
-+#define GPEX_ACK_REPLAY_TO		0x438
-+#define  ACK_LAT_TO_VAL_MASK		0x1fff
-+#define  ACK_LAT_TO_VAL_SHIFT		0
++		pcie@3600000 {
++			compatible =3D "fsl,lx2160a-pcie";
++			reg =3D <0x00 0x03600000 0x0 0x00100000   /* controller registers */
++			       0x90 0x00000000 0x0 0x00001000>; /* configuration space */
++			reg-names =3D "csr_axi_slave", "config_axi_slave";
++			interrupts =3D <GIC_SPI 118 IRQ_TYPE_LEVEL_HIGH>, /* AER interrupt */
++				     <GIC_SPI 118 IRQ_TYPE_LEVEL_HIGH>, /* PME interrupt */
++				     <GIC_SPI 118 IRQ_TYPE_LEVEL_HIGH>; /* controller interrupt */
++			interrupt-names =3D "aer", "pme", "intr";
++			#address-cells =3D <3>;
++			#size-cells =3D <2>;
++			device_type =3D "pci";
++			dma-coherent;
++			apio-wins =3D <256>;
++			ppio-wins =3D <24>;
++			bus-range =3D <0x0 0xff>;
++			ranges =3D <0x82000000 0x0 0x40000000 0x90 0x40000000 0x0 0x40000000>; =
+/* non-prefetchable memory */
++			msi-parent =3D <&its>;
++			#interrupt-cells =3D <1>;
++			interrupt-map-mask =3D <0 0 0 7>;
++			interrupt-map =3D <0000 0 0 1 &gic 0 0 GIC_SPI 119 IRQ_TYPE_LEVEL_HIGH>=
+,
++					<0000 0 0 2 &gic 0 0 GIC_SPI 120 IRQ_TYPE_LEVEL_HIGH>,
++					<0000 0 0 3 &gic 0 0 GIC_SPI 121 IRQ_TYPE_LEVEL_HIGH>,
++					<0000 0 0 4 &gic 0 0 GIC_SPI 122 IRQ_TYPE_LEVEL_HIGH>;
++			status =3D "disabled";
++		};
 +
- #define PAB_PEX_AMAP_CTRL(win)		PAB_REG_ADDR(0x4ba0, win)
- #define  AMAP_CTRL_EN_SHIFT		0
- #define  AMAP_CTRL_TYPE_SHIFT		1
++		pcie@3700000 {
++			compatible =3D "fsl,lx2160a-pcie";
++			reg =3D <0x00 0x03700000 0x0 0x00100000   /* controller registers */
++			       0x98 0x00000000 0x0 0x00001000>; /* configuration space */
++			reg-names =3D "csr_axi_slave", "config_axi_slave";
++			interrupts =3D <GIC_SPI 123 IRQ_TYPE_LEVEL_HIGH>, /* AER interrupt */
++				     <GIC_SPI 123 IRQ_TYPE_LEVEL_HIGH>, /* PME interrupt */
++				     <GIC_SPI 123 IRQ_TYPE_LEVEL_HIGH>; /* controller interrupt */
++			interrupt-names =3D "aer", "pme", "intr";
++			#address-cells =3D <3>;
++			#size-cells =3D <2>;
++			device_type =3D "pci";
++			dma-coherent;
++			apio-wins =3D <8>;
++			ppio-wins =3D <8>;
++			bus-range =3D <0x0 0xff>;
++			ranges =3D <0x82000000 0x0 0x40000000 0x98 0x40000000 0x0 0x40000000>; =
+/* non-prefetchable memory */
++			msi-parent =3D <&its>;
++			#interrupt-cells =3D <1>;
++			interrupt-map-mask =3D <0 0 0 7>;
++			interrupt-map =3D <0000 0 0 1 &gic 0 0 GIC_SPI 124 IRQ_TYPE_LEVEL_HIGH>=
+,
++					<0000 0 0 2 &gic 0 0 GIC_SPI 125 IRQ_TYPE_LEVEL_HIGH>,
++					<0000 0 0 3 &gic 0 0 GIC_SPI 126 IRQ_TYPE_LEVEL_HIGH>,
++					<0000 0 0 4 &gic 0 0 GIC_SPI 127 IRQ_TYPE_LEVEL_HIGH>;
++			status =3D "disabled";
++		};
++
++		pcie@3800000 {
++			compatible =3D "fsl,lx2160a-pcie";
++			reg =3D <0x00 0x03800000 0x0 0x00100000   /* controller registers */
++			       0xa0 0x00000000 0x0 0x00001000>; /* configuration space */
++			reg-names =3D "csr_axi_slave", "config_axi_slave";
++			interrupts =3D <GIC_SPI 128 IRQ_TYPE_LEVEL_HIGH>, /* AER interrupt */
++				     <GIC_SPI 128 IRQ_TYPE_LEVEL_HIGH>, /* PME interrupt */
++				     <GIC_SPI 128 IRQ_TYPE_LEVEL_HIGH>; /* controller interrupt */
++			interrupt-names =3D "aer", "pme", "intr";
++			#address-cells =3D <3>;
++			#size-cells =3D <2>;
++			device_type =3D "pci";
++			dma-coherent;
++			apio-wins =3D <256>;
++			ppio-wins =3D <24>;
++			bus-range =3D <0x0 0xff>;
++			ranges =3D <0x82000000 0x0 0x40000000 0xa0 0x40000000 0x0 0x40000000>; =
+/* non-prefetchable memory */
++			msi-parent =3D <&its>;
++			#interrupt-cells =3D <1>;
++			interrupt-map-mask =3D <0 0 0 7>;
++			interrupt-map =3D <0000 0 0 1 &gic 0 0 GIC_SPI 129 IRQ_TYPE_LEVEL_HIGH>=
+,
++					<0000 0 0 2 &gic 0 0 GIC_SPI 130 IRQ_TYPE_LEVEL_HIGH>,
++					<0000 0 0 3 &gic 0 0 GIC_SPI 131 IRQ_TYPE_LEVEL_HIGH>,
++					<0000 0 0 4 &gic 0 0 GIC_SPI 132 IRQ_TYPE_LEVEL_HIGH>;
++			status =3D "disabled";
++		};
++
++		pcie@3900000 {
++			compatible =3D "fsl,lx2160a-pcie";
++			reg =3D <0x00 0x03900000 0x0 0x00100000   /* controller registers */
++			       0xa8 0x00000000 0x0 0x00001000>; /* configuration space */
++			reg-names =3D "csr_axi_slave", "config_axi_slave";
++			interrupts =3D <GIC_SPI 103 IRQ_TYPE_LEVEL_HIGH>, /* AER interrupt */
++				     <GIC_SPI 103 IRQ_TYPE_LEVEL_HIGH>, /* PME interrupt */
++				     <GIC_SPI 103 IRQ_TYPE_LEVEL_HIGH>; /* controller interrupt */
++			interrupt-names =3D "aer", "pme", "intr";
++			#address-cells =3D <3>;
++			#size-cells =3D <2>;
++			device_type =3D "pci";
++			dma-coherent;
++			apio-wins =3D <8>;
++			ppio-wins =3D <8>;
++			bus-range =3D <0x0 0xff>;
++			ranges =3D <0x82000000 0x0 0x40000000 0xa8 0x40000000 0x0 0x40000000>; =
+/* non-prefetchable memory */
++			msi-parent =3D <&its>;
++			#interrupt-cells =3D <1>;
++			interrupt-map-mask =3D <0 0 0 7>;
++			interrupt-map =3D <0000 0 0 1 &gic 0 0 GIC_SPI 104 IRQ_TYPE_LEVEL_HIGH>=
+,
++					<0000 0 0 2 &gic 0 0 GIC_SPI 105 IRQ_TYPE_LEVEL_HIGH>,
++					<0000 0 0 3 &gic 0 0 GIC_SPI 106 IRQ_TYPE_LEVEL_HIGH>,
++					<0000 0 0 4 &gic 0 0 GIC_SPI 107 IRQ_TYPE_LEVEL_HIGH>;
++			status =3D "disabled";
++		};
++
+ 	};
+ };
 --=20
 2.17.1
 
