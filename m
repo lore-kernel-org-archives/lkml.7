@@ -6,46 +6,45 @@ X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
 	SPF_PASS,USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7EA2EC4360F
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 Mar 2019 20:01:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D7557C43381
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 Mar 2019 20:01:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 52F1B2064A
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 Mar 2019 20:01:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9EB202064A
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 Mar 2019 20:01:38 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1552334488;
-	bh=iOXo9G6zRh0r8iW1Af9cMed+mfeNdY2+lmHcEDhp82g=;
+	s=default; t=1552334498;
+	bh=gEpV6AaDsrPixLbAtnLwVFtiondkTTOyue9ndDAW9Zw=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=P7qcnPtkMysvm4L9Sp2ePmDuH/1zhZzI6OiL2EdhUrfwh0dVgdty353PXR5i4MmGr
-	 qcYVZfk6BTU4s8cUNZnw6Q9AVcdN5yaWHYLruk0btJVM5zepcvHCcxytQ3LYJ4BCpo
-	 4b2nNpfe/+mCoQnZMMJ1mY2AIZ/0ZHfRXSTIw2Go=
+	b=dGzkvK74/qAWbhYKeKeZIi0KRl4JzqY/JQv6jldFZ2K70O2UvB2lElbOpNLDvq/nB
+	 jGWz8Jc1S+76pzMHf00ildmw3/86aYJ/Zf2yG1p8Z8yBpROYQThqw+XNmfuO1ZB0T9
+	 XCxOa+wGcJVcck8Jvc/D3y6FAY1H4ojzTY8cc/Rw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729496AbfCKUB1 (ORCPT
+        id S1729561AbfCKUBh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 11 Mar 2019 16:01:27 -0400
-Received: from mail.kernel.org ([198.145.29.99]:37000 "EHLO mail.kernel.org"
+        Mon, 11 Mar 2019 16:01:37 -0400
+Received: from mail.kernel.org ([198.145.29.99]:36782 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729642AbfCKT7f (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 11 Mar 2019 15:59:35 -0400
+        id S1729616AbfCKT7Z (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 11 Mar 2019 15:59:25 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 801212087C;
-        Mon, 11 Mar 2019 19:59:34 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id B8C3F2087C;
+        Mon, 11 Mar 2019 19:59:23 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1552334375;
-        bh=iOXo9G6zRh0r8iW1Af9cMed+mfeNdY2+lmHcEDhp82g=;
+        s=default; t=1552334364;
+        bh=gEpV6AaDsrPixLbAtnLwVFtiondkTTOyue9ndDAW9Zw=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=A0FI5gWRRQavmhokqyIS7aUEOCIqA8vWTqnj7xx6Pm4MkLpPkfC5C79Oe8NjER5p/
-         Tao84urvBDxgE6nZW8YyveRvRTzjn/AB2hU0hK0WG90hNfPdcmaYRiV58AlA5zEg7F
-         KPrVr1kHs/4wiA01OdJ6s24ccv1ypDVBLi6aXp8k=
+        b=ucjIQFEKRd/P6ZPIDA/QA5L5eU8J6wJpmDIvoN1T1YPgtoDYAMoAR85l3GWV9qvXp
+         UtLNHOXboCCzmN1JklZGmrbaNs9c32Ycryexchj2NI75MGD4yApUDjZ3lxhyQ37lJZ
+         7psBRDXr866tWAUc0+MqkjBJ5sMT5eMQofuFUbaM=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Shubhrajyoti Datta <shubhrajyoti.datta@xilinx.com>,
-        Wolfram Sang <wsa@the-dreams.de>,
-        Sasha Levin <sashal@kernel.org>, linux-i2c@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.9 11/12] i2c: cadence: Fix the hold bit setting
-Date:   Mon, 11 Mar 2019 15:59:11 -0400
-Message-Id: <20190311195912.139410-11-sashal@kernel.org>
+Cc:     Yufen Yu <yuyufen@huawei.com>, Jens Axboe <axboe@kernel.dk>,
+        Sasha Levin <sashal@kernel.org>, linux-block@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.9 07/12] floppy: check_events callback should not return a negative number
+Date:   Mon, 11 Mar 2019 15:59:07 -0400
+Message-Id: <20190311195912.139410-7-sashal@kernel.org>
 X-Mailer: git-send-email 2.19.1
 In-Reply-To: <20190311195912.139410-1-sashal@kernel.org>
 References: <20190311195912.139410-1-sashal@kernel.org>
@@ -57,56 +56,41 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Shubhrajyoti Datta <shubhrajyoti.datta@xilinx.com>
+From: Yufen Yu <yuyufen@huawei.com>
 
-[ Upstream commit d358def706880defa4c9e87381c5bf086a97d5f9 ]
+[ Upstream commit 96d7cb932e826219ec41ac02e5af037ffae6098c ]
 
-In case the hold bit is not needed we are carrying the old values.
-Fix the same by resetting the bit when not needed.
+floppy_check_events() is supposed to return bit flags to say which
+events occured. We should return zero to say that no event flags are
+set.  Only BIT(0) and BIT(1) are used in the caller. And .check_events
+interface also expect to return an unsigned int value.
 
-Fixes the sporadic i2c bus lockups on National Instruments
-Zynq-based devices.
+However, after commit a0c80efe5956, it may return -EINTR (-4u).
+Here, both BIT(0) and BIT(1) are cleared. So this patch shouldn't
+affect runtime, but it obviously is still worth fixing.
 
-Fixes: df8eb5691c48 ("i2c: Add driver for Cadence I2C controller")
-Reported-by: Kyle Roeschley <kyle.roeschley@ni.com>
-Acked-by: Michal Simek <michal.simek@xilinx.com>
-Signed-off-by: Shubhrajyoti Datta <shubhrajyoti.datta@xilinx.com>
-Tested-by: Kyle Roeschley <kyle.roeschley@ni.com>
-Signed-off-by: Wolfram Sang <wsa@the-dreams.de>
+Reviewed-by: Dan Carpenter <dan.carpenter@oracle.com>
+Fixes: a0c80efe5956 ("floppy: fix lock_fdc() signal handling")
+Signed-off-by: Yufen Yu <yuyufen@huawei.com>
+Signed-off-by: Jens Axboe <axboe@kernel.dk>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/i2c/busses/i2c-cadence.c | 9 +++++++--
- 1 file changed, 7 insertions(+), 2 deletions(-)
+ drivers/block/floppy.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/i2c/busses/i2c-cadence.c b/drivers/i2c/busses/i2c-cadence.c
-index 45d6771fac8c..59c08d5b75d6 100644
---- a/drivers/i2c/busses/i2c-cadence.c
-+++ b/drivers/i2c/busses/i2c-cadence.c
-@@ -382,8 +382,10 @@ static void cdns_i2c_mrecv(struct cdns_i2c *id)
- 	 * Check for the message size against FIFO depth and set the
- 	 * 'hold bus' bit if it is greater than FIFO depth.
- 	 */
--	if (id->recv_count > CDNS_I2C_FIFO_DEPTH)
-+	if ((id->recv_count > CDNS_I2C_FIFO_DEPTH)  || id->bus_hold_flag)
- 		ctrl_reg |= CDNS_I2C_CR_HOLD;
-+	else
-+		ctrl_reg = ctrl_reg & ~CDNS_I2C_CR_HOLD;
+diff --git a/drivers/block/floppy.c b/drivers/block/floppy.c
+index 326b9ba4518e..6914c6e1e1a8 100644
+--- a/drivers/block/floppy.c
++++ b/drivers/block/floppy.c
+@@ -3752,7 +3752,7 @@ static unsigned int floppy_check_events(struct gendisk *disk,
  
- 	cdns_i2c_writereg(ctrl_reg, CDNS_I2C_CR_OFFSET);
- 
-@@ -440,8 +442,11 @@ static void cdns_i2c_msend(struct cdns_i2c *id)
- 	 * Check for the message size against FIFO depth and set the
- 	 * 'hold bus' bit if it is greater than FIFO depth.
- 	 */
--	if (id->send_count > CDNS_I2C_FIFO_DEPTH)
-+	if ((id->send_count > CDNS_I2C_FIFO_DEPTH) || id->bus_hold_flag)
- 		ctrl_reg |= CDNS_I2C_CR_HOLD;
-+	else
-+		ctrl_reg = ctrl_reg & ~CDNS_I2C_CR_HOLD;
-+
- 	cdns_i2c_writereg(ctrl_reg, CDNS_I2C_CR_OFFSET);
- 
- 	/* Clear the interrupts in interrupt status register. */
+ 	if (time_after(jiffies, UDRS->last_checked + UDP->checkfreq)) {
+ 		if (lock_fdc(drive))
+-			return -EINTR;
++			return 0;
+ 		poll_drive(false, 0);
+ 		process_fd_request();
+ 	}
 -- 
 2.19.1
 
