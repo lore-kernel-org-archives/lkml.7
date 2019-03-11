@@ -4,52 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+	SPF_PASS,USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C36B3C4360F
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 Mar 2019 20:00:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 747B8C43381
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 Mar 2019 20:00:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8FB012087C
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 Mar 2019 20:00:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2FCB92064A
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 Mar 2019 20:00:42 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1552334436;
-	bh=jgluM85L7tchmIGoIigx3wFMmaHo9lP9mKc3JQq7tvA=;
+	s=default; t=1552334442;
+	bh=FR0ygwC8oLPsGGLulMP/0I1ZXWAQjxy65/lqdL22wio=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=eO6BqherOvJ4KUF380FTWLcRQY7LMZ0mndrYjnrxnSN8sA40vijOiSexOiQUmzPgi
-	 HetLiPXVL9t3fAuZJ7fHUHniWEiImsVws6mRmRTZ2n+jA6ZK2QbfRldipL1y7FH7Y6
-	 pvNFtIeolPDR1+xk3Bsh6+NdvJjK1NJ6nD7e9AA0=
+	b=K2vN83AiFRDXtm6A0CLonWwuatnoghXjBLvOIgVLtuyDXKA4hqCrHYKn2E55iFOu1
+	 cH3vr+a2qawCt9zh6fSvTdgbUUt+YzSQmtvCxuxfeNBeR4dUAQpsz4BDcMpVvDcx/i
+	 gWvA3R0dlLNNlt8i7Y4AQehygltpPVv/YzZy4xW0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729709AbfCKT74 (ORCPT
+        id S1729336AbfCKUAk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 11 Mar 2019 15:59:56 -0400
-Received: from mail.kernel.org ([198.145.29.99]:37188 "EHLO mail.kernel.org"
+        Mon, 11 Mar 2019 16:00:40 -0400
+Received: from mail.kernel.org ([198.145.29.99]:37266 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729681AbfCKT7s (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 11 Mar 2019 15:59:48 -0400
+        id S1729698AbfCKT74 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 11 Mar 2019 15:59:56 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 6642C2064A;
-        Mon, 11 Mar 2019 19:59:46 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 33CD62064A;
+        Mon, 11 Mar 2019 19:59:55 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1552334387;
-        bh=jgluM85L7tchmIGoIigx3wFMmaHo9lP9mKc3JQq7tvA=;
+        s=default; t=1552334395;
+        bh=FR0ygwC8oLPsGGLulMP/0I1ZXWAQjxy65/lqdL22wio=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=I5lx3z8yPIVsLek/J93qdUkw9oGW5o0Dyvg15AWqgyIds9S9ceP9SGzGGML1Lgia2
-         1DYBqDS4Ko3NHHX+DNC6byuqgl+cf836DESN4S6qQpXFfc6dj1VcwbEp2f8nRckmhK
-         EXdtxlI1bYKvAvMP5uGb1fTru5Azihh4TLJ1qIks=
+        b=KJ44ik9Kyr8FcTHJmHiK3Igc5whCxTO3boDXheKXT2eD7v91A+uLM+3BWOvcOYywA
+         QwCvlHpoRqBiTIQETQlTFKoZY1uoGSQlpC8nAYUSo3hmBN9xlj2atCJuJFZLVCoNX+
+         vMTaa6W/GzoaNGenTr4bRG0Is6boIvzgE8rWbkbw=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Cong Wang <xiyou.wangcong@gmail.com>,
-        Jiri Pirko <jiri@resnulli.us>, Paolo Abeni <pabeni@redhat.com>,
-        "David S . Miller" <davem@davemloft.net>,
-        Sasha Levin <sashal@kernel.org>, netdev@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.4 6/8] team: avoid complex list operations in team_nl_cmd_options_set()
-Date:   Mon, 11 Mar 2019 15:59:36 -0400
-Message-Id: <20190311195938.139603-6-sashal@kernel.org>
+Cc:     Dmitry Torokhov <dmitry.torokhov@gmail.com>,
+        Sasha Levin <sashal@kernel.org>, linux-input@vger.kernel.org
+Subject: [PATCH AUTOSEL 3.18 2/6] Input: matrix_keypad - use flush_delayed_work()
+Date:   Mon, 11 Mar 2019 15:59:47 -0400
+Message-Id: <20190311195951.139741-2-sashal@kernel.org>
 X-Mailer: git-send-email 2.19.1
-In-Reply-To: <20190311195938.139603-1-sashal@kernel.org>
-References: <20190311195938.139603-1-sashal@kernel.org>
+In-Reply-To: <20190311195951.139741-1-sashal@kernel.org>
+References: <20190311195951.139741-1-sashal@kernel.org>
 MIME-Version: 1.0
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
@@ -58,116 +56,34 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Cong Wang <xiyou.wangcong@gmail.com>
+From: Dmitry Torokhov <dmitry.torokhov@gmail.com>
 
-[ Upstream commit 2fdeee2549231b1f989f011bb18191f5660d3745 ]
+[ Upstream commit a342083abe576db43594a32d458a61fa81f7cb32 ]
 
-The current opt_inst_list operations inside team_nl_cmd_options_set()
-is too complex to track:
+We should be using flush_delayed_work() instead of flush_work() in
+matrix_keypad_stop() to ensure that we are not missing work that is
+scheduled but not yet put in the workqueue (i.e. its delay timer has not
+expired yet).
 
-    LIST_HEAD(opt_inst_list);
-    nla_for_each_nested(...) {
-        list_for_each_entry(opt_inst, &team->option_inst_list, list) {
-            if (__team_option_inst_tmp_find(&opt_inst_list, opt_inst))
-                continue;
-            list_add(&opt_inst->tmp_list, &opt_inst_list);
-        }
-    }
-    team_nl_send_event_options_get(team, &opt_inst_list);
-
-as while we retrieve 'opt_inst' from team->option_inst_list, it could
-be added to the local 'opt_inst_list' for multiple times. The
-__team_option_inst_tmp_find() doesn't work, as the setter
-team_mode_option_set() still calls team->ops.exit() which uses
-->tmp_list too in __team_options_change_check().
-
-Simplify the list operations by moving the 'opt_inst_list' and
-team_nl_send_event_options_get() into the nla_for_each_nested() loop so
-that it can be guranteed that we won't insert a same list entry for
-multiple times. Therefore, __team_option_inst_tmp_find() can be removed
-too.
-
-Fixes: 4fb0534fb7bb ("team: avoid adding twice the same option to the event list")
-Fixes: 2fcdb2c9e659 ("team: allow to send multiple set events in one message")
-Reported-by: syzbot+4d4af685432dc0e56c91@syzkaller.appspotmail.com
-Reported-by: syzbot+68ee510075cf64260cc4@syzkaller.appspotmail.com
-Cc: Jiri Pirko <jiri@resnulli.us>
-Cc: Paolo Abeni <pabeni@redhat.com>
-Signed-off-by: Cong Wang <xiyou.wangcong@gmail.com>
-Acked-by: Jiri Pirko <jiri@mellanox.com>
-Reviewed-by: Paolo Abeni <pabeni@redhat.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
+Signed-off-by: Dmitry Torokhov <dmitry.torokhov@gmail.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/team/team.c | 27 +++++----------------------
- 1 file changed, 5 insertions(+), 22 deletions(-)
+ drivers/input/keyboard/matrix_keypad.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/net/team/team.c b/drivers/net/team/team.c
-index 33ffb573fd67..267a90423154 100644
---- a/drivers/net/team/team.c
-+++ b/drivers/net/team/team.c
-@@ -247,17 +247,6 @@ static void __team_option_inst_mark_removed_port(struct team *team,
- 	}
- }
+diff --git a/drivers/input/keyboard/matrix_keypad.c b/drivers/input/keyboard/matrix_keypad.c
+index 176bdd140769..a1b9753e0616 100644
+--- a/drivers/input/keyboard/matrix_keypad.c
++++ b/drivers/input/keyboard/matrix_keypad.c
+@@ -220,7 +220,7 @@ static void matrix_keypad_stop(struct input_dev *dev)
+ 	keypad->stopped = true;
+ 	spin_unlock_irq(&keypad->lock);
  
--static bool __team_option_inst_tmp_find(const struct list_head *opts,
--					const struct team_option_inst *needle)
--{
--	struct team_option_inst *opt_inst;
--
--	list_for_each_entry(opt_inst, opts, tmp_list)
--		if (opt_inst == needle)
--			return true;
--	return false;
--}
--
- static int __team_options_register(struct team *team,
- 				   const struct team_option *option,
- 				   size_t option_count)
-@@ -2447,7 +2436,6 @@ static int team_nl_cmd_options_set(struct sk_buff *skb, struct genl_info *info)
- 	int err = 0;
- 	int i;
- 	struct nlattr *nl_option;
--	LIST_HEAD(opt_inst_list);
- 
- 	team = team_nl_team_get(info);
- 	if (!team)
-@@ -2463,6 +2451,7 @@ static int team_nl_cmd_options_set(struct sk_buff *skb, struct genl_info *info)
- 		struct nlattr *opt_attrs[TEAM_ATTR_OPTION_MAX + 1];
- 		struct nlattr *attr;
- 		struct nlattr *attr_data;
-+		LIST_HEAD(opt_inst_list);
- 		enum team_option_type opt_type;
- 		int opt_port_ifindex = 0; /* != 0 for per-port options */
- 		u32 opt_array_index = 0;
-@@ -2566,23 +2555,17 @@ static int team_nl_cmd_options_set(struct sk_buff *skb, struct genl_info *info)
- 			if (err)
- 				goto team_put;
- 			opt_inst->changed = true;
--
--			/* dumb/evil user-space can send us duplicate opt,
--			 * keep only the last one
--			 */
--			if (__team_option_inst_tmp_find(&opt_inst_list,
--							opt_inst))
--				continue;
--
- 			list_add(&opt_inst->tmp_list, &opt_inst_list);
- 		}
- 		if (!opt_found) {
- 			err = -ENOENT;
- 			goto team_put;
- 		}
--	}
- 
--	err = team_nl_send_event_options_get(team, &opt_inst_list);
-+		err = team_nl_send_event_options_get(team, &opt_inst_list);
-+		if (err)
-+			break;
-+	}
- 
- team_put:
- 	team_nl_team_put(team);
+-	flush_work(&keypad->work.work);
++	flush_delayed_work(&keypad->work);
+ 	/*
+ 	 * matrix_keypad_scan() will leave IRQs enabled;
+ 	 * we should disable them now.
 -- 
 2.19.1
 
