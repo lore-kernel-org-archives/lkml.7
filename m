@@ -2,108 +2,177 @@ Return-Path: <SRS0=FxTY=RO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_MUTT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 94F29C43381
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 Mar 2019 14:27:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 92627C43381
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 Mar 2019 14:27:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 549962148D
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 Mar 2019 14:27:15 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="JPrysw8a"
+	by mail.kernel.org (Postfix) with ESMTP id 65BFA214AF
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 Mar 2019 14:27:18 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727660AbfCKO1O (ORCPT
+        id S1727762AbfCKO1R (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
+        Mon, 11 Mar 2019 10:27:17 -0400
+Received: from mga02.intel.com ([134.134.136.20]:44866 "EHLO mga02.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726897AbfCKO1O (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Mon, 11 Mar 2019 10:27:14 -0400
-Received: from mail-pf1-f195.google.com ([209.85.210.195]:41266 "EHLO
-        mail-pf1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726897AbfCKO1N (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 11 Mar 2019 10:27:13 -0400
-Received: by mail-pf1-f195.google.com with SMTP id d25so3814487pfn.8;
-        Mon, 11 Mar 2019 07:27:13 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:mime-version:content-disposition
-         :user-agent;
-        bh=ICrXTJ3B/DEaY6SBZ7LMgfjNBRMJJDkMINCPKs+DbHo=;
-        b=JPrysw8a19p+xe87/VaXEvMgroOuMO6ui1V4tK8VlYccVOAJhDhKe/zv94+Funzrok
-         N3JD9c7IsFnH3woSRpF3mMfrMGKIG4La6MpAW6ccRNytXXMhj16kuG1T15EPq/7NAxMQ
-         sttds+HOJn2IcOBLfF+k7MHRppH7NjPla3KTo26iWbJtHEC8JrXYvhbvN5D2CTIS/Cze
-         DfsEKBnWpyAq8W2CFR6FCfJJDq7pNcZ6kl+Xi4f4i8zPh2Wb/Nl5LkFSq8qM05z8VAv3
-         lLbSAfq9O3Sd4Q7TorvIvezYYq0GVv2epeNMPAKQBTgRXGutq5kukHL9ZjMTt6P+kRNl
-         Dm9A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:mime-version
-         :content-disposition:user-agent;
-        bh=ICrXTJ3B/DEaY6SBZ7LMgfjNBRMJJDkMINCPKs+DbHo=;
-        b=UgRZqsZuddHwlxgx23JjghqT7XKWWd3iZof6dRrYuMKtTYBn0RSHxplxzLO26QrgTA
-         mnnHCbW5W4T6XE7tSjyQhLFgTZ1AMMtxDtKSgYgbbMkZO3DANjyU4Q7ZRXHuX421s8dN
-         CidSlMd5qW93CajcbatsVVs6m5Vm0fHek5Og3G4JVXDwbxq2Be7HTUcZ7aL3UpTVGvVh
-         kaqPhW876kHLeNDYVZYvXdVo75PlolF8GUz+UPZbkPJGDXbcPL9CiaeoYOS4hZaYgQSw
-         mKY6Fw5k1XzSHj+vueEU0PpmrcSZVj2OzlbWntHqkbsFNENFWj8CwEBcbanryKjk2yBT
-         uzwQ==
-X-Gm-Message-State: APjAAAXeUY/hU85lWJmPPJwYko74IrwVuYmo85A8e++Xdl9A958tzMTj
-        khrwHZ3Rz+p5RWdcqwTGPgg=
-X-Google-Smtp-Source: APXvYqzRRy8YMZDqz6BWj3qw5XdTO6PMRW8wakYFMbaT+Hw2l2iiCq4BA/M4ZP7HGOxJI/bqJS3g8A==
-X-Received: by 2002:a62:1c45:: with SMTP id c66mr33607619pfc.90.1552314433059;
-        Mon, 11 Mar 2019 07:27:13 -0700 (PDT)
-Received: from nishad (p640014-ipngn8201hodogaya.kanagawa.ocn.ne.jp. [60.46.49.14])
-        by smtp.gmail.com with ESMTPSA id q207sm8710490pgq.88.2019.03.11.07.27.09
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Mon, 11 Mar 2019 07:27:12 -0700 (PDT)
-Date:   Mon, 11 Mar 2019 19:57:04 +0530
-From:   Nishad Kamdar <nishadkamdar@gmail.com>
-To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Joe Perches <joe@perches.com>
-Cc:     Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Shawn Guo <shawnguo@kernel.org>,
-        Sascha Hauer <s.hauer@pengutronix.de>,
-        Pengutronix Kernel Team <kernel@pengutronix.de>,
-        Fabio Estevam <festevam@gmail.com>,
-        NXP Linux Team <linux-imx@nxp.com>,
-        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH] ARM: dts: imx6ull: Use the correct style for SPDX License
- Identifier
-Message-ID: <20190311142700.GA5867@nishad>
+X-Amp-Result: UNSCANNABLE
+X-Amp-File-Uploaded: False
+Received: from fmsmga007.fm.intel.com ([10.253.24.52])
+  by orsmga101.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 11 Mar 2019 07:27:14 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.58,468,1544515200"; 
+   d="scan'208";a="133333978"
+Received: from stinkbox.fi.intel.com (HELO stinkbox) ([10.237.72.174])
+  by fmsmga007.fm.intel.com with SMTP; 11 Mar 2019 07:27:11 -0700
+Received: by stinkbox (sSMTP sendmail emulation); Mon, 11 Mar 2019 16:27:10 +0200
+Date:   Mon, 11 Mar 2019 16:27:10 +0200
+From:   Ville =?iso-8859-1?Q?Syrj=E4l=E4?= <ville.syrjala@linux.intel.com>
+To:     Rodrigo Siqueira <rodrigosiqueiramelo@gmail.com>
+Cc:     Shayenne Moura <shayenneluzmoura@gmail.com>,
+        Haneen Mohammed <hamohammed.sa@gmail.com>,
+        David Airlie <airlied@linux.ie>,
+        dri-devel <dri-devel@lists.freedesktop.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH] drm/vkms: Solve bug on kms_crc_cursor tests
+Message-ID: <20190311142710.GY3888@intel.com>
+References: <20190225142606.gov32asdq3qe375q@smtp.gmail.com>
+ <20190228101107.GL2665@phenom.ffwll.local>
+ <20190228140341.GG20097@intel.com>
+ <CAKkTe8Ei2fbz4L2noLvGWMCsHy1f7sadOV-horjNsGBEHt=q3w@mail.gmail.com>
+ <20190301152558.GR20097@intel.com>
+ <CAKkTe8HbgkVm1i2xAFT6ecgv2jFjyoqrSEYUpx_40Uj=ogKYPQ@mail.gmail.com>
+ <20190301184147.GS20097@intel.com>
+ <20190310203505.2needmil76a4rc74@smtp.gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-User-Agent: Mutt/1.9.4 (2018-02-28)
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20190310203505.2needmil76a4rc74@smtp.gmail.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This patch corrects the SPDX License Identifier style
-in imx6ull-pinfunc-snvs.h.
+On Sun, Mar 10, 2019 at 05:35:05PM -0300, Rodrigo Siqueira wrote:
+> On 03/01, Ville Syrjälä wrote:
+> > On Fri, Mar 01, 2019 at 03:35:35PM -0300, Shayenne Moura wrote:
+> > > Em sex, 1 de mar de 2019 às 12:26, Ville Syrjälä
+> > > <ville.syrjala@linux.intel.com> escreveu:
+> > > >
+> > > > On Fri, Mar 01, 2019 at 11:55:11AM -0300, Shayenne Moura wrote:
+> > > > > Em qui, 28 de fev de 2019 às 11:03, Ville Syrjälä
+> > > > > <ville.syrjala@linux.intel.com> escreveu:
+> > > > > >
+> > > > > > On Thu, Feb 28, 2019 at 11:11:07AM +0100, Daniel Vetter wrote:
+> > > > > > > On Mon, Feb 25, 2019 at 11:26:06AM -0300, Shayenne Moura wrote:
+> > > > > > > > vkms_crc_work_handle needs the value of the actual frame to
+> > > > > > > > schedule the workqueue that calls periodically the vblank
+> > > > > > > > handler and the destroy state functions. However, the frame
+> > > > > > > > value returned from vkms_vblank_simulate is updated and
+> > > > > > > > diminished in vblank_get_timestamp because it is not in a
+> > > > > > > > vblank interrupt, and return an inaccurate value.
+> > > > > > > >
+> > > > > > > > Solve this getting the actual vblank frame directly from the
+> > > > > > > > vblank->count inside the `struct drm_crtc`, instead of using
+> > > > > > > > the `drm_accurate_vblank_count` function.
+> > > > > > > >
+> > > > > > > > Signed-off-by: Shayenne Moura <shayenneluzmoura@gmail.com>
+> > > > > > >
+> > > > > > > Sorry for the delay, I'm a bit swamped right now :-/
+> > > > > > >
+> > > > > > > Debug work you're doing here is really impressive! But I have no idea
+> > > > > > > what's going on. It doesn't look like it's just papering over a bug (like
+> > > > > > > the in_vblank_irq check we've discussed on irc), but I also have no idea
+> > > > > > > why it works.
+> > > > > > >
+> > > > > > > I'll pull in Ville, he understands this better than me.
+> > > > > >
+> > > > > > It's not entirely clear what we're trying to fix. From what I can see
+> > > > > > the crc work seems to be in no way synchronized with page flips, so
+> > > > > > I'm not sure how all this is really supposed to work.
+> > > > > >
+> > > > >
+> > > > > Hi, Ville!
+> > > > >
+> > > > > Thank you for the review! :)
+> > > > >
+> > > > > I do not understand well what crc code is doing, but the issue that I found
+> > > > > is related to the vblank timestamp and frame count.
+> > > > >
+> > > > > When vkms handles the crc_cursor it uses the start frame and end frame
+> > > > > values to verify if it needs to call the function 'drm_crtc_add_crc_entry()'
+> > > > > for each frame.
+> > > > >
+> > > > > However, when getting the frame count, the code is calling the function
+> > > > > drm_update_vblank_count(dev, pipe, false) and, because of the 'false',
+> > > > > subtracting the actual vblank timestamp (consequently, the frame count
+> > > > > value), causing conflicts.
+> > > >
+> > > > The in_vblank_irq behavour looks sane to me. What are these conflicts?
+> > > >
+> > > 
+> > > The entire history was:
+> > >  - I sent the patch with bugfix for vblank extra frame. The patch changed
+> > >    our function vkms_get_vblank_timestamp() to look like this:
+> > > 
+> > > bool vkms_get_vblank_timestamp(struct drm_device *dev, unsigned int pipe,
+> > >                    int *max_error, ktime_t *vblank_time,
+> > >                    bool in_vblank_irq)
+> > > {
+> > >     struct vkms_device *vkmsdev = drm_device_to_vkms_device(dev);
+> > >     struct vkms_output *output = &vkmsdev->output;
+> > > 
+> > >     *vblank_time = output->vblank_hrtimer.node.expires;
+> > > 
+> > > +   if (!in_vblank_irq)
+> > > +        *vblank_time -= output->period_ns;
+> > > 
+> > >     return true;
+> > > }
+> > > 
+> > >  - This patch solve the issue that I was looking for (extra vblank
+> > > frames on kms_flip).
+> > > 
+> > >  - However, kms_cursor_crc tests, which passed before my patch, started to fail.
+> > > 
+> > >  - Debugging them, I found that the problem was inside of function
+> > > `vkms_vblank_simulate()`
+> > > when it was handling the crc_enabled (inside  if (state && output->crc_enabled))
+> > > and inside the function vkms_crc_work_handle() too.
+> > > 
+> > >  - Following the steps:
+> > > 1. Inside vkms_vblank_simulate() we call drm_crtc_accurate_vblank_count()
+> > > 2. In its turn, drm_crtc_accurate_vblank_count() calls the function
+> > >    drm_update_vblank_count(dev, pipe, false).  /* This false is default */
+> > > 3. Finally, the “false” used in drm_update_vblank_count(), will be
+> > >   passed to vkms_get_vblank_timestamp() and the condition “if
+> > >   (!in_vblank_irq)” will be executed multiple times (we don’t want it).
+> > > 
+> > >  - Inside vkms_crc, the issue is that the returned frame value change for
+> > > every call of drm_crtc_accurate_vblank_count() because
+> > > in_vblank_irq == false.
+> 
+> Hi Ville,
+>  
+> > OK. So why is it changing? AFAICS it should not change unless the
+> > timer was moved forward in between the calls.
+> 
+> Yes Ville, you’re right. We have to update it only when the function
+> vkms_vblank_simulate() is invoked (timer move forward), and FWIU we do
+> it when we call drm_crtc_handle_vblank(). However, the current
+> implementation of vkms, has a call to drm_crtc_accurate_vblank_count()
+> inside the vkms_vblank_simulate() which is a problem because it also
+> update the vblank value. FWIU, this patch fixes this issue by taking the
+> count value in the data struct instead of call
+> drm_crtc_accurate_vblank_count() which will avoid the extra update.
 
-Changes made by using a script provided by Joe Perches here:
-https://lkml.org/lkml/2019/2/7/46
-and making some manual changes.
+But why does that extra update change the vblank count?
 
-Suggested-by: Joe Perches <joe@perches.com>
-Signed-off-by: Nishad Kamdar <nishadkamdar@gmail.com>
----
- arch/arm/boot/dts/imx6ull-pinfunc-snvs.h | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
-
-diff --git a/arch/arm/boot/dts/imx6ull-pinfunc-snvs.h b/arch/arm/boot/dts/imx6ull-pinfunc-snvs.h
-index f6fb6783c193..54cfe72295aa 100644
---- a/arch/arm/boot/dts/imx6ull-pinfunc-snvs.h
-+++ b/arch/arm/boot/dts/imx6ull-pinfunc-snvs.h
-@@ -1,4 +1,4 @@
--// SPDX-License-Identifier: GPL-2.0
-+/* SPDX-License-Identifier: GPL-2.0 */
- /*
-  * Copyright (C) 2016 Freescale Semiconductor, Inc.
-  * Copyright (C) 2017 NXP
 -- 
-2.17.1
-
+Ville Syrjälä
+Intel
