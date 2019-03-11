@@ -7,56 +7,46 @@ X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B238EC43381
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 Mar 2019 19:56:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 604EDC43381
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 Mar 2019 19:56:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 841AE21773
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 Mar 2019 19:56:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3440B214AF
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 Mar 2019 19:56:55 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1552334212;
-	bh=Fqkhf86Oni1jNDsB2d1Z5aslQoZ+OPtNOmj7NkGg4YM=;
+	s=default; t=1552334215;
+	bh=sQwupFKwmbb3MQThaawXXZiN65aAm1JjP11vDG1HN4E=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=RO0op1FV4JW5CGsRXaKDSC2gsc5TSlSISO+YPIWajtspP1/xuFG33Gv8aoGVEG0iP
-	 NZy43ErVgOn4/ByLuvuDrKP6TeAhkLqcYCtXp5CQXaHH2QEI1KqY7cV/Vosa8HefbN
-	 9DnWs9PBK4th2HRKJ9Xw0zpuTwUT/LWy+Corrr7U=
+	b=a2bYg2XeJ80DR6RUhjbMHEkZODDwyL3Tqr/ZknuRKH6JhoVjR2V+aDorlUEKy5Beq
+	 MFCtKuZ7+Eca92vd3l+iUIVai7fOmfycJkCwOSoYunc/PHFoH2CDt2eL2yQl4b5oLn
+	 Z8Fzy06CkPJL1RnCQG9QogVol7GX05z2Txo7kRF4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728885AbfCKT4u (ORCPT
+        id S1728285AbfCKT4y (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 11 Mar 2019 15:56:50 -0400
-Received: from mail.kernel.org ([198.145.29.99]:34120 "EHLO mail.kernel.org"
+        Mon, 11 Mar 2019 15:56:54 -0400
+Received: from mail.kernel.org ([198.145.29.99]:34210 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728866AbfCKT4r (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 11 Mar 2019 15:56:47 -0400
+        id S1728866AbfCKT4v (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 11 Mar 2019 15:56:51 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id C2E31214AF;
-        Mon, 11 Mar 2019 19:56:44 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id A8971214AE;
+        Mon, 11 Mar 2019 19:56:50 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1552334206;
-        bh=Fqkhf86Oni1jNDsB2d1Z5aslQoZ+OPtNOmj7NkGg4YM=;
+        s=default; t=1552334211;
+        bh=sQwupFKwmbb3MQThaawXXZiN65aAm1JjP11vDG1HN4E=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=ghWjIRgZF57eycSTBqtUqj+b28i3gDfULO5nj5/iP/y+nk4z6ifnBiOqA6O1KubdW
-         itL1PRYoQStTsGd2RGwCgLiNNzl7ZCMDy5kzyFVhR7RbL2vGueIeFi6d63wIi2Hmcg
-         xUOK0q3I5oXtoCQDTbQQdbNLKzcAvano6iYKifkM=
+        b=xYQ9GzQwgKdQyXRNE9228IdeAJ0yIkahTL4ZXCRK/1wSPd62eMGLy5yDNrv7Vprdq
+         As1Ln0xzdJ8kN6q+RmuaY9owY2sTuo/iHAoWH89A1ri6j6G54jrbHEru7jsxb2WEIu
+         Gwy4NlruwalMUYAia8MbhtjwjdXUf3VdeioFOR4M=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Rajneesh Bhardwaj <rajneesh.bhardwaj@linux.intel.com>,
-        Borislav Petkov <bp@suse.de>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Dave Hansen <dave.hansen@linux.intel.com>,
-        "David E. Box" <david.e.box@intel.com>, dvhart@infradead.org,
-        "H. Peter Anvin" <hpa@zytor.com>, Ingo Molnar <mingo@redhat.com>,
-        Kan Liang <kan.liang@linux.intel.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        platform-driver-x86@vger.kernel.org,
-        Qiuxu Zhuo <qiuxu.zhuo@intel.com>,
-        Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>,
-        Thomas Gleixner <tglx@linutronix.de>, x86-ml <x86@kernel.org>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH AUTOSEL 4.20 45/52] x86/CPU: Add Icelake model number
-Date:   Mon, 11 Mar 2019 15:55:09 -0400
-Message-Id: <20190311195516.137772-45-sashal@kernel.org>
+Cc:     Huang Zijiang <huang.zijiang@zte.com.cn>,
+        "David S . Miller" <davem@davemloft.net>,
+        Sasha Levin <sashal@kernel.org>, netdev@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.20 47/52] net: hns: Fix object reference leaks in hns_dsaf_roce_reset()
+Date:   Mon, 11 Mar 2019 15:55:11 -0400
+Message-Id: <20190311195516.137772-47-sashal@kernel.org>
 X-Mailer: git-send-email 2.19.1
 In-Reply-To: <20190311195516.137772-1-sashal@kernel.org>
 References: <20190311195516.137772-1-sashal@kernel.org>
@@ -68,47 +58,40 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Rajneesh Bhardwaj <rajneesh.bhardwaj@linux.intel.com>
+From: Huang Zijiang <huang.zijiang@zte.com.cn>
 
-[ Upstream commit 8cd8f0ce0d6aafe661cb3d6781c8b82bc696c04d ]
+[ Upstream commit c969c6e7ab8cb42b5c787c567615474fdbad9d6a ]
 
-Add the CPUID model number of Icelake (ICL) mobile processors to the
-Intel family list. Icelake U/Y series uses model number 0x7E.
+The of_find_device_by_node() takes a reference to the underlying device
+structure, we should release that reference.
 
-Signed-off-by: Rajneesh Bhardwaj <rajneesh.bhardwaj@linux.intel.com>
-Signed-off-by: Borislav Petkov <bp@suse.de>
-Cc: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Cc: Dave Hansen <dave.hansen@linux.intel.com>
-Cc: "David E. Box" <david.e.box@intel.com>
-Cc: dvhart@infradead.org
-Cc: "H. Peter Anvin" <hpa@zytor.com>
-Cc: Ingo Molnar <mingo@redhat.com>
-Cc: Kan Liang <kan.liang@linux.intel.com>
-Cc: Peter Zijlstra <peterz@infradead.org>
-Cc: platform-driver-x86@vger.kernel.org
-Cc: Qiuxu Zhuo <qiuxu.zhuo@intel.com>
-Cc: Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>
-Cc: Thomas Gleixner <tglx@linutronix.de>
-Cc: x86-ml <x86@kernel.org>
-Link: https://lkml.kernel.org/r/20190214115712.19642-2-rajneesh.bhardwaj@linux.intel.com
+Signed-off-by: Huang Zijiang <huang.zijiang@zte.com.cn>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/x86/include/asm/intel-family.h | 2 ++
+ drivers/net/ethernet/hisilicon/hns/hns_dsaf_main.c | 2 ++
  1 file changed, 2 insertions(+)
 
-diff --git a/arch/x86/include/asm/intel-family.h b/arch/x86/include/asm/intel-family.h
-index 0dd6b0f4000e..058b1a1994c4 100644
---- a/arch/x86/include/asm/intel-family.h
-+++ b/arch/x86/include/asm/intel-family.h
-@@ -52,6 +52,8 @@
+diff --git a/drivers/net/ethernet/hisilicon/hns/hns_dsaf_main.c b/drivers/net/ethernet/hisilicon/hns/hns_dsaf_main.c
+index 3b9e74be5fbd..b8155f5e71b4 100644
+--- a/drivers/net/ethernet/hisilicon/hns/hns_dsaf_main.c
++++ b/drivers/net/ethernet/hisilicon/hns/hns_dsaf_main.c
+@@ -3081,6 +3081,7 @@ int hns_dsaf_roce_reset(struct fwnode_handle *dsaf_fwnode, bool dereset)
+ 	dsaf_dev = dev_get_drvdata(&pdev->dev);
+ 	if (!dsaf_dev) {
+ 		dev_err(&pdev->dev, "dsaf_dev is NULL\n");
++		put_device(&pdev->dev);
+ 		return -ENODEV;
+ 	}
  
- #define INTEL_FAM6_CANNONLAKE_MOBILE	0x66
+@@ -3088,6 +3089,7 @@ int hns_dsaf_roce_reset(struct fwnode_handle *dsaf_fwnode, bool dereset)
+ 	if (AE_IS_VER1(dsaf_dev->dsaf_ver)) {
+ 		dev_err(dsaf_dev->dev, "%s v1 chip doesn't support RoCE!\n",
+ 			dsaf_dev->ae_dev.name);
++		put_device(&pdev->dev);
+ 		return -ENODEV;
+ 	}
  
-+#define INTEL_FAM6_ICELAKE_MOBILE	0x7E
-+
- /* "Small Core" Processors (Atom) */
- 
- #define INTEL_FAM6_ATOM_BONNELL		0x1C /* Diamondville, Pineview */
 -- 
 2.19.1
 
