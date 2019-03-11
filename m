@@ -2,134 +2,130 @@ Return-Path: <SRS0=FxTY=RO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.8 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 54CF1C43381
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 Mar 2019 07:54:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 06069C43381
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 Mar 2019 07:55:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1648120643
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 Mar 2019 07:54:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C633720643
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 Mar 2019 07:55:54 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=umn.edu header.i=@umn.edu header.b="Dj+93rYb"
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="oPbZSo/v"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726864AbfCKHyt (ORCPT
+        id S1726921AbfCKHzw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 11 Mar 2019 03:54:49 -0400
-Received: from mta-p8.oit.umn.edu ([134.84.196.208]:59008 "EHLO
-        mta-p8.oit.umn.edu" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725839AbfCKHyt (ORCPT
+        Mon, 11 Mar 2019 03:55:52 -0400
+Received: from mail-pg1-f194.google.com ([209.85.215.194]:43588 "EHLO
+        mail-pg1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726875AbfCKHzw (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 11 Mar 2019 03:54:49 -0400
-Received: from localhost (unknown [127.0.0.1])
-        by mta-p8.oit.umn.edu (Postfix) with ESMTP id 736689CF
-        for <linux-kernel@vger.kernel.org>; Mon, 11 Mar 2019 07:54:47 +0000 (UTC)
-X-Virus-Scanned: amavisd-new at umn.edu
-Received: from mta-p8.oit.umn.edu ([127.0.0.1])
-        by localhost (mta-p8.oit.umn.edu [127.0.0.1]) (amavisd-new, port 10024)
-        with ESMTP id 5RK06ih16cYE for <linux-kernel@vger.kernel.org>;
-        Mon, 11 Mar 2019 02:54:47 -0500 (CDT)
-Received: from mail-io1-f71.google.com (mail-io1-f71.google.com [209.85.166.71])
-        (using TLSv1.2 with cipher AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mta-p8.oit.umn.edu (Postfix) with ESMTPS id 3F26692C
-        for <linux-kernel@vger.kernel.org>; Mon, 11 Mar 2019 02:54:47 -0500 (CDT)
-Received: by mail-io1-f71.google.com with SMTP id v3so3607662iol.3
-        for <linux-kernel@vger.kernel.org>; Mon, 11 Mar 2019 00:54:47 -0700 (PDT)
+        Mon, 11 Mar 2019 03:55:52 -0400
+Received: by mail-pg1-f194.google.com with SMTP id l11so3408242pgq.10
+        for <linux-kernel@vger.kernel.org>; Mon, 11 Mar 2019 00:55:51 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=umn.edu; s=google;
-        h=from:to:cc:subject:date:message-id;
-        bh=Hu9tC1WSl8tGjIx7E+uA6syKbui28C0mvmzOxgNZjNo=;
-        b=Dj+93rYb73Zn70wTR81Bm4QFAZKNfexSP1mhUE058/V4XLAJNvbQQqXVWmHNKA1bJq
-         GGyU+rlG2Eia9S9UDHyxXK4uMTVk9QvHZDqZqHvh4CKXnlZRlInRNEjU4ZaMvbo6yXv/
-         dujngH9MaffKlochSn4d7yVX4xr3mf3SdKFgd8i3ALzzgrKjBRPwh9PPKEZ72IIDQoT5
-         ElwRaCgDvSg+o/DkSyDElA7btRsXFfk0R/6qRDaTLTNuepxazh/SVlCzpeoFcp7TpIx5
-         b2CJ3Ri/TzKUEeCys1P+6GUhuz4qbwDF3vFNC9s7PCiq7oO91j0zGcGw626kQYYnIqFa
-         JCWg==
+        d=chromium.org; s=google;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=ft2UN5cLlD5VuHU5OgpRG9HuzgvY/xGUcyXH1HE1OW4=;
+        b=oPbZSo/viIJe8sbM72giRyXtRCSg5/jyuo3Kgt6UcDWFCmTlLcQSzeim1B0yGzWluY
+         qt39B2EiL8HZgQFQF+0EjJHHz12LZrMLavOhEW4pThlK8K9HV9L1Pth02YYcvlAzaWgr
+         tEO/Eq82wKrEHXKBSfIR+w/zg4TF+KuQJfZFY=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id;
-        bh=Hu9tC1WSl8tGjIx7E+uA6syKbui28C0mvmzOxgNZjNo=;
-        b=USy0cLCt3G7IdOeolO02CAo7ag4+eAobLcBCUAWZUdyoKv1ZfqeguFoGq3l+jrTDGK
-         QVy09cAz6Xq2xGq2iMM34UgB/ct2ED/RkC+NibG0FtsNbGLCcyVUEZ8sZSz9OjEQiWrl
-         2n2vO5obdbIlUTNOC9Xgo2u+u+NOkGInVwXPD6aFr4eNzYpNRPaTlyN60u/20Tt2+pXU
-         AqPs6rPJrLe+qRln7/COhQQ4yCWQZvLJEXu6Ezn+HgahLCnpc08DLAnV9Hy9itf+S/YK
-         la6kdv7BwCmOayw8ECvubB3bnFsbeMKySt+ERVwuZARe0j0osq2Zbii0t8pKPaBlGd4G
-         5KlA==
-X-Gm-Message-State: APjAAAWWNHCDaIIBZOKCvfAlSdZsgH0uhVOYDJ3NJj3IWnBDnt2YIBqv
-        IKAcHuC9zoeF5OOAvPqemMRNYSw3+ITiKX8Iu/HIntZBTMWk0CoDrEaQk0apjtR2tx3qT5PiC4H
-        kqMFZ6qV9Bs43HTvXz7T1l+/ysbxT
-X-Received: by 2002:a5d:8c85:: with SMTP id g5mr503611ion.195.1552290886891;
-        Mon, 11 Mar 2019 00:54:46 -0700 (PDT)
-X-Google-Smtp-Source: APXvYqziUDffAPz74NCA/DrX+4s1tCw5RM2Q2Twx1MaeiywzFQZtGY8OY7YcMckfQMVrEBm0Jl7pug==
-X-Received: by 2002:a5d:8c85:: with SMTP id g5mr503602ion.195.1552290886649;
-        Mon, 11 Mar 2019 00:54:46 -0700 (PDT)
-Received: from bee.dtc.umn.edu (cs-bee-u.cs.umn.edu. [128.101.106.63])
-        by smtp.gmail.com with ESMTPSA id f17sm7231879itb.36.2019.03.11.00.54.45
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=ft2UN5cLlD5VuHU5OgpRG9HuzgvY/xGUcyXH1HE1OW4=;
+        b=g/CL8liElNopGd1VtPFjs6T2Sdp0YmRa/cHpeXQzSfU9n9h0w4JBbZzOFF5oaaNtoW
+         qyTos0Vn16j1rkdIOOWTluaAwvIM6Xv/KM7nwYb90YlpQTfquE7y5CZqMR1DThNFJIwE
+         C0q1/LvNUaFxf/JEiyP7PlCkZDJPdTXYs7y9NJCfPk8EtMBz2tWAJW6vRt6gdiJjgYzU
+         BlD9htri3WjJB6EXswO9LrFKF5Tk4+dgM32En6opr/9KezPu3qNcrKK0trOCbsB3IgRC
+         BA8f/TKL+8YqWJrIJ/uP1b5Rk0mch4vH5i8r3d9SsmP+F0UdyJyWasu1u0LummBFBtVV
+         72ig==
+X-Gm-Message-State: APjAAAXiakFcHmrsfPtDIz8VG7U6LU9cGOTNLCJW1EzJR6Z3coAwfn4Z
+        1163JU5vgqVfyKv3qM5biC01hw==
+X-Google-Smtp-Source: APXvYqxQRedsJtxDZw+mhEF4kaD/iko7UVJ4HMEN7+v9kKKoVQwgNfBFtMb1CeCxxwNzewrDL9B8+g==
+X-Received: by 2002:a17:902:284b:: with SMTP id e69mr31738471plb.11.1552290951066;
+        Mon, 11 Mar 2019 00:55:51 -0700 (PDT)
+Received: from pihsun-z840.tpe.corp.google.com ([2401:fa00:1:10:7889:7a43:f899:134c])
+        by smtp.googlemail.com with ESMTPSA id y7sm6534145pgf.42.2019.03.11.00.55.48
         (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Mon, 11 Mar 2019 00:54:45 -0700 (PDT)
-From:   Kangjie Lu <kjlu@umn.edu>
-To:     kjlu@umn.edu
-Cc:     pakki001@umn.edu, Kalle Valo <kvalo@codeaurora.org>,
-        "David S. Miller" <davem@davemloft.net>,
-        linux-wireless@vger.kernel.org, netdev@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH] net: wireless: fix missing checks for ioremap
-Date:   Mon, 11 Mar 2019 02:54:40 -0500
-Message-Id: <20190311075440.1513-1-kjlu@umn.edu>
-X-Mailer: git-send-email 2.17.1
+        Mon, 11 Mar 2019 00:55:50 -0700 (PDT)
+From:   Pi-Hsun Shih <pihsun@chromium.org>
+Cc:     Pi-Hsun Shih <pihsun@chromium.org>,
+        Eddie Huang <eddie.huang@mediatek.com>,
+        Sean Wang <sean.wang@mediatek.com>,
+        Alessandro Zummo <a.zummo@towertech.it>,
+        Alexandre Belloni <alexandre.belloni@bootlin.com>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        linux-arm-kernel@lists.infradead.org (moderated list:ARM/Mediatek RTC
+        DRIVER),
+        linux-mediatek@lists.infradead.org (moderated list:ARM/Mediatek RTC
+        DRIVER),
+        linux-rtc@vger.kernel.org (open list:REAL TIME CLOCK (RTC) SUBSYSTEM),
+        linux-kernel@vger.kernel.org (open list)
+Subject: [PATCH] mfd: mt6397: Don't call irq_dispose_mapping.
+Date:   Mon, 11 Mar 2019 15:55:40 +0800
+Message-Id: <20190311075540.26117-1-pihsun@chromium.org>
+X-Mailer: git-send-email 2.21.0.360.g471c308f928-goog
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
+To:     unlisted-recipients:; (no To-header on input)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-ioremap could fail and returns NULL. The fix actively checks
-its return value and handles potential failures.
+The IRQ mapping was changed to not being created in the rtc-mt6397
+driver, so the irq_dispose_mapping is no longer needed.
+Also the dev_id passed to free_irq should be the same as the last
+argument passed to request_threaded_irq.
+This prevents a "Trying to free already-free IRQ 274" warning when
+unbinding the driver.
 
-Signed-off-by: Kangjie Lu <kjlu@umn.edu>
+Fixes: e695d3a0b3b3 ("mfd: mt6397: Create irq mappings in mfd core driver")
+Signed-off-by: Pi-Hsun Shih <pihsun@chromium.org>
+
 ---
- drivers/net/wireless/ray_cs.c | 12 ++++++++++++
- 1 file changed, 12 insertions(+)
+ drivers/rtc/rtc-mt6397.c | 9 +++------
+ 1 file changed, 3 insertions(+), 6 deletions(-)
 
-diff --git a/drivers/net/wireless/ray_cs.c b/drivers/net/wireless/ray_cs.c
-index 44a943d18b84..cecd18a2f2de 100644
---- a/drivers/net/wireless/ray_cs.c
-+++ b/drivers/net/wireless/ray_cs.c
-@@ -394,6 +394,10 @@ static int ray_config(struct pcmcia_device *link)
- 		goto failed;
- 	local->sram = ioremap(link->resource[2]->start,
- 			resource_size(link->resource[2]));
-+	if (!local->sram) {
-+		ret = -ENOMEM;
-+		goto failed;
-+	}
+diff --git a/drivers/rtc/rtc-mt6397.c b/drivers/rtc/rtc-mt6397.c
+index e9a25ec4d434..c06cf5202e02 100644
+--- a/drivers/rtc/rtc-mt6397.c
++++ b/drivers/rtc/rtc-mt6397.c
+@@ -343,7 +343,7 @@ static int mtk_rtc_probe(struct platform_device *pdev)
+ 	if (ret) {
+ 		dev_err(&pdev->dev, "Failed to request alarm IRQ: %d: %d\n",
+ 			rtc->irq, ret);
+-		goto out_dispose_irq;
++		return ret;
+ 	}
  
- /*** Set up 16k window for shared memory (receive buffer) ***************/
- 	link->resource[3]->flags |=
-@@ -408,6 +412,10 @@ static int ray_config(struct pcmcia_device *link)
- 		goto failed;
- 	local->rmem = ioremap(link->resource[3]->start,
- 			resource_size(link->resource[3]));
-+	if (!local->rmem) {
-+		ret = -ENOMEM;
-+		goto failed;
-+	}
+ 	device_init_wakeup(&pdev->dev, 1);
+@@ -359,9 +359,7 @@ static int mtk_rtc_probe(struct platform_device *pdev)
+ 	return 0;
  
- /*** Set up window for attribute memory ***********************************/
- 	link->resource[4]->flags |=
-@@ -422,6 +430,10 @@ static int ray_config(struct pcmcia_device *link)
- 		goto failed;
- 	local->amem = ioremap(link->resource[4]->start,
- 			resource_size(link->resource[4]));
-+	if (!local->amem) {
-+		ret = -ENOMEM;
-+		goto failed;
-+	}
+ out_free_irq:
+-	free_irq(rtc->irq, rtc->rtc_dev);
+-out_dispose_irq:
+-	irq_dispose_mapping(rtc->irq);
++	free_irq(rtc->irq, rtc);
+ 	return ret;
+ }
  
- 	dev_dbg(&link->dev, "ray_config sram=%p\n", local->sram);
- 	dev_dbg(&link->dev, "ray_config rmem=%p\n", local->rmem);
+@@ -369,8 +367,7 @@ static int mtk_rtc_remove(struct platform_device *pdev)
+ {
+ 	struct mt6397_rtc *rtc = platform_get_drvdata(pdev);
+ 
+-	free_irq(rtc->irq, rtc->rtc_dev);
+-	irq_dispose_mapping(rtc->irq);
++	free_irq(rtc->irq, rtc);
+ 
+ 	return 0;
+ }
 -- 
-2.17.1
+2.21.0.360.g471c308f928-goog
 
