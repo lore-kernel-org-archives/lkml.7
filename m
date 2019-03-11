@@ -2,91 +2,112 @@ Return-Path: <SRS0=FxTY=RO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_MUTT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.0 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D2EC6C43381
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 Mar 2019 17:53:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DAE36C43381
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 Mar 2019 17:55:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9E78520643
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 Mar 2019 17:53:29 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1552326809;
-	bh=3HtbBAbth7rTgOIbquCMmCeXipwT4tpWjq06KBV4IVs=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=R7urXLkvJskoMjOZkuETtF5SybCN1luWUgvDyaYQi6ZKHQw7BS2MQEdYaXdPG5RyY
-	 JavvCqd4q0zWmi93Cjr+oHf677fUotXbOqIStflYgIH06raKeVlYa+UAgO/dOAIwGr
-	 lhTKu1PzumtO0wsAUZQI5P9B4UGj0KZupEg9j+qQ=
+	by mail.kernel.org (Postfix) with ESMTP id AE06520828
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 Mar 2019 17:55:36 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=cogentembedded-com.20150623.gappssmtp.com header.i=@cogentembedded-com.20150623.gappssmtp.com header.b="hqBhsH/O"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728112AbfCKRx2 (ORCPT
+        id S1728096AbfCKRze (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 11 Mar 2019 13:53:28 -0400
-Received: from mail.kernel.org ([198.145.29.99]:37844 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726675AbfCKRx1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 11 Mar 2019 13:53:27 -0400
-Received: from localhost (odyssey.drury.edu [64.22.249.253])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D177E20643;
-        Mon, 11 Mar 2019 17:53:26 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1552326807;
-        bh=3HtbBAbth7rTgOIbquCMmCeXipwT4tpWjq06KBV4IVs=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=pkasg9/YOFNLP0umaMHJl2kx4EujkCMpaWKxVNc586XDNRKEL8OUlksN4Y4lPaqus
-         Fk1xralszK3pIXRxcWqdxHCZKAoSZdZqG1zYr1M/aidUaSOZnFOCAB+o4ioEpzo5fj
-         gdsJXo/UeLmdxcIKxWnETU8QQDaRsHBo69Me5hTc=
-Date:   Mon, 11 Mar 2019 12:53:26 -0500
-From:   Bjorn Helgaas <helgaas@kernel.org>
-To:     Nicholas Johnson <nicholas.johnson-opensource@outlook.com.au>
-Cc:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
-        "mika.westerberg@linux.intel.com" <mika.westerberg@linux.intel.com>,
-        "corbet@lwn.net" <corbet@lwn.net>
-Subject: Re: [PATCH v2 0/4] PCI: Patch series to support Thunderbolt without
- any BIOS support
-Message-ID: <20190311175325.GI214730@google.com>
-References: <PS2P216MB0642DA40B66B36581A238EF580480@PS2P216MB0642.KORP216.PROD.OUTLOOK.COM>
+        Mon, 11 Mar 2019 13:55:34 -0400
+Received: from mail-lj1-f193.google.com ([209.85.208.193]:35321 "EHLO
+        mail-lj1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727514AbfCKRze (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 11 Mar 2019 13:55:34 -0400
+Received: by mail-lj1-f193.google.com with SMTP id t13so4914925lji.2
+        for <linux-kernel@vger.kernel.org>; Mon, 11 Mar 2019 10:55:32 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=cogentembedded-com.20150623.gappssmtp.com; s=20150623;
+        h=subject:to:cc:references:from:organization:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=nCooZCQmTGdjQ0/9ylaKblDq4VKkhTsj6ZI5g1+4kPM=;
+        b=hqBhsH/OhOQJgzzUemh/qcNSaLlfOqDf0MQP83GBUuL47Atz22M5hs1QBYypVW3N+7
+         BnIIeAK3Jmk5vVYhyz0xJ1xlNFsmh0ouJUQ1Rp+G18fYuhsIZQN0OHhb4381TSKYWcFS
+         MUSZU+Ov0ujZjf7+PyiFQr5iDlfQl42voMFZdW+ZpubfiTO9c3tsCP2SV3fTo8l4lLHz
+         LbWT+LoCVqCQO1lyMIO62tR/M3B6Nq/rW5H2PuD2JlYAM+Fy6RyYJyARIiGoE3rY6SuV
+         MDKEg5inoAKd8HRl9ZE3euCNSnroCt3TQg+tASs7sYtfRWa/gsJJBj84gaGBCiClAi5V
+         yZDA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:organization
+         :message-id:date:user-agent:mime-version:in-reply-to
+         :content-language:content-transfer-encoding;
+        bh=nCooZCQmTGdjQ0/9ylaKblDq4VKkhTsj6ZI5g1+4kPM=;
+        b=lzrKDTNv1HI0d5PYyjflLVLWy384Jh6Qj1dNihF3XyQZltRJqjjY7CC/llXwTsYL3Y
+         MqkOr8uWCvgByeU8+2/J5jKpTXQnOiIXPw95qDW8vzTzk5tdZrUIr3wowT0AFHb/HFmg
+         iUw/Lze2mnluSrmD0cOCkffzjpJLuvPGsIkNCemX/b4sgrPwEz51FbPUA6LgAs6Tbfzw
+         f2TvecV/GtVfXCFP+uyt20NIwoE/12W/T6Omfw497uVdSQ2ea8jVqg5Y2ayrFt2EluHz
+         J7AmF4E3YsiHzU/z8mCxdpFdtPIDwmPJBlmcNUfCFUtTpL5MmyzCY19yX+xi2ztHoc3c
+         Gf8A==
+X-Gm-Message-State: APjAAAXVwgXXxkYeBI6MMXTBR5p4QHdZNx+fHDf6rrB2ONg75A4mQOFK
+        Qes8MmiBbgQLUYxH46vRbjU6sG7fL04=
+X-Google-Smtp-Source: APXvYqyo5dvqqO0Z7Zj33Bd9z9//QkS8OTmohxcZ7KdYh1ufOOr+/PZjkZR8IG+02/oIyssIW1z82A==
+X-Received: by 2002:a2e:870c:: with SMTP id m12mr16664527lji.24.1552326931774;
+        Mon, 11 Mar 2019 10:55:31 -0700 (PDT)
+Received: from wasted.cogentembedded.com ([31.173.87.168])
+        by smtp.gmail.com with ESMTPSA id r80sm40720lja.28.2019.03.11.10.55.30
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Mon, 11 Mar 2019 10:55:31 -0700 (PDT)
+Subject: Re: [PATCH v2] net: renesas: fix a missing check of of_get_phy_mode
+To:     David Miller <davem@davemloft.net>
+Cc:     kjlu@umn.edu, pakki001@umn.edu, vladimir_zapolskiy@mentor.com,
+        geert+renesas@glider.be, horms+renesas@verge.net.au,
+        chris.brandt@renesas.com, netdev@vger.kernel.org,
+        linux-renesas-soc@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <20190311074939.517-1-kjlu@umn.edu>
+ <20c5cfde-3c2d-43cb-efc4-be9782b7eb2e@cogentembedded.com>
+ <20190311.105203.2225467966650056784.davem@davemloft.net>
+From:   Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
+Organization: Cogent Embedded
+Message-ID: <c205461c-edb1-c9c1-a928-8068374aef2b@cogentembedded.com>
+Date:   Mon, 11 Mar 2019 20:55:30 +0300
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:52.0) Gecko/20100101
+ Thunderbird/52.2.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <PS2P216MB0642DA40B66B36581A238EF580480@PS2P216MB0642.KORP216.PROD.OUTLOOK.COM>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <20190311.105203.2225467966650056784.davem@davemloft.net>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-MW
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Mar 11, 2019 at 04:22:47PM +0000, Nicholas Johnson wrote:
+On 03/11/2019 08:52 PM, David Miller wrote:
+
+>>> of_get_phy_mode may fail and return a negative error code;
+>>> the fix checks the return value of of_get_phy_mode and
+>>> returns NULL of it fails.
+>>
+>>   Sorry, I overlooked this issue.
+>>
+>>> Signed-off-by: Kangjie Lu <kjlu@umn.edu>
+>>
+>> Fixes: b356e978e92f ("sh_eth: add device tree support")
+>> Reviewed-by: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
+>>
+>>> ---
+>>>  drivers/net/ethernet/renesas/sh_eth.c | 2 ++
+>>>  1 file changed, 2 insertions(+)
+>>
+>>    Why are you not fixing ravb_main.c as well? Especially as you have "renesas:"
+>> in your subject, not "sh_eth:"? :-/
 > 
-> If possible, please try to include this in the upcoming release. I have 
-> been slow in getting PATCH v2 out but overall, it should not be too much 
-> to do.
+> Kangjie please fix the subject line and incorporate Sergei's Fixes and
+> Reviewed-by tags.
 
-Quick primer on the Linux development model: Major releases, e.g.,
-v5.0, happen about every 9-10 weeks.  Subsystem maintainers typically
-review and merge patches into their -next branches for about eight
-weeks before the major release.
+   For the record, this patch was a nop, I have to NAK it. Kangjie, please address
+Geert's feedback, thanks.
 
-The first two weeks after a release are the merge window, during which
-subsystem maintainers ask Linus to merge those -next branches into the
-mainline.
+> Thanks.
 
-Between the closing of the merge window and the next major release,
-subsystem maintainers (1) ask Linus to merge fixes for regressions or
-problems introduced during the merge window, and (2) accumulate
-patches on their -next branches for the *next* merge window.
-
-v5.0 was released a week ago, which means the v5.1 merge window is
-half over.  Linus merged the PCI changes for v5.1 over the weekend, so
-by default, PCI changes that weren't included in that merge will be
-aiming for the v5.2 merge window.  Small fixes for regressions and
-things we broke during the merge window can be merged any time, but we
-have to be able to defend them as being critical enough to merge
-outside the merge window.
-
-See Documentation/process/2.Process.rst for more details.
-
-Bjorn
+MBR, Sergei
