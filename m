@@ -2,117 +2,127 @@ Return-Path: <SRS0=FxTY=RO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS autolearn=ham
-	autolearn_force=no version=3.4.0
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_MUTT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 38D0CC43381
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 Mar 2019 21:05:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 96BFCC43381
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 Mar 2019 21:05:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 06B202147C
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 Mar 2019 21:05:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 609832147C
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 Mar 2019 21:05:14 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=googlemail.com header.i=@googlemail.com header.b="EyGUhTcu"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="A2rGoJH8"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728340AbfCKVE7 (ORCPT
+        id S1728373AbfCKVFN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 11 Mar 2019 17:04:59 -0400
-Received: from mail-oi1-f193.google.com ([209.85.167.193]:36493 "EHLO
-        mail-oi1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727153AbfCKVE7 (ORCPT
+        Mon, 11 Mar 2019 17:05:13 -0400
+Received: from mail-qt1-f194.google.com ([209.85.160.194]:37617 "EHLO
+        mail-qt1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727153AbfCKVFM (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 11 Mar 2019 17:04:59 -0400
-Received: by mail-oi1-f193.google.com with SMTP id t206so312408oib.3;
-        Mon, 11 Mar 2019 14:04:58 -0700 (PDT)
+        Mon, 11 Mar 2019 17:05:12 -0400
+Received: by mail-qt1-f194.google.com with SMTP id z17so231719qtn.4;
+        Mon, 11 Mar 2019 14:05:11 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=googlemail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=fyEh/q1GP+1TyFUYOgVLvvn+RIucRiEc6k1EbDSBA+o=;
-        b=EyGUhTcuTghuetEBkt2+jsJOxfLGtCb8lsuNzw6mUtAQHjZ/MxHGGeu78tpFGmiYaU
-         QuOQJSXwTGzPx57TFEV32wbFVS9eDLS/FtTYZus87W9p6oMYu9d1gBWg1SYasoZzVwqL
-         NMXA/jRkNYxSkd1KaIytdw/Yw8AvcyYE4eG6BwuRTiQmH9O2I2aHxx4E+AVTWjsrywUk
-         aXgekKfN43Y2pwsnXrLql30VlpTCrexJRQRcmBzLTwU3viBtiYIhiYvEcK15dDkn33fI
-         sxR1JEDVwm46VdWqsJjPtmiMYr+HbINMwVR6NzkLLUyDebBaYamPyYdz9nRqv7XfxrOx
-         hx6A==
+        d=gmail.com; s=20161025;
+        h=from:date:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=lPW+umpbqOxuSeCoeKj43cDCuBgsCOWzFgpQA+MWtHI=;
+        b=A2rGoJH8UmNMDB/SQKDwfOztxQObQncRfTW7KcNoZ58lOA7BBYnjkSdYZ2f60iWwws
+         bmL3Gh7AFq5nnqldAyQpVGryEkP/l3Czi9MTaoRoSqO77b/MWSOWdBZ/3XywFlNRHy+E
+         XJ0XyGTMafdEp60yCJn+IXoILgJDVHj2XdQ9K/ueAU0CaBzUDkQSDt1o3rJ4mdZJiY07
+         jiet5GBKBCNh6/WT/ViZHoxQbYrS5L92wgarq32KaKk8lzgbiFN/+LVSGImA6W93bqB2
+         x1MFSTMotNfuxOyZwFP7fHZVYaCk6N007rQ0H7disvFozanW6ejc2hIkR33a3I1oKg9V
+         4aIQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=fyEh/q1GP+1TyFUYOgVLvvn+RIucRiEc6k1EbDSBA+o=;
-        b=PrFfbeO7O4qjjXH0ODotqx+CDuibuAas3GUqaRCYxhX3IT+3k6+untsnYPG7wZS02G
-         YGabS74XQUMUHj+B4/3OYaKPV8Xt3AreF4fCwSKj6D7xEgOBsnnmTLxglT3ZUyKFk6TA
-         mAbu+9x7hQvlaGNNbZ4LySrizLMNtEFsIG5yHYnobzsxa5Mwz64ky/N+E7fEWyX7mXhi
-         IxNeAon8uHQBP4G6GgmDdBB8wgOEkCdC0+G2iKZ5j4nM6N/8javKgEUUf6avAuFomDGs
-         9EL+yAoESQ4Ajj3tPMMtoGtdR5YBquLZAaH9Mo98q04qnJkA0wRcpZofPSgw/RfDI67v
-         QNfA==
-X-Gm-Message-State: APjAAAX5mU/ggwPkyfHdWf8ywl0sa4NSPt2Z8qsrlXex6QQMSPJnO1rn
-        /iyWVTAp2QNDrewYoMz4qm1E9tzIzSVMSkwvRYI=
-X-Google-Smtp-Source: APXvYqyUMz74cjyyJyPY950MjOdrXSuPDzrF2i3ApYJtGbQefLPpFqXhEy1ibyXj6TkjGZI6pVygfhf3cPeIdIp4MsU=
-X-Received: by 2002:aca:c286:: with SMTP id s128mr137941oif.39.1552338298130;
- Mon, 11 Mar 2019 14:04:58 -0700 (PDT)
+        h=x-gm-message-state:from:date:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=lPW+umpbqOxuSeCoeKj43cDCuBgsCOWzFgpQA+MWtHI=;
+        b=hPYEXQpq18foN0GRV+nsiDO1IoLtZNBQHbGoQObE8NDM1DjLIj2jubdSQc4aGkmMpQ
+         oLv83Uu5m5cs5JuIX/KOhkdISFCtHFUrHq6R5IuFJjXoCIEOh+tuJAGcXwESHAYh+8IJ
+         hdlHq+xcJ44Nj2DYjsOM7HTDZbCSXXoyvFrLkGatGyOttm2wd3f+tRZcJxjzUPsrfqPR
+         gDDZf2K+6KSUnHZeoAYb0jLIhN9v81mzgI1rO/pgCn7aLOamsn+T6/6esHHi/DPYIedU
+         QuslSqqDs0HofjkTo2DoBXSX955ycBxKfPdP/tyuWB3rCo61hJr3MTObCpCmhFyTRSJp
+         kiXw==
+X-Gm-Message-State: APjAAAXidYh+n8rM7O6GwM7PyOs1inIuXT0BSYnq+m15nrQvRBMpeydR
+        z6rSYAxKYwOnrBdAd7f1b1s=
+X-Google-Smtp-Source: APXvYqy32CVX7Ow1B0rf+IaOTwojQ4pMN4ZU35cHWfcFjwbuK0DWfY41GtDYmjR3XorvnQPALCytpQ==
+X-Received: by 2002:ac8:2c51:: with SMTP id e17mr26487173qta.254.1552338311009;
+        Mon, 11 Mar 2019 14:05:11 -0700 (PDT)
+Received: from quaco.ghostprotocols.net ([190.15.121.82])
+        by smtp.gmail.com with ESMTPSA id b142sm4819399qka.74.2019.03.11.14.05.09
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Mon, 11 Mar 2019 14:05:10 -0700 (PDT)
+From:   Arnaldo Carvalho de Melo <arnaldo.melo@gmail.com>
+X-Google-Original-From: Arnaldo Carvalho de Melo <acme@kernel.org>
+Received: by quaco.ghostprotocols.net (Postfix, from userid 1000)
+        id 7A28B4039C; Mon, 11 Mar 2019 18:05:07 -0300 (-03)
+Date:   Mon, 11 Mar 2019 18:05:07 -0300
+To:     Song Liu <songliubraving@fb.com>
+Cc:     Arnaldo Carvalho de Melo <acme@redhat.com>,
+        "bpf@vger.kernel.org" <bpf@vger.kernel.org>,
+        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "ast@kernel.org" <ast@kernel.org>,
+        "daniel@iogearbox.net" <daniel@iogearbox.net>,
+        Kernel Team <Kernel-team@fb.com>,
+        "peterz@infradead.org" <peterz@infradead.org>,
+        "jolsa@kernel.org" <jolsa@kernel.org>,
+        "namhyung@kernel.org" <namhyung@kernel.org>,
+        "sdf@fomichev.me" <sdf@fomichev.me>
+Subject: Re: [PATCH v8 perf,bpf 00/15] perf annotation of BPF programs
+Message-ID: <20190311210507.GF10690@kernel.org>
+References: <20190311195555.889995-1-songliubraving@fb.com>
+ <20190311202414.GA3078@redhat.com>
+ <B72EC7B0-6B8B-4739-87A0-15364D3DE44F@fb.com>
 MIME-Version: 1.0
-References: <20190304103846.2060-1-narmstrong@baylibre.com>
- <20190304103846.2060-6-narmstrong@baylibre.com> <CAFBinCAacdsjwtg_RK=e=Lnep7oLF+eTBmkb1FB4nFR129z1jA@mail.gmail.com>
- <bd9d1b4b-4dd7-864e-b197-c5993d3dd24f@baylibre.com>
-In-Reply-To: <bd9d1b4b-4dd7-864e-b197-c5993d3dd24f@baylibre.com>
-From:   Martin Blumenstingl <martin.blumenstingl@googlemail.com>
-Date:   Mon, 11 Mar 2019 22:04:47 +0100
-Message-ID: <CAFBinCCuWvm203nQFw6y3Nwoj_TxqgRk7X-N8O_P=SjAGJwDWA@mail.gmail.com>
-Subject: Re: [PATCH v2 5/8] phy: amlogic: add Amlogic G12A USB2 PHY Driver
-To:     Neil Armstrong <narmstrong@baylibre.com>
-Cc:     gregkh@linuxfoundation.org, hminas@synopsys.com, balbi@kernel.org,
-        kishon@ti.com, linux-amlogic@lists.infradead.org,
-        linux-usb@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <B72EC7B0-6B8B-4739-87A0-15364D3DE44F@fb.com>
+X-Url:  http://acmel.wordpress.com
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Neil,
+Em Mon, Mar 11, 2019 at 09:01:48PM +0000, Song Liu escreveu:
+> 
+> 
+> > On Mar 11, 2019, at 1:24 PM, Arnaldo Carvalho de Melo <acme@redhat.com> wrote:
+> > 
+> > Em Mon, Mar 11, 2019 at 12:55:40PM -0700, Song Liu escreveu:
+> >> ===================== Note on patch dependency  ========================
+> >> This set has dependency in both bpf-next tree and tip/perf/core. Current
+> >> version is developed on bpf-next tree with the following commits
+> >> cherry-picked from tip/perf/core (or acme/perf/core):
+> >> 
+> >> (from 1/11 to 11/11)
+> >> commit 76193a94522f ("perf, bpf: Introduce PERF_RECORD_KSYMBOL")
+> >> commit d764ac646491 ("tools headers uapi: Sync tools/include/uapi/linux/perf_event.h")
+> >> commit 6ee52e2a3fe4 ("perf, bpf: Introduce PERF_RECORD_BPF_EVENT")
+> >> commit df063c83aa2c ("tools headers uapi: Sync tools/include/uapi/linux/perf_event.h")
+> >> commit 9aa0bfa370b2 ("perf tools: Handle PERF_RECORD_KSYMBOL")
+> >> commit 45178a928a4b ("perf tools: Handle PERF_RECORD_BPF_EVENT")
+> >> commit 7b612e291a5a ("perf tools: Synthesize PERF_RECORD_* for loaded BPF programs")
+> >> commit a40b95bcd30c ("perf top: Synthesize BPF events for pre-existing loaded BPF programs")
+> >> commit 6934058d9fb6 ("bpf: Add module name [bpf] to ksymbols for bpf programs")
+> >> commit 811184fb6977 ("perf bpf: Fix synthesized PERF_RECORD_KSYMBOL/BPF_EVENT")
+> >> comimt 94816add0005 ("perf tools: Add perf_exe() helper to find perf binary")
+> >> ========================================================================
+> > 
+> > These csets are already upstream, i.e. already hit torvalds/master, i.e.
+> > will be in 5.1, can you check that we still need doing this
+> > cherry-picking?
+> > 
+> > - Arnaldo
+> 
+> I just checked that 02-15 of the set could apply to torvalds/master (with 
+> some minor conflicts), and it works as expected. 
 
-On Thu, Mar 7, 2019 at 9:41 AM Neil Armstrong <narmstrong@baylibre.com> wrote:
-[...]
-> >> +static int phy_meson_g12a_usb2_exit(struct phy *phy)
-> >> +{
-> >> +       struct phy_meson_g12a_usb2_priv *priv = phy_get_drvdata(phy);
-> >> +
-> >> +       return reset_control_reset(priv->reset);
-> > do you know whether we should reset_control_assert here instead of
-> > reset_control_reset?
-> > the probe function below already uses reset_control_deassert, so the
-> > current implementation is inconsistent. in v1 you replied with "Maybe
-> > it would be better, indeed." - if there's a reason why
-> > reset_control_assert doesn't work here then I would like to have a
-> > comment stating why
->
-> It's not clear yet, I implemented it safe here since in my tests, when
-> I left the USB2 PHYs resetted, it was kept resetted on a soft system reset
-> and the ROM was not able to setup the PHY correctly.
-that's probably why Amlogic's kernel also uses a reset pulse
+So no need to cherrypick, just use torvalds/master as a base, ok.
 
-> So maybe it's wrong for power management, it's safer to simply to keep the
-> PHYs unresetted when unused.
-if you re-send this patch anyways (to clean up the #include) can you
-please add a comment with the explanation from above?
-
-> > Apart from these two this is looking good!
-> > Human readable BIT/GENMASK #defines for the register bits would be
-> > nice, but I'm not sure if you have the details to add these.
->
-> I have the registers set in the doc, but it's much longer than copying
-> the registers structs from the vendor kernel, so I postponed it.
->
-> I'll try adding these, but for now it's low priority unless the PHY maintainer
-> asks for them.
-ACK, it's not high priority, so it's fine for now
-
-with the #include changed and a comment for the reset pulse you can add my:
-Reviewed-by: Martin Blumenstingl <martin.blumenstingl@googlemail.com>
-
-
-Regards
-Martin
+- Arnaldo
