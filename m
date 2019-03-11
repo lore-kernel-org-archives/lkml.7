@@ -2,131 +2,80 @@ Return-Path: <SRS0=FxTY=RO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,UNPARSEABLE_RELAY,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D5341C43381
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 Mar 2019 03:48:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 92A9CC43381
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 Mar 2019 03:52:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AE0782084D
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 Mar 2019 03:48:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4EAE2206DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 Mar 2019 03:52:39 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="PO39Y+g/"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727454AbfCKDs5 (ORCPT
+        id S1727159AbfCKDwi (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 10 Mar 2019 23:48:57 -0400
-Received: from mailgw02.mediatek.com ([210.61.82.184]:41264 "EHLO
-        mailgw02.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1727041AbfCKDsZ (ORCPT
+        Sun, 10 Mar 2019 23:52:38 -0400
+Received: from bombadil.infradead.org ([198.137.202.133]:37492 "EHLO
+        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726758AbfCKDwh (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 10 Mar 2019 23:48:25 -0400
-X-UUID: 6e0c2be5f12e4778b57297680578e052-20190311
-X-UUID: 6e0c2be5f12e4778b57297680578e052-20190311
-Received: from mtkcas09.mediatek.inc [(172.21.101.178)] by mailgw02.mediatek.com
-        (envelope-from <hsin-hsiung.wang@mediatek.com>)
-        (mhqrelay.mediatek.com ESMTP with TLS)
-        with ESMTP id 1842584796; Mon, 11 Mar 2019 11:48:10 +0800
-Received: from MTKCAS06.mediatek.inc (172.21.101.30) by
- mtkmbs08n2.mediatek.inc (172.21.101.56) with Microsoft SMTP Server (TLS) id
- 15.0.1395.4; Mon, 11 Mar 2019 11:48:08 +0800
-Received: from mtkslt302.mediatek.inc (10.21.14.115) by MTKCAS06.mediatek.inc
- (172.21.101.73) with Microsoft SMTP Server id 15.0.1395.4 via Frontend
- Transport; Mon, 11 Mar 2019 11:48:09 +0800
-From:   Hsin-Hsiung Wang <hsin-hsiung.wang@mediatek.com>
-To:     Lee Jones <lee.jones@linaro.org>, Rob Herring <robh+dt@kernel.org>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        Mark Brown <broonie@kernel.org>,
-        Eddie Huang <eddie.huang@mediatek.com>
-CC:     Marc Zyngier <marc.zyngier@arm.com>, <srv_heupstream@mediatek.com>,
-        <linux-mediatek@lists.infradead.org>, <linux-rtc@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <devicetree@vger.kernel.org>, Liam Girdwood <lgirdwood@gmail.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Sean Wang <sean.wang@mediatek.com>,
-        Alessandro Zummo <a.zummo@towertech.it>,
-        Alexandre Belloni <alexandre.belloni@bootlin.com>,
-        Ran Bi <ran.bi@mediatek.com>
-Subject: [PATCH v2 9/9] rtc: Add support for the MediaTek MT6358 RTC
-Date:   Mon, 11 Mar 2019 11:46:31 +0800
-Message-ID: <1552275991-34648-10-git-send-email-hsin-hsiung.wang@mediatek.com>
-X-Mailer: git-send-email 1.9.1
-In-Reply-To: <1552275991-34648-1-git-send-email-hsin-hsiung.wang@mediatek.com>
-References: <1552275991-34648-1-git-send-email-hsin-hsiung.wang@mediatek.com>
+        Sun, 10 Mar 2019 23:52:37 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20170209; h=Content-Transfer-Encoding:
+        Content-Type:In-Reply-To:MIME-Version:Date:Message-ID:From:References:Cc:To:
+        Subject:Sender:Reply-To:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=R/JJY+Fzox0n6gWzJmHh8OwouUibGB3HPKZVPqj4BSs=; b=PO39Y+g/N/jDwcale0v9WuudH
+        FLZYsm4Cw2GlhIJRu/YLUIPtUuvjmAPiKqxlFAV0X23XhdFAQInIVzXwIt6Hr13zsDckxsRQsCVD7
+        gq+5wSdA9+eUmv+KZKV60TKGhWOH2qvMtr1naqLzmMca89/CN27HjhPDoYGgN/IQQYQdLBu6KPZUe
+        hZt93qIcZlptWeoJwaptRBzZjGrG6jB68+2i0o3ghki1vAQCeeXto3c/d1TDB2t9Etq8em4ec/jmP
+        ulfgkoY7PhvQozWU2Qwu7tNETE8e1gzkYquOXJ96gpfW5OGvGf0N3ec7XW1IS142gTaevbmFI5Ig3
+        yws5/w//Q==;
+Received: from static-50-53-52-16.bvtn.or.frontiernet.net ([50.53.52.16] helo=midway.dunlab)
+        by bombadil.infradead.org with esmtpsa (Exim 4.90_1 #2 (Red Hat Linux))
+        id 1h3BzR-0004VI-3O; Mon, 11 Mar 2019 03:52:37 +0000
+Subject: Re: [PATCH 3/4] Add header file,Kconfig and Makefile
+To:     =?UTF-8?B?TW9ycmlzIEt1IOWPpOaWh+S/ig==?= <morris_ku@sunix.com>,
+        Morris Ku <saumah@gmail.com>,
+        "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>
+Cc:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "arnd@arndb.de" <arnd@arndb.de>
+References: <20190308123547.20578-1-saumah@gmail.com>
+ <c23c156e-0493-96e2-f4eb-0171e8c8fc58@infradead.org>
+ <HK2PR03MB45297EB467A0A7550CCBB94795480@HK2PR03MB4529.apcprd03.prod.outlook.com>
+From:   Randy Dunlap <rdunlap@infradead.org>
+Message-ID: <ae1cd94e-9c1c-e05c-ab82-73003fa1ab0e@infradead.org>
+Date:   Sun, 10 Mar 2019 20:52:36 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.5.1
 MIME-Version: 1.0
-Content-Type: text/plain
-X-TM-SNTS-SMTP: 940FE17246965C8CCC8881607C3F0EE8685B22C125EC05FBADDFF8DE90F0C90C2000:8
-X-MTK:  N
+In-Reply-To: <HK2PR03MB45297EB467A0A7550CCBB94795480@HK2PR03MB4529.apcprd03.prod.outlook.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Ran Bi <ran.bi@mediatek.com>
+On 3/10/19 8:25 PM, Morris Ku 古文俊 wrote:
+> Hi,
+> 
+>> This patch add header file, Kconfig and Makefile. 
+>> 
+>> Signed-off-by: Morris Ku <saumah@gmail.com>
+>> ---
+> ok , I'll delete Kconfig  in next version.
 
-This add support for the MediaTek MT6358 RTC. MT6397 mfd will pass
-RTC_WRTGR address offset to RTC driver.
+Hi,
+Please just send plain text emails -- no html.
 
-Signed-off-by: Ran Bi <ran.bi@mediatek.com>
----
- drivers/rtc/rtc-mt6397.c | 16 ++++++++++++++--
- 1 file changed, 14 insertions(+), 2 deletions(-)
+vger.kernel.org (the mailing list server) ignores emails
+that contain html.
 
-diff --git a/drivers/rtc/rtc-mt6397.c b/drivers/rtc/rtc-mt6397.c
-index f85f1fc..c8a0090 100644
---- a/drivers/rtc/rtc-mt6397.c
-+++ b/drivers/rtc/rtc-mt6397.c
-@@ -27,7 +27,7 @@
- #define RTC_BBPU		0x0000
- #define RTC_BBPU_CBUSY		BIT(6)
- 
--#define RTC_WRTGR		0x003c
-+#define RTC_WRTGR_DEFAULT	0x003c
- 
- #define RTC_IRQ_STA		0x0002
- #define RTC_IRQ_STA_AL		BIT(0)
-@@ -78,6 +78,7 @@ struct mt6397_rtc {
- 	struct regmap		*regmap;
- 	int			irq;
- 	u32			addr_base;
-+	u32			wrtgr_offset;
- };
- 
- static int mtk_rtc_write_trigger(struct mt6397_rtc *rtc)
-@@ -86,7 +87,8 @@ static int mtk_rtc_write_trigger(struct mt6397_rtc *rtc)
- 	int ret;
- 	u32 data;
- 
--	ret = regmap_write(rtc->regmap, rtc->addr_base + RTC_WRTGR, 1);
-+	ret = regmap_write(rtc->regmap,
-+			   rtc->addr_base + rtc->wrtgr_offset, 1);
- 	if (ret < 0)
- 		return ret;
- 
-@@ -341,6 +343,15 @@ static int mtk_rtc_probe(struct platform_device *pdev)
- 	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
- 	rtc->addr_base = res->start;
- 
-+	res = platform_get_resource(pdev, IORESOURCE_REG, 0);
-+	if (res) {
-+		rtc->wrtgr_offset = res->start;
-+		dev_info(&pdev->dev, "register offset:%d\n", rtc->wrtgr_offset);
-+	} else {
-+		rtc->wrtgr_offset = RTC_WRTGR_DEFAULT;
-+		dev_err(&pdev->dev, "Failed to get register offset\n");
-+	}
-+
- 	rtc->irq = platform_get_irq(pdev, 0);
- 	if (rtc->irq < 0)
- 		return rtc->irq;
-@@ -420,6 +431,7 @@ static SIMPLE_DEV_PM_OPS(mt6397_pm_ops, mt6397_rtc_suspend,
- 			mt6397_rtc_resume);
- 
- static const struct of_device_id mt6397_rtc_of_match[] = {
-+	{ .compatible = "mediatek,mt6358-rtc", },
- 	{ .compatible = "mediatek,mt6397-rtc", },
- 	{ }
- };
+thanks.
 -- 
-1.9.1
-
+~Randy
