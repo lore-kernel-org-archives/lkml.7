@@ -2,100 +2,129 @@ Return-Path: <SRS0=FxTY=RO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,
-	USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1CB42C43381
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 Mar 2019 11:55:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3CBE4C43381
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 Mar 2019 11:55:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DF9BC2086A
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 Mar 2019 11:55:29 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1552305330;
-	bh=EKxwG/qfQQ9/W+NkA+tIC2TchJFLWz0TrfiUdjN5i/Y=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=DphGJGlYLPBVNfI0OYqHGEFBZBwsgCQKuk961NLdAPMHm07kkX5wb4qhxGshb6PhB
-	 wXlXTq2UhT7Bnu00PsA0RDGrxiQuWXszpS3UmEF6FGWg51dlcR/6kLg+golW9byGAm
-	 DOn115EWWVEOT2ae6KxLwBGW7voqr1bZEsJ7RBaY=
+	by mail.kernel.org (Postfix) with ESMTP id 136A0206BA
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 Mar 2019 11:55:48 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726977AbfCKLz2 (ORCPT
+        id S1727143AbfCKLzq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 11 Mar 2019 07:55:28 -0400
-Received: from mail.kernel.org ([198.145.29.99]:39200 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725870AbfCKLz2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 11 Mar 2019 07:55:28 -0400
-Received: from linux-8ccs (ip5f5ade5e.dynamic.kabel-deutschland.de [95.90.222.94])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 96BCB206BA;
-        Mon, 11 Mar 2019 11:55:26 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1552305327;
-        bh=EKxwG/qfQQ9/W+NkA+tIC2TchJFLWz0TrfiUdjN5i/Y=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=0cm+EiySYb1k8Y0kNmE4Aj19KE87EL7tUwnDOdRwV/2Lg3aFlL0+0wMvTSMM8sI/Q
-         ZsA+zw0wAxTSrj5th0dYOIBZotpsFYu7hPjVOEpgyzykF8fd2gOYRbjabeX0jUQzml
-         qTrzKgsmvAxHV/5w3baTCdev0uLlyL9vGs7IxLws=
-Date:   Mon, 11 Mar 2019 12:55:23 +0100
-From:   Jessica Yu <jeyu@kernel.org>
-To:     Mathias Krause <minipli@googlemail.com>
-Cc:     linux-arch@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Rusty Russell <rusty@rustcorp.com.au>,
-        Arnd Bergmann <arnd@arndb.de>
-Subject: Re: [PATCH] vmlinux.lds.h: drop unused __vermagic
-Message-ID: <20190311115523.GA30951@linux-8ccs>
-References: <1546173604-26066-1-git-send-email-minipli@googlemail.com>
- <20190102202938.GA26600@linux-8ccs>
- <CA+rthh87tutLV=857g-Nrd6gAYK8xhRJX8MqpjC+CnmsjTqqJg@mail.gmail.com>
- <CA+rthh_OnmvQQbKAG55rha56HCp2vjhZMv0ahRdgJjbjmG=xRA@mail.gmail.com>
+        Mon, 11 Mar 2019 07:55:46 -0400
+Received: from cloudserver094114.home.pl ([79.96.170.134]:56817 "EHLO
+        cloudserver094114.home.pl" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726978AbfCKLzq (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 11 Mar 2019 07:55:46 -0400
+Received: from 79.184.254.189.ipv4.supernova.orange.pl (79.184.254.189) (HELO aspire.rjw.lan)
+ by serwer1319399.home.pl (79.96.170.134) with SMTP (IdeaSmtpServer 0.83.213)
+ id 3699321361d7e55d; Mon, 11 Mar 2019 12:55:43 +0100
+From:   "Rafael J. Wysocki" <rjw@rjwysocki.net>
+To:     Linux PM <linux-pm@vger.kernel.org>
+Cc:     Viresh Kumar <viresh.kumar@linaro.org>,
+        LKML <linux-kernel@vger.kernel.org>
+Subject: [PATCH] PM / wakeup: Drop wakeup_source_drop()
+Date:   Mon, 11 Mar 2019 12:53:59 +0100
+Message-ID: <2820276.PxaWYKrF8K@aspire.rjw.lan>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii; format=flowed
-Content-Disposition: inline
-In-Reply-To: <CA+rthh_OnmvQQbKAG55rha56HCp2vjhZMv0ahRdgJjbjmG=xRA@mail.gmail.com>
-X-OS:   Linux linux-8ccs 4.12.14-lp150.12.28-default x86_64
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Transfer-Encoding: 7Bit
+Content-Type: text/plain; charset="us-ascii"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-+++ Mathias Krause [10/03/19 20:26 +0100]:
->Hi Jessica,
->
->On Mon, 21 Jan 2019 at 12:39, Mathias Krause <minipli@googlemail.com> wrote:
->>
->> On Wed, 2 Jan 2019 at 21:29, Jessica Yu <jeyu@kernel.org> wrote:
->> >
->> > +++ Mathias Krause [30/12/18 13:40 +0100]:
->> > >The reference to '__vermagic' is a relict from v2.5 times. And even
->> > >there it had a very short life time, from v2.5.59 (commit 1d411b80ee18
->> > >("Module Sanity Check") in the historic tree) to v2.5.69 (commit
->> > >67ac5b866bda ("[PATCH] complete modinfo section")).
->> > >
->> > >Neither current kernels nor modules contain a '__vermagic' section any
->> > >more, so get rid of it.
->> > >
->> > >Signed-off-by: Mathias Krause <minipli@googlemail.com>
->> > >Cc: Rusty Russell <rusty@rustcorp.com.au>
->> > >Cc: Jessica Yu <jeyu@kernel.org>
->> >
->> > Thanks for the cleanup.
->> >
->> > Reviewed-by: Jessica Yu <jeyu@kernel.org>
->> >
->>
->> Arnd, will you carry this patch through your asm-generic tree or did
->> the MAINTAINERS file mislead me here?
->>
->
->looks like Arnd keeps ignoring my Emails. :/ Can you carry this patch
->through your module tree? Or do you think I should ask Andrew Morton
->instead?
+From: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
 
-Sure, I'll queue this up in modules-next shortly after the merge window.
+After commit d856f39ac1cc ("PM / wakeup: Rework wakeup source timer
+cancellation") wakeup_source_drop() is a trivial wrapper around
+__pm_relax() and it has no users except for wakeup_source_destroy()
+and wakeup_source_trash() which also has no users, so drop it along
+with the latter and make wakeup_source_destroy() call __pm_relax()
+directly.
 
-Thanks,
+Signed-off-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
+---
 
-Jessica
+Commit d856f39ac1cc is in the bleeding-edge branch of the linux-pm.git tree.
+
+---
+ drivers/base/power/wakeup.c |   18 +-----------------
+ include/linux/pm_wakeup.h   |    9 ---------
+ 2 files changed, 1 insertion(+), 26 deletions(-)
+
+Index: linux-pm/include/linux/pm_wakeup.h
+===================================================================
+--- linux-pm.orig/include/linux/pm_wakeup.h
++++ linux-pm/include/linux/pm_wakeup.h
+@@ -96,7 +96,6 @@ static inline void device_set_wakeup_pat
+ /* drivers/base/power/wakeup.c */
+ extern void wakeup_source_prepare(struct wakeup_source *ws, const char *name);
+ extern struct wakeup_source *wakeup_source_create(const char *name);
+-extern void wakeup_source_drop(struct wakeup_source *ws);
+ extern void wakeup_source_destroy(struct wakeup_source *ws);
+ extern void wakeup_source_add(struct wakeup_source *ws);
+ extern void wakeup_source_remove(struct wakeup_source *ws);
+@@ -134,8 +133,6 @@ static inline struct wakeup_source *wake
+ 	return NULL;
+ }
+ 
+-static inline void wakeup_source_drop(struct wakeup_source *ws) {}
+-
+ static inline void wakeup_source_destroy(struct wakeup_source *ws) {}
+ 
+ static inline void wakeup_source_add(struct wakeup_source *ws) {}
+@@ -204,12 +201,6 @@ static inline void wakeup_source_init(st
+ 	wakeup_source_add(ws);
+ }
+ 
+-static inline void wakeup_source_trash(struct wakeup_source *ws)
+-{
+-	wakeup_source_remove(ws);
+-	wakeup_source_drop(ws);
+-}
+-
+ static inline void __pm_wakeup_event(struct wakeup_source *ws, unsigned int msec)
+ {
+ 	return pm_wakeup_ws_event(ws, msec, false);
+Index: linux-pm/drivers/base/power/wakeup.c
+===================================================================
+--- linux-pm.orig/drivers/base/power/wakeup.c
++++ linux-pm/drivers/base/power/wakeup.c
+@@ -106,22 +106,6 @@ struct wakeup_source *wakeup_source_crea
+ }
+ EXPORT_SYMBOL_GPL(wakeup_source_create);
+ 
+-/**
+- * wakeup_source_drop - Prepare a struct wakeup_source object for destruction.
+- * @ws: Wakeup source to prepare for destruction.
+- *
+- * Callers must ensure that __pm_stay_awake() or __pm_wakeup_event() will never
+- * be run in parallel with this function for the same wakeup source object.
+- */
+-void wakeup_source_drop(struct wakeup_source *ws)
+-{
+-	if (!ws)
+-		return;
+-
+-	__pm_relax(ws);
+-}
+-EXPORT_SYMBOL_GPL(wakeup_source_drop);
+-
+ /*
+  * Record wakeup_source statistics being deleted into a dummy wakeup_source.
+  */
+@@ -161,7 +145,7 @@ void wakeup_source_destroy(struct wakeup
+ 	if (!ws)
+ 		return;
+ 
+-	wakeup_source_drop(ws);
++	__pm_relax(ws);
+ 	wakeup_source_record(ws);
+ 	kfree_const(ws->name);
+ 	kfree(ws);
+
