@@ -2,133 +2,127 @@ Return-Path: <SRS0=FxTY=RO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.8 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_NEOMUTT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B327DC43381
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 Mar 2019 14:53:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EDC6EC43381
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 Mar 2019 14:54:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7EB1820857
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 Mar 2019 14:53:24 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=azazel.net header.i=@azazel.net header.b="QNiVP2pU"
+	by mail.kernel.org (Postfix) with ESMTP id BED2C20857
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 Mar 2019 14:54:02 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727775AbfCKOxW (ORCPT
+        id S1727810AbfCKOyB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 11 Mar 2019 10:53:22 -0400
-Received: from kadath.azazel.net ([81.187.231.250]:55112 "EHLO
-        kadath.azazel.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727334AbfCKOxW (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 11 Mar 2019 10:53:22 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=azazel.net;
-         s=20190108; h=In-Reply-To:Content-Type:MIME-Version:References:Message-ID:
-        Subject:Cc:To:From:Date:Sender:Reply-To:Content-Transfer-Encoding:Content-ID:
-        Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
-        :Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:List-Subscribe:
-        List-Post:List-Owner:List-Archive;
-        bh=Pp0hqpqjCslrSXAn8lZXFgNmAVElhkqozU+LNwwYcoc=; b=QNiVP2pUTlSijwO1C4VrvXh9GG
-        viAE6J/OkOfgOJPMj52jzrhOQURsOKpePd7dDa35h5wwKuyol06DyuVsasCwrsnkf1UwNeALpBcmj
-        o4NqzWpw/Q36o9bR0eItIUfDk6S4oxuY8l1HriccPPrK5mGuHCYEiTU/H3MTWknEAWvTt0QhTNFBq
-        5RapNy8jAKyqzXSLARg7cCzufXpciqGq/F7/onbQRN8cMOtkZlZh7cbFiDOeQfm5AgeqHtvNfshOh
-        aCXsERW3FXbXZFgQTORyTXpuNqiJqWT3K3feRSng3XULbuZZN12RbIOWGGA3Usv4z8T2BPLZo0MbD
-        fnypGHXA==;
-Received: from kadath.azazel.net ([2001:8b0:135f:bcd1:e2cb:4eff:fedf:e608] helo=azazel.net)
-        by kadath.azazel.net with esmtpsa (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.89)
-        (envelope-from <jeremy@azazel.net>)
-        id 1h3MID-0003PK-TU; Mon, 11 Mar 2019 14:52:41 +0000
-Date:   Mon, 11 Mar 2019 14:52:40 +0000
-From:   Jeremy Sowden <jeremy@azazel.net>
-To:     Kalle Valo <kvalo@codeaurora.org>
-Cc:     ga58taw@mytum.de, Julius Niedworok <julius.n@gmx.net>,
-        linux-wireless@vger.kernel.org, david@redhat.com, nc@net.in.tum.de,
-        Johannes Berg <johannes@sipsolutions.net>,
-        "David S. Miller" <davem@davemloft.net>, netdev@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH RFC v2] mac80211: debugfs option to force TX status frames
-Message-ID: <20190311145240.akms2pz2hxsalmaz@azazel.net>
-References: <e20962001ee10a0f90f8e2f1f8baafcf3b70e9dd.camel@sipsolutions.net>
- <20190306200206.60916-1-julius.n@gmx.net>
- <87k1hazo6r.fsf@purkki.adurom.net>
- <20190307193045.a7awwn6mycloccq5@mission-control>
- <87h8c98q4l.fsf@codeaurora.org>
-MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="4jlle5knlvfploax"
-Content-Disposition: inline
-In-Reply-To: <87h8c98q4l.fsf@codeaurora.org>
-User-Agent: NeoMutt/20170113 (1.7.2)
-X-SA-Exim-Connect-IP: 2001:8b0:135f:bcd1:e2cb:4eff:fedf:e608
-X-SA-Exim-Mail-From: jeremy@azazel.net
-X-SA-Exim-Scanned: No (on kadath.azazel.net); SAEximRunCond expanded to false
+        Mon, 11 Mar 2019 10:54:01 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:55496 "EHLO mx1.redhat.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727334AbfCKOyB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 11 Mar 2019 10:54:01 -0400
+Received: from smtp.corp.redhat.com (int-mx05.intmail.prod.int.phx2.redhat.com [10.5.11.15])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id 273D081F25;
+        Mon, 11 Mar 2019 14:54:00 +0000 (UTC)
+Received: from llong.com (dhcp-17-221.bos.redhat.com [10.18.17.221])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 9B6385D706;
+        Mon, 11 Mar 2019 14:53:56 +0000 (UTC)
+From:   Waiman Long <longman@redhat.com>
+To:     Andrew Morton <akpm@linux-foundation.org>,
+        "Luis R. Rodriguez" <mcgrof@kernel.org>,
+        Kees Cook <keescook@chromium.org>,
+        Jonathan Corbet <corbet@lwn.net>
+Cc:     linux-kernel@vger.kernel.org, linux-fsdevel@vger.kernel.org,
+        linux-doc@vger.kernel.org, Al Viro <viro@zeniv.linux.org.uk>,
+        Matthew Wilcox <willy@infradead.org>,
+        "Eric W . Biederman" <ebiederm@xmission.com>,
+        Takashi Iwai <tiwai@suse.de>, Davidlohr Bueso <dbueso@suse.de>,
+        Manfred Spraul <manfred@colorfullife.com>,
+        Waiman Long <longman@redhat.com>
+Subject: [PATCH v2] ipc: Fix race condition in ipc_idr_alloc()
+Date:   Mon, 11 Mar 2019 10:53:35 -0400
+Message-Id: <20190311145335.9634-1-longman@redhat.com>
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.15
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.27]); Mon, 11 Mar 2019 14:54:00 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+In ipc_idr_alloc(), the sequence number of the kern_ipc_perm object
+was updated before calling idr_alloc(). Thus the ipc_checkid() call
+would fail for any previously allocated IPC id.  That gets changed
+recently in order to conserve the sequence number space. That can
+lead to a possible race condition where another thread may have called
+ipc_obtain_object_check() concurrently with a recently deleted IPC id.
+If idr_alloc() function happens to allocate the deleted index value,
+that thread will incorrectly get a handle to the new IPC id.
 
---4jlle5knlvfploax
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+However, we don't know if we should increment seq before the index value
+is allocated and compared with the previously allocated index value. To
+solve this dilemma, we will always put a new sequence number into the
+kern_ipc_perm object before calling idr_alloc(). If it happens that the
+sequence number don't need to be changed, we write back the right value
+afterward. This will ensure that a concurrent ipc_obtain_object_check()
+will not incorrectly match a deleted IPC id to to a new one.
 
-On 2019-03-11, at 16:03:38 +0200, Kalle Valo wrote:
-> ga58taw@mytum.de writes:
-> > On Thu, Mar 07, 2019 at 05:42:04PM +0200, Kalle Valo wrote:
-> > > > +   len = scnprintf(buf, sizeof(buf), "%d\n",
-> > > >                    (int)local->force_tx_status);
-> > >
-> > > I wonder about the cast, is it guaranteed that a bool is always of
-> > > the same size as an int?
-> >
-> > Why is this a problem? If a bool is smaller than an int, the
-> > compiler emits code that will prepend the value of force_tx_status
-> > with zeros.
->
-> Let's say that a bool is a byte and int is four bytes. If you use "%d"
-> I would guess that in that case scnprintf() writes 4 bytes, meaning
-> that 3 bytes will be overwriting either padding or some other field in
-> the struct.
+This is actually no different from what ipc_idr_alloc() used to
+be. The new IPC id is no danger of being incorrectly rejected as the
+kern_ipc_perm object will have the right seq value by the time the new
+id is returned.
 
-It's the value that matters, not the type.  It will only be too big for
-the buffer if the result of casting local->force_tx_status to int is
-less than -9 or greeater than 99.
+v2: Update commit log and code comment.
 
-  scnprintf(buf, size(buf), "%lld\n", (long long)local->force_tx_status)
+Reported-by: Manfred Spraul <manfred@colorfullife.com>
+Signed-off-by: Waiman Long <longman@redhat.com>
+---
+ ipc/util.c | 27 ++++++++++++++++++++++++---
+ 1 file changed, 24 insertions(+), 3 deletions(-)
 
-would also be fine if the value were in range.  Note also that scnprintf
-will not overrun the buffer: it will truncate the string.
+diff --git a/ipc/util.c b/ipc/util.c
+index 78e14acb51a7..631ed4790c83 100644
+--- a/ipc/util.c
++++ b/ipc/util.c
+@@ -221,15 +221,36 @@ static inline int ipc_idr_alloc(struct ipc_ids *ids, struct kern_ipc_perm *new)
+ 	 */
+ 
+ 	if (next_id < 0) { /* !CHECKPOINT_RESTORE or next_id is unset */
++		/*
++		 * It is possible that another thread may have called
++		 * ipc_obtain_object_check() concurrently with a recently
++		 * deleted IPC id (idx|seq). If idr_alloc*() happens to
++		 * allocate this deleted idx value, the other thread may
++		 * incorrectly get a handle to the new IPC id.
++		 *
++		 * To prevent this race condition from happening, we will
++		 * always store a new sequence number into the kern_ipc_perm
++		 * object before calling idr_alloc*(). This is what
++		 * ipc_idr_alloc() used to behave. If we find out that we
++		 * don't need to change seq, we write back the right value
++		 * to the kern_ipc_perm object before returning the new
++		 * IPC id to userspace.
++		 */
++		new->seq = ids->seq + 1;
++		if (new->seq > IPCID_SEQ_MAX)
++			new->seq = 0;
++
+ 		if (ipc_mni_extended)
+ 			idx = idr_alloc_cyclic(&ids->ipcs_idr, new, 0, ipc_mni,
+ 						GFP_NOWAIT);
+ 		else
+ 			idx = idr_alloc(&ids->ipcs_idr, new, 0, 0, GFP_NOWAIT);
+ 
+-		if ((idx <= ids->last_idx) && (++ids->seq > IPCID_SEQ_MAX))
+-			ids->seq = 0;
+-		new->seq = ids->seq;
++		/* Make ids->seq and new->seq stay in sync */
++		if (idx <= ids->last_idx)
++			ids->seq = new->seq;
++		else
++			new->seq = ids->seq;
+ 		ids->last_idx = idx;
+ 	} else {
+ 		new->seq = ipcid_to_seqx(next_id);
+-- 
+2.18.1
 
-> But I'm no compiler expert so I'm not going to argue about this
-> anymore.  I just wanted to point out that that the cast looks
-> dangerous and I would not do it.
-
-As it happens, arguments to variadic functions are subject to the
-"default argument promotions," so if local->force_tx_status is in fact a
-bool (I can't find the definition), it would be promoted to int and the
-cast is superfluous.
-
-J.
-
---4jlle5knlvfploax
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAABCAAdFiEEZ8d+2N/NBLDbUxIF0Z7UzfnX9sMFAlyGdjcACgkQ0Z7UzfnX
-9sMb1BAAsSESto65kU2vMM1odmXXphdjm3eCo+b7dJE6rHaaAB1IzY16XAGv1R1A
-T7vVvm+5Ia1WFFnKNr8VnF1s4gIhzqPCAGqHSuERNyIQKcAAwSVtSZtHpGa+WjrD
-qs/gfLXh7AkXQAePZG7p+KIvFVYa4ty94YonfEOE4MQlayUz1TdgwWnXezCk5i7d
-89H/rcZbcSQ9osp3+qIDoOGLvZa+nKLCIOrD85LTpfDpYUC3lUetM1byPsudv+5A
-HW7TGsbKOBnQLeIPx1o1DZUt0OX7pqlyrsO6K0XkBJHvGTFInP6MRenpDDPswXPn
-O8JxtqJ2mwEKj0HKoInopvXesPYY5NrHqML6PlzY3O9j1Wd5rviA6r80Y4MW06kd
-fQMoSKhK9nF6nNviaEXNmXCteryPlQTdAm5L05VmK2wiUJcza+ntF4yN6nEryq0a
-kd17nFUl+LU0LliCRxFpLSBV6F31s26rUVy9BEqp3q74Yh7Sqg5l5N0ZHInrEc2D
-XtJaTf5Nbyh7LHKiiiOpNMPzOD0pxixkmF8HU/2XW34uLl6ojXgvyiSE0EXrYdOM
-AjN5dEtxFpnM1dv7cQDoHdNTqYpcDLnstcXuyHcWru4bTXXcrPrVok/tbnsQ5x5m
-6Nlqd5G0pK0e2nigrCqBmigZxIPv4AVPRgDrlA/Sik96A9tbsq8=
-=KvZy
------END PGP SIGNATURE-----
-
---4jlle5knlvfploax--
