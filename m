@@ -2,101 +2,163 @@ Return-Path: <SRS0=FxTY=RO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_MUTT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E4C55C43381
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 Mar 2019 12:11:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CF40DC43381
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 Mar 2019 12:12:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BFEA02075C
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 Mar 2019 12:11:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A4A0C2075C
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 Mar 2019 12:12:38 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727353AbfCKMLl (ORCPT
+        id S1727378AbfCKMMh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 11 Mar 2019 08:11:41 -0400
-Received: from mail-qt1-f193.google.com ([209.85.160.193]:43554 "EHLO
-        mail-qt1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726652AbfCKMLk (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 11 Mar 2019 08:11:40 -0400
-Received: by mail-qt1-f193.google.com with SMTP id d16so4653424qtn.10;
-        Mon, 11 Mar 2019 05:11:39 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=H3QAA+O90f7r8NbQtZhP9wtU1gR8JJm3JN1WpqCkIhs=;
-        b=FV49cDltVrBVWvPj3TWqMv/62BEH/TA1JKG3iRvZAi6Mg6ZQ67sABTMRPLPiRrgjDx
-         q6JjCNGPTHH5PcCKvVkahzjzBCfWxQl1jRkDPv+gAbPb0zKts52rbZlibDKQIYAO9c2A
-         CbJW86a6L+ixiLNpMIIR5rR3eVA88+Px4J4oVNsWSU9XQlaVKGseLeLnbdmpSLb5UfuY
-         6Xi+ttmtHkluCdY7RCg4KdTHYy7/X2JmKbG1VeLnwkUxxvZcdKDYVVaqXUw1FwF0Td8K
-         7kj/h0+5IcO9EUK3fgOlkvLXZ58SjJpavvZJJQZrUWQ7qnAtowL6UqbDV2eJSUDRBy8A
-         AqAA==
-X-Gm-Message-State: APjAAAXRHOeH+ihM+jWISMRMktspDuTATD4RxI8BX3gq8RdiC58SFeJG
-        j4SHq1YQ0PngoVd5jHWZ/XDGk3lY565UElXFJCU=
-X-Google-Smtp-Source: APXvYqxsVqRI//5TTfbN2YueL6jap/wwPHgqW0M34D5qzKflQc762i4r94eWFx0oPJHBo/qF2WEV5+/w87BpTr9E1n8=
-X-Received: by 2002:a0c:b05a:: with SMTP id l26mr25236520qvc.40.1552306299491;
- Mon, 11 Mar 2019 05:11:39 -0700 (PDT)
+        Mon, 11 Mar 2019 08:12:37 -0400
+Received: from usa-sjc-mx-foss1.foss.arm.com ([217.140.101.70]:53394 "EHLO
+        foss.arm.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727082AbfCKMMg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 11 Mar 2019 08:12:36 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.72.51.249])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 22B80374;
+        Mon, 11 Mar 2019 05:12:36 -0700 (PDT)
+Received: from lakrids.cambridge.arm.com (usa-sjc-imap-foss1.foss.arm.com [10.72.51.249])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 2E8FE3F703;
+        Mon, 11 Mar 2019 05:12:33 -0700 (PDT)
+Date:   Mon, 11 Mar 2019 12:12:28 +0000
+From:   Mark Rutland <mark.rutland@arm.com>
+To:     Yu Zhao <yuzhao@google.com>,
+        Anshuman Khandual <anshuman.khandual@arm.com>
+Cc:     Catalin Marinas <catalin.marinas@arm.com>,
+        Will Deacon <will.deacon@arm.com>,
+        "Aneesh Kumar K . V" <aneesh.kumar@linux.vnet.ibm.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Nick Piggin <npiggin@gmail.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Joel Fernandes <joel@joelfernandes.org>,
+        "Kirill A . Shutemov" <kirill@shutemov.name>,
+        Ard Biesheuvel <ard.biesheuvel@linaro.org>,
+        Chintan Pandya <cpandya@codeaurora.org>,
+        Jun Yao <yaojun8558363@gmail.com>,
+        Laura Abbott <labbott@redhat.com>,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        linux-arch@vger.kernel.org, linux-mm@kvack.org
+Subject: Re: [PATCH v3 3/3] arm64: mm: enable per pmd page table lock
+Message-ID: <20190311121147.GA23361@lakrids.cambridge.arm.com>
+References: <20190218231319.178224-1-yuzhao@google.com>
+ <20190310011906.254635-1-yuzhao@google.com>
+ <20190310011906.254635-3-yuzhao@google.com>
 MIME-Version: 1.0
-References: <1546173604-26066-1-git-send-email-minipli@googlemail.com>
- <20190102202938.GA26600@linux-8ccs> <CA+rthh87tutLV=857g-Nrd6gAYK8xhRJX8MqpjC+CnmsjTqqJg@mail.gmail.com>
- <CA+rthh_OnmvQQbKAG55rha56HCp2vjhZMv0ahRdgJjbjmG=xRA@mail.gmail.com> <20190311115523.GA30951@linux-8ccs>
-In-Reply-To: <20190311115523.GA30951@linux-8ccs>
-From:   Arnd Bergmann <arnd@arndb.de>
-Date:   Mon, 11 Mar 2019 13:11:22 +0100
-Message-ID: <CAK8P3a2w0B50Nb1gu6nJ2BJJsPFyOyXXOqn5SaTZnRBS=vD+Yg@mail.gmail.com>
-Subject: Re: [PATCH] vmlinux.lds.h: drop unused __vermagic
-To:     Jessica Yu <jeyu@kernel.org>
-Cc:     Mathias Krause <minipli@googlemail.com>,
-        linux-arch <linux-arch@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Rusty Russell <rusty@rustcorp.com.au>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190310011906.254635-3-yuzhao@google.com>
+User-Agent: Mutt/1.11.1+11 (2f07cb52) (2018-12-01)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Mar 11, 2019 at 12:55 PM Jessica Yu <jeyu@kernel.org> wrote:
->
-> +++ Mathias Krause [10/03/19 20:26 +0100]:
-> >Hi Jessica,
-> >
-> >On Mon, 21 Jan 2019 at 12:39, Mathias Krause <minipli@googlemail.com> wrote:
-> >>
-> >> On Wed, 2 Jan 2019 at 21:29, Jessica Yu <jeyu@kernel.org> wrote:
-> >> >
-> >> > +++ Mathias Krause [30/12/18 13:40 +0100]:
-> >> > >The reference to '__vermagic' is a relict from v2.5 times. And even
-> >> > >there it had a very short life time, from v2.5.59 (commit 1d411b80ee18
-> >> > >("Module Sanity Check") in the historic tree) to v2.5.69 (commit
-> >> > >67ac5b866bda ("[PATCH] complete modinfo section")).
-> >> > >
-> >> > >Neither current kernels nor modules contain a '__vermagic' section any
-> >> > >more, so get rid of it.
-> >> > >
-> >> > >Signed-off-by: Mathias Krause <minipli@googlemail.com>
-> >> > >Cc: Rusty Russell <rusty@rustcorp.com.au>
-> >> > >Cc: Jessica Yu <jeyu@kernel.org>
-> >> >
-> >> > Thanks for the cleanup.
-> >> >
-> >> > Reviewed-by: Jessica Yu <jeyu@kernel.org>
-> >> >
-> >>
-> >> Arnd, will you carry this patch through your asm-generic tree or did
-> >> the MAINTAINERS file mislead me here?
-> >>
-> >
-> >looks like Arnd keeps ignoring my Emails. :/ Can you carry this patch
-> >through your module tree? Or do you think I should ask Andrew Morton
-> >instead?
+Hi,
 
-Oops, sorry about this.
+On Sat, Mar 09, 2019 at 06:19:06PM -0700, Yu Zhao wrote:
+> Switch from per mm_struct to per pmd page table lock by enabling
+> ARCH_ENABLE_SPLIT_PMD_PTLOCK. This provides better granularity for
+> large system.
+> 
+> I'm not sure if there is contention on mm->page_table_lock. Given
+> the option comes at no cost (apart from initializing more spin
+> locks), why not enable it now.
+> 
+> We only do so when pmd is not folded, so we don't mistakenly call
+> pgtable_pmd_page_ctor() on pud or p4d in pgd_pgtable_alloc(). (We
+> check shift against PMD_SHIFT, which is same as PUD_SHIFT when pmd
+> is folded).
 
-> Sure, I'll queue this up in modules-next shortly after the merge window.
+Just to check, I take it pgtable_pmd_page_ctor() is now a NOP when the
+PMD is folded, and this last paragraph is stale?
 
-Ok, thanks for picking it up!
+> Signed-off-by: Yu Zhao <yuzhao@google.com>
+> ---
+>  arch/arm64/Kconfig               |  3 +++
+>  arch/arm64/include/asm/pgalloc.h | 12 +++++++++++-
+>  arch/arm64/include/asm/tlb.h     |  5 ++++-
+>  3 files changed, 18 insertions(+), 2 deletions(-)
+> 
+> diff --git a/arch/arm64/Kconfig b/arch/arm64/Kconfig
+> index cfbf307d6dc4..a3b1b789f766 100644
+> --- a/arch/arm64/Kconfig
+> +++ b/arch/arm64/Kconfig
+> @@ -872,6 +872,9 @@ config ARCH_WANT_HUGE_PMD_SHARE
+>  config ARCH_HAS_CACHE_LINE_SIZE
+>  	def_bool y
+>  
+> +config ARCH_ENABLE_SPLIT_PMD_PTLOCK
+> +	def_bool y if PGTABLE_LEVELS > 2
+> +
+>  config SECCOMP
+>  	bool "Enable seccomp to safely compute untrusted bytecode"
+>  	---help---
+> diff --git a/arch/arm64/include/asm/pgalloc.h b/arch/arm64/include/asm/pgalloc.h
+> index 52fa47c73bf0..dabba4b2c61f 100644
+> --- a/arch/arm64/include/asm/pgalloc.h
+> +++ b/arch/arm64/include/asm/pgalloc.h
+> @@ -33,12 +33,22 @@
+>  
+>  static inline pmd_t *pmd_alloc_one(struct mm_struct *mm, unsigned long addr)
+>  {
+> -	return (pmd_t *)__get_free_page(PGALLOC_GFP);
+> +	struct page *page;
+> +
+> +	page = alloc_page(PGALLOC_GFP);
+> +	if (!page)
+> +		return NULL;
+> +	if (!pgtable_pmd_page_ctor(page)) {
+> +		__free_page(page);
+> +		return NULL;
+> +	}
+> +	return page_address(page);
+>  }
+>  
+>  static inline void pmd_free(struct mm_struct *mm, pmd_t *pmdp)
+>  {
+>  	BUG_ON((unsigned long)pmdp & (PAGE_SIZE-1));
+> +	pgtable_pmd_page_dtor(virt_to_page(pmdp));
+>  	free_page((unsigned long)pmdp);
+>  }
 
-     Arnd
+It looks like arm64's existing stage-2 code is inconsistent across
+alloc/free, and IIUC this change might turn that into a real problem.
+Currently we allocate all levels of stage-2 table with
+__get_free_page(), but free them with p?d_free(). We always miss the
+ctor and always use the dtor.
+
+Other than that, this patch looks fine to me, but I'd feel more
+comfortable if we could first fix the stage-2 code to free those stage-2
+tables without invoking the dtor.
+
+Anshuman, IIRC you had a patch to fix the stage-2 code to not invoke the
+dtors. If so, could you please post that so that we could take it as a
+preparatory patch for this series?
+
+Thanks,
+Mark.
+
+> diff --git a/arch/arm64/include/asm/tlb.h b/arch/arm64/include/asm/tlb.h
+> index 106fdc951b6e..4e3becfed387 100644
+> --- a/arch/arm64/include/asm/tlb.h
+> +++ b/arch/arm64/include/asm/tlb.h
+> @@ -62,7 +62,10 @@ static inline void __pte_free_tlb(struct mmu_gather *tlb, pgtable_t pte,
+>  static inline void __pmd_free_tlb(struct mmu_gather *tlb, pmd_t *pmdp,
+>  				  unsigned long addr)
+>  {
+> -	tlb_remove_table(tlb, virt_to_page(pmdp));
+> +	struct page *page = virt_to_page(pmdp);
+> +
+> +	pgtable_pmd_page_dtor(page);
+> +	tlb_remove_table(tlb, page);
+>  }
+>  #endif
+>  
+> -- 
+> 2.21.0.360.g471c308f928-goog
+> 
