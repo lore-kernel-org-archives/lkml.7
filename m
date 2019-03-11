@@ -6,113 +6,103 @@ X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 14754C43381
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 Mar 2019 01:26:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 12349C43381
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 Mar 2019 01:29:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DA86120657
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 Mar 2019 01:26:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D650720652
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 Mar 2019 01:29:42 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727022AbfCKB0B (ORCPT
+        id S1727050AbfCKB3l (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 10 Mar 2019 21:26:01 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:60170 "EHLO mx1.redhat.com"
+        Sun, 10 Mar 2019 21:29:41 -0400
+Received: from mga18.intel.com ([134.134.136.126]:20500 "EHLO mga18.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726895AbfCKB0A (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 10 Mar 2019 21:26:00 -0400
-Received: from smtp.corp.redhat.com (int-mx05.intmail.prod.int.phx2.redhat.com [10.5.11.15])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id 009A6309179A;
-        Mon, 11 Mar 2019 01:26:00 +0000 (UTC)
-Received: from llong.com (ovpn-120-78.rdu2.redhat.com [10.10.120.78])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 3829F5D70E;
-        Mon, 11 Mar 2019 01:25:53 +0000 (UTC)
-From:   Waiman Long <longman@redhat.com>
-To:     Andrew Morton <akpm@linux-foundation.org>,
-        "Luis R. Rodriguez" <mcgrof@kernel.org>,
-        Kees Cook <keescook@chromium.org>,
-        Jonathan Corbet <corbet@lwn.net>
-Cc:     linux-kernel@vger.kernel.org, linux-fsdevel@vger.kernel.org,
-        linux-doc@vger.kernel.org, Al Viro <viro@zeniv.linux.org.uk>,
-        Matthew Wilcox <willy@infradead.org>,
-        "Eric W . Biederman" <ebiederm@xmission.com>,
-        Takashi Iwai <tiwai@suse.de>, Davidlohr Bueso <dbueso@suse.de>,
-        Manfred Spraul <manfred@colorfullife.com>,
-        Waiman Long <longman@redhat.com>
-Subject: [PATCH-next] ipc: Fix race condition in ipc_idr_alloc()
-Date:   Sun, 10 Mar 2019 21:25:36 -0400
-Message-Id: <20190311012536.21747-1-longman@redhat.com>
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.15
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.41]); Mon, 11 Mar 2019 01:26:00 +0000 (UTC)
+        id S1726687AbfCKB3l (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 10 Mar 2019 21:29:41 -0400
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga004.jf.intel.com ([10.7.209.38])
+  by orsmga106.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 10 Mar 2019 18:29:40 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.58,466,1544515200"; 
+   d="scan'208";a="281478558"
+Received: from fmsmsx106.amr.corp.intel.com ([10.18.124.204])
+  by orsmga004.jf.intel.com with ESMTP; 10 Mar 2019 18:29:40 -0700
+Received: from fmsmsx114.amr.corp.intel.com (10.18.116.8) by
+ FMSMSX106.amr.corp.intel.com (10.18.124.204) with Microsoft SMTP Server (TLS)
+ id 14.3.408.0; Sun, 10 Mar 2019 18:29:39 -0700
+Received: from shsmsx151.ccr.corp.intel.com (10.239.6.50) by
+ FMSMSX114.amr.corp.intel.com (10.18.116.8) with Microsoft SMTP Server (TLS)
+ id 14.3.408.0; Sun, 10 Mar 2019 18:29:39 -0700
+Received: from shsmsx101.ccr.corp.intel.com ([169.254.1.158]) by
+ SHSMSX151.ccr.corp.intel.com ([169.254.3.26]) with mapi id 14.03.0415.000;
+ Mon, 11 Mar 2019 09:29:15 +0800
+From:   "Kang, Luwei" <luwei.kang@intel.com>
+To:     Paolo Bonzini <pbonzini@redhat.com>,
+        "Yang, Weijiang" <weijiang.yang@intel.com>,
+        "rkrcmar@redhat.com" <rkrcmar@redhat.com>,
+        "Christopherson, Sean J" <sean.j.christopherson@intel.com>,
+        "jmattson@google.com" <jmattson@google.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "kvm@vger.kernel.org" <kvm@vger.kernel.org>,
+        "mst@redhat.com" <mst@redhat.com>,
+        "Yu, Yu-cheng" <yu-cheng.yu@intel.com>
+CC:     Zhang Yi Z <yi.z.zhang@linux.intel.com>
+Subject: RE: [PATCH v3 7/8] KVM:X86: Add XSS bit 11 and 12 support for CET
+ xsaves/xrstors.
+Thread-Topic: [PATCH v3 7/8] KVM:X86: Add XSS bit 11 and 12 support for CET
+ xsaves/xrstors.
+Thread-Index: AQHUzZ0zOJhj9UImbUKmOc6EWitiSaYBF9CAgASf7tA=
+Date:   Mon, 11 Mar 2019 01:29:15 +0000
+Message-ID: <82D7661F83C1A047AF7DC287873BF1E172D0CBA3@SHSMSX101.ccr.corp.intel.com>
+References: <20190225132716.6982-1-weijiang.yang@intel.com>
+ <20190225132716.6982-8-weijiang.yang@intel.com>
+ <8643d7bf-15dd-858e-7973-c8796d6e9a92@redhat.com>
+In-Reply-To: <8643d7bf-15dd-858e-7973-c8796d6e9a92@redhat.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-ctpclassification: CTP_NT
+x-titus-metadata-40: eyJDYXRlZ29yeUxhYmVscyI6IiIsIk1ldGFkYXRhIjp7Im5zIjoiaHR0cDpcL1wvd3d3LnRpdHVzLmNvbVwvbnNcL0ludGVsMyIsImlkIjoiY2NmYjYzOTEtMWQ4OC00ZGNiLTgxNmItNGU4NTk1ODQzODU2IiwicHJvcHMiOlt7Im4iOiJDVFBDbGFzc2lmaWNhdGlvbiIsInZhbHMiOlt7InZhbHVlIjoiQ1RQX05UIn1dfV19LCJTdWJqZWN0TGFiZWxzIjpbXSwiVE1DVmVyc2lvbiI6IjE3LjEwLjE4MDQuNDkiLCJUcnVzdGVkTGFiZWxIYXNoIjoibDdQaWtsWUJvbXJ0VlF4UmRMS0xZTjVrNnkxTTBxODVJXC96Z1pjYlNqRytEVlA4eUNaKzV4dmluQm5KazAya2MifQ==
+dlp-product: dlpe-windows
+dlp-version: 11.0.400.15
+dlp-reaction: no-action
+x-originating-ip: [10.239.127.40]
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+MIME-Version: 1.0
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-In ipc_idr_alloc(), the sequence number of the kern_ipc_perm object was
-also set before calling idr_alloc(). That gets changed recently in order
-to conserve the sequence number space. That can lead to a possible race
-condition where another thread of the same kern_ipc_perm may have called
-ipc_obtain_object_check() concurrently with a recently deleted IPC id.
-If idr_alloc() function happens to allocate the deleted index value,
-that thread will incorrectly get a handle to the new IPC id.
-
-However, we don't know if we should increment seq before the index value
-is allocated and compared with the previously allocated index value. To
-solve this dilemma, we will always put a new sequence number into the
-kern_ipc_perm object before calling idr_alloc(). If it happens that the
-sequence number don't need to be changed, we write back the right value
-afterward. This will ensure that a concurrent ipc_obtain_object_check()
-will not incorrectly match a deleted IPC id to to a new one.
-
-Reported-by: Manfred Spraul <manfred@colorfullife.com>
-Signed-off-by: Waiman Long <longman@redhat.com>
----
- ipc/util.c | 25 ++++++++++++++++++++++---
- 1 file changed, 22 insertions(+), 3 deletions(-)
-
-diff --git a/ipc/util.c b/ipc/util.c
-index 78e14acb51a7..6cb4129a2649 100644
---- a/ipc/util.c
-+++ b/ipc/util.c
-@@ -221,15 +221,34 @@ static inline int ipc_idr_alloc(struct ipc_ids *ids, struct kern_ipc_perm *new)
- 	 */
- 
- 	if (next_id < 0) { /* !CHECKPOINT_RESTORE or next_id is unset */
-+		/*
-+		 * It is possible that another thread of the same
-+		 * kern_ipc_perm may have called ipc_obtain_object_check()
-+		 * concurrently with a recently deleted IPC id (idx|seq).
-+		 * If idr_alloc() happens to allocate this deleted idx value,
-+		 * the other thread may incorrectly get a handle to the new
-+		 * IPC id.
-+		 *
-+		 * To prevent this race condition from happening, we will
-+		 * always store a new sequence number into the kern_ipc_perm
-+		 * object before calling idr_alloc(). If we find out that we
-+		 * don't need to change seq, we write back the right value.
-+		 */
-+		new->seq = ids->seq + 1;
-+		if (new->seq > IPCID_SEQ_MAX)
-+			new->seq = 0;
-+
- 		if (ipc_mni_extended)
- 			idx = idr_alloc_cyclic(&ids->ipcs_idr, new, 0, ipc_mni,
- 						GFP_NOWAIT);
- 		else
- 			idx = idr_alloc(&ids->ipcs_idr, new, 0, 0, GFP_NOWAIT);
- 
--		if ((idx <= ids->last_idx) && (++ids->seq > IPCID_SEQ_MAX))
--			ids->seq = 0;
--		new->seq = ids->seq;
-+		/* Make ids->seq and new->seq stay in sync */
-+		if (idx <= ids->last_idx)
-+			ids->seq = new->seq;
-+		else
-+			new->seq = ids->seq;
- 		ids->last_idx = idx;
- 	} else {
- 		new->seq = ipcid_to_seqx(next_id);
--- 
-2.18.1
-
+PiA+IEZvciBHdWVzdCBYU1MsIHJpZ2h0IG5vdywgb25seSBiaXQgMTEodXNlciBzdGF0ZXMpIGFu
+ZCBiaXQgMTINCj4gPiAoc3VwZXJ2aXNvciBzdGF0ZXMpIGFyZSBzdXBwb3J0ZWQsIGlmIG90aGVy
+IGJpdHMgYXJlIGJlaW5nIHNldCwgbmVlZA0KPiA+IHRvIG1vZGlmeSBLVk1fU1VQUE9SVEVEX1hT
+UyBtYWNybyB0byBoYXZlIHN1cHBvcnQuDQo+ID4NCj4gPiBTaWduZWQtb2ZmLWJ5OiBaaGFuZyBZ
+aSBaIDx5aS56LnpoYW5nQGxpbnV4LmludGVsLmNvbT4NCj4gPiBTaWduZWQtb2ZmLWJ5OiBZYW5n
+IFdlaWppYW5nIDx3ZWlqaWFuZy55YW5nQGludGVsLmNvbT4NCj4gPiAtLS0NCj4gPiAgYXJjaC94
+ODYva3ZtL3ZteC5jIHwgOCArKysrKy0tLQ0KPiA+ICAxIGZpbGUgY2hhbmdlZCwgNSBpbnNlcnRp
+b25zKCspLCAzIGRlbGV0aW9ucygtKQ0KPiA+DQo+ID4gZGlmZiAtLWdpdCBhL2FyY2gveDg2L2t2
+bS92bXguYyBiL2FyY2gveDg2L2t2bS92bXguYyBpbmRleA0KPiA+IGQzMmNlZTllZTA3OS4uNjg5
+MDhlZDdiMTUxIDEwMDY0NA0KPiA+IC0tLSBhL2FyY2gveDg2L2t2bS92bXguYw0KPiA+ICsrKyBi
+L2FyY2gveDg2L2t2bS92bXguYw0KPiA+IEBAIC00Nyw2ICs0Nyw3IEBADQo+ID4gICNpbmNsdWRl
+IDxhc20vdmlydGV4dC5oPg0KPiA+ICAjaW5jbHVkZSA8YXNtL21jZS5oPg0KPiA+ICAjaW5jbHVk
+ZSA8YXNtL2ZwdS9pbnRlcm5hbC5oPg0KPiA+ICsjaW5jbHVkZSA8YXNtL2ZwdS90eXBlcy5oPg0K
+PiA+ICAjaW5jbHVkZSA8YXNtL3BlcmZfZXZlbnQuaD4NCj4gPiAgI2luY2x1ZGUgPGFzbS9kZWJ1
+Z3JlZy5oPg0KPiA+ICAjaW5jbHVkZSA8YXNtL2tleGVjLmg+DQo+ID4gQEAgLTQzMzYsMTIgKzQz
+MzcsMTMgQEAgc3RhdGljIGludCB2bXhfc2V0X21zcihzdHJ1Y3Qga3ZtX3ZjcHUgKnZjcHUsIHN0
+cnVjdCBtc3JfZGF0YSAqbXNyX2luZm8pDQo+ID4gIAljYXNlIE1TUl9JQTMyX1hTUzoNCj4gPiAg
+CQlpZiAoIXZteF94c2F2ZXNfc3VwcG9ydGVkKCkpDQo+ID4gIAkJCXJldHVybiAxOw0KPiA+ICsN
+Cj4gPiAgCQkvKg0KPiA+IC0JCSAqIFRoZSBvbmx5IHN1cHBvcnRlZCBiaXQgYXMgb2YgU2t5bGFr
+ZSBpcyBiaXQgOCwgYnV0DQo+ID4gLQkJICogaXQgaXMgbm90IHN1cHBvcnRlZCBvbiBLVk0uDQo+
+ID4gKwkJICogQ2hlY2sgYml0cyBiZWluZyBzZXQgYXJlIHN1cHBvcnRlZCBpbiBLVk0uDQo+ID4g
+IAkJICovDQo+ID4gLQkJaWYgKGRhdGEgIT0gMCkNCj4gPiArCQlpZiAoZGF0YSAmIH5rdm1fc3Vw
+cG9ydGVkX3hzcygpKQ0KPiA+ICAJCQlyZXR1cm4gMTsNCj4gPiArDQo+ID4gIAkJdmNwdS0+YXJj
+aC5pYTMyX3hzcyA9IGRhdGE7DQo+ID4gIAkJaWYgKHZjcHUtPmFyY2guaWEzMl94c3MgIT0gaG9z
+dF94c3MpDQo+ID4gIAkJCWFkZF9hdG9taWNfc3dpdGNoX21zcih2bXgsIE1TUl9JQTMyX1hTUywN
+Cj4gPg0KPiANCj4gTHV3ZWksIGNhbiB5b3Ugd29yayB3aXRoIFdlaWppYW5nIHRvIGFkZCBYU0FW
+RVMgc3VwcG9ydCBmb3IgUHJvY2Vzc29yIFRyYWNpbmc/DQoNCkhpIFBhb2xvLA0KICAgIEFzIHdl
+IHRhbGsgbG9uZyB0aW1lIGJlZm9yZS4gSSB3aWxsIGRvIHRoYXQuDQoNClRoYW5rcywNCkx1d2Vp
+IEthbmcNCg0KPiANCj4gUGFvbG8NCg==
