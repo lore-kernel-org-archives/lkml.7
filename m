@@ -7,43 +7,43 @@ X-Spam-Status: No, score=-12.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_PASS autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 14B5DC43381
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 Mar 2019 17:25:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4B040C43381
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 Mar 2019 17:25:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DAE9A2063F
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 Mar 2019 17:25:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1E97420643
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 Mar 2019 17:25:16 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1552325112;
-	bh=uoyvcnHzjWrNWVVTPHX21c3p638QO8DLdQx7OyScl7c=;
+	s=default; t=1552325116;
+	bh=eoiJ8Y7WJpVfiM+Ls9DjOU5lrfujq1mV76rlmLsUG3w=;
 	h=From:To:Cc:Subject:In-Reply-To:Date:List-ID:From;
-	b=1Nn0Faj/H3JhzItUaaAU5pqUumoJTnLOYT9C6YsJMFd4erbuAbcZ6Q3LCa5s4JpG4
-	 QzVjcK+pTi6bibcuVntMTbmChvfqaCUux+ac4yBuaBnYxOixGQypObjy/P4wkRIj5l
-	 pjGgB3X7Jyv5diQgrDtZPIUP0xIRb1yGmJF1MMPo=
+	b=vO24rhl4f/kx5DGDRvE0e68UfiBJexDUr0ogYSBYHwVzNx0mF+y20ynkxluCRqpX+
+	 K7dpusjDZS+CLcgL5btv1tNYsK2jZDn/CF7FM+UaWU+eDpedCnXazt4cEdwMZfO4GP
+	 sbCR+JqoRWjzjUElL6NPC1udnKWiHztKNS6wIkGQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728117AbfCKRYC (ORCPT
+        id S1728318AbfCKRZP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 11 Mar 2019 13:24:02 -0400
-Received: from heliosphere.sirena.org.uk ([172.104.155.198]:50448 "EHLO
+        Mon, 11 Mar 2019 13:25:15 -0400
+Received: from heliosphere.sirena.org.uk ([172.104.155.198]:50564 "EHLO
         heliosphere.sirena.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727905AbfCKRX7 (ORCPT
+        with ESMTP id S1728098AbfCKRYB (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 11 Mar 2019 13:23:59 -0400
+        Mon, 11 Mar 2019 13:24:01 -0400
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
         d=sirena.org.uk; s=20170815-heliosphere; h=Date:Message-Id:In-Reply-To:
         Subject:Cc:To:From:Sender:Reply-To:MIME-Version:Content-Type:
         Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
         Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:References:
         List-Id:List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:
-        List-Archive; bh=BMelY5BHaMGtrKjDHAbn5iQmGhdPaeBVqHghbF2/TMU=; b=Qt8pow/QROUO
-        kkDsLKQRbvWgcUBe09WhkYTDm1un6ZFCPb7CTOAMr0fnYPdFW5VBzH8vWHWQxzSF0R2wWpto0AXNj
-        NgZJANJUjEnxHRCPSFxWhIkjTfGiDabSLfsWgdkXfxqzHKNL7XIMoX76O3Ql1fsz3cRNHkZcN/UIR
-        joN6I=;
+        List-Archive; bh=X5sGB91oFBFVYIHkyXSiAn+ENZMIm0hBqBhWrcKAEqM=; b=GnMn/9OCB6JO
+        p+AkwHLylZW6/oY8z9ot84Y3h3p1PgRzPCU1P3kUE3nUgUVRVx5G6pdlK91KNoesjyaODhgNrphSk
+        sedQ5/FADpvnF2egXA4u2Lp+8tlhS0uTo11N+l1kwuB+WwH9vNUt3NwzQeudUwpnCe/0D+DTJi8P6
+        Rah6Y=;
 Received: from cpc102320-sgyl38-2-0-cust46.18-2.cable.virginm.net ([82.37.168.47] helo=debutante.sirena.org.uk)
         by heliosphere.sirena.org.uk with esmtpa (Exim 4.89)
         (envelope-from <broonie@sirena.org.uk>)
-        id 1h3OeP-0005MV-1I; Mon, 11 Mar 2019 17:23:45 +0000
+        id 1h3OeT-0005Mq-88; Mon, 11 Mar 2019 17:23:49 +0000
 Received: by debutante.sirena.org.uk (Postfix, from userid 1000)
-        id 774651128896; Mon, 11 Mar 2019 17:23:44 +0000 (GMT)
+        id CB5321128896; Mon, 11 Mar 2019 17:23:48 +0000 (GMT)
 From:   Mark Brown <broonie@kernel.org>
 To:     Olivier Moysan <olivier.moysan@st.com>
 Cc:     Mark Brown <broonie@kernel.org>, lgirdwood@gmail.com,
@@ -54,11 +54,11 @@ Cc:     Mark Brown <broonie@kernel.org>, lgirdwood@gmail.com,
         linux-kernel@vger.kernel.org, olivier.moysan@st.com,
         arnaud.pouliquen@st.com, benjamin.gaignard@st.com,
         alsa-devel@alsa-project.org
-Subject: Applied "ASoC: stm32: i2s: use default dai name" to the asoc tree
-In-Reply-To:  <1552317990-24219-4-git-send-email-olivier.moysan@st.com>
+Subject: Applied "ASoC: stm32: i2s: change trigger traces" to the asoc tree
+In-Reply-To:  <1552317990-24219-2-git-send-email-olivier.moysan@st.com>
 X-Patchwork-Hint: ignore
-Message-Id: <20190311172344.774651128896@debutante.sirena.org.uk>
-Date:   Mon, 11 Mar 2019 17:23:44 +0000 (GMT)
+Message-Id: <20190311172348.CB5321128896@debutante.sirena.org.uk>
+Date:   Mon, 11 Mar 2019 17:23:48 +0000 (GMT)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
@@ -66,7 +66,7 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 The patch
 
-   ASoC: stm32: i2s: use default dai name
+   ASoC: stm32: i2s: change trigger traces
 
 has been applied to the asoc tree at
 
@@ -91,60 +91,52 @@ to this mail.
 Thanks,
 Mark
 
-From fef050c88ce1cbec1ab9a0d981b5331a5ba40f15 Mon Sep 17 00:00:00 2001
+From 52e7306ca2db565edc1503a74477f3547bc9e408 Mon Sep 17 00:00:00 2001
 From: Olivier Moysan <olivier.moysan@st.com>
-Date: Mon, 11 Mar 2019 16:26:30 +0100
-Subject: [PATCH] ASoC: stm32: i2s: use default dai name
+Date: Mon, 11 Mar 2019 16:26:28 +0100
+Subject: [PATCH] ASoC: stm32: i2s: change trigger traces
 
-Use default DAI name based on dev_name function.
+Update traces to log capture/playback stream start/stop.
 
 Signed-off-by: Olivier Moysan <olivier.moysan@st.com>
 Signed-off-by: Mark Brown <broonie@kernel.org>
 ---
- sound/soc/stm/stm32_i2s.c | 7 -------
- 1 file changed, 7 deletions(-)
+ sound/soc/stm/stm32_i2s.c | 8 +++++---
+ 1 file changed, 5 insertions(+), 3 deletions(-)
 
 diff --git a/sound/soc/stm/stm32_i2s.c b/sound/soc/stm/stm32_i2s.c
-index 06bbbef74b3a..c18e068c1a0d 100644
+index 47c334de6b09..783b33497435 100644
 --- a/sound/soc/stm/stm32_i2s.c
 +++ b/sound/soc/stm/stm32_i2s.c
-@@ -179,7 +179,6 @@ enum i2s_datlen {
- 	I2S_I2SMOD_DATLEN_32,
- };
+@@ -593,7 +593,8 @@ static int stm32_i2s_trigger(struct snd_pcm_substream *substream, int cmd,
+ 	case SNDRV_PCM_TRIGGER_RESUME:
+ 	case SNDRV_PCM_TRIGGER_PAUSE_RELEASE:
+ 		/* Enable i2s */
+-		dev_dbg(cpu_dai->dev, "start I2S\n");
++		dev_dbg(cpu_dai->dev, "start I2S %s\n",
++			playback_flg ? "playback" : "capture");
  
--#define STM32_I2S_DAI_NAME_SIZE		20
- #define STM32_I2S_FIFO_SIZE		16
+ 		cfg1_mask = I2S_CFG1_RXDMAEN | I2S_CFG1_TXDMAEN;
+ 		regmap_update_bits(i2s->regmap, STM32_I2S_CFG1_REG,
+@@ -638,6 +639,9 @@ static int stm32_i2s_trigger(struct snd_pcm_substream *substream, int cmd,
+ 	case SNDRV_PCM_TRIGGER_STOP:
+ 	case SNDRV_PCM_TRIGGER_SUSPEND:
+ 	case SNDRV_PCM_TRIGGER_PAUSE_PUSH:
++		dev_dbg(cpu_dai->dev, "stop I2S %s\n",
++			playback_flg ? "playback" : "capture");
++
+ 		if (playback_flg)
+ 			regmap_update_bits(i2s->regmap, STM32_I2S_IER_REG,
+ 					   I2S_IER_UDRIE,
+@@ -654,8 +658,6 @@ static int stm32_i2s_trigger(struct snd_pcm_substream *substream, int cmd,
+ 			break;
+ 		}
  
- #define STM32_I2S_IS_MASTER(x)		((x)->ms_flg == I2S_MS_MASTER)
-@@ -202,7 +201,6 @@ enum i2s_datlen {
-  * @phys_addr: I2S registers physical base address
-  * @lock_fd: lock to manage race conditions in full duplex mode
-  * @irq_lock: prevent race condition with IRQ
-- * @dais_name: DAI name
-  * @mclk_rate: master clock frequency (Hz)
-  * @fmt: DAI protocol
-  * @refcount: keep count of opened streams on I2S
-@@ -224,7 +222,6 @@ struct stm32_i2s_data {
- 	dma_addr_t phys_addr;
- 	spinlock_t lock_fd; /* Manage race conditions for full duplex */
- 	spinlock_t irq_lock; /* used to prevent race condition with IRQ */
--	char dais_name[STM32_I2S_DAI_NAME_SIZE];
- 	unsigned int mclk_rate;
- 	unsigned int fmt;
- 	int refcount;
-@@ -771,12 +768,8 @@ static int stm32_i2s_dais_init(struct platform_device *pdev,
- 	if (!dai_ptr)
- 		return -ENOMEM;
- 
--	snprintf(i2s->dais_name, STM32_I2S_DAI_NAME_SIZE,
--		 "%s", dev_name(&pdev->dev));
+-		dev_dbg(cpu_dai->dev, "stop I2S\n");
 -
- 	dai_ptr->probe = stm32_i2s_dai_probe;
- 	dai_ptr->ops = &stm32_i2s_pcm_dai_ops;
--	dai_ptr->name = i2s->dais_name;
- 	dai_ptr->id = 1;
- 	stm32_i2s_dai_init(&dai_ptr->playback, "playback");
- 	stm32_i2s_dai_init(&dai_ptr->capture, "capture");
+ 		ret = regmap_update_bits(i2s->regmap, STM32_I2S_CR1_REG,
+ 					 I2S_CR1_SPE, 0);
+ 		if (ret < 0) {
 -- 
 2.20.1
 
