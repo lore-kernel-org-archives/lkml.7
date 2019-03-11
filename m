@@ -2,242 +2,128 @@ Return-Path: <SRS0=FxTY=RO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,UNPARSEABLE_RELAY,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 519BBC43381
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 Mar 2019 05:41:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B7E40C43381
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 Mar 2019 05:46:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 215C62084F
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 Mar 2019 05:41:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 714B2206DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 Mar 2019 05:46:45 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=umn.edu header.i=@umn.edu header.b="AJ8v781E"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726764AbfCKFli (ORCPT
+        id S1726496AbfCKFqo (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 11 Mar 2019 01:41:38 -0400
-Received: from mailgw01.mediatek.com ([210.61.82.183]:33688 "EHLO
-        mailgw01.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1726610AbfCKFlZ (ORCPT
+        Mon, 11 Mar 2019 01:46:44 -0400
+Received: from mta-p6.oit.umn.edu ([134.84.196.206]:41220 "EHLO
+        mta-p6.oit.umn.edu" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725808AbfCKFqn (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 11 Mar 2019 01:41:25 -0400
-X-UUID: f5542a9f09c54a52a44b31efa48f8db8-20190311
-X-UUID: f5542a9f09c54a52a44b31efa48f8db8-20190311
-Received: from mtkexhb01.mediatek.inc [(172.21.101.102)] by mailgw01.mediatek.com
-        (envelope-from <qii.wang@mediatek.com>)
-        (mhqrelay.mediatek.com ESMTP with TLS)
-        with ESMTP id 680816167; Mon, 11 Mar 2019 13:41:13 +0800
-Received: from mtkcas09.mediatek.inc (172.21.101.178) by
- mtkmbs03n1.mediatek.inc (172.21.101.181) with Microsoft SMTP Server (TLS) id
- 15.0.1395.4; Mon, 11 Mar 2019 13:41:11 +0800
-Received: from localhost.localdomain (10.17.3.153) by mtkcas09.mediatek.inc
- (172.21.101.73) with Microsoft SMTP Server id 15.0.1395.4 via Frontend
- Transport; Mon, 11 Mar 2019 13:41:11 +0800
-From:   Qii Wang <qii.wang@mediatek.com>
-To:     <wsa@the-dreams.de>
-CC:     <linux-i2c@vger.kernel.org>, <devicetree@vger.kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <linux-kernel@vger.kernel.org>,
-        <linux-mediatek@lists.infradead.org>,
-        <srv_heupstream@mediatek.com>, <leilk.liu@mediatek.com>,
-        <qii.wang@mediatek.com>, <xinping.qian@mediatek.com>,
-        <liguo.zhang@mediatek.com>, <robh@kernel.org>
-Subject: [PATCH v6 5/6] i2c: mediatek: Add i2c support for MediaTek MT8183
-Date:   Mon, 11 Mar 2019 13:40:39 +0800
-Message-ID: <1552282840-12778-6-git-send-email-qii.wang@mediatek.com>
-X-Mailer: git-send-email 1.7.9.5
-In-Reply-To: <1552282840-12778-1-git-send-email-qii.wang@mediatek.com>
-References: <1552282840-12778-1-git-send-email-qii.wang@mediatek.com>
-MIME-Version: 1.0
-Content-Type: text/plain
-X-MTK:  N
+        Mon, 11 Mar 2019 01:46:43 -0400
+Received: from localhost (unknown [127.0.0.1])
+        by mta-p6.oit.umn.edu (Postfix) with ESMTP id 23DE3A84
+        for <linux-kernel@vger.kernel.org>; Mon, 11 Mar 2019 05:46:42 +0000 (UTC)
+X-Virus-Scanned: amavisd-new at umn.edu
+Received: from mta-p6.oit.umn.edu ([127.0.0.1])
+        by localhost (mta-p6.oit.umn.edu [127.0.0.1]) (amavisd-new, port 10024)
+        with ESMTP id Gjy5vptP8sQX for <linux-kernel@vger.kernel.org>;
+        Mon, 11 Mar 2019 00:46:42 -0500 (CDT)
+Received: from mail-io1-f70.google.com (mail-io1-f70.google.com [209.85.166.70])
+        (using TLSv1.2 with cipher AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mta-p6.oit.umn.edu (Postfix) with ESMTPS id E5D8A977
+        for <linux-kernel@vger.kernel.org>; Mon, 11 Mar 2019 00:46:41 -0500 (CDT)
+Received: by mail-io1-f70.google.com with SMTP id z22so3372911iog.5
+        for <linux-kernel@vger.kernel.org>; Sun, 10 Mar 2019 22:46:41 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=umn.edu; s=google;
+        h=from:to:cc:subject:date:message-id;
+        bh=F2mjjiZfPiUEidWB1BypXaFyyuScwQzmmEeCWyaquRg=;
+        b=AJ8v781EluWCr1OeFJ21jYiN0Kcgrm26GWiuJzt595dSI8PidMpZbQjwFgyZ+HdOmd
+         6W5bR8C0KFlh57hLMVda03dYmvSn9DdQLagXoutwgWGrAAmoUgGf7xfKVgUxrXpT6KTz
+         ZGr2OgD81XVTPWliiZvrLX2l9SJ6iJqTdn9va/RNCWS9uDE/VC5F6dHf7M4aFE6PWhpN
+         ubRygFeDcWGynBXsRIImX5BW2tCsLnurQFtsXf1NLPH8NI8NgmgEVLnuXuyE6jIGbFZ0
+         3CRgLnkTDzPeBCDuNA51ySkOToRYNw7Q1BxCNhYfWstrM5SUHAbCuUbAIKaENA0cZECB
+         wJSg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=F2mjjiZfPiUEidWB1BypXaFyyuScwQzmmEeCWyaquRg=;
+        b=D13QKg/DhU7luAHpZOT+XAiqYHJKLLb9sFe0wRUZcWHIUwyazOniVsDWrfGOoivVrg
+         SkPYlN7AYUIABHSvUJq5B2eVCQS7QnDNi83oVqNchAi4tTyM3htoorrqZaWkkb16F5H9
+         GrSUWJq/tOqmH/7kRSmU6m3SDK7R+Rkq/2p+B933cg9youpgyvFWDmS6bM4OqY9tKr4h
+         DPr4D83qnEl9mtcUJa0Gk/KecQfwguz1Hs5PO5QbE9y3iF7uh0UxtQZw7rA9jes4lbyN
+         n1oQMo48RrJE70S3SB0Y1vqWLeSBIsWCRBtmANzKGEPL5Gn6yaLa0qQJ7UTlVKixSAFR
+         mBpw==
+X-Gm-Message-State: APjAAAWoKXMR/+pKF5vZ6nrUSZhZtDWAHvmzxWtrnbp+9ncnN8MQCsDI
+        GFGkiWjj2jvuPHh0S3b4wCBoRlt654l2z49SVJAfObtEt1rj1OkAbG2oEbLzwhENygOZc76zL3a
+        GKFdzUoBbQF0hAwyM8H9wfEPyn+Dq
+X-Received: by 2002:a24:1394:: with SMTP id 142mr3066886itz.54.1552283201523;
+        Sun, 10 Mar 2019 22:46:41 -0700 (PDT)
+X-Google-Smtp-Source: APXvYqybyx1ivjkIbqjCyQYzwS3lRzOKp/lPJ1ojI+ik8v1t81kPcPRrl/w/XvocTEs3iBJPa8Zurg==
+X-Received: by 2002:a24:1394:: with SMTP id 142mr3066874itz.54.1552283201264;
+        Sun, 10 Mar 2019 22:46:41 -0700 (PDT)
+Received: from bee.dtc.umn.edu (cs-bee-u.cs.umn.edu. [128.101.106.63])
+        by smtp.gmail.com with ESMTPSA id l5sm7519483itb.11.2019.03.10.22.46.40
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Sun, 10 Mar 2019 22:46:40 -0700 (PDT)
+From:   Kangjie Lu <kjlu@umn.edu>
+To:     kjlu@umn.edu
+Cc:     pakki001@umn.edu, Derek Chickles <dchickles@marvell.com>,
+        Satanand Burla <sburla@marvell.com>,
+        Felix Manlunas <fmanlunas@marvell.com>,
+        "David S. Miller" <davem@davemloft.net>, netdev@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH] net: liquidio: fix NULL pointer dereferences
+Date:   Mon, 11 Mar 2019 00:46:15 -0500
+Message-Id: <20190311054615.11760-1-kjlu@umn.edu>
+X-Mailer: git-send-email 2.17.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add i2c compatible for MT8183. Compare to MT2712 i2c controller,
-MT8183 has different register offsets. Ltiming_reg is added to
-adjust low width of SCL. Arb clock and dma_sync are needed.
+In case octeon_alloc_soft_command fails, the fix reports the
+error and returns to avoid NULL pointer dereferences.
 
-Signed-off-by: Qii Wang <qii.wang@mediatek.com>
+Signed-off-by: Kangjie Lu <kjlu@umn.edu>
 ---
- drivers/i2c/busses/i2c-mt65xx.c |   62 +++++++++++++++++++++++++++++++++++++--
- 1 file changed, 60 insertions(+), 2 deletions(-)
+ drivers/net/ethernet/cavium/liquidio/lio_vf_main.c | 12 ++++++++++++
+ 1 file changed, 12 insertions(+)
 
-diff --git a/drivers/i2c/busses/i2c-mt65xx.c b/drivers/i2c/busses/i2c-mt65xx.c
-index 6137ad7..745b0d0 100644
---- a/drivers/i2c/busses/i2c-mt65xx.c
-+++ b/drivers/i2c/busses/i2c-mt65xx.c
-@@ -133,6 +133,7 @@ enum I2C_REGS_OFFSET {
- 	OFFSET_DEBUGCTRL,
- 	OFFSET_TRANSFER_LEN_AUX,
- 	OFFSET_CLOCK_DIV,
-+	OFFSET_LTIMING,
- };
- 
- static const u16 mt_i2c_regs_v1[] = {
-@@ -162,6 +163,32 @@ enum I2C_REGS_OFFSET {
- 	[OFFSET_CLOCK_DIV] = 0x70,
- };
- 
-+static const u16 mt_i2c_regs_v2[] = {
-+	[OFFSET_DATA_PORT] = 0x0,
-+	[OFFSET_SLAVE_ADDR] = 0x4,
-+	[OFFSET_INTR_MASK] = 0x8,
-+	[OFFSET_INTR_STAT] = 0xc,
-+	[OFFSET_CONTROL] = 0x10,
-+	[OFFSET_TRANSFER_LEN] = 0x14,
-+	[OFFSET_TRANSAC_LEN] = 0x18,
-+	[OFFSET_DELAY_LEN] = 0x1c,
-+	[OFFSET_TIMING] = 0x20,
-+	[OFFSET_START] = 0x24,
-+	[OFFSET_EXT_CONF] = 0x28,
-+	[OFFSET_LTIMING] = 0x2c,
-+	[OFFSET_HS] = 0x30,
-+	[OFFSET_IO_CONFIG] = 0x34,
-+	[OFFSET_FIFO_ADDR_CLR] = 0x38,
-+	[OFFSET_TRANSFER_LEN_AUX] = 0x44,
-+	[OFFSET_CLOCK_DIV] = 0x48,
-+	[OFFSET_SOFTRESET] = 0x50,
-+	[OFFSET_DEBUGSTAT] = 0xe0,
-+	[OFFSET_DEBUGCTRL] = 0xe8,
-+	[OFFSET_FIFO_STAT] = 0xf4,
-+	[OFFSET_FIFO_THRESH] = 0xf8,
-+	[OFFSET_DCM_EN] = 0xf88,
-+};
+diff --git a/drivers/net/ethernet/cavium/liquidio/lio_vf_main.c b/drivers/net/ethernet/cavium/liquidio/lio_vf_main.c
+index 54b245797d2e..cc081cda847c 100644
+--- a/drivers/net/ethernet/cavium/liquidio/lio_vf_main.c
++++ b/drivers/net/ethernet/cavium/liquidio/lio_vf_main.c
+@@ -611,6 +611,12 @@ static void send_rx_ctrl_cmd(struct lio *lio, int start_stop)
+ 	sc = (struct octeon_soft_command *)
+ 		octeon_alloc_soft_command(oct, OCTNET_CMD_SIZE,
+ 					  16, 0);
++	if (!sc) {
++		netif_info(lio, rx_err, lio->netdev,
++			   "Failed to allocate octeon_soft_command\n");
++		return;
++	}
 +
- struct mtk_i2c_compatible {
- 	const struct i2c_adapter_quirks *quirks;
- 	const u16 *regs;
-@@ -172,6 +199,7 @@ struct mtk_i2c_compatible {
- 	unsigned char support_33bits: 1;
- 	unsigned char timing_adjust: 1;
- 	unsigned char dma_sync: 1;
-+	unsigned char ltiming_adjust: 1;
- };
  
- struct mtk_i2c {
-@@ -195,6 +223,7 @@ struct mtk_i2c {
- 	enum mtk_trans_op op;
- 	u16 timing_reg;
- 	u16 high_speed_reg;
-+	u16 ltiming_reg;
- 	unsigned char auto_restart;
- 	bool ignore_restart_irq;
- 	const struct mtk_i2c_compatible *dev_comp;
-@@ -222,6 +251,7 @@ struct mtk_i2c {
- 	.support_33bits = 1,
- 	.timing_adjust = 1,
- 	.dma_sync = 0,
-+	.ltiming_adjust = 0,
- };
+ 	ncmd = (union octnet_cmd *)sc->virtdptr;
  
- static const struct mtk_i2c_compatible mt6577_compat = {
-@@ -234,6 +264,7 @@ struct mtk_i2c {
- 	.support_33bits = 0,
- 	.timing_adjust = 0,
- 	.dma_sync = 0,
-+	.ltiming_adjust = 0,
- };
- 
- static const struct mtk_i2c_compatible mt6589_compat = {
-@@ -246,6 +277,7 @@ struct mtk_i2c {
- 	.support_33bits = 0,
- 	.timing_adjust = 0,
- 	.dma_sync = 0,
-+	.ltiming_adjust = 0,
- };
- 
- static const struct mtk_i2c_compatible mt7622_compat = {
-@@ -258,6 +290,7 @@ struct mtk_i2c {
- 	.support_33bits = 0,
- 	.timing_adjust = 0,
- 	.dma_sync = 0,
-+	.ltiming_adjust = 0,
- };
- 
- static const struct mtk_i2c_compatible mt8173_compat = {
-@@ -269,6 +302,19 @@ struct mtk_i2c {
- 	.support_33bits = 1,
- 	.timing_adjust = 0,
- 	.dma_sync = 0,
-+	.ltiming_adjust = 0,
-+};
+@@ -1960,6 +1966,12 @@ static int setup_nic_devices(struct octeon_device *octeon_dev)
+ 		sc = (struct octeon_soft_command *)
+ 			octeon_alloc_soft_command(octeon_dev, data_size,
+ 						  resp_size, 0);
++		if (!sc) {
++			dev_err(&octeon_dev->pci_dev->dev,
++				"Failed to allocate octeon_soft_command\n");
++			return -ENOMEM;
++		}
 +
-+static const struct mtk_i2c_compatible mt8183_compat = {
-+	.regs = mt_i2c_regs_v2,
-+	.pmic_i2c = 0,
-+	.dcm = 0,
-+	.auto_restart = 1,
-+	.aux_len_reg = 1,
-+	.support_33bits = 1,
-+	.timing_adjust = 1,
-+	.dma_sync = 1,
-+	.ltiming_adjust = 1,
- };
+ 		resp = (struct liquidio_if_cfg_resp *)sc->virtrptr;
+ 		vdata = (struct lio_version *)sc->virtdptr;
  
- static const struct of_device_id mtk_i2c_of_match[] = {
-@@ -277,6 +323,7 @@ struct mtk_i2c {
- 	{ .compatible = "mediatek,mt6589-i2c", .data = &mt6589_compat },
- 	{ .compatible = "mediatek,mt7622-i2c", .data = &mt7622_compat },
- 	{ .compatible = "mediatek,mt8173-i2c", .data = &mt8173_compat },
-+	{ .compatible = "mediatek,mt8183-i2c", .data = &mt8183_compat },
- 	{}
- };
- MODULE_DEVICE_TABLE(of, mtk_i2c_of_match);
-@@ -361,6 +408,8 @@ static void mtk_i2c_init_hw(struct mtk_i2c *i2c)
- 
- 	mtk_i2c_writew(i2c, i2c->timing_reg, OFFSET_TIMING);
- 	mtk_i2c_writew(i2c, i2c->high_speed_reg, OFFSET_HS);
-+	if (i2c->dev_comp->ltiming_adjust)
-+		mtk_i2c_writew(i2c, i2c->ltiming_reg, OFFSET_LTIMING);
- 
- 	/* If use i2c pin from PMIC mt6397 side, need set PATH_DIR first */
- 	if (i2c->have_pmic)
-@@ -460,6 +509,8 @@ static int mtk_i2c_set_speed(struct mtk_i2c *i2c, unsigned int parent_clk)
- 	unsigned int clk_src;
- 	unsigned int step_cnt;
- 	unsigned int sample_cnt;
-+	unsigned int l_step_cnt;
-+	unsigned int l_sample_cnt;
- 	unsigned int target_speed;
- 	int ret;
- 
-@@ -469,11 +520,11 @@ static int mtk_i2c_set_speed(struct mtk_i2c *i2c, unsigned int parent_clk)
- 	if (target_speed > MAX_FS_MODE_SPEED) {
- 		/* Set master code speed register */
- 		ret = mtk_i2c_calculate_speed(i2c, clk_src, MAX_FS_MODE_SPEED,
--					      &step_cnt, &sample_cnt);
-+					      &l_step_cnt, &l_sample_cnt);
- 		if (ret < 0)
- 			return ret;
- 
--		i2c->timing_reg = (sample_cnt << 8) | step_cnt;
-+		i2c->timing_reg = (l_sample_cnt << 8) | l_step_cnt;
- 
- 		/* Set the high speed mode register */
- 		ret = mtk_i2c_calculate_speed(i2c, clk_src, target_speed,
-@@ -483,6 +534,10 @@ static int mtk_i2c_set_speed(struct mtk_i2c *i2c, unsigned int parent_clk)
- 
- 		i2c->high_speed_reg = I2C_TIME_DEFAULT_VALUE |
- 			(sample_cnt << 12) | (step_cnt << 8);
-+
-+		if (i2c->dev_comp->ltiming_adjust)
-+			i2c->ltiming_reg = (l_sample_cnt << 6) | l_step_cnt |
-+					   (sample_cnt << 12) | (step_cnt << 9);
- 	} else {
- 		ret = mtk_i2c_calculate_speed(i2c, clk_src, target_speed,
- 					      &step_cnt, &sample_cnt);
-@@ -493,6 +548,9 @@ static int mtk_i2c_set_speed(struct mtk_i2c *i2c, unsigned int parent_clk)
- 
- 		/* Disable the high speed transaction */
- 		i2c->high_speed_reg = I2C_TIME_CLR_VALUE;
-+
-+		if (i2c->dev_comp->ltiming_adjust)
-+			i2c->ltiming_reg = (sample_cnt << 6) | step_cnt;
- 	}
- 
- 	return 0;
 -- 
-1.7.9.5
+2.17.1
 
