@@ -4,54 +4,48 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1CC28C43381
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 Mar 2019 19:58:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1AB60C43381
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 Mar 2019 19:58:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E51F02084F
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 Mar 2019 19:58:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D7B53214D8
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 Mar 2019 19:58:15 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1552334292;
-	bh=IYP+z8kciYaOnhBA5kVQRQt9GB/ssglnI/dSG0N6ObI=;
+	s=default; t=1552334296;
+	bh=X1oppJNfwUc2ScPfniRvMe+j+iX78dxmg214MRw/Id0=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=vm2exgvAi3cPUE9S5uCSYKkWiG4u8zJXfTzB2vWJVTEITKv4s2t7spFH04cLJgHCL
-	 EaZgyJPDTFxs1ch0GtMbdq5UzL4r01yAvv74cYpHtKT/EI+Huy+y348tBua/1OYNi2
-	 9hbDyJPcfA+R18nGwoUCus6KcB3AeA+abvF6irMs=
+	b=g0fJ2rAsaVQq4MambTDLOFpmkd3S2nptgtxEDTNleieh4togiNTvqO7sq1GtjR2ge
+	 DDMx5PWHmkvqC08sJGUqp9mMpR1RX34bbwlwN9Jqof/dSDkeplrb3hmU21zpnmJ4A1
+	 Tet56CpnaTtfRUs+jMkIuZvz+n3O2+PKCTE6jnsU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729311AbfCKT6J (ORCPT
+        id S1729326AbfCKT6O (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 11 Mar 2019 15:58:09 -0400
-Received: from mail.kernel.org ([198.145.29.99]:35520 "EHLO mail.kernel.org"
+        Mon, 11 Mar 2019 15:58:14 -0400
+Received: from mail.kernel.org ([198.145.29.99]:35568 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729294AbfCKT6H (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 11 Mar 2019 15:58:07 -0400
+        id S1729305AbfCKT6J (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 11 Mar 2019 15:58:09 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 6EAA82087C;
-        Mon, 11 Mar 2019 19:58:05 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 12DDE214AF;
+        Mon, 11 Mar 2019 19:58:07 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1552334286;
-        bh=IYP+z8kciYaOnhBA5kVQRQt9GB/ssglnI/dSG0N6ObI=;
+        s=default; t=1552334288;
+        bh=X1oppJNfwUc2ScPfniRvMe+j+iX78dxmg214MRw/Id0=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=U5Qd5/opXY9b7BWY704i5lTxxfHEnPLNGxB0LGOvVdiQFXiGw0+myUDSlwvOlC+Ol
-         CDflWQirGo1FLOgKBKQbkVq0lgMs9cSDQTzX76KBC9EbiHQMZFz5QtrGKtQyHKXzKx
-         DyqJOy91XFc4h+Qw8u79hpmD39I86TIvm2cxQ8UQ=
+        b=aOuV1BigK0+Qfoy5Y/4JQ6oY36HVW4sXSwSS2qPeQ+gfinTfPJPdWMXF+T6orPmC1
+         grg/vwCe3ZW5Qssu5u11m+cdFCQ7jJ8IlWUgZWhpHrOxgawvKc2vgreSiIEQVQr6wf
+         Y1TZ6JbmndRWKXyyZ7MJxngt+ydq3FPq/HgbtLUo=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Qian Cai <cai@lca.pw>,
-        Pasha Tatashin <Pavel.Tatashin@microsoft.com>,
-        Mel Gorman <mgorman@techsingularity.net>,
-        Yang Shi <yang.shi@linaro.org>,
-        Joonsoo Kim <iamjoonsoo.kim@lge.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Sasha Levin <sashal@kernel.org>, linux-mm@kvack.org
-Subject: [PATCH AUTOSEL 4.19 35/44] Revert "mm: use early_pfn_to_nid in page_ext_init"
-Date:   Mon, 11 Mar 2019 15:56:51 -0400
-Message-Id: <20190311195700.138462-35-sashal@kernel.org>
+Cc:     Dan Carpenter <dan.carpenter@oracle.com>,
+        "David S . Miller" <davem@davemloft.net>,
+        Sasha Levin <sashal@kernel.org>, netdev@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.19 37/44] net: dsa: bcm_sf2: potential array overflow in bcm_sf2_sw_suspend()
+Date:   Mon, 11 Mar 2019 15:56:53 -0400
+Message-Id: <20190311195700.138462-37-sashal@kernel.org>
 X-Mailer: git-send-email 2.19.1
 In-Reply-To: <20190311195700.138462-1-sashal@kernel.org>
 References: <20190311195700.138462-1-sashal@kernel.org>
@@ -63,115 +57,39 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Qian Cai <cai@lca.pw>
+From: Dan Carpenter <dan.carpenter@oracle.com>
 
-[ Upstream commit 2f1ee0913ce58efe7f18fbd518bd54c598559b89 ]
+[ Upstream commit 8d6ea932856c7087ce8c3d0e79494b7d5386f962 ]
 
-This reverts commit fe53ca54270a ("mm: use early_pfn_to_nid in
-page_ext_init").
+The value of ->num_ports comes from bcm_sf2_sw_probe() and it is less
+than or equal to DSA_MAX_PORTS.  The ds->ports[] array is used inside
+the dsa_is_user_port() and dsa_is_cpu_port() functions.  The ds->ports[]
+array is allocated in dsa_switch_alloc() and it has ds->num_ports
+elements so this leads to a static checker warning about a potential out
+of bounds read.
 
-When booting a system with "page_owner=on",
-
-start_kernel
-  page_ext_init
-    invoke_init_callbacks
-      init_section_page_ext
-        init_page_owner
-          init_early_allocated_pages
-            init_zones_in_node
-              init_pages_in_zone
-                lookup_page_ext
-                  page_to_nid
-
-The issue here is that page_to_nid() will not work since some page flags
-have no node information until later in page_alloc_init_late() due to
-DEFERRED_STRUCT_PAGE_INIT.  Hence, it could trigger an out-of-bounds
-access with an invalid nid.
-
-  UBSAN: Undefined behaviour in ./include/linux/mm.h:1104:50
-  index 7 is out of range for type 'zone [5]'
-
-Also, kernel will panic since flags were poisoned earlier with,
-
-CONFIG_DEBUG_VM_PGFLAGS=y
-CONFIG_NODE_NOT_IN_PAGE_FLAGS=n
-
-start_kernel
-  setup_arch
-    pagetable_init
-      paging_init
-        sparse_init
-          sparse_init_nid
-            memblock_alloc_try_nid_raw
-
-It did not handle it well in init_pages_in_zone() which ends up calling
-page_to_nid().
-
-  page:ffffea0004200000 is uninitialized and poisoned
-  raw: ffffffffffffffff ffffffffffffffff ffffffffffffffff ffffffffffffffff
-  raw: ffffffffffffffff ffffffffffffffff ffffffffffffffff ffffffffffffffff
-  page dumped because: VM_BUG_ON_PAGE(PagePoisoned(p))
-  page_owner info is not active (free page?)
-  kernel BUG at include/linux/mm.h:990!
-  RIP: 0010:init_page_owner+0x486/0x520
-
-This means that assumptions behind commit fe53ca54270a ("mm: use
-early_pfn_to_nid in page_ext_init") are incomplete.  Therefore, revert
-the commit for now.  A proper way to move the page_owner initialization
-to sooner is to hook into memmap initialization.
-
-Link: http://lkml.kernel.org/r/20190115202812.75820-1-cai@lca.pw
-Signed-off-by: Qian Cai <cai@lca.pw>
-Acked-by: Michal Hocko <mhocko@kernel.org>
-Cc: Pasha Tatashin <Pavel.Tatashin@microsoft.com>
-Cc: Mel Gorman <mgorman@techsingularity.net>
-Cc: Yang Shi <yang.shi@linaro.org>
-Cc: Joonsoo Kim <iamjoonsoo.kim@lge.com>
-Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
-Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
+Fixes: 8cfa94984c9c ("net: dsa: bcm_sf2: add suspend/resume callbacks")
+Signed-off-by: Dan Carpenter <dan.carpenter@oracle.com>
+Reviewed-by: Vivien Didelot <vivien.didelot@gmail.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- init/main.c   | 3 ++-
- mm/page_ext.c | 4 +---
- 2 files changed, 3 insertions(+), 4 deletions(-)
+ drivers/net/dsa/bcm_sf2.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/init/main.c b/init/main.c
-index 18f8f0140fa0..e083fac08aed 100644
---- a/init/main.c
-+++ b/init/main.c
-@@ -689,7 +689,6 @@ asmlinkage __visible void __init start_kernel(void)
- 		initrd_start = 0;
+diff --git a/drivers/net/dsa/bcm_sf2.c b/drivers/net/dsa/bcm_sf2.c
+index fc8b48adf38b..bb26a193361e 100644
+--- a/drivers/net/dsa/bcm_sf2.c
++++ b/drivers/net/dsa/bcm_sf2.c
+@@ -692,7 +692,7 @@ static int bcm_sf2_sw_suspend(struct dsa_switch *ds)
+ 	 * port, the other ones have already been disabled during
+ 	 * bcm_sf2_sw_setup
+ 	 */
+-	for (port = 0; port < DSA_MAX_PORTS; port++) {
++	for (port = 0; port < ds->num_ports; port++) {
+ 		if (dsa_is_user_port(ds, port) || dsa_is_cpu_port(ds, port))
+ 			bcm_sf2_port_disable(ds, port, NULL);
  	}
- #endif
--	page_ext_init();
- 	kmemleak_init();
- 	debug_objects_mem_init();
- 	setup_per_cpu_pageset();
-@@ -1140,6 +1139,8 @@ static noinline void __init kernel_init_freeable(void)
- 	sched_init_smp();
- 
- 	page_alloc_init_late();
-+	/* Initialize page ext after all struct pages are initialized. */
-+	page_ext_init();
- 
- 	do_basic_setup();
- 
-diff --git a/mm/page_ext.c b/mm/page_ext.c
-index a9826da84ccb..4961f13b6ec1 100644
---- a/mm/page_ext.c
-+++ b/mm/page_ext.c
-@@ -398,10 +398,8 @@ void __init page_ext_init(void)
- 			 * We know some arch can have a nodes layout such as
- 			 * -------------pfn-------------->
- 			 * N0 | N1 | N2 | N0 | N1 | N2|....
--			 *
--			 * Take into account DEFERRED_STRUCT_PAGE_INIT.
- 			 */
--			if (early_pfn_to_nid(pfn) != nid)
-+			if (pfn_to_nid(pfn) != nid)
- 				continue;
- 			if (init_section_page_ext(pfn, nid))
- 				goto oom;
 -- 
 2.19.1
 
