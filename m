@@ -2,147 +2,193 @@ Return-Path: <SRS0=FxTY=RO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIMWL_WL_MED,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_PASS autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 555B6C43381
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 Mar 2019 20:50:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3E0D1C10F06
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 Mar 2019 20:50:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 14A212064A
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 Mar 2019 20:50:23 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=fb.com header.i=@fb.com header.b="CrvbxuOt";
-	dkim=pass (1024-bit key) header.d=fb.onmicrosoft.com header.i=@fb.onmicrosoft.com header.b="kNZfoRny"
+	by mail.kernel.org (Postfix) with ESMTP id 042162064A
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 Mar 2019 20:50:37 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1552337437;
+	bh=WmnWnvhH8xU87ulSyPbAeUXZlyUM3QlsDz8cNEfmt0s=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=X2IUwhrpWUb8/IqftR4xAts7+drB3wkrE+FE1yFbCilAZ8Mw8taY9zHPeFufqktdM
+	 /n9eV0b0PjyaAfsvoRBLdumcxeVn7JUOBmjWXjw0nNya+TdqGpNbn/uJGiQBPqBxf4
+	 GVzr6n3RXV1UvMght+21QcaUnB4EO96EsY/+E+uM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728247AbfCKUuV (ORCPT
+        id S1728284AbfCKUug (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 11 Mar 2019 16:50:21 -0400
-Received: from mx0a-00082601.pphosted.com ([67.231.145.42]:55576 "EHLO
-        mx0a-00082601.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727304AbfCKUuU (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 11 Mar 2019 16:50:20 -0400
-Received: from pps.filterd (m0044008.ppops.net [127.0.0.1])
-        by mx0a-00082601.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x2BKnbWv027553;
-        Mon, 11 Mar 2019 13:50:04 -0700
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=fb.com; h=from : to : cc : subject
- : date : message-id : references : in-reply-to : content-type : content-id
- : content-transfer-encoding : mime-version; s=facebook;
- bh=qNOCRcXNifgCe+zDOWlAZ2PFj0XbUZP5zYv+FdQ7m1I=;
- b=CrvbxuOtjKJeCOTQaOjtOjOWBPvqfqZ3iiDKlS8Yg6TjejA1RTUvmMu5qUN4DGeRDnV9
- V6KL8wE1PzmwarJ3eRfVgNJbGq0p12scYCVWrFAHxFAs7cMX+Kzg1GujBhLDBcDYKHZY
- 1WYnhQsvpi34uRBUWliMRx8oq/ToLE3VXF8= 
-Received: from maileast.thefacebook.com ([199.201.65.23])
-        by mx0a-00082601.pphosted.com with ESMTP id 2r5xupg1ng-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-SHA384 bits=256 verify=NOT);
-        Mon, 11 Mar 2019 13:50:04 -0700
-Received: from frc-hub03.TheFacebook.com (2620:10d:c021:18::173) by
- frc-hub05.TheFacebook.com (2620:10d:c021:18::175) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA384) id
- 15.1.1713.5; Mon, 11 Mar 2019 13:49:26 -0700
-Received: from NAM01-SN1-obe.outbound.protection.outlook.com (192.168.183.28)
- by o365-in.thefacebook.com (192.168.177.73) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA384) id 15.1.1713.5
- via Frontend Transport; Mon, 11 Mar 2019 13:49:26 -0700
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=fb.onmicrosoft.com;
- s=selector1-fb-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=qNOCRcXNifgCe+zDOWlAZ2PFj0XbUZP5zYv+FdQ7m1I=;
- b=kNZfoRnyF0aeko7feUlByu6Zt3wU/vjsorxt8t+49w/qGe/vKEO/NGIrCdsPo+oVDql3OO+B+3DgV2v/hHkSMtv2aou4WYa7K3sYDmMwri8jWmSDsFRRTs/dASuLJjugG1+NIQxZwzusPKZspv5w6VeVio4G3lGv2CiHPc+Dk/M=
-Received: from BYAPR15MB2631.namprd15.prod.outlook.com (20.179.156.24) by
- BYAPR15MB3238.namprd15.prod.outlook.com (20.179.57.29) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.1686.17; Mon, 11 Mar 2019 20:49:24 +0000
-Received: from BYAPR15MB2631.namprd15.prod.outlook.com
- ([fe80::790e:7294:b086:9ded]) by BYAPR15MB2631.namprd15.prod.outlook.com
- ([fe80::790e:7294:b086:9ded%2]) with mapi id 15.20.1686.021; Mon, 11 Mar 2019
- 20:49:24 +0000
-From:   Roman Gushchin <guro@fb.com>
-To:     "Tobin C. Harding" <tobin@kernel.org>
-CC:     Andrew Morton <akpm@linux-foundation.org>,
-        Christoph Lameter <cl@linux.com>,
-        Pekka Enberg <penberg@kernel.org>,
-        David Rientjes <rientjes@google.com>,
-        Joonsoo Kim <iamjoonsoo.kim@lge.com>,
-        Matthew Wilcox <willy@infradead.org>,
-        "linux-mm@kvack.org" <linux-mm@kvack.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH 0/4] mm: Use slab_list list_head instead of lru
-Thread-Topic: [PATCH 0/4] mm: Use slab_list list_head instead of lru
-Thread-Index: AQHU16bt6o0Uju0YQ0mKx1ZofK0W1KYG6H2A
-Date:   Mon, 11 Mar 2019 20:49:23 +0000
-Message-ID: <20190311204919.GA20002@tower.DHCP.thefacebook.com>
-References: <20190311010744.5862-1-tobin@kernel.org>
-In-Reply-To: <20190311010744.5862-1-tobin@kernel.org>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-clientproxiedby: MW2PR16CA0010.namprd16.prod.outlook.com (2603:10b6:907::23)
- To BYAPR15MB2631.namprd15.prod.outlook.com (2603:10b6:a03:152::24)
-x-ms-exchange-messagesentrepresentingtype: 1
-x-originating-ip: [2620:10d:c090:200::1:b487]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: 1513610c-37d5-48a2-42b0-08d6a6630b07
-x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600127)(711020)(4605104)(2017052603328)(7153060)(7193020);SRVR:BYAPR15MB3238;
-x-ms-traffictypediagnostic: BYAPR15MB3238:
-x-microsoft-exchange-diagnostics: 1;BYAPR15MB3238;20:w3xRwUjIi+NTnsrogAPt1myxQYxymgia9zadw3C+I2fZSq8tZc2qo5SyNFKZmZkfzwmJY5adfHowZCMtSXgHG29ixcXmaXVM1GdN6UvblxJP66WJagBL6WD0pRFdofpSN0hw/7ppKYyG+MCGQTTsRpLY9QWM4vZw1M8CdoBEKY0=
-x-microsoft-antispam-prvs: <BYAPR15MB323838FA26119A5B1F2722FDBE480@BYAPR15MB3238.namprd15.prod.outlook.com>
-x-forefront-prvs: 09730BD177
-x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(366004)(136003)(39860400002)(376002)(346002)(396003)(199004)(189003)(33656002)(6116002)(9686003)(86362001)(4326008)(7736002)(25786009)(305945005)(68736007)(2906002)(6512007)(476003)(71200400001)(71190400001)(486006)(446003)(53936002)(97736004)(6246003)(14454004)(11346002)(478600001)(256004)(316002)(81166006)(46003)(1076003)(6916009)(8676002)(54906003)(81156014)(5660300002)(105586002)(106356001)(6436002)(8936002)(6486002)(99286004)(76176011)(52116002)(229853002)(6506007)(386003)(102836004)(186003);DIR:OUT;SFP:1102;SCL:1;SRVR:BYAPR15MB3238;H:BYAPR15MB2631.namprd15.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
-received-spf: None (protection.outlook.com: fb.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam-message-info: 0mlUCiGzU42LsFyAb0lZMkFztYdHCnQvroCw4B7saadbY7/94FEsNTsnJSTJ1yoMQq3pI1g3mG6BIuzR2E9AQoF2KReMqBb4fmsH33xytcHJY9bpHalU1MNyvlV7dPW2ylVWHjuxQwLiKi2OrA39wlt46x4Mj7Mpx/6hHOdn+B751lVxeMBDQldNjmJl2zoyo5tC0rAggRE+ea3PDUvheHTxXCItEXgMdKvccRJoc76g0eLAvZb6ozC0cWa0Tdlec0qh6D/QCwXn8aUjUI+0CS995W47VYUlAXrHsCNErSbhnZc+sUWAw3EtZy9MtpPDuXdggzCFvqyUdCE3U5QuuTSmKMDMLxMWxAailOPTIpbDqRR4lM6kOj/gKNXIr7OTlXvGXszcM0+Zpt3wVmC6x6e9/QNAnlxMPfGS1uxOFVw=
-Content-Type: text/plain; charset="us-ascii"
-Content-ID: <0067C8991FF0D646978183C4E83070A5@namprd15.prod.outlook.com>
-Content-Transfer-Encoding: quoted-printable
+        Mon, 11 Mar 2019 16:50:36 -0400
+Received: from mail.kernel.org ([198.145.29.99]:37842 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728067AbfCKUuf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 11 Mar 2019 16:50:35 -0400
+Received: from mail-wm1-f46.google.com (mail-wm1-f46.google.com [209.85.128.46])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 13EF221741;
+        Mon, 11 Mar 2019 20:50:34 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1552337434;
+        bh=WmnWnvhH8xU87ulSyPbAeUXZlyUM3QlsDz8cNEfmt0s=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=f2b7cfq4PQ89SN1Xoi9Ha237YKmHKyacm71MLg50GMSyBhl9qOSATAWSh5ZyuS7GG
+         jY/vEUQWyoFxwjRhDcL48lcZkHhFEZvPUklyhycHtsEq6HF8chQhaBGtmXBdnPj5tr
+         +tUsZzm/aqFKsuTLjt723hDkW+gpYzA0cIkeOKEw=
+Received: by mail-wm1-f46.google.com with SMTP id a188so481860wmf.3;
+        Mon, 11 Mar 2019 13:50:34 -0700 (PDT)
+X-Gm-Message-State: APjAAAUpL9/LdspRdlpWjhnKCn/Oxc3p55vS6ACI73f3/k6735FG6zJp
+        Gn6u6J8m1b79AASm9F/T97STRJ+hWQfkqH5P0nc=
+X-Google-Smtp-Source: APXvYqzDai9Dyx9OsaBigd7uYRVJCW6GOdcbvE+paemXRGcNrJ+R1kr5bCHNJ9SRIWPwk12NyZA9cJsY5qaDadIwr6U=
+X-Received: by 2002:a1c:234d:: with SMTP id j74mr75208wmj.130.1552337432486;
+ Mon, 11 Mar 2019 13:50:32 -0700 (PDT)
 MIME-Version: 1.0
-X-MS-Exchange-CrossTenant-Network-Message-Id: 1513610c-37d5-48a2-42b0-08d6a6630b07
-X-MS-Exchange-CrossTenant-originalarrivaltime: 11 Mar 2019 20:49:23.9654
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 8ae927fe-1255-47a7-a2af-5f3a069daaa2
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: BYAPR15MB3238
-X-OriginatorOrg: fb.com
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-03-11_16:,,
- signatures=0
-X-Proofpoint-Spam-Reason: safe
-X-FB-Internal: Safe
+References: <1552275991-34648-1-git-send-email-hsin-hsiung.wang@mediatek.com> <1552275991-34648-9-git-send-email-hsin-hsiung.wang@mediatek.com>
+In-Reply-To: <1552275991-34648-9-git-send-email-hsin-hsiung.wang@mediatek.com>
+From:   Sean Wang <sean.wang@kernel.org>
+Date:   Mon, 11 Mar 2019 13:50:21 -0700
+X-Gmail-Original-Message-ID: <CAGp9Lzq4D56PbivbHkQd41-TCoGACTiBqLz+Jyiqiog=YMvEbQ@mail.gmail.com>
+Message-ID: <CAGp9Lzq4D56PbivbHkQd41-TCoGACTiBqLz+Jyiqiog=YMvEbQ@mail.gmail.com>
+Subject: Re: [PATCH v2 8/9] rtc: mt6397: fix alarm register overwrite
+To:     Hsin-Hsiung Wang <hsin-hsiung.wang@mediatek.com>
+Cc:     Lee Jones <lee.jones@linaro.org>, Rob Herring <robh+dt@kernel.org>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        Mark Brown <broonie@kernel.org>,
+        Eddie Huang <eddie.huang@mediatek.com>,
+        linux-rtc@vger.kernel.org, devicetree@vger.kernel.org,
+        Alexandre Belloni <alexandre.belloni@bootlin.com>,
+        srv_heupstream <srv_heupstream@mediatek.com>,
+        Alessandro Zummo <a.zummo@towertech.it>,
+        Marc Zyngier <marc.zyngier@arm.com>,
+        Ran Bi <ran.bi@mediatek.com>,
+        Sean Wang <sean.wang@mediatek.com>,
+        linux-kernel@vger.kernel.org, Liam Girdwood <lgirdwood@gmail.com>,
+        linux-mediatek@lists.infradead.org,
+        Mark Rutland <mark.rutland@arm.com>,
+        linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Mar 11, 2019 at 12:07:40PM +1100, Tobin C. Harding wrote:
-> Currently the slab allocators (ab)use the struct page 'lru' list_head.
-> We have a list head for slab allocators to use, 'slab_list'.
->=20
-> Clean up all three allocators by using the 'slab_list' list_head instead
-> of overloading the 'lru' list_head.
->=20
-> Initial patch makes no code changes, adds comments to #endif statements.
->=20
-> Final 3 patches do changes as a patch per allocator, tested by building
-> and booting (in Qemu) after configuring kernel to use appropriate
-> allocator.  Also build and boot with debug options enabled (for slab
-> and slub).
+Hi,
 
-Hi Tobin!
+On Sun, Mar 10, 2019 at 8:49 PM Hsin-Hsiung Wang
+<hsin-hsiung.wang@mediatek.com> wrote:
+>
+> From: Ran Bi <ran.bi@mediatek.com>
+>
+> Alarm registers high byte was reserved for other functions.
+> This add mask in alarm registers operation functions.
+> This also fix error condition in interrupt handler.
+>
+> Fixes: fc2979118f3f ("rtc: mediatek: Add MT6397 RTC driver")
+>
 
-The patchset looks good to me, however I'd add some clarifications
-why switching from lru to slab_list is safe.
+add a  Cc: stable@vger.kernel.org  here to apply to all stable kernels
+for the critical fixup patch.
 
-My understanding is that the slab_list fields isn't currently in use,
-but it's not that obvious that putting slab_list and next/pages/pobjects
-fields into a union is safe (for the slub case).
+> Signed-off-by: Ran Bi <ran.bi@mediatek.com>
+> ---
+>  drivers/rtc/rtc-mt6397.c | 47 +++++++++++++++++++++++++++++++++--------------
+>  1 file changed, 33 insertions(+), 14 deletions(-)
+>
+> diff --git a/drivers/rtc/rtc-mt6397.c b/drivers/rtc/rtc-mt6397.c
+> index e9a25ec..f85f1fc 100644
+> --- a/drivers/rtc/rtc-mt6397.c
+> +++ b/drivers/rtc/rtc-mt6397.c
+> @@ -55,6 +55,14 @@
+>
+>  #define RTC_AL_SEC             0x0018
+>
+> +#define RTC_AL_SEC_MASK                0x003f
+> +#define RTC_AL_MIN_MASK                0x003f
+> +#define RTC_AL_HOU_MASK                0x001f
+> +#define RTC_AL_DOM_MASK                0x001f
+> +#define RTC_AL_DOW_MASK                0x0007
+> +#define RTC_AL_MTH_MASK                0x000f
+> +#define RTC_AL_YEA_MASK                0x007f
+> +
+>  #define RTC_PDN2               0x002e
+>  #define RTC_PDN2_PWRON_ALARM   BIT(4)
+>
+> @@ -111,7 +119,7 @@ static irqreturn_t mtk_rtc_irq_handler_thread(int irq, void *data)
+>                 irqen = irqsta & ~RTC_IRQ_EN_AL;
+>                 mutex_lock(&rtc->lock);
+>                 if (regmap_write(rtc->regmap, rtc->addr_base + RTC_IRQ_EN,
+> -                                irqen) < 0)
+> +                                irqen) == 0)
+>                         mtk_rtc_write_trigger(rtc);
+>                 mutex_unlock(&rtc->lock);
+>
+> @@ -233,12 +241,12 @@ static int mtk_rtc_read_alarm(struct device *dev, struct rtc_wkalrm *alm)
+>         alm->pending = !!(pdn2 & RTC_PDN2_PWRON_ALARM);
+>         mutex_unlock(&rtc->lock);
+>
+> -       tm->tm_sec = data[RTC_OFFSET_SEC];
+> -       tm->tm_min = data[RTC_OFFSET_MIN];
+> -       tm->tm_hour = data[RTC_OFFSET_HOUR];
+> -       tm->tm_mday = data[RTC_OFFSET_DOM];
+> -       tm->tm_mon = data[RTC_OFFSET_MTH];
+> -       tm->tm_year = data[RTC_OFFSET_YEAR];
+> +       tm->tm_sec = data[RTC_OFFSET_SEC] & RTC_AL_SEC_MASK;
+> +       tm->tm_min = data[RTC_OFFSET_MIN] & RTC_AL_MIN_MASK;
+> +       tm->tm_hour = data[RTC_OFFSET_HOUR] & RTC_AL_HOU_MASK;
+> +       tm->tm_mday = data[RTC_OFFSET_DOM] & RTC_AL_DOM_MASK;
+> +       tm->tm_mon = data[RTC_OFFSET_MTH] & RTC_AL_MTH_MASK;
+> +       tm->tm_year = data[RTC_OFFSET_YEAR] & RTC_AL_YEA_MASK;
+>
+>         tm->tm_year += RTC_MIN_YEAR_OFFSET;
+>         tm->tm_mon--;
+> @@ -259,14 +267,25 @@ static int mtk_rtc_set_alarm(struct device *dev, struct rtc_wkalrm *alm)
+>         tm->tm_year -= RTC_MIN_YEAR_OFFSET;
+>         tm->tm_mon++;
+>
+> -       data[RTC_OFFSET_SEC] = tm->tm_sec;
+> -       data[RTC_OFFSET_MIN] = tm->tm_min;
+> -       data[RTC_OFFSET_HOUR] = tm->tm_hour;
+> -       data[RTC_OFFSET_DOM] = tm->tm_mday;
+> -       data[RTC_OFFSET_MTH] = tm->tm_mon;
+> -       data[RTC_OFFSET_YEAR] = tm->tm_year;
+> -
+>         mutex_lock(&rtc->lock);
+> +       ret = regmap_bulk_read(rtc->regmap, rtc->addr_base + RTC_AL_SEC,
+> +                              data, RTC_OFFSET_COUNT);
+> +       if (ret < 0)
+> +               goto exit;
+> +
 
-Please, add a clarification/comment.
+Why did we need an additional regmap_bulk_read here? I would suppose
+data[RTC_OFFSET_*] & ~(RTC_AL_*_MASK) is always equal to 0.
 
-For patches 1, 3 and 4:
-Reviewed-by: Roman Gushchin <guro@fb.com>
+It might be another fixup since change is not being mentioned in the
+git message.
 
-Thanks!
+> +       data[RTC_OFFSET_SEC] = ((data[RTC_OFFSET_SEC] & ~(RTC_AL_SEC_MASK)) |
+> +                               (tm->tm_sec & RTC_AL_SEC_MASK));
+> +       data[RTC_OFFSET_MIN] = ((data[RTC_OFFSET_MIN] & ~(RTC_AL_MIN_MASK)) |
+> +                               (tm->tm_min & RTC_AL_MIN_MASK));
+> +       data[RTC_OFFSET_HOUR] = ((data[RTC_OFFSET_HOUR] & ~(RTC_AL_HOU_MASK)) |
+> +                               (tm->tm_hour & RTC_AL_HOU_MASK));
+> +       data[RTC_OFFSET_DOM] = ((data[RTC_OFFSET_DOM] & ~(RTC_AL_DOM_MASK)) |
+> +                               (tm->tm_mday & RTC_AL_DOM_MASK));
+> +       data[RTC_OFFSET_MTH] = ((data[RTC_OFFSET_MTH] & ~(RTC_AL_MTH_MASK)) |
+> +                               (tm->tm_mon & RTC_AL_MTH_MASK));
+> +       data[RTC_OFFSET_YEAR] = ((data[RTC_OFFSET_YEAR] & ~(RTC_AL_YEA_MASK)) |
+> +                               (tm->tm_year & RTC_AL_YEA_MASK));
+> +
+>         if (alm->enabled) {
+>                 ret = regmap_bulk_write(rtc->regmap,
+>                                         rtc->addr_base + RTC_AL_SEC,
+> --
+> 1.9.1
+>
+>
+> _______________________________________________
+> Linux-mediatek mailing list
+> Linux-mediatek@lists.infradead.org
+> http://lists.infradead.org/mailman/listinfo/linux-mediatek
