@@ -4,59 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8366CC43381
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 Mar 2019 20:05:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D3C91C43381
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 Mar 2019 20:05:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 515D52064A
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 Mar 2019 20:05:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9C4982064A
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 Mar 2019 20:05:25 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1552334716;
-	bh=gtJUkkur6R8EXD7+ArukugiIWxAJLHzWBZ7GZRsW/Lc=;
+	s=default; t=1552334725;
+	bh=/iERYPKb8IgX8b6MUHvfM5zqGZG/K2jaz4lnEbsWOS8=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=fE6g2tKrR4db5w9fG/xGQOLJm7qasXbS0lbqZPpUG1UKArUSZjDz1pMBPz3GmujkJ
-	 hGSbIykzj50BlI/hkFFksVJCQn+zDpIgl8guN0uFxxKwaugg0MpnugLCB3HepoVBWR
-	 jwRd3RE1HpL4mJ1G4okifdeXKGTmQmPGMUquHeCQ=
+	b=NzbeUJGO7fxI6OihKQTzRsoG7QrGYJd236TlmEJ7goIADYibOwF87Zw6YhLRTEfvf
+	 YfsdY49Cyi0pXCohOloD4sM3p5qltm4FEf35uPbchPt3wdiJ+EkjnFtJmHqC3v/194
+	 XCrf5lgZqf4LejWrSnM6UNAS2uIJ2gOrb2lYheos=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728903AbfCKUFP (ORCPT
+        id S1729488AbfCKUFY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 11 Mar 2019 16:05:15 -0400
-Received: from mail.kernel.org ([198.145.29.99]:35632 "EHLO mail.kernel.org"
+        Mon, 11 Mar 2019 16:05:24 -0400
+Received: from mail.kernel.org ([198.145.29.99]:35548 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729312AbfCKT6M (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 11 Mar 2019 15:58:12 -0400
+        id S1729300AbfCKT6I (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 11 Mar 2019 15:58:08 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 43DB22087C;
-        Mon, 11 Mar 2019 19:58:10 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id E8411217D4;
+        Mon, 11 Mar 2019 19:58:06 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1552334292;
-        bh=gtJUkkur6R8EXD7+ArukugiIWxAJLHzWBZ7GZRsW/Lc=;
+        s=default; t=1552334287;
+        bh=/iERYPKb8IgX8b6MUHvfM5zqGZG/K2jaz4lnEbsWOS8=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=UGG2uGLmQUZNnq/xCpkgJ5eNk9Ebt1GgJBah9aiE02PkQ0AdrZ6uCsXWcHeN6NIMA
-         knSI8803EZP1MSBKWGUC1Tsx7IaKNhjUr+EhCHimLuHT7okEsbV54wb3orHgHR9yl5
-         mlNdaiiTViEd/JBHvEjRkyFZM9+rPeUldIj4+cmE=
+        b=lTWDQgkqZOwZFhMZ/9X8XAP9NvqE54KUhOTLnRqEfhfkUug9+t8At7Ccdtw1ZCnm8
+         eEJsGAXQqsQNOzHM3yAI5oiG4Z5eocEi10ee6jVX3nQJYOE91c95XWth62yJ09bIBG
+         1rdjQqMjCURx+96CYNT87t+q/LyiuoZDs+Fpnmtw=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Rajneesh Bhardwaj <rajneesh.bhardwaj@linux.intel.com>,
-        Borislav Petkov <bp@suse.de>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Dave Hansen <dave.hansen@linux.intel.com>,
-        "David E. Box" <david.e.box@intel.com>, dvhart@infradead.org,
-        "H. Peter Anvin" <hpa@zytor.com>, Ingo Molnar <mingo@redhat.com>,
-        Kan Liang <kan.liang@linux.intel.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        platform-driver-x86@vger.kernel.org,
-        Qiuxu Zhuo <qiuxu.zhuo@intel.com>,
-        Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>,
-        Thomas Gleixner <tglx@linutronix.de>, x86-ml <x86@kernel.org>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH AUTOSEL 4.19 38/44] x86/CPU: Add Icelake model number
-Date:   Mon, 11 Mar 2019 15:56:54 -0400
-Message-Id: <20190311195700.138462-38-sashal@kernel.org>
+Cc:     Bill Kuzeja <William.Kuzeja@stratus.com>,
+        Bill Kuzeja <william.kuzeja@stratus.com>,
+        "Martin K . Petersen" <martin.petersen@oracle.com>,
+        Sasha Levin <sashal@kernel.org>, linux-scsi@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.19 36/44] scsi: qla2xxx: Fix panic from use after free in qla2x00_async_tm_cmd
+Date:   Mon, 11 Mar 2019 15:56:52 -0400
+Message-Id: <20190311195700.138462-36-sashal@kernel.org>
 X-Mailer: git-send-email 2.19.1
 In-Reply-To: <20190311195700.138462-1-sashal@kernel.org>
 References: <20190311195700.138462-1-sashal@kernel.org>
@@ -68,47 +58,43 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Rajneesh Bhardwaj <rajneesh.bhardwaj@linux.intel.com>
+From: Bill Kuzeja <William.Kuzeja@stratus.com>
 
-[ Upstream commit 8cd8f0ce0d6aafe661cb3d6781c8b82bc696c04d ]
+[ Upstream commit 388a49959ee4e4e99f160241d9599efa62cd4299 ]
 
-Add the CPUID model number of Icelake (ICL) mobile processors to the
-Intel family list. Icelake U/Y series uses model number 0x7E.
+In qla2x00_async_tm_cmd, we reference off sp after it has been freed.  This
+caused a panic on a system running a slub debug kernel. Since fcport is
+passed in anyways, just use that instead.
 
-Signed-off-by: Rajneesh Bhardwaj <rajneesh.bhardwaj@linux.intel.com>
-Signed-off-by: Borislav Petkov <bp@suse.de>
-Cc: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Cc: Dave Hansen <dave.hansen@linux.intel.com>
-Cc: "David E. Box" <david.e.box@intel.com>
-Cc: dvhart@infradead.org
-Cc: "H. Peter Anvin" <hpa@zytor.com>
-Cc: Ingo Molnar <mingo@redhat.com>
-Cc: Kan Liang <kan.liang@linux.intel.com>
-Cc: Peter Zijlstra <peterz@infradead.org>
-Cc: platform-driver-x86@vger.kernel.org
-Cc: Qiuxu Zhuo <qiuxu.zhuo@intel.com>
-Cc: Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>
-Cc: Thomas Gleixner <tglx@linutronix.de>
-Cc: x86-ml <x86@kernel.org>
-Link: https://lkml.kernel.org/r/20190214115712.19642-2-rajneesh.bhardwaj@linux.intel.com
+Signed-off-by: Bill Kuzeja <william.kuzeja@stratus.com>
+Acked-by: Giridhar Malavali <gmalavali@marvell.com>
+Acked-by: Himanshu Madhani <hmadhani@marvell.com>
+Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/x86/include/asm/intel-family.h | 2 ++
- 1 file changed, 2 insertions(+)
+ drivers/scsi/qla2xxx/qla_init.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/arch/x86/include/asm/intel-family.h b/arch/x86/include/asm/intel-family.h
-index 7ed08a7c3398..0ad25cc895ae 100644
---- a/arch/x86/include/asm/intel-family.h
-+++ b/arch/x86/include/asm/intel-family.h
-@@ -55,6 +55,8 @@
+diff --git a/drivers/scsi/qla2xxx/qla_init.c b/drivers/scsi/qla2xxx/qla_init.c
+index 5352c9bbcaf7..2271a2cd29d2 100644
+--- a/drivers/scsi/qla2xxx/qla_init.c
++++ b/drivers/scsi/qla2xxx/qla_init.c
+@@ -1719,13 +1719,13 @@ qla2x00_async_tm_cmd(fc_port_t *fcport, uint32_t flags, uint32_t lun,
  
- #define INTEL_FAM6_CANNONLAKE_MOBILE	0x66
+ 		/* Issue Marker IOCB */
+ 		qla2x00_marker(vha, vha->hw->req_q_map[0],
+-		    vha->hw->rsp_q_map[0], sp->fcport->loop_id, lun,
++		    vha->hw->rsp_q_map[0], fcport->loop_id, lun,
+ 		    flags == TCF_LUN_RESET ? MK_SYNC_ID_LUN : MK_SYNC_ID);
+ 	}
  
-+#define INTEL_FAM6_ICELAKE_MOBILE	0x7E
-+
- /* "Small Core" Processors (Atom) */
- 
- #define INTEL_FAM6_ATOM_PINEVIEW	0x1C
+ done_free_sp:
+ 	sp->free(sp);
+-	sp->fcport->flags &= ~FCF_ASYNC_SENT;
++	fcport->flags &= ~FCF_ASYNC_SENT;
+ done:
+ 	return rval;
+ }
 -- 
 2.19.1
 
