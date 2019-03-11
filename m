@@ -6,51 +6,49 @@ X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
 	SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 64BF8C43381
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 Mar 2019 20:03:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 77A4DC43381
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 Mar 2019 20:03:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 29C262064A
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 Mar 2019 20:03:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3DE4F2064A
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 Mar 2019 20:03:39 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1552334615;
-	bh=GKK/7wK91Yf3sfK6ORnQnJ3PSdPZH9e1OlDo+OAUrBA=;
+	s=default; t=1552334619;
+	bh=cn+83GNjq6AbdEuFOaFITA5hUm4yTWgIqMi8OE0wapY=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=o0Ls56yZTDkqAvUxe4zKYsMZcwQqt0ixKKJ8Er3PRH6uXdUE1JkNxRsalxnoUkpel
-	 uUzK+vTqNvCJCvkuQhLhCNUOrdViTp6npga9e9bvQDj1VY/bXCIdhyn+rKeMMekuAQ
-	 T8ZWMzIpwqyWQgM6vnhdO+GUGf3KXC5aghmP9i/8=
+	b=JMvoU1J5MAiC5eNPkn1UeL/Uo7HHsx8hz8sepnC253KQrSwL2rCTC+F4dxrD3+zlH
+	 y9eM02p/qjsZR+RjNkzwlZed0LYCuAGLWehvZro9aT6pr4dEUqeq9svHyTB1JNd0r7
+	 mrg27pMc9tc4kE+5pC3l77Pe/KiABEEfivbJ+As8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728926AbfCKT6r (ORCPT
+        id S1729637AbfCKUDh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 11 Mar 2019 15:58:47 -0400
-Received: from mail.kernel.org ([198.145.29.99]:36086 "EHLO mail.kernel.org"
+        Mon, 11 Mar 2019 16:03:37 -0400
+Received: from mail.kernel.org ([198.145.29.99]:36228 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729409AbfCKT6g (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 11 Mar 2019 15:58:36 -0400
+        id S1729439AbfCKT6q (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 11 Mar 2019 15:58:46 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id CD7B2214AE;
-        Mon, 11 Mar 2019 19:58:34 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id AB4812084F;
+        Mon, 11 Mar 2019 19:58:45 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1552334315;
-        bh=GKK/7wK91Yf3sfK6ORnQnJ3PSdPZH9e1OlDo+OAUrBA=;
+        s=default; t=1552334326;
+        bh=cn+83GNjq6AbdEuFOaFITA5hUm4yTWgIqMi8OE0wapY=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=OOd60UdNLa0OP4cE23CVoU18hVqKsJ2lwQ8ieGepa+eAteWem2FAdBIhzOULIJK7E
-         T1Ua9cpFhLvVSseN7eRjujS7OViRTdaYPiWQ3wCzDKscR6H2K++tFXO1t1P56960dA
-         I3laZf+kO6bUFrCR5ISPXNaq9VJ++B31m9ref914=
+        b=qsoIxNchWQL5It3uROESzKaasWbsB8+kLkOE/qIArFD6RLBncya+K9IUx1cf0d4lK
+         tNls+r8KjCkLK69PcXT/Y+5zg/B74smg/+ZCmJxjC+CM+7etaasMItYP31cDNLYceI
+         HJ2ynV+H4yupotLuLI4W8lkCPyXibpFYSVoIBXYk=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     =?UTF-8?q?Pawe=C5=82=20Chmiel?= <pawel.mikolaj.chmiel@gmail.com>,
-        Dmitry Torokhov <dmitry.torokhov@gmail.com>,
+Cc:     Dmitry Torokhov <dmitry.torokhov@gmail.com>,
         Sasha Levin <sashal@kernel.org>, linux-input@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.14 07/27] Input: pwm-vibra - stop regulator after disabling pwm, not before
-Date:   Mon, 11 Mar 2019 15:58:04 -0400
-Message-Id: <20190311195824.139043-7-sashal@kernel.org>
+Subject: [PATCH AUTOSEL 4.14 14/27] Input: ps2-gpio - flush TX work when closing port
+Date:   Mon, 11 Mar 2019 15:58:11 -0400
+Message-Id: <20190311195824.139043-14-sashal@kernel.org>
 X-Mailer: git-send-email 2.19.1
 In-Reply-To: <20190311195824.139043-1-sashal@kernel.org>
 References: <20190311195824.139043-1-sashal@kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
@@ -58,46 +56,34 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Paweł Chmiel <pawel.mikolaj.chmiel@gmail.com>
+From: Dmitry Torokhov <dmitry.torokhov@gmail.com>
 
-[ Upstream commit 94803aef3533676194c772383472636c453e3147 ]
+[ Upstream commit 33a841ce5cef4ca6c18ad333248b6d273f54c839 ]
 
-This patch fixes order of disable calls in pwm_vibrator_stop.
-Currently when starting device, we first enable vcc regulator and then
-setup and enable pwm. When stopping, we should do this in oposite order,
-so first disable pwm and then disable regulator.
-Previously order was the same as in start.
+To ensure that TX work is not running after serio port has been torn down,
+let's flush it when closing the port.
 
-Signed-off-by: Paweł Chmiel <pawel.mikolaj.chmiel@gmail.com>
+Reported-by: Sven Van Asbroeck <thesven73@gmail.com>
+Acked-by: Danilo Krummrich <danilokrummrich@dk-develop.de>
+Reviewed-by: Sven Van Asbroeck <TheSven73@gmail.com>
 Signed-off-by: Dmitry Torokhov <dmitry.torokhov@gmail.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/input/misc/pwm-vibra.c | 8 ++++----
- 1 file changed, 4 insertions(+), 4 deletions(-)
+ drivers/input/serio/ps2-gpio.c | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/drivers/input/misc/pwm-vibra.c b/drivers/input/misc/pwm-vibra.c
-index 9df87431d7d4..dbb6d9e1b947 100644
---- a/drivers/input/misc/pwm-vibra.c
-+++ b/drivers/input/misc/pwm-vibra.c
-@@ -80,14 +80,14 @@ static int pwm_vibrator_start(struct pwm_vibrator *vibrator)
- 
- static void pwm_vibrator_stop(struct pwm_vibrator *vibrator)
+diff --git a/drivers/input/serio/ps2-gpio.c b/drivers/input/serio/ps2-gpio.c
+index b50e3817f3c4..4a64ab30589c 100644
+--- a/drivers/input/serio/ps2-gpio.c
++++ b/drivers/input/serio/ps2-gpio.c
+@@ -76,6 +76,7 @@ static void ps2_gpio_close(struct serio *serio)
  {
-+	if (vibrator->pwm_dir)
-+		pwm_disable(vibrator->pwm_dir);
-+	pwm_disable(vibrator->pwm);
-+
- 	if (vibrator->vcc_on) {
- 		regulator_disable(vibrator->vcc);
- 		vibrator->vcc_on = false;
- 	}
--
--	if (vibrator->pwm_dir)
--		pwm_disable(vibrator->pwm_dir);
--	pwm_disable(vibrator->pwm);
+ 	struct ps2_gpio_data *drvdata = serio->port_data;
+ 
++	flush_delayed_work(&drvdata->tx_work);
+ 	disable_irq(drvdata->irq);
  }
  
- static void pwm_vibrator_play_work(struct work_struct *work)
 -- 
 2.19.1
 
