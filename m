@@ -6,30 +6,31 @@ X-Spam-Status: No, score=-4.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3CBE4C43381
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 Mar 2019 11:55:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B32DAC43381
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 Mar 2019 11:59:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 136A0206BA
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 Mar 2019 11:55:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 88215206BA
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 Mar 2019 11:59:12 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727143AbfCKLzq (ORCPT
+        id S1727080AbfCKL7L (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 11 Mar 2019 07:55:46 -0400
-Received: from cloudserver094114.home.pl ([79.96.170.134]:56817 "EHLO
+        Mon, 11 Mar 2019 07:59:11 -0400
+Received: from cloudserver094114.home.pl ([79.96.170.134]:55368 "EHLO
         cloudserver094114.home.pl" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726978AbfCKLzq (ORCPT
+        with ESMTP id S1726688AbfCKL7K (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 11 Mar 2019 07:55:46 -0400
+        Mon, 11 Mar 2019 07:59:10 -0400
 Received: from 79.184.254.189.ipv4.supernova.orange.pl (79.184.254.189) (HELO aspire.rjw.lan)
  by serwer1319399.home.pl (79.96.170.134) with SMTP (IdeaSmtpServer 0.83.213)
- id 3699321361d7e55d; Mon, 11 Mar 2019 12:55:43 +0100
+ id cb9b810278c7f12d; Mon, 11 Mar 2019 12:59:08 +0100
 From:   "Rafael J. Wysocki" <rjw@rjwysocki.net>
 To:     Linux PM <linux-pm@vger.kernel.org>
-Cc:     Viresh Kumar <viresh.kumar@linaro.org>,
-        LKML <linux-kernel@vger.kernel.org>
-Subject: [PATCH] PM / wakeup: Drop wakeup_source_drop()
-Date:   Mon, 11 Mar 2019 12:53:59 +0100
-Message-ID: <2820276.PxaWYKrF8K@aspire.rjw.lan>
+Cc:     LKML <linux-kernel@vger.kernel.org>,
+        Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>,
+        Doug Smythies <dsmythies@telus.net>
+Subject: [PATCH] cpufreq: intel_pstate: Fix up iowait_boost computation
+Date:   Mon, 11 Mar 2019 12:57:25 +0100
+Message-ID: <2396291.FVDonix7jd@aspire.rjw.lan>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 7Bit
 Content-Type: text/plain; charset="us-ascii"
@@ -40,91 +41,33 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
 
-After commit d856f39ac1cc ("PM / wakeup: Rework wakeup source timer
-cancellation") wakeup_source_drop() is a trivial wrapper around
-__pm_relax() and it has no users except for wakeup_source_destroy()
-and wakeup_source_trash() which also has no users, so drop it along
-with the latter and make wakeup_source_destroy() call __pm_relax()
-directly.
+After commit b8bd1581aa61 ("cpufreq: intel_pstate: Rework iowait
+boosting to be less aggressive") the handling of the case when
+the SCHED_CPUFREQ_IOWAIT flag is set again after a few iterations of
+intel_pstate_update_util() is a bit inconsistent, because the
+new value of cpu->iowait_boost may be lower than ONE_EIGHTH_FP
+if it was set before, but has not dropped down to zero just yet.
 
+Fix that up by ensuring that the new value of cpu->iowait_boost
+will always be at least ONE_EIGHTH_FP then.
+
+Fixes: b8bd1581aa61 ("cpufreq: intel_pstate: Rework iowait boosting to be less aggressive")
 Signed-off-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
 ---
+ drivers/cpufreq/intel_pstate.c |    2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-Commit d856f39ac1cc is in the bleeding-edge branch of the linux-pm.git tree.
-
----
- drivers/base/power/wakeup.c |   18 +-----------------
- include/linux/pm_wakeup.h   |    9 ---------
- 2 files changed, 1 insertion(+), 26 deletions(-)
-
-Index: linux-pm/include/linux/pm_wakeup.h
+Index: linux-pm/drivers/cpufreq/intel_pstate.c
 ===================================================================
---- linux-pm.orig/include/linux/pm_wakeup.h
-+++ linux-pm/include/linux/pm_wakeup.h
-@@ -96,7 +96,6 @@ static inline void device_set_wakeup_pat
- /* drivers/base/power/wakeup.c */
- extern void wakeup_source_prepare(struct wakeup_source *ws, const char *name);
- extern struct wakeup_source *wakeup_source_create(const char *name);
--extern void wakeup_source_drop(struct wakeup_source *ws);
- extern void wakeup_source_destroy(struct wakeup_source *ws);
- extern void wakeup_source_add(struct wakeup_source *ws);
- extern void wakeup_source_remove(struct wakeup_source *ws);
-@@ -134,8 +133,6 @@ static inline struct wakeup_source *wake
- 	return NULL;
- }
- 
--static inline void wakeup_source_drop(struct wakeup_source *ws) {}
--
- static inline void wakeup_source_destroy(struct wakeup_source *ws) {}
- 
- static inline void wakeup_source_add(struct wakeup_source *ws) {}
-@@ -204,12 +201,6 @@ static inline void wakeup_source_init(st
- 	wakeup_source_add(ws);
- }
- 
--static inline void wakeup_source_trash(struct wakeup_source *ws)
--{
--	wakeup_source_remove(ws);
--	wakeup_source_drop(ws);
--}
--
- static inline void __pm_wakeup_event(struct wakeup_source *ws, unsigned int msec)
- {
- 	return pm_wakeup_ws_event(ws, msec, false);
-Index: linux-pm/drivers/base/power/wakeup.c
-===================================================================
---- linux-pm.orig/drivers/base/power/wakeup.c
-+++ linux-pm/drivers/base/power/wakeup.c
-@@ -106,22 +106,6 @@ struct wakeup_source *wakeup_source_crea
- }
- EXPORT_SYMBOL_GPL(wakeup_source_create);
- 
--/**
-- * wakeup_source_drop - Prepare a struct wakeup_source object for destruction.
-- * @ws: Wakeup source to prepare for destruction.
-- *
-- * Callers must ensure that __pm_stay_awake() or __pm_wakeup_event() will never
-- * be run in parallel with this function for the same wakeup source object.
-- */
--void wakeup_source_drop(struct wakeup_source *ws)
--{
--	if (!ws)
--		return;
--
--	__pm_relax(ws);
--}
--EXPORT_SYMBOL_GPL(wakeup_source_drop);
--
- /*
-  * Record wakeup_source statistics being deleted into a dummy wakeup_source.
-  */
-@@ -161,7 +145,7 @@ void wakeup_source_destroy(struct wakeup
- 	if (!ws)
- 		return;
- 
--	wakeup_source_drop(ws);
-+	__pm_relax(ws);
- 	wakeup_source_record(ws);
- 	kfree_const(ws->name);
- 	kfree(ws);
+--- linux-pm.orig/drivers/cpufreq/intel_pstate.c
++++ linux-pm/drivers/cpufreq/intel_pstate.c
+@@ -1806,7 +1806,7 @@ static void intel_pstate_update_util(str
+ 		/* Start over if the CPU may have been idle. */
+ 		if (delta_ns > TICK_NSEC) {
+ 			cpu->iowait_boost = ONE_EIGHTH_FP;
+-		} else if (cpu->iowait_boost) {
++		} else if (cpu->iowait_boost >= ONE_EIGHTH_FP) {
+ 			cpu->iowait_boost <<= 1;
+ 			if (cpu->iowait_boost > int_tofp(1))
+ 				cpu->iowait_boost = int_tofp(1);
 
