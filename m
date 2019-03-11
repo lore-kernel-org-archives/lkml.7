@@ -6,356 +6,581 @@ X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E4FD7C43381
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 Mar 2019 11:20:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 00287C43381
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 Mar 2019 11:21:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 94DE52075C
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 Mar 2019 11:20:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C19512075C
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 Mar 2019 11:21:01 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727302AbfCKLUD (ORCPT
+        id S1727341AbfCKLVA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 11 Mar 2019 07:20:03 -0400
-Received: from mailproxy05.manitu.net ([217.11.48.69]:55390 "EHLO
-        mailproxy05.manitu.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726605AbfCKLUC (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 11 Mar 2019 07:20:02 -0400
-Received: from [10.163.244.21] (x2f7f415.dyn.telefonica.de [2.247.244.21])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        (Authenticated sender: wg@grandegger.com)
-        by mailproxy05.manitu.net (Postfix) with ESMTPSA id DC2411B60074;
-        Mon, 11 Mar 2019 12:20:14 +0100 (CET)
-From:   Wolfgang Grandegger <wg@grandegger.com>
-Subject: Re: [PATCH v7 1/4] can: m_can: Create a m_can platform framework
-To:     Dan Murphy <dmurphy@ti.com>, mkl@pengutronix.de,
-        davem@davemloft.net
-Cc:     linux-can@vger.kernel.org, netdev@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-References: <20190305155220.14037-1-dmurphy@ti.com>
- <5065d6ba-f195-a695-77b1-b837cac1a199@grandegger.com>
- <bbc9db2f-0702-4f24-db64-a41dc0607d2d@ti.com>
- <bf2613ae-67f6-661d-0faa-786308c249a0@grandegger.com>
- <cea76d80-d85c-2963-2745-4509450e2ea9@grandegger.com>
- <6016c8aa-01b6-38d5-0e1f-3a999aae6a13@ti.com>
- <1f6f77c6-dcf2-6212-5d4e-1eb699e603f1@grandegger.com>
- <1e9acd4e-97ad-1d9c-44b6-1b2d1bbe8c0e@ti.com>
- <2026f4ff-31de-3040-0872-5e9d01cc5aa5@grandegger.com>
- <a2538a05-a03f-06f8-99e3-c7c72287613c@ti.com>
- <e8782172-5156-6704-8ddb-b7d4d670e3c9@grandegger.com>
- <56edf2e9-1229-5b8d-f477-13efab207cd8@ti.com>
-Openpgp: preference=signencrypt
-Autocrypt: addr=wg@grandegger.com; prefer-encrypt=mutual; keydata=
- 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
- 8QEfHnPzgykCs2DOOQ==
-Message-ID: <afd9eece-49a0-1ee5-5ffc-ff9b92f4f80c@grandegger.com>
-Date:   Mon, 11 Mar 2019 12:19:58 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.2.1
+        Mon, 11 Mar 2019 07:21:00 -0400
+Received: from szxga07-in.huawei.com ([45.249.212.35]:55986 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726605AbfCKLVA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 11 Mar 2019 07:21:00 -0400
+Received: from DGGEMS409-HUB.china.huawei.com (unknown [172.30.72.60])
+        by Forcepoint Email with ESMTP id 3CB268F25783643E8322;
+        Mon, 11 Mar 2019 19:20:57 +0800 (CST)
+Received: from localhost (10.202.226.61) by DGGEMS409-HUB.china.huawei.com
+ (10.3.19.209) with Microsoft SMTP Server id 14.3.408.0; Mon, 11 Mar 2019
+ 19:20:51 +0800
+Date:   Mon, 11 Mar 2019 11:20:41 +0000
+From:   Jonathan Cameron <jonathan.cameron@huawei.com>
+To:     Keith Busch <keith.busch@intel.com>
+CC:     <linux-kernel@vger.kernel.org>, <linux-acpi@vger.kernel.org>,
+        <linux-mm@kvack.org>, <linux-api@vger.kernel.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Rafael Wysocki <rafael@kernel.org>,
+        "Dave Hansen" <dave.hansen@intel.com>,
+        Dan Williams <dan.j.williams@intel.com>
+Subject: Re: [PATCHv7 07/10] acpi/hmat: Register processor domain to its
+ memory
+Message-ID: <20190311112041.000015ba@huawei.com>
+In-Reply-To: <20190227225038.20438-8-keith.busch@intel.com>
+References: <20190227225038.20438-1-keith.busch@intel.com>
+        <20190227225038.20438-8-keith.busch@intel.com>
+Organization: Huawei
+X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; i686-w64-mingw32)
 MIME-Version: 1.0
-In-Reply-To: <56edf2e9-1229-5b8d-f477-13efab207cd8@ti.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-GB
+Content-Type: text/plain; charset="US-ASCII"
 Content-Transfer-Encoding: 7bit
+X-Originating-IP: [10.202.226.61]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hello Dan,
+On Wed, 27 Feb 2019 15:50:35 -0700
+Keith Busch <keith.busch@intel.com> wrote:
 
-Am 08.03.19 um 21:36 schrieb Dan Murphy:
-> On 3/8/19 12:06 PM, Wolfgang Grandegger wrote:
->>
->>
->> Am 08.03.19 um 18:52 schrieb Dan Murphy:
->>> On 3/8/19 11:40 AM, Wolfgang Grandegger wrote:
->>>> Hello Dan,
->>>>
->>>> Am 08.03.19 um 18:25 schrieb Dan Murphy:
->>>>> On 3/8/19 11:08 AM, Wolfgang Grandegger wrote:
->>>>>> Hello,
->>>>>>
->>>>>> Am 08.03.19 um 16:48 schrieb Dan Murphy:
->>>>>>> Wolfgang
->>>>>>>
->>>>>>> On 3/8/19 8:41 AM, Wolfgang Grandegger wrote:
->>>>>>>> Hello Dan,
->>>>>>>>
->>>>>>>> thinking more about it...
->>>>>>>>
->>>>>>>> Am 08.03.19 um 14:29 schrieb Wolfgang Grandegger:
->>>>>>>>> Hello Dan,
->>>>>>>>>
->>>>>>>>> Am 08.03.19 um 13:44 schrieb Dan Murphy:
->>>>>>>>>> Wolfgang
->>>>>>>>>>
->>>>>>>>>> On 3/8/19 4:10 AM, Wolfgang Grandegger wrote:
->>>>>>>>>>> Hallo Dan,
->>>>>>>>>>>
->>>>>>>>>>> Am 05.03.19 um 16:52 schrieb Dan Murphy:
->>>>>>>>>>>> Create a m_can platform framework that peripherial
->>>>>>>>>>>> devices can register to and use common code and register sets.
->>>>>>>>>>>> The peripherial devices may provide read/write and configuration
->>>>>>>>>>>> support of the IP.
->>>>>>>>>>>>
->>>>>>>>>>>> Signed-off-by: Dan Murphy <dmurphy@ti.com>
->>>>>>>>>>>> ---
->>>>>>>>>>>>
->>>>>>>>>>>>
->>>>>>>>>>>> v7 - Fixed remaining new checkpatch issues, removed CSR setting, fixed tx hard
->>>>>>>>>>>> start function to return tx_busy, and renamed device callbacks - https://lore.kernel.org/patchwork/patch/1047220/
->>>>>>>>>>>>
->>>>>>>>>>>> v6 - Squashed platform patch to this patch for bissectablity, fixed coding style
->>>>>>>>>>>> issues, updated Kconfig help, placed mcan reg offsets back into c file, renamed
->>>>>>>>>>>> priv->skb to priv->tx_skb and cleared perp interrupts at ISR start -
->>>>>>>>>>>> Patch 1 comments - https://lore.kernel.org/patchwork/patch/1042446/
->>>>>>>>>>>> Patch 2 comments - https://lore.kernel.org/patchwork/patch/1042442/
->>>>>>>>>>>>
->>>>>>>>>>>>  drivers/net/can/m_can/Kconfig          |  13 +-
->>>>>>>>>>>>  drivers/net/can/m_can/Makefile         |   1 +
->>>>>>>>>>>>  drivers/net/can/m_can/m_can.c          | 700 +++++++++++++------------
->>>>>>>>>>>>  drivers/net/can/m_can/m_can.h          | 110 ++++
->>>>>>>>>>>>  drivers/net/can/m_can/m_can_platform.c | 202 +++++++
->>>>>>>>>>>>  5 files changed, 682 insertions(+), 344 deletions(-)
->>>>>>>>>>>>  create mode 100644 drivers/net/can/m_can/m_can.h
->>>>>>>>>>>>  create mode 100644 drivers/net/can/m_can/m_can_platform.c
->>>>>>>>>>>>
->>>>>>>>>>>> diff --git a/drivers/net/can/m_can/Kconfig b/drivers/net/can/m_can/Kconfig
->>>>>>>>>>>> index 04f20dd39007..f7119fd72df4 100644
->>>>>>>>>>>> --- a/drivers/net/can/m_can/Kconfig
->>>>>>>>>>>> +++ b/drivers/net/can/m_can/Kconfig
->>>>>>>>>>>> @@ -1,5 +1,14 @@
->>>>>>>>>>>>  config CAN_M_CAN
->>>>>>>>>>>> +	tristate "Bosch M_CAN support"
->>>>>>>>>>>> +	---help---
->>>>>>>>>>>> +	  Say Y here if you want support for Bosch M_CAN controller framework.
->>>>>>>>>>>> +	  This is common support for devices that embed the Bosch M_CAN IP.
->>>>>>>>>>>> +
->>>>>>>>>>>> +config CAN_M_CAN_PLATFORM
->>>>>>>>>>>> +	tristate "Bosch M_CAN support for io-mapped devices"
->>>>>>>>>>>>  	depends on HAS_IOMEM
->>>>>>>>>>>> -	tristate "Bosch M_CAN devices"
->>>>>>>>>>>> +	depends on CAN_M_CAN
->>>>>>>>>>>>  	---help---
->>>>>>>>>>>> -	  Say Y here if you want to support for Bosch M_CAN controller.
->>>>>>>>>>>> +	  Say Y here if you want support for IO Mapped Bosch M_CAN controller.
->>>>>>>>>>>> +	  This support is for devices that have the Bosch M_CAN controller
->>>>>>>>>>>> +	  IP embedded into the device and the IP is IO Mapped to the processor.
->>>>>>>>>>>> diff --git a/drivers/net/can/m_can/Makefile b/drivers/net/can/m_can/Makefile
->>>>>>>>>>>> index 8bbd7f24f5be..057bbcdb3c74 100644
->>>>>>>>>>>> --- a/drivers/net/can/m_can/Makefile
->>>>>>>>>>>> +++ b/drivers/net/can/m_can/Makefile
->>>>>>>>>>>> @@ -3,3 +3,4 @@
->>>>>>>>>>>>  #
->>>>>>>>>>>>  
->>>>>>>>>>>>  obj-$(CONFIG_CAN_M_CAN) += m_can.o
->>>>>>>>>>>> +obj-$(CONFIG_CAN_M_CAN_PLATFORM) += m_can_platform.o
->>>>>>>>>>>> diff --git a/drivers/net/can/m_can/m_can.c b/drivers/net/can/m_can/m_can.c
->>>>>>>>>>>> index 9b449400376b..a60278d94126 100644
->>>>>>>>>>>> --- a/drivers/net/can/m_can/m_can.c
->>>>>>>>>>>> +++ b/drivers/net/can/m_can/m_can.c
->>>>>>>>>>>
->>>>>>>>>>> ... snip...
->>>>>>>>>>>
->>>>>>>>>>>> +static netdev_tx_t m_can_start_xmit(struct sk_buff *skb,
->>>>>>>>>>>> +				    struct net_device *dev)
->>>>>>>>>>>> +{
->>>>>>>>>>>> +	struct m_can_priv *priv = netdev_priv(dev);
->>>>>>>>>>>> +
->>>>>>>>>>>> +	if (can_dropped_invalid_skb(dev, skb))
->>>>>>>>>>>> +		return NETDEV_TX_OK;
->>>>>>>>>>>> +
->>>>>>>>>>>> +	if (priv->is_peripherial) {
->>>>>>>>>>>> +		if (priv->tx_skb) {
->>>>>>>>>>>> +			netdev_err(dev, "hard_xmit called while tx busy\n");
->>>>>>>>>>>> +			return NETDEV_TX_BUSY;
->>>>>>>>>>>> +		}
->>>>>>>>>>>
->>>>>>>>>>> The problem with that approach is, that the upper layer will try to
->>>>>>>>>>> resubmit the current "skb" but not the previous "tx_skb". And the
->>>>>>>>>>> previous "tx_skb" has not been freed yet. I would just drop and free the
->>>>>>>>>>> skb and return NETDEV_TX_OK in m_can_tx_handler() for peripheral devices
->>>>>>>>>>> (like can_dropped_invalid_skb() does).
->>>>>>>>>>>
->>>>>>>>>>
->>>>>>>>>> OK.
->>>>>>>>>>
->>>>>>>>>> So would this also be a bug in the hi3110 and mcp251x drivers (line 521) as well because besides checking tx_length
->>>>>>>>>> this is how these drivers are written.
->>>>>>>>>
->>>>>>>>> This is different. When entering the "start_xmit" routine, the previous
->>>>>>>>> TX is still in progress. It will (hopefully) complete soon. Therefore
->>>>>>>>> returning NETDEV_TX_BUSY is OK. The "start_xmit" routine will be
->>>>>>>>> recalled soon with the same "skb". That scenario should/could also not
->>>>>>>>> happen.
->>>>>>>>
->>>>>>>> In principle, this also applies to the m_can peripheral devices. If
->>>>>>>> tx_skb is not NULL, the TX is still in progress and returning
->>>>>>>> NETDEV_TX_BUSY is just fine.
->>>>>>>>
->>>>>>>>>
->>>>>>>>> In contrast, in "m_can_tx_handler()", the skb could not be handled
->>>>>>>>> because the FIFO is full. The "start_xmit" routine for peripheral
->>>>>>>>> devices for that skb already returned NETDEV_TX_OK. Therefore the only
->>>>>>>>> meaningful action is to drop the skb. Also this error should not happen
->>>>>>>>> and if, something is going really wrong. Therefore I think, a
->>>>>>>>> WARN_ONCE() would be even more appropriate. But that should be a
->>>>>>>>> separate patch.
->>>>>>>>
->>>>>>>> But that's a different issue/error. The tx_skb cannot be processed in
->>>>>>>> "m_can_tx_handler()". Either we drop it or we re-queue it (retry later).
->>>>>>>>
->>>>>>>
->>>>>>> OK I am a bit confused on this.  Are you saying this is not an issue?
->>>>>>> Or are you saying I need to check for tx_len like the other code?
->>>>>>
->>>>>> If you check for tx_skb in the "start_xmit" routine like the hi3110 and
->>>>>> mcp251x, it will work the same way. But only, if the "tx_handler()" has
->>>>>> fully processed the message. It simple means, the TX is still in
->>>>>> progress and will complete soon. But in "m_can_tx_handler()" we return
->>>>>> without handling the message! It will never be sent and freed. Or will
->>>>>> the "m_can_tx_handler()" retry?
->>>>>>
->>>>>
->>>>> I am not seeing where we are not handling the message in the m_can_tx_handler()
->>>>
->>>> static void m_can_tx_handler(struct m_can_classdev *priv)
->>>> {
->>>> 		...
->>>> 		/* Check if FIFO full */
->>>> 		if (m_can_tx_fifo_full(priv)) {
->>>> 			/* This shouldn't happen */
->>>> 			netif_stop_queue(dev);
->>>> 			netdev_warn(dev,
->>>> 				    "TX queue active although FIFO is full.");
->>>> 			return;
->>>> 		}
->>>>
->>>> We simply return here. When is the message (tx_skb) processed (sent or freed)?
->>>> What happens with tx_skb?
->>>>
->>>
->>> Are you sure you are looking at the right code?
->>>
->>> For patch version v7 I have the following
->>>
->>> 		/* Check if FIFO full */
->>> 		if (m_can_tx_fifo_full(cdev)) {
->>> 			/* This shouldn't happen */
->>> 			netif_stop_queue(dev);
->>> 			netdev_warn(dev,
->>> 				    "TX queue active although FIFO is full.");
->>> 			return NETDEV_TX_BUSY;
->>> 		}
->>>
->>> Which is no change from the original source code.
->>
->> I know,  but for the peripheral devices you have:
->>
->>   static void m_can_tx_work_queue(struct work_struct *ws)
->>   {
->> 	struct m_can_priv *priv = container_of(ws, struct m_can_priv,
->> 						tx_work);
->> 	netdev_tx_t ret;
->>
->> 	ret = m_can_tx_handler(priv);
->> 	if (ret == NETDEV_TX_OK)
->> 		priv->tx_skb = NULL;
->>   }
->>
->> What will happen with tx_skb if NETDEV_TX_BUSY? It has not been
->> dropped/freed yet?
->>
+> If the HMAT Subsystem Address Range provides a valid processor proximity
+> domain for a memory domain, or a processor domain matches the performance
+> access of the valid processor proximity domain, register the memory
+> target with that initiator so this relationship will be visible under
+> the node's sysfs directory.
 > 
-> OK I think I see the issue there.
-
-The key point is that the "skb" entered by the "start_xmit" must be
-released/free when it's processed (with NETDEV_TX_OK). This is more
-tricky for perp devices because the "skb" is handled deferred.
-
+> Since HMAT requires valid address ranges have an equivalent SRAT entry,
+> verify each memory target satisfies this requirement.
 > 
-> I should probably add can_put_echo_skb if NETDEV_TX_BUSY and always NULL out the SKB.
+> Signed-off-by: Keith Busch <keith.busch@intel.com>
+Hi Keith,
 
-can_put_echo_skb() should only be called after the TX has been
-initiated. The normal flow for the skb is:
+I have that test case with a single remote memory only node and it is ending
+up with no associated initiators.
 
- start-xmit -> initiate tx -> can_put_echo_skb -> return NETDEV_TX_OK...
-   tx done interrupt -> can_get_echo_skb -> free skb
+I made a minor modification inline and it works as expected.
 
-I would just drop the message/skb:
+With that change
 
-		/* Check if FIFO full */
-		if (m_can_tx_fifo_full(cdev)) {
-			/* This shouldn't happen */
-			netif_stop_queue(dev);
-			netdev_warn(dev,
-				    "TX queue active although FIFO is full.");
-			if (cdev->is_peripherial) {
-				kfree_skb(skb);
-				dev->stats.tx_dropped++;
-				return NETDEV_TX_OK;
-			} else {
-				return NETDEV_TX_BUSY;
-			}
-		}
+Reviewed-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
 
-> This appears to be the way the other perp drivers do it as they just put and null the skb
-> regardless of the return of the handlers.
+Jonathan
+> ---
+>  drivers/acpi/hmat/Kconfig |   3 +-
+>  drivers/acpi/hmat/hmat.c  | 395 +++++++++++++++++++++++++++++++++++++++++++++-
+>  2 files changed, 396 insertions(+), 2 deletions(-)
+> 
+> diff --git a/drivers/acpi/hmat/Kconfig b/drivers/acpi/hmat/Kconfig
+> index 2f7111b7af62..13cddd612a52 100644
+> --- a/drivers/acpi/hmat/Kconfig
+> +++ b/drivers/acpi/hmat/Kconfig
+> @@ -4,4 +4,5 @@ config ACPI_HMAT
+>  	depends on ACPI_NUMA
+>  	help
+>  	 If set, this option has the kernel parse and report the
+> -	 platform's ACPI HMAT (Heterogeneous Memory Attributes Table).
+> +	 platform's ACPI HMAT (Heterogeneous Memory Attributes Table),
+> +	 and register memory initiators with their targets.
+> diff --git a/drivers/acpi/hmat/hmat.c b/drivers/acpi/hmat/hmat.c
+> index 99f711420f6d..bb6a11653729 100644
+> --- a/drivers/acpi/hmat/hmat.c
+> +++ b/drivers/acpi/hmat/hmat.c
+> @@ -13,11 +13,105 @@
+>  #include <linux/device.h>
+>  #include <linux/init.h>
+>  #include <linux/list.h>
+> +#include <linux/list_sort.h>
+>  #include <linux/node.h>
+>  #include <linux/sysfs.h>
+>  
+>  static __initdata u8 hmat_revision;
+>  
+> +static __initdata LIST_HEAD(targets);
+> +static __initdata LIST_HEAD(initiators);
+> +static __initdata LIST_HEAD(localities);
+> +
+> +/*
+> + * The defined enum order is used to prioritize attributes to break ties when
+> + * selecting the best performing node.
+> + */
+> +enum locality_types {
+> +	WRITE_LATENCY,
+> +	READ_LATENCY,
+> +	WRITE_BANDWIDTH,
+> +	READ_BANDWIDTH,
+> +};
+> +
+> +static struct memory_locality *localities_types[4];
+> +
+> +struct memory_target {
+> +	struct list_head node;
+> +	unsigned int memory_pxm;
+> +	unsigned int processor_pxm;
+> +	struct node_hmem_attrs hmem_attrs;
+> +};
+> +
+> +struct memory_initiator {
+> +	struct list_head node;
+> +	unsigned int processor_pxm;
+> +};
+> +
+> +struct memory_locality {
+> +	struct list_head node;
+> +	struct acpi_hmat_locality *hmat_loc;
+> +};
+> +
+> +static __init struct memory_initiator *find_mem_initiator(unsigned int cpu_pxm)
+> +{
+> +	struct memory_initiator *intitator;
+> +
+> +	list_for_each_entry(intitator, &initiators, node)
+> +		if (intitator->processor_pxm == cpu_pxm)
+> +			return intitator;
+> +	return NULL;
+> +}
+> +
+> +static __init struct memory_target *find_mem_target(unsigned int mem_pxm)
+> +{
+> +	struct memory_target *target;
+> +
+> +	list_for_each_entry(target, &targets, node)
+> +		if (target->memory_pxm == mem_pxm)
+> +			return target;
+> +	return NULL;
+> +}
+> +
+> +static __init void alloc_memory_initiator(unsigned int cpu_pxm)
+> +{
+> +	struct memory_initiator *intitator;
+> +
+> +	if (pxm_to_node(cpu_pxm) == NUMA_NO_NODE)
+> +		return;
+> +
+> +	intitator = find_mem_initiator(cpu_pxm);
+> +	if (intitator)
+> +		return;
+> +
+> +	intitator = kzalloc(sizeof(*intitator), GFP_KERNEL);
+> +	if (!intitator)
+> +		return;
+> +
+> +	intitator->processor_pxm = cpu_pxm;
+> +	list_add_tail(&intitator->node, &initiators);
+> +}
+> +
+> +static __init void alloc_memory_target(unsigned int mem_pxm)
+> +{
+> +	struct memory_target *target;
+> +
+> +	if (pxm_to_node(mem_pxm) == NUMA_NO_NODE)
+> +		return;
+> +
+> +	target = find_mem_target(mem_pxm);
+> +	if (target)
+> +		return;
+> +
+> +	target = kzalloc(sizeof(*target), GFP_KERNEL);
+> +	if (!target)
+> +		return;
+> +
+> +	target->memory_pxm = mem_pxm;
+> +	target->processor_pxm = PXM_INVAL;
+> +	list_add_tail(&target->node, &targets);
+> +}
+> +
+>  static __init const char *hmat_data_type(u8 type)
+>  {
+>  	switch (type) {
+> @@ -89,14 +183,83 @@ static __init u32 hmat_normalize(u16 entry, u64 base, u8 type)
+>  	return value;
+>  }
+>  
+> +static __init void hmat_update_target_access(struct memory_target *target,
+> +					     u8 type, u32 value)
+> +{
+> +	switch (type) {
+> +	case ACPI_HMAT_ACCESS_LATENCY:
+> +		target->hmem_attrs.read_latency = value;
+> +		target->hmem_attrs.write_latency = value;
+> +		break;
+> +	case ACPI_HMAT_READ_LATENCY:
+> +		target->hmem_attrs.read_latency = value;
+> +		break;
+> +	case ACPI_HMAT_WRITE_LATENCY:
+> +		target->hmem_attrs.write_latency = value;
+> +		break;
+> +	case ACPI_HMAT_ACCESS_BANDWIDTH:
+> +		target->hmem_attrs.read_bandwidth = value;
+> +		target->hmem_attrs.write_bandwidth = value;
+> +		break;
+> +	case ACPI_HMAT_READ_BANDWIDTH:
+> +		target->hmem_attrs.read_bandwidth = value;
+> +		break;
+> +	case ACPI_HMAT_WRITE_BANDWIDTH:
+> +		target->hmem_attrs.write_bandwidth = value;
+> +		break;
+> +	default:
+> +		break;
+> +	}
+> +}
+> +
+> +static __init void hmat_add_locality(struct acpi_hmat_locality *hmat_loc)
+> +{
+> +	struct memory_locality *loc;
+> +
+> +	loc = kzalloc(sizeof(*loc), GFP_KERNEL);
+> +	if (!loc) {
+> +		pr_notice_once("Failed to allocate HMAT locality\n");
+> +		return;
+> +	}
+> +
+> +	loc->hmat_loc = hmat_loc;
+> +	list_add_tail(&loc->node, &localities);
+> +
+> +	switch (hmat_loc->data_type) {
+> +	case ACPI_HMAT_ACCESS_LATENCY:
+> +		localities_types[READ_LATENCY] = loc;
+> +		localities_types[WRITE_LATENCY] = loc;
+> +		break;
+> +	case ACPI_HMAT_READ_LATENCY:
+> +		localities_types[READ_LATENCY] = loc;
+> +		break;
+> +	case ACPI_HMAT_WRITE_LATENCY:
+> +		localities_types[WRITE_LATENCY] = loc;
+> +		break;
+> +	case ACPI_HMAT_ACCESS_BANDWIDTH:
+> +		localities_types[READ_BANDWIDTH] = loc;
+> +		localities_types[WRITE_BANDWIDTH] = loc;
+> +		break;
+> +	case ACPI_HMAT_READ_BANDWIDTH:
+> +		localities_types[READ_BANDWIDTH] = loc;
+> +		break;
+> +	case ACPI_HMAT_WRITE_BANDWIDTH:
+> +		localities_types[WRITE_BANDWIDTH] = loc;
+> +		break;
+> +	default:
+> +		break;
+> +	}
+> +}
+> +
+>  static __init int hmat_parse_locality(union acpi_subtable_headers *header,
+>  				      const unsigned long end)
+>  {
+>  	struct acpi_hmat_locality *hmat_loc = (void *)header;
+> +	struct memory_target *target;
+>  	unsigned int init, targ, total_size, ipds, tpds;
+>  	u32 *inits, *targs, value;
+>  	u16 *entries;
+> -	u8 type;
+> +	u8 type, mem_hier;
+>  
+>  	if (hmat_loc->header.length < sizeof(*hmat_loc)) {
+>  		pr_notice("HMAT: Unexpected locality header length: %d\n",
+> @@ -105,6 +268,7 @@ static __init int hmat_parse_locality(union acpi_subtable_headers *header,
+>  	}
+>  
+>  	type = hmat_loc->data_type;
+> +	mem_hier = hmat_loc->flags & ACPI_HMAT_MEMORY_HIERARCHY;
+>  	ipds = hmat_loc->number_of_initiator_Pds;
+>  	tpds = hmat_loc->number_of_target_Pds;
+>  	total_size = sizeof(*hmat_loc) + sizeof(*entries) * ipds * tpds +
+> @@ -123,6 +287,7 @@ static __init int hmat_parse_locality(union acpi_subtable_headers *header,
+>  	targs = inits + ipds;
+>  	entries = (u16 *)(targs + tpds);
+>  	for (init = 0; init < ipds; init++) {
+> +		alloc_memory_initiator(inits[init]);
+>  		for (targ = 0; targ < tpds; targ++) {
+>  			value = hmat_normalize(entries[init * tpds + targ],
+>  					       hmat_loc->entry_base_unit,
+> @@ -130,9 +295,18 @@ static __init int hmat_parse_locality(union acpi_subtable_headers *header,
+>  			pr_info("  Initiator-Target[%d-%d]:%d%s\n",
+>  				inits[init], targs[targ], value,
+>  				hmat_data_type_suffix(type));
+> +
+> +			if (mem_hier == ACPI_HMAT_MEMORY) {
+> +				target = find_mem_target(targs[targ]);
+> +				if (target && target->processor_pxm == inits[init])
+> +					hmat_update_target_access(target, type, value);
+> +			}
+>  		}
+>  	}
+>  
+> +	if (mem_hier == ACPI_HMAT_MEMORY)
+> +		hmat_add_locality(hmat_loc);
+> +
+>  	return 0;
+>  }
+>  
+> @@ -176,6 +350,23 @@ static int __init hmat_parse_address_range(union acpi_subtable_headers *header,
+>  		pr_info("HMAT: Memory Flags:%04x Processor Domain:%d Memory Domain:%d\n",
+>  			p->flags, p->processor_PD, p->memory_PD);
+>  
+> +	if (p->flags & ACPI_HMAT_MEMORY_PD_VALID) {
+> +		target = find_mem_target(p->memory_PD);
+> +		if (!target) {
+> +			pr_debug("HMAT: Memory Domain missing from SRAT\n");
+> +			return -EINVAL;
+> +		}
+> +	}
+> +	if (target && p->flags & ACPI_HMAT_PROCESSOR_PD_VALID) {
+> +		int p_node = pxm_to_node(p->processor_PD);
+> +
+> +		if (p_node == NUMA_NO_NODE) {
+> +			pr_debug("HMAT: Invalid Processor Domain\n");
+> +			return -EINVAL;
+> +		}
+> +		target->processor_pxm = p_node;
+> +	}
+> +
+>  	return 0;
+>  }
+>  
+> @@ -199,6 +390,195 @@ static int __init hmat_parse_subtable(union acpi_subtable_headers *header,
+>  	}
+>  }
+>  
+> +static __init int srat_parse_mem_affinity(union acpi_subtable_headers *header,
+> +					  const unsigned long end)
+> +{
+> +	struct acpi_srat_mem_affinity *ma = (void *)header;
+> +
+> +	if (!ma)
+> +		return -EINVAL;
+> +	if (!(ma->flags & ACPI_SRAT_MEM_ENABLED))
+> +		return 0;
+> +	alloc_memory_target(ma->proximity_domain);
+> +	return 0;
+> +}
+> +
+> +static __init u32 hmat_initiator_perf(struct memory_target *target,
+> +			       struct memory_initiator *initiator,
+> +			       struct acpi_hmat_locality *hmat_loc)
+> +{
+> +	unsigned int ipds, tpds, i, idx = 0, tdx = 0;
+> +	u32 *inits, *targs;
+> +	u16 *entries;
+> +
+> +	ipds = hmat_loc->number_of_initiator_Pds;
+> +	tpds = hmat_loc->number_of_target_Pds;
+> +	inits = (u32 *)(hmat_loc + 1);
+> +	targs = inits + ipds;
+> +	entries = (u16 *)(targs + tpds);
+> +
+> +	for (i = 0; i < ipds; i++) {
+> +		if (inits[i] == initiator->processor_pxm) {
+> +			idx = i;
+> +			break;
+> +		}
+> +	}
+> +
+> +	if (i == ipds)
+> +		return 0;
+> +
+> +	for (i = 0; i < tpds; i++) {
+> +		if (targs[i] == target->memory_pxm) {
+> +			tdx = i;
+> +			break;
+> +		}
+> +	}
+> +	if (i == tpds)
+> +		return 0;
+> +
+> +	return hmat_normalize(entries[idx * tpds + tdx],
+> +			      hmat_loc->entry_base_unit,
+> +			      hmat_loc->data_type);
+> +}
+> +
+> +static __init bool hmat_update_best(u8 type, u32 value, u32 *best)
+> +{
+> +	bool updated = false;
+> +
+> +	if (!value)
+> +		return false;
+> +
+> +	switch (type) {
+> +	case ACPI_HMAT_ACCESS_LATENCY:
+> +	case ACPI_HMAT_READ_LATENCY:
+> +	case ACPI_HMAT_WRITE_LATENCY:
+> +		if (!*best || *best > value) {
+> +			*best = value;
+> +			updated = true;
+> +		}
+> +		break;
+> +	case ACPI_HMAT_ACCESS_BANDWIDTH:
+> +	case ACPI_HMAT_READ_BANDWIDTH:
+> +	case ACPI_HMAT_WRITE_BANDWIDTH:
+> +		if (!*best || *best < value) {
+> +			*best = value;
+> +			updated = true;
+> +		}
+> +		break;
+> +	}
+> +
+> +	return updated;
+> +}
+> +
+> +static int initiator_cmp(void *priv, struct list_head *a, struct list_head *b)
+> +{
+> +	struct memory_initiator *ia;
+> +	struct memory_initiator *ib;
+> +	unsigned long *p_nodes = priv;
+> +
+> +	ia = list_entry(a, struct memory_initiator, node);
+> +	ib = list_entry(b, struct memory_initiator, node);
+> +
+> +	set_bit(ia->processor_pxm, p_nodes);
+> +	set_bit(ib->processor_pxm, p_nodes);
+> +
+> +	return ia->processor_pxm - ib->processor_pxm;
+> +}
+> +
+> +static __init void hmat_register_target_initiators(struct memory_target *target)
+> +{
+> +	static DECLARE_BITMAP(p_nodes, MAX_NUMNODES);
+> +	struct memory_initiator *initiator;
+> +	unsigned int mem_nid, cpu_nid;
+> +	struct memory_locality *loc = NULL;
+> +	u32 best = 0;
+> +	int i;
+> +
+(upshot of the below is I removed this test :)
+> +	if (target->processor_pxm == PXM_INVAL)
+> +		return;
 
-You can also use:
+This doesn't look right.  We check first if it is invalid  and return....
 
-		if (cdev->tx_skb) {
-			netdev_err(dev, "hard_xmit called while tx busy\n");
-			return NETDEV_TX_BUSY;
-		}
+> +
+> +	mem_nid = pxm_to_node(target->memory_pxm);
+> +
+> +	/*
+> +	 * If the Address Range Structure provides a local processor pxm, link
+> +	 * only that one. Otherwise, find the best performance attribtes and
+> +	 * register all initiators that match.
+> +	 */
+> +	if (target->processor_pxm != PXM_INVAL) {
 
-to check for "hard_xmit called while tx busy". But you still need to
-handle the "m_can_tx_fifo_full(cdev)" case properly. See above.
+Here we check the other path...
 
-> And clean is called when the BUS is off or coming out of suspend.
+> +		cpu_nid = pxm_to_node(target->processor_pxm);
+> +		register_memory_node_under_compute_node(mem_nid, cpu_nid, 0);
+> +		return;
+> +	}
+> +
 
-Probably we need that as well even if other drivers don't care if
-the device goes bus-off while TX messages are pending.
+So we can't get here.
 
-Wolfgang
+
+> +	if (list_empty(&localities))
+> +		return;
+> +
+> +	/*
+> +	 * We need the initiator list iteration sorted so we can use
+> +	 * bitmap_clear for previously set initiators when we find a better
+> +	 * memory accessor. We'll also use the sorting to prime the candidate
+> +	 * nodes with known initiators.
+> +	 */
+> +	bitmap_zero(p_nodes, MAX_NUMNODES);
+> +	list_sort(p_nodes, &initiators, initiator_cmp);
+> +	for (i = WRITE_LATENCY; i <= READ_BANDWIDTH; i++) {
+> +		loc = localities_types[i];
+> +		if (!loc)
+> +			continue;
+> +
+> +		best = 0;
+> +		list_for_each_entry(initiator, &initiators, node) {
+> +			u32 value;
+> +
+> +			if (!test_bit(initiator->processor_pxm, p_nodes))
+> +				continue;
+> +
+> +			value = hmat_initiator_perf(target, initiator, loc->hmat_loc);
+> +			if (hmat_update_best(loc->hmat_loc->data_type, value, &best))
+> +				bitmap_clear(p_nodes, 0, initiator->processor_pxm);
+> +			if (value != best)
+> +				clear_bit(initiator->processor_pxm, p_nodes);
+> +		}
+> +		if (best)
+> +			hmat_update_target_access(target, loc->hmat_loc->data_type, best);
+> +	}
+> +
+> +	for_each_set_bit(i, p_nodes, MAX_NUMNODES) {
+> +		cpu_nid = pxm_to_node(i);
+> +		register_memory_node_under_compute_node(mem_nid, cpu_nid, 0);
+> +	}
+> +}
+> +
+> +static __init void hmat_register_targets(void)
+> +{
+> +	struct memory_target *target;
+> +
+> +	list_for_each_entry(target, &targets, node)
+> +		hmat_register_target_initiators(target);
+> +}
+> +
+> +static __init void hmat_free_structures(void)
+> +{
+> +	struct memory_target *target, *tnext;
+> +	struct memory_locality *loc, *lnext;
+> +	struct memory_initiator *intitator, *inext;
+> +
+> +	list_for_each_entry_safe(target, tnext, &targets, node) {
+> +		list_del(&target->node);
+> +		kfree(target);
+> +	}
+> +
+> +	list_for_each_entry_safe(intitator, inext, &initiators, node) {
+> +		list_del(&intitator->node);
+> +		kfree(intitator);
+> +	}
+> +
+> +	list_for_each_entry_safe(loc, lnext, &localities, node) {
+> +		list_del(&loc->node);
+> +		kfree(loc);
+> +	}
+> +}
+> +
+>  static __init int hmat_init(void)
+>  {
+>  	struct acpi_table_header *tbl;
+> @@ -208,6 +588,17 @@ static __init int hmat_init(void)
+>  	if (srat_disabled())
+>  		return 0;
+>  
+> +	status = acpi_get_table(ACPI_SIG_SRAT, 0, &tbl);
+> +	if (ACPI_FAILURE(status))
+> +		return 0;
+> +
+> +	if (acpi_table_parse_entries(ACPI_SIG_SRAT,
+> +				sizeof(struct acpi_table_srat),
+> +				ACPI_SRAT_TYPE_MEMORY_AFFINITY,
+> +				srat_parse_mem_affinity, 0) < 0)
+> +		goto out_put;
+> +	acpi_put_table(tbl);
+> +
+>  	status = acpi_get_table(ACPI_SIG_HMAT, 0, &tbl);
+>  	if (ACPI_FAILURE(status))
+>  		return 0;
+> @@ -230,7 +621,9 @@ static __init int hmat_init(void)
+>  			goto out_put;
+>  		}
+>  	}
+> +	hmat_register_targets();
+>  out_put:
+> +	hmat_free_structures();
+>  	acpi_put_table(tbl);
+>  	return 0;
+>  }
+
+
