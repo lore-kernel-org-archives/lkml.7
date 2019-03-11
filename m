@@ -6,48 +6,48 @@ X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 979A0C43381
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 Mar 2019 13:30:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3ABFBC43381
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 Mar 2019 13:30:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 74F90222D4
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 Mar 2019 13:30:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 13CC1222E5
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 Mar 2019 13:30:47 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728237AbfCKNam (ORCPT
+        id S1727855AbfCKNap (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 11 Mar 2019 09:30:42 -0400
-Received: from mout.kundenserver.de ([212.227.17.10]:56983 "EHLO
+        Mon, 11 Mar 2019 09:30:45 -0400
+Received: from mout.kundenserver.de ([217.72.192.73]:49659 "EHLO
         mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727470AbfCKNTa (ORCPT
+        with ESMTP id S1727496AbfCKNTa (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Mon, 11 Mar 2019 09:19:30 -0400
 Received: from orion.localdomain ([95.115.159.19]) by mrelayeu.kundenserver.de
  (mreue109 [212.227.15.183]) with ESMTPSA (Nemesis) id
- 1MUXlG-1hTd7A2UjI-00QV2Z for <linux-kernel@vger.kernel.org>; Mon, 11 Mar 2019
- 14:19:28 +0100
+ 1MAwPf-1hEaIy26PJ-00BITC for <linux-kernel@vger.kernel.org>; Mon, 11 Mar 2019
+ 14:19:29 +0100
 From:   "Enrico Weigelt, metux IT consult" <info@metux.net>
 To:     linux-kernel@vger.kernel.org
-Subject: [PATCH 008/114] drivers: ata: Kconfig: pedantic formatting
-Date:   Mon, 11 Mar 2019 14:17:20 +0100
-Message-Id: <1552310346-7629-9-git-send-email-info@metux.net>
+Subject: [PATCH 014/114] drivers: fpga: Kconfig: pedantic formatting
+Date:   Mon, 11 Mar 2019 14:17:26 +0100
+Message-Id: <1552310346-7629-15-git-send-email-info@metux.net>
 X-Mailer: git-send-email 1.9.1
 In-Reply-To: <1552310346-7629-1-git-send-email-info@metux.net>
 References: <1552310346-7629-1-git-send-email-info@metux.net>
-X-Provags-ID: V03:K1:BgbOIhMFFcVriP51wL/nqhwt6+rYqLzeM58PZMWlIZ3pLkUzdAG
- /F9ybxpZXcZOrSOa7rkYpOiW/DC4L+iA1/iDkJ38z5xhoujEUTMqvBp+aLO6c0JTU0wkeGz
- uUC8JoLlpdu6MuaHO3axpycqGe4reAclNEiosVN5Es1bM0sVZ+rbNzkFPc4O7k96FWtcHTp
- T2XQGd2yF/H7uXmjwnxgw==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:MzCUQFtykQQ=:Gqi8UF/kTu4O4CgeDXBeu4
- 6FfbNu/a6bt8SvsTmeLjzaXqSA9D6ymZ9J3HiL/VslUBrbQ0tRSrBDS84V4FK8rOVudN8n9nN
- sVB87b43KDazPYwrGiG5f3NAzUwfIkJFRwF66oxAgXCKyvQVX2YbOJr1u1P44dpLkKkJNyeku
- 0u5cqt+Jt7YqqTnohllm1XE2oT3sIAelF5b2JDtgC0XTqL6FWndQiaidVi4V/lUgAzeqRhVFE
- jzzAWcJSRcXwMxD/AemIsN27mP/gucwxbZHRDfCLo1S1GDzFiPW5qT16Qqp/MWRpuSLn67/wr
- PNYTfhv5D0eihVEJElAsmYscNYetFMqNXE4tPrD8Zfje4XetNHtXmaNsXfB36aEEZj/awzGKG
- 6pFret+N9DQSDygGoPsTkpZlzgRIvftTcamOSNwcsEd8iplWYeU70MTh+5PAcr8WMmWI1x/Ak
- PgDustE9Ej/GWt8+pmU/PtfH7m+RiMxx+M2EHpS1puxE93+36oxEnEN+fU/zRRgAlrh5QWJwk
- uyRErB6U+E7C50Hr4O6zmiZO6yXBN2X9ANCZBTVrmgYMJvJpLC58FS05KqlpzgLaKBS6f/qMj
- QCT8q5z8l5ch3hepcU86uFtLX8Pv7u+7yTk3AuI+11fkEmXbz32PLfOSuUpcxvMjsjvvEKDHu
- y4BMsbaUy9ibO+ZGJQ87JzWjIaf8Vnx8P1yHtnrxDZIZsoKNy2CYkT08Gp2nYs1QkSRpWVF6H
- LrvAkew0tsFFgRN+c9A/O7tYKPtwh3zpRaZ+7Q==
+X-Provags-ID: V03:K1:kd6JYi3dQMfGiHqSPS7+dTeubG10nDe58PdLrK//33SxiQumbaN
+ ZWUkMFz7DiOU52Ioi+Gbzx3Yz5h6KpVHMYkeVjvEK9oFI6fdd1YKecAXUZSnaoUVrV+zuWg
+ npJbBsRbZ4EtxNJEZwKhfS4Y2pnt2VbQFNOmuhYWFKdGku2ndpYfU6lyHHb9/RbHvFh5p46
+ 5iw5m5PNY4U86EUyx/BYw==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:dVzqy7PPvY4=:Fyx1sCVNqU71fR3OIgVYgE
+ wkgUB7I+edrohFNA9/e6sDoCVBbt3cTeZpx8374J8qiv7gVVafLFJTm/7ZcFAvEHMgRKqZkZQ
+ 5BCzC7Jk1iBy/1yn73y68P/5yZwkZaQNPkBzUb776GRr5EAjm8s/3R5JTrxaT3vmBNUmNo+s6
+ DCGHUZSl8mhExlJm1F2nAeAFp+nbsSBKCBvnO+JdRV9ECNQd1991koJGFnSAXAjWU3xgFy6Jg
+ OdY7c0ghAih+vjJyCCbsBqCGgMQfN6e8OkTrUu5EsMl29S4DdZTJTlu4GewMF2eAyiOneDJlY
+ JaJwpOgJE3rKZrXv4xrxrZVk5J5IYxD1dU9gfZjbsyzVqoFDXilevkGslSZ4DWsq1kyyggt/R
+ SVehMpGs1+m25DgLvFk8h6N/m8wriVP2msY96hF1nuhO5VNwen4hbXeMcgbylnVpVlWKNpeaf
+ gio8qkeV2ZHVt3Bz0RPPAsyOu/3LFz8AVvIKCsjACXmkyzdDIqysvAZ8RcLGyKIzCkCKnT0Hy
+ Gz9C/Xvm18Yt66DmasriLIadIH5st+DD4PqVpxhaSioiJmHGUao4dwpcf8Eei9HWqbWhM50xU
+ SrEUZumzLwREH8p9/bNNOYABdKlomUShi5BwvPBuyRThNuEQV0bWlN9CVCsqVqV9kwQzS7FEi
+ BvLEfIHTyevo0hRSaY3fTtjeF4hq5NBRAP/sNi3hTlE6wlA/MhLXIFlOyJU0cCjijZXT4+KB8
+ CPef+Xiars+L9D2jAZIFLQcy5PXb/ERjYk37Zw==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
@@ -58,74 +58,26 @@ Great White Handkerchief come around and clean it up.
 
 Signed-off-by: Enrico Weigelt, metux IT consult <info@metux.net>
 ---
- drivers/ata/Kconfig | 18 +++++++++---------
- 1 file changed, 9 insertions(+), 9 deletions(-)
+ drivers/fpga/Kconfig | 6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
 
-diff --git a/drivers/ata/Kconfig b/drivers/ata/Kconfig
-index a6beb2c..e0a41b1 100644
---- a/drivers/ata/Kconfig
-+++ b/drivers/ata/Kconfig
-@@ -32,7 +32,7 @@ menuconfig ATA
- if ATA
+diff --git a/drivers/fpga/Kconfig b/drivers/fpga/Kconfig
+index c20445b..d7324096 100644
+--- a/drivers/fpga/Kconfig
++++ b/drivers/fpga/Kconfig
+@@ -25,9 +25,9 @@ config FPGA_MGR_SOCFPGA_A10
+ 	  FPGA manager driver support for Altera Arria10 SoCFPGA.
  
- config ATA_NONSTANDARD
--       bool
-+	bool
+ config ALTERA_PR_IP_CORE
+-        tristate "Altera Partial Reconfiguration IP Core"
+-        help
+-          Core driver support for Altera Partial Reconfiguration IP component
++	tristate "Altera Partial Reconfiguration IP Core"
++	help
++	  Core driver support for Altera Partial Reconfiguration IP component
  
- config ATA_VERBOSE_ERROR
- 	bool "Verbose ATA error reporting"
-@@ -222,7 +222,7 @@ config AHCI_XGENE
- 	tristate "APM X-Gene 6.0Gbps AHCI SATA host controller support"
- 	depends on PHY_XGENE
- 	help
--	 This option enables support for APM X-Gene SoC SATA host controller.
-+	  This option enables support for APM X-Gene SoC SATA host controller.
- 
- config AHCI_QORIQ
- 	tristate "Freescale QorIQ AHCI SATA support"
-@@ -256,9 +256,9 @@ config SATA_AHCI_SEATTLE
- 	tristate "AMD Seattle 6.0Gbps AHCI SATA host controller support"
- 	depends on ARCH_SEATTLE
- 	help
--	 This option enables support for AMD Seattle SATA host controller.
-+	  This option enables support for AMD Seattle SATA host controller.
- 
--	 If unsure, say N
-+	  If unsure, say N
- 
- config SATA_INIC162X
- 	tristate "Initio 162x SATA support (Very Experimental)"
-@@ -695,7 +695,7 @@ config PATA_IMX
- 	depends on ARCH_MXC
- 	help
- 	  This option enables support for the PATA host available on Freescale
--          iMX SoCs.
-+	  iMX SoCs.
- 
- 	  If unsure, say N.
- 
-@@ -704,7 +704,7 @@ config PATA_IT8213
- 	depends on PCI
- 	help
- 	  This option enables support for the ITE 821 PATA
--          controllers via the new ATA layer.
-+	  controllers via the new ATA layer.
- 
- 	  If unsure, say N.
- 
-@@ -732,9 +732,9 @@ config PATA_MACIO
- 	depends on PPC_PMAC
- 	help
- 	  Most IDE capable PowerMacs have IDE busses driven by a variant
--          of this controller which is part of the Apple chipset used on
--          most PowerMac models. Some models have multiple busses using
--          different chipsets, though generally, MacIO is one of them.
-+	  of this controller which is part of the Apple chipset used on
-+	  most PowerMac models. Some models have multiple busses using
-+	  different chipsets, though generally, MacIO is one of them.
- 
- config PATA_MARVELL
- 	tristate "Marvell PATA support via legacy mode"
+ config ALTERA_PR_IP_CORE_PLAT
+ 	tristate "Platform support of Altera Partial Reconfiguration IP Core"
 -- 
 1.9.1
 
