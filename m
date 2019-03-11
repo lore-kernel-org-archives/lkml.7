@@ -2,110 +2,152 @@ Return-Path: <SRS0=FxTY=RO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.6 required=3.0 tests=BIGNUM_EMAILS,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9180AC43381
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 Mar 2019 20:02:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 25461C43381
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 Mar 2019 20:02:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6020C2064A
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 Mar 2019 20:02:01 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="t4SepFwm"
+	by mail.kernel.org (Postfix) with ESMTP id EE0D02064A
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 Mar 2019 20:02:13 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1552334534;
+	bh=EP5Ln2Oj3faiJzLMm8g/xlZCKlK8v+a//48gJQ1SzH0=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=Qd5zFI6r8DEdp2JeYN2PtpG6G/t2TxpPB2BiTquNs7YHF3g+z4cZvODBMQbmUqR7B
+	 9w7ue3hjGbbSCJQGZ/SfzO7Dp+3xoqtyV7yUEbx9EZZefSfNRn9A2BY+fWHBON7n5v
+	 oVMtIXirFuQ5hOH0PWbz04Bta7HeMcrNrCQsPYC4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729581AbfCKUB7 (ORCPT
+        id S1729521AbfCKUCM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 11 Mar 2019 16:01:59 -0400
-Received: from mail-ot1-f68.google.com ([209.85.210.68]:36926 "EHLO
-        mail-ot1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729431AbfCKUB5 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 11 Mar 2019 16:01:57 -0400
-Received: by mail-ot1-f68.google.com with SMTP id b3so358389otp.4
-        for <linux-kernel@vger.kernel.org>; Mon, 11 Mar 2019 13:01:56 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=LKmRRe/TG/rwjTmD1hFHYCTcvGKG8Q7HIt+Pu52PNYg=;
-        b=t4SepFwm7MJII2vlP/crkbZzbn6V4YAob8oRRiaa74KOKCIzta3PoLlOrrbD4M6BfS
-         KG8r0h4Ckalk0hfsaw743kEpUOIBtCeNPeqRSjLbeUrkboJnkOKz8hFSA688/uXHWEHR
-         X6CsKm8QheoeBe41TpjPa6W6ADMHAlpNAvpM3hAhywncMCI84Nlm43Rz1r41acllSZnh
-         hYHXHPvlyywUDBAkJN9XD32NtiXXCSjJdltkBKVIZgS2HdpPQc539m0Mp6ZoP3QM0Xwe
-         VuM7ErDzqB12wzw2qrWZo08GqJP+dUflORW5IVwFrlToeBlFm13VErWd3DNctYcxY8zl
-         Ga3Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=LKmRRe/TG/rwjTmD1hFHYCTcvGKG8Q7HIt+Pu52PNYg=;
-        b=OK1KepdBSjljm8aXzp0OoPFDfDwRDcP3cjyhfD0JT2eHkiOYP8rp/aBICD7Sr7GXmU
-         T2D3vvfOpH8NfyNjGfCeS5MXB3LXThOuGRpdWJXqJc/JqD9ykEQ/ol7V1xb4GM7xOuHe
-         X6UZw/tbDD56aWoypgokyn2XcX/20YwqVRiYoqb+x3diQcqrU9yuG8Nq4CFXeu3WSJii
-         /kCBo4zAGVUAyXo/SPeiGKO+sALWQ/GqQL0OPUUc8Wud6jG7YvDMFC4oKL70/xMnmq2Z
-         R4V+dEwDz4hgF6oySP+4pf+NIIR4U6eYBxr5AclCufOV5abphnZRqw5n9g7i3YCn1MZh
-         ygZA==
-X-Gm-Message-State: APjAAAXbQeOKaJ6l7achmS2BpeGAczIUz0jNK2wy092BYIv1xmy5WKl+
-        8r4uUQVfuy7i7bVKZPxw5bLxoevJ09BtV8LUIIg=
-X-Google-Smtp-Source: APXvYqzNSGQESYOlpMDImQh3Lvx1WQMyidE/xkPdEf8G5j39yrOCPf9VZoTb3ZleCY/xcrN964SctfrJ7R0Nt6IQznA=
-X-Received: by 2002:a9d:5f1a:: with SMTP id f26mr20398541oti.95.1552334515634;
- Mon, 11 Mar 2019 13:01:55 -0700 (PDT)
+        Mon, 11 Mar 2019 16:02:12 -0400
+Received: from mail.kernel.org ([198.145.29.99]:36698 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728679AbfCKT7R (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 11 Mar 2019 15:59:17 -0400
+Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 272B621738;
+        Mon, 11 Mar 2019 19:59:16 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1552334356;
+        bh=EP5Ln2Oj3faiJzLMm8g/xlZCKlK8v+a//48gJQ1SzH0=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=bYh0TkJ6e8dJVmob058shS/DDe1U8gJ6v+WNTDWqX1+UXfvXkYT7l/vonitMLGvFu
+         i/0PORMr8r/UO7KhViVi+LZA5fzdlKCeMsF7mjyXA9iajjZVTlAPwgYg0akFBPTNn+
+         79Bs0iPLw9F1e6jb9VAsyH14rmm+DPuLdLewxwZs=
+From:   Sasha Levin <sashal@kernel.org>
+To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
+Cc:     Stefan Haberland <sth@linux.ibm.com>,
+        Martin Schwidefsky <schwidefsky@de.ibm.com>,
+        Sasha Levin <sashal@kernel.org>, linux-s390@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.9 03/12] s390/dasd: fix using offset into zero size array error
+Date:   Mon, 11 Mar 2019 15:59:03 -0400
+Message-Id: <20190311195912.139410-3-sashal@kernel.org>
+X-Mailer: git-send-email 2.19.1
+In-Reply-To: <20190311195912.139410-1-sashal@kernel.org>
+References: <20190311195912.139410-1-sashal@kernel.org>
 MIME-Version: 1.0
-References: <20190124201251.15159-1-TheSven73@googlemail.com>
- <CAGngYiWFU-VnG=ODLWaUf0yp69qaU2GSd9exdHvyi6Ko1ib9qw@mail.gmail.com>
- <20190208121916.GE23483@kroah.com> <CAGngYiVVNitd5SDLah-kxP69W6XHYHOQrOz=DnevuGnqoHD7HA@mail.gmail.com>
- <20190208141400.GA22162@kroah.com> <CAGngYiXZtNcqQ3JGgavBxypo75WtAT7T-X4DQFNWD8kQcifU8g@mail.gmail.com>
- <c8632a8c-dd3b-6b16-3fb2-5a1b381ca29a@suse.de>
-In-Reply-To: <c8632a8c-dd3b-6b16-3fb2-5a1b381ca29a@suse.de>
-From:   Sven Van Asbroeck <thesven73@gmail.com>
-Date:   Mon, 11 Mar 2019 16:01:44 -0400
-Message-ID: <CAGngYiVuh16dzSUvjZN0EcnaMy_n4_8Zzzth1M9XJTRQU6D8Ag@mail.gmail.com>
-Subject: Re: [PATCH v8 0/6] Add Fieldbus subsystem + support HMS Profinet card
-To:     =?UTF-8?Q?Andreas_F=C3=A4rber?= <afaerber@suse.de>
-Cc:     Greg KH <gregkh@linuxfoundation.org>, robh+dt@kernel.org,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Lee Jones <lee.jones@linaro.org>, mark.rutland@arm.com,
-        treding@nvidia.com, David Lechner <david@lechnology.com>,
-        noralf@tronnes.org, johan@kernel.org,
-        Michal Simek <monstr@monstr.eu>, michal.vokac@ysoft.com,
-        Arnd Bergmann <arnd@arndb.de>, john.garry@huawei.com,
-        geert+renesas@glider.be, robin.murphy@arm.com,
-        Paul Gortmaker <paul.gortmaker@windriver.com>,
-        sebastien.bourdelin@savoirfairelinux.com, icenowy@aosc.io,
-        Stuart Yoder <stuyoder@gmail.com>, maxime.ripard@bootlin.com,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+X-Patchwork-Hint: Ignore
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Andreas,
+From: Stefan Haberland <sth@linux.ibm.com>
 
-On Mon, Mar 11, 2019 at 1:25 PM Andreas F=C3=A4rber <afaerber@suse.de> wrot=
-e:
->
-> I have two unfinished drivers that might benefit, for Hilscher netX 52
-> (multi-protocol) and Microchip LAN9252 (EtherCAT), as well as a Linux
-> port for Infineon XMC4500 that might be expanded to XMC4800 (EtherCAT).
->
-> But currently -ENOTIME for review or development, sorry.
->
-> Staging sounds like a plan, if that allows us to still break the ABI.
+[ Upstream commit 4a8ef6999bce998fa5813023a9a6b56eea329dba ]
 
-Those devices have very similar functionality to the h/w we use.
-It would be awesome if we could find common ground here.
-And the userspace ABI design could definitely benefit from 2-3 extra
-supported devices to verify it against.
+Dan Carpenter reported the following:
 
->
-> Are you at Netdev 0x13 later this month? That might be an opportunity to
-> discuss the network-related parts such as Profinet and EtherCAT.
+The patch 52898025cf7d: "[S390] dasd: security and PSF update patch
+for EMC CKD ioctl" from Mar 8, 2010, leads to the following static
+checker warning:
 
-Will send you an off-list message.
+	drivers/s390/block/dasd_eckd.c:4486 dasd_symm_io()
+	error: using offset into zero size array 'psf_data[]'
 
-Cheers,
-Sven
+drivers/s390/block/dasd_eckd.c
+  4458          /* Copy parms from caller */
+  4459          rc = -EFAULT;
+  4460          if (copy_from_user(&usrparm, argp, sizeof(usrparm)))
+                                    ^^^^^^^
+The user can specify any "usrparm.psf_data_len".  They choose zero by
+mistake.
+
+  4461                  goto out;
+  4462          if (is_compat_task()) {
+  4463                  /* Make sure pointers are sane even on 31 bit. */
+  4464                  rc = -EINVAL;
+  4465                  if ((usrparm.psf_data >> 32) != 0)
+  4466                          goto out;
+  4467                  if ((usrparm.rssd_result >> 32) != 0)
+  4468                          goto out;
+  4469                  usrparm.psf_data &= 0x7fffffffULL;
+  4470                  usrparm.rssd_result &= 0x7fffffffULL;
+  4471          }
+  4472          /* alloc I/O data area */
+  4473          psf_data = kzalloc(usrparm.psf_data_len, GFP_KERNEL
+  			   				 | GFP_DMA);
+  4474          rssd_result = kzalloc(usrparm.rssd_result_len, GFP_KERNEL
+							       | GFP_DMA);
+  4475          if (!psf_data || !rssd_result) {
+
+kzalloc() returns a ZERO_SIZE_PTR (0x16).
+
+  4476                  rc = -ENOMEM;
+  4477                  goto out_free;
+  4478          }
+  4479
+  4480          /* get syscall header from user space */
+  4481          rc = -EFAULT;
+  4482          if (copy_from_user(psf_data,
+  4483                             (void __user *)(unsigned long)
+  				   	 		 usrparm.psf_data,
+  4484                             usrparm.psf_data_len))
+
+That all works great.
+
+  4485                  goto out_free;
+  4486          psf0 = psf_data[0];
+  4487          psf1 = psf_data[1];
+
+But now we're assuming that "->psf_data_len" was at least 2 bytes.
+
+Fix this by checking the user specified length psf_data_len.
+
+Fixes: 52898025cf7d ("[S390] dasd: security and PSF update patch for EMC CKD ioctl")
+Reported-by: Dan Carpenter <dan.carpenter@oracle.com>
+Signed-off-by: Stefan Haberland <sth@linux.ibm.com>
+Signed-off-by: Martin Schwidefsky <schwidefsky@de.ibm.com>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
+---
+ drivers/s390/block/dasd_eckd.c | 8 ++++++++
+ 1 file changed, 8 insertions(+)
+
+diff --git a/drivers/s390/block/dasd_eckd.c b/drivers/s390/block/dasd_eckd.c
+index be17de9807b6..11c6335b1951 100644
+--- a/drivers/s390/block/dasd_eckd.c
++++ b/drivers/s390/block/dasd_eckd.c
+@@ -4508,6 +4508,14 @@ static int dasd_symm_io(struct dasd_device *device, void __user *argp)
+ 		usrparm.psf_data &= 0x7fffffffULL;
+ 		usrparm.rssd_result &= 0x7fffffffULL;
+ 	}
++	/* at least 2 bytes are accessed and should be allocated */
++	if (usrparm.psf_data_len < 2) {
++		DBF_DEV_EVENT(DBF_WARNING, device,
++			      "Symmetrix ioctl invalid data length %d",
++			      usrparm.psf_data_len);
++		rc = -EINVAL;
++		goto out;
++	}
+ 	/* alloc I/O data area */
+ 	psf_data = kzalloc(usrparm.psf_data_len, GFP_KERNEL | GFP_DMA);
+ 	rssd_result = kzalloc(usrparm.rssd_result_len, GFP_KERNEL | GFP_DMA);
+-- 
+2.19.1
+
