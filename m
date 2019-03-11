@@ -4,37 +4,37 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3946EC10F0C
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 Mar 2019 09:32:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AF446C43381
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 Mar 2019 09:32:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 01BDB20657
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 Mar 2019 09:32:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6734D20657
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 Mar 2019 09:32:21 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="xUJHXxRb"
+	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="YMsp2PGj"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727372AbfCKJcP (ORCPT
+        id S1727390AbfCKJcU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 11 Mar 2019 05:32:15 -0400
+        Mon, 11 Mar 2019 05:32:20 -0400
 Received: from mail-eopbgr80085.outbound.protection.outlook.com ([40.107.8.85]:48938
         "EHLO EUR04-VI1-obe.outbound.protection.outlook.com"
         rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1727124AbfCKJcP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 11 Mar 2019 05:32:15 -0400
+        id S1727260AbfCKJcR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 11 Mar 2019 05:32:17 -0400
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector1;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=y/a8qAlxeqJzSchfITzvJwR/7Avj4N4SKqgqIBpuQrE=;
- b=xUJHXxRbUcq/WXK5bOsZagJhPY0x9PGmcX6wxx37tHgv4h27ZdAOiNOk/iFNCNFclTF9YVTkrU7bzv1zahaI45juwAkSaJmlxSpYUZqBV8WS8CBSw9TRanjyn/vLGnO7nPoPNEbeyMh2/+3ngCHOXSn/XZnEFcoBVfz7MeG30zw=
+ bh=4BMcqpDgTrc8M2YPv+PL29hYMDyvskZ4hrkMnMjLAqE=;
+ b=YMsp2PGjsP1kO+lD7OpZcsjeBpGkLywXpme/k9S75A5KbaujfNNWynXdFI3g9yGkBEbQ4w3pY23FuU1Osi5L5J7sjSk8BVYv9VwC5X2X5c+KtQ3ktjlaJ02CU5UR6ObT7XV+UG4bZVrBIB9M7RAh1CHf+fJoPBHYK+AxJozwJuI=
 Received: from AM6PR04MB5781.eurprd04.prod.outlook.com (20.179.3.19) by
  AM6PR04MB6566.eurprd04.prod.outlook.com (20.179.246.143) with Microsoft SMTP
  Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.1686.16; Mon, 11 Mar 2019 09:31:31 +0000
+ 15.20.1686.16; Mon, 11 Mar 2019 09:31:48 +0000
 Received: from AM6PR04MB5781.eurprd04.prod.outlook.com
  ([fe80::30cc:e034:1f7a:2cc7]) by AM6PR04MB5781.eurprd04.prod.outlook.com
  ([fe80::30cc:e034:1f7a:2cc7%2]) with mapi id 15.20.1686.021; Mon, 11 Mar 2019
- 09:31:31 +0000
+ 09:31:48 +0000
 From:   "Z.q. Hou" <zhiqiang.hou@nxp.com>
 To:     "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
         "linux-arm-kernel@lists.infradead.org" 
@@ -54,13 +54,13 @@ CC:     Mingkai Hu <mingkai.hu@nxp.com>,
         "M.h. Lian" <minghuan.lian@nxp.com>,
         Xiaowei Bao <xiaowei.bao@nxp.com>,
         "Z.q. Hou" <zhiqiang.hou@nxp.com>
-Subject: [PATCHv4 12/28] PCI: mobiveil: move out the link up waiting from
- mobiveil_host_init
-Thread-Topic: [PATCHv4 12/28] PCI: mobiveil: move out the link up waiting from
- mobiveil_host_init
-Thread-Index: AQHU1+01OAPqrzT7sUuzybX31Yd4fw==
-Date:   Mon, 11 Mar 2019 09:31:31 +0000
-Message-ID: <20190311093130.7209-13-Zhiqiang.Hou@nxp.com>
+Subject: [PATCHv4 14/28] PCI: mobiveil: initialize
+ Primary/Secondary/Subordinate bus number
+Thread-Topic: [PATCHv4 14/28] PCI: mobiveil: initialize
+ Primary/Secondary/Subordinate bus number
+Thread-Index: AQHU1+1AtGOoAU+YtEiiEyC+O3ktCA==
+Date:   Mon, 11 Mar 2019 09:31:48 +0000
+Message-ID: <20190311093130.7209-15-Zhiqiang.Hou@nxp.com>
 References: <20190311093130.7209-1-Zhiqiang.Hou@nxp.com>
 In-Reply-To: <20190311093130.7209-1-Zhiqiang.Hou@nxp.com>
 Accept-Language: zh-CN, en-US
@@ -76,48 +76,47 @@ x-ms-exchange-messagesentrepresentingtype: 1
 x-mailer: git-send-email 2.17.1
 x-originating-ip: [119.31.174.73]
 x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: b552853a-3d70-4c14-8f56-08d6a604584c
+x-ms-office365-filtering-correlation-id: 6414e1d7-6e2f-4080-8d60-08d6a6046260
 x-ms-office365-filtering-ht: Tenant
 x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600127)(711020)(4605104)(4618075)(2017052603328)(7153060)(7193020);SRVR:AM6PR04MB6566;
 x-ms-traffictypediagnostic: AM6PR04MB6566:
-x-microsoft-exchange-diagnostics: =?iso-8859-1?Q?1;AM6PR04MB6566;23:60oAHf54hxehkY0pxln2hx8EpStpSmFlGhumKGU?=
- =?iso-8859-1?Q?v8lxQagAbjVraZbEMAVe0f3cNvBye64V/4L1MGEPO2Z9bgosAapFOsVl74?=
- =?iso-8859-1?Q?S0WLzNtE/R3n8mZZgnvRWyWRu+Y7wxVqrC0VCQ1h9FpKz1bPFpYHW6yGrJ?=
- =?iso-8859-1?Q?tiS4rRp9LqYn1pGp653mznB83dlN6LnesKm+5CeIGsRnyFHYV7Dis86Vrf?=
- =?iso-8859-1?Q?OIJZSeCk+8QhKewWePjEaCY9ThTXGIkl2GMzY6Ihk4d4n+ZLBMN4awVNkE?=
- =?iso-8859-1?Q?gr4/rrHMiPbUO0MRWl515n1FNXxYjggHNpDrMhelDHzm+Z/2LX5e73fmGY?=
- =?iso-8859-1?Q?YQahoRAn8tEupEqKeXXzig8db2jThAN+bnDI41eQ7igUc0IU2V2ffwAuyu?=
- =?iso-8859-1?Q?Q7Go6dDiJGZ8cGj4lvSOGRjV6BuwTUp1nsoCX3dqoXf4sLBEtu/td36Go8?=
- =?iso-8859-1?Q?XfFCtHoAZm8JF5plqM2x/P8zIgrvZamIe0UokavKWnYisnZik8ix74LKsl?=
- =?iso-8859-1?Q?pIQUIE86Hx/ZBTWDy4rCo1s7eEtFQJBXlGtFpLa9gpFNJaCUSiVfFzFgPi?=
- =?iso-8859-1?Q?NL6HpUqQJ91V02A7mw2pQsmrk5A7t1j0O1Hz2ISABuMOKmEcSmDjRVod58?=
- =?iso-8859-1?Q?nX63jmLX2WXElrkjKjn06IOSfJsQXmbsIlFCsCgXbUNeE/A3sI7q52AlOa?=
- =?iso-8859-1?Q?zmwfKCC//nLUL/5/i+tpGSTh0VPdGNNsOrzOUUqbicWe9lMbJLaQZFkykK?=
- =?iso-8859-1?Q?D+i5eVZ76VxVqLCI3RaGqSw4SyDJZfCqK8CDMEUjItOpKV8NxcoR8/SFR5?=
- =?iso-8859-1?Q?f/aOBbCFvD7tSjD4nwp8bm/wzwFeNsKlxBiXxxhApeVuDueBcsMhefrG95?=
- =?iso-8859-1?Q?A+AMObZ8vsB3OF3xkYPZAIC+L9VR4UhIrNBL94KrXqReV3lp4gGX3QICtx?=
- =?iso-8859-1?Q?UKqJAfn2svoAW95MtiB8A8sGwIdNRkYuLowoiIpAmkbYELqfzDAw6dID5E?=
- =?iso-8859-1?Q?F+cGexh6/kvSwvYDaCMDPd3zZDSxw8V8lG+KSQzxT6Hon+knL0t3gi5UqJ?=
- =?iso-8859-1?Q?RB1CPUwpOS4rBLLkVlghUxoeZu8BCqCuRrvv0nclU23GXi26175/AF0SSY?=
- =?iso-8859-1?Q?+5jnvWkvNpXwWveoKGjNXGi6VOw/zqBo5bmA5IO3zrUbxD9M6o16mPuNVD?=
- =?iso-8859-1?Q?eP21muQBkUJdo14+wF5VRxdMoB2guvQ0FueDbb0v9UQpVBKkNrmxQFnzFV?=
- =?iso-8859-1?Q?xamNSeyKBgwSWlhczzuBs+JmthSGAHkhvAHsVVs4CdMFu0TATbjzSFK0bT?=
- =?iso-8859-1?Q?SUgW5cOYG07wVFz0rXixsyl3681PXQ7nexofzRE4dLTrEiIMdXacdvT6Cj?=
- =?iso-8859-1?Q?r8NxALK1NwFiqY3tDcI0yVFqeMV9mWlxX9PAxKvFAsx4YlhirGrl/0NDHg?=
- =?iso-8859-1?Q?PtptAaXjLeA4kaHfFv9KrTY1BmY2+y0h5oK?=
-x-microsoft-antispam-prvs: <AM6PR04MB656656CC0B5309F36BFDB0E084480@AM6PR04MB6566.eurprd04.prod.outlook.com>
+x-microsoft-exchange-diagnostics: =?iso-8859-1?Q?1;AM6PR04MB6566;23:2nyWhzU/u3C9d3uUunmmxohN6ssX76Bta/GZzl4?=
+ =?iso-8859-1?Q?2LdEThMKC44fQ82xbBPEPM8wwaI/yXhX/lrNbyqe5Pqt0poN+/yA8ZCQRm?=
+ =?iso-8859-1?Q?goExoSngWJfIiwX+iNvRQCpRiW8az370thxqy0X8p0abt5Hc77Fz0aICrD?=
+ =?iso-8859-1?Q?GPnjVudQH07OISyFSXFM7yuJS/9vOFv52nVw2dLTMGwI5q8/9GUqXtPSkX?=
+ =?iso-8859-1?Q?MTAoISn4PSSty700UU45P7Fb6XMKbQpqaxTcZ6DN1SwSVdA97ICon1252/?=
+ =?iso-8859-1?Q?39qScU/p08h43/75pjBUr6MXtv0ZDjDJ8KRMqnD8DDrBM5N7JWLdUoo0gl?=
+ =?iso-8859-1?Q?OFAOdPbi5uLykSYzVraWO6PUfYj5yA8iLwGGaMYUW0OPxLjU05GV1wmM8q?=
+ =?iso-8859-1?Q?QnQqtEgLckg51G26FGT90kz/eI0Qg/N3ENXUpOXhGfl9SdrlNM/YuJTIgD?=
+ =?iso-8859-1?Q?PuObUwg/Wmzxz71Owg6AOM9byxhOE5uTxzPMTyujR8urSbMYPjhQ1rlmMv?=
+ =?iso-8859-1?Q?fbGkWOpaAkEWO59CNTZ2m4qnc7vI9EZYxXViM4LgDCB8n7iljWT9AKMqBO?=
+ =?iso-8859-1?Q?rPry43AgWErudx+mxLZGdQUoUye/XaIxeXmdMyJHt+GZrlaA83+eMfYrPv?=
+ =?iso-8859-1?Q?oE0PTxg6w0UPsFDkiO5ropXoFIIHbn0UJ1pEIMGgXLnN7yV06Tl7E/m2Sz?=
+ =?iso-8859-1?Q?OsnqokbmlRa3xkzV0ecXIPYAyMxfaPS9iawA0DNj9bw9W20v8dHUC/dl/H?=
+ =?iso-8859-1?Q?OiDRJp4X3BG3By3DU+e/es7Kem26yMcAor8MQvITI99GG8ZV1KJgGEuAkn?=
+ =?iso-8859-1?Q?+57YsGX/Wf4GWXB2ksC+7ZQF6fU27cCNQ+a0OCUwxRIdtiZUnuX/FPUYwu?=
+ =?iso-8859-1?Q?RmcxLAdne3y3j0Wsz8iNI21l0UfsVhfy2sUymcJU8sk8nTyFj+EYVZoNPE?=
+ =?iso-8859-1?Q?5WsxmCXIidCWsvEb1jP1V83EpHk6z06YrpJznV2D1Nv+WjF1YbjM635V4u?=
+ =?iso-8859-1?Q?PYIsn8RycyA89UCW2HY3KDu6E2WrmpU7dXUDeu80ZVOa5mK1+IR5QMLqVj?=
+ =?iso-8859-1?Q?Mehed152zWVmbfOqiB2+PTFr/5lefWZIv4ZpK1DFftHexpOzmye51BIHad?=
+ =?iso-8859-1?Q?rU2QytymtlB6hMVefAkvgVx5tCynP1IeRqz4PUaLCrPIuojoLZKLVgPnxp?=
+ =?iso-8859-1?Q?yiYJXk+DpOqScmf7XjdWQ+OvjWNNjW6oRpNWoKH2uTAnxogkt9cYuKUBPz?=
+ =?iso-8859-1?Q?jI/ld6vIEYk9J/Y9wz0H4uAJubOeWKnkil04Yh6PtFr8H/3VRB7dG5tv/5?=
+ =?iso-8859-1?Q?oCy1o6TYovYh95r6rY8WV0NIyioejH+Vbc7eT1h82XtwE24fAtQSUhPi4U?=
+ =?iso-8859-1?Q?2RXP3u+I=3D?=
+x-microsoft-antispam-prvs: <AM6PR04MB6566C252FEDE0F61848C687A84480@AM6PR04MB6566.eurprd04.prod.outlook.com>
 x-forefront-prvs: 09730BD177
-x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(979002)(396003)(366004)(39860400002)(346002)(376002)(136003)(199004)(189003)(6436002)(478600001)(25786009)(99286004)(11346002)(2616005)(476003)(76176011)(3846002)(6116002)(81166006)(81156014)(486006)(71190400001)(71200400001)(2906002)(8676002)(2201001)(5660300002)(97736004)(6486002)(446003)(7416002)(2501003)(86362001)(256004)(14454004)(316002)(68736007)(26005)(8936002)(6512007)(53936002)(1076003)(66066001)(386003)(54906003)(50226002)(110136005)(102836004)(6506007)(36756003)(105586002)(4326008)(106356001)(186003)(305945005)(52116002)(7736002)(921003)(1121003)(969003)(989001)(999001)(1009001)(1019001);DIR:OUT;SFP:1101;SCL:1;SRVR:AM6PR04MB6566;H:AM6PR04MB5781.eurprd04.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
+x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(396003)(366004)(39860400002)(346002)(376002)(136003)(199004)(189003)(6436002)(478600001)(25786009)(99286004)(11346002)(2616005)(476003)(76176011)(3846002)(6116002)(81166006)(81156014)(486006)(71190400001)(71200400001)(2906002)(8676002)(2201001)(5660300002)(97736004)(6486002)(446003)(7416002)(4744005)(2501003)(86362001)(256004)(14454004)(316002)(68736007)(26005)(8936002)(6512007)(53936002)(1076003)(66066001)(386003)(54906003)(50226002)(110136005)(102836004)(6506007)(36756003)(105586002)(4326008)(106356001)(186003)(305945005)(52116002)(7736002)(921003)(1121003);DIR:OUT;SFP:1101;SCL:1;SRVR:AM6PR04MB6566;H:AM6PR04MB5781.eurprd04.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
 received-spf: None (protection.outlook.com: nxp.com does not designate
  permitted sender hosts)
 x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam-message-info: 65107GJjDvV2B7D6cFCLRZo4NlHsdBJ4RWxIoaVDlGzpOIcc30M68pVV9YNTPorHGqQ7mAzJviUZAtrQE7/am+37lCCItczF+oT2sZNCE6cyod82tTUtgZo0oD7x0toIje7LdClRDVMwsB28NvqWfrXnyOTnB8LKOP+RBzEP0n/W0x+URm6uprEx0VZawFaVWP0NykmJlVx8PyKQDDB40wncjHngQhpjZTBQDPr6e+MFDZRYJcIXdPWqiH23UbZoqbweCRR088laDcwlchMzRRwBofErRrN9Qg8C7LTxleWOrnivzCZ09kQJXemV8CpWx3KxhNTQUNw4BPFKvmYWe5PQKOIlCK6VMfaEjdDORCMYB0h66cGnwSOkg6O7SnGM8Ehcp5YbL0mLptbcdQVKk9FELhFk30QNak6E574leJ4=
+x-microsoft-antispam-message-info: ZOG5AiK+viOkVXE2H2LgmFb1AB3q/Hdn5Y8vJL2fFc7O+UqiFJbUnxvqxdsx4+uE0FBK25pRnq2LmoNi0RoNpHnXScbwLP9DbdCDYuTnPcC40Z9wBdRK6TblG5nz9IXPSBX8dcsLMbkhzv9RkDeXyozcd2E0TLl68g+2jmyDbaB6PT7mkiomBE+rNEck7yl9/LhkGZ+NqRg9DPkXL8tQbKi8IgQBtIkY0xWWA8onvDW1MuTkiPzubu9h5j00ZWJHcUbD5bdfB3SQbM/tgH0IykjjNgxnkD37sUDiVNp19EpMg1u7qwuOU3YnUAKYt1XNo/GsFzy4LCAi0Q9GLOG7Tph55W2p4R4yxxel+E7e3632eeYeio3t/AciG9OfGHjkVPQSdM3u/VXK1X1trk3sqIyDoxW4qLmBDvKoXpBsfDg=
 Content-Type: text/plain; charset="iso-8859-1"
 Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
 X-OriginatorOrg: nxp.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: b552853a-3d70-4c14-8f56-08d6a604584c
-X-MS-Exchange-CrossTenant-originalarrivaltime: 11 Mar 2019 09:31:31.3328
+X-MS-Exchange-CrossTenant-Network-Message-Id: 6414e1d7-6e2f-4080-8d60-08d6a6046260
+X-MS-Exchange-CrossTenant-originalarrivaltime: 11 Mar 2019 09:31:48.4531
  (UTC)
 X-MS-Exchange-CrossTenant-fromentityheader: Hosted
 X-MS-Exchange-CrossTenant-id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
@@ -130,8 +129,8 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Hou Zhiqiang <Zhiqiang.Hou@nxp.com>
 
-Host initial sequence does not depend on PCIe link up, so move it
-to the place just before the enumeration.
+The reset value is all zero, so set a workable value for Primary,
+Secondary and Subordinate bus numbers.
 
 Signed-off-by: Hou Zhiqiang <Zhiqiang.Hou@nxp.com>
 Reviewed-by: Minghuan Lian <Minghuan.Lian@nxp.com>
@@ -140,55 +139,28 @@ Reviewed-by: Subrahmanya Lingappa <l.subrahmanya@mobiveil.co.in>
 V4:
  - no change
 
- drivers/pci/controller/pcie-mobiveil.c | 15 +++++++--------
- 1 file changed, 7 insertions(+), 8 deletions(-)
+ drivers/pci/controller/pcie-mobiveil.c | 6 ++++++
+ 1 file changed, 6 insertions(+)
 
 diff --git a/drivers/pci/controller/pcie-mobiveil.c b/drivers/pci/controlle=
 r/pcie-mobiveil.c
-index 8eee1ab7ee24..c2848c22b466 100644
+index db7ecb021c63..9210165fe8c0 100644
 --- a/drivers/pci/controller/pcie-mobiveil.c
 +++ b/drivers/pci/controller/pcie-mobiveil.c
-@@ -582,15 +582,8 @@ static void mobiveil_pcie_enable_msi(struct mobiveil_p=
-cie *pcie)
- static int mobiveil_host_init(struct mobiveil_pcie *pcie)
- {
+@@ -582,6 +582,12 @@ static int mobiveil_host_init(struct mobiveil_pcie *pc=
+ie)
  	u32 value, pab_ctrl, type;
--	int err;
  	struct resource_entry *win;
 =20
--	err =3D mobiveil_bringup_link(pcie);
--	if (err) {
--		dev_info(&pcie->pdev->dev, "link bring-up failed\n");
--		return err;
--	}
--
++	/* setup bus numbers */
++	value =3D csr_readl(pcie, PCI_PRIMARY_BUS);
++	value &=3D 0xff000000;
++	value |=3D 0x00ff0100;
++	csr_writel(pcie, value, PCI_PRIMARY_BUS);
++
  	/*
  	 * program Bus Master Enable Bit in Command Register in PAB Config
  	 * Space
-@@ -662,7 +655,7 @@ static int mobiveil_host_init(struct mobiveil_pcie *pci=
-e)
- 	/* setup MSI hardware registers */
- 	mobiveil_pcie_enable_msi(pcie);
-=20
--	return err;
-+	return 0;
- }
-=20
- static void mobiveil_mask_intx_irq(struct irq_data *data)
-@@ -922,6 +915,12 @@ static int mobiveil_pcie_probe(struct platform_device =
-*pdev)
- 	bridge->map_irq =3D of_irq_parse_and_map_pci;
- 	bridge->swizzle_irq =3D pci_common_swizzle;
-=20
-+	ret =3D mobiveil_bringup_link(pcie);
-+	if (ret) {
-+		dev_info(dev, "link bring-up failed\n");
-+		goto error;
-+	}
-+
- 	/* setup the kernel resources for the newly added PCIe root bus */
- 	ret =3D pci_scan_root_bus_bridge(bridge);
- 	if (ret)
 --=20
 2.17.1
 
