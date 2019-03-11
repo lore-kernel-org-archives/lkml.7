@@ -2,217 +2,140 @@ Return-Path: <SRS0=FxTY=RO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIMWL_WL_MED,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CE28FC43381
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 Mar 2019 19:27:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6444AC43381
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 Mar 2019 19:27:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9A133206BA
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 Mar 2019 19:27:39 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=fb.com header.i=@fb.com header.b="mUrZ9oom";
-	dkim=pass (1024-bit key) header.d=fb.onmicrosoft.com header.i=@fb.onmicrosoft.com header.b="gZBqLNpn"
+	by mail.kernel.org (Postfix) with ESMTP id 4348D206BA
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 Mar 2019 19:27:56 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727816AbfCKT1i (ORCPT
+        id S1727976AbfCKT1z (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 11 Mar 2019 15:27:38 -0400
-Received: from mx0b-00082601.pphosted.com ([67.231.153.30]:43410 "EHLO
-        mx0a-00082601.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1727118AbfCKT1i (ORCPT
+        Mon, 11 Mar 2019 15:27:55 -0400
+Received: from mout.kundenserver.de ([212.227.126.135]:50551 "EHLO
+        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727118AbfCKT1y (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 11 Mar 2019 15:27:38 -0400
-Received: from pps.filterd (m0001255.ppops.net [127.0.0.1])
-        by mx0b-00082601.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x2BJMVim019506;
-        Mon, 11 Mar 2019 12:27:18 -0700
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=fb.com; h=from : to : cc : subject
- : date : message-id : references : in-reply-to : content-type : content-id
- : content-transfer-encoding : mime-version; s=facebook;
- bh=PuBmJknRoHywFqubd92sKBFm6vU1s5NvgXq1XGF/Vwo=;
- b=mUrZ9oomr7/f7cVOyeMKIXzLrvOo7t4XGFySgu82RAWJspV5MftG3XQblXd97sABC7nh
- ZUNS7ibVNkxe7tzoN6XvHUvwMqifGrMiqnzWelcKFGpeI7zUYR2PKWy6Faq8FzPKLCLy
- 3Iy7dHRwv42Zjllh19HvAycgezD4kSSXe+M= 
-Received: from maileast.thefacebook.com ([199.201.65.23])
-        by mx0b-00082601.pphosted.com with ESMTP id 2r5vc4rc51-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-SHA384 bits=256 verify=NOT);
-        Mon, 11 Mar 2019 12:27:18 -0700
-Received: from frc-hub03.TheFacebook.com (2620:10d:c021:18::173) by
- frc-hub02.TheFacebook.com (2620:10d:c021:18::172) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA384) id
- 15.1.1713.5; Mon, 11 Mar 2019 12:27:17 -0700
-Received: from NAM05-BY2-obe.outbound.protection.outlook.com (192.168.183.28)
- by o365-in.thefacebook.com (192.168.177.73) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA384) id 15.1.1713.5
- via Frontend Transport; Mon, 11 Mar 2019 12:27:17 -0700
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=fb.onmicrosoft.com;
- s=selector1-fb-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=PuBmJknRoHywFqubd92sKBFm6vU1s5NvgXq1XGF/Vwo=;
- b=gZBqLNpn+riBddCVM0TiUbZERiAkgE7Sb2cfRhbWHAevVbg+MNW/lirOMu4CJeRuyqvFe2hli244puJRlRUjb414vsWFBXcFBch9iUZEofvpFwO55fhaZ13WVc3+myFX4RT78nmCuJOE3M9oYBK9EMj7FvBZ3Xk6d2pQuL45Hyo=
-Received: from BYAPR15MB2631.namprd15.prod.outlook.com (20.179.156.24) by
- BYAPR15MB2966.namprd15.prod.outlook.com (20.178.237.147) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.1686.16; Mon, 11 Mar 2019 19:27:08 +0000
-Received: from BYAPR15MB2631.namprd15.prod.outlook.com
- ([fe80::790e:7294:b086:9ded]) by BYAPR15MB2631.namprd15.prod.outlook.com
- ([fe80::790e:7294:b086:9ded%2]) with mapi id 15.20.1686.021; Mon, 11 Mar 2019
- 19:27:08 +0000
-From:   Roman Gushchin <guro@fb.com>
-To:     Johannes Weiner <hannes@cmpxchg.org>
-CC:     Roman Gushchin <guroan@gmail.com>,
-        "linux-mm@kvack.org" <linux-mm@kvack.org>,
-        Kernel Team <Kernel-team@fb.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Tejun Heo <tj@kernel.org>, Rik van Riel <riel@surriel.com>,
-        Michal Hocko <mhocko@kernel.org>
-Subject: Re: [PATCH 5/5] mm: spill memcg percpu stats and events before
- releasing
-Thread-Topic: [PATCH 5/5] mm: spill memcg percpu stats and events before
- releasing
-Thread-Index: AQHU1TmwoulMxqBT9U+dUzzlGgn+iaYGuAGAgAAeXAA=
-Date:   Mon, 11 Mar 2019 19:27:08 +0000
-Message-ID: <20190311192702.GA6622@tower.DHCP.thefacebook.com>
-References: <20190307230033.31975-1-guro@fb.com>
- <20190307230033.31975-6-guro@fb.com> <20190311173825.GE10823@cmpxchg.org>
-In-Reply-To: <20190311173825.GE10823@cmpxchg.org>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-clientproxiedby: MWHPR21CA0034.namprd21.prod.outlook.com
- (2603:10b6:300:129::20) To BYAPR15MB2631.namprd15.prod.outlook.com
- (2603:10b6:a03:152::24)
-x-ms-exchange-messagesentrepresentingtype: 1
-x-originating-ip: [2620:10d:c090:200::1:b487]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: a6654dd5-30c3-4a13-2ba5-08d6a6578d09
-x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600127)(711020)(4605104)(2017052603328)(7153060)(7193020);SRVR:BYAPR15MB2966;
-x-ms-traffictypediagnostic: BYAPR15MB2966:
-x-microsoft-exchange-diagnostics: 1;BYAPR15MB2966;20:uVdq8nnCJU/DKhoO42G+rN8y75eaJX0WlHNcmrNkKifUg4J73FP1juqcyt3FgnrKCFyVSglXVzB/uh9RpaWUBKStwQYFOpJKxWKdxTcbpXBRE/DytsPXQAWSKL1Fq2c+MunbAOGaccLM3O+VCc9CE8GFNltSy52oqtgnjp6f99o=
-x-microsoft-antispam-prvs: <BYAPR15MB296680A644850C258224DF69BE480@BYAPR15MB2966.namprd15.prod.outlook.com>
-x-forefront-prvs: 09730BD177
-x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(396003)(136003)(366004)(376002)(346002)(39860400002)(189003)(199004)(25786009)(14454004)(52116002)(6486002)(102836004)(229853002)(6246003)(4326008)(105586002)(99286004)(33656002)(68736007)(14444005)(5660300002)(256004)(106356001)(86362001)(6512007)(6436002)(53936002)(54906003)(478600001)(316002)(9686003)(6116002)(386003)(305945005)(7736002)(76176011)(186003)(6506007)(46003)(446003)(81166006)(8936002)(476003)(11346002)(81156014)(6916009)(8676002)(1076003)(97736004)(71200400001)(71190400001)(2906002)(486006);DIR:OUT;SFP:1102;SCL:1;SRVR:BYAPR15MB2966;H:BYAPR15MB2631.namprd15.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
-received-spf: None (protection.outlook.com: fb.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam-message-info: U1xSphB1K7QRdUxX5/itZYhwbdVyAA7iTiUs8xtlRBbRf+v6/Rb4Ee8s4wMgre2Dzs+hmuSNPtOIYsdJJBJVjlQXf9h78mXeifquMrQZpmQ+IpgVlAMhXYFwjYYAZr+kMHjAYIJRNXxU4VBAxw/XNUHRvq7Oy2KSQpdDl08Y8aV2oLHVInBPb4amR32hNl1DLBtdUyHJPZY0RARHI/Mq7DX4ckNKXAkRlrLwJHIXSnC9wpV8iJrm8gnzvCa5Teu27+JbzoBv8c7/Ao+oP/rD2hDrWj0Q8QEkxThF4wcs5O/HOc4uo9z7y5UtsLftoDPu+LZA95cIRi5hBA2AKxxA2sr0wHg2RNezZBpVCG8IqL+bLq2EelYNVT8j/dLcl1fApIUn7p+b3zlraGOM7knzIsf755S725BDRE8SrePX3GY=
-Content-Type: text/plain; charset="us-ascii"
-Content-ID: <A8B3421037A6B442A7D3FEE88FE09D90@namprd15.prod.outlook.com>
-Content-Transfer-Encoding: quoted-printable
+        Mon, 11 Mar 2019 15:27:54 -0400
+Received: from [192.168.1.110] ([95.115.159.19]) by mrelayeu.kundenserver.de
+ (mreue010 [212.227.15.167]) with ESMTPSA (Nemesis) id
+ 1M4ahC-1h1ltX0Bmw-001hVV; Mon, 11 Mar 2019 20:27:45 +0100
+Subject: Re: [PATCH 2/4] Add SUNIX Multi-I/O card device driver
+To:     Arnd Bergmann <arnd@arndb.de>, Morris Ku <saumah@gmail.com>
+Cc:     gregkh <gregkh@linuxfoundation.org>, morris_ku@sunix.com,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+References: <20190308123432.20520-1-saumah@gmail.com>
+ <CAK8P3a2yKZqB1CtYSSrhHQmRDdE-GpwdHMifgPB5Ledv-UJzWw@mail.gmail.com>
+From:   "Enrico Weigelt, metux IT consult" <lkml@metux.net>
+Organization: metux IT consult
+Message-ID: <28e10b9b-630f-b3bf-4119-39c43459d665@metux.net>
+Date:   Mon, 11 Mar 2019 20:27:43 +0100
+User-Agent: Mozilla/5.0 (X11; Linux i686 on x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.2.1
 MIME-Version: 1.0
-X-MS-Exchange-CrossTenant-Network-Message-Id: a6654dd5-30c3-4a13-2ba5-08d6a6578d09
-X-MS-Exchange-CrossTenant-originalarrivaltime: 11 Mar 2019 19:27:08.1890
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 8ae927fe-1255-47a7-a2af-5f3a069daaa2
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: BYAPR15MB2966
-X-OriginatorOrg: fb.com
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-03-11_14:,,
- signatures=0
-X-Proofpoint-Spam-Reason: safe
-X-FB-Internal: Safe
+In-Reply-To: <CAK8P3a2yKZqB1CtYSSrhHQmRDdE-GpwdHMifgPB5Ledv-UJzWw@mail.gmail.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-Provags-ID: V03:K1:Jxso8Mmk1EWbLX+Bgmk+sx6b/JahjIrZzNa02G+7c808E1SkWkp
+ ydAY2oeELMlD6rHSZN2/QeOXMXAh8yrZOjN3BVm8LOLKygEe4xKu2eKyP2dC3UAUs2NfFad
+ 07+c1Y4yYUFtF5/kT993oI3TLWLMeAM+XUAb4g01r6qhOHTGAQBKy567re8yZ+1D0EvxK0d
+ yCRTGnNnbRJucSVoalzig==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:L36OGo6WqkE=:Nsnsk/8hYpN3B6Sjfwedch
+ xxFRikOjhVccNYQ5lDLXBJg0czbnaFBOykCIg7UFJhaGX5+1Mj1iKwZMKLoZKPeCgqxwVM25h
+ gJFA/a32tyakOIx9r6qoChPrE28SA1S2cDkwrP9wdL7ja7LZrWjj3i/jhbRFfJ/OLpcEGsCPd
+ Ci7QV/jgsvsqppcQToc88N470WZKRqZ9cmipR2SgO+qeRCPIcV8GbBny0KiNOU378sWV+7/yH
+ kNwfWUsG2fjV0xFRvP3z5NggWDNpBZb5KgftrfWWs9PQjuryty3U1auitKX4O0kKXScxv88j4
+ iWoXDeVyeOgsrych32rgupW7HGxYyFTWd1AZoEJsRh3EAOuCOTm511bHXfZhYf4QmhQhGbTLV
+ x8P0wwxFkKShyrT+IuDXtG+29JF4T0/efLfWvvgylf6lUOXu3jfDX+YhEhtR8/2UFVweHmjq1
+ OeDki5gwr+TFKEuhlUUzByCb1oH98xSS+tqnrZAzTsV94hPL2u5XTRd6XOWFcc8nokD3BA8/R
+ Xpyj0WqfTG20lnDdR/ikn7Kmw0brNoDbEhELC0egskZCkITgOKVwpP6fHVrdrULFv9K120LUk
+ 5bQyZ6b0b8ymVyRSqyXLPjKNkJgbKn296fnzuF82T7Fqy/0UNrTFSacR2AuI9EzVfiiJcBjMY
+ dyG/Fp4PKzwUs3M1BIw4Uz0ttp/0C1Ta5flDAeZFvfVC0esqRNfkjJtwulpdPMOUkmGqXcc0R
+ Mxaic93XXfQgYdLXPGVyk4DZYxzNoVdkLg5szC2JLz9lFf2n5+3818JBKOo=
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Mar 11, 2019 at 01:38:25PM -0400, Johannes Weiner wrote:
-> On Thu, Mar 07, 2019 at 03:00:33PM -0800, Roman Gushchin wrote:
-> > Spill percpu stats and events data to corresponding before releasing
-> > percpu memory.
-> >=20
-> > Although per-cpu stats are never exactly precise, dropping them on
-> > floor regularly may lead to an accumulation of an error. So, it's
-> > safer to sync them before releasing.
-> >=20
-> > To minimize the number of atomic updates, let's sum all stats/events
-> > on all cpus locally, and then make a single update per entry.
-> >=20
-> > Signed-off-by: Roman Gushchin <guro@fb.com>
-> > ---
-> >  mm/memcontrol.c | 52 +++++++++++++++++++++++++++++++++++++++++++++++++
-> >  1 file changed, 52 insertions(+)
-> >=20
-> > diff --git a/mm/memcontrol.c b/mm/memcontrol.c
-> > index 18e863890392..b7eb6fac735e 100644
-> > --- a/mm/memcontrol.c
-> > +++ b/mm/memcontrol.c
-> > @@ -4612,11 +4612,63 @@ static int mem_cgroup_css_online(struct cgroup_=
-subsys_state *css)
-> >  	return 0;
-> >  }
-> > =20
-> > +/*
-> > + * Spill all per-cpu stats and events into atomics.
-> > + * Try to minimize the number of atomic writes by gathering data from
-> > + * all cpus locally, and then make one atomic update.
-> > + * No locking is required, because no one has an access to
-> > + * the offlined percpu data.
-> > + */
-> > +static void mem_cgroup_spill_offlined_percpu(struct mem_cgroup *memcg)
-> > +{
-> > +	struct memcg_vmstats_percpu __percpu *vmstats_percpu;
-> > +	struct lruvec_stat __percpu *lruvec_stat_cpu;
-> > +	struct mem_cgroup_per_node *pn;
-> > +	int cpu, i;
-> > +	long x;
-> > +
-> > +	vmstats_percpu =3D memcg->vmstats_percpu_offlined;
-> > +
-> > +	for (i =3D 0; i < MEMCG_NR_STAT; i++) {
-> > +		int nid;
-> > +
-> > +		x =3D 0;
-> > +		for_each_possible_cpu(cpu)
-> > +			x +=3D per_cpu(vmstats_percpu->stat[i], cpu);
-> > +		if (x)
-> > +			atomic_long_add(x, &memcg->vmstats[i]);
-> > +
-> > +		if (i >=3D NR_VM_NODE_STAT_ITEMS)
-> > +			continue;
-> > +
-> > +		for_each_node(nid) {
-> > +			pn =3D mem_cgroup_nodeinfo(memcg, nid);
-> > +			lruvec_stat_cpu =3D pn->lruvec_stat_cpu_offlined;
-> > +
-> > +			x =3D 0;
-> > +			for_each_possible_cpu(cpu)
-> > +				x +=3D per_cpu(lruvec_stat_cpu->count[i], cpu);
-> > +			if (x)
-> > +				atomic_long_add(x, &pn->lruvec_stat[i]);
-> > +		}
-> > +	}
-> > +
-> > +	for (i =3D 0; i < NR_VM_EVENT_ITEMS; i++) {
-> > +		x =3D 0;
-> > +		for_each_possible_cpu(cpu)
-> > +			x +=3D per_cpu(vmstats_percpu->events[i], cpu);
-> > +		if (x)
-> > +			atomic_long_add(x, &memcg->vmevents[i]);
-> > +	}
->=20
-> This looks good, but couldn't this be merged with the cpu offlining?
-> It seems to be exactly the same code, except for the nesting of the
-> for_each_possible_cpu() iteration here.
->=20
-> This could be a function that takes a CPU argument and then iterates
-> the cgroups and stat items to collect and spill the counters of that
-> specified CPU; offlining would call it once, and this spill code here
-> would call it for_each_possible_cpu().
->=20
-> We shouldn't need the atomicity of this_cpu_xchg() during hotunplug,
-> the scheduler isn't even active on that CPU anymore when it's called.
+On 11.03.19 16:05, Arnd Bergmann wrote:
 
-Good point!
-I initially tried to adapt the cpu offlining code, but it didn't work
-well: the code became too complex and ugly. But the opposite can be done
-easily: mem_cgroup_spill_offlined_percpu() can take a cpumask,
-and the cpu offlining code will look like:
-	for_each_mem_cgroup(memcg)
-		mem_cgroup_spill_offlined_percpu(memcg, cpumask);
-I'll master a separate patch.
+Hi,
 
-Thank you!
+> Enrico has already replied with the most important comments. Here> are just some more high-level thoughts from me:
+I'll try to make things a bit more clear to newcomers:
+
+> * We want the functionality to be present in subsystem specific>   standalone drivers, i.e. drivers/tty/serial/, drivers/parport/,
+drivers/gpio>   etc, as Enrico said
+That means we'd have completely separate drivers for the uart, parport,
+gpio, etc. These might share some common code (eg. some board config
+data which is used by all drivers), in a separate module.
+
+>   If this is not possible, what you may need to do here is to have a>   small driver in drivers/mfd/ that handles the PCI function and
+creates>   platform_device instances that the individual drivers can
+bind to.
+
+'bind to' here means, the mfd driver will prepare the platform data
+(platform specific config struct) for the actual drivers and creates
+instances of them (see platform_device_register*() functions). The
+kernel will then load the corresponding modules (if not compiled-in)
+and calls these drivers with the platform data passed in to it's
+probe() callback.
+
+An example could be my recent gpio-amd-fch and pcengines-apuv2 drivers.
+Here, the gpio-amd-fch drives the gpio's in the SoC, while the
+pcengines-apuv2 driver one is just binding drivers together - the
+actual config (register addressed, etc) is in the pcengines-apu2 driver:
+
+See:
+drivers/gpio/gpio-amd-fch.c
+drivers/platform/x86/pcengines-apuv2.c
+
+Maybe it would be a good start, spliiting out the gpio stuff into
+it's own driver. If the gpio subdevice can't be probed individually
+(eg. has it's own pci function), you could do it the way I did it
+w/ gpio-amd-fch and pcengines-apuv2.
+
+> * do not implement your own ioctl handlers. If you need a custom>   interface for something hardware specific, split that out into>   a
+separate patch, so the base support can be reviewed>   independently.
+You really should try to get around w/o adding any special ioctl()s
+or other userland interfaces. If you *really* believe you can't do that,
+please let's talk about this first. Such cases usually indicate a
+missing generic functionality in one of the subsystems.
+
+Let me stress some very important point here (which also I frequently
+have to explain to my clients): in Linux, the kernel is *the*
+"hardware abstraction layer". Applications can just use generic APIs
+and never care about the actual underlying hardware - the kernel just
+presents everything by a uniform interface. That's why drivers really
+just dock into the corresponding subsystems and not introduce their
+own APIs.
+
+There're only few exceptions from that, eg. DRI subsystem, because these
+devices tend to be so specific, that it just doesn't make sense to
+create a uniform interface (unless we'd want to move entire gallium
+into the kernel ;-)).
+
+From what I can see in your patches, your cards provide pretty standard
+uart, parport, gpio.
+
+> * If the functions (in particular serial and parport) have a similar>   register layout to existing drivers, try to reuse the existing code>
+  and extend it, rather than duplicating the implementation.
+Yes, please have a closer look into the corresponding subsystems,
+which generic drivers already exist, that might fit to your device.
+
+For example, in gpio, we've got a generic driver for devices that map
+all the direction flags into one, and the line statii into another
+register (see bgpio_*() functions). We're yet lacking another generic
+one that puts everything for one line into one register (and then has
+an array of those) - that's still on my todo list.
+
+
+--mtx
+
+-- 
+Enrico Weigelt, metux IT consult
+Free software and Linux embedded engineering
+info@metux.net -- +49-151-27565287
