@@ -6,46 +6,45 @@ X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
 	SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A3C09C43381
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 Mar 2019 19:56:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 12963C43381
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 Mar 2019 19:57:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 76A23214AF
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 Mar 2019 19:56:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DA09321738
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 Mar 2019 19:57:01 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1552334219;
-	bh=6pktP2eBvwBqfSFJUuY97dQAnRVVDhWo5AvqF1PZkQU=;
+	s=default; t=1552334221;
+	bh=QpNv7KP6bJQnFVr1D6Hsiz7PwXAQRehVv7/X7tYeYRs=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Oa1gqlK7jgiCcM64BO8l8esPKpaHPAJqKi0Wz5d2+JBNg4URVLgAP4X81qLFFEiiU
-	 9pahQZLc3mFtKXHIvwZ6dmseE8dsU+RasMPjny9dHzrW4uSIE1WG5CSZ065s2K480D
-	 Veyx4pe+T3N44RW9lKhc/pjziiyMj0AV6B41+w5o=
+	b=cKeL3TMpRd6/yGJc8Qo+ZT42J5wuuzLtz0h6d781uRSqbFfkoCUV4UovV9OY1+ozF
+	 kdyuO2w7M5/pxGk28HVVCIEoVHrWFw9cun9/aONCJSkQUD3F26zZp632I5sXHTUAhF
+	 VJi3Ekxj2yUpZXwz1n2r1JHQAhha9WwCHOaPlXPU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728919AbfCKT45 (ORCPT
+        id S1728932AbfCKT5A (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 11 Mar 2019 15:56:57 -0400
-Received: from mail.kernel.org ([198.145.29.99]:34282 "EHLO mail.kernel.org"
+        Mon, 11 Mar 2019 15:57:00 -0400
+Received: from mail.kernel.org ([198.145.29.99]:34332 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728286AbfCKT4z (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 11 Mar 2019 15:56:55 -0400
+        id S1728920AbfCKT46 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 11 Mar 2019 15:56:58 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 0986F21773;
-        Mon, 11 Mar 2019 19:56:53 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id E69C52087C;
+        Mon, 11 Mar 2019 19:56:56 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1552334214;
-        bh=6pktP2eBvwBqfSFJUuY97dQAnRVVDhWo5AvqF1PZkQU=;
+        s=default; t=1552334217;
+        bh=QpNv7KP6bJQnFVr1D6Hsiz7PwXAQRehVv7/X7tYeYRs=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=pd4ObuS1kOY50p/98F1Rj1WSlJaiLfrru6Mq6rbvo2OliWxnsf3ai4A1AvtzmzMWt
-         Z/xpS6O2rlrJrrPyrakUlrC4BbbIFoYYtm9Cja8Bqf+1OIvQd9mr/Y/WIRBPRfTHGI
-         Z7TZsfmkizlZKAXd0HfzDCBz5UVPJTjdm8MtD4DM=
+        b=uku49mMDocgUaOQfp2EbyM+hRV6/p+g82MVNqFWNzrR0xYHvKgypZuTfy0Y5U7g3C
+         xCHVFuZGaROnSu3KRVknijq58LToGQ7FqAaqGrzXRDDTO4pAKxo4iykVrWFCdy8CWz
+         aN5eP1UoiSuBxlMoh5C11Lsc9rwcia37M1PyqrE0=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Paul Kocialkowski <paul.kocialkowski@bootlin.com>,
-        Wolfram Sang <wsa@the-dreams.de>,
-        Sasha Levin <sashal@kernel.org>, linux-i2c@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.20 49/52] i2c: bcm2835: Clear current buffer pointers and counts after a transfer
-Date:   Mon, 11 Mar 2019 15:55:13 -0400
-Message-Id: <20190311195516.137772-49-sashal@kernel.org>
+Cc:     Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH AUTOSEL 4.20 51/52] lib/crc32.c: mark crc32_le_base/__crc32c_le_base aliases as __pure
+Date:   Mon, 11 Mar 2019 15:55:15 -0400
+Message-Id: <20190311195516.137772-51-sashal@kernel.org>
 X-Mailer: git-send-email 2.19.1
 In-Reply-To: <20190311195516.137772-1-sashal@kernel.org>
 References: <20190311195516.137772-1-sashal@kernel.org>
@@ -57,69 +56,52 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Paul Kocialkowski <paul.kocialkowski@bootlin.com>
+From: Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>
 
-[ Upstream commit f275a4659484716259cc46268d9043424e51cf0f ]
+[ Upstream commit ff98e20ef2081b8620dada28fc2d4fb24ca0abf2 ]
 
-The driver's interrupt handler checks whether a message is currently
-being handled with the curr_msg pointer. When it is NULL, the interrupt
-is considered to be unexpected. Similarly, the i2c_start_transfer
-routine checks for the remaining number of messages to handle in
-num_msgs.
+The upcoming GCC 9 release extends the -Wmissing-attributes warnings
+(enabled by -Wall) to C and aliases: it warns when particular function
+attributes are missing in the aliases but not in their target.
 
-However, these values are never cleared and always keep the message and
-number relevant to the latest transfer (which might be done already and
-the underlying message memory might have been freed).
+In particular, it triggers here because crc32_le_base/__crc32c_le_base
+aren't __pure while their target crc32_le/__crc32c_le are.
 
-When an unexpected interrupt hits with the DONE bit set, the isr will
-then try to access the flags field of the curr_msg structure, leading
-to a fatal page fault.
+These aliases are used by architectures as a fallback in accelerated
+versions of CRC32. See commit 9784d82db3eb ("lib/crc32: make core crc32()
+routines weak so they can be overridden").
 
-The msg_buf and msg_buf_remaining fields are also never cleared at the
-end of the transfer, which can lead to similar pitfalls.
+Therefore, being fallbacks, it is likely that even if the aliases
+were called from C, there wouldn't be any optimizations possible.
+Currently, the only user is arm64, which calls this from asm.
 
-Fix these issues by introducing a cleanup function and always calling
-it after a transfer is finished.
+Still, marking the aliases as __pure makes sense and is a good idea
+for documentation purposes and possible future optimizations,
+which also silences the warning.
 
-Fixes: e2474541032d ("i2c: bcm2835: Fix hang for writing messages larger than 16 bytes")
-Signed-off-by: Paul Kocialkowski <paul.kocialkowski@bootlin.com>
-Acked-by: Stefan Wahren <stefan.wahren@i2se.com>
-Signed-off-by: Wolfram Sang <wsa@the-dreams.de>
+Acked-by: Ard Biesheuvel <ard.biesheuvel@linaro.org>
+Tested-by: Laura Abbott <labbott@redhat.com>
+Signed-off-by: Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/i2c/busses/i2c-bcm2835.c | 12 ++++++++++++
- 1 file changed, 12 insertions(+)
+ lib/crc32.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/i2c/busses/i2c-bcm2835.c b/drivers/i2c/busses/i2c-bcm2835.c
-index 44deae78913e..4d19254f78c8 100644
---- a/drivers/i2c/busses/i2c-bcm2835.c
-+++ b/drivers/i2c/busses/i2c-bcm2835.c
-@@ -191,6 +191,15 @@ static void bcm2835_i2c_start_transfer(struct bcm2835_i2c_dev *i2c_dev)
- 	bcm2835_i2c_writel(i2c_dev, BCM2835_I2C_C, c);
- }
+diff --git a/lib/crc32.c b/lib/crc32.c
+index 45b1d67a1767..4a20455d1f61 100644
+--- a/lib/crc32.c
++++ b/lib/crc32.c
+@@ -206,8 +206,8 @@ u32 __pure __weak __crc32c_le(u32 crc, unsigned char const *p, size_t len)
+ EXPORT_SYMBOL(crc32_le);
+ EXPORT_SYMBOL(__crc32c_le);
  
-+static void bcm2835_i2c_finish_transfer(struct bcm2835_i2c_dev *i2c_dev)
-+{
-+	i2c_dev->curr_msg = NULL;
-+	i2c_dev->num_msgs = 0;
-+
-+	i2c_dev->msg_buf = NULL;
-+	i2c_dev->msg_buf_remaining = 0;
-+}
-+
+-u32 crc32_le_base(u32, unsigned char const *, size_t) __alias(crc32_le);
+-u32 __crc32c_le_base(u32, unsigned char const *, size_t) __alias(__crc32c_le);
++u32 __pure crc32_le_base(u32, unsigned char const *, size_t) __alias(crc32_le);
++u32 __pure __crc32c_le_base(u32, unsigned char const *, size_t) __alias(__crc32c_le);
+ 
  /*
-  * Note about I2C_C_CLEAR on error:
-  * The I2C_C_CLEAR on errors will take some time to resolve -- if you were in
-@@ -291,6 +300,9 @@ static int bcm2835_i2c_xfer(struct i2c_adapter *adap, struct i2c_msg msgs[],
- 
- 	time_left = wait_for_completion_timeout(&i2c_dev->completion,
- 						adap->timeout);
-+
-+	bcm2835_i2c_finish_transfer(i2c_dev);
-+
- 	if (!time_left) {
- 		bcm2835_i2c_writel(i2c_dev, BCM2835_I2C_C,
- 				   BCM2835_I2C_C_CLEAR);
+  * This multiplies the polynomials x and y modulo the given modulus.
 -- 
 2.19.1
 
