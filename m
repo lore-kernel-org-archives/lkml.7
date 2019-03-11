@@ -2,94 +2,200 @@ Return-Path: <SRS0=FxTY=RO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+	SPF_PASS,USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7E495C43381
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 Mar 2019 20:13:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id ADA3EC43381
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 Mar 2019 20:15:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 46F57214AF
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 Mar 2019 20:13:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 72A092147C
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 Mar 2019 20:15:56 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1552335235;
-	bh=xJAIW4ZZsYYo8sQDqgKDMkwjJG6EinVHEuX8kR+JgI8=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=ccd5R4uVasHJIIZBcUcKLxm3HBneAsO1cor2WZie5Nr2/Q67M9zK3fSkeolatjYV+
-	 ugNsEZiO6gUu3ddbIknTnPc24/mIc6CZ3mLk8Eg3BPS1PFPDOGQb3UQKEFNMLQjcNo
-	 c4XeiR6DLAo2UNmqvctES06Ylo0kSRmUT45LpjYc=
+	s=default; t=1552335356;
+	bh=ngk0hOo5owtK7B9N8l6qA59tkuCL654naxAsi1bjkuA=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=H1NaSxm7PxkORSXI6/sFUa/ebPmMgQnntmmSQGrVRb9TcIvsMXgEVpE8gtU9/aVEI
+	 OSsmMmhbTx1jIgF+zL+4h1RcWgyk4MY0FdP9V7RyhBDiD1UfQ6vV7mHw6jegAk6cZO
+	 p5dimXrDmQ4sOfLj9n3EfkOOCmAWpxoPHu2RZkU8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728173AbfCKTzV (ORCPT
+        id S1728395AbfCKUPz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 11 Mar 2019 15:55:21 -0400
-Received: from mail.kernel.org ([198.145.29.99]:60792 "EHLO mail.kernel.org"
+        Mon, 11 Mar 2019 16:15:55 -0400
+Received: from mga11.intel.com ([192.55.52.93]:55643 "EHLO mga11.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727118AbfCKTzT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 11 Mar 2019 15:55:19 -0400
-Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 4F6AA214AF;
-        Mon, 11 Mar 2019 19:55:18 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1552334119;
-        bh=xJAIW4ZZsYYo8sQDqgKDMkwjJG6EinVHEuX8kR+JgI8=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=gUg2ng1ZvxOJbo8sC009if7r/59HO26Qg3ZmadWs3JM6Yz0gNqzXH5fakdtyUh+BC
-         ToIiZ1GH6W7bfJtnpwPcE8HF057f5t9zRqyKe7h/g6ycnx0F1CE1IGKgV58sApPbJp
-         c6GjG5kYHuxDtjU50TuAbYpt1LzVoAXS2N+U4gX4=
-From:   Sasha Levin <sashal@kernel.org>
-To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Alexander Shiyan <shc_work@mail.ru>,
-        Philipp Zabel <p.zabel@pengutronix.de>,
-        Sasha Levin <sashal@kernel.org>,
-        dri-devel@lists.freedesktop.org
-Subject: [PATCH AUTOSEL 4.20 02/52] gpu: ipu-v3: Fix i.MX51 CSI control registers offset
-Date:   Mon, 11 Mar 2019 15:54:26 -0400
-Message-Id: <20190311195516.137772-2-sashal@kernel.org>
-X-Mailer: git-send-email 2.19.1
-In-Reply-To: <20190311195516.137772-1-sashal@kernel.org>
-References: <20190311195516.137772-1-sashal@kernel.org>
+        id S1726675AbfCKUPy (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 11 Mar 2019 16:15:54 -0400
+X-Amp-Result: UNKNOWN
+X-Amp-Original-Verdict: FILE UNKNOWN
+X-Amp-File-Uploaded: False
+Received: from fmsmga005.fm.intel.com ([10.253.24.32])
+  by fmsmga102.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 11 Mar 2019 13:15:54 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.58,468,1544515200"; 
+   d="scan'208";a="327630203"
+Received: from unknown (HELO localhost.localdomain) ([10.232.112.69])
+  by fmsmga005.fm.intel.com with ESMTP; 11 Mar 2019 13:15:53 -0700
+Date:   Mon, 11 Mar 2019 14:16:33 -0600
+From:   Keith Busch <kbusch@kernel.org>
+To:     Jonathan Cameron <jonathan.cameron@huawei.com>
+Cc:     "Busch, Keith" <keith.busch@intel.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "linux-acpi@vger.kernel.org" <linux-acpi@vger.kernel.org>,
+        "linux-mm@kvack.org" <linux-mm@kvack.org>,
+        "linux-api@vger.kernel.org" <linux-api@vger.kernel.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Rafael Wysocki <rafael@kernel.org>,
+        "Hansen, Dave" <dave.hansen@intel.com>,
+        "Williams, Dan J" <dan.j.williams@intel.com>
+Subject: Re: [PATCHv7 10/10] doc/mm: New documentation for memory performance
+Message-ID: <20190311201632.GG10411@localhost.localdomain>
+References: <20190227225038.20438-1-keith.busch@intel.com>
+ <20190227225038.20438-11-keith.busch@intel.com>
+ <20190311113843.00006b47@huawei.com>
 MIME-Version: 1.0
-X-Patchwork-Hint: Ignore
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190311113843.00006b47@huawei.com>
+User-Agent: Mutt/1.9.1 (2017-09-22)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Alexander Shiyan <shc_work@mail.ru>
+On Mon, Mar 11, 2019 at 04:38:43AM -0700, Jonathan Cameron wrote:
+> On Wed, 27 Feb 2019 15:50:38 -0700
+> Keith Busch <keith.busch@intel.com> wrote:
+> 
+> > Platforms may provide system memory where some physical address ranges
+> > perform differently than others, or is side cached by the system.
+> The magic 'side cached' term still here in the patch description, ideally
+> wants cleaning up.
+> 
+> > 
+> > Add documentation describing a high level overview of such systems and the
+> > perforamnce and caching attributes the kernel provides for applications
+> performance
+> 
+> > wishing to query this information.
+> > 
+> > Reviewed-by: Mike Rapoport <rppt@linux.ibm.com>
+> > Signed-off-by: Keith Busch <keith.busch@intel.com>
+> 
+> A few comments inline. Mostly the weird corner cases that I miss understood
+> in one of the earlier versions of the code.
+> 
+> Whilst I think perhaps that one section could be tweaked a tiny bit I'm basically
+> happy with this if you don't want to.
+> 
+> Reviewed-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+> 
+> > ---
+> >  Documentation/admin-guide/mm/numaperf.rst | 164 ++++++++++++++++++++++++++++++
+> >  1 file changed, 164 insertions(+)
+> >  create mode 100644 Documentation/admin-guide/mm/numaperf.rst
+> > 
+> > diff --git a/Documentation/admin-guide/mm/numaperf.rst b/Documentation/admin-guide/mm/numaperf.rst
+> > new file mode 100644
+> > index 000000000000..d32756b9be48
+> > --- /dev/null
+> > +++ b/Documentation/admin-guide/mm/numaperf.rst
+> > @@ -0,0 +1,164 @@
+> > +.. _numaperf:
+> > +
+> > +=============
+> > +NUMA Locality
+> > +=============
+> > +
+> > +Some platforms may have multiple types of memory attached to a compute
+> > +node. These disparate memory ranges may share some characteristics, such
+> > +as CPU cache coherence, but may have different performance. For example,
+> > +different media types and buses affect bandwidth and latency.
+> > +
+> > +A system supports such heterogeneous memory by grouping each memory type
+> > +under different domains, or "nodes", based on locality and performance
+> > +characteristics.  Some memory may share the same node as a CPU, and others
+> > +are provided as memory only nodes. While memory only nodes do not provide
+> > +CPUs, they may still be local to one or more compute nodes relative to
+> > +other nodes. The following diagram shows one such example of two compute
+> > +nodes with local memory and a memory only node for each of compute node:
+> > +
+> > + +------------------+     +------------------+
+> > + | Compute Node 0   +-----+ Compute Node 1   |
+> > + | Local Node0 Mem  |     | Local Node1 Mem  |
+> > + +--------+---------+     +--------+---------+
+> > +          |                        |
+> > + +--------+---------+     +--------+---------+
+> > + | Slower Node2 Mem |     | Slower Node3 Mem |
+> > + +------------------+     +--------+---------+
+> > +
+> > +A "memory initiator" is a node containing one or more devices such as
+> > +CPUs or separate memory I/O devices that can initiate memory requests.
+> > +A "memory target" is a node containing one or more physical address
+> > +ranges accessible from one or more memory initiators.
+> > +
+> > +When multiple memory initiators exist, they may not all have the same
+> > +performance when accessing a given memory target. Each initiator-target
+> > +pair may be organized into different ranked access classes to represent
+> > +this relationship. 
+> 
+> This concept is a bit vague at the moment. Largely because only access0
+> is actually defined.  We should definitely keep a close eye on any others
+> that are defined in future to make sure this text is still valid.
+> 
+> I can certainly see it being used for different ideas of 'best' rather
+> than simply best and second best etc.
 
-[ Upstream commit 2c0408dd0d8906b26fe8023889af7adf5e68b2c2 ]
+I tried to make the interface flexible to future extension, but I'm
+still not sure how potential users would want to see something like
+all pair-wise attributes, so I had some trouble trying to capture that
+in words.
+ 
+> > The highest performing initiator to a given target
+> > +is considered to be one of that target's local initiators, and given
+> > +the highest access class, 0. Any given target may have one or more
+> > +local initiators, and any given initiator may have multiple local
+> > +memory targets.
+> > +
+> > +To aid applications matching memory targets with their initiators, the
+> > +kernel provides symlinks to each other. The following example lists the
+> > +relationship for the access class "0" memory initiators and targets, which is
+> > +the of nodes with the highest performing access relationship::
+> > +
+> > +	# symlinks -v /sys/devices/system/node/nodeX/access0/targets/
+> > +	relative: /sys/devices/system/node/nodeX/access0/targets/nodeY -> ../../nodeY
+> 
+> So this one perhaps needs a bit more description - I would put it after initiators
+> which precisely fits the description you have here now.
+> 
+> "targets contains those nodes for which this initiator is the best possible initiator."
+> 
+> which is subtly different form
+> 
+> "targets contains those nodes to which this node has the highest
+> performing access characteristics."
+> 
+> For example in my test case:
+> * 4 nodes with local memory and cpu, 1 node remote and equal distant from all of the
+>   initiators,
+> 
+> targets for the compute nodes contains both themselves and the remote node, to which
+> the characteristics are of course worse. As you point out before, we need to look
+> in 
+> node0/access0/targets/node0/access0/initiators 
+> node0/access0/targets/node4/access0/initiators 
+> to get the relevant characteristics and work out that node0 is 'nearer' itself
+> (obviously this is a bit of a silly case, but we could have no memory node0 and
+> be talking about node4 and node5.
+> 
+> I am happy with the actual interface, this is just a question about whether we can tweak
+> this text to be slightly clearer.
 
-The CSI0/CSI1 registers offset is at +0xe030000/+0xe038000 relative
-to the control module registers on IPUv3EX.
-This patch fixes wrong values for i.MX51 CSI0/CSI1.
+Sure, I mention this in patch 4's commit message. Probably worth
+repeating here:
 
-Fixes: 2ffd48f2e7 ("gpu: ipu-v3: Add Camera Sensor Interface unit")
-
-Signed-off-by: Alexander Shiyan <shc_work@mail.ru>
-Signed-off-by: Philipp Zabel <p.zabel@pengutronix.de>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
----
- drivers/gpu/ipu-v3/ipu-common.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
-
-diff --git a/drivers/gpu/ipu-v3/ipu-common.c b/drivers/gpu/ipu-v3/ipu-common.c
-index 474b00e19697..5b7cdbfe062f 100644
---- a/drivers/gpu/ipu-v3/ipu-common.c
-+++ b/drivers/gpu/ipu-v3/ipu-common.c
-@@ -898,8 +898,8 @@ static struct ipu_devtype ipu_type_imx51 = {
- 	.cpmem_ofs = 0x1f000000,
- 	.srm_ofs = 0x1f040000,
- 	.tpm_ofs = 0x1f060000,
--	.csi0_ofs = 0x1f030000,
--	.csi1_ofs = 0x1f038000,
-+	.csi0_ofs = 0x1e030000,
-+	.csi1_ofs = 0x1e038000,
- 	.ic_ofs = 0x1e020000,
- 	.disp0_ofs = 0x1e040000,
- 	.disp1_ofs = 0x1e048000,
--- 
-2.19.1
-
+    A memory initiator may have multiple memory targets in the same access
+    class. The target memory's initiators in a given class indicate the
+    nodes access characteristics share the same performance relative to other
+    linked initiator nodes. Each target within an initiator's access class,
+    though, do not necessarily perform the same as each other.
