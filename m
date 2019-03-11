@@ -6,48 +6,48 @@ X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E7B7CC43381
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 Mar 2019 13:27:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A16CEC43381
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 Mar 2019 13:27:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AD8412084F
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 Mar 2019 13:27:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6767C20857
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 Mar 2019 13:27:42 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728123AbfCKN1f (ORCPT
+        id S1727791AbfCKN12 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 11 Mar 2019 09:27:35 -0400
-Received: from mout.kundenserver.de ([217.72.192.73]:39263 "EHLO
+        Mon, 11 Mar 2019 09:27:28 -0400
+Received: from mout.kundenserver.de ([212.227.17.24]:37167 "EHLO
         mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727559AbfCKNTg (ORCPT
+        with ESMTP id S1727575AbfCKNTg (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Mon, 11 Mar 2019 09:19:36 -0400
 Received: from orion.localdomain ([95.115.159.19]) by mrelayeu.kundenserver.de
  (mreue109 [212.227.15.183]) with ESMTPSA (Nemesis) id
- 1McY0J-1gVfFQ1cKb-00cxnC for <linux-kernel@vger.kernel.org>; Mon, 11 Mar 2019
- 14:19:33 +0100
+ 1N7Qp1-1h0NNT1U6P-017mLe for <linux-kernel@vger.kernel.org>; Mon, 11 Mar 2019
+ 14:19:34 +0100
 From:   "Enrico Weigelt, metux IT consult" <info@metux.net>
 To:     linux-kernel@vger.kernel.org
-Subject: [PATCH 044/114] kernel: Kconfig: pedantic formatting
-Date:   Mon, 11 Mar 2019 14:17:56 +0100
-Message-Id: <1552310346-7629-45-git-send-email-info@metux.net>
+Subject: [PATCH 051/114] fs: Kconfig: pedantic formatting
+Date:   Mon, 11 Mar 2019 14:18:03 +0100
+Message-Id: <1552310346-7629-52-git-send-email-info@metux.net>
 X-Mailer: git-send-email 1.9.1
 In-Reply-To: <1552310346-7629-1-git-send-email-info@metux.net>
 References: <1552310346-7629-1-git-send-email-info@metux.net>
-X-Provags-ID: V03:K1:bbTazX9iUvAf8+dbV+j0TWoRspk3bpLMhCajGJAtJ7YMMVFRjUY
- WnrSp/7FFZ1sXrZpwsptzTzcMWDiQoU6hUWywiQQB7etUIO8oPUTmmugA/0WrdgxzlU7Aih
- NOZZPmrc1xExwDu3+fwLe3qjVjVBbMw36/e3DYRVEPvJJ60o5C1KT9g7ECEwuDfVtZGbRAm
- ABDgHXeopVlys+9oQcAhQ==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:XgPFCmMFz3g=:BIoRt9qcKfSu5K/QDNZPR7
- BlE8R5frA9dcaYa+qGRjiryH2oJu/JWoTK2RpslHvawoLVodePmLynVXMt2zdBUWWzBxr3IC+
- EH00/GoyPvkQvh/Lc64f9GzspcYRfe22BMIMQIpEzMaFYPPFou251j3q0KNYD5xFihvtPNOfy
- QCr2MXmcQW8NC3VNn58ue5LMvNGFwUGpBA6tz+ow4aqyO2sSQqsZlVp791yecw6cogvE3LhyQ
- zUBhQmQml0uoCo+Z9DOsIQfvykikvQoM9Slnsme0nc+nkuiQgVt5SK/hvGc/7uZBo+D5c502B
- CEj1vY69EmI1BntpnQj4M2dDuKOIi6TStTGp01Q1bcTfMVUe8UVrHb/vkXcxtfvnv+5+YW4RJ
- Ly2Pz+FoOvxhrxhtfFoTmWlr2RM0K6FuVtqTzatOizpatYHaubMyF2fShHowBB1QblEKLAVxI
- 8dw4TgQNIYhOkpd9ZOFoee88iPGXgXv4zTOGh74idWZVRoCO5nrdRnTYT7+xJKnriVigZF07k
- e+YGTy553NLrNv2OZGCjx7K/E20zDK6p4gkT3ikC7R+cqZCXT4ZSgS/czo/gmSReULR2Qt7Px
- utphm1jzfO/qObfdT7yAqscEl0/IWF3xRGd0QKb4tYDb9wG8iH70uHm5pRfMS/IQzfFRWQAAC
- v0PQ4RscbzHhu32UnM9CqXXvcgLkOJIllIduY6VXeIBE4LPREyoa0W2oLcq8PJnBfC1Ym+nRy
- RtrdxDS5mlBFLJHiR8IBZyIkwKfZSVKJPWrhVQ==
+X-Provags-ID: V03:K1:X4Ue4hX2b9dUiniwWahe++4B3Ux+ofQAtnRmlM5SjCscIGamxXY
+ ELioeAnoTrg6C4UXqpFDx66oVPymGJ6rs6mk3kpvQmzhsmfhSSwbPPtco+u9Ada7sJ6Jo5d
+ aMe8vygqdpeW/vXBwlUHHjYL6uVgIeYI3EKO9KHhFYWuV6fS094bJ5K4kCCSGBdxmzJF9iP
+ xZ1tyQ870Jf8SOOxCBxoQ==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:LEojyefwLUk=:cloDDKvxooXbxan9PkqDDW
+ K5p5MLpNt5IMlCkkR9NFAmzkykUjmAYbpahPnTUCaofodSpY123DAJQZ97xboOJ6HJbdfaKaC
+ FfOk2YIBRbUTA6xLM0/h+RQUzYOvxwwEvoHAoWzCIPhhQIw+xamtVIMzvOtjJh2JWioZzTkLM
+ YZUui8gCaFhrsjmGJcYMF+nm2cgRrwPFzdWEGU9oUDtS0a0NnOMEhKtp67bJNKaNxd8GvRqMm
+ m8gpHQA98vs8VBuK7szWUXEQ543aUDPv5oUJ7WCBhPZzI6Kc/ht+VRTQPvNTD4DFvXTIPyMj8
+ wRMJfiBdQ1ZPNywE9RGLAKKiSwWd6fRDzX/bHOA7Mb3um9MqA8q4fyT/xMxbmtddWI74/2bBB
+ FIh98VbuSMoYTuFzOhW0szhHCnOk+J7pI3Rz5mVdF+5e+nDwXjlYg9DBY5D3mtO/Yp9x78RpD
+ F594yMKwPrTpQBF8DFIj7HE8p3pab1hAWJD+QAK50nbw1YZg1jJQ4tKLA/DHG6jPfGQx9yxAE
+ rJwyLZeu7M1t6tDkYN8/S7q+M86CkP7dSVM5eeBh7wxsV5BUKtnQNIAIolWw05EUUrHHcItkG
+ nWnz/UQhCpJTqOYUl6FSCzvHcAO+foEYuHMOhGJCsQSOVwo6WP5nb30LaYZUX3jC0IfdUZXFA
+ cRyluqQRj3YNlj+JB/9/nMqA9MQcNm1wPpRTqt24/nbe6anzqkxFTuUwtbG305uE3AkrWxEtp
+ MgEv3CLulSv7vALToRPklOK1pKu9KMocsyv+Rg==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
@@ -58,481 +58,327 @@ Great White Handkerchief come around and clean it up.
 
 Signed-off-by: Enrico Weigelt, metux IT consult <info@metux.net>
 ---
- kernel/irq/Kconfig   |  26 +++----
- kernel/power/Kconfig |  12 +--
- kernel/rcu/Kconfig   |   2 +-
- kernel/time/Kconfig  |  20 ++---
- kernel/trace/Kconfig | 205 +++++++++++++++++++++++++--------------------------
- 5 files changed, 132 insertions(+), 133 deletions(-)
+ fs/9p/Kconfig              |  2 --
+ fs/Kconfig                 |  6 +++---
+ fs/autofs/Kconfig          | 36 ++++++++++++++++++------------------
+ fs/nfs/Kconfig             |  6 +++---
+ fs/notify/fanotify/Kconfig | 22 +++++++++++-----------
+ fs/orangefs/Kconfig        |  4 ++--
+ fs/proc/Kconfig            | 10 +++++-----
+ fs/pstore/Kconfig          | 18 +++++++++---------
+ fs/qnx6/Kconfig            |  2 +-
+ fs/quota/Kconfig           |  2 +-
+ fs/reiserfs/Kconfig        |  4 ++--
+ fs/ubifs/Kconfig           |  4 ++--
+ fs/ufs/Kconfig             |  4 ++--
+ 13 files changed, 59 insertions(+), 61 deletions(-)
 
-diff --git a/kernel/irq/Kconfig b/kernel/irq/Kconfig
-index 5f3e2ba..c595a48 100644
---- a/kernel/irq/Kconfig
-+++ b/kernel/irq/Kconfig
-@@ -3,11 +3,11 @@ menu "IRQ subsystem"
+diff --git a/fs/9p/Kconfig b/fs/9p/Kconfig
+index e416057..f31e4c0 100644
+--- a/fs/9p/Kconfig
++++ b/fs/9p/Kconfig
+@@ -17,7 +17,6 @@ config 9P_FSCACHE
+ 	  Choose Y here to enable persistent, read-only local
+ 	  caching support for 9p clients using FS-Cache
  
- # Make sparse irq Kconfig switch below available
- config MAY_HAVE_SPARSE_IRQ
+-
+ config 9P_FS_POSIX_ACL
+ 	bool "9P POSIX Access Control Lists"
+ 	select FS_POSIX_ACL
+@@ -29,7 +28,6 @@ config 9P_FS_POSIX_ACL
+ 
+ endif
+ 
+-
+ config 9P_FS_SECURITY
+ 	bool "9P Security Labels"
+ 	depends on 9P_FS
+diff --git a/fs/Kconfig b/fs/Kconfig
+index 2557506..11bcc80 100644
+--- a/fs/Kconfig
++++ b/fs/Kconfig
+@@ -6,7 +6,7 @@ menu "File systems"
+ 
+ # Use unaligned word dcache accesses
+ config DCACHE_WORD_ACCESS
 -       bool
 +	bool
  
- # Legacy support, required for itanic
- config GENERIC_IRQ_LEGACY
--       bool
-+	bool
+ if BLOCK
  
- # Enable the generic irq autoprobe mechanism
- config GENERIC_IRQ_PROBE
-@@ -15,20 +15,20 @@ config GENERIC_IRQ_PROBE
- 
- # Use the generic /proc/interrupts implementation
- config GENERIC_IRQ_SHOW
--       bool
-+	bool
- 
- # Print level/edge extra information
- config GENERIC_IRQ_SHOW_LEVEL
--       bool
-+	bool
- 
- # Supports effective affinity mask
- config GENERIC_IRQ_EFFECTIVE_AFF_MASK
--       bool
-+	bool
- 
- # Facility to allocate a hardware interrupt. This is legacy support
- # and should not be used in new code. Use irq domains instead.
- config GENERIC_IRQ_LEGACY_ALLOC_HWIRQ
--       bool
-+	bool
- 
- # Support for delayed migration from interrupt context
- config GENERIC_PENDING_IRQ
-@@ -40,24 +40,24 @@ config GENERIC_IRQ_MIGRATION
- 
- # Alpha specific irq affinity mechanism
- config AUTO_IRQ_AFFINITY
--       bool
-+	bool
- 
- # Tasklet based software resend for pending interrupts on enable_irq()
- config HARDIRQS_SW_RESEND
--       bool
-+	bool
- 
- # Preflow handler support for fasteoi (sparc64)
- config IRQ_PREFLOW_FASTEOI
--       bool
-+	bool
- 
- # Edge style eoi based handler (cell)
- config IRQ_EDGE_EOI_HANDLER
--       bool
-+	bool
- 
- # Generic configurable interrupt chip implementation
- config GENERIC_IRQ_CHIP
--       bool
--       select IRQ_DOMAIN
-+	bool
-+	select IRQ_DOMAIN
- 
- # Generic irq_domain hw <--> linux irq number translation
- config IRQ_DOMAIN
-@@ -105,7 +105,7 @@ config GENERIC_IRQ_RESERVATION_MODE
- 
- # Support forced irq threading
- config IRQ_FORCED_THREADING
--       bool
-+	bool
- 
- config SPARSE_IRQ
- 	bool "Support sparse irq numbering" if MAY_HAVE_SPARSE_IRQ
-diff --git a/kernel/power/Kconfig b/kernel/power/Kconfig
-index f8fe57d..a646337 100644
---- a/kernel/power/Kconfig
-+++ b/kernel/power/Kconfig
-@@ -85,20 +85,20 @@ config PM_STD_PARTITION
- 	default ""
- 	---help---
- 	  The default resume partition is the partition that the suspend-
--	  to-disk implementation will look for a suspended disk image. 
-+	  to-disk implementation will look for a suspended disk image.
- 
--	  The partition specified here will be different for almost every user. 
-+	  The partition specified here will be different for almost every user.
- 	  It should be a valid swap partition (at least for now) that is turned
--	  on before suspending. 
-+	  on before suspending.
- 
- 	  The partition specified can be overridden by specifying:
- 
--		resume=/dev/<other device> 
-+	        resume=/dev/<other device>
- 
--	  which will set the resume partition to the device specified. 
-+	  which will set the resume partition to the device specified.
- 
- 	  Note there is currently not a way to specify which device to save the
--	  suspended image to. It will simply pick the first available swap 
-+	  suspended image to. It will simply pick the first available swap
- 	  device.
- 
- config PM_SLEEP
-diff --git a/kernel/rcu/Kconfig b/kernel/rcu/Kconfig
-index 3730143..2f213fe 100644
---- a/kernel/rcu/Kconfig
-+++ b/kernel/rcu/Kconfig
-@@ -154,7 +154,7 @@ config RCU_FAST_NO_HZ
- 	  for example, slowing down synchronize_rcu().
- 
- 	  Say Y if energy efficiency is critically important, and you
--	  	don't care about increased grace-period durations.
-+	  don't care about increased grace-period durations.
- 
- 	  Say N if you are unsure.
- 
-diff --git a/kernel/time/Kconfig b/kernel/time/Kconfig
-index e2c038d..8e8e263 100644
---- a/kernel/time/Kconfig
-+++ b/kernel/time/Kconfig
-@@ -101,19 +101,19 @@ config NO_HZ_FULL
- 	select IRQ_WORK
- 	select CPU_ISOLATION
+@@ -90,8 +90,8 @@ config FILE_LOCKING
+ 	default y
  	help
--	 Adaptively try to shutdown the tick whenever possible, even when
--	 the CPU is running tasks. Typically this requires running a single
--	 task on the CPU. Chances for running tickless are maximized when
--	 the task mostly runs in userspace and has few kernel activity.
-+	  Adaptively try to shutdown the tick whenever possible, even when
-+	  the CPU is running tasks. Typically this requires running a single
-+	  task on the CPU. Chances for running tickless are maximized when
-+	  the task mostly runs in userspace and has few kernel activity.
+ 	  This option enables standard file locking support, required
+-          for filesystems like NFS and for the flock() system
+-          call. Disabling this option saves about 11k.
++	  for filesystems like NFS and for the flock() system
++	  call. Disabling this option saves about 11k.
  
--	 You need to fill up the nohz_full boot parameter with the
--	 desired range of dynticks CPUs.
-+	  You need to fill up the nohz_full boot parameter with the
-+	  desired range of dynticks CPUs.
- 
--	 This is implemented at the expense of some overhead in user <-> kernel
--	 transitions: syscalls, exceptions and interrupts. Even when it's
--	 dynamically off.
-+	  This is implemented at the expense of some overhead in user <-> kernel
-+	  transitions: syscalls, exceptions and interrupts. Even when it's
-+	  dynamically off.
- 
--	 Say N.
-+	  Say N.
- 
- endchoice
- 
-diff --git a/kernel/trace/Kconfig b/kernel/trace/Kconfig
-index fa8b1fe..05f29e2 100644
---- a/kernel/trace/Kconfig
-+++ b/kernel/trace/Kconfig
-@@ -69,13 +69,13 @@ config RING_BUFFER
- 	select IRQ_WORK
- 
- config FTRACE_NMI_ENTER
--       bool
--       depends on HAVE_FTRACE_NMI_ENTER
--       default y
-+	bool
-+	depends on HAVE_FTRACE_NMI_ENTER
-+	default y
- 
- config EVENT_TRACING
- 	select CONTEXT_SWITCH_TRACER
--        select GLOB
-+	select GLOB
- 	bool
- 
- config CONTEXT_SWITCH_TRACER
-@@ -84,8 +84,8 @@ config CONTEXT_SWITCH_TRACER
- config RING_BUFFER_ALLOW_SWAP
- 	bool
+ config MANDATORY_FILE_LOCKING
+ 	bool "Enable Mandatory file locking"
+diff --git a/fs/autofs/Kconfig b/fs/autofs/Kconfig
+index eaebcd4..bd07b75 100644
+--- a/fs/autofs/Kconfig
++++ b/fs/autofs/Kconfig
+@@ -2,30 +2,30 @@ config AUTOFS4_FS
+ 	tristate "Old Kconfig name for Kernel automounter support"
+ 	select AUTOFS_FS
  	help
--	 Allow the use of ring_buffer_swap_cpu.
--	 Adds a very slight overhead to tracing when enabled.
-+	  Allow the use of ring_buffer_swap_cpu.
-+	  Adds a very slight overhead to tracing when enabled.
+-	   This name exists for people to just automatically pick up the
+-	   new name of the autofs Kconfig option. All it does is select
+-	   the new option name.
++	  This name exists for people to just automatically pick up the
++	  new name of the autofs Kconfig option. All it does is select
++	  the new option name.
  
- config PREEMPTIRQ_TRACEPOINTS
- 	bool
-@@ -248,36 +248,36 @@ config HWLAT_TRACER
- 	bool "Tracer to detect hardware latencies (like SMIs)"
- 	select GENERIC_TRACER
- 	help
--	 This tracer, when enabled will create one or more kernel threads,
--	 depending on what the cpumask file is set to, which each thread
--	 spinning in a loop looking for interruptions caused by
--	 something other than the kernel. For example, if a
--	 System Management Interrupt (SMI) takes a noticeable amount of
--	 time, this tracer will detect it. This is useful for testing
--	 if a system is reliable for Real Time tasks.
-+	  This tracer, when enabled will create one or more kernel threads,
-+	  depending on what the cpumask file is set to, which each thread
-+	  spinning in a loop looking for interruptions caused by
-+	  something other than the kernel. For example, if a
-+	  System Management Interrupt (SMI) takes a noticeable amount of
-+	  time, this tracer will detect it. This is useful for testing
-+	  if a system is reliable for Real Time tasks.
+-	   It will go away in a release or two as people have
+-	   transitioned to just plain AUTOFS_FS.
++	  It will go away in a release or two as people have
++	  transitioned to just plain AUTOFS_FS.
  
--	 Some files are created in the tracing directory when this
--	 is enabled:
-+	  Some files are created in the tracing directory when this
-+	  is enabled:
- 
- 	   hwlat_detector/width   - time in usecs for how long to spin for
- 	   hwlat_detector/window  - time in usecs between the start of each
- 				     iteration
- 
--	 A kernel thread is created that will spin with interrupts disabled
--	 for "width" microseconds in every "window" cycle. It will not spin
--	 for "window - width" microseconds, where the system can
--	 continue to operate.
-+	  A kernel thread is created that will spin with interrupts disabled
-+	  for "width" microseconds in every "window" cycle. It will not spin
-+	  for "window - width" microseconds, where the system can
-+	  continue to operate.
- 
--	 The output will appear in the trace and trace_pipe files.
-+	  The output will appear in the trace and trace_pipe files.
- 
--	 When the tracer is not running, it has no affect on the system,
--	 but when it is running, it can cause the system to be
--	 periodically non responsive. Do not run this tracer on a
--	 production system.
-+	  When the tracer is not running, it has no affect on the system,
-+	  but when it is running, it can cause the system to be
-+	  periodically non responsive. Do not run this tracer on a
-+	  production system.
- 
--	 To enable this tracer, echo in "hwlat" into the current_tracer
--	 file. Every time a latency is greater than tracing_thresh, it will
--	 be recorded into the ring buffer.
-+	  To enable this tracer, echo in "hwlat" into the current_tracer
-+	  file. Every time a latency is greater than tracing_thresh, it will
-+	  be recorded into the ring buffer.
- 
- config ENABLE_DEFAULT_TRACERS
- 	bool "Trace process context switches and events"
-@@ -307,7 +307,7 @@ config TRACER_SNAPSHOT
- 	      cat snapshot
- 
- config TRACER_SNAPSHOT_PER_CPU_SWAP
--        bool "Allow snapshot to swap per CPU"
-+	bool "Allow snapshot to swap per CPU"
- 	depends on TRACER_SNAPSHOT
- 	select RING_BUFFER_ALLOW_SWAP
- 	help
-@@ -335,18 +335,18 @@ choice
- 	prompt "Branch Profiling"
- 	default BRANCH_PROFILE_NONE
- 	help
--	 The branch profiling is a software profiler. It will add hooks
--	 into the C conditionals to test which path a branch takes.
-+	  The branch profiling is a software profiler. It will add hooks
-+	  into the C conditionals to test which path a branch takes.
- 
--	 The likely/unlikely profiler only looks at the conditions that
--	 are annotated with a likely or unlikely macro.
-+	  The likely/unlikely profiler only looks at the conditions that
-+	  are annotated with a likely or unlikely macro.
- 
--	 The "all branch" profiler will profile every if-statement in the
--	 kernel. This profiler will also enable the likely/unlikely
--	 profiler.
-+	  The "all branch" profiler will profile every if-statement in the
-+	  kernel. This profiler will also enable the likely/unlikely
-+	  profiler.
- 
--	 Either of the above profilers adds a bit of overhead to the system.
--	 If unsure, choose "No branch profiling".
-+	  Either of the above profilers adds a bit of overhead to the system.
-+	  If unsure, choose "No branch profiling".
- 
- config BRANCH_PROFILE_NONE
- 	bool "No branch profiling"
-@@ -574,8 +574,8 @@ config BPF_KPROBE_OVERRIDE
- 	depends on FUNCTION_ERROR_INJECTION
+ config AUTOFS_FS
+ 	tristate "Kernel automounter support (supports v3, v4 and v5)"
  	default n
  	help
--	 Allows BPF to override the execution of a probed function and
--	 set a different return value.  This is used for error injection.
-+	  Allows BPF to override the execution of a probed function and
-+	  set a different return value.  This is used for error injection.
+-	   The automounter is a tool to automatically mount remote file systems
+-	   on demand. This implementation is partially kernel-based to reduce
+-	   overhead in the already-mounted case; this is unlike the BSD
+-	   automounter (amd), which is a pure user space daemon.
++	  The automounter is a tool to automatically mount remote file systems
++	  on demand. This implementation is partially kernel-based to reduce
++	  overhead in the already-mounted case; this is unlike the BSD
++	  automounter (amd), which is a pure user space daemon.
  
- config FTRACE_MCOUNT_RECORD
- 	def_bool y
-@@ -599,13 +599,13 @@ config EVENT_TRACE_TEST_SYSCALLS
- 	bool "Run selftest on syscall events"
- 	depends on FTRACE_STARTUP_TEST
+-	   To use the automounter you need the user-space tools from
+-	   <https://www.kernel.org/pub/linux/daemons/autofs/>; you also want
+-	   to answer Y to "NFS file system support", below.
++	  To use the automounter you need the user-space tools from
++	  <https://www.kernel.org/pub/linux/daemons/autofs/>; you also want
++	  to answer Y to "NFS file system support", below.
+ 
+-	   To compile this support as a module, choose M here: the module will be
+-	   called autofs.
++	  To compile this support as a module, choose M here: the module will be
++	  called autofs.
+ 
+-	   If you are not a part of a fairly large, distributed network or
+-	   don't have a laptop which needs to dynamically reconfigure to the
+-	   local network, you probably do not need an automounter, and can say
+-	   N here.
++	  If you are not a part of a fairly large, distributed network or
++	  don't have a laptop which needs to dynamically reconfigure to the
++	  local network, you probably do not need an automounter, and can say
++	  N here.
+diff --git a/fs/nfs/Kconfig b/fs/nfs/Kconfig
+index 5f93cfa..62304a0 100644
+--- a/fs/nfs/Kconfig
++++ b/fs/nfs/Kconfig
+@@ -147,10 +147,10 @@ config NFS_V4_1_MIGRATION
+ 	default n
  	help
--	 This option will also enable testing every syscall event.
--	 It only enables the event and disables it and runs various loads
--	 with the event enabled. This adds a bit more time for kernel boot
--	 up since it runs this on every system call defined.
-+	  This option will also enable testing every syscall event.
-+	  It only enables the event and disables it and runs various loads
-+	  with the event enabled. This adds a bit more time for kernel boot
-+	  up since it runs this on every system call defined.
+ 	  This option makes the NFS client advertise to NFSv4.1 servers that
+-          it can support NFSv4 migration.
++	  it can support NFSv4 migration.
  
--	 TBD - enable a way to actually call the syscalls as we test their
--	       events
-+	  TBD - enable a way to actually call the syscalls as we test their
-+	        events
+-          The NFSv4.1 pieces of the Linux NFSv4 migration implementation are
+-          still experimental.  If you are not an NFSv4 developer, say N here.
++	  The NFSv4.1 pieces of the Linux NFSv4 migration implementation are
++	  still experimental.  If you are not an NFSv4 developer, say N here.
  
- config MMIOTRACE
- 	bool "Memory mapped IO tracing"
-@@ -662,24 +662,24 @@ config MMIOTRACE_TEST
- 	  Say N, unless you absolutely know what you are doing.
+ config NFS_V4_SECURITY_LABEL
+ 	bool
+diff --git a/fs/notify/fanotify/Kconfig b/fs/notify/fanotify/Kconfig
+index 735bfb2..154e509 100644
+--- a/fs/notify/fanotify/Kconfig
++++ b/fs/notify/fanotify/Kconfig
+@@ -5,12 +5,12 @@ config FANOTIFY
+ 	select EXPORTFS
+ 	default n
+ 	---help---
+-	   Say Y here to enable fanotify support.  fanotify is a file access
+-	   notification system which differs from inotify in that it sends
+-	   an open file descriptor to the userspace listener along with
+-	   the event.
++	  Say Y here to enable fanotify support.  fanotify is a file access
++	  notification system which differs from inotify in that it sends
++	  an open file descriptor to the userspace listener along with
++	  the event.
  
- config TRACEPOINT_BENCHMARK
--        bool "Add tracepoint that benchmarks tracepoints"
-+	bool "Add tracepoint that benchmarks tracepoints"
+-	   If unsure, say Y.
++	  If unsure, say Y.
+ 
+ config FANOTIFY_ACCESS_PERMISSIONS
+ 	bool "fanotify permissions checking"
+@@ -18,10 +18,10 @@ config FANOTIFY_ACCESS_PERMISSIONS
+ 	depends on SECURITY
+ 	default n
+ 	---help---
+-	   Say Y here is you want fanotify listeners to be able to make permissions
+-	   decisions concerning filesystem events.  This is used by some fanotify
+-	   listeners which need to scan files before allowing the system access to
+-	   use those files.  This is used by some anti-malware vendors and by some
+-	   hierarchical storage management systems.
++	  Say Y here is you want fanotify listeners to be able to make permissions
++	  decisions concerning filesystem events.  This is used by some fanotify
++	  listeners which need to scan files before allowing the system access to
++	  use those files.  This is used by some anti-malware vendors and by some
++	  hierarchical storage management systems.
+ 
+-	   If unsure, say N.
++	  If unsure, say N.
+diff --git a/fs/orangefs/Kconfig b/fs/orangefs/Kconfig
+index 1554c02..fe78723 100644
+--- a/fs/orangefs/Kconfig
++++ b/fs/orangefs/Kconfig
+@@ -2,5 +2,5 @@ config ORANGEFS_FS
+ 	tristate "ORANGEFS (Powered by PVFS) support"
+ 	select FS_POSIX_ACL
  	help
--	 This option creates the tracepoint "benchmark:benchmark_event".
--	 When the tracepoint is enabled, it kicks off a kernel thread that
--	 goes into an infinite loop (calling cond_sched() to let other tasks
--	 run), and calls the tracepoint. Each iteration will record the time
--	 it took to write to the tracepoint and the next iteration that
--	 data will be passed to the tracepoint itself. That is, the tracepoint
--	 will report the time it took to do the previous tracepoint.
--	 The string written to the tracepoint is a static string of 128 bytes
--	 to keep the time the same. The initial string is simply a write of
--	 "START". The second string records the cold cache time of the first
--	 write which is not added to the rest of the calculations.
-+	  This option creates the tracepoint "benchmark:benchmark_event".
-+	  When the tracepoint is enabled, it kicks off a kernel thread that
-+	  goes into an infinite loop (calling cond_sched() to let other tasks
-+	  run), and calls the tracepoint. Each iteration will record the time
-+	  it took to write to the tracepoint and the next iteration that
-+	  data will be passed to the tracepoint itself. That is, the tracepoint
-+	  will report the time it took to do the previous tracepoint.
-+	  The string written to the tracepoint is a static string of 128 bytes
-+	  to keep the time the same. The initial string is simply a write of
-+	  "START". The second string records the cold cache time of the first
-+	  write which is not added to the rest of the calculations.
- 
--	 As it is a tight loop, it benchmarks as hot cache. That's fine because
--	 we care most about hot paths that are probably in cache already.
-+	  As it is a tight loop, it benchmarks as hot cache. That's fine because
-+	  we care most about hot paths that are probably in cache already.
- 
--	 An example of the output:
-+	  An example of the output:
- 
- 	      START
- 	      first=3672 [COLD CACHED]
-@@ -708,27 +708,27 @@ config RING_BUFFER_BENCHMARK
- 	  If unsure, say N.
- 
- config RING_BUFFER_STARTUP_TEST
--       bool "Ring buffer startup self test"
--       depends on RING_BUFFER
--       help
--         Run a simple self test on the ring buffer on boot up. Late in the
--	 kernel boot sequence, the test will start that kicks off
--	 a thread per cpu. Each thread will write various size events
--	 into the ring buffer. Another thread is created to send IPIs
--	 to each of the threads, where the IPI handler will also write
--	 to the ring buffer, to test/stress the nesting ability.
--	 If any anomalies are discovered, a warning will be displayed
--	 and all ring buffers will be disabled.
--
--	 The test runs for 10 seconds. This will slow your boot time
--	 by at least 10 more seconds.
--
--	 At the end of the test, statics and more checks are done.
--	 It will output the stats of each per cpu buffer. What
--	 was written, the sizes, what was read, what was lost, and
--	 other similar details.
--
--	 If unsure, say N
-+	bool "Ring buffer startup self test"
-+	depends on RING_BUFFER
+-	   Orange is a parallel file system designed for use on high end
+-	   computing (HEC) systems.
++	  Orange is a parallel file system designed for use on high end
++	  computing (HEC) systems.
+diff --git a/fs/proc/Kconfig b/fs/proc/Kconfig
+index 817c02b..22bf579 100644
+--- a/fs/proc/Kconfig
++++ b/fs/proc/Kconfig
+@@ -41,8 +41,8 @@ config PROC_VMCORE
+ 	bool "/proc/vmcore support"
+ 	depends on PROC_FS && CRASH_DUMP
+ 	default y
+-        help
+-        Exports the dump image of crashed kernel in ELF format.
 +	help
-+	  Run a simple self test on the ring buffer on boot up. Late in the
-+	  kernel boot sequence, the test will start that kicks off
-+	  a thread per cpu. Each thread will write various size events
-+	  into the ring buffer. Another thread is created to send IPIs
-+	  to each of the threads, where the IPI handler will also write
-+	  to the ring buffer, to test/stress the nesting ability.
-+	  If any anomalies are discovered, a warning will be displayed
-+	  and all ring buffers will be disabled.
-+
-+	  The test runs for 10 seconds. This will slow your boot time
-+	  by at least 10 more seconds.
-+
-+	  At the end of the test, statics and more checks are done.
-+	  It will output the stats of each per cpu buffer. What
-+	  was written, the sizes, what was read, what was lost, and
-+	  other similar details.
-+
-+	  If unsure, say N
++	  Exports the dump image of crashed kernel in ELF format.
  
- config PREEMPTIRQ_DELAY_TEST
- 	tristate "Preempt / IRQ disable delay thread to test latency tracers"
-@@ -746,32 +746,32 @@ config PREEMPTIRQ_DELAY_TEST
- 	  If unsure, say N
+ config PROC_VMCORE_DEVICE_DUMP
+ 	bool "Device Hardware/Firmware Log Collection"
+@@ -79,14 +79,14 @@ config PROC_SYSCTL
+ 	  limited in memory.
  
- config TRACE_EVAL_MAP_FILE
--       bool "Show eval mappings for trace events"
--       depends on TRACING
--       help
--	The "print fmt" of the trace events will show the enum/sizeof names
--	instead	of their values. This can cause problems for user space tools
--	that use this string to parse the raw data as user space does not know
--	how to convert the string to its value.
-+	bool "Show eval mappings for trace events"
-+	depends on TRACING
+ config PROC_PAGE_MONITOR
+- 	default y
++	default y
+ 	depends on PROC_FS && MMU
+ 	bool "Enable /proc page monitoring" if EXPERT
+- 	help
 +	help
-+	  The "print fmt" of the trace events will show the enum/sizeof names
-+	  instead of their values. This can cause problems for user space tools
-+	  that use this string to parse the raw data as user space does not know
-+	  how to convert the string to its value.
+ 	  Various /proc files exist to monitor process memory utilization:
+ 	  /proc/pid/smaps, /proc/pid/clear_refs, /proc/pid/pagemap,
+ 	  /proc/kpagecount, and /proc/kpageflags. Disabling these
+-          interfaces will reduce the size of the kernel by approximately 4kb.
++	  interfaces will reduce the size of the kernel by approximately 4kb.
  
--	To fix this, there's a special macro in the kernel that can be used
--	to convert an enum/sizeof into its value. If this macro is used, then
--	the print fmt strings will be converted to their values.
-+	  To fix this, there's a special macro in the kernel that can be used
-+	  to convert an enum/sizeof into its value. If this macro is used, then
-+	  the print fmt strings will be converted to their values.
+ config PROC_CHILDREN
+ 	bool "Include /proc/<pid>/task/<tid>/children file"
+diff --git a/fs/pstore/Kconfig b/fs/pstore/Kconfig
+index 0d19d19..df1d029 100644
+--- a/fs/pstore/Kconfig
++++ b/fs/pstore/Kconfig
+@@ -3,15 +3,15 @@ config PSTORE
+ 	select CRYPTO if PSTORE_COMPRESS
+ 	default n
+ 	help
+-	   This option enables generic access to platform level
+-	   persistent storage via "pstore" filesystem that can
+-	   be mounted as /dev/pstore.  Only useful if you have
+-	   a platform level driver that registers with pstore to
+-	   provide the data, so you probably should just go say "Y"
+-	   (or "M") to a platform specific persistent store driver
+-	   (e.g. ACPI_APEI on X86) which will select this for you.
+-	   If you don't have a platform persistent store driver,
+-	   say N.
++	  This option enables generic access to platform level
++	  persistent storage via "pstore" filesystem that can
++	  be mounted as /dev/pstore.  Only useful if you have
++	  a platform level driver that registers with pstore to
++	  provide the data, so you probably should just go say "Y"
++	  (or "M") to a platform specific persistent store driver
++	  (e.g. ACPI_APEI on X86) which will select this for you.
++	  If you don't have a platform persistent store driver,
++	  say N.
  
--	If something does not get converted properly, this option can be
--	used to show what enums/sizeof the kernel tried to convert.
-+	  If something does not get converted properly, this option can be
-+	  used to show what enums/sizeof the kernel tried to convert.
+ config PSTORE_DEFLATE_COMPRESS
+ 	tristate "DEFLATE (ZLIB) compression"
+diff --git a/fs/qnx6/Kconfig b/fs/qnx6/Kconfig
+index edbba5c..92b192a 100644
+--- a/fs/qnx6/Kconfig
++++ b/fs/qnx6/Kconfig
+@@ -6,7 +6,7 @@ config QNX6FS_FS
+ 	  QNX 6 (also called QNX RTP).
+ 	  Further information is available at <http://www.qnx.com/>.
+ 	  Say Y if you intend to mount QNX hard disks or floppies formatted
+-          with a mkqnx6fs.
++	  with a mkqnx6fs.
+ 	  However, keep in mind that this currently is a readonly driver!
  
--	This option is for debugging the conversions. A file is created
--	in the tracing directory called "eval_map" that will show the
--	names matched with their values and what trace event system they
--	belong too.
-+	  This option is for debugging the conversions. A file is created
-+	  in the tracing directory called "eval_map" that will show the
-+	  names matched with their values and what trace event system they
-+	  belong too.
+ 	  To compile this file system support as a module, choose M here: the
+diff --git a/fs/quota/Kconfig b/fs/quota/Kconfig
+index 4a09975..e042a90 100644
+--- a/fs/quota/Kconfig
++++ b/fs/quota/Kconfig
+@@ -46,7 +46,7 @@ config QUOTA_DEBUG
  
--	Normally, the mapping of the strings to values will be freed after
--	boot up or module load. With this option, they will not be freed, as
--	they are needed for the "eval_map" file. Enabling this option will
--	increase the memory footprint of the running kernel.
-+	  Normally, the mapping of the strings to values will be freed after
-+	  boot up or module load. With this option, they will not be freed, as
-+	  they are needed for the "eval_map" file. Enabling this option will
-+	  increase the memory footprint of the running kernel.
+ # Generic support for tree structured quota files. Selected when needed.
+ config QUOTA_TREE
+-	 tristate
++	tristate
  
--	If unsure, say N
-+	  If unsure, say N
+ config QFMT_V1
+ 	tristate "Old quota format support"
+diff --git a/fs/reiserfs/Kconfig b/fs/reiserfs/Kconfig
+index 86e71c0..e355709 100644
+--- a/fs/reiserfs/Kconfig
++++ b/fs/reiserfs/Kconfig
+@@ -10,7 +10,7 @@ config REISERFS_FS
  
- config TRACING_EVENTS_GPIO
- 	bool "Trace gpio events"
-@@ -795,4 +795,3 @@ config GCOV_PROFILE_FTRACE
- endif # FTRACE
+ 	  In general, ReiserFS is as fast as ext2, but is very efficient with
+ 	  large directories and small files.  Additional patches are needed
+-	  for NFS and quotas, please see 
++	  for NFS and quotas, please see
+ 	  <https://reiser4.wiki.kernel.org/index.php/Main_Page> for links.
  
- endif # TRACING_SUPPORT
--
+ 	  It is more easily extended to have features currently found in
+@@ -19,7 +19,7 @@ config REISERFS_FS
+ 	  plugins consistent with our motto ``It takes more than a license to
+ 	  make source code open.''
+ 
+-	  Read <https://reiser4.wiki.kernel.org/index.php/Main_Page> 
++	  Read <https://reiser4.wiki.kernel.org/index.php/Main_Page>
+ 	  to learn more about reiserfs.
+ 
+ 	  Sponsored by Threshold Networks, Emusic.com, and Bigstorage.com.
+diff --git a/fs/ubifs/Kconfig b/fs/ubifs/Kconfig
+index 9da2f13..b69eec0 100644
+--- a/fs/ubifs/Kconfig
++++ b/fs/ubifs/Kconfig
+@@ -28,8 +28,8 @@ config UBIFS_FS_LZO
+ 	bool "LZO compression support" if UBIFS_FS_ADVANCED_COMPR
+ 	default y
+ 	help
+-	   LZO compressor is generally faster than zlib but compresses worse.
+-	   Say 'Y' if unsure.
++	  LZO compressor is generally faster than zlib but compresses worse.
++	  Say 'Y' if unsure.
+ 
+ config UBIFS_FS_ZLIB
+ 	bool "ZLIB compression support" if UBIFS_FS_ADVANCED_COMPR
+diff --git a/fs/ufs/Kconfig b/fs/ufs/Kconfig
+index 0bf6e16..13e0e71 100644
+--- a/fs/ufs/Kconfig
++++ b/fs/ufs/Kconfig
+@@ -10,8 +10,8 @@ config UFS_FS
+ 	  experimental "UFS file system write support", below. Please read the
+ 	  file <file:Documentation/filesystems/ufs.txt> for more information.
+ 
+-          The recently released UFS2 variant (used in FreeBSD 5.x) is
+-          READ-ONLY supported.
++	  The recently released UFS2 variant (used in FreeBSD 5.x) is
++	  READ-ONLY supported.
+ 
+ 	  Note that this option is generally not needed for floppies, since a
+ 	  good portable way to transport files and directories between unixes
 -- 
 1.9.1
 
