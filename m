@@ -2,96 +2,111 @@ Return-Path: <SRS0=FxTY=RO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+X-Spam-Status: No, score=-7.0 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SIGNED_OFF_BY,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 26AB4C43381
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 Mar 2019 09:57:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8FEAAC43381
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 Mar 2019 09:58:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EBFFB206BA
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 Mar 2019 09:57:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5EC7520879
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 Mar 2019 09:58:53 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=baylibre-com.20150623.gappssmtp.com header.i=@baylibre-com.20150623.gappssmtp.com header.b="AMPtmvi5"
+	dkim=pass (2048-bit key) header.d=baylibre-com.20150623.gappssmtp.com header.i=@baylibre-com.20150623.gappssmtp.com header.b="OpFFhfXt"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727030AbfCKJ5R (ORCPT
+        id S1727103AbfCKJ6v (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 11 Mar 2019 05:57:17 -0400
-Received: from mail-wm1-f68.google.com ([209.85.128.68]:51093 "EHLO
-        mail-wm1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726567AbfCKJ4U (ORCPT
+        Mon, 11 Mar 2019 05:58:51 -0400
+Received: from mail-wr1-f67.google.com ([209.85.221.67]:41729 "EHLO
+        mail-wr1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726567AbfCKJ6v (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 11 Mar 2019 05:56:20 -0400
-Received: by mail-wm1-f68.google.com with SMTP id x7so3703192wmj.0
-        for <linux-kernel@vger.kernel.org>; Mon, 11 Mar 2019 02:56:19 -0700 (PDT)
+        Mon, 11 Mar 2019 05:58:51 -0400
+Received: by mail-wr1-f67.google.com with SMTP id n2so4316711wrw.8
+        for <linux-kernel@vger.kernel.org>; Mon, 11 Mar 2019 02:58:50 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=baylibre-com.20150623.gappssmtp.com; s=20150623;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=ml6CvXuME0Z+K5TCp7FSk/CVb63UuP6ge6cT6uImDU8=;
-        b=AMPtmvi5NAGFDML5TgMFV7WG36BWxCIx4m3lQQGavm7KeyQKpRo62YqVhzKrsLgnLX
-         mkx/WyT/WNCiqlI1XCF1y4DNSfUOWdc1HGIzhjI1057rWLHxmNhPztMRuc60T8NHtzOF
-         WBn+3ASO3kg7vVOzOe6qNdELim+5seUNOQshDL5P+YzAFGZMweRZbmNC35Y9NaqBcaBF
-         gTv2W2+IdFa2jHPj+V9xlYXYt+PTu02vG8sKSpjk1NnwIzpCNsGjjGJC9EbAWdtfPEEi
-         3oWgLQ4yiHwLLUbhayElbU5pAFDwOqz8NuzrKv9ng5LTVshWo53HmDQzj+y+T5xp1McM
-         MAUA==
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=J63OSK6jJV4RYXnglHExqatZ+hdW5fSRwa/MBq2INCM=;
+        b=OpFFhfXt3p+3HgVr5AUJKNNRt6mXqaAXIYk8IwXFMaVNmo3gAouXRY3qM1zn9gOH2G
+         8rSNlKOvjfGItABJyV3K1mDod5HePxVvk3faPZfRmG/4aCwN/KQ9ernsoCzNmRD5yP4l
+         RCqMYt5KPcsh8J3BOpEJSsaJU62na5FR34aDp9TiF1DTiFNU7V0yWXJnBLPArc7BrlPE
+         prjn5rTauwNPDCL5fDSgQolCWDarftydCgtLzSQgCb/+35WE53kY63dyckT/8HaxBjmS
+         EBIXJj2c3CdOvC9ZhAVNgBAPgNAQl7ujDvgXovF0kLOJBg6aQEgrL50ML1AF8qXhvV3J
+         TqlQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=ml6CvXuME0Z+K5TCp7FSk/CVb63UuP6ge6cT6uImDU8=;
-        b=ODxqyHE5sPwxX4aXrK8vG4Ls/hJuc0jDW35tW0VJBKpFZk89knaEnXrLHFMaMtGLBj
-         6Y18/tkvwa0bDAfJzvKe3T36LSu8UvIZLgMXX3fo/TjmEucn/wLE8gIbJt76S69rvFaI
-         AOrcAUTYsLkWWQAewuYGS9W9w+DBEI2HHs7yKSXlGGz0oRuDw71A6VPxXLWsr7iU2zt8
-         9rwSmQ41f8PzwUL/85IJ5351vYN/N8Hd1XGzK1hb5bn0FTv0sLtB/omRBpKWTH3RpX0A
-         rW8oZaBb87wvhGw6UPKKTJCEDs2xGVi6mK955IAdx4KhzhK6MqpRHIlEaChtuDEieDsP
-         ybtQ==
-X-Gm-Message-State: APjAAAXF/WyyldLt3bwMcW5j/3cB3n9QiwqgkgLj4XRsdNGy9mPnW6kn
-        ejau++fRGiL8PoF8DJ+x+nmPEg==
-X-Google-Smtp-Source: APXvYqwvl+lCRstMEevCscukF7R3/hPAwQBtGqgvjwzVd8d9iutAtbpToeqeZa64LkCF9H2Uv+DC5w==
-X-Received: by 2002:a1c:4c1a:: with SMTP id z26mr17081379wmf.139.1552298178656;
-        Mon, 11 Mar 2019 02:56:18 -0700 (PDT)
-Received: from bender.baylibre.local (lmontsouris-657-1-212-31.w90-63.abo.wanadoo.fr. [90.63.244.31])
-        by smtp.gmail.com with ESMTPSA id e12sm4764737wrs.91.2019.03.11.02.56.17
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-SHA bits=128/128);
-        Mon, 11 Mar 2019 02:56:17 -0700 (PDT)
-From:   Neil Armstrong <narmstrong@baylibre.com>
-To:     khilman@baylibre.com
-Cc:     Neil Armstrong <narmstrong@baylibre.com>,
-        linux-amlogic@lists.infradead.org,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: [PATCH 02/11] arm64: dts: meson-g12a-sei510: add uart_AO pinctrl
-Date:   Mon, 11 Mar 2019 10:56:04 +0100
-Message-Id: <20190311095613.11371-3-narmstrong@baylibre.com>
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20190311095613.11371-1-narmstrong@baylibre.com>
-References: <20190311095613.11371-1-narmstrong@baylibre.com>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=J63OSK6jJV4RYXnglHExqatZ+hdW5fSRwa/MBq2INCM=;
+        b=Umh8hndsnx5jcmWydb22ONHelhTPjtQVcfx5/bDTIaJUClA8xQYbFOnNYA8m6u8rfA
+         MRGpSM7t0JvzhPah3c2N+krUANVRcJtcR0WE7HrgtTBzbzNfFyR57bbZYvIsUy7qfY1z
+         o/FXUCeZvgAZIP2L+0tZirBKOkHtzaZNwGolbT3yRa1LzsxbL43ocxTXrvyWPuLHY2rM
+         fPdHCANsYXcUfZC3U33BXuRnC248oHMmEzKKWTSR23A0Git3qmr+owrs9eJ6DyvtbpHd
+         JBEAE9BokO1hQqS9YoaN0KPn+N1V1TBx3AGjn8kFmurkj4T7vIoIlnt6nEEmRC0PwHdX
+         Tvpg==
+X-Gm-Message-State: APjAAAU2pb7hcu1JWv5QlvJlpFGCyGyM01WIXbzcwBoSDg76hOhWMmrS
+        zNrEZQtia9CGP4ZrLFu4/0IUDvWeLjbmlS1X3S3OcA==
+X-Google-Smtp-Source: APXvYqzLQTudfyo5nuWqkKT9H6qp0gB9vcc45ut23eJmjVkjXYRlG6eVFyRl8AkTy+4LBn2twNDwudkCEMtxwYIzfsI=
+X-Received: by 2002:a05:6000:124d:: with SMTP id j13mr18519993wrx.102.1552298329638;
+ Mon, 11 Mar 2019 02:58:49 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <20190204095532.27185-1-narmstrong@baylibre.com>
+In-Reply-To: <20190204095532.27185-1-narmstrong@baylibre.com>
+From:   Maxime Jourdan <mjourdan@baylibre.com>
+Date:   Mon, 11 Mar 2019 10:58:38 +0100
+Message-ID: <CAMO6nazS_vvx4z+AFZjfX6K8ipB0-Cqoqaj0-WXN_DDWQ_T4xg@mail.gmail.com>
+Subject: Re: [PATCH] drm/meson: handle when meson_canvas_get returns -EPROBE_DEFER
+To:     Neil Armstrong <narmstrong@baylibre.com>
+Cc:     daniel@ffwll.ch, linux-amlogic@lists.infradead.org,
+        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        dri-devel@lists.freedesktop.org
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add pinctrl on the always-enabled debug UART AO.
+Hi Neil,
+On Mon, Feb 4, 2019 at 10:55 AM Neil Armstrong <narmstrong@baylibre.com> wrote:
+>
+> When meson_canvas is not yet probed, meson_canvas_get returns -EPROBE_DEFER.
+>
+> Handle this case but deferring the probe of the drm driver aswell.
+>
+> Fixes: 66cae477c380 ("drm/meson: Use optional canvas provider")
+> Signed-off-by: Neil Armstrong <narmstrong@baylibre.com>
+> ---
+>  drivers/gpu/drm/meson/meson_drv.c | 3 +++
+>  1 file changed, 3 insertions(+)
+>
+> diff --git a/drivers/gpu/drm/meson/meson_drv.c b/drivers/gpu/drm/meson/meson_drv.c
+> index ef4afaadaf8d..17e55d63daff 100644
+> --- a/drivers/gpu/drm/meson/meson_drv.c
+> +++ b/drivers/gpu/drm/meson/meson_drv.c
+> @@ -236,6 +236,9 @@ static int meson_drv_bind_master(struct device *dev, bool has_components)
+>                         meson_canvas_free(priv->canvas, priv->canvas_id_vd1_1);
+>                         goto free_drm;
+>                 }
+> +       } else if (PTR_ERR(priv->canvas) == -EPROBE_DEFER) {
+> +               ret = PTR_ERR(priv->canvas);
+> +               goto free_drm;
+>         } else {
+>                 priv->canvas = NULL;
+>
+> --
+> 2.20.1
+>
+>
+> _______________________________________________
+> linux-arm-kernel mailing list
+> linux-arm-kernel@lists.infradead.org
+> http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
 
-Signed-off-by: Neil Armstrong <narmstrong@baylibre.com>
----
- arch/arm64/boot/dts/amlogic/meson-g12a-sei510.dts | 2 ++
- 1 file changed, 2 insertions(+)
+With the upcoming patch series that aims at removing the DMC register
+range from the DRM driver's control, this fix will be incorporated,
+although rewritten because of code modifications in this partilcular
+area.
 
-diff --git a/arch/arm64/boot/dts/amlogic/meson-g12a-sei510.dts b/arch/arm64/boot/dts/amlogic/meson-g12a-sei510.dts
-index 6a7c3241862a..63c515fe4996 100644
---- a/arch/arm64/boot/dts/amlogic/meson-g12a-sei510.dts
-+++ b/arch/arm64/boot/dts/amlogic/meson-g12a-sei510.dts
-@@ -35,4 +35,6 @@
- 
- &uart_AO {
- 	status = "okay";
-+	pinctrl-0 = <&uart_ao_a_pins>;
-+	pinctrl-names = "default";
- };
--- 
-2.20.1
-
+Maxime
