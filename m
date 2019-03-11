@@ -7,52 +7,52 @@ X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C0733C43381
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 Mar 2019 15:03:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 805F8C43381
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 Mar 2019 15:04:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 916F42075C
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 Mar 2019 15:03:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4CE0F2084F
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 Mar 2019 15:04:00 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=amarulasolutions.com header.i=@amarulasolutions.com header.b="e35+0hfd"
+	dkim=pass (1024-bit key) header.d=amarulasolutions.com header.i=@amarulasolutions.com header.b="bTZUoHA4"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727145AbfCKPDz (ORCPT
+        id S1727304AbfCKPD7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 11 Mar 2019 11:03:55 -0400
-Received: from mail-pg1-f196.google.com ([209.85.215.196]:45468 "EHLO
-        mail-pg1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727027AbfCKPDx (ORCPT
+        Mon, 11 Mar 2019 11:03:59 -0400
+Received: from mail-pf1-f195.google.com ([209.85.210.195]:38878 "EHLO
+        mail-pf1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727153AbfCKPD5 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 11 Mar 2019 11:03:53 -0400
-Received: by mail-pg1-f196.google.com with SMTP id 125so4225141pgc.12
-        for <linux-kernel@vger.kernel.org>; Mon, 11 Mar 2019 08:03:53 -0700 (PDT)
+        Mon, 11 Mar 2019 11:03:57 -0400
+Received: by mail-pf1-f195.google.com with SMTP id n125so3896768pfn.5
+        for <linux-kernel@vger.kernel.org>; Mon, 11 Mar 2019 08:03:57 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=amarulasolutions.com; s=google;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=dRsN4/xf8NDRNF3fBDlFEKVlusjxUG54otEp2OGoHtk=;
-        b=e35+0hfd1N4Xe1tMiojhWAEnf5EkLPJKxuFvfvPoFUpqJ0sxfYhPFZR5ITOrlW6O8J
-         X6R/s8xVK75Ro7K0QLCJv3OAIF9a/keeemb3yzokqSxIHFCNYE4pJ02BIhRahFssutUf
-         7fWTYx5XsS9HE37WMd+mNWZNJmBWbI13Fe6GM=
+        bh=339cuj1SwivCqfuHe+ww4z/In8uNdl0g0CZZZUchuN0=;
+        b=bTZUoHA46lNvvnCfHGEY+l+GowjdEGMVPri71RA2jlWOlOCVAc0ew+V/enPHzTVkvN
+         NU11krMrkzcKxL6MMR9prDFF6+0MI/LAxtbyGAF9/KIEjCf+BlHceT/CrYc9Cghgxt98
+         HNpgEWWgJkCu2N9NZMJxty2jfSxj3JLgFMfqo=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=dRsN4/xf8NDRNF3fBDlFEKVlusjxUG54otEp2OGoHtk=;
-        b=oAp1l5b3/IMzZvIrn4zktKupVkAlP1YV3d1rA+hyo1QTGGgVyPw6O93FiJfrN/wobN
-         LV5u2cYDtVOmh40jI/w7YKB8ytJKJLgQollZki9d1ld6BBR7iHoRXMFy+VGCBY60SHRA
-         9APbHUHUHLm1jMkfA92XxqPsotTerjHSip0FnODvzFV9XPhnFnHi9yljWy4nJvYgrDha
-         7IHXXlMwxeUYVGskuKY6lLlNlAa/S0YO8CJzBt4gZAIqmLfJWtRArfROVM8N2Y8n4o4t
-         rz0mDAR0CmSAmZ0dd9jSVZx+hIip0A7WfMaLcbm9ZrucM8TyOPG01urxawQUEQGVWLqJ
-         e4jw==
-X-Gm-Message-State: APjAAAXqCNt3T8Lj3AVVxTcHZhuMWnJPuo3uwUQP5iOr75FdQSWaKfjd
-        +oQ9YVhKhaVEOoi675SN/psZ4Q==
-X-Google-Smtp-Source: APXvYqw/vKymQuvj9QfqJjvC0hOBjv/TSSYLzHYDnu7emfKWXNBkVxsCTnaVrglO5JSaQy8hGmH41g==
-X-Received: by 2002:a62:12d9:: with SMTP id 86mr32883128pfs.214.1552316632713;
-        Mon, 11 Mar 2019 08:03:52 -0700 (PDT)
+        bh=339cuj1SwivCqfuHe+ww4z/In8uNdl0g0CZZZUchuN0=;
+        b=mvVJjg71nvztXJxM2jyNOWel/RVvj8FGv4ToZ9IpB+8fSNYNOxSbOrBTyo0o/OWHH5
+         lNGciPvebSdZKMx2l776eRkI3i6VcJ0VYiHgz7BlrV6ASctHkmVt6N5z8RDTK5f9vScO
+         1UaQ6OHBgqi7KFWJA+vA+v1WsJh1q56T4yWRT4+HehyHlPDA0nae87fr99tDXBzJDIKB
+         U9X1Y2oLolrFK0toLjZKsiWBv82UvlcCAujhUeyaYmWLqjhNsvlt3Yr0TmnplvZAnVCi
+         2S7mzpi8OBkR63BU1XCqa1T4m5s54LiwkvXQoE5CiObZ9JMoCtRrEXjNGAwBeuLCBDaE
+         /B1Q==
+X-Gm-Message-State: APjAAAVR2y7j+QwjvokHR6BmVIIlPQgE2UjpBMaI7q7YMZOFhdSnB4MQ
+        JBOmQHmcO5puzH4nWTfhcLf7dQ==
+X-Google-Smtp-Source: APXvYqwxCKHgNRv1edO14Zth/h4eCdfBnVoBpfLgSv9pLwN+kjvmNmQT79kAIxOgajCOh1ziyShLdQ==
+X-Received: by 2002:a62:bd09:: with SMTP id a9mr33092507pff.61.1552316637043;
+        Mon, 11 Mar 2019 08:03:57 -0700 (PDT)
 Received: from localhost.localdomain ([183.82.224.199])
-        by smtp.gmail.com with ESMTPSA id x5sm7594531pgp.68.2019.03.11.08.03.48
+        by smtp.gmail.com with ESMTPSA id x5sm7594531pgp.68.2019.03.11.08.03.52
         (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Mon, 11 Mar 2019 08:03:52 -0700 (PDT)
+        Mon, 11 Mar 2019 08:03:56 -0700 (PDT)
 From:   Jagan Teki <jagan@amarulasolutions.com>
 To:     Heiko Stuebner <heiko@sntech.de>, Rob Herring <robh+dt@kernel.org>,
         Mark Rutland <mark.rutland@arm.com>
@@ -61,9 +61,9 @@ Cc:     devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
         linux-amarula@amarulasolutions.com,
         Jagan Teki <jagan@amarulasolutions.com>,
         Akash Gajjar <akash@openedev.com>
-Subject: [PATCH 2/3] arm64: dts: rockchip: rk3399: rock960: Add 12V DCIN regulator
-Date:   Mon, 11 Mar 2019 20:33:31 +0530
-Message-Id: <20190311150332.19492-2-jagan@amarulasolutions.com>
+Subject: [PATCH 3/3] arm64: dts: rockchip: rk3399: rock960: Add missing GPIO for vcc5v0_host
+Date:   Mon, 11 Mar 2019 20:33:32 +0530
+Message-Id: <20190311150332.19492-3-jagan@amarulasolutions.com>
 X-Mailer: git-send-email 2.18.0.321.gffc6fa0e3
 In-Reply-To: <20190311150332.19492-1-jagan@amarulasolutions.com>
 References: <20190311150332.19492-1-jagan@amarulasolutions.com>
@@ -74,45 +74,28 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-12V DCIN regulator is root source supply for the rest of regulators
-in Rock960 power diagram.
+vcc5v0_host on rock960 is bound to have GPIO4_PD1.
 
-Add support for it and attach same to supply vcc5v0_sys.
+Add support for it.
 
 Signed-off-by: Jagan Teki <jagan@amarulasolutions.com>
 Signed-off-by: Akash Gajjar <akash@openedev.com>
 ---
- arch/arm64/boot/dts/rockchip/rk3399-rock960.dtsi | 10 ++++++++++
- 1 file changed, 10 insertions(+)
+ arch/arm64/boot/dts/rockchip/rk3399-rock960.dtsi | 1 +
+ 1 file changed, 1 insertion(+)
 
 diff --git a/arch/arm64/boot/dts/rockchip/rk3399-rock960.dtsi b/arch/arm64/boot/dts/rockchip/rk3399-rock960.dtsi
-index a268ec9f6b5e..68ca3bf9ea2f 100644
+index 68ca3bf9ea2f..c3d3343d6dde 100644
 --- a/arch/arm64/boot/dts/rockchip/rk3399-rock960.dtsi
 +++ b/arch/arm64/boot/dts/rockchip/rk3399-rock960.dtsi
-@@ -18,6 +18,15 @@
- 		reset-gpios = <&gpio0 RK_PB2 GPIO_ACTIVE_LOW>;
- 	};
- 
-+	vcc12v_dcin: vcc12v-dcin {
-+		compatible = "regulator-fixed";
-+		regulator-name = "vcc12v_dcin";
-+		regulator-min-microvolt = <12000000>;
-+		regulator-max-microvolt = <12000000>;
-+		regulator-always-on;
-+		regulator-boot-on;
-+	};
-+
- 	vcc1v8_s0: vcc1v8-s0 {
+@@ -68,6 +68,7 @@
+ 	vcc5v0_host: vcc5v0-host-regulator {
  		compatible = "regulator-fixed";
- 		regulator-name = "vcc1v8_s0";
-@@ -32,6 +41,7 @@
- 		regulator-min-microvolt = <5000000>;
- 		regulator-max-microvolt = <5000000>;
- 		regulator-always-on;
-+		vin-supply = <&vcc12v_dcin>;
- 	};
- 
- 	vcc3v3_sys: vcc3v3-sys {
+ 		enable-active-high;
++		gpio = <&gpio4 RK_PD1 GPIO_ACTIVE_HIGH>;
+ 		pinctrl-names = "default";
+ 		pinctrl-0 = <&host_vbus_drv>;
+ 		regulator-name = "vcc5v0_host";
 -- 
 2.18.0.321.gffc6fa0e3
 
