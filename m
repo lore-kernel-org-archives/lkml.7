@@ -2,122 +2,125 @@ Return-Path: <SRS0=FxTY=RO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_PASS,USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 59451C43381
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 Mar 2019 16:45:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EC1A9C4360F
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 Mar 2019 16:46:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2103720643
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 Mar 2019 16:45:56 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1552322756;
-	bh=OsN6ywD2yRXxc/xFL6Cr32d+xB5lpNyVEbyRMIiY1q0=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=Sj3vK6qeMJ4VFMRc2VjmP7rVF588jBtdic99xK2P+2QwflhieoMtxxbaAfVAWvkXg
-	 EWgnswB/X2XBjP+c8eCiD4NjDML/JKoHpce5Sbju22FwhEPBX58OcVxst3onV40B03
-	 Mnnqx9ltYhqk9WIF6JRlbua8qOYlCZxcrToVr438=
+	by mail.kernel.org (Postfix) with ESMTP id BD28720643
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 Mar 2019 16:46:22 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="R52MJref"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727668AbfCKQpy (ORCPT
+        id S1727818AbfCKQqV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 11 Mar 2019 12:45:54 -0400
-Received: from mail-lj1-f194.google.com ([209.85.208.194]:38616 "EHLO
-        mail-lj1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727476AbfCKQpy (ORCPT
+        Mon, 11 Mar 2019 12:46:21 -0400
+Received: from mail-ed1-f66.google.com ([209.85.208.66]:39983 "EHLO
+        mail-ed1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727050AbfCKQqV (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 11 Mar 2019 12:45:54 -0400
-Received: by mail-lj1-f194.google.com with SMTP id x13so263747ljj.5
-        for <linux-kernel@vger.kernel.org>; Mon, 11 Mar 2019 09:45:52 -0700 (PDT)
+        Mon, 11 Mar 2019 12:46:21 -0400
+Received: by mail-ed1-f66.google.com with SMTP id r23so2109914edm.7;
+        Mon, 11 Mar 2019 09:46:20 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linux-foundation.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=IWZhUvFcYTHDJsxw40ZzY7zosT2pLDUL9BX7h8YRIBE=;
-        b=hHb1D9hYqFFijqa8C6MJegPdRB6ZPGUbFmJJTfNgDp2xmClbwLCVnz5TgVr/ffSPT3
-         Rp1Ds/E8S67I/6q4xLNBfqr5tILsqAXs2fK8bgo0HxhL0ao6JQpAORRb9H/FNewD5H1g
-         RBW+Nn0CFchDRDFiKnu8WiIGpf6rDpE2SOtsk=
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=kkf/Ijrme+opCg1UsdMKL4AypLjy9oSWPmvyVp+1AaY=;
+        b=R52MJrefkdEzuQ8cmYOEzgF9J9lGWW4f5VqG57Wrc4LcJQv0SGqVbvmlga76A1SSZg
+         5VE0y09Dp6+wgYsNyhPtorn7MC0MPuAu31MeQHQ9tYE7wk4xeDkj6WCoaLBS6jOpUTNo
+         CCTEMTLFcpJDwb1XplMB+bA6cSww65n9CSQsYWq83NbZ3yoEzLL2kfld4IBYjCdzmv9I
+         FbOKk8JpUm1wnIiYDW9XTd1oipr1N6GKRyW+kNo+6RI9RiCC+H11+hHH082tsrG3WNJH
+         6g2b5pXDePYVUDEiNJCY8Tb+hy0kDnkteQ0B2z0ihvv0iWqqbGuCOdJE3ndJF8gndGU6
+         gqdA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=IWZhUvFcYTHDJsxw40ZzY7zosT2pLDUL9BX7h8YRIBE=;
-        b=aJjOiWxTyYmvH2B3KAGsz3B4GEWJY/8c+U3FcdjOq0TrXcEdzFS2MnNztXk+9jMejR
-         qUmvf9ZLXNTl/0WuigLUs6NJdIbEMqib95leXbDpDMroSD76e4atEWMNFXF39fO5pDFR
-         +GsC3IxwbXJ7q5fse/5ftQyDLE/A3341EkW+joio12+wcBOaHLAcSx+c8Ls++FS5rDQX
-         JwS2LymzXbPkrbeT0bNFCQKZg1Loj9ai8dse/gj6xscicZ80YEsZ7cV7DDB440uxkfe0
-         ElkAewvdRDeD51f6eQrmPQJ0Y1PK1JagwsSgPZMVllGA8UTyEuuz3HLBNAl3I8qQd6cC
-         ilrQ==
-X-Gm-Message-State: APjAAAUDx43j9zCGWPwpOUIQQk09eH2+CtqmcD45eruiLi2KujJPt8QF
-        RKhirwVdat3dkl+f4qFOi+D+r9+ojew=
-X-Google-Smtp-Source: APXvYqy5Atii9VAUKXRddGjVFSX00lDrESobIAYcgQyYhg6dPfpsmpWEUq1U7xxRs3NSouw6LFGAiA==
-X-Received: by 2002:a2e:968d:: with SMTP id q13mr17561077lji.189.1552322751578;
-        Mon, 11 Mar 2019 09:45:51 -0700 (PDT)
-Received: from mail-lj1-f177.google.com (mail-lj1-f177.google.com. [209.85.208.177])
-        by smtp.gmail.com with ESMTPSA id q26sm332993lfd.27.2019.03.11.09.45.49
-        for <linux-kernel@vger.kernel.org>
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Mon, 11 Mar 2019 09:45:49 -0700 (PDT)
-Received: by mail-lj1-f177.google.com with SMTP id w6so4693889ljd.7
-        for <linux-kernel@vger.kernel.org>; Mon, 11 Mar 2019 09:45:49 -0700 (PDT)
-X-Received: by 2002:a2e:8585:: with SMTP id b5mr17126833lji.125.1552322748684;
- Mon, 11 Mar 2019 09:45:48 -0700 (PDT)
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=kkf/Ijrme+opCg1UsdMKL4AypLjy9oSWPmvyVp+1AaY=;
+        b=eGlABLOX4SlgqLwErFkvVClbVwAW0kkFlv2/5oFf0qdPXyLS4CYvZWLVahlarMHduh
+         0CmaMpmFlqKyaodCZCZjy9Uo1dT1aXmpnAzgwwj9jjKdPvXZ/BwmsKPLHr7EQYJvecVx
+         PeciRJdXa0wtbrQTj9+Ij5t+ie7eBmQ0SZNOvA17KcSdsld2R+lW8sx+xCt9bl1Ygsne
+         TutainXtfpXlxfWqoPHeKeXBLfjPULKZixXbojCZgnl6NvvMb3kpcdi8cRHoTpaOPc8B
+         h1TkHiOGwSfW2fXGa3ZsUy5Wb811O/4busMecHCcyHhPUtsU4C5qDDK86FdO0d0vwo3N
+         SuFw==
+X-Gm-Message-State: APjAAAV6/RnSfnlKx8haLN+SS2m8Cuj5uvRrfM+tJrpODe0TDKlqXpII
+        L72O7EZMd0LIbxTKsTFx1iQ=
+X-Google-Smtp-Source: APXvYqyQpW22nD/RG7vPyLS19R0fh65LzgqxQS4c7YM9aEOpRV0ZNtbAJzKYgAHuv6XQz0cllEHZRg==
+X-Received: by 2002:a05:6402:1352:: with SMTP id y18mr44341968edw.76.1552322779118;
+        Mon, 11 Mar 2019 09:46:19 -0700 (PDT)
+Received: from archlinux-ryzen ([2a01:4f9:2a:1fae::2])
+        by smtp.gmail.com with ESMTPSA id k14sm4781836edb.51.2019.03.11.09.46.17
+        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
+        Mon, 11 Mar 2019 09:46:18 -0700 (PDT)
+Date:   Mon, 11 Mar 2019 09:46:16 -0700
+From:   Nathan Chancellor <natechancellor@gmail.com>
+To:     "Darrick J. Wong" <darrick.wong@oracle.com>
+Cc:     linux-xfs@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Nick Desaulniers <ndesaulniers@google.com>,
+        clang-built-linux@googlegroups.com
+Subject: Re: [PATCH 1/2] xfs: zero initialize highstale and lowstale in
+ xfs_dir2_leaf_addname
+Message-ID: <20190311164616.GA14469@archlinux-ryzen>
+References: <20190311161948.GC4359@magnolia>
 MIME-Version: 1.0
-References: <CAG48ez1RVd5mQ_Pb6eygQESaZhpQz765OAZYSoPE0kPqfZEXQg@mail.gmail.com>
- <20190305091904.GB8256@zn.tnic> <20190305122218.GD13380@bombadil.infradead.org>
- <20190305134347.4be2449c@alans-desktop> <20190305145717.GD8256@zn.tnic>
- <CAHk-=wi2E4kugAW7BQwNSVwYHOr=B_9EgzBRMpQ2+1dxAqydDg@mail.gmail.com>
- <20190305173134.GE8256@zn.tnic> <CAHk-=wg0bY=RFhD4NW9x++fC0bME=_-9xM3kexGGM3gefHQTyQ@mail.gmail.com>
- <20190305181138.GG8256@zn.tnic> <20190305181808.GH8256@zn.tnic>
- <CAEdQ38G5M3vq9pGBV1iyEViO7JhFuXk5g+VCs-vUH+Z62kNqgQ@mail.gmail.com>
- <CAHk-=wgt7M6yA5BJCJo0nF22WgPJnN8CvViL9CAJmd+S+Civ6w@mail.gmail.com> <yw1xa7i14btw.fsf@mansr.com>
-In-Reply-To: <yw1xa7i14btw.fsf@mansr.com>
-From:   Linus Torvalds <torvalds@linux-foundation.org>
-Date:   Mon, 11 Mar 2019 09:45:32 -0700
-X-Gmail-Original-Message-ID: <CAHk-=whD1SumZUBQeuMT-GcciwPxg_jW_TsPAmokYp3sGGCGhA@mail.gmail.com>
-Message-ID: <CAHk-=whD1SumZUBQeuMT-GcciwPxg_jW_TsPAmokYp3sGGCGhA@mail.gmail.com>
-Subject: Re: [PATCH] x86: Deprecate a.out support
-To:     =?UTF-8?B?TcOlbnMgUnVsbGfDpXJk?= <mans@mansr.com>
-Cc:     Matt Turner <mattst88@gmail.com>, Borislav Petkov <bp@alien8.de>,
-        Alan Cox <gnomes@lxorguk.ukuu.org.uk>,
-        Matthew Wilcox <willy@infradead.org>,
-        Jann Horn <jannh@google.com>,
-        Al Viro <viro@zeniv.linux.org.uk>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        kernel list <linux-kernel@vger.kernel.org>,
-        linux-fsdevel <linux-fsdevel@vger.kernel.org>,
-        "the arch/x86 maintainers" <x86@kernel.org>,
-        Linux API <linux-api@vger.kernel.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Richard Weinberger <richard@nod.at>,
-        Anton Ivanov <anton.ivanov@cambridgegreys.com>,
-        linux-alpha <linux-alpha@vger.kernel.org>,
-        linux-m68k@lists.linux-m68k.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190311161948.GC4359@magnolia>
+User-Agent: Mutt/1.11.3 (2019-02-01)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Mar 11, 2019 at 9:26 AM M=C3=A5ns Rullg=C3=A5rd <mans@mansr.com> wr=
-ote:
->
-> Anyone running an Alpha machine likely also has some old OSF/1 binaries
-> they may wish to use.  It would be a shame to remove this feature, IMO.
+On Mon, Mar 11, 2019 at 09:19:48AM -0700, Darrick J. Wong wrote:
+> From: Darrick J. Wong <darrick.wong@oracle.com>
+> 
+> Smatch complains about the following:
+> 
+> fs/xfs/libxfs/xfs_dir2_leaf.c:848 xfs_dir2_leaf_addname() error:
+> uninitialized symbol 'lowstale'.
+> 
+> fs/xfs/libxfs/xfs_dir2_leaf.c:849 xfs_dir2_leaf_addname() error:
+> uninitialized symbol 'highstale'.
+> 
+> I don't think there's any incorrect behavior associated with the
+> uninitialized variable, but as the author of the previous zero-init
+> patch points out, it's best not to be passing around pointers to
+> uninitialized stack areas.
+> 
+> Signed-off-by: Darrick J. Wong <darrick.wong@oracle.com>
 
-If that's the case then we'd have to keep a.out alive for alpha, since
-that's the OSF/1 binary format (at least the only one we support - I'm
-not sure if later versions of OSF/1 ended up getting ELF).
+Reviewed-by: Nathan Chancellor <natechancellor@gmail.com>
 
-Which I guess we could do, but the question is whether people really
-do have OSF/1 binaries. It was really useful early on as a source of
-known-good binaries to test with, but I'm not convinced it's still in
-use.
+Thanks for this!
 
-It's not like there were OSF/1 binaries that we didn't havce access to
-natively (well, there _were_ special ones that didn't have open source
-versions, but most of them required more system-side support than
-Linux ever implemented, afaik).
-
-                           Linus
+> ---
+>  fs/xfs/libxfs/xfs_dir2_leaf.c |    4 ++--
+>  1 file changed, 2 insertions(+), 2 deletions(-)
+> 
+> diff --git a/fs/xfs/libxfs/xfs_dir2_leaf.c b/fs/xfs/libxfs/xfs_dir2_leaf.c
+> index 9a3767818c50..2abf945e5844 100644
+> --- a/fs/xfs/libxfs/xfs_dir2_leaf.c
+> +++ b/fs/xfs/libxfs/xfs_dir2_leaf.c
+> @@ -574,7 +574,7 @@ xfs_dir2_leaf_addname(
+>  	xfs_dir2_data_unused_t	*dup;		/* data unused entry */
+>  	int			error;		/* error return value */
+>  	int			grown;		/* allocated new data block */
+> -	int			highstale;	/* index of next stale leaf */
+> +	int			highstale = 0;	/* index of next stale leaf */
+>  	int			i;		/* temporary, index */
+>  	int			index;		/* leaf table position */
+>  	struct xfs_buf		*lbp;		/* leaf's buffer */
+> @@ -583,7 +583,7 @@ xfs_dir2_leaf_addname(
+>  	xfs_dir2_leaf_entry_t	*lep;		/* leaf entry table pointer */
+>  	int			lfloglow;	/* low leaf logging index */
+>  	int			lfloghigh;	/* high leaf logging index */
+> -	int			lowstale;	/* index of prev stale leaf */
+> +	int			lowstale = 0;	/* index of prev stale leaf */
+>  	xfs_dir2_leaf_tail_t	*ltp;		/* leaf tail pointer */
+>  	int			needbytes;	/* leaf block bytes needed */
+>  	int			needlog;	/* need to log data header */
