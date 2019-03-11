@@ -6,48 +6,48 @@ X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E5949C43381
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 Mar 2019 13:27:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EC4EFC43381
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 Mar 2019 13:27:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id ACA16206BA
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 Mar 2019 13:27:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AFBBC2084F
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 Mar 2019 13:27:26 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727712AbfCKN04 (ORCPT
+        id S1727724AbfCKN1Z (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 11 Mar 2019 09:26:56 -0400
-Received: from mout.kundenserver.de ([212.227.17.24]:42271 "EHLO
+        Mon, 11 Mar 2019 09:27:25 -0400
+Received: from mout.kundenserver.de ([212.227.17.13]:38979 "EHLO
         mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727480AbfCKNTh (ORCPT
+        with ESMTP id S1727576AbfCKNTg (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 11 Mar 2019 09:19:37 -0400
+        Mon, 11 Mar 2019 09:19:36 -0400
 Received: from orion.localdomain ([95.115.159.19]) by mrelayeu.kundenserver.de
  (mreue109 [212.227.15.183]) with ESMTPSA (Nemesis) id
- 1M4bA0-1h1gwa2sTu-001i6H for <linux-kernel@vger.kernel.org>; Mon, 11 Mar 2019
+ 1MqrsF-1ghjWx1yeP-00mp9W for <linux-kernel@vger.kernel.org>; Mon, 11 Mar 2019
  14:19:34 +0100
 From:   "Enrico Weigelt, metux IT consult" <info@metux.net>
 To:     linux-kernel@vger.kernel.org
-Subject: [PATCH 054/114] drivers: platform: Kconfig: pedantic formatting
-Date:   Mon, 11 Mar 2019 14:18:06 +0100
-Message-Id: <1552310346-7629-55-git-send-email-info@metux.net>
+Subject: [PATCH 052/114] arch: x86: Kconfig: pedantic formatting
+Date:   Mon, 11 Mar 2019 14:18:04 +0100
+Message-Id: <1552310346-7629-53-git-send-email-info@metux.net>
 X-Mailer: git-send-email 1.9.1
 In-Reply-To: <1552310346-7629-1-git-send-email-info@metux.net>
 References: <1552310346-7629-1-git-send-email-info@metux.net>
-X-Provags-ID: V03:K1:NP2r1DiRoddGbD1z8wTYXKmCQg1V5TWPaEdXY9KB5Kk5/9OzgSI
- afvf5t35LvjXu1DmA0vQpfO9p5TUTo8tuMcvO9GK8LxdcX+tyzo0ul020ciCX4f5L9dJENv
- M2C+c+SI/WVFDLdNv0iJt+lSG41sUwkMTlMyNNtyolBMfxnj97XTPSDWauoXqVYWJ8C5epq
- 4dSLxXYZKHNFYGYkREF/g==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:FbIjCH+62FM=:nlhupN9EZbGiKe1EETwjr5
- pSiVoIm4AG2+TE7aMvWHIdvwqaF3n35uurxa86z6r9WBH6/kHDR4Ft/OnNo59nV9TzXZ2sTkG
- XdMcV9ivQDErfT16f/lZ60K3O5b6p6+DQs90NzTF1rBuB+60HtYH+G2IxIfmfhU8scYX4L13i
- OpImgYH/itpx7dTMxfmuwSnnTd22//rXJYxg9e3bADPqNIGK8/F/y/35pE+Kyy7FHm4OufWc5
- Hy4SLcNws1rhPv9QicsutHUKBZLswf5Ofk6ev3KYglYqrBz2JMv2q2Bd6M92e7I7NtSOIkAPS
- XnOt86L6gDbhM8GllIdxhAwSUkQuTZqfaG8t0ePr2G7Sm0wZtkWeHXZt/D4VsWrBmYAR4QFb+
- TNV3DpgDQzy04f9z6ybBrJBR4Ns9MSpE+9OrleXqspHS41dw/khbOkS8+8V6AO+nu6y26Cq+M
- RMhqfE3f6aJe2s5epy54VM8fbJHrH9s8SjGpiFbK+rhEcWzZLA/W5fCfO7aKCmhX9r/spMAxV
- Bc5kydBVeaSRD8POA4kYVPQj8+95M9Ylmsn6WDEwYvWUHLgUnIbJWaPqJR9X8wW+JK5HsGAry
- 5VnEwSioMCVcHAaRNuxNCt8UKXgkhR+Lq+6xbzumale4exyyHYu4WA7z5DMo2Dx9N6bH8eW+x
- TthPV8h6Psbd+2LY1znoevVQ5qX/rOybUmmIuhykR4irSOlfs+/acf5ayqsDzKfhT4wGFRd2u
- injreOyGIoCb7gMVS0ZNnCXAUJaXA1JNIT7oxg==
+X-Provags-ID: V03:K1:zX+BlNS5+/iFVJnA1X3ogVIA5Dzw/46LgSaIm5Z02VGx7YX0tKL
+ oCwmR+hcrlEn1Hd8uhVOVpysrBndn84c7vmVcr6cIv5G9cyfJM98UCRXQQwUY2S9JuHWQNV
+ OdWrBrqUKu4tbfmESJlB2q0cr98wbawuloyQZs0SdgdXRIpiCJmht4geCey/koyIa3YG+8E
+ if1T2948HTyG5ueuV/E5w==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:24S72Vw/9pM=:64AL8OHoUvIiCxZ95+GEu0
+ zX60iQVrlzMEYW7zaHA5mPT6Iqimzoo+ik9py0vunt+RX5MVk4wArX+04ATaHVQsPBZ3X4RTW
+ hC3DIlf8kTAiOnhlcYfgwJgqHOM+JgCfb7byPhzuYRD2xLH+bFvg/VD6Imc9spO3Ew7+3EDaR
+ R/AJDp2wbvRtEVUqlIkdiVOzBDxsAd8EOBLNQfJZuSxPLXdFQQGzUkjoQnKqCvKOQvWitRbGr
+ VqFwIysW+nedaoZz43uuZNUzxygyYf0xc9zKdmOk5W9NK0tYxb0K3Ix35xo72E7M5eUEiJt2Y
+ Qip4RbAs7fw3UB6eNBP3cXvFJNpmFQR/5TUJ8wq1mZ6yi7aJLJu+8+Rhwj5mqEB2BoJyc3QCt
+ bpr96Xf0ChDg6u2ggnnUJMCE0dQ4cu71rBQ8HdRsYxE+kofKLNHIC1lXogXiSpHKHFM0CV2Mz
+ 4X1aiG/219C1xuOPLtMpGfNUZXM7KVxJH3KoePka87HFIff3dQKLVAVZ2RFEkTO+/m/eo9lwo
+ hudGQpn0y9ZI6yYeO1qmSzPga/Oevd7U+fetDBojg3/uf36FDam7Vz9elOOllpD1klBESq2zG
+ PnCerLI8SSX200xEFUJLu/gt0r3YRWD5qx4VPO77I9ZjyNCA9D8/3igj5sSOeJJqQhWTyftKv
+ A//V5wWr7T372+3dATtL4l5Gjmz+NIBVa2XWSq3Ks28u3DiMUKvQcTVpvOJ+tFThLNyPcATGZ
+ 4DSahlLWqCnxXlXCOuQtA9tdT9WWVQWqlr9cYA==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
@@ -58,357 +58,284 @@ Great White Handkerchief come around and clean it up.
 
 Signed-off-by: Enrico Weigelt, metux IT consult <info@metux.net>
 ---
- drivers/platform/chrome/Kconfig |  24 +++---
- drivers/platform/x86/Kconfig    | 165 ++++++++++++++++++++--------------------
- 2 files changed, 94 insertions(+), 95 deletions(-)
+ arch/x86/Kconfig     | 140 +++++++++++++++++++++++++--------------------------
+ arch/x86/kvm/Kconfig |   4 +-
+ arch/x86/xen/Kconfig |   8 +--
+ 3 files changed, 76 insertions(+), 76 deletions(-)
 
-diff --git a/drivers/platform/chrome/Kconfig b/drivers/platform/chrome/Kconfig
-index 5e2fde5..920277e 100644
---- a/drivers/platform/chrome/Kconfig
-+++ b/drivers/platform/chrome/Kconfig
-@@ -70,16 +70,16 @@ config CROS_EC_SPI
- 	  'pre-amble' bytes before the response actually starts.
+diff --git a/arch/x86/Kconfig b/arch/x86/Kconfig
+index c1f9b3c..3689662 100644
+--- a/arch/x86/Kconfig
++++ b/arch/x86/Kconfig
+@@ -432,8 +432,8 @@ config X86_MPPARSE
+ 	  (esp with 64bit cpus) with acpi support, MADT and DSDT will override it
  
- config CROS_EC_LPC
--        tristate "ChromeOS Embedded Controller (LPC)"
--        depends on MFD_CROS_EC && ACPI && (X86 || COMPILE_TEST)
--        help
--          If you say Y here, you get support for talking to the ChromeOS EC
--          over an LPC bus. This uses a simple byte-level protocol with a
--          checksum. This is used for userspace access only. The kernel
--          typically has its own communication methods.
-+	tristate "ChromeOS Embedded Controller (LPC)"
-+	depends on MFD_CROS_EC && ACPI && (X86 || COMPILE_TEST)
-+	help
-+	  If you say Y here, you get support for talking to the ChromeOS EC
-+	  over an LPC bus. This uses a simple byte-level protocol with a
-+	  checksum. This is used for userspace access only. The kernel
-+	  typically has its own communication methods.
- 
--          To compile this driver as a module, choose M here: the
--          module will be called cros_ec_lpc.
-+	  To compile this driver as a module, choose M here: the
-+	  module will be called cros_ec_lpc.
- 
- config CROS_EC_LPC_MEC
- 	bool "ChromeOS Embedded Controller LPC Microchip EC (MEC) variant"
-@@ -94,9 +94,9 @@ config CROS_EC_LPC_MEC
- 	  choose Y here.
- 
- config CROS_EC_PROTO
--        bool
--        help
--          ChromeOS EC communication protocol helpers.
-+	bool
-+	help
-+	  ChromeOS EC communication protocol helpers.
- 
- config CROS_KBD_LED_BACKLIGHT
- 	tristate "Backlight LED support for Chrome OS keyboards"
-diff --git a/drivers/platform/x86/Kconfig b/drivers/platform/x86/Kconfig
-index a1ed131..4970b3d 100644
---- a/drivers/platform/x86/Kconfig
-+++ b/drivers/platform/x86/Kconfig
-@@ -27,7 +27,7 @@ config ACER_WMI
- 	depends on ACPI_WMI
- 	select INPUT_SPARSEKMAP
- 	# Acer WMI depends on ACPI_VIDEO when ACPI is enabled
--        select ACPI_VIDEO if ACPI
-+	select ACPI_VIDEO if ACPI
- 	---help---
- 	  This is a driver for newer Acer (and Wistron) laptops. It adds
- 	  wireless radio and bluetooth control, and on some laptops,
-@@ -37,18 +37,18 @@ config ACER_WMI
- 	  here.
- 
- config ACER_WIRELESS
--        tristate "Acer Wireless Radio Control Driver"
--        depends on ACPI
--        depends on INPUT
--        ---help---
--          The Acer Wireless Radio Control handles the airplane mode hotkey
--          present on new Acer laptops.
-+	tristate "Acer Wireless Radio Control Driver"
-+	depends on ACPI
-+	depends on INPUT
-+	---help---
-+	  The Acer Wireless Radio Control handles the airplane mode hotkey
-+	  present on new Acer laptops.
- 
--          Say Y or M here if you have an Acer notebook with an airplane mode
--          hotkey.
-+	  Say Y or M here if you have an Acer notebook with an airplane mode
-+	  hotkey.
- 
--          If you choose to compile this driver as a module the module will be
--          called acer-wireless.
-+	  If you choose to compile this driver as a module the module will be
-+	  called acer-wireless.
- 
- config ACERHDF
- 	tristate "Acer Aspire One temperature and fan driver"
-@@ -78,10 +78,10 @@ config ALIENWARE_WMI
- 	depends on NEW_LEDS
- 	depends on ACPI_WMI
- 	---help---
--	 This is a driver for controlling Alienware BIOS driven
--	 features.  It exposes an interface for controlling the AlienFX
--	 zones on Alienware machines that don't contain a dedicated AlienFX
--	 USB MCU such as the X51 and X51-R2.
-+	  This is a driver for controlling Alienware BIOS driven
-+	  features.  It exposes an interface for controlling the AlienFX
-+	  zones on Alienware machines that don't contain a dedicated AlienFX
-+	  USB MCU such as the X51 and X51-R2.
- 
- config ASUS_LAPTOP
- 	tristate "Asus Laptop Extras"
-@@ -146,12 +146,12 @@ config DELL_SMBIOS_WMI
- 	select DELL_WMI_DESCRIPTOR
- 	depends on DELL_SMBIOS
- 	---help---
--	This provides an implementation for the Dell SMBIOS calling interface
--	communicated over ACPI-WMI.
-+	  This provides an implementation for the Dell SMBIOS calling interface
-+	  communicated over ACPI-WMI.
- 
--	If you have a Dell computer from >2007 you should say Y here.
--	If you aren't sure and this module doesn't work for your computer
--	it just won't load.
-+	  If you have a Dell computer from >2007 you should say Y here.
-+	  If you aren't sure and this module doesn't work for your computer
-+	  it just won't load.
- 
- config DELL_SMBIOS_SMM
- 	bool "Dell SMBIOS driver SMM backend"
-@@ -159,12 +159,12 @@ config DELL_SMBIOS_SMM
- 	depends on DCDBAS
- 	depends on DELL_SMBIOS
- 	---help---
--	This provides an implementation for the Dell SMBIOS calling interface
--	communicated over SMI/SMM.
-+	  This provides an implementation for the Dell SMBIOS calling interface
-+	  communicated over SMI/SMM.
- 
--	If you have a Dell computer from <=2017 you should say Y here.
--	If you aren't sure and this module doesn't work for your computer
--	it just won't load.
-+	  If you have a Dell computer from <=2017 you should say Y here.
-+	  If you aren't sure and this module doesn't work for your computer
-+	  it just won't load.
- 
- config DELL_LAPTOP
- 	tristate "Dell Laptop Extras"
-@@ -254,12 +254,11 @@ config DELL_RBU
- 	select FW_LOADER
- 	select FW_LOADER_USER_HELPER
- 	help
--	 Say m if you want to have the option of updating the BIOS for your
--	 DELL system. Note you need a Dell OpenManage or Dell Update package (DUP)
--	 supporting application to communicate with the BIOS regarding the new
--	 image for the image update to take effect.
--	 See <file:Documentation/dell_rbu.txt> for more details on the driver.
--
-+	  Say m if you want to have the option of updating the BIOS for your
-+	  DELL system. Note you need a Dell OpenManage or Dell Update package (DUP)
-+	  supporting application to communicate with the BIOS regarding the new
-+	  image for the image update to take effect.
-+	  See <file:Documentation/dell_rbu.txt> for more details on the driver.
- 
- config FUJITSU_LAPTOP
- 	tristate "Fujitsu Laptop Extras"
-@@ -281,21 +280,21 @@ config FUJITSU_LAPTOP
- 	  If you have a Fujitsu laptop, say Y or M here.
- 
- config FUJITSU_TABLET
--       tristate "Fujitsu Tablet Extras"
--       depends on ACPI
--       depends on INPUT
--       ---help---
--         This is a driver for tablets built by Fujitsu:
-+	tristate "Fujitsu Tablet Extras"
-+	depends on ACPI
-+	depends on INPUT
-+	---help---
-+	  This is a driver for tablets built by Fujitsu:
- 
--           * Lifebook P1510/P1610/P1620/Txxxx
--           * Stylistic ST5xxx
--           * Possibly other Fujitsu tablet models
-+	  * Lifebook P1510/P1610/P1620/Txxxx
-+	  * Stylistic ST5xxx
-+	  * Possibly other Fujitsu tablet models
- 
--         It adds support for the panel buttons, docking station detection,
--         tablet/notebook mode detection for convertible and
--         orientation detection for docked slates.
-+	  It adds support for the panel buttons, docking station detection,
-+	  tablet/notebook mode detection for convertible and
-+	  orientation detection for docked slates.
- 
--         If you have a Fujitsu convertible or slate, say Y or M here.
-+	  If you have a Fujitsu convertible or slate, say Y or M here.
- 
- config AMILO_RFKILL
- 	tristate "Fujitsu-Siemens Amilo rfkill support"
-@@ -350,11 +349,11 @@ config HP_WIRELESS
- 	depends on ACPI
- 	depends on INPUT
- 	help
--	 This driver provides supports for new HP wireless button for Windows 8.
--	 On such systems the driver should load automatically (via ACPI alias).
-+	  This driver provides supports for new HP wireless button for Windows 8.
-+	  On such systems the driver should load automatically (via ACPI alias).
- 
--	 To compile this driver as a module, choose M here: the module will
--	 be called hp-wireless.
-+	  To compile this driver as a module, choose M here: the module will
-+	  be called hp-wireless.
- 
- config HP_WMI
- 	tristate "HP WMI extras"
-@@ -363,11 +362,11 @@ config HP_WMI
- 	depends on RFKILL || RFKILL = n
- 	select INPUT_SPARSEKMAP
- 	help
--	 Say Y here if you want to support WMI-based hotkeys on HP laptops and
--	 to read data from WMI such as docking or ambient light sensor state.
-+	  Say Y here if you want to support WMI-based hotkeys on HP laptops and
-+	  to read data from WMI such as docking or ambient light sensor state.
- 
--	 To compile this driver as a module, choose M here: the module will
--	 be called hp-wmi.
-+	  To compile this driver as a module, choose M here: the module will
-+	  be called hp-wmi.
- 
- config LG_LAPTOP
- 	tristate "LG Laptop Extras"
-@@ -377,11 +376,11 @@ config LG_LAPTOP
- 	select INPUT_SPARSEKMAP
- 	select LEDS_CLASS
- 	help
--	 This driver adds support for hotkeys as well as control of keyboard
--	 backlight, battery maximum charge level and various other ACPI
--	 features.
-+	  This driver adds support for hotkeys as well as control of keyboard
-+	  backlight, battery maximum charge level and various other ACPI
-+	  features.
- 
--	 If you have an LG Gram laptop, say Y or M here.
-+	  If you have an LG Gram laptop, say Y or M here.
- 
- config MSI_LAPTOP
- 	tristate "MSI Laptop Extras"
-@@ -788,10 +787,10 @@ config MSI_WMI
- 	depends on ACPI_VIDEO || ACPI_VIDEO = n
- 	select INPUT_SPARSEKMAP
- 	help
--	 Say Y here if you want to support WMI-based hotkeys on MSI laptops.
-+	  Say Y here if you want to support WMI-based hotkeys on MSI laptops.
- 
--	 To compile this driver as a module, choose M here: the module will
--	 be called msi-wmi.
-+	  To compile this driver as a module, choose M here: the module will
-+	  be called msi-wmi.
- 
- config PEAQ_WMI
- 	tristate "PEAQ 2-in-1 WMI hotkey driver"
-@@ -799,7 +798,7 @@ config PEAQ_WMI
- 	depends on INPUT
- 	select INPUT_POLLDEV
- 	help
--	 Say Y here if you want to support WMI-based hotkeys on PEAQ 2-in-1s.
-+	  Say Y here if you want to support WMI-based hotkeys on PEAQ 2-in-1s.
- 
- config TOPSTAR_LAPTOP
- 	tristate "Topstar Laptop Extras"
-@@ -1002,11 +1001,11 @@ config INTEL_MID_POWER_BUTTON
- 	  If unsure, say N.
- 
- config INTEL_MFLD_THERMAL
--       tristate "Thermal driver for Intel Medfield platform"
--       depends on MFD_INTEL_MSIC && THERMAL
--       help
--         Say Y here to enable thermal driver support for the  Intel Medfield
--         platform.
-+	tristate "Thermal driver for Intel Medfield platform"
-+	depends on MFD_INTEL_MSIC && THERMAL
-+	help
-+	  Say Y here to enable thermal driver support for the  Intel Medfield
-+	  platform.
- 
- config INTEL_IPS
- 	tristate "Intel Intelligent Power Sharing"
-@@ -1061,17 +1060,17 @@ config IBM_RTL
- 	tristate "Device driver to enable PRTL support"
- 	depends on PCI
- 	---help---
--	 Enable support for IBM Premium Real Time Mode (PRTM).
--	 This module will allow you the enter and exit PRTM in the BIOS via
--	 sysfs on platforms that support this feature.  System in PRTM will
--	 not receive CPU-generated SMIs for recoverable errors.  Use of this
--	 feature without proper support may void your hardware warranty.
-+	  Enable support for IBM Premium Real Time Mode (PRTM).
-+	  This module will allow you the enter and exit PRTM in the BIOS via
-+	  sysfs on platforms that support this feature.  System in PRTM will
-+	  not receive CPU-generated SMIs for recoverable errors.  Use of this
-+	  feature without proper support may void your hardware warranty.
- 
--	 If the proper BIOS support is found the driver will load and create
--	 /sys/devices/system/ibm_rtl/.  The "state" variable will indicate
--	 whether or not the BIOS is in PRTM.
--	 state = 0 (BIOS SMIs on)
--	 state = 1 (BIOS SMIs off)
-+	  If the proper BIOS support is found the driver will load and create
-+	  /sys/devices/system/ibm_rtl/.  The "state" variable will indicate
-+	  whether or not the BIOS is in PRTM.
-+	  state = 0 (BIOS SMIs on)
-+	  state = 1 (BIOS SMIs off)
- 
- config XO1_RFKILL
- 	tristate "OLPC XO-1 software RF kill switch"
-@@ -1110,10 +1109,10 @@ config SAMSUNG_LAPTOP
- 	  will be called samsung-laptop.
- 
- config MXM_WMI
--       tristate "WMI support for MXM Laptop Graphics"
--       depends on ACPI_WMI
--       ---help---
--          MXM is a standard for laptop graphics cards, the WMI interface
-+	tristate "WMI support for MXM Laptop Graphics"
-+	depends on ACPI_WMI
-+	---help---
-+	  MXM is a standard for laptop graphics cards, the WMI interface
- 	  is required for switchable nvidia graphics machines
- 
- config INTEL_OAKTRAIL
-@@ -1149,7 +1148,7 @@ config APPLE_GMUX
- 	  control is supported by the driver.
- 
- config INTEL_RST
--        tristate "Intel Rapid Start Technology Driver"
-+	tristate "Intel Rapid Start Technology Driver"
- 	depends on ACPI
- 	---help---
- 	  This driver provides support for modifying paramaters on systems
-@@ -1161,7 +1160,7 @@ config INTEL_RST
- 	  as usual.
- 
- config INTEL_SMARTCONNECT
--        tristate "Intel Smart Connect disabling driver"
-+	tristate "Intel Smart Connect disabling driver"
- 	depends on ACPI
- 	---help---
- 	  Intel Smart Connect is a technology intended to permit devices to
-@@ -1320,6 +1319,6 @@ config PCENGINES_APU2
- endif # X86_PLATFORM_DEVICES
- 
- config PMC_ATOM
+ config GOLDFISH
 -       def_bool y
--       depends on PCI
--       select COMMON_CLK
+-       depends on X86_GOLDFISH
 +	def_bool y
-+	depends on PCI
-+	select COMMON_CLK
++	depends on X86_GOLDFISH
+ 
+ config RETPOLINE
+ 	bool "Avoid speculative indirect branches in kernel"
+@@ -554,12 +554,12 @@ config X86_UV
+ # Please maintain the alphabetic order if and when there are additions
+ 
+ config X86_GOLDFISH
+-       bool "Goldfish (Virtual Platform)"
+-       depends on X86_EXTENDED_PLATFORM
+-       ---help---
+-	 Enable support for the Goldfish virtual platform used primarily
+-	 for Android development. Unless you are building for the Android
+-	 Goldfish emulator say N here.
++	bool "Goldfish (Virtual Platform)"
++	depends on X86_EXTENDED_PLATFORM
++	---help---
++	  Enable support for the Goldfish virtual platform used primarily
++	  for Android development. Unless you are building for the Android
++	  Goldfish emulator say N here.
+ 
+ config X86_INTEL_CE
+ 	bool "CE4100 TV platform"
+@@ -870,16 +870,16 @@ config HPET_EMULATE_RTC
+ 	depends on HPET_TIMER && (RTC=y || RTC=m || RTC_DRV_CMOS=m || RTC_DRV_CMOS=y)
+ 
+ config APB_TIMER
+-       def_bool y if X86_INTEL_MID
+-       prompt "Intel MID APB Timer Support" if X86_INTEL_MID
+-       select DW_APB_TIMER
+-       depends on X86_INTEL_MID && SFI
+-       help
+-         APB timer is the replacement for 8254, HPET on X86 MID platforms.
+-         The APBT provides a stable time base on SMP
+-         systems, unlike the TSC, but it is more expensive to access,
+-         as it is off-chip. APB timers are always running regardless of CPU
+-         C states, they are used as per CPU clockevent device when possible.
++	def_bool y if X86_INTEL_MID
++	prompt "Intel MID APB Timer Support" if X86_INTEL_MID
++	select DW_APB_TIMER
++	depends on X86_INTEL_MID && SFI
++	help
++	  APB timer is the replacement for 8254, HPET on X86 MID platforms.
++	  The APBT provides a stable time base on SMP
++	  systems, unlike the TSC, but it is more expensive to access,
++	  as it is off-chip. APB timers are always running regardless of CPU
++	  C states, they are used as per CPU clockevent device when possible.
+ 
+ # Mark as expert because too many people got it wrong.
+ # The code disables itself when not needed.
+@@ -1048,8 +1048,8 @@ config SCHED_MC_PRIO
+ 	  If unsure say Y here.
+ 
+ config UP_LATE_INIT
+-       def_bool y
+-       depends on !SMP && X86_LOCAL_APIC
++	def_bool y
++	depends on !SMP && X86_LOCAL_APIC
+ 
+ config X86_UP_APIC
+ 	bool "Local APIC support on uniprocessors" if !PCI_MSI
+@@ -1133,16 +1133,16 @@ config X86_MCE_INTEL
+ 	prompt "Intel MCE features"
+ 	depends on X86_MCE && X86_LOCAL_APIC
+ 	---help---
+-	   Additional support for intel specific MCE features such as
+-	   the thermal monitor.
++	  Additional support for intel specific MCE features such as
++	  the thermal monitor.
+ 
+ config X86_MCE_AMD
+ 	def_bool y
+ 	prompt "AMD MCE features"
+ 	depends on X86_MCE && X86_LOCAL_APIC && AMD_NB
+ 	---help---
+-	   Additional support for AMD specific MCE features such as
+-	   the DRAM Error Threshold.
++	  Additional support for AMD specific MCE features such as
++	  the DRAM Error Threshold.
+ 
+ config X86_ANCIENT_MCE
+ 	bool "Support for old Pentium 5 / WinChip machine checks"
+@@ -1198,8 +1198,8 @@ config X86_LEGACY_VM86
+ 	  If unsure, say N here.
+ 
+ config VM86
+-       bool
+-       default X86_LEGACY_VM86
++	bool
++	default X86_LEGACY_VM86
+ 
+ config X86_16BIT
+ 	bool "Enable support for 16-bit segments" if EXPERT
+@@ -1220,22 +1220,22 @@ config X86_ESPFIX64
+ 	depends on X86_16BIT && X86_64
+ 
+ config X86_VSYSCALL_EMULATION
+-       bool "Enable vsyscall emulation" if EXPERT
+-       default y
+-       depends on X86_64
+-       ---help---
+-	 This enables emulation of the legacy vsyscall page.  Disabling
+-	 it is roughly equivalent to booting with vsyscall=none, except
+-	 that it will also disable the helpful warning if a program
+-	 tries to use a vsyscall.  With this option set to N, offending
+-	 programs will just segfault, citing addresses of the form
+-	 0xffffffffff600?00.
+-
+-	 This option is required by many programs built before 2013, and
+-	 care should be used even with newer programs if set to N.
+-
+-	 Disabling this option saves about 7K of kernel size and
+-	 possibly 4K of additional runtime pagetable memory.
++	bool "Enable vsyscall emulation" if EXPERT
++	default y
++	depends on X86_64
++	---help---
++	  This enables emulation of the legacy vsyscall page.  Disabling
++	  it is roughly equivalent to booting with vsyscall=none, except
++	  that it will also disable the helpful warning if a program
++	  tries to use a vsyscall.  With this option set to N, offending
++	  programs will just segfault, citing addresses of the form
++	  0xffffffffff600?00.
++
++	  This option is required by many programs built before 2013, and
++	  care should be used even with newer programs if set to N.
++
++	  Disabling this option saves about 7K of kernel size and
++	  possibly 4K of additional runtime pagetable memory.
+ 
+ config TOSHIBA
+ 	tristate "Toshiba Laptop support"
+@@ -1640,9 +1640,9 @@ config ARCH_PROC_KCORE_TEXT
+ 	depends on X86_64 && PROC_KCORE
+ 
+ config ILLEGAL_POINTER_VALUE
+-       hex
+-       default 0 if X86_32
+-       default 0xdead000000000000 if X86_64
++	hex
++	default 0 if X86_32
++	default 0xdead000000000000 if X86_64
+ 
+ config X86_PMEM_LEGACY_DEVICE
+ 	bool
+@@ -1938,11 +1938,11 @@ config EFI
+ 	  platforms.
+ 
+ config EFI_STUB
+-       bool "EFI stub support"
+-       depends on EFI && !X86_USE_3DNOW
+-       select RELOCATABLE
+-       ---help---
+-          This kernel feature allows a bzImage to be loaded directly
++	bool "EFI stub support"
++	depends on EFI && !X86_USE_3DNOW
++	select RELOCATABLE
++	---help---
++	  This kernel feature allows a bzImage to be loaded directly
+ 	  by EFI firmware without the use of a bootloader.
+ 
+ 	  See Documentation/efi-stub.txt for more information.
+@@ -1951,15 +1951,15 @@ config EFI_MIXED
+ 	bool "EFI mixed-mode support"
+ 	depends on EFI_STUB && X86_64
+ 	---help---
+-	   Enabling this feature allows a 64-bit kernel to be booted
+-	   on a 32-bit firmware, provided that your CPU supports 64-bit
+-	   mode.
++	  Enabling this feature allows a 64-bit kernel to be booted
++	  on a 32-bit firmware, provided that your CPU supports 64-bit
++	  mode.
+ 
+-	   Note that it is not possible to boot a mixed-mode enabled
+-	   kernel via the EFI boot stub - a bootloader that supports
+-	   the EFI handover protocol must be used.
++	  Note that it is not possible to boot a mixed-mode enabled
++	  kernel via the EFI boot stub - a bootloader that supports
++	  the EFI handover protocol must be used.
+ 
+-	   If unsure, say N.
++	  If unsure, say N.
+ 
+ config SECCOMP
+ 	def_bool y
+@@ -2190,16 +2190,16 @@ config RANDOMIZE_MEMORY
+ 	select DYNAMIC_MEMORY_LAYOUT
+ 	default RANDOMIZE_BASE
+ 	---help---
+-	   Randomizes the base virtual address of kernel memory sections
+-	   (physical memory mapping, vmalloc & vmemmap). This security feature
+-	   makes exploits relying on predictable memory locations less reliable.
++	  Randomizes the base virtual address of kernel memory sections
++	  (physical memory mapping, vmalloc & vmemmap). This security feature
++	  makes exploits relying on predictable memory locations less reliable.
+ 
+-	   The order of allocations remains unchanged. Entropy is generated in
+-	   the same way as RANDOMIZE_BASE. Current implementation in the optimal
+-	   configuration have in average 30,000 different possible virtual
+-	   addresses for each memory section.
++	  The order of allocations remains unchanged. Entropy is generated in
++	  the same way as RANDOMIZE_BASE. Current implementation in the optimal
++	  configuration have in average 30,000 different possible virtual
++	  addresses for each memory section.
+ 
+-	   If unsure, say Y.
++	  If unsure, say Y.
+ 
+ config RANDOMIZE_MEMORY_PHYSICAL_PADDING
+ 	hex "Physical memory mapping padding" if EXPERT
+@@ -2209,12 +2209,12 @@ config RANDOMIZE_MEMORY_PHYSICAL_PADDING
+ 	range 0x1 0x40 if MEMORY_HOTPLUG
+ 	range 0x0 0x40
+ 	---help---
+-	   Define the padding in terabytes added to the existing physical
+-	   memory size during kernel memory randomization. It is useful
+-	   for memory hotplug support but reduces the entropy available for
+-	   address randomization.
++	  Define the padding in terabytes added to the existing physical
++	  memory size during kernel memory randomization. It is useful
++	  for memory hotplug support but reduces the entropy available for
++	  address randomization.
+ 
+-	   If unsure, leave at the default value.
++	  If unsure, leave at the default value.
+ 
+ config HOTPLUG_CPU
+ 	bool "Support for hot-pluggable CPUs"
+diff --git a/arch/x86/kvm/Kconfig b/arch/x86/kvm/Kconfig
+index 72fa955..1405422 100644
+--- a/arch/x86/kvm/Kconfig
++++ b/arch/x86/kvm/Kconfig
+@@ -93,8 +93,8 @@ config KVM_MMU_AUDIT
+ 	bool "Audit KVM MMU"
+ 	depends on KVM && TRACEPOINTS
+ 	---help---
+-	 This option adds a R/W kVM module parameter 'mmu_audit', which allows
+-	 auditing of KVM MMU events at runtime.
++	  This option adds a R/W kVM module parameter 'mmu_audit', which allows
++	  auditing of KVM MMU events at runtime.
+ 
+ # OK, it's a little counter-intuitive to do this, but it puts it neatly under
+ # the virtualization menu.
+diff --git a/arch/x86/xen/Kconfig b/arch/x86/xen/Kconfig
+index e07abef..a4c717a 100644
+--- a/arch/x86/xen/Kconfig
++++ b/arch/x86/xen/Kconfig
+@@ -61,10 +61,10 @@ config XEN_512GB
+ 	  boot parameter "xen_512gb_limit".
+ 
+ config XEN_SAVE_RESTORE
+-       bool
+-       depends on XEN
+-       select HIBERNATE_CALLBACKS
+-       default y
++	bool
++	depends on XEN
++	select HIBERNATE_CALLBACKS
++	default y
+ 
+ config XEN_DEBUG_FS
+ 	bool "Enable Xen debug and tuning parameters in debugfs"
 -- 
 1.9.1
 
