@@ -2,178 +2,152 @@ Return-Path: <SRS0=FxTY=RO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,NORMAL_HTTP_TO_IP,SPF_PASS,UNPARSEABLE_RELAY autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 20606C43381
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 Mar 2019 01:46:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4F208C43381
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 Mar 2019 02:13:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EBC8D207E0
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 Mar 2019 01:46:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2001C20652
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 Mar 2019 02:13:14 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727116AbfCKBqA (ORCPT
+        id S1727193AbfCKCM5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 10 Mar 2019 21:46:00 -0400
-Received: from szxga04-in.huawei.com ([45.249.212.190]:4663 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726687AbfCKBqA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 10 Mar 2019 21:46:00 -0400
-Received: from DGGEMS408-HUB.china.huawei.com (unknown [172.30.72.60])
-        by Forcepoint Email with ESMTP id D3B70222B6386507C390;
-        Mon, 11 Mar 2019 09:45:54 +0800 (CST)
-Received: from [127.0.0.1] (10.177.31.96) by DGGEMS408-HUB.china.huawei.com
- (10.3.19.208) with Microsoft SMTP Server id 14.3.408.0; Mon, 11 Mar 2019
- 09:45:48 +0800
-Subject: Re: [PATCH v2] appletalk: Correctly check return value of
- register_snap_client
-To:     <davem@davemloft.net>, <joe@perches.com>,
-        <gregkh@linuxfoundation.org>
-References: <20190307022216.22464-1-yuehaibing@huawei.com>
-CC:     <linux-kernel@vger.kernel.org>, <netdev@vger.kernel.org>
-From:   YueHaibing <yuehaibing@huawei.com>
-Message-ID: <9c5dfaa3-074d-5056-2d34-2de639f300cc@huawei.com>
-Date:   Mon, 11 Mar 2019 09:45:47 +0800
-User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:45.0) Gecko/20100101
- Thunderbird/45.2.0
+        Sun, 10 Mar 2019 22:12:57 -0400
+Received: from out30-131.freemail.mail.aliyun.com ([115.124.30.131]:38869 "EHLO
+        out30-131.freemail.mail.aliyun.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1727072AbfCKCM5 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 10 Mar 2019 22:12:57 -0400
+X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R251e4;CH=green;DM=||false|;FP=0|-1|-1|-1|0|-1|-1|-1;HT=e01f04391;MF=alex.shi@linux.alibaba.com;NM=1;PH=DS;RN=9;SR=0;TI=SMTPD_---0TMRKbkC_1552270369;
+Received: from Alexs-MacBook-Pro.local(mailfrom:alex.shi@linux.alibaba.com fp:SMTPD_---0TMRKbkC_1552270369)
+          by smtp.aliyun-inc.com(127.0.0.1);
+          Mon, 11 Mar 2019 10:12:50 +0800
+Subject: Re: [PATCH v3 00/31] clean up and reorg Chinese kernel docs
+To:     linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
+        harryxiyou@gmail.com, corbet@lwn.net, Coly Li <colyli@suse.de>,
+        Fengguang Wu <fengguang.wu@intel.com>,
+        Li Zefan <lizefan@huawei.com>,
+        Shawn Guo <shawn.guo@linaro.org>, Li Yang <leoyang.li@nxp.com>
+References: <20190308030918.22337-1-alex.shi@linux.alibaba.com>
+From:   Alex Shi <alex.shi@linux.alibaba.com>
+Message-ID: <13549ad2-6a3e-5bc3-9e47-3e20fd720fd8@linux.alibaba.com>
+Date:   Mon, 11 Mar 2019 10:12:49 +0800
+User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.14; rv:60.0)
+ Gecko/20100101 Thunderbird/60.5.0
 MIME-Version: 1.0
-In-Reply-To: <20190307022216.22464-1-yuehaibing@huawei.com>
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.177.31.96]
-X-CFilter-Loop: Reflected
+In-Reply-To: <20190308030918.22337-1-alex.shi@linux.alibaba.com>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 8bit
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi David,
+CC more active Chinese peoples.
 
-Is there something need do for this patch? Pls let me know.
+Hi Harry,
 
-I saw the patchwork status labled to  'Not Applicable'
+Could you please give some comments as the patch series is updated to v3 and I can't see any problem of this series?
 
-https://patchwork.ozlabs.org/patch/1052624/
+There could do more on the processing docs translation, but as the first step, we want comments from Chinese doc maintainer.
 
-
-On 2019/3/7 10:22, Yue Haibing wrote:
-> From: YueHaibing <yuehaibing@huawei.com>
-> 
-> register_snap_client may return NULL, all the callers
-> check it, but only print a warning. This will result in
-> NULL pointer dereference in unregister_snap_client and other
-> places.
-> 
-> It has always been used like this since v2.6
-> 
-> Reported-by: Dan Carpenter <dan.carpenter@oracle.com>
-> Signed-off-by: YueHaibing <yuehaibing@huawei.com>
-> ---
-> v2: fix aarp_dl leak
-> ---
->  include/linux/atalk.h |  2 +-
->  net/appletalk/aarp.c  | 13 ++++++++++---
->  net/appletalk/ddp.c   | 20 ++++++++++++--------
->  3 files changed, 23 insertions(+), 12 deletions(-)
-> 
-> diff --git a/include/linux/atalk.h b/include/linux/atalk.h
-> index 5a90f28..0e5265a 100644
-> --- a/include/linux/atalk.h
-> +++ b/include/linux/atalk.h
-> @@ -108,7 +108,7 @@ static __inline__ struct elapaarp *aarp_hdr(struct sk_buff *skb)
->  #define AARP_RESOLVE_TIME	(10 * HZ)
->  
->  extern struct datalink_proto *ddp_dl, *aarp_dl;
-> -extern void aarp_proto_init(void);
-> +extern int aarp_proto_init(void);
->  
->  /* Inter module exports */
->  
-> diff --git a/net/appletalk/aarp.c b/net/appletalk/aarp.c
-> index 49a16ce..d11372d 100644
-> --- a/net/appletalk/aarp.c
-> +++ b/net/appletalk/aarp.c
-> @@ -879,15 +879,22 @@ static struct notifier_block aarp_notifier = {
->  
->  static unsigned char aarp_snap_id[] = { 0x00, 0x00, 0x00, 0x80, 0xF3 };
->  
-> -void __init aarp_proto_init(void)
-> +int __init aarp_proto_init(void)
->  {
-> +	int rc;
-> +
->  	aarp_dl = register_snap_client(aarp_snap_id, aarp_rcv);
-> -	if (!aarp_dl)
-> +	if (!aarp_dl) {
->  		printk(KERN_CRIT "Unable to register AARP with SNAP.\n");
-> +		return -ENOMEM;
-> +	}
->  	timer_setup(&aarp_timer, aarp_expire_timeout, 0);
->  	aarp_timer.expires  = jiffies + sysctl_aarp_expiry_time;
->  	add_timer(&aarp_timer);
-> -	register_netdevice_notifier(&aarp_notifier);
-> +	rc = register_netdevice_notifier(&aarp_notifier);
-> +	if (rc)
-> +		unregister_snap_client(aarp_dl);
-> +	return rc;
->  }
->  
->  /* Remove the AARP entries associated with a device. */
-> diff --git a/net/appletalk/ddp.c b/net/appletalk/ddp.c
-> index 795fbc6..709d254 100644
-> --- a/net/appletalk/ddp.c
-> +++ b/net/appletalk/ddp.c
-> @@ -1904,9 +1904,6 @@ static unsigned char ddp_snap_id[] = { 0x08, 0x00, 0x07, 0x80, 0x9B };
->  EXPORT_SYMBOL(atrtr_get_dev);
->  EXPORT_SYMBOL(atalk_find_dev_addr);
->  
-> -static const char atalk_err_snap[] __initconst =
-> -	KERN_CRIT "Unable to register DDP with SNAP.\n";
-> -
->  /* Called by proto.c on kernel start up */
->  static int __init atalk_init(void)
->  {
-> @@ -1921,17 +1918,22 @@ static int __init atalk_init(void)
->  		goto out_proto;
->  
->  	ddp_dl = register_snap_client(ddp_snap_id, atalk_rcv);
-> -	if (!ddp_dl)
-> -		printk(atalk_err_snap);
-> +	if (!ddp_dl) {
-> +		pr_crit("Unable to register DDP with SNAP.\n");
-> +		goto out_sock;
-> +	}
->  
->  	dev_add_pack(&ltalk_packet_type);
->  	dev_add_pack(&ppptalk_packet_type);
->  
->  	rc = register_netdevice_notifier(&ddp_notifier);
->  	if (rc)
-> -		goto out_sock;
-> +		goto out_snap;
-> +
-> +	rc = aarp_proto_init();
-> +	if (rc)
-> +		goto out_dev;
->  
-> -	aarp_proto_init();
->  	rc = atalk_proc_init();
->  	if (rc)
->  		goto out_aarp;
-> @@ -1945,11 +1947,13 @@ static int __init atalk_init(void)
->  	atalk_proc_exit();
->  out_aarp:
->  	aarp_cleanup_module();
-> +out_dev:
->  	unregister_netdevice_notifier(&ddp_notifier);
-> -out_sock:
-> +out_snap:
->  	dev_remove_pack(&ppptalk_packet_type);
->  	dev_remove_pack(&ltalk_packet_type);
->  	unregister_snap_client(ddp_dl);
-> +out_sock:
->  	sock_unregister(PF_APPLETALK);
->  out_proto:
->  	proto_unregister(&ddp_proto);
-> 
+Thanks
+Alex
+ 
+On 2019/3/8 11:08 上午, Alex Shi wrote:
+> Hi All,
+>
+> The following patches change existing Chinese kernel docs to rst format
+> and reorg them to make them alive in 'make htmldocs'.
+>
+> you can view the generated htmldocs from:
+> 	http://176.122.172.82/translations/zh_CN/index.html 
+>
+> Or make and review docs on your self box:
+>
+> 	make htmldocs SPHINXDIRS=translations/zh_CN 
+> 	lynx Documentation/output/translations/zh_CN/index.html
+>
+> Any comments are appreciated!
+>
+> V3 changes:
+> 1, fix a zh_CN/index.rst display issue
+> 2, update .mailmap for zh_CN transolators'r email address
+>
+> V2 changes:
+> 1, change the disclaimer file to Chinese version,
+> 2, replace the obsolete translator's email address in related files.
+> 3, fix couple of format issues in couple files
+>
+> Cheers!
+> Alex
+>
+>
+> Alex Shi (31):
+>   docs/zh_CN: add disclaimer file
+>   docs/zh_CN: move process related docs into process dir
+>   docs/zh_CN: change Chinese index to know process dir
+>   docs/zh_CN: add index file into process dir
+>   docs/zh_CN: rename HOWTO into process directory
+>   docs/zh_CN: howto format changes
+>   docs/zh_CN: rename SubmittingPatches for html links
+>   docs/zh_CN: format the submitting-patches doc to rst
+>   docs/zh_CN: rename stable_kernel_rules doc
+>   docs/zh_CN: rst format change for stable-kernel-rules
+>   docs/zh_CN: rename email-clients.txt as email-clients.rst
+>   docs/zh_CN: do rst format for email-clients.rst
+>   docs/zh_CN: rename volatile-consider-harmful doc
+>   docs/zh_CN: volatile doc format changes
+>   docs/zh_CN: rename SubmittingDrivers
+>   docs/zh_CN: format submitting drivers as rst
+>   docs/zh_CN: rename magic-numbers as rst doc
+>   docs/zh_CN: format the magic-number doc as rst
+>   docs/zh_CN: rename stable_api_nonsense.txt as stable-api-nonsense.rst
+>   docs/zh_CN: format stable-api-nonsense
+>   docs/zh_CN: update Li Yang's email address
+>   mailmap: update Li Yang's email address
+>   docs/zh_CN: update Zhang Wei's email address
+>   mailmap: update email address for Triplex
+>   docs/zh_CN: update TripleX chung's email address
+>   docs/zh_CN: fix rst format errors in howto.rst
+>   docs/zh_CN: fix indent issue in stable-api-nonsense file
+>   docs/zh_CN: fix indent issue in submitting-drivers
+>   docs/zh_CN: fix rst format issue in submitting-patch
+>   docs/zh_CN: remove zh-kernel.org in MAINTAINERS
+>   mailmap: update my obsolete email address
+>
+>  .mailmap                                      |   6 +
+>  .../translations/zh_CN/disclaimer-zh_CN.rst   |   9 ++
+>  Documentation/translations/zh_CN/index.rst    |  17 +-
+>  .../translations/zh_CN/magic-number.txt       | 153 ------------------
+>  .../translations/zh_CN/oops-tracing.txt       |   2 +-
+>  .../zh_CN/{ => process}/coding-style.rst      |   0
+>  .../email-clients.rst}                        |  53 +++---
+>  .../zh_CN/{HOWTO => process/howto.rst}        |  69 +++++---
+>  .../translations/zh_CN/process/index.rst      |  53 ++++++
+>  .../zh_CN/process/magic-number.rst            | 151 +++++++++++++++++
+>  .../stable-api-nonsense.rst}                  |  67 ++++----
+>  .../stable-kernel-rules.rst}                  |  32 ++--
+>  .../submitting-drivers.rst}                   |  34 ++--
+>  .../submitting-patches.rst}                   |  60 ++++---
+>  .../volatile-considered-harmful.rst}          |  35 ++--
+>  Documentation/translations/zh_CN/sparse.txt   |   6 +-
+>  MAINTAINERS                                   |   1 -
+>  17 files changed, 408 insertions(+), 340 deletions(-)
+>  create mode 100644 Documentation/translations/zh_CN/disclaimer-zh_CN.rst
+>  delete mode 100644 Documentation/translations/zh_CN/magic-number.txt
+>  rename Documentation/translations/zh_CN/{ => process}/coding-style.rst (100%)
+>  rename Documentation/translations/zh_CN/{email-clients.txt => process/email-clients.rst} (82%)
+>  rename Documentation/translations/zh_CN/{HOWTO => process/howto.rst} (95%)
+>  create mode 100644 Documentation/translations/zh_CN/process/index.rst
+>  create mode 100644 Documentation/translations/zh_CN/process/magic-number.rst
+>  rename Documentation/translations/zh_CN/{stable_api_nonsense.txt => process/stable-api-nonsense.rst} (80%)
+>  rename Documentation/translations/zh_CN/{stable_kernel_rules.txt => process/stable-kernel-rules.rst} (76%)
+>  rename Documentation/translations/zh_CN/{SubmittingDrivers => process/submitting-drivers.rst} (86%)
+>  rename Documentation/translations/zh_CN/{SubmittingPatches => process/submitting-patches.rst} (92%)
+>  rename Documentation/translations/zh_CN/{volatile-considered-harmful.txt => process/volatile-considered-harmful.rst} (81%)
+>
 
