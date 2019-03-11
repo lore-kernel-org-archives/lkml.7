@@ -4,49 +4,48 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_PASS,USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B0F19C43381
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 Mar 2019 19:55:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6C141C4360F
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 Mar 2019 19:55:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8262F214D8
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 Mar 2019 19:55:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2B7F321734
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 Mar 2019 19:55:42 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1552334133;
-	bh=tMC4nZ968v3aN4q+IFMd9YOh19PJHW65/irP+yIC6v8=;
+	s=default; t=1552334142;
+	bh=WA9HePv95xQ6u/mO8f6hJhrUuU79gR7iLRUX3wjKbuY=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=n/rNOXYeO25G9CSWZZRr1KHGOjVSBrpt5gecit1feEsbh7g+SFzJPmD7WFJFOJsOG
-	 JqKJP2FOO5XrrU46CNFdClnWETzq64cKfVGb5aUs6ekr076tCvBfBnJKKQMaCcgspu
-	 qW+6kEwxRV3QT0cPmTwVuYf/IGivJtQlEmhg2c8A=
+	b=pWz/zwTE2tGDvXgIUl0knj1eYTEjNQmHEulW07PobPlO1yKzj+sVy27EY2dECP9Ij
+	 ZNfcghfNUJkeVtXtiHmo6lzmtcWPciErcaElxujtkxgoSftx7HSjzgNHghnwzuZj1G
+	 7aoGYTN36G09FCtPGq65hs3ZVev4i3NEYgS5yjjo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728294AbfCKTzc (ORCPT
+        id S1728330AbfCKTzl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 11 Mar 2019 15:55:32 -0400
-Received: from mail.kernel.org ([198.145.29.99]:32850 "EHLO mail.kernel.org"
+        Mon, 11 Mar 2019 15:55:41 -0400
+Received: from mail.kernel.org ([198.145.29.99]:32922 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728171AbfCKTza (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 11 Mar 2019 15:55:30 -0400
+        id S1728313AbfCKTzj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 11 Mar 2019 15:55:39 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 6BCD5214D8;
-        Mon, 11 Mar 2019 19:55:28 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 660C3214D8;
+        Mon, 11 Mar 2019 19:55:38 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1552334129;
-        bh=tMC4nZ968v3aN4q+IFMd9YOh19PJHW65/irP+yIC6v8=;
+        s=default; t=1552334139;
+        bh=WA9HePv95xQ6u/mO8f6hJhrUuU79gR7iLRUX3wjKbuY=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=j9I5fd/wi76Wm8UQ6cinvsaCRbM7KGv57Q3IYbhI1kkkNEJdZZDFRKY9lGy2kdzKN
-         Qp7m7MF6qSog1nYetCfr8gaSpYs0YEnC9KARX2Dmw2OwR8Fq7tWdRsL6OEbTYkES79
-         e8JqdZpqzYNa69kVbnEE7xYyDC61+MQsnS9YCjvk=
+        b=V0p7VDGr8tMrU4rEmTTjkIZhMx3pvc5nOskyVFFzulPrUcxAC1SXkqXa667U/0XUG
+         g3Cnd7GLUboGjn/X4izilw4FXoQrxbQbQXH/qVt6wL8hxY9IyE5yIumzV2HPzmppOt
+         dYTLavI0hMoKziHtw0UYo2VI/Yb4pyw+N/McAsCA=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Julien Thierry <julien.thierry@arm.com>,
-        Christoffer Dall <christoffer.dall@arm.com>,
-        Sasha Levin <sashal@kernel.org>, kvmarm@lists.cs.columbia.edu
-Subject: [PATCH AUTOSEL 4.20 07/52] KVM: arm/arm64: vgic: Make vgic_dist->lpi_list_lock a raw_spinlock
-Date:   Mon, 11 Mar 2019 15:54:31 -0400
-Message-Id: <20190311195516.137772-7-sashal@kernel.org>
+Cc:     Guenter Roeck <linux@roeck-us.net>,
+        Chris Siebenmann <cks@cs.toronto.edu>,
+        Sasha Levin <sashal@kernel.org>, linux-hwmon@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.20 09/52] hwmon: (nct6775) Fix fan6 detection for NCT6793D
+Date:   Mon, 11 Mar 2019 15:54:33 -0400
+Message-Id: <20190311195516.137772-9-sashal@kernel.org>
 X-Mailer: git-send-email 2.19.1
 In-Reply-To: <20190311195516.137772-1-sashal@kernel.org>
 References: <20190311195516.137772-1-sashal@kernel.org>
@@ -58,135 +57,38 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Julien Thierry <julien.thierry@arm.com>
+From: Guenter Roeck <linux@roeck-us.net>
 
-[ Upstream commit fc3bc475231e12e9c0142f60100cf84d077c79e1 ]
+[ Upstream commit 2a2ec4aa0577ec0b7df2d1bde5c84ed39a8637cb ]
 
-vgic_dist->lpi_list_lock must always be taken with interrupts disabled as
-it is used in interrupt context.
+Commit 2d99925a15b6 ("hwmon: (nct6775) Separate fan/pwm configuration
+detection for NCT6793D") accidentally removed part of the code detecting
+if fan6 is enabled or not. As result, fan6 is no longer detected on Asus
+PRIME Z370-A. Restore the missing detection code.
 
-For configurations such as PREEMPT_RT_FULL, this means that it should
-be a raw_spinlock since RT spinlocks are interruptible.
-
-Signed-off-by: Julien Thierry <julien.thierry@arm.com>
-Acked-by: Christoffer Dall <christoffer.dall@arm.com>
-Acked-by: Marc Zyngier <marc.zyngier@arm.com>
-Signed-off-by: Christoffer Dall <christoffer.dall@arm.com>
+Fixes: 2d99925a15b6 ("hwmon: (nct6775) Separate fan/pwm configuration detection for NCT6793D")
+Reported-by: Chris Siebenmann <cks@cs.toronto.edu>
+Cc: Chris Siebenmann <cks@cs.toronto.edu>
+Signed-off-by: Guenter Roeck <linux@roeck-us.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- include/kvm/arm_vgic.h        |  2 +-
- virt/kvm/arm/vgic/vgic-init.c |  2 +-
- virt/kvm/arm/vgic/vgic-its.c  |  8 ++++----
- virt/kvm/arm/vgic/vgic.c      | 10 +++++-----
- 4 files changed, 11 insertions(+), 11 deletions(-)
+ drivers/hwmon/nct6775.c | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
-diff --git a/include/kvm/arm_vgic.h b/include/kvm/arm_vgic.h
-index 4f31f96bbfab..90ac450745f1 100644
---- a/include/kvm/arm_vgic.h
-+++ b/include/kvm/arm_vgic.h
-@@ -256,7 +256,7 @@ struct vgic_dist {
- 	u64			propbaser;
+diff --git a/drivers/hwmon/nct6775.c b/drivers/hwmon/nct6775.c
+index 4adec4ab7d06..59ee01f3d022 100644
+--- a/drivers/hwmon/nct6775.c
++++ b/drivers/hwmon/nct6775.c
+@@ -3594,7 +3594,8 @@ nct6775_check_fan_inputs(struct nct6775_data *data)
+ 			fan5pin |= cr1b & BIT(5);
+ 			fan5pin |= creb & BIT(5);
  
- 	/* Protects the lpi_list and the count value below. */
--	spinlock_t		lpi_list_lock;
-+	raw_spinlock_t		lpi_list_lock;
- 	struct list_head	lpi_list_head;
- 	int			lpi_list_count;
+-			fan6pin = creb & BIT(3);
++			fan6pin = !dsw_en && (cr2d & BIT(1));
++			fan6pin |= creb & BIT(3);
  
-diff --git a/virt/kvm/arm/vgic/vgic-init.c b/virt/kvm/arm/vgic/vgic-init.c
-index c0c0b88af1d5..33e7ee814f7b 100644
---- a/virt/kvm/arm/vgic/vgic-init.c
-+++ b/virt/kvm/arm/vgic/vgic-init.c
-@@ -64,7 +64,7 @@ void kvm_vgic_early_init(struct kvm *kvm)
- 	struct vgic_dist *dist = &kvm->arch.vgic;
- 
- 	INIT_LIST_HEAD(&dist->lpi_list_head);
--	spin_lock_init(&dist->lpi_list_lock);
-+	raw_spin_lock_init(&dist->lpi_list_lock);
- }
- 
- /* CREATION */
-diff --git a/virt/kvm/arm/vgic/vgic-its.c b/virt/kvm/arm/vgic/vgic-its.c
-index eb2a390a6c86..e99fb31582fb 100644
---- a/virt/kvm/arm/vgic/vgic-its.c
-+++ b/virt/kvm/arm/vgic/vgic-its.c
-@@ -73,7 +73,7 @@ static struct vgic_irq *vgic_add_lpi(struct kvm *kvm, u32 intid,
- 	irq->target_vcpu = vcpu;
- 	irq->group = 1;
- 
--	spin_lock_irqsave(&dist->lpi_list_lock, flags);
-+	raw_spin_lock_irqsave(&dist->lpi_list_lock, flags);
- 
- 	/*
- 	 * There could be a race with another vgic_add_lpi(), so we need to
-@@ -101,7 +101,7 @@ static struct vgic_irq *vgic_add_lpi(struct kvm *kvm, u32 intid,
- 	dist->lpi_list_count++;
- 
- out_unlock:
--	spin_unlock_irqrestore(&dist->lpi_list_lock, flags);
-+	raw_spin_unlock_irqrestore(&dist->lpi_list_lock, flags);
- 
- 	/*
- 	 * We "cache" the configuration table entries in our struct vgic_irq's.
-@@ -332,7 +332,7 @@ int vgic_copy_lpi_list(struct kvm *kvm, struct kvm_vcpu *vcpu, u32 **intid_ptr)
- 	if (!intids)
- 		return -ENOMEM;
- 
--	spin_lock_irqsave(&dist->lpi_list_lock, flags);
-+	raw_spin_lock_irqsave(&dist->lpi_list_lock, flags);
- 	list_for_each_entry(irq, &dist->lpi_list_head, lpi_list) {
- 		if (i == irq_count)
- 			break;
-@@ -341,7 +341,7 @@ int vgic_copy_lpi_list(struct kvm *kvm, struct kvm_vcpu *vcpu, u32 **intid_ptr)
- 			continue;
- 		intids[i++] = irq->intid;
- 	}
--	spin_unlock_irqrestore(&dist->lpi_list_lock, flags);
-+	raw_spin_unlock_irqrestore(&dist->lpi_list_lock, flags);
- 
- 	*intid_ptr = intids;
- 	return i;
-diff --git a/virt/kvm/arm/vgic/vgic.c b/virt/kvm/arm/vgic/vgic.c
-index f884a54b2601..c5165e3b80cb 100644
---- a/virt/kvm/arm/vgic/vgic.c
-+++ b/virt/kvm/arm/vgic/vgic.c
-@@ -72,7 +72,7 @@ static struct vgic_irq *vgic_get_lpi(struct kvm *kvm, u32 intid)
- 	struct vgic_irq *irq = NULL;
- 	unsigned long flags;
- 
--	spin_lock_irqsave(&dist->lpi_list_lock, flags);
-+	raw_spin_lock_irqsave(&dist->lpi_list_lock, flags);
- 
- 	list_for_each_entry(irq, &dist->lpi_list_head, lpi_list) {
- 		if (irq->intid != intid)
-@@ -88,7 +88,7 @@ static struct vgic_irq *vgic_get_lpi(struct kvm *kvm, u32 intid)
- 	irq = NULL;
- 
- out_unlock:
--	spin_unlock_irqrestore(&dist->lpi_list_lock, flags);
-+	raw_spin_unlock_irqrestore(&dist->lpi_list_lock, flags);
- 
- 	return irq;
- }
-@@ -138,15 +138,15 @@ void vgic_put_irq(struct kvm *kvm, struct vgic_irq *irq)
- 	if (irq->intid < VGIC_MIN_LPI)
- 		return;
- 
--	spin_lock_irqsave(&dist->lpi_list_lock, flags);
-+	raw_spin_lock_irqsave(&dist->lpi_list_lock, flags);
- 	if (!kref_put(&irq->refcount, vgic_irq_release)) {
--		spin_unlock_irqrestore(&dist->lpi_list_lock, flags);
-+		raw_spin_unlock_irqrestore(&dist->lpi_list_lock, flags);
- 		return;
- 	};
- 
- 	list_del(&irq->lpi_list);
- 	dist->lpi_list_count--;
--	spin_unlock_irqrestore(&dist->lpi_list_lock, flags);
-+	raw_spin_unlock_irqrestore(&dist->lpi_list_lock, flags);
- 
- 	kfree(irq);
- }
+ 			pwm5pin |= cr2d & BIT(7);
+ 			pwm5pin |= (creb & BIT(4)) && !(cr2a & BIT(0));
 -- 
 2.19.1
 
