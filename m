@@ -2,161 +2,112 @@ Return-Path: <SRS0=FxTY=RO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	MAILING_LIST_MULTI,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 14306C43381
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 Mar 2019 23:36:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AC7B9C43381
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 Mar 2019 23:37:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CA3FE2087C
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 Mar 2019 23:36:22 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="lRJmdFas"
+	by mail.kernel.org (Postfix) with ESMTP id 83FDC214AE
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 Mar 2019 23:37:13 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726436AbfCKXgV (ORCPT
+        id S1726490AbfCKXhM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 11 Mar 2019 19:36:21 -0400
-Received: from aserp2130.oracle.com ([141.146.126.79]:53864 "EHLO
-        aserp2130.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725850AbfCKXgU (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 11 Mar 2019 19:36:20 -0400
-Received: from pps.filterd (aserp2130.oracle.com [127.0.0.1])
-        by aserp2130.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x2BNXwOw074888;
-        Mon, 11 Mar 2019 23:35:58 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=subject : from : to :
- cc : references : message-id : date : mime-version : in-reply-to :
- content-type : content-transfer-encoding; s=corp-2018-07-02;
- bh=NJKDtsh5YrM8x5tUkycex/CSPhouA9bJRC3diCVnwtc=;
- b=lRJmdFas0b8kxWuc7L2qTZtKtcmEBK3xWcHg2atb1NWKF8NRqjuWoe6mgcyb+8JnnS/l
- FcIbJ0zp/JDx+kNrLLu2NIyLuvn8u5EuPqmjbZjYLE7teni+z0HPtfD3yiSie1Xtpgao
- 454aTNhlz66bkj7+v1CC3lWQoGq2Nm83J79SgJf0tfhkWYPr3QtK2aR79rDEXwFLLgzc
- e3M4qVvh7hmmjULeakpbk2an6Htu+bQm5Xfed6SVqvkBsDnyPCaPTlukWSIFS6uqP1VW
- AJcgZQpC/iNKUHIO9uSu2tPtR7mq6nxOOE//3LNDEtmn8sDOR5vjl3qp7bMTF8dbGiua QQ== 
-Received: from aserv0021.oracle.com (aserv0021.oracle.com [141.146.126.233])
-        by aserp2130.oracle.com with ESMTP id 2r430ehwpw-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Mon, 11 Mar 2019 23:35:58 +0000
-Received: from aserv0121.oracle.com (aserv0121.oracle.com [141.146.126.235])
-        by aserv0021.oracle.com (8.14.4/8.14.4) with ESMTP id x2BNZwhF027346
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Mon, 11 Mar 2019 23:35:58 GMT
-Received: from abhmp0012.oracle.com (abhmp0012.oracle.com [141.146.116.18])
-        by aserv0121.oracle.com (8.14.4/8.13.8) with ESMTP id x2BNZuMu017111;
-        Mon, 11 Mar 2019 23:35:56 GMT
-Received: from [10.132.91.175] (/10.132.91.175)
-        by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Mon, 11 Mar 2019 16:35:56 -0700
-Subject: Re: [RFC][PATCH 00/16] sched: Core scheduling
-From:   Subhra Mazumdar <subhra.mazumdar@oracle.com>
-To:     Aubrey Li <aubrey.intel@gmail.com>
-Cc:     Mel Gorman <mgorman@techsingularity.net>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Paul Turner <pjt@google.com>,
-        Tim Chen <tim.c.chen@linux.intel.com>,
-        Linux List Kernel Mailing <linux-kernel@vger.kernel.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Fr?d?ric Weisbecker <fweisbec@gmail.com>,
+        Mon, 11 Mar 2019 19:37:12 -0400
+Received: from mail.kernel.org ([198.145.29.99]:44024 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725850AbfCKXhL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 11 Mar 2019 19:37:11 -0400
+Received: from oasis.local.home (cpe-66-24-58-225.stny.res.rr.com [66.24.58.225])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id B29622087C;
+        Mon, 11 Mar 2019 23:36:41 +0000 (UTC)
+Date:   Mon, 11 Mar 2019 19:36:12 -0400
+From:   Steven Rostedt <rostedt@goodmis.org>
+To:     Karim Yaghmour <karim.yaghmour@opersys.com>
+Cc:     Geert Uytterhoeven <geert@linux-m68k.org>,
+        Greg KH <gregkh@linuxfoundation.org>,
+        Joel Fernandes <joel@joelfernandes.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Alexei Starovoitov <ast@kernel.org>,
+        atish patra <atishp04@gmail.com>,
+        Daniel Colascione <dancol@google.com>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Dietmar Eggemann <dietmar.eggemann@arm.com>,
+        Guenter Roeck <groeck@chromium.org>,
+        Jonathan Corbet <corbet@lwn.net>,
         Kees Cook <keescook@chromium.org>,
-        Greg Kerr <kerrnel@google.com>
-References: <20190218165620.383905466@infradead.org>
- <CAHk-=wh32Zgp+bN7G1KH7SuCiY1YSJ41Y-_eWpfWubGjqq2_dw@mail.gmail.com>
- <20190222124544.GY9565@techsingularity.net>
- <14a9adf7-9b50-1dfa-0c35-d04e976081c2@oracle.com>
- <CAERHkru9DzvszvdGHWp8PhEAqeUc-wVR1Gey-KtQ6aMRLx68bQ@mail.gmail.com>
- <19d5d492-a4c1-b3c8-cae4-da2fdfcb872b@oracle.com>
-Message-ID: <ac10b8fd-da1a-2cc2-afee-4e2b9b4278ee@oracle.com>
-Date:   Mon, 11 Mar 2019 16:33:22 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.5.1
+        Android Kernel Team <kernel-team@android.com>,
+        "open list:DOCUMENTATION" <linux-doc@vger.kernel.org>,
+        "open list:KERNEL SELFTEST FRAMEWORK" 
+        <linux-kselftest@vger.kernel.org>,
+        linux-trace-devel@vger.kernel.org,
+        Manoj Rao <linux@manojrajarao.com>,
+        Masahiro Yamada <yamada.masahiro@socionext.com>,
+        Masami Hiramatsu <mhiramat@kernel.org>,
+        Qais Yousef <qais.yousef@arm.com>,
+        Randy Dunlap <rdunlap@infradead.org>,
+        Shuah Khan <shuah@kernel.org>, Yonghong Song <yhs@fb.com>
+Subject: Re: [PATCH v4 1/2] Provide in-kernel headers for making it easy to
+ extend the kernel
+Message-ID: <20190311193612.4f09bf11@oasis.local.home>
+In-Reply-To: <3e84e1ef-e266-e983-5874-6c26ac7f38b8@opersys.com>
+References: <20190301160856.129678-1-joel@joelfernandes.org>
+        <CAMuHMdU77UyUs-LvRx-NN_k0Y7MZXQkBdgL2i83veCkvdzeeqA@mail.gmail.com>
+        <20190307150343.GB258852@google.com>
+        <CAMuHMdW_7BTZREsnz7uMTToCZ4HDOZboMJH8k8UZica2pB=Jew@mail.gmail.com>
+        <CAEXW_YQUcA+bnav20tAFQPXYE=epMie4X85diudKs_s-TJ7dsw@mail.gmail.com>
+        <20190308140251.GC25768@kroah.com>
+        <CAMuHMdUmnrJtu8bBeUgtiU6y_TLHM27z1WxpPia4dXMpApeijw@mail.gmail.com>
+        <20190309071648.GE3882@kroah.com>
+        <CAMuHMdUT+UGt9p2QhOXzAtCUmqy-a8YN-ceDa-0qANJE53pWBA@mail.gmail.com>
+        <20190309121141.GA30173@kroah.com>
+        <b7296377-9e0c-aed7-61f0-93d24d1ceddd@opersys.com>
+        <CAMuHMdV8+XTyGf1ZJ+gMf=zQpzqh3-+b7wgi+gAmXQ6HpUAw3A@mail.gmail.com>
+        <3e84e1ef-e266-e983-5874-6c26ac7f38b8@opersys.com>
+X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
 MIME-Version: 1.0
-In-Reply-To: <19d5d492-a4c1-b3c8-cae4-da2fdfcb872b@oracle.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 8bit
-Content-Language: en-US
-X-Proofpoint-Virus-Version: vendor=nai engine=5900 definitions=9192 signatures=668685
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
- suspectscore=0 phishscore=0 bulkscore=0 spamscore=0 clxscore=1015
- lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=999 adultscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1810050000
- definitions=main-1903110160
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Sat, 9 Mar 2019 16:44:31 -0500
+Karim Yaghmour <karim.yaghmour@opersys.com> wrote:
 
-On 3/11/19 11:34 AM, Subhra Mazumdar wrote:
->
-> On 3/10/19 9:23 PM, Aubrey Li wrote:
->> On Sat, Mar 9, 2019 at 3:50 AM Subhra Mazumdar
->> <subhra.mazumdar@oracle.com> wrote:
->>> expected. Most of the performance recovery happens in patch 15 which,
->>> unfortunately, is also the one that introduces the hard lockup.
->>>
->> After applied Subhra's patch, the following is triggered by enabling
->> core sched when a cgroup is
->> under heavy load.
->>
-> It seems you are facing some other deadlock where printk is involved. 
-> Can you
-> drop the last patch (patch 16 sched: Debug bits...) and try?
->
-> Thanks,
-> Subhra
->
-Never Mind, I am seeing the same lockdep deadlock output even w/o patch 
-16. Btw
-the NULL fix had something missing, following works.
 
---------->8------------
+> Sorry, I should've been clearer. I'm including eBPF/BCC into the 
+> "user-space tools" here. That was in fact my prime motivation in 
+> encouraging Joel at the last LPC to look at this. I've been integrating 
+> the teaching of eBPF into my AOSP debugging and performance analysis 
+> class (see CC courseware here: 
+> http://www.opersys.com/training/android-debug-and-performance), and it 
+> was pretty messy trying to show people how to benefit from such tools 
+> under Android. Joel's present set of patches would obviate this problem.
 
-diff --git a/kernel/sched/fair.c b/kernel/sched/fair.c
-index 1d0dac4..27cbc64 100644
---- a/kernel/sched/fair.c
-+++ b/kernel/sched/fair.c
-@@ -4131,7 +4131,7 @@ pick_next_entity(struct cfs_rq *cfs_rq, struct 
-sched_entity *curr)
-          * Avoid running the skip buddy, if running something else can
-          * be done without getting too unfair.
-*/
--       if (cfs_rq->skip == se) {
-+       if (cfs_rq->skip && cfs_rq->skip == se) {
-                 struct sched_entity *second;
+I've been reading this thread and staying out for the most part. But I
+was thinking about how I could use kernel headers for things like
+kprobes, and I want to mention the pony that I would like to have :-)
 
-                 if (se == curr) {
-@@ -4149,13 +4149,15 @@ pick_next_entity(struct cfs_rq *cfs_rq, struct 
-sched_entity *curr)
-/*
-          * Prefer last buddy, try to return the CPU to a preempted task.
-*/
--       if (cfs_rq->last && wakeup_preempt_entity(cfs_rq->last, left) < 1)
-+       if (left && cfs_rq->last && wakeup_preempt_entity(cfs_rq->last, 
-left)
-+           < 1)
-                 se = cfs_rq->last;
+Are headers really needed, and more importantly, are they enough? What
+if userspace is 32bit and the kernel is 64bit. Can ebpf scripts handle
+that?
 
-/*
-          * Someone really wants this to run. If it's not unfair, run it.
-*/
--       if (cfs_rq->next && wakeup_preempt_entity(cfs_rq->next, left) < 1)
-+       if (left && cfs_rq->next && wakeup_preempt_entity(cfs_rq->next, 
-left)
-+           < 1)
-                 se = cfs_rq->next;
+What I would love, is a table that has all structures and their fields
+with information about their types, size and signed types. Like the
+format fields in the events directory. This way ebpf (and kprobes,
+internally in the kernel) could access this table and be able to know
+what the data structures of the kernel is).
 
-         clear_buddies(cfs_rq, se);
-@@ -6958,6 +6960,9 @@ pick_task_fair(struct rq *rq)
+If you need it for modules, it shouldn't be too hard to take this
+information and turn it into headers that building modules could use.
 
-                 se = pick_next_entity(cfs_rq, NULL);
+Again, this is my pony, but I'd like to think outside the box here, and
+not be so focused on "headers" and see if there's another solution,
+that may be even more powerful.
 
-+               if (!(se || curr))
-+                       return NULL;
-+
-                 if (curr) {
-                         if (se && curr->on_rq)
-update_curr(cfs_rq);
-
+-- Steve
