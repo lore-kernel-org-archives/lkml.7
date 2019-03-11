@@ -2,140 +2,116 @@ Return-Path: <SRS0=FxTY=RO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_MUTT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4F924C43381
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 Mar 2019 08:31:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5A7F0C10F0C
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 Mar 2019 08:32:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1D0D320643
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 Mar 2019 08:31:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 29B9E20643
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 Mar 2019 08:32:46 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=c-s.fr header.i=@c-s.fr header.b="dr4ZE+Zq"
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="Ef02bbw0"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727011AbfCKIaa (ORCPT
+        id S1726898AbfCKIcp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 11 Mar 2019 04:30:30 -0400
-Received: from pegase1.c-s.fr ([93.17.236.30]:5944 "EHLO pegase1.c-s.fr"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725831AbfCKIaa (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 11 Mar 2019 04:30:30 -0400
-Received: from localhost (mailhub1-int [192.168.12.234])
-        by localhost (Postfix) with ESMTP id 44Hrrv0q9WzB09ZL;
-        Mon, 11 Mar 2019 09:30:23 +0100 (CET)
-Authentication-Results: localhost; dkim=pass
-        reason="1024-bit key; insecure key"
-        header.d=c-s.fr header.i=@c-s.fr header.b=dr4ZE+Zq; dkim-adsp=pass;
-        dkim-atps=neutral
-X-Virus-Scanned: Debian amavisd-new at c-s.fr
-Received: from pegase1.c-s.fr ([192.168.12.234])
-        by localhost (pegase1.c-s.fr [192.168.12.234]) (amavisd-new, port 10024)
-        with ESMTP id Yd00vQ6sluRh; Mon, 11 Mar 2019 09:30:23 +0100 (CET)
-Received: from messagerie.si.c-s.fr (messagerie.si.c-s.fr [192.168.25.192])
-        by pegase1.c-s.fr (Postfix) with ESMTP id 44Hrrt6pY6zB09ZD;
-        Mon, 11 Mar 2019 09:30:22 +0100 (CET)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=c-s.fr; s=mail;
-        t=1552293022; bh=mOmlvAdP26fagEkdX0sK+V4/3NmXkg//8eYE7tTc354=;
-        h=From:Subject:To:Cc:Date:From;
-        b=dr4ZE+Zqybak05ROVAI+s1XxopUdxLpJ9zylpRfznSBB2vV+Lx5ZmXvQZPU68h+zv
-         N/Yv4CC3hJA8ymdf799urVPxi6+f8PHEqkIYgMRWpFudwNbUZgtmMLmHRAXb3KLUD4
-         +oI7vapqTC0GpnHisabNwV5VxcOn7hO0PX7dvck8=
-Received: from localhost (localhost [127.0.0.1])
-        by messagerie.si.c-s.fr (Postfix) with ESMTP id 5F78F8B7FE;
-        Mon, 11 Mar 2019 09:30:27 +0100 (CET)
-X-Virus-Scanned: amavisd-new at c-s.fr
-Received: from messagerie.si.c-s.fr ([127.0.0.1])
-        by localhost (messagerie.si.c-s.fr [127.0.0.1]) (amavisd-new, port 10023)
-        with ESMTP id V5K2KPzEWNPt; Mon, 11 Mar 2019 09:30:27 +0100 (CET)
-Received: from po16846vm.idsi0.si.c-s.fr (po15451.idsi0.si.c-s.fr [172.25.231.2])
-        by messagerie.si.c-s.fr (Postfix) with ESMTP id 2B6E38B813;
-        Mon, 11 Mar 2019 09:30:27 +0100 (CET)
-Received: by po16846vm.idsi0.si.c-s.fr (Postfix, from userid 0)
-        id EA11D6FA08; Mon, 11 Mar 2019 08:30:26 +0000 (UTC)
-Message-Id: <cover.1552292207.git.christophe.leroy@c-s.fr>
-From:   Christophe Leroy <christophe.leroy@c-s.fr>
-Subject: [PATCH v2 00/10] Kernel Userspace protection for PPC32
-To:     Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        Paul Mackerras <paulus@samba.org>,
-        Michael Ellerman <mpe@ellerman.id.au>
-Cc:     linux-kernel@vger.kernel.org, linuxppc-dev@lists.ozlabs.org
-Date:   Mon, 11 Mar 2019 08:30:26 +0000 (UTC)
+        Mon, 11 Mar 2019 04:32:45 -0400
+Received: from userp2120.oracle.com ([156.151.31.85]:35348 "EHLO
+        userp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725932AbfCKIco (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 11 Mar 2019 04:32:44 -0400
+Received: from pps.filterd (userp2120.oracle.com [127.0.0.1])
+        by userp2120.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x2B8T5jV044177;
+        Mon, 11 Mar 2019 08:32:13 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=date : from : to : cc
+ : subject : message-id : references : mime-version : content-type :
+ in-reply-to; s=corp-2018-07-02;
+ bh=3Lc7seH0lqZwB3Rlv1142wPh1zLr9fTlvx2nnOI3SNM=;
+ b=Ef02bbw0v1X9/8h99v+gqnxrzX2hCZLee+mEJXbYrYRTzKLF1x2aFyR8OdePR4DJAvIg
+ t0ULfU5+p7KN/5VXubFvYx5LxmDJ4jui1z69nhMY/kQGsOInqBv4fara4XF41B6yv9bi
+ edzArMtpeg5WvVPsfXkx/atY3NYHfKsZkncsm6grI69VWbSToI/c6IPhnPe2yRLMBe9g
+ kOxmygkCWDG+hA2mIvENt6ZL83TbSXir96RkEIcW3ks+7IS7sCdIT2wII//8ar3sBaO/
+ 6XAKmkIps6C4kndHaG4EOJYWUPDN+MMMYVzKjUgtkAY977lI0e2yZ5b2Yqrcvy9KiuUX 0Q== 
+Received: from userv0021.oracle.com (userv0021.oracle.com [156.151.31.71])
+        by userp2120.oracle.com with ESMTP id 2r464r4tr9-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Mon, 11 Mar 2019 08:32:13 +0000
+Received: from userv0122.oracle.com (userv0122.oracle.com [156.151.31.75])
+        by userv0021.oracle.com (8.14.4/8.14.4) with ESMTP id x2B8WCbv012906
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Mon, 11 Mar 2019 08:32:12 GMT
+Received: from abhmp0017.oracle.com (abhmp0017.oracle.com [141.146.116.23])
+        by userv0122.oracle.com (8.14.4/8.14.4) with ESMTP id x2B8WBdg002890;
+        Mon, 11 Mar 2019 08:32:11 GMT
+Received: from kadam (/197.157.34.165)
+        by default (Oracle Beehive Gateway v4.0)
+        with ESMTP ; Mon, 11 Mar 2019 01:32:10 -0700
+Date:   Mon, 11 Mar 2019 11:31:59 +0300
+From:   Dan Carpenter <dan.carpenter@oracle.com>
+To:     Alexandru Ardelean <ardeleanalex@gmail.com>
+Cc:     Karen Palacio <karen.palacio.1994@gmail.com>,
+        devel@driverdev.osuosl.org, lars@metafoo.de,
+        "Hennerich, Michael" <Michael.Hennerich@analog.com>,
+        linux-iio@vger.kernel.org, gregkh@linuxfoundation.org,
+        LKML <linux-kernel@vger.kernel.org>,
+        Peter Meerwald-Stadler <pmeerw@pmeerw.net>, knaack.h@gmx.de,
+        Mircea Caprioru <mircea.caprioru@analog.com>,
+        Jonathan Cameron <jic23@kernel.org>
+Subject: Re: [PATCH] staging: iio: adc: ad7192: Add spaces around minus
+ operator
+Message-ID: <20190311083159.GE2434@kadam>
+References: <1552252931-10592-1-git-send-email-karen.palacio.1994@gmail.com>
+ <CA+U=Dso8UzRFcHj-2Ss08DmykuXaTzbYmtj3F40tzchgvb7zBw@mail.gmail.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CA+U=Dso8UzRFcHj-2Ss08DmykuXaTzbYmtj3F40tzchgvb7zBw@mail.gmail.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
+X-Proofpoint-Virus-Version: vendor=nai engine=5900 definitions=9191 signatures=668685
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
+ suspectscore=0 phishscore=0 bulkscore=0 spamscore=0 clxscore=1011
+ lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=999 adultscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1810050000
+ definitions=main-1903110065
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This series intend to implement Kernel Userspace protection for PPC32.
-It comes on top of the v5 series for Radix.
+On Mon, Mar 11, 2019 at 10:12:48AM +0200, Alexandru Ardelean wrote:
+> On Sun, Mar 10, 2019 at 11:23 PM Karen Palacio
+> <karen.palacio.1994@gmail.com> wrote:
+> >
+> > Add spaces around minus operator to fix readibility.
+> >
+> > Signed-off-by: Karen Palacio <karen.palacio.1994@gmail.com>
+> > ---
+> >  drivers/staging/iio/adc/ad7192.c | 2 +-
+> >  1 file changed, 1 insertion(+), 1 deletion(-)
+> >
+> > diff --git a/drivers/staging/iio/adc/ad7192.c b/drivers/staging/iio/adc/ad7192.c
+> > index acdbc07..7c632cf 100644
+> > --- a/drivers/staging/iio/adc/ad7192.c
+> > +++ b/drivers/staging/iio/adc/ad7192.c
+> > @@ -355,7 +355,7 @@ ad7192_show_scale_available(struct device *dev,
+> >  }
+> >
+> >  static IIO_DEVICE_ATTR_NAMED(in_v_m_v_scale_available,
+> > -                            in_voltage-voltage_scale_available,
+> > +                            in_voltage - voltage_scale_available,
+> 
+> This isn't broken, but I do agree it should be addressed.
+> I think it's the second time I see a similar patch trying to fix this.
+> So, obviously the code is a bit misleading.
+> 
 
-The first patch of the series is a fix which is expected to be merged soon.
-The second patch is a squash of Russel/Michael series for Radix.
+It's got to be more than that.  I did a simple grep of my inbox and it
+says that this is the 13th time someone has tried to do this.  It's
+possible that my grep is wrong, 13 seems high but not totaly impossible.
 
-Tested on:
-- 8xx
-- 83xx (ie book3s32 without hash table)
-- QEMU MAC99 (ie book3s32 with hash table)
-
-v2:
-- Rebased/adapted the series on top of the v5 series for Radix.
-- Reordered the patches so that we first have the ones common to 32 bits, then the 8xx, then book3s32
-- Fixed lockup on bad data write (unauthorised write to user) on book3s32 hash.
-- Added KUEP for book3s32
-
-Christophe Leroy (9):
-  powerpc/6xx: fix setup and use of SPRN_SPRG_PGDIR for hash32
-  powerpc/32: Remove MSR_PR test when returning from syscall
-  powerpc/32: Prepare for Kernel Userspace Access Protection
-  powerpc/8xx: Only define APG0 and APG1
-  powerpc/8xx: Add Kernel Userspace Execution Prevention
-  powerpc/8xx: Add Kernel Userspace Access Protection
-  powerpc/32s: Implement Kernel Userspace Execution Prevention.
-  powerpc/32s: Prepare Kernel Userspace Access Protection
-  powerpc/32s: Implement Kernel Userspace Access Protection
-
-Russell Currey (1):
-  powerpc/mm: Detect bad KUAP faults (Squash of v5 series)
-
- Documentation/admin-guide/kernel-parameters.txt |   4 +-
- arch/powerpc/include/asm/book3s/32/kup.h        | 149 ++++++++++++++++++++++++
- arch/powerpc/include/asm/book3s/32/mmu-hash.h   |   5 +
- arch/powerpc/include/asm/book3s/64/kup-radix.h  | 119 +++++++++++++++++++
- arch/powerpc/include/asm/exception-64s.h        |   2 +
- arch/powerpc/include/asm/feature-fixups.h       |   3 +
- arch/powerpc/include/asm/futex.h                |   4 +
- arch/powerpc/include/asm/kup.h                  |  65 +++++++++++
- arch/powerpc/include/asm/mmu.h                  |  10 +-
- arch/powerpc/include/asm/nohash/32/kup-8xx.h    |  68 +++++++++++
- arch/powerpc/include/asm/nohash/32/mmu-8xx.h    |  26 ++++-
- arch/powerpc/include/asm/processor.h            |   3 +
- arch/powerpc/include/asm/ptrace.h               |  11 +-
- arch/powerpc/include/asm/uaccess.h              |  38 ++++--
- arch/powerpc/kernel/asm-offsets.c               |   7 ++
- arch/powerpc/kernel/cpu_setup_6xx.S             |   3 -
- arch/powerpc/kernel/entry_32.S                  |  28 +++--
- arch/powerpc/kernel/entry_64.S                  |  27 ++++-
- arch/powerpc/kernel/exceptions-64s.S            |   3 +
- arch/powerpc/kernel/head_32.S                   |  52 +++++++--
- arch/powerpc/kernel/idle_book3s.S               |  39 +++++++
- arch/powerpc/kernel/setup_64.c                  |  10 ++
- arch/powerpc/lib/checksum_wrappers.c            |   4 +
- arch/powerpc/lib/code-patching.c                |   4 +-
- arch/powerpc/mm/8xx_mmu.c                       |  24 ++++
- arch/powerpc/mm/fault.c                         |  49 ++++++--
- arch/powerpc/mm/hash_low_32.S                   |  14 +--
- arch/powerpc/mm/init-common.c                   |  26 +++++
- arch/powerpc/mm/init_32.c                       |   3 +
- arch/powerpc/mm/pgtable-radix.c                 |  30 ++++-
- arch/powerpc/mm/pkeys.c                         |   1 +
- arch/powerpc/mm/ppc_mmu_32.c                    |  23 ++++
- arch/powerpc/platforms/Kconfig.cputype          |  37 ++++++
- 33 files changed, 826 insertions(+), 65 deletions(-)
- create mode 100644 arch/powerpc/include/asm/book3s/32/kup.h
- create mode 100644 arch/powerpc/include/asm/book3s/64/kup-radix.h
- create mode 100644 arch/powerpc/include/asm/kup.h
- create mode 100644 arch/powerpc/include/asm/nohash/32/kup-8xx.h
-
--- 
-2.13.3
+regards,
+dan carpenter
 
