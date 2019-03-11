@@ -2,85 +2,105 @@ Return-Path: <SRS0=FxTY=RO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_MUTT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 35309C43381
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 Mar 2019 13:42:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 65BE1C43381
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 Mar 2019 13:43:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0F9E32075C
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 Mar 2019 13:42:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2AEE6206BA
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 Mar 2019 13:43:16 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727586AbfCKNmM (ORCPT
+        id S1727591AbfCKNnP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 11 Mar 2019 09:42:12 -0400
-Received: from mout.kundenserver.de ([212.227.126.187]:48487 "EHLO
-        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727388AbfCKNmL (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 11 Mar 2019 09:42:11 -0400
-Received: from orion.localdomain ([95.115.159.19]) by mrelayeu.kundenserver.de
- (mreue010 [212.227.15.167]) with ESMTPSA (Nemesis) id
- 1MjjSt-1geynB0d0F-00lBta; Mon, 11 Mar 2019 14:42:10 +0100
-From:   "Enrico Weigelt, metux IT consult" <info@metux.net>
-To:     linux-kernel@vger.kernel.org
-Cc:     linux-alpha@vger.kernel.org
-Subject: [PATCH] arch: alpha: Kconfig: pedantic formatting
-Date:   Mon, 11 Mar 2019 14:42:08 +0100
-Message-Id: <1552311728-18973-1-git-send-email-info@metux.net>
-X-Mailer: git-send-email 1.9.1
-X-Provags-ID: V03:K1:BYTe8onhKxs2Ri1I7QxlD37sWNW6QAtL5RBmY9FcLsqlGfBRehO
- SHvEFEm+o3IGgpFsycukApl4grjV9Gry1Aky3GiNfWp+HwWZwrwE9R69nNbcbScXaajHlxu
- flHgu020MacjSUl6l54nZr4/UMkRMkkGoExow2tDE8ogvMl4XOPVnDguB6vd9Nikm+YQu08
- Je49mKWzqoDGGcVkuqqXg==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:CJZVRY/kAYM=:6f/0hO1jvfZX0N48A2Dmvd
- eRcZU3KqpSNdoldPOxtFjhqEds8gQRjTAUs0YXcSBDbCWvzglyVvYQUCcee7gcI2okzcoBOsz
- zhHxQEYpq3YhrGtqJK1AjLoDSi0KXHzngJfajwu2aglBFsEYt2Jg7KI9v9FHo+712D3YFtoGI
- 6IdKKKnUE00bvBGh3U3dQYLm3S9WEUQ3Sv6L6SqaC2VGpFCT7i7hSi7tj5wHDsn6a4j+LVLyw
- Va+6NbHQZL9PLhsGYY1AkH9Ap5K2pCxZNYtKlfx+QMVdgNcf2Fc+DHjpmhrnC/kFt6fruSmHv
- kapVQmG+++ljaAoTZeGeXMWHCoNAPCyC4N1VHaOtAM8GBbN7I9UF/FZLK9ol0lE5+jZDeHgru
- X9uP9YWjAwfneVqPf97PysQ36JaGydGYBPeuNANnzvOmhGniGqMgpUFdVj0xcS04xfMzTEs4W
- +fOguei7uhOtudvQrGWg049UCQwZsLAJll+oA1bpoXAFRop3fnQuOTYygNfS1nSLRmxxfALwV
- 2+QQRJZJzDs2qwrWYIQEmHMOeXUpcY+M3UtLPD6uvFu5iFFlEqueTkOrlGJsomoIJkZce30jH
- hUg+N3dBpbu6ULX9v+m0sYqp5PXVdsBf//o2pe2yCDLAFRxWiWDUHVOw8vPlTMv6TKFcue2IH
- QH64R+HGDgYYVZp/90Gabzvwo/Cxlcae55RbpeHt0wQjtxkUevM40yG5E4SBSHCTYsB/hvL8G
- RRXnJ+ABNK/CmVr+vQGeesHn0NvkgtupGGSSdQ==
+        Mon, 11 Mar 2019 09:43:15 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:60404 "EHLO mx1.redhat.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726872AbfCKNnO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 11 Mar 2019 09:43:14 -0400
+Received: from smtp.corp.redhat.com (int-mx06.intmail.prod.int.phx2.redhat.com [10.5.11.16])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id 64A5430832CF;
+        Mon, 11 Mar 2019 13:43:14 +0000 (UTC)
+Received: from sky.random (ovpn-121-1.rdu2.redhat.com [10.10.121.1])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id 2AA7D8BE63;
+        Mon, 11 Mar 2019 13:43:06 +0000 (UTC)
+Date:   Mon, 11 Mar 2019 09:43:05 -0400
+From:   Andrea Arcangeli <aarcange@redhat.com>
+To:     "Michael S. Tsirkin" <mst@redhat.com>
+Cc:     Jason Wang <jasowang@redhat.com>, kvm@vger.kernel.org,
+        virtualization@lists.linux-foundation.org, netdev@vger.kernel.org,
+        linux-kernel@vger.kernel.org, peterx@redhat.com,
+        linux-mm@kvack.org, Jerome Glisse <jglisse@redhat.com>
+Subject: Re: [RFC PATCH V2 5/5] vhost: access vq metadata through kernel
+ virtual address
+Message-ID: <20190311134305.GC23321@redhat.com>
+References: <1551856692-3384-1-git-send-email-jasowang@redhat.com>
+ <1551856692-3384-6-git-send-email-jasowang@redhat.com>
+ <20190307103503-mutt-send-email-mst@kernel.org>
+ <20190307124700-mutt-send-email-mst@kernel.org>
+ <20190307191622.GP23850@redhat.com>
+ <e2fad6ed-9257-b53c-394b-bc913fc444c0@redhat.com>
+ <20190308194845.GC26923@redhat.com>
+ <8b68a2a0-907a-15f5-a07f-fc5b53d7ea19@redhat.com>
+ <20190311084525-mutt-send-email-mst@kernel.org>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190311084525-mutt-send-email-mst@kernel.org>
+User-Agent: Mutt/1.11.3 (2019-02-01)
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.16
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.44]); Mon, 11 Mar 2019 13:43:14 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Formatting of Kconfig files doesn't look so pretty, so let the
-Great White Handkerchief come around and clean it up.
+On Mon, Mar 11, 2019 at 08:48:37AM -0400, Michael S. Tsirkin wrote:
+> Using copyXuser is better I guess.
 
-Signed-off-by: Enrico Weigelt, metux IT consult <info@metux.net>
----
- arch/alpha/Kconfig | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+It certainly would be faster there, but I don't think it's needed if
+that would be the only use case left that justifies supporting two
+different models. On small 32bit systems with little RAM kmap won't
+perform measurably different on 32bit or 64bit systems. If the 32bit
+host has a lot of ram it all gets slow anyway at accessing RAM above
+the direct mapping, if compared to 64bit host kernels, it's not just
+an issue for vhost + mmu notifier + kmap and the best way to optimize
+things is to run 64bit host kernels.
 
-diff --git a/arch/alpha/Kconfig b/arch/alpha/Kconfig
-index 584a6e1..ca70946 100644
---- a/arch/alpha/Kconfig
-+++ b/arch/alpha/Kconfig
-@@ -550,7 +550,7 @@ config NR_CPUS
- 	default "4" if !ALPHA_GENERIC && !ALPHA_MARVEL
- 	help
- 	  MARVEL support can handle a maximum of 32 CPUs, all the others
--          with working support have a maximum of 4 CPUs.
-+	  with working support have a maximum of 4 CPUs.
- 
- config ARCH_DISCONTIGMEM_ENABLE
- 	bool "Discontiguous Memory Support"
-@@ -662,7 +662,7 @@ choice
- endchoice
- 
- config HZ
--	int 
-+	int
- 	default 32 if HZ_32
- 	default 64 if HZ_64
- 	default 128 if HZ_128
--- 
-1.9.1
+Like Christoph pointed out, the main use case for retaining the
+copy-user model would be CPUs with virtually indexed not physically
+tagged data caches (they'll still suffer from the spectre-v1 fix,
+although I exclude they have to suffer the SMAP
+slowdown/feature). Those may require some additional flushing than the
+current copy-user model requires.
 
+As a rule of thumb any arch where copy_user_page doesn't define as
+copy_page will require some additional cache flushing after the
+kmap. Supposedly with vmap, the vmap layer should have taken care of
+that (I didn't verify that yet).
+
+There are some accessories like copy_to_user_page()
+copy_from_user_page() that could work and obviously defines to raw
+memcpy on x86 (the main cons is they don't provide word granular
+access) and at least on sparc they're tailored to ptrace assumptions
+so then we'd need to evaluate what happens if this is used outside of
+ptrace context. kmap has been used generally either to access whole
+pages (i.e. copy_user_page), so ptrace may actually be the only use
+case with subpage granularity access.
+
+#define copy_to_user_page(vma, page, vaddr, dst, src, len)		\
+	do {								\
+		flush_cache_page(vma, vaddr, page_to_pfn(page));	\
+		memcpy(dst, src, len);					\
+		flush_ptrace_access(vma, page, vaddr, src, len, 0);	\
+	} while (0)
+
+So I wouldn't rule out the need for a dual model, until we solve how
+to run this stable on non-x86 arches with not physically tagged
+caches.
+
+Thanks,
+Andrea
