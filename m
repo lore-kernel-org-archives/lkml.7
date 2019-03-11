@@ -2,160 +2,360 @@ Return-Path: <SRS0=FxTY=RO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5831FC43381
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 Mar 2019 11:11:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E4FD7C43381
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 Mar 2019 11:20:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1A86E2075C
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 Mar 2019 11:11:58 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="RgPU1d60"
+	by mail.kernel.org (Postfix) with ESMTP id 94DE52075C
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 Mar 2019 11:20:04 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727366AbfCKLL4 (ORCPT
+        id S1727302AbfCKLUD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 11 Mar 2019 07:11:56 -0400
-Received: from mailout1.w1.samsung.com ([210.118.77.11]:53889 "EHLO
-        mailout1.w1.samsung.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726623AbfCKLL4 (ORCPT
+        Mon, 11 Mar 2019 07:20:03 -0400
+Received: from mailproxy05.manitu.net ([217.11.48.69]:55390 "EHLO
+        mailproxy05.manitu.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726605AbfCKLUC (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 11 Mar 2019 07:11:56 -0400
-Received: from eucas1p1.samsung.com (unknown [182.198.249.206])
-        by mailout1.w1.samsung.com (KnoxPortal) with ESMTP id 20190311111154euoutp011f3ba0fb225dcc86ee450726afef724f~K4xgmLRyz1519015190euoutp01E
-        for <linux-kernel@vger.kernel.org>; Mon, 11 Mar 2019 11:11:54 +0000 (GMT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 mailout1.w1.samsung.com 20190311111154euoutp011f3ba0fb225dcc86ee450726afef724f~K4xgmLRyz1519015190euoutp01E
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
-        s=mail20170921; t=1552302714;
-        bh=mzxYUn0ytxFcevjXFEuBbLes4bQPYcWUj8djM0HpR0Q=;
-        h=Subject:To:Cc:From:Date:In-Reply-To:References:From;
-        b=RgPU1d60yrlppo9bbDFRML5SZKmva5xjzNe6YlYazvAMCCveB4yk+7GLcYt2fFaxB
-         o2XJQCKzJaVWWhSkKMhDa7+lAeBldajUyppqCA6Rq+hmhEGvHPJDW3sXsG7JK+7/EH
-         3m23o13VZXjAMPU4pl4HnMLyAKwpt/a0PcVC+YUE=
-Received: from eusmges2new.samsung.com (unknown [203.254.199.244]) by
-        eucas1p2.samsung.com (KnoxPortal) with ESMTP id
-        20190311111153eucas1p234981ad3a1ce55a3aef38900bcbe1655~K4xf0zH4B1033410334eucas1p2b;
-        Mon, 11 Mar 2019 11:11:53 +0000 (GMT)
-Received: from eucas1p2.samsung.com ( [182.198.249.207]) by
-        eusmges2new.samsung.com (EUCPMTA) with SMTP id E6.BE.04294.972468C5; Mon, 11
-        Mar 2019 11:11:53 +0000 (GMT)
-Received: from eusmtrp2.samsung.com (unknown [182.198.249.139]) by
-        eucas1p1.samsung.com (KnoxPortal) with ESMTPA id
-        20190311111152eucas1p11b309165ccdb9bfdc9c39ada5ae34fd6~K4xe2Wlxz1249712497eucas1p11;
-        Mon, 11 Mar 2019 11:11:52 +0000 (GMT)
-Received: from eusmgms2.samsung.com (unknown [182.198.249.180]) by
-        eusmtrp2.samsung.com (KnoxPortal) with ESMTP id
-        20190311111152eusmtrp2c5fc5658654eeef5730b13214b83dfe1~K4xen__7R1776717767eusmtrp2W;
-        Mon, 11 Mar 2019 11:11:52 +0000 (GMT)
-X-AuditID: cbfec7f4-835ff700000010c6-86-5c864279039a
-Received: from eusmtip2.samsung.com ( [203.254.199.222]) by
-        eusmgms2.samsung.com (EUCPMTA) with SMTP id A5.C3.04128.872468C5; Mon, 11
-        Mar 2019 11:11:52 +0000 (GMT)
-Received: from [106.116.147.30] (unknown [106.116.147.30]) by
-        eusmtip2.samsung.com (KnoxPortal) with ESMTPA id
-        20190311111151eusmtip290e834cfdfbbd9f1a61afa3d14aac989~K4xePid9n0954409544eusmtip2S;
-        Mon, 11 Mar 2019 11:11:51 +0000 (GMT)
-Subject: Re: [PATCH] usb: dwc3: Enable GBit Ethernet on Odroid XU4
-To:     Jochen Sprickerhof <jochen@sprickerhof.de>
-Cc:     Roger Quadros <rogerq@ti.com>, Felipe Balbi <balbi@kernel.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        linux-usb@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Kishon Vijay Abraham I <kishon@ti.com>
-From:   Marek Szyprowski <m.szyprowski@samsung.com>
-Message-ID: <2b8d7801-26a5-201e-71d1-ccef3c99f728@samsung.com>
-Date:   Mon, 11 Mar 2019 12:11:51 +0100
-User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:60.0) Gecko/20100101
-        Thunderbird/60.5.1
+        Mon, 11 Mar 2019 07:20:02 -0400
+Received: from [10.163.244.21] (x2f7f415.dyn.telefonica.de [2.247.244.21])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        (Authenticated sender: wg@grandegger.com)
+        by mailproxy05.manitu.net (Postfix) with ESMTPSA id DC2411B60074;
+        Mon, 11 Mar 2019 12:20:14 +0100 (CET)
+From:   Wolfgang Grandegger <wg@grandegger.com>
+Subject: Re: [PATCH v7 1/4] can: m_can: Create a m_can platform framework
+To:     Dan Murphy <dmurphy@ti.com>, mkl@pengutronix.de,
+        davem@davemloft.net
+Cc:     linux-can@vger.kernel.org, netdev@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+References: <20190305155220.14037-1-dmurphy@ti.com>
+ <5065d6ba-f195-a695-77b1-b837cac1a199@grandegger.com>
+ <bbc9db2f-0702-4f24-db64-a41dc0607d2d@ti.com>
+ <bf2613ae-67f6-661d-0faa-786308c249a0@grandegger.com>
+ <cea76d80-d85c-2963-2745-4509450e2ea9@grandegger.com>
+ <6016c8aa-01b6-38d5-0e1f-3a999aae6a13@ti.com>
+ <1f6f77c6-dcf2-6212-5d4e-1eb699e603f1@grandegger.com>
+ <1e9acd4e-97ad-1d9c-44b6-1b2d1bbe8c0e@ti.com>
+ <2026f4ff-31de-3040-0872-5e9d01cc5aa5@grandegger.com>
+ <a2538a05-a03f-06f8-99e3-c7c72287613c@ti.com>
+ <e8782172-5156-6704-8ddb-b7d4d670e3c9@grandegger.com>
+ <56edf2e9-1229-5b8d-f477-13efab207cd8@ti.com>
+Openpgp: preference=signencrypt
+Autocrypt: addr=wg@grandegger.com; prefer-encrypt=mutual; keydata=
+ mQINBFtEb5MBEAC5aRjs5jLwjbOaEE6rczZSqck7B3iGK8ldrV8HGSjxb1MAf4VbvDWrzXfA
+ phEgX3e54AnYhnKcf6BA3J9TlSDdUAW7r/ijOFl+TehMz7holgjhlDK41acJ/klwXJotIqby
+ bWqFgFw6o7b8hfbVzPi8Pz/+WOIKaDOb1Keb989mn253RF1yFakgvoQfCyAeVcnO5kcByW17
+ zbTEHsSduYi0Zir26Oedb2Vtas4SovrEXVh4e2dRdbEbHlI8po3Ih117CuGIPAe2RSfZKY88
+ 8c9m+WsJKtrIDIMY+f5kcHG5mib++u1oTg7wjfFgTr925g2WjzT63YRibW8Vazot9yXquMo2
+ HYQStmnN9MuAkL/jslnxhGKNwTzpXv6FD2g/9hcLfSjaaCwGzj2j2ucJglJnO1n+ibVB14l2
+ JLVe+IKJaE1gvm2v9HPsE+o1P4O8I9iCiAbQ6BGUszHADOg7r8CeTQ+AOCypfEZ5l1Hwa3gw
+ V+TtqyCU70U9LA0AKaDZ02vf0hFRWeXV/ErFq878GOXbbVMZu8G5aO0EcCBC75/KQnyi0WEl
+ KVIcyTyxKel/Ext7vUFIkiA16JNWRpS85YDfe9CoEZcZK+nUU268j6Bp5a7MYaF/dZaLT+Du
+ hLA82ry8IkPQvyV5yV+B0PwDM/w7de8zIzMy9YBXU8KGGDmgYQARAQABtCdXb2xmZ2FuZyBH
+ cmFuZGVnZ2VyIDx3Z0BncmFuZGVnZ2VyLmNvbT6JAj8EEwECACkFAltEb5MCGyMFCQlmAYAH
+ CwkIBwMCAQYVCAIJCgsEFgIDAQIeAQIXgAAKCRDwuz7LbZzIUhvED/4vTUqS0c/V5a4hc5Md
+ u/8qkF7qg011tM0lXrZZxMQ8NrjdFuDhUefZ1q59QbLFU9da9D/CRVJUSx6BnY9jkR6lIm9l
+ OGqS9ZlzubGXJCZhv1ONWPwY/i1RXTtauhRy+nkcyJk2Bzs5PWq1i4hWXpX//GfGUbCt+2bX
+ 2+9bmHSPFtZ/MpIigS1E8RehIzlzqC/NCJspY8H0HKtLR6kpanRBYCuYSlBom/1LEP2MmXhh
+ 9LgjQINp+jZJwnBj5L5JaUn/sg2WO+IiN6IphzyS2TvrlRhkhPJv5EOf0QmYzDgz5eU/h35x
+ aCclLSJ0Go83GO0bXFGCzN86VreRgLRGTa7/x9VW05LiBdlsuLpG23IHM5f6p0WpYgE+jdri
+ TrMued/DquQEcw/xNXpa3n9zTghLcWgcqGIdK3AE3yPjQBR3N6WoT4VOXnZjg6pyNHQ3W4qj
+ LQgzJ3Tq2gPMhRLFcLXyk6V3rQ0ffn4LCXkFYVIBGAN8hHMOFeV6NESkUcEil6V4oOsLLGuJ
+ XreFjAl1Cz3vIaVgzZEfub1z60DDM71lIr+UvWXLeMyKiSMWiJBPL3LUoUWmzpafaTJakDWm
+ CEXa871Jlw7sy99MGVhiVG74JHjtPE6ontM1dKCP1+yT53TeGp1o/3Hj3sUielfDr5nV/kT6
+ p5zmgQN/1bJgV/3sKrkCDQRbRG+TARAA37mw9iosCWO5OtCrbvgJJwzOR3XrijVKi9KTNzDO
+ NT2iy7teKP4+C+9why6iZhoJbBrTo56mbmI2nvfyOthxCa8nT14js8q0EgSMiyxXVeRvzEIQ
+ sYcG4zgbGjwJ94Vrr5tMCFn5B6cYKJffTGmfY0D3b2V4GqaCGxVs3lWcQJeKl/raL8lp4YWz
+ AI0jVx104W7rUbCTDvcSVfPqwM+9A6xaP4b1jwyYwGHgOTq6SeimRrGgM+UNtWqMU3+vUelG
+ 8gKDyfIIo4IrceeHss5OuRREQZq5vNuzkeIY6faYWv65KT+IQ6EyC9UEGkMdcStfEsZO53Qq
+ buA7Kha6lVViDM3vjGS+fnNq/od53dosWeWQ4O8M7Z6nxgp+EOPuJf041eKmIrcaRiXb+027
+ x4D0Kwv/xVsFa6cC2lkITWahENFIXwKOZ3imr2ZCtVF61qnm/GQ5P27JQKXMbPOM6wm0EjJ1
+ 9t2EkSpgVHI0Cd0ldxD4eaGNwpeHJ5WGGzZrOE7PCcRziJX0qO/FpLjTQ6scf+bPACgduY71
+ AwXyA24mg7F2vK+Vth+Yp7MlgwYBMUy6D140jrkWrcRxKYfW1BgcKpbG/dh5DhUAvoOzFD7i
+ zHrGK5FhzqJDBwKk7n9jGohf/MJWs2UKai/u4ogZBhhD5JPR8GG6VzO4snWisFLFuAEAEQEA
+ AYkCJQQYAQIADwUCW0RvkwIbDAUJCWYBgAAKCRDwuz7LbZzIUkA3D/wJOvcQ7rTeoRiamOIB
+ kD4n2Jsv8Vti/XfM0DTmhfnWL4y96VzSzNfl+EHAwXE4161qnXxTHnFK1hq7QklNdDiGW3iH
+ nKZUyHUTnlUlCocv8jWtlqrpH0XVtF12JET65mE14Hga6BQ4ECXwU2GcP3202A55EzMj31b/
+ 59GD3CDIJy7bjQi+pIRuA9ZQRsFas7Od7AWO/nFns2wJ6AJkjXdCUCZ4iOuf82gLK9olDSmd
+ H73Epc6l3jca62L2Lzei405LQSsfOZ06uH2aGPUJX4odUlEF6arm2j+9Q8Vyi4CJ316f2kAa
+ sl7LhAwZtaj8hjl/PUWfd5w47dUBDUZjIRYcdM2TTU3Spgvg3zqXUzur5+r0jkUl2naeiSB1
+ vwjfIwnPqZOVr9FAXuLbAdUyCCC0ohGLrq5Nsc1A02rxpQHRxTSm2FOdn2jYvuD7JUgkhmUh
+ /TXb8aL6A4hfX7oV4tGq7nSmDOCmgWRmAHAGp85fVq2iylCxZ1kKi8EYCSa28eQzetukFbAx
+ JwmcrUSaCOK+jpHlNY0PkghSIzAE/7Se+c37unJ39xJLkrgehLYmUF7cBeNWhfchu4fAJosM
+ 5mXohGkBKcd5YYmF13imYtAG5/VSmBm/0CFNGFO49MVTNGXGBznrPrWwtPZNwjJdi7JrvEbm
+ 8QEfHnPzgykCs2DOOQ==
+Message-ID: <afd9eece-49a0-1ee5-5ffc-ff9b92f4f80c@grandegger.com>
+Date:   Mon, 11 Mar 2019 12:19:58 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.2.1
 MIME-Version: 1.0
-In-Reply-To: <20190208193505.GA5822@vis>
+In-Reply-To: <56edf2e9-1229-5b8d-f477-13efab207cd8@ti.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-GB
 Content-Transfer-Encoding: 7bit
-Content-Language: en-US
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFlrJKsWRmVeSWpSXmKPExsWy7djP87qVTm0xBs/bRS2OtT1ht2hevJ7N
-        Yunfe4wWF572sFlc3jWHzWLRslZmi55HWg7sHptWdbJ57J+7ht1jw5Z/LB7Hb2xn8vi8SS6A
-        NYrLJiU1J7MstUjfLoErY+rxtYwFn3kq/nRpNzBu5Opi5OSQEDCRmH7pH3MXIxeHkMAKRol9
-        +9awQThfGCVebbjHCOF8ZpQ4ems1C0zLtcO9UInljBKTrvVDOe8ZJRo7Z7CBVAkLOEkcfrIY
-        rENEQE/idctfVpAiZoEbjBLvvveAJdgEDCW63naBNfAK2Em0PzjGCmKzCKhKrLrzh72LkYND
-        VCBG4tDiMogSQYmTM5+wgIQ5BTQkVrUYg4SZBeQltr+dwwxhi0vcejKfCWSVhMAmdonly+dD
-        Xe0iMbVxMxuELSzx6vgWdghbRuL/TpiGZkaJ9hmz2CGcHkaJrXN2QHVYSxw+fpEVZDOzgKbE
-        +l36EGFHiQlXzzKChCUE+CRuvBWEOIJPYtK26cwQYV6JjjYhiGo1iVnH18GtPXjhEvMERqVZ
-        SD6bheSdWUjemYWwdwEjyypG8dTS4tz01GKjvNRyveLE3OLSvHS95PzcTYzABHT63/EvOxh3
-        /Uk6xCjAwajEw5uQ3BojxJpYVlyZe4hRgoNZSYQ3QbYtRog3JbGyKrUoP76oNCe1+BCjNAeL
-        kjhvNcODaCGB9MSS1OzU1ILUIpgsEwenVANj31zvYtOF3+eeXuTbPn2y0tSJX5PZV75ODZ72
-        eU1dzJsfTQHij9ZLRao2yKppv/v1V/NSZ3xO9Cy7g1+ET2YaOmdxTVbdw7h2/tKu2yWfFtxi
-        c3W6KCzzT8GbrV4ngFd2y92jLK9qF3fGWrLOumXoUrV0WdwangMhOhe3/3s9c8YH+cc/F7ul
-        KbEUZyQaajEXFScCACCIbtA8AwAA
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFtrDIsWRmVeSWpSXmKPExsVy+t/xe7oVTm0xBtsWC1kca3vCbtG8eD2b
-        xdK/9xgtLjztYbO4vGsOm8WiZa3MFj2PtBzYPTat6mTz2D93DbvHhi3/WDyO39jO5PF5k1wA
-        a5SeTVF+aUmqQkZ+cYmtUrShhZGeoaWFnpGJpZ6hsXmslZGpkr6dTUpqTmZZapG+XYJextTj
-        axkLPvNU/OnSbmDcyNXFyMkhIWAice1wL2MXIxeHkMBSRolDB5ewQiRkJE5Oa4CyhSX+XOti
-        gyh6yyix5XgTE0hCWMBJ4vCTxSwgtoiAnsTrlr+sIEXMAjcYJT6f/g3VsZBJYs6Tn2Cj2AQM
-        Jbregozi5OAVsJNof3AMLM4ioCqx6s4fdhBbVCBG4sPdG0wQNYISJ2c+AdrAwcEpoCGxqsUY
-        JMwsoC7xZ94lZghbXmL72zlQtrjErSfzmSYwCs1C0j0LScssJC2zkLQsYGRZxSiSWlqcm55b
-        bKRXnJhbXJqXrpecn7uJERhz24793LKDsetd8CFGAQ5GJR5ejsTWGCHWxLLiytxDjBIczEoi
-        vAmybTFCvCmJlVWpRfnxRaU5qcWHGE2BfpvILCWanA9MB3kl8YamhuYWlobmxubGZhZK4rzn
-        DSqjhATSE0tSs1NTC1KLYPqYODilGhgbt7zpFV+u+NzxYr2SePHJH2vN1yWundd97r5J6v2f
-        LuIWWW1vxRVYzwrJCLdFr+OwTPvJcPSJp2Xb6TP754lcn3hq5Y9Y9z5DgcUs92Q0ZmxoOmhn
-        s/bcFr28wj9dsg8PW3Q939gbzcT10yfn9uNU7asMXhMmhmo786p/ms3ZfEFs7tOT25KUWIoz
-        Eg21mIuKEwHGStjjzwIAAA==
-X-CMS-MailID: 20190311111152eucas1p11b309165ccdb9bfdc9c39ada5ae34fd6
-X-Msg-Generator: CA
-Content-Type: text/plain; charset="utf-8"
-X-RootMTR: 20190206101740epcas2p131674b4b9733047711855ffb2e7a99a7
-X-EPHeader: CA
-CMS-TYPE: 201P
-X-CMS-RootMailID: 20190206101740epcas2p131674b4b9733047711855ffb2e7a99a7
-References: <20190121140204.GA2360@vis> <5C5A9DCB.8040507@ti.com>
-        <20190206093830.GS26157@vis>
-        <CGME20190206101740epcas2p131674b4b9733047711855ffb2e7a99a7@epcas2p1.samsung.com>
-        <5C5AB41C.9080402@ti.com> <bdbce410-7f48-17a5-b58b-3ebd65ca6913@samsung.com>
-        <20190208193505.GA5822@vis>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Jochen,
+Hello Dan,
 
-On 2019-02-08 20:35, Jochen Sprickerhof wrote:
-> Hi Marek,
->
-> * Marek Szyprowski <m.szyprowski@samsung.com> [2019-02-08 13:36]:
->>>>> On 21/01/19 16:02, Jochen Sprickerhof wrote:
->>>> [..]
->>>>>> I'm not sure why this it only works with the driver compiled into
->>>>>> the
->>>>>> kernel nor why it needs a hard reset or why it was the line was
->>>>>> dropped
->>>>>> when the patch was accepted. Would be great to get some feedback
->>>>>> of the
->>>>>> authors.
->>>>> When XHCI driver is compiled into the kernel are the relevant PHY
->>>>> drivers
->>>>> compiled in as well?
->>>> Only CONFIG_USB_PHY=y (I took the config from the
->>>> linux-image-4.19.0-1-armmp_4.19.13-1_armhf.deb Debian package as a
->>>> basis where this is the default).
+Am 08.03.19 um 21:36 schrieb Dan Murphy:
+> On 3/8/19 12:06 PM, Wolfgang Grandegger wrote:
 >>
->> I confirm that on Odroid XU4 USB 3.0 works only when all related drivers
->> (dwc3, xhci and exynos5 drd phy) are compiled into the kernel. If they
->> are compiled as modules, USB 3.0 calibration doesn't work. The mentioned
->> patch doesn't fix anything.
->
-> I've just tried Linux v5.0-rc5 with the Debian config and
-> USB_XHCI_PLATFORM=y and it works, thanks!
->
-> Is there a way to make it work with xhci compiled as a module, so it
-> would work in Debian out of the box?
+>>
+>> Am 08.03.19 um 18:52 schrieb Dan Murphy:
+>>> On 3/8/19 11:40 AM, Wolfgang Grandegger wrote:
+>>>> Hello Dan,
+>>>>
+>>>> Am 08.03.19 um 18:25 schrieb Dan Murphy:
+>>>>> On 3/8/19 11:08 AM, Wolfgang Grandegger wrote:
+>>>>>> Hello,
+>>>>>>
+>>>>>> Am 08.03.19 um 16:48 schrieb Dan Murphy:
+>>>>>>> Wolfgang
+>>>>>>>
+>>>>>>> On 3/8/19 8:41 AM, Wolfgang Grandegger wrote:
+>>>>>>>> Hello Dan,
+>>>>>>>>
+>>>>>>>> thinking more about it...
+>>>>>>>>
+>>>>>>>> Am 08.03.19 um 14:29 schrieb Wolfgang Grandegger:
+>>>>>>>>> Hello Dan,
+>>>>>>>>>
+>>>>>>>>> Am 08.03.19 um 13:44 schrieb Dan Murphy:
+>>>>>>>>>> Wolfgang
+>>>>>>>>>>
+>>>>>>>>>> On 3/8/19 4:10 AM, Wolfgang Grandegger wrote:
+>>>>>>>>>>> Hallo Dan,
+>>>>>>>>>>>
+>>>>>>>>>>> Am 05.03.19 um 16:52 schrieb Dan Murphy:
+>>>>>>>>>>>> Create a m_can platform framework that peripherial
+>>>>>>>>>>>> devices can register to and use common code and register sets.
+>>>>>>>>>>>> The peripherial devices may provide read/write and configuration
+>>>>>>>>>>>> support of the IP.
+>>>>>>>>>>>>
+>>>>>>>>>>>> Signed-off-by: Dan Murphy <dmurphy@ti.com>
+>>>>>>>>>>>> ---
+>>>>>>>>>>>>
+>>>>>>>>>>>>
+>>>>>>>>>>>> v7 - Fixed remaining new checkpatch issues, removed CSR setting, fixed tx hard
+>>>>>>>>>>>> start function to return tx_busy, and renamed device callbacks - https://lore.kernel.org/patchwork/patch/1047220/
+>>>>>>>>>>>>
+>>>>>>>>>>>> v6 - Squashed platform patch to this patch for bissectablity, fixed coding style
+>>>>>>>>>>>> issues, updated Kconfig help, placed mcan reg offsets back into c file, renamed
+>>>>>>>>>>>> priv->skb to priv->tx_skb and cleared perp interrupts at ISR start -
+>>>>>>>>>>>> Patch 1 comments - https://lore.kernel.org/patchwork/patch/1042446/
+>>>>>>>>>>>> Patch 2 comments - https://lore.kernel.org/patchwork/patch/1042442/
+>>>>>>>>>>>>
+>>>>>>>>>>>>  drivers/net/can/m_can/Kconfig          |  13 +-
+>>>>>>>>>>>>  drivers/net/can/m_can/Makefile         |   1 +
+>>>>>>>>>>>>  drivers/net/can/m_can/m_can.c          | 700 +++++++++++++------------
+>>>>>>>>>>>>  drivers/net/can/m_can/m_can.h          | 110 ++++
+>>>>>>>>>>>>  drivers/net/can/m_can/m_can_platform.c | 202 +++++++
+>>>>>>>>>>>>  5 files changed, 682 insertions(+), 344 deletions(-)
+>>>>>>>>>>>>  create mode 100644 drivers/net/can/m_can/m_can.h
+>>>>>>>>>>>>  create mode 100644 drivers/net/can/m_can/m_can_platform.c
+>>>>>>>>>>>>
+>>>>>>>>>>>> diff --git a/drivers/net/can/m_can/Kconfig b/drivers/net/can/m_can/Kconfig
+>>>>>>>>>>>> index 04f20dd39007..f7119fd72df4 100644
+>>>>>>>>>>>> --- a/drivers/net/can/m_can/Kconfig
+>>>>>>>>>>>> +++ b/drivers/net/can/m_can/Kconfig
+>>>>>>>>>>>> @@ -1,5 +1,14 @@
+>>>>>>>>>>>>  config CAN_M_CAN
+>>>>>>>>>>>> +	tristate "Bosch M_CAN support"
+>>>>>>>>>>>> +	---help---
+>>>>>>>>>>>> +	  Say Y here if you want support for Bosch M_CAN controller framework.
+>>>>>>>>>>>> +	  This is common support for devices that embed the Bosch M_CAN IP.
+>>>>>>>>>>>> +
+>>>>>>>>>>>> +config CAN_M_CAN_PLATFORM
+>>>>>>>>>>>> +	tristate "Bosch M_CAN support for io-mapped devices"
+>>>>>>>>>>>>  	depends on HAS_IOMEM
+>>>>>>>>>>>> -	tristate "Bosch M_CAN devices"
+>>>>>>>>>>>> +	depends on CAN_M_CAN
+>>>>>>>>>>>>  	---help---
+>>>>>>>>>>>> -	  Say Y here if you want to support for Bosch M_CAN controller.
+>>>>>>>>>>>> +	  Say Y here if you want support for IO Mapped Bosch M_CAN controller.
+>>>>>>>>>>>> +	  This support is for devices that have the Bosch M_CAN controller
+>>>>>>>>>>>> +	  IP embedded into the device and the IP is IO Mapped to the processor.
+>>>>>>>>>>>> diff --git a/drivers/net/can/m_can/Makefile b/drivers/net/can/m_can/Makefile
+>>>>>>>>>>>> index 8bbd7f24f5be..057bbcdb3c74 100644
+>>>>>>>>>>>> --- a/drivers/net/can/m_can/Makefile
+>>>>>>>>>>>> +++ b/drivers/net/can/m_can/Makefile
+>>>>>>>>>>>> @@ -3,3 +3,4 @@
+>>>>>>>>>>>>  #
+>>>>>>>>>>>>  
+>>>>>>>>>>>>  obj-$(CONFIG_CAN_M_CAN) += m_can.o
+>>>>>>>>>>>> +obj-$(CONFIG_CAN_M_CAN_PLATFORM) += m_can_platform.o
+>>>>>>>>>>>> diff --git a/drivers/net/can/m_can/m_can.c b/drivers/net/can/m_can/m_can.c
+>>>>>>>>>>>> index 9b449400376b..a60278d94126 100644
+>>>>>>>>>>>> --- a/drivers/net/can/m_can/m_can.c
+>>>>>>>>>>>> +++ b/drivers/net/can/m_can/m_can.c
+>>>>>>>>>>>
+>>>>>>>>>>> ... snip...
+>>>>>>>>>>>
+>>>>>>>>>>>> +static netdev_tx_t m_can_start_xmit(struct sk_buff *skb,
+>>>>>>>>>>>> +				    struct net_device *dev)
+>>>>>>>>>>>> +{
+>>>>>>>>>>>> +	struct m_can_priv *priv = netdev_priv(dev);
+>>>>>>>>>>>> +
+>>>>>>>>>>>> +	if (can_dropped_invalid_skb(dev, skb))
+>>>>>>>>>>>> +		return NETDEV_TX_OK;
+>>>>>>>>>>>> +
+>>>>>>>>>>>> +	if (priv->is_peripherial) {
+>>>>>>>>>>>> +		if (priv->tx_skb) {
+>>>>>>>>>>>> +			netdev_err(dev, "hard_xmit called while tx busy\n");
+>>>>>>>>>>>> +			return NETDEV_TX_BUSY;
+>>>>>>>>>>>> +		}
+>>>>>>>>>>>
+>>>>>>>>>>> The problem with that approach is, that the upper layer will try to
+>>>>>>>>>>> resubmit the current "skb" but not the previous "tx_skb". And the
+>>>>>>>>>>> previous "tx_skb" has not been freed yet. I would just drop and free the
+>>>>>>>>>>> skb and return NETDEV_TX_OK in m_can_tx_handler() for peripheral devices
+>>>>>>>>>>> (like can_dropped_invalid_skb() does).
+>>>>>>>>>>>
+>>>>>>>>>>
+>>>>>>>>>> OK.
+>>>>>>>>>>
+>>>>>>>>>> So would this also be a bug in the hi3110 and mcp251x drivers (line 521) as well because besides checking tx_length
+>>>>>>>>>> this is how these drivers are written.
+>>>>>>>>>
+>>>>>>>>> This is different. When entering the "start_xmit" routine, the previous
+>>>>>>>>> TX is still in progress. It will (hopefully) complete soon. Therefore
+>>>>>>>>> returning NETDEV_TX_BUSY is OK. The "start_xmit" routine will be
+>>>>>>>>> recalled soon with the same "skb". That scenario should/could also not
+>>>>>>>>> happen.
+>>>>>>>>
+>>>>>>>> In principle, this also applies to the m_can peripheral devices. If
+>>>>>>>> tx_skb is not NULL, the TX is still in progress and returning
+>>>>>>>> NETDEV_TX_BUSY is just fine.
+>>>>>>>>
+>>>>>>>>>
+>>>>>>>>> In contrast, in "m_can_tx_handler()", the skb could not be handled
+>>>>>>>>> because the FIFO is full. The "start_xmit" routine for peripheral
+>>>>>>>>> devices for that skb already returned NETDEV_TX_OK. Therefore the only
+>>>>>>>>> meaningful action is to drop the skb. Also this error should not happen
+>>>>>>>>> and if, something is going really wrong. Therefore I think, a
+>>>>>>>>> WARN_ONCE() would be even more appropriate. But that should be a
+>>>>>>>>> separate patch.
+>>>>>>>>
+>>>>>>>> But that's a different issue/error. The tx_skb cannot be processed in
+>>>>>>>> "m_can_tx_handler()". Either we drop it or we re-queue it (retry later).
+>>>>>>>>
+>>>>>>>
+>>>>>>> OK I am a bit confused on this.  Are you saying this is not an issue?
+>>>>>>> Or are you saying I need to check for tx_len like the other code?
+>>>>>>
+>>>>>> If you check for tx_skb in the "start_xmit" routine like the hi3110 and
+>>>>>> mcp251x, it will work the same way. But only, if the "tx_handler()" has
+>>>>>> fully processed the message. It simple means, the TX is still in
+>>>>>> progress and will complete soon. But in "m_can_tx_handler()" we return
+>>>>>> without handling the message! It will never be sent and freed. Or will
+>>>>>> the "m_can_tx_handler()" retry?
+>>>>>>
+>>>>>
+>>>>> I am not seeing where we are not handling the message in the m_can_tx_handler()
+>>>>
+>>>> static void m_can_tx_handler(struct m_can_classdev *priv)
+>>>> {
+>>>> 		...
+>>>> 		/* Check if FIFO full */
+>>>> 		if (m_can_tx_fifo_full(priv)) {
+>>>> 			/* This shouldn't happen */
+>>>> 			netif_stop_queue(dev);
+>>>> 			netdev_warn(dev,
+>>>> 				    "TX queue active although FIFO is full.");
+>>>> 			return;
+>>>> 		}
+>>>>
+>>>> We simply return here. When is the message (tx_skb) processed (sent or freed)?
+>>>> What happens with tx_skb?
+>>>>
+>>>
+>>> Are you sure you are looking at the right code?
+>>>
+>>> For patch version v7 I have the following
+>>>
+>>> 		/* Check if FIFO full */
+>>> 		if (m_can_tx_fifo_full(cdev)) {
+>>> 			/* This shouldn't happen */
+>>> 			netif_stop_queue(dev);
+>>> 			netdev_warn(dev,
+>>> 				    "TX queue active although FIFO is full.");
+>>> 			return NETDEV_TX_BUSY;
+>>> 		}
+>>>
+>>> Which is no change from the original source code.
+>>
+>> I know,  but for the peripheral devices you have:
+>>
+>>   static void m_can_tx_work_queue(struct work_struct *ws)
+>>   {
+>> 	struct m_can_priv *priv = container_of(ws, struct m_can_priv,
+>> 						tx_work);
+>> 	netdev_tx_t ret;
+>>
+>> 	ret = m_can_tx_handler(priv);
+>> 	if (ret == NETDEV_TX_OK)
+>> 		priv->tx_skb = NULL;
+>>   }
+>>
+>> What will happen with tx_skb if NETDEV_TX_BUSY? It has not been
+>> dropped/freed yet?
+>>
+> 
+> OK I think I see the issue there.
 
-One more comment - 5000M mode will also work with everything compiled as
-modules (dwc3, exynos5 drd phy and xhci-plat) too. Just make sure that
-xhci-plat is loaded before dwc3. This would require some manual
-configuration, because autoloading will load xhci-plat after dwc3 probe
-and switch to host mode.
+The key point is that the "skb" entered by the "start_xmit" must be
+released/free when it's processed (with NETDEV_TX_OK). This is more
+tricky for perp devices because the "skb" is handled deferred.
 
-Best regards
--- 
-Marek Szyprowski, PhD
-Samsung R&D Institute Poland
+> 
+> I should probably add can_put_echo_skb if NETDEV_TX_BUSY and always NULL out the SKB.
 
+can_put_echo_skb() should only be called after the TX has been
+initiated. The normal flow for the skb is:
+
+ start-xmit -> initiate tx -> can_put_echo_skb -> return NETDEV_TX_OK...
+   tx done interrupt -> can_get_echo_skb -> free skb
+
+I would just drop the message/skb:
+
+		/* Check if FIFO full */
+		if (m_can_tx_fifo_full(cdev)) {
+			/* This shouldn't happen */
+			netif_stop_queue(dev);
+			netdev_warn(dev,
+				    "TX queue active although FIFO is full.");
+			if (cdev->is_peripherial) {
+				kfree_skb(skb);
+				dev->stats.tx_dropped++;
+				return NETDEV_TX_OK;
+			} else {
+				return NETDEV_TX_BUSY;
+			}
+		}
+
+> This appears to be the way the other perp drivers do it as they just put and null the skb
+> regardless of the return of the handlers.
+
+You can also use:
+
+		if (cdev->tx_skb) {
+			netdev_err(dev, "hard_xmit called while tx busy\n");
+			return NETDEV_TX_BUSY;
+		}
+
+to check for "hard_xmit called while tx busy". But you still need to
+handle the "m_can_tx_fifo_full(cdev)" case properly. See above.
+
+> And clean is called when the BUS is off or coming out of suspend.
+
+Probably we need that as well even if other drivers don't care if
+the device goes bus-off while TX messages are pending.
+
+Wolfgang
