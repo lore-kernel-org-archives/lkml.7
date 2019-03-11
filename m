@@ -2,118 +2,106 @@ Return-Path: <SRS0=FxTY=RO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.5 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,
+	USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AA32EC43381
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 Mar 2019 19:10:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 034DAC43381
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 Mar 2019 19:13:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7B9CA2171F
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 Mar 2019 19:10:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C6DFB2084F
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 Mar 2019 19:13:42 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1552331430;
-	bh=EVWbQ0FLYyrCJYZDNZlHxygXu4O2tBnBySx/wI6Yciw=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=OrsXjL1u3wAfmsbGahUcnFYp8mICvrcvOOm+z0cYzmghPSNm5vflr9NqGxBaB9rdZ
-	 pegIY95jNx+TUy4975S0ENswSMYGxVgKRdnJtDR7GiD+VGUz2dzgie0ZkyG3GEqEyM
-	 7cdSp1iqctoT9cAUId5SQW5JMXubmM3Y4CjLK0DE=
+	s=default; t=1552331622;
+	bh=zPv8wh55mywMCqa0owDJ4RdB4f4ecTYLUs/yicH8mwg=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=VISYb0nFt+G/w+6bVST0vPazmbxjTx0+8GG8T377BUfxWIsGnouuxl4RU++jN3ZEO
+	 Y+/Deqdw1/3h5SemzU0krqXURRe9lXVUtII8ZGx3OPTSNr35G6ReEX0Ncmr1Cm+O8h
+	 GBIvsfRxWA8SfZkB7zCZDXVUSWZyuhRnG47ksMBA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728137AbfCKTK2 (ORCPT
+        id S1727794AbfCKTNl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 11 Mar 2019 15:10:28 -0400
-Received: from mail-lf1-f66.google.com ([209.85.167.66]:44104 "EHLO
-        mail-lf1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727424AbfCKTK1 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 11 Mar 2019 15:10:27 -0400
-Received: by mail-lf1-f66.google.com with SMTP id u9so113639lfe.11
-        for <linux-kernel@vger.kernel.org>; Mon, 11 Mar 2019 12:10:25 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linux-foundation.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=aPksBs5gmVWSAtQBhdxf/7+kKKa60fGxFB1/+DhE2AQ=;
-        b=Kc1ld9FxqH/Ed0XvvvnE0Y0vZYjRwQfgjTvHHYtdBVU5MHvQpzZAW/DccGNCX6kSqo
-         JJdbKDRrnnf8ajFkkLwnL36D4j1fdUwRVX7xwxUzn93jAaYjIY3YWFk+PCMvgHQaADgA
-         Jk25ujdwaDWfDowZGtVB2nypw19/ibH2N2vi0=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=aPksBs5gmVWSAtQBhdxf/7+kKKa60fGxFB1/+DhE2AQ=;
-        b=EaNJqzvqUAtaIppaJpZLeGF7am47AWA+T4skqADMgMc7p/VScpJAQVYyZ4ECq+1eKJ
-         RAtI6AH6wps8HRpaa84NH4/EzN62TQLeQ+sLzvGno7Fyn03OptF5U7jcMGDry6KiqO+Q
-         I2Kc8Z1l66rrBYAoFtBD3tb2d6GbnVU6DjGEBukCqqRhrE1LFy5QyG8Qo7ZFoTttxqDr
-         d7WwcuCWl3gBMUXQcI6CmcdJdsDO805qJO9FumhzVrlcbxn+b5ZRH4yQnI2v7KPra4pM
-         ZGGC/SdvZJXA0Dd9oYwdI9hkIlo2F2XfOfdhPV1w89y7fz/Mv+Tzy/n3H4PMBKvrwQ8B
-         xJog==
-X-Gm-Message-State: APjAAAU2OJhMHK4DCrdMx+1Nbn+OMeoQ4jS38WOOZ+i+hNCyeAH3tfM4
-        VFy0/FiawXuQfCF6DszZWmxNw9LjQrY=
-X-Google-Smtp-Source: APXvYqynymsgedtCV4S0Dkfhz7sBnrFFWd8EgOipnyEXbPbGzhGC1oxG6IfyQMGrFybZNW8VXwR7GA==
-X-Received: by 2002:ac2:55ab:: with SMTP id y11mr7218459lfg.55.1552331424104;
-        Mon, 11 Mar 2019 12:10:24 -0700 (PDT)
-Received: from mail-lf1-f44.google.com (mail-lf1-f44.google.com. [209.85.167.44])
-        by smtp.gmail.com with ESMTPSA id z88sm1060207ljb.10.2019.03.11.12.10.23
-        for <linux-kernel@vger.kernel.org>
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Mon, 11 Mar 2019 12:10:23 -0700 (PDT)
-Received: by mail-lf1-f44.google.com with SMTP id u9so113593lfe.11
-        for <linux-kernel@vger.kernel.org>; Mon, 11 Mar 2019 12:10:23 -0700 (PDT)
-X-Received: by 2002:ac2:548f:: with SMTP id t15mr3783375lfk.166.1552331014305;
- Mon, 11 Mar 2019 12:03:34 -0700 (PDT)
+        Mon, 11 Mar 2019 15:13:41 -0400
+Received: from mail.kernel.org ([198.145.29.99]:52590 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726675AbfCKTNl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 11 Mar 2019 15:13:41 -0400
+Received: from localhost (unknown [104.132.1.109])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 4325D20657;
+        Mon, 11 Mar 2019 19:13:40 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1552331620;
+        bh=zPv8wh55mywMCqa0owDJ4RdB4f4ecTYLUs/yicH8mwg=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=CNCZ/6kWBThGhQTGTG0EXae1YaKzqvpxp54475VMH3YIND7pPRRiv7Yn8pNwpOD00
+         CREzzfEMXwcXPVZ9ieK5rXw6kA1vkzVmdYEwrCDmfYitULPKwS5hA0Cn0Rt0SaWBiT
+         BEzFpuClxHcHozT4rtBByU4AqXJsNgsVlHgH+Yho=
+Date:   Mon, 11 Mar 2019 12:13:39 -0700
+From:   Greg KH <gregkh@linuxfoundation.org>
+To:     Sven Van Asbroeck <thesven73@gmail.com>
+Cc:     robh+dt@kernel.org, Linus Walleij <linus.walleij@linaro.org>,
+        Lee Jones <lee.jones@linaro.org>, mark.rutland@arm.com,
+        Andreas =?iso-8859-1?Q?F=E4rber?= <afaerber@suse.de>,
+        treding@nvidia.com, David Lechner <david@lechnology.com>,
+        noralf@tronnes.org, johan@kernel.org,
+        Michal Simek <monstr@monstr.eu>, michal.vokac@ysoft.com,
+        Arnd Bergmann <arnd@arndb.de>, john.garry@huawei.com,
+        geert+renesas@glider.be, robin.murphy@arm.com,
+        Paul Gortmaker <paul.gortmaker@windriver.com>,
+        sebastien.bourdelin@savoirfairelinux.com, icenowy@aosc.io,
+        Stuart Yoder <stuyoder@gmail.com>, maxime.ripard@bootlin.com,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH v8 0/6] Add Fieldbus subsystem + support HMS Profinet card
+Message-ID: <20190311191339.GA5628@kroah.com>
+References: <20190124201251.15159-1-TheSven73@googlemail.com>
+ <CAGngYiWFU-VnG=ODLWaUf0yp69qaU2GSd9exdHvyi6Ko1ib9qw@mail.gmail.com>
+ <20190208121916.GE23483@kroah.com>
+ <CAGngYiVVNitd5SDLah-kxP69W6XHYHOQrOz=DnevuGnqoHD7HA@mail.gmail.com>
+ <20190208141400.GA22162@kroah.com>
+ <CAGngYiXZtNcqQ3JGgavBxypo75WtAT7T-X4DQFNWD8kQcifU8g@mail.gmail.com>
 MIME-Version: 1.0
-References: <CAG48ez1RVd5mQ_Pb6eygQESaZhpQz765OAZYSoPE0kPqfZEXQg@mail.gmail.com>
- <20190305091904.GB8256@zn.tnic> <20190305122218.GD13380@bombadil.infradead.org>
- <20190305134347.4be2449c@alans-desktop> <20190305145717.GD8256@zn.tnic>
- <CAHk-=wi2E4kugAW7BQwNSVwYHOr=B_9EgzBRMpQ2+1dxAqydDg@mail.gmail.com>
- <20190305173134.GE8256@zn.tnic> <CAHk-=wg0bY=RFhD4NW9x++fC0bME=_-9xM3kexGGM3gefHQTyQ@mail.gmail.com>
- <20190305181138.GG8256@zn.tnic> <20190305181808.GH8256@zn.tnic>
- <CAEdQ38G5M3vq9pGBV1iyEViO7JhFuXk5g+VCs-vUH+Z62kNqgQ@mail.gmail.com>
- <CAHk-=wgt7M6yA5BJCJo0nF22WgPJnN8CvViL9CAJmd+S+Civ6w@mail.gmail.com>
- <yw1xa7i14btw.fsf@mansr.com> <CAHk-=whD1SumZUBQeuMT-GcciwPxg_jW_TsPAmokYp3sGGCGhA@mail.gmail.com>
- <yw1x5zsp473a.fsf@mansr.com>
-In-Reply-To: <yw1x5zsp473a.fsf@mansr.com>
-From:   Linus Torvalds <torvalds@linux-foundation.org>
-Date:   Mon, 11 Mar 2019 12:03:18 -0700
-X-Gmail-Original-Message-ID: <CAHk-=wiU7xacTqDfm-x29-meyJWNd_X95K0T8FQMcDgy-yo3Qw@mail.gmail.com>
-Message-ID: <CAHk-=wiU7xacTqDfm-x29-meyJWNd_X95K0T8FQMcDgy-yo3Qw@mail.gmail.com>
-Subject: Re: [PATCH] x86: Deprecate a.out support
-To:     =?UTF-8?B?TcOlbnMgUnVsbGfDpXJk?= <mans@mansr.com>
-Cc:     Matt Turner <mattst88@gmail.com>, Borislav Petkov <bp@alien8.de>,
-        Alan Cox <gnomes@lxorguk.ukuu.org.uk>,
-        Matthew Wilcox <willy@infradead.org>,
-        Jann Horn <jannh@google.com>,
-        Al Viro <viro@zeniv.linux.org.uk>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        kernel list <linux-kernel@vger.kernel.org>,
-        linux-fsdevel <linux-fsdevel@vger.kernel.org>,
-        "the arch/x86 maintainers" <x86@kernel.org>,
-        Linux API <linux-api@vger.kernel.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Richard Weinberger <richard@nod.at>,
-        Anton Ivanov <anton.ivanov@cambridgegreys.com>,
-        linux-alpha <linux-alpha@vger.kernel.org>,
-        linux-m68k@lists.linux-m68k.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAGngYiXZtNcqQ3JGgavBxypo75WtAT7T-X4DQFNWD8kQcifU8g@mail.gmail.com>
+User-Agent: Mutt/1.11.3 (2019-02-01)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Mar 11, 2019 at 11:08 AM M=C3=A5ns Rullg=C3=A5rd <mans@mansr.com> w=
-rote:
->
-> The latest version I have is 5.1, and that uses ECOFF.
+On Mon, Mar 11, 2019 at 01:02:34PM -0400, Sven Van Asbroeck wrote:
+> On Fri, Feb 8, 2019 at 9:14 AM Greg KH <gregkh@linuxfoundation.org> wrote:
+> >
+> > Well, who wants this code?  Who uses it?  Find those people and get them
+> > to review it.  If no one wants it or uses it, that kind of implies that
+> > it's not needed :)
+> 
+> We have customers who (will) talk to this ABI from userspace, but they are
+> not 'Linux-y' enough to come to the mailing list and meaningfully review
+> the userspace ABI.
+> 
+> IMHO the current reality of Fieldbus on Linux is companies rolling their own
+> proprietary out-of-tree interfaces and drivers. They do this partly because
+> there is no existing community or infrastructure. So there is no incentive
+> to be involved with mainline, which could also explain why no-one is commenting
+> on this Fieldbus ABI.
+> 
+> Chicken-and-egg problem ?
+> 
+> Greg, could I convince you to take this Fieldbus subsystem in drivers/staging?
+> Perhaps its presence may kickstart or seed a Linux Fieldbus community.
+> Being in staging/ also means that we can tweak the userspace ABI to our
+> heart's content if more people/requirements come in.
+> 
+> If there's been no meaningful activity in, say, one year from now, you may
+> decide to send this whole subsystem to /dev/null.
 
-ECOFF _is_ a.out as far as Linux is concerned.
+That sounds like a good plan, I'll take that.  Want to respin the
+patches with the code in drivers/staging/ and I'll be glad to queue them
+up after 5.1-rc1 is out.
 
-So Linux basically treats ECOFF as "regular a.out with just some
-header extensions".
+thanks,
 
-We don't have any specific support for ECOFF.
-
-I _think_. Again, it's been years and years.
-
-               Linus
+greg k-h
