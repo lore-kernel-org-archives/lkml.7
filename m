@@ -2,157 +2,134 @@ Return-Path: <SRS0=FxTY=RO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIMWL_WL_MED,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_PASS autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E4FEBC43381
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 Mar 2019 21:24:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6E21EC4360F
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 Mar 2019 21:26:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A600A214AE
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 Mar 2019 21:24:03 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=fb.com header.i=@fb.com header.b="Whz1nIlR";
-	dkim=pass (1024-bit key) header.d=fb.onmicrosoft.com header.i=@fb.onmicrosoft.com header.b="O1RdZikZ"
+	by mail.kernel.org (Postfix) with ESMTP id 3AAA72087C
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 Mar 2019 21:26:31 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1552339591;
+	bh=R6Ae/Y9icFFsz4L42BLG/1JtO76ZQRtYXcqZwEcCw+w=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=LJeYsWfHbx/QCKllLoMUF3M8ZpYJrmaiHgGu3oSR21+Xc0fHUK4zVj6seSCVc1WdZ
+	 yqQHjx9q9fqv/VWQb4m37EvIycjCkV/i2jSlrq1hRTKq6V57OPLmmZ73l2Ibg5RnR5
+	 JXhjDe1vYhnKqYFrCiQvMn16SIXc8XQjyE+Kgpd4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728297AbfCKVYC (ORCPT
+        id S1728268AbfCKV0a (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 11 Mar 2019 17:24:02 -0400
-Received: from mx0a-00082601.pphosted.com ([67.231.145.42]:37520 "EHLO
-        mx0a-00082601.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727008AbfCKVYA (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 11 Mar 2019 17:24:00 -0400
-Received: from pps.filterd (m0044008.ppops.net [127.0.0.1])
-        by mx0a-00082601.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x2BLJRTC020525;
-        Mon, 11 Mar 2019 14:23:33 -0700
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=fb.com; h=from : to : cc : subject
- : date : message-id : references : in-reply-to : content-type : content-id
- : content-transfer-encoding : mime-version; s=facebook;
- bh=TudZDC57UbbAsp5MTChf8gWDM4qRAZR+/Yj53v/x36w=;
- b=Whz1nIlRT6wyi6vkYC79rEVJNafmhs8bp2sqx9Edej2sr3l5dqLB64Yc0Jk7vi+D0lVu
- QKN8AedNSR8S6+ivw8mROMGunZF4Q6DmYFy6eCF+puNBTQaJZMWtV6ody8fMR0tFPFBr
- /hWMYf5wz6uT6wH7nLYjyNFOTC4mHtrTqzk= 
-Received: from maileast.thefacebook.com ([199.201.65.23])
-        by mx0a-00082601.pphosted.com with ESMTP id 2r5xupg5kp-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-SHA384 bits=256 verify=NOT);
-        Mon, 11 Mar 2019 14:23:32 -0700
-Received: from frc-hub01.TheFacebook.com (2620:10d:c021:18::171) by
- frc-hub04.TheFacebook.com (2620:10d:c021:18::174) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA384) id
- 15.1.1713.5; Mon, 11 Mar 2019 14:22:40 -0700
-Received: from NAM03-CO1-obe.outbound.protection.outlook.com (192.168.183.28)
- by o365-in.thefacebook.com (192.168.177.71) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA384) id 15.1.1713.5
- via Frontend Transport; Mon, 11 Mar 2019 14:22:39 -0700
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=fb.onmicrosoft.com;
- s=selector1-fb-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=TudZDC57UbbAsp5MTChf8gWDM4qRAZR+/Yj53v/x36w=;
- b=O1RdZikZsR9k5VYZ7ll7Zd1v7KIej+bLUwYDlQNRWgUVDGTvL9lAR9+RKmgiPWnQ2GXuq6f2u3vcuGKJoJyF+Q2wHqCF/nZ0JIJJCNghlDoAmKLEnvRPq+n+3HslNL515rISdErTR/DTsvmLKM1rKGcaWw9mpCGLGhk8EUbeJmM=
-Received: from MWHPR15MB1165.namprd15.prod.outlook.com (10.175.2.19) by
- MWHPR15MB1533.namprd15.prod.outlook.com (10.173.235.18) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.1686.17; Mon, 11 Mar 2019 21:22:38 +0000
-Received: from MWHPR15MB1165.namprd15.prod.outlook.com
- ([fe80::f190:6de5:7e3:e065]) by MWHPR15MB1165.namprd15.prod.outlook.com
- ([fe80::f190:6de5:7e3:e065%6]) with mapi id 15.20.1686.021; Mon, 11 Mar 2019
- 21:22:38 +0000
-From:   Song Liu <songliubraving@fb.com>
-To:     Arnaldo Carvalho de Melo <arnaldo.melo@gmail.com>
-CC:     Arnaldo Carvalho de Melo <acme@redhat.com>,
-        "bpf@vger.kernel.org" <bpf@vger.kernel.org>,
-        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "ast@kernel.org" <ast@kernel.org>,
-        "daniel@iogearbox.net" <daniel@iogearbox.net>,
-        Kernel Team <Kernel-team@fb.com>,
-        "peterz@infradead.org" <peterz@infradead.org>,
-        "jolsa@kernel.org" <jolsa@kernel.org>,
-        "namhyung@kernel.org" <namhyung@kernel.org>,
-        "sdf@fomichev.me" <sdf@fomichev.me>
-Subject: Re: [PATCH v8 perf,bpf 00/15] perf annotation of BPF programs
-Thread-Topic: [PATCH v8 perf,bpf 00/15] perf annotation of BPF programs
-Thread-Index: AQHU2ESEhUo7NOm9yEuQuJ5Kxn1dHqYG4EAAgAAKfoCAAADugIAAAPIAgAAC5ICAAAEOgA==
-Date:   Mon, 11 Mar 2019 21:22:37 +0000
-Message-ID: <9AC47385-896A-4F85-857B-C6FA686BD985@fb.com>
-References: <20190311195555.889995-1-songliubraving@fb.com>
- <20190311202414.GA3078@redhat.com>
- <B72EC7B0-6B8B-4739-87A0-15364D3DE44F@fb.com>
- <20190311210507.GF10690@kernel.org>
- <944EE4E6-FD71-4D41-ABE1-279C6950EB11@fb.com>
- <20190311211851.GB4939@kernel.org>
-In-Reply-To: <20190311211851.GB4939@kernel.org>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-mailer: Apple Mail (2.3445.102.3)
-x-originating-ip: [2620:10d:c090:200::2:e2c1]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: bacd56d9-bb39-4430-4b3c-08d6a667afc9
-x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600127)(711020)(4605104)(2017052603328)(7153060)(7193020);SRVR:MWHPR15MB1533;
-x-ms-traffictypediagnostic: MWHPR15MB1533:
-x-microsoft-exchange-diagnostics: 1;MWHPR15MB1533;20:CiGGs2YE+vkwolEhh3dLumip29Q7K4yZTTxmlLePe/seBSdfSj7r83brbBfUImjbLv/noyuW+5mtBCsiP99JWWZT2Nab8/I7wlCWA9j3o730i3z/aLR/bjYvFqWoGANL44SyY2DKMajm2Imb5uIKfVXa0T4RZIPa0XMxBaP4QLY=
-x-microsoft-antispam-prvs: <MWHPR15MB1533C3CED3D68A188E6531F9B3480@MWHPR15MB1533.namprd15.prod.outlook.com>
-x-forefront-prvs: 09730BD177
-x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(396003)(136003)(366004)(39860400002)(376002)(346002)(199004)(189003)(476003)(8676002)(97736004)(81166006)(71190400001)(71200400001)(105586002)(6512007)(46003)(106356001)(83716004)(53936002)(4326008)(76176011)(2906002)(68736007)(102836004)(53546011)(86362001)(25786009)(6506007)(6246003)(50226002)(57306001)(8936002)(478600001)(99286004)(186003)(36756003)(54906003)(256004)(14454004)(316002)(305945005)(7416002)(229853002)(82746002)(7736002)(11346002)(2616005)(446003)(33656002)(6436002)(81156014)(6486002)(5660300002)(486006)(93886005)(6116002)(6916009)(142933001);DIR:OUT;SFP:1102;SCL:1;SRVR:MWHPR15MB1533;H:MWHPR15MB1165.namprd15.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
-received-spf: None (protection.outlook.com: fb.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam-message-info: iHKKkbCd26mhc/l52dHOBc1xI4svOnOhXRCSPbXJlll+dRNFE8cEc2h3TpiwG4zZ43011BOdar32SucuuVm3HQm4OKxEfgGyu2sPiKPlXpSSGliuHO0s18rDtJVwU5BMH1/hmcLdBGCiyCdW7NLJZuib9LDmq8UEB/fuEM7YpGOCu3a57Qn2yBzCaL/F3T7KLU7AxxcSilHGIKfmM5i4ENREosbEj/+DC7oPCgTo2T07efzVDUYPa05sKVtqMjbAmQAiWhsy9WJ0RTj2V2j4RJiS5hi0N8fFwjDjbEN9MsMiYkcRPWisDdiw7b9uG/ynBjKU40gzl3919C6BTS0Bj60gq6uPZHrfvE1ykY+qIlZz/PFEMwWgUiPVezlxlzKHIODtEtFxm34UNLcFUBkIidqy6mFqyLPCo448pWlLL8k=
-Content-Type: text/plain; charset="us-ascii"
-Content-ID: <635CDA5C45136A4F82EB7C0747F56EC7@namprd15.prod.outlook.com>
-Content-Transfer-Encoding: quoted-printable
+        Mon, 11 Mar 2019 17:26:30 -0400
+Received: from mail.kernel.org ([198.145.29.99]:52960 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727138AbfCKV03 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 11 Mar 2019 17:26:29 -0400
+Received: from mail-qt1-f180.google.com (mail-qt1-f180.google.com [209.85.160.180])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id D6A8D2087C;
+        Mon, 11 Mar 2019 21:26:27 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1552339588;
+        bh=R6Ae/Y9icFFsz4L42BLG/1JtO76ZQRtYXcqZwEcCw+w=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=cyLU8CVkuWOMj9tQv97A1pwcs25QFHjKaVYyPOF+xK/0crH+a7tU8r7UqqeQJGwPM
+         blMUQn118aqZvoFO6izBja0HQSuNyLpqhEbuK1TVE3saohpZhlDejXYFfCXLC1gspx
+         tWzlgY8L6cQj0oz5gTMsusQjA+G4cLZPkQqsiHTY=
+Received: by mail-qt1-f180.google.com with SMTP id u7so257505qtg.9;
+        Mon, 11 Mar 2019 14:26:27 -0700 (PDT)
+X-Gm-Message-State: APjAAAXVG2s9UAlQDfmaTcjYzLqTikG1qNdrOfZDCQwQpaLvbop5O+8I
+        1VPb2UhbYeuErB4u6YCEXSzlL1PQqo3Ux1ISUA==
+X-Google-Smtp-Source: APXvYqzghD8vQ8o5ed8SI+d/2B6BuqrYk2fEyaXtHY2+deG5NRZLbiPaLV8uDICjy2YoWMM9+UBtn98b6eCooIjvs8I=
+X-Received: by 2002:a0c:b14f:: with SMTP id r15mr28007307qvc.90.1552339587095;
+ Mon, 11 Mar 2019 14:26:27 -0700 (PDT)
 MIME-Version: 1.0
-X-MS-Exchange-CrossTenant-Network-Message-Id: bacd56d9-bb39-4430-4b3c-08d6a667afc9
-X-MS-Exchange-CrossTenant-originalarrivaltime: 11 Mar 2019 21:22:37.9139
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 8ae927fe-1255-47a7-a2af-5f3a069daaa2
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: MWHPR15MB1533
-X-OriginatorOrg: fb.com
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-03-11_16:,,
- signatures=0
-X-Proofpoint-Spam-Reason: safe
-X-FB-Internal: Safe
+References: <1550472539-16590-1-git-send-email-Anson.Huang@nxp.com>
+ <1550472539-16590-2-git-send-email-Anson.Huang@nxp.com> <20190222195217.GA22194@bogus>
+ <bb19470c-1590-f8dd-72e6-b382444d7902@roeck-us.net> <DB3PR0402MB3916912A64AF0837A9649913F5790@DB3PR0402MB3916.eurprd04.prod.outlook.com>
+ <96932b3e-87f1-d8f2-95bc-0e9a8d5d45ed@roeck-us.net> <DB3PR0402MB391659B6A466B1D85114E9C9F57A0@DB3PR0402MB3916.eurprd04.prod.outlook.com>
+ <CAL_JsqJV9NxpOJi3Jh2Uk-TOmOL4rWwqZp3sodxsRinAHZ3m3w@mail.gmail.com> <AM0PR04MB4211EAEA6F03465D372B0B4F804C0@AM0PR04MB4211.eurprd04.prod.outlook.com>
+In-Reply-To: <AM0PR04MB4211EAEA6F03465D372B0B4F804C0@AM0PR04MB4211.eurprd04.prod.outlook.com>
+From:   Rob Herring <robh@kernel.org>
+Date:   Mon, 11 Mar 2019 16:26:16 -0500
+X-Gmail-Original-Message-ID: <CAL_JsqJiKx8UvZ8qu-YaaPooLbSMKANSX=YZQO=Nm_anD2v9gw@mail.gmail.com>
+Message-ID: <CAL_JsqJiKx8UvZ8qu-YaaPooLbSMKANSX=YZQO=Nm_anD2v9gw@mail.gmail.com>
+Subject: Re: [PATCH RESEND V2 1/4] dt-bindings: fsl: scu: add watchdog binding
+To:     Aisheng Dong <aisheng.dong@nxp.com>
+Cc:     Anson Huang <anson.huang@nxp.com>,
+        Guenter Roeck <linux@roeck-us.net>,
+        "mark.rutland@arm.com" <mark.rutland@arm.com>,
+        "ulf.hansson@linaro.org" <ulf.hansson@linaro.org>,
+        "heiko@sntech.de" <heiko@sntech.de>,
+        "catalin.marinas@arm.com" <catalin.marinas@arm.com>,
+        "will.deacon@arm.com" <will.deacon@arm.com>,
+        "bjorn.andersson@linaro.org" <bjorn.andersson@linaro.org>,
+        "festevam@gmail.com" <festevam@gmail.com>,
+        "jagan@amarulasolutions.com" <jagan@amarulasolutions.com>,
+        Andy Gross <andy.gross@linaro.org>,
+        dl-linux-imx <linux-imx@nxp.com>,
+        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+        "linux-watchdog@vger.kernel.org" <linux-watchdog@vger.kernel.org>,
+        "arnd@arndb.de" <arnd@arndb.de>,
+        "marc.w.gonzalez@free.fr" <marc.w.gonzalez@free.fr>,
+        "s.hauer@pengutronix.de" <s.hauer@pengutronix.de>,
+        "enric.balletbo@collabora.com" <enric.balletbo@collabora.com>,
+        "horms+renesas@verge.net.au" <horms+renesas@verge.net.au>,
+        "wim@linux-watchdog.org" <wim@linux-watchdog.org>,
+        Daniel Baluta <daniel.baluta@nxp.com>,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "kernel@pengutronix.de" <kernel@pengutronix.de>,
+        "olof@lixom.net" <olof@lixom.net>,
+        "shawnguo@kernel.org" <shawnguo@kernel.org>,
+        Jens Wiklander <jens.wiklander@linaro.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
++Jens W
 
+On Thu, Mar 7, 2019 at 6:22 AM Aisheng Dong <aisheng.dong@nxp.com> wrote:
+>
+> Hi Rob,
+>
+> > > > I think Rob suggested that the SCU parent driver should instantiate
+> > > > the watchdog without explicit watchdog node. That would be possible,
+> > > > but it currently uses
+> > > > devm_of_platform_populate() to do the instantiation, and changing
+> > > > that would be a mess. Besides, it does sem to me that your suggested
+> > > > node would describe the hardware, so I am not sure I understand the
+> > reasoning.
+> >
+> > It would just be a call to create a platform device instead. How is that a mess?
+> >
+> > It's describing firmware. We have DT for describing h/w we've failed to make
+> > discoverable. We should not repeat that and just describe firmware in DT.
+> > Make the firmware discoverable! Though there are cases like firmware
+> > provided clocks where we still need something in DT, but this is not one of
+> > them.
+> >
+>
+> The watchdog node here in question actually is not using SCU firmware call.
+> Due to security requirement by SCU, watchdog can only be accessed in
+> security mode, for IMX case, via ARM Trust Firmware. That means the
+> watchdog used in Linux actually is using ARM SMC call and does not
+> depend SCU driver. So It would be strange for SCU driver to instantiate it.
+>
+> For this situation, do you think we can move watchdog out of scu node?
+> Maybe rename the compatible string like "fsl,imx8qxp-sip-watchdog"
+> because it's actually a watchdog serviced by ATF firmware.
 
-> On Mar 11, 2019, at 2:18 PM, Arnaldo Carvalho de Melo <arnaldo.melo@gmail=
-.com> wrote:
->=20
-> Em Mon, Mar 11, 2019 at 09:08:31PM +0000, Song Liu escreveu:
->>> On Mar 11, 2019, at 2:05 PM, Arnaldo Carvalho de Melo <arnaldo.melo@gma=
-il.com> wrote:
->>> Em Mon, Mar 11, 2019 at 09:01:48PM +0000, Song Liu escreveu:
->>>>> On Mar 11, 2019, at 1:24 PM, Arnaldo Carvalho de Melo <acme@redhat.co=
-m> wrote:
->>>>> These csets are already upstream, i.e. already hit torvalds/master, i=
-.e.
->>>>> will be in 5.1, can you check that we still need doing this
->>>>> cherry-picking?
->=20
->>>> I just checked that 02-15 of the set could apply to torvalds/master (w=
-ith=20
->>>> some minor conflicts), and it works as expected.=20
->=20
->>> So no need to cherrypick, just use torvalds/master as a base, ok.
->=20
->> Do you want me to resend the set with the conflict resolved?=20
->=20
-> No need for today, I think Jiri is looking at that branch I saw you guys
-> chatting today, so if he has some new comments, you can then address and
-> repost, fixing the conflicts then.
->=20
-> - Arnaldo
+Yes, but that creates more questions. What exactly does ATF talk to
+for the watchdog? The SCU firmware?
 
-Got it. I will include the --bpf-event option change and repost later.=20
+Maybe ATF should define and provide a standard watchdog interface? It
+is still a question of making the firmware discoverable rather than
+trying to describe the firmware in DT.
 
-Thanks,
-Song=
+Rob
