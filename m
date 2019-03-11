@@ -2,181 +2,136 @@ Return-Path: <SRS0=FxTY=RO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 405D4C43381
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 Mar 2019 08:28:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5FEE4C10F0C
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 Mar 2019 08:28:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F2D3020643
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 Mar 2019 08:28:40 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="GTu/XCj8"
+	by mail.kernel.org (Postfix) with ESMTP id 3A2DD20850
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 Mar 2019 08:28:44 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726861AbfCKI2j (ORCPT
+        id S1726996AbfCKI2n (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 11 Mar 2019 04:28:39 -0400
-Received: from mail-qt1-f193.google.com ([209.85.160.193]:46587 "EHLO
-        mail-qt1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725932AbfCKI2j (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 11 Mar 2019 04:28:39 -0400
-Received: by mail-qt1-f193.google.com with SMTP id z25so4062939qti.13
-        for <linux-kernel@vger.kernel.org>; Mon, 11 Mar 2019 01:28:38 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=u/g68vjKtnqkumh5ZxD32tljZq9+3YSH18gcmZETy8Q=;
-        b=GTu/XCj8NRFw3YGg/JjiV2JU8xxkHaL36MHcUvn2ZMrxqNX+GVwuUHuBZMIochQCa2
-         ehG5+GWvW3WfFQDjSC4wjaFRL98/IrZnijO+zD2ofI8kspaDkkc/hM/qTITdjIjSfGxA
-         wltw9Rfx5W9+zhx4fzSe6C65ctSiAz8nYbm0c=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=u/g68vjKtnqkumh5ZxD32tljZq9+3YSH18gcmZETy8Q=;
-        b=UKOHBA1jHUqLHoVj93MpsdmmUD8PINak3+A1ABBIMydOhND0q6OXip00TlkUgNUgnt
-         qhrl+YyCRCp/E3HHBYbEo2mPlXSrJ3basDxyq9nfIMenmNXRDyew3wknFTeM9EpAIu4G
-         VIfhTczKxW1Xbt4PEg+avkZza/Sa0TrMlIqhYm2tQ1CW6Ky2nW3OyjnPO9inFxeUfsNw
-         5e8uDetBhrHTcCN7rHMDrPTp1VL2IIGGqbjvHHUhqwop1LFPsH/r5ZXp0YjoSlIRGAKg
-         F3udnssGZsPe4UHRGiG4rMCRZRT/pDCHAUxi0iX1qA0cnhxEBjNYYMZ9BCubGdn9LQ3W
-         C+3A==
-X-Gm-Message-State: APjAAAX8mk+Ts1N5OvGTzzBrkI5QtJjp52vWI3h3tyjv8LAx7pxBa3mq
-        K/lNj8L4KTvmEKvQcc7qOpz+GTGdlc9zKZGbv1icsA==
-X-Google-Smtp-Source: APXvYqzJrHIyJVDSQMCZmpc0fCbdydIiT5Tk8MH7UTZD8+XGXab9diQOjH2o5mTS+3ryNMTgnR5XtB1FSrGNBUSLIN0=
-X-Received: by 2002:ac8:2805:: with SMTP id 5mr24938833qtq.75.1552292917856;
- Mon, 11 Mar 2019 01:28:37 -0700 (PDT)
+        Mon, 11 Mar 2019 04:28:43 -0400
+Received: from foss.arm.com ([217.140.101.70]:50296 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725932AbfCKI2k (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 11 Mar 2019 04:28:40 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.72.51.249])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 9D338A78;
+        Mon, 11 Mar 2019 01:28:39 -0700 (PDT)
+Received: from [10.163.1.86] (unknown [10.163.1.86])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id C16FD3F59C;
+        Mon, 11 Mar 2019 01:28:30 -0700 (PDT)
+Subject: Re: [PATCH v3 3/3] arm64: mm: enable per pmd page table lock
+To:     Yu Zhao <yuzhao@google.com>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Will Deacon <will.deacon@arm.com>,
+        Mark Rutland <mark.rutland@arm.com>
+Cc:     "Aneesh Kumar K . V" <aneesh.kumar@linux.vnet.ibm.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Nick Piggin <npiggin@gmail.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Joel Fernandes <joel@joelfernandes.org>,
+        "Kirill A . Shutemov" <kirill@shutemov.name>,
+        Ard Biesheuvel <ard.biesheuvel@linaro.org>,
+        Chintan Pandya <cpandya@codeaurora.org>,
+        Jun Yao <yaojun8558363@gmail.com>,
+        Laura Abbott <labbott@redhat.com>,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        linux-arch@vger.kernel.org, linux-mm@kvack.org
+References: <20190218231319.178224-1-yuzhao@google.com>
+ <20190310011906.254635-1-yuzhao@google.com>
+ <20190310011906.254635-3-yuzhao@google.com>
+From:   Anshuman Khandual <anshuman.khandual@arm.com>
+Message-ID: <dfc727b4-0806-4867-2f9c-0bb8fdd459ad@arm.com>
+Date:   Mon, 11 Mar 2019 13:58:27 +0530
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:52.0) Gecko/20100101
+ Thunderbird/52.9.1
 MIME-Version: 1.0
-References: <1552282840-12778-1-git-send-email-qii.wang@mediatek.com> <1552282840-12778-4-git-send-email-qii.wang@mediatek.com>
-In-Reply-To: <1552282840-12778-4-git-send-email-qii.wang@mediatek.com>
-From:   Nicolas Boichat <drinkcat@chromium.org>
-Date:   Mon, 11 Mar 2019 16:28:26 +0800
-Message-ID: <CANMq1KBKbGUgDGKp=vHq9g-46sN+4_CjPh-7Tc4NzfKk+ckpsQ@mail.gmail.com>
-Subject: Re: [PATCH v6 3/6] i2c: mediatek: Add arb clock in i2c driver
-To:     Qii Wang <qii.wang@mediatek.com>
-Cc:     wsa@the-dreams.de, linux-i2c@vger.kernel.org,
-        devicetree@vger.kernel.org,
-        linux-arm Mailing List <linux-arm-kernel@lists.infradead.org>,
-        lkml <linux-kernel@vger.kernel.org>,
-        "moderated list:ARM/Mediatek SoC support" 
-        <linux-mediatek@lists.infradead.org>,
-        srv_heupstream <srv_heupstream@mediatek.com>,
-        Leilk Liu <leilk.liu@mediatek.com>, xinping.qian@mediatek.com,
-        liguo.zhang@mediatek.com, Rob Herring <robh@kernel.org>,
-        Matthias Brugger <matthias.bgg@gmail.com>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <20190310011906.254635-3-yuzhao@google.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Mar 11, 2019 at 1:41 PM Qii Wang <qii.wang@mediatek.com> wrote:
->
-> When two i2c controllers are internally connected to the same
-> GPIO pins, the arb clock is needed to ensure that the waveforms
-> do not interfere with each other. And we also need to enable
-> the interrupt to find arb lost, old i2c controllers also have
-> the bit.
->
-> Signed-off-by: Qii Wang <qii.wang@mediatek.com>
-
-I'll let Matthias comment too (I think the comment above is just
-enough), but otherwise:
-
-Reviewed-by: Nicolas Boichat <drinkcat@chromium.org>
-
+On 03/10/2019 06:49 AM, Yu Zhao wrote:
+> Switch from per mm_struct to per pmd page table lock by enabling
+> ARCH_ENABLE_SPLIT_PMD_PTLOCK. This provides better granularity for
+> large system.
+> 
+> I'm not sure if there is contention on mm->page_table_lock. Given
+> the option comes at no cost (apart from initializing more spin
+> locks), why not enable it now.
+> 
+> We only do so when pmd is not folded, so we don't mistakenly call
+> pgtable_pmd_page_ctor() on pud or p4d in pgd_pgtable_alloc(). (We
+> check shift against PMD_SHIFT, which is same as PUD_SHIFT when pmd
+> is folded).
+> 
+> Signed-off-by: Yu Zhao <yuzhao@google.com>
 > ---
->  drivers/i2c/busses/i2c-mt65xx.c |   25 ++++++++++++++++++++++---
->  1 file changed, 22 insertions(+), 3 deletions(-)
->
-> diff --git a/drivers/i2c/busses/i2c-mt65xx.c b/drivers/i2c/busses/i2c-mt65xx.c
-> index be36018..1a7235e 100644
-> --- a/drivers/i2c/busses/i2c-mt65xx.c
-> +++ b/drivers/i2c/busses/i2c-mt65xx.c
-> @@ -35,6 +35,7 @@
->  #include <linux/slab.h>
->
->  #define I2C_RS_TRANSFER                        (1 << 4)
-> +#define I2C_ARB_LOST                   (1 << 3)
->  #define I2C_HS_NACKERR                 (1 << 2)
->  #define I2C_ACKERR                     (1 << 1)
->  #define I2C_TRANSAC_COMP               (1 << 0)
-> @@ -181,6 +182,7 @@ struct mtk_i2c {
->         struct clk *clk_main;           /* main clock for i2c bus */
->         struct clk *clk_dma;            /* DMA clock for i2c via DMA */
->         struct clk *clk_pmic;           /* PMIC clock for i2c from PMIC */
-> +       struct clk *clk_arb;            /* Arbitrator clock for i2c */
->         bool have_pmic;                 /* can use i2c pins from PMIC */
->         bool use_push_pull;             /* IO config push-pull mode */
->
-> @@ -299,8 +301,18 @@ static int mtk_i2c_clock_enable(struct mtk_i2c *i2c)
->                 if (ret)
->                         goto err_pmic;
->         }
+>  arch/arm64/Kconfig               |  3 +++
+>  arch/arm64/include/asm/pgalloc.h | 12 +++++++++++-
+>  arch/arm64/include/asm/tlb.h     |  5 ++++-
+>  3 files changed, 18 insertions(+), 2 deletions(-)
+> 
+> diff --git a/arch/arm64/Kconfig b/arch/arm64/Kconfig
+> index cfbf307d6dc4..a3b1b789f766 100644
+> --- a/arch/arm64/Kconfig
+> +++ b/arch/arm64/Kconfig
+> @@ -872,6 +872,9 @@ config ARCH_WANT_HUGE_PMD_SHARE
+>  config ARCH_HAS_CACHE_LINE_SIZE
+>  	def_bool y
+>  
+> +config ARCH_ENABLE_SPLIT_PMD_PTLOCK
+> +	def_bool y if PGTABLE_LEVELS > 2
 > +
-> +       if (i2c->clk_arb) {
-> +               ret = clk_prepare_enable(i2c->clk_arb);
-> +               if (ret)
-> +                       goto err_arb;
-> +       }
-> +
->         return 0;
->
-> +err_arb:
-> +       if (i2c->have_pmic)
-> +               clk_disable_unprepare(i2c->clk_pmic);
->  err_pmic:
->         clk_disable_unprepare(i2c->clk_main);
->  err_main:
-> @@ -311,6 +323,9 @@ static int mtk_i2c_clock_enable(struct mtk_i2c *i2c)
->
->  static void mtk_i2c_clock_disable(struct mtk_i2c *i2c)
+>  config SECCOMP
+>  	bool "Enable seccomp to safely compute untrusted bytecode"
+>  	---help---
+> diff --git a/arch/arm64/include/asm/pgalloc.h b/arch/arm64/include/asm/pgalloc.h
+> index 52fa47c73bf0..dabba4b2c61f 100644
+> --- a/arch/arm64/include/asm/pgalloc.h
+> +++ b/arch/arm64/include/asm/pgalloc.h
+> @@ -33,12 +33,22 @@
+>  
+>  static inline pmd_t *pmd_alloc_one(struct mm_struct *mm, unsigned long addr)
 >  {
-> +       if (i2c->clk_arb)
-> +               clk_disable_unprepare(i2c->clk_arb);
+> -	return (pmd_t *)__get_free_page(PGALLOC_GFP);
+> +	struct page *page;
 > +
->         if (i2c->have_pmic)
->                 clk_disable_unprepare(i2c->clk_pmic);
->
-> @@ -519,13 +534,13 @@ static int mtk_i2c_do_transfer(struct mtk_i2c *i2c, struct i2c_msg *msgs,
->
->         /* Clear interrupt status */
->         mtk_i2c_writew(i2c, restart_flag | I2C_HS_NACKERR | I2C_ACKERR |
-> -              I2C_TRANSAC_COMP, OFFSET_INTR_STAT);
-> +                           I2C_ARB_LOST | I2C_TRANSAC_COMP, OFFSET_INTR_STAT);
->
->         mtk_i2c_writew(i2c, I2C_FIFO_ADDR_CLR, OFFSET_FIFO_ADDR_CLR);
->
->         /* Enable interrupt */
->         mtk_i2c_writew(i2c, restart_flag | I2C_HS_NACKERR | I2C_ACKERR |
-> -              I2C_TRANSAC_COMP, OFFSET_INTR_MASK);
-> +                           I2C_ARB_LOST | I2C_TRANSAC_COMP, OFFSET_INTR_MASK);
->
->         /* Set transfer and transaction len */
->         if (i2c->op == I2C_MASTER_WRRD) {
-> @@ -659,7 +674,7 @@ static int mtk_i2c_do_transfer(struct mtk_i2c *i2c, struct i2c_msg *msgs,
->
->         /* Clear interrupt mask */
->         mtk_i2c_writew(i2c, ~(restart_flag | I2C_HS_NACKERR | I2C_ACKERR |
-> -              I2C_TRANSAC_COMP), OFFSET_INTR_MASK);
-> +                           I2C_ARB_LOST | I2C_TRANSAC_COMP), OFFSET_INTR_MASK);
->
->         if (i2c->op == I2C_MASTER_WR) {
->                 dma_unmap_single(i2c->dev, wpaddr,
-> @@ -884,6 +899,10 @@ static int mtk_i2c_probe(struct platform_device *pdev)
->                 return PTR_ERR(i2c->clk_dma);
->         }
->
-> +       i2c->clk_arb = devm_clk_get(&pdev->dev, "arb");
-> +       if (IS_ERR(i2c->clk_arb))
-> +               i2c->clk_arb = NULL;
-> +
->         clk = i2c->clk_main;
->         if (i2c->have_pmic) {
->                 i2c->clk_pmic = devm_clk_get(&pdev->dev, "pmic");
-> --
-> 1.7.9.5
->
+> +	page = alloc_page(PGALLOC_GFP);
+> +	if (!page)
+> +		return NULL;
+> +	if (!pgtable_pmd_page_ctor(page)) {
+> +		__free_page(page);
+> +		return NULL;
+> +	}
+> +	return page_address(page);
+>  }
+>  
+>  static inline void pmd_free(struct mm_struct *mm, pmd_t *pmdp)
+>  {
+>  	BUG_ON((unsigned long)pmdp & (PAGE_SIZE-1));
+> +	pgtable_pmd_page_dtor(virt_to_page(pmdp));
+>  	free_page((unsigned long)pmdp);
+>  }
+
+There is just one problem here. ARM KVM's stage2_pmd_free() calls into pmd_free() on a page
+originally allocated with __get_free_page() and never went through pgtable_pmd_page_ctor().
+So when ARCH_ENABLE_SPLIT_PMD_PTLOCK is enabled
+
+stage2_pmd_free()
+	pgtable_pmd_page_dtor()
+		ptlock_free()
+			kmem_cache_free(page_ptl_cachep, page->ptl)
+
+Though SLUB implementation for kmem_cache_free() seems to be handling NULL page->ptl (as the
+page never got it's lock allocated or initialized) correctly I am not sure if it is a right
+thing to do.
