@@ -2,118 +2,138 @@ Return-Path: <SRS0=FxTY=RO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-10.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS autolearn=ham
-	autolearn_force=no version=3.4.0
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SIGNED_OFF_BY,SPF_PASS,USER_AGENT_MUTT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5CD6AC43381
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 Mar 2019 13:50:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1CD8AC43381
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 Mar 2019 13:50:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2DA872075C
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 Mar 2019 13:50:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E1A062075C
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 Mar 2019 13:50:12 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="avFj40jS"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="RyHjsdZn"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727641AbfCKNuG (ORCPT
+        id S1727667AbfCKNuL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 11 Mar 2019 09:50:06 -0400
-Received: from mail-pg1-f193.google.com ([209.85.215.193]:37168 "EHLO
-        mail-pg1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725943AbfCKNuF (ORCPT
+        Mon, 11 Mar 2019 09:50:11 -0400
+Received: from mail-ed1-f66.google.com ([209.85.208.66]:44382 "EHLO
+        mail-ed1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725943AbfCKNuK (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 11 Mar 2019 09:50:05 -0400
-Received: by mail-pg1-f193.google.com with SMTP id q206so4094245pgq.4;
-        Mon, 11 Mar 2019 06:50:04 -0700 (PDT)
+        Mon, 11 Mar 2019 09:50:10 -0400
+Received: by mail-ed1-f66.google.com with SMTP id b20so4060247edw.11;
+        Mon, 11 Mar 2019 06:50:08 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=TOOTq5oygx3K7ryDBNkseZFFGRYwImzfXcS07JM5dDc=;
-        b=avFj40jS5DOV2K+nzBFIkZWHIErpGQoPBlB3Utf9KTapeedZEYtVNw0PCm1Ppt6LZI
-         RvZupyHcwvAkLMQmBL0gh3kI7VGaOEyo6imf7tABMiCgCqFW/YlV3XpRdb+VHgfreMqK
-         N0dVEyAo8ih3/hKFQ06yCRTEI/eKm+en0DDhT634vXWAXDl/gg+QNtM5pISzGkvgpssr
-         FTgBUPaNYHaPvZWnEoAp+FJa20cgx0t7ZhsMp/PxjA6Run7UJH0kGxGZyE/C07gy4LyK
-         JenuSRGFnguegP8QqX3elRa0SP5peqtqH9mFusHMbPaMYtLTbnXRI8fvNM93fjVK9e6t
-         Sr+A==
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=iMzmxseIEor4W0Mlxh3NSGrXk6R/HrgYuHji6ua3eYs=;
+        b=RyHjsdZnUBnIiu/hrilLerZkzIUWf5iIHuYgd+UNM0fQlrBkbOtRtyEn1FnjtFJPuU
+         +TREejkaG4JKeSzU3eVdG3+SH7RA65l+UZpwTBoJJHIG42Rq1GjI3Be0hV8VUXNVcJu7
+         7X97K0FdGF1JdRl57R+HpIgR2za8p92b8pmlEtb40AWRoogA4WRNw5e4uxd1CNTzrUlu
+         UaLbF/iY016qavjgQ5OFIlDbeK4Hw6kmgiIUX4E/WP3jPgfzAWSD0LhTkoGAcbBnuFMi
+         V2tdwGMh4iYM/xXj/rXGgZt9cvVYmumcRiwgRVgDYBGt7xWdW8BVmDJ5/z9KDGafZq/v
+         WGrg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=TOOTq5oygx3K7ryDBNkseZFFGRYwImzfXcS07JM5dDc=;
-        b=P4I475QZ6A9CcaXLNjmWa3Z9pUlIpiLwL6N9RCtQlRO7MhvaiyY7BR/ybIx1KAbGcI
-         2MEs5uXr5rpAewmi/aleE0Ib7LEvRlZEu0LlKoN6tajsMv8NB1sgCD2zb6gvGSuMPd9T
-         jxkSNfMO23iifWhKriQEj447z7oZyRS41u9mo0fIZAzWzC45jjTcP537cqiROmC+4f/e
-         1R5iKyhotGRnwKajfOvb/xIaUtih8WfhwTMaWXVNXejP9ZOJtz8x5qHWyLLv+xUTMAtK
-         7zdo58eNgqZXzBr252hJh+2ZrYZD7zydtsX/z2J6ZwtfuowqsvkFrB7oXonbXCSvrDuR
-         2f0g==
-X-Gm-Message-State: APjAAAWOGp8UhDuqZEN+NT5GMhUSlXSe1epd3jaNYj+pXefFICaL11RR
-        hYMG8TdXX1DH5o7P0fKQ03AqlpgqjoMV2JRn6Ow=
-X-Google-Smtp-Source: APXvYqzjqa5R0bPrZRyEOkTXYYB4JFzx1DGH+slkcbj8DxdVleDrest7RRtOViRKoTfGGqMqHkAyMHTzvQ6d63rEWUc=
-X-Received: by 2002:a17:902:7682:: with SMTP id m2mr34611346pll.311.1552312204294;
- Mon, 11 Mar 2019 06:50:04 -0700 (PDT)
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=iMzmxseIEor4W0Mlxh3NSGrXk6R/HrgYuHji6ua3eYs=;
+        b=ZMlbdJtK18hHY7Mb/FU2SjoMTnBcTdqSyeswhFbCuu8/09FE5ReTtKWqIsfmiMzdVL
+         NBgmMEFexcOOI/WkgFtCxueZ6RINsoFk/c+IcorFv/HouachGvw6TMtCC3I7zwUmY/Zg
+         KevX+DraaNwq6DoX+zw+oGwgcsOn7p6JoOBITd2Vt/uP+8k9Ive+KfpsOWGN6h1ibLaS
+         FaDdS7iXVIOgwg7bnNQe2h6LcOXq3LTNB287ii3dMosUl2ItromZpnsyVkNiEJdfjA1h
+         wo/r8UMXaWL+V5jsz1BZYElB+cs8k4COERvXYOtS/BjuFp9rSXo1gALCN31YaPLVIh4D
+         yk0g==
+X-Gm-Message-State: APjAAAURD8sWFzK9OP8dZUN+GjltELu5cekYU8nJ+bSohd7PMfqA0ehe
+        2SsC4kEc1ou9FHLayjdJ1IU=
+X-Google-Smtp-Source: APXvYqw2w76Wp1JDHYpppn16AhJtXufj6P3YLY/GJeQM/kWbFZODZ+9tjhduedOv3thrCMTUOmuDvA==
+X-Received: by 2002:a50:b16c:: with SMTP id l41mr44619875edd.209.1552312207620;
+        Mon, 11 Mar 2019 06:50:07 -0700 (PDT)
+Received: from archlinux-ryzen ([2a01:4f9:2a:1fae::2])
+        by smtp.gmail.com with ESMTPSA id x36sm4709359eda.94.2019.03.11.06.50.06
+        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
+        Mon, 11 Mar 2019 06:50:06 -0700 (PDT)
+Date:   Mon, 11 Mar 2019 06:50:04 -0700
+From:   Nathan Chancellor <natechancellor@gmail.com>
+To:     Arnd Bergmann <arnd@arndb.de>
+Cc:     Jonathan Cameron <jic23@kernel.org>,
+        Nick Desaulniers <ndesaulniers@google.com>,
+        Hartmut Knaack <knaack.h@gmx.de>,
+        Lars-Peter Clausen <lars@metafoo.de>,
+        Peter Meerwald-Stadler <pmeerw@pmeerw.net>,
+        linux-iio@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>,
+        clang-built-linux@googlegroups.com
+Subject: Re: [PATCH] iio: common: ssp_sensors: Initialize calculated_time in
+ ssp_common_process_data
+Message-ID: <20190311135004.GA11528@archlinux-ryzen>
+References: <20190307214546.9624-1-natechancellor@gmail.com>
+ <CAKwvOdkeVmcoD7WusKE83MmRjX+h73rnHDY=Rn_a7LXsULPsrw@mail.gmail.com>
+ <20190310093738.72c1019b@archlinux>
+ <CAK8P3a3X1FbFPxOW54AtqeJgOTvjtnLwzVNCv+x-439Df_cEPw@mail.gmail.com>
 MIME-Version: 1.0
-References: <00000000000086d87305801011c4@google.com> <0000000000001d3a060583d187dd@google.com>
-In-Reply-To: <0000000000001d3a060583d187dd@google.com>
-From:   Andy Shevchenko <andy.shevchenko@gmail.com>
-Date:   Mon, 11 Mar 2019 15:49:52 +0200
-Message-ID: <CAHp75VcBAxcB8G1Dr2-nPF6N9W27O=BY4buORs_nqTM=md1=oQ@mail.gmail.com>
-Subject: Re: general protection fault in __bfs (2)
-To:     syzbot <syzbot+c58fa3b1231d2ea0c4d3@syzkaller.appspotmail.com>
-Cc:     Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        Borislav Petkov <bp@alien8.de>,
-        "David S. Miller" <davem@davemloft.net>,
-        Dou Liyang <douly.fnst@cn.fujitsu.com>,
-        "H. Peter Anvin" <hpa@zytor.com>, jon.maloy@ericsson.com,
-        Konrad Rzeszutek Wilk <konrad.wilk@oracle.com>,
-        "Brown, Len" <len.brown@intel.com>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        netdev <netdev@vger.kernel.org>, puwen@hygon.cn,
-        Mike Rapoport <rppt@linux.vnet.ibm.com>,
-        syzkaller-bugs@googlegroups.com,
-        Thomas Gleixner <tglx@linutronix.de>,
-        tipc-discussion@lists.sourceforge.net,
-        "maintainer:X86 ARCHITECTURE (32-BIT AND 64-BIT)" <x86@kernel.org>,
-        ying.xue@windriver.com
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAK8P3a3X1FbFPxOW54AtqeJgOTvjtnLwzVNCv+x-439Df_cEPw@mail.gmail.com>
+User-Agent: Mutt/1.11.3 (2019-02-01)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Mar 11, 2019 at 3:27 PM syzbot
-<syzbot+c58fa3b1231d2ea0c4d3@syzkaller.appspotmail.com> wrote:
->
-> syzbot has bisected this bug to:
->
-> commit 2646b90de5c3492db2ead71337fd4c7d7f549ebe
-> Author: Linus Walleij <linus.walleij@linaro.org>
-> Date:   Fri Oct 26 08:41:22 2018 +0000
->
->      gpio: Add global TODO file for GPIO
->
+On Mon, Mar 11, 2019 at 12:10:18PM +0100, Arnd Bergmann wrote:
+> On Sun, Mar 10, 2019 at 10:37 AM Jonathan Cameron <jic23@kernel.org> wrote:
+> > On Thu, 7 Mar 2019 16:35:26 -0800 Nick Desaulniers <ndesaulniers@google.com> wrote:
+> > > On Thu, Mar 7, 2019 at 1:46 PM Nathan Chancellor <natechancellor@gmail.com> wrote:
+> > > >
+> > > > When building with -Wsometimes-uninitialized, Clang warns:
+> > > >
+> > > > drivers/iio/common/ssp_sensors/ssp_iio.c:95:6: warning: variable
+> > > > 'calculated_time' is used uninitialized whenever 'if' condition is false
+> > > > [-Wsometimes-uninitialized]
+> > > >
+> > > > While it isn't wrong, this will never be a problem because
+> > > > iio_push_to_buffers_with_timestamp only uses calculated_time
+> > > > on the same condition that it is assigned (when scan_timestamp
+> > > > is not zero). While iio_push_to_buffers_with_timestamp is marked
+> > > > as inline, Clang does inlining in the optimization stage, which
+> > > > happens after the semantic analysis phase (plus inline is merely
+> > > > a hint to the compiler).
+> > > >
+> > > > Fix this by just zero initializing calculated_time.
+> > > >
+> > > > Link: https://github.com/ClangBuiltLinux/linux/issues/394
+> > > > Signed-off-by: Nathan Chancellor <natechancellor@gmail.com>
+> > >
+> > > Knowing that the same invariant holds across function boundaries to
+> > > protect access of unitialized values and thus undefined behavior
+> > > sounds tricky to diagnose accurately.  Thanks for the patch.
+> > > Reviewed-by: Nick Desaulniers <ndesaulniers@google.com>
+> > Applied to the togreg branch of iio.git and pushed out as testing
+> > for the autobuilders to play with it.
+> >
+> > Note this is going to be a while before it hits mainline but as
+> > it is a false (if reasonable!) warning I'm not going to rush
+> > it in as a fix.
+> 
+> I think it's actually a correct warning, it just doesn't trigger
+> on gcc because of a known gcc bug.
+> 
+> I'm not sure however why I don't see the warning with clang-8
+> on my local build. Is this something I have to enable
+> separately?
+> 
+>        Arnd
 
-AI is not ready to conqueror the world!
+Yes, -Wsometimes-uninitialized is not on by default because
+-Wuninitialized is disabled. You can either pass it via KCFLAGS or
+modify scripts/Makefile.extrawarn, which is the eventual goal because
+Clang can catch things that GCC can't:
 
-> bisection log:  https://syzkaller.appspot.com/x/bisect.txt?x=12589f8d200000
-> start commit:   2646b90d gpio: Add global TODO file for GPIO
-> git tree:       upstream
-> final crash:    https://syzkaller.appspot.com/x/report.txt?x=11589f8d200000
-> console output: https://syzkaller.appspot.com/x/log.txt?x=16589f8d200000
-> kernel config:  https://syzkaller.appspot.com/x/.config?x=8f00801d7b7c4fe6
-> dashboard link: https://syzkaller.appspot.com/bug?extid=c58fa3b1231d2ea0c4d3
-> userspace arch: amd64
-> syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=15bab650c00000
-> C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=17a331df400000
->
-> Reported-by: syzbot+c58fa3b1231d2ea0c4d3@syzkaller.appspotmail.com
-> Fixes: 2646b90d ("gpio: Add global TODO file for GPIO")
+https://github.com/ClangBuiltLinux/linux/issues/381
 
-
-
--- 
-With Best Regards,
-Andy Shevchenko
+Cheers,
+Nathan
