@@ -2,135 +2,136 @@ Return-Path: <SRS0=FxTY=RO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.8 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 62916C43381
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 Mar 2019 10:07:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1056CC43381
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 Mar 2019 10:07:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3B03920657
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 Mar 2019 10:07:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D19D720657
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 Mar 2019 10:07:58 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="gDWb1CiP";
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="das9v3vY"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727163AbfCKKHT (ORCPT
+        id S1727182AbfCKKH5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 11 Mar 2019 06:07:19 -0400
-Received: from usa-sjc-mx-foss1.foss.arm.com ([217.140.101.70]:51984 "EHLO
-        foss.arm.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726623AbfCKKHS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 11 Mar 2019 06:07:18 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.72.51.249])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 0F121374;
-        Mon, 11 Mar 2019 03:07:18 -0700 (PDT)
-Received: from [10.1.196.92] (usa-sjc-imap-foss1.foss.arm.com [10.72.51.249])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 631263F59C;
-        Mon, 11 Mar 2019 03:07:16 -0700 (PDT)
-Subject: Re: [PATCH v3 2/9] irqdomain: add bus token DOMAIN_BUS_WAKEUP
-To:     Lina Iyer <ilina@codeaurora.org>, swboyd@chromium.org,
-        evgreen@chromium.org
-Cc:     linux-kernel@vger.kernel.org, rplsssn@codeaurora.org,
-        linux-arm-msm@vger.kernel.org, thierry.reding@gmail.com,
-        bjorn.andersson@linaro.org, dianders@chromium.org,
-        linus.walleij@linaro.org
-References: <20190222221850.26939-1-ilina@codeaurora.org>
- <20190222221850.26939-3-ilina@codeaurora.org>
-From:   Marc Zyngier <marc.zyngier@arm.com>
-Openpgp: preference=signencrypt
-Autocrypt: addr=marc.zyngier@arm.com; prefer-encrypt=mutual; keydata=
- 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
-Organization: ARM Ltd
-Message-ID: <0c4ae5f1-9589-2262-325a-34cba324fbfa@arm.com>
-Date:   Mon, 11 Mar 2019 10:07:14 +0000
-User-Agent: Mozilla/5.0 (X11; Linux aarch64; rv:60.0) Gecko/20100101
- Thunderbird/60.5.1
+        Mon, 11 Mar 2019 06:07:57 -0400
+Received: from smtp.codeaurora.org ([198.145.29.96]:51074 "EHLO
+        smtp.codeaurora.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726074AbfCKKH5 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 11 Mar 2019 06:07:57 -0400
+Received: by smtp.codeaurora.org (Postfix, from userid 1000)
+        id 801FB61A8B; Mon, 11 Mar 2019 10:07:55 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
+        s=default; t=1552298875;
+        bh=ZXuDXx5vm5dKU06DRLzLdanZL3vAsQ2wV2uqPqiv4ow=;
+        h=From:To:Cc:Subject:Date:From;
+        b=gDWb1CiPJjZ3MbY2kaK4KLWM8Gdl9k+agkbh4yqbpAw3geb8mpEw5MwDnFDAe+BGo
+         kQV8FMUTkAz8rsswk2SIXuGSAIEaz8PNA/3uARl6Ea3/gUc/40kDv1SexoIzhVyqWq
+         mHdhisZpiELNnarVR8EN160P8Q0IpKIpA+yFcz8k=
+Received: from blr-ubuntu-87.qualcomm.com (blr-bdr-fw-01_globalnat_allzones-outside.qualcomm.com [103.229.18.19])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-SHA256 (128/128 bits))
+        (No client certificate requested)
+        (Authenticated sender: sibis@smtp.codeaurora.org)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id DDE5C61A8B;
+        Mon, 11 Mar 2019 10:07:50 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
+        s=default; t=1552298874;
+        bh=ZXuDXx5vm5dKU06DRLzLdanZL3vAsQ2wV2uqPqiv4ow=;
+        h=From:To:Cc:Subject:Date:From;
+        b=das9v3vYsfFz57R7HAFAE+S/RNT8TufPphjVliBMfpkZcCzjXstskkMm7L9wllu1c
+         zKZjDPd+mj3+slUkoqL0goLmXIvgq0lzpmYBdN9A+z8GafptakKLyAcqhuKW8AyLV4
+         oWmuzHn76pDT4MXSwF1x5bNS8V4pybTJd2G3w1ms=
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org DDE5C61A8B
+Authentication-Results: pdx-caf-mail.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
+Authentication-Results: pdx-caf-mail.web.codeaurora.org; spf=none smtp.mailfrom=sibis@codeaurora.org
+From:   Sibi Sankar <sibis@codeaurora.org>
+To:     myungjoo.ham@samsung.com, kyungmin.park@samsung.com
+Cc:     cw00.choi@samsung.com, linux-pm@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-arm-msm-owner@vger.kernel.org,
+        Saravana Kannan <skannan@codeaurora.org>,
+        Sibi Sankar <sibis@codeaurora.org>
+Subject: [PATCH v5] PM / devfreq: Restart previous governor if new governor fails to start
+Date:   Mon, 11 Mar 2019 15:36:30 +0530
+Message-Id: <20190311100630.12952-1-sibis@codeaurora.org>
+X-Mailer: git-send-email 2.20.1
 MIME-Version: 1.0
-In-Reply-To: <20190222221850.26939-3-ilina@codeaurora.org>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 22/02/2019 22:18, Lina Iyer wrote:
-> Add new bus token to describe domains that are wakeup capable.
+From: Saravana Kannan <skannan@codeaurora.org>
 
-This doesn't quite match what this bus token is trying to describe. How
-about something along the lines of the following:
+If the new governor fails to start, switch back to old governor so that the
+devfreq state is not left in some weird limbo.
 
-A single controller can handle normal interrupts and wake-up interrupts
-independently, with a different numbering space. It is thus crucial to
-allow the driver for such a controller discriminate between the two.
+[Mjungjoo: assume fatal on revert failure and set df->governor to NULL]
+Signed-off-by: Sibi Sankar <sibis@codeaurora.org>
+Signed-off-by: Saravana Kannan <skannan@codeaurora.org>
+Reviewed-by: Chanwoo Choi <cw00.choi@samsung.com>
+---
+V5:
+* assume fatal on revert failure and set df->governor to NULL
 
-A simple way to do so is to tag the wake-up irqdomain with a "bus token"
-that indicates the wake-up domain. This slightly abuses the notion of
-bus, but also radically simplifies the design of such a driver. Between
-two evils, we choose the least damaging.
+V4:
+* Removed prev_governor check.
 
-> 
-> Suggested-by: Stephen Boyd <swboyd@chromium.org>
-> Signed-off-by: Lina Iyer <ilina@codeaurora.org>
-> ---
->  include/linux/irqdomain.h | 1 +
->  1 file changed, 1 insertion(+)
-> 
-> diff --git a/include/linux/irqdomain.h b/include/linux/irqdomain.h
-> index 35965f41d7be..05055bc992ab 100644
-> --- a/include/linux/irqdomain.h
-> +++ b/include/linux/irqdomain.h
-> @@ -82,6 +82,7 @@ enum irq_domain_bus_token {
->  	DOMAIN_BUS_NEXUS,
->  	DOMAIN_BUS_IPI,
->  	DOMAIN_BUS_FSL_MC_MSI,
-> +	DOMAIN_BUS_WAKEUP,
->  };
->  
->  /**
-> 
+V3:
+* Fix NULL deref for real this time.
+* Addressed some style preferences.
 
-Thanks,
+V2:
+* Fixed typo in commit text
+* Fixed potential NULL deref
 
-	M.
+ drivers/devfreq/devfreq.c | 16 ++++++++++++++--
+ 1 file changed, 14 insertions(+), 2 deletions(-)
+
+diff --git a/drivers/devfreq/devfreq.c b/drivers/devfreq/devfreq.c
+index 428a1de81008..37490235ec34 100644
+--- a/drivers/devfreq/devfreq.c
++++ b/drivers/devfreq/devfreq.c
+@@ -1124,7 +1124,7 @@ static ssize_t governor_store(struct device *dev, struct device_attribute *attr,
+ 	struct devfreq *df = to_devfreq(dev);
+ 	int ret;
+ 	char str_governor[DEVFREQ_NAME_LEN + 1];
+-	struct devfreq_governor *governor;
++	const struct devfreq_governor *governor, *prev_governor;
+ 
+ 	ret = sscanf(buf, "%" __stringify(DEVFREQ_NAME_LEN) "s", str_governor);
+ 	if (ret != 1)
+@@ -1153,12 +1153,24 @@ static ssize_t governor_store(struct device *dev, struct device_attribute *attr,
+ 			goto out;
+ 		}
+ 	}
++	prev_governor = df->governor;
+ 	df->governor = governor;
+ 	strncpy(df->governor_name, governor->name, DEVFREQ_NAME_LEN);
+ 	ret = df->governor->event_handler(df, DEVFREQ_GOV_START, NULL);
+-	if (ret)
++	if (ret) {
+ 		dev_warn(dev, "%s: Governor %s not started(%d)\n",
+ 			 __func__, df->governor->name, ret);
++		df->governor = prev_governor;
++		strncpy(df->governor_name, prev_governor->name,
++			DEVFREQ_NAME_LEN);
++		ret = df->governor->event_handler(df, DEVFREQ_GOV_START, NULL);
++		if (ret) {
++			dev_warn(dev,
++				 "%s: reverting to Governor %s failed (%d)\n",
++				 __func__, df->governor_name, ret);
++			df->governor = NULL;
++		}
++	}
+ out:
+ 	mutex_unlock(&devfreq_list_lock);
+ 
 -- 
-Jazz is not dead. It just smells funny...
+The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
+a Linux Foundation Collaborative Project
+
