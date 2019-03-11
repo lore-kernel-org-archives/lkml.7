@@ -2,150 +2,151 @@ Return-Path: <SRS0=FxTY=RO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,USER_AGENT_MUTT autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 19288C10F06
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 Mar 2019 12:55:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D90EDC43381
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 Mar 2019 12:57:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D71C42075C
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 Mar 2019 12:55:04 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Gx0tOjH7"
+	by mail.kernel.org (Postfix) with ESMTP id A5A362075C
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 Mar 2019 12:57:32 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727291AbfCKMzD (ORCPT
+        id S1727334AbfCKM5b (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 11 Mar 2019 08:55:03 -0400
-Received: from mail-ot1-f66.google.com ([209.85.210.66]:44406 "EHLO
-        mail-ot1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726605AbfCKMzD (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 11 Mar 2019 08:55:03 -0400
-Received: by mail-ot1-f66.google.com with SMTP id g1so3783524otj.11;
-        Mon, 11 Mar 2019 05:55:03 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=sender:date:from:to:cc:subject:message-id:reply-to:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=XjRDh4ky7Pn/jY4wlA16VBNGdh5xpSfShrnXXpefjYA=;
-        b=Gx0tOjH7fUxrWVo0gvNz2AU7P+fq0VN0weB8+iR5VUg1AmXv37+dIgAJ4/HIJaWIG1
-         OKb8vTbgCdZvMC2Vb+vxfXnGbJMGXGGelQnJz2VG7DHmT2her5P2C/ORzTQgEaki+F/B
-         it3qDyyYyoJ1eDqaxbCfDCrST0xlTkXX/T2emN+C48NYCRImoklGmROAoeK66gptSAI0
-         NezvuqvWzCORVhydHKmNCljTu0kAQM0RWmr76hfiFlX60fGYs21cvj3c3IjMffcm7qLi
-         ZWOdsXT0Sqit5Z+kxgFrpUdRZPHRwIe1o7sIEw8u6WOpEmiQ+DF/kfDsJ3VjkYpeNnBa
-         wNyw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
-         :reply-to:references:mime-version:content-disposition:in-reply-to
-         :user-agent;
-        bh=XjRDh4ky7Pn/jY4wlA16VBNGdh5xpSfShrnXXpefjYA=;
-        b=d3XdimZJ4PjfiF8y3GMLjOQJR2B+bZogYj4CUHuJFuR0Xu3w5OtxZ1OPURZkx4XJya
-         Ok4G/f70H5RKhalGhX8xb58NNHOukh59e8PGg4prRclkA1kRsdG4TfQMQ6pDIHjID64x
-         Nh4bw4Z+/72MFzOej0PqWXEw+0ldbEYbdPvPSA/RLCGOK6rrkFdQeKPqTuzYRnkdnq4E
-         +RovtYNBDLSX/eavVVoktXX1og8C8Ggwusq1iS472lp0mYemm6S9hCAqXpKFUt19XImT
-         STGE6xopHLs8G4uZLLsDYfSAVDKy13yyFQAiRGMjEUKOTjg0usoEfT6XzOxQUBAIapTV
-         FfMA==
-X-Gm-Message-State: APjAAAUIOSmzRxBAUH1IcmGyAw8bKSOGE87DtzW29fyt8SEVdORdGFl7
-        bhvMD+ZdhCfdZ8+2wIiqmv6OE3A=
-X-Google-Smtp-Source: APXvYqxpsAhaOOFG2v8heO45MrcYkrZma9uQeKG5NjozkFf3rN6IQj7FcjP9Y4jvb+a6fQM02S7PpQ==
-X-Received: by 2002:a9d:66f:: with SMTP id 102mr20644425otn.340.1552308902394;
-        Mon, 11 Mar 2019 05:55:02 -0700 (PDT)
-Received: from serve.minyard.net ([47.184.128.64])
-        by smtp.gmail.com with ESMTPSA id l63sm2277352oia.47.2019.03.11.05.55.01
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Mon, 11 Mar 2019 05:55:01 -0700 (PDT)
-Received: from minyard.net (unknown [IPv6:2001:470:b8f6:1b:dd3c:1d89:d3d4:f9e3])
-        by serve.minyard.net (Postfix) with ESMTPSA id 45FC7180001;
-        Mon, 11 Mar 2019 12:55:01 +0000 (UTC)
-Date:   Mon, 11 Mar 2019 07:54:59 -0500
-From:   Corey Minyard <minyard@acm.org>
-To:     Konstantin Khlebnikov <khlebnikov@yandex-team.ru>
-Cc:     openipmi-developer@lists.sourceforge.net,
-        linux-kernel@vger.kernel.org,
-        Yang Yingliang <yangyingliang@huawei.com>,
-        stable@vger.kernel.org
-Subject: Re: [PATCH] ipmi: fix sleep-in-atomic in free_user at cleanup SRCU
- user->release_barrier
-Message-ID: <20190311125459.GA3498@minyard.net>
-Reply-To: minyard@acm.org
-References: <155229854905.2133.15708039732382992559.stgit@buzz>
+        Mon, 11 Mar 2019 08:57:31 -0400
+Received: from usa-sjc-mx-foss1.foss.arm.com ([217.140.101.70]:53848 "EHLO
+        foss.arm.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726605AbfCKM5a (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 11 Mar 2019 08:57:30 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.72.51.249])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id F178FA78;
+        Mon, 11 Mar 2019 05:57:29 -0700 (PDT)
+Received: from [10.163.1.86] (unknown [10.163.1.86])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 058B03F703;
+        Mon, 11 Mar 2019 05:57:22 -0700 (PDT)
+Subject: Re: [PATCH v3 3/3] arm64: mm: enable per pmd page table lock
+To:     Mark Rutland <mark.rutland@arm.com>, Yu Zhao <yuzhao@google.com>
+Cc:     Catalin Marinas <catalin.marinas@arm.com>,
+        Will Deacon <will.deacon@arm.com>,
+        "Aneesh Kumar K . V" <aneesh.kumar@linux.vnet.ibm.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Nick Piggin <npiggin@gmail.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Joel Fernandes <joel@joelfernandes.org>,
+        "Kirill A . Shutemov" <kirill@shutemov.name>,
+        Ard Biesheuvel <ard.biesheuvel@linaro.org>,
+        Chintan Pandya <cpandya@codeaurora.org>,
+        Jun Yao <yaojun8558363@gmail.com>,
+        Laura Abbott <labbott@redhat.com>,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        linux-arch@vger.kernel.org, linux-mm@kvack.org
+References: <20190218231319.178224-1-yuzhao@google.com>
+ <20190310011906.254635-1-yuzhao@google.com>
+ <20190310011906.254635-3-yuzhao@google.com>
+ <20190311121147.GA23361@lakrids.cambridge.arm.com>
+From:   Anshuman Khandual <anshuman.khandual@arm.com>
+Message-ID: <c567eb7f-40ca-ae20-94c3-5f48c9780f96@arm.com>
+Date:   Mon, 11 Mar 2019 18:27:19 +0530
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:52.0) Gecko/20100101
+ Thunderbird/52.9.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <155229854905.2133.15708039732382992559.stgit@buzz>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+In-Reply-To: <20190311121147.GA23361@lakrids.cambridge.arm.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Mar 11, 2019 at 01:02:29PM +0300, Konstantin Khlebnikov wrote:
-> free_user() could be called in atomic context.
+On 03/11/2019 05:42 PM, Mark Rutland wrote:
+> Hi,
 > 
-> This patch uses non-sleeping cleanup_srcu_struct_quiesced(). At this stage
-> atomic refcount is zero, thus all read-sections should have been ended.
+> On Sat, Mar 09, 2019 at 06:19:06PM -0700, Yu Zhao wrote:
+>> Switch from per mm_struct to per pmd page table lock by enabling
+>> ARCH_ENABLE_SPLIT_PMD_PTLOCK. This provides better granularity for
+>> large system.
+>>
+>> I'm not sure if there is contention on mm->page_table_lock. Given
+>> the option comes at no cost (apart from initializing more spin
+>> locks), why not enable it now.
+>>
+>> We only do so when pmd is not folded, so we don't mistakenly call
+>> pgtable_pmd_page_ctor() on pud or p4d in pgd_pgtable_alloc(). (We
+>> check shift against PMD_SHIFT, which is same as PUD_SHIFT when pmd
+>> is folded).
+> 
+> Just to check, I take it pgtable_pmd_page_ctor() is now a NOP when the
+> PMD is folded, and this last paragraph is stale?
+> 
+>> Signed-off-by: Yu Zhao <yuzhao@google.com>
+>> ---
+>>  arch/arm64/Kconfig               |  3 +++
+>>  arch/arm64/include/asm/pgalloc.h | 12 +++++++++++-
+>>  arch/arm64/include/asm/tlb.h     |  5 ++++-
+>>  3 files changed, 18 insertions(+), 2 deletions(-)
+>>
+>> diff --git a/arch/arm64/Kconfig b/arch/arm64/Kconfig
+>> index cfbf307d6dc4..a3b1b789f766 100644
+>> --- a/arch/arm64/Kconfig
+>> +++ b/arch/arm64/Kconfig
+>> @@ -872,6 +872,9 @@ config ARCH_WANT_HUGE_PMD_SHARE
+>>  config ARCH_HAS_CACHE_LINE_SIZE
+>>  	def_bool y
+>>  
+>> +config ARCH_ENABLE_SPLIT_PMD_PTLOCK
+>> +	def_bool y if PGTABLE_LEVELS > 2
+>> +
+>>  config SECCOMP
+>>  	bool "Enable seccomp to safely compute untrusted bytecode"
+>>  	---help---
+>> diff --git a/arch/arm64/include/asm/pgalloc.h b/arch/arm64/include/asm/pgalloc.h
+>> index 52fa47c73bf0..dabba4b2c61f 100644
+>> --- a/arch/arm64/include/asm/pgalloc.h
+>> +++ b/arch/arm64/include/asm/pgalloc.h
+>> @@ -33,12 +33,22 @@
+>>  
+>>  static inline pmd_t *pmd_alloc_one(struct mm_struct *mm, unsigned long addr)
+>>  {
+>> -	return (pmd_t *)__get_free_page(PGALLOC_GFP);
+>> +	struct page *page;
+>> +
+>> +	page = alloc_page(PGALLOC_GFP);
+>> +	if (!page)
+>> +		return NULL;
+>> +	if (!pgtable_pmd_page_ctor(page)) {
+>> +		__free_page(page);
+>> +		return NULL;
+>> +	}
+>> +	return page_address(page);
+>>  }
+>>  
+>>  static inline void pmd_free(struct mm_struct *mm, pmd_t *pmdp)
+>>  {
+>>  	BUG_ON((unsigned long)pmdp & (PAGE_SIZE-1));
+>> +	pgtable_pmd_page_dtor(virt_to_page(pmdp));
+>>  	free_page((unsigned long)pmdp);
+>>  }
+> 
+> It looks like arm64's existing stage-2 code is inconsistent across
+> alloc/free, and IIUC this change might turn that into a real problem.
+> Currently we allocate all levels of stage-2 table with
+> __get_free_page(), but free them with p?d_free(). We always miss the
+> ctor and always use the dtor.
+> 
+> Other than that, this patch looks fine to me, but I'd feel more
+> comfortable if we could first fix the stage-2 code to free those stage-2
+> tables without invoking the dtor.
 
-Thanks, I have this in my tree.
+Thats right. I have already highlighted this problem.
+ 
+> 
+> Anshuman, IIRC you had a patch to fix the stage-2 code to not invoke the
+> dtors. If so, could you please post that so that we could take it as a
+> preparatory patch for this series?
 
--corey
+Sure I can after fixing PTE level pte_free_kernel/__free_page which I had
+missed in V2.
 
-> 
-> Example:
-> 
->  BUG: sleeping function called from invalid context at kernel/workqueue.c:2856
->  in_atomic(): 1, irqs_disabled(): 0, pid: 177, name: ksoftirqd/27
->  CPU: 27 PID: 177 Comm: ksoftirqd/27 Not tainted 4.19.25-3 #1
->  Hardware name: AIC 1S-HV26-08/MB-DPSB04-06, BIOS IVYBV060 10/21/2015
->  Call Trace:
->   dump_stack+0x5c/0x7b
->   ___might_sleep+0xec/0x110
->   __flush_work+0x48/0x1f0
->   ? try_to_del_timer_sync+0x4d/0x80
->   _cleanup_srcu_struct+0x104/0x140
->   free_user+0x18/0x30 [ipmi_msghandler]
->   ipmi_free_recv_msg+0x3a/0x50 [ipmi_msghandler]
->   deliver_response+0xbd/0xd0 [ipmi_msghandler]
->   deliver_local_response+0xe/0x30 [ipmi_msghandler]
->   handle_one_recv_msg+0x163/0xc80 [ipmi_msghandler]
->   ? dequeue_entity+0xa0/0x960
->   handle_new_recv_msgs+0x15c/0x1f0 [ipmi_msghandler]
->   tasklet_action_common.isra.22+0x103/0x120
->   __do_softirq+0xf8/0x2d7
->   run_ksoftirqd+0x26/0x50
->   smpboot_thread_fn+0x11d/0x1e0
->   kthread+0x103/0x140
->   ? sort_range+0x20/0x20
->   ? kthread_destroy_worker+0x40/0x40
->   ret_from_fork+0x1f/0x40
-> 
-> Fixes: 77f8269606bf ("ipmi: fix use-after-free of user->release_barrier.rda")
-> Signed-off-by: Konstantin Khlebnikov <khlebnikov@yandex-team.ru>
-> Cc: stable@vger.kernel.org # 4.18
-> Cc: Yang Yingliang <yangyingliang@huawei.com>
-> Cc: Corey Minyard <cminyard@mvista.com>
-> ---
->  drivers/char/ipmi/ipmi_msghandler.c |    7 ++++++-
->  1 file changed, 6 insertions(+), 1 deletion(-)
-> 
-> diff --git a/drivers/char/ipmi/ipmi_msghandler.c b/drivers/char/ipmi/ipmi_msghandler.c
-> index e8ba67834746..c35f2bcbaa23 100644
-> --- a/drivers/char/ipmi/ipmi_msghandler.c
-> +++ b/drivers/char/ipmi/ipmi_msghandler.c
-> @@ -1260,7 +1260,12 @@ EXPORT_SYMBOL(ipmi_get_smi_info);
->  static void free_user(struct kref *ref)
->  {
->  	struct ipmi_user *user = container_of(ref, struct ipmi_user, refcount);
-> -	cleanup_srcu_struct(&user->release_barrier);
-> +
-> +	/*
-> +	 * Cleanup without waiting. This could be called in atomic context.
-> +	 * Refcount is zero: all read-sections should have been ended.
-> +	 */
-> +	cleanup_srcu_struct_quiesced(&user->release_barrier);
->  	kfree(user);
->  }
->  
-> 
+https://www.spinics.net/lists/arm-kernel/msg710118.html
