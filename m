@@ -2,113 +2,176 @@ Return-Path: <SRS0=FxTY=RO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AB12DC43381
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 Mar 2019 06:53:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4F3F8C43381
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 Mar 2019 06:53:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6F0E520657
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 Mar 2019 06:53:27 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=umn.edu header.i=@umn.edu header.b="Q3+WaJIz"
+	by mail.kernel.org (Postfix) with ESMTP id 1B4BE20657
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 Mar 2019 06:53:33 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726734AbfCKGx0 (ORCPT
+        id S1726812AbfCKGxb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 11 Mar 2019 02:53:26 -0400
-Received: from mta-p6.oit.umn.edu ([134.84.196.206]:54636 "EHLO
-        mta-p6.oit.umn.edu" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725869AbfCKGxX (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 11 Mar 2019 02:53:23 -0400
-Received: from localhost (unknown [127.0.0.1])
-        by mta-p6.oit.umn.edu (Postfix) with ESMTP id E566EA93
-        for <linux-kernel@vger.kernel.org>; Mon, 11 Mar 2019 06:53:21 +0000 (UTC)
-X-Virus-Scanned: amavisd-new at umn.edu
-Received: from mta-p6.oit.umn.edu ([127.0.0.1])
-        by localhost (mta-p6.oit.umn.edu [127.0.0.1]) (amavisd-new, port 10024)
-        with ESMTP id nHUFfuHgEJjl for <linux-kernel@vger.kernel.org>;
-        Mon, 11 Mar 2019 01:53:21 -0500 (CDT)
-Received: from mail-io1-f69.google.com (mail-io1-f69.google.com [209.85.166.69])
-        (using TLSv1.2 with cipher AES128-GCM-SHA256 (128/128 bits))
+        Mon, 11 Mar 2019 02:53:31 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:52584 "EHLO mx1.redhat.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725869AbfCKGxb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 11 Mar 2019 02:53:31 -0400
+Received: from smtp.corp.redhat.com (int-mx01.intmail.prod.int.phx2.redhat.com [10.5.11.11])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        by mta-p6.oit.umn.edu (Postfix) with ESMTPS id BAD88B5B
-        for <linux-kernel@vger.kernel.org>; Mon, 11 Mar 2019 01:53:21 -0500 (CDT)
-Received: by mail-io1-f69.google.com with SMTP id n15so3507375ioc.0
-        for <linux-kernel@vger.kernel.org>; Sun, 10 Mar 2019 23:53:21 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=umn.edu; s=google;
-        h=from:to:cc:subject:date:message-id;
-        bh=BwclKcHlyNokEmZBkCixxXn65ldk71jtuuiFi/oNrYc=;
-        b=Q3+WaJIzerhOigmCWcgB/aTx364zg2qKFDEjtT/cE3LR1owhn96WRUCc4HDZ3hi4W3
-         N78Kt7QGA/iHfKsEu0/CumO0EPGhEzRSV3PGy/6lx9lWAOq3Cwi0UuIMgoAlBgh7cu4j
-         5iFxyr98g1nNuyy/WPrmjE98Mlaaw+kByQ5F8T9E8GxWf1JSRiqmeU9J9CN34ZrlihTS
-         fhew+u3/or2glIvU6PuMz+5yrEYsxdGqclJAGg+NXGdTl79pvOgr0URXIwkXu/rLyQlM
-         I5CnIiyKeA+YU3BsfAG9se8A/PsuXDDNGZc3/ZahfxqtYssUUbMAYU4DG64dn8a2pzGf
-         W86Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id;
-        bh=BwclKcHlyNokEmZBkCixxXn65ldk71jtuuiFi/oNrYc=;
-        b=k7hSEgtLqwP9iq1qXzgCGQNaHtw2U1IxiXBFUSuzJxGBD5uEfXBa0qCXBbJd/DgXBy
-         HX5raeBn6X4t/662spJokUhwBCHZFLApvW+I85ck2gCnsaiFhXsoHHBHiVAsvmNnSaPn
-         wgCh/9X7f+JvWyK/uLkVHN7caroWUm+oVutOohIVQpm8amMjqATYM++rA7Gbbs0KJTKN
-         pHJof22Z6J0144MSmH0RGZXNgVQIFlJo0u+i9RP2tEbiAMTw1U114mrrngFQUgVWbsI4
-         N5dO08m38Wtdgev/937QrihubVXsaQhwUvauF1fWaXAX1uT9dGw+zP7UvugFTeC+yjiH
-         /t6w==
-X-Gm-Message-State: APjAAAWaouFbw2TOjqTrotDlD5x61wt+rBCo3LbNE1RxXld6oZZp+a/9
-        r1cp+FIyG+9s7WGbPfrUMVlfvN1MKr93XvvkPabCpGIWPUCnBaMRnK/Ggof+Wr48T/HTovl0ViR
-        YXNr3sQbhx47lWE/5K5LOXUJERVlo
-X-Received: by 2002:a24:ac58:: with SMTP id m24mr14148951iti.129.1552287201367;
-        Sun, 10 Mar 2019 23:53:21 -0700 (PDT)
-X-Google-Smtp-Source: APXvYqySMLxmimw8rqqTlemL7xujLWZeSRaLcbQoudPjUhxGq30LpTpDiI7B7+YWUsISdmEXIxlnuA==
-X-Received: by 2002:a24:ac58:: with SMTP id m24mr14148941iti.129.1552287201166;
-        Sun, 10 Mar 2019 23:53:21 -0700 (PDT)
-Received: from bee.dtc.umn.edu (cs-bee-u.cs.umn.edu. [128.101.106.63])
-        by smtp.gmail.com with ESMTPSA id p18sm7713571itp.10.2019.03.10.23.53.20
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Sun, 10 Mar 2019 23:53:20 -0700 (PDT)
-From:   Kangjie Lu <kjlu@umn.edu>
-To:     kjlu@umn.edu
-Cc:     pakki001@umn.edu, Manish Chopra <manishc@marvell.com>,
-        GR-Linux-NIC-Dev@marvell.com,
-        "David S. Miller" <davem@davemloft.net>, netdev@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH] net: qlge: fix a potential NULL pointer dereference
-Date:   Mon, 11 Mar 2019 01:53:15 -0500
-Message-Id: <20190311065315.23070-1-kjlu@umn.edu>
-X-Mailer: git-send-email 2.17.1
+        by mx1.redhat.com (Postfix) with ESMTPS id 7BE0488306;
+        Mon, 11 Mar 2019 06:53:30 +0000 (UTC)
+Received: from colo-mx.corp.redhat.com (colo-mx01.intmail.prod.int.phx2.redhat.com [10.5.11.20])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id 685FA600CD;
+        Mon, 11 Mar 2019 06:53:30 +0000 (UTC)
+Received: from zmail21.collab.prod.int.phx2.redhat.com (zmail21.collab.prod.int.phx2.redhat.com [10.5.83.24])
+        by colo-mx.corp.redhat.com (Postfix) with ESMTP id 2610F181A006;
+        Mon, 11 Mar 2019 06:53:30 +0000 (UTC)
+Date:   Mon, 11 Mar 2019 02:53:29 -0400 (EDT)
+From:   Pankaj Gupta <pagupta@redhat.com>
+To:     "Michael S. Tsirkin" <mst@redhat.com>
+Cc:     linux-kernel@vger.kernel.org,
+        virtualization@lists.linux-foundation.org, amit@kernel.org,
+        arnd@arndb.de, gregkh@linuxfoundation.org, xiaohli@redhat.com,
+        Gal Hammer <ghammer@redhat.com>
+Message-ID: <901790411.11174738.1552287209805.JavaMail.zimbra@redhat.com>
+In-Reply-To: <20190311023154-mutt-send-email-mst@kernel.org>
+References: <20190304130511.14450-1-pagupta@redhat.com> <20190304142506-mutt-send-email-mst@kernel.org> <444210313.9669582.1551769746169.JavaMail.zimbra@redhat.com> <20190311023154-mutt-send-email-mst@kernel.org>
+Subject: Re: [PATCH] virtio_console: free unused buffers with virtio port
+MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [10.65.161.16, 10.4.195.25]
+Thread-Topic: virtio_console: free unused buffers with virtio port
+Thread-Index: a1i/S6Lxw0xsmqXn4JX71Oh13B8niQ==
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.11
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.28]); Mon, 11 Mar 2019 06:53:30 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-In case alloc_ordered_workqueue fails, the fix returns
--ENOMEM to avoid NULL pointer dereference.
 
-Signed-off-by: Kangjie Lu <kjlu@umn.edu>
----
- drivers/net/ethernet/qlogic/qlge/qlge_main.c | 5 +++++
- 1 file changed, 5 insertions(+)
+> > 
+> > Hello Michael,
+> > 
+> > Thanks for your reply.
+> > 
+> > > 
+> > > On Mon, Mar 04, 2019 at 06:35:11PM +0530, Pankaj Gupta wrote:
+> > > >   The commit a7a69ec0d8e4 ("virtio_console: free buffers after reset")
+> > > >   deffered detaching of unused buffer to virtio device unplug time.
+> > > > 
+> > > >   This causes unplug/replug of single port in virtio device with an
+> > > >   error "Error allocating inbufs\n". As we don't free the unused
+> > > >   buffers
+> > > >   attached with the port. Re-plug the same port tries to allocate new
+> > > >   buffers in virtqueue and results in this error if queue is full.
+> 
+> That's the basic issue, isn't it? Why aren't we
+> reusing buffers that are already there?
 
-diff --git a/drivers/net/ethernet/qlogic/qlge/qlge_main.c b/drivers/net/ethernet/qlogic/qlge/qlge_main.c
-index 096515c27263..07e1c623048e 100644
---- a/drivers/net/ethernet/qlogic/qlge/qlge_main.c
-+++ b/drivers/net/ethernet/qlogic/qlge/qlge_main.c
-@@ -4681,6 +4681,11 @@ static int ql_init_device(struct pci_dev *pdev, struct net_device *ndev,
- 	 */
- 	qdev->workqueue = alloc_ordered_workqueue("%s", WQ_MEM_RECLAIM,
- 						  ndev->name);
-+	if (!qdev->workqueue) {
-+		err = -ENOMEM;
-+		goto err_out2;
-+	}
-+
- 	INIT_DELAYED_WORK(&qdev->asic_reset_work, ql_asic_reset_work);
- 	INIT_DELAYED_WORK(&qdev->mpi_reset_work, ql_mpi_reset_work);
- 	INIT_DELAYED_WORK(&qdev->mpi_work, ql_mpi_work);
--- 
-2.17.1
+I think that that's how initial design has been. Will see if I can fix this.
 
+> 
+> 
+> > > > 
+> > > >   This patch removes the unused buffers in vq's when we unplug the
+> > > >   port.
+> > > >   This is the best we can do as we cannot call device_reset because
+> > > >   virtio
+> > > >   device is still active. This was the working behaviour before the
+> > > >   change
+> > > >   introduced in commit b3258ff1d6.
+> > > > 
+> > > >   Reported-by: Xiaohui Li <xiaohli@redhat.com>
+> > > >   Fixes: b3258ff1d6 ("virtio_console: free buffers after reset")
+> > > >   Signed-off-by: Pankaj Gupta <pagupta@redhat.com>
+> > > 
+> > > I think if you do this you need to add support
+> > > in the packed ring.
+> > 
+> > o.k. I will look at the implementation details for "support
+> > of packed ring" for virtio_console. This will take some time.
+> > 
+> > Meanwhile "virtio_console" port hotplug/unplug is broken in upstream.
+> > Can we accept this patch as it fixes the upstream and together
+> > with parent patch(b3258ff1d6) does nice cleanups as well.
+> > 
+> > Thanks,
+> > Pankaj
+> 
+> Sorry, no - I don't think we should fix one configuration by breaking the
+> other.
+> If you want to go back, then that's a spec violation, but I guess we can
+> fix the spec to match.  OK, but code-wise if you call
+> virtqueue_detach_unused_buf without device reset then you need to teach
+> packed ring code to support that.
+
+o.k. Will look at this.
+
+Thanks for the pointers.
+
+Thanks,
+Pankaj
+
+> 
+> 
+> 
+> > > 
+> > > > ---
+> > > >  drivers/char/virtio_console.c | 14 +++++++++++---
+> > > >  1 file changed, 11 insertions(+), 3 deletions(-)
+> > > > 
+> > > > diff --git a/drivers/char/virtio_console.c
+> > > > b/drivers/char/virtio_console.c
+> > > > index fbeb71953526..5fbf2ac73111 100644
+> > > > --- a/drivers/char/virtio_console.c
+> > > > +++ b/drivers/char/virtio_console.c
+> > > > @@ -1506,15 +1506,25 @@ static void remove_port(struct kref *kref)
+> > > >          kfree(port);
+> > > >  }
+> > > >  
+> > > > +static void remove_unused_bufs(struct virtqueue *vq)
+> > > > +{
+> > > > +        struct port_buffer *buf;
+> > > > +
+> > > > +        while ((buf = virtqueue_detach_unused_buf(vq)))
+> > > > +                free_buf(buf, true);
+> > > > +}
+> > > > +
+> > > >  static void remove_port_data(struct port *port)
+> > > >  {
+> > > >          spin_lock_irq(&port->inbuf_lock);
+> > > >          /* Remove unused data this port might have received. */
+> > > >          discard_port_data(port);
+> > > > +        remove_unused_bufs(port->in_vq);
+> > > >          spin_unlock_irq(&port->inbuf_lock);
+> > > >  
+> > > >          spin_lock_irq(&port->outvq_lock);
+> > > >          reclaim_consumed_buffers(port);
+> > > > +        remove_unused_bufs(port->out_vq);
+> > > >          spin_unlock_irq(&port->outvq_lock);
+> > > >  }
+> > > >  
+> > > > @@ -1950,11 +1960,9 @@ static void remove_vqs(struct ports_device
+> > > > *portdev)
+> > > >          struct virtqueue *vq;
+> > > >  
+> > > >          virtio_device_for_each_vq(portdev->vdev, vq) {
+> > > > -                struct port_buffer *buf;
+> > > >  
+> > > >                  flush_bufs(vq, true);
+> > > > -                while ((buf = virtqueue_detach_unused_buf(vq)))
+> > > > -                        free_buf(buf, true);
+> > > > +                remove_unused_bufs(vq);
+> > > >          }
+> > > >          portdev->vdev->config->del_vqs(portdev->vdev);
+> > > >          kfree(portdev->in_vqs);
+> > > > --
+> > > > 2.20.1
+> > > 
+> 
