@@ -2,118 +2,260 @@ Return-Path: <SRS0=FxTY=RO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.0 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 457F3C43381
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 Mar 2019 14:18:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 76541C43381
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 Mar 2019 14:20:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0FA512075C
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 Mar 2019 14:18:38 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=cogentembedded-com.20150623.gappssmtp.com header.i=@cogentembedded-com.20150623.gappssmtp.com header.b="zLnaVKr1"
+	by mail.kernel.org (Postfix) with ESMTP id 432C820857
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 Mar 2019 14:20:16 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727790AbfCKOSg (ORCPT
+        id S1727593AbfCKOUP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 11 Mar 2019 10:18:36 -0400
-Received: from mail-lj1-f195.google.com ([209.85.208.195]:39780 "EHLO
-        mail-lj1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727762AbfCKOSe (ORCPT
+        Mon, 11 Mar 2019 10:20:15 -0400
+Received: from bhuna.collabora.co.uk ([46.235.227.227]:54624 "EHLO
+        bhuna.collabora.co.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727219AbfCKOUO (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 11 Mar 2019 10:18:34 -0400
-Received: by mail-lj1-f195.google.com with SMTP id g80so4213435ljg.6
-        for <linux-kernel@vger.kernel.org>; Mon, 11 Mar 2019 07:18:33 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=cogentembedded-com.20150623.gappssmtp.com; s=20150623;
-        h=subject:to:cc:references:from:organization:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=weLVDWMXOiIBSGNex18C86cJB6n0z/TV7g9lXzrJcfs=;
-        b=zLnaVKr1CmbhbaV8RBh+83dqUrMNhdBKVv1P+dH0d+8prIdV+veyBLToYFdFgqpbrB
-         YOC0rm71kxJl18ihAOLQ5k3ippovefF9wV5G8oJ+qPoUX6Dtwaw3TkYu53LH8dNSJvlu
-         in+MI+cZ+Wxh8R739Ic8YB852DjlUHPE1IVH9F3JcaM7BaLF5XUWRhxfCtMT2MX4toFQ
-         XBe55M7zyk81sEZKjthCjEiPRRNhU0ekATNgSJgbrXtgEkmNUHA9ynIGyjtlryZpvYkN
-         jUNbiVjJxb4Pj2gRy9acZGQQMq2ZWgrFcTlWdh2d8lFATgQWgd70RuLi3JSOw+x/hnty
-         ympg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:organization
-         :message-id:date:user-agent:mime-version:in-reply-to
-         :content-language:content-transfer-encoding;
-        bh=weLVDWMXOiIBSGNex18C86cJB6n0z/TV7g9lXzrJcfs=;
-        b=cEOZw34k234pr6GZGuJVH8V52036zG9JdNMuIdUapeE/djOVBG7ENbEvIMih881NRG
-         Cj1TKY473NY484iLc0j7U5/V2E+H4a8ixeYMxgTio5wmi/nNeKhnGCJ4H9wYC6cv+WRd
-         KabHttM1F+PcoULbjYzguXyX5HtmDsLjUPo9wdd3U8Z3NWTro32UIudY4hmMlm9yGntY
-         cXkBcHrGrpuFucn3OwNKB5/bmFDEloEuoKbmyjtR+CygmQhPTNluLagS4obHQBjqBQ8s
-         ykbHAtqLp1TwnCfvHf0uUCyZzX4f8mFQ/3rGSi97YvYhHk0i5d1EBdlzAYlTkMoPeYjD
-         Ld+Q==
-X-Gm-Message-State: APjAAAV+YraL7r878u2OZvpNruYKTYEiGJMpLwYND987piJkfkdaVN9L
-        vvboJ/YhGmFyzBIeEIM7K4d67ndGDHo=
-X-Google-Smtp-Source: APXvYqzYShqHW8zGFuMsZzaeV76v8hZczrJUfe1RFNLFATmH8v3cFo3CbnNJ0SRdsfVupI031MRdxA==
-X-Received: by 2002:a2e:5d88:: with SMTP id v8mr16627997lje.150.1552313912187;
-        Mon, 11 Mar 2019 07:18:32 -0700 (PDT)
-Received: from wasted.cogentembedded.com ([31.173.87.168])
-        by smtp.gmail.com with ESMTPSA id n13sm1112049lfb.89.2019.03.11.07.18.30
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Mon, 11 Mar 2019 07:18:31 -0700 (PDT)
-Subject: Re: [PATCH v2] net: renesas: fix a missing check of of_get_phy_mode
-To:     Geert Uytterhoeven <geert@linux-m68k.org>,
-        Kangjie Lu <kjlu@umn.edu>
-Cc:     pakki001@umn.edu, "David S. Miller" <davem@davemloft.net>,
-        Vladimir Zapolskiy <vladimir_zapolskiy@mentor.com>,
-        Geert Uytterhoeven <geert+renesas@glider.be>,
-        Simon Horman <horms+renesas@verge.net.au>,
-        Chris Brandt <chris.brandt@renesas.com>,
-        netdev <netdev@vger.kernel.org>,
-        Linux-Renesas <linux-renesas-soc@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-References: <20190311074939.517-1-kjlu@umn.edu>
- <CAMuHMdVfhq-d0CExnH+Y37k6pUz6OvOtScf6RbgFQ-Mx4dy4DA@mail.gmail.com>
-From:   Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
-Organization: Cogent Embedded
-Message-ID: <20b2afad-4983-3d97-2440-9745352342da@cogentembedded.com>
-Date:   Mon, 11 Mar 2019 17:18:29 +0300
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:52.0) Gecko/20100101
- Thunderbird/52.2.1
+        Mon, 11 Mar 2019 10:20:14 -0400
+Received: from localhost (unknown [IPv6:2a01:e0a:2c:6930:5cf4:84a1:2763:fe0d])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        (Authenticated sender: bbrezillon)
+        by bhuna.collabora.co.uk (Postfix) with ESMTPSA id 3EFC427D615;
+        Mon, 11 Mar 2019 14:20:12 +0000 (GMT)
+Date:   Mon, 11 Mar 2019 15:20:09 +0100
+From:   Boris Brezillon <boris.brezillon@collabora.com>
+To:     "Kazlauskas, Nicholas" <Nicholas.Kazlauskas@amd.com>
+Cc:     Helen Koike <helen.koike@collabora.com>,
+        "dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>,
+        "Grodzovsky, Andrey" <Andrey.Grodzovsky@amd.com>,
+        "daniel.vetter@ffwll.ch" <daniel.vetter@ffwll.ch>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Tomasz Figa <tfiga@chromium.org>,
+        David Airlie <airlied@linux.ie>,
+        Sean Paul <seanpaul@google.com>,
+        "kernel@collabora.com" <kernel@collabora.com>,
+        "Wentland, Harry" <Harry.Wentland@amd.com>,
+        =?UTF-8?B?U3TDqXBoYW5l?= Marchesin <marcheu@google.com>,
+        Eric Anholt <eric@anholt.net>
+Subject: Re: [PATCH 1/5] drm: don't block fb changes for async plane updates
+Message-ID: <20190311152009.7c55b797@collabora.com>
+In-Reply-To: <01f2b3ba-434a-f61f-e8e8-85f3c9107a5c@amd.com>
+References: <20190304144909.6267-1-helen.koike@collabora.com>
+        <20190304144909.6267-2-helen.koike@collabora.com>
+        <e2eb91f5-25e3-d030-74d8-de2348de5600@amd.com>
+        <20190311110616.6b474865@collabora.com>
+        <01f2b3ba-434a-f61f-e8e8-85f3c9107a5c@amd.com>
+Organization: Collabora
+X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; x86_64-redhat-linux-gnu)
 MIME-Version: 1.0
-In-Reply-To: <CAMuHMdVfhq-d0CExnH+Y37k6pUz6OvOtScf6RbgFQ-Mx4dy4DA@mail.gmail.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-MW
+Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 03/11/2019 01:59 PM, Geert Uytterhoeven wrote:
+On Mon, 11 Mar 2019 13:15:23 +0000
+"Kazlauskas, Nicholas" <Nicholas.Kazlauskas@amd.com> wrote:
 
->> of_get_phy_mode may fail and return a negative error code;
->> the fix checks the return value of of_get_phy_mode and
->> returns NULL of it fails.
->>
->> Signed-off-by: Kangjie Lu <kjlu@umn.edu>
+> On 3/11/19 6:06 AM, Boris Brezillon wrote:
+> > Hello Nicholas,
+> > 
+> > On Mon, 4 Mar 2019 15:46:49 +0000
+> > "Kazlauskas, Nicholas" <Nicholas.Kazlauskas@amd.com> wrote:
+> >   
+> >> On 3/4/19 9:49 AM, Helen Koike wrote:  
+> >>> In the case of a normal sync update, the preparation of framebuffers (be
+> >>> it calling drm_atomic_helper_prepare_planes() or doing setups with
+> >>> drm_framebuffer_get()) are performed in the new_state and the respective
+> >>> cleanups are performed in the old_state.
+> >>>
+> >>> In the case of async updates, the preparation is also done in the
+> >>> new_state but the cleanups are done in the new_state (because updates
+> >>> are performed in place, i.e. in the current state).
+> >>>
+> >>> The current code blocks async udpates when the fb is changed, turning
+> >>> async updates into sync updates, slowing down cursor updates and
+> >>> introducing regressions in igt tests with errors of type:
+> >>>
+> >>> "CRITICAL: completed 97 cursor updated in a period of 30 flips, we
+> >>> expect to complete approximately 15360 updates, with the threshold set
+> >>> at 7680"
+> >>>
+> >>> Fb changes in async updates were prevented to avoid the following scenario:
+> >>>
+> >>> - Async update, oldfb = NULL, newfb = fb1, prepare fb1, cleanup fb1
+> >>> - Async update, oldfb = fb1, newfb = fb2, prepare fb2, cleanup fb2
+> >>> - Non-async commit, oldfb = fb2, newfb = fb1, prepare fb1, cleanup fb2 (wrong)
+> >>> Where we have a single call to prepare fb2 but double cleanup call to fb2.
+> >>>
+> >>> To solve the above problems, instead of blocking async fb changes, we
+> >>> place the old framebuffer in the new_state object, so when the code
+> >>> performs cleanups in the new_state it will cleanup the old_fb and we
+> >>> will have the following scenario instead:
+> >>>
+> >>> - Async update, oldfb = NULL, newfb = fb1, prepare fb1, no cleanup
+> >>> - Async update, oldfb = fb1, newfb = fb2, prepare fb2, cleanup fb1
+> >>> - Non-async commit, oldfb = fb2, newfb = fb1, prepare fb1, cleanup fb2
+> >>>
+> >>> Where calls to prepare/cleanup are ballanced.
+> >>>
+> >>> Cc: <stable@vger.kernel.org> # v4.14+: 25dc194b34dd: drm: Block fb changes for async plane updates
+> >>> Fixes: 25dc194b34dd ("drm: Block fb changes for async plane updates")
+> >>> Suggested-by: Boris Brezillon <boris.brezillon@collabora.com>
+> >>> Signed-off-by: Helen Koike <helen.koike@collabora.com>
+> >>>
+> >>> ---
+> >>> Hello,
+> >>>
+> >>> As mentioned in the cover letter,
+> >>> I tested on the rockchip and on i915 (with a patch I am still working on for
+> >>> replacing cursors by async update), with igt plane_cursor_legacy and
+> >>> kms_cursor_legacy and I didn't see any regressions.
+> >>> I couldn't test on MSM and AMD because I don't have the hardware (and I am
+> >>> having some issues testing on vc4) and I would appreciate if anyone could help
+> >>> me testing those.
+> >>>
+> >>> I also think it would be a better solution if, instead of having async
+> >>> to do in-place updates in the current state, the async path should be
+> >>> equivalent to a syncronous update, i.e., modifying new_state and
+> >>> performing a flip
+> >>> IMHO, the only difference between sync and async should be that async update
+> >>> doesn't wait for vblank and applies the changes immeditally to the hw,
+> >>> but the code path could be almost the same.
+> >>> But for now I think this solution is ok (swaping new_fb/old_fb), and
+> >>> then we can adjust things little by little, what do you think?
+> >>>
+> >>> Thanks!
+> >>> Helen
+> >>>
+> >>>    drivers/gpu/drm/drm_atomic_helper.c | 20 ++++++++++----------
+> >>>    1 file changed, 10 insertions(+), 10 deletions(-)
+> >>>
+> >>> diff --git a/drivers/gpu/drm/drm_atomic_helper.c b/drivers/gpu/drm/drm_atomic_helper.c
+> >>> index 540a77a2ade9..e7eb96f1efc2 100644
+> >>> --- a/drivers/gpu/drm/drm_atomic_helper.c
+> >>> +++ b/drivers/gpu/drm/drm_atomic_helper.c
+> >>> @@ -1608,15 +1608,6 @@ int drm_atomic_helper_async_check(struct drm_device *dev,
+> >>>    	    old_plane_state->crtc != new_plane_state->crtc)
+> >>>    		return -EINVAL;
+> >>>    
+> >>> -	/*
+> >>> -	 * FIXME: Since prepare_fb and cleanup_fb are always called on
+> >>> -	 * the new_plane_state for async updates we need to block framebuffer
+> >>> -	 * changes. This prevents use of a fb that's been cleaned up and
+> >>> -	 * double cleanups from occuring.
+> >>> -	 */
+> >>> -	if (old_plane_state->fb != new_plane_state->fb)
+> >>> -		return -EINVAL;
+> >>> -
+> >>>    	funcs = plane->helper_private;
+> >>>    	if (!funcs->atomic_async_update)
+> >>>    		return -EINVAL;
+> >>> @@ -1657,6 +1648,9 @@ void drm_atomic_helper_async_commit(struct drm_device *dev,
+> >>>    	int i;
+> >>>    
+> >>>    	for_each_new_plane_in_state(state, plane, plane_state, i) {
+> >>> +		struct drm_framebuffer *new_fb = plane_state->fb;
+> >>> +		struct drm_framebuffer *old_fb = plane->state->fb;
+> >>> +
+> >>>    		funcs = plane->helper_private;
+> >>>    		funcs->atomic_async_update(plane, plane_state);
+> >>>    
+> >>> @@ -1665,11 +1659,17 @@ void drm_atomic_helper_async_commit(struct drm_device *dev,
+> >>>    		 * plane->state in-place, make sure at least common
+> >>>    		 * properties have been properly updated.
+> >>>    		 */
+> >>> -		WARN_ON_ONCE(plane->state->fb != plane_state->fb);
+> >>> +		WARN_ON_ONCE(plane->state->fb != new_fb);
+> >>>    		WARN_ON_ONCE(plane->state->crtc_x != plane_state->crtc_x);
+> >>>    		WARN_ON_ONCE(plane->state->crtc_y != plane_state->crtc_y);
+> >>>    		WARN_ON_ONCE(plane->state->src_x != plane_state->src_x);
+> >>>    		WARN_ON_ONCE(plane->state->src_y != plane_state->src_y);
+> >>> +
+> >>> +		/*
+> >>> +		 * Make sure the FBs have been swapped so that cleanups in the
+> >>> +		 * new_state performs a cleanup in the old FB.
+> >>> +		 */
+> >>> +		WARN_ON_ONCE(plane_state->fb != old_fb);  
+> >>
+> >> I personally think this approach is fine and the WARN_ON s are good for
+> >> catching drivers that want to use these in the future.  
+> > 
+> > Well, I agree this change is the way to go for a short-term solution
+> > to relax the old_fb == new_fb constraint, but I keep thinking this whole
+> > "update plane_state in place" is a recipe for trouble and just make
+> > things more complicated for drivers for no obvious reasons. Look at the
+> > VC4 implem [1] if you need a proof that things can get messy pretty
+> > quickly.
+> > 
+> > All this state-fields-copying steps could be skipped if the core was
+> > simply swapping the old/new states as is done in the sync update path.
+> > 
+> > [1]https://elixir.bootlin.com/linux/v5.0-rc7/source/drivers/gpu/drm/vc4/vc4_plane.c#L878  
 > 
->> --- a/drivers/net/ethernet/renesas/sh_eth.c
->> +++ b/drivers/net/ethernet/renesas/sh_eth.c
->> @@ -3187,6 +3187,8 @@ static struct sh_eth_plat_data *sh_eth_parse_dt(struct device *dev)
->>                 return NULL;
->>
->>         pdata->phy_interface = of_get_phy_mode(np);
->> +       if (pdata->phy_interface < 0)
->> +               return NULL;
+> I completely agree with this view FWIW. I had a discussion with Daniel 
+> about this when I had posted the original block FB changes patch.
 > 
-> sh_eth_plat_data.phy_interface has type phy_interface_t.
-> This is an enum containing only positive values, hence it is unsigned.
-> So the condition can never be true.
-
-   Good catch, thank you!
-   My gcc doesn't warn but doesn't generate the code for the branch either...
-
-[...]
-
-> Gr{oetje,eeting}s,
+> - The plane object needs to be locked in order for async state to be updated
+> - Blocking commit work holds the lock for the plane, async update won't 
+> happen
+> - Non-blocking commit work that's still ongoing won't have hw_done 
+> signaled and drm_atomic_helper_async_check will block the async update
 > 
->                         Geert
+> So this looks safe in theory, with the exception of the call to 
+> drm_atomic_helper_cleanup_planes occuring after hw_done is signaled.
 
-MBR, Sergei
+Isn't it also the case in the sync update path?
+
+> 
+> I believe that the behavior of this function still remains the same even 
+> if plane->state is swapped to something else during the call (since 
+> old_plane_state should never be equal to plane->state if the commit 
+> succeeded and the plane is in the commit), but I'm not sure that's 
+> something we'd want to rely on.
+> 
+> I think other than that issue, you could probably just:
+> 
+> drm_atomic_helper_prepare_planes(...);
+> drm_atomic_helper_swap_state(...);
+> drm_atomic_state_get(state);
+
+Why do we need a state_get() here? AFAICT, it's done this way in the
+sync update path because of the non-blocking semantic where the state
+might be released by the caller before it's been applied by the commit
+worker.
+
+> drm_atomic_helper_async_commit(...);
+> drm_atomic_helper_cleanup_planes(dev, state);
+> 
+> and it would work as expected. But there still may be other things I'm 
+> missing or haven't considered here.
+
+Actually, when I said we could swap states, I was not necessarily
+thinking about re-using drm_atomic_helper_swap_state(), but instead
+swap states directly in drm_atomic_helper_async_commit():
+
+	for_each_oldnew_plane_in_state(state, plane, old_plane_state,
+				       new_plane_state, i) {
+		WARN_ON(plane->state != old_plane_state);
+		old_plane_state->state = state;
+		new_plane_state->state = NULL;
+		state->planes[i].state = old_plane_state;
+		plane->state = new_plane_state;
+
+		funcs = plane->helper_private;
+		funcs->atomic_async_update(plane, new_plane_state);
+	}
+
+This way we would avoid the WARN_ON() lines we have in
+drm_atomic_helper_async_commit() to check that things have been
+properly updated in-place, and we would also get rid of the driver
+code copying the plane_state property that can change during an async
+update.
+
+But, as you said, I might be missing other potential issues.
