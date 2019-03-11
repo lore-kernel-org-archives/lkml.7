@@ -2,173 +2,73 @@ Return-Path: <SRS0=FxTY=RO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_MUTT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0EAEEC43381
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 Mar 2019 13:33:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5298CC43381
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 Mar 2019 13:33:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CF8B52147A
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 Mar 2019 13:33:15 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1552311195;
-	bh=FzmBTOYv3DlKkw61iNl06+QFZGEZ/z0t+KzY4FZ4t9o=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=XjFK87PM7Td8/mk/rFjvBBQrZMVHE8XzLG0JBFdhKXQVg+2Bv14NEhxqb2iQJSWIA
-	 JEtsYa6vUyy5/T7V/jeq7gp87fao9WMsccdbXMs6TfqR3Q1inRhW6dfJy2LFNzfn9D
-	 c95OshiNb+JmbVflf3OFuoDV07Ohva95mZTMEDIE=
+	by mail.kernel.org (Postfix) with ESMTP id 27CB92147A
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 Mar 2019 13:33:21 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727592AbfCKNdO (ORCPT
+        id S1727640AbfCKNdU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 11 Mar 2019 09:33:14 -0400
-Received: from mail.kernel.org ([198.145.29.99]:38270 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727426AbfCKNdN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 11 Mar 2019 09:33:13 -0400
-Received: from localhost (50-82-46-41.client.mchsi.com [50.82.46.41])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id BF0B72147A;
-        Mon, 11 Mar 2019 13:33:11 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1552311192;
-        bh=FzmBTOYv3DlKkw61iNl06+QFZGEZ/z0t+KzY4FZ4t9o=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=ReQmeHrkseghdTjlSkOu1EECP2CkfqlBDPPSFpSrpilimTMMH9sILYbsS+MyU633o
-         1xW4v1S5TCO/7Ce863cZKH2YvO1EZY1RLgTjjOG1wOW5DdcuVFPrwsu2ZqgYVpsVgL
-         JwhQwyDlrHMPoVYjxFx2x251z39eWTJ+U56NSCbE=
-Date:   Mon, 11 Mar 2019 08:33:10 -0500
-From:   Bjorn Helgaas <helgaas@kernel.org>
-To:     "Z.q. Hou" <zhiqiang.hou@nxp.com>
-Cc:     "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>,
-        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "robh+dt@kernel.org" <robh+dt@kernel.org>,
-        "mark.rutland@arm.com" <mark.rutland@arm.com>,
-        "l.subrahmanya@mobiveil.co.in" <l.subrahmanya@mobiveil.co.in>,
-        "shawnguo@kernel.org" <shawnguo@kernel.org>,
-        Leo Li <leoyang.li@nxp.com>,
-        "lorenzo.pieralisi@arm.com" <lorenzo.pieralisi@arm.com>,
-        "catalin.marinas@arm.com" <catalin.marinas@arm.com>,
-        "will.deacon@arm.com" <will.deacon@arm.com>,
-        "M.h. Lian" <minghuan.lian@nxp.com>,
-        Xiaowei Bao <xiaowei.bao@nxp.com>,
-        Mingkai Hu <mingkai.hu@nxp.com>
-Subject: Re: [PATCHv4 00/28] PCI: refactor Mobiveil driver and add PCIe Gen4
- driver for NXP Layerscape SoCs
-Message-ID: <20190311133310.GE214730@google.com>
-References: <20190311093130.7209-1-Zhiqiang.Hou@nxp.com>
+        Mon, 11 Mar 2019 09:33:20 -0400
+Received: from szxga04-in.huawei.com ([45.249.212.190]:4670 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1727552AbfCKNdT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 11 Mar 2019 09:33:19 -0400
+Received: from DGGEMS402-HUB.china.huawei.com (unknown [172.30.72.60])
+        by Forcepoint Email with ESMTP id 9FE40A695522DF555D55;
+        Mon, 11 Mar 2019 21:33:12 +0800 (CST)
+Received: from [127.0.0.1] (10.184.38.59) by DGGEMS402-HUB.china.huawei.com
+ (10.3.19.202) with Microsoft SMTP Server id 14.3.408.0; Mon, 11 Mar 2019
+ 21:33:06 +0800
+Subject: Re: [RFC PATCH] perf: Paper over the hw.target problems
+To:     Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Xie XiuQi <xiexiuqi@huawei.com>,
+        Peter Zijlstra <a.p.zijlstra@chello.nl>
+CC:     Arnaldo Carvalho de Melo <acme@redhat.com>,
+        Ingo Molnar <mingo@redhat.com>, <linux-kernel@vger.kernel.org>,
+        <jolsa@redhat.com>, <dvyukov@google.com>, <namhyung@kernel.org>,
+        <syzbot+a24c397a29ad22d86c98@syzkaller.appspotmail.com>,
+        "chengjian (D)" <cj.chengjian@huawei.com>,
+        Li Bin <huawei.libin@huawei.com>
+References: <278ac311-d8f3-2832-5fa1-522471c8c31c@huawei.com>
+ <20190228140109.64238-1-alexander.shishkin@linux.intel.com>
+ <c174549c-d169-7773-2f47-5863ba0b8056@huawei.com>
+ <87zhq5a6ck.fsf@ashishki-desk.ger.corp.intel.com>
+From:   "chengjian (D)" <cj.chengjian@huawei.com>
+Message-ID: <cf3f524e-cb3c-03d0-cfbd-c2d0efca9618@huawei.com>
+Date:   Mon, 11 Mar 2019 21:32:47 +0800
+User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:60.0) Gecko/20100101
+ Thunderbird/60.5.2
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190311093130.7209-1-Zhiqiang.Hou@nxp.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <87zhq5a6ck.fsf@ashishki-desk.ger.corp.intel.com>
+Content-Type: text/plain; charset="gbk"; format=flowed
+Content-Transfer-Encoding: 7bit
+Content-Language: en-US
+X-Originating-IP: [10.184.38.59]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi,
+Hi Alexander,
 
-On Mon, Mar 11, 2019 at 09:29:54AM +0000, Z.q. Hou wrote:
-> From: Hou Zhiqiang <Zhiqiang.Hou@nxp.com>
-> 
-> This patch set is aim to refactor the Mobiveil driver and add
-> PCIe support for NXP Layerscape series SoCs integrated Mobiveil's
-> PCIe Gen4 controller.
-> 
-> Hou Zhiqiang (28):
->   PCI: mobiveil: uniform the register accessors
 
-"uniform" is not a verb.  Maybe "Unify register accessors"?
+I have tested the new version, and put it in
 
->   PCI: mobiveil: format the code without function change
->   PCI: mobiveil: correct the returned error number
->   PCI: mobiveil: remove flag MSI_FLAG_MULTI_PCI_MSI
->   PCI: mobiveil: correct PCI base address in MEM/IO outbound windows
->   PCI: mobiveil: replace the resource list iteration function
->   PCI: mobiveil: use WIN_NUM_0 explicitly for CFG outbound window
->   PCI: mobiveil: use the 1st inbound window for MEM inbound transactions
->   PCI: mobiveil: correct inbound/outbound window setup routines
->   PCI: mobiveil: fix the INTx process error
->   PCI: mobiveil: only fix up the Class Code field
->   PCI: mobiveil: move out the link up waiting from mobiveil_host_init
+the syzkaller workspace, it works well now.
 
-Add parens for function names, e.g., "mobiveil_host_init()".  This
-occurs several more times, including both subject lines and changelogs.
+Tested-by: Cheng Jian <cj.chengjian@huawei.com>
 
->   PCI: mobiveil: move irq chained handler setup out of DT parse
 
-Capitalize acronyms in English text (subject lines, changelogs,
-comments), e.g., s/irq/IRQ/
+> Thanks a lot for taking the time and providing all the details. Please
+> find an updated version below, which should not exhibit that warning.
 
->   PCI: mobiveil: initialize Primary/Secondary/Subordinate bus number
->   dt-bindings: pci: mobiveil: change gpio_slave and apb_csr to optional
->   PCI: mobiveil: refactor Mobiveil PCIe Host Bridge IP driver
 
-This should give a hint about the purpose of refactoring.  Sounds like
-it's to make it easier to support both host and endpoint mode?
+Thanks.
 
->   PCI: mobiveil: fix the checking of valid device
->   PCI: mobiveil: add link up condition check
->   PCI: mobiveil: continue to initialize the host upon no PCIe link
->   PCI: mobiveil: disabled IB and OB windows set by bootloader
->   PCI: mobiveil: add Byte and Half-Word width register accessors
 
-"Byte" and "Half-Word" do not need to be capitalized.  Also, the
-changelog has a typo: "Half-Work" for "half-word".
-
->   PCI: mobiveil: make mobiveil_host_init can be used to re-init host
-
-Here's another of the places that need parens after the function name.
-
->   dt-bindings: pci: Add NXP Layerscape SoCs PCIe Gen4 controller
->   PCI: mobiveil: add PCIe Gen4 RC driver for NXP Layerscape SoCs
->   PCI: mobiveil: ls_pcie_g4: add Workaround for A-011577
->   PCI: mobiveil: ls_pcie_g4: add Workaround for A-011451
-
-The reader of these changelogs likely doesn't know what internal
-identifiers like "A-011577" mean, but *does* want a hint about what
-problem is being fixed and what platforms are affected.  So instead of
-the "ls_pcie_g4:" prefix, use something like:
-
-  PCI: mobiveil: Work around LX2160A r1.0 config access erratum
-  PCI: mobiveil: Work around LX2160A r1.0 split completion erratum
-
-and mention the erratum ID (A-011577) in the changelog.  If you can
-include the actual erratum text in the changelog, that would be even
-better.
-
-s/ERRATA/errata/ in the changelogs.
-
->   arm64: dts: freescale: lx2160a: add pcie DT nodes
-
-"PCIe"
-
->   arm64: defconfig: Enable CONFIG_PCI_LAYERSCAPE_GEN4
-
-I already asked you once [1] to:
-
-  please pay attention to the changelog conventions, e.g., capitalize the
-  first word of the sentence ("Remove flag ...", "Correct PCI base address
-  ...", etc), capitalize acronyms like "PCI" and "IRQ", use parentheses
-  after function names, etc.  You can see the conventions by running "git
-  log --oneline drivers/pci/controller".
-
-For example, instead of this:
-
-  PCI: mobiveil: add link up condition check
-
-it should be this:
-
-  PCI: mobiveil: Add link up condition check
-
-Please wait at least a few days before posting a v5 in case there are
-other comments.
-
-Bjorn
-
-[1] https://lore.kernel.org/linux-pci/20190130153447.GB229773@google.com
