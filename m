@@ -4,51 +4,63 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3224BC43381
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 Mar 2019 20:00:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7D7A1C43381
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 Mar 2019 20:00:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EDF522171F
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 Mar 2019 20:00:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4F30B2171F
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 Mar 2019 20:00:05 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1552334402;
-	bh=P3u4Anos50aB3NvsXsErWkQvqtWZ4/vqyqTg610MaqQ=;
+	s=default; t=1552334405;
+	bh=2ahr39JG4ahpvgXXMLZcvQGN109+8NUbGczsBU2Hx7g=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=lxG/z0caxL2QUnJRRMuy128hhBb1CMd26Gs/LdCiE/8ar69tJMjmmNQldC2esGeZh
-	 DmUvOtbqrHDJRzj7YwWEoHzAXllireLklJMl37U6ajif4rLLxgXpxowVvZC8L7CPKg
-	 CEL2/QXBaHHNM6dq3gBH7VR9xmEB7ASgB1zn0+DE=
+	b=iyvOf/eiVqbke/q1wTMyspMTmjIFWERUNoTo2Z/YF+/AwsnGrcygstrfL1VSMyn9n
+	 vkSgWPjVyu8Bc1ESIqPgVRQt/EOXKfFe2o11O6PLLO7zv49HjTHpBGg6kX/c3VcGIF
+	 JiZxU5IsauZbUsNCYGGECrXepZfsK6V26aCdkC1o=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729631AbfCKUAA (ORCPT
+        id S1729735AbfCKUAD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 11 Mar 2019 16:00:00 -0400
-Received: from mail.kernel.org ([198.145.29.99]:37236 "EHLO mail.kernel.org"
+        Mon, 11 Mar 2019 16:00:03 -0400
+Received: from mail.kernel.org ([198.145.29.99]:37286 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729695AbfCKT7v (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 11 Mar 2019 15:59:51 -0400
+        id S1729196AbfCKUAA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 11 Mar 2019 16:00:00 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 517432064A;
-        Mon, 11 Mar 2019 19:59:50 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 830FE2064A;
+        Mon, 11 Mar 2019 19:59:58 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1552334391;
-        bh=P3u4Anos50aB3NvsXsErWkQvqtWZ4/vqyqTg610MaqQ=;
+        s=default; t=1552334400;
+        bh=2ahr39JG4ahpvgXXMLZcvQGN109+8NUbGczsBU2Hx7g=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=lwiqZ08tn0vEAXt6dFc027Ekzelz80DLJCNK7JAIBdQ89tIDeoFfKOXFpA70JakIt
-         yJk+PgguRFeHI9ks43g1ELgAqvBUYc5Npn2EwEiLCtF8ICjpGInFZJaWACZ6yBNPtl
-         x12UOf10Ne0NBHimIHyDLvgEemjA4v9ky0jDaxm0=
+        b=Oftf0J15CcPizWZ9C6WR5oNE7StelMq+UfdPDnPmGSmzmoV7lh0Y20AAxR6zoYGZk
+         FythV8wA1etlKCuMYRZydtHobOIWS/h6qwXD0Qe+V4c0Sy6Wr17QUjMLL6PAxPaVaA
+         dVeeytRimHRQd4nNetRAj4kx0Z/GuvzzUaN4haog=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Gabriel Fernandez <gabriel.fernandez@st.com>,
-        Dmitry Torokhov <dmitry.torokhov@gmail.com>,
-        Sasha Levin <sashal@kernel.org>, linux-input@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.4 8/8] Input: st-keyscan - fix potential zalloc NULL dereference
-Date:   Mon, 11 Mar 2019 15:59:38 -0400
-Message-Id: <20190311195938.139603-8-sashal@kernel.org>
+Cc:     Yu Zhao <yuzhao@google.com>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Huang Ying <ying.huang@intel.com>,
+        Matthew Wilcox <willy@infradead.org>,
+        Keith Busch <keith.busch@intel.com>,
+        "Michael S . Tsirkin" <mst@redhat.com>,
+        John Hubbard <jhubbard@nvidia.com>,
+        Wei Yang <richard.weiyang@gmail.com>,
+        Mike Rapoport <rppt@linux.ibm.com>,
+        Andrea Arcangeli <aarcange@redhat.com>,
+        "Kirill A . Shutemov" <kirill.shutemov@linux.intel.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Sasha Levin <sashal@kernel.org>, linux-mm@kvack.org
+Subject: [PATCH AUTOSEL 3.18 4/6] mm/gup: fix gup_pmd_range() for dax
+Date:   Mon, 11 Mar 2019 15:59:49 -0400
+Message-Id: <20190311195951.139741-4-sashal@kernel.org>
 X-Mailer: git-send-email 2.19.1
-In-Reply-To: <20190311195938.139603-1-sashal@kernel.org>
-References: <20190311195938.139603-1-sashal@kernel.org>
+In-Reply-To: <20190311195951.139741-1-sashal@kernel.org>
+References: <20190311195951.139741-1-sashal@kernel.org>
 MIME-Version: 1.0
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
@@ -57,45 +69,48 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Gabriel Fernandez <gabriel.fernandez@st.com>
+From: Yu Zhao <yuzhao@google.com>
 
-[ Upstream commit 2439d37e1bf8a34d437573c086572abe0f3f1b15 ]
+[ Upstream commit 414fd080d125408cb15d04ff4907e1dd8145c8c7 ]
 
-This patch fixes the following static checker warning:
+For dax pmd, pmd_trans_huge() returns false but pmd_huge() returns true
+on x86.  So the function works as long as hugetlb is configured.
+However, dax doesn't depend on hugetlb.
 
-drivers/input/keyboard/st-keyscan.c:156 keyscan_probe()
-error: potential zalloc NULL dereference: 'keypad_data->input_dev'
-
-Reported-by: Dan Carpenter <dan.carpenter@oracle.com>
-Signed-off-by: Gabriel Fernandez <gabriel.fernandez@st.com>
-Signed-off-by: Dmitry Torokhov <dmitry.torokhov@gmail.com>
+Link: http://lkml.kernel.org/r/20190111034033.601-1-yuzhao@google.com
+Signed-off-by: Yu Zhao <yuzhao@google.com>
+Reviewed-by: Jan Kara <jack@suse.cz>
+Cc: Dan Williams <dan.j.williams@intel.com>
+Cc: Huang Ying <ying.huang@intel.com>
+Cc: Matthew Wilcox <willy@infradead.org>
+Cc: Keith Busch <keith.busch@intel.com>
+Cc: "Michael S . Tsirkin" <mst@redhat.com>
+Cc: John Hubbard <jhubbard@nvidia.com>
+Cc: Wei Yang <richard.weiyang@gmail.com>
+Cc: Mike Rapoport <rppt@linux.ibm.com>
+Cc: Andrea Arcangeli <aarcange@redhat.com>
+Cc: "Kirill A . Shutemov" <kirill.shutemov@linux.intel.com>
+Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
+Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/input/keyboard/st-keyscan.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ mm/gup.c | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/input/keyboard/st-keyscan.c b/drivers/input/keyboard/st-keyscan.c
-index de7be4f03d91..ebf9f643d910 100644
---- a/drivers/input/keyboard/st-keyscan.c
-+++ b/drivers/input/keyboard/st-keyscan.c
-@@ -153,6 +153,8 @@ static int keyscan_probe(struct platform_device *pdev)
+diff --git a/mm/gup.c b/mm/gup.c
+index ce1630bf0b95..29a36fae8624 100644
+--- a/mm/gup.c
++++ b/mm/gup.c
+@@ -885,7 +885,8 @@ static int gup_pmd_range(pud_t pud, unsigned long addr, unsigned long end,
+ 		if (pmd_none(pmd) || pmd_trans_splitting(pmd))
+ 			return 0;
  
- 	input_dev->id.bustype = BUS_HOST;
- 
-+	keypad_data->input_dev = input_dev;
-+
- 	error = keypad_matrix_key_parse_dt(keypad_data);
- 	if (error)
- 		return error;
-@@ -168,8 +170,6 @@ static int keyscan_probe(struct platform_device *pdev)
- 
- 	input_set_drvdata(input_dev, keypad_data);
- 
--	keypad_data->input_dev = input_dev;
--
- 	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
- 	keypad_data->base = devm_ioremap_resource(&pdev->dev, res);
- 	if (IS_ERR(keypad_data->base))
+-		if (unlikely(pmd_trans_huge(pmd) || pmd_huge(pmd))) {
++		if (unlikely(pmd_trans_huge(pmd) || pmd_huge(pmd) ||
++			     pmd_devmap(pmd))) {
+ 			/*
+ 			 * NUMA hinting faults need to be handled in the GUP
+ 			 * slowpath for accounting purposes and so that they
 -- 
 2.19.1
 
