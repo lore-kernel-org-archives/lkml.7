@@ -2,203 +2,98 @@ Return-Path: <SRS0=FxTY=RO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E7834C43381
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 Mar 2019 08:31:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 566B7C43381
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 Mar 2019 08:31:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 968B120643
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 Mar 2019 08:31:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 244BD2084D
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 Mar 2019 08:31:17 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=c-s.fr header.i=@c-s.fr header.b="SNn2vH7e"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727248AbfCKIbK (ORCPT
+        id S1727199AbfCKIbF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 11 Mar 2019 04:31:10 -0400
-Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:42564 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727220AbfCKIbJ (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 11 Mar 2019 04:31:09 -0400
-Received: from pps.filterd (m0098404.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x2B8TFYi047695
-        for <linux-kernel@vger.kernel.org>; Mon, 11 Mar 2019 04:31:08 -0400
-Received: from e06smtp05.uk.ibm.com (e06smtp05.uk.ibm.com [195.75.94.101])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 2r5h29yeg9-1
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
-        for <linux-kernel@vger.kernel.org>; Mon, 11 Mar 2019 04:31:08 -0400
-Received: from localhost
-        by e06smtp05.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
-        for <linux-kernel@vger.kernel.org> from <pmorel@linux.ibm.com>;
-        Mon, 11 Mar 2019 08:31:05 -0000
-Received: from b06cxnps4074.portsmouth.uk.ibm.com (9.149.109.196)
-        by e06smtp05.uk.ibm.com (192.168.101.135) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
-        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
-        Mon, 11 Mar 2019 08:31:03 -0000
-Received: from d06av21.portsmouth.uk.ibm.com (d06av21.portsmouth.uk.ibm.com [9.149.105.232])
-        by b06cxnps4074.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x2B8V1iF32571432
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Mon, 11 Mar 2019 08:31:01 GMT
-Received: from d06av21.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 55BE45205F;
-        Mon, 11 Mar 2019 08:31:01 +0000 (GMT)
-Received: from [9.145.177.223] (unknown [9.145.177.223])
-        by d06av21.portsmouth.uk.ibm.com (Postfix) with ESMTP id BE47D5204E;
-        Mon, 11 Mar 2019 08:31:00 +0000 (GMT)
-Reply-To: pmorel@linux.ibm.com
-Subject: Re: [PATCH v4 6/7] s390: ap: Cleanup on removing the AP device
-To:     Tony Krowiak <akrowiak@linux.ibm.com>, borntraeger@de.ibm.com
-Cc:     alex.williamson@redhat.com, cohuck@redhat.com,
-        linux-kernel@vger.kernel.org, linux-s390@vger.kernel.org,
-        kvm@vger.kernel.org, frankja@linux.ibm.com, pasic@linux.ibm.com,
-        david@redhat.com, schwidefsky@de.ibm.com,
-        heiko.carstens@de.ibm.com, freude@linux.ibm.com, mimu@linux.ibm.com
-References: <1550849400-27152-1-git-send-email-pmorel@linux.ibm.com>
- <1550849400-27152-7-git-send-email-pmorel@linux.ibm.com>
- <3956ad4c-55c9-e42c-4ab2-00ddae05b317@linux.ibm.com>
-From:   Pierre Morel <pmorel@linux.ibm.com>
-Date:   Mon, 11 Mar 2019 09:31:02 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.5.1
-MIME-Version: 1.0
-In-Reply-To: <3956ad4c-55c9-e42c-4ab2-00ddae05b317@linux.ibm.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
-X-TM-AS-GCONF: 00
-x-cbid: 19031108-0020-0000-0000-0000032125D4
-X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
-x-cbparentid: 19031108-0021-0000-0000-000021734847
-Message-Id: <94904df0-42b6-51f8-6440-68722ef5419d@linux.ibm.com>
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-03-11_07:,,
- signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
- malwarescore=0 suspectscore=2 phishscore=0 bulkscore=0 spamscore=0
- clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
- mlxlogscore=999 adultscore=0 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.0.1-1810050000 definitions=main-1903110065
+        Mon, 11 Mar 2019 04:31:05 -0400
+Received: from pegase1.c-s.fr ([93.17.236.30]:7677 "EHLO pegase1.c-s.fr"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727003AbfCKIae (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 11 Mar 2019 04:30:34 -0400
+Received: from localhost (mailhub1-int [192.168.12.234])
+        by localhost (Postfix) with ESMTP id 44Hrry2CpkzB09Zq;
+        Mon, 11 Mar 2019 09:30:26 +0100 (CET)
+Authentication-Results: localhost; dkim=pass
+        reason="1024-bit key; insecure key"
+        header.d=c-s.fr header.i=@c-s.fr header.b=SNn2vH7e; dkim-adsp=pass;
+        dkim-atps=neutral
+X-Virus-Scanned: Debian amavisd-new at c-s.fr
+Received: from pegase1.c-s.fr ([192.168.12.234])
+        by localhost (pegase1.c-s.fr [192.168.12.234]) (amavisd-new, port 10024)
+        with ESMTP id nRn9I_PSOpmu; Mon, 11 Mar 2019 09:30:26 +0100 (CET)
+Received: from messagerie.si.c-s.fr (messagerie.si.c-s.fr [192.168.25.192])
+        by pegase1.c-s.fr (Postfix) with ESMTP id 44Hrry13HTzB09ZD;
+        Mon, 11 Mar 2019 09:30:26 +0100 (CET)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=c-s.fr; s=mail;
+        t=1552293026; bh=ztmGavRLvNdF2u4ml0Z3unJoliY8vD4GX8nem0+fk9E=;
+        h=In-Reply-To:References:From:Subject:To:Cc:Date:From;
+        b=SNn2vH7eKtcEgDudG7VvDuSBp3iU2jkMA0MiTvnZgKX7VkWpBrLngbfKRpFtpsR8j
+         pfjuUWeRggipXJugMJ/9JfOUqt6XFzi1R8X6JIBdA3pHDYv4rnWWuJaCmPpKTHpXL4
+         EBQv7HFFJOxs5IXbw6zS4rzYSCqD+LDRx93mIQkw=
+Received: from localhost (localhost [127.0.0.1])
+        by messagerie.si.c-s.fr (Postfix) with ESMTP id A7FD88B813;
+        Mon, 11 Mar 2019 09:30:30 +0100 (CET)
+X-Virus-Scanned: amavisd-new at c-s.fr
+Received: from messagerie.si.c-s.fr ([127.0.0.1])
+        by localhost (messagerie.si.c-s.fr [127.0.0.1]) (amavisd-new, port 10023)
+        with ESMTP id JDtz0ycH5iH2; Mon, 11 Mar 2019 09:30:30 +0100 (CET)
+Received: from po16846vm.idsi0.si.c-s.fr (po15451.idsi0.si.c-s.fr [172.25.231.2])
+        by messagerie.si.c-s.fr (Postfix) with ESMTP id 84A818B7FE;
+        Mon, 11 Mar 2019 09:30:30 +0100 (CET)
+Received: by po16846vm.idsi0.si.c-s.fr (Postfix, from userid 0)
+        id 787626FA08; Mon, 11 Mar 2019 08:30:30 +0000 (UTC)
+Message-Id: <17f151878f35fd449b9375308dd096f0d922746b.1552292207.git.christophe.leroy@c-s.fr>
+In-Reply-To: <cover.1552292207.git.christophe.leroy@c-s.fr>
+References: <cover.1552292207.git.christophe.leroy@c-s.fr>
+From:   Christophe Leroy <christophe.leroy@c-s.fr>
+Subject: [PATCH v2 03/10] powerpc/32: Remove MSR_PR test when returning from
+ syscall
+To:     Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        Paul Mackerras <paulus@samba.org>,
+        Michael Ellerman <mpe@ellerman.id.au>, ruscur@russell.cc
+Cc:     linux-kernel@vger.kernel.org, linuxppc-dev@lists.ozlabs.org
+Date:   Mon, 11 Mar 2019 08:30:30 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 08/03/2019 23:43, Tony Krowiak wrote:
-> On 2/22/19 10:29 AM, Pierre Morel wrote:
->> When the device is remove, we must make sure to
->> clear the interruption and reset the AP device.
->>
->> We also need to clear the CRYCB of the guest.
->>
->> Signed-off-by: Pierre Morel <pmorel@linux.ibm.com>
->> ---
->>   drivers/s390/crypto/vfio_ap_drv.c     | 35 
->> +++++++++++++++++++++++++++++++++++
->>   drivers/s390/crypto/vfio_ap_ops.c     |  3 ++-
->>   drivers/s390/crypto/vfio_ap_private.h |  3 +++
->>   3 files changed, 40 insertions(+), 1 deletion(-)
->>
->> diff --git a/drivers/s390/crypto/vfio_ap_drv.c 
->> b/drivers/s390/crypto/vfio_ap_drv.c
->> index eca0ffc..e5d91ff 100644
->> --- a/drivers/s390/crypto/vfio_ap_drv.c
->> +++ b/drivers/s390/crypto/vfio_ap_drv.c
->> @@ -5,6 +5,7 @@
->>    * Copyright IBM Corp. 2018
->>    *
->>    * Author(s): Tony Krowiak <akrowiak@linux.ibm.com>
->> + *          Pierre Morel <pmorel@linux.ibm.com>
->>    */
->>   #include <linux/module.h>
->> @@ -12,6 +13,8 @@
->>   #include <linux/slab.h>
->>   #include <linux/string.h>
->>   #include <asm/facility.h>
->> +#include <linux/bitops.h>
->> +#include <linux/kvm_host.h>
->>   #include "vfio_ap_private.h"
->>   #define VFIO_AP_ROOT_NAME "vfio_ap"
->> @@ -61,6 +64,33 @@ static int vfio_ap_queue_dev_probe(struct ap_device 
->> *apdev)
->>   }
->>   /**
->> + * vfio_ap_update_crycb
->> + * @q: A pointer to the queue being removed
->> + *
->> + * We clear the APID of the queue, making this queue unusable for the 
->> guest.
->> + * After this function we can reset the queue without to fear a race 
->> with
->> + * the guest to access the queue again.
->> + * We do not fear race with the host as we still get the device.
->> + */
->> +static void vfio_ap_update_crycb(struct vfio_ap_queue *q)
->> +{
->> +    struct ap_matrix_mdev *matrix_mdev = q->matrix_mdev;
->> +
->> +    if (!matrix_mdev)
->> +        return;
->> +
->> +    clear_bit_inv(AP_QID_CARD(q->apqn), matrix_mdev->matrix.apm);
->> +
->> +    if (!matrix_mdev->kvm)
->> +        return;
->> +
->> +    kvm_arch_crypto_set_masks(matrix_mdev->kvm,
->> +                  matrix_mdev->matrix.apm,
->> +                  matrix_mdev->matrix.aqm,
->> +                  matrix_mdev->matrix.adm);
->> +}
->> +
->> +/**
->>    * vfio_ap_queue_dev_remove:
->>    *
->>    * Free the associated vfio_ap_queue structure
->> @@ -70,6 +100,11 @@ static void vfio_ap_queue_dev_remove(struct 
->> ap_device *apdev)
->>       struct vfio_ap_queue *q;
->>       q = dev_get_drvdata(&apdev->device);
->> +    if (!q)
->> +        return;
->> +
->> +    vfio_ap_update_crycb(q);
->> +    vfio_ap_mdev_reset_queue(q);
-> 
-> Since the bit corresponding to the APID is cleared in the
-> vfio_ap_update_crycb() above, shouldn't all queues on that
-> card also be reset?
+syscalls are from user only, so we can account time without checking
+whether returning to kernel or user as it will only be user.
 
-I do not think so.
-The remove function will be called in a loop for all queues by the bus.
-No need to clear all queues.
+Signed-off-by: Christophe Leroy <christophe.leroy@c-s.fr>
+---
+ arch/powerpc/kernel/entry_32.S | 5 -----
+ 1 file changed, 5 deletions(-)
 
-
-> 
->>       list_del(&q->list);
->>       kfree(q);
->>   }
->> diff --git a/drivers/s390/crypto/vfio_ap_ops.c 
->> b/drivers/s390/crypto/vfio_ap_ops.c
->> index 0196065..5b9bb33 100644
->> --- a/drivers/s390/crypto/vfio_ap_ops.c
->> +++ b/drivers/s390/crypto/vfio_ap_ops.c
->> @@ -59,6 +59,7 @@ int vfio_ap_mdev_reset_queue(struct vfio_ap_queue *q)
->>               if (retry <= 0)
->>                   pr_warn("%s: queue 0x%04x not empty\n",
->>                       __func__, q->apqn);
->> +            vfio_ap_free_irq(q);
-> 
-> Shouldn't this be done for the response codes that terminate this loop
-> such as those caught by the default case?
-
-I do not think so, the error code is returned and the caller may want to 
-reset the queue again.
-I think that doing the free inside the call to reset is not right.
-I will investigate in this direction.
-
-Regards,
-Pierre
-
+diff --git a/arch/powerpc/kernel/entry_32.S b/arch/powerpc/kernel/entry_32.S
+index b61cfd29c76f..aaf7c5f44823 100644
+--- a/arch/powerpc/kernel/entry_32.S
++++ b/arch/powerpc/kernel/entry_32.S
+@@ -422,12 +422,7 @@ BEGIN_FTR_SECTION
+ 	lwarx	r7,0,r1
+ END_FTR_SECTION_IFSET(CPU_FTR_NEED_PAIRED_STWCX)
+ 	stwcx.	r0,0,r1			/* to clear the reservation */
+-#ifdef CONFIG_VIRT_CPU_ACCOUNTING_NATIVE
+-	andi.	r4,r8,MSR_PR
+-	beq	3f
+ 	ACCOUNT_CPU_USER_EXIT(r2, r5, r7)
+-3:
+-#endif
+ 	lwz	r4,_LINK(r1)
+ 	lwz	r5,_CCR(r1)
+ 	mtlr	r4
 -- 
-Pierre Morel
-Linux/KVM/QEMU in Böblingen - Germany
+2.13.3
 
