@@ -2,88 +2,117 @@ Return-Path: <SRS0=FxTY=RO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_MUTT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E02F6C43381
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 Mar 2019 14:45:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B31DCC43381
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 Mar 2019 14:45:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B409F20657
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 Mar 2019 14:45:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8335E20657
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 Mar 2019 14:45:52 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727933AbfCKOpe (ORCPT
+        id S1727952AbfCKOpu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 11 Mar 2019 10:45:34 -0400
-Received: from mx2.suse.de ([195.135.220.15]:33634 "EHLO mx1.suse.de"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1727895AbfCKOpa (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 11 Mar 2019 10:45:30 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx1.suse.de (Postfix) with ESMTP id E1BFAAFBB;
-        Mon, 11 Mar 2019 14:45:27 +0000 (UTC)
-Received: by quack2.suse.cz (Postfix, from userid 1000)
-        id 594E51E426A; Mon, 11 Mar 2019 15:45:27 +0100 (CET)
-Date:   Mon, 11 Mar 2019 15:45:27 +0100
-From:   Jan Kara <jack@suse.cz>
-To:     Andrea Arcangeli <aarcange@redhat.com>
-Cc:     Jerome Glisse <jglisse@redhat.com>,
-        "Michael S. Tsirkin" <mst@redhat.com>,
-        Jason Wang <jasowang@redhat.com>, kvm@vger.kernel.org,
-        virtualization@lists.linux-foundation.org, netdev@vger.kernel.org,
-        linux-kernel@vger.kernel.org, peterx@redhat.com,
-        linux-mm@kvack.org, Jan Kara <jack@suse.cz>
-Subject: Re: [RFC PATCH V2 5/5] vhost: access vq metadata through kernel
- virtual address
-Message-ID: <20190311144527.GM11553@quack2.suse.cz>
-References: <1551856692-3384-1-git-send-email-jasowang@redhat.com>
- <1551856692-3384-6-git-send-email-jasowang@redhat.com>
- <20190306092837-mutt-send-email-mst@kernel.org>
- <15105894-4ec1-1ed0-1976-7b68ed9eeeda@redhat.com>
- <20190307101708-mutt-send-email-mst@kernel.org>
- <20190307190910.GE3835@redhat.com>
- <20190307193838.GQ23850@redhat.com>
- <20190307201722.GG3835@redhat.com>
- <20190307212717.GS23850@redhat.com>
+        Mon, 11 Mar 2019 10:45:50 -0400
+Received: from mga05.intel.com ([192.55.52.43]:11790 "EHLO mga05.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727800AbfCKOpM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 11 Mar 2019 10:45:12 -0400
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga001.jf.intel.com ([10.7.209.18])
+  by fmsmga105.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 11 Mar 2019 07:45:11 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.58,468,1544515200"; 
+   d="scan'208";a="202415585"
+Received: from tassilo.jf.intel.com (HELO tassilo.localdomain) ([10.7.201.137])
+  by orsmga001.jf.intel.com with ESMTP; 11 Mar 2019 07:45:10 -0700
+Received: by tassilo.localdomain (Postfix, from userid 1000)
+        id 55172301BF1; Mon, 11 Mar 2019 07:45:10 -0700 (PDT)
+From:   Andi Kleen <andi@firstfloor.org>
+To:     acme@kernel.org
+Cc:     jolsa@kernel.org, linux-perf-users@vger.kernel.org,
+        linux-kernel@vger.kernel.org, Andi Kleen <ak@linux.intel.com>
+Subject: [PATCH v6 11/11] perf tools ui: Fix ui popup browser for many entries
+Date:   Mon, 11 Mar 2019 07:45:02 -0700
+Message-Id: <20190311144502.15423-12-andi@firstfloor.org>
+X-Mailer: git-send-email 2.20.1
+In-Reply-To: <20190311144502.15423-1-andi@firstfloor.org>
+References: <20190311144502.15423-1-andi@firstfloor.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190307212717.GS23850@redhat.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu 07-03-19 16:27:17, Andrea Arcangeli wrote:
-> > driver that GUP page for hours/days/weeks/months ... obviously the
-> > race window is big enough here. It affects many fs (ext4, xfs, ...)
-> > in different ways. I think ext4 is the most obvious because of the
-> > kernel log trace it leaves behind.
-> > 
-> > Bottom line is for set_page_dirty to be safe you need the following:
-> >     lock_page()
-> >     page_mkwrite()
-> >     set_pte_with_write()
-> >     unlock_page()
-> 
-> I also wondered why ext4 writepage doesn't recreate the bh if they got
-> dropped by the VM and page->private is 0. I mean, page->index and
-> page->mapping are still there, that's enough info for writepage itself
-> to take a slow path and calls page_mkwrite to find where to write the
-> page on disk.
+From: Andi Kleen <ak@linux.intel.com>
 
-There are two problems:
+Fix the argv ui browser code to correctly display more entries
+than fit on the screen without crashing. The problem was some type
+confusion with pointer types in the ->seek function. Do
+the argv arithmetic correctly with char ** pointers. Also
+add some asserts to find overruns and limit the display function
+correctly.
 
-1) What to do with errors that page_mkwrite() can generate (ENOMEM, ENOSPC,
-EIO). On page fault you just propagate them to userspace, on set_page_dirty()
-you have no chance so you just silently loose data.
+Then finally remove a workaround for this in the res sample
+browser.
 
-2) We need various locks to protect page_mkwrite(), possibly do some IO.
-set_page_dirty() is rather uncertain context to acquire locks or do IO...
+Signed-off-by: Andi Kleen <ak@linux.intel.com>
+---
+ tools/perf/ui/browser.c             | 10 +++++++---
+ tools/perf/ui/browsers/res_sample.c |  3 ---
+ 2 files changed, 7 insertions(+), 6 deletions(-)
 
-									Honza
+diff --git a/tools/perf/ui/browser.c b/tools/perf/ui/browser.c
+index 4f75561424ed..4ad37d8c7d6a 100644
+--- a/tools/perf/ui/browser.c
++++ b/tools/perf/ui/browser.c
+@@ -611,14 +611,16 @@ void ui_browser__argv_seek(struct ui_browser *browser, off_t offset, int whence)
+ 		browser->top = browser->entries;
+ 		break;
+ 	case SEEK_CUR:
+-		browser->top = browser->top + browser->top_idx + offset;
++		browser->top = (char **)browser->top + offset;
+ 		break;
+ 	case SEEK_END:
+-		browser->top = browser->top + browser->nr_entries - 1 + offset;
++		browser->top = (char **)browser->entries + browser->nr_entries - 1 + offset;
+ 		break;
+ 	default:
+ 		return;
+ 	}
++	assert((char **)browser->top < (char **)browser->entries + browser->nr_entries);
++	assert((char **)browser->top >= (char **)browser->entries);
+ }
+ 
+ unsigned int ui_browser__argv_refresh(struct ui_browser *browser)
+@@ -630,7 +632,9 @@ unsigned int ui_browser__argv_refresh(struct ui_browser *browser)
+ 		browser->top = browser->entries;
+ 
+ 	pos = (char **)browser->top;
+-	while (idx < browser->nr_entries) {
++	while (idx < browser->nr_entries &&
++	       row < (unsigned)SLtt_Screen_Rows - 1) {
++		assert(pos < (char **)browser->entries + browser->nr_entries);
+ 		if (!browser->filter || !browser->filter(browser, *pos)) {
+ 			ui_browser__gotorc(browser, row, 0);
+ 			browser->write(browser, pos, row);
+diff --git a/tools/perf/ui/browsers/res_sample.c b/tools/perf/ui/browsers/res_sample.c
+index c2a8536904bc..8befd8e984ab 100644
+--- a/tools/perf/ui/browsers/res_sample.c
++++ b/tools/perf/ui/browsers/res_sample.c
+@@ -37,9 +37,6 @@ int res_sample_browse(struct res_sample *res_samples, int num_res,
+ 	struct res_sample *r;
+ 	char extra_format[256];
+ 
+-	/* For now since ui__popup_menu doesn't like lists that don't fit */
+-	num_res = max(min(SLtt_Screen_Rows - 4, num_res), 0);
+-
+ 	names = calloc(num_res, sizeof(char *));
+ 	if (!names)
+ 		return -1;
 -- 
-Jan Kara <jack@suse.com>
-SUSE Labs, CR
+2.20.1
+
