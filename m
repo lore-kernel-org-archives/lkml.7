@@ -2,219 +2,104 @@ Return-Path: <SRS0=FxTY=RO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_PASS autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6D0A7C43381
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 Mar 2019 15:22:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C9306C4360F
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 Mar 2019 15:27:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 38CB0206BA
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 Mar 2019 15:22:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A410920657
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 Mar 2019 15:27:00 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727592AbfCKPWC (ORCPT
+        id S1727360AbfCKP07 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 11 Mar 2019 11:22:02 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:17731 "EHLO mx1.redhat.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726000AbfCKPWB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 11 Mar 2019 11:22:01 -0400
-Received: from smtp.corp.redhat.com (int-mx05.intmail.prod.int.phx2.redhat.com [10.5.11.15])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id 0D25481F31;
-        Mon, 11 Mar 2019 15:22:01 +0000 (UTC)
-Received: from [10.36.112.64] (ovpn-112-64.ams2.redhat.com [10.36.112.64])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id 686E35D706;
-        Mon, 11 Mar 2019 15:21:59 +0000 (UTC)
-Subject: Re: [PATCH v4 17/17] kvm: vmx: Emulate TEST_CTL MSR
-To:     Xiaoyao Li <xiaoyao.li@linux.intel.com>
-Cc:     linux-kernel <linux-kernel@vger.kernel.org>, x86 <x86@kernel.org>,
-        kvm@vger.kernel.org
-References: <1551494711-213533-1-git-send-email-fenghua.yu@intel.com>
- <1551494711-213533-18-git-send-email-fenghua.yu@intel.com>
- <58653d477d78b2a69927d8707522d91f091bcb52.camel@linux.intel.com>
- <7a10bb11-e9bf-f49c-6575-25c3da08cfac@redhat.com>
- <b7a879103eb409bea3f2664d7e7a8b1787768cf2.camel@linux.intel.com>
-From:   Paolo Bonzini <pbonzini@redhat.com>
-Openpgp: preference=signencrypt
-Autocrypt: addr=pbonzini@redhat.com; prefer-encrypt=mutual; keydata=
- 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
- uUHgL9dKIfvpm+rNXRn9wAwGjk0X/A==
-Message-ID: <330cd5ec-813b-8835-2178-32e14190b9e6@redhat.com>
-Date:   Mon, 11 Mar 2019 16:21:56 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.4.0
+        Mon, 11 Mar 2019 11:26:59 -0400
+Received: from mx08-00178001.pphosted.com ([91.207.212.93]:55479 "EHLO
+        mx07-00178001.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726942AbfCKP07 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 11 Mar 2019 11:26:59 -0400
+Received: from pps.filterd (m0046661.ppops.net [127.0.0.1])
+        by mx08-00178001.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x2BFLfbm011746;
+        Mon, 11 Mar 2019 16:26:37 +0100
+Received: from beta.dmz-eu.st.com (beta.dmz-eu.st.com [164.129.1.35])
+        by mx08-00178001.pphosted.com with ESMTP id 2r458m4j0g-1
+        (version=TLSv1 cipher=ECDHE-RSA-AES256-SHA bits=256 verify=NOT);
+        Mon, 11 Mar 2019 16:26:37 +0100
+Received: from zeta.dmz-eu.st.com (zeta.dmz-eu.st.com [164.129.230.9])
+        by beta.dmz-eu.st.com (STMicroelectronics) with ESMTP id 5A4CD31;
+        Mon, 11 Mar 2019 15:26:36 +0000 (GMT)
+Received: from Webmail-eu.st.com (Safex1hubcas23.st.com [10.75.90.46])
+        by zeta.dmz-eu.st.com (STMicroelectronics) with ESMTP id 3C6F954C7;
+        Mon, 11 Mar 2019 15:26:36 +0000 (GMT)
+Received: from SAFEX1HUBCAS24.st.com (10.75.90.95) by SAFEX1HUBCAS23.st.com
+ (10.75.90.46) with Microsoft SMTP Server (TLS) id 14.3.435.0; Mon, 11 Mar
+ 2019 16:26:36 +0100
+Received: from localhost (10.201.23.16) by webmail-ga.st.com (10.75.90.48)
+ with Microsoft SMTP Server (TLS) id 14.3.435.0; Mon, 11 Mar 2019 16:26:36
+ +0100
+From:   Olivier Moysan <olivier.moysan@st.com>
+To:     <lgirdwood@gmail.com>, <broonie@kernel.org>, <perex@perex.cz>,
+        <tiwai@suse.com>, <mcoquelin.stm32@gmail.com>,
+        <alexandre.torgue@st.com>, <alsa-devel@alsa-project.org>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <linux-stm32@st-md-mailman.stormreply.com>,
+        <linux-kernel@vger.kernel.org>, <olivier.moysan@st.com>,
+        <arnaud.pouliquen@st.com>, <benjamin.gaignard@st.com>
+Subject: [PATCH 2/3] ASoC: stm32: i2s: improve channel capabilities handling
+Date:   Mon, 11 Mar 2019 16:26:29 +0100
+Message-ID: <1552317990-24219-3-git-send-email-olivier.moysan@st.com>
+X-Mailer: git-send-email 2.7.4
+In-Reply-To: <1552317990-24219-1-git-send-email-olivier.moysan@st.com>
+References: <1552317990-24219-1-git-send-email-olivier.moysan@st.com>
 MIME-Version: 1.0
-In-Reply-To: <b7a879103eb409bea3f2664d7e7a8b1787768cf2.camel@linux.intel.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.15
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.27]); Mon, 11 Mar 2019 15:22:01 +0000 (UTC)
+Content-Type: text/plain
+X-Originating-IP: [10.201.23.16]
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-03-11_12:,,
+ signatures=0
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 11/03/19 16:10, Xiaoyao Li wrote:
-> On Mon, 2019-03-11 at 14:31 +0100, Paolo Bonzini wrote:
->> On 09/03/19 03:31, Xiaoyao Li wrote:
->>> Hi, Paolo,
->>>
->>> Do you have any comments on this patch?
->>>
->>> We are preparing v5 patches for split lock detection, if you have any
->>> comments
->>> about this one, please let me know.
->>
->> No, my only comment is that it should be placed _before_ the other two
->> for bisectability.  I think I have already sent that small remark.
->>
->> Thanks,
->>
->> Paolo
-> 
-> I cannot find the small remark you sent before. Maybe I missed something.
-> But I'am confused why it should be placed _before_ the other two. This patch
-> just use the vmx->core_capability that defined it the previous patch.
+Use alsa snd_pcm_hw_constraint_single service to manage
+channels restriction. This provides better status on driver
+limitations, to the application.
 
-Because otherwise the guest can see core_capability != 0 and will #GP
-when trying to use split lock detection.
+Signed-off-by: Olivier Moysan <olivier.moysan@st.com>
+---
+ sound/soc/stm/stm32_i2s.c | 10 ++++------
+ 1 file changed, 4 insertions(+), 6 deletions(-)
 
-But you are right, this patch must be the last.  Instead,
-kvm-get_core_capability() should always return  0 until the previous
-patch.  Then in this patch you add the rdmsr and boot_cpu_has() tests.
-
-Paolo
-
->>>> +		if (!(vmx->core_capability & CORE_CAP_SPLIT_LOCK_DETECT))
->>>> +			return 1;
->>>> +
->>>> +		if (data & ~TEST_CTL_ENABLE_SPLIT_LOCK_DETECT)
->>>> +			return 1;
->>>> +		vmx->msr_test_ctl = data;
->>>> +		break;
->>>>  	case MSR_EFER:
->>>>  		ret = kvm_set_msr_common(vcpu, msr_info);
->>>>  		break;
->>>> @@ -4108,6 +4122,9 @@ static void vmx_vcpu_setup(struct vcpu_vmx *vmx)
->>>>  
->>>>  	vmx->arch_capabilities = kvm_get_arch_capabilities();
->>>>  
->>>> +	/* disable AC split lock by default */
->>>> +	vmx->msr_test_ctl = 0;
->>>> +
->>>>  	vm_exit_controls_init(vmx, vmx_vmexit_ctrl());
->>>>  
->>>>  	/* 22.2.1, 20.8.1 */
->>>> @@ -4145,6 +4162,7 @@ static void vmx_vcpu_reset(struct kvm_vcpu *vcpu,
->>>> bool
->>>> init_event)
->>>>  
->>>>  	vmx->rmode.vm86_active = 0;
->>>>  	vmx->spec_ctrl = 0;
->>>> +	vmx->msr_test_ctl = 0;
->>>>  
->>>>  	vcpu->arch.microcode_version = 0x100000000ULL;
->>>>  	vmx->vcpu.arch.regs[VCPU_REGS_RDX] = get_rdx_init_val();
->>>> @@ -6344,6 +6362,21 @@ static void atomic_switch_perf_msrs(struct vcpu_vmx
->>>> *vmx)
->>>>  					msrs[i].host, false);
->>>>  }
->>>>  
->>>> +static void atomic_switch_msr_test_ctl(struct vcpu_vmx *vmx)
->>>> +{
->>>> +	u64 host_msr_test_ctl;
->>>> +
->>>> +	if (!boot_cpu_has(X86_FEATURE_SPLIT_LOCK_DETECT))
->>>> +		return;
->>>> +
->>>> +	rdmsrl(MSR_TEST_CTL, host_msr_test_ctl);
->>>> +	if (host_msr_test_ctl == vmx->msr_test_ctl)
->>>> +		clear_atomic_switch_msr(vmx, MSR_TEST_CTL);
->>>> +	else
->>>> +		add_atomic_switch_msr(vmx, MSR_TEST_CTL, vmx->msr_test_ctl,
->>>> +				      host_msr_test_ctl, false);
->>>> +}
->>>> +
->>>>  static void vmx_arm_hv_timer(struct vcpu_vmx *vmx, u32 val)
->>>>  {
->>>>  	vmcs_write32(VMX_PREEMPTION_TIMER_VALUE, val);
->>>> @@ -6585,6 +6618,8 @@ static void vmx_vcpu_run(struct kvm_vcpu *vcpu)
->>>>  
->>>>  	atomic_switch_perf_msrs(vmx);
->>>>  
->>>> +	atomic_switch_msr_test_ctl(vmx);
->>>> +
->>>>  	vmx_update_hv_timer(vcpu);
->>>>  
->>>>  	/*
->>>> diff --git a/arch/x86/kvm/vmx/vmx.h b/arch/x86/kvm/vmx/vmx.h
->>>> index cc22379991f3..e8831609c6c3 100644
->>>> --- a/arch/x86/kvm/vmx/vmx.h
->>>> +++ b/arch/x86/kvm/vmx/vmx.h
->>>> @@ -191,6 +191,7 @@ struct vcpu_vmx {
->>>>  	u64		      msr_guest_kernel_gs_base;
->>>>  #endif
->>>>  
->>>> +	u64		      msr_test_ctl;
->>>>  	u64		      core_capability;
->>>>  	u64		      arch_capabilities;
->>>>  	u64		      spec_ctrl;
->>
->>
-> 
+diff --git a/sound/soc/stm/stm32_i2s.c b/sound/soc/stm/stm32_i2s.c
+index 783b33497435..06bbbef74b3a 100644
+--- a/sound/soc/stm/stm32_i2s.c
++++ b/sound/soc/stm/stm32_i2s.c
+@@ -496,12 +496,6 @@ static int stm32_i2s_configure(struct snd_soc_dai *cpu_dai,
+ 	unsigned int fthlv;
+ 	int ret;
+ 
+-	if ((params_channels(params) == 1) &&
+-	    ((i2s->fmt & SND_SOC_DAIFMT_FORMAT_MASK) != SND_SOC_DAIFMT_DSP_A)) {
+-		dev_err(cpu_dai->dev, "Mono mode supported only by DSP_A\n");
+-		return -EINVAL;
+-	}
+-
+ 	switch (format) {
+ 	case 16:
+ 		cfgr = I2S_CGFR_DATLEN_SET(I2S_I2SMOD_DATLEN_16);
+@@ -551,6 +545,10 @@ static int stm32_i2s_startup(struct snd_pcm_substream *substream,
+ 	i2s->substream = substream;
+ 	spin_unlock_irqrestore(&i2s->irq_lock, flags);
+ 
++	if ((i2s->fmt & SND_SOC_DAIFMT_FORMAT_MASK) != SND_SOC_DAIFMT_DSP_A)
++		snd_pcm_hw_constraint_single(substream->runtime,
++					     SNDRV_PCM_HW_PARAM_CHANNELS, 2);
++
+ 	ret = clk_prepare_enable(i2s->i2sclk);
+ 	if (ret < 0) {
+ 		dev_err(cpu_dai->dev, "Failed to enable clock: %d\n", ret);
+-- 
+2.7.4
 
