@@ -2,124 +2,151 @@ Return-Path: <SRS0=FxTY=RO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_PASS,USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6A77AC43381
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 Mar 2019 15:50:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8434BC43381
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 Mar 2019 15:51:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 37C5F20657
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 Mar 2019 15:50:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4DF8D20657
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 Mar 2019 15:51:23 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="pb4ws1/h"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="msB1N2el"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727623AbfCKPu1 (ORCPT
+        id S1727640AbfCKPvV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 11 Mar 2019 11:50:27 -0400
-Received: from mailout3.samsung.com ([203.254.224.33]:39362 "EHLO
-        mailout3.samsung.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726625AbfCKPu0 (ORCPT
+        Mon, 11 Mar 2019 11:51:21 -0400
+Received: from mail-pf1-f195.google.com ([209.85.210.195]:46440 "EHLO
+        mail-pf1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726625AbfCKPvV (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 11 Mar 2019 11:50:26 -0400
-Received: from epcas2p4.samsung.com (unknown [182.195.41.56])
-        by mailout3.samsung.com (KnoxPortal) with ESMTP id 20190311155024epoutp03cf6a6576f4b780eea4a7ab502597fb57~K8kqtpXU52089620896epoutp03y;
-        Mon, 11 Mar 2019 15:50:24 +0000 (GMT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 mailout3.samsung.com 20190311155024epoutp03cf6a6576f4b780eea4a7ab502597fb57~K8kqtpXU52089620896epoutp03y
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
-        s=mail20170921; t=1552319424;
-        bh=PWweXdHeQM230BkQfb3/K3K5eqh6ahnLgxB7l3qawts=;
-        h=From:To:Cc:Subject:Date:References:From;
-        b=pb4ws1/hpdyarrRKizbrBUwlxr90iFyzYoykTQe3ihFXZALnl9PqS1v0FXNBzqOf+
-         BqZ3xprrU7ahdtm30bKPGYnKJorRYCD4ZWHdC4oSkQ4z2HpLHbY8R4MvdRGhYp313m
-         m3Y/yn04tZVanrnOWCy1tuTM3PavAAjjlmq23g8U=
-Received: from epsmges2p3.samsung.com (unknown [182.195.42.71]) by
-        epcas2p1.samsung.com (KnoxPortal) with ESMTP id
-        20190311155023epcas2p182d0fd723d59d80adeb7cabc3f7f56e1~K8kqggj0Z0843208432epcas2p1X;
-        Mon, 11 Mar 2019 15:50:23 +0000 (GMT)
-Received: from epcas2p1.samsung.com ( [182.195.41.53]) by
-        epsmges2p3.samsung.com (Symantec Messaging Gateway) with SMTP id
-        1D.A6.04206.FB3868C5; Tue, 12 Mar 2019 00:50:23 +0900 (KST)
-Received: from epsmgms2p2new.samsung.com (unknown [182.195.42.143]) by
-        epcas2p4.samsung.com (KnoxPortal) with ESMTP id
-        20190311155023epcas2p428a025925f6442554b50e14e328a6d04~K8kqOgVyL2161821618epcas2p4O;
-        Mon, 11 Mar 2019 15:50:23 +0000 (GMT)
-X-AuditID: b6c32a47-133ff7000000106e-f6-5c8683bf8f3a
-Received: from epmmp1.local.host ( [203.254.227.16]) by
-        epsmgms2p2new.samsung.com (Symantec Messaging Gateway) with SMTP id
-        B1.4A.03620.FB3868C5; Tue, 12 Mar 2019 00:50:23 +0900 (KST)
-Received: from AMDC3061.digital.local ([106.116.147.40]) by mmp1.samsung.com
-        (Oracle Communications Messaging Server 7.0.5.31.0 64bit (built May  5
-        2014)) with ESMTPA id <0PO700GYHLBQEV60@mmp1.samsung.com>; Tue, 12 Mar 2019
-        00:50:23 +0900 (KST)
-From:   Sylwester Nawrocki <s.nawrocki@samsung.com>
-To:     krzk@kernel.org
-Cc:     kgene@kernel.org, robh+dt@kernel.org, b.zolnierkie@samsung.com,
-        m.szyprowski@samsung.com, devicetree@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org,
-        linux-samsung-soc@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Sylwester Nawrocki <s.nawrocki@samsung.com>,
-        stable@vger.kernel.org
-Subject: [PATCH] ARM: dts: exynos: Fix audio (microphone) routing on Odroid
- XU3
-Date:   Mon, 11 Mar 2019 16:50:12 +0100
-Message-id: <20190311155012.15797-1-s.nawrocki@samsung.com>
-X-Mailer: git-send-email 2.17.1
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFprHIsWRmVeSWpSXmKPExsWy7bCmqe7+5rYYg73HTC02zljPajH/yDlW
-        i/7Hr5ktzp/fwG6x6fE1VovLu+awWcw4v4/JYu2Ru+wWrXuPsFscftPOarFg4yNGB26PTas6
-        2Tw2L6n36NuyitHj8ya5AJYoLpuU1JzMstQifbsEroyn+zayFvxiq+j5PY+9gfENaxcjJ4eE
-        gInEgffnGUFsIYEdjBI7r6V3MXIB2d8ZJTo7vrDAFHV+uswGkdjNKLG8sZcRwvnFKLH2+3qw
-        KjYBQ4neo31go0QEhCXuLV3ODlLELLCGSWLe2bdgCWGBQImXu74zgdgsAqoSf2Y0gTXzClhL
-        /DpwHmqdvMTqDQeYQZolBBrZJPY9vgA0iQPIcZF415cIUSMt8WzVRkaImmZGiR3Pr7FDOBMY
-        JSbMmcwGUWUtcfj4RbBPmQX4JDoO/4UaxCvR0SYEUeIhMWlvOyskAGIlft68wTqBUXwBI8Mq
-        RrHUguLc9NRiowJjveLE3OLSvHS95PzcTYzgWNNy38G47ZzPIUYBDkYlHl6H4rYYIdbEsuLK
-        3EOMEhzMSiK8eVVAId6UxMqq1KL8+KLSnNTiQ4zSHCxK4rwPpedGCwmkJ5akZqemFqQWwWSZ
-        ODilGhh3X8vfp8x2xHO92CenBJMfJ3YFuFe3PXPgbk346yEs5tdQ5s7ymKnqgEso95KazfnR
-        huET+y9M7Dec8GCx22ttxsdaaTl27zi1JhR5tN0p3DurtEVO15Tt0swFOzdYdRrP9Njd3/v4
-        tgzLzqNHpstK7DTYkD57wja5x3pvl3baWs2adOZ8ipASS3FGoqEWc1FxIgBZ7/bdsQIAAA==
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFmpiluLIzCtJLcpLzFFi42I5/e+xgO7+5rYYg7tPFCw2zljPajH/yDlW
-        i/7Hr5ktzp/fwG6x6fE1VovLu+awWcw4v4/JYu2Ru+wWrXuPsFscftPOarFg4yNGB26PTas6
-        2Tw2L6n36NuyitHj8ya5AJYoLpuU1JzMstQifbsEroyn+zayFvxiq+j5PY+9gfENaxcjJ4eE
-        gIlE56fLbF2MXBxCAjsZJY50vGSHcH4xSiyddZgdpIpNwFCi92gfI4gtIiAscW/pcrA4s8Aa
-        JolvTZIgtrCAv8Sex1fB4iwCqhJ/ZjSxgNi8AtYSvw6cZ4HYJi+xesMB5gmMXAsYGVYxSqYW
-        FOem5xYbFRjlpZbrFSfmFpfmpesl5+duYgSGzLbDWv07GB8viT/EKMDBqMTD+6KgLUaINbGs
-        uDL3EKMEB7OSCG9eFVCINyWxsiq1KD++qDQntfgQozQHi5I4L3/+sUghgfTEktTs1NSC1CKY
-        LBMHp1QD4+FwPSev9ZtPvzrZfkcxvfqaN3NpusGhjWd+nvshGnvq3zJzZt+HmdOT+A90Xd17
-        4GlxZ/ukr9FnXP4FxyVeypDXF5xx8ZTen2WiVtJ3F3E21oheYr8j9Vnqb0aoXHFe0cto1+n3
-        GRiDE88Y+76axGjxdPelu68E76+KWcybt9QrmUk87oHObSWW4oxEQy3mouJEAMkOQtcVAgAA
-X-CMS-MailID: 20190311155023epcas2p428a025925f6442554b50e14e328a6d04
-CMS-TYPE: 102P
-X-CMS-RootMailID: 20190311155023epcas2p428a025925f6442554b50e14e328a6d04
-References: <CGME20190311155023epcas2p428a025925f6442554b50e14e328a6d04@epcas2p4.samsung.com>
+        Mon, 11 Mar 2019 11:51:21 -0400
+Received: by mail-pf1-f195.google.com with SMTP id s23so1884009pfe.13;
+        Mon, 11 Mar 2019 08:51:20 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=message-id:date:from:to:cc:subject:mime-version:content-disposition
+         :user-agent;
+        bh=bu4IbrWa1ZTI+K96nWVl7AHAx8DAHzjVhBaPXw8WmYQ=;
+        b=msB1N2elS4w879Qcmqs45axyGI85eOIJNKsbTt7tyLe0reuF/CxuVgggM+49f/5BGd
+         paJTnU4iCPNLFAYVeObHOKP2adFQ+2wVOCfBeQaDnQoLfWDM6Bu/Ghs1kQtDTopTU5e5
+         f4FtLViHH3hKvuctkE8/sZnl0z8Ri/dLbw8Mcin7DdZrCNx81Pj1LjJqY/3mxleSB58a
+         JRvMXoiJjRwpjjbbnGz8tlMl3HyRxljvUcJEVgSV6JYJ3/D3iEv5LPURcrHrrtLf6cYf
+         tB7lq6VTvbT5cyS3EmbgA28jIHQ/4vLjV2c1ntbvLGkRZX6r8wtcJXSFYPA4UOZ5B/gH
+         hg5A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:message-id:date:from:to:cc:subject:mime-version
+         :content-disposition:user-agent;
+        bh=bu4IbrWa1ZTI+K96nWVl7AHAx8DAHzjVhBaPXw8WmYQ=;
+        b=sFyahwEasFxMoAMXew2nEHy9TjoDmMfX2kTpneq7TNmwqwe4nANeHvLBTT4IxYPPIb
+         c5Qfse/2U0xOHUTts0MBwiWAusmXQYGpL/1AMu740rl44rg39RLVY6NB+BcC51f+ZioM
+         eRTE5v8g+braNOd1Qe2D1M/SDtrIrEf+FuqNh9X/qwvLjbCLHXFThtq6jeRLnIdTyK5M
+         eXtu0GOL+OqU0LyCblLBJg6CSbzsC3yZLGULBCMipqSDeCE+TZFYFHpi+hVzkKhquUx6
+         QksEg6yrMJQn1nbrIvrAUn9PKvj/STeamqXJSKqnTGCtuvbCItNy+2433f53R1d+EuNO
+         CkWw==
+X-Gm-Message-State: APjAAAVTBsS4zLvMeR9G2lMKBTpcS33xsRhm2brsC7nzpv7kJie2OUZA
+        fUZpo4xbHmhVayW0eZX9RSQ=
+X-Google-Smtp-Source: APXvYqwxI5R2u0XfFlDQ+0MFPCAwqlLrrph2iDZAxTBobXt6kE3YwuII7j6Sra3xFf9yViBEKV3G1w==
+X-Received: by 2002:a17:902:bd97:: with SMTP id q23mr33810806pls.94.1552319480110;
+        Mon, 11 Mar 2019 08:51:20 -0700 (PDT)
+Received: from sabyasachi ([2405:205:6194:e788:a4f9:f674:88cd:e152])
+        by smtp.gmail.com with ESMTPSA id 1sm19832053pfy.68.2019.03.11.08.51.14
+        (version=TLS1 cipher=ECDHE-RSA-AES128-SHA bits=128/128);
+        Mon, 11 Mar 2019 08:51:19 -0700 (PDT)
+Message-ID: <5c8683f7.1c69fb81.e37f9.75a0@mx.google.com>
+X-Google-Original-Message-ID: <20190311155111.GA9038@sabyasachi.linux@gmail.com>
+Date:   Mon, 11 Mar 2019 21:21:11 +0530
+From:   Sabyasachi Gupta <sabyasachi.linux@gmail.com>
+To:     akpm@linux-foundation.org
+Cc:     aacraid@microsemi.com, jejb@linux.vnet.ibm.com,
+        martin.petersen@oracle.com, linux-scsi@vger.kernel.org,
+        linux-kernel@vger.kernel.org, jrdr.linux@gmail.com
+Subject: [PATCH] scsi/dpt_i2o.c: Use dma_zalloc_coherent
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+User-Agent: Mutt/1.5.24 (2015-08-30)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The name of CODEC input widget to which microphone is connected through
-the "Headphone" jack is "IN12" not "IN1". This fixes microphone support
-on Odroid XU3.
+Replaced dma_alloc_coherent + memset with dma_zalloc_coherent
 
-Cc: <stable@vger.kernel.org> # v4.14+
-Signed-off-by: Sylwester Nawrocki <s.nawrocki@samsung.com>
+Signed-off-by: Sabyasachi Gupta <sabyasachi.linux@gmail.com>
 ---
- arch/arm/boot/dts/exynos5422-odroidxu3-audio.dtsi | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/scsi/dpt_i2o.c | 12 ++++--------
+ 1 file changed, 4 insertions(+), 8 deletions(-)
 
-diff --git a/arch/arm/boot/dts/exynos5422-odroidxu3-audio.dtsi b/arch/arm/boot/dts/exynos5422-odroidxu3-audio.dtsi
-index e84544b220b9..b90cea8b7368 100644
---- a/arch/arm/boot/dts/exynos5422-odroidxu3-audio.dtsi
-+++ b/arch/arm/boot/dts/exynos5422-odroidxu3-audio.dtsi
-@@ -22,7 +22,7 @@
- 			"Headphone Jack", "HPL",
- 			"Headphone Jack", "HPR",
- 			"Headphone Jack", "MICBIAS",
--			"IN1", "Headphone Jack",
-+			"IN12", "Headphone Jack",
- 			"Speakers", "SPKL",
- 			"Speakers", "SPKR";
+diff --git a/drivers/scsi/dpt_i2o.c b/drivers/scsi/dpt_i2o.c
+index 37de8fb..056383a 100644
+--- a/drivers/scsi/dpt_i2o.c
++++ b/drivers/scsi/dpt_i2o.c
+@@ -1370,13 +1370,12 @@ static s32 adpt_i2o_reset_hba(adpt_hba* pHba)
+ 		schedule_timeout_uninterruptible(1);
+ 	} while (m == EMPTY_QUEUE);
  
+-	status = dma_alloc_coherent(&pHba->pDev->dev, 4, &addr, GFP_KERNEL);
++	status = dma_zalloc_coherent(&pHba->pDev->dev, 4, &addr, GFP_KERNEL);
+ 	if(status == NULL) {
+ 		adpt_send_nop(pHba, m);
+ 		printk(KERN_ERR"IOP reset failed - no free memory.\n");
+ 		return -ENOMEM;
+ 	}
+-	memset(status,0,4);
+ 
+ 	msg[0]=EIGHT_WORD_MSG_SIZE|SGL_OFFSET_0;
+ 	msg[1]=I2O_CMD_ADAPTER_RESET<<24|HOST_TID<<12|ADAPTER_TID;
+@@ -2836,14 +2835,13 @@ static s32 adpt_i2o_init_outbound_q(adpt_hba* pHba)
+ 
+ 	msg=(u32 __iomem *)(pHba->msg_addr_virt+m);
+ 
+-	status = dma_alloc_coherent(&pHba->pDev->dev, 4, &addr, GFP_KERNEL);
++	status = dma_zalloc_coherent(&pHba->pDev->dev, 4, &addr, GFP_KERNEL);
+ 	if (!status) {
+ 		adpt_send_nop(pHba, m);
+ 		printk(KERN_WARNING"%s: IOP reset failed - no free memory.\n",
+ 			pHba->name);
+ 		return -ENOMEM;
+ 	}
+-	memset(status, 0, 4);
+ 
+ 	writel(EIGHT_WORD_MSG_SIZE| SGL_OFFSET_6, &msg[0]);
+ 	writel(I2O_CMD_OUTBOUND_INIT<<24 | HOST_TID<<12 | ADAPTER_TID, &msg[1]);
+@@ -2890,14 +2888,13 @@ static s32 adpt_i2o_init_outbound_q(adpt_hba* pHba)
+ 			pHba->reply_pool, pHba->reply_pool_pa);
+ 	}
+ 
+-	pHba->reply_pool = dma_alloc_coherent(&pHba->pDev->dev,
++	pHba->reply_pool = dma_zalloc_coherent(&pHba->pDev->dev,
+ 				pHba->reply_fifo_size * REPLY_FRAME_SIZE * 4,
+ 				&pHba->reply_pool_pa, GFP_KERNEL);
+ 	if (!pHba->reply_pool) {
+ 		printk(KERN_ERR "%s: Could not allocate reply pool\n", pHba->name);
+ 		return -ENOMEM;
+ 	}
+-	memset(pHba->reply_pool, 0 , pHba->reply_fifo_size * REPLY_FRAME_SIZE * 4);
+ 
+ 	for(i = 0; i < pHba->reply_fifo_size; i++) {
+ 		writel(pHba->reply_pool_pa + (i * REPLY_FRAME_SIZE * 4),
+@@ -3126,13 +3123,12 @@ static int adpt_i2o_build_sys_table(void)
+ 	sys_tbl_len = sizeof(struct i2o_sys_tbl) +	// Header + IOPs
+ 				(hba_count) * sizeof(struct i2o_sys_tbl_entry);
+ 
+-	sys_tbl = dma_alloc_coherent(&pHba->pDev->dev,
++	sys_tbl = dma_zalloc_coherent(&pHba->pDev->dev,
+ 				sys_tbl_len, &sys_tbl_pa, GFP_KERNEL);
+ 	if (!sys_tbl) {
+ 		printk(KERN_WARNING "SysTab Set failed. Out of memory.\n");	
+ 		return -ENOMEM;
+ 	}
+-	memset(sys_tbl, 0, sys_tbl_len);
+ 
+ 	sys_tbl->num_entries = hba_count;
+ 	sys_tbl->version = I2OVERSION;
 -- 
-2.17.1
+2.7.4
 
