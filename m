@@ -6,31 +6,32 @@ X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 90016C43381
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 Mar 2019 22:48:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6555DC4360F
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 Mar 2019 22:48:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5F535217F4
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 Mar 2019 22:48:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3DAE62087C
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 Mar 2019 22:48:20 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726627AbfCKWsP (ORCPT
+        id S1726686AbfCKWsT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 11 Mar 2019 18:48:15 -0400
-Received: from usa-sjc-mx-foss1.foss.arm.com ([217.140.101.70]:33926 "EHLO
+        Mon, 11 Mar 2019 18:48:19 -0400
+Received: from usa-sjc-mx-foss1.foss.arm.com ([217.140.101.70]:33940 "EHLO
         foss.arm.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726556AbfCKWsN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 11 Mar 2019 18:48:13 -0400
+        id S1726556AbfCKWsQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 11 Mar 2019 18:48:16 -0400
 Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.72.51.249])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 7A47B1993;
-        Mon, 11 Mar 2019 15:48:13 -0700 (PDT)
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 3134E1993;
+        Mon, 11 Mar 2019 15:48:16 -0700 (PDT)
 Received: from e113632-lin.cambridge.arm.com (e113632-lin.cambridge.arm.com [10.1.194.37])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPA id A8C353F59C;
-        Mon, 11 Mar 2019 15:48:12 -0700 (PDT)
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPA id 3C51A3F59C;
+        Mon, 11 Mar 2019 15:48:15 -0700 (PDT)
 From:   Valentin Schneider <valentin.schneider@arm.com>
 To:     linux-kernel@vger.kernel.org
-Cc:     Michal Simek <monstr@monstr.eu>
-Subject: [PATCH 05/14] microblaze: entry: Remove unneeded need_resched() loop
-Date:   Mon, 11 Mar 2019 22:47:43 +0000
-Message-Id: <20190311224752.8337-6-valentin.schneider@arm.com>
+Cc:     Greentime Hu <green.hu@gmail.com>,
+        Vincent Chen <deanbo422@gmail.com>
+Subject: [PATCH 07/14] nds32: ex-exit: Remove unneeded need_resched() loop
+Date:   Mon, 11 Mar 2019 22:47:45 +0000
+Message-Id: <20190311224752.8337-8-valentin.schneider@arm.com>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190311224752.8337-1-valentin.schneider@arm.com>
 References: <20190311224752.8337-1-valentin.schneider@arm.com>
@@ -46,30 +47,34 @@ is contained in a need_resched() loop, we don't need the outer arch
 code loop.
 
 Signed-off-by: Valentin Schneider <valentin.schneider@arm.com>
-Cc: Michal Simek <monstr@monstr.eu>
+Cc: Greentime Hu <green.hu@gmail.com>
+Cc: Vincent Chen <deanbo422@gmail.com>
 ---
- arch/microblaze/kernel/entry.S | 5 -----
- 1 file changed, 5 deletions(-)
+ arch/nds32/kernel/ex-exit.S | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/arch/microblaze/kernel/entry.S b/arch/microblaze/kernel/entry.S
-index 4e1b567becd6..de7083bd1d24 100644
---- a/arch/microblaze/kernel/entry.S
-+++ b/arch/microblaze/kernel/entry.S
-@@ -738,14 +738,9 @@ no_intr_resched:
- 	andi	r5, r5, _TIF_NEED_RESCHED;
- 	beqi	r5, restore /* if zero jump over */
+diff --git a/arch/nds32/kernel/ex-exit.S b/arch/nds32/kernel/ex-exit.S
+index 97ba15cd4180..1df02a793364 100644
+--- a/arch/nds32/kernel/ex-exit.S
++++ b/arch/nds32/kernel/ex-exit.S
+@@ -163,7 +163,7 @@ resume_kernel:
+ 	gie_disable
+ 	lwi	$t0, [tsk+#TSK_TI_PREEMPT]
+ 	bnez	$t0, no_work_pending
+-need_resched:
++
+ 	lwi	$t0, [tsk+#TSK_TI_FLAGS]
+ 	andi	$p1, $t0, #_TIF_NEED_RESCHED
+ 	beqz	$p1, no_work_pending
+@@ -173,7 +173,7 @@ need_resched:
+ 	beqz	$t0, no_work_pending
  
--preempt:
- 	/* interrupts are off that's why I am calling preempt_chedule_irq */
- 	bralid	r15, preempt_schedule_irq
- 	nop
--	lwi	r11, CURRENT_TASK, TS_THREAD_INFO;	/* get thread info */
--	lwi	r5, r11, TI_FLAGS;		/* get flags in thread info */
--	andi	r5, r5, _TIF_NEED_RESCHED;
--	bnei	r5, preempt /* if non zero jump to resched */
- restore:
+ 	jal	preempt_schedule_irq
+-	b	need_resched
++	b	no_work_pending
  #endif
- 	VM_OFF /* MS: turn off MMU */
+ 
+ /*
 -- 
 2.20.1
 
