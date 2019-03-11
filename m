@@ -3,127 +3,130 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
 X-Spam-Status: No, score=-8.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_MUTT
-	autolearn=ham autolearn_force=no version=3.4.0
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 54E6AC43381
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 Mar 2019 09:03:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C8F7BC43381
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 Mar 2019 09:04:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 231D92084D
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 Mar 2019 09:03:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A17D82075C
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 Mar 2019 09:04:21 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727050AbfCKJDT convert rfc822-to-8bit (ORCPT
+        id S1727069AbfCKJEU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 11 Mar 2019 05:03:19 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:58120 "EHLO mx1.redhat.com"
+        Mon, 11 Mar 2019 05:04:20 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:40444 "EHLO mx1.redhat.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725850AbfCKJDT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 11 Mar 2019 05:03:19 -0400
+        id S1725839AbfCKJEU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 11 Mar 2019 05:04:20 -0400
 Received: from smtp.corp.redhat.com (int-mx04.intmail.prod.int.phx2.redhat.com [10.5.11.14])
         (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id D6D3D30832C5;
-        Mon, 11 Mar 2019 09:03:18 +0000 (UTC)
-Received: from localhost (unknown [10.40.205.57])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 4E8575DA62;
-        Mon, 11 Mar 2019 09:03:16 +0000 (UTC)
-Date:   Mon, 11 Mar 2019 10:03:15 +0100
-From:   Stanislaw Gruszka <sgruszka@redhat.com>
-To:     Rosen Penev <rosenp@gmail.com>, Joerg Roedel <joro@8bytes.org>
-Cc:     Lorenzo Bianconi <lorenzo.bianconi@redhat.com>,
-        linux-wireless <linux-wireless@vger.kernel.org>,
-        Samuel Sieb <samuel@sieb.net>,
-        Alexander Duyck <alexander.h.duyck@linux.intel.com>,
-        iommu@lists.linux-foundation.org, linux-kernel@vger.kernel.org,
-        linux-nvme@lists.infradead.org, jan.viktorin@gmail.com
-Subject: [PATCH] iommu/amd: fix sg->dma_address for sg->offset bigger than
- PAGE_SIZE
-Message-ID: <20190311090314.GB3310@redhat.com>
-References: <20190226103450.GA2989@redhat.com>
- <20190226104413.GH20740@8bytes.org>
- <20190226112407.GB2989@redhat.com>
- <20190228090411.GA24938@redhat.com>
- <20190228104223.GA2749@redhat.com>
- <20190228121948.GD6072@redhat.com>
- <20190228134029.GC1594@8bytes.org>
- <20190304071037.GA2787@redhat.com>
- <CAKxU2N-k-9DCYBv6W3CohL963dr3AeY3VHyt8FrUuo=BfacDsw@mail.gmail.com>
- <20190311084319.GA3310@redhat.com>
+        by mx1.redhat.com (Postfix) with ESMTPS id C5602E6A81;
+        Mon, 11 Mar 2019 09:04:19 +0000 (UTC)
+Received: from dhcp-128-65.nay.redhat.com (ovpn-12-113.pek2.redhat.com [10.72.12.113])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id 0E5845DA62;
+        Mon, 11 Mar 2019 09:04:06 +0000 (UTC)
+Date:   Mon, 11 Mar 2019 17:04:02 +0800
+From:   Dave Young <dyoung@redhat.com>
+To:     David Hildenbrand <david@redhat.com>
+Cc:     linux-mm@kvack.org, linux-kernel@vger.kernel.org,
+        linux-doc@vger.kernel.org, devel@linuxdriverproject.org,
+        linux-fsdevel@vger.kernel.org, linux-pm@vger.kernel.org,
+        xen-devel@lists.xenproject.org,
+        kexec-ml <kexec@lists.infradead.org>, pv-drivers@vmware.com,
+        Andrew Morton <akpm@linux-foundation.org>,
+        "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>,
+        Baoquan He <bhe@redhat.com>, Omar Sandoval <osandov@fb.com>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Matthew Wilcox <willy@infradead.org>,
+        Michal Hocko <mhocko@suse.com>,
+        "Michael S. Tsirkin" <mst@redhat.com>,
+        Lianbo Jiang <lijiang@redhat.com>,
+        Borislav Petkov <bp@alien8.de>,
+        Kazuhito Hagio <k-hagio@ab.jp.nec.com>
+Subject: Re: [PATCH v2 3/8] kexec: export PG_offline to VMCOREINFO
+Message-ID: <20190311090402.GA12071@dhcp-128-65.nay.redhat.com>
+References: <20181122100627.5189-1-david@redhat.com>
+ <20181122100627.5189-4-david@redhat.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8BIT
-In-Reply-To: <20190311084319.GA3310@redhat.com>
-User-Agent: Mutt/1.8.3 (2017-05-23)
+In-Reply-To: <20181122100627.5189-4-david@redhat.com>
+User-Agent: Mutt/1.9.5 (2018-04-13)
 X-Scanned-By: MIMEDefang 2.79 on 10.5.11.14
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.44]); Mon, 11 Mar 2019 09:03:18 +0000 (UTC)
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.38]); Mon, 11 Mar 2019 09:04:20 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Take into account that sg->offset can be bigger than PAGE_SIZE when
-setting segment sg->dma_address. Otherwise sg->dma_address will point
-at diffrent page, what makes DMA not possible with erros like this:
+Hi David,
+On 11/22/18 at 11:06am, David Hildenbrand wrote:
+> Right now, pages inflated as part of a balloon driver will be dumped
+> by dump tools like makedumpfile. While XEN is able to check in the
+> crash kernel whether a certain pfn is actuall backed by memory in the
+> hypervisor (see xen_oldmem_pfn_is_ram) and optimize this case, dumps of
+> other balloon inflated memory will essentially result in zero pages getting
+> allocated by the hypervisor and the dump getting filled with this data.
+> 
+> The allocation and reading of zero pages can directly be avoided if a
+> dumping tool could know which pages only contain stale information not to
+> be dumped.
+> 
+> We now have PG_offline which can be (and already is by virtio-balloon)
+> used for marking pages as logically offline. Follow up patches will
+> make use of this flag also in other balloon implementations.
+> 
+> Let's export PG_offline via PAGE_OFFLINE_MAPCOUNT_VALUE, so
+> makedumpfile can directly skip pages that are logically offline and the
+> content therefore stale. (we export is as a macro to match how it is
+> done for PG_buddy. This way it is clearer that this is not actually a flag
+> but only a very specific mapcount value to represent page types).
+> 
+> Please note that this is also helpful for a problem we were seeing under
+> Hyper-V: Dumping logically offline memory (pages kept fake offline while
+> onlining a section via online_page_callback) would under some condicions
+> result in a kernel panic when dumping them.
+> 
+> Cc: Andrew Morton <akpm@linux-foundation.org>
+> Cc: Dave Young <dyoung@redhat.com>
+> Cc: "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>
+> Cc: Baoquan He <bhe@redhat.com>
+> Cc: Omar Sandoval <osandov@fb.com>
+> Cc: Arnd Bergmann <arnd@arndb.de>
+> Cc: Matthew Wilcox <willy@infradead.org>
+> Cc: Michal Hocko <mhocko@suse.com>
+> Cc: "Michael S. Tsirkin" <mst@redhat.com>
+> Cc: Lianbo Jiang <lijiang@redhat.com>
+> Cc: Borislav Petkov <bp@alien8.de>
+> Cc: Kazuhito Hagio <k-hagio@ab.jp.nec.com>
+> Acked-by: Michael S. Tsirkin <mst@redhat.com>
+> Acked-by: Dave Young <dyoung@redhat.com>
+> Signed-off-by: David Hildenbrand <david@redhat.com>
+> ---
+>  kernel/crash_core.c | 2 ++
+>  1 file changed, 2 insertions(+)
+> 
+> diff --git a/kernel/crash_core.c b/kernel/crash_core.c
+> index 933cb3e45b98..093c9f917ed0 100644
+> --- a/kernel/crash_core.c
+> +++ b/kernel/crash_core.c
+> @@ -464,6 +464,8 @@ static int __init crash_save_vmcoreinfo_init(void)
+>  	VMCOREINFO_NUMBER(PAGE_BUDDY_MAPCOUNT_VALUE);
+>  #ifdef CONFIG_HUGETLB_PAGE
+>  	VMCOREINFO_NUMBER(HUGETLB_PAGE_DTOR);
+> +#define PAGE_OFFLINE_MAPCOUNT_VALUE	(~PG_offline)
+> +	VMCOREINFO_NUMBER(PAGE_OFFLINE_MAPCOUNT_VALUE);
+>  #endif
+>  
+>  	arch_crash_save_vmcoreinfo();
 
-xhci_hcd 0000:38:00.3: AMD-Vi: Event logged [IO_PAGE_FAULT domain=0x0000 address=0x00000000fdaa70c0 flags=0x0020]
-xhci_hcd 0000:38:00.3: AMD-Vi: Event logged [IO_PAGE_FAULT domain=0x0000 address=0x00000000fdaa7040 flags=0x0020]
-xhci_hcd 0000:38:00.3: AMD-Vi: Event logged [IO_PAGE_FAULT domain=0x0000 address=0x00000000fdaa7080 flags=0x0020]
-xhci_hcd 0000:38:00.3: AMD-Vi: Event logged [IO_PAGE_FAULT domain=0x0000 address=0x00000000fdaa7100 flags=0x0020]
-xhci_hcd 0000:38:00.3: AMD-Vi: Event logged [IO_PAGE_FAULT domain=0x0000 address=0x00000000fdaa7000 flags=0x0020]
+The patch has been merged, would you mind to send a documentation patch
+for the vmcoreinfo, which is added recently in Documentation/kdump/vmcoreinfo.txt
 
-Additinally with wrong sg->dma_address unmap_sg will free wrong pages,
-what what can cause crashes like this:
+A brief description about how this vmcoreinfo field is used is good to
+have.
 
-Feb 28 19:27:45 kernel: BUG: Bad page state in process cinnamon  pfn:39e8b1
-Feb 28 19:27:45 kernel: Disabling lock debugging due to kernel taint
-Feb 28 19:27:45 kernel: flags: 0x2ffff0000000000()
-Feb 28 19:27:45 kernel: raw: 02ffff0000000000 0000000000000000 ffffffff00000301 0000000000000000
-Feb 28 19:27:45 kernel: raw: 0000000000000000 0000000000000000 00000001ffffffff 0000000000000000
-Feb 28 19:27:45 kernel: page dumped because: nonzero _refcount
-Feb 28 19:27:45 kernel: Modules linked in: ccm fuse arc4 nct6775 hwmon_vid amdgpu nls_iso8859_1 nls_cp437 edac_mce_amd vfat fat kvm_amd ccp rng_core kvm mt76x0u mt76x0_common mt76x02_usb irqbypass mt76_usb mt76x02_lib mt76 crct10dif_pclmul crc32_pclmul chash mac80211 amd_iommu_v2 ghash_clmulni_intel gpu_sched i2c_algo_bit ttm wmi_bmof snd_hda_codec_realtek snd_hda_codec_generic drm_kms_helper snd_hda_codec_hdmi snd_hda_intel drm snd_hda_codec aesni_intel snd_hda_core snd_hwdep aes_x86_64 crypto_simd snd_pcm cfg80211 cryptd mousedev snd_timer glue_helper pcspkr r8169 input_leds realtek agpgart libphy rfkill snd syscopyarea sysfillrect sysimgblt fb_sys_fops soundcore sp5100_tco k10temp i2c_piix4 wmi evdev gpio_amdpt pinctrl_amd mac_hid pcc_cpufreq acpi_cpufreq sg ip_tables x_tables ext4(E) crc32c_generic(E) crc16(E) mbcache(E) jbd2(E) fscrypto(E) sd_mod(E) hid_generic(E) usbhid(E) hid(E) dm_mod(E) serio_raw(E) atkbd(E) libps2(E) crc32c_intel(E) ahci(E) libahci(E) libata(E) xhci_pci(E) 
- xhci_hcd(E)
-Feb 28 19:27:45 kernel:  scsi_mod(E) i8042(E) serio(E) bcache(E) crc64(E)
-Feb 28 19:27:45 kernel: CPU: 2 PID: 896 Comm: cinnamon Tainted: G    B   W   E     4.20.12-arch1-1-custom #1
-Feb 28 19:27:45 kernel: Hardware name: To Be Filled By O.E.M. To Be Filled By O.E.M./B450M Pro4, BIOS P1.20 06/26/2018
-Feb 28 19:27:45 kernel: Call Trace:
-Feb 28 19:27:45 kernel:  dump_stack+0x5c/0x80
-Feb 28 19:27:45 kernel:  bad_page.cold.29+0x7f/0xb2
-Feb 28 19:27:45 kernel:  __free_pages_ok+0x2c0/0x2d0
-Feb 28 19:27:45 kernel:  skb_release_data+0x96/0x180
-Feb 28 19:27:45 kernel:  __kfree_skb+0xe/0x20
-Feb 28 19:27:45 kernel:  tcp_recvmsg+0x894/0xc60
-Feb 28 19:27:45 kernel:  ? reuse_swap_page+0x120/0x340
-Feb 28 19:27:45 kernel:  ? ptep_set_access_flags+0x23/0x30
-Feb 28 19:27:45 kernel:  inet_recvmsg+0x5b/0x100
-Feb 28 19:27:45 kernel:  __sys_recvfrom+0xc3/0x180
-Feb 28 19:27:45 kernel:  ? handle_mm_fault+0x10a/0x250
-Feb 28 19:27:45 kernel:  ? syscall_trace_enter+0x1d3/0x2d0
-Feb 28 19:27:45 kernel:  ? __audit_syscall_exit+0x22a/0x290
-Feb 28 19:27:45 kernel:  __x64_sys_recvfrom+0x24/0x30
-Feb 28 19:27:45 kernel:  do_syscall_64+0x5b/0x170
-Feb 28 19:27:45 kernel:  entry_SYSCALL_64_after_hwframe+0x44/0xa9
-
-Cc: stable@vger.kernel.org
-Reported-and-tested-by: jan.viktorin@gmail.com
-Signed-off-by: Stanislaw Gruszka <sgruszka@redhat.com>
----
- drivers/iommu/amd_iommu.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
-
-diff --git a/drivers/iommu/amd_iommu.c b/drivers/iommu/amd_iommu.c
-index 6b0760dafb3e..949621f33624 100644
---- a/drivers/iommu/amd_iommu.c
-+++ b/drivers/iommu/amd_iommu.c
-@@ -2604,7 +2604,7 @@ static int map_sg(struct device *dev, struct scatterlist *sglist,
- 
- 	/* Everything is mapped - write the right values into s->dma_address */
- 	for_each_sg(sglist, s, nelems, i) {
--		s->dma_address += address + s->offset;
-+		s->dma_address += address + (s->offset & ~PAGE_MASK);
- 		s->dma_length   = s->length;
- 	}
- 
--- 
-2.7.5
-
+Thanks
+Dave
