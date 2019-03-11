@@ -2,134 +2,112 @@ Return-Path: <SRS0=FxTY=RO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.5 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_PASS autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6B7CBC43381
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 Mar 2019 17:25:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 033FEC43381
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 Mar 2019 17:26:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3D4972084F
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 Mar 2019 17:25:31 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=cmpxchg-org.20150623.gappssmtp.com header.i=@cmpxchg-org.20150623.gappssmtp.com header.b="A0QAa7xg"
+	by mail.kernel.org (Postfix) with ESMTP id CD66B214AE
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 Mar 2019 17:26:00 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728098AbfCKRZa (ORCPT
+        id S1728062AbfCKRZ7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 11 Mar 2019 13:25:30 -0400
-Received: from mail-yw1-f65.google.com ([209.85.161.65]:44485 "EHLO
-        mail-yw1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727349AbfCKRZ2 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 11 Mar 2019 13:25:28 -0400
-Received: by mail-yw1-f65.google.com with SMTP id c4so4525501ywa.11
-        for <linux-kernel@vger.kernel.org>; Mon, 11 Mar 2019 10:25:28 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=cmpxchg-org.20150623.gappssmtp.com; s=20150623;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=f/08Cea8rl1auJ0ztvMCqTFjGtaWSYM7AUW8AvuH/RU=;
-        b=A0QAa7xgCQYBpQuFa1awMJf38b2jg+etnRfvYDr66i3IXqdjSawonGGo2ICZM74Asr
-         o6S9TIyGUWOIBts5qq8xc1Z+kfHH66CYpNPsnj0aD/swB3Mg/4e2FlUeZRc3AgJpmtN0
-         EFs2KR9cIITJLbNZ+C9dIONuJuEtvYFmjYFOLLHLytrhz+mNIcKz8MgkzLxc2P77eagQ
-         n5MyurlbC5t4Y4MYhS+bn1v7sDxmqHD1IboTDMXPedkG/tkwapmjtNAxtQ5v4Qh1pP7z
-         jRivnC6dNZuA7NqLiNGo8mjZzjGgRp4THrZqVPPP0JFC02BcFhJKRmygRZOZ4MqAMfr/
-         svog==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=f/08Cea8rl1auJ0ztvMCqTFjGtaWSYM7AUW8AvuH/RU=;
-        b=PNulpm3xfP6XJn3rptoXS7eYD99XXsgX/2OCF/2nZuRpJTv2jxBOp/iIzaZ3qbuVrc
-         TPFDKoDZUxbWSqF3EmVQFYFiiqWCwV08BmF7nEeT3GSXVfwqjo/sjTIYYipIcMgCdzWW
-         WPuLb/fZoyFy+5xVRqv9FMLt/nq06bAGBzMYry6c6B0VqzvrFs91Jp7u6ArXkxkAnj7W
-         a0mGnCyRKrFTbsaoAzmm+uwhORtiPooHKLIS+TNkdxaVXIRmS4mBqXgGVrNJqaWrx2at
-         2FtwG7taZLqIIrmSx+VkkQRAeE6CPAJ9pOvo5SIXepUZhqZigLDYDGxz0VITpcRnpBPU
-         VPjA==
-X-Gm-Message-State: APjAAAXmaZGFwCwc1wVnBJz+jUU6+AJ/6DBpBFc0m6jXJBm1yy4hie9o
-        3+LaG+Syd5AqLIUIPX8nBhdhkw==
-X-Google-Smtp-Source: APXvYqwZgrQea8FmLekPNMPenwnIlyxxrt87gJ6eaPSRwYTYSYUXxhPpQFzlD+GmKLLIR7+mqlCnqA==
-X-Received: by 2002:a25:61c8:: with SMTP id v191mr27629102ybb.489.1552325127865;
-        Mon, 11 Mar 2019 10:25:27 -0700 (PDT)
-Received: from localhost ([2620:10d:c091:200::1:3c60])
-        by smtp.gmail.com with ESMTPSA id b7sm2994000ywa.86.2019.03.11.10.25.26
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Mon, 11 Mar 2019 10:25:27 -0700 (PDT)
-Date:   Mon, 11 Mar 2019 13:25:26 -0400
-From:   Johannes Weiner <hannes@cmpxchg.org>
-To:     Roman Gushchin <guroan@gmail.com>
-Cc:     linux-mm@kvack.org, kernel-team@fb.com,
-        linux-kernel@vger.kernel.org, Tejun Heo <tj@kernel.org>,
-        Rik van Riel <riel@surriel.com>,
-        Michal Hocko <mhocko@kernel.org>, Roman Gushchin <guro@fb.com>
-Subject: Re: [PATCH 3/5] mm: release memcg percpu data prematurely
-Message-ID: <20190311172526.GC10823@cmpxchg.org>
-References: <20190307230033.31975-1-guro@fb.com>
- <20190307230033.31975-4-guro@fb.com>
+        Mon, 11 Mar 2019 13:25:59 -0400
+Received: from mx2.suse.de ([195.135.220.15]:35802 "EHLO mx1.suse.de"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1727641AbfCKRZ7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 11 Mar 2019 13:25:59 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx1.suse.de (Postfix) with ESMTP id 9D8C8AFDF;
+        Mon, 11 Mar 2019 17:25:57 +0000 (UTC)
+Subject: Re: [PATCH v8 0/6] Add Fieldbus subsystem + support HMS Profinet card
+To:     Sven Van Asbroeck <thesven73@gmail.com>
+Cc:     Greg KH <gregkh@linuxfoundation.org>, robh+dt@kernel.org,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Lee Jones <lee.jones@linaro.org>, mark.rutland@arm.com,
+        treding@nvidia.com, David Lechner <david@lechnology.com>,
+        noralf@tronnes.org, johan@kernel.org,
+        Michal Simek <monstr@monstr.eu>, michal.vokac@ysoft.com,
+        Arnd Bergmann <arnd@arndb.de>, john.garry@huawei.com,
+        geert+renesas@glider.be, robin.murphy@arm.com,
+        Paul Gortmaker <paul.gortmaker@windriver.com>,
+        sebastien.bourdelin@savoirfairelinux.com, icenowy@aosc.io,
+        Stuart Yoder <stuyoder@gmail.com>, maxime.ripard@bootlin.com,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+References: <20190124201251.15159-1-TheSven73@googlemail.com>
+ <CAGngYiWFU-VnG=ODLWaUf0yp69qaU2GSd9exdHvyi6Ko1ib9qw@mail.gmail.com>
+ <20190208121916.GE23483@kroah.com>
+ <CAGngYiVVNitd5SDLah-kxP69W6XHYHOQrOz=DnevuGnqoHD7HA@mail.gmail.com>
+ <20190208141400.GA22162@kroah.com>
+ <CAGngYiXZtNcqQ3JGgavBxypo75WtAT7T-X4DQFNWD8kQcifU8g@mail.gmail.com>
+From:   =?UTF-8?Q?Andreas_F=c3=a4rber?= <afaerber@suse.de>
+Openpgp: preference=signencrypt
+Organization: SUSE Linux GmbH
+Message-ID: <c8632a8c-dd3b-6b16-3fb2-5a1b381ca29a@suse.de>
+Date:   Mon, 11 Mar 2019 18:25:56 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.5.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190307230033.31975-4-guro@fb.com>
-User-Agent: Mutt/1.11.3 (2019-02-01)
+In-Reply-To: <CAGngYiXZtNcqQ3JGgavBxypo75WtAT7T-X4DQFNWD8kQcifU8g@mail.gmail.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Mar 07, 2019 at 03:00:31PM -0800, Roman Gushchin wrote:
-> To reduce the memory footprint of a dying memory cgroup, let's
-> release massive percpu data (vmstats_percpu) as early as possible,
-> and use atomic counterparts instead.
+Am 11.03.19 um 18:02 schrieb Sven Van Asbroeck:
+> On Fri, Feb 8, 2019 at 9:14 AM Greg KH <gregkh@linuxfoundation.org> wrote:
+>>
+>> Well, who wants this code?  Who uses it?  Find those people and get them
+>> to review it.  If no one wants it or uses it, that kind of implies that
+>> it's not needed :)
 > 
-> A dying cgroup can remain in the dying state for quite a long
-> time, being pinned in memory by any reference. For example,
-> if a page mlocked by some other cgroup, is charged to the dying
-> cgroup, it won't go away until the page will be released.
+> We have customers who (will) talk to this ABI from userspace, but they are
+> not 'Linux-y' enough to come to the mailing list and meaningfully review
+> the userspace ABI.
 > 
-> A dying memory cgroup can have some memory activity (e.g. dirty
-> pages can be flushed after cgroup removal), but in general it's
-> not expected to be very active in comparison to living cgroups.
+> IMHO the current reality of Fieldbus on Linux is companies rolling their own
+> proprietary out-of-tree interfaces and drivers. They do this partly because
+> there is no existing community or infrastructure. So there is no incentive
+> to be involved with mainline, which could also explain why no-one is commenting
+> on this Fieldbus ABI.
 > 
-> So reducing the memory footprint by releasing percpu data
-> and switching over to atomics seems to be a good trade off.
+> Chicken-and-egg problem ?
 > 
-> Signed-off-by: Roman Gushchin <guro@fb.com>
+> Greg, could I convince you to take this Fieldbus subsystem in drivers/staging?
+> Perhaps its presence may kickstart or seed a Linux Fieldbus community.
+> Being in staging/ also means that we can tweak the userspace ABI to our
+> heart's content if more people/requirements come in.
+> 
+> If there's been no meaningful activity in, say, one year from now, you may
+> decide to send this whole subsystem to /dev/null.
 
-Acked-by: Johannes Weiner <hannes@cmpxchg.org>
+I have two unfinished drivers that might benefit, for Hilscher netX 52
+(multi-protocol) and Microchip LAN9252 (EtherCAT), as well as a Linux
+port for Infineon XMC4500 that might be expanded to XMC4800 (EtherCAT).
 
-One nitpick below:
+But currently -ENOTIME for review or development, sorry.
 
-> @@ -4612,6 +4612,26 @@ static int mem_cgroup_css_online(struct cgroup_subsys_state *css)
->  	return 0;
->  }
->  
-> +static void mem_cgroup_free_percpu(struct rcu_head *rcu)
-> +{
-> +	struct mem_cgroup *memcg = container_of(rcu, struct mem_cgroup, rcu);
-> +
-> +	free_percpu(memcg->vmstats_percpu_offlined);
-> +	WARN_ON_ONCE(memcg->vmstats_percpu);
-> +
-> +	css_put(&memcg->css);
+Staging sounds like a plan, if that allows us to still break the ABI.
 
-Nitpick: I had to double take seeing a "mem_cgroup_free_*" function
-that does css_put(). We use "free" terminology (mem_cgroup_css_free,
-memcg_free_kmem, memcg_free_shrinker_maps, mem_cgroup_free) from the
-.css_free callback, which only happens when the last reference is put.
+Can't make any guarantees whether I might get to them within one year,
+as my LoRa project has been turning into a Black Hole. ;)
 
-Can we go with something less ambigous? We can add "rcu" and drop the
-mem_cgroup prefix since it's narrowly scoped. "percpu_rcu_free"?
+Are you at Netdev 0x13 later this month? That might be an opportunity to
+discuss the network-related parts such as Profinet and EtherCAT.
 
-> +static void mem_cgroup_offline_percpu(struct mem_cgroup *memcg)
-> +{
-> +	memcg->vmstats_percpu_offlined = (struct memcg_vmstats_percpu __percpu*)
-> +		rcu_dereference(memcg->vmstats_percpu);
-> +	rcu_assign_pointer(memcg->vmstats_percpu, NULL);
-> +
-> +	css_get(&memcg->css);
-> +	call_rcu(&memcg->rcu, mem_cgroup_free_percpu);
-> +}
-> +
->  static void mem_cgroup_css_offline(struct cgroup_subsys_state *css)
->  {
->  	struct mem_cgroup *memcg = mem_cgroup_from_css(css);
+Cheers,
+Andreas
+
+https://github.com/afaerber/netx-module
+https://github.com/afaerber/lan9252-module
+
+-- 
+SUSE Linux GmbH, Maxfeldstr. 5, 90409 Nürnberg, Germany
+GF: Felix Imendörffer, Jane Smithard, Graham Norton
+HRB 21284 (AG Nürnberg)
