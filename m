@@ -2,148 +2,170 @@ Return-Path: <SRS0=FxTY=RO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,UNPARSEABLE_RELAY
+X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1766EC10F0C
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 Mar 2019 06:10:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 01BE6C10F0C
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 Mar 2019 06:11:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DE10220657
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 Mar 2019 06:10:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CFC6420657
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 Mar 2019 06:11:08 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726530AbfCKGKf (ORCPT
+        id S1726623AbfCKGLH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 11 Mar 2019 02:10:35 -0400
-Received: from mailgw01.mediatek.com ([210.61.82.183]:64694 "EHLO
-        mailgw01.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1725866AbfCKGKf (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 11 Mar 2019 02:10:35 -0400
-X-UUID: 38f12cbe4e1d4ba9bf5976d5633a568c-20190311
-X-UUID: 38f12cbe4e1d4ba9bf5976d5633a568c-20190311
-Received: from mtkcas06.mediatek.inc [(172.21.101.30)] by mailgw01.mediatek.com
-        (envelope-from <eddie.huang@mediatek.com>)
-        (mhqrelay.mediatek.com ESMTP with TLS)
-        with ESMTP id 1005944272; Mon, 11 Mar 2019 14:10:23 +0800
-Received: from mtkcas07.mediatek.inc (172.21.101.84) by
- mtkmbs01n1.mediatek.inc (172.21.101.68) with Microsoft SMTP Server (TLS) id
- 15.0.1395.4; Mon, 11 Mar 2019 14:10:22 +0800
-Received: from [172.21.77.4] (172.21.77.4) by mtkcas07.mediatek.inc
- (172.21.101.73) with Microsoft SMTP Server id 15.0.1395.4 via Frontend
- Transport; Mon, 11 Mar 2019 14:10:22 +0800
-Message-ID: <1552284619.28295.3.camel@mtksdaap41>
-Subject: Re: [PATCH v2 9/9] rtc: Add support for the MediaTek MT6358 RTC
-From:   Eddie Huang <eddie.huang@mediatek.com>
-To:     Hsin-Hsiung Wang <hsin-hsiung.wang@mediatek.com>
-CC:     Lee Jones <lee.jones@linaro.org>, Rob Herring <robh+dt@kernel.org>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        Mark Brown <broonie@kernel.org>,
-        Marc Zyngier <marc.zyngier@arm.com>,
-        srv_heupstream <srv_heupstream@mediatek.com>,
-        "linux-mediatek@lists.infradead.org" 
-        <linux-mediatek@lists.infradead.org>,
-        "linux-rtc@vger.kernel.org" <linux-rtc@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>,
-        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
-        Liam Girdwood <lgirdwood@gmail.com>,
-        "Mark Rutland" <mark.rutland@arm.com>,
-        Sean Wang <Sean.Wang@mediatek.com>,
-        Alessandro Zummo <a.zummo@towertech.it>,
-        Alexandre Belloni <alexandre.belloni@bootlin.com>,
-        Ran Bi =?UTF-8?Q?=28=E6=AF=95=E5=86=89=29?= 
-        <Ran.Bi@mediatek.com>
-Date:   Mon, 11 Mar 2019 14:10:19 +0800
-In-Reply-To: <1552275991-34648-10-git-send-email-hsin-hsiung.wang@mediatek.com>
-References: <1552275991-34648-1-git-send-email-hsin-hsiung.wang@mediatek.com>
-         <1552275991-34648-10-git-send-email-hsin-hsiung.wang@mediatek.com>
-Content-Type: text/plain; charset="UTF-8"
-X-Mailer: Evolution 3.10.4-0ubuntu2 
+        Mon, 11 Mar 2019 02:11:07 -0400
+Received: from szxga07-in.huawei.com ([45.249.212.35]:43676 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1725870AbfCKGLH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 11 Mar 2019 02:11:07 -0400
+Received: from DGGEMS411-HUB.china.huawei.com (unknown [172.30.72.58])
+        by Forcepoint Email with ESMTP id AEF322CFC8245E962ED7;
+        Mon, 11 Mar 2019 14:11:00 +0800 (CST)
+Received: from 138.huawei.com (10.175.124.28) by smtp.huawei.com (10.3.19.211)
+ with Microsoft SMTP Server (TLS) id 14.3.408.0; Mon, 11 Mar 2019 14:10:54
+ +0800
+From:   Gao Xiang <gaoxiang25@huawei.com>
+To:     <stable@vger.kernel.org>
+CC:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        <linux-erofs@lists.ozlabs.org>, Chao Yu <yuchao0@huawei.com>,
+        Chao Yu <chao@kernel.org>, Miao Xie <miaoxie@huawei.com>,
+        Fang Wei <fangwei1@huawei.com>,
+        Gao Xiang <gaoxiang25@huawei.com>
+Subject: [PATCH 4.19 2/5] staging: erofs: fix fast symlink w/o xattr when fs xattr is on
+Date:   Mon, 11 Mar 2019 14:08:55 +0800
+Message-ID: <20190311060858.28654-2-gaoxiang25@huawei.com>
+X-Mailer: git-send-email 2.14.5
+In-Reply-To: <20190311060858.28654-1-gaoxiang25@huawei.com>
+References: <20190311060858.28654-1-gaoxiang25@huawei.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-X-MTK:  N
+Content-Type: text/plain
+X-Originating-IP: [10.175.124.28]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, 2019-03-11 at 11:46 +0800, Hsin-Hsiung Wang wrote:
-> From: Ran Bi <ran.bi@mediatek.com>
-> 
-> This add support for the MediaTek MT6358 RTC. MT6397 mfd will pass
-> RTC_WRTGR address offset to RTC driver.
-> 
-> Signed-off-by: Ran Bi <ran.bi@mediatek.com>
-> ---
->  drivers/rtc/rtc-mt6397.c | 16 ++++++++++++++--
->  1 file changed, 14 insertions(+), 2 deletions(-)
-> 
-> diff --git a/drivers/rtc/rtc-mt6397.c b/drivers/rtc/rtc-mt6397.c
-> index f85f1fc..c8a0090 100644
-> --- a/drivers/rtc/rtc-mt6397.c
-> +++ b/drivers/rtc/rtc-mt6397.c
-> @@ -27,7 +27,7 @@
->  #define RTC_BBPU		0x0000
->  #define RTC_BBPU_CBUSY		BIT(6)
->  
-> -#define RTC_WRTGR		0x003c
-> +#define RTC_WRTGR_DEFAULT	0x003c
->  
->  #define RTC_IRQ_STA		0x0002
->  #define RTC_IRQ_STA_AL		BIT(0)
-> @@ -78,6 +78,7 @@ struct mt6397_rtc {
->  	struct regmap		*regmap;
->  	int			irq;
->  	u32			addr_base;
-> +	u32			wrtgr_offset;
+commit 7077fffcb0b0b65dc75e341306aeef4d0e7f2ec6 upstream.
 
-It is strange that hardware change trigger register offset, I think we
-have no choice to add a field to describe it.
+Currently, this will hit a BUG_ON for these symlinks as follows:
 
->  };
->  
->  static int mtk_rtc_write_trigger(struct mt6397_rtc *rtc)
-> @@ -86,7 +87,8 @@ static int mtk_rtc_write_trigger(struct mt6397_rtc *rtc)
->  	int ret;
->  	u32 data;
->  
-> -	ret = regmap_write(rtc->regmap, rtc->addr_base + RTC_WRTGR, 1);
-> +	ret = regmap_write(rtc->regmap,
-> +			   rtc->addr_base + rtc->wrtgr_offset, 1);
->  	if (ret < 0)
->  		return ret;
->  
-> @@ -341,6 +343,15 @@ static int mtk_rtc_probe(struct platform_device *pdev)
->  	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
->  	rtc->addr_base = res->start;
->  
-> +	res = platform_get_resource(pdev, IORESOURCE_REG, 0);
-> +	if (res) {
-> +		rtc->wrtgr_offset = res->start;
-> +		dev_info(&pdev->dev, "register offset:%d\n", rtc->wrtgr_offset);
+- kernel message
+------------[ cut here ]------------
+kernel BUG at drivers/staging/erofs/xattr.c:59!
+SMP PTI
+CPU: 1 PID: 1170 Comm: getllxattr Not tainted 4.20.0-rc6+ #92
+Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS 1.10.2-2.fc27 04/01/2014
+RIP: 0010:init_inode_xattrs+0x22b/0x270
+Code: 48 0f 45 ea f0 ff 4d 34 74 0d 41 83 4c 24 e0 01 31 c0 e9 00 fe ff ff 48 89 ef e8 e0 31 9e ff eb e9 89 e8 e9 ef fd ff ff 0f 0$
+ <0f> 0b 48 89 ef e8 fb f6 9c ff 48 8b 45 08 a8 01 75 24 f0 ff 4d 34
+RSP: 0018:ffffa03ac026bdf8 EFLAGS: 00010246
+------------[ cut here ]------------
+...
+Call Trace:
+ erofs_listxattr+0x30/0x2c0
+ ? selinux_inode_listxattr+0x5a/0x80
+ ? kmem_cache_alloc+0x33/0x170
+ ? security_inode_listxattr+0x27/0x40
+ listxattr+0xaf/0xc0
+ path_listxattr+0x5a/0xa0
+ do_syscall_64+0x43/0xf0
+ entry_SYSCALL_64_after_hwframe+0x44/0xa9
+...
+---[ end trace 3c24b49408dc0c72 ]---
 
-Nit: useless log
+Fix it by checking ->xattr_isize in init_inode_xattrs(),
+and it also fixes improper return value -ENOTSUPP
+(it should be -ENODATA if xattr is enabled) for those inodes.
 
-> +	} else {
-> +		rtc->wrtgr_offset = RTC_WRTGR_DEFAULT;
-> +		dev_err(&pdev->dev, "Failed to get register offset\n");
-> +	}
-> +
->  	rtc->irq = platform_get_irq(pdev, 0);
->  	if (rtc->irq < 0)
->  		return rtc->irq;
-> @@ -420,6 +431,7 @@ static SIMPLE_DEV_PM_OPS(mt6397_pm_ops, mt6397_rtc_suspend,
->  			mt6397_rtc_resume);
->  
->  static const struct of_device_id mt6397_rtc_of_match[] = {
-> +	{ .compatible = "mediatek,mt6358-rtc", },
->  	{ .compatible = "mediatek,mt6397-rtc", },
->  	{ }
->  };
+Fixes: b17500a0fdba ("staging: erofs: introduce xattr & acl support")
+Cc: <stable@vger.kernel.org> # 4.19+
+Reported-by: Li Guifu <bluce.liguifu@huawei.com>
+Tested-by: Li Guifu <bluce.liguifu@huawei.com>
+Reviewed-by: Chao Yu <yuchao0@huawei.com>
+Signed-off-by: Gao Xiang <gaoxiang25@huawei.com>
+---
+ drivers/staging/erofs/inode.c |  8 ++++----
+ drivers/staging/erofs/xattr.c | 25 ++++++++++++++++++++-----
+ 2 files changed, 24 insertions(+), 9 deletions(-)
 
-Without the log, you can my get 
-Acked-by: Eddie Huang <eddie.huang@mediatekcom>
-
+diff --git a/drivers/staging/erofs/inode.c b/drivers/staging/erofs/inode.c
+index 9e7815f55a17..7448744cc515 100644
+--- a/drivers/staging/erofs/inode.c
++++ b/drivers/staging/erofs/inode.c
+@@ -184,16 +184,16 @@ static int fill_inode(struct inode *inode, int isdir)
+ 		/* setup the new inode */
+ 		if (S_ISREG(inode->i_mode)) {
+ #ifdef CONFIG_EROFS_FS_XATTR
+-			if (vi->xattr_isize)
+-				inode->i_op = &erofs_generic_xattr_iops;
++			inode->i_op = &erofs_generic_xattr_iops;
+ #endif
+ 			inode->i_fop = &generic_ro_fops;
+ 		} else if (S_ISDIR(inode->i_mode)) {
+ 			inode->i_op =
+ #ifdef CONFIG_EROFS_FS_XATTR
+-				vi->xattr_isize ? &erofs_dir_xattr_iops :
+-#endif
++				&erofs_dir_xattr_iops;
++#else
+ 				&erofs_dir_iops;
++#endif
+ 			inode->i_fop = &erofs_dir_fops;
+ 		} else if (S_ISLNK(inode->i_mode)) {
+ 			/* by default, page_get_link is used for symlink */
+diff --git a/drivers/staging/erofs/xattr.c b/drivers/staging/erofs/xattr.c
+index d4bccb57e7c3..ac2567576335 100644
+--- a/drivers/staging/erofs/xattr.c
++++ b/drivers/staging/erofs/xattr.c
+@@ -55,7 +55,26 @@ static int init_inode_xattrs(struct inode *inode)
+ 		return 0;
+ 
+ 	vi = EROFS_V(inode);
+-	BUG_ON(!vi->xattr_isize);
++
++	/*
++	 * bypass all xattr operations if ->xattr_isize is not greater than
++	 * sizeof(struct erofs_xattr_ibody_header), in detail:
++	 * 1) it is not enough to contain erofs_xattr_ibody_header then
++	 *    ->xattr_isize should be 0 (it means no xattr);
++	 * 2) it is just to contain erofs_xattr_ibody_header, which is on-disk
++	 *    undefined right now (maybe use later with some new sb feature).
++	 */
++	if (vi->xattr_isize == sizeof(struct erofs_xattr_ibody_header)) {
++		errln("xattr_isize %d of nid %llu is not supported yet",
++		      vi->xattr_isize, vi->nid);
++		return -ENOTSUPP;
++	} else if (vi->xattr_isize < sizeof(struct erofs_xattr_ibody_header)) {
++		if (unlikely(vi->xattr_isize)) {
++			DBG_BUGON(1);
++			return -EIO;	/* xattr ondisk layout error */
++		}
++		return -ENOATTR;
++	}
+ 
+ 	sbi = EROFS_I_SB(inode);
+ 	it.blkaddr = erofs_blknr(iloc(sbi, vi->nid) + vi->inode_isize);
+@@ -414,7 +433,6 @@ static int erofs_xattr_generic_get(const struct xattr_handler *handler,
+ 		struct dentry *unused, struct inode *inode,
+ 		const char *name, void *buffer, size_t size)
+ {
+-	struct erofs_vnode *const vi = EROFS_V(inode);
+ 	struct erofs_sb_info *const sbi = EROFS_I_SB(inode);
+ 
+ 	switch (handler->flags) {
+@@ -432,9 +450,6 @@ static int erofs_xattr_generic_get(const struct xattr_handler *handler,
+ 		return -EINVAL;
+ 	}
+ 
+-	if (!vi->xattr_isize)
+-		return -ENOATTR;
+-
+ 	return erofs_getxattr(inode, handler->flags, name, buffer, size);
+ }
+ 
+-- 
+2.14.5
 
