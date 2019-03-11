@@ -6,50 +6,50 @@ X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
 	SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B271DC43381
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 Mar 2019 20:00:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C36B3C4360F
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 Mar 2019 20:00:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 815C82087C
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 Mar 2019 20:00:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8FB012087C
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 Mar 2019 20:00:36 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1552334430;
-	bh=NDW14k+WaO8haX/CP+qnrw7K4z0Sj5X55grZIP0vMI8=;
+	s=default; t=1552334436;
+	bh=jgluM85L7tchmIGoIigx3wFMmaHo9lP9mKc3JQq7tvA=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=qfgumgQ9hiltJ1QZ/bNomIRn5ZyLY7SKkime1Hc1qbxvxcWovPGB6uG9l8dIN4St1
-	 /LRN5lq/sVr9MdkS+5MAQ22QnM4UY2R9xomdJrJCBtBFpL+2lezKizfONaHyZqGG3/
-	 HZ1FqUWX0VvKbs2OGEiIAk8NHxA4Z77JYIu49fB4=
+	b=eO6BqherOvJ4KUF380FTWLcRQY7LMZ0mndrYjnrxnSN8sA40vijOiSexOiQUmzPgi
+	 HetLiPXVL9t3fAuZJ7fHUHniWEiImsVws6mRmRTZ2n+jA6ZK2QbfRldipL1y7FH7Y6
+	 pvNFtIeolPDR1+xk3Bsh6+NdvJjK1NJ6nD7e9AA0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729288AbfCKUA2 (ORCPT
+        id S1729709AbfCKT74 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 11 Mar 2019 16:00:28 -0400
-Received: from mail.kernel.org ([198.145.29.99]:37272 "EHLO mail.kernel.org"
+        Mon, 11 Mar 2019 15:59:56 -0400
+Received: from mail.kernel.org ([198.145.29.99]:37188 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729711AbfCKT75 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 11 Mar 2019 15:59:57 -0400
+        id S1729681AbfCKT7s (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 11 Mar 2019 15:59:48 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 2B870214AF;
-        Mon, 11 Mar 2019 19:59:56 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 6642C2064A;
+        Mon, 11 Mar 2019 19:59:46 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1552334397;
-        bh=NDW14k+WaO8haX/CP+qnrw7K4z0Sj5X55grZIP0vMI8=;
+        s=default; t=1552334387;
+        bh=jgluM85L7tchmIGoIigx3wFMmaHo9lP9mKc3JQq7tvA=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=wsH1//c/E8lIw11s5mziffB2l11gygr/EofwkzM7QxqBXj9WvbaaeIYHcrC/QKvlU
-         wlD1mxkKoutp7nV9r0QlqnyIfKIy3Z8Jx4RIE054FS3PFgOy1LW/aCVowEpvf5uFkO
-         bmLWIUwS8dQffFaYeqXzzGKK6THKl4KJinQaqWTo=
+        b=I5lx3z8yPIVsLek/J93qdUkw9oGW5o0Dyvg15AWqgyIds9S9ceP9SGzGGML1Lgia2
+         1DYBqDS4Ko3NHHX+DNC6byuqgl+cf836DESN4S6qQpXFfc6dj1VcwbEp2f8nRckmhK
+         EXdtxlI1bYKvAvMP5uGb1fTru5Azihh4TLJ1qIks=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
 Cc:     Cong Wang <xiyou.wangcong@gmail.com>,
         Jiri Pirko <jiri@resnulli.us>, Paolo Abeni <pabeni@redhat.com>,
         "David S . Miller" <davem@davemloft.net>,
         Sasha Levin <sashal@kernel.org>, netdev@vger.kernel.org
-Subject: [PATCH AUTOSEL 3.18 3/6] team: avoid complex list operations in team_nl_cmd_options_set()
-Date:   Mon, 11 Mar 2019 15:59:48 -0400
-Message-Id: <20190311195951.139741-3-sashal@kernel.org>
+Subject: [PATCH AUTOSEL 4.4 6/8] team: avoid complex list operations in team_nl_cmd_options_set()
+Date:   Mon, 11 Mar 2019 15:59:36 -0400
+Message-Id: <20190311195938.139603-6-sashal@kernel.org>
 X-Mailer: git-send-email 2.19.1
-In-Reply-To: <20190311195951.139741-1-sashal@kernel.org>
-References: <20190311195951.139741-1-sashal@kernel.org>
+In-Reply-To: <20190311195938.139603-1-sashal@kernel.org>
+References: <20190311195938.139603-1-sashal@kernel.org>
 MIME-Version: 1.0
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
@@ -103,10 +103,10 @@ Signed-off-by: Sasha Levin <sashal@kernel.org>
  1 file changed, 5 insertions(+), 22 deletions(-)
 
 diff --git a/drivers/net/team/team.c b/drivers/net/team/team.c
-index 3e0f7116380d..eb04b348edf3 100644
+index 33ffb573fd67..267a90423154 100644
 --- a/drivers/net/team/team.c
 +++ b/drivers/net/team/team.c
-@@ -253,17 +253,6 @@ static void __team_option_inst_mark_removed_port(struct team *team,
+@@ -247,17 +247,6 @@ static void __team_option_inst_mark_removed_port(struct team *team,
  	}
  }
  
@@ -124,7 +124,7 @@ index 3e0f7116380d..eb04b348edf3 100644
  static int __team_options_register(struct team *team,
  				   const struct team_option *option,
  				   size_t option_count)
-@@ -2435,7 +2424,6 @@ static int team_nl_cmd_options_set(struct sk_buff *skb, struct genl_info *info)
+@@ -2447,7 +2436,6 @@ static int team_nl_cmd_options_set(struct sk_buff *skb, struct genl_info *info)
  	int err = 0;
  	int i;
  	struct nlattr *nl_option;
@@ -132,7 +132,7 @@ index 3e0f7116380d..eb04b348edf3 100644
  
  	team = team_nl_team_get(info);
  	if (!team)
-@@ -2451,6 +2439,7 @@ static int team_nl_cmd_options_set(struct sk_buff *skb, struct genl_info *info)
+@@ -2463,6 +2451,7 @@ static int team_nl_cmd_options_set(struct sk_buff *skb, struct genl_info *info)
  		struct nlattr *opt_attrs[TEAM_ATTR_OPTION_MAX + 1];
  		struct nlattr *attr;
  		struct nlattr *attr_data;
@@ -140,7 +140,7 @@ index 3e0f7116380d..eb04b348edf3 100644
  		enum team_option_type opt_type;
  		int opt_port_ifindex = 0; /* != 0 for per-port options */
  		u32 opt_array_index = 0;
-@@ -2554,23 +2543,17 @@ static int team_nl_cmd_options_set(struct sk_buff *skb, struct genl_info *info)
+@@ -2566,23 +2555,17 @@ static int team_nl_cmd_options_set(struct sk_buff *skb, struct genl_info *info)
  			if (err)
  				goto team_put;
  			opt_inst->changed = true;
