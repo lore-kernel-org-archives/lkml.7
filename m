@@ -2,188 +2,157 @@ Return-Path: <SRS0=FxTY=RO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_PASS autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 83B0FC43381
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 Mar 2019 09:13:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 69203C43381
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 Mar 2019 09:14:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 45FE72075C
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 Mar 2019 09:13:44 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=baylibre-com.20150623.gappssmtp.com header.i=@baylibre-com.20150623.gappssmtp.com header.b="mRNrRAxZ"
+	by mail.kernel.org (Postfix) with ESMTP id 423F4206BA
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 Mar 2019 09:14:26 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727091AbfCKJNn (ORCPT
+        id S1727101AbfCKJOZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 11 Mar 2019 05:13:43 -0400
-Received: from mail-wr1-f66.google.com ([209.85.221.66]:44948 "EHLO
-        mail-wr1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727033AbfCKJNl (ORCPT
+        Mon, 11 Mar 2019 05:14:25 -0400
+Received: from mail-vs1-f65.google.com ([209.85.217.65]:46527 "EHLO
+        mail-vs1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726977AbfCKJOY (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 11 Mar 2019 05:13:41 -0400
-Received: by mail-wr1-f66.google.com with SMTP id w2so4139256wrt.11
-        for <linux-kernel@vger.kernel.org>; Mon, 11 Mar 2019 02:13:39 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=baylibre-com.20150623.gappssmtp.com; s=20150623;
-        h=subject:to:cc:references:from:openpgp:autocrypt:organization
-         :message-id:date:user-agent:mime-version:in-reply-to
-         :content-language:content-transfer-encoding;
-        bh=NuerTc2fpI9z6/DTCz1boyUaac/YxoBZPWr0MXu5tiE=;
-        b=mRNrRAxZtnEtWT4ZcZz+IFLJ/2TLZDzfaTMcDxNIUQT2XBsMAPf7O2c0DJApQ2mRNn
-         KLHs2TgwCXvp4NxgKq4naql+8ksXKcHy/0wxDBHFbcl3i2EFeqHpfdF4bRXZGCzxl0my
-         h8oFjMHZeBT0UdRhOXUvUoQ50JbJWHbUO8pZqrRNAUqDknaxmdp92qZo/uyr3AHJUqmm
-         PGeaHmtbLb/ihv/8I2B1DdKHu4k5HCfNGSzbrXs266PMblfip3yWOpza7MY9lHc7obuq
-         omw+5k1UFpY0L6U8dzdZxEqYfs17dW9i6dFzDAWh5B5Q4qsdCGPd1GhoFiCP+aoVJW5z
-         LcvQ==
+        Mon, 11 Mar 2019 05:14:24 -0400
+Received: by mail-vs1-f65.google.com with SMTP id b17so2223116vsr.13
+        for <linux-kernel@vger.kernel.org>; Mon, 11 Mar 2019 02:14:23 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:openpgp:autocrypt
-         :organization:message-id:date:user-agent:mime-version:in-reply-to
-         :content-language:content-transfer-encoding;
-        bh=NuerTc2fpI9z6/DTCz1boyUaac/YxoBZPWr0MXu5tiE=;
-        b=lGagKem+OkZ6bQsyx4enPew5Kk6dew8Wv5X7+fkllfxsCjTTYRrK8WdKcZzPJlwcUp
-         u2WCn2gMKqWA+3oMu+R4wTZ3w6rkScrJS+1T7Hh20e6hv6PmTcR29p/nV8Amw2tbK01j
-         x6pPNUsfChbtn0yoRLCpwczZKxpLKL5vS4hcBx3SDlNUEFSbV0hmFVzMHjaO7330GBt2
-         z5odnFEMEmjTsEQWrwDcyufFtPJvnWJWgkFiVEqZSK/BKuWvhwflpgC/k78/N0L8Hp0U
-         /Hg4qubezh2yQhhyDe3oIMR+VRZEtlephiCoURffewDQRRb/+OGdvqXpGRgobAMik8J6
-         lX7Q==
-X-Gm-Message-State: APjAAAVduhu/IHL2EFSDd/l9OYellFmtzvmwLaOps1tlae7ZdNlZQZCR
-        zZUiYIueYDd7/88YuF2cH6hvhpCXnucCmw==
-X-Google-Smtp-Source: APXvYqyW+yXnQsmRogXtruRVrxggBDLVdiEqRt6Ku8SIpyvGs76WFoNrj+Dlh8NaD7wJE+CWJZVz2g==
-X-Received: by 2002:adf:e90b:: with SMTP id f11mr19763234wrm.36.1552295618697;
-        Mon, 11 Mar 2019 02:13:38 -0700 (PDT)
-Received: from [10.1.2.12] (lmontsouris-657-1-212-31.w90-63.abo.wanadoo.fr. [90.63.244.31])
-        by smtp.gmail.com with ESMTPSA id l18sm7074606wrv.20.2019.03.11.02.13.37
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Mon, 11 Mar 2019 02:13:38 -0700 (PDT)
-Subject: Re: [PATCH 4/9] arm64: dts: meson: g12a: add uart_ao_a pinctrl
-To:     khilman@baylibre.com
-Cc:     Jerome Brunet <jbrunet@baylibre.com>,
-        linux-amlogic@lists.infradead.org,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-References: <20190307151342.7381-1-narmstrong@baylibre.com>
- <20190307151342.7381-5-narmstrong@baylibre.com>
-From:   Neil Armstrong <narmstrong@baylibre.com>
-Openpgp: preference=signencrypt
-Autocrypt: addr=narmstrong@baylibre.com; prefer-encrypt=mutual; keydata=
- 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
- ZaTUOEkgIor5losDrePdPgE=
-Organization: Baylibre
-Message-ID: <244fba9a-31ab-a75c-3de2-a66638a9d36d@baylibre.com>
-Date:   Mon, 11 Mar 2019 10:13:37 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.5.1
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=PuQeRMisIVhGjNz6Qb/iU/T3AY0VkaMTmKCFjo+Ggng=;
+        b=aiEgPuIVNpWaQZ5jxq9ZfOYuXYKS8XbuOTzMyYSO2n9vvyYRn3t0/R0WiKQwHK+EXz
+         +kwoLPYex3CNPyoy7gEmmhbLVErOOvFxkD7/pyamb+sk9uz2K4uAOJGtM9T6e6/zrMpA
+         YZjkVd+uo/uh5S10S+f2M/0aTz6EmE5jx14jMLyKMvYHvW+Uqm8SdTXj2SARUNY6UsZo
+         7nQEs0Ykm6sdPKQkW3y1CYzW9CP3Vc9/m+irv/FBmQquIR3OW+euR03lxDhvV6+/HHBf
+         Sx3fkipiOClL7ohQM5765tb9d4snbZfhyjijA4SrO0sUt1NHq2K0Vxzkf35eEekmB4Vh
+         FpLQ==
+X-Gm-Message-State: APjAAAW/jjGNGvk1xtEv0u/f1yeSsDhexVq1Yl/poABZHEslabEYBAX0
+        UtVotcDJuJL0s5gs5cq24UtUFKShN/T9CxGYsEZP1ZIR
+X-Google-Smtp-Source: APXvYqwQrHlwNMY6K4fcj0hRsTEqOZELpm9OB/w7iek3jNB072mVO386TVNeDhlqU+mfu2BdJ/pK7M6XTcpEYvCZ/Fg=
+X-Received: by 2002:a67:8588:: with SMTP id h130mr15401357vsd.11.1552295663204;
+ Mon, 11 Mar 2019 02:14:23 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <20190307151342.7381-5-narmstrong@baylibre.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+References: <201903042049.npxcZzps%fengguang.wu@intel.com> <CAMuHMdX365qmWiii=gQLADpW49EMkdDrVJDPWNBpAZuZM0WQFQ@mail.gmail.com>
+ <alpine.LNX.2.21.1903051154200.135@nippy.intranet> <alpine.LNX.2.21.1903051357410.135@nippy.intranet>
+ <CAMuHMdUuwudbk15GUPPxL+-Gt4zhhSomk-wMAHeTOkoaDOCUAA@mail.gmail.com>
+ <alpine.LNX.2.21.1903051948290.147@nippy.intranet> <mvmh8chzo7j.fsf@linux-m68k.org>
+ <alpine.LNX.2.21.1903071329140.513@nippy.intranet> <CAMuHMdVzLTO-yYJJ=HqVySX6gqes9cnyspungsB5maduzNt0RA@mail.gmail.com>
+ <alpine.LNX.2.21.1903080838260.595@nippy.intranet>
+In-Reply-To: <alpine.LNX.2.21.1903080838260.595@nippy.intranet>
+From:   Geert Uytterhoeven <geert@linux-m68k.org>
+Date:   Mon, 11 Mar 2019 10:14:11 +0100
+Message-ID: <CAMuHMdWr-Y7mfH3gFXfK0fWpEhhdoW9VUkOEwf0nFN8kfr4zrg@mail.gmail.com>
+Subject: Re: [m68k:master 1174/1174] arch/m68k/include/asm/string.h:72:25:
+ warning: '__builtin_memcpy' forming offset 8 is out of the bounds [0, 7]
+To:     Finn Thain <fthain@telegraphics.com.au>
+Cc:     Andreas Schwab <schwab@linux-m68k.org>,
+        kbuild test robot <lkp@intel.com>, kbuild-all@01.org,
+        linux-m68k <linux-m68k@lists.linux-m68k.org>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 07/03/2019 16:13, Neil Armstrong wrote:
-> From: Jerome Brunet <jbrunet@baylibre.com>
-> 
-> Add the always on UART pinctrl setting to the g12a soc DT and
-> use it for the u200 reference design
-> 
-> Signed-off-by: Jerome Brunet <jbrunet@baylibre.com>
-> Signed-off-by: Neil Armstrong <narmstrong@baylibre.com>
-> ---
->  .../arm64/boot/dts/amlogic/meson-g12a-u200.dts |  2 ++
->  arch/arm64/boot/dts/amlogic/meson-g12a.dtsi    | 18 ++++++++++++++++++
->  2 files changed, 20 insertions(+)
-> 
-> diff --git a/arch/arm64/boot/dts/amlogic/meson-g12a-u200.dts b/arch/arm64/boot/dts/amlogic/meson-g12a-u200.dts
-> index c44dbdddf2cf..f2afd0bf3e28 100644
-> --- a/arch/arm64/boot/dts/amlogic/meson-g12a-u200.dts
-> +++ b/arch/arm64/boot/dts/amlogic/meson-g12a-u200.dts
-> @@ -25,5 +25,7 @@
->  
->  &uart_AO {
->  	status = "okay";
-> +	pinctrl-0 = <&uart_ao_a_pins>;
-> +	pinctrl-names = "default";
->  };
->  
-> diff --git a/arch/arm64/boot/dts/amlogic/meson-g12a.dtsi b/arch/arm64/boot/dts/amlogic/meson-g12a.dtsi
-> index c141cc7f6b09..f8f055c49f9a 100644
-> --- a/arch/arm64/boot/dts/amlogic/meson-g12a.dtsi
-> +++ b/arch/arm64/boot/dts/amlogic/meson-g12a.dtsi
-> @@ -177,6 +177,24 @@
->  						#gpio-cells = <2>;
->  						gpio-ranges = <&ao_pinctrl 0 0 15>;
->  					};
-> +
-> +					uart_ao_a_pins: uart_a_ao {
-> +						mux {
-> +							groups = "uart_ao_a_tx",
-> +								 "uart_ao_a_rx";
-> +							function = "uart_ao_a";
-> +							bias-disable;
-> +						};
-> +					};
-> +
-> +					uart_ao_a_cts_rts_pins: uart_ao_a_cts_rts {
-> +						mux {
-> +							groups = "uart_ao_a_cts",
-> +								 "uart_ao_a_rts";
-> +							function = "uart_ao_a";
-> +							bias-disable;
-> +						};
-> +					};
->  				};
->  			};
->  
-> 
+Hi Finn,
 
-Will move this out of this patchset to the boards patchset
+On Thu, Mar 7, 2019 at 10:42 PM Finn Thain <fthain@telegraphics.com.au> wrote:
+> On Thu, 7 Mar 2019, Geert Uytterhoeven wrote:
+> > On Thu, Mar 7, 2019 at 3:59 AM Finn Thain <fthain@telegraphics.com.au> wrote:
+> > > On Tue, 5 Mar 2019, Andreas Schwab wrote:
+> > > > On Mar 05 2019, Finn Thain <fthain@telegraphics.com.au> wrote:
+> > > >
+> > > > > interesting that the kernel's strlen implementation in
+> > > > > include/linux/string.h can't achieve this.
+> > > >
+> > > > This implementation is only available if ARCH_HAS_FORTIFY_SOURCE.
+> > > >
+> > >
+> > > I see. Perhaps we could add another definition to that file:
+> > >
+> > > #if !defined(__NO_FORTIFY) && defined(__OPTIMIZE__) && defined(CONFIG_FORTIFY_SOURCE)
+> > > ...
+> > > #else
+> > > __FORTIFY_INLINE __kernel_size_t strlen(const char *p)
+> > > {
+> > >         return __builtin_strlen(p);
+> > > }
+> > > #endif
+> > >
+> > > I didn't test that.
+>
+> I've tested it now, it works too. This may be a better solution than
+> defining a strlen macro.
+>
+> diff --git a/include/linux/string.h b/include/linux/string.h
+> index 7927b875f80c..ec9c0a206bd3 100644
+> --- a/include/linux/string.h
+> +++ b/include/linux/string.h
+> @@ -436,6 +436,13 @@ __FORTIFY_INLINE char *strcpy(char *p, const char *q)
+>         return p;
+>  }
+>
+> +#else
+> +
+> +__FORTIFY_INLINE __kernel_size_t strlen(const char *p)
+> +{
+> +       return __builtin_strlen(p);
+> +}
+> +
+>  #endif
+>
+>  /**
+>
+> > But the following patch seems to work...
+> > >
+> > > diff --git a/arch/m68k/include/asm/string.h b/arch/m68k/include/asm/string.h
+> > > index f759d944c449..3cff6b128ed3 100644
+> > > --- a/arch/m68k/include/asm/string.h
+> > > +++ b/arch/m68k/include/asm/string.h
+> > > @@ -71,4 +71,6 @@ extern void *memset(void *, int, __kernel_size_t);
+> > >  extern void *memcpy(void *, const void *, __kernel_size_t);
+> > >  #define memcpy(d, s, n) __builtin_memcpy(d, s, n)
+> > >
+> > > +#define strlen(s) __builtin_strlen(s)
+> >
+> > Shouldn't you add
+> >
+> >     #define __HAVE_ARCH_STRLEN
+> >
+> > here...
+> >
+>
+> No, the link fails because the compiler still emits some references to
+> strlen().
+
+Despite -ffreestanding?!?
+
+> > > --- a/lib/string.c
+> > > +++ b/lib/string.c
+> > > @@ -472,6 +472,7 @@ char *strim(char *s)
+> > >  EXPORT_SYMBOL(strim);
+> > >
+> > >  #ifndef __HAVE_ARCH_STRLEN
+> > > +#undef strlen
+> >
+> > ... so you can drop this change?
+
+Gr{oetje,eeting}s,
+
+                        Geert
+
+-- 
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
