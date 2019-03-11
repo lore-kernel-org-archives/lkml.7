@@ -2,130 +2,111 @@ Return-Path: <SRS0=FxTY=RO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_MUTT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-4.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DE11EC43381
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 Mar 2019 10:56:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 043E5C43381
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 Mar 2019 10:59:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B544F20657
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 Mar 2019 10:56:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D013120657
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 Mar 2019 10:59:37 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727297AbfCKK4E (ORCPT
+        id S1727258AbfCKK7g (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 11 Mar 2019 06:56:04 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:49968 "EHLO mx1.redhat.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726770AbfCKK4D (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 11 Mar 2019 06:56:03 -0400
-Received: from smtp.corp.redhat.com (int-mx01.intmail.prod.int.phx2.redhat.com [10.5.11.11])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id 47E1B30832CF;
-        Mon, 11 Mar 2019 10:56:03 +0000 (UTC)
-Received: from krava (unknown [10.43.17.112])
-        by smtp.corp.redhat.com (Postfix) with SMTP id 4E1D4600CD;
-        Mon, 11 Mar 2019 10:56:01 +0000 (UTC)
-Date:   Mon, 11 Mar 2019 11:56:00 +0100
-From:   Jiri Olsa <jolsa@redhat.com>
-To:     Alexey Budankov <alexey.budankov@linux.intel.com>
-Cc:     Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Andi Kleen <ak@linux.intel.com>,
-        linux-kernel <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH v5 07/10] perf record: implement -z,--compression_level=n
- option and compression
-Message-ID: <20190311105600.GC12810@krava>
-References: <4d1b11a4-77ed-d9af-ed22-875fc17b6050@linux.intel.com>
- <87fa1906-2d6a-a00a-7ba5-b570d0cbf9cc@linux.intel.com>
- <20190305122534.GB16615@krava>
- <ee765c0e-6e5c-e879-aaa6-40f314f85a5e@linux.intel.com>
- <20190307121429.GB29474@krava>
- <002e7e10-b0ef-df2a-261c-88fd9c00364d@linux.intel.com>
- <20190308104657.GA21500@krava>
- <8a44eb08-9ad2-4e8e-26f4-9e35496cc50e@linux.intel.com>
+        Mon, 11 Mar 2019 06:59:36 -0400
+Received: from mail-ua1-f65.google.com ([209.85.222.65]:32994 "EHLO
+        mail-ua1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726605AbfCKK7f (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 11 Mar 2019 06:59:35 -0400
+Received: by mail-ua1-f65.google.com with SMTP id q17so1357385uam.0;
+        Mon, 11 Mar 2019 03:59:35 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=+OLKVxphRgfnEDcet5lBNBYXLMLeC25lXUE4Z/6oh6k=;
+        b=Vlx/pD08bUjwsFEXF+XVNXqW4iBh1c/ZdhGiutBp22fXHVTJc6ax9+uyS1Aqz2yMLL
+         m0c7mVdDSTR0No2n8IW139SS8QC+7vUDjXQM3tltMmIFRre1DfcSdAhNdOLBl5uX2QU3
+         mj9L2dkKiyXnneP94E2EPwxVnK0SmEDBQ8aLGvCn0nNXiY3zFmur999p3GyRqiZDWc3h
+         xdaekx3/DGCsqxV8z1Fls6tsIH/0yIx6fTe5VO/3fUcxpT7o9V9susLfNmdfSBCvCgJ3
+         XY7zx4zxUOdOG3c3MA0CP7alhDfBH8EpTXJ/jLG7YfR3n+fEF0dQaWmJdjisbh9kzPXx
+         jryA==
+X-Gm-Message-State: APjAAAVnTW+PZzuxmGDEo3dgLcnCxKuuEhHuw1r/bEX4Ev6M0tnUJCsb
+        F7PVKakZCxBwA6KG2LjAx1/TWImO747TIZFEC2c=
+X-Google-Smtp-Source: APXvYqxe/+IjsJNdttwCevT2NzWiqo01fV+MMSfCGQCewnwq5x9tQLnaBxJzUVlqexkZuUdsziOSLC9nBN8IhQZ/dyA=
+X-Received: by 2002:ab0:7191:: with SMTP id l17mr15051652uao.28.1552301974612;
+ Mon, 11 Mar 2019 03:59:34 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <8a44eb08-9ad2-4e8e-26f4-9e35496cc50e@linux.intel.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.11
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.44]); Mon, 11 Mar 2019 10:56:03 +0000 (UTC)
+References: <20190311074939.517-1-kjlu@umn.edu>
+In-Reply-To: <20190311074939.517-1-kjlu@umn.edu>
+From:   Geert Uytterhoeven <geert@linux-m68k.org>
+Date:   Mon, 11 Mar 2019 11:59:23 +0100
+Message-ID: <CAMuHMdVfhq-d0CExnH+Y37k6pUz6OvOtScf6RbgFQ-Mx4dy4DA@mail.gmail.com>
+Subject: Re: [PATCH v2] net: renesas: fix a missing check of of_get_phy_mode
+To:     Kangjie Lu <kjlu@umn.edu>
+Cc:     pakki001@umn.edu,
+        Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Vladimir Zapolskiy <vladimir_zapolskiy@mentor.com>,
+        Geert Uytterhoeven <geert+renesas@glider.be>,
+        Simon Horman <horms+renesas@verge.net.au>,
+        Chris Brandt <chris.brandt@renesas.com>,
+        netdev <netdev@vger.kernel.org>,
+        Linux-Renesas <linux-renesas-soc@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sun, Mar 10, 2019 at 07:17:08PM +0300, Alexey Budankov wrote:
+Hi Kangjie,
 
-SNIP
+On Mon, Mar 11, 2019 at 8:50 AM Kangjie Lu <kjlu@umn.edu> wrote:
+> of_get_phy_mode may fail and return a negative error code;
+> the fix checks the return value of of_get_phy_mode and
+> returns NULL of it fails.
+>
+> Signed-off-by: Kangjie Lu <kjlu@umn.edu>
 
-> > so to be on the same page.. normal processing without compression is:
-> > 
-> >   perf_mmap__push does:
-> > 	push(mmap buf)
-> > 	  record__pushfn
-> > 	    record__write
-> > 	      write(buf)
-> > 
-> >   perf_mmap__aio_push does:
-> > 	memcpy(aio buf, mmap buf)
-> > 	  push(aio buf)
-> > 	    record__aio_pushfn
-> > 	      record__aio_write
-> > 	        aio_write(aio buf)
-> > 
-> > 
-> > and for compression it would be:
-> > 
-> >   perf_mmap__push does:
-> > 	push(mmap buf)
-> > 	  compress_push
-> > 	    memcpy(compress buffer, mmapbuf)  EXTRA copy
-> > 	      record__pushfn
-> > 	        record__write
-> > 		  write(buf)
-> > 
-> >   perf_mmap__aio_push does:
-> > 	memcpy(aio buf, mmap buf)
-> > 	  memcpy(compress buffer, mmapbuf)    EXTRA copy
-> > 	    push(aio buf)
-> > 	      record__aio_pushfn
-> > 	        record__aio_write
-> > 	          aio_write(aio buf)
-> > 
-> > 
-> > side note: that actualy makes me think why do we even have perf_mmap__aio_push,
-> > it looks like we could copy the buf in the callback push function with no harm?
-> 
-> Well, yes, perf_mmap__aio_push() can be avoided and perf_mmap__push() can be used
-> as for serial as for AIO, moving all the specifics to record code from mmap.c,
-> like this:
-> 
-> Serial
-> 	perf_mmap__push(, record__pushfn)
->  	   push(), possibly two times
-> 	      record__pushfn()
->                  if (-z) zstd_compress(map->base => map->data) <-- compressing memcpy()
->                  record__write(-z ? map->data, map->base)
-> AIO
-> 	record__aio_push()
-> 	   perf_mmap__push(, record__aio_pushfn())
->               push(), possibly two times
->                  record__aio_pushfn()
->                     if (-z) zstd_compress(map->base => map->aio.data[i]) <--- compressing memcpy()
->                     else memcpy(map->base => map->aio.data[i]) <--- plain memcpy()
->            record__aio_write(map->aio.data[i]) 
-> 
-> So now it looks optimal as from performance and data loss reduction 
-> perspective as from design perspective. What do you think?
+> --- a/drivers/net/ethernet/renesas/sh_eth.c
+> +++ b/drivers/net/ethernet/renesas/sh_eth.c
+> @@ -3187,6 +3187,8 @@ static struct sh_eth_plat_data *sh_eth_parse_dt(struct device *dev)
+>                 return NULL;
+>
+>         pdata->phy_interface = of_get_phy_mode(np);
+> +       if (pdata->phy_interface < 0)
+> +               return NULL;
 
-yes, that looks much better.. so we'd have record__pushfn
-for standard (serial) and record__aio_pushfn for AIO
+sh_eth_plat_data.phy_interface has type phy_interface_t.
+This is an enum containing only positive values, hence it is unsigned.
+So the condition can never be true.
 
-thanks,
-jirka
+of_get_phy_mode() returns int, as it has to indicate errors by returning
+negative error codes.  Hence please use an intermediate of type int:
+
+    int ret;
+
+    ...
+    ret = of_get_phy_mode(np);
+    if (ret < 0)
+            return NULL;
+
+    pdata->phy_interface = ret;
+
+>
+>         mac_addr = of_get_mac_address(np);
+>         if (mac_addr)
+
+Gr{oetje,eeting}s,
+
+                        Geert
+
+-- 
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
