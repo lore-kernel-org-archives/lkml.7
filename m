@@ -6,23 +6,23 @@ X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 76332C43381
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 Mar 2019 18:56:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 04738C43381
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 Mar 2019 18:56:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 560EE20883
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 Mar 2019 18:56:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D93A920643
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 Mar 2019 18:56:32 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728505AbfCKS4U (ORCPT
+        id S1728516AbfCKS4b (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 11 Mar 2019 14:56:20 -0400
-Received: from mout.kundenserver.de ([217.72.192.75]:58293 "EHLO
+        Mon, 11 Mar 2019 14:56:31 -0400
+Received: from mout.kundenserver.de ([217.72.192.73]:56663 "EHLO
         mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728380AbfCKS4P (ORCPT
+        with ESMTP id S1728465AbfCKS4P (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Mon, 11 Mar 2019 14:56:15 -0400
 Received: from orion.localdomain ([95.115.159.19]) by mrelayeu.kundenserver.de
  (mreue107 [212.227.15.183]) with ESMTPSA (Nemesis) id
- 1MRnXY-1hVUY81wdO-00TBmG; Mon, 11 Mar 2019 19:55:58 +0100
+ 1Mhl4Q-1gYVBN2hSi-00dphG; Mon, 11 Mar 2019 19:55:57 +0100
 From:   "Enrico Weigelt, metux IT consult" <info@metux.net>
 To:     linux-kernel@vger.kernel.org
 Cc:     linus.walleij@linaro.org, bgolaszewski@baylibre.com,
@@ -36,28 +36,28 @@ Cc:     linus.walleij@linaro.org, bgolaszewski@baylibre.com,
         shawnguo@kernel.org, linux-gpio@vger.kernel.org,
         linux-mips@vger.kernel.org, linux-pwm@vger.kernel.org,
         linux-omap@vger.kernel.org, linux-tegra@vger.kernel.org
-Subject: [PATCH 42/42] drivers: gpio: use devm_platform_ioremap_resource()
-Date:   Mon, 11 Mar 2019 19:55:21 +0100
-Message-Id: <1552330521-4276-42-git-send-email-info@metux.net>
+Subject: [PATCH 41/42] drivers: gpio: xlp: devm_platform_ioremap_resource()
+Date:   Mon, 11 Mar 2019 19:55:20 +0100
+Message-Id: <1552330521-4276-41-git-send-email-info@metux.net>
 X-Mailer: git-send-email 1.9.1
 In-Reply-To: <1552330521-4276-1-git-send-email-info@metux.net>
 References: <1552330521-4276-1-git-send-email-info@metux.net>
-X-Provags-ID: V03:K1:2LJDIy+/NTyotb6nvlXwEmN99EPjq0YcVBzQbh4KjRi9rAfmUI1
- C3Y7OdifTOByscUfTFZpIXO1TCLynfnzceMCY5HxiZXgV86Mik8dApa3MjfPWedJV0J2iLq
- 7vQ10gnTKbTWpbcqBf4tx01AIDb+m9/LB8DdhnxyM15dcLjD5C+fjbGS2g+pZD7+jJ5N6zJ
- cavweOpA1vp+cMoGqOw2g==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:TWrT11k4J4o=:POyb8WLicxVsIKrHqtlzXs
- 4y7ZFYUxXGgZQAEb7Hb3ujZNcJ6k3z5Xa9IzdKIKvTGtF0NMAVNnM5sM2YFcMLUu73Ne/G4TD
- hynb3/JsExeKCjR8nTE7HzxpOp6qdYh0Yh51Yk70FYQY0vNe2leVBDcjhFVOFRq6xscTWxfbq
- r81p2aWg5O2AU7qbqGaJsXUFSnL8pXXSA5NAjDsAQRRhPbutbmp5yRsoT9kAu+fhbpJXNjeEP
- ANWbluKGkxZqMWdEyqUYsnu2CTFfg020BNdMxV4DE2yV37YcC2VRhvzduE2z2LGZxzJHrJH2C
- fKDYm9xCp5ipZX2yqSxJlUSPTbZluuvQSccFtpdaKUIgbMvtHw6kmAxmtFPqXySK7mR3pdali
- Q7bo/zZ1LQkz29dPme0bi1zR4ycpHh/bDnAC1lVSOVrquNpgWXw4ojH8BQzwlNvuKhf/ErTvE
- O/2htmuYY1FmOKSVPcpOpZcKHRCGYXSNuA71gETjpTfgyeirgcgyvMlwlDiA0jN9zyEw0L9ly
- H0Tcq0ZidfR8gMsnbxY9LnJbZ8oqXHCg4DdH+0JuIrtTCW8x3axAmTy/Qjr7bh7fkOUAuWQCJ
- VmGCIlGQbVPVDYuqopv5KicFkt+WbHeUUPG98PgP96Hrr/tHBGTfSFGOXZ9tN59EqGRTyD3RS
- CfCb/BhMOmY3pyjjVjkZSoauSD7Qyxm/CHxu/4icbhsz6Cij0sAPOKgKhWF1/4MpoIgR3gMMP
- O5ajKagKpgt1YXNdSMOf9EYVP3Kw2D5yZI8TXQ==
+X-Provags-ID: V03:K1:Ebl/mDhgO3X+TD45Mmlesnt8aOyo/ItBE1dervu7xKnkqgy9rPl
+ ZU8NQt4OyItW5fhyPOcdT32HSrxTH/WUFYoQeE2jcjvhynzGoJUtIuXQHvvE8oW4M4D5MVW
+ nhTxzdPfFpCucDxvtiHbGyhO2/D9b7Dq1jqvY2azjJfmX3MZ/mswkXKB0W3PFLdvsy6msor
+ Fet53/iryx2U/NRQKq7vg==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:NkUzcETFWxI=:ut3VHH5070qjslAcSn/BxX
+ PwyoLovdleZQSvM1uWpAx5OqoaUixmjMDv5jgysJGbPEx+TIMP+0Tfa8q7Gj6rWIdYxALT+Zl
+ 0LQ3tuQNHdZ1IQ0gOr6oWpycFzL+fxckL1hvd/SmzgUctASyAHMHZqjXt2TgRZz3VC5SFNfki
+ sZHmxJJJCI+I9D1Vbo1oJVyKg4VGquA2UleXy57/xylE6WPWpKCYUmUKtZxahj6GxbeMyI1x6
+ iNdLEx7z0gprvLJZqGc0rWeWxKqHSnAV0Z/1DHUDTA1TT2cVuc+warzdZG2x5tLmUErp47W5K
+ 7xNSyLfHlrAnTgORmwYKSOtreYj7EtKlwu/+q8QU8q+uEzXWLIw/QzaqIBDKBOD9A0f5xzCeP
+ SdCpa1UcQ/m8biTplb1ZeV1R+SwS1qCHIkrR3tLzg586En19m+jejpkpL9mazccIV8bYa9DEg
+ DIJv8kZgMhzvePtlxqUvHfgy2u8KhnoDT1ks3eCpPy0wqoyFDNCjP61vegh2qculXL7bHVw9G
+ HgxDvvYO/5hAjzxWF6y2sJUP3NLzJns5A7aSrqHIjGeW+Bk44TWifKHl96QPykkYH8u1YOcJq
+ PjZCs14P+Z7YnNnrc0ZxEOwr19vXImtcGfj6GAKVZI6aa+veaL4so/5LkqVCt3a/ohXjsEwP+
+ sK3l7VsItNn7UIbfodkXa6tsJ7WaAMe32+eWYRlDjZf4gu2hFqG71jtMVBYGaN+5IIxt+sArH
+ UnG0Cw383yr7HDYqAHvqZFBliWobeWvpWlK12A==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
@@ -68,30 +68,36 @@ and devm_ioremap_resource() together.
 
 Signed-off-by: Enrico Weigelt, metux IT consult <info@metux.net>
 ---
- drivers/gpio/gpio-zynq.c | 4 +---
- 1 file changed, 1 insertion(+), 3 deletions(-)
+ drivers/gpio/gpio-xlp.c | 7 +------
+ 1 file changed, 1 insertion(+), 6 deletions(-)
 
-diff --git a/drivers/gpio/gpio-zynq.c b/drivers/gpio/gpio-zynq.c
-index 00ff7b1..9392eda 100644
---- a/drivers/gpio/gpio-zynq.c
-+++ b/drivers/gpio/gpio-zynq.c
-@@ -834,7 +834,6 @@ static int zynq_gpio_probe(struct platform_device *pdev)
- 	int ret, bank_num;
- 	struct zynq_gpio *gpio;
- 	struct gpio_chip *chip;
--	struct resource *res;
- 	const struct of_device_id *match;
+diff --git a/drivers/gpio/gpio-xlp.c b/drivers/gpio/gpio-xlp.c
+index 0a3607f..54d3359 100644
+--- a/drivers/gpio/gpio-xlp.c
++++ b/drivers/gpio/gpio-xlp.c
+@@ -290,22 +290,17 @@ static void xlp_gpio_set(struct gpio_chip *gc, unsigned gpio, int state)
+ static int xlp_gpio_probe(struct platform_device *pdev)
+ {
+ 	struct gpio_chip *gc;
+-	struct resource *iores;
+ 	struct xlp_gpio_priv *priv;
+ 	void __iomem *gpio_base;
+ 	int irq_base, irq, err;
+ 	int ngpio;
+ 	u32 soc_type;
  
- 	gpio = devm_kzalloc(&pdev->dev, sizeof(*gpio), GFP_KERNEL);
-@@ -849,8 +848,7 @@ static int zynq_gpio_probe(struct platform_device *pdev)
- 	gpio->p_data = match->data;
- 	platform_set_drvdata(pdev, gpio);
+-	iores = platform_get_resource(pdev, IORESOURCE_MEM, 0);
+-	if (!iores)
+-		return -ENODEV;
+-
+ 	priv = devm_kzalloc(&pdev->dev,	sizeof(*priv), GFP_KERNEL);
+ 	if (!priv)
+ 		return -ENOMEM;
  
--	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
--	gpio->base_addr = devm_ioremap_resource(&pdev->dev, res);
-+	gpio->base_addr = devm_platform_ioremap_resource(pdev, 0);
- 	if (IS_ERR(gpio->base_addr))
- 		return PTR_ERR(gpio->base_addr);
+-	gpio_base = devm_ioremap_resource(&pdev->dev, iores);
++	gpio_base = devm_platform_ioremap_resource(pdev, 0);
+ 	if (IS_ERR(gpio_base))
+ 		return PTR_ERR(gpio_base);
  
 -- 
 1.9.1
