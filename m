@@ -6,47 +6,46 @@ X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
 	SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 901A5C43381
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 Mar 2019 19:57:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1C42FC43381
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 Mar 2019 19:57:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 637052084F
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 Mar 2019 19:57:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E457F2087C
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 Mar 2019 19:57:16 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1552334231;
-	bh=uuJY5hsgnonw1TO77Svvlxi6xb0Kj4kb/7j4muJT6bs=;
+	s=default; t=1552334237;
+	bh=XukdhBXvSJy8wHNVKBvdDe00YoJD4Ilq8W0JUFG4GcE=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=UlSoUo9TV1gFLZB+y2PM22G3iR8EReHu4NKCY+BKFCJ8B/R8utoiVH9Qx35Ovedl9
-	 Vuv2tHGNTTxpXKYJN/nOb9WFq79yDnoDQ1VJciVBxYCJprTh/Qkldx1q7L2J9K1mlA
-	 2O0yHOeouRgRHnVWurscrdE2szfirNf9bTP7njmc=
+	b=m30akcez/p4L3iaEvW6VXtBfPoVGFKJ3WSl0mIoO6f/QhQs9TdT+41Wt+f3SSfILL
+	 WXUqmtR0SxvWsJ9l9rEK/U5P1qSQP9AhZJgzPEB1NpB2dq41SoXinXomSmkun/NdSz
+	 QtnIPkQzPwJVoVzbkKN95q8V3PAqsohcxCaEDoio=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728985AbfCKT5K (ORCPT
+        id S1729005AbfCKT5P (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 11 Mar 2019 15:57:10 -0400
-Received: from mail.kernel.org ([198.145.29.99]:34460 "EHLO mail.kernel.org"
+        Mon, 11 Mar 2019 15:57:15 -0400
+Received: from mail.kernel.org ([198.145.29.99]:34650 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728957AbfCKT5F (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 11 Mar 2019 15:57:05 -0400
+        id S1728243AbfCKT5N (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 11 Mar 2019 15:57:13 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 989952087C;
-        Mon, 11 Mar 2019 19:57:03 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 1470F214AE;
+        Mon, 11 Mar 2019 19:57:11 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1552334224;
-        bh=uuJY5hsgnonw1TO77Svvlxi6xb0Kj4kb/7j4muJT6bs=;
+        s=default; t=1552334232;
+        bh=XukdhBXvSJy8wHNVKBvdDe00YoJD4Ilq8W0JUFG4GcE=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=ax4JZ1KPzY6roUU7XFHn1WgM7p3nOsZsmhXHyd5/k5hf7kZ1unsTaidCc/5r8+hjw
-         zSoV/d1fW5LIrGXuHTHB/zRtLnrwGTyafko5eOxyv5UHhno6fwNdlVWmbh31MNmE/b
-         kLuPP53vlB2YlI3t3N1imXzYiO+prD/ifXMoN0q8=
+        b=DA2s2aWKoQiBh43zgh0iD6i+LRlq2lMNy/CXTTqd+nzemAPhpUoog/n0nZe7MJEb7
+         sytOlCIcLHx+m84Mk+PiBorx4MlAqH+VREESwkkXcPrslXFZY5k4nAfqOPzy7dDBwA
+         vaWZY3wcO/vgcfxG5bKzSvvuvBa7Labb40g71HDM=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Julia Lawall <Julia.Lawall@lip6.fr>,
-        Philipp Zabel <p.zabel@pengutronix.de>,
-        Sasha Levin <sashal@kernel.org>,
-        dri-devel@lists.freedesktop.org
-Subject: [PATCH AUTOSEL 4.19 03/44] drm/imx: imx-ldb: add missing of_node_puts
-Date:   Mon, 11 Mar 2019 15:56:19 -0400
-Message-Id: <20190311195700.138462-3-sashal@kernel.org>
+Cc:     Julien Thierry <julien.thierry@arm.com>,
+        Christoffer Dall <christoffer.dall@arm.com>,
+        Sasha Levin <sashal@kernel.org>, kvmarm@lists.cs.columbia.edu
+Subject: [PATCH AUTOSEL 4.19 07/44] KVM: arm/arm64: vgic: Make vgic_dist->lpi_list_lock a raw_spinlock
+Date:   Mon, 11 Mar 2019 15:56:23 -0400
+Message-Id: <20190311195700.138462-7-sashal@kernel.org>
 X-Mailer: git-send-email 2.19.1
 In-Reply-To: <20190311195700.138462-1-sashal@kernel.org>
 References: <20190311195700.138462-1-sashal@kernel.org>
@@ -58,118 +57,135 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Julia Lawall <Julia.Lawall@lip6.fr>
+From: Julien Thierry <julien.thierry@arm.com>
 
-[ Upstream commit aa3312012f103f91f123600bbf768b11c8f431bc ]
+[ Upstream commit fc3bc475231e12e9c0142f60100cf84d077c79e1 ]
 
-The device node iterators perform an of_node_get on each
-iteration, so a jump out of the loop requires an of_node_put.
+vgic_dist->lpi_list_lock must always be taken with interrupts disabled as
+it is used in interrupt context.
 
-Move the initialization channel->child = child; down to just
-before the call to imx_ldb_register so that intervening failures
-don't need to clear it.  Add a label at the end of the function to
-do all the of_node_puts.
+For configurations such as PREEMPT_RT_FULL, this means that it should
+be a raw_spinlock since RT spinlocks are interruptible.
 
-The semantic patch that finds part of this problem is as follows
-(http://coccinelle.lip6.fr):
-
-// <smpl>
-@@
-expression root,e;
-local idexpression child;
-iterator name for_each_child_of_node;
-@@
-
- for_each_child_of_node(root, child) {
-   ... when != of_node_put(child)
-       when != e = child
-(
-   return child;
-|
-*  return ...;
-)
-   ...
- }
-// </smpl>
-
-Signed-off-by: Julia Lawall <Julia.Lawall@lip6.fr>
-Signed-off-by: Philipp Zabel <p.zabel@pengutronix.de>
+Signed-off-by: Julien Thierry <julien.thierry@arm.com>
+Acked-by: Christoffer Dall <christoffer.dall@arm.com>
+Acked-by: Marc Zyngier <marc.zyngier@arm.com>
+Signed-off-by: Christoffer Dall <christoffer.dall@arm.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/gpu/drm/imx/imx-ldb.c | 25 +++++++++++++++++--------
- 1 file changed, 17 insertions(+), 8 deletions(-)
+ include/kvm/arm_vgic.h        |  2 +-
+ virt/kvm/arm/vgic/vgic-init.c |  2 +-
+ virt/kvm/arm/vgic/vgic-its.c  |  8 ++++----
+ virt/kvm/arm/vgic/vgic.c      | 10 +++++-----
+ 4 files changed, 11 insertions(+), 11 deletions(-)
 
-diff --git a/drivers/gpu/drm/imx/imx-ldb.c b/drivers/gpu/drm/imx/imx-ldb.c
-index 3bd0f8a18e74..42daa5c9ff8e 100644
---- a/drivers/gpu/drm/imx/imx-ldb.c
-+++ b/drivers/gpu/drm/imx/imx-ldb.c
-@@ -651,8 +651,10 @@ static int imx_ldb_bind(struct device *dev, struct device *master, void *data)
- 		int bus_format;
+diff --git a/include/kvm/arm_vgic.h b/include/kvm/arm_vgic.h
+index 4f31f96bbfab..90ac450745f1 100644
+--- a/include/kvm/arm_vgic.h
++++ b/include/kvm/arm_vgic.h
+@@ -256,7 +256,7 @@ struct vgic_dist {
+ 	u64			propbaser;
  
- 		ret = of_property_read_u32(child, "reg", &i);
--		if (ret || i < 0 || i > 1)
--			return -EINVAL;
-+		if (ret || i < 0 || i > 1) {
-+			ret = -EINVAL;
-+			goto free_child;
-+		}
+ 	/* Protects the lpi_list and the count value below. */
+-	spinlock_t		lpi_list_lock;
++	raw_spinlock_t		lpi_list_lock;
+ 	struct list_head	lpi_list_head;
+ 	int			lpi_list_count;
  
- 		if (!of_device_is_available(child))
- 			continue;
-@@ -665,7 +667,6 @@ static int imx_ldb_bind(struct device *dev, struct device *master, void *data)
- 		channel = &imx_ldb->channel[i];
- 		channel->ldb = imx_ldb;
- 		channel->chno = i;
--		channel->child = child;
+diff --git a/virt/kvm/arm/vgic/vgic-init.c b/virt/kvm/arm/vgic/vgic-init.c
+index c0c0b88af1d5..33e7ee814f7b 100644
+--- a/virt/kvm/arm/vgic/vgic-init.c
++++ b/virt/kvm/arm/vgic/vgic-init.c
+@@ -64,7 +64,7 @@ void kvm_vgic_early_init(struct kvm *kvm)
+ 	struct vgic_dist *dist = &kvm->arch.vgic;
  
- 		/*
- 		 * The output port is port@4 with an external 4-port mux or
-@@ -675,13 +676,13 @@ static int imx_ldb_bind(struct device *dev, struct device *master, void *data)
- 						  imx_ldb->lvds_mux ? 4 : 2, 0,
- 						  &channel->panel, &channel->bridge);
- 		if (ret && ret != -ENODEV)
--			return ret;
-+			goto free_child;
- 
- 		/* panel ddc only if there is no bridge */
- 		if (!channel->bridge) {
- 			ret = imx_ldb_panel_ddc(dev, channel, child);
- 			if (ret)
--				return ret;
-+				goto free_child;
- 		}
- 
- 		bus_format = of_get_bus_format(dev, child);
-@@ -697,18 +698,26 @@ static int imx_ldb_bind(struct device *dev, struct device *master, void *data)
- 		if (bus_format < 0) {
- 			dev_err(dev, "could not determine data mapping: %d\n",
- 				bus_format);
--			return bus_format;
-+			ret = bus_format;
-+			goto free_child;
- 		}
- 		channel->bus_format = bus_format;
-+		channel->child = child;
- 
- 		ret = imx_ldb_register(drm, channel);
--		if (ret)
--			return ret;
-+		if (ret) {
-+			channel->child = NULL;
-+			goto free_child;
-+		}
- 	}
- 
- 	dev_set_drvdata(dev, imx_ldb);
- 
- 	return 0;
-+
-+free_child:
-+	of_node_put(child);
-+	return ret;
+ 	INIT_LIST_HEAD(&dist->lpi_list_head);
+-	spin_lock_init(&dist->lpi_list_lock);
++	raw_spin_lock_init(&dist->lpi_list_lock);
  }
  
- static void imx_ldb_unbind(struct device *dev, struct device *master,
+ /* CREATION */
+diff --git a/virt/kvm/arm/vgic/vgic-its.c b/virt/kvm/arm/vgic/vgic-its.c
+index 12502251727e..f376c82afb61 100644
+--- a/virt/kvm/arm/vgic/vgic-its.c
++++ b/virt/kvm/arm/vgic/vgic-its.c
+@@ -73,7 +73,7 @@ static struct vgic_irq *vgic_add_lpi(struct kvm *kvm, u32 intid,
+ 	irq->target_vcpu = vcpu;
+ 	irq->group = 1;
+ 
+-	spin_lock_irqsave(&dist->lpi_list_lock, flags);
++	raw_spin_lock_irqsave(&dist->lpi_list_lock, flags);
+ 
+ 	/*
+ 	 * There could be a race with another vgic_add_lpi(), so we need to
+@@ -101,7 +101,7 @@ static struct vgic_irq *vgic_add_lpi(struct kvm *kvm, u32 intid,
+ 	dist->lpi_list_count++;
+ 
+ out_unlock:
+-	spin_unlock_irqrestore(&dist->lpi_list_lock, flags);
++	raw_spin_unlock_irqrestore(&dist->lpi_list_lock, flags);
+ 
+ 	/*
+ 	 * We "cache" the configuration table entries in our struct vgic_irq's.
+@@ -339,7 +339,7 @@ int vgic_copy_lpi_list(struct kvm *kvm, struct kvm_vcpu *vcpu, u32 **intid_ptr)
+ 	if (!intids)
+ 		return -ENOMEM;
+ 
+-	spin_lock_irqsave(&dist->lpi_list_lock, flags);
++	raw_spin_lock_irqsave(&dist->lpi_list_lock, flags);
+ 	list_for_each_entry(irq, &dist->lpi_list_head, lpi_list) {
+ 		if (i == irq_count)
+ 			break;
+@@ -348,7 +348,7 @@ int vgic_copy_lpi_list(struct kvm *kvm, struct kvm_vcpu *vcpu, u32 **intid_ptr)
+ 			continue;
+ 		intids[i++] = irq->intid;
+ 	}
+-	spin_unlock_irqrestore(&dist->lpi_list_lock, flags);
++	raw_spin_unlock_irqrestore(&dist->lpi_list_lock, flags);
+ 
+ 	*intid_ptr = intids;
+ 	return i;
+diff --git a/virt/kvm/arm/vgic/vgic.c b/virt/kvm/arm/vgic/vgic.c
+index f884a54b2601..c5165e3b80cb 100644
+--- a/virt/kvm/arm/vgic/vgic.c
++++ b/virt/kvm/arm/vgic/vgic.c
+@@ -72,7 +72,7 @@ static struct vgic_irq *vgic_get_lpi(struct kvm *kvm, u32 intid)
+ 	struct vgic_irq *irq = NULL;
+ 	unsigned long flags;
+ 
+-	spin_lock_irqsave(&dist->lpi_list_lock, flags);
++	raw_spin_lock_irqsave(&dist->lpi_list_lock, flags);
+ 
+ 	list_for_each_entry(irq, &dist->lpi_list_head, lpi_list) {
+ 		if (irq->intid != intid)
+@@ -88,7 +88,7 @@ static struct vgic_irq *vgic_get_lpi(struct kvm *kvm, u32 intid)
+ 	irq = NULL;
+ 
+ out_unlock:
+-	spin_unlock_irqrestore(&dist->lpi_list_lock, flags);
++	raw_spin_unlock_irqrestore(&dist->lpi_list_lock, flags);
+ 
+ 	return irq;
+ }
+@@ -138,15 +138,15 @@ void vgic_put_irq(struct kvm *kvm, struct vgic_irq *irq)
+ 	if (irq->intid < VGIC_MIN_LPI)
+ 		return;
+ 
+-	spin_lock_irqsave(&dist->lpi_list_lock, flags);
++	raw_spin_lock_irqsave(&dist->lpi_list_lock, flags);
+ 	if (!kref_put(&irq->refcount, vgic_irq_release)) {
+-		spin_unlock_irqrestore(&dist->lpi_list_lock, flags);
++		raw_spin_unlock_irqrestore(&dist->lpi_list_lock, flags);
+ 		return;
+ 	};
+ 
+ 	list_del(&irq->lpi_list);
+ 	dist->lpi_list_count--;
+-	spin_unlock_irqrestore(&dist->lpi_list_lock, flags);
++	raw_spin_unlock_irqrestore(&dist->lpi_list_lock, flags);
+ 
+ 	kfree(irq);
+ }
 -- 
 2.19.1
 
