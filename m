@@ -4,47 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 318CEC43381
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 Mar 2019 20:11:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 83DB9C10F06
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 Mar 2019 20:11:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EE4332087C
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 Mar 2019 20:11:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 564B92087C
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 Mar 2019 20:11:40 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1552335094;
-	bh=otW8F45s7IE1iN3/Uar5IhKqKxXYhscDYQKY8ikA9gE=;
+	s=default; t=1552335100;
+	bh=MgS5vH4cOQBaWwogD2sXt6fd3B8H8+0P5xhj/bLe8SY=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=YPsg8wbitFwx/Q5DxI4rD85hRt2ocYrVWVQKmGSwAMOERMKIe3Fq5SW0bfL+brmJk
-	 iCVQeGxKh9jJwqO+sg/iv/tJ3O9m7t22cJtbqhwELb3t7EYXckiflT8ST6pbD742Bb
-	 AOsHiOm5TJEK9yKbwie7F9UCzRGjyn4+O74z1AiM=
+	b=gr2WobYMrzip0WPDI8Ociezv6dc7lsrOpRz9svUe9E1UqIUWsF/L6jF3HWJtEkYQ0
+	 yBoEiMk8c1ub4Z9t1p9bWNSYnFzy/NcpB71nLf3LibpYpLGMrpXItB3ARgSRaddXUv
+	 YSKAHGT8a0A5DZchTEvRgbIxMh3RW48L8KVGoAaI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728911AbfCKULc (ORCPT
+        id S1728858AbfCKULj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 11 Mar 2019 16:11:32 -0400
-Received: from mail.kernel.org ([198.145.29.99]:33502 "EHLO mail.kernel.org"
+        Mon, 11 Mar 2019 16:11:39 -0400
+Received: from mail.kernel.org ([198.145.29.99]:33496 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728610AbfCKT4S (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S1728592AbfCKT4S (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Mon, 11 Mar 2019 15:56:18 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 383A62087C;
-        Mon, 11 Mar 2019 19:56:17 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id D87BB214AF;
+        Mon, 11 Mar 2019 19:56:15 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1552334177;
-        bh=otW8F45s7IE1iN3/Uar5IhKqKxXYhscDYQKY8ikA9gE=;
+        s=default; t=1552334176;
+        bh=MgS5vH4cOQBaWwogD2sXt6fd3B8H8+0P5xhj/bLe8SY=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=k/SWUNLlaczs2n4NxyV2kTG2WcWSDPqlDNG/e7l6CgPifN/tCna0v9m/P3GtOrYmp
-         +TON5gkqkX6nWKKUWumWylA+JmSIbVMqcUsjvsrIo0Ol/delQtpUYsMFA1AlYp41hT
-         Uih5mvoMswIpPfqSiyxSHp0ln3jYtzDSpijn/78s=
+        b=LHshnBFynFtHfn78Fyg6MEYDIF2ekXXHJxfcEacZiQ1Q6kFVy98v7odzk2iNzVdws
+         VXuMhbMVCdSH5VEoer4je5MYO85c3Pp37ke3BRlTdIfgAcLpfEKKfGUo1uSXqq9E2k
+         +1cIALdf2HtJi5kzozXbyvE2VG+u2WNj96jHdkz8=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Yufen Yu <yuyufen@huawei.com>, Jens Axboe <axboe@kernel.dk>,
-        Sasha Levin <sashal@kernel.org>, linux-block@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.20 34/52] floppy: check_events callback should not return a negative number
-Date:   Mon, 11 Mar 2019 15:54:58 -0400
-Message-Id: <20190311195516.137772-34-sashal@kernel.org>
+Cc:     Andrea Claudi <aclaudi@redhat.com>,
+        Pablo Neira Ayuso <pablo@netfilter.org>,
+        Sasha Levin <sashal@kernel.org>, netdev@vger.kernel.org,
+        lvs-devel@vger.kernel.org, netfilter-devel@vger.kernel.org,
+        coreteam@netfilter.org
+Subject: [PATCH AUTOSEL 4.20 33/52] ipvs: fix dependency on nf_defrag_ipv6
+Date:   Mon, 11 Mar 2019 15:54:57 -0400
+Message-Id: <20190311195516.137772-33-sashal@kernel.org>
 X-Mailer: git-send-email 2.19.1
 In-Reply-To: <20190311195516.137772-1-sashal@kernel.org>
 References: <20190311195516.137772-1-sashal@kernel.org>
@@ -56,41 +60,109 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Yufen Yu <yuyufen@huawei.com>
+From: Andrea Claudi <aclaudi@redhat.com>
 
-[ Upstream commit 96d7cb932e826219ec41ac02e5af037ffae6098c ]
+[ Upstream commit 098e13f5b21d3398065fce8780f07a3ef62f4812 ]
 
-floppy_check_events() is supposed to return bit flags to say which
-events occured. We should return zero to say that no event flags are
-set.  Only BIT(0) and BIT(1) are used in the caller. And .check_events
-interface also expect to return an unsigned int value.
+ipvs relies on nf_defrag_ipv6 module to manage IPv6 fragmentation,
+but lacks proper Kconfig dependencies and does not explicitly
+request defrag features.
 
-However, after commit a0c80efe5956, it may return -EINTR (-4u).
-Here, both BIT(0) and BIT(1) are cleared. So this patch shouldn't
-affect runtime, but it obviously is still worth fixing.
+As a result, if netfilter hooks are not loaded, when IPv6 fragmented
+packet are handled by ipvs only the first fragment makes through.
 
-Reviewed-by: Dan Carpenter <dan.carpenter@oracle.com>
-Fixes: a0c80efe5956 ("floppy: fix lock_fdc() signal handling")
-Signed-off-by: Yufen Yu <yuyufen@huawei.com>
-Signed-off-by: Jens Axboe <axboe@kernel.dk>
+Fix it properly declaring the dependency on Kconfig and registering
+netfilter hooks on ip_vs_add_service() and ip_vs_new_dest().
+
+Reported-by: Li Shuang <shuali@redhat.com>
+Signed-off-by: Andrea Claudi <aclaudi@redhat.com>
+Acked-by: Julian Anastasov <ja@ssi.bg>
+Acked-by: Simon Horman <horms@verge.net.au>
+Signed-off-by: Pablo Neira Ayuso <pablo@netfilter.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/block/floppy.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ net/netfilter/ipvs/Kconfig      |  1 +
+ net/netfilter/ipvs/ip_vs_core.c | 10 ++++------
+ net/netfilter/ipvs/ip_vs_ctl.c  | 10 ++++++++++
+ 3 files changed, 15 insertions(+), 6 deletions(-)
 
-diff --git a/drivers/block/floppy.c b/drivers/block/floppy.c
-index fb23578e9a41..0cd5874ebb22 100644
---- a/drivers/block/floppy.c
-+++ b/drivers/block/floppy.c
-@@ -4081,7 +4081,7 @@ static unsigned int floppy_check_events(struct gendisk *disk,
+diff --git a/net/netfilter/ipvs/Kconfig b/net/netfilter/ipvs/Kconfig
+index cad48d07c818..8401cefd9f65 100644
+--- a/net/netfilter/ipvs/Kconfig
++++ b/net/netfilter/ipvs/Kconfig
+@@ -29,6 +29,7 @@ config	IP_VS_IPV6
+ 	bool "IPv6 support for IPVS"
+ 	depends on IPV6 = y || IP_VS = IPV6
+ 	select IP6_NF_IPTABLES
++	select NF_DEFRAG_IPV6
+ 	---help---
+ 	  Add IPv6 support to IPVS.
  
- 	if (time_after(jiffies, UDRS->last_checked + UDP->checkfreq)) {
- 		if (lock_fdc(drive))
--			return -EINTR;
-+			return 0;
- 		poll_drive(false, 0);
- 		process_fd_request();
+diff --git a/net/netfilter/ipvs/ip_vs_core.c b/net/netfilter/ipvs/ip_vs_core.c
+index fe9abf3cc10a..235205c93e14 100644
+--- a/net/netfilter/ipvs/ip_vs_core.c
++++ b/net/netfilter/ipvs/ip_vs_core.c
+@@ -1536,14 +1536,12 @@ ip_vs_try_to_schedule(struct netns_ipvs *ipvs, int af, struct sk_buff *skb,
+ 		/* sorry, all this trouble for a no-hit :) */
+ 		IP_VS_DBG_PKT(12, af, pp, skb, iph->off,
+ 			      "ip_vs_in: packet continues traversal as normal");
+-		if (iph->fragoffs) {
+-			/* Fragment that couldn't be mapped to a conn entry
+-			 * is missing module nf_defrag_ipv6
+-			 */
+-			IP_VS_DBG_RL("Unhandled frag, load nf_defrag_ipv6\n");
++
++		/* Fragment couldn't be mapped to a conn entry */
++		if (iph->fragoffs)
+ 			IP_VS_DBG_PKT(7, af, pp, skb, iph->off,
+ 				      "unhandled fragment");
+-		}
++
+ 		*verdict = NF_ACCEPT;
+ 		return 0;
  	}
+diff --git a/net/netfilter/ipvs/ip_vs_ctl.c b/net/netfilter/ipvs/ip_vs_ctl.c
+index 432141f04af3..3321f9dcd470 100644
+--- a/net/netfilter/ipvs/ip_vs_ctl.c
++++ b/net/netfilter/ipvs/ip_vs_ctl.c
+@@ -43,6 +43,7 @@
+ #ifdef CONFIG_IP_VS_IPV6
+ #include <net/ipv6.h>
+ #include <net/ip6_route.h>
++#include <net/netfilter/ipv6/nf_defrag_ipv6.h>
+ #endif
+ #include <net/route.h>
+ #include <net/sock.h>
+@@ -895,6 +896,7 @@ ip_vs_new_dest(struct ip_vs_service *svc, struct ip_vs_dest_user_kern *udest,
+ {
+ 	struct ip_vs_dest *dest;
+ 	unsigned int atype, i;
++	int ret = 0;
+ 
+ 	EnterFunction(2);
+ 
+@@ -905,6 +907,10 @@ ip_vs_new_dest(struct ip_vs_service *svc, struct ip_vs_dest_user_kern *udest,
+ 			atype & IPV6_ADDR_LINKLOCAL) &&
+ 			!__ip_vs_addr_is_local_v6(svc->ipvs->net, &udest->addr.in6))
+ 			return -EINVAL;
++
++		ret = nf_defrag_ipv6_enable(svc->ipvs->net);
++		if (ret)
++			return ret;
+ 	} else
+ #endif
+ 	{
+@@ -1228,6 +1234,10 @@ ip_vs_add_service(struct netns_ipvs *ipvs, struct ip_vs_service_user_kern *u,
+ 			ret = -EINVAL;
+ 			goto out_err;
+ 		}
++
++		ret = nf_defrag_ipv6_enable(ipvs->net);
++		if (ret)
++			goto out_err;
+ 	}
+ #endif
+ 
 -- 
 2.19.1
 
