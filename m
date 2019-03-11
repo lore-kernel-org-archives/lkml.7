@@ -2,146 +2,178 @@ Return-Path: <SRS0=FxTY=RO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E42F3C10F03
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 Mar 2019 01:45:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 20606C43381
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 Mar 2019 01:46:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C075A206DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 Mar 2019 01:45:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EBC8D207E0
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 Mar 2019 01:46:01 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727076AbfCKBpN convert rfc822-to-8bit (ORCPT
+        id S1727116AbfCKBqA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 10 Mar 2019 21:45:13 -0400
-Received: from terminus.zytor.com ([198.137.202.136]:54145 "EHLO
-        mail.zytor.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726687AbfCKBpN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 10 Mar 2019 21:45:13 -0400
-Received: from [IPv6:2601:646:8680:2bb1:b911:67c8:ac46:1844] ([IPv6:2601:646:8680:2bb1:b911:67c8:ac46:1844])
-        (authenticated bits=0)
-        by mail.zytor.com (8.15.2/8.15.2) with ESMTPSA id x2B1ilYF3742446
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NO);
-        Sun, 10 Mar 2019 18:44:49 -0700
-Date:   Sun, 10 Mar 2019 18:44:39 -0700
-User-Agent: K-9 Mail for Android
-In-Reply-To: <20190310061840.GA21641@kroah.com>
-References: <20190308124902.257040783@linuxfoundation.org> <20190308124904.216497374@linuxfoundation.org> <CED6E6E5-00E5-4FFD-A8C9-254EA3A5288E@zytor.com> <20190310061840.GA21641@kroah.com>
+        Sun, 10 Mar 2019 21:46:00 -0400
+Received: from szxga04-in.huawei.com ([45.249.212.190]:4663 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726687AbfCKBqA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 10 Mar 2019 21:46:00 -0400
+Received: from DGGEMS408-HUB.china.huawei.com (unknown [172.30.72.60])
+        by Forcepoint Email with ESMTP id D3B70222B6386507C390;
+        Mon, 11 Mar 2019 09:45:54 +0800 (CST)
+Received: from [127.0.0.1] (10.177.31.96) by DGGEMS408-HUB.china.huawei.com
+ (10.3.19.208) with Microsoft SMTP Server id 14.3.408.0; Mon, 11 Mar 2019
+ 09:45:48 +0800
+Subject: Re: [PATCH v2] appletalk: Correctly check return value of
+ register_snap_client
+To:     <davem@davemloft.net>, <joe@perches.com>,
+        <gregkh@linuxfoundation.org>
+References: <20190307022216.22464-1-yuehaibing@huawei.com>
+CC:     <linux-kernel@vger.kernel.org>, <netdev@vger.kernel.org>
+From:   YueHaibing <yuehaibing@huawei.com>
+Message-ID: <9c5dfaa3-074d-5056-2d34-2de639f300cc@huawei.com>
+Date:   Mon, 11 Mar 2019 09:45:47 +0800
+User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:45.0) Gecko/20100101
+ Thunderbird/45.2.0
 MIME-Version: 1.0
-Content-Type: text/plain;
- charset=utf-8
-Content-Transfer-Encoding: 8BIT
-Subject: Re: [PATCH 5.0 30/46] x86/boot/compressed/64: Do not read legacy ROM on EFI system
-To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-CC:     linux-kernel@vger.kernel.org, stable@vger.kernel.org,
-        Pitam Mitra <pitamm@gmail.com>,
-        "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Bockjoo Kim <bockjoo@phys.ufl.edu>, bp@alien8.de
-From:   hpa@zytor.com
-Message-ID: <FB07447E-B597-41D1-B795-E220F17018FE@zytor.com>
+In-Reply-To: <20190307022216.22464-1-yuehaibing@huawei.com>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [10.177.31.96]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On March 9, 2019 10:18:40 PM PST, Greg Kroah-Hartman <gregkh@linuxfoundation.org> wrote:
->On Sat, Mar 09, 2019 at 10:10:19PM -0800, hpa@zytor.com wrote:
->> On March 8, 2019 4:50:03 AM PST, Greg Kroah-Hartman
-><gregkh@linuxfoundation.org> wrote:
->> >5.0-stable review patch.  If anyone has any objections, please let
->me
->> >know.
->> >
->> >------------------
->> >
->> >From: Kirill A. Shutemov <kirill.shutemov@linux.intel.com>
->> >
->> >commit 6f913de3231e1d70a871135b38219da7810df218 upstream.
->> >
->> >EFI systems do not necessarily provide a legacy ROM. If the ROM is
->> >missing
->> >the memory is not mapped at all.
->> >
->> >Trying to dereference values in the legacy ROM area leads to a crash
->on
->> >Macbook Pro.
->> >
->> >Only look for values in the legacy ROM area for non-EFI system.
->> >
->> >Fixes: 3548e131ec6a ("x86/boot/compressed/64: Find a place for
->32-bit
->> >trampoline")
->> >Reported-by: Pitam Mitra <pitamm@gmail.com>
->> >Signed-off-by: Kirill A. Shutemov <kirill.shutemov@linux.intel.com>
->> >Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
->> >Tested-by: Bockjoo Kim <bockjoo@phys.ufl.edu>
->> >Cc: bp@alien8.de
->> >Cc: hpa@zytor.com
->> >Cc: stable@vger.kernel.org
->> >Link:
->>
->>https://lkml.kernel.org/r/20190219075224.35058-1-kirill.shutemov@linux.intel.com
->> >Bugzilla: https://bugzilla.kernel.org/show_bug.cgi?id=202351
->> >Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
->> >
->> >---
->> > arch/x86/boot/compressed/pgtable_64.c |   19 ++++++++++++++++---
->> > 1 file changed, 16 insertions(+), 3 deletions(-)
->> >
->> >--- a/arch/x86/boot/compressed/pgtable_64.c
->> >+++ b/arch/x86/boot/compressed/pgtable_64.c
->> >@@ -1,5 +1,7 @@
->> >+#include <linux/efi.h>
->> > #include <asm/e820/types.h>
->> > #include <asm/processor.h>
->> >+#include <asm/efi.h>
->> > #include "pgtable.h"
->> > #include "../string.h"
->> > 
->> >@@ -37,9 +39,10 @@ int cmdline_find_option_bool(const char
->> > 
->> > static unsigned long find_trampoline_placement(void)
->> > {
->> >-	unsigned long bios_start, ebda_start;
->> >+	unsigned long bios_start = 0, ebda_start = 0;
->> > 	unsigned long trampoline_start;
->> > 	struct boot_e820_entry *entry;
->> >+	char *signature;
->> > 	int i;
->> > 
->> > 	/*
->> >@@ -47,8 +50,18 @@ static unsigned long find_trampoline_pla
->> > 	 * This code is based on reserve_bios_regions().
->> > 	 */
->> > 
->> >-	ebda_start = *(unsigned short *)0x40e << 4;
->> >-	bios_start = *(unsigned short *)0x413 << 10;
->> >+	/*
->> >+	 * EFI systems may not provide legacy ROM. The memory may not be
->> >mapped
->> >+	 * at all.
->> >+	 *
->> >+	 * Only look for values in the legacy ROM for non-EFI system.
->> >+	 */
->> >+	signature = (char *)&boot_params->efi_info.efi_loader_signature;
->> >+	if (strncmp(signature, EFI32_LOADER_SIGNATURE, 4) &&
->> >+	    strncmp(signature, EFI64_LOADER_SIGNATURE, 4)) {
->> >+		ebda_start = *(unsigned short *)0x40e << 4;
->> >+		bios_start = *(unsigned short *)0x413 << 10;
->> >+	}
->> > 
->> > 	if (bios_start < BIOS_START_MIN || bios_start > BIOS_START_MAX)
->> > 		bios_start = BIOS_START_MAX;
->> 
->> Only one objection: the explanation is nonsensical. 
->
->Heh, take it up with the original submitter, I don't change the
->changelog text after it hits Linus's tree :)
->
->greg k-h
+Hi David,
 
-:)
--- 
-Sent from my Android device with K-9 Mail. Please excuse my brevity.
+Is there something need do for this patch? Pls let me know.
+
+I saw the patchwork status labled to  'Not Applicable'
+
+https://patchwork.ozlabs.org/patch/1052624/
+
+
+On 2019/3/7 10:22, Yue Haibing wrote:
+> From: YueHaibing <yuehaibing@huawei.com>
+> 
+> register_snap_client may return NULL, all the callers
+> check it, but only print a warning. This will result in
+> NULL pointer dereference in unregister_snap_client and other
+> places.
+> 
+> It has always been used like this since v2.6
+> 
+> Reported-by: Dan Carpenter <dan.carpenter@oracle.com>
+> Signed-off-by: YueHaibing <yuehaibing@huawei.com>
+> ---
+> v2: fix aarp_dl leak
+> ---
+>  include/linux/atalk.h |  2 +-
+>  net/appletalk/aarp.c  | 13 ++++++++++---
+>  net/appletalk/ddp.c   | 20 ++++++++++++--------
+>  3 files changed, 23 insertions(+), 12 deletions(-)
+> 
+> diff --git a/include/linux/atalk.h b/include/linux/atalk.h
+> index 5a90f28..0e5265a 100644
+> --- a/include/linux/atalk.h
+> +++ b/include/linux/atalk.h
+> @@ -108,7 +108,7 @@ static __inline__ struct elapaarp *aarp_hdr(struct sk_buff *skb)
+>  #define AARP_RESOLVE_TIME	(10 * HZ)
+>  
+>  extern struct datalink_proto *ddp_dl, *aarp_dl;
+> -extern void aarp_proto_init(void);
+> +extern int aarp_proto_init(void);
+>  
+>  /* Inter module exports */
+>  
+> diff --git a/net/appletalk/aarp.c b/net/appletalk/aarp.c
+> index 49a16ce..d11372d 100644
+> --- a/net/appletalk/aarp.c
+> +++ b/net/appletalk/aarp.c
+> @@ -879,15 +879,22 @@ static struct notifier_block aarp_notifier = {
+>  
+>  static unsigned char aarp_snap_id[] = { 0x00, 0x00, 0x00, 0x80, 0xF3 };
+>  
+> -void __init aarp_proto_init(void)
+> +int __init aarp_proto_init(void)
+>  {
+> +	int rc;
+> +
+>  	aarp_dl = register_snap_client(aarp_snap_id, aarp_rcv);
+> -	if (!aarp_dl)
+> +	if (!aarp_dl) {
+>  		printk(KERN_CRIT "Unable to register AARP with SNAP.\n");
+> +		return -ENOMEM;
+> +	}
+>  	timer_setup(&aarp_timer, aarp_expire_timeout, 0);
+>  	aarp_timer.expires  = jiffies + sysctl_aarp_expiry_time;
+>  	add_timer(&aarp_timer);
+> -	register_netdevice_notifier(&aarp_notifier);
+> +	rc = register_netdevice_notifier(&aarp_notifier);
+> +	if (rc)
+> +		unregister_snap_client(aarp_dl);
+> +	return rc;
+>  }
+>  
+>  /* Remove the AARP entries associated with a device. */
+> diff --git a/net/appletalk/ddp.c b/net/appletalk/ddp.c
+> index 795fbc6..709d254 100644
+> --- a/net/appletalk/ddp.c
+> +++ b/net/appletalk/ddp.c
+> @@ -1904,9 +1904,6 @@ static unsigned char ddp_snap_id[] = { 0x08, 0x00, 0x07, 0x80, 0x9B };
+>  EXPORT_SYMBOL(atrtr_get_dev);
+>  EXPORT_SYMBOL(atalk_find_dev_addr);
+>  
+> -static const char atalk_err_snap[] __initconst =
+> -	KERN_CRIT "Unable to register DDP with SNAP.\n";
+> -
+>  /* Called by proto.c on kernel start up */
+>  static int __init atalk_init(void)
+>  {
+> @@ -1921,17 +1918,22 @@ static int __init atalk_init(void)
+>  		goto out_proto;
+>  
+>  	ddp_dl = register_snap_client(ddp_snap_id, atalk_rcv);
+> -	if (!ddp_dl)
+> -		printk(atalk_err_snap);
+> +	if (!ddp_dl) {
+> +		pr_crit("Unable to register DDP with SNAP.\n");
+> +		goto out_sock;
+> +	}
+>  
+>  	dev_add_pack(&ltalk_packet_type);
+>  	dev_add_pack(&ppptalk_packet_type);
+>  
+>  	rc = register_netdevice_notifier(&ddp_notifier);
+>  	if (rc)
+> -		goto out_sock;
+> +		goto out_snap;
+> +
+> +	rc = aarp_proto_init();
+> +	if (rc)
+> +		goto out_dev;
+>  
+> -	aarp_proto_init();
+>  	rc = atalk_proc_init();
+>  	if (rc)
+>  		goto out_aarp;
+> @@ -1945,11 +1947,13 @@ static int __init atalk_init(void)
+>  	atalk_proc_exit();
+>  out_aarp:
+>  	aarp_cleanup_module();
+> +out_dev:
+>  	unregister_netdevice_notifier(&ddp_notifier);
+> -out_sock:
+> +out_snap:
+>  	dev_remove_pack(&ppptalk_packet_type);
+>  	dev_remove_pack(&ltalk_packet_type);
+>  	unregister_snap_client(ddp_dl);
+> +out_sock:
+>  	sock_unregister(PF_APPLETALK);
+>  out_proto:
+>  	proto_unregister(&ddp_proto);
+> 
+
