@@ -2,117 +2,96 @@ Return-Path: <SRS0=FxTY=RO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,
-	USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_MUTT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5F272C43381
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 Mar 2019 22:41:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 11E99C43381
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 Mar 2019 22:43:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2A5FB2148D
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 Mar 2019 22:41:44 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1552344104;
-	bh=T4d3bzHQRcayBAPdRMLxv0rUZJIeCyBP9xBDFwH6zn0=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=QCm9ShCmC94uFft9bd5wSu3aIC4uG2IoiuMsadYilX+55BOdgNIMYiqaj6XpMro9k
-	 jhIZ0dttEBSt6i2tlpN4FeKFMgDfxQn4qs0rkMoMNHfxWlfEJSCHdJNxZRjHDwaJkJ
-	 GffujToYtExwz0n16sv2Uci3hgzIX9YTu+YgoK48=
+	by mail.kernel.org (Postfix) with ESMTP id C82402087C
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 Mar 2019 22:43:38 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726451AbfCKWln (ORCPT
+        id S1726418AbfCKWnh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 11 Mar 2019 18:41:43 -0400
-Received: from mail-ot1-f67.google.com ([209.85.210.67]:41624 "EHLO
-        mail-ot1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725843AbfCKWlm (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 11 Mar 2019 18:41:42 -0400
-Received: by mail-ot1-f67.google.com with SMTP id t7so714091otk.8;
-        Mon, 11 Mar 2019 15:41:42 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=TJML0uGfLYj5LcXJ4ZSv+L1LfESaD+LndKo9tAnKPnI=;
-        b=cnDETFtzpm/6T7qD/hQdFn3FVyVU/fw+mzt7BVGSC8ohbTJ+YS6D4DnP/T/5aDfEBn
-         rJCU5WTxFp7iJ0xn8J+JpzkdpyH3WnlvZHixsYzpi11G6NAZa0rEzgGByumm/XbFxODQ
-         efneTvxrXiSGUfjqz8EatyRtLMcn85XC5lCUcn9nWITlEE0OXvMNZwfs95/Cpbxt/2j2
-         ACLorxOXBQDRjiqulvzJs6sttzdQcLpACMWi4CmMBVxB15ioqnA6xFKBRj6o+IF1y6QH
-         V82PjxnF78K4QxqIwOPxYylAxpiy1jdbBG59wA0Ru1o8wWV26vf5siRVwEOqSbYxISs/
-         8kaw==
-X-Gm-Message-State: APjAAAWvOE1VS3FKnM48lybbOm4Wcl5m31i9PrUEBZEzDYb1ugFSDQ+3
-        oiYlmE+O8gBZaVHixA8GEg==
-X-Google-Smtp-Source: APXvYqws1Fdg+l1hnYj9cI/erwrOqcnhpIHzvFFUQZLzfYiJM4C1GtLrQALvmc7rI4HYL33tYX2w3g==
-X-Received: by 2002:a9d:130:: with SMTP id 45mr23236431otu.355.1552344101336;
-        Mon, 11 Mar 2019 15:41:41 -0700 (PDT)
-Received: from localhost (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
-        by smtp.gmail.com with ESMTPSA id o4sm194581oih.45.2019.03.11.15.41.40
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Mon, 11 Mar 2019 15:41:40 -0700 (PDT)
-Date:   Mon, 11 Mar 2019 17:41:40 -0500
-From:   Rob Herring <robh@kernel.org>
-To:     Vishal Sagar <vishal.sagar@xilinx.com>
-Cc:     Hyun Kwon <hyunk@xilinx.com>, laurent.pinchart@ideasonboard.com,
-        mchehab@kernel.org, robh+dt@kernel.org, mark.rutland@arm.com,
-        Michal Simek <michals@xilinx.com>, linux-media@vger.kernel.org,
-        devicetree@vger.kernel.org, sakari.ailus@linux.intel.com,
-        hans.verkuil@cisco.com, linux-arm-kernel@lists.infradead.org,
-        linux-kernel@vger.kernel.org, Dinesh Kumar <dineshk@xilinx.com>,
-        Sandip Kothari <sandipk@xilinx.com>,
-        Vishal Sagar <vishal.sagar@xilinx.com>
-Subject: Re: [PATCH v5 1/2] media: dt-bindings: media: xilinx: Add Xilinx
- MIPI CSI-2 Rx Subsystem
-Message-ID: <20190311224140.GA23484@bogus>
-References: <1552297257-145919-1-git-send-email-vishal.sagar@xilinx.com>
- <1552297257-145919-2-git-send-email-vishal.sagar@xilinx.com>
+        Mon, 11 Mar 2019 18:43:37 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:38672 "EHLO mx1.redhat.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725843AbfCKWnh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 11 Mar 2019 18:43:37 -0400
+Received: from smtp.corp.redhat.com (int-mx04.intmail.prod.int.phx2.redhat.com [10.5.11.14])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id 1DC7E3087BA7;
+        Mon, 11 Mar 2019 22:43:37 +0000 (UTC)
+Received: from localhost (unknown [10.18.25.174])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id 7730E5DAAF;
+        Mon, 11 Mar 2019 22:43:34 +0000 (UTC)
+Date:   Mon, 11 Mar 2019 18:43:33 -0400
+From:   Mike Snitzer <snitzer@redhat.com>
+To:     "Paul E. McKenney" <paulmck@linux.ibm.com>
+Cc:     Christoph Hellwig <hch@infradead.org>,
+        Nikos Tsironis <ntsironis@arrikto.com>, agk@redhat.com,
+        dm-devel@redhat.com, mpatocka@redhat.com, iliastsi@arrikto.com,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 1/3] list_bl: Add hlist_bl_add_before/behind helpers
+Message-ID: <20190311224333.GA16968@redhat.com>
+References: <20181220180651.4879-1-ntsironis@arrikto.com>
+ <20181220180651.4879-2-ntsironis@arrikto.com>
+ <20190228213201.GB23527@redhat.com>
+ <20190311181607.GA9388@infradead.org>
+ <20190311221321.GP13351@linux.ibm.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <1552297257-145919-2-git-send-email-vishal.sagar@xilinx.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <20190311221321.GP13351@linux.ibm.com>
+User-Agent: Mutt/1.5.21 (2010-09-15)
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.14
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.45]); Mon, 11 Mar 2019 22:43:37 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, 11 Mar 2019 15:10:56 +0530, Vishal Sagar wrote:
-> Add bindings documentation for Xilinx MIPI CSI-2 Rx Subsystem.
-> 
-> The Xilinx MIPI CSI-2 Rx Subsystem consists of a CSI-2 Rx controller, a
-> DPHY in Rx mode, an optional I2C controller and a Video Format Bridge.
-> 
-> Signed-off-by: Vishal Sagar <vishal.sagar@xilinx.com>
-> Reviewed-by: Hyun Kwon <hyun.kwon@xilinx.com>
-> ---
-> v5
-> - Incorporated comments by Luca Cersoli
-> - Removed DPHY clock from description and example
-> - Removed bayer pattern from device tree MIPI CSI IP
->   doesn't deal with bayer pattern.
-> 
-> v4
-> - Added reviewed by Hyun Kwon
-> 
-> v3
-> - removed interrupt parent as suggested by Rob
-> - removed dphy clock
-> - moved vfb to optional properties
-> - Added required and optional port properties section
-> - Added endpoint property section
-> 
-> v2
-> - updated the compatible string to latest version supported
-> - removed DPHY related parameters
-> - added CSI v2.0 related property (including VCX for supporting upto 16
->   virtual channels).
-> - modified csi-pxl-format from string to unsigned int type where the value
->   is as per the CSI specification
-> - Defined port 0 and port 1 as sink and source ports.
-> - Removed max-lanes property as suggested by Rob and Sakari
-> 
->  .../bindings/media/xilinx/xlnx,csi2rxss.txt        | 118 +++++++++++++++++++++
->  1 file changed, 118 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/media/xilinx/xlnx,csi2rxss.txt
-> 
+On Mon, Mar 11 2019 at  6:13pm -0400,
+Paul E. McKenney <paulmck@linux.ibm.com> wrote:
 
-Reviewed-by: Rob Herring <robh@kernel.org>
+> On Mon, Mar 11, 2019 at 11:16:08AM -0700, Christoph Hellwig wrote:
+> > On Thu, Feb 28, 2019 at 04:32:02PM -0500, Mike Snitzer wrote:
+> > > Hi Paul and Christoph,
+> > > 
+> > > You've added your Signed-off-by to include/linux/list_bl.h commits in
+> > > the past.  I'm not sure how this proposed patch should be handled.
+> > > 
+> > > These new hlist_bl_add_{before,behind} changes are a prereq for
+> > > dm-snapshot changes that Nikos has proposed, please see:
+> > > https://patchwork.kernel.org/patch/10739265/
+> > > 
+> > > Any assistance/review you, or others on LKML, might be able to provide
+> > > would be appreciated.
+> > 
+> > I just killed two helpers.  That being said assuming that we only
+> > rely on the next pointer for the lockless traversals the changes look
+> > fine to me, but the code might be beyond my paygrade..
+> 
+> First, apologies for being slow on this one.
+
+No problem.
+ 
+> Second, were the two helpers hlist_bl_add_{before,behind}()?  If so, I
+> guess there is not much point in me looking them over.  Though perhaps
+> I should be looking something else over?
+
+No, think Christoph was referring to his commit 1879fd6a26571fd4e8e1f
+from 2011.
+
+Anyway, I'd like you to look over this new proposed patch that
+introduces hlist_bl_add_{before,behind}(), please see:
+https://patchwork.kernel.org/patch/10835713/
+
+If you're happy with the patch, and can provide your Reviewed-by or
+Acked-by, I'll then pick it up as a prereq for the broader dm-snapshot
+changes that Nikos has provided.
+
+Thanks!
+Mike
