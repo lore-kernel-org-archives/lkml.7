@@ -2,136 +2,98 @@ Return-Path: <SRS0=FxTY=RO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.8 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1056CC43381
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 Mar 2019 10:07:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 80702C43381
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 Mar 2019 10:09:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D19D720657
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 Mar 2019 10:07:58 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="gDWb1CiP";
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="das9v3vY"
+	by mail.kernel.org (Postfix) with ESMTP id 4F6C820657
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 Mar 2019 10:09:31 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727182AbfCKKH5 (ORCPT
+        id S1727119AbfCKKJ3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 11 Mar 2019 06:07:57 -0400
-Received: from smtp.codeaurora.org ([198.145.29.96]:51074 "EHLO
-        smtp.codeaurora.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726074AbfCKKH5 (ORCPT
+        Mon, 11 Mar 2019 06:09:29 -0400
+Received: from mout.kundenserver.de ([217.72.192.73]:51605 "EHLO
+        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726605AbfCKKJ3 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 11 Mar 2019 06:07:57 -0400
-Received: by smtp.codeaurora.org (Postfix, from userid 1000)
-        id 801FB61A8B; Mon, 11 Mar 2019 10:07:55 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
-        s=default; t=1552298875;
-        bh=ZXuDXx5vm5dKU06DRLzLdanZL3vAsQ2wV2uqPqiv4ow=;
-        h=From:To:Cc:Subject:Date:From;
-        b=gDWb1CiPJjZ3MbY2kaK4KLWM8Gdl9k+agkbh4yqbpAw3geb8mpEw5MwDnFDAe+BGo
-         kQV8FMUTkAz8rsswk2SIXuGSAIEaz8PNA/3uARl6Ea3/gUc/40kDv1SexoIzhVyqWq
-         mHdhisZpiELNnarVR8EN160P8Q0IpKIpA+yFcz8k=
-Received: from blr-ubuntu-87.qualcomm.com (blr-bdr-fw-01_globalnat_allzones-outside.qualcomm.com [103.229.18.19])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-SHA256 (128/128 bits))
-        (No client certificate requested)
-        (Authenticated sender: sibis@smtp.codeaurora.org)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id DDE5C61A8B;
-        Mon, 11 Mar 2019 10:07:50 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
-        s=default; t=1552298874;
-        bh=ZXuDXx5vm5dKU06DRLzLdanZL3vAsQ2wV2uqPqiv4ow=;
-        h=From:To:Cc:Subject:Date:From;
-        b=das9v3vYsfFz57R7HAFAE+S/RNT8TufPphjVliBMfpkZcCzjXstskkMm7L9wllu1c
-         zKZjDPd+mj3+slUkoqL0goLmXIvgq0lzpmYBdN9A+z8GafptakKLyAcqhuKW8AyLV4
-         oWmuzHn76pDT4MXSwF1x5bNS8V4pybTJd2G3w1ms=
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org DDE5C61A8B
-Authentication-Results: pdx-caf-mail.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
-Authentication-Results: pdx-caf-mail.web.codeaurora.org; spf=none smtp.mailfrom=sibis@codeaurora.org
-From:   Sibi Sankar <sibis@codeaurora.org>
-To:     myungjoo.ham@samsung.com, kyungmin.park@samsung.com
-Cc:     cw00.choi@samsung.com, linux-pm@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-arm-msm-owner@vger.kernel.org,
-        Saravana Kannan <skannan@codeaurora.org>,
-        Sibi Sankar <sibis@codeaurora.org>
-Subject: [PATCH v5] PM / devfreq: Restart previous governor if new governor fails to start
-Date:   Mon, 11 Mar 2019 15:36:30 +0530
-Message-Id: <20190311100630.12952-1-sibis@codeaurora.org>
-X-Mailer: git-send-email 2.20.1
+        Mon, 11 Mar 2019 06:09:29 -0400
+Received: from [192.168.1.110] ([95.115.159.19]) by mrelayeu.kundenserver.de
+ (mreue107 [212.227.15.183]) with ESMTPSA (Nemesis) id
+ 1MXYAj-1hYw9W1iFr-00YyVh; Mon, 11 Mar 2019 11:09:13 +0100
+Subject: Re: [PATCH] leds: fix a potential NULL pointer dereference
+To:     Jacek Anaszewski <jacek.anaszewski@gmail.com>,
+        Kangjie Lu <kjlu@umn.edu>
+Cc:     pakki001@umn.edu, Riku Voipio <riku.voipio@iki.fi>,
+        Pavel Machek <pavel@ucw.cz>, linux-leds@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+References: <20190309060411.29074-1-kjlu@umn.edu>
+ <8c616b91-8f0d-f53b-af10-4d768063c5a0@gmail.com>
+From:   "Enrico Weigelt, metux IT consult" <lkml@metux.net>
+Organization: metux IT consult
+Message-ID: <32c84850-85e8-e063-b104-220afe0554f8@metux.net>
+Date:   Mon, 11 Mar 2019 11:09:08 +0100
+User-Agent: Mozilla/5.0 (X11; Linux i686 on x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.2.1
 MIME-Version: 1.0
+In-Reply-To: <8c616b91-8f0d-f53b-af10-4d768063c5a0@gmail.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
 Content-Transfer-Encoding: 8bit
+X-Provags-ID: V03:K1:l4WWnk0lhDdM6zcHsosPQv0MZ2ja7pssbyUY4v5jX2yUALokfsS
+ iHEUoMMfEHzlZUCiTLF0pWIlERFJDjBDvbTJdnloqLSO+cob/GP1CEhPwsY2gPIJSVt7fRR
+ hD+YcWAPT7QO/0QGtf/rsL13dpQmIdSONEXt8eIqD2Zv0Pbm50DZjut97QSnuBgeEQLLaA9
+ 2UGVogY0kngl+dp5qrZmA==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:Oz041aZd7qo=:cNuckBhySI5nv+8WwA33GK
+ FGywX1Fg88RZ5ypUC0hlFf5xxtp+LIsUpnSA3o3nFOGWoTbznf+HCmin4z66djTpsdJ3Tkxwh
+ I5zw3Xu3qawgel9QCOS2+ZPcQiPta/1l5Ryhk0Eh6Ft7royaJI7zCfBSgklQfwGOn2js/fMJ/
+ QuNDTsoIkcct8IKMMIlCAEF3wmtg/ATEPCeAn34EpgSuSmjwd3V/iwyked48VKvVpW3WgRvVZ
+ zNkC3RBkhrtjSvIpus/1Jk/tphmM7fLAlngYU7KO9LrrW8JhaWVYlFiAHJNh3BmLaCM/b3zqJ
+ vTzC37psTonArOoMIwyF7Xk18399/repAO9+O16F/8wGtsV4CmrGMpooUTg/Zu6YMiodGzVzZ
+ 0wvGJmO6VlTSNgGouNS3dKnUFP/cdJRiHY+yuSjJ83+lfbxX1rrKTSs0cpYGCMlsSig7UuVRf
+ L6dpPNxIA2QzRsE3EUpaoywVbd5ydmaUNQqZTR6wrbepDD2xOENPAYJOHJqtdVs9eStjeG7kG
+ whYu1uBixIQWJ67mCddhDLDh5BgNmTQLTTl5AC1IU4thGUYHKmrpfIik5Vep559ZL+I3h7EK2
+ lROl0wRie6naOH5w9sjE9sxGqJrG000esg3lVq4hq+5eyPQVrLKQsoPeMrqhmghQR+SIt+poq
+ 81iqhcqtythH5ASFAFosbBgF/KOdew8xnPv7NzsOsEEaLTYcyEjzYd8/D0faSQP19XQsBm29E
+ bMP0DbQurzH0DsOZv/uQc6Sm7bZuSJ45u8NhXI80bmQkbZDLluSQ3NUTrbg=
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Saravana Kannan <skannan@codeaurora.org>
+On 10.03.19 21:27, Jacek Anaszewski wrote:
+> Hi Kangjie,
+> 
+> Thank you for the patch.
+> 
+> On 3/9/19 7:04 AM, Kangjie Lu wrote:
+>> In case of_match_device cannot find a match, the fixes returns
+>> -EINVAL to avoid NULL pointer dereference.
+>>
+>> Signed-off-by: Kangjie Lu <kjlu@umn.edu>
+>> ---
+>>   drivers/leds/leds-pca9532.c | 8 ++++++--
+>>   1 file changed, 6 insertions(+), 2 deletions(-)
+>>
+>> diff --git a/drivers/leds/leds-pca9532.c b/drivers/leds/leds-pca9532.c
+>> index 7fea18b0c15d..4b0335591728 100644
+>> --- a/drivers/leds/leds-pca9532.c
+>> +++ b/drivers/leds/leds-pca9532.c
+>> @@ -513,6 +513,7 @@ static int pca9532_probe(struct i2c_client *client,
+>>       const struct i2c_device_id *id)
+>>   {
+>>       int devid;
+>> +    const struct of_device_id *of_id;
 
-If the new governor fails to start, switch back to old governor so that the
-devfreq state is not left in some weird limbo.
+Looks like an indention mismatch that might call for the
+Great White Handkerchief ;-)
 
-[Mjungjoo: assume fatal on revert failure and set df->governor to NULL]
-Signed-off-by: Sibi Sankar <sibis@codeaurora.org>
-Signed-off-by: Saravana Kannan <skannan@codeaurora.org>
-Reviewed-by: Chanwoo Choi <cw00.choi@samsung.com>
----
-V5:
-* assume fatal on revert failure and set df->governor to NULL
 
-V4:
-* Removed prev_governor check.
+--mtx
 
-V3:
-* Fix NULL deref for real this time.
-* Addressed some style preferences.
-
-V2:
-* Fixed typo in commit text
-* Fixed potential NULL deref
-
- drivers/devfreq/devfreq.c | 16 ++++++++++++++--
- 1 file changed, 14 insertions(+), 2 deletions(-)
-
-diff --git a/drivers/devfreq/devfreq.c b/drivers/devfreq/devfreq.c
-index 428a1de81008..37490235ec34 100644
---- a/drivers/devfreq/devfreq.c
-+++ b/drivers/devfreq/devfreq.c
-@@ -1124,7 +1124,7 @@ static ssize_t governor_store(struct device *dev, struct device_attribute *attr,
- 	struct devfreq *df = to_devfreq(dev);
- 	int ret;
- 	char str_governor[DEVFREQ_NAME_LEN + 1];
--	struct devfreq_governor *governor;
-+	const struct devfreq_governor *governor, *prev_governor;
- 
- 	ret = sscanf(buf, "%" __stringify(DEVFREQ_NAME_LEN) "s", str_governor);
- 	if (ret != 1)
-@@ -1153,12 +1153,24 @@ static ssize_t governor_store(struct device *dev, struct device_attribute *attr,
- 			goto out;
- 		}
- 	}
-+	prev_governor = df->governor;
- 	df->governor = governor;
- 	strncpy(df->governor_name, governor->name, DEVFREQ_NAME_LEN);
- 	ret = df->governor->event_handler(df, DEVFREQ_GOV_START, NULL);
--	if (ret)
-+	if (ret) {
- 		dev_warn(dev, "%s: Governor %s not started(%d)\n",
- 			 __func__, df->governor->name, ret);
-+		df->governor = prev_governor;
-+		strncpy(df->governor_name, prev_governor->name,
-+			DEVFREQ_NAME_LEN);
-+		ret = df->governor->event_handler(df, DEVFREQ_GOV_START, NULL);
-+		if (ret) {
-+			dev_warn(dev,
-+				 "%s: reverting to Governor %s failed (%d)\n",
-+				 __func__, df->governor_name, ret);
-+			df->governor = NULL;
-+		}
-+	}
- out:
- 	mutex_unlock(&devfreq_list_lock);
- 
 -- 
-The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
-a Linux Foundation Collaborative Project
-
+Enrico Weigelt, metux IT consult
+Free software and Linux embedded engineering
+info@metux.net -- +49-151-27565287
