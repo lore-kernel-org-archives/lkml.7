@@ -2,55 +2,55 @@ Return-Path: <SRS0=FxTY=RO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.6 required=3.0 tests=BIGNUM_EMAILS,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 13D4BC43381
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 Mar 2019 19:55:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 53C6EC43381
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 Mar 2019 19:55:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DCC8B2177E
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 Mar 2019 19:55:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 27E6C2175B
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 Mar 2019 19:55:49 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1552334145;
-	bh=u4yCI//0+5ur/Rfq0HDSVPKcU/M8WZ36wRUQlmhB+hQ=;
+	s=default; t=1552334149;
+	bh=GKK/7wK91Yf3sfK6ORnQnJ3PSdPZH9e1OlDo+OAUrBA=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=RXPMWEcXE8WlZurUfKHJfF/HpbXHNtc5ooupiWWPG2K8Z8K+oXTV8W8U82kiqa+S7
-	 mT83EwJI02Tf6rjqNQJTFR3D2+PaWPuE1GkY2Tp8bZCiHSaB+kI9RyKgHvTUsPSGeP
-	 0OIofaa7wqPie5YxXC3cIBRMs3wCd/4x5R68j5pk=
+	b=nzy7VxSfug8oqcXFF+VsKbgnvbd9CAXwpClKDyxx0d+bzyG7W6NLOhfF/El8EhWu0
+	 4vrwS/eet2JTS3CnASs9bGFfwVGrbY3yIe5E9tXkLp4d4JNIW4wzNUVdrdR7clz8RD
+	 gVz3dcdTSmIn1R/6utYmZu8rnZT9YsO/pXgBT7JA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728351AbfCKTzo (ORCPT
+        id S1728371AbfCKTzr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 11 Mar 2019 15:55:44 -0400
-Received: from mail.kernel.org ([198.145.29.99]:32928 "EHLO mail.kernel.org"
+        Mon, 11 Mar 2019 15:55:47 -0400
+Received: from mail.kernel.org ([198.145.29.99]:32996 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728324AbfCKTzl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 11 Mar 2019 15:55:41 -0400
+        id S1728324AbfCKTzq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 11 Mar 2019 15:55:46 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 7285021734;
-        Mon, 11 Mar 2019 19:55:39 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 956D72173C;
+        Mon, 11 Mar 2019 19:55:44 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1552334140;
-        bh=u4yCI//0+5ur/Rfq0HDSVPKcU/M8WZ36wRUQlmhB+hQ=;
+        s=default; t=1552334145;
+        bh=GKK/7wK91Yf3sfK6ORnQnJ3PSdPZH9e1OlDo+OAUrBA=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=h3n/v7gz8GBq9kCSQ2lCvM7nAzk4RTQrAMFG6gDct4WmEE6wWgCnqMHLJSfS/TvQd
-         A3qGV1QTaGKTps0xyJ+7YXoI7u06B3X5J+UzuCpNOvUNuQAb1i/9vnv5Dc2kXMVoUR
-         JuW0+Qrrolb5q4RPI2AFkZ3Dnmf+yBPyM4AoZF1k=
+        b=qatQSxEQ4e9YQNFQKuZ9Reqguq+wHPzbKkpCF2/MkWQ8iGh9MKmo9lThNP+dxR2w+
+         rxTjeHk59Xl9SdbIcChk2yi/ygpAgYR7oPbxjG1z7zwiRxTjy1NkVLEKaEd//XSHjW
+         Uvj9Z4GPW5UG0favTzU3bUkw3tQjKNFyc4IEKFTA=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Stefan Haberland <sth@linux.ibm.com>,
-        Martin Schwidefsky <schwidefsky@de.ibm.com>,
-        Sasha Levin <sashal@kernel.org>, linux-s390@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.20 10/52] s390/dasd: fix using offset into zero size array error
-Date:   Mon, 11 Mar 2019 15:54:34 -0400
-Message-Id: <20190311195516.137772-10-sashal@kernel.org>
+Cc:     =?UTF-8?q?Pawe=C5=82=20Chmiel?= <pawel.mikolaj.chmiel@gmail.com>,
+        Dmitry Torokhov <dmitry.torokhov@gmail.com>,
+        Sasha Levin <sashal@kernel.org>, linux-input@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.20 12/52] Input: pwm-vibra - stop regulator after disabling pwm, not before
+Date:   Mon, 11 Mar 2019 15:54:36 -0400
+Message-Id: <20190311195516.137772-12-sashal@kernel.org>
 X-Mailer: git-send-email 2.19.1
 In-Reply-To: <20190311195516.137772-1-sashal@kernel.org>
 References: <20190311195516.137772-1-sashal@kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
@@ -58,96 +58,46 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Stefan Haberland <sth@linux.ibm.com>
+From: Paweł Chmiel <pawel.mikolaj.chmiel@gmail.com>
 
-[ Upstream commit 4a8ef6999bce998fa5813023a9a6b56eea329dba ]
+[ Upstream commit 94803aef3533676194c772383472636c453e3147 ]
 
-Dan Carpenter reported the following:
+This patch fixes order of disable calls in pwm_vibrator_stop.
+Currently when starting device, we first enable vcc regulator and then
+setup and enable pwm. When stopping, we should do this in oposite order,
+so first disable pwm and then disable regulator.
+Previously order was the same as in start.
 
-The patch 52898025cf7d: "[S390] dasd: security and PSF update patch
-for EMC CKD ioctl" from Mar 8, 2010, leads to the following static
-checker warning:
-
-	drivers/s390/block/dasd_eckd.c:4486 dasd_symm_io()
-	error: using offset into zero size array 'psf_data[]'
-
-drivers/s390/block/dasd_eckd.c
-  4458          /* Copy parms from caller */
-  4459          rc = -EFAULT;
-  4460          if (copy_from_user(&usrparm, argp, sizeof(usrparm)))
-                                    ^^^^^^^
-The user can specify any "usrparm.psf_data_len".  They choose zero by
-mistake.
-
-  4461                  goto out;
-  4462          if (is_compat_task()) {
-  4463                  /* Make sure pointers are sane even on 31 bit. */
-  4464                  rc = -EINVAL;
-  4465                  if ((usrparm.psf_data >> 32) != 0)
-  4466                          goto out;
-  4467                  if ((usrparm.rssd_result >> 32) != 0)
-  4468                          goto out;
-  4469                  usrparm.psf_data &= 0x7fffffffULL;
-  4470                  usrparm.rssd_result &= 0x7fffffffULL;
-  4471          }
-  4472          /* alloc I/O data area */
-  4473          psf_data = kzalloc(usrparm.psf_data_len, GFP_KERNEL
-  			   				 | GFP_DMA);
-  4474          rssd_result = kzalloc(usrparm.rssd_result_len, GFP_KERNEL
-							       | GFP_DMA);
-  4475          if (!psf_data || !rssd_result) {
-
-kzalloc() returns a ZERO_SIZE_PTR (0x16).
-
-  4476                  rc = -ENOMEM;
-  4477                  goto out_free;
-  4478          }
-  4479
-  4480          /* get syscall header from user space */
-  4481          rc = -EFAULT;
-  4482          if (copy_from_user(psf_data,
-  4483                             (void __user *)(unsigned long)
-  				   	 		 usrparm.psf_data,
-  4484                             usrparm.psf_data_len))
-
-That all works great.
-
-  4485                  goto out_free;
-  4486          psf0 = psf_data[0];
-  4487          psf1 = psf_data[1];
-
-But now we're assuming that "->psf_data_len" was at least 2 bytes.
-
-Fix this by checking the user specified length psf_data_len.
-
-Fixes: 52898025cf7d ("[S390] dasd: security and PSF update patch for EMC CKD ioctl")
-Reported-by: Dan Carpenter <dan.carpenter@oracle.com>
-Signed-off-by: Stefan Haberland <sth@linux.ibm.com>
-Signed-off-by: Martin Schwidefsky <schwidefsky@de.ibm.com>
+Signed-off-by: Paweł Chmiel <pawel.mikolaj.chmiel@gmail.com>
+Signed-off-by: Dmitry Torokhov <dmitry.torokhov@gmail.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/s390/block/dasd_eckd.c | 8 ++++++++
- 1 file changed, 8 insertions(+)
+ drivers/input/misc/pwm-vibra.c | 8 ++++----
+ 1 file changed, 4 insertions(+), 4 deletions(-)
 
-diff --git a/drivers/s390/block/dasd_eckd.c b/drivers/s390/block/dasd_eckd.c
-index 4e7b55a14b1a..6e294b4d3635 100644
---- a/drivers/s390/block/dasd_eckd.c
-+++ b/drivers/s390/block/dasd_eckd.c
-@@ -4469,6 +4469,14 @@ static int dasd_symm_io(struct dasd_device *device, void __user *argp)
- 		usrparm.psf_data &= 0x7fffffffULL;
- 		usrparm.rssd_result &= 0x7fffffffULL;
+diff --git a/drivers/input/misc/pwm-vibra.c b/drivers/input/misc/pwm-vibra.c
+index 9df87431d7d4..dbb6d9e1b947 100644
+--- a/drivers/input/misc/pwm-vibra.c
++++ b/drivers/input/misc/pwm-vibra.c
+@@ -80,14 +80,14 @@ static int pwm_vibrator_start(struct pwm_vibrator *vibrator)
+ 
+ static void pwm_vibrator_stop(struct pwm_vibrator *vibrator)
+ {
++	if (vibrator->pwm_dir)
++		pwm_disable(vibrator->pwm_dir);
++	pwm_disable(vibrator->pwm);
++
+ 	if (vibrator->vcc_on) {
+ 		regulator_disable(vibrator->vcc);
+ 		vibrator->vcc_on = false;
  	}
-+	/* at least 2 bytes are accessed and should be allocated */
-+	if (usrparm.psf_data_len < 2) {
-+		DBF_DEV_EVENT(DBF_WARNING, device,
-+			      "Symmetrix ioctl invalid data length %d",
-+			      usrparm.psf_data_len);
-+		rc = -EINVAL;
-+		goto out;
-+	}
- 	/* alloc I/O data area */
- 	psf_data = kzalloc(usrparm.psf_data_len, GFP_KERNEL | GFP_DMA);
- 	rssd_result = kzalloc(usrparm.rssd_result_len, GFP_KERNEL | GFP_DMA);
+-
+-	if (vibrator->pwm_dir)
+-		pwm_disable(vibrator->pwm_dir);
+-	pwm_disable(vibrator->pwm);
+ }
+ 
+ static void pwm_vibrator_play_work(struct work_struct *work)
 -- 
 2.19.1
 
