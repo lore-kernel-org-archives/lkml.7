@@ -2,90 +2,158 @@ Return-Path: <SRS0=FxTY=RO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_MUTT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AF86CC43381
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 Mar 2019 12:19:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9A9C1C43381
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 Mar 2019 12:21:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 797B22084F
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 Mar 2019 12:19:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5E4632075C
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 Mar 2019 12:21:12 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="vkhzb6eP"
+	dkim=pass (1024-bit key) header.d=Mellanox.com header.i=@Mellanox.com header.b="hwV4GC5S"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727355AbfCKMTo (ORCPT
+        id S1727373AbfCKMVL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 11 Mar 2019 08:19:44 -0400
-Received: from aserp2130.oracle.com ([141.146.126.79]:42586 "EHLO
-        aserp2130.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726592AbfCKMTo (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 11 Mar 2019 08:19:44 -0400
-Received: from pps.filterd (aserp2130.oracle.com [127.0.0.1])
-        by aserp2130.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x2BC96fD072366;
-        Mon, 11 Mar 2019 12:19:27 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=date : from : to : cc
- : subject : message-id : references : mime-version : content-type :
- in-reply-to; s=corp-2018-07-02;
- bh=bDD59JllYSk0321O5FEz0An2d6vIuOjVL8JIUviCVSk=;
- b=vkhzb6ePDn7HnTFONbASTcCW0EJMjcZcOXGGksraSBL7LOyj8G85KWnZ93SKOuZkddkz
- en8OMnJEhiSmhMaphCkxLHKDGxoBIRQFDrV+2y6CFrJC+AseVzznRB9jilq2uXK/5/ec
- cynfMukhe8kqEayNhYQGNxr+P30a4XNoPj3KzghNf/0IkYEFK6gNCyOrVi7kamZH2Pjb
- d+mWb6EdYjfBbEFZl4mmRYwS2kvsa4yaH4/gGRmTfVWI7k1G/RHDMkH1uI/bEITisMCq
- Ygu8RE5msgNStlUAew7hW2uLumPfa2uaYKt6AqZ3d5yUs+LhfV2XFHUeuVJu33FltKbW wg== 
-Received: from aserv0022.oracle.com (aserv0022.oracle.com [141.146.126.234])
-        by aserp2130.oracle.com with ESMTP id 2r430eefv0-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Mon, 11 Mar 2019 12:19:27 +0000
-Received: from aserv0121.oracle.com (aserv0121.oracle.com [141.146.126.235])
-        by aserv0022.oracle.com (8.14.4/8.14.4) with ESMTP id x2BCJRJT031064
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Mon, 11 Mar 2019 12:19:27 GMT
-Received: from abhmp0008.oracle.com (abhmp0008.oracle.com [141.146.116.14])
-        by aserv0121.oracle.com (8.14.4/8.13.8) with ESMTP id x2BCJR2v029888;
-        Mon, 11 Mar 2019 12:19:27 GMT
-Received: from kadam (/197.157.34.165)
-        by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Mon, 11 Mar 2019 05:19:26 -0700
-Date:   Mon, 11 Mar 2019 15:19:18 +0300
-From:   Dan Carpenter <dan.carpenter@oracle.com>
-To:     Mao Wenan <maowenan@huawei.com>
-Cc:     gregkh@linuxfoundation.org, jslaby@suse.com,
-        linux-serial@vger.kernel.org, linux-kernel@vger.kernel.org,
-        kernel-janitors@vger.kernel.org, vz@mleia.com
-Subject: Re: [PATCH serial v3] sc16is7xx: missing unregister/delete driver on
- error in sc16is7xx_init()
-Message-ID: <20190311121918.GD2412@kadam>
-References: <20190311093959.86344-1-maowenan@huawei.com>
+        Mon, 11 Mar 2019 08:21:11 -0400
+Received: from mail-eopbgr20084.outbound.protection.outlook.com ([40.107.2.84]:7511
+        "EHLO EUR02-VE1-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726592AbfCKMVK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 11 Mar 2019 08:21:10 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Mellanox.com;
+ s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=oZxeVsP88EDa5tTFZGWkUZL6SMNS5qnzeBxJN4yAP5U=;
+ b=hwV4GC5Scv+/hH7H0vP8K4s7M7j3FKlYht+qXytQ8Qs/d+JRb42njxM92mST+JNE8MsTAKYscvqvtFmfkTSryQlXR45GjUMyDV6Tnue/b58OJPmcrlesAjfEkYGSq7/zT2WnT3cI3qVGofRJ4V86281EcqYud8l6eOfwDYL6Fbg=
+Received: from DBBPR05MB6570.eurprd05.prod.outlook.com (20.179.44.81) by
+ DBBPR05MB6297.eurprd05.prod.outlook.com (20.179.40.144) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.1665.19; Mon, 11 Mar 2019 12:21:05 +0000
+Received: from DBBPR05MB6570.eurprd05.prod.outlook.com
+ ([fe80::5d59:2e1c:c260:ea6f]) by DBBPR05MB6570.eurprd05.prod.outlook.com
+ ([fe80::5d59:2e1c:c260:ea6f%2]) with mapi id 15.20.1686.021; Mon, 11 Mar 2019
+ 12:21:05 +0000
+From:   Jason Gunthorpe <jgg@mellanox.com>
+To:     Qian Cai <cai@lca.pw>,
+        "akpm@linux-foundation.org" <akpm@linux-foundation.org>,
+        "arnd@arndb.de" <arnd@arndb.de>,
+        "linux-mm@kvack.org" <linux-mm@kvack.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH] mm/debug: add a cast to u64 for atomic64_read()
+Thread-Topic: [PATCH] mm/debug: add a cast to u64 for atomic64_read()
+Thread-Index: AQHU129qkdpyS6s9ikO3HiiIZ0g4PKYFzm+AgACMeAA=
+Date:   Mon, 11 Mar 2019 12:21:05 +0000
+Message-ID: <20190311122100.GF22862@mellanox.com>
+References: <20190310183051.87303-1-cai@lca.pw>
+ <20190311035815.kq7ftc6vphy6vwen@linux-r8p5>
+In-Reply-To: <20190311035815.kq7ftc6vphy6vwen@linux-r8p5>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-clientproxiedby: YQXPR0101CA0045.CANPRD01.PROD.OUTLOOK.COM
+ (2603:10b6:c00:14::22) To DBBPR05MB6570.eurprd05.prod.outlook.com
+ (2603:10a6:10:d1::17)
+x-ms-exchange-messagesentrepresentingtype: 1
+x-originating-ip: [24.137.65.181]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: b2be0e62-1792-46b8-83f9-08d6a61c0885
+x-ms-office365-filtering-ht: Tenant
+x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600127)(711020)(4605104)(4618075)(2017052603328)(7153060)(7193020);SRVR:DBBPR05MB6297;
+x-ms-traffictypediagnostic: DBBPR05MB6297:
+x-microsoft-exchange-diagnostics: =?us-ascii?Q?1;DBBPR05MB6297;23:P7xtHHClqt/GURYNk801RMY3na87eOmiGEzkdXw0t?=
+ =?us-ascii?Q?uP8Z+jzqUyzexocaV2u3jZRvIdUGajYf6HZByDCSSpd6coRVeP078dKbfw6v?=
+ =?us-ascii?Q?3wcxre1191tqqknZxGB5or8N0JNG+S/jGqHQ+jMSGo8Xdp0FqsgpZ+5B+3D7?=
+ =?us-ascii?Q?zNje7eQZOF7HeRV72ORwazxkyZM0IfRdwxb3guTEACqrn2Nl9opV208LxX2/?=
+ =?us-ascii?Q?Y8y9145icm1PgxJ33a5ZuvRqwOhHqSoP0fFlfsNcqtVeVJ0pRt4h35EvW3XY?=
+ =?us-ascii?Q?Dyc7fLpTBrxmNSeUUr7abtyXTGxqfzAmoeYf0A+uflDkLXqFZzv00rTn6sq5?=
+ =?us-ascii?Q?5OIxrPj37SLou4h8e26D7/dYlDdYDMxUTvTcjrCRPvQ6cq5Uc9ZXh5rNOV6B?=
+ =?us-ascii?Q?67cRKQa30Bn4uv7AaVbX8EcdoDppcMNFEx+XA+l9zKcFUB9WMmghzt8iSZz7?=
+ =?us-ascii?Q?zxjzQdySCasO7jMLkkrDtDN/dEaO0dxWI6cWU4a2t17X7H0EP+j4Dqzg+3Ua?=
+ =?us-ascii?Q?klI9X+JWMFnIbuomS3I815SNG9Ile79hGhED/GtaVy/7Kdu5j0tYDsgbckaU?=
+ =?us-ascii?Q?gLj4e3Ts386YjkLoyBlKf7ht1ae93nm9jh/6Myan67QQVdtNzMpBD9nHNPYY?=
+ =?us-ascii?Q?H2w8gth8Iy6d2NSdaLHctuRqn2RbEGqi6/WboDaWtAUmpIDfdiFFahKI2QNe?=
+ =?us-ascii?Q?42av1Sbe67ixAHAmdy8HU8FlxfduLmk96kjpABgIJj+lIleN32vbS+x13YHk?=
+ =?us-ascii?Q?cr3uy/QqkhWZ9+4Lns7vX13ubdFHpEe+8AKxxV51E6jO9Akrs61vGdCL2uU0?=
+ =?us-ascii?Q?kgaJWwngis6/Xu7xdt8eA3WYzTJrtcWsmToelRJrbDe/egzE0XHdErfeWQAK?=
+ =?us-ascii?Q?Nm463adNRIG3rGlVEtRNjfa68KhqJsoPtXeHXuZw5yzuVY25wwOF+sCMBcM5?=
+ =?us-ascii?Q?RGACAmswddF6HnzmRFt5dGOya1AY+5HXoVM8UnE9PCSxtZql3KIxDBpv7h+V?=
+ =?us-ascii?Q?fCyiolniawCe414RgCJSH5cnltLieqiPdxofgxf99r1Q/dbfJu7qx40hzsMD?=
+ =?us-ascii?Q?XMTJHDB4GovdtkeIEI7ZZwuCU/Lu3U5neh39AdUzrCtyfjCCrwR+/YjKLh90?=
+ =?us-ascii?Q?GP/sJK7joBnVWty3CgKETYNlCWSxze1jeB7a4XXFTwAHiZvHu39nrb89DJZs?=
+ =?us-ascii?Q?DR2ucy+aXGz3vQbhBettUK5XUoqhF4v+IQB9Ipvwsvv/I3Q9RVE4/zM4zGMw?=
+ =?us-ascii?Q?bZQ3uO70XmnytjdNJtWuhvdtJEj7U5NqhhFRmqAkt3GDOvSgaBNSNL/BrkNg?=
+ =?us-ascii?B?UT09?=
+x-microsoft-antispam-prvs: <DBBPR05MB6297EEE29F45807BFDE934B6CF480@DBBPR05MB6297.eurprd05.prod.outlook.com>
+x-forefront-prvs: 09730BD177
+x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(376002)(136003)(346002)(39860400002)(366004)(396003)(189003)(199004)(5660300002)(478600001)(6486002)(36756003)(6436002)(68736007)(486006)(8936002)(1076003)(6506007)(186003)(6512007)(99286004)(2906002)(105586002)(71190400001)(106356001)(2501003)(110136005)(8676002)(2616005)(6246003)(316002)(6116002)(66066001)(71200400001)(86362001)(76176011)(6346003)(52116002)(11346002)(3846002)(476003)(386003)(33656002)(7736002)(14444005)(305945005)(256004)(26005)(102836004)(97736004)(81166006)(25786009)(14454004)(2201001)(446003)(53936002)(81156014)(229853002);DIR:OUT;SFP:1101;SCL:1;SRVR:DBBPR05MB6297;H:DBBPR05MB6570.eurprd05.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
+received-spf: None (protection.outlook.com: mellanox.com does not designate
+ permitted sender hosts)
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=jgg@mellanox.com; 
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam-message-info: sp9gzXRPK1KsVsaILHbhwfGN5eRzAIjeLVTM0rwJdjdG5O8TM+rXf0kMRwsNL8MWh2oZc6ZSEsiGX+TEbmnsicQJWWaRDIwTOb8/9OLoXygcycrpSeDlLmA42YyBUiVo6+N7cmG+5VdkMthBO+LgmmfSTtC0GLgSu76ZSYD0v7iorFKx5nAcUcf0TqHiG79Rv2LRHUJtTOZzEoWpg9DQQTm1ZQHAb55VYUtpmoL30djzpJwfhazA08SFmtyne8cGsDryT7MBlKPo+Y1EteMLjMJYUSWIPWlliT2ohsnh7rtYh8TD644mbLLDf0cwwQnkbNnbc6HWhGQIdqQpkRWBl/erUTeCHN368A1olkBN5VHcgCPGl2ojg//p02QCOsojuhoW0c5qEGumK951Vp0m9EgB1Rr+n6yx7iJfla1pWSE=
+Content-Type: text/plain; charset="us-ascii"
+Content-ID: <6E5A9794289BF749B57BA2804F2A7859@eurprd05.prod.outlook.com>
+Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190311093959.86344-1-maowenan@huawei.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
-X-Proofpoint-Virus-Version: vendor=nai engine=5900 definitions=9191 signatures=668685
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
- suspectscore=0 phishscore=0 bulkscore=0 spamscore=0 clxscore=1015
- lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=999 adultscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1810050000
- definitions=main-1903110092
+X-OriginatorOrg: Mellanox.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: b2be0e62-1792-46b8-83f9-08d6a61c0885
+X-MS-Exchange-CrossTenant-originalarrivaltime: 11 Mar 2019 12:21:05.3928
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: a652971c-7d2e-4d9b-a6a4-d149256f461b
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DBBPR05MB6297
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Mar 11, 2019 at 05:39:59PM +0800, Mao Wenan wrote:
-> Add the missing uart_unregister_driver() and i2c_del_driver() before
-> return from sc16is7xx_init() in the error handling case.
-> 
-> Signed-off-by: Mao Wenan <maowenan@huawei.com>
-> Reviewed-by: Vladimir Zapolskiy <vz@mleia.com>
+On Sun, Mar 10, 2019 at 08:58:15PM -0700, Davidlohr Bueso wrote:
+> On Sun, 10 Mar 2019, Qian Cai wrote:
+>=20
+> > atomic64_read() on ppc64le returns "long int", so fix the same way as
+> > the commit d549f545e690 ("drm/virtio: use %llu format string form
+> > atomic64_t") by adding a cast to u64, which makes it work on all arches=
+.
+> >=20
+> > In file included from ./include/linux/printk.h:7,
+> >                 from ./include/linux/kernel.h:15,
+> >                 from mm/debug.c:9:
+> > mm/debug.c: In function 'dump_mm':
+> > ./include/linux/kern_levels.h:5:18: warning: format '%llx' expects
+> > argument of type 'long long unsigned int', but argument 19 has type
+> > 'long int' [-Wformat=3D]
+> > #define KERN_SOH "\001"  /* ASCII Start Of Header */
+> >                  ^~~~~~
+> > ./include/linux/kern_levels.h:8:20: note: in expansion of macro
+> > 'KERN_SOH'
+> > #define KERN_EMERG KERN_SOH "0" /* system is unusable */
+> >                    ^~~~~~~~
+> > ./include/linux/printk.h:297:9: note: in expansion of macro 'KERN_EMERG=
+'
+> >  printk(KERN_EMERG pr_fmt(fmt), ##__VA_ARGS__)
+> >         ^~~~~~~~~~
+> > mm/debug.c:133:2: note: in expansion of macro 'pr_emerg'
+> >  pr_emerg("mm %px mmap %px seqnum %llu task_size %lu\n"
+> >  ^~~~~~~~
+> > mm/debug.c:140:17: note: format string is defined here
+> >   "pinned_vm %llx data_vm %lx exec_vm %lx stack_vm %lx\n"
+> >              ~~~^
+> >              %lx
+> >=20
+> > Fixes: 70f8a3ca68d3 ("mm: make mm->pinned_vm an atomic64 counter")
+> > Signed-off-by: Qian Cai <cai@lca.pw>
+>=20
+> Acked-by: Davidlohr Bueso <dbueso@suse.de>
 
-This looks nice.  Thanks!
+Not saying this patch shouldn't go ahead..
 
-Reviewed-by: Dan Carpeter <dan.carpenter@oracle.com>
+But is there a special reason the atomic64*'s on ppc don't use the u64
+type like other archs? Seems like a better thing to fix than adding
+casts all over the place.
 
-regards,
-dan carpenter
-
+Jason
