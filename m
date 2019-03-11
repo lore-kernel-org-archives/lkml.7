@@ -7,57 +7,58 @@ X-Spam-Status: No, score=-12.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_PASS autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 63A00C43381
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 Mar 2019 17:23:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A8B18C43381
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 Mar 2019 17:23:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3314220643
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 Mar 2019 17:23:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7A4CC2063F
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 Mar 2019 17:23:43 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1552325021;
-	bh=DjiO1uv5wtfLiCtW3MS3KigNGkKvj7KPiOgEezQR55A=;
+	s=default; t=1552325023;
+	bh=0b4pNyZIqmDE/F3FFm4cthw1hqt5748t6sBW2sOl0zU=;
 	h=From:To:Cc:Subject:In-Reply-To:Date:List-ID:From;
-	b=MWWKmUhrbOqVSgoVLwPEAkvHkjsdxN1vRVC3RQ5T1fqtPHA+hgSo1knjpqFWbvRlg
-	 VIgLMx7YXJhWDHHfdhAkMBiet29fmgZxF7oommlI1e/lp0MWs0HU95HIRxk0/WFzCW
-	 Mk5E526rd+JbUQHl/azlIOsgwC/ORGZ571koU+sY=
+	b=cBBwkHkOr8TgnT+WwhjX55qJDiwIrh5SJe3cQuacJ3rsg6dVi9REFvWzpxsEI6WSl
+	 AJ/PudrRMS8F3qI+VQjrum7QNNSMRbOrcp/JpLX2o5CntSGQKDbwMAnfnwuIdsU/3s
+	 GcJE5H77si6Wn+YiVuxlym+R8UjHK+2jwSWABrPc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728008AbfCKRXk (ORCPT
+        id S1728031AbfCKRXm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 11 Mar 2019 13:23:40 -0400
-Received: from heliosphere.sirena.org.uk ([172.104.155.198]:49784 "EHLO
+        Mon, 11 Mar 2019 13:23:42 -0400
+Received: from heliosphere.sirena.org.uk ([172.104.155.198]:49818 "EHLO
         heliosphere.sirena.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726641AbfCKRXj (ORCPT
+        with ESMTP id S1727987AbfCKRXk (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 11 Mar 2019 13:23:39 -0400
+        Mon, 11 Mar 2019 13:23:40 -0400
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
         d=sirena.org.uk; s=20170815-heliosphere; h=Date:Message-Id:In-Reply-To:
         Subject:Cc:To:From:Sender:Reply-To:MIME-Version:Content-Type:
         Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
         Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:References:
         List-Id:List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:
-        List-Archive; bh=sSklwvYpb7CkD8ts0EwPQfsh9N4juLaCReWG14ueJHo=; b=GwRuPKepUDu6
-        btnS40NbsAq+Q38xcgerUwLdC5wyY4WGUDRefE2/+bqxmkC/T57WQuaXYwUpa2HC+OTS/n6y5RDLZ
-        ODf8upSlJbgxx1HNbys45oYHzWWqRcPoEYM2BLIw/yGWBf9Hx6U6u79KfUDK68SoGojXj01Z4IS2D
-        e2bxI=;
+        List-Archive; bh=4PYsjOHcsmuOtq4dlytNCFy2tEUNoxDVKAMNIWp/UV4=; b=tZ5rRIbxUzF/
+        w50nOzPP5IerzBzASF8HU5YBHfuf7sfWl3bVLWtrZPyAs/SjSRLw9gvBPZkWxgBKuDV6Tr+bf5HZZ
+        gncD7rTiH+xxlz/L8qZfV4bsr8UCEGotibSyOjLMDC76f64wdXq04fzhKOCqNDKNzqJy7z1djBWBN
+        o1awI=;
 Received: from cpc102320-sgyl38-2-0-cust46.18-2.cable.virginm.net ([82.37.168.47] helo=debutante.sirena.org.uk)
         by heliosphere.sirena.org.uk with esmtpa (Exim 4.89)
         (envelope-from <broonie@sirena.org.uk>)
-        id 1h3Odw-0005Kg-Pk; Mon, 11 Mar 2019 17:23:16 +0000
+        id 1h3Oe5-0005L3-8t; Mon, 11 Mar 2019 17:23:25 +0000
 Received: by debutante.sirena.org.uk (Postfix, from userid 1000)
-        id 2C2DB1128896; Mon, 11 Mar 2019 17:23:16 +0000 (GMT)
+        id D3A4A1128897; Mon, 11 Mar 2019 17:23:24 +0000 (GMT)
 From:   Mark Brown <broonie@kernel.org>
-To:     Luca Ceresoli <luca@lucaceresoli.net>
-Cc:     Mark Brown <broonie@kernel.org>, alsa-devel@alsa-project.org,
-        devicetree@vger.kernel.org, Mark Rutland <mark.rutland@arm.com>,
-        Lars-Peter Clausen <lars@metafoo.de>,
-        linux-kernel@vger.kernel.org, Takashi Iwai <tiwai@suse.com>,
-        Liam Girdwood <lgirdwood@gmail.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Brown <broonie@kernel.org>, alsa-devel@alsa-project.org
-Subject: Applied "ASoC: axi-i2s: make both "rx" and "tx" optional" to the asoc tree
-In-Reply-To:  <20190307214456.16445-2-luca@lucaceresoli.net>
+To:     Olivier Moysan <olivier.moysan@st.com>
+Cc:     Mark Brown <broonie@kernel.org>, lgirdwood@gmail.com,
+        broonie@kernel.org, perex@perex.cz, tiwai@suse.com,
+        mcoquelin.stm32@gmail.com, alexandre.torgue@st.com,
+        alsa-devel@alsa-project.org, linux-arm-kernel@lists.infradead.org,
+        linux-stm32@st-md-mailman.stormreply.com,
+        linux-kernel@vger.kernel.org, olivier.moysan@st.com,
+        arnaud.pouliquen@st.com, benjamin.gaignard@st.com,
+        alsa-devel@alsa-project.org
+Subject: Applied "ASoC: stm32: i2s: fix registers declaration in regmap" to the asoc tree
+In-Reply-To:  <1552318768-25404-1-git-send-email-olivier.moysan@st.com>
 X-Patchwork-Hint: ignore
-Message-Id: <20190311172316.2C2DB1128896@debutante.sirena.org.uk>
-Date:   Mon, 11 Mar 2019 17:23:16 +0000 (GMT)
+Message-Id: <20190311172324.D3A4A1128897@debutante.sirena.org.uk>
+Date:   Mon, 11 Mar 2019 17:23:24 +0000 (GMT)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
@@ -65,7 +66,7 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 The patch
 
-   ASoC: axi-i2s: make both "rx" and "tx" optional
+   ASoC: stm32: i2s: fix registers declaration in regmap
 
 has been applied to the asoc tree at
 
@@ -90,45 +91,42 @@ to this mail.
 Thanks,
 Mark
 
-From fa225400758dfc7ccddebf4d990f991a435f7921 Mon Sep 17 00:00:00 2001
-From: Luca Ceresoli <luca@lucaceresoli.net>
-Date: Thu, 7 Mar 2019 22:44:56 +0100
-Subject: [PATCH] ASoC: axi-i2s: make both "rx" and "tx" optional
+From a39fe6e2061615496c12825d6d249fedf1974f8a Mon Sep 17 00:00:00 2001
+From: Olivier Moysan <olivier.moysan@st.com>
+Date: Mon, 11 Mar 2019 16:39:28 +0100
+Subject: [PATCH] ASoC: stm32: i2s: fix registers declaration in regmap
 
-Both the capture and playback channels are optional in the axi_i2s IP
-block. Document how to tell the driver which channels are
-instantiated.
+- Declare SR as volatile, as it is changed by hardware.
+- Remove TXDR from readable and volatile register list,
+as it is intended for write accesses only.
 
-Signed-off-by: Luca Ceresoli <luca@lucaceresoli.net>
+Signed-off-by: Olivier Moysan <olivier.moysan@st.com>
 Signed-off-by: Mark Brown <broonie@kernel.org>
 ---
- Documentation/devicetree/bindings/sound/adi,axi-i2s.txt | 7 +++++--
- 1 file changed, 5 insertions(+), 2 deletions(-)
+ sound/soc/stm/stm32_i2s.c | 3 +--
+ 1 file changed, 1 insertion(+), 2 deletions(-)
 
-diff --git a/Documentation/devicetree/bindings/sound/adi,axi-i2s.txt b/Documentation/devicetree/bindings/sound/adi,axi-i2s.txt
-index 4248b662deff..229ad1392cdc 100644
---- a/Documentation/devicetree/bindings/sound/adi,axi-i2s.txt
-+++ b/Documentation/devicetree/bindings/sound/adi,axi-i2s.txt
-@@ -1,5 +1,8 @@
- ADI AXI-I2S controller
- 
-+The core can be generated with transmit (playback), only receive
-+(capture) or both directions enabled.
-+
- Required properties:
-  - compatible : Must be "adi,axi-i2s-1.00.a"
-  - reg : Must contain I2S core's registers location and length
-@@ -9,8 +12,8 @@ Required properties:
-  - clock-names : "axi" for the clock to the AXI interface, "ref" for the sample
-    rate reference clock.
-  - dmas: Pairs of phandle and specifier for the DMA channels that are used by
--   the core. The core expects two dma channels, one for transmit and one for
--   receive.
-+   the core. The core expects two dma channels if both transmit and receive are
-+   enabled, one channel otherwise.
-  - dma-names : "tx" for the transmit channel, "rx" for the receive channel.
- 
- For more details on the 'dma', 'dma-names', 'clock' and 'clock-names' properties
+diff --git a/sound/soc/stm/stm32_i2s.c b/sound/soc/stm/stm32_i2s.c
+index 47c334de6b09..8968458eec62 100644
+--- a/sound/soc/stm/stm32_i2s.c
++++ b/sound/soc/stm/stm32_i2s.c
+@@ -281,7 +281,6 @@ static bool stm32_i2s_readable_reg(struct device *dev, unsigned int reg)
+ 	case STM32_I2S_CFG2_REG:
+ 	case STM32_I2S_IER_REG:
+ 	case STM32_I2S_SR_REG:
+-	case STM32_I2S_TXDR_REG:
+ 	case STM32_I2S_RXDR_REG:
+ 	case STM32_I2S_CGFR_REG:
+ 		return true;
+@@ -293,7 +292,7 @@ static bool stm32_i2s_readable_reg(struct device *dev, unsigned int reg)
+ static bool stm32_i2s_volatile_reg(struct device *dev, unsigned int reg)
+ {
+ 	switch (reg) {
+-	case STM32_I2S_TXDR_REG:
++	case STM32_I2S_SR_REG:
+ 	case STM32_I2S_RXDR_REG:
+ 		return true;
+ 	default:
 -- 
 2.20.1
 
