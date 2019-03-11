@@ -6,49 +6,50 @@ X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
 	SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6202EC43381
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 Mar 2019 20:00:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B271DC43381
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 Mar 2019 20:00:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 304F62087C
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 Mar 2019 20:00:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 815C82087C
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 Mar 2019 20:00:30 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1552334425;
-	bh=dreO4LGqw9LVj1R+omuHVNeF32gEB1t2HDUfEwG86F4=;
+	s=default; t=1552334430;
+	bh=NDW14k+WaO8haX/CP+qnrw7K4z0Sj5X55grZIP0vMI8=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=ss/0YvA1Dj8eVtDfbc7ig0aTSpEgyjIX2k2IuqrWOpxCImegcodST8gC4O1xHiM1Z
-	 M4kfZP1OoJh452qTmd93p83d+uNP3grm7yTxobQ/mr+hNrQsuele/dCOGf4Ss96aCc
-	 Tk97cm0bY8/JYXeUOO09qaDWiGjLTFBynZN3dFIo=
+	b=qfgumgQ9hiltJ1QZ/bNomIRn5ZyLY7SKkime1Hc1qbxvxcWovPGB6uG9l8dIN4St1
+	 /LRN5lq/sVr9MdkS+5MAQ22QnM4UY2R9xomdJrJCBtBFpL+2lezKizfONaHyZqGG3/
+	 HZ1FqUWX0VvKbs2OGEiIAk8NHxA4Z77JYIu49fB4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729719AbfCKT76 (ORCPT
+        id S1729288AbfCKUA2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 11 Mar 2019 15:59:58 -0400
-Received: from mail.kernel.org ([198.145.29.99]:37204 "EHLO mail.kernel.org"
+        Mon, 11 Mar 2019 16:00:28 -0400
+Received: from mail.kernel.org ([198.145.29.99]:37272 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729683AbfCKT7t (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 11 Mar 2019 15:59:49 -0400
+        id S1729711AbfCKT75 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 11 Mar 2019 15:59:57 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id A08A5214D8;
-        Mon, 11 Mar 2019 19:59:47 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 2B870214AF;
+        Mon, 11 Mar 2019 19:59:56 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1552334388;
-        bh=dreO4LGqw9LVj1R+omuHVNeF32gEB1t2HDUfEwG86F4=;
+        s=default; t=1552334397;
+        bh=NDW14k+WaO8haX/CP+qnrw7K4z0Sj5X55grZIP0vMI8=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=v44Y0AoVcSCZxE7harKcDxqatG7mWnEmLh9JyeEH7fzgrIHG7Rhso5T8jPYyyZ2ly
-         Dql3cGITJCRCub1ldMExkZ4Er984DRTAMfm1fIJuAZyzUHG7NlV3zzyEiI9D/nahmS
-         7uAjjBupFPgsck61gaRNNkqprZ4CgvfcBhfNvgT4=
+        b=wsH1//c/E8lIw11s5mziffB2l11gygr/EofwkzM7QxqBXj9WvbaaeIYHcrC/QKvlU
+         wlD1mxkKoutp7nV9r0QlqnyIfKIy3Z8Jx4RIE054FS3PFgOy1LW/aCVowEpvf5uFkO
+         bmLWIUwS8dQffFaYeqXzzGKK6THKl4KJinQaqWTo=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Shubhrajyoti Datta <shubhrajyoti.datta@xilinx.com>,
-        Wolfram Sang <wsa@the-dreams.de>,
-        Sasha Levin <sashal@kernel.org>, linux-i2c@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.4 7/8] i2c: cadence: Fix the hold bit setting
-Date:   Mon, 11 Mar 2019 15:59:37 -0400
-Message-Id: <20190311195938.139603-7-sashal@kernel.org>
+Cc:     Cong Wang <xiyou.wangcong@gmail.com>,
+        Jiri Pirko <jiri@resnulli.us>, Paolo Abeni <pabeni@redhat.com>,
+        "David S . Miller" <davem@davemloft.net>,
+        Sasha Levin <sashal@kernel.org>, netdev@vger.kernel.org
+Subject: [PATCH AUTOSEL 3.18 3/6] team: avoid complex list operations in team_nl_cmd_options_set()
+Date:   Mon, 11 Mar 2019 15:59:48 -0400
+Message-Id: <20190311195951.139741-3-sashal@kernel.org>
 X-Mailer: git-send-email 2.19.1
-In-Reply-To: <20190311195938.139603-1-sashal@kernel.org>
-References: <20190311195938.139603-1-sashal@kernel.org>
+In-Reply-To: <20190311195951.139741-1-sashal@kernel.org>
+References: <20190311195951.139741-1-sashal@kernel.org>
 MIME-Version: 1.0
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
@@ -57,56 +58,116 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Shubhrajyoti Datta <shubhrajyoti.datta@xilinx.com>
+From: Cong Wang <xiyou.wangcong@gmail.com>
 
-[ Upstream commit d358def706880defa4c9e87381c5bf086a97d5f9 ]
+[ Upstream commit 2fdeee2549231b1f989f011bb18191f5660d3745 ]
 
-In case the hold bit is not needed we are carrying the old values.
-Fix the same by resetting the bit when not needed.
+The current opt_inst_list operations inside team_nl_cmd_options_set()
+is too complex to track:
 
-Fixes the sporadic i2c bus lockups on National Instruments
-Zynq-based devices.
+    LIST_HEAD(opt_inst_list);
+    nla_for_each_nested(...) {
+        list_for_each_entry(opt_inst, &team->option_inst_list, list) {
+            if (__team_option_inst_tmp_find(&opt_inst_list, opt_inst))
+                continue;
+            list_add(&opt_inst->tmp_list, &opt_inst_list);
+        }
+    }
+    team_nl_send_event_options_get(team, &opt_inst_list);
 
-Fixes: df8eb5691c48 ("i2c: Add driver for Cadence I2C controller")
-Reported-by: Kyle Roeschley <kyle.roeschley@ni.com>
-Acked-by: Michal Simek <michal.simek@xilinx.com>
-Signed-off-by: Shubhrajyoti Datta <shubhrajyoti.datta@xilinx.com>
-Tested-by: Kyle Roeschley <kyle.roeschley@ni.com>
-Signed-off-by: Wolfram Sang <wsa@the-dreams.de>
+as while we retrieve 'opt_inst' from team->option_inst_list, it could
+be added to the local 'opt_inst_list' for multiple times. The
+__team_option_inst_tmp_find() doesn't work, as the setter
+team_mode_option_set() still calls team->ops.exit() which uses
+->tmp_list too in __team_options_change_check().
+
+Simplify the list operations by moving the 'opt_inst_list' and
+team_nl_send_event_options_get() into the nla_for_each_nested() loop so
+that it can be guranteed that we won't insert a same list entry for
+multiple times. Therefore, __team_option_inst_tmp_find() can be removed
+too.
+
+Fixes: 4fb0534fb7bb ("team: avoid adding twice the same option to the event list")
+Fixes: 2fcdb2c9e659 ("team: allow to send multiple set events in one message")
+Reported-by: syzbot+4d4af685432dc0e56c91@syzkaller.appspotmail.com
+Reported-by: syzbot+68ee510075cf64260cc4@syzkaller.appspotmail.com
+Cc: Jiri Pirko <jiri@resnulli.us>
+Cc: Paolo Abeni <pabeni@redhat.com>
+Signed-off-by: Cong Wang <xiyou.wangcong@gmail.com>
+Acked-by: Jiri Pirko <jiri@mellanox.com>
+Reviewed-by: Paolo Abeni <pabeni@redhat.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/i2c/busses/i2c-cadence.c | 9 +++++++--
- 1 file changed, 7 insertions(+), 2 deletions(-)
+ drivers/net/team/team.c | 27 +++++----------------------
+ 1 file changed, 5 insertions(+), 22 deletions(-)
 
-diff --git a/drivers/i2c/busses/i2c-cadence.c b/drivers/i2c/busses/i2c-cadence.c
-index 84deed6571bd..6d32e6da3110 100644
---- a/drivers/i2c/busses/i2c-cadence.c
-+++ b/drivers/i2c/busses/i2c-cadence.c
-@@ -378,8 +378,10 @@ static void cdns_i2c_mrecv(struct cdns_i2c *id)
- 	 * Check for the message size against FIFO depth and set the
- 	 * 'hold bus' bit if it is greater than FIFO depth.
- 	 */
--	if (id->recv_count > CDNS_I2C_FIFO_DEPTH)
-+	if ((id->recv_count > CDNS_I2C_FIFO_DEPTH)  || id->bus_hold_flag)
- 		ctrl_reg |= CDNS_I2C_CR_HOLD;
-+	else
-+		ctrl_reg = ctrl_reg & ~CDNS_I2C_CR_HOLD;
+diff --git a/drivers/net/team/team.c b/drivers/net/team/team.c
+index 3e0f7116380d..eb04b348edf3 100644
+--- a/drivers/net/team/team.c
++++ b/drivers/net/team/team.c
+@@ -253,17 +253,6 @@ static void __team_option_inst_mark_removed_port(struct team *team,
+ 	}
+ }
  
- 	cdns_i2c_writereg(ctrl_reg, CDNS_I2C_CR_OFFSET);
+-static bool __team_option_inst_tmp_find(const struct list_head *opts,
+-					const struct team_option_inst *needle)
+-{
+-	struct team_option_inst *opt_inst;
+-
+-	list_for_each_entry(opt_inst, opts, tmp_list)
+-		if (opt_inst == needle)
+-			return true;
+-	return false;
+-}
+-
+ static int __team_options_register(struct team *team,
+ 				   const struct team_option *option,
+ 				   size_t option_count)
+@@ -2435,7 +2424,6 @@ static int team_nl_cmd_options_set(struct sk_buff *skb, struct genl_info *info)
+ 	int err = 0;
+ 	int i;
+ 	struct nlattr *nl_option;
+-	LIST_HEAD(opt_inst_list);
  
-@@ -436,8 +438,11 @@ static void cdns_i2c_msend(struct cdns_i2c *id)
- 	 * Check for the message size against FIFO depth and set the
- 	 * 'hold bus' bit if it is greater than FIFO depth.
- 	 */
--	if (id->send_count > CDNS_I2C_FIFO_DEPTH)
-+	if ((id->send_count > CDNS_I2C_FIFO_DEPTH) || id->bus_hold_flag)
- 		ctrl_reg |= CDNS_I2C_CR_HOLD;
-+	else
-+		ctrl_reg = ctrl_reg & ~CDNS_I2C_CR_HOLD;
-+
- 	cdns_i2c_writereg(ctrl_reg, CDNS_I2C_CR_OFFSET);
+ 	team = team_nl_team_get(info);
+ 	if (!team)
+@@ -2451,6 +2439,7 @@ static int team_nl_cmd_options_set(struct sk_buff *skb, struct genl_info *info)
+ 		struct nlattr *opt_attrs[TEAM_ATTR_OPTION_MAX + 1];
+ 		struct nlattr *attr;
+ 		struct nlattr *attr_data;
++		LIST_HEAD(opt_inst_list);
+ 		enum team_option_type opt_type;
+ 		int opt_port_ifindex = 0; /* != 0 for per-port options */
+ 		u32 opt_array_index = 0;
+@@ -2554,23 +2543,17 @@ static int team_nl_cmd_options_set(struct sk_buff *skb, struct genl_info *info)
+ 			if (err)
+ 				goto team_put;
+ 			opt_inst->changed = true;
+-
+-			/* dumb/evil user-space can send us duplicate opt,
+-			 * keep only the last one
+-			 */
+-			if (__team_option_inst_tmp_find(&opt_inst_list,
+-							opt_inst))
+-				continue;
+-
+ 			list_add(&opt_inst->tmp_list, &opt_inst_list);
+ 		}
+ 		if (!opt_found) {
+ 			err = -ENOENT;
+ 			goto team_put;
+ 		}
+-	}
  
- 	/* Clear the interrupts in interrupt status register. */
+-	err = team_nl_send_event_options_get(team, &opt_inst_list);
++		err = team_nl_send_event_options_get(team, &opt_inst_list);
++		if (err)
++			break;
++	}
+ 
+ team_put:
+ 	team_nl_team_put(team);
 -- 
 2.19.1
 
