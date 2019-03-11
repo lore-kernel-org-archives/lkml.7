@@ -6,47 +6,46 @@ X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
 	SPF_PASS,USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2A8B7C10F06
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 Mar 2019 20:13:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1FA43C43381
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 Mar 2019 20:13:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F28BE214AF
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 Mar 2019 20:13:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E3B7E214AE
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 Mar 2019 20:13:15 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1552335191;
-	bh=tbxKn7I5O5Y7nr/25fdh6dPFJpzBIQ6AgSfZ9NH11dU=;
+	s=default; t=1552335196;
+	bh=e2c4kaqA2yWvAUYVKF7t2p1GxQTGCnrtGOJJBfngglk=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Tct9PD+VGjqSxKXkp1butWq3OE3amW76EFzEq3eP3Z/pHblVM0RIJBRin15KjXGPC
-	 c0iZTQBRqo68zBv5gCDmPomzm2lz3oWTPqCTCG/SUImlUBv2VACQmAb4su+KA4gmKB
-	 kJGjnNGlwhxmJAznKXSZ1W6IJEcWLci0MzNk6a5M=
+	b=d+7lzcE8x8kx1hK+XXbNU5UcubT87zfOvuae7AirVNxWcASUwy26qAiDiwZZYojiv
+	 /XAz6Guzel8B5Ez3XYEPs2VQDPYZJlrLIW79AQOcCmAUiZfKpmLnCfRYP7nQPjn9fE
+	 zpbhx1xO6+soEO9TkH0k03gLhJLQZIzKHMaF4/cY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728408AbfCKTzx (ORCPT
+        id S1728612AbfCKUNP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 11 Mar 2019 15:55:53 -0400
-Received: from mail.kernel.org ([198.145.29.99]:33084 "EHLO mail.kernel.org"
+        Mon, 11 Mar 2019 16:13:15 -0400
+Received: from mail.kernel.org ([198.145.29.99]:33100 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728381AbfCKTzu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 11 Mar 2019 15:55:50 -0400
+        id S1728388AbfCKTzv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 11 Mar 2019 15:55:51 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id CD1162177E;
-        Mon, 11 Mar 2019 19:55:48 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id E0ADF217D9;
+        Mon, 11 Mar 2019 19:55:49 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1552334149;
-        bh=tbxKn7I5O5Y7nr/25fdh6dPFJpzBIQ6AgSfZ9NH11dU=;
+        s=default; t=1552334150;
+        bh=e2c4kaqA2yWvAUYVKF7t2p1GxQTGCnrtGOJJBfngglk=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=hW8iRMfPkb+LnaTTtPyosO4OiXC5S8nTE825Evb/66a0oPjxoKR3gdUFvzRKlbKp8
-         gG0zeH+rvBXFe1vplPFVHp41zGiimjT5aFIg2DXp3qfpK+0cPdEaEMnVPV9nCxpZ0a
-         HC34VrZaSBjICFF7WhLsRD1MPw9KOS71M4z3VM0U=
+        b=D/T/v1ibCqDhzGhCqjI+hB90skkED/xb+Mo6eHwsXc+CxbxFTO241MG5Gy6obJu8C
+         cP2vfP4ikZAiSTDB47u5xdneGd9c7LqMPjcUKwfNqLD48J6/1pGI1gY5XbLJCRLrwb
+         fCscEgeyB03xF/Qe74AxG4mywCzGMo12KxhDK95I=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Guennadi Liakhovetski <guennadi.liakhovetski@intel.com>,
-        Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>,
+Cc:     Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>,
         Mark Brown <broonie@kernel.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH AUTOSEL 4.20 15/52] ASoC: topology: fix oops/use-after-free case with dai driver
-Date:   Mon, 11 Mar 2019 15:54:39 -0400
-Message-Id: <20190311195516.137772-15-sashal@kernel.org>
+Subject: [PATCH AUTOSEL 4.20 16/52] ASoC: dapm: fix out-of-bounds accesses to DAPM lookup tables
+Date:   Mon, 11 Mar 2019 15:54:40 -0400
+Message-Id: <20190311195516.137772-16-sashal@kernel.org>
 X-Mailer: git-send-email 2.19.1
 In-Reply-To: <20190311195516.137772-1-sashal@kernel.org>
 References: <20190311195516.137772-1-sashal@kernel.org>
@@ -58,64 +57,101 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Guennadi Liakhovetski <guennadi.liakhovetski@intel.com>
+From: Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>
 
-[ Upstream commit 52abe6cc1866ac3d54612f5d80563e6608c0ddfc ]
+[ Upstream commit c16e12010060c6c7a31f08b4a99513064cb53b7d ]
 
-rmmod/modprobe tests expose a kernel oops when accessing the dai
-driver pointer. This comes from the topology design which operates in
-multiple passes. Each object removal happens at a specific iteration,
-and the code checks for the iteration (order) number after the memory
-containing the order was freed.
+KASAN reports and additional traces point to out-of-bounds accesses to
+the dapm_up_seq and dapm_down_seq lookup tables. The indices used are
+larger than the array definition.
 
-Fix this be clearing a reference to the dai driver and check its
-validity to avoid dereferences.
+Fix by adding missing entries for the new widget types in these two
+lookup tables, and align them with PGA values.
 
-Signed-off-by: Guennadi Liakhovetski <guennadi.liakhovetski@intel.com>
+Also the sequences for the following widgets were not defined. Since
+their values defaulted to zero, assign them explicitly
+
+ snd_soc_dapm_input
+ snd_soc_dapm_output
+ snd_soc_dapm_vmid
+ snd_soc_dapm_siggen
+ snd_soc_dapm_sink
+
+Fixes: 8a70b4544ef4 ('ASoC: dapm: Add new widget type for constructing DAPM graphs on DSPs.').
 Signed-off-by: Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>
 Signed-off-by: Mark Brown <broonie@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- sound/soc/soc-core.c     | 2 +-
- sound/soc/soc-topology.c | 5 +++++
- 2 files changed, 6 insertions(+), 1 deletion(-)
+ sound/soc/soc-dapm.c | 24 ++++++++++++++++++++++++
+ 1 file changed, 24 insertions(+)
 
-diff --git a/sound/soc/soc-core.c b/sound/soc/soc-core.c
-index 2d49492d6069..c8c6c5a6de8f 100644
---- a/sound/soc/soc-core.c
-+++ b/sound/soc/soc-core.c
-@@ -951,7 +951,7 @@ static void soc_remove_dai(struct snd_soc_dai *dai, int order)
- {
- 	int err;
- 
--	if (!dai || !dai->probed ||
-+	if (!dai || !dai->probed || !dai->driver ||
- 	    dai->driver->remove_order != order)
- 		return;
- 
-diff --git a/sound/soc/soc-topology.c b/sound/soc/soc-topology.c
-index 045ef136903d..fc79ec6927e3 100644
---- a/sound/soc/soc-topology.c
-+++ b/sound/soc/soc-topology.c
-@@ -502,6 +502,7 @@ static void remove_dai(struct snd_soc_component *comp,
- {
- 	struct snd_soc_dai_driver *dai_drv =
- 		container_of(dobj, struct snd_soc_dai_driver, dobj);
-+	struct snd_soc_dai *dai;
- 
- 	if (pass != SOC_TPLG_PASS_PCM_DAI)
- 		return;
-@@ -509,6 +510,10 @@ static void remove_dai(struct snd_soc_component *comp,
- 	if (dobj->ops && dobj->ops->dai_unload)
- 		dobj->ops->dai_unload(comp, dobj);
- 
-+	list_for_each_entry(dai, &comp->dai_list, list)
-+		if (dai->driver == dai_drv)
-+			dai->driver = NULL;
-+
- 	kfree(dai_drv->name);
- 	list_del(&dobj->list);
- 	kfree(dai_drv);
+diff --git a/sound/soc/soc-dapm.c b/sound/soc/soc-dapm.c
+index a5178845065b..5d3f235f4be6 100644
+--- a/sound/soc/soc-dapm.c
++++ b/sound/soc/soc-dapm.c
+@@ -70,12 +70,16 @@ static int dapm_up_seq[] = {
+ 	[snd_soc_dapm_clock_supply] = 1,
+ 	[snd_soc_dapm_supply] = 2,
+ 	[snd_soc_dapm_micbias] = 3,
++	[snd_soc_dapm_vmid] = 3,
+ 	[snd_soc_dapm_dai_link] = 2,
+ 	[snd_soc_dapm_dai_in] = 4,
+ 	[snd_soc_dapm_dai_out] = 4,
+ 	[snd_soc_dapm_aif_in] = 4,
+ 	[snd_soc_dapm_aif_out] = 4,
+ 	[snd_soc_dapm_mic] = 5,
++	[snd_soc_dapm_siggen] = 5,
++	[snd_soc_dapm_input] = 5,
++	[snd_soc_dapm_output] = 5,
+ 	[snd_soc_dapm_mux] = 6,
+ 	[snd_soc_dapm_demux] = 6,
+ 	[snd_soc_dapm_dac] = 7,
+@@ -83,11 +87,19 @@ static int dapm_up_seq[] = {
+ 	[snd_soc_dapm_mixer] = 8,
+ 	[snd_soc_dapm_mixer_named_ctl] = 8,
+ 	[snd_soc_dapm_pga] = 9,
++	[snd_soc_dapm_buffer] = 9,
++	[snd_soc_dapm_scheduler] = 9,
++	[snd_soc_dapm_effect] = 9,
++	[snd_soc_dapm_src] = 9,
++	[snd_soc_dapm_asrc] = 9,
++	[snd_soc_dapm_encoder] = 9,
++	[snd_soc_dapm_decoder] = 9,
+ 	[snd_soc_dapm_adc] = 10,
+ 	[snd_soc_dapm_out_drv] = 11,
+ 	[snd_soc_dapm_hp] = 11,
+ 	[snd_soc_dapm_spk] = 11,
+ 	[snd_soc_dapm_line] = 11,
++	[snd_soc_dapm_sink] = 11,
+ 	[snd_soc_dapm_kcontrol] = 12,
+ 	[snd_soc_dapm_post] = 13,
+ };
+@@ -100,13 +112,25 @@ static int dapm_down_seq[] = {
+ 	[snd_soc_dapm_spk] = 3,
+ 	[snd_soc_dapm_line] = 3,
+ 	[snd_soc_dapm_out_drv] = 3,
++	[snd_soc_dapm_sink] = 3,
+ 	[snd_soc_dapm_pga] = 4,
++	[snd_soc_dapm_buffer] = 4,
++	[snd_soc_dapm_scheduler] = 4,
++	[snd_soc_dapm_effect] = 4,
++	[snd_soc_dapm_src] = 4,
++	[snd_soc_dapm_asrc] = 4,
++	[snd_soc_dapm_encoder] = 4,
++	[snd_soc_dapm_decoder] = 4,
+ 	[snd_soc_dapm_switch] = 5,
+ 	[snd_soc_dapm_mixer_named_ctl] = 5,
+ 	[snd_soc_dapm_mixer] = 5,
+ 	[snd_soc_dapm_dac] = 6,
+ 	[snd_soc_dapm_mic] = 7,
++	[snd_soc_dapm_siggen] = 7,
++	[snd_soc_dapm_input] = 7,
++	[snd_soc_dapm_output] = 7,
+ 	[snd_soc_dapm_micbias] = 8,
++	[snd_soc_dapm_vmid] = 8,
+ 	[snd_soc_dapm_mux] = 9,
+ 	[snd_soc_dapm_demux] = 9,
+ 	[snd_soc_dapm_aif_in] = 10,
 -- 
 2.19.1
 
