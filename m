@@ -2,138 +2,182 @@ Return-Path: <SRS0=FxTY=RO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-11.0 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PULL_REQUEST,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_PASS autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C9BACC43381
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 Mar 2019 21:53:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2D4CDC43381
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 Mar 2019 21:55:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8EF31214AE
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 Mar 2019 21:53:10 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1552341190;
-	bh=M3kg/jdEBUe+CDQz+GMx2iZEuq1EMWCLrvE45qvukMI=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=ICx7IHFymKjSaVd2UJMWR9eaGo5XlBHQOjiQrIiBw7vtQViAobReIs8tUdpr4Hif+
-	 2RVap2zfXms3amvlgwC9lNMI/3b5qlNaWR8o5f85qBc0YRv83CZXHTJo4nN+O+RmEq
-	 3vhv1eUmEWLn4410j/Ejnwx0SNM+iEi8uWj7RPG4=
+	by mail.kernel.org (Postfix) with ESMTP id E22A02147C
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 Mar 2019 21:55:00 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=intel-com.20150623.gappssmtp.com header.i=@intel-com.20150623.gappssmtp.com header.b="pDKoSqgc"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728417AbfCKVxJ (ORCPT
+        id S1728001AbfCKVy7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 11 Mar 2019 17:53:09 -0400
-Received: from mail-lj1-f195.google.com ([209.85.208.195]:32999 "EHLO
-        mail-lj1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727548AbfCKVxI (ORCPT
+        Mon, 11 Mar 2019 17:54:59 -0400
+Received: from mail-oi1-f195.google.com ([209.85.167.195]:40960 "EHLO
+        mail-oi1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727459AbfCKVy7 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 11 Mar 2019 17:53:08 -0400
-Received: by mail-lj1-f195.google.com with SMTP id z7so509442lji.0
-        for <linux-kernel@vger.kernel.org>; Mon, 11 Mar 2019 14:53:07 -0700 (PDT)
+        Mon, 11 Mar 2019 17:54:59 -0400
+Received: by mail-oi1-f195.google.com with SMTP id e7so385200oia.8
+        for <linux-kernel@vger.kernel.org>; Mon, 11 Mar 2019 14:54:58 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linux-foundation.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=72QtNwbLsdBpSZDKo9CP7eJ/scNnRHayCxjjk07ES3Y=;
-        b=LA+Wfgc2lBBEL9hzQqlUJrd/usGm7EKbpwpoJMMCw+3/d0O29pB9qlN40v6A/XD+zL
-         VYC+XsQUTAVToadUn1rdPJaBno60ecvk2noT50fp9cPrbFoT8PB4Ho3DaaaJL/r9N1yf
-         ga8/t9Io2HVZFCHmb/5O6GF5W5HWY+ygSpF6I=
+        d=intel-com.20150623.gappssmtp.com; s=20150623;
+        h=mime-version:from:date:message-id:subject:to:cc;
+        bh=prLvtdgijDE7anHBdKpQSgXUM//Li7bfJi+Sflxhf98=;
+        b=pDKoSqgcYHfaqF6LH4VphTgdj8ZPG+XwOfFj1rn/XQRZ9AvwDgw5qBbOv1FMbmTa9d
+         tFJxd3b6tO404mgSj1Qix3gJtqXkfXvbJuE2xkBQ9mVDOuaPZbSi3RCf0gvwos9feout
+         BVrc+pU+XNKGCQQfnwV7SKsqHGTM2Z8GAAbs0P7BNqRtEUuJSVZ9Iub1HkN79ZeaXsdS
+         qW4My2so8FbBxZ7tY2z2p2gVI1G9u1p6vHZyatf381VZr3GCL2t5rlZwbvuxQu+iA2Xx
+         ebF+SYWo2yAwxfnLDX7oDPEMSospg+rzQa8vq4Gw+xFluLmGgHEXrc1qNKtdvca1VX8Z
+         RCtQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=72QtNwbLsdBpSZDKo9CP7eJ/scNnRHayCxjjk07ES3Y=;
-        b=E3eJZ/RmCNV33w0Vt15qhzyPUy+HajVEV4YehqB2jeXDA4inWzDz3POa4MGj/Kfum9
-         W7OuJsAeemii38DQTfxvFORwnti9Cls4WxisaDzUsnnrRLalTfPpgLRGycWL1h4bbQ24
-         3niwBbeusNAvlFCYdKy7J2w9zCYY3JsTNd5xhpUK/88cWvsyHTUP2Uije+Au5p8nOd9U
-         vDFCAtDWC6Q7NT0BGneayxJLu8uUxGoJjZHJuGR/9Th/1l2W2FRl+DYmIEEBKFNyNfKO
-         2Dv1hi8AbAvfZ9WNox72NrlzLLYJEw8Ep9dWl+5ai1k1VxJd6z6j8VX0CSZ54trrvKrz
-         vH0w==
-X-Gm-Message-State: APjAAAVSXqoxIJ5+XRM9MZosWXHPkHp4QcHyYOa/n5uN5iPs6w0wthu7
-        IrBSAx/ZF5nVUt2SXAGb1fMuxJfJxVg=
-X-Google-Smtp-Source: APXvYqxGNqErUDc/g8FweP+SUI2hzipONfJatoeY3T5215hv2XFfQYIr8AAxpLhxjn2gZ44o89QnUA==
-X-Received: by 2002:a2e:2c11:: with SMTP id s17mr17678978ljs.147.1552341186035;
-        Mon, 11 Mar 2019 14:53:06 -0700 (PDT)
-Received: from mail-lf1-f44.google.com (mail-lf1-f44.google.com. [209.85.167.44])
-        by smtp.gmail.com with ESMTPSA id r11sm1100858ljb.29.2019.03.11.14.53.05
-        for <linux-kernel@vger.kernel.org>
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Mon, 11 Mar 2019 14:53:05 -0700 (PDT)
-Received: by mail-lf1-f44.google.com with SMTP id 197so478400lfz.3
-        for <linux-kernel@vger.kernel.org>; Mon, 11 Mar 2019 14:53:05 -0700 (PDT)
-X-Received: by 2002:ac2:5088:: with SMTP id f8mr18412143lfm.11.1552340743409;
- Mon, 11 Mar 2019 14:45:43 -0700 (PDT)
+        h=x-gm-message-state:mime-version:from:date:message-id:subject:to:cc;
+        bh=prLvtdgijDE7anHBdKpQSgXUM//Li7bfJi+Sflxhf98=;
+        b=mZLw7zYezt9LzZUNqLAH7ip4LyY420BdasNYcR19bqMuZ4bnQTc0+5DnIOKyP14hw4
+         hSm2H0oKxzsU9ZSbiw0IX1I4AJtOFgyW0+ebHjX5BGHaUpvwkUb0aSoyEIMmrmhUkofq
+         WgIKnchm4yM7MvtUHYCDAR7pcFbNasuDkqhCPKoOc0iJQgWI3XmMNF6HS53zLqOwJC/L
+         I1b0blfJJIVS9BJkNNEk+0O2G43b4J91YNIZUpExKEWNFzn/YExK4KOryHcYLQ9498DH
+         LVRp5tLcYPxPpXoEg/sQP0WdeiQS9XgQqsr0KZ+2eRM+0ZWGEBorfWYYatSfPG1UKHC4
+         tGUg==
+X-Gm-Message-State: APjAAAW+uhCBY5AAvy+qD2Y1Jqv1sWLlhLK8dXIRvaGmBAjmjERq1+xj
+        DJovpwG3WVnf1caEYpft3ATCyTeJfI8PtnubJlDQlBbfmxk=
+X-Google-Smtp-Source: APXvYqybMup1Xj4IUj0ZrDKdvKAhJ3GhVMtlYSYCh1m3w7wt6ohqodlIIv5Sj3othwt8S8k0r37EH0iyXNM+/N6FlY4=
+X-Received: by 2002:aca:cc0f:: with SMTP id c15mr265421oig.105.1552341298046;
+ Mon, 11 Mar 2019 14:54:58 -0700 (PDT)
 MIME-Version: 1.0
-References: <CAG48ez1RVd5mQ_Pb6eygQESaZhpQz765OAZYSoPE0kPqfZEXQg@mail.gmail.com>
- <20190305091904.GB8256@zn.tnic> <20190305122218.GD13380@bombadil.infradead.org>
- <20190305134347.4be2449c@alans-desktop> <20190305145717.GD8256@zn.tnic>
- <CAHk-=wi2E4kugAW7BQwNSVwYHOr=B_9EgzBRMpQ2+1dxAqydDg@mail.gmail.com>
- <20190305173134.GE8256@zn.tnic> <CAHk-=wg0bY=RFhD4NW9x++fC0bME=_-9xM3kexGGM3gefHQTyQ@mail.gmail.com>
- <20190305181138.GG8256@zn.tnic> <20190305181808.GH8256@zn.tnic>
- <CAEdQ38G5M3vq9pGBV1iyEViO7JhFuXk5g+VCs-vUH+Z62kNqgQ@mail.gmail.com>
- <CAHk-=wgt7M6yA5BJCJo0nF22WgPJnN8CvViL9CAJmd+S+Civ6w@mail.gmail.com>
- <yw1xa7i14btw.fsf@mansr.com> <CAHk-=whD1SumZUBQeuMT-GcciwPxg_jW_TsPAmokYp3sGGCGhA@mail.gmail.com>
- <yw1x5zsp473a.fsf@mansr.com> <CAHk-=wiU7xacTqDfm-x29-meyJWNd_X95K0T8FQMcDgy-yo3Qw@mail.gmail.com>
- <yw1x1s3d42ia.fsf@mansr.com> <CAK8P3a031d9mSOxVmCAGcrbdaCE8N3R4e2Smtxp-Z+cautTAvg@mail.gmail.com>
-In-Reply-To: <CAK8P3a031d9mSOxVmCAGcrbdaCE8N3R4e2Smtxp-Z+cautTAvg@mail.gmail.com>
-From:   Linus Torvalds <torvalds@linux-foundation.org>
-Date:   Mon, 11 Mar 2019 14:45:27 -0700
-X-Gmail-Original-Message-ID: <CAHk-=wj3v41CWH+3ry3+vrkjAEcyGojtevpsZDbiXVvpv1nTkA@mail.gmail.com>
-Message-ID: <CAHk-=wj3v41CWH+3ry3+vrkjAEcyGojtevpsZDbiXVvpv1nTkA@mail.gmail.com>
-Subject: Re: [PATCH] x86: Deprecate a.out support
-To:     Arnd Bergmann <arnd@arndb.de>
-Cc:     =?UTF-8?B?TcOlbnMgUnVsbGfDpXJk?= <mans@mansr.com>,
-        Matt Turner <mattst88@gmail.com>,
-        Borislav Petkov <bp@alien8.de>,
-        Alan Cox <gnomes@lxorguk.ukuu.org.uk>,
-        Matthew Wilcox <willy@infradead.org>,
-        Jann Horn <jannh@google.com>,
-        Al Viro <viro@zeniv.linux.org.uk>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        kernel list <linux-kernel@vger.kernel.org>,
-        linux-fsdevel <linux-fsdevel@vger.kernel.org>,
-        "the arch/x86 maintainers" <x86@kernel.org>,
-        Linux API <linux-api@vger.kernel.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Richard Weinberger <richard@nod.at>,
-        Anton Ivanov <anton.ivanov@cambridgegreys.com>,
-        linux-alpha <linux-alpha@vger.kernel.org>,
-        linux-m68k <linux-m68k@lists.linux-m68k.org>
+From:   Dan Williams <dan.j.williams@intel.com>
+Date:   Mon, 11 Mar 2019 14:54:47 -0700
+Message-ID: <CAPcyv4hPv7b1FWUxuDvcx8+kFWh7Npgk92P+SEpSPWvT2cxheg@mail.gmail.com>
+Subject: [GIT PULL] libnvdimm updates for 5.1
+To:     Linus Torvalds <torvalds@linux-foundation.org>
+Cc:     Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        linux-nvdimm <linux-nvdimm@lists.01.org>
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Mar 11, 2019 at 2:34 PM Arnd Bergmann <arnd@arndb.de> wrote:
->
-> The main historic use case I've heard of was running Netscape
-> Navigator on Alpha Linux, before there was an open source version.
-> Doing this today to connect to the open internet is probably
-> a bit pointless, but there may be other use cases.
+Hi Linus, please pull from:
 
-The _really_ main version was that I decided to make my life easier
-for the initial alpha port by trying to run basic (tested) OSF/1
-binaries directly.
+  git://git.kernel.org/pub/scm/linux/kernel/git/nvdimm/nvdimm
+tags/libnvdimm-for-5.1
 
-Netscape may have been one of the binaries people actually ended up
-using, but it's probably not a reason any more, since the internet has
-moved past that anyway.
+...to receive the general libnvdimm update for 5.1, while I track down
+a response on the issue highlighted "PMEM as RAM" pull request.
 
-> Looking at the system call table in the kernel
-> (arch/alpha/kernel/syscalls/syscall.tbl), we seem to support a
-> specific subset that was required for a set of applications, and
-> not much more.
+The bulk of this has been in -next since before the merge window
+opened, with no known collisions / issues reported. The only detail
+worth noting, outside the tag message, is that the
+"libnvdimm-start-pad" topic has been truncated to just cleanups and
+small fixes. The full topic branch would have doubled down on hacks
+around the "section alignment" limitation of the core-mm, instead
+effort is now being spent to address that root issue in the memory
+hotplug implementation for v5.2. I'll note, since I messed this up in
+the past, the topic-branch merges have summary messages as to why the
+merge was made.
 
-Yeah, it never supported arbitrary binaries, particularly since
-there's often lots of other issues too with running things like that
-(ie filesystem layout etc). It worked for normal fairly well behaved
-stuff, but wasn't ever a full OSF/1 emulation environment.
+---
 
-I _suspect_ nobody actually runs any OSF/1 binaries any more, but it
-would obviously be good to verify that. Your argument that timeval
-handling was broken _may_ be an indication of that (or may just mean
-very few apps care).
+The following changes since commit d13937116f1e82bf508a6325111b322c30c85eb9:
 
-I think we should try the a.out removal and see if anybody notices.
+  Linux 5.0-rc6 (2019-02-10 14:42:20 -0800)
 
-                    Linus
+are available in the Git repository at:
+
+  git://git.kernel.org/pub/scm/linux/kernel/git/nvdimm/nvdimm
+tags/libnvdimm-for-5.1
+
+for you to fetch changes up to 4083014e32699af04a8e6eaa4855b08dba36a47a:
+
+  Merge branch 'for-5.1/nfit/ars' into libnvdimm-for-next (2019-03-11
+12:37:55 -0700)
+
+----------------------------------------------------------------
+libnvdimm for v5.1
+
+* Fix nfit-bus command submission regression
+
+* Support retrieval of short-ARS results if the ARS state is "requires
+  continuation", and even if the "no_init_ars" module parameter is
+  specified.
+
+* Allow busy-polling of the kernel ARS state by allowing root to reset
+  the exponential back-off timer.
+
+* Filter potentially stale ARS results by tracking query-ARS relative to
+  the previous start-ARS.
+
+* Enhance dax_device alignment checks
+
+* Add support for the Hyper-V family of device-specific-methods (DSMs)
+
+* Add several fixes and workarounds for Hyper-V compatibility.
+
+* Fix support to cache the dirty-shutdown-count at init.
+
+----------------------------------------------------------------
+Dan Williams (20):
+      libnvdimm/label: Clear 'updating' flag after label-set update
+      nfit: Fix nfit_intel_shutdown_status() command submission
+      MAINTAINERS: Update filesystem-dax and NVDIMM entries
+      libnvdimm/dimm: Add a no-BLK quirk based on NVDIMM family
+      acpi/nfit: Fix bus command validation
+      libnvdimm/pfn: Account for PAGE_SIZE > info-block-size in nd_pfn_init()
+      libnvdimm/pmem: Honor force_raw for legacy pmem regions
+      acpi/nfit: Require opt-in for read-only label configurations
+      nfit/ars: Attempt a short-ARS whenever the ARS state is idle at boot
+      nfit/ars: Attempt short-ARS even in the no_init_ars case
+      nfit/ars: Remove ars_start_flags
+      nfit/ars: Introduce scrub_flags
+      nfit/ars: Allow root to busy-poll the ARS state machine
+      nfit/ars: Avoid stale ARS results
+      dax: Check the end of the block-device capacity with dax_direct_access()
+      libnvdimm/pfn: Remove dax_label_reserve
+      libnvdimm/namespace: Clean up holder_class_store()
+      Merge branch 'for-5.1/libnvdimm' into libnvdimm-for-next
+      Merge branch 'for-5.1/libnvdimm-start-pad' into libnvdimm-for-next
+      Merge branch 'for-5.1/nfit/ars' into libnvdimm-for-next
+
+Dexuan Cui (2):
+      nfit: acpi_nfit_ctl(): Check out_obj->type in the right place
+      nfit: Add Hyper-V NVDIMM DSM command set to white list
+
+Oliver O'Halloran (1):
+      libnvdimm: Fix altmap reservation size calculation
+
+Toshi Kani (1):
+      acpi/nfit: Update NFIT flags error message
+
+Vishal Verma (2):
+      libnvdimm/btt: Remove unnecessary code in btt_freelist_init
+      libnvdimm/btt: Fix LBA masking during 'free list' population
+
+Wei Yang (1):
+      libnvdimm, pfn: Fix over-trim in trim_pfn_device()
+
+YueHaibing (1):
+      libnvdimm/of_pmem: Fix platform_no_drv_owner.cocci warnings
+
+ MAINTAINERS                     |  17 ++--
+ drivers/acpi/nfit/core.c        | 185 +++++++++++++++++++++++++++-------------
+ drivers/acpi/nfit/nfit.h        |  17 +++-
+ drivers/dax/super.c             |  38 ++++++---
+ drivers/nvdimm/btt.c            |  33 ++++---
+ drivers/nvdimm/btt.h            |   2 +
+ drivers/nvdimm/btt_devs.c       |   8 ++
+ drivers/nvdimm/dimm_devs.c      |   7 ++
+ drivers/nvdimm/label.c          |  26 ++++--
+ drivers/nvdimm/namespace_devs.c |  18 +++-
+ drivers/nvdimm/of_pmem.c        |   1 -
+ drivers/nvdimm/pfn_devs.c       |  24 +++---
+ drivers/nvdimm/region_devs.c    |   7 ++
+ include/linux/libnvdimm.h       |   2 +
+ include/uapi/linux/ndctl.h      |   1 +
+ 15 files changed, 273 insertions(+), 113 deletions(-)
