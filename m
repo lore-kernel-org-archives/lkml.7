@@ -8,55 +8,55 @@ X-Spam-Status: No, score=-8.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A3A27C10F0C
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 Mar 2019 06:28:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CE40CC43381
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 Mar 2019 06:28:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 73FB92075C
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 Mar 2019 06:28:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9DA8E206DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 Mar 2019 06:28:15 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="WQJg6c0h"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ZXEbFOfD"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726721AbfCKG2J (ORCPT
+        id S1726815AbfCKG2N (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 11 Mar 2019 02:28:09 -0400
-Received: from mail-pf1-f193.google.com ([209.85.210.193]:41023 "EHLO
+        Mon, 11 Mar 2019 02:28:13 -0400
+Received: from mail-pf1-f193.google.com ([209.85.210.193]:38972 "EHLO
         mail-pf1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726633AbfCKG2H (ORCPT
+        with ESMTP id S1726752AbfCKG2L (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 11 Mar 2019 02:28:07 -0400
-Received: by mail-pf1-f193.google.com with SMTP id d25so2964829pfn.8;
-        Sun, 10 Mar 2019 23:28:07 -0700 (PDT)
+        Mon, 11 Mar 2019 02:28:11 -0400
+Received: by mail-pf1-f193.google.com with SMTP id i20so2969966pfo.6;
+        Sun, 10 Mar 2019 23:28:10 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=FucV4xmaQpW0g5ag0DNsjakkAYyguzHLUsgHU2+3MJM=;
-        b=WQJg6c0h9PEPWkuhREut2WFmWqxBv05+kjsy92DB+r2DPNDe+wH9rjjHeE6fkwWj9c
-         jatd8P4Dp20Fu5930yJEuZKSV/GplhYMfcs75tIAPzkhYRLHESFnG+U++bvQRvsDerJs
-         sfF9sRvkXVeJvtbz5KEZGuGaXYzr9uyo9VZRJKuo87MzBLRz5slSQkjNt7tc66gB0eRO
-         G2KZjOOx2AojV0aO6H05Eby0Lw8Ir7ryBDvhIf/2gEaF2Xp+DUh1ppKdbUeMzmZWIgdf
-         wLRmEJCl9UxkMbEFk3vbHJe/TMjhihH8pm/0M2bq3ubEMucr7uokLI5bC9Cyktbo8t5q
-         jkVg==
+        bh=q61okzQLGrbhI4rcbZXifSBtd7n/ivAfi57IgaXUs8I=;
+        b=ZXEbFOfDRcV0Y46G+5qtwRCdO6WuWmQtZ8h/MWa8zXDbwoburAP9f8GLe6TKyTJlUE
+         my+T45zIEz3QB/ZDb4rg7Rd5npopAYgckkbfKVRxz0vD1R8QKxIlRt/YvwAxg+UE6SF4
+         55Gs/ZY3ESMerZjjGxDfjuYX4udWnk4uy3+JjCjppLBHENZwfow2Nst1WS+tMHniKrRH
+         ZoU9Ms5pXJg07T9n22zekh3NRRfE6XpTcQU9Mb2+Yk4JrN/VbZlBjEiY7IXVjSojnmJ2
+         +BHH+BgR+CC4mqHMLbWdNUeGkCA1pQrBFIAM1CgCCNlhZgRu3G3kQSIqwSbDTVYBUfF2
+         469g==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=FucV4xmaQpW0g5ag0DNsjakkAYyguzHLUsgHU2+3MJM=;
-        b=UulMMexQ1o4wEgYS4/SPJ3ahktqmM9jEc2p1Rd90H9fofwGaI2hmWK/gaSY10MkYON
-         ECGbhDvL8vw3YPgdzePUZc0GG1tSKOEd6RBAiZ+mMEMN5PXSqFlzIKYaUu73b2Aap3+H
-         AUPAokbPDZov2Fb7H2uVdT/tSPnJHFTpZpA1I3bQqNHM6SYVEvfhXkdZM0o2XqLW6RYp
-         4ro5cbE9ovHoGaLzHOh0zzLB6nLE2jWn/xME4Edyw+JGENh5h2h2OIOGcGFrhpyRpQ59
-         I4v8dPNM1EWE5rAzlwHM4zjsnVqVwhEun+4R6H42+sAIWrhpPjzjyv/gDaG5wX6sulF6
-         DQ9w==
-X-Gm-Message-State: APjAAAVwnxtWK6ZcUQUVPehwEplSN6CsP7vbJgSKzylWH9zepqoeDuZ6
-        rGnr9l4P+YktfUncMFBN0IFeXNabs7g=
-X-Google-Smtp-Source: APXvYqxe7P7wpWkxkI8ViRxptxK87IEs7t8WSl9npEWo8ryQZ+UJ44ekmW8tbR4Ux8NdkJ17U/DTDQ==
-X-Received: by 2002:a63:5721:: with SMTP id l33mr3313762pgb.300.1552285686381;
-        Sun, 10 Mar 2019 23:28:06 -0700 (PDT)
+        bh=q61okzQLGrbhI4rcbZXifSBtd7n/ivAfi57IgaXUs8I=;
+        b=fXFaNGJyrK9lezh/03nAUTpYFW3oqd4tHQfaABaakJqmsYTMJOE/eWMUGQKDswO4bx
+         N9rRw7U/k4Ec5xj6lGF1yTxVfoa/Y4rwqFPuu1KWFaFw62z6//kPSDI19fVrfkR/uZ2o
+         M+uG3Da00BctxSw93y4buJgqqQQDw2CKilU9+kowSq7d3p6rL6tzH030xabhKIEhcKF0
+         MbEr6M9807pSm3yHOudrNcYDD1uCklxV4ej8qBy+BCw3fUIZjQJ+hAokbX+c0X4RNIA5
+         IrwqBxudsFBgHK9MR8e75t7tmcy2CJVPKzRcKF0ZaVnxVFGvBgsPx/tgfNcQJ/dnl58F
+         vEVg==
+X-Gm-Message-State: APjAAAUE5M0d3Rul5E4bmZAsqrg5gMyeH8H5bOCFAlq9pZCLqJybB0gg
+        remWfcRgIulLuzcfL2htdcfu1UXj7Kk=
+X-Google-Smtp-Source: APXvYqzyA1WayQVBbaaucUXplrjVOwPGMZti72n2FowIf9WLI0uRrLiR0A7oO11EdF6yEirBbCoIdA==
+X-Received: by 2002:a17:902:a5c6:: with SMTP id t6mr3280975plq.221.1552285689718;
+        Sun, 10 Mar 2019 23:28:09 -0700 (PDT)
 Received: from squirtle.lan (c-24-22-235-96.hsd1.wa.comcast.net. [24.22.235.96])
-        by smtp.gmail.com with ESMTPSA id f192sm10241679pfc.180.2019.03.10.23.28.05
+        by smtp.gmail.com with ESMTPSA id f192sm10241679pfc.180.2019.03.10.23.28.08
         (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Sun, 10 Mar 2019 23:28:05 -0700 (PDT)
+        Sun, 10 Mar 2019 23:28:09 -0700 (PDT)
 From:   Andrey Smirnov <andrew.smirnov@gmail.com>
 To:     linux-gpio@vger.kernel.org
 Cc:     Andrey Smirnov <andrew.smirnov@gmail.com>,
@@ -66,9 +66,9 @@ Cc:     Andrey Smirnov <andrew.smirnov@gmail.com>,
         Heiner Kallweit <hkallweit1@gmail.com>,
         Fabio Estevam <festevam@gmail.com>,
         linux-kernel@vger.kernel.org, linux-imx@nxp.com
-Subject: [PATCH 1/7] gpio: vf610: Do not share irq_chip
-Date:   Sun, 10 Mar 2019 23:27:31 -0700
-Message-Id: <20190311062737.6652-2-andrew.smirnov@gmail.com>
+Subject: [PATCH 3/7] gpio: vf610: Simplify vf610_gpio_get()
+Date:   Sun, 10 Mar 2019 23:27:33 -0700
+Message-Id: <20190311062737.6652-4-andrew.smirnov@gmail.com>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190311062737.6652-1-andrew.smirnov@gmail.com>
 References: <20190311062737.6652-1-andrew.smirnov@gmail.com>
@@ -79,8 +79,9 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Fix the warning produced by gpiochip_set_irq_hooks() by allocating a
-dedicated IRQ chip per GPIO chip/port.
+Both branches of the if statement do exactly the same thing, just at
+different offsets. Simplify the code a bit by moving shared action
+code outside of the if statement. No functional change intended.
 
 Signed-off-by: Andrey Smirnov <andrew.smirnov@gmail.com>
 Cc: Linus Walleij <linus.walleij@linaro.org>
@@ -93,86 +94,36 @@ Cc: linux-gpio@vger.kernel.org
 Cc: linux-kernel@vger.kernel.org
 Cc: linux-imx@nxp.com
 ---
- drivers/gpio/gpio-vf610.c | 26 ++++++++++++--------------
- 1 file changed, 12 insertions(+), 14 deletions(-)
+ drivers/gpio/gpio-vf610.c | 12 +++++-------
+ 1 file changed, 5 insertions(+), 7 deletions(-)
 
 diff --git a/drivers/gpio/gpio-vf610.c b/drivers/gpio/gpio-vf610.c
-index 541fa6ac399d..7e9451f47efe 100644
+index 2ea17870e9da..bb35cedd05e3 100644
 --- a/drivers/gpio/gpio-vf610.c
 +++ b/drivers/gpio/gpio-vf610.c
-@@ -29,6 +29,7 @@ struct fsl_gpio_soc_data {
+@@ -85,17 +85,15 @@ static int vf610_gpio_get(struct gpio_chip *gc, unsigned int gpio)
+ {
+ 	struct vf610_gpio_port *port = gpiochip_get_data(gc);
+ 	unsigned long mask = BIT(gpio);
+-	void __iomem *addr;
++	unsigned long offset = GPIO_PDIR;
  
- struct vf610_gpio_port {
- 	struct gpio_chip gc;
-+	struct irq_chip ic;
- 	void __iomem *base;
- 	void __iomem *gpio_base;
- 	const struct fsl_gpio_soc_data *sdata;
-@@ -60,8 +61,6 @@ struct vf610_gpio_port {
- #define PORT_INT_EITHER_EDGE	0xb
- #define PORT_INT_LOGIC_ONE	0xc
- 
--static struct irq_chip vf610_gpio_irq_chip;
--
- static const struct fsl_gpio_soc_data imx_data = {
- 	.have_paddr = true,
- };
-@@ -237,15 +236,6 @@ static int vf610_gpio_irq_set_wake(struct irq_data *d, u32 enable)
- 	return 0;
+ 	if (port->sdata && port->sdata->have_paddr) {
+ 		mask &= vf610_gpio_readl(port->gpio_base + GPIO_PDDR);
+-		addr = mask ? port->gpio_base + GPIO_PDOR :
+-			      port->gpio_base + GPIO_PDIR;
+-		return !!(vf610_gpio_readl(addr) & BIT(gpio));
+-	} else {
+-		return !!(vf610_gpio_readl(port->gpio_base + GPIO_PDIR)
+-					   & BIT(gpio));
++		if (mask)
++			offset = GPIO_PDOR;
+ 	}
++
++	return !!(vf610_gpio_readl(port->gpio_base + offset) & BIT(gpio));
  }
  
--static struct irq_chip vf610_gpio_irq_chip = {
--	.name		= "gpio-vf610",
--	.irq_ack	= vf610_gpio_irq_ack,
--	.irq_mask	= vf610_gpio_irq_mask,
--	.irq_unmask	= vf610_gpio_irq_unmask,
--	.irq_set_type	= vf610_gpio_irq_set_type,
--	.irq_set_wake	= vf610_gpio_irq_set_wake,
--};
--
- static int vf610_gpio_probe(struct platform_device *pdev)
- {
- 	struct device *dev = &pdev->dev;
-@@ -253,6 +243,7 @@ static int vf610_gpio_probe(struct platform_device *pdev)
- 	struct vf610_gpio_port *port;
- 	struct resource *iores;
- 	struct gpio_chip *gc;
-+	struct irq_chip *ic;
- 	int i;
- 	int ret;
- 
-@@ -316,6 +307,14 @@ static int vf610_gpio_probe(struct platform_device *pdev)
- 	gc->direction_output = vf610_gpio_direction_output;
- 	gc->set = vf610_gpio_set;
- 
-+	ic = &port->ic;
-+	ic->name = "gpio-vf610";
-+	ic->irq_ack = vf610_gpio_irq_ack;
-+	ic->irq_mask = vf610_gpio_irq_mask;
-+	ic->irq_unmask = vf610_gpio_irq_unmask;
-+	ic->irq_set_type = vf610_gpio_irq_set_type;
-+	ic->irq_set_wake = vf610_gpio_irq_set_wake;
-+
- 	ret = gpiochip_add_data(gc, port);
- 	if (ret < 0)
- 		return ret;
-@@ -327,14 +326,13 @@ static int vf610_gpio_probe(struct platform_device *pdev)
- 	/* Clear the interrupt status register for all GPIO's */
- 	vf610_gpio_writel(~0, port->base + PORT_ISFR);
- 
--	ret = gpiochip_irqchip_add(gc, &vf610_gpio_irq_chip, 0,
--				   handle_edge_irq, IRQ_TYPE_NONE);
-+	ret = gpiochip_irqchip_add(gc, ic, 0, handle_edge_irq, IRQ_TYPE_NONE);
- 	if (ret) {
- 		dev_err(dev, "failed to add irqchip\n");
- 		gpiochip_remove(gc);
- 		return ret;
- 	}
--	gpiochip_set_chained_irqchip(gc, &vf610_gpio_irq_chip, port->irq,
-+	gpiochip_set_chained_irqchip(gc, ic, port->irq,
- 				     vf610_gpio_irq_handler);
- 
- 	return 0;
+ static void vf610_gpio_set(struct gpio_chip *gc, unsigned int gpio, int val)
 -- 
 2.20.1
 
