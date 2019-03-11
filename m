@@ -3,54 +3,57 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
 X-Spam-Status: No, score=-0.7 required=3.0 tests=FROM_LOCAL_HEX,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS autolearn=ham
-	autolearn_force=no version=3.4.0
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D5497C43381
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 Mar 2019 13:23:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 65E3EC43381
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 Mar 2019 13:23:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id ADE1420857
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 Mar 2019 13:23:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3AE7F20657
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 Mar 2019 13:23:11 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727501AbfCKNXF (ORCPT
+        id S1728042AbfCKNXD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 11 Mar 2019 09:23:05 -0400
-Received: from mail-it1-f200.google.com ([209.85.166.200]:51037 "EHLO
-        mail-it1-f200.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726958AbfCKNXB (ORCPT
+        Mon, 11 Mar 2019 09:23:03 -0400
+Received: from mail-io1-f70.google.com ([209.85.166.70]:49467 "EHLO
+        mail-io1-f70.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727768AbfCKNXC (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 11 Mar 2019 09:23:01 -0400
-Received: by mail-it1-f200.google.com with SMTP id i63so4991756itb.0
+        Mon, 11 Mar 2019 09:23:02 -0400
+Received: by mail-io1-f70.google.com with SMTP id m15so4091098ioc.16
         for <linux-kernel@vger.kernel.org>; Mon, 11 Mar 2019 06:23:01 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:date:in-reply-to:message-id:subject
          :from:to;
-        bh=2EhzN5XbYHFQTtG1JAAIyXoSHbmRVeXXvwKjVmg8rcc=;
-        b=X3Q31A7pe5ssGFqJef3kWXbYcLAIVSOhOa/SBh/7D4RraV1W0HRWhBxXMSwR9dkyVD
-         Pu6CC92Y1m53UXZfihqkqds4SW14VJ4haHjkuSh/QqIy3jOAogIfzAZhtlLiVstaSEce
-         047YrmxiyGliOEKd2PMJmamiWYWXhh0BisZ8wkMPe54jdZllZxSjEKmhgFJInrZ/utSd
-         K20W3E6tBbrca/MSDjGvaYqHa4UlTQrXp1RWBzAR0ATzdBeu4xiJoXVmi0oSitMxP0jy
-         Rzadok0GPyoSWUjxxBLXhGYQ8iZ3DC/UbPZ+zkf0RgIdArcoz2rk556UofmP5LL6pN+i
-         JeWw==
-X-Gm-Message-State: APjAAAUebUAdsGs5FJq9B9aqSf6VMMmx77XBxLqhD1Re90oXahXkNf0w
-        r/kZSfhazuvSlx7pmeTtiggtbTg6FXpPmizFF2dUjWrQ38u2
-X-Google-Smtp-Source: APXvYqypCOSl+cov2ngYhPspk0BmvldODN0+SeLpdA8w10V4bqr7Cwo5XYDbOPfvWCaIkGf0DMHiWZlvE7rG1a1T81Xkd2e4eHX1
+        bh=pK1+3s0qzliVgO8uChK0ndiAxt70wC3Rvaiv9+li/DY=;
+        b=NQZqD6yi6vCvdv8kZqGTV2z4ph1UL4lxp9/+KfszTEVAmYLa/cPA0E/1nJ2LEEuD//
+         igh3Avo+c5riewFDUBszG++m2jON6nsPyLXh6lFC1bTJDLKyFQYbZv9iGHA6mqFQH/NL
+         EZh+T06oGBzuKw+l8aL9NYZYX4cEiomHAKd65wdcVt1p9ho9GOE7udLiYMGaFGru4/jg
+         d3HzVMyQHMuIZKwguqykxt4FRZnKqhYqlwfiwM0eZKJUcsOubg5V6JgJOatBhTtL++hY
+         OjGupKLneF2bvFqr3Ct51cZsAV0cnUi7EfEctENPUbSR2BmbKtmqPKyDju+aD3gOk4dq
+         +tqw==
+X-Gm-Message-State: APjAAAXcotTVIQ7WfsZGb7lz/BDQ/UJsrIMMuG7b+4fSwKfO0UXoARM/
+        YAmeDsgGShdGY2ohTv5i4YFBzZBHIGpm2Kx4annXuth7GQkN
+X-Google-Smtp-Source: APXvYqw5xG9uh2Gm9ddSyDz77pKjUJDXM3u365mXqCK7rViSoBgkjkhHMLjtY6/G8/Jdbai85TvgA8JTT2fUbMwoYP5kc6yuI0bN
 MIME-Version: 1.0
-X-Received: by 2002:a5d:8b47:: with SMTP id c7mr19516661iot.21.1552310580995;
- Mon, 11 Mar 2019 06:23:00 -0700 (PDT)
-Date:   Mon, 11 Mar 2019 06:23:00 -0700
-In-Reply-To: <00000000000082477205811c029c@google.com>
+X-Received: by 2002:a24:78cb:: with SMTP id p194mr20558447itc.7.1552310581223;
+ Mon, 11 Mar 2019 06:23:01 -0700 (PDT)
+Date:   Mon, 11 Mar 2019 06:23:01 -0700
+In-Reply-To: <00000000000054cc6d05834c33d7@google.com>
 X-Google-Appengine-App-Id: s~syzkaller
 X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <000000000000c2ebc60583d178e5@google.com>
-Subject: Re: possible deadlock in io_submit_one
-From:   syzbot <syzbot+a3accb352f9c22041cfa@syzkaller.appspotmail.com>
-To:     adam.manzanares@wdc.com, avi@scylladb.com, bcrl@kvack.org,
-        darrick.wong@oracle.com, gregkh@linuxfoundation.org, hch@lst.de,
-        jmoyer@redhat.com, linux-aio@kvack.org,
-        linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org,
-        syzkaller-bugs@googlegroups.com, viro@zeniv.linux.org.uk
+Message-ID: <000000000000c66d400583d17848@google.com>
+Subject: Re: kernel BUG at include/linux/mm.h:LINE! (5)
+From:   syzbot <syzbot+5013d47539cdd43e7098@syzkaller.appspotmail.com>
+To:     ast@kernel.org, aviadye@mellanox.com, borisp@mellanox.com,
+        bpf@vger.kernel.org, daniel@iogearbox.net, davejwatson@fb.com,
+        davem@davemloft.net, edumazet@google.com, eranbe@mellanox.com,
+        eric.dumazet@gmail.com, john.fastabend@gmail.com, kafai@fb.com,
+        kuznet@ms2.inr.ac.ru, linux-kernel@vger.kernel.org,
+        netdev@vger.kernel.org, songliubraving@fb.com,
+        syzkaller-bugs@googlegroups.com, yhs@fb.com,
+        yoshfuji@linux-ipv6.org
 Content-Type: text/plain; charset="UTF-8"; format=flowed; delsp=yes
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
@@ -59,22 +62,22 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 syzbot has bisected this bug to:
 
-commit bfe4037e722ec672c9dafd5730d9132afeeb76e9
-Author: Christoph Hellwig <hch@lst.de>
-Date:   Mon Jul 16 07:08:20 2018 +0000
+commit 94850257cf0f88b20db7644f28bfedc7d284de15
+Author: Boris Pismenny <borisp@mellanox.com>
+Date:   Wed Feb 27 15:38:03 2019 +0000
 
-     aio: implement IOCB_CMD_POLL
+     tls: Fix tls_device handling of partial records
 
-bisection log:  https://syzkaller.appspot.com/x/bisect.txt?x=108886bd200000
-start commit:   bfe4037e aio: implement IOCB_CMD_POLL
-git tree:       upstream
-final crash:    https://syzkaller.appspot.com/x/report.txt?x=128886bd200000
-console output: https://syzkaller.appspot.com/x/log.txt?x=148886bd200000
-kernel config:  https://syzkaller.appspot.com/x/.config?x=2e0064f906afee10
-dashboard link: https://syzkaller.appspot.com/bug?extid=a3accb352f9c22041cfa
+bisection log:  https://syzkaller.appspot.com/x/bisect.txt?x=13d9d977200000
+start commit:   94850257 tls: Fix tls_device handling of partial records
+git tree:       net-next
+final crash:    https://syzkaller.appspot.com/x/report.txt?x=1039d977200000
+console output: https://syzkaller.appspot.com/x/log.txt?x=17d9d977200000
+kernel config:  https://syzkaller.appspot.com/x/.config?x=47f2db597668ac40
+dashboard link: https://syzkaller.appspot.com/bug?extid=5013d47539cdd43e7098
 userspace arch: amd64
-syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=156479f8c00000
-C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=128c75c4c00000
+syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=148763eb200000
+C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=1416ff3d200000
 
-Reported-by: syzbot+a3accb352f9c22041cfa@syzkaller.appspotmail.com
-Fixes: bfe4037e ("aio: implement IOCB_CMD_POLL")
+Reported-by: syzbot+5013d47539cdd43e7098@syzkaller.appspotmail.com
+Fixes: 94850257 ("tls: Fix tls_device handling of partial records")
