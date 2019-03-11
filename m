@@ -6,48 +6,48 @@ X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5EC11C43381
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 Mar 2019 13:23:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 42E72C43381
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 Mar 2019 13:23:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 383172084F
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 Mar 2019 13:23:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1E04420657
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 Mar 2019 13:23:58 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728077AbfCKNXv (ORCPT
+        id S1727772AbfCKNXu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 11 Mar 2019 09:23:51 -0400
-Received: from mout.kundenserver.de ([212.227.17.13]:54277 "EHLO
+        Mon, 11 Mar 2019 09:23:50 -0400
+Received: from mout.kundenserver.de ([212.227.17.10]:52833 "EHLO
         mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727647AbfCKNTl (ORCPT
+        with ESMTP id S1727638AbfCKNTl (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Mon, 11 Mar 2019 09:19:41 -0400
 Received: from orion.localdomain ([95.115.159.19]) by mrelayeu.kundenserver.de
  (mreue109 [212.227.15.183]) with ESMTPSA (Nemesis) id
- 1MNKuK-1hQwVC0UzS-00Or9l for <linux-kernel@vger.kernel.org>; Mon, 11 Mar 2019
- 14:19:40 +0100
+ 1MgNlB-1gZX8O1aGt-00htTg for <linux-kernel@vger.kernel.org>; Mon, 11 Mar 2019
+ 14:19:39 +0100
 From:   "Enrico Weigelt, metux IT consult" <info@metux.net>
 To:     linux-kernel@vger.kernel.org
-Subject: [PATCH 094/114] arch: nds32: Kconfig: pedantic formatting
-Date:   Mon, 11 Mar 2019 14:18:46 +0100
-Message-Id: <1552310346-7629-95-git-send-email-info@metux.net>
+Subject: [PATCH 089/114] drivers: virtio: Kconfig: pedantic formatting
+Date:   Mon, 11 Mar 2019 14:18:41 +0100
+Message-Id: <1552310346-7629-90-git-send-email-info@metux.net>
 X-Mailer: git-send-email 1.9.1
 In-Reply-To: <1552310346-7629-1-git-send-email-info@metux.net>
 References: <1552310346-7629-1-git-send-email-info@metux.net>
-X-Provags-ID: V03:K1:63gDKIIvixtwmcIAp6PAt0Inw+VXPLQnyqe341iL6UkKqlnpWlI
- k5Zlx/fsaSPflNLleiXY9g3LI7wSURBoS2M2WtUMdDX83KvtP8gFVsc4jKJ2ynhE1piN6qZ
- pDzXpi1d1hJztDvseeJznttBI377Vmrnlt2dMCDHeeCGgZ1XC6V9eKEQFxwzupp9K90+q0e
- 7lx+kPPmQhO4j50K262Qw==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:THHVSl57rvA=:RZ7EmG4nAVJuPLsT4APMcW
- b4O9e4FeV9qibYHZRwJ5cw2QNhUq6qAiaxvkKjIGMGppKth6vWKzIgjm9ZFBZkH5Re9rtRw4y
- UrYqIfNqW0eCkg9xjcmBkMKeNz72MKmWRX9sfTBFHt18R4M41JDg4XNly+FTAkJ4gfTWn2kjC
- emqYrfRHzDBzjO1CPyPCLYSEqO8FGCLzsFqjgVeYhq6gJmbpOwMah/BRQgVixaC66vt7gvfWm
- yr64g61TVV+88W9OG79hPuGFGoUS+x3ZbzGgaRpPn6pKUK2TNnMr3aqeU52DNs5hB7SDQOJ7R
- wz3RdRcDHssliZ7nPuHkw9e5zxLcCg1kyj2WFO2ITRuByVML+edtpWd+c0arwbvRhHY91tS/0
- ir7oUQ6NgYdC1ACFkJ2RMwYXTUeML7zz5DNTLyuDjdYFAUvBatpREAr5v1LG+g4/TYk+5wdT1
- /j/q8TvZOxX2q8me5O8FaWeLBMS384gwLu/6jMnvblPa5xjvYYbjU0lv3uvUaaApDvkbFjsTN
- 6qW2xPpKUyZZQFt+IppxVYV+HjWtWV+8zf0I/I3MoqqiCWAu4L2DNgeAiykmAGKJf/a7eDbWT
- MHYu573yxmzhB9ATuH8RVQJtYvFMKiWM/URgTH/uyxRM01ivrG9eXEAV/t8l2OosuXZvpRozP
- R6LfPG+DeWoVx/9FVPt6IFn5fAkmGMhEKUvHQ++P8Nz4AiUuCjmu2fMh59wAqiX7FSumJmlOn
- WDCt9HRMzGmsetq/3fV+IP5D+S8fU5fP+LOynQ==
+X-Provags-ID: V03:K1:zVG/RdFywF7j2KDkEf700Eh/v4jt/YL5Bx/Yix5tPd78u6LAtDM
+ 8w1HnjhbmPV63FuxBpiI6dqkIjxyaIOkMzEAQFjBmvzBPj8av5MoT0d42SxzubJ8Z2JhcWH
+ u9WWFUgSk7E//MMWPfQQZGC33kbjoqRmc/1704v1MkqNfpqVqUygPEnWAjKibyzLOiSrjJw
+ y2OjVsIoMVb0CRkj3OFYw==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:8+eyNOZc1SE=:g3CpCaiTrYlDd11P9f7wr2
+ 7FGQZb86doL1M06l9KO37K+OGRRXy2Zy3/ELgx8H3C8fNC1dasE6OiEYGx4Gr+mMOGg/mwCwY
+ zht9xw19QlBdYpVgSYEVXI0Gtz481P69uJbnzps4sI9rNcVDu7mehDLqUc6SoKaGk7cPXjKQ0
+ qU/9x/g7gemmMvMzfPG2yFrnU4EmiqHh+IgdhMtMSKbbNocWFMA3oSo0z8P9Wp4I+SY16WOne
+ 5eJhEFoYEA/yuax9PU34a70hyExAuafBgRKg4roTwdYOeVIT2jAPtvIOasBKBqvskf5hTrMkY
+ hc0kUtUfDAwCNAne7ysOYURmUSe3Sw9FmSS6HcQdqIyYkUEquPwBDfVZg1jfbT/DfzjTWaxfB
+ 8gnyewFcNy5vGJ9IoGjfljykB568vNQbUjP4uZE1hmzvVJ7kHn/ajLU1bu+cwLxlA1lmaqYDx
+ 3wBB8oaBYNpDjlKMrYKVmTG1hIjMbVePnaVieWQBbD5HYM21TaebUFMkT5pIjVQjnRGHrjFzM
+ oyWt/x66OyIf73Bx3L69PUcPEuhjEJ+uS2Tflbw3ouD5MnKM5HI1ANUNVb/A2lepPo4kAwfbP
+ zFidqjrMTC8HEWwn1lD7mFGwgicSdQ3dnnOo1DbwsVHAC2OaZEAtIbzaxQW6viezzdZhXQ9EO
+ OvUK6i0dq3uwdzyboq4MYtjsF96qh95BY+hxRS1Wcx8BbHpsJlTSiRqB2/xn0b0fa3+459zi7
+ e8B4leqZs3i6k9YwsX6lkHJ3jptsBSFOiCgBrw==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
@@ -58,63 +58,94 @@ Great White Handkerchief come around and clean it up.
 
 Signed-off-by: Enrico Weigelt, metux IT consult <info@metux.net>
 ---
- arch/nds32/Kconfig | 16 ++++++++--------
- 1 file changed, 8 insertions(+), 8 deletions(-)
+ drivers/virtio/Kconfig | 44 ++++++++++++++++++++++----------------------
+ 1 file changed, 22 insertions(+), 22 deletions(-)
 
-diff --git a/arch/nds32/Kconfig b/arch/nds32/Kconfig
-index addb7f5..c0b13bf 100644
---- a/arch/nds32/Kconfig
-+++ b/arch/nds32/Kconfig
-@@ -4,7 +4,7 @@
- #
+diff --git a/drivers/virtio/Kconfig b/drivers/virtio/Kconfig
+index 3589764..390f6e0 100644
+--- a/drivers/virtio/Kconfig
++++ b/drivers/virtio/Kconfig
+@@ -28,17 +28,17 @@ config VIRTIO_PCI_LEGACY
+ 	default y
+ 	depends on VIRTIO_PCI
+ 	---help---
+-          Virtio PCI Card 0.9.X Draft (circa 2014) and older device support.
++	  Virtio PCI Card 0.9.X Draft (circa 2014) and older device support.
  
- config NDS32
--        def_bool y
-+	def_bool y
- 	select ARCH_32BIT_OFF_T
- 	select ARCH_HAS_SYNC_DMA_FOR_CPU
- 	select ARCH_HAS_SYNC_DMA_FOR_DEVICE
-@@ -51,13 +51,13 @@ config GENERIC_CALIBRATE_DELAY
- 	def_bool y
+ 	  This option enables building a transitional driver, supporting
+ 	  both devices conforming to Virtio 1 specification, and legacy devices.
+ 	  If disabled, you get a slightly smaller, non-transitional driver,
+ 	  with no legacy compatibility.
  
- config GENERIC_CSUM
--        def_bool y
-+	def_bool y
+-          So look out into your driveway.  Do you have a flying car?  If
+-          so, you can happily disable this option and virtio will not
+-          break.  Otherwise, leave it set.  Unless you're testing what
+-          life will be like in The Future.
++	  So look out into your driveway.  Do you have a flying car?  If
++	  so, you can happily disable this option and virtio will not
++	  break.  Otherwise, leave it set.  Unless you're testing what
++	  life will be like in The Future.
  
- config GENERIC_HWEIGHT
--        def_bool y
-+	def_bool y
+ 	  If unsure, say Y.
  
- config GENERIC_LOCKBREAK
--        def_bool y
-+	def_bool y
- 	depends on PREEMPT
+@@ -47,40 +47,40 @@ config VIRTIO_BALLOON
+ 	depends on VIRTIO
+ 	select MEMORY_BALLOON
+ 	---help---
+-	 This driver supports increasing and decreasing the amount
+-	 of memory within a KVM guest.
++	  This driver supports increasing and decreasing the amount
++	  of memory within a KVM guest.
  
- config RWSEM_GENERIC_SPINLOCK
-@@ -67,7 +67,7 @@ config TRACE_IRQFLAGS_SUPPORT
- 	def_bool y
+-	 If unsure, say M.
++	  If unsure, say M.
  
- config STACKTRACE_SUPPORT
--        def_bool y
-+	def_bool y
+ config VIRTIO_INPUT
+ 	tristate "Virtio input driver"
+ 	depends on VIRTIO
+ 	depends on INPUT
+ 	---help---
+-	 This driver supports virtio input devices such as
+-	 keyboards, mice and tablets.
++	  This driver supports virtio input devices such as
++	  keyboards, mice and tablets.
  
- config FIX_EARLYCON_MEM
- 	def_bool y
-@@ -82,11 +82,11 @@ config NR_CPUS
- 	default 1
+-	 If unsure, say M.
++	  If unsure, say M.
  
- config MMU
--        def_bool y
-+	def_bool y
+- config VIRTIO_MMIO
++config VIRTIO_MMIO
+ 	tristate "Platform bus driver for memory mapped virtio devices"
+ 	depends on HAS_IOMEM && HAS_DMA
+- 	select VIRTIO
+- 	---help---
+- 	 This drivers provides support for memory mapped virtio
+-	 platform device driver.
++	select VIRTIO
++	---help---
++	  This drivers provides support for memory mapped virtio
++	  platform device driver.
  
- config NDS32_BUILTIN_DTB
--        string "Builtin DTB"
--        default ""
-+	string "Builtin DTB"
-+	default ""
- 	help
- 	  User can use it to specify the dts of the SoC
- endmenu
+- 	 If unsure, say N.
++	  If unsure, say N.
+ 
+ config VIRTIO_MMIO_CMDLINE_DEVICES
+ 	bool "Memory mapped virtio devices parameter parsing"
+ 	depends on VIRTIO_MMIO
+ 	---help---
+-	 Allow virtio-mmio devices instantiation via the kernel command line
+-	 or module parameters. Be aware that using incorrect parameters (base
+-	 address in particular) can crash your system - you have been warned.
+-	 See Documentation/admin-guide/kernel-parameters.rst for details.
++	  Allow virtio-mmio devices instantiation via the kernel command line
++	  or module parameters. Be aware that using incorrect parameters (base
++	  address in particular) can crash your system - you have been warned.
++	  See Documentation/admin-guide/kernel-parameters.rst for details.
+ 
+-	 If unsure, say 'N'.
++	  If unsure, say 'N'.
+ 
+ endif # VIRTIO_MENU
 -- 
 1.9.1
 
