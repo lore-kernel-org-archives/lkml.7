@@ -2,97 +2,152 @@ Return-Path: <SRS0=FxTY=RO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-12.0 required=3.0
+	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_PASS autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 611D0C43381
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 Mar 2019 14:55:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5BA9DC43381
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 Mar 2019 14:56:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3AEC62075C
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 Mar 2019 14:55:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 346B92075C
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 Mar 2019 14:56:27 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727791AbfCKOzw (ORCPT
+        id S1727850AbfCKO4Z (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 11 Mar 2019 10:55:52 -0400
-Received: from mail-qt1-f194.google.com ([209.85.160.194]:41263 "EHLO
-        mail-qt1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727812AbfCKOzv (ORCPT
+        Mon, 11 Mar 2019 10:56:25 -0400
+Received: from mail-qt1-f196.google.com ([209.85.160.196]:38984 "EHLO
+        mail-qt1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727433AbfCKO4Z (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 11 Mar 2019 10:55:51 -0400
-Received: by mail-qt1-f194.google.com with SMTP id v10so5337568qtp.8
-        for <linux-kernel@vger.kernel.org>; Mon, 11 Mar 2019 07:55:51 -0700 (PDT)
+        Mon, 11 Mar 2019 10:56:25 -0400
+Received: by mail-qt1-f196.google.com with SMTP id t28so1697005qte.6
+        for <linux-kernel@vger.kernel.org>; Mon, 11 Mar 2019 07:56:24 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=AebQmIMK8lzGgezuA2w2mUrodEUsYs59QWYsQaJJEuA=;
-        b=F/Bkt9IN6By2/WuMqsc7fZgLq35TjLbaP2K6rxXdrx4mIEND61A8GcaBN58+4Y7ZNA
-         7X4ah0HmOq69Nt1AB3iqX7CFxfBAiJmt+KRg0D1laUGnvYs/6V2diP+Uyenpmqf19tvK
-         +THJ8edRhJGjJznHpDKSYZN4j2Akm+VU49ixZsVvKkqxwTkOlpCwpDIU61VmrUMKFe+A
-         6TpuXYFgd6XTTzXVezV4tvWDw7/ZA7LLmGGKIa4bB/uqB1lIhynyuKZXxT5MOY/h1vf9
-         eNgrAv3OmxAU49lrVbHGmTgBSwgTJYJI3kw9WXw0UYmgwrt+p+zFf0mb2S8Mzanzk15W
-         F4lA==
-X-Gm-Message-State: APjAAAUFyblnVpPv5kAtABA0QH/OGjd4Rs6q9+MFljsIwGbT2mi1yRdm
-        Khy8KXikQI0aQoCoWNYe5GjEvzhs/7bTZTrc30H3aw==
-X-Google-Smtp-Source: APXvYqybFKoYtimWvcJeDFm8//cGF5ptvZkYk5jQ9zfifTYwB4h+se5w0DVgVfSuaNFsjZCSphHLp1eTmm/6jnJFSYQ=
-X-Received: by 2002:ac8:2eb8:: with SMTP id h53mr10098479qta.188.1552316150956;
- Mon, 11 Mar 2019 07:55:50 -0700 (PDT)
+        bh=A6WUodKr6yAywA/HHVdmRHarMgILwJ8qtk0xnCBTaQc=;
+        b=WbreCW/DdPQbuzxd+j4IgpPk4B2RPSnohpG6ceTUV3Rw6lnk/gBFfPmuNzE85b4KKc
+         73pmF32l1hF+jlkbRODLGAau06q3j2x/IJHCq6+ss2LzMKTowcno7F1NgglEq3CI+mYT
+         tAtYTx8DbCGW5IRY1nLQA7ncP9HD3HIEATdew1K/7wrfgZ9jc7JaU/8WYKxVtdqCv2CM
+         pU1G+dys5H3wcWHUZZKjYI5ARSpgq6zOkEd7QY+3RQpvHGW7mot0nvUBXeBWk2pUuQAO
+         KxF/tiqU3+JpCvgfB33qYCTa6WF2LeEan/nhFiRIRubmOCQHgf4V75VhWQtGEhfhFBEF
+         qcUA==
+X-Gm-Message-State: APjAAAUlr2LykcPxpwB5Kb0d2r4ciEjJBB97OwZzbZwcTi3vXuc8eQI7
+        lUAl+T5baM8rb+ZEabr+7oeIhHFkk0zACOTs/8EK3Q==
+X-Google-Smtp-Source: APXvYqzLNCQzgTMPjeo2/4640ScxGsLNtI0VYZrrW92+xN1xPY1QY2pYUDcvQTb3yWzPjZrSaq5SWBupYq6+hyZwFpo=
+X-Received: by 2002:ac8:2527:: with SMTP id 36mr11186029qtm.308.1552316184343;
+ Mon, 11 Mar 2019 07:56:24 -0700 (PDT)
 MIME-Version: 1.0
-References: <20190302222338.8023-1-colin.king@canonical.com>
-In-Reply-To: <20190302222338.8023-1-colin.king@canonical.com>
+References: <20190226234853.20441-1-louis@kragniz.eu> <20190227110720.27329-1-louis@kragniz.eu>
+ <CAKwvOd=RZ7E3MRo4dB6KEi5aw92kjZ63ij0jL4XJ0nKzDwcm=g@mail.gmail.com>
+In-Reply-To: <CAKwvOd=RZ7E3MRo4dB6KEi5aw92kjZ63ij0jL4XJ0nKzDwcm=g@mail.gmail.com>
 From:   Benjamin Tissoires <benjamin.tissoires@redhat.com>
-Date:   Mon, 11 Mar 2019 15:55:39 +0100
-Message-ID: <CAO-hwJJXgiLqLCQ+8Cw7Z1=yba0pVkLCkGH8R8HZjNQj=Vg4GA@mail.gmail.com>
-Subject: Re: [PATCH][next] HID: uclogic: remove redudant duplicated null check
- on ver_ptr
-To:     Colin King <colin.king@canonical.com>
-Cc:     Jiri Kosina <jikos@kernel.org>,
+Date:   Mon, 11 Mar 2019 15:56:13 +0100
+Message-ID: <CAO-hwJKD_Oy9_znmNL2s_652YuS59O4O9_2Qk=HZZ58XcT75cg@mail.gmail.com>
+Subject: Re: [PATCH v2] HID: quirks: use correct format chars in dbg_hid
+To:     Nick Desaulniers <ndesaulniers@google.com>
+Cc:     Louis Taylor <louis@kragniz.eu>, Jiri Kosina <jikos@kernel.org>,
         "open list:HID CORE LAYER" <linux-input@vger.kernel.org>,
-        kernel-janitors@vger.kernel.org,
-        lkml <linux-kernel@vger.kernel.org>
+        LKML <linux-kernel@vger.kernel.org>,
+        clang-built-linux@googlegroups.com
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat, Mar 2, 2019 at 11:23 PM Colin King <colin.king@canonical.com> wrote:
+On Wed, Feb 27, 2019 at 8:43 PM Nick Desaulniers
+<ndesaulniers@google.com> wrote:
 >
-> From: Colin Ian King <colin.king@canonical.com>
+> On Wed, Feb 27, 2019 at 3:08 AM Louis Taylor <louis@kragniz.eu> wrote:
+> >
+> > When building with -Wformat, clang warns:
+> >
+> > drivers/hid/hid-quirks.c:1075:27: warning: format specifies type
+> > 'unsigned short' but the argument has type '__u32' (aka 'unsigned int')
+> > [-Wformat]
+> >                   bl_entry->driver_data, bl_entry->vendor,
+> >                                          ^~~~~~~~~~~~~~~~
+> > ./include/linux/hid.h:1170:48: note: expanded from macro 'dbg_hid'
+> >           printk(KERN_DEBUG "%s: " format, __FILE__, ##arg);      \
+> >                                    ~~~~~~              ^~~
+> > drivers/hid/hid-quirks.c:1076:4: warning: format specifies type
+> > 'unsigned short' but the argument has type '__u32' (aka 'unsigned int')
+> > [-Wformat]
+> >                   bl_entry->product);
+> >                   ^~~~~~~~~~~~~~~~~
+> > ./include/linux/hid.h:1170:48: note: expanded from macro 'dbg_hid'
+> >           printk(KERN_DEBUG "%s: " format, __FILE__, ##arg);      \
+> >                                    ~~~~~~              ^~~
+> > drivers/hid/hid-quirks.c:1242:12: warning: format specifies type
+> > 'unsigned short' but the argument has type '__u32' (aka 'unsigned int')
+> > [-Wformat]
+> >                   quirks, hdev->vendor, hdev->product);
+> >                           ^~~~~~~~~~~~
+> > ./include/linux/hid.h:1170:48: note: expanded from macro 'dbg_hid'
+> >           printk(KERN_DEBUG "%s: " format, __FILE__, ##arg);      \
+> >                                    ~~~~~~              ^~~
+> > drivers/hid/hid-quirks.c:1242:26: warning: format specifies type
+> > 'unsigned short' but the argument has type '__u32' (aka 'unsigned int')
+> > [-Wformat]
+> >                   quirks, hdev->vendor, hdev->product);
+> >                                         ^~~~~~~~~~~~~
+> > ./include/linux/hid.h:1170:48: note: expanded from macro 'dbg_hid'
+> >           printk(KERN_DEBUG "%s: " format, __FILE__, ##arg);      \
+> >                                    ~~~~~~              ^~~
+> > 4 warnings generated.
+> >
+> > This patch fixes the format strings to use the correct format type for unsigned
+> > ints.
+> >
+> > Link: https://github.com/ClangBuiltLinux/linux/issues/378
+> > Signed-off-by: Louis Taylor <louis@kragniz.eu>
 >
-> Currently ver_ptr is being null checked twice, once before calling
-> usb_string and once afterwards.  The second null check is redundant
-> and can be removed, remove it.
->
-> Detected by CoverityScan, CID#1477308 ("Logically dead code")
->
-> Signed-off-by: Colin Ian King <colin.king@canonical.com>
-> ---
+> Thanks for following up on the feedback.
+> Reviewed-by: Nick Desaulniers <ndesaulniers@google.com>
 
 Applied to for-5.1/upstream-fixes
 
 Cheers,
 Benjamin
 
->  drivers/hid/hid-uclogic-params.c | 4 ----
->  1 file changed, 4 deletions(-)
 >
-> diff --git a/drivers/hid/hid-uclogic-params.c b/drivers/hid/hid-uclogic-params.c
-> index 7710d9f957da..0187c9f8fc22 100644
-> --- a/drivers/hid/hid-uclogic-params.c
-> +++ b/drivers/hid/hid-uclogic-params.c
-> @@ -735,10 +735,6 @@ static int uclogic_params_huion_init(struct uclogic_params *params,
->                 goto cleanup;
->         }
->         rc = usb_string(udev, 201, ver_ptr, ver_len);
-> -       if (ver_ptr == NULL) {
-> -               rc = -ENOMEM;
-> -               goto cleanup;
-> -       }
->         if (rc == -EPIPE) {
->                 *ver_ptr = '\0';
->         } else if (rc < 0) {
+> > ---
+> >
+> > v2: change format string to use %04x instead of %x
+> >
+> >  drivers/hid/hid-quirks.c | 4 ++--
+> >  1 file changed, 2 insertions(+), 2 deletions(-)
+> >
+> > diff --git a/drivers/hid/hid-quirks.c b/drivers/hid/hid-quirks.c
+> > index 94088c0ed68a..b608a57b7908 100644
+> > --- a/drivers/hid/hid-quirks.c
+> > +++ b/drivers/hid/hid-quirks.c
+> > @@ -1071,7 +1071,7 @@ static struct hid_device_id *hid_exists_dquirk(const struct hid_device *hdev)
+> >         }
+> >
+> >         if (bl_entry != NULL)
+> > -               dbg_hid("Found dynamic quirk 0x%lx for HID device 0x%hx:0x%hx\n",
+> > +               dbg_hid("Found dynamic quirk 0x%lx for HID device 0x%04x:0x%04x\n",
+> >                         bl_entry->driver_data, bl_entry->vendor,
+> >                         bl_entry->product);
+> >
+> > @@ -1238,7 +1238,7 @@ static unsigned long hid_gets_squirk(const struct hid_device *hdev)
+> >                 quirks |= bl_entry->driver_data;
+> >
+> >         if (quirks)
+> > -               dbg_hid("Found squirk 0x%lx for HID device 0x%hx:0x%hx\n",
+> > +               dbg_hid("Found squirk 0x%lx for HID device 0x%04x:0x%04x\n",
+> >                         quirks, hdev->vendor, hdev->product);
+> >         return quirks;
+> >  }
+> > --
+> > 2.20.1
+> >
+>
+>
 > --
-> 2.20.1
->
+> Thanks,
+> ~Nick Desaulniers
