@@ -2,110 +2,128 @@ Return-Path: <SRS0=FxTY=RO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2563AC10F06
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 Mar 2019 16:36:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 73421C43381
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 Mar 2019 16:36:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E9C35205F4
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 Mar 2019 16:36:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 44EF2205F4
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 Mar 2019 16:36:30 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="Vfj3uJFJ"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="ZxJvlV4h"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727598AbfCKQgY (ORCPT
+        id S1727810AbfCKQg3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 11 Mar 2019 12:36:24 -0400
-Received: from mail-it1-f194.google.com ([209.85.166.194]:40009 "EHLO
-        mail-it1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727027AbfCKQgY (ORCPT
+        Mon, 11 Mar 2019 12:36:29 -0400
+Received: from mail-it1-f195.google.com ([209.85.166.195]:51891 "EHLO
+        mail-it1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727643AbfCKQg1 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 11 Mar 2019 12:36:24 -0400
-Received: by mail-it1-f194.google.com with SMTP id l139so8284134ita.5
-        for <linux-kernel@vger.kernel.org>; Mon, 11 Mar 2019 09:36:24 -0700 (PDT)
+        Mon, 11 Mar 2019 12:36:27 -0400
+Received: by mail-it1-f195.google.com with SMTP id e24so8319912itl.1
+        for <linux-kernel@vger.kernel.org>; Mon, 11 Mar 2019 09:36:26 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
+        d=linaro.org; s=google;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=/fI3qTkgpdY5Rt3zarXzq2kzVx67QSqse33gh9oYOXo=;
-        b=Vfj3uJFJfnW58Myoo7xtTHzZojAbWg8KwWv79MEz3BIh6n3wfalUQEAmDxSyAjgCX1
-         kyDSaWgME5bwzbw8D0navJlAJL4kj4Wy0+NIRGIOhYDiF+6AbYZT7j0fvAYAyNMXQxMA
-         HSHFiQNCj7DcNz3H7XWL28eyl17w5VrMD4x16nnmJjKCDM7nWry3FiVEQbuozuMxb2cT
-         6rCM+WAhtWkXdFC5IkCz2FBc+OdYFnfM3OBJmvyxbinij8cbBbD7jRsuFfhMJ0J4KHFq
-         Br0HV1IF7cuDkVMABolaaEjaCGLpyVslp8lh7NxuAOTai9IaTar0eW0bMIIbTace57y2
-         IbIA==
+        bh=5bujM85Y0scj/fEZwrlnYcayj7i0rZlLHknj8BGgmlQ=;
+        b=ZxJvlV4hegE8DN0DV3FW4178aEMDeHea8IXp0fzUZM97n9Kop92Wf2mzwL7uHNnhHb
+         BzTTzMqzWDeeQZiRmtcN1aBt3HclJ2/oErULNL4pRjtG/MgtkTALWT7c312yZQdBPAoE
+         B49BYNsYSCjKU2E1LGMKWXjXr8tvh3dtNBALdDSUY4nyM/AIiSX3fA6NC1YeSogrNQzI
+         2U3b6DBO7oCA0WNfUUGcbQNfzcNSh8ahfpLN9OJFCae+dbToC4OLhIKurpRI4PraFrQ8
+         Cv/TSyuoFDP/lH08wSQEwlP4OMjTyfApoeGnqeSqSnkvFJlKOUjNEPiDXLhwLERfDDJR
+         ImdQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=/fI3qTkgpdY5Rt3zarXzq2kzVx67QSqse33gh9oYOXo=;
-        b=s1ZsjNrNB7TL/gP6g9l9IHdGE2V7CBZeYOIU9bsjf8izE5P+XwHaquVK8zjkIaNRE+
-         ihD0+oeKN8lgt1rMS3hD6pgveBwga9Yl0UehgeRHhrL8yayTbWoArN09e5vra4X4+EdX
-         PmgTYOk5Qh1VBaimwOhQ1SfUkAf4+kuFz8dAMjoWQfaE+6jl/BQVV2kR84gTjn0/Sa9O
-         iY4fLX4HzE5gniytjExhkGNoKECcITQDl290g0xu91QA+uKU7ih3Ln0h29GHR3ZX97DC
-         OOxbtmku6pwGPbEabp+bTkLbZVtwI/A5KYX82T3mJQe/gOhDItw+DI1ttEtfnGTgMD2d
-         rJUA==
-X-Gm-Message-State: APjAAAVoloSXEs1iDbatzRf8eQF/gBd/PMqnhxNBXhLB2Yb5bXvTpPkx
-        vVZWK0tXaZkdZvHn0XBNvqIsp+6fkgar9URmQ6Gi5g==
-X-Google-Smtp-Source: APXvYqwLiWUBxDNY3OTYLFa+WsqzNgUwbKi5gA9EEmNsWbx1yO1sW1/sJpEoUwU3Pzr308X3+NXm4VJqB8i9uqubXEw=
-X-Received: by 2002:a24:674a:: with SMTP id u71mr397848itc.12.1552322183512;
- Mon, 11 Mar 2019 09:36:23 -0700 (PDT)
+        bh=5bujM85Y0scj/fEZwrlnYcayj7i0rZlLHknj8BGgmlQ=;
+        b=Nube9lxKNCLBPY1TBLdvm4utkPox2cPXZSTAipvPKv/MObOIGHFF8/CvJbCdJz7O1s
+         KFFtOq/gz9IFIjv2XCS268k8yeOzUy1WexXYoiUjiZ//eSfSrVj2zpjmmH5Lp67apvoF
+         PUY2cbDWFF4XpclylS8ttrMiMeeawHtM0K3GYNgvamZ5JoUHrhAode+2/rnyTJEAdopa
+         J1jasy1espw4CR7bRx67HHSAlJxYHbpeP2HEN/GGBhnXiq/ur69GM8EpqIdJMibmghq8
+         nNUaPjXHriQ4s1rEDCAwYdxsHmR2KbsKVpC3UT59mXS5iwPH2CjKpm/0dCrR8Jq+1B3f
+         cmwA==
+X-Gm-Message-State: APjAAAWkSrhm6zG3L0WZGBl3h/qcMueWz+chm+LgHes4B7j1tJ6yudvM
+        PExSuBkN0L4gCUfI7Jf7yf0VHWS6bVsi2zdvax1MVJAt3JU=
+X-Google-Smtp-Source: APXvYqylhJso83eUpkLgcTRmqSkUgn+uTBfrquEyBEepmT3VJYrGK/ro99ZaL1Ky/cYbH3iMAjbhbT4FcbajY65wCJ4=
+X-Received: by 2002:a24:1947:: with SMTP id b68mr308858itb.121.1552322186149;
+ Mon, 11 Mar 2019 09:36:26 -0700 (PDT)
 MIME-Version: 1.0
-References: <0000000000008f34570583d15823@google.com> <0ded99b8d69a74c260f3f44f5ae1ab59@suse.de>
- <CACT4Y+ZXBhNamhTYVW_9y_yUWRE+=rO8vdBF=m40kjqJQGY-gQ@mail.gmail.com> <531016fbc6fee2f1a1c386b0daeba867@suse.de>
-In-Reply-To: <531016fbc6fee2f1a1c386b0daeba867@suse.de>
-From:   Dmitry Vyukov <dvyukov@google.com>
-Date:   Mon, 11 Mar 2019 17:36:12 +0100
-Message-ID: <CACT4Y+YLZYJ21Bao5HVAvXhvb9PQ41J-4RvtkZZEMF38qtkxHg@mail.gmail.com>
-Subject: Re: WARNING in ep_poll_callback
-To:     Roman Penyaev <rpenyaev@suse.de>
-Cc:     Andrew Morton <akpm@linux-foundation.org>, dbueso@suse.de,
-        Jason Baron <jbaron@akamai.com>,
-        linux-fsdevel <linux-fsdevel@vger.kernel.org>,
+References: <20190307091514.2489338-1-arnd@arndb.de> <20190307091514.2489338-2-arnd@arndb.de>
+ <CAKwvOdk=9j2HvtWOpdOEw9sm0Nh2oU3c1c6+hJJ5WMweAM=4EQ@mail.gmail.com>
+ <20190307234850.nsbpkfcit3lnmytu@shell.armlinux.org.uk> <CAKv+Gu9VM2Vs3Q8+bPLsnt08dOmba6j54gnhiHkk=AHRzG8tVA@mail.gmail.com>
+ <20190308095308.hjjrzdp4fzbbtnnv@shell.armlinux.org.uk> <CAKv+Gu_szWgw-KJASLYGJ6hJXh5K8WxnUn+UQkm7jUup=rqG6w@mail.gmail.com>
+ <20190308103429.ycasmpt6tcpsoqps@shell.armlinux.org.uk> <CAKv+Gu_9=G3U6Yaw8fLfTP3QT38WdwrFaC-BqLTCr2NihWA2ZA@mail.gmail.com>
+ <20190308105835.tovswk5rwxusmxdu@shell.armlinux.org.uk> <CAKv+Gu-Od+hBosThTWFooz9FMKnu3g0oNh_2hmidetbB-_YyjQ@mail.gmail.com>
+ <CAK8P3a1ECw_g1AqsVavD8hhVEGqNk6Kcx_U0L=0d29eu561NhA@mail.gmail.com>
+ <CAKv+Gu8qgsnPV=uWR2jkJ5bsYihekkEvWNuw4whLdLrbBa7gnA@mail.gmail.com> <CAK8P3a0QCgLbXpztUQXAhWLp=ArJUqmtcuXNZUeXZBH+N1QeaA@mail.gmail.com>
+In-Reply-To: <CAK8P3a0QCgLbXpztUQXAhWLp=ArJUqmtcuXNZUeXZBH+N1QeaA@mail.gmail.com>
+From:   Ard Biesheuvel <ard.biesheuvel@linaro.org>
+Date:   Mon, 11 Mar 2019 17:36:14 +0100
+Message-ID: <CAKv+Gu__jgnm00ou+3FsqRBZWeDFy5Qi+1eiXeMKqc+hVSXomg@mail.gmail.com>
+Subject: Re: [PATCH 2/2] ARM: futex: make futex_detect_cmpxchg more reliable
+To:     Arnd Bergmann <arnd@arndb.de>
+Cc:     Russell King - ARM Linux admin <linux@armlinux.org.uk>,
+        Mikael Pettersson <mikpelinux@gmail.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Nick Desaulniers <ndesaulniers@google.com>,
         LKML <linux-kernel@vger.kernel.org>,
-        Paul McKenney <paulmck@linux.vnet.ibm.com>,
-        Stephen Rothwell <sfr@canb.auug.org.au>,
-        syzkaller-bugs <syzkaller-bugs@googlegroups.com>,
-        Al Viro <viro@zeniv.linux.org.uk>
+        Ingo Molnar <mingo@redhat.com>,
+        Darren Hart <dvhart@infradead.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Dave Martin <Dave.Martin@arm.com>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Mar 11, 2019 at 2:53 PM Roman Penyaev <rpenyaev@suse.de> wrote:
+On Mon, 11 Mar 2019 at 17:30, Arnd Bergmann <arnd@arndb.de> wrote:
 >
-> On 2019-03-11 14:45, Dmitry Vyukov wrote:
-> > On Mon, Mar 11, 2019 at 2:37 PM Roman Penyaev <rpenyaev@suse.de> wrote:
-> >>
-> >> Hi Andrew,
-> >>
-> >> I thought "epoll: loosen irq safety in ep_poll_callback()" patch was
-> >> removed from your tree, at least I got a notification on 9th of
-> >> january,
-> >> also I do not see it in the linux-next tree.
-> >>
-> >> Should I ignore this syzbot message?
+> On Mon, Mar 11, 2019 at 3:36 PM Ard Biesheuvel
+> <ard.biesheuvel@linaro.org> wrote:
+> > On Mon, 11 Mar 2019 at 15:34, Arnd Bergmann <arnd@arndb.de> wrote:
+> > > On Fri, Mar 8, 2019 at 12:56 PM Ard Biesheuvel
+> > > <ard.biesheuvel@linaro.org> wrote:
+> > > > On Fri, 8 Mar 2019 at 11:58, Russell King - ARM Linux admin <linux@armlinux.org.uk> wrote:
+> > > > > On Fri, Mar 08, 2019 at 11:45:21AM +0100, Ard Biesheuvel wrote:
+> > >
+> > > My first attempt (before finding the original patch from Mikael Pettersson)
+> > > was to change the probe to pass '1' as the value instead of '0', that
+> > > worked fine.
+> > >
 > >
-> > If this was resolved we need to communicate it to syzbot one way or the
-> > other.
-> > Since it was in linux-next, it won't even be able to do fix bisection.
-> > So the bug will be open forever otherwise.
+> > Which probe is that?
 >
-> Bug was fixed (commit was simply dropped).  How can I tell syzbot to
-> shut up
-> and to resolve the issue?
+> diff --git a/kernel/futex.c b/kernel/futex.c
+> index c3b73b0311bc..19615ad3c4f7 100644
+> --- a/kernel/futex.c
+> +++ b/kernel/futex.c
+> @@ -3864,7 +3864,7 @@ static void __init futex_detect_cmpxchg(void)
+>          * implementation, the non-functional ones will return
+>          * -ENOSYS.
+>          */
+> -       if (cmpxchg_futex_value_locked(&curval, NULL, 0, 0) == -EFAULT)
+> +       if (cmpxchg_futex_value_locked(&curval, NULL, 1, 1) == -EFAULT)
+>                 futex_cmpxchg_enabled = 1;
+>  #endif
+>  }
+>
 
-Hi Roman,
+Ah ok.
 
-The docs are at:
+That explains a lot.
 
-> See https://goo.gl/tpsmEJ for more information about syzbot.
+Can't we just return -EFAULT if uaddr is NULL? Or does that defeat this check?
 
-There is no official support for bugs fixed not by commit merges.
-Linux-next creates various interesting corner-cases for the process.
-Let's go with this option for now:
+Note that PA-RISC has
 
-#syz invalid
+        /* futex.c wants to do a cmpxchg_inatomic on kernel NULL, which is
+         * our gateway page, and causes no end of trouble...
+         */
+        if (uaccess_kernel() && !uaddr)
+                return -EFAULT;
