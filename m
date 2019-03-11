@@ -2,143 +2,123 @@ Return-Path: <SRS0=FxTY=RO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_MUTT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 01A70C43381
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 Mar 2019 16:37:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DC817C10F06
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 Mar 2019 16:38:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C6404205F4
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 Mar 2019 16:37:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id ABC0A205F4
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 Mar 2019 16:38:08 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=joelfernandes.org header.i=@joelfernandes.org header.b="RUl5P7Bl"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="HB25eUUK"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727842AbfCKQhO (ORCPT
+        id S1727844AbfCKQiH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 11 Mar 2019 12:37:14 -0400
-Received: from mail-qt1-f195.google.com ([209.85.160.195]:46138 "EHLO
-        mail-qt1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726000AbfCKQhN (ORCPT
+        Mon, 11 Mar 2019 12:38:07 -0400
+Received: from mail-io1-f67.google.com ([209.85.166.67]:40370 "EHLO
+        mail-io1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726675AbfCKQiH (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 11 Mar 2019 12:37:13 -0400
-Received: by mail-qt1-f195.google.com with SMTP id z25so5752061qti.13
-        for <linux-kernel@vger.kernel.org>; Mon, 11 Mar 2019 09:37:12 -0700 (PDT)
+        Mon, 11 Mar 2019 12:38:07 -0400
+Received: by mail-io1-f67.google.com with SMTP id p17so4588308iol.7
+        for <linux-kernel@vger.kernel.org>; Mon, 11 Mar 2019 09:38:06 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=joelfernandes.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=G27fHy4oX6lVvV0AJGT0kD4xGV/ixARd1cxmGlNoTEs=;
-        b=RUl5P7Blvh5Vjd1STtbCd0DJ2LW8Ekj48hesKpURIwtD0KTGXrQWOfplvH+jDXSaqM
-         IJNnrRxS8R9X/RxSzE36dSwSLDNBUgUsjweaiQyAWWyx5NCH5vju+KzSG+MIv4RyH3OW
-         Y2G4tcWDhiMBxXaMF1v9PuGSrkLYLHl8jaEz8=
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=Ipn/5myNwouNT6UUJzGkDkf1Ss+2OoiytB9AUmnnvak=;
+        b=HB25eUUK8cr86dgo/Q8YiGVFXt55l2f21f6w1tPyhp22JWMX/2gJ4OM5HJ0LWm+o4+
+         tnibXvoh8bHiUSqvA1s7ClHkZUk7i9d4NCXUA3r+8zH9OGnTcQFcjhMLI6rQEzs3Rykj
+         xbGgcqoLwxcipi1eqnKjt0am7JANzI1MGLDV+SQRfMnGEOcnNmWsxqkgsMMhjNEcXvcu
+         9iNYj7qAp1C1pq2mpXrtg3pArqShYcUlyGcj2K812o+H2pb0/UeHzTgQUaHz/O5JL1Ut
+         yZxgIcJRpRKHNpv6EsjlA4zEtHai85FSI+OkxcRwnu2XvdSgLi2IRM1ulz2bQUty3ZR8
+         y+pw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=G27fHy4oX6lVvV0AJGT0kD4xGV/ixARd1cxmGlNoTEs=;
-        b=eqj6VhnOI0YV5HQS7oG/xd8hESH39xAuu53I3mtiYRVe2jXcClmhl8EJFwB4yycrNV
-         Waxsuo6k0McNJc+4R511W3bygvweK+uHz5cQBRl6zHzPrIpVJ22VTcAmj8aETNs/HQNW
-         vklg/YyvNX7GwxJs/HbwHeUGICJhTT4a3nwwrMMSl7zytHBaKd+hcl5HEla9l0h2PcT9
-         EPNTFmW7JCedrYrdlrbx+TKXd/hwTTGriZpdRjmaM4N+/81jlUuDfkSLiqfonfJMJoNg
-         wOGAF+KNR1V9BZbvQmrwIr3f+/Asa7T/AxGG2JQmFHARqRQYNYq3B2B0+d6yDai+QpC5
-         aZ2w==
-X-Gm-Message-State: APjAAAW50m2jAfcnGRxXwlZkJ9tNPOVMPfLioEfnAkuk8Po8EqY81R4E
-        losfFVHDch5NjagKWk6HEeQuZg==
-X-Google-Smtp-Source: APXvYqznvEKmcXKhClZinaN40B17zN0KWGOs1yBTG0qLudTRViQAXn4RMBDPBw62it/E4rkoGIpYkQ==
-X-Received: by 2002:a0c:ac93:: with SMTP id m19mr26410101qvc.27.1552322232394;
-        Mon, 11 Mar 2019 09:37:12 -0700 (PDT)
-Received: from localhost ([2620:0:1004:1100:cca9:fccc:8667:9bdc])
-        by smtp.gmail.com with ESMTPSA id c2sm4667103qtc.41.2019.03.11.09.37.11
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Mon, 11 Mar 2019 09:37:11 -0700 (PDT)
-Date:   Mon, 11 Mar 2019 12:37:10 -0400
-From:   Joel Fernandes <joel@joelfernandes.org>
-To:     Sultan Alsawaf <sultan@kerneltoast.com>
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Arve =?iso-8859-1?B?SGr4bm5lduVn?= <arve@android.com>,
-        Todd Kjos <tkjos@android.com>,
-        Martijn Coenen <maco@android.com>,
-        Christian Brauner <christian@brauner.io>,
-        Ingo Molnar <mingo@redhat.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        linux-kernel@vger.kernel.org, devel@driverdev.osuosl.org,
-        linux-mm@kvack.org, Suren Baghdasaryan <surenb@google.com>,
-        Tim Murray <timmurray@google.com>, mhocko@kernel.org,
-        vbabka@suse.cz, hannes@cmpxchg.org
-Subject: Re: [RFC] simple_lmk: Introduce Simple Low Memory Killer for Android
-Message-ID: <20190311163710.GA72600@google.com>
-References: <20190310203403.27915-1-sultan@kerneltoast.com>
- <20190311163233.GA34252@google.com>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=Ipn/5myNwouNT6UUJzGkDkf1Ss+2OoiytB9AUmnnvak=;
+        b=Hr6aXhluzLlTPBqEjGA8+ZMvgxlUvipnxlgwFNpG+GK7ksGaozGgusNoyWdvlyddx0
+         sG4TKVpNuUUKmQEwV8g9EAa+ktQgcX2AoT0dr9UyMTe9PlDg0jiOa78Wu+pLG+rEYy/+
+         77sW1tthwICADdN/iZMVz3Q1aul/rYMqolpaNSN8W00XEzAlyx96ZnJWShZLat0R4Ua2
+         J6TbduyiNQ4OI4hxmnpUj6N+1wkYjlq5A4kbGQvTeMGpCGcAIBuIlbLX1zIFMASSr7Le
+         B1D+znq8c+yUHNVA9bduE+qhUqmp9iYcCgcYxCSzkKOKaqAoFbeCOjj4cCVZx3F2F8Dh
+         2JeA==
+X-Gm-Message-State: APjAAAUemUbgckeIw4DENbwp7jNA5h3KGJLNcTGw2aBwIIcXoz6++O5O
+        vt0zlTP+A3PX8A1Qi1SR4uu+iCJAgINAUvBDZvl4tA==
+X-Google-Smtp-Source: APXvYqzBguLd7N68Z1Z2tWiLvpFPIMTA0qvVa44s1tQzpC8iBCrcWKibUUn7nmtRgITNhPrLx/9Y3CyWlPobSAJFkd8=
+X-Received: by 2002:a6b:3709:: with SMTP id e9mr8213415ioa.282.1552322285829;
+ Mon, 11 Mar 2019 09:38:05 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190311163233.GA34252@google.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+References: <CACT4Y+YLZYJ21Bao5HVAvXhvb9PQ41J-4RvtkZZEMF38qtkxHg@mail.gmail.com>
+ <00000000000073a5740583d42c1e@google.com>
+In-Reply-To: <00000000000073a5740583d42c1e@google.com>
+From:   Dmitry Vyukov <dvyukov@google.com>
+Date:   Mon, 11 Mar 2019 17:37:54 +0100
+Message-ID: <CACT4Y+aHBMnOHQaTphgGwW8mZbDeHCu+Ce8zXki1ntdEbTPJqQ@mail.gmail.com>
+Subject: Re: Re: WARNING in ep_poll_callback
+To:     syzbot <syzbot+aea82bf9ee6ffd9a79d9@syzkaller.appspotmail.com>,
+        Roman Penyaev <rpenyaev@suse.de>
+Cc:     "'Dmitry Vyukov' via syzkaller-bugs" 
+        <syzkaller-bugs@googlegroups.com>,
+        Andrew Morton <akpm@linux-foundation.org>, dbueso@suse.de,
+        Jason Baron <jbaron@akamai.com>,
+        linux-fsdevel <linux-fsdevel@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Paul McKenney <paulmck@linux.vnet.ibm.com>,
+        Stephen Rothwell <sfr@canb.auug.org.au>,
+        Al Viro <viro@zeniv.linux.org.uk>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Mar 11, 2019 at 12:32:33PM -0400, Joel Fernandes wrote:
-> On Sun, Mar 10, 2019 at 01:34:03PM -0700, Sultan Alsawaf wrote:
-> [...]
-> >  
-> >  	/* Perform scheduler related setup. Assign this task to a CPU. */
-> >  	retval = sched_fork(clone_flags, p);
-> > diff --git a/mm/page_alloc.c b/mm/page_alloc.c
-> > index 3eb01dedf..fd0d697c6 100644
-> > --- a/mm/page_alloc.c
-> > +++ b/mm/page_alloc.c
-> > @@ -67,6 +67,7 @@
-> >  #include <linux/lockdep.h>
-> >  #include <linux/nmi.h>
-> >  #include <linux/psi.h>
-> > +#include <linux/simple_lmk.h>
-> >  
-> >  #include <asm/sections.h>
-> >  #include <asm/tlbflush.h>
-> > @@ -967,6 +968,11 @@ static inline void __free_one_page(struct page *page,
-> >  		}
-> >  	}
-> >  
-> > +#ifdef CONFIG_ANDROID_SIMPLE_LMK
-> > +	if (simple_lmk_page_in(page, order, migratetype))
-> > +		return;
-> > +#endif
-> > +
-> >  	list_add(&page->lru, &zone->free_area[order].free_list[migratetype]);
-> >  out:
-> >  	zone->free_area[order].nr_free++;
-> > @@ -4427,6 +4433,13 @@ __alloc_pages_slowpath(gfp_t gfp_mask, unsigned int order,
-> >  	if (costly_order && !(gfp_mask & __GFP_RETRY_MAYFAIL))
-> >  		goto nopage;
-> >  
-> > +#ifdef CONFIG_ANDROID_SIMPLE_LMK
-> > +	page = simple_lmk_oom_alloc(order, ac->migratetype);
-> > +	if (page)
-> > +		prep_new_page(page, order, gfp_mask, alloc_flags);
-> > +	goto got_pg;
-> > +#endif
-> > +
-> 
-> Hacking generic MM code with Android-specific callback is probably a major
-> issue with your patch.
+On Mon, Mar 11, 2019 at 5:36 PM syzbot
+<syzbot+@syzkaller.appspotmail.com> wrote:
 >
-> Also I CC'd -mm maintainers and lists since your patch
-> touches page_alloc.c. Always run get_maintainer.pl before sending a patch. I
-> added them this time.
+> > On Mon, Mar 11, 2019 at 2:53 PM Roman Penyaev <rpenyaev@suse.de> wrote:
+>
+> >> On 2019-03-11 14:45, Dmitry Vyukov wrote:
+> >> > On Mon, Mar 11, 2019 at 2:37 PM Roman Penyaev <rpenyaev@suse.de> wrote:
+> >> >>
+> >> >> Hi Andrew,
+> >> >>
+> >> >> I thought "epoll: loosen irq safety in ep_poll_callback()" patch was
+> >> >> removed from your tree, at least I got a notification on 9th of
+> >> >> january,
+> >> >> also I do not see it in the linux-next tree.
+> >> >>
+> >> >> Should I ignore this syzbot message?
+> >> >
+> >> > If this was resolved we need to communicate it to syzbot one way or the
+> >> > other.
+> >> > Since it was in linux-next, it won't even be able to do fix bisection.
+> >> > So the bug will be open forever otherwise.
+>
+> >> Bug was fixed (commit was simply dropped).  How can I tell syzbot to
+> >> shut up
+> >> and to resolve the issue?
+>
+> > Hi Roman,
+>
+> > The docs are at:
+>
+> >> See https://goo.gl/tpsmEJ for more information about syzbot.
+>
+> > There is no official support for bugs fixed not by commit merges.
+> > Linux-next creates various interesting corner-cases for the process.
+> > Let's go with this option for now:
+>
+> > #syz invalid
+>
+> I see the command but can't find the corresponding bug.
+> Please resend the email to syzbot+HASH@syzkaller.appspotmail.com address
+> that is the sender of the bug report (also present in the Reported-by tag).
 
-I see you CC'd linux-mm on your initial patch, so I apologize. Ignore this
-part of my reply. Thanks.
++syzbot email
 
-
-
-> Have you looked at the recent PSI work that Suren and Johannes have been
-> doing [1]?  As I understand, userspace lmkd may be migrated to use that at some
-> point.  Suren can provide more details. I am sure AOSP contributions to make
-> LMKd better by using the PSI backend would be appreciated. Please consider
-> collaborating on that and help out, thanks. Check the cover-letter of that
-> patch [1] where LMKd is mentioned.
- 
+Please don't drop bug reporter email from CC.
