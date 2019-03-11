@@ -2,80 +2,78 @@ Return-Path: <SRS0=FxTY=RO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_NEOMUTT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.7 required=3.0 tests=FROM_LOCAL_HEX,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D275FC43381
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 Mar 2019 13:07:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 02ED8C10F06
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 Mar 2019 13:08:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AC7F12075C
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 Mar 2019 13:07:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C60142084F
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 Mar 2019 13:08:03 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727440AbfCKNHS (ORCPT
+        id S1727461AbfCKNIC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 11 Mar 2019 09:07:18 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:63262 "EHLO mx1.redhat.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725943AbfCKNHR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 11 Mar 2019 09:07:17 -0400
-Received: from smtp.corp.redhat.com (int-mx05.intmail.prod.int.phx2.redhat.com [10.5.11.15])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id 937013087BB5;
-        Mon, 11 Mar 2019 13:07:17 +0000 (UTC)
-Received: from sirius.home.kraxel.org (ovpn-117-175.ams2.redhat.com [10.36.117.175])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 411EC5D706;
-        Mon, 11 Mar 2019 13:07:17 +0000 (UTC)
-Received: by sirius.home.kraxel.org (Postfix, from userid 1000)
-        id 6AC5017532; Mon, 11 Mar 2019 14:07:16 +0100 (CET)
-Date:   Mon, 11 Mar 2019 14:07:16 +0100
-From:   Gerd Hoffmann <kraxel@redhat.com>
-To:     Rodrigo Siqueira <rodrigosiqueiramelo@gmail.com>
-Cc:     David Airlie <airlied@linux.ie>, Daniel Vetter <daniel@ffwll.ch>,
-        virtualization@lists.linux-foundation.org,
-        dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] drm/bochs: Fix NULL dereference on atomic_disable helper
-Message-ID: <20190311130716.6hjqci43clic5lxx@sirius.home.kraxel.org>
-References: <20190310212150.xhhb4abzm7j3ain2@smtp.gmail.com>
- <20190311062200.4mtel3j5fjxtxrcf@sirius.home.kraxel.org>
- <20190311101159.t6mbzm5sdwuh5muc@smtp.gmail.com>
+        Mon, 11 Mar 2019 09:08:02 -0400
+Received: from mail-it1-f199.google.com ([209.85.166.199]:51190 "EHLO
+        mail-it1-f199.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727337AbfCKNIB (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 11 Mar 2019 09:08:01 -0400
+Received: by mail-it1-f199.google.com with SMTP id i63so4951456itb.0
+        for <linux-kernel@vger.kernel.org>; Mon, 11 Mar 2019 06:08:01 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:date:message-id:subject:from:to;
+        bh=jV0TIOFNu+hVCGZgL94GVpwyNNbbjqUpazKlNnc3uFo=;
+        b=Rkvq4wIBLy64VxBvwNJaTLkDdCPwpj5eWQISpeqgpTMl8Xc6ff8pioeLFBdWWXk/J6
+         it2txT29z/3UGQMS0l/A2gUS6ggtHnzmiaR3BDICTlrh0P3pBB7pxiSus3f+IQgLZYhI
+         b4uv1TYHFlAdaoPABFqYnVIFCYK9l44gyCocw1yHv0s0b26YkOfdhLu/qq+ouCv06rUi
+         eoWJQ4NwgmuRKM16I8va3T9MhJ0NDL5P1Z09UW24Nys6kUM49KzFNjFkIRTUkaBaBFRU
+         B3veCg4+4JU1qlyykHuWdS4s1BgmFjBOb6Omv+Z47lCldPh3lGp9dP4wkjQ/CK75PmCl
+         yeew==
+X-Gm-Message-State: APjAAAUYwWsRAOo55BaKTwVAW54PSQVYsdJHSXEoZQ9nvNIa9aDeog9r
+        DVklarFzRpkTWNy2ZNTR96h4dCNPr2qX1Na3Sh1WSurNu3kR
+X-Google-Smtp-Source: APXvYqxMWqYladm/NuaaRcwSzK/ttla74H8jKKFHCdgh/T+j32JYKNzD0KzruYXhlxc68jbCk92jCqJ8tzbdub8vUeRjgDEPOdul
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190311101159.t6mbzm5sdwuh5muc@smtp.gmail.com>
-User-Agent: NeoMutt/20180716
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.15
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.45]); Mon, 11 Mar 2019 13:07:17 +0000 (UTC)
+X-Received: by 2002:a5d:954c:: with SMTP id a12mr19448883ios.14.1552309681113;
+ Mon, 11 Mar 2019 06:08:01 -0700 (PDT)
+Date:   Mon, 11 Mar 2019 06:08:01 -0700
+X-Google-Appengine-App-Id: s~syzkaller
+X-Google-Appengine-App-Id-Alias: syzkaller
+Message-ID: <0000000000001fd5780583d1433f@google.com>
+Subject: KASAN: null-ptr-deref Read in reclaim_high
+From:   syzbot <syzbot+fa11f9da42b46cea3b4a@syzkaller.appspotmail.com>
+To:     akpm@linux-foundation.org, cgroups@vger.kernel.org,
+        hannes@cmpxchg.org, linux-kernel@vger.kernel.org,
+        linux-mm@kvack.org, mhocko@kernel.org, mhocko@suse.com,
+        sfr@canb.auug.org.au, shakeelb@google.com,
+        syzkaller-bugs@googlegroups.com, vdavydov.dev@gmail.com
+Content-Type: text/plain; charset="UTF-8"; format=flowed; delsp=yes
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-  Hi,
+syzbot has bisected this bug to:
 
-> > >  static void bochs_crtc_atomic_flush(struct drm_crtc *crtc,
-> > >  				    struct drm_crtc_state *old_crtc_state)
-> > >  {
-> > > @@ -66,6 +71,7 @@ static const struct drm_crtc_funcs bochs_crtc_funcs = {
-> > >  static const struct drm_crtc_helper_funcs bochs_helper_funcs = {
-> > >  	.mode_set_nofb = bochs_crtc_mode_set_nofb,
-> > >  	.atomic_enable = bochs_crtc_atomic_enable,
-> > > +	.atomic_disable = bochs_crtc_atomic_disable,
-> > 
-> > Shouldn't we make the callback optional instead of adding empty dummy
-> > functions to drivers?
-> 
-> Hi Gerd,
-> 
-> I agree, and I can work in this issue.
-> Just one question, should we make atomic_enable optional as well?
+commit 29a4b8e275d1f10c51c7891362877ef6cffae9e7
+Author: Shakeel Butt <shakeelb@google.com>
+Date:   Wed Jan 9 22:02:21 2019 +0000
 
-IIRC the drm code checks for the atomic_enable callback presence to
-figure whenever it should take the atomic or legacy code paths.
+     memcg: schedule high reclaim for remote memcgs on high_work
 
-So, I think that will not work.
+bisection log:  https://syzkaller.appspot.com/x/bisect.txt?x=155bf5db200000
+start commit:   29a4b8e2 memcg: schedule high reclaim for remote memcgs on..
+git tree:       linux-next
+final crash:    https://syzkaller.appspot.com/x/report.txt?x=175bf5db200000
+console output: https://syzkaller.appspot.com/x/log.txt?x=135bf5db200000
+kernel config:  https://syzkaller.appspot.com/x/.config?x=611f89e5b6868db
+dashboard link: https://syzkaller.appspot.com/bug?extid=fa11f9da42b46cea3b4a
+userspace arch: amd64
+syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=14259017400000
+C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=141630a0c00000
 
-cheers,
-  Gerd
-
+Reported-by: syzbot+fa11f9da42b46cea3b4a@syzkaller.appspotmail.com
+Fixes: 29a4b8e2 ("memcg: schedule high reclaim for remote memcgs on  
+high_work")
