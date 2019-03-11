@@ -6,45 +6,46 @@ X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
 	SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CC89AC43381
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 Mar 2019 19:58:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5DD4DC4360F
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 Mar 2019 19:58:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9482A2087C
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 Mar 2019 19:58:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3029C214AF
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 Mar 2019 19:58:06 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1552334282;
-	bh=VSRK+e64H6DBXbP0DsbedvCI3y0Sh8fLno4v5ZN3k7w=;
+	s=default; t=1552334286;
+	bh=1NBB3WLsM3p6uRGOplZg73mDiVeStTDgAgNckrrakDI=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=vMymgfw/2DQwfokW7yI/pcconfYF588RMY5vRj3mM54h75xTcuqGeLQiRipm5xe99
-	 X/5TmlsSw6RWmcJ1HFEagLCjwGA+4O9SdL5qKawJD1KfZOAIdYdtoNpkRjzsKXzdfs
-	 UbnZFC6C8xONXsbAZnGyr/eS9i9FnpzbkmxDcTTM=
+	b=a/qSNSPsPVDGwNx8bLlTROxFPUw8iNQgTmF+/TaxRNqCfYOpaLuuoGaiCYB4PPAly
+	 N03xPdhNBUvDIeyhE1f27h9amHoww4ypUOGkE2qu31qrWoTj03+tzxy/bahq91gY69
+	 aWzZ9S/86+3dvAiaPZt8VZ2f/58jBFHVAFoHwd+s=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729272AbfCKT6B (ORCPT
+        id S1728444AbfCKT6F (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 11 Mar 2019 15:58:01 -0400
-Received: from mail.kernel.org ([198.145.29.99]:35320 "EHLO mail.kernel.org"
+        Mon, 11 Mar 2019 15:58:05 -0400
+Received: from mail.kernel.org ([198.145.29.99]:35368 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728521AbfCKT54 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 11 Mar 2019 15:57:56 -0400
+        id S1729267AbfCKT6A (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 11 Mar 2019 15:58:00 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 302E5214AF;
-        Mon, 11 Mar 2019 19:57:55 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id CB5812087C;
+        Mon, 11 Mar 2019 19:57:58 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1552334275;
-        bh=VSRK+e64H6DBXbP0DsbedvCI3y0Sh8fLno4v5ZN3k7w=;
+        s=default; t=1552334279;
+        bh=1NBB3WLsM3p6uRGOplZg73mDiVeStTDgAgNckrrakDI=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=iQ6o7ciYab7g5Szsxgoh2gtwz6gyqH+QAIpfnef5zXqdbfiorpIfsyHn5FdFKZTOb
-         Up5rnFsshi7AGiJnCDKaXfODQQCj2ULE5c9LkkfaZyc/1UEOEh23LSBikGoHsjXsaX
-         /salGs4rM4kCcm+pGQ4DxM+mSMIwnwpKOi4dC6+8=
+        b=iu8C7Z86FDZqtCauN9colb2BiGWG2bm2hZq9CvY7Pwfgtk9OUW6qDLu9nSg3Igj4A
+         LGEtVu/226dle7Dh/ulGvUSHFlE3tipbxp3foI9pfg5chXITO6gcaJHDaG9OL/xBHd
+         rJ25UREsqcQk18Uuk0/phxDuV22hsYY17GACl68w=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Yufen Yu <yuyufen@huawei.com>, Jens Axboe <axboe@kernel.dk>,
-        Sasha Levin <sashal@kernel.org>, linux-block@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.19 31/44] floppy: check_events callback should not return a negative number
-Date:   Mon, 11 Mar 2019 15:56:47 -0400
-Message-Id: <20190311195700.138462-31-sashal@kernel.org>
+Cc:     Benjamin Coddington <bcodding@redhat.com>,
+        Anna Schumaker <Anna.Schumaker@Netapp.com>,
+        Sasha Levin <sashal@kernel.org>, linux-nfs@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.19 33/44] NFS: Don't use page_file_mapping after removing the page
+Date:   Mon, 11 Mar 2019 15:56:49 -0400
+Message-Id: <20190311195700.138462-33-sashal@kernel.org>
 X-Mailer: git-send-email 2.19.1
 In-Reply-To: <20190311195700.138462-1-sashal@kernel.org>
 References: <20190311195700.138462-1-sashal@kernel.org>
@@ -56,41 +57,67 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Yufen Yu <yuyufen@huawei.com>
+From: Benjamin Coddington <bcodding@redhat.com>
 
-[ Upstream commit 96d7cb932e826219ec41ac02e5af037ffae6098c ]
+[ Upstream commit d2ceb7e57086750ea6198a31fd942d98099a0786 ]
 
-floppy_check_events() is supposed to return bit flags to say which
-events occured. We should return zero to say that no event flags are
-set.  Only BIT(0) and BIT(1) are used in the caller. And .check_events
-interface also expect to return an unsigned int value.
+If nfs_page_async_flush() removes the page from the mapping, then we can't
+use page_file_mapping() on it as nfs_updatepate() is wont to do when
+receiving an error.  Instead, push the mapping to the stack before the page
+is possibly truncated.
 
-However, after commit a0c80efe5956, it may return -EINTR (-4u).
-Here, both BIT(0) and BIT(1) are cleared. So this patch shouldn't
-affect runtime, but it obviously is still worth fixing.
-
-Reviewed-by: Dan Carpenter <dan.carpenter@oracle.com>
-Fixes: a0c80efe5956 ("floppy: fix lock_fdc() signal handling")
-Signed-off-by: Yufen Yu <yuyufen@huawei.com>
-Signed-off-by: Jens Axboe <axboe@kernel.dk>
+Fixes: 8fc75bed96bb ("NFS: Fix up return value on fatal errors in nfs_page_async_flush()")
+Signed-off-by: Benjamin Coddington <bcodding@redhat.com>
+Signed-off-by: Anna Schumaker <Anna.Schumaker@Netapp.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/block/floppy.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ fs/nfs/write.c | 11 ++++++-----
+ 1 file changed, 6 insertions(+), 5 deletions(-)
 
-diff --git a/drivers/block/floppy.c b/drivers/block/floppy.c
-index fdabd0b74492..a8de56f1936d 100644
---- a/drivers/block/floppy.c
-+++ b/drivers/block/floppy.c
-@@ -4084,7 +4084,7 @@ static unsigned int floppy_check_events(struct gendisk *disk,
+diff --git a/fs/nfs/write.c b/fs/nfs/write.c
+index d790faff8e47..51d0b7913c04 100644
+--- a/fs/nfs/write.c
++++ b/fs/nfs/write.c
+@@ -238,9 +238,9 @@ static void nfs_grow_file(struct page *page, unsigned int offset, unsigned int c
+ }
  
- 	if (time_after(jiffies, UDRS->last_checked + UDP->checkfreq)) {
- 		if (lock_fdc(drive))
--			return -EINTR;
-+			return 0;
- 		poll_drive(false, 0);
- 		process_fd_request();
- 	}
+ /* A writeback failed: mark the page as bad, and invalidate the page cache */
+-static void nfs_set_pageerror(struct page *page)
++static void nfs_set_pageerror(struct address_space *mapping)
+ {
+-	nfs_zap_mapping(page_file_mapping(page)->host, page_file_mapping(page));
++	nfs_zap_mapping(mapping->host, mapping);
+ }
+ 
+ /*
+@@ -994,7 +994,7 @@ static void nfs_write_completion(struct nfs_pgio_header *hdr)
+ 		nfs_list_remove_request(req);
+ 		if (test_bit(NFS_IOHDR_ERROR, &hdr->flags) &&
+ 		    (hdr->good_bytes < bytes)) {
+-			nfs_set_pageerror(req->wb_page);
++			nfs_set_pageerror(page_file_mapping(req->wb_page));
+ 			nfs_context_set_write_error(req->wb_context, hdr->error);
+ 			goto remove_req;
+ 		}
+@@ -1330,7 +1330,8 @@ int nfs_updatepage(struct file *file, struct page *page,
+ 		unsigned int offset, unsigned int count)
+ {
+ 	struct nfs_open_context *ctx = nfs_file_open_context(file);
+-	struct inode	*inode = page_file_mapping(page)->host;
++	struct address_space *mapping = page_file_mapping(page);
++	struct inode	*inode = mapping->host;
+ 	int		status = 0;
+ 
+ 	nfs_inc_stats(inode, NFSIOS_VFSUPDATEPAGE);
+@@ -1348,7 +1349,7 @@ int nfs_updatepage(struct file *file, struct page *page,
+ 
+ 	status = nfs_writepage_setup(ctx, page, offset, count);
+ 	if (status < 0)
+-		nfs_set_pageerror(page);
++		nfs_set_pageerror(mapping);
+ 	else
+ 		__set_page_dirty_nobuffers(page);
+ out:
 -- 
 2.19.1
 
