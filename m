@@ -2,159 +2,160 @@ Return-Path: <SRS0=FxTY=RO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8CA73C43381
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 Mar 2019 08:17:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8162CC43381
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 Mar 2019 08:19:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 57E012075C
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 Mar 2019 08:17:06 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="BtxvR2mn"
+	by mail.kernel.org (Postfix) with ESMTP id 54CE12075C
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 Mar 2019 08:19:11 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726932AbfCKIRE (ORCPT
+        id S1726898AbfCKITJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 11 Mar 2019 04:17:04 -0400
-Received: from mail-wm1-f68.google.com ([209.85.128.68]:38978 "EHLO
-        mail-wm1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725850AbfCKIRE (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 11 Mar 2019 04:17:04 -0400
-Received: by mail-wm1-f68.google.com with SMTP id z84so3284594wmg.4
-        for <linux-kernel@vger.kernel.org>; Mon, 11 Mar 2019 01:17:02 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=J7rfsXeTGnmu0wmQA7+37iHI9cfFYSdM46ow32yeWUI=;
-        b=BtxvR2mnOgRYtC2htq2dOrk5xdbfQ9BTo/Sh+CwaKDKQbaVhEplQPJ4/MYJsQkhEaV
-         rfUMCKXFM+1zV2XWYQ0UMEbmvE7gEQt9QCitxPH0Xm56bHRmKiy6qVUvXSUncimzZiWr
-         OlH6rczIiBZOyEHMI8+whoz0lKkACCenb3hjqMVMadXOwlpVYYkfytfKYmvEKvk11Rd8
-         AxvCtyhgTXkpzjEz4G81O2M5c62ReCtEa/0GnZXf/uxpTmBxfSifcI8X4a9wPawMvAsq
-         kboZuzxzWFlXoDEeAOOmjQ0tls5l1XF8AROSPEQGC0EqNP4mODb5pPDJW+uZZZZV0kY2
-         zi9g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=J7rfsXeTGnmu0wmQA7+37iHI9cfFYSdM46ow32yeWUI=;
-        b=Q6Y5IsilLKaKpwfWIuF58Y7f6TmB5O/BWCmjU6mvBirdbpNdq1cs9O6r6ABT/jgB1h
-         6i53f7uWEfjnGUKQwB9b+cTxQ8iwDkQgWuwf8LXRCU0yV6iNzuNDOZXanbxBVmHCBQGZ
-         mm5EehMrj77nNwjWNVdsbJNWcxg6F315BkGYWTuR+Pus3/r19E+eBW7i8Ai8X4vyD8yl
-         uNWyWSJ4KpnJUrYz2Yf+eeOwV3J2EEikskj+wddGiqCvJIdp7pW5ecdGb3gyo0Sti+1Y
-         vJ+kfPXkH9son6KA5Yy0Fv7Hj3fd9hIETYlZiIsJOVW8o9IcDP5SVKe3Dx6eDAKtspUY
-         iY4g==
-X-Gm-Message-State: APjAAAVjHH1db22yWWUyM+Z5YM0YaZEeJgQ0aaTLhbkyW4Mit7C7jEgm
-        Q01Hu4MMZAb8RApQ8q8YBbw=
-X-Google-Smtp-Source: APXvYqxhpO7MtOQRuW+rx9QNXGTF8Xorie9Oke2++Yr6fv3BiyTlvs2HFE8sO1ELVMgiKKB0m0cPGQ==
-X-Received: by 2002:a1c:64c1:: with SMTP id y184mr16304578wmb.0.1552292221397;
-        Mon, 11 Mar 2019 01:17:01 -0700 (PDT)
-Received: from giga-mm ([62.68.22.49])
-        by smtp.gmail.com with ESMTPSA id h13sm8351294wrt.89.2019.03.11.01.17.00
-        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Mon, 11 Mar 2019 01:17:00 -0700 (PDT)
-Date:   Mon, 11 Mar 2019 09:16:59 +0100
-From:   Alexander Sverdlin <alexander.sverdlin@gmail.com>
-To:     Oleksij Rempel <o.rempel@pengutronix.de>
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Jiri Slaby <jslaby@suse.com>,
-        Steven Walter <stevenrwalter@gmail.com>,
-        Pengutronix Kernel Team <kernel@pengutronix.de>,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v1 1/3] drivers/tty: refactor functions for
- flushing/queuing work
-Message-Id: <20190311091659.c9acd07eab2f5d19c3e00369@gmail.com>
-In-Reply-To: <20190110101232.9398-2-o.rempel@pengutronix.de>
-References: <20190110101232.9398-1-o.rempel@pengutronix.de>
-        <20190110101232.9398-2-o.rempel@pengutronix.de>
-X-Mailer: Sylpheed 3.7.0 (GTK+ 2.24.32; x86_64-unknown-linux-gnu)
-Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+        Mon, 11 Mar 2019 04:19:09 -0400
+Received: from mga18.intel.com ([134.134.136.126]:27649 "EHLO mga18.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725932AbfCKITJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 11 Mar 2019 04:19:09 -0400
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga002.jf.intel.com ([10.7.209.21])
+  by orsmga106.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 11 Mar 2019 01:19:08 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.58,467,1544515200"; 
+   d="scan'208";a="140922179"
+Received: from linux.intel.com ([10.54.29.200])
+  by orsmga002.jf.intel.com with ESMTP; 11 Mar 2019 01:19:08 -0700
+Received: from [10.125.252.60] (abudanko-mobl.ccr.corp.intel.com [10.125.252.60])
+        by linux.intel.com (Postfix) with ESMTP id C0F0558046F;
+        Mon, 11 Mar 2019 01:19:05 -0700 (PDT)
+Subject: Re: [PATCH v5 03/10] perf session: define bytes_transferred and
+ bytes_compressed metrics
+From:   Alexey Budankov <alexey.budankov@linux.intel.com>
+To:     Jiri Olsa <jolsa@redhat.com>
+Cc:     Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Andi Kleen <ak@linux.intel.com>,
+        linux-kernel <linux-kernel@vger.kernel.org>
+References: <4d1b11a4-77ed-d9af-ed22-875fc17b6050@linux.intel.com>
+ <cc16317a-87f0-7abe-69a6-31394d32dda7@linux.intel.com>
+ <20190305122604.GG16615@krava>
+ <bcee0574-80cc-79df-b36d-e6495c786d9f@linux.intel.com>
+Organization: Intel Corp.
+Message-ID: <92831c18-865b-50bf-1f03-b38b63099703@linux.intel.com>
+Date:   Mon, 11 Mar 2019 11:19:03 +0300
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
+ Thunderbird/60.5.1
+MIME-Version: 1.0
+In-Reply-To: <bcee0574-80cc-79df-b36d-e6495c786d9f@linux.intel.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
 Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hello Oleksij,
-
-On Thu, 10 Jan 2019 11:12:30 +0100
-Oleksij Rempel <o.rempel@pengutronix.de> wrote:
-
-> From: Steven Walter <stevenrwalter@gmail.com>
+On 07.03.2019 11:29, Alexey Budankov wrote:
 > 
-> Preparation for converting to kthread_worker
+> On 05.03.2019 15:26, Jiri Olsa wrote:
+>> On Fri, Mar 01, 2019 at 06:43:28PM +0300, Alexey Budankov wrote:
+>>>
+>>> Define bytes_transferred and bytes_compressed metrics to calculate
+>>> comp_ratio=transferred/compressed in the end of the data collection.
+>>>
+>>> bytes_transferred accumulates the amount of bytes that was extracted from
+>>> the mmaped kernel buffers for compression. bytes_compressed accumulates
+>>> the amount of bytes that was received after applying compression to
+>>> move to a storage.
+>>>
+>>> Signed-off-by: Alexey Budankov <alexey.budankov@linux.intel.com>
+>>> ---
+>>>  tools/perf/builtin-record.c | 8 ++++++++
+>>>  tools/perf/util/env.h       | 1 +
+>>>  tools/perf/util/session.h   | 2 ++
+>>>  3 files changed, 11 insertions(+)
+>>>
+>>> diff --git a/tools/perf/builtin-record.c b/tools/perf/builtin-record.c
+>>> index 9b02a68e8c23..ab121bc27c6d 100644
+>>> --- a/tools/perf/builtin-record.c
+>>> +++ b/tools/perf/builtin-record.c
+>>> @@ -1449,6 +1449,14 @@ static int __cmd_record(struct record *rec, int argc, const char **argv)
+>>>  	record__mmap_read_all(rec, true);
+>>>  	record__aio_mmap_read_sync(rec);
+>>>  
+>>> +	if (!quiet && rec->session->bytes_transferred && rec->session->bytes_compressed) {
+>>> +		float ratio = (float)rec->session->bytes_transferred/(float)rec->session->bytes_compressed;
+>>> +
+>>> +		session->header.env.comp_ratio = ratio + 0.5;
+>>
+>> what's the + 0.5 for?
 > 
-> Signed-off-by: Steven Walter <stevenrwalter@gmail.com>
-> Tested-by: Oleksij Rempel <o.rempel@pengutronix.de>
-
-Tested-by: Alexander Sverdlin <alexander.sverdlin@gmail.com>
-
-> ---
->  drivers/tty/tty_buffer.c | 12 +++++++++---
->  include/linux/tty.h      |  1 +
->  2 files changed, 10 insertions(+), 3 deletions(-)
+> Arithmetic rounding before type cast.
 > 
-> diff --git a/drivers/tty/tty_buffer.c b/drivers/tty/tty_buffer.c
-> index 77070c2d1240..e0090e65d83a 100644
-> --- a/drivers/tty/tty_buffer.c
-> +++ b/drivers/tty/tty_buffer.c
-> @@ -72,7 +72,7 @@ void tty_buffer_unlock_exclusive(struct tty_port *port)
->  	atomic_dec(&buf->priority);
->  	mutex_unlock(&buf->lock);
->  	if (restart)
-> -		queue_work(system_unbound_wq, &buf->work);
-> +		tty_buffer_queue_work(port);
->  }
->  EXPORT_SYMBOL_GPL(tty_buffer_unlock_exclusive);
->  
-> @@ -410,7 +410,7 @@ void tty_schedule_flip(struct tty_port *port)
->  	 * flush_to_ldisc() sees buffer data.
->  	 */
->  	smp_store_release(&buf->tail->commit, buf->tail->used);
-> -	queue_work(system_unbound_wq, &buf->work);
-> +	tty_buffer_queue_work(port);
->  }
->  EXPORT_SYMBOL(tty_schedule_flip);
->  
-> @@ -557,6 +557,12 @@ void tty_flip_buffer_push(struct tty_port *port)
->  }
->  EXPORT_SYMBOL(tty_flip_buffer_push);
->  
-> +bool tty_buffer_queue_work(struct tty_port *port)
-> +{
-> +	struct tty_bufhead *buf = &port->buf;
-> +	return schedule_work(&buf->work);
-> +}
-> +
->  /**
->   *	tty_buffer_init		-	prepare a tty buffer structure
->   *	@tty: tty to initialise
-> @@ -605,7 +611,7 @@ void tty_buffer_set_lock_subclass(struct tty_port *port)
->  
->  bool tty_buffer_restart_work(struct tty_port *port)
->  {
-> -	return queue_work(system_unbound_wq, &port->buf.work);
-> +	return tty_buffer_queue_work(port);
->  }
->  
->  bool tty_buffer_cancel_work(struct tty_port *port)
-> diff --git a/include/linux/tty.h b/include/linux/tty.h
-> index bfa4e2ee94a9..226a9eff0766 100644
-> --- a/include/linux/tty.h
-> +++ b/include/linux/tty.h
-> @@ -507,6 +507,7 @@ extern void session_clear_tty(struct pid *session);
->  extern void no_tty(void);
->  extern void tty_buffer_free_all(struct tty_port *port);
->  extern void tty_buffer_flush(struct tty_struct *tty, struct tty_ldisc *ld);
-> +extern bool tty_buffer_queue_work(struct tty_port *port);
->  extern void tty_buffer_init(struct tty_port *port);
->  extern void tty_buffer_set_lock_subclass(struct tty_port *port);
->  extern bool tty_buffer_restart_work(struct tty_port *port);
+>>
+>>> +		fprintf(stderr,	"[ perf record: Compressed %.3f MB to %.3f MB, ratio is %.3f ]\n",
+>>> +			rec->session->bytes_transferred / 1024.0 / 1024.0, rec->session->bytes_compressed / 1024.0 / 1024.0, ratio);
+>>> +	}
+>>> +
+>>
+>> could this be below together with the current:
+>>
+>> 	fprintf(stderr, "[ perf record: Captured and wrote %.3f MB %s%s%s ]\n",
+> 
+> Please provide an example of what you exactly mean.
 
+It could look like this:
 
--- 
-Alexander Sverdlin.
+[ perf record: Woken up 101 times to write data ]
+[ perf record: Captured and wrote 5.173 MB perf.data (714077 samples), compressed 27.241 MB to 5.160 MB, ratio is 5.279 ]
+
+Any comments?
+
+~Alexey
+
+> 
+> ~Alexey
+> 
+>>
+>> thanks,
+>> jirka
+>>
+>>>  	if (forks) {
+>>>  		int exit_status;
+>>>  
+>>> diff --git a/tools/perf/util/env.h b/tools/perf/util/env.h
+>>> index d01b8355f4ca..fb39e9af128f 100644
+>>> --- a/tools/perf/util/env.h
+>>> +++ b/tools/perf/util/env.h
+>>> @@ -64,6 +64,7 @@ struct perf_env {
+>>>  	struct memory_node	*memory_nodes;
+>>>  	unsigned long long	 memory_bsize;
+>>>  	u64                     clockid_res_ns;
+>>> +	u32                     comp_ratio;
+>>>  };
+>>>  
+>>>  extern struct perf_env perf_env;
+>>> diff --git a/tools/perf/util/session.h b/tools/perf/util/session.h
+>>> index d96eccd7d27f..0e14884f28b2 100644
+>>> --- a/tools/perf/util/session.h
+>>> +++ b/tools/perf/util/session.h
+>>> @@ -35,6 +35,8 @@ struct perf_session {
+>>>  	struct ordered_events	ordered_events;
+>>>  	struct perf_data	*data;
+>>>  	struct perf_tool	*tool;
+>>> +	u64			bytes_transferred;
+>>> +	u64			bytes_compressed;
+>>>  };
+>>>  
+>>>  struct perf_tool;
+>>> -- 
+>>> 2.20.1
+>>>
+>>
+> 
