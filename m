@@ -2,60 +2,60 @@ Return-Path: <SRS0=FxTY=RO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIM_ADSP_CUSTOM_MED,
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIM_ADSP_CUSTOM_MED,
 	DKIM_INVALID,DKIM_SIGNED,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AD599C43381
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 Mar 2019 20:54:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3A75BC43381
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 Mar 2019 20:54:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 734F72064A
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 Mar 2019 20:54:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 069BA2147C
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 Mar 2019 20:54:18 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="HViIoR2W"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="qG97ZO7C"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728214AbfCKUyM (ORCPT
+        id S1728287AbfCKUyR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 11 Mar 2019 16:54:12 -0400
-Received: from mail-lj1-f195.google.com ([209.85.208.195]:45302 "EHLO
-        mail-lj1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727304AbfCKUyM (ORCPT
+        Mon, 11 Mar 2019 16:54:17 -0400
+Received: from mail-lj1-f194.google.com ([209.85.208.194]:46383 "EHLO
+        mail-lj1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727304AbfCKUyQ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 11 Mar 2019 16:54:12 -0400
-Received: by mail-lj1-f195.google.com with SMTP id d24so318244ljc.12
-        for <linux-kernel@vger.kernel.org>; Mon, 11 Mar 2019 13:54:10 -0700 (PDT)
+        Mon, 11 Mar 2019 16:54:16 -0400
+Received: by mail-lj1-f194.google.com with SMTP id v16so312948ljg.13
+        for <linux-kernel@vger.kernel.org>; Mon, 11 Mar 2019 13:54:14 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=sender:from:to:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=U+3QcfvocSbrPnop7NmaFRUnP+hcHK+uTwNneM6FOCg=;
-        b=HViIoR2WLJGnz70E6F1JywZhDiTGI8O0NG+vXtNU9g1yxaBcUCvzzG3omr5TD/6mLG
-         h4zJh6QFhGtZ+zYWEPHhDMu704wEC7UJDkhwhFMX6DiaivR0sWQ90KQ1hICt6lkB2UMD
-         EAZwxtAu2YFkh8/NrM+XGj+bF/Yh5Yi79Ka70HJftBq6oe+VnEFebj5K53S7vWtdqBtZ
-         htjchmtGBCZlXek8qZWlsyrIsy8M6XZZ8Gbh64n/B5kD9qzotOIGVBBLCy//QQr9xzQI
-         6vL/RuYMDp+Oz4a+aBRQ7X/qJKXxlXhGctgjM0cAqOZDSx+uYqwSZEbEV8HrGOIcqQre
-         X6nw==
+        h=sender:from:to:subject:date:message-id:in-reply-to:references
+         :mime-version:content-transfer-encoding;
+        bh=ZEF3oKCVpObZ8A3c3Q5bQmTJpDHKDqfO0yTANqAzP1A=;
+        b=qG97ZO7CCTF68kjtM0uuD1kyrtf60I+Rfynz/ksPXbwD/QjRMokJhzfwTcKvx1p919
+         a14QFvrO3PspC2CY1E3HK+NgACqRfl8ZsxYZdXL+sGW+xZhrKRSGrjpVIYsdU3oC8h/+
+         PmC4cXziKCRBVcC2qQ0GfyRQG5/wIE1MW3Qjj8MQqm/tDgu9oKkafyzyNVrRJKUyIFU5
+         xM1BiYBLMkR7t+66PFo/iKsGuWeoPRpwkEXCihuiIemCrBW/1V+0NDTCl1NrcRdawegS
+         PmrJL2csNqtJjxw3AtBY9hsUSB4SUkzB29Um0FooRGHStSZmhHRb4QHgaduYFJKI2xwC
+         Fjww==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:sender:from:to:subject:date:message-id
-         :mime-version:content-transfer-encoding;
-        bh=U+3QcfvocSbrPnop7NmaFRUnP+hcHK+uTwNneM6FOCg=;
-        b=beL8Da76VfuNvlELiLeLF3zBoKX1+ex5b+pZsrUQXNQBJYyy5y0PWFSpamgeZNmKJc
-         0UCPQQG/nivWpxvshXqyczBb/Ci/CvS1qrVnpTjR+hSXAcwXgpP7ub0E7d2qRwR0PUSP
-         GABSVc+EHzTq/4VnnPzVky7aOq3FDNFzfcCA/JnfOlN/9JtYImgj7rNJYHCP2TGSuk5x
-         quRLXTaHpkFwBQnqvyol6F6nEev+RCmSDwxrRYrpuDj1LYiUTnK27jE9F4pMNpy0816z
-         2HPyT5cwr//T0tZF80mEAfxjsQEfYqJRir400F6pX7X6qM+pGku46fI9AsTiLijAwWwP
-         J1WA==
-X-Gm-Message-State: APjAAAXNzPgSuv3H4X5+eGt8zP0+sUdWcTPDCThGSLCX7Vu2pDk/Uy9z
-        5qbcz2pOFtUE1LQc6bVp6pQ=
-X-Google-Smtp-Source: APXvYqwInFzyxRmHsmvpaOZ8007EfRS/nyBxBLiKZQ8UaUL8j5yhhudMJ5l1p5acoOJXuYVN2VlJGg==
-X-Received: by 2002:a2e:3316:: with SMTP id d22mr306499ljc.145.1552337650045;
-        Mon, 11 Mar 2019 13:54:10 -0700 (PDT)
+         :in-reply-to:references:mime-version:content-transfer-encoding;
+        bh=ZEF3oKCVpObZ8A3c3Q5bQmTJpDHKDqfO0yTANqAzP1A=;
+        b=JwlBMy2OMRovfMBNV1rw88LEWiOzbdBMIG3UFJ3PsiGQXAR/w9wXEhOlzPjKzBjl9s
+         Pnp4dLOODkT88dd7LcbZqRXQwqtEPTCjkJFsPf3/SS/dGwYuRhiI3EAoAOe1ZNHTeFuo
+         Nl10dmWg/ooyJ4XfA6akeRBVv8crEClFAJiAlwIvhX759r5xlOTx+faWp/OZ19TseJOm
+         +/SEjaWHoszK5dBaednk28M1yIHF1UcWNVfdP7l0BOdkXBEXTMDIp7hawoTvUVqo96lY
+         3xuRoawhMb99BlVZ514t4oX6Ev+qf0nAkVaBxqqS+YTeZ/If9oD2H9+0nhmRjM5B5MWZ
+         6dwQ==
+X-Gm-Message-State: APjAAAWXwLf9ATtN6Py33lhazvKl9dFbVuv/+BqAtWCjC3dOqhOGpo9Y
+        ewGjSmVolwGb56grTbXNdBw=
+X-Google-Smtp-Source: APXvYqxI7r3HJfUtSpj/wbI/Rdur1vde2Yr3KowM73Za4jbDHLAkimaDZjuDeP82l/TyoNA+9OhyFg==
+X-Received: by 2002:a2e:87ca:: with SMTP id v10mr17250936ljj.89.1552337654158;
+        Mon, 11 Mar 2019 13:54:14 -0700 (PDT)
 Received: from localhost.localdomain (89-68-132-187.dynamic.chello.pl. [89.68.132.187])
-        by smtp.gmail.com with ESMTPSA id c1sm1246894lfk.79.2019.03.11.13.54.08
+        by smtp.gmail.com with ESMTPSA id c1sm1246894lfk.79.2019.03.11.13.54.12
         (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Mon, 11 Mar 2019 13:54:09 -0700 (PDT)
+        Mon, 11 Mar 2019 13:54:13 -0700 (PDT)
 From:   Mariusz Ceier <mceier+kernel@gmail.com>
 To:     Jaroslav Kysela <perex@perex.cz>, Takashi Iwai <tiwai@suse.com>,
         Ravindra Lokhande <rlokhande@nvidia.com>,
@@ -65,10 +65,12 @@ To:     Jaroslav Kysela <perex@perex.cz>, Takashi Iwai <tiwai@suse.com>,
         Keyon Jie <yang.jie@linux.intel.com>,
         Mariusz Ceier <mceier+kernel@gmail.com>,
         alsa-devel@alsa-project.org, linux-kernel@vger.kernel.org
-Subject: [PATCH 0/1] sound/hda/hdac_stream: Avoid NULL pointer dereference
-Date:   Mon, 11 Mar 2019 21:53:56 +0100
-Message-Id: <20190311205357.7573-1-mceier+kernel@gmail.com>
+Subject: [PATCH 1/1] sound/hda/hdac_stream: Avoid NULL pointer dereference
+Date:   Mon, 11 Mar 2019 21:53:57 +0100
+Message-Id: <20190311205357.7573-2-mceier+kernel@gmail.com>
 X-Mailer: git-send-email 2.21.0
+In-Reply-To: <20190311205357.7573-1-mceier+kernel@gmail.com>
+References: <20190311205357.7573-1-mceier+kernel@gmail.com>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
@@ -76,24 +78,31 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Seems like commit 9b6f7e7a296e17990aae298c809b001e99ddd151 introduced
-NULL pointer dereference for ca0132 codec. 
-When ca0132 loads firmware, snd_hdac_stream_start is called with
-azx_dev->substream being NULL.
+For ca0132 codec, azx_dev->stream is NULL during firmware loading.
+Calling snd_hdac_get_stream_stripe_ctl unconditionally causes NULL
+pointer dereference in that function.
 
-This patch calls snd_hdac_get_stream_stripe_ctl only when
-azx_dev->substream is not NULL. Even if I'm not sure if this is correct,
-since it might be that ca0132 codec does something wrong, with this
-change NULL pointer dereference doesn't happen and ca0132 works again on
-my system with Recon3Di.
-
-
-Mariusz Ceier (1):
-  sound/hda/hdac_stream: Avoid NULL pointer dereference
-
+Signed-off-by: Mariusz Ceier <mceier+kernel@gmail.com>
+---
  sound/hda/hdac_stream.c | 5 ++++-
  1 file changed, 4 insertions(+), 1 deletion(-)
 
+diff --git a/sound/hda/hdac_stream.c b/sound/hda/hdac_stream.c
+index f5dd288d1a7a..76e9b41fcea2 100644
+--- a/sound/hda/hdac_stream.c
++++ b/sound/hda/hdac_stream.c
+@@ -95,7 +95,10 @@ void snd_hdac_stream_start(struct hdac_stream *azx_dev, bool fresh_start)
+ 			      1 << azx_dev->index,
+ 			      1 << azx_dev->index);
+ 	/* set stripe control */
+-	stripe_ctl = snd_hdac_get_stream_stripe_ctl(bus, azx_dev->substream);
++	if (azx_dev->substream)
++		stripe_ctl = snd_hdac_get_stream_stripe_ctl(bus, azx_dev->substream);
++	else
++		stripe_ctl = 0;
+ 	snd_hdac_stream_updateb(azx_dev, SD_CTL_3B, SD_CTL_STRIPE_MASK,
+ 				stripe_ctl);
+ 	/* set DMA start and interrupt mask */
 -- 
 2.21.0
 
