@@ -2,27 +2,27 @@ Return-Path: <SRS0=FxTY=RO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_MUTT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_MUTT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8C628C43381
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 Mar 2019 21:12:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 76286C43381
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 Mar 2019 21:13:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5BA432087C
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 Mar 2019 21:12:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 44BBB2087C
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 Mar 2019 21:13:37 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728343AbfCKVMp (ORCPT
+        id S1728384AbfCKVNg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 11 Mar 2019 17:12:45 -0400
-Received: from zeniv.linux.org.uk ([195.92.253.2]:59990 "EHLO
+        Mon, 11 Mar 2019 17:13:36 -0400
+Received: from zeniv.linux.org.uk ([195.92.253.2]:60050 "EHLO
         ZenIV.linux.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727955AbfCKVMp (ORCPT
+        with ESMTP id S1727916AbfCKVNf (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 11 Mar 2019 17:12:45 -0400
+        Mon, 11 Mar 2019 17:13:35 -0400
 Received: from viro by ZenIV.linux.org.uk with local (Exim 4.92 #3 (Red Hat Linux))
-        id 1h3SDr-0001sB-PQ; Mon, 11 Mar 2019 21:12:35 +0000
-Date:   Mon, 11 Mar 2019 21:12:35 +0000
+        id 1h3SEi-0001yq-42; Mon, 11 Mar 2019 21:13:28 +0000
+Date:   Mon, 11 Mar 2019 21:13:28 +0000
 From:   Al Viro <viro@zeniv.linux.org.uk>
 To:     Christoph Hellwig <hch@lst.de>
 Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
@@ -36,36 +36,50 @@ Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
         zhengbin <zhengbin13@huawei.com>, bcrl@kvack.org,
         linux-fsdevel@vger.kernel.org, linux-aio@kvack.org,
         houtao1@huawei.com, yi.zhang@huawei.com
-Subject: Re: [PATCH 8/8] aio: move sanity checks and request allocation to
- io_submit_one()
-Message-ID: <20190311211235.GM2217@ZenIV.linux.org.uk>
+Subject: Re: [PATCH 3/8] aio: store event at final iocb_put()
+Message-ID: <20190311211328.GN2217@ZenIV.linux.org.uk>
 References: <20190310070606.GA10138@ZenIV.linux.org.uk>
  <20190310070822.11564-1-viro@ZenIV.linux.org.uk>
- <20190310070822.11564-8-viro@ZenIV.linux.org.uk>
- <20190311194830.GH12602@lst.de>
+ <20190310070822.11564-3-viro@ZenIV.linux.org.uk>
+ <20190311194431.GD12602@lst.de>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20190311194830.GH12602@lst.de>
+In-Reply-To: <20190311194431.GD12602@lst.de>
 User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Mar 11, 2019 at 08:48:30PM +0100, Christoph Hellwig wrote:
-> On Sun, Mar 10, 2019 at 07:08:22AM +0000, Al Viro wrote:
+On Mon, Mar 11, 2019 at 08:44:31PM +0100, Christoph Hellwig wrote:
+> On Sun, Mar 10, 2019 at 07:08:17AM +0000, Al Viro wrote:
 > > From: Al Viro <viro@zeniv.linux.org.uk>
 > > 
-> > makes for somewhat cleaner control flow in __io_submit_one()
+> > Instead of having aio_complete() set ->ki_res.{res,res2}, do that
+> > explicitly in its callers, drop the reference (as aio_complete()
+> > used to do) and delay the rest until the final iocb_put().
 > > 
 > > Signed-off-by: Al Viro <viro@zeniv.linux.org.uk>
+> > ---
+> >  fs/aio.c | 45 ++++++++++++++++++++-------------------------
+> >  1 file changed, 20 insertions(+), 25 deletions(-)
+> > 
+> > diff --git a/fs/aio.c b/fs/aio.c
+> > index 2249a7a1d6b3..b9c4c1894020 100644
+> > --- a/fs/aio.c
+> > +++ b/fs/aio.c
+> > @@ -1077,24 +1077,10 @@ static inline void iocb_destroy(struct aio_kiocb *iocb)
+> >  	kmem_cache_free(kiocb_cachep, iocb);
+> >  }
+> >  
+> > -static inline void iocb_put(struct aio_kiocb *iocb)
+> > -{
+> > -	if (refcount_dec_and_test(&iocb->ki_refcnt))
+> > -		iocb_destroy(iocb);
+> > -}
 > 
-> I wonder if we should even bother keeping __io_submit_one.  Splitting
-> that out was prep work from Jens for something that eventually turned
-> into io_uring.
+> Maybe iocb_put should just have been added in the place you move
+> it to in patch 1?
 
-*shrug*
-
-I think it's a bit easier to keep track of control flow - failure exits
-are simpler that way.
+Might as well...
