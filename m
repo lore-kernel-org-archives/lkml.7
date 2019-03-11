@@ -3,51 +3,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0B2E8C43381
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 Mar 2019 13:29:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 177E2C43381
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 Mar 2019 13:29:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D746A2184D
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 Mar 2019 13:29:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DA55F2184D
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 Mar 2019 13:29:08 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727570AbfCKNTe (ORCPT
+        id S1727883AbfCKN3F (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 11 Mar 2019 09:19:34 -0400
-Received: from mout.kundenserver.de ([212.227.17.24]:51205 "EHLO
+        Mon, 11 Mar 2019 09:29:05 -0400
+Received: from mout.kundenserver.de ([217.72.192.75]:34267 "EHLO
         mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727480AbfCKNTa (ORCPT
+        with ESMTP id S1727534AbfCKNTd (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 11 Mar 2019 09:19:30 -0400
+        Mon, 11 Mar 2019 09:19:33 -0400
 Received: from orion.localdomain ([95.115.159.19]) by mrelayeu.kundenserver.de
  (mreue109 [212.227.15.183]) with ESMTPSA (Nemesis) id
- 1Mkpj7-1gdsi73fbj-00mHBM for <linux-kernel@vger.kernel.org>; Mon, 11 Mar 2019
- 14:19:28 +0100
+ 1MXH3Y-1hYc051ylq-00YiVp for <linux-kernel@vger.kernel.org>; Mon, 11 Mar 2019
+ 14:19:31 +0100
 From:   "Enrico Weigelt, metux IT consult" <info@metux.net>
 To:     linux-kernel@vger.kernel.org
-Subject: [PATCH 010/114] sound: soc: qcom: Kconfig: pedantic formatting
-Date:   Mon, 11 Mar 2019 14:17:22 +0100
-Message-Id: <1552310346-7629-11-git-send-email-info@metux.net>
+Subject: [PATCH 029/114] sound: drivers: Kconfig: pedantic formatting
+Date:   Mon, 11 Mar 2019 14:17:41 +0100
+Message-Id: <1552310346-7629-30-git-send-email-info@metux.net>
 X-Mailer: git-send-email 1.9.1
 In-Reply-To: <1552310346-7629-1-git-send-email-info@metux.net>
 References: <1552310346-7629-1-git-send-email-info@metux.net>
-X-Provags-ID: V03:K1:B3VBc+NZWKIAEsI0Am9cP0XvhXXe0dm+E5IFhdjQzhGqiO7euNO
- VXP3tbFSOP91W4ATX3gp3NwXB7ODUmi4n/q9jlh1IuzzPruZjiPKlOgI+qBwlpVWSErKtU0
- nPug9oBawbpGScjN5/B6IHWd9J7j/w5tP50YVAZQPqHuhGvc8leESWFe/3I3PLACzwSzf1Y
- pjEOVMGjmtL9uLjcymJSg==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:xWdzfQ9yk9I=:b97SE35KiKNTDV1NatanJL
- L2src6+jAcuv3i4Y1E3sFoZdvLweRnidWh2P4gCdoRiWKROepFkZJZVu73tkCiMYbZA2DP8St
- Izf8V3rtl3senUUYMr7vPaaz2weWHPvC2p/xaefcLwngxh0/6mYxLGduGMHSeHUKPiiKd9wfH
- Bs5H5/gYEgEFYNzjMA0YXbTOHbcgb214n/pr4u2Ai0E+73cu/Ry+VlNCIeiFI8toVq5Z8Om/u
- QkkjHRNpjFfeSuH/ycdnV97INSWl6MZlmuwTb9eV0X9ktbBwMCx7KAW2NF/tv8QUq1xH5sOsV
- QtB5bTz5NITiD7il9s+XSB7b8lcgXVE6FQ/Bky6GnwKegwAindvrT+eXMexM1Jv8+p2bfXZwt
- hxBvDBp+VNYgDdwd/3tZrejK2Wss7IfrIK6fMYxVMnfQ9TweWfyQndIkObjytCPLP7R9hi8ZY
- svIq9nTYBRGtO0eGAGVWM0zQvWsP3zAHG9Mcya4WDTxi2RD514OmP+A0Z6rGjnnWj69YMnqe7
- tnt9FlNi4rGMsETsB4TRSoRO4LUSmM7aWCSa55bRcSzW9hrxILPPZ32jR7I7n0ReYOcJ6Qldi
- v2AWTBKojnfkCeHdXG8TOTm6LxPgcoCHOniO/dLZoDb0BGkwoGCLkwgefRCL0aJ7nyzs/lROV
- W4BHrzuKf1AWzhyvSSIjMac2i2K16GIqlORkkbWf3NM0dbvDFnV36uSDMJFdlGt/rcA/ACNt8
- eZBGL7ELntjp1s1fuuf8irXaxsxuD0ILCsschg==
+X-Provags-ID: V03:K1:VN+2+fHRA50us7Inz9TvRsUmNXHtp9x5xf3YE43SSLNNt20gWBb
+ N3apSDV7zEmnG4KVe+o3vSU7oz5hxdIa+1o5o/GljLbbUY+8iiqESqPnOASO4xIvP+COgZP
+ xfaQCWo2bH6DJir9EfhMcpClXJCFQ0p25I+O4PPaEndSZxnyswxk/tAbzNrpOuQ0SdDN5MN
+ BrBJOcfpO138/sJzh5edA==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:iFd7BTxpfLo=:6YogadVHsnChPitq8rn7NN
+ M5YVxlbhOyCaZBQaauvZww+xRpuCSJaO6HR3TShthRFRR+aHO78xtZ1SlKudYNH7vPnwVWJoZ
+ 5qKMst33X3PZsHdU9+8t3UzpNYlU6NdqokUSRysInrN5TYyo3BpgHe6JMfoxXe2GPEnXq/1P1
+ wHl1MVqi/eL5NtI/6pu9CHywKHZKjBOPKmHVBTssE+x6ihvPqqKWnZJjgXktIfmc8If4X092u
+ bvbkojog9qMdITiXbO+/aYRYZPYy8cpA6I+qDTQp463cQ5xnX4Jnspcx9zVKKhGf5s0/dwN6P
+ 7zpuj+GFdLr/XXRgBolqWxZdxrNpcYyJsvgrNuJxHy3CkQtEI4A8bo4p25FtendJhKEqQu2UY
+ 3n+93mFSoeIRnv5O/rm17TatVuNKIWEv4+Pr80ENOTO+hIXX+Ei/weOT6YlGrb3nL+tsZ2z3F
+ TRGlKReSpfcyKDQsWQCzLIki5V0nzvTdaPA2TE83olZV6vMmcDZkvE5jyFVlfx5ARrmwfEtH9
+ Yxd8I/d2yvcmkdPMUqrpOw/pl3lyFW5eqxkR3IAb0QGZROqyaEeX9QPe/xKzt1+jLQkBCyHbZ
+ 911UjPHz5zrx36TpQgOuuwGMV3RdbaJ1fSZLt31fGq4Llcmru2kQf6tI17Z+IBMOmlHaUeUA4
+ urJZtbhjeaFKHTffwSSn2Ut2ZZUKgvCh+IyW/e3u+cJhihEdSIHcClS6Oege5xpKpIbIlUP0i
+ hoGQ+WUTXQyb5EHIyR/pMgapEKq7AunUWY9Czg==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
@@ -58,75 +58,77 @@ Great White Handkerchief come around and clean it up.
 
 Signed-off-by: Enrico Weigelt, metux IT consult <info@metux.net>
 ---
- sound/soc/qcom/Kconfig | 28 ++++++++++++++--------------
- 1 file changed, 14 insertions(+), 14 deletions(-)
+ sound/drivers/Kconfig | 26 +++++++++++++-------------
+ 1 file changed, 13 insertions(+), 13 deletions(-)
 
-diff --git a/sound/soc/qcom/Kconfig b/sound/soc/qcom/Kconfig
-index 75ceb04..85397f4 100644
---- a/sound/soc/qcom/Kconfig
-+++ b/sound/soc/qcom/Kconfig
-@@ -2,8 +2,8 @@ config SND_SOC_QCOM
- 	tristate "ASoC support for QCOM platforms"
- 	depends on ARCH_QCOM || COMPILE_TEST
- 	help
--          Say Y or M if you want to add support to use audio devices
--          in Qualcomm Technologies SOC-based platforms.
-+	  Say Y or M if you want to add support to use audio devices
-+	  in Qualcomm Technologies SOC-based platforms.
+diff --git a/sound/drivers/Kconfig b/sound/drivers/Kconfig
+index 648a12d..77618ed 100644
+--- a/sound/drivers/Kconfig
++++ b/sound/drivers/Kconfig
+@@ -1,6 +1,6 @@
+ config SND_MPU401_UART
+-        tristate
+-        select SND_RAWMIDI
++	tristate
++	select SND_RAWMIDI
  
- config SND_SOC_LPASS_CPU
+ config SND_OPL3_LIB
  	tristate
-@@ -29,17 +29,17 @@ config SND_SOC_STORM
- 	select SND_SOC_LPASS_IPQ806X
- 	select SND_SOC_MAX98357A
+@@ -42,7 +42,7 @@ menuconfig SND_DRIVERS
+ 	default y
  	help
--          Say Y or M if you want add support for SoC audio on the
--          Qualcomm Technologies IPQ806X-based Storm board.
-+	  Say Y or M if you want add support for SoC audio on the
-+	  Qualcomm Technologies IPQ806X-based Storm board.
+ 	  Support for generic sound devices.
+-  
++
+ if SND_DRIVERS
  
- config SND_SOC_APQ8016_SBC
- 	tristate "SoC Audio support for APQ8016 SBC platforms"
- 	depends on SND_SOC_QCOM
- 	select SND_SOC_LPASS_APQ8016
+ config SND_PCSP
+@@ -89,16 +89,16 @@ config SND_DUMMY
+ 	  will be called snd-dummy.
+ 
+ config SND_ALOOP
+-        tristate "Generic loopback driver (PCM)"
+-        select SND_PCM
+-        help
+-          Say 'Y' or 'M' to include support for the PCM loopback device.
++	tristate "Generic loopback driver (PCM)"
++	select SND_PCM
++	help
++	  Say 'Y' or 'M' to include support for the PCM loopback device.
+ 	  This module returns played samples back to the user space using
+ 	  the standard ALSA PCM device. The devices are routed 0->1 and
+           1->0, where first number is the playback PCM device and second
+ 	  number is the capture device. Module creates two PCM devices and
+ 	  configured number of substreams (see the pcm_substreams module
+-          parameter).
++	  parameter).
+ 
+ 	  The loopback device allows time sychronization with an external
+ 	  timing source using the time shift universal control (+-20%
+@@ -140,13 +140,13 @@ config SND_MTS64
+ 	depends on PARPORT
+ 	select SND_RAWMIDI
  	help
--          Support for Qualcomm Technologies LPASS audio block in
--          APQ8016 SOC-based systems.
--          Say Y if you want to use audio devices on MI2S.
-+	  Support for Qualcomm Technologies LPASS audio block in
-+	  APQ8016 SOC-based systems.
-+	  Say Y if you want to use audio devices on MI2S.
+-	  The ESI Miditerminal 4140 is a 4 In 4 Out MIDI Interface with 
+-          additional SMPTE Timecode capabilities for the parallel port.
++	  The ESI Miditerminal 4140 is a 4 In 4 Out MIDI Interface with
++	  additional SMPTE Timecode capabilities for the parallel port.
  
- config SND_SOC_QCOM_COMMON
- 	tristate
-@@ -81,10 +81,10 @@ config SND_SOC_QDSP6
- 	select SND_SOC_QDSP6_ASM
- 	select SND_SOC_QDSP6_ASM_DAI
- 	help
--	 To add support for MSM QDSP6 Soc Audio.
--	 This will enable sound soc platform specific
--	 audio drivers. This includes q6asm, q6adm,
--	 q6afe interfaces to DSP using apr.
-+	  To add support for MSM QDSP6 Soc Audio.
-+	  This will enable sound soc platform specific
-+	  audio drivers. This includes q6asm, q6adm,
-+	  q6afe interfaces to DSP using apr.
+ 	  Say 'Y' to include support for this device.
  
- config SND_SOC_MSM8996
- 	tristate "SoC Machine driver for MSM8996 and APQ8096 boards"
-@@ -92,9 +92,9 @@ config SND_SOC_MSM8996
- 	select SND_SOC_QDSP6
- 	select SND_SOC_QCOM_COMMON
- 	help
--          Support for Qualcomm Technologies LPASS audio block in
--          APQ8096 SoC-based systems.
--          Say Y if you want to use audio device on this SoCs
-+	  Support for Qualcomm Technologies LPASS audio block in
-+	  APQ8096 SoC-based systems.
-+	  Say Y if you want to use audio device on this SoCs
+-	  To compile this driver as a module, chose 'M' here: the module 
+-          will be called snd-mts64.
++	  To compile this driver as a module, chose 'M' here: the module
++	  will be called snd-mts64.
  
- config SND_SOC_SDM845
- 	tristate "SoC Machine driver for SDM845 boards"
+ config SND_SERIAL_U16550
+ 	tristate "UART16550 serial MIDI driver"
+@@ -235,4 +235,4 @@ config SND_AC97_POWER_SAVE_DEFAULT
+ 
+ 	  See SND_AC97_POWER_SAVE for more details.
+ 
+-endif	# SND_DRIVERS
++endif # SND_DRIVERS
 -- 
 1.9.1
 
