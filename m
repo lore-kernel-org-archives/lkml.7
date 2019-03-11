@@ -2,176 +2,161 @@ Return-Path: <SRS0=FxTY=RO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C9B16C43381
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 Mar 2019 15:39:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7AC70C10F06
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 Mar 2019 15:39:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 97FCC21872
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 Mar 2019 15:39:40 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1552318780;
-	bh=PIh2RqSE6xm2uW/oO7DHOcc52neJDPZgog/RRatZEY4=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=BOlFQ62MZfhJR4Wjunt9vMXbKEm77gX2hjLl38QMuBIH3hWBylW7QmMUIbisBDaJB
-	 mSsiFo0x0G1ISz/zsFps9ZG8hiGnJYd3APAKB46h3R/qDfpyE8x1dz4Mifz2qfeYe8
-	 Zt2oNrr30thEcd8Fq1IlCqAr+HM3wWzoyf+cOha8=
+	by mail.kernel.org (Postfix) with ESMTP id 5505321872
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 Mar 2019 15:39:49 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727569AbfCKPjj (ORCPT
+        id S1727683AbfCKPjs (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 11 Mar 2019 11:39:39 -0400
-Received: from mail-lj1-f193.google.com ([209.85.208.193]:39616 "EHLO
-        mail-lj1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727050AbfCKPjj (ORCPT
+        Mon, 11 Mar 2019 11:39:48 -0400
+Received: from mout.kundenserver.de ([212.227.17.10]:44379 "EHLO
+        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727153AbfCKPjr (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 11 Mar 2019 11:39:39 -0400
-Received: by mail-lj1-f193.google.com with SMTP id g80so4489416ljg.6
-        for <linux-kernel@vger.kernel.org>; Mon, 11 Mar 2019 08:39:37 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linux-foundation.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=bDkuJtxD0NMnHUhhT8vuTYdKs1FgcVsbN9MTv7cPTMI=;
-        b=H7reVy24SQkeZI/Q/3zebUzrBrGMH3l3xrh4IT2/gL19IlPsi7/9Q5Tu2zxLL52tZX
-         HFHdsWfOz7VAGHcJrUWR0Y00hmjAVuOaB1+4xaRsuSFEpg0ws9zfIcqHax3fJ9Ej+W51
-         6Yz9dv/n/9U8qtf25k0T8auwfnxJlgiD0T9U4=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=bDkuJtxD0NMnHUhhT8vuTYdKs1FgcVsbN9MTv7cPTMI=;
-        b=kQlyqF4J/kXpAbezJs3/dpPt/nVQxuXcw2YbbjIQJXE/FwoUmlxXYZun6dIMdMrkfy
-         5QPpuKFW70qc5g4ylTNr8pYH0p/D4jKKR9Z4BL5T7Wn8ZpFi/5Cw8KDtRSTY4e5aOwHZ
-         HlabkxV4uRERHwH9cipFdExykz4aGAug7UBVFynP8lkv/O4jiKXvZgDAvZADPlyo5o19
-         sAecIUyyEeNmgx136vhrFKKqWCF3gDM/jtgmEu9cMNvk/RFk7clOg84AYm/593gVhZi2
-         wBDNq4PCjWjyq3auZAOJ/NxwCnIjMQSo91ABdtsIk0dx2DwVDrqF/Ey550jwcUNMLtDC
-         AQ6A==
-X-Gm-Message-State: APjAAAUi36ZttOwn/v5y4c5Y4wBs3Qr7XxdEljIRnvWExBsYhV1aHEdl
-        vMyZC+T0kQDnr6V0COexfkGQSZ9/u0Q=
-X-Google-Smtp-Source: APXvYqwjUViO42MR6X2dumuND4VP8oKHNYGu0OSK85MryEM3olkg8RHXu++o4zEpuuSBdSqJoFjsGA==
-X-Received: by 2002:a2e:2f04:: with SMTP id v4mr17092202ljv.129.1552318775769;
-        Mon, 11 Mar 2019 08:39:35 -0700 (PDT)
-Received: from mail-lf1-f50.google.com (mail-lf1-f50.google.com. [209.85.167.50])
-        by smtp.gmail.com with ESMTPSA id q9sm1148578lfk.40.2019.03.11.08.39.34
-        for <linux-kernel@vger.kernel.org>
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Mon, 11 Mar 2019 08:39:34 -0700 (PDT)
-Received: by mail-lf1-f50.google.com with SMTP id u68so3794126lff.7
-        for <linux-kernel@vger.kernel.org>; Mon, 11 Mar 2019 08:39:34 -0700 (PDT)
-X-Received: by 2002:ac2:4424:: with SMTP id w4mr4240665lfl.148.1552318773874;
- Mon, 11 Mar 2019 08:39:33 -0700 (PDT)
+        Mon, 11 Mar 2019 11:39:47 -0400
+Received: from wuerfel.lan ([109.192.41.194]) by mrelayeu.kundenserver.de
+ (mreue106 [212.227.15.145]) with ESMTPA (Nemesis) id
+ 1MnqbU-1giwm43Jla-00pJck; Mon, 11 Mar 2019 16:39:02 +0100
+From:   Arnd Bergmann <arnd@arndb.de>
+To:     "David S . Miller" <davem@davemloft.net>
+Cc:     Deepa Dinamani <deepa.kernel@gmail.com>,
+        Willem de Bruijn <willemb@google.com>,
+        linux-alpha@vger.kernel.org, linux-arch@vger.kernel.org,
+        linux-mips@vger.kernel.org, linux-parisc@vger.kernel.org,
+        sparclinux@vger.kernel.org, Laura Abbott <labbott@redhat.com>,
+        netdev@vger.kernel.org, Arnd Bergmann <arnd@arndb.de>,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH] y2038: fix socket.h header inclusion
+Date:   Mon, 11 Mar 2019 16:38:17 +0100
+Message-Id: <20190311153857.563743-1-arnd@arndb.de>
+X-Mailer: git-send-email 2.20.0
 MIME-Version: 1.0
-References: <155221755096.13878.3370977359110476046.tglx@nanos.tec.linutronix.de>
- <155221755097.13878.5173016541431155948.tglx@nanos.tec.linutronix.de>
- <CAHk-=wjNes0wn0KUMMY6dOK_sN69z2TiGpDZ2cyzYF07s64bXQ@mail.gmail.com> <alpine.DEB.2.21.1903111516190.1691@nanos.tec.linutronix.de>
-In-Reply-To: <alpine.DEB.2.21.1903111516190.1691@nanos.tec.linutronix.de>
-From:   Linus Torvalds <torvalds@linux-foundation.org>
-Date:   Mon, 11 Mar 2019 08:39:17 -0700
-X-Gmail-Original-Message-ID: <CAHk-=whUyG3+Zwb74LSOPGtTBvK9N6DG4f=Y5Yv9Xzcy-qY0Qw@mail.gmail.com>
-Message-ID: <CAHk-=whUyG3+Zwb74LSOPGtTBvK9N6DG4f=Y5Yv9Xzcy-qY0Qw@mail.gmail.com>
-Subject: Re: [GIT pull] x86/asm for 5.1
-To:     Thomas Gleixner <tglx@linutronix.de>
-Cc:     Kees Cook <keescook@chromium.org>,
-        Linux List Kernel Mailing <linux-kernel@vger.kernel.org>,
-        "the arch/x86 maintainers" <x86@kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
+X-Provags-ID: V03:K1:hbJOlGFctjSe4uIASWSdvohq94Ci+jZkFRBdQPJ/OWMJENbMYXn
+ p6diVLksQqT/wvIECJWQdSwuaOMZWQ0QLFzjm5MOU1cbl3c6MYiCGGsCzyNWZhVkYC5yLtW
+ j7YY9/8HEBXDzh06CyrsYWzY4rcFhasLmbxOMaLQpnhqIbb35YmXVq/TcxIo+lwnbjS7SLX
+ dnU81YbsyenBlRqPf2TBg==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:B3/mxksVWSY=:xFc7KSzQwv5Vqct67DwByb
+ Y3V37JImFVImcC6lns6wFika45ZzzLtkS4UBSIGYozSLVEaegao9d+Lri62jpMdqbvzbEg/hN
+ a1Jkcud6zOGJvFz//q330eqeusWDQUIUuBbknFvyaRuMrJerMdvHxozvBh95Ew1ckmBmjP9dq
+ WjqyHMh87EoY8X6fo3iQXs2v9jzBynk7L0b5CgpJuK5kyPkDox/BAtkJONXrV1HVFifM8/Atv
+ 918HtQL0odUeaUK2W4cn1ugP4K0ozbnGoZlBOjP1JKnOgujEnaXkQNPr1CV/uCKH0Njpppl7M
+ VF/g7jAysP6M8yZ+cD86ylBPmClnwqdyPGBzvpdgHrZYWlAw2MulW7xZ50462QVbhFd6l++UK
+ nQEm8IMZVCSC8GZkGSZH4hbQy+1Eox6MNOuYs05+XbpCqeD+amY6FZkvlPpOq8FAl/Vrb+U8J
+ PcHl0SHrlVmpL3Br9dVDhMzgwWhvo1HTTD28Fb2xtb3HNWSzoahJ6dozChNwBbKyDCxJxra0z
+ eKfH6Y5tDP1tOk6uWTa65+V0c+6qlRBiEnJ5yOsTSGENByCaToy+H1cBBveNn3FA1IMsFNMqO
+ RDyITVHC2Md4U/CccXrqXzB79w1JVo9xGX1SbC4RyxIBhljt3EqZHLZdzF58i96PLf1Gl23I6
+ 43FXfE5KyL6BM1/sdHTbVdiRxmn/q2d2vFvFC1hCncdExKo2jRCoLYvU2VcxX/XKcEIvDsKgn
+ z3QzZdIagN6UJkMY4ckBxcahLZ1E5+7FhPABuw==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Mar 11, 2019 at 7:22 AM Thomas Gleixner <tglx@linutronix.de> wrote:
->
-> > So it basically "pins" the bits on CPU's before they are ready, so the
-> > secondary CPU's maghically get the bits set _independently_ of running
-> > the actual setup code to set them. That may *work*, but it sure looks
-> > iffy.
->
-> Which I looked at and it's a non issue. The SMAP/SMEP settings are globally
-> the same
+Referencing the __kernel_long_t type caused some user space applications
+to stop compiling when they had not already included linux/posix_types.h,
+e.g.
 
-No, Thomas, they really aren't globally the same, and it causes
-problems in that patch, and particularly in the actual "security" part
-of it.
+s/multicast.c -o ext/sockets/multicast.lo
+In file included from /builddir/build/BUILD/php-7.3.3/main/php.h:468,
+                 from /builddir/build/BUILD/php-7.3.3/ext/sockets/sockets.c:27:
+/builddir/build/BUILD/php-7.3.3/ext/sockets/sockets.c: In function 'zm_startup_sockets':
+/builddir/build/BUILD/php-7.3.3/ext/sockets/sockets.c:776:40: error: '__kernel_long_t' undeclared (first use in this function)
+  776 |  REGISTER_LONG_CONSTANT("SO_SNDTIMEO", SO_SNDTIMEO, CONST_CS | CONST_PERSISTENT);
 
->  and the non-boot CPUs set the bits very early in the boot process.
+It is safe to include that header here, since it only contains kernel
+internal types that do not conflict with other user space types.
 
-They are set early in the boot process, but they are set separately
-for each CPU, and not at the same time.
+It's still possible that some related build failures remain, but those
+are likely to be for code that is not already y2038 safe.
 
-And that's important. It's important because when the *first* CPU sets
-the "you now need to pin and check the SMAP bit", the _other_ CPU"s
-have not set it yet.
+Reported-by: Laura Abbott <labbott@redhat.com>
+Fixes: a9beb86ae6e5 ("sock: Add SO_RCVTIMEO_NEW and SO_SNDTIMEO_NEW")
+Signed-off-by: Arnd Bergmann <arnd@arndb.de>
+---
+ arch/alpha/include/uapi/asm/socket.h  | 2 +-
+ arch/mips/include/uapi/asm/socket.h   | 2 +-
+ arch/parisc/include/uapi/asm/socket.h | 2 +-
+ arch/sparc/include/uapi/asm/socket.h  | 2 +-
+ include/uapi/asm-generic/socket.h     | 2 +-
+ 5 files changed, 5 insertions(+), 5 deletions(-)
 
-Why is that a real and big deal?
+diff --git a/arch/alpha/include/uapi/asm/socket.h b/arch/alpha/include/uapi/asm/socket.h
+index 0d0fddb7e738..976e89b116e5 100644
+--- a/arch/alpha/include/uapi/asm/socket.h
++++ b/arch/alpha/include/uapi/asm/socket.h
+@@ -2,8 +2,8 @@
+ #ifndef _UAPI_ASM_SOCKET_H
+ #define _UAPI_ASM_SOCKET_H
+ 
++#include <linux/posix_types.h>
+ #include <asm/sockios.h>
+-#include <asm/bitsperlong.h>
+ 
+ /* For setsockopt(2) */
+ /*
+diff --git a/arch/mips/include/uapi/asm/socket.h b/arch/mips/include/uapi/asm/socket.h
+index eb9f33f8a8b3..d41765cfbc6e 100644
+--- a/arch/mips/include/uapi/asm/socket.h
++++ b/arch/mips/include/uapi/asm/socket.h
+@@ -10,8 +10,8 @@
+ #ifndef _UAPI_ASM_SOCKET_H
+ #define _UAPI_ASM_SOCKET_H
+ 
++#include <linux/posix_types.h>
+ #include <asm/sockios.h>
+-#include <asm/bitsperlong.h>
+ 
+ /*
+  * For setsockopt(2)
+diff --git a/arch/parisc/include/uapi/asm/socket.h b/arch/parisc/include/uapi/asm/socket.h
+index 16e428f03526..66c5dd245ac7 100644
+--- a/arch/parisc/include/uapi/asm/socket.h
++++ b/arch/parisc/include/uapi/asm/socket.h
+@@ -2,8 +2,8 @@
+ #ifndef _UAPI_ASM_SOCKET_H
+ #define _UAPI_ASM_SOCKET_H
+ 
++#include <linux/posix_types.h>
+ #include <asm/sockios.h>
+-#include <asm/bitsperlong.h>
+ 
+ /* For setsockopt(2) */
+ #define SOL_SOCKET	0xffff
+diff --git a/arch/sparc/include/uapi/asm/socket.h b/arch/sparc/include/uapi/asm/socket.h
+index 88fe4f978aca..9265a9eece15 100644
+--- a/arch/sparc/include/uapi/asm/socket.h
++++ b/arch/sparc/include/uapi/asm/socket.h
+@@ -2,8 +2,8 @@
+ #ifndef _ASM_SOCKET_H
+ #define _ASM_SOCKET_H
+ 
++#include <linux/posix_types.h>
+ #include <asm/sockios.h>
+-#include <asm/bitsperlong.h>
+ 
+ /* For setsockopt(2) */
+ #define SOL_SOCKET	0xffff
+diff --git a/include/uapi/asm-generic/socket.h b/include/uapi/asm-generic/socket.h
+index c8b430cb6dc4..8c1391c89171 100644
+--- a/include/uapi/asm-generic/socket.h
++++ b/include/uapi/asm-generic/socket.h
+@@ -2,8 +2,8 @@
+ #ifndef __ASM_GENERIC_SOCKET_H
+ #define __ASM_GENERIC_SOCKET_H
+ 
++#include <linux/posix_types.h>
+ #include <asm/sockios.h>
+-#include <asm/bitsperlong.h>
+ 
+ /* For setsockopt(2) */
+ #define SOL_SOCKET	1
+-- 
+2.20.0
 
-It's a real and big deal because when the *other* CPU's get around to
-booting and do _their_ thing, they don't have their per-cpu bits set
-yet, so _as_ they are setting up, they will be doing that
-
-        cr4_set_bits(X86_CR4_SMEP/SMAP/UMIP);
-
-dance trying to set one bit at a time, and as they do that, they don't
-yet have the pinned bits set.
-
-So what does that result in?
-
-It results in that insanity in the patch where it *first* does the
-
-        val |= cr4_pin;
-
-which is entirely insane for three important reasons:
-
- (a) doing that is what causes 99% of the pain with "oh, the compiler
-will now have seen that 'val' already has the bits set, so the
-compiler might optimize out the test afterwards, so we need to play
-extra games".
-
- (b) doing that first is pointless from a ROP use angle, since an
-attacker would use the address to after the operation, so now it's
-confusing anybody who reads the code into maybe thinking that that
-initial "or" has some security meaning
-
- (c) BUT it's actually *bad* for security, because doing that early
-'or' means that you lose the warning about possible _real_ mistakes
-where somebody hadn't set the bit or screwed up, because you're now
-hiding it by setting the bits early,
-
-See? It's a real downside. It causes the code to look odd, and
-pointless, and in the process it actually causes *less* verification
-coverage and attack warning because it will not warn about somebody
-who ended up getting to that "set cr4" part with bits clear by other
-tricks (for example, by corrupting the argument, or by just getting
-the ROP address from the pvops table for 'set_cr4()').
-
-So it literally makes the patch uglier and *weaker*.
-
-Side note: my suggested version was not as strong as it should have
-been either. The actual inline asm should still have the "+r" part to
-make sure it actually tests the register value (AFTER the write!) that
-it used, and that there's no reload or similar that the compiler did
-that causes it to test another value than the one it actually wrote to
-%cr3.
-
-So the inline asm should probably be
-
-        asm volatile("mov %0,%%cr4":"+r" (val):"memory");
-
-to make it better to actually test 'val' after the write.
-
-Anyway, I repeat: when a patch is trying to fix a really esoteric
-security issue, and the *only* reason for a patch is for that actual
-attack, then the fix in question should really be held to some much
-higher standards than this patch was held to.
-
-When the comments are actively garbage and don't match the code, when
-the code doesn't actually do a good job of testing against the attack
-despite _trying_ to and actively DOES NOT WARN if somebody got to
-there by picking up the pointer to the function, then patch is simply
-not a great patch.
-
-Don't make excuses for a bad patch.
-
-                Linus
