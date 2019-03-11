@@ -6,48 +6,48 @@ X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id ADB45C43381
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 Mar 2019 13:24:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 808EDC43381
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 Mar 2019 13:24:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 86CB82084F
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 Mar 2019 13:24:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 594A82087C
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 Mar 2019 13:24:48 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727645AbfCKNTk (ORCPT
+        id S1727688AbfCKNYr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 11 Mar 2019 09:19:40 -0400
-Received: from mout.kundenserver.de ([217.72.192.73]:39745 "EHLO
+        Mon, 11 Mar 2019 09:24:47 -0400
+Received: from mout.kundenserver.de ([217.72.192.73]:42903 "EHLO
         mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727490AbfCKNTa (ORCPT
+        with ESMTP id S1727637AbfCKNTk (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 11 Mar 2019 09:19:30 -0400
+        Mon, 11 Mar 2019 09:19:40 -0400
 Received: from orion.localdomain ([95.115.159.19]) by mrelayeu.kundenserver.de
  (mreue109 [212.227.15.183]) with ESMTPSA (Nemesis) id
- 1MbAYo-1gWU3t0tJI-00basd for <linux-kernel@vger.kernel.org>; Mon, 11 Mar 2019
- 14:19:29 +0100
+ 1M8ysi-1h66nd0sHW-0065oz for <linux-kernel@vger.kernel.org>; Mon, 11 Mar 2019
+ 14:19:39 +0100
 From:   "Enrico Weigelt, metux IT consult" <info@metux.net>
 To:     linux-kernel@vger.kernel.org
-Subject: [PATCH 012/114] arch: um: Kconfig: pedantic formatting
-Date:   Mon, 11 Mar 2019 14:17:24 +0100
-Message-Id: <1552310346-7629-13-git-send-email-info@metux.net>
+Subject: [PATCH 088/114] drivers: irqchip: Kconfig: pedantic formatting
+Date:   Mon, 11 Mar 2019 14:18:40 +0100
+Message-Id: <1552310346-7629-89-git-send-email-info@metux.net>
 X-Mailer: git-send-email 1.9.1
 In-Reply-To: <1552310346-7629-1-git-send-email-info@metux.net>
 References: <1552310346-7629-1-git-send-email-info@metux.net>
-X-Provags-ID: V03:K1:+TXDl585hP44vwVZsQho//+OAw0bgOYrxfCl2tkj/bhLtjnPN/I
- pqgT51YfoNuXWbYF32WZ67KUWGabAvM0GLo9HmaV6iq2ixxgdxUkclFjBctLX1DSfsJqR8+
- s8VZ+WQy2ObtC/Mv0wTZKbRO8pz5jXNdUyDThy7sV57VO6xwYBhNJiDjome2mqutr2/TfSJ
- BVmNnQIcyAzdlOtqvxWqg==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:adLf6bH5Kjg=:l4W0TLtTvyQOgvBQsqhDpf
- pbSu/bDbIqBR1zPs/mgIf1VtdLdKafn57VhmNq/6BEshmEFdiYKaA4YWQC3bldEmF7wBcJG57
- UhUjH8K2RoAIBvif9BHs0u6nLciO0Q632G3c8I+48y7g9MOKBbkz2AnkB1eDEcwdxUCj92bbh
- gnNQMIxrAn3oqDZpKKgD09Iss0u2ndO56ZozEN1Fzp5k+OYXwx1egNnsh0j46UlRw1MTz2ijQ
- F0YW7KrsipuX8Dm2jp2AAh9FPC0v3OoNKoXCzFFWa0CaWNc0PWXBmMB6gJDj/QxePlnycMWN+
- 1a9DzD2nbJhu6hY2G0/cVRoHW+ag0qe4mOGjGMCztUfOIDG5FKKDugSQe0Fu4kWuw19hKOHxr
- RPMJt5BcdHsyw03y+9ZLHuIcNdtfpN7fH38c+vWrmT5dFUSQvJU/h7Aee6LUBNVz6Su2A1RXi
- xZDSSGrWkCkNVEVh46ESKDpdiT++26FOrSK7rcc1eDEhyPsfKYyViLdbUDV6jkLSYp+JOh5/4
- /ABJfln1gxMgXi+bEjJEULi7vZ3m4c6NXrVXVtQT7usud4aEadxNpWmD6wdTg2yW8mu7ksJc8
- zppwV/Ayl8rATGR2jce9wxkk5FOuDwhfvlJCpVDEPMEyo2LXJqwi5HF2YVLBi1+3EvNWnw9Zw
- hCFYvaybu+C2j87ZNE2bnWpyZQdsUr4L9GoO5iEv2v3TeT84P64nUeprcOu4xfbGkAXb2ZpJN
- DPIVuRNZawDQqz5yIMzO3nW1cC5ef54njvpxVA==
+X-Provags-ID: V03:K1:izFnSWKW5Fl5xyJWegRlQ0UQxYVWbLywyoiMjxJDw64ZN/hs15a
+ u+iPh7jVw8x4nsCMhAXlw6/AWHU54rEIMEcqkgXvU47+q06+VSqWcL3jEIVKE71KdHV3APz
+ Bnqb9YXcaCB3GD3uI6JSx5iBC2s8JQfH1+vfqjuv+WRrTxWpxwn7ffVgMI76KdE7FTLEmCF
+ 7yUYMhKDtP4MKjfzXM8QA==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:nhYAlfBmieQ=:H3fPckh85zpWyMwsxwLFuH
+ ZxTW8ZmIw6BzN+ROfJyPfBuVq0HpkqUgOd1S3tHsu+0c1kz4dpd+zs3SZ34uIsf3uL4DtSN3d
+ 67PhlI4viEfSnt0fu91LnzSFF6jcenHzhj0SdiqPx6/Kspg9WPZ+WyspSD1RY7JOhNhvpH7QE
+ RN5MIZtoXDeQZ2XifOrc3yhqZJsnTdAiDjh/uJ7VoTqdDeNfd8gDvkyWEPnaVWOyVUR2MnJWJ
+ CG+SDEZFNa5A9m974Z27W17jx2nsCUhUE+oFDbeLoriH/jlTKRdXS2D0QJxMlF7Qz+w+LzT9k
+ 0G1LHfZ1KRYMnsiWxOJESsk6IH3a1WcdcEsPr1hUfQW5Uj5SWwujzmQ01edbOehFSrvEbdKxJ
+ EThaFN16Qn6zxddV3xa/eRghejZMNPk+dENV/RdXFaE8PQxLVcxFQcfcqKtC5crIBy3rvN8Yd
+ gyqhtLPng+F/j6z7RQXO0jLTybiOpMO22qs6BNXVRsfl1Wu2rjeRxSXH3VgcUdew8uoI8Wxgm
+ BKi84yVheflc3GGWzaSw6RiVdsLzx4K3xah0zWErNyNH9aidAc27YPMGiLr0zjf29hDxmphDY
+ sgZaCDwC2o7UAniCQXtG0hNCHkFPOPtQ/7gYuVmDIokXLzgA51hjXAKTlgtDP81SMx+T8QAkY
+ BMPH4EnzbuImJPB9jxY22ItXzqmpgkW3Xf0qZrQ1Ykok+++JZnVtLLb3U11/YXstYBSxrSmwi
+ nyQshvO8TGaPeWW8asunbTQjE5kbiZHlzvsXEA==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
@@ -58,86 +58,110 @@ Great White Handkerchief come around and clean it up.
 
 Signed-off-by: Enrico Weigelt, metux IT consult <info@metux.net>
 ---
- arch/um/Kconfig | 52 ++++++++++++++++++++++++++--------------------------
+ drivers/irqchip/Kconfig | 52 ++++++++++++++++++++++++-------------------------
  1 file changed, 26 insertions(+), 26 deletions(-)
 
-diff --git a/arch/um/Kconfig b/arch/um/Kconfig
-index ec9711d..216ee50 100644
---- a/arch/um/Kconfig
-+++ b/arch/um/Kconfig
-@@ -80,46 +80,46 @@ config LD_SCRIPT_DYN
+diff --git a/drivers/irqchip/Kconfig b/drivers/irqchip/Kconfig
+index 5438abb..134c7c8 100644
+--- a/drivers/irqchip/Kconfig
++++ b/drivers/irqchip/Kconfig
+@@ -251,9 +251,9 @@ config VERSATILE_FPGA_IRQ
+ 	select IRQ_DOMAIN
+ 
+ config VERSATILE_FPGA_IRQ_NR
+-       int
+-       default 4
+-       depends on VERSATILE_FPGA_IRQ
++	int
++	default 4
++	depends on VERSATILE_FPGA_IRQ
+ 
+ config XTENSA_MX
  	bool
- 	default y
- 	depends on !LD_SCRIPT_STATIC
--        select MODULE_REL_CRCS if MODVERSIONS
-+	select MODULE_REL_CRCS if MODVERSIONS
- 
- config HOSTFS
- 	tristate "Host filesystem"
+@@ -276,8 +276,8 @@ config KEYSTONE_IRQ
+ 	tristate "Keystone 2 IRQ controller IP"
+ 	depends on ARCH_KEYSTONE
  	help
--          While the User-Mode Linux port uses its own root file system for
--          booting and normal file access, this module lets the UML user
--          access files stored on the host.  It does not require any
--          network connection between the Host and UML.  An example use of
--          this might be:
-+	  While the User-Mode Linux port uses its own root file system for
-+	  booting and normal file access, this module lets the UML user
-+	  access files stored on the host.  It does not require any
-+	  network connection between the Host and UML.  An example use of
-+	  this might be:
+-		Support for Texas Instruments Keystone 2 IRQ controller IP which
+-		is part of the Keystone 2 IPC mechanism
++	  Support for Texas Instruments Keystone 2 IRQ controller IP which
++	  is part of the Keystone 2 IPC mechanism
  
--          mount none /tmp/fromhost -t hostfs -o /tmp/umlshare
-+	  mount none /tmp/fromhost -t hostfs -o /tmp/umlshare
- 
--          where /tmp/fromhost is an empty directory inside UML and
--          /tmp/umlshare is a directory on the host with files the UML user
--          wishes to access.
-+	  where /tmp/fromhost is an empty directory inside UML and
-+	  /tmp/umlshare is a directory on the host with files the UML user
-+	  wishes to access.
- 
--          For more information, see
--          <http://user-mode-linux.sourceforge.net/hostfs.html>.
-+	  For more information, see
-+	  <http://user-mode-linux.sourceforge.net/hostfs.html>.
- 
--          If you'd like to be able to work with files stored on the host,
--          say Y or M here; otherwise say N.
-+	  If you'd like to be able to work with files stored on the host,
-+	  say Y or M here; otherwise say N.
- 
- config MCONSOLE
- 	bool "Management console"
- 	depends on PROC_FS
+ config MIPS_GIC
+ 	bool
+@@ -291,11 +291,11 @@ config INGENIC_IRQ
  	default y
- 	help
--          The user mode linux management console is a low-level interface to
--          the kernel, somewhat like the i386 SysRq interface.  Since there is
--          a full-blown operating system running under every user mode linux
--          instance, there is much greater flexibility possible than with the
--          SysRq mechanism.
--
--          If you answer 'Y' to this option, to use this feature, you need the
--          mconsole client (called uml_mconsole) which is present in CVS in
--          2.4.5-9um and later (path /tools/mconsole), and is also in the
--          distribution RPM package in 2.4.6 and later.
--
--          It is safe to say 'Y' here.
-+	  The user mode linux management console is a low-level interface to
-+	  the kernel, somewhat like the i386 SysRq interface.  Since there is
-+	  a full-blown operating system running under every user mode linux
-+	  instance, there is much greater flexibility possible than with the
-+	  SysRq mechanism.
-+
-+	  If you answer 'Y' to this option, to use this feature, you need the
-+	  mconsole client (called uml_mconsole) which is present in CVS in
-+	  2.4.5-9um and later (path /tools/mconsole), and is also in the
-+	  distribution RPM package in 2.4.6 and later.
-+
-+	  It is safe to say 'Y' here.
  
- config MAGIC_SYSRQ
- 	bool "Magic SysRq key"
+ config RENESAS_H8300H_INTC
+-        bool
++	bool
+ 	select IRQ_DOMAIN
+ 
+ config RENESAS_H8S_INTC
+-        bool
++	bool
+ 	select IRQ_DOMAIN
+ 
+ config IMX_GPCV2
+@@ -328,7 +328,7 @@ config MVEBU_PIC
+ 	bool
+ 
+ config MVEBU_SEI
+-        bool
++	bool
+ 
+ config LS_SCFG_MSI
+ 	def_bool y if SOC_LS1021A || ARCH_LAYERSCAPE
+@@ -367,20 +367,20 @@ config IRQ_UNIPHIER_AIDET
+ 	  Support for the UniPhier AIDET (ARM Interrupt Detector).
+ 
+ config MESON_IRQ_GPIO
+-       bool "Meson GPIO Interrupt Multiplexer"
+-       depends on ARCH_MESON
+-       select IRQ_DOMAIN
+-       select IRQ_DOMAIN_HIERARCHY
+-       help
+-         Support Meson SoC Family GPIO Interrupt Multiplexer
++	bool "Meson GPIO Interrupt Multiplexer"
++	depends on ARCH_MESON
++	select IRQ_DOMAIN
++	select IRQ_DOMAIN_HIERARCHY
++	help
++	  Support Meson SoC Family GPIO Interrupt Multiplexer
+ 
+ config GOLDFISH_PIC
+-       bool "Goldfish programmable interrupt controller"
+-       depends on MIPS && (GOLDFISH || COMPILE_TEST)
+-       select IRQ_DOMAIN
+-       help
+-         Say yes here to enable Goldfish interrupt controller driver used
+-         for Goldfish based virtual platforms.
++	bool "Goldfish programmable interrupt controller"
++	depends on MIPS && (GOLDFISH || COMPILE_TEST)
++	select IRQ_DOMAIN
++	help
++	  Say yes here to enable Goldfish interrupt controller driver used
++	  for Goldfish based virtual platforms.
+ 
+ config QCOM_PDC
+ 	bool "QCOM PDC"
+@@ -431,10 +431,10 @@ config SIFIVE_PLIC
+ 	bool "SiFive Platform-Level Interrupt Controller"
+ 	depends on RISCV
+ 	help
+-	   This enables support for the PLIC chip found in SiFive (and
+-	   potentially other) RISC-V systems.  The PLIC controls devices
+-	   interrupts and connects them to each core's local interrupt
+-	   controller.  Aside from timer and software interrupts, all other
+-	   interrupt sources are subordinate to the PLIC.
++	  This enables support for the PLIC chip found in SiFive (and
++	  potentially other) RISC-V systems.  The PLIC controls devices
++	  interrupts and connects them to each core's local interrupt
++	  controller.  Aside from timer and software interrupts, all other
++	  interrupt sources are subordinate to the PLIC.
+ 
+-	   If you don't know what to do here, say Y.
++	  If you don't know what to do here, say Y.
 -- 
 1.9.1
 
