@@ -2,88 +2,139 @@ Return-Path: <SRS0=FxTY=RO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 927DDC43381
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 Mar 2019 09:56:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 58F4EC43381
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 Mar 2019 09:56:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6B7B62084F
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 Mar 2019 09:56:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 314AF20857
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 Mar 2019 09:56:53 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727398AbfCKJ4s (ORCPT
+        id S1727415AbfCKJ4v (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 11 Mar 2019 05:56:48 -0400
-Received: from mail-out.m-online.net ([212.18.0.9]:57898 "EHLO
-        mail-out.m-online.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726074AbfCKJ4q (ORCPT
+        Mon, 11 Mar 2019 05:56:51 -0400
+Received: from bhuna.collabora.co.uk ([46.235.227.227]:53700 "EHLO
+        bhuna.collabora.co.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726074AbfCKJ4u (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 11 Mar 2019 05:56:46 -0400
-Received: from frontend01.mail.m-online.net (unknown [192.168.8.182])
-        by mail-out.m-online.net (Postfix) with ESMTP id 44HtmX332yz1rghy;
-        Mon, 11 Mar 2019 10:56:44 +0100 (CET)
-Received: from localhost (dynscan1.mnet-online.de [192.168.6.70])
-        by mail.m-online.net (Postfix) with ESMTP id 44HtmW6ghYz1qrh2;
-        Mon, 11 Mar 2019 10:56:43 +0100 (CET)
-X-Virus-Scanned: amavisd-new at mnet-online.de
-Received: from mail.mnet-online.de ([192.168.8.182])
-        by localhost (dynscan1.mail.m-online.net [192.168.6.70]) (amavisd-new, port 10024)
-        with ESMTP id kACLItIAooB0; Mon, 11 Mar 2019 10:56:43 +0100 (CET)
-X-Auth-Info: dDZS6kxfS4Bc21ktbFoXlmXOBbWRVWVWLDOtQt27Td3JjumDNk7oHTaDX3jkRqdg
-Received: from hawking (charybdis-ext.suse.de [195.135.221.2])
+        Mon, 11 Mar 2019 05:56:50 -0400
+Received: from localhost (unknown [IPv6:2a01:e0a:2c:6930:5cf4:84a1:2763:fe0d])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.mnet-online.de (Postfix) with ESMTPSA;
-        Mon, 11 Mar 2019 10:56:42 +0100 (CET)
-From:   Andreas Schwab <schwab@linux-m68k.org>
-To:     Geert Uytterhoeven <geert@linux-m68k.org>
-Cc:     Finn Thain <fthain@telegraphics.com.au>,
-        kbuild test robot <lkp@intel.com>, kbuild-all@01.org,
-        linux-m68k <linux-m68k@lists.linux-m68k.org>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Subject: Re: [m68k:master 1174/1174] arch/m68k/include/asm/string.h:72:25: warning: '__builtin_memcpy' forming offset 8 is out of the bounds [0, 7]
-References: <201903042049.npxcZzps%fengguang.wu@intel.com>
-        <CAMuHMdX365qmWiii=gQLADpW49EMkdDrVJDPWNBpAZuZM0WQFQ@mail.gmail.com>
-        <alpine.LNX.2.21.1903051154200.135@nippy.intranet>
-        <alpine.LNX.2.21.1903051357410.135@nippy.intranet>
-        <CAMuHMdUuwudbk15GUPPxL+-Gt4zhhSomk-wMAHeTOkoaDOCUAA@mail.gmail.com>
-        <alpine.LNX.2.21.1903051948290.147@nippy.intranet>
-        <mvmh8chzo7j.fsf@linux-m68k.org>
-        <alpine.LNX.2.21.1903071329140.513@nippy.intranet>
-        <CAMuHMdVzLTO-yYJJ=HqVySX6gqes9cnyspungsB5maduzNt0RA@mail.gmail.com>
-        <alpine.LNX.2.21.1903080838260.595@nippy.intranet>
-        <CAMuHMdWr-Y7mfH3gFXfK0fWpEhhdoW9VUkOEwf0nFN8kfr4zrg@mail.gmail.com>
-X-Yow:  What I need is a MATURE RELATIONSHIP with a FLOPPY DISK...
+        (Authenticated sender: bbrezillon)
+        by bhuna.collabora.co.uk (Postfix) with ESMTPSA id 46A2326048B;
+        Mon, 11 Mar 2019 09:56:47 +0000 (GMT)
 Date:   Mon, 11 Mar 2019 10:56:42 +0100
-In-Reply-To: <CAMuHMdWr-Y7mfH3gFXfK0fWpEhhdoW9VUkOEwf0nFN8kfr4zrg@mail.gmail.com>
-        (Geert Uytterhoeven's message of "Mon, 11 Mar 2019 10:14:11 +0100")
-Message-ID: <mvmo96hvin9.fsf@linux-m68k.org>
-User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/26.1.92 (gnu/linux)
+From:   Boris Brezillon <boris.brezillon@collabora.com>
+To:     Helen Koike <helen.koike@collabora.com>
+Cc:     dri-devel@lists.freedesktop.org, nicholas.kazlauskas@amd.com,
+        andrey.grodzovsky@amd.com, daniel.vetter@ffwll.ch,
+        linux-kernel@vger.kernel.org, Tomasz Figa <tfiga@chromium.org>,
+        David Airlie <airlied@linux.ie>,
+        Sean Paul <seanpaul@google.com>, kernel@collabora.com,
+        harry.wentland@amd.com,
+        =?UTF-8?B?U3TDqXBoYW5l?= Marchesin <marcheu@google.com>,
+        Eric Anholt <eric@anholt.net>
+Subject: Re: [PATCH 5/5] drm/vc4: fix fb references in async update
+Message-ID: <20190311105642.44816e7b@collabora.com>
+In-Reply-To: <20190304144909.6267-6-helen.koike@collabora.com>
+References: <20190304144909.6267-1-helen.koike@collabora.com>
+        <20190304144909.6267-6-helen.koike@collabora.com>
+Organization: Collabora
+X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; x86_64-redhat-linux-gnu)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mär 11 2019, Geert Uytterhoeven <geert@linux-m68k.org> wrote:
++Eric (the VC4 driver maintainer)
 
-> Hi Finn,
->
-> On Thu, Mar 7, 2019 at 10:42 PM Finn Thain <fthain@telegraphics.com.au> wrote:
->> No, the link fails because the compiler still emits some references to
->> strlen().
->
-> Despite -ffreestanding?!?
+Hello Helen,
 
-*Because* of -ffreestanding.  Without that, strlen would be recognized
-and turned into __builtin_strlen.
+On Mon,  4 Mar 2019 11:49:09 -0300
+Helen Koike <helen.koike@collabora.com> wrote:
 
-Andreas.
+> Async update callbacks are expected to set the old_fb in the new_state
+> so prepare/cleanup framebuffers are balanced.
+> 
+> Calling drm_atomic_set_fb_for_plane() (which gets a reference of the new
+> fb and put the old fb) is not required, as it's taken care by
+> drm_mode_cursor_universal() when calling drm_atomic_helper_update_plane().
+> 
+> Cc: <stable@vger.kernel.org> # v4.19+: 25dc194b34dd: drm: Block fb changes for async plane updates
+> Cc: <stable@vger.kernel.org> # v4.19+: 8105bbaf9afd: drm: don't block fb changes for async plane updates
 
--- 
-Andreas Schwab, schwab@linux-m68k.org
-GPG Key fingerprint = 7578 EB47 D4E5 4D69 2510  2552 DF73 E780 A9DA AEC1
-"And now for something completely different."
+Hm, the commit hash you give here will change when applied to the DRM
+tree. I think there's a standard way to express dependencies between
+patches that needs to be applied to stable, but I'm not sure you need
+to describe that since Greg picks patches in the order they appear in
+Linus' tree and those patches will be applied in the right order.
+
+Another option if you want to keep things simple is to squash all
+changes in a single patch ;).
+
+> Fixes: 25dc194b34dd ("drm: Block fb changes for async plane updates")
+
+Nitpicking: this Fixes tag is a bit of lie since you're actually fixing a
+mistake that was introduced when async update support was added to VC4.
+Commit 25dc194b34dd only added a new constraint to fix the initial
+problem.
+
+So I'd suggest:
+
+Fixes: 539c320bfa97 ("drm/vc4: update cursors asynchronously through atomic")
+
+BTW, the same applies to other patches in this series.
+
+> Suggested-by: Boris Brezillon <boris.brezillon@collabora.com>
+
+Other than that,
+
+Reviewed-by: Boris Brezillon <boris.brezillon@collabora.com>
+
+Regards,
+
+Boris
+
+> Signed-off-by: Helen Koike <helen.koike@collabora.com>
+> 
+> ---
+> Hello,
+> 
+> As mentioned in the cover letter,
+> I tested on the rockchip and on i915 using igt plane_cursor_legacy and
+> kms_cursor_legacy and I didn't see any regressions.
+> But I couldn't test on VC4. I have a Raspberry pi model B rev2, when
+> FB_SIMPLE is running I can see output on the screen, but when vc4 is
+> loaded my hdmi display is not detected anymore, I am still debugging
+> this, probably some config in the firmware, but I would appreciate if
+> anyone could help me testing it.
+> 
+> Also the Cc statble commit hash dependency needs to be updated once the
+> refered commit is merged.
+> 
+> Thanks!
+> Helen
+> 
+>  drivers/gpu/drm/vc4/vc4_plane.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+> 
+> diff --git a/drivers/gpu/drm/vc4/vc4_plane.c b/drivers/gpu/drm/vc4/vc4_plane.c
+> index 1babfeca0c92..1235e53b22a3 100644
+> --- a/drivers/gpu/drm/vc4/vc4_plane.c
+> +++ b/drivers/gpu/drm/vc4/vc4_plane.c
+> @@ -968,7 +968,7 @@ static void vc4_plane_atomic_async_update(struct drm_plane *plane,
+>  {
+>  	struct vc4_plane_state *vc4_state, *new_vc4_state;
+>  
+> -	drm_atomic_set_fb_for_plane(plane->state, state->fb);
+> +	swap(plane->state->fb, state->fb);
+>  	plane->state->crtc_x = state->crtc_x;
+>  	plane->state->crtc_y = state->crtc_y;
+>  	plane->state->crtc_w = state->crtc_w;
+
