@@ -2,128 +2,106 @@ Return-Path: <SRS0=FxTY=RO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 73421C43381
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 Mar 2019 16:36:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DE7DEC43381
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 Mar 2019 16:36:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 44EF2205F4
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 Mar 2019 16:36:30 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="ZxJvlV4h"
+	by mail.kernel.org (Postfix) with ESMTP id B586A2084F
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 Mar 2019 16:36:35 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727810AbfCKQg3 (ORCPT
+        id S1727778AbfCKQg2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 11 Mar 2019 12:36:29 -0400
-Received: from mail-it1-f195.google.com ([209.85.166.195]:51891 "EHLO
-        mail-it1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727643AbfCKQg1 (ORCPT
+        Mon, 11 Mar 2019 12:36:28 -0400
+Received: from mail-io1-f71.google.com ([209.85.166.71]:33351 "EHLO
+        mail-io1-f71.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727027AbfCKQg0 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 11 Mar 2019 12:36:27 -0400
-Received: by mail-it1-f195.google.com with SMTP id e24so8319912itl.1
-        for <linux-kernel@vger.kernel.org>; Mon, 11 Mar 2019 09:36:26 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=5bujM85Y0scj/fEZwrlnYcayj7i0rZlLHknj8BGgmlQ=;
-        b=ZxJvlV4hegE8DN0DV3FW4178aEMDeHea8IXp0fzUZM97n9Kop92Wf2mzwL7uHNnhHb
-         BzTTzMqzWDeeQZiRmtcN1aBt3HclJ2/oErULNL4pRjtG/MgtkTALWT7c312yZQdBPAoE
-         B49BYNsYSCjKU2E1LGMKWXjXr8tvh3dtNBALdDSUY4nyM/AIiSX3fA6NC1YeSogrNQzI
-         2U3b6DBO7oCA0WNfUUGcbQNfzcNSh8ahfpLN9OJFCae+dbToC4OLhIKurpRI4PraFrQ8
-         Cv/TSyuoFDP/lH08wSQEwlP4OMjTyfApoeGnqeSqSnkvFJlKOUjNEPiDXLhwLERfDDJR
-         ImdQ==
+        Mon, 11 Mar 2019 12:36:26 -0400
+Received: by mail-io1-f71.google.com with SMTP id n15so4563744ioc.0
+        for <linux-kernel@vger.kernel.org>; Mon, 11 Mar 2019 09:36:25 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=5bujM85Y0scj/fEZwrlnYcayj7i0rZlLHknj8BGgmlQ=;
-        b=Nube9lxKNCLBPY1TBLdvm4utkPox2cPXZSTAipvPKv/MObOIGHFF8/CvJbCdJz7O1s
-         KFFtOq/gz9IFIjv2XCS268k8yeOzUy1WexXYoiUjiZ//eSfSrVj2zpjmmH5Lp67apvoF
-         PUY2cbDWFF4XpclylS8ttrMiMeeawHtM0K3GYNgvamZ5JoUHrhAode+2/rnyTJEAdopa
-         J1jasy1espw4CR7bRx67HHSAlJxYHbpeP2HEN/GGBhnXiq/ur69GM8EpqIdJMibmghq8
-         nNUaPjXHriQ4s1rEDCAwYdxsHmR2KbsKVpC3UT59mXS5iwPH2CjKpm/0dCrR8Jq+1B3f
-         cmwA==
-X-Gm-Message-State: APjAAAWkSrhm6zG3L0WZGBl3h/qcMueWz+chm+LgHes4B7j1tJ6yudvM
-        PExSuBkN0L4gCUfI7Jf7yf0VHWS6bVsi2zdvax1MVJAt3JU=
-X-Google-Smtp-Source: APXvYqylhJso83eUpkLgcTRmqSkUgn+uTBfrquEyBEepmT3VJYrGK/ro99ZaL1Ky/cYbH3iMAjbhbT4FcbajY65wCJ4=
-X-Received: by 2002:a24:1947:: with SMTP id b68mr308858itb.121.1552322186149;
- Mon, 11 Mar 2019 09:36:26 -0700 (PDT)
+        h=x-gm-message-state:mime-version:date:in-reply-to:message-id:subject
+         :from:to:cc;
+        bh=v/W4l2oeEfeSQAeMVBpOW2XizYCPg5XJwuQyB8vi++c=;
+        b=gINaEn+uaFP+axYGbyPb4aMJxuvuMN6K2UNcWcSomZ+MznPK2/EDbN1+P5zIpctwdt
+         c94MSgdwq7WRVakJAa0S4iW9JZ31K34UCZeqYBz2abAlgFFqS9HkSGhY9cYwKkHzUKn7
+         aMoUx+SOm4f4bQ9NPcan8qQdEm8cZSP3T4eaE8wxqIwnhIu3UCk/oxrAwUvmBg6EGfty
+         hmK8S2iPaXVOhciynzz5aWqzxvG+OIHs35NfGVC8jS9eaNKwxW4XlPNRi/iB3E4svyjf
+         UMkrm9qayo+07z4W+wj/omVTqLNtRlCWVd3xUzlX8dRZrAzkJ2s5rFUhyOosFLTPQzjW
+         FlTw==
+X-Gm-Message-State: APjAAAUTmh86O0McuQZDSh+oFw0sY7XUjm3W9Z22ylExmMgl6hDyRsmt
+        VRfbKb2PvlHC1RLof4Q8JLjPfO3WWlKzlEBj8G3oXiyQh0er
+X-Google-Smtp-Source: APXvYqyh1kjd66e8Qn9/ig6ya3to1B1vGO6ikYmmsr8EuU+SQKk9QUYL+oeFzc2qZvYkmYXlJR+TV1AHu9ZdKfy5xaYaijTc60QD
 MIME-Version: 1.0
-References: <20190307091514.2489338-1-arnd@arndb.de> <20190307091514.2489338-2-arnd@arndb.de>
- <CAKwvOdk=9j2HvtWOpdOEw9sm0Nh2oU3c1c6+hJJ5WMweAM=4EQ@mail.gmail.com>
- <20190307234850.nsbpkfcit3lnmytu@shell.armlinux.org.uk> <CAKv+Gu9VM2Vs3Q8+bPLsnt08dOmba6j54gnhiHkk=AHRzG8tVA@mail.gmail.com>
- <20190308095308.hjjrzdp4fzbbtnnv@shell.armlinux.org.uk> <CAKv+Gu_szWgw-KJASLYGJ6hJXh5K8WxnUn+UQkm7jUup=rqG6w@mail.gmail.com>
- <20190308103429.ycasmpt6tcpsoqps@shell.armlinux.org.uk> <CAKv+Gu_9=G3U6Yaw8fLfTP3QT38WdwrFaC-BqLTCr2NihWA2ZA@mail.gmail.com>
- <20190308105835.tovswk5rwxusmxdu@shell.armlinux.org.uk> <CAKv+Gu-Od+hBosThTWFooz9FMKnu3g0oNh_2hmidetbB-_YyjQ@mail.gmail.com>
- <CAK8P3a1ECw_g1AqsVavD8hhVEGqNk6Kcx_U0L=0d29eu561NhA@mail.gmail.com>
- <CAKv+Gu8qgsnPV=uWR2jkJ5bsYihekkEvWNuw4whLdLrbBa7gnA@mail.gmail.com> <CAK8P3a0QCgLbXpztUQXAhWLp=ArJUqmtcuXNZUeXZBH+N1QeaA@mail.gmail.com>
-In-Reply-To: <CAK8P3a0QCgLbXpztUQXAhWLp=ArJUqmtcuXNZUeXZBH+N1QeaA@mail.gmail.com>
-From:   Ard Biesheuvel <ard.biesheuvel@linaro.org>
-Date:   Mon, 11 Mar 2019 17:36:14 +0100
-Message-ID: <CAKv+Gu__jgnm00ou+3FsqRBZWeDFy5Qi+1eiXeMKqc+hVSXomg@mail.gmail.com>
-Subject: Re: [PATCH 2/2] ARM: futex: make futex_detect_cmpxchg more reliable
-To:     Arnd Bergmann <arnd@arndb.de>
-Cc:     Russell King - ARM Linux admin <linux@armlinux.org.uk>,
-        Mikael Pettersson <mikpelinux@gmail.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Nick Desaulniers <ndesaulniers@google.com>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Darren Hart <dvhart@infradead.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Dave Martin <Dave.Martin@arm.com>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>
-Content-Type: text/plain; charset="UTF-8"
+X-Received: by 2002:a05:660c:150:: with SMTP id r16mr298962itk.39.1552322185632;
+ Mon, 11 Mar 2019 09:36:25 -0700 (PDT)
+Date:   Mon, 11 Mar 2019 09:36:25 -0700
+In-Reply-To: <CACT4Y+YLZYJ21Bao5HVAvXhvb9PQ41J-4RvtkZZEMF38qtkxHg@mail.gmail.com>
+X-Google-Appengine-App-Id: s~syzkaller
+X-Google-Appengine-App-Id-Alias: syzkaller
+Message-ID: <00000000000073a5740583d42c1e@google.com>
+Subject: Re: Re: WARNING in ep_poll_callback
+From:   syzbot <syzbot+@syzkaller.appspotmail.com>
+To:     "'Dmitry Vyukov' via syzkaller-bugs" 
+        <syzkaller-bugs@googlegroups.com>
+Cc:     akpm@linux-foundation.org, dbueso@suse.de, jbaron@akamai.com,
+        linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org,
+        paulmck@linux.vnet.ibm.com, rpenyaev@suse.de, sfr@canb.auug.org.au,
+        syzkaller-bugs@googlegroups.com, viro@zeniv.linux.org.uk
+Content-Type: text/plain; charset="UTF-8"; format=flowed; delsp=yes
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, 11 Mar 2019 at 17:30, Arnd Bergmann <arnd@arndb.de> wrote:
->
-> On Mon, Mar 11, 2019 at 3:36 PM Ard Biesheuvel
-> <ard.biesheuvel@linaro.org> wrote:
-> > On Mon, 11 Mar 2019 at 15:34, Arnd Bergmann <arnd@arndb.de> wrote:
-> > > On Fri, Mar 8, 2019 at 12:56 PM Ard Biesheuvel
-> > > <ard.biesheuvel@linaro.org> wrote:
-> > > > On Fri, 8 Mar 2019 at 11:58, Russell King - ARM Linux admin <linux@armlinux.org.uk> wrote:
-> > > > > On Fri, Mar 08, 2019 at 11:45:21AM +0100, Ard Biesheuvel wrote:
-> > >
-> > > My first attempt (before finding the original patch from Mikael Pettersson)
-> > > was to change the probe to pass '1' as the value instead of '0', that
-> > > worked fine.
-> > >
-> >
-> > Which probe is that?
->
-> diff --git a/kernel/futex.c b/kernel/futex.c
-> index c3b73b0311bc..19615ad3c4f7 100644
-> --- a/kernel/futex.c
-> +++ b/kernel/futex.c
-> @@ -3864,7 +3864,7 @@ static void __init futex_detect_cmpxchg(void)
->          * implementation, the non-functional ones will return
->          * -ENOSYS.
->          */
-> -       if (cmpxchg_futex_value_locked(&curval, NULL, 0, 0) == -EFAULT)
-> +       if (cmpxchg_futex_value_locked(&curval, NULL, 1, 1) == -EFAULT)
->                 futex_cmpxchg_enabled = 1;
->  #endif
->  }
->
+> On Mon, Mar 11, 2019 at 2:53 PM Roman Penyaev <rpenyaev@suse.de> wrote:
 
-Ah ok.
+>> On 2019-03-11 14:45, Dmitry Vyukov wrote:
+>> > On Mon, Mar 11, 2019 at 2:37 PM Roman Penyaev <rpenyaev@suse.de> wrote:
+>> >>
+>> >> Hi Andrew,
+>> >>
+>> >> I thought "epoll: loosen irq safety in ep_poll_callback()" patch was
+>> >> removed from your tree, at least I got a notification on 9th of
+>> >> january,
+>> >> also I do not see it in the linux-next tree.
+>> >>
+>> >> Should I ignore this syzbot message?
+>> >
+>> > If this was resolved we need to communicate it to syzbot one way or the
+>> > other.
+>> > Since it was in linux-next, it won't even be able to do fix bisection.
+>> > So the bug will be open forever otherwise.
 
-That explains a lot.
+>> Bug was fixed (commit was simply dropped).  How can I tell syzbot to
+>> shut up
+>> and to resolve the issue?
 
-Can't we just return -EFAULT if uaddr is NULL? Or does that defeat this check?
+> Hi Roman,
 
-Note that PA-RISC has
+> The docs are at:
 
-        /* futex.c wants to do a cmpxchg_inatomic on kernel NULL, which is
-         * our gateway page, and causes no end of trouble...
-         */
-        if (uaccess_kernel() && !uaddr)
-                return -EFAULT;
+>> See https://goo.gl/tpsmEJ for more information about syzbot.
+
+> There is no official support for bugs fixed not by commit merges.
+> Linux-next creates various interesting corner-cases for the process.
+> Let's go with this option for now:
+
+> #syz invalid
+
+I see the command but can't find the corresponding bug.
+Please resend the email to syzbot+HASH@syzkaller.appspotmail.com address
+that is the sender of the bug report (also present in the Reported-by tag).
+
+
+> --
+> You received this message because you are subscribed to the Google  
+> Groups "syzkaller-bugs" group.
+> To unsubscribe from this group and stop receiving emails from it, send an  
+> email to syzkaller-bugs+unsubscribe@googlegroups.com.
+> To view this discussion on the web visit  
+> https://groups.google.com/d/msgid/syzkaller-bugs/CACT4Y%2BYLZYJ21Bao5HVAvXhvb9PQ41J-4RvtkZZEMF38qtkxHg%40mail.gmail.com.
+> For more options, visit https://groups.google.com/d/optout.
