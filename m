@@ -2,119 +2,90 @@ Return-Path: <SRS0=FxTY=RO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,
+	USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B6DC1C43381
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 Mar 2019 22:06:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C113AC43381
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 Mar 2019 22:06:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 80E952087C
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 Mar 2019 22:06:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8F1D22087C
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 Mar 2019 22:06:53 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1552341994;
-	bh=nM3KQnBbqpIc2+gMCyMyh2uahYO2VlWfsXrh8CkNld8=;
+	s=default; t=1552342013;
+	bh=e3qeIgAvgigXCOF0/IqnwW/ef15iWRPI6wvIzNob6zI=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=mZdPWxacAc1CbJnzEePD9tnmti2FHYAnRJ868BysI6t5gI09yEicBwhDq+Xh3uUW2
-	 OY0sm1fF2gdjd8SZUooYXcQCqezcMw8MMxIytFOEyMRVrewDMHmvxyfARBMVaFJxrs
-	 DPQXKxvCEchRcrTGCci3bYd0ih0b7MCR0EFBcrWc=
+	b=LbnFM3k9j5KATUwsgL7riwFWrWVuqUpWdhfBt1kL10osuSDoC5YAFSSp4iH7AWUa1
+	 qNTcaw8Jvq3VtfEwBRuexAoWapQMEjRva6uIDxhvXryPftfMS9FlWxYevrbcNQ9xNh
+	 aKNnwBvkxfXQ0x52fy5ChBR3x2KKlNnFZIzPwy+c=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728275AbfCKWGd (ORCPT
+        id S1728371AbfCKWGw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 11 Mar 2019 18:06:33 -0400
-Received: from mail-ot1-f68.google.com ([209.85.210.68]:45425 "EHLO
-        mail-ot1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727527AbfCKWGc (ORCPT
+        Mon, 11 Mar 2019 18:06:52 -0400
+Received: from mail-ot1-f65.google.com ([209.85.210.65]:38764 "EHLO
+        mail-ot1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727527AbfCKWGw (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 11 Mar 2019 18:06:32 -0400
-Received: by mail-ot1-f68.google.com with SMTP id i12so621391otp.12;
-        Mon, 11 Mar 2019 15:06:32 -0700 (PDT)
+        Mon, 11 Mar 2019 18:06:52 -0400
+Received: by mail-ot1-f65.google.com with SMTP id m1so666996otf.5;
+        Mon, 11 Mar 2019 15:06:51 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
          :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=KZfuW/QqHqpiwbbZDSR+JEf1pjvJkZeqOnESC9a6lwg=;
-        b=YTWN6FTsd4w8+IKiRgNy4lfMi/x6+66R9IocIW7xpi1dw2sWR8WrC6jjHaBadYqRkM
-         bahW0OIsovRFbpLasAl9bDcmX5vSwUQL7DKjqHe7LaIwE5SBzBC+SuRa1/5/MY7unmIb
-         GBKRZHR58mOADwSyyyXpg3NuiGQRxFkShiVQ+0hm0xO2eXZW23flTfisWxkIsTEyha1e
-         +vsbfRsrrL+a6h1hrF867EYBSMcGEq2RLsYJnvoDWXu9bTlh2hO/6qGKSSH5F4dXwbo0
-         zo/byCWj5wRtU4+TnH+XkgRsRh5nbP3xJn8ICAdwVhC/1WPMuAdVCo8cTvBWH/s4tQqB
-         toXQ==
-X-Gm-Message-State: APjAAAXkxvJt/TpMtvml+mMtaDgwRDQ/jPfuGRUJO8zZ08jDg7NbV9sK
-        InI4GmSVHgrFxYbqZOIibg==
-X-Google-Smtp-Source: APXvYqzlKrSBQCY0b1JmlCt33ZSwqW/5ziF1xsV/d+ZWhc+BTdGRAenpbmk8vKnC57O1WLGaABK06g==
-X-Received: by 2002:a05:6830:11c9:: with SMTP id v9mr8980767otq.288.1552341991779;
-        Mon, 11 Mar 2019 15:06:31 -0700 (PDT)
+        bh=JC4zTqb1x8erp06ciU6x7MCTK7JGOSkY7SX+8G3xOI4=;
+        b=Q9jAo0tPZv59Ml0M5LPKbh3coDvrBGY4h4A/Rk3tIexsOKpfNHh6DILq0yRaKhbSPP
+         iJPIeigkKMZjiQgLNAcgRZLNxeesfjU7QL4eH5V6OGRMI2EJQmXo3Go43A6rSTizgpFY
+         vjc3FDv2oqY2SCZUO0Jleo9mPtNyr7QlHUbZpBIrlwrbT7RnbXwkysHckJLeBnNfnxGJ
+         +d0Y67w5IDnmaW0GoyaCHv7+SMmA6YAMvpY/1/wTQXv00FWXqSYPp7yr1OCgvA/ddI0p
+         jzNkTLp1QQlCL6TiWh8Hl/46+k9FusTq71+U/SgwoWqf4nY20OhKollZkGbflauTF4M7
+         zfsA==
+X-Gm-Message-State: APjAAAWB51w4+3/rTKw6BznzecvnhyxAAxkAQYUcGiux7Dtim+QWklKb
+        /hUtgxNh91Beb5/vdCsYHASt3BM=
+X-Google-Smtp-Source: APXvYqwrYOI/MCxwgruCtoSnd7h4OE/EAXa4gjFtjtIVIvbfWAcE9VbEZqau7hiwYN7PUxnaEMa2/g==
+X-Received: by 2002:a9d:630f:: with SMTP id q15mr22071133otk.153.1552342011116;
+        Mon, 11 Mar 2019 15:06:51 -0700 (PDT)
 Received: from localhost (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
-        by smtp.gmail.com with ESMTPSA id k15sm3031631otj.26.2019.03.11.15.06.30
+        by smtp.gmail.com with ESMTPSA id 60sm2976093otw.50.2019.03.11.15.06.50
         (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Mon, 11 Mar 2019 15:06:31 -0700 (PDT)
-Date:   Mon, 11 Mar 2019 17:06:30 -0500
+        Mon, 11 Mar 2019 15:06:50 -0700 (PDT)
+Date:   Mon, 11 Mar 2019 17:06:50 -0500
 From:   Rob Herring <robh@kernel.org>
-To:     Sean Wang <sean.wang@kernel.org>
-Cc:     Hsin-Hsiung Wang <hsin-hsiung.wang@mediatek.com>,
-        Lee Jones <lee.jones@linaro.org>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        Mark Brown <broonie@kernel.org>,
-        Eddie Huang <eddie.huang@mediatek.com>,
-        linux-rtc@vger.kernel.org, devicetree@vger.kernel.org,
-        Alexandre Belloni <alexandre.belloni@bootlin.com>,
-        srv_heupstream <srv_heupstream@mediatek.com>,
-        Alessandro Zummo <a.zummo@towertech.it>,
-        Marc Zyngier <marc.zyngier@arm.com>,
-        Sean Wang <sean.wang@mediatek.com>,
-        linux-kernel@vger.kernel.org, Liam Girdwood <lgirdwood@gmail.com>,
-        linux-mediatek@lists.infradead.org,
-        Mark Rutland <mark.rutland@arm.com>,
-        linux-arm-kernel@lists.infradead.org
-Subject: Re: [PATCH v2 3/9] dt-bindings: mfd: Add compatible for the MediaTek
- MT6358 PMIC
-Message-ID: <20190311220630.GA4082@bogus>
-References: <1552275991-34648-1-git-send-email-hsin-hsiung.wang@mediatek.com>
- <1552275991-34648-4-git-send-email-hsin-hsiung.wang@mediatek.com>
- <CAGp9LzrWawWy+mX5VpLeqdV85f0iEdRv6JtJbjS5pamN5xfKjA@mail.gmail.com>
+To:     Lukasz Luba <l.luba@partner.samsung.com>
+Cc:     devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-pm@vger.kernel.org, linux-samsung-soc@vger.kernel.org,
+        b.zolnierkie@samsung.com, krzk@kernel.org, kgene@kernel.org,
+        cw00.choi@samsung.com, kyungmin.park@samsung.com,
+        m.szyprowski@samsung.com, s.nawrocki@samsung.com,
+        myungjoo.ham@samsung.com, Lukasz Luba <l.luba@partner.samsung.com>
+Subject: Re: [PATCH v5 1/8] clk: samsung: add needed IDs for DMC clocks in
+  Exynos5420
+Message-ID: <20190311220650.GB4082@bogus>
+References: <1551781151-5562-1-git-send-email-l.luba@partner.samsung.com>
+ <CGME20190305101924eucas1p1147e3895a89a72c9db7d128d90dd3daa@eucas1p1.samsung.com>
+ <1551781151-5562-2-git-send-email-l.luba@partner.samsung.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <CAGp9LzrWawWy+mX5VpLeqdV85f0iEdRv6JtJbjS5pamN5xfKjA@mail.gmail.com>
+In-Reply-To: <1551781151-5562-2-git-send-email-l.luba@partner.samsung.com>
 User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Mar 11, 2019 at 12:19:32PM -0700, Sean Wang wrote:
-> Hi,
+On Tue,  5 Mar 2019 11:19:04 +0100, Lukasz Luba wrote:
+> Define new IDs for clocks used by Dynamic Memory Controller in
+> Exynos5422 SoC.
 > 
-> Always put the patches about dt-binding changes at the head of the
-> series to let the related maintainer more easily find them.
+> Signed-off-by: Lukasz Luba <l.luba@partner.samsung.com>
+> ---
+>  include/dt-bindings/clock/exynos5420.h | 18 +++++++++++++++++-
+>  1 file changed, 17 insertions(+), 1 deletion(-)
 > 
-> On Sun, Mar 10, 2019 at 8:48 PM Hsin-Hsiung Wang
-> <hsin-hsiung.wang@mediatek.com> wrote:
-> >
-> > This adds compatible for the MediaTek MT6358 PMIC.
-> >
-> > Signed-off-by: Hsin-Hsiung Wang <hsin-hsiung.wang@mediatek.com>
-> > ---
-> >  Documentation/devicetree/bindings/mfd/mt6397.txt | 11 ++++++++---
-> >  1 file changed, 8 insertions(+), 3 deletions(-)
-> >
-> > diff --git a/Documentation/devicetree/bindings/mfd/mt6397.txt b/Documentation/devicetree/bindings/mfd/mt6397.txt
-> > index 0ebd08a..62f1c17 100644
-> > --- a/Documentation/devicetree/bindings/mfd/mt6397.txt
-> > +++ b/Documentation/devicetree/bindings/mfd/mt6397.txt
-> > @@ -17,22 +17,27 @@ Documentation/devicetree/bindings/soc/mediatek/pwrap.txt
-> >  This document describes the binding for MFD device and its sub module.
-> >
-> >  Required properties:
-> > -compatible: "mediatek,mt6397" or "mediatek,mt6323"
-> > +compatible:
-> > +       "mediatek,mt6323" for PMIC MT6323
-> > +       "mediatek,mt6358" for PMIC MT6358
-> > +       "mediatek,mt6397" for PMIC MT6397
-> 
-> don't change anything not related MT6358
 
-Reformatting like this is preferred.
+Please add Acked-by/Reviewed-by tags when posting new versions. However,
+there's no need to repost patches *only* to add the tags. The upstream
+maintainer will do that for acks received on the version they apply.
 
-Rob
+If a tag was not added on purpose, please state why and what changed.
