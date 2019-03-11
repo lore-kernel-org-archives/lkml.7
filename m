@@ -2,163 +2,204 @@ Return-Path: <SRS0=FxTY=RO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-11.6 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E3FDEC43381
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 Mar 2019 17:43:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 522C9C43381
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 Mar 2019 17:44:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B8E7E20828
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 Mar 2019 17:43:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1CD3E20643
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 Mar 2019 17:44:31 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=nifty.com header.i=@nifty.com header.b="CG+M0wSE"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="umkR38j0"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727869AbfCKRno (ORCPT
+        id S1727912AbfCKRo3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 11 Mar 2019 13:43:44 -0400
-Received: from conssluserg-06.nifty.com ([210.131.2.91]:48324 "EHLO
-        conssluserg-06.nifty.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726641AbfCKRno (ORCPT
+        Mon, 11 Mar 2019 13:44:29 -0400
+Received: from mail-pg1-f196.google.com ([209.85.215.196]:45624 "EHLO
+        mail-pg1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726641AbfCKRo3 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 11 Mar 2019 13:43:44 -0400
-Received: from mail-vs1-f42.google.com (mail-vs1-f42.google.com [209.85.217.42]) (authenticated)
-        by conssluserg-06.nifty.com with ESMTP id x2BHhdPQ022368;
-        Tue, 12 Mar 2019 02:43:40 +0900
-DKIM-Filter: OpenDKIM Filter v2.10.3 conssluserg-06.nifty.com x2BHhdPQ022368
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nifty.com;
-        s=dec2015msa; t=1552326220;
-        bh=+CZQeUcOauqWEqCHTvIsTi9HekeJELm9Qu4ksBOo56E=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=CG+M0wSEW5BLsg59b2wo0Bf3yTlIZnhpEyKDAXyJLbrQkIyRkOg5M/MFvsgNYgcL8
-         g4xnHXAGtXtfqBflIooPJL19jfX32MkQ0jQXdYVcHZQX3A+YXA8lJisqSkdA9hBrtj
-         1Mb8DMyTvEts3ZhbvixVHfltRBBQhzPNNueZ1LTAGU0JPfUGMTumKs4Ur0A1HO9PIA
-         ch5yyG/9hE2oz6JGOb4wyidD8zWeO+Xgn2CW4sg6IZ/H/i1aab8W9zFxEcWvmlKGgR
-         aUrwjaKXaPlJqHHp1EPrjwSljPJqt0H0fJMRK7QmixzZKn1u74BIwIga9u97ZA0wrW
-         wTgWRCIzaQoYw==
-X-Nifty-SrcIP: [209.85.217.42]
-Received: by mail-vs1-f42.google.com with SMTP id w14so3255780vso.6;
-        Mon, 11 Mar 2019 10:43:40 -0700 (PDT)
-X-Gm-Message-State: APjAAAUc38gE8J6T8rcm1a1Q3tyq0UWVrv+H5v7F3h0YWBgPlIQQEsyZ
-        eo+0gy3IHM9xFeTGtAFvhG5nYBaAqhSpghTPAXQ=
-X-Google-Smtp-Source: APXvYqyPMhLoztL5Qx8FPm/9LcHwWrJF7Evj6JSqaisuiEpFXsTG3x2ygsUL9HLJqB8qhQ4EqlLsrP81rSLhjmGx87A=
-X-Received: by 2002:a67:f90e:: with SMTP id t14mr17627803vsq.181.1552326219132;
- Mon, 11 Mar 2019 10:43:39 -0700 (PDT)
+        Mon, 11 Mar 2019 13:44:29 -0400
+Received: by mail-pg1-f196.google.com with SMTP id 125so4565817pgc.12
+        for <linux-kernel@vger.kernel.org>; Mon, 11 Mar 2019 10:44:28 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=from:to:cc:subject:references:date:in-reply-to:message-id
+         :user-agent:mime-version;
+        bh=rk1ujnovH0ihtWvyW1UTAjw45AYQQwWbbJnLYMNnddI=;
+        b=umkR38j0hhg+AZvHSVY7BM2IjHChhQJutt8VnTQF2/fio1joQjV/8CuZxrwncxR31m
+         7ufqhnKuTXaGmNnYDXDvwmEaUJWkHRCi7Z/cwx1b1z5PMtIeaq39OOIlro8xD3qfBEq4
+         uvMJGSFTG8V0vQVNkm3oqDpepj2a84/RuMyD/Ng/xEaDJdIeRyNqyJ4bIUwiaEd3GL5d
+         uZw1hj+aGkIYErpN1/VMhRJjZRyfcQ9dGd/NvMjIkamveEqN9fcbxZULYFhAkIocFgk7
+         FFunEO9JrqpafS/8mECra+HZdRfY5f8DAljZsAA7g999h/Pwe4z/CqG/f1oWbEJoWvbm
+         R+fw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:references:date:in-reply-to
+         :message-id:user-agent:mime-version;
+        bh=rk1ujnovH0ihtWvyW1UTAjw45AYQQwWbbJnLYMNnddI=;
+        b=tO5phRIA+nxJR9h6IndPn2dqIZQXIZ0TKSj1SzDkkMSqE0+3FaHDSEVGDgh7tOGl5U
+         EGhO07Ob1HRpBwaHWPc6Erl81PdCdgEzh2n84c1Nl8BL6paOBeEt/gbo8Maw2ynEbCQQ
+         yLr6eDVF+ailEo6ejgjAF15CDxuUN5mhm78r3YcQhwbuKrt3JTz6SSbifnH3sqzD6PaS
+         JfoBffSccG6+6poKOzvyKDb333NfoV1pK03/NfIjUQMLVJ7lmZoRGqlmF6cHUSfBYWUt
+         XNNBCY019/tidKXUTcGAkJl8dJZA4p88sNiLh+jbaIVwt2RJLY80/k8g3fp62+5uTjiQ
+         ZudA==
+X-Gm-Message-State: APjAAAXMgsRNUGGa0CAiLCNrh/84KQYygDw/1fKgFb8E0mT0hkC5PK46
+        +6UW1fcvTz4Cwt86R2v69aqeLWOq3i4=
+X-Google-Smtp-Source: APXvYqyckL7OvI/rbBmNeQ2rZvBIUzVsw3DtajlW8b+2pCfhnV+96sMizM4jwVGDqr7MOrXN789PuQ==
+X-Received: by 2002:a65:625a:: with SMTP id q26mr23556854pgv.61.1552326267584;
+        Mon, 11 Mar 2019 10:44:27 -0700 (PDT)
+Received: from bsegall-linux.svl.corp.google.com.localhost ([2620:15c:2cd:202:39d7:98b3:2536:e93f])
+        by smtp.gmail.com with ESMTPSA id r82sm11094253pfa.161.2019.03.11.10.44.26
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Mon, 11 Mar 2019 10:44:26 -0700 (PDT)
+From:   bsegall@google.com
+To:     Phil Auld <pauld@redhat.com>
+Cc:     mingo@redhat.com, peterz@infradead.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [RFC]  sched/fair: hard lockup in sched_cfs_period_timer
+References: <20190301145209.GA9304@pauld.bos.csb>
+        <xm26ef7mzew2.fsf@bsegall-linux.svl.corp.google.com>
+        <20190304190510.GB5366@lorien.usersys.redhat.com>
+        <xm268sxtyx5u.fsf@bsegall-linux.svl.corp.google.com>
+        <20190305200554.GA8786@pauld.bos.csb>
+        <xm261s3lyrrl.fsf@bsegall-linux.svl.corp.google.com>
+        <20190306162313.GB8786@pauld.bos.csb>
+        <xm26wolbyfe9.fsf@bsegall-linux.svl.corp.google.com>
+        <20190309203320.GA24464@lorien.usersys.redhat.com>
+Date:   Mon, 11 Mar 2019 10:44:25 -0700
+In-Reply-To: <20190309203320.GA24464@lorien.usersys.redhat.com> (Phil Auld's
+        message of "Sat, 9 Mar 2019 15:33:21 -0500")
+Message-ID: <xm26sgvtxq4m.fsf@bsegall-linux.svl.corp.google.com>
+User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/26.1 (gnu/linux)
 MIME-Version: 1.0
-References: <20190309154307.23039-1-ar@cs.msu.ru>
-In-Reply-To: <20190309154307.23039-1-ar@cs.msu.ru>
-From:   Masahiro Yamada <yamada.masahiro@socionext.com>
-Date:   Tue, 12 Mar 2019 02:43:03 +0900
-X-Gmail-Original-Message-ID: <CAK7LNAT4sM+pnQyxNVpE2O3ChEirpUq6LjLnvT6xhJ7LuFGKHQ@mail.gmail.com>
-Message-ID: <CAK7LNAT4sM+pnQyxNVpE2O3ChEirpUq6LjLnvT6xhJ7LuFGKHQ@mail.gmail.com>
-Subject: Re: [PATCH v2 1/3] scripts/package/Makefile: put proper config in
- source tarball
-To:     Arseny Maslennikov <ar@cs.msu.ru>
-Cc:     Michal Marek <michal.lkml@markovi.net>,
-        Linux Kbuild mailing list <linux-kbuild@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Ben Hutchings <ben@decadent.org.uk>,
-        Riku Voipio <riku.voipio@linaro.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sun, Mar 10, 2019 at 12:44 AM Arseny Maslennikov <ar@cs.msu.ru> wrote:
+Phil Auld <pauld@redhat.com> writes:
+
+> On Wed, Mar 06, 2019 at 11:25:02AM -0800 bsegall@google.com wrote:
+>> Phil Auld <pauld@redhat.com> writes:
+>> 
+>> > On Tue, Mar 05, 2019 at 12:45:34PM -0800 bsegall@google.com wrote:
+>> >> Phil Auld <pauld@redhat.com> writes:
+>> >> 
+>> >> > Interestingly, if I limit the number of child cgroups to the number of 
+>> >> > them I'm actually putting processes into (16 down from 2500) the problem
+>> >> > does not reproduce.
+>> >> 
+>> >> That is indeed interesting, and definitely not something we'd want to
+>> >> matter. (Particularly if it's not root->a->b->c...->throttled_cgroup or
+>> >> root->throttled->a->...->thread vs root->throttled_cgroup, which is what
+>> >> I was originally thinking of)
+>> >> 
+>> >
+>> > The locking may be a red herring.
+>> >
+>> > The setup is root->throttled->a where a is 1-2500. There are 4 threads in
+>> > each of the first 16 a groups.  The parent, throttled, is where the 
+>> > cfs_period/quota_us are set. 
+>> >
+>> > I wonder if the problem is the walk_tg_tree_from() call in unthrottle_cfs_rq(). 
+>> >
+>> > The distribute_cfg_runtime looks to be O(n * m) where n is number of 
+>> > throttled cfs_rqs and m is the number of child cgroups. But I'm not 
+>> > completely clear on how the hierarchical cgroups play together here. 
+>> >
+>> > I'll pull on this thread some. 
+>> >
+>> > Thanks for your input.
+>> >
+>> >
+>> > Cheers,
+>> > Phil
+>> 
+>> Yeah, that isn't under the cfs_b lock, but is still part of distribute
+>> (and under rq lock, which might also matter). I was thinking too much
+>> about just the cfs_b regions. I'm not sure there's any good general
+>> optimization there.
+>>
 >
-> It is widely known that one can build a kernel without a .config in the
-> source tree by setting KCONFIG_CONFIG equal to the actual configuration
-> file path.
+> It's really an edge case, but the watchdog NMI is pretty painful.
 >
-> When making a *-pkg target, make(1) prepares a source tarball and tries
-> to pack `.config' in there regardless of the value of KCONFIG_CONFIG,
-> failing spectacularly if .config is absent and packing the wrong config
-> if it exists.
-> Let's fix that by including whatever KCONFIG_CONFIG points to in the
-> archive under the traditional name `.config'.
+>> I suppose cfs_rqs (tgs/cfs_bs?) could have "nearest
+>> ancestor with a quota" pointer and ones with quota could have
+>> "descendants with quota" list, parallel to the children/parent lists of
+>> tgs. Then throttle/unthrottle would only have to visit these lists, and
+>> child cgroups/cfs_rqs without their own quotas would just check
+>> cfs_rq->nearest_quota_cfs_rq->throttle_count. throttled_clock_task_time
+>> can also probably be tracked there.
 >
-> We have to pass --absolute-names to tar, since it seems to trim the
-> paths of archive members first and only then consider --transform, which
-> breaks KCONFIG_CONFIG=../../some.config, as well as absolute paths.
+> That seems like it would add a lot of complexity for this edge case. Maybe
+> it would be acceptible to use the safety valve like my first example, or
+> something like the below which will tune the period up until it doesn't
+> overrun for ever.  The down side of this one is it does change the user's
+> settings, but that could be preferable to an NMI crash.
+
+Yeah, I'm not sure what solution is best here, but one of the solutions
+should be done.
+
 >
-> Signed-off-by: Arseny Maslennikov <ar@cs.msu.ru>
-
-
-rpm-pkg will work in a strange way.
-(probably snap-pkg too).
-
-rpm package is compiled in $(HOME)/rpmbuild/BUILD.
-The source package will contain the .config in the standard location,
-but KCONFIG_CONFIG will point to a different path.
-
-Rather, I'd like to stop the build.
-
-
-quiet_cmd_src_tar = TAR     $(2).tar.gz
-      cmd_src_tar = \
-if test "$(objtree)" != "$(srctree)"; then \
-        echo >&2; \
-        echo >&2 "  ERROR:"; \
-        echo >&2 "  Building source tarball is not possible outside the"; \
-        echo >&2 "  kernel source tree. Don't set KBUILD_OUTPUT, or use the"; \
-        echo >&2 "  binrpm-pkg or bindeb-pkg target instead."; \
-        echo >&2; \
-        false; \
-fi ; \
-if test "$(KCONFIG_CONFIG)" != .config; then \
-        echo >&2; \
-        echo >&2 "  ERROR:"; \
-        echo >&2 "  Please do not override KCONFIG_CONFIG"; \
-        echo >&2 "  for source package build"; \
-        echo >&2; \
-        false; \
-fi ; \
-$(srctree)/scripts/setlocalversion --save-scmversion; \
-tar -cz $(RCS_TAR_IGNORE) -f $(2).tar.gz \
---transform 's:^:$(2)/:S' $(TAR_CONTENT) $(3); \
-rm -f $(objtree)/.scmversion
-
-
-
-I am included to do the opposite;
-replace KCONFIG_CONFIG with the hard-coded .config
-
-KCONFIG_CONFIG does not work.
-It is half-baked at best.
-
-
-
-> ---
->  scripts/package/Makefile | 3 ++-
->  1 file changed, 2 insertions(+), 1 deletion(-)
+> Cheers,
+> Phil
 >
-> diff --git a/scripts/package/Makefile b/scripts/package/Makefile
-> index 2c6de21e5152..134cefee068d 100644
-> --- a/scripts/package/Makefile
-> +++ b/scripts/package/Makefile
-> @@ -27,7 +27,7 @@ KDEB_SOURCENAME ?= linux-$(KERNELRELEASE)
->  KBUILD_PKG_ROOTCMD ?="fakeroot -u"
->  export KDEB_SOURCENAME
->  # Include only those top-level files that are needed by make, plus the GPL copy
-> -TAR_CONTENT := $(KBUILD_ALLDIRS) .config .scmversion Makefile \
-> +TAR_CONTENT := $(KBUILD_ALLDIRS) $(KCONFIG_CONFIG) .scmversion Makefile \
->                 Kbuild Kconfig COPYING $(wildcard localversion*)
->  MKSPEC     := $(srctree)/scripts/package/mkspec
->
-> @@ -44,6 +44,7 @@ if test "$(objtree)" != "$(srctree)"; then \
->  fi ; \
->  $(srctree)/scripts/setlocalversion --save-scmversion; \
->  tar -cz $(RCS_TAR_IGNORE) -f $(2).tar.gz \
-> +       --absolute-names --transform 's:^$(KCONFIG_CONFIG)$$:.config:S' \
->         --transform 's:^:$(2)/:S' $(TAR_CONTENT) $(3); \
->  rm -f $(objtree)/.scmversion
->
-> --
-> 2.20.1
->
+> diff --git a/kernel/sched/fair.c b/kernel/sched/fair.c
+> index 310d0637fe4b..78f9e28adc7b 100644
+> --- a/kernel/sched/fair.c
+> +++ b/kernel/sched/fair.c
+> @@ -4859,16 +4859,42 @@ static enum hrtimer_restart sched_cfs_slack_timer(struct hrtimer *timer)
+>  	return HRTIMER_NORESTART;
+>  }
+>  
+> +extern const u64 max_cfs_quota_period;
+> +s64 cfs_quota_period_autotune_thresh = 100 * NSEC_PER_MSEC;
+> +int cfs_quota_period_autotune_shift  = 4; /* 100 / 16 = 6.25% */
 
+Letting it spin for 100ms and then only increasing by 6% seems extremely
+generous. If we went this route I'd probably say "after looping N
+times, set the period to time taken / N + X%" where N is like 8 or
+something. I think I'd probably perfer something like this to the
+previous "just abort and let it happen again next interrupt" one.
 
--- 
-Best Regards
-Masahiro Yamada
+> +
+>  static enum hrtimer_restart sched_cfs_period_timer(struct hrtimer *timer)
+>  {
+>  	struct cfs_bandwidth *cfs_b =
+>  		container_of(timer, struct cfs_bandwidth, period_timer);
+> +	s64 nsprev, nsnow, new_period;
+> +	ktime_t now;
+>  	int overrun;
+>  	int idle = 0;
+>  
+>  	raw_spin_lock(&cfs_b->lock);
+> +	nsprev = ktime_to_ns(hrtimer_cb_get_time(timer));
+>  	for (;;) {
+> -		overrun = hrtimer_forward_now(timer, cfs_b->period);
+> +		/* 
+> +		 * Note this reverts the change to use hrtimer_forward_now, which avoids calling hrtimer_cb_get_time
+> +		 * for a value we already have
+> +		 */
+> +		now = hrtimer_cb_get_time(timer);
+> +		nsnow = ktime_to_ns(now);
+> +		if (nsnow - nsprev >= cfs_quota_period_autotune_thresh) {
+> +			new_period = ktime_to_ns(cfs_b->period);
+> +			new_period += new_period >> cfs_quota_period_autotune_shift;
+> +			if (new_period <= max_cfs_quota_period) {
+> +				cfs_b->period = ns_to_ktime(new_period);
+> +				cfs_b->quota += cfs_b->quota >> cfs_quota_period_autotune_shift;
+> +				pr_warn_ratelimited(
+> +					"cfs_period_timer [cpu%d] : Running too long, scaling up (new period %lld, new quota = %lld)\n", 
+> +					smp_processor_id(), cfs_b->period/NSEC_PER_USEC, cfs_b->quota/NSEC_PER_USEC);
+> +			}
+> +			nsprev = nsnow;
+> +		}
+> +
+> +		overrun = hrtimer_forward(timer, now, cfs_b->period);
+>  		if (!overrun)
+>  			break;
