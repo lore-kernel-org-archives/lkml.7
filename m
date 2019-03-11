@@ -2,113 +2,80 @@ Return-Path: <SRS0=FxTY=RO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_PASS,URIBL_BLOCKED,USER_IN_DEF_DKIM_WL autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-3.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_NEOMUTT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1EEEEC43381
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 Mar 2019 13:06:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D275FC43381
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 Mar 2019 13:07:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DC55E2084F
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 Mar 2019 13:06:56 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="pDQJ7V/R"
+	by mail.kernel.org (Postfix) with ESMTP id AC7F12075C
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 Mar 2019 13:07:19 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727423AbfCKNGz (ORCPT
+        id S1727440AbfCKNHS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 11 Mar 2019 09:06:55 -0400
-Received: from mail-io1-f65.google.com ([209.85.166.65]:41504 "EHLO
-        mail-io1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725943AbfCKNGz (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 11 Mar 2019 09:06:55 -0400
-Received: by mail-io1-f65.google.com with SMTP id v10so2578354iom.8
-        for <linux-kernel@vger.kernel.org>; Mon, 11 Mar 2019 06:06:54 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=CwESnDc/hIoUpicbwWt0hWKwXZiLW4n83UTux0FIXhc=;
-        b=pDQJ7V/RL9ALCsJSLC+ZVKD3636b8mwwFf/bEkCgh/q7VhhA/dnUUdTEfXre6z68W2
-         d0JOci2yjltnzZePGyIgxILW7BMQ7ZXsIK6wcU5OTF1WrmlZarbhccEMkV1qlfgqeLnf
-         Gzgxx5QDN0Ji++lWvaOr66kD8Uz1JzvdfxLoSotO235CexFt5FM6BPiHsTaBlVi9VQRs
-         bmDgYo0zf4+bORVHhZZeeuq0wHNFVvUZJX0SGjwpkU4GM8R2W60N1R5DYf3i2ZsiDJHi
-         aTZq+3sLl25QveOLe6qdNm6oPmmrB5PIkTUNebjMkVNTL8Mm80JZvKB1QkpJjwN7TVdD
-         2P+Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=CwESnDc/hIoUpicbwWt0hWKwXZiLW4n83UTux0FIXhc=;
-        b=K6YkjcD0vRcDLK0WdRvq6zzQyqmfDFTy0uZ33Z6fb2O7vKCqZQtEhpRLIU+63wM5wf
-         zS66Yn2Tgn8LZTsuSW8yq6HKmA8INU8d2iJYnVYyqgnVG9qN9bKx2DL9w5Je5eJtefh+
-         wW3D/k1zgU3fQH/jvQFt+5DsGYjkixi7rTA8mTYhyi/0WVnbAefxfb6NeCmHsmNrfT1p
-         s3fFZ7FxLb9rs4YfOLMzE50j8Fo897j0EXvLlnynwz9KtOhauOiW3khWgTVYSO1DmGn1
-         cFHOulhSOiC661MmQG8wllkywRT1ebnWWp2DvQnvR3TEy+J2c8sthpgMheaz294dMz9B
-         JwCw==
-X-Gm-Message-State: APjAAAVixs1uxYEK5QvzISprZr5+bSzes5IVpxTFZ/UVa2wMLdLZChaZ
-        Dm5NymvorP4AhbXizP5Iw86dBqPsxNOosO5wrXkhbg==
-X-Google-Smtp-Source: APXvYqw1rxYrzxphgSoPEhfC2nJIvUQSyGhbD9xsOH7VSZPoKubv/9MLRw9f3Md2AoafkE7CzN6vhzStzvbfOhOrDYE=
-X-Received: by 2002:a5d:834a:: with SMTP id q10mr15786580ior.271.1552309613871;
- Mon, 11 Mar 2019 06:06:53 -0700 (PDT)
-MIME-Version: 1.0
-References: <00000000000011f13c0583d0b48c@google.com>
-In-Reply-To: <00000000000011f13c0583d0b48c@google.com>
-From:   Dmitry Vyukov <dvyukov@google.com>
-Date:   Mon, 11 Mar 2019 14:06:42 +0100
-Message-ID: <CACT4Y+aw4wMD=GavraSLxN+P+dvXhc940BJKSqGRnw5krqtNDA@mail.gmail.com>
-Subject: Re: WARNING in vkms_vblank_simulate
-To:     syzbot <syzbot+0871b14ca2e2fb64f6e3@syzkaller.appspotmail.com>,
-        shayenneluzmoura@gmail.com,
-        Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
-        mahesh1.kumar@intel.com,
-        Rodrigo Siqueira <rodrigosiqueiramelo@gmail.com>,
-        Sean Paul <seanpaul@chromium.org>,
-        Haneen Mohammed <hamohammed.sa@gmail.com>
+        Mon, 11 Mar 2019 09:07:18 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:63262 "EHLO mx1.redhat.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725943AbfCKNHR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 11 Mar 2019 09:07:17 -0400
+Received: from smtp.corp.redhat.com (int-mx05.intmail.prod.int.phx2.redhat.com [10.5.11.15])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id 937013087BB5;
+        Mon, 11 Mar 2019 13:07:17 +0000 (UTC)
+Received: from sirius.home.kraxel.org (ovpn-117-175.ams2.redhat.com [10.36.117.175])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 411EC5D706;
+        Mon, 11 Mar 2019 13:07:17 +0000 (UTC)
+Received: by sirius.home.kraxel.org (Postfix, from userid 1000)
+        id 6AC5017532; Mon, 11 Mar 2019 14:07:16 +0100 (CET)
+Date:   Mon, 11 Mar 2019 14:07:16 +0100
+From:   Gerd Hoffmann <kraxel@redhat.com>
+To:     Rodrigo Siqueira <rodrigosiqueiramelo@gmail.com>
 Cc:     David Airlie <airlied@linux.ie>, Daniel Vetter <daniel@ffwll.ch>,
-        DRI <dri-devel@lists.freedesktop.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        syzkaller-bugs <syzkaller-bugs@googlegroups.com>
-Content-Type: text/plain; charset="UTF-8"
+        virtualization@lists.linux-foundation.org,
+        dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] drm/bochs: Fix NULL dereference on atomic_disable helper
+Message-ID: <20190311130716.6hjqci43clic5lxx@sirius.home.kraxel.org>
+References: <20190310212150.xhhb4abzm7j3ain2@smtp.gmail.com>
+ <20190311062200.4mtel3j5fjxtxrcf@sirius.home.kraxel.org>
+ <20190311101159.t6mbzm5sdwuh5muc@smtp.gmail.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190311101159.t6mbzm5sdwuh5muc@smtp.gmail.com>
+User-Agent: NeoMutt/20180716
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.15
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.45]); Mon, 11 Mar 2019 13:07:17 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Mar 11, 2019 at 1:28 PM syzbot
-<syzbot+0871b14ca2e2fb64f6e3@syzkaller.appspotmail.com> wrote:
->
-> syzbot has bisected this bug to:
->
-> commit 09ef09b4ab95dc405ad4171ec2cd8a4ff5227108
-> Author: Shayenne Moura <shayenneluzmoura@gmail.com>
-> Date:   Wed Feb 6 20:08:13 2019 +0000
->
->      drm/vkms: WARN when hrtimer_forward_now fails
+  Hi,
 
-+Shayenne
+> > >  static void bochs_crtc_atomic_flush(struct drm_crtc *crtc,
+> > >  				    struct drm_crtc_state *old_crtc_state)
+> > >  {
+> > > @@ -66,6 +71,7 @@ static const struct drm_crtc_funcs bochs_crtc_funcs = {
+> > >  static const struct drm_crtc_helper_funcs bochs_helper_funcs = {
+> > >  	.mode_set_nofb = bochs_crtc_mode_set_nofb,
+> > >  	.atomic_enable = bochs_crtc_atomic_enable,
+> > > +	.atomic_disable = bochs_crtc_atomic_disable,
+> > 
+> > Shouldn't we make the callback optional instead of adding empty dummy
+> > functions to drivers?
+> 
+> Hi Gerd,
+> 
+> I agree, and I can work in this issue.
+> Just one question, should we make atomic_enable optional as well?
 
-This should have been included the author email when mailed by the
-bot. This should be fixed now, tests added. Sorry for the churn.
+IIRC the drm code checks for the atomic_enable callback presence to
+figure whenever it should take the atomic or legacy code paths.
 
+So, I think that will not work.
 
-> bisection log:  https://syzkaller.appspot.com/x/bisect.txt?x=128448cf200000
-> start commit:   09ef09b4 drm/vkms: WARN when hrtimer_forward_now fails
-> git tree:       upstream
-> final crash:    https://syzkaller.appspot.com/x/report.txt?x=118448cf200000
-> console output: https://syzkaller.appspot.com/x/log.txt?x=168448cf200000
-> kernel config:  https://syzkaller.appspot.com/x/.config?x=c1e0e0ec44d1e5ff
-> dashboard link: https://syzkaller.appspot.com/bug?extid=0871b14ca2e2fb64f6e3
-> userspace arch: amd64
-> syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=1787db8d200000
-> C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=17fc9883200000
->
-> Reported-by: syzbot+0871b14ca2e2fb64f6e3@syzkaller.appspotmail.com
-> Fixes: 09ef09b4 ("drm/vkms: WARN when hrtimer_forward_now fails")
->
-> --
-> You received this message because you are subscribed to the Google Groups "syzkaller-bugs" group.
-> To unsubscribe from this group and stop receiving emails from it, send an email to syzkaller-bugs+unsubscribe@googlegroups.com.
-> To view this discussion on the web visit https://groups.google.com/d/msgid/syzkaller-bugs/00000000000011f13c0583d0b48c%40google.com.
-> For more options, visit https://groups.google.com/d/optout.
+cheers,
+  Gerd
+
