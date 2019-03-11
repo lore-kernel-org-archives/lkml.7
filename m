@@ -2,753 +2,316 @@ Return-Path: <SRS0=FxTY=RO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,UNPARSEABLE_RELAY
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 235E7C43381
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 Mar 2019 09:40:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8EC05C43381
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 Mar 2019 09:43:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C5F902075C
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 Mar 2019 09:40:05 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=baylibre-com.20150623.gappssmtp.com header.i=@baylibre-com.20150623.gappssmtp.com header.b="aQyyrIFh"
+	by mail.kernel.org (Postfix) with ESMTP id 4C1572075C
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 Mar 2019 09:43:28 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727426AbfCKJkE (ORCPT
+        id S1727189AbfCKJn1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 11 Mar 2019 05:40:04 -0400
-Received: from mail-ot1-f68.google.com ([209.85.210.68]:35532 "EHLO
-        mail-ot1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727386AbfCKJkB (ORCPT
+        Mon, 11 Mar 2019 05:43:27 -0400
+Received: from Mailgw01.mediatek.com ([1.203.163.78]:33145 "EHLO
+        mailgw01.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1726723AbfCKJn0 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 11 Mar 2019 05:40:01 -0400
-Received: by mail-ot1-f68.google.com with SMTP id z19so3342444otm.2
-        for <linux-kernel@vger.kernel.org>; Mon, 11 Mar 2019 02:39:59 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=baylibre-com.20150623.gappssmtp.com; s=20150623;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=m10vH7VhrLXBtuRmbQQzufuUhuoAzkMO8SrlxsRrKXo=;
-        b=aQyyrIFhTttAT8JZQorU4f0/QVQOJ3rQJAc8+E4snl64tzIwba9RVgkL0kGcN5FUyp
-         SX+M+PwdgcoPNrQrYzbn27PhhPzS4AuRvEI/W7953uGsaxumiRu0kFhIImCpfAYTJr/Q
-         HV+EmvLj6/Zitz0QVlGnMH2nLA3V/lU0xpdzy13NkedRQKMcj1SEOHsDnM2IRUu3xRid
-         V7KAswGvtnDaqUd4TRANoKyfEIExypC0pLbx7FKIm9duxJ1cipVzfv/IDue66CBog6r0
-         ZfFL4MzyPubv8At8JYJyJXs0OIg694Z0pDOC2HkebRqdogINHqIL+YYM17Q6MM6Vj4Bq
-         /5iQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=m10vH7VhrLXBtuRmbQQzufuUhuoAzkMO8SrlxsRrKXo=;
-        b=k9yq8O3jd/wVy6xsJdzCYsFQqxZcD8rDIQUdA4np/NqNBAy5M841BqU+C6M/Gy3ejc
-         aUEM9ApGjQZYUfMV3FoTU07/mSbdoovfleps4ydWJeU6yShxvUFBsPmZhjuUTlJAHORk
-         vt78PLr7bq6QEyRF/Ojuo6oo1R1xLzbc+xxnkfyl3K+EGkc/6nvrB0Ka30wy5kpAC0Qs
-         /8Yy1/YPRuz406WUgBHOawN5mvviGx5MQBAIoGZVyP1+JpRsPKomxq3FzQUD+tDFlqTz
-         D3jIyeVsFFjV7zO8XVzmmY26MLr1i8AvbYjt0dd49S7bqzRLnbepmTmyBPoX5ZDwmbQ6
-         JlyA==
-X-Gm-Message-State: APjAAAXJcbYdQh62ftLOccI9OItd9qYopCGvXnAn1gOxyIvBqhweYlQo
-        vsyEXlPwFx86Cjt7TjPeQsF+Yg8NVPGSltYHyqPGzQ==
-X-Google-Smtp-Source: APXvYqz7WuV1WEysz8AGBo6tKCrtHcc7YSGoVNlAXYF667zfAmivyfcuP+1Z3eAZFCmMfA2dSzKlPK+jWgjUygLUEyc=
-X-Received: by 2002:a9d:6c8c:: with SMTP id c12mr19374297otr.27.1552297199062;
- Mon, 11 Mar 2019 02:39:59 -0700 (PDT)
-MIME-Version: 1.0
-References: <20190307103348.1591457-1-arnd@arndb.de>
-In-Reply-To: <20190307103348.1591457-1-arnd@arndb.de>
-From:   Bartosz Golaszewski <bgolaszewski@baylibre.com>
-Date:   Mon, 11 Mar 2019 10:39:48 +0100
-Message-ID: <CAMpxmJXpYtJp5eZfz1uCQfE8yg_uLzQxWNt9wKZ4uMzfckU2TQ@mail.gmail.com>
-Subject: Re: [PATCH] gpio: omap: avoid clang warning
-To:     Arnd Bergmann <arnd@arndb.de>
-Cc:     Grygorii Strashko <grygorii.strashko@ti.com>,
-        Santosh Shilimkar <ssantosh@kernel.org>,
-        Kevin Hilman <khilman@kernel.org>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Nick Desaulniers <ndesaulniers@google.com>,
-        Tony Lindgren <tony@atomide.com>,
-        Janusz Krzysztofik <jmkrzyszt@gmail.com>,
-        Wolfram Sang <wsa+renesas@sang-engineering.com>,
-        Linux-OMAP <linux-omap@vger.kernel.org>,
-        linux-gpio <linux-gpio@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>
+        Mon, 11 Mar 2019 05:43:26 -0400
+X-UUID: 366357bf2c854dc7b4a187ec5dd157fe-20190311
+X-UUID: 366357bf2c854dc7b4a187ec5dd157fe-20190311
+Received: from mtkcas36.mediatek.inc [(172.27.4.253)] by mailgw01.mediatek.com
+        (envelope-from <qii.wang@mediatek.com>)
+        (mailgw01.mediatek.com ESMTP with TLS)
+        with ESMTP id 1595569405; Mon, 11 Mar 2019 17:43:19 +0800
+Received: from MTKCAS32.mediatek.inc (172.27.4.184) by MTKMBS31N2.mediatek.inc
+ (172.27.4.87) with Microsoft SMTP Server (TLS) id 15.0.1395.4; Mon, 11 Mar
+ 2019 17:43:17 +0800
+Received: from [10.17.3.153] (172.27.4.253) by MTKCAS32.mediatek.inc
+ (172.27.4.170) with Microsoft SMTP Server id 15.0.1395.4 via Frontend
+ Transport; Mon, 11 Mar 2019 17:43:16 +0800
+Message-ID: <1552297396.12703.2.camel@mhfsdcap03>
+Subject: Re: [PATCH v6 6/6] dts: arm64: mt8183: Add I2C nodes
+From:   Qii Wang <qii.wang@mediatek.com>
+To:     Nicolas Boichat <drinkcat@chromium.org>
+CC:     <wsa@the-dreams.de>, <linux-i2c@vger.kernel.org>,
+        <devicetree@vger.kernel.org>,
+        linux-arm Mailing List <linux-arm-kernel@lists.infradead.org>,
+        lkml <linux-kernel@vger.kernel.org>,
+        "moderated list:ARM/Mediatek SoC support" 
+        <linux-mediatek@lists.infradead.org>,
+        srv_heupstream <srv_heupstream@mediatek.com>,
+        Leilk Liu <leilk.liu@mediatek.com>,
+        <xinping.qian@mediatek.com>, <liguo.zhang@mediatek.com>,
+        Rob Herring <robh@kernel.org>
+Date:   Mon, 11 Mar 2019 17:43:16 +0800
+In-Reply-To: <CANMq1KDqKy=F0+Ld+k1-E9Y9qxfYMDORJPHvqEpCBGi5G7+zgw@mail.gmail.com>
+References: <1552282840-12778-1-git-send-email-qii.wang@mediatek.com>
+         <1552282840-12778-7-git-send-email-qii.wang@mediatek.com>
+         <CANMq1KDqKy=F0+Ld+k1-E9Y9qxfYMDORJPHvqEpCBGi5G7+zgw@mail.gmail.com>
 Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+X-Mailer: Evolution 3.2.3-0ubuntu6 
+Content-Transfer-Encoding: 7bit
+MIME-Version: 1.0
+X-MTK:  N
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-czw., 7 mar 2019 o 11:39 Arnd Bergmann <arnd@arndb.de> napisa=C5=82(a):
->
-> clang warns about a tentative array definition in the gpio-omap driver:
->
-> drivers/gpio/gpio-omap.c:1282:34: error: tentative array definition assum=
-ed to have one element [-Werror]
-> static const struct of_device_id omap_gpio_match[];
->
-> It's best to just reorder the entire file to avoid forward declarations,
-> which lets us use the regular declaration. To do this, the unnecessary
-> CONFIG_OF check must also be removed.
->
-> Signed-off-by: Arnd Bergmann <arnd@arndb.de>
-> ---
->  drivers/gpio/gpio-omap.c | 549 +++++++++++++++++++--------------------
->  1 file changed, 267 insertions(+), 282 deletions(-)
->
-> diff --git a/drivers/gpio/gpio-omap.c b/drivers/gpio/gpio-omap.c
-> index f4e9921fa966..9d743563f4c1 100644
-> --- a/drivers/gpio/gpio-omap.c
-> +++ b/drivers/gpio/gpio-omap.c
-> @@ -1249,196 +1249,63 @@ static int omap_gpio_chip_init(struct gpio_bank =
-*bank, struct irq_chip *irqc)
->         return ret;
->  }
->
-> -static void omap_gpio_idle(struct gpio_bank *bank, bool may_lose_context=
-);
-> -static void omap_gpio_unidle(struct gpio_bank *bank);
-> -
-> -static int gpio_omap_cpu_notifier(struct notifier_block *nb,
-> -                                 unsigned long cmd, void *v)
-> +static void omap_gpio_init_context(struct gpio_bank *p)
->  {
-> -       struct gpio_bank *bank;
-> -       unsigned long flags;
-> +       struct omap_gpio_reg_offs *regs =3D p->regs;
-> +       void __iomem *base =3D p->base;
->
-> -       bank =3D container_of(nb, struct gpio_bank, nb);
-> +       p->context.ctrl         =3D readl_relaxed(base + regs->ctrl);
-> +       p->context.oe           =3D readl_relaxed(base + regs->direction)=
-;
-> +       p->context.wake_en      =3D readl_relaxed(base + regs->wkup_en);
-> +       p->context.leveldetect0 =3D readl_relaxed(base + regs->leveldetec=
-t0);
-> +       p->context.leveldetect1 =3D readl_relaxed(base + regs->leveldetec=
-t1);
-> +       p->context.risingdetect =3D readl_relaxed(base + regs->risingdete=
-ct);
-> +       p->context.fallingdetect =3D readl_relaxed(base + regs->fallingde=
-tect);
-> +       p->context.irqenable1   =3D readl_relaxed(base + regs->irqenable)=
-;
-> +       p->context.irqenable2   =3D readl_relaxed(base + regs->irqenable2=
-);
->
-> -       raw_spin_lock_irqsave(&bank->lock, flags);
-> -       switch (cmd) {
-> -       case CPU_CLUSTER_PM_ENTER:
-> -               if (bank->is_suspended)
-> -                       break;
-> -               omap_gpio_idle(bank, true);
-> -               break;
-> -       case CPU_CLUSTER_PM_ENTER_FAILED:
-> -       case CPU_CLUSTER_PM_EXIT:
-> -               if (bank->is_suspended)
-> -                       break;
-> -               omap_gpio_unidle(bank);
-> -               break;
-> -       }
-> -       raw_spin_unlock_irqrestore(&bank->lock, flags);
-> +       if (regs->set_dataout && p->regs->clr_dataout)
-> +               p->context.dataout =3D readl_relaxed(base + regs->set_dat=
-aout);
-> +       else
-> +               p->context.dataout =3D readl_relaxed(base + regs->dataout=
-);
->
-> -       return NOTIFY_OK;
-> +       p->context_valid =3D true;
->  }
->
-> -static const struct of_device_id omap_gpio_match[];
-> -
-> -static int omap_gpio_probe(struct platform_device *pdev)
-> +static void omap_gpio_restore_context(struct gpio_bank *bank)
->  {
-> -       struct device *dev =3D &pdev->dev;
-> -       struct device_node *node =3D dev->of_node;
-> -       const struct of_device_id *match;
-> -       const struct omap_gpio_platform_data *pdata;
-> -       struct resource *res;
-> -       struct gpio_bank *bank;
-> -       struct irq_chip *irqc;
-> -       int ret;
-> -
-> -       match =3D of_match_device(of_match_ptr(omap_gpio_match), dev);
-> -
-> -       pdata =3D match ? match->data : dev_get_platdata(dev);
-> -       if (!pdata)
-> -               return -EINVAL;
-> -
-> -       bank =3D devm_kzalloc(dev, sizeof(*bank), GFP_KERNEL);
-> -       if (!bank)
-> -               return -ENOMEM;
-> -
-> -       irqc =3D devm_kzalloc(dev, sizeof(*irqc), GFP_KERNEL);
-> -       if (!irqc)
-> -               return -ENOMEM;
-> -
-> -       irqc->irq_startup =3D omap_gpio_irq_startup,
-> -       irqc->irq_shutdown =3D omap_gpio_irq_shutdown,
-> -       irqc->irq_ack =3D omap_gpio_ack_irq,
-> -       irqc->irq_mask =3D omap_gpio_mask_irq,
-> -       irqc->irq_unmask =3D omap_gpio_unmask_irq,
-> -       irqc->irq_set_type =3D omap_gpio_irq_type,
-> -       irqc->irq_set_wake =3D omap_gpio_wake_enable,
-> -       irqc->irq_bus_lock =3D omap_gpio_irq_bus_lock,
-> -       irqc->irq_bus_sync_unlock =3D gpio_irq_bus_sync_unlock,
-> -       irqc->name =3D dev_name(&pdev->dev);
-> -       irqc->flags =3D IRQCHIP_MASK_ON_SUSPEND;
-> -       irqc->parent_device =3D dev;
-> -
-> -       bank->irq =3D platform_get_irq(pdev, 0);
-> -       if (bank->irq <=3D 0) {
-> -               if (!bank->irq)
-> -                       bank->irq =3D -ENXIO;
-> -               if (bank->irq !=3D -EPROBE_DEFER)
-> -                       dev_err(dev,
-> -                               "can't get irq resource ret=3D%d\n", bank=
-->irq);
-> -               return bank->irq;
-> -       }
-> -
-> -       bank->chip.parent =3D dev;
-> -       bank->chip.owner =3D THIS_MODULE;
-> -       bank->dbck_flag =3D pdata->dbck_flag;
-> -       bank->quirks =3D pdata->quirks;
-> -       bank->stride =3D pdata->bank_stride;
-> -       bank->width =3D pdata->bank_width;
-> -       bank->is_mpuio =3D pdata->is_mpuio;
-> -       bank->non_wakeup_gpios =3D pdata->non_wakeup_gpios;
-> -       bank->regs =3D pdata->regs;
-> -#ifdef CONFIG_OF_GPIO
-> -       bank->chip.of_node =3D of_node_get(node);
-> -#endif
-> -
-> -       if (node) {
-> -               if (!of_property_read_bool(node, "ti,gpio-always-on"))
-> -                       bank->loses_context =3D true;
-> -       } else {
-> -               bank->loses_context =3D pdata->loses_context;
-> -
-> -               if (bank->loses_context)
-> -                       bank->get_context_loss_count =3D
-> -                               pdata->get_context_loss_count;
-> -       }
-> -
-> -       if (bank->regs->set_dataout && bank->regs->clr_dataout) {
-> -               bank->set_dataout =3D omap_set_gpio_dataout_reg;
-> -               bank->set_dataout_multiple =3D omap_set_gpio_dataout_reg_=
-multiple;
-> -       } else {
-> -               bank->set_dataout =3D omap_set_gpio_dataout_mask;
-> -               bank->set_dataout_multiple =3D
-> -                               omap_set_gpio_dataout_mask_multiple;
-> -       }
-> -
-> -       if (bank->quirks & OMAP_GPIO_QUIRK_IDLE_REMOVE_TRIGGER) {
-> -               bank->funcs.idle_enable_level_quirk =3D
-> -                       omap2_gpio_enable_level_quirk;
-> -               bank->funcs.idle_disable_level_quirk =3D
-> -                       omap2_gpio_disable_level_quirk;
-> -       }
-> -
-> -       raw_spin_lock_init(&bank->lock);
-> -       raw_spin_lock_init(&bank->wa_lock);
-> -
-> -       /* Static mapping, never released */
-> -       res =3D platform_get_resource(pdev, IORESOURCE_MEM, 0);
-> -       bank->base =3D devm_ioremap_resource(dev, res);
-> -       if (IS_ERR(bank->base)) {
-> -               return PTR_ERR(bank->base);
-> -       }
-> -
-> -       if (bank->dbck_flag) {
-> -               bank->dbck =3D devm_clk_get(dev, "dbclk");
-> -               if (IS_ERR(bank->dbck)) {
-> -                       dev_err(dev,
-> -                               "Could not get gpio dbck. Disable debounc=
-e\n");
-> -                       bank->dbck_flag =3D false;
-> -               } else {
-> -                       clk_prepare(bank->dbck);
-> -               }
-> -       }
-> -
-> -       platform_set_drvdata(pdev, bank);
-> -
-> -       pm_runtime_enable(dev);
-> -       pm_runtime_get_sync(dev);
-> -
-> -       if (bank->is_mpuio)
-> -               omap_mpuio_init(bank);
-> -
-> -       omap_gpio_mod_init(bank);
-> -
-> -       ret =3D omap_gpio_chip_init(bank, irqc);
-> -       if (ret) {
-> -               pm_runtime_put_sync(dev);
-> -               pm_runtime_disable(dev);
-> -               if (bank->dbck_flag)
-> -                       clk_unprepare(bank->dbck);
-> -               return ret;
-> -       }
-> -
-> -       omap_gpio_show_rev(bank);
-> +       writel_relaxed(bank->context.wake_en,
-> +                               bank->base + bank->regs->wkup_en);
-> +       writel_relaxed(bank->context.ctrl, bank->base + bank->regs->ctrl)=
-;
-> +       writel_relaxed(bank->context.leveldetect0,
-> +                               bank->base + bank->regs->leveldetect0);
-> +       writel_relaxed(bank->context.leveldetect1,
-> +                               bank->base + bank->regs->leveldetect1);
-> +       writel_relaxed(bank->context.risingdetect,
-> +                               bank->base + bank->regs->risingdetect);
-> +       writel_relaxed(bank->context.fallingdetect,
-> +                               bank->base + bank->regs->fallingdetect);
-> +       if (bank->regs->set_dataout && bank->regs->clr_dataout)
-> +               writel_relaxed(bank->context.dataout,
-> +                               bank->base + bank->regs->set_dataout);
-> +       else
-> +               writel_relaxed(bank->context.dataout,
-> +                               bank->base + bank->regs->dataout);
-> +       writel_relaxed(bank->context.oe, bank->base + bank->regs->directi=
-on);
->
-> -       if (bank->funcs.idle_enable_level_quirk &&
-> -           bank->funcs.idle_disable_level_quirk) {
-> -               bank->nb.notifier_call =3D gpio_omap_cpu_notifier;
-> -               cpu_pm_register_notifier(&bank->nb);
-> +       if (bank->dbck_enable_mask) {
-> +               writel_relaxed(bank->context.debounce, bank->base +
-> +                                       bank->regs->debounce);
-> +               writel_relaxed(bank->context.debounce_en,
-> +                                       bank->base + bank->regs->debounce=
-_en);
->         }
->
-> -       pm_runtime_put(dev);
-> -
-> -       return 0;
-> -}
-> -
-> -static int omap_gpio_remove(struct platform_device *pdev)
-> -{
-> -       struct gpio_bank *bank =3D platform_get_drvdata(pdev);
-> -
-> -       if (bank->nb.notifier_call)
-> -               cpu_pm_unregister_notifier(&bank->nb);
-> -       list_del(&bank->node);
-> -       gpiochip_remove(&bank->chip);
-> -       pm_runtime_disable(&pdev->dev);
-> -       if (bank->dbck_flag)
-> -               clk_unprepare(bank->dbck);
-> -
-> -       return 0;
-> +       writel_relaxed(bank->context.irqenable1,
-> +                               bank->base + bank->regs->irqenable);
-> +       writel_relaxed(bank->context.irqenable2,
-> +                               bank->base + bank->regs->irqenable2);
->  }
->
-> -static void omap_gpio_restore_context(struct gpio_bank *bank);
-> -
->  static void omap_gpio_idle(struct gpio_bank *bank, bool may_lose_context=
-)
->  {
->         struct device *dev =3D bank->chip.parent;
-> @@ -1479,8 +1346,6 @@ static void omap_gpio_idle(struct gpio_bank *bank, =
-bool may_lose_context)
->         omap_gpio_dbck_disable(bank);
->  }
->
-> -static void omap_gpio_init_context(struct gpio_bank *p);
-> -
->  static void omap_gpio_unidle(struct gpio_bank *bank)
->  {
->         struct device *dev =3D bank->chip.parent;
-> @@ -1574,113 +1439,33 @@ static void omap_gpio_unidle(struct gpio_bank *b=
-ank)
->         bank->workaround_enabled =3D false;
->  }
->
-> -static void omap_gpio_init_context(struct gpio_bank *p)
-> +static int gpio_omap_cpu_notifier(struct notifier_block *nb,
-> +                                 unsigned long cmd, void *v)
->  {
-> -       struct omap_gpio_reg_offs *regs =3D p->regs;
-> -       void __iomem *base =3D p->base;
-> +       struct gpio_bank *bank;
-> +       unsigned long flags;
->
-> -       p->context.ctrl         =3D readl_relaxed(base + regs->ctrl);
-> -       p->context.oe           =3D readl_relaxed(base + regs->direction)=
-;
-> -       p->context.wake_en      =3D readl_relaxed(base + regs->wkup_en);
-> -       p->context.leveldetect0 =3D readl_relaxed(base + regs->leveldetec=
-t0);
-> -       p->context.leveldetect1 =3D readl_relaxed(base + regs->leveldetec=
-t1);
-> -       p->context.risingdetect =3D readl_relaxed(base + regs->risingdete=
-ct);
-> -       p->context.fallingdetect =3D readl_relaxed(base + regs->fallingde=
-tect);
-> -       p->context.irqenable1   =3D readl_relaxed(base + regs->irqenable)=
-;
-> -       p->context.irqenable2   =3D readl_relaxed(base + regs->irqenable2=
-);
-> +       bank =3D container_of(nb, struct gpio_bank, nb);
->
-> -       if (regs->set_dataout && p->regs->clr_dataout)
-> -               p->context.dataout =3D readl_relaxed(base + regs->set_dat=
-aout);
-> -       else
-> -               p->context.dataout =3D readl_relaxed(base + regs->dataout=
-);
-> +       raw_spin_lock_irqsave(&bank->lock, flags);
-> +       switch (cmd) {
-> +       case CPU_CLUSTER_PM_ENTER:
-> +               if (bank->is_suspended)
-> +                       break;
-> +               omap_gpio_idle(bank, true);
-> +               break;
-> +       case CPU_CLUSTER_PM_ENTER_FAILED:
-> +       case CPU_CLUSTER_PM_EXIT:
-> +               if (bank->is_suspended)
-> +                       break;
-> +               omap_gpio_unidle(bank);
-> +               break;
-> +       }
-> +       raw_spin_unlock_irqrestore(&bank->lock, flags);
->
-> -       p->context_valid =3D true;
-> -}
-> -
-> -static void omap_gpio_restore_context(struct gpio_bank *bank)
-> -{
-> -       writel_relaxed(bank->context.wake_en,
-> -                               bank->base + bank->regs->wkup_en);
-> -       writel_relaxed(bank->context.ctrl, bank->base + bank->regs->ctrl)=
-;
-> -       writel_relaxed(bank->context.leveldetect0,
-> -                               bank->base + bank->regs->leveldetect0);
-> -       writel_relaxed(bank->context.leveldetect1,
-> -                               bank->base + bank->regs->leveldetect1);
-> -       writel_relaxed(bank->context.risingdetect,
-> -                               bank->base + bank->regs->risingdetect);
-> -       writel_relaxed(bank->context.fallingdetect,
-> -                               bank->base + bank->regs->fallingdetect);
-> -       if (bank->regs->set_dataout && bank->regs->clr_dataout)
-> -               writel_relaxed(bank->context.dataout,
-> -                               bank->base + bank->regs->set_dataout);
-> -       else
-> -               writel_relaxed(bank->context.dataout,
-> -                               bank->base + bank->regs->dataout);
-> -       writel_relaxed(bank->context.oe, bank->base + bank->regs->directi=
-on);
-> -
-> -       if (bank->dbck_enable_mask) {
-> -               writel_relaxed(bank->context.debounce, bank->base +
-> -                                       bank->regs->debounce);
-> -               writel_relaxed(bank->context.debounce_en,
-> -                                       bank->base + bank->regs->debounce=
-_en);
-> -       }
-> -
-> -       writel_relaxed(bank->context.irqenable1,
-> -                               bank->base + bank->regs->irqenable);
-> -       writel_relaxed(bank->context.irqenable2,
-> -                               bank->base + bank->regs->irqenable2);
-> -}
-> -
-> -static int __maybe_unused omap_gpio_runtime_suspend(struct device *dev)
-> -{
-> -       struct gpio_bank *bank =3D dev_get_drvdata(dev);
-> -       unsigned long flags;
-> -       int error =3D 0;
-> -
-> -       raw_spin_lock_irqsave(&bank->lock, flags);
-> -       /* Must be idled only by CPU_CLUSTER_PM_ENTER? */
-> -       if (bank->irq_usage) {
-> -               error =3D -EBUSY;
-> -               goto unlock;
-> -       }
-> -       omap_gpio_idle(bank, true);
-> -       bank->is_suspended =3D true;
-> -unlock:
-> -       raw_spin_unlock_irqrestore(&bank->lock, flags);
-> -
-> -       return error;
-> -}
-> -
-> -static int __maybe_unused omap_gpio_runtime_resume(struct device *dev)
-> -{
-> -       struct gpio_bank *bank =3D dev_get_drvdata(dev);
-> -       unsigned long flags;
-> -       int error =3D 0;
-> -
-> -       raw_spin_lock_irqsave(&bank->lock, flags);
-> -       /* Must be unidled only by CPU_CLUSTER_PM_ENTER? */
-> -       if (bank->irq_usage) {
-> -               error =3D -EBUSY;
-> -               goto unlock;
-> -       }
-> -       omap_gpio_unidle(bank);
-> -       bank->is_suspended =3D false;
-> -unlock:
-> -       raw_spin_unlock_irqrestore(&bank->lock, flags);
-> -
-> -       return error;
-> +       return NOTIFY_OK;
->  }
->
-> -#ifdef CONFIG_ARCH_OMAP2PLUS
-> -static const struct dev_pm_ops gpio_pm_ops =3D {
-> -       SET_RUNTIME_PM_OPS(omap_gpio_runtime_suspend, omap_gpio_runtime_r=
-esume,
-> -                                                                       N=
-ULL)
-> -};
-> -#else
-> -static const struct dev_pm_ops gpio_pm_ops;
-> -#endif /* CONFIG_ARCH_OMAP2PLUS */
-> -
-> -#if defined(CONFIG_OF)
->  static struct omap_gpio_reg_offs omap2_gpio_regs =3D {
->         .revision =3D             OMAP24XX_GPIO_REVISION,
->         .direction =3D            OMAP24XX_GPIO_OE,
-> @@ -1768,15 +1553,215 @@ static const struct of_device_id omap_gpio_match=
-[] =3D {
->         { },
->  };
->  MODULE_DEVICE_TABLE(of, omap_gpio_match);
-> +
-> +static int omap_gpio_probe(struct platform_device *pdev)
-> +{
-> +       struct device *dev =3D &pdev->dev;
-> +       struct device_node *node =3D dev->of_node;
-> +       const struct of_device_id *match;
-> +       const struct omap_gpio_platform_data *pdata;
-> +       struct resource *res;
-> +       struct gpio_bank *bank;
-> +       struct irq_chip *irqc;
-> +       int ret;
-> +
-> +       match =3D of_match_device(of_match_ptr(omap_gpio_match), dev);
-> +
-> +       pdata =3D match ? match->data : dev_get_platdata(dev);
-> +       if (!pdata)
-> +               return -EINVAL;
-> +
-> +       bank =3D devm_kzalloc(dev, sizeof(*bank), GFP_KERNEL);
-> +       if (!bank)
-> +               return -ENOMEM;
-> +
-> +       irqc =3D devm_kzalloc(dev, sizeof(*irqc), GFP_KERNEL);
-> +       if (!irqc)
-> +               return -ENOMEM;
-> +
-> +       irqc->irq_startup =3D omap_gpio_irq_startup,
-> +       irqc->irq_shutdown =3D omap_gpio_irq_shutdown,
-> +       irqc->irq_ack =3D omap_gpio_ack_irq,
-> +       irqc->irq_mask =3D omap_gpio_mask_irq,
-> +       irqc->irq_unmask =3D omap_gpio_unmask_irq,
-> +       irqc->irq_set_type =3D omap_gpio_irq_type,
-> +       irqc->irq_set_wake =3D omap_gpio_wake_enable,
-> +       irqc->irq_bus_lock =3D omap_gpio_irq_bus_lock,
-> +       irqc->irq_bus_sync_unlock =3D gpio_irq_bus_sync_unlock,
-> +       irqc->name =3D dev_name(&pdev->dev);
-> +       irqc->flags =3D IRQCHIP_MASK_ON_SUSPEND;
-> +       irqc->parent_device =3D dev;
-> +
-> +       bank->irq =3D platform_get_irq(pdev, 0);
-> +       if (bank->irq <=3D 0) {
-> +               if (!bank->irq)
-> +                       bank->irq =3D -ENXIO;
-> +               if (bank->irq !=3D -EPROBE_DEFER)
-> +                       dev_err(dev,
-> +                               "can't get irq resource ret=3D%d\n", bank=
-->irq);
-> +               return bank->irq;
-> +       }
-> +
-> +       bank->chip.parent =3D dev;
-> +       bank->chip.owner =3D THIS_MODULE;
-> +       bank->dbck_flag =3D pdata->dbck_flag;
-> +       bank->quirks =3D pdata->quirks;
-> +       bank->stride =3D pdata->bank_stride;
-> +       bank->width =3D pdata->bank_width;
-> +       bank->is_mpuio =3D pdata->is_mpuio;
-> +       bank->non_wakeup_gpios =3D pdata->non_wakeup_gpios;
-> +       bank->regs =3D pdata->regs;
-> +#ifdef CONFIG_OF_GPIO
-> +       bank->chip.of_node =3D of_node_get(node);
->  #endif
->
-> +       if (node) {
-> +               if (!of_property_read_bool(node, "ti,gpio-always-on"))
-> +                       bank->loses_context =3D true;
-> +       } else {
-> +               bank->loses_context =3D pdata->loses_context;
-> +
-> +               if (bank->loses_context)
-> +                       bank->get_context_loss_count =3D
-> +                               pdata->get_context_loss_count;
-> +       }
-> +
-> +       if (bank->regs->set_dataout && bank->regs->clr_dataout) {
-> +               bank->set_dataout =3D omap_set_gpio_dataout_reg;
-> +               bank->set_dataout_multiple =3D omap_set_gpio_dataout_reg_=
-multiple;
-> +       } else {
-> +               bank->set_dataout =3D omap_set_gpio_dataout_mask;
-> +               bank->set_dataout_multiple =3D
-> +                               omap_set_gpio_dataout_mask_multiple;
-> +       }
-> +
-> +       if (bank->quirks & OMAP_GPIO_QUIRK_IDLE_REMOVE_TRIGGER) {
-> +               bank->funcs.idle_enable_level_quirk =3D
-> +                       omap2_gpio_enable_level_quirk;
-> +               bank->funcs.idle_disable_level_quirk =3D
-> +                       omap2_gpio_disable_level_quirk;
-> +       }
-> +
-> +       raw_spin_lock_init(&bank->lock);
-> +       raw_spin_lock_init(&bank->wa_lock);
-> +
-> +       /* Static mapping, never released */
-> +       res =3D platform_get_resource(pdev, IORESOURCE_MEM, 0);
-> +       bank->base =3D devm_ioremap_resource(dev, res);
-> +       if (IS_ERR(bank->base)) {
-> +               return PTR_ERR(bank->base);
-> +       }
-> +
-> +       if (bank->dbck_flag) {
-> +               bank->dbck =3D devm_clk_get(dev, "dbclk");
-> +               if (IS_ERR(bank->dbck)) {
-> +                       dev_err(dev,
-> +                               "Could not get gpio dbck. Disable debounc=
-e\n");
-> +                       bank->dbck_flag =3D false;
-> +               } else {
-> +                       clk_prepare(bank->dbck);
-> +               }
-> +       }
-> +
-> +       platform_set_drvdata(pdev, bank);
-> +
-> +       pm_runtime_enable(dev);
-> +       pm_runtime_get_sync(dev);
-> +
-> +       if (bank->is_mpuio)
-> +               omap_mpuio_init(bank);
-> +
-> +       omap_gpio_mod_init(bank);
-> +
-> +       ret =3D omap_gpio_chip_init(bank, irqc);
-> +       if (ret) {
-> +               pm_runtime_put_sync(dev);
-> +               pm_runtime_disable(dev);
-> +               if (bank->dbck_flag)
-> +                       clk_unprepare(bank->dbck);
-> +               return ret;
-> +       }
-> +
-> +       omap_gpio_show_rev(bank);
-> +
-> +       if (bank->funcs.idle_enable_level_quirk &&
-> +           bank->funcs.idle_disable_level_quirk) {
-> +               bank->nb.notifier_call =3D gpio_omap_cpu_notifier;
-> +               cpu_pm_register_notifier(&bank->nb);
-> +       }
-> +
-> +       pm_runtime_put(dev);
-> +
-> +       return 0;
-> +}
-> +
-> +static int omap_gpio_remove(struct platform_device *pdev)
-> +{
-> +       struct gpio_bank *bank =3D platform_get_drvdata(pdev);
-> +
-> +       if (bank->nb.notifier_call)
-> +               cpu_pm_unregister_notifier(&bank->nb);
-> +       list_del(&bank->node);
-> +       gpiochip_remove(&bank->chip);
-> +       pm_runtime_disable(&pdev->dev);
-> +       if (bank->dbck_flag)
-> +               clk_unprepare(bank->dbck);
-> +
-> +       return 0;
-> +}
-> +
-> +static int __maybe_unused omap_gpio_runtime_suspend(struct device *dev)
-> +{
-> +       struct gpio_bank *bank =3D dev_get_drvdata(dev);
-> +       unsigned long flags;
-> +       int error =3D 0;
-> +
-> +       raw_spin_lock_irqsave(&bank->lock, flags);
-> +       /* Must be idled only by CPU_CLUSTER_PM_ENTER? */
-> +       if (bank->irq_usage) {
-> +               error =3D -EBUSY;
-> +               goto unlock;
-> +       }
-> +       omap_gpio_idle(bank, true);
-> +       bank->is_suspended =3D true;
-> +unlock:
-> +       raw_spin_unlock_irqrestore(&bank->lock, flags);
-> +
-> +       return error;
-> +}
-> +
-> +static int __maybe_unused omap_gpio_runtime_resume(struct device *dev)
-> +{
-> +       struct gpio_bank *bank =3D dev_get_drvdata(dev);
-> +       unsigned long flags;
-> +       int error =3D 0;
-> +
-> +       raw_spin_lock_irqsave(&bank->lock, flags);
-> +       /* Must be unidled only by CPU_CLUSTER_PM_ENTER? */
-> +       if (bank->irq_usage) {
-> +               error =3D -EBUSY;
-> +               goto unlock;
-> +       }
-> +       omap_gpio_unidle(bank);
-> +       bank->is_suspended =3D false;
-> +unlock:
-> +       raw_spin_unlock_irqrestore(&bank->lock, flags);
-> +
-> +       return error;
-> +}
-> +
-> +static const struct dev_pm_ops gpio_pm_ops =3D {
-> +       SET_RUNTIME_PM_OPS(omap_gpio_runtime_suspend, omap_gpio_runtime_r=
-esume,
-> +                                                                       N=
-ULL)
-> +};
-> +
->  static struct platform_driver omap_gpio_driver =3D {
->         .probe          =3D omap_gpio_probe,
->         .remove         =3D omap_gpio_remove,
->         .driver         =3D {
->                 .name   =3D "omap_gpio",
->                 .pm     =3D &gpio_pm_ops,
-> -               .of_match_table =3D of_match_ptr(omap_gpio_match),
-> +               .of_match_table =3D omap_gpio_match,
+On Mon, 2019-03-11 at 16:36 +0800, Nicolas Boichat wrote:
+> On Mon, Mar 11, 2019 at 1:41 PM Qii Wang <qii.wang@mediatek.com> wrote:
+> >
+> > This patch adds nodes for I2C controller.
+> >
+> > Signed-off-by: Qii Wang <qii.wang@mediatek.com>
+> > ---
+> 
+> This applies on top of some other uncommitted series, right? This is
+> fine, but please say which one.
+> 
 
-This doesn't seem like a logical part of this commit. Can you send a
-separate patch?
+https://patchwork.kernel.org/cover/10846715/
+This series are based on 5.0-rc1(i2c/for-next) and these series
+http://lists.infradead.org/pipermail/linux-mediatek/2019-February/017570.html
+http://lists.infradead.org/pipermail/linux-mediatek/2019-February/017320.html
 
-Other than that, looks good to me.
+> >  arch/arm64/boot/dts/mediatek/mt8183.dtsi |  190 ++++++++++++++++++++++++++++++
+> >  1 file changed, 190 insertions(+)
+> >
+> > diff --git a/arch/arm64/boot/dts/mediatek/mt8183.dtsi b/arch/arm64/boot/dts/mediatek/mt8183.dtsi
+> > index 165b859..f20f1af 100644
+> > --- a/arch/arm64/boot/dts/mediatek/mt8183.dtsi
+> > +++ b/arch/arm64/boot/dts/mediatek/mt8183.dtsi
+> > @@ -16,6 +16,21 @@
+> >         #address-cells = <2>;
+> >         #size-cells = <2>;
+> >
+> > +       aliases {
+> > +               i2c0 = &i2c0;
+> > +               i2c1 = &i2c1;
+> > +               i2c2 = &i2c2;
+> > +               i2c3 = &i2c3;
+> > +               i2c4 = &i2c4;
+> > +               i2c5 = &i2c5;
+> > +               i2c6 = &i2c6;
+> > +               i2c7 = &i2c7;
+> > +               i2c8 = &i2c8;
+> > +               i2c9 = &i2c9;
+> > +               i2c10 = &i2c10;
+> > +               i2c11 = &i2c11;
+> > +       };
+> > +
+> >         cpus {
+> >                 #address-cells = <1>;
+> >                 #size-cells = <0>;
+> > @@ -268,6 +283,79 @@
+> >                         status = "disabled";
+> >                 };
+> >
+> > +               i2c6: i2c@11005000 {
+> > +                       compatible = "mediatek,mt8183-i2c";
+> > +                       reg = <0 0x11005000 0 0x1000>,
+> > +                               <0 0x11000600 0 0x80>;
+> > +                       interrupts = <GIC_SPI 87 IRQ_TYPE_LEVEL_LOW>;
+> > +                       clocks = <&infracfg CLK_INFRA_I2C6>,
+> > +                                <&infracfg CLK_INFRA_AP_DMA>;
+> > +                       clock-names = "main", "dma";
+> > +                       clock-div = <1>;
+> > +                       #address-cells = <1>;
+> > +                       #size-cells = <0>;
+> > +                       status = "disabled";
+> > +               };
+> > +
+> > +               i2c0: i2c@11007000 {
+> > +                       compatible = "mediatek,mt8183-i2c";
+> > +                       reg = <0 0x11007000 0 0x1000>,
+> > +                               <0 0x11000080 0 0x80>;
+> > +                       interrupts = <GIC_SPI 81 IRQ_TYPE_LEVEL_LOW>;
+> > +                       clocks = <&infracfg CLK_INFRA_I2C0>,
+> > +                                <&infracfg CLK_INFRA_AP_DMA>;
+> > +                       clock-names = "main", "dma";
+> > +                       clock-div = <1>;
+> > +                       #address-cells = <1>;
+> > +                       #size-cells = <0>;
+> > +                       status = "disabled";
+> > +               };
+> > +
+> > +               i2c4: i2c@11008000 {
+> > +                       compatible = "mediatek,mt8183-i2c";
+> > +                       id = <4>;
+> > +                       reg = <0 0x11008000 0 0x1000>,
+> > +                               <0 0x11000100 0 0x80>;
+> > +                       interrupts = <GIC_SPI 82 IRQ_TYPE_LEVEL_LOW>;
+> > +                       clocks = <&infracfg CLK_INFRA_I2C1>,
+> > +                                <&infracfg CLK_INFRA_AP_DMA>,
+> > +                                <&infracfg CLK_INFRA_I2C1_ARBITER>;
+> > +                       clock-names = "main", "dma","arb";
+> > +                       clock-div = <1>;
+> > +                       #address-cells = <1>;
+> > +                       #size-cells = <0>;
+> > +                       status = "disabled";
+> > +               };
+> > +
+> > +               i2c2: i2c@11009000 {
+> > +                       compatible = "mediatek,mt8183-i2c";
+> > +                       reg = <0 0x11009000 0 0x1000>,
+> > +                               <0 0x11000280 0 0x80>;
+> > +                       interrupts = <GIC_SPI 83 IRQ_TYPE_LEVEL_LOW>;
+> > +                       clocks = <&infracfg CLK_INFRA_I2C2>,
+> > +                                <&infracfg CLK_INFRA_AP_DMA>,
+> > +                                <&infracfg CLK_INFRA_I2C2_ARBITER>;
+> > +                       clock-names = "main", "dma", "arb";
+> > +                       clock-div = <1>;
+> > +                       #address-cells = <1>;
+> > +                       #size-cells = <0>;
+> > +                       status = "disabled";
+> > +               };
+> > +
+> > +               i2c3: i2c@1100f000 {
+> > +                       compatible = "mediatek,mt8183-i2c";
+> > +                       reg = <0 0x1100f000 0 0x1000>,
+> > +                               <0 0x11000400 0 0x80>;
+> > +                       interrupts = <GIC_SPI 84 IRQ_TYPE_LEVEL_LOW>;
+> > +                       clocks = <&infracfg CLK_INFRA_I2C3>,
+> > +                                <&infracfg CLK_INFRA_AP_DMA>;
+> > +                       clock-names = "main", "dma";
+> > +                       clock-div = <1>;
+> > +                       #address-cells = <1>;
+> > +                       #size-cells = <0>;
+> > +                       status = "disabled";
+> > +               };
+> > +
+> >                 spi0: spi@1100a000 {
+> >                         compatible = "mediatek,mt8183-spi";
+> >                         #address-cells = <1>;
+> > @@ -294,6 +382,20 @@
+> >                         status = "disabled";
+> >                 };
+> >
+> > +               i2c1: i2c@11011000 {
+> > +                       compatible = "mediatek,mt8183-i2c";
+> > +                       reg = <0 0x11011000 0 0x1000>,
+> > +                               <0 0x11000480 0 0x80>;
+> > +                       interrupts = <GIC_SPI 85 IRQ_TYPE_LEVEL_LOW>;
+> > +                       clocks = <&infracfg CLK_INFRA_I2C4>,
+> > +                                <&infracfg CLK_INFRA_AP_DMA>;
+> > +                       clock-names = "main", "dma";
+> > +                       clock-div = <1>;
+> > +                       #address-cells = <1>;
+> > +                       #size-cells = <0>;
+> > +                       status = "disabled";
+> > +               };
+> > +
+> >                 spi2: spi@11012000 {
+> >                         compatible = "mediatek,mt8183-spi";
+> >                         #address-cells = <1>;
+> > @@ -320,6 +422,66 @@
+> >                         status = "disabled";
+> >                 };
+> >
+> > +               i2c9: i2c@11014000 {
+> > +                       compatible = "mediatek,mt8183-i2c";
+> > +                       reg = <0 0x11014000 0 0x1000>,
+> > +                               <0 0x11000180 0 0x80>;
+> > +                       interrupts = <GIC_SPI 131 IRQ_TYPE_LEVEL_LOW>;
+> > +                       clocks = <&infracfg CLK_INFRA_I2C1_IMM>,
+> > +                                <&infracfg CLK_INFRA_AP_DMA>,
+> > +                                <&infracfg CLK_INFRA_I2C1_ARBITER>;
+> > +                       clock-names = "main", "dma", "arb";
+> > +                       clock-div = <1>;
+> > +                       #address-cells = <1>;
+> > +                       #size-cells = <0>;
+> > +                       status = "disabled";
+> > +               };
+> > +
+> > +               i2c10: i2c@11015000 {
+> > +                       compatible = "mediatek,mt8183-i2c";
+> > +                       reg = <0 0x11015000 0 0x1000>,
+> > +                               <0 0x11000300 0 0x80>;
+> > +                       interrupts = <GIC_SPI 132 IRQ_TYPE_LEVEL_LOW>;
+> > +                       clocks = <&infracfg CLK_INFRA_I2C2_IMM>,
+> > +                                <&infracfg CLK_INFRA_AP_DMA>,
+> > +                                <&infracfg CLK_INFRA_I2C2_ARBITER>;
+> > +                       clock-names = "main", "dma", "arb";
+> > +                       clock-div = <1>;
+> > +                       #address-cells = <1>;
+> > +                       #size-cells = <0>;
+> > +                       status = "disabled";
+> > +               };
+> > +
+> > +               i2c5: i2c@11016000 {
+> > +                       compatible = "mediatek,mt8183-i2c";
+> > +                       reg = <0 0x11016000 0 0x1000>,
+> > +                               <0 0x11000500 0 0x80>;
+> > +                       interrupts = <GIC_SPI 86 IRQ_TYPE_LEVEL_LOW>;
+> > +                       clocks = <&infracfg CLK_INFRA_I2C5>,
+> > +                                <&infracfg CLK_INFRA_AP_DMA>,
+> > +                                <&infracfg CLK_INFRA_I2C5_ARBITER>;
+> > +                       clock-names = "main", "dma", "arb";
+> > +                       clock-div = <1>;
+> > +                       #address-cells = <1>;
+> > +                       #size-cells = <0>;
+> > +                       status = "disabled";
+> > +               };
+> > +
+> > +               i2c11: i2c@11017000 {
+> > +                       compatible = "mediatek,mt8183-i2c";
+> > +                       reg = <0 0x11017000 0 0x1000>,
+> > +                               <0 0x11000580 0 0x80>;
+> > +                       interrupts = <GIC_SPI 133 IRQ_TYPE_LEVEL_LOW>;
+> > +                       clocks = <&infracfg CLK_INFRA_I2C5_IMM>,
+> > +                                <&infracfg CLK_INFRA_AP_DMA>,
+> > +                                <&infracfg CLK_INFRA_I2C5_ARBITER>;
+> > +                       clock-names = "main", "dma", "arb";
+> > +                       clock-div = <1>;
+> > +                       #address-cells = <1>;
+> > +                       #size-cells = <0>;
+> > +                       status = "disabled";
+> > +               };
+> > +
+> >                 spi4: spi@11018000 {
+> >                         compatible = "mediatek,mt8183-spi";
+> >                         #address-cells = <1>;
+> > @@ -346,6 +508,34 @@
+> >                         status = "disabled";
+> >                 };
+> >
+> > +               i2c7: i2c@1101a000 {
+> > +                       compatible = "mediatek,mt8183-i2c";
+> > +                       reg = <0 0x1101a000 0 0x1000>,
+> > +                               <0 0x11000680 0 0x80>;
+> > +                       interrupts = <GIC_SPI 88 IRQ_TYPE_LEVEL_LOW>;
+> > +                       clocks = <&infracfg CLK_INFRA_I2C7>,
+> > +                                <&infracfg CLK_INFRA_AP_DMA>;
+> > +                       clock-names = "main", "dma";
+> > +                       clock-div = <1>;
+> > +                       #address-cells = <1>;
+> > +                       #size-cells = <0>;
+> > +                       status = "disabled";
+> > +               };
+> > +
+> > +               i2c8: i2c@1101b000 {
+> > +                       compatible = "mediatek,mt8183-i2c";
+> > +                       reg = <0 0x1101b000 0 0x1000>,
+> > +                               <0 0x11000700 0 0x80>;
+> > +                       interrupts = <GIC_SPI 89 IRQ_TYPE_LEVEL_LOW>;
+> > +                       clocks = <&infracfg CLK_INFRA_I2C8>,
+> > +                                <&infracfg CLK_INFRA_AP_DMA>;
+> > +                       clock-names = "main", "dma";
+> > +                       clock-div = <1>;
+> > +                       #address-cells = <1>;
+> > +                       #size-cells = <0>;
+> > +                       status = "disabled";
+> > +               };
+> > +
+> >                 audiosys: syscon@11220000 {
+> >                         compatible = "mediatek,mt8183-audiosys", "syscon";
+> >                         reg = <0 0x11220000 0 0x1000>;
+> > --
+> > 1.7.9.5
+> >
 
-Bart
 
->         },
->  };
->
-> --
-> 2.20.0
->
