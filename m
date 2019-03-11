@@ -6,48 +6,48 @@ X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DE880C43381
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 Mar 2019 13:25:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E98AEC43381
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 Mar 2019 13:25:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A5AD720857
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 Mar 2019 13:25:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C1FA9206BA
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 Mar 2019 13:25:25 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726897AbfCKNZR (ORCPT
+        id S1728119AbfCKNZY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 11 Mar 2019 09:25:17 -0400
-Received: from mout.kundenserver.de ([212.227.17.13]:54839 "EHLO
+        Mon, 11 Mar 2019 09:25:24 -0400
+Received: from mout.kundenserver.de ([217.72.192.75]:52995 "EHLO
         mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727626AbfCKNTj (ORCPT
+        with ESMTP id S1727617AbfCKNTj (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Mon, 11 Mar 2019 09:19:39 -0400
 Received: from orion.localdomain ([95.115.159.19]) by mrelayeu.kundenserver.de
  (mreue109 [212.227.15.183]) with ESMTPSA (Nemesis) id
- 1MeCxd-1gSuMP1b8B-00bJts for <linux-kernel@vger.kernel.org>; Mon, 11 Mar 2019
- 14:19:38 +0100
+ 1MvbO4-1gkA632VQE-00siKL for <linux-kernel@vger.kernel.org>; Mon, 11 Mar 2019
+ 14:19:37 +0100
 From:   "Enrico Weigelt, metux IT consult" <info@metux.net>
 To:     linux-kernel@vger.kernel.org
-Subject: [PATCH 082/114] drivers: pwm: Kconfig: pedantic formatting
-Date:   Mon, 11 Mar 2019 14:18:34 +0100
-Message-Id: <1552310346-7629-83-git-send-email-info@metux.net>
+Subject: [PATCH 076/114] drivers: virt: Kconfig: pedantic formatting
+Date:   Mon, 11 Mar 2019 14:18:28 +0100
+Message-Id: <1552310346-7629-77-git-send-email-info@metux.net>
 X-Mailer: git-send-email 1.9.1
 In-Reply-To: <1552310346-7629-1-git-send-email-info@metux.net>
 References: <1552310346-7629-1-git-send-email-info@metux.net>
-X-Provags-ID: V03:K1:zDFlJq4+jvslwgWqmgybuUzQxME175YeIxWsbYKkXUAOr5HeaVb
- fXETcwLNq1sdFuIeGIhwKx4yQ1WG+OaYBmd0inhKmYpN610Z+9J074UqgZ8kzuINKgEaWLt
- owG9t4pKXcyIWWdcyyGleXvchJS1V8Yx3kOqtu50Y8EXJD4gJ1rM0rLBaRRiaQcZ1yr9tX9
- lwV+fIvzX//SX+AQxdsXg==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:k9SYNq3eSWc=:39SFNp81xRJ+XYyVM97ksD
- 4V0sEQ1HPm6qNdr0yr5ygZlXZbsrYHx0s+/ocV9ccOQQsh/3P5brBcmeVUgevxGH7ktAk/Vo8
- iI3eJkD17BT0kHKvjW7rE15KLD77d/y5fU0fWEXXk2ua/3sglb8zYjZxvFKRh+xeNyGrG9EtS
- vD74NE4x2eEmpnWHyYI2Fz05Qg7l0QfXh0mX94PtrRJu4m4Of8EHwJqueJAQRbTWHCAHC7d+v
- kuQIJor//aeLA8XK5nkkhwgvQEzeJavlMV0A9i4LBhyNgJ8syUP2/+UtdUwxZPHSH20IoG5CN
- oMRW0AegmJ53URecx1el9kGQkBbVkAnu1q31b4UahDn8VwdQmAOZ+6zjj6+nCk/xAYJnsagt1
- uDia0UcyF09y9fSeUpqPwbp0OT7jReSFaG+mMVTX9QEHwFEVfT9b8MUhvX4+CkcQnt6PkoOWU
- xWVzTc0ZnCbbS4Aop6Grj4epT6J/BWEpj+c7YyscLcDwUS4A7HSQ8oIZgIGQr5048pm1fkv1q
- 2sYFRXPjBZd5vLvXwkfF/kTXL+7vefpC1CJRwc3+aWWmwYLNeXUh5LSv2EEOhbvQAU9CWS5uL
- EAx48HveFf4IVvLpff/1yGO8gw6dUQhQDgeBFfjdJ+AcGWATT00d1gP9o3/DgyrloO/CkYvdK
- OhGI1c2OZ79vwzCgBWfXSkCOaAy45H6ej4rLRWFYbROvUsH6R1XeX5HHER5LzQNux0Iiz4KRp
- IG4n38Vq+u+MZczYqBisD5CSLR8Miu11LMhXmA==
+X-Provags-ID: V03:K1:jFjYX0frhQ0wIS3LWB8N/kYhTd2681jx+LFrU43KpSosMGny9iv
+ Eey8eyQq/cbX5ciPF5zzrg7jSTlrxQZV0zF+ujq2bWcI22oGSNh6ZTyH+sKATsTc5Z/1W8i
+ BUUrrXnRFhWYiB0qMFbwGgPq4fAH0XSgDhzn6NsNm/uP5118vfL5KndfpqDh/S9k5z7TDF/
+ 78JohIFBwInopw9iP3obA==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:SJsF8Teh/+A=:crvwkNase1dLyZgJPFOYJZ
+ xpCu6mwD4X6VpoDcnRKGADlnBv4Qh9VzqyPStfPttgheuD5wXY6lhFO3sGBygj3MXSIvTK6Lq
+ a1rg0AIMJmF2ccJFxENTca3kAWG+NmNChez7notiDsWmeLvVwMttIhvUmYkc9k4MNeY6nsmVA
+ M6TZ4quu6Tpktdqps8lu6ylnQFa/Tpfybk3HrMwAD9aJIKdSlNr+hw8emqvwwjy7eJn/1eiA+
+ OZV3nqogca7XuQhR/DTn2NTiHyi94yniD+iK8cQgrRMZt6ra9lv2rQ9+DDzAzlA1FtsOCb6lM
+ WCeearx/J9/bjmz623U5KXftcdgBB8AxvP6uWBWtnrimCuAVp5SLYnaz4qKqN1aMPvgyK41JD
+ 4HMiGjvQKay4xvewo11Ug9wQUlBE/QDHqnCmaltqFIWMM8tuXrsc0lIzlbyR9wEWfjmTn7tad
+ ob4p1sRjxYxmyPXbjqO1JvH3HsMuHGg1Ms7OByrv+RzGSWPdALt1hGwtVIfH1NyTZF/J1G0BU
+ 9ZdMJEeiapnek1PtYpMjUH1+OfnS0jmlqBvSterjog3hcSvfQiiEYt/9VsUWVzByPC0WFQeLk
+ k+pXoRYHqGAq4ZgDcls+eaadAkbRRCp2Ht2wdWgfZZ6HslzpN/3DVckf9DxLUuGBEpackF6y4
+ wCTWCNyukrj02CtYrApnS/R1mgmFUZreJKJvrk2J+vIZeuzQSClx0/BC2qHNoJdKZ83km8eBB
+ +3MqpxD5r0gUyhRMZqTU5Tb98CQGph4Sgo7Q8g==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
@@ -58,40 +58,36 @@ Great White Handkerchief come around and clean it up.
 
 Signed-off-by: Enrico Weigelt, metux IT consult <info@metux.net>
 ---
- drivers/pwm/Kconfig | 6 +++---
- 1 file changed, 3 insertions(+), 3 deletions(-)
+ drivers/virt/Kconfig | 10 +++++-----
+ 1 file changed, 5 insertions(+), 5 deletions(-)
 
-diff --git a/drivers/pwm/Kconfig b/drivers/pwm/Kconfig
-index a8f47df..3a5c20f 100644
---- a/drivers/pwm/Kconfig
-+++ b/drivers/pwm/Kconfig
-@@ -447,7 +447,7 @@ config PWM_TEGRA
- 	  To compile this driver as a module, choose M here: the module
- 	  will be called pwm-tegra.
- 
--config  PWM_TIECAP
-+config PWM_TIECAP
- 	tristate "ECAP PWM support"
- 	depends on ARCH_OMAP2PLUS || ARCH_DAVINCI_DA8XX || ARCH_KEYSTONE || ARCH_K3
+diff --git a/drivers/virt/Kconfig b/drivers/virt/Kconfig
+index 8d9cdfb..17a8685 100644
+--- a/drivers/virt/Kconfig
++++ b/drivers/virt/Kconfig
+@@ -17,17 +17,17 @@ config FSL_HV_MANAGER
+ 	depends on FSL_SOC
+ 	select EPAPR_PARAVIRT
  	help
-@@ -456,7 +456,7 @@ config  PWM_TIECAP
- 	  To compile this driver as a module, choose M here: the module
- 	  will be called pwm-tiecap.
+-          The Freescale hypervisor management driver provides several services
++	  The Freescale hypervisor management driver provides several services
+ 	  to drivers and applications related to the Freescale hypervisor:
  
--config  PWM_TIEHRPWM
-+config PWM_TIEHRPWM
- 	tristate "EHRPWM PWM support"
- 	depends on ARCH_OMAP2PLUS || ARCH_DAVINCI_DA8XX
- 	help
-@@ -466,7 +466,7 @@ config  PWM_TIEHRPWM
- 	  To compile this driver as a module, choose M here: the module
- 	  will be called pwm-tiehrpwm.
+-          1) An ioctl interface for querying and managing partitions.
++	  1) An ioctl interface for querying and managing partitions.
  
--config  PWM_TIPWMSS
-+config PWM_TIPWMSS
- 	bool
- 	default y if (ARCH_OMAP2PLUS) && (PWM_TIECAP || PWM_TIEHRPWM)
- 	help
+-          2) A file interface to reading incoming doorbells.
++	  2) A file interface to reading incoming doorbells.
+ 
+-          3) An interrupt handler for shutting down the partition upon
++	  3) An interrupt handler for shutting down the partition upon
+ 	     receiving the shutdown doorbell from a manager partition.
+ 
+-          4) A kernel interface for receiving callbacks when a managed
++	  4) A kernel interface for receiving callbacks when a managed
+ 	     partition shuts down.
+ 
+ source "drivers/virt/vboxguest/Kconfig"
 -- 
 1.9.1
 
