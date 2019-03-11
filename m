@@ -2,119 +2,122 @@ Return-Path: <SRS0=FxTY=RO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D9039C43381
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 Mar 2019 16:49:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C2103C43381
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 Mar 2019 16:50:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A5EAB20643
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 Mar 2019 16:49:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8B5A420643
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 Mar 2019 16:50:24 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="anKR7d3m"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="xOJgdGI0"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727847AbfCKQtd (ORCPT
+        id S1727850AbfCKQuX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 11 Mar 2019 12:49:33 -0400
-Received: from mail-it1-f196.google.com ([209.85.166.196]:53409 "EHLO
-        mail-it1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726675AbfCKQtd (ORCPT
+        Mon, 11 Mar 2019 12:50:23 -0400
+Received: from mail-wm1-f66.google.com ([209.85.128.66]:38078 "EHLO
+        mail-wm1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726942AbfCKQuW (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 11 Mar 2019 12:49:33 -0400
-Received: by mail-it1-f196.google.com with SMTP id x189so1341618itd.3
-        for <linux-kernel@vger.kernel.org>; Mon, 11 Mar 2019 09:49:32 -0700 (PDT)
+        Mon, 11 Mar 2019 12:50:22 -0400
+Received: by mail-wm1-f66.google.com with SMTP id a188so4997345wmf.3
+        for <linux-kernel@vger.kernel.org>; Mon, 11 Mar 2019 09:50:21 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=wheW8ruAVLkED+IQx5lIuhsAFwray9LmcUkbx4VnGWg=;
-        b=anKR7d3mbOMpLsfGpjU4FyFPreObgWL1efAgwNK8fiI4IDR3m9Nn4PBGZlrLaFOOfz
-         k0xijHrhDgaCLRTos8yWw9LQ2jqXtK+CZ+AFGfIhxpSj9cyvrIkQNpPFAhXosARqD7re
-         6CJp7R8nP1T7m+XL4bP0z+ZDevfYoB7GpYXf9//FOfFryUE3b8ePevKMFMDbzPOYmK49
-         R5fiq3no1lOWLaiKNT7Wq/N60S4ssmpqJEQBGws7nc6SEtGBczyfZkPA41kwRssTt7pr
-         vAtb2OMZvJfqrKGijZVY5Pv7rj11qdIGfdyhbSuDrJGo5C31B929wyZZJtbbQlv4H0UQ
-         R3Og==
+        bh=z9dBJ4NwNB62s3bZo7u0/QJA77GvfBIPB9kdw3KAMaY=;
+        b=xOJgdGI0fsyw6kLv9GBWRaB+HufmWpOcmyV33pdqLNbEkxrY/WUdYrMs5x0/St2EV1
+         i3fC0eLtOWPeqeemZlfMtD3sc9xOZBgh48DK30MG8Q6QZ3uE+5EZEDu5YOMFdqYcgL1r
+         mrx+n4usHC4+UXD6/D5ZFzRh0qUtmsiluZeIWLalMLvPt1D3r2QStGQBoBq5PrydN5hO
+         8twuQOuswhmCsewo+922TsLyIPueiCLxYEKCfL+4RmCLc9yjkgA+iPci/IPPKhiOkg13
+         gvmNyu+Suc6tU4Q6kKPDZbAzxXunGdsMrBb6ymn8UjF0rDdab8qwUm2F93h1SWGqnxeE
+         3mqQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=wheW8ruAVLkED+IQx5lIuhsAFwray9LmcUkbx4VnGWg=;
-        b=Mtq3QbFsIqgnrmUpBxsUxgFmsS0EjxZ3STL8FOswqChngiw8BRMRaNxsfnYMIRaUDS
-         QpvXMMEU380pPM/L7din14qJqALi8z3l6jbWAUHXKW0haKYvC8ja7Ut+SPjpRPPcXRb7
-         VESIkZwjaYPbThGfEUqVtczrvrtaTLrSIHkh84ztaVYZYlpJqcFUCTB3WYwkKb1bmR6i
-         V07XFxOmNvMTuoLjx21uqs3voC1sQTSU3bIsU53V/mzr4PqcPhnlfgO0FB134Jg/R+dV
-         CfdTwNklmOpM5YtWNMyOg53agB5At2MBOUMJx6wJawQ06nzbTQaSj+spQvgBK8rbfk7L
-         z2gA==
-X-Gm-Message-State: APjAAAVCGbyQ7vWWJs6dZ/t1r+F6FiYdA3UGwU3ELQKtuL0wO2Xl8Gv4
-        6v1sioYtXaE+JUVm3d3yONr4toBDk0YpMjR5Bu/9RA==
-X-Google-Smtp-Source: APXvYqxzhBCEfAw2XXxuQ/qW6kAhxeeRnGThucg80P/97odjEf/PBvcQelpwvmriD0Ll5pqV0Fxz9cQw3GqzlY34UuY=
-X-Received: by 2002:a24:32d0:: with SMTP id j199mr390920ita.71.1552322972201;
- Mon, 11 Mar 2019 09:49:32 -0700 (PDT)
+        bh=z9dBJ4NwNB62s3bZo7u0/QJA77GvfBIPB9kdw3KAMaY=;
+        b=nlh3flw1ObiqpjG9wD2ZbDH0msVH6htxbjp6/FBjOwF8c+AIWUk76MOoWUtEpxJmjg
+         hqS74FdqHzwDMFbN/3nqealVUjCDAfiz+iJSfVzAq4p2FOMSwcItGTBAKaOKXKFVJYnT
+         sed7j5WPTKrrjHhjVzt+cKUrQ72zHrtmUnaBgxP2GXwCco1qvUc7svnO4/ZksQYEzOjw
+         IvDiZZ0eg3Tk8jECocDJBD63gYQIvIkjXkpRNGz8UPAuIQPeowE2m8fqygCk7RkGiuFH
+         Qvqi4MIh1Ga1kOfr387AJZJARYaP/bvZ1woUjubhK2exqcCCcR9NYZ6kDYquCnFpVbUM
+         o7uQ==
+X-Gm-Message-State: APjAAAWWi6xclHodBVU7yj/BnHvcH9DmnL+lF4s2hKygcy0YNkMgA9LZ
+        SyjFekWU9YFa14oStr/2i7fkSfDiiUEtOFUdxM3dSg==
+X-Google-Smtp-Source: APXvYqwQNBr5SGSUcDSVTSB60H/nsAkuIoexn1eoA8bjZ4GKIyDxLHSxeYGjZlT56F89uMidBVoFWU0upV9G+tl6cKE=
+X-Received: by 2002:a1c:80c4:: with SMTP id b187mr395918wmd.23.1552323020672;
+ Mon, 11 Mar 2019 09:50:20 -0700 (PDT)
 MIME-Version: 1.0
-References: <20181215212304.19390-1-natechancellor@gmail.com> <CAK8P3a05QL855mx21R-Pr6c2WjhSoopdFk9z4HvKoeM19A5aSQ@mail.gmail.com>
-In-Reply-To: <CAK8P3a05QL855mx21R-Pr6c2WjhSoopdFk9z4HvKoeM19A5aSQ@mail.gmail.com>
-From:   Ard Biesheuvel <ard.biesheuvel@linaro.org>
-Date:   Mon, 11 Mar 2019 17:49:21 +0100
-Message-ID: <CAKv+Gu8nWO_GCPF1e6viGTSi5c-C+HoXqFNU=9yboC47E-kAFg@mail.gmail.com>
-Subject: Re: [PATCH] ARM: Ensure that NEON code always compiles with Clang
-To:     Arnd Bergmann <arnd@arndb.de>
-Cc:     Nathan Chancellor <natechancellor@gmail.com>,
-        Russell King <linux@armlinux.org.uk>,
-        Nicolas Pitre <nicolas.pitre@linaro.org>,
-        Tri Vo <trong@android.com>,
-        "open list:DOCUMENTATION" <linux-doc@vger.kernel.org>,
-        Jonathan Corbet <corbet@lwn.net>,
-        Nick Desaulniers <ndesaulniers@google.com>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>
+References: <CGME20190308205332epcas1p181370b12f611fd746d333a557a1ddb48@epcas1p1.samsung.com>
+ <CALAqxLUZKinhCasO4rXBJuip3bOo+JCovWLrHYPBPTopf6d7Vw@mail.gmail.com> <fe3b207e-1200-4a76-8c10-28655029f16d@samsung.com>
+In-Reply-To: <fe3b207e-1200-4a76-8c10-28655029f16d@samsung.com>
+From:   John Stultz <john.stultz@linaro.org>
+Date:   Mon, 11 Mar 2019 09:50:08 -0700
+Message-ID: <CALAqxLV2tWWNuo5UWq8UqDsUDbT4CQX5GVXiBRkHRb+322ys_w@mail.gmail.com>
+Subject: Re: REGRESSION: dwc2: gadget: Add scatter-gather mode
+To:     Marek Szyprowski <m.szyprowski@samsung.com>
+Cc:     Felipe Balbi <felipe.balbi@linux.intel.com>,
+        Minas Harutyunyan <Minas.Harutyunyan@synopsys.com>,
+        Artur Petrosyan <Arthur.Petrosyan@synopsys.com>,
+        Linux USB List <linux-usb@vger.kernel.org>,
+        lkml <linux-kernel@vger.kernel.org>,
+        Tom Gall <tom.gall@linaro.org>,
+        Andrzej Hajda <a.hajda@samsung.com>,
+        Andrzej Pietrasiewicz <andrzejtp2010@gmail.com>
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, 11 Mar 2019 at 17:22, Arnd Bergmann <arnd@arndb.de> wrote:
+On Mon, Mar 11, 2019 at 3:15 AM Marek Szyprowski
+<m.szyprowski@samsung.com> wrote:
 >
-> On Sat, Dec 15, 2018 at 10:24 PM Nathan Chancellor
-> <natechancellor@gmail.com> wrote:
-> >  endif
-> > diff --git a/arch/arm/lib/xor-neon.c b/arch/arm/lib/xor-neon.c
-> > index a6741a895189..4600b62d845f 100644
-> > --- a/arch/arm/lib/xor-neon.c
-> > +++ b/arch/arm/lib/xor-neon.c
-> > @@ -14,7 +14,7 @@
-> >  MODULE_LICENSE("GPL");
+> Hi John
+>
+>
+> On 2019-03-08 21:53, John Stultz wrote:
+> > Hey Andrzej,
+> >   I just wanted to let you know, trying to boot linus/master on the
+> > hikey board today, I've been seeing lots of errors on boot (which
+> > sometimes crash the board, and sometimes doesn't). See the example
+> > below.
 > >
-> >  #ifndef __ARM_NEON__
-> > -#error You should compile this file with '-mfloat-abi=softfp -mfpu=neon'
-> > +#error You should compile this file with '-march=armv7-a -mfloat-abi=softfp -mfpu=neon'
-> >  #endif
+> > I've bisected the issue down to 10209abe87f5 ("usb: dwc2: gadget: Add
+> > scatter-gather mode"), and if I revert that change the issue goes
+> > away.
 > >
+> > Looking at the patch, I can't see anything obviously sticking out, but
+> > let me know if you have anything suggestions you'd like me to test.
 >
-> I see this patch has made it in now, but I also see two other problems with the
-> same file that prevent it from working right with clang:
+> I've CCed new Andrzej's email.
 >
-> - it triggers #warning This code requires at least version 4.6 of GCC
+> Could you tell a bit more how to reproduce this issue? Which USB
+> function are you running on the target system? I've noticed that you are
+> using functionfs. Is is possible to get access to the usb function
+> daemon to reproduce the problem here? Which version of HiKey board are
+> you using?
 
-What is currently the oldest GCC we support for ARM?
+So this is on a LeMaker HiKey (2gb ram 8gb storage), running AOSP (so
+its adbd that is the ffs daemon)
 
-> - As I reported in https://bugs.llvm.org/show_bug.cgi?id=40976, even
->   when it builds cleanly, it does not get vectorized.
->
-> Has anyone actually managed to get this to do the right thing?
->
+I have a mainline tracking tree which follows mainline here to provide
+MALI gpu and other android requirements:
+  https://git.linaro.org/people/john.stultz/android-dev.git/log/?h=dev/hikey-mainline-WIP
 
-On my Cortex-A57 under KVM, I get this at boot
+I'm traveling this week, but if you really want to reproduce this
+yourself you can grab the system/vendor/boot images here:
+https://snapshots.linaro.org/96boards/hikey/linaro/aosp-master/latest/
 
-[    0.002287] xor: measuring software checksum speed
-[    0.100054]    arm4regs  :  5212.800 MB/sec
-[    0.200131]    8regs     :  3472.800 MB/sec
-[    0.300205]    32regs    :  3282.000 MB/sec
-[    0.400281]    neon      :  7011.600 MB/sec
+Then build the kernel w/ the hikey_defconfig and replace the kernel
+image in boot.img w/ the abootimg tool.
 
-So that means that
-a) the cost model is inaccurate, at least for some cores,
-b) given that the code is only selected if it is faster, it would be
-nice if we could override the cost model based decisions made by the
-vectorizer.
+Let me know if you have any trouble and I can try to help walk you through it.
+
+thanks
+-john
