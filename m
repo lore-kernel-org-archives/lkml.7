@@ -6,48 +6,48 @@ X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C2BFFC43381
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 Mar 2019 13:25:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C03F8C43381
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 Mar 2019 13:25:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9DF672084F
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 Mar 2019 13:25:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 965DE2084F
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 Mar 2019 13:25:47 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728034AbfCKNZW (ORCPT
+        id S1728134AbfCKNZp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 11 Mar 2019 09:25:22 -0400
-Received: from mout.kundenserver.de ([212.227.17.13]:44519 "EHLO
+        Mon, 11 Mar 2019 09:25:45 -0400
+Received: from mout.kundenserver.de ([217.72.192.75]:58603 "EHLO
         mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727614AbfCKNTj (ORCPT
+        with ESMTP id S1727486AbfCKNTi (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 11 Mar 2019 09:19:39 -0400
+        Mon, 11 Mar 2019 09:19:38 -0400
 Received: from orion.localdomain ([95.115.159.19]) by mrelayeu.kundenserver.de
  (mreue109 [212.227.15.183]) with ESMTPSA (Nemesis) id
- 1M2OEq-1h3trz1pHi-003txN for <linux-kernel@vger.kernel.org>; Mon, 11 Mar 2019
+ 1Ma1wY-1hWx2b0Ig0-00Vygx for <linux-kernel@vger.kernel.org>; Mon, 11 Mar 2019
  14:19:37 +0100
 From:   "Enrico Weigelt, metux IT consult" <info@metux.net>
 To:     linux-kernel@vger.kernel.org
-Subject: [PATCH 075/114] drivers: soc: Kconfig: pedantic formatting
-Date:   Mon, 11 Mar 2019 14:18:27 +0100
-Message-Id: <1552310346-7629-76-git-send-email-info@metux.net>
+Subject: [PATCH 072/114] drivers: macintosh: Kconfig: pedantic formatting
+Date:   Mon, 11 Mar 2019 14:18:24 +0100
+Message-Id: <1552310346-7629-73-git-send-email-info@metux.net>
 X-Mailer: git-send-email 1.9.1
 In-Reply-To: <1552310346-7629-1-git-send-email-info@metux.net>
 References: <1552310346-7629-1-git-send-email-info@metux.net>
-X-Provags-ID: V03:K1:WNe5ajDCvAztfws4BppVvCQjFI/iGhfL3Wau5SgcQUwrLQOw3wS
- o9Qs3UDjBfvn6MDFPm8piEwCfAIJQjV9xs4i7THmOhxbLXMFIT4iAFYSqxoOfPWoLt+qbAu
- jx5U8ijZxKH14NY4FP1+XqthQWcrV2HHvnrQfREJZE08MMJ4cEmjndP0PxwpGk+jPsdFAm/
- I1pIkWq31EG0V7NfPclvQ==
-X-UI-Out-Filterresults: notjunk:1;V03:K0://Ae+MnW+h0=:9xT2SJA9exnqPMYUmmtLlN
- zJCOFY1qrBBvwj+slWWPLLI8EB+VK4xH2Okxlo5pdDpNiwojUQDu17u4Uo/6ytMpyvPKWpb7C
- QxAFNV2LNFzUBBf2P1QL+FlrIwCKqNhHZTwB6yLkQvGiMCQy89FB7gwk9VtBdrycuRKcC281t
- Z0JLdO4c1JD8HWPyyBfusKOglmq7Ru+lnyBdPTe4J+/A1QfjlIkZIJR34kHwdZXqdcGIUS3D6
- TMhn/JZIVfZqOARJzbjHFGypt97kLz0vmUUS1WPUtH1l/CAQ+fwUCd2JPtYucpzapB58RVQrc
- M5KK6vOeDa//eSRNv+i8BGh+GcBjePJK3Af4yLmM5z0vc0frMEU1jaRDmxsc2jTkEU6C6fY6e
- fHMpZCjCWiwsfTsX8ff6RDU/DigeVrrLBeAjOpSs8lWTSkMPI+xvpuWzzt2AWcpqhlhinHKBO
- ovDaf19NaKogOFfFyQuBe5LblPjsLTiXhQIwJuAklpqXyaL0fq4CMyPUymtZasvyzFF7n1w/d
- W0xLMihU28Dr72JQy1DqVw9a5dt3YRgsXoArmkNDGs+Bzyl+uRoxbwo+no/hmkx7a0CQhdWI5
- 11G05blpNcw5dDtu4Js2F/NDH2B7PVXAxtWCOmm61vn40TG/zpDY2ii9PIYwCVkyT7MF93nCp
- 41peHRNY6o8FZhPktZzygQT41h0SQpGwp4P/ADpfhE4JUe7Y4LKpJ/+HA25P+wj2IKpsyA9Ig
- mTGHgb8UlKC3rqWQUCxRtYHgqQcMO1EJV6zIKg==
+X-Provags-ID: V03:K1:LVdFh4KnuAGCEi09F2EjzRV3InIwhqv6JEwKRFfQdhh0uA4uHOp
+ wmZdEKK2JUFyGbDF8+yFGcLsqZY66dKvMiskl0j85bO5iuedvMN6YMXW2QQSAaIu7bqwmVY
+ QcjBtypo0Z9lnPKegcCgbh0u6meA7O19H8u6qW4fhDksrsMJEj810P/SyEAdTQgBT0dWtQd
+ 5ruNzW+ityv9+N+PsdRqA==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:vkdE0oZowzY=:kSKd98n5U+G9BlsfFt/GZ3
+ VeKdoeIZGA5UKNk+0REpmjYcTpKU/AgOZrXlaIZYob3n9rfDhJwKI/yBVOtYiR6SHsKjWBpQF
+ ScA8NQ/eA0K7CdslKir9og9BQlXHOd8tnBw2/U6w99p+RnyQoyJXFhF6SBjtfzNNWrMKlGnni
+ lb9GrcrGr+7fOWNWC1zOwBxqi2Bw9gt/UjB5AmoQjdi7CccFra8ApORtfkEM2X0ZK3LXAtAoR
+ OJ5DDjZsJ/IBADxpD7qpU3V0BTuhWDTO4B/qKLQNTz6czJHHdwRBgGfpjNu2MIdVjXyTm1OAr
+ gA5qY3ViudV66lz/AlomhxSxLTgQn1BVFRI7sTjzTMGfXflzXyD1SRmqzP8Bn46JV/dYP0gtp
+ BeAuESVgHj6NujRDiVMc2JJ/VC7giKd4/bjPd+to2mz7oyGp+VmDqoMNz7srKQBnCKApGCpOR
+ 5v+BBZ91JzVRHmHT+tE1vcdNUATykauhd/8qVl3KQWId3Mw74kIjqEzufMifTjm2P2i47+rtd
+ Bt2XaTF5+fydsSxrJVBgYXQ9Ixoiw/rLe1oQ8BRFSWDhOda/F+MeRgWP6moSFY2H6ugb9y1Pb
+ B0+vV3ehR68r8C+7d0aCmAMxv+GeWxvjCFxO8ZCOc3Nf1nWJMMcESW4tTGNVW1/nOi6seC6BU
+ 76BqqgxmAVUnUUi8ExokK6ycXXdjsHH3j355+OAi2+ojVF+YU/dnZuMdhfHNMBMnjB8Eh1mYJ
+ 15TOmCeeQ+WnzBXq8hlsg7/cpEAu56izBRFFRw==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
@@ -58,102 +58,40 @@ Great White Handkerchief come around and clean it up.
 
 Signed-off-by: Enrico Weigelt, metux IT consult <info@metux.net>
 ---
- drivers/soc/fsl/Kconfig      |  9 +++++----
- drivers/soc/qcom/Kconfig     | 23 ++++++++++++-----------
- drivers/soc/rockchip/Kconfig | 18 +++++++++---------
- 3 files changed, 26 insertions(+), 24 deletions(-)
+ drivers/macintosh/Kconfig | 6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
 
-diff --git a/drivers/soc/fsl/Kconfig b/drivers/soc/fsl/Kconfig
-index 61f8e14..0db980a 100644
---- a/drivers/soc/fsl/Kconfig
-+++ b/drivers/soc/fsl/Kconfig
-@@ -20,13 +20,14 @@ config FSL_GUTS
- 	  into this driver as well.
- 
- config FSL_MC_DPIO
--        tristate "QorIQ DPAA2 DPIO driver"
--        depends on FSL_MC_BUS
--        select SOC_BUS
--        help
-+	tristate "QorIQ DPAA2 DPIO driver"
-+	depends on FSL_MC_BUS
-+	select SOC_BUS
-+	help
- 	  Driver for the DPAA2 DPIO object.  A DPIO provides queue and
- 	  buffer management facilities for software to interact with
- 	  other DPAA2 objects. This driver does not expose the DPIO
- 	  objects individually, but groups them under a service layer
- 	  API.
-+
- endmenu
-diff --git a/drivers/soc/qcom/Kconfig b/drivers/soc/qcom/Kconfig
-index 1ee298f..e885233 100644
---- a/drivers/soc/qcom/Kconfig
-+++ b/drivers/soc/qcom/Kconfig
-@@ -32,13 +32,13 @@ config QCOM_GLINK_SSR
- 	  neighboring subsystems going up or down.
- 
- config QCOM_GSBI
--        tristate "QCOM General Serial Bus Interface"
--        depends on ARCH_QCOM || COMPILE_TEST
--        select MFD_SYSCON
--        help
--          Say y here to enable GSBI support.  The GSBI provides control
--          functions for connecting the underlying serial UART, SPI, and I2C
--          devices to the output pins.
-+	tristate "QCOM General Serial Bus Interface"
-+	depends on ARCH_QCOM || COMPILE_TEST
-+	select MFD_SYSCON
-+	help
-+	  Say y here to enable GSBI support.  The GSBI provides control
-+	  functions for connecting the underlying serial UART, SPI, and I2C
-+	  devices to the output pins.
- 
- config QCOM_LLCC
- 	tristate "Qualcomm Technologies, Inc. LLCC driver"
-@@ -175,8 +175,9 @@ config QCOM_APR
- 	depends on ARCH_QCOM || COMPILE_TEST
- 	depends on RPMSG
+diff --git a/drivers/macintosh/Kconfig b/drivers/macintosh/Kconfig
+index 47c350c..c5baaaf 100644
+--- a/drivers/macintosh/Kconfig
++++ b/drivers/macintosh/Kconfig
+@@ -177,7 +177,7 @@ config THERM_ADT746X
+ 	depends on I2C && I2C_POWERMAC && PPC_PMAC && !PPC_PMAC64
  	help
--          Enable APR IPC protocol support between
--          application processor and QDSP6. APR is
--          used by audio driver to configure QDSP6
--          ASM, ADM and AFE modules.
-+	  Enable APR IPC protocol support between
-+	  application processor and QDSP6. APR is
-+	  used by audio driver to configure QDSP6
-+	  ASM, ADM and AFE modules.
-+
- endmenu
-diff --git a/drivers/soc/rockchip/Kconfig b/drivers/soc/rockchip/Kconfig
-index 20da55d..f468b79 100644
---- a/drivers/soc/rockchip/Kconfig
-+++ b/drivers/soc/rockchip/Kconfig
-@@ -14,15 +14,15 @@ config ROCKCHIP_GRF
- 	  to make some of them conform to expectations of the kernel.
+ 	  This driver provides some thermostat and fan control for the
+-          iBook G4, and the ATI based aluminium PowerBooks, allowing slightly
++	  iBook G4, and the ATI based aluminium PowerBooks, allowing slightly
+ 	  better fan behaviour by default, and some manual control.
  
- config ROCKCHIP_PM_DOMAINS
--        bool "Rockchip generic power domain"
--        depends on PM
--        select PM_GENERIC_DOMAINS
--        help
--          Say y here to enable power domain support.
--          In order to meet high performance and low power requirements, a power
--          management unit is designed or saving power when RK3288 in low power
--          mode. The RK3288 PMU is dedicated for managing the power of the whole chip.
-+	bool "Rockchip generic power domain"
-+	depends on PM
-+	select PM_GENERIC_DOMAINS
-+	help
-+	  Say y here to enable power domain support.
-+	  In order to meet high performance and low power requirements, a power
-+	  management unit is designed or saving power when RK3288 in low power
-+	  mode. The RK3288 PMU is dedicated for managing the power of the whole chip.
+ config WINDFARM
+@@ -213,7 +213,7 @@ config WINDFARM_PM91
+ 	select I2C_POWERMAC
+ 	help
+ 	  This driver provides thermal control for the PowerMac9,1
+-          which is the recent (SMU based) single CPU desktop G5
++	  which is the recent (SMU based) single CPU desktop G5
  
--          If unsure, say N.
-+	  If unsure, say N.
+ config WINDFARM_PM112
+ 	tristate "Support for thermal management on PowerMac11,2"
+@@ -241,7 +241,7 @@ config PMAC_RACKMETER
+ 	depends on PPC_PMAC
+ 	help
+ 	  This driver provides some support to control the front panel
+-          blue LEDs "vu-meter" of the XServer macs.
++	  blue LEDs "vu-meter" of the XServer macs.
  
- endif
+ config SENSORS_AMS
+ 	tristate "Apple Motion Sensor driver"
 -- 
 1.9.1
 
