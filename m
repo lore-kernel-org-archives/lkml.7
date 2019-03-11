@@ -2,125 +2,131 @@ Return-Path: <SRS0=FxTY=RO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.0 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8BA3CC43381
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 Mar 2019 10:43:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5CFE3C43381
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 Mar 2019 10:51:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 55B64206BA
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 Mar 2019 10:43:29 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=cogentembedded-com.20150623.gappssmtp.com header.i=@cogentembedded-com.20150623.gappssmtp.com header.b="hNzZp1V2"
+	by mail.kernel.org (Postfix) with ESMTP id 2FC46206BA
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 Mar 2019 10:51:10 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727236AbfCKKn2 (ORCPT
+        id S1727195AbfCKKvI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 11 Mar 2019 06:43:28 -0400
-Received: from mail-lj1-f194.google.com ([209.85.208.194]:46738 "EHLO
-        mail-lj1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726623AbfCKKn1 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 11 Mar 2019 06:43:27 -0400
-Received: by mail-lj1-f194.google.com with SMTP id v16so3547338ljg.13
-        for <linux-kernel@vger.kernel.org>; Mon, 11 Mar 2019 03:43:26 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=cogentembedded-com.20150623.gappssmtp.com; s=20150623;
-        h=subject:to:cc:references:from:organization:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=c87jzWIZtvLDTsWdnzo/HYHSGIho26mPgXOUYgHAzRE=;
-        b=hNzZp1V2F9T986baoYsBdF+/RWPQUElueA47CpSTyNtyhyAtGEDXNN0lou9OCm2Ivv
-         lDzShv0+yUbipnxIX+H3CN7IeWcRKeqBUgzBEM0yhbJxXUT4EM6f5XFDXizCQqNGiVeU
-         rr1ByKAO1k3fI9g54QTGiB6K6jPBR+I/EbaAyw5Wt8AWTd+n7IA+YQD3v63xKsQL0IiG
-         Fqi1eHEeZPJFCFMMn5wnhagZM8m9v7MuORRwuHDQjgPoQdZyN8Lb9IJxGHDYJ3dgHV9T
-         +EhWaGmTcANa5+Y/z1EeNldEKhUzOd7ypZjh/LzFeF/e3hG2/HgtmQCaGuwg76XfKxRZ
-         tqxQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:organization
-         :message-id:date:user-agent:mime-version:in-reply-to
-         :content-language:content-transfer-encoding;
-        bh=c87jzWIZtvLDTsWdnzo/HYHSGIho26mPgXOUYgHAzRE=;
-        b=uYxKOQdFeNhKo0YVJW1AkAbPY4Ms9C4VN0u7Pgw0DAZKDjPJFKdOPv6Vg6APYUvCpL
-         +bfx5EFh/Zi/wgiJql940yeidho0KPhJOQKhpC3N98oYPnRzmdRJ//Jg7Z1VzZVjmS7c
-         pIcZdidhvS21EhCPJULSoXyJqgSvi/PKWfdNHMqu15LnDp1cM4SjR/NfhYAoBT7wMatH
-         NYPn+PWOsnt0anERiB11vsnLhHoTCvJJnGVf1PsmW7nUEXu8BQmlgZNNDQ1zJwXD64gL
-         4NrOACkhDtCwKpok42f/nz4usEDn4zjTl5FWUIMGL+oC/dZhOUgeINnpBVL324XI2Pm/
-         TTsw==
-X-Gm-Message-State: APjAAAXLiFnX5tjorgEnalFjmNBsPLm4cN2YaROjnj3MIMoH7FbBMWZ+
-        ZiKl+uMzBTESkBvsWJS1wlbJPEa+zJA=
-X-Google-Smtp-Source: APXvYqx4n6QFeBGEX7jnjyS9xY79Xp5DXhb2UtHTpHtXqJbc89CAqvcUMViRK0v63VlR9HTdmSqXPw==
-X-Received: by 2002:a2e:5518:: with SMTP id j24mr16516405ljb.80.1552301005376;
-        Mon, 11 Mar 2019 03:43:25 -0700 (PDT)
-Received: from wasted.cogentembedded.com ([31.173.87.180])
-        by smtp.gmail.com with ESMTPSA id 8sm898789ljs.42.2019.03.11.03.43.23
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Mon, 11 Mar 2019 03:43:24 -0700 (PDT)
-Subject: Re: [PATCH] net: renesas: fix a potential NULL pointer dereference
-To:     Geert Uytterhoeven <geert@linux-m68k.org>,
-        Kangjie Lu <kjlu@umn.edu>
-Cc:     pakki001@umn.edu, "David S. Miller" <davem@davemloft.net>,
-        Vladimir Zapolskiy <vladimir_zapolskiy@mentor.com>,
-        Geert Uytterhoeven <geert+renesas@glider.be>,
-        Vladimir Barinov <vladimir.barinov@cogentembedded.com>,
-        Chris Brandt <chris.brandt@renesas.com>,
-        netdev <netdev@vger.kernel.org>,
-        Linux-Renesas <linux-renesas-soc@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-References: <20190311070138.24084-1-kjlu@umn.edu>
- <CAMuHMdUcc2MXwX1sP4QEiWskoDofR8HQv-e2f9nWXhaMPeeZYA@mail.gmail.com>
-From:   Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
-Organization: Cogent Embedded
-Message-ID: <73506a39-1c8c-b5dc-d5df-6f9dc51c09aa@cogentembedded.com>
-Date:   Mon, 11 Mar 2019 13:43:18 +0300
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:52.0) Gecko/20100101
- Thunderbird/52.2.1
+        Mon, 11 Mar 2019 06:51:08 -0400
+Received: from usa-sjc-mx-foss1.foss.arm.com ([217.140.101.70]:52436 "EHLO
+        foss.arm.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725839AbfCKKvI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 11 Mar 2019 06:51:08 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.72.51.249])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 7D5D1374;
+        Mon, 11 Mar 2019 03:51:07 -0700 (PDT)
+Received: from [10.1.196.92] (usa-sjc-imap-foss1.foss.arm.com [10.72.51.249])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id C6BB83F703;
+        Mon, 11 Mar 2019 03:51:05 -0700 (PDT)
+Subject: Re: [PATCH v3 3/9] of: irq: add helper to remap interrupts to another
+ irqdomain
+To:     Lina Iyer <ilina@codeaurora.org>, swboyd@chromium.org,
+        evgreen@chromium.org
+Cc:     linux-kernel@vger.kernel.org, rplsssn@codeaurora.org,
+        linux-arm-msm@vger.kernel.org, thierry.reding@gmail.com,
+        bjorn.andersson@linaro.org, dianders@chromium.org,
+        linus.walleij@linaro.org
+References: <20190222221850.26939-1-ilina@codeaurora.org>
+ <20190222221850.26939-4-ilina@codeaurora.org>
+From:   Marc Zyngier <marc.zyngier@arm.com>
+Openpgp: preference=signencrypt
+Autocrypt: addr=marc.zyngier@arm.com; prefer-encrypt=mutual; keydata=
+ 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
+Organization: ARM Ltd
+Message-ID: <bcd89c7e-ab26-f84f-9fe9-8a4958437c04@arm.com>
+Date:   Mon, 11 Mar 2019 10:51:04 +0000
+User-Agent: Mozilla/5.0 (X11; Linux aarch64; rv:60.0) Gecko/20100101
+ Thunderbird/60.5.1
 MIME-Version: 1.0
-In-Reply-To: <CAMuHMdUcc2MXwX1sP4QEiWskoDofR8HQv-e2f9nWXhaMPeeZYA@mail.gmail.com>
+In-Reply-To: <20190222221850.26939-4-ilina@codeaurora.org>
 Content-Type: text/plain; charset=utf-8
-Content-Language: en-MW
+Content-Language: en-US
 Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hello!
-
-On 03/11/2019 10:43 AM, Geert Uytterhoeven wrote:
-
->> In case of_get_phy_mode fails, the fix returns NULL to avoid
->> the NULL pointer dereference.
->>
->> Signed-off-by: Kangjie Lu <kjlu@umn.edu>
+On 22/02/2019 22:18, Lina Iyer wrote:
+> From: Stephen Boyd <swboyd@chromium.org>
 > 
-> Thanks for your patch!
-> 
->> --- a/drivers/net/ethernet/renesas/sh_eth.c
->> +++ b/drivers/net/ethernet/renesas/sh_eth.c
->> @@ -3187,6 +3187,8 @@ static struct sh_eth_plat_data *sh_eth_parse_dt(struct device *dev)
->>                 return NULL;
->>
->>         pdata->phy_interface = of_get_phy_mode(np);
->> +       if (unlikely(!pdata->phy_interface))
->> +               return NULL;
-> 
-> of_get_phy_mode() does not return a pointer, but a phy mode index.
-> Hence zero is a valid value.
-> 
-> So I'm wondering where is the potential NULL pointer dereference?
+> Sometimes interrupts are routed from an interrupt controller to another
+> in no specific order. Having these in the drives makes it difficult to
 
-   Hm, not seeing NULL deref as well...
+s/drives/driver/ ?
 
-> Perhaps we do need to check for negative error codes?
-> Or is this already handled later, by {of_,}phy_connect()?
+> maintain when the same drivers supports multiple variants with different
+> mapping. Also, specifying them in DT makes little sense with a
+> bunch of numbers like -
+> 	<0, 13>, <5, 32>,
+> It makes more sense when we can have the parent handle along with
+> interrupt specificers for the incoming interrupt as well as that of the
 
-   Not seeing such handling too...
-   The v2 patch seems good though, as the "phy-mode" prop is mandatory anyway.
+specifiers
 
-> Gr{oetje,eeting}s,
-> 
->                         Geert
+> outgoing interrupt like -
+> 	<22 0 &intc 36 0>,
+> 	<24 0 &intc 37 0>,
+> 	<26 0 &intc 38 0>,
+> And the interrupt specifiers can be interpred using these properties -
 
-MBR, Sergei
+interpreted
+
+> 	irqdomain-map-mask = <0xff 0>;
+> 	irqdomain-map-pass-thru = <0 0xff>;
+
+Talking about interpretation, can you please expand on how these should
+be used? You definitely want to have this documented as a generic
+binding somewhere.
+
+Thanks,
+
+	M.
+-- 
+Jazz is not dead. It just smells funny...
