@@ -2,104 +2,128 @@ Return-Path: <SRS0=FxTY=RO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_MUTT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_PASS autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 25A9BC43381
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 Mar 2019 20:58:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 08481C43381
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 Mar 2019 20:59:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E4DEC2147C
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 Mar 2019 20:58:58 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="EBtD80Ft"
+	by mail.kernel.org (Postfix) with ESMTP id D13FD214AE
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 Mar 2019 20:59:16 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728090AbfCKU65 (ORCPT
+        id S1728282AbfCKU7P (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 11 Mar 2019 16:58:57 -0400
-Received: from mail-qt1-f193.google.com ([209.85.160.193]:34387 "EHLO
-        mail-qt1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726675AbfCKU65 (ORCPT
+        Mon, 11 Mar 2019 16:59:15 -0400
+Received: from mail-qt1-f196.google.com ([209.85.160.196]:36634 "EHLO
+        mail-qt1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726675AbfCKU7O (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 11 Mar 2019 16:58:57 -0400
-Received: by mail-qt1-f193.google.com with SMTP id x20so233001qto.1;
-        Mon, 11 Mar 2019 13:58:56 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:date:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=9an/t+t64HgvbEoe1ugAOOfJWBGKYBAyfg2mCKmAGGQ=;
-        b=EBtD80FtPlDEqapJYPQw8e+GyJ6FaaQI237QY06B7mfCcBS8HryJS9mNEJ7Qbc+SDr
-         Wng6NXEdwr51p1XmTmqcvvsMef2qGbP77W2JWpFSg7hX87IQldT7NOfqhltYZbnxxm/q
-         rV/k26AMEyC0IbDPwSmLLRfZbYP4MOpg2c57DlYIvBYgEVPXjz2JfIMao3jxrzoUb9XM
-         HiPTxNsOL8rI2YEcW3I8JgbGMrcbInlio7Vx9P76YsVRw6owXK9NsFuY84o2omrQ7CP3
-         6D9UtzLlW5mS9WOzZIeEy/xJ5/5r0dBZsYSCUm7VV1b/C+xCCMJxgZuhNIBxrBlv5kao
-         b6RA==
+        Mon, 11 Mar 2019 16:59:14 -0400
+Received: by mail-qt1-f196.google.com with SMTP id b3so216514qtj.3
+        for <linux-kernel@vger.kernel.org>; Mon, 11 Mar 2019 13:59:14 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:date:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=9an/t+t64HgvbEoe1ugAOOfJWBGKYBAyfg2mCKmAGGQ=;
-        b=NjGSL+H71W6cqw+09g1gTRNe5ei2ebp2uGxsTL+GUTyCKClWxagHnfL/IBt0VnHGk5
-         kRJiE5Pd1+AnQ7PQ3jyBs1NBN38odjsNzOQ+cbx/z0EFAkxZU2QPYX/ePEjskuLg6IRL
-         X+bDPJhPi3SsHlb1rbh4SUDBCC6MI0kz7n/fdqpjT6rsChXo2qLkCVSLL2aCDjlUgTlT
-         pL3M44Af7sSoCS3SblFgxbkqNdh/IqQ5ylsPngdgKvO7lvC04au9iLshfgFqrCKDBjpf
-         MnHkHO8uJMv7hntFpKBjwggEugitiYEgC0cYzjcVgsocFE7OEKzOSBAfvwbR3YF3X73G
-         G/Gw==
-X-Gm-Message-State: APjAAAVY4eCWy/Mkv7Kf+qHMJVBAkkuGBHVCIqq91FdUkjhJYLTdrlse
-        dM+mJT10oPzWLcFIpTw7CFs=
-X-Google-Smtp-Source: APXvYqwOdW/VuUxJ0783GmIITQ6C+UwYrD3Cfyfc7O+7RG3twiqHs17yYvBZ6NRhthejsLGjAAxjBw==
-X-Received: by 2002:ac8:540f:: with SMTP id b15mr4828377qtq.209.1552337936001;
-        Mon, 11 Mar 2019 13:58:56 -0700 (PDT)
-Received: from quaco.ghostprotocols.net ([190.15.121.82])
-        by smtp.gmail.com with ESMTPSA id t27sm31343qtb.60.2019.03.11.13.58.54
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Mon, 11 Mar 2019 13:58:55 -0700 (PDT)
-From:   Arnaldo Carvalho de Melo <arnaldo.melo@gmail.com>
-X-Google-Original-From: Arnaldo Carvalho de Melo <acme@kernel.org>
-Received: by quaco.ghostprotocols.net (Postfix, from userid 1000)
-        id CD6D44039C; Mon, 11 Mar 2019 17:58:52 -0300 (-03)
-Date:   Mon, 11 Mar 2019 17:58:52 -0300
-To:     Andi Kleen <ak@linux.intel.com>
-Cc:     Arnaldo Carvalho de Melo <arnaldo.melo@gmail.com>,
-        Andi Kleen <andi@firstfloor.org>, jolsa@kernel.org,
-        linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v1 06/10] perf, tools, report: Print better message for
- JITed code
-Message-ID: <20190311205852.GE10690@kernel.org>
-References: <20190311202446.10210-1-andi@firstfloor.org>
- <20190311202446.10210-7-andi@firstfloor.org>
- <20190311203302.GB10690@kernel.org>
- <20190311204856.GD29294@tassilo.jf.intel.com>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=joFaR78DHCL1tgJBLek+bVJOh7TncAG/dejcR7SsEV8=;
+        b=KYiKOjMiKfJl8oyOc5AfRW2Q9QAc7wF1yfAYDk82JG/29xCDi4tkdzrOf4Wk3M15ap
+         tCO0CgIG/arV2TG0Vut2dho8CwdT+2KUSuQ3FHKg7F34FdJf2jhe6W+0LSyyPYG04UtN
+         vQpgjqJ/qvUnySM+XBztKfScFtd13AmnOYfPkcuevhXGKOedNHLE1Kx+LuHg4NKqN/oS
+         n6lfijkQYrDvyYQMabgfPeIklKBr3b88BPGmYtUNVEIeMKu5VmNZXP3ErDbDI0kqicSB
+         xpNK/55p/kZdfcmGEeUCBHkN5OTWURigW1yZzMLyziRoxBzFBn+vqgX5AR478EkW/py3
+         iVZQ==
+X-Gm-Message-State: APjAAAU6Ha4ND55JH7cROtKGuTncluT6n5okzkg0DJcnxhQcOTKw36Ve
+        ttjDYDhbM0i3nw7PWt3j1GKz2T6KPYA4xvdS/is=
+X-Google-Smtp-Source: APXvYqxHPmSH3YNUPm92hk7m0r5Ew58SFKfmughZBfCE8Jyeut2w3Ec+a+hL/xE/MZ2RuWEV9XBM0cuMWZ+ttqgJuCQ=
+X-Received: by 2002:ac8:2bcf:: with SMTP id n15mr26261515qtn.96.1552337953350;
+ Mon, 11 Mar 2019 13:59:13 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190311204856.GD29294@tassilo.jf.intel.com>
-X-Url:  http://acmel.wordpress.com
-User-Agent: Mutt/1.10.1 (2018-07-13)
+References: <20190307091514.2489338-1-arnd@arndb.de> <20190307091514.2489338-2-arnd@arndb.de>
+ <CAKwvOdk=9j2HvtWOpdOEw9sm0Nh2oU3c1c6+hJJ5WMweAM=4EQ@mail.gmail.com>
+ <20190307234850.nsbpkfcit3lnmytu@shell.armlinux.org.uk> <CAKv+Gu9VM2Vs3Q8+bPLsnt08dOmba6j54gnhiHkk=AHRzG8tVA@mail.gmail.com>
+ <20190308095308.hjjrzdp4fzbbtnnv@shell.armlinux.org.uk> <CAKv+Gu_szWgw-KJASLYGJ6hJXh5K8WxnUn+UQkm7jUup=rqG6w@mail.gmail.com>
+ <20190308103429.ycasmpt6tcpsoqps@shell.armlinux.org.uk> <CAKv+Gu_9=G3U6Yaw8fLfTP3QT38WdwrFaC-BqLTCr2NihWA2ZA@mail.gmail.com>
+ <20190308105835.tovswk5rwxusmxdu@shell.armlinux.org.uk> <CAKv+Gu-Od+hBosThTWFooz9FMKnu3g0oNh_2hmidetbB-_YyjQ@mail.gmail.com>
+ <CAK8P3a1ECw_g1AqsVavD8hhVEGqNk6Kcx_U0L=0d29eu561NhA@mail.gmail.com>
+ <CAKv+Gu8qgsnPV=uWR2jkJ5bsYihekkEvWNuw4whLdLrbBa7gnA@mail.gmail.com>
+ <CAK8P3a0QCgLbXpztUQXAhWLp=ArJUqmtcuXNZUeXZBH+N1QeaA@mail.gmail.com> <CAKv+Gu__jgnm00ou+3FsqRBZWeDFy5Qi+1eiXeMKqc+hVSXomg@mail.gmail.com>
+In-Reply-To: <CAKv+Gu__jgnm00ou+3FsqRBZWeDFy5Qi+1eiXeMKqc+hVSXomg@mail.gmail.com>
+From:   Arnd Bergmann <arnd@arndb.de>
+Date:   Mon, 11 Mar 2019 21:58:55 +0100
+Message-ID: <CAK8P3a2Rr1_+m245cBhS6EkKm9-ZgfVDNB0x-=RNJ3KrGEWBpQ@mail.gmail.com>
+Subject: Re: [PATCH 2/2] ARM: futex: make futex_detect_cmpxchg more reliable
+To:     Ard Biesheuvel <ard.biesheuvel@linaro.org>
+Cc:     Russell King - ARM Linux admin <linux@armlinux.org.uk>,
+        Mikael Pettersson <mikpelinux@gmail.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Nick Desaulniers <ndesaulniers@google.com>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Darren Hart <dvhart@infradead.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Dave Martin <Dave.Martin@arm.com>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Em Mon, Mar 11, 2019 at 01:48:56PM -0700, Andi Kleen escreveu:
-> On Mon, Mar 11, 2019 at 05:33:02PM -0300, Arnaldo Carvalho de Melo wrote:
-> > Em Mon, Mar 11, 2019 at 01:24:42PM -0700, Andi Kleen escreveu:
-> > > +		if (!strncmp(map->dso->name, "/tmp/perf-", 10)) {
-> > > +			static bool warned;
-> > > +			if (!warned) {
-> > > +				pr_err("Cannot find executable, JITed code present? May need agent.\n");
-> > > +				warned = true;
-> > > +			}
- 
-> > Please use WARN_ON_ONCE(), we have it in tools/include/asm/bug.h, just
-> > like the kernel.
+On Mon, Mar 11, 2019 at 5:36 PM Ard Biesheuvel
+<ard.biesheuvel@linaro.org> wrote:
+>
+> On Mon, 11 Mar 2019 at 17:30, Arnd Bergmann <arnd@arndb.de> wrote:
+> >
+> > On Mon, Mar 11, 2019 at 3:36 PM Ard Biesheuvel
+> > <ard.biesheuvel@linaro.org> wrote:
+> > > On Mon, 11 Mar 2019 at 15:34, Arnd Bergmann <arnd@arndb.de> wrote:
+> > > > On Fri, Mar 8, 2019 at 12:56 PM Ard Biesheuvel
+> > > > <ard.biesheuvel@linaro.org> wrote:
+> > > > > On Fri, 8 Mar 2019 at 11:58, Russell King - ARM Linux admin <linux@armlinux.org.uk> wrote:
+> > > > > > On Fri, Mar 08, 2019 at 11:45:21AM +0100, Ard Biesheuvel wrote:
+> > > >
+> > > > My first attempt (before finding the original patch from Mikael Pettersson)
+> > > > was to change the probe to pass '1' as the value instead of '0', that
+> > > > worked fine.
+> > > >
+> > >
+> > > Which probe is that?
+> >
+> > diff --git a/kernel/futex.c b/kernel/futex.c
+> > index c3b73b0311bc..19615ad3c4f7 100644
+> > --- a/kernel/futex.c
+> > +++ b/kernel/futex.c
+> > @@ -3864,7 +3864,7 @@ static void __init futex_detect_cmpxchg(void)
+> >          * implementation, the non-functional ones will return
+> >          * -ENOSYS.
+> >          */
+> > -       if (cmpxchg_futex_value_locked(&curval, NULL, 0, 0) == -EFAULT)
+> > +       if (cmpxchg_futex_value_locked(&curval, NULL, 1, 1) == -EFAULT)
+> >                 futex_cmpxchg_enabled = 1;
+> >  #endif
+> >  }
+> >
+>
+> Ah ok.
+>
+> That explains a lot.
+>
+> Can't we just return -EFAULT if uaddr is NULL? Or does that defeat this check?
 
-> But that prints "assertation failed". This is not a perf bug, but can happen
-> in normal operation.
+I think that would work here, it would just create a tiny overhead
+for each call to futex_atomic_cmpxchg_inatomic().
 
-Sorry, we also have WARN_ONCE() and that one doesn't have any extra
-message printed, only what you pass to it, right?
+Semi-related side note:
+After I looked at access_ok() for a bit too long, I tried replacing it with
 
-- Arnaldo
+#define access_ok(addr, size) \
+       (((u64)(uintptr_t)addr + (u64)(size_t)size) >=
+current_thread_info()->addr_limit)
+
+which interestingly seemed to improve the output with clang (it lets it
+combine multiple access_ok() checks and schedule the instructions better,
+compared to our inline asm implementation), but it unfortunately creates
+horrible code with gcc.
+
+      Arnd
