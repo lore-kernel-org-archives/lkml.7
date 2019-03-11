@@ -6,147 +6,133 @@ X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D90EDC43381
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 Mar 2019 12:57:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 08FA9C43381
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 Mar 2019 13:02:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A5A362075C
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 Mar 2019 12:57:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CD5002075C
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 Mar 2019 13:02:23 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727334AbfCKM5b (ORCPT
+        id S1727202AbfCKNCW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 11 Mar 2019 08:57:31 -0400
-Received: from usa-sjc-mx-foss1.foss.arm.com ([217.140.101.70]:53848 "EHLO
-        foss.arm.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726605AbfCKM5a (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 11 Mar 2019 08:57:30 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.72.51.249])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id F178FA78;
-        Mon, 11 Mar 2019 05:57:29 -0700 (PDT)
-Received: from [10.163.1.86] (unknown [10.163.1.86])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 058B03F703;
-        Mon, 11 Mar 2019 05:57:22 -0700 (PDT)
-Subject: Re: [PATCH v3 3/3] arm64: mm: enable per pmd page table lock
-To:     Mark Rutland <mark.rutland@arm.com>, Yu Zhao <yuzhao@google.com>
-Cc:     Catalin Marinas <catalin.marinas@arm.com>,
-        Will Deacon <will.deacon@arm.com>,
-        "Aneesh Kumar K . V" <aneesh.kumar@linux.vnet.ibm.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Nick Piggin <npiggin@gmail.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Joel Fernandes <joel@joelfernandes.org>,
-        "Kirill A . Shutemov" <kirill@shutemov.name>,
-        Ard Biesheuvel <ard.biesheuvel@linaro.org>,
-        Chintan Pandya <cpandya@codeaurora.org>,
-        Jun Yao <yaojun8558363@gmail.com>,
-        Laura Abbott <labbott@redhat.com>,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        linux-arch@vger.kernel.org, linux-mm@kvack.org
-References: <20190218231319.178224-1-yuzhao@google.com>
- <20190310011906.254635-1-yuzhao@google.com>
- <20190310011906.254635-3-yuzhao@google.com>
- <20190311121147.GA23361@lakrids.cambridge.arm.com>
-From:   Anshuman Khandual <anshuman.khandual@arm.com>
-Message-ID: <c567eb7f-40ca-ae20-94c3-5f48c9780f96@arm.com>
-Date:   Mon, 11 Mar 2019 18:27:19 +0530
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:52.0) Gecko/20100101
- Thunderbird/52.9.1
-MIME-Version: 1.0
-In-Reply-To: <20190311121147.GA23361@lakrids.cambridge.arm.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+        Mon, 11 Mar 2019 09:02:22 -0400
+Received: from metis.ext.pengutronix.de ([85.220.165.71]:42973 "EHLO
+        metis.ext.pengutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726605AbfCKNCV (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 11 Mar 2019 09:02:21 -0400
+Received: from kresse.hi.pengutronix.de ([2001:67c:670:100:1d::2a])
+        by metis.ext.pengutronix.de with esmtp (Exim 4.89)
+        (envelope-from <l.stach@pengutronix.de>)
+        id 1h3KZE-0006T7-KV; Mon, 11 Mar 2019 14:02:08 +0100
+Message-ID: <1552309326.2453.14.camel@pengutronix.de>
+Subject: Re: [PATCH 2/3] clk: imx8mq: add hdmi_phy_27m clock as pll's
+ reference clock
+From:   Lucas Stach <l.stach@pengutronix.de>
+To:     Anson Huang <anson.huang@nxp.com>,
+        "shawnguo@kernel.org" <shawnguo@kernel.org>,
+        "s.hauer@pengutronix.de" <s.hauer@pengutronix.de>,
+        "kernel@pengutronix.de" <kernel@pengutronix.de>,
+        Fabio Estevam <fabio.estevam@nxp.com>,
+        "robh+dt@kernel.org" <robh+dt@kernel.org>,
+        "mark.rutland@arm.com" <mark.rutland@arm.com>,
+        "mturquette@baylibre.com" <mturquette@baylibre.com>,
+        "sboyd@kernel.org" <sboyd@kernel.org>,
+        Abel Vesa <abel.vesa@nxp.com>,
+        "agx@sigxcpu.org" <agx@sigxcpu.org>,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>,
+        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "linux-clk@vger.kernel.org" <linux-clk@vger.kernel.org>
+Cc:     dl-linux-imx <linux-imx@nxp.com>
+Date:   Mon, 11 Mar 2019 14:02:06 +0100
+In-Reply-To: <DB3PR0402MB391694C610CA6B7027376E4CF54C0@DB3PR0402MB3916.eurprd04.prod.outlook.com>
+References: <1551929772-22633-1-git-send-email-Anson.Huang@nxp.com>
+         <1551929772-22633-2-git-send-email-Anson.Huang@nxp.com>
+         <1551960333.9298.37.camel@pengutronix.de>
+         <DB3PR0402MB391694C610CA6B7027376E4CF54C0@DB3PR0402MB3916.eurprd04.prod.outlook.com>
+Content-Type: text/plain; charset="UTF-8"
+X-Mailer: Evolution 3.22.6-1+deb9u1 
+Mime-Version: 1.0
+Content-Transfer-Encoding: 8bit
+X-SA-Exim-Connect-IP: 2001:67c:670:100:1d::2a
+X-SA-Exim-Mail-From: l.stach@pengutronix.de
+X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
+X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 03/11/2019 05:42 PM, Mark Rutland wrote:
-> Hi,
+Am Donnerstag, den 07.03.2019, 12:56 +0000 schrieb Anson Huang:
+> Hi, Lucas
 > 
-> On Sat, Mar 09, 2019 at 06:19:06PM -0700, Yu Zhao wrote:
->> Switch from per mm_struct to per pmd page table lock by enabling
->> ARCH_ENABLE_SPLIT_PMD_PTLOCK. This provides better granularity for
->> large system.
->>
->> I'm not sure if there is contention on mm->page_table_lock. Given
->> the option comes at no cost (apart from initializing more spin
->> locks), why not enable it now.
->>
->> We only do so when pmd is not folded, so we don't mistakenly call
->> pgtable_pmd_page_ctor() on pud or p4d in pgd_pgtable_alloc(). (We
->> check shift against PMD_SHIFT, which is same as PUD_SHIFT when pmd
->> is folded).
+> Best Regards!
+> Anson Huang
 > 
-> Just to check, I take it pgtable_pmd_page_ctor() is now a NOP when the
-> PMD is folded, and this last paragraph is stale?
+> > -----Original Message-----
+> > > > From: Lucas Stach [mailto:l.stach@pengutronix.de]
+> > Sent: 2019年3月7日 20:06
+> > > > > > To: Anson Huang <anson.huang@nxp.com>; shawnguo@kernel.org;
+> > > > s.hauer@pengutronix.de; kernel@pengutronix.de; Fabio Estevam
+> > > > > > > > <fabio.estevam@nxp.com>; robh+dt@kernel.org; mark.rutland@arm.com;
+> > > > mturquette@baylibre.com; sboyd@kernel.org; Abel Vesa
+> > > > > > <abel.vesa@nxp.com>; agx@sigxcpu.org; linux-arm-
+> > > > kernel@lists.infradead.org; devicetree@vger.kernel.org; linux-
+> > kernel@vger.kernel.org; linux-clk@vger.kernel.org
+> > > > Cc: dl-linux-imx <linux-imx@nxp.com>
+> > Subject: Re: [PATCH 2/3] clk: imx8mq: add hdmi_phy_27m clock as pll's
+> > reference clock
+> > 
+> > Am Donnerstag, den 07.03.2019, 03:41 +0000 schrieb Anson Huang:
+> > > There is another 27MHz OSC inside i.MX8MQ's display block and it can
+> > > be one of reference clocks of all PLLs, add it into clock tree and
+> > > also add it as PLL's reference clock.
+> > > 
+> > > > > > Signed-off-by: Anson Huang <Anson.Huang@nxp.com>
+> > > ---
+> > >  drivers/clk/imx/clk-imx8mq.c | 3 ++-
+> > >  1 file changed, 2 insertions(+), 1 deletion(-)
+> > > 
+> > > diff --git a/drivers/clk/imx/clk-imx8mq.c
+> > > b/drivers/clk/imx/clk-imx8mq.c index a9b3888..bb1bf9b 100644
+> > > --- a/drivers/clk/imx/clk-imx8mq.c
+> > > +++ b/drivers/clk/imx/clk-imx8mq.c
+> > > @@ -26,7 +26,7 @@ static u32 share_count_nand;
+> > > 
+> > >  static struct clk *clks[IMX8MQ_CLK_END];
+> > > 
+> > > -static const char * const pll_ref_sels[] = { "osc_25m", "osc_27m",
+> > > "dummy", "dummy", };
+> > > +static const char * const pll_ref_sels[] = { "osc_25m", "osc_27m",
+> > > +"osc_hdmi_phy_27m", "dummy", };
+> > >  static const char * const arm_pll_bypass_sels[] = {"arm_pll",
+> > > "arm_pll_ref_sel", };
+> > >  static const char * const gpu_pll_bypass_sels[] = {"gpu_pll",
+> > > "gpu_pll_ref_sel", };
+> > >  static const char * const vpu_pll_bypass_sels[] = {"vpu_pll",
+> > > "vpu_pll_ref_sel", }; @@ -281,6 +281,7 @@ static int
+> > 
+> > imx8mq_clocks_probe(struct platform_device *pdev)
+> > > > > >  	clks[IMX8MQ_CLK_32K] = of_clk_get_by_name(np, "ckil");
+> > > > > >  	clks[IMX8MQ_CLK_25M] = of_clk_get_by_name(np, "osc_25m");
+> > > > > >  	clks[IMX8MQ_CLK_27M] = of_clk_get_by_name(np, "osc_27m");
+> > > > > > +	clks[IMX8MQ_CLK_HDMI_PHY_27M] = of_clk_get_by_name(np,
+> > > +"osc_hdmi_phy_27m");
+> > 
+> > This is not acceptable. This adds a new required clock input, without
+> > bothering to add the corresponding binding information or thinking about
+> > backwards compatibility. At this point there are existing DTs out there, which
+> > don't provide this required clock, which will cause a full boot regression. This
+> > can only be an optional clock input at this point.
 > 
->> Signed-off-by: Yu Zhao <yuzhao@google.com>
->> ---
->>  arch/arm64/Kconfig               |  3 +++
->>  arch/arm64/include/asm/pgalloc.h | 12 +++++++++++-
->>  arch/arm64/include/asm/tlb.h     |  5 ++++-
->>  3 files changed, 18 insertions(+), 2 deletions(-)
->>
->> diff --git a/arch/arm64/Kconfig b/arch/arm64/Kconfig
->> index cfbf307d6dc4..a3b1b789f766 100644
->> --- a/arch/arm64/Kconfig
->> +++ b/arch/arm64/Kconfig
->> @@ -872,6 +872,9 @@ config ARCH_WANT_HUGE_PMD_SHARE
->>  config ARCH_HAS_CACHE_LINE_SIZE
->>  	def_bool y
->>  
->> +config ARCH_ENABLE_SPLIT_PMD_PTLOCK
->> +	def_bool y if PGTABLE_LEVELS > 2
->> +
->>  config SECCOMP
->>  	bool "Enable seccomp to safely compute untrusted bytecode"
->>  	---help---
->> diff --git a/arch/arm64/include/asm/pgalloc.h b/arch/arm64/include/asm/pgalloc.h
->> index 52fa47c73bf0..dabba4b2c61f 100644
->> --- a/arch/arm64/include/asm/pgalloc.h
->> +++ b/arch/arm64/include/asm/pgalloc.h
->> @@ -33,12 +33,22 @@
->>  
->>  static inline pmd_t *pmd_alloc_one(struct mm_struct *mm, unsigned long addr)
->>  {
->> -	return (pmd_t *)__get_free_page(PGALLOC_GFP);
->> +	struct page *page;
->> +
->> +	page = alloc_page(PGALLOC_GFP);
->> +	if (!page)
->> +		return NULL;
->> +	if (!pgtable_pmd_page_ctor(page)) {
->> +		__free_page(page);
->> +		return NULL;
->> +	}
->> +	return page_address(page);
->>  }
->>  
->>  static inline void pmd_free(struct mm_struct *mm, pmd_t *pmdp)
->>  {
->>  	BUG_ON((unsigned long)pmdp & (PAGE_SIZE-1));
->> +	pgtable_pmd_page_dtor(virt_to_page(pmdp));
->>  	free_page((unsigned long)pmdp);
->>  }
-> 
-> It looks like arm64's existing stage-2 code is inconsistent across
-> alloc/free, and IIUC this change might turn that into a real problem.
-> Currently we allocate all levels of stage-2 table with
-> __get_free_page(), but free them with p?d_free(). We always miss the
-> ctor and always use the dtor.
-> 
-> Other than that, this patch looks fine to me, but I'd feel more
-> comfortable if we could first fix the stage-2 code to free those stage-2
-> tables without invoking the dtor.
+> What do you think if we don't get such clock from DT? Just register this fixed clock
+> in clock driver directly, then there will be no dependency of DT.
 
-Thats right. I have already highlighted this problem.
- 
-> 
-> Anshuman, IIRC you had a patch to fix the stage-2 code to not invoke the
-> dtors. If so, could you please post that so that we could take it as a
-> preparatory patch for this series?
+I don't think that's a good idea, as there can probably be use-cases
+where having the XTAL unpopulated is actually a valid system
+configuration, so not having this clock must be valid for the CCM
+driver.
 
-Sure I can after fixing PTE level pte_free_kernel/__free_page which I had
-missed in V2.
-
-https://www.spinics.net/lists/arm-kernel/msg710118.html
+Regards,
+Lucas
