@@ -2,171 +2,147 @@ Return-Path: <SRS0=FxTY=RO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D3718C43381
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 Mar 2019 18:10:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CF654C43381
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 Mar 2019 18:10:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A06C9206DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 Mar 2019 18:10:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A409A20828
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 Mar 2019 18:10:32 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="S4FMq8xt"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="gQdaE3SS"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727904AbfCKSK1 (ORCPT
+        id S1727999AbfCKSKb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 11 Mar 2019 14:10:27 -0400
-Received: from mail-qt1-f194.google.com ([209.85.160.194]:35545 "EHLO
-        mail-qt1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727008AbfCKSK0 (ORCPT
+        Mon, 11 Mar 2019 14:10:31 -0400
+Received: from mail-pf1-f193.google.com ([209.85.210.193]:44901 "EHLO
+        mail-pf1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727008AbfCKSK3 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 11 Mar 2019 14:10:26 -0400
-Received: by mail-qt1-f194.google.com with SMTP id b16so5058032qtt.2;
-        Mon, 11 Mar 2019 11:10:25 -0700 (PDT)
+        Mon, 11 Mar 2019 14:10:29 -0400
+Received: by mail-pf1-f193.google.com with SMTP id a3so4256296pff.11;
+        Mon, 11 Mar 2019 11:10:29 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=from:date:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=pdUcx2DG7vNx38cGxgDtsGGweNfsR7/aaFa2nOJg28E=;
-        b=S4FMq8xtew0O4lJu7sWRk0xpsGiFNBxmnC9mL07rvVSu0wfPLR3JZ+dY9b3/ipZtE1
-         mjyfvrT/dZg8+ybGR+fySw0INKDL6JW2Mf8L0LszQRyUfCPJvhxP5ffGq0E6DZEgNu/9
-         8OkpFfC5R/iYV8WVpcUu1O73INpoJc2sx9YBK/0aFrxIn3Xisy9BX55iAidHEiV3gkBM
-         u+aHbngbrO+M27uCvRnsaHCAUd4lL/zOXfIDGOo3R/9xctPYW9YQxaCtr7hiKJ4fM17M
-         qt6RzmBy6xCkMulzLSee9TarOvOwtFXyQZ3e2RgojRsKsl/syM0QIKxfmSh38v0gFTiF
-         hCyQ==
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=3J6aRGS8TRn4JCgRnhJL5XlZcsFJ1KpSHVbtqp+zT7Q=;
+        b=gQdaE3SS9MslyaO3z5jcJrtVBT6Vjvgw+IWQDpx68QqPJP2HaJPNjj2s2Wb2LVdsIF
+         NFQN9DkVocIvEiSIuNlzZiKzm/FmLyJjkV1W8wi2GleWhyTCyKKkWY8ewUUUmCW5eHce
+         lfnSLbDGz4w3r0cD3+YdhaP5gKZ1TxW6XbuLvGl2Iyz4y56lYYSkMWjF9xfyGogV2h4t
+         fWACQ5Ttg335usF+N0HgOPGeZ4iBxkjm+sNSE/HNkF71r/F/kX8FrvDePP0/fLernG1c
+         kvmwNxvZcMBNz5V3v+e86VQ+gZ/qKXxvnzsIrk1S42BNFsAqx+MOaPcQYp72yDWtnuXw
+         yQig==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:date:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=pdUcx2DG7vNx38cGxgDtsGGweNfsR7/aaFa2nOJg28E=;
-        b=pD3RSvXxkg1lbD5OD5tFMMy001JJx3mCoPphP1qlhhkaH+ZQ43s6XyGLZM+k4njjNn
-         PC6YY0VpkJ+BeAHa89kHXMDfTbFS0mzNLKIPAEridqYiD930HnMRCN/CoESUAAjB4tRE
-         zpi0TIK+pUd0xahZfvuCMwgfJDL3/exFJkJmzXORK7jRYpDb57XhClStNnbOi8zXLpVd
-         EgER4e5J+t166U/BL0tzPmw1xxvcDIN6Y15N/2O35WxNUl3I/1xUxGHcyd/l7kgSMZ+T
-         aytZScQjKPxszPevsgHvggXWgnghZXlw9SR7EczdGF78W+V37lW4q08kk5ijr2Ar0+Vr
-         wYHg==
-X-Gm-Message-State: APjAAAXml18LTxk63amBzGuHHSugRFfNDLZdKEJ3kM0FZXg0aDb0LvSs
-        teQZWNIk5xFg9W5DBxCnGfM=
-X-Google-Smtp-Source: APXvYqzadlEm4x/T3VEitHbD3YPioA2uxJodGd0XpY10jWD1elikNOffnQhrizCbzGol0ePgBKZAPw==
-X-Received: by 2002:ac8:5297:: with SMTP id s23mr25902202qtn.371.1552327824800;
-        Mon, 11 Mar 2019 11:10:24 -0700 (PDT)
-Received: from quaco.ghostprotocols.net ([2804:1b1:210a:2644:8d4d:9170:85d5:da34])
-        by smtp.gmail.com with ESMTPSA id k64sm3740303qkd.55.2019.03.11.11.10.23
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Mon, 11 Mar 2019 11:10:23 -0700 (PDT)
-From:   Arnaldo Carvalho de Melo <arnaldo.melo@gmail.com>
-X-Google-Original-From: Arnaldo Carvalho de Melo <acme@kernel.org>
-Received: by quaco.ghostprotocols.net (Postfix, from userid 1000)
-        id 2F20B4039C; Mon, 11 Mar 2019 15:10:21 -0300 (-03)
-Date:   Mon, 11 Mar 2019 15:10:21 -0300
-To:     Andi Kleen <andi@firstfloor.org>
-Cc:     jolsa@kernel.org, linux-perf-users@vger.kernel.org,
-        linux-kernel@vger.kernel.org, Andi Kleen <ak@linux.intel.com>
-Subject: Re: [PATCH v6 09/11] perf tools report: Add custom scripts to script
- menu
-Message-ID: <20190311181021.GT10690@kernel.org>
-References: <20190311144502.15423-1-andi@firstfloor.org>
- <20190311144502.15423-10-andi@firstfloor.org>
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=3J6aRGS8TRn4JCgRnhJL5XlZcsFJ1KpSHVbtqp+zT7Q=;
+        b=qeZp5zUawqdG785BqvAbVkWnks94fH0pQ/I2Jtp+bubFoksX+/m4HHTPBRm2E/zAiR
+         twik41qZATyWY4Q09hgdEdKgJFdAI5BKEmuIdlSWujpDWMFKLKag+n1BEi0ZvDQF9A5D
+         VD7XwRjopkyWKoxAVVIyFg5XmWeRiLevyHoZbdrpwDU1Pp5I9bMbWQUkF+qjgulR7jlN
+         Nv3r/bqOlcJ53Gw39Tvlpg+3lAv+Y9gm4Qme0sNzsuhq2ESEpJTsIk3IY1ZHOIjniViG
+         IKqTznQJOYSyCUcDLdqyqNSde+bomk/oMV9P2SjG+hgslHhT5OHBBUIGQoeFIct599NW
+         an4A==
+X-Gm-Message-State: APjAAAW6iOF9wDeYV14IuaZ3RxNxqKYAwLe7MEMbwfQ6ZbFRNRiP/Qbn
+        d2I3NrBYtJ1KpDOsXr4t4qY=
+X-Google-Smtp-Source: APXvYqydHZSKHBnGliDGzibIRVTsvuddg8OJFURFfqbb933ISPAJXkqWvG6RfeVAzNHFLLKhDZiEBg==
+X-Received: by 2002:a17:902:76c7:: with SMTP id j7mr34481486plt.121.1552327829007;
+        Mon, 11 Mar 2019 11:10:29 -0700 (PDT)
+Received: from [10.69.37.149] ([192.19.223.250])
+        by smtp.gmail.com with ESMTPSA id l64sm11518070pfj.179.2019.03.11.11.10.27
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Mon, 11 Mar 2019 11:10:28 -0700 (PDT)
+Subject: Re: general protection fault in skb_put
+To:     Dmitry Vyukov <dvyukov@google.com>,
+        James Smart <james.smart@broadcom.com>
+Cc:     syzbot <syzbot+65788f9af9d54844389e@syzkaller.appspotmail.com>,
+        Jens Axboe <axboe@fb.com>, Christoph Hellwig <hch@lst.de>,
+        Johan Hedberg <johan.hedberg@gmail.com>, keith.busch@intel.com,
+        linux-bluetooth <linux-bluetooth@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        linux-nvme@lists.infradead.org,
+        Marcel Holtmann <marcel@holtmann.org>,
+        Sagi Grimberg <sagi@grimberg.me>,
+        syzkaller-bugs <syzkaller-bugs@googlegroups.com>
+References: <000000000000032b7f0583d16e0e@google.com>
+ <b17bcabf-5f2c-083a-91a9-6d99f5111a3f@broadcom.com>
+ <CACT4Y+aT_oeWK5UWy9N76noDEfPTC8q2d8vd+KugE2UXgxpJcQ@mail.gmail.com>
+From:   James Smart <jsmart2021@gmail.com>
+Message-ID: <a68b264c-d573-87ef-13fb-883c6b0a710c@gmail.com>
+Date:   Mon, 11 Mar 2019 11:10:26 -0700
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
+ Thunderbird/60.5.3
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190311144502.15423-10-andi@firstfloor.org>
-X-Url:  http://acmel.wordpress.com
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <CACT4Y+aT_oeWK5UWy9N76noDEfPTC8q2d8vd+KugE2UXgxpJcQ@mail.gmail.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Em Mon, Mar 11, 2019 at 07:45:00AM -0700, Andi Kleen escreveu:
-> From: Andi Kleen <ak@linux.intel.com>
+On 3/11/2019 9:40 AM, Dmitry Vyukov wrote:
+> On Mon, Mar 11, 2019 at 5:20 PM 'James Smart' via syzkaller-bugs
+> <syzkaller-bugs@googlegroups.com> wrote:
+>>
+>> On 3/11/2019 6:20 AM, syzbot wrote:
+>>> syzbot has bisected this bug to:
+>>>
+>>> commit 97faec531460c949d7120672b8c77e2f41f8d6d7
+>>> Author: James Smart <jsmart2021@gmail.com>
+>>> Date:   Thu Sep 13 23:17:38 2018 +0000
+>>>
+>>>      nvme_fc: add 'nvme_discovery' sysfs attribute to fc transport device
+>>>
+>>> bisection log:
+>>> https://syzkaller.appspot.com/x/bisect.txt?x=121f55db200000
+>>> start commit:   97faec53 nvme_fc: add 'nvme_discovery' sysfs attribute
+>>> to ..
+>>> git tree:       linux-next
+>>> final crash: https://syzkaller.appspot.com/x/report.txt?x=111f55db200000
+>>> console output: https://syzkaller.appspot.com/x/log.txt?x=161f55db200000
+>>> kernel config: https://syzkaller.appspot.com/x/.config?x=59aefae07c771af6
+>>> dashboard link:
+>>> https://syzkaller.appspot.com/bug?extid=65788f9af9d54844389e
+>>> userspace arch: amd64
+>>> syz repro: https://syzkaller.appspot.com/x/repro.syz?x=178e0798c00000
+>>> C reproducer: https://syzkaller.appspot.com/x/repro.c?x=11b4f0b0c00000
+>>>
+>>> Reported-by: syzbot+65788f9af9d54844389e@syzkaller.appspotmail.com
+>>> Fixes: 97faec53 ("nvme_fc: add 'nvme_discovery' sysfs attribute to fc
+>>> transport device")
+>>
+>> can someone contact me as to what this thing is doing and how to
+>> interpret all the logs.  nvme_fc isn't remotely in any of the logs and
+>> doesn't use skb's unless the underlying udev_uevents are using them.
 > 
-> Add a way to define custom scripts through ~/.perfconfig, which
-> are then added to the scripts menu. The scripts get the same
-> arguments as perf script, in particular -i, --cpu, --tid.
+> Hi James,
 > 
-> Signed-off-by: Andi Kleen <ak@linux.intel.com>
-> ---
->  tools/perf/Documentation/perf-config.txt |  8 ++++++++
->  tools/perf/ui/browsers/scripts.c         | 20 ++++++++++++++++++++
->  2 files changed, 28 insertions(+)
+> What exactly is unclear/needs interpretation? syzbot did what is
+> commonly known as kernel/git bisection process. This is a new feature
+> so there can be some rough edges. Hopefully we can improve the
+> representation together.
 > 
-> diff --git a/tools/perf/Documentation/perf-config.txt b/tools/perf/Documentation/perf-config.txt
-> index 2d0fb7613134..c3323228d3d0 100644
-> --- a/tools/perf/Documentation/perf-config.txt
-> +++ b/tools/perf/Documentation/perf-config.txt
-> @@ -590,6 +590,14 @@ samples.*::
->  		Define how many ns worth of time to show
->  		around samples in perf report sample context browser.
->  
-> +script.*::
-> +
-> +	Any option defines a script that is added to the scripts menu
-> +	in the interactive perf browser and whose output is displayed.
-> +	The name of the option is the name, the value is a script command line.
-> +	The script gets the same options passed as a full perf script,
-> +	in particular -i perfdata file, --cpu, --tid
-> +
+> Thanks
+> 
+Everything is unclear. You're telling me that an error occurred and that 
+you reduced it to the git submit where the error starts appearing.
 
-Isn't it better to use 'scripts' for those scripts and leave 'script'
-for configuring the 'perf script' command like we have options for
-annotate, etc?
+Usually there would be something in the base crash, which I'm looking at 
+in https://syzkaller.appspot.com/x/report.txt?x=111f55db200000 which 
+would point back at something in the patch or related to it. There are 
+no relationships.  I can't quite figure out what the base test actually 
+did that generated the failure to see if there's any possible relationship.
 
-- Arnaldo
+Everything in the base crash stacktrace points to an issue in the 
+bluetooth uart driver doing all the logging - not the patch called out. 
+So this looks like a failure of your infrastructure.
 
->  SEE ALSO
->  --------
->  linkperf:perf[1]
-> diff --git a/tools/perf/ui/browsers/scripts.c b/tools/perf/ui/browsers/scripts.c
-> index cdba58447b85..5d407ab834b5 100644
-> --- a/tools/perf/ui/browsers/scripts.c
-> +++ b/tools/perf/ui/browsers/scripts.c
-> @@ -6,6 +6,7 @@
->  #include "../../util/symbol.h"
->  #include "../browser.h"
->  #include "../libslang.h"
-> +#include "config.h"
->  
->  #define SCRIPT_NAMELEN	128
->  #define SCRIPT_MAX_NO	64
-> @@ -53,6 +54,24 @@ static int add_script_option(const char *name, const char *opt,
->  	return 0;
->  }
->  
-> +static int scripts_config(const char *var, const char *value, void *data)
-> +{
-> +	struct script_config *c = data;
-> +
-> +	if (!strstarts(var, "script."))
-> +		return -1;
-> +	if (c->index >= SCRIPT_MAX_NO)
-> +		return -1;
-> +	c->names[c->index] = strdup(var + 7);
-> +	if (!c->names[c->index])
-> +		return -1;
-> +	if (asprintf(&c->paths[c->index], "%s %s", value,
-> +		     c->extra_format) < 0)
-> +		return -1;
-> +	c->index++;
-> +	return 0;
-> +}
-> +
->  /*
->   * When success, will copy the full path of the selected script
->   * into  the buffer pointed by script_name, and return 0.
-> @@ -87,6 +106,7 @@ static int list_scripts(char *script_name, bool *custom,
->  			  &scriptc);
->  	add_script_option("Show individual samples with source", "-F +srcline,+srccode",
->  			  &scriptc);
-> +	perf_config(scripts_config, &scriptc);
->  	custom_perf = scriptc.index;
->  	add_script_option("Show samples with custom perf script arguments", "", &scriptc);
->  	i = scriptc.index;
-> -- 
-> 2.20.1
+-- james
 
--- 
-
-- Arnaldo
