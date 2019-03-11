@@ -7,163 +7,203 @@ X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D46FEC43381
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 Mar 2019 08:30:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CB025C43381
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 Mar 2019 08:30:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7A1F220643
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 Mar 2019 08:30:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8541C20643
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 Mar 2019 08:30:55 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=c-s.fr header.i=@c-s.fr header.b="Vbg2DOA6"
+	dkim=pass (1024-bit key) header.d=c-s.fr header.i=@c-s.fr header.b="UuIZsUhG"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727116AbfCKIan (ORCPT
+        id S1727159AbfCKIay (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 11 Mar 2019 04:30:43 -0400
-Received: from pegase1.c-s.fr ([93.17.236.30]:7677 "EHLO pegase1.c-s.fr"
+        Mon, 11 Mar 2019 04:30:54 -0400
+Received: from pegase1.c-s.fr ([93.17.236.30]:59199 "EHLO pegase1.c-s.fr"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726723AbfCKIah (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 11 Mar 2019 04:30:37 -0400
+        id S1727078AbfCKIak (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 11 Mar 2019 04:30:40 -0400
 Received: from localhost (mailhub1-int [192.168.12.234])
-        by localhost (Postfix) with ESMTP id 44Hrs256lTzB09Zy;
-        Mon, 11 Mar 2019 09:30:30 +0100 (CET)
+        by localhost (Postfix) with ESMTP id 44Hrs60yFszB09bB;
+        Mon, 11 Mar 2019 09:30:34 +0100 (CET)
 Authentication-Results: localhost; dkim=pass
         reason="1024-bit key; insecure key"
-        header.d=c-s.fr header.i=@c-s.fr header.b=Vbg2DOA6; dkim-adsp=pass;
+        header.d=c-s.fr header.i=@c-s.fr header.b=UuIZsUhG; dkim-adsp=pass;
         dkim-atps=neutral
 X-Virus-Scanned: Debian amavisd-new at c-s.fr
 Received: from pegase1.c-s.fr ([192.168.12.234])
         by localhost (pegase1.c-s.fr [192.168.12.234]) (amavisd-new, port 10024)
-        with ESMTP id P2I79fmTpMqz; Mon, 11 Mar 2019 09:30:30 +0100 (CET)
+        with ESMTP id uv9GssUkULmV; Mon, 11 Mar 2019 09:30:34 +0100 (CET)
 Received: from messagerie.si.c-s.fr (messagerie.si.c-s.fr [192.168.25.192])
-        by pegase1.c-s.fr (Postfix) with ESMTP id 44Hrs23zKdzB09ZD;
-        Mon, 11 Mar 2019 09:30:30 +0100 (CET)
+        by pegase1.c-s.fr (Postfix) with ESMTP id 44Hrs56tS9z9vRb5;
+        Mon, 11 Mar 2019 09:30:33 +0100 (CET)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=c-s.fr; s=mail;
-        t=1552293030; bh=viwz0+kQKH2jMfJ0rgJLsPM3KipIVrqR0y68CVp074c=;
+        t=1552293034; bh=7hPijb5uPrMLCHbULa8Qq1TxqgBP2GHpYBq6lL8F6is=;
         h=In-Reply-To:References:From:Subject:To:Cc:Date:From;
-        b=Vbg2DOA6mGIxUyUr60Bv+V6rP4LoNVtnrpqxHV36FBWWXdNWscXYP8LJ3CmXl05Rw
-         U/XcJo2NyIsOsEKKQX0vQTHZGvZLj89ZxfdywOyuFmolF/bH96HOQ+cSlfgOkkc7dv
-         XWBtZtfxQaJALJUJQXcSYvVtaE6E0qHkpvfFyMZI=
+        b=UuIZsUhGdGCuQ1o8jZ8xXa3CsJnU3vrdiFtH0u5pzTJZKaTa9Swn87aRzGDR1NprH
+         MVuiYxfXFFz+fk1HV2BCw9k61EK7nZeFPlGRdB4LCyKnurldHnN1HC5t9Ace0LrpiM
+         CdZI6xo/kjR2KIMgbladUEKdEI9D9ZBYhObSQLSQ=
 Received: from localhost (localhost [127.0.0.1])
-        by messagerie.si.c-s.fr (Postfix) with ESMTP id 25F8D8B813;
-        Mon, 11 Mar 2019 09:30:35 +0100 (CET)
+        by messagerie.si.c-s.fr (Postfix) with ESMTP id 7211C8B7FE;
+        Mon, 11 Mar 2019 09:30:38 +0100 (CET)
 X-Virus-Scanned: amavisd-new at c-s.fr
 Received: from messagerie.si.c-s.fr ([127.0.0.1])
         by localhost (messagerie.si.c-s.fr [127.0.0.1]) (amavisd-new, port 10023)
-        with ESMTP id qrxih7oeDJcK; Mon, 11 Mar 2019 09:30:35 +0100 (CET)
+        with ESMTP id W9ribUUCd8b1; Mon, 11 Mar 2019 09:30:38 +0100 (CET)
 Received: from po16846vm.idsi0.si.c-s.fr (po15451.idsi0.si.c-s.fr [172.25.231.2])
-        by messagerie.si.c-s.fr (Postfix) with ESMTP id F345B8B7FE;
-        Mon, 11 Mar 2019 09:30:34 +0100 (CET)
+        by messagerie.si.c-s.fr (Postfix) with ESMTP id 48AB18B817;
+        Mon, 11 Mar 2019 09:30:38 +0100 (CET)
 Received: by po16846vm.idsi0.si.c-s.fr (Postfix, from userid 0)
-        id E11056FA08; Mon, 11 Mar 2019 08:30:34 +0000 (UTC)
-Message-Id: <bac688f0f7f60d6862d839982c9cccbeda6fec3c.1552292207.git.christophe.leroy@c-s.fr>
+        id 2FE066FA08; Mon, 11 Mar 2019 08:30:38 +0000 (UTC)
+Message-Id: <a2847248a92cb1641b1740fa121c5a30593ae662.1552292207.git.christophe.leroy@c-s.fr>
 In-Reply-To: <cover.1552292207.git.christophe.leroy@c-s.fr>
 References: <cover.1552292207.git.christophe.leroy@c-s.fr>
 From:   Christophe Leroy <christophe.leroy@c-s.fr>
-Subject: [PATCH v2 07/10] powerpc/8xx: Add Kernel Userspace Access Protection
+Subject: [PATCH v2 10/10] powerpc/32s: Implement Kernel Userspace Access
+ Protection
 To:     Benjamin Herrenschmidt <benh@kernel.crashing.org>,
         Paul Mackerras <paulus@samba.org>,
         Michael Ellerman <mpe@ellerman.id.au>, ruscur@russell.cc
 Cc:     linux-kernel@vger.kernel.org, linuxppc-dev@lists.ozlabs.org
-Date:   Mon, 11 Mar 2019 08:30:34 +0000 (UTC)
+Date:   Mon, 11 Mar 2019 08:30:38 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This patch adds Kernel Userspace Access Protection on the 8xx.
+This patch implements Kernel Userspace Access Protection for
+book3s/32.
 
-When a page is RO or RW, it is set RO or RW for Key 0 and NA
-for Key 1.
+Due to limitations of the processor page protection capabilities,
+the protection is only against writing. read protection cannot be
+achieved using page protection.
 
-Up to now, the User group is defined with Key 0 for both User and
-Supervisor.
+The previous patch modifies the page protection so that RW user
+pages are RW for Key 0 and RO for Key 1, and it sets Key 0 for
+both user and kernel.
 
-By changing the group to Key 0 for User and Key 1 for Supervisor,
-this patch prevents the Kernel from being able to access user data.
+This patch changes userspace segment registers are set to Ku 0
+and Ks 1. When kernel needs to write to RW pages, the associated
+segment register is then changed to Ks 0 in order to allow write
+access to the kernel.
 
-At exception entry, the kernel saves SPRN_MD_AP in the regs struct,
-and reapply the protection. At exception exit it restores SPRN_MD_AP
-with the value saved on exception entry.
+In order to avoid having the read all segment registers when
+locking/unlocking the access, some data is kept in the thread_struct
+and saved on stack on exceptions. The field identifies both the
+first unlocked segment and the first segment following the last
+unlocked one. When no segment is unlocked, it contains value 0.
+
+As the hash_page() function is not able to easily determine if a
+protfault is due to a bad kernel access to userspace, protfaults
+need to be handled by handle_page_fault when KUAP is set.
 
 Signed-off-by: Christophe Leroy <christophe.leroy@c-s.fr>
 ---
- arch/powerpc/include/asm/kup.h               |  3 ++
- arch/powerpc/include/asm/nohash/32/kup-8xx.h | 68 ++++++++++++++++++++++++++++
- arch/powerpc/include/asm/nohash/32/mmu-8xx.h |  7 +++
- arch/powerpc/mm/8xx_mmu.c                    | 12 +++++
- arch/powerpc/platforms/Kconfig.cputype       |  1 +
- 5 files changed, 91 insertions(+)
- create mode 100644 arch/powerpc/include/asm/nohash/32/kup-8xx.h
+ arch/powerpc/include/asm/book3s/32/kup.h | 107 +++++++++++++++++++++++++++++++
+ arch/powerpc/include/asm/processor.h     |   3 +
+ arch/powerpc/kernel/asm-offsets.c        |   3 +
+ arch/powerpc/kernel/head_32.S            |  11 ++++
+ arch/powerpc/mm/ppc_mmu_32.c             |  10 +++
+ arch/powerpc/platforms/Kconfig.cputype   |   1 +
+ 6 files changed, 135 insertions(+)
 
-diff --git a/arch/powerpc/include/asm/kup.h b/arch/powerpc/include/asm/kup.h
-index 632b367b93f4..75ade5a54607 100644
---- a/arch/powerpc/include/asm/kup.h
-+++ b/arch/powerpc/include/asm/kup.h
-@@ -5,6 +5,9 @@
- #ifdef CONFIG_PPC64
- #include <asm/book3s/64/kup-radix.h>
+diff --git a/arch/powerpc/include/asm/book3s/32/kup.h b/arch/powerpc/include/asm/book3s/32/kup.h
+index 5f97c742ca71..b3560b2de435 100644
+--- a/arch/powerpc/include/asm/book3s/32/kup.h
++++ b/arch/powerpc/include/asm/book3s/32/kup.h
+@@ -37,6 +37,113 @@
  #endif
-+#ifdef CONFIG_PPC_8xx
-+#include <asm/nohash/32/kup-8xx.h>
-+#endif
+ .endm
  
- #ifdef __ASSEMBLY__
- #ifndef CONFIG_PPC_KUAP
-diff --git a/arch/powerpc/include/asm/nohash/32/kup-8xx.h b/arch/powerpc/include/asm/nohash/32/kup-8xx.h
-new file mode 100644
-index 000000000000..a44cc6c1b901
---- /dev/null
-+++ b/arch/powerpc/include/asm/nohash/32/kup-8xx.h
-@@ -0,0 +1,68 @@
-+/* SPDX-License-Identifier: GPL-2.0 */
-+#ifndef _ASM_POWERPC_KUP_8XX_H_
-+#define _ASM_POWERPC_KUP_8XX_H_
-+
-+#include <asm/bug.h>
-+
 +#ifdef CONFIG_PPC_KUAP
 +
-+#ifdef __ASSEMBLY__
++.macro kuap_update_sr	gpr1, gpr2, gpr3	/* NEVER use r0 as gpr2 due to addis */
++101:	mtsrin	\gpr1, \gpr2
++	addi	\gpr1, \gpr1, 0x111		/* next VSID */
++	rlwinm	\gpr1, \gpr1, 0, 0xf0ffffff	/* clear VSID overflow */
++	addis	\gpr2, \gpr2, 0x1000		/* address of next segment */
++	cmplw	\gpr2, \gpr3
++	blt-	101b
++	isync
++.endm
 +
 +.macro kuap_save_and_lock	sp, thread, gpr1, gpr2, gpr3
-+	lis	\gpr2, MD_APG_KUAP@h	/* only APG0 and APG1 are used */
-+	mfspr	\gpr1, SPRN_MD_AP
-+	mtspr	SPRN_MD_AP, \gpr2
-+	stw	\gpr1, STACK_REGS_KUAP(\sp)
++	lwz	\gpr2, KUAP(\thread)
++	rlwinm.	\gpr3, \gpr2, 28, 0xf0000000
++	stw	\gpr2, STACK_REGS_KUAP(\sp)
++	beq+	102f
++	li	\gpr1, 0
++	stw	\gpr1, KUAP(\thread)
++	mfsrin	\gpr1, \gpr2
++	oris	\gpr1, \gpr1, SR_KS@h	/* set Ks */
++	kuap_update_sr	\gpr1, \gpr2, \gpr3
++102:
 +.endm
 +
 +.macro kuap_restore	sp, current, gpr1, gpr2, gpr3
-+	lwz	\gpr1, STACK_REGS_KUAP(\sp)
-+	mtspr	SPRN_MD_AP, \gpr1
++	lwz	\gpr2, STACK_REGS_KUAP(\sp)
++	rlwinm.	\gpr3, \gpr2, 28, 0xf0000000
++	stw	\gpr2, THREAD + KUAP(\current)
++	beq+	102f
++	mfsrin	\gpr1, \gpr2
++	rlwinm	\gpr1, \gpr1, 0, ~SR_KS	/* Clear Ks */
++	kuap_update_sr	\gpr1, \gpr2, \gpr3
++102:
 +.endm
 +
 +.macro kuap_check	current, gpr
 +#ifdef CONFIG_PPC_KUAP_DEBUG
-+	mfspr	\gpr, SPRN_MD_AP
-+	rlwinm	\gpr, \gpr, 16, 0xffff
-+999:	twnei	\gpr, MD_APG_KUAP@h
++	lwz	\gpr2, KUAP(thread)
++999:	twnei	\gpr, 0
 +	EMIT_BUG_ENTRY 999b, __FILE__, __LINE__, (BUGFLAG_WARNING | BUGFLAG_ONCE)
 +#endif
 +.endm
 +
++#endif /* CONFIG_PPC_KUAP */
++
 +#else /* !__ASSEMBLY__ */
 +
-+#include <asm/reg.h>
++#ifdef CONFIG_PPC_KUAP
 +
-+static inline void allow_user_access(void __user *to, const void __user *from,
-+				     unsigned long size)
++#include <linux/sched.h>
++
++static inline void kuap_update_sr(u32 sr, u32 addr, u32 end)
 +{
-+	mtspr(SPRN_MD_AP, MD_APG_INIT);
++	barrier();	/* make sure thread.kuap is updated before playing with SRs */
++	while (addr < end) {
++		mtsrin(sr, addr);
++		sr += 0x111;		/* next VSID */
++		sr &= 0xf0ffffff;	/* clear VSID overflow */
++		addr += 0x10000000;	/* address of next segment */
++	}
++	isync();	/* Context sync required after mtsrin() */
 +}
 +
-+static inline void prevent_user_access(void __user *to, const void __user *from,
-+				       unsigned long size)
++static inline void allow_user_access(void __user *to, const void __user *from, u32 size)
 +{
-+	mtspr(SPRN_MD_AP, MD_APG_KUAP);
++	u32 addr = (__force u32)to;
++	u32 end = min(addr + size, TASK_SIZE);
++
++	if (!addr || addr >= TASK_SIZE || !size)
++		return;
++
++	current->thread.kuap = (addr & 0xf0000000) | ((((end - 1) >> 28) + 1) & 0xf);
++	kuap_update_sr(mfsrin(addr) & ~SR_KS, addr, end);	/* Clear Ks */
++}
++
++static inline void prevent_user_access(void __user *to, const void __user *from, u32 size)
++{
++	u32 addr = (__force u32)to;
++	u32 end = min(addr + size, TASK_SIZE);
++
++	if (!addr || addr >= TASK_SIZE || !size)
++		return;
++
++	current->thread.kuap = 0;
++	kuap_update_sr(mfsrin(addr) | SR_KS, addr, end);	/* set Ks */
 +}
 +
 +static inline void allow_read_from_user(const void __user *from, unsigned long size)
 +{
-+	allow_user_access(NULL, from, size);
 +}
 +
 +static inline void allow_write_to_user(void __user *to, unsigned long size)
@@ -173,39 +213,95 @@ index 000000000000..a44cc6c1b901
 +
 +static inline bool bad_kuap_fault(struct pt_regs *regs, bool is_write)
 +{
-+	return WARN(!((regs->kuap ^ MD_APG_KUAP) & 0xf0000000),
-+		    "Bug: fault blocked by AP register !");
-+}
++	if (!is_write)
++		return false;
 +
-+#endif /* !__ASSEMBLY__ */
++	return WARN(!regs->kuap, "Bug: write fault blocked by segment registers !");
++}
 +
 +#endif /* CONFIG_PPC_KUAP */
 +
-+#endif /* _ASM_POWERPC_KUP_8XX_H_ */
-diff --git a/arch/powerpc/include/asm/nohash/32/mmu-8xx.h b/arch/powerpc/include/asm/nohash/32/mmu-8xx.h
-index 3cb743284e09..f620adef54fc 100644
---- a/arch/powerpc/include/asm/nohash/32/mmu-8xx.h
-+++ b/arch/powerpc/include/asm/nohash/32/mmu-8xx.h
-@@ -121,6 +121,13 @@
-  */
- #define MD_APG_INIT	0x4fffffff
+ #endif /* __ASSEMBLY__ */
  
-+/*
-+ * 0 => No user => 01 (all accesses performed according to page definition)
-+ * 1 => User => 10 (all accesses performed according to swaped page definition)
-+ * 2-16 => NA => 11 (all accesses performed as user iaw page definition)
-+ */
-+#define MD_APG_KUAP	0x6fffffff
-+
- /* The effective page number register.  When read, contains the information
-  * about the last instruction TLB miss.  When MD_RPN is written, bits in
-  * this register are used to create the TLB entry.
-diff --git a/arch/powerpc/mm/8xx_mmu.c b/arch/powerpc/mm/8xx_mmu.c
-index e257a0c9bd08..87648b58d295 100644
---- a/arch/powerpc/mm/8xx_mmu.c
-+++ b/arch/powerpc/mm/8xx_mmu.c
-@@ -225,3 +225,15 @@ void __init setup_kuep(bool disabled)
- 	mtspr(SPRN_MI_AP, MI_APG_KUEP);
+ #endif /* _ASM_POWERPC_BOOK3S_32_KUP_H */
+diff --git a/arch/powerpc/include/asm/processor.h b/arch/powerpc/include/asm/processor.h
+index 3351bcf42f2d..540949b397d4 100644
+--- a/arch/powerpc/include/asm/processor.h
++++ b/arch/powerpc/include/asm/processor.h
+@@ -164,6 +164,9 @@ struct thread_struct {
+ 	unsigned long	rtas_sp;	/* stack pointer for when in RTAS */
+ #endif
+ #endif
++#if defined(CONFIG_PPC_BOOK3S_32) && defined(CONFIG_PPC_KUAP)
++	unsigned long	kuap;		/* opened segments for user access */
++#endif
+ 	/* Debug Registers */
+ 	struct debug_reg debug;
+ 	struct thread_fp_state	fp_state;
+diff --git a/arch/powerpc/kernel/asm-offsets.c b/arch/powerpc/kernel/asm-offsets.c
+index 66202e02fee2..60b82198de7c 100644
+--- a/arch/powerpc/kernel/asm-offsets.c
++++ b/arch/powerpc/kernel/asm-offsets.c
+@@ -147,6 +147,9 @@ int main(void)
+ #if defined(CONFIG_KVM) && defined(CONFIG_BOOKE)
+ 	OFFSET(THREAD_KVM_VCPU, thread_struct, kvm_vcpu);
+ #endif
++#if defined(CONFIG_PPC_BOOK3S_32) && defined(CONFIG_PPC_KUAP)
++	OFFSET(KUAP, thread_struct, kuap);
++#endif
+ 
+ #ifdef CONFIG_PPC_TRANSACTIONAL_MEM
+ 	OFFSET(PACATMSCRATCH, paca_struct, tm_scratch);
+diff --git a/arch/powerpc/kernel/head_32.S b/arch/powerpc/kernel/head_32.S
+index dfc1a68fc647..2b122394d34b 100644
+--- a/arch/powerpc/kernel/head_32.S
++++ b/arch/powerpc/kernel/head_32.S
+@@ -387,7 +387,11 @@ DataAccess:
+ 	EXCEPTION_PROLOG
+ 	mfspr	r10,SPRN_DSISR
+ 	stw	r10,_DSISR(r11)
++#ifdef CONFIG_PPC_KUAP
++	andis.	r0,r10,(DSISR_BAD_FAULT_32S | DSISR_DABRMATCH | DSISR_PROTFAULT)@h
++#else
+ 	andis.	r0,r10,(DSISR_BAD_FAULT_32S|DSISR_DABRMATCH)@h
++#endif
+ 	bne	1f			/* if not, try to put a PTE */
+ 	mfspr	r4,SPRN_DAR		/* into the hash table */
+ 	rlwinm	r3,r10,32-15,21,21	/* DSISR_STORE -> _PAGE_RW */
+@@ -906,6 +910,9 @@ load_up_mmu:
+ #ifdef CONFIG_PPC_KUEP
+ 	oris	r3, r3, SR_NX@h	/* Set Nx */
+ #endif
++#ifdef CONFIG_PPC_KUAP
++	oris	r3, r3, SR_KS@h	/* Set Ks */
++#endif
+ 	li	r4,0
+ 3:	mtsrin	r3,r4
+ 	addi	r3,r3,0x111	/* increment VSID */
+@@ -914,6 +921,7 @@ load_up_mmu:
+ 	li	r0, 16 - NUM_USER_SEGMENTS /* load up kernel segment registers */
+ 	mtctr	r0			/* for context 0 */
+ 	rlwinm	r3, r3, 0, ~SR_NX	/* Nx = 0 */
++	rlwinm	r3, r3, 0, ~SR_KS	/* Ks = 0 */
+ 	oris	r3, r3, SR_KP@h		/* Kp = 1 */
+ 3:	mtsrin	r3, r4
+ 	addi	r3, r3, 0x111	/* increment VSID */
+@@ -1028,6 +1036,9 @@ _ENTRY(switch_mmu_context)
+ #ifdef CONFIG_PPC_KUEP
+ 	oris	r3, r3, SR_NX@h	/* Set Nx */
+ #endif
++#ifdef CONFIG_PPC_KUAP
++	oris	r3, r3, SR_KS@h	/* Set Ks */
++#endif
+ 	li	r0,NUM_USER_SEGMENTS
+ 	mtctr	r0
+ 
+diff --git a/arch/powerpc/mm/ppc_mmu_32.c b/arch/powerpc/mm/ppc_mmu_32.c
+index a99ede671653..dd31cc284857 100644
+--- a/arch/powerpc/mm/ppc_mmu_32.c
++++ b/arch/powerpc/mm/ppc_mmu_32.c
+@@ -405,3 +405,13 @@ void __init setup_kuep(bool disabled)
+ 		pr_warn("KUEP cannot be disabled yet on 6xx when compiled in\n");
  }
  #endif
 +
@@ -215,23 +311,21 @@ index e257a0c9bd08..87648b58d295 100644
 +	pr_info("Activating Kernel Userspace Access Protection\n");
 +
 +	if (disabled)
-+		pr_warn("KUAP cannot be disabled yet on 8xx when compiled in\n");
-+
-+	mtspr(SPRN_MD_AP, MD_APG_KUAP);
++		pr_warn("KUAP cannot be disabled yet on 6xx when compiled in\n");
 +}
 +#endif
 diff --git a/arch/powerpc/platforms/Kconfig.cputype b/arch/powerpc/platforms/Kconfig.cputype
-index 00fa0d110dcb..ab586963893a 100644
+index 6bc0a4c08c1c..60a7c7095b05 100644
 --- a/arch/powerpc/platforms/Kconfig.cputype
 +++ b/arch/powerpc/platforms/Kconfig.cputype
-@@ -35,6 +35,7 @@ config PPC_8xx
- 	select FSL_SOC
- 	select SYS_SUPPORTS_HUGETLBFS
+@@ -26,6 +26,7 @@ config PPC_BOOK3S_32
+ 	select PPC_FPU
+ 	select PPC_HAVE_PMU_SUPPORT
  	select PPC_HAVE_KUEP
 +	select PPC_HAVE_KUAP
  
- config 40x
- 	bool "AMCC 40x"
+ config PPC_85xx
+ 	bool "Freescale 85xx"
 -- 
 2.13.3
 
