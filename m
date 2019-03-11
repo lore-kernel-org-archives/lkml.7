@@ -4,48 +4,47 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+	SPF_PASS,USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E72ABC4360F
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 Mar 2019 19:58:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 633E2C43381
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 Mar 2019 19:59:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B78C9214AE
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 Mar 2019 19:58:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2AB112087C
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 Mar 2019 19:59:04 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1552334339;
-	bh=E0fgIza9+M28y/WMr1PzLTFMqibo3W94Ud5zHJmftuI=;
+	s=default; t=1552334344;
+	bh=IG/QmBlCQ/BXkYWRO0x2yMArthahtn01d9Y69zUBFzo=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=mUf95yg/FGL7jltXGfG95hb3kqolwEDdIOADf11ZW3GicMgLpUkEn2XhJBBy+c6I5
-	 vXxI6WxSxRxEBbnQw8UxTr/aJHF7ye/Vx1xK25exupMZmhXZjJPcC+MHqK+LgUp7gA
-	 nDx44CORR6w0JRWY4jhA5mgny6HythzP8/sCAZHU=
+	b=k90XpwbdS2be8EEl4cPHYP2cBe88eQj5edIHjSfvJWZXV3Nwi3/stKiL6qZaQvpyn
+	 5RG11254xJCapUoTp6agLL57ci8WtoGecxTtzOAtFTSeSsLV6qfUSBuRP+3SXidsve
+	 KSkpied8IHkqlYOtMD0FscFPMkYKBS62nJA+dfH0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729500AbfCKT66 (ORCPT
+        id S1728420AbfCKT7C (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 11 Mar 2019 15:58:58 -0400
-Received: from mail.kernel.org ([198.145.29.99]:36160 "EHLO mail.kernel.org"
+        Mon, 11 Mar 2019 15:59:02 -0400
+Received: from mail.kernel.org ([198.145.29.99]:36298 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729420AbfCKT6l (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 11 Mar 2019 15:58:41 -0400
+        id S1729472AbfCKT6w (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 11 Mar 2019 15:58:52 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 1002121738;
-        Mon, 11 Mar 2019 19:58:39 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 74C892087C;
+        Mon, 11 Mar 2019 19:58:51 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1552334320;
-        bh=E0fgIza9+M28y/WMr1PzLTFMqibo3W94Ud5zHJmftuI=;
+        s=default; t=1552334332;
+        bh=IG/QmBlCQ/BXkYWRO0x2yMArthahtn01d9Y69zUBFzo=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=wM02WW5wu11WBPNvQfVZ8QnEpoHk87w6iCvdj7tmMANGT+AIhk8sbhZbvgNmreuQB
-         MP41rsVR9yczxJ33DDyCnEzR68TDQPmJD9oi0SAw7VY2pBb6BV/mSJsp58ZS3p3NGb
-         +tVeVbjk2U5jDWjbxaPSQaR9q8aXahL5mUqjWw0E=
+        b=eo+C7WWBNok4aV/FGuMR7/gUsAeG89jxI0Pxubu0FBl6ZiT2jbQ3IQyoxqUiv/0mm
+         unL9dUYxTn0GXLAeWcKAzCx6hUSQEevNc4FI7LWECNXbdQpae7+qVHqhLHEsLTfdHN
+         QFmG7ivMhtf86OzDIE8z65XkJhv+Vg7K2GDZbHd4=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Christoffer Dall <christoffer.dall@arm.com>,
-        Marc Zyngier <marc.zyngier@arm.com>,
-        Sasha Levin <sashal@kernel.org>, kvmarm@lists.cs.columbia.edu
-Subject: [PATCH AUTOSEL 4.14 11/27] KVM: arm/arm64: Reset the VCPU without preemption and vcpu state loaded
-Date:   Mon, 11 Mar 2019 15:58:08 -0400
-Message-Id: <20190311195824.139043-11-sashal@kernel.org>
+Cc:     Yufen Yu <yuyufen@huawei.com>, Jens Axboe <axboe@kernel.dk>,
+        Sasha Levin <sashal@kernel.org>, linux-block@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.14 18/27] floppy: check_events callback should not return a negative number
+Date:   Mon, 11 Mar 2019 15:58:15 -0400
+Message-Id: <20190311195824.139043-18-sashal@kernel.org>
 X-Mailer: git-send-email 2.19.1
 In-Reply-To: <20190311195824.139043-1-sashal@kernel.org>
 References: <20190311195824.139043-1-sashal@kernel.org>
@@ -57,86 +56,41 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Christoffer Dall <christoffer.dall@arm.com>
+From: Yufen Yu <yuyufen@huawei.com>
 
-[ Upstream commit e761a927bc9a7ee6ceb7c4f63d5922dbced87f0d ]
+[ Upstream commit 96d7cb932e826219ec41ac02e5af037ffae6098c ]
 
-We have two ways to reset a vcpu:
-- either through VCPU_INIT
-- or through a PSCI_ON call
+floppy_check_events() is supposed to return bit flags to say which
+events occured. We should return zero to say that no event flags are
+set.  Only BIT(0) and BIT(1) are used in the caller. And .check_events
+interface also expect to return an unsigned int value.
 
-The first one is easy to reason about. The second one is implemented
-in a more bizarre way, as it is the vcpu that handles PSCI_ON that
-resets the vcpu that is being powered-on. As we need to turn the logic
-around and have the target vcpu to reset itself, we must take some
-preliminary steps.
+However, after commit a0c80efe5956, it may return -EINTR (-4u).
+Here, both BIT(0) and BIT(1) are cleared. So this patch shouldn't
+affect runtime, but it obviously is still worth fixing.
 
-Resetting the VCPU state modifies the system register state in memory,
-but this may interact with vcpu_load/vcpu_put if running with preemption
-disabled, which in turn may lead to corrupted system register state.
-
-Address this by disabling preemption and doing put/load if required
-around the reset logic.
-
-Reviewed-by: Andrew Jones <drjones@redhat.com>
-Signed-off-by: Christoffer Dall <christoffer.dall@arm.com>
-Signed-off-by: Marc Zyngier <marc.zyngier@arm.com>
+Reviewed-by: Dan Carpenter <dan.carpenter@oracle.com>
+Fixes: a0c80efe5956 ("floppy: fix lock_fdc() signal handling")
+Signed-off-by: Yufen Yu <yuyufen@huawei.com>
+Signed-off-by: Jens Axboe <axboe@kernel.dk>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/arm64/kvm/reset.c | 26 ++++++++++++++++++++++++--
- 1 file changed, 24 insertions(+), 2 deletions(-)
+ drivers/block/floppy.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/arch/arm64/kvm/reset.c b/arch/arm64/kvm/reset.c
-index a74311beda35..c1c5a57249d2 100644
---- a/arch/arm64/kvm/reset.c
-+++ b/arch/arm64/kvm/reset.c
-@@ -95,16 +95,33 @@ int kvm_arch_dev_ioctl_check_extension(struct kvm *kvm, long ext)
-  * This function finds the right table above and sets the registers on
-  * the virtual CPU struct to their architecturally defined reset
-  * values.
-+ *
-+ * Note: This function can be called from two paths: The KVM_ARM_VCPU_INIT
-+ * ioctl or as part of handling a request issued by another VCPU in the PSCI
-+ * handling code.  In the first case, the VCPU will not be loaded, and in the
-+ * second case the VCPU will be loaded.  Because this function operates purely
-+ * on the memory-backed valus of system registers, we want to do a full put if
-+ * we were loaded (handling a request) and load the values back at the end of
-+ * the function.  Otherwise we leave the state alone.  In both cases, we
-+ * disable preemption around the vcpu reset as we would otherwise race with
-+ * preempt notifiers which also call put/load.
-  */
- int kvm_reset_vcpu(struct kvm_vcpu *vcpu)
- {
- 	const struct kvm_regs *cpu_reset;
-+	int ret = -EINVAL;
-+	bool loaded;
-+
-+	preempt_disable();
-+	loaded = (vcpu->cpu != -1);
-+	if (loaded)
-+		kvm_arch_vcpu_put(vcpu);
+diff --git a/drivers/block/floppy.c b/drivers/block/floppy.c
+index a7f212ea17bf..3ea9c3e9acb3 100644
+--- a/drivers/block/floppy.c
++++ b/drivers/block/floppy.c
+@@ -4079,7 +4079,7 @@ static unsigned int floppy_check_events(struct gendisk *disk,
  
- 	switch (vcpu->arch.target) {
- 	default:
- 		if (test_bit(KVM_ARM_VCPU_EL1_32BIT, vcpu->arch.features)) {
- 			if (!cpu_has_32bit_el1())
--				return -EINVAL;
-+				goto out;
- 			cpu_reset = &default_regs_reset32;
- 		} else {
- 			cpu_reset = &default_regs_reset;
-@@ -127,5 +144,10 @@ int kvm_reset_vcpu(struct kvm_vcpu *vcpu)
- 		vcpu->arch.workaround_flags |= VCPU_WORKAROUND_2_FLAG;
- 
- 	/* Reset timer */
--	return kvm_timer_vcpu_reset(vcpu);
-+	ret = kvm_timer_vcpu_reset(vcpu);
-+out:
-+	if (loaded)
-+		kvm_arch_vcpu_load(vcpu, smp_processor_id());
-+	preempt_enable();
-+	return ret;
- }
+ 	if (time_after(jiffies, UDRS->last_checked + UDP->checkfreq)) {
+ 		if (lock_fdc(drive))
+-			return -EINTR;
++			return 0;
+ 		poll_drive(false, 0);
+ 		process_fd_request();
+ 	}
 -- 
 2.19.1
 
