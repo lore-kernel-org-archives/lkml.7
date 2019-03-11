@@ -2,131 +2,86 @@ Return-Path: <SRS0=FxTY=RO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_PASS autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-5.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_MUTT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 07813C43381
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 Mar 2019 17:24:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 877B2C43381
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 Mar 2019 17:24:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CEFBC20643
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 Mar 2019 17:24:47 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1552325087;
-	bh=9MViBI/7U+ijEtdQopBnK4+pprgCBKwBC0w9f2JcJBs=;
-	h=From:To:Cc:Subject:In-Reply-To:Date:List-ID:From;
-	b=EnyahuOu1RrHaSHeEguPs0NP8FaWwre+ubab15FQYbuZsMHVQ46wDh1RPbRDOtHMf
-	 f1veaZB/O7rOORO6UeUpZSwaZQs8/CfVe+E6Aj/cQ7xlCoCERnZjHzAnpFoakx1QXk
-	 igIzQFPEWlz4xEP3wt39yZvMrxGQsgVA/MyekAoU=
+	by mail.kernel.org (Postfix) with ESMTP id 6336520828
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 Mar 2019 17:24:49 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728287AbfCKRYq (ORCPT
+        id S1727909AbfCKRYs (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 11 Mar 2019 13:24:46 -0400
-Received: from heliosphere.sirena.org.uk ([172.104.155.198]:51294 "EHLO
-        heliosphere.sirena.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727778AbfCKRY0 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 11 Mar 2019 13:24:26 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=sirena.org.uk; s=20170815-heliosphere; h=Date:Message-Id:In-Reply-To:
-        Subject:Cc:To:From:Sender:Reply-To:MIME-Version:Content-Type:
-        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:References:
-        List-Id:List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:
-        List-Archive; bh=mT5mK1CNPKvbZJvdJUcgtev/XZ45Ga6+qTbmebanZQo=; b=b7NfgX0ZyTb6
-        Gqp0nDHRHspeyXOm3UwKHe8QPxc36BEqfLz4MZWirwMDo4yuW3pA/PMi+v6yQfxEQomKWRr6OiyMt
-        iWrGbbYNI8CKpjtCHDvemHBVDFfe6liAQ6TrqHx9qIRA5oUlcjNnWQbVBA9r85Kd7WC/Bn3t9OfJU
-        bKEd4=;
-Received: from cpc102320-sgyl38-2-0-cust46.18-2.cable.virginm.net ([82.37.168.47] helo=debutante.sirena.org.uk)
-        by heliosphere.sirena.org.uk with esmtpa (Exim 4.89)
-        (envelope-from <broonie@sirena.org.uk>)
-        id 1h3Oez-0005OU-Ip; Mon, 11 Mar 2019 17:24:21 +0000
-Received: by debutante.sirena.org.uk (Postfix, from userid 1000)
-        id 275811128896; Mon, 11 Mar 2019 17:24:21 +0000 (GMT)
-From:   Mark Brown <broonie@kernel.org>
-To:     Arnd Bergmann <arnd@arndb.de>
-Cc:     Mark Brown <broonie@kernel.org>, Mark Brown <broonie@kernel.org>,
-        Rasmus Villemoes <linux@rasmusvillemoes.dk>,
-        Boris Brezillon <bbrezillon@kernel.org>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        linux-spi@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-spi@vger.kernel.org
-Subject: Applied "spi: work around clang bug in SPI_BPW_RANGE_MASK()" to the spi tree
-In-Reply-To:  <20190307155506.2993868-1-arnd@arndb.de>
-X-Patchwork-Hint: ignore
-Message-Id: <20190311172421.275811128896@debutante.sirena.org.uk>
-Date:   Mon, 11 Mar 2019 17:24:21 +0000 (GMT)
+        Mon, 11 Mar 2019 13:24:48 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:56664 "EHLO mx1.redhat.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728217AbfCKRYX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 11 Mar 2019 13:24:23 -0400
+Received: from smtp.corp.redhat.com (int-mx06.intmail.prod.int.phx2.redhat.com [10.5.11.16])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id 5437A90903;
+        Mon, 11 Mar 2019 17:24:23 +0000 (UTC)
+Received: from krava (ovpn-204-107.brq.redhat.com [10.40.204.107])
+        by smtp.corp.redhat.com (Postfix) with SMTP id A3EA95C21A;
+        Mon, 11 Mar 2019 17:24:21 +0000 (UTC)
+Date:   Mon, 11 Mar 2019 18:24:20 +0100
+From:   Jiri Olsa <jolsa@redhat.com>
+To:     Andi Kleen <andi@firstfloor.org>
+Cc:     acme@kernel.org, jolsa@kernel.org,
+        linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Andi Kleen <ak@linux.intel.com>
+Subject: Re: [PATCH v6 07/11] perf tools report: Implement browsing of
+ individual samples
+Message-ID: <20190311172420.GC9664@krava>
+References: <20190311144502.15423-1-andi@firstfloor.org>
+ <20190311144502.15423-8-andi@firstfloor.org>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190311144502.15423-8-andi@firstfloor.org>
+User-Agent: Mutt/1.10.1 (2018-07-13)
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.16
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.29]); Mon, 11 Mar 2019 17:24:23 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The patch
+On Mon, Mar 11, 2019 at 07:44:58AM -0700, Andi Kleen wrote:
 
-   spi: work around clang bug in SPI_BPW_RANGE_MASK()
+SNIP
 
-has been applied to the spi tree at
+> diff --git a/tools/perf/ui/browsers/scripts.c b/tools/perf/ui/browsers/scripts.c
+> index 9e5f87558af6..cdba58447b85 100644
+> --- a/tools/perf/ui/browsers/scripts.c
+> +++ b/tools/perf/ui/browsers/scripts.c
+> @@ -125,7 +125,7 @@ static int list_scripts(char *script_name, bool *custom,
+>  	return ret;
+>  }
+>  
+> -static void run_script(char *cmd)
+> +void run_script(char *cmd)
+>  {
+>  	pr_debug("Running %s\n", cmd);
+>  	SLang_reset_tty();
+> diff --git a/tools/perf/util/hist.c b/tools/perf/util/hist.c
+> index fd5d02c1a521..3a0e2bb40529 100644
+> --- a/tools/perf/util/hist.c
+> +++ b/tools/perf/util/hist.c
+> @@ -436,6 +436,13 @@ static int hist_entry__init(struct hist_entry *he,
+>  			goto err_rawdata;
+>  	}
+>  
+> +	if (symbol_conf.res_sample) {
+> +		he->res_samples = calloc(sizeof(struct res_sample),
+> +					symbol_conf.res_sample);
+> +		if (!he->res_samples)
+> +			return -ENOMEM;
+> +	}
 
-   https://git.kernel.org/pub/scm/linux/kernel/git/broonie/spi.git 
+https://lore.kernel.org/lkml/20190311123227.GA26829@krava/
 
-All being well this means that it will be integrated into the linux-next
-tree (usually sometime in the next 24 hours) and sent to Linus during
-the next merge window (or sooner if it is a bug fix), however if
-problems are discovered then the patch may be dropped or reverted.  
-
-You may get further e-mails resulting from automated or manual testing
-and review of the tree, please engage with people reporting problems and
-send followup patches addressing any issues that are reported if needed.
-
-If any updates are required or you are submitting further changes they
-should be sent as incremental updates against current git, existing
-patches will not be replaced.
-
-Please add any relevant lists and maintainers to the CCs when replying
-to this mail.
-
-Thanks,
-Mark
-
-From eefffb42f6659c9510105f3e4ebf2a8499d56936 Mon Sep 17 00:00:00 2001
-From: Arnd Bergmann <arnd@arndb.de>
-Date: Thu, 7 Mar 2019 16:54:21 +0100
-Subject: [PATCH] spi: work around clang bug in SPI_BPW_RANGE_MASK()
-
-Clang-8 evaluates both sides of a ?: expression to check for
-valid arithmetic even in the side that is never taken. This
-results in a build warning:
-
-drivers/spi/spi-sh-msiof.c:1052:24: error: shift count >= width of type [-Werror,-Wshift-count-overflow]
-        .bits_per_word_mask = SPI_BPW_RANGE_MASK(8, 32),
-                              ^~~~~~~~~~~~~~~~~~~~~~~~~
-
-Change the implementation to use the GENMASK() macro that does
-what we want here but does not have a problem with the shift
-count overflow.
-
-Link: https://bugs.llvm.org/show_bug.cgi?id=38789
-Signed-off-by: Arnd Bergmann <arnd@arndb.de>
-Signed-off-by: Mark Brown <broonie@kernel.org>
----
- include/linux/spi/spi.h | 3 +--
- 1 file changed, 1 insertion(+), 2 deletions(-)
-
-diff --git a/include/linux/spi/spi.h b/include/linux/spi/spi.h
-index 662b336aa2e4..b27386450089 100644
---- a/include/linux/spi/spi.h
-+++ b/include/linux/spi/spi.h
-@@ -444,8 +444,7 @@ struct spi_controller {
- 	/* bitmask of supported bits_per_word for transfers */
- 	u32			bits_per_word_mask;
- #define SPI_BPW_MASK(bits) BIT((bits) - 1)
--#define SPI_BIT_MASK(bits) (((bits) == 32) ? ~0U : (BIT(bits) - 1))
--#define SPI_BPW_RANGE_MASK(min, max) (SPI_BIT_MASK(max) - SPI_BIT_MASK(min - 1))
-+#define SPI_BPW_RANGE_MASK(min, max) GENMASK((min) - 1, (max) - 1)
- 
- 	/* limits on transfer speed */
- 	u32			min_speed_hz;
--- 
-2.20.1
-
+jirka
