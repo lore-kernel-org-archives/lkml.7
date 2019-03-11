@@ -6,46 +6,45 @@ X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
 	SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D6C43C43381
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 Mar 2019 19:58:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 181A5C43381
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 Mar 2019 19:58:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A03682171F
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 Mar 2019 19:58:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D687321734
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 Mar 2019 19:58:25 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1552334301;
-	bh=sQwupFKwmbb3MQThaawXXZiN65aAm1JjP11vDG1HN4E=;
+	s=default; t=1552334306;
+	bh=+u1e3/PVkxtbkOTEztkjRaMj7bgwpvCzON0ol0D8zI4=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=fvLFGHPV7xkGj6A4K+yBmrW8dM4HJRlCtzJ+U+Z6yQzG2LXOgHgRthceU3+4i7Ct2
-	 JkMnTvjBMKzEiPQaw3z1srLL1ofPdV7EB6XXwGv7RIBVCG/2eEt+WzLq0jE61QBiRn
-	 itqTueRuwtdX4UusKGIWffZMSnJP0wEBo5lW5lqw=
+	b=EPfBMVvuM9htKlpDc/+45iZH6kUKBvVBBJ1cyDEfiZNA823Cfo3ZqZTJbmkT4E2WG
+	 bR3Iu987oTWeP7/6AI0sGJjzR3sNiY1ypG9cAWGukEO3CZUjoSHFbz8L0x8GRkd9yR
+	 NEX2P0/uBbVW2DRIQLx7RXYXX+VTSrTHa+1p28A8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729361AbfCKT6U (ORCPT
+        id S1728833AbfCKT6Y (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 11 Mar 2019 15:58:20 -0400
-Received: from mail.kernel.org ([198.145.29.99]:35742 "EHLO mail.kernel.org"
+        Mon, 11 Mar 2019 15:58:24 -0400
+Received: from mail.kernel.org ([198.145.29.99]:35848 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729294AbfCKT6R (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 11 Mar 2019 15:58:17 -0400
+        id S1727138AbfCKT6W (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 11 Mar 2019 15:58:22 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 7D014217D8;
-        Mon, 11 Mar 2019 19:58:16 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id D0692214AE;
+        Mon, 11 Mar 2019 19:58:20 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1552334297;
-        bh=sQwupFKwmbb3MQThaawXXZiN65aAm1JjP11vDG1HN4E=;
+        s=default; t=1552334301;
+        bh=+u1e3/PVkxtbkOTEztkjRaMj7bgwpvCzON0ol0D8zI4=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=zzuIbucMAvBKX9vWiXNpIBIlw9LEfBWgr7WVjCQrdaAQsUhyuzgYpbbxXZddOFSCi
-         OPPWBsXVeCddqMC8ffS8qb/R3kBRTRow5lV7OEWQoGhWQPjf4xbqNK/z6sbF51Ui2/
-         ZcLB9LhH0evt6NHGcG2z8qYBqFzTDPTWKfpajzok=
+        b=o0fNbGszTs2DgsJcvGIb235+1/63lm7xz31+iGTDtowfqYPnLzkyzQFZstw7BZwjt
+         Z2k7WDKPmpObo03onPV/T/4QJgEKwzzBbwpsKM5KKFiwaVJaAVSCJ5nD3tXFJVK1YW
+         yKa6dyXECVt6kuFtlRzp1D+iFrmxVJ+UBesfu0rA=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Huang Zijiang <huang.zijiang@zte.com.cn>,
-        "David S . Miller" <davem@davemloft.net>,
-        Sasha Levin <sashal@kernel.org>, netdev@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.19 40/44] net: hns: Fix object reference leaks in hns_dsaf_roce_reset()
-Date:   Mon, 11 Mar 2019 15:56:56 -0400
-Message-Id: <20190311195700.138462-40-sashal@kernel.org>
+Cc:     Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH AUTOSEL 4.19 43/44] auxdisplay: ht16k33: fix potential user-after-free on module unload
+Date:   Mon, 11 Mar 2019 15:56:59 -0400
+Message-Id: <20190311195700.138462-43-sashal@kernel.org>
 X-Mailer: git-send-email 2.19.1
 In-Reply-To: <20190311195700.138462-1-sashal@kernel.org>
 References: <20190311195700.138462-1-sashal@kernel.org>
@@ -57,40 +56,44 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Huang Zijiang <huang.zijiang@zte.com.cn>
+From: Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>
 
-[ Upstream commit c969c6e7ab8cb42b5c787c567615474fdbad9d6a ]
+[ Upstream commit 69ef9bc54715fb1cb7786ada15774e469e822209 ]
 
-The of_find_device_by_node() takes a reference to the underlying device
-structure, we should release that reference.
+On module unload/remove, we need to ensure that work does not run
+after we have freed resources. Concretely, cancel_delayed_work()
+may return while the callback function is still running.
 
-Signed-off-by: Huang Zijiang <huang.zijiang@zte.com.cn>
-Signed-off-by: David S. Miller <davem@davemloft.net>
+From kernel/workqueue.c:
+
+    The work callback function may still be running on return,
+    unless it returns true and the work doesn't re-arm itself.
+    Explicitly flush or use cancel_delayed_work_sync() to wait on it.
+
+Link: https://lore.kernel.org/lkml/20190204220952.30761-1-TheSven73@googlemail.com/
+Reported-by: Sven Van Asbroeck <thesven73@gmail.com>
+Reviewed-by: Dmitry Torokhov <dmitry.torokhov@gmail.com>
+Reviewed-by: Sven Van Asbroeck <TheSven73@gmail.com>
+Acked-by: Robin van der Gracht <robin@protonic.nl>
+Signed-off-by: Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/ethernet/hisilicon/hns/hns_dsaf_main.c | 2 ++
- 1 file changed, 2 insertions(+)
+ drivers/auxdisplay/ht16k33.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/net/ethernet/hisilicon/hns/hns_dsaf_main.c b/drivers/net/ethernet/hisilicon/hns/hns_dsaf_main.c
-index 3b9e74be5fbd..b8155f5e71b4 100644
---- a/drivers/net/ethernet/hisilicon/hns/hns_dsaf_main.c
-+++ b/drivers/net/ethernet/hisilicon/hns/hns_dsaf_main.c
-@@ -3081,6 +3081,7 @@ int hns_dsaf_roce_reset(struct fwnode_handle *dsaf_fwnode, bool dereset)
- 	dsaf_dev = dev_get_drvdata(&pdev->dev);
- 	if (!dsaf_dev) {
- 		dev_err(&pdev->dev, "dsaf_dev is NULL\n");
-+		put_device(&pdev->dev);
- 		return -ENODEV;
- 	}
+diff --git a/drivers/auxdisplay/ht16k33.c b/drivers/auxdisplay/ht16k33.c
+index a43276c76fc6..21393ec3b9a4 100644
+--- a/drivers/auxdisplay/ht16k33.c
++++ b/drivers/auxdisplay/ht16k33.c
+@@ -509,7 +509,7 @@ static int ht16k33_remove(struct i2c_client *client)
+ 	struct ht16k33_priv *priv = i2c_get_clientdata(client);
+ 	struct ht16k33_fbdev *fbdev = &priv->fbdev;
  
-@@ -3088,6 +3089,7 @@ int hns_dsaf_roce_reset(struct fwnode_handle *dsaf_fwnode, bool dereset)
- 	if (AE_IS_VER1(dsaf_dev->dsaf_ver)) {
- 		dev_err(dsaf_dev->dev, "%s v1 chip doesn't support RoCE!\n",
- 			dsaf_dev->ae_dev.name);
-+		put_device(&pdev->dev);
- 		return -ENODEV;
- 	}
- 
+-	cancel_delayed_work(&fbdev->work);
++	cancel_delayed_work_sync(&fbdev->work);
+ 	unregister_framebuffer(fbdev->info);
+ 	framebuffer_release(fbdev->info);
+ 	free_page((unsigned long) fbdev->buffer);
 -- 
 2.19.1
 
