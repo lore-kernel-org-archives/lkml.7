@@ -6,48 +6,48 @@ X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5A9CDC43381
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 Mar 2019 13:30:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 979A0C43381
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 Mar 2019 13:30:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 391CC222C3
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 Mar 2019 13:30:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 74F90222D4
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 Mar 2019 13:30:44 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728115AbfCKNaa (ORCPT
+        id S1728237AbfCKNam (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 11 Mar 2019 09:30:30 -0400
-Received: from mout.kundenserver.de ([212.227.17.24]:47701 "EHLO
+        Mon, 11 Mar 2019 09:30:42 -0400
+Received: from mout.kundenserver.de ([212.227.17.10]:56983 "EHLO
         mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727511AbfCKNTb (ORCPT
+        with ESMTP id S1727470AbfCKNTa (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 11 Mar 2019 09:19:31 -0400
+        Mon, 11 Mar 2019 09:19:30 -0400
 Received: from orion.localdomain ([95.115.159.19]) by mrelayeu.kundenserver.de
  (mreue109 [212.227.15.183]) with ESMTPSA (Nemesis) id
- 1MpUQk-1giZPa0Qkm-00ppxP for <linux-kernel@vger.kernel.org>; Mon, 11 Mar 2019
- 14:19:30 +0100
+ 1MUXlG-1hTd7A2UjI-00QV2Z for <linux-kernel@vger.kernel.org>; Mon, 11 Mar 2019
+ 14:19:28 +0100
 From:   "Enrico Weigelt, metux IT consult" <info@metux.net>
 To:     linux-kernel@vger.kernel.org
-Subject: [PATCH 019/114] drivers: uwb: Kconfig: pedantic formatting
-Date:   Mon, 11 Mar 2019 14:17:31 +0100
-Message-Id: <1552310346-7629-20-git-send-email-info@metux.net>
+Subject: [PATCH 008/114] drivers: ata: Kconfig: pedantic formatting
+Date:   Mon, 11 Mar 2019 14:17:20 +0100
+Message-Id: <1552310346-7629-9-git-send-email-info@metux.net>
 X-Mailer: git-send-email 1.9.1
 In-Reply-To: <1552310346-7629-1-git-send-email-info@metux.net>
 References: <1552310346-7629-1-git-send-email-info@metux.net>
-X-Provags-ID: V03:K1:KxnYeBSPKnsEwyjNNcS0xwWst7w71VqINq91mr6YgMmomqCRSs4
- 3DKkYCOg62InJT3BbcQwcgnDa7U60MrZOjNBcUSdNIRK2u12pOxYKSyiCl1WsfOJcal+8Qm
- sngfnoxifOkAnma96+YDonB7FUChNSIoZ+HJjwHv24M8xIXhEX+hs7lO+5U0Am3If7u3QEg
- WgQyXLJ+ES/TNhcFuCcsA==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:9ScILsAWVfc=:I3/VCUtsAuzCLnH1i51yw3
- Cn/isNODCTOGHpGu+qyKxMRgVeUJ3O1YuoPQSZ7B1mLlauL+TLg4RJOQyv21dhOY97B9l7Kku
- 6Ynkf9UA0hbL7D0r/9Tz/lV/0QhFPQ9vsPyk4jtoN9FZehCbbcfwIwj+Cc4jkmxHZT+/4Q9lj
- jdaCFtRifno/77pEGYiBX8xtcFz0v8JofDtSrRC5uth0xb1swr0a4L61Zw1+yjRVd6Ue81WKj
- cClzB1pm0Jwt13P43ZfIzoDC/DyP1TXWjAx+GSv4/e8LT0P9YfLCHHkCPDOrBGHLnR8RIsM/V
- rmjQvt2n6kBnildoACmMt/GKZckhfH9lwVf3a2cL2F+Y6KYMdtS2lk7CPg9S9NjmxlPQS4fAP
- 7AluzDLL29vL7+bPeveld75RuxvANhGWbmlFY1nxQ4ZUMpbQaAUOu2Ahlva6KZQCnMgVzkSEl
- tgTRR2mAyQIjXp0ljN8t33JTCoHVQQ2M1KtI1mFJLOep+0atUhp2KUNvzMAaM0/i9dcniPc8A
- 0WRC1/T2GkwpcPIwwuaBpc9jUGQBF1RBghJzu7DA/WbJtvaaM0CnMI27qg5M8E/mx5GaV/sYX
- abPdsTkIfvMI/XEkgqxcysVMFtLgQAXT5lDPNg8BA3h/fqrTMKzx+CgP1/qjv7FWcqTgdH+lZ
- SKB9P0PLSHKt5wnBwR84jGxpFluhZ4Ky7BANwrpN08Y5pCuONpHYjpBzSfTMMumedW5dp+vhF
- 2+06+AFaiIvZjEGJ34f38RLXLbcNYVWEVlkwqQ==
+X-Provags-ID: V03:K1:BgbOIhMFFcVriP51wL/nqhwt6+rYqLzeM58PZMWlIZ3pLkUzdAG
+ /F9ybxpZXcZOrSOa7rkYpOiW/DC4L+iA1/iDkJ38z5xhoujEUTMqvBp+aLO6c0JTU0wkeGz
+ uUC8JoLlpdu6MuaHO3axpycqGe4reAclNEiosVN5Es1bM0sVZ+rbNzkFPc4O7k96FWtcHTp
+ T2XQGd2yF/H7uXmjwnxgw==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:MzCUQFtykQQ=:Gqi8UF/kTu4O4CgeDXBeu4
+ 6FfbNu/a6bt8SvsTmeLjzaXqSA9D6ymZ9J3HiL/VslUBrbQ0tRSrBDS84V4FK8rOVudN8n9nN
+ sVB87b43KDazPYwrGiG5f3NAzUwfIkJFRwF66oxAgXCKyvQVX2YbOJr1u1P44dpLkKkJNyeku
+ 0u5cqt+Jt7YqqTnohllm1XE2oT3sIAelF5b2JDtgC0XTqL6FWndQiaidVi4V/lUgAzeqRhVFE
+ jzzAWcJSRcXwMxD/AemIsN27mP/gucwxbZHRDfCLo1S1GDzFiPW5qT16Qqp/MWRpuSLn67/wr
+ PNYTfhv5D0eihVEJElAsmYscNYetFMqNXE4tPrD8Zfje4XetNHtXmaNsXfB36aEEZj/awzGKG
+ 6pFret+N9DQSDygGoPsTkpZlzgRIvftTcamOSNwcsEd8iplWYeU70MTh+5PAcr8WMmWI1x/Ak
+ PgDustE9Ej/GWt8+pmU/PtfH7m+RiMxx+M2EHpS1puxE93+36oxEnEN+fU/zRRgAlrh5QWJwk
+ uyRErB6U+E7C50Hr4O6zmiZO6yXBN2X9ANCZBTVrmgYMJvJpLC58FS05KqlpzgLaKBS6f/qMj
+ QCT8q5z8l5ch3hepcU86uFtLX8Pv7u+7yTk3AuI+11fkEmXbz32PLfOSuUpcxvMjsjvvEKDHu
+ y4BMsbaUy9ibO+ZGJQ87JzWjIaf8Vnx8P1yHtnrxDZIZsoKNy2CYkT08Gp2nYs1QkSRpWVF6H
+ LrvAkew0tsFFgRN+c9A/O7tYKPtwh3zpRaZ+7Q==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
@@ -58,66 +58,74 @@ Great White Handkerchief come around and clean it up.
 
 Signed-off-by: Enrico Weigelt, metux IT consult <info@metux.net>
 ---
- drivers/uwb/Kconfig | 42 +++++++++++++++++++++---------------------
- 1 file changed, 21 insertions(+), 21 deletions(-)
+ drivers/ata/Kconfig | 18 +++++++++---------
+ 1 file changed, 9 insertions(+), 9 deletions(-)
 
-diff --git a/drivers/uwb/Kconfig b/drivers/uwb/Kconfig
-index afac258..d0e15e1 100644
---- a/drivers/uwb/Kconfig
-+++ b/drivers/uwb/Kconfig
-@@ -41,31 +41,31 @@ config UWB_HWA
- 	  is safe to select any even if you do not have the hardware.
+diff --git a/drivers/ata/Kconfig b/drivers/ata/Kconfig
+index a6beb2c..e0a41b1 100644
+--- a/drivers/ata/Kconfig
++++ b/drivers/ata/Kconfig
+@@ -32,7 +32,7 @@ menuconfig ATA
+ if ATA
  
- config UWB_WHCI
--        tristate "UWB Radio Control driver for WHCI-compliant cards"
--        depends on PCI
--        help
--          This driver enables the radio controller for WHCI cards.
-+	tristate "UWB Radio Control driver for WHCI-compliant cards"
-+	depends on PCI
-+	help
-+	  This driver enables the radio controller for WHCI cards.
+ config ATA_NONSTANDARD
+-       bool
++	bool
  
--          WHCI is a specification developed by Intel
--          (http://www.intel.com/technology/comms/wusb/whci.htm) much
--          in the spirit of USB's EHCI, but for UWB and Wireless USB
--          radio/host controllers connected via memory mapping (eg:
--          PCI). Most of these cards come also with a Wireless USB host
--          controller.
-+	  WHCI is a specification developed by Intel
-+	  (http://www.intel.com/technology/comms/wusb/whci.htm) much
-+	  in the spirit of USB's EHCI, but for UWB and Wireless USB
-+	  radio/host controllers connected via memory mapping (eg:
-+	  PCI). Most of these cards come also with a Wireless USB host
-+	  controller.
+ config ATA_VERBOSE_ERROR
+ 	bool "Verbose ATA error reporting"
+@@ -222,7 +222,7 @@ config AHCI_XGENE
+ 	tristate "APM X-Gene 6.0Gbps AHCI SATA host controller support"
+ 	depends on PHY_XGENE
+ 	help
+-	 This option enables support for APM X-Gene SoC SATA host controller.
++	  This option enables support for APM X-Gene SoC SATA host controller.
  
--          To compile this driver select Y (built in) or M (module). It
--          is safe to select any even if you do not have the hardware.
-+	  To compile this driver select Y (built in) or M (module). It
-+	  is safe to select any even if you do not have the hardware.
+ config AHCI_QORIQ
+ 	tristate "Freescale QorIQ AHCI SATA support"
+@@ -256,9 +256,9 @@ config SATA_AHCI_SEATTLE
+ 	tristate "AMD Seattle 6.0Gbps AHCI SATA host controller support"
+ 	depends on ARCH_SEATTLE
+ 	help
+-	 This option enables support for AMD Seattle SATA host controller.
++	  This option enables support for AMD Seattle SATA host controller.
  
- config UWB_I1480U
--        tristate "Support for Intel Wireless UWB Link 1480 HWA"
--        depends on UWB_HWA
--        select FW_LOADER
--        help
--         This driver enables support for the i1480 when connected via
--         USB. It consists of a firmware uploader that will enable it
--         to behave as an HWA device.
-+	tristate "Support for Intel Wireless UWB Link 1480 HWA"
-+	depends on UWB_HWA
-+	select FW_LOADER
-+	help
-+	  This driver enables support for the i1480 when connected via
-+	  USB. It consists of a firmware uploader that will enable it
-+	  to behave as an HWA device.
+-	 If unsure, say N
++	  If unsure, say N
  
--         To compile this driver select Y (built in) or M (module). It
--         is safe to select any even if you do not have the hardware.
-+	  To compile this driver select Y (built in) or M (module). It
-+	  is safe to select any even if you do not have the hardware.
+ config SATA_INIC162X
+ 	tristate "Initio 162x SATA support (Very Experimental)"
+@@ -695,7 +695,7 @@ config PATA_IMX
+ 	depends on ARCH_MXC
+ 	help
+ 	  This option enables support for the PATA host available on Freescale
+-          iMX SoCs.
++	  iMX SoCs.
  
- endif # UWB
+ 	  If unsure, say N.
+ 
+@@ -704,7 +704,7 @@ config PATA_IT8213
+ 	depends on PCI
+ 	help
+ 	  This option enables support for the ITE 821 PATA
+-          controllers via the new ATA layer.
++	  controllers via the new ATA layer.
+ 
+ 	  If unsure, say N.
+ 
+@@ -732,9 +732,9 @@ config PATA_MACIO
+ 	depends on PPC_PMAC
+ 	help
+ 	  Most IDE capable PowerMacs have IDE busses driven by a variant
+-          of this controller which is part of the Apple chipset used on
+-          most PowerMac models. Some models have multiple busses using
+-          different chipsets, though generally, MacIO is one of them.
++	  of this controller which is part of the Apple chipset used on
++	  most PowerMac models. Some models have multiple busses using
++	  different chipsets, though generally, MacIO is one of them.
+ 
+ config PATA_MARVELL
+ 	tristate "Marvell PATA support via legacy mode"
 -- 
 1.9.1
 
