@@ -2,200 +2,200 @@ Return-Path: <SRS0=FxTY=RO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_PASS,USER_AGENT_MUTT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F3E5FC43381
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 Mar 2019 13:39:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B2305C43381
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 Mar 2019 13:39:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BA5812075C
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 Mar 2019 13:39:46 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=joelfernandes.org header.i=@joelfernandes.org header.b="VU1U9PxC"
+	by mail.kernel.org (Postfix) with ESMTP id 7D5E12075C
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 Mar 2019 13:39:58 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727683AbfCKNjn (ORCPT
+        id S1727697AbfCKNj5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 11 Mar 2019 09:39:43 -0400
-Received: from mail-qt1-f196.google.com ([209.85.160.196]:34709 "EHLO
-        mail-qt1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726872AbfCKNjm (ORCPT
+        Mon, 11 Mar 2019 09:39:57 -0400
+Received: from mout.kundenserver.de ([212.227.126.131]:60461 "EHLO
+        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726872AbfCKNj4 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 11 Mar 2019 09:39:42 -0400
-Received: by mail-qt1-f196.google.com with SMTP id x20so5012467qto.1
-        for <linux-kernel@vger.kernel.org>; Mon, 11 Mar 2019 06:39:41 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=joelfernandes.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=NyK4GfMt/DHi95NLfTJrQeYHSok+IWJ5DODJR1IX2Bc=;
-        b=VU1U9PxCn/zV/FhEnOlyYpZofUcifQzq0InlYhXk1YeoG4yhOWFHaHwlxu1eHMP8fQ
-         W1DGKVZmWgbkYjaZ7Z+VVXpfME5VmIPN/QtVcbHsv0uEPPj5XjfcHkQIUKkDHDstTugR
-         sKxAKA7qXzMmCrFUNn5+65FAPH1sL57Owv8H4=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=NyK4GfMt/DHi95NLfTJrQeYHSok+IWJ5DODJR1IX2Bc=;
-        b=TJ4eDMiCqtobPCUQr0BwdTU89FJvT8pAjRoySHF7q+JEdVd/zDRnS9YqpxdagLcKnC
-         iz98ck/F4D5Uz2yTOrgRwHf+7sMnd8yu21vxATMpyF3JKDJLfxlTOpeQhH7ph7BDrlAS
-         xBXTCaAtpct+2gxxabiiOTwrMqyJs51o8ySnPVSlE7Nmvf67b1ueQ149R6D3omtuxwuo
-         3y4a405fZtUuCK4dqafIKDPDFy0w9QKcZM8h0iHILjHcr6VpGo/PLxgLY7SulQRxQtLr
-         xSrWhX9JVQHfGoHjppcNPFAkjpf7LbXmLW7gq7rKvCJreLX1AR+7QOt1hn6URO7AG76g
-         vqCQ==
-X-Gm-Message-State: APjAAAWCatvJOAiifwG7kpHLtkBB1ztZjdWBmOz7W1rdu0Dq3HPnoeVE
-        13UO8J/BDHgYMwf5PFxOnovWpg==
-X-Google-Smtp-Source: APXvYqy/Kd4aByMV2oD+czNPFKHJs6B6CdmpfTDXyLrFWdj8qLbADnTJJGrGR9DBuTdGu0NVVT3wbw==
-X-Received: by 2002:ac8:2273:: with SMTP id p48mr25414541qtp.7.1552311581168;
-        Mon, 11 Mar 2019 06:39:41 -0700 (PDT)
-Received: from localhost ([2620:0:1004:1100:cca9:fccc:8667:9bdc])
-        by smtp.gmail.com with ESMTPSA id y53sm4527879qtj.66.2019.03.11.06.39.39
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Mon, 11 Mar 2019 06:39:40 -0700 (PDT)
-Date:   Mon, 11 Mar 2019 09:39:39 -0400
-From:   Joel Fernandes <joel@joelfernandes.org>
-To:     "Paul E. McKenney" <paulmck@linux.vnet.ibm.com>
-Cc:     linux-kernel@vger.kernel.org, rcu@vger.kernel.org,
-        jiangshanlai@gmail.com, dipankar@in.ibm.com,
-        mathieu.desnoyers@efficios.com, josh@joshtriplett.org,
-        rostedt@goodmis.org, luto@kernel.org, byungchul.park@lge.com
-Subject: Re: [PATCH tip/core/rcu 06/19] rcu: Add warning to detect
- half-interrupts
-Message-ID: <20190311133939.GA29747@google.com>
-References: <20180829222021.GA29944@linux.vnet.ibm.com>
- <20180829222047.319-6-paulmck@linux.vnet.ibm.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20180829222047.319-6-paulmck@linux.vnet.ibm.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+        Mon, 11 Mar 2019 09:39:56 -0400
+Received: from orion.localdomain ([95.115.159.19]) by mrelayeu.kundenserver.de
+ (mreue011 [212.227.15.167]) with ESMTPSA (Nemesis) id
+ 1MfHQp-1gadFK40iJ-00grDI; Mon, 11 Mar 2019 14:39:54 +0100
+From:   "Enrico Weigelt, metux IT consult" <info@metux.net>
+To:     linux-kernel@vger.kernel.org
+Cc:     luto@amacapital.net, wad@chromium.org
+Subject: [PATCH] arch: Kconfig: pedantic formatting
+Date:   Mon, 11 Mar 2019 14:39:52 +0100
+Message-Id: <1552311592-18060-1-git-send-email-info@metux.net>
+X-Mailer: git-send-email 1.9.1
+X-Provags-ID: V03:K1:CcgJiMmr7Y3dcvLO3hZqll609I6zDInyK89lLQtttlcT3Pi1jfR
+ wzazBD1uU5VIMiUh1To5RriyJICbJ1jCb2lqWx4FPZGXh1nclh3olRGc2jaB1s+87td1gDw
+ BrGkAOzu7FQSkIwmsdOOb2KqwEMXRJS3cZDJfEaji7GVQS//scMGSN5qckH5mJrq9KKvf03
+ Ar4ocA23uzHV6vZCP4dxQ==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:2IW4nwaKPpc=:ufjgXdB92V0iX3cCg4yhJR
+ qOKTpbG8IEXVc9mf+kw+X1g9uoYe/kz1l+aFev8BFWiy9LQti2PdIdbRwe0T5gRnQVqlau3ly
+ W2hYNtDhgcxc3MEvBcisGXRUI18OIbgOVZ1XhNl7fB7/RgIlOO/fV1i8wCaS2FNrgCkzfE7JO
+ CeE9Ui5egwOGlJQhM8C/qe3bWcNf7CC+p+Gj2NjDfhBzlckhgfWb7a7SaRsC3GK9GFwtayx4a
+ dykFbnT+8D70oQwP4lfuGXb2WZYJAexZaBoQ6RmiAuruKs71VeG/w8hJzqqF7uj0hZcqyfkUb
+ /WB5vP36e/Yj9H3lnKyHsxHXviad1ra81v9XB8Xi3sMj7FItiRH7roo3tiPYYZfYN29eMpsMN
+ 38zscdKthqPEL8ajBxcLNLj1hAgRs8V+M6LGK0pMjf0Bs9dt1GIrF/CRBEiSiivePIOLoGIn/
+ Exr0KHifAhxfFGRezQJFTjkZF10pTdSgcumsoPS3uBsu9o+lwrFj9yCczzY8k51FNrVfAnjud
+ gniAeXDA+9eiR0oaFRqJ3d2Uok2CW04dQzxWGxCJQmKV/eexHRqXS0Qe8jYZgRzOg+QnOTttG
+ /RiNEs9Xuo1uxjq087eekKZ6v1PcovVhTqZQuowGEFFCVR7/sb3vAqgOYtjiMDcdcktyio7XR
+ avMx69JcRYkthUamEpikmf1Tk+90sY3n3YrMiGstNxldLx6WqMhFrVvHXZsTle26NA6NtRB7A
+ pzZgHscvAc4sQCRXNBPlF7IQBnf9sqyiIT+4LDdnJCUCrlgnkybpP8XSBrAU2jasMleEAqlup
+ AwcXCRjC9+kYY1BDsEx3jDrm3xQ0PwxdOIhCnihMxd7sLJsH0S3xFALmODrXr2X6Lomke2yO/
+ y3MQy1ezmmbow0ANuBiZpxhEJ7Cf6rkw5hRLgfUK4znsFIlPCpXSLL02TQmJnu
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Aug 29, 2018 at 03:20:34PM -0700, Paul E. McKenney wrote:
-> RCU's dyntick-idle code is written to tolerate half-interrupts, that it,
-> either an interrupt that invokes rcu_irq_enter() but never invokes the
-> corresponding rcu_irq_exit() on the one hand, or an interrupt that never
-> invokes rcu_irq_enter() but does invoke the "corresponding" rcu_irq_exit()
-> on the other.  These things really did happen at one time, as evidenced
-> by this ca-2011 LKML post:
-> 
-> http://lkml.kernel.org/r/20111014170019.GE2428@linux.vnet.ibm.com
-> 
-> The reason why RCU tolerates half-interrupts is that usermode helpers
-> used exceptions to invoke a system call from within the kernel such that
-> the system call did a normal return (not a return from exception) to
-> the calling context.  This caused rcu_irq_enter() to be invoked without
-> a matching rcu_irq_exit().  However, usermode helpers have since been
-> rewritten to make much more housebroken use of workqueues, kernel threads,
-> and do_execve(), and therefore should no longer produce half-interrupts.
-> No one knows of any other source of half-interrupts, but then again,
-> no one seems insane enough to go audit the entire kernel to verify that
-> half-interrupts really are a relic of the past.
-> 
-> This commit therefore adds a pair of WARN_ON_ONCE() calls that will
-> trigger in the presence of half interrupts, which the code will continue
-> to handle correctly.  If neither of these WARN_ON_ONCE() trigger by
-> mid-2021, then perhaps RCU can stop handling half-interrupts, which
-> would be a considerable simplification.
+Formatting of Kconfig files doesn't look so pretty, so let the
+Great White Handkerchief come around and clean it up.
 
-Hi Paul and everyone,
-I was thinking some more about this patch and whether we can simplify this code
-much in 2021. Since 2021 is a bit far away, I thought working on it in again to
-keep it fresh in memory is a good idea ;-)
+Signed-off-by: Enrico Weigelt, metux IT consult <info@metux.net>
+---
+ arch/Kconfig | 94 ++++++++++++++++++++++++++++++------------------------------
+ 1 file changed, 47 insertions(+), 47 deletions(-)
 
-To me it seems we cannot easily combine the counters (dynticks_nesting and
-dynticks_nmi_nesting) even if we confirmed that there is no possibility of a
-half-interrupt scenario (assuming simplication means counter combining like
-Byungchul tried to do in https://goo.gl/X1U77X). The reason is because these
-2 counters need to be tracked separately as they are used differently in the
-following function:
+diff --git a/arch/Kconfig b/arch/Kconfig
+index 33687dd..41f9c4b 100644
+--- a/arch/Kconfig
++++ b/arch/Kconfig
+@@ -69,30 +69,30 @@ config KPROBES
+ 	  If in doubt, say "N".
+ 
+ config JUMP_LABEL
+-       bool "Optimize very unlikely/likely branches"
+-       depends on HAVE_ARCH_JUMP_LABEL
+-       depends on CC_HAS_ASM_GOTO
+-       help
+-         This option enables a transparent branch optimization that
+-	 makes certain almost-always-true or almost-always-false branch
+-	 conditions even cheaper to execute within the kernel.
+-
+-	 Certain performance-sensitive kernel code, such as trace points,
+-	 scheduler functionality, networking code and KVM have such
+-	 branches and include support for this optimization technique.
+-
+-         If it is detected that the compiler has support for "asm goto",
+-	 the kernel will compile such branches with just a nop
+-	 instruction. When the condition flag is toggled to true, the
+-	 nop will be converted to a jump instruction to execute the
+-	 conditional block of instructions.
+-
+-	 This technique lowers overhead and stress on the branch prediction
+-	 of the processor and generally makes the kernel faster. The update
+-	 of the condition is slower, but those are always very rare.
+-
+-	 ( On 32-bit x86, the necessary options added to the compiler
+-	   flags may increase the size of the kernel slightly. )
++	bool "Optimize very unlikely/likely branches"
++	depends on HAVE_ARCH_JUMP_LABEL
++	depends on CC_HAS_ASM_GOTO
++	help
++	  This option enables a transparent branch optimization that
++	  makes certain almost-always-true or almost-always-false branch
++	  conditions even cheaper to execute within the kernel.
++
++	  Certain performance-sensitive kernel code, such as trace points,
++	  scheduler functionality, networking code and KVM have such
++	  branches and include support for this optimization technique.
++
++	  If it is detected that the compiler has support for "asm goto",
++	  the kernel will compile such branches with just a nop
++	  instruction. When the condition flag is toggled to true, the
++	  nop will be converted to a jump instruction to execute the
++	  conditional block of instructions.
++
++	  This technique lowers overhead and stress on the branch prediction
++	  of the processor and generally makes the kernel faster. The update
++	  of the condition is slower, but those are always very rare.
++
++	  ( On 32-bit x86, the necessary options added to the compiler
++	    flags may increase the size of the kernel slightly. )
+ 
+ config STATIC_KEYS_SELFTEST
+ 	bool "Static key selftest"
+@@ -110,9 +110,9 @@ config KPROBES_ON_FTRACE
+ 	depends on KPROBES && HAVE_KPROBES_ON_FTRACE
+ 	depends on DYNAMIC_FTRACE_WITH_REGS
+ 	help
+-	 If function tracer is enabled and the arch supports full
+-	 passing of pt_regs to function tracing, then kprobes can
+-	 optimize on top of function tracing.
++	  If function tracer is enabled and the arch supports full
++	  passing of pt_regs to function tracing, then kprobes can
++	  optimize on top of function tracing.
+ 
+ config UPROBES
+ 	def_bool n
+@@ -164,23 +164,23 @@ config HAVE_EFFICIENT_UNALIGNED_ACCESS
+ 	  information on the topic of unaligned memory accesses.
+ 
+ config ARCH_USE_BUILTIN_BSWAP
+-       bool
+-       help
+-	 Modern versions of GCC (since 4.4) have builtin functions
+-	 for handling byte-swapping. Using these, instead of the old
+-	 inline assembler that the architecture code provides in the
+-	 __arch_bswapXX() macros, allows the compiler to see what's
+-	 happening and offers more opportunity for optimisation. In
+-	 particular, the compiler will be able to combine the byteswap
+-	 with a nearby load or store and use load-and-swap or
+-	 store-and-swap instructions if the architecture has them. It
+-	 should almost *never* result in code which is worse than the
+-	 hand-coded assembler in <asm/swab.h>.  But just in case it
+-	 does, the use of the builtins is optional.
+-
+-	 Any architecture with load-and-swap or store-and-swap
+-	 instructions should set this. And it shouldn't hurt to set it
+-	 on architectures that don't have such instructions.
++	bool
++	help
++	  Modern versions of GCC (since 4.4) have builtin functions
++	  for handling byte-swapping. Using these, instead of the old
++	  inline assembler that the architecture code provides in the
++	  __arch_bswapXX() macros, allows the compiler to see what's
++	  happening and offers more opportunity for optimisation. In
++	  particular, the compiler will be able to combine the byteswap
++	  with a nearby load or store and use load-and-swap or
++	  store-and-swap instructions if the architecture has them. It
++	  should almost *never* result in code which is worse than the
++	  hand-coded assembler in <asm/swab.h>.  But just in case it
++	  does, the use of the builtins is optional.
++
++	  Any architecture with load-and-swap or store-and-swap
++	  instructions should set this. And it shouldn't hurt to set it
++	  on architectures that don't have such instructions.
+ 
+ config KRETPROBES
+ 	def_bool y
+@@ -234,10 +234,10 @@ config HAVE_DMA_CONTIGUOUS
+ 	bool
+ 
+ config GENERIC_SMP_IDLE_THREAD
+-       bool
++	bool
+ 
+ config GENERIC_IDLE_POLL_SETUP
+-       bool
++	bool
+ 
+ config ARCH_HAS_FORTIFY_SOURCE
+ 	bool
+@@ -251,7 +251,7 @@ config ARCH_HAS_SET_MEMORY
+ 
+ # Select if arch init_task must go in the __init_task_data section
+ config ARCH_TASK_STRUCT_ON_STACK
+-       bool
++	bool
+ 
+ # Select if arch has its private alloc_task_struct() function
+ config ARCH_TASK_STRUCT_ALLOCATOR
+-- 
+1.9.1
 
-static int rcu_is_cpu_rrupt_from_idle(void)
-{
-        return __this_cpu_read(rcu_data.dynticks_nesting) <= 0 &&
-               __this_cpu_read(rcu_data.dynticks_nmi_nesting) <= 1;
-}
-
-dynticks_nesting actually tracks if we entered/exited idle or user mode.
-
-dynticks_nmi_nesting tracks if we entered/exited interrupts.
-
-We have to do the "dynticks_nmi_nesting <= 1" check because
-rcu_is_cpu_rrupt_from_idle() can possibly be called from an interrupt itself
-(like timer) so we discount 1 interrupt, and, the "dynticks_nesting <= 0"
-check is because the CPU MUST be in user or idle for the check to return
-true. We can't really combine these two into one counter then I think because
-they both convey different messages.
-
-The only simplication we can do, is probably the "crowbar" updates to
-dynticks_nmi_nesting can be removed from rcu_eqs_enter/exit once we confirm
-no more half-interrupts are possible. Which might still be a worthwhile thing
-to do (while still keeping both counters separate).
-
-However, I think we could combine the counters and lead to simplying the code
-in case we implement rcu_is_cpu_rrupt_from_idle differently such that it does
-not need the counters but NOHZ_FULL may take issue with that since it needs
-rcu_user_enter->rcu_eqs_enter to convey that the CPU is "RCU"-idle.
-
-Actually, I had another question... rcu_user_enter() is a NOOP in !NOHZ_FULL config.
-In this case I was wondering if the the warning Paul added (in the patch I'm replying to)
-will really get fired for half-interrupts. The vast majority of the systems I believe are
-NOHZ_IDLE not NOHZ_FULL.
-This is what a half-interrupt really looks like right? Please correct me if I'm wrong:
-rcu_irq_enter()   [half interrupt causes an exception and thus rcu_irq_enter]
-rcu_user_enter()  [due to usermode upcall]
-rcu_user_exit()
-(no more rcu_irq_exit() - hence half an interrupt)
-
-But the rcu_user_enter()/exit is a NOOP in some configs, so will the warning in
-rcu_eqs_e{xit,nter} really do anything?
-
-Or was the idea with adding the new warnings, that they would fire the next
-time rcu_idle_enter/exit is called? Like for example:
-
-rcu_irq_enter()   [This is due to half-interrupt]
-rcu_idle_enter()  [Eventually we enter the idle loop at some point
-		   after the half-interrupt and the rcu_eqs_enter()
-		   would "crowbar" the dynticks_nmi_nesting counter to 0].
-
-thanks!
-
- - Joel
-
-> 
-> Reported-by: Steven Rostedt <rostedt@goodmis.org>
-> Reported-by: Joel Fernandes <joel@joelfernandes.org>
-> Reported-by: Andy Lutomirski <luto@kernel.org>
-> Signed-off-by: Paul E. McKenney <paulmck@linux.vnet.ibm.com>
-> Reviewed-by: Joel Fernandes (Google) <joel@joelfernandes.org>
-> ---
->  kernel/rcu/tree.c | 2 ++
->  1 file changed, 2 insertions(+)
-> 
-> diff --git a/kernel/rcu/tree.c b/kernel/rcu/tree.c
-> index dc041c2afbcc..d2b6ade692c9 100644
-> --- a/kernel/rcu/tree.c
-> +++ b/kernel/rcu/tree.c
-> @@ -714,6 +714,7 @@ static void rcu_eqs_enter(bool user)
->  	struct rcu_dynticks *rdtp;
->  
->  	rdtp = this_cpu_ptr(&rcu_dynticks);
-> +	WARN_ON_ONCE(rdtp->dynticks_nmi_nesting != DYNTICK_IRQ_NONIDLE);
->  	WRITE_ONCE(rdtp->dynticks_nmi_nesting, 0);
->  	WARN_ON_ONCE(IS_ENABLED(CONFIG_RCU_EQS_DEBUG) &&
->  		     rdtp->dynticks_nesting == 0);
-> @@ -895,6 +896,7 @@ static void rcu_eqs_exit(bool user)
->  	trace_rcu_dyntick(TPS("End"), rdtp->dynticks_nesting, 1, rdtp->dynticks);
->  	WARN_ON_ONCE(IS_ENABLED(CONFIG_RCU_EQS_DEBUG) && !user && !is_idle_task(current));
->  	WRITE_ONCE(rdtp->dynticks_nesting, 1);
-> +	WARN_ON_ONCE(rdtp->dynticks_nmi_nesting);
->  	WRITE_ONCE(rdtp->dynticks_nmi_nesting, DYNTICK_IRQ_NONIDLE);
->  }
->  
-> -- 
-> 2.17.1
-> 
