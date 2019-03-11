@@ -2,107 +2,134 @@ Return-Path: <SRS0=FxTY=RO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_NEOMUTT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3A3DDC43381
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 Mar 2019 19:15:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8B7B7C43381
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 Mar 2019 19:17:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 17CD52087C
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 Mar 2019 19:15:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6C11A20883
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 Mar 2019 19:17:12 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728201AbfCKTP6 (ORCPT
+        id S1728059AbfCKTRL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 11 Mar 2019 15:15:58 -0400
-Received: from sauhun.de ([88.99.104.3]:59988 "EHLO pokefinder.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727469AbfCKTP5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 11 Mar 2019 15:15:57 -0400
-Received: from localhost (p54B3359D.dip0.t-ipconnect.de [84.179.53.157])
-        by pokefinder.org (Postfix) with ESMTPSA id E1C5F2C08C3;
-        Mon, 11 Mar 2019 20:15:55 +0100 (CET)
-Date:   Mon, 11 Mar 2019 20:15:55 +0100
-From:   Wolfram Sang <wsa@the-dreams.de>
-To:     Hans de Goede <hdegoede@redhat.com>
-Cc:     Jarkko Nikula <jarkko.nikula@linux.intel.com>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Mika Westerberg <mika.westerberg@linux.intel.com>,
-        Lee Jones <lee.jones@linaro.org>, linux-i2c@vger.kernel.org,
-        linux-acpi@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 2/2] mfd: intel-lpss: Add "linux,use-dynamic-adapter-nr"
- device-prop to i2c-devices
-Message-ID: <20190311191555.4dc2wbwqesqmn2kq@ninjato>
-References: <20190311112216.31391-1-hdegoede@redhat.com>
- <20190311112216.31391-3-hdegoede@redhat.com>
+        Mon, 11 Mar 2019 15:17:11 -0400
+Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:53614 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1727708AbfCKTRK (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 11 Mar 2019 15:17:10 -0400
+Received: from pps.filterd (m0098393.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x2BJ9Vah030887
+        for <linux-kernel@vger.kernel.org>; Mon, 11 Mar 2019 15:17:09 -0400
+Received: from e06smtp02.uk.ibm.com (e06smtp02.uk.ibm.com [195.75.94.98])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 2r5v10vvek-1
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
+        for <linux-kernel@vger.kernel.org>; Mon, 11 Mar 2019 15:17:08 -0400
+Received: from localhost
+        by e06smtp02.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
+        for <linux-kernel@vger.kernel.org> from <ldufour@linux.ibm.com>;
+        Mon, 11 Mar 2019 19:17:06 -0000
+Received: from b06cxnps4075.portsmouth.uk.ibm.com (9.149.109.197)
+        by e06smtp02.uk.ibm.com (192.168.101.132) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
+        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
+        Mon, 11 Mar 2019 19:17:03 -0000
+Received: from b06wcsmtp001.portsmouth.uk.ibm.com (b06wcsmtp001.portsmouth.uk.ibm.com [9.149.105.160])
+        by b06cxnps4075.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x2BJH2KF34930866
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Mon, 11 Mar 2019 19:17:02 GMT
+Received: from b06wcsmtp001.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 3E79EA4054;
+        Mon, 11 Mar 2019 19:17:02 +0000 (GMT)
+Received: from b06wcsmtp001.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 8D385A405C;
+        Mon, 11 Mar 2019 19:17:01 +0000 (GMT)
+Received: from pomme.aus.stglabs.ibm.com (unknown [9.145.164.181])
+        by b06wcsmtp001.portsmouth.uk.ibm.com (Postfix) with ESMTP;
+        Mon, 11 Mar 2019 19:17:01 +0000 (GMT)
+From:   Laurent Dufour <ldufour@linux.ibm.com>
+To:     linux-kernel@vger.kernel.org, linux-mm@kvack.org
+Cc:     stable@vger.kernel.org, Christoph Lameter <cl@linux.com>,
+        Pekka Enberg <penberg@kernel.org>,
+        David Rientjes <rientjes@google.com>,
+        Joonsoo Kim <iamjoonsoo.kim@lge.com>,
+        Andrew Morton <akpm@linux-foundation.org>
+Subject: [PATCH] mm/slab: protect cache_reap() against CPU and memory hot plug operations
+Date:   Mon, 11 Mar 2019 20:17:01 +0100
+X-Mailer: git-send-email 2.21.0
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="65wlv6bh3hk7fgyp"
-Content-Disposition: inline
-In-Reply-To: <20190311112216.31391-3-hdegoede@redhat.com>
-User-Agent: NeoMutt/20170113 (1.7.2)
+Content-Transfer-Encoding: 8bit
+X-TM-AS-GCONF: 00
+x-cbid: 19031119-0008-0000-0000-000002CB630F
+X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
+x-cbparentid: 19031119-0009-0000-0000-000022377F0E
+Message-Id: <20190311191701.24325-1-ldufour@linux.ibm.com>
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-03-11_14:,,
+ signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
+ malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
+ clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
+ mlxlogscore=999 adultscore=0 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.0.1-1810050000 definitions=main-1903110133
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+The commit 95402b382901 ("cpu-hotplug: replace per-subsystem mutexes with
+get_online_cpus()") remove the CPU_LOCK_ACQUIRE operation which was use to
+grap the cache_chain_mutex lock which was protecting cache_reap() against
+CPU hot plug operations.
 
---65wlv6bh3hk7fgyp
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Later the commit 18004c5d4084 ("mm, sl[aou]b: Use a common mutex
+definition") changed cache_chain_mutex to slab_mutex but this didn't help
+fixing the missing the cache_reap() protection against CPU hot plug
+operations.
 
-On Mon, Mar 11, 2019 at 12:22:16PM +0100, Hans de Goede wrote:
-> The i2c-designware-platdrv assumes that if the pdev has an apci-companion
-> it should use a dynamic adapter-nr and otherwise it will use pdev->id as
-> adapter-nr.
->=20
-> On some devices e.g. the Apollo Lake using Acer TravelMate Spin B118,
-> some of the LPSS i2c-adapters are enumerated through PCI and do not have
-> an ACPI fwnode. These devices are handled as mfd devices so they end up
-> using the i2c-designware-platdrv driver.
->=20
-> This results in the i2c-adapter being registered with the mfd generated
-> pdev->id as adapter-nr, which conflicts with existing adapters, triggering
-> a WARN(id < 0, "couldn't get idr") in i2c-core-base.c and causing the
-> adapter registration to fail.
->=20
-> To fix this the i2c-designware-platdrv now also supports a
-> "linux,use-dynamic-adapter-nr" device-property, which tells it to use a
-> dynamic adapter nr even if there is no ACPI fwnode for the device.
->=20
-> This commit adds this device-property to the properties list for PCI
-> enumerated LPSS i2c-adapters.
->=20
-> BugLink: https://bugzilla.redhat.com/show_bug.cgi?id=3D1687065
-> Signed-off-by: Hans de Goede <hdegoede@redhat.com>
+Here we are stopping the per cpu worker while holding the slab_mutex to
+ensure that cache_reap() is not running in our back and will not be
+triggered anymore for this cpu.
 
-You need to CC the devicetree ML on such patches. However, I am afraid I
-can pretty much NACK this one already. This is a Linux configuration
-item and DT is only for describing HW.
+This patch fixes that race leading to SLAB's data corruption when CPU
+hotplug are triggered. We hit it while doing partition migration on PowerVM
+leading to CPU reconfiguration through the CPU hotplug mechanism.
 
-Maybe the designware maintainers have a better idea how to achieve what
-you need.
+This fix is covering kernel containing to the commit 6731d4f12315 ("slab:
+Convert to hotplug state machine"), ie 4.9.1, earlier kernel needs a
+slightly different patch.
 
+Cc: stable@vger.kernel.org
+Cc: Christoph Lameter <cl@linux.com>
+Cc: Pekka Enberg <penberg@kernel.org>
+Cc: David Rientjes <rientjes@google.com>
+Cc: Joonsoo Kim <iamjoonsoo.kim@lge.com>
+Cc: Andrew Morton <akpm@linux-foundation.org>
+Signed-off-by: Laurent Dufour <ldufour@linux.ibm.com>
+---
+ mm/slab.c | 2 ++
+ 1 file changed, 2 insertions(+)
 
---65wlv6bh3hk7fgyp
-Content-Type: application/pgp-signature; name="signature.asc"
+diff --git a/mm/slab.c b/mm/slab.c
+index 28652e4218e0..ba499d90f27f 100644
+--- a/mm/slab.c
++++ b/mm/slab.c
+@@ -1103,6 +1103,7 @@ static int slab_online_cpu(unsigned int cpu)
+ 
+ static int slab_offline_cpu(unsigned int cpu)
+ {
++	mutex_lock(&slab_mutex);
+ 	/*
+ 	 * Shutdown cache reaper. Note that the slab_mutex is held so
+ 	 * that if cache_reap() is invoked it cannot do anything
+@@ -1112,6 +1113,7 @@ static int slab_offline_cpu(unsigned int cpu)
+ 	cancel_delayed_work_sync(&per_cpu(slab_reap_work, cpu));
+ 	/* Now the cache_reaper is guaranteed to be not running. */
+ 	per_cpu(slab_reap_work, cpu).work.func = NULL;
++	mutex_unlock(&slab_mutex);
+ 	return 0;
+ }
+ 
+-- 
+2.21.0
 
------BEGIN PGP SIGNATURE-----
-
-iQIzBAABCAAdFiEEOZGx6rniZ1Gk92RdFA3kzBSgKbYFAlyGs+sACgkQFA3kzBSg
-Kbb7MA//dTFm2uJgtmWTwBlX6sv2c8KRgO7GDWntvUTY28kOHNx/Ow6noezZBgds
-UXsUVjHXsdFiqClRrTewJVqzSLTAg4H8dtN1PTmjLfcPTLj/GJr4hAgpc7Ue6nbk
-DrzxwTY1OsSQUkJf5q85ReIUyE2vDmadokxeIf08hwE6HZ/FHlrbCFx6ooGkKoL7
-R8y59uyo7npXa4uEPniSB0lRue6EbnHkNvni0HoJwzWXJcEsH8yyOBjJOz9ufugw
-/ih25THatp/7q7Z7GO10Dh+v4vJ/ezY++DfLMslUsjWxep/6+fc2I+YtmJz0a2zu
-6u2K1Emewd7Rp0RnETHzUjxUippHdCgx8nkKS95DZCME3IdfhRBTcYolC8t726BH
-kt043d3+j14KBKXPpqKhlIS0tYdlbZsYhJYAWi9tnggeWT6ZfBsG7HcEypEPNyik
-+OFf2eobzLua+BR+dkI0jylCSVOTjvoOzdbhifiI9GxcaSf7ke/gv2GLqwvDqMT0
-UKaVwfKQIoZuoPQjf1d3eqOszHmUZOlkYNkQkyJLhEIG18HitrkViIatyUG7HWQv
-eh3Vv84gDvAacBiQcyIp98T458MDLbbf3XfSAT3+v6czBD912vTz1D+vNBoX1dAD
-Y2wfvW5QGF4PhZ9kDQeZCcqn90M+kw0rQxMkm75e9hV8odqRjJI=
-=cXel
------END PGP SIGNATURE-----
-
---65wlv6bh3hk7fgyp--
