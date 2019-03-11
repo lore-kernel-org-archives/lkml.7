@@ -7,59 +7,58 @@ X-Spam-Status: No, score=-12.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_PASS autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8734FC43381
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 Mar 2019 17:23:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7F42EC43381
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 Mar 2019 17:24:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5929820643
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 Mar 2019 17:23:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 50FA92063F
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 Mar 2019 17:24:05 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1552325037;
-	bh=32sY2VJ2fJRT9iOczDrV9SLBbZfg2AesWyy4JKgrT9Y=;
+	s=default; t=1552325045;
+	bh=Pqe5qUPixoz51dE/iPu56iH0L7KMyaaRw9jdITC4IKM=;
 	h=From:To:Cc:Subject:In-Reply-To:Date:List-ID:From;
-	b=z/nfa3phnIxFwyaBoIGczMpu7f9Dc+U5j0HetdRKGNA40YychYGP7CEylywPDlAP8
-	 9QdVsP/D8qOyf/yyRpSt/ABFHTt75gkkYTaEvmyb6nvz3FnbRiXyehHKg5ID7erMFM
-	 Imyfqr6khAU292hfJSZrL0jLIeBkOMiX2H/XSfXM=
+	b=qa++lNyYwe7bkIJ0tUh6WKHv8rKt7tZDsYDTq24+TV+3IE61ttnBqfb8XeFjsFWul
+	 SUpJkTpOy6QVl3LlvrcjoV/a3IsQSV+3HILo+ky/sZszrWpUGmCIyGvPPcMPhhcVSO
+	 zfwXqox+tuFCpu8CjwTSPNaVJssA/1pXSwY0K11E=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728086AbfCKRX4 (ORCPT
+        id S1728132AbfCKRYD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 11 Mar 2019 13:23:56 -0400
-Received: from heliosphere.sirena.org.uk ([172.104.155.198]:50158 "EHLO
+        Mon, 11 Mar 2019 13:24:03 -0400
+Received: from heliosphere.sirena.org.uk ([172.104.155.198]:50496 "EHLO
         heliosphere.sirena.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727905AbfCKRXu (ORCPT
+        with ESMTP id S1728088AbfCKRX7 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 11 Mar 2019 13:23:50 -0400
+        Mon, 11 Mar 2019 13:23:59 -0400
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
         d=sirena.org.uk; s=20170815-heliosphere; h=Date:Message-Id:In-Reply-To:
         Subject:Cc:To:From:Sender:Reply-To:MIME-Version:Content-Type:
         Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
         Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:References:
         List-Id:List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:
-        List-Archive; bh=ZfrutqsiZJ38u1YCAk4p/vLQ5O1cgNIaeMLtaQ47Fi0=; b=OLVJ+wxo/+Pa
-        6J9jZhvoPG28yOOJuLgOVsEpn/gQc8BLGm4gu12Qdt4Q1aF0JxMFn6qo0YZeu+irrcfj7g5hZyWmf
-        d+opItX+bzDP/w9T6OLSLDKo0H6mFFk+AgTl28emf62rr+YiJORIIhB4WfzBGH+jvRnpPDFdBKeDE
-        zAJQQ=;
+        List-Archive; bh=e66MHKtgtjsKcdJyO3q9b1HmidwPpQhR0oda6cXIg6I=; b=kDdemKIgXsXe
+        2Zb+JuUD5j9o0o9E16V2xfyiiEkEK9rP7N4cQkRjfBbxavpH4ciZu6ei+Q9ux8+T3X5N/74PRMJjx
+        d1M7G2MvuzAZI0d2l8WKQYXpUVX8/5wYvLZg04IwlHEOvviCyZR/54qQX6aGex+6pf21if43x3P1t
+        kVfFg=;
 Received: from cpc102320-sgyl38-2-0-cust46.18-2.cable.virginm.net ([82.37.168.47] helo=debutante.sirena.org.uk)
         by heliosphere.sirena.org.uk with esmtpa (Exim 4.89)
         (envelope-from <broonie@sirena.org.uk>)
-        id 1h3OeK-0005M9-Lb; Mon, 11 Mar 2019 17:23:40 +0000
+        id 1h3OeR-0005Mj-3e; Mon, 11 Mar 2019 17:23:47 +0000
 Received: by debutante.sirena.org.uk (Postfix, from userid 1000)
-        id 133D41128896; Mon, 11 Mar 2019 17:23:40 +0000 (GMT)
+        id A663B1128896; Mon, 11 Mar 2019 17:23:46 +0000 (GMT)
 From:   Mark Brown <broonie@kernel.org>
-To:     Arnd Bergmann <arnd@arndb.de>
-Cc:     Mark Brown <broonie@kernel.org>,
-        Peter Ujfalusi <peter.ujfalusi@ti.com>,
-        Mark Brown <broonie@kernel.org>, alsa-devel@alsa-project.org,
-        linux-kernel@vger.kernel.org, Tony Lindgren <tony@atomide.com>,
-        Nick Desaulniers <ndesaulniers@google.com>,
-        Takashi Iwai <tiwai@suse.com>,
-        Liam Girdwood <lgirdwood@gmail.com>,
-        Jarkko Nikula <jarkko.nikula@bitmer.com>,
+To:     Olivier Moysan <olivier.moysan@st.com>
+Cc:     Mark Brown <broonie@kernel.org>, lgirdwood@gmail.com,
+        broonie@kernel.org, perex@perex.cz, tiwai@suse.com,
+        mcoquelin.stm32@gmail.com, alexandre.torgue@st.com,
+        alsa-devel@alsa-project.org, linux-arm-kernel@lists.infradead.org,
+        linux-stm32@st-md-mailman.stormreply.com,
+        linux-kernel@vger.kernel.org, olivier.moysan@st.com,
+        arnaud.pouliquen@st.com, benjamin.gaignard@st.com,
         alsa-devel@alsa-project.org
-Subject: Applied "ASoC: ams-delta: remove duplicate 'const'" to the asoc tree
-In-Reply-To:  <20190307101101.613881-1-arnd@arndb.de>
+Subject: Applied "ASoC: stm32: i2s: improve channel capabilities handling" to the asoc tree
+In-Reply-To:  <1552317990-24219-3-git-send-email-olivier.moysan@st.com>
 X-Patchwork-Hint: ignore
-Message-Id: <20190311172340.133D41128896@debutante.sirena.org.uk>
-Date:   Mon, 11 Mar 2019 17:23:40 +0000 (GMT)
+Message-Id: <20190311172346.A663B1128896@debutante.sirena.org.uk>
+Date:   Mon, 11 Mar 2019 17:23:46 +0000 (GMT)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
@@ -67,7 +66,7 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 The patch
 
-   ASoC: ams-delta: remove duplicate 'const'
+   ASoC: stm32: i2s: improve channel capabilities handling
 
 has been applied to the asoc tree at
 
@@ -92,41 +91,49 @@ to this mail.
 Thanks,
 Mark
 
-From c9fbc1c02ec881c8bb037f87efb706d22589fdab Mon Sep 17 00:00:00 2001
-From: Arnd Bergmann <arnd@arndb.de>
-Date: Thu, 7 Mar 2019 11:10:49 +0100
-Subject: [PATCH] ASoC: ams-delta: remove duplicate 'const'
+From c2dc8b2c114c22d7a04cf26a7c7d04faaa757143 Mon Sep 17 00:00:00 2001
+From: Olivier Moysan <olivier.moysan@st.com>
+Date: Mon, 11 Mar 2019 16:26:29 +0100
+Subject: [PATCH] ASoC: stm32: i2s: improve channel capabilities handling
 
-clang points out that SOC_ENUM_SINGLE_EXT_DECL() contains a 'const'
-modifier already, so adding another one does not make it more const:
+Use alsa snd_pcm_hw_constraint_single service to manage
+channels restriction. This provides better status on driver
+limitations, to the application.
 
-sound/soc/ti/ams-delta.c:203:14: error: duplicate 'const' declaration specifier [-Werror,-Wduplicate-decl-specifier]
-static const SOC_ENUM_SINGLE_EXT_DECL(ams_delta_audio_enum,
-             ^
-include/sound/soc.h:351:2: note: expanded from macro 'SOC_ENUM_SINGLE_EXT_DECL'
-        const struct soc_enum name = SOC_ENUM_SINGLE_EXT(ARRAY_SIZE(xtexts), xtexts)
-
-Signed-off-by: Arnd Bergmann <arnd@arndb.de>
-Reviewed-by: Peter Ujfalusi <peter.ujfalusi@ti.com>
-Reviewed-by: Nathan Chancellor <natechancellor@gmail.com>
+Signed-off-by: Olivier Moysan <olivier.moysan@st.com>
 Signed-off-by: Mark Brown <broonie@kernel.org>
 ---
- sound/soc/ti/ams-delta.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ sound/soc/stm/stm32_i2s.c | 10 ++++------
+ 1 file changed, 4 insertions(+), 6 deletions(-)
 
-diff --git a/sound/soc/ti/ams-delta.c b/sound/soc/ti/ams-delta.c
-index 4dce494dfbd3..b9611db14c86 100644
---- a/sound/soc/ti/ams-delta.c
-+++ b/sound/soc/ti/ams-delta.c
-@@ -200,7 +200,7 @@ static int ams_delta_get_audio_mode(struct snd_kcontrol *kcontrol,
- 	return 0;
- }
+diff --git a/sound/soc/stm/stm32_i2s.c b/sound/soc/stm/stm32_i2s.c
+index 783b33497435..06bbbef74b3a 100644
+--- a/sound/soc/stm/stm32_i2s.c
++++ b/sound/soc/stm/stm32_i2s.c
+@@ -496,12 +496,6 @@ static int stm32_i2s_configure(struct snd_soc_dai *cpu_dai,
+ 	unsigned int fthlv;
+ 	int ret;
  
--static const SOC_ENUM_SINGLE_EXT_DECL(ams_delta_audio_enum,
-+static SOC_ENUM_SINGLE_EXT_DECL(ams_delta_audio_enum,
- 				      ams_delta_audio_mode);
+-	if ((params_channels(params) == 1) &&
+-	    ((i2s->fmt & SND_SOC_DAIFMT_FORMAT_MASK) != SND_SOC_DAIFMT_DSP_A)) {
+-		dev_err(cpu_dai->dev, "Mono mode supported only by DSP_A\n");
+-		return -EINVAL;
+-	}
+-
+ 	switch (format) {
+ 	case 16:
+ 		cfgr = I2S_CGFR_DATLEN_SET(I2S_I2SMOD_DATLEN_16);
+@@ -551,6 +545,10 @@ static int stm32_i2s_startup(struct snd_pcm_substream *substream,
+ 	i2s->substream = substream;
+ 	spin_unlock_irqrestore(&i2s->irq_lock, flags);
  
- static const struct snd_kcontrol_new ams_delta_audio_controls[] = {
++	if ((i2s->fmt & SND_SOC_DAIFMT_FORMAT_MASK) != SND_SOC_DAIFMT_DSP_A)
++		snd_pcm_hw_constraint_single(substream->runtime,
++					     SNDRV_PCM_HW_PARAM_CHANNELS, 2);
++
+ 	ret = clk_prepare_enable(i2s->i2sclk);
+ 	if (ret < 0) {
+ 		dev_err(cpu_dai->dev, "Failed to enable clock: %d\n", ret);
 -- 
 2.20.1
 
