@@ -2,115 +2,152 @@ Return-Path: <SRS0=FxTY=RO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B85B8C43381
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 Mar 2019 08:29:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3C4B4C43381
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 Mar 2019 08:30:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8FA7E20643
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 Mar 2019 08:29:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D1E8620643
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 Mar 2019 08:30:32 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=c-s.fr header.i=@c-s.fr header.b="LJD/TT88"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726999AbfCKI3x (ORCPT
+        id S1727030AbfCKIaa (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 11 Mar 2019 04:29:53 -0400
-Received: from szxga04-in.huawei.com ([45.249.212.190]:4666 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1725831AbfCKI3w (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 11 Mar 2019 04:29:52 -0400
-Received: from DGGEMS406-HUB.china.huawei.com (unknown [172.30.72.58])
-        by Forcepoint Email with ESMTP id 10505851703A1F03DFF0;
-        Mon, 11 Mar 2019 16:29:50 +0800 (CST)
-Received: from [127.0.0.1] (10.184.189.20) by DGGEMS406-HUB.china.huawei.com
- (10.3.19.206) with Microsoft SMTP Server id 14.3.408.0; Mon, 11 Mar 2019
- 16:29:41 +0800
-To:     <davem@davemloft.net>, <kuznet@ms2.inr.ac.ru>,
-        <yoshfuji@linux-ipv6.org>, <netdev@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>
-CC:     Mingfangsen <mingfangsen@huawei.com>
-From:   linmiaohe <linmiaohe@huawei.com>
-Subject: [PATCH net] net: sit: fix UBSAN Undefined behaviour in check_6rd
-Message-ID: <694fb074-53a3-af60-6561-57c022445a48@huawei.com>
-Date:   Mon, 11 Mar 2019 16:29:32 +0800
-User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:60.0) Gecko/20100101
- Thunderbird/60.5.1
-MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.184.189.20]
-X-CFilter-Loop: Reflected
+        Mon, 11 Mar 2019 04:30:30 -0400
+Received: from pegase1.c-s.fr ([93.17.236.30]:57540 "EHLO pegase1.c-s.fr"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726074AbfCKIaa (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 11 Mar 2019 04:30:30 -0400
+Received: from localhost (mailhub1-int [192.168.12.234])
+        by localhost (Postfix) with ESMTP id 44Hrrv5c3qzB09ZG;
+        Mon, 11 Mar 2019 09:30:23 +0100 (CET)
+Authentication-Results: localhost; dkim=pass
+        reason="1024-bit key; insecure key"
+        header.d=c-s.fr header.i=@c-s.fr header.b=LJD/TT88; dkim-adsp=pass;
+        dkim-atps=neutral
+X-Virus-Scanned: Debian amavisd-new at c-s.fr
+Received: from pegase1.c-s.fr ([192.168.12.234])
+        by localhost (pegase1.c-s.fr [192.168.12.234]) (amavisd-new, port 10024)
+        with ESMTP id ZLVP7xvMeONR; Mon, 11 Mar 2019 09:30:23 +0100 (CET)
+Received: from messagerie.si.c-s.fr (messagerie.si.c-s.fr [192.168.25.192])
+        by pegase1.c-s.fr (Postfix) with ESMTP id 44Hrrv4WVvzB09ZD;
+        Mon, 11 Mar 2019 09:30:23 +0100 (CET)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=c-s.fr; s=mail;
+        t=1552293023; bh=OGZz0Q4R6Zdt3TK+8zOZmGmuwyLbFuizUxlVfu9yL9A=;
+        h=In-Reply-To:References:From:Subject:To:Cc:Date:From;
+        b=LJD/TT887bLaODNMA/oS7jf1JB3Q2Of7WbGD4XWOuFBC1UUqnssCeA80DLIkYqf2H
+         UhFcQJrQrguA+SloLKJsfQdf+/hbGKZHiGnz/co3PqwK88Hl/Xg4RVQEPkk3R9tg/O
+         0M0WNgMAyl9O1By6Iun5Bc4+XFB0sl7v703Z3L20=
+Received: from localhost (localhost [127.0.0.1])
+        by messagerie.si.c-s.fr (Postfix) with ESMTP id 26C938B813;
+        Mon, 11 Mar 2019 09:30:28 +0100 (CET)
+X-Virus-Scanned: amavisd-new at c-s.fr
+Received: from messagerie.si.c-s.fr ([127.0.0.1])
+        by localhost (messagerie.si.c-s.fr [127.0.0.1]) (amavisd-new, port 10023)
+        with ESMTP id 7A7YHdLI4gQ3; Mon, 11 Mar 2019 09:30:28 +0100 (CET)
+Received: from po16846vm.idsi0.si.c-s.fr (po15451.idsi0.si.c-s.fr [172.25.231.2])
+        by messagerie.si.c-s.fr (Postfix) with ESMTP id 00DAA8B7FE;
+        Mon, 11 Mar 2019 09:30:27 +0100 (CET)
+Received: by po16846vm.idsi0.si.c-s.fr (Postfix, from userid 0)
+        id ED3AC6FA08; Mon, 11 Mar 2019 08:30:27 +0000 (UTC)
+Message-Id: <b348c3da010023d1c163ddd527aab6aba87f73ee.1552292207.git.christophe.leroy@c-s.fr>
+In-Reply-To: <cover.1552292207.git.christophe.leroy@c-s.fr>
+References: <cover.1552292207.git.christophe.leroy@c-s.fr>
+From:   Christophe Leroy <christophe.leroy@c-s.fr>
+Subject: [PATCH v2 01/10] powerpc/6xx: fix setup and use of SPRN_SPRG_PGDIR
+ for hash32
+To:     Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        Paul Mackerras <paulus@samba.org>,
+        Michael Ellerman <mpe@ellerman.id.au>, ruscur@russell.cc
+Cc:     linux-kernel@vger.kernel.org, linuxppc-dev@lists.ozlabs.org
+Date:   Mon, 11 Mar 2019 08:30:27 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Miaohe Lin <linmiaohe@huawei.com>
+Not only the 603 but all 6xx need SPRN_SPRG_PGDIR to be initialised at
+startup. This patch move it from __setup_cpu_603() to start_here()
+and __secondary_start(), close to the initialisation of SPRN_THREAD.
 
-In func check_6rd,tunnel->ip6rd.relay_prefixlen may equal to
-32,so UBSAN complain about it.
+Previously, virt addr of PGDIR was retrieved from thread struct.
+Now that it is the phys addr which is stored in SPRN_SPRG_PGDIR,
+hash_page() shall not convert it to phys anymore.
+This patch removes the conversion.
 
-UBSAN: Undefined behaviour in net/ipv6/sit.c:781:47
-shift exponent 32 is too large for 32-bit type 'unsigned int'
-CPU: 6 PID: 20036 Comm: syz-executor.0 Not tainted 4.19.27 #2
-Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS 1.10.2-1ubuntu1
-04/01/2014
-Call Trace:
-__dump_stack lib/dump_stack.c:77 [inline]
-dump_stack+0xca/0x13e lib/dump_stack.c:113
-ubsan_epilogue+0xe/0x81 lib/ubsan.c:159
-__ubsan_handle_shift_out_of_bounds+0x293/0x2e8 lib/ubsan.c:425
-check_6rd.constprop.9+0x433/0x4e0 net/ipv6/sit.c:781
-try_6rd net/ipv6/sit.c:806 [inline]
-ipip6_tunnel_xmit net/ipv6/sit.c:866 [inline]
-sit_tunnel_xmit+0x141c/0x2720 net/ipv6/sit.c:1033
-__netdev_start_xmit include/linux/netdevice.h:4300 [inline]
-netdev_start_xmit include/linux/netdevice.h:4309 [inline]
-xmit_one net/core/dev.c:3243 [inline]
-dev_hard_start_xmit+0x17c/0x780 net/core/dev.c:3259
-__dev_queue_xmit+0x1656/0x2500 net/core/dev.c:3829
-neigh_output include/net/neighbour.h:501 [inline]
-ip6_finish_output2+0xa36/0x2290 net/ipv6/ip6_output.c:120
-ip6_finish_output+0x3e7/0xa20 net/ipv6/ip6_output.c:154
-NF_HOOK_COND include/linux/netfilter.h:278 [inline]
-ip6_output+0x1e2/0x720 net/ipv6/ip6_output.c:171
-dst_output include/net/dst.h:444 [inline]
-ip6_local_out+0x99/0x170 net/ipv6/output_core.c:176
-ip6_send_skb+0x9d/0x2f0 net/ipv6/ip6_output.c:1697
-ip6_push_pending_frames+0xc0/0x100 net/ipv6/ip6_output.c:1717
-rawv6_push_pending_frames net/ipv6/raw.c:616 [inline]
-rawv6_sendmsg+0x2435/0x3530 net/ipv6/raw.c:946
-inet_sendmsg+0xf8/0x5c0 net/ipv4/af_inet.c:798
-sock_sendmsg_nosec net/socket.c:621 [inline]
-sock_sendmsg+0xc8/0x110 net/socket.c:631
-___sys_sendmsg+0x6cf/0x890 net/socket.c:2114
-__sys_sendmsg+0xf0/0x1b0 net/socket.c:2152
-do_syscall_64+0xc8/0x580 arch/x86/entry/common.c:290
-entry_SYSCALL_64_after_hwframe+0x49/0xbe
-
-Signed-off-by: linmiaohe <linmiaohe@huawei.com>
+Fixes: 93c4a162b014("powerpc/6xx: Store PGDIR physical address in a SPRG")
+Reported-by: Guenter Roeck <linux@roeck-us.net>
+Tested-by: Guenter Roeck <linux@roeck-us.net>
+Signed-off-by: Christophe Leroy <christophe.leroy@c-s.fr>
 ---
- net/ipv6/sit.c | 5 +++--
- 1 file changed, 3 insertions(+), 2 deletions(-)
+ arch/powerpc/kernel/cpu_setup_6xx.S | 3 ---
+ arch/powerpc/kernel/head_32.S       | 6 ++++++
+ arch/powerpc/mm/hash_low_32.S       | 8 ++++----
+ 3 files changed, 10 insertions(+), 7 deletions(-)
 
-diff --git a/net/ipv6/sit.c b/net/ipv6/sit.c
-index 09e440e8dfae..07e21a82ce4c 100644
---- a/net/ipv6/sit.c
-+++ b/net/ipv6/sit.c
-@@ -778,8 +778,9 @@ static bool check_6rd(struct ip_tunnel *tunnel, const struct in6_addr *v6dst,
- 		pbw0 = tunnel->ip6rd.prefixlen >> 5;
- 		pbi0 = tunnel->ip6rd.prefixlen & 0x1f;
-
--		d = (ntohl(v6dst->s6_addr32[pbw0]) << pbi0) >>
--		    tunnel->ip6rd.relay_prefixlen;
-+		d = tunnel->ip6rd.relay_prefixlen < 32 ?
-+			(ntohl(v6dst->s6_addr32[pbw0]) << pbi0) >>
-+		    tunnel->ip6rd.relay_prefixlen : 0;
-
- 		pbi1 = pbi0 - tunnel->ip6rd.relay_prefixlen;
- 		if (pbi1 > 0)
+diff --git a/arch/powerpc/kernel/cpu_setup_6xx.S b/arch/powerpc/kernel/cpu_setup_6xx.S
+index 6f1c11e0691f..7534ecff5e92 100644
+--- a/arch/powerpc/kernel/cpu_setup_6xx.S
++++ b/arch/powerpc/kernel/cpu_setup_6xx.S
+@@ -24,9 +24,6 @@ BEGIN_MMU_FTR_SECTION
+ 	li	r10,0
+ 	mtspr	SPRN_SPRG_603_LRU,r10		/* init SW LRU tracking */
+ END_MMU_FTR_SECTION_IFSET(MMU_FTR_NEED_DTLB_SW_LRU)
+-	lis	r10, (swapper_pg_dir - PAGE_OFFSET)@h
+-	ori	r10, r10, (swapper_pg_dir - PAGE_OFFSET)@l
+-	mtspr	SPRN_SPRG_PGDIR, r10
+ 
+ BEGIN_FTR_SECTION
+ 	bl	__init_fpu_registers
+diff --git a/arch/powerpc/kernel/head_32.S b/arch/powerpc/kernel/head_32.S
+index ce6a972f2584..48051c8977c5 100644
+--- a/arch/powerpc/kernel/head_32.S
++++ b/arch/powerpc/kernel/head_32.S
+@@ -855,6 +855,9 @@ __secondary_start:
+ 	li	r3,0
+ 	stw	r3, RTAS_SP(r4)		/* 0 => not in RTAS */
+ #endif
++	lis	r4, (swapper_pg_dir - PAGE_OFFSET)@h
++	ori	r4, r4, (swapper_pg_dir - PAGE_OFFSET)@l
++	mtspr	SPRN_SPRG_PGDIR, r4
+ 
+ 	/* enable MMU and jump to start_secondary */
+ 	li	r4,MSR_KERNEL
+@@ -942,6 +945,9 @@ start_here:
+ 	li	r3,0
+ 	stw	r3, RTAS_SP(r4)		/* 0 => not in RTAS */
+ #endif
++	lis	r4, (swapper_pg_dir - PAGE_OFFSET)@h
++	ori	r4, r4, (swapper_pg_dir - PAGE_OFFSET)@l
++	mtspr	SPRN_SPRG_PGDIR, r4
+ 
+ 	/* stack */
+ 	lis	r1,init_thread_union@ha
+diff --git a/arch/powerpc/mm/hash_low_32.S b/arch/powerpc/mm/hash_low_32.S
+index 1f13494efb2b..a6c491f18a04 100644
+--- a/arch/powerpc/mm/hash_low_32.S
++++ b/arch/powerpc/mm/hash_low_32.S
+@@ -70,12 +70,12 @@ _GLOBAL(hash_page)
+ 	lis	r0,KERNELBASE@h		/* check if kernel address */
+ 	cmplw	0,r4,r0
+ 	ori	r3,r3,_PAGE_USER|_PAGE_PRESENT /* test low addresses as user */
+-	mfspr	r5, SPRN_SPRG_PGDIR	/* virt page-table root */
++	mfspr	r5, SPRN_SPRG_PGDIR	/* phys page-table root */
+ 	blt+	112f			/* assume user more likely */
+-	lis	r5,swapper_pg_dir@ha	/* if kernel address, use */
+-	addi	r5,r5,swapper_pg_dir@l	/* kernel page table */
++	lis	r5, (swapper_pg_dir - PAGE_OFFSET)@ha	/* if kernel address, use */
++	addi	r5 ,r5 ,(swapper_pg_dir - PAGE_OFFSET)@l	/* kernel page table */
+ 	rlwimi	r3,r9,32-12,29,29	/* MSR_PR -> _PAGE_USER */
+-112:	tophys(r5, r5)
++112:
+ #ifndef CONFIG_PTE_64BIT
+ 	rlwimi	r5,r4,12,20,29		/* insert top 10 bits of address */
+ 	lwz	r8,0(r5)		/* get pmd entry */
 -- 
-2.16.2
-
+2.13.3
 
