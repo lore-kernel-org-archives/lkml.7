@@ -2,94 +2,111 @@ Return-Path: <SRS0=FxTY=RO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_MUTT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 23727C43381
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 Mar 2019 18:32:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1603CC43381
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 Mar 2019 18:34:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E56E520657
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 Mar 2019 18:32:27 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="HZ9Mj6kr"
+	by mail.kernel.org (Postfix) with ESMTP id E370820657
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 Mar 2019 18:34:14 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727362AbfCKSc0 (ORCPT
+        id S1727500AbfCKSeN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 11 Mar 2019 14:32:26 -0400
-Received: from mail-wr1-f68.google.com ([209.85.221.68]:33460 "EHLO
-        mail-wr1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726641AbfCKScZ (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 11 Mar 2019 14:32:25 -0400
-Received: by mail-wr1-f68.google.com with SMTP id i8so16461wrm.0
-        for <linux-kernel@vger.kernel.org>; Mon, 11 Mar 2019 11:32:24 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=FFJcWlvldHTmrlLPlzcIYgOszRXJkvCIhv8XHtPEruQ=;
-        b=HZ9Mj6krz57s8G7uD+uO5HFkG/G8hfOqNuSFBog1yIJzT8RAhOq0XUh6dY+ok4iNfl
-         W7h5tfqsvloH+p5NKcY8GnptDqJuWq+WPE5OD0MKQnwh8Blp7OsLmZMq6Ctyudw9ZdH9
-         FVu6NnML0fhRcz5s5sy1DO9JA+3LpdGaypUaNu7swd8rCCVVW+G+QNSb3whTq1u+gVFy
-         jH8E7QSIiB5zI+7FUspeeQgRmKLEplrVVddGYsKMZksyulfOVy7mJF2GUMJFo4X3RVRt
-         9+D1tmiHaRBqXJI12NIfZJDEvWxz1jT59A2TIYrL0WMWOnoa9+54suEVu2oPCmGBlZgG
-         bnzQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=FFJcWlvldHTmrlLPlzcIYgOszRXJkvCIhv8XHtPEruQ=;
-        b=hWFBpd2V4xbWI++3htVe1WRqJVe4trkoo8UFAofmTTZUT3ENaZttxIR1GKtf4TyL2F
-         sRnhjeTPzLmNTXxIrpb18DpgLHsNIs2F4B/vl4c7fKrpyXV+mLF9Vq413zus+59r74/R
-         YHZfSutOcmsi53EZMgRg0aaIeUgwhFU0Ifue1Qw6FUCr5Iz0aVQBaDPNi/aa1r/xqAKe
-         Vywg1r9wFgzDOpV9ezb8uf9bYJ0H8TWdBc++cAV7l4nYfPKXN8I9WI5YEWzRZJ5HsGdZ
-         GQLhp7t3IwUxMDRzlEgF3oWAG+oLB76ZE2mKvsuAzBHm0OV5ztZZiTTcZXbTpB9ZP4D3
-         Q/YQ==
-X-Gm-Message-State: APjAAAWHR0KNg16Y740SVxsuXDQF+O+5HxgrWoyNWMeJTDWESxx6vj53
-        M4+zHa+zu9lE9I2XLbyR0GH7+mUA06Cy3TLm+VI=
-X-Google-Smtp-Source: APXvYqyXBtN3KhtnvCk+rGNkx06i80eIHigKztUlVTCpuJ1oE3S8LGRUOQUGwkVbuTc8lwGd7dlSd3d1hb6L/IqS7VE=
-X-Received: by 2002:adf:e548:: with SMTP id z8mr21787507wrm.52.1552329143965;
- Mon, 11 Mar 2019 11:32:23 -0700 (PDT)
+        Mon, 11 Mar 2019 14:34:13 -0400
+Received: from foss.arm.com ([217.140.101.70]:58722 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726641AbfCKSeN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 11 Mar 2019 14:34:13 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.72.51.249])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id AD7E8374;
+        Mon, 11 Mar 2019 11:34:12 -0700 (PDT)
+Received: from e107155-lin (e107155-lin.cambridge.arm.com [10.1.196.42])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id B6A9F3F614;
+        Mon, 11 Mar 2019 11:34:09 -0700 (PDT)
+Date:   Mon, 11 Mar 2019 18:34:03 +0000
+From:   Sudeep Holla <sudeep.holla@arm.com>
+To:     "Haibo Xu (Arm Technology China)" <Haibo.Xu@arm.com>
+Cc:     "x86@kernel.org" <x86@kernel.org>,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "linuxppc-dev@lists.ozlabs.org" <linuxppc-dev@lists.ozlabs.org>,
+        Catalin Marinas <Catalin.Marinas@arm.com>,
+        Will Deacon <Will.Deacon@arm.com>,
+        Oleg Nesterov <oleg@redhat.com>,
+        Paul Mackerras <paulus@samba.org>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>,
+        Richard Weinberger <richard@nod.at>,
+        "jdike@addtoit.com" <jdike@addtoit.com>,
+        Steve Capper <Steve.Capper@arm.com>,
+        "Bin Lu (Arm Technology China)" <Bin.Lu@arm.com>,
+        Andy Lutomirski <luto@kernel.org>,
+        Borislav Petkov <bp@alien8.de>
+Subject: Re: [PATCH 3/6] x86: clean up _TIF_SYSCALL_EMU handling using
+ ptrace_syscall_enter hook
+Message-ID: <20190311183403.GA31062@e107155-lin>
+References: <20190228183220.15626-1-sudeep.holla@arm.com>
+ <20190228183220.15626-4-sudeep.holla@arm.com>
+ <eb9ef619-4af8-71e1-5aee-0b6294ac488b@arm.com>
+ <20190304101205.GA1504@e107155-lin>
+ <96d59a68-e5e2-86d9-c707-a79aad438b76@arm.com>
 MIME-Version: 1.0
-References: <20190226193609.9862-1-andrew.smirnov@gmail.com>
- <20190226193609.9862-7-andrew.smirnov@gmail.com> <20190304123300.GH6325@pendragon.ideasonboard.com>
-In-Reply-To: <20190304123300.GH6325@pendragon.ideasonboard.com>
-From:   Andrey Smirnov <andrew.smirnov@gmail.com>
-Date:   Mon, 11 Mar 2019 11:32:12 -0700
-Message-ID: <CAHQ1cqGF8P=GukzGpHz3u=m0nXbrQk1_7qpZZSa=j36MDvv7TA@mail.gmail.com>
-Subject: Re: [PATCH 6/9] drm/bridge: tc358767: Simplify error check in tc_aux_linx_setup()
-To:     Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-Cc:     dri-devel@lists.freedesktop.org,
-        Archit Taneja <architt@codeaurora.org>,
-        Andrzej Hajda <a.hajda@samsung.com>,
-        Chris Healy <cphealy@gmail.com>,
-        Lucas Stach <l.stach@pengutronix.de>,
-        linux-kernel <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <96d59a68-e5e2-86d9-c707-a79aad438b76@arm.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Mar 4, 2019 at 4:33 AM Laurent Pinchart
-<laurent.pinchart@ideasonboard.com> wrote:
->
-> Hi Andrey,
->
-> Thank you for the patch.
->
-> On Tue, Feb 26, 2019 at 11:36:06AM -0800, Andrey Smirnov wrote:
-> > Tc_poll_timeout() can only return -ETIMEDOUT, so checking for other
-> > errors is not necessary. Drop it. No functional change intended.
->
-> Is that true given patch 1/9 in this series ? regmap_read_poll_timeout()
-> can also return an error from regmap_read().
->
+(I thought I had sent this email, last Tuesday itself, but saw this in my
+draft today, something went wrong, sorry for the delay)
 
-Ugh, I misread "?:" in regmap_read_poll_timeout() code as "?", this
-patch is incorrect. Sorry about that, will drop in v2.
+On Tue, Mar 05, 2019 at 02:14:47AM +0000, Haibo Xu (Arm Technology China) wrote:
+> On 2019/3/4 18:12, Sudeep Holla wrote:
+> > On Mon, Mar 04, 2019 at 08:25:28AM +0000, Haibo Xu (Arm Technology China) wrote:
+> >> On 2019/3/1 2:32, Sudeep Holla wrote:
+> >>> Now that we have a new hook ptrace_syscall_enter that can be called from
+> >>> syscall entry code and it handles PTRACE_SYSEMU in generic code, we
+> >>> can do some cleanup using the same in syscall_trace_enter.
+> >>>
+> >>> Further the extra logic to find single stepping PTRACE_SYSEMU_SINGLESTEP
+> >>> in syscall_slow_exit_work seems unnecessary. Let's remove the same.
+> >>
+> >> I think we should not change the logic here. Is so, it will double the report of syscall
+> >> when PTRACE_SYSEMU_SINGLESTEP is enabled.
+> >>
+> >
+> > I don't think that should happen, but I may be missing something.
+> > Can you explain how ?
+> >
+>
+> When PTRACE_SYSEMU_SINGLESTEP is enabled, both the _TIF_SYSCALL_EMU and
+> _TIF_SINGLESTEP flags are set, but ptrace only need to report(send SIGTRAP)
+> at the entry of a system call, no need to report at the exit of a system
+> call.
+>
+Sorry, but I still not get it, we have:
 
-Thanks,
-Andrey Smirnov
+	step = ((flags & (_TIF_SINGLESTEP | _TIF_SYSCALL_EMU)) == _TIF_SINGLESTEP);
+
+For me, this is same as:
+	step = ((flags & _TIF_SINGLESTEP) == _TIF_SINGLESTEP)
+	or
+	if (flags & _TIF_SINGLESTEP)
+		step = true;
+
+So when PTRACE_SYSEMU_SINGLESTEP, _TIF_SYSCALL_EMU and _TIF_SINGLESTEP
+are set and step evaluates to true.
+
+So dropping _TIF_SYSCALL_EMU here should be fine. Am I still missing
+something ?
+
+--
+Regards,
+Sudeep
