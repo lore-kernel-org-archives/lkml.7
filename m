@@ -2,92 +2,118 @@ Return-Path: <SRS0=FxTY=RO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,URIBL_BLOCKED
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_MUTT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 701BAC4360F
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 Mar 2019 18:48:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 31B47C43381
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 Mar 2019 18:48:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3E35F206DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 Mar 2019 18:48:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 07097206DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 Mar 2019 18:48:46 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="E3CyCkzO"
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=ffwll.ch header.i=@ffwll.ch header.b="kcTQJczS"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727916AbfCKSsM (ORCPT
+        id S1728046AbfCKSso (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 11 Mar 2019 14:48:12 -0400
-Received: from mail-oi1-f193.google.com ([209.85.167.193]:44869 "EHLO
-        mail-oi1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726942AbfCKSsL (ORCPT
+        Mon, 11 Mar 2019 14:48:44 -0400
+Received: from mail-ed1-f65.google.com ([209.85.208.65]:33303 "EHLO
+        mail-ed1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726942AbfCKSsn (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 11 Mar 2019 14:48:11 -0400
-Received: by mail-oi1-f193.google.com with SMTP id a81so4520051oii.11;
-        Mon, 11 Mar 2019 11:48:10 -0700 (PDT)
+        Mon, 11 Mar 2019 14:48:43 -0400
+Received: by mail-ed1-f65.google.com with SMTP id d12so211756edp.0
+        for <linux-kernel@vger.kernel.org>; Mon, 11 Mar 2019 11:48:42 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=R9aBFyECQDqLE8kcWcrFTaNk6b19WS2DWEH1/8Z/ri4=;
-        b=E3CyCkzOEUn59R3BNajWY/zfmMNPByDSokd+5eP+vb7mg2PgIp94ATtYrj0ugTS6WY
-         LlSWC7yzhsKZzjuwh+Mo5nZHfdWLNNLvuZdPEPgexqucsexTwLTX7BLRchqpR59/xwOs
-         FC9kRZJsIEu2ouSZp9yIhlqEB8H8rY5Mlo3RcbICOyHTGns3N8uuxQZBoR3umWK9miaW
-         vlbTPIYlaccfWQMD9Gg2QFdfECGGLRQDuZb9ABHptzNACEtBLeKwbyepiDf5+hphl/Oy
-         llrcAAzCnVlkJM7Eiy17JTvYJMl34IKg8F+LDynOG4BsjNl/6Tyq10vdPQdHf9jwDh1l
-         gjgA==
+        d=ffwll.ch; s=google;
+        h=sender:date:from:to:cc:subject:message-id:mail-followup-to
+         :references:mime-version:content-disposition:in-reply-to:user-agent;
+        bh=f98+g+RT3l3DxvAAheGVVm6ONRnaMiYAzNdjej9J/g8=;
+        b=kcTQJczSTaR5y45g5ENDYA5LjB94XNW9kGMcTV3SR/lSqgqzaz8wMqoSqD1kJpVSIW
+         IaeJIjyRA2cf+hMSrrMGpNwQItRTXZqX/E69nTh8HMWt/n8Tm9vH/ROibLtPLVGcRWkk
+         1YK7vuh1NdCaglMOTN+RbYe8TZe54ky5kq6l8=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=R9aBFyECQDqLE8kcWcrFTaNk6b19WS2DWEH1/8Z/ri4=;
-        b=FuwiJByBiJOogbHedZxCBnRlp9X19eVX0nFavRHgls2A6HrQNyf4I9l4RM7fipNLda
-         jzL2q6ET9CfddB2VI9MOWei1LNDz5GGtOcQSpKBSvsnZwCKKpc52OEBO44NqaLHpBvaQ
-         i5sD96++XY39Bp37DiK5mWxzyfoqYJFpXWK90A1WZds9VOmcEt+cZamESlK5/nGsNjDU
-         8ledlIcPdisMHeFrnjbZRbMG55bdM9SY0+UrWQp7xbnfO6mvSHeOjEwXme0Mf8kJebN+
-         fpt1tcQ0CbWomZr40oZCg3hXaA22qpxYjQNwfY1TaAH5dh/0JKomLC1XmBU7N2KnV/pF
-         zWEg==
-X-Gm-Message-State: APjAAAWT/PCdy5QF+BbplsHBhgCsmFuNMsFoWwfCcH0BlndAApsxSKaC
-        ndoOoc41Iswyug95QjJFVqaG0aj2D7eiO9vABxI=
-X-Google-Smtp-Source: APXvYqwPO/t1MO/iIkpZ8udFipCCs0ZyEZ4duBAfeCUcCWrOB32St950yWYE+HJBKD+rPtKjeqrL2W7o/Wvtz9V7cVk=
-X-Received: by 2002:aca:e6d5:: with SMTP id d204mr149970oih.77.1552330090324;
- Mon, 11 Mar 2019 11:48:10 -0700 (PDT)
+        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
+         :mail-followup-to:references:mime-version:content-disposition
+         :in-reply-to:user-agent;
+        bh=f98+g+RT3l3DxvAAheGVVm6ONRnaMiYAzNdjej9J/g8=;
+        b=pMb7/17cpg7wqHR9CYs3/RapB11xjIOz56VMYr34/pGA+15ciQAWEClgkQoRWgVxTB
+         np66DCjm0+ujunXzzrGQPKx96s3j9wTwTQNHbLMfg/BPs8PWGxnHl9EpBGcznPIKvLo2
+         IVEz3oY4RpY01LGp3JSQh9FkmVHt5UcJdQ0JTbxfb5v4ZapCVC8GLQ/n0stP6ozv4TP7
+         zw18bjpeWkemedLAfnvIzNyoFm6HzVOtoNpMIkKjZtK83Adnsn2bL7aXoZdEZ0zqhjeK
+         G24o/WFqobcbLlQY2YdiT5p6a8Tw8WtQ+5bLUqAGszlhocTOeujkd9wtTR0VyOb3zeUU
+         zyyg==
+X-Gm-Message-State: APjAAAX0xTLBCgsFX4TAifVG3V+LEpnh1KjZEDvPFDg8oe6jriMHbDT4
+        WyvzWKnncTy4z6uagcp2DSw6lw==
+X-Google-Smtp-Source: APXvYqwujuAK5pq1B7bcSwZbNHECxMO+qRZwmgjMJkdKMqX3cV7GYWMWfMT5y8i9G4LAHD7dW8yV7A==
+X-Received: by 2002:a17:906:482:: with SMTP id f2mr22873401eja.68.1552330121958;
+        Mon, 11 Mar 2019 11:48:41 -0700 (PDT)
+Received: from phenom.ffwll.local ([2a02:168:569e:0:3106:d637:d723:e855])
+        by smtp.gmail.com with ESMTPSA id s6sm4881237eda.90.2019.03.11.11.48.40
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Mon, 11 Mar 2019 11:48:41 -0700 (PDT)
+Date:   Mon, 11 Mar 2019 19:48:39 +0100
+From:   Daniel Vetter <daniel@ffwll.ch>
+To:     Rodrigo Siqueira <rodrigosiqueiramelo@gmail.com>
+Cc:     Gerd Hoffmann <kraxel@redhat.com>, David Airlie <airlied@linux.ie>,
+        linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org,
+        virtualization@lists.linux-foundation.org
+Subject: Re: [PATCH] drm/bochs: Fix NULL dereference on atomic_disable helper
+Message-ID: <20190311184839.GO2665@phenom.ffwll.local>
+Mail-Followup-To: Rodrigo Siqueira <rodrigosiqueiramelo@gmail.com>,
+        Gerd Hoffmann <kraxel@redhat.com>, David Airlie <airlied@linux.ie>,
+        linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org,
+        virtualization@lists.linux-foundation.org
+References: <20190310212150.xhhb4abzm7j3ain2@smtp.gmail.com>
+ <20190311062200.4mtel3j5fjxtxrcf@sirius.home.kraxel.org>
+ <20190311101159.t6mbzm5sdwuh5muc@smtp.gmail.com>
+ <20190311130716.6hjqci43clic5lxx@sirius.home.kraxel.org>
+ <20190311132358.GF2665@phenom.ffwll.local>
+ <20190311133919.azyhtioxf23duf3g@sirius.home.kraxel.org>
+ <20190311174958.xdw4lrvf6ydeplvc@smtp.gmail.com>
 MIME-Version: 1.0
-References: <20190310193246.31761-1-TheSven73@gmail.com> <20190311180042.GA17880@arch>
- <fe70de0a-9134-8942-c729-e014807d101b@axentia.se>
-In-Reply-To: <fe70de0a-9134-8942-c729-e014807d101b@axentia.se>
-From:   Sven Van Asbroeck <thesven73@gmail.com>
-Date:   Mon, 11 Mar 2019 14:47:59 -0400
-Message-ID: <CAGngYiXyEksuMDBkrasiwwge4fgoHKKecsSHB6q0GQyEoiZXxw@mail.gmail.com>
-Subject: Re: [PATCH] iio: envelope-detector: fix use-after-free on device remove
-To:     Peter Rosin <peda@axentia.se>
-Cc:     Tomasz Duszynski <tduszyns@gmail.com>,
-        Jonathan Cameron <jic23@kernel.org>,
-        Hartmut Knaack <knaack.h@gmx.de>,
-        Lars-Peter Clausen <lars@metafoo.de>,
-        Peter Meerwald-Stadler <pmeerw@pmeerw.net>,
-        "linux-iio@vger.kernel.org" <linux-iio@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190311174958.xdw4lrvf6ydeplvc@smtp.gmail.com>
+X-Operating-System: Linux phenom 4.19.0-1-amd64 
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Peter,
+On Mon, Mar 11, 2019 at 02:49:58PM -0300, Rodrigo Siqueira wrote:
+> On 03/11, Gerd Hoffmann wrote:
+> >   Hi,
+> > 
+> > > > IIRC the drm code checks for the atomic_enable callback presence to
+> > > > figure whenever it should take the atomic or legacy code paths.
+> > > 
+> > > It should check for drm_driver->mode_config.funcs.atomic_commit for that,
+> > > see drm_drv_uses_atomic_modeset(). Anything else should be a bug.
+> > > 
+> > > Or do you mean the fallback to the old crtc helper prepare/commit
+> > > callbacks?
+> > 
+> > Probably the later.  There was some reason why I've left in the empty
+> > bochs_crtc_atomic_enable() callback ...
+> 
+> Just for checking before I start to work in this patch:
+> The correct solution should be made atomic_enable and atomic_disable
+> optional, right? I should do it, and check if Bochs driver really needs
+> bochs_crtc_atomic_enable after my change, right?
 
-On Mon, Mar 11, 2019 at 2:41 PM Peter Rosin <peda@axentia.se> wrote:
->
-> This is false positive, AFAICT. The delayed work must have
-> finished while envelope_detector_read_raw() holds the read_lock
-> mutex, and it would be highly surprising if the device can go
-> away while it is handling an IIO ->read_raw call. (THAT would be
-> an interesting bug...)
+Yup. I just tried to remember why we haven't done this yet, but I think
+that was a patch to make crtc->helper_funcs optional. And that doesn't
+make sense imo, since if your crtc doesn't do anything then you don't
+really have an atomic driver :-) And if there's ever a legit use case for
+this, then that drive probably shouldn't use the atomic helpers ...
 
-Quite right. I had completely overlooked the fact that wait_for_completion()
-cannot finish unless explicitly completed. Unlike
-wait_for_completion_interruptible().
-
-So yes, this looks like a false positive. My apologies.
-
-Sven
+But making crtc_helper_funcs->atomic_enable/disable optional sounds like a
+good idea.
+-Daniel
+-- 
+Daniel Vetter
+Software Engineer, Intel Corporation
+http://blog.ffwll.ch
