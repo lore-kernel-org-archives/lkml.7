@@ -2,93 +2,114 @@ Return-Path: <SRS0=FxTY=RO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_MUTT
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_MUTT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E025AC43381
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 Mar 2019 17:03:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AC3BDC43381
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 Mar 2019 17:04:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id ADF59206BA
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 Mar 2019 17:03:41 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1552323821;
-	bh=yIXpNpIfLBnD91GkZCJjN2L8+vrYfwgXDFlQTAWYEBw=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=Kj1lMV4rdzynAfL7sh08zpu0EZcvs/8esapIBsEGGLCcKztByPO30qzlSAM3pvQ+J
-	 Cnl7lYEx1M4OZiu2+JFAHsAdbnkwz07Lz5lLekJewr3DWA+zjRiSO7pH8/FMXNkpS9
-	 gwW/FzgWey+aciXZysFR0MDdcdxsXbpByFR5jaao=
+	by mail.kernel.org (Postfix) with ESMTP id 798A1206BA
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 Mar 2019 17:04:57 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="J8/EvyuN"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727830AbfCKRDk (ORCPT
+        id S1727500AbfCKRE4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 11 Mar 2019 13:03:40 -0400
-Received: from heliosphere.sirena.org.uk ([172.104.155.198]:44396 "EHLO
-        heliosphere.sirena.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727304AbfCKRDk (ORCPT
+        Mon, 11 Mar 2019 13:04:56 -0400
+Received: from mail-qk1-f193.google.com ([209.85.222.193]:46843 "EHLO
+        mail-qk1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727050AbfCKREz (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 11 Mar 2019 13:03:40 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=sirena.org.uk; s=20170815-heliosphere; h=In-Reply-To:Content-Type:
-        MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=yIXpNpIfLBnD91GkZCJjN2L8+vrYfwgXDFlQTAWYEBw=; b=lNoCA75CMcsr7KCplQQprH/Hd
-        jz9n6n70kN2TBOQrDsjxqFo3iMjzHldYDwHkn8mm0MN1RVC+Si7Tff8++SOMHO5Gdn4BHDHBIj2cH
-        AN0eZ4485p+mm/djyZSDaMxB4CrDLmTWGPw4MyL95G2NZUfJwU9F4P1wLsOihUeh+wW+4=;
-Received: from cpc102320-sgyl38-2-0-cust46.18-2.cable.virginm.net ([82.37.168.47] helo=debutante.sirena.org.uk)
-        by heliosphere.sirena.org.uk with esmtpa (Exim 4.89)
-        (envelope-from <broonie@sirena.org.uk>)
-        id 1h3OKu-0005Gr-Av; Mon, 11 Mar 2019 17:03:36 +0000
-Received: by debutante.sirena.org.uk (Postfix, from userid 1000)
-        id 026061128896; Mon, 11 Mar 2019 17:03:34 +0000 (GMT)
-Date:   Mon, 11 Mar 2019 17:03:34 +0000
-From:   Mark Brown <broonie@kernel.org>
-To:     Volker Haspel <volker.haspel@linutronix.de>
-Cc:     linux-kernel@vger.kernel.org, linux-spi@vger.kernel.org,
-        Han Xu <han.xu@nxp.com>, john.ogness@linutronix.de
-Subject: Re: [PATCH] spi: spi-fsl-qspi: call spi_unregister_controller
-Message-ID: <20190311170334.GA14368@sirena.org.uk>
-References: <20190307103008.19841-1-volker.haspel@linutronix.de>
+        Mon, 11 Mar 2019 13:04:55 -0400
+Received: by mail-qk1-f193.google.com with SMTP id i5so3135543qkd.13;
+        Mon, 11 Mar 2019 10:04:55 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:date:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=Kihxu78XGREzEYXmXtozJkaTjytu7T0TEALyEfGu5xc=;
+        b=J8/EvyuNZMyvg0XQSzxkLAAwf6GYcRrMQlUqyHOBE793xXYQm77jmduloJMZFjT5LH
+         xRgVTsXonZz9MqGTZx2JnNpcGarEUwzbWsMi0hVcIQtuRCDv7aeq4qhTZG1BUsWS7PaS
+         FJ4UTumYBuv97Z4XFLJ2aSgwjNnOkaP/n+TiZrlDm2pgLkjjqXheqC045/e6oAnge1e9
+         uzF9P0BDTvEwRqqYYZjvhy8oVSNN02Bk40qCCBsFij2uKoXjSWr8W/P8gDMGAiECqIye
+         qaEFvUc4ic+agZKPVY0w1Cqoy8YujUdvtBZJpxeU8zCl88bRNUnziMhJg381Yx0fMQHV
+         qrwQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:date:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=Kihxu78XGREzEYXmXtozJkaTjytu7T0TEALyEfGu5xc=;
+        b=umsSqJjBAzpMgsn70AqmHlkJRmSvv0RYGTWOjVAiMmCfQTtMJo7bwwtCIxVFN+plIp
+         7R2OMyhBcRF/caU9TffPhQSJkiMrHcw7HrnH9cYkAVLV5RmVFmbSSqUpMhE0iN/4GF3j
+         72cel48Ve2PZ1PVU46wKR7vZFUtlklfiHa9Rg4XstO+Z3z4rlssi5F6i8amaELisrdCS
+         raqS/dbXxmnLxURAPSJNQn73nrJ2R2dYa8IzIPrR5B90r5pmGYADZrbk0m8Z3HiBa3Lq
+         2Q1KAkmz4lvytjfaaB+ppT4bA6wXfm/p0b93TafWhcX4tPyqVGhmFfHQ+dtwIuC0IFMd
+         P6hA==
+X-Gm-Message-State: APjAAAVepoBa26iD3/wZSge6U1O4Mi/UpGDcFnk1Dk9KItCCp8PLjwSL
+        ldkDuNfqofsJCAt3r05L/vbunmdf53s=
+X-Google-Smtp-Source: APXvYqzV17i0npdBsqTncpbtqmgK9Xk+z6HtphZNO+YV8LpUx0YHbcdmHfM0wJw9ToJeq4v2x1CKSQ==
+X-Received: by 2002:a37:5c05:: with SMTP id q5mr24010893qkb.20.1552323894493;
+        Mon, 11 Mar 2019 10:04:54 -0700 (PDT)
+Received: from quaco.ghostprotocols.net ([2804:1b1:210a:2644:8d4d:9170:85d5:da34])
+        by smtp.gmail.com with ESMTPSA id p35sm4100108qte.83.2019.03.11.10.04.53
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Mon, 11 Mar 2019 10:04:53 -0700 (PDT)
+From:   Arnaldo Carvalho de Melo <arnaldo.melo@gmail.com>
+X-Google-Original-From: Arnaldo Carvalho de Melo <acme@kernel.org>
+Received: by quaco.ghostprotocols.net (Postfix, from userid 1000)
+        id 1DFBC4039C; Mon, 11 Mar 2019 14:04:51 -0300 (-03)
+Date:   Mon, 11 Mar 2019 14:04:51 -0300
+To:     Andi Kleen <andi@firstfloor.org>
+Cc:     jolsa@kernel.org, linux-perf-users@vger.kernel.org,
+        linux-kernel@vger.kernel.org, Andi Kleen <ak@linux.intel.com>
+Subject: Re: [PATCH v6 03/11] perf tools report: Support time sort key
+Message-ID: <20190311170451.GP10690@kernel.org>
+References: <20190311144502.15423-1-andi@firstfloor.org>
+ <20190311144502.15423-4-andi@firstfloor.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="cWoXeonUoKmBZSoM"
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20190307103008.19841-1-volker.haspel@linutronix.de>
-X-Cookie: Body by Nautilus, Brain by Mattel.
+In-Reply-To: <20190311144502.15423-4-andi@firstfloor.org>
+X-Url:  http://acmel.wordpress.com
 User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Em Mon, Mar 11, 2019 at 07:44:54AM -0700, Andi Kleen escreveu:
+> From: Andi Kleen <ak@linux.intel.com>
+> 
+> Add a time sort key to perf report to display samples for
+> different time quantums separately. This allows easier
+> analysis of workloads that change over time, and also
+> will allow looking at the context of samples.
+> 
+> % perf record ...
+> % perf report --sort time,overhead,symbol --time-quantum 1ms --stdio
+> ...
+>      0.67%  277061.87300  [.] _dl_start
+>      0.50%  277061.87300  [.] f1
+>      0.50%  277061.87300  [.] f2
+>      0.33%  277061.87300  [.] main
+>      0.29%  277061.87300  [.] _dl_lookup_symbol_x
+>      0.29%  277061.87300  [.] dl_main
+>      0.29%  277061.87300  [.] do_lookup_x
+>      0.17%  277061.87300  [.] _dl_debug_initialize
+>      0.17%  277061.87300  [.] _dl_init_paths
+>      0.08%  277061.87300  [.] check_match
+>      0.04%  277061.87300  [.] _dl_count_modids
+>      1.33%  277061.87400  [.] f1
+>      1.33%  277061.87400  [.] f2
+>      1.33%  277061.87400  [.] main
+>      1.17%  277061.87500  [.] main
+>      1.08%  277061.87500  [.] f1
+>      1.08%  277061.87500  [.] f2
+>      1.00%  277061.87600  [.] main
+>      0.83%  277061.87600  [.] f1
+>      0.83%  277061.87600  [.] f2
+>      1.00%  277061.87700  [.] main
 
---cWoXeonUoKmBZSoM
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-
-On Thu, Mar 07, 2019 at 11:30:08AM +0100, Volker Haspel wrote:
-> The driver does not clearly unregister the spi controller.
-> Therefore calling an unbind and bind again will end up in a
-> Kernel crash.
-> Each driver who calls spi_register_controller() in the probe function
-> has to call spi_unregister_controller() too.
-
-Why not change it to use devm?
-
---cWoXeonUoKmBZSoM
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAlyGlOYACgkQJNaLcl1U
-h9AeuQf/TJE1svaqSfmjrzUapyQBDgHieQwhgpFkHDYkNAcdKPXxZcnlvhz5lrFa
-/0bZ6BeH7jGfY/lNPWLpQ09na9+UaMwYUyhA/hO7HtSDNw1KTxq/77AuG6rDSVxG
-ppShkWJfXcgPs/YqwOZbwerWzNKwC0io02cnd+raP2kjyItOiaqzzTrtpodjxDHj
-bM9kYkZGLQqUOTLqH7wgA9l532UvoRkZvy0Iq/PEIb1I/smlbesfmdbAwOfQyV9d
-uNHeOiRKUwE1W08YX//tgG82el+v7HkGRhXr01u/ZRD9H5/HODLb5e+ClhUEVsJE
-rzgEIDthOFfKw4wMfsLtdF3/BR5lQQ==
-=/i+o
------END PGP SIGNATURE-----
-
---cWoXeonUoKmBZSoM--
+Thanks, applied.
