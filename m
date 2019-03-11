@@ -3,135 +3,114 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
 X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5FEE4C10F0C
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 Mar 2019 08:28:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B85B8C43381
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 Mar 2019 08:29:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3A2DD20850
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 Mar 2019 08:28:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8FA7E20643
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 Mar 2019 08:29:54 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726996AbfCKI2n (ORCPT
+        id S1726999AbfCKI3x (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 11 Mar 2019 04:28:43 -0400
-Received: from foss.arm.com ([217.140.101.70]:50296 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725932AbfCKI2k (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 11 Mar 2019 04:28:40 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.72.51.249])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 9D338A78;
-        Mon, 11 Mar 2019 01:28:39 -0700 (PDT)
-Received: from [10.163.1.86] (unknown [10.163.1.86])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id C16FD3F59C;
-        Mon, 11 Mar 2019 01:28:30 -0700 (PDT)
-Subject: Re: [PATCH v3 3/3] arm64: mm: enable per pmd page table lock
-To:     Yu Zhao <yuzhao@google.com>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Will Deacon <will.deacon@arm.com>,
-        Mark Rutland <mark.rutland@arm.com>
-Cc:     "Aneesh Kumar K . V" <aneesh.kumar@linux.vnet.ibm.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Nick Piggin <npiggin@gmail.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Joel Fernandes <joel@joelfernandes.org>,
-        "Kirill A . Shutemov" <kirill@shutemov.name>,
-        Ard Biesheuvel <ard.biesheuvel@linaro.org>,
-        Chintan Pandya <cpandya@codeaurora.org>,
-        Jun Yao <yaojun8558363@gmail.com>,
-        Laura Abbott <labbott@redhat.com>,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        linux-arch@vger.kernel.org, linux-mm@kvack.org
-References: <20190218231319.178224-1-yuzhao@google.com>
- <20190310011906.254635-1-yuzhao@google.com>
- <20190310011906.254635-3-yuzhao@google.com>
-From:   Anshuman Khandual <anshuman.khandual@arm.com>
-Message-ID: <dfc727b4-0806-4867-2f9c-0bb8fdd459ad@arm.com>
-Date:   Mon, 11 Mar 2019 13:58:27 +0530
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:52.0) Gecko/20100101
- Thunderbird/52.9.1
+        Mon, 11 Mar 2019 04:29:53 -0400
+Received: from szxga04-in.huawei.com ([45.249.212.190]:4666 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1725831AbfCKI3w (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 11 Mar 2019 04:29:52 -0400
+Received: from DGGEMS406-HUB.china.huawei.com (unknown [172.30.72.58])
+        by Forcepoint Email with ESMTP id 10505851703A1F03DFF0;
+        Mon, 11 Mar 2019 16:29:50 +0800 (CST)
+Received: from [127.0.0.1] (10.184.189.20) by DGGEMS406-HUB.china.huawei.com
+ (10.3.19.206) with Microsoft SMTP Server id 14.3.408.0; Mon, 11 Mar 2019
+ 16:29:41 +0800
+To:     <davem@davemloft.net>, <kuznet@ms2.inr.ac.ru>,
+        <yoshfuji@linux-ipv6.org>, <netdev@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>
+CC:     Mingfangsen <mingfangsen@huawei.com>
+From:   linmiaohe <linmiaohe@huawei.com>
+Subject: [PATCH net] net: sit: fix UBSAN Undefined behaviour in check_6rd
+Message-ID: <694fb074-53a3-af60-6561-57c022445a48@huawei.com>
+Date:   Mon, 11 Mar 2019 16:29:32 +0800
+User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:60.0) Gecko/20100101
+ Thunderbird/60.5.1
 MIME-Version: 1.0
-In-Reply-To: <20190310011906.254635-3-yuzhao@google.com>
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset="utf-8"
 Content-Language: en-US
 Content-Transfer-Encoding: 7bit
+X-Originating-IP: [10.184.189.20]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 03/10/2019 06:49 AM, Yu Zhao wrote:
-> Switch from per mm_struct to per pmd page table lock by enabling
-> ARCH_ENABLE_SPLIT_PMD_PTLOCK. This provides better granularity for
-> large system.
-> 
-> I'm not sure if there is contention on mm->page_table_lock. Given
-> the option comes at no cost (apart from initializing more spin
-> locks), why not enable it now.
-> 
-> We only do so when pmd is not folded, so we don't mistakenly call
-> pgtable_pmd_page_ctor() on pud or p4d in pgd_pgtable_alloc(). (We
-> check shift against PMD_SHIFT, which is same as PUD_SHIFT when pmd
-> is folded).
-> 
-> Signed-off-by: Yu Zhao <yuzhao@google.com>
-> ---
->  arch/arm64/Kconfig               |  3 +++
->  arch/arm64/include/asm/pgalloc.h | 12 +++++++++++-
->  arch/arm64/include/asm/tlb.h     |  5 ++++-
->  3 files changed, 18 insertions(+), 2 deletions(-)
-> 
-> diff --git a/arch/arm64/Kconfig b/arch/arm64/Kconfig
-> index cfbf307d6dc4..a3b1b789f766 100644
-> --- a/arch/arm64/Kconfig
-> +++ b/arch/arm64/Kconfig
-> @@ -872,6 +872,9 @@ config ARCH_WANT_HUGE_PMD_SHARE
->  config ARCH_HAS_CACHE_LINE_SIZE
->  	def_bool y
->  
-> +config ARCH_ENABLE_SPLIT_PMD_PTLOCK
-> +	def_bool y if PGTABLE_LEVELS > 2
-> +
->  config SECCOMP
->  	bool "Enable seccomp to safely compute untrusted bytecode"
->  	---help---
-> diff --git a/arch/arm64/include/asm/pgalloc.h b/arch/arm64/include/asm/pgalloc.h
-> index 52fa47c73bf0..dabba4b2c61f 100644
-> --- a/arch/arm64/include/asm/pgalloc.h
-> +++ b/arch/arm64/include/asm/pgalloc.h
-> @@ -33,12 +33,22 @@
->  
->  static inline pmd_t *pmd_alloc_one(struct mm_struct *mm, unsigned long addr)
->  {
-> -	return (pmd_t *)__get_free_page(PGALLOC_GFP);
-> +	struct page *page;
-> +
-> +	page = alloc_page(PGALLOC_GFP);
-> +	if (!page)
-> +		return NULL;
-> +	if (!pgtable_pmd_page_ctor(page)) {
-> +		__free_page(page);
-> +		return NULL;
-> +	}
-> +	return page_address(page);
->  }
->  
->  static inline void pmd_free(struct mm_struct *mm, pmd_t *pmdp)
->  {
->  	BUG_ON((unsigned long)pmdp & (PAGE_SIZE-1));
-> +	pgtable_pmd_page_dtor(virt_to_page(pmdp));
->  	free_page((unsigned long)pmdp);
->  }
+From: Miaohe Lin <linmiaohe@huawei.com>
 
-There is just one problem here. ARM KVM's stage2_pmd_free() calls into pmd_free() on a page
-originally allocated with __get_free_page() and never went through pgtable_pmd_page_ctor().
-So when ARCH_ENABLE_SPLIT_PMD_PTLOCK is enabled
+In func check_6rd,tunnel->ip6rd.relay_prefixlen may equal to
+32,so UBSAN complain about it.
 
-stage2_pmd_free()
-	pgtable_pmd_page_dtor()
-		ptlock_free()
-			kmem_cache_free(page_ptl_cachep, page->ptl)
+UBSAN: Undefined behaviour in net/ipv6/sit.c:781:47
+shift exponent 32 is too large for 32-bit type 'unsigned int'
+CPU: 6 PID: 20036 Comm: syz-executor.0 Not tainted 4.19.27 #2
+Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS 1.10.2-1ubuntu1
+04/01/2014
+Call Trace:
+__dump_stack lib/dump_stack.c:77 [inline]
+dump_stack+0xca/0x13e lib/dump_stack.c:113
+ubsan_epilogue+0xe/0x81 lib/ubsan.c:159
+__ubsan_handle_shift_out_of_bounds+0x293/0x2e8 lib/ubsan.c:425
+check_6rd.constprop.9+0x433/0x4e0 net/ipv6/sit.c:781
+try_6rd net/ipv6/sit.c:806 [inline]
+ipip6_tunnel_xmit net/ipv6/sit.c:866 [inline]
+sit_tunnel_xmit+0x141c/0x2720 net/ipv6/sit.c:1033
+__netdev_start_xmit include/linux/netdevice.h:4300 [inline]
+netdev_start_xmit include/linux/netdevice.h:4309 [inline]
+xmit_one net/core/dev.c:3243 [inline]
+dev_hard_start_xmit+0x17c/0x780 net/core/dev.c:3259
+__dev_queue_xmit+0x1656/0x2500 net/core/dev.c:3829
+neigh_output include/net/neighbour.h:501 [inline]
+ip6_finish_output2+0xa36/0x2290 net/ipv6/ip6_output.c:120
+ip6_finish_output+0x3e7/0xa20 net/ipv6/ip6_output.c:154
+NF_HOOK_COND include/linux/netfilter.h:278 [inline]
+ip6_output+0x1e2/0x720 net/ipv6/ip6_output.c:171
+dst_output include/net/dst.h:444 [inline]
+ip6_local_out+0x99/0x170 net/ipv6/output_core.c:176
+ip6_send_skb+0x9d/0x2f0 net/ipv6/ip6_output.c:1697
+ip6_push_pending_frames+0xc0/0x100 net/ipv6/ip6_output.c:1717
+rawv6_push_pending_frames net/ipv6/raw.c:616 [inline]
+rawv6_sendmsg+0x2435/0x3530 net/ipv6/raw.c:946
+inet_sendmsg+0xf8/0x5c0 net/ipv4/af_inet.c:798
+sock_sendmsg_nosec net/socket.c:621 [inline]
+sock_sendmsg+0xc8/0x110 net/socket.c:631
+___sys_sendmsg+0x6cf/0x890 net/socket.c:2114
+__sys_sendmsg+0xf0/0x1b0 net/socket.c:2152
+do_syscall_64+0xc8/0x580 arch/x86/entry/common.c:290
+entry_SYSCALL_64_after_hwframe+0x49/0xbe
 
-Though SLUB implementation for kmem_cache_free() seems to be handling NULL page->ptl (as the
-page never got it's lock allocated or initialized) correctly I am not sure if it is a right
-thing to do.
+Signed-off-by: linmiaohe <linmiaohe@huawei.com>
+---
+ net/ipv6/sit.c | 5 +++--
+ 1 file changed, 3 insertions(+), 2 deletions(-)
+
+diff --git a/net/ipv6/sit.c b/net/ipv6/sit.c
+index 09e440e8dfae..07e21a82ce4c 100644
+--- a/net/ipv6/sit.c
++++ b/net/ipv6/sit.c
+@@ -778,8 +778,9 @@ static bool check_6rd(struct ip_tunnel *tunnel, const struct in6_addr *v6dst,
+ 		pbw0 = tunnel->ip6rd.prefixlen >> 5;
+ 		pbi0 = tunnel->ip6rd.prefixlen & 0x1f;
+
+-		d = (ntohl(v6dst->s6_addr32[pbw0]) << pbi0) >>
+-		    tunnel->ip6rd.relay_prefixlen;
++		d = tunnel->ip6rd.relay_prefixlen < 32 ?
++			(ntohl(v6dst->s6_addr32[pbw0]) << pbi0) >>
++		    tunnel->ip6rd.relay_prefixlen : 0;
+
+ 		pbi1 = pbi0 - tunnel->ip6rd.relay_prefixlen;
+ 		if (pbi1 > 0)
+-- 
+2.16.2
+
+
