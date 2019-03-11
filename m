@@ -2,100 +2,155 @@ Return-Path: <SRS0=FxTY=RO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT autolearn=ham
+X-Spam-Status: No, score=-12.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_PASS autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 59933C43381
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 Mar 2019 16:00:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8D1D8C10F06
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 Mar 2019 16:01:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 248432084F
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 Mar 2019 16:00:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5C4932084F
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 Mar 2019 16:01:27 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="XYupapqU"
+	dkim=pass (1024-bit key) header.d=amarulasolutions.com header.i=@amarulasolutions.com header.b="FLRf+fk1"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727564AbfCKQA4 (ORCPT
+        id S1727652AbfCKQB0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 11 Mar 2019 12:00:56 -0400
-Received: from mail-io1-f68.google.com ([209.85.166.68]:45652 "EHLO
-        mail-io1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726000AbfCKQA4 (ORCPT
+        Mon, 11 Mar 2019 12:01:26 -0400
+Received: from mail-it1-f195.google.com ([209.85.166.195]:52352 "EHLO
+        mail-it1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726000AbfCKQBZ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 11 Mar 2019 12:00:56 -0400
-Received: by mail-io1-f68.google.com with SMTP id x9so4464615iog.12
-        for <linux-kernel@vger.kernel.org>; Mon, 11 Mar 2019 09:00:56 -0700 (PDT)
+        Mon, 11 Mar 2019 12:01:25 -0400
+Received: by mail-it1-f195.google.com with SMTP id g17so8105110ita.2
+        for <linux-kernel@vger.kernel.org>; Mon, 11 Mar 2019 09:01:24 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=sEJ6Z1+CqNvu7IhQbM2Y+65pOInbk33Q6mV8kWRLSv0=;
-        b=XYupapqUf991V+f7zTpBC64Js+6wrMtY6xPtMts6VdGrI8Inhd5yeBAvLmY/FAYcAF
-         UZkW3AKErwyzLRsaUdiounyh7HwMzAL6ti8IpXu7MJ5c+C/wZSuaX/pVnQAxW3zx26dk
-         JvnDnW0Cag8CTMzRgudnDQJfWZfrv1Qnd0AQY=
+        d=amarulasolutions.com; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=TMOi8B+1epU1K9RxGY+X9JnIHdYzFe8+3EHfpEokmkY=;
+        b=FLRf+fk1TZIGb7sOTxWw6TueK1CN17obX7x/bk8oQ3hieAGf6DlKds0R5H7P6NCQVb
+         U9bHExmfwU4I9hkoJvJSWVMnl8/Bj/1qVuO/19SaU6OqgTqWylID5nX6Fv2SaaxxLzAa
+         hwtCQAaAhgKnB4sSoP+/txzAaY97jvnFb85GM=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=sEJ6Z1+CqNvu7IhQbM2Y+65pOInbk33Q6mV8kWRLSv0=;
-        b=cE1nRvOpqo1Jl5Vrir4++WarszIGz32B9vbSS1pGVFOcvO6cHt0kZ4zQ+ynkkD4upN
-         s8l0YVKF8+JRHbNnyVo5A91HmlBC8ow88pJbTa8YZzKkuwl92Wf7dclDMvTJXE1+Lj8W
-         EYCoJt0V7RzPtwrcBroLMjDnvR8Cf+CWVgY2Ote5DDo5BsHUB+uy9JDvVyQB8JZM1Ffq
-         ipVK4m6bjEYfIgfHXbWOvDgJoalyEkXoVCMbvhaZQjSzOaU1jfuE7+vi9ne/kMyrgPEf
-         XhZ8iki4lrOgOYurRlb2hqUVp78iT+d/dDZTq2xvFNHGamBy3NAT4qfNspano6eZyM1z
-         eW8w==
-X-Gm-Message-State: APjAAAUEgpJ6Pnqbq16F1Kc85fnbGcyUHbKU5NYe39kjpDKnnfN2llTA
-        V0wVvJPkZheIbKzhHlaSXpO73Q==
-X-Google-Smtp-Source: APXvYqy7W5GY3W6AWWs3iEWx/hIH008tvmi+oXmiwjjgfgZamJTogQDX1L69F32oyyTTbBS96i1S4g==
-X-Received: by 2002:a6b:f40d:: with SMTP id i13mr4743854iog.135.1552320055634;
-        Mon, 11 Mar 2019 09:00:55 -0700 (PDT)
-Received: from ncrews2.bld.corp.google.com ([2620:15c:183:200:3338:94cc:1814:b147])
-        by smtp.gmail.com with ESMTPSA id w8sm2457919iob.34.2019.03.11.09.00.54
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-SHA bits=128/128);
-        Mon, 11 Mar 2019 09:00:54 -0700 (PDT)
-From:   Nick Crews <ncrews@chromium.org>
-To:     enric.balletbo@collabora.com, bleung@chromium.org
-Cc:     linux-kernel@vger.kernel.org, dlaurie@chromium.org,
-        groeck@google.com, dtor@google.com,
-        Nick Crews <ncrews@chromium.org>
-Subject: [PATCH] platform/chrome: Fix locking pattern in wilco_ec_mailbox()
-Date:   Mon, 11 Mar 2019 09:58:38 -0600
-Message-Id: <20190311155838.255314-1-ncrews@chromium.org>
-X-Mailer: git-send-email 2.20.1
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=TMOi8B+1epU1K9RxGY+X9JnIHdYzFe8+3EHfpEokmkY=;
+        b=WlfGZyEqT9/Yk0EDoK+kVSrj3DG/vnAQUAaBQYa1bB0bPHa5kqhE+GS0qCCYLoINvJ
+         17lfgoSjcUrmSs/LUZnkYOaSaGzAGlAGHe0Z1dJSD/q964txbtdtdCyZpFg0Hczvtqa+
+         lZCbIUIFNO+Ewx1DeTRSz9dOAWd7BQMwLPjMtCwwmvkIZWdZqDczwlw1+Oo9nCzrbqEN
+         gRfXexWEvj1rD3qdpmA9pYmkDcrpZwKIx8i4cbniQp/dCMnXoOxR6/mRNLmkO215v1cS
+         LPccb6nNh1ZqCbFVrkbKbFHRFxSuwcnWtbmNTgIsVAtRhqOLEedQXpy/AUsbQHCkn5t0
+         dEPQ==
+X-Gm-Message-State: APjAAAXjIDDUaT5qNOy7KR9Ysuu2MSHZYtPirRYpdWqVcMFyUU9+AKvK
+        hVd1hreT/NSUFKqdozirVnZkyhFPtbPA8ZVJ9ByfKg==
+X-Google-Smtp-Source: APXvYqwg59UDVOWE7z/p66RcYCYFpXYZVzNaNxc8DEk5jyLaaU5ZR7vkiUNMh2C0kQBomEoNZ/9wSb5kds+tkR4b6Gc=
+X-Received: by 2002:a24:3655:: with SMTP id l82mr244741itl.107.1552320083085;
+ Mon, 11 Mar 2019 09:01:23 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <20190311133637.18334-1-jagan@amarulasolutions.com>
+ <20190311133637.18334-2-jagan@amarulasolutions.com> <20190311153734.izg44ijwqqh2vpxc@flea>
+In-Reply-To: <20190311153734.izg44ijwqqh2vpxc@flea>
+From:   Jagan Teki <jagan@amarulasolutions.com>
+Date:   Mon, 11 Mar 2019 21:31:11 +0530
+Message-ID: <CAMty3ZDDARP02qMJZ9CXeiMv=kghoiUHgEAV9b4q+SrbLss40Q@mail.gmail.com>
+Subject: Re: [PATCH v8 01/15] drm/sun4i: dsi: Fix video start delay computation
+To:     Maxime Ripard <maxime.ripard@bootlin.com>
+Cc:     David Airlie <airlied@linux.ie>, Daniel Vetter <daniel@ffwll.ch>,
+        Chen-Yu Tsai <wens@csie.org>,
+        Michael Turquette <mturquette@baylibre.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        linux-clk <linux-clk@vger.kernel.org>,
+        dri-devel <dri-devel@lists.freedesktop.org>,
+        devicetree <devicetree@vger.kernel.org>,
+        Michael Trimarchi <michael@amarulasolutions.com>,
+        linux-amarula@amarulasolutions.com,
+        linux-sunxi <linux-sunxi@googlegroups.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Before, ec->data_buffer could be written to from multiple
-contexts at the same time. Since the ec is shared data,
-it needs to be inside the mutex as well.
+On Mon, Mar 11, 2019 at 9:07 PM Maxime Ripard <maxime.ripard@bootlin.com> wrote:
+>
+> On Mon, Mar 11, 2019 at 07:06:23PM +0530, Jagan Teki wrote:
+> > Vertical video start delay is computed by excluding vertical front
+> > porch value from total vertical timings.
+> >
+> > This clearly confirmed from BSP code and here how it computed,
+> >
+> > (drivers/video/sunxi/disp2/disp/de/lowlevel_sun50iw1/de_dsi.c)
+> > u32 vfp = panel->lcd_vt - panel->lcd_y - panel->lcd_vbp;
+> > => (panel->lcd_vt) - panel->lcd_y - (panel->lcd_vbp)
+> > => (timmings->ver_front_porch + panel->lcd_vbp + panel->lcd_y)
+> >    - panel->lcd_y - (panel->lcd_vbp)
+> > => timmings->ver_front_porch + panel->lcd_vbp + panel->lcd_y
+> >                            - panel->lcd_y - panel->lcd_vbp
+> > => timmings->ver_front_porch
+> >
+> > But the current driver is assuming it can exclude vertical front
+> > porch along with vertical sync values from total vertical timings,
+> > which resulting wrong start delay indeed wrong picture rendering
+> > in the panel.
+>
+> Same story here: which panel, which datasheet, which "wrong picture
+> rendering"?
 
-Signed-off-by: Nick Crews <ncrews@chromium.org>
----
- drivers/platform/chrome/wilco_ec/mailbox.c | 6 +++---
- 1 file changed, 3 insertions(+), 3 deletions(-)
+It's bananapi,s070wv20-ct16 DSI
 
-diff --git a/drivers/platform/chrome/wilco_ec/mailbox.c b/drivers/platform/chrome/wilco_ec/mailbox.c
-index f6ff29a11f1a..d6cb96168285 100644
---- a/drivers/platform/chrome/wilco_ec/mailbox.c
-+++ b/drivers/platform/chrome/wilco_ec/mailbox.c
-@@ -223,12 +223,12 @@ int wilco_ec_mailbox(struct wilco_ec_device *ec, struct wilco_ec_message *msg)
- 		msg->command, msg->type, msg->flags, msg->response_size,
- 		msg->request_size);
- 
--	/* Prepare request packet */
-+	mutex_lock(&ec->mailbox_lock);
-+
- 	rq = ec->data_buffer;
- 	wilco_ec_prepare(msg, rq);
--
--	mutex_lock(&ec->mailbox_lock);
- 	ret = wilco_ec_transfer(ec, msg, rq);
-+	
- 	mutex_unlock(&ec->mailbox_lock);
- 
- 	return ret;
--- 
+>
+> > Example: timings, where it produces the issue.
+> > {
+> >       .vdisplay       = 600,
+> >       .vsync_start    = 600 + 12,
+> >       .vsync_end      = 600 + 12 + 2,
+> >       .vtotal         = 600 + 12 + 2 + 21,
+> > }
+>
+> Can you 100% trust those timings?
+
+ie. reason, I have given the Mainline timings [1]. The above timings
+are wrongly mentioned actual timings are from [1]
+
+>
+> > It produces the desired start delay value as 19 but the correct working
+> > value should be 513.
+> >
+> > So, Fix it by computing proper video start delay.
+> >
+> > Fixes: 69006ef0ecb1 ("drm/sun4i: dsi: Change the start delay calculation")
+> > Signed-off-by: Jagan Teki <jagan@amarulasolutions.com>
+> > ---
+> >  drivers/gpu/drm/sun4i/sun6i_mipi_dsi.c | 10 ++++++++--
+> >  1 file changed, 8 insertions(+), 2 deletions(-)
+> >
+> > diff --git a/drivers/gpu/drm/sun4i/sun6i_mipi_dsi.c b/drivers/gpu/drm/sun4i/sun6i_mipi_dsi.c
+> > index 62a508420227..8d6292c0158b 100644
+> > --- a/drivers/gpu/drm/sun4i/sun6i_mipi_dsi.c
+> > +++ b/drivers/gpu/drm/sun4i/sun6i_mipi_dsi.c
+> > @@ -364,8 +364,14 @@ static void sun6i_dsi_inst_init(struct sun6i_dsi *dsi,
+> >  static u16 sun6i_dsi_get_video_start_delay(struct sun6i_dsi *dsi,
+> >                                          struct drm_display_mode *mode)
+> >  {
+> > -     u16 start = clamp(mode->vtotal - mode->vdisplay - 10, 8, 100);
+> > -     u16 delay = mode->vtotal - (mode->vsync_end - mode->vdisplay) + start;
+> > +     u16 delay = mode->vtotal - (mode->vsync_start - mode->vdisplay);
+> > +
+> > +     /**
+> > +      * BSP comment:
+> > +      * put start_delay to tcon. set ready sync early to dramfreq,
+> > +      * so set start_delay 1
+> > +      */
+>
+> That doesn't make any sense to me... What does it mean?
+
+Which is meaning as above stated as "BSP comment" from here[2]
+
+[1] https://git.kernel.org/pub/scm/linux/kernel/git/next/linux-next.git/commit/drivers/gpu/drm/panel/panel-simple.c?id=7ad8b41cd8f5c2842646d01cdd576663caee04a7
+[2] https://github.com/longsleep/linux-pine64/blob/pine64-hacks-1.2/drivers/video/sunxi/disp2/disp/de/lowlevel_sun50iw1/de_dsi.c#L729
