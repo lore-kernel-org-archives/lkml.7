@@ -5,148 +5,218 @@ X-Spam-Level:
 X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	MAILING_LIST_MULTI,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 34A2AC10F06
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 Mar 2019 10:52:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 15929C43381
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 Mar 2019 10:52:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 05D9120857
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 Mar 2019 10:52:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CC28320657
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 Mar 2019 10:52:25 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727329AbfCKKwK (ORCPT
+        id S1727348AbfCKKwY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 11 Mar 2019 06:52:10 -0400
-Received: from Galois.linutronix.de ([146.0.238.70]:38055 "EHLO
-        Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727261AbfCKKwJ (ORCPT
+        Mon, 11 Mar 2019 06:52:24 -0400
+Received: from mail-vs1-f66.google.com ([209.85.217.66]:35716 "EHLO
+        mail-vs1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727248AbfCKKwX (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 11 Mar 2019 06:52:09 -0400
-Received: from localhost ([127.0.0.1] helo=vostro.local)
-        by Galois.linutronix.de with esmtp (Exim 4.80)
-        (envelope-from <john.ogness@linutronix.de>)
-        id 1h3IX9-00021p-IH; Mon, 11 Mar 2019 11:51:51 +0100
-From:   John Ogness <john.ogness@linutronix.de>
-To:     Sergey Senozhatsky <sergey.senozhatsky.work@gmail.com>
-Cc:     Sergey Senozhatsky <sergey.senozhatsky@gmail.com>,
-        linux-kernel@vger.kernel.org,
-        Peter Zijlstra <peterz@infradead.org>,
-        Petr Mladek <pmladek@suse.com>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Daniel Wang <wonderfly@google.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Alan Cox <gnomes@lxorguk.ukuu.org.uk>,
-        Jiri Slaby <jslaby@suse.com>,
-        Peter Feiner <pfeiner@google.com>, linux-serial@vger.kernel.org
-Subject: Re: [RFC PATCH v1 08/25] printk: add ring buffer and kthread
-References: <20190212143003.48446-1-john.ogness@linutronix.de>
-        <20190212143003.48446-9-john.ogness@linutronix.de>
-        <20190304073856.GA552@jagdpanzerIV>
-        <20190304100044.GC21004@jagdpanzerIV>
-        <20190304110703.GA960@tigerII.localdomain>
-        <87o96p9gtx.fsf@linutronix.de> <20190307051530.GC4893@jagdpanzerIV>
-Date:   Mon, 11 Mar 2019 11:51:49 +0100
-In-Reply-To: <20190307051530.GC4893@jagdpanzerIV> (Sergey Senozhatsky's
-        message of "Thu, 7 Mar 2019 14:15:30 +0900")
-Message-ID: <87va0pznsq.fsf@linutronix.de>
-User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/23.4 (gnu/linux)
+        Mon, 11 Mar 2019 06:52:23 -0400
+Received: by mail-vs1-f66.google.com with SMTP id e81so2386383vsd.2;
+        Mon, 11 Mar 2019 03:52:22 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=2ZdTxBmS/0+3PwlZrUoyPq32cxTBR+P2d6ASOtvv3MM=;
+        b=Di2M/fi28AKsnQy1t6E21VMBYmX69R9H1UmvFG1De0g70IsGy4v8UYN+7UxnY9jKZr
+         zSCLmczE0LYivSEGaBVAa/JFoUQHtgR4jcREA8Bf9OBH6l7zD+aJ/TsMGobkjTSg82NV
+         tY5Z3V5HBTluKtPgtkwuOdAJ2ST4UFUMTBD/de9DMxZeRgJHiRNSLHegaZgaxQp0o7ri
+         N0b1COC7/qAdCA37m2eZ7u00GkDqrE+6zXift2HpaEoPzkpizxun/pcYbaznDF4Kv6ML
+         fpzxnzZ58BsG/1NXntTfrrte6HjfxSyT4r/mcH+ZdC4b7S+ObclkewTZ7NSYZ5TTqejp
+         RZMw==
+X-Gm-Message-State: APjAAAW5Qb9MkNQ1EBjqPo5a3y1e42uHpQlb7XmZO9qTt/eipENF9Fda
+        AUFvIi3B5w1m9To3KvEtewqsVquv8pPcvKXkzZc=
+X-Google-Smtp-Source: APXvYqybhNzHQIp9Z8kkWfRL1ysh/WMqqrzZo/vBU1cLFkFjSh+7CDTcHjn6+iPQi1bLRh5JsAVhMDy3lt6W+kcoy68=
+X-Received: by 2002:a67:8588:: with SMTP id h130mr15569913vsd.11.1552301541718;
+ Mon, 11 Mar 2019 03:52:21 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+References: <20190212180441.15340-1-keescook@chromium.org> <20190212180441.15340-3-keescook@chromium.org>
+In-Reply-To: <20190212180441.15340-3-keescook@chromium.org>
+From:   Geert Uytterhoeven <geert@linux-m68k.org>
+Date:   Mon, 11 Mar 2019 11:52:09 +0100
+Message-ID: <CAMuHMdW6N40+0gGQ+LSrN64Mo4A0-ELAm0pR3gWQ0mNanyBuUQ@mail.gmail.com>
+Subject: Re: [PATCH 2/2] lib: Introduce test_stackinit module
+To:     Kees Cook <keescook@chromium.org>
+Cc:     Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Emese Revfy <re.emese@gmail.com>,
+        Alexander Popov <alex.popov@linux.com>,
+        Ard Biesheuvel <ard.biesheuvel@linaro.org>,
+        Laura Abbott <labbott@redhat.com>,
+        Jann Horn <jannh@google.com>,
+        Alexander Potapenko <glider@google.com>,
+        kernel-hardening@lists.openwall.com,
+        "Linux/m68k" <linux-m68k@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2019-03-07, Sergey Senozhatsky <sergey.senozhatsky.work@gmail.com> wrote:
->> The current printk implementation will do a better job of getting the
->> informational messages out, but at an enormous cost to all the tasks
->> on the system (including the realtime tasks). I am proposing a printk
->> implementation where the tasks are not affected by console printing
->> floods.
->
-> In new printk design the tasks are still affected by printing floods.
-> Tasks have to line up and (busy) wait for each other, regardless of
-> contexts.
+Hi Kees,
 
-They only line up and busy wait is to add the informational message to
-the ring buffer. The current printk implementation is the same in this
-respect. And as you've noted, the logbuf spinlock is not a source of
-latencies.
+On Tue, Feb 12, 2019 at 7:08 PM Kees Cook <keescook@chromium.org> wrote:
+> Adds test for stack initialization coverage. We have several build options
+> that control the level of stack variable initialization. This test lets us
+> visualize which options cover which cases, and provide tests for some of
+> the pathological padding conditions the compiler will sometimes fail to
+> initialize.
 
-> One of the late patch sets which I had (I never ever published it) was
-> a different kind of printk-kthread offloading. The idea was that
-> whatever should be printed (suppress_message_printing()) should be
-> printed. We obviously can't loop in console_unlock() for ever and
-> there is only one way to figure out if we can print out more messages,
-> that's why printk became RCU stall detector and watchdog aware; and
-> printk would break out and wake up printk_kthread if it sees that
-> watchdog is about to get angry on that particular CPU. printk_kthread
-> would run with preemption disabled and do the same thing: if it spent
-> watchdog_threshold / 2 printing - breakout, enable local IRQ,
-> cond_resched(). IOW watchdogs determine how much time we can spend on
-> printing.
+With current upstream, using gcc Ubuntu 8.2.0-1ubuntu2~18.04, I get
+on m68k:
 
-I studied and experimented with this (from your git). It was an
-interesting idea of keeping the current logic, but allowing to offload
-to a separate kthread if things were getting too overloaded. (It is also
-where I got term "emergency" from.)
+test_stackinit: u8_zero: stack fill missed target!?
+test_stackinit: u8_zero: fill 1 wide
+test_stackinit: u8_zero: target offset by 20
+test_stackinit: u16_zero: stack fill missed target!?
+test_stackinit: u16_zero: fill 2 wide
+test_stackinit: u16_zero: target offset by 20
+test_stackinit: u32_zero: stack fill missed target!?
+test_stackinit: u32_zero: fill 4 wide
+test_stackinit: u32_zero: target offset by 20
+test_stackinit: u64_zero: stack fill missed target!?
+test_stackinit: u64_zero: fill 8 wide
+test_stackinit: u64_zero: target offset by 20
+test_stackinit: char_array_zero: stack fill missed target!?
+test_stackinit: char_array_zero: fill 16 wide
+test_stackinit: char_array_zero: target offset by -12
+test_stackinit: small_hole_zero: stack fill missed target!?
+test_stackinit: small_hole_zero: fill 14 wide
+test_stackinit: small_hole_zero: target offset by -12
+test_stackinit: big_hole_zero ok
+test_stackinit: trailing_hole_zero: stack fill missed target!?
+test_stackinit: trailing_hole_zero: fill 14 wide
+test_stackinit: trailing_hole_zero: target offset by -12
+test_stackinit: packed_zero: stack fill missed target!?
+test_stackinit: packed_zero: fill 16 wide
+test_stackinit: packed_zero: target offset by -12
+test_stackinit: small_hole_dynamic_partial: stack fill missed target!?
+test_stackinit: small_hole_dynamic_partial: fill 14 wide
+test_stackinit: small_hole_dynamic_partial: target offset by -12
+test_stackinit: big_hole_dynamic_partial ok
+test_stackinit: trailing_hole_dynamic_partial: stack fill missed target!?
+test_stackinit: trailing_hole_dynamic_partial: fill 14 wide
+test_stackinit: trailing_hole_dynamic_partial: target offset by -12
+test_stackinit: packed_dynamic_partial: stack fill missed target!?
+test_stackinit: packed_dynamic_partial: fill 16 wide
+test_stackinit: packed_dynamic_partial: target offset by -12
+test_stackinit: small_hole_static_partial: stack fill missed target!?
+test_stackinit: small_hole_static_partial: fill 14 wide
+test_stackinit: small_hole_static_partial: target offset by -12
+test_stackinit: big_hole_static_partial ok
+test_stackinit: trailing_hole_static_partial: stack fill missed target!?
+test_stackinit: trailing_hole_static_partial: fill 14 wide
+test_stackinit: trailing_hole_static_partial: target offset by -12
+test_stackinit: packed_static_partial: stack fill missed target!?
+test_stackinit: packed_static_partial: fill 16 wide
+test_stackinit: packed_static_partial: target offset by -12
+test_stackinit: small_hole_static_all: stack fill missed target!?
+test_stackinit: small_hole_static_all: fill 14 wide
+test_stackinit: small_hole_static_all: target offset by -12
+test_stackinit: big_hole_static_all FAIL (uninit bytes: 61)
+test_stackinit: trailing_hole_static_all: stack fill missed target!?
+test_stackinit: trailing_hole_static_all: fill 14 wide
+test_stackinit: trailing_hole_static_all: target offset by -12
+test_stackinit: packed_static_all: stack fill missed target!?
+test_stackinit: packed_static_all: fill 16 wide
+test_stackinit: packed_static_all: target offset by -12
+test_stackinit: small_hole_dynamic_all: stack fill missed target!?
+test_stackinit: small_hole_dynamic_all: fill 14 wide
+test_stackinit: small_hole_dynamic_all: target offset by -12
+test_stackinit: big_hole_dynamic_all FAIL (uninit bytes: 61)
+test_stackinit: trailing_hole_dynamic_all: stack fill missed target!?
+test_stackinit: trailing_hole_dynamic_all: fill 14 wide
+test_stackinit: trailing_hole_dynamic_all: target offset by -12
+test_stackinit: packed_dynamic_all: stack fill missed target!?
+test_stackinit: packed_dynamic_all: fill 16 wide
+test_stackinit: packed_dynamic_all: target offset by -12
+test_stackinit: small_hole_runtime_partial: stack fill missed target!?
+test_stackinit: small_hole_runtime_partial: fill 14 wide
+test_stackinit: small_hole_runtime_partial: target offset by -12
+test_stackinit: big_hole_runtime_partial FAIL (uninit bytes: 127)
+test_stackinit: trailing_hole_runtime_partial: stack fill missed target!?
+test_stackinit: trailing_hole_runtime_partial: fill 14 wide
+test_stackinit: trailing_hole_runtime_partial: target offset by -12
+test_stackinit: packed_runtime_partial: stack fill missed target!?
+test_stackinit: packed_runtime_partial: fill 16 wide
+test_stackinit: packed_runtime_partial: target offset by -12
+test_stackinit: small_hole_runtime_all: stack fill missed target!?
+test_stackinit: small_hole_runtime_all: fill 14 wide
+test_stackinit: small_hole_runtime_all: target offset by -12
+test_stackinit: big_hole_runtime_all FAIL (uninit bytes: 61)
+test_stackinit: trailing_hole_runtime_all: stack fill missed target!?
+test_stackinit: trailing_hole_runtime_all: fill 14 wide
+test_stackinit: trailing_hole_runtime_all: target offset by -12
+test_stackinit: packed_runtime_all: stack fill missed target!?
+test_stackinit: packed_runtime_all: fill 16 wide
+test_stackinit: packed_runtime_all: target offset by -12
+test_stackinit: u8_none: stack fill missed target!?
+test_stackinit: u8_none: fill 1 wide
+test_stackinit: u8_none: target offset by 20
+test_stackinit: u16_none: stack fill missed target!?
+test_stackinit: u16_none: fill 2 wide
+test_stackinit: u16_none: target offset by 20
+test_stackinit: u32_none: stack fill missed target!?
+test_stackinit: u32_none: fill 4 wide
+test_stackinit: u32_none: target offset by 20
+test_stackinit: u64_none: stack fill missed target!?
+test_stackinit: u64_none: fill 8 wide
+test_stackinit: u64_none: target offset by 20
+test_stackinit: char_array_none: stack fill missed target!?
+test_stackinit: char_array_none: fill 16 wide
+test_stackinit: char_array_none: target offset by -12
+test_stackinit: switch_1_none: stack fill missed target!?
+test_stackinit: switch_1_none: fill 8 wide
+test_stackinit: switch_1_none: target offset by 16
+test_stackinit: switch_2_none: stack fill missed target!?
+test_stackinit: switch_2_none: fill 8 wide
+test_stackinit: switch_2_none: target offset by 16
+test_stackinit: small_hole_none: stack fill missed target!?
+test_stackinit: small_hole_none: fill 14 wide
+test_stackinit: small_hole_none: target offset by -12
+test_stackinit: big_hole_none FAIL (uninit bytes: 128)
+test_stackinit: trailing_hole_none: stack fill missed target!?
+test_stackinit: trailing_hole_none: fill 14 wide
+test_stackinit: trailing_hole_none: target offset by -12
+test_stackinit: packed_none: stack fill missed target!?
+test_stackinit: packed_none: fill 16 wide
+test_stackinit: packed_none: target offset by -12
+test_stackinit: user: stack fill missed target!?
+test_stackinit: user: fill 14 wide
+test_stackinit: user: target offset by -12
+test_stackinit: failures: 42
 
-But I was satisfied with neither the direct printing (winner takes all,
-printk-safe defers) nor _relying_ on a kthread for important messages in
-an offload situation. This is what convinced me that the kernel needs a
-new interface so that it can communicate the _really_ important things
-synchronously: write_atomic().
+Any idea what is wrong? I find the test code a bit hard to understand...
 
->> I want messages of the information category to cause no disturbance
->> to the system. Give the kernel the freedom to communicate to users
->> without destroying its own performance. This can only be achieved if
->> the messages are printed from a _fully_ preemptible context.
-> [..]
->> And I want messages of the emergency category to be as reliable as
->> possible, regardless of the costs to the system. Give the kernel a
->> clear mechanism to _reliably_ communicate critical information.  Such
->> messages should never appear on a correctly functioning system.
->
-> I don't really understand the role of loglevel anymore.
->
-> When I do ./a.out --loglevel=X  I have a clear understanding that
-> all messages which fall into [critical, X] range will be in the logs,
-> because I told that application that those messages are important to
-> me right now. And it used to be the same with the kernel loglevel.
+Also, I see comments making assumptions that are not true:
 
-The loglevel is not related to logging. It specifies the amount of
-console printing. But I will assume you are referring to creating log
-files by having an external device store the console printing.
+    struct test_small_hole {
+            size_t one;
+            char two;
+            /* 3 byte padding hole here. */
+            int three;
+            unsigned long four;
+    };
 
-> But now the kernel will do its own thing:
->
->   - what the kernel considers important will go into the logs
->   - what the kernel doesn't consider important _maybe_ will end up
->     in the logs (preemptible printk kthread). And this is where
->     loglevel now. After the _maybe_ part.
+On m68k (and a few other architectures), integrals of 16-bit and larger
+are aligned to a 2-byte address, so the padding may be only a single byte.
 
-"what the kernel considers" is a configuration option of the
-administrator. The administrator can increase the verbocity of the
-console (loglevel) without having negative effects on the system
-itself. Also, if the system were to suddenly crash, those crash messages
-shouldn't be in jeopardy just because the verbocity of the console was
-turned up.
+Thanks!
 
-You (and Petr) talk about that _all_ console printing is for
-emergencies. That if an administrator sets the loglevel to 7 it is
-because the pr_info messages are just as important as the pr_emerg. And
-if that is indeed the intention of console printing and loglevel, then
-why is asynchronous printk calls for console messages even allowed
-today? IMO that isn't taking the importance of the message very
-seriously.
+Gr{oetje,eeting}s,
 
-> If I'm not mistaken, Tetsuo reported that on a box under heavy OOM
-> pressure he saw preemptible printk dragging 5 minutes behind the
-> logbuf head. Preemptible printk is good for nothing. It's beyond
-> useless, it's something else.
+                        Geert
 
-The informational messages are correctly timestamped and can be sorted
-offline. They are informational, so any loss is less tragic. And they
-aren't affecting system performance because they are being printed in
-preemptible contexts.
+-- 
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
 
-John Ogness
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
