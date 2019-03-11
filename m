@@ -1,176 +1,115 @@
 Return-Path: <SRS0=FxTY=RO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
-X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Level: *
+X-Spam-Status: No, score=1.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FSL_HELO_FAKE,MAILING_LIST_MULTI,SPF_PASS,
+	USER_AGENT_MUTT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 38B66C4360F
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 Mar 2019 09:08:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 400EAC43381
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 Mar 2019 09:09:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0F032206BA
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 Mar 2019 09:08:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0DB6A206BA
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 Mar 2019 09:09:08 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1552295348;
+	bh=qPJmZY1vnYEvVKahx2PP8hRcrnJnDjhr/LAOlB5UScs=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=j7ZWtOT7qev/ItGHuYEEzQs9vAQZ7ZZIE58FoGm0VBSFzPUO4K/h39Q6VlA9qZHCn
+	 TUnENDTRs9RQKcwF/+bmAZVZ/7v2gUPkh/0yLAb+UYxZW5LTAP/XvwyIIJOfGPQWee
+	 hufbx+HEIejAodukbvRpqAEBDmS7pmhiKiW298RY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727017AbfCKJIt (ORCPT
+        id S1727063AbfCKJJG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 11 Mar 2019 05:08:49 -0400
-Received: from mail02.iobjects.de ([188.40.134.68]:38620 "EHLO
-        mail02.iobjects.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725850AbfCKJIt (ORCPT
+        Mon, 11 Mar 2019 05:09:06 -0400
+Received: from mail-wr1-f67.google.com ([209.85.221.67]:33078 "EHLO
+        mail-wr1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725850AbfCKJJG (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 11 Mar 2019 05:08:49 -0400
-Received: from tux.wizards.de (pD9EBF050.dip0.t-ipconnect.de [217.235.240.80])
-        by mail02.iobjects.de (Postfix) with ESMTPSA id E596741666B0;
-        Mon, 11 Mar 2019 10:08:46 +0100 (CET)
-Received: from [192.168.100.223] (ragnarok.applied-asynchrony.com [192.168.100.223])
-        by tux.wizards.de (Postfix) with ESMTP id 862A5F01604;
-        Mon, 11 Mar 2019 10:08:46 +0100 (CET)
-Subject: Re: [PATCH BUGFIX IMPROVEMENT V2 7/9] block, bfq: print SHARED
- instead of pid for shared queues in logs
-To:     Paolo Valente <paolo.valente@linaro.org>,
-        Jens Axboe <axboe@kernel.dk>
-Cc:     linux-block@vger.kernel.org, linux-kernel@vger.kernel.org,
-        ulf.hansson@linaro.org, linus.walleij@linaro.org,
-        broonie@kernel.org, bfq-iosched@googlegroups.com,
-        oleksandr@natalenko.name, fra.fra.800@gmail.com,
-        alessio.masola@gmail.com
-References: <20190310181137.2604-1-paolo.valente@linaro.org>
- <20190310181137.2604-8-paolo.valente@linaro.org>
-From:   =?UTF-8?Q?Holger_Hoffst=c3=a4tte?= <holger@applied-asynchrony.com>
-Organization: Applied Asynchrony, Inc.
-Message-ID: <491be7d2-cbe2-a1f1-e102-b449b3a8ace6@applied-asynchrony.com>
-Date:   Mon, 11 Mar 2019 10:08:46 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.5.3
+        Mon, 11 Mar 2019 05:09:06 -0400
+Received: by mail-wr1-f67.google.com with SMTP id i8so4164378wrm.0
+        for <linux-kernel@vger.kernel.org>; Mon, 11 Mar 2019 02:09:04 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=sender:date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:content-transfer-encoding:in-reply-to
+         :user-agent;
+        bh=NNZVPb2K3M8mrikZFB4dPK1dxCzfHjeONxF73GfQ7G8=;
+        b=SX0bpm2SbYUWTjEeaZiwgVrWLEN767k5DbtPsvUlzoW14bOT1Dx+R2qj486/X428Qs
+         NEXt40n36hvD4fMvj3HGyQOiXixq3clnEH4J3uU7e7lJR++KoerIGTbtZsnhpie7SRvV
+         OYuTrdN0GNENvtw7+jE/tM6khxQCSE0Vqx8bbHwla9p97PKDW7mm9Ycc8dJ8syH2sWPV
+         aKCK4yVWVMO87V/f5QXVzFt6U7KD4M/H1cIBuBQwKTk6aFIYlqw7L1Pocp6eS/jrqiDk
+         xwQbh39aIgH5X8cQz8G01dXhYY6JblUq1SaWfnyI+lfoxnbauUii/vdoFH3xyKkQFWoB
+         UAeQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
+         :references:mime-version:content-disposition
+         :content-transfer-encoding:in-reply-to:user-agent;
+        bh=NNZVPb2K3M8mrikZFB4dPK1dxCzfHjeONxF73GfQ7G8=;
+        b=klmRo2OQjjeV4tdtOGw82UHooEY8t3GE2sjgjP8ldM8xYuVMBoLBUxHKMJuGWX5IYn
+         pvCxIz3jFewsQEQpBU5HdlE4a9rGAgEnqgKNgyL+xRi7eX+xNcU8LuCGboPJ3Y8oukfo
+         U9LTxjCEmKML7iFnKwvBjyHOc+sbauZydsEYoeQtRmj8f6JXy5QaSWtBlrVVKVVDaTF9
+         PM4nEiIoMdY41GfTjBTjd6syvhEWHD87tHJr4Oo6YEKNXn2ykmqXntnkoBLzVoLjD9SR
+         ojgs81356nJaLFIMphDQlfXInn8Ymb6eBKeDxP0jBeRev9nKoE6ZWReelBYvccrKp4xV
+         t/dg==
+X-Gm-Message-State: APjAAAWH/7/a6aecJU8ieDYO/Vscne/tDROo9DtD4xmMqRCvi9vw4FvX
+        t5SfNyTaSHw2lqJy3PhSqzI=
+X-Google-Smtp-Source: APXvYqw4OuHlHBbK46vqlR+9ca0Dvw7ikEm/l6CySYgPJ3wd+t3yRIW3Uc1zKAkQlhWilxVq4KZXkA==
+X-Received: by 2002:adf:ba12:: with SMTP id o18mr20652199wrg.326.1552295343954;
+        Mon, 11 Mar 2019 02:09:03 -0700 (PDT)
+Received: from gmail.com (2E8B0CD5.catv.pool.telekom.hu. [46.139.12.213])
+        by smtp.gmail.com with ESMTPSA id o12sm19431745wre.0.2019.03.11.02.09.02
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Mon, 11 Mar 2019 02:09:03 -0700 (PDT)
+Date:   Mon, 11 Mar 2019 10:09:01 +0100
+From:   Ingo Molnar <mingo@kernel.org>
+To:     Linus Torvalds <torvalds@linux-foundation.org>
+Cc:     Thomas Gleixner <tglx@linutronix.de>,
+        Linux List Kernel Mailing <linux-kernel@vger.kernel.org>,
+        the arch/x86 maintainers <x86@kernel.org>
+Subject: Re: [GIT pull] scheduler updates for 5.1
+Message-ID: <20190311090901.GA22570@gmail.com>
+References: <155221755096.13878.3370977359110476046.tglx@nanos.tec.linutronix.de>
+ <155221755097.13878.2888459223557668046.tglx@nanos.tec.linutronix.de>
+ <CAHk-=wi_krg9B2B0i7+mV4rRCdowiNw3bOC9rssaZTVFQvKMxQ@mail.gmail.com>
 MIME-Version: 1.0
-In-Reply-To: <20190310181137.2604-8-paolo.valente@linaro.org>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <CAHk-=wi_krg9B2B0i7+mV4rRCdowiNw3bOC9rssaZTVFQvKMxQ@mail.gmail.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi,
 
-Guess what - more problems ;-)
-This time when building without CONFIG_BFQ_GROUP_IOSCHED, see below..
+* Linus Torvalds <torvalds@linux-foundation.org> wrote:
 
-On 3/10/19 7:11 PM, Paolo Valente wrote:
-> From: Francesco Pollicino <fra.fra.800@gmail.com>
+> On Sun, Mar 10, 2019 at 4:33 AM Thomas Gleixner <tglx@linutronix.de> wrote:
+> >
+> > A small set of fixes for the scheduler:
 > 
-> The function "bfq_log_bfqq" prints the pid of the process
-> associated with the queue passed as input.
+> What? No.
 > 
-> Unfortunately, if the queue is shared, then more than one process
-> is associated with the queue. The pid that gets printed in this
-> case is the pid of one of the associated processes.
-> Which process gets printed depends on the exact sequence of merge
-> events the queue underwent. So printing such a pid is rather
-> useless and above all is often rather confusing because it
-> reports a random pid between those of the associated processes.
+> This is completely broken, and even warns loudly about it.
 > 
-> This commit addresses this issue by printing SHARED instead of a pid
-> if the queue is shared.
+>   kernel/sched/cpufreq_schedutil.c: In function ‘sugov_iowait_boost’:
+>   ./include/linux/kernel.h:827:29: warning: comparison of distinct
+> pointer types lacks a cast
+>   kernel/sched/cpufreq_schedutil.c:346:26: note: in expansion of macro ‘min’
+>      sg_cpu->iowait_boost = min(sg_cpu->iowait_boost << 1,
+> SCHED_CAPACITY_SCALE);
+>                             ^~~
 > 
-> Signed-off-by: Francesco Pollicino <fra.fra.800@gmail.com>
-> Signed-off-by: Paolo Valente <paolo.valente@linaro.org>
-> ---
->   block/bfq-iosched.c | 10 ++++++++++
->   block/bfq-iosched.h | 23 +++++++++++++++++++----
->   2 files changed, 29 insertions(+), 4 deletions(-)
+> because 'SCHED_CAPACITY_SCALE' is of type 'long' and 'iowait_boost' is
+> 'unsigned int'.
 > 
-> diff --git a/block/bfq-iosched.c b/block/bfq-iosched.c
-> index 500b04df9efa..7d95d9c01036 100644
-> --- a/block/bfq-iosched.c
-> +++ b/block/bfq-iosched.c
-> @@ -2590,6 +2590,16 @@ bfq_merge_bfqqs(struct bfq_data *bfqd, struct bfq_io_cq *bic,
->   	 *   assignment causes no harm).
->   	 */
->   	new_bfqq->bic = NULL;
-> +	/*
-> +	 * If the queue is shared, the pid is the pid of one of the associated
-> +	 * processes. Which pid depends on the exact sequence of merge events
-> +	 * the queue underwent. So printing such a pid is useless and confusing
-> +	 * because it reports a random pid between those of the associated
-> +	 * processes.
-> +	 * We mark such a queue with a pid -1, and then print SHARED instead of
-> +	 * a pid in logging messages.
-> +	 */
-> +	new_bfqq->pid = -1;
->   	bfqq->bic = NULL;
->   	/* release process reference to bfqq */
->   	bfq_put_queue(bfqq);
-> diff --git a/block/bfq-iosched.h b/block/bfq-iosched.h
-> index 829730b96fb2..6410cc9a064d 100644
-> --- a/block/bfq-iosched.h
-> +++ b/block/bfq-iosched.h
-> @@ -32,6 +32,8 @@
->   #define BFQ_DEFAULT_GRP_IOPRIO	0
->   #define BFQ_DEFAULT_GRP_CLASS	IOPRIO_CLASS_BE
->   
-> +#define MAX_PID_STR_LENGTH 12
-> +
->   /*
->    * Soft real-time applications are extremely more latency sensitive
->    * than interactive ones. Over-raise the weight of the former to
-> @@ -1016,13 +1018,23 @@ void bfq_add_bfqq_busy(struct bfq_data *bfqd, struct bfq_queue *bfqq);
->   /* --------------- end of interface of B-WF2Q+ ---------------- */
->   
->   /* Logging facilities. */
-> +static void bfq_pid_to_str(int pid, char *str, int len)
-> +{
-> +	if (pid != -1)
-> +		snprintf(str, len, "%d", pid);
-> +	else
-> +		snprintf(str, len, "SHARED-");
-> +}
-> +
->   #ifdef CONFIG_BFQ_GROUP_IOSCHED
->   struct bfq_group *bfqq_group(struct bfq_queue *bfqq);
->   
->   #define bfq_log_bfqq(bfqd, bfqq, fmt, args...)	do {			\
-> +	char pid_str[MAX_PID_STR_LENGTH];	\
-> +	bfq_pid_to_str((bfqq)->pid, pid_str, MAX_PID_STR_LENGTH);	\
->   	blk_add_cgroup_trace_msg((bfqd)->queue,				\
->   			bfqg_to_blkg(bfqq_group(bfqq))->blkcg,		\
-> -			"bfq%d%c " fmt, (bfqq)->pid,			\
-> +			"bfq%s%c " fmt, pid_str,			\
->   			bfq_bfqq_sync((bfqq)) ? 'S' : 'A', ##args);	\
->   } while (0)
->   
-> @@ -1033,10 +1045,13 @@ struct bfq_group *bfqq_group(struct bfq_queue *bfqq);
->   
->   #else /* CONFIG_BFQ_GROUP_IOSCHED */
->   
-> -#define bfq_log_bfqq(bfqd, bfqq, fmt, args...)	\
-> -	blk_add_trace_msg((bfqd)->queue, "bfq%d%c " fmt, (bfqq)->pid,	\
-> +#define bfq_log_bfqq(bfqd, bfqq, fmt, args...) do {	\
-> +	char pid_str[MAX_PID_STR_LENGTH];	\
-> +	bfq_pid_to_str((bfqq)->pid, pid_str, MAX_PID_STR_LENGTH);	\
-> +	blk_add_trace_msg((bfqd)->queue, "bfq%s%c " fmt, pid_str,	\
->   			bfq_bfqq_sync((bfqq)) ? 'S' : 'A',		\
-> -				##args)
-> +				##args)		\
----------------------------------------^ compilation error due to missing ;
+> Why are you sending me code that hasn't even been compiled, and call it a "fix"?
 
-> +} while (0)
->   #define bfq_log_bfqg(bfqd, bfqg, fmt, args...)		do {} while (0)
-^^^^^^^^^^^^^^^^^^^^^^^^
-Here you re- and effectively undefine the previous new bfq_log_bfqq()
-definition with an empty block; I think you wanted to delete the second
-(empty) definition, otherwise the new code won't do much.
+Sorry about that - we'll sort this out!
 
-Finally there is now a warning at bfq-cgroup.c:25 that bfq_pid_to_str()
-is defined but not used (in that compilation unit) since it is defined
-unconditionally for both cases of CONFIG_BFQ_GROUP_IOSCHED, which is
-required for bfq-cgroup.c. Since reordering the includes there won't work
-due to ifdef overlaps, the easiest fix for that is to mark bfq_pid_to_str()
-as "static inline", as already suggested by Oleksandr.
+Thanks,
 
-With those changes it builds.
-
-cheers,
-Holger
+	Ingo
