@@ -2,136 +2,92 @@ Return-Path: <SRS0=FxTY=RO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 697F3C43381
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 Mar 2019 16:11:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DB4C6C43381
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 Mar 2019 16:13:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 38531206BA
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 Mar 2019 16:11:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B14F12084F
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 Mar 2019 16:13:59 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727514AbfCKQLI convert rfc822-to-8bit (ORCPT
+        id S1727527AbfCKQN6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 11 Mar 2019 12:11:08 -0400
-Received: from unicorn.mansr.com ([81.2.72.234]:34224 "EHLO unicorn.mansr.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726625AbfCKQLH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 11 Mar 2019 12:11:07 -0400
-Received: by unicorn.mansr.com (Postfix, from userid 51770)
-        id 3983314CEA; Mon, 11 Mar 2019 16:11:06 +0000 (GMT)
-From:   =?iso-8859-1?Q?M=E5ns_Rullg=E5rd?= <mans@mansr.com>
-To:     Maxime Ripard <maxime.ripard@bootlin.com>
-Cc:     David Airlie <airlied@linux.ie>, Chen-Yu Tsai <wens@csie.org>,
-        dri-devel@lists.freedesktop.org,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] drm/sun4i: hdmi: add support for ddc-i2c-bus property
-References: <20190311134713.25876-1-mans@mansr.com>
-        <20190311154702.eslw5ccol44vxcmy@flea>
-Date:   Mon, 11 Mar 2019 16:11:06 +0000
-In-Reply-To: <20190311154702.eslw5ccol44vxcmy@flea> (Maxime Ripard's message
-        of "Mon, 11 Mar 2019 16:47:02 +0100")
-Message-ID: <yw1xef7d4cit.fsf@mansr.com>
-User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/25.3 (gnu/linux)
-MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Transfer-Encoding: 8BIT
+        Mon, 11 Mar 2019 12:13:58 -0400
+Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:46400 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726641AbfCKQN6 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 11 Mar 2019 12:13:58 -0400
+Received: from pps.filterd (m0098396.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x2BG9gTl011720
+        for <linux-kernel@vger.kernel.org>; Mon, 11 Mar 2019 12:13:57 -0400
+Received: from e34.co.us.ibm.com (e34.co.us.ibm.com [32.97.110.152])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 2r5s1n6x5s-1
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
+        for <linux-kernel@vger.kernel.org>; Mon, 11 Mar 2019 12:13:57 -0400
+Received: from localhost
+        by e34.co.us.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
+        for <linux-kernel@vger.kernel.org> from <jejb@linux.vnet.ibm.com>;
+        Mon, 11 Mar 2019 16:13:56 -0000
+Received: from b03cxnp07029.gho.boulder.ibm.com (9.17.130.16)
+        by e34.co.us.ibm.com (192.168.1.134) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
+        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
+        Mon, 11 Mar 2019 16:13:52 -0000
+Received: from b03ledav006.gho.boulder.ibm.com (b03ledav006.gho.boulder.ibm.com [9.17.130.237])
+        by b03cxnp07029.gho.boulder.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x2BGDp2923199916
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Mon, 11 Mar 2019 16:13:51 GMT
+Received: from b03ledav006.gho.boulder.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id BC93BC6059;
+        Mon, 11 Mar 2019 16:13:51 +0000 (GMT)
+Received: from b03ledav006.gho.boulder.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 4BDE3C6057;
+        Mon, 11 Mar 2019 16:13:50 +0000 (GMT)
+Received: from jarvis.ext.hansenpartnership.com (unknown [9.85.171.143])
+        by b03ledav006.gho.boulder.ibm.com (Postfix) with ESMTP;
+        Mon, 11 Mar 2019 16:13:50 +0000 (GMT)
+Subject: Re: [PATCH] scsi/dpt_i2o.c: Use dma_zalloc_coherent
+From:   James Bottomley <jejb@linux.vnet.ibm.com>
+To:     Sabyasachi Gupta <sabyasachi.linux@gmail.com>,
+        akpm@linux-foundation.org
+Cc:     aacraid@microsemi.com, martin.petersen@oracle.com,
+        linux-scsi@vger.kernel.org, linux-kernel@vger.kernel.org,
+        jrdr.linux@gmail.com
+Date:   Mon, 11 Mar 2019 09:13:49 -0700
+In-Reply-To: <5c8683f7.1c69fb81.e37f9.75a0@mx.google.com>
+References: <5c8683f7.1c69fb81.e37f9.75a0@mx.google.com>
+Content-Type: text/plain; charset="UTF-8"
+X-Mailer: Evolution 3.26.6 
+Mime-Version: 1.0
+Content-Transfer-Encoding: 7bit
+X-TM-AS-GCONF: 00
+x-cbid: 19031116-0016-0000-0000-0000098EA616
+X-IBM-SpamModules-Scores: 
+X-IBM-SpamModules-Versions: BY=3.00010739; HX=3.00000242; KW=3.00000007;
+ PH=3.00000004; SC=3.00000281; SDB=6.01172879; UDB=6.00613182; IPR=6.00953533;
+ MB=3.00025929; MTD=3.00000008; XFM=3.00000015; UTC=2019-03-11 16:13:55
+X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
+x-cbparentid: 19031116-0017-0000-0000-0000426A81E3
+Message-Id: <1552320829.2889.11.camel@linux.vnet.ibm.com>
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-03-11_12:,,
+ signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
+ malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
+ clxscore=1011 lowpriorityscore=0 mlxscore=0 impostorscore=0
+ mlxlogscore=550 adultscore=0 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.0.1-1810050000 definitions=main-1903110116
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Maxime Ripard <maxime.ripard@bootlin.com> writes:
+On Mon, 2019-03-11 at 21:21 +0530, Sabyasachi Gupta wrote:
+> Replaced dma_alloc_coherent + memset with dma_zalloc_coherent
 
-> Hi!
->
-> On Mon, Mar 11, 2019 at 01:47:13PM +0000, Mans Rullgard wrote:
->> Sometimes it is desirabled to use a separate i2c controller for ddc
->> access.  This adds support for the ddc-i2c-bus property of the
->> hdmi-connector node, using the specified controller if provided.
->> 
->> Signed-off-by: Mans Rullgard <mans@mansr.com>
->> ---
->>  drivers/gpu/drm/sun4i/sun4i_hdmi.h     |  1 +
->>  drivers/gpu/drm/sun4i/sun4i_hdmi_enc.c | 37 +++++++++++++++++++++++---
->>  2 files changed, 35 insertions(+), 3 deletions(-)
->> 
->> diff --git a/drivers/gpu/drm/sun4i/sun4i_hdmi.h b/drivers/gpu/drm/sun4i/sun4i_hdmi.h
->> index b685ee11623d..b08c4453d47c 100644
->> --- a/drivers/gpu/drm/sun4i/sun4i_hdmi.h
->> +++ b/drivers/gpu/drm/sun4i/sun4i_hdmi.h
->> @@ -269,6 +269,7 @@ struct sun4i_hdmi {
->>  	struct clk		*tmds_clk;
->>  
->>  	struct i2c_adapter	*i2c;
->> +	struct i2c_adapter	*ddc_i2c;
->>  
->>  	/* Regmap fields for I2C adapter */
->>  	struct regmap_field	*field_ddc_en;
->> diff --git a/drivers/gpu/drm/sun4i/sun4i_hdmi_enc.c b/drivers/gpu/drm/sun4i/sun4i_hdmi_enc.c
->> index 061d2e0d9011..5b2fac79f5d6 100644
->> --- a/drivers/gpu/drm/sun4i/sun4i_hdmi_enc.c
->> +++ b/drivers/gpu/drm/sun4i/sun4i_hdmi_enc.c
->> @@ -212,7 +212,7 @@ static int sun4i_hdmi_get_modes(struct drm_connector *connector)
->>  	struct edid *edid;
->>  	int ret;
->>  
->> -	edid = drm_get_edid(connector, hdmi->i2c);
->> +	edid = drm_get_edid(connector, hdmi->ddc_i2c ?: hdmi->i2c);
->
-> You can't test whether ddc_i2c is NULL or not...
->
->>  	if (!edid)
->>  		return 0;
->>  
->> @@ -228,6 +228,28 @@ static int sun4i_hdmi_get_modes(struct drm_connector *connector)
->>  	return ret;
->>  }
->>  
->> +static struct i2c_adapter *sun4i_hdmi_get_ddc(struct device *dev)
->> +{
->> +	struct device_node *phandle, *remote;
->> +	struct i2c_adapter *ddc;
->> +
->> +	remote = of_graph_get_remote_node(dev->of_node, 1, -1);
->> +	if (!remote)
->> +		return ERR_PTR(-EINVAL);
->> +
->> +	phandle = of_parse_phandle(remote, "ddc-i2c-bus", 0);
->> +	of_node_put(remote);
->> +	if (!phandle)
->> +		return NULL;
->> +
->> +	ddc = of_get_i2c_adapter_by_node(phandle);
->> +	of_node_put(phandle);
->> +	if (!ddc)
->> +		return ERR_PTR(-EPROBE_DEFER);
->> +
->> +	return ddc;
->
-> ... Since even in (most) error cases you're returning a !NULL pointer.
->
->> +}
->> +
->>  static const struct drm_connector_helper_funcs sun4i_hdmi_connector_helper_funcs = {
->>  	.get_modes	= sun4i_hdmi_get_modes,
->>  };
->> @@ -575,6 +597,12 @@ static int sun4i_hdmi_bind(struct device *dev, struct device *master,
->>  		goto err_disable_mod_clk;
->>  	}
->>  
->> +	hdmi->ddc_i2c = sun4i_hdmi_get_ddc(dev);
->> +	if (IS_ERR(hdmi->ddc_i2c)) {
+I really don't think so.  This API is going away:
 
-... which is checked here.
+https://lkml.org/lkml/2019/1/8/394
 
-The property is optional, so the idea was to return null in that case
-and use the built-in controller.  If the property exists but some error
-occurs, we want to abort rather than proceed with the fallback which
-almost certainly won't work.
+James
 
-Maybe I got something wrong in that logic.
-
--- 
-Måns Rullgård
