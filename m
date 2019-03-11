@@ -7,61 +7,51 @@ X-Spam-Status: No, score=-12.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_PASS autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 343F9C43381
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 Mar 2019 17:24:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E981FC43381
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 Mar 2019 17:24:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 038912063F
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 Mar 2019 17:24:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B5EFB2147C
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 Mar 2019 17:24:14 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1552325052;
-	bh=d4UdD16OQq8BCqz38LiAC7H1j/rVITfCm0tW1YIvEhI=;
+	s=default; t=1552325054;
+	bh=Z7gSD1cfhfeWzy9eFF6aNew+iatyRPjZC7Lzg4yYYKk=;
 	h=From:To:Cc:Subject:In-Reply-To:Date:List-ID:From;
-	b=Awz9xxifl6Nw2E30ne5OjoOvDajlhwTzcI27kD2PVKiacKplxGtEFgx6iXHkYMFpK
-	 NCMT4y5fcKt6eIug7TaQXSmkk5lk4KQOJBM+upo599ReDeFZmGceCfA6OUNPC9x+6e
-	 iltIzVDaGVJtPr4ZWID+TaM5PUeM+9a5gwC0R638=
+	b=b0h3zoec8MURwsp9pr/Xkz7+32gFWmDgALNiHqkJMfIMA9Yf5JdRjd+X/deJG0TAB
+	 ATUkcF8TDAKGMuer3OP4hI2OihHAYaV0UygeEgzUjmdw4AeuT2nsRilON3urJylpsF
+	 gtvh/OVoYnO4gynM08b24NbTzZvWFc2lhja/nftY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728163AbfCKRYK (ORCPT
+        id S1728183AbfCKRYN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 11 Mar 2019 13:24:10 -0400
-Received: from heliosphere.sirena.org.uk ([172.104.155.198]:50596 "EHLO
+        Mon, 11 Mar 2019 13:24:13 -0400
+Received: from heliosphere.sirena.org.uk ([172.104.155.198]:50864 "EHLO
         heliosphere.sirena.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728108AbfCKRYC (ORCPT
+        with ESMTP id S1728165AbfCKRYM (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 11 Mar 2019 13:24:02 -0400
+        Mon, 11 Mar 2019 13:24:12 -0400
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
         d=sirena.org.uk; s=20170815-heliosphere; h=Date:Message-Id:In-Reply-To:
         Subject:Cc:To:From:Sender:Reply-To:MIME-Version:Content-Type:
         Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
         Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:References:
         List-Id:List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:
-        List-Archive; bh=7WFL3W2M3ADq+FKR8oU8nBzoFiliH+Io6Beopa2Nrfg=; b=UVMgXSueIeGm
-        sputoW48Y/0d0GNr0se4/xabf1aKiEeG8Xa5W/idLYVi5UPzVmT56JpzEZZ8a1+/eJD3QKy0yuMt5
-        jtN7y2ODUnfZg0U8L6963iX+WfsQxriqzN1WNViADkpIzMXjcl+2qg67Jx3CF5BTichJjDj51yIz8
-        5II1I=;
+        List-Archive; bh=vwg+fTsjOHRkwc6pYQ+QdK2eEly5aPzVudr4+tuAEPE=; b=nd9m5gK//AIf
+        ldu6gc0gkx9gR1Zb4HftjvXtbM8EuShY/uAv0F6Ss3qcPXLiv0EYXhU5LNJLxquNu9ji3LIYXVciR
+        2N0V2gSUGq9fgIeJArvh/fqksCzjt1C2yre7LJjoNfZb351L4L8t+fUf9dLOmHl0Cr9pExh5oY+tz
+        LhELA=;
 Received: from cpc102320-sgyl38-2-0-cust46.18-2.cable.virginm.net ([82.37.168.47] helo=debutante.sirena.org.uk)
         by heliosphere.sirena.org.uk with esmtpa (Exim 4.89)
         (envelope-from <broonie@sirena.org.uk>)
-        id 1h3OeX-0005N9-NY; Mon, 11 Mar 2019 17:23:53 +0000
+        id 1h3Oen-0005O9-Fs; Mon, 11 Mar 2019 17:24:09 +0000
 Received: by debutante.sirena.org.uk (Postfix, from userid 1000)
-        id 349AB1128896; Mon, 11 Mar 2019 17:23:53 +0000 (GMT)
+        id D43661128896; Mon, 11 Mar 2019 17:24:08 +0000 (GMT)
 From:   Mark Brown <broonie@kernel.org>
-To:     Arnd Bergmann <arnd@arndb.de>
-Cc:     Peter Ujfalusi <peter.ujfalusi@ti.com>,
-        Mark Brown <broonie@kernel.org>,
-        Peter Ujfalusi <peter.ujfalusi@ti.com>,
-        Mark Brown <broonie@kernel.org>, alsa-devel@alsa-project.org,
-        Kees Cook <keescook@chromium.org>,
-        Tony Lindgren <tony@atomide.com>, linux-kernel@vger.kernel.org,
-        Nick Desaulniers <ndesaulniers@google.com>,
-        Takashi Iwai <tiwai@suse.com>,
-        Liam Girdwood <lgirdwood@gmail.com>,
-        Vishal Thanki <vishalthanki@gmail.com>,
-        alsa-devel@alsa-project.org
-Subject: Applied "ASoC: davinci-mcasp: Fix clang warning without CONFIG_PM" to the asoc tree
-In-Reply-To:  <20190307101145.636705-1-arnd@arndb.de>
+To:     Axel Lin <axel.lin@ingics.com>
+Cc:     Mark Brown <broonie@kernel.org>, linux-kernel@vger.kernel.org
+Subject: Applied "regulator: ab3100: Remove ab3100_regulators_remove function" to the regulator tree
+In-Reply-To: 
 X-Patchwork-Hint: ignore
-Message-Id: <20190311172353.349AB1128896@debutante.sirena.org.uk>
-Date:   Mon, 11 Mar 2019 17:23:53 +0000 (GMT)
+Message-Id: <20190311172408.D43661128896@debutante.sirena.org.uk>
+Date:   Mon, 11 Mar 2019 17:24:08 +0000 (GMT)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
@@ -69,11 +59,11 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 The patch
 
-   ASoC: davinci-mcasp: Fix clang warning without CONFIG_PM
+   regulator: ab3100: Remove ab3100_regulators_remove function
 
-has been applied to the asoc tree at
+has been applied to the regulator tree at
 
-   https://git.kernel.org/pub/scm/linux/kernel/git/broonie/sound.git 
+   https://git.kernel.org/pub/scm/linux/kernel/git/broonie/regulator.git 
 
 All being well this means that it will be integrated into the linux-next
 tree (usually sometime in the next 24 hours) and sent to Linus during
@@ -94,49 +84,94 @@ to this mail.
 Thanks,
 Mark
 
-From 8ca5104715cfd14254ea5aecc390ae583b707607 Mon Sep 17 00:00:00 2001
-From: Arnd Bergmann <arnd@arndb.de>
-Date: Thu, 7 Mar 2019 11:11:30 +0100
-Subject: [PATCH] ASoC: davinci-mcasp: Fix clang warning without CONFIG_PM
+From 5b60ee576a02cb6b2371dec085ef2623a7df77b9 Mon Sep 17 00:00:00 2001
+From: Axel Lin <axel.lin@ingics.com>
+Date: Thu, 7 Mar 2019 21:53:56 +0800
+Subject: [PATCH] regulator: ab3100: Remove ab3100_regulators_remove function
 
-Building with clang shows a variable that is only used by the
-suspend/resume functions but defined outside of their #ifdef block:
+Current code is using devm_regulator_register() so it is not necessary
+to save reg->rdev for clean up. Remove *rdev from struct ab3100_regulator,
+then ab3100_regulators_remove() can be removed as well.
 
-sound/soc/ti/davinci-mcasp.c:48:12: error: variable 'context_regs' is not needed and will not be emitted
-
-We commonly fix these by marking the PM functions as __maybe_unused,
-but here that would grow the davinci_mcasp structure, so instead
-add another #ifdef here.
-
-Fixes: 1cc0c054f380 ("ASoC: davinci-mcasp: Convert the context save/restore to use array")
-Signed-off-by: Arnd Bergmann <arnd@arndb.de>
-Acked-by: Peter Ujfalusi <peter.ujfalusi@ti.com>
-Reviewed-by: Nathan Chancellor <natechancellor@gmail.com>
+Signed-off-by: Axel Lin <axel.lin@ingics.com>
+Reviewed-by: Linus Walleij <linus.walleij@linaro.org>
 Signed-off-by: Mark Brown <broonie@kernel.org>
 ---
- sound/soc/ti/davinci-mcasp.c | 2 ++
- 1 file changed, 2 insertions(+)
+ drivers/regulator/ab3100.c | 24 ++----------------------
+ 1 file changed, 2 insertions(+), 22 deletions(-)
 
-diff --git a/sound/soc/ti/davinci-mcasp.c b/sound/soc/ti/davinci-mcasp.c
-index a3a67a8f0f54..9fbc759fdefe 100644
---- a/sound/soc/ti/davinci-mcasp.c
-+++ b/sound/soc/ti/davinci-mcasp.c
-@@ -45,6 +45,7 @@
+diff --git a/drivers/regulator/ab3100.c b/drivers/regulator/ab3100.c
+index de2644490f0d..c92966a79a7e 100644
+--- a/drivers/regulator/ab3100.c
++++ b/drivers/regulator/ab3100.c
+@@ -48,7 +48,6 @@
+  * @regreg: regulator register number in the AB3100
+  */
+ struct ab3100_regulator {
+-	struct regulator_dev *rdev;
+ 	struct device *dev;
+ 	struct ab3100_platform_data *plfdata;
+ 	u8 regreg;
+@@ -545,8 +544,6 @@ static int ab3100_regulator_register(struct platform_device *pdev,
+ 		return err;
+ 	}
  
- #define MCASP_MAX_AFIFO_DEPTH	64
+-	/* Then set a pointer back to the registered regulator */
+-	reg->rdev = rdev;
+ 	return 0;
+ }
  
-+#ifdef CONFIG_PM
- static u32 context_regs[] = {
- 	DAVINCI_MCASP_TXFMCTL_REG,
- 	DAVINCI_MCASP_RXFMCTL_REG,
-@@ -68,6 +69,7 @@ struct davinci_mcasp_context {
- 	u32	*xrsr_regs; /* for serializer configuration */
- 	bool	pm_state;
+@@ -609,18 +606,6 @@ static const u8 ab3100_reg_initvals[] = {
+ 	LDO_D_SETTING,
  };
-+#endif
  
- struct davinci_mcasp_ruledata {
- 	struct davinci_mcasp *mcasp;
+-static int ab3100_regulators_remove(struct platform_device *pdev)
+-{
+-	int i;
+-
+-	for (i = 0; i < AB3100_NUM_REGULATORS; i++) {
+-		struct ab3100_regulator *reg = &ab3100_regulators[i];
+-
+-		reg->rdev = NULL;
+-	}
+-	return 0;
+-}
+-
+ static int
+ ab3100_regulator_of_probe(struct platform_device *pdev, struct device_node *np)
+ {
+@@ -647,10 +632,8 @@ ab3100_regulator_of_probe(struct platform_device *pdev, struct device_node *np)
+ 			pdev, NULL, ab3100_regulator_matches[i].init_data,
+ 			ab3100_regulator_matches[i].of_node,
+ 			(unsigned long)ab3100_regulator_matches[i].driver_data);
+-		if (err) {
+-			ab3100_regulators_remove(pdev);
++		if (err)
+ 			return err;
+-		}
+ 	}
+ 
+ 	return 0;
+@@ -709,10 +692,8 @@ static int ab3100_regulators_probe(struct platform_device *pdev)
+ 
+ 		err = ab3100_regulator_register(pdev, plfdata, NULL, NULL,
+ 						desc->id);
+-		if (err) {
+-			ab3100_regulators_remove(pdev);
++		if (err)
+ 			return err;
+-		}
+ 	}
+ 
+ 	return 0;
+@@ -723,7 +704,6 @@ static struct platform_driver ab3100_regulators_driver = {
+ 		.name  = "ab3100-regulators",
+ 	},
+ 	.probe = ab3100_regulators_probe,
+-	.remove = ab3100_regulators_remove,
+ };
+ 
+ static __init int ab3100_regulators_init(void)
 -- 
 2.20.1
 
