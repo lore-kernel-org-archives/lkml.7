@@ -2,136 +2,118 @@ Return-Path: <SRS0=FxTY=RO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_NEOMUTT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0F533C43381
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 Mar 2019 11:06:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 15A49C43381
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 Mar 2019 11:09:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D9D7A206BA
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 Mar 2019 11:06:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E351E2075C
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 Mar 2019 11:09:32 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727302AbfCKLGU convert rfc822-to-8bit (ORCPT
+        id S1727317AbfCKLJb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 11 Mar 2019 07:06:20 -0400
-Received: from Galois.linutronix.de ([146.0.238.70]:38103 "EHLO
-        Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725839AbfCKLGU (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 11 Mar 2019 07:06:20 -0400
-Received: from bigeasy by Galois.linutronix.de with local (Exim 4.80)
-        (envelope-from <bigeasy@linutronix.de>)
-        id 1h3Ikv-0002ST-T2; Mon, 11 Mar 2019 12:06:06 +0100
-Date:   Mon, 11 Mar 2019 12:06:05 +0100
-From:   Sebastian Andrzej Siewior <bigeasy@linutronix.de>
-To:     Dave Hansen <dave.hansen@intel.com>
-Cc:     linux-kernel@vger.kernel.org, x86@kernel.org,
-        Andy Lutomirski <luto@kernel.org>,
-        Paolo Bonzini <pbonzini@redhat.com>,
-        Radim =?utf-8?B?S3LEjW3DocWZ?= <rkrcmar@redhat.com>,
-        kvm@vger.kernel.org, "Jason A. Donenfeld" <Jason@zx2c4.com>,
-        Rik van Riel <riel@surriel.com>,
-        Dave Hansen <dave.hansen@linux.intel.com>
-Subject: Re: [PATCH 14/22] x86/fpu: Eager switch PKRU state
-Message-ID: <20190311110605.2xxjx2ym3n63lpr2@linutronix.de>
-References: <20190221115020.12385-1-bigeasy@linutronix.de>
- <20190221115020.12385-15-bigeasy@linutronix.de>
- <eedfbbbe-02d0-f977-2a64-e683b98d3904@intel.com>
- <20190308180849.hy22jejhffp4n6uh@linutronix.de>
- <b0f3ffa8-faec-73b2-f6f2-ea37ece3a3b1@intel.com>
+        Mon, 11 Mar 2019 07:09:31 -0400
+Received: from usa-sjc-mx-foss1.foss.arm.com ([217.140.101.70]:52694 "EHLO
+        foss.arm.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726074AbfCKLJb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 11 Mar 2019 07:09:31 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.72.51.249])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 31F24374;
+        Mon, 11 Mar 2019 04:09:30 -0700 (PDT)
+Received: from [10.1.196.92] (usa-sjc-imap-foss1.foss.arm.com [10.72.51.249])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 41D433F703;
+        Mon, 11 Mar 2019 04:09:28 -0700 (PDT)
+Subject: Re: [PATCH v3 0/9] qcom: support wakeup capable GPIOs
+To:     Lina Iyer <ilina@codeaurora.org>, swboyd@chromium.org,
+        evgreen@chromium.org
+Cc:     linux-kernel@vger.kernel.org, rplsssn@codeaurora.org,
+        linux-arm-msm@vger.kernel.org, thierry.reding@gmail.com,
+        bjorn.andersson@linaro.org, dianders@chromium.org,
+        linus.walleij@linaro.org
+References: <20190222221850.26939-1-ilina@codeaurora.org>
+From:   Marc Zyngier <marc.zyngier@arm.com>
+Openpgp: preference=signencrypt
+Autocrypt: addr=marc.zyngier@arm.com; prefer-encrypt=mutual; keydata=
+ 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
+Organization: ARM Ltd
+Message-ID: <3abee3a0-ddde-def9-dd96-5388517e85db@arm.com>
+Date:   Mon, 11 Mar 2019 11:09:26 +0000
+User-Agent: Mozilla/5.0 (X11; Linux aarch64; rv:60.0) Gecko/20100101
+ Thunderbird/60.5.1
 MIME-Version: 1.0
+In-Reply-To: <20190222221850.26939-1-ilina@codeaurora.org>
 Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8BIT
-In-Reply-To: <b0f3ffa8-faec-73b2-f6f2-ea37ece3a3b1@intel.com>
-User-Agent: NeoMutt/20180716
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2019-03-08 11:01:25 [-0800], Dave Hansen wrote:
-> On 3/8/19 10:08 AM, Sebastian Andrzej Siewior wrote:
-> > On 2019-02-25 10:16:24 [-0800], Dave Hansen wrote:
-> >>> +	if (!cpu_feature_enabled(X86_FEATURE_OSPKE))
-> >>> +		return;
-> >>> +
-> >>> +	if (current->mm) {
-> >>> +		pk = get_xsave_addr(&new_fpu->state.xsave, XFEATURE_PKRU);
-> >>> +		WARN_ON_ONCE(!pk);
-…
-> Nothing will break, but the warning will trigger, which isn't nice.
-
-the warning should trigger if something goes south, I was not expecting
-it to happen.
-
-> > My understanding is that the in-kernel XSAVE will always save everything
-> > so we should never "lose" the XFEATURE_PKRU no matter what user space
-> > does.
-> > 
-> > So as test case you want
-> > 	xsave (-1 & ~XFEATURE_PKRU)
-> > 	xrestore (-1 & ~XFEATURE_PKRU)
-> > 
-> > in userland and then a context switch to see if the warning above
-> > triggers?
+On 22/02/2019 22:18, Lina Iyer wrote:
+> Hi all,
 > 
-> I think you need an XRSTOR with RFBM=-1 (or at least with the PKRU bit
-> set) and the PKRU bit in the XFEATURES field in the XSAVE buffer set to 0.
+> This series is based on idea of setting up a wakeup parent interrupt controller
+> for GPIOs that are wakeup capable. The patch is based on Thierry's hierarchical
+> GPIO irqdomains. Much of the idea stem's from Stephen's suggestions in [1] with
+> some fixes.
 
-let me check that, write a test case in userland and I come back with
-the results. I can remove that warning but I wasn't expecting it to
-trigger so let me verify that first.
+Given how long it took to get there, I'm really keen on moving forward
+with this as the first implementation. There is a number of things that
+needs fixing, but nothing that looks major so far.
 
-> >>> +		if (pk)
-> >>> +			pkru_val = pk->pkru;
-> >>> +	}> +	__write_pkru(pkru_val);
-> >>>  }
-> >>
-> >> A comment above __write_pkru() would be nice to say that it only
-> >> actually does the slow instruction on changes to the value.
-> > 
-> > Could we please not do this? It is a comment above one of the callers
-> > function and we have two or three. And we have that comment already
-> > within __write_pkru().
-> 
-> I looked at this code and thought "writing PKRU is slow", and "this
-> writes PKRU unconditionally", and "the __ version of the function
-> shoudn't have much logic in it".
-> 
-> I got 2/3 wrong.  To me that means this site needs a 1-line comment.
-> Feel free to move one of the other comments to here if you think it's
-> over-commented, but this site needs one.
+> I am posting this series to help with the discussions around this approach.
+> Please take a look at the series and let me know your comments. We need to find
+> a good place to add the document the generic irqdomain-map bindings.
 
-right because things changed as part of patch series. 
-You wanted to have in __write_pkru() the same semantic like in
-__read_pkru() which is currently the case because __write_pkru() has the
-check. It  would be great if we could rename it to something else and
-avoid the comment. (Because if this user gets a comment then other
-should, too and I think this is an overkill).
+How about the obvious
+Documentation/devicetree/bindings/interrupt-controller/interrupts.txt.
 
-> > Last time we talked about this we agreed (or this was my impression) that
-> > 0 should be written so that the kernel thread should always be able to
-> > write to user space in case it borrowed its mm (otherwise it has none
-> > and it would fail anyway).
-> 
-> We can't write to userspace when borrowing an mm.  If the kernel borrows
-> an mm, we might as well be on the init_mm which has no userspace mappings.
+I'd really like to see a respin of this by -rc1.
 
-If a kernel thread borrows a mm from a user task via use_mm() then it
-_can_ write to that task's user land memory from a kthread.
+Thanks,
 
-> > We didn't want to leave PKRU alone because the outcome (whether or not
-> > the write by the kernel thread succeeds) should not depend on the last
-> > running task (and be random) but deterministic.
-> 
-> Right, so let's make it deterministically restrictive: either
-> init_pkru_value, or -1 since kernel threads shouldn't be touching
-> userspace in the first place.
-
-I'm fine either way, just tell me what you want. Just consider the
-use_mm() part above I wrote. (I remember you/luto suggest to have an API
-for something like that so that the PKRU value can be 
-
-Sebastian
+	M.
+-- 
+Jazz is not dead. It just smells funny...
