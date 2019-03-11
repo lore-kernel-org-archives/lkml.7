@@ -3,206 +3,134 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
 X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS autolearn=ham
-	autolearn_force=no version=3.4.0
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 44A1AC43381
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 Mar 2019 10:06:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 62916C43381
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 Mar 2019 10:07:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 10738206BA
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 Mar 2019 10:06:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3B03920657
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 Mar 2019 10:07:21 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727139AbfCKKGW (ORCPT
+        id S1727163AbfCKKHT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 11 Mar 2019 06:06:22 -0400
-Received: from bhuna.collabora.co.uk ([46.235.227.227]:53742 "EHLO
-        bhuna.collabora.co.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726864AbfCKKGW (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 11 Mar 2019 06:06:22 -0400
-Received: from localhost (unknown [IPv6:2a01:e0a:2c:6930:5cf4:84a1:2763:fe0d])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        (Authenticated sender: bbrezillon)
-        by bhuna.collabora.co.uk (Postfix) with ESMTPSA id A892626048B;
-        Mon, 11 Mar 2019 10:06:19 +0000 (GMT)
-Date:   Mon, 11 Mar 2019 11:06:16 +0100
-From:   Boris Brezillon <boris.brezillon@collabora.com>
-To:     "Kazlauskas, Nicholas" <Nicholas.Kazlauskas@amd.com>
-Cc:     Helen Koike <helen.koike@collabora.com>,
-        "dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>,
-        "Grodzovsky, Andrey" <Andrey.Grodzovsky@amd.com>,
-        "daniel.vetter@ffwll.ch" <daniel.vetter@ffwll.ch>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Tomasz Figa <tfiga@chromium.org>,
-        David Airlie <airlied@linux.ie>,
-        Sean Paul <seanpaul@google.com>,
-        "kernel@collabora.com" <kernel@collabora.com>,
-        "Wentland, Harry" <Harry.Wentland@amd.com>,
-        =?UTF-8?B?U3TDqXBoYW5l?= Marchesin <marcheu@google.com>,
-        Eric Anholt <eric@anholt.net>
-Subject: Re: [PATCH 1/5] drm: don't block fb changes for async plane updates
-Message-ID: <20190311110616.6b474865@collabora.com>
-In-Reply-To: <e2eb91f5-25e3-d030-74d8-de2348de5600@amd.com>
-References: <20190304144909.6267-1-helen.koike@collabora.com>
-        <20190304144909.6267-2-helen.koike@collabora.com>
-        <e2eb91f5-25e3-d030-74d8-de2348de5600@amd.com>
-Organization: Collabora
-X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; x86_64-redhat-linux-gnu)
+        Mon, 11 Mar 2019 06:07:19 -0400
+Received: from usa-sjc-mx-foss1.foss.arm.com ([217.140.101.70]:51984 "EHLO
+        foss.arm.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726623AbfCKKHS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 11 Mar 2019 06:07:18 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.72.51.249])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 0F121374;
+        Mon, 11 Mar 2019 03:07:18 -0700 (PDT)
+Received: from [10.1.196.92] (usa-sjc-imap-foss1.foss.arm.com [10.72.51.249])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 631263F59C;
+        Mon, 11 Mar 2019 03:07:16 -0700 (PDT)
+Subject: Re: [PATCH v3 2/9] irqdomain: add bus token DOMAIN_BUS_WAKEUP
+To:     Lina Iyer <ilina@codeaurora.org>, swboyd@chromium.org,
+        evgreen@chromium.org
+Cc:     linux-kernel@vger.kernel.org, rplsssn@codeaurora.org,
+        linux-arm-msm@vger.kernel.org, thierry.reding@gmail.com,
+        bjorn.andersson@linaro.org, dianders@chromium.org,
+        linus.walleij@linaro.org
+References: <20190222221850.26939-1-ilina@codeaurora.org>
+ <20190222221850.26939-3-ilina@codeaurora.org>
+From:   Marc Zyngier <marc.zyngier@arm.com>
+Openpgp: preference=signencrypt
+Autocrypt: addr=marc.zyngier@arm.com; prefer-encrypt=mutual; keydata=
+ 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
+Organization: ARM Ltd
+Message-ID: <0c4ae5f1-9589-2262-325a-34cba324fbfa@arm.com>
+Date:   Mon, 11 Mar 2019 10:07:14 +0000
+User-Agent: Mozilla/5.0 (X11; Linux aarch64; rv:60.0) Gecko/20100101
+ Thunderbird/60.5.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+In-Reply-To: <20190222221850.26939-3-ilina@codeaurora.org>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
 Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hello Nicholas,
+On 22/02/2019 22:18, Lina Iyer wrote:
+> Add new bus token to describe domains that are wakeup capable.
 
-On Mon, 4 Mar 2019 15:46:49 +0000
-"Kazlauskas, Nicholas" <Nicholas.Kazlauskas@amd.com> wrote:
+This doesn't quite match what this bus token is trying to describe. How
+about something along the lines of the following:
 
-> On 3/4/19 9:49 AM, Helen Koike wrote:
-> > In the case of a normal sync update, the preparation of framebuffers (be
-> > it calling drm_atomic_helper_prepare_planes() or doing setups with
-> > drm_framebuffer_get()) are performed in the new_state and the respective
-> > cleanups are performed in the old_state.
-> > 
-> > In the case of async updates, the preparation is also done in the
-> > new_state but the cleanups are done in the new_state (because updates
-> > are performed in place, i.e. in the current state).
-> > 
-> > The current code blocks async udpates when the fb is changed, turning
-> > async updates into sync updates, slowing down cursor updates and
-> > introducing regressions in igt tests with errors of type:
-> > 
-> > "CRITICAL: completed 97 cursor updated in a period of 30 flips, we
-> > expect to complete approximately 15360 updates, with the threshold set
-> > at 7680"
-> > 
-> > Fb changes in async updates were prevented to avoid the following scenario:
-> > 
-> > - Async update, oldfb = NULL, newfb = fb1, prepare fb1, cleanup fb1
-> > - Async update, oldfb = fb1, newfb = fb2, prepare fb2, cleanup fb2
-> > - Non-async commit, oldfb = fb2, newfb = fb1, prepare fb1, cleanup fb2 (wrong)
-> > Where we have a single call to prepare fb2 but double cleanup call to fb2.
-> > 
-> > To solve the above problems, instead of blocking async fb changes, we
-> > place the old framebuffer in the new_state object, so when the code
-> > performs cleanups in the new_state it will cleanup the old_fb and we
-> > will have the following scenario instead:
-> > 
-> > - Async update, oldfb = NULL, newfb = fb1, prepare fb1, no cleanup
-> > - Async update, oldfb = fb1, newfb = fb2, prepare fb2, cleanup fb1
-> > - Non-async commit, oldfb = fb2, newfb = fb1, prepare fb1, cleanup fb2
-> > 
-> > Where calls to prepare/cleanup are ballanced.
-> > 
-> > Cc: <stable@vger.kernel.org> # v4.14+: 25dc194b34dd: drm: Block fb changes for async plane updates
-> > Fixes: 25dc194b34dd ("drm: Block fb changes for async plane updates")
-> > Suggested-by: Boris Brezillon <boris.brezillon@collabora.com>
-> > Signed-off-by: Helen Koike <helen.koike@collabora.com>
-> > 
-> > ---
-> > Hello,
-> > 
-> > As mentioned in the cover letter,
-> > I tested on the rockchip and on i915 (with a patch I am still working on for
-> > replacing cursors by async update), with igt plane_cursor_legacy and
-> > kms_cursor_legacy and I didn't see any regressions.
-> > I couldn't test on MSM and AMD because I don't have the hardware (and I am
-> > having some issues testing on vc4) and I would appreciate if anyone could help
-> > me testing those.
-> > 
-> > I also think it would be a better solution if, instead of having async
-> > to do in-place updates in the current state, the async path should be
-> > equivalent to a syncronous update, i.e., modifying new_state and
-> > performing a flip
-> > IMHO, the only difference between sync and async should be that async update
-> > doesn't wait for vblank and applies the changes immeditally to the hw,
-> > but the code path could be almost the same.
-> > But for now I think this solution is ok (swaping new_fb/old_fb), and
-> > then we can adjust things little by little, what do you think?
-> > 
-> > Thanks!
-> > Helen
-> > 
-> >   drivers/gpu/drm/drm_atomic_helper.c | 20 ++++++++++----------
-> >   1 file changed, 10 insertions(+), 10 deletions(-)
-> > 
-> > diff --git a/drivers/gpu/drm/drm_atomic_helper.c b/drivers/gpu/drm/drm_atomic_helper.c
-> > index 540a77a2ade9..e7eb96f1efc2 100644
-> > --- a/drivers/gpu/drm/drm_atomic_helper.c
-> > +++ b/drivers/gpu/drm/drm_atomic_helper.c
-> > @@ -1608,15 +1608,6 @@ int drm_atomic_helper_async_check(struct drm_device *dev,
-> >   	    old_plane_state->crtc != new_plane_state->crtc)
-> >   		return -EINVAL;
-> >   
-> > -	/*
-> > -	 * FIXME: Since prepare_fb and cleanup_fb are always called on
-> > -	 * the new_plane_state for async updates we need to block framebuffer
-> > -	 * changes. This prevents use of a fb that's been cleaned up and
-> > -	 * double cleanups from occuring.
-> > -	 */
-> > -	if (old_plane_state->fb != new_plane_state->fb)
-> > -		return -EINVAL;
-> > -
-> >   	funcs = plane->helper_private;
-> >   	if (!funcs->atomic_async_update)
-> >   		return -EINVAL;
-> > @@ -1657,6 +1648,9 @@ void drm_atomic_helper_async_commit(struct drm_device *dev,
-> >   	int i;
-> >   
-> >   	for_each_new_plane_in_state(state, plane, plane_state, i) {
-> > +		struct drm_framebuffer *new_fb = plane_state->fb;
-> > +		struct drm_framebuffer *old_fb = plane->state->fb;
-> > +
-> >   		funcs = plane->helper_private;
-> >   		funcs->atomic_async_update(plane, plane_state);
-> >   
-> > @@ -1665,11 +1659,17 @@ void drm_atomic_helper_async_commit(struct drm_device *dev,
-> >   		 * plane->state in-place, make sure at least common
-> >   		 * properties have been properly updated.
-> >   		 */
-> > -		WARN_ON_ONCE(plane->state->fb != plane_state->fb);
-> > +		WARN_ON_ONCE(plane->state->fb != new_fb);
-> >   		WARN_ON_ONCE(plane->state->crtc_x != plane_state->crtc_x);
-> >   		WARN_ON_ONCE(plane->state->crtc_y != plane_state->crtc_y);
-> >   		WARN_ON_ONCE(plane->state->src_x != plane_state->src_x);
-> >   		WARN_ON_ONCE(plane->state->src_y != plane_state->src_y);
-> > +
-> > +		/*
-> > +		 * Make sure the FBs have been swapped so that cleanups in the
-> > +		 * new_state performs a cleanup in the old FB.
-> > +		 */
-> > +		WARN_ON_ONCE(plane_state->fb != old_fb);  
-> 
-> I personally think this approach is fine and the WARN_ON s are good for 
-> catching drivers that want to use these in the future.
+A single controller can handle normal interrupts and wake-up interrupts
+independently, with a different numbering space. It is thus crucial to
+allow the driver for such a controller discriminate between the two.
 
-Well, I agree this change is the way to go for a short-term solution
-to relax the old_fb == new_fb constraint, but I keep thinking this whole
-"update plane_state in place" is a recipe for trouble and just make
-things more complicated for drivers for no obvious reasons. Look at the
-VC4 implem [1] if you need a proof that things can get messy pretty
-quickly.
-
-All this state-fields-copying steps could be skipped if the core was
-simply swapping the old/new states as is done in the sync update path.
-
-[1]https://elixir.bootlin.com/linux/v5.0-rc7/source/drivers/gpu/drm/vc4/vc4_plane.c#L878
+A simple way to do so is to tag the wake-up irqdomain with a "bus token"
+that indicates the wake-up domain. This slightly abuses the notion of
+bus, but also radically simplifies the design of such a driver. Between
+two evils, we choose the least damaging.
 
 > 
-> I do think it would be good to add something to the function docs that 
-> explains this requirement and the issue that it addresses. It's a little 
-> unintuitive to require that the old fb is placed into the new state, but 
-> it makes sense as a workaround to this problem.
+> Suggested-by: Stephen Boyd <swboyd@chromium.org>
+> Signed-off-by: Lina Iyer <ilina@codeaurora.org>
+> ---
+>  include/linux/irqdomain.h | 1 +
+>  1 file changed, 1 insertion(+)
 > 
-> Nicholas Kazlauskas
-> 
-> >   	}
-> >   }
-> >   EXPORT_SYMBOL(drm_atomic_helper_async_commit);
-> >   
+> diff --git a/include/linux/irqdomain.h b/include/linux/irqdomain.h
+> index 35965f41d7be..05055bc992ab 100644
+> --- a/include/linux/irqdomain.h
+> +++ b/include/linux/irqdomain.h
+> @@ -82,6 +82,7 @@ enum irq_domain_bus_token {
+>  	DOMAIN_BUS_NEXUS,
+>  	DOMAIN_BUS_IPI,
+>  	DOMAIN_BUS_FSL_MC_MSI,
+> +	DOMAIN_BUS_WAKEUP,
+>  };
+>  
+>  /**
 > 
 
+Thanks,
+
+	M.
+-- 
+Jazz is not dead. It just smells funny...
