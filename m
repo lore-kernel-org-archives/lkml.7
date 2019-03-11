@@ -2,93 +2,88 @@ Return-Path: <SRS0=FxTY=RO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 34010C43381
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 Mar 2019 19:47:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AF845C43381
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 Mar 2019 19:48:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0741420643
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 Mar 2019 19:47:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7EADC20643
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 Mar 2019 19:48:26 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728257AbfCKTr2 convert rfc822-to-8bit (ORCPT
+        id S1728008AbfCKTsZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 11 Mar 2019 15:47:28 -0400
-Received: from unicorn.mansr.com ([81.2.72.234]:36396 "EHLO unicorn.mansr.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727027AbfCKTr1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 11 Mar 2019 15:47:27 -0400
-Received: by unicorn.mansr.com (Postfix, from userid 51770)
-        id 4969C15632; Mon, 11 Mar 2019 19:47:25 +0000 (GMT)
-From:   =?iso-8859-1?Q?M=E5ns_Rullg=E5rd?= <mans@mansr.com>
-To:     Linus Torvalds <torvalds@linux-foundation.org>
-Cc:     Matt Turner <mattst88@gmail.com>, Borislav Petkov <bp@alien8.de>,
-        Alan Cox <gnomes@lxorguk.ukuu.org.uk>,
-        Matthew Wilcox <willy@infradead.org>,
-        Jann Horn <jannh@google.com>,
-        Al Viro <viro@zeniv.linux.org.uk>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        kernel list <linux-kernel@vger.kernel.org>,
-        linux-fsdevel <linux-fsdevel@vger.kernel.org>,
-        "the arch\/x86 maintainers" <x86@kernel.org>,
-        Linux API <linux-api@vger.kernel.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Richard Weinberger <richard@nod.at>,
-        Anton Ivanov <anton.ivanov@cambridgegreys.com>,
-        linux-alpha <linux-alpha@vger.kernel.org>,
-        linux-m68k@lists.linux-m68k.org
-Subject: Re: [PATCH] x86: Deprecate a.out support
-References: <CAG48ez1RVd5mQ_Pb6eygQESaZhpQz765OAZYSoPE0kPqfZEXQg@mail.gmail.com>
-        <20190305091904.GB8256@zn.tnic>
-        <20190305122218.GD13380@bombadil.infradead.org>
-        <20190305134347.4be2449c@alans-desktop>
-        <20190305145717.GD8256@zn.tnic>
-        <CAHk-=wi2E4kugAW7BQwNSVwYHOr=B_9EgzBRMpQ2+1dxAqydDg@mail.gmail.com>
-        <20190305173134.GE8256@zn.tnic>
-        <CAHk-=wg0bY=RFhD4NW9x++fC0bME=_-9xM3kexGGM3gefHQTyQ@mail.gmail.com>
-        <20190305181138.GG8256@zn.tnic> <20190305181808.GH8256@zn.tnic>
-        <CAEdQ38G5M3vq9pGBV1iyEViO7JhFuXk5g+VCs-vUH+Z62kNqgQ@mail.gmail.com>
-        <CAHk-=wgt7M6yA5BJCJo0nF22WgPJnN8CvViL9CAJmd+S+Civ6w@mail.gmail.com>
-        <yw1xa7i14btw.fsf@mansr.com>
-        <CAHk-=whD1SumZUBQeuMT-GcciwPxg_jW_TsPAmokYp3sGGCGhA@mail.gmail.com>
-        <yw1x5zsp473a.fsf@mansr.com>
-        <CAHk-=wiU7xacTqDfm-x29-meyJWNd_X95K0T8FQMcDgy-yo3Qw@mail.gmail.com>
-Date:   Mon, 11 Mar 2019 19:47:25 +0000
-In-Reply-To: <CAHk-=wiU7xacTqDfm-x29-meyJWNd_X95K0T8FQMcDgy-yo3Qw@mail.gmail.com>
-        (Linus Torvalds's message of "Mon, 11 Mar 2019 12:03:18 -0700")
-Message-ID: <yw1x1s3d42ia.fsf@mansr.com>
-User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/25.3 (gnu/linux)
-MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Transfer-Encoding: 8BIT
+        Mon, 11 Mar 2019 15:48:25 -0400
+Received: from mout.kundenserver.de ([212.227.17.24]:36287 "EHLO
+        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727027AbfCKTsZ (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 11 Mar 2019 15:48:25 -0400
+Received: from orion.localdomain ([95.115.159.19]) by mrelayeu.kundenserver.de
+ (mreue109 [212.227.15.183]) with ESMTPSA (Nemesis) id
+ 1MatZt-1gW0hZ3vFT-00cRJq; Mon, 11 Mar 2019 20:48:23 +0100
+From:   "Enrico Weigelt, metux IT consult" <info@metux.net>
+To:     linux-kernel@vger.kernel.org
+Cc:     linus.walleij@linaro.org, bgolaszewski@baylibre.com,
+        linux-gpio@vger.kernel.org
+Subject: [PATCH] drivers: gpio: octeon: use devm_platform_ioremap_resource()
+Date:   Mon, 11 Mar 2019 20:48:21 +0100
+Message-Id: <1552333701-22712-1-git-send-email-info@metux.net>
+X-Mailer: git-send-email 1.9.1
+In-Reply-To: <1552330521-4276-23-git-send-email-info@metux.net>
+References: <1552330521-4276-23-git-send-email-info@metux.net>
+X-Provags-ID: V03:K1:O7zyg437ojWNNGrlqt+uZMayC1uHEekNobbsCmkjlBHoogDhJ7s
+ vcewt2TcovNki/OHV1FNN0R5v7qqb/r0Ldp2sng5MS/60FLRSFvTgAVgEoFRndZSUKm1kp6
+ zVaJ9cpx0rmnYLyW7yPuLXkcaPPyhjL1DrslaFHv4LJ7doSdY/LtPoFEDldBoQ3fonYzq31
+ F8jZuEy56ZpOONXh3h9tg==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:oKA2JKYwJhI=:VyHwXOQ+26ejCUDVXokCeW
+ Q8CIfTMo3RkRdBr2QtJhzh8lirkAhA0A1emszDMNbaYs8ev9SKZVrxJmsQQnMaxvUhgyZ0zPa
+ L4r+zfXWeZE8UJeAlXxVZ8AlBJ0a1M8ZU9gMaDeVoqXij01uE0c/Z/N5kl34HNRGolm5E6Ln9
+ XOGpI6hHSF8WTGO6Mlv91GZdXfip8ESf9orjosDHNwMXDutES4cfLQ54V3jmvD6klJ6huQEqc
+ MPNjB2lawgxV7bpRkmqPV5zQNWCxqOArO+EA5w7vCEVyrvpB2ZGB7sHjAWwj8Vvx96+I4dtv/
+ IDm1V2fnqPAwT7rrZrWlUFFfc4QXmpb/k/8t529dg1fBGOYBH4B6J6/Uj/W1fnHr7cgAUhfyQ
+ vv6F7kx2hhpMAgYIa9i6jFlgPP+YoPld3gpY4TygF4xVKQZsIHJfcZWaqtFluH9wKf/TOzMpN
+ UF37zk60HkpoVFqYkzqePKXBGUnqWSN88z2mVHM5HjTiZ/461B+TAgvDf1AyeQDPorydU4V9J
+ sSYoiyxnhu3dP9C//4AVGi1CJiurMw19s3bA5TXFvuTUWbpwN+hB5BhTouROZ+PS2iMVhPsYW
+ Erl2bmiMNPMVImPprem3vrDhI8tQ65zajj7Y+WlDZpxO5liO+lQdxVv8REJ3hf2EFZFujvMTw
+ LPxOtTG7fxtCPb6xu+yrKyJX10taT1lTAYud49C39ylU2h746kMsWiuMgWcmWOdXIxsCVW6yw
+ 5uaovKpgf9LeK0KqtUPlAleMMB4mM/yvCd7L9A==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Linus Torvalds <torvalds@linux-foundation.org> writes:
+Use the new helper that wraps the calls to platform_get_resource()
+and devm_ioremap_resource() together.
 
-> On Mon, Mar 11, 2019 at 11:08 AM Måns Rullgård <mans@mansr.com> wrote:
->>
->> The latest version I have is 5.1, and that uses ECOFF.
->
-> ECOFF _is_ a.out as far as Linux is concerned.
->
-> So Linux basically treats ECOFF as "regular a.out with just some
-> header extensions".
->
-> We don't have any specific support for ECOFF.
->
-> I _think_. Again, it's been years and years.
+Signed-off-by: Enrico Weigelt, metux IT consult <info@metux.net>
+---
+ drivers/gpio/gpio-octeon.c | 4 +---
+ 1 file changed, 1 insertion(+), 3 deletions(-)
 
-Right, which is why killing a.out entirely would have the unfortunate
-effect of also removing the OSF/1 compatibility on Alpha.
-
-If we are to support Alpha as an architecture at all, it makes sense to
-support the things people actually use it for.
-
-Now, personally I can live without it.  I just don't like to see
-features removed without due consideration.
-
+diff --git a/drivers/gpio/gpio-octeon.c b/drivers/gpio/gpio-octeon.c
+index 1b19c88..afb0e8a 100644
+--- a/drivers/gpio/gpio-octeon.c
++++ b/drivers/gpio/gpio-octeon.c
+@@ -82,7 +82,6 @@ static int octeon_gpio_probe(struct platform_device *pdev)
+ {
+ 	struct octeon_gpio *gpio;
+ 	struct gpio_chip *chip;
+-	struct resource *res_mem;
+ 	void __iomem *reg_base;
+ 	int err = 0;
+ 
+@@ -91,8 +90,7 @@ static int octeon_gpio_probe(struct platform_device *pdev)
+ 		return -ENOMEM;
+ 	chip = &gpio->chip;
+ 
+-	res_mem = platform_get_resource(pdev, IORESOURCE_MEM, 0);
+-	reg_base = devm_ioremap_resource(&pdev->dev, res_mem);
++	reg_base = devm_platform_ioremap_resource(pdev, 0);
+ 	if (IS_ERR(reg_base))
+ 		return PTR_ERR(reg_base);
+ 
 -- 
-Måns Rullgård
+1.9.1
+
