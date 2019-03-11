@@ -7,61 +7,62 @@ X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
 	SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 82F88C43381
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 Mar 2019 16:04:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5F755C43381
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 Mar 2019 16:06:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 42A8E206BA
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 Mar 2019 16:04:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2BBD72084F
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 Mar 2019 16:06:06 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="FFrDtf/7"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="uCwizerW"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727590AbfCKQEn (ORCPT
+        id S1727641AbfCKQGE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 11 Mar 2019 12:04:43 -0400
-Received: from mail-lf1-f67.google.com ([209.85.167.67]:45491 "EHLO
-        mail-lf1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726625AbfCKQEn (ORCPT
+        Mon, 11 Mar 2019 12:06:04 -0400
+Received: from mail-lf1-f65.google.com ([209.85.167.65]:43411 "EHLO
+        mail-lf1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726000AbfCKQGE (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 11 Mar 2019 12:04:43 -0400
-Received: by mail-lf1-f67.google.com with SMTP id f16so3830730lfk.12
-        for <linux-kernel@vger.kernel.org>; Mon, 11 Mar 2019 09:04:42 -0700 (PDT)
+        Mon, 11 Mar 2019 12:06:04 -0400
+Received: by mail-lf1-f65.google.com with SMTP id g7so2820501lfh.10;
+        Mon, 11 Mar 2019 09:06:02 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=Y/4qEUcYdrj81JAUOKKSkmmZfLbmLspDvwoI6v3CsUs=;
-        b=FFrDtf/7kNu/XOmX25bQ4E9GpZ+MwHodPG9Z2bb07eDXEML4eZsferx/jpDfvkHxod
-         fLjCFZGsCNtvsL5WwvOP9vXKkZbj7WaqKLGIOyTt2MqBAkN6F332zNPuZIxnClAfHZ6z
-         rLwqKZFWmtBgTLTzq5kV2xlnC1tPs/ZAELMWg4sPK8yh9IBTT7Ixx7Z3iCjzrDP0Uc5C
-         rkoakoFT+/aFDxbcDDyxSYaNqUv1zf4DFATGIw9LFXKmRU+0zxeV1XBlspak46aA8Tzf
-         F3wb2NlSR/iAUPfYq6LlDkbG5+ayEib+ewWqZMMbSNqfngu+wtAmyPrRLzNQ4y78jpRj
-         TtMA==
+        bh=JNyhMnlDg9WEdIRIw0umsEvuQCRWeLX+PEwNVwlGL4c=;
+        b=uCwizerWNy+yzBhHNvpKIJwYUlepq1+3IvmmtcEwqTitBdz3QcmX8pmW9u/Jv1z16z
+         XH72BBfG/bk9LdOSp9zRJ/gKAax6cMAo1GRfFRtKx4G9Befz814r3yXY+a1BZg99NNmm
+         8n4eb583vFHtLtnZYQygwKw5CXWM5+H4XCl/fXYtWLrqtzWplHiurBByHQbb0wWXEmfX
+         q4HwS1r/g/YyXCta3FevPmGx7CCUN6ixdR2+Wdco3V3Y6xDvMO+DZhisRQlDtJRWjZMp
+         2Pc3i1Y4aAExiPvtpD+C9HFMaM7XRGBPVbe27PzmMqTQLLeyFU3049oYss3zjw6cZ2Xc
+         xo6Q==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=Y/4qEUcYdrj81JAUOKKSkmmZfLbmLspDvwoI6v3CsUs=;
-        b=eMjY7vduxj4vU58RGhr1MvbvE9awuVZOeZJNBmHMB1ummZZB76Uic0U3CGpnmm2biq
-         pKqi0gbXwFc2R9/iz8zK5v9iKHWS75wVK/f0XxWfKOSK2SIwyx+dbkt0C+NlYmxTR5X4
-         jE0X3AmDn7qFAL8+/HCppOpX7k3C1CmRqzIl26C4X2C4LlFyQQiUbN2Vyr3WXbo29Gru
-         BrzbcL0PieGIbWwOd/sajkU0QX0ZPpqyIPM4rkGYmFEIP20puXkLhqC1fTS/YrYjhkk0
-         aUkfWrUsyec8UP5JURGa5YFBYM+qLCZ4bp00BlzejBJNvBzzcF0k5u/mL1HeOMW0xOSR
-         Z6kw==
-X-Gm-Message-State: APjAAAX57BmI6yiDYYf5rNeNOIJxmnF/5ZPxcbAti/GzZ50Y2y6PPTXw
-        rdmjY0Y+C8JF/aGl3REif+quSUmJPHIFchHsB8M=
-X-Google-Smtp-Source: APXvYqxxtKQqVhh7npHuAp/daNaCYhRcGLczu9jWIkCjCbhvvfyhr2IJ3OUa/p0cSX528rh3DPT70bZQ9/D/VJrSmP4=
-X-Received: by 2002:a19:aa44:: with SMTP id t65mr16335222lfe.31.1552320281395;
- Mon, 11 Mar 2019 09:04:41 -0700 (PDT)
+        bh=JNyhMnlDg9WEdIRIw0umsEvuQCRWeLX+PEwNVwlGL4c=;
+        b=gR05durq00dVkj/CsqISF2R0E4DOBd4Wu0Xej7GXg92oI8h1LfVTG3nYVLh0BPUbWf
+         kouUhPhT9GC5EKNP50W/nRDajWbGamFUl2q4nkcw/7O/9t1KtuV0TRlSK/UI9r2vOoZW
+         b/umm3GrNa78FrFj5OJPMWg6sCD/UOJ0MUWQWF072GUF8EEuJgTNgsaJZVTWdb2OD/5Q
+         jEC9yZ0bi39YwbIwpt8Q52BD3Bxvs0BPpb4wbawzzLuSrVeHcYf/SZH2+n6q2XFerhsM
+         DW4BKsvW+Von6h257V2JoKy1Xnn/IT6u6voWif8XtPhfeEdLJ5W3xPGvaiNEZMjPRBiK
+         7yOQ==
+X-Gm-Message-State: APjAAAV1qzSUTT8bm2jJzvAnFeD4Is9i3Pqf/9/2yKddfwUEewL1XZz5
+        xZEjV8PPwGmI4T9+7mGM2g5PcWoWrRXHQbI1eyg=
+X-Google-Smtp-Source: APXvYqzlfpYTidxiZZAcMWrjIDa9kvGdIKKNPa2f4ZKGeUX7rxX+yW01yuCiaJc81ZLKrzmfph5xCwmSIqw0QArREWg=
+X-Received: by 2002:a19:2d44:: with SMTP id t4mr17433882lft.90.1552320362100;
+ Mon, 11 Mar 2019 09:06:02 -0700 (PDT)
 MIME-Version: 1.0
-References: <5c86820f.1c69fb81.149f0.0834@mx.google.com>
-In-Reply-To: <5c86820f.1c69fb81.149f0.0834@mx.google.com>
+References: <5c8682ef.1c69fb81.5a1ea.2e7f@mx.google.com>
+In-Reply-To: <5c8682ef.1c69fb81.5a1ea.2e7f@mx.google.com>
 From:   Souptick Joarder <jrdr.linux@gmail.com>
-Date:   Mon, 11 Mar 2019 21:34:28 +0530
-Message-ID: <CAFqt6zZ6RmhyTmfgSRW-tAAFc=ESBcOng8NcL1KrBKY13LOaig@mail.gmail.com>
-Subject: Re: [PATCH] fs/coda/psdev.c: Remove duplicate header
+Date:   Mon, 11 Mar 2019 21:35:50 +0530
+Message-ID: <CAFqt6zY2uWNke8JmyEiS+yiXLC43ZQA_wpv=YgCj-cHbBPXp0A@mail.gmail.com>
+Subject: Re: [PATCH] arch/sh/boards/mach-dreamcast/irq.c: Remove duplicate header
 To:     Sabyasachi Gupta <sabyasachi.linux@gmail.com>
-Cc:     Andrew Morton <akpm@linux-foundation.org>, jaharkes@cs.cmu.edu,
-        coda@cs.cmu.edu, codalist@coda.cs.cmu.edu,
+Cc:     Andrew Morton <akpm@linux-foundation.org>,
+        Yoshinori Sato <ysato@users.sourceforge.jp>,
+        Rich Felker <dalias@libc.org>, linux-sh@vger.kernel.org,
         linux-kernel@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
@@ -69,31 +70,31 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Mar 11, 2019 at 9:13 PM Sabyasachi Gupta
+On Mon, Mar 11, 2019 at 9:16 PM Sabyasachi Gupta
 <sabyasachi.linux@gmail.com> wrote:
 >
-> Remove linux/poll.h which is included more than once
+> Remove  linux/irq.h which is included more than once.
 >
 > Signed-off-by: Sabyasachi Gupta <sabyasachi.linux@gmail.com>
 
-Acked-by: Souptick Joarder <jrdr.linux@gmail.com>
+Acked-by : Souptick Joarder <jrdr.linux@gmail.com>
 
 > ---
->  fs/coda/psdev.c | 1 -
+>  arch/sh/boards/mach-dreamcast/irq.c | 1 -
 >  1 file changed, 1 deletion(-)
 >
-> diff --git a/fs/coda/psdev.c b/fs/coda/psdev.c
-> index c5234c2..f2bb798 100644
-> --- a/fs/coda/psdev.c
-> +++ b/fs/coda/psdev.c
-> @@ -39,7 +39,6 @@
->  #include <linux/device.h>
->  #include <linux/pid_namespace.h>
->  #include <asm/io.h>
-> -#include <linux/poll.h>
->  #include <linux/uaccess.h>
->
->  #include <linux/coda.h>
+> diff --git a/arch/sh/boards/mach-dreamcast/irq.c b/arch/sh/boards/mach-dreamcast/irq.c
+> index 2789647..69fa91c 100644
+> --- a/arch/sh/boards/mach-dreamcast/irq.c
+> +++ b/arch/sh/boards/mach-dreamcast/irq.c
+> @@ -10,7 +10,6 @@
+>   */
+>  #include <linux/irq.h>
+>  #include <linux/io.h>
+> -#include <linux/irq.h>
+>  #include <linux/export.h>
+>  #include <linux/err.h>
+>  #include <mach/sysasic.h>
 > --
 > 2.7.4
 >
