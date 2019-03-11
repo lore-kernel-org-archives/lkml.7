@@ -2,116 +2,118 @@ Return-Path: <SRS0=FxTY=RO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 702ABC43381
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 Mar 2019 07:21:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E638DC43381
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 Mar 2019 07:21:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3F942206DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 Mar 2019 07:21:18 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="Nlknxib4"
+	by mail.kernel.org (Postfix) with ESMTP id BC388206DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 Mar 2019 07:21:51 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726896AbfCKHVQ (ORCPT
+        id S1726920AbfCKHVu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 11 Mar 2019 03:21:16 -0400
-Received: from fllv0016.ext.ti.com ([198.47.19.142]:57084 "EHLO
-        fllv0016.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726623AbfCKHVQ (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 11 Mar 2019 03:21:16 -0400
-Received: from lelv0265.itg.ti.com ([10.180.67.224])
-        by fllv0016.ext.ti.com (8.15.2/8.15.2) with ESMTP id x2B7L5e5098203;
-        Mon, 11 Mar 2019 02:21:05 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1552288865;
-        bh=67q5ZnH1MQkGKYWJOQqRKqAo9/CXJhYr2puCNPSeLFg=;
-        h=Subject:To:CC:References:From:Date:In-Reply-To;
-        b=Nlknxib4iEm/TLMUZ0BvaQgMmueb70X43T19+yzbS0pNwyLKmVT7IJI46SUXTiL1m
-         dL+0r+J37vOPHZGwvHwCBai5RhkIOnbFqUToICaAwLAklrEHoI/k5EebeP7ozH6FJe
-         mtLCf3zF0a8zzoJffZpi5CyiaGwXw2aKEcX1Zqqs=
-Received: from DLEE105.ent.ti.com (dlee105.ent.ti.com [157.170.170.35])
-        by lelv0265.itg.ti.com (8.15.2/8.15.2) with ESMTPS id x2B7L5sw123606
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Mon, 11 Mar 2019 02:21:05 -0500
-Received: from DLEE101.ent.ti.com (157.170.170.31) by DLEE105.ent.ti.com
- (157.170.170.35) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1591.10; Mon, 11
- Mar 2019 02:21:04 -0500
-Received: from dlep33.itg.ti.com (157.170.170.75) by DLEE101.ent.ti.com
- (157.170.170.31) with Microsoft SMTP Server (version=TLS1_0,
- cipher=TLS_RSA_WITH_AES_256_CBC_SHA) id 15.1.1591.10 via Frontend Transport;
- Mon, 11 Mar 2019 02:21:04 -0500
-Received: from [172.24.190.89] (ileax41-snat.itg.ti.com [10.172.224.153])
-        by dlep33.itg.ti.com (8.14.3/8.13.8) with ESMTP id x2B7KvrF014354;
-        Mon, 11 Mar 2019 02:20:58 -0500
-Subject: Re: Nokia N900: wl1251 spi3.0: EOW timed out on
-To:     Merlijn Wajer <merlijn@wizzup.org>,
-        "kvalo@codeaurora.org" <kvalo@codeaurora.org>
-CC:     linux-omap <linux-omap@vger.kernel.org>,
-        "linux-wireless@vger.kernel.org" <linux-wireless@vger.kernel.org>,
-        Tony Lindgren <tony@atomide.com>,
-        Sebastian Reichel <sre@kernel.org>,
-        Pavel Machek <pavel@ucw.cz>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "broonie@kernel.org" <broonie@kernel.org>
-References: <3819003e-2ab3-0325-de0d-9fa07b51ee9f@wizzup.org>
- <436a9a35-539a-3fe8-2225-36b45c7e5412@wizzup.org>
- <165d492e-435b-40a8-f784-5f2d08803514@ti.com>
- <1b2918b4-1765-5aba-4752-1d04bdfea925@wizzup.org>
-From:   Vignesh Raghavendra <vigneshr@ti.com>
-Message-ID: <ddfababf-3d3c-85c1-e1d8-762b4c41f19c@ti.com>
-Date:   Mon, 11 Mar 2019 12:51:57 +0530
+        Mon, 11 Mar 2019 03:21:50 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:53448 "EHLO mx1.redhat.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726623AbfCKHVu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 11 Mar 2019 03:21:50 -0400
+Received: from smtp.corp.redhat.com (int-mx03.intmail.prod.int.phx2.redhat.com [10.5.11.13])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id 21B0D30821F9;
+        Mon, 11 Mar 2019 07:21:50 +0000 (UTC)
+Received: from [10.72.12.54] (ovpn-12-54.pek2.redhat.com [10.72.12.54])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id EAD25611C3;
+        Mon, 11 Mar 2019 07:21:43 +0000 (UTC)
+Subject: Re: [RFC PATCH V2 5/5] vhost: access vq metadata through kernel
+ virtual address
+To:     Andrea Arcangeli <aarcange@redhat.com>
+Cc:     Jerome Glisse <jglisse@redhat.com>,
+        "Michael S. Tsirkin" <mst@redhat.com>, kvm@vger.kernel.org,
+        virtualization@lists.linux-foundation.org, netdev@vger.kernel.org,
+        linux-kernel@vger.kernel.org, peterx@redhat.com,
+        linux-mm@kvack.org, Jan Kara <jack@suse.cz>
+References: <1551856692-3384-1-git-send-email-jasowang@redhat.com>
+ <1551856692-3384-6-git-send-email-jasowang@redhat.com>
+ <20190306092837-mutt-send-email-mst@kernel.org>
+ <15105894-4ec1-1ed0-1976-7b68ed9eeeda@redhat.com>
+ <20190307101708-mutt-send-email-mst@kernel.org>
+ <20190307190910.GE3835@redhat.com> <20190307193838.GQ23850@redhat.com>
+ <20190307201722.GG3835@redhat.com> <20190307212717.GS23850@redhat.com>
+ <671c4a98-4699-836e-79fc-0ce650c7f701@redhat.com>
+ <20190308191108.GA26923@redhat.com>
+From:   Jason Wang <jasowang@redhat.com>
+Message-ID: <189b7839-3208-fb2e-4ac0-e6ca50e397bb@redhat.com>
+Date:   Mon, 11 Mar 2019 15:21:41 +0800
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
  Thunderbird/60.5.1
 MIME-Version: 1.0
-In-Reply-To: <1b2918b4-1765-5aba-4752-1d04bdfea925@wizzup.org>
-Content-Type: text/plain; charset="utf-8"
+In-Reply-To: <20190308191108.GA26923@redhat.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 8bit
 Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.13
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.47]); Mon, 11 Mar 2019 07:21:50 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
 
+On 2019/3/9 上午3:11, Andrea Arcangeli wrote:
+> On Fri, Mar 08, 2019 at 05:13:26PM +0800, Jason Wang wrote:
+>> Actually not wrapping around,  the pages for used ring was marked as
+>> dirty after a round of virtqueue processing when we're sure vhost wrote
+>> something there.
+> Thanks for the clarification. So we need to convert it to
+> set_page_dirty and move it to the mmu notifier invalidate but in those
+> cases where gup_fast was called with write=1 (1 out of 3).
+>
+> If using ->invalidate_range the page pin also must be removed
+> immediately after get_user_pages returns (not ok to hold the pin in
+> vmap until ->invalidate_range is called) to avoid false positive gup
+> pin checks in things like KSM, or the pin must be released in
+> invalidate_range_start (which is called before the pin checks).
+>
+> Here's why:
+>
+> 		/*
+> 		 * Check that no O_DIRECT or similar I/O is in progress on the
+> 		 * page
+> 		 */
+> 		if (page_mapcount(page) + 1 + swapped != page_count(page)) {
+> 			set_pte_at(mm, pvmw.address, pvmw.pte, entry);
+> 			goto out_unlock;
+> 		}
+> 		[..]
+> 		set_pte_at_notify(mm, pvmw.address, pvmw.pte, entry);
+> 			  ^^^^^^^ too late release the pin here, the
+> 				  above already failed
+>
+> ->invalidate_range cannot be used with mutex anyway so you need to go
+> back with invalidate_range_start/end anyway, just the pin must be
+> released in _start at the latest in such case.
 
-On 11/03/19 12:53 AM, Merlijn Wajer wrote:
-> Hi,
-> 
-> On 10/03/2019 05:16, Vignesh Raghavendra wrote:
->> Hi.
->>
->> On 10-Mar-19 6:23 AM, Merlijn Wajer wrote:
->>>
->>> Hi,
->>>
->>> On 10/03/2019 00:22, Merlijn Wajer wrote:
->>>> Hi,
->>>>
->>>> I just migrated to Linux 5.0  (from 4.15) on my Nokia N900, and I'm
->>>> getting a lot of messages like this:
->>>>
->>>>> wl1251 spi3.0: EOW timed out
->>
->>
->> Could you try if this patch fixes the issue? This is part of latest mainline tree but not part of 5.0:
->> https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/commit/?id=baf8b9f8d260c55a86405f70a384c29cda888476
-> 
-> This seems to fix the issue. Would it make sense to queue this for an
-> upcoming fixes release for 5.0?
-> 
 
-Patch carries "Cc: stable@vger.kernel.org" tag. So, will be backported
-to stable trees. It will be part of one of 5.0.y stable releases.
+Yes.
 
-> Cheers,
-> Merlijn
-> 
 
--- 
-Regards
-Vignesh
+>
+> My prefer is generally to call gup_fast() followed by immediate
+> put_page() because I always want to drop FOLL_GET from gup_fast as a
+> whole to avoid 2 useless atomic ops per gup_fast.
+
+
+Ok, will do this (if I still plan to use vmap() in next version).
+
+
+>
+> I'll write more about vmap in answer to the other email.
+>
+> Thanks,
+> Andrea
+
+
+Thanks
+
