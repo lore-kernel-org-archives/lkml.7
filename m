@@ -2,92 +2,139 @@ Return-Path: <SRS0=FxTY=RO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DB4C6C43381
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 Mar 2019 16:13:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9EBB2C43381
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 Mar 2019 16:15:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B14F12084F
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 Mar 2019 16:13:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7363F214D8
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 Mar 2019 16:15:30 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727527AbfCKQN6 (ORCPT
+        id S1727595AbfCKQP2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 11 Mar 2019 12:13:58 -0400
-Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:46400 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726641AbfCKQN6 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 11 Mar 2019 12:13:58 -0400
-Received: from pps.filterd (m0098396.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x2BG9gTl011720
-        for <linux-kernel@vger.kernel.org>; Mon, 11 Mar 2019 12:13:57 -0400
-Received: from e34.co.us.ibm.com (e34.co.us.ibm.com [32.97.110.152])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 2r5s1n6x5s-1
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
-        for <linux-kernel@vger.kernel.org>; Mon, 11 Mar 2019 12:13:57 -0400
-Received: from localhost
-        by e34.co.us.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
-        for <linux-kernel@vger.kernel.org> from <jejb@linux.vnet.ibm.com>;
-        Mon, 11 Mar 2019 16:13:56 -0000
-Received: from b03cxnp07029.gho.boulder.ibm.com (9.17.130.16)
-        by e34.co.us.ibm.com (192.168.1.134) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
-        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
-        Mon, 11 Mar 2019 16:13:52 -0000
-Received: from b03ledav006.gho.boulder.ibm.com (b03ledav006.gho.boulder.ibm.com [9.17.130.237])
-        by b03cxnp07029.gho.boulder.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x2BGDp2923199916
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Mon, 11 Mar 2019 16:13:51 GMT
-Received: from b03ledav006.gho.boulder.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id BC93BC6059;
-        Mon, 11 Mar 2019 16:13:51 +0000 (GMT)
-Received: from b03ledav006.gho.boulder.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 4BDE3C6057;
-        Mon, 11 Mar 2019 16:13:50 +0000 (GMT)
-Received: from jarvis.ext.hansenpartnership.com (unknown [9.85.171.143])
-        by b03ledav006.gho.boulder.ibm.com (Postfix) with ESMTP;
-        Mon, 11 Mar 2019 16:13:50 +0000 (GMT)
-Subject: Re: [PATCH] scsi/dpt_i2o.c: Use dma_zalloc_coherent
-From:   James Bottomley <jejb@linux.vnet.ibm.com>
-To:     Sabyasachi Gupta <sabyasachi.linux@gmail.com>,
-        akpm@linux-foundation.org
-Cc:     aacraid@microsemi.com, martin.petersen@oracle.com,
-        linux-scsi@vger.kernel.org, linux-kernel@vger.kernel.org,
-        jrdr.linux@gmail.com
-Date:   Mon, 11 Mar 2019 09:13:49 -0700
-In-Reply-To: <5c8683f7.1c69fb81.e37f9.75a0@mx.google.com>
-References: <5c8683f7.1c69fb81.e37f9.75a0@mx.google.com>
-Content-Type: text/plain; charset="UTF-8"
-X-Mailer: Evolution 3.26.6 
-Mime-Version: 1.0
-Content-Transfer-Encoding: 7bit
-X-TM-AS-GCONF: 00
-x-cbid: 19031116-0016-0000-0000-0000098EA616
-X-IBM-SpamModules-Scores: 
-X-IBM-SpamModules-Versions: BY=3.00010739; HX=3.00000242; KW=3.00000007;
- PH=3.00000004; SC=3.00000281; SDB=6.01172879; UDB=6.00613182; IPR=6.00953533;
- MB=3.00025929; MTD=3.00000008; XFM=3.00000015; UTC=2019-03-11 16:13:55
-X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
-x-cbparentid: 19031116-0017-0000-0000-0000426A81E3
-Message-Id: <1552320829.2889.11.camel@linux.vnet.ibm.com>
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-03-11_12:,,
- signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
- malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
- clxscore=1011 lowpriorityscore=0 mlxscore=0 impostorscore=0
- mlxlogscore=550 adultscore=0 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.0.1-1810050000 definitions=main-1903110116
+        Mon, 11 Mar 2019 12:15:28 -0400
+Received: from mx2.suse.de ([195.135.220.15]:50690 "EHLO mx1.suse.de"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726625AbfCKQP2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 11 Mar 2019 12:15:28 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx1.suse.de (Postfix) with ESMTP id 2F065AE03;
+        Mon, 11 Mar 2019 16:15:27 +0000 (UTC)
+Received: by quack2.suse.cz (Postfix, from userid 1000)
+        id C93871E426A; Mon, 11 Mar 2019 17:15:25 +0100 (CET)
+Date:   Mon, 11 Mar 2019 17:15:25 +0100
+From:   Jan Kara <jack@suse.cz>
+To:     Alexander Lochmann <alexander.lochmann@tu-dortmund.de>
+Cc:     tytso@mit.edu, jack@suse.com, linux-ext4@vger.kernel.org,
+        linux-kernel@vger.kernel.org,
+        Horst Schirmeier <horst.schirmeier@tu-dortmund.de>
+Subject: Re: [PATCH 1/1] Updated locking documentation for struct journal_t
+Message-ID: <20190311161525.GN11553@quack2.suse.cz>
+References: <20190308150605.98405-1-alexander.lochmann@tu-dortmund.de>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190308150605.98405-1-alexander.lochmann@tu-dortmund.de>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, 2019-03-11 at 21:21 +0530, Sabyasachi Gupta wrote:
-> Replaced dma_alloc_coherent + memset with dma_zalloc_coherent
+On Fri 08-03-19 16:06:05, Alexander Lochmann wrote:
+> We used LockDoc to derive locking rules for each member
+> of struct journal_t. Based on those results, we extended
+> the existing documentation by more members
+> of struct inode, and updated the existing documentation.
+> 
+> Signed-off-by: Alexander Lochmann <alexander.lochmann@tu-dortmund.de>
+> Signed-off-by: Horst Schirmeier <horst.schirmeier@tu-dortmund.de>
+> ---
+>  include/linux/jbd2.h | 14 +++++++++-----
+>  1 file changed, 9 insertions(+), 5 deletions(-)
 
-I really don't think so.  This API is going away:
+Thanks for the patch! Some comments below.
 
-https://lkml.org/lkml/2019/1/8/394
+> diff --git a/include/linux/jbd2.h b/include/linux/jbd2.h
+> index 0f919d5fe84f..c1ba44ca515a 100644
+> --- a/include/linux/jbd2.h
+> +++ b/include/linux/jbd2.h
+> @@ -585,7 +585,8 @@ struct transaction_s
+>  	}			t_state;
+>  
+>  	/*
+> -	 * Where in the log does this transaction's commit start? [no locking]
+> +	 * Where in the log does this transaction's commit start?
+> +	 * [journal_t->j_state_lock]
+>  	 */
+>  	unsigned long		t_log_start;
+>  
+> @@ -647,17 +648,17 @@ struct transaction_s
+>  	unsigned long		t_max_wait;
+>  
+>  	/*
+> -	 * When transaction started
+> +	 * When transaction started [j_state_lock]
+>  	 */
+>  	unsigned long		t_start;
+>  
+>  	/*
+> -	 * When commit was requested
+> +	 * When commit was requested [j_state_lock]
+>  	 */
+>  	unsigned long		t_requested;
+>  
+>  	/*
+> -	 * Checkpointing stats [j_checkpoint_sem]
+> +	 * Checkpointing stats [j_list_lock]
+>  	 */
+>  	struct transaction_chp_stats_s t_chp_stats;
+>  
 
-James
+These look correct to me.
 
+> @@ -762,6 +764,7 @@ struct journal_s
+>  
+>  	/**
+>  	 * @j_sb_buffer: The first part of the superblock buffer.
+> +	 * [j_checkpoint_mutex]
+>  	 */
+>  	struct buffer_head	*j_sb_buffer;
+
+This isn't true. j_sb_buffer is just initialized in journal_init_common()
+and never changed. So there's no lock protecting it.
+
+
+> @@ -1015,6 +1018,7 @@ struct journal_s
+>  	 * @j_commit_interval:
+>  	 *
+>  	 * What is the maximum transaction lifetime before we begin a commit?
+> +	 * [super_block->s_umount]
+>  	 */
+>  	unsigned long		j_commit_interval;
+
+Ditto here.
+
+> @@ -1032,7 +1036,7 @@ struct journal_s
+>  	 * @j_revoke:
+>  	 *
+>  	 * The revoke table - maintains the list of revoked blocks in the
+> -	 * current transaction.
+> +	 * current transaction. [j_state_lock]
+>  	 */
+>  	struct jbd2_revoke_table_s *j_revoke;
+>  
+
+This is also not true. The contents of the revoke table itself is protected
+by j_revoke_lock. The pointer to current revoke table (i.e. j_revoke
+itself) is changed only when the currently running transation is in
+T_SWITCH state - a special state where no updates can be happening anymore
+and new transaction cannot be running yet either.
+
+								Honza
+-- 
+Jan Kara <jack@suse.com>
+SUSE Labs, CR
