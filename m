@@ -2,159 +2,296 @@ Return-Path: <SRS0=FxTY=RO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.0 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C3DDCC43381
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 Mar 2019 11:38:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0D1C4C43381
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 Mar 2019 11:39:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8757B206BA
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 Mar 2019 11:38:12 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=amdcloud.onmicrosoft.com header.i=@amdcloud.onmicrosoft.com header.b="0Tyb6CKN"
+	by mail.kernel.org (Postfix) with ESMTP id C266620657
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 Mar 2019 11:39:03 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727403AbfCKLiL (ORCPT
+        id S1727429AbfCKLjC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 11 Mar 2019 07:38:11 -0400
-Received: from mail-eopbgr700089.outbound.protection.outlook.com ([40.107.70.89]:58584
-        "EHLO NAM04-SN1-obe.outbound.protection.outlook.com"
+        Mon, 11 Mar 2019 07:39:02 -0400
+Received: from szxga05-in.huawei.com ([45.249.212.191]:5232 "EHLO huawei.com"
         rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726914AbfCKLiK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 11 Mar 2019 07:38:10 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=amdcloud.onmicrosoft.com; s=selector1-amd-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=IoQrWar4GK4K3ovJgOD+k75O4DaW9MpKVclXcrvbBQw=;
- b=0Tyb6CKNxENgOWp2PPrwhQ9GdIxsbYKI6DpaulwYnsuYEA8X0Au7iqlwEJopMVHXryHeaBCwi9JDLxnHwxiiG0AvRSYYApa7g9JSuLRloPVfr0Gc1sDcIm/QubUzy6gHHRpmfr2SuR4QBwxI3EK1M+RjDNl2iioNrtUFeVYg3rM=
-Received: from DM6PR12MB2844.namprd12.prod.outlook.com (20.176.117.96) by
- DM6PR12MB3227.namprd12.prod.outlook.com (20.179.105.95) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.1686.21; Mon, 11 Mar 2019 11:38:05 +0000
-Received: from DM6PR12MB2844.namprd12.prod.outlook.com
- ([fe80::3589:a066:e1d:b1f0]) by DM6PR12MB2844.namprd12.prod.outlook.com
- ([fe80::3589:a066:e1d:b1f0%5]) with mapi id 15.20.1686.021; Mon, 11 Mar 2019
- 11:38:05 +0000
-From:   "Suthikulpanit, Suravee" <Suravee.Suthikulpanit@amd.com>
-To:     Oren Twaig <oren@scalemp.com>
-CC:     "kvm@vger.kernel.org" <kvm@vger.kernel.org>,
-        "x86@kernel.org" <x86@kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH] svm: Fix AVIC incomplete IPI emulation
-Thread-Topic: [PATCH] svm: Fix AVIC incomplete IPI emulation
-Thread-Index: AQHU0rY9293WXGT45E2nygfc4G4QEKYGWFMA
-Date:   Mon, 11 Mar 2019 11:38:05 +0000
-Message-ID: <ab2b29ac-adcf-12ab-7c53-cc427995e94c@amd.com>
-References: <d53d2240-d1f1-da04-9126-9eb3518d0047@scalemp.com>
-In-Reply-To: <d53d2240-d1f1-da04-9126-9eb3518d0047@scalemp.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-user-agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.14; rv:60.0)
- Gecko/20100101 Thunderbird/60.5.1
-x-originating-ip: [165.204.77.1]
-x-clientproxiedby: SN4PR0401CA0026.namprd04.prod.outlook.com
- (2603:10b6:803:2a::12) To DM6PR12MB2844.namprd12.prod.outlook.com
- (2603:10b6:5:45::32)
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=Suravee.Suthikulpanit@amd.com; 
-x-ms-exchange-messagesentrepresentingtype: 1
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: 4a8aa43b-8ada-424f-1c58-08d6a61606cf
-x-ms-office365-filtering-ht: Tenant
-x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(5600127)(711020)(4605104)(4618075)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(2017052603328)(7153060)(7193020);SRVR:DM6PR12MB3227;
-x-ms-traffictypediagnostic: DM6PR12MB3227:
-x-microsoft-exchange-diagnostics: 1;DM6PR12MB3227;20:lYQ1hNT4585xXqBXA0jYfOiCm29sa0xzNjMJoHU3SFanm1N1dmDuPOtUubNLPVXrAuO3WRp5BAayi9B76epiogs6mpR749nGowg436p86qmqHYjcTy13/Rm3n8NfBsiRX/V/gv/87/fCw1B8KZ11Eh/sEJnW6VPHBZUsx3i7o3gDLJPV3K9Zlt8biaYSl11hV18Pt/D2/+Zc213Y6sw/0lHYzehsV7TRor4+fNwe+bBtwzn/pbgiVEsP02LZSKZs
-x-microsoft-antispam-prvs: <DM6PR12MB3227874A8FCF0DBC3EAF9E86F3480@DM6PR12MB3227.namprd12.prod.outlook.com>
-x-forefront-prvs: 09730BD177
-x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(39860400002)(346002)(136003)(366004)(396003)(376002)(199004)(189003)(53936002)(105586002)(25786009)(386003)(26005)(54906003)(102836004)(6506007)(6246003)(53546011)(72206003)(6486002)(52116002)(6436002)(99286004)(3846002)(36756003)(6116002)(81156014)(81166006)(14454004)(6512007)(64126003)(229853002)(76176011)(31686004)(65956001)(66066001)(65806001)(478600001)(8676002)(486006)(31696002)(2906002)(14444005)(256004)(305945005)(71200400001)(7736002)(71190400001)(8936002)(86362001)(2616005)(476003)(11346002)(446003)(65826007)(186003)(97736004)(106356001)(58126008)(5660300002)(68736007)(6916009)(316002)(4326008);DIR:OUT;SFP:1101;SCL:1;SRVR:DM6PR12MB3227;H:DM6PR12MB2844.namprd12.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
-received-spf: None (protection.outlook.com: amd.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam-message-info: xFdbRfYVchRPbCmNwEcXYYB9gQcHVTs1J7cfOBSp3vjKWR+m/7WgBUWH+YCQccXYPyAkSHxO9bzCWfrgqsLEGy2YsGTrRdSv9SFg6DxmtofjBYuf2uIPE1OQuZQ6BO009jEyfoCwr1E1b8NYp0tBrpKjIZD4hte1U3mucU7bpUBm8dJq+c7s3LTPAQOx7tLKH34DGfp0oIQtdSESGx8cGh8+QXUr3L4YQLN0FjA2y6hcbAkYnB8CM6uaN/YTEdh7azuD1g1KjYTifgAQwGaPiziZvp58LLVK7ymN17+GXIw+OTB+FIils57jPSfQRSBWMBnq7fr5c9NgaR99G+aloj9uwtk8O26dnlEeTQYEI/owQY8hX7iXaop552a2JAj2O52waYAW4coZU+x6VUbkTSfOjXbHJ7azMKVKwqIkDRA=
-Content-Type: text/plain; charset="utf-8"
-Content-ID: <7E7606A84EEF004D8C4D64CC5ADD986C@namprd12.prod.outlook.com>
-Content-Transfer-Encoding: base64
+        id S1726914AbfCKLjC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 11 Mar 2019 07:39:02 -0400
+Received: from DGGEMS406-HUB.china.huawei.com (unknown [172.30.72.60])
+        by Forcepoint Email with ESMTP id DF62EE70C7920DBA5E05;
+        Mon, 11 Mar 2019 19:38:58 +0800 (CST)
+Received: from localhost (10.202.226.61) by DGGEMS406-HUB.china.huawei.com
+ (10.3.19.206) with Microsoft SMTP Server id 14.3.408.0; Mon, 11 Mar 2019
+ 19:38:54 +0800
+Date:   Mon, 11 Mar 2019 11:38:43 +0000
+From:   Jonathan Cameron <jonathan.cameron@huawei.com>
+To:     Keith Busch <keith.busch@intel.com>
+CC:     <linux-kernel@vger.kernel.org>, <linux-acpi@vger.kernel.org>,
+        <linux-mm@kvack.org>, <linux-api@vger.kernel.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Rafael Wysocki <rafael@kernel.org>,
+        "Dave Hansen" <dave.hansen@intel.com>,
+        Dan Williams <dan.j.williams@intel.com>
+Subject: Re: [PATCHv7 10/10] doc/mm: New documentation for memory
+ performance
+Message-ID: <20190311113843.00006b47@huawei.com>
+In-Reply-To: <20190227225038.20438-11-keith.busch@intel.com>
+References: <20190227225038.20438-1-keith.busch@intel.com>
+        <20190227225038.20438-11-keith.busch@intel.com>
+Organization: Huawei
+X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; i686-w64-mingw32)
 MIME-Version: 1.0
-X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 4a8aa43b-8ada-424f-1c58-08d6a61606cf
-X-MS-Exchange-CrossTenant-originalarrivaltime: 11 Mar 2019 11:38:05.6544
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 3dd8961f-e488-4e60-8e11-a82d994e183d
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM6PR12MB3227
+Content-Type: text/plain; charset="US-ASCII"
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [10.202.226.61]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-SGkgT3JlbiwNCg0KU29ycnkgZm9yIGRlbGF5IHJlc3BvbnNlLg0KDQpPbiAzLzUvMTkgMToxNSBB
-TSwgT3JlbiBUd2FpZyB3cm90ZToNCj4gSGVsbG8gU3VyYXZlZSwNCj4gDQo+IEFjY29yZGluZyB0
-byBBTUQncyBTRE0sIHRoZSB0YXJnZXQtbm90LXJ1bm5pbmcgaW5jb21wbGV0ZQ0KPiBpcGkgZXhp
-dCBpcyBvbmx5IHJlY2VpdmVkIGlmIGFueSBvZiB0aGUgZGVzdGluYXRpb24gY3B1cyBoYWQgdGhl
-DQo+IG5vdC1ydW5uaW5nIGJpdCBzZXQgaW4gdGhlIGF2aWMgYmFja2luZyBwYWdlLg0KDQpJIGJl
-bGlldmUgeW91IGFyZSByZWZlcnJpbmcgdG8gdGhlICJpc1J1bm5pbmciIChJUikgYml0IGlzIGlu
-IHRoZQ0KQVZJQyBwaHlzaWNhbCBBUElDIElEIHRhYmxlIGVudHJ5Lg0KDQo+IEhvd2V2ZXIsIG5v
-dCBiZWZvcmUgdGhlIENQVSBfYWxyZWFkeV8gc2V0IHRoZSByZWxldmFudCBJUlIgYml0DQo+IGlu
-IGFsbCB0aGVzZSBjcHVzLg0KDQpOb3Qgc3VyZSB3aGF0IHlvdSBtZWFudCBoZXJlLg0KDQo+IElu
-IHRoaXMgY2hhbmdlLCB0aGUgcGF0Y2ggZm9yY2VzIEtWTSB0byBzZW5kIGFub3RoZXIgaW50ZXJy
-dXB0IA0KPiB0byB0aGUgdmNwdSB3aGV0aGVyIFNWTSBhbHJlYWR5IGRpZCB0aGF0IG9yIG5vdC4g
-V2hpY2ggbWVhbnMNCj4gdGhlIHZjcHUvcywgdW5kZXIgc29tZSBjb25kaXRpb25zLCBjYW4gZ2V0
-IGFuIEVYVFJBIGludGVycnVwdA0KPiBpdCBuZXZlciBpbnRlbmRlZCB0byBnZXQgPj4gRXhhbXBs
-ZToNCj4gIMKgIDEuIHZjcHUgQjogSXMgaW4gIm5vdC1ydW5uaW5nIiBzdGF0ZS4NCj4gIMKgIDIu
-IHZjcHUgQTogV3JpdGVzIHRvIHRoZSBJQ1IgdG8gc2VuZCB2ZWN0b3IgODAgdG8gdmNwdSBCDQo+
-ICDCoCAzLiB2Y3B1IEE6IFNWTSB1cGRhdGVzIHZjcHUgQiBJUlIgd2l0aCBiaXQgODANCj4gIMKg
-IDQuIHZjcHUgQTogU1ZNIGV4aXRzIG9uIGluY29tcGxldGUgSVBJIHRhcmdldC1ub3QtcnVubmlu
-ZyBleGl0Lg0KPiAgwqAgNS4gdmNwdSBBOiBOb3cgc3RvcHMgZXhlY3V0aW5nIGFueSBjb2RlIEAg
-aHlwZXJ2aXNvciBsZXZlbC4NCj4gIMKgIDYuIHZjcHUgQjogRHVlIHRvIGFub3RoZXIgaW50ZXJy
-dXB0IChsaWtlIGxhcGljIHRpbWVyKQ0KPiAgwqDCoMKgwqAgcmVzdW1lcyBydW5uaW5nIHRoZSBn
-dWVzdC4gV2hpbGUgaGFuZGxpbmcgaW50ZXJydXB0cywNCj4gIMKgwqDCoMKgIGl0IGFsc28gaGFu
-ZGxlcyBpbnRlcnJ1cHQgdmVjdG9yIDgwIChhcyBpdCdzIGluIGhpcyBJUlIpDQo+ICDCoCA3LiB2
-Y3B1IEE6IHJlc3VtZXMgZXhlY3V0aW5nIHRoZSBiZWxvdyBjb2RlIGFuZCBzZW5kcw0KPiAgwqDC
-oMKgwqAgYW4gX2FkZGl0aW9uYWxfaW50ZXJydXB0IHRvIHZjcHUgQi4NCj4gDQo+IE92ZXJhbGws
-IHZjcHUgQiBnb3QgdHdvIGludGVycnVwdHMuIFRoZSBzZWNvbmQgaXMgdW53YW50ZWQgYW5kDQo+
-IG5vdCBkb2N1bWVudGVkIGluIHRoZSBzeXN0ZW0gYXJjaGl0ZWN0dXJlLg0KPg0KPiBDYW4geW91
-IHBsZWFzZSBlbGFib3JhdGUgbW9yZSB0byB3aHkgdGhlIGltcGxlbWVudGF0aW9uDQo+IGJlbG93
-IGNvbmZsaWN0IHdpdGggdGhlIHNwZWNpZmljYXRpb25zICh3aGljaCB3YXMgdGhlIGNvZGUNCj4g
-YmVmb3JlIHRoaXMgY29tbWl0KSA/DQpUaGlzIHBhdGNoIHdhcyBpbnRyb2R1Y2VkIHRvIGZpeCBh
-biBpc3N1ZSB3aGVyZSB0aGUgU1ZNIGRyaXZlciB0cmllcyB0bw0KaGFuZGxlIHRoZSBzdGVwIDUg
-YWJvdmUgYnkgc2NoZWR1bGluZyB2Y3B1IEIgaW50byBfcnVubmluZ18gc3RhdGUgdG8gaGFuZGxl
-DQp0aGUgSVBJIGZyb20gdmNwdSBBLiBIb3dldmVyLCBwcmlvciB0byB0aGlzIHBhdGNoLCB2Y3B1
-IEIgd2FzIG5ldmVyIGdldA0Kc2NoZWR1bGVkIHRvIHJ1biB1bmxlc3MgdGhlcmUgYXJlIG90aGVy
-IGludGVycnVwdHMgKGUuZy4gdGltZXIpLg0KVGhpcyBzaG91bGQgbm90IGJlIHRoZSBjYXNlIGFz
-IFZjcHUgQiBzaG91bGQgaGF2ZSBiZWVuIHJ1bm5pbmcgcmVnYXJkbGVzcw0Kb2Ygb3RoZXIgaW50
-ZXJydXB0cy4gU28sIEkgZG9uJ3QgdGhpbmsgc3RlcCA2IGFuZCA3IGFib3ZlIGFyZSBjb3JyZWN0
-Lg0KDQpUaGUgaXNzdWUgd2FzIGNhdXNlZCBieSB0aGUgYXBpYy0+aXJyX3BlbmRpbmcgbm90IHNl
-dCB0byB0cnVlIHdoZW4gdHJ5aW5nIHRvDQpnZXQgdmNwdSBCIHNjaGVkdWxlZC4gVGhpcyBmbGFn
-IGlzIGNoZWNrZWQgaW4gYXBpY19maW5kX2hpZ2hlc3RfaXJyKCkgYmVmb3JlDQpzZWFyY2hpbmcg
-Zm9yIHRoZSBoaWdoZXN0IGJpdC4NCg0KVG8gZml4IHRoZSBpc3N1ZSwgSSBkZWNpZGVkIHRvIGxl
-dmVyYWdlIHRoZSBleGlzdGluZyBlbXVsYXRpb24gY29kZSBmb3INCklDUiBhbmQgSUNSMiwgd2hp
-Y2ggaW4gdHVybiBjYWxscyBhcGljX3NlbmRfaXBpKCkgdG8gZGVsaXZlciBpbnRlcnJ1cHQgdG8g
-dnB1IEIuDQoNCkhvd2V2ZXIsIGxvb2tpbmcgYSBiaXQgbW9yZSBjbG9zZWx5LCBJIG5vdGljZSB0
-aGUgbG9naWMgaW4gc3ZtX2RlbGl2ZXJfYXZpY19pbnRyKCkNCnNob3VsZCBhbHNvIGhhdmUgYmVl
-biBjaGFuZ2VkIGZyb20ga3ZtX3ZjcHVfd2FrZV91cCgpIHRvIGt2bV92Y3B1X2tpY2soKQ0Kc2lu
-Y2UgdGhlIGxhdHRlciB3aWxsIHJlc3VsdCBpbiBjbGVhcmluZyB0aGUgSVJSIGJpdCBmb3IgdGhl
-IElQSSB2ZWN0b3INCndoZW4gdHJ5aW5nIHRvIHNlbmQgSVBJIGFzIHBhcnQgb2YgdGhlIGZvbGxv
-d2luZyBjYWxsIHBhdGguDQoNCiAgIHZjcHVfZW50ZXJfZ3Vlc3QoKQ0KICAgICB8LS0gaW5qZWN0
-X3BlbmRpbmdfZXZlbnQoKQ0KICAgICAgIHwtLSBrdm1fY3B1X2dldF9pbnRlcnJ1cHQoKQ0KICAg
-ICAgICAgfC0tICBrdm1fZ2V0X2FwaWNfaW50ZXJydXB0KCkNCiAgICAgICAgICAgfC0tIGFwaWNf
-Y2xlYXJfaXJyKCkNCiAgICAgICAgICAgfC0tIGFwaWNfc2V0X2lzcigpDQogICAgICAgICAgIHwt
-LSBhcGljX3VwZGF0ZV9wcHIoKSAuLi4uDQoNClBsZWFzZSBzZWUgdGhlIHBhdGNoIGJlbG93Lg0K
-DQpOb3Qgc3VyZSBpZiB0aGlzIHdvdWxkIGFkZHJlc3MgdGhlIHByb2JsZW0geW91IGFyZSBzZWVp
-bmcuDQoNClRoYW5rcywNClN1cmF2ZWUNCg0KZGlmZiAtLWdpdCBhL2FyY2gveDg2L2t2bS9zdm0u
-YyBiL2FyY2gveDg2L2t2bS9zdm0uYw0KaW5kZXggMjRkZmE2YTkzNzExLi5kMjg0MWMzZGJjMDQg
-MTAwNjQ0DQotLS0gYS9hcmNoL3g4Ni9rdm0vc3ZtLmMNCisrKyBiL2FyY2gveDg2L2t2bS9zdm0u
-Yw0KQEAgLTUyMTksMTEgKzUyNTYsMTMgQEAgc3RhdGljIHZvaWQgc3ZtX2RlbGl2ZXJfYXZpY19p
-bnRyKHN0cnVjdCBrdm1fdmNwdSAqdmNwdSwgaW50IHZlYykNCiAgICAgICAgIGt2bV9sYXBpY19z
-ZXRfaXJyKHZlYywgdmNwdS0+YXJjaC5hcGljKTsNCiAgICAgICAgIHNtcF9tYl9fYWZ0ZXJfYXRv
-bWljKCk7DQoNCi0gICAgICAgaWYgKGF2aWNfdmNwdV9pc19ydW5uaW5nKHZjcHUpKQ0KKyAgICAg
-ICBpZiAoYXZpY192Y3B1X2lzX3J1bm5pbmcodmNwdSkpIHsNCiAgICAgICAgICAgICAgICAgd3Jt
-c3JsKFNWTV9BVklDX0RPT1JCRUxMLA0KICAgICAgICAgICAgICAgICAgICAgICAga3ZtX2NwdV9n
-ZXRfYXBpY2lkKHZjcHUtPmNwdSkpOw0KLSAgICAgICBlbHNlDQotICAgICAgICAgICAgICAga3Zt
-X3ZjcHVfd2FrZV91cCh2Y3B1KTsNCisgICAgICAgfSBlbHNlIHsNCisgICAgICAgICAgICAgICBr
-dm1fbWFrZV9yZXF1ZXN0KEtWTV9SRVFfRVZFTlQsIHZjcHUpOw0KKyAgICAgICAgICAgICAgIGt2
-bV92Y3B1X2tpY2sodmNwdSk7DQorICAgICAgIH0NCiAgfQ0KDQogIHN0YXRpYyB2b2lkIHN2bV9p
-cl9saXN0X2RlbChzdHJ1Y3QgdmNwdV9zdm0gKnN2bSwgc3RydWN0IGFtZF9pb21tdV9waV9kYXRh
-ICpwaSkNCg==
+On Wed, 27 Feb 2019 15:50:38 -0700
+Keith Busch <keith.busch@intel.com> wrote:
+
+> Platforms may provide system memory where some physical address ranges
+> perform differently than others, or is side cached by the system.
+The magic 'side cached' term still here in the patch description, ideally
+wants cleaning up.
+
+> 
+> Add documentation describing a high level overview of such systems and the
+> perforamnce and caching attributes the kernel provides for applications
+performance
+
+> wishing to query this information.
+> 
+> Reviewed-by: Mike Rapoport <rppt@linux.ibm.com>
+> Signed-off-by: Keith Busch <keith.busch@intel.com>
+
+A few comments inline. Mostly the weird corner cases that I miss understood
+in one of the earlier versions of the code.
+
+Whilst I think perhaps that one section could be tweaked a tiny bit I'm basically
+happy with this if you don't want to.
+
+Reviewed-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+
+> ---
+>  Documentation/admin-guide/mm/numaperf.rst | 164 ++++++++++++++++++++++++++++++
+>  1 file changed, 164 insertions(+)
+>  create mode 100644 Documentation/admin-guide/mm/numaperf.rst
+> 
+> diff --git a/Documentation/admin-guide/mm/numaperf.rst b/Documentation/admin-guide/mm/numaperf.rst
+> new file mode 100644
+> index 000000000000..d32756b9be48
+> --- /dev/null
+> +++ b/Documentation/admin-guide/mm/numaperf.rst
+> @@ -0,0 +1,164 @@
+> +.. _numaperf:
+> +
+> +=============
+> +NUMA Locality
+> +=============
+> +
+> +Some platforms may have multiple types of memory attached to a compute
+> +node. These disparate memory ranges may share some characteristics, such
+> +as CPU cache coherence, but may have different performance. For example,
+> +different media types and buses affect bandwidth and latency.
+> +
+> +A system supports such heterogeneous memory by grouping each memory type
+> +under different domains, or "nodes", based on locality and performance
+> +characteristics.  Some memory may share the same node as a CPU, and others
+> +are provided as memory only nodes. While memory only nodes do not provide
+> +CPUs, they may still be local to one or more compute nodes relative to
+> +other nodes. The following diagram shows one such example of two compute
+> +nodes with local memory and a memory only node for each of compute node:
+> +
+> + +------------------+     +------------------+
+> + | Compute Node 0   +-----+ Compute Node 1   |
+> + | Local Node0 Mem  |     | Local Node1 Mem  |
+> + +--------+---------+     +--------+---------+
+> +          |                        |
+> + +--------+---------+     +--------+---------+
+> + | Slower Node2 Mem |     | Slower Node3 Mem |
+> + +------------------+     +--------+---------+
+> +
+> +A "memory initiator" is a node containing one or more devices such as
+> +CPUs or separate memory I/O devices that can initiate memory requests.
+> +A "memory target" is a node containing one or more physical address
+> +ranges accessible from one or more memory initiators.
+> +
+> +When multiple memory initiators exist, they may not all have the same
+> +performance when accessing a given memory target. Each initiator-target
+> +pair may be organized into different ranked access classes to represent
+> +this relationship. 
+
+This concept is a bit vague at the moment. Largely because only access0
+is actually defined.  We should definitely keep a close eye on any others
+that are defined in future to make sure this text is still valid.
+
+I can certainly see it being used for different ideas of 'best' rather
+than simply best and second best etc.
+
+> The highest performing initiator to a given target
+> +is considered to be one of that target's local initiators, and given
+> +the highest access class, 0. Any given target may have one or more
+> +local initiators, and any given initiator may have multiple local
+> +memory targets.
+> +
+> +To aid applications matching memory targets with their initiators, the
+> +kernel provides symlinks to each other. The following example lists the
+> +relationship for the access class "0" memory initiators and targets, which is
+> +the of nodes with the highest performing access relationship::
+> +
+> +	# symlinks -v /sys/devices/system/node/nodeX/access0/targets/
+> +	relative: /sys/devices/system/node/nodeX/access0/targets/nodeY -> ../../nodeY
+
+So this one perhaps needs a bit more description - I would put it after initiators
+which precisely fits the description you have here now.
+
+"targets contains those nodes for which this initiator is the best possible initiator."
+
+which is subtly different form
+
+"targets contains those nodes to which this node has the highest
+performing access characteristics."
+
+For example in my test case:
+* 4 nodes with local memory and cpu, 1 node remote and equal distant from all of the
+  initiators,
+
+targets for the compute nodes contains both themselves and the remote node, to which
+the characteristics are of course worse. As you point out before, we need to look
+in 
+node0/access0/targets/node0/access0/initiators 
+node0/access0/targets/node4/access0/initiators 
+to get the relevant characteristics and work out that node0 is 'nearer' itself
+(obviously this is a bit of a silly case, but we could have no memory node0 and
+be talking about node4 and node5.
+
+I am happy with the actual interface, this is just a question about whether we can tweak
+this text to be slightly clearer.
+
+> +
+> +	# symlinks -v /sys/devices/system/node/nodeY/access0/initiators/
+> +	relative: /sys/devices/system/node/nodeY/access0/initiators/nodeX -> ../../nodeX
+> +
+> +================
+> +NUMA Performance
+> +================
+> +
+> +Applications may wish to consider which node they want their memory to
+> +be allocated from based on the node's performance characteristics. If
+> +the system provides these attributes, the kernel exports them under the
+> +node sysfs hierarchy by appending the attributes directory under the
+> +memory node's access class 0 initiators as follows::
+> +
+> +	/sys/devices/system/node/nodeY/access0/initiators/
+> +
+> +These attributes apply only when accessed from nodes that have the
+> +are linked under the this access's inititiators.
+> +
+> +The performance characteristics the kernel provides for the local initiators
+> +are exported are as follows::
+> +
+> +	# tree -P "read*|write*" /sys/devices/system/node/nodeY/access0/initiators/
+> +	/sys/devices/system/node/nodeY/access0/initiators/
+> +	|-- read_bandwidth
+> +	|-- read_latency
+> +	|-- write_bandwidth
+> +	`-- write_latency
+> +
+> +The bandwidth attributes are provided in MiB/second.
+> +
+> +The latency attributes are provided in nanoseconds.
+> +
+> +The values reported here correspond to the rated latency and bandwidth
+> +for the platform.
+> +
+> +==========
+> +NUMA Cache
+> +==========
+> +
+> +System memory may be constructed in a hierarchy of elements with various
+> +performance characteristics in order to provide large address space of
+> +slower performing memory cached by a smaller higher performing memory. The
+> +system physical addresses memory  initiators are aware of are provided
+> +by the last memory level in the hierarchy. The system meanwhile uses
+> +higher performing memory to transparently cache access to progressively
+> +slower levels.
+> +
+> +The term "far memory" is used to denote the last level memory in the
+> +hierarchy. Each increasing cache level provides higher performing
+> +initiator access, and the term "near memory" represents the fastest
+> +cache provided by the system.
+> +
+> +This numbering is different than CPU caches where the cache level (ex:
+> +L1, L2, L3) uses the CPU-side view where each increased level is lower
+> +performing. In contrast, the memory cache level is centric to the last
+> +level memory, so the higher numbered cache level corresponds to  memory
+> +nearer to the CPU, and further from far memory.
+> +
+> +The memory-side caches are not directly addressable by software. When
+> +software accesses a system address, the system will return it from the
+> +near memory cache if it is present. If it is not present, the system
+> +accesses the next level of memory until there is either a hit in that
+> +cache level, or it reaches far memory.
+> +
+> +An application does not need to know about caching attributes in order
+> +to use the system. Software may optionally query the memory cache
+> +attributes in order to maximize the performance out of such a setup.
+> +If the system provides a way for the kernel to discover this information,
+> +for example with ACPI HMAT (Heterogeneous Memory Attribute Table),
+> +the kernel will append these attributes to the NUMA node memory target.
+> +
+> +When the kernel first registers a memory cache with a node, the kernel
+> +will create the following directory::
+
+Real nitpick but more precisely, "If relevant, the kernel..."  Otherwise
+we say it's always there but then say it isn't below.
+
+> +
+> +	/sys/devices/system/node/nodeX/memory_side_cache/
+> +
+> +If that directory is not present, the system either does not not provide
+> +a memory-side cache, or that information is not accessible to the kernel.
+> +
+> +The attributes for each level of cache is provided under its cache
+> +level index::
+> +
+> +	/sys/devices/system/node/nodeX/memory_side_cache/indexA/
+> +	/sys/devices/system/node/nodeX/memory_side_cache/indexB/
+> +	/sys/devices/system/node/nodeX/memory_side_cache/indexC/
+> +
+> +Each cache level's directory provides its attributes. For example, the
+> +following shows a single cache level and the attributes available for
+> +software to query::
+> +
+> +	# tree sys/devices/system/node/node0/memory_side_cache/
+> +	/sys/devices/system/node/node0/memory_side_cache/
+> +	|-- index1
+> +	|   |-- indexing
+> +	|   |-- line_size
+> +	|   |-- size
+> +	|   `-- write_policy
+> +
+> +The "indexing" will be 0 if it is a direct-mapped cache, and non-zero
+> +for any other indexed based, multi-way associativity.
+> +
+> +The "line_size" is the number of bytes accessed from the next cache
+> +level on a miss.
+> +
+> +The "size" is the number of bytes provided by this cache level.
+> +
+> +The "write_policy" will be 0 for write-back, and non-zero for
+> +write-through caching.
+> +
+> +========
+> +See Also
+> +========
+> +.. [1] https://www.uefi.org/sites/default/files/resources/ACPI_6_2.pdf
+> +       Section 5.2.27
+
+
