@@ -2,120 +2,79 @@ Return-Path: <SRS0=FxTY=RO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2381AC4360F
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 Mar 2019 09:37:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9FE3DC43381
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 Mar 2019 09:38:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F012B20850
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 Mar 2019 09:37:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 755FE2075C
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 Mar 2019 09:38:44 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727415AbfCKJhn (ORCPT
+        id S1727417AbfCKJin (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 11 Mar 2019 05:37:43 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:42232 "EHLO mx1.redhat.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727323AbfCKJhl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 11 Mar 2019 05:37:41 -0400
-Received: from smtp.corp.redhat.com (int-mx05.intmail.prod.int.phx2.redhat.com [10.5.11.15])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id A7D2EC002965;
-        Mon, 11 Mar 2019 09:37:41 +0000 (UTC)
-Received: from xz-x1.nay.redhat.com (dhcp-14-116.nay.redhat.com [10.66.14.116])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id B3B195D705;
-        Mon, 11 Mar 2019 09:37:34 +0000 (UTC)
-From:   Peter Xu <peterx@redhat.com>
-To:     linux-kernel@vger.kernel.org
-Cc:     Paolo Bonzini <pbonzini@redhat.com>,
-        Hugh Dickins <hughd@google.com>,
-        Luis Chamberlain <mcgrof@kernel.org>,
-        Maxime Coquelin <maxime.coquelin@redhat.com>,
-        kvm@vger.kernel.org, Jerome Glisse <jglisse@redhat.com>,
-        Pavel Emelyanov <xemul@virtuozzo.com>,
-        Johannes Weiner <hannes@cmpxchg.org>, peterx@redhat.com,
-        Martin Cracauer <cracauer@cons.org>,
-        Denis Plotnikov <dplotnikov@virtuozzo.com>, linux-mm@kvack.org,
-        Marty McFadden <mcfadden8@llnl.gov>,
-        Maya Gokhale <gokhale2@llnl.gov>,
-        Mike Kravetz <mike.kravetz@oracle.com>,
-        Andrea Arcangeli <aarcange@redhat.com>,
-        Mike Rapoport <rppt@linux.vnet.ibm.com>,
-        Kees Cook <keescook@chromium.org>,
-        Mel Gorman <mgorman@suse.de>,
-        "Kirill A . Shutemov" <kirill@shutemov.name>,
-        linux-fsdevel@vger.kernel.org,
-        "Dr . David Alan Gilbert" <dgilbert@redhat.com>,
-        Andrew Morton <akpm@linux-foundation.org>
-Subject: [PATCH 3/3] userfaultfd: apply unprivileged_userfaultfd check
-Date:   Mon, 11 Mar 2019 17:37:01 +0800
-Message-Id: <20190311093701.15734-4-peterx@redhat.com>
-In-Reply-To: <20190311093701.15734-1-peterx@redhat.com>
-References: <20190311093701.15734-1-peterx@redhat.com>
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.15
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.31]); Mon, 11 Mar 2019 09:37:41 +0000 (UTC)
+        Mon, 11 Mar 2019 05:38:43 -0400
+Received: from szxga07-in.huawei.com ([45.249.212.35]:57680 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1727142AbfCKJin (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 11 Mar 2019 05:38:43 -0400
+Received: from DGGEMS402-HUB.china.huawei.com (unknown [172.30.72.59])
+        by Forcepoint Email with ESMTP id E07CFDEEE38C8976245B;
+        Mon, 11 Mar 2019 17:38:40 +0800 (CST)
+Received: from localhost.localdomain.localdomain (10.175.113.25) by
+ DGGEMS402-HUB.china.huawei.com (10.3.19.202) with Microsoft SMTP Server id
+ 14.3.408.0; Mon, 11 Mar 2019 17:38:39 +0800
+From:   Mao Wenan <maowenan@huawei.com>
+To:     <gregkh@linuxfoundation.org>, <jslaby@suse.com>,
+        <linux-serial@vger.kernel.org>, <kernel-janitors@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>, <dan.carpenter@oracle.com>
+Subject: [PATCH v2] serial: sh-sci: Missing uart_unregister_driver() on error in sci_probe_single()
+Date:   Mon, 11 Mar 2019 17:51:15 +0800
+Message-ID: <20190311095115.156774-1-maowenan@huawei.com>
+X-Mailer: git-send-email 2.20.1
+MIME-Version: 1.0
+Content-Transfer-Encoding: 7BIT
+Content-Type:   text/plain; charset=US-ASCII
+X-Originating-IP: [10.175.113.25]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Apply the unprivileged_userfaultfd check when doing userfaultfd
-syscall.  We didn't check it in other paths of userfaultfd (e.g., the
-ioctl() path) because we don't want to drag down the fast path of
-userfaultfd, as suggested by Andrea.
+Add the missing uart_unregister_driver() before return
+from sci_probe_single() in the error handling case.
 
-Suggested-by: Andrea Arcangeli <aarcange@redhat.com>
-Suggested-by: Mike Rapoport <rppt@linux.vnet.ibm.com>
-Signed-off-by: Peter Xu <peterx@redhat.com>
+Signed-off-by: Mao Wenan <maowenan@huawei.com>
 ---
- fs/userfaultfd.c | 25 +++++++++++++++++++++++++
- 1 file changed, 25 insertions(+)
+ v1->v2: add uart_unregister_driver() if mctrl_gpio_init is failed.
+ drivers/tty/serial/sh-sci.c | 8 ++++++--
+ 1 file changed, 6 insertions(+), 2 deletions(-)
 
-diff --git a/fs/userfaultfd.c b/fs/userfaultfd.c
-index c2188464555a..effdcfc88629 100644
---- a/fs/userfaultfd.c
-+++ b/fs/userfaultfd.c
-@@ -951,6 +951,28 @@ void userfaultfd_unmap_complete(struct mm_struct *mm, struct list_head *uf)
- 	}
- }
+diff --git a/drivers/tty/serial/sh-sci.c b/drivers/tty/serial/sh-sci.c
+index 64bbeb7d7e0c..fb5034390795 100644
+--- a/drivers/tty/serial/sh-sci.c
++++ b/drivers/tty/serial/sh-sci.c
+@@ -3254,12 +3254,16 @@ static int sci_probe_single(struct platform_device *dev,
+ 	mutex_unlock(&sci_uart_registration_lock);
  
-+/* Whether current process allows to use userfaultfd syscalls */
-+static bool userfaultfd_allowed(void)
-+{
-+	bool allowed = false;
-+
-+	switch (unprivileged_userfaultfd) {
-+	case UFFD_UNPRIV_ENABLED:
-+		allowed = true;
-+		break;
-+	case UFFD_UNPRIV_KVM:
-+		allowed = !!test_bit(MMF_USERFAULTFD_ALLOW,
-+				     &current->mm->flags);
-+		/* Fall through */
-+	case UFFD_UNPRIV_DISABLED:
-+		allowed = allowed || ns_capable(current_user_ns(),
-+						CAP_SYS_PTRACE);
-+		break;
+ 	ret = sci_init_single(dev, sciport, index, p, false);
+-	if (ret)
++	if (ret) {
++		uart_unregister_driver(&sci_uart_driver);
+ 		return ret;
 +	}
-+
-+	return allowed;
-+}
-+
- static int userfaultfd_release(struct inode *inode, struct file *file)
- {
- 	struct userfaultfd_ctx *ctx = file->private_data;
-@@ -2018,6 +2040,9 @@ SYSCALL_DEFINE1(userfaultfd, int, flags)
- 	BUILD_BUG_ON(UFFD_CLOEXEC != O_CLOEXEC);
- 	BUILD_BUG_ON(UFFD_NONBLOCK != O_NONBLOCK);
  
-+	if (!userfaultfd_allowed())
-+		return -EPERM;
-+
- 	if (flags & ~UFFD_SHARED_FCNTL_FLAGS)
- 		return -EINVAL;
+ 	sciport->gpios = mctrl_gpio_init(&sciport->port, 0);
+-	if (IS_ERR(sciport->gpios) && PTR_ERR(sciport->gpios) != -ENOSYS)
++	if (IS_ERR(sciport->gpios) && PTR_ERR(sciport->gpios) != -ENOSYS) {
++		uart_unregister_driver(&sci_uart_driver);
+ 		return PTR_ERR(sciport->gpios);
++	}
  
+ 	if (sciport->has_rtscts) {
+ 		if (!IS_ERR_OR_NULL(mctrl_gpio_to_gpiod(sciport->gpios,
 -- 
-2.17.1
+2.20.1
 
