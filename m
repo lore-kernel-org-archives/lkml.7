@@ -6,23 +6,23 @@ X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2CCC3C43381
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 Mar 2019 18:56:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7A237C43381
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 Mar 2019 18:57:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 04D182087F
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 Mar 2019 18:56:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4FE272087C
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 Mar 2019 18:57:07 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728557AbfCKS45 (ORCPT
+        id S1728571AbfCKS5G (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 11 Mar 2019 14:56:57 -0400
-Received: from mout.kundenserver.de ([212.227.17.24]:55205 "EHLO
+        Mon, 11 Mar 2019 14:57:06 -0400
+Received: from mout.kundenserver.de ([217.72.192.74]:41457 "EHLO
         mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728422AbfCKS4K (ORCPT
+        with ESMTP id S1728367AbfCKS4J (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 11 Mar 2019 14:56:10 -0400
+        Mon, 11 Mar 2019 14:56:09 -0400
 Received: from orion.localdomain ([95.115.159.19]) by mrelayeu.kundenserver.de
  (mreue107 [212.227.15.183]) with ESMTPSA (Nemesis) id
- 1N64JK-1h17sA22Ke-016O8s; Mon, 11 Mar 2019 19:55:54 +0100
+ 1MowbA-1ghnlu09lu-00qVPs; Mon, 11 Mar 2019 19:55:52 +0100
 From:   "Enrico Weigelt, metux IT consult" <info@metux.net>
 To:     linux-kernel@vger.kernel.org
 Cc:     linus.walleij@linaro.org, bgolaszewski@baylibre.com,
@@ -36,28 +36,28 @@ Cc:     linus.walleij@linaro.org, bgolaszewski@baylibre.com,
         shawnguo@kernel.org, linux-gpio@vger.kernel.org,
         linux-mips@vger.kernel.org, linux-pwm@vger.kernel.org,
         linux-omap@vger.kernel.org, linux-tegra@vger.kernel.org
-Subject: [PATCH 37/42] drivers: gpio: vf610: use devm_platform_ioremap_resource()
-Date:   Mon, 11 Mar 2019 19:55:16 +0100
-Message-Id: <1552330521-4276-37-git-send-email-info@metux.net>
+Subject: [PATCH 34/42] drivers: gpio: timberdale: use devm_platform_ioremap_resource()
+Date:   Mon, 11 Mar 2019 19:55:13 +0100
+Message-Id: <1552330521-4276-34-git-send-email-info@metux.net>
 X-Mailer: git-send-email 1.9.1
 In-Reply-To: <1552330521-4276-1-git-send-email-info@metux.net>
 References: <1552330521-4276-1-git-send-email-info@metux.net>
-X-Provags-ID: V03:K1:Ucrc1rIZnt/p8T36RAg8ZJhwLTig6Ec+rVO+L0FTiXne/Om1/65
- 6b60/8QyWOqDdAfOAiDUYkHIa72Hzq9OGx1WD3DsxvdGjve85qnjdqtkhscew1ojBbKh5Qv
- iJBiGzS+Vix1eeimkxP9xPQqoJtfJx+L8d3ETxbNfw2YDI5+zuXnIkkRhCXfvUJdHkZweDC
- 2O3sTGIkZMnHqPfjVE5kw==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:vJV42iPBVX0=:Ick/bR1C4rhZKtcuiYMB2H
- vxIetXYMKfLIX+83l4yZ7IhdaSxKemJuk5EgQC/RQtrunyCCaT1AVVOoieqgdJUGRETsN+hk6
- OrnZx/tTxyjXbzXxr0xw+tLQ1Rnev6IyAChaj6nE+poxEqHsvD3PxMiZRJCxF5QXc2Ff2BvXd
- svvkwqMTwr1QHKqVdP0HOXfPfUr46+m2wBsB2+Ll7M4Wlzl85benhxKXRVb3i2Yzr4xMTOvfQ
- ZvsNNooP7O4JhS7FXrj/YgBM1LAJLO8Ws6RrLKH18XpBqOGqCK1IuSaOeIzDsBh1b+poCKCIy
- OL4Y9wowWuFEajPD7SjUt7+SDVQpyKAzNmf4LD8fDTfsevteTj3DTrDROJXeupUcK1eFVg1GD
- J7IqhsKsbilfY99v5W/l5JMoMfOF7RyH5pEh4eOGA/yu1Ii/pJQmvUUdmj+7UZ1c+ZQ1PDHYo
- l18VU7nDQP1phv43RS/yDvEDbokCqXkOzF5SEYo9ip5HgTY3R5mxjEcrJNDJG74/ZPl85L/pP
- begw4+MnO/L4X58MnhrJTzxN88rH6tpnKqL/6jOjK8R9/piucnbdTNlJ38e6332xFNU3JInMb
- /OyNpfLT9dHK3bWkdpmI9QuvPXVtBikWEzAbPB3HrVHkwlQAvdU8/gBFliTCK9zxqeEE0YRUW
- jSJBFWxra3mKbRaqYkEY8y7PIg/zhGQysq7ZqxKzl/LXEd4cvZy1vp9ZtYuT/QCkS69gfdBD/
- //m+aDWMt6jQ0m2CMVJp3E3/VU4F3ZPKOQpx3w==
+X-Provags-ID: V03:K1:QoZ9+Bdn0zvLNC9Ul5vk/lW9WVObrOgmx9XHGg7C6l741oHBY5l
+ JpGeCdCLJSbGspSbLsmwu0klWidoukkWM0jLPacPwy3JC5j2r7qvF4yFKhMyOHTucUjvQ4P
+ wSz1pEqNDZTQf4zliMzPirbz9hj1rddwpwrz++PuTx4dLfE9XsDcX7C59oJX9BTjk2kyqrQ
+ qy9WCueExCKcH6yyzJDJg==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:yr3BOJgbBdQ=:gSjSDRerZcy8sdvUDH3BGW
+ GrXVTr1BDSA+MDb7pTHEwllzioDpqqe4tb5jWMyHL8zRop7oePHvMmQuQk+xBof7bNPb3b8Cd
+ Ic4p1gt6RUzwHkqMOG+i3cCrIV5eDyAoFixDBOrWd9JNdBsb3OMr3UeKr7kCvhZM3VqVYPOjT
+ hkUEueB/Al50cuj4UatLPc6gAzegRtB5AE0oTih0HZwW2uaG9rcBndWUDIZfHspc1c9XmNupx
+ GrQZ9tBwbNHT6AWKcnO5jmTYVc7IJY3EUsRKJ7iQf/Egy0FTuxu/kiF83agAblA3ROjhB46CF
+ ROY21gn8dHj3oKCRH2LW3vw2G6XHL/xcFZI1Yuc6D+LLGeO4iYWJ6NCAyVhhRdDt5m/W31NHR
+ Aswdyfhy096y224/mLOawtOjTnchZIE3DnW9VaP0Lo3RFgb8wgZYqWOAbmb8Q3jJGj+5rZ19E
+ Lg05IZYBD9ulS7tH6q1joXspMxt5vcptCqrPWKg8lLbLFN1vL7EPF+q5sAI31eHuu10ALST3M
+ 9CZxphw8bpp1owCnZO7t+vinjD4j0gbEUr4eGLacisdgjgJq6nSHrXg6jBOnMCSsfBGQ8wfFP
+ 9evgdZu1u2szISbFzoYgS3sQTcIvKnpj92mSiJhVoUjL933yKYHAhL3G91+PNUERzHx0/GxyB
+ 52lv76iojaNoONQG+Nf+YGS1RZCxNlQx9mJF1wdUaYng1J0lS3X3O44JJKju+wIc75Ddm2bDL
+ LfOYSkM9SztS1GxnDR7WtjcyGVLDz03YttqKCQ==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
@@ -68,36 +68,30 @@ and devm_ioremap_resource() together.
 
 Signed-off-by: Enrico Weigelt, metux IT consult <info@metux.net>
 ---
- drivers/gpio/gpio-vf610.c | 7 ++-----
- 1 file changed, 2 insertions(+), 5 deletions(-)
+ drivers/gpio/gpio-timberdale.c | 4 +---
+ 1 file changed, 1 insertion(+), 3 deletions(-)
 
-diff --git a/drivers/gpio/gpio-vf610.c b/drivers/gpio/gpio-vf610.c
-index 541fa6a..4b86a2d 100644
---- a/drivers/gpio/gpio-vf610.c
-+++ b/drivers/gpio/gpio-vf610.c
-@@ -251,7 +251,6 @@ static int vf610_gpio_probe(struct platform_device *pdev)
+diff --git a/drivers/gpio/gpio-timberdale.c b/drivers/gpio/gpio-timberdale.c
+index 314e300..1c70e83 100644
+--- a/drivers/gpio/gpio-timberdale.c
++++ b/drivers/gpio/gpio-timberdale.c
+@@ -229,7 +229,6 @@ static int timbgpio_probe(struct platform_device *pdev)
  	struct device *dev = &pdev->dev;
- 	struct device_node *np = dev->of_node;
- 	struct vf610_gpio_port *port;
--	struct resource *iores;
  	struct gpio_chip *gc;
- 	int i;
- 	int ret;
-@@ -261,13 +260,11 @@ static int vf610_gpio_probe(struct platform_device *pdev)
- 		return -ENOMEM;
+ 	struct timbgpio *tgpio;
+-	struct resource *iomem;
+ 	struct timbgpio_platform_data *pdata = dev_get_platdata(&pdev->dev);
+ 	int irq = platform_get_irq(pdev, 0);
  
- 	port->sdata = of_device_get_match_data(dev);
--	iores = platform_get_resource(pdev, IORESOURCE_MEM, 0);
--	port->base = devm_ioremap_resource(dev, iores);
-+	port->base = devm_platform_ioremap_resource(pdev, 0);
- 	if (IS_ERR(port->base))
- 		return PTR_ERR(port->base);
+@@ -246,8 +245,7 @@ static int timbgpio_probe(struct platform_device *pdev)
  
--	iores = platform_get_resource(pdev, IORESOURCE_MEM, 1);
--	port->gpio_base = devm_ioremap_resource(dev, iores);
-+	port->gpio_base = devm_platform_ioremap_resource(pdev, 1);
- 	if (IS_ERR(port->gpio_base))
- 		return PTR_ERR(port->gpio_base);
+ 	spin_lock_init(&tgpio->lock);
+ 
+-	iomem = platform_get_resource(pdev, IORESOURCE_MEM, 0);
+-	tgpio->membase = devm_ioremap_resource(dev, iomem);
++	tgpio->membase = devm_platform_ioremap_resource(pdev, 0);
+ 	if (IS_ERR(tgpio->membase))
+ 		return PTR_ERR(tgpio->membase);
  
 -- 
 1.9.1
