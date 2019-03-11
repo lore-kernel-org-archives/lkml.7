@@ -2,92 +2,342 @@ Return-Path: <SRS0=FxTY=RO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_PASS,USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B249EC43381
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 Mar 2019 19:50:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B6C1DC43381
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 Mar 2019 19:51:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7FA3A214AF
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 Mar 2019 19:50:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 718DE20643
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 Mar 2019 19:51:35 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=ffwll.ch header.i=@ffwll.ch header.b="BcIttJ3X"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728218AbfCKTuN (ORCPT
+        id S1727962AbfCKTvd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 11 Mar 2019 15:50:13 -0400
-Received: from mout.kundenserver.de ([212.227.126.131]:45917 "EHLO
-        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727818AbfCKTuN (ORCPT
+        Mon, 11 Mar 2019 15:51:33 -0400
+Received: from mail-ed1-f66.google.com ([209.85.208.66]:40947 "EHLO
+        mail-ed1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727153AbfCKTvd (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 11 Mar 2019 15:50:13 -0400
-Received: from orion.localdomain ([95.115.159.19]) by mrelayeu.kundenserver.de
- (mreue012 [212.227.15.167]) with ESMTPSA (Nemesis) id
- 1M7ehh-1h9BZ40QmL-0085cE; Mon, 11 Mar 2019 20:50:07 +0100
-From:   "Enrico Weigelt, metux IT consult" <info@metux.net>
-To:     linux-kernel@vger.kernel.org
-Cc:     grygorii.strashko@ti.com, ssantosh@kernel.org, khilman@kernel.org,
-        linus.walleij@linaro.org, bgolaszewski@baylibre.com,
-        linux-omap@vger.kernel.org, linux-gpio@vger.kernel.org
-Subject: [PATCH] drivers: gpio: omap: use devm_platform_ioremap_resource()
-Date:   Mon, 11 Mar 2019 20:50:05 +0100
-Message-Id: <1552333805-23235-1-git-send-email-info@metux.net>
-X-Mailer: git-send-email 1.9.1
-In-Reply-To: <d3b12ed4-67e6-2993-4f56-80b1be572a24@gmail.com>
-References: <d3b12ed4-67e6-2993-4f56-80b1be572a24@gmail.com>
-X-Provags-ID: V03:K1:UOLgKaQ4hC7p6VlbeF2/EGm6uS9JICB5QtHJDTckcYTIO2u3hoP
- tzuldZ8GqmLa4aQkDKcotrX4YvcR0pxuJ9Kxr8keTLGMRc4APqaU/0I0RKaJFZ3j3mHZ8+9
- KbLB+5isuvTFGkDM8Ybs17R47PnhmpGzZgfbwC/NaYYDS9Imx13UwU9EVoQT/LblP89gYmX
- BCwIoJ2AjsQF8iHRC5FNA==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:DMq2/qe6GFI=:Z9noEBtHa6RFqR3sHElB0V
- TmCZf6FmpI4d0Aou0nioTQTj6Wh1KF/CZck1kJ+OQwN3vuXshw3XAjEedboZems3BvPlA9jyR
- 01jvsxEs5wetFCjcI94DYGOJmnKN1SwwGjrS+mnq7kRy7WtS4h3HCV0dY+VlNDVuD6uz9XGLQ
- 4diPwAvLN4Ji3xkz6In3dbaKOokKLUqxDCTVgxicvlxe74idf3l5QBUxd8MvoY2FpKsL77Fln
- 7gg1cpdP2vDIQUAeFP/vM6PCbytThC7pErXzC7KKg1W0oTGWe2NSnWJtP6ldGge3VjQE7cyro
- HDx/Zs3e13vOXxTk8ZnNARwMnTb3mFdqCuIEP/NMCUpSbiTmXJ+uxbvod5GzWMfgreSn5kcDi
- BoRypTqYeb4ZCTCB/qQ+c+wKOOOH4gFwdXLklVZCd0aNKnCbbDyGPHbVfx50VhJi8KxeHkQcA
- wAYsCkkp722IlLv7E9gL6blEEDOOzKeNKqS/2P1zGmcrbSMqOHLV9L+2Gfd1dwGtuXggJwA14
- ctOU4EYgiLvUORDmBRcDjB/yrYykSG24v7LdjYYOaM8GoOgE7OJadGxjxNGuLoaZncuIc/3Uu
- RvwauXOJgTRz38swDYcn15JVQ6NEP8pFL4LoYX9y8gD2t3vu88574fHhYNh0LpEKMkfOV1JvD
- 2aigyANEgwTXn49sGmndwO43UnhigEO46swA2iowKHuZdIp9HP5wYyQU9QpRIU/dvNM22PNIl
- jyRU+bD5TWVPRKujGpXnmKhaNXUoNCNHntRCxdAMuWk1k+G71Wzn/OPqVMlo9iiWAYkZM87jv
- py9VAsRhpkyVVDmHUsCwDphMMiGgsFWSpZxRUjxNX08dwwa90TuK+a12tVdBELRcrCRZA0ifi
- nYRMMA7rP6sl9an/zPiHZHVcfZov+p4wffYwQlXNGoKeORU9LYqlp9WwHaWF/Bltk6Qg2RftC
- fNmifc7ls8w==
+        Mon, 11 Mar 2019 15:51:33 -0400
+Received: by mail-ed1-f66.google.com with SMTP id r23so321200edm.7
+        for <linux-kernel@vger.kernel.org>; Mon, 11 Mar 2019 12:51:31 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=ffwll.ch; s=google;
+        h=sender:date:from:to:cc:subject:message-id:mail-followup-to
+         :references:mime-version:content-disposition:in-reply-to:user-agent;
+        bh=seBVun6aEFair20ayvnGq5otGX6k3JBe0BFYFzryfRA=;
+        b=BcIttJ3X3zKcuIi+FxegB49gcI27A6lB1+IejOlj8IDxlSX3uHuE4iDRbAMTpWfdRe
+         vdZ3SHg9LrnYwpDOe/8TunTsbByfJxBNAYQU5rSUmFWiGnuDHUsRoaZ0oG/LT2WGtg1L
+         qVZrqqPN6UFucTVoqdsf8ZA3OyPdc/gr7Y2Cs=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
+         :mail-followup-to:references:mime-version:content-disposition
+         :in-reply-to:user-agent;
+        bh=seBVun6aEFair20ayvnGq5otGX6k3JBe0BFYFzryfRA=;
+        b=tBLhOKJLugRD2xeWoAubuWUJsvfnm7MhWQwMtrOZlLeAkSJQQ72c81yURl7TLV4oFJ
+         IgxsT5WiIpxuz+CxmoHjUXjqFUGUDm+114ww+IgsBn4QY/kRY+vdvauMr7yhekMhuNYf
+         VYZLlOIYBh8Lc/NixRalZ8Dofw+6E9MHeX8LL5K0P9EdLQ/dxX6ZD/2aXSj7lueKw4kL
+         JQVH7StJYrqzhGNatFLnYRUsRCvbF+XvzzV2BhPUE9+CCz1w1LHHeSzyNuSEBsM221/S
+         9nyWkffoyEyd+Mnof46k73pl2mPUYIFCusG/P/A0t898uZzPc0lqpWaZ/LVcO2yH6TnB
+         SlJQ==
+X-Gm-Message-State: APjAAAVb/GoRI2PS+lgGyh/LoZKKvtHHUMROC05YiCkbvvg+VG6O9wPF
+        XM/NdI6mdtmwFIXklP35aVbrjg==
+X-Google-Smtp-Source: APXvYqx+ZKTOH5ECd/TBO7I2bXlJ1UCKGku5OfnoWOtjimlesSVSi4GzblqPj0MbQn9kuyD2RcsyxA==
+X-Received: by 2002:a17:906:51cd:: with SMTP id v13mr8271759ejk.71.1552333890400;
+        Mon, 11 Mar 2019 12:51:30 -0700 (PDT)
+Received: from phenom.ffwll.local ([2a02:168:569e:0:3106:d637:d723:e855])
+        by smtp.gmail.com with ESMTPSA id f5sm3234283ejf.25.2019.03.11.12.51.28
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Mon, 11 Mar 2019 12:51:29 -0700 (PDT)
+Date:   Mon, 11 Mar 2019 20:51:27 +0100
+From:   Daniel Vetter <daniel@ffwll.ch>
+To:     Boris Brezillon <boris.brezillon@collabora.com>
+Cc:     "Kazlauskas, Nicholas" <Nicholas.Kazlauskas@amd.com>,
+        Helen Koike <helen.koike@collabora.com>,
+        "dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>,
+        "Grodzovsky, Andrey" <Andrey.Grodzovsky@amd.com>,
+        "daniel.vetter@ffwll.ch" <daniel.vetter@ffwll.ch>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Tomasz Figa <tfiga@chromium.org>,
+        David Airlie <airlied@linux.ie>,
+        Sean Paul <seanpaul@google.com>,
+        "kernel@collabora.com" <kernel@collabora.com>,
+        "Wentland, Harry" <Harry.Wentland@amd.com>,
+        =?iso-8859-1?Q?St=E9phane?= Marchesin <marcheu@google.com>,
+        Eric Anholt <eric@anholt.net>
+Subject: Re: [PATCH 1/5] drm: don't block fb changes for async plane updates
+Message-ID: <20190311195127.GT2665@phenom.ffwll.local>
+Mail-Followup-To: Boris Brezillon <boris.brezillon@collabora.com>,
+        "Kazlauskas, Nicholas" <Nicholas.Kazlauskas@amd.com>,
+        Helen Koike <helen.koike@collabora.com>,
+        "dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>,
+        "Grodzovsky, Andrey" <Andrey.Grodzovsky@amd.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Tomasz Figa <tfiga@chromium.org>, David Airlie <airlied@linux.ie>,
+        Sean Paul <seanpaul@google.com>,
+        "kernel@collabora.com" <kernel@collabora.com>,
+        "Wentland, Harry" <Harry.Wentland@amd.com>,
+        =?iso-8859-1?Q?St=E9phane?= Marchesin <marcheu@google.com>,
+        Eric Anholt <eric@anholt.net>
+References: <20190304144909.6267-1-helen.koike@collabora.com>
+ <20190304144909.6267-2-helen.koike@collabora.com>
+ <e2eb91f5-25e3-d030-74d8-de2348de5600@amd.com>
+ <20190311110616.6b474865@collabora.com>
+ <01f2b3ba-434a-f61f-e8e8-85f3c9107a5c@amd.com>
+ <20190311152009.7c55b797@collabora.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190311152009.7c55b797@collabora.com>
+X-Operating-System: Linux phenom 4.19.0-1-amd64 
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Use the new helper that wraps the calls to platform_get_resource()
-and devm_ioremap_resource() together.
+On Mon, Mar 11, 2019 at 03:20:09PM +0100, Boris Brezillon wrote:
+> On Mon, 11 Mar 2019 13:15:23 +0000
+> "Kazlauskas, Nicholas" <Nicholas.Kazlauskas@amd.com> wrote:
+> 
+> > On 3/11/19 6:06 AM, Boris Brezillon wrote:
+> > > Hello Nicholas,
+> > > 
+> > > On Mon, 4 Mar 2019 15:46:49 +0000
+> > > "Kazlauskas, Nicholas" <Nicholas.Kazlauskas@amd.com> wrote:
+> > >   
+> > >> On 3/4/19 9:49 AM, Helen Koike wrote:  
+> > >>> In the case of a normal sync update, the preparation of framebuffers (be
+> > >>> it calling drm_atomic_helper_prepare_planes() or doing setups with
+> > >>> drm_framebuffer_get()) are performed in the new_state and the respective
+> > >>> cleanups are performed in the old_state.
+> > >>>
+> > >>> In the case of async updates, the preparation is also done in the
+> > >>> new_state but the cleanups are done in the new_state (because updates
+> > >>> are performed in place, i.e. in the current state).
+> > >>>
+> > >>> The current code blocks async udpates when the fb is changed, turning
+> > >>> async updates into sync updates, slowing down cursor updates and
+> > >>> introducing regressions in igt tests with errors of type:
+> > >>>
+> > >>> "CRITICAL: completed 97 cursor updated in a period of 30 flips, we
+> > >>> expect to complete approximately 15360 updates, with the threshold set
+> > >>> at 7680"
+> > >>>
+> > >>> Fb changes in async updates were prevented to avoid the following scenario:
+> > >>>
+> > >>> - Async update, oldfb = NULL, newfb = fb1, prepare fb1, cleanup fb1
+> > >>> - Async update, oldfb = fb1, newfb = fb2, prepare fb2, cleanup fb2
+> > >>> - Non-async commit, oldfb = fb2, newfb = fb1, prepare fb1, cleanup fb2 (wrong)
+> > >>> Where we have a single call to prepare fb2 but double cleanup call to fb2.
+> > >>>
+> > >>> To solve the above problems, instead of blocking async fb changes, we
+> > >>> place the old framebuffer in the new_state object, so when the code
+> > >>> performs cleanups in the new_state it will cleanup the old_fb and we
+> > >>> will have the following scenario instead:
+> > >>>
+> > >>> - Async update, oldfb = NULL, newfb = fb1, prepare fb1, no cleanup
+> > >>> - Async update, oldfb = fb1, newfb = fb2, prepare fb2, cleanup fb1
+> > >>> - Non-async commit, oldfb = fb2, newfb = fb1, prepare fb1, cleanup fb2
+> > >>>
+> > >>> Where calls to prepare/cleanup are ballanced.
+> > >>>
+> > >>> Cc: <stable@vger.kernel.org> # v4.14+: 25dc194b34dd: drm: Block fb changes for async plane updates
+> > >>> Fixes: 25dc194b34dd ("drm: Block fb changes for async plane updates")
+> > >>> Suggested-by: Boris Brezillon <boris.brezillon@collabora.com>
+> > >>> Signed-off-by: Helen Koike <helen.koike@collabora.com>
+> > >>>
+> > >>> ---
+> > >>> Hello,
+> > >>>
+> > >>> As mentioned in the cover letter,
+> > >>> I tested on the rockchip and on i915 (with a patch I am still working on for
+> > >>> replacing cursors by async update), with igt plane_cursor_legacy and
+> > >>> kms_cursor_legacy and I didn't see any regressions.
+> > >>> I couldn't test on MSM and AMD because I don't have the hardware (and I am
+> > >>> having some issues testing on vc4) and I would appreciate if anyone could help
+> > >>> me testing those.
+> > >>>
+> > >>> I also think it would be a better solution if, instead of having async
+> > >>> to do in-place updates in the current state, the async path should be
+> > >>> equivalent to a syncronous update, i.e., modifying new_state and
+> > >>> performing a flip
+> > >>> IMHO, the only difference between sync and async should be that async update
+> > >>> doesn't wait for vblank and applies the changes immeditally to the hw,
+> > >>> but the code path could be almost the same.
+> > >>> But for now I think this solution is ok (swaping new_fb/old_fb), and
+> > >>> then we can adjust things little by little, what do you think?
+> > >>>
+> > >>> Thanks!
+> > >>> Helen
+> > >>>
+> > >>>    drivers/gpu/drm/drm_atomic_helper.c | 20 ++++++++++----------
+> > >>>    1 file changed, 10 insertions(+), 10 deletions(-)
+> > >>>
+> > >>> diff --git a/drivers/gpu/drm/drm_atomic_helper.c b/drivers/gpu/drm/drm_atomic_helper.c
+> > >>> index 540a77a2ade9..e7eb96f1efc2 100644
+> > >>> --- a/drivers/gpu/drm/drm_atomic_helper.c
+> > >>> +++ b/drivers/gpu/drm/drm_atomic_helper.c
+> > >>> @@ -1608,15 +1608,6 @@ int drm_atomic_helper_async_check(struct drm_device *dev,
+> > >>>    	    old_plane_state->crtc != new_plane_state->crtc)
+> > >>>    		return -EINVAL;
+> > >>>    
+> > >>> -	/*
+> > >>> -	 * FIXME: Since prepare_fb and cleanup_fb are always called on
+> > >>> -	 * the new_plane_state for async updates we need to block framebuffer
+> > >>> -	 * changes. This prevents use of a fb that's been cleaned up and
+> > >>> -	 * double cleanups from occuring.
+> > >>> -	 */
+> > >>> -	if (old_plane_state->fb != new_plane_state->fb)
+> > >>> -		return -EINVAL;
+> > >>> -
+> > >>>    	funcs = plane->helper_private;
+> > >>>    	if (!funcs->atomic_async_update)
+> > >>>    		return -EINVAL;
+> > >>> @@ -1657,6 +1648,9 @@ void drm_atomic_helper_async_commit(struct drm_device *dev,
+> > >>>    	int i;
+> > >>>    
+> > >>>    	for_each_new_plane_in_state(state, plane, plane_state, i) {
+> > >>> +		struct drm_framebuffer *new_fb = plane_state->fb;
+> > >>> +		struct drm_framebuffer *old_fb = plane->state->fb;
+> > >>> +
+> > >>>    		funcs = plane->helper_private;
+> > >>>    		funcs->atomic_async_update(plane, plane_state);
+> > >>>    
+> > >>> @@ -1665,11 +1659,17 @@ void drm_atomic_helper_async_commit(struct drm_device *dev,
+> > >>>    		 * plane->state in-place, make sure at least common
+> > >>>    		 * properties have been properly updated.
+> > >>>    		 */
+> > >>> -		WARN_ON_ONCE(plane->state->fb != plane_state->fb);
+> > >>> +		WARN_ON_ONCE(plane->state->fb != new_fb);
+> > >>>    		WARN_ON_ONCE(plane->state->crtc_x != plane_state->crtc_x);
+> > >>>    		WARN_ON_ONCE(plane->state->crtc_y != plane_state->crtc_y);
+> > >>>    		WARN_ON_ONCE(plane->state->src_x != plane_state->src_x);
+> > >>>    		WARN_ON_ONCE(plane->state->src_y != plane_state->src_y);
+> > >>> +
+> > >>> +		/*
+> > >>> +		 * Make sure the FBs have been swapped so that cleanups in the
+> > >>> +		 * new_state performs a cleanup in the old FB.
+> > >>> +		 */
+> > >>> +		WARN_ON_ONCE(plane_state->fb != old_fb);  
+> > >>
+> > >> I personally think this approach is fine and the WARN_ON s are good for
+> > >> catching drivers that want to use these in the future.  
+> > > 
+> > > Well, I agree this change is the way to go for a short-term solution
+> > > to relax the old_fb == new_fb constraint, but I keep thinking this whole
+> > > "update plane_state in place" is a recipe for trouble and just make
+> > > things more complicated for drivers for no obvious reasons. Look at the
+> > > VC4 implem [1] if you need a proof that things can get messy pretty
+> > > quickly.
+> > > 
+> > > All this state-fields-copying steps could be skipped if the core was
+> > > simply swapping the old/new states as is done in the sync update path.
+> > > 
+> > > [1]https://elixir.bootlin.com/linux/v5.0-rc7/source/drivers/gpu/drm/vc4/vc4_plane.c#L878  
+> > 
+> > I completely agree with this view FWIW. I had a discussion with Daniel 
+> > about this when I had posted the original block FB changes patch.
+> > 
+> > - The plane object needs to be locked in order for async state to be updated
+> > - Blocking commit work holds the lock for the plane, async update won't 
+> > happen
+> > - Non-blocking commit work that's still ongoing won't have hw_done 
+> > signaled and drm_atomic_helper_async_check will block the async update
+> > 
+> > So this looks safe in theory, with the exception of the call to 
+> > drm_atomic_helper_cleanup_planes occuring after hw_done is signaled.
+> 
+> Isn't it also the case in the sync update path?
+> 
+> > 
+> > I believe that the behavior of this function still remains the same even 
+> > if plane->state is swapped to something else during the call (since 
+> > old_plane_state should never be equal to plane->state if the commit 
+> > succeeded and the plane is in the commit), but I'm not sure that's 
+> > something we'd want to rely on.
+> > 
+> > I think other than that issue, you could probably just:
+> > 
+> > drm_atomic_helper_prepare_planes(...);
+> > drm_atomic_helper_swap_state(...);
+> > drm_atomic_state_get(state);
+> 
+> Why do we need a state_get() here? AFAICT, it's done this way in the
+> sync update path because of the non-blocking semantic where the state
+> might be released by the caller before it's been applied by the commit
+> worker.
+> 
+> > drm_atomic_helper_async_commit(...);
+> > drm_atomic_helper_cleanup_planes(dev, state);
+> > 
+> > and it would work as expected. But there still may be other things I'm 
+> > missing or haven't considered here.
+> 
+> Actually, when I said we could swap states, I was not necessarily
+> thinking about re-using drm_atomic_helper_swap_state(), but instead
+> swap states directly in drm_atomic_helper_async_commit():
+> 
+> 	for_each_oldnew_plane_in_state(state, plane, old_plane_state,
+> 				       new_plane_state, i) {
+> 		WARN_ON(plane->state != old_plane_state);
+> 		old_plane_state->state = state;
+> 		new_plane_state->state = NULL;
+> 		state->planes[i].state = old_plane_state;
+> 		plane->state = new_plane_state;
+> 
+> 		funcs = plane->helper_private;
+> 		funcs->atomic_async_update(plane, new_plane_state);
+> 	}
+> 
+> This way we would avoid the WARN_ON() lines we have in
+> drm_atomic_helper_async_commit() to check that things have been
+> properly updated in-place, and we would also get rid of the driver
+> code copying the plane_state property that can change during an async
+> update.
+> 
+> But, as you said, I might be missing other potential issues.
 
-Signed-off-by: Enrico Weigelt, metux IT consult <info@metux.net>
----
- drivers/gpio/gpio-omap.c | 4 +---
- 1 file changed, 1 insertion(+), 3 deletions(-)
+Ok I dug around again, and I think I reconstructed the problem again.
 
-diff --git a/drivers/gpio/gpio-omap.c b/drivers/gpio/gpio-omap.c
-index 7f33024..ce6e67a 100644
---- a/drivers/gpio/gpio-omap.c
-+++ b/drivers/gpio/gpio-omap.c
-@@ -1289,7 +1289,6 @@ static int omap_gpio_probe(struct platform_device *pdev)
- 	struct device_node *node = dev->of_node;
- 	const struct of_device_id *match;
- 	const struct omap_gpio_platform_data *pdata;
--	struct resource *res;
- 	struct gpio_bank *bank;
- 	struct irq_chip *irqc;
- 	int ret;
-@@ -1375,8 +1374,7 @@ static int omap_gpio_probe(struct platform_device *pdev)
- 	raw_spin_lock_init(&bank->wa_lock);
- 
- 	/* Static mapping, never released */
--	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
--	bank->base = devm_ioremap_resource(dev, res);
-+	bank->base = devm_platform_ioremap_resource(pdev, 0);
- 	if (IS_ERR(bank->base)) {
- 		return PTR_ERR(bank->base);
- 	}
+The issue is the lifetimes of state structs. The nonblocking commit worker
+doesn't hold a reference onto the new states at all. The only reason those
+new states cannot disappear is that the next atomic comit touching the
+same states waits for crtc_commit.hw_done before it pushes its own update
+through (and then goes and releases those state structures).
+
+The old state has no such issue, since each commit takes ownership of the
+old state and then releases it. And can do that any time after hw_done.
+
+Now with the current async code that's no issue, because we do check for
+hw_done. The trouble is that hw_done is a kernel-internal implementation
+detail. The only think userspace can observe is flip_done, and that's
+what's used for -EBUSY for normal page-flips. For cursor this kinda
+doesn't matter, because these two should be fairly close together (in most
+cases hw_done even happens before flip_done, but that depends upon the
+driver). So the occasional silent fallback to a synchronous commit doesn't
+really matter.
+
+What we could do is just wait for hw_done for async commits, but that's
+kinda not cool either since it blocks (again cursor is ill-defined enough
+that it doesn't matter). And pushing async updates to a worker means we
+need to greatly extend the crtc_commit tracking (at least to each plane
+state). I think most of that exist now, since we had to add it anyway for
+planes which can be reassigned between crtc.
+
+tldr; maybe we can do the full swapping now?
+
+I agree it feels like the cleaner solution, but definitely need a pile of
+igt tests to make sure we can mix&match between async and sync commits and
+nothing blows up. And sync commits need to use reassignment of planes to
+different crtcs plus nonblocking commit (I think amd hw can do all that,
+or at least I've seen prep patches).
+-Daniel
 -- 
-1.9.1
-
+Daniel Vetter
+Software Engineer, Intel Corporation
+http://blog.ffwll.ch
