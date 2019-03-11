@@ -2,160 +2,105 @@ Return-Path: <SRS0=FxTY=RO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_MUTT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 17AA7C43381
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 Mar 2019 03:32:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CFAD1C43381
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 Mar 2019 03:35:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D195220657
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 Mar 2019 03:32:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9B7B520657
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 Mar 2019 03:35:16 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=broadcom.com header.i=@broadcom.com header.b="Ax602LMd"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="keehgDIX"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727188AbfCKDcr (ORCPT
+        id S1727233AbfCKDfP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 10 Mar 2019 23:32:47 -0400
-Received: from mail-wr1-f67.google.com ([209.85.221.67]:37687 "EHLO
-        mail-wr1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726895AbfCKDcq (ORCPT
+        Sun, 10 Mar 2019 23:35:15 -0400
+Received: from bombadil.infradead.org ([198.137.202.133]:49904 "EHLO
+        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726758AbfCKDfP (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 10 Mar 2019 23:32:46 -0400
-Received: by mail-wr1-f67.google.com with SMTP id y15so1586029wro.4
-        for <linux-kernel@vger.kernel.org>; Sun, 10 Mar 2019 20:32:45 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=broadcom.com; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=eprZ8cmXoh2OhO59jEglRlcZUCoRFQq0VHh61J/wlVk=;
-        b=Ax602LMdRKf06MjSYF+aGj3/q7oXrsgOiu8Mm7Dq69CYfDhurckZY7BapXTc+ZzzJj
-         MZX3qVPq1DLys/25gqnW3hkEfrM59o7BVU0PU7MKAvakJLzVIZUkbY41f/8keT2mO5YA
-         OhWuQFZCbBuOznoTzXCKGWhA0/uf2LovS6bSM=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=eprZ8cmXoh2OhO59jEglRlcZUCoRFQq0VHh61J/wlVk=;
-        b=rW94HEhLlz2Kn1t9WyMJ9GbbPP8PvycXJpxbNFEgBa4dmDBZYLBb5hAjQZ1T1J5dK9
-         QW1++fr2++qXoKO5980ft5L3bxFJ6JZA1qxnCFvgUW9KJIdvQM+XPRMqrT6XvFFRE93h
-         fkKmKMHuECGOWliN7A2Y3HAHKHgD3gACPGDmqsNz5u8koRwsj5O9L9fe5yi1kmeEBYSz
-         FW09x8PTd0jJM0SWcj8TA9rgWxb0ZOHZtf2+FpHIsArXs836glZI/VCbM8dW97ZITNa6
-         D7FwkLr4oX7yeFzlxG0+q9ttrBPXRevSoyCK2iaN139GQnMcNXg3O/rlvTJ78phnYWkS
-         yThQ==
-X-Gm-Message-State: APjAAAX8vbM0i4Hpjt8onzYValJgVXm4gnRVOOn8gcykFcLQhFLr2UFa
-        /ZYTRnnm1qkReBvQuKfKQeOXWJZZdZg9SRrDvy9v1g==
-X-Google-Smtp-Source: APXvYqz/9R5ArHb2zL9mELHsbEiKNd+w17Du+LtSjwrRoOBcoFsc6vgj+qPCxmhihNluWgawbmZn6Lr1TMLJAXm2EBY=
-X-Received: by 2002:adf:9ecc:: with SMTP id b12mr18848219wrf.83.1552275164821;
- Sun, 10 Mar 2019 20:32:44 -0700 (PDT)
+        Sun, 10 Mar 2019 23:35:15 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
+        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=G0UV+6QfJ8G1Ev3WxxjVfXJfM2E9oz/BceVfJ2Bztyo=; b=keehgDIXv/bay5VQbyo0DH6Re
+        2gqSiuaS2ZbNPKNHOxy0S1dq+CWO9BM3Ql7jCzgOBtErhQCOA9Gm10zg/Y1LnlFjThTEZWv4QVFi8
+        aF+JoczA/30GAvPwvcnKxV9tszxAlRaZcm+mxtZME6NfxOMb86Tsgc3Pw0v+5l4NbWx/QQqrZz0/g
+        k4JMO/7+HSF0lsOuWhTNNGPvUSh/PEojYjLfmnxtGcmiWI1pikJzLS/MxWNJrAg1hsw7QLJF4Hxs9
+        wlkEJuDeaa8WausdaIubXdg70olEF1nBeCF5t0K2awJTXNm5Mptztkaf2WTuLdeomTvAQ5eHHtovk
+        AmbcvY3Xw==;
+Received: from willy by bombadil.infradead.org with local (Exim 4.90_1 #2 (Red Hat Linux))
+        id 1h3BiY-00069z-Np; Mon, 11 Mar 2019 03:35:10 +0000
+Date:   Sun, 10 Mar 2019 20:35:10 -0700
+From:   Matthew Wilcox <willy@infradead.org>
+To:     Waiman Long <longman@redhat.com>
+Cc:     Andrew Morton <akpm@linux-foundation.org>,
+        "Luis R. Rodriguez" <mcgrof@kernel.org>,
+        Kees Cook <keescook@chromium.org>,
+        Jonathan Corbet <corbet@lwn.net>, linux-kernel@vger.kernel.org,
+        linux-fsdevel@vger.kernel.org, linux-doc@vger.kernel.org,
+        Al Viro <viro@zeniv.linux.org.uk>,
+        "Eric W . Biederman" <ebiederm@xmission.com>,
+        Takashi Iwai <tiwai@suse.de>, Davidlohr Bueso <dbueso@suse.de>,
+        Manfred Spraul <manfred@colorfullife.com>
+Subject: Re: [PATCH-next] ipc: Fix race condition in ipc_idr_alloc()
+Message-ID: <20190311033510.GB19508@bombadil.infradead.org>
+References: <20190311012536.21747-1-longman@redhat.com>
 MIME-Version: 1.0
-References: <1550658842-19167-1-git-send-email-srinath.mannam@broadcom.com>
- <1550658842-19167-2-git-send-email-srinath.mannam@broadcom.com>
- <20190222172042.GA6792@bogus> <CABe79T5SqQJhF0GY06-+-aSCV-ya-RODEeV0DLg0Poupjeq+fA@mail.gmail.com>
- <CAL_JsqKyYoc3wLWGhbBdQxn=1NLhGbxfB2sUZUXm13_YTEyTGw@mail.gmail.com>
-In-Reply-To: <CAL_JsqKyYoc3wLWGhbBdQxn=1NLhGbxfB2sUZUXm13_YTEyTGw@mail.gmail.com>
-From:   Srinath Mannam <srinath.mannam@broadcom.com>
-Date:   Mon, 11 Mar 2019 09:02:33 +0530
-Message-ID: <CABe79T7LQFf9J67P=eo0sAn6oJ10ovciR4o3_Z_K=6NLjtyr3A@mail.gmail.com>
-Subject: Re: [PATCH v4 1/3] dt-bindings: phy: Add Stingray USB PHY binding document
-To:     Rob Herring <robh@kernel.org>
-Cc:     Mark Rutland <mark.rutland@arm.com>,
-        Kishon Vijay Abraham I <kishon@ti.com>,
-        Tejun Heo <tj@kernel.org>,
-        Jayachandran C <jnair@caviumnetworks.com>,
-        devicetree@vger.kernel.org,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        BCM Kernel Feedback <bcm-kernel-feedback-list@broadcom.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190311012536.21747-1-longman@redhat.com>
+User-Agent: Mutt/1.9.2 (2017-12-15)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Rob,
+On Sun, Mar 10, 2019 at 09:25:36PM -0400, Waiman Long wrote:
+> @@ -221,15 +221,34 @@ static inline int ipc_idr_alloc(struct ipc_ids *ids, struct kern_ipc_perm *new)
+>  	 */
+>  
+>  	if (next_id < 0) { /* !CHECKPOINT_RESTORE or next_id is unset */
+> +		/*
+> +		 * It is possible that another thread of the same
+> +		 * kern_ipc_perm may have called ipc_obtain_object_check()
+> +		 * concurrently with a recently deleted IPC id (idx|seq).
+> +		 * If idr_alloc() happens to allocate this deleted idx value,
+> +		 * the other thread may incorrectly get a handle to the new
+> +		 * IPC id.
+> +		 *
+> +		 * To prevent this race condition from happening, we will
+> +		 * always store a new sequence number into the kern_ipc_perm
+> +		 * object before calling idr_alloc(). If we find out that we
+> +		 * don't need to change seq, we write back the right value.
+> +		 */
+> +		new->seq = ids->seq + 1;
+> +		if (new->seq > IPCID_SEQ_MAX)
+> +			new->seq = 0;
+> +
+>  		if (ipc_mni_extended)
+>  			idx = idr_alloc_cyclic(&ids->ipcs_idr, new, 0, ipc_mni,
+>  						GFP_NOWAIT);
+>  		else
+>  			idx = idr_alloc(&ids->ipcs_idr, new, 0, 0, GFP_NOWAIT);
+>  
+> -		if ((idx <= ids->last_idx) && (++ids->seq > IPCID_SEQ_MAX))
+> -			ids->seq = 0;
+> -		new->seq = ids->seq;
+> +		/* Make ids->seq and new->seq stay in sync */
+> +		if (idx <= ids->last_idx)
+> +			ids->seq = new->seq;
+> +		else
+> +			new->seq = ids->seq;
 
-Please find my comments below,
+This can't possibly be right.  It's no better to occasionally find the
+wrong ID than to find an uninitialised ID.
 
-On Sat, Feb 23, 2019 at 1:05 AM Rob Herring <robh@kernel.org> wrote:
->
-> On Fri, Feb 22, 2019 at 11:29 AM Srinath Mannam
-> <srinath.mannam@broadcom.com> wrote:
-> >
-> > Hi Rob,
-> >
-> > Thanks for the review, Please find my comments below in line.
-> >
-> > On Fri, Feb 22, 2019 at 10:50 PM Rob Herring <robh@kernel.org> wrote:
-> > >
-> > > On Wed, Feb 20, 2019 at 04:04:00PM +0530, Srinath Mannam wrote:
-> > > > Add DT binding document for Stingray USB PHY.
-> > > >
-> > > > Signed-off-by: Srinath Mannam <srinath.mannam@broadcom.com>
-> > > > Reviewed-by: Florian Fainelli <f.fainelli@gmail.com>
-> > > > Reviewed-by: Scott Branden <scott.branden@broadcom.com>
-> > > > ---
-> > > >  .../bindings/phy/brcm,stingray-usb-phy.txt         | 62 ++++++++++++++++++++++
-> > > >  1 file changed, 62 insertions(+)
-> > > >  create mode 100644 Documentation/devicetree/bindings/phy/brcm,stingray-usb-phy.txt
-> > > >
-> > > > diff --git a/Documentation/devicetree/bindings/phy/brcm,stingray-usb-phy.txt b/Documentation/devicetree/bindings/phy/brcm,stingray-usb-phy.txt
-> > > > new file mode 100644
-> > > > index 0000000..da19236
-> > > > --- /dev/null
-> > > > +++ b/Documentation/devicetree/bindings/phy/brcm,stingray-usb-phy.txt
-> > > > @@ -0,0 +1,62 @@
-> > > > +Broadcom Stingray USB PHY
-> > > > +
-> > > > +Required properties:
-> > > > + - compatible : should be one of the listed compatibles
-> > > > +     - "brcm,sr-usb-combo-phy" is a combo PHY has one SS PHY and one HS PHY.
-> > > > +     - "brcm,sr-usb-hs-phy" has a single HS PHY.
-> > > > + - reg: offset and length of the PHY blocks registers
-> > > > + - address-cells: should be 1
-> > > > + - size-cells: should be 0
-> > > > +
-> > > > +Sub-nodes:
-> > > > +  brcm,sr-usb-combo-phy have two sub-nodes for one SS PHY and one HS PHY.
-> > > > +
-> > > > +Sub-nodes required properties:
-> > > > + - reg: required for brcm,sr-usb-phy model PHY.
-> > > > +     reg value 0 is HS PHY and 1 is SS PHY.
-> > > > + - phy-cells: generic PHY binding; must be 0
-> > > > +
-> > > > +Refer to phy/phy-bindings.txt for the generic PHY binding properties
-> > > > +
-> > > > +Example:
-> > > > +     usbphy0: usb-phy@0 {
-> > > > +             compatible = "brcm,sr-usb-combo-phy";
-> > > > +             reg = <0x00000000 0x100>;
-> > > > +             #address-cells = <1>;
-> > > > +             #size-cells = <0>;
-> > > > +
-> > > > +             usb0_phy0: phy@0 {
-> > > > +                     reg = <0>;
-> > > > +                     #phy-cells = <0>;
-> > > > +             };
-> > > > +
-> > > > +             usb0_phy1: phy@1 {
-> > > > +                     reg = <1>;
-> > > > +                     #phy-cells = <0>;
-> > > > +             };
-> > >
-> > > Again, you don't need child nodes here. There are not any per child
-> > > resources. Clients can refer to <&usbphy0 1> just as easily as
-> > > <&usb0_phy1>. This is why we have #phy-cells.
-> > This phy controller is combo PHY it has one Super Speed USB PHY and
-> > one High Speed USB PHY.
-> > We required to create two PHY devices inside driver to initialize and
-> > service(reset) both SS and HS PHYs separately.
-> > That is the reason we used two child nodes.
->
-> What you do in the driver is your business. That is independent of the
-> binding. Go look at other phy drivers which use #phy-cells=1.
-> .of_xlate() function is what converts the phy cells to a struct phy.
->
-I have followed exactly same pattern available in open source.
-ex: Documentation/devicetree/bindings/phy/brcm-sata-phy.txt
-In this also, two child nodes are used with #phy-cells 0.
-> Rob
+The normal pattern for solving this kind of problem is to idr_alloc()
+a NULL pointer, initialise new->seq, then call idr_replace() to turn
+that NULL pointer into the actual pointer you want.
