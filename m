@@ -2,26 +2,26 @@ Return-Path: <SRS0=FxTY=RO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_MUTT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-5.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_MUTT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A585FC43381
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 Mar 2019 19:44:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6B3F9C43381
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 Mar 2019 19:46:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6B00A20643
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 Mar 2019 19:44:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4032E20643
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 Mar 2019 19:46:30 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728215AbfCKTo5 (ORCPT
+        id S1728067AbfCKTq2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 11 Mar 2019 15:44:57 -0400
-Received: from verein.lst.de ([213.95.11.211]:43205 "EHLO newverein.lst.de"
+        Mon, 11 Mar 2019 15:46:28 -0400
+Received: from verein.lst.de ([213.95.11.211]:43219 "EHLO newverein.lst.de"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727008AbfCKTo4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 11 Mar 2019 15:44:56 -0400
+        id S1727008AbfCKTq2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 11 Mar 2019 15:46:28 -0400
 Received: by newverein.lst.de (Postfix, from userid 2407)
-        id BCAAD68C7B; Mon, 11 Mar 2019 20:44:51 +0100 (CET)
-Date:   Mon, 11 Mar 2019 20:44:51 +0100
+        id BA60C68CEC; Mon, 11 Mar 2019 20:46:22 +0100 (CET)
+Date:   Mon, 11 Mar 2019 20:46:22 +0100
 From:   Christoph Hellwig <hch@lst.de>
 To:     Al Viro <viro@ZenIV.linux.org.uk>
 Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
@@ -36,19 +36,35 @@ Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
         zhengbin <zhengbin13@huawei.com>, bcrl@kvack.org,
         linux-fsdevel@vger.kernel.org, linux-aio@kvack.org,
         houtao1@huawei.com, yi.zhang@huawei.com
-Subject: Re: [PATCH 5/8] make aio_read()/aio_write() return int
-Message-ID: <20190311194451.GE12602@lst.de>
-References: <20190310070606.GA10138@ZenIV.linux.org.uk> <20190310070822.11564-1-viro@ZenIV.linux.org.uk> <20190310070822.11564-5-viro@ZenIV.linux.org.uk>
+Subject: Re: [PATCH 6/8] move dropping ->ki_eventfd into iocb_destroy()
+Message-ID: <20190311194622.GF12602@lst.de>
+References: <20190310070606.GA10138@ZenIV.linux.org.uk> <20190310070822.11564-1-viro@ZenIV.linux.org.uk> <20190310070822.11564-6-viro@ZenIV.linux.org.uk>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20190310070822.11564-5-viro@ZenIV.linux.org.uk>
+In-Reply-To: <20190310070822.11564-6-viro@ZenIV.linux.org.uk>
 User-Agent: Mutt/1.5.17 (2007-11-01)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Looks good,
+On Sun, Mar 10, 2019 at 07:08:20AM +0000, Al Viro wrote:
+> From: Al Viro <viro@zeniv.linux.org.uk>
+> 
+> Signed-off-by: Al Viro <viro@zeniv.linux.org.uk>
 
-Reviewed-by: Christoph Hellwig <hch@lst.de>
+Looks sensible, but a changelog would be nice.
+
+>  	if (iocb->aio_flags & IOCB_FLAG_RESFD) {
+> +		struct eventfd_ctx *eventfd;
+>  		/*
+>  		 * If the IOCB_FLAG_RESFD flag of aio_flags is set, get an
+>  		 * instance of the file* now. The file descriptor must be
+>  		 * an eventfd() fd, and will be signaled for each completed
+>  		 * event using the eventfd_signal() function.
+>  		 */
+> +		eventfd = eventfd_ctx_fdget((int) iocb->aio_resfd);
+
+I don't think there is any point in the cast in either the old or new
+code.
