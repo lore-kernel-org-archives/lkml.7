@@ -2,101 +2,177 @@ Return-Path: <SRS0=FxTY=RO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_PASS,USER_AGENT_GIT autolearn=ham
+X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A7EEDC43381
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 Mar 2019 09:39:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DDAF1C43381
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 Mar 2019 09:40:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6CED02075C
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 Mar 2019 09:39:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AA10720880
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 Mar 2019 09:40:00 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727270AbfCKJj4 (ORCPT
+        id S1727384AbfCKJj7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 11 Mar 2019 05:39:56 -0400
-Received: from mx2.suse.de ([195.135.220.15]:53362 "EHLO mx1.suse.de"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1727026AbfCKJjz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 11 Mar 2019 05:39:55 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx1.suse.de (Postfix) with ESMTP id E42C0AC3F;
-        Mon, 11 Mar 2019 09:39:53 +0000 (UTC)
-From:   Juergen Gross <jgross@suse.com>
-To:     torvalds@linux-foundation.org
-Cc:     linux-kernel@vger.kernel.org, xen-devel@lists.xenproject.org,
-        boris.ostrovsky@oracle.com
-Subject: [GIT PULL] xen: fixes and features for 5.1-rc1
-Date:   Mon, 11 Mar 2019 10:39:51 +0100
-Message-Id: <20190311093951.18085-1-jgross@suse.com>
-X-Mailer: git-send-email 2.16.4
+        Mon, 11 Mar 2019 05:39:59 -0400
+Received: from bhuna.collabora.co.uk ([46.235.227.227]:53588 "EHLO
+        bhuna.collabora.co.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727143AbfCKJj5 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 11 Mar 2019 05:39:57 -0400
+Received: from localhost (unknown [IPv6:2a01:e0a:2c:6930:5cf4:84a1:2763:fe0d])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        (Authenticated sender: bbrezillon)
+        by bhuna.collabora.co.uk (Postfix) with ESMTPSA id 806F426048B;
+        Mon, 11 Mar 2019 09:39:53 +0000 (GMT)
+Date:   Mon, 11 Mar 2019 10:39:50 +0100
+From:   Boris Brezillon <boris.brezillon@collabora.com>
+To:     Helen Koike <helen.koike@collabora.com>
+Cc:     dri-devel@lists.freedesktop.org, nicholas.kazlauskas@amd.com,
+        andrey.grodzovsky@amd.com, daniel.vetter@ffwll.ch,
+        linux-kernel@vger.kernel.org, Tomasz Figa <tfiga@chromium.org>,
+        David Airlie <airlied@linux.ie>,
+        Sean Paul <seanpaul@google.com>, kernel@collabora.com,
+        harry.wentland@amd.com,
+        =?UTF-8?B?U3TDqXBoYW5l?= Marchesin <marcheu@google.com>
+Subject: Re: [PATCH 1/5] drm: don't block fb changes for async plane updates
+Message-ID: <20190311103950.4465ea8c@collabora.com>
+In-Reply-To: <20190304144909.6267-2-helen.koike@collabora.com>
+References: <20190304144909.6267-1-helen.koike@collabora.com>
+        <20190304144909.6267-2-helen.koike@collabora.com>
+Organization: Collabora
+X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; x86_64-redhat-linux-gnu)
+MIME-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Linus,
+On Mon,  4 Mar 2019 11:49:05 -0300
+Helen Koike <helen.koike@collabora.com> wrote:
 
-Please git pull the following tag:
+> In the case of a normal sync update, the preparation of framebuffers (be
+> it calling drm_atomic_helper_prepare_planes() or doing setups with
+> drm_framebuffer_get()) are performed in the new_state and the respective
+> cleanups are performed in the old_state.
+> 
+> In the case of async updates, the preparation is also done in the
+> new_state but the cleanups are done in the new_state (because updates
+> are performed in place, i.e. in the current state).
+> 
+> The current code blocks async udpates when the fb is changed, turning
+> async updates into sync updates, slowing down cursor updates and
+> introducing regressions in igt tests with errors of type:
+> 
+> "CRITICAL: completed 97 cursor updated in a period of 30 flips, we
+> expect to complete approximately 15360 updates, with the threshold set
+> at 7680"
+> 
+> Fb changes in async updates were prevented to avoid the following scenario:
+> 
+> - Async update, oldfb = NULL, newfb = fb1, prepare fb1, cleanup fb1
+> - Async update, oldfb = fb1, newfb = fb2, prepare fb2, cleanup fb2
+> - Non-async commit, oldfb = fb2, newfb = fb1, prepare fb1, cleanup fb2 (wrong)
+> Where we have a single call to prepare fb2 but double cleanup call to fb2.
+> 
+> To solve the above problems, instead of blocking async fb changes, we
+> place the old framebuffer in the new_state object, so when the code
+> performs cleanups in the new_state it will cleanup the old_fb and we
+> will have the following scenario instead:
+> 
+> - Async update, oldfb = NULL, newfb = fb1, prepare fb1, no cleanup
+> - Async update, oldfb = fb1, newfb = fb2, prepare fb2, cleanup fb1
+> - Non-async commit, oldfb = fb2, newfb = fb1, prepare fb1, cleanup fb2
+> 
+> Where calls to prepare/cleanup are ballanced.
+> 
+> Cc: <stable@vger.kernel.org> # v4.14+: 25dc194b34dd: drm: Block fb changes for async plane updates
+> Fixes: 25dc194b34dd ("drm: Block fb changes for async plane updates")
+> Suggested-by: Boris Brezillon <boris.brezillon@collabora.com>
+> Signed-off-by: Helen Koike <helen.koike@collabora.com>
+> 
+> ---
+> Hello,
+> 
+> As mentioned in the cover letter,
+> I tested on the rockchip and on i915 (with a patch I am still working on for
+> replacing cursors by async update), with igt plane_cursor_legacy and
+> kms_cursor_legacy and I didn't see any regressions.
+> I couldn't test on MSM and AMD because I don't have the hardware (and I am
+> having some issues testing on vc4) and I would appreciate if anyone could help
+> me testing those.
+> 
+> I also think it would be a better solution if, instead of having async
+> to do in-place updates in the current state, the async path should be
+> equivalent to a syncronous update, i.e., modifying new_state and
+> performing a flip
+> IMHO, the only difference between sync and async should be that async update
+> doesn't wait for vblank and applies the changes immeditally to the hw,
+> but the code path could be almost the same.
+> But for now I think this solution is ok (swaping new_fb/old_fb), and
+> then we can adjust things little by little, what do you think?
+> 
+> Thanks!
+> Helen
+> 
+>  drivers/gpu/drm/drm_atomic_helper.c | 20 ++++++++++----------
+>  1 file changed, 10 insertions(+), 10 deletions(-)
+> 
+> diff --git a/drivers/gpu/drm/drm_atomic_helper.c b/drivers/gpu/drm/drm_atomic_helper.c
+> index 540a77a2ade9..e7eb96f1efc2 100644
+> --- a/drivers/gpu/drm/drm_atomic_helper.c
+> +++ b/drivers/gpu/drm/drm_atomic_helper.c
+> @@ -1608,15 +1608,6 @@ int drm_atomic_helper_async_check(struct drm_device *dev,
+>  	    old_plane_state->crtc != new_plane_state->crtc)
+>  		return -EINVAL;
+>  
+> -	/*
+> -	 * FIXME: Since prepare_fb and cleanup_fb are always called on
+> -	 * the new_plane_state for async updates we need to block framebuffer
+> -	 * changes. This prevents use of a fb that's been cleaned up and
+> -	 * double cleanups from occuring.
+> -	 */
+> -	if (old_plane_state->fb != new_plane_state->fb)
+> -		return -EINVAL;
+> -
+>  	funcs = plane->helper_private;
+>  	if (!funcs->atomic_async_update)
+>  		return -EINVAL;
+> @@ -1657,6 +1648,9 @@ void drm_atomic_helper_async_commit(struct drm_device *dev,
+>  	int i;
+>  
+>  	for_each_new_plane_in_state(state, plane, plane_state, i) {
+> +		struct drm_framebuffer *new_fb = plane_state->fb;
+> +		struct drm_framebuffer *old_fb = plane->state->fb;
+> +
+>  		funcs = plane->helper_private;
+>  		funcs->atomic_async_update(plane, plane_state);
+>  
+> @@ -1665,11 +1659,17 @@ void drm_atomic_helper_async_commit(struct drm_device *dev,
+>  		 * plane->state in-place, make sure at least common
+>  		 * properties have been properly updated.
+>  		 */
+> -		WARN_ON_ONCE(plane->state->fb != plane_state->fb);
+> +		WARN_ON_ONCE(plane->state->fb != new_fb);
+>  		WARN_ON_ONCE(plane->state->crtc_x != plane_state->crtc_x);
+>  		WARN_ON_ONCE(plane->state->crtc_y != plane_state->crtc_y);
+>  		WARN_ON_ONCE(plane->state->src_x != plane_state->src_x);
+>  		WARN_ON_ONCE(plane->state->src_y != plane_state->src_y);
+> +
+> +		/*
+> +		 * Make sure the FBs have been swapped so that cleanups in the
+> +		 * new_state performs a cleanup in the old FB.
+> +		 */
+> +		WARN_ON_ONCE(plane_state->fb != old_fb);
 
- git://git.kernel.org/pub/scm/linux/kernel/git/xen/tip.git for-linus-5.1a-rc1-tag
+Looks like this patch should go last in the series if you want to keep
+things bisectable, otherwise you'll have a WARN_ON() backtrace in the
+drivers your fixing in the following patches.
 
-xen: fixes and features for 5.1-rc1
+>  	}
+>  }
+>  EXPORT_SYMBOL(drm_atomic_helper_async_commit);
 
-It contains the following patches:
-
-- a remove of fallback code for very old Xen hypervisors
-- 3 patches for fixing Xen dom0 boot regressions
-- an old patch for Xen PCI passthrough which was never applied for
-  unknown reasons
-- some more minor fixes and cleanup patches
-
-Thanks.
-
-Juergen
-
- arch/x86/include/asm/xen/hypercall.h  | 13 +-----
- arch/x86/kernel/e820.c                |  5 +++
- arch/x86/xen/mmu_pv.c                 | 13 +++---
- arch/x86/xen/setup.c                  | 13 ++++++
- drivers/xen/Makefile                  |  1 -
- drivers/xen/cpu_hotplug.c             |  2 +-
- drivers/xen/fallback.c                | 81 -----------------------------------
- drivers/xen/gntdev-dmabuf.c           | 21 ++++++++-
- drivers/xen/gntdev-dmabuf.h           |  2 +-
- drivers/xen/gntdev.c                  |  2 +-
- drivers/xen/xen-acpi-processor.c      | 22 +++++-----
- drivers/xen/xen-balloon.c             | 11 +++++
- drivers/xen/xen-pciback/pciback_ops.c |  2 -
- drivers/xen/xen-pciback/xenbus.c      |  2 +-
- drivers/xen/xen-scsiback.c            |  2 +-
- include/linux/memory_hotplug.h        |  2 +
- include/xen/xen.h                     |  4 ++
- mm/memory_hotplug.c                   |  6 +++
- 18 files changed, 85 insertions(+), 119 deletions(-)
-
-Andy Shevchenko (1):
-      xen/ACPI: Switch to bitmap_zalloc()
-
-Arnd Bergmann (1):
-      xen: remove pre-xen3 fallback handlers
-
-Dan Carpenter (1):
-      xen, cpu_hotplug: Prevent an out of bounds access
-
-Gustavo A. R. Silva (2):
-      xen: mark expected switch fall-through
-      xen-scsiback: mark expected switch fall-through
-
-Juergen Gross (3):
-      x86: respect memory size limiting via mem= parameter
-      x86/xen: dont add memory above max allowed allocation
-      xen: fix dom0 boot on huge systems
-
-Konrad Rzeszutek Wilk (1):
-      xen/pciback: Don't disable PCI_COMMAND on PCI device reset.
-
-Oleksandr Andrushchenko (2):
-      xen/gntdev: Do not destroy context while dma-bufs are in use
-      xen/gntdev: Check and release imported dma-bufs on close
