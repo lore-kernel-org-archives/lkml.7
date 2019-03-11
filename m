@@ -6,49 +6,47 @@ X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
 	SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 14CAFC43381
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 Mar 2019 19:57:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E2B9AC43381
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 Mar 2019 19:57:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DDAD521738
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 Mar 2019 19:57:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B4A08217F5
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 Mar 2019 19:57:06 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1552334224;
-	bh=08ZBeF8CLF3RZli4ixSGutjomqLkWrRsbuVh8n19LPU=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=UwQxDgmzvjcE9S6IIP582Eo5Rg6oH5dJ2UD554TeacUIeNqisR+szjFcmVnjLI5h+
-	 WNkyIVEF36fEkTQsGurDAKUSTciaeQoSXN9l5AetujEnPEWN01YRHSPK5hDz9Nl43X
-	 FO89/tG6QUXoJKigev2s5zbWetMElqHkwj/7xNeE=
+	s=default; t=1552334226;
+	bh=eHAmPnAwcSsbv89EtT4YjXVaeQbfQE51gGAhor6VdjE=;
+	h=From:To:Cc:Subject:Date:List-ID:From;
+	b=LIGkPHaVzG+HAvugXCU0XWu/pDzQbGp9U9NTZateuTQ+4ESX+UQ5AtUmEVFQOKJ/o
+	 VfVQhhQzbVb0YqRL/0b+Z8ywkvmAic0Z7EfMfN3bF7yfYA0gKXIDoc01NDclbnAhEc
+	 85KK9V0vlzcrUdqDsEvGc33dlOnU4xCBatLx5WrU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728949AbfCKT5D (ORCPT
+        id S1728961AbfCKT5F (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 11 Mar 2019 15:57:03 -0400
-Received: from mail.kernel.org ([198.145.29.99]:34366 "EHLO mail.kernel.org"
+        Mon, 11 Mar 2019 15:57:05 -0400
+Received: from mail.kernel.org ([198.145.29.99]:34424 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728928AbfCKT5A (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 11 Mar 2019 15:57:00 -0400
+        id S1728240AbfCKT5C (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 11 Mar 2019 15:57:02 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 02B102087C;
-        Mon, 11 Mar 2019 19:56:58 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 8A0D3214AE;
+        Mon, 11 Mar 2019 19:57:01 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1552334219;
-        bh=08ZBeF8CLF3RZli4ixSGutjomqLkWrRsbuVh8n19LPU=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=m9WNeBmAisu40I9Qfg6PiVybxOnxdnAPlHZxkMhK2yJYDPirqojEu7fvl0xjx4po2
-         S62aY2Z8B5K+nHWAEQ+2rItc9TRZkSjUTMM7YQ+5ice+kAEKnCvAjqBxi3dQRQFaje
-         8tOBBMSiBV/DgMRxSK0EOPF+R7oVymoyNC+iTngs=
+        s=default; t=1552334222;
+        bh=eHAmPnAwcSsbv89EtT4YjXVaeQbfQE51gGAhor6VdjE=;
+        h=From:To:Cc:Subject:Date:From;
+        b=0qRwYV4uwthOsoV02a4DG94ofudnDv/OyCW0eEzPHNnKfp3syFn0EVLBCFfvNQDlw
+         e3EG4l4SuP7LzWB8HAUs29Gz6klUPHb6OtrEguEJP+38NCB4Ta7u7pcfLydb9O/kn4
+         cXkWIgWW3Wq5yq3tuDjrRILvlVCkSa82VQMBxdmg=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Gabriel Fernandez <gabriel.fernandez@st.com>,
-        Dmitry Torokhov <dmitry.torokhov@gmail.com>,
-        Sasha Levin <sashal@kernel.org>, linux-input@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.20 52/52] Input: st-keyscan - fix potential zalloc NULL dereference
-Date:   Mon, 11 Mar 2019 15:55:16 -0400
-Message-Id: <20190311195516.137772-52-sashal@kernel.org>
+Cc:     Philipp Zabel <p.zabel@pengutronix.de>,
+        Sasha Levin <sashal@kernel.org>,
+        dri-devel@lists.freedesktop.org
+Subject: [PATCH AUTOSEL 4.19 01/44] drm/imx: ignore plane updates on disabled crtcs
+Date:   Mon, 11 Mar 2019 15:56:17 -0400
+Message-Id: <20190311195700.138462-1-sashal@kernel.org>
 X-Mailer: git-send-email 2.19.1
-In-Reply-To: <20190311195516.137772-1-sashal@kernel.org>
-References: <20190311195516.137772-1-sashal@kernel.org>
 MIME-Version: 1.0
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
@@ -57,45 +55,41 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Gabriel Fernandez <gabriel.fernandez@st.com>
+From: Philipp Zabel <p.zabel@pengutronix.de>
 
-[ Upstream commit 2439d37e1bf8a34d437573c086572abe0f3f1b15 ]
+[ Upstream commit 4fb873c9648e383206e0a91cef9b03aa54066aca ]
 
-This patch fixes the following static checker warning:
+This patch fixes backtraces like the following when sending SIGKILL to a
+process with a currently pending plane update:
 
-drivers/input/keyboard/st-keyscan.c:156 keyscan_probe()
-error: potential zalloc NULL dereference: 'keypad_data->input_dev'
+    [drm:ipu_plane_atomic_check] CRTC should be enabled
+    [drm:drm_framebuffer_remove] *ERROR* failed to commit
+    ------------[ cut here ]------------
+    WARNING: CPU: 3 PID: 63 at drivers/gpu/drm/drm_framebuffer.c:926 drm_framebuffer_remove+0x47c/0x498
+    atomic remove_fb failed with -22
 
-Reported-by: Dan Carpenter <dan.carpenter@oracle.com>
-Signed-off-by: Gabriel Fernandez <gabriel.fernandez@st.com>
-Signed-off-by: Dmitry Torokhov <dmitry.torokhov@gmail.com>
+Signed-off-by: Philipp Zabel <p.zabel@pengutronix.de>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/input/keyboard/st-keyscan.c | 4 ++--
+ drivers/gpu/drm/imx/ipuv3-plane.c | 4 ++--
  1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/input/keyboard/st-keyscan.c b/drivers/input/keyboard/st-keyscan.c
-index babcfb165e4f..3b85631fde91 100644
---- a/drivers/input/keyboard/st-keyscan.c
-+++ b/drivers/input/keyboard/st-keyscan.c
-@@ -153,6 +153,8 @@ static int keyscan_probe(struct platform_device *pdev)
+diff --git a/drivers/gpu/drm/imx/ipuv3-plane.c b/drivers/gpu/drm/imx/ipuv3-plane.c
+index 203f247d4854..a323a0db2fc1 100644
+--- a/drivers/gpu/drm/imx/ipuv3-plane.c
++++ b/drivers/gpu/drm/imx/ipuv3-plane.c
+@@ -375,9 +375,9 @@ static int ipu_plane_atomic_check(struct drm_plane *plane,
+ 	if (ret)
+ 		return ret;
  
- 	input_dev->id.bustype = BUS_HOST;
+-	/* CRTC should be enabled */
++	/* nothing to check when disabling or disabled */
+ 	if (!crtc_state->enable)
+-		return -EINVAL;
++		return 0;
  
-+	keypad_data->input_dev = input_dev;
-+
- 	error = keypad_matrix_key_parse_dt(keypad_data);
- 	if (error)
- 		return error;
-@@ -168,8 +170,6 @@ static int keyscan_probe(struct platform_device *pdev)
- 
- 	input_set_drvdata(input_dev, keypad_data);
- 
--	keypad_data->input_dev = input_dev;
--
- 	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
- 	keypad_data->base = devm_ioremap_resource(&pdev->dev, res);
- 	if (IS_ERR(keypad_data->base))
+ 	switch (plane->type) {
+ 	case DRM_PLANE_TYPE_PRIMARY:
 -- 
 2.19.1
 
