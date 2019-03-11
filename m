@@ -4,48 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+	SPF_PASS,USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 25D3FC43381
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 Mar 2019 20:03:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id ED0F8C4360F
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 Mar 2019 20:03:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EA7C82064A
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 Mar 2019 20:02:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BEEFC2087C
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 Mar 2019 20:03:09 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1552334580;
-	bh=d7Tqjh7SIOkwevRNpGbd6OaKpbBseCw01ihijQfJa5Y=;
+	s=default; t=1552334589;
+	bh=Qqw5E0jowqj2BSqx8AnJtPT+6VfE8ziDEpX7XBXDxYo=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=0h7GuhYsxqmLFNGELkxSX6Dh/YlbJCCYeLzWo+4Tk0cGoacWY9tk06I5VdkgpZa2q
-	 NmEO9MN77iBvz3/RmtkDZATDNgsDEyRRmI7zYEXnWt6hivv0DASYq0Jg8NRXK2oilZ
-	 zFk+q0smONNrVrlUUjMwgRgruMruOKwj3AxSuGlo=
+	b=ajZg2lqwP2CL1gQ2ShgkuVgb+2T2xdz09g6MCH+VnqtSfmo6W7jWLwva+FrU4wW+S
+	 WmQns3onY8cIldmJCNJzh/Fh15kWTT9RcJ8yDLlksO+cWlBQuB/XZ6jdEFLAFdwhZW
+	 fvQ2YD6NsbftDL3WXtTdd20W7vXKTsjs5WrFFFlE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729617AbfCKUC6 (ORCPT
+        id S1729671AbfCKUDI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 11 Mar 2019 16:02:58 -0400
-Received: from mail.kernel.org ([198.145.29.99]:36308 "EHLO mail.kernel.org"
+        Mon, 11 Mar 2019 16:03:08 -0400
+Received: from mail.kernel.org ([198.145.29.99]:36284 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729482AbfCKT6x (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 11 Mar 2019 15:58:53 -0400
+        id S1729446AbfCKT6w (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 11 Mar 2019 15:58:52 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 7EB1F214AE;
-        Mon, 11 Mar 2019 19:58:52 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 1EB6E2084F;
+        Mon, 11 Mar 2019 19:58:50 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1552334333;
-        bh=d7Tqjh7SIOkwevRNpGbd6OaKpbBseCw01ihijQfJa5Y=;
+        s=default; t=1552334331;
+        bh=Qqw5E0jowqj2BSqx8AnJtPT+6VfE8ziDEpX7XBXDxYo=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=ukJG49nj+34uKdHNozD+OxawY8qskoYFBoImhK9y+31GRd+i8Mw+J2oUYZ5xm9DsZ
-         adENVAKHc0oqCv9b2ktTfzSnyDBgdzI14sgnCjpxoB+ntR+bUhmFBs/UIx9OdWidpt
-         rHGq0PENqU2cwW7PMIL4n3SIwmvx9tgaOPHSfLWo=
+        b=k/aVJjVF3MX+2pzeuZsZLY9s0v4mZacay0bDmy+JYl7gRhRgRF7wkSv3k37lCC0dt
+         uvdlC3EJixyCn8bHSLTRDKZtDuGuHLMWKcDvIxvjHsWlTYhAZq7iAGgJQh5AF4C6cE
+         LppGPKg9q46DdUeszipR7r2++wPG2IsJPPBQoHvM=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Benjamin Coddington <bcodding@redhat.com>,
-        Anna Schumaker <Anna.Schumaker@Netapp.com>,
-        Sasha Levin <sashal@kernel.org>, linux-nfs@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.14 19/27] NFS: Don't use page_file_mapping after removing the page
-Date:   Mon, 11 Mar 2019 15:58:16 -0400
-Message-Id: <20190311195824.139043-19-sashal@kernel.org>
+Cc:     Andrea Claudi <aclaudi@redhat.com>,
+        Pablo Neira Ayuso <pablo@netfilter.org>,
+        Sasha Levin <sashal@kernel.org>, netdev@vger.kernel.org,
+        lvs-devel@vger.kernel.org, netfilter-devel@vger.kernel.org,
+        coreteam@netfilter.org
+Subject: [PATCH AUTOSEL 4.14 17/27] ipvs: fix dependency on nf_defrag_ipv6
+Date:   Mon, 11 Mar 2019 15:58:14 -0400
+Message-Id: <20190311195824.139043-17-sashal@kernel.org>
 X-Mailer: git-send-email 2.19.1
 In-Reply-To: <20190311195824.139043-1-sashal@kernel.org>
 References: <20190311195824.139043-1-sashal@kernel.org>
@@ -57,67 +59,109 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Benjamin Coddington <bcodding@redhat.com>
+From: Andrea Claudi <aclaudi@redhat.com>
 
-[ Upstream commit d2ceb7e57086750ea6198a31fd942d98099a0786 ]
+[ Upstream commit 098e13f5b21d3398065fce8780f07a3ef62f4812 ]
 
-If nfs_page_async_flush() removes the page from the mapping, then we can't
-use page_file_mapping() on it as nfs_updatepate() is wont to do when
-receiving an error.  Instead, push the mapping to the stack before the page
-is possibly truncated.
+ipvs relies on nf_defrag_ipv6 module to manage IPv6 fragmentation,
+but lacks proper Kconfig dependencies and does not explicitly
+request defrag features.
 
-Fixes: 8fc75bed96bb ("NFS: Fix up return value on fatal errors in nfs_page_async_flush()")
-Signed-off-by: Benjamin Coddington <bcodding@redhat.com>
-Signed-off-by: Anna Schumaker <Anna.Schumaker@Netapp.com>
+As a result, if netfilter hooks are not loaded, when IPv6 fragmented
+packet are handled by ipvs only the first fragment makes through.
+
+Fix it properly declaring the dependency on Kconfig and registering
+netfilter hooks on ip_vs_add_service() and ip_vs_new_dest().
+
+Reported-by: Li Shuang <shuali@redhat.com>
+Signed-off-by: Andrea Claudi <aclaudi@redhat.com>
+Acked-by: Julian Anastasov <ja@ssi.bg>
+Acked-by: Simon Horman <horms@verge.net.au>
+Signed-off-by: Pablo Neira Ayuso <pablo@netfilter.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- fs/nfs/write.c | 11 ++++++-----
- 1 file changed, 6 insertions(+), 5 deletions(-)
+ net/netfilter/ipvs/Kconfig      |  1 +
+ net/netfilter/ipvs/ip_vs_core.c | 10 ++++------
+ net/netfilter/ipvs/ip_vs_ctl.c  | 10 ++++++++++
+ 3 files changed, 15 insertions(+), 6 deletions(-)
 
-diff --git a/fs/nfs/write.c b/fs/nfs/write.c
-index 2d956a7d5378..50ed3944d183 100644
---- a/fs/nfs/write.c
-+++ b/fs/nfs/write.c
-@@ -236,9 +236,9 @@ static void nfs_grow_file(struct page *page, unsigned int offset, unsigned int c
- }
+diff --git a/net/netfilter/ipvs/Kconfig b/net/netfilter/ipvs/Kconfig
+index b32fb0dbe237..3f8e490d1133 100644
+--- a/net/netfilter/ipvs/Kconfig
++++ b/net/netfilter/ipvs/Kconfig
+@@ -29,6 +29,7 @@ config	IP_VS_IPV6
+ 	bool "IPv6 support for IPVS"
+ 	depends on IPV6 = y || IP_VS = IPV6
+ 	select IP6_NF_IPTABLES
++	select NF_DEFRAG_IPV6
+ 	---help---
+ 	  Add IPv6 support to IPVS.
  
- /* A writeback failed: mark the page as bad, and invalidate the page cache */
--static void nfs_set_pageerror(struct page *page)
-+static void nfs_set_pageerror(struct address_space *mapping)
+diff --git a/net/netfilter/ipvs/ip_vs_core.c b/net/netfilter/ipvs/ip_vs_core.c
+index 1bd53b1e7672..4278f5c947ab 100644
+--- a/net/netfilter/ipvs/ip_vs_core.c
++++ b/net/netfilter/ipvs/ip_vs_core.c
+@@ -1524,14 +1524,12 @@ ip_vs_try_to_schedule(struct netns_ipvs *ipvs, int af, struct sk_buff *skb,
+ 		/* sorry, all this trouble for a no-hit :) */
+ 		IP_VS_DBG_PKT(12, af, pp, skb, iph->off,
+ 			      "ip_vs_in: packet continues traversal as normal");
+-		if (iph->fragoffs) {
+-			/* Fragment that couldn't be mapped to a conn entry
+-			 * is missing module nf_defrag_ipv6
+-			 */
+-			IP_VS_DBG_RL("Unhandled frag, load nf_defrag_ipv6\n");
++
++		/* Fragment couldn't be mapped to a conn entry */
++		if (iph->fragoffs)
+ 			IP_VS_DBG_PKT(7, af, pp, skb, iph->off,
+ 				      "unhandled fragment");
+-		}
++
+ 		*verdict = NF_ACCEPT;
+ 		return 0;
+ 	}
+diff --git a/net/netfilter/ipvs/ip_vs_ctl.c b/net/netfilter/ipvs/ip_vs_ctl.c
+index 2f45c3ce77ef..a683d7f52bcb 100644
+--- a/net/netfilter/ipvs/ip_vs_ctl.c
++++ b/net/netfilter/ipvs/ip_vs_ctl.c
+@@ -43,6 +43,7 @@
+ #ifdef CONFIG_IP_VS_IPV6
+ #include <net/ipv6.h>
+ #include <net/ip6_route.h>
++#include <net/netfilter/ipv6/nf_defrag_ipv6.h>
+ #endif
+ #include <net/route.h>
+ #include <net/sock.h>
+@@ -888,6 +889,7 @@ ip_vs_new_dest(struct ip_vs_service *svc, struct ip_vs_dest_user_kern *udest,
  {
--	nfs_zap_mapping(page_file_mapping(page)->host, page_file_mapping(page));
-+	nfs_zap_mapping(mapping->host, mapping);
- }
+ 	struct ip_vs_dest *dest;
+ 	unsigned int atype, i;
++	int ret = 0;
  
- /*
-@@ -994,7 +994,7 @@ static void nfs_write_completion(struct nfs_pgio_header *hdr)
- 		nfs_list_remove_request(req);
- 		if (test_bit(NFS_IOHDR_ERROR, &hdr->flags) &&
- 		    (hdr->good_bytes < bytes)) {
--			nfs_set_pageerror(req->wb_page);
-+			nfs_set_pageerror(page_file_mapping(req->wb_page));
- 			nfs_context_set_write_error(req->wb_context, hdr->error);
- 			goto remove_req;
+ 	EnterFunction(2);
+ 
+@@ -898,6 +900,10 @@ ip_vs_new_dest(struct ip_vs_service *svc, struct ip_vs_dest_user_kern *udest,
+ 			atype & IPV6_ADDR_LINKLOCAL) &&
+ 			!__ip_vs_addr_is_local_v6(svc->ipvs->net, &udest->addr.in6))
+ 			return -EINVAL;
++
++		ret = nf_defrag_ipv6_enable(svc->ipvs->net);
++		if (ret)
++			return ret;
+ 	} else
+ #endif
+ 	{
+@@ -1221,6 +1227,10 @@ ip_vs_add_service(struct netns_ipvs *ipvs, struct ip_vs_service_user_kern *u,
+ 			ret = -EINVAL;
+ 			goto out_err;
  		}
-@@ -1330,7 +1330,8 @@ int nfs_updatepage(struct file *file, struct page *page,
- 		unsigned int offset, unsigned int count)
- {
- 	struct nfs_open_context *ctx = nfs_file_open_context(file);
--	struct inode	*inode = page_file_mapping(page)->host;
-+	struct address_space *mapping = page_file_mapping(page);
-+	struct inode	*inode = mapping->host;
- 	int		status = 0;
++
++		ret = nf_defrag_ipv6_enable(ipvs->net);
++		if (ret)
++			goto out_err;
+ 	}
+ #endif
  
- 	nfs_inc_stats(inode, NFSIOS_VFSUPDATEPAGE);
-@@ -1348,7 +1349,7 @@ int nfs_updatepage(struct file *file, struct page *page,
- 
- 	status = nfs_writepage_setup(ctx, page, offset, count);
- 	if (status < 0)
--		nfs_set_pageerror(page);
-+		nfs_set_pageerror(mapping);
- 	else
- 		__set_page_dirty_nobuffers(page);
- out:
 -- 
 2.19.1
 
