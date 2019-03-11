@@ -2,125 +2,136 @@ Return-Path: <SRS0=FxTY=RO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 01E6AC43381
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 Mar 2019 07:38:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B1DACC43381
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 Mar 2019 07:40:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B92D12075C
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 Mar 2019 07:38:21 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=umn.edu header.i=@umn.edu header.b="pUtXmU+k"
+	by mail.kernel.org (Postfix) with ESMTP id 862412075C
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 Mar 2019 07:40:47 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726772AbfCKHiS (ORCPT
+        id S1726875AbfCKHkq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 11 Mar 2019 03:38:18 -0400
-Received: from mta-p5.oit.umn.edu ([134.84.196.205]:53056 "EHLO
-        mta-p5.oit.umn.edu" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725831AbfCKHiR (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 11 Mar 2019 03:38:17 -0400
-Received: from localhost (unknown [127.0.0.1])
-        by mta-p5.oit.umn.edu (Postfix) with ESMTP id EB5767AA
-        for <linux-kernel@vger.kernel.org>; Mon, 11 Mar 2019 07:38:15 +0000 (UTC)
-X-Virus-Scanned: amavisd-new at umn.edu
-Received: from mta-p5.oit.umn.edu ([127.0.0.1])
-        by localhost (mta-p5.oit.umn.edu [127.0.0.1]) (amavisd-new, port 10024)
-        with ESMTP id PDuRrk7Qo03Z for <linux-kernel@vger.kernel.org>;
-        Mon, 11 Mar 2019 02:38:15 -0500 (CDT)
-Received: from mail-it1-f198.google.com (mail-it1-f198.google.com [209.85.166.198])
-        (using TLSv1.2 with cipher AES128-GCM-SHA256 (128/128 bits))
+        Mon, 11 Mar 2019 03:40:46 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:45922 "EHLO mx1.redhat.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725869AbfCKHkp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 11 Mar 2019 03:40:45 -0400
+Received: from smtp.corp.redhat.com (int-mx02.intmail.prod.int.phx2.redhat.com [10.5.11.12])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        by mta-p5.oit.umn.edu (Postfix) with ESMTPS id B78B66F7
-        for <linux-kernel@vger.kernel.org>; Mon, 11 Mar 2019 02:38:15 -0500 (CDT)
-Received: by mail-it1-f198.google.com with SMTP id w200so4333149itc.8
-        for <linux-kernel@vger.kernel.org>; Mon, 11 Mar 2019 00:38:15 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=umn.edu; s=google;
-        h=from:to:cc:subject:date:message-id;
-        bh=t2u+k+1lf2yxQwwxdGnoBM7qwW0LxgJjzCrp1mwq8jU=;
-        b=pUtXmU+kvD7hKowimvcLtlRIGxficvLngQAKJIzeLOH59fvQTIuUemnVUvtS7Z3FKd
-         IFxbqxioRXqukwnJooVRSIaccCtewLiHdjTzs/FkaSx1YQoDe4HSYNxaXjVnki1jR+AQ
-         FYs+zN/FQVjseujvexwMJm0+wFwQEAzJdt3oVNm1bOUJ+dUMG4gd4xMnALN/m65kymFi
-         pAOg4BFNTeDa4X3f72hrtoiw30cm9RhQQ0Dtlao3dhnh8BulPxhruePxERcMAMJj/itu
-         P2moWWVVSHGnYmlrmfarOqf3qyrItAErVD76m5l/BDPC8fh2s8X5pR3wM+Kxnx/7KrWw
-         PQQA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id;
-        bh=t2u+k+1lf2yxQwwxdGnoBM7qwW0LxgJjzCrp1mwq8jU=;
-        b=dyUq891pgb0TuulG9TRJ03s50zXROsLu8NtFiDa/PHfq1d3RsnBFpkvIQzRUz2L6Il
-         X8TPa+k26uZ6QUxtM1N/EfaQq5ECeXi71l7E3qraiiSiNSP3qUCujsZAqTbPynRwRsFW
-         /v7r67b9D/K04GkNE9Qp+m1i1ATez+BolUYSOPX+XVxTYz36f2MAqKmHkGQkYCrg0prl
-         Ar51+fp2ECrs0E0YHGFEYbbMB94QL1YcCbfX57OommKFmiM1C2aWQpPRJG8D6wNEx6xM
-         KZmGLskgi/t1AZgnuYok2eJrtZJiQ0ElMEIzYzQZwv5qxUOlUT8dnAXJlTf/5PX+Tth3
-         zf3w==
-X-Gm-Message-State: APjAAAUpA+uZzxb+2PQr8aJA6C8H7RqmotPTRbzsXBVEPk05vZF0N6sl
-        gE7Dr9PPxuSF+LYAvW7MoRq1oALIUIegzSk/kfqOigUoX4Yl+iAxLtfPdlVARhcvkZECbyJ0PEx
-        kh88KmrX2abq9pIC6sJmsOQwm2DYQ
-X-Received: by 2002:a6b:f201:: with SMTP id q1mr351400ioh.197.1552289895337;
-        Mon, 11 Mar 2019 00:38:15 -0700 (PDT)
-X-Google-Smtp-Source: APXvYqwoWZ0Oa20v+BcKj7fhpbi64/UlR5Yp89qS45DPTBEralAWQPfRB09AkPviqrtpVPkWmUL9Aw==
-X-Received: by 2002:a6b:f201:: with SMTP id q1mr351392ioh.197.1552289895117;
-        Mon, 11 Mar 2019 00:38:15 -0700 (PDT)
-Received: from bee.dtc.umn.edu (cs-bee-u.cs.umn.edu. [128.101.106.63])
-        by smtp.gmail.com with ESMTPSA id y16sm1902555ion.64.2019.03.11.00.38.13
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Mon, 11 Mar 2019 00:38:14 -0700 (PDT)
-From:   Kangjie Lu <kjlu@umn.edu>
-To:     kjlu@umn.edu
-Cc:     pakki001@umn.edu, Stanislaw Gruszka <sgruszka@redhat.com>,
-        Kalle Valo <kvalo@codeaurora.org>,
-        "David S. Miller" <davem@davemloft.net>,
-        linux-wireless@vger.kernel.org, netdev@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH] net: iwlegacy: fix potential NULL pointer dereferences
-Date:   Mon, 11 Mar 2019 02:37:57 -0500
-Message-Id: <20190311073758.31038-1-kjlu@umn.edu>
-X-Mailer: git-send-email 2.17.1
+        by mx1.redhat.com (Postfix) with ESMTPS id E37F0307E056;
+        Mon, 11 Mar 2019 07:40:44 +0000 (UTC)
+Received: from [10.72.12.54] (ovpn-12-54.pek2.redhat.com [10.72.12.54])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 2A5F260C4E;
+        Mon, 11 Mar 2019 07:40:32 +0000 (UTC)
+Subject: Re: [RFC PATCH V2 5/5] vhost: access vq metadata through kernel
+ virtual address
+To:     Andrea Arcangeli <aarcange@redhat.com>
+Cc:     "Michael S. Tsirkin" <mst@redhat.com>, kvm@vger.kernel.org,
+        virtualization@lists.linux-foundation.org, netdev@vger.kernel.org,
+        linux-kernel@vger.kernel.org, peterx@redhat.com,
+        linux-mm@kvack.org, Jerome Glisse <jglisse@redhat.com>
+References: <1551856692-3384-1-git-send-email-jasowang@redhat.com>
+ <1551856692-3384-6-git-send-email-jasowang@redhat.com>
+ <20190307103503-mutt-send-email-mst@kernel.org>
+ <20190307124700-mutt-send-email-mst@kernel.org>
+ <20190307191622.GP23850@redhat.com>
+ <e2fad6ed-9257-b53c-394b-bc913fc444c0@redhat.com>
+ <20190308194845.GC26923@redhat.com>
+From:   Jason Wang <jasowang@redhat.com>
+Message-ID: <8b68a2a0-907a-15f5-a07f-fc5b53d7ea19@redhat.com>
+Date:   Mon, 11 Mar 2019 15:40:31 +0800
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.5.1
+MIME-Version: 1.0
+In-Reply-To: <20190308194845.GC26923@redhat.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 8bit
+Content-Language: en-US
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.12
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.42]); Mon, 11 Mar 2019 07:40:44 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-In case create_singlethread_workqueue fails, the fix immediately
-return to avoid NULL pointer dereferences.
 
-Signed-off-by: Kangjie Lu <kjlu@umn.edu>
----
- drivers/net/wireless/intel/iwlegacy/3945-mac.c | 2 ++
- drivers/net/wireless/intel/iwlegacy/4965-mac.c | 2 ++
- 2 files changed, 4 insertions(+)
+On 2019/3/9 上午3:48, Andrea Arcangeli wrote:
+> Hello Jeson,
+>
+> On Fri, Mar 08, 2019 at 04:50:36PM +0800, Jason Wang wrote:
+>> Just to make sure I understand here. For boosting through huge TLB, do
+>> you mean we can do that in the future (e.g by mapping more userspace
+>> pages to kenrel) or it can be done by this series (only about three 4K
+>> pages were vmapped per virtqueue)?
+> When I answered about the advantages of mmu notifier and I mentioned
+> guaranteed 2m/gigapages where available, I overlooked the detail you
+> were using vmap instead of kmap. So with vmap you're actually doing
+> the opposite, it slows down the access because it will always use a 4k
+> TLB even if QEMU runs on THP or gigapages hugetlbfs.
+>
+> If there's just one page (or a few pages) in each vmap there's no need
+> of vmap, the linearity vmap provides doesn't pay off in such
+> case.
+>
+> So likely there's further room for improvement here that you can
+> achieve in the current series by just dropping vmap/vunmap.
+>
+> You can just use kmap (or kmap_atomic if you're in preemptible
+> section, should work from bh/irq).
+>
+> In short the mmu notifier to invalidate only sets a "struct page *
+> userringpage" pointer to NULL without calls to vunmap.
+>
+> In all cases immediately after gup_fast returns you can always call
+> put_page immediately (which explains why I'd like an option to drop
+> FOLL_GET from gup_fast to speed it up).
+>
+> Then you can check the sequence_counter and inc/dec counter increased
+> by _start/_end. That will tell you if the page you got and you called
+> put_page to immediately unpin it or even to free it, cannot go away
+> under you until the invalidate is called.
+>
+> If sequence counters and counter tells that gup_fast raced with anyt
+> mmu notifier invalidate you can just repeat gup_fast. Otherwise you're
+> done, the page cannot go away under you, the host virtual to host
+> physical mapping cannot change either. And the page is not pinned
+> either. So you can just set the "struct page * userringpage = page"
+> where "page" was the one setup by gup_fast.
+>
+> When later the invalidate runs, you can just call set_page_dirty if
+> gup_fast was called with "write = 1" and then you clear the pointer
+> "userringpage = NULL".
+>
+> When you need to read/write to the memory
+> kmap/kmap_atomic(userringpage) should work.
 
-diff --git a/drivers/net/wireless/intel/iwlegacy/3945-mac.c b/drivers/net/wireless/intel/iwlegacy/3945-mac.c
-index 271977f7fbb0..d23ee2ca0c8e 100644
---- a/drivers/net/wireless/intel/iwlegacy/3945-mac.c
-+++ b/drivers/net/wireless/intel/iwlegacy/3945-mac.c
-@@ -3403,6 +3403,8 @@ static void
- il3945_setup_deferred_work(struct il_priv *il)
- {
- 	il->workqueue = create_singlethread_workqueue(DRV_NAME);
-+	if (!il->workqueue)
-+		return;
- 
- 	init_waitqueue_head(&il->wait_command_queue);
- 
-diff --git a/drivers/net/wireless/intel/iwlegacy/4965-mac.c b/drivers/net/wireless/intel/iwlegacy/4965-mac.c
-index 94222ae464ae..2c555c9f1ff4 100644
---- a/drivers/net/wireless/intel/iwlegacy/4965-mac.c
-+++ b/drivers/net/wireless/intel/iwlegacy/4965-mac.c
-@@ -6236,6 +6236,8 @@ static void
- il4965_setup_deferred_work(struct il_priv *il)
- {
- 	il->workqueue = create_singlethread_workqueue(DRV_NAME);
-+	if (!il->workqueue)
-+		return;
- 
- 	init_waitqueue_head(&il->wait_command_queue);
- 
--- 
-2.17.1
 
+Yes, I've considered kmap() from the start. The reason I don't do that 
+is large virtqueue may need more than one page so VA might not be 
+contiguous. But this is probably not a big issue which just need more 
+tricks in the vhost memory accessors.
+
+
+>
+> In short because there's no hardware involvement here, the established
+> mapping is just the pointer to the page, there is no need of setting
+> up any pagetables or to do any TLB flushes (except on 32bit archs if
+> the page is above the direct mapping but it never happens on 64bit
+> archs).
+
+
+I see, I believe we don't care much about the performance of 32bit archs 
+(or we can just fallback to copy_to_user() friends). Using direct 
+mapping (I guess kernel will always try hugepage for that?) should be 
+better and we can even use it for the data transfer not only for the 
+metadata.
+
+Thanks
+
+
+>
+> Thanks,
+> Andrea
