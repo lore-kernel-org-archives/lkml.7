@@ -2,101 +2,110 @@ Return-Path: <SRS0=FxTY=RO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AC127C43381
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 Mar 2019 20:01:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9180AC43381
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 Mar 2019 20:02:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 74DA22064A
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 Mar 2019 20:01:58 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1552334518;
-	bh=7PlG8hMLrV6hJ/KLIylTARr2b8X4u9wC32d+0PhmLJ0=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=ON6yWJWNNLE3FAsMfpdEUohzUUQu9QKV+K76ZR/lxYF0W7nrVrtsYiQl9QvWsYK7U
-	 zb8PfHvSZUWk6KD5+2Ip9xaOFBlDq9J8HXBvroySkLAsSyH7gsRKLeqv5NU534Fl1i
-	 nChnfW6v/Snl1zb/Oz3lyB/xrtHsIP+FpIXjhArQ=
+	by mail.kernel.org (Postfix) with ESMTP id 6020C2064A
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 Mar 2019 20:02:01 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="t4SepFwm"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729442AbfCKUB4 (ORCPT
+        id S1729581AbfCKUB7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 11 Mar 2019 16:01:56 -0400
-Received: from mail.kernel.org ([198.145.29.99]:36716 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729572AbfCKT7S (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 11 Mar 2019 15:59:18 -0400
-Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 36BCE2177E;
-        Mon, 11 Mar 2019 19:59:17 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1552334357;
-        bh=7PlG8hMLrV6hJ/KLIylTARr2b8X4u9wC32d+0PhmLJ0=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=bL4nNCr1hyP0IvutXx6vZeEv+Rqu47pyC5fuOs2l+Q0kbBUe/DOETfRkXPCb4OnoI
-         zjmkAZwpW0D4aXyCQVfBbzH+lbPiGibT0e0WdU5wmTdtoC7xEailnl1wLbuJIUx2Xe
-         DcIT9KIVlyNYO7WlkkPIImqrkBs1ljvVVjdczMzU=
-From:   Sasha Levin <sashal@kernel.org>
-To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Yizhuo <yzhai003@ucr.edu>, Tony Lindgren <tony@atomide.com>,
-        Sasha Levin <sashal@kernel.org>, linux-omap@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.9 04/12] ARM: OMAP2+: Variable "reg" in function omap4_dsi_mux_pads() could be uninitialized
-Date:   Mon, 11 Mar 2019 15:59:04 -0400
-Message-Id: <20190311195912.139410-4-sashal@kernel.org>
-X-Mailer: git-send-email 2.19.1
-In-Reply-To: <20190311195912.139410-1-sashal@kernel.org>
-References: <20190311195912.139410-1-sashal@kernel.org>
+        Mon, 11 Mar 2019 16:01:59 -0400
+Received: from mail-ot1-f68.google.com ([209.85.210.68]:36926 "EHLO
+        mail-ot1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729431AbfCKUB5 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 11 Mar 2019 16:01:57 -0400
+Received: by mail-ot1-f68.google.com with SMTP id b3so358389otp.4
+        for <linux-kernel@vger.kernel.org>; Mon, 11 Mar 2019 13:01:56 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc:content-transfer-encoding;
+        bh=LKmRRe/TG/rwjTmD1hFHYCTcvGKG8Q7HIt+Pu52PNYg=;
+        b=t4SepFwm7MJII2vlP/crkbZzbn6V4YAob8oRRiaa74KOKCIzta3PoLlOrrbD4M6BfS
+         KG8r0h4Ckalk0hfsaw743kEpUOIBtCeNPeqRSjLbeUrkboJnkOKz8hFSA688/uXHWEHR
+         X6CsKm8QheoeBe41TpjPa6W6ADMHAlpNAvpM3hAhywncMCI84Nlm43Rz1r41acllSZnh
+         hYHXHPvlyywUDBAkJN9XD32NtiXXCSjJdltkBKVIZgS2HdpPQc539m0Mp6ZoP3QM0Xwe
+         VuM7ErDzqB12wzw2qrWZo08GqJP+dUflORW5IVwFrlToeBlFm13VErWd3DNctYcxY8zl
+         Ga3Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=LKmRRe/TG/rwjTmD1hFHYCTcvGKG8Q7HIt+Pu52PNYg=;
+        b=OK1KepdBSjljm8aXzp0OoPFDfDwRDcP3cjyhfD0JT2eHkiOYP8rp/aBICD7Sr7GXmU
+         T2D3vvfOpH8NfyNjGfCeS5MXB3LXThOuGRpdWJXqJc/JqD9ykEQ/ol7V1xb4GM7xOuHe
+         X6UZw/tbDD56aWoypgokyn2XcX/20YwqVRiYoqb+x3diQcqrU9yuG8Nq4CFXeu3WSJii
+         /kCBo4zAGVUAyXo/SPeiGKO+sALWQ/GqQL0OPUUc8Wud6jG7YvDMFC4oKL70/xMnmq2Z
+         R4V+dEwDz4hgF6oySP+4pf+NIIR4U6eYBxr5AclCufOV5abphnZRqw5n9g7i3YCn1MZh
+         ygZA==
+X-Gm-Message-State: APjAAAXbQeOKaJ6l7achmS2BpeGAczIUz0jNK2wy092BYIv1xmy5WKl+
+        8r4uUQVfuy7i7bVKZPxw5bLxoevJ09BtV8LUIIg=
+X-Google-Smtp-Source: APXvYqzNSGQESYOlpMDImQh3Lvx1WQMyidE/xkPdEf8G5j39yrOCPf9VZoTb3ZleCY/xcrN964SctfrJ7R0Nt6IQznA=
+X-Received: by 2002:a9d:5f1a:: with SMTP id f26mr20398541oti.95.1552334515634;
+ Mon, 11 Mar 2019 13:01:55 -0700 (PDT)
 MIME-Version: 1.0
-X-Patchwork-Hint: Ignore
-Content-Transfer-Encoding: 8bit
+References: <20190124201251.15159-1-TheSven73@googlemail.com>
+ <CAGngYiWFU-VnG=ODLWaUf0yp69qaU2GSd9exdHvyi6Ko1ib9qw@mail.gmail.com>
+ <20190208121916.GE23483@kroah.com> <CAGngYiVVNitd5SDLah-kxP69W6XHYHOQrOz=DnevuGnqoHD7HA@mail.gmail.com>
+ <20190208141400.GA22162@kroah.com> <CAGngYiXZtNcqQ3JGgavBxypo75WtAT7T-X4DQFNWD8kQcifU8g@mail.gmail.com>
+ <c8632a8c-dd3b-6b16-3fb2-5a1b381ca29a@suse.de>
+In-Reply-To: <c8632a8c-dd3b-6b16-3fb2-5a1b381ca29a@suse.de>
+From:   Sven Van Asbroeck <thesven73@gmail.com>
+Date:   Mon, 11 Mar 2019 16:01:44 -0400
+Message-ID: <CAGngYiVuh16dzSUvjZN0EcnaMy_n4_8Zzzth1M9XJTRQU6D8Ag@mail.gmail.com>
+Subject: Re: [PATCH v8 0/6] Add Fieldbus subsystem + support HMS Profinet card
+To:     =?UTF-8?Q?Andreas_F=C3=A4rber?= <afaerber@suse.de>
+Cc:     Greg KH <gregkh@linuxfoundation.org>, robh+dt@kernel.org,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Lee Jones <lee.jones@linaro.org>, mark.rutland@arm.com,
+        treding@nvidia.com, David Lechner <david@lechnology.com>,
+        noralf@tronnes.org, johan@kernel.org,
+        Michal Simek <monstr@monstr.eu>, michal.vokac@ysoft.com,
+        Arnd Bergmann <arnd@arndb.de>, john.garry@huawei.com,
+        geert+renesas@glider.be, robin.murphy@arm.com,
+        Paul Gortmaker <paul.gortmaker@windriver.com>,
+        sebastien.bourdelin@savoirfairelinux.com, icenowy@aosc.io,
+        Stuart Yoder <stuyoder@gmail.com>, maxime.ripard@bootlin.com,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Yizhuo <yzhai003@ucr.edu>
+Hi Andreas,
 
-[ Upstream commit dc30e70391376ba3987aeb856ae6d9c0706534f1 ]
+On Mon, Mar 11, 2019 at 1:25 PM Andreas F=C3=A4rber <afaerber@suse.de> wrot=
+e:
+>
+> I have two unfinished drivers that might benefit, for Hilscher netX 52
+> (multi-protocol) and Microchip LAN9252 (EtherCAT), as well as a Linux
+> port for Infineon XMC4500 that might be expanded to XMC4800 (EtherCAT).
+>
+> But currently -ENOTIME for review or development, sorry.
+>
+> Staging sounds like a plan, if that allows us to still break the ABI.
 
-In function omap4_dsi_mux_pads(), local variable "reg" could
-be uninitialized if function regmap_read() returns -EINVAL.
-However, it will be used directly in the later context, which
-is potentially unsafe.
+Those devices have very similar functionality to the h/w we use.
+It would be awesome if we could find common ground here.
+And the userspace ABI design could definitely benefit from 2-3 extra
+supported devices to verify it against.
 
-Signed-off-by: Yizhuo <yzhai003@ucr.edu>
-Signed-off-by: Tony Lindgren <tony@atomide.com>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
----
- arch/arm/mach-omap2/display.c | 7 ++++++-
- 1 file changed, 6 insertions(+), 1 deletion(-)
+>
+> Are you at Netdev 0x13 later this month? That might be an opportunity to
+> discuss the network-related parts such as Profinet and EtherCAT.
 
-diff --git a/arch/arm/mach-omap2/display.c b/arch/arm/mach-omap2/display.c
-index 70b3eaf085e4..5ca7e29ad851 100644
---- a/arch/arm/mach-omap2/display.c
-+++ b/arch/arm/mach-omap2/display.c
-@@ -115,6 +115,7 @@ static int omap4_dsi_mux_pads(int dsi_id, unsigned lanes)
- 	u32 enable_mask, enable_shift;
- 	u32 pipd_mask, pipd_shift;
- 	u32 reg;
-+	int ret;
- 
- 	if (dsi_id == 0) {
- 		enable_mask = OMAP4_DSI1_LANEENABLE_MASK;
-@@ -130,7 +131,11 @@ static int omap4_dsi_mux_pads(int dsi_id, unsigned lanes)
- 		return -ENODEV;
- 	}
- 
--	regmap_read(omap4_dsi_mux_syscon, OMAP4_DSIPHY_SYSCON_OFFSET, &reg);
-+	ret = regmap_read(omap4_dsi_mux_syscon,
-+					  OMAP4_DSIPHY_SYSCON_OFFSET,
-+					  &reg);
-+	if (ret)
-+		return ret;
- 
- 	reg &= ~enable_mask;
- 	reg &= ~pipd_mask;
--- 
-2.19.1
+Will send you an off-list message.
 
+Cheers,
+Sven
