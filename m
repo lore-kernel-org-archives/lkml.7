@@ -2,124 +2,175 @@ Return-Path: <SRS0=FxTY=RO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_MUTT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7E8E5C43381
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 Mar 2019 09:06:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 38B66C4360F
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 Mar 2019 09:08:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 577C1206BA
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 Mar 2019 09:06:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0F032206BA
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 Mar 2019 09:08:51 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727045AbfCKJGL (ORCPT
+        id S1727017AbfCKJIt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 11 Mar 2019 05:06:11 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:38024 "EHLO mx1.redhat.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725839AbfCKJGL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 11 Mar 2019 05:06:11 -0400
-Received: from smtp.corp.redhat.com (int-mx04.intmail.prod.int.phx2.redhat.com [10.5.11.14])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id A4CD2308A953;
-        Mon, 11 Mar 2019 09:06:10 +0000 (UTC)
-Received: from dhcp-128-65.nay.redhat.com (ovpn-12-113.pek2.redhat.com [10.72.12.113])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id F21E95DD8D;
-        Mon, 11 Mar 2019 09:05:56 +0000 (UTC)
-Date:   Mon, 11 Mar 2019 17:05:53 +0800
-From:   Dave Young <dyoung@redhat.com>
-To:     Bhupesh Sharma <bhsharma@redhat.com>
-Cc:     linux-kernel@vger.kernel.org, Mark Rutland <mark.rutland@arm.com>,
-        Kazuhito Hagio <k-hagio@ab.jp.nec.com>,
-        Michael Ellerman <mpe@ellerman.id.au>, x86@kernel.org,
-        Will Deacon <will.deacon@arm.com>,
-        linuxppc-dev@lists.ozlabs.org, kexec@lists.infradead.org,
-        James Morse <james.morse@arm.com>,
-        linux-arm-kernel@lists.infradead.org,
-        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        Boris Petkov <bp@alien8.de>,
-        Thomas Gleixner <tglx@linutronix.de>, bhupesh.linux@gmail.com,
-        Dave Anderson <anderson@redhat.com>,
-        Ingo Molnar <mingo@kernel.org>,
-        Paul Mackerras <paulus@samba.org>
-Subject: Re: [PATCH v2 0/2] Append new variables to vmcoreinfo (PTRS_PER_PGD
- for arm64 and MAX_PHYSMEM_BITS for all archs)
-Message-ID: <20190311090553.GA12130@dhcp-128-65.nay.redhat.com>
-References: <1552212242-9479-1-git-send-email-bhsharma@redhat.com>
+        Mon, 11 Mar 2019 05:08:49 -0400
+Received: from mail02.iobjects.de ([188.40.134.68]:38620 "EHLO
+        mail02.iobjects.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725850AbfCKJIt (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 11 Mar 2019 05:08:49 -0400
+Received: from tux.wizards.de (pD9EBF050.dip0.t-ipconnect.de [217.235.240.80])
+        by mail02.iobjects.de (Postfix) with ESMTPSA id E596741666B0;
+        Mon, 11 Mar 2019 10:08:46 +0100 (CET)
+Received: from [192.168.100.223] (ragnarok.applied-asynchrony.com [192.168.100.223])
+        by tux.wizards.de (Postfix) with ESMTP id 862A5F01604;
+        Mon, 11 Mar 2019 10:08:46 +0100 (CET)
+Subject: Re: [PATCH BUGFIX IMPROVEMENT V2 7/9] block, bfq: print SHARED
+ instead of pid for shared queues in logs
+To:     Paolo Valente <paolo.valente@linaro.org>,
+        Jens Axboe <axboe@kernel.dk>
+Cc:     linux-block@vger.kernel.org, linux-kernel@vger.kernel.org,
+        ulf.hansson@linaro.org, linus.walleij@linaro.org,
+        broonie@kernel.org, bfq-iosched@googlegroups.com,
+        oleksandr@natalenko.name, fra.fra.800@gmail.com,
+        alessio.masola@gmail.com
+References: <20190310181137.2604-1-paolo.valente@linaro.org>
+ <20190310181137.2604-8-paolo.valente@linaro.org>
+From:   =?UTF-8?Q?Holger_Hoffst=c3=a4tte?= <holger@applied-asynchrony.com>
+Organization: Applied Asynchrony, Inc.
+Message-ID: <491be7d2-cbe2-a1f1-e102-b449b3a8ace6@applied-asynchrony.com>
+Date:   Mon, 11 Mar 2019 10:08:46 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.5.3
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <1552212242-9479-1-git-send-email-bhsharma@redhat.com>
-User-Agent: Mutt/1.9.5 (2018-04-13)
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.14
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.41]); Mon, 11 Mar 2019 09:06:11 +0000 (UTC)
+In-Reply-To: <20190310181137.2604-8-paolo.valente@linaro.org>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Bhupesh,
-On 03/10/19 at 03:34pm, Bhupesh Sharma wrote:
-> Changes since v1:
-> ----------------
-> - v1 was sent out as a single patch which can be seen here:
->   http://lists.infradead.org/pipermail/kexec/2019-February/022411.html
-> 
-> - v2 breaks the single patch into two independent patches:
->   [PATCH 1/2] appends 'PTRS_PER_PGD' to vmcoreinfo for arm64 arch, whereas
->   [PATCH 2/2] appends 'MAX_PHYSMEM_BITS' to vmcoreinfo in core kernel code (all archs)
-> 
-> This patchset primarily fixes the regression reported in user-space
-> utilities like 'makedumpfile' and 'crash-utility' on arm64 architecture
-> with the availability of 52-bit address space feature in underlying
-> kernel. These regressions have been reported both on CPUs which don't
-> support ARMv8.2 extensions (i.e. LVA, LPA) and are running newer kernels
-> and also on prototype platforms (like ARMv8 FVP simulator model) which
-> support ARMv8.2 extensions and are running newer kernels.
-> 
-> The reason for these regressions is that right now user-space tools
-> have no direct access to these values (since these are not exported
-> from the kernel) and hence need to rely on a best-guess method of
-> determining value of 'PTRS_PER_PGD' and 'MAX_PHYSMEM_BITS' supported
-> by underlying kernel.
-> 
-> Exporting these values via vmcoreinfo will help user-land in such cases.
-> In addition, as per suggestion from makedumpfile maintainer (Kazu)
-> during v1 review, it makes more sense to append 'MAX_PHYSMEM_BITS' to
-> vmcoreinfo in the core code itself rather than in arm64 arch-specific
-> code, so that the user-space code for other archs can also benefit from
-> this addition to the vmcoreinfo and use it as a standard way of
-> determining 'SECTIONS_SHIFT' value in user-land.
-> 
-> Cc: Mark Rutland <mark.rutland@arm.com>
-> Cc: James Morse <james.morse@arm.com>
-> Cc: Will Deacon <will.deacon@arm.com>
-> Cc: Boris Petkov <bp@alien8.de>
-> Cc: Ingo Molnar <mingo@kernel.org>
-> Cc: Thomas Gleixner <tglx@linutronix.de>
-> Cc: Michael Ellerman <mpe@ellerman.id.au>
-> Cc: Paul Mackerras <paulus@samba.org>
-> Cc: Benjamin Herrenschmidt <benh@kernel.crashing.org>
-> Cc: Dave Anderson <anderson@redhat.com>
-> Cc: Kazuhito Hagio <k-hagio@ab.jp.nec.com>
-> Cc: x86@kernel.org
-> Cc: linuxppc-dev@lists.ozlabs.org
-> Cc: linux-arm-kernel@lists.infradead.org
-> Cc: linux-kernel@vger.kernel.org
-> Cc: kexec@lists.infradead.org
-> 
-> Bhupesh Sharma (2):
->   arm64, vmcoreinfo : Append 'PTRS_PER_PGD' to vmcoreinfo
->   crash_core, vmcoreinfo: Append 'MAX_PHYSMEM_BITS' to vmcoreinfo
-> 
->  arch/arm64/kernel/crash_core.c | 1 +
->  kernel/crash_core.c            | 1 +
->  2 files changed, 2 insertions(+)
-> 
+Hi,
 
-Lianbo's document patch has been merged, would you mind to add vmcoreinfo doc
-patch as well in your series?
+Guess what - more problems ;-)
+This time when building without CONFIG_BFQ_GROUP_IOSCHED, see below..
 
-Thanks
-Dave
+On 3/10/19 7:11 PM, Paolo Valente wrote:
+> From: Francesco Pollicino <fra.fra.800@gmail.com>
+> 
+> The function "bfq_log_bfqq" prints the pid of the process
+> associated with the queue passed as input.
+> 
+> Unfortunately, if the queue is shared, then more than one process
+> is associated with the queue. The pid that gets printed in this
+> case is the pid of one of the associated processes.
+> Which process gets printed depends on the exact sequence of merge
+> events the queue underwent. So printing such a pid is rather
+> useless and above all is often rather confusing because it
+> reports a random pid between those of the associated processes.
+> 
+> This commit addresses this issue by printing SHARED instead of a pid
+> if the queue is shared.
+> 
+> Signed-off-by: Francesco Pollicino <fra.fra.800@gmail.com>
+> Signed-off-by: Paolo Valente <paolo.valente@linaro.org>
+> ---
+>   block/bfq-iosched.c | 10 ++++++++++
+>   block/bfq-iosched.h | 23 +++++++++++++++++++----
+>   2 files changed, 29 insertions(+), 4 deletions(-)
+> 
+> diff --git a/block/bfq-iosched.c b/block/bfq-iosched.c
+> index 500b04df9efa..7d95d9c01036 100644
+> --- a/block/bfq-iosched.c
+> +++ b/block/bfq-iosched.c
+> @@ -2590,6 +2590,16 @@ bfq_merge_bfqqs(struct bfq_data *bfqd, struct bfq_io_cq *bic,
+>   	 *   assignment causes no harm).
+>   	 */
+>   	new_bfqq->bic = NULL;
+> +	/*
+> +	 * If the queue is shared, the pid is the pid of one of the associated
+> +	 * processes. Which pid depends on the exact sequence of merge events
+> +	 * the queue underwent. So printing such a pid is useless and confusing
+> +	 * because it reports a random pid between those of the associated
+> +	 * processes.
+> +	 * We mark such a queue with a pid -1, and then print SHARED instead of
+> +	 * a pid in logging messages.
+> +	 */
+> +	new_bfqq->pid = -1;
+>   	bfqq->bic = NULL;
+>   	/* release process reference to bfqq */
+>   	bfq_put_queue(bfqq);
+> diff --git a/block/bfq-iosched.h b/block/bfq-iosched.h
+> index 829730b96fb2..6410cc9a064d 100644
+> --- a/block/bfq-iosched.h
+> +++ b/block/bfq-iosched.h
+> @@ -32,6 +32,8 @@
+>   #define BFQ_DEFAULT_GRP_IOPRIO	0
+>   #define BFQ_DEFAULT_GRP_CLASS	IOPRIO_CLASS_BE
+>   
+> +#define MAX_PID_STR_LENGTH 12
+> +
+>   /*
+>    * Soft real-time applications are extremely more latency sensitive
+>    * than interactive ones. Over-raise the weight of the former to
+> @@ -1016,13 +1018,23 @@ void bfq_add_bfqq_busy(struct bfq_data *bfqd, struct bfq_queue *bfqq);
+>   /* --------------- end of interface of B-WF2Q+ ---------------- */
+>   
+>   /* Logging facilities. */
+> +static void bfq_pid_to_str(int pid, char *str, int len)
+> +{
+> +	if (pid != -1)
+> +		snprintf(str, len, "%d", pid);
+> +	else
+> +		snprintf(str, len, "SHARED-");
+> +}
+> +
+>   #ifdef CONFIG_BFQ_GROUP_IOSCHED
+>   struct bfq_group *bfqq_group(struct bfq_queue *bfqq);
+>   
+>   #define bfq_log_bfqq(bfqd, bfqq, fmt, args...)	do {			\
+> +	char pid_str[MAX_PID_STR_LENGTH];	\
+> +	bfq_pid_to_str((bfqq)->pid, pid_str, MAX_PID_STR_LENGTH);	\
+>   	blk_add_cgroup_trace_msg((bfqd)->queue,				\
+>   			bfqg_to_blkg(bfqq_group(bfqq))->blkcg,		\
+> -			"bfq%d%c " fmt, (bfqq)->pid,			\
+> +			"bfq%s%c " fmt, pid_str,			\
+>   			bfq_bfqq_sync((bfqq)) ? 'S' : 'A', ##args);	\
+>   } while (0)
+>   
+> @@ -1033,10 +1045,13 @@ struct bfq_group *bfqq_group(struct bfq_queue *bfqq);
+>   
+>   #else /* CONFIG_BFQ_GROUP_IOSCHED */
+>   
+> -#define bfq_log_bfqq(bfqd, bfqq, fmt, args...)	\
+> -	blk_add_trace_msg((bfqd)->queue, "bfq%d%c " fmt, (bfqq)->pid,	\
+> +#define bfq_log_bfqq(bfqd, bfqq, fmt, args...) do {	\
+> +	char pid_str[MAX_PID_STR_LENGTH];	\
+> +	bfq_pid_to_str((bfqq)->pid, pid_str, MAX_PID_STR_LENGTH);	\
+> +	blk_add_trace_msg((bfqd)->queue, "bfq%s%c " fmt, pid_str,	\
+>   			bfq_bfqq_sync((bfqq)) ? 'S' : 'A',		\
+> -				##args)
+> +				##args)		\
+---------------------------------------^ compilation error due to missing ;
+
+> +} while (0)
+>   #define bfq_log_bfqg(bfqd, bfqg, fmt, args...)		do {} while (0)
+^^^^^^^^^^^^^^^^^^^^^^^^
+Here you re- and effectively undefine the previous new bfq_log_bfqq()
+definition with an empty block; I think you wanted to delete the second
+(empty) definition, otherwise the new code won't do much.
+
+Finally there is now a warning at bfq-cgroup.c:25 that bfq_pid_to_str()
+is defined but not used (in that compilation unit) since it is defined
+unconditionally for both cases of CONFIG_BFQ_GROUP_IOSCHED, which is
+required for bfq-cgroup.c. Since reordering the includes there won't work
+due to ifdef overlaps, the easiest fix for that is to mark bfq_pid_to_str()
+as "static inline", as already suggested by Oleksandr.
+
+With those changes it builds.
+
+cheers,
+Holger
