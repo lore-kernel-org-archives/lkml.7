@@ -2,116 +2,131 @@ Return-Path: <SRS0=FxTY=RO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_MUTT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9A0B8C43381
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 Mar 2019 16:20:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B9EA8C43381
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 Mar 2019 16:20:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 59DF72084F
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 Mar 2019 16:20:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 78A962087F
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 Mar 2019 16:20:13 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="iTN3/uV8"
+	dkim=pass (2048-bit key) header.d=nifty.com header.i=@nifty.com header.b="Jbr9GUCr"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727519AbfCKQUB (ORCPT
+        id S1727660AbfCKQUL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 11 Mar 2019 12:20:01 -0400
-Received: from aserp2130.oracle.com ([141.146.126.79]:59074 "EHLO
-        aserp2130.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726675AbfCKQUA (ORCPT
+        Mon, 11 Mar 2019 12:20:11 -0400
+Received: from conssluserg-02.nifty.com ([210.131.2.81]:40533 "EHLO
+        conssluserg-02.nifty.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726641AbfCKQUL (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 11 Mar 2019 12:20:00 -0400
-Received: from pps.filterd (aserp2130.oracle.com [127.0.0.1])
-        by aserp2130.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x2BGJVe5110686;
-        Mon, 11 Mar 2019 16:19:54 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=date : from : to : cc
- : subject : message-id : mime-version : content-type; s=corp-2018-07-02;
- bh=n6Mc/pIyRxKJquEGA+zfhNGg7HTntORVqLlWN5uTjbs=;
- b=iTN3/uV8Hc63yfZl8VzmDjWMHivwVw4g7mgEK1z8e6/gfDA7iS2lDyq82qm13oOu3Kes
- VpHlAWwn+qJ2Q9RHRguJBnuLPb/8BsUqMi3DqGVzQ5+uaca0q8SdKf+ZGPUEPSW1tuYE
- +pj+Kl0TJfAOWzFVUeBAj6z7xdzuEaEl+Fi8Sh5gGgtiLYTmJB7+8IHthGsQFJ76KxxG
- VMLw+TB9+Rlyu9fkT1d5PrQZ+GsyBnrw2btmAu8v+/kfNq0a5uyPWXaRbpkFReX6eQ59
- eJT8fXw8d6fDDEIq/wWDI24DMTMTSaar5u+HV631P+oidDdQv0fVS9/uCt8qCaOC9GOP Mw== 
-Received: from userv0021.oracle.com (userv0021.oracle.com [156.151.31.71])
-        by aserp2130.oracle.com with ESMTP id 2r430efyrd-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Mon, 11 Mar 2019 16:19:54 +0000
-Received: from userv0122.oracle.com (userv0122.oracle.com [156.151.31.75])
-        by userv0021.oracle.com (8.14.4/8.14.4) with ESMTP id x2BGJrYH029487
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Mon, 11 Mar 2019 16:19:53 GMT
-Received: from abhmp0018.oracle.com (abhmp0018.oracle.com [141.146.116.24])
-        by userv0122.oracle.com (8.14.4/8.14.4) with ESMTP id x2BGJr5D011004;
-        Mon, 11 Mar 2019 16:19:53 GMT
-Received: from localhost (/10.159.224.240)
-        by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Mon, 11 Mar 2019 16:19:52 +0000
-Date:   Mon, 11 Mar 2019 09:19:48 -0700
-From:   "Darrick J. Wong" <darrick.wong@oracle.com>
-To:     linux-xfs@vger.kernel.org
-Cc:     Nathan Chancellor <natechancellor@gmail.com>,
-        linux-kernel@vger.kernel.org,
-        Nick Desaulniers <ndesaulniers@google.com>,
-        clang-built-linux@googlegroups.com
-Subject: [PATCH 1/2] xfs: zero initialize highstale and lowstale in
- xfs_dir2_leaf_addname
-Message-ID: <20190311161948.GC4359@magnolia>
+        Mon, 11 Mar 2019 12:20:11 -0400
+Received: from mail-vs1-f41.google.com (mail-vs1-f41.google.com [209.85.217.41]) (authenticated)
+        by conssluserg-02.nifty.com with ESMTP id x2BGK473001869;
+        Tue, 12 Mar 2019 01:20:04 +0900
+DKIM-Filter: OpenDKIM Filter v2.10.3 conssluserg-02.nifty.com x2BGK473001869
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nifty.com;
+        s=dec2015msa; t=1552321205;
+        bh=J2EdVSMmdVb73H7hclqhuXeBYWCnyXXRAAl39GsBCyU=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=Jbr9GUCrbDqCMDuTMdRmqH0KTMCkskLwi9Ya5m0mLdFbZo2Oub59T6hLLURA1oqK8
+         6FbHfQGBHqScjvs7XBenKXupoH0427lazeYw51SfIgWrvJbrjHCi0FXCKn7KSPRNAl
+         IQmmmkiqLR9zVE+rbT08sjcRRVKTn6pcrqQgxBc3zlBaHkTAzivb7dpYiH4liIDFum
+         0dkOvqrtoN44sToT7hmb7lBlr2Ny2QKAaGPkbnEhFoO2wke2FIKVospdOS3SeM3rbF
+         uG596JuI48+HixMgOCu+9mWLnbzWBPvRaG+JjRFjbG9FAAb7ZrUVc7rrJYyyKYcyOQ
+         DS6aFdDvB4x6w==
+X-Nifty-SrcIP: [209.85.217.41]
+Received: by mail-vs1-f41.google.com with SMTP id b17so3060619vsr.13;
+        Mon, 11 Mar 2019 09:20:04 -0700 (PDT)
+X-Gm-Message-State: APjAAAWw+O5Z2AItegNRCWRIVpFxz1OCbaIc2GVBP8vi9mMJW+qaRYdn
+        uEvMTimM75YQ1ukHg9Ebnq8CfGzneFlAUobjrVY=
+X-Google-Smtp-Source: APXvYqy8Hp4yuoC9tjYEKoLSVSOg7YGAF2RZugJBbadOrjo58qsbNZdSq7uwdIITP/hALlq2dVQK6TEwY+Gy/AD3IAw=
+X-Received: by 2002:a67:7bd3:: with SMTP id w202mr17253529vsc.179.1552321203680;
+ Mon, 11 Mar 2019 09:20:03 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-User-Agent: Mutt/1.9.4 (2018-02-28)
-X-Proofpoint-Virus-Version: vendor=nai engine=5900 definitions=9192 signatures=668685
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
- suspectscore=1 phishscore=0 bulkscore=0 spamscore=0 clxscore=1015
- lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=890 adultscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1810050000
- definitions=main-1903110117
+References: <1552049064-32044-1-git-send-email-info@metux.net>
+In-Reply-To: <1552049064-32044-1-git-send-email-info@metux.net>
+From:   Masahiro Yamada <yamada.masahiro@socionext.com>
+Date:   Tue, 12 Mar 2019 01:19:27 +0900
+X-Gmail-Original-Message-ID: <CAK7LNARUc3CQXDKogH0MVWCbWatQK0-0PRrG5QbOaz+bb_rMsA@mail.gmail.com>
+Message-ID: <CAK7LNARUc3CQXDKogH0MVWCbWatQK0-0PRrG5QbOaz+bb_rMsA@mail.gmail.com>
+Subject: Re: Debian build polishing
+To:     "Enrico Weigelt, metux IT consult" <info@metux.net>
+Cc:     Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Michal Marek <michal.lkml@markovi.net>,
+        Robo Bot <apw@canonical.com>, Joe Perches <joe@perches.com>,
+        Linux Kbuild mailing list <linux-kbuild@vger.kernel.org>,
+        linux-riscv@lists.infradead.org,
+        Ben Hutchings <ben@decadent.org.uk>,
+        Riku Voipio <riku.voipio@linaro.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Darrick J. Wong <darrick.wong@oracle.com>
+(+CC more debian folks)
 
-Smatch complains about the following:
 
-fs/xfs/libxfs/xfs_dir2_leaf.c:848 xfs_dir2_leaf_addname() error:
-uninitialized symbol 'lowstale'.
+On Fri, Mar 8, 2019 at 9:45 PM Enrico Weigelt, metux IT consult
+<info@metux.net> wrote:
+>
+> Hi folks,
+>
+>
+> here're some patches for polishing up the Debian packaging stuff,
+> so it can be directly used w/ usual Debian machinery like
+> pbuilder, git-buildpackage, dck-buildpackage, etc.
+>
+> These expect debian/rules to exist in the unpacked/patched tree
+> and drive the whole build. Currently 'make deb-pkg' does it in
+> the opposite direction - it creates debian/rules and fills in
+> some data, that's derived from .config etc.
+>
+> My goal is building the kernel package in exactly the same way as
+> any other Debian package - so there must be a debian/rules as the
+> primary entry point. To do that, w/ minimal change and w/o breaking
+> the existing machinery, I'm going in several steps:
+>
+> #1: add Makefile rules for retrieving missing makefile-internal
+>     variables kernel config system .config (eg. kernel arch).
+>
+>     this could be used for other build systems, too.
+>     just call: `make kernelarch` or `make kernellocalversion`
+>
+> #2: add an env variable for changing the name of the rules file
+>     generated by mkdebian. When coming from an existing rules
+>     file, we can prevent this from being overwritten.
+>
+> #3: add a generic debian/rules file, that calls mkdebian to
+>     create the remaining debian control files (w/ rules redirected
+>     into nirvana)
+>
+> The existing `make deb-pkg` is bypassed and remains ontouched.
+>
+> One point still puzzling me: once the debian/rules is applied and
+> somebody calls `make deb-pkg`, he'll end up w/ unclean tree, as
+> now a git-tracked file is changed.
 
-fs/xfs/libxfs/xfs_dir2_leaf.c:849 xfs_dir2_leaf_addname() error:
-uninitialized symbol 'highstale'.
 
-I don't think there's any incorrect behavior associated with the
-uninitialized variable, but as the author of the previous zero-init
-patch points out, it's best not to be passing around pointers to
-uninitialized stack areas.
+Then, setlocalversion will set -dirty flag.
 
-Signed-off-by: Darrick J. Wong <darrick.wong@oracle.com>
----
- fs/xfs/libxfs/xfs_dir2_leaf.c |    4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+Committing debian/rules looks questionable to me.
 
-diff --git a/fs/xfs/libxfs/xfs_dir2_leaf.c b/fs/xfs/libxfs/xfs_dir2_leaf.c
-index 9a3767818c50..2abf945e5844 100644
---- a/fs/xfs/libxfs/xfs_dir2_leaf.c
-+++ b/fs/xfs/libxfs/xfs_dir2_leaf.c
-@@ -574,7 +574,7 @@ xfs_dir2_leaf_addname(
- 	xfs_dir2_data_unused_t	*dup;		/* data unused entry */
- 	int			error;		/* error return value */
- 	int			grown;		/* allocated new data block */
--	int			highstale;	/* index of next stale leaf */
-+	int			highstale = 0;	/* index of next stale leaf */
- 	int			i;		/* temporary, index */
- 	int			index;		/* leaf table position */
- 	struct xfs_buf		*lbp;		/* leaf's buffer */
-@@ -583,7 +583,7 @@ xfs_dir2_leaf_addname(
- 	xfs_dir2_leaf_entry_t	*lep;		/* leaf entry table pointer */
- 	int			lfloglow;	/* low leaf logging index */
- 	int			lfloghigh;	/* high leaf logging index */
--	int			lowstale;	/* index of prev stale leaf */
-+	int			lowstale = 0;	/* index of prev stale leaf */
- 	xfs_dir2_leaf_tail_t	*ltp;		/* leaf tail pointer */
- 	int			needbytes;	/* leaf block bytes needed */
- 	int			needlog;	/* need to log data header */
+
+> Perhaps I just change deb-pkg to call debian/rules then, but I'd
+> like to hear your oppinions about this, before.
+>
+>
+> What do you think about that ?
+>
+>
+> --mtx
+>
+>
+
+
+-- 
+Best Regards
+Masahiro Yamada
