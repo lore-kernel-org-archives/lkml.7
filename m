@@ -6,48 +6,48 @@ X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 97C67C43381
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 Mar 2019 13:19:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CF7C9C4360F
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 Mar 2019 13:19:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 70C7820657
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 Mar 2019 13:19:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AA80120657
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 Mar 2019 13:19:32 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727498AbfCKNTa (ORCPT
+        id S1727524AbfCKNTb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 11 Mar 2019 09:19:30 -0400
-Received: from mout.kundenserver.de ([217.72.192.74]:48041 "EHLO
+        Mon, 11 Mar 2019 09:19:31 -0400
+Received: from mout.kundenserver.de ([212.227.17.10]:43373 "EHLO
         mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726826AbfCKNT3 (ORCPT
+        with ESMTP id S1727360AbfCKNT3 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Mon, 11 Mar 2019 09:19:29 -0400
 Received: from orion.localdomain ([95.115.159.19]) by mrelayeu.kundenserver.de
  (mreue109 [212.227.15.183]) with ESMTPSA (Nemesis) id
- 1M6lxY-1h8Jhx2fle-008Hg5 for <linux-kernel@vger.kernel.org>; Mon, 11 Mar 2019
- 14:19:27 +0100
+ 1Mzhax-1gqUxF0ljl-00vj8U for <linux-kernel@vger.kernel.org>; Mon, 11 Mar 2019
+ 14:19:28 +0100
 From:   "Enrico Weigelt, metux IT consult" <info@metux.net>
 To:     linux-kernel@vger.kernel.org
-Subject: [PATCH 001/114] drivers: gpio: Kconfig: pedantic formatting
-Date:   Mon, 11 Mar 2019 14:17:13 +0100
-Message-Id: <1552310346-7629-2-git-send-email-info@metux.net>
+Subject: [PATCH 005/114] fs: 9p: Kconfig: pedantic formatting
+Date:   Mon, 11 Mar 2019 14:17:17 +0100
+Message-Id: <1552310346-7629-6-git-send-email-info@metux.net>
 X-Mailer: git-send-email 1.9.1
 In-Reply-To: <1552310346-7629-1-git-send-email-info@metux.net>
 References: <1552310346-7629-1-git-send-email-info@metux.net>
-X-Provags-ID: V03:K1:ejjcvAzyls6sHQOvoDOcMZJC1qbAC+6RBRvAklbon/vzDh6qBaF
- mc3NUhINuTrdrYaDyGwkp4fVvlaMia3Utx8zo9h0ZN/gdWmuFOsbZd9fwrt8Yuki8T4CGJ3
- 26h9lNjefgHxqLHIIAoSYFxmV4KMB5iy8aZpPB2OL6V2RLC9o4QvSU9XRKqwasj7+N3EtRv
- HwC9hhqr98B9ChO17NARw==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:PbSyNX7pOM0=:qSyjP4hH5WfRkvEaP87N80
- yR7t1EWQpcf8GJ7npONPZ4mOC7jyRsmOdXJ4CGZwcvRXRSLJDdKsZt3TkFlLgXa7GmncFZaaW
- 2Eewt/UwxfNZBRHkr+LRPNprRVv82u8oYlW6xG51HFX26gvgWQbKsrtfwRHphskuK+LeHbRxx
- /lt4Ab4z6O5fGcCSBV9dnxO5TuJ9Hd5YjN9skuTR8O/lJjIj/zGEUOfaHF9UPxSTvGqQTKSqL
- YJRQS9ZcrO35KVGug+6zxTM2n5TCoUL3EcPXnV9oPxJAhpnmv4oVRGVmQaZbg+14ePlBm/XiL
- CG8zC2+rLojSPf+S/mQ/g85G0Y7dzNfinQMFCsTH/RRBw2OaLkrxEKbusKNtxVcMtVujZK2o4
- rHjpSrbGOVkClMwsTy8CNzdhUAVDwZDTcukFO5w4JMeA7MubwsjE2ucwrZt3tsnaIoLIyRJ42
- TdJx5OKG/qmcdoM9BsZdtiHW6LeppWp6SfTyToTKxY8DHTO7HRrhYmyOsEaCsQYoBau2N/uzN
- Pyp0LJ/YOfR9aMCVsoxNS9xqGlDo4ZWu3QIogNCpr/1u5q2iYwqLWPuJztN83S2NHxuihiFLa
- gFrioo0eNWNKMaZrC7c/yS37X1zGbA0nPaz9JL6M05zX1E7vvHvyTmIR4gOs9rN7w057riONA
- 1gvdBV2U7p3BFn7TmbrEMndQNPWe9qrTE/10j2uFDjhiPExKlEg+hm0gmdLEtMwUOuOhdavpo
- lho0cWPY6jZQWu8HvvFKhBS55vV+xUJtKYVx6w==
+X-Provags-ID: V03:K1:R30D1OaZ5Nols/dyP35MH8/SF6ijtK6c+BdOzVZJVqgN/hz84Vj
+ g0egd7d++AYjbqkrM4Z1L33/jsfoDSfEWlMxZsWmKSzTVJv/jG1VZc4RgwsbTQK5q/kAWg/
+ cFVKUo4RAvp6IaL/4XpcO4ysMYPhbgszqSfsy3fLfYPbR+i5R09p3C8Q7R8jvCI0OYkMIPy
+ OKn7VtvqUxrDm0zGzBPBQ==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:863297sOTmI=:gjmddDyQhiXRwr16Sxc2vg
+ 8lxr1jMaREVSayeUwJPpzsPvxTbcyl58oH1DPsK3e3xNA4XbjQoJqkU483gWRz9XT+3vgYUOx
+ M7sL6jdGE++CRpW3rzDf9gVs/27AaxOQVxKUO1KfgEyVcLkoyNMX9/Fl+62/sz7eW/XjtQFDu
+ yQSqwevQDt4NpSKRtI58hQ+UF9S4BVZGB8pJLrsWOmW8e9EDbTbcJDgT6cJgABJVGYgZTdEx9
+ KP0Zi/HnnJ+k7r8lnPdxGjiBTy+gRCtQujeUuuTedfANke6Iv79ksDcfz7iQ02y/OzX4Rb1Vs
+ viKcLt7m3pUa42ZizrS07YrHlVf9SSap3wKfYX31fJ7wK8UaO/aJVEg3GQoFbQZT4KP+Mwrcp
+ WNeuTV0QM+RF38cTmccaQhZH+uL0H5jZ3ZP3JbZCN4zO3V4PctjqtMAqUlVCsSJ81rZ2mvr5F
+ l3Nw+vLdIuTKOSviDtFI3BRtATYw4eo4h1Lg2Cj29ShCw80IuP6e1aoMvj06gcrw6ZK8yt12N
+ aTM0cM83BrbdsYxUn/6jq8YVYZii8oVKCtL3rlF0FrkeFdT+wNhX0aywis1baQAdKArgfqZkj
+ Ax5T0IavZHrYCGqDhwIn2BepRUhP2rKAMCqFfR8AmUaRTDgUSYDtM9GtIhbi7fiuzk+ddKfdr
+ fidLTQjOh5LmG2e8nJUdb3D9EKZb9LrGcDwbb0eTqmI+2/kkqZRLT/9aDgz3kTxT8l0QHpgDM
+ lrfn8IhbhQlM5YZ/buDALq4VKdpu3p0pF/6QgA==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
@@ -58,125 +58,37 @@ Great White Handkerchief come around and clean it up.
 
 Signed-off-by: Enrico Weigelt, metux IT consult <info@metux.net>
 ---
- drivers/gpio/Kconfig | 50 +++++++++++++++++++++++++-------------------------
- 1 file changed, 25 insertions(+), 25 deletions(-)
+ fs/9p/Kconfig | 20 ++++++++++----------
+ 1 file changed, 10 insertions(+), 10 deletions(-)
 
-diff --git a/drivers/gpio/Kconfig b/drivers/gpio/Kconfig
-index 3f50526..c5420e6 100644
---- a/drivers/gpio/Kconfig
-+++ b/drivers/gpio/Kconfig
-@@ -27,12 +27,12 @@ config GPIOLIB_FASTPATH_LIMIT
- 	range 32 512
- 	default 512
- 	help
--	   This adjusts the point at which certain APIs will switch from
--	   using a stack allocated buffer to a dynamically allocated buffer.
-+	  This adjusts the point at which certain APIs will switch from
-+	  using a stack allocated buffer to a dynamically allocated buffer.
+diff --git a/fs/9p/Kconfig b/fs/9p/Kconfig
+index 11045d8..e416057 100644
+--- a/fs/9p/Kconfig
++++ b/fs/9p/Kconfig
+@@ -31,13 +31,13 @@ endif
  
--	   You shouldn't need to change this unless you really need to
--	   optimize either stack space or performance. Change this carefully
--	   since setting an incorrect value could cause stack corruption.
-+	  You shouldn't need to change this unless you really need to
-+	  optimize either stack space or performance. Change this carefully
-+	  since setting an incorrect value could cause stack corruption.
  
- config OF_GPIO
- 	def_bool y
-@@ -320,7 +320,7 @@ config GPIO_MENZ127
- 	depends on MCB
- 	select GPIO_GENERIC
- 	help
--	 Say yes here to support the MEN 16Z127 GPIO Controller
-+	  Say yes here to support the MEN 16Z127 GPIO Controller
- 
- config GPIO_MM_LANTIQ
- 	bool "Lantiq Memory mapped GPIOs"
-@@ -862,11 +862,11 @@ config GPIO_MAX732X
- 	  Input and Output (designed by 'P'). The combinations are listed
- 	  below:
- 
--	  8 bits:	max7319 (8I), max7320 (8O), max7321 (8P),
--		  	max7322 (4I4O), max7323 (4P4O)
-+	  8 bits:       max7319 (8I), max7320 (8O), max7321 (8P),
-+	                max7322 (4I4O), max7323 (4P4O)
- 
--	  16 bits:	max7324 (8I8O), max7325 (8P8O),
--		  	max7326 (4I12O), max7327 (4P12O)
-+	  16 bits:      max7324 (8I8O), max7325 (8P8O),
-+	                max7326 (4I12O), max7327 (4P12O)
- 
- 	  Board setup code must specify the model to use, and the start
- 	  number for these GPIOs.
-@@ -893,17 +893,17 @@ config GPIO_PCA953X
- 	  SMBus I/O expanders, made mostly by NXP or TI.  Compatible
- 	  models include:
- 
--	  4 bits:	pca9536, pca9537
-+	  4 bits:       pca9536, pca9537
- 
--	  8 bits:	max7310, max7315, pca6107, pca9534, pca9538, pca9554,
--			pca9556, pca9557, pca9574, tca6408, tca9554, xra1202
-+	  8 bits:       max7310, max7315, pca6107, pca9534, pca9538, pca9554,
-+	                pca9556, pca9557, pca9574, tca6408, tca9554, xra1202
- 
--	  16 bits:	max7312, max7313, pca9535, pca9539, pca9555, pca9575,
--			tca6416
-+	  16 bits:      max7312, max7313, pca9535, pca9539, pca9555, pca9575,
-+	                tca6416
- 
--	  24 bits:	tca6424
-+	  24 bits:      tca6424
- 
--	  40 bits:	pca9505, pca9698
-+	  40 bits:      pca9505, pca9698
- 
- config GPIO_PCA953X_IRQ
- 	bool "Interrupt controller support for PCA953x"
-@@ -925,7 +925,7 @@ config GPIO_PCF857X
- 
- 	  8 bits:   pcf8574, pcf8574a, pca8574, pca8574a,
- 	            pca9670, pca9672, pca9674, pca9674a,
--	  	    max7328, max7329
-+	            max7328, max7329
- 
- 	  16 bits:  pcf8575, pcf8575c, pca8575,
- 	            pca9671, pca9673, pca9675
-@@ -1047,9 +1047,9 @@ config HTC_EGPIO
- 	bool "HTC EGPIO support"
- 	depends on GPIOLIB && ARM
- 	help
--	    This driver supports the CPLD egpio chip present on
--	    several HTC phones.  It provides basic support for input
--	    pins, output pins, and irqs.
-+	  This driver supports the CPLD egpio chip present on
-+	  several HTC phones.  It provides basic support for input
-+	  pins, output pins, and irqs.
- 
- config GPIO_JANZ_TTL
- 	tristate "Janz VMOD-TTL Digital IO Module"
-@@ -1085,7 +1085,7 @@ config GPIO_LP873X
- 	  on LP873X PMICs.
- 
- 	  This driver can also be built as a module. If so, the module will be
--          called gpio-lp873x.
-+	  called gpio-lp873x.
- 
- config GPIO_LP87565
- 	tristate "TI LP87565 GPIO"
-@@ -1436,9 +1436,9 @@ config GPIO_VIPERBOARD
- 	  Say yes here to access the GPIO signals of Nano River
- 	  Technologies Viperboard. There are two GPIO chips on the
- 	  board: gpioa and gpiob.
--          See viperboard API specification and Nano
--          River Tech's viperboard.h for detailed meaning
--          of the module parameters.
-+	  See viperboard API specification and Nano
-+	  River Tech's viperboard.h for detailed meaning
-+	  of the module parameters.
- 
- endmenu
- 
+ config 9P_FS_SECURITY
+-        bool "9P Security Labels"
+-        depends on 9P_FS
+-        help
+-          Security labels support alternative access control models
+-          implemented by security modules like SELinux.  This option
+-          enables an extended attribute handler for file security
+-          labels in the 9P filesystem.
+-
+-          If you are not using a security module that requires using
+-          extended attributes for file security labels, say N.
++	bool "9P Security Labels"
++	depends on 9P_FS
++	help
++	  Security labels support alternative access control models
++	  implemented by security modules like SELinux.  This option
++	  enables an extended attribute handler for file security
++	  labels in the 9P filesystem.
++
++	  If you are not using a security module that requires using
++	  extended attributes for file security labels, say N.
 -- 
 1.9.1
 
