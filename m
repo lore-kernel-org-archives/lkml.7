@@ -2,96 +2,87 @@ Return-Path: <SRS0=FxTY=RO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6399BC43381
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 Mar 2019 15:35:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 65243C43381
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 Mar 2019 15:36:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 28E1B20657
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 Mar 2019 15:35:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DBA1C2084F
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 Mar 2019 15:36:47 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="HU8/vVft"
+	dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b="bkGaZ4y+"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727362AbfCKPf0 (ORCPT
+        id S1727501AbfCKPgq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 11 Mar 2019 11:35:26 -0400
-Received: from mail-pg1-f195.google.com ([209.85.215.195]:46678 "EHLO
-        mail-pg1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726546AbfCKPf0 (ORCPT
+        Mon, 11 Mar 2019 11:36:46 -0400
+Received: from perceval.ideasonboard.com ([213.167.242.64]:59806 "EHLO
+        perceval.ideasonboard.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726546AbfCKPgq (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 11 Mar 2019 11:35:26 -0400
-Received: by mail-pg1-f195.google.com with SMTP id a22so4295449pgg.13
-        for <linux-kernel@vger.kernel.org>; Mon, 11 Mar 2019 08:35:26 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=message-id:date:from:to:cc:subject:mime-version:content-disposition
-         :user-agent;
-        bh=RXazlCLC+fh5A8rzoHGP/wwJ5mYIgXpL91wntwPhYIY=;
-        b=HU8/vVftgSgrcjDC4iI3rpVhwMkdyii723axAkvGwVEp0rdGFG8GhqFOfshDdP2gM6
-         Ew2VbsaX8QJVCAMNoqmbCkahw9desLXWnr2XPIFVH+9X+ql+GNss+fZgkexeWMf2UWIQ
-         GsBFYWqkrUzH7zVA2+L7zjryn7MwNOORMReAFKCh2hk+NHM1xIATbZkncpKytXMxgV+j
-         oNHSScYp4ljM7eGY7dVh+WPaImEPIAT1JpPiHJFkrcnoVhCXCgxbME/Fp9k4hafqoniV
-         Oect2xrqNTLbVP1PszRrvznRDuSAUENSz4KPg5tHMjO3hSdl+vRSsJEUnzNc7sI19ubA
-         Bfsg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:message-id:date:from:to:cc:subject:mime-version
-         :content-disposition:user-agent;
-        bh=RXazlCLC+fh5A8rzoHGP/wwJ5mYIgXpL91wntwPhYIY=;
-        b=I7FiixndZ1tFZRg56XwwvlG5MuIitUK4JVYEF/S+jYT6Pt6p3ESjwD4+ZbaYgdyO2b
-         hecNLC9UcRS6XEVuQJx+nQmsVsSfhEmBU8pkcQzmwyWvF4HVEdnpP5V4r+YcGvuw1/Jl
-         +n4jxIt221PtTYCPdKUhwHHCNfy08nj0soBtBkCpnc9IOAjmuA0nZTbovegGyrHqM1tp
-         DFagcykG00Kn6n4Ni0mL/keE0NePEyxmLoDEx0Dmr2cKkdR6FV6vUndJ8QtzszCaE+iV
-         WUT11qDd5xpYqRlthF2Zb71suLysbnyzDCz8KK0wm4Fuo7lVbt6v6990joQeAUp5nw5N
-         Nimw==
-X-Gm-Message-State: APjAAAWtsOnc+ECnHtYahTV44Sd0EddalOJiMkWm/LCzDVoQgEjMr4Ym
-        huj7qqcOwkSCtE4c3R0bUq4=
-X-Google-Smtp-Source: APXvYqytdj/bkRYSi1csXc8M0KUgIGkhFeEAUCooZtXMCleT2dbNnrWnPITkyJIKiodSgu8KI8/pSQ==
-X-Received: by 2002:a62:110c:: with SMTP id z12mr33982851pfi.184.1552318525702;
-        Mon, 11 Mar 2019 08:35:25 -0700 (PDT)
-Received: from sabyasachi ([2409:4061:2010:45b9:a4f9:f674:88cd:e152])
-        by smtp.gmail.com with ESMTPSA id a2sm8347917pff.58.2019.03.11.08.35.20
-        (version=TLS1 cipher=ECDHE-RSA-AES128-SHA bits=128/128);
-        Mon, 11 Mar 2019 08:35:25 -0700 (PDT)
-Message-ID: <5c86803d.1c69fb81.1a7c6.2b78@mx.google.com>
-X-Google-Original-Message-ID: <20190311153515.GA8300@sabyasachi.linux@gmail.com>
-Date:   Mon, 11 Mar 2019 21:05:15 +0530
-From:   Sabyasachi Gupta <sabyasachi.linux@gmail.com>
-To:     akpm@linux-foundation.org
-Cc:     dhowells@redhat.com, linux-cachefs@redhat.com,
-        linux-kernel@vger.kernel.org, jrdr.linux@gmail.com
-Subject: [PATCH] fs/cachefiles/namei.c: Remove duplicate header
+        Mon, 11 Mar 2019 11:36:46 -0400
+Received: from localhost.localdomain (cpc89242-aztw30-2-0-cust488.18-1.cable.virginm.net [86.31.129.233])
+        by perceval.ideasonboard.com (Postfix) with ESMTPSA id E7BB99B8;
+        Mon, 11 Mar 2019 16:36:43 +0100 (CET)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ideasonboard.com;
+        s=mail; t=1552318604;
+        bh=jld2dr+xMjLXgYp1ZexxHsn0GeElgKdzqgi29mbBwwU=;
+        h=From:To:Cc:Subject:Date:From;
+        b=bkGaZ4y+h/HGxvSxMYyS4J7iqt/gIOWYRCLQOYJ3QDxgMz8+VruoaP+F3g7PLoBRt
+         l2rqY7R5ZRl3rBYKhuhCzVLKyafB180s57sPLoKr52Xf2W/kQxia6NenPG6l1Vs2Ox
+         p7V+SM14X2qm8qPeYExjaUU8tEFBP+DHdEHeAkwM=
+From:   Kieran Bingham <kieran.bingham+renesas@ideasonboard.com>
+To:     linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org
+Cc:     Kieran Bingham <kieran.bingham+renesas@ideasonboard.com>,
+        Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
+        Maxime Ripard <maxime.ripard@bootlin.com>,
+        Sean Paul <sean@poorly.run>, David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>
+Subject: [PATCH] gpu: drm: atomic_helper: Fix spelling errors
+Date:   Mon, 11 Mar 2019 15:36:39 +0000
+Message-Id: <20190311153639.979-1-kieran.bingham+renesas@ideasonboard.com>
+X-Mailer: git-send-email 2.19.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-User-Agent: Mutt/1.5.24 (2015-08-30)
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Remove linux/xattr.h which is included more than once
+Trivial fixes identified while working on the DRM code.
 
-Signed-off-by: Sabyasachi Gupta <sabyasachi.linux@gmail.com>
+  s/artifically/artificially/
+  s/achive/acheive/
+
+Signed-off-by: Kieran Bingham <kieran.bingham+renesas@ideasonboard.com>
 ---
- fs/cachefiles/namei.c | 1 -
- 1 file changed, 1 deletion(-)
+ drivers/gpu/drm/drm_atomic_helper.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/fs/cachefiles/namei.c b/fs/cachefiles/namei.c
-index 95983c7..edecb7f 100644
---- a/fs/cachefiles/namei.c
-+++ b/fs/cachefiles/namei.c
-@@ -20,7 +20,6 @@
- #include <linux/namei.h>
- #include <linux/security.h>
- #include <linux/slab.h>
--#include <linux/xattr.h>
- #include "internal.h"
+diff --git a/drivers/gpu/drm/drm_atomic_helper.c b/drivers/gpu/drm/drm_atomic_helper.c
+index 540a77a2ade9..ccb278ed1bf8 100644
+--- a/drivers/gpu/drm/drm_atomic_helper.c
++++ b/drivers/gpu/drm/drm_atomic_helper.c
+@@ -1752,7 +1752,7 @@ int drm_atomic_helper_commit(struct drm_device *dev,
+ 	 *
+ 	 * NOTE: Commit work has multiple phases, first hardware commit, then
+ 	 * cleanup. We want them to overlap, hence need system_unbound_wq to
+-	 * make sure work items don't artifically stall on each another.
++	 * make sure work items don't artificially stall on each another.
+ 	 */
  
- #define CACHEFILES_KEYBUF_SIZE 512
+ 	drm_atomic_state_get(state);
+@@ -1786,7 +1786,7 @@ EXPORT_SYMBOL(drm_atomic_helper_commit);
+  *
+  * Asynchronous workers need to have sufficient parallelism to be able to run
+  * different atomic commits on different CRTCs in parallel. The simplest way to
+- * achive this is by running them on the &system_unbound_wq work queue. Note
++ * acheive this is by running them on the &system_unbound_wq work queue. Note
+  * that drivers are not required to split up atomic commits and run an
+  * individual commit in parallel - userspace is supposed to do that if it cares.
+  * But it might be beneficial to do that for modesets, since those necessarily
 -- 
-2.7.4
+2.19.1
 
