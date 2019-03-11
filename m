@@ -2,78 +2,112 @@ Return-Path: <SRS0=FxTY=RO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_MUTT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3D5F8C10F06
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 Mar 2019 17:21:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 67BCEC43381
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 Mar 2019 17:22:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 107DF20643
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 Mar 2019 17:21:48 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1552324908;
-	bh=irusktoUqBxIGna2TUrk+42IOTws/SJm4zdVFovg4U8=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=PUWlJE3fuBkwW+yqX5Ir/yKrvq/KgFuLSF+G6tPpmGucVlM3Hnctu250XoNQLOMxz
-	 RN3DQarUD6qAHOQX5AFpGzy6GSkcALN59WBo6P5J7oKtozVavJlhk5sEUfiezBFZW8
-	 xKoiuobKX3S/eCcq+M8Zr9kzthFbfXeetvVibJLA=
+	by mail.kernel.org (Postfix) with ESMTP id 3D8032063F
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 Mar 2019 17:22:18 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727498AbfCKRVq (ORCPT
+        id S1727731AbfCKRWQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 11 Mar 2019 13:21:46 -0400
-Received: from mail.kernel.org ([198.145.29.99]:50256 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727110AbfCKRVq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 11 Mar 2019 13:21:46 -0400
-Received: from localhost (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 89D6F2063F;
-        Mon, 11 Mar 2019 17:21:45 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1552324905;
-        bh=irusktoUqBxIGna2TUrk+42IOTws/SJm4zdVFovg4U8=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=ABOXfqh5WHjVkWwB/A4gBhc+9RG16n7B18BhCj4upaBBVv3nb3Y5z9zousty7k9wH
-         EWN+z+7sKU6btYhahiq/02QU8QD8+GjvNBfSSu3RgJfEZgGRicSz/SlIcd4vA6ja5D
-         PcTtbE55+Fnpe91RPOZ+q8SBadvBStjQiiBSs4wg=
-Date:   Mon, 11 Mar 2019 13:21:44 -0400
-From:   Sasha Levin <sashal@kernel.org>
-To:     Keith Busch <kbusch@kernel.org>
-Cc:     linux-kernel@vger.kernel.org, stable@vger.kernel.org,
-        Keith Busch <keith.busch@intel.com>,
-        Christoph Hellwig <hch@lst.de>, linux-nvme@lists.infradead.org
-Subject: Re: [PATCH AUTOSEL 4.19 59/64] nvme-pci: fix rapid add remove
- sequence
-Message-ID: <20190311172144.GF158926@sasha-vm>
-References: <20190228151105.11277-1-sashal@kernel.org>
- <20190228151105.11277-59-sashal@kernel.org>
- <20190228151642.GA21796@localhost.localdomain>
+        Mon, 11 Mar 2019 13:22:16 -0400
+Received: from mx2.suse.de ([195.135.220.15]:34786 "EHLO mx1.suse.de"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726641AbfCKRWQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 11 Mar 2019 13:22:16 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx1.suse.de (Postfix) with ESMTP id BD6FFAD52;
+        Mon, 11 Mar 2019 17:22:14 +0000 (UTC)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii; format=flowed
-Content-Disposition: inline
-In-Reply-To: <20190228151642.GA21796@localhost.localdomain>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Type: text/plain; charset=US-ASCII;
+ format=flowed
+Content-Transfer-Encoding: 7bit
+Date:   Mon, 11 Mar 2019 18:22:14 +0100
+From:   Roman Penyaev <rpenyaev@suse.de>
+To:     Dmitry Vyukov <dvyukov@google.com>
+Cc:     syzbot <syzbot+aea82bf9ee6ffd9a79d9@syzkaller.appspotmail.com>,
+        'Dmitry Vyukov' via syzkaller-bugs 
+        <syzkaller-bugs@googlegroups.com>,
+        Andrew Morton <akpm@linux-foundation.org>, dbueso@suse.de,
+        Jason Baron <jbaron@akamai.com>,
+        linux-fsdevel <linux-fsdevel@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Paul McKenney <paulmck@linux.vnet.ibm.com>,
+        Stephen Rothwell <sfr@canb.auug.org.au>,
+        Al Viro <viro@zeniv.linux.org.uk>
+Subject: Re: WARNING in ep_poll_callback
+In-Reply-To: <CACT4Y+aHBMnOHQaTphgGwW8mZbDeHCu+Ce8zXki1ntdEbTPJqQ@mail.gmail.com>
+References: <CACT4Y+YLZYJ21Bao5HVAvXhvb9PQ41J-4RvtkZZEMF38qtkxHg@mail.gmail.com>
+ <00000000000073a5740583d42c1e@google.com>
+ <CACT4Y+aHBMnOHQaTphgGwW8mZbDeHCu+Ce8zXki1ntdEbTPJqQ@mail.gmail.com>
+Message-ID: <340d29d33c1adfd55fe8b1ad48674708@suse.de>
+X-Sender: rpenyaev@suse.de
+User-Agent: Roundcube Webmail
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Feb 28, 2019 at 08:16:43AM -0700, Keith Busch wrote:
->On Thu, Feb 28, 2019 at 10:11:00AM -0500, Sasha Levin wrote:
->> From: Keith Busch <keith.busch@intel.com>
->>
->> [ Upstream commit 5c959d73dba6495ec01d04c206ee679d61ccb2b0 ]
->
->This patch was broken, so please make sure to include the one that
->fixes this:
->
->  Upstream commit 4726bcf30fad37cc555cd9dcd6c73f2b2668c879
->  ("nvme-pci: add missing unlock for reset error")
+On 2019-03-11 17:37, Dmitry Vyukov wrote:
+> On Mon, Mar 11, 2019 at 5:36 PM syzbot
+> <syzbot+@syzkaller.appspotmail.com> wrote:
+>> 
+>> > On Mon, Mar 11, 2019 at 2:53 PM Roman Penyaev <rpenyaev@suse.de> wrote:
+>> 
+>> >> On 2019-03-11 14:45, Dmitry Vyukov wrote:
+>> >> > On Mon, Mar 11, 2019 at 2:37 PM Roman Penyaev <rpenyaev@suse.de> wrote:
+>> >> >>
+>> >> >> Hi Andrew,
+>> >> >>
+>> >> >> I thought "epoll: loosen irq safety in ep_poll_callback()" patch was
+>> >> >> removed from your tree, at least I got a notification on 9th of
+>> >> >> january,
+>> >> >> also I do not see it in the linux-next tree.
+>> >> >>
+>> >> >> Should I ignore this syzbot message?
+>> >> >
+>> >> > If this was resolved we need to communicate it to syzbot one way or the
+>> >> > other.
+>> >> > Since it was in linux-next, it won't even be able to do fix bisection.
+>> >> > So the bug will be open forever otherwise.
+>> 
+>> >> Bug was fixed (commit was simply dropped).  How can I tell syzbot to
+>> >> shut up
+>> >> and to resolve the issue?
+>> 
+>> > Hi Roman,
+>> 
+>> > The docs are at:
+>> 
+>> >> See https://goo.gl/tpsmEJ for more information about syzbot.
 
-I've queued this one as well, thank you.
+Thanks! Will read.
+
+>> 
+>> > There is no official support for bugs fixed not by commit merges.
+>> > Linux-next creates various interesting corner-cases for the process.
+>> > Let's go with this option for now:
+>> 
+>> > #syz invalid
+>> 
+>> I see the command but can't find the corresponding bug.
+>> Please resend the email to syzbot+HASH@syzkaller.appspotmail.com 
+>> address
+>> that is the sender of the bug report (also present in the Reported-by 
+>> tag).
+> 
+> +syzbot email
+> 
+> Please don't drop bug reporter email from CC.
+
+Did not know. Thanks for your help!
 
 --
-Thanks,
-Sasha
+Roman
+
+
+
