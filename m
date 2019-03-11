@@ -2,181 +2,125 @@ Return-Path: <SRS0=FxTY=RO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 623B4C43381
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 Mar 2019 21:32:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D05C8C4360F
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 Mar 2019 21:34:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 28D592064A
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 Mar 2019 21:32:23 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=akkea.ca header.i=@akkea.ca header.b="oYXTXoEG";
-	dkim=pass (1024-bit key) header.d=akkea.ca header.i=@akkea.ca header.b="h1LwvnXn"
+	by mail.kernel.org (Postfix) with ESMTP id A5EC320657
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 Mar 2019 21:34:46 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728269AbfCKVcV (ORCPT
+        id S1728309AbfCKVep convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 11 Mar 2019 17:32:21 -0400
-Received: from node.akkea.ca ([192.155.83.177]:35728 "EHLO node.akkea.ca"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727660AbfCKVcV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 11 Mar 2019 17:32:21 -0400
-Received: from localhost (localhost [127.0.0.1])
-        by node.akkea.ca (Postfix) with ESMTP id 4F55E4E204D;
-        Mon, 11 Mar 2019 21:32:20 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=akkea.ca; s=mail;
-        t=1552339940; bh=LIGpjz1YHtcVmmkL9eotJ9aLeoxlA5DdsfT2VT3O5wo=;
-        h=From:To:Cc:Subject:Date;
-        b=oYXTXoEGes9uBPhRXjb4huTzySkNKkMoSQznxiG8vaOZdsGKL3UrkNjBBlQYpS3uf
-         3Z9UPeU5K6VYURsQvdwcqXzNrI+QDBrTZdfCBpKUMlm5KVxZxubnY2Tiw5FrPcxX5U
-         AMFMXWWuu3tN6LI/72zGQOTRDWI+njMPVBKEpzgE=
-X-Virus-Scanned: Debian amavisd-new at mail.akkea.ca
-Received: from node.akkea.ca ([127.0.0.1])
-        by localhost (mail.akkea.ca [127.0.0.1]) (amavisd-new, port 10024)
-        with ESMTP id XxoABcZ4M7xP; Mon, 11 Mar 2019 21:32:19 +0000 (UTC)
-Received: from midas.localdomain (S0106788a2041785e.gv.shawcable.net [70.66.86.75])
-        by node.akkea.ca (Postfix) with ESMTPSA id 2C7834E204B;
-        Mon, 11 Mar 2019 21:32:19 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=akkea.ca; s=mail;
-        t=1552339939; bh=LIGpjz1YHtcVmmkL9eotJ9aLeoxlA5DdsfT2VT3O5wo=;
-        h=From:To:Cc:Subject:Date;
-        b=h1LwvnXn0dk5CROrA4LclvCaZ2WoQLK2Ci76xOa9BedMRQqfnEhdufqPAWHEcAbTV
-         6f3YkxrjhWHTPhiO8u+HMZnJ5ADjXDAFyH+a5i83tiSM3Q21TYC6N5S4pEYWMzw2E4
-         M9aXto75LovDb574sQgi4xJJzHKvAWcVmI1lV86A=
-From:   "Angus Ainslie (Purism)" <angus@akkea.ca>
-To:     Mark Rutland <mark.rutland@arm.com>
-Cc:     Rob Herring <robh+dt@kernel.org>, Shawn Guo <shawnguo@kernel.org>,
-        Fabio Estevam <festevam@gmail.com>, kernel@pengutronix.de,
-        Lucas Stach <l.stach@pengutronix.de>, abel.vesa@nxp.com,
-        daniel.baluta@nxp.com, agx@sigxcpu.org, linux-imx@nxp.com,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        "Angus Ainslie (Purism)" <angus@akkea.ca>
-Subject: [PATCH] arm64: dts: fsl: imx8mq: enable the thermal management unit (TMU)
-Date:   Mon, 11 Mar 2019 14:31:24 -0700
-Message-Id: <20190311213124.29325-1-angus@akkea.ca>
-X-Mailer: git-send-email 2.17.1
+        Mon, 11 Mar 2019 17:34:45 -0400
+Received: from mail-qt1-f195.google.com ([209.85.160.195]:34838 "EHLO
+        mail-qt1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727996AbfCKVep (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 11 Mar 2019 17:34:45 -0400
+Received: by mail-qt1-f195.google.com with SMTP id h39so336173qte.2;
+        Mon, 11 Mar 2019 14:34:44 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=nrHq7yZf8D9z0i9FW4UPhbrDKoMd6sDIcTNy4S1jgA0=;
+        b=n419Sjr5xz1CIept8JGDD+1xeVwjqjYTDyD4wRvRR3uE26SamX3/oMTH0s0HnspfbC
+         up2l4+mZ4eesW9hdIHYsVsbD2ef540YXDSTL9fw9Xzg/EtOHhwIMMyEcLXWpxhORYlDz
+         Pg2kavuoFirkrYkDlIFDLC5vdAW/RZ9/5pwQFkf+tODXztjbXIr+d+1RQBlxUqRfBCAn
+         FMbCmvGOteGPgYArCh2AkoJhr24Sx/C/j1oPYi2bt0iF/nLgt8drNYBMWryiT4bWIspK
+         shoaqyUfR3OG4cumFKd/ZCxfRDFUrugVhED/SGhCZxBPHP4vCx1tJ7Trhja+xZKelgcj
+         R9dw==
+X-Gm-Message-State: APjAAAXy5KzLsAsC25OQdiSr+E7AQQuUHCIKQQFl9fdhlLGwvvMAJop5
+        im7d7BwXQa45AkX4xesBhzYJedwfSznxCSK5Jb++vjh2
+X-Google-Smtp-Source: APXvYqziNzwGjEEBBFr3p4AAMX7aM6pxJUfKYtFgXjzB6jLucrqbIevpeLAxI+Ois9dU6S749WDR3RpIYJXL/axEIC8=
+X-Received: by 2002:ac8:1e17:: with SMTP id n23mr5425799qtl.152.1552340083914;
+ Mon, 11 Mar 2019 14:34:43 -0700 (PDT)
+MIME-Version: 1.0
+References: <CAG48ez1RVd5mQ_Pb6eygQESaZhpQz765OAZYSoPE0kPqfZEXQg@mail.gmail.com>
+ <20190305091904.GB8256@zn.tnic> <20190305122218.GD13380@bombadil.infradead.org>
+ <20190305134347.4be2449c@alans-desktop> <20190305145717.GD8256@zn.tnic>
+ <CAHk-=wi2E4kugAW7BQwNSVwYHOr=B_9EgzBRMpQ2+1dxAqydDg@mail.gmail.com>
+ <20190305173134.GE8256@zn.tnic> <CAHk-=wg0bY=RFhD4NW9x++fC0bME=_-9xM3kexGGM3gefHQTyQ@mail.gmail.com>
+ <20190305181138.GG8256@zn.tnic> <20190305181808.GH8256@zn.tnic>
+ <CAEdQ38G5M3vq9pGBV1iyEViO7JhFuXk5g+VCs-vUH+Z62kNqgQ@mail.gmail.com>
+ <CAHk-=wgt7M6yA5BJCJo0nF22WgPJnN8CvViL9CAJmd+S+Civ6w@mail.gmail.com>
+ <yw1xa7i14btw.fsf@mansr.com> <CAHk-=whD1SumZUBQeuMT-GcciwPxg_jW_TsPAmokYp3sGGCGhA@mail.gmail.com>
+ <yw1x5zsp473a.fsf@mansr.com> <CAHk-=wiU7xacTqDfm-x29-meyJWNd_X95K0T8FQMcDgy-yo3Qw@mail.gmail.com>
+ <yw1x1s3d42ia.fsf@mansr.com>
+In-Reply-To: <yw1x1s3d42ia.fsf@mansr.com>
+From:   Arnd Bergmann <arnd@arndb.de>
+Date:   Mon, 11 Mar 2019 22:34:26 +0100
+Message-ID: <CAK8P3a031d9mSOxVmCAGcrbdaCE8N3R4e2Smtxp-Z+cautTAvg@mail.gmail.com>
+Subject: Re: [PATCH] x86: Deprecate a.out support
+To:     =?UTF-8?B?TcOlbnMgUnVsbGfDpXJk?= <mans@mansr.com>
+Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
+        Matt Turner <mattst88@gmail.com>,
+        Borislav Petkov <bp@alien8.de>,
+        Alan Cox <gnomes@lxorguk.ukuu.org.uk>,
+        Matthew Wilcox <willy@infradead.org>,
+        Jann Horn <jannh@google.com>,
+        Al Viro <viro@zeniv.linux.org.uk>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        kernel list <linux-kernel@vger.kernel.org>,
+        linux-fsdevel <linux-fsdevel@vger.kernel.org>,
+        "the arch/x86 maintainers" <x86@kernel.org>,
+        Linux API <linux-api@vger.kernel.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Richard Weinberger <richard@nod.at>,
+        Anton Ivanov <anton.ivanov@cambridgegreys.com>,
+        linux-alpha <linux-alpha@vger.kernel.org>,
+        linux-m68k <linux-m68k@lists.linux-m68k.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8BIT
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-These are the TMU nodes from the NXP vendor kernel
+On Mon, Mar 11, 2019 at 8:47 PM Måns Rullgård <mans@mansr.com> wrote:
+> Linus Torvalds <torvalds@linux-foundation.org> writes:
+> > On Mon, Mar 11, 2019 at 11:08 AM Måns Rullgård <mans@mansr.com> wrote:
+> >>
+> >> The latest version I have is 5.1, and that uses ECOFF.
+> >
+> > ECOFF _is_ a.out as far as Linux is concerned.
+> >
+> > So Linux basically treats ECOFF as "regular a.out with just some
+> > header extensions".
+> >
+> > We don't have any specific support for ECOFF.
+> >
+> > I _think_. Again, it's been years and years.
+>
+> Right, which is why killing a.out entirely would have the unfortunate
+> effect of also removing the OSF/1 compatibility on Alpha.
+>
+> If we are to support Alpha as an architecture at all, it makes sense to
+> support the things people actually use it for.
+>
+> Now, personally I can live without it.  I just don't like to see
+> features removed without due consideration.
 
-Signed-off-by: Angus Ainslie (Purism) <angus@akkea.ca>
----
- arch/arm64/boot/dts/freescale/imx8mq.dtsi | 83 +++++++++++++++++++++++
- 1 file changed, 83 insertions(+)
+The main historic use case I've heard of was running Netscape
+Navigator on Alpha Linux, before there was an open source version.
+Doing this today to connect to the open internet is probably
+a bit pointless, but there may be other use cases.
 
-diff --git a/arch/arm64/boot/dts/freescale/imx8mq.dtsi b/arch/arm64/boot/dts/freescale/imx8mq.dtsi
-index 9155bd4784eb..087620c6e17f 100644
---- a/arch/arm64/boot/dts/freescale/imx8mq.dtsi
-+++ b/arch/arm64/boot/dts/freescale/imx8mq.dtsi
-@@ -8,6 +8,7 @@
- #include <dt-bindings/power/imx8mq-power.h>
- #include <dt-bindings/gpio/gpio.h>
- #include <dt-bindings/interrupt-controller/arm-gic.h>
-+#include <dt-bindings/thermal/thermal.h>
- #include "imx8mq-pinfunc.h"
- 
- / {
-@@ -89,6 +90,7 @@
- 			reg = <0x0>;
- 			enable-method = "psci";
- 			next-level-cache = <&A53_L2>;
-+			#cooling-cells = <2>;
- 		};
- 
- 		A53_1: cpu@1 {
-@@ -210,6 +212,87 @@
- 				#interrupt-cells = <2>;
- 			};
- 
-+			tmu: tmu@30260000 {
-+				compatible = "fsl,imx8mq-tmu";
-+				reg = <0x30260000 0x10000>;
-+				interrupt = <GIC_SPI 49 IRQ_TYPE_LEVEL_HIGH>;
-+				little-endian;
-+				fsl,tmu-range = <0xb0000 0xa0026 0x80048 0x70061>;
-+				fsl,tmu-calibration = <0x00000000 0x00000023
-+						       0x00000001 0x00000029
-+						       0x00000002 0x0000002f
-+						       0x00000003 0x00000035
-+						       0x00000004 0x0000003d
-+						       0x00000005 0x00000043
-+						       0x00000006 0x0000004b
-+						       0x00000007 0x00000051
-+						       0x00000008 0x00000057
-+						       0x00000009 0x0000005f
-+						       0x0000000a 0x00000067
-+						       0x0000000b 0x0000006f
-+
-+						       0x00010000 0x0000001b
-+						       0x00010001 0x00000023
-+						       0x00010002 0x0000002b
-+						       0x00010003 0x00000033
-+						       0x00010004 0x0000003b
-+						       0x00010005 0x00000043
-+						       0x00010006 0x0000004b
-+						       0x00010007 0x00000055
-+						       0x00010008 0x0000005d
-+						       0x00010009 0x00000067
-+						       0x0001000a 0x00000070
-+
-+						       0x00020000 0x00000017
-+						       0x00020001 0x00000023
-+						       0x00020002 0x0000002d
-+						       0x00020003 0x00000037
-+						       0x00020004 0x00000041
-+						       0x00020005 0x0000004b
-+						       0x00020006 0x00000057
-+						       0x00020007 0x00000063
-+						       0x00020008 0x0000006f
-+
-+						       0x00030000 0x00000015
-+						       0x00030001 0x00000021
-+						       0x00030002 0x0000002d
-+						       0x00030003 0x00000039
-+						       0x00030004 0x00000045
-+						       0x00030005 0x00000053
-+						       0x00030006 0x0000005f
-+						       0x00030007 0x00000071>;
-+				#thermal-sensor-cells =  <0>;
-+			};
-+
-+			thermal-zones {
-+				cpu-thermal {
-+					polling-delay-passive = <250>;
-+					polling-delay = <2000>;
-+					thermal-sensors = <&tmu>;
-+
-+					trips {
-+						cpu_alert0: trip0 {
-+							temperature = <85000>;
-+							hysteresis = <2000>;
-+							type = "passive";
-+						};
-+
-+						cpu_crit0: trip1 {
-+							temperature = <95000>;
-+							hysteresis = <2000>;
-+							type = "critical";
-+						};
-+					};
-+
-+					cooling-maps {
-+						map0 {
-+							trip = <&cpu_alert0>;
-+							cooling-device = <&A53_0 THERMAL_NO_LIMIT THERMAL_NO_LIMIT>;
-+						};
-+					};
-+				};
-+			};
-+
- 			wdog1: watchdog@30280000 {
- 				compatible = "fsl,imx8mq-wdt", "fsl,imx21-wdt";
- 				reg = <0x30280000 0x10000>;
--- 
-2.17.1
+Looking at the system call table in the kernel
+(arch/alpha/kernel/syscalls/syscall.tbl), we seem to support a
+specific subset that was required for a set of applications, and
+not much more. Old system calls (osf_old_open, osf_execve,
+osf_old_sigaction) are listed but not implemented, and the same
+is true for most of the later calls (osf_fuser, osf_sigsendset,
+osf_waitid, osf_signal, ...), just the ones in the middle are there.
+This would also indicate that it never really worked as a
+general-purpose emulation layer but was only there for a specific
+set of applications.
 
+Another data point I have is that osf1 emulation was broken
+between linux-4.13 and linux-4.16 without anyone noticing, see
+47669fb6b595 ("alpha: osf_sys.c: fix put_tv32 regression").
+
+      Arnd
