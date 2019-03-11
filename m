@@ -2,193 +2,120 @@ Return-Path: <SRS0=FxTY=RO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3E0D1C10F06
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 Mar 2019 20:50:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D247DC43381
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 Mar 2019 20:50:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 042162064A
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 Mar 2019 20:50:37 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1552337437;
-	bh=WmnWnvhH8xU87ulSyPbAeUXZlyUM3QlsDz8cNEfmt0s=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=X2IUwhrpWUb8/IqftR4xAts7+drB3wkrE+FE1yFbCilAZ8Mw8taY9zHPeFufqktdM
-	 /n9eV0b0PjyaAfsvoRBLdumcxeVn7JUOBmjWXjw0nNya+TdqGpNbn/uJGiQBPqBxf4
-	 GVzr6n3RXV1UvMght+21QcaUnB4EO96EsY/+E+uM=
+	by mail.kernel.org (Postfix) with ESMTP id A028B2064A
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 Mar 2019 20:50:42 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="jz3xsJ9z"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728284AbfCKUug (ORCPT
+        id S1728309AbfCKUul (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 11 Mar 2019 16:50:36 -0400
-Received: from mail.kernel.org ([198.145.29.99]:37842 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728067AbfCKUuf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 11 Mar 2019 16:50:41 -0400
+Received: from mail-io1-f66.google.com ([209.85.166.66]:39540 "EHLO
+        mail-io1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727304AbfCKUuf (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
         Mon, 11 Mar 2019 16:50:35 -0400
-Received: from mail-wm1-f46.google.com (mail-wm1-f46.google.com [209.85.128.46])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 13EF221741;
-        Mon, 11 Mar 2019 20:50:34 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1552337434;
-        bh=WmnWnvhH8xU87ulSyPbAeUXZlyUM3QlsDz8cNEfmt0s=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=f2b7cfq4PQ89SN1Xoi9Ha237YKmHKyacm71MLg50GMSyBhl9qOSATAWSh5ZyuS7GG
-         jY/vEUQWyoFxwjRhDcL48lcZkHhFEZvPUklyhycHtsEq6HF8chQhaBGtmXBdnPj5tr
-         +tUsZzm/aqFKsuTLjt723hDkW+gpYzA0cIkeOKEw=
-Received: by mail-wm1-f46.google.com with SMTP id a188so481860wmf.3;
+Received: by mail-io1-f66.google.com with SMTP id x3so102163ior.6;
         Mon, 11 Mar 2019 13:50:34 -0700 (PDT)
-X-Gm-Message-State: APjAAAUpL9/LdspRdlpWjhnKCn/Oxc3p55vS6ACI73f3/k6735FG6zJp
-        Gn6u6J8m1b79AASm9F/T97STRJ+hWQfkqH5P0nc=
-X-Google-Smtp-Source: APXvYqzDai9Dyx9OsaBigd7uYRVJCW6GOdcbvE+paemXRGcNrJ+R1kr5bCHNJ9SRIWPwk12NyZA9cJsY5qaDadIwr6U=
-X-Received: by 2002:a1c:234d:: with SMTP id j74mr75208wmj.130.1552337432486;
- Mon, 11 Mar 2019 13:50:32 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc:content-transfer-encoding;
+        bh=h3e09nPexFL1d+StgQQ2seLSeIrMyIbV2/hM/Z+YGuI=;
+        b=jz3xsJ9zknfNxcqL63/8AK35ddZujWqTu3vt6GRMpHnYa3a8HREYGdg2wmiMKxYUKP
+         7YG+6UQYpdjI64YY8ehDQT8LxATEGgcK7M8wBWAvEXqb+uJgzMfCU+NZ7PKsSGD+swr4
+         Qh4WdTZ6g+zVSIN78dopmBSuhzvPMVbey5a7ObZSgdhRFjC+HHNyk+V40964ugArHxlk
+         W1eo8FmIc5AjMcmm0EmkwGK1sRRDXnWIBAJgxQzKk7e2HVQJqS5CUpqGllPEcVyBGvVK
+         EBtUXRAoeAGXiynVeXwRkduUFbhUjWllU28kGirMFK6DEI8O8kS3iddu2G8Fzg3oKyii
+         /PXg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=h3e09nPexFL1d+StgQQ2seLSeIrMyIbV2/hM/Z+YGuI=;
+        b=KUclBmY6z6eeHhquLCHJJO9HpltOOKNkOP1TbEn3X2XHnx9v9GkiRh79BPleBfbU8J
+         s/dnbeQOmfMjoivAmmXRGHq2opz7CtyQ1Musq5BqTHudyATh1qZDusHak5MLl+sB4P8I
+         1F5bxvqEUvcudPh8yg9d0T8Y3INtAGK6AQNf0SWpRuMx6mu3ZlutASr5l4hfApEKnByB
+         tZyuZsE+c/w1OoUCEoK92rVNwNOzy16G2vkB1uFVdKgBM/62AY7sD4xQGvypQIGTrJb2
+         Qq0nUkD0Mdy6mXsIiqVR1z7VZDRc1C5Nn/8w0yERZykC32N6hfQyZINqXuhLzAochCLV
+         zJqw==
+X-Gm-Message-State: APjAAAW3iSxuWJGq3SPUKLDfG0schEWhtbjFpDvLYpzhOaiDBTwSKXJp
+        VHCkABZyuQ6OYUL3UBWdSh4184GwZYNUITFUb0U=
+X-Google-Smtp-Source: APXvYqwFPP3uVjpJAc0mbhr0ge++2Fns2p9ZjUEhfxpcAxpeiaggHOy+G0J9yOMtcNZp6jRpFxzdvo7ceyPDNRrVn7k=
+X-Received: by 2002:a6b:c543:: with SMTP id v64mr18449937iof.6.1552337433952;
+ Mon, 11 Mar 2019 13:50:33 -0700 (PDT)
 MIME-Version: 1.0
-References: <1552275991-34648-1-git-send-email-hsin-hsiung.wang@mediatek.com> <1552275991-34648-9-git-send-email-hsin-hsiung.wang@mediatek.com>
-In-Reply-To: <1552275991-34648-9-git-send-email-hsin-hsiung.wang@mediatek.com>
-From:   Sean Wang <sean.wang@kernel.org>
+References: <CAG48ez1RVd5mQ_Pb6eygQESaZhpQz765OAZYSoPE0kPqfZEXQg@mail.gmail.com>
+ <20190305091904.GB8256@zn.tnic> <20190305122218.GD13380@bombadil.infradead.org>
+ <20190305134347.4be2449c@alans-desktop> <20190305145717.GD8256@zn.tnic>
+ <CAHk-=wi2E4kugAW7BQwNSVwYHOr=B_9EgzBRMpQ2+1dxAqydDg@mail.gmail.com>
+ <20190305173134.GE8256@zn.tnic> <CAHk-=wg0bY=RFhD4NW9x++fC0bME=_-9xM3kexGGM3gefHQTyQ@mail.gmail.com>
+ <20190305181138.GG8256@zn.tnic> <20190305181808.GH8256@zn.tnic>
+ <CAEdQ38G5M3vq9pGBV1iyEViO7JhFuXk5g+VCs-vUH+Z62kNqgQ@mail.gmail.com>
+ <CAHk-=wgt7M6yA5BJCJo0nF22WgPJnN8CvViL9CAJmd+S+Civ6w@mail.gmail.com>
+ <yw1xa7i14btw.fsf@mansr.com> <CAHk-=whD1SumZUBQeuMT-GcciwPxg_jW_TsPAmokYp3sGGCGhA@mail.gmail.com>
+ <yw1x5zsp473a.fsf@mansr.com> <CAHk-=wiU7xacTqDfm-x29-meyJWNd_X95K0T8FQMcDgy-yo3Qw@mail.gmail.com>
+ <yw1x1s3d42ia.fsf@mansr.com>
+In-Reply-To: <yw1x1s3d42ia.fsf@mansr.com>
+From:   Matt Turner <mattst88@gmail.com>
 Date:   Mon, 11 Mar 2019 13:50:21 -0700
-X-Gmail-Original-Message-ID: <CAGp9Lzq4D56PbivbHkQd41-TCoGACTiBqLz+Jyiqiog=YMvEbQ@mail.gmail.com>
-Message-ID: <CAGp9Lzq4D56PbivbHkQd41-TCoGACTiBqLz+Jyiqiog=YMvEbQ@mail.gmail.com>
-Subject: Re: [PATCH v2 8/9] rtc: mt6397: fix alarm register overwrite
-To:     Hsin-Hsiung Wang <hsin-hsiung.wang@mediatek.com>
-Cc:     Lee Jones <lee.jones@linaro.org>, Rob Herring <robh+dt@kernel.org>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        Mark Brown <broonie@kernel.org>,
-        Eddie Huang <eddie.huang@mediatek.com>,
-        linux-rtc@vger.kernel.org, devicetree@vger.kernel.org,
-        Alexandre Belloni <alexandre.belloni@bootlin.com>,
-        srv_heupstream <srv_heupstream@mediatek.com>,
-        Alessandro Zummo <a.zummo@towertech.it>,
-        Marc Zyngier <marc.zyngier@arm.com>,
-        Ran Bi <ran.bi@mediatek.com>,
-        Sean Wang <sean.wang@mediatek.com>,
-        linux-kernel@vger.kernel.org, Liam Girdwood <lgirdwood@gmail.com>,
-        linux-mediatek@lists.infradead.org,
-        Mark Rutland <mark.rutland@arm.com>,
-        linux-arm-kernel@lists.infradead.org
+Message-ID: <CAEdQ38F3RxBXB2ow3L7F4vQd5JnJLPJ-mEqCK5ENV7NDQO9eJQ@mail.gmail.com>
+Subject: Re: [PATCH] x86: Deprecate a.out support
+To:     =?UTF-8?B?TcOlbnMgUnVsbGfDpXJk?= <mans@mansr.com>
+Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
+        Borislav Petkov <bp@alien8.de>,
+        Alan Cox <gnomes@lxorguk.ukuu.org.uk>,
+        Matthew Wilcox <willy@infradead.org>,
+        Jann Horn <jannh@google.com>,
+        Al Viro <viro@zeniv.linux.org.uk>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        kernel list <linux-kernel@vger.kernel.org>,
+        linux-fsdevel <linux-fsdevel@vger.kernel.org>,
+        "the arch/x86 maintainers" <x86@kernel.org>,
+        Linux API <linux-api@vger.kernel.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Richard Weinberger <richard@nod.at>,
+        Anton Ivanov <anton.ivanov@cambridgegreys.com>,
+        linux-alpha <linux-alpha@vger.kernel.org>,
+        linux-m68k@lists.linux-m68k.org
 Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi,
+On Mon, Mar 11, 2019 at 12:47 PM M=C3=A5ns Rullg=C3=A5rd <mans@mansr.com> w=
+rote:
+>
+> Linus Torvalds <torvalds@linux-foundation.org> writes:
+>
+> > On Mon, Mar 11, 2019 at 11:08 AM M=C3=A5ns Rullg=C3=A5rd <mans@mansr.co=
+m> wrote:
+> >>
+> >> The latest version I have is 5.1, and that uses ECOFF.
+> >
+> > ECOFF _is_ a.out as far as Linux is concerned.
+> >
+> > So Linux basically treats ECOFF as "regular a.out with just some
+> > header extensions".
+> >
+> > We don't have any specific support for ECOFF.
+> >
+> > I _think_. Again, it's been years and years.
+>
+> Right, which is why killing a.out entirely would have the unfortunate
+> effect of also removing the OSF/1 compatibility on Alpha.
+>
+> If we are to support Alpha as an architecture at all, it makes sense to
+> support the things people actually use it for.
 
-On Sun, Mar 10, 2019 at 8:49 PM Hsin-Hsiung Wang
-<hsin-hsiung.wang@mediatek.com> wrote:
->
-> From: Ran Bi <ran.bi@mediatek.com>
->
-> Alarm registers high byte was reserved for other functions.
-> This add mask in alarm registers operation functions.
-> This also fix error condition in interrupt handler.
->
-> Fixes: fc2979118f3f ("rtc: mediatek: Add MT6397 RTC driver")
->
-
-add a  Cc: stable@vger.kernel.org  here to apply to all stable kernels
-for the critical fixup patch.
-
-> Signed-off-by: Ran Bi <ran.bi@mediatek.com>
-> ---
->  drivers/rtc/rtc-mt6397.c | 47 +++++++++++++++++++++++++++++++++--------------
->  1 file changed, 33 insertions(+), 14 deletions(-)
->
-> diff --git a/drivers/rtc/rtc-mt6397.c b/drivers/rtc/rtc-mt6397.c
-> index e9a25ec..f85f1fc 100644
-> --- a/drivers/rtc/rtc-mt6397.c
-> +++ b/drivers/rtc/rtc-mt6397.c
-> @@ -55,6 +55,14 @@
->
->  #define RTC_AL_SEC             0x0018
->
-> +#define RTC_AL_SEC_MASK                0x003f
-> +#define RTC_AL_MIN_MASK                0x003f
-> +#define RTC_AL_HOU_MASK                0x001f
-> +#define RTC_AL_DOM_MASK                0x001f
-> +#define RTC_AL_DOW_MASK                0x0007
-> +#define RTC_AL_MTH_MASK                0x000f
-> +#define RTC_AL_YEA_MASK                0x007f
-> +
->  #define RTC_PDN2               0x002e
->  #define RTC_PDN2_PWRON_ALARM   BIT(4)
->
-> @@ -111,7 +119,7 @@ static irqreturn_t mtk_rtc_irq_handler_thread(int irq, void *data)
->                 irqen = irqsta & ~RTC_IRQ_EN_AL;
->                 mutex_lock(&rtc->lock);
->                 if (regmap_write(rtc->regmap, rtc->addr_base + RTC_IRQ_EN,
-> -                                irqen) < 0)
-> +                                irqen) == 0)
->                         mtk_rtc_write_trigger(rtc);
->                 mutex_unlock(&rtc->lock);
->
-> @@ -233,12 +241,12 @@ static int mtk_rtc_read_alarm(struct device *dev, struct rtc_wkalrm *alm)
->         alm->pending = !!(pdn2 & RTC_PDN2_PWRON_ALARM);
->         mutex_unlock(&rtc->lock);
->
-> -       tm->tm_sec = data[RTC_OFFSET_SEC];
-> -       tm->tm_min = data[RTC_OFFSET_MIN];
-> -       tm->tm_hour = data[RTC_OFFSET_HOUR];
-> -       tm->tm_mday = data[RTC_OFFSET_DOM];
-> -       tm->tm_mon = data[RTC_OFFSET_MTH];
-> -       tm->tm_year = data[RTC_OFFSET_YEAR];
-> +       tm->tm_sec = data[RTC_OFFSET_SEC] & RTC_AL_SEC_MASK;
-> +       tm->tm_min = data[RTC_OFFSET_MIN] & RTC_AL_MIN_MASK;
-> +       tm->tm_hour = data[RTC_OFFSET_HOUR] & RTC_AL_HOU_MASK;
-> +       tm->tm_mday = data[RTC_OFFSET_DOM] & RTC_AL_DOM_MASK;
-> +       tm->tm_mon = data[RTC_OFFSET_MTH] & RTC_AL_MTH_MASK;
-> +       tm->tm_year = data[RTC_OFFSET_YEAR] & RTC_AL_YEA_MASK;
->
->         tm->tm_year += RTC_MIN_YEAR_OFFSET;
->         tm->tm_mon--;
-> @@ -259,14 +267,25 @@ static int mtk_rtc_set_alarm(struct device *dev, struct rtc_wkalrm *alm)
->         tm->tm_year -= RTC_MIN_YEAR_OFFSET;
->         tm->tm_mon++;
->
-> -       data[RTC_OFFSET_SEC] = tm->tm_sec;
-> -       data[RTC_OFFSET_MIN] = tm->tm_min;
-> -       data[RTC_OFFSET_HOUR] = tm->tm_hour;
-> -       data[RTC_OFFSET_DOM] = tm->tm_mday;
-> -       data[RTC_OFFSET_MTH] = tm->tm_mon;
-> -       data[RTC_OFFSET_YEAR] = tm->tm_year;
-> -
->         mutex_lock(&rtc->lock);
-> +       ret = regmap_bulk_read(rtc->regmap, rtc->addr_base + RTC_AL_SEC,
-> +                              data, RTC_OFFSET_COUNT);
-> +       if (ret < 0)
-> +               goto exit;
-> +
-
-Why did we need an additional regmap_bulk_read here? I would suppose
-data[RTC_OFFSET_*] & ~(RTC_AL_*_MASK) is always equal to 0.
-
-It might be another fixup since change is not being mentioned in the
-git message.
-
-> +       data[RTC_OFFSET_SEC] = ((data[RTC_OFFSET_SEC] & ~(RTC_AL_SEC_MASK)) |
-> +                               (tm->tm_sec & RTC_AL_SEC_MASK));
-> +       data[RTC_OFFSET_MIN] = ((data[RTC_OFFSET_MIN] & ~(RTC_AL_MIN_MASK)) |
-> +                               (tm->tm_min & RTC_AL_MIN_MASK));
-> +       data[RTC_OFFSET_HOUR] = ((data[RTC_OFFSET_HOUR] & ~(RTC_AL_HOU_MASK)) |
-> +                               (tm->tm_hour & RTC_AL_HOU_MASK));
-> +       data[RTC_OFFSET_DOM] = ((data[RTC_OFFSET_DOM] & ~(RTC_AL_DOM_MASK)) |
-> +                               (tm->tm_mday & RTC_AL_DOM_MASK));
-> +       data[RTC_OFFSET_MTH] = ((data[RTC_OFFSET_MTH] & ~(RTC_AL_MTH_MASK)) |
-> +                               (tm->tm_mon & RTC_AL_MTH_MASK));
-> +       data[RTC_OFFSET_YEAR] = ((data[RTC_OFFSET_YEAR] & ~(RTC_AL_YEA_MASK)) |
-> +                               (tm->tm_year & RTC_AL_YEA_MASK));
-> +
->         if (alm->enabled) {
->                 ret = regmap_bulk_write(rtc->regmap,
->                                         rtc->addr_base + RTC_AL_SEC,
-> --
-> 1.9.1
->
->
-> _______________________________________________
-> Linux-mediatek mailing list
-> Linux-mediatek@lists.infradead.org
-> http://lists.infradead.org/mailman/listinfo/linux-mediatek
+I agree. I was not aware that a.out was effectively the same as ECOFF.
