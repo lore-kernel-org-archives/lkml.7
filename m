@@ -2,244 +2,185 @@ Return-Path: <SRS0=FxTY=RO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_MUTT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3C898C10F06
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 Mar 2019 22:29:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 90CBBC43381
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 Mar 2019 22:31:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 09C042148D
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 Mar 2019 22:29:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4F5382148D
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 Mar 2019 22:31:34 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726425AbfCKW3I (ORCPT
+        id S1726329AbfCKWbd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 11 Mar 2019 18:29:08 -0400
-Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:44786 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1725826AbfCKW3I (ORCPT
+        Mon, 11 Mar 2019 18:31:33 -0400
+Received: from Galois.linutronix.de ([146.0.238.70]:41013 "EHLO
+        Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725865AbfCKWbc (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 11 Mar 2019 18:29:08 -0400
-Received: from pps.filterd (m0098413.ppops.net [127.0.0.1])
-        by mx0b-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x2BMIx6x028063
-        for <linux-kernel@vger.kernel.org>; Mon, 11 Mar 2019 18:29:06 -0400
-Received: from e14.ny.us.ibm.com (e14.ny.us.ibm.com [129.33.205.204])
-        by mx0b-001b2d01.pphosted.com with ESMTP id 2r5x8w5eh4-1
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
-        for <linux-kernel@vger.kernel.org>; Mon, 11 Mar 2019 18:29:06 -0400
-Received: from localhost
-        by e14.ny.us.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
-        for <linux-kernel@vger.kernel.org> from <paulmck@linux.vnet.ibm.com>;
-        Mon, 11 Mar 2019 22:29:06 -0000
-Received: from b01cxnp22036.gho.pok.ibm.com (9.57.198.26)
-        by e14.ny.us.ibm.com (146.89.104.201) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
-        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
-        Mon, 11 Mar 2019 22:29:02 -0000
-Received: from b01ledav003.gho.pok.ibm.com (b01ledav003.gho.pok.ibm.com [9.57.199.108])
-        by b01cxnp22036.gho.pok.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x2BMT1DZ24838234
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Mon, 11 Mar 2019 22:29:02 GMT
-Received: from b01ledav003.gho.pok.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id C56DFB2068;
-        Mon, 11 Mar 2019 22:29:01 +0000 (GMT)
-Received: from b01ledav003.gho.pok.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 8DD7EB2065;
-        Mon, 11 Mar 2019 22:29:01 +0000 (GMT)
-Received: from paulmck-ThinkPad-W541 (unknown [9.70.82.188])
-        by b01ledav003.gho.pok.ibm.com (Postfix) with ESMTP;
-        Mon, 11 Mar 2019 22:29:01 +0000 (GMT)
-Received: by paulmck-ThinkPad-W541 (Postfix, from userid 1000)
-        id 7FFB316C5F31; Mon, 11 Mar 2019 15:29:03 -0700 (PDT)
-Date:   Mon, 11 Mar 2019 15:29:03 -0700
-From:   "Paul E. McKenney" <paulmck@linux.ibm.com>
-To:     Joel Fernandes <joel@joelfernandes.org>
-Cc:     linux-kernel@vger.kernel.org, rcu@vger.kernel.org,
-        jiangshanlai@gmail.com, dipankar@in.ibm.com,
-        mathieu.desnoyers@efficios.com, josh@joshtriplett.org,
-        rostedt@goodmis.org, luto@kernel.org, byungchul.park@lge.com
-Subject: Re: [PATCH tip/core/rcu 06/19] rcu: Add warning to detect
- half-interrupts
-Reply-To: paulmck@linux.ibm.com
-References: <20180829222021.GA29944@linux.vnet.ibm.com>
- <20180829222047.319-6-paulmck@linux.vnet.ibm.com>
- <20190311133939.GA29747@google.com>
+        Mon, 11 Mar 2019 18:31:32 -0400
+Received: from p5492e2fc.dip0.t-ipconnect.de ([84.146.226.252] helo=nanos)
+        by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
+        (Exim 4.80)
+        (envelope-from <tglx@linutronix.de>)
+        id 1h3TRt-0001K5-8L; Mon, 11 Mar 2019 23:31:09 +0100
+Date:   Mon, 11 Mar 2019 23:31:08 +0100 (CET)
+From:   Thomas Gleixner <tglx@linutronix.de>
+To:     Pavel Machek <pavel@ucw.cz>
+cc:     corbet@lwn.net, LKML <linux-kernel@vger.kernel.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>, x86@kernel.org,
+        Peter Zijlstra <peterz@infradead.org>,
+        Jiri Kosina <jkosina@suse.cz>,
+        Josh Poimboeuf <jpoimboe@redhat.com>,
+        Dave Hansen <dave.hansen@linux.intel.com>,
+        Andy Lutomirski <luto@kernel.org>,
+        Greg KH <gregkh@linuxfoundation.org>,
+        Konrad Rzeszutek Wilk <konrad.wilk@oracle.com>,
+        David Woodhouse <dwmw2@infradead.org>,
+        Tom Lendacky <thomas.lendacky@amd.com>,
+        Paolo Bonzini <pbonzini@redhat.com>,
+        Joerg Roedel <joro@8bytes.org>,
+        Tony Luck <tony.luck@intel.com>,
+        Salvatore Bonaccorso <carnil@debian.org>,
+        linux-doc@vger.kernel.org
+Subject: Re: [patch] Fix up l1ft documentation was Re: Taking a break - time
+ to look back
+In-Reply-To: <20190311131341.GA28223@amd>
+Message-ID: <alpine.DEB.2.21.1903112211180.1651@nanos.tec.linutronix.de>
+References: <alpine.DEB.2.21.1812200022580.1651@nanos.tec.linutronix.de> <20190102235152.GA24163@amd> <20190311102109.GA14118@amd> <alpine.DEB.2.21.1903111403330.1691@nanos.tec.linutronix.de> <20190311131341.GA28223@amd>
+User-Agent: Alpine 2.21 (DEB 202 2017-01-01)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190311133939.GA29747@google.com>
-User-Agent: Mutt/1.5.21 (2010-09-15)
-X-TM-AS-GCONF: 00
-x-cbid: 19031122-0052-0000-0000-000003994067
-X-IBM-SpamModules-Scores: 
-X-IBM-SpamModules-Versions: BY=3.00010741; HX=3.00000242; KW=3.00000007;
- PH=3.00000004; SC=3.00000281; SDB=6.01173004; UDB=6.00613258; IPR=6.00953659;
- MB=3.00025936; MTD=3.00000008; XFM=3.00000015; UTC=2019-03-11 22:29:05
-X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
-x-cbparentid: 19031122-0053-0000-0000-0000601F6387
-Message-Id: <20190311222903.GR13351@linux.ibm.com>
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-03-11_16:,,
- signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
- malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
- clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
- mlxlogscore=999 adultscore=0 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.0.1-1810050000 definitions=main-1903110153
+Content-Type: text/plain; charset=US-ASCII
+X-Linutronix-Spam-Score: -1.0
+X-Linutronix-Spam-Level: -
+X-Linutronix-Spam-Status: No , -1.0 points, 5.0 required,  ALL_TRUSTED=-1,SHORTCIRCUIT=-0.0001
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Mar 11, 2019 at 09:39:39AM -0400, Joel Fernandes wrote:
-> On Wed, Aug 29, 2018 at 03:20:34PM -0700, Paul E. McKenney wrote:
-> > RCU's dyntick-idle code is written to tolerate half-interrupts, that it,
-> > either an interrupt that invokes rcu_irq_enter() but never invokes the
-> > corresponding rcu_irq_exit() on the one hand, or an interrupt that never
-> > invokes rcu_irq_enter() but does invoke the "corresponding" rcu_irq_exit()
-> > on the other.  These things really did happen at one time, as evidenced
-> > by this ca-2011 LKML post:
-> > 
-> > http://lkml.kernel.org/r/20111014170019.GE2428@linux.vnet.ibm.com
-> > 
-> > The reason why RCU tolerates half-interrupts is that usermode helpers
-> > used exceptions to invoke a system call from within the kernel such that
-> > the system call did a normal return (not a return from exception) to
-> > the calling context.  This caused rcu_irq_enter() to be invoked without
-> > a matching rcu_irq_exit().  However, usermode helpers have since been
-> > rewritten to make much more housebroken use of workqueues, kernel threads,
-> > and do_execve(), and therefore should no longer produce half-interrupts.
-> > No one knows of any other source of half-interrupts, but then again,
-> > no one seems insane enough to go audit the entire kernel to verify that
-> > half-interrupts really are a relic of the past.
-> > 
-> > This commit therefore adds a pair of WARN_ON_ONCE() calls that will
-> > trigger in the presence of half interrupts, which the code will continue
-> > to handle correctly.  If neither of these WARN_ON_ONCE() trigger by
-> > mid-2021, then perhaps RCU can stop handling half-interrupts, which
-> > would be a considerable simplification.
+Pavel,
+
+On Mon, 11 Mar 2019, Pavel Machek wrote:
+> On Mon 2019-03-11 14:05:07, Thomas Gleixner wrote:
+> > Huch? Care to tell what's a lie instead of making bold statements?
 > 
-> Hi Paul and everyone,
-> I was thinking some more about this patch and whether we can simplify this code
-> much in 2021. Since 2021 is a bit far away, I thought working on it in again to
-> keep it fresh in memory is a good idea ;-)
-
-Indeed, easy to forget.  ;-)
-
-> To me it seems we cannot easily combine the counters (dynticks_nesting and
-> dynticks_nmi_nesting) even if we confirmed that there is no possibility of a
-> half-interrupt scenario (assuming simplication means counter combining like
-> Byungchul tried to do in https://goo.gl/X1U77X). The reason is because these
-> 2 counters need to be tracked separately as they are used differently in the
-> following function:
+> Take a care to look at the patch I submitted?
 > 
-> static int rcu_is_cpu_rrupt_from_idle(void)
-> {
->         return __this_cpu_read(rcu_data.dynticks_nesting) <= 0 &&
->                __this_cpu_read(rcu_data.dynticks_nmi_nesting) <= 1;
-> }
+> Lie:
 > 
-> dynticks_nesting actually tracks if we entered/exited idle or user mode.
-
-True, though it tracks user mode only in CONFIG_NO_HZ_FULL kernels.
-
-> dynticks_nmi_nesting tracks if we entered/exited interrupts.
-
-Including NMIs, yes.
-
-> We have to do the "dynticks_nmi_nesting <= 1" check because
-> rcu_is_cpu_rrupt_from_idle() can possibly be called from an interrupt itself
-> (like timer) so we discount 1 interrupt, and, the "dynticks_nesting <= 0"
-> check is because the CPU MUST be in user or idle for the check to return
-> true. We can't really combine these two into one counter then I think because
-> they both convey different messages.
+> # A system with an up to date kernel is protected against attacks from
+> # malicious user space applications.
 > 
-> The only simplication we can do, is probably the "crowbar" updates to
-> dynticks_nmi_nesting can be removed from rcu_eqs_enter/exit once we confirm
-> no more half-interrupts are possible. Which might still be a worthwhile thing
-> to do (while still keeping both counters separate).
+> 3GB system running 32bit kernel is not protected. Same is true for for
+> really big 64bit systems.
+
+I agree that this statement is incorrect.
+
+Calling this a lie is a completly unjustified personal attack on those who
+spent quite a lot of time on writing up documentation in the first
+place. It's suggesting that this document was written with malicious intent
+and the purpose of deceiving someone. Care to explain why you are assuming
+this to be the case?
+
+> If I do what dmesg suggests, this becomes untrue:
 > 
-> However, I think we could combine the counters and lead to simplying the code
-> in case we implement rcu_is_cpu_rrupt_from_idle differently such that it does
-> not need the counters but NOHZ_FULL may take issue with that since it needs
-> rcu_user_enter->rcu_eqs_enter to convey that the CPU is "RCU"-idle.
-
-I haven't gone through it in detail, but it seems like we should be able
-to treat in-kernel process-level execution like an interrupt from idle
-or userspace, as the case might be.  If we did that, shouldn't we be
-able to just do this?
-
-static int rcu_is_cpu_rrupt_from_idle(void)
-{
-        return __this_cpu_read(rcu_data.dynticks_nmi_nesting) <= 1;
-}
-
-> Actually, I had another question... rcu_user_enter() is a NOOP in !NOHZ_FULL config.
-> In this case I was wondering if the the warning Paul added (in the patch I'm replying to)
-> will really get fired for half-interrupts. The vast majority of the systems I believe are
-> NOHZ_IDLE not NOHZ_FULL.
-> This is what a half-interrupt really looks like right? Please correct me if I'm wrong:
-> rcu_irq_enter()   [half interrupt causes an exception and thus rcu_irq_enter]
-> rcu_user_enter()  [due to usermode upcall]
-> rcu_user_exit()
-> (no more rcu_irq_exit() - hence half an interrupt)
+> # The Linux kernel contains a mitigation for this attack vector, PTE
+> # inversion, which is permanently enabled and has no performance
+> # impact.
 > 
-> But the rcu_user_enter()/exit is a NOOP in some configs, so will the warning in
-> rcu_eqs_e{xit,nter} really do anything?
+> Limiting memory to 2GB _is_ going to have severe perfomance impact.
 
-Yes, because these are also called from rcu_idle_enter() and
-rcu_idle_exit(), which is invoked even in !NO_HZ_FULL kernels.
+Sure. That still does not justify the "changelog" you provided.
 
-> Or was the idea with adding the new warnings, that they would fire the next
-> time rcu_idle_enter/exit is called? Like for example:
+> commit 9664b4dabdb132433a6843aefe05814953f1342f
+> Author: Pavel <pavel@ucw.cz>
+> Date:   Thu Jan 3 00:48:40 2019 +0100
 > 
-> rcu_irq_enter()   [This is due to half-interrupt]
-> rcu_idle_enter()  [Eventually we enter the idle loop at some point
-> 		   after the half-interrupt and the rcu_eqs_enter()
-> 		   would "crowbar" the dynticks_nmi_nesting counter to 0].
+>     Ok, I guess L1TF was a lot of fun, and there was not time for a good
+>     documentation.
 
-You got it!  ;-)
+It's interesting that quite some people were actually happy about that
+document. Sorry, that we weren't able to live up to your high standards.
 
-So yes, these warnings just detect the presence of misnesting.  Presumably
-event tracing would then be used to track down the culprits.  Assuming that
-the misnesting is reproducible and all that.
+>     There's admin guide that is written as an advertisment, and
 
-							Thanx, Paul
+What is the advertisement part again?
 
-> thanks!
-> 
->  - Joel
-> 
-> > 
-> > Reported-by: Steven Rostedt <rostedt@goodmis.org>
-> > Reported-by: Joel Fernandes <joel@joelfernandes.org>
-> > Reported-by: Andy Lutomirski <luto@kernel.org>
-> > Signed-off-by: Paul E. McKenney <paulmck@linux.vnet.ibm.com>
-> > Reviewed-by: Joel Fernandes (Google) <joel@joelfernandes.org>
-> > ---
-> >  kernel/rcu/tree.c | 2 ++
-> >  1 file changed, 2 insertions(+)
-> > 
-> > diff --git a/kernel/rcu/tree.c b/kernel/rcu/tree.c
-> > index dc041c2afbcc..d2b6ade692c9 100644
-> > --- a/kernel/rcu/tree.c
-> > +++ b/kernel/rcu/tree.c
-> > @@ -714,6 +714,7 @@ static void rcu_eqs_enter(bool user)
-> >  	struct rcu_dynticks *rdtp;
-> >  
-> >  	rdtp = this_cpu_ptr(&rcu_dynticks);
-> > +	WARN_ON_ONCE(rdtp->dynticks_nmi_nesting != DYNTICK_IRQ_NONIDLE);
-> >  	WRITE_ONCE(rdtp->dynticks_nmi_nesting, 0);
-> >  	WARN_ON_ONCE(IS_ENABLED(CONFIG_RCU_EQS_DEBUG) &&
-> >  		     rdtp->dynticks_nesting == 0);
-> > @@ -895,6 +896,7 @@ static void rcu_eqs_exit(bool user)
-> >  	trace_rcu_dyntick(TPS("End"), rdtp->dynticks_nesting, 1, rdtp->dynticks);
-> >  	WARN_ON_ONCE(IS_ENABLED(CONFIG_RCU_EQS_DEBUG) && !user && !is_idle_task(current));
-> >  	WRITE_ONCE(rdtp->dynticks_nesting, 1);
-> > +	WARN_ON_ONCE(rdtp->dynticks_nmi_nesting);
-> >  	WRITE_ONCE(rdtp->dynticks_nmi_nesting, DYNTICK_IRQ_NONIDLE);
-> >  }
-> >  
-> > -- 
-> > 2.17.1
-> > 
-> 
+>     unfortunately is slightly "inaccurate" at places (to the point of
+>     lying).
+>     
+>     Plus, I believe it should go to x86/ directory, as this is really
+>     Intel issue, and not anything ARM (or RISC-V) people need to know.
 
+It's a document targeted at system administrators and it definitely should
+not be burried somewhere in Documentation/x86. As there are more documents
+being worked on for the other issues, I have a patch ready which moves that
+stuff into a separate hardware vulnerabilites folder in the admin-guide.
+
+FWIW, to the best of my knowledge the documentation about writing
+changelogs is neither incorrect nor is it optional to adhere to it.
+
+> @@ -1,10 +1,11 @@
+>  L1TF - L1 Terminal Fault
+>  ========================
+>  
+> -L1 Terminal Fault is a hardware vulnerability which allows unprivileged
+> -speculative access to data which is available in the Level 1 Data Cache
+> -when the page table entry controlling the virtual address, which is used
+> -for the access, has the Present bit cleared or other reserved bits set.
+> +L1 Terminal Fault is a hardware vulnerability on most recent Intel x86
+
+The 'Affected processors' section right below this is very clear about this
+being an Intel only issue (for now). So what exactly is the point of this
+change?
+
+> +CPUs which allows unprivileged speculative access to data which is
+> +available in the Level 1 Data Cache when the page table entry
+> +controlling the virtual address, which is used for the access, has the
+> +Present bit cleared or other reserved bits set.
+>  
+>  Affected processors
+>  -------------------
+> @@ -76,12 +77,14 @@ Attack scenarios
+>     deterministic and more practical.
+>  
+>     The Linux kernel contains a mitigation for this attack vector, PTE
+> -   inversion, which is permanently enabled and has no performance
+> -   impact. The kernel ensures that the address bits of PTEs, which are not
+> -   marked present, never point to cacheable physical memory space.
+> -
+> -   A system with an up to date kernel is protected against attacks from
+> -   malicious user space applications.
+> +   inversion, which is permanently enabled and has no measurable
+> +   performance impact in most configurations. The kernel ensures that
+> +   the address bits of PTEs, which are not marked present, never point
+> +   to cacheable physical memory space. On x86-32, this physical memory
+
+On x86-32? That's incorrect, because there are a lot of x86-32 systems
+which are not affected. Also it has nothing to do with the bit-width of the
+hardware. A 32bit kernel booted on a 64bit capable CPU has the same issue.
+For further correctness, this needs to mention that !PAE enabled kernels
+cannot do PTE inversion at all.
+
+> +   needs to be limited to 2GiB to make mitigation effective.
+
+The 2G limitation is not a general limitation. The limitation depends on
+the number of physical address bits supported by the cache (not the number
+of physical addresss bits exposed as pins) and is definitely not hardcoded
+to 2G. Just because your machine emits the 2G number does not make it
+universally correct. On a system with 36bit physical address space the
+limit is 32G and on some CPUs that's actually wrong as well, see:
+override_cache_bits().
+
+Quoting yourself:
+
+> 3GB system running 32bit kernel is not protected. Same is true for for
+> really big 64bit systems.
+
+Where is the explanation for the 'really big 64bit systems' issue for
+correctness sake?
+
+Thanks,
+
+	tglx
