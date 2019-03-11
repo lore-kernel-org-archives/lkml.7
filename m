@@ -2,113 +2,115 @@ Return-Path: <SRS0=FxTY=RO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+	SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E136FC43381
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 Mar 2019 17:47:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E0A5EC43381
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 Mar 2019 17:48:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B513620643
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 Mar 2019 17:47:53 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="L2B98ZSB"
+	by mail.kernel.org (Postfix) with ESMTP id B861520643
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 Mar 2019 17:48:31 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1552326511;
+	bh=cJqMmrl54HyULei8Ia4DY7Sui+gjLqh0hF+JvVcaioY=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=SyCkjcrL0d34JDSgJoOQI5r0PSKreDSFzHvWAS7qwYBltYkQD2CJeleNuRBu+VQz8
+	 VGhYiqWZ9HYFy1PbL+1TtBEJ6NUKnxCBN7WaxdlyFkRENxcyBJSTy31IPz/mlPoBHs
+	 tMZ/iiQ3iYyz1qBChTw70ZQpskJIXmB0oNJEs1W4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727926AbfCKRrw (ORCPT
+        id S1727818AbfCKRsa (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 11 Mar 2019 13:47:52 -0400
-Received: from lelv0143.ext.ti.com ([198.47.23.248]:37858 "EHLO
-        lelv0143.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727818AbfCKRrv (ORCPT
+        Mon, 11 Mar 2019 13:48:30 -0400
+Received: from mail-lf1-f46.google.com ([209.85.167.46]:43678 "EHLO
+        mail-lf1-f46.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727008AbfCKRs3 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 11 Mar 2019 13:47:51 -0400
-Received: from lelv0265.itg.ti.com ([10.180.67.224])
-        by lelv0143.ext.ti.com (8.15.2/8.15.2) with ESMTP id x2BHlfQA003658;
-        Mon, 11 Mar 2019 12:47:41 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1552326461;
-        bh=Yt4S7O/WuklQkEvWX7rUlVTWgy//JAzu5O2rIZIRUl8=;
-        h=Subject:To:CC:References:From:Date:In-Reply-To;
-        b=L2B98ZSBHdBHGG+EzScaDZ19KTZFelOUbseY1w8Qyreti4gfbQLmrfVPxWmzDL2xL
-         s7Ryc1rfYYkiCK5IJFHJ4FxB4Ive0FMDK0Tj45p/CmQzc8lkGDX0KH9EWcgudp7vaw
-         SH3c4vLpR19M0tlz25mmlyr5sUM+8P4I4hcUMrwU=
-Received: from DFLE105.ent.ti.com (dfle105.ent.ti.com [10.64.6.26])
-        by lelv0265.itg.ti.com (8.15.2/8.15.2) with ESMTPS id x2BHlfOv037556
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Mon, 11 Mar 2019 12:47:41 -0500
-Received: from DFLE112.ent.ti.com (10.64.6.33) by DFLE105.ent.ti.com
- (10.64.6.26) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1591.10; Mon, 11
- Mar 2019 12:47:40 -0500
-Received: from dflp33.itg.ti.com (10.64.6.16) by DFLE112.ent.ti.com
- (10.64.6.33) with Microsoft SMTP Server (version=TLS1_0,
- cipher=TLS_RSA_WITH_AES_256_CBC_SHA) id 15.1.1591.10 via Frontend Transport;
- Mon, 11 Mar 2019 12:47:40 -0500
-Received: from [172.22.80.120] (ileax41-snat.itg.ti.com [10.172.224.153])
-        by dflp33.itg.ti.com (8.14.3/8.13.8) with ESMTP id x2BHlePU010276;
-        Mon, 11 Mar 2019 12:47:40 -0500
-Subject: Re: [PATCH 4/4] leds: lm3532: Introduce the lm3532 LED driver
-To:     Joe Perches <joe@perches.com>,
-        Jacek Anaszewski <jacek.anaszewski@gmail.com>,
-        <robh+dt@kernel.org>, <pavel@ucw.cz>, <tony@atomide.com>,
-        <lee.jones@linaro.org>
-CC:     <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <linux-leds@vger.kernel.org>
-References: <20190307220947.20057-1-dmurphy@ti.com>
- <20190307220947.20057-4-dmurphy@ti.com>
- <8ac4d84f-c792-893d-fbae-fac88fac8631@gmail.com>
- <bb621d08-c192-0018-f67e-3f3262a71b6f@ti.com>
- <cf26b351-f2b5-8345-29b7-401153b5f0d7@gmail.com>
- <ee13f836-bd77-22b0-e230-2fc9050afe88@ti.com>
- <09ee942fb7be08c600c989217ad3abfe4b6702fd.camel@perches.com>
-From:   Dan Murphy <dmurphy@ti.com>
-Message-ID: <c3743a0e-9efd-e179-098c-31b1242870b4@ti.com>
-Date:   Mon, 11 Mar 2019 12:47:23 -0500
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.5.3
+        Mon, 11 Mar 2019 13:48:29 -0400
+Received: by mail-lf1-f46.google.com with SMTP id g7so3082343lfh.10
+        for <linux-kernel@vger.kernel.org>; Mon, 11 Mar 2019 10:48:28 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linux-foundation.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=eQTnlpbYSlvlEggHKpOcgCUg+Hl6a6HGXGsz6xjzAWA=;
+        b=H9WW6kpnCR3Swai6uKxOHSMrBKFShxbM49viAqT6juWuNfoDmTP3qwfqAWj3n6aqK+
+         yS/DEveUpUvXkfc0PCZfdQhlEbxkgZSr0nZ7HdLlaymhlwY0oALHQpW6KmdUjHlOMfOC
+         p2ZTqzNlU46sUxGzvBiyXPkXFX7Fb6BJ2iomk=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=eQTnlpbYSlvlEggHKpOcgCUg+Hl6a6HGXGsz6xjzAWA=;
+        b=JekW+OmDVfm5JvqajDGiJtJ+78iikhaydAeyTX3QpuC9kP9CCJ9DPXueuWvTTmZ9wm
+         l5ipNod7uUeqreGVYqkHXKWQAjByg6cYYvE94YjyzpvDiVGaZKDCvBsq96lORkqNkL8/
+         N81V7bmPXQeJqPg+vS7jULrem44MhZ5VqnBTYFRtQvAr5Nfvu13V6aL27ykVcSOZyHdY
+         TPa2INPBcMVM491evZ+4oQ+j5IgN7WuCat65IjVHYC+hd6V68zxfblhN0d9udEV+R9oh
+         e5qWglCwkjhYq1sccuD25enQ5+b3c+bmi/Icci7pqlXf2LgQkOAxRVXgBQmBkmIPbJBl
+         Mzvw==
+X-Gm-Message-State: APjAAAV/kJV9Vd7mEY61lOnfW7tqQejSLOlv5+H+u/cCQKWiVfiHx/Ym
+        u+xQYZ6B62ElGljyDHD1DykK8Jwfp8M=
+X-Google-Smtp-Source: APXvYqxRvqMsHewH7TCUkUw9KLL+gVpRSQRDZnKuwUxpZal0K/NNGxCqaIceZ/M32Vr1kTkRYeIQ/A==
+X-Received: by 2002:ac2:52ae:: with SMTP id r14mr19323291lfm.66.1552326506538;
+        Mon, 11 Mar 2019 10:48:26 -0700 (PDT)
+Received: from mail-lj1-f170.google.com (mail-lj1-f170.google.com. [209.85.208.170])
+        by smtp.gmail.com with ESMTPSA id v20sm1038932ljv.83.2019.03.11.10.48.23
+        for <linux-kernel@vger.kernel.org>
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Mon, 11 Mar 2019 10:48:24 -0700 (PDT)
+Received: by mail-lj1-f170.google.com with SMTP id v16so4877943ljg.13
+        for <linux-kernel@vger.kernel.org>; Mon, 11 Mar 2019 10:48:23 -0700 (PDT)
+X-Received: by 2002:a2e:9117:: with SMTP id m23mr17089773ljg.94.1552326503575;
+ Mon, 11 Mar 2019 10:48:23 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <09ee942fb7be08c600c989217ad3abfe4b6702fd.camel@perches.com>
-Content-Type: text/plain; charset="utf-8"
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+References: <00000000000080952b0583d183f0@google.com> <1552317574.45180.94.camel@acm.org>
+In-Reply-To: <1552317574.45180.94.camel@acm.org>
+From:   Linus Torvalds <torvalds@linux-foundation.org>
+Date:   Mon, 11 Mar 2019 10:48:07 -0700
+X-Gmail-Original-Message-ID: <CAHk-=wh_H+Wce_n8vW68ZzoSs3m=exP+kKZZZRCxAfi6dG2_Mg@mail.gmail.com>
+Message-ID: <CAHk-=wh_H+Wce_n8vW68ZzoSs3m=exP+kKZZZRCxAfi6dG2_Mg@mail.gmail.com>
+Subject: Re: BUG: MAX_STACK_TRACE_ENTRIES too low!
+To:     Bart Van Assche <bvanassche@acm.org>
+Cc:     syzbot <syzbot+78923eea7cf44364f4fb@syzkaller.appspotmail.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        "Darrick J. Wong" <darrick.wong@oracle.com>, dledford@redhat.com,
+        "Gustavo A. R. Silva" <gustavo@embeddedor.com>,
+        Christoph Hellwig <hch@infradead.org>,
+        Jann Horn <jannh@google.com>, Jason Gunthorpe <jgg@ziepe.ca>,
+        johannes.berg@intel.com, leon@kernel.org,
+        Linux List Kernel Mailing <linux-kernel@vger.kernel.org>,
+        linux-rdma@vger.kernel.org, linux-xfs@vger.kernel.org,
+        Waiman Long <longman@redhat.com>,
+        Ingo Molnar <mingo@kernel.org>, Ingo Molnar <mingo@redhat.com>,
+        Paul McKenney <paulmck@linux.vnet.ibm.com>,
+        Peter Zijlstra <peterz@infradead.org>, roland@purestorage.com,
+        sean.hefty@intel.com, shamir.rabinovitch@oracle.com,
+        swise@opengridcomputing.com, syzkaller-bugs@googlegroups.com,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Tejun Heo <tj@kernel.org>, Will Deacon <will.deacon@arm.com>,
+        Cong Wang <xiyou.wangcong@gmail.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Thanks Joe
-
-On 3/11/19 12:30 PM, Joe Perches wrote:
-> On Mon, 2019-03-11 at 12:24 -0500, Dan Murphy wrote:
->> checkpatch takes issue with // in headers.
->> Unless they have removed that requirement.
-> 
-> Awhile ago...
+On Mon, Mar 11, 2019 at 8:19 AM Bart Van Assche <bvanassche@acm.org> wrote:
 >
+> I think this issue has been fixed by a commit that went upstream yesterday. Hence:
+>
+> #syz fix: workqueue, lockdep: Fix an alloc_workqueue() error path
 
-I guess I was referring to this SPDX warning
- 
-WARNING: Missing or malformed SPDX-License-Identifier tag in line 1
-#1: FILE: drivers/net/can/m_can/m_can.h:1:
-+//SPDX-License-Identifier: GPL-2.0
+Well, syzbot just reported a problem with that fix itself ("WARNING in
+lockdep_unregister_key").
 
-> commit dadf680de3c2eb4cba9840619991eda0cfe98778
-> Author: Joe Perches <joe@perches.com>
-> Date:   Tue Aug 2 14:04:33 2016 -0700
-> 
->     checkpatch: allow c99 style // comments
->     
->     Sanitise the lines that contain c99 comments so that the error doesn't
->     get emitted.
->     
->     Link: http://lkml.kernel.org/r/d4d22c34ad7bcc1bceb52f0742f76b7a6d585235.1468368420.git.joe@perches.com
->     Signed-off-by: Joe Perches <joe@perches.com>
->     Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
->     Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
-> 
+Looks like now the lockdep_unregister_key() cleanup might be called
+even when the lockdep map was never initialized at all in that error
+case. Hmm?
 
+I _think_ you need to split that "err_free_wq" label into "just free
+the wq" and "unregister lockdep and free wq".
 
--- 
-------------------
-Dan Murphy
+But I didn't look any more closely, I might be misreading things.
+
+                Linus
