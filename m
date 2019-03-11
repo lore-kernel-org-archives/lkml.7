@@ -4,52 +4,54 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+	SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6947EC43381
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 Mar 2019 20:04:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F01A2C43381
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 Mar 2019 20:04:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 35B3C2064A
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 Mar 2019 20:04:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BBF2C2064A
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 Mar 2019 20:04:10 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1552334646;
-	bh=9CaMT7P3oqdE6QSzxRU5Dzepe4EYD5WTKQK7/G+m6GE=;
+	s=default; t=1552334650;
+	bh=5oZYfJ9/oa6CVJCyhd7FQwoWxRUpD40wPy1ruGJIUvE=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=1N2mCJGPEnuwACUSa+eKy+bXmStFTE4cXI0JNQHlfrHiTHjROGhnEtcmmv0xXJ5eZ
-	 bu4q3bXyuun7VYmmty/JPo6UCrUpMzIokZNn/tOVbJcVPlysx4EOxDM+DCuwipTiaz
-	 ScfV7fHEB/1fjE4Quz2SDrF08UX+QrHSZ3SE6GCI=
+	b=hPxsQ7TOAhCCxZEflUqPhGTHgXLCd1s3dtVtEeqX0k1W6uZIdsyX4BxiWcO6uyXP5
+	 Ki+ZqMwHG5b+n0UDfSPL0NvEsnbKlMqY6sXU0R4hZxJBfeOlrtxRjI4RKgI9b4t8SD
+	 6WFIcUCDufFqSjvFiGAhR83B8gmWorV5R6fpSEN8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729591AbfCKUEE (ORCPT
+        id S1729695AbfCKUEJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 11 Mar 2019 16:04:04 -0400
-Received: from mail.kernel.org ([198.145.29.99]:36102 "EHLO mail.kernel.org"
+        Mon, 11 Mar 2019 16:04:09 -0400
+Received: from mail.kernel.org ([198.145.29.99]:36074 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728904AbfCKT6i (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 11 Mar 2019 15:58:38 -0400
+        id S1729405AbfCKT6d (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 11 Mar 2019 15:58:33 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E6FD9214AE;
-        Mon, 11 Mar 2019 19:58:36 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 69BA821741;
+        Mon, 11 Mar 2019 19:58:32 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1552334317;
-        bh=9CaMT7P3oqdE6QSzxRU5Dzepe4EYD5WTKQK7/G+m6GE=;
+        s=default; t=1552334313;
+        bh=5oZYfJ9/oa6CVJCyhd7FQwoWxRUpD40wPy1ruGJIUvE=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=hl5U9NOxpCCu+lYi9wmaqZTY9pEMIDY0Uzh+z6jsuDnUyCCIiNIdsBN8cxaztAqlp
-         hlu6oBTHDYwg1v7NUbB9d2dbqg9nNbVDxGGeO9/8ApxJuMqsZnZV/EGYD0qAS6gtPC
-         Lop0BU8K32iBmNYLqvflj6iFWkICp/nZqptDygNk=
+        b=UGAHDxlPyXSE1e+W50QW5dAaiQ/aQOWwL801q39Bdoccn2PDLYClT+5pkBLKdFidF
+         ifnTGoWpgFrEAXpShVpGL7Lm7dQP2nMJq8xeGUNib3b80cd1kRXvvzlpxMshMU5Qny
+         4L2Znii1bJa8iKHa+ePK7SUu30wl9JQh6inpxL5A=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>,
-        Mark Brown <broonie@kernel.org>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH AUTOSEL 4.14 09/27] ASoC: dapm: fix out-of-bounds accesses to DAPM lookup tables
-Date:   Mon, 11 Mar 2019 15:58:06 -0400
-Message-Id: <20190311195824.139043-9-sashal@kernel.org>
+Cc:     Jonathan Bakker <xc-racer2@live.ca>,
+        =?UTF-8?q?Pawe=C5=82=20Chmiel?= <pawel.mikolaj.chmiel@gmail.com>,
+        Dmitry Torokhov <dmitry.torokhov@gmail.com>,
+        Sasha Levin <sashal@kernel.org>, linux-input@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.14 06/27] Input: pwm-vibra - prevent unbalanced regulator
+Date:   Mon, 11 Mar 2019 15:58:03 -0400
+Message-Id: <20190311195824.139043-6-sashal@kernel.org>
 X-Mailer: git-send-email 2.19.1
 In-Reply-To: <20190311195824.139043-1-sashal@kernel.org>
 References: <20190311195824.139043-1-sashal@kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
@@ -57,101 +59,64 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>
+From: Jonathan Bakker <xc-racer2@live.ca>
 
-[ Upstream commit c16e12010060c6c7a31f08b4a99513064cb53b7d ]
+[ Upstream commit 3ca232df9921f083c3b37ba5fbc76f4d9046268b ]
 
-KASAN reports and additional traces point to out-of-bounds accesses to
-the dapm_up_seq and dapm_down_seq lookup tables. The indices used are
-larger than the array definition.
+pwm_vibrator_stop disables the regulator, but it can be called from
+multiple places, even when the regulator is already disabled. Fix this
+by using regulator_is_enabled check when starting and stopping device.
 
-Fix by adding missing entries for the new widget types in these two
-lookup tables, and align them with PGA values.
-
-Also the sequences for the following widgets were not defined. Since
-their values defaulted to zero, assign them explicitly
-
- snd_soc_dapm_input
- snd_soc_dapm_output
- snd_soc_dapm_vmid
- snd_soc_dapm_siggen
- snd_soc_dapm_sink
-
-Fixes: 8a70b4544ef4 ('ASoC: dapm: Add new widget type for constructing DAPM graphs on DSPs.').
-Signed-off-by: Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>
-Signed-off-by: Mark Brown <broonie@kernel.org>
+Signed-off-by: Jonathan Bakker <xc-racer2@live.ca>
+Signed-off-by: Paweł Chmiel <pawel.mikolaj.chmiel@gmail.com>
+Signed-off-by: Dmitry Torokhov <dmitry.torokhov@gmail.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- sound/soc/soc-dapm.c | 24 ++++++++++++++++++++++++
- 1 file changed, 24 insertions(+)
+ drivers/input/misc/pwm-vibra.c | 17 ++++++++++++-----
+ 1 file changed, 12 insertions(+), 5 deletions(-)
 
-diff --git a/sound/soc/soc-dapm.c b/sound/soc/soc-dapm.c
-index 53c9d7525639..c8cdbe4b5680 100644
---- a/sound/soc/soc-dapm.c
-+++ b/sound/soc/soc-dapm.c
-@@ -75,12 +75,16 @@ static int dapm_up_seq[] = {
- 	[snd_soc_dapm_clock_supply] = 1,
- 	[snd_soc_dapm_supply] = 2,
- 	[snd_soc_dapm_micbias] = 3,
-+	[snd_soc_dapm_vmid] = 3,
- 	[snd_soc_dapm_dai_link] = 2,
- 	[snd_soc_dapm_dai_in] = 4,
- 	[snd_soc_dapm_dai_out] = 4,
- 	[snd_soc_dapm_aif_in] = 4,
- 	[snd_soc_dapm_aif_out] = 4,
- 	[snd_soc_dapm_mic] = 5,
-+	[snd_soc_dapm_siggen] = 5,
-+	[snd_soc_dapm_input] = 5,
-+	[snd_soc_dapm_output] = 5,
- 	[snd_soc_dapm_mux] = 6,
- 	[snd_soc_dapm_demux] = 6,
- 	[snd_soc_dapm_dac] = 7,
-@@ -88,11 +92,19 @@ static int dapm_up_seq[] = {
- 	[snd_soc_dapm_mixer] = 8,
- 	[snd_soc_dapm_mixer_named_ctl] = 8,
- 	[snd_soc_dapm_pga] = 9,
-+	[snd_soc_dapm_buffer] = 9,
-+	[snd_soc_dapm_scheduler] = 9,
-+	[snd_soc_dapm_effect] = 9,
-+	[snd_soc_dapm_src] = 9,
-+	[snd_soc_dapm_asrc] = 9,
-+	[snd_soc_dapm_encoder] = 9,
-+	[snd_soc_dapm_decoder] = 9,
- 	[snd_soc_dapm_adc] = 10,
- 	[snd_soc_dapm_out_drv] = 11,
- 	[snd_soc_dapm_hp] = 11,
- 	[snd_soc_dapm_spk] = 11,
- 	[snd_soc_dapm_line] = 11,
-+	[snd_soc_dapm_sink] = 11,
- 	[snd_soc_dapm_kcontrol] = 12,
- 	[snd_soc_dapm_post] = 13,
+diff --git a/drivers/input/misc/pwm-vibra.c b/drivers/input/misc/pwm-vibra.c
+index 55da191ae550..9df87431d7d4 100644
+--- a/drivers/input/misc/pwm-vibra.c
++++ b/drivers/input/misc/pwm-vibra.c
+@@ -34,6 +34,7 @@ struct pwm_vibrator {
+ 	struct work_struct play_work;
+ 	u16 level;
+ 	u32 direction_duty_cycle;
++	bool vcc_on;
  };
-@@ -105,13 +117,25 @@ static int dapm_down_seq[] = {
- 	[snd_soc_dapm_spk] = 3,
- 	[snd_soc_dapm_line] = 3,
- 	[snd_soc_dapm_out_drv] = 3,
-+	[snd_soc_dapm_sink] = 3,
- 	[snd_soc_dapm_pga] = 4,
-+	[snd_soc_dapm_buffer] = 4,
-+	[snd_soc_dapm_scheduler] = 4,
-+	[snd_soc_dapm_effect] = 4,
-+	[snd_soc_dapm_src] = 4,
-+	[snd_soc_dapm_asrc] = 4,
-+	[snd_soc_dapm_encoder] = 4,
-+	[snd_soc_dapm_decoder] = 4,
- 	[snd_soc_dapm_switch] = 5,
- 	[snd_soc_dapm_mixer_named_ctl] = 5,
- 	[snd_soc_dapm_mixer] = 5,
- 	[snd_soc_dapm_dac] = 6,
- 	[snd_soc_dapm_mic] = 7,
-+	[snd_soc_dapm_siggen] = 7,
-+	[snd_soc_dapm_input] = 7,
-+	[snd_soc_dapm_output] = 7,
- 	[snd_soc_dapm_micbias] = 8,
-+	[snd_soc_dapm_vmid] = 8,
- 	[snd_soc_dapm_mux] = 9,
- 	[snd_soc_dapm_demux] = 9,
- 	[snd_soc_dapm_aif_in] = 10,
+ 
+ static int pwm_vibrator_start(struct pwm_vibrator *vibrator)
+@@ -42,10 +43,13 @@ static int pwm_vibrator_start(struct pwm_vibrator *vibrator)
+ 	struct pwm_state state;
+ 	int err;
+ 
+-	err = regulator_enable(vibrator->vcc);
+-	if (err) {
+-		dev_err(pdev, "failed to enable regulator: %d", err);
+-		return err;
++	if (!vibrator->vcc_on) {
++		err = regulator_enable(vibrator->vcc);
++		if (err) {
++			dev_err(pdev, "failed to enable regulator: %d", err);
++			return err;
++		}
++		vibrator->vcc_on = true;
+ 	}
+ 
+ 	pwm_get_state(vibrator->pwm, &state);
+@@ -76,7 +80,10 @@ static int pwm_vibrator_start(struct pwm_vibrator *vibrator)
+ 
+ static void pwm_vibrator_stop(struct pwm_vibrator *vibrator)
+ {
+-	regulator_disable(vibrator->vcc);
++	if (vibrator->vcc_on) {
++		regulator_disable(vibrator->vcc);
++		vibrator->vcc_on = false;
++	}
+ 
+ 	if (vibrator->pwm_dir)
+ 		pwm_disable(vibrator->pwm_dir);
 -- 
 2.19.1
 
