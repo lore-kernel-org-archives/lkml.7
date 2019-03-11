@@ -3,51 +3,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D4BBEC43381
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 Mar 2019 13:28:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0B2E8C43381
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 Mar 2019 13:29:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A4DD52184D
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 Mar 2019 13:28:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D746A2184D
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 Mar 2019 13:29:00 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727896AbfCKN2p (ORCPT
+        id S1727570AbfCKNTe (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 11 Mar 2019 09:28:45 -0400
-Received: from mout.kundenserver.de ([212.227.17.24]:40405 "EHLO
-        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727546AbfCKNTe (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
         Mon, 11 Mar 2019 09:19:34 -0400
+Received: from mout.kundenserver.de ([212.227.17.24]:51205 "EHLO
+        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727480AbfCKNTa (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 11 Mar 2019 09:19:30 -0400
 Received: from orion.localdomain ([95.115.159.19]) by mrelayeu.kundenserver.de
  (mreue109 [212.227.15.183]) with ESMTPSA (Nemesis) id
- 1Mg6mG-1gZG1K1sic-00hcUn for <linux-kernel@vger.kernel.org>; Mon, 11 Mar 2019
- 14:19:32 +0100
+ 1Mkpj7-1gdsi73fbj-00mHBM for <linux-kernel@vger.kernel.org>; Mon, 11 Mar 2019
+ 14:19:28 +0100
 From:   "Enrico Weigelt, metux IT consult" <info@metux.net>
 To:     linux-kernel@vger.kernel.org
-Subject: [PATCH 036/114] arch: amd64: Kconfig: pedantic formatting
-Date:   Mon, 11 Mar 2019 14:17:48 +0100
-Message-Id: <1552310346-7629-37-git-send-email-info@metux.net>
+Subject: [PATCH 010/114] sound: soc: qcom: Kconfig: pedantic formatting
+Date:   Mon, 11 Mar 2019 14:17:22 +0100
+Message-Id: <1552310346-7629-11-git-send-email-info@metux.net>
 X-Mailer: git-send-email 1.9.1
 In-Reply-To: <1552310346-7629-1-git-send-email-info@metux.net>
 References: <1552310346-7629-1-git-send-email-info@metux.net>
-X-Provags-ID: V03:K1:aIka6Oue/rIm5Lf8Zfz2LaJiMMFpgggcfdzs+8XlJfi/StmQpJM
- Fi5srHyov7abqzannYeR5kJ6C9gvRTCA6BCuFCvH2XRiF3ph71a/klkeBaKEaH9AnlCPwzd
- eA50qSlB0whHKxzhoGFN23adu8Oky3IYfXgO0lHN0Weo125Vv5f27FrYToNgJMO0FPNtndU
- bmkvcwFsYBXlN4mhBF2qg==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:F/1BjP6aYM8=:grCDGzFjuyCdFJ5bcZKKv9
- OKnQ7O4D69OI3khuOs7jqPz1FIbfSU1xneadXHGlb5j7HiKWrcjBR1KM+yXC+Tm103Voif3M5
- k/gzXL0SeieAKQkoVf4WzrI0utF/h/pUXHeD3x+QXpjorSoiH9Ul1TwTHm6bg52MXHcNBY6cP
- f02o/FSzVivpiDR+k7s7oxRIkXOI3pD4QACDvRGSxECtlHp7cjNtMJKT6tfq08n6wB4rS9Kfw
- zHH9JyK1n7SpU1QkA0CGjFBUZQ2gjdtRPC+qJqEJAhvgcecjuGhHTGu0ZizvaLVIXdW/89eYM
- fdQnGfvXjGVhhrXoYjgGTvN2Fc5Nlu5Jabz/G2fHLRrZg01E8OPOwfBO/0HoplY5rVrLfDcV8
- l3/nuNIvqiUnnG/LVpEitwY22biCC8mvwDPv+Or6m5ZYBOtse4oPNLYSivCN7udQ44zL3FPQJ
- QQRx8w1wybUr4rG2jxbirNip709fXweV7Rpr2lfYOrpNyp7dKmGFYgdTLNEqIOsUx+wy7dvA6
- +nAanz1vLHXcgxVWm8XnFNjaTrNna6i2NB+M3asQ6qw/e/nrycL1oFC9Vf1UQmNh4h73NT1kI
- oi4yhHzkW883HldVP0oKQHMvlTS95JJYp4wj7Oa1X5r0yYNdAUBpz3Ar+qapJmXAEmG4OiZsJ
- Sjd6Ni63Vqqpe6XaFS/HormOC5RsYKi7XXTwiTBcmgXPGZlbuENycye1UZEOrb4XFAZHUPKKP
- GvNuntOj4qMIBJyoVpyofTC+s/8JaNppnzYzaA==
+X-Provags-ID: V03:K1:B3VBc+NZWKIAEsI0Am9cP0XvhXXe0dm+E5IFhdjQzhGqiO7euNO
+ VXP3tbFSOP91W4ATX3gp3NwXB7ODUmi4n/q9jlh1IuzzPruZjiPKlOgI+qBwlpVWSErKtU0
+ nPug9oBawbpGScjN5/B6IHWd9J7j/w5tP50YVAZQPqHuhGvc8leESWFe/3I3PLACzwSzf1Y
+ pjEOVMGjmtL9uLjcymJSg==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:xWdzfQ9yk9I=:b97SE35KiKNTDV1NatanJL
+ L2src6+jAcuv3i4Y1E3sFoZdvLweRnidWh2P4gCdoRiWKROepFkZJZVu73tkCiMYbZA2DP8St
+ Izf8V3rtl3senUUYMr7vPaaz2weWHPvC2p/xaefcLwngxh0/6mYxLGduGMHSeHUKPiiKd9wfH
+ Bs5H5/gYEgEFYNzjMA0YXbTOHbcgb214n/pr4u2Ai0E+73cu/Ry+VlNCIeiFI8toVq5Z8Om/u
+ QkkjHRNpjFfeSuH/ycdnV97INSWl6MZlmuwTb9eV0X9ktbBwMCx7KAW2NF/tv8QUq1xH5sOsV
+ QtB5bTz5NITiD7il9s+XSB7b8lcgXVE6FQ/Bky6GnwKegwAindvrT+eXMexM1Jv8+p2bfXZwt
+ hxBvDBp+VNYgDdwd/3tZrejK2Wss7IfrIK6fMYxVMnfQ9TweWfyQndIkObjytCPLP7R9hi8ZY
+ svIq9nTYBRGtO0eGAGVWM0zQvWsP3zAHG9Mcya4WDTxi2RD514OmP+A0Z6rGjnnWj69YMnqe7
+ tnt9FlNi4rGMsETsB4TRSoRO4LUSmM7aWCSa55bRcSzW9hrxILPPZ32jR7I7n0ReYOcJ6Qldi
+ v2AWTBKojnfkCeHdXG8TOTm6LxPgcoCHOniO/dLZoDb0BGkwoGCLkwgefRCL0aJ7nyzs/lROV
+ W4BHrzuKf1AWzhyvSSIjMac2i2K16GIqlORkkbWf3NM0dbvDFnV36uSDMJFdlGt/rcA/ACNt8
+ eZBGL7ELntjp1s1fuuf8irXaxsxuD0ILCsschg==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
@@ -58,130 +58,75 @@ Great White Handkerchief come around and clean it up.
 
 Signed-off-by: Enrico Weigelt, metux IT consult <info@metux.net>
 ---
- arch/arm64/Kconfig     | 58 +++++++++++++++++++++++++-------------------------
- arch/arm64/kvm/Kconfig |  2 +-
- 2 files changed, 30 insertions(+), 30 deletions(-)
+ sound/soc/qcom/Kconfig | 28 ++++++++++++++--------------
+ 1 file changed, 14 insertions(+), 14 deletions(-)
 
-diff --git a/arch/arm64/Kconfig b/arch/arm64/Kconfig
-index 117b254..e04923c 100644
---- a/arch/arm64/Kconfig
-+++ b/arch/arm64/Kconfig
-@@ -196,31 +196,31 @@ config ARM64_CONT_SHIFT
- 	default 4
- 
- config ARCH_MMAP_RND_BITS_MIN
--       default 14 if ARM64_64K_PAGES
--       default 16 if ARM64_16K_PAGES
--       default 18
-+	default 14 if ARM64_64K_PAGES
-+	default 16 if ARM64_16K_PAGES
-+	default 18
- 
- # max bits determined by the following formula:
- #  VA_BITS - PAGE_SHIFT - 3
- config ARCH_MMAP_RND_BITS_MAX
--       default 19 if ARM64_VA_BITS=36
--       default 24 if ARM64_VA_BITS=39
--       default 27 if ARM64_VA_BITS=42
--       default 30 if ARM64_VA_BITS=47
--       default 29 if ARM64_VA_BITS=48 && ARM64_64K_PAGES
--       default 31 if ARM64_VA_BITS=48 && ARM64_16K_PAGES
--       default 33 if ARM64_VA_BITS=48
--       default 14 if ARM64_64K_PAGES
--       default 16 if ARM64_16K_PAGES
--       default 18
-+	default 19 if ARM64_VA_BITS=36
-+	default 24 if ARM64_VA_BITS=39
-+	default 27 if ARM64_VA_BITS=42
-+	default 30 if ARM64_VA_BITS=47
-+	default 29 if ARM64_VA_BITS=48 && ARM64_64K_PAGES
-+	default 31 if ARM64_VA_BITS=48 && ARM64_16K_PAGES
-+	default 33 if ARM64_VA_BITS=48
-+	default 14 if ARM64_64K_PAGES
-+	default 16 if ARM64_16K_PAGES
-+	default 18
- 
- config ARCH_MMAP_RND_COMPAT_BITS_MIN
--       default 7 if ARM64_64K_PAGES
--       default 9 if ARM64_16K_PAGES
--       default 11
-+	default 7 if ARM64_64K_PAGES
-+	default 9 if ARM64_16K_PAGES
-+	default 11
- 
- config ARCH_MMAP_RND_COMPAT_BITS_MAX
--       default 16
-+	default 16
- 
- config NO_IOPORT_MAP
- 	def_bool y if !PCI
-@@ -253,7 +253,7 @@ config GENERIC_HWEIGHT
- 	def_bool y
- 
- config GENERIC_CSUM
--        def_bool y
-+	def_bool y
- 
- config GENERIC_CALIBRATE_DELAY
- 	def_bool y
-@@ -790,9 +790,9 @@ config ARM64_PA_BITS
- 	default 52 if ARM64_PA_BITS_52
- 
- config CPU_BIG_ENDIAN
--       bool "Build big-endian kernel"
--       help
--         Say Y if you plan on running a kernel in big-endian mode.
-+	bool "Build big-endian kernel"
-+	help
-+	  Say Y if you plan on running a kernel in big-endian mode.
- 
- config SCHED_MC
- 	bool "Multi-core scheduler support"
-@@ -1178,15 +1178,15 @@ config ARM64_PAN
- 	bool "Enable support for Privileged Access Never (PAN)"
- 	default y
+diff --git a/sound/soc/qcom/Kconfig b/sound/soc/qcom/Kconfig
+index 75ceb04..85397f4 100644
+--- a/sound/soc/qcom/Kconfig
++++ b/sound/soc/qcom/Kconfig
+@@ -2,8 +2,8 @@ config SND_SOC_QCOM
+ 	tristate "ASoC support for QCOM platforms"
+ 	depends on ARCH_QCOM || COMPILE_TEST
  	help
--	 Privileged Access Never (PAN; part of the ARMv8.1 Extensions)
--	 prevents the kernel or hypervisor from accessing user-space (EL0)
--	 memory directly.
-+	  Privileged Access Never (PAN; part of the ARMv8.1 Extensions)
-+	  prevents the kernel or hypervisor from accessing user-space (EL0)
-+	  memory directly.
+-          Say Y or M if you want to add support to use audio devices
+-          in Qualcomm Technologies SOC-based platforms.
++	  Say Y or M if you want to add support to use audio devices
++	  in Qualcomm Technologies SOC-based platforms.
  
--	 Choosing this option will cause any unprotected (not using
--	 copy_to_user et al) memory access to fail with a permission fault.
-+	  Choosing this option will cause any unprotected (not using
-+	  copy_to_user et al) memory access to fail with a permission fault.
- 
--	 The feature is detected at runtime, and will remain as a 'nop'
--	 instruction if the cpu does not implement the feature.
-+	  The feature is detected at runtime, and will remain as a 'nop'
-+	  instruction if the cpu does not implement the feature.
- 
- config ARM64_LSE_ATOMICS
- 	bool "Atomic instructions"
-@@ -1459,7 +1459,7 @@ config EFI
+ config SND_SOC_LPASS_CPU
+ 	tristate
+@@ -29,17 +29,17 @@ config SND_SOC_STORM
+ 	select SND_SOC_LPASS_IPQ806X
+ 	select SND_SOC_MAX98357A
  	help
- 	  This option provides support for runtime services provided
- 	  by UEFI firmware (such as non-volatile variables, realtime
--          clock, and platform reset). A UEFI stub is also provided to
-+	  clock, and platform reset). A UEFI stub is also provided to
- 	  allow the kernel to be booted as an EFI application. This
- 	  is only useful on systems that have UEFI firmware.
+-          Say Y or M if you want add support for SoC audio on the
+-          Qualcomm Technologies IPQ806X-based Storm board.
++	  Say Y or M if you want add support for SoC audio on the
++	  Qualcomm Technologies IPQ806X-based Storm board.
  
-diff --git a/arch/arm64/kvm/Kconfig b/arch/arm64/kvm/Kconfig
-index a3f8562..164e463 100644
---- a/arch/arm64/kvm/Kconfig
-+++ b/arch/arm64/kvm/Kconfig
-@@ -59,7 +59,7 @@ config KVM_ARM_PMU
- 	  virtual machines.
+ config SND_SOC_APQ8016_SBC
+ 	tristate "SoC Audio support for APQ8016 SBC platforms"
+ 	depends on SND_SOC_QCOM
+ 	select SND_SOC_LPASS_APQ8016
+ 	help
+-          Support for Qualcomm Technologies LPASS audio block in
+-          APQ8016 SOC-based systems.
+-          Say Y if you want to use audio devices on MI2S.
++	  Support for Qualcomm Technologies LPASS audio block in
++	  APQ8016 SOC-based systems.
++	  Say Y if you want to use audio devices on MI2S.
  
- config KVM_INDIRECT_VECTORS
--       def_bool KVM && (HARDEN_BRANCH_PREDICTOR || HARDEN_EL2_VECTORS)
-+	def_bool KVM && (HARDEN_BRANCH_PREDICTOR || HARDEN_EL2_VECTORS)
+ config SND_SOC_QCOM_COMMON
+ 	tristate
+@@ -81,10 +81,10 @@ config SND_SOC_QDSP6
+ 	select SND_SOC_QDSP6_ASM
+ 	select SND_SOC_QDSP6_ASM_DAI
+ 	help
+-	 To add support for MSM QDSP6 Soc Audio.
+-	 This will enable sound soc platform specific
+-	 audio drivers. This includes q6asm, q6adm,
+-	 q6afe interfaces to DSP using apr.
++	  To add support for MSM QDSP6 Soc Audio.
++	  This will enable sound soc platform specific
++	  audio drivers. This includes q6asm, q6adm,
++	  q6afe interfaces to DSP using apr.
  
- source "drivers/vhost/Kconfig"
+ config SND_SOC_MSM8996
+ 	tristate "SoC Machine driver for MSM8996 and APQ8096 boards"
+@@ -92,9 +92,9 @@ config SND_SOC_MSM8996
+ 	select SND_SOC_QDSP6
+ 	select SND_SOC_QCOM_COMMON
+ 	help
+-          Support for Qualcomm Technologies LPASS audio block in
+-          APQ8096 SoC-based systems.
+-          Say Y if you want to use audio device on this SoCs
++	  Support for Qualcomm Technologies LPASS audio block in
++	  APQ8096 SoC-based systems.
++	  Say Y if you want to use audio device on this SoCs
  
+ config SND_SOC_SDM845
+ 	tristate "SoC Machine driver for SDM845 boards"
 -- 
 1.9.1
 
