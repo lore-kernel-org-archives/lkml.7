@@ -7,63 +7,64 @@ X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5EC03C43381
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 Mar 2019 09:56:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B8F62C43381
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 Mar 2019 09:56:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2F8352084F
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 Mar 2019 09:56:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 885BA2084F
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 Mar 2019 09:56:46 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=baylibre-com.20150623.gappssmtp.com header.i=@baylibre-com.20150623.gappssmtp.com header.b="xjm19XfN"
+	dkim=pass (2048-bit key) header.d=baylibre-com.20150623.gappssmtp.com header.i=@baylibre-com.20150623.gappssmtp.com header.b="xTNsRIDy"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727353AbfCKJ4c (ORCPT
+        id S1727323AbfCKJ4b (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 11 Mar 2019 05:56:32 -0400
-Received: from mail-wr1-f68.google.com ([209.85.221.68]:34333 "EHLO
-        mail-wr1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727228AbfCKJ4Y (ORCPT
+        Mon, 11 Mar 2019 05:56:31 -0400
+Received: from mail-wm1-f68.google.com ([209.85.128.68]:38529 "EHLO
+        mail-wm1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727219AbfCKJ4W (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 11 Mar 2019 05:56:24 -0400
-Received: by mail-wr1-f68.google.com with SMTP id f14so4320235wrg.1
-        for <linux-kernel@vger.kernel.org>; Mon, 11 Mar 2019 02:56:23 -0700 (PDT)
+        Mon, 11 Mar 2019 05:56:22 -0400
+Received: by mail-wm1-f68.google.com with SMTP id a188so3566813wmf.3
+        for <linux-kernel@vger.kernel.org>; Mon, 11 Mar 2019 02:56:21 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=baylibre-com.20150623.gappssmtp.com; s=20150623;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=xc6TAi3Hh+qeOL4saESoM75HmTfiu/18FSF6TCAEiY8=;
-        b=xjm19XfNfCS7KEJ7sSM7HS0WXvcWEegjXgv3l6mPS6jY+FAuYBxyiXEMypQtlKnSKj
-         pMP0Igaabw8t5gBK83w8ZuGu1hpzkV+wAohlcMFQikwZOuDqPeKdeHGqaqjqLlPJW1EK
-         f/TKwCL1nWkCB/bPNZBoOaFw3mDTs0P4E0vZ4sPQeziKq/T2m+cddgPucxRZB9EXOxmq
-         VK4/wf/bqV32vW8JtUsx2RSnL47E9IyMGv8g58WCw81Bn4rPBJI9rDjxeXdlnXAX16Os
-         pV7HczhEKTCyE5519Avu8gx/3wTda6qUXs3QfibVwRlPJSv7FTmKx8ov+fmFBSzhdmAw
-         /R1w==
+        bh=1vd80S55Frb6CGjHBLvPF+QFGjEdspA5jjiX4inId9o=;
+        b=xTNsRIDydRcgWEh+tsTla52WubKGreooa9VLwv8JP6SkimjYefF8rx8p6emQJh26Jm
+         wtlmKGwOyiADzlLZly43pzSH8ngPmwqPD8niYNnmVPAh2aRAZDH7xTFd5Nw5z9zikU1y
+         NvJe8oz/CmLFVNBKd7pdKVJhtylR1YRRUS0w7W1NE/YoWua6qPJKYMPbUE3fn2D5UzcB
+         efTdtwRW06z8WtFHAb10aVTDm6dZFfXJm49wAHnV+Cf2K6W3jOcSczG562ggX47YOQuG
+         9hi7hid5FCDr40p7PeoPY6xkmXt7XWa+YrXppizOUHEV0HarOuv0K3E6gIU4tyqvgYWr
+         KJ+g==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=xc6TAi3Hh+qeOL4saESoM75HmTfiu/18FSF6TCAEiY8=;
-        b=PYjNmOpy/63MNF4B20JF7iHfW2gMD6+AwzGSyZicbmnJjBOimsgwfffvwvpuDRD+oD
-         ZjhqlzNCleI6D83TSb+4/Mj3UWLm9Nhe0cWIHmM5dc2MWrvpKprGK2gBywp1MB4xGJvL
-         wH8a7VGBJAQh7gNvmeGhpJdRsSRzOOs48qUGSSAXmf0SUlVKEVkamJ/q8ySCDd247N1I
-         OQT9+s+19r8s78BOF1niIuVYspH8Nd3bcQqb/DvYrgrojf74vDxkFXzaVZ79Qh8n/t61
-         GzeFSK1DjbUeyypaPJxr2fXgcMlEvWkutXt/Tj7Sglrxh1V1wSg+0/wGJQIVfw8Zw28/
-         wjuQ==
-X-Gm-Message-State: APjAAAXvjXmzskNYX6//1xVmXmI9C9v6bkcRIBwkRSKehNpVx5JcPPCD
-        Q30r/eikFufKsYnobJTSt/3shg==
-X-Google-Smtp-Source: APXvYqzLahKurVD0KnSDQYMIGe3vOtIceOe0rIUlpNrHOWc5PH7u02E3ym5CHSITyz1DXzlgbmr5XQ==
-X-Received: by 2002:adf:f88f:: with SMTP id u15mr13249571wrp.117.1552298182652;
-        Mon, 11 Mar 2019 02:56:22 -0700 (PDT)
+        bh=1vd80S55Frb6CGjHBLvPF+QFGjEdspA5jjiX4inId9o=;
+        b=C8TZNFLFfie6V83aXNBmLSbgvjAg9/YfCeLEV3Af4M1Ez+J5wYXzM2Ig2D5XG/k/fA
+         RheoTtx2xAMWGkmpc0YAnOhcD+zUl0tsL6sZ2wVQHIPYKZPS3w77y9Dvz+SXPXwUmtBD
+         hUCCuEU2Z/pZc5ajgFOJhuBy+YPWd3K4Q8PvJcVR8Why4EuXoK/EfllssM3h0yBQDzQE
+         Ay5J8lJIMVNWGoWHho8/y/zAD7bCstRTTwRjIUHb4bEd2Ok4sOt7B3Um4+aBZKG+54p1
+         qpce+yTJ+dVIVvXnD51Gv7tmJZZZzs+1NUIfmGzE5q/tLS1XiCcbatyNUA3v/qbx0fXV
+         nr9g==
+X-Gm-Message-State: APjAAAXgFcBDJvjwvfUfz/ojEeyPNL0rc4+k39QBuCcqoxUKdpRi49pU
+        kuImBXvHtIN2h7OYiZiAr+d0Dg==
+X-Google-Smtp-Source: APXvYqyFPBiX/Dzj3+1uGcZxa0ESCGxxzjzLSjAg4zYz/BoOSpwSCmtAQPGJePmtlVc6NgV2ysdnaA==
+X-Received: by 2002:a05:600c:246:: with SMTP id 6mr16982360wmj.150.1552298180816;
+        Mon, 11 Mar 2019 02:56:20 -0700 (PDT)
 Received: from bender.baylibre.local (lmontsouris-657-1-212-31.w90-63.abo.wanadoo.fr. [90.63.244.31])
-        by smtp.gmail.com with ESMTPSA id e12sm4764737wrs.91.2019.03.11.02.56.21
+        by smtp.gmail.com with ESMTPSA id e12sm4764737wrs.91.2019.03.11.02.56.20
         (version=TLS1_2 cipher=ECDHE-RSA-AES128-SHA bits=128/128);
-        Mon, 11 Mar 2019 02:56:21 -0700 (PDT)
+        Mon, 11 Mar 2019 02:56:20 -0700 (PDT)
 From:   Neil Armstrong <narmstrong@baylibre.com>
 To:     khilman@baylibre.com
-Cc:     Neil Armstrong <narmstrong@baylibre.com>,
+Cc:     Jerome Brunet <jbrunet@baylibre.com>,
         linux-amlogic@lists.infradead.org,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: [PATCH 07/11] arm64: dts: meson-g12a-x96-max: Enable BT Module
-Date:   Mon, 11 Mar 2019 10:56:09 +0100
-Message-Id: <20190311095613.11371-8-narmstrong@baylibre.com>
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        Neil Armstrong <narmstrong@baylibre.com>
+Subject: [PATCH 05/11] arm64: dts: meson-g12a-sei510: add regulators
+Date:   Mon, 11 Mar 2019 10:56:07 +0100
+Message-Id: <20190311095613.11371-6-narmstrong@baylibre.com>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190311095613.11371-1-narmstrong@baylibre.com>
 References: <20190311095613.11371-1-narmstrong@baylibre.com>
@@ -74,36 +75,96 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Enable the Bluetooth Module on the X96 Max Set-Top-Box.
+From: Jerome Brunet <jbrunet@baylibre.com>
 
+Add some regulators. Still missing
+* VDD_EE (0.8V - PWM controlled)
+* VDD_CPU(PWM controlled)
+* VDDQ1_5
+
+Signed-off-by: Jerome Brunet <jbrunet@baylibre.com>
 Signed-off-by: Neil Armstrong <narmstrong@baylibre.com>
 ---
- arch/arm64/boot/dts/amlogic/meson-g12a-x96-max.dts | 12 ++++++++++++
- 1 file changed, 12 insertions(+)
+ .../boot/dts/amlogic/meson-g12a-sei510.dts    | 55 +++++++++++++++++++
+ 1 file changed, 55 insertions(+)
 
-diff --git a/arch/arm64/boot/dts/amlogic/meson-g12a-x96-max.dts b/arch/arm64/boot/dts/amlogic/meson-g12a-x96-max.dts
-index 21e5de48613e..61606601fb4f 100644
---- a/arch/arm64/boot/dts/amlogic/meson-g12a-x96-max.dts
-+++ b/arch/arm64/boot/dts/amlogic/meson-g12a-x96-max.dts
-@@ -88,6 +88,18 @@
+diff --git a/arch/arm64/boot/dts/amlogic/meson-g12a-sei510.dts b/arch/arm64/boot/dts/amlogic/meson-g12a-sei510.dts
+index 63c515fe4996..2b11b5893958 100644
+--- a/arch/arm64/boot/dts/amlogic/meson-g12a-sei510.dts
++++ b/arch/arm64/boot/dts/amlogic/meson-g12a-sei510.dts
+@@ -15,10 +15,36 @@
+ 		serial0 = &uart_AO;
  	};
+ 
++	ao_5v: regulator-ao_5v {
++		compatible = "regulator-fixed";
++		regulator-name = "AO_5V";
++		regulator-min-microvolt = <5000000>;
++		regulator-max-microvolt = <5000000>;
++		vin-supply = <&dc_in>;
++		regulator-always-on;
++	};
++
+ 	chosen {
+ 		stdout-path = "serial0:115200n8";
+ 	};
+ 
++	dc_in: regulator-dc_in {
++		compatible = "regulator-fixed";
++		regulator-name = "DC_IN";
++		regulator-min-microvolt = <5000000>;
++		regulator-max-microvolt = <5000000>;
++		regulator-always-on;
++	};
++
++	emmc_1v8: regulator-emmc_1v8 {
++		compatible = "regulator-fixed";
++		regulator-name = "EMMC_1V8";
++		regulator-min-microvolt = <1800000>;
++		regulator-max-microvolt = <1800000>;
++		vin-supply = <&vddao_3v3>;
++		regulator-always-on;
++	};
++
+ 	memory@0 {
+ 		device_type = "memory";
+ 		reg = <0x0 0x0 0x0 0x40000000>;
+@@ -31,6 +57,35 @@
+ 			no-map;
+ 		};
+ 	};
++
++	vddao_3v3: regulator-vddao_3v3 {
++		compatible = "regulator-fixed";
++		regulator-name = "VDDAO_3V3";
++		regulator-min-microvolt = <3300000>;
++		regulator-max-microvolt = <3300000>;
++		vin-supply = <&dc_in>;
++		regulator-always-on;
++	};
++
++	vddao_3v3_t: regultor-vddao_3v3_t {
++		compatible = "regulator-fixed";
++		regulator-name = "VDDAO_3V3_T";
++		regulator-min-microvolt = <3300000>;
++		regulator-max-microvolt = <3300000>;
++		vin-supply = <&vddao_3v3>;
++		gpio = <&gpio GPIOH_8 GPIO_OPEN_DRAIN>;
++		enable-active-high;
++	};
++
++	vddio_ao1v8: regulator-vddio_ao1v8 {
++		compatible = "regulator-fixed";
++		regulator-name = "VDDIO_AO1V8";
++		regulator-min-microvolt = <1800000>;
++		regulator-max-microvolt = <1800000>;
++		vin-supply = <&vddao_3v3>;
++		regulator-always-on;
++	};
++
  };
  
-+&uart_A {
-+	status = "okay";
-+	pinctrl-0 = <&uart_a_pins>, <&uart_a_cts_rts_pins>;
-+	pinctrl-names = "default";
-+	uart-has-rtscts;
-+
-+	bluetooth {
-+		compatible = "brcm,bcm43438-bt";
-+		shutdown-gpios = <&gpio GPIOX_17 GPIO_ACTIVE_HIGH>;
-+	};
-+};
-+
  &uart_AO {
- 	status = "okay";
- 	pinctrl-0 = <&uart_ao_a_pins>;
 -- 
 2.20.1
 
