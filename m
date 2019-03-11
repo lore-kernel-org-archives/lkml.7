@@ -6,48 +6,48 @@ X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BAA82C43381
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 Mar 2019 13:23:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5EC11C43381
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 Mar 2019 13:23:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 946F12084F
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 Mar 2019 13:23:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 383172084F
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 Mar 2019 13:23:53 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727664AbfCKNTl (ORCPT
+        id S1728077AbfCKNXv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 11 Mar 2019 09:19:41 -0400
-Received: from mout.kundenserver.de ([217.72.192.73]:53417 "EHLO
+        Mon, 11 Mar 2019 09:23:51 -0400
+Received: from mout.kundenserver.de ([212.227.17.13]:54277 "EHLO
         mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726826AbfCKNTb (ORCPT
+        with ESMTP id S1727647AbfCKNTl (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 11 Mar 2019 09:19:31 -0400
+        Mon, 11 Mar 2019 09:19:41 -0400
 Received: from orion.localdomain ([95.115.159.19]) by mrelayeu.kundenserver.de
  (mreue109 [212.227.15.183]) with ESMTPSA (Nemesis) id
- 1MyK9S-1grKpx37SG-00yjwN for <linux-kernel@vger.kernel.org>; Mon, 11 Mar 2019
- 14:19:29 +0100
+ 1MNKuK-1hQwVC0UzS-00Or9l for <linux-kernel@vger.kernel.org>; Mon, 11 Mar 2019
+ 14:19:40 +0100
 From:   "Enrico Weigelt, metux IT consult" <info@metux.net>
 To:     linux-kernel@vger.kernel.org
-Subject: [PATCH 016/114] drivers: pcmcia: Kconfig: pedantic formatting
-Date:   Mon, 11 Mar 2019 14:17:28 +0100
-Message-Id: <1552310346-7629-17-git-send-email-info@metux.net>
+Subject: [PATCH 094/114] arch: nds32: Kconfig: pedantic formatting
+Date:   Mon, 11 Mar 2019 14:18:46 +0100
+Message-Id: <1552310346-7629-95-git-send-email-info@metux.net>
 X-Mailer: git-send-email 1.9.1
 In-Reply-To: <1552310346-7629-1-git-send-email-info@metux.net>
 References: <1552310346-7629-1-git-send-email-info@metux.net>
-X-Provags-ID: V03:K1:DutnTnCXKj+LjH0YvRZSP1ALY/F5lkX5onakkTKHZDsBPowO+K0
- 3XzyldEtUj59teylaPxCYyDgPlkhoHWujqCg0Jib2RXRx5gjNz9GDVQo/wgdX7YFqf8iTng
- r3vltWSAuFjoZrYzZeSrRUlOjbBcYjKRrM2jE1w+NG5Mfin+D0GZAFUNXeEgODckIr2zPtf
- X/2c1UiqKkPAfW090lzdg==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:Tg3vld7R8TY=:1TzriM+Sa4KY86EL36cKSO
- eC/SNM10BvpFbs/wXABCLg0OfuBRYCKzJwehvEAT9zya2fNUH1O0+G7UFBuZnFC7sd5g1M3jg
- ZaRzIK3Qa+Puskf8In12W54WaAZGYTWBu+MRriSWHHhYhnkfEYvnntQ5HcDtlRDxQr+kxZive
- VqhJSYRQnohcdjjj99yrw/mYeBd4hXvWOiJYf66iZIxN37UtBnCMXENrN+zn9tkaOcYF4qC8w
- 5TQRqrb3q585zAvj7JPt9wAC8UuQ1rP+0u+QD/St88j7pR7sjHQNK0zoMv400gwmHQwhl0vv2
- kAY5PXK/C6ZrpmTSOldP6De29U+YssI3GpdimeOYJqzW9i68PvZWOnxbszIVD1cx+hSWrJ1Ck
- DmyfEeiqk4Tu4tCHpFwoNJZqABed7IgA0OYbF/+cgbhgmJuXuAi5UYBgt25nQGZgX2HQqao8V
- KZh1176SxnLOlQ+DMF944BbFMAKCC2RTGu5z+mgrZbmGY5trDBI4OaDTT0zKXnpqHLwbNXA00
- 108gAzuGvP2MeuzkMWCxpwPS30vwtiyJls8lF/564o+5D3lE2EmNtuu2/bztd3zLHbNtzQs/j
- QaBggkVuvF8ZAf0mMMOJtYggjC8qr4vN1rGg26dYS5Zfr9ZWqgiHPe80rvFITz9R4x3fkcAAp
- rtwxQtTa3Fuex++bqAJdgo5jSZZhV7wosSkFbD1A0BSTwIQixQGuAFOn3bXj7WJlPl3FAxVZr
- ATThKf2Ayw1FygOf/btR3fHDomBp2CLbkY2A5g==
+X-Provags-ID: V03:K1:63gDKIIvixtwmcIAp6PAt0Inw+VXPLQnyqe341iL6UkKqlnpWlI
+ k5Zlx/fsaSPflNLleiXY9g3LI7wSURBoS2M2WtUMdDX83KvtP8gFVsc4jKJ2ynhE1piN6qZ
+ pDzXpi1d1hJztDvseeJznttBI377Vmrnlt2dMCDHeeCGgZ1XC6V9eKEQFxwzupp9K90+q0e
+ 7lx+kPPmQhO4j50K262Qw==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:THHVSl57rvA=:RZ7EmG4nAVJuPLsT4APMcW
+ b4O9e4FeV9qibYHZRwJ5cw2QNhUq6qAiaxvkKjIGMGppKth6vWKzIgjm9ZFBZkH5Re9rtRw4y
+ UrYqIfNqW0eCkg9xjcmBkMKeNz72MKmWRX9sfTBFHt18R4M41JDg4XNly+FTAkJ4gfTWn2kjC
+ emqYrfRHzDBzjO1CPyPCLYSEqO8FGCLzsFqjgVeYhq6gJmbpOwMah/BRQgVixaC66vt7gvfWm
+ yr64g61TVV+88W9OG79hPuGFGoUS+x3ZbzGgaRpPn6pKUK2TNnMr3aqeU52DNs5hB7SDQOJ7R
+ wz3RdRcDHssliZ7nPuHkw9e5zxLcCg1kyj2WFO2ITRuByVML+edtpWd+c0arwbvRhHY91tS/0
+ ir7oUQ6NgYdC1ACFkJ2RMwYXTUeML7zz5DNTLyuDjdYFAUvBatpREAr5v1LG+g4/TYk+5wdT1
+ /j/q8TvZOxX2q8me5O8FaWeLBMS384gwLu/6jMnvblPa5xjvYYbjU0lv3uvUaaApDvkbFjsTN
+ 6qW2xPpKUyZZQFt+IppxVYV+HjWtWV+8zf0I/I3MoqqiCWAu4L2DNgeAiykmAGKJf/a7eDbWT
+ MHYu573yxmzhB9ATuH8RVQJtYvFMKiWM/URgTH/uyxRM01ivrG9eXEAV/t8l2OosuXZvpRozP
+ R6LfPG+DeWoVx/9FVPt6IFn5fAkmGMhEKUvHQ++P8Nz4AiUuCjmu2fMh59wAqiX7FSumJmlOn
+ WDCt9HRMzGmsetq/3fV+IP5D+S8fU5fP+LOynQ==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
@@ -58,47 +58,63 @@ Great White Handkerchief come around and clean it up.
 
 Signed-off-by: Enrico Weigelt, metux IT consult <info@metux.net>
 ---
- drivers/pcmcia/Kconfig | 20 ++++++++++----------
- 1 file changed, 10 insertions(+), 10 deletions(-)
+ arch/nds32/Kconfig | 16 ++++++++--------
+ 1 file changed, 8 insertions(+), 8 deletions(-)
 
-diff --git a/drivers/pcmcia/Kconfig b/drivers/pcmcia/Kconfig
-index fab92ba..1fc7ded 100644
---- a/drivers/pcmcia/Kconfig
-+++ b/drivers/pcmcia/Kconfig
-@@ -22,18 +22,18 @@ config PCMCIA
- 	select CRC32
- 	default y
- 	---help---
--	   This option enables support for 16-bit PCMCIA cards. Most older
--	   PC-cards are such 16-bit PCMCIA cards, so unless you know you're
--	   only using 32-bit CardBus cards, say Y or M here.
-+	  This option enables support for 16-bit PCMCIA cards. Most older
-+	  PC-cards are such 16-bit PCMCIA cards, so unless you know you're
-+	  only using 32-bit CardBus cards, say Y or M here.
+diff --git a/arch/nds32/Kconfig b/arch/nds32/Kconfig
+index addb7f5..c0b13bf 100644
+--- a/arch/nds32/Kconfig
++++ b/arch/nds32/Kconfig
+@@ -4,7 +4,7 @@
+ #
  
--	   To use 16-bit PCMCIA cards, you will need supporting software in
--	   most cases. (see the file <file:Documentation/Changes> for
--	   location and details).
-+	  To use 16-bit PCMCIA cards, you will need supporting software in
-+	  most cases. (see the file <file:Documentation/Changes> for
-+	  location and details).
+ config NDS32
+-        def_bool y
++	def_bool y
+ 	select ARCH_32BIT_OFF_T
+ 	select ARCH_HAS_SYNC_DMA_FOR_CPU
+ 	select ARCH_HAS_SYNC_DMA_FOR_DEVICE
+@@ -51,13 +51,13 @@ config GENERIC_CALIBRATE_DELAY
+ 	def_bool y
  
--	   To compile this driver as modules, choose M here: the
--	   module will be called pcmcia.
-+	  To compile this driver as modules, choose M here: the
-+	  module will be called pcmcia.
+ config GENERIC_CSUM
+-        def_bool y
++	def_bool y
  
--	   If unsure, say Y.
-+	  If unsure, say Y.
+ config GENERIC_HWEIGHT
+-        def_bool y
++	def_bool y
  
- config PCMCIA_LOAD_CIS
- 	bool "Load CIS updates from userspace"
-@@ -275,4 +275,4 @@ config PCCARD_NONSTATIC
- config PCCARD_IODYN
- 	bool
+ config GENERIC_LOCKBREAK
+-        def_bool y
++	def_bool y
+ 	depends on PREEMPT
  
--endif	# PCCARD
-+endif # PCCARD
+ config RWSEM_GENERIC_SPINLOCK
+@@ -67,7 +67,7 @@ config TRACE_IRQFLAGS_SUPPORT
+ 	def_bool y
+ 
+ config STACKTRACE_SUPPORT
+-        def_bool y
++	def_bool y
+ 
+ config FIX_EARLYCON_MEM
+ 	def_bool y
+@@ -82,11 +82,11 @@ config NR_CPUS
+ 	default 1
+ 
+ config MMU
+-        def_bool y
++	def_bool y
+ 
+ config NDS32_BUILTIN_DTB
+-        string "Builtin DTB"
+-        default ""
++	string "Builtin DTB"
++	default ""
+ 	help
+ 	  User can use it to specify the dts of the SoC
+ endmenu
 -- 
 1.9.1
 
