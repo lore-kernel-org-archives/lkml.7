@@ -4,47 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 15478C43381
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 Mar 2019 20:07:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 72932C43381
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 Mar 2019 20:07:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DA5672064A
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 Mar 2019 20:07:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 465362064A
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 Mar 2019 20:07:18 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1552334821;
-	bh=92KM0Hg7I0+v96nTiX4I0Il58DgOijqfraiDVrrXDGk=;
+	s=default; t=1552334838;
+	bh=GQsHKEMVfQdGigqv8DR5qZAObLWl7hnAYxenJ809ziQ=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=WaXWXcC8kNv9skdVud+moNx6OkcsOEvB55cNRwbCqUX4CTDkdmxn6MqtJp98paAzz
-	 TiKL6mGV0n7l5/oM/SYsUaPXr2dsRW++28C/UBwnPp+5utInKRQuutMtD2JLKVruy8
-	 QG5FgFZwxVi5XWMfE65EzMgEL6hV5Qq2YlbSpP2I=
+	b=hSdJBPB1HEIXQYnTCYDgFuDRqmDs34Jlm5KPiQp5Qb2k3hWzeD7AUctiVuQB+UvPo
+	 Yv5PgzyTZk0GSGMYCGc+H6ENsDSPTJkbpFf9GLxEHTZCPMcEwsfx3uQvkRVSTZuf1T
+	 VJG4RrHtLpDNhGoVvTNIK85gz85Puh92b/drOTEE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729347AbfCKUHA (ORCPT
+        id S1729246AbfCKUHR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 11 Mar 2019 16:07:00 -0400
-Received: from mail.kernel.org ([198.145.29.99]:35192 "EHLO mail.kernel.org"
+        Mon, 11 Mar 2019 16:07:17 -0400
+Received: from mail.kernel.org ([198.145.29.99]:35026 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729178AbfCKT5q (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 11 Mar 2019 15:57:46 -0400
+        id S1729123AbfCKT5g (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 11 Mar 2019 15:57:36 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 32E3C2084F;
-        Mon, 11 Mar 2019 19:57:45 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 48032214AE;
+        Mon, 11 Mar 2019 19:57:34 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1552334265;
-        bh=92KM0Hg7I0+v96nTiX4I0Il58DgOijqfraiDVrrXDGk=;
+        s=default; t=1552334255;
+        bh=GQsHKEMVfQdGigqv8DR5qZAObLWl7hnAYxenJ809ziQ=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=ypHPubJW2KL5o+8WNEWMm9lOvKDb203RSC9OcIKftPsQ7vfTtZtaDDa7TTPl3Tz06
-         m+g8irpIkmNVVaSolm6DD9UsKN35+AWR0QQ6Slzn9MczI74RgHQ4uB4vhZV4o9jzWe
-         ocdJ7F9F5AbJCERxT9CnWqpsk9RipCK8D9BnW/M0=
+        b=juG4LFuJgHum4Le4gkq4JO0Li444fSK1tso1S6Zl7Lpvly08nmlmF1HQxtL/rgxhA
+         FwsGOSzg856g+o1TVBkzfq0kTC7GeTaiQUN03ni6kE0SpPk0V+9xo7F1Syge9vPuil
+         Ia1C0f24E8X9wWDsKFeN6qrKfO1bTQAqGkHpj/LU=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Dmitry Torokhov <dmitry.torokhov@gmail.com>,
-        Sasha Levin <sashal@kernel.org>, linux-input@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.19 24/44] Input: ps2-gpio - flush TX work when closing port
-Date:   Mon, 11 Mar 2019 15:56:40 -0400
-Message-Id: <20190311195700.138462-24-sashal@kernel.org>
+Cc:     Christoffer Dall <christoffer.dall@arm.com>,
+        Marc Zyngier <marc.zyngier@arm.com>,
+        Sasha Levin <sashal@kernel.org>, kvmarm@lists.cs.columbia.edu
+Subject: [PATCH AUTOSEL 4.19 19/44] KVM: arm/arm64: vgic: Always initialize the group of private IRQs
+Date:   Mon, 11 Mar 2019 15:56:35 -0400
+Message-Id: <20190311195700.138462-19-sashal@kernel.org>
 X-Mailer: git-send-email 2.19.1
 In-Reply-To: <20190311195700.138462-1-sashal@kernel.org>
 References: <20190311195700.138462-1-sashal@kernel.org>
@@ -56,34 +58,82 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Dmitry Torokhov <dmitry.torokhov@gmail.com>
+From: Christoffer Dall <christoffer.dall@arm.com>
 
-[ Upstream commit 33a841ce5cef4ca6c18ad333248b6d273f54c839 ]
+[ Upstream commit ab2d5eb03dbb7b37a1c6356686fb48626ab0c93e ]
 
-To ensure that TX work is not running after serio port has been torn down,
-let's flush it when closing the port.
+We currently initialize the group of private IRQs during
+kvm_vgic_vcpu_init, and the value of the group depends on the GIC model
+we are emulating.  However, CPUs created before creating (and
+initializing) the VGIC might end up with the wrong group if the VGIC
+is created as GICv3 later.
 
-Reported-by: Sven Van Asbroeck <thesven73@gmail.com>
-Acked-by: Danilo Krummrich <danilokrummrich@dk-develop.de>
-Reviewed-by: Sven Van Asbroeck <TheSven73@gmail.com>
-Signed-off-by: Dmitry Torokhov <dmitry.torokhov@gmail.com>
+Since we have no enforced ordering of creating the VGIC and creating
+VCPUs, we can end up with part the VCPUs being properly intialized and
+the remaining incorrectly initialized.  That also means that we have no
+single place to do the per-cpu data structure initialization which
+depends on knowing the emulated GIC model (which is only the group
+field).
+
+This patch removes the incorrect comment from kvm_vgic_vcpu_init and
+initializes the group of all previously created VCPUs's private
+interrupts in vgic_init in addition to the existing initialization in
+kvm_vgic_vcpu_init.
+
+Signed-off-by: Christoffer Dall <christoffer.dall@arm.com>
+Signed-off-by: Marc Zyngier <marc.zyngier@arm.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/input/serio/ps2-gpio.c | 1 +
- 1 file changed, 1 insertion(+)
+ virt/kvm/arm/vgic/vgic-init.c | 22 ++++++++++++++--------
+ 1 file changed, 14 insertions(+), 8 deletions(-)
 
-diff --git a/drivers/input/serio/ps2-gpio.c b/drivers/input/serio/ps2-gpio.c
-index c62cceb97bb1..5e8d8384aa2a 100644
---- a/drivers/input/serio/ps2-gpio.c
-+++ b/drivers/input/serio/ps2-gpio.c
-@@ -76,6 +76,7 @@ static void ps2_gpio_close(struct serio *serio)
+diff --git a/virt/kvm/arm/vgic/vgic-init.c b/virt/kvm/arm/vgic/vgic-init.c
+index 33e7ee814f7b..8196e4f8731f 100644
+--- a/virt/kvm/arm/vgic/vgic-init.c
++++ b/virt/kvm/arm/vgic/vgic-init.c
+@@ -231,13 +231,6 @@ int kvm_vgic_vcpu_init(struct kvm_vcpu *vcpu)
+ 			irq->config = VGIC_CONFIG_LEVEL;
+ 		}
+ 
+-		/*
+-		 * GICv3 can only be created via the KVM_DEVICE_CREATE API and
+-		 * so we always know the emulation type at this point as it's
+-		 * either explicitly configured as GICv3, or explicitly
+-		 * configured as GICv2, or not configured yet which also
+-		 * implies GICv2.
+-		 */
+ 		if (dist->vgic_model == KVM_DEV_TYPE_ARM_VGIC_V3)
+ 			irq->group = 1;
+ 		else
+@@ -281,7 +274,7 @@ int vgic_init(struct kvm *kvm)
  {
- 	struct ps2_gpio_data *drvdata = serio->port_data;
+ 	struct vgic_dist *dist = &kvm->arch.vgic;
+ 	struct kvm_vcpu *vcpu;
+-	int ret = 0, i;
++	int ret = 0, i, idx;
  
-+	flush_delayed_work(&drvdata->tx_work);
- 	disable_irq(drvdata->irq);
- }
+ 	if (vgic_initialized(kvm))
+ 		return 0;
+@@ -298,6 +291,19 @@ int vgic_init(struct kvm *kvm)
+ 	if (ret)
+ 		goto out;
  
++	/* Initialize groups on CPUs created before the VGIC type was known */
++	kvm_for_each_vcpu(idx, vcpu, kvm) {
++		struct vgic_cpu *vgic_cpu = &vcpu->arch.vgic_cpu;
++
++		for (i = 0; i < VGIC_NR_PRIVATE_IRQS; i++) {
++			struct vgic_irq *irq = &vgic_cpu->private_irqs[i];
++			if (dist->vgic_model == KVM_DEV_TYPE_ARM_VGIC_V3)
++				irq->group = 1;
++			else
++				irq->group = 0;
++		}
++	}
++
+ 	if (vgic_has_its(kvm)) {
+ 		ret = vgic_v4_init(kvm);
+ 		if (ret)
 -- 
 2.19.1
 
