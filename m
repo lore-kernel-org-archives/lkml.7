@@ -6,46 +6,44 @@ X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
 	SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5DAA0C43381
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 Mar 2019 20:09:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CB355C43381
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 Mar 2019 20:10:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 24D222064A
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 Mar 2019 20:09:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 932D32087C
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 Mar 2019 20:10:13 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1552334994;
-	bh=0TPV97L8kD+hDOg3kiQe2FN8wb4G+qRZpoLoNMiBfyY=;
+	s=default; t=1552335013;
+	bh=PvFgnao3BGnA9sdolGvGxZLvaZhMaI6HmQF2SZyjQ7A=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Lx+H2zEx8fLrvjnoVhhvxO22VuS6LHagjyst1hxL/CwhfRXPYxf0WbKkoka0zuy/5
-	 ObKaBoBYCmcQmz0aJ4DGEAXl19oQhtz3hedd0JvHqXG1ftwA8RFinNh/BY8tSbyWyq
-	 qCPTe8f8WxznD8B+qYCTiaXyvjEC3ziDA+qGqxVI=
+	b=Rp4r+nFYyQV4qU5h/BWsfs6cWOIQvF7ggFAJAgmIS2ZHrsnbZ/9zZ53/Nltc0SXfJ
+	 xXaMjTu8MAIcMcQ52zOEXg++HgF3TvJkYh7y7OrRwAMjhA0Z/9ktmDu5o6BiMR6adv
+	 cg//D/wK3yME+qxQKJZ/tLhiXa1uSVhMWGVagaMI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728996AbfCKUJw (ORCPT
+        id S1728953AbfCKUKM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 11 Mar 2019 16:09:52 -0400
-Received: from mail.kernel.org ([198.145.29.99]:34036 "EHLO mail.kernel.org"
+        Mon, 11 Mar 2019 16:10:12 -0400
+Received: from mail.kernel.org ([198.145.29.99]:33914 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728810AbfCKT4o (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 11 Mar 2019 15:56:44 -0400
+        id S1728740AbfCKT4j (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 11 Mar 2019 15:56:39 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B05502173C;
-        Mon, 11 Mar 2019 19:56:42 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id E6F962087C;
+        Mon, 11 Mar 2019 19:56:37 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1552334203;
-        bh=0TPV97L8kD+hDOg3kiQe2FN8wb4G+qRZpoLoNMiBfyY=;
+        s=default; t=1552334198;
+        bh=PvFgnao3BGnA9sdolGvGxZLvaZhMaI6HmQF2SZyjQ7A=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=zVfqybOXGGCOSWjsdT6xbzipYkJ6zCwZtvtLSgFJJjNLoph89iyPWzFkLsKTiPQMN
-         36zIv7otIUBjCrVNl9fGBQ51xVdz89wltfvNUhA44sJx4Rg4o5i5xErFrncrQvhciM
-         zr+GnxvkqjygpXqUuNELndC67fPG02N1mEHWeUBI=
+        b=AHuedRXmaQ9aAh21LQ/B2hCB8d9ARRSGmkUsB/pvgWxJDrPzRRpIHHCZRgr1s3oGE
+         rFjB5rAYdMEM358fZl3uEyOTmHXtBAujzmKyJWXeE7b3FXgWQQF1bZr5ydAEDAJVao
+         PVZ5SD46ZAW8gFLlET/4LzrxyS9DQXUBixbxQYtE=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Dan Carpenter <dan.carpenter@oracle.com>,
-        "David S . Miller" <davem@davemloft.net>,
-        Sasha Levin <sashal@kernel.org>, netdev@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.20 44/52] net: dsa: bcm_sf2: potential array overflow in bcm_sf2_sw_suspend()
-Date:   Mon, 11 Mar 2019 15:55:08 -0400
-Message-Id: <20190311195516.137772-44-sashal@kernel.org>
+Cc:     Guo Ren <ren_guo@c-sky.com>, Sasha Levin <sashal@kernel.org>
+Subject: [PATCH AUTOSEL 4.20 41/52] csky: Fixup io-range page attribute for mmap("/dev/mem")
+Date:   Mon, 11 Mar 2019 15:55:05 -0400
+Message-Id: <20190311195516.137772-41-sashal@kernel.org>
 X-Mailer: git-send-email 2.19.1
 In-Reply-To: <20190311195516.137772-1-sashal@kernel.org>
 References: <20190311195516.137772-1-sashal@kernel.org>
@@ -57,39 +55,60 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Dan Carpenter <dan.carpenter@oracle.com>
+From: Guo Ren <ren_guo@c-sky.com>
 
-[ Upstream commit 8d6ea932856c7087ce8c3d0e79494b7d5386f962 ]
+[ Upstream commit 76d21d186a65523b08ea5f70302e2c29ee8f6a8d ]
 
-The value of ->num_ports comes from bcm_sf2_sw_probe() and it is less
-than or equal to DSA_MAX_PORTS.  The ds->ports[] array is used inside
-the dsa_is_user_port() and dsa_is_cpu_port() functions.  The ds->ports[]
-array is allocated in dsa_switch_alloc() and it has ds->num_ports
-elements so this leads to a static checker warning about a potential out
-of bounds read.
+Some user space drivers need accessing IO address and IO remap need
+SO(strong order) page-attribute to make IO operation correct. So we
+need add SO-page-attr for all non-memory address.
 
-Fixes: 8cfa94984c9c ("net: dsa: bcm_sf2: add suspend/resume callbacks")
-Signed-off-by: Dan Carpenter <dan.carpenter@oracle.com>
-Reviewed-by: Vivien Didelot <vivien.didelot@gmail.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
+Signed-off-by: Guo Ren <ren_guo@c-sky.com>
+Reported-by: Fan Xiaodong <xiaodong.fan@boyahualu.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/dsa/bcm_sf2.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ arch/csky/include/asm/pgtable.h |  5 +++++
+ arch/csky/mm/ioremap.c          | 14 ++++++++++++++
+ 2 files changed, 19 insertions(+)
 
-diff --git a/drivers/net/dsa/bcm_sf2.c b/drivers/net/dsa/bcm_sf2.c
-index 2eb68769562c..6c9dee78e9da 100644
---- a/drivers/net/dsa/bcm_sf2.c
-+++ b/drivers/net/dsa/bcm_sf2.c
-@@ -691,7 +691,7 @@ static int bcm_sf2_sw_suspend(struct dsa_switch *ds)
- 	 * port, the other ones have already been disabled during
- 	 * bcm_sf2_sw_setup
- 	 */
--	for (port = 0; port < DSA_MAX_PORTS; port++) {
-+	for (port = 0; port < ds->num_ports; port++) {
- 		if (dsa_is_user_port(ds, port) || dsa_is_cpu_port(ds, port))
- 			bcm_sf2_port_disable(ds, port, NULL);
- 	}
+diff --git a/arch/csky/include/asm/pgtable.h b/arch/csky/include/asm/pgtable.h
+index af7a7faa1010..dcea277c09ae 100644
+--- a/arch/csky/include/asm/pgtable.h
++++ b/arch/csky/include/asm/pgtable.h
+@@ -241,6 +241,11 @@ static inline pte_t pte_mkyoung(pte_t pte)
+ 
+ #define pgd_index(address)	((address) >> PGDIR_SHIFT)
+ 
++#define __HAVE_PHYS_MEM_ACCESS_PROT
++struct file;
++extern pgprot_t phys_mem_access_prot(struct file *file, unsigned long pfn,
++				     unsigned long size, pgprot_t vma_prot);
++
+ /*
+  * Macro to make mark a page protection value as "uncacheable".  Note
+  * that "protection" is really a misnomer here as the protection value
+diff --git a/arch/csky/mm/ioremap.c b/arch/csky/mm/ioremap.c
+index 7ad3ff103f4a..02025a2a9ec0 100644
+--- a/arch/csky/mm/ioremap.c
++++ b/arch/csky/mm/ioremap.c
+@@ -46,3 +46,17 @@ void iounmap(void __iomem *addr)
+ 	vunmap((void *)((unsigned long)addr & PAGE_MASK));
+ }
+ EXPORT_SYMBOL(iounmap);
++
++pgprot_t phys_mem_access_prot(struct file *file, unsigned long pfn,
++			      unsigned long size, pgprot_t vma_prot)
++{
++	if (!pfn_valid(pfn)) {
++		vma_prot.pgprot |= _PAGE_SO;
++		return pgprot_noncached(vma_prot);
++	} else if (file->f_flags & O_SYNC) {
++		return pgprot_noncached(vma_prot);
++	}
++
++	return vma_prot;
++}
++EXPORT_SYMBOL(phys_mem_access_prot);
 -- 
 2.19.1
 
