@@ -2,96 +2,129 @@ Return-Path: <SRS0=FxTY=RO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_PASS autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_PASS,USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 42765C10F06
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 Mar 2019 16:59:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4C793C43381
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 Mar 2019 16:59:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1AC8D206BA
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 Mar 2019 16:59:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1CD27206BA
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 Mar 2019 16:59:32 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Ub72mcrA"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727623AbfCKQ7S convert rfc822-to-8bit (ORCPT
+        id S1727828AbfCKQ7b (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 11 Mar 2019 12:59:18 -0400
-Received: from lhrrgout.huawei.com ([185.176.76.210]:32903 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726675AbfCKQ7R (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 11 Mar 2019 12:59:17 -0400
-Received: from LHREML712-CAH.china.huawei.com (unknown [172.18.7.107])
-        by Forcepoint Email with ESMTP id 6D7D4F457CD0D9C76349;
-        Mon, 11 Mar 2019 16:59:15 +0000 (GMT)
-Received: from fraeml701-chm.china.huawei.com (10.206.15.50) by
- LHREML712-CAH.china.huawei.com (10.201.108.35) with Microsoft SMTP Server
- (TLS) id 14.3.408.0; Mon, 11 Mar 2019 16:59:15 +0000
-Received: from fraeml704-chm.china.huawei.com (10.206.15.53) by
- fraeml701-chm.china.huawei.com (10.206.15.50) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id
- 15.1.1591.10; Mon, 11 Mar 2019 18:59:14 +0200
-Received: from fraeml704-chm.china.huawei.com ([10.206.112.182]) by
- fraeml704-chm.china.huawei.com ([10.206.112.182]) with mapi id
- 15.01.1591.008; Mon, 11 Mar 2019 18:59:14 +0200
-From:   Dmitry Kasatkin <dmitry.kasatkin@huawei.com>
-To:     Al Viro <viro@zeniv.linux.org.uk>,
-        yuehaibing <yuehaibing@huawei.com>
-CC:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linux-fsdevel@vger.kernel.org" <linux-fsdevel@vger.kernel.org>,
-        "keescook@chromium.org" <keescook@chromium.org>,
-        "stable@vger.kernel.org" <stable@vger.kernel.org>,
-        "gregkh@google.com" <gregkh@google.com>
-Subject: Re: [PATCH -next] exec: Fix mem leak in kernel_read_file
-Thread-Topic: [PATCH -next] exec: Fix mem leak in kernel_read_file
-Thread-Index: AQHUx/hXfkWBsNi2tEKokiQlVrf8Y6XmQzYAgCCDsbc=
-Date:   Mon, 11 Mar 2019 16:59:14 +0000
-Message-ID: <ad928cfca24743d5bb9f01e9a3ae74bd@huawei.com>
-References: <20190219021038.11340-1-yuehaibing@huawei.com>,<20190219022512.GW2217@ZenIV.linux.org.uk>
-In-Reply-To: <20190219022512.GW2217@ZenIV.linux.org.uk>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-originating-ip: [10.122.225.32]
-Content-Type: text/plain; charset="iso-8859-1"
-Content-Transfer-Encoding: 8BIT
+        Mon, 11 Mar 2019 12:59:31 -0400
+Received: from mail-qt1-f194.google.com ([209.85.160.194]:42931 "EHLO
+        mail-qt1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726675AbfCKQ7a (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 11 Mar 2019 12:59:30 -0400
+Received: by mail-qt1-f194.google.com with SMTP id u7so5848091qtg.9;
+        Mon, 11 Mar 2019 09:59:30 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:date:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=KI+BNiyO0P4l5mn1tS7DhvkOTjvTUqUiUWapeOMdJOk=;
+        b=Ub72mcrA/6SU7i5WA23qIwjUEL2XNjB6p/z6VsjO4FtWatd1QrgokNiFX1TO5NZ0tP
+         sCL19UeKrR5q/YsovnCujc+8fIzQnYhNx6VBIilv9JpOJDvYnRnZuZofBLsGMeIC0aXK
+         NVceYVKQWtE2LA46J1u2lfD2aX0l+MeXuqn9NSs224fURgJnA3fFSL0dQmprnRhqcOkZ
+         T8BjaWLWKwRpP5UN5RP7flweE1EPZmkTu7ET+lQf4jyeXyXrPIzMeBPaR51LbUcrswOH
+         Arc5yHtPMMJ2NehNw/PWbYzLQw6oOcl/s8qweOFO3HE55Yykq3IG3obk7ssz5KgAWeW9
+         fVqw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:date:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=KI+BNiyO0P4l5mn1tS7DhvkOTjvTUqUiUWapeOMdJOk=;
+        b=lHHsvb/BcLMpKr3WmBpaWCtfk75Xsa5m8g/Iv7T54UH0KmD5cQrgoONMdFlkylCtkd
+         87kNn4dkLGTWA00sGmPPQwCnsbsF0FZDv1p4IzkzVVsbSzJ1R5iWAZ2TmG1lETWkT/g7
+         P2L6NjIEYzqAO4r6iywQOrULUGUtOiD3SGkEbHVhKwjoDBIoJRV402uGBAxvxka4TjMG
+         +QIR/91xsfdh2ird02UWN4kz3EyOMytHlPcAZRp5ietPI5IxgPz0fTkvvC4LJGLflJPj
+         DVzg0Q39ImNlrF2msT8MeTGQtaVD4aXlS5GTesologmdYmjqb86ahEAr8jDX+FMeE4E1
+         MsHQ==
+X-Gm-Message-State: APjAAAX7ux0ke53mRl6VMn633C2ktUx5XTKx4hdXkK/f7XBxS5ZxSd5R
+        3HL20mEqQNlAoQkT221Ipi/gnfx5
+X-Google-Smtp-Source: APXvYqwiPgC/ziSOVUrb5fp4I3rgFXBPAuLlfhwiAXkpbybWTuqmNxRWZfkegxtvsI21h3io2jLT3Q==
+X-Received: by 2002:ac8:8d5:: with SMTP id y21mr27186795qth.67.1552323569427;
+        Mon, 11 Mar 2019 09:59:29 -0700 (PDT)
+Received: from quaco.ghostprotocols.net ([179.162.132.204])
+        by smtp.gmail.com with ESMTPSA id g123sm9333540qkg.0.2019.03.11.09.59.27
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Mon, 11 Mar 2019 09:59:28 -0700 (PDT)
+From:   Arnaldo Carvalho de Melo <arnaldo.melo@gmail.com>
+X-Google-Original-From: Arnaldo Carvalho de Melo <acme@kernel.org>
+Received: by quaco.ghostprotocols.net (Postfix, from userid 1000)
+        id 26A5E4039C; Mon, 11 Mar 2019 13:59:25 -0300 (-03)
+Date:   Mon, 11 Mar 2019 13:59:25 -0300
+To:     Andi Kleen <andi@firstfloor.org>
+Cc:     jolsa@kernel.org, linux-perf-users@vger.kernel.org,
+        linux-kernel@vger.kernel.org, Andi Kleen <ak@linux.intel.com>
+Subject: Re: [PATCH v6 02/11] perf tools report: Parse time quantum
+Message-ID: <20190311165925.GO10690@kernel.org>
+References: <20190311144502.15423-1-andi@firstfloor.org>
+ <20190311144502.15423-3-andi@firstfloor.org>
 MIME-Version: 1.0
-X-CFilter-Loop: Reflected
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190311144502.15423-3-andi@firstfloor.org>
+X-Url:  http://acmel.wordpress.com
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-
-From: Al Viro <viro@ftp.linux.org.uk> on behalf of Al Viro <viro@zeniv.linux.org.uk>
-Sent: Tuesday, February 19, 2019 4:25 AM
-To: yuehaibing
-Cc: linux-kernel@vger.kernel.org; linux-fsdevel@vger.kernel.org; Dmitry Kasatkin; keescook@chromium.org
-Subject: Re: [PATCH -next] exec: Fix mem leak in kernel_read_file
-    
-On Tue, Feb 19, 2019 at 10:10:38AM +0800, YueHaibing wrote:
-> syzkaller report this:
-> BUG: memory leak
-> unreferenced object 0xffffc9000488d000 (size 9195520):
->   comm "syz-executor.0", pid 2752, jiffies 4294787496 (age 18.757s)
->   hex dump (first 32 bytes):
->     ff ff ff ff ff ff ff ff a8 00 00 00 01 00 00 00  ................
->     02 00 00 00 00 00 00 00 80 a1 7a c1 ff ff ff ff  ..........z.....
->   backtrace:
->     [<000000000863775c>] __vmalloc_node mm/vmalloc.c:1795 [inline]
->     [<000000000863775c>] __vmalloc_node_flags mm/vmalloc.c:1809 [inline]
->     [<000000000863775c>] vmalloc+0x8c/0xb0 mm/vmalloc.c:1831
->     [<000000003f668111>] kernel_read_file+0x58f/0x7d0 fs/exec.c:924
->     [<000000002385813f>] kernel_read_file_from_fd+0x49/0x80 fs/exec.c:993
->     [<0000000011953ff1>] __do_sys_finit_module+0x13b/0x2a0 kernel/module.c:3895
->     [<000000006f58491f>] do_syscall_64+0x147/0x600 arch/x86/entry/common.c:290
->     [<00000000ee78baf4>] entry_SYSCALL_64_after_hwframe+0x49/0xbe
->     [<00000000241f889b>] 0xffffffffffffffff
+Em Mon, Mar 11, 2019 at 07:44:53AM -0700, Andi Kleen escreveu:
+> From: Andi Kleen <ak@linux.intel.com>
 > 
-> It should goto 'out_free' lable to free allocated buf while kernel_read
-> fails.
+> Many workloads change over time. perf report currently aggregates
+> the whole time range reported in perf.data.
+> 
+> This patch adds an option for a time quantum to quantisize the
+> perf.data over time.
+> 
+> This just adds the option, will be used in follow on patches
+> for a time sort key.
+> 
+> Signed-off-by: Andi Kleen <ak@linux.intel.com>
+> 
+> ---
+> v2:
+> Move time_quantum to symbol_conf. check for zero time quantum
+> v3:
+> Document s unit
+> v4:
+> Use _NSEC defines
 
-Applied.
+Humm? This just adds a header, but nevermind, I have the full patch in
+my tree already :-)
 
+- Arnaldo
 
-This must be applied to stables as well...
-    
+> ---
+>  tools/perf/util/symbol.c | 1 +
+>  1 file changed, 1 insertion(+)
+> 
+> diff --git a/tools/perf/util/symbol.c b/tools/perf/util/symbol.c
+> index 6b73a0eeb6a1..967066d4d899 100644
+> --- a/tools/perf/util/symbol.c
+> +++ b/tools/perf/util/symbol.c
+> @@ -30,6 +30,7 @@
+>  #include <elf.h>
+>  #include <limits.h>
+>  #include <symbol/kallsyms.h>
+> +#include <linux/time64.h>
+>  #include <sys/utsname.h>
+>  
+>  static int dso__load_kernel_sym(struct dso *dso, struct map *map);
+> -- 
+> 2.20.1
+
+-- 
+
+- Arnaldo
