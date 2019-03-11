@@ -2,80 +2,113 @@ Return-Path: <SRS0=FxTY=RO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A2D60C43381
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 Mar 2019 14:24:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 17F7EC43381
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 Mar 2019 14:25:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7AD2C206BA
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 Mar 2019 14:24:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E4744206BA
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 Mar 2019 14:25:41 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727520AbfCKOY4 convert rfc822-to-8bit (ORCPT
+        id S1727659AbfCKOZl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 11 Mar 2019 10:24:56 -0400
-Received: from mail-qk1-f193.google.com ([209.85.222.193]:43536 "EHLO
-        mail-qk1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727219AbfCKOYz (ORCPT
+        Mon, 11 Mar 2019 10:25:41 -0400
+Received: from lb1-smtp-cloud8.xs4all.net ([194.109.24.21]:38202 "EHLO
+        lb1-smtp-cloud8.xs4all.net" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726897AbfCKOZk (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 11 Mar 2019 10:24:55 -0400
-Received: by mail-qk1-f193.google.com with SMTP id s26so2778118qkm.10
-        for <linux-kernel@vger.kernel.org>; Mon, 11 Mar 2019 07:24:55 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=mktf9NbwTHJzytT6rfosuWYysmBIsHkTibLJvruU36o=;
-        b=VtsI5JOQGDqawh3Nd/F2maJ8yM0UnAoWyBobSGMYF0tT60vcYQ2S82uOrNb4OdIFLp
-         j4KC+KAyMkY4nx/XUoSsTSHQh3yZZKNwus+4sFMOpKoiR6J6iFtVqN+wNXdv6XP6bvDG
-         i4ri8pqXbrOsim8F7Z3O2i/W8DJ1hhXD+RIMC61UhLyeE0Eus2tV5BoWBlU3qNetJNpU
-         FQaSqNzCMnzy+mRC/NGxd0CZXqF6RN4OabKAjwiY3gwmL08oXJ2gRFC8cp6v9cqAq9qx
-         LGdw/ffobfAu93JCNFtGDq0nmaO0hn1BNQKTawysJmA682UunLVlu1QAjaNyUNQX0+X0
-         VD4g==
-X-Gm-Message-State: APjAAAVyfzXsVcM7tbSvPr/8W7B5iYAOojllUpqmSWSa9tF1O/OdJrXS
-        1l42+qDGtfANpibCs2hGukwc+V4onQ3XcjnYWjRR3Q==
-X-Google-Smtp-Source: APXvYqxh/pw0RG3E66KyVw8a1DD6DP3U4kZPxmIcWlU1sNrWRJIeG9QOmBsEXU+VTv9P0J8WW1V0xFwNJQZbchB+L6s=
-X-Received: by 2002:a05:620a:12a5:: with SMTP id x5mr24802251qki.291.1552314294804;
- Mon, 11 Mar 2019 07:24:54 -0700 (PDT)
-MIME-Version: 1.0
-References: <20190307155323.2949975-1-arnd@arndb.de> <d69abbf5-faf6-d169-2a0c-f440e17ef011@st.com>
-In-Reply-To: <d69abbf5-faf6-d169-2a0c-f440e17ef011@st.com>
-From:   Arnd Bergmann <arnd@arndb.de>
-Date:   Mon, 11 Mar 2019 15:24:37 +0100
-Message-ID: <CAK8P3a2Y-H9v6dFNUPLOFEVJka8+w+5X9VuQETXn539K90fHQQ@mail.gmail.com>
-Subject: Re: [PATCH] drm/stm: fix CONFIG_FB dependency
-To:     Yannick FERTRE <yannick.fertre@st.com>
-Cc:     Philippe CORNU <philippe.cornu@st.com>,
-        Benjamin Gaignard <benjamin.gaignard@linaro.org>,
-        Vincent ABRIOU <vincent.abriou@st.com>,
-        David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        Maxime Coquelin <mcoquelin.stm32@gmail.com>,
-        Alexandre TORGUE <alexandre.torgue@st.com>,
-        "dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>,
-        "linux-stm32@st-md-mailman.stormreply.com" 
-        <linux-stm32@st-md-mailman.stormreply.com>,
+        Mon, 11 Mar 2019 10:25:40 -0400
+Received: from [192.168.2.10] ([212.251.195.8])
+        by smtp-cloud8.xs4all.net with ESMTPA
+        id 3LrwhRzi14HFn3LrzhEsUF; Mon, 11 Mar 2019 15:25:38 +0100
+Subject: Re: [PATCH] media: atmel: atmel-isc: reworked driver and formats
+To:     Ken Sloat <KSloat@aampglobal.com>,
+        "Eugen.Hristev@microchip.com" <Eugen.Hristev@microchip.com>,
+        "linux-media@vger.kernel.org" <linux-media@vger.kernel.org>,
         "linux-arm-kernel@lists.infradead.org" 
         <linux-arm-kernel@lists.infradead.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 8BIT
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "mchehab@kernel.org" <mchehab@kernel.org>,
+        "Nicolas.Ferre@microchip.com" <Nicolas.Ferre@microchip.com>,
+        "sakari.ailus@iki.fi" <sakari.ailus@iki.fi>
+References: <1550219467-9532-1-git-send-email-eugen.hristev@microchip.com>
+ <BL0PR07MB4115ECEE3BED0B46C342F4A9AD630@BL0PR07MB4115.namprd07.prod.outlook.com>
+From:   Hans Verkuil <hverkuil@xs4all.nl>
+Message-ID: <805728da-29ac-bf4b-ad61-95bc71036e23@xs4all.nl>
+Date:   Mon, 11 Mar 2019 15:25:32 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.4.0
+MIME-Version: 1.0
+In-Reply-To: <BL0PR07MB4115ECEE3BED0B46C342F4A9AD630@BL0PR07MB4115.namprd07.prod.outlook.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-CMAE-Envelope: MS4wfKz+PTmhN7YIqOrPP4/Zfo/kjOxLAEE703kNnB05PmljFNMJTZzoz64P3RPt+cJkmvSCDKra8W4/DrpowR03KIfjMsw83SyHmdJ3RMY9y10UmWrnQLS3
+ /MT9dW24y3mS2TsPJ96Bye4j1Hx5beBgHaLdEtdLzpfEUj0zpFI4UWhqddlGWgxmNblEyoFEO89XjuUcbUxfoDhyQ4n/IAARYONmC7uZ3M8vkXg48Vqdqj8X
+ ydQUEW/1/qear9bIdRHRxV4j3meL6Jeiv/8yoUL84uuI5zu5TGEMyIHWqCIQsfL1R3NNOOFGc304oC8F4TxLs43bHWEhWc6TPzzObBAoWNTeVytWSfUrgH4U
+ nwBujMpWGEnGGriHOi2Oy+yrpMDPh/OuNzRZ6+PvddBBmlTI2cYEHltDfT9dsPsntkiaTcw4+SHDXdp+rz3D0e6ry96XtzHCYRzOvNxcJySkIIsOpsA=
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Mar 8, 2019 at 4:50 PM Yannick FERTRE <yannick.fertre@st.com> wrote:
->
-> Reviewed-by: Yannick Fertré <yannick.fertre@st.com>
+Hi Ken,
 
-Thanks,
+On 2/18/19 2:37 PM, Ken Sloat wrote:
+>> -----Original Message-----
+>> From: Eugen.Hristev@microchip.com <Eugen.Hristev@microchip.com>
+>> Sent: Friday, February 15, 2019 3:38 AM
+>> To: linux-media@vger.kernel.org; linux-arm-kernel@lists.infradead.org; linux-
+>> kernel@vger.kernel.org; mchehab@kernel.org;
+>> Nicolas.Ferre@microchip.com; Ken Sloat <KSloat@aampglobal.com>;
+>> sakari.ailus@iki.fi; hverkuil@xs4all.nl
+>> Cc: Eugen.Hristev@microchip.com
+>> Subject: [PATCH] media: atmel: atmel-isc: reworked driver and formats
+>>
+>> From: Eugen Hristev <eugen.hristev@microchip.com>
+>>
+>> This change is a redesign in the formats and the way the ISC is configured
+>> w.r.t. sensor format and the output format from the ISC.
+>> I have changed the splitting between sensor output (which is also ISC input)
+>> and ISC output.
+>> The sensor format represents the way the sensor is configured, and what ISC
+>> is receiving.
+>> The format configuration represents the way ISC is interpreting the data and
+>> formatting the output to the subsystem.
+>> Now it's much easier to figure out what is the ISC configuration for input, and
+>> what is the configuration for output.
+>> The non-raw format can be obtained directly from sensor or it can be done
+>> inside the ISC. The controller format list will include a configuration for each
+>> format.
+>> The old supported formats are still in place, if we want to dump the sensor
+>> format directly to the output, the try format routine will detect and configure
+>> the pipeline accordingly.
+>> This also fixes the previous issues when the raw format was NULL which
+>> resulted in many crashes for sensors which did not have the expected/tested
+>> formats.
+>>
+>> Signed-off-by: Eugen Hristev <eugen.hristev@microchip.com>
+>> ---
+>> Hello Ken and possibly others using ISC driver,
+>>
+>> I would appreciate if you could test this patch with your sensor, because I do
+>> not wish to break anything in your setups.
+>> Feedback is appreciated if any errors appear, so I can fix them.
+>> I tested with ov5640, ov7670, ov7740(only in 4.19 because on latest it's
+>> broken for me...) Rebased this patch on top of mediatree.git/master Thanks!
+>>
+>> Eugen
+>>
+> Hi Eugen,
+> 
+> No problem I will try to test sometime this week on my setup. I appreciate you keeping me in the loop.
 
-> Arnd,
-> could you merge the patch?
-> I think that Benjamin could also merge it.
+Were you able to test this patch? And if not, when do you think you can
+test this? I think it would be good to test this before committing it
+since it is a major change.
 
-I think this should go through the drm tree, so someone with
-access to that should merge it, not me.
+Regards,
 
-     Arnd
+	Hans
