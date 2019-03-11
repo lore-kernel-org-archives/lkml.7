@@ -6,48 +6,48 @@ X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2420AC43381
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 Mar 2019 13:31:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 24989C10F06
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 Mar 2019 13:31:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E6D27222EB
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 Mar 2019 13:31:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F30C8222F6
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 Mar 2019 13:31:20 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728176AbfCKNbO (ORCPT
+        id S1727698AbfCKNbN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 11 Mar 2019 09:31:14 -0400
-Received: from mout.kundenserver.de ([212.227.17.24]:49835 "EHLO
+        Mon, 11 Mar 2019 09:31:13 -0400
+Received: from mout.kundenserver.de ([212.227.17.10]:43745 "EHLO
         mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727440AbfCKNT3 (ORCPT
+        with ESMTP id S1727454AbfCKNT3 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Mon, 11 Mar 2019 09:19:29 -0400
 Received: from orion.localdomain ([95.115.159.19]) by mrelayeu.kundenserver.de
  (mreue109 [212.227.15.183]) with ESMTPSA (Nemesis) id
- 1MryKp-1ggdbJ1HlN-00nv5C for <linux-kernel@vger.kernel.org>; Mon, 11 Mar 2019
+ 1MA7Su-1hDlE21xLm-00BZS5 for <linux-kernel@vger.kernel.org>; Mon, 11 Mar 2019
  14:19:28 +0100
 From:   "Enrico Weigelt, metux IT consult" <info@metux.net>
 To:     linux-kernel@vger.kernel.org
-Subject: [PATCH 006/114] drivers: uio: Kconfig: pedantic formatting
-Date:   Mon, 11 Mar 2019 14:17:18 +0100
-Message-Id: <1552310346-7629-7-git-send-email-info@metux.net>
+Subject: [PATCH 007/114] drivers: leds: Kconfig: pedantic formatting
+Date:   Mon, 11 Mar 2019 14:17:19 +0100
+Message-Id: <1552310346-7629-8-git-send-email-info@metux.net>
 X-Mailer: git-send-email 1.9.1
 In-Reply-To: <1552310346-7629-1-git-send-email-info@metux.net>
 References: <1552310346-7629-1-git-send-email-info@metux.net>
-X-Provags-ID: V03:K1:HKid9Lkm6EmEHRoHapAFwp/C4T+Tymd1NGRAqABFhUYSJX+SD00
- zFwLi+KJE+5KDuzSKwquekGSDHCxA5RCl+mpNonL7H8K959cp7xmuVnMw9Op2kLUz/PGbLw
- Y9IsgO1v+Gqnn+YpZjPWTvUB2fCKiJ0h5PVS/Yv6Nq8+ZYcu6Ghbic0L/A14ZPwy1K3zVbY
- rMdPjgfqCqVWW15Cs2gwQ==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:i26b43x2fm8=:xxobDOf4yl8r+po9uUUgGI
- tizG3jRSadnt1Vy4Z8UGWBDEXOHePxMV+3RzxnLJjK+0fDeKJDMiOS46/5aGxCXsD7frvF4Zm
- 4dJN9h28+upgAee0VgUN0xpAcp0ODLtwq6ehQ1W+mOi5bY7ZMFLIT0KGGVtvw0a4w5LEfqSoG
- MXo8SsQurxsRyCkxrLOtz1VjRxGHB7y9RubgXeXHk65uGd285FqCp5+g4dcP5UWxmZIjK0Xje
- kq6Wx2g+akr0xT2/wgrV2vodvxXOyY740IqPshX/U8zSHxfYm+sQizy84nZn2Tk56ac9dzgUx
- 6Ts6eZnO3BQ1DbE0DUETRmnFmmsaOUd0Ji3I0YG2oekiEuJYwC1AZiywzOGCKepQEx2Sizh2T
- 5yhLda7WycOwl4hEXnbMN5673rGoGf3sD6o4wNcq0A05HFy60m5QE0UOY3EK3XzENTQiW5f3U
- QCozuEKAZmQlauZ9FYCaHFzyinq24rSje8ml6AR2MPlgsudSiIqOnflT2lstXKZYQMuX1EBdR
- +3ac9qXNMm02/5XSvsmprNfR1qKd5x1fr292TN90LIW/s+TmdIqFYXXKuhvVyomRcdpLRLekj
- S3SbUB7RiubOgs4IUk8+Zug8K8jWzhzX7HkMzvF9LxGyNrUNA4soavBxgWrlks8it+GC6cjPN
- O4z9MOCPNTWSSKd+QwG9s/nP8hxScf8jWLv7T5FpNoisNTFbsIpKASMQmpaE1OJu0UhSVH4g5
- 2uUqLHKzbemlI9RNBntlbdLtIUPV91lQo0+s8A==
+X-Provags-ID: V03:K1:4SNdNw9l1J6lTKgi3pumUUCryyTdN0FH98dgwd9Xa/VK6Md2DpC
+ BnsiFMI3DpC3YlpFWmaCx9X+HP4tzhBDvMeUksBZjEBqdl0KGzrrf5JiBPfb9GnW611563i
+ kKC5/DMeRgcFiGh0hHpuJ/gYOCf2/7KY77ElqpKDuBusts7lUDPqNOKWREzPLEmmigsOa4w
+ 6qG6KehMyMwa8lU4++E+w==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:6sM0tKVDChM=:TlISrDYwV35/K0+Ry2CNML
+ 0ycreL4Qv6Lahu9IoXVQUZqdM4+2TSIaonv9vTNwr3HyXtZYNTf5POaBVelET1hPdY3WuJucG
+ 87k82qbOsI0ZJcGBfjBZXw2mahEVKZfITVTlVWGxO1TBejSyHRG4EJg4S6Xwo4Luz6zpMUc4D
+ rQbJv2kNY0N7hZDq1p+cadVU++ZPSFnLiPyppI3vmcoRvdl2/k5wYZZ7C4ueIo2BnUgS7uGA5
+ rd7/GZP7v1AEbuNj/MVCrharHeOnaoHBZcPL4Zu91d3D/AZftdRlvTXkTyfgsTegFIOqVyWob
+ SHSQ3/f68Cs0C+G++VPsdANsP4t/qhvzFVEnYtKIzKCx78XbyldS0Sl1x2Lzwp/1c8Ec6UGUD
+ pvRwDTWHd65LmjKgOQf6lrpZFrsSRsftDoW48DB/npI8l7IUrKECp/XfG4921gXuQYA0ZuzCt
+ kzRLB4hKCP/9Y6hNZWWs8kNBRA5w2ja63EeWUOkXznSfgL5NOuc7mAa4Lz5irnD0uC4yjJAgf
+ 35UlFzpazJAntUCa6/zUrM3qcgpVVkWjFlH0dxkjdflzT3hUw2gFR+2Gbc+5RM/QjKYSLVeuy
+ A4/0eqUo5zswDj9IwBC58S29KJr3Ux8qnomFdkUNGM5rN9mruFB7HaO5TNcP9+I6UqDIvNB7D
+ 4JwVvtco0BheWdA0ssqiub7il8V5HcoIHoGy03UpQxcJIcPorxaEbe5eR457htiDUzNUtev+y
+ Ym6RQJAgKUWiLj+4ZYiCWhRQ9b/fyBB7+zVaxA==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
@@ -58,22 +58,52 @@ Great White Handkerchief come around and clean it up.
 
 Signed-off-by: Enrico Weigelt, metux IT consult <info@metux.net>
 ---
- drivers/uio/Kconfig | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/leds/Kconfig | 18 +++++++++---------
+ 1 file changed, 9 insertions(+), 9 deletions(-)
 
-diff --git a/drivers/uio/Kconfig b/drivers/uio/Kconfig
-index 7e8dc78..4286b73 100644
---- a/drivers/uio/Kconfig
-+++ b/drivers/uio/Kconfig
-@@ -17,7 +17,7 @@ config UIO_CIF
- 	depends on PCI
+diff --git a/drivers/leds/Kconfig b/drivers/leds/Kconfig
+index a72f97f..2b5ae50 100644
+--- a/drivers/leds/Kconfig
++++ b/drivers/leds/Kconfig
+@@ -56,7 +56,7 @@ config LEDS_AAT1290
+ 	depends on OF
+ 	depends on PINCTRL
  	help
- 	  Driver for Hilscher CIF DeviceNet and Profibus cards.  This
--  	  driver requires a userspace component called cif that handles
-+	  driver requires a userspace component called cif that handles
- 	  all of the heavy lifting and can be found at:
- 	        <http://www.osadl.org/projects/downloads/UIO/user/>
+-	 This option enables support for the LEDs on the AAT1290.
++	  This option enables support for the LEDs on the AAT1290.
  
+ config LEDS_AN30259A
+ 	tristate "LED support for Panasonic AN30259A"
+@@ -413,13 +413,13 @@ config LEDS_CLEVO_MAIL
+ 
+ 	  This module can drive the mail LED for the following notebooks:
+ 
+-	  	Clevo D400P
+-	  	Clevo D410J
+-	  	Clevo D410V
+-	  	Clevo D400V/D470V (not tested, but might work)
+-	  	Clevo M540N
+-	  	Clevo M5x0N (not tested, but might work)
+-	  	Positivo Mobile (Clevo M5x0V)
++	        Clevo D400P
++	        Clevo D410J
++	        Clevo D410V
++	        Clevo D400V/D470V (not tested, but might work)
++	        Clevo M540N
++	        Clevo M5x0N (not tested, but might work)
++	        Positivo Mobile (Clevo M5x0V)
+ 
+ 	  If your model is not listed here you can try the "nodetect"
+ 	  module parameter.
+@@ -462,7 +462,7 @@ config LEDS_WM831X_STATUS
+ 	depends on MFD_WM831X
+ 	help
+ 	  This option enables support for the status LEDs of the WM831x
+-          series of PMICs.
++	  series of PMICs.
+ 
+ config LEDS_WM8350
+ 	tristate "LED Support for WM8350 AudioPlus PMIC"
 -- 
 1.9.1
 
