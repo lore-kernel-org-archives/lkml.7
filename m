@@ -4,49 +4,48 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_PASS,USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 714C2C43381
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 Mar 2019 20:03:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6947EC43381
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 Mar 2019 20:04:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4492B2064A
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 Mar 2019 20:03:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 35B3C2064A
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 Mar 2019 20:04:06 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1552334633;
-	bh=k5sfPXxMrxZ6suKAME+79KuKlZnZCw9jAM6Ilq7Vwdk=;
+	s=default; t=1552334646;
+	bh=9CaMT7P3oqdE6QSzxRU5Dzepe4EYD5WTKQK7/G+m6GE=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=ZHWogMDCKWVOZN1hKDT3H/ObH61x13Tb2M9lpTSFqXU32SbmRmyTss3ii2Aj7SNvR
-	 hkNLvfmqQhVxG5PBzzfkf0v6BRL8SGWgeZgkZsVcM3cyMsiXwyYELSKxuMBf9qqqDd
-	 /ZvoxTIqiL/OQBbNAbzvEt7Hv/3ftFJNZPx0nEAw=
+	b=1N2mCJGPEnuwACUSa+eKy+bXmStFTE4cXI0JNQHlfrHiTHjROGhnEtcmmv0xXJ5eZ
+	 bu4q3bXyuun7VYmmty/JPo6UCrUpMzIokZNn/tOVbJcVPlysx4EOxDM+DCuwipTiaz
+	 ScfV7fHEB/1fjE4Quz2SDrF08UX+QrHSZ3SE6GCI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729464AbfCKUDv (ORCPT
+        id S1729591AbfCKUEE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 11 Mar 2019 16:03:51 -0400
-Received: from mail.kernel.org ([198.145.29.99]:36170 "EHLO mail.kernel.org"
+        Mon, 11 Mar 2019 16:04:04 -0400
+Received: from mail.kernel.org ([198.145.29.99]:36102 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729429AbfCKT6m (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 11 Mar 2019 15:58:42 -0400
+        id S1728904AbfCKT6i (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 11 Mar 2019 15:58:38 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 1D89021741;
-        Mon, 11 Mar 2019 19:58:41 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id E6FD9214AE;
+        Mon, 11 Mar 2019 19:58:36 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1552334321;
-        bh=k5sfPXxMrxZ6suKAME+79KuKlZnZCw9jAM6Ilq7Vwdk=;
+        s=default; t=1552334317;
+        bh=9CaMT7P3oqdE6QSzxRU5Dzepe4EYD5WTKQK7/G+m6GE=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=yqvwrd8snEJxQA9cvxdAn3lusY29CnYnWtNR7ptFxb4d0Q6mS1Q9egK2HVxqzoZF0
-         FDyccjSabAM5mJVz2pReEr7zEmI4DtQK8EvUcIfIhLe8tHxtSYahu4NZoNvMFw9dFR
-         yFDhSYfRyRIH4+0UUq3M0KpooS5s6awzIV46FcQc=
+        b=hl5U9NOxpCCu+lYi9wmaqZTY9pEMIDY0Uzh+z6jsuDnUyCCIiNIdsBN8cxaztAqlp
+         hlu6oBTHDYwg1v7NUbB9d2dbqg9nNbVDxGGeO9/8ApxJuMqsZnZV/EGYD0qAS6gtPC
+         Lop0BU8K32iBmNYLqvflj6iFWkICp/nZqptDygNk=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Russell King <rmk+kernel@armlinux.org.uk>,
-        Tony Lindgren <tony@atomide.com>,
-        Sasha Levin <sashal@kernel.org>, linux-omap@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.14 12/27] ARM: OMAP2+: fix lack of timer interrupts on CPU1 after hotplug
-Date:   Mon, 11 Mar 2019 15:58:09 -0400
-Message-Id: <20190311195824.139043-12-sashal@kernel.org>
+Cc:     Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>,
+        Mark Brown <broonie@kernel.org>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH AUTOSEL 4.14 09/27] ASoC: dapm: fix out-of-bounds accesses to DAPM lookup tables
+Date:   Mon, 11 Mar 2019 15:58:06 -0400
+Message-Id: <20190311195824.139043-9-sashal@kernel.org>
 X-Mailer: git-send-email 2.19.1
 In-Reply-To: <20190311195824.139043-1-sashal@kernel.org>
 References: <20190311195824.139043-1-sashal@kernel.org>
@@ -58,79 +57,101 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Russell King <rmk+kernel@armlinux.org.uk>
+From: Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>
 
-[ Upstream commit 50d6b3cf9403879911e06d69c7ef41e43f8f7b4b ]
+[ Upstream commit c16e12010060c6c7a31f08b4a99513064cb53b7d ]
 
-If we have a kernel configured for periodic timer interrupts, and we
-have cpuidle enabled, then we end up with CPU1 losing timer interupts
-after a hotplug.
+KASAN reports and additional traces point to out-of-bounds accesses to
+the dapm_up_seq and dapm_down_seq lookup tables. The indices used are
+larger than the array definition.
 
-This can manifest itself in RCU stall warnings, or userspace becoming
-unresponsive.
+Fix by adding missing entries for the new widget types in these two
+lookup tables, and align them with PGA values.
 
-The problem is that the kernel initially wants to use the TWD timer
-for interrupts, but the TWD loses context when we enter the C3 cpuidle
-state.  Nothing reprograms the TWD after idle.
+Also the sequences for the following widgets were not defined. Since
+their values defaulted to zero, assign them explicitly
 
-We have solved this in the past by switching to broadcast timer ticks,
-and cpuidle44xx switches to that mode at boot time.  However, there is
-nothing to switch from periodic mode local timers after a hotplug
-operation.
+ snd_soc_dapm_input
+ snd_soc_dapm_output
+ snd_soc_dapm_vmid
+ snd_soc_dapm_siggen
+ snd_soc_dapm_sink
 
-We call tick_broadcast_enter() in omap_enter_idle_coupled(), which one
-would expect would take care of the issue, but internally this only
-deals with one-shot local timers - tick_broadcast_enable() on the other
-hand only deals with periodic local timers.  So, we need to call both.
-
-Signed-off-by: Russell King <rmk+kernel@armlinux.org.uk>
-[tony@atomide.com: just standardized the subject line]
-Signed-off-by: Tony Lindgren <tony@atomide.com>
+Fixes: 8a70b4544ef4 ('ASoC: dapm: Add new widget type for constructing DAPM graphs on DSPs.').
+Signed-off-by: Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>
+Signed-off-by: Mark Brown <broonie@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/arm/mach-omap2/cpuidle44xx.c | 16 ++++------------
- 1 file changed, 4 insertions(+), 12 deletions(-)
+ sound/soc/soc-dapm.c | 24 ++++++++++++++++++++++++
+ 1 file changed, 24 insertions(+)
 
-diff --git a/arch/arm/mach-omap2/cpuidle44xx.c b/arch/arm/mach-omap2/cpuidle44xx.c
-index a8b291f00109..dae514c8276a 100644
---- a/arch/arm/mach-omap2/cpuidle44xx.c
-+++ b/arch/arm/mach-omap2/cpuidle44xx.c
-@@ -152,6 +152,10 @@ static int omap_enter_idle_coupled(struct cpuidle_device *dev,
- 	mpuss_can_lose_context = (cx->mpu_state == PWRDM_POWER_RET) &&
- 				 (cx->mpu_logic_state == PWRDM_POWER_OFF);
- 
-+	/* Enter broadcast mode for periodic timers */
-+	tick_broadcast_enable();
-+
-+	/* Enter broadcast mode for one-shot timers */
- 	tick_broadcast_enter();
- 
- 	/*
-@@ -218,15 +222,6 @@ static int omap_enter_idle_coupled(struct cpuidle_device *dev,
- 	return index;
- }
- 
--/*
-- * For each cpu, setup the broadcast timer because local timers
-- * stops for the states above C1.
-- */
--static void omap_setup_broadcast_timer(void *arg)
--{
--	tick_broadcast_enable();
--}
--
- static struct cpuidle_driver omap4_idle_driver = {
- 	.name				= "omap4_idle",
- 	.owner				= THIS_MODULE,
-@@ -319,8 +314,5 @@ int __init omap4_idle_init(void)
- 	if (!cpu_clkdm[0] || !cpu_clkdm[1])
- 		return -ENODEV;
- 
--	/* Configure the broadcast timer on each cpu */
--	on_each_cpu(omap_setup_broadcast_timer, NULL, 1);
--
- 	return cpuidle_register(idle_driver, cpu_online_mask);
- }
+diff --git a/sound/soc/soc-dapm.c b/sound/soc/soc-dapm.c
+index 53c9d7525639..c8cdbe4b5680 100644
+--- a/sound/soc/soc-dapm.c
++++ b/sound/soc/soc-dapm.c
+@@ -75,12 +75,16 @@ static int dapm_up_seq[] = {
+ 	[snd_soc_dapm_clock_supply] = 1,
+ 	[snd_soc_dapm_supply] = 2,
+ 	[snd_soc_dapm_micbias] = 3,
++	[snd_soc_dapm_vmid] = 3,
+ 	[snd_soc_dapm_dai_link] = 2,
+ 	[snd_soc_dapm_dai_in] = 4,
+ 	[snd_soc_dapm_dai_out] = 4,
+ 	[snd_soc_dapm_aif_in] = 4,
+ 	[snd_soc_dapm_aif_out] = 4,
+ 	[snd_soc_dapm_mic] = 5,
++	[snd_soc_dapm_siggen] = 5,
++	[snd_soc_dapm_input] = 5,
++	[snd_soc_dapm_output] = 5,
+ 	[snd_soc_dapm_mux] = 6,
+ 	[snd_soc_dapm_demux] = 6,
+ 	[snd_soc_dapm_dac] = 7,
+@@ -88,11 +92,19 @@ static int dapm_up_seq[] = {
+ 	[snd_soc_dapm_mixer] = 8,
+ 	[snd_soc_dapm_mixer_named_ctl] = 8,
+ 	[snd_soc_dapm_pga] = 9,
++	[snd_soc_dapm_buffer] = 9,
++	[snd_soc_dapm_scheduler] = 9,
++	[snd_soc_dapm_effect] = 9,
++	[snd_soc_dapm_src] = 9,
++	[snd_soc_dapm_asrc] = 9,
++	[snd_soc_dapm_encoder] = 9,
++	[snd_soc_dapm_decoder] = 9,
+ 	[snd_soc_dapm_adc] = 10,
+ 	[snd_soc_dapm_out_drv] = 11,
+ 	[snd_soc_dapm_hp] = 11,
+ 	[snd_soc_dapm_spk] = 11,
+ 	[snd_soc_dapm_line] = 11,
++	[snd_soc_dapm_sink] = 11,
+ 	[snd_soc_dapm_kcontrol] = 12,
+ 	[snd_soc_dapm_post] = 13,
+ };
+@@ -105,13 +117,25 @@ static int dapm_down_seq[] = {
+ 	[snd_soc_dapm_spk] = 3,
+ 	[snd_soc_dapm_line] = 3,
+ 	[snd_soc_dapm_out_drv] = 3,
++	[snd_soc_dapm_sink] = 3,
+ 	[snd_soc_dapm_pga] = 4,
++	[snd_soc_dapm_buffer] = 4,
++	[snd_soc_dapm_scheduler] = 4,
++	[snd_soc_dapm_effect] = 4,
++	[snd_soc_dapm_src] = 4,
++	[snd_soc_dapm_asrc] = 4,
++	[snd_soc_dapm_encoder] = 4,
++	[snd_soc_dapm_decoder] = 4,
+ 	[snd_soc_dapm_switch] = 5,
+ 	[snd_soc_dapm_mixer_named_ctl] = 5,
+ 	[snd_soc_dapm_mixer] = 5,
+ 	[snd_soc_dapm_dac] = 6,
+ 	[snd_soc_dapm_mic] = 7,
++	[snd_soc_dapm_siggen] = 7,
++	[snd_soc_dapm_input] = 7,
++	[snd_soc_dapm_output] = 7,
+ 	[snd_soc_dapm_micbias] = 8,
++	[snd_soc_dapm_vmid] = 8,
+ 	[snd_soc_dapm_mux] = 9,
+ 	[snd_soc_dapm_demux] = 9,
+ 	[snd_soc_dapm_aif_in] = 10,
 -- 
 2.19.1
 
