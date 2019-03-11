@@ -2,120 +2,204 @@ Return-Path: <SRS0=FxTY=RO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3ED99C43381
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 Mar 2019 17:26:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F1530C43381
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 Mar 2019 17:27:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0FE262063F
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 Mar 2019 17:26:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B6A2A2063F
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 Mar 2019 17:27:11 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=nifty.com header.i=@nifty.com header.b="QPCK9ufq"
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="s+HdsXnb"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728102AbfCKR0I (ORCPT
+        id S1727955AbfCKR1K (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 11 Mar 2019 13:26:08 -0400
-Received: from conssluserg-06.nifty.com ([210.131.2.91]:30244 "EHLO
-        conssluserg-06.nifty.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726977AbfCKR0I (ORCPT
+        Mon, 11 Mar 2019 13:27:10 -0400
+Received: from fllv0016.ext.ti.com ([198.47.19.142]:41236 "EHLO
+        fllv0016.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726977AbfCKR1J (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 11 Mar 2019 13:26:08 -0400
-Received: from mail-vs1-f49.google.com (mail-vs1-f49.google.com [209.85.217.49]) (authenticated)
-        by conssluserg-06.nifty.com with ESMTP id x2BHPo8w013037;
-        Tue, 12 Mar 2019 02:25:50 +0900
-DKIM-Filter: OpenDKIM Filter v2.10.3 conssluserg-06.nifty.com x2BHPo8w013037
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nifty.com;
-        s=dec2015msa; t=1552325151;
-        bh=/uTXvDqoIkGNMXXXDJ+c1whBGdzleS4VwYBQuTu5TSU=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=QPCK9ufq1EkWd4ea7WzLwAeEIB3a5ZdOlZma1+2dWpp7m9zNlrjbgy0uTGZmmPqrS
-         PM3hpJYEvans19WFKO+Rm5amCQmHcQIcxLGMlFhgJWvmzne/GDlBInVi9dHNUEsiw1
-         15BWMspej794IqHW87XsvLvre4zS4dZhBGztaT5X4d2Cu6xq/DWItUrQYU1FuTpLDd
-         bvFJMjeLiLzfU0OxubkplxYteJRnN7N5S66coFTazBZSsPUaTVHWTbhNYHhf024J0G
-         4GbF5GaLZPb7URcAVSc0f2zQHrY3s2gqKtp/fhZ9XuvpOoGwaNXY89nXKOkywpMLlE
-         UydjbmlAfr29w==
-X-Nifty-SrcIP: [209.85.217.49]
-Received: by mail-vs1-f49.google.com with SMTP id j12so3225034vsd.3;
-        Mon, 11 Mar 2019 10:25:50 -0700 (PDT)
-X-Gm-Message-State: APjAAAV+pNZKXfwg4t4Nhffxyy02cXxp9fj9keu8kwRAn/MQbTfGRV7p
-        MyMn2alUXqxL0rBFrtLk7dQZ6GC/SStBnPdh+Nw=
-X-Google-Smtp-Source: APXvYqwVWfwnkQ22Qr8JgOqqcj14FI4XLr2p4959uakaEuPpbTe2q7e5B9RSjp6T0PpcvYgXnFmlamLM4Ui9Evqs5qU=
-X-Received: by 2002:a05:6102:18f:: with SMTP id r15mr17485537vsq.215.1552325149774;
- Mon, 11 Mar 2019 10:25:49 -0700 (PDT)
+        Mon, 11 Mar 2019 13:27:09 -0400
+Received: from fllv0035.itg.ti.com ([10.64.41.0])
+        by fllv0016.ext.ti.com (8.15.2/8.15.2) with ESMTP id x2BHR58i066354;
+        Mon, 11 Mar 2019 12:27:05 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1552325225;
+        bh=OnPFerda0jQWM66jxTxChk2fsMMxy1ilbLhi9i/3Kj4=;
+        h=Subject:To:CC:References:From:Date:In-Reply-To;
+        b=s+HdsXnbOVP5L+FQGeI6DlHcb8dGzEON93vx+Qf3rF0gkui2lUbHOJSKvgu244eCH
+         vhhrcQBUWKeHzUEYaABDoOKcjfX3gqSeaR5LnEdvO7t2pn1ObtDocMSGviSBWpdwhp
+         yfV2iNlh+OpNi2sOhmgzkiEg6y8Ud9dvS3rAwDLo=
+Received: from DLEE105.ent.ti.com (dlee105.ent.ti.com [157.170.170.35])
+        by fllv0035.itg.ti.com (8.15.2/8.15.2) with ESMTPS id x2BHR5CD062213
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Mon, 11 Mar 2019 12:27:05 -0500
+Received: from DLEE103.ent.ti.com (157.170.170.33) by DLEE105.ent.ti.com
+ (157.170.170.35) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1591.10; Mon, 11
+ Mar 2019 12:27:04 -0500
+Received: from dlep33.itg.ti.com (157.170.170.75) by DLEE103.ent.ti.com
+ (157.170.170.33) with Microsoft SMTP Server (version=TLS1_0,
+ cipher=TLS_RSA_WITH_AES_256_CBC_SHA) id 15.1.1591.10 via Frontend Transport;
+ Mon, 11 Mar 2019 12:27:04 -0500
+Received: from [172.22.80.120] (ileax41-snat.itg.ti.com [10.172.224.153])
+        by dlep33.itg.ti.com (8.14.3/8.13.8) with ESMTP id x2BHR3KG015074;
+        Mon, 11 Mar 2019 12:27:04 -0500
+Subject: Re: [PATCH 11/25] leds: lp8860: Use led_compose_name()
+To:     Jacek Anaszewski <jacek.anaszewski@gmail.com>,
+        <linux-leds@vger.kernel.org>
+CC:     <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <pavel@ucw.cz>, <robh@kernel.org>
+References: <20190310182836.20841-1-jacek.anaszewski@gmail.com>
+ <20190310182836.20841-12-jacek.anaszewski@gmail.com>
+ <cf42384b-cdbc-3ad7-468f-c4036579652f@ti.com>
+ <7242a6e9-ece7-22af-4d62-f2a6aa163579@gmail.com>
+From:   Dan Murphy <dmurphy@ti.com>
+Message-ID: <7df54f37-1cd4-b1d7-78f2-0aea894f6543@ti.com>
+Date:   Mon, 11 Mar 2019 12:26:47 -0500
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.5.3
 MIME-Version: 1.0
-References: <20190304165732.24043-1-ar@cs.msu.ru> <20190304165732.24043-3-ar@cs.msu.ru>
-In-Reply-To: <20190304165732.24043-3-ar@cs.msu.ru>
-From:   Masahiro Yamada <yamada.masahiro@socionext.com>
-Date:   Tue, 12 Mar 2019 02:25:13 +0900
-X-Gmail-Original-Message-ID: <CAK7LNATzyyga_jbd_9BbEqws9PE-19L3FSxxoPwbC7ieic0yQg@mail.gmail.com>
-Message-ID: <CAK7LNATzyyga_jbd_9BbEqws9PE-19L3FSxxoPwbC7ieic0yQg@mail.gmail.com>
-Subject: Re: [PATCH 2/3] Makefile: kselftest: use KCONFIG_CONFIG
-To:     Arseny Maslennikov <ar@cs.msu.ru>
-Cc:     Michal Marek <michal.lkml@markovi.net>,
-        Jeff Dike <jdike@addtoit.com>,
-        Richard Weinberger <richard@nod.at>,
-        Anton Ivanov <anton.ivanov@cambridgegreys.com>,
-        Linux Kbuild mailing list <linux-kbuild@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        linux-um@lists.infradead.org
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <7242a6e9-ece7-22af-4d62-f2a6aa163579@gmail.com>
+Content-Type: text/plain; charset="utf-8"
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Mar 5, 2019 at 1:58 AM Arseny Maslennikov <ar@cs.msu.ru> wrote:
->
-> If the config file is reassigned through the KCONFIG_CONFIG
-> makeflag/envvar, this rule still attempts to use the wrong, possibly
-> nonexistent file.
-> Let's fix that.
->
-> Signed-off-by: Arseny Maslennikov <ar@cs.msu.ru>
-> ---
->  Makefile | 4 ++--
->  1 file changed, 2 insertions(+), 2 deletions(-)
->
-> diff --git a/Makefile b/Makefile
-> index d5713e7b1e50..4d8760166a47 100644
-> --- a/Makefile
-> +++ b/Makefile
-> @@ -1199,9 +1199,9 @@ kselftest-clean:
->
->  PHONY += kselftest-merge
->  kselftest-merge:
-> -       $(if $(wildcard $(objtree)/.config),, $(error No .config exists, config your kernel first!))
-> +       $(if $(wildcard $(objtree)/$(KCONFIG_CONFIG)),, $(error No $(KCONFIG_CONFIG) exists, config your kernel first!))
->         $(Q)$(CONFIG_SHELL) $(srctree)/scripts/kconfig/merge_config.sh \
-> -               -m $(objtree)/.config \
-> +               -m $(objtree)/$(KCONFIG_CONFIG) \
+Jacek
+
+On 3/11/19 12:24 PM, Jacek Anaszewski wrote:
+> Dan,
+> 
+> On 3/11/19 1:28 PM, Dan Murphy wrote:
+>> On 3/10/19 1:28 PM, Jacek Anaszewski wrote:
+>>> Switch to using generic LED support for composing LED class
+>>> device name.
+>>>
+>>> While at it, avoid iterating through available child of nodes
+>>> in favor of obtaining single expected child node using single
+>>> call to of_get_next_available_child().
+>>>
+>>> Signed-off-by: Jacek Anaszewski <jacek.anaszewski@gmail.com>
+>>> Cc: Dan Murphy <dmurphy@ti.com>
+>>> ---
+>>>   drivers/leds/leds-lp8860.c | 38 +++++++++++++++++++-------------------
+>>>   1 file changed, 19 insertions(+), 19 deletions(-)
+>>>
+>>> diff --git a/drivers/leds/leds-lp8860.c b/drivers/leds/leds-lp8860.c
+>>> index 39c72a908f3b..7c12ccdc1f2f 100644
+>>> --- a/drivers/leds/leds-lp8860.c
+>>> +++ b/drivers/leds/leds-lp8860.c
+>>> @@ -22,7 +22,6 @@
+>>>   #include <linux/of_gpio.h>
+>>>   #include <linux/gpio/consumer.h>
+>>>   #include <linux/slab.h>
+>>> -#include <uapi/linux/uleds.h>
+>>>     #define LP8860_DISP_CL1_BRT_MSB        0x00
+>>>   #define LP8860_DISP_CL1_BRT_LSB        0x01
+>>> @@ -87,6 +86,8 @@
+>>>     #define LP8860_CLEAR_FAULTS        0x01
+>>>   +#define LP8860_NAME            "lp8860"
+>>> +
+>>>   /**
+>>>    * struct lp8860_led -
+>>>    * @lock - Lock for reading/writing the device
+>>> @@ -96,7 +97,6 @@
+>>>    * @eeprom_regmap - EEPROM register map
+>>>    * @enable_gpio - VDDIO/EN gpio to enable communication interface
+>>>    * @regulator - LED supply regulator pointer
+>>> - * @label - LED label
+>>>    */
+>>>   struct lp8860_led {
+>>>       struct mutex lock;
+>>> @@ -106,7 +106,6 @@ struct lp8860_led {
+>>>       struct regmap *eeprom_regmap;
+>>>       struct gpio_desc *enable_gpio;
+>>>       struct regulator *regulator;
+>>> -    char label[LED_MAX_NAME_SIZE];
+>>>   };
+>>>     struct lp8860_eeprom_reg {
+>>> @@ -387,25 +386,26 @@ static int lp8860_probe(struct i2c_client *client,
+>>>       struct lp8860_led *led;
+>>>       struct device_node *np = client->dev.of_node;
+>>>       struct device_node *child_node;
+>>> -    const char *name;
+>>> +    struct led_init_data init_data;
+>>>         led = devm_kzalloc(&client->dev, sizeof(*led), GFP_KERNEL);
+>>>       if (!led)
+>>>           return -ENOMEM;
+>>>   -    for_each_available_child_of_node(np, child_node) {
+>>> -        led->led_dev.default_trigger = of_get_property(child_node,
+>>> -                            "linux,default-trigger",
+>>> -                            NULL);
+>>> -
+>>> -        ret = of_property_read_string(child_node, "label", &name);
+>>> -        if (!ret)
+>>> -            snprintf(led->label, sizeof(led->label), "%s:%s",
+>>> -                 id->name, name);
+>>> -        else
+>>> -            snprintf(led->label, sizeof(led->label),
+>>> -                "%s::display_cluster", id->name);
+>>> -    }
+>>> +    child_node = of_get_next_available_child(np, NULL);
+>>
+>> Again this device has multiple outputs that can be banked or separated.
+>>
+>> I would prefer to leave the iteration and just change the name generation.
+> 
+> In [0] you agreed on removing that. This code is simply broken since
+> there is only one instance of struct lp8860_led allocated.
+> 
+
+Thanks for the reminder on my ack
+
+Dan
+
+>>> +    if (!child_node)
+>>> +        return -EINVAL;
+>>> +
+>>> +    init_data.fwnode = of_fwnode_handle(child_node),
+>>> +
+>>> +    led->led_dev.default_trigger = of_get_property(child_node,
+>>> +                        "linux,default-trigger",
+>>> +                        NULL);
+>>> +
+>>> +    ret = led_compose_name(init_data.fwnode, LP8860_NAME,
+>>> +                   ":display_cluster", init_data.name);
+>>> +    if (ret)
+>>> +        return ret;
+>>>         led->enable_gpio = devm_gpiod_get_optional(&client->dev,
+>>>                              "enable", GPIOD_OUT_LOW);
+>>> @@ -420,7 +420,6 @@ static int lp8860_probe(struct i2c_client *client,
+>>>           led->regulator = NULL;
+>>>         led->client = client;
+>>> -    led->led_dev.name = led->label;
+>>>       led->led_dev.brightness_set_blocking = lp8860_brightness_set;
+>>>         mutex_init(&led->lock);
+>>> @@ -447,7 +446,8 @@ static int lp8860_probe(struct i2c_client *client,
+>>>       if (ret)
+>>>           return ret;
+>>>   -    ret = devm_led_classdev_register(&client->dev, &led->led_dev);
+>>> +    ret = devm_led_classdev_register_ext(&client->dev, &led->led_dev,
+>>> +                         &init_data);
+>>>       if (ret) {
+>>>           dev_err(&client->dev, "led register err: %d\n", ret);
+>>>           return ret;
+>>>
+>>
+>>
+> 
+> [0] https://lkml.org/lkml/2018/11/12/2231
+> 
 
 
-You are blindly replacing .config with $(KCONFIG_CONFIG).
-
-
-What kind of usage do you assume for KCONFIG_CONFIG ?
-
-$(objtree)/$(KCONFIG_CONFIG) means
-$(KCONFIG_CONFIG) never becomes an absolute path.
-
-
-
-
-
-
-
-
->                 $(srctree)/tools/testing/selftests/*/config
->         +$(Q)$(MAKE) -f $(srctree)/Makefile olddefconfig
->
-> --
-> 2.20.1
->
-
-
---
-Best Regards
-Masahiro Yamada
+-- 
+------------------
+Dan Murphy
