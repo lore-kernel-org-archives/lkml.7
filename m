@@ -2,156 +2,171 @@ Return-Path: <SRS0=FxTY=RO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_PASS,USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 54765C43381
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 Mar 2019 18:09:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D3718C43381
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 Mar 2019 18:10:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2E02D206DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 Mar 2019 18:09:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A06C9206DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 Mar 2019 18:10:28 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="mbG5HFOv"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="S4FMq8xt"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727915AbfCKSJO (ORCPT
+        id S1727904AbfCKSK1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 11 Mar 2019 14:09:14 -0400
-Received: from mail-ot1-f66.google.com ([209.85.210.66]:35169 "EHLO
-        mail-ot1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727008AbfCKSJN (ORCPT
+        Mon, 11 Mar 2019 14:10:27 -0400
+Received: from mail-qt1-f194.google.com ([209.85.160.194]:35545 "EHLO
+        mail-qt1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727008AbfCKSK0 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 11 Mar 2019 14:09:13 -0400
-Received: by mail-ot1-f66.google.com with SMTP id z25so39778otk.2
-        for <linux-kernel@vger.kernel.org>; Mon, 11 Mar 2019 11:09:13 -0700 (PDT)
+        Mon, 11 Mar 2019 14:10:26 -0400
+Received: by mail-qt1-f194.google.com with SMTP id b16so5058032qtt.2;
+        Mon, 11 Mar 2019 11:10:25 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=f4mC82pidqSCPI9N9AxvKpvaBTHGNkY4Lid4nwuaH4M=;
-        b=mbG5HFOvWilg9mQu5jG1qVpu/8BbTUud8Yc+8AAgitqarqAW88LjstsFDPF3saF7Nr
-         /d/TlnRnGsf/3HXc99JNEBRyfMUcjRzTQywYnObeK17NsZaeg4H4I5VSiPFSkVOuIIHb
-         nwVAtIE9O+F+VgADPxzLFvK2i9MCgfLA/pAj4=
+        d=gmail.com; s=20161025;
+        h=from:date:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=pdUcx2DG7vNx38cGxgDtsGGweNfsR7/aaFa2nOJg28E=;
+        b=S4FMq8xtew0O4lJu7sWRk0xpsGiFNBxmnC9mL07rvVSu0wfPLR3JZ+dY9b3/ipZtE1
+         mjyfvrT/dZg8+ybGR+fySw0INKDL6JW2Mf8L0LszQRyUfCPJvhxP5ffGq0E6DZEgNu/9
+         8OkpFfC5R/iYV8WVpcUu1O73INpoJc2sx9YBK/0aFrxIn3Xisy9BX55iAidHEiV3gkBM
+         u+aHbngbrO+M27uCvRnsaHCAUd4lL/zOXfIDGOo3R/9xctPYW9YQxaCtr7hiKJ4fM17M
+         qt6RzmBy6xCkMulzLSee9TarOvOwtFXyQZ3e2RgojRsKsl/syM0QIKxfmSh38v0gFTiF
+         hCyQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=f4mC82pidqSCPI9N9AxvKpvaBTHGNkY4Lid4nwuaH4M=;
-        b=LJ1vnsCVmxboNCtIub+cHf7bSZmv/KJllTAoDgph5aQX1Epftq+c4blgh6Dg6b1oJ8
-         RXOUeLFbP58LKURaTTsFdM7P8St4ypmUnLXXE0yK6A+pfz/ChwxVpus5rDlKyH80V6XE
-         19SdCFg0Hrb30OpqdAhheA4yVkAXsjEck0ex6tFbloFmlTGB0t6MR3av7KXI0e3HgjYd
-         DMetqciklphPv6rMoM+3ZPAypiSeTqCr4w4P+0MLlu8nFhmaWkkxvneTw97Yh6c+29ZV
-         8t76actSwqGd02NH38xTY4yhT/JyZ76wDoZKiiyMXkcIm/fw8qxeusfXGp2Wsu8q0LhX
-         hg9w==
-X-Gm-Message-State: APjAAAXQmegcu4PqBx/kjhMpKIXSUzKltStum8a4gFOm/THmhO4TVf+9
-        4FhZDIbjP0YJvbmh1n6j+YSQPEwreAY=
-X-Google-Smtp-Source: APXvYqycX7E8c2mqsexzPrXZb4PEWCGyBkQq5CuVSbd6+FWA6sED4FsM2EjdE9uDhEOzoQEdjBv3gg==
-X-Received: by 2002:a9d:7f8d:: with SMTP id t13mr20359412otp.92.1552327751968;
-        Mon, 11 Mar 2019 11:09:11 -0700 (PDT)
-Received: from mail-oi1-f180.google.com (mail-oi1-f180.google.com. [209.85.167.180])
-        by smtp.gmail.com with ESMTPSA id 97sm2618996otc.25.2019.03.11.11.09.10
-        for <linux-kernel@vger.kernel.org>
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Mon, 11 Mar 2019 11:09:11 -0700 (PDT)
-Received: by mail-oi1-f180.google.com with SMTP id w66so4429420oia.4
-        for <linux-kernel@vger.kernel.org>; Mon, 11 Mar 2019 11:09:10 -0700 (PDT)
-X-Received: by 2002:aca:d803:: with SMTP id p3mr23407oig.111.1552327749933;
- Mon, 11 Mar 2019 11:09:09 -0700 (PDT)
+        h=x-gm-message-state:from:date:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=pdUcx2DG7vNx38cGxgDtsGGweNfsR7/aaFa2nOJg28E=;
+        b=pD3RSvXxkg1lbD5OD5tFMMy001JJx3mCoPphP1qlhhkaH+ZQ43s6XyGLZM+k4njjNn
+         PC6YY0VpkJ+BeAHa89kHXMDfTbFS0mzNLKIPAEridqYiD930HnMRCN/CoESUAAjB4tRE
+         zpi0TIK+pUd0xahZfvuCMwgfJDL3/exFJkJmzXORK7jRYpDb57XhClStNnbOi8zXLpVd
+         EgER4e5J+t166U/BL0tzPmw1xxvcDIN6Y15N/2O35WxNUl3I/1xUxGHcyd/l7kgSMZ+T
+         aytZScQjKPxszPevsgHvggXWgnghZXlw9SR7EczdGF78W+V37lW4q08kk5ijr2Ar0+Vr
+         wYHg==
+X-Gm-Message-State: APjAAAXml18LTxk63amBzGuHHSugRFfNDLZdKEJ3kM0FZXg0aDb0LvSs
+        teQZWNIk5xFg9W5DBxCnGfM=
+X-Google-Smtp-Source: APXvYqzadlEm4x/T3VEitHbD3YPioA2uxJodGd0XpY10jWD1elikNOffnQhrizCbzGol0ePgBKZAPw==
+X-Received: by 2002:ac8:5297:: with SMTP id s23mr25902202qtn.371.1552327824800;
+        Mon, 11 Mar 2019 11:10:24 -0700 (PDT)
+Received: from quaco.ghostprotocols.net ([2804:1b1:210a:2644:8d4d:9170:85d5:da34])
+        by smtp.gmail.com with ESMTPSA id k64sm3740303qkd.55.2019.03.11.11.10.23
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Mon, 11 Mar 2019 11:10:23 -0700 (PDT)
+From:   Arnaldo Carvalho de Melo <arnaldo.melo@gmail.com>
+X-Google-Original-From: Arnaldo Carvalho de Melo <acme@kernel.org>
+Received: by quaco.ghostprotocols.net (Postfix, from userid 1000)
+        id 2F20B4039C; Mon, 11 Mar 2019 15:10:21 -0300 (-03)
+Date:   Mon, 11 Mar 2019 15:10:21 -0300
+To:     Andi Kleen <andi@firstfloor.org>
+Cc:     jolsa@kernel.org, linux-perf-users@vger.kernel.org,
+        linux-kernel@vger.kernel.org, Andi Kleen <ak@linux.intel.com>
+Subject: Re: [PATCH v6 09/11] perf tools report: Add custom scripts to script
+ menu
+Message-ID: <20190311181021.GT10690@kernel.org>
+References: <20190311144502.15423-1-andi@firstfloor.org>
+ <20190311144502.15423-10-andi@firstfloor.org>
 MIME-Version: 1.0
-References: <20190225190957.40425-1-ncrews@chromium.org> <CAFqH_52NG0Zmc=dtZa=6o7kJc0fdueLqTaQiZdtM=2tBer+6vA@mail.gmail.com>
- <CAHX4x84gmrvnGMSE9Geb=8s+Htao+Z=Zp=rR0GpCV+FP5Ax+QQ@mail.gmail.com>
-In-Reply-To: <CAHX4x84gmrvnGMSE9Geb=8s+Htao+Z=Zp=rR0GpCV+FP5Ax+QQ@mail.gmail.com>
-From:   Nick Crews <ncrews@chromium.org>
-Date:   Mon, 11 Mar 2019 12:08:57 -0600
-X-Gmail-Original-Message-ID: <CAHX4x84UE_TD4kSny3JABTzORWrirSNsFb7GkdF=Rqcj9uHEkw@mail.gmail.com>
-Message-ID: <CAHX4x84UE_TD4kSny3JABTzORWrirSNsFb7GkdF=Rqcj9uHEkw@mail.gmail.com>
-Subject: Re: [PATCH v2] platform/chrome: Add Wilco EC Event Handling
-To:     Enric Balletbo Serra <eballetbo@gmail.com>
-Cc:     Benson Leung <bleung@chromium.org>,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        Duncan Laurie <dlaurie@chromium.org>,
-        Oleh Lamzin <lamzin@google.com>,
-        Bartosz Fabianowski <bartfab@google.com>,
-        Daniel Erat <derat@google.com>,
-        Guenter Roeck <groeck@google.com>,
-        Dmitry Torokhov <dtor@google.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190311144502.15423-10-andi@firstfloor.org>
+X-Url:  http://acmel.wordpress.com
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Bump so this doesn't get lost :)
+Em Mon, Mar 11, 2019 at 07:45:00AM -0700, Andi Kleen escreveu:
+> From: Andi Kleen <ak@linux.intel.com>
+> 
+> Add a way to define custom scripts through ~/.perfconfig, which
+> are then added to the scripts menu. The scripts get the same
+> arguments as perf script, in particular -i, --cpu, --tid.
+> 
+> Signed-off-by: Andi Kleen <ak@linux.intel.com>
+> ---
+>  tools/perf/Documentation/perf-config.txt |  8 ++++++++
+>  tools/perf/ui/browsers/scripts.c         | 20 ++++++++++++++++++++
+>  2 files changed, 28 insertions(+)
+> 
+> diff --git a/tools/perf/Documentation/perf-config.txt b/tools/perf/Documentation/perf-config.txt
+> index 2d0fb7613134..c3323228d3d0 100644
+> --- a/tools/perf/Documentation/perf-config.txt
+> +++ b/tools/perf/Documentation/perf-config.txt
+> @@ -590,6 +590,14 @@ samples.*::
+>  		Define how many ns worth of time to show
+>  		around samples in perf report sample context browser.
+>  
+> +script.*::
+> +
+> +	Any option defines a script that is added to the scripts menu
+> +	in the interactive perf browser and whose output is displayed.
+> +	The name of the option is the name, the value is a script command line.
+> +	The script gets the same options passed as a full perf script,
+> +	in particular -i perfdata file, --cpu, --tid
+> +
 
-On Mon, Mar 4, 2019 at 4:54 PM Nick Crews <ncrews@chromium.org> wrote:
->
-> Hi Enric,
->
-> On Tue, Feb 26, 2019 at 8:04 AM Enric Balletbo Serra
-> <eballetbo@gmail.com> wrote:
-> >
-> > Hi Nick,
-> >
-> > Missatge de Nick Crews <ncrews@chromium.org> del dia dl., 25 de febr.
-> > 2019 a les 20:13:
-> > >
-> > > This patch is meant to be applied on top of the current
-> > > for-next top of tree in the chrome/platform repo, at
-> > > https://git.kernel.org/pub/scm/linux/kernel/git/chrome-platform/linux.git/log/?h=for-next
-> > >
-> > > The Wilco Embedded Controller can return extended events that
-> > > are not handled by standard ACPI objects. These events can
-> > > contain information about changes in EC controlled features,
-> > > such as the charger or battery getting plugged/unplugged.
-> > >
-> >
-> > To understand better this I think would be good to know what kind of
-> > events or which specific events do you expect to handle through this
-> > interface. Because if these events are like the ones you described
-> > above (charger/battery plugged/unplugged) this should go again through
-> > the power-supply subsystem and use the standard interface for that.
->
-> I didn't fully understand what was going on here either, so I had to figure
-> it out myself as well :)
->
-> I had a bad description for what sort of events this driver will be used for.
-> There are two general classes of events that are generated by the EC and
-> sent to the OS over ACPI: Standard ones (such as charger/battery/lid stuff
-> as you mention) and the special ones that we care about. These special events
-> include errors and notifications from the optional charging/display
-> dock accessory,
-> for instance "The cable you connected with is not supported". The
-> standard ones are
-> indeed handled through the standard interfaces. This interface also
-> gets notified
-> for a few of the standard events such as the battery getting plugged
-> and unplugged,
-> and that's why I was getting confused.
->
-> You can see in some of the coreboot code where ACPI determines whether
-> or not to forward these special "QS events" to this driver or to the
-> standard ACPI system:
-> https://review.coreboot.org/cgit/coreboot.git/tree/src/ec/google/wilco/acpi/event.asl#n80
->
-> >
-> > I suspect that what you want here, is different kernel drivers
-> > accessing this event interface. E.g a wilco_ec_charger hooked to this
-> > event interface that is able to get the event when the battery is
-> > charging or not charging or charged. Maybe something similar to MKBP
-> > events in cros-ec? Is that what you want?
->
-> This is not what we want, I should have explained the use case in my
-> original message.
-> The point of this driver is to allow telemetry and diagnostics management for
-> enterprise uses. A telemetry daemon will be running on the device
-> waiting for events,
-> (such as "The video port on the dock is not working.") and will report
-> them to a cloud service.
-> An example daemon that will use this is here:
-> https://chromium-review.googlesource.com/c/chromiumos/platform2/+/1390115
->
-> With these explanations, do you now think that we should keep this structure,
-> and not move to the power_supply subsystem?
->
-> Thanks for your thoughts,
-> Nick
+Isn't it better to use 'scripts' for those scripts and leave 'script'
+for configuring the 'perf script' command like we have options for
+annotate, etc?
+
+- Arnaldo
+
+>  SEE ALSO
+>  --------
+>  linkperf:perf[1]
+> diff --git a/tools/perf/ui/browsers/scripts.c b/tools/perf/ui/browsers/scripts.c
+> index cdba58447b85..5d407ab834b5 100644
+> --- a/tools/perf/ui/browsers/scripts.c
+> +++ b/tools/perf/ui/browsers/scripts.c
+> @@ -6,6 +6,7 @@
+>  #include "../../util/symbol.h"
+>  #include "../browser.h"
+>  #include "../libslang.h"
+> +#include "config.h"
+>  
+>  #define SCRIPT_NAMELEN	128
+>  #define SCRIPT_MAX_NO	64
+> @@ -53,6 +54,24 @@ static int add_script_option(const char *name, const char *opt,
+>  	return 0;
+>  }
+>  
+> +static int scripts_config(const char *var, const char *value, void *data)
+> +{
+> +	struct script_config *c = data;
+> +
+> +	if (!strstarts(var, "script."))
+> +		return -1;
+> +	if (c->index >= SCRIPT_MAX_NO)
+> +		return -1;
+> +	c->names[c->index] = strdup(var + 7);
+> +	if (!c->names[c->index])
+> +		return -1;
+> +	if (asprintf(&c->paths[c->index], "%s %s", value,
+> +		     c->extra_format) < 0)
+> +		return -1;
+> +	c->index++;
+> +	return 0;
+> +}
+> +
+>  /*
+>   * When success, will copy the full path of the selected script
+>   * into  the buffer pointed by script_name, and return 0.
+> @@ -87,6 +106,7 @@ static int list_scripts(char *script_name, bool *custom,
+>  			  &scriptc);
+>  	add_script_option("Show individual samples with source", "-F +srcline,+srccode",
+>  			  &scriptc);
+> +	perf_config(scripts_config, &scriptc);
+>  	custom_perf = scriptc.index;
+>  	add_script_option("Show samples with custom perf script arguments", "", &scriptc);
+>  	i = scriptc.index;
+> -- 
+> 2.20.1
+
+-- 
+
+- Arnaldo
