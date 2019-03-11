@@ -4,30 +4,30 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 85C8AC43381
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 Mar 2019 22:16:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0F46FC43381
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 Mar 2019 22:16:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5335A2171F
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 Mar 2019 22:16:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CFFE320657
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 Mar 2019 22:16:33 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728550AbfCKWQG (ORCPT
+        id S1728600AbfCKWQc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 11 Mar 2019 18:16:06 -0400
+        Mon, 11 Mar 2019 18:16:32 -0400
 Received: from mga01.intel.com ([192.55.52.88]:33616 "EHLO mga01.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727898AbfCKWQC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 11 Mar 2019 18:16:02 -0400
+        id S1728357AbfCKWP5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 11 Mar 2019 18:15:57 -0400
 X-Amp-Result: SKIPPED(no attachment in message)
 X-Amp-File-Uploaded: False
 Received: from orsmga002.jf.intel.com ([10.7.209.21])
-  by fmsmga101.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 11 Mar 2019 15:16:02 -0700
+  by fmsmga101.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 11 Mar 2019 15:15:57 -0700
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="5.58,468,1544515200"; 
-   d="scan'208";a="141133795"
+   d="scan'208";a="141133781"
 Received: from tthayer-hp-z620.an.intel.com ([10.122.105.146])
-  by orsmga002.jf.intel.com with ESMTP; 11 Mar 2019 15:16:00 -0700
+  by orsmga002.jf.intel.com with ESMTP; 11 Mar 2019 15:15:55 -0700
 From:   thor.thayer@linux.intel.com
 To:     lee.jones@linaro.org, arnd@arndb.de, dinguyen@kernel.org,
         linux@armlinux.org.uk, catalin.marinas@arm.com,
@@ -38,9 +38,9 @@ Cc:     davem@davemloft.net, mcoquelin.stm32@gmail.com,
         bjorn.andersson@linaro.org, devicetree@vger.kernel.org,
         linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
         netdev@vger.kernel.org, Thor Thayer <thor.thayer@linux.intel.com>
-Subject: [RESEND PATCHv4 5/6] net: stmmac: socfpga: Use shared System Manager driver
-Date:   Mon, 11 Mar 2019 17:18:07 -0500
-Message-Id: <1552342688-6663-6-git-send-email-thor.thayer@linux.intel.com>
+Subject: [RESEND PATCHv4 2/6] Documentation: dt: socfpga: Add S10 System Manager binding
+Date:   Mon, 11 Mar 2019 17:18:04 -0500
+Message-Id: <1552342688-6663-3-git-send-email-thor.thayer@linux.intel.com>
 X-Mailer: git-send-email 2.7.4
 In-Reply-To: <1552342688-6663-1-git-send-email-thor.thayer@linux.intel.com>
 References: <1552342688-6663-1-git-send-email-thor.thayer@linux.intel.com>
@@ -51,47 +51,38 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Thor Thayer <thor.thayer@linux.intel.com>
 
-The ARM64 System Manager requires a different method of reading
-the System Manager than ARM32. A new System Manager driver was
-created to steer ARM32 System Manager calls to regmap_mmio and
-ARM64 System Manager calls to the new access method.
-
-Convert from syscon to the shared System Manager driver so that
-both ARM64 and ARM32 are supported.
+Add the device tree bindings for the Stratix10 System Manager.
 
 Signed-off-by: Thor Thayer <thor.thayer@linux.intel.com>
-Acked-by: David S. Miller <davem@davemloft.net>
+Reviewed-by: Rob Herring <robh@kernel.org>
 ---
-v2  No change to code. Update commit message.
-v3  Remove the unused syscon.h header.
-v4  No change - Resend add Acked-by
+v2  New compatible string and usage for Stratix10
+v3  No change
+v4  Add Reviewed-by from v2.
 ---
- drivers/net/ethernet/stmicro/stmmac/dwmac-socfpga.c | 5 +++--
- 1 file changed, 3 insertions(+), 2 deletions(-)
+ .../devicetree/bindings/arm/altera/socfpga-system.txt        | 12 ++++++++++++
+ 1 file changed, 12 insertions(+)
 
-diff --git a/drivers/net/ethernet/stmicro/stmmac/dwmac-socfpga.c b/drivers/net/ethernet/stmicro/stmmac/dwmac-socfpga.c
-index 5b3b06a0a3bf..d466e33635b0 100644
---- a/drivers/net/ethernet/stmicro/stmmac/dwmac-socfpga.c
-+++ b/drivers/net/ethernet/stmicro/stmmac/dwmac-socfpga.c
-@@ -15,7 +15,7 @@
-  * Adopted from dwmac-sti.c
-  */
- 
--#include <linux/mfd/syscon.h>
-+#include <linux/mfd/altera-sysmgr.h>
- #include <linux/of.h>
- #include <linux/of_address.h>
- #include <linux/of_net.h>
-@@ -114,7 +114,8 @@ static int socfpga_dwmac_parse_data(struct socfpga_dwmac *dwmac, struct device *
- 
- 	dwmac->interface = of_get_phy_mode(np);
- 
--	sys_mgr_base_addr = syscon_regmap_lookup_by_phandle(np, "altr,sysmgr-syscon");
-+	sys_mgr_base_addr =
-+		altr_sysmgr_regmap_lookup_by_phandle(np, "altr,sysmgr-syscon");
- 	if (IS_ERR(sys_mgr_base_addr)) {
- 		dev_info(dev, "No sysmgr-syscon node found\n");
- 		return PTR_ERR(sys_mgr_base_addr);
+diff --git a/Documentation/devicetree/bindings/arm/altera/socfpga-system.txt b/Documentation/devicetree/bindings/arm/altera/socfpga-system.txt
+index f4d04a067282..82edbaaa3f85 100644
+--- a/Documentation/devicetree/bindings/arm/altera/socfpga-system.txt
++++ b/Documentation/devicetree/bindings/arm/altera/socfpga-system.txt
+@@ -11,3 +11,15 @@ Example:
+ 		reg = <0xffd08000 0x1000>;
+ 		cpu1-start-addr = <0xffd080c4>;
+ 	};
++
++ARM64 - Stratix10
++Required properties:
++- compatible : "altr,sys-mgr-s10"
++- reg : Should contain 1 register range(address and length)
++        for system manager register.
++
++Example:
++	 sysmgr@ffd12000 {
++		compatible = "altr,sys-mgr-s10";
++		reg = <0xffd12000 0x228>;
++	};
 -- 
 2.7.4
 
