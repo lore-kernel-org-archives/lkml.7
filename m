@@ -6,31 +6,32 @@ X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C5725C43381
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 Mar 2019 22:49:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E9823C10F06
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 Mar 2019 22:49:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9A8742087C
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 Mar 2019 22:49:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BFC8D214D8
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 Mar 2019 22:49:11 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726863AbfCKWtF (ORCPT
+        id S1726566AbfCKWsK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 11 Mar 2019 18:49:05 -0400
-Received: from usa-sjc-mx-foss1.foss.arm.com ([217.140.101.70]:33912 "EHLO
-        foss.arm.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726578AbfCKWsL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 11 Mar 2019 18:48:11 -0400
+        Mon, 11 Mar 2019 18:48:10 -0400
+Received: from foss.arm.com ([217.140.101.70]:33892 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726442AbfCKWsJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 11 Mar 2019 18:48:09 -0400
 Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.72.51.249])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 3919D19BF;
-        Mon, 11 Mar 2019 15:48:11 -0700 (PDT)
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id C7E831688;
+        Mon, 11 Mar 2019 15:48:08 -0700 (PDT)
 Received: from e113632-lin.cambridge.arm.com (e113632-lin.cambridge.arm.com [10.1.194.37])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPA id 672223F59C;
-        Mon, 11 Mar 2019 15:48:10 -0700 (PDT)
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPA id DBF503F59C;
+        Mon, 11 Mar 2019 15:48:07 -0700 (PDT)
 From:   Valentin Schneider <valentin.schneider@arm.com>
 To:     linux-kernel@vger.kernel.org
-Cc:     Guo Ren <guoren@kernel.org>
-Subject: [PATCH 03/14] csky: entry: Remove unneeded need_resched() loop
-Date:   Mon, 11 Mar 2019 22:47:41 +0000
-Message-Id: <20190311224752.8337-4-valentin.schneider@arm.com>
+Cc:     Ingo Molnar <mingo@redhat.com>,
+        Peter Zijlstra <peterz@infradead.org>
+Subject: [PATCH 01/14] sched/core: Fix preempt_schedule() interrupt return comment
+Date:   Mon, 11 Mar 2019 22:47:39 +0000
+Message-Id: <20190311224752.8337-2-valentin.schneider@arm.com>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190311224752.8337-1-valentin.schneider@arm.com>
 References: <20190311224752.8337-1-valentin.schneider@arm.com>
@@ -41,32 +42,41 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Since the enabling and disabling of IRQs within preempt_schedule_irq()
-is contained in a need_resched() loop, we don't need the outer arch
-code loop.
+preempt_schedule_irq() is the one that should be called on return from
+interrupt, clean up the comment to avoid any ambiguity.
 
 Signed-off-by: Valentin Schneider <valentin.schneider@arm.com>
-Cc: Guo Ren <guoren@kernel.org>
+Cc: Ingo Molnar <mingo@redhat.com>
+Cc: Peter Zijlstra <peterz@infradead.org>
 ---
- arch/csky/kernel/entry.S | 4 ----
- 1 file changed, 4 deletions(-)
+ kernel/sched/core.c | 7 +++----
+ 1 file changed, 3 insertions(+), 4 deletions(-)
 
-diff --git a/arch/csky/kernel/entry.S b/arch/csky/kernel/entry.S
-index 5137ed9062bd..2d9e4776ba7a 100644
---- a/arch/csky/kernel/entry.S
-+++ b/arch/csky/kernel/entry.S
-@@ -307,11 +307,7 @@ ENTRY(csky_irq)
- 	ldw	r8, (r9, TINFO_FLAGS)
- 	btsti	r8, TIF_NEED_RESCHED
- 	bf	2f
--1:
- 	jbsr	preempt_schedule_irq	/* irq en/disable is done inside */
--	ldw	r7, (r9, TINFO_FLAGS)	/* get new tasks TI_FLAGS */
--	btsti	r7, TIF_NEED_RESCHED
--	bt	1b			/* go again */
- #endif
- 2:
- 	jmpi	ret_from_exception
--- 
+diff --git a/kernel/sched/core.c b/kernel/sched/core.c
+index ead464a0f2e5..78c5aaa28278 100644
+--- a/kernel/sched/core.c
++++ b/kernel/sched/core.c
+@@ -3652,9 +3652,8 @@ static void __sched notrace preempt_schedule_common(void)
+ 
+ #ifdef CONFIG_PREEMPT
+ /*
+- * this is the entry point to schedule() from in-kernel preemption
+- * off of preempt_enable. Kernel preemptions off return from interrupt
+- * occur there and call schedule directly.
++ * This is the entry point to schedule() from in-kernel preemption
++ * off of preempt_enable.
+  */
+ asmlinkage __visible void __sched notrace preempt_schedule(void)
+ {
+@@ -3725,7 +3724,7 @@ EXPORT_SYMBOL_GPL(preempt_schedule_notrace);
+ #endif /* CONFIG_PREEMPT */
+ 
+ /*
+- * this is the entry point to schedule() from kernel preemption
++ * This is the entry point to schedule() from kernel preemption
+  * off of irq context.
+  * Note, that this is called and return with irqs disabled. This will
+  * protect us against recursive calling from irq.
+--
 2.20.1
 
