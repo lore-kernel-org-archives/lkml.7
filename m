@@ -6,48 +6,48 @@ X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AED97C10F06
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 Mar 2019 13:29:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 37154C43381
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 Mar 2019 13:29:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5A82D21902
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 Mar 2019 13:29:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DC17921902
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 Mar 2019 13:29:27 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727677AbfCKN3V (ORCPT
+        id S1728213AbfCKN3T (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 11 Mar 2019 09:29:21 -0400
-Received: from mout.kundenserver.de ([217.72.192.73]:48521 "EHLO
+        Mon, 11 Mar 2019 09:29:19 -0400
+Received: from mout.kundenserver.de ([217.72.192.73]:42131 "EHLO
         mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727495AbfCKNTd (ORCPT
+        with ESMTP id S1727536AbfCKNTd (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Mon, 11 Mar 2019 09:19:33 -0400
 Received: from orion.localdomain ([95.115.159.19]) by mrelayeu.kundenserver.de
  (mreue109 [212.227.15.183]) with ESMTPSA (Nemesis) id
- 1MuluP-1glX8c1a9D-00rtNY for <linux-kernel@vger.kernel.org>; Mon, 11 Mar 2019
- 14:19:29 +0100
+ 1MORMu-1hPqZh2UjG-00Px5R for <linux-kernel@vger.kernel.org>; Mon, 11 Mar 2019
+ 14:19:31 +0100
 From:   "Enrico Weigelt, metux IT consult" <info@metux.net>
 To:     linux-kernel@vger.kernel.org
-Subject: [PATCH 013/114] arch: um: drivers: Kconfig: pedantic formatting
-Date:   Mon, 11 Mar 2019 14:17:25 +0100
-Message-Id: <1552310346-7629-14-git-send-email-info@metux.net>
+Subject: [PATCH 030/114] sound: oao: Kconfig: pedantic formatting
+Date:   Mon, 11 Mar 2019 14:17:42 +0100
+Message-Id: <1552310346-7629-31-git-send-email-info@metux.net>
 X-Mailer: git-send-email 1.9.1
 In-Reply-To: <1552310346-7629-1-git-send-email-info@metux.net>
 References: <1552310346-7629-1-git-send-email-info@metux.net>
-X-Provags-ID: V03:K1:7OxLrUddZ5x5cVcfNcqAISDetx7itee/CDjdqEhYI3D8NkaRkNW
- cQToe7MLuSnFTNkO1wwUeLf9Ame00d5M6eV1cwj15JgTtXpSBnXF5nJx2lmhXZbUriq/ITL
- 6ssorlnRYlUgJnKPugAn7zcSUvy18uiFwZbgf6zhZtR3FSYzEQt0RFxBD0n9fkv18NXvKtZ
- hqZBxWgITI6IdfGxHQtTQ==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:EZ+SVxHVz6s=:VxW/Czef/FFpK/ILHpXoFG
- zk5E33/AmXlpX0zpoD2x6QrLbMk79jg8vEDBN0FLSR8voLUabT5alAhUrYi9qW5euwYT/AFzg
- mUyt4aqAzVhbGdX+rccaKo+6M2/pa3KdM88jkHlbW+3StDS/Fav/Vg/HsQ1odWDtm/cUwP0EW
- 00Z2VrOJfdEXao9luWGn3NpTk+4rQBJxrHzf4WkRg8/Nzw/Hx4q+P9ihkTix5WffqUDuQGRbZ
- uDqcpfqKDdMIPEPZtNZn67coOFW9IKYEKSIoUgmViclw1EJnj0721Eujfqg90GC2eqw1nvSzp
- IxWiV1NYz/ZWs0nFnvPUpMtaqadFz6wRkj++WQbYLbkELNp5pha1KIMVmlh07IeSoqdzduuUx
- Oxzy/Yct1vPy8P0jAKTAofhx5nvxgbh6eEh6raL+DzabCOJK5W0g0LYJ6+gN7Z7nevFGd3ai/
- 1jjp2e8jpZHrVwUiuMIDEkZPvuNaW6XfNvXgjR6I2BywZVUyY54sA8YZhyQZgAP7HGYvcklnb
- pahRfvxLoOH9SFiKebrzYQCYxwwBHrz2P/rIhGiQncRXCciPtpd+Z+ahcjgPv80sITYYdyQek
- qHj9sUUBldii8JfOmjjMTyPRXFfU8DUpzsXgvsFcYJbwAlDDcvVTdm21RvC+yBbl8gWAC56zK
- Kx9uZMGoa0KODKlj6AFjLqQ3fPTQF7c2ow7gwryl7xzLi/JKrXWYhfLEnF+yuTQYsdDQMcQL5
- oWZwxW/Njd5KXHFGCyt/ZXyWYPHKYcibWlyAZQ==
+X-Provags-ID: V03:K1:dO9sO0Qax0EiREJAz+uYfttpQLJssOvBGpLIaGAWzA2PvyMP+hq
+ LmEpDYxWN6xH2qguit2mq+TlrFrVr6LSV7wlpgKOLukKl61I+66ffOtvE/FvJE9o2uXNpBY
+ cVACzf0w+snP8rREdIBulHbXrbX9tAI0BFBfo5kBqSg2LvolrctJv3kqNBt2G6z2ds2g+Bx
+ JdZO3t5KM9YVeql85sq4Q==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:5bzEUc2894s=:wo+boS0QIWp+bL2c/T4RIg
+ CVQpRTkk2PXNlaRSHF1LPa6QJKa+NaAtrwO/Z/rpQFbqpR5oNWd+iSe2HX2qI3d7EwZxF/mwt
+ Rq5nNXvuDmspKmn28FC/pmecfP7P+8yczDFpTHeoMhK8e/ECn4o+tvD+JN/ud90Cwv4xTKu9I
+ V7n4azE113wWUVp41YORLKbYf788Wl6m8qfUgm47oHI090Ttjkh/NVQg3ttRxhDoPiGKGji08
+ liXAOWTC/Qi+1dPJpCWLtjMc5+5NxOXDX2zTo2Qdy5eLXPxtiUWWgIca6hoM4uZQp6p6bjzqz
+ y6H8cw97gKF81elgFvV1V5RJYrm32DNLEZm3bd9HFHAnU0rHCwa+lPcLVfk+vd89ZjT8/+yVK
+ Q4XFchoZsGZaMSjKgm5VamhzU+WDFPPc+t6YGBJ+bLjhbctVTAx2Re0gzr1w5Nu38lLfFl+YW
+ gEIi8Ffp30zsnZk0We0ciuPDPWs0hCHLcL7jiiNPAAsFVa5ylKvG73wXLxNHsQM4FisCoVTg+
+ la9UqgoJ8BnYn72UDka+pbEOqSimlvCG+9YKnwxTBLc4wwHJpfd3m5h0FkiB0USnnRvUi9d9r
+ 075qrKvJH2KDdLdrtqXsSkobwAcvnlvlN325zrTt13C0hreUG0R5aobuqS0KMwni14EClPGw2
+ woJ6CNfTCOGDf8UVJq6CnePzcFephIZzL8IX11LoQjVP2ppjyeyNZrf2vRDx+JvLe163n+ZXy
+ 7jOA4qkrM040rFCzzxaLHFIFnG1/sY8Uymy2yw==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
@@ -58,465 +58,30 @@ Great White Handkerchief come around and clean it up.
 
 Signed-off-by: Enrico Weigelt, metux IT consult <info@metux.net>
 ---
- arch/um/drivers/Kconfig | 352 ++++++++++++++++++++++++------------------------
- 1 file changed, 176 insertions(+), 176 deletions(-)
+ sound/aoa/Kconfig | 6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
 
-diff --git a/arch/um/drivers/Kconfig b/arch/um/drivers/Kconfig
-index 2b1aaf7..2638e46 100644
---- a/arch/um/drivers/Kconfig
-+++ b/arch/um/drivers/Kconfig
-@@ -11,58 +11,58 @@ config STDERR_CONSOLE
- config SSL
- 	bool "Virtual serial line"
- 	help
--          The User-Mode Linux environment allows you to create virtual serial
--          lines on the UML that are usually made to show up on the host as
--          ttys or ptys.
-+	  The User-Mode Linux environment allows you to create virtual serial
-+	  lines on the UML that are usually made to show up on the host as
-+	  ttys or ptys.
+diff --git a/sound/aoa/Kconfig b/sound/aoa/Kconfig
+index c081e18..a1e3231 100644
+--- a/sound/aoa/Kconfig
++++ b/sound/aoa/Kconfig
+@@ -3,8 +3,8 @@ menuconfig SND_AOA
+ 	depends on PPC_PMAC
+ 	select SND_PCM
+ 	---help---
+-	This option enables the new driver for the various
+-	Apple Onboard Audio components.
++	  This option enables the new driver for the various
++	  Apple Onboard Audio components.
  
--          See <http://user-mode-linux.sourceforge.net/old/input.html> for more
--          information and command line examples of how to use this facility.
-+	  See <http://user-mode-linux.sourceforge.net/old/input.html> for more
-+	  information and command line examples of how to use this facility.
+ if SND_AOA
  
--          Unless you have a specific reason for disabling this, say Y.
-+	  Unless you have a specific reason for disabling this, say Y.
+@@ -14,4 +14,4 @@ source "sound/aoa/codecs/Kconfig"
  
- config NULL_CHAN
- 	bool "null channel support"
- 	help
--          This option enables support for attaching UML consoles and serial
--          lines to a device similar to /dev/null.  Data written to it disappears
--          and there is never any data to be read.
-+	  This option enables support for attaching UML consoles and serial
-+	  lines to a device similar to /dev/null.  Data written to it disappears
-+	  and there is never any data to be read.
+ source "sound/aoa/soundbus/Kconfig"
  
- config PORT_CHAN
- 	bool "port channel support"
- 	help
--          This option enables support for attaching UML consoles and serial
--          lines to host portals.  They may be accessed with 'telnet <host>
--          <port number>'.  Any number of consoles and serial lines may be
--          attached to a single portal, although what UML device you get when
--          you telnet to that portal will be unpredictable.
--          It is safe to say 'Y' here.
-+	  This option enables support for attaching UML consoles and serial
-+	  lines to host portals.  They may be accessed with 'telnet <host>
-+	  <port number>'.  Any number of consoles and serial lines may be
-+	  attached to a single portal, although what UML device you get when
-+	  you telnet to that portal will be unpredictable.
-+	  It is safe to say 'Y' here.
- 
- config PTY_CHAN
- 	bool "pty channel support"
- 	help
--          This option enables support for attaching UML consoles and serial
--          lines to host pseudo-terminals.  Access to both traditional
--          pseudo-terminals (/dev/pty*) and pts pseudo-terminals are controlled
--          with this option.  The assignment of UML devices to host devices
--          will be announced in the kernel message log.
--          It is safe to say 'Y' here.
-+	  This option enables support for attaching UML consoles and serial
-+	  lines to host pseudo-terminals.  Access to both traditional
-+	  pseudo-terminals (/dev/pty*) and pts pseudo-terminals are controlled
-+	  with this option.  The assignment of UML devices to host devices
-+	  will be announced in the kernel message log.
-+	  It is safe to say 'Y' here.
- 
- config TTY_CHAN
- 	bool "tty channel support"
- 	help
--          This option enables support for attaching UML consoles and serial
--          lines to host terminals.  Access to both virtual consoles
--          (/dev/tty*) and the slave side of pseudo-terminals (/dev/ttyp* and
--          /dev/pts/*) are controlled by this option.
--          It is safe to say 'Y' here.
-+	  This option enables support for attaching UML consoles and serial
-+	  lines to host terminals.  Access to both virtual consoles
-+	  (/dev/tty*) and the slave side of pseudo-terminals (/dev/ttyp* and
-+	  /dev/pts/*) are controlled by this option.
-+	  It is safe to say 'Y' here.
- 
- config XTERM_CHAN
- 	bool "xterm channel support"
- 	help
--          This option enables support for attaching UML consoles and serial
--          lines to xterms.  Each UML device so assigned will be brought up in
--          its own xterm.
--          It is safe to say 'Y' here.
-+	  This option enables support for attaching UML consoles and serial
-+	  lines to xterms.  Each UML device so assigned will be brought up in
-+	  its own xterm.
-+	  It is safe to say 'Y' here.
- 
- config NOCONFIG_CHAN
- 	bool
-@@ -72,43 +72,43 @@ config CON_ZERO_CHAN
- 	string "Default main console channel initialization"
- 	default "fd:0,fd:1"
- 	help
--          This is the string describing the channel to which the main console
--          will be attached by default.  This value can be overridden from the
--          command line.  The default value is "fd:0,fd:1", which attaches the
--          main console to stdin and stdout.
--          It is safe to leave this unchanged.
-+	  This is the string describing the channel to which the main console
-+	  will be attached by default.  This value can be overridden from the
-+	  command line.  The default value is "fd:0,fd:1", which attaches the
-+	  main console to stdin and stdout.
-+	  It is safe to leave this unchanged.
- 
- config CON_CHAN
- 	string "Default console channel initialization"
- 	default "xterm"
- 	help
--          This is the string describing the channel to which all consoles
--          except the main console will be attached by default.  This value can
--          be overridden from the command line.  The default value is "xterm",
--          which brings them up in xterms.
--          It is safe to leave this unchanged, although you may wish to change
--          this if you expect the UML that you build to be run in environments
--          which don't have X or xterm available.
-+	  This is the string describing the channel to which all consoles
-+	  except the main console will be attached by default.  This value can
-+	  be overridden from the command line.  The default value is "xterm",
-+	  which brings them up in xterms.
-+	  It is safe to leave this unchanged, although you may wish to change
-+	  this if you expect the UML that you build to be run in environments
-+	  which don't have X or xterm available.
- 
- config SSL_CHAN
- 	string "Default serial line channel initialization"
- 	default "pty"
- 	help
--          This is the string describing the channel to which the serial lines
--          will be attached by default.  This value can be overridden from the
--          command line.  The default value is "pty", which attaches them to
--          traditional pseudo-terminals.
--          It is safe to leave this unchanged, although you may wish to change
--          this if you expect the UML that you build to be run in environments
--          which don't have a set of /dev/pty* devices.
-+	  This is the string describing the channel to which the serial lines
-+	  will be attached by default.  This value can be overridden from the
-+	  command line.  The default value is "pty", which attaches them to
-+	  traditional pseudo-terminals.
-+	  It is safe to leave this unchanged, although you may wish to change
-+	  this if you expect the UML that you build to be run in environments
-+	  which don't have a set of /dev/pty* devices.
- 
- config UML_SOUND
- 	tristate "Sound support"
- 	help
--          This option enables UML sound support.  If enabled, it will pull in
--          soundcore and the UML hostaudio relay, which acts as a intermediary
--          between the host's dsp and mixer devices and the UML sound system.
--          It is safe to say 'Y' here.
-+	  This option enables UML sound support.  If enabled, it will pull in
-+	  soundcore and the UML hostaudio relay, which acts as a intermediary
-+	  between the host's dsp and mixer devices and the UML sound system.
-+	  It is safe to say 'Y' here.
- 
- config SOUND
- 	tristate
-@@ -131,107 +131,107 @@ menu "UML Network Devices"
- config UML_NET
- 	bool "Virtual network device"
- 	help
--        While the User-Mode port cannot directly talk to any physical
--        hardware devices, this choice and the following transport options
--        provide one or more virtual network devices through which the UML
--        kernels can talk to each other, the host, and with the host's help,
--        machines on the outside world.
-+	  While the User-Mode port cannot directly talk to any physical
-+	  hardware devices, this choice and the following transport options
-+	  provide one or more virtual network devices through which the UML
-+	  kernels can talk to each other, the host, and with the host's help,
-+	  machines on the outside world.
- 
--        For more information, including explanations of the networking and
--        sample configurations, see
--        <http://user-mode-linux.sourceforge.net/old/networking.html>.
-+	  For more information, including explanations of the networking and
-+	  sample configurations, see
-+	  <http://user-mode-linux.sourceforge.net/old/networking.html>.
- 
--        If you'd like to be able to enable networking in the User-Mode
--        linux environment, say Y; otherwise say N.  Note that you must
--        enable at least one of the following transport options to actually
--        make use of UML networking.
-+	  If you'd like to be able to enable networking in the User-Mode
-+	  linux environment, say Y; otherwise say N.  Note that you must
-+	  enable at least one of the following transport options to actually
-+	  make use of UML networking.
- 
- config UML_NET_ETHERTAP
- 	bool "Ethertap transport"
- 	depends on UML_NET
- 	help
--        The Ethertap User-Mode Linux network transport allows a single
--        running UML to exchange packets with its host over one of the
--        host's Ethertap devices, such as /dev/tap0.  Additional running
--        UMLs can use additional Ethertap devices, one per running UML.
--        While the UML believes it's on a (multi-device, broadcast) virtual
--        Ethernet network, it's in fact communicating over a point-to-point
--        link with the host.
--
--        To use this, your host kernel must have support for Ethertap
--        devices.  Also, if your host kernel is 2.4.x, it must have
--        CONFIG_NETLINK_DEV configured as Y or M.
--
--        For more information, see
--        <http://user-mode-linux.sourceforge.net/old/networking.html>  That site
--        has examples of the UML command line to use to enable Ethertap
--        networking.
--
--        If you'd like to set up an IP network with the host and/or the
--        outside world, say Y to this, the Daemon Transport and/or the
--        Slip Transport.  You'll need at least one of them, but may choose
--        more than one without conflict.  If you don't need UML networking,
--        say N.
-+	  The Ethertap User-Mode Linux network transport allows a single
-+	  running UML to exchange packets with its host over one of the
-+	  host's Ethertap devices, such as /dev/tap0.  Additional running
-+	  UMLs can use additional Ethertap devices, one per running UML.
-+	  While the UML believes it's on a (multi-device, broadcast) virtual
-+	  Ethernet network, it's in fact communicating over a point-to-point
-+	  link with the host.
-+
-+	  To use this, your host kernel must have support for Ethertap
-+	  devices.  Also, if your host kernel is 2.4.x, it must have
-+	  CONFIG_NETLINK_DEV configured as Y or M.
-+
-+	  For more information, see
-+	  <http://user-mode-linux.sourceforge.net/old/networking.html>  That site
-+	  has examples of the UML command line to use to enable Ethertap
-+	  networking.
-+
-+	  If you'd like to set up an IP network with the host and/or the
-+	  outside world, say Y to this, the Daemon Transport and/or the
-+	  Slip Transport.  You'll need at least one of them, but may choose
-+	  more than one without conflict.  If you don't need UML networking,
-+	  say N.
- 
- config UML_NET_TUNTAP
- 	bool "TUN/TAP transport"
- 	depends on UML_NET
- 	help
--        The UML TUN/TAP network transport allows a UML instance to exchange
--        packets with the host over a TUN/TAP device.  This option will only
--        work with a 2.4 host, unless you've applied the TUN/TAP patch to
--        your 2.2 host kernel.
-+	  The UML TUN/TAP network transport allows a UML instance to exchange
-+	  packets with the host over a TUN/TAP device.  This option will only
-+	  work with a 2.4 host, unless you've applied the TUN/TAP patch to
-+	  your 2.2 host kernel.
- 
--        To use this transport, your host kernel must have support for TUN/TAP
--        devices, either built-in or as a module.
-+	  To use this transport, your host kernel must have support for TUN/TAP
-+	  devices, either built-in or as a module.
- 
- config UML_NET_SLIP
- 	bool "SLIP transport"
- 	depends on UML_NET
- 	help
--        The slip User-Mode Linux network transport allows a running UML to
--        network with its host over a point-to-point link.  Unlike Ethertap,
--        which can carry any Ethernet frame (and hence even non-IP packets),
--        the slip transport can only carry IP packets.
--
--        To use this, your host must support slip devices.
--
--        For more information, see
--        <http://user-mode-linux.sourceforge.net/old/networking.html>.
--        has examples of the UML command line to use to enable slip
--        networking, and details of a few quirks with it.
--
--        The Ethertap Transport is preferred over slip because of its
--        limitations.  If you prefer slip, however, say Y here.  Otherwise
--        choose the Multicast transport (to network multiple UMLs on
--        multiple hosts), Ethertap (to network with the host and the
--        outside world), and/or the Daemon transport (to network multiple
--        UMLs on a single host).  You may choose more than one without
--        conflict.  If you don't need UML networking, say N.
-+	  The slip User-Mode Linux network transport allows a running UML to
-+	  network with its host over a point-to-point link.  Unlike Ethertap,
-+	  which can carry any Ethernet frame (and hence even non-IP packets),
-+	  the slip transport can only carry IP packets.
-+
-+	  To use this, your host must support slip devices.
-+
-+	  For more information, see
-+	  <http://user-mode-linux.sourceforge.net/old/networking.html>.
-+	  has examples of the UML command line to use to enable slip
-+	  networking, and details of a few quirks with it.
-+
-+	  The Ethertap Transport is preferred over slip because of its
-+	  limitations.  If you prefer slip, however, say Y here.  Otherwise
-+	  choose the Multicast transport (to network multiple UMLs on
-+	  multiple hosts), Ethertap (to network with the host and the
-+	  outside world), and/or the Daemon transport (to network multiple
-+	  UMLs on a single host).  You may choose more than one without
-+	  conflict.  If you don't need UML networking, say N.
- 
- config UML_NET_DAEMON
- 	bool "Daemon transport"
- 	depends on UML_NET
- 	help
--        This User-Mode Linux network transport allows one or more running
--        UMLs on a single host to communicate with each other, but not to
--        the host.
--
--        To use this form of networking, you'll need to run the UML
--        networking daemon on the host.
--
--        For more information, see
--        <http://user-mode-linux.sourceforge.net/old/networking.html>  That site
--        has examples of the UML command line to use to enable Daemon
--        networking.
--
--        If you'd like to set up a network with other UMLs on a single host,
--        say Y.  If you need a network between UMLs on multiple physical
--        hosts, choose the Multicast Transport.  To set up a network with
--        the host and/or other IP machines, say Y to the Ethertap or Slip
--        transports.  You'll need at least one of them, but may choose
--        more than one without conflict.  If you don't need UML networking,
--        say N.
-+	  This User-Mode Linux network transport allows one or more running
-+	  UMLs on a single host to communicate with each other, but not to
-+	  the host.
-+
-+	  To use this form of networking, you'll need to run the UML
-+	  networking daemon on the host.
-+
-+	  For more information, see
-+	  <http://user-mode-linux.sourceforge.net/old/networking.html>  That site
-+	  has examples of the UML command line to use to enable Daemon
-+	  networking.
-+
-+	  If you'd like to set up a network with other UMLs on a single host,
-+	  say Y.  If you need a network between UMLs on multiple physical
-+	  hosts, choose the Multicast Transport.  To set up a network with
-+	  the host and/or other IP machines, say Y to the Ethertap or Slip
-+	  transports.  You'll need at least one of them, but may choose
-+	  more than one without conflict.  If you don't need UML networking,
-+	  say N.
- 
- config UML_NET_VECTOR
- 	bool "Vector I/O high performance network devices"
-@@ -270,26 +270,26 @@ config UML_NET_MCAST
- 	bool "Multicast transport"
- 	depends on UML_NET
- 	help
--        This Multicast User-Mode Linux network transport allows multiple
--        UMLs (even ones running on different host machines!) to talk to
--        each other over a virtual ethernet network.  However, it requires
--        at least one UML with one of the other transports to act as a
--        bridge if any of them need to be able to talk to their hosts or any
--        other IP machines.
--
--        To use this, your host kernel(s) must support IP Multicasting.
--
--        For more information, see
--        <http://user-mode-linux.sourceforge.net/old/networking.html>  That site
--        has examples of the UML command line to use to enable Multicast
--        networking, and notes about the security of this approach.
--
--        If you need UMLs on multiple physical hosts to communicate as if
--        they shared an Ethernet network, say Y.  If you need to communicate
--        with other IP machines, make sure you select one of the other
--        transports (possibly in addition to Multicast; they're not
--        exclusive).  If you don't need to network UMLs say N to each of
--        the transports.
-+	  This Multicast User-Mode Linux network transport allows multiple
-+	  UMLs (even ones running on different host machines!) to talk to
-+	  each other over a virtual ethernet network.  However, it requires
-+	  at least one UML with one of the other transports to act as a
-+	  bridge if any of them need to be able to talk to their hosts or any
-+	  other IP machines.
-+
-+	  To use this, your host kernel(s) must support IP Multicasting.
-+
-+	  For more information, see
-+	  <http://user-mode-linux.sourceforge.net/old/networking.html>  That site
-+	  has examples of the UML command line to use to enable Multicast
-+	  networking, and notes about the security of this approach.
-+
-+	  If you need UMLs on multiple physical hosts to communicate as if
-+	  they shared an Ethernet network, say Y.  If you need to communicate
-+	  with other IP machines, make sure you select one of the other
-+	  transports (possibly in addition to Multicast; they're not
-+	  exclusive).  If you don't need to network UMLs say N to each of
-+	  the transports.
- 
- config UML_NET_PCAP
- 	bool "pcap transport"
-@@ -300,9 +300,9 @@ config UML_NET_PCAP
- 	UML act as a network monitor for the host.  You must have libcap
- 	installed in order to build the pcap transport into UML.
- 
--        For more information, see
--        <http://user-mode-linux.sourceforge.net/old/networking.html>  That site
--        has examples of the UML command line to use to enable this option.
-+	  For more information, see
-+	  <http://user-mode-linux.sourceforge.net/old/networking.html>  That site
-+	  has examples of the UML command line to use to enable this option.
- 
- 	If you intend to use UML as a network monitor for the host, say
- 	Y here.  Otherwise, say N.
-@@ -311,27 +311,27 @@ config UML_NET_SLIRP
- 	bool "SLiRP transport"
- 	depends on UML_NET
- 	help
--        The SLiRP User-Mode Linux network transport allows a running UML
--        to network by invoking a program that can handle SLIP encapsulated
--        packets.  This is commonly (but not limited to) the application
--        known as SLiRP, a program that can re-socket IP packets back onto
--        the host on which it is run.  Only IP packets are supported,
--        unlike other network transports that can handle all Ethernet
--        frames.  In general, slirp allows the UML the same IP connectivity
--        to the outside world that the host user is permitted, and unlike
--        other transports, SLiRP works without the need of root level
--        privleges, setuid binaries, or SLIP devices on the host.  This
--        also means not every type of connection is possible, but most
--        situations can be accommodated with carefully crafted slirp
--        commands that can be passed along as part of the network device's
--        setup string.  The effect of this transport on the UML is similar
--        that of a host behind a firewall that masquerades all network
--        connections passing through it (but is less secure).
--
--        To use this you should first have slirp compiled somewhere
--        accessible on the host, and have read its documentation.  If you
--        don't need UML networking, say N.
--
--        Startup example: "eth0=slirp,FE:FD:01:02:03:04,/usr/local/bin/slirp"
-+	  The SLiRP User-Mode Linux network transport allows a running UML
-+	  to network by invoking a program that can handle SLIP encapsulated
-+	  packets.  This is commonly (but not limited to) the application
-+	  known as SLiRP, a program that can re-socket IP packets back onto
-+	  he host on which it is run.  Only IP packets are supported,
-+	  unlike other network transports that can handle all Ethernet
-+	  frames.  In general, slirp allows the UML the same IP connectivity
-+	  to the outside world that the host user is permitted, and unlike
-+	  other transports, SLiRP works without the need of root level
-+	  privleges, setuid binaries, or SLIP devices on the host.  This
-+	  also means not every type of connection is possible, but most
-+	  situations can be accommodated with carefully crafted slirp
-+	  commands that can be passed along as part of the network device's
-+	  setup string.  The effect of this transport on the UML is similar
-+	  that of a host behind a firewall that masquerades all network
-+	  connections passing through it (but is less secure).
-+
-+	  To use this you should first have slirp compiled somewhere
-+	  accessible on the host, and have read its documentation.  If you
-+	  don't need UML networking, say N.
-+
-+	  Startup example: "eth0=slirp,FE:FD:01:02:03:04,/usr/local/bin/slirp"
- 
- endmenu
+-endif	# SND_AOA
++endif # SND_AOA
 -- 
 1.9.1
 
