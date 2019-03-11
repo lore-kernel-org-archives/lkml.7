@@ -4,50 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_PASS,USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D419CC43381
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 Mar 2019 20:13:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7E495C43381
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 Mar 2019 20:13:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A3932214AE
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 Mar 2019 20:13:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 46F57214AF
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 Mar 2019 20:13:55 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1552335229;
-	bh=POioTTXZKI4CfItPHYq8TEC4Kjx/U6aX/MyYTSc8JqE=;
+	s=default; t=1552335235;
+	bh=xJAIW4ZZsYYo8sQDqgKDMkwjJG6EinVHEuX8kR+JgI8=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=QmZz1xlzhblXMpHjOznliLFxDMOiW+aSd2u/2UaRMew31qnHdl+va8rkgKQES99WG
-	 8bl4kn48KzyNrKlkaBpR0TIO1MFHcF3EDDnY3wCCn3itpGjaGloAABT6ns6Vev9xlU
-	 fqhQmURXNOsaKnTRN3B+u5vPksUQo7Ju0D3sUB+c=
+	b=ccd5R4uVasHJIIZBcUcKLxm3HBneAsO1cor2WZie5Nr2/Q67M9zK3fSkeolatjYV+
+	 ugNsEZiO6gUu3ddbIknTnPc24/mIc6CZ3mLk8Eg3BPS1PFPDOGQb3UQKEFNMLQjcNo
+	 c4XeiR6DLAo2UNmqvctES06Ylo0kSRmUT45LpjYc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728667AbfCKUNs (ORCPT
+        id S1728173AbfCKTzV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 11 Mar 2019 16:13:48 -0400
-Received: from mail.kernel.org ([198.145.29.99]:32910 "EHLO mail.kernel.org"
+        Mon, 11 Mar 2019 15:55:21 -0400
+Received: from mail.kernel.org ([198.145.29.99]:60792 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728171AbfCKTzi (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 11 Mar 2019 15:55:38 -0400
+        id S1727118AbfCKTzT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 11 Mar 2019 15:55:19 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 3C1FD214AE;
-        Mon, 11 Mar 2019 19:55:37 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 4F6AA214AF;
+        Mon, 11 Mar 2019 19:55:18 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1552334138;
-        bh=POioTTXZKI4CfItPHYq8TEC4Kjx/U6aX/MyYTSc8JqE=;
+        s=default; t=1552334119;
+        bh=xJAIW4ZZsYYo8sQDqgKDMkwjJG6EinVHEuX8kR+JgI8=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=k5P91zT75CLipBITEGYGTDsZrVGIkQCVVxhvAqu7bdxv2QhAEeiGKg2ir66Shs5Vw
-         DNU2g7RT3wz61IAvENCQ+5pQOpaPlesRRqQcK3iyHpPdQhgLnAUJ036rDbCpuJaFgJ
-         ZwINTR3us+NjfpwG9hKR3JCswMcJi0TrFYJ2v/Bk=
+        b=gUg2ng1ZvxOJbo8sC009if7r/59HO26Qg3ZmadWs3JM6Yz0gNqzXH5fakdtyUh+BC
+         ToIiZ1GH6W7bfJtnpwPcE8HF057f5t9zRqyKe7h/g6ycnx0F1CE1IGKgV58sApPbJp
+         c6GjG5kYHuxDtjU50TuAbYpt1LzVoAXS2N+U4gX4=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Enric Balletbo i Serra <enric.balletbo@collabora.com>,
-        Heiko Stuebner <heiko@sntech.de>,
-        Sasha Levin <sashal@kernel.org>, devicetree@vger.kernel.org,
-        linux-rockchip@lists.infradead.org
-Subject: [PATCH AUTOSEL 4.20 08/52] arm64: dts: rockchip: fix graph_port warning on rk3399 bob kevin and excavator
-Date:   Mon, 11 Mar 2019 15:54:32 -0400
-Message-Id: <20190311195516.137772-8-sashal@kernel.org>
+Cc:     Alexander Shiyan <shc_work@mail.ru>,
+        Philipp Zabel <p.zabel@pengutronix.de>,
+        Sasha Levin <sashal@kernel.org>,
+        dri-devel@lists.freedesktop.org
+Subject: [PATCH AUTOSEL 4.20 02/52] gpu: ipu-v3: Fix i.MX51 CSI control registers offset
+Date:   Mon, 11 Mar 2019 15:54:26 -0400
+Message-Id: <20190311195516.137772-2-sashal@kernel.org>
 X-Mailer: git-send-email 2.19.1
 In-Reply-To: <20190311195516.137772-1-sashal@kernel.org>
 References: <20190311195516.137772-1-sashal@kernel.org>
@@ -59,68 +58,38 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Enric Balletbo i Serra <enric.balletbo@collabora.com>
+From: Alexander Shiyan <shc_work@mail.ru>
 
-[ Upstream commit 26cd8657c7e745686a4c54a5cccf721ede208a25 ]
+[ Upstream commit 2c0408dd0d8906b26fe8023889af7adf5e68b2c2 ]
 
-Ports are described by child 'port' nodes contained in the device node.
-'ports' is optional and is used to group all 'port' nodes which is not
-the case here.
+The CSI0/CSI1 registers offset is at +0xe030000/+0xe038000 relative
+to the control module registers on IPUv3EX.
+This patch fixes wrong values for i.MX51 CSI0/CSI1.
 
-This patch fixes the following warnings:
+Fixes: 2ffd48f2e7 ("gpu: ipu-v3: Add Camera Sensor Interface unit")
 
-arch/arm64/boot/dts/rockchip/rk3399-gru-bob.dts:25.9-29.5: Warning (graph_port): /edp-panel/ports: graph port node name should be 'port'
-arch/arm64/boot/dts/rockchip/rk3399-gru-kevin.dts:46.9-50.5: Warningi (graph_port): /edp-panel/ports: graph port node name should be 'port'
-arch/arm64/boot/dts/rockchip/rk3399-sapphire-excavator.dts:94.9-98.5: Warning (graph_port): /edp-panel/ports: graph port node name should be 'port'
-
-Signed-off-by: Enric Balletbo i Serra <enric.balletbo@collabora.com>
-Signed-off-by: Heiko Stuebner <heiko@sntech.de>
+Signed-off-by: Alexander Shiyan <shc_work@mail.ru>
+Signed-off-by: Philipp Zabel <p.zabel@pengutronix.de>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/arm64/boot/dts/rockchip/rk3399-gru-bob.dts            | 2 +-
- arch/arm64/boot/dts/rockchip/rk3399-gru-kevin.dts          | 2 +-
- arch/arm64/boot/dts/rockchip/rk3399-sapphire-excavator.dts | 2 +-
- 3 files changed, 3 insertions(+), 3 deletions(-)
+ drivers/gpu/ipu-v3/ipu-common.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/arch/arm64/boot/dts/rockchip/rk3399-gru-bob.dts b/arch/arm64/boot/dts/rockchip/rk3399-gru-bob.dts
-index 1ee0dc0d9f10..d1cf404b8708 100644
---- a/arch/arm64/boot/dts/rockchip/rk3399-gru-bob.dts
-+++ b/arch/arm64/boot/dts/rockchip/rk3399-gru-bob.dts
-@@ -22,7 +22,7 @@
- 		backlight = <&backlight>;
- 		power-supply = <&pp3300_disp>;
- 
--		ports {
-+		port {
- 			panel_in_edp: endpoint {
- 				remote-endpoint = <&edp_out_panel>;
- 			};
-diff --git a/arch/arm64/boot/dts/rockchip/rk3399-gru-kevin.dts b/arch/arm64/boot/dts/rockchip/rk3399-gru-kevin.dts
-index 2cc7c47d6a85..65637a5a4b21 100644
---- a/arch/arm64/boot/dts/rockchip/rk3399-gru-kevin.dts
-+++ b/arch/arm64/boot/dts/rockchip/rk3399-gru-kevin.dts
-@@ -43,7 +43,7 @@
- 		backlight = <&backlight>;
- 		power-supply = <&pp3300_disp>;
- 
--		ports {
-+		port {
- 			panel_in_edp: endpoint {
- 				remote-endpoint = <&edp_out_panel>;
- 			};
-diff --git a/arch/arm64/boot/dts/rockchip/rk3399-sapphire-excavator.dts b/arch/arm64/boot/dts/rockchip/rk3399-sapphire-excavator.dts
-index fef2c0608999..b14d83919f14 100644
---- a/arch/arm64/boot/dts/rockchip/rk3399-sapphire-excavator.dts
-+++ b/arch/arm64/boot/dts/rockchip/rk3399-sapphire-excavator.dts
-@@ -50,7 +50,7 @@
- 		pinctrl-0 = <&lcd_panel_reset>;
- 		power-supply = <&vcc3v3_s0>;
- 
--		ports {
-+		port {
- 			panel_in_edp: endpoint {
- 				remote-endpoint = <&edp_out_panel>;
- 			};
+diff --git a/drivers/gpu/ipu-v3/ipu-common.c b/drivers/gpu/ipu-v3/ipu-common.c
+index 474b00e19697..5b7cdbfe062f 100644
+--- a/drivers/gpu/ipu-v3/ipu-common.c
++++ b/drivers/gpu/ipu-v3/ipu-common.c
+@@ -898,8 +898,8 @@ static struct ipu_devtype ipu_type_imx51 = {
+ 	.cpmem_ofs = 0x1f000000,
+ 	.srm_ofs = 0x1f040000,
+ 	.tpm_ofs = 0x1f060000,
+-	.csi0_ofs = 0x1f030000,
+-	.csi1_ofs = 0x1f038000,
++	.csi0_ofs = 0x1e030000,
++	.csi1_ofs = 0x1e038000,
+ 	.ic_ofs = 0x1e020000,
+ 	.disp0_ofs = 0x1e040000,
+ 	.disp1_ofs = 0x1e048000,
 -- 
 2.19.1
 
