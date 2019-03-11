@@ -4,49 +4,57 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+	SPF_PASS,USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 87376C10F06
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 Mar 2019 19:55:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2D739C4360F
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 Mar 2019 19:55:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5942F21738
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 Mar 2019 19:55:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F0E37214AF
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 Mar 2019 19:55:27 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1552334125;
-	bh=sDvHS/1dTtexsX4npEmyGH8qV1SFth8DCGf/8hb5LOk=;
+	s=default; t=1552334128;
+	bh=70o5BDnU03plRCSx+rUhMvBJ7H5/zLM1AoW/K+pse5I=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=eZNhir6fc3p87alP/XorVYWFMp5X21mLUZEExKdvYvCgfxRih6sfFJ83GjygwvTYZ
-	 fWPYE0a21zV+Ngd0wN0aUb/WIWmh9JkyvKLn48LmAFi4F2r2Hzd7l2+p+b2vm5B96x
-	 Of82J5EX4JiqEV1FQkrD0UwIp6QoWNsnOp2m2/GI=
+	b=DnW7woblJ7CS8cUbYcVxhSNMlTQAvxC3x39ApPp4b4EVtQGuX3013EBcGm4Rzzqw4
+	 WewAP5HmDiDeokJuQBrAsGWAyEtBvn5GsMFIq8QVAvnI8560+P0XR9E0rw8FZa5nOB
+	 geNtFdHcfPG8XMlt8Es4CwMFdY6mHwbtHeUSC8F4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728260AbfCKTzY (ORCPT
+        id S1728282AbfCKTz1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 11 Mar 2019 15:55:24 -0400
-Received: from mail.kernel.org ([198.145.29.99]:60884 "EHLO mail.kernel.org"
+        Mon, 11 Mar 2019 15:55:27 -0400
+Received: from mail.kernel.org ([198.145.29.99]:60918 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728171AbfCKTzV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 11 Mar 2019 15:55:21 -0400
+        id S1728264AbfCKTzY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 11 Mar 2019 15:55:24 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 7FBDB214D8;
-        Mon, 11 Mar 2019 19:55:20 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 82F9B214AE;
+        Mon, 11 Mar 2019 19:55:22 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1552334121;
-        bh=sDvHS/1dTtexsX4npEmyGH8qV1SFth8DCGf/8hb5LOk=;
+        s=default; t=1552334123;
+        bh=70o5BDnU03plRCSx+rUhMvBJ7H5/zLM1AoW/K+pse5I=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=0ISO9Gv4IqQZ+MyzjOeEaRyjxkdhrGEDn+d78dlCN6K51NxGr6Sap/X4SGlVGAdC2
-         D2Tcq5KcoiQqMk0Eyj8v07C1CevWFUfT+uNk3mJZ71Bq3VNw0BXlqHlyMgOP/8VrKd
-         aN7lBOOx0s1B8o4wARYJ5UHsRCElwltPPUvK0vc4=
+        b=RKnzG71ul6DRp0sLkL6aF9jdi07Pj8VK3nHrjFEn7yVdLRWLI65M6eYOz7x+FRp2p
+         GyeTDYQ9AjISE3DEsnWSGAlsGx+9klKPxVqeSk/ao0o80+u4L6QFcwcXl9Me7VytAm
+         bshiUfxJD2sEgcXsSxAAnNF1vHNMu/yCZwT5prsM=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Steve Longerbeam <slongerbeam@gmail.com>,
-        Philipp Zabel <p.zabel@pengutronix.de>,
-        Sasha Levin <sashal@kernel.org>,
-        dri-devel@lists.freedesktop.org
-Subject: [PATCH AUTOSEL 4.20 04/52] gpu: ipu-v3: Fix CSI offsets for imx53
-Date:   Mon, 11 Mar 2019 15:54:28 -0400
-Message-Id: <20190311195516.137772-4-sashal@kernel.org>
+Cc:     Tony Lindgren <tony@atomide.com>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        Daniel Lezcano <daniel.lezcano@linaro.org>,
+        "H . Nikolaus Schaller" <hns@goldelico.com>,
+        Keerthy <j-keerthy@ti.com>,
+        Ladislav Michl <ladis@linux-mips.org>,
+        Pavel Machek <pavel@ucw.cz>,
+        Sebastian Reichel <sre@kernel.org>,
+        Tero Kristo <t-kristo@ti.com>,
+        Thierry Reding <thierry.reding@gmail.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH AUTOSEL 4.20 06/52] clocksource: timer-ti-dm: Fix pwm dmtimer usage of fck reparenting
+Date:   Mon, 11 Mar 2019 15:54:30 -0400
+Message-Id: <20190311195516.137772-6-sashal@kernel.org>
 X-Mailer: git-send-email 2.19.1
 In-Reply-To: <20190311195516.137772-1-sashal@kernel.org>
 References: <20190311195516.137772-1-sashal@kernel.org>
@@ -58,37 +66,58 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Steve Longerbeam <slongerbeam@gmail.com>
+From: Tony Lindgren <tony@atomide.com>
 
-[ Upstream commit bb867d219fda7fbaabea3314702474c4eac2b91d ]
+[ Upstream commit 983a5a43ec254cd5ddf3254db80ca96e8f8bb2a4 ]
 
-The CSI offsets are wrong for both CSI0 and CSI1. They are at
-physical address 0x1e030000 and 0x1e038000 respectively.
+Commit 84badc5ec5fc ("ARM: dts: omap4: Move l4 child devices to probe
+them with ti-sysc") moved some omap4 timers to probe with ti-sysc
+interconnect target module. Turns out this broke pwm-omap-dmtimer
+where we now try to reparent the clock to itself with the following:
 
-Fixes: 2ffd48f2e7 ("gpu: ipu-v3: Add Camera Sensor Interface unit")
+omap_dm_timer_of_set_source: failed to set parent
 
-Signed-off-by: Steve Longerbeam <slongerbeam@gmail.com>
-Signed-off-by: Philipp Zabel <p.zabel@pengutronix.de>
+With ti-sysc, we can now configure the clock sources in the dts
+with assigned-clocks and assigned-clock-parents. So we should be able
+to remove omap_dm_timer_of_set_source with clean-up patches later on.
+But for now, let's just fix it first by checking if parent and fck
+are the same and bail out of so.
+
+Fixes: 84badc5ec5fc ("ARM: dts: omap4: Move l4 child devices to probe them with ti-sysc")
+Cc: Bartosz Golaszewski <bgolaszewski@baylibre.com>
+Cc: Daniel Lezcano <daniel.lezcano@linaro.org>
+Cc: H. Nikolaus Schaller <hns@goldelico.com>
+Cc: Keerthy <j-keerthy@ti.com>
+Cc: Ladislav Michl <ladis@linux-mips.org>
+Cc: Pavel Machek <pavel@ucw.cz>
+Cc: Sebastian Reichel <sre@kernel.org>
+Cc: Tero Kristo <t-kristo@ti.com>
+Cc: Thierry Reding <thierry.reding@gmail.com>
+Cc: Thomas Gleixner <tglx@linutronix.de>
+Reported-by: H. Nikolaus Schaller <hns@goldelico.com>
+Tested-By: Andreas Kemnade <andreas@kemnade.info>
+Tested-By: H. Nikolaus Schaller <hns@goldelico.com>
+Signed-off-by: Tony Lindgren <tony@atomide.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/gpu/ipu-v3/ipu-common.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ drivers/clocksource/timer-ti-dm.c | 4 ++++
+ 1 file changed, 4 insertions(+)
 
-diff --git a/drivers/gpu/ipu-v3/ipu-common.c b/drivers/gpu/ipu-v3/ipu-common.c
-index 5b7cdbfe062f..0a7d4395d427 100644
---- a/drivers/gpu/ipu-v3/ipu-common.c
-+++ b/drivers/gpu/ipu-v3/ipu-common.c
-@@ -914,8 +914,8 @@ static struct ipu_devtype ipu_type_imx53 = {
- 	.cpmem_ofs = 0x07000000,
- 	.srm_ofs = 0x07040000,
- 	.tpm_ofs = 0x07060000,
--	.csi0_ofs = 0x07030000,
--	.csi1_ofs = 0x07038000,
-+	.csi0_ofs = 0x06030000,
-+	.csi1_ofs = 0x06038000,
- 	.ic_ofs = 0x06020000,
- 	.disp0_ofs = 0x06040000,
- 	.disp1_ofs = 0x06048000,
+diff --git a/drivers/clocksource/timer-ti-dm.c b/drivers/clocksource/timer-ti-dm.c
+index 4cce6b224b87..3ecf84706640 100644
+--- a/drivers/clocksource/timer-ti-dm.c
++++ b/drivers/clocksource/timer-ti-dm.c
+@@ -154,6 +154,10 @@ static int omap_dm_timer_of_set_source(struct omap_dm_timer *timer)
+ 	if (IS_ERR(parent))
+ 		return -ENODEV;
+ 
++	/* Bail out if both clocks point to fck */
++	if (clk_is_match(parent, timer->fclk))
++		return 0;
++
+ 	ret = clk_set_parent(timer->fclk, parent);
+ 	if (ret < 0)
+ 		pr_err("%s: failed to set parent\n", __func__);
 -- 
 2.19.1
 
