@@ -2,106 +2,117 @@ Return-Path: <SRS0=FxTY=RO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B0D94C43381
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 Mar 2019 09:34:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2F66AC43381
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 Mar 2019 09:37:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8B97620657
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 Mar 2019 09:34:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F3CC02075C
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 Mar 2019 09:37:17 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727291AbfCKJeQ convert rfc822-to-8bit (ORCPT
+        id S1727201AbfCKJhQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 11 Mar 2019 05:34:16 -0400
-Received: from mx08-00178001.pphosted.com ([91.207.212.93]:18796 "EHLO
-        mx07-00178001.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1727101AbfCKJeP (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 11 Mar 2019 05:34:15 -0400
-Received: from pps.filterd (m0046660.ppops.net [127.0.0.1])
-        by mx08-00178001.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x2B9R5ZD008919;
-        Mon, 11 Mar 2019 10:34:02 +0100
-Received: from beta.dmz-eu.st.com (beta.dmz-eu.st.com [164.129.1.35])
-        by mx08-00178001.pphosted.com with ESMTP id 2r43gdbcs8-1
-        (version=TLSv1 cipher=ECDHE-RSA-AES256-SHA bits=256 verify=NOT);
-        Mon, 11 Mar 2019 10:34:02 +0100
-Received: from zeta.dmz-eu.st.com (zeta.dmz-eu.st.com [164.129.230.9])
-        by beta.dmz-eu.st.com (STMicroelectronics) with ESMTP id 7FB2E3D;
-        Mon, 11 Mar 2019 09:34:01 +0000 (GMT)
-Received: from Webmail-eu.st.com (sfhdag5node3.st.com [10.75.127.15])
-        by zeta.dmz-eu.st.com (STMicroelectronics) with ESMTP id 442EB295E;
-        Mon, 11 Mar 2019 09:34:01 +0000 (GMT)
-Received: from SFHDAG3NODE1.st.com (10.75.127.7) by SFHDAG5NODE3.st.com
- (10.75.127.15) with Microsoft SMTP Server (TLS) id 15.0.1347.2; Mon, 11 Mar
- 2019 10:34:00 +0100
-Received: from SFHDAG3NODE1.st.com ([fe80::1166:1abb:aad4:5f86]) by
- SFHDAG3NODE1.st.com ([fe80::1166:1abb:aad4:5f86%20]) with mapi id
- 15.00.1347.000; Mon, 11 Mar 2019 10:34:00 +0100
-From:   Bich HEMON <bich.hemon@st.com>
-To:     Wolfram Sang <wsa@the-dreams.de>
-CC:     Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Maxime Coquelin <mcoquelin.stm32@gmail.com>,
-        Alexandre TORGUE <alexandre.torgue@st.com>,
-        Pierre Yves MORDRET <pierre-yves.mordret@st.com>,
-        "linux-i2c@vger.kernel.org" <linux-i2c@vger.kernel.org>,
-        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
-        "linux-stm32@st-md-mailman.stormreply.com" 
-        <linux-stm32@st-md-mailman.stormreply.com>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH] i2c: i2c-stm32f7: Fix SDADEL minimum formula
-Thread-Topic: [PATCH] i2c: i2c-stm32f7: Fix SDADEL minimum formula
-Thread-Index: AQHU1C78TFNtpaUoH0S1cdbw5UeFxaYDCGcAgAAKP4CAAw9TAA==
-Date:   Mon, 11 Mar 2019 09:34:00 +0000
-Message-ID: <36e0aec2-8fb8-d584-daee-1b3427f1067e@st.com>
-References: <1551885125-22295-1-git-send-email-bich.hemon@st.com>
- <20190309101340.GH1340@kunai> <20190309105021.GI1340@kunai>
-In-Reply-To: <20190309105021.GI1340@kunai>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-user-agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.5.1
-x-ms-exchange-messagesentrepresentingtype: 1
-x-ms-exchange-transport-fromentityheader: Hosted
-x-originating-ip: [10.75.127.44]
-Content-Type: text/plain; charset="Windows-1252"
-Content-ID: <CAB849C8628AE3419068CD4964787227@st.com>
-Content-Transfer-Encoding: 8BIT
-MIME-Version: 1.0
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-03-11_08:,,
- signatures=0
+        Mon, 11 Mar 2019 05:37:16 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:45182 "EHLO mx1.redhat.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726969AbfCKJhP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 11 Mar 2019 05:37:15 -0400
+Received: from smtp.corp.redhat.com (int-mx05.intmail.prod.int.phx2.redhat.com [10.5.11.15])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id D0F77C057F3C;
+        Mon, 11 Mar 2019 09:37:14 +0000 (UTC)
+Received: from xz-x1.nay.redhat.com (dhcp-14-116.nay.redhat.com [10.66.14.116])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id C95C05D705;
+        Mon, 11 Mar 2019 09:37:02 +0000 (UTC)
+From:   Peter Xu <peterx@redhat.com>
+To:     linux-kernel@vger.kernel.org
+Cc:     Paolo Bonzini <pbonzini@redhat.com>,
+        Hugh Dickins <hughd@google.com>,
+        Luis Chamberlain <mcgrof@kernel.org>,
+        Maxime Coquelin <maxime.coquelin@redhat.com>,
+        kvm@vger.kernel.org, Jerome Glisse <jglisse@redhat.com>,
+        Pavel Emelyanov <xemul@virtuozzo.com>,
+        Johannes Weiner <hannes@cmpxchg.org>, peterx@redhat.com,
+        Martin Cracauer <cracauer@cons.org>,
+        Denis Plotnikov <dplotnikov@virtuozzo.com>, linux-mm@kvack.org,
+        Marty McFadden <mcfadden8@llnl.gov>,
+        Maya Gokhale <gokhale2@llnl.gov>,
+        Mike Kravetz <mike.kravetz@oracle.com>,
+        Andrea Arcangeli <aarcange@redhat.com>,
+        Mike Rapoport <rppt@linux.vnet.ibm.com>,
+        Kees Cook <keescook@chromium.org>,
+        Mel Gorman <mgorman@suse.de>,
+        "Kirill A . Shutemov" <kirill@shutemov.name>,
+        linux-fsdevel@vger.kernel.org,
+        "Dr . David Alan Gilbert" <dgilbert@redhat.com>,
+        Andrew Morton <akpm@linux-foundation.org>
+Subject: [PATCH 0/3] userfaultfd: allow to forbid unprivileged users
+Date:   Mon, 11 Mar 2019 17:36:58 +0800
+Message-Id: <20190311093701.15734-1-peterx@redhat.com>
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.15
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.32]); Mon, 11 Mar 2019 09:37:15 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 3/9/19 11:50 AM, Wolfram Sang wrote:
-> On Sat, Mar 09, 2019 at 11:13:40AM +0100, Wolfram Sang wrote:
->> On Wed, Mar 06, 2019 at 03:12:16PM +0000, Bich HEMON wrote:
->>> From: Nicolas Le Bayon <nicolas.le.bayon@st.com>
->>>
->>> It conforms with Reference Manual I2C timing section.
->>>
->>> Signed-off-by: Nicolas Le Bayon <nicolas.le.bayon@st.com>
->>> Signed-off-by: Bich Hemon <bich.hemon@st.com>
->>
->> Applied to for-current, thanks!
-> 
-> Do you have a Fixes tag for this?
-> 
-Hi Wolfram,
+Hi,
 
-Fixes: aeb068c57214858b638d5ee627bb4a831f98771e ("i2c: i2c-stm32f7: add 
-driver")
+(The idea comes from Andrea, and following discussions with Mike and
+ other people)
 
-Will you change the commit message or do you want me to resend the patch?
+This patchset introduces a new sysctl flag to allow the admin to
+forbid users from using userfaultfd:
 
-BR,
+  $ cat /proc/sys/vm/unprivileged_userfaultfd
+  [disabled] enabled kvm
 
-Bich
+  - When set to "disabled", all unprivileged users are forbidden to
+    use userfaultfd syscalls.
+
+  - When set to "enabled", all users are allowed to use userfaultfd
+    syscalls.
+
+  - When set to "kvm", all unprivileged users are forbidden to use the
+    userfaultfd syscalls, except the user who has permission to open
+    /dev/kvm.
+
+This new flag can add one more layer of security to reduce the attack
+surface of the kernel by abusing userfaultfd.  Here we grant the
+thread userfaultfd permission by checking against CAP_SYS_PTRACE
+capability.  By default, the value is "disabled" which is the most
+strict policy.  Distributions can have their own perferred value.
+
+The "kvm" entry is a bit special here only to make sure that existing
+users like QEMU/KVM won't break by this newly introduced flag.  What
+we need to do is simply set the "unprivileged_userfaultfd" flag to
+"kvm" here to automatically grant userfaultfd permission for processes
+like QEMU/KVM without extra code to tweak these flags in the admin
+code.
+
+Patch 1:  The interface patch to introduce the flag
+
+Patch 2:  The KVM related changes to detect opening of /dev/kvm
+
+Patch 3:  Apply the flag to userfaultfd syscalls
+
+All comments would be greatly welcomed.  Thanks,
+
+Peter Xu (3):
+  userfaultfd/sysctl: introduce unprivileged_userfaultfd
+  kvm/mm: introduce MMF_USERFAULTFD_ALLOW flag
+  userfaultfd: apply unprivileged_userfaultfd check
+
+ fs/userfaultfd.c               | 121 +++++++++++++++++++++++++++++++++
+ include/linux/sched/coredump.h |   1 +
+ include/linux/userfaultfd_k.h  |   5 ++
+ init/Kconfig                   |  11 +++
+ kernel/sysctl.c                |  11 +++
+ virt/kvm/kvm_main.c            |   7 ++
+ 6 files changed, 156 insertions(+)
+
+-- 
+2.17.1
+
