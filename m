@@ -6,48 +6,48 @@ X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 378A2C4360F
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 Mar 2019 13:21:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 26C8DC43381
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 Mar 2019 13:21:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0E8842084F
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 Mar 2019 13:21:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F301220657
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 Mar 2019 13:21:26 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727775AbfCKNT4 (ORCPT
+        id S1727720AbfCKNTr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 11 Mar 2019 09:19:56 -0400
-Received: from mout.kundenserver.de ([212.227.17.13]:57055 "EHLO
+        Mon, 11 Mar 2019 09:19:47 -0400
+Received: from mout.kundenserver.de ([212.227.17.10]:47547 "EHLO
         mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727592AbfCKNTh (ORCPT
+        with ESMTP id S1727527AbfCKNTc (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 11 Mar 2019 09:19:37 -0400
+        Mon, 11 Mar 2019 09:19:32 -0400
 Received: from orion.localdomain ([95.115.159.19]) by mrelayeu.kundenserver.de
  (mreue109 [212.227.15.183]) with ESMTPSA (Nemesis) id
- 1N5mOb-1h0vLI2dcx-017ENk for <linux-kernel@vger.kernel.org>; Mon, 11 Mar 2019
- 14:19:35 +0100
+ 1Mj8eB-1gXsAx2Ikv-00f9eo for <linux-kernel@vger.kernel.org>; Mon, 11 Mar 2019
+ 14:19:30 +0100
 From:   "Enrico Weigelt, metux IT consult" <info@metux.net>
 To:     linux-kernel@vger.kernel.org
-Subject: [PATCH 061/114] drivers: sbus: Kconfig: pedantic formatting
-Date:   Mon, 11 Mar 2019 14:18:13 +0100
-Message-Id: <1552310346-7629-62-git-send-email-info@metux.net>
+Subject: [PATCH 022/114] security: keys: Kconfig: pedantic formatting
+Date:   Mon, 11 Mar 2019 14:17:34 +0100
+Message-Id: <1552310346-7629-23-git-send-email-info@metux.net>
 X-Mailer: git-send-email 1.9.1
 In-Reply-To: <1552310346-7629-1-git-send-email-info@metux.net>
 References: <1552310346-7629-1-git-send-email-info@metux.net>
-X-Provags-ID: V03:K1:uv5hMka7NA9Hmootsaq1jBDjUiXjRatpBM7qRkksDN6aaKITnEq
- kQ4vdlFSLNm1lMUvcTWlET2/Re5nvmkfQCaUdX/wP68Kz/t1PeshD146XIPrTtv75g4XlW0
- ETMR+7P6vYNXDpi/GOCt4qz6wnU7iE7oF0QrcdRfaJoWiWGNJYrBa1YuD+7x+P38+4ooe5M
- FWFtn8H2B5nw98HVeQftQ==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:beqLM2uFWM0=:q4/5AWnLVu9I4C1/SRFgbb
- BGZMNAzn7hmSRMLME0TIRuWQ/R3xmDp5F75CVAsmD5FrVzo4I/2p9iKHqKcj0Jv9FhMt+qdi6
- X7hRcW0o88wmh4AxTHKfJ5e9Yh1j+LjVUJbq606EvdSAoOgh++69DfO4Qn0qVXZFSQ79Deqb3
- bG3+BKXqGsxSOcc+ru1H/HztOqkvTODdAJh7F8nyN3YvN55lYpePBDKXqh2ZGHEd64yqKMFmx
- ty/5kCW2IdOmNP9ekVvW1IUiQEIvLQqKvEd/0d6VARozPtnF4L9ltDJ52CqHsz5LCzbelWL6x
- uL/o2iN02QdzfGHhOSBkV/9J6ATs5NnLsrwIaBA5bNZFEObCcUUscXgMdE/8j8Bo9K/lkmHLJ
- iob4U/tjtOUqfElWr40OUXPNCfSAXb0z71fuzdTLGXt0EkMfTdA0iwP9K++3xeivn5/O7NTnM
- ZNpVD+9nP+r0jZTxF9F4wi2yqAsn6Cml07HkWZh3qddold9ktLnW9U6YzfvZGTFypxgY6PMdx
- cuvI/RtJcuaqylUBhf4NG9nNJOHWFpd3+u3CfwCTZhlWCWRVNHKxtNojaFRo0WlQleYkw+pfp
- Eulp1jhuPE/Be+MuP7RtD0qymE+/94wfyOQ+PUg3EoQ9v5G3bs6t18N6UC3E4wtvmnV61E4iu
- Jvj7ltd5pdHcuzd/UpHLzK/hMUkz2mlCm9ZdzBS5PTFHylDrY3YrkaLlbYHfoNW1S93UxW7kE
- 9QSlvsYmjYeqrSwK+ibJ2Q7CWXBVxt4lFwpJkg==
+X-Provags-ID: V03:K1:3xbV75g4gAW8vahpPwED+P5HjM5JVu2hIvgd4ACuiNb0EvsREtJ
+ FYHHlR1rV/YryiyOdt7yD8NekWPerVjy6E2EcqnCZihnk+a2amoJfYk85bu4bt7VUP/JkwQ
+ 1Qwdd32ufjOn6Ru3ZoceJhtErqmqnYnWmphU2iJicDRJNZeaHdzJtymW6qteZe4HJebuS+v
+ NdPBocIs5MVXhmeS+SLFw==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:u5SNyAZqwDY=:6C+hNVx/WyntvKqSTymWeq
+ 3bQrPOeB9BEcS+EEgBGiKA9JjuPLNa1GfV7fngqX5X7agt1FHqVBa6tEDK8SsOEd98BeAxdna
+ 5FQQcKkC81J7gzgILwg4UNDWwEIZ4O9ivLyugRj/YBz+jUHOIsSncSg+fM9S9zP+ERkXaJf3P
+ z5XNtQw/I79tKdh5bIVNOKZC2+JKLGNmCbN5aFfxriRNS61ABDRrKtGUN+7n1kISCAnbWdBVb
+ tAaE+p0+aZV9yUfnqi4IGzsv1BAvRsZONIsdqhyxaH+XKAn+7aN1I34UvqwjKw4jNMfNVN+UM
+ 0OA7cSOjzkD7xs0Qnl9LzSnk7bvy5xAD30NzcS1ixwaudroJ2oc5rCTW3UJmjOO2at1ZJ6haN
+ eOmbP2XTCOl5QZL9tAjDoZnH//RzlWcTv9JVkTHAK8WoZYUdM2Tbh8EeTn3hYM0ss/rTVs9Li
+ dISD+N1m2arycGUaxc/t5z7WvKWbGPsQXEVjoswU4vQtrAM+JtvGMev61+ooWvhxc4eBRfYDG
+ QTKMVwelaogyirFte2o1mF1vlC9wMt3vXNIUK0aAUkWpxOmIVR0xMUeSqXOOm4YFEzeJizy4u
+ dFdGBbF6LtRN4Am+eb7DgINcuvp3UvIxtwXeGA/2SjwyRAVutozQluosDR8dYTOc6Rb/PhIK/
+ sJBqR7Ivh1+u1N7WCAgJJ01Fxh6L7cqEOVIBfBAPeMx6jMRRqqVGJ1ScDiku5d1V1+K4XakCK
+ yPeBtdu1+4DNEZA5oyXzqCcIriln7KFfjZh83g==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
@@ -58,26 +58,39 @@ Great White Handkerchief come around and clean it up.
 
 Signed-off-by: Enrico Weigelt, metux IT consult <info@metux.net>
 ---
- drivers/sbus/char/Kconfig | 7 +++----
- 1 file changed, 3 insertions(+), 4 deletions(-)
+ security/keys/Kconfig | 22 +++++++++++-----------
+ 1 file changed, 11 insertions(+), 11 deletions(-)
 
-diff --git a/drivers/sbus/char/Kconfig b/drivers/sbus/char/Kconfig
-index 89edd13..8fe4123 100644
---- a/drivers/sbus/char/Kconfig
-+++ b/drivers/sbus/char/Kconfig
-@@ -68,9 +68,8 @@ config ORACLE_DAX
- 	depends on SPARC64
- 	default m
- 	help
--	 Driver for Oracle Data Analytics Accelerator, which is
--	 a coprocessor that performs database operations in hardware.
--	 It is available on M7 and M8 based systems only.
-+	  Driver for Oracle Data Analytics Accelerator, which is
-+	  a coprocessor that performs database operations in hardware.
-+	  It is available on M7 and M8 based systems only.
+diff --git a/security/keys/Kconfig b/security/keys/Kconfig
+index 6462e66..6594149 100644
+--- a/security/keys/Kconfig
++++ b/security/keys/Kconfig
+@@ -90,14 +90,14 @@ config ENCRYPTED_KEYS
+ 	  If you are unsure as to whether this is required, answer N.
  
- endmenu
+ config KEY_DH_OPERATIONS
+-       bool "Diffie-Hellman operations on retained keys"
+-       depends on KEYS
+-       select CRYPTO
+-       select CRYPTO_HASH
+-       select CRYPTO_DH
+-       help
+-	 This option provides support for calculating Diffie-Hellman
+-	 public keys and shared secrets using values stored as keys
+-	 in the kernel.
 -
+-	 If you are unsure as to whether this is required, answer N.
++	bool "Diffie-Hellman operations on retained keys"
++	depends on KEYS
++	select CRYPTO
++	select CRYPTO_HASH
++	select CRYPTO_DH
++	help
++	  This option provides support for calculating Diffie-Hellman
++	  public keys and shared secrets using values stored as keys
++	  in the kernel.
++
++	  If you are unsure as to whether this is required, answer N.
 -- 
 1.9.1
 
