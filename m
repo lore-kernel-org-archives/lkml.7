@@ -2,135 +2,87 @@ Return-Path: <SRS0=FxTY=RO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C24B0C10F06
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 Mar 2019 13:29:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B801FC43381
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 Mar 2019 13:29:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 828A721906
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 Mar 2019 13:29:46 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=ffwll.ch header.i=@ffwll.ch header.b="iFbMATaZ"
+	by mail.kernel.org (Postfix) with ESMTP id 89E6A2196E
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 Mar 2019 13:29:54 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728078AbfCKN3p (ORCPT
+        id S1727783AbfCKN3x (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 11 Mar 2019 09:29:45 -0400
-Received: from mail-ed1-f65.google.com ([209.85.208.65]:39729 "EHLO
-        mail-ed1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727539AbfCKN3n (ORCPT
+        Mon, 11 Mar 2019 09:29:53 -0400
+Received: from mout.kundenserver.de ([212.227.17.10]:35377 "EHLO
+        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727533AbfCKNTc (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 11 Mar 2019 09:29:43 -0400
-Received: by mail-ed1-f65.google.com with SMTP id p27so4009285edc.6
-        for <linux-kernel@vger.kernel.org>; Mon, 11 Mar 2019 06:29:41 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=ffwll.ch; s=google;
-        h=sender:date:from:to:cc:subject:message-id:mail-followup-to
-         :references:mime-version:content-disposition:in-reply-to:user-agent;
-        bh=3m7ss/8c6yX1mGA4RdYg+uoBuR8oPxWQjMjvdeAjBqY=;
-        b=iFbMATaZ9VfrRs7rmBD7nztMvz9zOa8Ho33R+4Ljp5m+n9chAf4IXrirJvaPqKjbg5
-         yB3oUZVyJD0mW4h+J4QdmkfA6sHE75r3X2HcZ5XBcNcBCzkqQbc3WvNBgG82saWT5dkN
-         aT2Fe3nZfva/3o/u217IMuW4TJKGdVnlHF/gU=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
-         :mail-followup-to:references:mime-version:content-disposition
-         :in-reply-to:user-agent;
-        bh=3m7ss/8c6yX1mGA4RdYg+uoBuR8oPxWQjMjvdeAjBqY=;
-        b=gVURPD4Neao/rnoEyCCJj00eU7tARe7FNO2umL7beoyvtcYwfiPk5mc3VYBUshxfHH
-         Ge4QoSSPIKpHawb0RP36Fs6Dl41g2ZwQLNugOyFoTbgwScUqC1NblyxQwkiQRacEPD7A
-         xUNZFtgsZ60eUTCeREkE2fQCprkaVU7JPGCzvudGRdKJVQIlHUgJoLadYB8WwhXpR/Q+
-         OjZVAD+5LXtn96lrarXGa/CuVOhj87pCO0V5HBK2wyk25pneyz9brvzu4MdQq1Okf5dn
-         gzuhCf3pCOjmmk4htNnzah/ihlIturNZwF0JILJOo0fqOYFaNF1hAFnJzYK9VGfiOODV
-         M9KA==
-X-Gm-Message-State: APjAAAUGeGPAYUE02OG6BxSN5P0K3WeWmPB2VnC+19eCDFA+/A76DE1R
-        KmSw1pOkINeSKKw7jVGZPKAEFA==
-X-Google-Smtp-Source: APXvYqz/HpT7MeK2z09rJJ5mmHdIc0FHZcv4y9ax4XUOgcBJbr0E42DqX9/7DXOw6rWLfwUxRvFt6w==
-X-Received: by 2002:a17:906:590c:: with SMTP id h12mr2809727ejq.69.1552310981121;
-        Mon, 11 Mar 2019 06:29:41 -0700 (PDT)
-Received: from phenom.ffwll.local ([2a02:168:569e:0:3106:d637:d723:e855])
-        by smtp.gmail.com with ESMTPSA id w6sm666244eds.0.2019.03.11.06.29.39
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Mon, 11 Mar 2019 06:29:40 -0700 (PDT)
-Date:   Mon, 11 Mar 2019 14:29:38 +0100
-From:   Daniel Vetter <daniel@ffwll.ch>
-To:     Rodrigo Siqueira <rodrigosiqueiramelo@gmail.com>
-Cc:     Daniel Vetter <daniel@ffwll.ch>, David Airlie <airlied@linux.ie>,
-        Haneen Mohammed <hamohammed.sa@gmail.com>,
-        dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] drm/vkms: Remove useless call to drm_connector_register()
-Message-ID: <20190311132938.GG2665@phenom.ffwll.local>
-Mail-Followup-To: Rodrigo Siqueira <rodrigosiqueiramelo@gmail.com>,
-        David Airlie <airlied@linux.ie>,
-        Haneen Mohammed <hamohammed.sa@gmail.com>,
-        dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org
-References: <20190310212241.4fsqejz5rlnp7m2k@smtp.gmail.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190310212241.4fsqejz5rlnp7m2k@smtp.gmail.com>
-X-Operating-System: Linux phenom 4.19.0-1-amd64 
-User-Agent: Mutt/1.10.1 (2018-07-13)
+        Mon, 11 Mar 2019 09:19:32 -0400
+Received: from orion.localdomain ([95.115.159.19]) by mrelayeu.kundenserver.de
+ (mreue109 [212.227.15.183]) with ESMTPSA (Nemesis) id
+ 1M4bA0-1h1gwf1Imc-001i6H for <linux-kernel@vger.kernel.org>; Mon, 11 Mar 2019
+ 14:19:31 +0100
+From:   "Enrico Weigelt, metux IT consult" <info@metux.net>
+To:     linux-kernel@vger.kernel.org
+Subject: [PATCH 028/114] arch: alpha: Kconfig: pedantic formatting
+Date:   Mon, 11 Mar 2019 14:17:40 +0100
+Message-Id: <1552310346-7629-29-git-send-email-info@metux.net>
+X-Mailer: git-send-email 1.9.1
+In-Reply-To: <1552310346-7629-1-git-send-email-info@metux.net>
+References: <1552310346-7629-1-git-send-email-info@metux.net>
+X-Provags-ID: V03:K1:kKaOopG5JARMiaHEbO3gTXA8X2Gvm2s/J+hqTcEafsbKR9O4C8Y
+ ymYXEeV+iosrGVPgs0Fvn3M9BALKNF5zB6qxr0jdncPS+/4cnfoyitmzDLvN04MsEXlbmfD
+ VOqwsDvtYZ5hqwQH9cRGKWw/HGF8ZDHC0YiKR8hXLPimD6jkouFF9WZtmlGDEYqfbhOJNtV
+ 02sSPVO4lYArpBsn/eAxQ==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:RbG3q+EqOAQ=:HYIQhP9bVUWw20WVx3aOyH
+ py5n9e14n3zboGqU7BLFb5WX5ZlGtWJrPgqwsxjoCyHQ22vJ1AUyepMlg6RS7uP6IoI4JPgLp
+ MEfkRugrtbcCQDVqnICZfgTdT7Jnnz1P/UGb6FoXkW/2Dtor3DITchHg0DhvzUJAklzL3N2sa
+ jyj9EZhDKoyDcVi4aj5m5bawoPIdQB/Yjr/rEv/sHL9P8UdBqApguDoO+Gdjyw+rCvGSiHGu0
+ sdbVA/otKenUwbXE4y4yDWHo2eB6XTN0nh6ehZEaKUAWK3zcWeASkiSY74MF9N+9SOKNH60iK
+ JxJyDUrwu0dakp/8OGfwb2l65ZkCIE9OXJRkD3oBTbVG2spiP8vpTXZOD3BbRqDg6aY+eS+9+
+ sClAGiI6fsxZzDbJ3oF1oThM+1D31SXTZQ5qjMgvwN4LQs/oQ1tza+S84O3wb1QD9/cUjuMuX
+ R/lTuH//5tR+5Wxl92gTvMMwqpr9/qngRUy4JzVQ4mqmy46GoCKWwbkmi1obby7nEi2Y4zK56
+ BnaAyKZck/ubuE7CECiP4rqnBCI7BvyJrUcmKN322FHaEZtK30fNDysftXzYA5f+/3oJOrVlz
+ qvi163zmE+H1BnuNN/xqi9zvrSsUCd/eSNYPEKttwSZJhWk+7RMb40Oimx0XL1ChsaonyNwau
+ 1jDyyipqjVT5Kemnwpm/CkbGiei3lMQ6ZQZ/dyoSAqZzkj6TP0TocNPPiktwSF3Snw03hjWlp
+ foIpZySl6ED4I9JWxA4YHqZQKzMIeQukwGuPlw==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sun, Mar 10, 2019 at 06:22:41PM -0300, Rodrigo Siqueira wrote:
-> The function vkms_output_init() is invoked during the module
-> initialization, and it handles the creation/configuration of the vkms
-> essential elements (e.g., connectors, encoder, etc). Among the
-> initializations, this function tries to initialize a connector and
-> register it by calling drm_connector_register(). However, inside the
-> drm_connector_register(), at the beginning of this function there is the
-> following validation:
-> 
->  if (!connector->dev->registered)
->    return 0;
-> 
-> In this sense, invoke drm_connector_register() after initializing the
-> connector has no effect because the register field is false. The
-> connector register happens when drm_dev_register() is invoked.
-> Therefore, this commit removes the drm_connector_register() from
-> vkms_output_init().
-> 
-> Signed-off-by: Rodrigo Siqueira <rodrigosiqueiramelo@gmail.com>
-> ---
->  drivers/gpu/drm/vkms/vkms_output.c | 6 ------
->  1 file changed, 6 deletions(-)
-> 
-> diff --git a/drivers/gpu/drm/vkms/vkms_output.c b/drivers/gpu/drm/vkms/vkms_output.c
-> index 3b162b25312e..a6cee4c279c2 100644
-> --- a/drivers/gpu/drm/vkms/vkms_output.c
-> +++ b/drivers/gpu/drm/vkms/vkms_output.c
-> @@ -71,12 +71,6 @@ int vkms_output_init(struct vkms_device *vkmsdev)
->  
->  	drm_connector_helper_add(connector, &vkms_conn_helper_funcs);
->  
-> -	ret = drm_connector_register(connector);
+Formatting of Kconfig files doesn't look so pretty, so let the
+Great White Handkerchief come around and clean it up.
 
-Yeah that's only needed for connectors added when hotplugging at runtime,
-not for connectors which are created at driver load time.
+Signed-off-by: Enrico Weigelt, metux IT consult <info@metux.net>
+---
+ arch/alpha/Kconfig | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-Reviewed-by: Daniel Vetter <daniel.vetter@ffwll.ch>
-
-btw same issue exists with the drm_connector_unregister, that's also not
-needed.
--Daniel
-
-> -	if (ret) {
-> -		DRM_ERROR("Failed to register connector\n");
-> -		goto err_connector_register;
-> -	}
-> -
->  	ret = drm_encoder_init(dev, encoder, &vkms_encoder_funcs,
->  			       DRM_MODE_ENCODER_VIRTUAL, NULL);
->  	if (ret) {
-> -- 
-> 2.21.0
-
+diff --git a/arch/alpha/Kconfig b/arch/alpha/Kconfig
+index 584a6e1..ca70946 100644
+--- a/arch/alpha/Kconfig
++++ b/arch/alpha/Kconfig
+@@ -550,7 +550,7 @@ config NR_CPUS
+ 	default "4" if !ALPHA_GENERIC && !ALPHA_MARVEL
+ 	help
+ 	  MARVEL support can handle a maximum of 32 CPUs, all the others
+-          with working support have a maximum of 4 CPUs.
++	  with working support have a maximum of 4 CPUs.
+ 
+ config ARCH_DISCONTIGMEM_ENABLE
+ 	bool "Discontiguous Memory Support"
+@@ -662,7 +662,7 @@ choice
+ endchoice
+ 
+ config HZ
+-	int 
++	int
+ 	default 32 if HZ_32
+ 	default 64 if HZ_64
+ 	default 128 if HZ_128
 -- 
-Daniel Vetter
-Software Engineer, Intel Corporation
-http://blog.ffwll.ch
+1.9.1
+
