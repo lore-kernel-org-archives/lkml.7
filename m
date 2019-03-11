@@ -7,34 +7,34 @@ X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B2FB5C43381
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 Mar 2019 07:17:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9760FC43381
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 Mar 2019 07:17:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 74ECE206DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 Mar 2019 07:17:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5A725206DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 Mar 2019 07:17:17 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="ctvL7lHG"
+	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="SXtErhEC"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726908AbfCKHRM (ORCPT
+        id S1726938AbfCKHRP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 11 Mar 2019 03:17:12 -0400
+        Mon, 11 Mar 2019 03:17:15 -0400
 Received: from mail-eopbgr00058.outbound.protection.outlook.com ([40.107.0.58]:53313
         "EHLO EUR02-AM5-obe.outbound.protection.outlook.com"
         rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726077AbfCKHRJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 11 Mar 2019 03:17:09 -0400
+        id S1725943AbfCKHRL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 11 Mar 2019 03:17:11 -0400
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector1;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=PIB9B4sPPVj2fHYe81EHQQssn7tIDYGbILLjeoXVZIo=;
- b=ctvL7lHG/QdovthoWAkcWv68WanijpGo7UvYT/N1ncYvFXkarwTM1EDaVNXHJC5kLu7LeeblSCs0/oPS0O/DvqWI3Cl54n0oC7JF9BaG/qYnfBAaGQ4zVbEjpI/PpOsbLQCFeqXxS1XBtlNdyo5ShfVgpBJsT3wK/34GeCAZ2lM=
+ bh=FUAq3WQ66ErTWwcJmRKrT+poDi4bUoGNapPM+AjpM20=;
+ b=SXtErhECQo01exCJtANCg70U9Qz68btHxsI33kLL285lkuKbUiFVIX9dHCFANtGMfbqmmQ8bA5jh6Wf40ssw55knd0uw6vLgj8yTt9+lw2+rL52y6y1N+AlkpG3nIMOlyCtb9vstcnn5BoZMTcaqcRGXQ6XqzPcmHSFPYr5cwmY=
 Received: from DB3PR0402MB3916.eurprd04.prod.outlook.com (52.134.72.18) by
  DB3PR0402MB3724.eurprd04.prod.outlook.com (52.134.66.147) with Microsoft SMTP
  Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.1686.18; Mon, 11 Mar 2019 07:16:55 +0000
+ 15.20.1686.18; Mon, 11 Mar 2019 07:16:56 +0000
 Received: from DB3PR0402MB3916.eurprd04.prod.outlook.com
  ([fe80::1cb4:3e1c:fc85:7ed7]) by DB3PR0402MB3916.eurprd04.prod.outlook.com
  ([fe80::1cb4:3e1c:fc85:7ed7%2]) with mapi id 15.20.1686.021; Mon, 11 Mar 2019
- 07:16:55 +0000
+ 07:16:56 +0000
 From:   Anson Huang <anson.huang@nxp.com>
 To:     "thierry.reding@gmail.com" <thierry.reding@gmail.com>,
         "robh+dt@kernel.org" <robh+dt@kernel.org>,
@@ -56,11 +56,11 @@ To:     "thierry.reding@gmail.com" <thierry.reding@gmail.com>,
         <linux-arm-kernel@lists.infradead.org>,
         "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
 CC:     dl-linux-imx <linux-imx@nxp.com>
-Subject: [PATCH 4/5] ARM: dts: imx7ulp: Add pwm0 support
-Thread-Topic: [PATCH 4/5] ARM: dts: imx7ulp: Add pwm0 support
-Thread-Index: AQHU19pZs/QkjBQhTECvLbkuloZZ8Q==
-Date:   Mon, 11 Mar 2019 07:16:30 +0000
-Message-ID: <1552288273-31028-5-git-send-email-Anson.Huang@nxp.com>
+Subject: [PATCH 5/5] ARM: dts: imx7ulp-evk: Add backlight support
+Thread-Topic: [PATCH 5/5] ARM: dts: imx7ulp-evk: Add backlight support
+Thread-Index: AQHU19pdorqa8Sk1YE6WpQPvp2fT6Q==
+Date:   Mon, 11 Mar 2019 07:16:37 +0000
+Message-ID: <1552288273-31028-6-git-send-email-Anson.Huang@nxp.com>
 References: <1552288273-31028-1-git-send-email-Anson.Huang@nxp.com>
 In-Reply-To: <1552288273-31028-1-git-send-email-Anson.Huang@nxp.com>
 Accept-Language: en-US
@@ -76,46 +76,46 @@ authentication-results: spf=none (sender IP is )
 x-ms-exchange-messagesentrepresentingtype: 1
 x-originating-ip: [119.31.174.66]
 x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: b3e17da0-f5ba-46b8-0be5-08d6a5f17bd6
+x-ms-office365-filtering-correlation-id: 17d5d829-efd5-41d2-3d0a-08d6a5f17fe2
 x-ms-office365-filtering-ht: Tenant
 x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600127)(711020)(4605104)(4618075)(2017052603328)(7153060)(7193020);SRVR:DB3PR0402MB3724;
 x-ms-traffictypediagnostic: DB3PR0402MB3724:
-x-microsoft-exchange-diagnostics: =?iso-8859-1?Q?1;DB3PR0402MB3724;23:QcLoxisXtCO1mbWMAM7z0mc7PtSUFWN8xGZZo?=
- =?iso-8859-1?Q?WHumNM2Gh7iMjyY/eZeLyz/8X3QkhoiSGs9De24JdbTDvZ+kR7m+nJ6Gki?=
- =?iso-8859-1?Q?zJM+2h8e+xVf3I8bkI8at1eSJV5Kl6MGuCBqeQX7EaiR4xkEYcLF40NimS?=
- =?iso-8859-1?Q?Q/sYUO8xCGvJrJRadBtMa0qgj1d5ftJEJlS2txAnHU4ggM1ylUU+4ApIyu?=
- =?iso-8859-1?Q?ZOxN9FCS3b+v52VJ3IF1iGbXgb0B8HK5TcLhO3/P61OWIwAjeqWGDVYbVR?=
- =?iso-8859-1?Q?/hR4uuZL1wtX9nyHglIb9Iw4kCMGy+wXlCatmc8Sd0lVuaj3Tnm/NJYK3D?=
- =?iso-8859-1?Q?xqPQDL3IXq2aBssKUH2ffP+xI/z8gGybOfI7JcmidMctAK/wNY+9xM3ma4?=
- =?iso-8859-1?Q?UojLX70MRujkjr0gPlTAe36OkYYkOnWgOx0Zyo+b92e4MstbeDpXAQ01SU?=
- =?iso-8859-1?Q?DiE3r2HCMBY8eYKbNMdXIhv0pIiewnbdgH4oR5ThlYPBxnkla8IaEORkim?=
- =?iso-8859-1?Q?r2o+Zx9Ou/xgD9jwn6TkxL4kOz+3L9rGdF5/5QbZ7VkRqCTCnrAAUceCby?=
- =?iso-8859-1?Q?qQN91rmhW//jpRcibL8ELMiIo7RE/y+AJcB02ko7DaFEjuJJLnQRsdLtmC?=
- =?iso-8859-1?Q?oS7HfciL941IpYMeb/HPZ7GWdUnkuwb07sc6si+rxT6y0b/4fIEc2Qe4Sz?=
- =?iso-8859-1?Q?9zIC/vRXFohnjdFp4FLN34gJd2dOe93pnpAsWyYZGpjILAVvd34DX4sKHv?=
- =?iso-8859-1?Q?Jg+Y9YATlE4U1z9M+iNC2lVHhbehy2dcP2xjgOvVi9MwNFaoFJlwDIAjaz?=
- =?iso-8859-1?Q?2/xsgzg1ZGqBOtQp5TLCos7se9GU5MC/Hir2N7xpnYrOFG2dtXr9wWnqsg?=
- =?iso-8859-1?Q?zwfn88kM3C3R9qA2nUoCFoAZOlS/GOKAyKI+e8y0wYz3SBHTmEdYa/05Ye?=
- =?iso-8859-1?Q?arG+PosNpFeziwF9lZMeCGiH5T393kl+/rqLT1g1X76Ke4uEdj2vdxm0/F?=
- =?iso-8859-1?Q?YVT5Disp9NUw6wEBuv2WNq7C8M3p6T6ez4KGYfzCWI5Jdr9OtHkZYOA1zd?=
- =?iso-8859-1?Q?Sge5eerMt6eCqtd3I7J+9Ol3v5Yt3Za/IwpJqP3UlLxwSIjCX0FCnNLfpl?=
- =?iso-8859-1?Q?+TVHqOm5wFW6KeM56OiogvOssYV6vJKmnL4nSrf+knrPE250gbbnY1aE6e?=
- =?iso-8859-1?Q?kGLGqp48GuVLjUeQosCLx99u8ZohRVvIJg0nOHHsXeA2kmi4pPA4gqFjDr?=
- =?iso-8859-1?Q?asdtT0P9YDLknXsvfRsNKQUx2P7BmbUoj82QVJgPlpCy3TvmegyRDRmHkI?=
- =?iso-8859-1?Q?xBWJENoxpecaZqMGPZwjCv9taWQSEKJWyEC44IlLh78IzXw=3D=3D?=
-x-microsoft-antispam-prvs: <DB3PR0402MB372471CFFE8F5E35D81B5E5BF5480@DB3PR0402MB3724.eurprd04.prod.outlook.com>
+x-microsoft-exchange-diagnostics: =?iso-8859-1?Q?1;DB3PR0402MB3724;23:S6vN3io0doOPuw7uWMiF1B8d40fKV6S5jkwXS?=
+ =?iso-8859-1?Q?X2Nq9KHZ4sw9maWKDo7O4qN1GNj374oTJmww5VJHPVmcE2u4Luk8kXWeRL?=
+ =?iso-8859-1?Q?9htWboElOpzMLLMp1IRsvBI0hwxKOcwQ8KXNa6V53LNexoopfbsd0jRoho?=
+ =?iso-8859-1?Q?ANd/WPBCnhYzezjQXaqzoIjxh6eloNH5FOFPCnMAl8xlGjHr/ahFtLCeyT?=
+ =?iso-8859-1?Q?iRZmWIomlIGf3EgKI9e1Y1aqip0alTgYp07MhqPueEh6tgiNCUKo6u9srm?=
+ =?iso-8859-1?Q?LsAQpdubSuPtcYdGQQBIQObFS7Gp4i0CA5SqcDhLVN9NlSnOZv6kBnrmZc?=
+ =?iso-8859-1?Q?8vxW/jFiLxfkVtWzy+2tJ/pfqkacFKkgokguqjieJlEOicRPHgEc8kjRT0?=
+ =?iso-8859-1?Q?bHD1pZxpfrul+0ldDARSfGcHONj5QAvD7+jnQie6/Vis78NSKF5C+ym7af?=
+ =?iso-8859-1?Q?4Vgf2pLW6W2H2vyOe+58F8J0UtL6esVlMPDqE5bz5Admy8HQC1MfNG19yr?=
+ =?iso-8859-1?Q?aaYdsY4KU+rKaMyCik54SQLAiW8feFfEO8Smoj6MxQwEcQgRJg8iFSGSYR?=
+ =?iso-8859-1?Q?M8Ses1Y2FeY3rgwkdA1UyYtQZvy/SR2c/5s6lPHVCqGUla5WC0qpH1rOjm?=
+ =?iso-8859-1?Q?rA6N5rUf/Lgp8gZV6NdKaLXM2KBAU/JE4u6yvI7pvkl7Ql3WlRnnzvegrb?=
+ =?iso-8859-1?Q?3tcZLDtzyf5jSgmUjJS6aqXO1WOsSFEyYtl2RNKGkbFimFfqgDTmlqwbtY?=
+ =?iso-8859-1?Q?oZJCpnOk+8N6GHqvGNZFWl1Jwq5GOma82kJWfCy/kDP0ZYENipeUnab1tm?=
+ =?iso-8859-1?Q?wnG6VbWV2e7cWRipbnDTD787kEYhUf3tNDlek3Cdsowa0MY2onLXp/EqWr?=
+ =?iso-8859-1?Q?BcjbGn0rquRXLrwiW+2hbqLAOETad0JGdL6tPvZCWVfd3d8YEr1h0dvYuN?=
+ =?iso-8859-1?Q?GOfjnRykPP6GH3PG6y0GPR/rAOCBp5/WNq6N3xIge0kLgsJv0f43M3GujQ?=
+ =?iso-8859-1?Q?0JnIw2Pi3NPIVK8EQ1MLFVZHQPHIrmXiISSQ+FErvs+4jtr/6srSEZJlXH?=
+ =?iso-8859-1?Q?nxWow7+h6G1nBGYwq0beHj63NEWll1hxNARqf6zfugM2TUjictIqQGjvKt?=
+ =?iso-8859-1?Q?5s1nmoU2NwKehsoTfHtOeY0u1qIwvAi5PH6TBtexoUb27W+d2jK3fS+rMG?=
+ =?iso-8859-1?Q?kf6+bbi5y1brKArgdwYF/+xCrRsKl89h+6JlukPvPCdGxqhSowGNAUgL21?=
+ =?iso-8859-1?Q?OhPSfoVluTSgqSzzJQYDvSlkkU5ve4f6APK99tYOZ4lLqmpe58tcyuj7yw?=
+ =?iso-8859-1?Q?sIdxquSaxtypHtpHp0qgdEUdgNWvIWAAea/9CzxDT150hOQ=3D=3D?=
+x-microsoft-antispam-prvs: <DB3PR0402MB3724EA78170FA9699B061035F5480@DB3PR0402MB3724.eurprd04.prod.outlook.com>
 x-forefront-prvs: 09730BD177
-x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(346002)(376002)(39860400002)(366004)(396003)(136003)(199004)(189003)(105586002)(6512007)(6486002)(2501003)(6436002)(97736004)(446003)(110136005)(2616005)(81166006)(81156014)(8676002)(11346002)(106356001)(478600001)(6116002)(3846002)(4326008)(25786009)(486006)(476003)(2906002)(305945005)(316002)(7736002)(102836004)(7416002)(14454004)(52116002)(256004)(6666004)(8936002)(66066001)(186003)(6506007)(386003)(71200400001)(99286004)(5660300002)(71190400001)(86362001)(76176011)(14444005)(26005)(53936002)(68736007)(50226002)(36756003)(2201001)(921003)(1121003);DIR:OUT;SFP:1101;SCL:1;SRVR:DB3PR0402MB3724;H:DB3PR0402MB3916.eurprd04.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
+x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(346002)(376002)(39860400002)(366004)(396003)(136003)(199004)(189003)(105586002)(6512007)(6486002)(2501003)(6436002)(97736004)(446003)(110136005)(2616005)(81166006)(81156014)(8676002)(11346002)(106356001)(478600001)(6116002)(3846002)(4326008)(25786009)(486006)(476003)(2906002)(305945005)(316002)(7736002)(102836004)(7416002)(14454004)(52116002)(256004)(6666004)(8936002)(66066001)(186003)(6506007)(386003)(71200400001)(99286004)(5660300002)(71190400001)(86362001)(76176011)(4744005)(26005)(53936002)(68736007)(50226002)(36756003)(2201001)(921003)(1121003);DIR:OUT;SFP:1101;SCL:1;SRVR:DB3PR0402MB3724;H:DB3PR0402MB3916.eurprd04.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
 received-spf: None (protection.outlook.com: nxp.com does not designate
  permitted sender hosts)
 x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam-message-info: lQssiCuu6OmypOwHjYCX0wu688kZOpH/5u0Aa7pAM1SGEo5Grdz6KmlbYgO+MVTqRX8nssm2qSAdOxT694jC52ZAHo43cnBpB7FVu+EfIfTLI9e6RwMkCTkYPdoippw15YmwxlxhKn/0B+/umFh3e/NpEz8EreQ8cULlgZam2RHkmmZnH5z5JkJLXskC2nrkVU/XSlWA5IHK5E8ZHlv84yVPzObY+5YJT9eI3AQJgEsNTmR0kxl3KBAk5HIh11Ht6NrvjeA7uiPKGQcpz1cYH+2qCUh1yCw/hXEVowlQTi24pvBZkmufGEoeB5qoqW0UovGdwd06520xj46pb1B6rm2ulZc4gv68XGeWhoBqcGzhdrl5hba4ZgjqKdlI4TgEVHiR7SC+o4keP1B07342G2m+5u3M1yy3RMk68SGRV2I=
+x-microsoft-antispam-message-info: 44g6VKLRyjGSQ65TCSDp/AI+sb57tSemafFRgKMDHLTcewqFbnqVtGIIQzehJ4s8La0/G43QGfFj9YjNJ3zn9gLfGMIuRdXL3WU4xuWZApOK5qgLC/WcKFBBOhHPpv4DxXXwFx1HN2283V0fn3RqfrNH2l2K3ofWTP/WIWoEu77ceropkLG7eVDxwUB3TVS9w9svF+wL/ji+MWZxmJTdr+rIBvgrr6x49R40rZMCjq0Z2dKPk77MNjw2XIhJR0Bi3gb51mxebWSZ5lAQrcN34+c5KZC4y0mlKBuV7DplJlxjWHOH2tda3adiBtkgrV/o7mi9k+GtffFBq2+d+QpXmsM4kwkp4rE7My3+v5JGm5I74D8MwDRqN3rVcYeOpe4DN1Je3fc9W5qIx0VNJNR3g4/bU6Fr3xt5c9I+lmC9tU0=
 Content-Type: text/plain; charset="iso-8859-1"
 Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
 X-OriginatorOrg: nxp.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: b3e17da0-f5ba-46b8-0be5-08d6a5f17bd6
-X-MS-Exchange-CrossTenant-originalarrivaltime: 11 Mar 2019 07:16:30.5432
+X-MS-Exchange-CrossTenant-Network-Message-Id: 17d5d829-efd5-41d2-3d0a-08d6a5f17fe2
+X-MS-Exchange-CrossTenant-originalarrivaltime: 11 Mar 2019 07:16:37.5972
  (UTC)
 X-MS-Exchange-CrossTenant-fromentityheader: Hosted
 X-MS-Exchange-CrossTenant-id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
@@ -126,68 +126,34 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add i.MX7ULP EVK board PWM0 support.
+This patch adds i.MX7ULP EVK board MIPI-DSI backlight
+support.
 
 Signed-off-by: Anson Huang <Anson.Huang@nxp.com>
 ---
- arch/arm/boot/dts/imx7ulp-evk.dts | 12 ++++++++++++
- arch/arm/boot/dts/imx7ulp.dtsi    | 11 +++++++++++
- 2 files changed, 23 insertions(+)
+ arch/arm/boot/dts/imx7ulp-evk.dts | 8 ++++++++
+ 1 file changed, 8 insertions(+)
 
 diff --git a/arch/arm/boot/dts/imx7ulp-evk.dts b/arch/arm/boot/dts/imx7ulp-=
 evk.dts
-index a09026a..002b0c5 100644
+index 002b0c5..f5b9828 100644
 --- a/arch/arm/boot/dts/imx7ulp-evk.dts
 +++ b/arch/arm/boot/dts/imx7ulp-evk.dts
-@@ -40,6 +40,12 @@
- 	status =3D "okay";
- };
-=20
-+&pwm0 {
-+	pinctrl-names =3D "default";
-+	pinctrl-0 =3D <&pinctrl_pwm0>;
-+	status =3D "okay";
-+};
-+
- &usdhc0 {
- 	pinctrl-names =3D "default";
- 	pinctrl-0 =3D <&pinctrl_usdhc0>;
-@@ -57,6 +63,12 @@
- 		bias-pull-up;
+@@ -22,6 +22,14 @@
+ 		reg =3D <0x60000000 0x40000000>;
  	};
 =20
-+	pinctrl_pwm0: pwm0grp {
-+		fsl,pins =3D <
-+			IMX7ULP_PAD_PTF2__TPM4_CH1	0x3
-+		>;
++	backlight {
++		compatible =3D "pwm-backlight";
++		pwms =3D <&pwm0 1 50000>;
++		brightness-levels =3D <0 20 25 30 35 40 100>;
++		default-brightness-level =3D <6>;
++		status =3D "okay";
 +	};
 +
- 	pinctrl_usdhc0: usdhc0grp {
- 		fsl,pins =3D <
- 			IMX7ULP_PAD_PTD1__SDHC0_CMD	0x43
-diff --git a/arch/arm/boot/dts/imx7ulp.dtsi b/arch/arm/boot/dts/imx7ulp.dts=
-i
-index fca6e50..cffe9c3 100644
---- a/arch/arm/boot/dts/imx7ulp.dtsi
-+++ b/arch/arm/boot/dts/imx7ulp.dtsi
-@@ -124,6 +124,17 @@
- 			status =3D "disabled";
- 		};
-=20
-+		pwm0: pwm@40250000 {
-+			compatible =3D "fsl,imx-tpm-pwm";
-+			reg =3D <0x40250000 0x1000>;
-+			fsl,pwm-number =3D <6>;
-+			assigned-clocks =3D <&pcc2 IMX7ULP_CLK_LPTPM4>;
-+			assigned-clock-parents =3D <&scg1 IMX7ULP_CLK_SOSC_BUS_CLK>;
-+			clocks =3D <&pcc2 IMX7ULP_CLK_LPTPM4>;
-+			#pwm-cells =3D <2>;
-+			status =3D "disabled";
-+		};
-+
- 		tpm5: tpm@40260000 {
- 			compatible =3D "fsl,imx7ulp-tpm";
- 			reg =3D <0x40260000 0x1000>;
+ 	reg_vsd_3v3: regulator-vsd-3v3 {
+ 		compatible =3D "regulator-fixed";
+ 		regulator-name =3D "VSD_3V3";
 --=20
 2.7.4
 
