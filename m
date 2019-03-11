@@ -6,48 +6,48 @@ X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 42E72C43381
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 Mar 2019 13:23:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 50F05C43381
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 Mar 2019 13:24:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1E04420657
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 Mar 2019 13:23:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2B99020883
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 Mar 2019 13:24:06 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727772AbfCKNXu (ORCPT
+        id S1727846AbfCKNYE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 11 Mar 2019 09:23:50 -0400
-Received: from mout.kundenserver.de ([212.227.17.10]:52833 "EHLO
+        Mon, 11 Mar 2019 09:24:04 -0400
+Received: from mout.kundenserver.de ([212.227.17.13]:39143 "EHLO
         mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727638AbfCKNTl (ORCPT
+        with ESMTP id S1727650AbfCKNTl (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Mon, 11 Mar 2019 09:19:41 -0400
 Received: from orion.localdomain ([95.115.159.19]) by mrelayeu.kundenserver.de
  (mreue109 [212.227.15.183]) with ESMTPSA (Nemesis) id
- 1MgNlB-1gZX8O1aGt-00htTg for <linux-kernel@vger.kernel.org>; Mon, 11 Mar 2019
- 14:19:39 +0100
+ 1Mbj3Y-1gUqAM1WCk-00dEm5 for <linux-kernel@vger.kernel.org>; Mon, 11 Mar 2019
+ 14:19:40 +0100
 From:   "Enrico Weigelt, metux IT consult" <info@metux.net>
 To:     linux-kernel@vger.kernel.org
-Subject: [PATCH 089/114] drivers: virtio: Kconfig: pedantic formatting
-Date:   Mon, 11 Mar 2019 14:18:41 +0100
-Message-Id: <1552310346-7629-90-git-send-email-info@metux.net>
+Subject: [PATCH 096/114] arch: openrisc: Kconfig: pedantic formatting
+Date:   Mon, 11 Mar 2019 14:18:48 +0100
+Message-Id: <1552310346-7629-97-git-send-email-info@metux.net>
 X-Mailer: git-send-email 1.9.1
 In-Reply-To: <1552310346-7629-1-git-send-email-info@metux.net>
 References: <1552310346-7629-1-git-send-email-info@metux.net>
-X-Provags-ID: V03:K1:zVG/RdFywF7j2KDkEf700Eh/v4jt/YL5Bx/Yix5tPd78u6LAtDM
- 8w1HnjhbmPV63FuxBpiI6dqkIjxyaIOkMzEAQFjBmvzBPj8av5MoT0d42SxzubJ8Z2JhcWH
- u9WWFUgSk7E//MMWPfQQZGC33kbjoqRmc/1704v1MkqNfpqVqUygPEnWAjKibyzLOiSrjJw
- y2OjVsIoMVb0CRkj3OFYw==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:8+eyNOZc1SE=:g3CpCaiTrYlDd11P9f7wr2
- 7FGQZb86doL1M06l9KO37K+OGRRXy2Zy3/ELgx8H3C8fNC1dasE6OiEYGx4Gr+mMOGg/mwCwY
- zht9xw19QlBdYpVgSYEVXI0Gtz481P69uJbnzps4sI9rNcVDu7mehDLqUc6SoKaGk7cPXjKQ0
- qU/9x/g7gemmMvMzfPG2yFrnU4EmiqHh+IgdhMtMSKbbNocWFMA3oSo0z8P9Wp4I+SY16WOne
- 5eJhEFoYEA/yuax9PU34a70hyExAuafBgRKg4roTwdYOeVIT2jAPtvIOasBKBqvskf5hTrMkY
- hc0kUtUfDAwCNAne7ysOYURmUSe3Sw9FmSS6HcQdqIyYkUEquPwBDfVZg1jfbT/DfzjTWaxfB
- 8gnyewFcNy5vGJ9IoGjfljykB568vNQbUjP4uZE1hmzvVJ7kHn/ajLU1bu+cwLxlA1lmaqYDx
- 3wBB8oaBYNpDjlKMrYKVmTG1hIjMbVePnaVieWQBbD5HYM21TaebUFMkT5pIjVQjnRGHrjFzM
- oyWt/x66OyIf73Bx3L69PUcPEuhjEJ+uS2Tflbw3ouD5MnKM5HI1ANUNVb/A2lepPo4kAwfbP
- zFidqjrMTC8HEWwn1lD7mFGwgicSdQ3dnnOo1DbwsVHAC2OaZEAtIbzaxQW6viezzdZhXQ9EO
- OvUK6i0dq3uwdzyboq4MYtjsF96qh95BY+hxRS1Wcx8BbHpsJlTSiRqB2/xn0b0fa3+459zi7
- e8B4leqZs3i6k9YwsX6lkHJ3jptsBSFOiCgBrw==
+X-Provags-ID: V03:K1:h2jP0AEfB4WomEB45piXLeE/aAi3cpALijHhN7G2CilDOMC0Foz
+ GXr1caXK8mV7cknYHdfKPG0iTJfS1HtQT57wx6PSCxXXW/qwkTAxOYT1I59Q7dpLeezyeit
+ jh/a425L0doQi7y3LdK1IOp5m2QVTxVJVtjEdanAUf2y6jZfWCz2ikA7ZmHS1lGL8j5Dx00
+ yVW2yg/s/c1U9hNkYjYNA==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:S0OGOxPAXH0=:kIjZj5+SOUrcsJ+IjVguYk
+ KHKB8DiOPy8NYsls+eEnqArqCdOOMek/llPxwUKFIbFei56/BAa6SBSSyPLF35mQAJN6tPB6+
+ kHsEsxmckrv9ZSNrt/1T+JwGTnoH1mxZd2K1APRmyCCsxMFzTpFs0cK99sIV3hLay4Wo/zLAk
+ 3/nolYkVZUHXbdhumqiC18tKd3pLKg0Wa9KjP7hNfWPb7mwx4jYcBXZltvJoOtYJmVL/SXOln
+ u6pi3+tLeLYnvaM5kB7AyTnoZgyPv2XFpuD1YCWypjdD5tFWmcW9Qt+7L+ApLlYWJTTBt9j8m
+ 67JHCcXtsCc3FdknWbUj85U+9XVuDfHyEIChm4jTYNpVjgB/ChWCMLwts2YExIUv6+45Lwyid
+ W71LiwJO7bO8K7/znCr3YwAAqfs1hFoTHHFZLfLp07YaVHGMpqycEr1bVoY/ulgLM6jNIFskT
+ hS7FbKFHZ0NrXQWQGpzdhCK+TrlqdZj0wfPGRnjyo/GYk5sKb8g/9cSSsGY2FQiOxwMaYKtD1
+ aBXx/LBMuq3Vl1VpR4BfSFK81+7ebFU+DyC+2LNQDnHkvFo9gVEC+x2oMlYsqYrvEQ7HVkTLC
+ XIhuVO6x9ZIu18sSgry0MVxuLAaZ8ip9JiAoFEE+AVZlrqjnzNZqYlVQ6pAh22tkJ1E1TMInp
+ yKuNAdRbfQSU77/e7efiNny+iHbv3FwM1uVnTBelD6j0VxLqk/J4LVycIpfXnBCjyhQmKasMm
+ Wdj9N6Z5upgz8BSeA8nGk+Tlhxn7ylPYZJfTgg==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
@@ -58,94 +58,78 @@ Great White Handkerchief come around and clean it up.
 
 Signed-off-by: Enrico Weigelt, metux IT consult <info@metux.net>
 ---
- drivers/virtio/Kconfig | 44 ++++++++++++++++++++++----------------------
- 1 file changed, 22 insertions(+), 22 deletions(-)
+ arch/openrisc/Kconfig | 26 +++++++++++++-------------
+ 1 file changed, 13 insertions(+), 13 deletions(-)
 
-diff --git a/drivers/virtio/Kconfig b/drivers/virtio/Kconfig
-index 3589764..390f6e0 100644
---- a/drivers/virtio/Kconfig
-+++ b/drivers/virtio/Kconfig
-@@ -28,17 +28,17 @@ config VIRTIO_PCI_LEGACY
- 	default y
- 	depends on VIRTIO_PCI
- 	---help---
--          Virtio PCI Card 0.9.X Draft (circa 2014) and older device support.
-+	  Virtio PCI Card 0.9.X Draft (circa 2014) and older device support.
+diff --git a/arch/openrisc/Kconfig b/arch/openrisc/Kconfig
+index a5e361f..4722291 100644
+--- a/arch/openrisc/Kconfig
++++ b/arch/openrisc/Kconfig
+@@ -13,7 +13,7 @@ config OPENRISC
+ 	select IRQ_DOMAIN
+ 	select HANDLE_DOMAIN_IRQ
+ 	select GPIOLIB
+-        select HAVE_ARCH_TRACEHOOK
++	select HAVE_ARCH_TRACEHOOK
+ 	select SPARSE_IRQ
+ 	select GENERIC_IRQ_CHIP
+ 	select GENERIC_IRQ_PROBE
+@@ -56,12 +56,12 @@ config NO_IOPORT_MAP
+ 	def_bool y
  
- 	  This option enables building a transitional driver, supporting
- 	  both devices conforming to Virtio 1 specification, and legacy devices.
- 	  If disabled, you get a slightly smaller, non-transitional driver,
- 	  with no legacy compatibility.
+ config TRACE_IRQFLAGS_SUPPORT
+-        def_bool y
++	def_bool y
  
--          So look out into your driveway.  Do you have a flying car?  If
--          so, you can happily disable this option and virtio will not
--          break.  Otherwise, leave it set.  Unless you're testing what
--          life will be like in The Future.
-+	  So look out into your driveway.  Do you have a flying car?  If
-+	  so, you can happily disable this option and virtio will not
-+	  break.  Otherwise, leave it set.  Unless you're testing what
-+	  life will be like in The Future.
+ # For now, use generic checksum functions
+ #These can be reimplemented in assembly later if so inclined
+ config GENERIC_CSUM
+-        def_bool y
++	def_bool y
  
- 	  If unsure, say Y.
+ config STACKTRACE_SUPPORT
+ 	def_bool y
+@@ -94,8 +94,8 @@ config DCACHE_WRITETHROUGH
+ 	  If unsure say N here
  
-@@ -47,40 +47,40 @@ config VIRTIO_BALLOON
- 	depends on VIRTIO
- 	select MEMORY_BALLOON
- 	---help---
--	 This driver supports increasing and decreasing the amount
--	 of memory within a KVM guest.
-+	  This driver supports increasing and decreasing the amount
-+	  of memory within a KVM guest.
+ config OPENRISC_BUILTIN_DTB
+-        string "Builtin DTB"
+-        default ""
++	string "Builtin DTB"
++	default ""
  
--	 If unsure, say M.
-+	  If unsure, say M.
+ menu "Class II Instructions"
  
- config VIRTIO_INPUT
- 	tristate "Virtio input driver"
- 	depends on VIRTIO
- 	depends on INPUT
- 	---help---
--	 This driver supports virtio input devices such as
--	 keyboards, mice and tablets.
-+	  This driver supports virtio input devices such as
-+	  keyboards, mice and tablets.
+@@ -166,13 +166,13 @@ config OPENRISC_HAVE_SHADOW_GPRS
+ 	  On a unicore system it's safe to say N here if you are unsure.
  
--	 If unsure, say M.
-+	  If unsure, say M.
+ config CMDLINE
+-        string "Default kernel command string"
+-        default ""
+-        help
+-          On some architectures there is currently no way for the boot loader
+-          to pass arguments to the kernel. For these architectures, you should
+-          supply some command-line options at build time by entering them
+-          here.
++	string "Default kernel command string"
++	default ""
++	help
++	  On some architectures there is currently no way for the boot loader
++	  to pass arguments to the kernel. For these architectures, you should
++	  supply some command-line options at build time by entering them
++	  here.
  
-- config VIRTIO_MMIO
-+config VIRTIO_MMIO
- 	tristate "Platform bus driver for memory mapped virtio devices"
- 	depends on HAS_IOMEM && HAS_DMA
-- 	select VIRTIO
-- 	---help---
-- 	 This drivers provides support for memory mapped virtio
--	 platform device driver.
-+	select VIRTIO
-+	---help---
-+	  This drivers provides support for memory mapped virtio
-+	  platform device driver.
+ menu "Debugging options"
  
-- 	 If unsure, say N.
-+	  If unsure, say N.
+@@ -190,7 +190,7 @@ config OPENRISC_ESR_EXCEPTION_BUG_CHECK
+ 	default n
+ 	help
+ 	  This option enables some checks that might expose some problems
+-          in kernel.
++	  in kernel.
  
- config VIRTIO_MMIO_CMDLINE_DEVICES
- 	bool "Memory mapped virtio devices parameter parsing"
- 	depends on VIRTIO_MMIO
- 	---help---
--	 Allow virtio-mmio devices instantiation via the kernel command line
--	 or module parameters. Be aware that using incorrect parameters (base
--	 address in particular) can crash your system - you have been warned.
--	 See Documentation/admin-guide/kernel-parameters.rst for details.
-+	  Allow virtio-mmio devices instantiation via the kernel command line
-+	  or module parameters. Be aware that using incorrect parameters (base
-+	  address in particular) can crash your system - you have been warned.
-+	  See Documentation/admin-guide/kernel-parameters.rst for details.
+ 	  Say N if you are unsure.
  
--	 If unsure, say 'N'.
-+	  If unsure, say 'N'.
- 
- endif # VIRTIO_MENU
 -- 
 1.9.1
 
