@@ -2,129 +2,129 @@ Return-Path: <SRS0=FxTY=RO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,
+	USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EFCE1C4360F
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 Mar 2019 18:17:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 484CDC43381
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 Mar 2019 18:17:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CD34C20657
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 Mar 2019 18:17:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1C0EC206BA
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 Mar 2019 18:17:32 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="G1lIcDN/"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727988AbfCKSRY (ORCPT
+        id S1728064AbfCKSRa (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 11 Mar 2019 14:17:24 -0400
-Received: from mail-pg1-f193.google.com ([209.85.215.193]:32949 "EHLO
-        mail-pg1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727050AbfCKSRX (ORCPT
+        Mon, 11 Mar 2019 14:17:30 -0400
+Received: from mail-qk1-f196.google.com ([209.85.222.196]:40494 "EHLO
+        mail-qk1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727050AbfCKSR3 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 11 Mar 2019 14:17:23 -0400
-Received: by mail-pg1-f193.google.com with SMTP id h11so4665351pgl.0;
-        Mon, 11 Mar 2019 11:17:22 -0700 (PDT)
+        Mon, 11 Mar 2019 14:17:29 -0400
+Received: by mail-qk1-f196.google.com with SMTP id h28so3297569qkk.7;
+        Mon, 11 Mar 2019 11:17:28 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:date:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=etZJriD3PeivOCYKmhhwVNUC+UxpgKf3v+fm/BPssXI=;
+        b=G1lIcDN/q+QCGmZUhDtB2f3wuD9YJddY4GGjadpi5d6/jiEHH4P/gP/XZ+Sj7kokj1
+         rVoP24rMxpyP3SInOtjK0OL7rgey+4DnZaSvtmKBjnxW40TGmwyUKwl76bhYDzf/Ayr2
+         8bsLPRlZbG4WXW7V7//7g/mIgWzfW6ZyB43tBobVoK2UwnN8r08980sj9yx9A8DhzDBk
+         KnhiFCCtb6Wli+AbTGXBjfgvW6oiulUZbDdhRJGcUWG78gUntr0q25DBq1WcHpZZSUJw
+         IYEH6nqjG+TXr4wDUuiBtPQaUpXmaWCQB6EsmoZdOSsaGenqCNmO24Fwvz9xEB3XZEnj
+         geCg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:message-id:subject:from:to:cc:date:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=65VE5QgVhr6ICAJfRGCrsKBljMby4Ut1mhr1wB4b5Mc=;
-        b=ZZFYkEUhiZIXqwe8/eqtaDXwAspaahYkDW8t9BOAsMln4NwZ5eXUaYtPvzabl63Ygs
-         P/ZOyP1D5mn75oX5prq1pbPBiBh7Q8nvxqlUK3R6mYdcchwn2IrdPPM9e6yNuVzniPrW
-         BV9i/CxJ1+mc86t4FAMOzu3rGpITBdkD+IW0Umf2f/UkGv/esETJFy/K3LSrvUTcnIPF
-         pyqheTSo4EYcpxgMJ482CFtnI/j018RUjO8I9cnBVZs6RZFs3LdMMkMoHUrrDd+M7BQe
-         O0ESuAAk9uGHUcLRJnLUNSuVMHbYDnNNZVASAD5iS+V0LHZ+Vzqs6al46wUw2ldwbF+E
-         bk4g==
-X-Gm-Message-State: APjAAAVobCnlai1e5lX2OUg5N7z2gMsCWa31fpeL7l3O5PtpUsKVOe/h
-        I0ZWuy93ND1yNCVTaJXINs0=
-X-Google-Smtp-Source: APXvYqy0wiSRi7OfMtyimcNK/+p5IdT/gGESjTc5rn6Ed04X0yrOKOg+r/HNYPN2F2EgNv3oLDrivA==
-X-Received: by 2002:a65:4bcc:: with SMTP id p12mr10299670pgr.187.1552328241850;
-        Mon, 11 Mar 2019 11:17:21 -0700 (PDT)
-Received: from ?IPv6:2620:15c:2cd:203:5cdc:422c:7b28:ebb5? ([2620:15c:2cd:203:5cdc:422c:7b28:ebb5])
-        by smtp.gmail.com with ESMTPSA id e22sm9271463pfi.126.2019.03.11.11.17.20
+        h=x-gm-message-state:from:date:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=etZJriD3PeivOCYKmhhwVNUC+UxpgKf3v+fm/BPssXI=;
+        b=hCEReWfdCeS5Ub8q3w6g5ifVyv3Kn7LoU0ItD5Fz9Qd5vN1lBTkUXnOz2hSvUal5ij
+         tjhVCOcP4Zs70GOlagSCh5NT+rNLIigHkRAhFU5qyk6Z4FYsZJiRnCfMg2jjqqBQJ6Ir
+         dPPRpNsr/TjTpR341elFCbCpncb1Op9bdwkZe9QoQr5PCzyyTlooy7hpUcUW+2q55x4K
+         1XS8PxLa4zojdGZPUAZY7JLPKQ50ZTgyGba5ts+mkpiwCwQeSUeCEtO2mCgf/hjqlXoT
+         4qRdHjOIZGgy8CNwDRkR2Isn2UWmVJctPRDHkpV1dJvEUvTbVl1XGIu/mdCldcFtRHJ0
+         4Zeg==
+X-Gm-Message-State: APjAAAWn94dJh0VMhaLtoB0koMRWLLm13yLxRD4drX/gJdyIrJPrcPzE
+        efN61UBPqkLSrtn+KyFGh2Ikz+Pa
+X-Google-Smtp-Source: APXvYqwryzX33cl90KADZtbGGooZ6Y2iVXaQCkxLkDWk43RVVl0mC0A2I2YenAoNP7ML3xmXjlilpA==
+X-Received: by 2002:a37:360a:: with SMTP id d10mr24694045qka.83.1552328248346;
+        Mon, 11 Mar 2019 11:17:28 -0700 (PDT)
+Received: from quaco.ghostprotocols.net ([179.162.132.204])
+        by smtp.gmail.com with ESMTPSA id n3sm3662771qkf.93.2019.03.11.11.17.26
         (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Mon, 11 Mar 2019 11:17:21 -0700 (PDT)
-Message-ID: <1552328239.45180.101.camel@acm.org>
-Subject: Re: BUG: MAX_STACK_TRACE_ENTRIES too low!
-From:   Bart Van Assche <bvanassche@acm.org>
-To:     Linus Torvalds <torvalds@linux-foundation.org>
-Cc:     syzbot <syzbot+78923eea7cf44364f4fb@syzkaller.appspotmail.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        "Darrick J. Wong" <darrick.wong@oracle.com>, dledford@redhat.com,
-        "Gustavo A. R. Silva" <gustavo@embeddedor.com>,
-        Christoph Hellwig <hch@infradead.org>,
-        Jann Horn <jannh@google.com>, Jason Gunthorpe <jgg@ziepe.ca>,
-        johannes.berg@intel.com, leon@kernel.org,
-        Linux List Kernel Mailing <linux-kernel@vger.kernel.org>,
-        linux-rdma@vger.kernel.org, linux-xfs@vger.kernel.org,
-        Waiman Long <longman@redhat.com>,
-        Ingo Molnar <mingo@kernel.org>, Ingo Molnar <mingo@redhat.com>,
-        Paul McKenney <paulmck@linux.vnet.ibm.com>,
-        Peter Zijlstra <peterz@infradead.org>, roland@purestorage.com,
-        sean.hefty@intel.com, shamir.rabinovitch@oracle.com,
-        swise@opengridcomputing.com, syzkaller-bugs@googlegroups.com,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Tejun Heo <tj@kernel.org>, Will Deacon <will.deacon@arm.com>,
-        Cong Wang <xiyou.wangcong@gmail.com>
-Date:   Mon, 11 Mar 2019 11:17:19 -0700
-In-Reply-To: <CAHk-=wh_H+Wce_n8vW68ZzoSs3m=exP+kKZZZRCxAfi6dG2_Mg@mail.gmail.com>
-References: <00000000000080952b0583d183f0@google.com>
-         <1552317574.45180.94.camel@acm.org>
-         <CAHk-=wh_H+Wce_n8vW68ZzoSs3m=exP+kKZZZRCxAfi6dG2_Mg@mail.gmail.com>
-Content-Type: text/plain; charset="UTF-7"
-X-Mailer: Evolution 3.26.2-1 
-Mime-Version: 1.0
-Content-Transfer-Encoding: 7bit
+        Mon, 11 Mar 2019 11:17:27 -0700 (PDT)
+From:   Arnaldo Carvalho de Melo <arnaldo.melo@gmail.com>
+X-Google-Original-From: Arnaldo Carvalho de Melo <acme@kernel.org>
+Received: by quaco.ghostprotocols.net (Postfix, from userid 1000)
+        id 4E9AA4039C; Mon, 11 Mar 2019 15:17:24 -0300 (-03)
+Date:   Mon, 11 Mar 2019 15:17:24 -0300
+To:     Andi Kleen <andi@firstfloor.org>
+Cc:     jolsa@kernel.org, linux-perf-users@vger.kernel.org,
+        linux-kernel@vger.kernel.org, Andi Kleen <ak@linux.intel.com>
+Subject: Re: [PATCH v6 11/11] perf tools ui: Fix ui popup browser for many
+ entries
+Message-ID: <20190311181724.GU10690@kernel.org>
+References: <20190311144502.15423-1-andi@firstfloor.org>
+ <20190311144502.15423-12-andi@firstfloor.org>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190311144502.15423-12-andi@firstfloor.org>
+X-Url:  http://acmel.wordpress.com
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, 2019-03-11 at 10:48 -0700, Linus Torvalds wrote:
-+AD4 On Mon, Mar 11, 2019 at 8:19 AM Bart Van Assche +ADw-bvanassche+AEA-acm.org+AD4 wrote:
-+AD4 +AD4 
-+AD4 +AD4 I think this issue has been fixed by a commit that went upstream yesterday. Hence:
-+AD4 +AD4 
-+AD4 +AD4 +ACM-syz fix: workqueue, lockdep: Fix an alloc+AF8-workqueue() error path
-+AD4 
-+AD4 Well, syzbot just reported a problem with that fix itself (+ACI-WARNING in
-+AD4 lockdep+AF8-unregister+AF8-key+ACI).
-+AD4 
-+AD4 Looks like now the lockdep+AF8-unregister+AF8-key() cleanup might be called
-+AD4 even when the lockdep map was never initialized at all in that error
-+AD4 case. Hmm?
-+AD4 
-+AD4 I +AF8-think+AF8 you need to split that +ACI-err+AF8-free+AF8-wq+ACI label into +ACI-just free
-+AD4 the wq+ACI and +ACI-unregister lockdep and free wq+ACI.
-+AD4 
-+AD4 But I didn't look any more closely, I might be misreading things.
+Em Mon, Mar 11, 2019 at 07:45:02AM -0700, Andi Kleen escreveu:
+> From: Andi Kleen <ak@linux.intel.com>
+> 
+> Fix the argv ui browser code to correctly display more entries
+> than fit on the screen without crashing. The problem was some type
+> confusion with pointer types in the ->seek function. Do
+> the argv arithmetic correctly with char ** pointers. Also
+> add some asserts to find overruns and limit the display function
+> correctly.
+> 
+> Then finally remove a workaround for this in the res sample
+> browser.
 
-Hi Linus,
+Applied and added this, please do so next time:
 
-From the console output of the syzbot bug report at the start of this
-e-mail thread:
+Committer testing:
 
-WARNING: CPU: 1 PID: 7649 at kernel/locking/lockdep.c:747 register+AF8-lock+AF8-class+-0x10de/0x2220
+1) Resize the x terminal to have just some 5 lines
 
-On line 747 in lockdep.c there is the following warning statement:
+2) Use 'perf report --samples 1' to activate the sample browser options
+   in the menu
 
-			WARN+AF8-ON+AF8-ONCE(class-+AD4-name +ACEAPQ lock-+AD4-name)+ADs
+3) Press ENTER, this will cause the crash:
 
-My interpretation is that this means that a lockdep key got reregistered
-without unregistration between the two registration calls. That's why I
-posted my +ACIAIw-syz fix: workqueue, lockdep: Fix an alloc+AF8-workqueue() error
-path+ACI reply.
+  # perf report --samples 1
+  perf: Segmentation fault
+  -------- backtrace --------
+  perf[0x5a514a]
+  /lib64/libc.so.6(+0x385bf)[0x7f27281b55bf]
+  /lib64/libc.so.6(+0x161a67)[0x7f27282dea67]
+  /lib64/libslang.so.2(SLsmg_write_wrapped_string+0x82)[0x7f272874a0b2]
+  perf(ui_browser__argv_refresh+0x77)[0x5939a7]
+  perf[0x5924cc]
+  perf(ui_browser__run+0x39)[0x593449]
+  perf(ui__popup_menu+0x83)[0x5a5263]
+  perf[0x59f421]
+  perf(perf_evlist__tui_browse_hists+0x3a0)[0x5a3780]
+  perf(cmd_report+0x2746)[0x447136]
+  perf[0x4a95fe]
+  perf(main+0x61c)[0x42dc6c]
+  /lib64/libc.so.6(__libc_start_main+0xf2)[0x7f27281a1412]
+  perf(_start+0x2d)[0x42de9d]
+  #
 
-The latest syzbot complaint is different. In the console output of the latest
-report I found the following:
+After applying this patch no crash takes place in such situation.
 
-WARNING: CPU: 1 PID: 6970 at kernel/locking/lockdep.c:4925 lockdep+AF8-unregister+AF8-key+-0x21c/0x4e0
-
-On line 4925 there is the following warning statement:
-
-	WARN+AF8-ON+AF8-ONCE(+ACE-found)+ADs
-
-In other words, lockdep+AF8-unregister+AF8-key() got called for a key that was never
-registered.
-
-I agree with your conclusion that the err+AF8-free+AF8-wq label needs to be split. I
-will post a patch that realizes this.
-
-Bart.
+Signed-off-by: Andi Kleen <ak@linux.intel.com>
+Tested-by: Arnaldo Carvalho de Melo <acme@redhat.com>
