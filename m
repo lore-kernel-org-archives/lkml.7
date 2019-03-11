@@ -2,177 +2,753 @@ Return-Path: <SRS0=FxTY=RO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DDAF1C43381
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 Mar 2019 09:40:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 235E7C43381
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 Mar 2019 09:40:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AA10720880
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 Mar 2019 09:40:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C5F902075C
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 Mar 2019 09:40:05 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=baylibre-com.20150623.gappssmtp.com header.i=@baylibre-com.20150623.gappssmtp.com header.b="aQyyrIFh"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727384AbfCKJj7 (ORCPT
+        id S1727426AbfCKJkE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 11 Mar 2019 05:39:59 -0400
-Received: from bhuna.collabora.co.uk ([46.235.227.227]:53588 "EHLO
-        bhuna.collabora.co.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727143AbfCKJj5 (ORCPT
+        Mon, 11 Mar 2019 05:40:04 -0400
+Received: from mail-ot1-f68.google.com ([209.85.210.68]:35532 "EHLO
+        mail-ot1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727386AbfCKJkB (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 11 Mar 2019 05:39:57 -0400
-Received: from localhost (unknown [IPv6:2a01:e0a:2c:6930:5cf4:84a1:2763:fe0d])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        (Authenticated sender: bbrezillon)
-        by bhuna.collabora.co.uk (Postfix) with ESMTPSA id 806F426048B;
-        Mon, 11 Mar 2019 09:39:53 +0000 (GMT)
-Date:   Mon, 11 Mar 2019 10:39:50 +0100
-From:   Boris Brezillon <boris.brezillon@collabora.com>
-To:     Helen Koike <helen.koike@collabora.com>
-Cc:     dri-devel@lists.freedesktop.org, nicholas.kazlauskas@amd.com,
-        andrey.grodzovsky@amd.com, daniel.vetter@ffwll.ch,
-        linux-kernel@vger.kernel.org, Tomasz Figa <tfiga@chromium.org>,
-        David Airlie <airlied@linux.ie>,
-        Sean Paul <seanpaul@google.com>, kernel@collabora.com,
-        harry.wentland@amd.com,
-        =?UTF-8?B?U3TDqXBoYW5l?= Marchesin <marcheu@google.com>
-Subject: Re: [PATCH 1/5] drm: don't block fb changes for async plane updates
-Message-ID: <20190311103950.4465ea8c@collabora.com>
-In-Reply-To: <20190304144909.6267-2-helen.koike@collabora.com>
-References: <20190304144909.6267-1-helen.koike@collabora.com>
-        <20190304144909.6267-2-helen.koike@collabora.com>
-Organization: Collabora
-X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; x86_64-redhat-linux-gnu)
+        Mon, 11 Mar 2019 05:40:01 -0400
+Received: by mail-ot1-f68.google.com with SMTP id z19so3342444otm.2
+        for <linux-kernel@vger.kernel.org>; Mon, 11 Mar 2019 02:39:59 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=baylibre-com.20150623.gappssmtp.com; s=20150623;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc:content-transfer-encoding;
+        bh=m10vH7VhrLXBtuRmbQQzufuUhuoAzkMO8SrlxsRrKXo=;
+        b=aQyyrIFhTttAT8JZQorU4f0/QVQOJ3rQJAc8+E4snl64tzIwba9RVgkL0kGcN5FUyp
+         SX+M+PwdgcoPNrQrYzbn27PhhPzS4AuRvEI/W7953uGsaxumiRu0kFhIImCpfAYTJr/Q
+         HV+EmvLj6/Zitz0QVlGnMH2nLA3V/lU0xpdzy13NkedRQKMcj1SEOHsDnM2IRUu3xRid
+         V7KAswGvtnDaqUd4TRANoKyfEIExypC0pLbx7FKIm9duxJ1cipVzfv/IDue66CBog6r0
+         ZfFL4MzyPubv8At8JYJyJXs0OIg694Z0pDOC2HkebRqdogINHqIL+YYM17Q6MM6Vj4Bq
+         /5iQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=m10vH7VhrLXBtuRmbQQzufuUhuoAzkMO8SrlxsRrKXo=;
+        b=k9yq8O3jd/wVy6xsJdzCYsFQqxZcD8rDIQUdA4np/NqNBAy5M841BqU+C6M/Gy3ejc
+         aUEM9ApGjQZYUfMV3FoTU07/mSbdoovfleps4ydWJeU6yShxvUFBsPmZhjuUTlJAHORk
+         vt78PLr7bq6QEyRF/Ojuo6oo1R1xLzbc+xxnkfyl3K+EGkc/6nvrB0Ka30wy5kpAC0Qs
+         /8Yy1/YPRuz406WUgBHOawN5mvviGx5MQBAIoGZVyP1+JpRsPKomxq3FzQUD+tDFlqTz
+         D3jIyeVsFFjV7zO8XVzmmY26MLr1i8AvbYjt0dd49S7bqzRLnbepmTmyBPoX5ZDwmbQ6
+         JlyA==
+X-Gm-Message-State: APjAAAXJcbYdQh62ftLOccI9OItd9qYopCGvXnAn1gOxyIvBqhweYlQo
+        vsyEXlPwFx86Cjt7TjPeQsF+Yg8NVPGSltYHyqPGzQ==
+X-Google-Smtp-Source: APXvYqz7WuV1WEysz8AGBo6tKCrtHcc7YSGoVNlAXYF667zfAmivyfcuP+1Z3eAZFCmMfA2dSzKlPK+jWgjUygLUEyc=
+X-Received: by 2002:a9d:6c8c:: with SMTP id c12mr19374297otr.27.1552297199062;
+ Mon, 11 Mar 2019 02:39:59 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+References: <20190307103348.1591457-1-arnd@arndb.de>
+In-Reply-To: <20190307103348.1591457-1-arnd@arndb.de>
+From:   Bartosz Golaszewski <bgolaszewski@baylibre.com>
+Date:   Mon, 11 Mar 2019 10:39:48 +0100
+Message-ID: <CAMpxmJXpYtJp5eZfz1uCQfE8yg_uLzQxWNt9wKZ4uMzfckU2TQ@mail.gmail.com>
+Subject: Re: [PATCH] gpio: omap: avoid clang warning
+To:     Arnd Bergmann <arnd@arndb.de>
+Cc:     Grygorii Strashko <grygorii.strashko@ti.com>,
+        Santosh Shilimkar <ssantosh@kernel.org>,
+        Kevin Hilman <khilman@kernel.org>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Nick Desaulniers <ndesaulniers@google.com>,
+        Tony Lindgren <tony@atomide.com>,
+        Janusz Krzysztofik <jmkrzyszt@gmail.com>,
+        Wolfram Sang <wsa+renesas@sang-engineering.com>,
+        Linux-OMAP <linux-omap@vger.kernel.org>,
+        linux-gpio <linux-gpio@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon,  4 Mar 2019 11:49:05 -0300
-Helen Koike <helen.koike@collabora.com> wrote:
-
-> In the case of a normal sync update, the preparation of framebuffers (be
-> it calling drm_atomic_helper_prepare_planes() or doing setups with
-> drm_framebuffer_get()) are performed in the new_state and the respective
-> cleanups are performed in the old_state.
-> 
-> In the case of async updates, the preparation is also done in the
-> new_state but the cleanups are done in the new_state (because updates
-> are performed in place, i.e. in the current state).
-> 
-> The current code blocks async udpates when the fb is changed, turning
-> async updates into sync updates, slowing down cursor updates and
-> introducing regressions in igt tests with errors of type:
-> 
-> "CRITICAL: completed 97 cursor updated in a period of 30 flips, we
-> expect to complete approximately 15360 updates, with the threshold set
-> at 7680"
-> 
-> Fb changes in async updates were prevented to avoid the following scenario:
-> 
-> - Async update, oldfb = NULL, newfb = fb1, prepare fb1, cleanup fb1
-> - Async update, oldfb = fb1, newfb = fb2, prepare fb2, cleanup fb2
-> - Non-async commit, oldfb = fb2, newfb = fb1, prepare fb1, cleanup fb2 (wrong)
-> Where we have a single call to prepare fb2 but double cleanup call to fb2.
-> 
-> To solve the above problems, instead of blocking async fb changes, we
-> place the old framebuffer in the new_state object, so when the code
-> performs cleanups in the new_state it will cleanup the old_fb and we
-> will have the following scenario instead:
-> 
-> - Async update, oldfb = NULL, newfb = fb1, prepare fb1, no cleanup
-> - Async update, oldfb = fb1, newfb = fb2, prepare fb2, cleanup fb1
-> - Non-async commit, oldfb = fb2, newfb = fb1, prepare fb1, cleanup fb2
-> 
-> Where calls to prepare/cleanup are ballanced.
-> 
-> Cc: <stable@vger.kernel.org> # v4.14+: 25dc194b34dd: drm: Block fb changes for async plane updates
-> Fixes: 25dc194b34dd ("drm: Block fb changes for async plane updates")
-> Suggested-by: Boris Brezillon <boris.brezillon@collabora.com>
-> Signed-off-by: Helen Koike <helen.koike@collabora.com>
-> 
+czw., 7 mar 2019 o 11:39 Arnd Bergmann <arnd@arndb.de> napisa=C5=82(a):
+>
+> clang warns about a tentative array definition in the gpio-omap driver:
+>
+> drivers/gpio/gpio-omap.c:1282:34: error: tentative array definition assum=
+ed to have one element [-Werror]
+> static const struct of_device_id omap_gpio_match[];
+>
+> It's best to just reorder the entire file to avoid forward declarations,
+> which lets us use the regular declaration. To do this, the unnecessary
+> CONFIG_OF check must also be removed.
+>
+> Signed-off-by: Arnd Bergmann <arnd@arndb.de>
 > ---
-> Hello,
-> 
-> As mentioned in the cover letter,
-> I tested on the rockchip and on i915 (with a patch I am still working on for
-> replacing cursors by async update), with igt plane_cursor_legacy and
-> kms_cursor_legacy and I didn't see any regressions.
-> I couldn't test on MSM and AMD because I don't have the hardware (and I am
-> having some issues testing on vc4) and I would appreciate if anyone could help
-> me testing those.
-> 
-> I also think it would be a better solution if, instead of having async
-> to do in-place updates in the current state, the async path should be
-> equivalent to a syncronous update, i.e., modifying new_state and
-> performing a flip
-> IMHO, the only difference between sync and async should be that async update
-> doesn't wait for vblank and applies the changes immeditally to the hw,
-> but the code path could be almost the same.
-> But for now I think this solution is ok (swaping new_fb/old_fb), and
-> then we can adjust things little by little, what do you think?
-> 
-> Thanks!
-> Helen
-> 
->  drivers/gpu/drm/drm_atomic_helper.c | 20 ++++++++++----------
->  1 file changed, 10 insertions(+), 10 deletions(-)
-> 
-> diff --git a/drivers/gpu/drm/drm_atomic_helper.c b/drivers/gpu/drm/drm_atomic_helper.c
-> index 540a77a2ade9..e7eb96f1efc2 100644
-> --- a/drivers/gpu/drm/drm_atomic_helper.c
-> +++ b/drivers/gpu/drm/drm_atomic_helper.c
-> @@ -1608,15 +1608,6 @@ int drm_atomic_helper_async_check(struct drm_device *dev,
->  	    old_plane_state->crtc != new_plane_state->crtc)
->  		return -EINVAL;
->  
-> -	/*
-> -	 * FIXME: Since prepare_fb and cleanup_fb are always called on
-> -	 * the new_plane_state for async updates we need to block framebuffer
-> -	 * changes. This prevents use of a fb that's been cleaned up and
-> -	 * double cleanups from occuring.
-> -	 */
-> -	if (old_plane_state->fb != new_plane_state->fb)
-> -		return -EINVAL;
-> -
->  	funcs = plane->helper_private;
->  	if (!funcs->atomic_async_update)
->  		return -EINVAL;
-> @@ -1657,6 +1648,9 @@ void drm_atomic_helper_async_commit(struct drm_device *dev,
->  	int i;
->  
->  	for_each_new_plane_in_state(state, plane, plane_state, i) {
-> +		struct drm_framebuffer *new_fb = plane_state->fb;
-> +		struct drm_framebuffer *old_fb = plane->state->fb;
-> +
->  		funcs = plane->helper_private;
->  		funcs->atomic_async_update(plane, plane_state);
->  
-> @@ -1665,11 +1659,17 @@ void drm_atomic_helper_async_commit(struct drm_device *dev,
->  		 * plane->state in-place, make sure at least common
->  		 * properties have been properly updated.
->  		 */
-> -		WARN_ON_ONCE(plane->state->fb != plane_state->fb);
-> +		WARN_ON_ONCE(plane->state->fb != new_fb);
->  		WARN_ON_ONCE(plane->state->crtc_x != plane_state->crtc_x);
->  		WARN_ON_ONCE(plane->state->crtc_y != plane_state->crtc_y);
->  		WARN_ON_ONCE(plane->state->src_x != plane_state->src_x);
->  		WARN_ON_ONCE(plane->state->src_y != plane_state->src_y);
-> +
-> +		/*
-> +		 * Make sure the FBs have been swapped so that cleanups in the
-> +		 * new_state performs a cleanup in the old FB.
-> +		 */
-> +		WARN_ON_ONCE(plane_state->fb != old_fb);
-
-Looks like this patch should go last in the series if you want to keep
-things bisectable, otherwise you'll have a WARN_ON() backtrace in the
-drivers your fixing in the following patches.
-
->  	}
+>  drivers/gpio/gpio-omap.c | 549 +++++++++++++++++++--------------------
+>  1 file changed, 267 insertions(+), 282 deletions(-)
+>
+> diff --git a/drivers/gpio/gpio-omap.c b/drivers/gpio/gpio-omap.c
+> index f4e9921fa966..9d743563f4c1 100644
+> --- a/drivers/gpio/gpio-omap.c
+> +++ b/drivers/gpio/gpio-omap.c
+> @@ -1249,196 +1249,63 @@ static int omap_gpio_chip_init(struct gpio_bank =
+*bank, struct irq_chip *irqc)
+>         return ret;
 >  }
->  EXPORT_SYMBOL(drm_atomic_helper_async_commit);
+>
+> -static void omap_gpio_idle(struct gpio_bank *bank, bool may_lose_context=
+);
+> -static void omap_gpio_unidle(struct gpio_bank *bank);
+> -
+> -static int gpio_omap_cpu_notifier(struct notifier_block *nb,
+> -                                 unsigned long cmd, void *v)
+> +static void omap_gpio_init_context(struct gpio_bank *p)
+>  {
+> -       struct gpio_bank *bank;
+> -       unsigned long flags;
+> +       struct omap_gpio_reg_offs *regs =3D p->regs;
+> +       void __iomem *base =3D p->base;
+>
+> -       bank =3D container_of(nb, struct gpio_bank, nb);
+> +       p->context.ctrl         =3D readl_relaxed(base + regs->ctrl);
+> +       p->context.oe           =3D readl_relaxed(base + regs->direction)=
+;
+> +       p->context.wake_en      =3D readl_relaxed(base + regs->wkup_en);
+> +       p->context.leveldetect0 =3D readl_relaxed(base + regs->leveldetec=
+t0);
+> +       p->context.leveldetect1 =3D readl_relaxed(base + regs->leveldetec=
+t1);
+> +       p->context.risingdetect =3D readl_relaxed(base + regs->risingdete=
+ct);
+> +       p->context.fallingdetect =3D readl_relaxed(base + regs->fallingde=
+tect);
+> +       p->context.irqenable1   =3D readl_relaxed(base + regs->irqenable)=
+;
+> +       p->context.irqenable2   =3D readl_relaxed(base + regs->irqenable2=
+);
+>
+> -       raw_spin_lock_irqsave(&bank->lock, flags);
+> -       switch (cmd) {
+> -       case CPU_CLUSTER_PM_ENTER:
+> -               if (bank->is_suspended)
+> -                       break;
+> -               omap_gpio_idle(bank, true);
+> -               break;
+> -       case CPU_CLUSTER_PM_ENTER_FAILED:
+> -       case CPU_CLUSTER_PM_EXIT:
+> -               if (bank->is_suspended)
+> -                       break;
+> -               omap_gpio_unidle(bank);
+> -               break;
+> -       }
+> -       raw_spin_unlock_irqrestore(&bank->lock, flags);
+> +       if (regs->set_dataout && p->regs->clr_dataout)
+> +               p->context.dataout =3D readl_relaxed(base + regs->set_dat=
+aout);
+> +       else
+> +               p->context.dataout =3D readl_relaxed(base + regs->dataout=
+);
+>
+> -       return NOTIFY_OK;
+> +       p->context_valid =3D true;
+>  }
+>
+> -static const struct of_device_id omap_gpio_match[];
+> -
+> -static int omap_gpio_probe(struct platform_device *pdev)
+> +static void omap_gpio_restore_context(struct gpio_bank *bank)
+>  {
+> -       struct device *dev =3D &pdev->dev;
+> -       struct device_node *node =3D dev->of_node;
+> -       const struct of_device_id *match;
+> -       const struct omap_gpio_platform_data *pdata;
+> -       struct resource *res;
+> -       struct gpio_bank *bank;
+> -       struct irq_chip *irqc;
+> -       int ret;
+> -
+> -       match =3D of_match_device(of_match_ptr(omap_gpio_match), dev);
+> -
+> -       pdata =3D match ? match->data : dev_get_platdata(dev);
+> -       if (!pdata)
+> -               return -EINVAL;
+> -
+> -       bank =3D devm_kzalloc(dev, sizeof(*bank), GFP_KERNEL);
+> -       if (!bank)
+> -               return -ENOMEM;
+> -
+> -       irqc =3D devm_kzalloc(dev, sizeof(*irqc), GFP_KERNEL);
+> -       if (!irqc)
+> -               return -ENOMEM;
+> -
+> -       irqc->irq_startup =3D omap_gpio_irq_startup,
+> -       irqc->irq_shutdown =3D omap_gpio_irq_shutdown,
+> -       irqc->irq_ack =3D omap_gpio_ack_irq,
+> -       irqc->irq_mask =3D omap_gpio_mask_irq,
+> -       irqc->irq_unmask =3D omap_gpio_unmask_irq,
+> -       irqc->irq_set_type =3D omap_gpio_irq_type,
+> -       irqc->irq_set_wake =3D omap_gpio_wake_enable,
+> -       irqc->irq_bus_lock =3D omap_gpio_irq_bus_lock,
+> -       irqc->irq_bus_sync_unlock =3D gpio_irq_bus_sync_unlock,
+> -       irqc->name =3D dev_name(&pdev->dev);
+> -       irqc->flags =3D IRQCHIP_MASK_ON_SUSPEND;
+> -       irqc->parent_device =3D dev;
+> -
+> -       bank->irq =3D platform_get_irq(pdev, 0);
+> -       if (bank->irq <=3D 0) {
+> -               if (!bank->irq)
+> -                       bank->irq =3D -ENXIO;
+> -               if (bank->irq !=3D -EPROBE_DEFER)
+> -                       dev_err(dev,
+> -                               "can't get irq resource ret=3D%d\n", bank=
+->irq);
+> -               return bank->irq;
+> -       }
+> -
+> -       bank->chip.parent =3D dev;
+> -       bank->chip.owner =3D THIS_MODULE;
+> -       bank->dbck_flag =3D pdata->dbck_flag;
+> -       bank->quirks =3D pdata->quirks;
+> -       bank->stride =3D pdata->bank_stride;
+> -       bank->width =3D pdata->bank_width;
+> -       bank->is_mpuio =3D pdata->is_mpuio;
+> -       bank->non_wakeup_gpios =3D pdata->non_wakeup_gpios;
+> -       bank->regs =3D pdata->regs;
+> -#ifdef CONFIG_OF_GPIO
+> -       bank->chip.of_node =3D of_node_get(node);
+> -#endif
+> -
+> -       if (node) {
+> -               if (!of_property_read_bool(node, "ti,gpio-always-on"))
+> -                       bank->loses_context =3D true;
+> -       } else {
+> -               bank->loses_context =3D pdata->loses_context;
+> -
+> -               if (bank->loses_context)
+> -                       bank->get_context_loss_count =3D
+> -                               pdata->get_context_loss_count;
+> -       }
+> -
+> -       if (bank->regs->set_dataout && bank->regs->clr_dataout) {
+> -               bank->set_dataout =3D omap_set_gpio_dataout_reg;
+> -               bank->set_dataout_multiple =3D omap_set_gpio_dataout_reg_=
+multiple;
+> -       } else {
+> -               bank->set_dataout =3D omap_set_gpio_dataout_mask;
+> -               bank->set_dataout_multiple =3D
+> -                               omap_set_gpio_dataout_mask_multiple;
+> -       }
+> -
+> -       if (bank->quirks & OMAP_GPIO_QUIRK_IDLE_REMOVE_TRIGGER) {
+> -               bank->funcs.idle_enable_level_quirk =3D
+> -                       omap2_gpio_enable_level_quirk;
+> -               bank->funcs.idle_disable_level_quirk =3D
+> -                       omap2_gpio_disable_level_quirk;
+> -       }
+> -
+> -       raw_spin_lock_init(&bank->lock);
+> -       raw_spin_lock_init(&bank->wa_lock);
+> -
+> -       /* Static mapping, never released */
+> -       res =3D platform_get_resource(pdev, IORESOURCE_MEM, 0);
+> -       bank->base =3D devm_ioremap_resource(dev, res);
+> -       if (IS_ERR(bank->base)) {
+> -               return PTR_ERR(bank->base);
+> -       }
+> -
+> -       if (bank->dbck_flag) {
+> -               bank->dbck =3D devm_clk_get(dev, "dbclk");
+> -               if (IS_ERR(bank->dbck)) {
+> -                       dev_err(dev,
+> -                               "Could not get gpio dbck. Disable debounc=
+e\n");
+> -                       bank->dbck_flag =3D false;
+> -               } else {
+> -                       clk_prepare(bank->dbck);
+> -               }
+> -       }
+> -
+> -       platform_set_drvdata(pdev, bank);
+> -
+> -       pm_runtime_enable(dev);
+> -       pm_runtime_get_sync(dev);
+> -
+> -       if (bank->is_mpuio)
+> -               omap_mpuio_init(bank);
+> -
+> -       omap_gpio_mod_init(bank);
+> -
+> -       ret =3D omap_gpio_chip_init(bank, irqc);
+> -       if (ret) {
+> -               pm_runtime_put_sync(dev);
+> -               pm_runtime_disable(dev);
+> -               if (bank->dbck_flag)
+> -                       clk_unprepare(bank->dbck);
+> -               return ret;
+> -       }
+> -
+> -       omap_gpio_show_rev(bank);
+> +       writel_relaxed(bank->context.wake_en,
+> +                               bank->base + bank->regs->wkup_en);
+> +       writel_relaxed(bank->context.ctrl, bank->base + bank->regs->ctrl)=
+;
+> +       writel_relaxed(bank->context.leveldetect0,
+> +                               bank->base + bank->regs->leveldetect0);
+> +       writel_relaxed(bank->context.leveldetect1,
+> +                               bank->base + bank->regs->leveldetect1);
+> +       writel_relaxed(bank->context.risingdetect,
+> +                               bank->base + bank->regs->risingdetect);
+> +       writel_relaxed(bank->context.fallingdetect,
+> +                               bank->base + bank->regs->fallingdetect);
+> +       if (bank->regs->set_dataout && bank->regs->clr_dataout)
+> +               writel_relaxed(bank->context.dataout,
+> +                               bank->base + bank->regs->set_dataout);
+> +       else
+> +               writel_relaxed(bank->context.dataout,
+> +                               bank->base + bank->regs->dataout);
+> +       writel_relaxed(bank->context.oe, bank->base + bank->regs->directi=
+on);
+>
+> -       if (bank->funcs.idle_enable_level_quirk &&
+> -           bank->funcs.idle_disable_level_quirk) {
+> -               bank->nb.notifier_call =3D gpio_omap_cpu_notifier;
+> -               cpu_pm_register_notifier(&bank->nb);
+> +       if (bank->dbck_enable_mask) {
+> +               writel_relaxed(bank->context.debounce, bank->base +
+> +                                       bank->regs->debounce);
+> +               writel_relaxed(bank->context.debounce_en,
+> +                                       bank->base + bank->regs->debounce=
+_en);
+>         }
+>
+> -       pm_runtime_put(dev);
+> -
+> -       return 0;
+> -}
+> -
+> -static int omap_gpio_remove(struct platform_device *pdev)
+> -{
+> -       struct gpio_bank *bank =3D platform_get_drvdata(pdev);
+> -
+> -       if (bank->nb.notifier_call)
+> -               cpu_pm_unregister_notifier(&bank->nb);
+> -       list_del(&bank->node);
+> -       gpiochip_remove(&bank->chip);
+> -       pm_runtime_disable(&pdev->dev);
+> -       if (bank->dbck_flag)
+> -               clk_unprepare(bank->dbck);
+> -
+> -       return 0;
+> +       writel_relaxed(bank->context.irqenable1,
+> +                               bank->base + bank->regs->irqenable);
+> +       writel_relaxed(bank->context.irqenable2,
+> +                               bank->base + bank->regs->irqenable2);
+>  }
+>
+> -static void omap_gpio_restore_context(struct gpio_bank *bank);
+> -
+>  static void omap_gpio_idle(struct gpio_bank *bank, bool may_lose_context=
+)
+>  {
+>         struct device *dev =3D bank->chip.parent;
+> @@ -1479,8 +1346,6 @@ static void omap_gpio_idle(struct gpio_bank *bank, =
+bool may_lose_context)
+>         omap_gpio_dbck_disable(bank);
+>  }
+>
+> -static void omap_gpio_init_context(struct gpio_bank *p);
+> -
+>  static void omap_gpio_unidle(struct gpio_bank *bank)
+>  {
+>         struct device *dev =3D bank->chip.parent;
+> @@ -1574,113 +1439,33 @@ static void omap_gpio_unidle(struct gpio_bank *b=
+ank)
+>         bank->workaround_enabled =3D false;
+>  }
+>
+> -static void omap_gpio_init_context(struct gpio_bank *p)
+> +static int gpio_omap_cpu_notifier(struct notifier_block *nb,
+> +                                 unsigned long cmd, void *v)
+>  {
+> -       struct omap_gpio_reg_offs *regs =3D p->regs;
+> -       void __iomem *base =3D p->base;
+> +       struct gpio_bank *bank;
+> +       unsigned long flags;
+>
+> -       p->context.ctrl         =3D readl_relaxed(base + regs->ctrl);
+> -       p->context.oe           =3D readl_relaxed(base + regs->direction)=
+;
+> -       p->context.wake_en      =3D readl_relaxed(base + regs->wkup_en);
+> -       p->context.leveldetect0 =3D readl_relaxed(base + regs->leveldetec=
+t0);
+> -       p->context.leveldetect1 =3D readl_relaxed(base + regs->leveldetec=
+t1);
+> -       p->context.risingdetect =3D readl_relaxed(base + regs->risingdete=
+ct);
+> -       p->context.fallingdetect =3D readl_relaxed(base + regs->fallingde=
+tect);
+> -       p->context.irqenable1   =3D readl_relaxed(base + regs->irqenable)=
+;
+> -       p->context.irqenable2   =3D readl_relaxed(base + regs->irqenable2=
+);
+> +       bank =3D container_of(nb, struct gpio_bank, nb);
+>
+> -       if (regs->set_dataout && p->regs->clr_dataout)
+> -               p->context.dataout =3D readl_relaxed(base + regs->set_dat=
+aout);
+> -       else
+> -               p->context.dataout =3D readl_relaxed(base + regs->dataout=
+);
+> +       raw_spin_lock_irqsave(&bank->lock, flags);
+> +       switch (cmd) {
+> +       case CPU_CLUSTER_PM_ENTER:
+> +               if (bank->is_suspended)
+> +                       break;
+> +               omap_gpio_idle(bank, true);
+> +               break;
+> +       case CPU_CLUSTER_PM_ENTER_FAILED:
+> +       case CPU_CLUSTER_PM_EXIT:
+> +               if (bank->is_suspended)
+> +                       break;
+> +               omap_gpio_unidle(bank);
+> +               break;
+> +       }
+> +       raw_spin_unlock_irqrestore(&bank->lock, flags);
+>
+> -       p->context_valid =3D true;
+> -}
+> -
+> -static void omap_gpio_restore_context(struct gpio_bank *bank)
+> -{
+> -       writel_relaxed(bank->context.wake_en,
+> -                               bank->base + bank->regs->wkup_en);
+> -       writel_relaxed(bank->context.ctrl, bank->base + bank->regs->ctrl)=
+;
+> -       writel_relaxed(bank->context.leveldetect0,
+> -                               bank->base + bank->regs->leveldetect0);
+> -       writel_relaxed(bank->context.leveldetect1,
+> -                               bank->base + bank->regs->leveldetect1);
+> -       writel_relaxed(bank->context.risingdetect,
+> -                               bank->base + bank->regs->risingdetect);
+> -       writel_relaxed(bank->context.fallingdetect,
+> -                               bank->base + bank->regs->fallingdetect);
+> -       if (bank->regs->set_dataout && bank->regs->clr_dataout)
+> -               writel_relaxed(bank->context.dataout,
+> -                               bank->base + bank->regs->set_dataout);
+> -       else
+> -               writel_relaxed(bank->context.dataout,
+> -                               bank->base + bank->regs->dataout);
+> -       writel_relaxed(bank->context.oe, bank->base + bank->regs->directi=
+on);
+> -
+> -       if (bank->dbck_enable_mask) {
+> -               writel_relaxed(bank->context.debounce, bank->base +
+> -                                       bank->regs->debounce);
+> -               writel_relaxed(bank->context.debounce_en,
+> -                                       bank->base + bank->regs->debounce=
+_en);
+> -       }
+> -
+> -       writel_relaxed(bank->context.irqenable1,
+> -                               bank->base + bank->regs->irqenable);
+> -       writel_relaxed(bank->context.irqenable2,
+> -                               bank->base + bank->regs->irqenable2);
+> -}
+> -
+> -static int __maybe_unused omap_gpio_runtime_suspend(struct device *dev)
+> -{
+> -       struct gpio_bank *bank =3D dev_get_drvdata(dev);
+> -       unsigned long flags;
+> -       int error =3D 0;
+> -
+> -       raw_spin_lock_irqsave(&bank->lock, flags);
+> -       /* Must be idled only by CPU_CLUSTER_PM_ENTER? */
+> -       if (bank->irq_usage) {
+> -               error =3D -EBUSY;
+> -               goto unlock;
+> -       }
+> -       omap_gpio_idle(bank, true);
+> -       bank->is_suspended =3D true;
+> -unlock:
+> -       raw_spin_unlock_irqrestore(&bank->lock, flags);
+> -
+> -       return error;
+> -}
+> -
+> -static int __maybe_unused omap_gpio_runtime_resume(struct device *dev)
+> -{
+> -       struct gpio_bank *bank =3D dev_get_drvdata(dev);
+> -       unsigned long flags;
+> -       int error =3D 0;
+> -
+> -       raw_spin_lock_irqsave(&bank->lock, flags);
+> -       /* Must be unidled only by CPU_CLUSTER_PM_ENTER? */
+> -       if (bank->irq_usage) {
+> -               error =3D -EBUSY;
+> -               goto unlock;
+> -       }
+> -       omap_gpio_unidle(bank);
+> -       bank->is_suspended =3D false;
+> -unlock:
+> -       raw_spin_unlock_irqrestore(&bank->lock, flags);
+> -
+> -       return error;
+> +       return NOTIFY_OK;
+>  }
+>
+> -#ifdef CONFIG_ARCH_OMAP2PLUS
+> -static const struct dev_pm_ops gpio_pm_ops =3D {
+> -       SET_RUNTIME_PM_OPS(omap_gpio_runtime_suspend, omap_gpio_runtime_r=
+esume,
+> -                                                                       N=
+ULL)
+> -};
+> -#else
+> -static const struct dev_pm_ops gpio_pm_ops;
+> -#endif /* CONFIG_ARCH_OMAP2PLUS */
+> -
+> -#if defined(CONFIG_OF)
+>  static struct omap_gpio_reg_offs omap2_gpio_regs =3D {
+>         .revision =3D             OMAP24XX_GPIO_REVISION,
+>         .direction =3D            OMAP24XX_GPIO_OE,
+> @@ -1768,15 +1553,215 @@ static const struct of_device_id omap_gpio_match=
+[] =3D {
+>         { },
+>  };
+>  MODULE_DEVICE_TABLE(of, omap_gpio_match);
+> +
+> +static int omap_gpio_probe(struct platform_device *pdev)
+> +{
+> +       struct device *dev =3D &pdev->dev;
+> +       struct device_node *node =3D dev->of_node;
+> +       const struct of_device_id *match;
+> +       const struct omap_gpio_platform_data *pdata;
+> +       struct resource *res;
+> +       struct gpio_bank *bank;
+> +       struct irq_chip *irqc;
+> +       int ret;
+> +
+> +       match =3D of_match_device(of_match_ptr(omap_gpio_match), dev);
+> +
+> +       pdata =3D match ? match->data : dev_get_platdata(dev);
+> +       if (!pdata)
+> +               return -EINVAL;
+> +
+> +       bank =3D devm_kzalloc(dev, sizeof(*bank), GFP_KERNEL);
+> +       if (!bank)
+> +               return -ENOMEM;
+> +
+> +       irqc =3D devm_kzalloc(dev, sizeof(*irqc), GFP_KERNEL);
+> +       if (!irqc)
+> +               return -ENOMEM;
+> +
+> +       irqc->irq_startup =3D omap_gpio_irq_startup,
+> +       irqc->irq_shutdown =3D omap_gpio_irq_shutdown,
+> +       irqc->irq_ack =3D omap_gpio_ack_irq,
+> +       irqc->irq_mask =3D omap_gpio_mask_irq,
+> +       irqc->irq_unmask =3D omap_gpio_unmask_irq,
+> +       irqc->irq_set_type =3D omap_gpio_irq_type,
+> +       irqc->irq_set_wake =3D omap_gpio_wake_enable,
+> +       irqc->irq_bus_lock =3D omap_gpio_irq_bus_lock,
+> +       irqc->irq_bus_sync_unlock =3D gpio_irq_bus_sync_unlock,
+> +       irqc->name =3D dev_name(&pdev->dev);
+> +       irqc->flags =3D IRQCHIP_MASK_ON_SUSPEND;
+> +       irqc->parent_device =3D dev;
+> +
+> +       bank->irq =3D platform_get_irq(pdev, 0);
+> +       if (bank->irq <=3D 0) {
+> +               if (!bank->irq)
+> +                       bank->irq =3D -ENXIO;
+> +               if (bank->irq !=3D -EPROBE_DEFER)
+> +                       dev_err(dev,
+> +                               "can't get irq resource ret=3D%d\n", bank=
+->irq);
+> +               return bank->irq;
+> +       }
+> +
+> +       bank->chip.parent =3D dev;
+> +       bank->chip.owner =3D THIS_MODULE;
+> +       bank->dbck_flag =3D pdata->dbck_flag;
+> +       bank->quirks =3D pdata->quirks;
+> +       bank->stride =3D pdata->bank_stride;
+> +       bank->width =3D pdata->bank_width;
+> +       bank->is_mpuio =3D pdata->is_mpuio;
+> +       bank->non_wakeup_gpios =3D pdata->non_wakeup_gpios;
+> +       bank->regs =3D pdata->regs;
+> +#ifdef CONFIG_OF_GPIO
+> +       bank->chip.of_node =3D of_node_get(node);
+>  #endif
+>
+> +       if (node) {
+> +               if (!of_property_read_bool(node, "ti,gpio-always-on"))
+> +                       bank->loses_context =3D true;
+> +       } else {
+> +               bank->loses_context =3D pdata->loses_context;
+> +
+> +               if (bank->loses_context)
+> +                       bank->get_context_loss_count =3D
+> +                               pdata->get_context_loss_count;
+> +       }
+> +
+> +       if (bank->regs->set_dataout && bank->regs->clr_dataout) {
+> +               bank->set_dataout =3D omap_set_gpio_dataout_reg;
+> +               bank->set_dataout_multiple =3D omap_set_gpio_dataout_reg_=
+multiple;
+> +       } else {
+> +               bank->set_dataout =3D omap_set_gpio_dataout_mask;
+> +               bank->set_dataout_multiple =3D
+> +                               omap_set_gpio_dataout_mask_multiple;
+> +       }
+> +
+> +       if (bank->quirks & OMAP_GPIO_QUIRK_IDLE_REMOVE_TRIGGER) {
+> +               bank->funcs.idle_enable_level_quirk =3D
+> +                       omap2_gpio_enable_level_quirk;
+> +               bank->funcs.idle_disable_level_quirk =3D
+> +                       omap2_gpio_disable_level_quirk;
+> +       }
+> +
+> +       raw_spin_lock_init(&bank->lock);
+> +       raw_spin_lock_init(&bank->wa_lock);
+> +
+> +       /* Static mapping, never released */
+> +       res =3D platform_get_resource(pdev, IORESOURCE_MEM, 0);
+> +       bank->base =3D devm_ioremap_resource(dev, res);
+> +       if (IS_ERR(bank->base)) {
+> +               return PTR_ERR(bank->base);
+> +       }
+> +
+> +       if (bank->dbck_flag) {
+> +               bank->dbck =3D devm_clk_get(dev, "dbclk");
+> +               if (IS_ERR(bank->dbck)) {
+> +                       dev_err(dev,
+> +                               "Could not get gpio dbck. Disable debounc=
+e\n");
+> +                       bank->dbck_flag =3D false;
+> +               } else {
+> +                       clk_prepare(bank->dbck);
+> +               }
+> +       }
+> +
+> +       platform_set_drvdata(pdev, bank);
+> +
+> +       pm_runtime_enable(dev);
+> +       pm_runtime_get_sync(dev);
+> +
+> +       if (bank->is_mpuio)
+> +               omap_mpuio_init(bank);
+> +
+> +       omap_gpio_mod_init(bank);
+> +
+> +       ret =3D omap_gpio_chip_init(bank, irqc);
+> +       if (ret) {
+> +               pm_runtime_put_sync(dev);
+> +               pm_runtime_disable(dev);
+> +               if (bank->dbck_flag)
+> +                       clk_unprepare(bank->dbck);
+> +               return ret;
+> +       }
+> +
+> +       omap_gpio_show_rev(bank);
+> +
+> +       if (bank->funcs.idle_enable_level_quirk &&
+> +           bank->funcs.idle_disable_level_quirk) {
+> +               bank->nb.notifier_call =3D gpio_omap_cpu_notifier;
+> +               cpu_pm_register_notifier(&bank->nb);
+> +       }
+> +
+> +       pm_runtime_put(dev);
+> +
+> +       return 0;
+> +}
+> +
+> +static int omap_gpio_remove(struct platform_device *pdev)
+> +{
+> +       struct gpio_bank *bank =3D platform_get_drvdata(pdev);
+> +
+> +       if (bank->nb.notifier_call)
+> +               cpu_pm_unregister_notifier(&bank->nb);
+> +       list_del(&bank->node);
+> +       gpiochip_remove(&bank->chip);
+> +       pm_runtime_disable(&pdev->dev);
+> +       if (bank->dbck_flag)
+> +               clk_unprepare(bank->dbck);
+> +
+> +       return 0;
+> +}
+> +
+> +static int __maybe_unused omap_gpio_runtime_suspend(struct device *dev)
+> +{
+> +       struct gpio_bank *bank =3D dev_get_drvdata(dev);
+> +       unsigned long flags;
+> +       int error =3D 0;
+> +
+> +       raw_spin_lock_irqsave(&bank->lock, flags);
+> +       /* Must be idled only by CPU_CLUSTER_PM_ENTER? */
+> +       if (bank->irq_usage) {
+> +               error =3D -EBUSY;
+> +               goto unlock;
+> +       }
+> +       omap_gpio_idle(bank, true);
+> +       bank->is_suspended =3D true;
+> +unlock:
+> +       raw_spin_unlock_irqrestore(&bank->lock, flags);
+> +
+> +       return error;
+> +}
+> +
+> +static int __maybe_unused omap_gpio_runtime_resume(struct device *dev)
+> +{
+> +       struct gpio_bank *bank =3D dev_get_drvdata(dev);
+> +       unsigned long flags;
+> +       int error =3D 0;
+> +
+> +       raw_spin_lock_irqsave(&bank->lock, flags);
+> +       /* Must be unidled only by CPU_CLUSTER_PM_ENTER? */
+> +       if (bank->irq_usage) {
+> +               error =3D -EBUSY;
+> +               goto unlock;
+> +       }
+> +       omap_gpio_unidle(bank);
+> +       bank->is_suspended =3D false;
+> +unlock:
+> +       raw_spin_unlock_irqrestore(&bank->lock, flags);
+> +
+> +       return error;
+> +}
+> +
+> +static const struct dev_pm_ops gpio_pm_ops =3D {
+> +       SET_RUNTIME_PM_OPS(omap_gpio_runtime_suspend, omap_gpio_runtime_r=
+esume,
+> +                                                                       N=
+ULL)
+> +};
+> +
+>  static struct platform_driver omap_gpio_driver =3D {
+>         .probe          =3D omap_gpio_probe,
+>         .remove         =3D omap_gpio_remove,
+>         .driver         =3D {
+>                 .name   =3D "omap_gpio",
+>                 .pm     =3D &gpio_pm_ops,
+> -               .of_match_table =3D of_match_ptr(omap_gpio_match),
+> +               .of_match_table =3D omap_gpio_match,
 
+This doesn't seem like a logical part of this commit. Can you send a
+separate patch?
+
+Other than that, looks good to me.
+
+Bart
+
+>         },
+>  };
+>
+> --
+> 2.20.0
+>
