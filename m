@@ -2,119 +2,138 @@ Return-Path: <SRS0=FxTY=RO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_MUTT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E38CBC43381
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 Mar 2019 21:52:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C9BACC43381
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 Mar 2019 21:53:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B7577214AE
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 Mar 2019 21:52:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8EF31214AE
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 Mar 2019 21:53:10 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1552341190;
+	bh=M3kg/jdEBUe+CDQz+GMx2iZEuq1EMWCLrvE45qvukMI=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=ICx7IHFymKjSaVd2UJMWR9eaGo5XlBHQOjiQrIiBw7vtQViAobReIs8tUdpr4Hif+
+	 2RVap2zfXms3amvlgwC9lNMI/3b5qlNaWR8o5f85qBc0YRv83CZXHTJo4nN+O+RmEq
+	 3vhv1eUmEWLn4410j/Ejnwx0SNM+iEi8uWj7RPG4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728490AbfCKVw1 (ORCPT
+        id S1728417AbfCKVxJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 11 Mar 2019 17:52:27 -0400
-Received: from atrey.karlin.mff.cuni.cz ([195.113.26.193]:42844 "EHLO
-        atrey.karlin.mff.cuni.cz" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727138AbfCKVw1 (ORCPT
+        Mon, 11 Mar 2019 17:53:09 -0400
+Received: from mail-lj1-f195.google.com ([209.85.208.195]:32999 "EHLO
+        mail-lj1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727548AbfCKVxI (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 11 Mar 2019 17:52:27 -0400
-Received: by atrey.karlin.mff.cuni.cz (Postfix, from userid 512)
-        id B3A7580730; Mon, 11 Mar 2019 22:52:17 +0100 (CET)
-Date:   Mon, 11 Mar 2019 22:52:24 +0100
-From:   Pavel Machek <pavel@ucw.cz>
-To:     Nick Crews <ncrews@chromium.org>
-Cc:     kernel list <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH] platform/chrome: Add Wilco EC keyboard backlight LEDs
- support
-Message-ID: <20190311215224.GA11869@amd>
-References: <20190308203801.57920-1-ncrews@chromium.org>
- <CAE_wzQ-Ds5a9iPuLTpV5mBHBtoUUh_-fRw66s0Su7eOifygqKQ@mail.gmail.com>
- <20190308221307.GB16125@amd>
- <CAHX4x84pgHeseVphBUq0HLJ70KU-Fz1TQtaq1=iz=mFCDZuJkw@mail.gmail.com>
+        Mon, 11 Mar 2019 17:53:08 -0400
+Received: by mail-lj1-f195.google.com with SMTP id z7so509442lji.0
+        for <linux-kernel@vger.kernel.org>; Mon, 11 Mar 2019 14:53:07 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linux-foundation.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=72QtNwbLsdBpSZDKo9CP7eJ/scNnRHayCxjjk07ES3Y=;
+        b=LA+Wfgc2lBBEL9hzQqlUJrd/usGm7EKbpwpoJMMCw+3/d0O29pB9qlN40v6A/XD+zL
+         VYC+XsQUTAVToadUn1rdPJaBno60ecvk2noT50fp9cPrbFoT8PB4Ho3DaaaJL/r9N1yf
+         ga8/t9Io2HVZFCHmb/5O6GF5W5HWY+ygSpF6I=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=72QtNwbLsdBpSZDKo9CP7eJ/scNnRHayCxjjk07ES3Y=;
+        b=E3eJZ/RmCNV33w0Vt15qhzyPUy+HajVEV4YehqB2jeXDA4inWzDz3POa4MGj/Kfum9
+         W7OuJsAeemii38DQTfxvFORwnti9Cls4WxisaDzUsnnrRLalTfPpgLRGycWL1h4bbQ24
+         3niwBbeusNAvlFCYdKy7J2w9zCYY3JsTNd5xhpUK/88cWvsyHTUP2Uije+Au5p8nOd9U
+         vDFCAtDWC6Q7NT0BGneayxJLu8uUxGoJjZHJuGR/9Th/1l2W2FRl+DYmIEEBKFNyNfKO
+         2Dv1hi8AbAvfZ9WNox72NrlzLLYJEw8Ep9dWl+5ai1k1VxJd6z6j8VX0CSZ54trrvKrz
+         vH0w==
+X-Gm-Message-State: APjAAAVSXqoxIJ5+XRM9MZosWXHPkHp4QcHyYOa/n5uN5iPs6w0wthu7
+        IrBSAx/ZF5nVUt2SXAGb1fMuxJfJxVg=
+X-Google-Smtp-Source: APXvYqxGNqErUDc/g8FweP+SUI2hzipONfJatoeY3T5215hv2XFfQYIr8AAxpLhxjn2gZ44o89QnUA==
+X-Received: by 2002:a2e:2c11:: with SMTP id s17mr17678978ljs.147.1552341186035;
+        Mon, 11 Mar 2019 14:53:06 -0700 (PDT)
+Received: from mail-lf1-f44.google.com (mail-lf1-f44.google.com. [209.85.167.44])
+        by smtp.gmail.com with ESMTPSA id r11sm1100858ljb.29.2019.03.11.14.53.05
+        for <linux-kernel@vger.kernel.org>
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Mon, 11 Mar 2019 14:53:05 -0700 (PDT)
+Received: by mail-lf1-f44.google.com with SMTP id 197so478400lfz.3
+        for <linux-kernel@vger.kernel.org>; Mon, 11 Mar 2019 14:53:05 -0700 (PDT)
+X-Received: by 2002:ac2:5088:: with SMTP id f8mr18412143lfm.11.1552340743409;
+ Mon, 11 Mar 2019 14:45:43 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-        protocol="application/pgp-signature"; boundary="RnlQjJ0d97Da+TV1"
-Content-Disposition: inline
-In-Reply-To: <CAHX4x84pgHeseVphBUq0HLJ70KU-Fz1TQtaq1=iz=mFCDZuJkw@mail.gmail.com>
-User-Agent: Mutt/1.5.23 (2014-03-12)
+References: <CAG48ez1RVd5mQ_Pb6eygQESaZhpQz765OAZYSoPE0kPqfZEXQg@mail.gmail.com>
+ <20190305091904.GB8256@zn.tnic> <20190305122218.GD13380@bombadil.infradead.org>
+ <20190305134347.4be2449c@alans-desktop> <20190305145717.GD8256@zn.tnic>
+ <CAHk-=wi2E4kugAW7BQwNSVwYHOr=B_9EgzBRMpQ2+1dxAqydDg@mail.gmail.com>
+ <20190305173134.GE8256@zn.tnic> <CAHk-=wg0bY=RFhD4NW9x++fC0bME=_-9xM3kexGGM3gefHQTyQ@mail.gmail.com>
+ <20190305181138.GG8256@zn.tnic> <20190305181808.GH8256@zn.tnic>
+ <CAEdQ38G5M3vq9pGBV1iyEViO7JhFuXk5g+VCs-vUH+Z62kNqgQ@mail.gmail.com>
+ <CAHk-=wgt7M6yA5BJCJo0nF22WgPJnN8CvViL9CAJmd+S+Civ6w@mail.gmail.com>
+ <yw1xa7i14btw.fsf@mansr.com> <CAHk-=whD1SumZUBQeuMT-GcciwPxg_jW_TsPAmokYp3sGGCGhA@mail.gmail.com>
+ <yw1x5zsp473a.fsf@mansr.com> <CAHk-=wiU7xacTqDfm-x29-meyJWNd_X95K0T8FQMcDgy-yo3Qw@mail.gmail.com>
+ <yw1x1s3d42ia.fsf@mansr.com> <CAK8P3a031d9mSOxVmCAGcrbdaCE8N3R4e2Smtxp-Z+cautTAvg@mail.gmail.com>
+In-Reply-To: <CAK8P3a031d9mSOxVmCAGcrbdaCE8N3R4e2Smtxp-Z+cautTAvg@mail.gmail.com>
+From:   Linus Torvalds <torvalds@linux-foundation.org>
+Date:   Mon, 11 Mar 2019 14:45:27 -0700
+X-Gmail-Original-Message-ID: <CAHk-=wj3v41CWH+3ry3+vrkjAEcyGojtevpsZDbiXVvpv1nTkA@mail.gmail.com>
+Message-ID: <CAHk-=wj3v41CWH+3ry3+vrkjAEcyGojtevpsZDbiXVvpv1nTkA@mail.gmail.com>
+Subject: Re: [PATCH] x86: Deprecate a.out support
+To:     Arnd Bergmann <arnd@arndb.de>
+Cc:     =?UTF-8?B?TcOlbnMgUnVsbGfDpXJk?= <mans@mansr.com>,
+        Matt Turner <mattst88@gmail.com>,
+        Borislav Petkov <bp@alien8.de>,
+        Alan Cox <gnomes@lxorguk.ukuu.org.uk>,
+        Matthew Wilcox <willy@infradead.org>,
+        Jann Horn <jannh@google.com>,
+        Al Viro <viro@zeniv.linux.org.uk>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        kernel list <linux-kernel@vger.kernel.org>,
+        linux-fsdevel <linux-fsdevel@vger.kernel.org>,
+        "the arch/x86 maintainers" <x86@kernel.org>,
+        Linux API <linux-api@vger.kernel.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Richard Weinberger <richard@nod.at>,
+        Anton Ivanov <anton.ivanov@cambridgegreys.com>,
+        linux-alpha <linux-alpha@vger.kernel.org>,
+        linux-m68k <linux-m68k@lists.linux-m68k.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Mon, Mar 11, 2019 at 2:34 PM Arnd Bergmann <arnd@arndb.de> wrote:
+>
+> The main historic use case I've heard of was running Netscape
+> Navigator on Alpha Linux, before there was an open source version.
+> Doing this today to connect to the open internet is probably
+> a bit pointless, but there may be other use cases.
 
---RnlQjJ0d97Da+TV1
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+The _really_ main version was that I decided to make my life easier
+for the initial alpha port by trying to run basic (tested) OSF/1
+binaries directly.
 
-On Mon 2019-03-11 09:36:20, Nick Crews wrote:
-> On Fri, Mar 8, 2019 at 3:13 PM Pavel Machek <pavel@ucw.cz> wrote:
-> >
-> > Hi!
-> >
-> > > > This patch is meant to be applied on top of the for-next
-> > > > branch of the platform/chrome repository, as it uses some of
-> > > > the code staged there.
-> > > >
-> > > > The EC is in charge of controlling the keyboard backlight on
-> > > > the Wilco platform. We expose a standard LED class device at
-> > > > /sys/class/leds/wilco::kbd_backlight. This driver is modeled
-> > > > after the standard Chrome OS keyboard backlight driver at
-> > > > drivers/platform/chrome/cros_kbd_led_backlight.c
-> > > >
-> > > > Some Wilco devices do not support a keyboard backlight. This
-> > > > is checked in probe(), and in this case the sysfs entry will
-> > > > not appear, and everything will behave normally.
-> > >
-> > > It would be even better if we did not register platform device if EC
-> > > does not support backlight.
->=20
-> Good point Dmitry. That would require making the core driver
-> dependent upon this keyboard backlight driver, though. Do you
-> think that added complexity is worth it? I don't see performance
-> concerns with adding one unused platform device, so is your rationale
-> that it would just be cleaner code?
->=20
+Netscape may have been one of the binaries people actually ended up
+using, but it's probably not a reason any more, since the internet has
+moved past that anyway.
 
-You probably wanted to mail dmitry. You should have probably cc-ed
-Dmitry and the lists.
+> Looking at the system call table in the kernel
+> (arch/alpha/kernel/syscalls/syscall.tbl), we seem to support a
+> specific subset that was required for a set of applications, and
+> not much more.
 
-> > > > +       data->led.brightness_set =3D keyboard_led_set_brightness;
-> > > > +       data->led.brightness_get =3D keyboard_led_get_brightness;
-> > >
-> > > wilco_ec_mailbox() may sleep, so you need to assign it to
-> > > led.brightness_set_blocking.
-> >
-> > Hmm. Seeing get method there... can the EC change the brightness
-> > without command from kernel?
->=20
-> No, the EC won't change the brightness without getting told to by
-> the kernel. Do you think that means that we could get away with just
-> caching the brightness from the previous set_brightness(), and not
-> actually sending a mailbox) command to the EC on get_brightness()?
+Yeah, it never supported arbitrary binaries, particularly since
+there's often lots of other issues too with running things like that
+(ie filesystem layout etc). It worked for normal fairly well behaved
+stuff, but wasn't ever a full OSF/1 emulation environment.
 
-Something like that. Even better ... don't implement brightness_get at
-all, and check that core does the right thing checking it.
-									Pavel
+I _suspect_ nobody actually runs any OSF/1 binaries any more, but it
+would obviously be good to verify that. Your argument that timeval
+handling was broken _may_ be an indication of that (or may just mean
+very few apps care).
 
---=20
-(english) http://www.livejournal.com/~pavelmachek
-(cesky, pictures) http://atrey.karlin.mff.cuni.cz/~pavel/picture/horses/blo=
-g.html
+I think we should try the a.out removal and see if anybody notices.
 
---RnlQjJ0d97Da+TV1
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1
-
-iEYEARECAAYFAlyG2JgACgkQMOfwapXb+vKCUACfRRJXyEh2d0B2t/ryZkDRBJxh
-2YcAniWQXISxY4P7uJzbqygouUX7zPfR
-=Ucwz
------END PGP SIGNATURE-----
-
---RnlQjJ0d97Da+TV1--
+                    Linus
