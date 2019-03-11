@@ -2,95 +2,110 @@ Return-Path: <SRS0=FxTY=RO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_PASS autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A3BF3C43381
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 Mar 2019 21:37:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 61A29C43381
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 Mar 2019 21:38:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6FB52214AE
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 Mar 2019 21:37:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 31D7120657
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 Mar 2019 21:38:27 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728270AbfCKVhE (ORCPT
+        id S1728318AbfCKVi0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 11 Mar 2019 17:37:04 -0400
-Received: from mail-qt1-f195.google.com ([209.85.160.195]:36322 "EHLO
-        mail-qt1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727898AbfCKVhD (ORCPT
+        Mon, 11 Mar 2019 17:38:26 -0400
+Received: from mail-qt1-f194.google.com ([209.85.160.194]:45722 "EHLO
+        mail-qt1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727008AbfCKViZ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 11 Mar 2019 17:37:03 -0400
-Received: by mail-qt1-f195.google.com with SMTP id b3so334032qtj.3;
-        Mon, 11 Mar 2019 14:37:03 -0700 (PDT)
+        Mon, 11 Mar 2019 17:38:25 -0400
+Received: by mail-qt1-f194.google.com with SMTP id v20so264681qtv.12;
+        Mon, 11 Mar 2019 14:38:25 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=OE2aYycL7Gv4WG0PwdCG8G+PdgNWJSiiyLW27YU//Vg=;
-        b=ZugH7MC7vzMyqKGojaCQmD7AKXX8mWHoo+KOgWWfIDOxpq4TsMWKm3ffGKV7jX3prM
-         KZHg5DKRuHOAoC3BqN164ulZLf6tvYne+MUSwhHqQWJDr2Aow24xZtmSC5oWAXV4h6+L
-         WxGEllJhFIah4OhptkzKgx9tT8+x2K1r7QZfod3VPTS2bGioAG4CGDN81t/3T9PNbd4N
-         WKFGzTQYbALoZw9NhErSsYSKyE0S0Mxcrqo7pUwupXwl7HgHmtiFlcDCy/bRsAVJkIX1
-         +017YzUurvkGbzd99thIr767VhcQUfjyWCmUzyoVS5Rx/W6x91LE+dAdDJdkl/As9x8l
-         esdw==
-X-Gm-Message-State: APjAAAVh3WyEw75JyWNMHGNXKKwqadCK2GjwtPqpOgZlHGN6jS5AWcyp
-        Jl12xLlcV1H5Qab8ug62VSzdidOlk+R5iyREElw=
-X-Google-Smtp-Source: APXvYqyQ2w+0tVp9ObKx7GziegLU2CjhMw+WODkxrU5qE4r6kEba8X6k8H1cAJnWbDdyK/UW1QQd5pLKhcA/mnPZvqY=
-X-Received: by 2002:ac8:1b7a:: with SMTP id p55mr14190887qtk.319.1552340222778;
- Mon, 11 Mar 2019 14:37:02 -0700 (PDT)
+        bh=HyUft/RqubZVWIHTJ99/NednP6Xtq8YIkptzcvyysyM=;
+        b=Q8rttX4iE9gEa8lngjlmFo/sJjaP56NXSVmzma4c6wS4YS2FY5ATzRTPOcPL6o+qxW
+         Nm2jWEB3qE8aTKUvgUjjEtuVvBcvmWNwqATTbPSvACjoJrV8flo/0UfefvUYZml4/N02
+         6Wpv1OQEtuwD5M9t0I9mQJ1/K97EzVGN/Akccc1NOKiwdpfMrkATdX/FmgT0SCQOGvu2
+         Gp+cC7SytxBq/1ZoOxKFY3askJ42hbgJ3FUdQDeB6WG3aIl6RIl0z0jMkU9ppvSOb2y5
+         Q00T4BH1UK43cQUyZ9I9/Qstb7CeUIr4JBevqFi1I5mh/9HxtL5fGPSJdtLoOnWm9sKf
+         TiVw==
+X-Gm-Message-State: APjAAAWFemsVduEJHJJoesCJ0/Z0SWrLy8JHZph0Mj89fefTm6oETDhc
+        ZXQzoL92E3yD1r/e+H9cHZbZlYopP6r6/DzjBJ/pww==
+X-Google-Smtp-Source: APXvYqwzG69VXZlckmZjLkXe5InGQjVr40YinRF8xOI+j2t3NaEC+UJL+67reJ6cDQkZ69uOI8bKa2Tu9YYrq8VvgU4=
+X-Received: by 2002:ac8:1e17:: with SMTP id n23mr5436901qtl.152.1552340304772;
+ Mon, 11 Mar 2019 14:38:24 -0700 (PDT)
 MIME-Version: 1.0
-References: <20181215212304.19390-1-natechancellor@gmail.com>
- <CAK8P3a05QL855mx21R-Pr6c2WjhSoopdFk9z4HvKoeM19A5aSQ@mail.gmail.com> <CAKv+Gu8nWO_GCPF1e6viGTSi5c-C+HoXqFNU=9yboC47E-kAFg@mail.gmail.com>
-In-Reply-To: <CAKv+Gu8nWO_GCPF1e6viGTSi5c-C+HoXqFNU=9yboC47E-kAFg@mail.gmail.com>
+References: <20190122141027.70cd9166@canb.auug.org.au> <20190213162212.500a7cd5@canb.auug.org.au>
+ <CAK8P3a1hw03ik+tZSG8PnP7Rd=Pzwbo7n59HLJW04ncndyqzsg@mail.gmail.com> <CAMuHMdUmPBeQ=jcDufVBDEGiO1Yk4bWWBSg488Jm_wwAuySHBQ@mail.gmail.com>
+In-Reply-To: <CAMuHMdUmPBeQ=jcDufVBDEGiO1Yk4bWWBSg488Jm_wwAuySHBQ@mail.gmail.com>
 From:   Arnd Bergmann <arnd@arndb.de>
-Date:   Mon, 11 Mar 2019 22:36:45 +0100
-Message-ID: <CAK8P3a3NjTCgFd2dQ9KbHP8DpXf6s-ULfeU6acAYC4SDi+2qvw@mail.gmail.com>
-Subject: Re: [PATCH] ARM: Ensure that NEON code always compiles with Clang
-To:     Ard Biesheuvel <ard.biesheuvel@linaro.org>
-Cc:     Nathan Chancellor <natechancellor@gmail.com>,
-        Russell King <linux@armlinux.org.uk>,
-        Nicolas Pitre <nicolas.pitre@linaro.org>,
-        Tri Vo <trong@android.com>,
-        "open list:DOCUMENTATION" <linux-doc@vger.kernel.org>,
-        Jonathan Corbet <corbet@lwn.net>,
-        Nick Desaulniers <ndesaulniers@google.com>,
+Date:   Mon, 11 Mar 2019 22:38:07 +0100
+Message-ID: <CAK8P3a1zHm-WjYjEA65PomrKe7+5Sd110KbXv13=wiMVpxyuaQ@mail.gmail.com>
+Subject: Re: New syscalls (was: Re: linux-next: manual merge of the pidfd tree
+ with the y2038 tree (now block and tip trees))
+To:     Geert Uytterhoeven <geert@linux-m68k.org>
+Cc:     Stephen Rothwell <sfr@canb.auug.org.au>,
+        Christian Brauner <christian@brauner.io>,
+        Jens Axboe <axboe@kernel.dk>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@elte.hu>, "H. Peter Anvin" <hpa@zytor.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Linux Next Mailing List <linux-next@vger.kernel.org>,
         Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>
+        Linux-Arch <linux-arch@vger.kernel.org>
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Mar 11, 2019 at 5:49 PM Ard Biesheuvel
-<ard.biesheuvel@linaro.org> wrote:
->
-> On Mon, 11 Mar 2019 at 17:22, Arnd Bergmann <arnd@arndb.de> wrote:
-> >
-> > On Sat, Dec 15, 2018 at 10:24 PM Nathan Chancellor
-> > <natechancellor@gmail.com> wrote:
-> > >  endif
-> > > diff --git a/arch/arm/lib/xor-neon.c b/arch/arm/lib/xor-neon.c
-> > > index a6741a895189..4600b62d845f 100644
-> > > --- a/arch/arm/lib/xor-neon.c
-> > > +++ b/arch/arm/lib/xor-neon.c
-> > > @@ -14,7 +14,7 @@
-> > >  MODULE_LICENSE("GPL");
+On Mon, Mar 11, 2019 at 9:36 AM Geert Uytterhoeven <geert@linux-m68k.org> wrote:
+> On Wed, Feb 13, 2019 at 3:22 PM Arnd Bergmann <arnd@arndb.de> wrote:
+> > On Wed, Feb 13, 2019 at 6:22 AM Stephen Rothwell <sfr@canb.auug.org.au> wrote:
+> > > On Tue, 22 Jan 2019 14:10:27 +1100 Stephen Rothwell <sfr@canb.auug.org.au> wrote:
+> > > > Today's linux-next merge of the pidfd tree got conflicts in:
+> > > >
+> > > >   arch/x86/entry/syscalls/syscall_32.tbl
+> > > >   arch/x86/entry/syscalls/syscall_64.tbl
+> > > >   include/uapi/asm-generic/unistd.h
+> > > >
+> > > > between commits:
+> > > >
+> > > >   63a96220ad45 ("arch: add split IPC system calls where needed")
+> > > >   0bd4bb9c5612 ("y2038: add 64-bit time_t syscalls to all 32-bit architectures")
+> > > >
+> > > > from the y2038 tree and commit:
+> > > >
+> > > >   3d2991bc7a67 ("signal: add pidfd_send_signal() syscall")
+> > > >
+> > > > from the pidfd tree.
 > > >
-> > >  #ifndef __ARM_NEON__
-> > > -#error You should compile this file with '-mfloat-abi=softfp -mfpu=neon'
-> > > +#error You should compile this file with '-march=armv7-a -mfloat-abi=softfp -mfpu=neon'
-> > >  #endif
-> > >
+> > > This is now a conflict between the block, tip and pidfd trees.  The
+> > > resolution now looks like below.
 > >
-> > I see this patch has made it in now, but I also see two other problems with the
-> > same file that prevent it from working right with clang:
-> >
-> > - it triggers #warning This code requires at least version 4.6 of GCC
+> > Checked it again, still looks good. Thanks,
 >
-> What is currently the oldest GCC we support for ARM?
+> What's the plan with adding new syscalls to all architectures?
+>
+>   + <stdin>: warning: #warning syscall io_uring_enter not implemented
+> [-Wcpp]:  => 1481:2
+>   + <stdin>: warning: #warning syscall io_uring_register not
+> implemented [-Wcpp]:  => 1484:2
+>   + <stdin>: warning: #warning syscall io_uring_setup not implemented
+> [-Wcpp]:  => 1478:2
+>
+> and more seem to be planned for this merge window.
+>
+> Shall each architcture maintainer take care of this hxxself, or will
+> this be done in
+> a coordinated way?
 
-Linux overall requires gcc-4.6, so we could just as well drop this
-check, good point.
+I was planning to send a patch for all architectures this time
+(after all three sets are merged, which is now), and ask future
+submitters to do it themselves when first adding a new system
+call.
 
        Arnd
