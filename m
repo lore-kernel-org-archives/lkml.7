@@ -2,230 +2,117 @@ Return-Path: <SRS0=FxTY=RO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-12.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_PASS autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2C3BFC43381
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 Mar 2019 17:24:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8A0BCC43381
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 Mar 2019 17:25:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E0CDD20643
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 Mar 2019 17:24:54 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="XKywfgtW"
+	by mail.kernel.org (Postfix) with ESMTP id 5B7A12063F
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 Mar 2019 17:25:07 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1552325107;
+	bh=7RpSNMUg9sbmjCpAWm4+1FRRVQvJHm49ZXykN6ZICTw=;
+	h=From:To:Cc:Subject:In-Reply-To:Date:List-ID:From;
+	b=kRJIR2RVp2WnhgmxNxdrOWHW05xrFVbpSEtyRsiKieWJSy+tTXov+YcVZyPZBnVZF
+	 1UVkS6IrrSxV/PtALhZwZO+Vy+XhTA5zjGvGqXPy+kQnsedvVrWI6dICxvFkLa25J4
+	 wb+VgiEQMMVBLtjDe0yEWlZj1lYzKO/FkmmkJqH4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728311AbfCKRYx (ORCPT
+        id S1727962AbfCKRZG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 11 Mar 2019 13:24:53 -0400
-Received: from mail-lj1-f194.google.com ([209.85.208.194]:35870 "EHLO
-        mail-lj1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728217AbfCKRYv (ORCPT
+        Mon, 11 Mar 2019 13:25:06 -0400
+Received: from heliosphere.sirena.org.uk ([172.104.155.198]:50830 "EHLO
+        heliosphere.sirena.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726675AbfCKRYK (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 11 Mar 2019 13:24:51 -0400
-Received: by mail-lj1-f194.google.com with SMTP id v10so4830881lji.3;
-        Mon, 11 Mar 2019 10:24:49 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=4gBDFDsDBuiOoTQiFzS5olmoAYRlzLldl+FtvNq985Y=;
-        b=XKywfgtWKPsv1l27HRLlCSj3xLvVevbwinDWU6c9r9/5g99i6L8Bi6OCUzuhyuopfI
-         EeGijCN1zLmXccYVDcmw+9wnqrHwiA0NbluMfJYHjLen2FSA30SZPaftFkY2VDnRDdFZ
-         5yw853OaMSqVMw0FNMgjvKxw+GOlZAlexNAP4HDAVVpevnSRQxc12WjCbgqkV5dQz4ln
-         PPxLcXmUxi4xh7pX4lmnr7M1AWpcxVWX/+QUgw3oFYvs5u7DeiaEWGMevIuYdBp+ZgyN
-         G112OBzgqxVXvFcVkAegvbhkNj6hcJkc74/rrjPHA6oK4cH0m+rB9TFmacOrgo4GJRyF
-         0Vfw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=4gBDFDsDBuiOoTQiFzS5olmoAYRlzLldl+FtvNq985Y=;
-        b=VUI9hp5Yae+mhj3oV3mqItM7KeGz4KmcDZAIll9iATgSdQzrRUU2cyAPmeI/Rq59Pn
-         cCwifSf/U92ryTpMowDTqSAk0WlwnKjKS/FrDOFOSNfHPb4MeQZZAf9NtcKZ7ZfiiG7k
-         70mqEnqdo9anOLRwFUqqDibA3cpiTh4EnhmWiKlirNgOP82p83m3vs/OLNhbNJtPqaEr
-         MZBHvVQOv8iuT3DBzoZN1Ihhk44P+/8Vf9bl077eqMe45jc4Uj1IpDkLAwUSCugmRx2t
-         viZ7toZU9wacBdGe+7FwrWBtwsNb1Yjk4j2eELlnyKpOipoMUEYW9hugMvB4aMRaxhGT
-         SMyw==
-X-Gm-Message-State: APjAAAWSI6azrSn71ORLPtcRSbvhvxkiOfskpfX/omDN7EyEXd25hpwf
-        m5/jqzP/NbYA4awGRXu/7Vo=
-X-Google-Smtp-Source: APXvYqx/YEMQ3HkNlaMCVSznhu4glq3EthmtE3s3l/ER0+919Pwe9o3jCFJb/MfMOQANkSdKshVUTA==
-X-Received: by 2002:a2e:80cd:: with SMTP id r13mr17110688ljg.34.1552325088288;
-        Mon, 11 Mar 2019 10:24:48 -0700 (PDT)
-Received: from [192.168.1.18] (cka136.neoplus.adsl.tpnet.pl. [83.31.76.136])
-        by smtp.gmail.com with ESMTPSA id x87sm1023949ljb.91.2019.03.11.10.24.46
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Mon, 11 Mar 2019 10:24:47 -0700 (PDT)
-Subject: Re: [PATCH 13/25] leds: lm3692x: Use led_compose_name()
-To:     Dan Murphy <dmurphy@ti.com>, linux-leds@vger.kernel.org
-Cc:     devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        pavel@ucw.cz, robh@kernel.org
-References: <20190310182836.20841-1-jacek.anaszewski@gmail.com>
- <20190310182836.20841-14-jacek.anaszewski@gmail.com>
- <6e439475-8d34-5d5c-4a12-5d1d864e9c22@ti.com>
-From:   Jacek Anaszewski <jacek.anaszewski@gmail.com>
-Message-ID: <5ae3df58-7379-c584-9d00-ef1c35d8689d@gmail.com>
-Date:   Mon, 11 Mar 2019 18:24:46 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.5.1
-MIME-Version: 1.0
-In-Reply-To: <6e439475-8d34-5d5c-4a12-5d1d864e9c22@ti.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+        Mon, 11 Mar 2019 13:24:10 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=sirena.org.uk; s=20170815-heliosphere; h=Date:Message-Id:In-Reply-To:
+        Subject:Cc:To:From:Sender:Reply-To:MIME-Version:Content-Type:
+        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:References:
+        List-Id:List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:
+        List-Archive; bh=bMg03Gd6bcAgOPO6FwSfg80y+qjJq5SYCbOEe0aTwSY=; b=SFc+jyQycFmg
+        JjImlHoQAdmHS+2xbbf4NUDiJSjgIti76dx50zH5rAaM72eJ7MjUA2VqHPQINf3mfGA/fsnDUDxYV
+        5DDMZobOEU+CvwuMqhfuA4gBP6bHUSMo843a7mLkxZADdzY81lpqPne/I4KEKd3hAajnA9irI3JaB
+        5pvO4=;
+Received: from cpc102320-sgyl38-2-0-cust46.18-2.cable.virginm.net ([82.37.168.47] helo=debutante.sirena.org.uk)
+        by heliosphere.sirena.org.uk with esmtpa (Exim 4.89)
+        (envelope-from <broonie@sirena.org.uk>)
+        id 1h3Oej-0005Ny-Sw; Mon, 11 Mar 2019 17:24:05 +0000
+Received: by debutante.sirena.org.uk (Postfix, from userid 1000)
+        id 6E12D1128896; Mon, 11 Mar 2019 17:24:05 +0000 (GMT)
+From:   Mark Brown <broonie@kernel.org>
+To:     Axel Lin <axel.lin@ingics.com>
+Cc:     Charles Keepax <ckeepax@opensource.cirrus.com>,
+        Mark Brown <broonie@kernel.org>, linux-kernel@vger.kernel.org
+Subject: Applied "regulator: wm8400: Fix trivial typo" to the regulator tree
+In-Reply-To: 
+X-Patchwork-Hint: ignore
+Message-Id: <20190311172405.6E12D1128896@debutante.sirena.org.uk>
+Date:   Mon, 11 Mar 2019 17:24:05 +0000 (GMT)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Dan,
+The patch
 
-On 3/11/19 1:38 PM, Dan Murphy wrote:
-> On 3/10/19 1:28 PM, Jacek Anaszewski wrote:
->> Switch to using generic LED support for composing LED class
->> device name.
->>
->> Since the same device strings would be used in two places,
->> then add macros LM36922_NAME and LM36922_NAME for use in
->> lm3692x_probe_dt(() and lm3692x_id array.
->>
->> Signed-off-by: Jacek Anaszewski <jacek.anaszewski@gmail.com>
->> Acked-by: Pavel Machek <pavel@ucw.cz>
->> Cc: Dan Murphy <dmurphy@ti.com>
->> ---
->>   drivers/leds/leds-lm3692x.c | 39 ++++++++++++++++++++-------------------
->>   1 file changed, 20 insertions(+), 19 deletions(-)
->>
->> diff --git a/drivers/leds/leds-lm3692x.c b/drivers/leds/leds-lm3692x.c
->> index 4f413a7c5f05..9dfc0f28a9c8 100644
->> --- a/drivers/leds/leds-lm3692x.c
->> +++ b/drivers/leds/leds-lm3692x.c
->> @@ -13,7 +13,6 @@
->>   #include <linux/regmap.h>
->>   #include <linux/regulator/consumer.h>
->>   #include <linux/slab.h>
->> -#include <uapi/linux/uleds.h>
->>   
->>   #define LM36922_MODEL	0
->>   #define LM36923_MODEL	1
->> @@ -95,6 +94,9 @@
->>   #define LM3692X_FAULT_FLAG_SHRT BIT(3)
->>   #define LM3692X_FAULT_FLAG_OPEN BIT(4)
->>   
->> +#define LM36922_NAME "lm36922"
->> +#define LM36923_NAME "lm36923"
->> +
->>   /**
->>    * struct lm3692x_led -
->>    * @lock - Lock for reading/writing the device
->> @@ -103,7 +105,6 @@
->>    * @regmap - Devices register map
->>    * @enable_gpio - VDDIO/EN gpio to enable communication interface
->>    * @regulator - LED supply regulator pointer
->> - * @label - LED label
->>    * @led_enable - LED sync to be enabled
->>    * @model_id - Current device model ID enumerated
->>    */
->> @@ -114,7 +115,6 @@ struct lm3692x_led {
->>   	struct regmap *regmap;
->>   	struct gpio_desc *enable_gpio;
->>   	struct regulator *regulator;
->> -	char label[LED_MAX_NAME_SIZE];
->>   	int led_enable;
->>   	int model_id;
->>   };
->> @@ -325,7 +325,8 @@ static int lm3692x_init(struct lm3692x_led *led)
->>   static int lm3692x_probe_dt(struct lm3692x_led *led)
->>   {
->>   	struct fwnode_handle *child = NULL;
->> -	const char *name;
->> +	struct led_init_data init_data;
->> +	char *model_name;
->>   	int ret;
->>   
->>   	led->enable_gpio = devm_gpiod_get_optional(&led->client->dev,
->> @@ -346,17 +347,20 @@ static int lm3692x_probe_dt(struct lm3692x_led *led)
->>   		dev_err(&led->client->dev, "No LED Child node\n");
->>   		return -ENODEV;
->>   	}
->> +	init_data.fwnode = child;
->>   
->> -	fwnode_property_read_string(child, "linux,default-trigger",
->> -				    &led->led_dev.default_trigger);
->> +	if (led->model_id == LM36922_MODEL)
->> +		model_name =  LM36922_NAME;
->> +	else
->> +		model_name =  LM36923_NAME;
->>   
-> 
-> 
-> Why do we need this change?
-> 
-> led->client->name should suffice here and then we do not have to #define the name at all.
+   regulator: wm8400: Fix trivial typo
 
-Indeed, at that time I was not aware that I2C subsystem creates client
-name using product name from DT compatible property.
+has been applied to the regulator tree at
 
-> 
->> -	ret = fwnode_property_read_string(child, "label", &name);
->> +	ret = led_compose_name(child, model_name, ":backlight_cluster",
->> +			       init_data.name);
->>   	if (ret)
->> -		snprintf(led->label, sizeof(led->label),
->> -			"%s::", led->client->name);
->> -	else
->> -		snprintf(led->label, sizeof(led->label),
->> -			 "%s:%s", led->client->name, name);
->> +		return ret;
->> +
->> +	fwnode_property_read_string(child, "linux,default-trigger",
->> +				    &led->led_dev.default_trigger);
->>   
->>   	ret = fwnode_property_read_u32(child, "reg", &led->led_enable);
->>   	if (ret) {
->> @@ -364,16 +368,13 @@ static int lm3692x_probe_dt(struct lm3692x_led *led)
->>   		return ret;
->>   	}
->>   
->> -	led->led_dev.name = led->label;
->> -
->> -	ret = devm_led_classdev_register(&led->client->dev, &led->led_dev);
->> +	ret = devm_led_classdev_register_ext(&led->client->dev, &led->led_dev,
->> +					     &init_data);
->>   	if (ret) {
->>   		dev_err(&led->client->dev, "led register err: %d\n", ret);
->>   		return ret;
->>   	}
->>   
->> -	led->led_dev.dev->of_node = to_of_node(child);
->> -
-> 
-> Seems like an additional change here not documented.
-> If it is a bug fix or an enhancement probably need a separate patch.
-> 
-> I do know why this is removed just need tracability on the log.
+   https://git.kernel.org/pub/scm/linux/kernel/git/broonie/regulator.git 
 
-OK, I will add the comment.
+All being well this means that it will be integrated into the linux-next
+tree (usually sometime in the next 24 hours) and sent to Linus during
+the next merge window (or sooner if it is a bug fix), however if
+problems are discovered then the patch may be dropped or reverted.  
 
->>   	return 0;
->>   }
->>   
->> @@ -439,8 +440,8 @@ static int lm3692x_remove(struct i2c_client *client)
->>   }
->>   
->>   static const struct i2c_device_id lm3692x_id[] = {
->> -	{ "lm36922", LM36922_MODEL },
->> -	{ "lm36923", LM36923_MODEL },
->> +	{ LM36922_NAME, LM36922_MODEL },
->> +	{ LM36923_NAME, LM36923_MODEL },
->>   	{ }
->>   };
->>   MODULE_DEVICE_TABLE(i2c, lm3692x_id);
->>
-> 
-> 
+You may get further e-mails resulting from automated or manual testing
+and review of the tree, please engage with people reporting problems and
+send followup patches addressing any issues that are reported if needed.
 
+If any updates are required or you are submitting further changes they
+should be sent as incremental updates against current git, existing
+patches will not be replaced.
+
+Please add any relevant lists and maintainers to the CCs when replying
+to this mail.
+
+Thanks,
+Mark
+
+From 178d08ea81b1538ea0b2c432a3ddda53b7fec296 Mon Sep 17 00:00:00 2001
+From: Axel Lin <axel.lin@ingics.com>
+Date: Wed, 27 Feb 2019 13:54:21 +0800
+Subject: [PATCH] regulator: wm8400: Fix trivial typo
+
+Use WM8400_DC2_ENA_MASK for DCDC2 enable_mask.
+The define is the same as WM8400_DC1_ENA_MASK, just a cleanup.
+
+Signed-off-by: Axel Lin <axel.lin@ingics.com>
+Acked-by: Charles Keepax <ckeepax@opensource.cirrus.com>
+Signed-off-by: Mark Brown <broonie@kernel.org>
+---
+ drivers/regulator/wm8400-regulator.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/drivers/regulator/wm8400-regulator.c b/drivers/regulator/wm8400-regulator.c
+index 40c4e6628471..5ce86b92851b 100644
+--- a/drivers/regulator/wm8400-regulator.c
++++ b/drivers/regulator/wm8400-regulator.c
+@@ -194,7 +194,7 @@ static struct regulator_desc regulators[] = {
+ 		.id = WM8400_DCDC2,
+ 		.ops = &wm8400_dcdc_ops,
+ 		.enable_reg = WM8400_DCDC2_CONTROL_1,
+-		.enable_mask = WM8400_DC1_ENA_MASK,
++		.enable_mask = WM8400_DC2_ENA_MASK,
+ 		.n_voltages = WM8400_DC2_VSEL_MASK + 1,
+ 		.vsel_reg = WM8400_DCDC2_CONTROL_1,
+ 		.vsel_mask = WM8400_DC2_VSEL_MASK,
 -- 
-Best regards,
-Jacek Anaszewski
+2.20.1
+
