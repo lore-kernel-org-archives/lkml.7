@@ -2,168 +2,150 @@ Return-Path: <SRS0=FxTY=RO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E50C2C43381
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 Mar 2019 13:53:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 30C23C43381
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 Mar 2019 13:54:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B2BCB2075C
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 Mar 2019 13:53:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 09BB720657
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 Mar 2019 13:54:12 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727601AbfCKNxi (ORCPT
+        id S1727610AbfCKNyK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 11 Mar 2019 09:53:38 -0400
-Received: from lb1-smtp-cloud8.xs4all.net ([194.109.24.21]:36590 "EHLO
-        lb1-smtp-cloud8.xs4all.net" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1725943AbfCKNxi (ORCPT
+        Mon, 11 Mar 2019 09:54:10 -0400
+Received: from mout.kundenserver.de ([212.227.17.10]:36307 "EHLO
+        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725943AbfCKNyJ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 11 Mar 2019 09:53:38 -0400
-Received: from [192.168.2.10] ([212.251.195.8])
-        by smtp-cloud8.xs4all.net with ESMTPA
-        id 3LMxhRckl4HFn3LN0hEdK5; Mon, 11 Mar 2019 14:53:35 +0100
-Subject: Re: [PATCH v11 0/5] Media Device Allocator API
-To:     Shuah Khan <shuah@kernel.org>, mchehab@kernel.org, perex@perex.cz,
-        tiwai@suse.com
-Cc:     linux-media@vger.kernel.org, linux-kernel@vger.kernel.org,
-        alsa-devel@alsa-project.org
-References: <cover.1550804023.git.shuah@kernel.org>
-From:   Hans Verkuil <hverkuil@xs4all.nl>
-Message-ID: <2cff0450-7f48-b685-56c4-ae494cb67f14@xs4all.nl>
-Date:   Mon, 11 Mar 2019 14:53:31 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.4.0
-MIME-Version: 1.0
-In-Reply-To: <cover.1550804023.git.shuah@kernel.org>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-CMAE-Envelope: MS4wfEmVcC4WhcxX9YuKkvns1YU+Fhwzpu7QrO+MXFYlSh/ZedUUz+C4DYPfWgmb5LBR96I+KMDSv9O86d2Lde7N1FOilF6V0S9Ccke/EqGDQ6Me/xZ/xhku
- r+yCIcQC+Bn+EFBKT3SFgbheAT8h+Usf/7nJGQ2WiZkw9gBRi5PnxEj/sEPK6VS4Eog7Jxkl+B0Elr920V2GMFZgexcCFI4YGjmlmBxv498NL2y6Aqe5Dkc2
- B2tT7wpKl+5GY2P60FqJnOmDiHphIzIyT0/gd9m7sB4FuRYAiCWFUhYOM7BzhlkjkbsASIzJ9iS/Rc0XILaGzG177jrwyf/g7Or1MtpxFFgCu/PzrpuGZXQe
- 8p7cCBqozE/rkrF2frPjo6+hKFxUSQ==
+        Mon, 11 Mar 2019 09:54:09 -0400
+Received: from orion.localdomain ([95.115.159.19]) by mrelayeu.kundenserver.de
+ (mreue106 [212.227.15.183]) with ESMTPSA (Nemesis) id
+ 1Md6AP-1gU0pI0x6Z-00aCVB; Mon, 11 Mar 2019 14:54:07 +0100
+From:   "Enrico Weigelt, metux IT consult" <info@metux.net>
+To:     linux-kernel@vger.kernel.org
+Cc:     linux-mm@kvack.org
+Subject: [PATCH] mm: Kconfig: pedantic formatting
+Date:   Mon, 11 Mar 2019 14:54:04 +0100
+Message-Id: <1552312444-24572-1-git-send-email-info@metux.net>
+X-Mailer: git-send-email 1.9.1
+X-Provags-ID: V03:K1:bafHJ2JVH9BUC2oLYNjgUVX5blGqKNn3Itah62vN4Gr3/ptUe0k
+ qebJAoRDSi72UxJOCmkZ0bdFNiOzHftyMzvDSf2rtEx9IOqPfaxxU86mtKBPUrBuvIwCbTK
+ g1P5kGyr7qFM8O0ba4ODc8aka8KlSRB00jY2ugGNHvrTBuwoOUs0uc87vPUOYzw+X2VrHNv
+ ztsky/IjigjYYyC5RtM2Q==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:dXDytxCcq8A=:wx09j4PCzoyWeo3iJM25L/
+ bohkfyPw61pjdGDM5coJ3n313KHY4mA9LUm1KbNoYx8sAiPI78yyztiVPhFSj6+P+T0yaCZdC
+ 7UEQ41BcKl4l31h5QIFWYjeSeuScLWkyzyx9wD6GkVgSzvpd6z8wEPs2XYHr/iw1zTxE8154v
+ KAJq5DxznJSCLjHCGMagTwvXRHPghzGcAier7BZpn6xizdB4Z3FX458jdfkfwHVpXlfKIWecj
+ /Mw7pEkAuu7jdTzFQ2rJbu/9nYdYvvobT3PZUn3EfIoI6GsXSag1hTjGb9y6AABuJFWo5OQem
+ FOjtnPHX0oYQFiz8cjNxKaY0urh/d4EZFmmricao4DuVFYgifDUGCMAia7oMMZvMtHujIF4rM
+ QqBFCyr8NkBaDMJGFmy5s5nERqaMzmwzq2tZ/TX+0zUORM+VBHL9pCUm46sdaVK7PeBT07OVS
+ r7KkDuf4flatOKgzhcdm0YUH9BDFg2OPgNG+dhETANvZJUT6svATeF4oIvUh6YC+5FgHNfvDX
+ rT6VLiSehx/lElhDsW5I2vnpwWY54PGqCIv87hJwlcDG+nTtkBEcPl3BrmBnxSbtx2H9qnHlZ
+ 8M9qlFHp2CVZH+y5BualavBCi+bLb0QOmUBpcOIB1woGOcnZkQF1DEoYYooVUIbfqetlIptTq
+ 6pldjBlXl1H0bMMpN5o4iSRLdK1uRsICMYLKyYPhEtZvotbmPV7xh30fG8psJ0d3s5XT16xSj
+ qWar2KUMDSZhEoXQYU/AoJuzIGdE9l1hUHig+g==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2/22/19 6:28 PM, Shuah Khan wrote:
-> Media Device Allocator API to allows multiple drivers share a media device.
-> This API solves a very common use-case for media devices where one physical
-> device (an USB stick) provides both audio and video. When such media device
-> exposes a standard USB Audio class, a proprietary Video class, two or more
-> independent drivers will share a single physical USB bridge. In such cases,
-> it is necessary to coordinate access to the shared resource.
-> 
-> Using this API, drivers can allocate a media device with the shared struct
-> device as the key. Once the media device is allocated by a driver, other
-> drivers can get a reference to it. The media device is released when all
-> the references are released.
+Formatting of Kconfig files doesn't look so pretty, so let the
+Great White Handkerchief come around and clean it up.
 
-While doing the final compile tests for the pull request I encountered the
-following sparse warnings:
+Signed-off-by: Enrico Weigelt, metux IT consult <info@metux.net>
+---
+ mm/Kconfig | 40 ++++++++++++++++++++--------------------
+ 1 file changed, 20 insertions(+), 20 deletions(-)
 
-sparse: WARNINGS
-/home/hans/work/build/media-git/drivers/media/usb/au0828/au0828-core.c:282:6: warning: this statement may fall through [-Wimplicit-fallthrough=]
-SPARSE:/home/hans/work/build/media-git/drivers/media/media-dev-allocator.c
-/home/hans/work/build/media-git/drivers/media/media-dev-allocator.c:94:21:  warning: symbol 'media_device_usb_allocate' was not declared.
-Should it be static?
-SPARSE:/home/hans/work/build/media-git/drivers/media/media-dev-allocator.c
-/home/hans/work/build/media-git/drivers/media/media-dev-allocator.c:120:6:  warning: symbol 'media_device_delete' was not declared. Should
-it be static?
-/home/hans/work/build/media-git/drivers/media/media-dev-allocator.c:94:22: warning: no previous prototype for 'media_device_usb_allocate'
-[-Wmissing-prototypes]
-/home/hans/work/build/media-git/drivers/media/media-dev-allocator.c:120:6: warning: no previous prototype for 'media_device_delete'
-[-Wmissing-prototypes]
-
-Can you fix these issues and post a v12?
-
-Thanks!
-
-	Hans
-
-> 
-> - This patch series in rested on 5.0-rc7 and addresses comments on
->   v10 series from Hans Verkuil. Fixed problems found in resource
->   sharing logic in au0828 adding a patch 5 to this series.
-> - I am sharing the test plan used for testing resource sharing which
->   could serve as a regression test plan. Test results can be found at:
-> 
-> https://docs.google.com/document/d/1XMs3HYgLiHby6xVIvIxv75KSXAAN3F4uUpw2uLuD9c4/edit?usp=sharing
-> 
-> - v10 was tested on 5.0-rc3 and addresses comments on v9 series from
->   Hans Verkuil.
-> - v9 was tested on 4.20-rc6.
-> - Tested sharing resources with kaffeine, vlc, xawtv, tvtime, and
->   arecord. When analog is streaming, digital and audio user-space
->   applications detect that the tuner is busy and exit. When digital
->   is streaming, analog and audio applications detect that the tuner is
->   busy and exit. When arecord is owns the tuner, digital and analog
->   detect that the tuner is busy and exit.
-> - Tested media device allocator API with bind/unbind testing on
->   snd-usb-audio and au0828 drivers to make sure /dev/mediaX is released
->   only when the last driver is unbound.
-> - Addressed review comments from Hans on the RFC v8 (rebased on 4.19)
-> - Updated change log to describe the use-case more clearly.
-> - No changes to 0001,0002 code since the v7 referenced below.
-> - 0003 is a new patch to enable ALSA defines that have been
->   disabled for kernel between 4.9 and 4.19.
-> - Minor merge conflict resolution in 0004.
-> - Added SPDX to new files.
-> 
-> Changes since v10:
-> - Patch 1: Fixed SPDX tag and removed redundant IS_ENABLED(CONFIG_USB)
->            around media_device_usb_allocate() - Sakari Ailus's review
->            comment.
-> - Patch 2 and 3: No changes
-> - Patch 4: Fixed SPDX tag - Sakari Ailus's review comment.
-> - Carried Reviewed-by tag from Takashi Iwai for the sound from v9.
-> - Patch 5: This is a new patch added to fix resource sharing
-> 	   inconsistencies and problem found during testing using Han's
-> 	   tests.
-> Changes since v9:
-> - Patch 1: Fix mutex assert warning from find_module() calls. This
->   code was written before the change to find_module() that requires
->   callers to hold module_mutex. I missed this during my testing on
->   4.20-rc6. Hans Verkuil reported the problem.
-> - Patch 4: sound/usb: Initializes all the entities it can before
->   registering the device based on comments from Hans Verkuil
-> - Carried Reviewed-by tag from Takashi Iwai for the sound from v9.
-> - No changes to Patches 2 and 3.
-> 
-> References:
-> https://lkml.org/lkml/2018/11/2/169
-> https://www.mail-archive.com/linux-media@vger.kernel.org/msg105854.html
-> 
-> Shuah Khan (5):
->   media: Media Device Allocator API
->   media: change au0828 to use Media Device Allocator API
->   media: media.h: Enable ALSA MEDIA_INTF_T* interface types
->   sound/usb: Use Media Controller API to share media resources
->   au0828: fix enable and disable source audio and video inconsistencies
-> 
->  Documentation/media/kapi/mc-core.rst   |  41 ++++
->  drivers/media/Makefile                 |   4 +
->  drivers/media/media-dev-allocator.c    | 142 +++++++++++
->  drivers/media/usb/au0828/au0828-core.c | 190 ++++++++++----
->  drivers/media/usb/au0828/au0828.h      |   6 +-
->  include/media/media-dev-allocator.h    |  53 ++++
->  include/uapi/linux/media.h             |  25 +-
->  sound/usb/Kconfig                      |   4 +
->  sound/usb/Makefile                     |   2 +
->  sound/usb/card.c                       |  14 ++
->  sound/usb/card.h                       |   3 +
->  sound/usb/media.c                      | 327 +++++++++++++++++++++++++
->  sound/usb/media.h                      |  74 ++++++
->  sound/usb/mixer.h                      |   3 +
->  sound/usb/pcm.c                        |  29 ++-
->  sound/usb/quirks-table.h               |   1 +
->  sound/usb/stream.c                     |   2 +
->  sound/usb/usbaudio.h                   |   6 +
->  18 files changed, 865 insertions(+), 61 deletions(-)
->  create mode 100644 drivers/media/media-dev-allocator.c
->  create mode 100644 include/media/media-dev-allocator.h
->  create mode 100644 sound/usb/media.c
->  create mode 100644 sound/usb/media.h
-> 
+diff --git a/mm/Kconfig b/mm/Kconfig
+index 25c71eb..9181eb2 100644
+--- a/mm/Kconfig
++++ b/mm/Kconfig
+@@ -123,9 +123,9 @@ config SPARSEMEM_VMEMMAP
+ 	depends on SPARSEMEM && SPARSEMEM_VMEMMAP_ENABLE
+ 	default y
+ 	help
+-	 SPARSEMEM_VMEMMAP uses a virtually mapped memmap to optimise
+-	 pfn_to_page and page_to_pfn operations.  This is the most
+-	 efficient option when sufficient kernel resources are available.
++	  SPARSEMEM_VMEMMAP uses a virtually mapped memmap to optimise
++	  pfn_to_page and page_to_pfn operations.  This is the most
++	  efficient option when sufficient kernel resources are available.
+ 
+ config HAVE_MEMBLOCK_NODE_MAP
+ 	bool
+@@ -160,10 +160,10 @@ config MEMORY_HOTPLUG_SPARSE
+ 	depends on SPARSEMEM && MEMORY_HOTPLUG
+ 
+ config MEMORY_HOTPLUG_DEFAULT_ONLINE
+-        bool "Online the newly added memory blocks by default"
+-        default n
+-        depends on MEMORY_HOTPLUG
+-        help
++	bool "Online the newly added memory blocks by default"
++	default n
++	depends on MEMORY_HOTPLUG
++	help
+ 	  This option sets the default policy setting for memory hotplug
+ 	  onlining policy (/sys/devices/system/memory/auto_online_blocks) which
+ 	  determines what happens to newly added memory regions. Policy setting
+@@ -228,14 +228,14 @@ config COMPACTION
+ 	select MIGRATION
+ 	depends on MMU
+ 	help
+-          Compaction is the only memory management component to form
+-          high order (larger physically contiguous) memory blocks
+-          reliably. The page allocator relies on compaction heavily and
+-          the lack of the feature can lead to unexpected OOM killer
+-          invocations for high order memory requests. You shouldn't
+-          disable this option unless there really is a strong reason for
+-          it and then we would be really interested to hear about that at
+-          linux-mm@kvack.org.
++	  Compaction is the only memory management component to form
++	  high order (larger physically contiguous) memory blocks
++	  reliably. The page allocator relies on compaction heavily and
++	  the lack of the feature can lead to unexpected OOM killer
++	  invocations for high order memory requests. You shouldn't
++	  disable this option unless there really is a strong reason for
++	  it and then we would be really interested to hear about that at
++	  linux-mm@kvack.org.
+ 
+ #
+ # support for page migration
+@@ -304,10 +304,10 @@ config KSM
+ 	  root has set /sys/kernel/mm/ksm/run to 1 (if CONFIG_SYSFS is set).
+ 
+ config DEFAULT_MMAP_MIN_ADDR
+-        int "Low address space to protect from user allocation"
++	int "Low address space to protect from user allocation"
+ 	depends on MMU
+-        default 4096
+-        help
++	default 4096
++	help
+ 	  This is the portion of low virtual memory which should be protected
+ 	  from userspace allocation.  Keeping a user from writing to low pages
+ 	  can help reduce the impact of kernel NULL pointer bugs.
+@@ -400,7 +400,7 @@ choice
+ 	  benefit but it will work automatically for all applications.
+ 
+ 	config TRANSPARENT_HUGEPAGE_MADVISE
+-		bool "madvise"
++	bool "madvise"
+ 	help
+ 	  Enabling Transparent Hugepage madvise, will only provide a
+ 	  performance improvement benefit to the applications using
+@@ -410,7 +410,7 @@ choice
+ endchoice
+ 
+ config ARCH_WANTS_THP_SWAP
+-       def_bool n
++	def_bool n
+ 
+ config THP_SWAP
+ 	def_bool y
+-- 
+1.9.1
 
