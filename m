@@ -2,112 +2,120 @@ Return-Path: <SRS0=FxTY=RO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_PASS autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 033FEC43381
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 Mar 2019 17:26:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3ED99C43381
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 Mar 2019 17:26:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CD66B214AE
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 Mar 2019 17:26:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0FE262063F
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 Mar 2019 17:26:10 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=nifty.com header.i=@nifty.com header.b="QPCK9ufq"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728062AbfCKRZ7 (ORCPT
+        id S1728102AbfCKR0I (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 11 Mar 2019 13:25:59 -0400
-Received: from mx2.suse.de ([195.135.220.15]:35802 "EHLO mx1.suse.de"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1727641AbfCKRZ7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 11 Mar 2019 13:25:59 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx1.suse.de (Postfix) with ESMTP id 9D8C8AFDF;
-        Mon, 11 Mar 2019 17:25:57 +0000 (UTC)
-Subject: Re: [PATCH v8 0/6] Add Fieldbus subsystem + support HMS Profinet card
-To:     Sven Van Asbroeck <thesven73@gmail.com>
-Cc:     Greg KH <gregkh@linuxfoundation.org>, robh+dt@kernel.org,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Lee Jones <lee.jones@linaro.org>, mark.rutland@arm.com,
-        treding@nvidia.com, David Lechner <david@lechnology.com>,
-        noralf@tronnes.org, johan@kernel.org,
-        Michal Simek <monstr@monstr.eu>, michal.vokac@ysoft.com,
-        Arnd Bergmann <arnd@arndb.de>, john.garry@huawei.com,
-        geert+renesas@glider.be, robin.murphy@arm.com,
-        Paul Gortmaker <paul.gortmaker@windriver.com>,
-        sebastien.bourdelin@savoirfairelinux.com, icenowy@aosc.io,
-        Stuart Yoder <stuyoder@gmail.com>, maxime.ripard@bootlin.com,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-References: <20190124201251.15159-1-TheSven73@googlemail.com>
- <CAGngYiWFU-VnG=ODLWaUf0yp69qaU2GSd9exdHvyi6Ko1ib9qw@mail.gmail.com>
- <20190208121916.GE23483@kroah.com>
- <CAGngYiVVNitd5SDLah-kxP69W6XHYHOQrOz=DnevuGnqoHD7HA@mail.gmail.com>
- <20190208141400.GA22162@kroah.com>
- <CAGngYiXZtNcqQ3JGgavBxypo75WtAT7T-X4DQFNWD8kQcifU8g@mail.gmail.com>
-From:   =?UTF-8?Q?Andreas_F=c3=a4rber?= <afaerber@suse.de>
-Openpgp: preference=signencrypt
-Organization: SUSE Linux GmbH
-Message-ID: <c8632a8c-dd3b-6b16-3fb2-5a1b381ca29a@suse.de>
-Date:   Mon, 11 Mar 2019 18:25:56 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.5.1
+        Mon, 11 Mar 2019 13:26:08 -0400
+Received: from conssluserg-06.nifty.com ([210.131.2.91]:30244 "EHLO
+        conssluserg-06.nifty.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726977AbfCKR0I (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 11 Mar 2019 13:26:08 -0400
+Received: from mail-vs1-f49.google.com (mail-vs1-f49.google.com [209.85.217.49]) (authenticated)
+        by conssluserg-06.nifty.com with ESMTP id x2BHPo8w013037;
+        Tue, 12 Mar 2019 02:25:50 +0900
+DKIM-Filter: OpenDKIM Filter v2.10.3 conssluserg-06.nifty.com x2BHPo8w013037
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nifty.com;
+        s=dec2015msa; t=1552325151;
+        bh=/uTXvDqoIkGNMXXXDJ+c1whBGdzleS4VwYBQuTu5TSU=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=QPCK9ufq1EkWd4ea7WzLwAeEIB3a5ZdOlZma1+2dWpp7m9zNlrjbgy0uTGZmmPqrS
+         PM3hpJYEvans19WFKO+Rm5amCQmHcQIcxLGMlFhgJWvmzne/GDlBInVi9dHNUEsiw1
+         15BWMspej794IqHW87XsvLvre4zS4dZhBGztaT5X4d2Cu6xq/DWItUrQYU1FuTpLDd
+         bvFJMjeLiLzfU0OxubkplxYteJRnN7N5S66coFTazBZSsPUaTVHWTbhNYHhf024J0G
+         4GbF5GaLZPb7URcAVSc0f2zQHrY3s2gqKtp/fhZ9XuvpOoGwaNXY89nXKOkywpMLlE
+         UydjbmlAfr29w==
+X-Nifty-SrcIP: [209.85.217.49]
+Received: by mail-vs1-f49.google.com with SMTP id j12so3225034vsd.3;
+        Mon, 11 Mar 2019 10:25:50 -0700 (PDT)
+X-Gm-Message-State: APjAAAV+pNZKXfwg4t4Nhffxyy02cXxp9fj9keu8kwRAn/MQbTfGRV7p
+        MyMn2alUXqxL0rBFrtLk7dQZ6GC/SStBnPdh+Nw=
+X-Google-Smtp-Source: APXvYqwVWfwnkQ22Qr8JgOqqcj14FI4XLr2p4959uakaEuPpbTe2q7e5B9RSjp6T0PpcvYgXnFmlamLM4Ui9Evqs5qU=
+X-Received: by 2002:a05:6102:18f:: with SMTP id r15mr17485537vsq.215.1552325149774;
+ Mon, 11 Mar 2019 10:25:49 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <CAGngYiXZtNcqQ3JGgavBxypo75WtAT7T-X4DQFNWD8kQcifU8g@mail.gmail.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+References: <20190304165732.24043-1-ar@cs.msu.ru> <20190304165732.24043-3-ar@cs.msu.ru>
+In-Reply-To: <20190304165732.24043-3-ar@cs.msu.ru>
+From:   Masahiro Yamada <yamada.masahiro@socionext.com>
+Date:   Tue, 12 Mar 2019 02:25:13 +0900
+X-Gmail-Original-Message-ID: <CAK7LNATzyyga_jbd_9BbEqws9PE-19L3FSxxoPwbC7ieic0yQg@mail.gmail.com>
+Message-ID: <CAK7LNATzyyga_jbd_9BbEqws9PE-19L3FSxxoPwbC7ieic0yQg@mail.gmail.com>
+Subject: Re: [PATCH 2/3] Makefile: kselftest: use KCONFIG_CONFIG
+To:     Arseny Maslennikov <ar@cs.msu.ru>
+Cc:     Michal Marek <michal.lkml@markovi.net>,
+        Jeff Dike <jdike@addtoit.com>,
+        Richard Weinberger <richard@nod.at>,
+        Anton Ivanov <anton.ivanov@cambridgegreys.com>,
+        Linux Kbuild mailing list <linux-kbuild@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        linux-um@lists.infradead.org
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Am 11.03.19 um 18:02 schrieb Sven Van Asbroeck:
-> On Fri, Feb 8, 2019 at 9:14 AM Greg KH <gregkh@linuxfoundation.org> wrote:
->>
->> Well, who wants this code?  Who uses it?  Find those people and get them
->> to review it.  If no one wants it or uses it, that kind of implies that
->> it's not needed :)
-> 
-> We have customers who (will) talk to this ABI from userspace, but they are
-> not 'Linux-y' enough to come to the mailing list and meaningfully review
-> the userspace ABI.
-> 
-> IMHO the current reality of Fieldbus on Linux is companies rolling their own
-> proprietary out-of-tree interfaces and drivers. They do this partly because
-> there is no existing community or infrastructure. So there is no incentive
-> to be involved with mainline, which could also explain why no-one is commenting
-> on this Fieldbus ABI.
-> 
-> Chicken-and-egg problem ?
-> 
-> Greg, could I convince you to take this Fieldbus subsystem in drivers/staging?
-> Perhaps its presence may kickstart or seed a Linux Fieldbus community.
-> Being in staging/ also means that we can tweak the userspace ABI to our
-> heart's content if more people/requirements come in.
-> 
-> If there's been no meaningful activity in, say, one year from now, you may
-> decide to send this whole subsystem to /dev/null.
+On Tue, Mar 5, 2019 at 1:58 AM Arseny Maslennikov <ar@cs.msu.ru> wrote:
+>
+> If the config file is reassigned through the KCONFIG_CONFIG
+> makeflag/envvar, this rule still attempts to use the wrong, possibly
+> nonexistent file.
+> Let's fix that.
+>
+> Signed-off-by: Arseny Maslennikov <ar@cs.msu.ru>
+> ---
+>  Makefile | 4 ++--
+>  1 file changed, 2 insertions(+), 2 deletions(-)
+>
+> diff --git a/Makefile b/Makefile
+> index d5713e7b1e50..4d8760166a47 100644
+> --- a/Makefile
+> +++ b/Makefile
+> @@ -1199,9 +1199,9 @@ kselftest-clean:
+>
+>  PHONY += kselftest-merge
+>  kselftest-merge:
+> -       $(if $(wildcard $(objtree)/.config),, $(error No .config exists, config your kernel first!))
+> +       $(if $(wildcard $(objtree)/$(KCONFIG_CONFIG)),, $(error No $(KCONFIG_CONFIG) exists, config your kernel first!))
+>         $(Q)$(CONFIG_SHELL) $(srctree)/scripts/kconfig/merge_config.sh \
+> -               -m $(objtree)/.config \
+> +               -m $(objtree)/$(KCONFIG_CONFIG) \
 
-I have two unfinished drivers that might benefit, for Hilscher netX 52
-(multi-protocol) and Microchip LAN9252 (EtherCAT), as well as a Linux
-port for Infineon XMC4500 that might be expanded to XMC4800 (EtherCAT).
 
-But currently -ENOTIME for review or development, sorry.
+You are blindly replacing .config with $(KCONFIG_CONFIG).
 
-Staging sounds like a plan, if that allows us to still break the ABI.
 
-Can't make any guarantees whether I might get to them within one year,
-as my LoRa project has been turning into a Black Hole. ;)
+What kind of usage do you assume for KCONFIG_CONFIG ?
 
-Are you at Netdev 0x13 later this month? That might be an opportunity to
-discuss the network-related parts such as Profinet and EtherCAT.
+$(objtree)/$(KCONFIG_CONFIG) means
+$(KCONFIG_CONFIG) never becomes an absolute path.
 
-Cheers,
-Andreas
 
-https://github.com/afaerber/netx-module
-https://github.com/afaerber/lan9252-module
 
--- 
-SUSE Linux GmbH, Maxfeldstr. 5, 90409 Nürnberg, Germany
-GF: Felix Imendörffer, Jane Smithard, Graham Norton
-HRB 21284 (AG Nürnberg)
+
+
+
+
+
+>                 $(srctree)/tools/testing/selftests/*/config
+>         +$(Q)$(MAKE) -f $(srctree)/Makefile olddefconfig
+>
+> --
+> 2.20.1
+>
+
+
+--
+Best Regards
+Masahiro Yamada
