@@ -4,48 +4,48 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+	SPF_PASS,USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CC945C43381
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 Mar 2019 20:04:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A3BD6C43381
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 Mar 2019 20:05:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 94CA42064A
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 Mar 2019 20:04:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 749602064A
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 Mar 2019 20:05:06 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1552334697;
-	bh=vILgORYGx/jvYIG8Kn2sxIPyx7fpm2nu6hNlKFZmjOs=;
+	s=default; t=1552334706;
+	bh=yi66KY97cAF0XSIlDC5TPtGaTMBs7kCAdK71Hz+5S+g=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=VJJfV2rP+6xrIYxl1pHj2QcCFT5OKrhkn5TckW5Q6bz98gwdCIpyjRVw6BNtqMDwu
-	 A2a63xivrc+Gm/CVS3qZNa2vH+yWf+ItQFEXud3jCIpqPsVtGB3L6gcpMkGv8Eeygo
-	 rcKItLoz3aT7lp3w7k2llC84Zf+gboTV5M1WW6sk=
+	b=balnFAvSzx0aDLl39DuiSFYIGoZNia71Jm+sN6QrOaBryXWdyYEvRfzjZzJSka3HW
+	 4uhCNn5uP2L0j3KyXzoSEriFHthcJtm9B2l0mN0eZfw24Uyd2KXO8ZnZVcfPYipEGZ
+	 Ufx7Jt40TH5ZlZLIX2sYhRHKIxdoNpUnsR8C8GOo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729087AbfCKUE4 (ORCPT
+        id S1729314AbfCKUFF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 11 Mar 2019 16:04:56 -0400
-Received: from mail.kernel.org ([198.145.29.99]:35758 "EHLO mail.kernel.org"
+        Mon, 11 Mar 2019 16:05:05 -0400
+Received: from mail.kernel.org ([198.145.29.99]:35682 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729347AbfCKT6S (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 11 Mar 2019 15:58:18 -0400
+        id S1729328AbfCKT6P (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 11 Mar 2019 15:58:15 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 89FCF214AF;
-        Mon, 11 Mar 2019 19:58:17 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id BCE9C214AF;
+        Mon, 11 Mar 2019 19:58:13 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1552334298;
-        bh=vILgORYGx/jvYIG8Kn2sxIPyx7fpm2nu6hNlKFZmjOs=;
+        s=default; t=1552334294;
+        bh=yi66KY97cAF0XSIlDC5TPtGaTMBs7kCAdK71Hz+5S+g=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=IbJmpDjwk+lvdoMgEKuF1jOM19sgr2VRdWWwMSuVNcUsX+LDGqUXVMMrQvyFA0MrG
-         9h6vuLBRykinJyKO9goN1pfrYX4QEk/5HNjkRLIWjcMzRBiAgO+KUq2AhxTRRgio7c
-         5iugqphnYTr1Py82GzyMcYWfkI1qI81guTWiKYPY=
+        b=FLkLi8wpRxyaprOM6E5FwuyZ+oho7/efHWszerenOv34PPyrZcyIQU56SOms19GFn
+         R9ZezUnuz/XfuMcpQCY6YCrh6PklgwOeIgWZ/5Y2ZVQawrYrXKgVndUPUIrhIZgfOg
+         GTceR/rR1oVPUsYzXyktSb7AT71A7qM9TQYtGCJs=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Shubhrajyoti Datta <shubhrajyoti.datta@xilinx.com>,
-        Wolfram Sang <wsa@the-dreams.de>,
-        Sasha Levin <sashal@kernel.org>, linux-i2c@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.19 41/44] i2c: cadence: Fix the hold bit setting
-Date:   Mon, 11 Mar 2019 15:56:57 -0400
-Message-Id: <20190311195700.138462-41-sashal@kernel.org>
+Cc:     Jann Horn <jannh@google.com>,
+        "David S . Miller" <davem@davemloft.net>,
+        Sasha Levin <sashal@kernel.org>, linux-mm@kvack.org
+Subject: [PATCH AUTOSEL 4.19 39/44] mm: page_alloc: fix ref bias in page_frag_alloc() for 1-byte allocs
+Date:   Mon, 11 Mar 2019 15:56:55 -0400
+Message-Id: <20190311195700.138462-39-sashal@kernel.org>
 X-Mailer: git-send-email 2.19.1
 In-Reply-To: <20190311195700.138462-1-sashal@kernel.org>
 References: <20190311195700.138462-1-sashal@kernel.org>
@@ -57,56 +57,72 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Shubhrajyoti Datta <shubhrajyoti.datta@xilinx.com>
+From: Jann Horn <jannh@google.com>
 
-[ Upstream commit d358def706880defa4c9e87381c5bf086a97d5f9 ]
+[ Upstream commit 2c2ade81741c66082f8211f0b96cf509cc4c0218 ]
 
-In case the hold bit is not needed we are carrying the old values.
-Fix the same by resetting the bit when not needed.
+The basic idea behind ->pagecnt_bias is: If we pre-allocate the maximum
+number of references that we might need to create in the fastpath later,
+the bump-allocation fastpath only has to modify the non-atomic bias value
+that tracks the number of extra references we hold instead of the atomic
+refcount. The maximum number of allocations we can serve (under the
+assumption that no allocation is made with size 0) is nc->size, so that's
+the bias used.
 
-Fixes the sporadic i2c bus lockups on National Instruments
-Zynq-based devices.
+However, even when all memory in the allocation has been given away, a
+reference to the page is still held; and in the `offset < 0` slowpath, the
+page may be reused if everyone else has dropped their references.
+This means that the necessary number of references is actually
+`nc->size+1`.
 
-Fixes: df8eb5691c48 ("i2c: Add driver for Cadence I2C controller")
-Reported-by: Kyle Roeschley <kyle.roeschley@ni.com>
-Acked-by: Michal Simek <michal.simek@xilinx.com>
-Signed-off-by: Shubhrajyoti Datta <shubhrajyoti.datta@xilinx.com>
-Tested-by: Kyle Roeschley <kyle.roeschley@ni.com>
-Signed-off-by: Wolfram Sang <wsa@the-dreams.de>
+Luckily, from a quick grep, it looks like the only path that can call
+page_frag_alloc(fragsz=1) is TAP with the IFF_NAPI_FRAGS flag, which
+requires CAP_NET_ADMIN in the init namespace and is only intended to be
+used for kernel testing and fuzzing.
+
+To test for this issue, put a `WARN_ON(page_ref_count(page) == 0)` in the
+`offset < 0` path, below the virt_to_page() call, and then repeatedly call
+writev() on a TAP device with IFF_TAP|IFF_NO_PI|IFF_NAPI_FRAGS|IFF_NAPI,
+with a vector consisting of 15 elements containing 1 byte each.
+
+Signed-off-by: Jann Horn <jannh@google.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/i2c/busses/i2c-cadence.c | 9 +++++++--
- 1 file changed, 7 insertions(+), 2 deletions(-)
+ mm/page_alloc.c | 8 ++++----
+ 1 file changed, 4 insertions(+), 4 deletions(-)
 
-diff --git a/drivers/i2c/busses/i2c-cadence.c b/drivers/i2c/busses/i2c-cadence.c
-index b13605718291..d917cefc5a19 100644
---- a/drivers/i2c/busses/i2c-cadence.c
-+++ b/drivers/i2c/busses/i2c-cadence.c
-@@ -382,8 +382,10 @@ static void cdns_i2c_mrecv(struct cdns_i2c *id)
- 	 * Check for the message size against FIFO depth and set the
- 	 * 'hold bus' bit if it is greater than FIFO depth.
- 	 */
--	if (id->recv_count > CDNS_I2C_FIFO_DEPTH)
-+	if ((id->recv_count > CDNS_I2C_FIFO_DEPTH)  || id->bus_hold_flag)
- 		ctrl_reg |= CDNS_I2C_CR_HOLD;
-+	else
-+		ctrl_reg = ctrl_reg & ~CDNS_I2C_CR_HOLD;
+diff --git a/mm/page_alloc.c b/mm/page_alloc.c
+index a9de1dbb9a6c..ef99971c13dd 100644
+--- a/mm/page_alloc.c
++++ b/mm/page_alloc.c
+@@ -4532,11 +4532,11 @@ void *page_frag_alloc(struct page_frag_cache *nc,
+ 		/* Even if we own the page, we do not use atomic_set().
+ 		 * This would break get_page_unless_zero() users.
+ 		 */
+-		page_ref_add(page, size - 1);
++		page_ref_add(page, size);
  
- 	cdns_i2c_writereg(ctrl_reg, CDNS_I2C_CR_OFFSET);
+ 		/* reset page count bias and offset to start of new frag */
+ 		nc->pfmemalloc = page_is_pfmemalloc(page);
+-		nc->pagecnt_bias = size;
++		nc->pagecnt_bias = size + 1;
+ 		nc->offset = size;
+ 	}
  
-@@ -440,8 +442,11 @@ static void cdns_i2c_msend(struct cdns_i2c *id)
- 	 * Check for the message size against FIFO depth and set the
- 	 * 'hold bus' bit if it is greater than FIFO depth.
- 	 */
--	if (id->send_count > CDNS_I2C_FIFO_DEPTH)
-+	if ((id->send_count > CDNS_I2C_FIFO_DEPTH) || id->bus_hold_flag)
- 		ctrl_reg |= CDNS_I2C_CR_HOLD;
-+	else
-+		ctrl_reg = ctrl_reg & ~CDNS_I2C_CR_HOLD;
-+
- 	cdns_i2c_writereg(ctrl_reg, CDNS_I2C_CR_OFFSET);
+@@ -4552,10 +4552,10 @@ void *page_frag_alloc(struct page_frag_cache *nc,
+ 		size = nc->size;
+ #endif
+ 		/* OK, page count is 0, we can safely set it */
+-		set_page_count(page, size);
++		set_page_count(page, size + 1);
  
- 	/* Clear the interrupts in interrupt status register. */
+ 		/* reset page count bias and offset to start of new frag */
+-		nc->pagecnt_bias = size;
++		nc->pagecnt_bias = size + 1;
+ 		offset = size - fragsz;
+ 	}
+ 
 -- 
 2.19.1
 
