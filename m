@@ -2,168 +2,272 @@ Return-Path: <SRS0=FxTY=RO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_MUTT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 90E57C43381
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 Mar 2019 22:10:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9C6E5C43381
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 Mar 2019 22:10:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 427C6214D8
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 Mar 2019 22:10:05 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=vmware.com header.i=@vmware.com header.b="Yu8KfOF7"
+	by mail.kernel.org (Postfix) with ESMTP id 5B39D2087C
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 Mar 2019 22:10:09 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728267AbfCKWKD (ORCPT
+        id S1728408AbfCKWKH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 11 Mar 2019 18:10:03 -0400
-Received: from mail-eopbgr740055.outbound.protection.outlook.com ([40.107.74.55]:7728
-        "EHLO NAM01-BN3-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1727138AbfCKWKD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 11 Mar 2019 18:10:03 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=vmware.com;
- s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=p2iKpN8uFDCMyMnY/++1zj2+mhKMGq0jwvD8fD6TCOQ=;
- b=Yu8KfOF7fGeHXyERPegEZ6PhIRuior8OBuTj0WoYWfTbaFnuOUk3gadrF8Ox3HNRaJWOB6EZ7qfX6zgorKRlF9tsqZSjfLcWIetP87rqNLD7xrc+OaG9i9KmgfSbsNgrllJZV2znSxfmHw2iDff7H8jxHUZ/EE4W3R4kx2Npwio=
-Received: from BYAPR05MB5048.namprd05.prod.outlook.com (20.177.230.218) by
- BYAPR05MB5719.namprd05.prod.outlook.com (20.177.187.20) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.1709.11; Mon, 11 Mar 2019 22:09:56 +0000
-Received: from BYAPR05MB5048.namprd05.prod.outlook.com
- ([fe80::b542:165c:d3da:244]) by BYAPR05MB5048.namprd05.prod.outlook.com
- ([fe80::b542:165c:d3da:244%6]) with mapi id 15.20.1709.011; Mon, 11 Mar 2019
- 22:09:56 +0000
-From:   Vishnu DASA <vdasa@vmware.com>
-To:     "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "virtualization@lists.linux-foundation.org" 
-        <virtualization@lists.linux-foundation.org>
-CC:     Vishnu DASA <vdasa@vmware.com>, Pv-drivers <Pv-drivers@vmware.com>
-Subject: [PATCH] VMCI: Use BIT() macro for bit definitions
-Thread-Topic: [PATCH] VMCI: Use BIT() macro for bit definitions
-Thread-Index: AQHU2Fco7mvuWBzPrk2iev2EOu8NqA==
-Date:   Mon, 11 Mar 2019 22:09:56 +0000
-Message-ID: <20190311220928.4560-1-vdasa@vmware.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-clientproxiedby: BYAPR07CA0068.namprd07.prod.outlook.com
- (2603:10b6:a03:60::45) To BYAPR05MB5048.namprd05.prod.outlook.com
- (2603:10b6:a03:9d::26)
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=vdasa@vmware.com; 
-x-ms-exchange-messagesentrepresentingtype: 1
-x-mailer: git-send-email 2.19.1
-x-originating-ip: [66.170.99.1]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: cf129130-739c-454d-c8b3-08d6a66e4b30
-x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600127)(711020)(4605104)(2017052603328)(7153060)(7193020);SRVR:BYAPR05MB5719;
-x-ms-traffictypediagnostic: BYAPR05MB5719:
-x-ld-processed: b39138ca-3cee-4b4a-a4d6-cd83d9dd62f0,ExtAddr
-x-microsoft-antispam-prvs: <BYAPR05MB571982F6EFECFA2DF42401F7CE480@BYAPR05MB5719.namprd05.prod.outlook.com>
-x-forefront-prvs: 09730BD177
-x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(366004)(39860400002)(376002)(136003)(396003)(346002)(189003)(199004)(4326008)(97736004)(14454004)(25786009)(476003)(106356001)(486006)(2616005)(71190400001)(105586002)(71200400001)(2906002)(1076003)(36756003)(478600001)(107886003)(305945005)(86362001)(2201001)(50226002)(386003)(53936002)(102836004)(6506007)(316002)(52116002)(256004)(26005)(99286004)(14444005)(3846002)(54906003)(110136005)(6116002)(6436002)(5660300002)(81156014)(81166006)(6512007)(68736007)(6486002)(8676002)(186003)(66066001)(2501003)(8936002)(7736002);DIR:OUT;SFP:1101;SCL:1;SRVR:BYAPR05MB5719;H:BYAPR05MB5048.namprd05.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
-received-spf: None (protection.outlook.com: vmware.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam-message-info: bBmk24bi17/w9kS7h5rs3fJuS00a3ipAvBjBsi5Nb61ESfCQ8TJM9t0QEiFLZt1F1dVJdkusPXepRKup0/qb+VSbb8CWAielYTyFpXIe2Tathppj9FyrCM6vHK3BSl6YdyNZ5xRTgYHGdBKydEVY6Zuhu+j0UNb8IjDKP5ZcfiGyCQb8B2aZ24Zg2RQXPtEVkQ6gTc70t+EMlY8PxfSzAdku6kjQq4OOnpWo1ocME8N1+W13mFwU+494c4TI4NOwFt5/4B1mEluTbgFiCbh3J374elMOr7K/Qz3N9OzJ1/xUFqCPzB/2tU1RxRaGpjGrgd773MSOk2Tp0E+N5kZpMY25pB2dBYr5VvCNB9Bq51gsBP6CvUHy4nI9J2+zYLNN20AXQHkc6zdgh3t8ZXBO57rR7lMT0fdaTgYi3n25jzU=
-Content-Type: text/plain; charset="iso-8859-1"
-Content-Transfer-Encoding: quoted-printable
+        Mon, 11 Mar 2019 18:10:07 -0400
+Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:43130 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1728313AbfCKWKH (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 11 Mar 2019 18:10:07 -0400
+Received: from pps.filterd (m0098396.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x2BM9iAM122257
+        for <linux-kernel@vger.kernel.org>; Mon, 11 Mar 2019 18:10:05 -0400
+Received: from e12.ny.us.ibm.com (e12.ny.us.ibm.com [129.33.205.202])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 2r5uemn37k-1
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
+        for <linux-kernel@vger.kernel.org>; Mon, 11 Mar 2019 18:10:05 -0400
+Received: from localhost
+        by e12.ny.us.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
+        for <linux-kernel@vger.kernel.org> from <paulmck@linux.vnet.ibm.com>;
+        Mon, 11 Mar 2019 22:10:04 -0000
+Received: from b01cxnp22033.gho.pok.ibm.com (9.57.198.23)
+        by e12.ny.us.ibm.com (146.89.104.199) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
+        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
+        Mon, 11 Mar 2019 22:10:00 -0000
+Received: from b01ledav003.gho.pok.ibm.com (b01ledav003.gho.pok.ibm.com [9.57.199.108])
+        by b01cxnp22033.gho.pok.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x2BM9xqg25165980
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Mon, 11 Mar 2019 22:09:59 GMT
+Received: from b01ledav003.gho.pok.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 2D416B2087;
+        Mon, 11 Mar 2019 22:09:59 +0000 (GMT)
+Received: from b01ledav003.gho.pok.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id F353DB2080;
+        Mon, 11 Mar 2019 22:09:58 +0000 (GMT)
+Received: from paulmck-ThinkPad-W541 (unknown [9.70.82.188])
+        by b01ledav003.gho.pok.ibm.com (Postfix) with ESMTP;
+        Mon, 11 Mar 2019 22:09:58 +0000 (GMT)
+Received: by paulmck-ThinkPad-W541 (Postfix, from userid 1000)
+        id E67B616C34A1; Mon, 11 Mar 2019 15:10:00 -0700 (PDT)
+Date:   Mon, 11 Mar 2019 15:10:00 -0700
+From:   "Paul E. McKenney" <paulmck@linux.ibm.com>
+To:     NeilBrown <neilb@suse.com>
+Cc:     Herbert Xu <herbert@gondor.apana.org.au>,
+        Thomas Graf <tgraf@suug.ch>, netdev@vger.kernel.org,
+        linux-kernel@vger.kernel.org, rcu@vger.kernel.org,
+        neeraju@codeaurora.org
+Subject: Re: [PATCH 2/5] rhashtable: don't hold lock on first table
+ throughout insertion.
+Reply-To: paulmck@linux.ibm.com
+References: <20180725152250.GN12945@linux.vnet.ibm.com>
+ <87r2jpmqu2.fsf@notabene.neil.brown.name>
+ <20180727031815.GW24813@linux.vnet.ibm.com>
+ <20180727145731.GA2780@linux.vnet.ibm.com>
+ <87zhy8s05i.fsf@notabene.neil.brown.name>
+ <20180731041425.GI24813@linux.vnet.ibm.com>
+ <87lg9sro5r.fsf@notabene.neil.brown.name>
+ <20180731144429.GM24813@linux.vnet.ibm.com>
+ <20190311152752.GA10700@linux.ibm.com>
+ <874l89qdwy.fsf@notabene.neil.brown.name>
 MIME-Version: 1.0
-X-OriginatorOrg: vmware.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: cf129130-739c-454d-c8b3-08d6a66e4b30
-X-MS-Exchange-CrossTenant-originalarrivaltime: 11 Mar 2019 22:09:56.2639
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: b39138ca-3cee-4b4a-a4d6-cd83d9dd62f0
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: BYAPR05MB5719
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <874l89qdwy.fsf@notabene.neil.brown.name>
+User-Agent: Mutt/1.5.21 (2010-09-15)
+X-TM-AS-GCONF: 00
+x-cbid: 19031122-0060-0000-0000-0000031A81E6
+X-IBM-SpamModules-Scores: 
+X-IBM-SpamModules-Versions: BY=3.00010741; HX=3.00000242; KW=3.00000007;
+ PH=3.00000004; SC=3.00000281; SDB=6.01172997; UDB=6.00613254; IPR=6.00953652;
+ MB=3.00025936; MTD=3.00000008; XFM=3.00000015; UTC=2019-03-11 22:10:02
+X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
+x-cbparentid: 19031122-0061-0000-0000-00004893D96F
+Message-Id: <20190311221000.GO13351@linux.ibm.com>
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-03-11_16:,,
+ signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
+ malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
+ clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
+ mlxlogscore=999 adultscore=0 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.0.1-1810050000 definitions=main-1903110151
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-No functional changes, cleanup only.
+On Tue, Mar 12, 2019 at 08:50:05AM +1100, NeilBrown wrote:
+> On Mon, Mar 11 2019, Paul E. McKenney wrote:
+> 
+> > On Tue, Jul 31, 2018 at 07:44:29AM -0700, Paul E. McKenney wrote:
+> >> On Tue, Jul 31, 2018 at 03:04:48PM +1000, NeilBrown wrote:
+> >> > On Mon, Jul 30 2018, Paul E. McKenney wrote:
+> >> > 
+> >> > > On Tue, Jul 31, 2018 at 10:45:45AM +1000, NeilBrown wrote:
+> >> > >> On Fri, Jul 27 2018, Paul E. McKenney wrote:
+> >> > >> 
+> >> > >> > On Thu, Jul 26, 2018 at 08:18:15PM -0700, Paul E. McKenney wrote:
+> >> > >> >> On Fri, Jul 27, 2018 at 11:04:37AM +1000, NeilBrown wrote:
+> >> > >> >> > On Wed, Jul 25 2018, Paul E. McKenney wrote:
+> >> > >> >> > >> 
+> >> > >> >> > >> Looks good ... except ... naming is hard.
+> >> > >> >> > >> 
+> >> > >> >> > >>  is_after_call_rcu_init()  asserts where in the lifecycle we are,
+> >> > >> >> > >>  is_after_call_rcu() tests where in the lifecycle we are.
+> >> > >> >> > >> 
+> >> > >> >> > >>  The names are similar but the purpose is quite different.
+> >> > >> >> > >>  Maybe s/is_after_call_rcu_init/call_rcu_init/ ??
+> >> > >> >> > >
+> >> > >> >> > > How about rcu_head_init() and rcu_head_after_call_rcu()?
+> >> > >> >> 
+> >> > >> >> Very well, I will pull this change in on my next rebase.
+> >> > >> >
+> >> > >> > Like this?
+> >> > >> 
+> >> > >> Hard to say - unwinding white-space damage in my head is too challenging
+> >> > >> when newlines have been deleted :-(
+> >> > >
+> >> > > What???  Don't you like block-structured code?
+> >> > >
+> >> > > All kidding aside, how about the following more conventionally formatted
+> >> > > version?
+> >> > 
+> >> > Wow - it's like I just got new glasses!
+> >> > Yes - nice an clear and now flaws to be found.  Thanks a lot.
+> >> 
+> >> Now that flaws are to be found, please feel free to report them.  ;-)
+> >
+> > Hello, Neil,
+> >
+> > Any plans to use these functions?  There are still no upstream uses.
+> > On the other hand, if they proved unuseful, I will remove them.  If I
+> > don't hear otherwise from you, I will pull them in v5.2.
+> 
+> Hi Paul,
+>  yes, I do still have plans for them.  I've got quite a few things I
+>  want to add to rhashtables including this, but got stalled late last
+>  year and I haven't managed to get back to it.
+>  Thanks for your prompting - I'll make an effort to post some patches
+>  soon, particularly the one that makes use of this new functionality.
 
-Reviewed-by: Adit Ranadive <aditr@vmware.com>
-Reviewed-by: Jorgen Hansen <jhansen@vmware.com>
-Signed-off-by: Vishnu Dasa <vdasa@vmware.com>
----
- include/linux/vmw_vmci_defs.h | 34 +++++++++++++++++-----------------
- 1 file changed, 17 insertions(+), 17 deletions(-)
+OK, I won't remove it.  Not just yet, anyway.  ;-)
 
-diff --git a/include/linux/vmw_vmci_defs.h b/include/linux/vmw_vmci_defs.h
-index eaa1e762bf06..007e28053da8 100644
---- a/include/linux/vmw_vmci_defs.h
-+++ b/include/linux/vmw_vmci_defs.h
-@@ -33,27 +33,27 @@
- #define VMCI_MAX_DEVICES 1
-=20
- /* Status register bits. */
--#define VMCI_STATUS_INT_ON     0x1
-+#define VMCI_STATUS_INT_ON     BIT(0)
-=20
- /* Control register bits. */
--#define VMCI_CONTROL_RESET        0x1
--#define VMCI_CONTROL_INT_ENABLE   0x2
--#define VMCI_CONTROL_INT_DISABLE  0x4
-+#define VMCI_CONTROL_RESET        BIT(0)
-+#define VMCI_CONTROL_INT_ENABLE   BIT(1)
-+#define VMCI_CONTROL_INT_DISABLE  BIT(2)
-=20
- /* Capabilities register bits. */
--#define VMCI_CAPS_HYPERCALL     0x1
--#define VMCI_CAPS_GUESTCALL     0x2
--#define VMCI_CAPS_DATAGRAM      0x4
--#define VMCI_CAPS_NOTIFICATIONS 0x8
--#define VMCI_CAPS_PPN64         0x10
-+#define VMCI_CAPS_HYPERCALL     BIT(0)
-+#define VMCI_CAPS_GUESTCALL     BIT(1)
-+#define VMCI_CAPS_DATAGRAM      BIT(2)
-+#define VMCI_CAPS_NOTIFICATIONS BIT(3)
-+#define VMCI_CAPS_PPN64         BIT(4)
-=20
- /* Interrupt Cause register bits. */
--#define VMCI_ICR_DATAGRAM      0x1
--#define VMCI_ICR_NOTIFICATION  0x2
-+#define VMCI_ICR_DATAGRAM      BIT(0)
-+#define VMCI_ICR_NOTIFICATION  BIT(1)
-=20
- /* Interrupt Mask register bits. */
--#define VMCI_IMR_DATAGRAM      0x1
--#define VMCI_IMR_NOTIFICATION  0x2
-+#define VMCI_IMR_DATAGRAM      BIT(0)
-+#define VMCI_IMR_NOTIFICATION  BIT(1)
-=20
- /* Maximum MSI/MSI-X interrupt vectors in the device. */
- #define VMCI_MAX_INTRS 2
-@@ -463,9 +463,9 @@ struct vmci_datagram {
-  * datagram callback is invoked in a delayed context (not interrupt contex=
-t).
-  */
- #define VMCI_FLAG_DG_NONE          0
--#define VMCI_FLAG_WELLKNOWN_DG_HND 0x1
--#define VMCI_FLAG_ANYCID_DG_HND    0x2
--#define VMCI_FLAG_DG_DELAYED_CB    0x4
-+#define VMCI_FLAG_WELLKNOWN_DG_HND BIT(0)
-+#define VMCI_FLAG_ANYCID_DG_HND    BIT(1)
-+#define VMCI_FLAG_DG_DELAYED_CB    BIT(2)
-=20
- /*
-  * Maximum supported size of a VMCI datagram for routable datagrams.
-@@ -694,7 +694,7 @@ struct vmci_qp_detach_msg {
- };
-=20
- /* VMCI Doorbell API. */
--#define VMCI_FLAG_DELAYED_CB 0x01
-+#define VMCI_FLAG_DELAYED_CB BIT(0)
-=20
- typedef void (*vmci_callback) (void *client_data);
-=20
---=20
-2.19.1
+							Thanx, Paul
+
+> Thanks,
+> NeilBrown
+> 
+> 
+> >
+> > 							Thanx, Paul
+> >
+> >> > NeilBrown
+> >> > 
+> >> > >
+> >> > > 							Thanx, Paul
+> >> > >
+> >> > > ------------------------------------------------------------------------
+> >> > >
+> >> > > commit e3408141ed7d702995b2fdc94703af88aadd226b
+> >> > > Author: Paul E. McKenney <paulmck@linux.vnet.ibm.com>
+> >> > > Date:   Tue Jul 24 15:28:09 2018 -0700
+> >> > >
+> >> > >     rcu: Provide functions for determining if call_rcu() has been invoked
+> >> > >     
+> >> > >     This commit adds rcu_head_init() and rcu_head_after_call_rcu() functions
+> >> > >     to help RCU users detect when another CPU has passed the specified
+> >> > >     rcu_head structure and function to call_rcu().  The rcu_head_init()
+> >> > >     should be invoked before making the structure visible to RCU readers,
+> >> > >     and then the rcu_head_after_call_rcu() may be invoked from within
+> >> > >     an RCU read-side critical section on an rcu_head structure that
+> >> > >     was obtained during a traversal of the data structure in question.
+> >> > >     The rcu_head_after_call_rcu() function will return true if the rcu_head
+> >> > >     structure has already been passed (with the specified function) to
+> >> > >     call_rcu(), otherwise it will return false.
+> >> > >     
+> >> > >     If rcu_head_init() has not been invoked on the rcu_head structure
+> >> > >     or if the rcu_head (AKA callback) has already been invoked, then
+> >> > >     rcu_head_after_call_rcu() will do WARN_ON_ONCE().
+> >> > >     
+> >> > >     Reported-by: NeilBrown <neilb@suse.com>
+> >> > >     Signed-off-by: Paul E. McKenney <paulmck@linux.vnet.ibm.com>
+> >> > >     [ paulmck: Apply neilb naming feedback. ]
+> >> > >
+> >> > > diff --git a/include/linux/rcupdate.h b/include/linux/rcupdate.h
+> >> > > index e4f821165d0b..4db8bcacc51a 100644
+> >> > > --- a/include/linux/rcupdate.h
+> >> > > +++ b/include/linux/rcupdate.h
+> >> > > @@ -857,6 +857,46 @@ static inline notrace void rcu_read_unlock_sched_notrace(void)
+> >> > >  #endif /* #else #ifdef CONFIG_ARCH_WEAK_RELEASE_ACQUIRE */
+> >> > >  
+> >> > >  
+> >> > > +/* Has the specified rcu_head structure been handed to call_rcu()? */
+> >> > > +
+> >> > > +/*
+> >> > > + * rcu_head_init - Initialize rcu_head for rcu_head_after_call_rcu()
+> >> > > + * @rhp: The rcu_head structure to initialize.
+> >> > > + *
+> >> > > + * If you intend to invoke rcu_head_after_call_rcu() to test whether a
+> >> > > + * given rcu_head structure has already been passed to call_rcu(), then
+> >> > > + * you must also invoke this rcu_head_init() function on it just after
+> >> > > + * allocating that structure.  Calls to this function must not race with
+> >> > > + * calls to call_rcu(), rcu_head_after_call_rcu(), or callback invocation.
+> >> > > + */
+> >> > > +static inline void rcu_head_init(struct rcu_head *rhp)
+> >> > > +{
+> >> > > +	rhp->func = (rcu_callback_t)~0L;
+> >> > > +}
+> >> > > +
+> >> > > +/*
+> >> > > + * rcu_head_after_call_rcu - Has this rcu_head been passed to call_rcu()?
+> >> > > + * @rhp: The rcu_head structure to test.
+> >> > > + * @func: The function passed to call_rcu() along with @rhp.
+> >> > > + *
+> >> > > + * Returns @true if the @rhp has been passed to call_rcu() with @func,
+> >> > > + * and @false otherwise.  Emits a warning in any other case, including
+> >> > > + * the case where @rhp has already been invoked after a grace period.
+> >> > > + * Calls to this function must not race with callback invocation.  One way
+> >> > > + * to avoid such races is to enclose the call to rcu_head_after_call_rcu()
+> >> > > + * in an RCU read-side critical section that includes a read-side fetch
+> >> > > + * of the pointer to the structure containing @rhp.
+> >> > > + */
+> >> > > +static inline bool
+> >> > > +rcu_head_after_call_rcu(struct rcu_head *rhp, rcu_callback_t f)
+> >> > > +{
+> >> > > +	if (READ_ONCE(rhp->func) == f)
+> >> > > +		return true;
+> >> > > +	WARN_ON_ONCE(READ_ONCE(rhp->func) != (rcu_callback_t)~0L);
+> >> > > +	return false;
+> >> > > +}
+> >> > > +
+> >> > > +
+> >> > >  /* Transitional pre-consolidation compatibility definitions. */
+> >> > >  
+> >> > >  static inline void synchronize_rcu_bh(void)
+> >> > > diff --git a/kernel/rcu/rcu.h b/kernel/rcu/rcu.h
+> >> > > index 5dec94509a7e..4c56c1d98fb3 100644
+> >> > > --- a/kernel/rcu/rcu.h
+> >> > > +++ b/kernel/rcu/rcu.h
+> >> > > @@ -224,6 +224,7 @@ void kfree(const void *);
+> >> > >   */
+> >> > >  static inline bool __rcu_reclaim(const char *rn, struct rcu_head *head)
+> >> > >  {
+> >> > > +	rcu_callback_t f;
+> >> > >  	unsigned long offset = (unsigned long)head->func;
+> >> > >  
+> >> > >  	rcu_lock_acquire(&rcu_callback_map);
+> >> > > @@ -234,7 +235,9 @@ static inline bool __rcu_reclaim(const char *rn, struct rcu_head *head)
+> >> > >  		return true;
+> >> > >  	} else {
+> >> > >  		RCU_TRACE(trace_rcu_invoke_callback(rn, head);)
+> >> > > -		head->func(head);
+> >> > > +		f = head->func;
+> >> > > +		WRITE_ONCE(head->func, (rcu_callback_t)0L);
+> >> > > +		f(head);
+> >> > >  		rcu_lock_release(&rcu_callback_map);
+> >> > >  		return false;
+> >> > >  	}
+> >> 
+> >> 
+
 
