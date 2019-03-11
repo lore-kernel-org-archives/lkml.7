@@ -2,95 +2,116 @@ Return-Path: <SRS0=FxTY=RO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS autolearn=ham
+X-Spam-Status: No, score=-3.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_NEOMUTT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 29CBCC43381
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 Mar 2019 14:03:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3F521C43381
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 Mar 2019 14:04:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E97A120657
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 Mar 2019 14:03:48 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="Mm28mot+";
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="dp0pSymG"
+	by mail.kernel.org (Postfix) with ESMTP id 0E5FE20657
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 Mar 2019 14:04:08 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727751AbfCKODr (ORCPT
+        id S1727758AbfCKOEH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 11 Mar 2019 10:03:47 -0400
-Received: from smtp.codeaurora.org ([198.145.29.96]:41300 "EHLO
-        smtp.codeaurora.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727469AbfCKODr (ORCPT
+        Mon, 11 Mar 2019 10:04:07 -0400
+Received: from relay8-d.mail.gandi.net ([217.70.183.201]:55385 "EHLO
+        relay8-d.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727469AbfCKOEG (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 11 Mar 2019 10:03:47 -0400
-Received: by smtp.codeaurora.org (Postfix, from userid 1000)
-        id F25EB60DAD; Mon, 11 Mar 2019 14:03:45 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
-        s=default; t=1552313026;
-        bh=rz3hpzhYgGZX+8d6angQRiM2LfoJqX1KFo32hfT+/ho=;
-        h=From:To:Cc:Subject:References:Date:In-Reply-To:From;
-        b=Mm28mot+AnDLGjzpKCpXpJhjEF0veKfewlvbznM+Qd0Q0lap1JvORB0mp9xc55SEw
-         wTRbTCbY1a8olx5fMINSpPNYxxtlm5SnGQ+u86y9c+GBt/t2D//FyEt41JL7jMpQ30
-         SqArGQtVZSlCSkOLnHihKCx/+dZjJuz8+Bsu8DBs=
-Received: from x230.qca.qualcomm.com (87-95-203-65.bb.dnainternet.fi [87.95.203.65])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        (Authenticated sender: kvalo@smtp.codeaurora.org)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id B693260CED;
-        Mon, 11 Mar 2019 14:03:40 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
-        s=default; t=1552313023;
-        bh=rz3hpzhYgGZX+8d6angQRiM2LfoJqX1KFo32hfT+/ho=;
-        h=From:To:Cc:Subject:References:Date:In-Reply-To:From;
-        b=dp0pSymG8EmWjTv0abskzeHgYzU+W61G9wg0vpDjEUmrrGQvtV/79aqrivAOENej6
-         KoBOlxtdNrVDuQSA5eA9DMRGvgiMApXcL4E6xfyF7uLtEJDEun2x7N/IK+fBaS5DM9
-         dALHH7z+0rP9opgHZg+DPBSavSPmB261T/cFWu1M=
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org B693260CED
-Authentication-Results: pdx-caf-mail.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
-Authentication-Results: pdx-caf-mail.web.codeaurora.org; spf=none smtp.mailfrom=kvalo@codeaurora.org
-From:   Kalle Valo <kvalo@codeaurora.org>
-To:     ga58taw@mytum.de
-Cc:     Julius Niedworok <julius.n@gmx.net>,
-        linux-wireless@vger.kernel.org, david@redhat.com, nc@net.in.tum.de,
-        Johannes Berg <johannes@sipsolutions.net>,
-        "David S. Miller" <davem@davemloft.net>, netdev@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH RFC v2] mac80211: debugfs option to force TX status frames
-References: <e20962001ee10a0f90f8e2f1f8baafcf3b70e9dd.camel@sipsolutions.net>
-        <20190306200206.60916-1-julius.n@gmx.net>
-        <87k1hazo6r.fsf@purkki.adurom.net>
-        <20190307193045.a7awwn6mycloccq5@mission-control>
-Date:   Mon, 11 Mar 2019 16:03:38 +0200
-In-Reply-To: <20190307193045.a7awwn6mycloccq5@mission-control>
-        (ga58taw@mytum.de's message of "Thu, 7 Mar 2019 20:30:45 +0100")
-Message-ID: <87h8c98q4l.fsf@codeaurora.org>
-User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/24.5 (gnu/linux)
+        Mon, 11 Mar 2019 10:04:06 -0400
+X-Originating-IP: 90.88.150.179
+Received: from localhost (aaubervilliers-681-1-31-179.w90-88.abo.wanadoo.fr [90.88.150.179])
+        (Authenticated sender: maxime.ripard@bootlin.com)
+        by relay8-d.mail.gandi.net (Postfix) with ESMTPSA id D4FEF1BF218;
+        Mon, 11 Mar 2019 14:04:02 +0000 (UTC)
+Date:   Mon, 11 Mar 2019 15:04:02 +0100
+From:   Maxime Ripard <maxime.ripard@bootlin.com>
+To:     Jagan Teki <jagan@amarulasolutions.com>
+Cc:     David Airlie <airlied@linux.ie>, Daniel Vetter <daniel@ffwll.ch>,
+        Chen-Yu Tsai <wens@csie.org>,
+        dri-devel <dri-devel@lists.freedesktop.org>,
+        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        linux-amarula@amarulasolutions.com,
+        Michael Trimarchi <michael@amarulasolutions.com>,
+        linux-sunxi <linux-sunxi@googlegroups.com>
+Subject: Re: [PATCH v9 3/5] drm/sun4i: sun6i_mipi_dsi: Support vblk timing
+ for 4-lane devices
+Message-ID: <20190311140402.ie7abxda6pizrybj@flea>
+References: <20190303173527.31055-1-jagan@amarulasolutions.com>
+ <20190303173527.31055-4-jagan@amarulasolutions.com>
+ <20190304154911.s6rcx6bzal5slcjk@flea>
+ <CAMty3ZBVh_PTYB-HmLCUuRsH+4NU=CaeXdKtNYqEDHHZuRGCvw@mail.gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature"; boundary="mqq4mfoclpdqed4k"
+Content-Disposition: inline
+In-Reply-To: <CAMty3ZBVh_PTYB-HmLCUuRsH+4NU=CaeXdKtNYqEDHHZuRGCvw@mail.gmail.com>
+User-Agent: NeoMutt/20180716
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-ga58taw@mytum.de writes:
 
-> On Thu, Mar 07, 2019 at 05:42:04PM +0200, Kalle Valo wrote:
->> > +   len = scnprintf(buf, sizeof(buf), "%d\n", (int)local->force_tx_status);
->>
->> I wonder about the cast, is it guaranteed that a bool is always of the
->> same size as an int?
->
-> Why is this a problem? If a bool is smaller than an int, the compiler
-> emits code that will prepend the value of force_tx_status with zeros.
+--mqq4mfoclpdqed4k
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-Let's say that a bool is a byte and int is four bytes. If you use "%d" I
-would guess that in that case scnprintf() writes 4 bytes, meaning that 3
-bytes will be overwriting either padding or some other field in the
-struct.
+On Thu, Mar 07, 2019 at 09:33:38PM +0530, Jagan Teki wrote:
+> On Mon, Mar 4, 2019 at 9:19 PM Maxime Ripard <maxime.ripard@bootlin.com> =
+wrote:
+> >
+> > On Sun, Mar 03, 2019 at 11:05:25PM +0530, Jagan Teki wrote:
+> > > Like other dsi setup timings, or hblk for that matter vblk would
+> > > also require compute the timings based payload equation along with
+> > > packet overhead.
+> > >
+> > > But, on the other hand vblk computation is also depends on device
+> > > lane number.
+> > > - for 4 lane devices, it is computed based on vtotal, packet overhead
+> > >   along with hblk value.
+> > > - for others devices, it is simply 0
+> > >
+> > > BSP code from BPI-M64-bsp is computing vblk as for 4-lane devices
+> > > (from linux-sunxi
+> > > drivers/video/sunxi/disp2/disp/de/lowlevel_sun50iw1/de_dsi.c)
+> > >
+> > > tmp =3D (ht*dsi_pixel_bits[format]/8)*vt-(4+dsi_hblk+2);
+> > > dsi_vblk =3D (lane-tmp%lane);
+> > >
+> > > So, update the vblk timing calculation to support all type of
+> > > devices.
+> > >
+> > > Tested on 2-lane, 4-lane MIPI-DSI LCD panels.
+> >
+> > You should be explaining which issue you faced, in which setup, what
+> > were its symptoms and how that solution is fixing it.
+>=20
+> No, it is not a fix, didn't specify either. it is vblk timings support
+> like others dsi timings.
 
-But I'm no compiler expert so I'm not going to argue about this anymore.
-I just wanted to point out that that the cast looks dangerous and I
-would not do it.
+So it's not fixing anything, and this isn't a new feature
+either. What's the point then?
 
--- 
-Kalle Valo
+Maxime
+
+--=20
+Maxime Ripard, Bootlin
+Embedded Linux and Kernel engineering
+https://bootlin.com
+
+--mqq4mfoclpdqed4k
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iHUEABYIAB0WIQRcEzekXsqa64kGDp7j7w1vZxhRxQUCXIZqzQAKCRDj7w1vZxhR
+xUl8AQDzpIsbwiyzkZ+aez3Ix0wICtijzP4KTpfNcIYEUUirFwEArgbMtnpsg02j
+EKB2JBz7nYOOkaycbCvOS/Je1lNDPw0=
+=rN6W
+-----END PGP SIGNATURE-----
+
+--mqq4mfoclpdqed4k--
