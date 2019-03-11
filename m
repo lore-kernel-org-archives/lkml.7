@@ -2,152 +2,364 @@ Return-Path: <SRS0=FxTY=RO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,NORMAL_HTTP_TO_IP,SPF_PASS,UNPARSEABLE_RELAY autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4F208C43381
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 Mar 2019 02:13:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6E9CCC4360F
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 Mar 2019 02:31:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2001C20652
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 Mar 2019 02:13:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3E19E206DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 Mar 2019 02:31:40 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727193AbfCKCM5 (ORCPT
+        id S1727236AbfCKCbi (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 10 Mar 2019 22:12:57 -0400
-Received: from out30-131.freemail.mail.aliyun.com ([115.124.30.131]:38869 "EHLO
-        out30-131.freemail.mail.aliyun.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727072AbfCKCM5 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 10 Mar 2019 22:12:57 -0400
-X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R251e4;CH=green;DM=||false|;FP=0|-1|-1|-1|0|-1|-1|-1;HT=e01f04391;MF=alex.shi@linux.alibaba.com;NM=1;PH=DS;RN=9;SR=0;TI=SMTPD_---0TMRKbkC_1552270369;
-Received: from Alexs-MacBook-Pro.local(mailfrom:alex.shi@linux.alibaba.com fp:SMTPD_---0TMRKbkC_1552270369)
-          by smtp.aliyun-inc.com(127.0.0.1);
-          Mon, 11 Mar 2019 10:12:50 +0800
-Subject: Re: [PATCH v3 00/31] clean up and reorg Chinese kernel docs
-To:     linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
-        harryxiyou@gmail.com, corbet@lwn.net, Coly Li <colyli@suse.de>,
-        Fengguang Wu <fengguang.wu@intel.com>,
-        Li Zefan <lizefan@huawei.com>,
-        Shawn Guo <shawn.guo@linaro.org>, Li Yang <leoyang.li@nxp.com>
-References: <20190308030918.22337-1-alex.shi@linux.alibaba.com>
-From:   Alex Shi <alex.shi@linux.alibaba.com>
-Message-ID: <13549ad2-6a3e-5bc3-9e47-3e20fd720fd8@linux.alibaba.com>
-Date:   Mon, 11 Mar 2019 10:12:49 +0800
-User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.14; rv:60.0)
- Gecko/20100101 Thunderbird/60.5.0
+        Sun, 10 Mar 2019 22:31:38 -0400
+Received: from szxga04-in.huawei.com ([45.249.212.190]:4664 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1727099AbfCKCbi (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 10 Mar 2019 22:31:38 -0400
+Received: from DGGEMS403-HUB.china.huawei.com (unknown [172.30.72.59])
+        by Forcepoint Email with ESMTP id 0BF8857AE6A66C4859E2;
+        Mon, 11 Mar 2019 10:31:36 +0800 (CST)
+Received: from 138.huawei.com (10.175.124.28) by smtp.huawei.com (10.3.19.203)
+ with Microsoft SMTP Server (TLS) id 14.3.408.0; Mon, 11 Mar 2019 10:31:26
+ +0800
+From:   Gao Xiang <gaoxiang25@huawei.com>
+To:     <stable@vger.kernel.org>
+CC:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        <linux-erofs@lists.ozlabs.org>, Chao Yu <yuchao0@huawei.com>,
+        Chao Yu <chao@kernel.org>, Miao Xie <miaoxie@huawei.com>,
+        Fang Wei <fangwei1@huawei.com>,
+        Gao Xiang <gaoxiang25@huawei.com>
+Subject: [PATCH RESEND for-5.0 1/2] staging: erofs: keep corrupted fs from crashing kernel in erofs_namei()
+Date:   Mon, 11 Mar 2019 10:29:31 +0800
+Message-ID: <20190311022932.13539-1-gaoxiang25@huawei.com>
+X-Mailer: git-send-email 2.14.5
 MIME-Version: 1.0
-In-Reply-To: <20190308030918.22337-1-alex.shi@linux.alibaba.com>
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 8bit
-Content-Language: en-US
+Content-Type: text/plain
+X-Originating-IP: [10.175.124.28]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-CC more active Chinese peoples.
+commit 419d6efc50e94bcf5d6b35cd8c71f79edadec564 upstream.
 
-Hi Harry,
+As Al pointed out, "
+... and while we are at it, what happens to
+	unsigned int nameoff = le16_to_cpu(de[mid].nameoff);
+	unsigned int matched = min(startprfx, endprfx);
 
-Could you please give some comments as the patch series is updated to v3 and I can't see any problem of this series?
+	struct qstr dname = QSTR_INIT(data + nameoff,
+		unlikely(mid >= ndirents - 1) ?
+			maxsize - nameoff :
+			le16_to_cpu(de[mid + 1].nameoff) - nameoff);
 
-There could do more on the processing docs translation, but as the first step, we want comments from Chinese doc maintainer.
+	/* string comparison without already matched prefix */
+	int ret = dirnamecmp(name, &dname, &matched);
+if le16_to_cpu(de[...].nameoff) is not monotonically increasing?  I.e.
+what's to prevent e.g. (unsigned)-1 ending up in dname.len?
 
-Thanks
-Alex
- 
-On 2019/3/8 11:08 上午, Alex Shi wrote:
-> Hi All,
->
-> The following patches change existing Chinese kernel docs to rst format
-> and reorg them to make them alive in 'make htmldocs'.
->
-> you can view the generated htmldocs from:
-> 	http://176.122.172.82/translations/zh_CN/index.html 
->
-> Or make and review docs on your self box:
->
-> 	make htmldocs SPHINXDIRS=translations/zh_CN 
-> 	lynx Documentation/output/translations/zh_CN/index.html
->
-> Any comments are appreciated!
->
-> V3 changes:
-> 1, fix a zh_CN/index.rst display issue
-> 2, update .mailmap for zh_CN transolators'r email address
->
-> V2 changes:
-> 1, change the disclaimer file to Chinese version,
-> 2, replace the obsolete translator's email address in related files.
-> 3, fix couple of format issues in couple files
->
-> Cheers!
-> Alex
->
->
-> Alex Shi (31):
->   docs/zh_CN: add disclaimer file
->   docs/zh_CN: move process related docs into process dir
->   docs/zh_CN: change Chinese index to know process dir
->   docs/zh_CN: add index file into process dir
->   docs/zh_CN: rename HOWTO into process directory
->   docs/zh_CN: howto format changes
->   docs/zh_CN: rename SubmittingPatches for html links
->   docs/zh_CN: format the submitting-patches doc to rst
->   docs/zh_CN: rename stable_kernel_rules doc
->   docs/zh_CN: rst format change for stable-kernel-rules
->   docs/zh_CN: rename email-clients.txt as email-clients.rst
->   docs/zh_CN: do rst format for email-clients.rst
->   docs/zh_CN: rename volatile-consider-harmful doc
->   docs/zh_CN: volatile doc format changes
->   docs/zh_CN: rename SubmittingDrivers
->   docs/zh_CN: format submitting drivers as rst
->   docs/zh_CN: rename magic-numbers as rst doc
->   docs/zh_CN: format the magic-number doc as rst
->   docs/zh_CN: rename stable_api_nonsense.txt as stable-api-nonsense.rst
->   docs/zh_CN: format stable-api-nonsense
->   docs/zh_CN: update Li Yang's email address
->   mailmap: update Li Yang's email address
->   docs/zh_CN: update Zhang Wei's email address
->   mailmap: update email address for Triplex
->   docs/zh_CN: update TripleX chung's email address
->   docs/zh_CN: fix rst format errors in howto.rst
->   docs/zh_CN: fix indent issue in stable-api-nonsense file
->   docs/zh_CN: fix indent issue in submitting-drivers
->   docs/zh_CN: fix rst format issue in submitting-patch
->   docs/zh_CN: remove zh-kernel.org in MAINTAINERS
->   mailmap: update my obsolete email address
->
->  .mailmap                                      |   6 +
->  .../translations/zh_CN/disclaimer-zh_CN.rst   |   9 ++
->  Documentation/translations/zh_CN/index.rst    |  17 +-
->  .../translations/zh_CN/magic-number.txt       | 153 ------------------
->  .../translations/zh_CN/oops-tracing.txt       |   2 +-
->  .../zh_CN/{ => process}/coding-style.rst      |   0
->  .../email-clients.rst}                        |  53 +++---
->  .../zh_CN/{HOWTO => process/howto.rst}        |  69 +++++---
->  .../translations/zh_CN/process/index.rst      |  53 ++++++
->  .../zh_CN/process/magic-number.rst            | 151 +++++++++++++++++
->  .../stable-api-nonsense.rst}                  |  67 ++++----
->  .../stable-kernel-rules.rst}                  |  32 ++--
->  .../submitting-drivers.rst}                   |  34 ++--
->  .../submitting-patches.rst}                   |  60 ++++---
->  .../volatile-considered-harmful.rst}          |  35 ++--
->  Documentation/translations/zh_CN/sparse.txt   |   6 +-
->  MAINTAINERS                                   |   1 -
->  17 files changed, 408 insertions(+), 340 deletions(-)
->  create mode 100644 Documentation/translations/zh_CN/disclaimer-zh_CN.rst
->  delete mode 100644 Documentation/translations/zh_CN/magic-number.txt
->  rename Documentation/translations/zh_CN/{ => process}/coding-style.rst (100%)
->  rename Documentation/translations/zh_CN/{email-clients.txt => process/email-clients.rst} (82%)
->  rename Documentation/translations/zh_CN/{HOWTO => process/howto.rst} (95%)
->  create mode 100644 Documentation/translations/zh_CN/process/index.rst
->  create mode 100644 Documentation/translations/zh_CN/process/magic-number.rst
->  rename Documentation/translations/zh_CN/{stable_api_nonsense.txt => process/stable-api-nonsense.rst} (80%)
->  rename Documentation/translations/zh_CN/{stable_kernel_rules.txt => process/stable-kernel-rules.rst} (76%)
->  rename Documentation/translations/zh_CN/{SubmittingDrivers => process/submitting-drivers.rst} (86%)
->  rename Documentation/translations/zh_CN/{SubmittingPatches => process/submitting-patches.rst} (92%)
->  rename Documentation/translations/zh_CN/{volatile-considered-harmful.txt => process/volatile-considered-harmful.rst} (81%)
->
+Corrupted fs image shouldn't oops the kernel.. "
+
+Revisit the related lookup flow to address the issue.
+
+Fixes: d72d1ce60174 ("staging: erofs: add namei functions")
+Cc: <stable@vger.kernel.org> # 4.19+
+Suggested-by: Al Viro <viro@ZenIV.linux.org.uk>
+Signed-off-by: Gao Xiang <gaoxiang25@huawei.com>
+---
+
+resend:
+ - add LKML and linux-erofs mailing list to cc
+
+This series resolves the following conflicts:
+FAILED: patch "[PATCH] staging: erofs: keep corrupted fs from crashing kernel in" failed to apply to 5.0-stable tree
+FAILED: patch "[PATCH] staging: erofs: compressed_pages should not be accessed again" failed to apply to 5.0-stable tree
+
+ drivers/staging/erofs/namei.c | 183 ++++++++++++++++++++++--------------------
+ 1 file changed, 97 insertions(+), 86 deletions(-)
+
+diff --git a/drivers/staging/erofs/namei.c b/drivers/staging/erofs/namei.c
+index 5596c52e246d..ecc51ef0753f 100644
+--- a/drivers/staging/erofs/namei.c
++++ b/drivers/staging/erofs/namei.c
+@@ -15,74 +15,77 @@
+ 
+ #include <trace/events/erofs.h>
+ 
+-/* based on the value of qn->len is accurate */
+-static inline int dirnamecmp(struct qstr *qn,
+-	struct qstr *qd, unsigned int *matched)
++struct erofs_qstr {
++	const unsigned char *name;
++	const unsigned char *end;
++};
++
++/* based on the end of qn is accurate and it must have the trailing '\0' */
++static inline int dirnamecmp(const struct erofs_qstr *qn,
++			     const struct erofs_qstr *qd,
++			     unsigned int *matched)
+ {
+-	unsigned int i = *matched, len = min(qn->len, qd->len);
+-loop:
+-	if (unlikely(i >= len)) {
+-		*matched = i;
+-		if (qn->len < qd->len) {
+-			/*
+-			 * actually (qn->len == qd->len)
+-			 * when qd->name[i] == '\0'
+-			 */
+-			return qd->name[i] == '\0' ? 0 : -1;
++	unsigned int i = *matched;
++
++	/*
++	 * on-disk error, let's only BUG_ON in the debugging mode.
++	 * otherwise, it will return 1 to just skip the invalid name
++	 * and go on (in consideration of the lookup performance).
++	 */
++	DBG_BUGON(qd->name > qd->end);
++
++	/* qd could not have trailing '\0' */
++	/* However it is absolutely safe if < qd->end */
++	while (qd->name + i < qd->end && qd->name[i] != '\0') {
++		if (qn->name[i] != qd->name[i]) {
++			*matched = i;
++			return qn->name[i] > qd->name[i] ? 1 : -1;
+ 		}
+-		return (qn->len > qd->len);
++		++i;
+ 	}
+-
+-	if (qn->name[i] != qd->name[i]) {
+-		*matched = i;
+-		return qn->name[i] > qd->name[i] ? 1 : -1;
+-	}
+-
+-	++i;
+-	goto loop;
++	*matched = i;
++	/* See comments in __d_alloc on the terminating NUL character */
++	return qn->name[i] == '\0' ? 0 : 1;
+ }
+ 
+-static struct erofs_dirent *find_target_dirent(
+-	struct qstr *name,
+-	u8 *data, int maxsize)
++#define nameoff_from_disk(off, sz)	(le16_to_cpu(off) & ((sz) - 1))
++
++static struct erofs_dirent *find_target_dirent(struct erofs_qstr *name,
++					       u8 *data,
++					       unsigned int dirblksize,
++					       const int ndirents)
+ {
+-	unsigned int ndirents, head, back;
++	int head, back;
+ 	unsigned int startprfx, endprfx;
+ 	struct erofs_dirent *const de = (struct erofs_dirent *)data;
+ 
+-	/* make sure that maxsize is valid */
+-	BUG_ON(maxsize < sizeof(struct erofs_dirent));
+-
+-	ndirents = le16_to_cpu(de->nameoff) / sizeof(*de);
+-
+-	/* corrupted dir (may be unnecessary...) */
+-	BUG_ON(!ndirents);
+-
+-	head = 0;
++	/* since the 1st dirent has been evaluated previously */
++	head = 1;
+ 	back = ndirents - 1;
+ 	startprfx = endprfx = 0;
+ 
+ 	while (head <= back) {
+-		unsigned int mid = head + (back - head) / 2;
+-		unsigned int nameoff = le16_to_cpu(de[mid].nameoff);
++		const int mid = head + (back - head) / 2;
++		const int nameoff = nameoff_from_disk(de[mid].nameoff,
++						      dirblksize);
+ 		unsigned int matched = min(startprfx, endprfx);
+-
+-		struct qstr dname = QSTR_INIT(data + nameoff,
+-			unlikely(mid >= ndirents - 1) ?
+-				maxsize - nameoff :
+-				le16_to_cpu(de[mid + 1].nameoff) - nameoff);
++		struct erofs_qstr dname = {
++			.name = data + nameoff,
++			.end = unlikely(mid >= ndirents - 1) ?
++				data + dirblksize :
++				data + nameoff_from_disk(de[mid + 1].nameoff,
++							 dirblksize)
++		};
+ 
+ 		/* string comparison without already matched prefix */
+ 		int ret = dirnamecmp(name, &dname, &matched);
+ 
+-		if (unlikely(!ret))
++		if (unlikely(!ret)) {
+ 			return de + mid;
+-		else if (ret > 0) {
++		} else if (ret > 0) {
+ 			head = mid + 1;
+ 			startprfx = matched;
+-		} else if (unlikely(mid < 1))	/* fix "mid" overflow */
+-			break;
+-		else {
++		} else {
+ 			back = mid - 1;
+ 			endprfx = matched;
+ 		}
+@@ -91,12 +94,12 @@ static struct erofs_dirent *find_target_dirent(
+ 	return ERR_PTR(-ENOENT);
+ }
+ 
+-static struct page *find_target_block_classic(
+-	struct inode *dir,
+-	struct qstr *name, int *_diff)
++static struct page *find_target_block_classic(struct inode *dir,
++					      struct erofs_qstr *name,
++					      int *_ndirents)
+ {
+ 	unsigned int startprfx, endprfx;
+-	unsigned int head, back;
++	int head, back;
+ 	struct address_space *const mapping = dir->i_mapping;
+ 	struct page *candidate = ERR_PTR(-ENOENT);
+ 
+@@ -105,41 +108,43 @@ static struct page *find_target_block_classic(
+ 	back = inode_datablocks(dir) - 1;
+ 
+ 	while (head <= back) {
+-		unsigned int mid = head + (back - head) / 2;
++		const int mid = head + (back - head) / 2;
+ 		struct page *page = read_mapping_page(mapping, mid, NULL);
+ 
+-		if (IS_ERR(page)) {
+-exact_out:
+-			if (!IS_ERR(candidate)) /* valid candidate */
+-				put_page(candidate);
+-			return page;
+-		} else {
+-			int diff;
+-			unsigned int ndirents, matched;
+-			struct qstr dname;
++		if (!IS_ERR(page)) {
+ 			struct erofs_dirent *de = kmap_atomic(page);
+-			unsigned int nameoff = le16_to_cpu(de->nameoff);
+-
+-			ndirents = nameoff / sizeof(*de);
++			const int nameoff = nameoff_from_disk(de->nameoff,
++							      EROFS_BLKSIZ);
++			const int ndirents = nameoff / sizeof(*de);
++			int diff;
++			unsigned int matched;
++			struct erofs_qstr dname;
+ 
+-			/* corrupted dir (should have one entry at least) */
+-			BUG_ON(!ndirents || nameoff > PAGE_SIZE);
++			if (unlikely(!ndirents)) {
++				DBG_BUGON(1);
++				kunmap_atomic(de);
++				put_page(page);
++				page = ERR_PTR(-EIO);
++				goto out;
++			}
+ 
+ 			matched = min(startprfx, endprfx);
+ 
+ 			dname.name = (u8 *)de + nameoff;
+-			dname.len = ndirents == 1 ?
+-				/* since the rest of the last page is 0 */
+-				EROFS_BLKSIZ - nameoff
+-				: le16_to_cpu(de[1].nameoff) - nameoff;
++			if (ndirents == 1)
++				dname.end = (u8 *)de + EROFS_BLKSIZ;
++			else
++				dname.end = (u8 *)de +
++					nameoff_from_disk(de[1].nameoff,
++							  EROFS_BLKSIZ);
+ 
+ 			/* string comparison without already matched prefix */
+ 			diff = dirnamecmp(name, &dname, &matched);
+ 			kunmap_atomic(de);
+ 
+ 			if (unlikely(!diff)) {
+-				*_diff = 0;
+-				goto exact_out;
++				*_ndirents = 0;
++				goto out;
+ 			} else if (diff > 0) {
+ 				head = mid + 1;
+ 				startprfx = matched;
+@@ -147,45 +152,51 @@ static struct page *find_target_block_classic(
+ 				if (likely(!IS_ERR(candidate)))
+ 					put_page(candidate);
+ 				candidate = page;
++				*_ndirents = ndirents;
+ 			} else {
+ 				put_page(page);
+ 
+-				if (unlikely(mid < 1))	/* fix "mid" overflow */
+-					break;
+-
+ 				back = mid - 1;
+ 				endprfx = matched;
+ 			}
++			continue;
+ 		}
++out:		/* free if the candidate is valid */
++		if (!IS_ERR(candidate))
++			put_page(candidate);
++		return page;
+ 	}
+-	*_diff = 1;
+ 	return candidate;
+ }
+ 
+ int erofs_namei(struct inode *dir,
+-	struct qstr *name,
+-	erofs_nid_t *nid, unsigned int *d_type)
++		struct qstr *name,
++		erofs_nid_t *nid, unsigned int *d_type)
+ {
+-	int diff;
++	int ndirents;
+ 	struct page *page;
+-	u8 *data;
++	void *data;
+ 	struct erofs_dirent *de;
++	struct erofs_qstr qn;
+ 
+ 	if (unlikely(!dir->i_size))
+ 		return -ENOENT;
+ 
+-	diff = 1;
+-	page = find_target_block_classic(dir, name, &diff);
++	qn.name = name->name;
++	qn.end = name->name + name->len;
++
++	ndirents = 0;
++	page = find_target_block_classic(dir, &qn, &ndirents);
+ 
+ 	if (unlikely(IS_ERR(page)))
+ 		return PTR_ERR(page);
+ 
+ 	data = kmap_atomic(page);
+ 	/* the target page has been mapped */
+-	de = likely(diff) ?
+-		/* since the rest of the last page is 0 */
+-		find_target_dirent(name, data, EROFS_BLKSIZ) :
+-		(struct erofs_dirent *)data;
++	if (ndirents)
++		de = find_target_dirent(&qn, data, EROFS_BLKSIZ, ndirents);
++	else
++		de = (struct erofs_dirent *)data;
+ 
+ 	if (likely(!IS_ERR(de))) {
+ 		*nid = le64_to_cpu(de->nid);
+-- 
+2.14.5
 
