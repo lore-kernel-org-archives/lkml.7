@@ -2,364 +2,160 @@ Return-Path: <SRS0=FxTY=RO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A1B3BC43381
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 Mar 2019 03:12:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 17AA7C43381
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 Mar 2019 03:32:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5194220652
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 Mar 2019 03:12:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D195220657
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 Mar 2019 03:32:48 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="PQ9KOjU/"
+	dkim=pass (1024-bit key) header.d=broadcom.com header.i=@broadcom.com header.b="Ax602LMd"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727313AbfCKDMd (ORCPT
+        id S1727188AbfCKDcr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 10 Mar 2019 23:12:33 -0400
-Received: from mail-qk1-f194.google.com ([209.85.222.194]:37202 "EHLO
-        mail-qk1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726895AbfCKDMc (ORCPT
+        Sun, 10 Mar 2019 23:32:47 -0400
+Received: from mail-wr1-f67.google.com ([209.85.221.67]:37687 "EHLO
+        mail-wr1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726895AbfCKDcq (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 10 Mar 2019 23:12:32 -0400
-Received: by mail-qk1-f194.google.com with SMTP id m9so1903806qkl.4;
-        Sun, 10 Mar 2019 20:12:31 -0700 (PDT)
+        Sun, 10 Mar 2019 23:32:46 -0400
+Received: by mail-wr1-f67.google.com with SMTP id y15so1586029wro.4
+        for <linux-kernel@vger.kernel.org>; Sun, 10 Mar 2019 20:32:45 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
+        d=broadcom.com; s=google;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=Sk9q/XQEtotVicBryerq4eIMnQNZYUgLvxOTe2OLFf4=;
-        b=PQ9KOjU/sp4QDWZAZ6g8R/l7/WbJ+6kgeyMAHOHD6WmT+JKTIRLuSfStTvLUdSwiBL
-         JVJ6WKE5kg//YDv8L/oNVfBXnlEEDsk1jO5/W4Js5vL4O5SYmQfiSA2d0Pwj7XPBw6Df
-         b9sqfq1tDgtUwx/4w3nNRyKPeXU9bMJ6CqRq8kXpgY+3o56HBw8T7c+oEPGSeT6KrQd9
-         INHZjz8S1NXdcQj8ONNvHolo8vYUGu3raDGa+KSQtDOuP7jA9RgDB7gEut/joqVUfQ7l
-         nUO42tNOywiTUa0gp5FjaegcFlzTSIS3Wvfrc6R2RH7sBy5JfkOD3u04euEsLhxSQPV0
-         ErBg==
+         :cc;
+        bh=eprZ8cmXoh2OhO59jEglRlcZUCoRFQq0VHh61J/wlVk=;
+        b=Ax602LMdRKf06MjSYF+aGj3/q7oXrsgOiu8Mm7Dq69CYfDhurckZY7BapXTc+ZzzJj
+         MZX3qVPq1DLys/25gqnW3hkEfrM59o7BVU0PU7MKAvakJLzVIZUkbY41f/8keT2mO5YA
+         OhWuQFZCbBuOznoTzXCKGWhA0/uf2LovS6bSM=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=Sk9q/XQEtotVicBryerq4eIMnQNZYUgLvxOTe2OLFf4=;
-        b=kEahUKaQXZ9v0JahhbbU0YLJ8tYnrS7j4Qx6tiRPdSl9qfF/nBfPwTy8Aap/O+wAv/
-         HX3ZOcBIvLMvYll7cLaSPq69bQfoiLMZbjXBNIPhBGa7PGr853NEQJLmeQ3vn6BRuH+z
-         9vxaF7JC4Kh9VIqyoLLnOsEomSmFoV84evmfPsoJ9vk+zQyorXWlzIE+QhQDcvaWbFMn
-         5Y8dk7Nh6VK16ZWAYTYXX40ub+wXR4GceP/tN5XJmDYJvpUFamL5f90kPMb6xdLNZ47v
-         fMv1J5pKlzslNvOdpHRZhDKrSCNILLKswZ4SW7JmsXQ/05ssCdEJSQ3LYBUQTB8KxOZ0
-         b7TQ==
-X-Gm-Message-State: APjAAAVsjhqgIvSEfdyB5EQnAywXsgvczwPUZYJnkWvy+wR9iAqkrAt8
-        VJkwqC8DpZjhQGAZIC1NZo2fMnSkoNAuLGmV5Z8=
-X-Google-Smtp-Source: APXvYqwWOzJKzJzsES4/Is1pD+ZSerLieSfmet0/9L8qYszqTXZT1Vz75edKEvM3rWeIbmk6Fcm5bgv9sD8m1BIaBgo=
-X-Received: by 2002:a05:620a:12a5:: with SMTP id x5mr23024509qki.291.1552273951080;
- Sun, 10 Mar 2019 20:12:31 -0700 (PDT)
+         :message-id:subject:to:cc;
+        bh=eprZ8cmXoh2OhO59jEglRlcZUCoRFQq0VHh61J/wlVk=;
+        b=rW94HEhLlz2Kn1t9WyMJ9GbbPP8PvycXJpxbNFEgBa4dmDBZYLBb5hAjQZ1T1J5dK9
+         QW1++fr2++qXoKO5980ft5L3bxFJ6JZA1qxnCFvgUW9KJIdvQM+XPRMqrT6XvFFRE93h
+         fkKmKMHuECGOWliN7A2Y3HAHKHgD3gACPGDmqsNz5u8koRwsj5O9L9fe5yi1kmeEBYSz
+         FW09x8PTd0jJM0SWcj8TA9rgWxb0ZOHZtf2+FpHIsArXs836glZI/VCbM8dW97ZITNa6
+         D7FwkLr4oX7yeFzlxG0+q9ttrBPXRevSoyCK2iaN139GQnMcNXg3O/rlvTJ78phnYWkS
+         yThQ==
+X-Gm-Message-State: APjAAAX8vbM0i4Hpjt8onzYValJgVXm4gnRVOOn8gcykFcLQhFLr2UFa
+        /ZYTRnnm1qkReBvQuKfKQeOXWJZZdZg9SRrDvy9v1g==
+X-Google-Smtp-Source: APXvYqz/9R5ArHb2zL9mELHsbEiKNd+w17Du+LtSjwrRoOBcoFsc6vgj+qPCxmhihNluWgawbmZn6Lr1TMLJAXm2EBY=
+X-Received: by 2002:adf:9ecc:: with SMTP id b12mr18848219wrf.83.1552275164821;
+ Sun, 10 Mar 2019 20:32:44 -0700 (PDT)
 MIME-Version: 1.0
-References: <20190308162757.9260-1-lhenriques@suse.com> <20190308162757.9260-3-lhenriques@suse.com>
-In-Reply-To: <20190308162757.9260-3-lhenriques@suse.com>
-From:   "Yan, Zheng" <ukernel@gmail.com>
-Date:   Mon, 11 Mar 2019 11:12:19 +0800
-Message-ID: <CAAM7YAnDvg0y8qkdGjO-EEdC6s5dMeHHF-PgeAxPqN_LPSSrEA@mail.gmail.com>
-Subject: Re: [PATCH 2/2] ceph: quota: fix quota subdir mounts
-To:     Luis Henriques <lhenriques@suse.com>
-Cc:     "Yan, Zheng" <zyan@redhat.com>, Sage Weil <sage@redhat.com>,
-        Ilya Dryomov <idryomov@gmail.com>,
-        ceph-devel <ceph-devel@vger.kernel.org>,
+References: <1550658842-19167-1-git-send-email-srinath.mannam@broadcom.com>
+ <1550658842-19167-2-git-send-email-srinath.mannam@broadcom.com>
+ <20190222172042.GA6792@bogus> <CABe79T5SqQJhF0GY06-+-aSCV-ya-RODEeV0DLg0Poupjeq+fA@mail.gmail.com>
+ <CAL_JsqKyYoc3wLWGhbBdQxn=1NLhGbxfB2sUZUXm13_YTEyTGw@mail.gmail.com>
+In-Reply-To: <CAL_JsqKyYoc3wLWGhbBdQxn=1NLhGbxfB2sUZUXm13_YTEyTGw@mail.gmail.com>
+From:   Srinath Mannam <srinath.mannam@broadcom.com>
+Date:   Mon, 11 Mar 2019 09:02:33 +0530
+Message-ID: <CABe79T7LQFf9J67P=eo0sAn6oJ10ovciR4o3_Z_K=6NLjtyr3A@mail.gmail.com>
+Subject: Re: [PATCH v4 1/3] dt-bindings: phy: Add Stingray USB PHY binding document
+To:     Rob Herring <robh@kernel.org>
+Cc:     Mark Rutland <mark.rutland@arm.com>,
+        Kishon Vijay Abraham I <kishon@ti.com>,
+        Tejun Heo <tj@kernel.org>,
+        Jayachandran C <jnair@caviumnetworks.com>,
+        devicetree@vger.kernel.org,
         Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Hendrik Peyerl <hpeyerl@plusline.net>
+        BCM Kernel Feedback <bcm-kernel-feedback-list@broadcom.com>
 Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat, Mar 9, 2019 at 12:30 AM Luis Henriques <lhenriques@suse.com> wrote:
->
-> The CephFS kernel client does not enforce quotas set in a directory that =
-isn't
-> visible from the mount point.  For example, given the path '/dir1/dir2', =
-if quotas
-> are set in 'dir1' and the filesystem is mounted with
->
->   mount -t ceph <server>:<port>:/dir1/ /mnt
->
-> then the client won't be able to access 'dir1' inode, even if 'dir2' belo=
-ngs to
-> a quota realm that points to it.
->
-> This patch fixes this issue by simply doing an MDS LOOKUPINO operation fo=
-r
-> unknown inodes.  Any inode reference obtained this way will be added to a=
- list
-> in ceph_mds_client, and will only be released when the filesystem is umou=
-nted.
->
-> Link: https://tracker.ceph.com/issues/38482
-> Reported-by: Hendrik Peyerl <hpeyerl@plusline.net>
-> Signed-off-by: Luis Henriques <lhenriques@suse.com>
-> ---
->  fs/ceph/mds_client.c | 14 +++++++
->  fs/ceph/mds_client.h |  2 +
->  fs/ceph/quota.c      | 91 +++++++++++++++++++++++++++++++++++++++-----
->  fs/ceph/super.h      |  2 +
->  4 files changed, 99 insertions(+), 10 deletions(-)
->
-> diff --git a/fs/ceph/mds_client.c b/fs/ceph/mds_client.c
-> index 163fc74bf221..72c5ce5e4209 100644
-> --- a/fs/ceph/mds_client.c
-> +++ b/fs/ceph/mds_client.c
-> @@ -3656,6 +3656,8 @@ int ceph_mdsc_init(struct ceph_fs_client *fsc)
->         mdsc->max_sessions =3D 0;
->         mdsc->stopping =3D 0;
->         atomic64_set(&mdsc->quotarealms_count, 0);
-> +       INIT_LIST_HEAD(&mdsc->quotarealms_inodes_list);
-> +       spin_lock_init(&mdsc->quotarealms_inodes_lock);
->         mdsc->last_snap_seq =3D 0;
->         init_rwsem(&mdsc->snap_rwsem);
->         mdsc->snap_realms =3D RB_ROOT;
-> @@ -3726,9 +3728,21 @@ static void wait_requests(struct ceph_mds_client *=
-mdsc)
->   */
->  void ceph_mdsc_pre_umount(struct ceph_mds_client *mdsc)
->  {
-> +       struct ceph_inode_info *ci;
-> +
->         dout("pre_umount\n");
->         mdsc->stopping =3D 1;
->
-> +       spin_lock(&mdsc->quotarealms_inodes_lock);
-> +       while(!list_empty(&mdsc->quotarealms_inodes_list)) {
-> +               ci =3D list_first_entry(&mdsc->quotarealms_inodes_list,
-> +                                     struct ceph_inode_info,
-> +                                     i_quotarealms_inode_item);
-> +               list_del(&ci->i_quotarealms_inode_item);
-> +               iput(&ci->vfs_inode);
+Hi Rob,
 
-iput while holding spinlock is not good
+Please find my comments below,
 
-> +       }
-> +       spin_unlock(&mdsc->quotarealms_inodes_lock);
-> +
->         lock_unlock_sessions(mdsc);
->         ceph_flush_dirty_caps(mdsc);
->         wait_requests(mdsc);
-> diff --git a/fs/ceph/mds_client.h b/fs/ceph/mds_client.h
-> index 729da155ebf0..58968fb338ec 100644
-> --- a/fs/ceph/mds_client.h
-> +++ b/fs/ceph/mds_client.h
-> @@ -329,6 +329,8 @@ struct ceph_mds_client {
->         int                     stopping;      /* true if shutting down *=
-/
+On Sat, Feb 23, 2019 at 1:05 AM Rob Herring <robh@kernel.org> wrote:
 >
->         atomic64_t              quotarealms_count; /* # realms with quota=
- */
-> +       struct list_head        quotarealms_inodes_list;
-> +       spinlock_t              quotarealms_inodes_lock;
+> On Fri, Feb 22, 2019 at 11:29 AM Srinath Mannam
+> <srinath.mannam@broadcom.com> wrote:
+> >
+> > Hi Rob,
+> >
+> > Thanks for the review, Please find my comments below in line.
+> >
+> > On Fri, Feb 22, 2019 at 10:50 PM Rob Herring <robh@kernel.org> wrote:
+> > >
+> > > On Wed, Feb 20, 2019 at 04:04:00PM +0530, Srinath Mannam wrote:
+> > > > Add DT binding document for Stingray USB PHY.
+> > > >
+> > > > Signed-off-by: Srinath Mannam <srinath.mannam@broadcom.com>
+> > > > Reviewed-by: Florian Fainelli <f.fainelli@gmail.com>
+> > > > Reviewed-by: Scott Branden <scott.branden@broadcom.com>
+> > > > ---
+> > > >  .../bindings/phy/brcm,stingray-usb-phy.txt         | 62 ++++++++++++++++++++++
+> > > >  1 file changed, 62 insertions(+)
+> > > >  create mode 100644 Documentation/devicetree/bindings/phy/brcm,stingray-usb-phy.txt
+> > > >
+> > > > diff --git a/Documentation/devicetree/bindings/phy/brcm,stingray-usb-phy.txt b/Documentation/devicetree/bindings/phy/brcm,stingray-usb-phy.txt
+> > > > new file mode 100644
+> > > > index 0000000..da19236
+> > > > --- /dev/null
+> > > > +++ b/Documentation/devicetree/bindings/phy/brcm,stingray-usb-phy.txt
+> > > > @@ -0,0 +1,62 @@
+> > > > +Broadcom Stingray USB PHY
+> > > > +
+> > > > +Required properties:
+> > > > + - compatible : should be one of the listed compatibles
+> > > > +     - "brcm,sr-usb-combo-phy" is a combo PHY has one SS PHY and one HS PHY.
+> > > > +     - "brcm,sr-usb-hs-phy" has a single HS PHY.
+> > > > + - reg: offset and length of the PHY blocks registers
+> > > > + - address-cells: should be 1
+> > > > + - size-cells: should be 0
+> > > > +
+> > > > +Sub-nodes:
+> > > > +  brcm,sr-usb-combo-phy have two sub-nodes for one SS PHY and one HS PHY.
+> > > > +
+> > > > +Sub-nodes required properties:
+> > > > + - reg: required for brcm,sr-usb-phy model PHY.
+> > > > +     reg value 0 is HS PHY and 1 is SS PHY.
+> > > > + - phy-cells: generic PHY binding; must be 0
+> > > > +
+> > > > +Refer to phy/phy-bindings.txt for the generic PHY binding properties
+> > > > +
+> > > > +Example:
+> > > > +     usbphy0: usb-phy@0 {
+> > > > +             compatible = "brcm,sr-usb-combo-phy";
+> > > > +             reg = <0x00000000 0x100>;
+> > > > +             #address-cells = <1>;
+> > > > +             #size-cells = <0>;
+> > > > +
+> > > > +             usb0_phy0: phy@0 {
+> > > > +                     reg = <0>;
+> > > > +                     #phy-cells = <0>;
+> > > > +             };
+> > > > +
+> > > > +             usb0_phy1: phy@1 {
+> > > > +                     reg = <1>;
+> > > > +                     #phy-cells = <0>;
+> > > > +             };
+> > >
+> > > Again, you don't need child nodes here. There are not any per child
+> > > resources. Clients can refer to <&usbphy0 1> just as easily as
+> > > <&usb0_phy1>. This is why we have #phy-cells.
+> > This phy controller is combo PHY it has one Super Speed USB PHY and
+> > one High Speed USB PHY.
+> > We required to create two PHY devices inside driver to initialize and
+> > service(reset) both SS and HS PHYs separately.
+> > That is the reason we used two child nodes.
 >
->         /*
->          * snap_rwsem will cover cap linkage into snaprealms, and
-> diff --git a/fs/ceph/quota.c b/fs/ceph/quota.c
-> index 9455d3aef0c3..c57c0b709efe 100644
-> --- a/fs/ceph/quota.c
-> +++ b/fs/ceph/quota.c
-> @@ -22,7 +22,16 @@ void ceph_adjust_quota_realms_count(struct inode *inod=
-e, bool inc)
->  static inline bool ceph_has_realms_with_quotas(struct inode *inode)
->  {
->         struct ceph_mds_client *mdsc =3D ceph_inode_to_client(inode)->mds=
-c;
-> -       return atomic64_read(&mdsc->quotarealms_count) > 0;
-> +       struct super_block *sb =3D mdsc->fsc->sb;
-> +
-> +       if (atomic64_read(&mdsc->quotarealms_count) > 0)
-> +               return true;
-> +       /* if root is the real CephFS root, we don't have quota realms */
-> +       if (sb->s_root->d_inode &&
-> +           (sb->s_root->d_inode->i_ino =3D=3D CEPH_INO_ROOT))
-> +               return false;
-> +       /* otherwise, we can't know for sure */
-> +       return true;
->  }
+> What you do in the driver is your business. That is independent of the
+> binding. Go look at other phy drivers which use #phy-cells=1.
+> .of_xlate() function is what converts the phy cells to a struct phy.
 >
->  void ceph_handle_quota(struct ceph_mds_client *mdsc,
-> @@ -68,6 +77,37 @@ void ceph_handle_quota(struct ceph_mds_client *mdsc,
->         iput(inode);
->  }
->
-> +/*
-> + * This function will try to lookup a realm inode.  If the inode is foun=
-d
-> + * (through an MDS LOOKUPINO operation), the realm->inode will be update=
-d and
-> + * the inode will also be added to an mdsc list which will be freed only=
- when
-> + * the filesystem is umounted.
-> + */
-> +static struct inode *lookup_quotarealm_inode(struct ceph_mds_client *mds=
-c,
-> +                                            struct super_block *sb,
-> +                                            struct ceph_snap_realm *real=
-m)
-> +{
-> +       struct inode *in;
-> +
-> +       in =3D ceph_lookup_inode(sb, realm->ino);
-> +       if (IS_ERR(in)) {
-> +               pr_warn("Can't lookup inode %llx (err: %ld)\n",
-> +                       realm->ino, PTR_ERR(in));
-> +               return in;
-> +       }
-> +
-> +       spin_lock(&mdsc->quotarealms_inodes_lock);
-> +       list_add(&ceph_inode(in)->i_quotarealms_inode_item,
-> +                &mdsc->quotarealms_inodes_list);
-> +       spin_unlock(&mdsc->quotarealms_inodes_lock);
-> +
-> +       spin_lock(&realm->inodes_with_caps_lock);
-> +       realm->inode =3D in;
-> +       spin_unlock(&realm->inodes_with_caps_lock);
-> +
-> +       return in;
-> +}
-> +
->  /*
->   * This function walks through the snaprealm for an inode and returns th=
-e
->   * ceph_snap_realm for the first snaprealm that has quotas set (either m=
-ax_files
-> @@ -76,9 +116,15 @@ void ceph_handle_quota(struct ceph_mds_client *mdsc,
->   *
->   * Note that the caller is responsible for calling ceph_put_snap_realm()=
- on the
->   * returned realm.
-> + *
-> + * Callers of this function need to hold mdsc->snap_rwsem.  If there's t=
-he need
-> + * to do an inode lookup, this rwsem will be temporarily dropped.  Hence=
- the
-> + * 'retry' argument: if rwsem needs to be dropped and 'retry' is 'true' =
-this
-> + * function will return -EAGAIN; otherwise, the whole operation will be
-> + * restarted.
->   */
->  static struct ceph_snap_realm *get_quota_realm(struct ceph_mds_client *m=
-dsc,
-> -                                              struct inode *inode)
-> +                                              struct inode *inode, bool =
-retry)
->  {
->         struct ceph_inode_info *ci =3D NULL;
->         struct ceph_snap_realm *realm, *next;
-> @@ -88,6 +134,7 @@ static struct ceph_snap_realm *get_quota_realm(struct =
-ceph_mds_client *mdsc,
->         if (ceph_snap(inode) !=3D CEPH_NOSNAP)
->                 return NULL;
->
-> +restart:
->         realm =3D ceph_inode(inode)->i_snap_realm;
->         if (realm)
->                 ceph_get_snap_realm(mdsc, realm);
-> @@ -98,8 +145,17 @@ static struct ceph_snap_realm *get_quota_realm(struct=
- ceph_mds_client *mdsc,
->                 spin_lock(&realm->inodes_with_caps_lock);
->                 in =3D realm->inode ? igrab(realm->inode) : NULL;
->                 spin_unlock(&realm->inodes_with_caps_lock);
-> -               if (!in)
-> -                       break;
-> +               if (!in) {
-> +                       up_read(&mdsc->snap_rwsem);
-> +                       in =3D lookup_quotarealm_inode(mdsc, inode->i_sb,=
- realm);
-> +                       down_read(&mdsc->snap_rwsem);
-> +                       if (IS_ERR(in))
-> +                               break;
-> +                       ceph_put_snap_realm(mdsc, realm);
-> +                       if (!retry)
-> +                               return ERR_PTR(-EAGAIN);
-> +                       goto restart;
-> +               }
->
->                 ci =3D ceph_inode(in);
->                 has_quota =3D __ceph_has_any_quota(ci);
-> @@ -125,9 +181,17 @@ bool ceph_quota_is_same_realm(struct inode *old, str=
-uct inode *new)
->         struct ceph_snap_realm *old_realm, *new_realm;
->         bool is_same;
->
-> +restart:
->         down_read(&mdsc->snap_rwsem);
-> -       old_realm =3D get_quota_realm(mdsc, old);
-> -       new_realm =3D get_quota_realm(mdsc, new);
-> +       old_realm =3D get_quota_realm(mdsc, old, true);
-> +       /* This needs to be atomic, so we need to hold snap_rwsem */
-
-I don't understand this comment. get_quota_realm() unlock snap_rwsem
-no matter the 'retry' parameter is true or not/
-
-
-> +       new_realm =3D get_quota_realm(mdsc, new, false);
-> +       if (PTR_ERR(new_realm) =3D=3D -EAGAIN) {
-> +               up_read(&mdsc->snap_rwsem);
-> +               if (old_realm)
-> +                       ceph_put_snap_realm(mdsc, old_realm);
-> +               goto restart;
-> +       }
->         is_same =3D (old_realm =3D=3D new_realm);
->         up_read(&mdsc->snap_rwsem);
->
-> @@ -166,6 +230,7 @@ static bool check_quota_exceeded(struct inode *inode,=
- enum quota_check_op op,
->                 return false;
->
->         down_read(&mdsc->snap_rwsem);
-> +restart:
->         realm =3D ceph_inode(inode)->i_snap_realm;
->         if (realm)
->                 ceph_get_snap_realm(mdsc, realm);
-> @@ -176,9 +241,15 @@ static bool check_quota_exceeded(struct inode *inode=
-, enum quota_check_op op,
->                 spin_lock(&realm->inodes_with_caps_lock);
->                 in =3D realm->inode ? igrab(realm->inode) : NULL;
->                 spin_unlock(&realm->inodes_with_caps_lock);
-> -               if (!in)
-> -                       break;
-> -
-> +               if (!in) {
-
-maybe we should  distinguish =E2=80=98realm->inode is null' from 'igrab fai=
-ls'
-
-> +                       up_read(&mdsc->snap_rwsem);
-> +                       in =3D lookup_quotarealm_inode(mdsc, inode->i_sb,=
- realm);
-> +                       down_read(&mdsc->snap_rwsem);
-> +                       if (IS_ERR(in))
-> +                               break;
-> +                       ceph_put_snap_realm(mdsc, realm);
-> +                       goto restart;
-> +               }
->                 ci =3D ceph_inode(in);
->                 spin_lock(&ci->i_ceph_lock);
->                 if (op =3D=3D QUOTA_CHECK_MAX_FILES_OP) {
-> @@ -314,7 +385,7 @@ bool ceph_quota_update_statfs(struct ceph_fs_client *=
-fsc, struct kstatfs *buf)
->         bool is_updated =3D false;
->
->         down_read(&mdsc->snap_rwsem);
-> -       realm =3D get_quota_realm(mdsc, d_inode(fsc->sb->s_root));
-> +       realm =3D get_quota_realm(mdsc, d_inode(fsc->sb->s_root), true);
->         up_read(&mdsc->snap_rwsem);
->         if (!realm)
->                 return false;
-> diff --git a/fs/ceph/super.h b/fs/ceph/super.h
-> index ce51e98b08ec..cc7766aeb73b 100644
-> --- a/fs/ceph/super.h
-> +++ b/fs/ceph/super.h
-> @@ -375,6 +375,8 @@ struct ceph_inode_info {
->         struct list_head i_snap_realm_item;
->         struct list_head i_snap_flush_item;
->
-> +       struct list_head i_quotarealms_inode_item;
-> +
->         struct work_struct i_wb_work;  /* writeback work */
->         struct work_struct i_pg_inv_work;  /* page invalidation work */
->
+I have followed exactly same pattern available in open source.
+ex: Documentation/devicetree/bindings/phy/brcm-sata-phy.txt
+In this also, two child nodes are used with #phy-cells 0.
+> Rob
