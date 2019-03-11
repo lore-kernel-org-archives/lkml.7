@@ -2,108 +2,116 @@ Return-Path: <SRS0=FxTY=RO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_MUTT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AEBE1C43381
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 Mar 2019 22:12:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6BE16C4360F
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 Mar 2019 22:13:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 83F90217D4
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 Mar 2019 22:12:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 32EF821738
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 Mar 2019 22:13:28 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728481AbfCKWMx convert rfc822-to-8bit (ORCPT
+        id S1728512AbfCKWN0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 11 Mar 2019 18:12:53 -0400
-Received: from unicorn.mansr.com ([81.2.72.234]:37330 "EHLO unicorn.mansr.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728117AbfCKWMw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 11 Mar 2019 18:12:52 -0400
-Received: by unicorn.mansr.com (Postfix, from userid 51770)
-        id 1443914CEA; Mon, 11 Mar 2019 22:12:51 +0000 (GMT)
-From:   =?iso-8859-1?Q?M=E5ns_Rullg=E5rd?= <mans@mansr.com>
-To:     Linus Torvalds <torvalds@linux-foundation.org>
-Cc:     Arnd Bergmann <arnd@arndb.de>, Matt Turner <mattst88@gmail.com>,
-        Borislav Petkov <bp@alien8.de>,
-        Alan Cox <gnomes@lxorguk.ukuu.org.uk>,
-        Matthew Wilcox <willy@infradead.org>,
-        Jann Horn <jannh@google.com>,
-        Al Viro <viro@zeniv.linux.org.uk>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        kernel list <linux-kernel@vger.kernel.org>,
-        linux-fsdevel <linux-fsdevel@vger.kernel.org>,
-        "the arch\/x86 maintainers" <x86@kernel.org>,
-        Linux API <linux-api@vger.kernel.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Richard Weinberger <richard@nod.at>,
-        Anton Ivanov <anton.ivanov@cambridgegreys.com>,
-        linux-alpha <linux-alpha@vger.kernel.org>,
-        linux-m68k <linux-m68k@lists.linux-m68k.org>
-Subject: Re: [PATCH] x86: Deprecate a.out support
-References: <CAG48ez1RVd5mQ_Pb6eygQESaZhpQz765OAZYSoPE0kPqfZEXQg@mail.gmail.com>
-        <20190305091904.GB8256@zn.tnic>
-        <20190305122218.GD13380@bombadil.infradead.org>
-        <20190305134347.4be2449c@alans-desktop>
-        <20190305145717.GD8256@zn.tnic>
-        <CAHk-=wi2E4kugAW7BQwNSVwYHOr=B_9EgzBRMpQ2+1dxAqydDg@mail.gmail.com>
-        <20190305173134.GE8256@zn.tnic>
-        <CAHk-=wg0bY=RFhD4NW9x++fC0bME=_-9xM3kexGGM3gefHQTyQ@mail.gmail.com>
-        <20190305181138.GG8256@zn.tnic> <20190305181808.GH8256@zn.tnic>
-        <CAEdQ38G5M3vq9pGBV1iyEViO7JhFuXk5g+VCs-vUH+Z62kNqgQ@mail.gmail.com>
-        <CAHk-=wgt7M6yA5BJCJo0nF22WgPJnN8CvViL9CAJmd+S+Civ6w@mail.gmail.com>
-        <yw1xa7i14btw.fsf@mansr.com>
-        <CAHk-=whD1SumZUBQeuMT-GcciwPxg_jW_TsPAmokYp3sGGCGhA@mail.gmail.com>
-        <yw1x5zsp473a.fsf@mansr.com>
-        <CAHk-=wiU7xacTqDfm-x29-meyJWNd_X95K0T8FQMcDgy-yo3Qw@mail.gmail.com>
-        <yw1x1s3d42ia.fsf@mansr.com>
-        <CAK8P3a031d9mSOxVmCAGcrbdaCE8N3R4e2Smtxp-Z+cautTAvg@mail.gmail.com>
-        <CAHk-=wj3v41CWH+3ry3+vrkjAEcyGojtevpsZDbiXVvpv1nTkA@mail.gmail.com>
-Date:   Mon, 11 Mar 2019 22:12:50 +0000
-In-Reply-To: <CAHk-=wj3v41CWH+3ry3+vrkjAEcyGojtevpsZDbiXVvpv1nTkA@mail.gmail.com>
-        (Linus Torvalds's message of "Mon, 11 Mar 2019 14:45:27 -0700")
-Message-ID: <yw1xsgvt2h7h.fsf@mansr.com>
-User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/25.3 (gnu/linux)
+        Mon, 11 Mar 2019 18:13:26 -0400
+Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:38262 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1727138AbfCKWNZ (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 11 Mar 2019 18:13:25 -0400
+Received: from pps.filterd (m0098419.ppops.net [127.0.0.1])
+        by mx0b-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x2BM9SXQ030700
+        for <linux-kernel@vger.kernel.org>; Mon, 11 Mar 2019 18:13:24 -0400
+Received: from e14.ny.us.ibm.com (e14.ny.us.ibm.com [129.33.205.204])
+        by mx0b-001b2d01.pphosted.com with ESMTP id 2r5ybbt59f-1
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
+        for <linux-kernel@vger.kernel.org>; Mon, 11 Mar 2019 18:13:23 -0400
+Received: from localhost
+        by e14.ny.us.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
+        for <linux-kernel@vger.kernel.org> from <paulmck@linux.vnet.ibm.com>;
+        Mon, 11 Mar 2019 22:13:23 -0000
+Received: from b01cxnp22034.gho.pok.ibm.com (9.57.198.24)
+        by e14.ny.us.ibm.com (146.89.104.201) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
+        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
+        Mon, 11 Mar 2019 22:13:21 -0000
+Received: from b01ledav003.gho.pok.ibm.com (b01ledav003.gho.pok.ibm.com [9.57.199.108])
+        by b01cxnp22034.gho.pok.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x2BMDKSN23003236
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Mon, 11 Mar 2019 22:13:20 GMT
+Received: from b01ledav003.gho.pok.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 219CAB2089;
+        Mon, 11 Mar 2019 22:13:20 +0000 (GMT)
+Received: from b01ledav003.gho.pok.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 03FBEB2080;
+        Mon, 11 Mar 2019 22:13:20 +0000 (GMT)
+Received: from paulmck-ThinkPad-W541 (unknown [9.70.82.188])
+        by b01ledav003.gho.pok.ibm.com (Postfix) with ESMTP;
+        Mon, 11 Mar 2019 22:13:19 +0000 (GMT)
+Received: by paulmck-ThinkPad-W541 (Postfix, from userid 1000)
+        id EB40716C34A1; Mon, 11 Mar 2019 15:13:21 -0700 (PDT)
+Date:   Mon, 11 Mar 2019 15:13:21 -0700
+From:   "Paul E. McKenney" <paulmck@linux.ibm.com>
+To:     Christoph Hellwig <hch@infradead.org>
+Cc:     Mike Snitzer <snitzer@redhat.com>,
+        Nikos Tsironis <ntsironis@arrikto.com>, agk@redhat.com,
+        dm-devel@redhat.com, mpatocka@redhat.com, iliastsi@arrikto.com,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 1/3] list_bl: Add hlist_bl_add_before/behind helpers
+Reply-To: paulmck@linux.ibm.com
+References: <20181220180651.4879-1-ntsironis@arrikto.com>
+ <20181220180651.4879-2-ntsironis@arrikto.com>
+ <20190228213201.GB23527@redhat.com>
+ <20190311181607.GA9388@infradead.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Transfer-Encoding: 8BIT
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190311181607.GA9388@infradead.org>
+User-Agent: Mutt/1.5.21 (2010-09-15)
+X-TM-AS-GCONF: 00
+x-cbid: 19031122-0052-0000-0000-000003993F59
+X-IBM-SpamModules-Scores: 
+X-IBM-SpamModules-Versions: BY=3.00010741; HX=3.00000242; KW=3.00000007;
+ PH=3.00000004; SC=3.00000281; SDB=6.01172999; UDB=6.00613254; IPR=6.00953653;
+ MB=3.00025936; MTD=3.00000008; XFM=3.00000015; UTC=2019-03-11 22:13:23
+X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
+x-cbparentid: 19031122-0053-0000-0000-0000601F5CE7
+Message-Id: <20190311221321.GP13351@linux.ibm.com>
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-03-11_16:,,
+ signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
+ malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
+ clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
+ mlxlogscore=999 adultscore=0 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.0.1-1810050000 definitions=main-1903110151
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Linus Torvalds <torvalds@linux-foundation.org> writes:
+On Mon, Mar 11, 2019 at 11:16:08AM -0700, Christoph Hellwig wrote:
+> On Thu, Feb 28, 2019 at 04:32:02PM -0500, Mike Snitzer wrote:
+> > Hi Paul and Christoph,
+> > 
+> > You've added your Signed-off-by to include/linux/list_bl.h commits in
+> > the past.  I'm not sure how this proposed patch should be handled.
+> > 
+> > These new hlist_bl_add_{before,behind} changes are a prereq for
+> > dm-snapshot changes that Nikos has proposed, please see:
+> > https://patchwork.kernel.org/patch/10739265/
+> > 
+> > Any assistance/review you, or others on LKML, might be able to provide
+> > would be appreciated.
+> 
+> I just killed two helpers.  That being said assuming that we only
+> rely on the next pointer for the lockless traversals the changes look
+> fine to me, but the code might be beyond my paygrade..
 
-> On Mon, Mar 11, 2019 at 2:34 PM Arnd Bergmann <arnd@arndb.de> wrote:
->>
->> The main historic use case I've heard of was running Netscape
->> Navigator on Alpha Linux, before there was an open source version.
->> Doing this today to connect to the open internet is probably
->> a bit pointless, but there may be other use cases.
->
-> The _really_ main version was that I decided to make my life easier
-> for the initial alpha port by trying to run basic (tested) OSF/1
-> binaries directly.
->
-> Netscape may have been one of the binaries people actually ended up
-> using, but it's probably not a reason any more, since the internet has
-> moved past that anyway.
->
->> Looking at the system call table in the kernel
->> (arch/alpha/kernel/syscalls/syscall.tbl), we seem to support a
->> specific subset that was required for a set of applications, and
->> not much more.
->
-> Yeah, it never supported arbitrary binaries, particularly since
-> there's often lots of other issues too with running things like that
-> (ie filesystem layout etc). It worked for normal fairly well behaved
-> stuff, but wasn't ever a full OSF/1 emulation environment.
->
-> I _suspect_ nobody actually runs any OSF/1 binaries any more, but it
-> would obviously be good to verify that. Your argument that timeval
-> handling was broken _may_ be an indication of that (or may just mean
-> very few apps care).
+First, apologies for being slow on this one.
 
-Does it count if I fire up an Alpha and run a few OSF/1 binaries right
-now? :-)
+Second, were the two helpers hlist_bl_add_{before,behind}()?  If so, I
+guess there is not much point in me looking them over.  Though perhaps
+I should be looking something else over?
 
--- 
-Måns Rullgård
+							Thanx, Paul
+
