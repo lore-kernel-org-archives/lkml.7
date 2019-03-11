@@ -2,263 +2,184 @@ Return-Path: <SRS0=FxTY=RO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT
+X-Spam-Status: No, score=-13.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_MUTT
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4FC18C43381
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 Mar 2019 20:56:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8E771C10F06
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 Mar 2019 20:57:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 18DC62064A
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 Mar 2019 20:56:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 528612147C
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 Mar 2019 20:57:28 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="W1B+uHOz"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728531AbfCKU4d (ORCPT
+        id S1728345AbfCKU51 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 11 Mar 2019 16:56:33 -0400
-Received: from mga18.intel.com ([134.134.136.126]:10472 "EHLO mga18.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728294AbfCKUzm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 11 Mar 2019 16:55:42 -0400
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga003.fm.intel.com ([10.253.24.29])
-  by orsmga106.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 11 Mar 2019 13:55:41 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.58,468,1544515200"; 
-   d="scan'208";a="139910175"
-Received: from unknown (HELO localhost.lm.intel.com) ([10.232.112.69])
-  by FMSMGA003.fm.intel.com with ESMTP; 11 Mar 2019 13:55:41 -0700
-From:   Keith Busch <keith.busch@intel.com>
-To:     linux-kernel@vger.kernel.org, linux-acpi@vger.kernel.org,
-        linux-mm@kvack.org, linux-api@vger.kernel.org
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Rafael Wysocki <rafael@kernel.org>,
-        Dave Hansen <dave.hansen@intel.com>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Jonathan Cameron <jonathan.cameron@huawei.com>,
-        Brice Goglin <Brice.Goglin@inria.fr>,
-        Keith Busch <keith.busch@intel.com>
-Subject: [PATCHv8 05/10] node: Add heterogenous memory access attributes
-Date:   Mon, 11 Mar 2019 14:56:01 -0600
-Message-Id: <20190311205606.11228-6-keith.busch@intel.com>
-X-Mailer: git-send-email 2.13.6
-In-Reply-To: <20190311205606.11228-1-keith.busch@intel.com>
-References: <20190311205606.11228-1-keith.busch@intel.com>
+        Mon, 11 Mar 2019 16:57:27 -0400
+Received: from mail-qt1-f196.google.com ([209.85.160.196]:42581 "EHLO
+        mail-qt1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727753AbfCKU50 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 11 Mar 2019 16:57:26 -0400
+Received: by mail-qt1-f196.google.com with SMTP id u7so163700qtg.9;
+        Mon, 11 Mar 2019 13:57:25 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:date:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=oTqIPcquLN0WxH7JpOcWhV3nfI5Ss1yHEcWa/CSFZrQ=;
+        b=W1B+uHOze3+y7LtTW3aOCalmIBhvcODWbzGZbNL/WfFZ+mRsUAcRRe1lmZRmGCOoML
+         fyFC/+FuYb+5+dFbonZejq8bPWMgbVqyUGqkRRKvkJM4opKCtqYUA1dU+Xx2JniO9Vrg
+         KmT/Yq2H6aiUzRedFcb802w7MMLpeBItf/1oeRwmjCJ32Cg5noIbwQ7wIr9vv3ms5tSr
+         eVwXzrWikLIui0KiLbPYMCkHmum2EqsYOcoQlRrLUGn+N4Rhig1YHQTv1QtoBigRxTRr
+         SbZaUvEgH3q1HCgqq1et3hMIP/xBRNlh2mV8JH5IpEB1Bum4WhpMmyjAREjNBJaA8OWL
+         B95A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:date:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=oTqIPcquLN0WxH7JpOcWhV3nfI5Ss1yHEcWa/CSFZrQ=;
+        b=hBm5iNrMcAnue5K5j2/jvwN+nXANxZIZEaDQKDzcDhpuw0Mz1N5ozcd7ihIhUs3GzV
+         oSnWDvK316slwwevjBYPZOp4EjjVxyK/gjHFaqirit3duxjmRGnphE320N77Q3MhcleD
+         IysV33ttuSDdWpXcWQRoYu9W169vn7zyFxTitczJbiUCzmoUKGs8gTEXJ+h/u2pV/V8X
+         qP+ZR/j2stTxKEm6TCtP63Tzn09rjgLri7cFurY3214j+AcbRG96L3csQOZwajejHWUK
+         Un7cziuvXXDgqvadVAC8t264Hzpr/X7KaVRinjYgU5WPI+acIJ2Xgm3ZYWaG4Esz5n+z
+         58Tw==
+X-Gm-Message-State: APjAAAXOfCWZ33pys1VrzoBm2mZnPqlcvkGDY5MWpw8OmveU/s8VJuBn
+        RF9gIVPliV62Px+6BFSG/cg=
+X-Google-Smtp-Source: APXvYqzxuchVkvCkb8IuuayhpFMDjrKoZYSY8r0L9q9wuHTIsvf1OhR6VHEtVsYezOXzQQm6VPo+vA==
+X-Received: by 2002:ac8:3181:: with SMTP id h1mr17242637qte.294.1552337844812;
+        Mon, 11 Mar 2019 13:57:24 -0700 (PDT)
+Received: from quaco.ghostprotocols.net ([190.15.121.82])
+        by smtp.gmail.com with ESMTPSA id f18sm4582177qta.64.2019.03.11.13.57.23
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Mon, 11 Mar 2019 13:57:23 -0700 (PDT)
+From:   Arnaldo Carvalho de Melo <arnaldo.melo@gmail.com>
+X-Google-Original-From: Arnaldo Carvalho de Melo <acme@kernel.org>
+Received: by quaco.ghostprotocols.net (Postfix, from userid 1000)
+        id 9E0B14039C; Mon, 11 Mar 2019 17:57:20 -0300 (-03)
+Date:   Mon, 11 Mar 2019 17:57:20 -0300
+To:     Daniel Borkmann <daniel@iogearbox.net>
+Cc:     Arnaldo Carvalho de Melo <arnaldo.melo@gmail.com>,
+        Alexei Starovoitov <alexei.starovoitov@gmail.com>,
+        Song Liu <songliubraving@fb.com>, bpf@vger.kernel.org,
+        netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
+        ast@kernel.org, kernel-team@fb.com, peterz@infradead.org,
+        acme@redhat.com, jolsa@kernel.org, namhyung@kernel.org
+Subject: Re: [PATCH v7 perf,bpf 02/15] bpf: libbpf: introduce
+ bpf_program__get_prog_info_linear()
+Message-ID: <20190311205720.GD10690@kernel.org>
+References: <20190307175810.249857-1-songliubraving@fb.com>
+ <20190307175810.249857-3-songliubraving@fb.com>
+ <20190311182631.GX10690@kernel.org>
+ <b6fb25aa-5bfc-cf97-f960-5966154e5ef5@iogearbox.net>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <b6fb25aa-5bfc-cf97-f960-5966154e5ef5@iogearbox.net>
+X-Url:  http://acmel.wordpress.com
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Heterogeneous memory systems provide memory nodes with different latency
-and bandwidth performance attributes. Provide a new kernel interface
-for subsystems to register the attributes under the memory target
-node's initiator access class. If the system provides this information,
-applications may query these attributes when deciding which node to
-request memory.
+Em Mon, Mar 11, 2019 at 09:45:49PM +0100, Daniel Borkmann escreveu:
+> On 03/11/2019 07:26 PM, Arnaldo Carvalho de Melo wrote:
+> > Em Thu, Mar 07, 2019 at 09:57:57AM -0800, Song Liu escreveu:
+> >> Currently, bpf_prog_info includes 9 arrays. The user has the option to
+> >> fetch any combination of these arrays. However, this requires a lot of
+> >> handling of these arrays. This work becomes more tricky when we need to
+> >> store bpf_prog_info to a file, because these arrays are allocated
+> >> independently.
+> >>
+> >> This patch introduces struct bpf_prog_info_linear, which stores arrays
+> >> of bpf_prog_info in continues memory. Helper functions are introduced
+> >> to unify the work to get different information of bpf_prog_info.
+> >> Specifically, bpf_program__get_prog_info_linear() allows the user to
+> >> select which arrays to fetch, and handles details for the user.
+> >>
+> >> Plesae see the comments before enum bpf_prog_info_array for more details
+> >> and examples.
+> >>
+> >> Cc: Daniel Borkmann <daniel@iogearbox.net>
+> >> Cc: Alexei Starovoitov <ast@kernel.org>
+> > 
+> > Daniel, are you ok with these changes to libbpf and bpftool? Perhaps
+> > those should be detached from this patchkit and submitted sooner,
+> > eroding the size of this kit.
+> > 
+> > Alternatively, if you're ok with it, please provide your Acked-by and
+> > I'll process as soon as I get back to it after Jiri is done reviewing.
+> 
+> Overall looks okay. Are you planning to get these in for 5.1 window? If
 
-The following example shows the new sysfs hierarchy for a node exporting
-performance attributes:
+I hope so.
 
-  # tree -P "read*|write*"/sys/devices/system/node/nodeY/accessZ/initiators/
-  /sys/devices/system/node/nodeY/accessZ/initiators/
-  |-- read_bandwidth
-  |-- read_latency
-  |-- write_bandwidth
-  `-- write_latency
+> yes, that would be great, otherwise we might need to cherry-pick the libbpf
 
-The bandwidth is exported as MB/s and latency is reported in
-nanoseconds. The values are taken from the platform as reported by the
-manufacturer.
+So I'll try and grab those for my next pull req to Ingo, this week,
+will add your Acked-by, ok?
 
-Memory accesses from an initiator node that is not one of the memory's
-access "Z" initiator nodes linked in the same directory may observe
-different performance than reported here. When a subsystem makes use
-of this interface, initiators of a different access number may not have
-the same performance relative to initiators in other access numbers, or
-omitted from the any access class' initiators.
+> and bpftool ones from your tree into bpf-next as well since there's just
+> too much going on in this area where we'd potentially run into complex
+> merge conflicts. In the latter case, libbpf.map would need to be fixed up
+> to LIBBPF_0.0.3 as convention is that this is in line with kernel release.
 
-Descriptions for memory access initiator performance access attributes
-are added to sysfs stable documentation.
+BTW, while running my build tests I had to add this to today's batch,
+should be trivial when merging, I think, ok?
 
-Acked-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
-Tested-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
-Signed-off-by: Keith Busch <keith.busch@intel.com>
----
- Documentation/ABI/stable/sysfs-devices-node | 28 ++++++++++++++
- drivers/base/Kconfig                        |  8 ++++
- drivers/base/node.c                         | 59 +++++++++++++++++++++++++++++
- include/linux/node.h                        | 26 +++++++++++++
- 4 files changed, 121 insertions(+)
 
-diff --git a/Documentation/ABI/stable/sysfs-devices-node b/Documentation/ABI/stable/sysfs-devices-node
-index 433bcc04e542..735a40a3f9b2 100644
---- a/Documentation/ABI/stable/sysfs-devices-node
-+++ b/Documentation/ABI/stable/sysfs-devices-node
-@@ -114,3 +114,31 @@ Contact:	Keith Busch <keith.busch@intel.com>
- Description:
- 		The directory containing symlinks to memory targets that
- 		this initiator node has class "Y" access.
-+
-+What:		/sys/devices/system/node/nodeX/accessY/initiators/read_bandwidth
-+Date:		December 2018
-+Contact:	Keith Busch <keith.busch@intel.com>
-+Description:
-+		This node's read bandwidth in MB/s when accessed from
-+		nodes found in this access class's linked initiators.
-+
-+What:		/sys/devices/system/node/nodeX/accessY/initiators/read_latency
-+Date:		December 2018
-+Contact:	Keith Busch <keith.busch@intel.com>
-+Description:
-+		This node's read latency in nanoseconds when accessed
-+		from nodes found in this access class's linked initiators.
-+
-+What:		/sys/devices/system/node/nodeX/accessY/initiators/write_bandwidth
-+Date:		December 2018
-+Contact:	Keith Busch <keith.busch@intel.com>
-+Description:
-+		This node's write bandwidth in MB/s when accessed from
-+		found in this access class's linked initiators.
-+
-+What:		/sys/devices/system/node/nodeX/accessY/initiators/write_latency
-+Date:		December 2018
-+Contact:	Keith Busch <keith.busch@intel.com>
-+Description:
-+		This node's write latency in nanoseconds when access
-+		from nodes found in this class's linked initiators.
-diff --git a/drivers/base/Kconfig b/drivers/base/Kconfig
-index 059700ea3521..a7438a58c250 100644
---- a/drivers/base/Kconfig
-+++ b/drivers/base/Kconfig
-@@ -149,6 +149,14 @@ config DEBUG_TEST_DRIVER_REMOVE
- 	  unusable. You should say N here unless you are explicitly looking to
- 	  test this functionality.
+commit dfcbc2f2994b8a3af3605a26dc29c07ad7378bf4
+Author: Arnaldo Carvalho de Melo <acme@redhat.com>
+Date:   Mon Mar 11 17:07:52 2019 -0300
+
+    tools lib bpf: Fix the build by adding a missing stdarg.h include
+    
+    The libbpf_print_fn_t typedef uses va_list without including the header
+    where that type is defined, stdarg.h, breaking in places where we're
+    unlucky for that type not to be already defined by some previously
+    included header.
+    
+    Noticed while building on fedora 24 cross building tools/perf to the ARC
+    architecture using the uClibc C library:
+    
+      28 fedora:24-x-ARC-uClibc   : FAIL arc-linux-gcc (ARCompact ISA Linux uClibc toolchain 2017.09-rc2) 7.1.1 20170710
+    
+        CC       /tmp/build/perf/tests/llvm.o
+      In file included from tests/llvm.c:3:0:
+      /git/linux/tools/lib/bpf/libbpf.h:57:20: error: unknown type name 'va_list'
+            const char *, va_list ap);
+                          ^~~~~~~
+      /git/linux/tools/lib/bpf/libbpf.h:59:34: error: unknown type name 'libbpf_print_fn_t'
+       LIBBPF_API void libbpf_set_print(libbpf_print_fn_t fn);
+                                        ^~~~~~~~~~~~~~~~~
+      mv: cannot stat '/tmp/build/perf/tests/.llvm.o.tmp': No such file or directory
+    
+    Cc: Alexei Starovoitov <ast@kernel.org>
+    Cc: Daniel Borkmann <daniel@iogearbox.net>
+    Cc: Jakub Kicinski <jakub.kicinski@netronome.com>
+    Cc: Jiri Olsa <jolsa@kernel.org>
+    Cc: Namhyung Kim <namhyung@kernel.org>
+    Cc: Quentin Monnet <quentin.monnet@netronome.com>
+    Cc: Stanislav Fomichev <sdf@google.com>
+    Cc: Yonghong Song <yhs@fb.com>
+    Fixes: a8a1f7d09cfc ("libbpf: fix libbpf_print")
+    Link: https://lkml.kernel.org/n/tip-5270n2quu2gqz22o7itfdx00@git.kernel.org
+    Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
+
+diff --git a/tools/lib/bpf/libbpf.h b/tools/lib/bpf/libbpf.h
+index b4652aa1a58a..aa1521a51687 100644
+--- a/tools/lib/bpf/libbpf.h
++++ b/tools/lib/bpf/libbpf.h
+@@ -10,6 +10,7 @@
+ #ifndef __LIBBPF_LIBBPF_H
+ #define __LIBBPF_LIBBPF_H
  
-+config HMEM_REPORTING
-+	bool
-+	default n
-+	depends on NUMA
-+	help
-+	  Enable reporting for heterogenous memory access attributes under
-+	  their non-uniform memory nodes.
-+
- source "drivers/base/test/Kconfig"
- 
- config SYS_HYPERVISOR
-diff --git a/drivers/base/node.c b/drivers/base/node.c
-index 6f4097680580..2de546a040a5 100644
---- a/drivers/base/node.c
-+++ b/drivers/base/node.c
-@@ -71,6 +71,9 @@ struct node_access_nodes {
- 	struct device		dev;
- 	struct list_head	list_node;
- 	unsigned		access;
-+#ifdef CONFIG_HMEM_REPORTING
-+	struct node_hmem_attrs	hmem_attrs;
-+#endif
- };
- #define to_access_nodes(dev) container_of(dev, struct node_access_nodes, dev)
- 
-@@ -148,6 +151,62 @@ static struct node_access_nodes *node_init_node_access(struct node *node,
- 	return NULL;
- }
- 
-+#ifdef CONFIG_HMEM_REPORTING
-+#define ACCESS_ATTR(name) 						   \
-+static ssize_t name##_show(struct device *dev,				   \
-+			   struct device_attribute *attr,		   \
-+			   char *buf)					   \
-+{									   \
-+	return sprintf(buf, "%u\n", to_access_nodes(dev)->hmem_attrs.name); \
-+}									   \
-+static DEVICE_ATTR_RO(name);
-+
-+ACCESS_ATTR(read_bandwidth)
-+ACCESS_ATTR(read_latency)
-+ACCESS_ATTR(write_bandwidth)
-+ACCESS_ATTR(write_latency)
-+
-+static struct attribute *access_attrs[] = {
-+	&dev_attr_read_bandwidth.attr,
-+	&dev_attr_read_latency.attr,
-+	&dev_attr_write_bandwidth.attr,
-+	&dev_attr_write_latency.attr,
-+	NULL,
-+};
-+
-+/**
-+ * node_set_perf_attrs - Set the performance values for given access class
-+ * @nid: Node identifier to be set
-+ * @hmem_attrs: Heterogeneous memory performance attributes
-+ * @access: The access class the for the given attributes
-+ */
-+void node_set_perf_attrs(unsigned int nid, struct node_hmem_attrs *hmem_attrs,
-+			 unsigned access)
-+{
-+	struct node_access_nodes *c;
-+	struct node *node;
-+	int i;
-+
-+	if (WARN_ON_ONCE(!node_online(nid)))
-+		return;
-+
-+	node = node_devices[nid];
-+	c = node_init_node_access(node, access);
-+	if (!c)
-+		return;
-+
-+	c->hmem_attrs = *hmem_attrs;
-+	for (i = 0; access_attrs[i] != NULL; i++) {
-+		if (sysfs_add_file_to_group(&c->dev.kobj, access_attrs[i],
-+					    "initiators")) {
-+			pr_info("failed to add performance attribute to node %d\n",
-+				nid);
-+			break;
-+		}
-+	}
-+}
-+#endif
-+
- #define K(x) ((x) << (PAGE_SHIFT - 10))
- static ssize_t node_read_meminfo(struct device *dev,
- 			struct device_attribute *attr, char *buf)
-diff --git a/include/linux/node.h b/include/linux/node.h
-index bb288817ed33..4139d728f8b3 100644
---- a/include/linux/node.h
-+++ b/include/linux/node.h
-@@ -20,6 +20,32 @@
- #include <linux/list.h>
- #include <linux/workqueue.h>
- 
-+/**
-+ * struct node_hmem_attrs - heterogeneous memory performance attributes
-+ *
-+ * @read_bandwidth:	Read bandwidth in MB/s
-+ * @write_bandwidth:	Write bandwidth in MB/s
-+ * @read_latency:	Read latency in nanoseconds
-+ * @write_latency:	Write latency in nanoseconds
-+ */
-+struct node_hmem_attrs {
-+	unsigned int read_bandwidth;
-+	unsigned int write_bandwidth;
-+	unsigned int read_latency;
-+	unsigned int write_latency;
-+};
-+
-+#ifdef CONFIG_HMEM_REPORTING
-+void node_set_perf_attrs(unsigned int nid, struct node_hmem_attrs *hmem_attrs,
-+			 unsigned access);
-+#else
-+static inline void node_set_perf_attrs(unsigned int nid,
-+				       struct node_hmem_attrs *hmem_attrs,
-+				       unsigned access)
-+{
-+}
-+#endif
-+
- struct node {
- 	struct device	dev;
- 	struct list_head access_list;
--- 
-2.14.4
-
++#include <stdarg.h>
+ #include <stdio.h>
+ #include <stdint.h>
+ #include <stdbool.h>
