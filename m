@@ -6,48 +6,48 @@ X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 31B28C43381
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 Mar 2019 13:31:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 43A65C43381
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 Mar 2019 13:31:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0AC01222EB
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 Mar 2019 13:31:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0E319222EB
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 Mar 2019 13:31:07 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728203AbfCKNbC (ORCPT
+        id S1728043AbfCKNbA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 11 Mar 2019 09:31:02 -0400
-Received: from mout.kundenserver.de ([217.72.192.75]:36611 "EHLO
+        Mon, 11 Mar 2019 09:31:00 -0400
+Received: from mout.kundenserver.de ([217.72.192.73]:36769 "EHLO
         mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727357AbfCKNTa (ORCPT
+        with ESMTP id S1727476AbfCKNTa (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Mon, 11 Mar 2019 09:19:30 -0400
 Received: from orion.localdomain ([95.115.159.19]) by mrelayeu.kundenserver.de
  (mreue109 [212.227.15.183]) with ESMTPSA (Nemesis) id
- 1N1wdj-1gx3SD04Bl-012IhG for <linux-kernel@vger.kernel.org>; Mon, 11 Mar 2019
+ 1N9dkB-1gyAS53AOL-015aUY for <linux-kernel@vger.kernel.org>; Mon, 11 Mar 2019
  14:19:28 +0100
 From:   "Enrico Weigelt, metux IT consult" <info@metux.net>
 To:     linux-kernel@vger.kernel.org
-Subject: [PATCH 004/114] drivers: watchdog: Kconfig: pedantic formatting
-Date:   Mon, 11 Mar 2019 14:17:16 +0100
-Message-Id: <1552310346-7629-5-git-send-email-info@metux.net>
+Subject: [PATCH 009/114] drivers: ide: Kconfig: pedantic formatting
+Date:   Mon, 11 Mar 2019 14:17:21 +0100
+Message-Id: <1552310346-7629-10-git-send-email-info@metux.net>
 X-Mailer: git-send-email 1.9.1
 In-Reply-To: <1552310346-7629-1-git-send-email-info@metux.net>
 References: <1552310346-7629-1-git-send-email-info@metux.net>
-X-Provags-ID: V03:K1:8IqKrxPTE6GXKU6/jjHLNzBYbG6b3/sZ5IzWlwNIAMGE6e8pSsI
- IYAjyFsOQgeEpn9FVZcRS5r1H7Ex0BCNcQY18xe9a2//B9RK9ZVL8x7Tg1RfJwAasXHeDsu
- yD0laV4Fn/Ai6G8GYb7ysl53+GbxfJn9Ck0Bos+8uZxk6sy+reCBI9IY/NFZgF/uXg0Ytgk
- UDwsw8h8dE1SC05OIdSCw==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:WlbFdfsdY+4=:ryyBx8ONZ4Y32mc1Flw70m
- V8AOxZz55huPmcvYLw+/j+wXeNi0PCwlGmmcMB/0X9InUtIClZ2jBapQ9H1Nuxp1qDkfwHCmu
- jrWuRnls9KFqFQwGWFKWnfh9vTQdgSOTcKWhNChOIs4ij9QnoDZ0uuDKeEXinHkWwD7zBB9JM
- BGylYP9u10AuZKTcYuz7G/q97c58vNdX6WOWbi8RK0qbNIWyaJI/EtPCScaxp6MYZDWbdk7IB
- NYS73PBufxpYOigUstY5IC/BlDgm4hZ21rLPQGTgc7ea8xGqEUzjGhOSSAY/N3IFQC48Jc+gf
- cc5O2F64sYSQ/T7MazBqjo91Pinpp2Rf/RVSu99GZtzd3nU7Fhiek4gBUAWtlzGiR0093ahul
- HIuq8X5ZYOGH4Ku8CQWL+nJOrTXIKYfkM0IQcCptL7ldy7YbzpVDwhX5UiQZVbt6VpYtUUvMc
- EN3B3fRs2sBbRQMtSaUWM7F3gTQI+Q2ACg5krjKbRQPMsKhvoP4LWkKUaCn6X/viAOQBurG3R
- QGwXQ7JHuDxR5q51AVxM2n4cEiwxaxUVZUKSo0MjbQE4Ko1DTjjhb8wH57Xhdx7iKoFUveJLX
- c3wWj1lxGoWvVxXrq4Xfch9Umlal5L6a4TLsySskGdsos+aUxfMW+cEO/LWxStVjhQdrDntwu
- Vq+joDbmSE/NrvU0dx1EUAgIcPCoSksFtX4Wjdy8Eg3fOD7F4lGJVR0UwpVVVnLemxicXtV7f
- RshaRGnEOzI5OeVGl2pAg9Iq92UtaFnYpHQtYA==
+X-Provags-ID: V03:K1:cxQFezJFX4NsODF7FIPh2elE4uYdDlg55y/XXkngdNnzfhWel20
+ sacx+6/hE9XFwSs2Eq1jthbicJRrSSSCrPla3uR3qbfyWkO0ua/sKkEUemEjevgbj6g0dkP
+ S0VXvitUvl4AlQcObq67vAO23W42B7rwFYzFUdU48tm/yjrZ7zv6idScMTJxsC0DzTjEi8Q
+ eaccbF5BCrH9fFPlNmyuA==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:z7VDqqE5m/s=:WjWo6CmozBYtaturxNYV0g
+ Z5l4Q7eT1X35VbTHCGXW6Eo2Xx1qCyCSl2+6QFijlHwq40tqhAu5q/aXEIjLsnVLWjpY7Hc70
+ JPjThybDypJe7mWpF+2gipUxw0EvxTpTPySoDlgWtl2iGXon4aNtIWB7lyDZICbDgyGN2SZsU
+ K4vwyh+Y+u87T+wkWlUWFfj86tdv6SN9uIqJsrlZ5Ps4P3emDzsTCZFX1znrM7lsgkUZRvlpP
+ kC2EkF9aaYTUhKiPl70vcLfJbN0K3sgGAGAo/3nUNcZvLLjQhY43BE9clRijP046sjwUzGzGW
+ V9GqZhzUdLTz2oEpe4sD67hyxiBR4K78+mAbh8kYPsk/uAJobd/eiKKJAaJlK00+Kj+t+tG23
+ FCw+GDj+zhbDhzBly8/iXv38WLp7eDg9wMTNbrgcz/nHMSLGm0WhkN+Z9qKf2BuRkB4pDRuUE
+ M9cZ5dzvlPqxwb1QU5Wbh4p6sBqgU5RTrOGUwNlyxyEt0Bmo/dJQihgjPe42wt4V1d94bMAZR
+ nEQu719iGeifUvSxAXpt1XoLv0vDYic+7s1csEIjmFqlZSmwSvPp5tUByUT1z6ZDjZAOLw7WI
+ ehBCVkNxQKvf/kPAqQML7k6lEQBoxDV8UknL7Kny/vgQzDTHuzublLRDo8RB+IfAxcFAihJN/
+ 7F+RGT+iIn/BT6CmwrKNt4CP3/BeF732YcnKd8zmGJiK1fPQvG9g/EdyZhW/I2bxKqIiGRuAg
+ Cbxfm/4c7W/4M3VELyPhxO4paMpEhg8RrXxlhg==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
@@ -58,58 +58,65 @@ Great White Handkerchief come around and clean it up.
 
 Signed-off-by: Enrico Weigelt, metux IT consult <info@metux.net>
 ---
- drivers/watchdog/Kconfig | 24 ++++++++++++------------
- 1 file changed, 12 insertions(+), 12 deletions(-)
+ drivers/ide/Kconfig | 26 +++++++++++++-------------
+ 1 file changed, 13 insertions(+), 13 deletions(-)
 
-diff --git a/drivers/watchdog/Kconfig b/drivers/watchdog/Kconfig
-index 65c3c42..89b331c 100644
---- a/drivers/watchdog/Kconfig
-+++ b/drivers/watchdog/Kconfig
-@@ -279,10 +279,10 @@ config ARMADA_37XX_WATCHDOG
- 	select MFD_SYSCON
- 	select WATCHDOG_CORE
- 	help
--	   Say Y here to include support for the watchdog timer found on
--	   Marvell Armada 37xx SoCs.
--	   To compile this driver as a module, choose M here: the
--	   module will be called armada_37xx_wdt.
-+	  Say Y here to include support for the watchdog timer found on
-+	  Marvell Armada 37xx SoCs.
-+	  To compile this driver as a module, choose M here: the
-+	  module will be called armada_37xx_wdt.
+diff --git a/drivers/ide/Kconfig b/drivers/ide/Kconfig
+index 901b883..19fcd07 100644
+--- a/drivers/ide/Kconfig
++++ b/drivers/ide/Kconfig
+@@ -320,9 +320,9 @@ config BLK_DEV_OFFBOARD
+ config BLK_DEV_GENERIC
+ 	tristate "Generic PCI IDE Chipset Support"
+ 	select BLK_DEV_IDEPCI
+-        help
+-          This option provides generic support for various PCI IDE Chipsets
+-          which otherwise might not be supported.
++	help
++	  This option provides generic support for various PCI IDE Chipsets
++	  which otherwise might not be supported.
  
- config ASM9260_WATCHDOG
- 	tristate "Alphascale ASM9260 watchdog"
-@@ -606,10 +606,10 @@ config MAX77620_WATCHDOG
- 	tristate "Maxim Max77620 Watchdog Timer"
- 	depends on MFD_MAX77620 || COMPILE_TEST
+ config BLK_DEV_OPTI621
+ 	tristate "OPTi 82C621 chipset enhanced support"
+@@ -516,7 +516,7 @@ config BLK_DEV_IT8213
+ 	tristate "IT8213 IDE support"
+ 	select BLK_DEV_IDEDMA_PCI
  	help
--	 This is the driver for the Max77620 watchdog timer.
--	 Say 'Y' here to enable the watchdog timer support for
--	 MAX77620 chips. To compile this driver as a module,
--	 choose M here: the module will be called max77620_wdt.
-+	  This is the driver for the Max77620 watchdog timer.
-+	  Say 'Y' here to enable the watchdog timer support for
-+	  MAX77620 chips. To compile this driver as a module,
-+	  choose M here: the module will be called max77620_wdt.
+-	 This driver adds support for the ITE 8213 IDE controller.
++	  This driver adds support for the ITE 8213 IDE controller.
  
- config IMX2_WDT
- 	tristate "IMX2+ Watchdog"
-@@ -1644,10 +1644,10 @@ config BCM7038_WDT
- 	depends on HAS_IOMEM
- 	depends on ARCH_BRCMSTB || BMIPS_GENERIC || COMPILE_TEST
- 	help
--	 Watchdog driver for the built-in hardware in Broadcom 7038 and
--	 later SoCs used in set-top boxes.  BCM7038 was made public
--	 during the 2004 CES, and since then, many Broadcom chips use this
--	 watchdog block, including some cable modem chips.
-+	  Watchdog driver for the built-in hardware in Broadcom 7038 and
-+	  later SoCs used in set-top boxes.  BCM7038 was made public
-+	  during the 2004 CES, and since then, many Broadcom chips use this
-+	  watchdog block, including some cable modem chips.
+ config BLK_DEV_IT821X
+ 	tristate "IT821X IDE support"
+@@ -671,20 +671,20 @@ config BLK_DEV_IDE_PMAC_ATA100FIRST
+ 	  hard disk and hdc for CD-ROM.
  
- config IMGPDC_WDT
- 	tristate "Imagination Technologies PDC Watchdog Timer"
+ config BLK_DEV_IDE_AU1XXX
+-       bool "IDE for AMD Alchemy Au1200"
+-       depends on MIPS_ALCHEMY
+-       select IDE_XFER_MODE
++	bool "IDE for AMD Alchemy Au1200"
++	depends on MIPS_ALCHEMY
++	select IDE_XFER_MODE
+ choice
+-       prompt "IDE Mode for AMD Alchemy Au1200"
+-       default BLK_DEV_IDE_AU1XXX_PIO_DBDMA
+-       depends on BLK_DEV_IDE_AU1XXX
++	prompt "IDE Mode for AMD Alchemy Au1200"
++	default BLK_DEV_IDE_AU1XXX_PIO_DBDMA
++	depends on BLK_DEV_IDE_AU1XXX
+ 
+ config BLK_DEV_IDE_AU1XXX_PIO_DBDMA
+-       bool "PIO+DbDMA IDE for AMD Alchemy Au1200"
++	bool "PIO+DbDMA IDE for AMD Alchemy Au1200"
+ 
+ config BLK_DEV_IDE_AU1XXX_MDMA2_DBDMA
+-       bool "MDMA2+DbDMA IDE for AMD Alchemy Au1200"
+-       depends on BLK_DEV_IDE_AU1XXX
++	bool "MDMA2+DbDMA IDE for AMD Alchemy Au1200"
++	depends on BLK_DEV_IDE_AU1XXX
+ endchoice
+ 
+ config BLK_DEV_IDE_TX4938
 -- 
 1.9.1
 
