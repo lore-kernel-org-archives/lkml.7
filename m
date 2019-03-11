@@ -2,152 +2,190 @@ Return-Path: <SRS0=FxTY=RO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_PASS,URIBL_BLOCKED autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0385AC43381
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 Mar 2019 11:48:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 03964C43381
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 Mar 2019 11:48:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B867920657
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 Mar 2019 11:48:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C7CD120657
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 Mar 2019 11:48:18 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727384AbfCKLsA (ORCPT
+        id S1727423AbfCKLsR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 11 Mar 2019 07:48:00 -0400
-Received: from szxga05-in.huawei.com ([45.249.212.191]:5233 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726914AbfCKLr7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 11 Mar 2019 07:47:59 -0400
-Received: from DGGEMS414-HUB.china.huawei.com (unknown [172.30.72.60])
-        by Forcepoint Email with ESMTP id ED20CA4C898C32F3FBC6;
-        Mon, 11 Mar 2019 19:47:55 +0800 (CST)
-Received: from localhost (10.202.226.61) by DGGEMS414-HUB.china.huawei.com
- (10.3.19.214) with Microsoft SMTP Server id 14.3.408.0; Mon, 11 Mar 2019
- 19:47:47 +0800
-Date:   Mon, 11 Mar 2019 11:47:37 +0000
-From:   Jonathan Cameron <jonathan.cameron@huawei.com>
-To:     Keith Busch <keith.busch@intel.com>
-CC:     <linux-kernel@vger.kernel.org>, <linux-acpi@vger.kernel.org>,
-        <linux-mm@kvack.org>, <linux-api@vger.kernel.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Rafael Wysocki <rafael@kernel.org>,
-        "Dave Hansen" <dave.hansen@intel.com>,
-        Dan Williams <dan.j.williams@intel.com>, <linuxarm@huawei.com>
-Subject: Re: [PATCHv7 00/10] Heterogenous memory node attributes
-Message-ID: <20190311114459.00006f3d@huawei.com>
-In-Reply-To: <20190227225038.20438-1-keith.busch@intel.com>
-References: <20190227225038.20438-1-keith.busch@intel.com>
-Organization: Huawei
-X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; i686-w64-mingw32)
+        Mon, 11 Mar 2019 07:48:17 -0400
+Received: from mail-ot1-f65.google.com ([209.85.210.65]:34148 "EHLO
+        mail-ot1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726914AbfCKLsR (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 11 Mar 2019 07:48:17 -0400
+Received: by mail-ot1-f65.google.com with SMTP id r19so133609otn.1
+        for <linux-kernel@vger.kernel.org>; Mon, 11 Mar 2019 04:48:16 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=/4Op3nXMYu7DUp/Bemmj1TQd/62FjfWVJ/UMTXhICbQ=;
+        b=DUWMmRwV3BsBqt2XYvl9dcMZCMGbEit3QBG0d7zNN7jDSbOkbLuBhYiPIy9qMlM0nK
+         wFChr+mJceSC5M92DSTm7UgzNmhMOIRXVuZ5kR/K/pYT0vXb7A2KNm4PfxCnaJrBw8zi
+         7iXaYk2U9Uh9U2vEds5UtFrqA2LTXibMZSQqq7JKng8zfh4cT/M9obOoEJv7GTbXrrL8
+         rpxzcgq3fT4Nhiq7nBR4N5hHhSiHep8V2gDo7GUlIpS0GYnjFJhurAexlQFBzJ4zGiL9
+         5eGiOYxoeO9drircsGenaybBMkJboEBt6YXHCU4GTGZyO4x45XM2MUlVwNVBLm/5MQci
+         g7jA==
+X-Gm-Message-State: APjAAAXFaAVQJS0n+wdEMuE3D7k4RZyuN7UmSak8bwB1GceixJW/pcuK
+        aLJ+Dsl05OeGev/V6RB4JFUoreAhXTXwBxYmeeAB4jVlEV0=
+X-Google-Smtp-Source: APXvYqwRl1CiCt/4TFBDG2KuKdIdErn2glyHSHEgj6Ot7XFfbmKZIpdRpMASFSAs26KH4fheBz4FMBxVfsA/OURTqck=
+X-Received: by 2002:a9d:4e10:: with SMTP id p16mr21395675otf.65.1552304895993;
+ Mon, 11 Mar 2019 04:48:15 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset="US-ASCII"
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.202.226.61]
-X-CFilter-Loop: Reflected
+References: <20190307123254.348-1-omosnace@redhat.com> <20190308202555.dj75sfdxxxnckygq@madcap2.tricolour.ca>
+In-Reply-To: <20190308202555.dj75sfdxxxnckygq@madcap2.tricolour.ca>
+From:   Ondrej Mosnacek <omosnace@redhat.com>
+Date:   Mon, 11 Mar 2019 12:48:05 +0100
+Message-ID: <CAFqZXNv2nX-nRn6zr+HTdKe0SEsB-v1NT+=UM4StiEvr=3=quw@mail.gmail.com>
+Subject: Re: [RFC PATCH ghak10 v6 0/2] audit: Log changes that can affect the
+ system clock
+To:     Richard Guy Briggs <rgb@redhat.com>
+Cc:     Linux-Audit Mailing List <linux-audit@redhat.com>,
+        Paul Moore <paul@paul-moore.com>,
+        Steve Grubb <sgrubb@redhat.com>,
+        Miroslav Lichvar <mlichvar@redhat.com>,
+        John Stultz <john.stultz@linaro.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Stephen Boyd <sboyd@kernel.org>,
+        Linux kernel mailing list <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, 27 Feb 2019 15:50:28 -0700
-Keith Busch <keith.busch@intel.com> wrote:
+On Fri, Mar 8, 2019 at 9:26 PM Richard Guy Briggs <rgb@redhat.com> wrote:
+> On 2019-03-07 13:32, Ondrej Mosnacek wrote:
+> > This patchset implements auditing of (syscall-triggered) changes that
+> > can modify or indirectly affect the system clock. Some of these
+> > changes can already be detected by simply logging relevant syscalls,
+> > but this has some disadvantages:
+> >   a) It is usually not possible to find out from the syscall records
+> >      the amount by which the time was shifted.
+> >   b) Syscalls like adjtimex(2) or clock_adjtime(2) can be used also
+> >      for read-only operations, which might flood the audit log with
+> >      false positives. (Note that these patches don't solve this
+> >      problem yet due to the limitations of current record filtering
+> >      capabilities.)
+> >
+> > The main motivation is to provide better reliability of timestamps
+> > on the system as mandated by the FPT_STM.1 security functional
+> > requirement from Common Criteria. This requirement apparently demands
+> > that it is possible to reconstruct from audit trail the old and new
+> > values of the time when it is adjusted (see [1]).
+> >
+> > The current version of the patchset logs the following changes:
+> >   - direct setting of system time to a given value
+> >   - direct injection of timekeeping offset
+> >   - adjustment of timekeeping's TAI offset
+> >   - NTP value adjustments:
+> >     - time_offset
+> >     - time_freq
+> >     - time_status
+> >     - time_adjust
+> >     - tick_usec
+> >
+> > Changes to the following NTP values are not logged, as they are not
+> > important for security:
+> >   - time_maxerror
+> >   - time_esterror
+> >   - time_constant
+> >
+> > Audit kernel GitHub issue: https://github.com/linux-audit/audit-kernel/issues/10
+> > Audit kernel RFE page: https://github.com/linux-audit/audit-kernel/wiki/RFE-More-detailed-auditing-of-changes-to-system-clock
+> >
+> > Testing: Passed audit-testuite; functional tests TBD
+>
+> Reviewed-by: Richard Guy Briggs <rgb@redhat.com>
+>
+> How do you plan to test this in the audit-testsuite?
 
-> == Changes since v6 ==
-> 
->   Updated to linux-next, which has a change to the HMAT structures to
->   account for ACPI revision 6.3.
-> 
->   Changed memory-side cache "associativity" attribute to "indexing"
-> 
-> 
-> Regarding the Kconfig, I am having the implementation specific as a user
-> selectable option, and the generic interface, HMEM_REPORTING, is not a
-> user prompt. I just wanted to clarify the point that there's only one.
-> 
-> 
-> == Background ==
-> 
-> Platforms may provide multiple types of cpu attached system memory. The
-> memory ranges for each type may have different characteristics that
-> applications may wish to know about when considering what node they want
-> their memory allocated from. 
-> 
-> It had previously been difficult to describe these setups as memory
-> rangers were generally lumped into the NUMA node of the CPUs. New
-> platform attributes have been created and in use today that describe
-> the more complex memory hierarchies that can be created.
-> 
-> This series' objective is to provide the attributes from such systems
-> that are useful for applications to know about, and readily usable with
-> existing tools and libraries. Those applications may query performance
-> attributes relative to a particular CPU they're running on in order to
-> make more informed choices for where they want to allocate hot and cold
-> data. This works with mbind() or the numactl library.
+My plan is to add a new subtest which will use a short C program that
+calls the relevant syscalls (they are listed in patch 1/2) directly
+and will check if they produce the expected records. I outlined some
+specific things to be tested in the RFE page.
 
-Hi Keith,
+>
+> > Changes in v6:
+> >   - Reorganized the patches to group changes by record type, not
+> >     kernel subsytem, as suggested in earlier discussions
+> >   - Added checks to ignore no-change events (new value == old value)
+> >   - Added TIME_INJOFFSET logging also to do_settimeofday64() to cover
+> >     syscalls such as settimeofday(2), stime(2), clock_settime(2)
+> >   - Created an RFE page on audit-kernel GitHub
+> > TODO:
+> >   - tests for audit-testsuite
+> >
+> > v5: https://www.redhat.com/archives/linux-audit/2018-August/msg00039.html
+> > Changes in v5:
+> >   - Dropped logging of some less important changes and update commit messages
+> >   - No longer mark the patchset as RFC
+> >
+> > v4: https://www.redhat.com/archives/linux-audit/2018-August/msg00023.html
+> > Changes in v4:
+> >   - Squashed first two patches into one
+> >   - Renamed ADJNTPVAL's "type" field to "op" to align with audit record
+> >     conventions
+> >   - Minor commit message editing
+> >   - Cc timekeeping/NTP people for feedback
+> >
+> > v3: https://www.redhat.com/archives/linux-audit/2018-July/msg00001.html
+> > Changes in v3:
+> >   - Switched to separate records for each variable
+> >   - Both old and new value is now reported for each change
+> >   - Injecting offset is reported via a separate record (since this
+> >     offset consists of two values and is added directly to the clock,
+> >     i.e. it doesn't make sense to log old and new value)
+> >   - Added example records produced by chronyd -q (see the commit message
+> >     of the last patch)
+> >
+> > v2: https://www.redhat.com/archives/linux-audit/2018-June/msg00114.html
+> > Changes in v2:
+> >   - The audit_adjtime() function has been modified to only log those
+> >     fields that contain values that are actually used, resulting in more
+> >     compact records.
+> >   - The audit_adjtime() call has been moved to do_adjtimex() in
+> >     timekeeping.c
+> >   - Added an additional patch (for review) that simplifies the detection
+> >     if the syscall is read-only.
+> >
+> > v1: https://www.redhat.com/archives/linux-audit/2018-June/msg00095.html
+> >
+> > [1] https://www.niap-ccevs.org/MMO/PP/pp_ca_v2.1.pdf -- section 5.1,
+> >     table 4
+> >
+> > Ondrej Mosnacek (2):
+> >   timekeeping: Audit clock adjustments
+> >   ntp: Audit NTP parameters adjustment
+> >
+> >  include/linux/audit.h      | 29 +++++++++++++++++++++++++++++
+> >  include/uapi/linux/audit.h |  2 ++
+> >  kernel/auditsc.c           | 15 +++++++++++++++
+> >  kernel/time/ntp.c          | 38 ++++++++++++++++++++++++++++++--------
+> >  kernel/time/timekeeping.c  |  6 ++++++
+> >  5 files changed, 82 insertions(+), 8 deletions(-)
+> >
+> > --
+> > 2.20.1
+> >
+>
+> - RGB
+>
+> --
+> Richard Guy Briggs <rgb@redhat.com>
+> Sr. S/W Engineer, Kernel Security, Base Operating Systems
+> Remote, Ottawa, Red Hat Canada
+> IRC: rgb, SunRaycer
+> Voice: +1.647.777.2635, Internal: (81) 32635
 
-Great to see this 'nearly' good to go.
-
-For those that were too small / trivial to deserve a reviewed-by
-Acked-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
-
-Subject to that one tweak in patch 7,
-Tested-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
-
-Note that my tests were very limited for the memory-side caches
-and not exactly comprehensive for the access attributes either.
-
-They focused on the cases I care about rather than putting together
-a fuller test suite.  That is probably worth doing at some point though
-not sure I'll get to it any time soon.
-
-Thanks,
-
-Jonathan
-
-> 
-> Keith Busch (10):
->   acpi: Create subtable parsing infrastructure
->   acpi: Add HMAT to generic parsing tables
->   acpi/hmat: Parse and report heterogeneous memory
->   node: Link memory nodes to their compute nodes
->   node: Add heterogenous memory access attributes
->   node: Add memory-side caching attributes
->   acpi/hmat: Register processor domain to its memory
->   acpi/hmat: Register performance attributes
->   acpi/hmat: Register memory side cache attributes
->   doc/mm: New documentation for memory performance
-> 
->  Documentation/ABI/stable/sysfs-devices-node   |  87 +++-
->  Documentation/admin-guide/mm/numaperf.rst     | 164 +++++++
->  arch/arm64/kernel/acpi_numa.c                 |   2 +-
->  arch/arm64/kernel/smp.c                       |   4 +-
->  arch/ia64/kernel/acpi.c                       |  14 +-
->  arch/x86/kernel/acpi/boot.c                   |  36 +-
->  drivers/acpi/Kconfig                          |   1 +
->  drivers/acpi/Makefile                         |   1 +
->  drivers/acpi/hmat/Kconfig                     |  11 +
->  drivers/acpi/hmat/Makefile                    |   1 +
->  drivers/acpi/hmat/hmat.c                      | 670 ++++++++++++++++++++++++++
->  drivers/acpi/numa.c                           |  16 +-
->  drivers/acpi/scan.c                           |   4 +-
->  drivers/acpi/tables.c                         |  76 ++-
->  drivers/base/Kconfig                          |   8 +
->  drivers/base/node.c                           | 352 +++++++++++++-
->  drivers/irqchip/irq-gic-v2m.c                 |   2 +-
->  drivers/irqchip/irq-gic-v3-its-pci-msi.c      |   2 +-
->  drivers/irqchip/irq-gic-v3-its-platform-msi.c |   2 +-
->  drivers/irqchip/irq-gic-v3-its.c              |   6 +-
->  drivers/irqchip/irq-gic-v3.c                  |  10 +-
->  drivers/irqchip/irq-gic.c                     |   4 +-
->  drivers/mailbox/pcc.c                         |   2 +-
->  include/linux/acpi.h                          |   6 +-
->  include/linux/node.h                          |  72 ++-
->  25 files changed, 1487 insertions(+), 66 deletions(-)
->  create mode 100644 Documentation/admin-guide/mm/numaperf.rst
->  create mode 100644 drivers/acpi/hmat/Kconfig
->  create mode 100644 drivers/acpi/hmat/Makefile
->  create mode 100644 drivers/acpi/hmat/hmat.c
-> 
-
-
+--
+Ondrej Mosnacek <omosnace at redhat dot com>
+Associate Software Engineer, Security Technologies
+Red Hat, Inc.
