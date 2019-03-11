@@ -2,234 +2,188 @@ Return-Path: <SRS0=FxTY=RO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 22F21C10F0C
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 Mar 2019 09:13:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 83B0FC43381
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 Mar 2019 09:13:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D2DA4206BA
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 Mar 2019 09:13:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 45FE72075C
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 Mar 2019 09:13:44 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="ENlxhxor"
+	dkim=pass (2048-bit key) header.d=baylibre-com.20150623.gappssmtp.com header.i=@baylibre-com.20150623.gappssmtp.com header.b="mRNrRAxZ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727026AbfCKJNi (ORCPT
+        id S1727091AbfCKJNn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 11 Mar 2019 05:13:38 -0400
-Received: from mail-wr1-f65.google.com ([209.85.221.65]:33573 "EHLO
-        mail-wr1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726682AbfCKJNh (ORCPT
+        Mon, 11 Mar 2019 05:13:43 -0400
+Received: from mail-wr1-f66.google.com ([209.85.221.66]:44948 "EHLO
+        mail-wr1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727033AbfCKJNl (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 11 Mar 2019 05:13:37 -0400
-Received: by mail-wr1-f65.google.com with SMTP id i8so4180745wrm.0
-        for <linux-kernel@vger.kernel.org>; Mon, 11 Mar 2019 02:13:35 -0700 (PDT)
+        Mon, 11 Mar 2019 05:13:41 -0400
+Received: by mail-wr1-f66.google.com with SMTP id w2so4139256wrt.11
+        for <linux-kernel@vger.kernel.org>; Mon, 11 Mar 2019 02:13:39 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:subject:from:in-reply-to:date:cc
-         :content-transfer-encoding:message-id:references:to;
-        bh=v/GXb4J8pruY+jsYpA5h+s1lRj17Oc3uyTpQGDh1w8w=;
-        b=ENlxhxor5yVkfqj2Mq6zMM7gCyyA+zH9ueY3O0/xLlglPlG3wLfjh+lIwxAkBjlmQb
-         Sc1yNzXV1MLPSVi7eQ4MFpRmIBXWLuHBhyECz88wd8EtirjfzAjcKlqZGEW3WqqYXbD/
-         k7c21cH1AfFDfluvsCNoLlJ9FKYkh9NkmIsOWCU/sGzPShLy3AACvkBNqLrQ3xhtfmy5
-         ZHtiLUP5L6gsypO1yzzuKMr9zzdwEZOQqeLYMtoCEXly74RikDFQRZnRN+xxnpwikM06
-         Elr6vy2UEpbpuMOUeTeTlMmEq7RK51AE56NxxcdAQDkonGOCoDMQnMwLs+WTh/srZbBq
-         jNqg==
+        d=baylibre-com.20150623.gappssmtp.com; s=20150623;
+        h=subject:to:cc:references:from:openpgp:autocrypt:organization
+         :message-id:date:user-agent:mime-version:in-reply-to
+         :content-language:content-transfer-encoding;
+        bh=NuerTc2fpI9z6/DTCz1boyUaac/YxoBZPWr0MXu5tiE=;
+        b=mRNrRAxZtnEtWT4ZcZz+IFLJ/2TLZDzfaTMcDxNIUQT2XBsMAPf7O2c0DJApQ2mRNn
+         KLHs2TgwCXvp4NxgKq4naql+8ksXKcHy/0wxDBHFbcl3i2EFeqHpfdF4bRXZGCzxl0my
+         h8oFjMHZeBT0UdRhOXUvUoQ50JbJWHbUO8pZqrRNAUqDknaxmdp92qZo/uyr3AHJUqmm
+         PGeaHmtbLb/ihv/8I2B1DdKHu4k5HCfNGSzbrXs266PMblfip3yWOpza7MY9lHc7obuq
+         omw+5k1UFpY0L6U8dzdZxEqYfs17dW9i6dFzDAWh5B5Q4qsdCGPd1GhoFiCP+aoVJW5z
+         LcvQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:subject:from:in-reply-to:date:cc
-         :content-transfer-encoding:message-id:references:to;
-        bh=v/GXb4J8pruY+jsYpA5h+s1lRj17Oc3uyTpQGDh1w8w=;
-        b=Ypr8+OiRkU0H0FT3P5iaTkTxlEY8kfEyUyGX/F35+yXZMyb+uoU0LTgMcvv57CPCow
-         N42CI22ePjP5/poWKm3wvJeCKDDdRVW1W1fb8yFUkjl8bQ3YlGVapqqmCLUG040Piodh
-         CgpOwE03JRjhl6uLhTuSZNV5CdUhgvM/rO3I7PDILCS1kpoR2BzxUm/T297XBYf6mHVJ
-         TS0PhHVXwZXJMwg3ihV/Dtg1+ZtcdXxFDddHtRtBBRKSxLsqQ9VSzhSfda4b4ujKzhQc
-         XJFosYm+nzn82VIxKbdp5XU7zi22L+73ubuNcnFcGbFyWC8McujSj0CqNHC+k/qStMCN
-         LWHQ==
-X-Gm-Message-State: APjAAAVl9KPufYRIKsQgwTfSj14M89ZOWYymA4VY3Iz5ao7dhD8VOv0H
-        R/UBTHht3pgo9ZuwjqsSgtr4gQ==
-X-Google-Smtp-Source: APXvYqwo6hItvEQ9SuWbQ7XxvTra4ikvKzQiaWvfbWCT4LFBxxglZklsf9KhIqXT3U6OzD1sJmIiJQ==
-X-Received: by 2002:adf:d4ca:: with SMTP id w10mr2430118wrk.197.1552295614993;
-        Mon, 11 Mar 2019 02:13:34 -0700 (PDT)
-Received: from [192.168.0.100] (146-241-91-215.dyn.eolo.it. [146.241.91.215])
-        by smtp.gmail.com with ESMTPSA id w4sm22318088wmg.8.2019.03.11.02.13.33
+        h=x-gm-message-state:subject:to:cc:references:from:openpgp:autocrypt
+         :organization:message-id:date:user-agent:mime-version:in-reply-to
+         :content-language:content-transfer-encoding;
+        bh=NuerTc2fpI9z6/DTCz1boyUaac/YxoBZPWr0MXu5tiE=;
+        b=lGagKem+OkZ6bQsyx4enPew5Kk6dew8Wv5X7+fkllfxsCjTTYRrK8WdKcZzPJlwcUp
+         u2WCn2gMKqWA+3oMu+R4wTZ3w6rkScrJS+1T7Hh20e6hv6PmTcR29p/nV8Amw2tbK01j
+         x6pPNUsfChbtn0yoRLCpwczZKxpLKL5vS4hcBx3SDlNUEFSbV0hmFVzMHjaO7330GBt2
+         z5odnFEMEmjTsEQWrwDcyufFtPJvnWJWgkFiVEqZSK/BKuWvhwflpgC/k78/N0L8Hp0U
+         /Hg4qubezh2yQhhyDe3oIMR+VRZEtlephiCoURffewDQRRb/+OGdvqXpGRgobAMik8J6
+         lX7Q==
+X-Gm-Message-State: APjAAAVduhu/IHL2EFSDd/l9OYellFmtzvmwLaOps1tlae7ZdNlZQZCR
+        zZUiYIueYDd7/88YuF2cH6hvhpCXnucCmw==
+X-Google-Smtp-Source: APXvYqyW+yXnQsmRogXtruRVrxggBDLVdiEqRt6Ku8SIpyvGs76WFoNrj+Dlh8NaD7wJE+CWJZVz2g==
+X-Received: by 2002:adf:e90b:: with SMTP id f11mr19763234wrm.36.1552295618697;
+        Mon, 11 Mar 2019 02:13:38 -0700 (PDT)
+Received: from [10.1.2.12] (lmontsouris-657-1-212-31.w90-63.abo.wanadoo.fr. [90.63.244.31])
+        by smtp.gmail.com with ESMTPSA id l18sm7074606wrv.20.2019.03.11.02.13.37
         (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Mon, 11 Mar 2019 02:13:34 -0700 (PDT)
-Content-Type: text/plain;
-        charset=utf-8
-Mime-Version: 1.0 (Mac OS X Mail 12.2 \(3445.102.3\))
-Subject: Re: [PATCH BUGFIX IMPROVEMENT V2 7/9] block, bfq: print SHARED
- instead of pid for shared queues in logs
-From:   Paolo Valente <paolo.valente@linaro.org>
-In-Reply-To: <491be7d2-cbe2-a1f1-e102-b449b3a8ace6@applied-asynchrony.com>
-Date:   Mon, 11 Mar 2019 10:13:31 +0100
-Cc:     Jens Axboe <axboe@kernel.dk>,
-        linux-block <linux-block@vger.kernel.org>,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        Ulf Hansson <ulf.hansson@linaro.org>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Mark Brown <broonie@kernel.org>,
-        'Oleksandr Natalenko' via bfq-iosched 
-        <bfq-iosched@googlegroups.com>, oleksandr@natalenko.name,
-        fra.fra.800@gmail.com, alessio.masola@gmail.com
-Content-Transfer-Encoding: quoted-printable
-Message-Id: <74D5550B-765A-46C4-9663-F2CEA2E95F5E@linaro.org>
-References: <20190310181137.2604-1-paolo.valente@linaro.org>
- <20190310181137.2604-8-paolo.valente@linaro.org>
- <491be7d2-cbe2-a1f1-e102-b449b3a8ace6@applied-asynchrony.com>
-To:     =?utf-8?Q?Holger_Hoffst=C3=A4tte?= <holger@applied-asynchrony.com>
-X-Mailer: Apple Mail (2.3445.102.3)
+        Mon, 11 Mar 2019 02:13:38 -0700 (PDT)
+Subject: Re: [PATCH 4/9] arm64: dts: meson: g12a: add uart_ao_a pinctrl
+To:     khilman@baylibre.com
+Cc:     Jerome Brunet <jbrunet@baylibre.com>,
+        linux-amlogic@lists.infradead.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+References: <20190307151342.7381-1-narmstrong@baylibre.com>
+ <20190307151342.7381-5-narmstrong@baylibre.com>
+From:   Neil Armstrong <narmstrong@baylibre.com>
+Openpgp: preference=signencrypt
+Autocrypt: addr=narmstrong@baylibre.com; prefer-encrypt=mutual; keydata=
+ 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
+ ZaTUOEkgIor5losDrePdPgE=
+Organization: Baylibre
+Message-ID: <244fba9a-31ab-a75c-3de2-a66638a9d36d@baylibre.com>
+Date:   Mon, 11 Mar 2019 10:13:37 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.5.1
+MIME-Version: 1.0
+In-Reply-To: <20190307151342.7381-5-narmstrong@baylibre.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On 07/03/2019 16:13, Neil Armstrong wrote:
+> From: Jerome Brunet <jbrunet@baylibre.com>
+> 
+> Add the always on UART pinctrl setting to the g12a soc DT and
+> use it for the u200 reference design
+> 
+> Signed-off-by: Jerome Brunet <jbrunet@baylibre.com>
+> Signed-off-by: Neil Armstrong <narmstrong@baylibre.com>
+> ---
+>  .../arm64/boot/dts/amlogic/meson-g12a-u200.dts |  2 ++
+>  arch/arm64/boot/dts/amlogic/meson-g12a.dtsi    | 18 ++++++++++++++++++
+>  2 files changed, 20 insertions(+)
+> 
+> diff --git a/arch/arm64/boot/dts/amlogic/meson-g12a-u200.dts b/arch/arm64/boot/dts/amlogic/meson-g12a-u200.dts
+> index c44dbdddf2cf..f2afd0bf3e28 100644
+> --- a/arch/arm64/boot/dts/amlogic/meson-g12a-u200.dts
+> +++ b/arch/arm64/boot/dts/amlogic/meson-g12a-u200.dts
+> @@ -25,5 +25,7 @@
+>  
+>  &uart_AO {
+>  	status = "okay";
+> +	pinctrl-0 = <&uart_ao_a_pins>;
+> +	pinctrl-names = "default";
+>  };
+>  
+> diff --git a/arch/arm64/boot/dts/amlogic/meson-g12a.dtsi b/arch/arm64/boot/dts/amlogic/meson-g12a.dtsi
+> index c141cc7f6b09..f8f055c49f9a 100644
+> --- a/arch/arm64/boot/dts/amlogic/meson-g12a.dtsi
+> +++ b/arch/arm64/boot/dts/amlogic/meson-g12a.dtsi
+> @@ -177,6 +177,24 @@
+>  						#gpio-cells = <2>;
+>  						gpio-ranges = <&ao_pinctrl 0 0 15>;
+>  					};
+> +
+> +					uart_ao_a_pins: uart_a_ao {
+> +						mux {
+> +							groups = "uart_ao_a_tx",
+> +								 "uart_ao_a_rx";
+> +							function = "uart_ao_a";
+> +							bias-disable;
+> +						};
+> +					};
+> +
+> +					uart_ao_a_cts_rts_pins: uart_ao_a_cts_rts {
+> +						mux {
+> +							groups = "uart_ao_a_cts",
+> +								 "uart_ao_a_rts";
+> +							function = "uart_ao_a";
+> +							bias-disable;
+> +						};
+> +					};
+>  				};
+>  			};
+>  
+> 
 
-
-> Il giorno 11 mar 2019, alle ore 10:08, Holger Hoffst=C3=A4tte =
-<holger@applied-asynchrony.com> ha scritto:
->=20
-> Hi,
->=20
-> Guess what - more problems ;-)
-
-The curse of the print SHARED :)
-
-Thank you very much Holger for testing what I guiltily did not.  I'll
-send a v3 as Francesco fixes this too.
-
-Paolo
-
-> This time when building without CONFIG_BFQ_GROUP_IOSCHED, see below..
->=20
-> On 3/10/19 7:11 PM, Paolo Valente wrote:
->> From: Francesco Pollicino <fra.fra.800@gmail.com>
->> The function "bfq_log_bfqq" prints the pid of the process
->> associated with the queue passed as input.
->> Unfortunately, if the queue is shared, then more than one process
->> is associated with the queue. The pid that gets printed in this
->> case is the pid of one of the associated processes.
->> Which process gets printed depends on the exact sequence of merge
->> events the queue underwent. So printing such a pid is rather
->> useless and above all is often rather confusing because it
->> reports a random pid between those of the associated processes.
->> This commit addresses this issue by printing SHARED instead of a pid
->> if the queue is shared.
->> Signed-off-by: Francesco Pollicino <fra.fra.800@gmail.com>
->> Signed-off-by: Paolo Valente <paolo.valente@linaro.org>
->> ---
->>  block/bfq-iosched.c | 10 ++++++++++
->>  block/bfq-iosched.h | 23 +++++++++++++++++++----
->>  2 files changed, 29 insertions(+), 4 deletions(-)
->> diff --git a/block/bfq-iosched.c b/block/bfq-iosched.c
->> index 500b04df9efa..7d95d9c01036 100644
->> --- a/block/bfq-iosched.c
->> +++ b/block/bfq-iosched.c
->> @@ -2590,6 +2590,16 @@ bfq_merge_bfqqs(struct bfq_data *bfqd, struct =
-bfq_io_cq *bic,
->>  	 *   assignment causes no harm).
->>  	 */
->>  	new_bfqq->bic =3D NULL;
->> +	/*
->> +	 * If the queue is shared, the pid is the pid of one of the =
-associated
->> +	 * processes. Which pid depends on the exact sequence of merge =
-events
->> +	 * the queue underwent. So printing such a pid is useless and =
-confusing
->> +	 * because it reports a random pid between those of the =
-associated
->> +	 * processes.
->> +	 * We mark such a queue with a pid -1, and then print SHARED =
-instead of
->> +	 * a pid in logging messages.
->> +	 */
->> +	new_bfqq->pid =3D -1;
->>  	bfqq->bic =3D NULL;
->>  	/* release process reference to bfqq */
->>  	bfq_put_queue(bfqq);
->> diff --git a/block/bfq-iosched.h b/block/bfq-iosched.h
->> index 829730b96fb2..6410cc9a064d 100644
->> --- a/block/bfq-iosched.h
->> +++ b/block/bfq-iosched.h
->> @@ -32,6 +32,8 @@
->>  #define BFQ_DEFAULT_GRP_IOPRIO	0
->>  #define BFQ_DEFAULT_GRP_CLASS	IOPRIO_CLASS_BE
->>  +#define MAX_PID_STR_LENGTH 12
->> +
->>  /*
->>   * Soft real-time applications are extremely more latency sensitive
->>   * than interactive ones. Over-raise the weight of the former to
->> @@ -1016,13 +1018,23 @@ void bfq_add_bfqq_busy(struct bfq_data *bfqd, =
-struct bfq_queue *bfqq);
->>  /* --------------- end of interface of B-WF2Q+ ---------------- */
->>    /* Logging facilities. */
->> +static void bfq_pid_to_str(int pid, char *str, int len)
->> +{
->> +	if (pid !=3D -1)
->> +		snprintf(str, len, "%d", pid);
->> +	else
->> +		snprintf(str, len, "SHARED-");
->> +}
->> +
->>  #ifdef CONFIG_BFQ_GROUP_IOSCHED
->>  struct bfq_group *bfqq_group(struct bfq_queue *bfqq);
->>    #define bfq_log_bfqq(bfqd, bfqq, fmt, args...)	do {			=
-\
->> +	char pid_str[MAX_PID_STR_LENGTH];	\
->> +	bfq_pid_to_str((bfqq)->pid, pid_str, MAX_PID_STR_LENGTH);	=
-\
->>  	blk_add_cgroup_trace_msg((bfqd)->queue,				=
-\
->>  			bfqg_to_blkg(bfqq_group(bfqq))->blkcg,		=
-\
->> -			"bfq%d%c " fmt, (bfqq)->pid,			=
-\
->> +			"bfq%s%c " fmt, pid_str,			=
-\
->>  			bfq_bfqq_sync((bfqq)) ? 'S' : 'A', ##args);	=
-\
->>  } while (0)
->>  @@ -1033,10 +1045,13 @@ struct bfq_group *bfqq_group(struct =
-bfq_queue *bfqq);
->>    #else /* CONFIG_BFQ_GROUP_IOSCHED */
->>  -#define bfq_log_bfqq(bfqd, bfqq, fmt, args...)	\
->> -	blk_add_trace_msg((bfqd)->queue, "bfq%d%c " fmt, (bfqq)->pid,	=
-\
->> +#define bfq_log_bfqq(bfqd, bfqq, fmt, args...) do {	\
->> +	char pid_str[MAX_PID_STR_LENGTH];	\
->> +	bfq_pid_to_str((bfqq)->pid, pid_str, MAX_PID_STR_LENGTH);	=
-\
->> +	blk_add_trace_msg((bfqd)->queue, "bfq%s%c " fmt, pid_str,	=
-\
->>  			bfq_bfqq_sync((bfqq)) ? 'S' : 'A',		=
-\
->> -				##args)
->> +				##args)		\
-> ---------------------------------------^ compilation error due to =
-missing ;
->=20
->> +} while (0)
->>  #define bfq_log_bfqg(bfqd, bfqg, fmt, args...)		do {} =
-while (0)
-> ^^^^^^^^^^^^^^^^^^^^^^^^
-> Here you re- and effectively undefine the previous new bfq_log_bfqq()
-> definition with an empty block; I think you wanted to delete the =
-second
-> (empty) definition, otherwise the new code won't do much.
->=20
-> Finally there is now a warning at bfq-cgroup.c:25 that =
-bfq_pid_to_str()
-> is defined but not used (in that compilation unit) since it is defined
-> unconditionally for both cases of CONFIG_BFQ_GROUP_IOSCHED, which is
-> required for bfq-cgroup.c. Since reordering the includes there won't =
-work
-> due to ifdef overlaps, the easiest fix for that is to mark =
-bfq_pid_to_str()
-> as "static inline", as already suggested by Oleksandr.
->=20
-> With those changes it builds.
->=20
-> cheers,
-> Holger
-
+Will move this out of this patchset to the boards patchset
