@@ -6,37 +6,37 @@ X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B0758C43381
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 Mar 2019 14:45:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E2781C43381
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 Mar 2019 14:45:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 891BE20657
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 Mar 2019 14:45:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B332720657
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 Mar 2019 14:45:26 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727860AbfCKOpR (ORCPT
+        id S1727847AbfCKOpP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 11 Mar 2019 10:45:17 -0400
-Received: from mga05.intel.com ([192.55.52.43]:11790 "EHLO mga05.intel.com"
+        Mon, 11 Mar 2019 10:45:15 -0400
+Received: from mga09.intel.com ([134.134.136.24]:14901 "EHLO mga09.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727722AbfCKOpL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S1727488AbfCKOpL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Mon, 11 Mar 2019 10:45:11 -0400
 X-Amp-Result: SKIPPED(no attachment in message)
 X-Amp-File-Uploaded: False
-Received: from orsmga001.jf.intel.com ([10.7.209.18])
-  by fmsmga105.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 11 Mar 2019 07:45:10 -0700
+Received: from orsmga007.jf.intel.com ([10.7.209.58])
+  by orsmga102.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 11 Mar 2019 07:45:10 -0700
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="5.58,468,1544515200"; 
-   d="scan'208";a="202415584"
+   d="scan'208";a="121681632"
 Received: from tassilo.jf.intel.com (HELO tassilo.localdomain) ([10.7.201.137])
-  by orsmga001.jf.intel.com with ESMTP; 11 Mar 2019 07:45:10 -0700
+  by orsmga007.jf.intel.com with ESMTP; 11 Mar 2019 07:45:10 -0700
 Received: by tassilo.localdomain (Postfix, from userid 1000)
-        id 455C4301DEE; Mon, 11 Mar 2019 07:45:10 -0700 (PDT)
+        id 14484301BF1; Mon, 11 Mar 2019 07:45:10 -0700 (PDT)
 From:   Andi Kleen <andi@firstfloor.org>
 To:     acme@kernel.org
 Cc:     jolsa@kernel.org, linux-perf-users@vger.kernel.org,
         linux-kernel@vger.kernel.org, Andi Kleen <ak@linux.intel.com>
-Subject: [PATCH v6 09/11] perf tools report: Add custom scripts to script menu
-Date:   Mon, 11 Mar 2019 07:45:00 -0700
-Message-Id: <20190311144502.15423-10-andi@firstfloor.org>
+Subject: [PATCH v6 03/11] perf tools report: Support time sort key
+Date:   Mon, 11 Mar 2019 07:44:54 -0700
+Message-Id: <20190311144502.15423-4-andi@firstfloor.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190311144502.15423-1-andi@firstfloor.org>
 References: <20190311144502.15423-1-andi@firstfloor.org>
@@ -49,80 +49,211 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Andi Kleen <ak@linux.intel.com>
 
-Add a way to define custom scripts through ~/.perfconfig, which
-are then added to the scripts menu. The scripts get the same
-arguments as perf script, in particular -i, --cpu, --tid.
+Add a time sort key to perf report to display samples for
+different time quantums separately. This allows easier
+analysis of workloads that change over time, and also
+will allow looking at the context of samples.
+
+% perf record ...
+% perf report --sort time,overhead,symbol --time-quantum 1ms --stdio
+...
+     0.67%  277061.87300  [.] _dl_start
+     0.50%  277061.87300  [.] f1
+     0.50%  277061.87300  [.] f2
+     0.33%  277061.87300  [.] main
+     0.29%  277061.87300  [.] _dl_lookup_symbol_x
+     0.29%  277061.87300  [.] dl_main
+     0.29%  277061.87300  [.] do_lookup_x
+     0.17%  277061.87300  [.] _dl_debug_initialize
+     0.17%  277061.87300  [.] _dl_init_paths
+     0.08%  277061.87300  [.] check_match
+     0.04%  277061.87300  [.] _dl_count_modids
+     1.33%  277061.87400  [.] f1
+     1.33%  277061.87400  [.] f2
+     1.33%  277061.87400  [.] main
+     1.17%  277061.87500  [.] main
+     1.08%  277061.87500  [.] f1
+     1.08%  277061.87500  [.] f2
+     1.00%  277061.87600  [.] main
+     0.83%  277061.87600  [.] f1
+     0.83%  277061.87600  [.] f2
+     1.00%  277061.87700  [.] main
 
 Signed-off-by: Andi Kleen <ak@linux.intel.com>
----
- tools/perf/Documentation/perf-config.txt |  8 ++++++++
- tools/perf/ui/browsers/scripts.c         | 20 ++++++++++++++++++++
- 2 files changed, 28 insertions(+)
 
-diff --git a/tools/perf/Documentation/perf-config.txt b/tools/perf/Documentation/perf-config.txt
-index 2d0fb7613134..c3323228d3d0 100644
---- a/tools/perf/Documentation/perf-config.txt
-+++ b/tools/perf/Documentation/perf-config.txt
-@@ -590,6 +590,14 @@ samples.*::
- 		Define how many ns worth of time to show
- 		around samples in perf report sample context browser.
+---
+v2:
+Use symbol_conf.time_quantum
+v3:
+Use _PER_NSEC defines
+Fix fallback path for zero quantum
+---
+ tools/perf/Documentation/perf-report.txt |  2 ++
+ tools/perf/util/hist.c                   | 11 +++++++
+ tools/perf/util/hist.h                   |  1 +
+ tools/perf/util/sort.c                   | 39 ++++++++++++++++++++++++
+ tools/perf/util/sort.h                   |  2 ++
+ 5 files changed, 55 insertions(+)
+
+diff --git a/tools/perf/Documentation/perf-report.txt b/tools/perf/Documentation/perf-report.txt
+index 9ec1702bccdd..546d87221ad8 100644
+--- a/tools/perf/Documentation/perf-report.txt
++++ b/tools/perf/Documentation/perf-report.txt
+@@ -105,6 +105,8 @@ OPTIONS
+ 	guest machine
+ 	- sample: Number of sample
+ 	- period: Raw number of event count of sample
++	- time: Separate the samples by time stamp with the resolution specified by
++	--time-quantum (default 100ms). Specify with overhead and before it.
  
-+script.*::
-+
-+	Any option defines a script that is added to the scripts menu
-+	in the interactive perf browser and whose output is displayed.
-+	The name of the option is the name, the value is a script command line.
-+	The script gets the same options passed as a full perf script,
-+	in particular -i perfdata file, --cpu, --tid
-+
- SEE ALSO
- --------
- linkperf:perf[1]
-diff --git a/tools/perf/ui/browsers/scripts.c b/tools/perf/ui/browsers/scripts.c
-index cdba58447b85..5d407ab834b5 100644
---- a/tools/perf/ui/browsers/scripts.c
-+++ b/tools/perf/ui/browsers/scripts.c
-@@ -6,6 +6,7 @@
- #include "../../util/symbol.h"
- #include "../browser.h"
- #include "../libslang.h"
-+#include "config.h"
+ 	By default, comm, dso and symbol keys are used.
+ 	(i.e. --sort comm,dso,symbol)
+diff --git a/tools/perf/util/hist.c b/tools/perf/util/hist.c
+index f9eb95bf3938..fd5d02c1a521 100644
+--- a/tools/perf/util/hist.c
++++ b/tools/perf/util/hist.c
+@@ -19,6 +19,7 @@
+ #include <math.h>
+ #include <inttypes.h>
+ #include <sys/param.h>
++#include <linux/time64.h>
  
- #define SCRIPT_NAMELEN	128
- #define SCRIPT_MAX_NO	64
-@@ -53,6 +54,24 @@ static int add_script_option(const char *name, const char *opt,
- 	return 0;
+ static bool hists__filter_entry_by_dso(struct hists *hists,
+ 				       struct hist_entry *he);
+@@ -192,6 +193,7 @@ void hists__calc_col_len(struct hists *hists, struct hist_entry *h)
+ 	hists__new_col_len(hists, HISTC_MEM_LVL, 21 + 3);
+ 	hists__new_col_len(hists, HISTC_LOCAL_WEIGHT, 12);
+ 	hists__new_col_len(hists, HISTC_GLOBAL_WEIGHT, 12);
++	hists__new_col_len(hists, HISTC_TIME, 12);
+ 
+ 	if (h->srcline) {
+ 		len = MAX(strlen(h->srcline), strlen(sort_srcline.se_header));
+@@ -246,6 +248,14 @@ static void he_stat__add_cpumode_period(struct he_stat *he_stat,
+ 	}
  }
  
-+static int scripts_config(const char *var, const char *value, void *data)
++static long hist_time(unsigned long time)
 +{
-+	struct script_config *c = data;
-+
-+	if (!strstarts(var, "script."))
-+		return -1;
-+	if (c->index >= SCRIPT_MAX_NO)
-+		return -1;
-+	c->names[c->index] = strdup(var + 7);
-+	if (!c->names[c->index])
-+		return -1;
-+	if (asprintf(&c->paths[c->index], "%s %s", value,
-+		     c->extra_format) < 0)
-+		return -1;
-+	c->index++;
-+	return 0;
++	unsigned long time_quantum = symbol_conf.time_quantum;
++	if (time_quantum)
++		return (time / time_quantum) * time_quantum;
++	return time;
 +}
 +
- /*
-  * When success, will copy the full path of the selected script
-  * into  the buffer pointed by script_name, and return 0.
-@@ -87,6 +106,7 @@ static int list_scripts(char *script_name, bool *custom,
- 			  &scriptc);
- 	add_script_option("Show individual samples with source", "-F +srcline,+srccode",
- 			  &scriptc);
-+	perf_config(scripts_config, &scriptc);
- 	custom_perf = scriptc.index;
- 	add_script_option("Show samples with custom perf script arguments", "", &scriptc);
- 	i = scriptc.index;
+ static void he_stat__add_period(struct he_stat *he_stat, u64 period,
+ 				u64 weight)
+ {
+@@ -635,6 +645,7 @@ __hists__add_entry(struct hists *hists,
+ 		.raw_data = sample->raw_data,
+ 		.raw_size = sample->raw_size,
+ 		.ops = ops,
++		.time = hist_time(sample->time),
+ 	}, *he = hists__findnew_entry(hists, &entry, al, sample_self);
+ 
+ 	if (!hists->has_callchains && he && he->callchain_size != 0)
+diff --git a/tools/perf/util/hist.h b/tools/perf/util/hist.h
+index 4af27fbab24f..6279eca56409 100644
+--- a/tools/perf/util/hist.h
++++ b/tools/perf/util/hist.h
+@@ -31,6 +31,7 @@ enum hist_filter {
+ 
+ enum hist_column {
+ 	HISTC_SYMBOL,
++	HISTC_TIME,
+ 	HISTC_DSO,
+ 	HISTC_THREAD,
+ 	HISTC_COMM,
+diff --git a/tools/perf/util/sort.c b/tools/perf/util/sort.c
+index d2299e912e59..bdd30cab51cb 100644
+--- a/tools/perf/util/sort.c
++++ b/tools/perf/util/sort.c
+@@ -3,6 +3,7 @@
+ #include <inttypes.h>
+ #include <regex.h>
+ #include <linux/mman.h>
++#include <linux/time64.h>
+ #include "sort.h"
+ #include "hist.h"
+ #include "comm.h"
+@@ -15,6 +16,7 @@
+ #include <traceevent/event-parse.h>
+ #include "mem-events.h"
+ #include "annotate.h"
++#include "time-utils.h"
+ #include <linux/kernel.h>
+ 
+ regex_t		parent_regex;
+@@ -654,6 +656,42 @@ struct sort_entry sort_socket = {
+ 	.se_width_idx	= HISTC_SOCKET,
+ };
+ 
++/* --sort time */
++
++static int64_t
++sort__time_cmp(struct hist_entry *left, struct hist_entry *right)
++{
++	return right->time - left->time;
++}
++
++static int hist_entry__time_snprintf(struct hist_entry *he, char *bf,
++				    size_t size, unsigned int width)
++{
++	unsigned long secs;
++	unsigned long long nsecs;
++	char he_time[32];
++
++	nsecs = he->time;
++	secs = nsecs / NSEC_PER_SEC;
++	nsecs -= secs * NSEC_PER_SEC;
++
++	if (symbol_conf.nanosecs)
++		snprintf(he_time, sizeof he_time, "%5lu.%09llu: ",
++			 secs, nsecs);
++	else
++		timestamp__scnprintf_usec(he->time, he_time,
++					  sizeof(he_time));
++
++	return repsep_snprintf(bf, size, "%-.*s", width, he_time);
++}
++
++struct sort_entry sort_time = {
++	.se_header      = "Time",
++	.se_cmp	        = sort__time_cmp,
++	.se_snprintf    = hist_entry__time_snprintf,
++	.se_width_idx	= HISTC_TIME,
++};
++
+ /* --sort trace */
+ 
+ static char *get_trace_output(struct hist_entry *he)
+@@ -1634,6 +1672,7 @@ static struct sort_dimension common_sort_dimensions[] = {
+ 	DIM(SORT_DSO_SIZE, "dso_size", sort_dso_size),
+ 	DIM(SORT_CGROUP_ID, "cgroup_id", sort_cgroup_id),
+ 	DIM(SORT_SYM_IPC_NULL, "ipc_null", sort_sym_ipc_null),
++	DIM(SORT_TIME, "time", sort_time),
+ };
+ 
+ #undef DIM
+diff --git a/tools/perf/util/sort.h b/tools/perf/util/sort.h
+index 2fbee0b1011c..19dceb7f6145 100644
+--- a/tools/perf/util/sort.h
++++ b/tools/perf/util/sort.h
+@@ -135,6 +135,7 @@ struct hist_entry {
+ 	char			*srcfile;
+ 	struct symbol		*parent;
+ 	struct branch_info	*branch_info;
++	long			time;
+ 	struct hists		*hists;
+ 	struct mem_info		*mem_info;
+ 	void			*raw_data;
+@@ -231,6 +232,7 @@ enum sort_type {
+ 	SORT_DSO_SIZE,
+ 	SORT_CGROUP_ID,
+ 	SORT_SYM_IPC_NULL,
++	SORT_TIME,
+ 
+ 	/* branch stack specific sort keys */
+ 	__SORT_BRANCH_STACK,
 -- 
 2.20.1
 
