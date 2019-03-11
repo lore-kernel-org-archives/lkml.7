@@ -2,106 +2,104 @@ Return-Path: <SRS0=FxTY=RO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.0 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6FFDFC43381
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 Mar 2019 09:55:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E2263C43381
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 Mar 2019 09:56:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2F652206BA
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 Mar 2019 09:55:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AF6A4206BA
+	for <linux-kernel@archiver.kernel.org>; Mon, 11 Mar 2019 09:56:20 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=baylibre-com.20150623.gappssmtp.com header.i=@baylibre-com.20150623.gappssmtp.com header.b="MGvMuB0p"
+	dkim=pass (2048-bit key) header.d=baylibre-com.20150623.gappssmtp.com header.i=@baylibre-com.20150623.gappssmtp.com header.b="1+gXhw+2"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727134AbfCKJz4 (ORCPT
+        id S1727164AbfCKJ4T (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 11 Mar 2019 05:55:56 -0400
-Received: from mail-oi1-f195.google.com ([209.85.167.195]:46043 "EHLO
-        mail-oi1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726989AbfCKJzz (ORCPT
+        Mon, 11 Mar 2019 05:56:19 -0400
+Received: from mail-wr1-f44.google.com ([209.85.221.44]:43866 "EHLO
+        mail-wr1-f44.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726567AbfCKJ4T (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 11 Mar 2019 05:55:55 -0400
-Received: by mail-oi1-f195.google.com with SMTP id t82so3099523oie.12
-        for <linux-kernel@vger.kernel.org>; Mon, 11 Mar 2019 02:55:54 -0700 (PDT)
+        Mon, 11 Mar 2019 05:56:19 -0400
+Received: by mail-wr1-f44.google.com with SMTP id d17so4295672wre.10
+        for <linux-kernel@vger.kernel.org>; Mon, 11 Mar 2019 02:56:17 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=baylibre-com.20150623.gappssmtp.com; s=20150623;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=4mgLO8GjIRGemzyiDWBOZgSDz812zHoHuJiyKDaWj6g=;
-        b=MGvMuB0pVVRHiVoUELQKyxcn3kfJr4VS+GCKSpRO9J0lK8A/kwJxH0v9TCw6EAvl3O
-         97X6lPm4g34dGOMqdAe3KkHDWw8uP53d1DlI6069xDlAXV6FyEenH/HjPZJTItZH8ovS
-         RoGRqcGRsDuYg5TfW4BZlDrY2cC6iUKXzPCg+RHvz5vqsnfTmkR+7H/8gitfSCi42XYt
-         i4gtL/iLd+AGXcaWZQGROJAxFWfUzsjvA5d7wcJgvq2KPm6SOwQHiDHxaZAEOIyrYpsd
-         NbbfhuO9pbAktp0IicKMfktMVfj0nFABtDfO5VutNdS8nt3KpyCerQFzfmoeWAO0/xGM
-         bWtg==
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=E5odumMPqXsJ46+A7zdstiqux6E3Cw2T3fnx8yG9MXA=;
+        b=1+gXhw+29l+0dSa+z3z7JYPFdgfOrGVsZDRLbi0tKX/1OSMbfD1UQ1mKD/pXxyNP/p
+         Z87hgrqil/yfsLhYMw89JIFvZ2tBV2OpI18EzDNpINXwpCTgtwkGxcDIOqNRlrMF/HYv
+         1yhmhTz715ShEmbAeAyQ986PjRvq+agKlPwqPMTOBcYMUSv3llQn1qRx3xfEJahogozP
+         bQmB58oPOen4lET+Ac5x4yrZ7BvfuIwAX5QLBJBsMfNhi1YiqTbqW7W7BUuZuHwn1Zne
+         qAXj6ITTZ8F9697EmyTBCwt3puxmEVn/ek7yXlIeV28mRM++2e97eJstRDbOJv0p8zQ6
+         2AjA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=4mgLO8GjIRGemzyiDWBOZgSDz812zHoHuJiyKDaWj6g=;
-        b=P/baBq/qeuCoLNp6lwSI50/BHi8EJlIooAw23VLrDdeIVysNrQY7Xd8SylUZcGj+WJ
-         5BKu1dkJDOpewcQsqO/CcbtWtffteObGt5ph6Z8DYzWTgwKnqsFxdzhd41x0sde2wRIL
-         oJnEKWFzCArBjJB5V93xxcWYnzmZdfTlgvuane74PjH9df7bJnS3y6BEG+ruhusoMQGu
-         V45c5ZnTbGrZ/zlU4schuOVQw54qHTJPLpOCc+86XbIGp0DgDCYVEnNrKme9vn/IB7ZA
-         zHd+6+u6gB30H+Y2i8QiV6kpbzsxD2PEDxLAlLjyXPomOECx/1R+p7eTgyaFkFPmVoWb
-         mJhw==
-X-Gm-Message-State: APjAAAXc0hTumZh9v95EMotbDtCR/alKDZ8J75qwjQ8qVMIpynle5p5b
-        MFntD0gPTf4Dt0ZnsUJ55aVbykRSahmJqtHD42lSlQ==
-X-Google-Smtp-Source: APXvYqxNLGbrA/VllyprphQLk9CKxJSR/HQEOnemVinc8qayxHm2j2IUrcu5svuWrQhJzdRfBTAzCp2XUpE8qFMPtbI=
-X-Received: by 2002:aca:fd91:: with SMTP id b139mr16540852oii.170.1552298154134;
- Mon, 11 Mar 2019 02:55:54 -0700 (PDT)
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=E5odumMPqXsJ46+A7zdstiqux6E3Cw2T3fnx8yG9MXA=;
+        b=dT1ag3fxB1ruVuNeEnaFyqzSC4jZQQpjONCDzhocXAHekmX6j67Gcl2xblDe+bl4q2
+         x3aKj1hgvGEV+j8Xv5WB5T+cUQS1kj0Jw0+157p0JwFuKJBE9EfabzFOS+SHqpq/HfcT
+         vnQ1GPpQEXB1FlCjLwUEwnondkNsLsvD9B6jdj0bpunlPIKiZYJx/PEm2LjzG/Jy9UN5
+         Hapjo6WAfbPbNtpy1m8twufzA8JYJq/RGiyZlfqRUVtS1qT1UJo/JPOWxK2CvNvEQae/
+         pkdS+87wIa2tjR3xKvJRWxii7dRfLH4Ms3K/u3yYOSm8iSV7dC9BGRPLKhOaievoZ4y/
+         mErg==
+X-Gm-Message-State: APjAAAUyu9u0IOla+v+hTH9J7hIc8H+/GmBIrD+Qgp1R7MGoXG45WC23
+        osI1+HCUMucAsunYcA5DaIuv9w==
+X-Google-Smtp-Source: APXvYqxL0XcwZmofwI221hhIdt6O80Bqt79gm2QFbzYhqwx1hpUIU84Q8dJKd6XSOixysjSZV1KKCw==
+X-Received: by 2002:adf:f690:: with SMTP id v16mr19993596wrp.139.1552298177009;
+        Mon, 11 Mar 2019 02:56:17 -0700 (PDT)
+Received: from bender.baylibre.local (lmontsouris-657-1-212-31.w90-63.abo.wanadoo.fr. [90.63.244.31])
+        by smtp.gmail.com with ESMTPSA id e12sm4764737wrs.91.2019.03.11.02.56.16
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-SHA bits=128/128);
+        Mon, 11 Mar 2019 02:56:16 -0700 (PDT)
+From:   Neil Armstrong <narmstrong@baylibre.com>
+To:     khilman@baylibre.com
+Cc:     Neil Armstrong <narmstrong@baylibre.com>,
+        linux-amlogic@lists.infradead.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+Subject: [PATCH 00/11] arm64: dts: g12a: Add boards peripherals
+Date:   Mon, 11 Mar 2019 10:56:02 +0100
+Message-Id: <20190311095613.11371-1-narmstrong@baylibre.com>
+X-Mailer: git-send-email 2.20.1
 MIME-Version: 1.0
-References: <20190311062737.6652-1-andrew.smirnov@gmail.com>
-In-Reply-To: <20190311062737.6652-1-andrew.smirnov@gmail.com>
-From:   Bartosz Golaszewski <bgolaszewski@baylibre.com>
-Date:   Mon, 11 Mar 2019 10:55:43 +0100
-Message-ID: <CAMpxmJXXp9KMNBExV5xQZg-dmS=WeRSD52_CKgXneMw5oA9dSg@mail.gmail.com>
-Subject: Re: [PATCH 0/7] VF610 GPIO fixes/improvments
-To:     Andrey Smirnov <andrew.smirnov@gmail.com>
-Cc:     linux-gpio <linux-gpio@vger.kernel.org>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Chris Healy <cphealy@gmail.com>, Andrew Lunn <andrew@lunn.ch>,
-        Heiner Kallweit <hkallweit1@gmail.com>,
-        Fabio Estevam <festevam@gmail.com>,
-        LKML <linux-kernel@vger.kernel.org>, linux-imx@nxp.com
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-pon., 11 mar 2019 o 07:28 Andrey Smirnov <andrew.smirnov@gmail.com> napisa=
-=C5=82(a):
->
-> Everyone:
->
-> This series contains a number of fixes/improvements I came up with
-> while working VF610 GPIO code. Hopefully each commit is
-> self-explanatory.
->
-> Feedback is welcome!
->
-> Thanks,
-> Andrey Smirnov
->
-> Andrey Smirnov (7):
->   gpio: vf610: Do not share irq_chip
->   gpio: vf610: Simplify vf610_gpio_set()
->   gpio: vf610: Simplify vf610_gpio_get()
->   gpio: vf610: Use devres to disable clk_port
->   gpio: vf610: Use devres to disable clk_gpio
->   gpio: vf610: Use devres to remove gpiochip
->   gpio: vf610: Don't use explicit &pdev->dev in vf610_gpio_probe()
->
->  drivers/gpio/gpio-vf610.c | 85 +++++++++++++++++----------------------
->  1 file changed, 36 insertions(+), 49 deletions(-)
->
-> --
-> 2.20.1
->
+Following [1], add regulators, bluetooth, UART and ADC keys on :
+- meson-g12a-x96-max
+- meson-g12a-u200
+- meson-g12a-sei510
 
-Nice cleanups! Series applied, thanks!
+[1] https://patchwork.kernel.org/cover/10843095/
 
-Bart
+Guillaume La Roque (1):
+  arm64: dts: meson-g12a-x96-max: add regulators
+
+Jerome Brunet (2):
+  arm64: dts: meson-g12a-u200: add regulators
+  arm64: dts: meson-g12a-sei510: add regulators
+
+Neil Armstrong (8):
+  arm64: dts: meson-g12a-u200: add uart_AO pinctrl
+  arm64: dts: meson-g12a-sei510: add uart_AO pinctrl
+  arm64: dts: meson-g12a-x96-max: add uart_AO pinctrl
+  arm64: dts: meson-g12a-x96-max: Enable BT Module
+  arm64: dts: meson-g12a-sei510: Add ADC Key and BT support
+  arm64: dts: meson-g12a-sei510: Enable USB
+  arm64: dts: meson-g12a-u200: Enable USB
+  arm64: dts: meson-g12a-x96-max: Enable USB
+
+ .../boot/dts/amlogic/meson-g12a-sei510.dts    | 97 +++++++++++++++++++
+ .../boot/dts/amlogic/meson-g12a-u200.dts      | 97 +++++++++++++++++++
+ .../boot/dts/amlogic/meson-g12a-x96-max.dts   | 88 +++++++++++++++++
+ 3 files changed, 282 insertions(+)
+
+-- 
+2.20.1
+
