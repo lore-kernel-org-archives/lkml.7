@@ -2,100 +2,266 @@ Return-Path: <SRS0=J4ZE=RP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8F66BC43381
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 21:13:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DD6BBC10F00
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 21:13:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 65A9D2147C
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 21:13:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8C9172175B
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 21:13:46 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="TqRyxSi9"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726791AbfCLVNM convert rfc822-to-8bit (ORCPT
+        id S1726945AbfCLVNp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 12 Mar 2019 17:13:12 -0400
-Received: from mail-ot1-f67.google.com ([209.85.210.67]:45076 "EHLO
-        mail-ot1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726396AbfCLVNM (ORCPT
+        Tue, 12 Mar 2019 17:13:45 -0400
+Received: from mail-io1-f66.google.com ([209.85.166.66]:37054 "EHLO
+        mail-io1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726396AbfCLVNo (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 12 Mar 2019 17:13:12 -0400
-Received: by mail-ot1-f67.google.com with SMTP id i12so3823350otp.12
-        for <linux-kernel@vger.kernel.org>; Tue, 12 Mar 2019 14:13:12 -0700 (PDT)
+        Tue, 12 Mar 2019 17:13:44 -0400
+Received: by mail-io1-f66.google.com with SMTP id x7so3435297ioh.4;
+        Tue, 12 Mar 2019 14:13:44 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=Ph/nRcOQwIH7Iz18D0S3VCpv2XhAxXLbQaFu6XqKiBI=;
+        b=TqRyxSi9sgw9xEzqbjSt0EEbwLKM1pM/ZbqEE4V0pc9PCO3Q+BTAzqj8it9S5AHKS0
+         i5dhe23tB6ve6htzSECsVwxa3NsgQe+DDvuQjxAXCgxbyTeuanXQUm7LnBR/Rfh+UGwm
+         TFLmf/d9msEyAlGkDL6F7iageyZZutX0N/sMFplKPUGI5Xq2Rc8+NdzLGfEEfQQODNZM
+         R66S/qBBanM6Uk/LtZnwI7ol6q/Bg7Ltuk141z4eZNbVUC392qUliHGmkR2rTWQImyN2
+         baMVRFC3RlqtSvDiCyqAdYor0PCAfSzk4AtnvTtdzNxW8bHqtKjaL5jplRxbgbnNtP9Q
+         XJXQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=3jmJXa4rzUEjqLYYUxVP8wSbrNr3+v4uEdwLGkO9joA=;
-        b=H7MJE2O98BdH+vFlWKRztqDkhCGuXZuxUJWqLWglZ4PCh+Ixok7F+DAjXfYgfJy6N5
-         2DDUl3J0436L+Ur53yZVHhAI3QyluXbVmG2Kh42g1Ew/3+LjIw8TUaqvK7aBfP1LPfIj
-         7aGzlQj2GHkmZ2XinJ5NGLgUFpaHDNg63nj3KJw4IhN05H8mP4HgxyM57Ly7JShrpZ78
-         Z5LpEh3G7gvsmhcFxPV40brjkE+T1Etn5wrRx26W2f94ekj7kNkjO2pjEh0t1mASl1ax
-         iePiBUV1Juts6iX43DEJBAgkXsm6fpIoJRyJjXQjT+948JqrPe0muZOWJfCqds3Gw84V
-         n2kQ==
-X-Gm-Message-State: APjAAAUMYr6Jw/yEIFnrIsiyEaeSKxgZHMPeYxYG0TLC2RXRjFs3SpOe
-        8qwKOg4RxZe4aZpeuaZoTzrleZ4VvQpJKtNjxlUbZw==
-X-Google-Smtp-Source: APXvYqzN2+BHlrw2pWgucJMJKUY//qSZUyb7RDQg4jcbZNAvYOwJ1WSHOgGonfgzc6DOPGRUWj2muPjZQ2TYGJJThIE=
-X-Received: by 2002:a9d:5616:: with SMTP id e22mr25903782oti.365.1552425191717;
- Tue, 12 Mar 2019 14:13:11 -0700 (PDT)
+         :message-id:subject:to:cc;
+        bh=Ph/nRcOQwIH7Iz18D0S3VCpv2XhAxXLbQaFu6XqKiBI=;
+        b=L0mrKditR5WKv2e1x+xQWSEo0XA3/7YAO+zV+i8NbORcNHBYmStCaHPrBJMoa0X33b
+         j31mEHMuB6r8c0MSRVD1cKG5user9XPeCCmrsOaOgOv7fwbq0u7xyT7+wjGAkb0J3kAK
+         gJCMFe5xVhmgLTpD78uFsVF9VWf+UW9YsUoKHI8W40LAPxkkvQM7p4a7gjS6PaezGfRy
+         jnH9MDnFsKdl98FK77LEw80FzP9PlJWZFkK7aDJ24PUYvM5deEJ3fIkAETkhy+dI2rsE
+         Ztop9/ZjZyOhftVRD/M+IZxB5SZR/PQlXlvZ88evqzqqBY3I6WAQJXf4yY7DVGFC511Y
+         QzPA==
+X-Gm-Message-State: APjAAAVF4emsUMbqMZqOCMTrZtRtGxBh7HtmUIdt7HslQomZ5FYxY7py
+        G5mhs2Ylc74tG+EezdX7czHlp0G4f+2Lo8m6Uw0=
+X-Google-Smtp-Source: APXvYqx6R5ALQ8xlR7Z+gpbB5yvLIqFRPtHR07v30jkWssK+SjaxmwmxEvkRl8Wv8tr3RjGNinik8wSRnw6SttmpnMY=
+X-Received: by 2002:a6b:f70a:: with SMTP id k10mr12242291iog.68.1552425223444;
+ Tue, 12 Mar 2019 14:13:43 -0700 (PDT)
 MIME-Version: 1.0
-References: <20190312202008.29681-1-malat@debian.org> <57a0d93c-8784-d6af-a5fb-75e31455ae57@c-s.fr>
-In-Reply-To: <57a0d93c-8784-d6af-a5fb-75e31455ae57@c-s.fr>
-From:   Mathieu Malaterre <malat@debian.org>
-Date:   Tue, 12 Mar 2019 22:12:59 +0100
-Message-ID: <CA+7wUsyA698UtNLni7wi3=cKjbCd1V71YA0sxDtMD=MmQvQxTQ@mail.gmail.com>
-Subject: Re: [PATCH] powerpc: sstep: Mark variable `rc` as unused in function 'analyse_instr'
-To:     Christophe Leroy <christophe.leroy@c-s.fr>
-Cc:     Michael Ellerman <mpe@ellerman.id.au>,
-        Paul Mackerras <paulus@samba.org>,
-        linuxppc-dev <linuxppc-dev@lists.ozlabs.org>,
-        LKML <linux-kernel@vger.kernel.org>
+References: <20190306155048.12868-1-nitesh@redhat.com> <20190306155048.12868-3-nitesh@redhat.com>
+ <CAKgT0UdDohCXZY3q9qhQsHw-2vKp_CAgvf2dd2e6U6KLsAkVng@mail.gmail.com>
+ <2d9ae889-a9b9-7969-4455-ff36944f388b@redhat.com> <22e4b1cd-38a5-6642-8cbe-d68e4fcbb0b7@redhat.com>
+ <CAKgT0UcAqGX26pcQLzFUevHsLu-CtiyOYe15uG3bkhGZ5BJKAg@mail.gmail.com>
+ <78b604be-2129-a716-a7a6-f5b382c9fb9c@redhat.com> <CAKgT0Uc_z9Vi+JhQcJYX+J9c4J56RRSkzzegbb2=9xO-NY3dgw@mail.gmail.com>
+ <20190307212845-mutt-send-email-mst@kernel.org> <CAKgT0Ucu3EMsYBfdKtEiprrn-VBZy3Y+0HdEp5b4PO2SQgGsRw@mail.gmail.com>
+ <17d2afa6-556e-ec73-40dc-beac536b3f20@redhat.com> <CAKgT0UcdQZwHjmMBkSWmy_ZdShJCagjwomn13g+r7ZNJBRn1LQ@mail.gmail.com>
+ <8f692047-4750-6827-1ee0-d3d354788f09@redhat.com> <CAKgT0UddT9CKg1uZo6ZODs9ARti-6XGm9Zvo+8QRZKUPSwzWMQ@mail.gmail.com>
+ <41ae8afe-72c9-58e6-0cbb-9375c91ce37a@redhat.com>
+In-Reply-To: <41ae8afe-72c9-58e6-0cbb-9375c91ce37a@redhat.com>
+From:   Alexander Duyck <alexander.duyck@gmail.com>
+Date:   Tue, 12 Mar 2019 14:13:31 -0700
+Message-ID: <CAKgT0Uftff+JVRW-sQ6u8DeVg4Fq9b-pgE6Ojr+XqQFn13JmGw@mail.gmail.com>
+Subject: Re: [RFC][Patch v9 2/6] KVM: Enables the kernel to isolate guest free pages
+To:     Nitesh Narayan Lal <nitesh@redhat.com>
+Cc:     "Michael S. Tsirkin" <mst@redhat.com>,
+        David Hildenbrand <david@redhat.com>,
+        kvm list <kvm@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        linux-mm <linux-mm@kvack.org>,
+        Paolo Bonzini <pbonzini@redhat.com>, lcapitulino@redhat.com,
+        pagupta@redhat.com, wei.w.wang@intel.com,
+        Yang Zhang <yang.zhang.wz@gmail.com>,
+        Rik van Riel <riel@surriel.com>, dodgen@google.com,
+        Konrad Rzeszutek Wilk <konrad.wilk@oracle.com>,
+        dhildenb@redhat.com, Andrea Arcangeli <aarcange@redhat.com>
 Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 8BIT
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Mar 12, 2019 at 9:56 PM Christophe Leroy
-<christophe.leroy@c-s.fr> wrote:
+On Tue, Mar 12, 2019 at 12:46 PM Nitesh Narayan Lal <nitesh@redhat.com> wrote:
 >
->
->
-> Le 12/03/2019 à 21:20, Mathieu Malaterre a écrit :
-> > Add gcc attribute unused for `rc` variable.
+> On 3/8/19 4:39 PM, Alexander Duyck wrote:
+> > On Fri, Mar 8, 2019 at 11:39 AM Nitesh Narayan Lal <nitesh@redhat.com> wrote:
+> >> On 3/8/19 2:25 PM, Alexander Duyck wrote:
+> >>> On Fri, Mar 8, 2019 at 11:10 AM Nitesh Narayan Lal <nitesh@redhat.com> wrote:
+> >>>> On 3/8/19 1:06 PM, Alexander Duyck wrote:
+> >>>>> On Thu, Mar 7, 2019 at 6:32 PM Michael S. Tsirkin <mst@redhat.com> wrote:
+> >>>>>> On Thu, Mar 07, 2019 at 02:35:53PM -0800, Alexander Duyck wrote:
+> >>>>>>> The only other thing I still want to try and see if I can do is to add
+> >>>>>>> a jiffies value to the page private data in the case of the buddy
+> >>>>>>> pages.
+> >>>>>> Actually there's one extra thing I think we should do, and that is make
+> >>>>>> sure we do not leave less than X% off the free memory at a time.
+> >>>>>> This way chances of triggering an OOM are lower.
+> >>>>> If nothing else we could probably look at doing a watermark of some
+> >>>>> sort so we have to have X amount of memory free but not hinted before
+> >>>>> we will start providing the hints. It would just be a matter of
+> >>>>> tracking how much memory we have hinted on versus the amount of memory
+> >>>>> that has been pulled from that pool.
+> >>>> This is to avoid false OOM in the guest?
+> >>> Partially, though it would still be possible. Basically it would just
+> >>> be a way of determining when we have hinted "enough". Basically it
+> >>> doesn't do us much good to be hinting on free memory if the guest is
+> >>> already constrained and just going to reallocate the memory shortly
+> >>> after we hinted on it. The idea is with a watermark we can avoid
+> >>> hinting until we start having pages that are actually going to stay
+> >>> free for a while.
+> >>>
+> >>>>>  It is another reason why we
+> >>>>> probably want a bit in the buddy pages somewhere to indicate if a page
+> >>>>> has been hinted or not as we can then use that to determine if we have
+> >>>>> to account for it in the statistics.
+> >>>> The one benefit which I can see of having an explicit bit is that it
+> >>>> will help us to have a single hook away from the hot path within buddy
+> >>>> merging code (just like your arch_merge_page) and still avoid duplicate
+> >>>> hints while releasing pages.
+> >>>>
+> >>>> I still have to check PG_idle and PG_young which you mentioned but I
+> >>>> don't think we can reuse any existing bits.
+> >>> Those are bits that are already there for 64b. I think those exist in
+> >>> the page extension for 32b systems. If I am not mistaken they are only
+> >>> used in VMA mapped memory. What I was getting at is that those are the
+> >>> bits we could think about reusing.
+> >>>
+> >>>> If we really want to have something like a watermark, then can't we use
+> >>>> zone->free_pages before isolating to see how many free pages are there
+> >>>> and put a threshold on it? (__isolate_free_page() does a similar thing
+> >>>> but it does that on per request basis).
+> >>> Right. That is only part of it though since that tells you how many
+> >>> free pages are there. But how many of those free pages are hinted?
+> >>> That is the part we would need to track separately and then then
+> >>> compare to free_pages to determine if we need to start hinting on more
+> >>> memory or not.
+> >> Only pages which are isolated will be hinted, and once a page is
+> >> isolated it will not be counted in the zone free pages.
+> >> Feel free to correct me if I am wrong.
+> > You are correct up to here. When we isolate the page it isn't counted
+> > against the free pages. However after we complete the hint we end up
+> > taking it out of isolation and returning it to the "free" state, so it
+> > will be counted against the free pages.
 > >
-> > Fix warnings treated as errors with W=1:
-> >
-> >    arch/powerpc/lib/sstep.c:1172:31: error: variable 'rc' set but not used [-Werror=unused-but-set-variable]
-> >
-> > Signed-off-by: Mathieu Malaterre <malat@debian.org>
-> > ---
-> >   arch/powerpc/lib/sstep.c | 2 +-
-> >   1 file changed, 1 insertion(+), 1 deletion(-)
-> >
-> > diff --git a/arch/powerpc/lib/sstep.c b/arch/powerpc/lib/sstep.c
-> > index 3d33fb509ef4..32d092f62ae0 100644
-> > --- a/arch/powerpc/lib/sstep.c
-> > +++ b/arch/powerpc/lib/sstep.c
-> > @@ -1169,7 +1169,7 @@ static nokprobe_inline int trap_compare(long v1, long v2)
-> >   int analyse_instr(struct instruction_op *op, const struct pt_regs *regs,
-> >                 unsigned int instr)
-> >   {
-> > -     unsigned int opcode, ra, rb, rc, rd, spr, u;
-> > +     unsigned int opcode, ra, rb, rc __maybe_unused, rd, spr, u;
->
-> I think it would be better to enclose 'rc' inside a #ifdef CONFIG_PPC64
+> >> If I am understanding it correctly you only want to hint the idle pages,
+> >> is that right?
+> > Getting back to the ideas from our earlier discussion, we had 3 stages
+> > for things. Free but not hinted, isolated due to hinting, and free and
+> > hinted. So what we would need to do is identify the size of the first
+> > pool that is free and not hinted by knowing the total number of free
+> > pages, and then subtract the size of the pages that are hinted and
+> > still free.
+> To summarize, for now, I think it makes sense to stick with the current
+> approach as this way we can avoid any locking in the allocation path and
+> reduce the number of hypercalls for a bunch of MAX_ORDER - 1 page.
 
-Hum odd, I would have bet you would have suggested me to use
-IS_ENABLED with some crazy scheme (I was not able to mix it with the
-switch case nicely).
+I'm not sure what you are talking about by "avoid any locking in the
+allocation path". Are you talking about the spin on idle bit, if so
+then yes. However I have been testing your patches and I was correct
+in the assumption that you forgot to handle the zone lock when you
+were freeing __free_one_page. I just did a quick copy/paste from your
+zone lock handling from the guest_free_page_hinting function into the
+release_buddy_pages function and then I was able to enable multiple
+CPUs without any issues.
 
-Anyway I'll try your suggestion and post a v2.
+> For the next step other than the comments received in the code and what
+> I mentioned in the cover email, I would like to do the following:
+> 1. Explore the watermark idea suggested by Alex and bring down memhog
+> execution time if possible.
 
-> Christophe
->
-> >       unsigned long int imm;
-> >       unsigned long int val, val2;
-> >       unsigned int mb, me, sh;
-> >
+So there are a few things that are hurting us on the memhog test:
+1. The current QEMU patch is only madvising 4K pages at a time, this
+is disabling THP and hurts the test.
+
+2. The fact that we madvise the pages away makes it so that we have to
+fault the page back in in order to use it for the memhog test. In
+order to avoid that penalty we may want to see if we can introduce
+some sort of "timeout" on the pages so that we are only hinting away
+old pages that have not been used for some period of time.
+
+3. Currently we are still doing a large amount of processing in the
+page free path. Ideally we should look at getting away from trying to
+do so much per-cpu work and instead just have some small tasks that
+put the data needed in the page, and then have a separate thread
+walking the free_list checking that data, isolating the pages, hinting
+them, and then returning them back to the free_list.
+
+> 2. Benchmark hinting v/s non-hinting more extensively.
+> Let me know if you have any specific suggestions in terms of the tools I
+> can run to do the same. (I am planning to run atleast netperf, hackbench
+> and stress for this).
+
+So I have been running the memhog 32g test and the will-it-scale
+page_fault1 test as my primary two tests for this so far.
+
+What I have seen so far has been pretty promising. I had to do some
+build fixes, fixes to QEMU to hint on the full size page instead of 4K
+page, and fixes for locking so this isn't exactly your original patch
+set, but with all that I am seeing data comparable to the original
+patch set I had.
+
+For memhog 32g I am seeing performance similar to a VM that was fresh
+booted. I make that the comparison because you will have to take page
+faults on a fresh boot as you access additional memory. However after
+the first run of the runtime drops  from 22s to 20s without the
+hinting enabled.
+
+The big one that probably still needs some work will be the multi-cpu
+scaling. With the per-cpu locking for the zone lock to pull pages out,
+and put them back in the free list I am seeing what looks like about a
+10% drop in the page_fault1 test. Here are the results as I have seen
+so far on a 16 cpu 32G VM:
+
+-- baseline --
+./runtest.py page_fault1
+tasks,processes,processes_idle,threads,threads_idle,linear
+0,0,100,0,100,0
+1,522242,93.73,514965,93.74,522242
+2,929433,87.48,857280,87.50,1044484
+3,1360651,81.25,1214224,81.48,1566726
+4,1693709,75.01,1437156,76.33,2088968
+5,2062392,68.77,1743294,70.78,2611210
+6,2271363,62.54,1787238,66.75,3133452
+7,2564479,56.33,1924684,61.77,3655694
+8,2699897,50.09,2205783,54.28,4177936
+9,2931697,43.85,2135788,50.20,4700178
+10,2939384,37.63,2258725,45.04,5222420
+11,3039010,31.41,2209401,41.04,5744662
+12,3022976,25.19,2177655,35.68,6266904
+13,3015683,18.98,2123546,31.73,6789146
+14,2921798,12.77,2160489,27.30,7311388
+15,2846758,6.51,1815036,17.40,7833630
+16,2703146,0.36,2121018,18.21,8355872
+
+-- modified rh patchset --
+./runtest.py page_fault1
+tasks,processes,processes_idle,threads,threads_idle,linear
+0,0,100,0,100,0
+1,527216,93.72,517459,93.70,527216
+2,911239,87.48,843278,87.51,1054432
+3,1295059,81.22,1193523,81.61,1581648
+4,1649332,75.02,1439403,76.17,2108864
+5,1985780,68.81,1745556,70.44,2636080
+6,2174751,62.56,1769433,66.84,3163296
+7,2433273,56.33,2121777,58.46,3690512
+8,2537356,50.17,1901743,57.23,4217728
+9,2737689,43.87,1859179,54.17,4744944
+10,2718474,37.65,2188891,43.69,5272160
+11,2743381,31.47,2205112,38.00,5799376
+12,2738717,25.26,2117281,38.09,6326592
+13,2643648,19.06,1887956,35.31,6853808
+14,2598001,12.92,1916544,27.87,7381024
+15,2498325,6.70,1992580,26.10,7908240
+16,2424587,0.45,2137742,21.37,8435456
+
+As we discussed earlier, it would probably be good to focus on only
+pulling something like 4 to 8 (MAX_ORDER - 1) pages per round of
+hinting. You might also look at only working one zone at a time. Then
+what you could do is look at placing the pages you have already hinted
+on at the tail end of the free_list and pull a new set of pages out to
+hint on. You could do this all in one shot while holding the zone
+lock.
