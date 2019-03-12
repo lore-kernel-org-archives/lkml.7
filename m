@@ -2,468 +2,152 @@ Return-Path: <SRS0=J4ZE=RP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3DD0BC43381
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 08:12:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 646E5C43381
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 08:12:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E9D09214D8
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 08:11:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 352882147C
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 08:12:41 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=sifive.com header.i=@sifive.com header.b="KBzwe5ZS"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="dTy8c44Y"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727534AbfCLIL6 (ORCPT
+        id S1727552AbfCLIMj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 12 Mar 2019 04:11:58 -0400
-Received: from mail-pf1-f194.google.com ([209.85.210.194]:33655 "EHLO
-        mail-pf1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727402AbfCLIL4 (ORCPT
+        Tue, 12 Mar 2019 04:12:39 -0400
+Received: from mail-ed1-f65.google.com ([209.85.208.65]:44120 "EHLO
+        mail-ed1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726614AbfCLIMi (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 12 Mar 2019 04:11:56 -0400
-Received: by mail-pf1-f194.google.com with SMTP id i19so1278640pfd.0
-        for <linux-kernel@vger.kernel.org>; Tue, 12 Mar 2019 01:11:55 -0700 (PDT)
+        Tue, 12 Mar 2019 04:12:38 -0400
+Received: by mail-ed1-f65.google.com with SMTP id b20so1437387edw.11
+        for <linux-kernel@vger.kernel.org>; Tue, 12 Mar 2019 01:12:36 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=sifive.com; s=google;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references;
-        bh=DmcQ0gJRY3cgm0tjcWWK1ZRcFIkIsKUcf0BGXbgSqw8=;
-        b=KBzwe5ZSZA945QIetKI/LlpZdtFyvyzrwJbyRDfPKI+2vfklFScX0ydibP5LQxCcUq
-         dA45Ll5zN77At8r2n8wIUKe4mjRSaqG9lWBySebHU+Yx2ctKCt9+bBYZtSvaCZa8VxkG
-         x2mwjP9pj8+Bd0Y1jyDkEHgnzmkSY81w6iGJ8UNupwrJcNm8T1bVlfJSOg7sHFEpPHs0
-         bAKMSpiyN+FPJRA9KC+9yCrEDUiTn+/yxyAeWempKirZPK8rtK8//5dOzrvtDR1lgdsY
-         NhGP6Qqz38GOuuXkSySN1C5WE8+27Z8dA5/ap+wnYrpJdhIiA16yQLZHEf8FS6FQ+TqZ
-         J+nQ==
+        d=chromium.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=R0mZsImqR53Kxxc9BQBRXlQ0nDhqA80yLbSd4EnNMSA=;
+        b=dTy8c44YfGvEllrv3/Z69NO6ez+TCw4MCLIeGwuroytkoenZl6fk80U6qpeNtn36CX
+         4+qzaBE9RYyhfSAizT2/JjOo1ZrW2dslLs5VMyAiTqTNVGtfJQC4BTXXG3arlw9vANaV
+         f0lGkr6zO3AfMlI12TryuOpWgxOtCG5BQQuus=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references;
-        bh=DmcQ0gJRY3cgm0tjcWWK1ZRcFIkIsKUcf0BGXbgSqw8=;
-        b=Zuc5UTxLPvtfh1/SFFlSCO/7bjUtHCuOZq1vggY88ToGu0dZH9062Fd+1vUf7KhDjL
-         yLc/M608/4luCTc5nt+TCyVaBXzl439ImBt3WvBpMuG1CzkJ7VZ2WqPjjz8oCrn7mr18
-         0FLQwBeet+phZR1lvThc4CGZyXODKn+iSn9cIuA+fwCSx6ShhLSNG0YZSbxbXNguRA5r
-         +JxV7I1gZdaMhtA6knp8ta9L1mRRennHJS08KWHJyFGPWCerNhmCKX6eyADrkyyyv59v
-         vrcIOkZgMmP/AnpREBV6sFZsK0WOzWoEXau85Rz4WWD908R24lbhj0G50k1doYE3vnfE
-         7bOg==
-X-Gm-Message-State: APjAAAVuS3r3/UqTgGtZU93LK6VbT4Z3D6r7ffjNlK5rxJtEN4YVXks4
-        leL4cEzofesOVNqa1QAuxe4Hmg==
-X-Google-Smtp-Source: APXvYqzUT85n0JHgYZjsniVS0PQ8e0t97hYcfMk9hOzZTbMb/pECgYjLWNuKhC8KBPJEhgRDT2n5iQ==
-X-Received: by 2002:a63:7403:: with SMTP id p3mr33556791pgc.343.1552378315489;
-        Tue, 12 Mar 2019 01:11:55 -0700 (PDT)
-Received: from buildserver-90.open-silicon.com ([114.143.65.226])
-        by smtp.googlemail.com with ESMTPSA id o5sm3687795pgc.16.2019.03.12.01.11.51
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-SHA bits=128/128);
-        Tue, 12 Mar 2019 01:11:54 -0700 (PDT)
-From:   Yash Shah <yash.shah@sifive.com>
-To:     palmer@sifive.com, linux-pwm@vger.kernel.org,
-        linux-riscv@lists.infradead.org
-Cc:     thierry.reding@gmail.com, robh+dt@kernel.org, mark.rutland@arm.com,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        sachin.ghadi@sifive.com, paul.walmsley@sifive.com,
-        Yash Shah <yash.shah@sifive.com>
-Subject: [PATCH v9 2/2] pwm: sifive: Add a driver for SiFive SoC PWM
-Date:   Tue, 12 Mar 2019 13:41:29 +0530
-Message-Id: <1552378289-27245-3-git-send-email-yash.shah@sifive.com>
-X-Mailer: git-send-email 1.9.1
-In-Reply-To: <1552378289-27245-1-git-send-email-yash.shah@sifive.com>
-References: <1552378289-27245-1-git-send-email-yash.shah@sifive.com>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=R0mZsImqR53Kxxc9BQBRXlQ0nDhqA80yLbSd4EnNMSA=;
+        b=Dm4UPsDKSUtxGrXa+K6Z9xG8GlPy37yVqHmJB77Nu1hh+rq7wH4BqCfnDs2Vfp4OyV
+         lyblUPyrbR5/EWsrbCH/9sCICyJnC2ofPJ0AEY9gliZYcYBKCDmNVwvdOp/YMs2Wvv1N
+         o6kAZEn7bDO+cV6Fhreb4zZ31JIfKB9j4/hjhe/jgCW8NgbIT211hxp98Uz0Y/yxwT9M
+         q0JTqJprMOUEkd23MyyyaMIhRvd5fHCpA4xVsftO7elOTi+QldN8VwQiJcCxuyA8tVkt
+         vUU+2A8+EeMlJU8q5vo7hpXzYxQlYvrnId68pgR2lWY9QozL6yAbkKiO6E0bP/QP+L+u
+         0E8g==
+X-Gm-Message-State: APjAAAXieVmhbAG2oX4PV4F31K9d0SZywJUgQ1Ag2iKwiw++CS6Gadok
+        03feUrrpxpteOlLXfNPDS85uJiXFHKmL+us2wTGmQg==
+X-Google-Smtp-Source: APXvYqzMY1U7rdAtGCZ6nf6oUfHrZUQwIq7q5ROL23PAePBW8o2Qd9ZuHCqRaZsiLNG9vGcsh5lNu7DU5myS94L7i9A=
+X-Received: by 2002:a50:97b3:: with SMTP id e48mr2393733edb.159.1552378356029;
+ Tue, 12 Mar 2019 01:12:36 -0700 (PDT)
+MIME-Version: 1.0
+References: <20190307094653.119425-1-pihsun@chromium.org> <20190307122313.GA30234@dhcp22.suse.cz>
+ <CANdKZ0ez+y1rCEGszqzJp4Oz94dMpTF6NCR11yGVZaJyM1ZD4A@mail.gmail.com>
+ <20190307132353.GB30234@dhcp22.suse.cz> <CANdKZ0fgLLPyY8CatjFHMFfwAwSq1T77=aGFc+-ZLEpVdm=hLQ@mail.gmail.com>
+ <20190312080746.GF5721@dhcp22.suse.cz>
+In-Reply-To: <20190312080746.GF5721@dhcp22.suse.cz>
+From:   Pi-Hsun Shih <pihsun@chromium.org>
+Date:   Tue, 12 Mar 2019 16:12:00 +0800
+Message-ID: <CANdKZ0fYqvP=QF-f42MNbKnvVzX6GQy+1QsDrdAnxvMcmAq1Tg@mail.gmail.com>
+Subject: Re: [PATCH] mm/swap: Avoid undefined behavior in __swapoffset
+To:     Michal Hocko <mhocko@kernel.org>
+Cc:     Andrew Morton <akpm@linux-foundation.org>,
+        Matthew Wilcox <willy@infradead.org>,
+        Johannes Weiner <hannes@cmpxchg.org>,
+        Vlastimil Babka <vbabka@suse.cz>,
+        Minchan Kim <minchan@kernel.org>,
+        Omar Sandoval <osandov@fb.com>,
+        Huang Ying <ying.huang@intel.com>, Tejun Heo <tj@kernel.org>,
+        Wei Yang <richard.weiyang@gmail.com>,
+        open list <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Adds a PWM driver for PWM chip present in SiFive's HiFive Unleashed SoC.
+On Tue, Mar 12, 2019 at 4:07 PM Michal Hocko <mhocko@kernel.org> wrote:
+>
+> On Tue 12-03-19 15:02:38, Pi-Hsun Shih wrote:
+> > On Thu, Mar 7, 2019 at 9:23 PM Michal Hocko <mhocko@kernel.org> wrote:
+> > >
+> > > On Thu 07-03-19 20:47:52, Pi-Hsun Shih wrote:
+> > > > On Thu, Mar 7, 2019 at 8:23 PM Michal Hocko <mhocko@kernel.org> wrote:
+> > > > >
+> > > > > On Thu 07-03-19 17:46:50, Pi-Hsun Shih wrote:
+> > > > > > Use offsetof to calculate offset of a field to avoid UBSAN warning like:
+> > > > > >
+> > > > > > ===================================================================
+> > > > > > UBSAN: Undefined behaviour in mm/swapfile.c:3010:38
+> > > > > > member access within null pointer of type 'union swap_header'
+> > > > > > CPU: 6 PID: 1833 Comm: swapon Tainted: G S                4.19.23 #43
+> > > > > > Call trace:
+> > > > > >  dump_backtrace+0x0/0x194
+> > > > > >  show_stack+0x20/0x2c
+> > > > > >  __dump_stack+0x20/0x28
+> > > > > >  dump_stack+0x70/0x94
+> > > > > >  ubsan_epilogue+0x14/0x44
+> > > > > >  ubsan_type_mismatch_common+0xf4/0xfc
+> > > > > >  __ubsan_handle_type_mismatch_v1+0x34/0x54
+> > > > > >  __se_sys_swapon+0x654/0x1084
+> > > > > >  __arm64_sys_swapon+0x1c/0x24
+> > > > > >  el0_svc_common+0xa8/0x150
+> > > > > >  el0_svc_compat_handler+0x2c/0x38
+> > > > > >  el0_svc_compat+0x8/0x18
+> > > > > > ==================================================================
+> > > > >
+> > > > > Could you be more specific about what exactly is undefined here and
+> > > > > why offsetof is any better. AFAIR it uses the same construct unless a
+> > > > > compiler defines a built in.
+> > > > >
+> > > > > I do not object the change itself because it is cleaner to use the
+> > > > > existing helper but I am wondering why this is fixing ubsan. Is ubsan
+> > > > > defining the compiler variant and consider it safe?
+> > > > >
+> > > >
+> > > > The undefined behavior is from trying to accessing a member of NULL,
+> > > > even not using it value but only use the address.
+> > >
+> > > Hmm, we've been using this trick for ages and I do not remember any
+> > > compiler to complain as there is no real access. I am not sure what the
+> > > C standard has to tell about that but I presume reasonable compilers
+> > > will not abuse the UB here.
+> > >
+> >
+> > Some more testing shows that GCC optimize the
+> > ((size_t)&((type*)0)->member) to a constant in the result binary, and
+> > never emit any UBSAN checks on the statement.
+> > Clang doesn't optimize it to a constant in -O0, optimize it to a
+> > constant in -O1 or above, and always emit the
+> > __ubsan_handle_type_mismatch check when "-fsanitize=undefined" is
+> > given.
+> > So this UBSAN warning only happens when kernel is compiled by clang, not GCC.
+> >
+> > From what I've found, it's a UB from C standard view point
+> > (https://software.intel.com/en-us/blogs/2015/04/20/null-pointer-dereferencing-causes-undefined-behavior),
+> > but I agree that probably no reasonable compilers would abuse the UB
+> > here.
+>
+> I really do not want to go and lawyering about the standard here but
+> getting an address of an offset based on NULL ptr is not really
+> dereferencing of a NULL ptr. At least this was not the case for ages
+> and no compiler can afford to change it because there is quite a lot of
+> userspace to rely on this construct.
+>
+> But as I've said using offseoff is nicer so I completely support a patch
+> that get's read of a custom redefinition of it or open code directly.
+> But calling it an UB is a bit of stretch.
 
-Signed-off-by: Wesley W. Terpstra <wesley@sifive.com>
-[Atish: Various fixes and code cleanup]
-Signed-off-by: Atish Patra <atish.patra@wdc.com>
-Signed-off-by: Yash Shah <yash.shah@sifive.com>
----
- drivers/pwm/Kconfig      |  11 ++
- drivers/pwm/Makefile     |   1 +
- drivers/pwm/pwm-sifive.c | 338 +++++++++++++++++++++++++++++++++++++++++++++++
- 3 files changed, 350 insertions(+)
- create mode 100644 drivers/pwm/pwm-sifive.c
+Ok I'll send a v2 with a better commit title / message.
 
-diff --git a/drivers/pwm/Kconfig b/drivers/pwm/Kconfig
-index a8f47df..4a61d1a 100644
---- a/drivers/pwm/Kconfig
-+++ b/drivers/pwm/Kconfig
-@@ -380,6 +380,17 @@ config PWM_SAMSUNG
- 	  To compile this driver as a module, choose M here: the module
- 	  will be called pwm-samsung.
- 
-+config PWM_SIFIVE
-+	tristate "SiFive PWM support"
-+	depends on OF
-+	depends on COMMON_CLK
-+	depends on RISCV || COMPILE_TEST
-+	help
-+	  Generic PWM framework driver for SiFive SoCs.
-+
-+	  To compile this driver as a module, choose M here: the module
-+	  will be called pwm-sifive.
-+
- config PWM_SPEAR
- 	tristate "STMicroelectronics SPEAr PWM support"
- 	depends on PLAT_SPEAR
-diff --git a/drivers/pwm/Makefile b/drivers/pwm/Makefile
-index 9c676a0..30089ca 100644
---- a/drivers/pwm/Makefile
-+++ b/drivers/pwm/Makefile
-@@ -37,6 +37,7 @@ obj-$(CONFIG_PWM_RCAR)		+= pwm-rcar.o
- obj-$(CONFIG_PWM_RENESAS_TPU)	+= pwm-renesas-tpu.o
- obj-$(CONFIG_PWM_ROCKCHIP)	+= pwm-rockchip.o
- obj-$(CONFIG_PWM_SAMSUNG)	+= pwm-samsung.o
-+obj-$(CONFIG_PWM_SIFIVE)	+= pwm-sifive.o
- obj-$(CONFIG_PWM_SPEAR)		+= pwm-spear.o
- obj-$(CONFIG_PWM_STI)		+= pwm-sti.o
- obj-$(CONFIG_PWM_STM32)		+= pwm-stm32.o
-diff --git a/drivers/pwm/pwm-sifive.c b/drivers/pwm/pwm-sifive.c
-new file mode 100644
-index 0000000..4233557
---- /dev/null
-+++ b/drivers/pwm/pwm-sifive.c
-@@ -0,0 +1,338 @@
-+// SPDX-License-Identifier: GPL-2.0
-+/*
-+ * Copyright (C) 2017-2018 SiFive
-+ * For SiFive's PWM IP block documentation please refer Chapter 14 of
-+ * Reference Manual : https://static.dev.sifive.com/FU540-C000-v1.0.pdf
-+ *
-+ * Limitations:
-+ * - When changing both duty cycle and period, we cannot prevent in
-+ *   software that the output might produce a period with mixed
-+ *   settings (new period length and old duty cycle).
-+ * - The hardware cannot generate a 100% duty cycle.
-+ * - The hardware generates only inverted output.
-+ */
-+#include <linux/clk.h>
-+#include <linux/io.h>
-+#include <linux/module.h>
-+#include <linux/platform_device.h>
-+#include <linux/pwm.h>
-+#include <linux/slab.h>
-+#include <linux/bitfield.h>
-+
-+/* Register offsets */
-+#define PWM_SIFIVE_PWMCFG		0x0
-+#define PWM_SIFIVE_PWMCOUNT		0x8
-+#define PWM_SIFIVE_PWMS			0x10
-+#define PWM_SIFIVE_PWMCMP0		0x20
-+
-+/* PWMCFG fields */
-+#define PWM_SIFIVE_PWMCFG_SCALE		GENMASK(3, 0)
-+#define PWM_SIFIVE_PWMCFG_STICKY	BIT(8)
-+#define PWM_SIFIVE_PWMCFG_ZERO_CMP	BIT(9)
-+#define PWM_SIFIVE_PWMCFG_DEGLITCH	BIT(10)
-+#define PWM_SIFIVE_PWMCFG_EN_ALWAYS	BIT(12)
-+#define PWM_SIFIVE_PWMCFG_EN_ONCE	BIT(13)
-+#define PWM_SIFIVE_PWMCFG_CENTER	BIT(16)
-+#define PWM_SIFIVE_PWMCFG_GANG		BIT(24)
-+#define PWM_SIFIVE_PWMCFG_IP		BIT(28)
-+
-+/* PWM_SIFIVE_SIZE_PWMCMP is used to calculate offset for pwmcmpX registers */
-+#define PWM_SIFIVE_SIZE_PWMCMP		4
-+#define PWM_SIFIVE_CMPWIDTH		16
-+#define PWM_SIFIVE_DEFAULT_PERIOD	10000000
-+
-+#define div_u64_round(a, b) \
-+	({typeof(b) __b = b; div_u64((a) + __b / 2, __b); })
-+
-+struct pwm_sifive_ddata {
-+	struct pwm_chip	chip;
-+	struct mutex lock; /* lock to protect user_count */
-+	struct notifier_block notifier;
-+	struct clk *clk;
-+	void __iomem *regs;
-+	unsigned int real_period;
-+	unsigned int approx_period;
-+	int user_count;
-+};
-+
-+static inline
-+struct pwm_sifive_ddata *pwm_sifive_chip_to_ddata(struct pwm_chip *c)
-+{
-+	return container_of(c, struct pwm_sifive_ddata, chip);
-+}
-+
-+static int pwm_sifive_request(struct pwm_chip *chip, struct pwm_device *dev)
-+{
-+	struct pwm_sifive_ddata *pwm = pwm_sifive_chip_to_ddata(chip);
-+
-+	mutex_lock(&pwm->lock);
-+	pwm->user_count++;
-+	mutex_unlock(&pwm->lock);
-+
-+	return 0;
-+}
-+
-+static void pwm_sifive_free(struct pwm_chip *chip, struct pwm_device *dev)
-+{
-+	struct pwm_sifive_ddata *pwm = pwm_sifive_chip_to_ddata(chip);
-+
-+	mutex_lock(&pwm->lock);
-+	pwm->user_count--;
-+	mutex_unlock(&pwm->lock);
-+}
-+
-+static void pwm_sifive_update_clock(struct pwm_sifive_ddata *pwm,
-+				    unsigned long rate)
-+{
-+	u32 val;
-+	unsigned long long num;
-+	/*
-+	 * The PWM unit is used with pwmzerocmp=0, so the only way to modify the
-+	 * period length is using pwmscale which provides the number of bits the
-+	 * counter is shifted before being feed to the comparators. A period
-+	 * lasts (1 << (PWM_SIFIVE_CMPWIDTH + pwmscale)) clock ticks.
-+	 * (1 << (PWM_SIFIVE_CMPWIDTH + scale)) * 10^9/rate = period
-+	 */
-+	unsigned long scale_pow =
-+			div64_ul(pwm->approx_period * (u64)rate, NSEC_PER_SEC);
-+	int scale = clamp(ilog2(scale_pow) - PWM_SIFIVE_CMPWIDTH, 0, 0xf);
-+
-+	val = PWM_SIFIVE_PWMCFG_EN_ALWAYS |
-+	      FIELD_PREP(PWM_SIFIVE_PWMCFG_SCALE, scale);
-+	writel(val, pwm->regs + PWM_SIFIVE_PWMCFG);
-+
-+	/* As scale <= 15 the shift operation cannot overflow. */
-+	num = (unsigned long long)NSEC_PER_SEC << (PWM_SIFIVE_CMPWIDTH + scale);
-+	pwm->real_period = div64_ul(num, rate);
-+	dev_dbg(pwm->chip.dev, "New real_period = %u ns\n", pwm->real_period);
-+}
-+
-+static void pwm_sifive_get_state(struct pwm_chip *chip, struct pwm_device *dev,
-+				 struct pwm_state *state)
-+{
-+	struct pwm_sifive_ddata *pwm = pwm_sifive_chip_to_ddata(chip);
-+	u32 duty, val;
-+
-+	duty = readl(pwm->regs + PWM_SIFIVE_PWMCMP0 +
-+		     dev->hwpwm * PWM_SIFIVE_SIZE_PWMCMP);
-+
-+	state->enabled = duty > 0;
-+
-+	val = readl(pwm->regs + PWM_SIFIVE_PWMCFG);
-+	if (!(val & PWM_SIFIVE_PWMCFG_EN_ALWAYS))
-+		state->enabled = false;
-+
-+	state->period = pwm->real_period;
-+	state->duty_cycle =
-+		(u64)duty * pwm->real_period >> PWM_SIFIVE_CMPWIDTH;
-+	state->polarity = PWM_POLARITY_INVERSED;
-+}
-+
-+static int pwm_sifive_enable(struct pwm_chip *chip, bool enable)
-+{
-+	struct pwm_sifive_ddata *pwm = pwm_sifive_chip_to_ddata(chip);
-+	int ret;
-+
-+	if (enable) {
-+		ret = clk_enable(pwm->clk);
-+		if (ret) {
-+			dev_err(pwm->chip.dev, "Enable clk failed:%d\n", ret);
-+			return ret;
-+		}
-+	}
-+
-+	if (!enable)
-+		clk_disable(pwm->clk);
-+
-+	return 0;
-+}
-+
-+static int pwm_sifive_apply(struct pwm_chip *chip, struct pwm_device *dev,
-+			    struct pwm_state *state)
-+{
-+	struct pwm_sifive_ddata *pwm = pwm_sifive_chip_to_ddata(chip);
-+	unsigned int duty_cycle;
-+	u32 frac;
-+	struct pwm_state cur_state;
-+	bool enabled;
-+	int ret = 0;
-+	unsigned long num;
-+
-+	if (state->polarity != PWM_POLARITY_INVERSED)
-+		return -EINVAL;
-+
-+	ret = clk_enable(pwm->clk);
-+	if (ret) {
-+		dev_err(pwm->chip.dev, "Enable clk failed:%d\n", ret);
-+		return ret;
-+	}
-+
-+	mutex_lock(&pwm->lock);
-+	pwm_get_state(dev, &cur_state);
-+
-+	enabled = cur_state.enabled;
-+
-+	if (state->period != pwm->approx_period) {
-+		if (pwm->user_count != 1) {
-+			ret = -EBUSY;
-+			goto exit;
-+		}
-+		pwm->approx_period = state->period;
-+		pwm_sifive_update_clock(pwm, clk_get_rate(pwm->clk));
-+	}
-+
-+	duty_cycle = state->duty_cycle;
-+	if (!state->enabled)
-+		duty_cycle = 0;
-+
-+	num = (u64)duty_cycle * (1U << PWM_SIFIVE_CMPWIDTH);
-+	frac = div_u64_round(num, state->period);
-+	/* The hardware cannot generate a 100% duty cycle */
-+	frac = min(frac, (1U << PWM_SIFIVE_CMPWIDTH) - 1);
-+
-+	writel(frac, pwm->regs + PWM_SIFIVE_PWMCMP0 +
-+	       dev->hwpwm * PWM_SIFIVE_SIZE_PWMCMP);
-+
-+	if (state->enabled != enabled) {
-+		ret = pwm_sifive_enable(chip, state->enabled);
-+		if (ret)
-+			goto exit;
-+	}
-+
-+exit:
-+	clk_disable(pwm->clk);
-+	mutex_unlock(&pwm->lock);
-+	return ret;
-+}
-+
-+static const struct pwm_ops pwm_sifive_ops = {
-+	.request = pwm_sifive_request,
-+	.free = pwm_sifive_free,
-+	.get_state = pwm_sifive_get_state,
-+	.apply = pwm_sifive_apply,
-+	.owner = THIS_MODULE,
-+};
-+
-+static int pwm_sifive_clock_notifier(struct notifier_block *nb,
-+				     unsigned long event, void *data)
-+{
-+	struct clk_notifier_data *ndata = data;
-+	struct pwm_sifive_ddata *pwm =
-+		container_of(nb, struct pwm_sifive_ddata, notifier);
-+
-+	if (event == POST_RATE_CHANGE)
-+		pwm_sifive_update_clock(pwm, ndata->new_rate);
-+
-+	return NOTIFY_OK;
-+}
-+
-+static int pwm_sifive_probe(struct platform_device *pdev)
-+{
-+	struct device *dev = &pdev->dev;
-+	struct pwm_sifive_ddata *pwm;
-+	struct pwm_chip *chip;
-+	struct resource *res;
-+	int ret;
-+
-+	pwm = devm_kzalloc(dev, sizeof(*pwm), GFP_KERNEL);
-+	if (!pwm)
-+		return -ENOMEM;
-+
-+	mutex_init(&pwm->lock);
-+	chip = &pwm->chip;
-+	chip->dev = dev;
-+	chip->ops = &pwm_sifive_ops;
-+	chip->of_pwm_n_cells = 3;
-+	chip->base = -1;
-+	chip->npwm = 4;
-+
-+	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
-+	pwm->regs = devm_ioremap_resource(dev, res);
-+	if (IS_ERR(pwm->regs)) {
-+		dev_err(dev, "Unable to map IO resources\n");
-+		return PTR_ERR(pwm->regs);
-+	}
-+
-+	pwm->clk = devm_clk_get(dev, NULL);
-+	if (IS_ERR(pwm->clk)) {
-+		if (PTR_ERR(pwm->clk) != -EPROBE_DEFER)
-+			dev_err(dev, "Unable to find controller clock\n");
-+		return PTR_ERR(pwm->clk);
-+	}
-+
-+	ret = clk_prepare_enable(pwm->clk);
-+	if (ret) {
-+		dev_err(dev, "failed to enable clock for pwm: %d\n", ret);
-+		return ret;
-+	}
-+
-+	/* Watch for changes to underlying clock frequency */
-+	pwm->notifier.notifier_call = pwm_sifive_clock_notifier;
-+	ret = clk_notifier_register(pwm->clk, &pwm->notifier);
-+	if (ret) {
-+		dev_err(dev, "failed to register clock notifier: %d\n", ret);
-+		goto disable_clk;
-+	}
-+
-+	/* Initialize PWM */
-+	pwm->approx_period = PWM_SIFIVE_DEFAULT_PERIOD;
-+	pwm_sifive_update_clock(pwm, clk_get_rate(pwm->clk));
-+
-+	ret = pwmchip_add(chip);
-+	if (ret < 0) {
-+		dev_err(dev, "cannot register PWM: %d\n", ret);
-+		goto unregister_clk;
-+	}
-+
-+	platform_set_drvdata(pdev, pwm);
-+	dev_dbg(dev, "SiFive PWM chip registered %d PWMs\n", chip->npwm);
-+
-+	return 0;
-+
-+unregister_clk:
-+	clk_notifier_unregister(pwm->clk, &pwm->notifier);
-+disable_clk:
-+	clk_disable_unprepare(pwm->clk);
-+
-+	return ret;
-+}
-+
-+static int pwm_sifive_remove(struct platform_device *dev)
-+{
-+	struct pwm_sifive_ddata *pwm = platform_get_drvdata(dev);
-+	int ret, ch;
-+	bool is_enabled = false;
-+
-+	ret = pwmchip_remove(&pwm->chip);
-+	clk_notifier_unregister(pwm->clk, &pwm->notifier);
-+
-+	for (ch = 0; ch < pwm->chip.npwm; ch++) {
-+		if (pwm_is_enabled(&pwm->chip.pwms[ch])) {
-+			is_enabled = true;
-+			break;
-+		}
-+	}
-+	if (is_enabled)
-+		clk_disable(pwm->clk);
-+	clk_unprepare(pwm->clk);
-+	return ret;
-+}
-+
-+static const struct of_device_id pwm_sifive_of_match[] = {
-+	{ .compatible = "sifive,pwm0" },
-+	{},
-+};
-+MODULE_DEVICE_TABLE(of, pwm_sifive_of_match);
-+
-+static struct platform_driver pwm_sifive_driver = {
-+	.probe = pwm_sifive_probe,
-+	.remove = pwm_sifive_remove,
-+	.driver = {
-+		.name = "pwm-sifive",
-+		.of_match_table = pwm_sifive_of_match,
-+	},
-+};
-+module_platform_driver(pwm_sifive_driver);
-+
-+MODULE_DESCRIPTION("SiFive PWM driver");
-+MODULE_LICENSE("GPL v2");
--- 
-1.9.1
-
+> --
+> Michal Hocko
+> SUSE Labs
