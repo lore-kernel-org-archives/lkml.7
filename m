@@ -7,47 +7,47 @@ X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 794FFC43381
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 17:59:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 95D99C10F00
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 17:59:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 46F1B214AF
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 17:59:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 68479214AF
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 17:59:28 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1552413563;
-	bh=2ddWb6nN4SwCa4+bDUyaiOY3bgfooQU8Th5bk9InRqg=;
+	s=default; t=1552413568;
+	bh=UnOB25eJ+t8VptOGRxIYV1YIQ1maq8d6IOTPXLkilJA=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=OhLhigiupGvDUtYM/aBKfudBMmtvJh4BC2/DJPAa3AMTJKLsMOulVHtMx6Jovvtiu
-	 QuOzj1RU/ahdlKmzgYaMdY7wbecPjkRyWoAK4NySghnRBKakADcQz0lpJKfZMIO8eV
-	 XQzLL3nkNc43UaVpaTugFs5K3JLisOFPnr9t0824=
+	b=0aqO4h9Qbx7nyQ4WhiN3YpdXMYYH4kaF0c0qabz642FCGsJ7/w9bsC9hqGnJ54CWI
+	 Rydceh+SSJW3GFjvaT7RzFyDFt47c5Z1Ks1O3To2vLPAlH0lGt/r98k85cKMMYOxnR
+	 FSs+0eimILQg28STB6FrLq3yTVu9O6ypnFx57r/E=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728085AbfCLR7W (ORCPT
+        id S1728464AbfCLR71 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 12 Mar 2019 13:59:22 -0400
-Received: from mail.kernel.org ([198.145.29.99]:50740 "EHLO mail.kernel.org"
+        Tue, 12 Mar 2019 13:59:27 -0400
+Received: from mail.kernel.org ([198.145.29.99]:50706 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727971AbfCLRNd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S1727968AbfCLRNd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Tue, 12 Mar 2019 13:13:33 -0400
 Received: from localhost (unknown [104.133.8.98])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E8035217F5;
+        by mail.kernel.org (Postfix) with ESMTPSA id 353D421852;
         Tue, 12 Mar 2019 17:13:32 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1552410813;
-        bh=2ddWb6nN4SwCa4+bDUyaiOY3bgfooQU8Th5bk9InRqg=;
+        s=default; t=1552410812;
+        bh=UnOB25eJ+t8VptOGRxIYV1YIQ1maq8d6IOTPXLkilJA=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=X9kQWUqmQsgSuAXz78/p2goTCcXg2Cc87pseT8DXIsIrrxJ/nJ6e9CJbZ1hLh5RFi
-         GTxovtDO00zmeboYk/8aTMNMYtSPfkl8kBR/gxAnsJr+qfbOhbr67mQ1p368EHDQTH
-         uAezAE2s97Zugig2v9Z0ydmywRReGZldl/8X0YcA=
+        b=bCvjVCXsqaSmqoOQ8xoIT2qz4o+H/O/NclVtYax6/WoTXHOnxtV0CASTnYVOHdpB5
+         FOcs/XpHl3naIXadh4mOJ2YAINgvwllrov32EYPHCbIg57adg1BL2iBuU1g6JM/+fw
+         jqTA1P1b+E4pKpPOXb/xavOOUG87OtAKP2eIHC6I=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Mark Syms <mark.syms@citrix.com>,
-        Andreas Gruenbacher <agruenba@redhat.com>,
-        Bob Peterson <rpeterso@redhat.com>
-Subject: [PATCH 4.20 165/171] gfs2: Fix missed wakeups in find_insert_glock
-Date:   Tue, 12 Mar 2019 10:09:05 -0700
-Message-Id: <20190312170401.640154262@linuxfoundation.org>
+        stable@vger.kernel.org, kernel test robot <rong.a.chen@intel.com>,
+        Jakub Sitnicki <jakub@cloudflare.com>,
+        Daniel Borkmann <daniel@iogearbox.net>
+Subject: [PATCH 4.20 164/171] bpf: Stop the psock parser before canceling its work
+Date:   Tue, 12 Mar 2019 10:09:04 -0700
+Message-Id: <20190312170401.502067554@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190312170347.868927101@linuxfoundation.org>
 References: <20190312170347.868927101@linuxfoundation.org>
@@ -66,38 +66,63 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-From: Andreas Gruenbacher <agruenba@redhat.com>
+From: Jakub Sitnicki <jakub@cloudflare.com>
 
-commit 605b0487f0bc1ae9963bf52ece0f5c8055186f81 upstream.
+commit e8e3437762ad938880dd48a3c52d702e7cf3c124 upstream.
 
-Mark Syms has reported seeing tasks that are stuck waiting in
-find_insert_glock.  It turns out that struct lm_lockname contains four padding
-bytes on 64-bit architectures that function glock_waitqueue doesn't skip when
-hashing the glock name.  As a result, we can end up waking up the wrong
-waitqueue, and the waiting tasks may be stuck forever.
+We might have never enabled (started) the psock's parser, in which case it
+will not get stopped when destroying the psock. This leads to a warning
+when trying to cancel parser's work from psock's deferred destructor:
 
-Fix that by using ht_parms.key_len instead of sizeof(struct lm_lockname) for
-the key length.
+[  405.325769] WARNING: CPU: 1 PID: 3216 at net/strparser/strparser.c:526 strp_done+0x3c/0x40
+[  405.326712] Modules linked in: [last unloaded: test_bpf]
+[  405.327359] CPU: 1 PID: 3216 Comm: kworker/1:164 Tainted: G        W         5.0.0 #42
+[  405.328294] Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS ?-20180531_142017-buildhw-08.phx2.fedoraproject.org-1.fc28 04/01/2014
+[  405.329712] Workqueue: events sk_psock_destroy_deferred
+[  405.330254] RIP: 0010:strp_done+0x3c/0x40
+[  405.330706] Code: 28 e8 b8 d5 6b ff 48 8d bb 80 00 00 00 e8 9c d5 6b ff 48 8b 7b 18 48 85 ff 74 0d e8 1e a5 e8 ff 48 c7 43 18 00 00 00 00 5b c3 <0f> 0b eb cf 66 66 66 66 90 55 89 f5 53 48 89 fb 48 83 c7 28 e8 0b
+[  405.332862] RSP: 0018:ffffc900026bbe50 EFLAGS: 00010246
+[  405.333482] RAX: ffffffff819323e0 RBX: ffff88812cb83640 RCX: ffff88812cb829e8
+[  405.334228] RDX: 0000000000000001 RSI: ffff88812cb837e8 RDI: ffff88812cb83640
+[  405.335366] RBP: ffff88813fd22680 R08: 0000000000000000 R09: 000073746e657665
+[  405.336472] R10: 8080808080808080 R11: 0000000000000001 R12: ffff88812cb83600
+[  405.337760] R13: 0000000000000000 R14: ffff88811f401780 R15: ffff88812cb837e8
+[  405.338777] FS:  0000000000000000(0000) GS:ffff88813fd00000(0000) knlGS:0000000000000000
+[  405.339903] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+[  405.340821] CR2: 00007fb11489a6b8 CR3: 000000012d4d6000 CR4: 00000000000406e0
+[  405.341981] DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
+[  405.343131] DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
+[  405.344415] Call Trace:
+[  405.344821]  sk_psock_destroy_deferred+0x23/0x1b0
+[  405.345585]  process_one_work+0x1ae/0x3e0
+[  405.346110]  worker_thread+0x3c/0x3b0
+[  405.346576]  ? pwq_unbound_release_workfn+0xd0/0xd0
+[  405.347187]  kthread+0x11d/0x140
+[  405.347601]  ? __kthread_parkme+0x80/0x80
+[  405.348108]  ret_from_fork+0x35/0x40
+[  405.348566] ---[ end trace a4a3af4026a327d4 ]---
 
-Reported-by: Mark Syms <mark.syms@citrix.com>
-Signed-off-by: Andreas Gruenbacher <agruenba@redhat.com>
-Signed-off-by: Bob Peterson <rpeterso@redhat.com>
+Stop psock's parser just before canceling its work.
+
+Fixes: 1d79895aef18 ("sk_msg: Always cancel strp work before freeing the psock")
+Reported-by: kernel test robot <rong.a.chen@intel.com>
+Signed-off-by: Jakub Sitnicki <jakub@cloudflare.com>
+Signed-off-by: Daniel Borkmann <daniel@iogearbox.net>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- fs/gfs2/glock.c |    2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ net/core/skmsg.c |    1 +
+ 1 file changed, 1 insertion(+)
 
---- a/fs/gfs2/glock.c
-+++ b/fs/gfs2/glock.c
-@@ -107,7 +107,7 @@ static int glock_wake_function(wait_queu
+--- a/net/core/skmsg.c
++++ b/net/core/skmsg.c
+@@ -545,6 +545,7 @@ static void sk_psock_destroy_deferred(st
+ 	struct sk_psock *psock = container_of(gc, struct sk_psock, gc);
  
- static wait_queue_head_t *glock_waitqueue(struct lm_lockname *name)
- {
--	u32 hash = jhash2((u32 *)name, sizeof(*name) / 4, 0);
-+	u32 hash = jhash2((u32 *)name, ht_parms.key_len / 4, 0);
+ 	/* No sk_callback_lock since already detached. */
++	strp_stop(&psock->parser.strp);
+ 	strp_done(&psock->parser.strp);
  
- 	return glock_wait_table + hash_32(hash, GLOCK_WAIT_TABLE_BITS);
- }
+ 	cancel_work_sync(&psock->work);
 
 
