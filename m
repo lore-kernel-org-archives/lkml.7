@@ -2,397 +2,286 @@ Return-Path: <SRS0=J4ZE=RP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 25804C43381
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 17:41:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CCC63C43381
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 17:41:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D7DF1206DF
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 17:41:21 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="xZVusKar"
+	by mail.kernel.org (Postfix) with ESMTP id 90FD0206DF
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 17:41:29 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1552412489;
+	bh=Rwkr9kRGTXcX9GDqDa9E62RBKItdZUmWVJFF6SYzXpo=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=prFiZkf3kCVyIpRBsMRdrV0wWMv+IeraZ1DCivTIxlOo1EIocc/ScXlMhl3dpwrHF
+	 2jx7g/9pqy2VFRQ4cyCOdJ7kGo76T26olzkV9queFKrCRRRPmufNSl8UTGK+qwhe1V
+	 rIf+mTagwYJSRTIQ414smqIkcR2iUakLb2uzxZjQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727627AbfCLRlU (ORCPT
+        id S1729151AbfCLRlR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 12 Mar 2019 13:41:20 -0400
-Received: from fllv0016.ext.ti.com ([198.47.19.142]:46360 "EHLO
-        fllv0016.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728982AbfCLRQG (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 12 Mar 2019 13:41:17 -0400
+Received: from mail.kernel.org ([198.145.29.99]:57658 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728192AbfCLRQG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Tue, 12 Mar 2019 13:16:06 -0400
-Received: from lelv0265.itg.ti.com ([10.180.67.224])
-        by fllv0016.ext.ti.com (8.15.2/8.15.2) with ESMTP id x2CHFP2p074836;
-        Tue, 12 Mar 2019 12:15:25 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1552410925;
-        bh=J00UlMWvcxG3Azu7yRyik5W7B9ewbHNqKsF22gu3Ykg=;
-        h=Subject:To:CC:References:From:Date:In-Reply-To;
-        b=xZVusKarnUFFPWwv/Ce8YQ12Gk9ahLMqpL25KBnQ69Je3XdJ4PPQ7f2uJg4IB3rGm
-         QVFnxiRKNlOJhv/0v+DKclFz2IWGcVsoDgNIPRooVSnLxv2HO+7P2rzFfrtAWKg0by
-         vBNsQJtj3PSsdHsF0gxKV8C5/7BDo3vFaqFlKYnY=
-Received: from DFLE109.ent.ti.com (dfle109.ent.ti.com [10.64.6.30])
-        by lelv0265.itg.ti.com (8.15.2/8.15.2) with ESMTPS id x2CHFOLx077481
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Tue, 12 Mar 2019 12:15:24 -0500
-Received: from DFLE112.ent.ti.com (10.64.6.33) by DFLE109.ent.ti.com
- (10.64.6.30) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1591.10; Tue, 12
- Mar 2019 12:15:24 -0500
-Received: from dflp32.itg.ti.com (10.64.6.15) by DFLE112.ent.ti.com
- (10.64.6.33) with Microsoft SMTP Server (version=TLS1_0,
- cipher=TLS_RSA_WITH_AES_256_CBC_SHA) id 15.1.1591.10 via Frontend Transport;
- Tue, 12 Mar 2019 12:15:24 -0500
-Received: from [172.22.79.221] (ileax41-snat.itg.ti.com [10.172.224.153])
-        by dflp32.itg.ti.com (8.14.3/8.13.8) with ESMTP id x2CHFN1C030064;
-        Tue, 12 Mar 2019 12:15:23 -0500
-Subject: Re: [PATCH 02/25] leds: core: Add support for composing LED class
- device names
-To:     Jacek Anaszewski <jacek.anaszewski@gmail.com>,
-        <linux-leds@vger.kernel.org>
-CC:     <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <pavel@ucw.cz>, <robh@kernel.org>,
-        Baolin Wang <baolin.wang@linaro.org>,
-        Daniel Mack <daniel@zonque.org>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Oleh Kravchenko <oleg@kaa.org.ua>,
-        Sakari Ailus <sakari.ailus@linux.intel.com>
-References: <20190310182836.20841-1-jacek.anaszewski@gmail.com>
- <20190310182836.20841-3-jacek.anaszewski@gmail.com>
-From:   Dan Murphy <dmurphy@ti.com>
-Message-ID: <79bf90e1-f1df-c015-d3ed-6294bda7f1fb@ti.com>
-Date:   Tue, 12 Mar 2019 12:15:06 -0500
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.5.3
+Received: from localhost (unknown [104.133.8.98])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 56FFF2171F;
+        Tue, 12 Mar 2019 17:16:05 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1552410965;
+        bh=Rwkr9kRGTXcX9GDqDa9E62RBKItdZUmWVJFF6SYzXpo=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=upQK/dDgYYqHQkLJPvOBPoZhVuz9z3/h4UGfR69Vc0ZltyQee2C1iWlov1qrP5qTJ
+         LZXmg9KWrn/MZqWqNmO5xFjfaJ2qcLKN9l/Id5PYEELgdazMS6YCnHKgcFhcMNSyLV
+         2z5Xwp5SrtWk+jRv3higOFVApluTjzrgPA90z40A=
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     linux-kernel@vger.kernel.org
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        stable@vger.kernel.org, Mike Kravetz <mike.kravetz@oracle.com>,
+        Naoya Horiguchi <n-horiguchi@ah.jp.nec.com>,
+        Michal Hocko <mhocko@kernel.org>,
+        Andrea Arcangeli <aarcange@redhat.com>,
+        "Kirill A . Shutemov" <kirill.shutemov@linux.intel.com>,
+        Mel Gorman <mgorman@techsingularity.net>,
+        Davidlohr Bueso <dave@stgolabs.net>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>
+Subject: [PATCH 4.14 038/135] hugetlbfs: fix races and page leaks during migration
+Date:   Tue, 12 Mar 2019 10:08:05 -0700
+Message-Id: <20190312170344.595617036@linuxfoundation.org>
+X-Mailer: git-send-email 2.21.0
+In-Reply-To: <20190312170341.127810985@linuxfoundation.org>
+References: <20190312170341.127810985@linuxfoundation.org>
+User-Agent: quilt/0.65
+X-stable: review
+X-Patchwork-Hint: ignore
 MIME-Version: 1.0
-In-Reply-To: <20190310182836.20841-3-jacek.anaszewski@gmail.com>
-Content-Type: text/plain; charset="utf-8"
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 3/10/19 1:28 PM, Jacek Anaszewski wrote:
-> Add public led_compose_name() API for composing LED class device
-> name basing on fwnode_handle data. The function composes device name
-> according to either a new <color:function> pattern or the legacy
-> <devicename:color:function> pattern. The decision on using the
-> particular pattern is made basing on whether fwnode contains new
-> "function" and "color" properties, or the legacy "label" proeprty.
-> 
-> Backwards compatibility with in-driver hard-coded LED class device
-> names is assured thanks to the default_desc argument.
-> 
-> In case none of the aforementioned properties was found, then, for OF
-> nodes, the node name is adopted for LED class device name.
-> 
-> Alongside these changes added is a new tool - tools/leds/get_led_device_info.sh.
-> The tool allows retrieving details of a LED class device's parent device,
-> which proves that getting rid of a devicename section from LED name pattern
-> is justified since this information is already available in sysfs.
-> 
-> Signed-off-by: Jacek Anaszewski <jacek.anaszewski@gmail.com>
-> Cc: Baolin Wang <baolin.wang@linaro.org>
-> Cc: Daniel Mack <daniel@zonque.org>
-> Cc: Dan Murphy <dmurphy@ti.com>
-> Cc: Linus Walleij <linus.walleij@linaro.org>
-> Cc: Oleh Kravchenko <oleg@kaa.org.ua>
-> Cc: Sakari Ailus <sakari.ailus@linux.intel.com>
-> ---
->  Documentation/leds/leds-class.txt | 20 +++++++++-
->  drivers/leds/led-core.c           | 82 +++++++++++++++++++++++++++++++++++++++
->  include/linux/leds.h              | 31 +++++++++++++++
->  tools/leds/get_led_device_info.sh | 81 ++++++++++++++++++++++++++++++++++++++
->  4 files changed, 213 insertions(+), 1 deletion(-)
->  create mode 100755 tools/leds/get_led_device_info.sh
-> 
-> diff --git a/Documentation/leds/leds-class.txt b/Documentation/leds/leds-class.txt
-> index 8b39cc6b03ee..866fe87063d4 100644
-> --- a/Documentation/leds/leds-class.txt
-> +++ b/Documentation/leds/leds-class.txt
-> @@ -43,7 +43,22 @@ LED Device Naming
->  
->  Is currently of the form:
->  
-> -"devicename:colour:function"
-> +"colour:function"
-> +
-> +There might be still LED class drivers around using "devicename:colour:function"
-> +naming pattern, but the "devicename" section is now deprecated since it used
-> +to convey information that was already available in the sysfs, like product
-> +name. There is a tool (tools/leds/get_led_device_info.sh) available for
-> +retrieving that information per a LED class device.
-> +
-> +Associations with other devices, like network ones, should be defined
-> +via LED triggr mechanism. This approach is applied by some of wireless
-> +network drivers that create triggers dynamically and incorporate phy
-> +name into its name. On the other hand input subsystem offers LED - input
-> +bridge (drivers/input/input-leds.c) for exposing keyboard LEDs as LED class
-> +devices. The get_led_device_info.sh script has support for retrieving related
-> +input device node name. Should it support discovery of associations between
-> +LEDs and other subsystems, please don't hesitate to submit a relevant patch.
->  
->  There have been calls for LED properties such as colour to be exported as
->  individual led class attributes. As a solution which doesn't incur as much
-> @@ -51,6 +66,9 @@ overhead, I suggest these become part of the device name. The naming scheme
->  above leaves scope for further attributes should they be needed. If sections
->  of the name don't apply, just leave that section blank.
->  
-> +Please also keep in mind that LED subsystem has a protection against LED name
-> +conflict. It adds numerical suffix (e.g. "_1", "_2", "_3" etc.) to the requested
-> +LED class device name in case it is already in use.
->  
->  Brightness setting API
->  ======================
-> diff --git a/drivers/leds/led-core.c b/drivers/leds/led-core.c
-> index ede4fa0ac2cc..bad92250d1d5 100644
-> --- a/drivers/leds/led-core.c
-> +++ b/drivers/leds/led-core.c
-> @@ -16,6 +16,8 @@
->  #include <linux/list.h>
->  #include <linux/module.h>
->  #include <linux/mutex.h>
-> +#include <linux/of.h>
-> +#include <linux/property.h>
->  #include <linux/rwsem.h>
->  #include "leds.h"
->  
-> @@ -327,3 +329,83 @@ void led_sysfs_enable(struct led_classdev *led_cdev)
->  	led_cdev->flags &= ~LED_SYSFS_DISABLE;
->  }
->  EXPORT_SYMBOL_GPL(led_sysfs_enable);
-> +
-> +static void led_parse_properties(struct fwnode_handle *fwnode,
-> +				 struct led_properties *props)
-> +{
-> +	int ret;
-> +
-> +	if (!fwnode)
-> +		return;
-> +
-> +	if (fwnode_property_present(fwnode, "label")) {
-> +		ret = fwnode_property_read_string(fwnode, "label", &props->label);
-> +		if (ret)
-> +			pr_err("Error parsing \'label\' property (%d)\n", ret);
-> +		return;
-> +	}
-> +
-> +	if (fwnode_property_present(fwnode, "function")) {
-> +		ret = fwnode_property_read_string(fwnode, "function", &props->function);
-> +		if (ret)
-> +			pr_err("Error parsing \'function\' property (%d)\n", ret);
-> +	} else {
-> +		pr_info("\'function\' property not found\n");
-> +	}
-> +
-> +	if (fwnode_property_present(fwnode, "color")) {
-> +		ret = fwnode_property_read_string(fwnode, "color", &props->color);
-> +		if (ret)
-> +			pr_info("Error parsing \'color\' property (%d)\n", ret);
-> +	} else {
-> +		pr_info("\'color\' property not found\n");
-> +	}
-> +}
-> +
-> +int led_compose_name(struct fwnode_handle *fwnode, const char *led_hw_name,
-> +		     const char *default_desc, char *led_classdev_name)
-> +{
-> +	struct led_properties props = {};
-> +
-> +	if (!led_classdev_name)
-> +		return -EINVAL;
-> +
-> +	led_parse_properties(fwnode, &props);
-> +
-> +	if (props.label) {
-> +		/*
-> +		 * Presence of 'label' DT property implies legacy LED name,
-> +		 * formatted as <devicename:color:function>, with possible
-> +		 * section omission if doesn't apply to given device.
-> +		 *
-> +		 * If no led_hw_name has been passed, then it indicates that
-> +		 * DT label should be used as-is for LED class device name.
-> +		 * Otherwise the label is prepended with led_hw_name to compose
-> +		 * the final LED class device name.
-> +		 */
-> +		if (!led_hw_name) {
-> +			strncpy(led_classdev_name, props.label,
-> +				LED_MAX_NAME_SIZE);
-> +		} else {
-> +			snprintf(led_classdev_name, LED_MAX_NAME_SIZE, "%s:%s",
-> +				 led_hw_name, props.label);
-> +		}
-> +	} else if (props.function || props.color) {
-> +		snprintf(led_classdev_name, LED_MAX_NAME_SIZE, "%s:%s",
-> +			 props.color ?: "", props.function ?: "");
-> +	} else if (default_desc) {
-> +		if (!led_hw_name) {
-> +			pr_err("Legacy LED naming requires devicename segment");
-> +			return -EINVAL;
-> +		}
-> +		snprintf(led_classdev_name, LED_MAX_NAME_SIZE, "%s:%s",
-> +			 led_hw_name, default_desc);
-> +	} else if (is_of_node(fwnode)) {
-> +		strncpy(led_classdev_name, to_of_node(fwnode)->name,
-> +			LED_MAX_NAME_SIZE);
-> +	} else
-> +		return -EINVAL;
-> +
-> +	return 0;
-> +}
-> +EXPORT_SYMBOL_GPL(led_compose_name);
-> diff --git a/include/linux/leds.h b/include/linux/leds.h
-> index bffb4315fd66..c2936fc989d4 100644
-> --- a/include/linux/leds.h
-> +++ b/include/linux/leds.h
-> @@ -252,6 +252,31 @@ extern void led_sysfs_disable(struct led_classdev *led_cdev);
->  extern void led_sysfs_enable(struct led_classdev *led_cdev);
->  
->  /**
-> + * led_compose_name - compose LED class device name
-> + * @child: child fwnode_handle describing a LED,
-> + *	   or a group of synchronized LEDs.
-> + * @led_hw_name: name of the LED controller, used when falling back to legacy
-> + *		 LED naming; it should be set to NULL in new LED class drivers
-> + * @default_desc: default <color:function> tuple, for backwards compatibility
-> + *		  with in-driver hard-coded LED names used as a fallback when
-> + *		  "label" DT property is absent; it should be set to NULL
-> + *		  in new LED class drivers
-> + * @led_classdev_name: composed LED class device name
-> + *
-> + * Create LED class device name basing on the configuration provided by the
-> + * board firmware. The name can have a legacy form <devicename:color:function>,
-> + * or a new form <color:function>. The latter is chosen if "label" property is
-> + * absent and at least one of "color" or "function" is present in the fwnode,
-> + * leaving the section blank if the related property is absent. In case none
-> + * of the aforementioned properties is found, then, for OF nodes, the node name
-> + * is adopted for LED class device name.
-> + *
-> + * Returns: 0 on success or negative error value on failure
-> + */
-> +extern int led_compose_name(struct fwnode_handle *child, const char *led_hw_name,
-> +			    const char *default_desc, char *led_classdev_name);
-> +
-> +/**
->   * led_sysfs_is_disabled - check if LED sysfs interface is disabled
->   * @led_cdev: the LED to query
->   *
-> @@ -428,6 +453,12 @@ struct led_platform_data {
->  	struct led_info	*leds;
->  };
->  
-> +struct led_properties {
-> +	const char *color;
-> +	const char *function;
-> +	const char *label;
-> +};
-> +
->  struct gpio_desc;
->  typedef int (*gpio_blink_set_t)(struct gpio_desc *desc, int state,
->  				unsigned long *delay_on,
-> diff --git a/tools/leds/get_led_device_info.sh b/tools/leds/get_led_device_info.sh
-> new file mode 100755
-> index 000000000000..4671aa690e4a
-> --- /dev/null
-> +++ b/tools/leds/get_led_device_info.sh
-> @@ -0,0 +1,81 @@
-> +#!/bin/sh
-> +# SPDX-License-Identifier: GPL-2.0
-> +
+4.14-stable review patch.  If anyone has any objections, please let me know.
 
-Is there a way to give usage or help here?  It's not entirely clear what the argument to pass in is.
-
-maybe if $1 = "?" then print usage
-
-Dan
-
-
-> +if [ $# -ne 1 ]; then
-> +	echo "get_led_devicename.sh LED_CDEV_PATH"
-> +	exit 1
-> +fi
-> +
-> +led_cdev_path=`echo $1 | sed s'/\/$//'`
-> +
-> +ls "$led_cdev_path/brightness" > /dev/null 2>&1
-> +if [ $? -ne 0 ]; then
-> +	echo "Device \"$led_cdev_path\" does not exist."
-> +	exit 1
-> +fi
-> +
-> +bus=`readlink $led_cdev_path/device/subsystem | sed s'/.*\///'`
-> +usb_subdev=`readlink $led_cdev_path | grep usb | sed s'/\(.*usb[0-9]*\/[0-9]*-[0-9]*\)\/.*/\1/'`
-> +ls "$led_cdev_path/device/of_node/compatible" > /dev/null 2>&1
-> +of_node_missing=$?
-> +
-> +if [ "$bus" = "input" ]; then
-> +	input_node=`readlink $led_cdev_path/device | sed s'/.*\///'`
-> +	if [ ! -z $usb_subdev ]; then
-> +		bus="usb"
-> +	fi
-> +fi
-> +
-> +if [ "$bus" = "usb" ]; then
-> +	usb_interface=`readlink $led_cdev_path | sed s'/.*\(usb[0-9]*\)/\1/' | cut -d \/ -f 3`
-> +	driver=`readlink $usb_interface/driver | sed s'/.*\///'`
-> +	cd $led_cdev_path/../$usb_subdev
-> +	idVendor=`cat idVendor`
-> +	idProduct=`cat idProduct`
-> +	manufacturer=`cat manufacturer`
-> +	product=`cat product`
-> +elif [ "$bus" = "input" ]; then
-> +	cd $led_cdev_path
-> +	product=`cat device/name`
-> +	driver=`cat device/device/driver/description`
-> +elif [ $of_node_missing -eq 0 ]; then
-> +	cd $led_cdev_path
-> +	compatible=`cat device/of_node/compatible`
-> +	if [ "$compatible" = "gpio-leds" ]; then
-> +		driver="leds-gpio"
-> +	elif [ "$compatible" = "pwm-leds" ]; then
-> +		driver="leds-pwm"
-> +	else
-> +		manufacturer=`echo $compatible | cut -d, -f1`
-> +		product=`echo $compatible | cut -d, -f2`
-> +	fi
-> +else
-> +	echo "Unknown device type."
-> +	exit 1
-> +fi
-> +
-> +printf "bus:\t\t\t$bus\n"
-> +
-> +if [ ! -z "$idVendor" ]; then
-> +	printf "idVendor:\t\t$idVendor\n"
-> +fi
-> +
-> +if [ ! -z "$idProduct" ]; then
-> +	printf "idProduct:\t\t$idProduct\n"
-> +fi
-> +
-> +if [ ! -z "$manufacturer" ]; then
-> +	printf "manufacturer:\t\t$manufacturer\n"
-> +fi
-> +
-> +if [ ! -z "$product" ]; then
-> +	printf "product:\t\t$product\n"
-> +fi
-> +
-> +if [ ! -z "$driver" ]; then
-> +	printf "driver:\t\t\t$driver\n"
-> +fi
-> +
-> +if [ ! -z "$input_node" ]; then
-> +	printf "associated input node:\t$input_node\n"
-> +fi
-> 
-
-
--- 
 ------------------
-Dan Murphy
+
+From: Mike Kravetz <mike.kravetz@oracle.com>
+
+commit cb6acd01e2e43fd8bad11155752b7699c3d0fb76 upstream.
+
+hugetlb pages should only be migrated if they are 'active'.  The
+routines set/clear_page_huge_active() modify the active state of hugetlb
+pages.
+
+When a new hugetlb page is allocated at fault time, set_page_huge_active
+is called before the page is locked.  Therefore, another thread could
+race and migrate the page while it is being added to page table by the
+fault code.  This race is somewhat hard to trigger, but can be seen by
+strategically adding udelay to simulate worst case scheduling behavior.
+Depending on 'how' the code races, various BUG()s could be triggered.
+
+To address this issue, simply delay the set_page_huge_active call until
+after the page is successfully added to the page table.
+
+Hugetlb pages can also be leaked at migration time if the pages are
+associated with a file in an explicitly mounted hugetlbfs filesystem.
+For example, consider a two node system with 4GB worth of huge pages
+available.  A program mmaps a 2G file in a hugetlbfs filesystem.  It
+then migrates the pages associated with the file from one node to
+another.  When the program exits, huge page counts are as follows:
+
+  node0
+  1024    free_hugepages
+  1024    nr_hugepages
+
+  node1
+  0       free_hugepages
+  1024    nr_hugepages
+
+  Filesystem                         Size  Used Avail Use% Mounted on
+  nodev                              4.0G  2.0G  2.0G  50% /var/opt/hugepool
+
+That is as expected.  2G of huge pages are taken from the free_hugepages
+counts, and 2G is the size of the file in the explicitly mounted
+filesystem.  If the file is then removed, the counts become:
+
+  node0
+  1024    free_hugepages
+  1024    nr_hugepages
+
+  node1
+  1024    free_hugepages
+  1024    nr_hugepages
+
+  Filesystem                         Size  Used Avail Use% Mounted on
+  nodev                              4.0G  2.0G  2.0G  50% /var/opt/hugepool
+
+Note that the filesystem still shows 2G of pages used, while there
+actually are no huge pages in use.  The only way to 'fix' the filesystem
+accounting is to unmount the filesystem
+
+If a hugetlb page is associated with an explicitly mounted filesystem,
+this information in contained in the page_private field.  At migration
+time, this information is not preserved.  To fix, simply transfer
+page_private from old to new page at migration time if necessary.
+
+There is a related race with removing a huge page from a file and
+migration.  When a huge page is removed from the pagecache, the
+page_mapping() field is cleared, yet page_private remains set until the
+page is actually freed by free_huge_page().  A page could be migrated
+while in this state.  However, since page_mapping() is not set the
+hugetlbfs specific routine to transfer page_private is not called and we
+leak the page count in the filesystem.
+
+To fix that, check for this condition before migrating a huge page.  If
+the condition is detected, return EBUSY for the page.
+
+Link: http://lkml.kernel.org/r/74510272-7319-7372-9ea6-ec914734c179@oracle.com
+Link: http://lkml.kernel.org/r/20190212221400.3512-1-mike.kravetz@oracle.com
+Fixes: bcc54222309c ("mm: hugetlb: introduce page_huge_active")
+Signed-off-by: Mike Kravetz <mike.kravetz@oracle.com>
+Reviewed-by: Naoya Horiguchi <n-horiguchi@ah.jp.nec.com>
+Cc: Michal Hocko <mhocko@kernel.org>
+Cc: Andrea Arcangeli <aarcange@redhat.com>
+Cc: "Kirill A . Shutemov" <kirill.shutemov@linux.intel.com>
+Cc: Mel Gorman <mgorman@techsingularity.net>
+Cc: Davidlohr Bueso <dave@stgolabs.net>
+Cc: <stable@vger.kernel.org>
+[mike.kravetz@oracle.com: v2]
+  Link: http://lkml.kernel.org/r/7534d322-d782-8ac6-1c8d-a8dc380eb3ab@oracle.com
+[mike.kravetz@oracle.com: update comment and changelog]
+  Link: http://lkml.kernel.org/r/420bcfd6-158b-38e4-98da-26d0cd85bd01@oracle.com
+Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
+Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+
+---
+ fs/hugetlbfs/inode.c |   12 ++++++++++++
+ mm/hugetlb.c         |   16 +++++++++++++---
+ mm/migrate.c         |   11 +++++++++++
+ 3 files changed, 36 insertions(+), 3 deletions(-)
+
+--- a/fs/hugetlbfs/inode.c
++++ b/fs/hugetlbfs/inode.c
+@@ -845,6 +845,18 @@ static int hugetlbfs_migrate_page(struct
+ 	rc = migrate_huge_page_move_mapping(mapping, newpage, page);
+ 	if (rc != MIGRATEPAGE_SUCCESS)
+ 		return rc;
++
++	/*
++	 * page_private is subpool pointer in hugetlb pages.  Transfer to
++	 * new page.  PagePrivate is not associated with page_private for
++	 * hugetlb pages and can not be set here as only page_huge_active
++	 * pages can be migrated.
++	 */
++	if (page_private(page)) {
++		set_page_private(newpage, page_private(page));
++		set_page_private(page, 0);
++	}
++
+ 	if (mode != MIGRATE_SYNC_NO_COPY)
+ 		migrate_page_copy(newpage, page);
+ 	else
+--- a/mm/hugetlb.c
++++ b/mm/hugetlb.c
+@@ -3577,7 +3577,6 @@ retry_avoidcopy:
+ 	copy_user_huge_page(new_page, old_page, address, vma,
+ 			    pages_per_huge_page(h));
+ 	__SetPageUptodate(new_page);
+-	set_page_huge_active(new_page);
+ 
+ 	mmun_start = address & huge_page_mask(h);
+ 	mmun_end = mmun_start + huge_page_size(h);
+@@ -3600,6 +3599,7 @@ retry_avoidcopy:
+ 				make_huge_pte(vma, new_page, 1));
+ 		page_remove_rmap(old_page, true);
+ 		hugepage_add_new_anon_rmap(new_page, vma, address);
++		set_page_huge_active(new_page);
+ 		/* Make the old page be freed below */
+ 		new_page = old_page;
+ 	}
+@@ -3682,6 +3682,7 @@ static int hugetlb_no_page(struct mm_str
+ 	struct page *page;
+ 	pte_t new_pte;
+ 	spinlock_t *ptl;
++	bool new_page = false;
+ 
+ 	/*
+ 	 * Currently, we are forced to kill the process in the event the
+@@ -3747,7 +3748,7 @@ retry:
+ 		}
+ 		clear_huge_page(page, address, pages_per_huge_page(h));
+ 		__SetPageUptodate(page);
+-		set_page_huge_active(page);
++		new_page = true;
+ 
+ 		if (vma->vm_flags & VM_MAYSHARE) {
+ 			int err = huge_add_to_page_cache(page, mapping, idx);
+@@ -3818,6 +3819,15 @@ retry:
+ 	}
+ 
+ 	spin_unlock(ptl);
++
++	/*
++	 * Only make newly allocated pages active.  Existing pages found
++	 * in the pagecache could be !page_huge_active() if they have been
++	 * isolated for migration.
++	 */
++	if (new_page)
++		set_page_huge_active(page);
++
+ 	unlock_page(page);
+ out:
+ 	return ret;
+@@ -4053,7 +4063,6 @@ int hugetlb_mcopy_atomic_pte(struct mm_s
+ 	 * the set_pte_at() write.
+ 	 */
+ 	__SetPageUptodate(page);
+-	set_page_huge_active(page);
+ 
+ 	mapping = dst_vma->vm_file->f_mapping;
+ 	idx = vma_hugecache_offset(h, dst_vma, dst_addr);
+@@ -4121,6 +4130,7 @@ int hugetlb_mcopy_atomic_pte(struct mm_s
+ 	update_mmu_cache(dst_vma, dst_addr, dst_pte);
+ 
+ 	spin_unlock(ptl);
++	set_page_huge_active(page);
+ 	if (vm_shared)
+ 		unlock_page(page);
+ 	ret = 0;
+--- a/mm/migrate.c
++++ b/mm/migrate.c
+@@ -1303,6 +1303,16 @@ static int unmap_and_move_huge_page(new_
+ 		lock_page(hpage);
+ 	}
+ 
++	/*
++	 * Check for pages which are in the process of being freed.  Without
++	 * page_mapping() set, hugetlbfs specific move page routine will not
++	 * be called and we could leak usage counts for subpools.
++	 */
++	if (page_private(hpage) && !page_mapping(hpage)) {
++		rc = -EBUSY;
++		goto out_unlock;
++	}
++
+ 	if (PageAnon(hpage))
+ 		anon_vma = page_get_anon_vma(hpage);
+ 
+@@ -1334,6 +1344,7 @@ put_anon:
+ 		set_page_owner_migrate_reason(new_hpage, reason);
+ 	}
+ 
++out_unlock:
+ 	unlock_page(hpage);
+ out:
+ 	if (rc != -EAGAIN)
+
+
