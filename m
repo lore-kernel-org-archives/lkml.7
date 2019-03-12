@@ -2,53 +2,51 @@ Return-Path: <SRS0=J4ZE=RP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_PASS,USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9717FC43381
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 17:31:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E995AC43381
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 17:31:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5C6942087C
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 17:31:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BBD0F206DF
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 17:31:33 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1552411888;
-	bh=8h0ClOKckmUj/kya6Qke4sN/Cy6KQglprMPlDCvvIkM=;
+	s=default; t=1552411893;
+	bh=1tdeYFIXL7uYmksV6OONGB8Q/eBH0Ifxu3NGtf7CBZs=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=cYJSUMkbIHdrSNfee3/ZAFk62WfS5Ddjutl27f5CsHrNfY4K1LBTdqM3T3XLzmjtT
-	 L/bAhQ8+7g9MGFhqNEZB2SnkvwdVE7R6UE3awSM5vAl4cdpqYtW5zsKPFzjPQgk1N1
-	 b7QlOWdwdl/zJ37fXlRUMaq3afrIfIyEW3UX0fMg=
+	b=AeUz0mDXsBMsBNz2MTYKFEjmvkON0tOgvrQ/eMwAnqT672Zj++lPlEYXpsovOMqtF
+	 SwckK4zi5yHsOqm355jM1CRdU1MFjbeG3inuJ4fqtRFDZAwvnTiQKL8LocMzRDUaz9
+	 fPssCooYb++0PVpAVu+6D70VfCHkekipySEaPF5w=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729478AbfCLRRL (ORCPT
+        id S1729404AbfCLRbc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 12 Mar 2019 13:17:11 -0400
-Received: from mail.kernel.org ([198.145.29.99]:57614 "EHLO mail.kernel.org"
+        Tue, 12 Mar 2019 13:31:32 -0400
+Received: from mail.kernel.org ([198.145.29.99]:60252 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728968AbfCLRQE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 12 Mar 2019 13:16:04 -0400
+        id S1729464AbfCLRRK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 12 Mar 2019 13:17:10 -0400
 Received: from localhost (unknown [104.133.8.98])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 025EF21850;
-        Tue, 12 Mar 2019 17:16:03 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id CFA6E217D8;
+        Tue, 12 Mar 2019 17:17:09 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1552410964;
-        bh=8h0ClOKckmUj/kya6Qke4sN/Cy6KQglprMPlDCvvIkM=;
+        s=default; t=1552411029;
+        bh=1tdeYFIXL7uYmksV6OONGB8Q/eBH0Ifxu3NGtf7CBZs=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=y+gjPt/4a361tFJE0GYkZFDRs2qN+nGujpzcy9oXu8kXEfeALESqCK9x4McoTQtoR
-         jAZ7CLaXlnaWjm9duuaiH8PX/7PckmSmZykhEtb1B+KkK7gG2i4O6JOMTy8uK1Ay9t
-         7kA9bLu+BmZ+dMR4xSFkHJhKgxlYdclnqWX6SpeQ=
+        b=CpqdtZdtF4ZtXe790sWUQOWAS6V2hT06dD5nClB/DLQiYlpSbZFRPvrhAHg4/2pM0
+         /igobZIwICbX9FQH91c5/uEgF45yrPYayTHY0pZluAodtiIr5C6S3cvlb/30B0yLqT
+         0yrAHJr9AAUEzapVr42tamKIh9VWBs/0U4tGsL28=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, ZhangXiaoxu <zhangxiaoxu5@huawei.com>,
-        Simon Horman <horms@verge.net.au>,
-        Pablo Neira Ayuso <pablo@netfilter.org>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.14 050/135] ipvs: Fix signed integer overflow when setsockopt timeout
-Date:   Tue, 12 Mar 2019 10:08:17 -0700
-Message-Id: <20190312170345.780652682@linuxfoundation.org>
+        stable@vger.kernel.org,
+        "Peter Zijlstra (Intel)" <peterz@infradead.org>,
+        Thomas Gleixner <tglx@linutronix.de>
+Subject: [PATCH 4.14 133/135] perf/x86/intel: Generalize dynamic constraint creation
+Date:   Tue, 12 Mar 2019 10:09:40 -0700
+Message-Id: <20190312170353.414674067@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190312170341.127810985@linuxfoundation.org>
 References: <20190312170341.127810985@linuxfoundation.org>
@@ -67,91 +65,85 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-[ Upstream commit 53ab60baa1ac4f20b080a22c13b77b6373922fd7 ]
+From: "Peter Zijlstra (Intel)" <peterz@infradead.org>
 
-There is a UBSAN bug report as below:
-UBSAN: Undefined behaviour in net/netfilter/ipvs/ip_vs_ctl.c:2227:21
-signed integer overflow:
--2147483647 * 1000 cannot be represented in type 'int'
+commit 11f8b2d65ca9029591c8df26bb6bd063c312b7fe upstream
 
-Reproduce program:
-	#include <stdio.h>
-	#include <sys/types.h>
-	#include <sys/socket.h>
+Such that we can re-use it.
 
-	#define IPPROTO_IP 0
-	#define IPPROTO_RAW 255
-
-	#define IP_VS_BASE_CTL		(64+1024+64)
-	#define IP_VS_SO_SET_TIMEOUT	(IP_VS_BASE_CTL+10)
-
-	/* The argument to IP_VS_SO_GET_TIMEOUT */
-	struct ipvs_timeout_t {
-		int tcp_timeout;
-		int tcp_fin_timeout;
-		int udp_timeout;
-	};
-
-	int main() {
-		int ret = -1;
-		int sockfd = -1;
-		struct ipvs_timeout_t to;
-
-		sockfd = socket(AF_INET, SOCK_RAW, IPPROTO_RAW);
-		if (sockfd == -1) {
-			printf("socket init error\n");
-			return -1;
-		}
-
-		to.tcp_timeout = -2147483647;
-		to.tcp_fin_timeout = -2147483647;
-		to.udp_timeout = -2147483647;
-
-		ret = setsockopt(sockfd,
-				 IPPROTO_IP,
-				 IP_VS_SO_SET_TIMEOUT,
-				 (char *)(&to),
-				 sizeof(to));
-
-		printf("setsockopt return %d\n", ret);
-		return ret;
-	}
-
-Return -EINVAL if the timeout value is negative or max than 'INT_MAX / HZ'.
-
-Signed-off-by: ZhangXiaoxu <zhangxiaoxu5@huawei.com>
-Acked-by: Simon Horman <horms@verge.net.au>
-Signed-off-by: Pablo Neira Ayuso <pablo@netfilter.org>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
+Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
+Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- net/netfilter/ipvs/ip_vs_ctl.c | 12 ++++++++++++
- 1 file changed, 12 insertions(+)
+ arch/x86/events/intel/core.c |   51 +++++++++++++++++++++++++------------------
+ 1 file changed, 30 insertions(+), 21 deletions(-)
 
-diff --git a/net/netfilter/ipvs/ip_vs_ctl.c b/net/netfilter/ipvs/ip_vs_ctl.c
-index 2f45c3ce77ef..dff4ead3d117 100644
---- a/net/netfilter/ipvs/ip_vs_ctl.c
-+++ b/net/netfilter/ipvs/ip_vs_ctl.c
-@@ -2252,6 +2252,18 @@ static int ip_vs_set_timeout(struct netns_ipvs *ipvs, struct ip_vs_timeout_user
- 		  u->tcp_fin_timeout,
- 		  u->udp_timeout);
+--- a/arch/x86/events/intel/core.c
++++ b/arch/x86/events/intel/core.c
+@@ -2640,6 +2640,35 @@ intel_stop_scheduling(struct cpu_hw_even
+ }
  
-+#ifdef CONFIG_IP_VS_PROTO_TCP
-+	if (u->tcp_timeout < 0 || u->tcp_timeout > (INT_MAX / HZ) ||
-+	    u->tcp_fin_timeout < 0 || u->tcp_fin_timeout > (INT_MAX / HZ)) {
-+		return -EINVAL;
+ static struct event_constraint *
++dyn_constraint(struct cpu_hw_events *cpuc, struct event_constraint *c, int idx)
++{
++	WARN_ON_ONCE(!cpuc->constraint_list);
++
++	if (!(c->flags & PERF_X86_EVENT_DYNAMIC)) {
++		struct event_constraint *cx;
++
++		/*
++		 * grab pre-allocated constraint entry
++		 */
++		cx = &cpuc->constraint_list[idx];
++
++		/*
++		 * initialize dynamic constraint
++		 * with static constraint
++		 */
++		*cx = *c;
++
++		/*
++		 * mark constraint as dynamic
++		 */
++		cx->flags |= PERF_X86_EVENT_DYNAMIC;
++		c = cx;
 +	}
-+#endif
 +
-+#ifdef CONFIG_IP_VS_PROTO_UDP
-+	if (u->udp_timeout < 0 || u->udp_timeout > (INT_MAX / HZ))
-+		return -EINVAL;
-+#endif
++	return c;
++}
 +
- #ifdef CONFIG_IP_VS_PROTO_TCP
- 	if (u->tcp_timeout) {
- 		pd = ip_vs_proto_data_get(ipvs, IPPROTO_TCP);
--- 
-2.19.1
-
++static struct event_constraint *
+ intel_get_excl_constraints(struct cpu_hw_events *cpuc, struct perf_event *event,
+ 			   int idx, struct event_constraint *c)
+ {
+@@ -2669,27 +2698,7 @@ intel_get_excl_constraints(struct cpu_hw
+ 	 * only needed when constraint has not yet
+ 	 * been cloned (marked dynamic)
+ 	 */
+-	if (!(c->flags & PERF_X86_EVENT_DYNAMIC)) {
+-		struct event_constraint *cx;
+-
+-		/*
+-		 * grab pre-allocated constraint entry
+-		 */
+-		cx = &cpuc->constraint_list[idx];
+-
+-		/*
+-		 * initialize dynamic constraint
+-		 * with static constraint
+-		 */
+-		*cx = *c;
+-
+-		/*
+-		 * mark constraint as dynamic, so we
+-		 * can free it later on
+-		 */
+-		cx->flags |= PERF_X86_EVENT_DYNAMIC;
+-		c = cx;
+-	}
++	c = dyn_constraint(cpuc, c, idx);
+ 
+ 	/*
+ 	 * From here on, the constraint is dynamic.
 
 
