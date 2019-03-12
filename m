@@ -2,58 +2,55 @@ Return-Path: <SRS0=J4ZE=RP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C6B62C43381
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 17:39:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B7E82C10F00
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 17:39:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 99DB3214AE
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 17:39:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8D0442173C
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 17:39:24 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1552412352;
-	bh=iUEhQArM1tNQKd8sckRDVb1L56MPraFnMhHiwx2EoBs=;
+	s=default; t=1552412364;
+	bh=s86Jh0s/SfejSfI6FfxGZlRqputgUZQPuS1LZ1e0VNY=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=O4VHXSbH6Knwnqt3CYIIHFwuYhyQEidAUBuDs72dGlx7MmsL/ZXaGRJSKuOyJ2go0
-	 488N/kjJBC9QtXw/CfQi7fUu97yAQu7F8iRzRlWmLlkDxfB9iI24XPE0FNeoIFD0zv
-	 EjGr95PZK4Z/TubE18DLkIh598iArETIeV128RYA=
+	b=NfY+CLxs7kxihYfnqJollGeuPbAZcOrrPMqcFWFVuMQN57zh39EDrnHvhTQtHrr6U
+	 rxxIRw21ZBZk4PF9dqnR3yjtNqxFRQR/EBLD7HyoJi9GFSsLfwvrirKhYITDl7RnCP
+	 1ymhjeuF8kvMJI5vl5Xr978qNVIR8wOLVPhKBU9Y=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728589AbfCLRjL (ORCPT
+        id S1729112AbfCLRQX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 12 Mar 2019 13:39:11 -0400
-Received: from mail.kernel.org ([198.145.29.99]:58400 "EHLO mail.kernel.org"
+        Tue, 12 Mar 2019 13:16:23 -0400
+Received: from mail.kernel.org ([198.145.29.99]:55784 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729115AbfCLRQZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 12 Mar 2019 13:16:25 -0400
+        id S1728694AbfCLRPY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 12 Mar 2019 13:15:24 -0400
 Received: from localhost (unknown [104.133.8.98])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 843342087C;
-        Tue, 12 Mar 2019 17:16:23 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 8733F217D4;
+        Tue, 12 Mar 2019 17:15:23 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1552410983;
-        bh=iUEhQArM1tNQKd8sckRDVb1L56MPraFnMhHiwx2EoBs=;
+        s=default; t=1552410923;
+        bh=s86Jh0s/SfejSfI6FfxGZlRqputgUZQPuS1LZ1e0VNY=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=mxASmGjHeRcSDk+eo11zkDSyRnjGHXk2EFEqvY7LigCSOYrNX0Zz2UTn+4EN5xCPY
-         +zwmPEVl9QD8IJ0BD/jtVwCMUui6pdoCTz9uWVZG7aQ+pfleKrrTVKzEbAa0AX9aAT
-         pZeuJ8XE46gyDSQeNNwjZd4e5B0VubvPFA2MNBso=
+        b=cJ+K4d1FRY4RyNLQ7EkOF+7Lo274CAQGLzlO6XWg+/+s/qykVJEEpO+T/cKZ0117n
+         hF+oR17CV0OdbNieUgxkQhJjOjXANJJFqrkWpEHwwbAKuCysaNHHMF36dh+MmkrF4I
+         ZWWR3l4ZHvmmYk2trlbCHvUgnQzTokr94tKcVg28=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Boris Ostrovsky <boris.ostrovsky@oracle.com>,
-        Joerg Roedel <joro@8bytes.org>,
-        Brijesh Singh <brijesh.singh@amd.com>,
-        Suravee Suthikulpanit <suravee.suthikulpanit@amd.com>,
-        Joerg Roedel <jroedel@suse.de>, Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.14 051/135] iommu/amd: Fix IOMMU page flush when detach device from a domain
-Date:   Tue, 12 Mar 2019 10:08:18 -0700
-Message-Id: <20190312170345.874395653@linuxfoundation.org>
+        stable@vger.kernel.org, Ronnie Sahlberg <lsahlber@redhat.com>,
+        Steve French <stfrench@microsoft.com>,
+        Aurelien Aptel <aaptel@suse.com>
+Subject: [PATCH 4.19 143/149] cifs: allow calling SMB2_xxx_free(NULL)
+Date:   Tue, 12 Mar 2019 10:09:21 -0700
+Message-Id: <20190312170401.279894701@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
-In-Reply-To: <20190312170341.127810985@linuxfoundation.org>
-References: <20190312170341.127810985@linuxfoundation.org>
+In-Reply-To: <20190312170349.421581206@linuxfoundation.org>
+References: <20190312170349.421581206@linuxfoundation.org>
 User-Agent: quilt/0.65
 X-stable: review
 X-Patchwork-Hint: ignore
@@ -65,85 +62,77 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-4.14-stable review patch.  If anyone has any objections, please let me know.
+4.19-stable review patch.  If anyone has any objections, please let me know.
 
 ------------------
 
-[ Upstream commit 9825bd94e3a2baae1f4874767ae3a7d4c049720e ]
+From: Ronnie Sahlberg <lsahlber@redhat.com>
 
-When a VM is terminated, the VFIO driver detaches all pass-through
-devices from VFIO domain by clearing domain id and page table root
-pointer from each device table entry (DTE), and then invalidates
-the DTE. Then, the VFIO driver unmap pages and invalidate IOMMU pages.
+commit 32a1fb36f6e50183871c2c1fcf5493c633e84732 upstream.
 
-Currently, the IOMMU driver keeps track of which IOMMU and how many
-devices are attached to the domain. When invalidate IOMMU pages,
-the driver checks if the IOMMU is still attached to the domain before
-issuing the invalidate page command.
+Change these free functions to allow passing NULL as the argument and
+treat it as a no-op just like free(NULL) would.
+Or, if rqst->rq_iov is NULL.
 
-However, since VFIO has already detached all devices from the domain,
-the subsequent INVALIDATE_IOMMU_PAGES commands are being skipped as
-there is no IOMMU attached to the domain. This results in data
-corruption and could cause the PCI device to end up in indeterministic
-state.
+The second scenario could happen for smb2_queryfs() if the call
+to SMB2_query_info_init() fails and we go to qfs_exit to clean up
+and free all resources.
+In that case we have not yet assigned rqst[2].rq_iov and thus
+the rq_iov dereference in SMB2_close_free() will cause a NULL pointer
+dereference.
 
-Fix this by invalidate IOMMU pages when detach a device, and
-before decrementing the per-domain device reference counts.
+[ bp: upstream patch also fixes SMB2_set_info_free which was introduced in 4.20 ]
 
-Cc: Boris Ostrovsky <boris.ostrovsky@oracle.com>
-Suggested-by: Joerg Roedel <joro@8bytes.org>
-Co-developed-by: Brijesh Singh <brijesh.singh@amd.com>
-Signed-off-by: Brijesh Singh <brijesh.singh@amd.com>
-Signed-off-by: Suravee Suthikulpanit <suravee.suthikulpanit@amd.com>
-Fixes: 6de8ad9b9ee0 ('x86/amd-iommu: Make iommu_flush_pages aware of multiple IOMMUs')
-Signed-off-by: Joerg Roedel <jroedel@suse.de>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
+Fixes:  1eb9fb52040f ("cifs: create SMB2_open_init()/SMB2_open_free() helpers")
+
+Signed-off-by: Ronnie Sahlberg <lsahlber@redhat.com>
+Signed-off-by: Steve French <stfrench@microsoft.com>
+Reviewed-by: Aurelien Aptel <aaptel@suse.com>
+CC: Stable <stable@vger.kernel.org>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+
 ---
- drivers/iommu/amd_iommu.c | 15 +++++++++++----
- 1 file changed, 11 insertions(+), 4 deletions(-)
+ fs/cifs/smb2pdu.c |   16 ++++++++++------
+ 1 file changed, 10 insertions(+), 6 deletions(-)
 
-diff --git a/drivers/iommu/amd_iommu.c b/drivers/iommu/amd_iommu.c
-index 0c0acf6fda87..78b97f31a1f2 100644
---- a/drivers/iommu/amd_iommu.c
-+++ b/drivers/iommu/amd_iommu.c
-@@ -1919,6 +1919,7 @@ static void do_attach(struct iommu_dev_data *dev_data,
- 
- static void do_detach(struct iommu_dev_data *dev_data)
+--- a/fs/cifs/smb2pdu.c
++++ b/fs/cifs/smb2pdu.c
+@@ -2243,10 +2243,12 @@ SMB2_open_free(struct smb_rqst *rqst)
  {
-+	struct protection_domain *domain = dev_data->domain;
- 	struct amd_iommu *iommu;
- 	u16 alias;
+ 	int i;
  
-@@ -1934,10 +1935,6 @@ static void do_detach(struct iommu_dev_data *dev_data)
- 	iommu = amd_iommu_rlookup_table[dev_data->devid];
- 	alias = dev_data->alias;
- 
--	/* decrease reference counters */
--	dev_data->domain->dev_iommu[iommu->index] -= 1;
--	dev_data->domain->dev_cnt                 -= 1;
--
- 	/* Update data structures */
- 	dev_data->domain = NULL;
- 	list_del(&dev_data->list);
-@@ -1947,6 +1944,16 @@ static void do_detach(struct iommu_dev_data *dev_data)
- 
- 	/* Flush the DTE entry */
- 	device_flush_dte(dev_data);
-+
-+	/* Flush IOTLB */
-+	domain_flush_tlb_pde(domain);
-+
-+	/* Wait for the flushes to finish */
-+	domain_flush_complete(domain);
-+
-+	/* decrease reference counters - needs to happen after the flushes */
-+	domain->dev_iommu[iommu->index] -= 1;
-+	domain->dev_cnt                 -= 1;
+-	cifs_small_buf_release(rqst->rq_iov[0].iov_base);
+-	for (i = 1; i < rqst->rq_nvec; i++)
+-		if (rqst->rq_iov[i].iov_base != smb2_padding)
+-			kfree(rqst->rq_iov[i].iov_base);
++	if (rqst && rqst->rq_iov) {
++		cifs_small_buf_release(rqst->rq_iov[0].iov_base);
++		for (i = 1; i < rqst->rq_nvec; i++)
++			if (rqst->rq_iov[i].iov_base != smb2_padding)
++				kfree(rqst->rq_iov[i].iov_base);
++	}
  }
  
- /*
--- 
-2.19.1
-
+ int
+@@ -2535,7 +2537,8 @@ SMB2_close_init(struct cifs_tcon *tcon,
+ void
+ SMB2_close_free(struct smb_rqst *rqst)
+ {
+-	cifs_small_buf_release(rqst->rq_iov[0].iov_base); /* request */
++	if (rqst && rqst->rq_iov)
++		cifs_small_buf_release(rqst->rq_iov[0].iov_base); /* request */
+ }
+ 
+ int
+@@ -2685,7 +2688,8 @@ SMB2_query_info_init(struct cifs_tcon *t
+ void
+ SMB2_query_info_free(struct smb_rqst *rqst)
+ {
+-	cifs_small_buf_release(rqst->rq_iov[0].iov_base); /* request */
++	if (rqst && rqst->rq_iov)
++		cifs_small_buf_release(rqst->rq_iov[0].iov_base); /* request */
+ }
+ 
+ static int
 
 
