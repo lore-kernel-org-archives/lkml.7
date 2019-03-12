@@ -2,53 +2,51 @@ Return-Path: <SRS0=J4ZE=RP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 184A3C43381
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 17:59:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 12531C43381
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 17:59:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DD2C4214AF
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 17:59:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BF2A9205C9
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 17:59:10 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1552413544;
-	bh=XxuUbZsz7VTvVZyCUF8PA7i5ndaKkaD4MoaZInej/HU=;
+	s=default; t=1552413550;
+	bh=Ym/elR2+WQop+XjRYS9pOBDEeSFshGzzqjY2y3RLcro=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=X/HcSYQGjMczd+C+zTVQ+aC7LCFPVtJgLmmeT/OTx67DcGwV/VcSmiOuGNfLOWCIn
-	 u19Wypubm1LfpER72Dgh1pRRTTVUvBVNS1Sgl6rUNIr/j5b1r3nqU9zEAmoUKRwnYW
-	 26q15zI1JQC3jYwC8F+bNXlRgRFujgVEJWo7vtYc=
+	b=K30WTiXN89jjq2+4zC4Wuk2TpzKgPWsMXCWZwtD3Th16U/tTDkuE9vWx/UZ+zyFLS
+	 /PZMQ4hD/uPIUIMMAvEECgupZMO0aq2JaOhQhZ7eCoplC8nguDchMQFl/0xjCwLMbg
+	 ZnQ6SffdUCIoGTD0kwHUrnf53vhFyk2HbWhFyYVk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727992AbfCLRNg (ORCPT
+        id S1728400AbfCLR7J (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 12 Mar 2019 13:13:36 -0400
-Received: from mail.kernel.org ([198.145.29.99]:49126 "EHLO mail.kernel.org"
+        Tue, 12 Mar 2019 13:59:09 -0400
+Received: from mail.kernel.org ([198.145.29.99]:50764 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727725AbfCLRM7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 12 Mar 2019 13:12:59 -0400
+        id S1727976AbfCLRNf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 12 Mar 2019 13:13:35 -0400
 Received: from localhost (unknown [104.133.8.98])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id AE131217D4;
-        Tue, 12 Mar 2019 17:12:58 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id A85BA21741;
+        Tue, 12 Mar 2019 17:13:33 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1552410778;
-        bh=XxuUbZsz7VTvVZyCUF8PA7i5ndaKkaD4MoaZInej/HU=;
+        s=default; t=1552410813;
+        bh=Ym/elR2+WQop+XjRYS9pOBDEeSFshGzzqjY2y3RLcro=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=iR+aOU6P06O1iE/q6T05xnCZ6SKnOovcKK14GhA3J3UD3CN5/23tZ9EJGM2MYpaBC
-         3yqZqiLgiImLIm+/F6pGbJoT7oHpwnyXPSfQLRBe2EuqrvnGWZ+IybSt3wplYZLX6k
-         81zMiXWzKl3j0bB9uvlVA91uP9awgJREDPfYv39I=
+        b=1PT+VOLewuoqRyAjcdbpapmeR+Q7S/fLppuBQjmV2f1lcTImQ2GFNT+9bSOGX/Wn0
+         ql3X3/RJ5U/iucEKBEH3nHx6kK0NpxfjSZXd9xrJhZrCMOfZXMMEvl9aLn23zfrrza
+         jkwXY83qcQUBiBBcOwr1wE95qz9qpTmPkYZqQCDA=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Codrin Ciubotariu <codrin.ciubotariu@microchip.com>,
-        Ludovic Desroches <ludovic.desroches@microchip.com>,
-        Vinod Koul <vkoul@kernel.org>, Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.20 118/171] dmaengine: at_xdmac: Fix wrongfull report of a channel as in use
-Date:   Tue, 12 Mar 2019 10:08:18 -0700
-Message-Id: <20190312170358.027167167@linuxfoundation.org>
+        stable@vger.kernel.org, Al Viro <viro@ZenIV.linux.org.uk>,
+        Gao Xiang <gaoxiang25@huawei.com>
+Subject: [PATCH 4.20 166/171] staging: erofs: keep corrupted fs from crashing kernel in erofs_namei()
+Date:   Tue, 12 Mar 2019 10:09:06 -0700
+Message-Id: <20190312170401.778427448@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190312170347.868927101@linuxfoundation.org>
 References: <20190312170347.868927101@linuxfoundation.org>
@@ -67,100 +65,314 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-[ Upstream commit dc3f595b6617ebc0307e0ce151e8f2f2b2489b95 ]
+From: Gao Xiang <gaoxiang25@huawei.com>
 
-atchan->status variable is used to store two different information:
- - pass channel interrupts status from interrupt handler to tasklet;
- - channel information like whether it is cyclic or paused;
+commit 419d6efc50e94bcf5d6b35cd8c71f79edadec564 upstream.
 
-This causes a bug when device_terminate_all() is called,
-(AT_XDMAC_CHAN_IS_CYCLIC cleared on atchan->status) and then a late End
-of Block interrupt arrives (AT_XDMAC_CIS_BIS), which sets bit 0 of
-atchan->status. Bit 0 is also used for AT_XDMAC_CHAN_IS_CYCLIC, so when
-a new descriptor for a cyclic transfer is created, the driver reports
-the channel as in use:
+As Al pointed out, "
+... and while we are at it, what happens to
+	unsigned int nameoff = le16_to_cpu(de[mid].nameoff);
+	unsigned int matched = min(startprfx, endprfx);
 
-if (test_and_set_bit(AT_XDMAC_CHAN_IS_CYCLIC, &atchan->status)) {
-	dev_err(chan2dev(chan), "channel currently used\n");
-	return NULL;
-}
+	struct qstr dname = QSTR_INIT(data + nameoff,
+		unlikely(mid >= ndirents - 1) ?
+			maxsize - nameoff :
+			le16_to_cpu(de[mid + 1].nameoff) - nameoff);
 
-This patch fixes the bug by adding a different struct member to keep
-the interrupts status separated from the channel status bits.
+	/* string comparison without already matched prefix */
+	int ret = dirnamecmp(name, &dname, &matched);
+if le16_to_cpu(de[...].nameoff) is not monotonically increasing?  I.e.
+what's to prevent e.g. (unsigned)-1 ending up in dname.len?
 
-Fixes: e1f7c9eee707 ("dmaengine: at_xdmac: creation of the atmel eXtended DMA Controller driver")
-Signed-off-by: Codrin Ciubotariu <codrin.ciubotariu@microchip.com>
-Acked-by: Ludovic Desroches <ludovic.desroches@microchip.com>
-Signed-off-by: Vinod Koul <vkoul@kernel.org>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
+Corrupted fs image shouldn't oops the kernel.. "
+
+Revisit the related lookup flow to address the issue.
+
+Fixes: d72d1ce60174 ("staging: erofs: add namei functions")
+Cc: <stable@vger.kernel.org> # 4.19+
+Suggested-by: Al Viro <viro@ZenIV.linux.org.uk>
+Signed-off-by: Gao Xiang <gaoxiang25@huawei.com>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+
+
 ---
- drivers/dma/at_xdmac.c | 19 ++++++++++---------
- 1 file changed, 10 insertions(+), 9 deletions(-)
+ drivers/staging/erofs/namei.c |  183 ++++++++++++++++++++++--------------------
+ 1 file changed, 97 insertions(+), 86 deletions(-)
 
-diff --git a/drivers/dma/at_xdmac.c b/drivers/dma/at_xdmac.c
-index 4e557684f792..fe69dccfa0c0 100644
---- a/drivers/dma/at_xdmac.c
-+++ b/drivers/dma/at_xdmac.c
-@@ -203,6 +203,7 @@ struct at_xdmac_chan {
- 	u32				save_cim;
- 	u32				save_cnda;
- 	u32				save_cndc;
-+	u32				irq_status;
- 	unsigned long			status;
- 	struct tasklet_struct		tasklet;
- 	struct dma_slave_config		sconfig;
-@@ -1580,8 +1581,8 @@ static void at_xdmac_tasklet(unsigned long data)
- 	struct at_xdmac_desc	*desc;
- 	u32			error_mask;
+--- a/drivers/staging/erofs/namei.c
++++ b/drivers/staging/erofs/namei.c
+@@ -15,74 +15,77 @@
  
--	dev_dbg(chan2dev(&atchan->chan), "%s: status=0x%08lx\n",
--		 __func__, atchan->status);
-+	dev_dbg(chan2dev(&atchan->chan), "%s: status=0x%08x\n",
-+		__func__, atchan->irq_status);
+ #include <trace/events/erofs.h>
  
- 	error_mask = AT_XDMAC_CIS_RBEIS
- 		     | AT_XDMAC_CIS_WBEIS
-@@ -1589,15 +1590,15 @@ static void at_xdmac_tasklet(unsigned long data)
+-/* based on the value of qn->len is accurate */
+-static inline int dirnamecmp(struct qstr *qn,
+-	struct qstr *qd, unsigned int *matched)
++struct erofs_qstr {
++	const unsigned char *name;
++	const unsigned char *end;
++};
++
++/* based on the end of qn is accurate and it must have the trailing '\0' */
++static inline int dirnamecmp(const struct erofs_qstr *qn,
++			     const struct erofs_qstr *qd,
++			     unsigned int *matched)
+ {
+-	unsigned int i = *matched, len = min(qn->len, qd->len);
+-loop:
+-	if (unlikely(i >= len)) {
+-		*matched = i;
+-		if (qn->len < qd->len) {
+-			/*
+-			 * actually (qn->len == qd->len)
+-			 * when qd->name[i] == '\0'
+-			 */
+-			return qd->name[i] == '\0' ? 0 : -1;
+-		}
+-		return (qn->len > qd->len);
+-	}
++	unsigned int i = *matched;
  
- 	if (at_xdmac_chan_is_cyclic(atchan)) {
- 		at_xdmac_handle_cyclic(atchan);
--	} else if ((atchan->status & AT_XDMAC_CIS_LIS)
--		   || (atchan->status & error_mask)) {
-+	} else if ((atchan->irq_status & AT_XDMAC_CIS_LIS)
-+		   || (atchan->irq_status & error_mask)) {
- 		struct dma_async_tx_descriptor  *txd;
+-	if (qn->name[i] != qd->name[i]) {
+-		*matched = i;
+-		return qn->name[i] > qd->name[i] ? 1 : -1;
++	/*
++	 * on-disk error, let's only BUG_ON in the debugging mode.
++	 * otherwise, it will return 1 to just skip the invalid name
++	 * and go on (in consideration of the lookup performance).
++	 */
++	DBG_BUGON(qd->name > qd->end);
++
++	/* qd could not have trailing '\0' */
++	/* However it is absolutely safe if < qd->end */
++	while (qd->name + i < qd->end && qd->name[i] != '\0') {
++		if (qn->name[i] != qd->name[i]) {
++			*matched = i;
++			return qn->name[i] > qd->name[i] ? 1 : -1;
++		}
++		++i;
+ 	}
+-
+-	++i;
+-	goto loop;
++	*matched = i;
++	/* See comments in __d_alloc on the terminating NUL character */
++	return qn->name[i] == '\0' ? 0 : 1;
+ }
  
--		if (atchan->status & AT_XDMAC_CIS_RBEIS)
-+		if (atchan->irq_status & AT_XDMAC_CIS_RBEIS)
- 			dev_err(chan2dev(&atchan->chan), "read bus error!!!");
--		if (atchan->status & AT_XDMAC_CIS_WBEIS)
-+		if (atchan->irq_status & AT_XDMAC_CIS_WBEIS)
- 			dev_err(chan2dev(&atchan->chan), "write bus error!!!");
--		if (atchan->status & AT_XDMAC_CIS_ROIS)
-+		if (atchan->irq_status & AT_XDMAC_CIS_ROIS)
- 			dev_err(chan2dev(&atchan->chan), "request overflow error!!!");
+-static struct erofs_dirent *find_target_dirent(
+-	struct qstr *name,
+-	u8 *data, int maxsize)
++#define nameoff_from_disk(off, sz)	(le16_to_cpu(off) & ((sz) - 1))
++
++static struct erofs_dirent *find_target_dirent(struct erofs_qstr *name,
++					       u8 *data,
++					       unsigned int dirblksize,
++					       const int ndirents)
+ {
+-	unsigned int ndirents, head, back;
++	int head, back;
+ 	unsigned int startprfx, endprfx;
+ 	struct erofs_dirent *const de = (struct erofs_dirent *)data;
  
- 		spin_lock(&atchan->lock);
-@@ -1652,7 +1653,7 @@ static irqreturn_t at_xdmac_interrupt(int irq, void *dev_id)
- 			atchan = &atxdmac->chan[i];
- 			chan_imr = at_xdmac_chan_read(atchan, AT_XDMAC_CIM);
- 			chan_status = at_xdmac_chan_read(atchan, AT_XDMAC_CIS);
--			atchan->status = chan_status & chan_imr;
-+			atchan->irq_status = chan_status & chan_imr;
- 			dev_vdbg(atxdmac->dma.dev,
- 				 "%s: chan%d: imr=0x%x, status=0x%x\n",
- 				 __func__, i, chan_imr, chan_status);
-@@ -1666,7 +1667,7 @@ static irqreturn_t at_xdmac_interrupt(int irq, void *dev_id)
- 				 at_xdmac_chan_read(atchan, AT_XDMAC_CDA),
- 				 at_xdmac_chan_read(atchan, AT_XDMAC_CUBC));
+-	/* make sure that maxsize is valid */
+-	BUG_ON(maxsize < sizeof(struct erofs_dirent));
+-
+-	ndirents = le16_to_cpu(de->nameoff) / sizeof(*de);
+-
+-	/* corrupted dir (may be unnecessary...) */
+-	BUG_ON(!ndirents);
+-
+-	head = 0;
++	/* since the 1st dirent has been evaluated previously */
++	head = 1;
+ 	back = ndirents - 1;
+ 	startprfx = endprfx = 0;
  
--			if (atchan->status & (AT_XDMAC_CIS_RBEIS | AT_XDMAC_CIS_WBEIS))
-+			if (atchan->irq_status & (AT_XDMAC_CIS_RBEIS | AT_XDMAC_CIS_WBEIS))
- 				at_xdmac_write(atxdmac, AT_XDMAC_GD, atchan->mask);
+ 	while (head <= back) {
+-		unsigned int mid = head + (back - head) / 2;
+-		unsigned int nameoff = le16_to_cpu(de[mid].nameoff);
++		const int mid = head + (back - head) / 2;
++		const int nameoff = nameoff_from_disk(de[mid].nameoff,
++						      dirblksize);
+ 		unsigned int matched = min(startprfx, endprfx);
+-
+-		struct qstr dname = QSTR_INIT(data + nameoff,
+-			unlikely(mid >= ndirents - 1) ?
+-				maxsize - nameoff :
+-				le16_to_cpu(de[mid + 1].nameoff) - nameoff);
++		struct erofs_qstr dname = {
++			.name = data + nameoff,
++			.end = unlikely(mid >= ndirents - 1) ?
++				data + dirblksize :
++				data + nameoff_from_disk(de[mid + 1].nameoff,
++							 dirblksize)
++		};
  
- 			tasklet_schedule(&atchan->tasklet);
--- 
-2.19.1
-
+ 		/* string comparison without already matched prefix */
+ 		int ret = dirnamecmp(name, &dname, &matched);
+ 
+-		if (unlikely(!ret))
++		if (unlikely(!ret)) {
+ 			return de + mid;
+-		else if (ret > 0) {
++		} else if (ret > 0) {
+ 			head = mid + 1;
+ 			startprfx = matched;
+-		} else if (unlikely(mid < 1))	/* fix "mid" overflow */
+-			break;
+-		else {
++		} else {
+ 			back = mid - 1;
+ 			endprfx = matched;
+ 		}
+@@ -91,12 +94,12 @@ static struct erofs_dirent *find_target_
+ 	return ERR_PTR(-ENOENT);
+ }
+ 
+-static struct page *find_target_block_classic(
+-	struct inode *dir,
+-	struct qstr *name, int *_diff)
++static struct page *find_target_block_classic(struct inode *dir,
++					      struct erofs_qstr *name,
++					      int *_ndirents)
+ {
+ 	unsigned int startprfx, endprfx;
+-	unsigned int head, back;
++	int head, back;
+ 	struct address_space *const mapping = dir->i_mapping;
+ 	struct page *candidate = ERR_PTR(-ENOENT);
+ 
+@@ -105,41 +108,43 @@ static struct page *find_target_block_cl
+ 	back = inode_datablocks(dir) - 1;
+ 
+ 	while (head <= back) {
+-		unsigned int mid = head + (back - head) / 2;
++		const int mid = head + (back - head) / 2;
+ 		struct page *page = read_mapping_page(mapping, mid, NULL);
+ 
+-		if (IS_ERR(page)) {
+-exact_out:
+-			if (!IS_ERR(candidate)) /* valid candidate */
+-				put_page(candidate);
+-			return page;
+-		} else {
+-			int diff;
+-			unsigned int ndirents, matched;
+-			struct qstr dname;
++		if (!IS_ERR(page)) {
+ 			struct erofs_dirent *de = kmap_atomic(page);
+-			unsigned int nameoff = le16_to_cpu(de->nameoff);
+-
+-			ndirents = nameoff / sizeof(*de);
++			const int nameoff = nameoff_from_disk(de->nameoff,
++							      EROFS_BLKSIZ);
++			const int ndirents = nameoff / sizeof(*de);
++			int diff;
++			unsigned int matched;
++			struct erofs_qstr dname;
+ 
+-			/* corrupted dir (should have one entry at least) */
+-			BUG_ON(!ndirents || nameoff > PAGE_SIZE);
++			if (unlikely(!ndirents)) {
++				DBG_BUGON(1);
++				kunmap_atomic(de);
++				put_page(page);
++				page = ERR_PTR(-EIO);
++				goto out;
++			}
+ 
+ 			matched = min(startprfx, endprfx);
+ 
+ 			dname.name = (u8 *)de + nameoff;
+-			dname.len = ndirents == 1 ?
+-				/* since the rest of the last page is 0 */
+-				EROFS_BLKSIZ - nameoff
+-				: le16_to_cpu(de[1].nameoff) - nameoff;
++			if (ndirents == 1)
++				dname.end = (u8 *)de + EROFS_BLKSIZ;
++			else
++				dname.end = (u8 *)de +
++					nameoff_from_disk(de[1].nameoff,
++							  EROFS_BLKSIZ);
+ 
+ 			/* string comparison without already matched prefix */
+ 			diff = dirnamecmp(name, &dname, &matched);
+ 			kunmap_atomic(de);
+ 
+ 			if (unlikely(!diff)) {
+-				*_diff = 0;
+-				goto exact_out;
++				*_ndirents = 0;
++				goto out;
+ 			} else if (diff > 0) {
+ 				head = mid + 1;
+ 				startprfx = matched;
+@@ -147,45 +152,51 @@ exact_out:
+ 				if (likely(!IS_ERR(candidate)))
+ 					put_page(candidate);
+ 				candidate = page;
++				*_ndirents = ndirents;
+ 			} else {
+ 				put_page(page);
+ 
+-				if (unlikely(mid < 1))	/* fix "mid" overflow */
+-					break;
+-
+ 				back = mid - 1;
+ 				endprfx = matched;
+ 			}
++			continue;
+ 		}
++out:		/* free if the candidate is valid */
++		if (!IS_ERR(candidate))
++			put_page(candidate);
++		return page;
+ 	}
+-	*_diff = 1;
+ 	return candidate;
+ }
+ 
+ int erofs_namei(struct inode *dir,
+-	struct qstr *name,
+-	erofs_nid_t *nid, unsigned int *d_type)
++		struct qstr *name,
++		erofs_nid_t *nid, unsigned int *d_type)
+ {
+-	int diff;
++	int ndirents;
+ 	struct page *page;
+-	u8 *data;
++	void *data;
+ 	struct erofs_dirent *de;
++	struct erofs_qstr qn;
+ 
+ 	if (unlikely(!dir->i_size))
+ 		return -ENOENT;
+ 
+-	diff = 1;
+-	page = find_target_block_classic(dir, name, &diff);
++	qn.name = name->name;
++	qn.end = name->name + name->len;
++
++	ndirents = 0;
++	page = find_target_block_classic(dir, &qn, &ndirents);
+ 
+ 	if (unlikely(IS_ERR(page)))
+ 		return PTR_ERR(page);
+ 
+ 	data = kmap_atomic(page);
+ 	/* the target page has been mapped */
+-	de = likely(diff) ?
+-		/* since the rest of the last page is 0 */
+-		find_target_dirent(name, data, EROFS_BLKSIZ) :
+-		(struct erofs_dirent *)data;
++	if (ndirents)
++		de = find_target_dirent(&qn, data, EROFS_BLKSIZ, ndirents);
++	else
++		de = (struct erofs_dirent *)data;
+ 
+ 	if (likely(!IS_ERR(de))) {
+ 		*nid = le64_to_cpu(de->nid);
 
 
