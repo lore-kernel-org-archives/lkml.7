@@ -2,60 +2,54 @@ Return-Path: <SRS0=J4ZE=RP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4F460C43381
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 17:52:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 72039C43381
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 17:52:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1977E217D4
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 17:52:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4249121773
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 17:52:56 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1552413172;
-	bh=36ZXzO03QtD06j7h523/vphW3B4FCTcVl+xuKYfyigI=;
+	s=default; t=1552413176;
+	bh=pniqlRoheXg6hb/eAq/S/qpd27Zij8udGK7C6KeXT+8=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Q28mrh1/HNJMIspXvDGS2uuJiO9vD3eptPaI1alwTRoHH2hj+E8PERA5gB20YFBmr
-	 5xveEWeBoxke8kUyEqiYcqbn7JY+YROlulGpy+D4uS0scUIP3lnb3fHS0mNXfmv9fF
-	 kPoT8AMeVSHybGIhc5sPNwXvzYbkAxdvx1xvJtpU=
+	b=TLsyCdgCpy3Sru9MoN27pwiKMSd7eNSpT515vfvlXceJZrRypG/+Yw8EEzkIluffT
+	 l3psBgsdps9im84ALG+a4mS24x8pd8qplwoUywTqKe9TmBvqtxAsGC33UpsxxjPwir
+	 lcz3MSsmDQdlCawreDN0SVMVtqv4Gxy7P5aI6ec8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728348AbfCLROY (ORCPT
+        id S1728909AbfCLRwy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 12 Mar 2019 13:14:24 -0400
-Received: from mail.kernel.org ([198.145.29.99]:51102 "EHLO mail.kernel.org"
+        Tue, 12 Mar 2019 13:52:54 -0400
+Received: from mail.kernel.org ([198.145.29.99]:53012 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728040AbfCLRNn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 12 Mar 2019 13:13:43 -0400
+        id S1728338AbfCLROY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 12 Mar 2019 13:14:24 -0400
 Received: from localhost (unknown [104.133.8.98])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 3F45121873;
-        Tue, 12 Mar 2019 17:13:42 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 3F9D021741;
+        Tue, 12 Mar 2019 17:14:23 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1552410822;
-        bh=36ZXzO03QtD06j7h523/vphW3B4FCTcVl+xuKYfyigI=;
+        s=default; t=1552410863;
+        bh=pniqlRoheXg6hb/eAq/S/qpd27Zij8udGK7C6KeXT+8=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=mNDxcCUoYdF9xYYoQx+TLs25pOZvpGzBsn/RXQU6jSAxiqWZQwONKa2VxUNAkbAaV
-         Omjm0ku3CKhAXuhTAp8QpdtWKF9daOziE28XaNh7sQOvj0X+RuylHB5dW2TzEXUzWa
-         Jcd++zVHdNuozYdPgKP0Xe7RHYaEK75zT9f/rWfw=
+        b=2ZTJWUchnpjdktgWFZKPo3XOAaFQEGWZpSYOmGovhCEi+dz+pSblthElndmE372Tz
+         1w1jEIC3L2c/xnTQj8ud0NBUpH1fz7lFwFXAntH7UbUOp9TR5FiNt9l05ACHUkpXvX
+         4NAu5015G26Lfi9TknhxA+Utu2fQG13+YUrMYU1E=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Ryan Grachek <ryan@edited.us>,
-        Wei Xu <xuwei5@hisilicon.com>,
-        Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org,
-        Alistair Strachan <astrachan@google.com>,
-        John Stultz <john.stultz@linaro.org>
-Subject: [PATCH 4.20 156/171] arm64: dts: hikey: Revert "Enable HS200 mode on eMMC"
-Date:   Tue, 12 Mar 2019 10:08:56 -0700
-Message-Id: <20190312170400.911136900@linuxfoundation.org>
+        stable@vger.kernel.org, Fathi Boudra <fathi.boudra@linaro.org>,
+        Shuah Khan <shuah@kernel.org>, Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.19 032/149] selftests: net: use LDLIBS instead of LDFLAGS
+Date:   Tue, 12 Mar 2019 10:07:30 -0700
+Message-Id: <20190312170352.392258552@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
-In-Reply-To: <20190312170347.868927101@linuxfoundation.org>
-References: <20190312170347.868927101@linuxfoundation.org>
+In-Reply-To: <20190312170349.421581206@linuxfoundation.org>
+References: <20190312170349.421581206@linuxfoundation.org>
 User-Agent: quilt/0.65
 X-stable: review
 X-Patchwork-Hint: ignore
@@ -67,47 +61,81 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-4.20-stable review patch.  If anyone has any objections, please let me know.
+4.19-stable review patch.  If anyone has any objections, please let me know.
 
 ------------------
 
-From: Alistair Strachan <astrachan@google.com>
+[ Upstream commit 870f193d48c25a97d61a8e6c04e3c29a2c606850 ]
 
-commit 8d26c1390aec795d492b8de5e4437751e8805a1d upstream.
+reuseport_bpf_numa fails to build due to undefined reference errors:
 
-This reverts commit abd7d0972a192ee653efc7b151a6af69db58f2bb. This
-change was already partially reverted by John Stultz in
-commit 9c6d26df1fae ("arm64: dts: hikey: Fix eMMC corruption regression").
+ aarch64-linaro-linux-gcc
+ --sysroot=/build/tmp-rpb-glibc/sysroots/hikey -Wall
+ -Wl,--no-as-needed -O2 -g -I../../../../usr/include/  -Wl,-O1
+ -Wl,--hash-style=gnu -Wl,--as-needed -lnuma  reuseport_bpf_numa.c
+ -o
+ /build/tmp-rpb-glibc/work/hikey-linaro-linux/kselftests/4.12-r0/linux-4.12-rc7/tools/testing/selftests/net/reuseport_bpf_numa
+ /tmp/ccfUuExT.o: In function `send_from_node':
+ /build/tmp-rpb-glibc/work/hikey-linaro-linux/kselftests/4.12-r0/linux-4.12-rc7/tools/testing/selftests/net/reuseport_bpf_numa.c:138:
+ undefined reference to `numa_run_on_node'
+ /tmp/ccfUuExT.o: In function `main':
+ /build/tmp-rpb-glibc/work/hikey-linaro-linux/kselftests/4.12-r0/linux-4.12-rc7/tools/testing/selftests/net/reuseport_bpf_numa.c:230:
+ undefined reference to `numa_available'
+ /build/tmp-rpb-glibc/work/hikey-linaro-linux/kselftests/4.12-r0/linux-4.12-rc7/tools/testing/selftests/net/reuseport_bpf_numa.c:233:
+ undefined reference to `numa_max_node'
 
-This change appears to cause controller resets and block read failures
-which prevents successful booting on some hikey boards.
+It's GNU Make and linker specific.
 
-Cc: Ryan Grachek <ryan@edited.us>
-Cc: Wei Xu <xuwei5@hisilicon.com>
-Cc: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-Cc: Rob Herring <robh+dt@kernel.org>
-Cc: Mark Rutland <mark.rutland@arm.com>
-Cc: linux-arm-kernel@lists.infradead.org
-Cc: devicetree@vger.kernel.org
-Cc: stable <stable@vger.kernel.org> #4.17+
-Signed-off-by: Alistair Strachan <astrachan@google.com>
-Signed-off-by: John Stultz <john.stultz@linaro.org>
-Signed-off-by: Wei Xu <xuwei5@hisilicon.com>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+The default Makefile rule looks like:
 
+$(CC) $(CFLAGS) $(LDFLAGS) $@ $^ $(LDLIBS)
+
+When linking is done by gcc itself, no issue, but when it needs to be passed
+to proper ld, only LDLIBS follows and then ld cannot know what libs to link
+with.
+
+More detail:
+https://www.gnu.org/software/make/manual/html_node/Implicit-Variables.html
+
+LDFLAGS
+Extra flags to give to compilers when they are supposed to invoke the linker,
+‘ld’, such as -L. Libraries (-lfoo) should be added to the LDLIBS variable
+instead.
+
+LDLIBS
+Library flags or names given to compilers when they are supposed to invoke the
+linker, ‘ld’. LOADLIBES is a deprecated (but still supported) alternative to
+LDLIBS. Non-library linker flags, such as -L, should go in the LDFLAGS
+variable.
+
+https://lkml.org/lkml/2010/2/10/362
+
+tools/perf: libraries must come after objects
+
+Link order matters, use LDLIBS instead of LDFLAGS to properly link against
+libnuma.
+
+Signed-off-by: Fathi Boudra <fathi.boudra@linaro.org>
+Signed-off-by: Shuah Khan <shuah@kernel.org>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/arm64/boot/dts/hisilicon/hi6220-hikey.dts |    1 -
- 1 file changed, 1 deletion(-)
+ tools/testing/selftests/net/Makefile | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
---- a/arch/arm64/boot/dts/hisilicon/hi6220-hikey.dts
-+++ b/arch/arm64/boot/dts/hisilicon/hi6220-hikey.dts
-@@ -301,7 +301,6 @@
+diff --git a/tools/testing/selftests/net/Makefile b/tools/testing/selftests/net/Makefile
+index 919aa2ac00af..9a3764a1084e 100644
+--- a/tools/testing/selftests/net/Makefile
++++ b/tools/testing/selftests/net/Makefile
+@@ -18,6 +18,6 @@ TEST_GEN_PROGS += reuseport_dualstack reuseaddr_conflict tls
+ KSFT_KHDR_INSTALL := 1
+ include ../lib.mk
  
- 		dwmmc_0: dwmmc0@f723d000 {
- 			cap-mmc-highspeed;
--			mmc-hs200-1_8v;
- 			non-removable;
- 			bus-width = <0x8>;
- 			vmmc-supply = <&ldo19>;
+-$(OUTPUT)/reuseport_bpf_numa: LDFLAGS += -lnuma
++$(OUTPUT)/reuseport_bpf_numa: LDLIBS += -lnuma
+ $(OUTPUT)/tcp_mmap: LDFLAGS += -lpthread
+ $(OUTPUT)/tcp_inq: LDFLAGS += -lpthread
+-- 
+2.19.1
+
 
 
