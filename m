@@ -2,223 +2,165 @@ Return-Path: <SRS0=J4ZE=RP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
 	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 01B18C10F00
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 22:57:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3971AC10F0B
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 22:57:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AF7A4217D9
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 22:57:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F130B213A2
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 22:57:20 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="VmdyRRhm"
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=hansenpartnership.com header.i=@hansenpartnership.com header.b="TOJYB90P"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727124AbfCLW5E (ORCPT
+        id S1727318AbfCLW5T (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 12 Mar 2019 18:57:04 -0400
-Received: from mail-it1-f194.google.com ([209.85.166.194]:54924 "EHLO
-        mail-it1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726372AbfCLW5E (ORCPT
+        Tue, 12 Mar 2019 18:57:19 -0400
+Received: from bedivere.hansenpartnership.com ([66.63.167.143]:49232 "EHLO
+        bedivere.hansenpartnership.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726372AbfCLW5T (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 12 Mar 2019 18:57:04 -0400
-Received: by mail-it1-f194.google.com with SMTP id w18so7241171itj.4;
-        Tue, 12 Mar 2019 15:57:03 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=jIFuwTaqlsPxroQheI+plV9ASZgtqzOS4PSZ00O/GCE=;
-        b=VmdyRRhmKuHbcpkG8m+AVJpZeTLkgs88qJxqBQ80xUiEM1GRYFwMXtA2dx54CJ97AU
-         CdUop5KWoTbZS/9dVAVE4JNnbeZwQDpZBFiUcv22IilkF0CId7GouHM2vn3i7QmWZynl
-         g4t/HPIQjRG6htkap+SxSH9pZnUXevZAq94gvm1fB6tLu1MAk3HZ4gAF1Ffp+DFdNB9M
-         UGxw0wcWjmH3wYPCBZeDHuUPaYt1y/7FK3+ZJmdMWIb2GXGBwTEr5L/EfiElTr8EuJQX
-         07AO+k4CH2H5DLCRchY4oNhbCvaXcILrLeKI5MZEuHtRNJmB+IZwEdZ8nVWar2O3+b68
-         epQw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=jIFuwTaqlsPxroQheI+plV9ASZgtqzOS4PSZ00O/GCE=;
-        b=BaDjMn97lRusq2tI6HWTr7s0HiK8QqhezzfF3q++dvczEr6WnyGumJpzci/4pQ1wK6
-         dGjXPaxtgFH6DxsxOaRrGxzWavAr7iz4GJy8jXJNMkcBqqdhTY7FiNPkIwNWm21McvUp
-         n2goocD1G/wyiESPJ63KiMybj6L8MQ+QkGUXv63oHZO5wDH4qEtD0Iy0JLijpNPKlAeo
-         3s3l2YWiD5pLfY02iPOudzG3T1ZHrC6wqbyLTE5+mXFyLk7waoH+PPR3L9N+yvDAig1i
-         6bAttToVhC9rh2fzvDbxyv6FTTYvcDnefLWzCJwnDFeA2bFbgUkUDnNDcOlENVEVgyp8
-         hoMg==
-X-Gm-Message-State: APjAAAWDTvuMk838xU5Sv1kmEFzEapieEisxpOkJKjBlsPGf7F5GXYTC
-        e7z8TVyDAc9MkQrcf401UQ9rQaWajJGl0KrDMH8=
-X-Google-Smtp-Source: APXvYqwL7Bqrcj7SXP29rOVcCDsjzWYenQ27zAqjv+O5kl+XPR3EpMGhyotzkBj4jLCYXb7avecbKU+9xy3Nz0cqQwQ=
-X-Received: by 2002:a24:b643:: with SMTP id d3mr136826itj.146.1552431422559;
- Tue, 12 Mar 2019 15:57:02 -0700 (PDT)
-MIME-Version: 1.0
-References: <20190306155048.12868-1-nitesh@redhat.com> <20190306155048.12868-3-nitesh@redhat.com>
- <CAKgT0UdDohCXZY3q9qhQsHw-2vKp_CAgvf2dd2e6U6KLsAkVng@mail.gmail.com>
- <2d9ae889-a9b9-7969-4455-ff36944f388b@redhat.com> <22e4b1cd-38a5-6642-8cbe-d68e4fcbb0b7@redhat.com>
- <CAKgT0UcAqGX26pcQLzFUevHsLu-CtiyOYe15uG3bkhGZ5BJKAg@mail.gmail.com>
- <78b604be-2129-a716-a7a6-f5b382c9fb9c@redhat.com> <CAKgT0Uc_z9Vi+JhQcJYX+J9c4J56RRSkzzegbb2=9xO-NY3dgw@mail.gmail.com>
- <20190307212845-mutt-send-email-mst@kernel.org> <CAKgT0Ucu3EMsYBfdKtEiprrn-VBZy3Y+0HdEp5b4PO2SQgGsRw@mail.gmail.com>
- <17d2afa6-556e-ec73-40dc-beac536b3f20@redhat.com> <CAKgT0UcdQZwHjmMBkSWmy_ZdShJCagjwomn13g+r7ZNJBRn1LQ@mail.gmail.com>
- <8f692047-4750-6827-1ee0-d3d354788f09@redhat.com> <CAKgT0UddT9CKg1uZo6ZODs9ARti-6XGm9Zvo+8QRZKUPSwzWMQ@mail.gmail.com>
- <41ae8afe-72c9-58e6-0cbb-9375c91ce37a@redhat.com> <CAKgT0Uftff+JVRW-sQ6u8DeVg4Fq9b-pgE6Ojr+XqQFn13JmGw@mail.gmail.com>
- <be257778-3ecb-8f12-2d51-451a5e16fd3f@redhat.com>
-In-Reply-To: <be257778-3ecb-8f12-2d51-451a5e16fd3f@redhat.com>
-From:   Alexander Duyck <alexander.duyck@gmail.com>
-Date:   Tue, 12 Mar 2019 15:56:51 -0700
-Message-ID: <CAKgT0UfG6PQS-LTGGcGrV3Qi1eLAFxef=OV43SVThQVgFSMqRA@mail.gmail.com>
-Subject: Re: [RFC][Patch v9 2/6] KVM: Enables the kernel to isolate guest free pages
-To:     David Hildenbrand <david@redhat.com>
-Cc:     Nitesh Narayan Lal <nitesh@redhat.com>,
-        "Michael S. Tsirkin" <mst@redhat.com>,
-        kvm list <kvm@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        linux-mm <linux-mm@kvack.org>,
-        Paolo Bonzini <pbonzini@redhat.com>, lcapitulino@redhat.com,
-        pagupta@redhat.com, wei.w.wang@intel.com,
-        Yang Zhang <yang.zhang.wz@gmail.com>,
-        Rik van Riel <riel@surriel.com>, dodgen@google.com,
-        Konrad Rzeszutek Wilk <konrad.wilk@oracle.com>,
-        dhildenb@redhat.com, Andrea Arcangeli <aarcange@redhat.com>
+        Tue, 12 Mar 2019 18:57:19 -0400
+Received: from localhost (localhost [127.0.0.1])
+        by bedivere.hansenpartnership.com (Postfix) with ESMTP id BB7C38EE20E;
+        Tue, 12 Mar 2019 15:57:17 -0700 (PDT)
+Received: from bedivere.hansenpartnership.com ([127.0.0.1])
+        by localhost (bedivere.hansenpartnership.com [127.0.0.1]) (amavisd-new, port 10024)
+        with ESMTP id bIXGJAv6LSQ8; Tue, 12 Mar 2019 15:57:17 -0700 (PDT)
+Received: from [153.66.254.194] (unknown [50.35.68.20])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by bedivere.hansenpartnership.com (Postfix) with ESMTPSA id D55418EE0F5;
+        Tue, 12 Mar 2019 15:57:16 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=hansenpartnership.com;
+        s=20151216; t=1552431437;
+        bh=nqauZTMjLIlCtdjWAuZ6B+xT+zykoUqdVHDcgv40x8U=;
+        h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
+        b=TOJYB90P8bGGBEgy/p2OzDozxFdWmdmTmVmEbZ2kxfHjm8Wnvw7af8NCL1GtxlDfT
+         CejvYaJVYV9EA/FkWkrN20QgY7XgolCcEnHjrMbejdgOOXNh3wKjFfiVxVq932K3Dx
+         h2zVGng+Z8FhH1B/f+R4JyloBXH9kXZ0FY4mGKB4=
+Message-ID: <1552431434.14432.47.camel@HansenPartnership.com>
+Subject: Re: [RFC PATCH V2 0/5] vhost: accelerate metadata access through
+ vmap()
+From:   James Bottomley <James.Bottomley@HansenPartnership.com>
+To:     Andrea Arcangeli <aarcange@redhat.com>
+Cc:     "Michael S. Tsirkin" <mst@redhat.com>,
+        Jason Wang <jasowang@redhat.com>,
+        David Miller <davem@davemloft.net>, hch@infradead.org,
+        kvm@vger.kernel.org, virtualization@lists.linux-foundation.org,
+        netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
+        peterx@redhat.com, linux-mm@kvack.org,
+        linux-arm-kernel@lists.infradead.org, linux-parisc@vger.kernel.org
+Date:   Tue, 12 Mar 2019 15:57:14 -0700
+In-Reply-To: <20190312225032.GD25147@redhat.com>
+References: <20190311235140-mutt-send-email-mst@kernel.org>
+         <76c353ed-d6de-99a9-76f9-f258074c1462@redhat.com>
+         <20190312075033-mutt-send-email-mst@kernel.org>
+         <1552405610.3083.17.camel@HansenPartnership.com>
+         <20190312200450.GA25147@redhat.com>
+         <1552424017.14432.11.camel@HansenPartnership.com>
+         <20190312211117.GB25147@redhat.com>
+         <1552425555.14432.14.camel@HansenPartnership.com>
+         <20190312215321.GC25147@redhat.com>
+         <1552428174.14432.39.camel@HansenPartnership.com>
+         <20190312225032.GD25147@redhat.com>
 Content-Type: text/plain; charset="UTF-8"
+X-Mailer: Evolution 3.26.6 
+Mime-Version: 1.0
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Mar 12, 2019 at 2:53 PM David Hildenbrand <david@redhat.com> wrote:
->
-> On 12.03.19 22:13, Alexander Duyck wrote:
-> > On Tue, Mar 12, 2019 at 12:46 PM Nitesh Narayan Lal <nitesh@redhat.com> wrote:
-> >>
-> >> On 3/8/19 4:39 PM, Alexander Duyck wrote:
-> >>> On Fri, Mar 8, 2019 at 11:39 AM Nitesh Narayan Lal <nitesh@redhat.com> wrote:
-> >>>> On 3/8/19 2:25 PM, Alexander Duyck wrote:
-> >>>>> On Fri, Mar 8, 2019 at 11:10 AM Nitesh Narayan Lal <nitesh@redhat.com> wrote:
-> >>>>>> On 3/8/19 1:06 PM, Alexander Duyck wrote:
-> >>>>>>> On Thu, Mar 7, 2019 at 6:32 PM Michael S. Tsirkin <mst@redhat.com> wrote:
-> >>>>>>>> On Thu, Mar 07, 2019 at 02:35:53PM -0800, Alexander Duyck wrote:
-> >>>>>>>>> The only other thing I still want to try and see if I can do is to add
-> >>>>>>>>> a jiffies value to the page private data in the case of the buddy
-> >>>>>>>>> pages.
-> >>>>>>>> Actually there's one extra thing I think we should do, and that is make
-> >>>>>>>> sure we do not leave less than X% off the free memory at a time.
-> >>>>>>>> This way chances of triggering an OOM are lower.
-> >>>>>>> If nothing else we could probably look at doing a watermark of some
-> >>>>>>> sort so we have to have X amount of memory free but not hinted before
-> >>>>>>> we will start providing the hints. It would just be a matter of
-> >>>>>>> tracking how much memory we have hinted on versus the amount of memory
-> >>>>>>> that has been pulled from that pool.
-> >>>>>> This is to avoid false OOM in the guest?
-> >>>>> Partially, though it would still be possible. Basically it would just
-> >>>>> be a way of determining when we have hinted "enough". Basically it
-> >>>>> doesn't do us much good to be hinting on free memory if the guest is
-> >>>>> already constrained and just going to reallocate the memory shortly
-> >>>>> after we hinted on it. The idea is with a watermark we can avoid
-> >>>>> hinting until we start having pages that are actually going to stay
-> >>>>> free for a while.
-> >>>>>
-> >>>>>>>  It is another reason why we
-> >>>>>>> probably want a bit in the buddy pages somewhere to indicate if a page
-> >>>>>>> has been hinted or not as we can then use that to determine if we have
-> >>>>>>> to account for it in the statistics.
-> >>>>>> The one benefit which I can see of having an explicit bit is that it
-> >>>>>> will help us to have a single hook away from the hot path within buddy
-> >>>>>> merging code (just like your arch_merge_page) and still avoid duplicate
-> >>>>>> hints while releasing pages.
-> >>>>>>
-> >>>>>> I still have to check PG_idle and PG_young which you mentioned but I
-> >>>>>> don't think we can reuse any existing bits.
-> >>>>> Those are bits that are already there for 64b. I think those exist in
-> >>>>> the page extension for 32b systems. If I am not mistaken they are only
-> >>>>> used in VMA mapped memory. What I was getting at is that those are the
-> >>>>> bits we could think about reusing.
-> >>>>>
-> >>>>>> If we really want to have something like a watermark, then can't we use
-> >>>>>> zone->free_pages before isolating to see how many free pages are there
-> >>>>>> and put a threshold on it? (__isolate_free_page() does a similar thing
-> >>>>>> but it does that on per request basis).
-> >>>>> Right. That is only part of it though since that tells you how many
-> >>>>> free pages are there. But how many of those free pages are hinted?
-> >>>>> That is the part we would need to track separately and then then
-> >>>>> compare to free_pages to determine if we need to start hinting on more
-> >>>>> memory or not.
-> >>>> Only pages which are isolated will be hinted, and once a page is
-> >>>> isolated it will not be counted in the zone free pages.
-> >>>> Feel free to correct me if I am wrong.
-> >>> You are correct up to here. When we isolate the page it isn't counted
-> >>> against the free pages. However after we complete the hint we end up
-> >>> taking it out of isolation and returning it to the "free" state, so it
-> >>> will be counted against the free pages.
-> >>>
-> >>>> If I am understanding it correctly you only want to hint the idle pages,
-> >>>> is that right?
-> >>> Getting back to the ideas from our earlier discussion, we had 3 stages
-> >>> for things. Free but not hinted, isolated due to hinting, and free and
-> >>> hinted. So what we would need to do is identify the size of the first
-> >>> pool that is free and not hinted by knowing the total number of free
-> >>> pages, and then subtract the size of the pages that are hinted and
-> >>> still free.
-> >> To summarize, for now, I think it makes sense to stick with the current
-> >> approach as this way we can avoid any locking in the allocation path and
-> >> reduce the number of hypercalls for a bunch of MAX_ORDER - 1 page.
-> >
-> > I'm not sure what you are talking about by "avoid any locking in the
-> > allocation path". Are you talking about the spin on idle bit, if so
-> > then yes. However I have been testing your patches and I was correct
-> > in the assumption that you forgot to handle the zone lock when you
-> > were freeing __free_one_page. I just did a quick copy/paste from your
-> > zone lock handling from the guest_free_page_hinting function into the
-> > release_buddy_pages function and then I was able to enable multiple
-> > CPUs without any issues.
-> >
-> >> For the next step other than the comments received in the code and what
-> >> I mentioned in the cover email, I would like to do the following:
-> >> 1. Explore the watermark idea suggested by Alex and bring down memhog
-> >> execution time if possible.
-> >
-> > So there are a few things that are hurting us on the memhog test:
-> > 1. The current QEMU patch is only madvising 4K pages at a time, this
-> > is disabling THP and hurts the test.
-> >
-> > 2. The fact that we madvise the pages away makes it so that we have to
-> > fault the page back in in order to use it for the memhog test. In
-> > order to avoid that penalty we may want to see if we can introduce
-> > some sort of "timeout" on the pages so that we are only hinting away
-> > old pages that have not been used for some period of time.
-> >
-> > 3. Currently we are still doing a large amount of processing in the
-> > page free path. Ideally we should look at getting away from trying to
-> > do so much per-cpu work and instead just have some small tasks that
-> > put the data needed in the page, and then have a separate thread
-> > walking the free_list checking that data, isolating the pages, hinting
-> > them, and then returning them back to the free_list.
->
-> This is highly debatable. Whenever the is concurrency, there is the need
-> for locking (well, at least synchronization - maybe using existing locks
-> like the zone lock). The other thread has to run somewhere. One thread
-> per VCPU might not what we want ... sorting this out might be more
-> complicated than it would seem. I would suggest to defer the discussion
-> of this change to a later stage. It can be easily reworked later - in
-> theory :)
+On Tue, 2019-03-12 at 18:50 -0400, Andrea Arcangeli wrote:
+> On Tue, Mar 12, 2019 at 03:02:54PM -0700, James Bottomley wrote:
+> > I'm sure there must be workarounds elsewhere in the other arch code
+> > otherwise things like this, which appear all over drivers/,
+> > wouldn't
+> > work:
+> > 
+> > drivers/scsi/isci/request.c:1430
+> > 
+> > 	kaddr = kmap_atomic(page);
+> > 	memcpy(kaddr + sg->offset, src_addr, copy_len);
+> > 	kunmap_atomic(kaddr);
+> > 
+> 
+> Are you sure "page" is an userland page with an alias address?
+> 
+> 	sg->page_link = (unsigned long)virt_to_page(addr);
 
-I'm not suggesting anything too complex for now. I would be happy with
-just using the zone lock. The only other thing we would really need to
-make it work is some sort of bit we could set once a page has been
-hinted, and cleared when it is allocated. I"m leaning toward
-PG_owner_priv_1 at this point since it doesn't seem to be used in the
-buddy allocator but is heavily used/re-purposed in multiple other
-spots.
+Yes, it's an element of a scatter gather list, which may be either a
+kernel page or a user page, but is usually the latter.
 
-> 1 and 2 you mention are the lower hanging fruits that will definitely
-> improve performance.
+> page_link seems to point to kernel memory.
+> 
+> I found an apparent solution like parisc on arm 32bit:
+> 
+> void __kunmap_atomic(void *kvaddr)
+> {
+> 	unsigned long vaddr = (unsigned long) kvaddr & PAGE_MASK;
+> 	int idx, type;
+> 
+> 	if (kvaddr >= (void *)FIXADDR_START) {
+> 		type = kmap_atomic_idx();
+> 		idx = FIX_KMAP_BEGIN + type + KM_TYPE_NR *
+> smp_processor_id();
+> 
+> 		if (cache_is_vivt())
+> 			__cpuc_flush_dcache_area((void *)vaddr,
+> PAGE_SIZE);
+> 
+> However on arm 64bit kunmap_atomic is not implemented at all and
+> other 32bit implementations don't do it, for example sparc seems to
+> do the cache flush too if the kernel is built with
+> CONFIG_DEBUG_HIGHMEM (which makes the flushing conditional to the
+> debug option).
+> 
+> The kunmap_atomic where fixmap is used, is flushing the tlb lazily so
+> even on 32bit you can't even be sure if there was a tlb flush for
+> each single page you unmapped, so it's hard to see how the above can
+> work safe, is "page" would have been an userland page mapped with
+> aliased CPU cache.
+> 
+> > the sequence dirties the kernel virtual address but doesn't flush
+> > before doing kunmap.  There are hundreds of other examples which is
+> > why I think adding flush_kernel_dcache_page() is an already lost
+> > cause.
+> 
+> In lots of cases kmap is needed to just modify kernel memory not to
+> modify userland memory (where get/put_user is more commonly used
+> instead..), there's no cache aliasing in such case.
 
-Agreed. Although the challenge with 2 is getting to the page later
-instead of trying to immediately hint on the page we just freed. That
-is why I still thing 3 is going to tie in closely with 2.
+That's why I picked drivers/  The use case in there is mostly kmap to
+put a special value into a scatter gather list entry.
 
-> --
->
-> Thanks,
->
-> David / dhildenb
+> > Actually copy_user_page() is unused in the main kernel.  The big
+> > problem is copy_user_highpage() but that's mostly highly optimised
+> > by the VIPT architectures (in other words you can fiddle with kmap
+> > without impacting it).
+> 
+> copy_user_page is not unused, it's called precisely by
+> copy_user_highpage, which is why the cache flushes are done inside
+> copy_user_page.
+> 
+> static inline void copy_user_highpage(struct page *to, struct page
+> *from,
+> 	unsigned long vaddr, struct vm_area_struct *vma)
+> {
+> 	char *vfrom, *vto;
+> 
+> 	vfrom = kmap_atomic(from);
+> 	vto = kmap_atomic(to);
+> 	copy_user_page(vto, vfrom, vaddr, to);
+> 	kunmap_atomic(vto);
+> 	kunmap_atomic(vfrom);
+> }
+
+That's the asm/generic implementation.  Most VIPT architectures
+override it.
+
+James
+
