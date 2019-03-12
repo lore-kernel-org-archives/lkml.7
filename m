@@ -2,98 +2,91 @@ Return-Path: <SRS0=J4ZE=RP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.5 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,
-	USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8558BC43381
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 10:41:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 17CF9C43381
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 10:42:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 51BA6206BA
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 10:41:10 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=baylibre-com.20150623.gappssmtp.com header.i=@baylibre-com.20150623.gappssmtp.com header.b="D4O/PX7t"
+	by mail.kernel.org (Postfix) with ESMTP id E0E0D2075C
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 10:42:41 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726365AbfCLKlI (ORCPT
+        id S1726415AbfCLKmk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 12 Mar 2019 06:41:08 -0400
-Received: from mail-wm1-f68.google.com ([209.85.128.68]:54107 "EHLO
-        mail-wm1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725917AbfCLKlI (ORCPT
+        Tue, 12 Mar 2019 06:42:40 -0400
+Received: from outbound.smtp.vt.edu ([198.82.183.121]:57068 "EHLO
+        omr2.cc.vt.edu" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1725844AbfCLKmk (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 12 Mar 2019 06:41:08 -0400
-Received: by mail-wm1-f68.google.com with SMTP id e74so2057255wmg.3
-        for <linux-kernel@vger.kernel.org>; Tue, 12 Mar 2019 03:41:06 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=baylibre-com.20150623.gappssmtp.com; s=20150623;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=2HFQV2y8hskAx25njtTZlnSgLWBuB/+pMIlMUpHEdxE=;
-        b=D4O/PX7tKBm1JomFHZG4wVbtczKMWRtbjO0/pf3PLZcHEZjqjs0dPm4+dRddLtOZQC
-         lfhv609b/mVtU8HEjoZ6pwy4QskayPNuuHvnQjN1buBdiuaGAW8jI1FmE/V6jQSMAFJe
-         DDiwzYy4ilFjHQ6PAbZ3v6y9DxkXYStpRoD/Cc0sZUCCWwcCLflTjrx7oOMYwkRREFBP
-         rH2vL5ke5vXbJg0iu16toDEFdpwy4yYIc1C98OXrQXeKcHWBjbrR40pHlUzzmOPQvWqn
-         x3q//Pg9WyLaeRFX7pID98KwMGY6evdcAgDn4Lg43/Q0drKbInARP+hWGzlBAXDf/oCm
-         kieQ==
+        Tue, 12 Mar 2019 06:42:40 -0400
+Received: from mr1.cc.vt.edu (mr1.cc.vt.edu [IPv6:2607:b400:92:8300:0:31:1732:8aa4])
+        by omr2.cc.vt.edu (8.14.4/8.14.4) with ESMTP id x2CAgcGY032652
+        for <linux-kernel@vger.kernel.org>; Tue, 12 Mar 2019 06:42:38 -0400
+Received: from mail-qk1-f199.google.com (mail-qk1-f199.google.com [209.85.222.199])
+        by mr1.cc.vt.edu (8.14.7/8.14.7) with ESMTP id x2CAgXr3004460
+        for <linux-kernel@vger.kernel.org>; Tue, 12 Mar 2019 06:42:38 -0400
+Received: by mail-qk1-f199.google.com with SMTP id j1so1714148qkl.23
+        for <linux-kernel@vger.kernel.org>; Tue, 12 Mar 2019 03:42:38 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=2HFQV2y8hskAx25njtTZlnSgLWBuB/+pMIlMUpHEdxE=;
-        b=b7hGMRlbEp3OFeBsC4l9G1Yh2GiS0pjp7cnYAZhHQoQJ9Z0QHCgjs5/Cbt0cEma3SZ
-         B9GZ9x5pq9BePBovqVqzBHc+0k57hocAZ1UR4UNwmwLuPSh3jcGeqqK3PLYM0kmITvx3
-         c9QCYwKR6k01iTDNST95JoQ2G0tAiwDbUd0N1boTON39ZfzDDv9wQEO+ss2wqeTuxKBX
-         64nPn0tMnAB9Mw94DJVtjj424vHrYiq8lesfFCpSvbOkefFlGjM8WDtEpDQuZss5mSD7
-         ZwWFH/rFbML0cF6aEG353x2eu5LW2zSxzf0ENZSWHM0oQvnTE+lAlIqbtleo1+xSyhGP
-         H7sQ==
-X-Gm-Message-State: APjAAAWulGR0DhTLP6PNtK39Fm4PC0AXcjttrhJaCUbJBQOsJaWXERCE
-        8teYb74UUBmsSSOHMZQGwMfTng==
-X-Google-Smtp-Source: APXvYqzly4TMxeNNywfTTxuG4sdpQlAn07jyd9PtWBXskc9KrO2ZXFQ56IcdRQrbdSH95cC5u4r/rw==
-X-Received: by 2002:a1c:dc0a:: with SMTP id t10mr1912080wmg.101.1552387266112;
-        Tue, 12 Mar 2019 03:41:06 -0700 (PDT)
-Received: from Red ([2a01:cb1d:147:7200:2e56:dcff:fed2:c6d6])
-        by smtp.googlemail.com with ESMTPSA id o30sm12517078wro.57.2019.03.12.03.41.04
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Tue, 12 Mar 2019 03:41:05 -0700 (PDT)
-Date:   Tue, 12 Mar 2019 11:41:02 +0100
-From:   LABBE Corentin <clabbe@baylibre.com>
-To:     Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
-Cc:     axboe@kernel.dk, b.zolnierkie@samsung.com,
-        linux-ide@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] ata: pata_oldpiix: Add missing device ID for
- INTEL_82371AB
-Message-ID: <20190312104102.GA28302@Red>
-References: <1544449564-16557-1-git-send-email-clabbe@baylibre.com>
- <9aab3632-4647-cb66-f720-8f6742bc9b4e@cogentembedded.com>
-MIME-Version: 1.0
+        h=x-gm-message-state:sender:from:to:cc:subject:mime-version:date
+         :message-id;
+        bh=ERcXO2axeLwNg9dWoWi5E7axFrzxhAYjbC9wWmgct5Y=;
+        b=WWYF2s20bA5jgwnxedGxgD+jesSQ9yS/58sA8Cf62Dp4EvuVBrniGqeDKLVqFmUrTz
+         JEoxX22px/Z8JKEQX9nUHeRo6qL7nZ7Icuur9mOYM/Wr+Fgh28O/6ryMnUsBZdxfXns9
+         3oUuv/8YP751vC2DL325xzUifG0ppfSmMmcOE58+0H3Ttch5BL1D8QrYsMavCsZIzE2A
+         QliG724R73kbH6S/wYQwD0gNgGHvpQYJmAwdvNgQaqS9j46471anb7X1x+vu0BS46E0j
+         dO9ljD30YLIl/AzjCmsLTz39wqYxz8kMqBDarYTDa2NHrQpGM3MYDqFrG/7cP6T9JoAK
+         EuIw==
+X-Gm-Message-State: APjAAAVSTKTwVspYY9i1u2MjYedmX+dpqb9n8jsaM5pFhk5ji5anAmVK
+        K4/Q9w4c0WeVVnZyAxS0aHcUE/mLTr6HjDphHawHd85Jk/LyfsaCvBydpI+sV4LU6QwQSVzdpi3
+        v+IlUEO0CRcD0sH7E5CSZ2wzQz0cPDzlwB60=
+X-Received: by 2002:ac8:22ea:: with SMTP id g39mr18742568qta.73.1552387353700;
+        Tue, 12 Mar 2019 03:42:33 -0700 (PDT)
+X-Google-Smtp-Source: APXvYqxrqhYIBYOBTmARS+fuP+Rb3hBAuh1oYi5C5wy5GTxSRqW5sVkGqPD/Vj5lhSazGm6lD5sBaQ==
+X-Received: by 2002:ac8:22ea:: with SMTP id g39mr18742559qta.73.1552387353533;
+        Tue, 12 Mar 2019 03:42:33 -0700 (PDT)
+Received: from turing-police ([2601:5c0:c001:4341::3b7])
+        by smtp.gmail.com with ESMTPSA id d63sm6135829qka.22.2019.03.12.03.42.32
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Tue, 12 Mar 2019 03:42:32 -0700 (PDT)
+From:   "Valdis Kl=?utf-8?Q?=c4=93?=tnieks" <valdis.kletnieks@vt.edu>
+X-Google-Original-From: "Valdis Kl=?utf-8?Q?=c4=93?=tnieks" <Valdis.Kletnieks@vt.edu>
+X-Mailer: exmh version 2.9.0 11/07/2018 with nmh-1.7+dev
+To:     MyungJoo Ham <myungjoo.ham@samsung.com>,
+        Chanwoo Choi <cw00.choi@samsung.com>
+cc:     linux-kernel@vger.kernel.org
+Subject: [PATCH] drivers/extcon/devres.c - fix kerneldoc comment
+Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <9aab3632-4647-cb66-f720-8f6742bc9b4e@cogentembedded.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Date:   Tue, 12 Mar 2019 06:42:31 -0400
+Message-ID: <14349.1552387351@turing-police>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Dec 10, 2018 at 05:52:35PM +0300, Sergei Shtylyov wrote:
-> Hello!
-> 
-> On 12/10/2018 04:46 PM, Corentin Labbe wrote:
-> 
-> > When playing with a virtual SPARC machine with qemu, I found that the
-> > IDE emulated device was not probing with the ata/pata_oldpiix driver.
-> 
->    Correctly, it should probe with ata_piix,
-> 
-> > But with the old ide/piix, it was probed.> 
-> > This is due to this PCI devid was not migrated from the old ide/piix.
-> 
->    It wasn't on purpose -- the IDE driver supports the original PIIX
-> incorrectly.
-> 
+Building with W=1 reports:
 
-Hello
+  CC      drivers/extcon/devres.o
+drivers/extcon/devres.c:208: warning: bad line:                         - Resource-managed extcon_unregister_notifier()
 
-What about removing this old driver totally if it dont work ?
+Give the line the asterisk it wanted.
 
-Regards
+Signed-off-by: Valdis Kletnieks <valdis.kletnieks@vt.edu>
+
+diff --git a/drivers/extcon/devres.c b/drivers/extcon/devres.c
+index f599aeddf8e5..f487d877ab5d 100644
+--- a/drivers/extcon/devres.c
++++ b/drivers/extcon/devres.c
+@@ -205,7 +205,7 @@ EXPORT_SYMBOL(devm_extcon_register_notifier);
+ 
+ /**
+  * devm_extcon_unregister_notifier()
+-			- Resource-managed extcon_unregister_notifier()
++ *			- Resource-managed extcon_unregister_notifier()
+  * @dev:	the device owning the extcon device being created
+  * @edev:	the extcon device
+  * @id:		the unique id among the extcon enumeration
+
