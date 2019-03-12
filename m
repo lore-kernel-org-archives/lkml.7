@@ -4,50 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 37315C43381
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 17:44:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E8127C43381
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 17:44:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0A4152087C
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 17:44:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B2F6C206DF
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 17:44:36 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1552412662;
-	bh=ijOs+cHaXoxmxtie+LkYkYW2a66VDlZhxH4T/PddzOA=;
+	s=default; t=1552412676;
+	bh=GmmWS9IFe54Z+hx2nhaFV0JSrTVHNaGDx4sv7k9qwns=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=ZZt6XrGwY8gFAJzZwF2DJGjkMc5KLy52n2dB/FCXrAw2fDC5B+cjiv5zpS4UPIBJP
-	 LVQ3rmtMd9ZM/LHK4is8+L3lu0LZ+UjJeiahSB8rwLlKreGYjyyXUliYx92BltcVvK
-	 +rElkVe7Bi3DI+Gtp74g8BTsayyCkXBXM3Mnxpqo=
+	b=Er0Zuu6zMxgpzSnd0eNG7OsyUW/5YZBxyHdVTD08cGA+Ab57xu7VD4kf0nTV8dOpJ
+	 avFSX8MamyU+ixX4PhTdo2BGOGY/QypRrLlRhlQaQbXl8KfoF/Q16TLR2xF6f3Eo94
+	 U0Jiis4uqzOtxGKgSCGVPpntDXryZuupuEr6b/FM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728854AbfCLRoU (ORCPT
+        id S1728650AbfCLRof (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 12 Mar 2019 13:44:20 -0400
-Received: from mail.kernel.org ([198.145.29.99]:56606 "EHLO mail.kernel.org"
+        Tue, 12 Mar 2019 13:44:35 -0400
+Received: from mail.kernel.org ([198.145.29.99]:56582 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728834AbfCLRPk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S1728830AbfCLRPk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Tue, 12 Mar 2019 13:15:40 -0400
 Received: from localhost (unknown [104.133.8.98])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 48B6E2171F;
-        Tue, 12 Mar 2019 17:15:40 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 952102087C;
+        Tue, 12 Mar 2019 17:15:39 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1552410940;
-        bh=ijOs+cHaXoxmxtie+LkYkYW2a66VDlZhxH4T/PddzOA=;
+        s=default; t=1552410939;
+        bh=GmmWS9IFe54Z+hx2nhaFV0JSrTVHNaGDx4sv7k9qwns=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=JrQUv1wZ2DRARSpb2NkT3DyaBUOo/CsIY/zbxfPf1MooUVuTQAaAOWkpOH0Q9IPDn
-         AL1kvNYFg/+Lei+EnD11/aq80pJxV9a9gv/UIlMV+tQetg9uN9cHTgujcE2Ho3eapW
-         +12+AE7hLEvt06/wKCL00cSf94TtERh/AheuJBxs=
+        b=O46YTHsFQuYICyW3B7jzCcTz/bFK5C2rGnxjiN5EUNEbK98lSCLzkMMCGmIIwXrxR
+         l573yuXFKlE327S6T1XvoBZXqb38wUfkfq72NNbLwaQkCYQX69se2PfSbotFYFLZaU
+         FK5oKjFPO/vi2lz5QLlJuUo0Guj0GTH6NEE2u1Ik=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Chris Healy <Chris.Healy@zii.aero>,
-        Andrew Lunn <andrew@lunn.ch>,
+        stable@vger.kernel.org, Haiyang Zhang <haiyangz@microsoft.com>,
         "David S. Miller" <davem@davemloft.net>
-Subject: [PATCH 4.14 017/135] net: dsa: mv88e6xxx: Fix u64 statistics
-Date:   Tue, 12 Mar 2019 10:07:44 -0700
-Message-Id: <20190312170342.695671882@linuxfoundation.org>
+Subject: [PATCH 4.14 016/135] hv_netvsc: Fix IP header checksum for coalesced packets
+Date:   Tue, 12 Mar 2019 10:07:43 -0700
+Message-Id: <20190312170342.605281119@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190312170341.127810985@linuxfoundation.org>
 References: <20190312170341.127810985@linuxfoundation.org>
@@ -66,33 +65,59 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-From: Andrew Lunn <andrew@lunn.ch>
+From: Haiyang Zhang <haiyangz@microsoft.com>
 
-[ Upstream commit 6e46e2d821bb22b285ae8187959096b65d063b0d ]
+[ Upstream commit bf48648d650db1146b75b9bd358502431e86cf4f ]
 
-The switch maintains u64 counters for the number of octets sent and
-received. These are kept as two u32's which need to be combined.  Fix
-the combing, which wrongly worked on u16's.
+Incoming packets may have IP header checksum verified by the host.
+They may not have IP header checksum computed after coalescing.
+This patch re-compute the checksum when necessary, otherwise the
+packets may be dropped, because Linux network stack always checks it.
 
-Fixes: 80c4627b2719 ("dsa: mv88x6xxx: Refactor getting a single statistic")
-Reported-by: Chris Healy <Chris.Healy@zii.aero>
-Signed-off-by: Andrew Lunn <andrew@lunn.ch>
+Signed-off-by: Haiyang Zhang <haiyangz@microsoft.com>
 Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- drivers/net/dsa/mv88e6xxx/chip.c |    2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/net/hyperv/netvsc_drv.c |   22 +++++++++++++++++++---
+ 1 file changed, 19 insertions(+), 3 deletions(-)
 
---- a/drivers/net/dsa/mv88e6xxx/chip.c
-+++ b/drivers/net/dsa/mv88e6xxx/chip.c
-@@ -639,7 +639,7 @@ static uint64_t _mv88e6xxx_get_ethtool_s
- 	default:
- 		return UINT64_MAX;
- 	}
--	value = (((u64)high) << 16) | low;
-+	value = (((u64)high) << 32) | low;
- 	return value;
+--- a/drivers/net/hyperv/netvsc_drv.c
++++ b/drivers/net/hyperv/netvsc_drv.c
+@@ -741,6 +741,14 @@ void netvsc_linkstatus_callback(struct h
+ 	schedule_delayed_work(&ndev_ctx->dwork, 0);
  }
  
++static void netvsc_comp_ipcsum(struct sk_buff *skb)
++{
++	struct iphdr *iph = (struct iphdr *)skb->data;
++
++	iph->check = 0;
++	iph->check = ip_fast_csum(iph, iph->ihl);
++}
++
+ static struct sk_buff *netvsc_alloc_recv_skb(struct net_device *net,
+ 					     struct napi_struct *napi,
+ 					     const struct ndis_tcp_ip_checksum_info *csum_info,
+@@ -764,9 +772,17 @@ static struct sk_buff *netvsc_alloc_recv
+ 	/* skb is already created with CHECKSUM_NONE */
+ 	skb_checksum_none_assert(skb);
+ 
+-	/*
+-	 * In Linux, the IP checksum is always checked.
+-	 * Do L4 checksum offload if enabled and present.
++	/* Incoming packets may have IP header checksum verified by the host.
++	 * They may not have IP header checksum computed after coalescing.
++	 * We compute it here if the flags are set, because on Linux, the IP
++	 * checksum is always checked.
++	 */
++	if (csum_info && csum_info->receive.ip_checksum_value_invalid &&
++	    csum_info->receive.ip_checksum_succeeded &&
++	    skb->protocol == htons(ETH_P_IP))
++		netvsc_comp_ipcsum(skb);
++
++	/* Do L4 checksum offload if enabled and present.
+ 	 */
+ 	if (csum_info && (net->features & NETIF_F_RXCSUM)) {
+ 		if (csum_info->receive.tcp_checksum_succeeded ||
 
 
