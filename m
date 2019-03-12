@@ -4,50 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9B985C43381
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 17:54:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 98DDAC43381
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 17:54:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6D06D2087C
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 17:54:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6A3A52087C
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 17:54:21 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1552413258;
-	bh=TP9vxTRQCvKYd1TJWs+1gVM38nsxIQNmjHkB99AyrMY=;
+	s=default; t=1552413261;
+	bh=Pfal4VrzdWj5ycOE/UcwQLbQsEy0XKkf1+tXF3t/xXI=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=SjjRCVF+Bjk31Cj4hGuSZS0n68E3VJQ54JyMzowha9mZ3+stzblUdQ9YFp/wfVjF6
-	 FAeCZLbEteOaosa99SGepUMsx87CigKLN1PoLvpXHCb9caiOCmiq4r72iFaC2mO/LW
-	 5Bz56faKmqJybquhzuq40MPRNpaSP3voK0HGy6Yc=
+	b=dG8Vzmbv7XLE/zkwhX4nk/oaUcFgYiz/BOgaoc+yK+NpTNzSnIpS3sx6zK05ta6wa
+	 GYQWMgacnyjkwiuWmDHA57bIJnHSQw/nQslMOe4geKgwr4xtJIpafe7ZmUALSPe/dI
+	 EEuEBVz6YeLtzj+q4uC6lONG748IresCpcEgDOkM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728806AbfCLRyR (ORCPT
+        id S1729058AbfCLRyT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 12 Mar 2019 13:54:17 -0400
-Received: from mail.kernel.org ([198.145.29.99]:52374 "EHLO mail.kernel.org"
+        Tue, 12 Mar 2019 13:54:19 -0400
+Received: from mail.kernel.org ([198.145.29.99]:52398 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728264AbfCLROM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 12 Mar 2019 13:14:12 -0400
+        id S1727436AbfCLROL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 12 Mar 2019 13:14:11 -0400
 Received: from localhost (unknown [104.133.8.98])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 9EBE921850;
-        Tue, 12 Mar 2019 17:14:11 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id DF2102186A;
+        Tue, 12 Mar 2019 17:14:10 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
         s=default; t=1552410851;
-        bh=TP9vxTRQCvKYd1TJWs+1gVM38nsxIQNmjHkB99AyrMY=;
+        bh=Pfal4VrzdWj5ycOE/UcwQLbQsEy0XKkf1+tXF3t/xXI=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=fu2Lenq5fofdZ7eyOx8HO48P48EclwaoYaPA8FUN4LfVmuhDToY327Y8OfFjA1RLx
-         dyyYriir3/A66YtqZam8/fdkDw0stTkiSt6SZLj2moCw+dm/gpPdPnKPdmh0PpDx4p
-         rEbL8pxtmkkON2mgO4IzJ5wMSBBxUU5acGBlJX5Q=
+        b=sfIOCrYrr3VHRXALFAx9HrLYbyLIixsV0b9O0W/ioAtvU6Qs4Wv86PB05YOzm/RGK
+         4jwD3GNIaFXTHS7J11c4AWBA+WVNjARRL6mMbDLvwJCsSfQOqaxh7QMP0xNQpk+mjE
+         WhXKaG+R59+yeKBLt1E6HA1LxkWxkwMX2GpXR4jE=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Harini Katakam <harini.katakam@xilinx.com>,
-        "David S. Miller" <davem@davemloft.net>,
+        stable@vger.kernel.org, Sinan Kaya <okaya@kernel.org>,
+        Andy Shevchenko <andy.shevchenko@gmail.com>,
+        "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 046/149] net: macb: Apply RXUBR workaround only to versions with errata
-Date:   Tue, 12 Mar 2019 10:07:44 -0700
-Message-Id: <20190312170353.650427272@linuxfoundation.org>
+Subject: [PATCH 4.19 045/149] platform/x86: Fix unmet dependency warning for SAMSUNG_Q10
+Date:   Tue, 12 Mar 2019 10:07:43 -0700
+Message-Id: <20190312170353.540894091@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190312170349.421581206@linuxfoundation.org>
 References: <20190312170349.421581206@linuxfoundation.org>
@@ -66,153 +67,41 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-[ Upstream commit e501070e4db0b67a4c17a5557d1e9d098f3db310 ]
+[ Upstream commit 0ee4b5f801b73b83a9fb3921d725f2162fd4a2e5 ]
 
-The interrupt handler contains a workaround for RX hang applicable
-to Zynq and AT91RM9200 only. Subsequent versions do not need this
-workaround. This workaround unnecessarily resets RX whenever RX used
-bit read is observed, which can be often under heavy traffic. There
-is no other action performed on RX UBR interrupt. Hence introduce a
-CAPS mask; enable this interrupt and workaround only on affected
-versions.
+Add BACKLIGHT_LCD_SUPPORT for SAMSUNG_Q10 to fix the
+warning: unmet direct dependencies detected for BACKLIGHT_CLASS_DEVICE.
 
-Signed-off-by: Harini Katakam <harini.katakam@xilinx.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
+SAMSUNG_Q10 selects BACKLIGHT_CLASS_DEVICE but BACKLIGHT_CLASS_DEVICE
+depends on BACKLIGHT_LCD_SUPPORT.
+
+Copy BACKLIGHT_LCD_SUPPORT dependency into SAMSUNG_Q10 to fix:
+
+WARNING: unmet direct dependencies detected for BACKLIGHT_CLASS_DEVICE
+  Depends on [n]: HAS_IOMEM [=y] && BACKLIGHT_LCD_SUPPORT [=n]
+  Selected by [y]:
+  - SAMSUNG_Q10 [=y] && X86 [=y] && X86_PLATFORM_DEVICES [=y] && ACPI [=y]
+
+Signed-off-by: Sinan Kaya <okaya@kernel.org>
+Acked-by: Andy Shevchenko <andy.shevchenko@gmail.com>
+Signed-off-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/ethernet/cadence/macb.h      |  3 +++
- drivers/net/ethernet/cadence/macb_main.c | 28 ++++++++++++++----------
- 2 files changed, 20 insertions(+), 11 deletions(-)
+ drivers/platform/x86/Kconfig | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/drivers/net/ethernet/cadence/macb.h b/drivers/net/ethernet/cadence/macb.h
-index 3d45f4c92cf6..9bbaad9f3d63 100644
---- a/drivers/net/ethernet/cadence/macb.h
-+++ b/drivers/net/ethernet/cadence/macb.h
-@@ -643,6 +643,7 @@
- #define MACB_CAPS_JUMBO				0x00000020
- #define MACB_CAPS_GEM_HAS_PTP			0x00000040
- #define MACB_CAPS_BD_RD_PREFETCH		0x00000080
-+#define MACB_CAPS_NEEDS_RSTONUBR		0x00000100
- #define MACB_CAPS_FIFO_MODE			0x10000000
- #define MACB_CAPS_GIGABIT_MODE_AVAILABLE	0x20000000
- #define MACB_CAPS_SG_DISABLED			0x40000000
-@@ -1214,6 +1215,8 @@ struct macb {
- 
- 	int	rx_bd_rd_prefetch;
- 	int	tx_bd_rd_prefetch;
-+
-+	u32	rx_intr_mask;
- };
- 
- #ifdef CONFIG_MACB_USE_HWSTAMP
-diff --git a/drivers/net/ethernet/cadence/macb_main.c b/drivers/net/ethernet/cadence/macb_main.c
-index 8f4b2f9a8e07..8abea1c3844f 100644
---- a/drivers/net/ethernet/cadence/macb_main.c
-+++ b/drivers/net/ethernet/cadence/macb_main.c
-@@ -56,8 +56,7 @@
- /* level of occupied TX descriptors under which we wake up TX process */
- #define MACB_TX_WAKEUP_THRESH(bp)	(3 * (bp)->tx_ring_size / 4)
- 
--#define MACB_RX_INT_FLAGS	(MACB_BIT(RCOMP) | MACB_BIT(RXUBR)	\
--				 | MACB_BIT(ISR_ROVR))
-+#define MACB_RX_INT_FLAGS	(MACB_BIT(RCOMP) | MACB_BIT(ISR_ROVR))
- #define MACB_TX_ERR_FLAGS	(MACB_BIT(ISR_TUND)			\
- 					| MACB_BIT(ISR_RLE)		\
- 					| MACB_BIT(TXERR))
-@@ -1271,7 +1270,7 @@ static int macb_poll(struct napi_struct *napi, int budget)
- 				queue_writel(queue, ISR, MACB_BIT(RCOMP));
- 			napi_reschedule(napi);
- 		} else {
--			queue_writel(queue, IER, MACB_RX_INT_FLAGS);
-+			queue_writel(queue, IER, bp->rx_intr_mask);
- 		}
- 	}
- 
-@@ -1289,7 +1288,7 @@ static void macb_hresp_error_task(unsigned long data)
- 	u32 ctrl;
- 
- 	for (q = 0, queue = bp->queues; q < bp->num_queues; ++q, ++queue) {
--		queue_writel(queue, IDR, MACB_RX_INT_FLAGS |
-+		queue_writel(queue, IDR, bp->rx_intr_mask |
- 					 MACB_TX_INT_FLAGS |
- 					 MACB_BIT(HRESP));
- 	}
-@@ -1319,7 +1318,7 @@ static void macb_hresp_error_task(unsigned long data)
- 
- 		/* Enable interrupts */
- 		queue_writel(queue, IER,
--			     MACB_RX_INT_FLAGS |
-+			     bp->rx_intr_mask |
- 			     MACB_TX_INT_FLAGS |
- 			     MACB_BIT(HRESP));
- 	}
-@@ -1373,14 +1372,14 @@ static irqreturn_t macb_interrupt(int irq, void *dev_id)
- 			    (unsigned int)(queue - bp->queues),
- 			    (unsigned long)status);
- 
--		if (status & MACB_RX_INT_FLAGS) {
-+		if (status & bp->rx_intr_mask) {
- 			/* There's no point taking any more interrupts
- 			 * until we have processed the buffers. The
- 			 * scheduling call may fail if the poll routine
- 			 * is already scheduled, so disable interrupts
- 			 * now.
- 			 */
--			queue_writel(queue, IDR, MACB_RX_INT_FLAGS);
-+			queue_writel(queue, IDR, bp->rx_intr_mask);
- 			if (bp->caps & MACB_CAPS_ISR_CLEAR_ON_WRITE)
- 				queue_writel(queue, ISR, MACB_BIT(RCOMP));
- 
-@@ -1413,8 +1412,9 @@ static irqreturn_t macb_interrupt(int irq, void *dev_id)
- 		/* There is a hardware issue under heavy load where DMA can
- 		 * stop, this causes endless "used buffer descriptor read"
- 		 * interrupts but it can be cleared by re-enabling RX. See
--		 * the at91 manual, section 41.3.1 or the Zynq manual
--		 * section 16.7.4 for details.
-+		 * the at91rm9200 manual, section 41.3.1 or the Zynq manual
-+		 * section 16.7.4 for details. RXUBR is only enabled for
-+		 * these two versions.
- 		 */
- 		if (status & MACB_BIT(RXUBR)) {
- 			ctrl = macb_readl(bp, NCR);
-@@ -2264,7 +2264,7 @@ static void macb_init_hw(struct macb *bp)
- 
- 		/* Enable interrupts */
- 		queue_writel(queue, IER,
--			     MACB_RX_INT_FLAGS |
-+			     bp->rx_intr_mask |
- 			     MACB_TX_INT_FLAGS |
- 			     MACB_BIT(HRESP));
- 	}
-@@ -3912,6 +3912,7 @@ static const struct macb_config sama5d4_config = {
- };
- 
- static const struct macb_config emac_config = {
-+	.caps = MACB_CAPS_NEEDS_RSTONUBR,
- 	.clk_init = at91ether_clk_init,
- 	.init = at91ether_init,
- };
-@@ -3933,7 +3934,8 @@ static const struct macb_config zynqmp_config = {
- };
- 
- static const struct macb_config zynq_config = {
--	.caps = MACB_CAPS_GIGABIT_MODE_AVAILABLE | MACB_CAPS_NO_GIGABIT_HALF,
-+	.caps = MACB_CAPS_GIGABIT_MODE_AVAILABLE | MACB_CAPS_NO_GIGABIT_HALF |
-+		MACB_CAPS_NEEDS_RSTONUBR,
- 	.dma_burst_length = 16,
- 	.clk_init = macb_clk_init,
- 	.init = macb_init,
-@@ -4088,6 +4090,10 @@ static int macb_probe(struct platform_device *pdev)
- 						macb_dma_desc_get_size(bp);
- 	}
- 
-+	bp->rx_intr_mask = MACB_RX_INT_FLAGS;
-+	if (bp->caps & MACB_CAPS_NEEDS_RSTONUBR)
-+		bp->rx_intr_mask |= MACB_BIT(RXUBR);
-+
- 	mac = of_get_mac_address(np);
- 	if (mac) {
- 		ether_addr_copy(bp->dev->dev_addr, mac);
+diff --git a/drivers/platform/x86/Kconfig b/drivers/platform/x86/Kconfig
+index 96afca4648d5..7563c07e14e4 100644
+--- a/drivers/platform/x86/Kconfig
++++ b/drivers/platform/x86/Kconfig
+@@ -1078,6 +1078,7 @@ config INTEL_OAKTRAIL
+ config SAMSUNG_Q10
+ 	tristate "Samsung Q10 Extras"
+ 	depends on ACPI
++	depends on BACKLIGHT_LCD_SUPPORT
+ 	select BACKLIGHT_CLASS_DEVICE
+ 	---help---
+ 	  This driver provides support for backlight control on Samsung Q10
 -- 
 2.19.1
 
