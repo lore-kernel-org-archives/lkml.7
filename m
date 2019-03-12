@@ -2,54 +2,52 @@ Return-Path: <SRS0=J4ZE=RP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 22A82C43381
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 17:14:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C85C0C43381
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 17:14:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E91B22183E
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 17:14:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9B46D218A5
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 17:14:20 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1552410858;
-	bh=kixqxUifwfzAPAjbW+2zbJ4t4vgynvC7Ij8IRZtnhMk=;
+	s=default; t=1552410860;
+	bh=ermJy2yLAgRIkH6StdJtFvak8tKz1xtLTsAZKhXflhM=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=JfAC68CHNNr+h0v+zXvd9X9Yqnt3oC2ZYvye/PGz6nphdtp0dDCAgdblkRNoBCGLT
-	 YeHkvVRpai2oqtbhfDGjxXF5O517b9iYiLmMl9YPVkWaqWKlEy4RJUKahf1mSXzjCI
-	 oXqLGmlAbE6Nw3FWdj8xqSeT+AHYZhcGFRhBTUqQ=
+	b=2nwZ46RAVvTFo0J0yae3w0bzoGarDu5Ew4sTecwHKcx2vbPKS1YYZbl7hOpyGAic5
+	 XofF65aHaTwwEZ3QP++pFvuX+iXpqi9HDEdBPhwOzvn2f2bLq4noGGKM+LAr4zXKoS
+	 +dbSn2FutV01j+Qn+zyu//pxTL4GG8gJlCYECGx0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728290AbfCLROQ (ORCPT
+        id S1728307AbfCLROT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 12 Mar 2019 13:14:16 -0400
-Received: from mail.kernel.org ([198.145.29.99]:50790 "EHLO mail.kernel.org"
+        Tue, 12 Mar 2019 13:14:19 -0400
+Received: from mail.kernel.org ([198.145.29.99]:50894 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727980AbfCLRNf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 12 Mar 2019 13:13:35 -0400
+        id S1727993AbfCLRNh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 12 Mar 2019 13:13:37 -0400
 Received: from localhost (unknown [104.133.8.98])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 633F52183F;
-        Tue, 12 Mar 2019 17:13:34 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id A72AA2184C;
+        Tue, 12 Mar 2019 17:13:36 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1552410814;
-        bh=kixqxUifwfzAPAjbW+2zbJ4t4vgynvC7Ij8IRZtnhMk=;
+        s=default; t=1552410816;
+        bh=ermJy2yLAgRIkH6StdJtFvak8tKz1xtLTsAZKhXflhM=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=POoHaugHYRa4/xDF8wJtvvZoGpEjDig3NXeijqzc5i8KT/Y7sUJ25ZbzUj+3b+4iX
-         gZ4CMcZrQK/ZJTZoU0ntAta4gG59+jx1EjgKd3N87YyFRSB7Au7AXXtOUOXV0h5/Ne
-         75MZDaJylHKU26tMVCWV8uFuuQQc0MJNIV5LMN6k=
+        b=hxm+lBSbPFAAZO+0up1ri2oyiXfDbAoRMFwLQesHSevIN08jEJadmj+6JpgniGYtc
+         mQ6TIEERPdxMzNRfuwnYfeGckEVczywTKGuEOUerfsSSvgOs1d9VBZwzmH3ONKc4Oh
+         mHJGU/FojE5vbd1SVBRQYOF2RjfijqkszNb7h6KM=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         stable@vger.kernel.org,
-        Martin Blumenstingl <martin.blumenstingl@googlemail.com>,
-        "Daniel F. Dickinson" <cshored@thecshore.com>,
-        Kalle Valo <kvalo@codeaurora.org>,
-        Christian Lamparter <chunkeey@gmail.com>
-Subject: [PATCH 4.20 167/171] ath9k: Avoid OF no-EEPROM quirks without qca,no-eeprom
-Date:   Tue, 12 Mar 2019 10:09:07 -0700
-Message-Id: <20190312170401.904559812@linuxfoundation.org>
+        "Peter Zijlstra (Intel)" <peterz@infradead.org>,
+        Thomas Gleixner <tglx@linutronix.de>
+Subject: [PATCH 4.20 169/171] perf/x86/intel: Generalize dynamic constraint creation
+Date:   Tue, 12 Mar 2019 10:09:09 -0700
+Message-Id: <20190312170402.090057653@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190312170347.868927101@linuxfoundation.org>
 References: <20190312170347.868927101@linuxfoundation.org>
@@ -68,88 +66,85 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-From: Daniel F. Dickinson <cshored@thecshore.com>
+From: "Peter Zijlstra (Intel)" <peterz@infradead.org>
 
-commit ce938231bd3b1d7af3cbd8836f084801090470e1 upstream.
+commit 11f8b2d65ca9029591c8df26bb6bd063c312b7fe upstream
 
-ath9k_of_init() function[0] was initially written on the assumption that
-if someone had an explicit ath9k OF node that "there must be something
-wrong, why would someone add an OF node if everything is fine"[1]
-(Quoting Martin Blumenstingl <martin.blumenstingl@googlemail.com>)
+Such that we can re-use it.
 
-"it turns out it's not that simple. with your requirements I'm now aware
-of two use-cases where the current code in ath9k_of_init() doesn't work
-without modifications"[1]
-
-The "your requirements" Martin speaks of is the result of the fact that I
-have a device (PowerCloud Systems CR5000) has some kind of default - not
-unique mac address - set and requires to set the correct MAC address via
-mac-address devicetree property, however:
-
-"some cards come with a physical EEPROM chip [or OTP] so "qca,no-eeprom"
-should not be set (your use-case). in this case AH_USE_EEPROM should be
-set (which is the default when there is no OF node)"[1]
-
-The other use case is:
-
-the firmware on some PowerMac G5 seems to add a OF node for the ath9k
-card automatically. depending on the EEPROM on the card AH_NO_EEP_SWAP
-should be unset (which is the default when there is no OF node). see [3]
-
-After this patch to ath9k_of_init() the new behavior will be:
-
-    if there's no OF node then everything is the same as before
-    if there's an empty OF node then ath9k will use the hardware EEPROM
-      (before ath9k would fail to initialize because no EEPROM data was
-      provided by userspace)
-    if there's an OF node with only a MAC address then ath9k will use
-      the MAC address and the hardware EEPROM (see the case above)
-    with "qca,no-eeprom" EEPROM data from userspace will be requested.
-      the behavior here will not change
-[1]
-
-Martin provides additional background on EEPROM swapping[1].
-
-Thanks to Christian Lamparter <chunkeey@gmail.com> for all his help on
-troubleshooting this issue and the basis for this patch.
-
-[0]https://elixir.bootlin.com/linux/v4.20-rc7/source/drivers/net/wireless/ath/ath9k/init.c#L615
-[1]https://github.com/openwrt/openwrt/pull/1645#issuecomment-448027058
-[2]https://github.com/openwrt/openwrt/pull/1613
-[3]https://patchwork.kernel.org/patch/10241731/
-
-Fixes: 138b41253d9c ("ath9k: parse the device configuration from an OF node")
-Reviewed-by: Martin Blumenstingl <martin.blumenstingl@googlemail.com>
-Tested-by: Martin Blumenstingl <martin.blumenstingl@googlemail.com>
-Signed-off-by: Daniel F. Dickinson <cshored@thecshore.com>
-Signed-off-by: Kalle Valo <kvalo@codeaurora.org>
-Cc: Christian Lamparter <chunkeey@gmail.com>
+Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
+Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-
 ---
- drivers/net/wireless/ath/ath9k/init.c |    6 +++---
- 1 file changed, 3 insertions(+), 3 deletions(-)
+ arch/x86/events/intel/core.c |   51 +++++++++++++++++++++++++------------------
+ 1 file changed, 30 insertions(+), 21 deletions(-)
 
---- a/drivers/net/wireless/ath/ath9k/init.c
-+++ b/drivers/net/wireless/ath/ath9k/init.c
-@@ -636,15 +636,15 @@ static int ath9k_of_init(struct ath_soft
- 		ret = ath9k_eeprom_request(sc, eeprom_name);
- 		if (ret)
- 			return ret;
-+
-+		ah->ah_flags &= ~AH_USE_EEPROM;
-+		ah->ah_flags |= AH_NO_EEP_SWAP;
- 	}
- 
- 	mac = of_get_mac_address(np);
- 	if (mac)
- 		ether_addr_copy(common->macaddr, mac);
- 
--	ah->ah_flags &= ~AH_USE_EEPROM;
--	ah->ah_flags |= AH_NO_EEP_SWAP;
--
- 	return 0;
+--- a/arch/x86/events/intel/core.c
++++ b/arch/x86/events/intel/core.c
+@@ -2769,6 +2769,35 @@ intel_stop_scheduling(struct cpu_hw_even
  }
  
+ static struct event_constraint *
++dyn_constraint(struct cpu_hw_events *cpuc, struct event_constraint *c, int idx)
++{
++	WARN_ON_ONCE(!cpuc->constraint_list);
++
++	if (!(c->flags & PERF_X86_EVENT_DYNAMIC)) {
++		struct event_constraint *cx;
++
++		/*
++		 * grab pre-allocated constraint entry
++		 */
++		cx = &cpuc->constraint_list[idx];
++
++		/*
++		 * initialize dynamic constraint
++		 * with static constraint
++		 */
++		*cx = *c;
++
++		/*
++		 * mark constraint as dynamic
++		 */
++		cx->flags |= PERF_X86_EVENT_DYNAMIC;
++		c = cx;
++	}
++
++	return c;
++}
++
++static struct event_constraint *
+ intel_get_excl_constraints(struct cpu_hw_events *cpuc, struct perf_event *event,
+ 			   int idx, struct event_constraint *c)
+ {
+@@ -2798,27 +2827,7 @@ intel_get_excl_constraints(struct cpu_hw
+ 	 * only needed when constraint has not yet
+ 	 * been cloned (marked dynamic)
+ 	 */
+-	if (!(c->flags & PERF_X86_EVENT_DYNAMIC)) {
+-		struct event_constraint *cx;
+-
+-		/*
+-		 * grab pre-allocated constraint entry
+-		 */
+-		cx = &cpuc->constraint_list[idx];
+-
+-		/*
+-		 * initialize dynamic constraint
+-		 * with static constraint
+-		 */
+-		*cx = *c;
+-
+-		/*
+-		 * mark constraint as dynamic, so we
+-		 * can free it later on
+-		 */
+-		cx->flags |= PERF_X86_EVENT_DYNAMIC;
+-		c = cx;
+-	}
++	c = dyn_constraint(cpuc, c, idx);
+ 
+ 	/*
+ 	 * From here on, the constraint is dynamic.
 
 
