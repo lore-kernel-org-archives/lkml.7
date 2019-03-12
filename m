@@ -1,145 +1,167 @@
-Return-Path: <SRS0=FxTY=RO=vger.kernel.org=linux-kernel-owner@kernel.org>
+Return-Path: <SRS0=J4ZE=RP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_MUTT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 44DC8C43381
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 Mar 2019 23:58:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 75375C43381
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 00:04:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0F1BD2148D
-	for <linux-kernel@archiver.kernel.org>; Mon, 11 Mar 2019 23:58:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 421482075C
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 00:04:56 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="Uq5DG41h"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="mRq2K6gI"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726336AbfCKX6n (ORCPT
+        id S1726345AbfCLAEz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 11 Mar 2019 19:58:43 -0400
-Received: from mail-ua1-f65.google.com ([209.85.222.65]:36597 "EHLO
-        mail-ua1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725850AbfCKX6m (ORCPT
+        Mon, 11 Mar 2019 20:04:55 -0400
+Received: from mail-it1-f195.google.com ([209.85.166.195]:53587 "EHLO
+        mail-it1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725850AbfCLAEy (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 11 Mar 2019 19:58:42 -0400
-Received: by mail-ua1-f65.google.com with SMTP id e15so204322uam.3
-        for <linux-kernel@vger.kernel.org>; Mon, 11 Mar 2019 16:58:41 -0700 (PDT)
+        Mon, 11 Mar 2019 20:04:54 -0400
+Received: by mail-it1-f195.google.com with SMTP id x189so1569693itd.3;
+        Mon, 11 Mar 2019 17:04:54 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=N20KT5RcXIKPLrLophveDXK6Y0mLDSNidvB525qrrR4=;
-        b=Uq5DG41hDYZnL4k0WSqLJZ+5EwzG2Ir9JXnjcdwhafRkUqyfhN2HeeX90hvLnK7xzA
-         q43QEN82NFlw6uwcRCPRQDzVINJhOCRHd0TBwJV6WjA2VWLKMP9BE7FwG4z3nIMHwhTW
-         6n1aHf8JlxocAOkkfWxkMSWccPOu2qRVcFVcZwNf8wdqzuctk7boRAZokzqZU5diIwV+
-         L53I7/zvvb7OWkI6PyOIEA0WvGZ0qUSgleYnPXmIlIY/Ew2AYYKmNwbt1ttVXC6THTJh
-         DFBYbxz6pPBhNfCFs7AIyHQkMDieigJZ5xCeZtvZf0/rPCp/8uy8vPJbF1l4P0Hbp26j
-         jw1A==
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=2/2Qa2e4UEqK/boVPhIKwaqF0oM6VtVD5qsDfr70Dho=;
+        b=mRq2K6gITp61ApN0SLj4S9OAELSAcR8/59tG2kyQZVSHEjGwC2rEBEUPXPDx+zNZvO
+         eHD6v7/RbUEwR7Bhg5PrwgSEKeFOrcCxC1keBovmW9YULHcbmEPrsFWlFjp4o6UJd2i6
+         YXgOFc9O0xA18SCJdFHqZx+nOY/A84tdTbisYCx2vJ/eXyui2oQFBZbHj9PtGpRiFLYi
+         rWfsOXNUi1AdO9Zf8nGvRHUvkoeOMBYCwcl6CAp0s+9v0sC9EvUv5dMpTwcUOtHTO7yM
+         woroS54Ua/ASXjwae3vkHjTQxoWty9yGiCJ2CJ1Nq2/qqzL5dRkKGUPq9sWUVZt58y/n
+         cacg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=N20KT5RcXIKPLrLophveDXK6Y0mLDSNidvB525qrrR4=;
-        b=hRx1mXj7v0uFLyhxjgAtGIuvgtZRCkcprq8AKN5vHwkpLHYFfcydLJf//LagvFSg8v
-         YlwG82Mr2DraCr/6iX7qrSIXBJUd4aypKY62LJy74SROBHRxFZx/3Y7Y3UWvgxoeqdJQ
-         kxRwEL0s8P/ItWXo0oAgcO6TRx8BdKoY8OEJwiQE/xuImPYz3nKZweHXjZeQy91qWprk
-         VjAXpt0p3cq2Hc2NlMSvBzNNJwZKSOFCT/1LadXl83F852XNF/Cyd8NKcitXhbtdVmfB
-         znXoZie3UjAKk2ofpZV4TVh+n61a0xGpwsXIJdDwctvb1KnUtPQsleqVCir/NE5/TWqq
-         Ta4Q==
-X-Gm-Message-State: APjAAAWX4M9Si2N5pzfCUnSwx/q0NiEBfu1dvZoQadg8lOaLOwEGgGKz
-        YjFhcWVZsjbRq/GVatzCgnb4oI0JxItVVbZ6oE1kFQ==
-X-Google-Smtp-Source: APXvYqwxdOTsTmN5RIMe8AVgPVdKtkhXD3+gwq0S4Sf7OkgKZaRvyUvN4jKKDGXJkoRw0KfZA20o25K8rfMjVxdaGYE=
-X-Received: by 2002:ab0:2789:: with SMTP id t9mr18483371uap.100.1552348720797;
- Mon, 11 Mar 2019 16:58:40 -0700 (PDT)
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=2/2Qa2e4UEqK/boVPhIKwaqF0oM6VtVD5qsDfr70Dho=;
+        b=c2FsJ77RkX+ATvC578Z0/IyuTcJ9jkWGq7W/FLJL8ItFgLpMOYKSl5V2HyRl4NqKZe
+         +M3nXY3AWmdBfw21S6SjJGQfWeYLAe9XhujJp1CAz52ikpsQNSIfBTTSSeKxaZsMbwp+
+         +hg8ebd5r05kkqxfB182/rNj3UCogBPqndcvByrKkshF7r10TvP98SDuPS230YhDKYxe
+         WDwzgEO2AVGmPCuhnMhbwIz4ZHe4qfvigx6Q8qKvs4V40CJzapYeZB2O2HlK67gebKjk
+         gdY2x+Uz8ry5gR9g37Rtb71bC31eBNoRIMrb6oxYNEf1i2a/O7Wv/XKvTgyeZdNVLEQJ
+         z2TA==
+X-Gm-Message-State: APjAAAVRb/UWo6HBqDJ/RVPf6fMePhfJkS8adfm5beUVo4uSf7lSq2Q0
+        f9eG1Eol9UCoBt1j3OKDvOg=
+X-Google-Smtp-Source: APXvYqw240U8b/x+Mo2SnrQZ5DICtP17icV7c6TUoSyd3a9bWbPZcMzTdBw9lYI911XetX/kYxd3MQ==
+X-Received: by 2002:a24:4290:: with SMTP id i138mr542504itb.24.1552349093561;
+        Mon, 11 Mar 2019 17:04:53 -0700 (PDT)
+Received: from ubu-Virtual-Machine (66-188-57-61.dhcp.bycy.mi.charter.com. [66.188.57.61])
+        by smtp.gmail.com with ESMTPSA id d139sm430774itc.44.2019.03.11.17.04.52
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Mon, 11 Mar 2019 17:04:52 -0700 (PDT)
+Date:   Mon, 11 Mar 2019 20:04:50 -0400
+From:   Kimberly Brown <kimbrownkd@gmail.com>
+To:     Greg KH <gregkh@linuxfoundation.org>
+Cc:     Michael Kelley <mikelley@microsoft.com>,
+        Long Li <longli@microsoft.com>,
+        Sasha Levin <Alexander.Levin@microsoft.com>,
+        Stephen Hemminger <sthemmin@microsoft.com>,
+        Dexuan Cui <decui@microsoft.com>,
+        "K. Y. Srinivasan" <kys@microsoft.com>,
+        Haiyang Zhang <haiyangz@microsoft.com>,
+        linux-hyperv@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v5] Drivers: hv: vmbus: Expose monitor data only when
+ monitor pages are used
+Message-ID: <20190312000449.GA2741@ubu-Virtual-Machine>
+References: <20190301191824.GA4108@ubu-Virtual-Machine>
+ <20190308224611.GA3047@ubu-Virtual-Machine>
+ <20190309072135.GG3882@kroah.com>
 MIME-Version: 1.0
-References: <20190301160856.129678-1-joel@joelfernandes.org>
- <CAMuHMdU77UyUs-LvRx-NN_k0Y7MZXQkBdgL2i83veCkvdzeeqA@mail.gmail.com>
- <20190307150343.GB258852@google.com> <CAMuHMdW_7BTZREsnz7uMTToCZ4HDOZboMJH8k8UZica2pB=Jew@mail.gmail.com>
- <CAEXW_YQUcA+bnav20tAFQPXYE=epMie4X85diudKs_s-TJ7dsw@mail.gmail.com>
- <20190308140251.GC25768@kroah.com> <CAMuHMdUmnrJtu8bBeUgtiU6y_TLHM27z1WxpPia4dXMpApeijw@mail.gmail.com>
- <20190309071648.GE3882@kroah.com> <CAMuHMdUT+UGt9p2QhOXzAtCUmqy-a8YN-ceDa-0qANJE53pWBA@mail.gmail.com>
- <20190309121141.GA30173@kroah.com> <b7296377-9e0c-aed7-61f0-93d24d1ceddd@opersys.com>
- <CAMuHMdV8+XTyGf1ZJ+gMf=zQpzqh3-+b7wgi+gAmXQ6HpUAw3A@mail.gmail.com>
- <3e84e1ef-e266-e983-5874-6c26ac7f38b8@opersys.com> <20190311193612.4f09bf11@oasis.local.home>
-In-Reply-To: <20190311193612.4f09bf11@oasis.local.home>
-From:   Daniel Colascione <dancol@google.com>
-Date:   Mon, 11 Mar 2019 16:58:28 -0700
-Message-ID: <CAKOZuetHG0O-CiO6h5tD7aht_MT70ebwWMMSPkRUHdiM3wVq0Q@mail.gmail.com>
-Subject: Re: [PATCH v4 1/2] Provide in-kernel headers for making it easy to
- extend the kernel
-To:     Steven Rostedt <rostedt@goodmis.org>
-Cc:     Karim Yaghmour <karim.yaghmour@opersys.com>,
-        Geert Uytterhoeven <geert@linux-m68k.org>,
-        Greg KH <gregkh@linuxfoundation.org>,
-        Joel Fernandes <joel@joelfernandes.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Alexei Starovoitov <ast@kernel.org>,
-        atish patra <atishp04@gmail.com>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Dietmar Eggemann <dietmar.eggemann@arm.com>,
-        Guenter Roeck <groeck@chromium.org>,
-        Jonathan Corbet <corbet@lwn.net>,
-        Kees Cook <keescook@chromium.org>,
-        Android Kernel Team <kernel-team@android.com>,
-        "open list:DOCUMENTATION" <linux-doc@vger.kernel.org>,
-        "open list:KERNEL SELFTEST FRAMEWORK" 
-        <linux-kselftest@vger.kernel.org>,
-        linux-trace-devel@vger.kernel.org,
-        Manoj Rao <linux@manojrajarao.com>,
-        Masahiro Yamada <yamada.masahiro@socionext.com>,
-        Masami Hiramatsu <mhiramat@kernel.org>,
-        Qais Yousef <qais.yousef@arm.com>,
-        Randy Dunlap <rdunlap@infradead.org>,
-        Shuah Khan <shuah@kernel.org>, Yonghong Song <yhs@fb.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190309072135.GG3882@kroah.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Mar 11, 2019 at 4:37 PM Steven Rostedt <rostedt@goodmis.org> wrote:
->
-> On Sat, 9 Mar 2019 16:44:31 -0500
-> Karim Yaghmour <karim.yaghmour@opersys.com> wrote:
->
->
-> > Sorry, I should've been clearer. I'm including eBPF/BCC into the
-> > "user-space tools" here. That was in fact my prime motivation in
-> > encouraging Joel at the last LPC to look at this. I've been integrating
-> > the teaching of eBPF into my AOSP debugging and performance analysis
-> > class (see CC courseware here:
-> > http://www.opersys.com/training/android-debug-and-performance), and it
-> > was pretty messy trying to show people how to benefit from such tools
-> > under Android. Joel's present set of patches would obviate this problem.
->
-> I've been reading this thread and staying out for the most part. But I
-> was thinking about how I could use kernel headers for things like
-> kprobes, and I want to mention the pony that I would like to have :-)
->
-> Are headers really needed, and more importantly, are they enough? What
-> if userspace is 32bit and the kernel is 64bit. Can ebpf scripts handle
-> that?
+On Sat, Mar 09, 2019 at 08:21:35AM +0100, Greg KH wrote:
+> On Fri, Mar 08, 2019 at 05:46:11PM -0500, Kimberly Brown wrote:
+> >  static struct kobj_type vmbus_chan_ktype = {
+> >  	.sysfs_ops = &vmbus_chan_sysfs_ops,
+> >  	.release = vmbus_chan_release,
+> > -	.default_attrs = vmbus_chan_attrs,
+> 
+> As discussed on IRC, a kobj_type needs to get an attribute group one of
+> these days, not just a attribute list :)
+> 
+> So thanks for persisting with this, sorry for the earlier review
+> comments, you were totally right about this, nice work.
+> 
+> Minor review comments below:
+> 
+> >  };
+> >  
+> >  /*
+> > @@ -1571,11 +1624,34 @@ int vmbus_add_channel_kobj(struct hv_device *dev, struct vmbus_channel *channel)
+> >  	if (ret)
+> >  		return ret;
+> >  
+> > +	ret = sysfs_create_group(kobj, &vmbus_chan_group);
+> > +	channel->sysfs_group_ready = !ret;
+> 
+> Why do you need this flag?
+> 
 
-Why would eBPF care about the bit width of userspace? I've thought a
-lot about inspecting user state from the kernel and have some weird
-ideas in that area (e.g., why not register eBPF programs to unwind
-user stacks?) --- but I think that Joel's work is independent of all
-that. I'm curious what you think we can do about userspace. I wish we
-could just compile the world with frame pointers, but we can't.
+I added this flag to prevent sysfs_remove_group() from being called if
+sysfs_create_group() or the earlier call to kobject_init_and_add()
+failed. However, it looks like that would just lead to WARN() being
+called, which seems appropriate. I'll remove this flag.
 
-> What I would love, is a table that has all structures and their fields
-> with information about their types, size and signed types. Like the
-> format fields in the events directory. This way ebpf (and kprobes,
-> internally in the kernel) could access this table and be able to know
-> what the data structures of the kernel is).
 
-Think of the headers as encoding this information and more and the C
-compiler as a magical decoder ring. :-) I totally get the desire for a
-metadata format a little less messy than C code, but as a practical
-matter, a rich C-compilation pipeline already exists, and the
-debuginfo you're proposing doesn't, except in the form of DWARF, which
-I think would be even more controversial to embed in the kernel memory
-image than headers are. A header blob provides a strict superset of
-the information your scheme provides.
+> > +
+> > +	if (ret) {
+> > +		/*
+> > +		 * If an error is returned to the calling functions, those
+> > +		 * functions will call kobject_put() on the channel kobject,
+> > +		 * which will cleanup the empty channel directory created by
+> > +		 * kobject_init_and_add().
+> 
+> Why is this comment needed?
+> 
+
+Another reviewer asked why the empty directory created by
+kobject_init_and_add() isn't removed here when sysfs_create_group()
+fails. We decided that a comment would help clear up any future
+confusion.
+
+
+> > +		 */
+> > +		pr_err("Unable to set up channel sysfs files\n");
+> 
+> dev_err() to show who had the problem with the files?
+>
+
+Yes, good point. I'll change this.
+
+
+> > +		return ret;
+> > +	}
+> > +
+> >  	kobject_uevent(kobj, KOBJ_ADD);
+> >  
+> >  	return 0;
+> >  }
+> >  
+> > +/*
+> > + * vmbus_remove_channel_attr_group - remove the channel's attribute group
+> > + */
+> > +void vmbus_remove_channel_attr_group(struct vmbus_channel *channel)
+> > +{
+> > +	if (channel->sysfs_group_ready)
+> > +		sysfs_remove_group(&channel->kobj, &vmbus_chan_group);
+> 
+> You should be able to just always remove these, no need for a flag to
+> say you have created them or not, right?
+> 
+> thanks,
+> 
+> greg k-h
