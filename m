@@ -2,91 +2,155 @@ Return-Path: <SRS0=J4ZE=RP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D1614C43381
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 20:32:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BC78FC43381
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 20:33:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 961C42147C
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 20:32:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6C2462147C
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 20:33:11 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="bWGqmlRc"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=tycho.nsa.gov header.i=@tycho.nsa.gov header.b="oCcrZQQT"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727335AbfCLUcP (ORCPT
+        id S1727337AbfCLUdJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 12 Mar 2019 16:32:15 -0400
-Received: from mail-lj1-f196.google.com ([209.85.208.196]:40042 "EHLO
-        mail-lj1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726535AbfCLUcO (ORCPT
+        Tue, 12 Mar 2019 16:33:09 -0400
+Received: from upbd19pa12.eemsg.mail.mil ([214.24.27.87]:52454 "EHLO
+        upbd19pa12.eemsg.mail.mil" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726527AbfCLUdJ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 12 Mar 2019 16:32:14 -0400
-Received: by mail-lj1-f196.google.com with SMTP id w6so3525246ljd.7;
-        Tue, 12 Mar 2019 13:32:13 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=UfIjYxHBvbuUQHpqxad4WlYpbS3+zRJUhvLI/xTMs8w=;
-        b=bWGqmlRc1cuwQ+owBbVFhNRREw1dsGQI383z9GJmHO83mqBmql2y2NYPgxewQ/TVBS
-         ib88Mhq1X6EIEHMtyJO+Ky+MtR20AElsH7LSeXbEGRQn9ys9paTHXQeOuk31awJFiGVM
-         w1oE0t+C/ieBefSMDYZ9tXP6mAyBKxzrFZer5lE5EsSYhCO5TwF/+YohlUGjsc6LOdif
-         qUSs66SHjA3b0GiQFHY+3j7RUHeNRlvEWJaVxW4IZ4q1198NYg2Pd+cFpqry26qT/gzK
-         kUzwpQRAn6O343zJlHbPzMErx53r/w9ucr05SjqI+5E0zO5DNX0jTXiwkSEDiobVEhM2
-         8c7A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=UfIjYxHBvbuUQHpqxad4WlYpbS3+zRJUhvLI/xTMs8w=;
-        b=Y76zBmT71gEAkkdCOWnT3bfmNJbnK4lWnq8fvwD6d8NMXqXYMjnSMD1Cl0TXRhpue2
-         7dmulu6+xP/+0Wog8UbjuvMqRCcrJ++sTOysAlFFXJ9pY8gw2Az1HYM3DNFp0yg/txgM
-         evFhwGqxwxlzLm/sronnib/gE4/PU5XRbspQK1Qg/Qgv6Rd8yJKPtnMZWpNHrXzlgcmh
-         aidOH7jLIGvYH5e+RliqgYLZdtkIjiJwPH9Cs77BuTLUAtKixishssghNqUkBlGlEaw1
-         I+BnwRc5gvlqg3nf+Z2274Z6rqAvUadrbj+F/efzlXmpJNFapR4u77rwq0SFFMERKKD/
-         mutQ==
-X-Gm-Message-State: APjAAAVAJDxs7D2/km6RAxF0OEpI99IDVWHTaPwaFlT19PsFh6B3Y5sc
-        iRZNcAVaLnxh6x0AqLKLRxuwzoqiNapMdfoEvDQ=
-X-Google-Smtp-Source: APXvYqw7aGXRJbBP48H/ZtW/Etax0zRLIspRoWe/+kjjpOe8jfQ+K1svf8cXiFm7Rlg/q/FvW5plSnqGMBip2MDngBs=
-X-Received: by 2002:a2e:8908:: with SMTP id d8mr681831lji.174.1552422732884;
- Tue, 12 Mar 2019 13:32:12 -0700 (PDT)
+        Tue, 12 Mar 2019 16:33:09 -0400
+X-Greylist: delayed 710 seconds by postgrey-1.27 at vger.kernel.org; Tue, 12 Mar 2019 16:33:07 EDT
+X-EEMSG-check-017: 196149196|UPBD19PA12_EEMSG_MP12.csd.disa.mil
+Received: from emsm-gh1-uea11.ncsc.mil ([214.29.60.3])
+  by upbd19pa12.eemsg.mail.mil with ESMTP/TLS/DHE-RSA-AES256-SHA256; 12 Mar 2019 20:21:02 +0000
+DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
+  d=tycho.nsa.gov; i=@tycho.nsa.gov; q=dns/txt;
+  s=tycho.nsa.gov; t=1552422062; x=1583958062;
+  h=subject:to:references:from:message-id:date:mime-version:
+   in-reply-to:content-transfer-encoding;
+  bh=AJ6uoGYzwnG6v1r9poWuiQzJMhgHbv7AkuySoSRjsUU=;
+  b=oCcrZQQTyziOhuGFO74A99eUxWFrndrZk09a6kwaV+aoEKTlD6wQSxzL
+   V6G5mMPWdrKFipmXky13PQ2gkGh7gzIULvc+lngUkcP+pH0Dr1CuQtbxF
+   J2hKF5NrJoH3ETBUcgfFpw9/C0qCpMc3q4m53CwvWFajgY84MWTBc4fe4
+   E8LhWquAO4LJ6r5jVE8kKCtEscb5P+dyDeQjmAjINS3wkU1WJO4651B7c
+   7I0ewk2OBN4mJyUacOb2iN1kL+cr7FkvYa+5fNaMPomP7uwPjwG17shG5
+   WKRjuQ6OH1ugASpANOzcMaXJQYynakvIQihlCS56ZLw+GkkiFrmpZ21c7
+   g==;
+X-IronPort-AV: E=Sophos;i="5.58,471,1544486400"; 
+   d="scan'208";a="24949589"
+IronPort-PHdr: =?us-ascii?q?9a23=3Ajz0LXxYm2zM1Aq9HDBDIfej/LSx+4OfEezUN45?=
+ =?us-ascii?q?9isYplN5qZps2zYB7h7PlgxGXEQZ/co6odzbaP6+a4ACQp2tWoiDg6aptCVh?=
+ =?us-ascii?q?sI2409vjcLJ4q7M3D9N+PgdCcgHc5PBxdP9nC/NlVJSo6lPwWB6nK94iQPFR?=
+ =?us-ascii?q?rhKAF7Ovr6GpLIj8Swyuu+54Dfbx9HiTagfb9+Ngm6oRjMvcQKnIVuLbo8xA?=
+ =?us-ascii?q?HUqXVSYeRWwm1oJVOXnxni48q74YBu/SdNtf8/7sBMSar1cbg2QrxeFzQmLn?=
+ =?us-ascii?q?s65Nb3uhnZTAuA/WUTX2MLmRdVGQfF7RX6XpDssivms+d2xSeXMdHqQb0yRD?=
+ =?us-ascii?q?+v9LlgRgP2hygbNj456GDXhdJ2jKJHuxKquhhzz5fJbI2JKPZye6XQct0ARW?=
+ =?us-ascii?q?pFQ81fSSpPDI2hZIcLFuYNI+JVo4z7qlATrxWxGBOsCfvyxDFWiH/43a403e?=
+ =?us-ascii?q?ovHg7J3gMvA90AvW/IrNj3LqoeTfy5wafKwDjFcvhY2S396I/Nch05vP+MQa?=
+ =?us-ascii?q?x/cdLRyUYxEQPOk0ieqYn/MDOR0uQCrWia5PdnWOK0lmEnsBp8oiSvx8gwio?=
+ =?us-ascii?q?nJgZgZylbf9Spj2oo1Ktq4SFBibNOiDZBeuSaaN45sTcMjRWFloCU6xaMcuZ?=
+ =?us-ascii?q?69YicKzI4rxxnFa/yIdYWD/xHtVP6JLDtli39od6izihav/US61OHxWde43E?=
+ =?us-ascii?q?xXoidDj9LCrGoC1wbJ5ciCUvZ9+0Ch1iuR2A3L8eFEJFw0lbLcK5483r48jp?=
+ =?us-ascii?q?oTvlrHHi/xgEj2kLWZdl8l+ui18OTreKnmp5+AOI90jQHyKKIuldCkAeskKA?=
+ =?us-ascii?q?QOWmmb+eCk2L3i+032XqlKg+UrnqTWv53WP8QWqrOjDwNL3Ysv9QyzAyq+3N?=
+ =?us-ascii?q?Qdh3YHLVZFeBydj4juPlHDOOv4Auqkg1m3jDdqx+zJPr3mApnXKHjDi63uca?=
+ =?us-ascii?q?xy605b1go/1cpf6I5MCrEdPPLzXVf8tN7fDh85KQO0xeDnB8tm1o4FW2KPBL?=
+ =?us-ascii?q?SWMLnIvV+N+O0lO/OMa5MNuDbhN/gl4ObjjWcjll8AeamkxoMXZ2qlHvRiOk?=
+ =?us-ascii?q?mZZH3sgtAbEWgUpAYxUOvqiFiaWz5Je3myR7485i08CI++E4jDXpqigKaA3C?=
+ =?us-ascii?q?egBZBWfnpJCkqNEXfzb4WEX+0DZz6MLcN7lTwET7ehQZc71R6yrA/616ZnLu?=
+ =?us-ascii?q?3M9y0Dq53j0Nl15+vOlRA97jF0Ecud3H+XT21unWMHWSU23KZhrkx50FuD1r?=
+ =?us-ascii?q?J4g/NAH9xJ+/xJShs6NYLbz+FiD9DyWwTBfsqGSVq/QdWpHysxTtQvzN8KeE?=
+ =?us-ascii?q?t9BdqigQ7Z3yawAL8aiaaLBJoq/aLYxXTxINx9y3mVnJUm2nshQsJJM2C9zo?=
+ =?us-ascii?q?Rl+gPTG4vAlUPRw6Stda0a2iPW3GWFx3DIuUwOFEZIWLjBFVUYYVHb5YDh71?=
+ =?us-ascii?q?7GZ6enFLBiNwxG08PEIaxPPJmhoE9HT7/bMc7feCrlln+5HxeT7quFdovxY2?=
+ =?us-ascii?q?EU1yibD1ILxURb5nuCNA4jFg+/rG/ESj9jD1TiZwXr6+Y64He6SFIkigKHdU?=
+ =?us-ascii?q?ts05Kr9RMPw/+RUfUe2vQDoihyhS9zGQOGw9/OC9eG7zFkdaFYbMJ1tExLzk?=
+ =?us-ascii?q?rFpgd9OdqmNKkkiVkAJVck93jy3gl6X90T2fMhq2knmU8rc/OV?=
+X-IPAS-Result: =?us-ascii?q?A2CCAADzE4hc/wHyM5BkHQEBBQEHBQGBUwYBCwGBZSpog?=
+ =?us-ascii?q?QMnhAqTU0wBAQEBAQEGgQgtiT+ObIF7MAgBhEAChDkiNgcNAQEDAQEBCAEDA?=
+ =?us-ascii?q?gFsHAyCOikBgmYBAQEBAyMVUQsRAwECAQICJgICTwgGAQwGAgEBgl8/AYFoD?=
+ =?us-ascii?q?Q+wXIEvhDABgRSEbQWBCyQBiywXeIEHgTiCa4gLglcDkHZMkmwJh1WLOgYZg?=
+ =?us-ascii?q?XmFZotdLYpNgROEV4lDhRwIKYFWKwgCGAghD4MnE4IDF4hfhVsjAzABAYEDA?=
+ =?us-ascii?q?QGQPwEB?=
+Received: from tarius.tycho.ncsc.mil ([144.51.242.1])
+  by emsm-gh1-uea11.NCSC.MIL with ESMTP; 12 Mar 2019 20:21:01 +0000
+Received: from moss-pluto.infosec.tycho.ncsc.mil (moss-pluto [192.168.25.131])
+        by tarius.tycho.ncsc.mil (8.14.4/8.14.4) with ESMTP id x2CKKxt8009864;
+        Tue, 12 Mar 2019 16:20:59 -0400
+Subject: Re: [PATCH] selinux: use kernel definition of PF_MAX in scripts
+To:     Johannes Brechtmann <johannes@jnbr.me>,
+        Paul Moore <paul@paul-moore.com>,
+        Eric Paris <eparis@parisplace.org>, selinux@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+References: <20190312194758.6f411a8b@t440s.fritz.box>
+From:   Stephen Smalley <sds@tycho.nsa.gov>
+Message-ID: <30b42bae-2aef-071f-6d59-fda40d2e4ff2@tycho.nsa.gov>
+Date:   Tue, 12 Mar 2019 16:16:54 -0400
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.5.1
 MIME-Version: 1.0
-References: <20190311213124.29325-1-angus@akkea.ca> <CAHQ1cqEHr1mB2EH3-fJPrYa+nkcWPPjmCTjSt-XsDnJp-SCf+w@mail.gmail.com>
- <9f25fb1a0acb35539dcd802502c49058@www.akkea.ca>
-In-Reply-To: <9f25fb1a0acb35539dcd802502c49058@www.akkea.ca>
-From:   Fabio Estevam <festevam@gmail.com>
-Date:   Tue, 12 Mar 2019 17:32:23 -0300
-Message-ID: <CAOMZO5B3DohJ73wdnp2qm+-6b_B3hw38YOi=52dHA9NzUFVEnw@mail.gmail.com>
-Subject: Re: [PATCH] arm64: dts: fsl: imx8mq: enable the thermal management
- unit (TMU)
-To:     Angus Ainslie <angus@akkea.ca>
-Cc:     Andrey Smirnov <andrew.smirnov@gmail.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Shawn Guo <shawnguo@kernel.org>,
-        Sascha Hauer <kernel@pengutronix.de>,
-        Lucas Stach <l.stach@pengutronix.de>,
-        Abel Vesa <abel.vesa@nxp.com>,
-        Daniel Baluta <daniel.baluta@nxp.com>,
-        =?UTF-8?Q?Guido_G=C3=BCnther?= <agx@sigxcpu.org>,
-        dl-linux-imx <linux-imx@nxp.com>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>,
-        linux-kernel <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <20190312194758.6f411a8b@t440s.fritz.box>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Angus,
+On 3/12/19 2:47 PM, Johannes Brechtmann wrote:
+>  From 1892b9ff8045bac6fe166802b2d8a8a3111c1e0c Mon Sep 17 00:00:00 2001
+> From: Johannes Brechtmann <johannes@jnbr.me>
+> Date: Tue, 12 Mar 2019 17:50:12 +0100
+> Subject: [PATCH] selinux: use kernel definition of PF_MAX in scripts
+> 
+> Building selinux scripts of old releases on a current host fails with:
+> 
+>      In file included from scripts/selinux/genheaders/genheaders.c:19:
+>      ./security/selinux/include/classmap.h:245:2: error: #error New
+>      address family defined, please update secclass_map.
+> 
+> Fix the issue by including linux/socket.h from kernel instead of
+> sys/socket.h from host.
+> 
+> Signed-off-by: Johannes Brechtmann <johannes@jnbr.me>
 
-On Tue, Mar 12, 2019 at 5:19 PM Angus Ainslie <angus@akkea.ca> wrote:
+Thanks, but already covered by
+https://lore.kernel.org/selinux/20190225005528.28371-1-paulo@paulo.ac/
 
-> I tried applying those to linux-next. They don't apply very cleanly
-> there so I gave up.
+> ---
+>   scripts/selinux/genheaders/genheaders.c | 2 +-
+>   scripts/selinux/mdp/mdp.c               | 2 +-
+>   2 files changed, 2 insertions(+), 2 deletions(-)
+> 
+> diff --git a/scripts/selinux/genheaders/genheaders.c b/scripts/selinux/genheaders/genheaders.c
+> index 1ceedea847dd..6db7e07fbc4c 100644
+> --- a/scripts/selinux/genheaders/genheaders.c
+> +++ b/scripts/selinux/genheaders/genheaders.c
+> @@ -9,7 +9,7 @@
+>   #include <string.h>
+>   #include <errno.h>
+>   #include <ctype.h>
+> -#include <sys/socket.h>
+> +#include <linux/socket.h>
+>   
+>   struct security_class_mapping {
+>   	const char *name;
+> diff --git a/scripts/selinux/mdp/mdp.c b/scripts/selinux/mdp/mdp.c
+> index 073fe7537f6c..744d9fc9c0bd 100644
+> --- a/scripts/selinux/mdp/mdp.c
+> +++ b/scripts/selinux/mdp/mdp.c
+> @@ -32,7 +32,7 @@
+>   #include <stdlib.h>
+>   #include <unistd.h>
+>   #include <string.h>
+> -#include <sys/socket.h>
+> +#include <linux/socket.h>
+>   
+>   static void usage(char *name)
+>   {
+> 
 
-You need to apply this commit first:
-https://git.kernel.org/pub/scm/linux/kernel/git/evalenti/linux-soc-thermal.git/patch/?id=7797ff424818c975b59c35880dbc90fe08350204
