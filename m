@@ -4,52 +4,53 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1DABBC43381
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 17:51:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6C89CC43381
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 17:51:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DB3EC205C9
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 17:51:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3D8CA2087C
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 17:51:37 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1552413095;
-	bh=KnYDALy9O/YSRotnmMulZ1tyy44pm0XI4ZMYlafLIiw=;
+	s=default; t=1552413097;
+	bh=fCpb523PH5ze2vmTXgxOeONnOMTgzT1g5WAb2NGe/3w=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=nOgpl7WRJQWz0wTVBrfW60HS10N0FW7p3jsp66DzSyVVagkA5Yu6is5nfIZzGUIDj
-	 erE7/QgR31STBeqIBOCzKF440KKHtcgw2IpUaP7qKFo64NPmgX6nL+BBaiJ0LZSCcR
-	 vplzOs19X0nYpPWAyDe9YcUH67R/azEDtiU8AbnQ=
+	b=LgAMuk2pR8kFQkHetAbRpbAnHlQ6Tk1hwpdSY1FbmUnHa6C6RL3QLKoP2yLGQfPdN
+	 aUQweB2eCLfppCYCItW8UN47xnea27WQ16ipFqT3vWD1v8fKMjYNz9PdS1SUcERrRM
+	 UOASGA7e3qWLPuVV44iLkreCwGrygtu5bPM9hPcg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728926AbfCLRvd (ORCPT
+        id S1729245AbfCLRvf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 12 Mar 2019 13:51:33 -0400
-Received: from mail.kernel.org ([198.145.29.99]:53450 "EHLO mail.kernel.org"
+        Tue, 12 Mar 2019 13:51:35 -0400
+Received: from mail.kernel.org ([198.145.29.99]:53414 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727543AbfCLROe (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 12 Mar 2019 13:14:34 -0400
+        id S1728399AbfCLROd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 12 Mar 2019 13:14:33 -0400
 Received: from localhost (unknown [104.133.8.98])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 3102C2173C;
-        Tue, 12 Mar 2019 17:14:33 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 6E75E21741;
+        Tue, 12 Mar 2019 17:14:32 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1552410873;
-        bh=KnYDALy9O/YSRotnmMulZ1tyy44pm0XI4ZMYlafLIiw=;
+        s=default; t=1552410872;
+        bh=fCpb523PH5ze2vmTXgxOeONnOMTgzT1g5WAb2NGe/3w=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=W3YIbuUcNuV2NZox92iCzWvcNjOwZK864XEkM4W3jEuQphXxkDcB6lfkTR2duIkHj
-         5gu9JCyzHM4UZEKYwFBok8272mvBZsPn1ME0ce96x5cwTX82OkVL2r/kvE0TWa9nyN
-         dIabp9rzznRbs8weG+JGXTd1rYl3LjEcF+7E5k6o=
+        b=lf0DVKoz5sQ+J8T3u8T6KFyGXPBAES90sevn3sJ9CcGZVqvv6cXsc9urZ4QZpwNar
+         /vDcq9pNJtSLCSS9+5Nu6rpP5frgFTBZvE6ZUyKVt4kJYNEkpYG1t9JFJy5jezdjEh
+         ihaHaoYljqVxIJZoLKc6WPRy7gMnwpbGzlYO59Nw=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Dan Carpenter <dan.carpenter@oracle.com>,
-        Luis Chamberlain <mcgrof@kernel.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
+        stable@vger.kernel.org, Lance Digby <ldigby@redhat.com>,
+        Jiri Olsa <jolsa@kernel.org>,
+        Quentin Monnet <quentin.monnet@netronome.com>,
+        Jakub Kicinski <jakub.kicinski@netronome.com>,
+        Daniel Borkmann <daniel@iogearbox.net>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 057/149] lib/test_kmod.c: potential double free in error handling
-Date:   Tue, 12 Mar 2019 10:07:55 -0700
-Message-Id: <20190312170354.494516490@linuxfoundation.org>
+Subject: [PATCH 4.19 074/149] bpftool: Fix prog dump by tag
+Date:   Tue, 12 Mar 2019 10:08:12 -0700
+Message-Id: <20190312170355.818860573@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190312170349.421581206@linuxfoundation.org>
 References: <20190312170349.421581206@linuxfoundation.org>
@@ -68,38 +69,68 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-[ Upstream commit db7ddeab3ce5d64c9696e70d61f45ea9909cd196 ]
+[ Upstream commit 752bcf80f5549c9901b2e8bc77b2138de55b1026 ]
 
-There is a copy and paste bug so we set "config->test_driver" to NULL
-twice instead of setting "config->test_fs".  Smatch complains that it
-leads to a double free:
+Lance reported an issue with bpftool not being able to
+dump program if there are more programs loaded and you
+want to dump any but the first program, like:
 
-  lib/test_kmod.c:840 __kmod_config_init() warn: 'config->test_fs' double freed
+  # bpftool prog
+  28: kprobe  name trace_req_start  tag 1dfc28ba8b3dd597  gpl
+  	loaded_at 2019-01-18T17:02:40+1100  uid 0
+  	xlated 112B  jited 109B  memlock 4096B  map_ids 13
+  29: kprobe  name trace_req_compl  tag 5b6a5ecc6030a683  gpl
+  	loaded_at 2019-01-18T17:02:40+1100  uid 0
+  	xlated 928B  jited 575B  memlock 4096B  map_ids 13,14
+  #  bpftool prog dum jited tag 1dfc28ba8b3dd597
+   0:	push   %rbp
+   1:	mov    %rsp,%rbp
+  ...
 
-Link: http://lkml.kernel.org/r/20190121140011.GA14283@kadam
-Fixes: d9c6a72d6fa2 ("kmod: add test driver to stress test the module loader")
-Signed-off-by: Dan Carpenter <dan.carpenter@oracle.com>
-Acked-by: Luis Chamberlain <mcgrof@kernel.org>
-Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
-Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
+  #  bpftool prog dum jited tag 5b6a5ecc6030a683
+  Error: can't get prog info (29): Bad address
+
+The problem is in the prog_fd_by_tag function not cleaning
+the struct bpf_prog_info before another request, so the
+previous program length is still in there and kernel assumes
+it needs to dump the program, which fails because there's no
+user pointer set.
+
+Moving the struct bpf_prog_info declaration into the loop,
+so it gets cleaned before each query.
+
+Fixes: 71bb428fe2c1 ("tools: bpf: add bpftool")
+Reported-by: Lance Digby <ldigby@redhat.com>
+Signed-off-by: Jiri Olsa <jolsa@kernel.org>
+Reviewed-by: Quentin Monnet <quentin.monnet@netronome.com>
+Acked-by: Jakub Kicinski <jakub.kicinski@netronome.com>
+Signed-off-by: Daniel Borkmann <daniel@iogearbox.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- lib/test_kmod.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ tools/bpf/bpftool/prog.c | 5 +++--
+ 1 file changed, 3 insertions(+), 2 deletions(-)
 
-diff --git a/lib/test_kmod.c b/lib/test_kmod.c
-index d82d022111e0..9cf77628fc91 100644
---- a/lib/test_kmod.c
-+++ b/lib/test_kmod.c
-@@ -632,7 +632,7 @@ static void __kmod_config_free(struct test_config *config)
- 	config->test_driver = NULL;
+diff --git a/tools/bpf/bpftool/prog.c b/tools/bpf/bpftool/prog.c
+index 0de024a6cc2b..bbba0d61570f 100644
+--- a/tools/bpf/bpftool/prog.c
++++ b/tools/bpf/bpftool/prog.c
+@@ -109,13 +109,14 @@ static void print_boot_time(__u64 nsecs, char *buf, unsigned int size)
  
- 	kfree_const(config->test_fs);
--	config->test_driver = NULL;
-+	config->test_fs = NULL;
- }
+ static int prog_fd_by_tag(unsigned char *tag)
+ {
+-	struct bpf_prog_info info = {};
+-	__u32 len = sizeof(info);
+ 	unsigned int id = 0;
+ 	int err;
+ 	int fd;
  
- static void kmod_config_free(struct kmod_test_device *test_dev)
+ 	while (true) {
++		struct bpf_prog_info info = {};
++		__u32 len = sizeof(info);
++
+ 		err = bpf_prog_get_next_id(id, &id);
+ 		if (err) {
+ 			p_err("%s", strerror(errno));
 -- 
 2.19.1
 
