@@ -7,46 +7,46 @@ X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E8127C43381
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 17:44:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E163DC43381
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 17:44:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B2F6C206DF
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 17:44:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B51F02087C
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 17:44:39 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1552412676;
-	bh=GmmWS9IFe54Z+hx2nhaFV0JSrTVHNaGDx4sv7k9qwns=;
+	s=default; t=1552412679;
+	bh=1EQeXiDW1LHZByLpQI82Cyc77Yyov7lWcWFZk3b2XqQ=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Er0Zuu6zMxgpzSnd0eNG7OsyUW/5YZBxyHdVTD08cGA+Ab57xu7VD4kf0nTV8dOpJ
-	 avFSX8MamyU+ixX4PhTdo2BGOGY/QypRrLlRhlQaQbXl8KfoF/Q16TLR2xF6f3Eo94
-	 U0Jiis4uqzOtxGKgSCGVPpntDXryZuupuEr6b/FM=
+	b=gmUaeXPl+HwcxiE2a1BCy+lQRcYSCO3SjpCOflIJfKheGN6cSCbWIMs1S3YuTzYQi
+	 ufaIlzgFzzEvwiR+a+MtXESwQgtDV89/Ogvmyn6SEqxTuU5M4bI3ViPQuG8sm4QvEJ
+	 4A0AQn50G+QG57bE9YfhpxIgVji2VrRRxuGYxe/A=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728650AbfCLRof (ORCPT
+        id S1729213AbfCLRoi (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 12 Mar 2019 13:44:35 -0400
-Received: from mail.kernel.org ([198.145.29.99]:56582 "EHLO mail.kernel.org"
+        Tue, 12 Mar 2019 13:44:38 -0400
+Received: from mail.kernel.org ([198.145.29.99]:56542 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728830AbfCLRPk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 12 Mar 2019 13:15:40 -0400
+        id S1728827AbfCLRPj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 12 Mar 2019 13:15:39 -0400
 Received: from localhost (unknown [104.133.8.98])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 952102087C;
-        Tue, 12 Mar 2019 17:15:39 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id F34692186A;
+        Tue, 12 Mar 2019 17:15:38 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
         s=default; t=1552410939;
-        bh=GmmWS9IFe54Z+hx2nhaFV0JSrTVHNaGDx4sv7k9qwns=;
+        bh=1EQeXiDW1LHZByLpQI82Cyc77Yyov7lWcWFZk3b2XqQ=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=O46YTHsFQuYICyW3B7jzCcTz/bFK5C2rGnxjiN5EUNEbK98lSCLzkMMCGmIIwXrxR
-         l573yuXFKlE327S6T1XvoBZXqb38wUfkfq72NNbLwaQkCYQX69se2PfSbotFYFLZaU
-         FK5oKjFPO/vi2lz5QLlJuUo0Guj0GTH6NEE2u1Ik=
+        b=kxgYlCTJmpJ1+fdW+U9G9tQkEwkpa5lFSZu27MdzzHx/5b7wPAPQeIdgAKlJ2IXBB
+         Vwx4EV5fO9ejZ9mVTtmU2JAQdy09Fu8spXayQO+pfK/gAReyx+qloNB3ZBf7dULmxy
+         EiLLLO+mt1HEDiqd6TJj/Yjf30MgnoxKgdlquVqE=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Haiyang Zhang <haiyangz@microsoft.com>,
+        stable@vger.kernel.org, Jiri Benc <jbenc@redhat.com>,
         "David S. Miller" <davem@davemloft.net>
-Subject: [PATCH 4.14 016/135] hv_netvsc: Fix IP header checksum for coalesced packets
-Date:   Tue, 12 Mar 2019 10:07:43 -0700
-Message-Id: <20190312170342.605281119@linuxfoundation.org>
+Subject: [PATCH 4.14 015/135] geneve: correctly handle ipv6.disable module parameter
+Date:   Tue, 12 Mar 2019 10:07:42 -0700
+Message-Id: <20190312170342.513697780@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190312170341.127810985@linuxfoundation.org>
 References: <20190312170341.127810985@linuxfoundation.org>
@@ -65,59 +65,56 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-From: Haiyang Zhang <haiyangz@microsoft.com>
+From: Jiri Benc <jbenc@redhat.com>
 
-[ Upstream commit bf48648d650db1146b75b9bd358502431e86cf4f ]
+[ Upstream commit cf1c9ccba7308e48a68fa77f476287d9d614e4c7 ]
 
-Incoming packets may have IP header checksum verified by the host.
-They may not have IP header checksum computed after coalescing.
-This patch re-compute the checksum when necessary, otherwise the
-packets may be dropped, because Linux network stack always checks it.
+When IPv6 is compiled but disabled at runtime, geneve_sock_add returns
+-EAFNOSUPPORT. For metadata based tunnels, this causes failure of the whole
+operation of bringing up the tunnel.
 
-Signed-off-by: Haiyang Zhang <haiyangz@microsoft.com>
+Ignore failure of IPv6 socket creation for metadata based tunnels caused by
+IPv6 not being available.
+
+This is the same fix as what commit d074bf960044 ("vxlan: correctly handle
+ipv6.disable module parameter") is doing for vxlan.
+
+Note there's also commit c0a47e44c098 ("geneve: should not call rt6_lookup()
+when ipv6 was disabled") which fixes a similar issue but for regular
+tunnels, while this patch is needed for metadata based tunnels.
+
+Signed-off-by: Jiri Benc <jbenc@redhat.com>
 Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- drivers/net/hyperv/netvsc_drv.c |   22 +++++++++++++++++++---
- 1 file changed, 19 insertions(+), 3 deletions(-)
+ drivers/net/geneve.c |   11 ++++++++---
+ 1 file changed, 8 insertions(+), 3 deletions(-)
 
---- a/drivers/net/hyperv/netvsc_drv.c
-+++ b/drivers/net/hyperv/netvsc_drv.c
-@@ -741,6 +741,14 @@ void netvsc_linkstatus_callback(struct h
- 	schedule_delayed_work(&ndev_ctx->dwork, 0);
- }
+--- a/drivers/net/geneve.c
++++ b/drivers/net/geneve.c
+@@ -632,15 +632,20 @@ out:
+ static int geneve_open(struct net_device *dev)
+ {
+ 	struct geneve_dev *geneve = netdev_priv(dev);
+-	bool ipv6 = !!(geneve->info.mode & IP_TUNNEL_INFO_IPV6);
+ 	bool metadata = geneve->collect_md;
++	bool ipv4, ipv6;
+ 	int ret = 0;
  
-+static void netvsc_comp_ipcsum(struct sk_buff *skb)
-+{
-+	struct iphdr *iph = (struct iphdr *)skb->data;
-+
-+	iph->check = 0;
-+	iph->check = ip_fast_csum(iph, iph->ihl);
-+}
-+
- static struct sk_buff *netvsc_alloc_recv_skb(struct net_device *net,
- 					     struct napi_struct *napi,
- 					     const struct ndis_tcp_ip_checksum_info *csum_info,
-@@ -764,9 +772,17 @@ static struct sk_buff *netvsc_alloc_recv
- 	/* skb is already created with CHECKSUM_NONE */
- 	skb_checksum_none_assert(skb);
- 
--	/*
--	 * In Linux, the IP checksum is always checked.
--	 * Do L4 checksum offload if enabled and present.
-+	/* Incoming packets may have IP header checksum verified by the host.
-+	 * They may not have IP header checksum computed after coalescing.
-+	 * We compute it here if the flags are set, because on Linux, the IP
-+	 * checksum is always checked.
-+	 */
-+	if (csum_info && csum_info->receive.ip_checksum_value_invalid &&
-+	    csum_info->receive.ip_checksum_succeeded &&
-+	    skb->protocol == htons(ETH_P_IP))
-+		netvsc_comp_ipcsum(skb);
-+
-+	/* Do L4 checksum offload if enabled and present.
- 	 */
- 	if (csum_info && (net->features & NETIF_F_RXCSUM)) {
- 		if (csum_info->receive.tcp_checksum_succeeded ||
++	ipv6 = geneve->info.mode & IP_TUNNEL_INFO_IPV6 || metadata;
++	ipv4 = !ipv6 || metadata;
+ #if IS_ENABLED(CONFIG_IPV6)
+-	if (ipv6 || metadata)
++	if (ipv6) {
+ 		ret = geneve_sock_add(geneve, true);
++		if (ret < 0 && ret != -EAFNOSUPPORT)
++			ipv4 = false;
++	}
+ #endif
+-	if (!ret && (!ipv6 || metadata))
++	if (ipv4)
+ 		ret = geneve_sock_add(geneve, false);
+ 	if (ret < 0)
+ 		geneve_sock_release(geneve);
 
 
