@@ -4,51 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1ACF8C43381
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 17:48:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 60AB4C43381
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 17:48:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DEFC92173C
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 17:48:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 31FC42173C
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 17:48:19 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1552412896;
-	bh=0JvHPP//cXlqDXAg9KMU65RjY5rAPgDPMr4nTbHmqew=;
+	s=default; t=1552412899;
+	bh=hXhfNQTp7+rRZ/EKdpAAF17IA4VFwfiLd5/lM7cEWgU=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=TQ5JsvZvlDBQ2Zwa//Rz+2YNKT+GMZvCbEaPUgRa/XQjOymnqSRo2apMTZQ0/iCh+
-	 EwAA9M2JCNzRSgAoJdUNSgVWeO+0acRbu+Hw3c2lHuEbOy/ESY7I3X2ft3+BCIPnek
-	 7L9n04CSJtAg0Ea7MOC5+ogYxmL7edbn/5nsJXU0=
+	b=VKf9MNHlkTdiXkgfRUE2g1nTFmtGkH3fC+m4mrZ7Hkl29ENSlGqj5ibs1jfCo+Ymt
+	 jb/WACmsSoBui2xMwAHhTH6nfuXch/QfxStBEdcLZ0c66taWQ8z7iHss2Oeg/HcBNC
+	 wyyKjtvuov3ZVxjcreFHTKYQMU/PVVRLEKTgX8tY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727545AbfCLRsO (ORCPT
+        id S1728598AbfCLRPD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 12 Mar 2019 13:48:14 -0400
-Received: from mail.kernel.org ([198.145.29.99]:54886 "EHLO mail.kernel.org"
+        Tue, 12 Mar 2019 13:15:03 -0400
+Received: from mail.kernel.org ([198.145.29.99]:52874 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728599AbfCLRPE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 12 Mar 2019 13:15:04 -0400
+        id S1728323AbfCLROV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 12 Mar 2019 13:14:21 -0400
 Received: from localhost (unknown [104.133.8.98])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 5C979206DF;
-        Tue, 12 Mar 2019 17:15:03 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 3C5C72183E;
+        Tue, 12 Mar 2019 17:14:20 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1552410903;
-        bh=0JvHPP//cXlqDXAg9KMU65RjY5rAPgDPMr4nTbHmqew=;
+        s=default; t=1552410860;
+        bh=hXhfNQTp7+rRZ/EKdpAAF17IA4VFwfiLd5/lM7cEWgU=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=lVY91zSDyU6RzvKvcttSEGzRg2K72jEll7BPvrmnL5vMedAPIQt6NCofYE6BLojK6
-         nJZYJh00yB9d4gpmJKWDm0gS9vJ9hzRY8lESg+1kuToA62dvt0IPInl3aRtPqSfthh
-         Z6U4GyK6WUoJNlzITJ01jc8MiEJeA5CecUubcjfg=
+        b=QSQX1VOe8emsf72HnfmufgnnzYhi/SqugvzgRiEhk32QcWtIOQ9hc3UNa8XvZafgV
+         iN0aGPF2u5GzDXWnu3jSZlFR+Ru0AnoKbD40lMVwVyOMtKq23wxmjQIZEquprntIUi
+         GbDt7lKAkpKzG96u5zgSAqIkkBDmgVoZnIIghb+Y=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Tetsuo Handa <penguin-kernel@I-love.SAKURA.ne.jp>,
-        Jan Kara <jack@suse.cz>, Dmitry Vyukov <dvyukov@google.com>,
-        Jens Axboe <axboe@kernel.dk>, Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 117/149] fs: ratelimit __find_get_block_slow() failure message.
-Date:   Tue, 12 Mar 2019 10:08:55 -0700
-Message-Id: <20190312170359.275220975@linuxfoundation.org>
+        stable@vger.kernel.org, Manish Chopra <manishc@marvell.com>,
+        Ariel Elior <aelior@marvell.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.19 038/149] qed: Fix system crash in ll2 xmit
+Date:   Tue, 12 Mar 2019 10:07:36 -0700
+Message-Id: <20190312170352.917510459@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190312170349.421581206@linuxfoundation.org>
 References: <20190312170349.421581206@linuxfoundation.org>
@@ -67,74 +67,82 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-[ Upstream commit 43636c804df0126da669c261fc820fb22f62bfc2 ]
+[ Upstream commit 7c81626a3c37e4ac320b8ad785694ba498f24794 ]
 
-When something let __find_get_block_slow() hit all_mapped path, it calls
-printk() for 100+ times per a second. But there is no need to print same
-message with such high frequency; it is just asking for stall warning, or
-at least bloating log files.
+Cache number of fragments in the skb locally as in case
+of linear skb (with zero fragments), tx completion
+(or freeing of skb) may happen before driver tries
+to get number of frgaments from the skb which could
+lead to stale access to an already freed skb.
 
-  [  399.866302][T15342] __find_get_block_slow() failed. block=1, b_blocknr=8
-  [  399.873324][T15342] b_state=0x00000029, b_size=512
-  [  399.878403][T15342] device loop0 blocksize: 4096
-  [  399.883296][T15342] __find_get_block_slow() failed. block=1, b_blocknr=8
-  [  399.890400][T15342] b_state=0x00000029, b_size=512
-  [  399.895595][T15342] device loop0 blocksize: 4096
-  [  399.900556][T15342] __find_get_block_slow() failed. block=1, b_blocknr=8
-  [  399.907471][T15342] b_state=0x00000029, b_size=512
-  [  399.912506][T15342] device loop0 blocksize: 4096
-
-This patch reduces frequency to up to once per a second, in addition to
-concatenating three lines into one.
-
-  [  399.866302][T15342] __find_get_block_slow() failed. block=1, b_blocknr=8, b_state=0x00000029, b_size=512, device loop0 blocksize: 4096
-
-Signed-off-by: Tetsuo Handa <penguin-kernel@I-love.SAKURA.ne.jp>
-Reviewed-by: Jan Kara <jack@suse.cz>
-Cc: Dmitry Vyukov <dvyukov@google.com>
-Signed-off-by: Jens Axboe <axboe@kernel.dk>
+Signed-off-by: Manish Chopra <manishc@marvell.com>
+Signed-off-by: Ariel Elior <aelior@marvell.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- fs/buffer.c | 19 ++++++++++---------
- 1 file changed, 10 insertions(+), 9 deletions(-)
+ drivers/net/ethernet/qlogic/qed/qed_ll2.c | 20 +++++++++++++++-----
+ 1 file changed, 15 insertions(+), 5 deletions(-)
 
-diff --git a/fs/buffer.c b/fs/buffer.c
-index 6f1ae3ac9789..c083c4b3c1e7 100644
---- a/fs/buffer.c
-+++ b/fs/buffer.c
-@@ -200,6 +200,7 @@ __find_get_block_slow(struct block_device *bdev, sector_t block)
- 	struct buffer_head *head;
- 	struct page *page;
- 	int all_mapped = 1;
-+	static DEFINE_RATELIMIT_STATE(last_warned, HZ, 1);
+diff --git a/drivers/net/ethernet/qlogic/qed/qed_ll2.c b/drivers/net/ethernet/qlogic/qed/qed_ll2.c
+index 92cd8abeb41d..015de1e0addd 100644
+--- a/drivers/net/ethernet/qlogic/qed/qed_ll2.c
++++ b/drivers/net/ethernet/qlogic/qed/qed_ll2.c
+@@ -2430,19 +2430,24 @@ static int qed_ll2_start_xmit(struct qed_dev *cdev, struct sk_buff *skb,
+ {
+ 	struct qed_ll2_tx_pkt_info pkt;
+ 	const skb_frag_t *frag;
++	u8 flags = 0, nr_frags;
+ 	int rc = -EINVAL, i;
+ 	dma_addr_t mapping;
+ 	u16 vlan = 0;
+-	u8 flags = 0;
  
- 	index = block >> (PAGE_SHIFT - bd_inode->i_blkbits);
- 	page = find_get_page_flags(bd_mapping, index, FGP_ACCESSED);
-@@ -227,15 +228,15 @@ __find_get_block_slow(struct block_device *bdev, sector_t block)
- 	 * file io on the block device and getblk.  It gets dealt with
- 	 * elsewhere, don't buffer_error if we had some unmapped buffers
- 	 */
--	if (all_mapped) {
--		printk("__find_get_block_slow() failed. "
--			"block=%llu, b_blocknr=%llu\n",
--			(unsigned long long)block,
--			(unsigned long long)bh->b_blocknr);
--		printk("b_state=0x%08lx, b_size=%zu\n",
--			bh->b_state, bh->b_size);
--		printk("device %pg blocksize: %d\n", bdev,
--			1 << bd_inode->i_blkbits);
-+	ratelimit_set_flags(&last_warned, RATELIMIT_MSG_ON_RELEASE);
-+	if (all_mapped && __ratelimit(&last_warned)) {
-+		printk("__find_get_block_slow() failed. block=%llu, "
-+		       "b_blocknr=%llu, b_state=0x%08lx, b_size=%zu, "
-+		       "device %pg blocksize: %d\n",
-+		       (unsigned long long)block,
-+		       (unsigned long long)bh->b_blocknr,
-+		       bh->b_state, bh->b_size, bdev,
-+		       1 << bd_inode->i_blkbits);
+ 	if (unlikely(skb->ip_summed != CHECKSUM_NONE)) {
+ 		DP_INFO(cdev, "Cannot transmit a checksummed packet\n");
+ 		return -EINVAL;
  	}
- out_unlock:
- 	spin_unlock(&bd_mapping->private_lock);
+ 
+-	if (1 + skb_shinfo(skb)->nr_frags > CORE_LL2_TX_MAX_BDS_PER_PACKET) {
++	/* Cache number of fragments from SKB since SKB may be freed by
++	 * the completion routine after calling qed_ll2_prepare_tx_packet()
++	 */
++	nr_frags = skb_shinfo(skb)->nr_frags;
++
++	if (1 + nr_frags > CORE_LL2_TX_MAX_BDS_PER_PACKET) {
+ 		DP_ERR(cdev, "Cannot transmit a packet with %d fragments\n",
+-		       1 + skb_shinfo(skb)->nr_frags);
++		       1 + nr_frags);
+ 		return -EINVAL;
+ 	}
+ 
+@@ -2464,7 +2469,7 @@ static int qed_ll2_start_xmit(struct qed_dev *cdev, struct sk_buff *skb,
+ 	}
+ 
+ 	memset(&pkt, 0, sizeof(pkt));
+-	pkt.num_of_bds = 1 + skb_shinfo(skb)->nr_frags;
++	pkt.num_of_bds = 1 + nr_frags;
+ 	pkt.vlan = vlan;
+ 	pkt.bd_flags = flags;
+ 	pkt.tx_dest = QED_LL2_TX_DEST_NW;
+@@ -2475,12 +2480,17 @@ static int qed_ll2_start_xmit(struct qed_dev *cdev, struct sk_buff *skb,
+ 	    test_bit(QED_LL2_XMIT_FLAGS_FIP_DISCOVERY, &xmit_flags))
+ 		pkt.remove_stag = true;
+ 
++	/* qed_ll2_prepare_tx_packet() may actually send the packet if
++	 * there are no fragments in the skb and subsequently the completion
++	 * routine may run and free the SKB, so no dereferencing the SKB
++	 * beyond this point unless skb has any fragments.
++	 */
+ 	rc = qed_ll2_prepare_tx_packet(&cdev->hwfns[0], cdev->ll2->handle,
+ 				       &pkt, 1);
+ 	if (rc)
+ 		goto err;
+ 
+-	for (i = 0; i < skb_shinfo(skb)->nr_frags; i++) {
++	for (i = 0; i < nr_frags; i++) {
+ 		frag = &skb_shinfo(skb)->frags[i];
+ 
+ 		mapping = skb_frag_dma_map(&cdev->pdev->dev, frag, 0,
 -- 
 2.19.1
 
