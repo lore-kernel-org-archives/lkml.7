@@ -6,31 +6,32 @@ X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CAF0FC43381
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 14:20:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E335EC43381
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 14:20:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 98DE72075C
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 14:20:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A7E49214AE
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 14:20:33 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726875AbfCLOU2 (ORCPT
+        id S1726890AbfCLOUc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 12 Mar 2019 10:20:28 -0400
-Received: from mx2.suse.de ([195.135.220.15]:58444 "EHLO mx1.suse.de"
+        Tue, 12 Mar 2019 10:20:32 -0400
+Received: from mx2.suse.de ([195.135.220.15]:58458 "EHLO mx1.suse.de"
         rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726817AbfCLOUX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 12 Mar 2019 10:20:23 -0400
+        id S1725894AbfCLOUZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 12 Mar 2019 10:20:25 -0400
 X-Virus-Scanned: by amavisd-new at test-mx.suse.de
 Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx1.suse.de (Postfix) with ESMTP id 9A007B646;
-        Tue, 12 Mar 2019 14:20:22 +0000 (UTC)
+        by mx1.suse.de (Postfix) with ESMTP id EB991B63E;
+        Tue, 12 Mar 2019 14:20:23 +0000 (UTC)
 From:   Luis Henriques <lhenriques@suse.com>
 To:     "Yan, Zheng" <zyan@redhat.com>, Sage Weil <sage@redhat.com>,
         Ilya Dryomov <idryomov@gmail.com>
 Cc:     ceph-devel@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Luis Henriques <lhenriques@suse.com>
-Subject: [PATCH v2 1/2] ceph: factor out ceph_lookup_inode()
-Date:   Tue, 12 Mar 2019 14:20:18 +0000
-Message-Id: <20190312142019.30936-2-lhenriques@suse.com>
+        Luis Henriques <lhenriques@suse.com>,
+        Hendrik Peyerl <hpeyerl@plusline.net>
+Subject: [PATCH v2 2/2] ceph: quota: fix quota subdir mounts
+Date:   Tue, 12 Mar 2019 14:20:19 +0000
+Message-Id: <20190312142019.30936-3-lhenriques@suse.com>
 In-Reply-To: <20190312142019.30936-1-lhenriques@suse.com>
 References: <20190312142019.30936-1-lhenriques@suse.com>
 MIME-Version: 1.0
@@ -40,62 +41,275 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This function will be used by __fh_to_dentry and by the quotas code, to
-find quota realm inodes that are not visible in the mountpoint.
+The CephFS kernel client does not enforce quotas set in a directory that
+isn't visible from the mount point.  For example, given the path
+'/dir1/dir2', if quotas are set in 'dir1' and the filesystem is mounted with
 
+  mount -t ceph <server>:<port>:/dir1/ /mnt
+
+then the client won't be able to access 'dir1' inode, even if 'dir2' belongs
+to a quota realm that points to it.
+
+This patch fixes this issue by simply doing an MDS LOOKUPINO operation for
+unknown inodes.  Any inode reference obtained this way will be added to a
+list in ceph_mds_client, and will only be released when the filesystem is
+umounted.
+
+Link: https://tracker.ceph.com/issues/38482
+Reported-by: Hendrik Peyerl <hpeyerl@plusline.net>
 Signed-off-by: Luis Henriques <lhenriques@suse.com>
 ---
- fs/ceph/export.c | 14 +++++++++++++-
- fs/ceph/super.h  |  1 +
- 2 files changed, 14 insertions(+), 1 deletion(-)
+ fs/ceph/mds_client.c |  15 ++++++
+ fs/ceph/mds_client.h |   2 +
+ fs/ceph/quota.c      | 106 +++++++++++++++++++++++++++++++++++++++----
+ fs/ceph/super.h      |   2 +
+ 4 files changed, 115 insertions(+), 10 deletions(-)
 
-diff --git a/fs/ceph/export.c b/fs/ceph/export.c
-index 3c59ad180ef0..0d8ead82c816 100644
---- a/fs/ceph/export.c
-+++ b/fs/ceph/export.c
-@@ -59,7 +59,7 @@ static int ceph_encode_fh(struct inode *inode, u32 *rawfh, int *max_len,
- 	return type;
+diff --git a/fs/ceph/mds_client.c b/fs/ceph/mds_client.c
+index 163fc74bf221..1dc24c3525fe 100644
+--- a/fs/ceph/mds_client.c
++++ b/fs/ceph/mds_client.c
+@@ -3656,6 +3656,8 @@ int ceph_mdsc_init(struct ceph_fs_client *fsc)
+ 	mdsc->max_sessions = 0;
+ 	mdsc->stopping = 0;
+ 	atomic64_set(&mdsc->quotarealms_count, 0);
++	INIT_LIST_HEAD(&mdsc->quotarealms_inodes_list);
++	spin_lock_init(&mdsc->quotarealms_inodes_lock);
+ 	mdsc->last_snap_seq = 0;
+ 	init_rwsem(&mdsc->snap_rwsem);
+ 	mdsc->snap_realms = RB_ROOT;
+@@ -3726,6 +3728,8 @@ static void wait_requests(struct ceph_mds_client *mdsc)
+  */
+ void ceph_mdsc_pre_umount(struct ceph_mds_client *mdsc)
+ {
++	struct ceph_inode_info *ci;
++
+ 	dout("pre_umount\n");
+ 	mdsc->stopping = 1;
+ 
+@@ -3738,6 +3742,17 @@ void ceph_mdsc_pre_umount(struct ceph_mds_client *mdsc)
+ 	 * their inode/dcache refs
+ 	 */
+ 	ceph_msgr_flush();
++	/*
++	 * It's now safe to clean quotarealms_inode_list without holding
++	 * mdsc->quotarealms_inodes_lock
++	 */
++	while (!list_empty(&mdsc->quotarealms_inodes_list)) {
++		ci = list_first_entry(&mdsc->quotarealms_inodes_list,
++				      struct ceph_inode_info,
++				      i_quotarealms_inode_item);
++		list_del(&ci->i_quotarealms_inode_item);
++		iput(&ci->vfs_inode);
++	}
  }
  
--static struct dentry *__fh_to_dentry(struct super_block *sb, u64 ino)
-+struct inode *ceph_lookup_inode(struct super_block *sb, u64 ino)
- {
- 	struct ceph_mds_client *mdsc = ceph_sb_to_client(sb)->mdsc;
- 	struct inode *inode;
-@@ -92,12 +92,24 @@ static struct dentry *__fh_to_dentry(struct super_block *sb, u64 ino)
- 		ceph_mdsc_put_request(req);
- 		if (!inode)
- 			return ERR_PTR(-ESTALE);
-+		if (err)
-+			return ERR_PTR(err);
- 		if (inode->i_nlink == 0) {
- 			iput(inode);
- 			return ERR_PTR(-ESTALE);
- 		}
- 	}
+ /*
+diff --git a/fs/ceph/mds_client.h b/fs/ceph/mds_client.h
+index 729da155ebf0..58968fb338ec 100644
+--- a/fs/ceph/mds_client.h
++++ b/fs/ceph/mds_client.h
+@@ -329,6 +329,8 @@ struct ceph_mds_client {
+ 	int                     stopping;      /* true if shutting down */
  
-+	return inode;
+ 	atomic64_t		quotarealms_count; /* # realms with quota */
++	struct list_head	quotarealms_inodes_list;
++	spinlock_t		quotarealms_inodes_lock;
+ 
+ 	/*
+ 	 * snap_rwsem will cover cap linkage into snaprealms, and
+diff --git a/fs/ceph/quota.c b/fs/ceph/quota.c
+index 9455d3aef0c3..d1ab1b331c0d 100644
+--- a/fs/ceph/quota.c
++++ b/fs/ceph/quota.c
+@@ -22,7 +22,16 @@ void ceph_adjust_quota_realms_count(struct inode *inode, bool inc)
+ static inline bool ceph_has_realms_with_quotas(struct inode *inode)
+ {
+ 	struct ceph_mds_client *mdsc = ceph_inode_to_client(inode)->mdsc;
+-	return atomic64_read(&mdsc->quotarealms_count) > 0;
++	struct super_block *sb = mdsc->fsc->sb;
++
++	if (atomic64_read(&mdsc->quotarealms_count) > 0)
++		return true;
++	/* if root is the real CephFS root, we don't have quota realms */
++	if (sb->s_root->d_inode &&
++	    (sb->s_root->d_inode->i_ino == CEPH_INO_ROOT))
++		return false;
++	/* otherwise, we can't know for sure */
++	return true;
+ }
+ 
+ void ceph_handle_quota(struct ceph_mds_client *mdsc,
+@@ -68,6 +77,37 @@ void ceph_handle_quota(struct ceph_mds_client *mdsc,
+ 	iput(inode);
+ }
+ 
++/*
++ * This function will try to lookup a realm inode.  If the inode is found
++ * (through an MDS LOOKUPINO operation), the realm->inode will be updated and
++ * the inode will also be added to an mdsc list which will be freed only when
++ * the filesystem is umounted.
++ */
++static struct inode *lookup_quotarealm_inode(struct ceph_mds_client *mdsc,
++					     struct super_block *sb,
++					     struct ceph_snap_realm *realm)
++{
++	struct inode *in;
++
++	in = ceph_lookup_inode(sb, realm->ino);
++	if (IS_ERR(in)) {
++		pr_warn("Can't lookup inode %llx (err: %ld)\n",
++			realm->ino, PTR_ERR(in));
++		return in;
++	}
++
++	spin_lock(&mdsc->quotarealms_inodes_lock);
++	list_add(&ceph_inode(in)->i_quotarealms_inode_item,
++		 &mdsc->quotarealms_inodes_list);
++	spin_unlock(&mdsc->quotarealms_inodes_lock);
++
++	spin_lock(&realm->inodes_with_caps_lock);
++	realm->inode = in;
++	spin_unlock(&realm->inodes_with_caps_lock);
++
++	return in;
 +}
 +
-+static struct dentry *__fh_to_dentry(struct super_block *sb, u64 ino)
-+{
-+	struct inode *inode = ceph_lookup_inode(sb, ino);
-+
-+	if (IS_ERR(inode))
-+		return ERR_CAST(inode);
-+
- 	return d_obtain_alias(inode);
- }
+ /*
+  * This function walks through the snaprealm for an inode and returns the
+  * ceph_snap_realm for the first snaprealm that has quotas set (either max_files
+@@ -76,9 +116,15 @@ void ceph_handle_quota(struct ceph_mds_client *mdsc,
+  *
+  * Note that the caller is responsible for calling ceph_put_snap_realm() on the
+  * returned realm.
++ *
++ * Callers of this function need to hold mdsc->snap_rwsem.  However, if there's
++ * a need to do an inode lookup, this rwsem will be temporarily dropped.  Hence
++ * the 'retry' argument: if rwsem needs to be dropped and 'retry' is 'false'
++ * this function will return -EAGAIN; otherwise, the snaprealms walk-through
++ * will be restarted.
+  */
+ static struct ceph_snap_realm *get_quota_realm(struct ceph_mds_client *mdsc,
+-					       struct inode *inode)
++					       struct inode *inode, bool retry)
+ {
+ 	struct ceph_inode_info *ci = NULL;
+ 	struct ceph_snap_realm *realm, *next;
+@@ -88,6 +134,7 @@ static struct ceph_snap_realm *get_quota_realm(struct ceph_mds_client *mdsc,
+ 	if (ceph_snap(inode) != CEPH_NOSNAP)
+ 		return NULL;
  
++restart:
+ 	realm = ceph_inode(inode)->i_snap_realm;
+ 	if (realm)
+ 		ceph_get_snap_realm(mdsc, realm);
+@@ -95,11 +142,25 @@ static struct ceph_snap_realm *get_quota_realm(struct ceph_mds_client *mdsc,
+ 		pr_err_ratelimited("get_quota_realm: ino (%llx.%llx) "
+ 				   "null i_snap_realm\n", ceph_vinop(inode));
+ 	while (realm) {
++		bool has_inode;
++
+ 		spin_lock(&realm->inodes_with_caps_lock);
+-		in = realm->inode ? igrab(realm->inode) : NULL;
++		has_inode = realm->inode;
++		in = has_inode ? igrab(realm->inode) : NULL;
+ 		spin_unlock(&realm->inodes_with_caps_lock);
+-		if (!in)
++		if (has_inode && !in)
+ 			break;
++		if (!in) {
++			up_read(&mdsc->snap_rwsem);
++			in = lookup_quotarealm_inode(mdsc, inode->i_sb, realm);
++			down_read(&mdsc->snap_rwsem);
++			if (IS_ERR(in))
++				break;
++			ceph_put_snap_realm(mdsc, realm);
++			if (!retry)
++				return ERR_PTR(-EAGAIN);
++			goto restart;
++		}
+ 
+ 		ci = ceph_inode(in);
+ 		has_quota = __ceph_has_any_quota(ci);
+@@ -125,9 +186,22 @@ bool ceph_quota_is_same_realm(struct inode *old, struct inode *new)
+ 	struct ceph_snap_realm *old_realm, *new_realm;
+ 	bool is_same;
+ 
++restart:
++	/*
++	 * We need to lookup 2 quota realms atomically, i.e. with snap_rwsem.
++	 * However, get_quota_realm may drop it temporarily.  By setting the
++	 * 'retry' parameter to 'false', we'll get -EAGAIN if the rwsem was
++	 * dropped and we can then restart the whole operation.
++	 */
+ 	down_read(&mdsc->snap_rwsem);
+-	old_realm = get_quota_realm(mdsc, old);
+-	new_realm = get_quota_realm(mdsc, new);
++	old_realm = get_quota_realm(mdsc, old, true);
++	new_realm = get_quota_realm(mdsc, new, false);
++	if (PTR_ERR(new_realm) == -EAGAIN) {
++		up_read(&mdsc->snap_rwsem);
++		if (old_realm)
++			ceph_put_snap_realm(mdsc, old_realm);
++		goto restart;
++	}
+ 	is_same = (old_realm == new_realm);
+ 	up_read(&mdsc->snap_rwsem);
+ 
+@@ -166,6 +240,7 @@ static bool check_quota_exceeded(struct inode *inode, enum quota_check_op op,
+ 		return false;
+ 
+ 	down_read(&mdsc->snap_rwsem);
++restart:
+ 	realm = ceph_inode(inode)->i_snap_realm;
+ 	if (realm)
+ 		ceph_get_snap_realm(mdsc, realm);
+@@ -173,12 +248,23 @@ static bool check_quota_exceeded(struct inode *inode, enum quota_check_op op,
+ 		pr_err_ratelimited("check_quota_exceeded: ino (%llx.%llx) "
+ 				   "null i_snap_realm\n", ceph_vinop(inode));
+ 	while (realm) {
++		bool has_inode;
++
+ 		spin_lock(&realm->inodes_with_caps_lock);
+-		in = realm->inode ? igrab(realm->inode) : NULL;
++		has_inode = realm->inode;
++		in = has_inode ? igrab(realm->inode) : NULL;
+ 		spin_unlock(&realm->inodes_with_caps_lock);
+-		if (!in)
++		if (has_inode && !in)
+ 			break;
+-
++		if (!in) {
++			up_read(&mdsc->snap_rwsem);
++			in = lookup_quotarealm_inode(mdsc, inode->i_sb, realm);
++			down_read(&mdsc->snap_rwsem);
++			if (IS_ERR(in))
++				break;
++			ceph_put_snap_realm(mdsc, realm);
++			goto restart;
++		}
+ 		ci = ceph_inode(in);
+ 		spin_lock(&ci->i_ceph_lock);
+ 		if (op == QUOTA_CHECK_MAX_FILES_OP) {
+@@ -314,7 +400,7 @@ bool ceph_quota_update_statfs(struct ceph_fs_client *fsc, struct kstatfs *buf)
+ 	bool is_updated = false;
+ 
+ 	down_read(&mdsc->snap_rwsem);
+-	realm = get_quota_realm(mdsc, d_inode(fsc->sb->s_root));
++	realm = get_quota_realm(mdsc, d_inode(fsc->sb->s_root), true);
+ 	up_read(&mdsc->snap_rwsem);
+ 	if (!realm)
+ 		return false;
 diff --git a/fs/ceph/super.h b/fs/ceph/super.h
-index dfb64a5211b6..ce51e98b08ec 100644
+index ce51e98b08ec..cc7766aeb73b 100644
 --- a/fs/ceph/super.h
 +++ b/fs/ceph/super.h
-@@ -1061,6 +1061,7 @@ extern long ceph_ioctl(struct file *file, unsigned int cmd, unsigned long arg);
+@@ -375,6 +375,8 @@ struct ceph_inode_info {
+ 	struct list_head i_snap_realm_item;
+ 	struct list_head i_snap_flush_item;
  
- /* export.c */
- extern const struct export_operations ceph_export_ops;
-+struct inode *ceph_lookup_inode(struct super_block *sb, u64 ino);
++	struct list_head i_quotarealms_inode_item;
++
+ 	struct work_struct i_wb_work;  /* writeback work */
+ 	struct work_struct i_pg_inv_work;  /* page invalidation work */
  
- /* locks.c */
- extern __init void ceph_flock_init(void);
