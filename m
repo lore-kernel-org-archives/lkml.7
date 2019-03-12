@@ -2,55 +2,55 @@ Return-Path: <SRS0=J4ZE=RP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+X-Spam-Status: No, score=-14.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 13B09C43381
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 17:32:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BA94DC43381
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 17:32:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DB4A22087C
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 17:32:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8B1202087C
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 17:32:41 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1552411951;
-	bh=APZPdU7VhwYSGbvYpfEmcCtHjzc0PYTNatcOl+t67OE=;
+	s=default; t=1552411961;
+	bh=YvzDEsnyBOg+O9VLOP8HFQJKaii5pZp1M3eVQMbqnVY=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=x/OMFEehGgQ/PMCIfbUIzRdsCGKGLqu3IN7Heegozy0AebV3EQD+LksCSvjAE15+0
-	 i7OkQ6Qf638jCXUcAVaBufyGnmeh1TpeB+as2VHGGoWA6iroKZiczLDc9yapwzM/H2
-	 +er4gJFhr2qjWhC7os6yc4RRXxj20ihmuh6DFN3k=
+	b=ekn0WxpM8RNuDrApbgk1h0YKw4/f9G8g8uBnES9n6o8z2xi1kCEBKb3anaEn2+qhs
+	 QeRlSIsd4YZJVdKhz10dEjhbZ/+l4gH1jhYiFmOGZxY7iBbUlHKPVw/RXltmfkCCM3
+	 i6BiQueu+QOuvSWHSJbxsqd1i7XY+6XVS18t7W6k=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729557AbfCLRcS (ORCPT
+        id S1729499AbfCLRcj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 12 Mar 2019 13:32:18 -0400
-Received: from mail.kernel.org ([198.145.29.99]:60292 "EHLO mail.kernel.org"
+        Tue, 12 Mar 2019 13:32:39 -0400
+Received: from mail.kernel.org ([198.145.29.99]:60220 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729418AbfCLRRF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 12 Mar 2019 13:17:05 -0400
+        id S1728047AbfCLRRE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 12 Mar 2019 13:17:04 -0400
 Received: from localhost (unknown [104.133.8.98])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D843F2087C;
-        Tue, 12 Mar 2019 17:17:04 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 8D1EB2171F;
+        Tue, 12 Mar 2019 17:17:03 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1552411025;
-        bh=APZPdU7VhwYSGbvYpfEmcCtHjzc0PYTNatcOl+t67OE=;
+        s=default; t=1552411023;
+        bh=YvzDEsnyBOg+O9VLOP8HFQJKaii5pZp1M3eVQMbqnVY=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=IB3ijwoQNlPj9ajRuZuDMkpYDfyDypbVNcCfmNoCcrYST5pYvEPd5/5/In1YH3ZhE
-         p/gaOjdqekWpLOECN4rLga3h2GoTiL4ncJ4gBBnUXv+g/d+M/I0Y9r0JYWWFmQfC6N
-         K1mBSKu4qczBMPypx5g6tQM8l865azXrbXds3ax4=
+        b=tGZoytl5GWmAin0vOr3mWUTbgUzscmglSTUmMisvi53mZR8GyRxUDtpaz2e966/tJ
+         bcV4ddEbRmlMD72gKK9T/3SpI36+V2cFkNKMfvIFt33oMJZXELUToZ5hRRqPUdKAYK
+         5bsSTIFabyuApzBzVYGAfWN0HO736xy+JXNj8I9I=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Jun-Ru Chang <jrjang@realtek.com>,
-        Tony Wu <tonywu@realtek.com>,
-        Paul Burton <paul.burton@mips.com>, ralf@linux-mips.org,
-        jhogan@kernel.org, macro@mips.com, yamada.masahiro@socionext.com,
-        peterz@infradead.org, mingo@kernel.org, linux-mips@vger.kernel.org,
+        stable@vger.kernel.org, Michael Petlan <mpetlan@redhat.com>,
+        Adrian Hunter <adrian.hunter@intel.com>,
+        Jiri Olsa <jolsa@redhat.com>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Arnaldo Carvalho de Melo <acme@redhat.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.14 115/135] MIPS: Remove function size check in get_frame_info()
-Date:   Tue, 12 Mar 2019 10:09:22 -0700
-Message-Id: <20190312170351.821104117@linuxfoundation.org>
+Subject: [PATCH 4.14 113/135] perf trace: Support multiple "vfs_getname" probes
+Date:   Tue, 12 Mar 2019 10:09:20 -0700
+Message-Id: <20190312170351.630894396@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190312170341.127810985@linuxfoundation.org>
 References: <20190312170341.127810985@linuxfoundation.org>
@@ -69,62 +69,99 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-[ Upstream commit 2b424cfc69728224fcb5fad138ea7260728e0901 ]
+[ Upstream commit 6ab3bc240ade47a0f52bc16d97edd9accbe0024e ]
 
-Patch (b6c7a324df37b "MIPS: Fix get_frame_info() handling of
-microMIPS function size.") introduces additional function size
-check for microMIPS by only checking insn between ip and ip + func_size.
-However, func_size in get_frame_info() is always 0 if KALLSYMS is not
-enabled. This causes get_frame_info() to return immediately without
-calculating correct frame_size, which in turn causes "Can't analyze
-schedule() prologue" warning messages at boot time.
+With a suitably defined "probe:vfs_getname" probe, 'perf trace' can
+"beautify" its output, so syscalls like open() or openat() can print the
+"filename" argument instead of just its hex address, like:
 
-This patch removes func_size check, and let the frame_size check run
-up to 128 insns for both MIPS and microMIPS.
+  $ perf trace -e open -- touch /dev/null
+  [...]
+       0.590 ( 0.014 ms): touch/18063 open(filename: /dev/null, flags: CREAT|NOCTTY|NONBLOCK|WRONLY, mode: IRUGO|IWUGO) = 3
+  [...]
 
-Signed-off-by: Jun-Ru Chang <jrjang@realtek.com>
-Signed-off-by: Tony Wu <tonywu@realtek.com>
-Signed-off-by: Paul Burton <paul.burton@mips.com>
-Fixes: b6c7a324df37b ("MIPS: Fix get_frame_info() handling of microMIPS function size.")
-Cc: <ralf@linux-mips.org>
-Cc: <jhogan@kernel.org>
-Cc: <macro@mips.com>
-Cc: <yamada.masahiro@socionext.com>
-Cc: <peterz@infradead.org>
-Cc: <mingo@kernel.org>
-Cc: <linux-mips@vger.kernel.org>
-Cc: <linux-kernel@vger.kernel.org>
+The output without such beautifier looks like:
+
+     0.529 ( 0.011 ms): touch/18075 open(filename: 0xc78cf288, flags: CREAT|NOCTTY|NONBLOCK|WRONLY, mode: IRUGO|IWUGO) = 3
+
+However, when the vfs_getname probe expands to multiple probes and it is
+not the first one that is hit, the beautifier fails, as following:
+
+     0.326 ( 0.010 ms): touch/18072 open(filename: , flags: CREAT|NOCTTY|NONBLOCK|WRONLY, mode: IRUGO|IWUGO) = 3
+
+Fix it by hooking into all the expanded probes (inlines), now, for instance:
+
+  [root@quaco ~]# perf probe -l
+    probe:vfs_getname    (on getname_flags:73@fs/namei.c with pathname)
+    probe:vfs_getname_1  (on getname_flags:73@fs/namei.c with pathname)
+  [root@quaco ~]# perf trace -e open* sleep 1
+       0.010 ( 0.005 ms): sleep/5588 openat(dfd: CWD, filename: /etc/ld.so.cache, flags: RDONLY|CLOEXEC)   = 3
+       0.029 ( 0.006 ms): sleep/5588 openat(dfd: CWD, filename: /lib64/libc.so.6, flags: RDONLY|CLOEXEC)   = 3
+       0.194 ( 0.008 ms): sleep/5588 openat(dfd: CWD, filename: /usr/lib/locale/locale-archive, flags: RDONLY|CLOEXEC) = 3
+  [root@quaco ~]#
+
+Works, further verified with:
+
+  [root@quaco ~]# perf test vfs
+  65: Use vfs_getname probe to get syscall args filenames   : Ok
+  66: Add vfs_getname probe to get syscall args filenames   : Ok
+  67: Check open filename arg using perf trace + vfs_getname: Ok
+  [root@quaco ~]#
+
+Reported-by: Michael Petlan <mpetlan@redhat.com>
+Tested-by: Michael Petlan <mpetlan@redhat.com>
+Cc: Adrian Hunter <adrian.hunter@intel.com>
+Cc: Jiri Olsa <jolsa@redhat.com>
+Cc: Namhyung Kim <namhyung@kernel.org>
+Link: https://lkml.kernel.org/n/tip-mv8kolk17xla1smvmp3qabv1@git.kernel.org
+Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/mips/kernel/process.c | 7 +++----
- 1 file changed, 3 insertions(+), 4 deletions(-)
+ tools/perf/builtin-trace.c | 25 ++++++++++++++++++-------
+ 1 file changed, 18 insertions(+), 7 deletions(-)
 
-diff --git a/arch/mips/kernel/process.c b/arch/mips/kernel/process.c
-index e8b166e9146a..ea563bfea0e1 100644
---- a/arch/mips/kernel/process.c
-+++ b/arch/mips/kernel/process.c
-@@ -370,7 +370,7 @@ static inline int is_sp_move_ins(union mips_instruction *ip, int *frame_size)
- static int get_frame_info(struct mips_frame_info *info)
- {
- 	bool is_mmips = IS_ENABLED(CONFIG_CPU_MICROMIPS);
--	union mips_instruction insn, *ip, *ip_end;
-+	union mips_instruction insn, *ip;
- 	const unsigned int max_insns = 128;
- 	unsigned int last_insn_size = 0;
- 	unsigned int i;
-@@ -383,10 +383,9 @@ static int get_frame_info(struct mips_frame_info *info)
- 	if (!ip)
- 		goto err;
+diff --git a/tools/perf/builtin-trace.c b/tools/perf/builtin-trace.c
+index 8e3c4ec00017..b224bf3f2b99 100644
+--- a/tools/perf/builtin-trace.c
++++ b/tools/perf/builtin-trace.c
+@@ -2109,19 +2109,30 @@ static size_t trace__fprintf_thread_summary(struct trace *trace, FILE *fp);
  
--	ip_end = (void *)ip + info->func_size;
--
--	for (i = 0; i < max_insns && ip < ip_end; i++) {
-+	for (i = 0; i < max_insns; i++) {
- 		ip = (void *)ip + last_insn_size;
+ static bool perf_evlist__add_vfs_getname(struct perf_evlist *evlist)
+ {
+-	struct perf_evsel *evsel = perf_evsel__newtp("probe", "vfs_getname");
++	bool found = false;
++	struct perf_evsel *evsel, *tmp;
++	struct parse_events_error err = { .idx = 0, };
++	int ret = parse_events(evlist, "probe:vfs_getname*", &err);
+ 
+-	if (IS_ERR(evsel))
++	if (ret)
+ 		return false;
+ 
+-	if (perf_evsel__field(evsel, "pathname") == NULL) {
++	evlist__for_each_entry_safe(evlist, evsel, tmp) {
++		if (!strstarts(perf_evsel__name(evsel), "probe:vfs_getname"))
++			continue;
 +
- 		if (is_mmips && mm_insn_16bit(ip->halfword[0])) {
- 			insn.word = ip->halfword[0] << 16;
- 			last_insn_size = 2;
++		if (perf_evsel__field(evsel, "pathname")) {
++			evsel->handler = trace__vfs_getname;
++			found = true;
++			continue;
++		}
++
++		list_del_init(&evsel->node);
++		evsel->evlist = NULL;
+ 		perf_evsel__delete(evsel);
+-		return false;
+ 	}
+ 
+-	evsel->handler = trace__vfs_getname;
+-	perf_evlist__add(evlist, evsel);
+-	return true;
++	return found;
+ }
+ 
+ static struct perf_evsel *perf_evsel__new_pgfault(u64 config)
 -- 
 2.19.1
 
