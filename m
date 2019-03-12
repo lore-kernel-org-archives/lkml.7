@@ -2,96 +2,161 @@ Return-Path: <SRS0=J4ZE=RP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,URIBL_BLOCKED
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B8ABDC43381
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 18:14:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2E91AC43381
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 18:14:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 80C2F2087C
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 18:14:03 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="S/mo7T0X"
+	by mail.kernel.org (Postfix) with ESMTP id ED20D2087C
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 18:14:10 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1552414451;
+	bh=FipTVCBHndGvnon2xyD2/dLzZY90Gik19ywchGNhqHM=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=AUo6Y6lw6G8PfwEE/er9V8Tj0eVwfsSl9L6CndGz5Ob+Mywmh0YaSQhBlrLglBTon
+	 SICLJVzRD+bae3ZkhXjLdoapcjUTxu5onGzype0PLLUhVZ3ngquDkYw/WZddIByFgx
+	 mv1fOZsFECtoS1hl367VwBKCz3RdthdDW3J/QycQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727488AbfCLSOB (ORCPT
+        id S1727286AbfCLSN5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 12 Mar 2019 14:14:01 -0400
-Received: from mail-oi1-f195.google.com ([209.85.167.195]:36266 "EHLO
-        mail-oi1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726869AbfCLRLX (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 12 Mar 2019 13:11:23 -0400
-Received: by mail-oi1-f195.google.com with SMTP id t206so2740449oib.3
-        for <linux-kernel@vger.kernel.org>; Tue, 12 Mar 2019 10:11:23 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=/34JM6n4jbLorpMWeteTyQIhtscAMn+/Mff17ZFVkU8=;
-        b=S/mo7T0XDqYtcBFjmUlbV/oyhvFiTCNm/epZWXkiPLvjtcsPHrYEEglAzU+RTSFght
-         8zRaHlifKBynuBUhuvezFleWhnfuj/eWIj3+4OeBLYSuiVuDCr513q6qfse1Lf8nUwLU
-         z08hOGUhGhVgwnlB40ptpXwoBhvfzoSaUHlsHHxkQcb/qcAlq8c0w010DQ5zs+uZthKW
-         MG/0UKmBoecOdLkrxmhlLkgInZ0yRCsO+7xPkOm44GyzAs4Q05JO1s93EQX72QfcFA+I
-         i8kNZq7wMB34N5MZE/nzJFGJ3xzbGUtxsdls80lSKuQnl8pxHgyT08r+0mBAPp+MW3X3
-         2eKQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=/34JM6n4jbLorpMWeteTyQIhtscAMn+/Mff17ZFVkU8=;
-        b=RLIIWUn/bXpWJC+6I09jyNAFuzDlzGZdmx2XzT371bugFvibAHXU3QEz90nqoB4wK7
-         5abFWkb4Cm1vXlGFhDnrNMHxqvTtxpF6w859QOuIjDDb6r5Qp2FAy1RPVC6dyS6zqKxy
-         8d7mRL8MftnWjQWZpQ7JvqK8LxlOTBWT6RFXF5aBktj9+gA1k7Fd/wi4pX1fbjvGOwL4
-         YtYFvVCytnkhL1T9R0Vkm28wJJH50zeSZmU6wPay4vVai/kfPZE+KsCYrqCcd4VgaeV4
-         rxasPQwIfxKFS2L3zUNSdeUagVARmcspPravyzfzMO+trPBe9so0gQywe4aNSypqbBfj
-         JjaQ==
-X-Gm-Message-State: APjAAAXrHkfLoPUXmju1bJGlcEb7LZpG6tftn1VU+f4M7MyBmTJ5OKiE
-        zwLt0PGjZEa6eYiFzEVspfjrxDWOwFhX8OupqqE=
-X-Google-Smtp-Source: APXvYqxV6uRSGhGzdtVh9u1BbIyZqPM8caDx+PHty/Pyl48dNS0u9ii/K0stY7FYyt+4FVfFo/fB0Yh6bddX0KSsk8g=
-X-Received: by 2002:aca:e6d5:: with SMTP id d204mr2450438oih.77.1552410681983;
- Tue, 12 Mar 2019 10:11:21 -0700 (PDT)
+        Tue, 12 Mar 2019 14:13:57 -0400
+Received: from mail.kernel.org ([198.145.29.99]:44548 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726886AbfCLRLY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 12 Mar 2019 13:11:24 -0400
+Received: from localhost (unknown [104.133.8.98])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 7609C21734;
+        Tue, 12 Mar 2019 17:11:23 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1552410683;
+        bh=FipTVCBHndGvnon2xyD2/dLzZY90Gik19ywchGNhqHM=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=D0mAfRO6inqd68TpDBywk9NZsarQ96njklBSLBo1Hy32Xv8YstJ7qcYfN7Ve8i8Gr
+         wqN515lJlRgFoqrbn/4PRAzsIFJgqQpqioqiDEYwCEP/tRM0N1TlA84IlxbS/CWnWJ
+         J/4WIhpp0Dh9DJc7jcWn6dDCdOwEfdycdYjkHy3E=
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     linux-kernel@vger.kernel.org
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        stable@vger.kernel.org,
+        Christian Koenig <christian.koenig@amd.com>,
+        Alex Deucher <alexander.deucher@amd.com>,
+        David Zhou <David1.Zhou@amd.com>,
+        Huang Rui <ray.huang@amd.com>,
+        Junwei Zhang <Jerry.Zhang@amd.com>,
+        Michel Daenzer <michel.daenzer@amd.com>,
+        David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
+        Maxime Ripard <maxime.ripard@bootlin.com>,
+        Sean Paul <sean@poorly.run>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        Will Deacon <will.deacon@arm.com>,
+        Christoph Hellwig <hch@infradead.org>,
+        Robin Murphy <robin.murphy@arm.com>,
+        amd-gfx list <amd-gfx@lists.freedesktop.org>,
+        dri-devel <dri-devel@lists.freedesktop.org>,
+        Carsten Haitzler <Carsten.Haitzler@arm.com>,
+        Ard Biesheuvel <ard.biesheuvel@linaro.org>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 5.0 13/25] drm: disable uncached DMA optimization for ARM and arm64
+Date:   Tue, 12 Mar 2019 10:08:51 -0700
+Message-Id: <20190312170404.531087175@linuxfoundation.org>
+X-Mailer: git-send-email 2.21.0
+In-Reply-To: <20190312170403.643852550@linuxfoundation.org>
+References: <20190312170403.643852550@linuxfoundation.org>
+User-Agent: quilt/0.65
+X-stable: review
+X-Patchwork-Hint: ignore
 MIME-Version: 1.0
-References: <20190124201251.15159-1-TheSven73@googlemail.com>
- <CAGngYiWFU-VnG=ODLWaUf0yp69qaU2GSd9exdHvyi6Ko1ib9qw@mail.gmail.com>
- <20190208121916.GE23483@kroah.com> <CAGngYiVVNitd5SDLah-kxP69W6XHYHOQrOz=DnevuGnqoHD7HA@mail.gmail.com>
- <20190208141400.GA22162@kroah.com> <CAGngYiXZtNcqQ3JGgavBxypo75WtAT7T-X4DQFNWD8kQcifU8g@mail.gmail.com>
- <20190311191339.GA5628@kroah.com>
-In-Reply-To: <20190311191339.GA5628@kroah.com>
-From:   Sven Van Asbroeck <thesven73@gmail.com>
-Date:   Tue, 12 Mar 2019 13:11:11 -0400
-Message-ID: <CAGngYiVB=6627d31ad5ajfrmBtV5_pDLudKkBuPNyNnqkssBAA@mail.gmail.com>
-Subject: Re: [PATCH v8 0/6] Add Fieldbus subsystem + support HMS Profinet card
-To:     Greg KH <gregkh@linuxfoundation.org>
-Cc:     robh+dt@kernel.org, Linus Walleij <linus.walleij@linaro.org>,
-        Lee Jones <lee.jones@linaro.org>, mark.rutland@arm.com,
-        =?UTF-8?Q?Andreas_F=C3=A4rber?= <afaerber@suse.de>,
-        treding@nvidia.com, David Lechner <david@lechnology.com>,
-        noralf@tronnes.org, johan@kernel.org,
-        Michal Simek <monstr@monstr.eu>, michal.vokac@ysoft.com,
-        Arnd Bergmann <arnd@arndb.de>, john.garry@huawei.com,
-        geert+renesas@glider.be, robin.murphy@arm.com,
-        Paul Gortmaker <paul.gortmaker@windriver.com>,
-        sebastien.bourdelin@savoirfairelinux.com, icenowy@aosc.io,
-        Stuart Yoder <stuyoder@gmail.com>, maxime.ripard@bootlin.com,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Mar 11, 2019 at 3:13 PM Greg KH <gregkh@linuxfoundation.org> wrote:
->
-> That sounds like a good plan, I'll take that.  Want to respin the
-> patches with the code in drivers/staging/ and I'll be glad to queue them
-> up after 5.1-rc1 is out.
+5.0-stable review patch.  If anyone has any objections, please let me know.
 
-Andreas Farber suggested that the patchset may have more success reaching
-its target audience by cross-posting in netdev, and maybe linux-serial +
-linux-gpio. Does that sound ok? Any other group where the patchset might
-be welcome?
+------------------
 
-Greg, are you ok with holding off taking the patch for a few days, to give
-the netdev/serial/gpio people a chance to react?
+[ Upstream commit e02f5c1bb2283cfcee68f2f0feddcc06150f13aa ]
+
+The DRM driver stack is designed to work with cache coherent devices
+only, but permits an optimization to be enabled in some cases, where
+for some buffers, both the CPU and the GPU use uncached mappings,
+removing the need for DMA snooping and allocation in the CPU caches.
+
+The use of uncached GPU mappings relies on the correct implementation
+of the PCIe NoSnoop TLP attribute by the platform, otherwise the GPU
+will use cached mappings nonetheless. On x86 platforms, this does not
+seem to matter, as uncached CPU mappings will snoop the caches in any
+case. However, on ARM and arm64, enabling this optimization on a
+platform where NoSnoop is ignored results in loss of coherency, which
+breaks correct operation of the device. Since we have no way of
+detecting whether NoSnoop works or not, just disable this
+optimization entirely for ARM and arm64.
+
+Cc: Christian Koenig <christian.koenig@amd.com>
+Cc: Alex Deucher <alexander.deucher@amd.com>
+Cc: David Zhou <David1.Zhou@amd.com>
+Cc: Huang Rui <ray.huang@amd.com>
+Cc: Junwei Zhang <Jerry.Zhang@amd.com>
+Cc: Michel Daenzer <michel.daenzer@amd.com>
+Cc: David Airlie <airlied@linux.ie>
+Cc: Daniel Vetter <daniel@ffwll.ch>
+Cc: Maarten Lankhorst <maarten.lankhorst@linux.intel.com>
+Cc: Maxime Ripard <maxime.ripard@bootlin.com>
+Cc: Sean Paul <sean@poorly.run>
+Cc: Michael Ellerman <mpe@ellerman.id.au>
+Cc: Benjamin Herrenschmidt <benh@kernel.crashing.org>
+Cc: Will Deacon <will.deacon@arm.com>
+Cc: Christoph Hellwig <hch@infradead.org>
+Cc: Robin Murphy <robin.murphy@arm.com>
+Cc: amd-gfx list <amd-gfx@lists.freedesktop.org>
+Cc: dri-devel <dri-devel@lists.freedesktop.org>
+Reported-by: Carsten Haitzler <Carsten.Haitzler@arm.com>
+Signed-off-by: Ard Biesheuvel <ard.biesheuvel@linaro.org>
+Reviewed-by: Christian König <christian.koenig@amd.com>
+Reviewed-by: Alex Deucher <alexander.deucher@amd.com>
+Link: https://patchwork.kernel.org/patch/10778815/
+Signed-off-by: Christian König <christian.koenig@amd.com>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
+---
+ include/drm/drm_cache.h |   18 ++++++++++++++++++
+ 1 file changed, 18 insertions(+)
+
+--- a/include/drm/drm_cache.h
++++ b/include/drm/drm_cache.h
+@@ -47,6 +47,24 @@ static inline bool drm_arch_can_wc_memor
+ 	return false;
+ #elif defined(CONFIG_MIPS) && defined(CONFIG_CPU_LOONGSON3)
+ 	return false;
++#elif defined(CONFIG_ARM) || defined(CONFIG_ARM64)
++	/*
++	 * The DRM driver stack is designed to work with cache coherent devices
++	 * only, but permits an optimization to be enabled in some cases, where
++	 * for some buffers, both the CPU and the GPU use uncached mappings,
++	 * removing the need for DMA snooping and allocation in the CPU caches.
++	 *
++	 * The use of uncached GPU mappings relies on the correct implementation
++	 * of the PCIe NoSnoop TLP attribute by the platform, otherwise the GPU
++	 * will use cached mappings nonetheless. On x86 platforms, this does not
++	 * seem to matter, as uncached CPU mappings will snoop the caches in any
++	 * case. However, on ARM and arm64, enabling this optimization on a
++	 * platform where NoSnoop is ignored results in loss of coherency, which
++	 * breaks correct operation of the device. Since we have no way of
++	 * detecting whether NoSnoop works or not, just disable this
++	 * optimization entirely for ARM and arm64.
++	 */
++	return false;
+ #else
+ 	return true;
+ #endif
+
+
