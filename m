@@ -2,91 +2,171 @@ Return-Path: <SRS0=J4ZE=RP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_MUTT autolearn=ham autolearn_force=no
+X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_PASS autolearn=unavailable autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C708BC43381
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 03:45:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D3ADEC4360F
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 03:50:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 96A672087C
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 03:45:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id ADDF62087C
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 03:50:54 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726991AbfCLDpm (ORCPT
+        id S1726954AbfCLDux (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 11 Mar 2019 23:45:42 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:42248 "EHLO mx1.redhat.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726617AbfCLDpl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 11 Mar 2019 23:45:41 -0400
-Received: from smtp.corp.redhat.com (int-mx03.intmail.prod.int.phx2.redhat.com [10.5.11.13])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id 6E8C930832D8;
-        Tue, 12 Mar 2019 03:45:41 +0000 (UTC)
-Received: from localhost (ovpn-12-19.pek2.redhat.com [10.72.12.19])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id 7F117608C8;
-        Tue, 12 Mar 2019 03:45:40 +0000 (UTC)
-Date:   Tue, 12 Mar 2019 11:45:37 +0800
-From:   Baoquan He <bhe@redhat.com>
-To:     Kees Cook <keescook@chromium.org>
-Cc:     LKML <linux-kernel@vger.kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        "H. Peter Anvin" <hpa@zytor.com>,
-        Dave Hansen <dave.hansen@linux.intel.com>,
-        Andy Lutomirski <luto@kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>, X86 ML <x86@kernel.org>,
-        Mike Travis <travis@sgi.com>,
-        Thomas Garnier <thgarnie@google.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Masahiro Yamada <yamada.masahiro@socionext.com>,
-        "Kirill A. Shutemov" <kirill@shutemov.name>
-Subject: Re: [PATCH v3 1/6] x86/mm/KASLR: Improve code comments about struct
- kaslr_memory_region
-Message-ID: <20190312034537.GL21116@MiWiFi-R3L-srv>
-References: <20190216140008.28671-1-bhe@redhat.com>
- <20190216140008.28671-2-bhe@redhat.com>
- <CAGXu5j+MUrt70E6YiwM0QWOQxQeU9+rY7UPvuDrASne1pkCZLA@mail.gmail.com>
- <20190218031729.GG14858@MiWiFi-R3L-srv>
+        Mon, 11 Mar 2019 23:50:53 -0400
+Received: from mail-qt1-f195.google.com ([209.85.160.195]:41778 "EHLO
+        mail-qt1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726754AbfCLDuw (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 11 Mar 2019 23:50:52 -0400
+Received: by mail-qt1-f195.google.com with SMTP id v10so1067196qtp.8
+        for <linux-kernel@vger.kernel.org>; Mon, 11 Mar 2019 20:50:51 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:content-transfer-encoding
+         :in-reply-to;
+        bh=QRPDOmP3PZybh4jg1T0rjd7mcth50LuMLbslo/IWnIE=;
+        b=QRAO9p51w8DJPijjP/Kj/iKM0Bl8vMFCNjout0MZFXelDuYttLJYqD+dTSaGwlGbIv
+         A6wzqLTZpJppg3ghVtfgTWkxcYJ2QWAss5Ef4CyMYNVQyCRCLfjiEkzudCD8CgC4mGCB
+         CytloNA6kzBCofYSW0176asnXzghKWHeHN1cjieRJY8vGSR9NJeg4X9inzZdqrr0QTZ2
+         bk0KircBIas+53AX3L7OCAL+6/DgAUyNyQU7S8lu/oxNmdtRzCUvemXwFlNWN3LOBT4x
+         Rxr/9WseYyZHF+ICm2sign+op7X0/p7Z9u6JYbLSo+MHOCWFNh1w8Ev0FxrKN/+I1Mvg
+         c4ww==
+X-Gm-Message-State: APjAAAXHjnurVukSFmAygYhAwF/mXAyRD+OvFmyjTg+ri+g/aooq4MKw
+        wCdqUVxL3k/s9+iZysxNFuxLkg==
+X-Google-Smtp-Source: APXvYqytPBLiV9ui85yEFwzYki+uAt4jj2vFWUzeaP5nba2eYldaAweFOnQcfmd69Ncni6yOLzzxow==
+X-Received: by 2002:ac8:faf:: with SMTP id b44mr28675567qtk.9.1552362651332;
+        Mon, 11 Mar 2019 20:50:51 -0700 (PDT)
+Received: from redhat.com (pool-173-76-246-42.bstnma.fios.verizon.net. [173.76.246.42])
+        by smtp.gmail.com with ESMTPSA id p35sm5014288qte.83.2019.03.11.20.50.49
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Mon, 11 Mar 2019 20:50:50 -0700 (PDT)
+Date:   Mon, 11 Mar 2019 23:50:47 -0400
+From:   "Michael S. Tsirkin" <mst@redhat.com>
+To:     Jason Wang <jasowang@redhat.com>
+Cc:     Andrea Arcangeli <aarcange@redhat.com>, kvm@vger.kernel.org,
+        virtualization@lists.linux-foundation.org, netdev@vger.kernel.org,
+        linux-kernel@vger.kernel.org, peterx@redhat.com,
+        linux-mm@kvack.org, Jerome Glisse <jglisse@redhat.com>
+Subject: Re: [RFC PATCH V2 5/5] vhost: access vq metadata through kernel
+ virtual address
+Message-ID: <20190311234956-mutt-send-email-mst@kernel.org>
+References: <1551856692-3384-1-git-send-email-jasowang@redhat.com>
+ <1551856692-3384-6-git-send-email-jasowang@redhat.com>
+ <20190307103503-mutt-send-email-mst@kernel.org>
+ <20190307124700-mutt-send-email-mst@kernel.org>
+ <20190307191622.GP23850@redhat.com>
+ <e2fad6ed-9257-b53c-394b-bc913fc444c0@redhat.com>
+ <20190308194845.GC26923@redhat.com>
+ <8b68a2a0-907a-15f5-a07f-fc5b53d7ea19@redhat.com>
+ <20190311084525-mutt-send-email-mst@kernel.org>
+ <ff45ea43-1145-5ea6-767c-1a99d55a9c61@redhat.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <20190218031729.GG14858@MiWiFi-R3L-srv>
-User-Agent: Mutt/1.10.1 (2018-07-13)
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.13
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.44]); Tue, 12 Mar 2019 03:45:41 +0000 (UTC)
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <ff45ea43-1145-5ea6-767c-1a99d55a9c61@redhat.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 02/18/19 at 11:17am, Baoquan He wrote:
-> > > + * When KASLR is active then the MM code makes sure that for each region
-> > > + * there's such a single, dynamic, global base address 'unsigned long'
-> > > + * variable available for the KASLR code to point to and modify directly:
-> > > + *
-> > > + *     { &page_offset_base, 0 },
-> > > + *     { &vmalloc_base,     0 },
-> > > + *     { &vmemmap_base,     1 },
-> > > + *
-> > > + * @size_tb: size in TB of each memory region. Thereinto, the size of
-> > 
-> > nit: "Thereinto" is odd. I'd say "Therefore".
-
-
-Recheck here, there might be a misunderstanding. Here, 'Thereinto', I
-want to say among the sizes of these three memory regions, the size of
-the physical memory mapping region is variable. Just look it up in dict,
-it sounds right. 'Therefore' equals to 'Hence' which is not expected
-here. Am I right?
+On Tue, Mar 12, 2019 at 10:52:15AM +0800, Jason Wang wrote:
 > 
-> Will replace it with 'Therefore'.
+> On 2019/3/11 下午8:48, Michael S. Tsirkin wrote:
+> > On Mon, Mar 11, 2019 at 03:40:31PM +0800, Jason Wang wrote:
+> > > On 2019/3/9 上午3:48, Andrea Arcangeli wrote:
+> > > > Hello Jeson,
+> > > > 
+> > > > On Fri, Mar 08, 2019 at 04:50:36PM +0800, Jason Wang wrote:
+> > > > > Just to make sure I understand here. For boosting through huge TLB, do
+> > > > > you mean we can do that in the future (e.g by mapping more userspace
+> > > > > pages to kenrel) or it can be done by this series (only about three 4K
+> > > > > pages were vmapped per virtqueue)?
+> > > > When I answered about the advantages of mmu notifier and I mentioned
+> > > > guaranteed 2m/gigapages where available, I overlooked the detail you
+> > > > were using vmap instead of kmap. So with vmap you're actually doing
+> > > > the opposite, it slows down the access because it will always use a 4k
+> > > > TLB even if QEMU runs on THP or gigapages hugetlbfs.
+> > > > 
+> > > > If there's just one page (or a few pages) in each vmap there's no need
+> > > > of vmap, the linearity vmap provides doesn't pay off in such
+> > > > case.
+> > > > 
+> > > > So likely there's further room for improvement here that you can
+> > > > achieve in the current series by just dropping vmap/vunmap.
+> > > > 
+> > > > You can just use kmap (or kmap_atomic if you're in preemptible
+> > > > section, should work from bh/irq).
+> > > > 
+> > > > In short the mmu notifier to invalidate only sets a "struct page *
+> > > > userringpage" pointer to NULL without calls to vunmap.
+> > > > 
+> > > > In all cases immediately after gup_fast returns you can always call
+> > > > put_page immediately (which explains why I'd like an option to drop
+> > > > FOLL_GET from gup_fast to speed it up).
+> > > > 
+> > > > Then you can check the sequence_counter and inc/dec counter increased
+> > > > by _start/_end. That will tell you if the page you got and you called
+> > > > put_page to immediately unpin it or even to free it, cannot go away
+> > > > under you until the invalidate is called.
+> > > > 
+> > > > If sequence counters and counter tells that gup_fast raced with anyt
+> > > > mmu notifier invalidate you can just repeat gup_fast. Otherwise you're
+> > > > done, the page cannot go away under you, the host virtual to host
+> > > > physical mapping cannot change either. And the page is not pinned
+> > > > either. So you can just set the "struct page * userringpage = page"
+> > > > where "page" was the one setup by gup_fast.
+> > > > 
+> > > > When later the invalidate runs, you can just call set_page_dirty if
+> > > > gup_fast was called with "write = 1" and then you clear the pointer
+> > > > "userringpage = NULL".
+> > > > 
+> > > > When you need to read/write to the memory
+> > > > kmap/kmap_atomic(userringpage) should work.
+> > > Yes, I've considered kmap() from the start. The reason I don't do that is
+> > > large virtqueue may need more than one page so VA might not be contiguous.
+> > > But this is probably not a big issue which just need more tricks in the
+> > > vhost memory accessors.
+> > > 
+> > > 
+> > > > In short because there's no hardware involvement here, the established
+> > > > mapping is just the pointer to the page, there is no need of setting
+> > > > up any pagetables or to do any TLB flushes (except on 32bit archs if
+> > > > the page is above the direct mapping but it never happens on 64bit
+> > > > archs).
+> > > I see, I believe we don't care much about the performance of 32bit archs (or
+> > > we can just fallback to copy_to_user() friends).
+> > Using copyXuser is better I guess.
+> 
+> 
+> Ok.
+> 
 > 
 > > 
-> > > + * the physical memory mapping region is variable, calculated according
-> > > + * to the actual size of system RAM in order to save more space for
-> > > + * randomization. The rest are fixed values related to paging mode.
-> > > + *
-> > > + * @size_tb: is the size of each memory region after randomization, and
-> > > + * its unit is TB.
+> > > Using direct mapping (I
+> > > guess kernel will always try hugepage for that?) should be better and we can
+> > > even use it for the data transfer not only for the metadata.
+> > > 
+> > > Thanks
+> > We can't really. The big issue is get user pages. Doing that on data
+> > path will be slower than copyXuser.
+> 
+> 
+> I meant if we can find a way to avoid doing gup in datapath. E.g vhost
+> maintain a range tree and add or remove ranges through MMU notifier. Then in
+> datapath, if we find the range, then use direct mapping otherwise
+> copy_to_user().
+> 
+> Thanks
+
+We can try. But I'm not sure there's any reason to think there's any
+locality there.
+
+> 
+> >   Or maybe it won't with the
+> > amount of mitigations spread around. Go ahead and try.
+> > 
+> > 
