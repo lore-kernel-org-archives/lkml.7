@@ -6,66 +6,125 @@ X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,UNPARSEABLE_RELAY,
 	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B1920C43381
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 03:25:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 72624C43381
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 03:25:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8B47C2084F
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 03:25:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 428DD2084F
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 03:25:51 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727098AbfCLDZp (ORCPT
+        id S1727133AbfCLDZu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 11 Mar 2019 23:25:45 -0400
-Received: from out30-130.freemail.mail.aliyun.com ([115.124.30.130]:60131 "EHLO
-        out30-130.freemail.mail.aliyun.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726998AbfCLDZg (ORCPT
+        Mon, 11 Mar 2019 23:25:50 -0400
+Received: from out30-57.freemail.mail.aliyun.com ([115.124.30.57]:50691 "EHLO
+        out30-57.freemail.mail.aliyun.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1727021AbfCLDZk (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 11 Mar 2019 23:25:36 -0400
-X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R261e4;CH=green;DM=||false|;FP=0|-1|-1|-1|0|-1|-1|-1;HT=e01e07487;MF=alex.shi@linux.alibaba.com;NM=1;PH=DS;RN=10;SR=0;TI=SMTPD_---0TMWKpur_1552361132;
-Received: from localhost(mailfrom:alex.shi@linux.alibaba.com fp:SMTPD_---0TMWKpur_1552361132)
+        Mon, 11 Mar 2019 23:25:40 -0400
+X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R161e4;CH=green;DM=||false|;FP=0|-1|-1|-1|0|-1|-1|-1;HT=e01f04397;MF=alex.shi@linux.alibaba.com;NM=1;PH=DS;RN=10;SR=0;TI=SMTPD_---0TMWKpvJ_1552361136;
+Received: from localhost(mailfrom:alex.shi@linux.alibaba.com fp:SMTPD_---0TMWKpvJ_1552361136)
           by smtp.aliyun-inc.com(127.0.0.1);
-          Tue, 12 Mar 2019 11:25:33 +0800
+          Tue, 12 Mar 2019 11:25:36 +0800
 From:   Alex Shi <alex.shi@linux.alibaba.com>
 To:     corbet@lwn.net, harryxiyou@gmail.com, linux-doc@vger.kernel.org,
         linux-kernel@vger.kernel.org
 Cc:     Alex Shi <alex.shi@linux.alibaba.com>,
-        TripleX Chung <xxx.phy@gmail.com>,
-        Li Zefan <lizefan@huawei.com>,
+        Bryan Wu <bryan.wu@analog.com>, Li Zefan <lizefan@huawei.com>,
         Shawn Guo <shawn.guo@linaro.org>,
         Fengguang Wu <fengguang.wu@intel.com>, Coly Li <colyli@suse.de>
-Subject: [PATCH v4 09/31] docs/zh_CN: rename stable_kernel_rules doc
-Date:   Tue, 12 Mar 2019 11:24:38 +0800
-Message-Id: <20190312032501.62056-10-alex.shi@linux.alibaba.com>
+Subject: [PATCH v4 14/31] docs/zh_CN: volatile doc format changes
+Date:   Tue, 12 Mar 2019 11:24:43 +0800
+Message-Id: <20190312032501.62056-15-alex.shi@linux.alibaba.com>
 X-Mailer: git-send-email 2.19.1.856.g8858448bb
 In-Reply-To: <20190312032501.62056-1-alex.shi@linux.alibaba.com>
 References: <20190312032501.62056-1-alex.shi@linux.alibaba.com>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This patch renamed stable_kernel_rules.txt to stable-kernel-rules.rst
-Make it available in htmldocs making.
+make it readble as rst format for html etc doc making.
 
 Signed-off-by: Alex Shi <alex.shi@linux.alibaba.com>
 Cc: Harry Wei <harryxiyou@gmail.com>
 Cc: Jonathan Corbet <corbet@lwn.net>
-Cc: TripleX Chung <xxx.phy@gmail.com>
+Cc: Bryan Wu <bryan.wu@analog.com>
 Cc: Li Zefan <lizefan@huawei.com>
 Cc: Shawn Guo <shawn.guo@linaro.org>
 Cc: Fengguang Wu <fengguang.wu@intel.com>
 Cc: Coly Li <colyli@suse.de>
 Signed-off-by: Weiwei Jia <harryxiyou@gmail.com>
 ---
- .../process/{stable_kernel_rules.txt => stable-kernel-rules.rst}  | 0
- 1 file changed, 0 insertions(+), 0 deletions(-)
- rename Documentation/translations/zh_CN/process/{stable_kernel_rules.txt => stable-kernel-rules.rst} (100%)
+ .../process/volatile-considered-harmful.rst   | 35 ++++++++-----------
+ 1 file changed, 14 insertions(+), 21 deletions(-)
 
-diff --git a/Documentation/translations/zh_CN/process/stable_kernel_rules.txt b/Documentation/translations/zh_CN/process/stable-kernel-rules.rst
-similarity index 100%
-rename from Documentation/translations/zh_CN/process/stable_kernel_rules.txt
-rename to Documentation/translations/zh_CN/process/stable-kernel-rules.rst
+diff --git a/Documentation/translations/zh_CN/process/volatile-considered-harmful.rst b/Documentation/translations/zh_CN/process/volatile-considered-harmful.rst
+index 475125967197..48b32ce58ef1 100644
+--- a/Documentation/translations/zh_CN/process/volatile-considered-harmful.rst
++++ b/Documentation/translations/zh_CN/process/volatile-considered-harmful.rst
+@@ -1,30 +1,23 @@
+-Chinese translated version of Documentation/process/volatile-considered-harmful.rst
++.. _cn_volatile_considered_harmful:
+ 
+-If you have any comment or update to the content, please contact the
+-original document maintainer directly.  However, if you have a problem
+-communicating in English you can also ask the Chinese maintainer for
+-help.  Contact the Chinese maintainer if this translation is outdated
+-or if there is a problem with the translation.
++.. include:: ../disclaimer-zh_CN.rst
+ 
+-Maintainer: Jonathan Corbet <corbet@lwn.net>
+-Chinese maintainer: Bryan Wu <bryan.wu@analog.com>
+----------------------------------------------------------------------
+-Documentation/process/volatile-considered-harmful.rst 的中文翻译
++:Original: :ref:`Documentation/process/volatile-considered-harmful.rst
++           <volatile_considered_harmful>`
+ 
+ 如果想评论或更新本文的内容，请直接联系原文档的维护者。如果你使用英文
+ 交流有困难的话，也可以向中文版维护者求助。如果本翻译更新不及时或者翻
+-译存在问题，请联系中文版维护者。
++译存在问题，请联系中文版维护者::
+ 
+-英文版维护者： Jonathan Corbet <corbet@lwn.net>
+-中文版维护者： 伍鹏  Bryan Wu <bryan.wu@analog.com>
+-中文版翻译者： 伍鹏  Bryan Wu <bryan.wu@analog.com>
+-中文版校译者： 张汉辉  Eugene Teo <eugeneteo@kernel.sg>
+-               杨瑞  Dave Young <hidave.darkstar@gmail.com>
+-以下为正文
+----------------------------------------------------------------------
++        英文版维护者： Jonathan Corbet <corbet@lwn.net>
++        中文版维护者： 伍鹏  Bryan Wu <bryan.wu@analog.com>
++        中文版翻译者： 伍鹏  Bryan Wu <bryan.wu@analog.com>
++        中文版校译者： 张汉辉  Eugene Teo <eugeneteo@kernel.sg>
++                       杨瑞  Dave Young <hidave.darkstar@gmail.com>
++                       时奎亮 Alex Shi <alex.shi@linux.alibaba.com>
+ 
+ 为什么不应该使用“volatile”类型
+-------------------------------
++==============================
+ 
+ C程序员通常认为volatile表示某个变量可以在当前执行的线程之外被改变；因此，在内核
+ 中用到共享数据结构时，常常会有C程序员喜欢使用volatile这类变量。换句话说，他们经
+@@ -41,7 +34,7 @@ C程序员通常认为volatile表示某个变量可以在当前执行的线程
+ 必要再使用volatile。如果仍然必须使用volatile，那么几乎可以肯定在代码的某处有一
+ 个bug。在正确设计的内核代码中，volatile能带来的仅仅是使事情变慢。
+ 
+-思考一下这段典型的内核代码：
++思考一下这段典型的内核代码::
+ 
+     spin_lock(&the_lock);
+     do_something_on(&shared_data);
+@@ -66,7 +59,7 @@ volatile的存储类型最初是为那些内存映射的I/O寄存器而定义。
+ 是必需的。
+ 
+ 另一种引起用户可能使用volatile的情况是当处理器正忙着等待一个变量的值。正确执行一
+-个忙等待的方法是：
++个忙等待的方法是::
+ 
+     while (my_variable != what_i_want)
+         cpu_relax();
 -- 
 2.19.1.856.g8858448bb
 
