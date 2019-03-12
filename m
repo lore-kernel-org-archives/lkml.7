@@ -4,50 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 34908C43381
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 17:17:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2BA93C10F00
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 17:17:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F2164217D8
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 17:17:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F21792171F
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 17:17:18 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1552411038;
-	bh=FVn1Ww1+JbhWmSPTmOAgmGDt5IRZqhmQ+qzmU0qbjaw=;
+	s=default; t=1552411039;
+	bh=8xSJeDtXk9xVdngmmovu5aR1EOhcq5cKKEiUr6uN82Q=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=f+OxZ7P/kYREcw/0EleqttFyzta+jp0CX4cYj4mL/iXO/kvbDjelsgBrnTMZXmosz
-	 KE6h3fhzmMVQMDcNMyw8amduzpMD0CY73kjr7gK0qF3kynKZTuYFvXy6NH4C0/TDjj
-	 yrUFJd9v7hk3nvMyLZBSgf7eIUW1i8De1wSXglLM=
+	b=jPSXNNosyhi5PJc4iyNf7w4rJ+W7PNCFiFvxJ0t7oX1IAwiMtQ2jIKb/UwTt7wJ8u
+	 RJlLqEEU4fYqUUfWp6xk9yyUD3UdPJidX0lEmRcExT3X1BbNcAv567vn10SWbo6TGV
+	 OWaqGn1NkKCdEQQyWqXRVJdbFLJZm9RSV2JE7h3g=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729520AbfCLRRQ (ORCPT
+        id S1729533AbfCLRRR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 12 Mar 2019 13:17:16 -0400
-Received: from mail.kernel.org ([198.145.29.99]:57734 "EHLO mail.kernel.org"
+        Tue, 12 Mar 2019 13:17:17 -0400
+Received: from mail.kernel.org ([198.145.29.99]:57778 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728630AbfCLRQI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 12 Mar 2019 13:16:08 -0400
+        id S1729019AbfCLRQJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 12 Mar 2019 13:16:09 -0400
 Received: from localhost (unknown [104.133.8.98])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 94E3D217D4;
-        Tue, 12 Mar 2019 17:16:07 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 0E5812183F;
+        Tue, 12 Mar 2019 17:16:09 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1552410967;
-        bh=FVn1Ww1+JbhWmSPTmOAgmGDt5IRZqhmQ+qzmU0qbjaw=;
+        s=default; t=1552410969;
+        bh=8xSJeDtXk9xVdngmmovu5aR1EOhcq5cKKEiUr6uN82Q=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Q2MHWLHZNE2DKBE4zqwxTIJY1CL42fTczd8wnJGJDGi2XQt99AY+y+wIwYdtkbB6D
-         WZXSwGTskPgsHKUhQGlJ0ztBxRO6qpq9k3RPT8mFO5Jx5ZEoFzvl2Hb4k6In1HBA0k
-         G5Ff24IxyeAHvwTC48FsaxJ+8zTd+E5h1PVDimWE=
+        b=igCYS+rXpXKu9lO28oKMI/bXSu4jJXHj0Em0jWMHAx++AkfPaXs6B0LCEAs1TG5mf
+         ulcWBp3fXBWqS/k3M1mAkp9GIA6lTD/0qhasybROg5hgevQsq7eV6bdo9tromwJKAS
+         gviifcxvmaoE6Vn5pq2QUZ8YdMQ9VnKoRZskkFh0=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, YueHaibing <yuehaibing@huawei.com>,
-        Al Viro <viro@zeniv.linux.org.uk>,
-        Thibaut Sautereau <thibaut@sautereau.fr>
-Subject: [PATCH 4.14 041/135] exec: Fix mem leak in kernel_read_file
-Date:   Tue, 12 Mar 2019 10:08:08 -0700
-Message-Id: <20190312170344.891752555@linuxfoundation.org>
+        stable@vger.kernel.org, syzbot <syzkaller@googlegroups.com>,
+        Alistair Strachan <astrachan@google.com>,
+        Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
+        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
+Subject: [PATCH 4.14 043/135] media: uvcvideo: Fix type check leading to overflow
+Date:   Tue, 12 Mar 2019 10:08:10 -0700
+Message-Id: <20190312170345.095097787@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190312170341.127810985@linuxfoundation.org>
 References: <20190312170341.127810985@linuxfoundation.org>
@@ -66,51 +67,62 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-From: YueHaibing <yuehaibing@huawei.com>
+From: Alistair Strachan <astrachan@google.com>
 
-commit f612acfae86af7ecad754ae6a46019be9da05b8e upstream.
+commit 47bb117911b051bbc90764a8bff96543cbd2005f upstream.
 
-syzkaller report this:
-BUG: memory leak
-unreferenced object 0xffffc9000488d000 (size 9195520):
-  comm "syz-executor.0", pid 2752, jiffies 4294787496 (age 18.757s)
-  hex dump (first 32 bytes):
-    ff ff ff ff ff ff ff ff a8 00 00 00 01 00 00 00  ................
-    02 00 00 00 00 00 00 00 80 a1 7a c1 ff ff ff ff  ..........z.....
-  backtrace:
-    [<000000000863775c>] __vmalloc_node mm/vmalloc.c:1795 [inline]
-    [<000000000863775c>] __vmalloc_node_flags mm/vmalloc.c:1809 [inline]
-    [<000000000863775c>] vmalloc+0x8c/0xb0 mm/vmalloc.c:1831
-    [<000000003f668111>] kernel_read_file+0x58f/0x7d0 fs/exec.c:924
-    [<000000002385813f>] kernel_read_file_from_fd+0x49/0x80 fs/exec.c:993
-    [<0000000011953ff1>] __do_sys_finit_module+0x13b/0x2a0 kernel/module.c:3895
-    [<000000006f58491f>] do_syscall_64+0x147/0x600 arch/x86/entry/common.c:290
-    [<00000000ee78baf4>] entry_SYSCALL_64_after_hwframe+0x49/0xbe
-    [<00000000241f889b>] 0xffffffffffffffff
+When initially testing the Camera Terminal Descriptor wTerminalType
+field (buffer[4]), no mask is used. Later in the function, the MSB is
+overloaded to store the descriptor subtype, and so a mask of 0x7fff
+is used to check the type.
 
-It should goto 'out_free' lable to free allocated buf while kernel_read
-fails.
+If a descriptor is specially crafted to set this overloaded bit in the
+original wTerminalType field, the initial type check will fail (falling
+through, without adjusting the buffer size), but the later type checks
+will pass, assuming the buffer has been made suitably large, causing an
+overflow.
 
-Fixes: 39d637af5aa7 ("vfs: forbid write access when reading a file into memory")
-Signed-off-by: YueHaibing <yuehaibing@huawei.com>
-Signed-off-by: Al Viro <viro@zeniv.linux.org.uk>
-Cc: Thibaut Sautereau <thibaut@sautereau.fr>
+Avoid this problem by checking for the MSB in the wTerminalType field.
+If the bit is set, assume the descriptor is bad, and abort parsing it.
+
+Originally reported here:
+https://groups.google.com/forum/#!topic/syzkaller/Ot1fOE6v1d8
+A similar (non-compiling) patch was provided at that time.
+
+Reported-by: syzbot <syzkaller@googlegroups.com>
+Signed-off-by: Alistair Strachan <astrachan@google.com>
+Signed-off-by: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+Signed-off-by: Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- fs/exec.c |    2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/media/usb/uvc/uvc_driver.c |   14 +++++++++++---
+ 1 file changed, 11 insertions(+), 3 deletions(-)
 
---- a/fs/exec.c
-+++ b/fs/exec.c
-@@ -925,7 +925,7 @@ int kernel_read_file(struct file *file,
- 		bytes = kernel_read(file, *buf + pos, i_size - pos, &pos);
- 		if (bytes < 0) {
- 			ret = bytes;
--			goto out;
-+			goto out_free;
+--- a/drivers/media/usb/uvc/uvc_driver.c
++++ b/drivers/media/usb/uvc/uvc_driver.c
+@@ -1054,11 +1054,19 @@ static int uvc_parse_standard_control(st
+ 			return -EINVAL;
  		}
  
- 		if (bytes == 0)
+-		/* Make sure the terminal type MSB is not null, otherwise it
+-		 * could be confused with a unit.
++		/*
++		 * Reject invalid terminal types that would cause issues:
++		 *
++		 * - The high byte must be non-zero, otherwise it would be
++		 *   confused with a unit.
++		 *
++		 * - Bit 15 must be 0, as we use it internally as a terminal
++		 *   direction flag.
++		 *
++		 * Other unknown types are accepted.
+ 		 */
+ 		type = get_unaligned_le16(&buffer[4]);
+-		if ((type & 0xff00) == 0) {
++		if ((type & 0x7f00) == 0 || (type & 0x8000) != 0) {
+ 			uvc_trace(UVC_TRACE_DESCR, "device %d videocontrol "
+ 				"interface %d INPUT_TERMINAL %d has invalid "
+ 				"type 0x%04x, skipping\n", udev->devnum,
 
 
