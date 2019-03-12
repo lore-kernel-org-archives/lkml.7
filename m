@@ -4,52 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D697CC43381
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 18:02:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7D659C43381
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 18:02:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 980D6205C9
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 18:02:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 42FA0214AF
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 18:02:24 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1552413737;
-	bh=jqHHD2ErqTP4mhfq/+GgPz/pP9HzdIeiq8ZPFObdJzM=;
+	s=default; t=1552413744;
+	bh=LaFB3FUr7UEu4uP1+IqZl2HmprpSwNuMFr/SY0/6B0Q=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=dMOU9Bc5DXi3fTn7RlzRh7upcFpDg4Osc9afZTRCGzXvVT6J9/aFSiC8o3dKhKjF2
-	 RX55/wpTi9xlHbsy8dGrEVdiabH13/aJct00IWvzVyiavVjpebnpDbC5OW/ETWLSlc
-	 pqh+cwTOgmWOkqEFTQoHdtFQmSK4CajUTcd/FKH4=
+	b=LvKlkhjagfzpDofdNCCbJ6vJTx0fL0xiUX9ifulNRA5ail8HAqg443mJnjwyoi/+7
+	 1j0IrucCyntW/w48dIXkOuol2ubinvJ1X/4VV5SxsMIb0BAvEHWBlqAgyB956LIvSd
+	 cwJFSdYVt80W/UW/TXXQQq+puQFSs3xrNBxn6k9A=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727791AbfCLRNH (ORCPT
+        id S1728757AbfCLSCW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 12 Mar 2019 13:13:07 -0400
-Received: from mail.kernel.org ([198.145.29.99]:48138 "EHLO mail.kernel.org"
+        Tue, 12 Mar 2019 14:02:22 -0400
+Received: from mail.kernel.org ([198.145.29.99]:49184 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727555AbfCLRMg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 12 Mar 2019 13:12:36 -0400
+        id S1727784AbfCLRNG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 12 Mar 2019 13:13:06 -0400
 Received: from localhost (unknown [104.133.8.98])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id C9BC921741;
-        Tue, 12 Mar 2019 17:12:35 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 13DA121852;
+        Tue, 12 Mar 2019 17:13:06 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1552410755;
-        bh=jqHHD2ErqTP4mhfq/+GgPz/pP9HzdIeiq8ZPFObdJzM=;
+        s=default; t=1552410786;
+        bh=LaFB3FUr7UEu4uP1+IqZl2HmprpSwNuMFr/SY0/6B0Q=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=QbufFgZ9lwL0PK88l/VDU8K1M3eLsgMwthdvYMQuZ3bXS1YNoaSVXgsDm7gmihRWP
-         1IfC9dbp8/Uqg2RnuxbqFrDipZ+sn75cwtPe8LtXbvYhYzXmXaejZcWXfBCeh73s0J
-         7bX7mHkULRP2cQw9jM2BeOMQxzFM6b2o1jLxh0Bs=
+        b=FqYMkit1yYvxco9d0bM0kCU4T+4v8vPmgqtg75fZaE+rAyaBdyRU8j+zrI/jME6AM
+         Ygl3EfR+7UZRbzRjL7RRaTvCmCAOkarOTb77bvtRC/Yq6umB9HJFswYNrgvVBSHv8k
+         v/7kplSdbPrIlZ/J03jxlCwqRqongqzbgCetjIto=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Dan Carpenter <dan.carpenter@oracle.com>,
-        Luis Chamberlain <mcgrof@kernel.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
+        stable@vger.kernel.org, Zenghui Yu <yuzenghui@huawei.com>,
+        Marc Zyngier <marc.zyngier@arm.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.20 066/171] lib/test_kmod.c: potential double free in error handling
-Date:   Tue, 12 Mar 2019 10:07:26 -0700
-Message-Id: <20190312170353.870866511@linuxfoundation.org>
+Subject: [PATCH 4.20 107/171] irqchip/gic-v3-its: Fix ITT_entry_size accessor
+Date:   Tue, 12 Mar 2019 10:08:07 -0700
+Message-Id: <20190312170357.229114918@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190312170347.868927101@linuxfoundation.org>
 References: <20190312170347.868927101@linuxfoundation.org>
@@ -68,38 +66,35 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-[ Upstream commit db7ddeab3ce5d64c9696e70d61f45ea9909cd196 ]
+[ Upstream commit 56841070ccc87b463ac037d2d1f2beb8e5e35f0c ]
 
-There is a copy and paste bug so we set "config->test_driver" to NULL
-twice instead of setting "config->test_fs".  Smatch complains that it
-leads to a double free:
+According to ARM IHI 0069C (ID070116), we should use GITS_TYPER's
+bits [7:4] as ITT_entry_size instead of [8:4]. Although this is
+pretty annoying, it only results in a potential over-allocation
+of memory, and nothing bad happens.
 
-  lib/test_kmod.c:840 __kmod_config_init() warn: 'config->test_fs' double freed
-
-Link: http://lkml.kernel.org/r/20190121140011.GA14283@kadam
-Fixes: d9c6a72d6fa2 ("kmod: add test driver to stress test the module loader")
-Signed-off-by: Dan Carpenter <dan.carpenter@oracle.com>
-Acked-by: Luis Chamberlain <mcgrof@kernel.org>
-Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
-Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
+Fixes: 3dfa576bfb45 ("irqchip/gic-v3-its: Add probing for VLPI properties")
+Signed-off-by: Zenghui Yu <yuzenghui@huawei.com>
+[maz: massaged subject and commit message]
+Signed-off-by: Marc Zyngier <marc.zyngier@arm.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- lib/test_kmod.c | 2 +-
+ include/linux/irqchip/arm-gic-v3.h | 2 +-
  1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/lib/test_kmod.c b/lib/test_kmod.c
-index d82d022111e0..9cf77628fc91 100644
---- a/lib/test_kmod.c
-+++ b/lib/test_kmod.c
-@@ -632,7 +632,7 @@ static void __kmod_config_free(struct test_config *config)
- 	config->test_driver = NULL;
- 
- 	kfree_const(config->test_fs);
--	config->test_driver = NULL;
-+	config->test_fs = NULL;
- }
- 
- static void kmod_config_free(struct kmod_test_device *test_dev)
+diff --git a/include/linux/irqchip/arm-gic-v3.h b/include/linux/irqchip/arm-gic-v3.h
+index 071b4cbdf010..c848a7cc502e 100644
+--- a/include/linux/irqchip/arm-gic-v3.h
++++ b/include/linux/irqchip/arm-gic-v3.h
+@@ -319,7 +319,7 @@
+ #define GITS_TYPER_PLPIS		(1UL << 0)
+ #define GITS_TYPER_VLPIS		(1UL << 1)
+ #define GITS_TYPER_ITT_ENTRY_SIZE_SHIFT	4
+-#define GITS_TYPER_ITT_ENTRY_SIZE(r)	((((r) >> GITS_TYPER_ITT_ENTRY_SIZE_SHIFT) & 0x1f) + 1)
++#define GITS_TYPER_ITT_ENTRY_SIZE(r)	((((r) >> GITS_TYPER_ITT_ENTRY_SIZE_SHIFT) & 0xf) + 1)
+ #define GITS_TYPER_IDBITS_SHIFT		8
+ #define GITS_TYPER_DEVBITS_SHIFT	13
+ #define GITS_TYPER_DEVBITS(r)		((((r) >> GITS_TYPER_DEVBITS_SHIFT) & 0x1f) + 1)
 -- 
 2.19.1
 
