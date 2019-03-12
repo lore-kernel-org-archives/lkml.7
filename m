@@ -2,177 +2,212 @@ Return-Path: <SRS0=J4ZE=RP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_MUTT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5DBA7C43381
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 13:30:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 76148C4360F
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 13:34:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2C6CE206BA
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 13:30:54 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=bgdev-pl.20150623.gappssmtp.com header.i=@bgdev-pl.20150623.gappssmtp.com header.b="wo874/+C"
+	by mail.kernel.org (Postfix) with ESMTP id 3D94D2075C
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 13:34:58 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1552397698;
+	bh=c5SWOnWEyk1TNAkhujBCfkajP9wYzT7EUzp4gRDfQDA=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=NnqCC6DDOPHfywBoTKNMarqDRs2A5cumSyOqhFEc5c9Uv/6Z/PkzshXkBsYY71B5k
+	 0IdZaCdvWdETOKth6X7B3xyeUhKufKRq34x0phj4qMlKUSfML9Hj6i4spcvN5Qe/Cj
+	 Bi0pkyJ+6RVaTF9e0chjpdKDoA9In2VlxOvFg380=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726806AbfCLNaw (ORCPT
+        id S1726600AbfCLNe5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 12 Mar 2019 09:30:52 -0400
-Received: from mail-wm1-f68.google.com ([209.85.128.68]:39329 "EHLO
-        mail-wm1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726521AbfCLNaw (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 12 Mar 2019 09:30:52 -0400
-Received: by mail-wm1-f68.google.com with SMTP id t124so2602393wma.4
-        for <linux-kernel@vger.kernel.org>; Tue, 12 Mar 2019 06:30:50 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=bgdev-pl.20150623.gappssmtp.com; s=20150623;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=3QIFQocTUGRi3zH5QMDviZrJx7jR9iM8LInODOvNKNg=;
-        b=wo874/+Csl+843lZ8Q25PESj1oWghoL6/zdckFhhIAXku6KT3/mVk6KqVfPwRzppbS
-         IhgeORiHg5GQaNE02CxPxabvmVRZkJ+6Qo1bZsp/A+Djxyndw801RfXFVdawM6l4rFo/
-         2D5C2WN35wCkf0aF7YUQNEkUzp7w5914lWLKTMAd08yxy89UAAZ2bnRUHHOb5KJZAJ5a
-         n0CuMj82Y8WLvbbfOnxjbv3uxM9F7n1IEE0EHIf2lUAhkWyvMM6fcpFqaoji/+44/qxL
-         A2+Hbtj5HiCnuRvULGpPuSRDoaT3ELCux0vcCGCYp7AdQ+O5ltC7vdvMZ5UQec927pS5
-         Hspg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=3QIFQocTUGRi3zH5QMDviZrJx7jR9iM8LInODOvNKNg=;
-        b=TyTofsr9v5e4/Afu2ZkBD0UnisSY8Ifac1yhcXN2Wv2R7lz0j0IE745PB6dRYQn3lx
-         fRwBERlxPGlvoxwEQkI2n/GYCYfBoL1a2a/DA/d3JR0oiml/ZTFrcRgcwKgf8z9ixbyg
-         8h+9JsIzlIdF9/P9ejb7gOShoHKKWVB6psjaI6TFOfyfccT36toWQ6Up7qOkkgAaVPDV
-         14OjHh9SwXzu8mvI03R4it+9NTEkuHwpXGM8B/OKpLT1euqphIh28G1bIZXKmXe25Kf8
-         dsORbObnkaaMoN4hA3H7ce0fqC3a6tFb1irrnJQ5iiCT1Rj/wGFd3SuxZEvUyBkd8euk
-         cgvA==
-X-Gm-Message-State: APjAAAUohVHCnzYxEeonqTjeb61qgwGZOKvPZJSIWQF9U4IxUeoERPcP
-        xK9i+uO9JAa+F1DKGqya/IxiywNicpQ=
-X-Google-Smtp-Source: APXvYqyAMTX7z+yeTXqDQ8Ln41XysN9xVrOYSMJH6OspoNeU6Bb/lI/HwSYEIAnHAfHiVYCO+wIomQ==
-X-Received: by 2002:a1c:3c02:: with SMTP id j2mr2587786wma.72.1552397450001;
-        Tue, 12 Mar 2019 06:30:50 -0700 (PDT)
-Received: from localhost.localdomain (aputeaux-684-1-27-140.w90-86.abo.wanadoo.fr. [90.86.252.140])
-        by smtp.gmail.com with ESMTPSA id p5sm2187849wme.14.2019.03.12.06.30.49
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Tue, 12 Mar 2019 06:30:49 -0700 (PDT)
-From:   Bartosz Golaszewski <brgl@bgdev.pl>
-To:     Jeff Dike <jdike@addtoit.com>, Richard Weinberger <richard@nod.at>,
-        Anton Ivanov <anton.ivanov@cambridgegreys.com>
-Cc:     linux-um@lists.infradead.org, linux-kernel@vger.kernel.org,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>
-Subject: [PATCH] um: remove uses of variable length arrays
-Date:   Tue, 12 Mar 2019 14:30:47 +0100
-Message-Id: <20190312133047.16201-1-brgl@bgdev.pl>
-X-Mailer: git-send-email 2.20.1
+        Tue, 12 Mar 2019 09:34:57 -0400
+Received: from mail.kernel.org ([198.145.29.99]:34734 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725774AbfCLNe4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 12 Mar 2019 09:34:56 -0400
+Received: from localhost (173-25-63-173.client.mchsi.com [173.25.63.173])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id B22152075C;
+        Tue, 12 Mar 2019 13:34:54 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1552397694;
+        bh=c5SWOnWEyk1TNAkhujBCfkajP9wYzT7EUzp4gRDfQDA=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=aOzTYnyU5kdU6SOcjY47kaF1aQj2jIcoA+zONX6YydnEm3Aib4WXt6uSG7UyudnlU
+         Kt9UpDcQea27qxUqgHIDc+gwhv9yjWmFbfcIlVrI4yHZVzzLWZ15i5xvkZhCzAsQT3
+         V9k/jKoFe9wBjDf6j00JuHwgVn9eJz7iLaM/615k=
+Date:   Tue, 12 Mar 2019 08:34:52 -0500
+From:   Bjorn Helgaas <helgaas@kernel.org>
+To:     "Z.q. Hou" <zhiqiang.hou@nxp.com>
+Cc:     "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>,
+        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "robh+dt@kernel.org" <robh+dt@kernel.org>,
+        "mark.rutland@arm.com" <mark.rutland@arm.com>,
+        "l.subrahmanya@mobiveil.co.in" <l.subrahmanya@mobiveil.co.in>,
+        "shawnguo@kernel.org" <shawnguo@kernel.org>,
+        Leo Li <leoyang.li@nxp.com>,
+        "lorenzo.pieralisi@arm.com" <lorenzo.pieralisi@arm.com>,
+        "catalin.marinas@arm.com" <catalin.marinas@arm.com>,
+        "will.deacon@arm.com" <will.deacon@arm.com>,
+        Mingkai Hu <mingkai.hu@nxp.com>,
+        "M.h. Lian" <minghuan.lian@nxp.com>,
+        Xiaowei Bao <xiaowei.bao@nxp.com>
+Subject: Re: [PATCHv4 26/28] PCI: mobiveil: ls_pcie_g4: add Workaround for
+ A-011451
+Message-ID: <20190312133452.GA210027@google.com>
+References: <20190311093130.7209-1-Zhiqiang.Hou@nxp.com>
+ <20190311093130.7209-27-Zhiqiang.Hou@nxp.com>
+ <20190311173439.GH214730@google.com>
+ <AM6PR04MB578187096D0CFD2B8D9C13FF84490@AM6PR04MB5781.eurprd04.prod.outlook.com>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
+In-Reply-To: <AM6PR04MB578187096D0CFD2B8D9C13FF84490@AM6PR04MB5781.eurprd04.prod.outlook.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Bartosz Golaszewski <bgolaszewski@baylibre.com>
+On Tue, Mar 12, 2019 at 09:34:17AM +0000, Z.q. Hou wrote:
+> Hi Bjorn,
+> 
+> Thanks a lot for your comments!
+> 
+> > -----Original Message-----
+> > From: Bjorn Helgaas [mailto:helgaas@kernel.org]
+> > Sent: 2019年3月12日 1:35
+> > To: Z.q. Hou <zhiqiang.hou@nxp.com>
+> > Cc: linux-pci@vger.kernel.org; linux-arm-kernel@lists.infradead.org;
+> > devicetree@vger.kernel.org; linux-kernel@vger.kernel.org;
+> > robh+dt@kernel.org; mark.rutland@arm.com; l.subrahmanya@mobiveil.co.in;
+> > shawnguo@kernel.org; Leo Li <leoyang.li@nxp.com>;
+> > lorenzo.pieralisi@arm.com; catalin.marinas@arm.com;
+> > will.deacon@arm.com; Mingkai Hu <mingkai.hu@nxp.com>; M.h. Lian
+> > <minghuan.lian@nxp.com>; Xiaowei Bao <xiaowei.bao@nxp.com>
+> > Subject: Re: [PATCHv4 26/28] PCI: mobiveil: ls_pcie_g4: add Workaround for
+> > A-011451
+> > 
+> > On Mon, Mar 11, 2019 at 09:33:32AM +0000, Z.q. Hou wrote:
+> > > From: Hou Zhiqiang <Zhiqiang.Hou@nxp.com>
+> > >
+> > > When LX2 PCIe controller is sending multiple split completions and ACK
+> > > latency expires indicating that ACK should be send at priority.
+> > > But because of large number of split completions and FC update DLLP,
+> > > the controller does not give priority to ACK transmission. This
+> > > results into ACK latency timer timeout error at the link partner and
+> > > the pending TLPs are replayed by the link partner again.
+> > >
+> > > Workaround:
+> > > 1. Reduce the ACK latency timeout value to a very small value.
+> > > 2. Restrict the number of completions from the LX2 PCIe controller
+> > >    to 1, by changing the Max Read Request Size (MRRS) of link partner
+> > >    to the same value as Max Packet size (MPS).
+> > >
+> > > This patch implemented part 1, the part 2 can be set by kernel
+> > > parameter 'pci=pcie_bus_perf'
+> > 
+> > If I understand correctly, you're saying that LX2160A Rev1.0 will only work
+> > correctly if you have this patch applied AND you boot with
+> > "pci=pcie_bus_perf".
+> 
+> Your understanding is correct.
+> 
+> > That might be OK if these rev 1.0 parts are only used in the lab and are never
+> > shipped to customers.  But if these parts are ever shipped to customers, I
+> > don't think it's acceptable for them to have to figure out that they must boot
+> > with "pci=pcie_bus_perf".  Yes, you can document that in release notes, but
+> > it's still a poor user experience, and users will forget, and they will see
+> > mysterious hard-to-debug issues.
 
-While the affected code is run in user-mode, the build still warns
-about it. Convert all uses of VLA to dynamic allocations.
+Since you didn't respond here, I assume these rev 1.0 parts have been
+or will be shipped to end users?  Please confirm.
 
-Signed-off-by: Bartosz Golaszewski <bgolaszewski@baylibre.com>
----
- arch/um/os-Linux/umid.c | 36 +++++++++++++++++++++++++++---------
- 1 file changed, 27 insertions(+), 9 deletions(-)
+> > Maybe there's a way for you to automatically set that pcie_bus_perf mode?
+> > With a dmesg note to indicate that you're overriding any mode the user may
+> > have selected?
+> 
+> Actually we don't have a way to set the pcie_bus_perf automatically
+> under Linux, we give this parameter in kernel cmdline.  Do you have
+> any advice about how to set this parameter automatically under
+> Linux?
 
-diff --git a/arch/um/os-Linux/umid.c b/arch/um/os-Linux/umid.c
-index 998fbb445458..e261656fe9d7 100644
---- a/arch/um/os-Linux/umid.c
-+++ b/arch/um/os-Linux/umid.c
-@@ -135,12 +135,18 @@ static int remove_files_and_dir(char *dir)
-  */
- static inline int is_umdir_used(char *dir)
- {
--	char file[strlen(uml_dir) + UMID_LEN + sizeof("/pid\0")];
--	char pid[sizeof("nnnnn\0")], *end;
-+	char pid[sizeof("nnnnn\0")], *end, *file;
- 	int dead, fd, p, n, err;
-+	size_t filelen;
- 
--	n = snprintf(file, sizeof(file), "%s/pid", dir);
--	if (n >= sizeof(file)) {
-+	err = asprintf(&file, "%s/pid", dir);
-+	if (err < 0)
-+		return 0;
-+
-+	filelen = strlen(file);
-+
-+	n = snprintf(file, filelen, "%s/pid", dir);
-+	if (n >= filelen) {
- 		printk(UM_KERN_ERR "is_umdir_used - pid filename too long\n");
- 		err = -E2BIG;
- 		goto out;
-@@ -185,6 +191,7 @@ static inline int is_umdir_used(char *dir)
- out_close:
- 	close(fd);
- out:
-+	free(file);
- 	return 0;
- }
- 
-@@ -210,18 +217,21 @@ static int umdir_take_if_dead(char *dir)
- 
- static void __init create_pid_file(void)
- {
--	char file[strlen(uml_dir) + UMID_LEN + sizeof("/pid\0")];
--	char pid[sizeof("nnnnn\0")];
-+	char pid[sizeof("nnnnn\0")], *file;
- 	int fd, n;
- 
--	if (umid_file_name("pid", file, sizeof(file)))
-+	file = malloc(strlen(uml_dir) + UMID_LEN + sizeof("/pid\0"));
-+	if (!file)
- 		return;
- 
-+	if (umid_file_name("pid", file, sizeof(file)))
-+		goto out;
-+
- 	fd = open(file, O_RDWR | O_CREAT | O_EXCL, 0644);
- 	if (fd < 0) {
- 		printk(UM_KERN_ERR "Open of machine pid file \"%s\" failed: "
- 		       "%s\n", file, strerror(errno));
--		return;
-+		goto out;
- 	}
- 
- 	snprintf(pid, sizeof(pid), "%d\n", getpid());
-@@ -231,6 +241,8 @@ static void __init create_pid_file(void)
- 		       errno);
- 
- 	close(fd);
-+out:
-+	free(file);
- }
- 
- int __init set_umid(char *name)
-@@ -385,13 +397,19 @@ __uml_setup("uml_dir=", set_uml_dir,
- 
- static void remove_umid_dir(void)
- {
--	char dir[strlen(uml_dir) + UMID_LEN + 1], err;
-+	char *dir, err;
-+
-+	dir = malloc(strlen(uml_dir) + UMID_LEN + 1);
-+	if (!dir)
-+		return;
- 
- 	sprintf(dir, "%s%s", uml_dir, umid);
- 	err = remove_files_and_dir(dir);
- 	if (err)
- 		os_warn("%s - remove_files_and_dir failed with err = %d\n",
- 			__func__, err);
-+
-+	free(dir);
- }
- 
- __uml_exitcall(remove_umid_dir);
--- 
-2.20.1
+The beauty of Linux being open-source is that if you need something
+that doesn't exist, you are empowered to create it.
 
+We do have one place already (cns3xxx_pcie_hw_init()) that explicitly
+sets pcie_bus_config.  You might be able to do something similar.
+
+> > > This ERRATA is only for LX2160A Rev1.0, and it will be fixed in
+> > > Rev2.0.
+> > >
+> > > Signed-off-by: Hou Zhiqiang <Zhiqiang.Hou@nxp.com>
+> > > ---
+> > > V4:
+> > >  - no change
+> > >
+> > >  .../pci/controller/mobiveil/pci-layerscape-gen4.c | 15 +++++++++++++++
+> > >  drivers/pci/controller/mobiveil/pcie-mobiveil.h   |  4 ++++
+> > >  2 files changed, 19 insertions(+)
+> > >
+> > > diff --git a/drivers/pci/controller/mobiveil/pci-layerscape-gen4.c
+> > > b/drivers/pci/controller/mobiveil/pci-layerscape-gen4.c
+> > > index d2c5dbbd5e3c..20ce146788ca 100644
+> > > --- a/drivers/pci/controller/mobiveil/pci-layerscape-gen4.c
+> > > +++ b/drivers/pci/controller/mobiveil/pci-layerscape-gen4.c
+> > > @@ -82,12 +82,27 @@ static bool ls_pcie_g4_is_bridge(struct ls_pcie_g4
+> > *pcie)
+> > >  	return header_type == PCI_HEADER_TYPE_BRIDGE;  }
+> > >
+> > > +static void workaround_A011451(struct ls_pcie_g4 *pcie) {
+> > > +	struct mobiveil_pcie *mv_pci = pcie->pci;
+> > > +	u32 val;
+> > > +
+> > > +	/* Set ACK latency timeout */
+> > > +	val = csr_readl(mv_pci, GPEX_ACK_REPLAY_TO);
+> > > +	val &= ~(ACK_LAT_TO_VAL_MASK << ACK_LAT_TO_VAL_SHIFT);
+> > > +	val |= (4 << ACK_LAT_TO_VAL_SHIFT);
+> > > +	csr_writel(mv_pci, val, GPEX_ACK_REPLAY_TO); }
+> > > +
+> > >  static int ls_pcie_g4_host_init(struct mobiveil_pcie *pci)  {
+> > >  	struct ls_pcie_g4 *pcie = to_ls_pcie_g4(pci);
+> > >
+> > >  	pcie->rev = csr_readb(pci, PCI_REVISION_ID);
+> > >
+> > > +	if (pcie->rev == REV_1_0)
+> > > +		workaround_A011451(pcie);
+> > > +
+> > >  	return 0;
+> > >  }
+> > >
+> > > diff --git a/drivers/pci/controller/mobiveil/pcie-mobiveil.h
+> > > b/drivers/pci/controller/mobiveil/pcie-mobiveil.h
+> > > index ab43de5e4b2b..f0e2e4ae09b5 100644
+> > > --- a/drivers/pci/controller/mobiveil/pcie-mobiveil.h
+> > > +++ b/drivers/pci/controller/mobiveil/pcie-mobiveil.h
+> > > @@ -85,6 +85,10 @@
+> > >  #define PAB_AXI_AMAP_PEX_WIN_H(win)	PAB_REG_ADDR(0x0bac,
+> > win)
+> > >  #define PAB_INTP_AXI_PIO_CLASS		0x474
+> > >
+> > > +#define GPEX_ACK_REPLAY_TO		0x438
+> > > +#define  ACK_LAT_TO_VAL_MASK		0x1fff
+> > > +#define  ACK_LAT_TO_VAL_SHIFT		0
+> > > +
+> > >  #define PAB_PEX_AMAP_CTRL(win)		PAB_REG_ADDR(0x4ba0,
+> > win)
+> > >  #define  AMAP_CTRL_EN_SHIFT		0
+> > >  #define  AMAP_CTRL_TYPE_SHIFT		1
+> > > --
+> > > 2.17.1
+> > >
+> 
+> Thanks,
+> Zhiqiang
