@@ -2,161 +2,266 @@ Return-Path: <SRS0=J4ZE=RP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIMWL_WL_MED,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 37653C43381
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 18:05:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2C8BAC43381
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 18:05:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0364B214AF
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 18:05:49 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1552413949;
-	bh=JcZC2tVXX6IeUet10kinkIdGVsV/WoOhZb6X/BKPong=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=fgSYJy0QjbAYP7D4bgXas1AJNbdrhUonkn1a3m4hM5ocCgGxHb2HQYG+6BS/kJ+9k
-	 PXzwAvgjl2HnlfTsXK8V8biU2frs+/Oa9Aq9HhKLeofR9YWHaR0sqcDM2/1WHYPe/8
-	 Ieg8oSRIQxja/WFrPWWhLRgqHMgg/Etmz1LyNn/M=
+	by mail.kernel.org (Postfix) with ESMTP id DA3A22147C
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 18:05:55 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=fb.com header.i=@fb.com header.b="ejRv1O3Q";
+	dkim=pass (1024-bit key) header.d=fb.onmicrosoft.com header.i=@fb.onmicrosoft.com header.b="KgvJqOeJ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727688AbfCLSFr (ORCPT
+        id S1729168AbfCLSFu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 12 Mar 2019 14:05:47 -0400
-Received: from mail.kernel.org ([198.145.29.99]:48044 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727324AbfCLRMf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 12 Mar 2019 13:12:35 -0400
-Received: from localhost (unknown [104.133.8.98])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B5EDD217F5;
-        Tue, 12 Mar 2019 17:12:33 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1552410753;
-        bh=JcZC2tVXX6IeUet10kinkIdGVsV/WoOhZb6X/BKPong=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=qKfOboGdGcMtnRrZ3yY2ziaPWV8vJRRLThKUHx+OLlr9Q3xxTK4UNM03P+5OeleAT
-         hUQAB0dHLeSuYKouuBAK7H4GlrZPYOVt8v7KqsqBetZLJL3TlOuyRhbdbSXH9HyeNj
-         fKPOM3P4R596drN6b8UgDNn1F3uqJx0v0/5YE0/E=
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     linux-kernel@vger.kernel.org
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Michal Hocko <mhocko@suse.com>,
-        Mikhail Zaslonko <zaslonko@linux.ibm.com>,
-        Gerald Schaefer <gerald.schaefer@de.ibm.com>,
-        Mikhail Gavrilov <mikhail.v.gavrilov@gmail.com>,
-        Oscar Salvador <osalvador@suse.de>,
-        Pavel Tatashin <pasha.tatashin@soleen.com>,
-        Heiko Carstens <heiko.carstens@de.ibm.com>,
-        Martin Schwidefsky <schwidefsky@de.ibm.com>,
+        Tue, 12 Mar 2019 14:05:50 -0400
+Received: from mx0a-00082601.pphosted.com ([67.231.145.42]:54620 "EHLO
+        mx0a-00082601.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726722AbfCLSFp (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 12 Mar 2019 14:05:45 -0400
+Received: from pps.filterd (m0109334.ppops.net [127.0.0.1])
+        by mx0a-00082601.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x2CI2tbv023074;
+        Tue, 12 Mar 2019 11:05:29 -0700
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=fb.com; h=from : to : cc : subject
+ : date : message-id : references : in-reply-to : content-type : content-id
+ : content-transfer-encoding : mime-version; s=facebook;
+ bh=6Ws3AIdbpT34KncUDlT96q/8l4bC8vf7Sa0gpmMAouw=;
+ b=ejRv1O3QkHjC2LPTJglsnvuZ2Mv9sEQqLemmivqBQZIVDEHfzDQZVAuxdpR+onFx2M7I
+ R5ecoo1wUvQVMQ2GvMxTSagf9pRNAfOlyx7lB2zhmvY19Bgpzq80Do2KLE/myNgUPSm3
+ gl2J2ImM94AG5zpI9FDoHZKStSSfF2llHoY= 
+Received: from maileast.thefacebook.com ([199.201.65.23])
+        by mx0a-00082601.pphosted.com with ESMTP id 2r6f6j8xtb-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-SHA384 bits=256 verify=NOT);
+        Tue, 12 Mar 2019 11:05:28 -0700
+Received: from frc-mbx08.TheFacebook.com (192.168.155.29) by
+ frc-hub06.TheFacebook.com (192.168.177.76) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA384) id
+ 15.1.1713.5; Tue, 12 Mar 2019 11:00:25 -0700
+Received: from frc-hub04.TheFacebook.com (192.168.177.74) by
+ frc-mbx08.TheFacebook.com (192.168.155.29) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA384) id
+ 15.1.1713.5; Tue, 12 Mar 2019 11:00:25 -0700
+Received: from NAM02-SN1-obe.outbound.protection.outlook.com (192.168.183.28)
+ by o365-in.thefacebook.com (192.168.177.74) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA384) id 15.1.1713.5
+ via Frontend Transport; Tue, 12 Mar 2019 11:00:25 -0700
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=fb.onmicrosoft.com;
+ s=selector1-fb-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=6Ws3AIdbpT34KncUDlT96q/8l4bC8vf7Sa0gpmMAouw=;
+ b=KgvJqOeJHy4E4dmODiDb6j5FbkFzjezHKH5QUcHSQlgML9z3iuUgW5g+VLafvSMoRvFYdQsKFCSTVy9RL4TCZPSGaphgsDHEtmMGqCEsd+QnivAdOGcAFnFZp+YPPCgWYm9hoKLHdJZJBgRNzuGKEWfUO0klwzW7aL1yj3jWf/Y=
+Received: from BYAPR15MB2631.namprd15.prod.outlook.com (20.179.156.24) by
+ BYAPR15MB3159.namprd15.prod.outlook.com (20.178.207.220) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.1686.19; Tue, 12 Mar 2019 18:00:09 +0000
+Received: from BYAPR15MB2631.namprd15.prod.outlook.com
+ ([fe80::790e:7294:b086:9ded]) by BYAPR15MB2631.namprd15.prod.outlook.com
+ ([fe80::790e:7294:b086:9ded%2]) with mapi id 15.20.1686.021; Tue, 12 Mar 2019
+ 18:00:09 +0000
+From:   Roman Gushchin <guro@fb.com>
+To:     "Tobin C. Harding" <me@tobin.cc>
+CC:     "Tobin C. Harding" <tobin@kernel.org>,
         Andrew Morton <akpm@linux-foundation.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.20 063/171] mm, memory_hotplug: is_mem_section_removable do not pass the end of a zone
-Date:   Tue, 12 Mar 2019 10:07:23 -0700
-Message-Id: <20190312170353.644012693@linuxfoundation.org>
-X-Mailer: git-send-email 2.21.0
-In-Reply-To: <20190312170347.868927101@linuxfoundation.org>
-References: <20190312170347.868927101@linuxfoundation.org>
-User-Agent: quilt/0.65
-X-stable: review
-X-Patchwork-Hint: ignore
+        Christopher Lameter <cl@linux.com>,
+        Pekka Enberg <penberg@cs.helsinki.fi>,
+        Matthew Wilcox <willy@infradead.org>,
+        "Tycho Andersen" <tycho@tycho.ws>,
+        "linux-mm@kvack.org" <linux-mm@kvack.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: Re: [RFC 04/15] slub: Enable Slab Movable Objects (SMO)
+Thread-Topic: [RFC 04/15] slub: Enable Slab Movable Objects (SMO)
+Thread-Index: AQHU1WWOlMss86oUX0OspYov/G2S1KYGmQIAgACnOACAAQ/MAA==
+Date:   Tue, 12 Mar 2019 18:00:09 +0000
+Message-ID: <20190312175958.GA31407@tower.DHCP.thefacebook.com>
+References: <20190308041426.16654-1-tobin@kernel.org>
+ <20190308041426.16654-5-tobin@kernel.org>
+ <20190311224842.GC7915@tower.DHCP.thefacebook.com>
+ <20190312014712.GF9362@eros.localdomain>
+In-Reply-To: <20190312014712.GF9362@eros.localdomain>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-clientproxiedby: MWHPR1301CA0018.namprd13.prod.outlook.com
+ (2603:10b6:301:29::31) To BYAPR15MB2631.namprd15.prod.outlook.com
+ (2603:10b6:a03:152::24)
+x-ms-exchange-messagesentrepresentingtype: 1
+x-originating-ip: [2620:10d:c090:200::2:d3a0]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: 923feb45-9ecd-4b02-534c-08d6a71490cf
+x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600127)(711020)(4605104)(2017052603328)(7153060)(7193020);SRVR:BYAPR15MB3159;
+x-ms-traffictypediagnostic: BYAPR15MB3159:
+x-microsoft-exchange-diagnostics: 1;BYAPR15MB3159;20:+ulgd+cC+WcT4q2RwZ6I8BT1sdE+AfWTOEqCwcBjhMpyRaSFLUTfW/dXSfa+DmWB0yujhw6RsWx3EnwWlvcJW4m0cgJu89YqzkCZLlBObgR3BXgortvpDrlQxnIJeCx93bAZdpsZWzS9dNkp5ZJzqKWhXbtM9jsqBAvQ7dczRF8=
+x-microsoft-antispam-prvs: <BYAPR15MB315991C75D0827E975FDE105BE490@BYAPR15MB3159.namprd15.prod.outlook.com>
+x-forefront-prvs: 09749A275C
+x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(136003)(366004)(396003)(346002)(376002)(39860400002)(189003)(199004)(52314003)(186003)(46003)(8676002)(106356001)(6246003)(81166006)(81156014)(25786009)(33656002)(14454004)(478600001)(6506007)(102836004)(52116002)(386003)(71190400001)(8936002)(229853002)(76176011)(68736007)(6116002)(4326008)(71200400001)(6512007)(9686003)(476003)(11346002)(446003)(53936002)(486006)(6436002)(99286004)(6486002)(2906002)(7736002)(305945005)(86362001)(316002)(14444005)(93886005)(256004)(1076003)(5660300002)(6916009)(105586002)(54906003)(97736004);DIR:OUT;SFP:1102;SCL:1;SRVR:BYAPR15MB3159;H:BYAPR15MB2631.namprd15.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
+received-spf: None (protection.outlook.com: fb.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam-message-info: 05YkwGLcmrv07Rd/Wgqz9MJxu23uFHUInNh2+aJzbtwZOlU8hzCFEof85Pm+35TC+tzqq+YxXztS3x61A+tkYUAwr6MBRItsr28/61dW0YvqQPzH18QIXn2Pr1zYt6zgnTdoDpADAfLWOs5YpSnrpgQTmFbrYw//cR2muwwmBXzt9CwmovqKtEqgy5GBSsd0lP8ZvCly9Cu78XZ8lxAUy30JHCT9U/Ql+J9Sotapm+CgSU8tKN0mzDnvuaGeu4zhvnN1nKPHJijPUoUjKAOf55B6/9CQ77s2TG3ybz7jBB2tiSaus+X6YXqQcvg8D0FZ/75eZw8rJ7dQQcweTnXefFXpUkcmYECuRCLsQO92xINqiTXgXjd71+P94qkiRAOmnuda1DdtEp57Jzz5qD3gkohnKCqw9hVFyqDzhNvgmDk=
+Content-Type: text/plain; charset="us-ascii"
+Content-ID: <431E5C4F4C688345ABB7F7F3714A6E90@namprd15.prod.outlook.com>
+Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+X-MS-Exchange-CrossTenant-Network-Message-Id: 923feb45-9ecd-4b02-534c-08d6a71490cf
+X-MS-Exchange-CrossTenant-originalarrivaltime: 12 Mar 2019 18:00:09.3276
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 8ae927fe-1255-47a7-a2af-5f3a069daaa2
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: BYAPR15MB3159
+X-OriginatorOrg: fb.com
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-03-12_10:,,
+ signatures=0
+X-Proofpoint-Spam-Reason: safe
+X-FB-Internal: Safe
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-4.20-stable review patch.  If anyone has any objections, please let me know.
+On Tue, Mar 12, 2019 at 12:47:12PM +1100, Tobin C. Harding wrote:
+> On Mon, Mar 11, 2019 at 10:48:45PM +0000, Roman Gushchin wrote:
+> > On Fri, Mar 08, 2019 at 03:14:15PM +1100, Tobin C. Harding wrote:
+> > > We have now in place a mechanism for adding callbacks to a cache in
+> > > order to be able to implement object migration.
+> > >=20
+> > > Add a function __move() that implements SMO by moving all objects in =
+a
+> > > slab page using the isolate/migrate callback methods.
+> > >=20
+> > > Co-developed-by: Christoph Lameter <cl@linux.com>
+> > > Signed-off-by: Tobin C. Harding <tobin@kernel.org>
+> > > ---
+> > >  mm/slub.c | 85 +++++++++++++++++++++++++++++++++++++++++++++++++++++=
+++
+> > >  1 file changed, 85 insertions(+)
+> > >=20
+> > > diff --git a/mm/slub.c b/mm/slub.c
+> > > index 0133168d1089..6ce866b420f1 100644
+> > > --- a/mm/slub.c
+> > > +++ b/mm/slub.c
+> > > @@ -4325,6 +4325,91 @@ int __kmem_cache_create(struct kmem_cache *s, =
+slab_flags_t flags)
+> > >  	return err;
+> > >  }
+> > > =20
+> > > +/*
+> > > + * Allocate a slab scratch space that is sufficient to keep pointers=
+ to
+> > > + * individual objects for all objects in cache and also a bitmap for=
+ the
+> > > + * objects (used to mark which objects are active).
+> > > + */
+> > > +static inline void *alloc_scratch(struct kmem_cache *s)
+> > > +{
+> > > +	unsigned int size =3D oo_objects(s->max);
+> > > +
+> > > +	return kmalloc(size * sizeof(void *) +
+> > > +		       BITS_TO_LONGS(size) * sizeof(unsigned long),
+> > > +		       GFP_KERNEL);
+> >=20
+> > I wonder how big this allocation can be?
+> > Given that the reason for migration is probably highly fragmented memor=
+y,
+> > we probably don't want to have a high-order allocation here. So maybe
+> > kvmalloc()?
+> >=20
+> > > +}
+> > > +
+> > > +/*
+> > > + * __move() - Move all objects in the given slab.
+> > > + * @page: The slab we are working on.
+> > > + * @scratch: Pointer to scratch space.
+> > > + * @node: The target node to move objects to.
+> > > + *
+> > > + * If the target node is not the current node then the object is mov=
+ed
+> > > + * to the target node.  If the target node is the current node then =
+this
+> > > + * is an effective way of defragmentation since the current slab pag=
+e
+> > > + * with its object is exempt from allocation.
+> > > + */
+> > > +static void __move(struct page *page, void *scratch, int node)
+> > > +{
+> >=20
+> > __move() isn't a very explanatory name. kmem_cache_move() (as in Christ=
+opher's
+> > version) is much better, IMO. Or maybe move_slab_objects()?
+>=20
+> How about move_slab_page()?  We use kmem_cache_move() later in the
+> series.  __move() moves all objects in the given page but not all
+> objects in this cache (which kmem_cache_move() later does).  Open to
+> further suggestions though, naming things is hard :)
+>=20
+> Christopher's original patch uses kmem_cache_move() for a function that
+> only moves objects from within partial slabs, I changed it because I did
+> not think this name suitably describes the behaviour.  So from the
+> original I rename:
+>=20
+> 	__move() -> __defrag()
+> 	kmem_cache_move() -> __move()
+> =09
+> And reuse kmem_cache_move() for move _all_ objects (includes full list).
+>=20
+> With this set applied we have the call chains
+>=20
+> kmem_cache_shrink()		# Defined in slab_common.c, exported to kernel.
+>  -> __kmem_cache_shrink()	# Defined in slub.c
+>    -> __defrag()		# Unconditionally (i.e 100%)
+>      -> __move()
+>=20
+> kmem_cache_defrag()		# Exported to kernel
+>  -> __defrag()
+>    -> __move()
+>=20
+> move_store()			# sysfs
+>  -> kmem_cache_move()
+>    -> __move()
+>  or
+>  -> __move_all_objects_to()
+>    -> kmem_cache_move()
+>      -> __move()
+>=20
+>=20
+> Suggested improvements?
 
-------------------
+move_slab_page() looks good to me. I don't have a strong opinion on naming =
+here,
+I just think that unique names are always preferred even for static functio=
+ns
+(that's why I don't like __move()). Also, it's not clear what '__' means he=
+re.
+So maybe move_slab_page(), defrag_kmem_node(), etc? Or something like this.
 
-[ Upstream commit efad4e475c312456edb3c789d0996d12ed744c13 ]
+>=20
+> > Also, it's usually better to avoid adding new functions without calling=
+ them.
+> > Maybe it's possible to merge this patch with (9)?
+>=20
+> Understood.  The reason behind this is that I attempted to break this
+> set up separating the implementation of SMO with the addition of each
+> feature.  This function is only called when features are implemented to
+> use SMO, I did not want to elevate any feature above any other by
+> including it in this patch.  I'm open to suggestions on how to order
+> though, also I'm happy to order it differently if/when we do PATCH
+> version.  Is that acceptable for the RFC versions?
 
-Patch series "mm, memory_hotplug: fix uninitialized pages fallouts", v2.
+The general rule is that any patch should be self-sufficient.
+If it's required to look into further patches to understand why something
+has been done, it makes the review process harder.
 
-Mikhail Zaslonko has posted fixes for the two bugs quite some time ago
-[1].  I have pushed back on those fixes because I believed that it is
-much better to plug the problem at the initialization time rather than
-play whack-a-mole all over the hotplug code and find all the places
-which expect the full memory section to be initialized.
+I think it's possible to make the patchset to conform this rule with
+some almost cosmetic changes, e.g. move some changes from one patch
+to another, add some comments, etc.
 
-We have ended up with commit 2830bf6f05fb ("mm, memory_hotplug:
-initialize struct pages for the full memory section") merged and cause a
-regression [2][3].  The reason is that there might be memory layouts
-when two NUMA nodes share the same memory section so the merged fix is
-simply incorrect.
+Anyway, it's definitely fine for an RFC, just something to think of
+in the next version.
 
-In order to plug this hole we really have to be zone range aware in
-those handlers.  I have split up the original patch into two.  One is
-unchanged (patch 2) and I took a different approach for `removable'
-crash.
-
-[1] http://lkml.kernel.org/r/20181105150401.97287-2-zaslonko@linux.ibm.com
-[2] https://bugzilla.redhat.com/show_bug.cgi?id=1666948
-[3] http://lkml.kernel.org/r/20190125163938.GA20411@dhcp22.suse.cz
-
-This patch (of 2):
-
-Mikhail has reported the following VM_BUG_ON triggered when reading sysfs
-removable state of a memory block:
-
- page:000003d08300c000 is uninitialized and poisoned
- page dumped because: VM_BUG_ON_PAGE(PagePoisoned(p))
- Call Trace:
-   is_mem_section_removable+0xb4/0x190
-   show_mem_removable+0x9a/0xd8
-   dev_attr_show+0x34/0x70
-   sysfs_kf_seq_show+0xc8/0x148
-   seq_read+0x204/0x480
-   __vfs_read+0x32/0x178
-   vfs_read+0x82/0x138
-   ksys_read+0x5a/0xb0
-   system_call+0xdc/0x2d8
- Last Breaking-Event-Address:
-   is_mem_section_removable+0xb4/0x190
- Kernel panic - not syncing: Fatal exception: panic_on_oops
-
-The reason is that the memory block spans the zone boundary and we are
-stumbling over an unitialized struct page.  Fix this by enforcing zone
-range in is_mem_section_removable so that we never run away from a zone.
-
-Link: http://lkml.kernel.org/r/20190128144506.15603-2-mhocko@kernel.org
-Signed-off-by: Michal Hocko <mhocko@suse.com>
-Reported-by: Mikhail Zaslonko <zaslonko@linux.ibm.com>
-Debugged-by: Mikhail Zaslonko <zaslonko@linux.ibm.com>
-Tested-by: Gerald Schaefer <gerald.schaefer@de.ibm.com>
-Tested-by: Mikhail Gavrilov <mikhail.v.gavrilov@gmail.com>
-Reviewed-by: Oscar Salvador <osalvador@suse.de>
-Cc: Pavel Tatashin <pasha.tatashin@soleen.com>
-Cc: Heiko Carstens <heiko.carstens@de.ibm.com>
-Cc: Martin Schwidefsky <schwidefsky@de.ibm.com>
-Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
-Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
----
- mm/memory_hotplug.c | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
-
-diff --git a/mm/memory_hotplug.c b/mm/memory_hotplug.c
-index 21d94b5677e8..5ce0d929ff48 100644
---- a/mm/memory_hotplug.c
-+++ b/mm/memory_hotplug.c
-@@ -1234,7 +1234,8 @@ static bool is_pageblock_removable_nolock(struct page *page)
- bool is_mem_section_removable(unsigned long start_pfn, unsigned long nr_pages)
- {
- 	struct page *page = pfn_to_page(start_pfn);
--	struct page *end_page = page + nr_pages;
-+	unsigned long end_pfn = min(start_pfn + nr_pages, zone_end_pfn(page_zone(page)));
-+	struct page *end_page = pfn_to_page(end_pfn);
- 
- 	/* Check the starting page of each pageblock within the range */
- 	for (; page < end_page; page = next_active_pageblock(page)) {
--- 
-2.19.1
-
-
-
+Thanks!
