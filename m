@@ -4,51 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 194F6C10F00
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 18:10:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CCE8CC4360F
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 18:10:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DEB2B2063F
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 18:10:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9416A2175B
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 18:10:22 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1552414219;
-	bh=3H3ebCvKD9TytECa5/AZ1ZJHGJXPZFwkvUltvkkytUI=;
+	s=default; t=1552414222;
+	bh=LurI/UZyCedM7BjCh5jtb/QXezeOxqIcmixx3QHN4Qk=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=fucPyLjPw2PldMZ5hwypQs+wUMK1jnO5rqKz7h7O7qTCQAltoFDOQJGnDeC2GRUrD
-	 3Uv8Ko4mUVziZypkCmU7dIP+I1Icvtoz21z7gNk3plnDPxwDeqgjvZ/PMYgWvNAiXr
-	 QhiT/Ixq1bsIjX+p+VEJEvQ7CWJnbfj1MqtZ3w9A=
+	b=meXSpTcAmlWX48cpInASyCkJHS+gFBFtXmLBzw/AMnFRuUaCoYwpuYcVpgQPfk82L
+	 TS8bfDqYmPjZBdr0xKhZWYwlv2Ij5NZkXAu+F+7cBa1MwKszDmmmrQ64WNw/YrZvzg
+	 10MAghKFmx8kh5b6tWNm5np7TwZSJ2JY6vbr+df4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727215AbfCLRL4 (ORCPT
+        id S1729275AbfCLSKV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 12 Mar 2019 13:11:56 -0400
-Received: from mail.kernel.org ([198.145.29.99]:45664 "EHLO mail.kernel.org"
+        Tue, 12 Mar 2019 14:10:21 -0400
+Received: from mail.kernel.org ([198.145.29.99]:46126 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727100AbfCLRLq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 12 Mar 2019 13:11:46 -0400
+        id S1727204AbfCLRL4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 12 Mar 2019 13:11:56 -0400
 Received: from localhost (unknown [104.133.8.98])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id ACAA92173C;
-        Tue, 12 Mar 2019 17:11:45 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 7F8472171F;
+        Tue, 12 Mar 2019 17:11:55 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1552410705;
-        bh=3H3ebCvKD9TytECa5/AZ1ZJHGJXPZFwkvUltvkkytUI=;
+        s=default; t=1552410715;
+        bh=LurI/UZyCedM7BjCh5jtb/QXezeOxqIcmixx3QHN4Qk=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=cHoMsPxtjlJrnI9s+6pcbpXN8mc9Tlge/Pf5jpf1htToDipzY/UUH0AKdGHIsEnm1
-         WbczMN/aUkLN+Hqk8qW4Il9vw7GTfhVQHDXm5yWFdCl2YBF/LeM0nYx9723YW8UQB4
-         BtTxxQzaeX8xBl/9oq583jpaIOyxfgF4HbjRnEf0=
+        b=DB7YJ6mHVSAhDBvsBr4MkBohq2kkJeNQEhk7GVeCLtbNREUs1AX3JfSIxNXoa6SWR
+         KVVi5x6yL1hnZCfaGwvvYJ5xKbxy40WAKGARZc7+LsEB9UoQdCvBQ//GUIDgpBVMpN
+         KtwahoW0jBSdOpToX4VipSSWN/e7fcvDkhs++F7o=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Taehee Yoo <ap420073@gmail.com>,
-        Florian Westphal <fw@strlen.de>,
-        Pablo Neira Ayuso <pablo@netfilter.org>,
+        stable@vger.kernel.org, Max Filippov <jcmvbkbc@gmail.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.20 004/171] netfilter: nft_compat: use refcnt_t type for nft_xt reference count
-Date:   Tue, 12 Mar 2019 10:06:24 -0700
-Message-Id: <20190312170348.240062961@linuxfoundation.org>
+Subject: [PATCH 4.20 030/171] xtensa: SMP: limit number of possible CPUs by NR_CPUS
+Date:   Tue, 12 Mar 2019 10:06:50 -0700
+Message-Id: <20190312170350.590070363@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190312170347.868927101@linuxfoundation.org>
 References: <20190312170347.868927101@linuxfoundation.org>
@@ -67,113 +65,47 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-[ Upstream commit 12c44aba6618b7f6c437076e5722237190f6cd5f ]
+[ Upstream commit 25384ce5f9530def39421597b1457d9462df6455 ]
 
-Using standard integer type was fine while all operations on it were
-guarded by the nftnl subsys mutex.
+This fixes the following warning at boot when the kernel is booted on a
+board with more CPU cores than was configured in NR_CPUS:
 
-This isn't true anymore:
-1. transactions are guarded only by a pernet mutex, so concurrent
-   rule manipulation in different netns is racy
-2. the ->destroy hook runs from a work queue after the transaction
-   mutex has been released already.
+  smp_init_cpus: Core Count = 8
+  smp_init_cpus: Core Id = 0
+  ------------[ cut here ]------------
+  WARNING: CPU: 0 PID: 0 at include/linux/cpumask.h:121 smp_init_cpus+0x54/0x74
+  Modules linked in:
+  CPU: 0 PID: 0 Comm: swapper Not tainted 5.0.0-rc3-00015-g1459333f88a0 #124
+  Call Trace:
+    __warn$part$3+0x6a/0x7c
+    warn_slowpath_null+0x35/0x3c
+    smp_init_cpus+0x54/0x74
+    setup_arch+0x1c0/0x1d0
+    start_kernel+0x44/0x310
+    _startup+0x107/0x107
 
-cpu0                           cpu1 (net 1)        cpu2 (net 2)
- kworker
-    nft_compat->destroy        nft_compat->init    nft_compat->init
-      if (--nft_xt->ref == 0)   nft_xt->ref++        nft_xt->ref++
-
-Switch to refcount_t.  Doing this however only fixes a minor aspect,
-nft_compat also performs linked-list operations in an unsafe way.
-
-This is addressed in the next two patches.
-
-Fixes: f102d66b335a ("netfilter: nf_tables: use dedicated mutex to guard transactions")
-Fixes: 0935d5588400 ("netfilter: nf_tables: asynchronous release")
-Reported-by: Taehee Yoo <ap420073@gmail.com>
-Signed-off-by: Florian Westphal <fw@strlen.de>
-Signed-off-by: Pablo Neira Ayuso <pablo@netfilter.org>
+Signed-off-by: Max Filippov <jcmvbkbc@gmail.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- net/netfilter/nft_compat.c | 16 ++++++++--------
- 1 file changed, 8 insertions(+), 8 deletions(-)
+ arch/xtensa/kernel/smp.c | 5 +++++
+ 1 file changed, 5 insertions(+)
 
-diff --git a/net/netfilter/nft_compat.c b/net/netfilter/nft_compat.c
-index c90a4640723f..791f3e693e3d 100644
---- a/net/netfilter/nft_compat.c
-+++ b/net/netfilter/nft_compat.c
-@@ -26,7 +26,7 @@
- struct nft_xt {
- 	struct list_head	head;
- 	struct nft_expr_ops	ops;
--	unsigned int		refcnt;
-+	refcount_t		refcnt;
+diff --git a/arch/xtensa/kernel/smp.c b/arch/xtensa/kernel/smp.c
+index 80be6449c497..be1f280c322c 100644
+--- a/arch/xtensa/kernel/smp.c
++++ b/arch/xtensa/kernel/smp.c
+@@ -96,6 +96,11 @@ void __init smp_init_cpus(void)
+ 	pr_info("%s: Core Count = %d\n", __func__, ncpus);
+ 	pr_info("%s: Core Id = %d\n", __func__, core_id);
  
- 	/* Unlike other expressions, ops doesn't have static storage duration.
- 	 * nft core assumes they do.  We use kfree_rcu so that nft core can
-@@ -45,7 +45,7 @@ struct nft_xt_match_priv {
- 
- static bool nft_xt_put(struct nft_xt *xt)
- {
--	if (--xt->refcnt == 0) {
-+	if (refcount_dec_and_test(&xt->refcnt)) {
- 		list_del(&xt->head);
- 		kfree_rcu(xt, rcu_head);
- 		return true;
-@@ -273,7 +273,7 @@ nft_target_init(const struct nft_ctx *ctx, const struct nft_expr *expr,
- 		return -EINVAL;
- 
- 	nft_xt = container_of(expr->ops, struct nft_xt, ops);
--	nft_xt->refcnt++;
-+	refcount_inc(&nft_xt->refcnt);
- 	return 0;
++	if (ncpus > NR_CPUS) {
++		ncpus = NR_CPUS;
++		pr_info("%s: limiting core count by %d\n", __func__, ncpus);
++	}
++
+ 	for (i = 0; i < ncpus; ++i)
+ 		set_cpu_possible(i, true);
  }
- 
-@@ -487,7 +487,7 @@ __nft_match_init(const struct nft_ctx *ctx, const struct nft_expr *expr,
- 		return ret;
- 
- 	nft_xt = container_of(expr->ops, struct nft_xt, ops);
--	nft_xt->refcnt++;
-+	refcount_inc(&nft_xt->refcnt);
- 	return 0;
- }
- 
-@@ -790,7 +790,7 @@ nft_match_select_ops(const struct nft_ctx *ctx,
- 		goto err;
- 	}
- 
--	nft_match->refcnt = 0;
-+	refcount_set(&nft_match->refcnt, 0);
- 	nft_match->ops.type = &nft_match_type;
- 	nft_match->ops.eval = nft_match_eval;
- 	nft_match->ops.init = nft_match_init;
-@@ -894,7 +894,7 @@ nft_target_select_ops(const struct nft_ctx *ctx,
- 		goto err;
- 	}
- 
--	nft_target->refcnt = 0;
-+	refcount_set(&nft_target->refcnt, 0);
- 	nft_target->ops.type = &nft_target_type;
- 	nft_target->ops.size = NFT_EXPR_SIZE(XT_ALIGN(target->targetsize));
- 	nft_target->ops.init = nft_target_init;
-@@ -965,7 +965,7 @@ static void __exit nft_compat_module_exit(void)
- 	list_for_each_entry_safe(xt, next, &nft_target_list, head) {
- 		struct xt_target *target = xt->ops.data;
- 
--		if (WARN_ON_ONCE(xt->refcnt))
-+		if (WARN_ON_ONCE(refcount_read(&xt->refcnt)))
- 			continue;
- 		module_put(target->me);
- 		kfree(xt);
-@@ -974,7 +974,7 @@ static void __exit nft_compat_module_exit(void)
- 	list_for_each_entry_safe(xt, next, &nft_match_list, head) {
- 		struct xt_match *match = xt->ops.data;
- 
--		if (WARN_ON_ONCE(xt->refcnt))
-+		if (WARN_ON_ONCE(refcount_read(&xt->refcnt)))
- 			continue;
- 		module_put(match->me);
- 		kfree(xt);
 -- 
 2.19.1
 
