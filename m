@@ -2,107 +2,92 @@ Return-Path: <SRS0=J4ZE=RP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,
-	USER_AGENT_NEOMUTT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7D7E2C43381
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 15:27:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 89CACC43381
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 15:28:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4E1252083D
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 15:27:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4CBDC2083D
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 15:28:47 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="RxDwlbGQ"
+	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="O2P8pHa1"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726767AbfCLP1K (ORCPT
+        id S1726498AbfCLP2p (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 12 Mar 2019 11:27:10 -0400
-Received: from mail-pg1-f195.google.com ([209.85.215.195]:35152 "EHLO
-        mail-pg1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726192AbfCLP1K (ORCPT
+        Tue, 12 Mar 2019 11:28:45 -0400
+Received: from hqemgate14.nvidia.com ([216.228.121.143]:3852 "EHLO
+        hqemgate14.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725895AbfCLP2p (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 12 Mar 2019 11:27:10 -0400
-Received: by mail-pg1-f195.google.com with SMTP id e17so2103955pgd.2;
-        Tue, 12 Mar 2019 08:27:09 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=ODldI1C3mxz+vy99PjB8RPMPSBYb65r6oyz5C0XKTeA=;
-        b=RxDwlbGQAW3JTCLL1+jv+mN8bZwA8VfHgdf7CbkeBpwiVG+sFJjX191tO7dHFF3cii
-         se8p3GqJJlfdIYNFS96VhSwCdrH7rLGLsN9CztXmdPA+VZzFBAciy0T8ABUveZNrMFj7
-         TiJYe6C9HKwezW5zqIOUm3hXR+1xcZPiFHFDI+rhNjCzTie1DWpU42AlQJoypURfaOUi
-         /LYuTrYK6AVa0rARWpg/13flpCP5rAl0qK/9Evo8CyYY+xXZiuiPj0miLxhudp0zmXPx
-         K1TB3jvM/46cffLa3OuzwhPxBKVlk2ry2VmYv4flgUNKTawH1cV2FbFWnOJIjfEj+OKQ
-         CxPQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=ODldI1C3mxz+vy99PjB8RPMPSBYb65r6oyz5C0XKTeA=;
-        b=i94PJFEtU/MhRevtTzYykXM2nMtafy72Z2Q4rM8klAkfZ6RSGLRnksmNbIZD77wWY6
-         eVB3AAN3KkB39djkmgpHKDSanZX385CkrkakCfZGH7V8vZ09WzhCRCigWqCq4rVwA7AR
-         tRWTg3mAT61HXqlT9aglrgWFKaxsgzujL6jEsyFIbawPk+0nHudqgCGvBkLqouGuELTK
-         cfQ5BXa6hdCx07kgQasJBzwWrm82wuNCyoxKeaunPJoXRwfv3ppippS3lXdRTkzEDDRQ
-         puYny40/x9FQJ11y0xcdmBSFt5wWd6kJnohMUg2CTkDUAphCQHPStHORFqG/6Av58J8C
-         q4Sg==
-X-Gm-Message-State: APjAAAUzk+7C6VIBs7wEopxAvUldQpCR2VuKzD4IjDD+KnRtHhY+Y7m3
-        AjCukkVcmLQ3tSNd2wZ4vOI=
-X-Google-Smtp-Source: APXvYqzKQfGk4tT+alE8AqjgfLvuPvIqbP0236qh11bo5ZesXtpJ30nuYd6LjxKCNOC2tYA0xpXWDA==
-X-Received: by 2002:a17:902:6804:: with SMTP id h4mr40331528plk.115.1552404429059;
-        Tue, 12 Mar 2019 08:27:09 -0700 (PDT)
-Received: from ast-mbp ([2620:10d:c090:180::4168])
-        by smtp.gmail.com with ESMTPSA id q78sm15818107pfa.138.2019.03.12.08.27.07
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Tue, 12 Mar 2019 08:27:08 -0700 (PDT)
-Date:   Tue, 12 Mar 2019 08:27:06 -0700
-From:   Alexei Starovoitov <alexei.starovoitov@gmail.com>
-To:     Qais Yousef <Qais.Yousef@arm.com>
-Cc:     Steven Rostedt <rostedt@goodmis.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Alexei Starovoitov <ast@kernel.org>,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        Martin KaFai Lau <kafai@fb.com>,
-        Song Liu <songliubraving@fb.com>, Yonghong Song <yhs@fb.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
-        "bpf@vger.kernel.org" <bpf@vger.kernel.org>
-Subject: Re: [RFC][PATCH] Export supported trace features in debugfs
-Message-ID: <20190312152703.dulqcnhkknklxihq@ast-mbp>
-References: <20190312110437.5977-1-qais.yousef@arm.com>
+        Tue, 12 Mar 2019 11:28:45 -0400
+Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqemgate14.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
+        id <B5c87d02e0000>; Tue, 12 Mar 2019 08:28:46 -0700
+Received: from hqmail.nvidia.com ([172.20.161.6])
+  by hqpgpgate101.nvidia.com (PGP Universal service);
+  Tue, 12 Mar 2019 08:28:44 -0700
+X-PGP-Universal: processed;
+        by hqpgpgate101.nvidia.com on Tue, 12 Mar 2019 08:28:44 -0700
+Received: from [10.21.132.148] (10.124.1.5) by HQMAIL101.nvidia.com
+ (172.20.187.10) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Tue, 12 Mar
+ 2019 15:28:43 +0000
+Subject: Re: [PATCH] bus: tegra-aconnect: use devm_clk_*() helpers
+To:     Sameer Pujar <spujar@nvidia.com>, <treding@nvidia.com>
+CC:     <linux-tegra@vger.kernel.org>, <linux-kernel@vger.kernel.org>
+References: <1552401249-29838-1-git-send-email-spujar@nvidia.com>
+From:   Jon Hunter <jonathanh@nvidia.com>
+Message-ID: <b4d6bbde-2c65-a46c-febf-38bc6a92683b@nvidia.com>
+Date:   Tue, 12 Mar 2019 15:28:41 +0000
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.5.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190312110437.5977-1-qais.yousef@arm.com>
-User-Agent: NeoMutt/20180223
+In-Reply-To: <1552401249-29838-1-git-send-email-spujar@nvidia.com>
+X-Originating-IP: [10.124.1.5]
+X-ClientProxiedBy: HQMAIL105.nvidia.com (172.20.187.12) To
+ HQMAIL101.nvidia.com (172.20.187.10)
+Content-Type: text/plain; charset="utf-8"
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
+        t=1552404526; bh=Sv/cYdmS2VVziZTSCxaP+iNMb/9u2v1EemRgxgkkw9k=;
+        h=X-PGP-Universal:Subject:To:CC:References:From:Message-ID:Date:
+         User-Agent:MIME-Version:In-Reply-To:X-Originating-IP:
+         X-ClientProxiedBy:Content-Type:Content-Language:
+         Content-Transfer-Encoding;
+        b=O2P8pHa1O/idyoQH1VI3SLshP0vtPqFUDbGBA66Qmon4rWW/fSui3e44jjvlrvKgW
+         YOFoN32HfbrrfOwuCmD+3TQBIFUGBVpy1hpF6K5PW2hE4sKmPAo23gqBEECKpBuY/j
+         se/veECOjeKVrSpD7m3qEFXwW41vpf9t0Zj7sLekmVSY/sVFqQTQ7K4Tdlo3Dgz5K6
+         qAJmP9Jhx1CRA2K8i4wI7Ry6a8nZ3Gejplgu2z5ockLdNm06scARJtmrSwEj8afq98
+         TTWdIcWIl2amxAFhfGW06XYyo1AMHsVL2pqOe+/pClt9x+rUl4R+oq4JwC9UQUPfUS
+         GXD9bsCCR+zPg==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Mar 12, 2019 at 11:07:14AM +0000, Qais Yousef wrote:
-> eBPF tools like bcc-tools have hard time figuring out when features like
-> raw_tracepoint are supported in the kernel on which we are running. At
-> the moment a fragile mechanism of matching bpf_find_raw_tracepoint()
-> function in /proc/kallsyms is used to find out whether raw tracepoints
-> can be used or not. But when this function was renamed recently to
-> bpf_get_raw_tracepoint() the tool started to fail to use raw
-> tracepoints.
-> 
-> To help in providing a more reliable way to detect features like
-> RAW_TRACEPOINT, add a new file in trace debugfs to export the supported
-> features.
-> 
-> $cat /sys/kernel/debug/tracing/supported_features
-> RAW_TRACEPOINT
-> EXAMPLE_FEATURE_1
-> EXAMPLE_FEATURE_2
-> 
-> Signed-off-by: Qais Yousef <qais.yousef@arm.com>
 
-this type of attempts have been made in the past and we always rejected them.
-Please use 'bpftool' instead that detects numerous bpf related features including raw_tp.
-# bpftool feature probe|grep raw_tracepoint
-eBPF program_type raw_tracepoint is available
+On 12/03/2019 14:34, Sameer Pujar wrote:
+> aconnect bus driver is using pm_clk_*() for managing required clocks. With
+> this, clocks seem to be always ON. This happens because, the clock prepare
+> count is incremented in pm_clock_acquire() which is called during device
+> probe(). The count is decremented during remove(). Hence the prepare_count
+> for the clock is non-zero till the remove() gets executed. This is true for
+> BPMP managed clock sources, where clock enable and disable happens during
+> prepare and unprepare phases respectively. Thus clocks remain ON always and
+> that is why pm_clk_*() cannot be used on Tegra.
 
+Same comments here as for the ADMA patch. This is not completely true
+for all devices.
+
+> This patch replaces pm_clk_*() with devm_clk_*() and runtime PM callbacks
+> reflect this. System suspend/resume can use pm_runtime_force_suspend/resume
+
+You need to explain the last bit more. In fact I don't believe it
+belongs in this patch.
+
+Cheers
+Jon
+
+-- 
+nvpublic
