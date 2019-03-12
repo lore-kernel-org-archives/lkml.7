@@ -2,97 +2,154 @@ Return-Path: <SRS0=J4ZE=RP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 150C3C43381
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 14:47:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 406D3C43381
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 14:47:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E122E2087C
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 14:47:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 137E92087C
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 14:47:10 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726788AbfCLOq7 (ORCPT
+        id S1726852AbfCLOrI convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 12 Mar 2019 10:46:59 -0400
-Received: from ns.gsystem.sk ([62.176.172.50]:42592 "EHLO gsystem.sk"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726255AbfCLOq7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 12 Mar 2019 10:46:59 -0400
-X-Greylist: delayed 1606 seconds by postgrey-1.27 at vger.kernel.org; Tue, 12 Mar 2019 10:46:58 EDT
-Received: from [192.168.1.3]
-        by gsystem.sk with esmtpsa (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.89)
-        (envelope-from <linux@zary.sk>)
-        id 1h3iGJ-00025t-5P; Tue, 12 Mar 2019 15:20:11 +0100
-From:   Ondrej Zary <linux@zary.sk>
-To:     linux-usb@vger.kernel.org
-Subject: Resetting dead USB controllers automatically?
-Date:   Tue, 12 Mar 2019 15:20:08 +0100
-User-Agent: KMail/1.9.10
-Cc:     linux-kernel@vger.kernel.org
-MIME-Version: 1.0
-Content-Type: Text/Plain;
-  charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Content-Disposition: inline
-Message-Id: <201903121520.08430.linux@zary.sk>
+        Tue, 12 Mar 2019 10:47:08 -0400
+Received: from vegas.theobroma-systems.com ([144.76.126.164]:50289 "EHLO
+        mail.theobroma-systems.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726255AbfCLOrI (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 12 Mar 2019 10:47:08 -0400
+Received: from ip092042140082.rev.nessus.at ([92.42.140.82]:50669 helo=[10.2.146.249])
+        by mail.theobroma-systems.com with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
+        (Exim 4.80)
+        (envelope-from <christoph.muellner@theobroma-systems.com>)
+        id 1h3ig1-0004Xr-94; Tue, 12 Mar 2019 15:46:45 +0100
+Content-Type: text/plain;
+        charset=utf-8
+Mime-Version: 1.0 (Mac OS X Mail 11.5 \(3445.9.1\))
+Subject: Re: [PATCH v2 2/3] dt-bindings: mmc: Add a new property
+ disable-cqe-dcmd.
+From:   =?utf-8?Q?Christoph_M=C3=BCllner?= 
+        <christoph.muellner@theobroma-systems.com>
+In-Reply-To: <4793843.T1TZ7EF8k3@phil>
+Date:   Tue, 12 Mar 2019 15:46:44 +0100
+Cc:     Adrian Hunter <adrian.hunter@intel.com>, robh+dt@kernel.org,
+        mark.rutland@arm.com, shawn.lin@rock-chips.com,
+        ulf.hansson@linaro.org,
+        Philipp Tomsich <philipp.tomsich@theobroma-systems.com>,
+        Michal Simek <michal.simek@xilinx.com>,
+        Douglas Anderson <dianders@chromium.org>,
+        Viresh Kumar <viresh.kumar@linaro.org>,
+        Enric Balletbo i Serra <enric.balletbo@collabora.com>,
+        Vicente Bergas <vicencb@gmail.com>,
+        Emil Renner Berthing <kernel@esmil.dk>,
+        Randy Li <ayaka@soulik.info>,
+        Tony Xie <tony.xie@rock-chips.com>,
+        Ezequiel Garcia <ezequiel@collabora.com>,
+        Klaus Goger <klaus.goger@theobroma-systems.com>,
+        Lin Huang <hl@rock-chips.com>, linux-mmc@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org,
+        linux-rockchip@lists.infradead.org
+Content-Transfer-Encoding: 8BIT
+Message-Id: <D7EF0176-0EBD-4401-83BE-E7F951F88CAA@theobroma-systems.com>
+References: <20190307084329.25416-1-christoph.muellner@theobroma-systems.com>
+ <37a96eda-196e-bacf-7ae2-5b9354c70273@intel.com>
+ <3BCC2A27-3AF4-4E5E-BBD4-6A5B49831D3C@theobroma-systems.com>
+ <4793843.T1TZ7EF8k3@phil>
+To:     Heiko Stuebner <heiko@sntech.de>
+X-Mailer: Apple Mail (2.3445.9.1)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hello,
-my USB controller sometimes dies when plugging a device (maybe because of static):
 
-[11197.529334] ehci-pci 0000:00:09.2: HC died; cleaning up
-[11197.529883] uhci_hcd 0000:00:09.0: host system error, PCI problems?
-[11197.529893] uhci_hcd 0000:00:09.0: host controller process error, something bad happened!
-[11197.530568] usb 1-1: USB disconnect, device number 7
-[11197.531224] uhci_hcd 0000:00:09.0: host system error, PCI problems?
-[11197.531278] uhci_hcd 0000:00:09.0: host controller process error, something bad happened!
-[11197.532155] uhci_hcd 0000:00:09.0: host system error, PCI problems?
-[11197.532203] uhci_hcd 0000:00:09.0: host controller process error, something bad happened!
-[11197.539798] uhci_hcd 0000:00:09.0: host system error, PCI problems?
-[11197.539865] uhci_hcd 0000:00:09.0: host controller process error, something bad happened!
-[11197.540092] uhci_hcd 0000:00:09.0: host system error, PCI problems?
-[11197.540109] uhci_hcd 0000:00:09.0: host controller process error, something bad happened!
-[11197.541210] uhci_hcd 0000:00:09.0: host system error, PCI problems?
-[11197.541285] uhci_hcd 0000:00:09.0: host controller process error, something bad happened!
-[11197.553179] usb 1-2: USB disconnect, device number 3
-[11197.554087] usb 1-4: USB disconnect, device number 4
-[11197.580154] uhci_hcd 0000:00:09.0: FGR not stopped yet!
-[11197.943554] uhci_hcd 0000:00:09.0: host system error, PCI problems?
-[11197.943717] uhci_hcd 0000:00:09.0: host controller process error, something bad happened!
-[11197.943735] uhci_hcd 0000:00:09.0: host controller halted, very bad!
-[11197.943794] uhci_hcd 0000:00:09.0: HCRESET not completed yet!
-[11197.943809] uhci_hcd 0000:00:09.0: HC died; cleaning up
+> On 12.03.2019, at 14:17, Heiko Stuebner <heiko@sntech.de> wrote:
+> 
+> Am Freitag, 8. März 2019, 14:10:45 CET schrieb Christoph Müllner:
+>> 
+>>> On 08.03.2019, at 13:46, Adrian Hunter <adrian.hunter@intel.com> wrote:
+>>> 
+>>> On 7/03/19 10:43 AM, Christoph Muellner wrote:
+>>>> This patch documents the new property disable-cqe-dcmd
+>>>> for the Arasan eMMC 5.1 driver.
+>>>> 
+>>>> Signed-off-by: Christoph Muellner <christoph.muellner@theobroma-systems.com>
+>>>> Signed-off-by: Philipp Tomsich <philipp.tomsich@theobroma-systems.com>
+>>>> ---
+>>>> Documentation/devicetree/bindings/mmc/arasan,sdhci.txt | 4 ++++
+>>>> 1 file changed, 4 insertions(+)
+>>>> 
+>>>> diff --git a/Documentation/devicetree/bindings/mmc/arasan,sdhci.txt b/Documentation/devicetree/bindings/mmc/arasan,sdhci.txt
+>>>> index 1edbb049cccb..ec699bf98b7c 100644
+>>>> --- a/Documentation/devicetree/bindings/mmc/arasan,sdhci.txt
+>>>> +++ b/Documentation/devicetree/bindings/mmc/arasan,sdhci.txt
+>>>> @@ -44,6 +44,10 @@ Optional Properties:
+>>>>    properly. Test mode can be used to force the controller to function.
+>>>>  - xlnx,int-clock-stable-broken: when present, the controller always reports
+>>>>    that the internal clock is stable even when it is not.
+>>>> +  - disable-cqe-dcmd: The eMMC 5.1 standard specifies direct commands (DCMDs)
+>>>> +    as part of the command queue engine (CQE). On controllers with a CQHCI,
+>>>> +    such as the Arasan eMMC 5.1 host controller, the driver has to enable DCMDs.
+>>>> +    This is done unless disable-cqe-dcmd is specified.
+> 
+> This needs a rewording please. See below for hw-description vs. driver, so
+> the description should be centered around why this is a property of the hw
+> [like faulty controller implementation or whatever]
 
-rmmod & modprobe isn't enough to fix it. Reboot is needed to make it work again.
-Or something like this:
-#!/bin/sh
-rmmod ehci-pci
-rmmod uhci-hcd
-echo 1 >"/sys/bus/pci/devices/0000:00:09.0/remove"
-echo 1 >"/sys/bus/pci/devices/0000:00:09.1/remove"
-echo 1 >"/sys/bus/pci/devices/0000:00:09.2/remove"
-echo 1 >/sys/bus/pci/rescan
-modprobe uhci-hcd
+I understand, that you prefer a HW-specific name for a property
+over one, that explains the actual effect.
+However, using disable-<feature> (which is always a directive for the driver
+and not a HW description) is not uncommon:
 
-I'm not the only one affected by this problem:
-http://www.google.com/search?q=%22HC+died%3B+cleaning+up%22
+* disable-wp should be "no-wp-line-connection"
+* disable-over-current -> "no-over-current-line-connection"
+* srp-disable -> "not-existing-srp-implementation"
+* ...
 
-Maybe the uhci/ehci drivers (or the USB core?) could reset the controller automatically to improve reliability.
+But I don't mind using something else.
+Would "broken-cqe-dcmd" (like broken-cd or broken-flash-reset) be ok?
+Or other suggestions?
 
-Looks like someone thought about this before but it was never implemented.
-There's a comment in ehci_handle_controller_death() function in drivers/usb/host/ehci-timer.c:
-	/* Not in process context, so don't try to reset the controller */
+Also I'd like to mention, that my first implementation was "supports-cqe-dcmd".
+I guess that would be a good choice, if it would have been there
+from the beginning. Introducing it now, would silently disable DCMD
+for existing DTBs. Therefore I went on to "disable-cqe-dcmd".
 
+> 
+> 
+>>> If "supports-cqe" is in mmc.txt, should "disable-cqe-dcmd" be there also?
+>> 
+>> The file mmc.txt says on top:
+>> "These properties are common to multiple MMC host controllers".
+>> As my patchset introduces "disable-cqe-dcmd" just for sdhci-of-arasan,
+>> I would say it should not go into that file.
+>> 
+>> Also I wonder why "supports-cqe" is in mmc.txt, because
+>> only sdhci-tegra.c is evaluating that property.
+>> So I would expect it to be documented in
+>> Documentation/devicetree/bindings/mmc/nvidia,tegra20-sdhci.txt
+>> 
+>> However, I see that "disable-cqe-dcmd" could go into other drivers as well.
+>> But is this enough to document it in mmc.txt?
+> 
+> Devicetree is always about describing the hardware capabilites and never
+> about the actual nitty-gritty of driver implementation, aka it is not meant
+> as a space for hardware-independent config-settings or such.
+> 
+> As for only tegra evaluating this, is probably because it is still so new, like
+> january 2019 and Rob explicitly suggested it becoming common [0], which
+> suggests that the disable-cqe-dcmds should probably also be common.
 
+So mmc.txt lists "standardised" names for properties to reduce the risk
+of having similar, but distinct names for different MMC drivers.
+So whenever you want to introduce a new property for a driver,
+check if there isn't already something defined in mmc.txt.
 
-The controller is:
-00:09.0 USB controller [0c03]: VIA Technologies, Inc. VT82xx/62xx UHCI USB 1.1 Controller [1106:3038] (rev 62)
-00:09.1 USB controller [0c03]: VIA Technologies, Inc. VT82xx/62xx UHCI USB 1.1 Controller [1106:3038] (rev 62)
-00:09.2 USB controller [0c03]: VIA Technologies, Inc. USB 2.0 [1106:3104] (rev 65)
+When seeing it this way, it clearly makes sense to have the property there.
 
--- 
-Ondrej Zary
+Thanks,
+Christoph
+
