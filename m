@@ -7,38 +7,38 @@ X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D8BA3C43381
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 02:02:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E8F47C43381
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 02:02:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9BB0D214AE
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 02:02:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B9DBB214AF
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 02:02:34 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1552356150;
-	bh=nRqU8G4fjuVX1EKxctFWDMy4ZPTvimzvcowJBbkcJ48=;
+	s=default; t=1552356154;
+	bh=ETkE8f/Ki+j/0BbIzQo1SP5o6zzr3zvo6sMH/EeoX4I=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=KH0s/zP5tMN0eAq4pG1SCp+vom6c3/g20/3LcsWnP1NJzBCvtuiW6L+uaR00WE6K4
-	 H7BZ4YqMxOn+PZ2eOB5aGGAyRg/pMVK3NVpdmufCsTeGmI7H9h1iRiAUJ7KhcCQsGL
-	 /DcbZ+IXA1zfgscnM43L4fl+N4s4Rj9AJqTeXrz8=
+	b=t8j2Kjg0+PEqRKdxagdpWr5+zZm4eG6xBkn4rXKq5IxL6VsT0UJiSE9ue7F0jThhN
+	 xYb962MJFSwqIvrGgpyeDd/TydBoPhuKlfKmfMDfl6OCvfDY5aPnYPkLSzh/AbUiAA
+	 WfT8oG7aErQtzBMEU3CSo8oNLEPsC5XxlhJtP5xs=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726852AbfCLCC2 (ORCPT
+        id S1726864AbfCLCCd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 11 Mar 2019 22:02:28 -0400
-Received: from mail.kernel.org ([198.145.29.99]:36188 "EHLO mail.kernel.org"
+        Mon, 11 Mar 2019 22:02:33 -0400
+Received: from mail.kernel.org ([198.145.29.99]:36320 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726835AbfCLCCZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 11 Mar 2019 22:02:25 -0400
+        id S1726835AbfCLCCb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 11 Mar 2019 22:02:31 -0400
 Received: from quaco.meukeo.local (unknown [179.97.35.11])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 9D5BE2171F;
-        Tue, 12 Mar 2019 02:02:21 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 5D743214AF;
+        Tue, 12 Mar 2019 02:02:28 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1552356144;
-        bh=nRqU8G4fjuVX1EKxctFWDMy4ZPTvimzvcowJBbkcJ48=;
+        s=default; t=1552356150;
+        bh=ETkE8f/Ki+j/0BbIzQo1SP5o6zzr3zvo6sMH/EeoX4I=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=yA1aqnXmXGQOHmrFxsI/MXC6waVkys5RiKyoRs2V48pA57+FEhvsSrbghfEM2cRnt
-         zoEBOHT7BXf4sguPekuX8gKb9x3YxhD+Ub9/M112h/emN6skRTr/zgyTK+K7zVp8TK
-         zEJyEoiXHOQoIHTEgBj/5aLclRnSqt5Oz2YbY+Ps=
+        b=naXrAyCYXv9+LCcBHMbBqZy32YwvX5b7+s5kPntcPg1YUQTN2uXBEQrWQKgMfV+IG
+         tcWCC9u6aoQ2s6JxV66AYhBJpsoLPh7Noo2zYukau/y4JplNOQoyMt8mWYQfB7H9V4
+         SQQhu54kAdh/9c3zdWiGKsmVnV0g9D9FpCbXkA5A=
 From:   Arnaldo Carvalho de Melo <acme@kernel.org>
 To:     Ingo Molnar <mingo@kernel.org>
 Cc:     Jiri Olsa <jolsa@kernel.org>, Namhyung Kim <namhyung@kernel.org>,
@@ -46,9 +46,9 @@ Cc:     Jiri Olsa <jolsa@kernel.org>, Namhyung Kim <namhyung@kernel.org>,
         linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
         Andi Kleen <ak@linux.intel.com>,
         Arnaldo Carvalho de Melo <acme@redhat.com>
-Subject: [PATCH 03/30] perf report: Support output in nanoseconds
-Date:   Mon, 11 Mar 2019 23:01:37 -0300
-Message-Id: <20190312020204.22092-4-acme@kernel.org>
+Subject: [PATCH 05/30] perf report: Parse time quantum
+Date:   Mon, 11 Mar 2019 23:01:39 -0300
+Message-Id: <20190312020204.22092-6-acme@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190312020204.22092-1-acme@kernel.org>
 References: <20190312020204.22092-1-acme@kernel.org>
@@ -61,130 +61,145 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Andi Kleen <ak@linux.intel.com>
 
-Upcoming changes add timestamp output in perf report. Add a --ns
-argument similar to perf script to support nanoseconds resolution when
-needed.
+Many workloads change over time. 'perf report' currently aggregates the
+whole time range reported in perf.data.
+
+This patch adds an option for a time quantum to quantisize the perf.data
+over time.
+
+This just adds the option, will be used in follow on patches for a time
+sort key.
 
 Signed-off-by: Andi Kleen <ak@linux.intel.com>
 Cc: Jiri Olsa <jolsa@kernel.org>
 Cc: Namhyung Kim <namhyung@kernel.org>
-Link: http://lkml.kernel.org/r/20190305144758.12397-5-andi@firstfloor.org
+Link: http://lkml.kernel.org/r/20190305144758.12397-6-andi@firstfloor.org
+[ Use NSEC_PER_[MU]SEC ]
 Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 ---
- tools/perf/Documentation/perf-report.txt |  3 +++
- tools/perf/builtin-report.c              |  1 +
- tools/perf/builtin-script.c              | 11 +++++------
- tools/perf/util/symbol.c                 |  1 +
+ tools/perf/Documentation/perf-report.txt |  4 +++
+ tools/perf/builtin-report.c              | 42 ++++++++++++++++++++++++
+ tools/perf/util/symbol.c                 |  2 ++
  tools/perf/util/symbol_conf.h            |  1 +
- 5 files changed, 11 insertions(+), 6 deletions(-)
+ 4 files changed, 49 insertions(+)
 
 diff --git a/tools/perf/Documentation/perf-report.txt b/tools/perf/Documentation/perf-report.txt
-index 1a27bfe05039..51dbc519dbce 100644
+index 51dbc519dbce..9ec1702bccdd 100644
 --- a/tools/perf/Documentation/perf-report.txt
 +++ b/tools/perf/Documentation/perf-report.txt
-@@ -477,6 +477,9 @@ include::itrace.txt[]
- 	Please note that not all mmaps are stored, options affecting which ones
- 	are include 'perf record --data', for instance.
+@@ -497,6 +497,10 @@ include::itrace.txt[]
+ 	The period/hits keywords set the base the percentage is computed
+ 	on - the samples period or the number of samples (hits).
  
-+--ns::
-+	Show time stamps in nanoseconds.
++--time-quantum::
++	Configure time quantum for time sort key. Default 100ms.
++	Accepts s, us, ms, ns units.
 +
- --stats::
- 	Display overall events statistics without any further processing.
- 	(like the one at the end of the perf report -D command)
+ include::callchain-overhead-calculation.txt[]
+ 
+ SEE ALSO
 diff --git a/tools/perf/builtin-report.c b/tools/perf/builtin-report.c
-index ee93c18a6685..515864ba504a 100644
+index 515864ba504a..05c8dd41106c 100644
 --- a/tools/perf/builtin-report.c
 +++ b/tools/perf/builtin-report.c
-@@ -1147,6 +1147,7 @@ int cmd_report(int argc, const char **argv)
- 	OPT_CALLBACK(0, "percent-type", &report.annotation_opts, "local-period",
+@@ -47,9 +47,11 @@
+ #include <errno.h>
+ #include <inttypes.h>
+ #include <regex.h>
++#include "sane_ctype.h"
+ #include <signal.h>
+ #include <linux/bitmap.h>
+ #include <linux/stringify.h>
++#include <linux/time64.h>
+ #include <sys/types.h>
+ #include <sys/stat.h>
+ #include <unistd.h>
+@@ -926,6 +928,43 @@ report_parse_callchain_opt(const struct option *opt, const char *arg, int unset)
+ 	return parse_callchain_report_opt(arg);
+ }
+ 
++static int
++parse_time_quantum(const struct option *opt, const char *arg,
++		   int unset __maybe_unused)
++{
++	unsigned long *time_q = opt->value;
++	char *end;
++
++	*time_q = strtoul(arg, &end, 0);
++	if (end == arg)
++		goto parse_err;
++	if (*time_q == 0) {
++		pr_err("time quantum cannot be 0");
++		return -1;
++	}
++	while (isspace(*end))
++		end++;
++	if (*end == 0)
++		return 0;
++	if (!strcmp(end, "s")) {
++		*time_q *= NSEC_PER_SEC;
++		return 0;
++	}
++	if (!strcmp(end, "ms")) {
++		*time_q *= NSEC_PER_MSEC;
++		return 0;
++	}
++	if (!strcmp(end, "us")) {
++		*time_q *= NSEC_PER_USEC;
++		return 0;
++	}
++	if (!strcmp(end, "ns"))
++		return 0;
++parse_err:
++	pr_err("Cannot parse time quantum `%s'\n", arg);
++	return -1;
++}
++
+ int
+ report_parse_ignore_callees_opt(const struct option *opt __maybe_unused,
+ 				const char *arg, int unset __maybe_unused)
+@@ -1148,6 +1187,9 @@ int cmd_report(int argc, const char **argv)
  		     "Set percent type local/global-period/hits",
  		     annotate_parse_percent_type),
-+	OPT_BOOLEAN(0, "ns", &symbol_conf.nanosecs, "Show times in nanosecs"),
+ 	OPT_BOOLEAN(0, "ns", &symbol_conf.nanosecs, "Show times in nanosecs"),
++	OPT_CALLBACK(0, "time-quantum", &symbol_conf.time_quantum, "time (ms|us|ns|s)",
++		     "Set time quantum for time sort key (default 100ms)",
++		     parse_time_quantum),
  	OPT_END()
  	};
  	struct perf_data data = {
-diff --git a/tools/perf/builtin-script.c b/tools/perf/builtin-script.c
-index a5080afd361d..111787e83784 100644
---- a/tools/perf/builtin-script.c
-+++ b/tools/perf/builtin-script.c
-@@ -60,7 +60,6 @@ static bool			no_callchain;
- static bool			latency_format;
- static bool			system_wide;
- static bool			print_flags;
--static bool			nanosecs;
- static const char		*cpu_list;
- static DECLARE_BITMAP(cpu_bitmap, MAX_NR_CPUS);
- static struct perf_stat_config	stat_config;
-@@ -691,7 +690,7 @@ static int perf_sample__fprintf_start(struct perf_sample *sample,
- 		secs = nsecs / NSEC_PER_SEC;
- 		nsecs -= secs * NSEC_PER_SEC;
- 
--		if (nanosecs)
-+		if (symbol_conf.nanosecs)
- 			printed += fprintf(fp, "%5lu.%09llu: ", secs, nsecs);
- 		else {
- 			char sample_time[32];
-@@ -3244,7 +3243,7 @@ static int parse_insn_trace(const struct option *opt __maybe_unused,
- {
- 	parse_output_fields(NULL, "+insn,-event,-period", 0);
- 	itrace_parse_synth_opts(opt, "i0ns", 0);
--	nanosecs = true;
-+	symbol_conf.nanosecs = true;
- 	return 0;
- }
- 
-@@ -3262,7 +3261,7 @@ static int parse_call_trace(const struct option *opt __maybe_unused,
- {
- 	parse_output_fields(NULL, "-ip,-addr,-event,-period,+callindent", 0);
- 	itrace_parse_synth_opts(opt, "cewp", 0);
--	nanosecs = true;
-+	symbol_conf.nanosecs = true;
- 	return 0;
- }
- 
-@@ -3272,7 +3271,7 @@ static int parse_callret_trace(const struct option *opt __maybe_unused,
- {
- 	parse_output_fields(NULL, "-ip,-addr,-event,-period,+callindent,+flags", 0);
- 	itrace_parse_synth_opts(opt, "crewp", 0);
--	nanosecs = true;
-+	symbol_conf.nanosecs = true;
- 	return 0;
- }
- 
-@@ -3408,7 +3407,7 @@ int cmd_script(int argc, const char **argv)
- 	OPT_BOOLEAN('f', "force", &symbol_conf.force, "don't complain, do it"),
- 	OPT_INTEGER(0, "max-blocks", &max_blocks,
- 		    "Maximum number of code blocks to dump with brstackinsn"),
--	OPT_BOOLEAN(0, "ns", &nanosecs,
-+	OPT_BOOLEAN(0, "ns", &symbol_conf.nanosecs,
- 		    "Use 9 decimal places when displaying time"),
- 	OPT_CALLBACK_OPTARG(0, "itrace", &itrace_synth_opts, NULL, "opts",
- 			    "Instruction Tracing options\n" ITRACE_HELP,
 diff --git a/tools/perf/util/symbol.c b/tools/perf/util/symbol.c
-index 758bf5f74e6e..eb873ea1c405 100644
+index eb873ea1c405..6b73a0eeb6a1 100644
 --- a/tools/perf/util/symbol.c
 +++ b/tools/perf/util/symbol.c
-@@ -39,6 +39,7 @@ int vmlinux_path__nr_entries;
- char **vmlinux_path;
- 
- struct symbol_conf symbol_conf = {
-+	.nanosecs		= false,
- 	.use_modules		= true,
- 	.try_vmlinux_path	= true,
+@@ -6,6 +6,7 @@
+ #include <string.h>
+ #include <linux/kernel.h>
+ #include <linux/mman.h>
++#include <linux/time64.h>
+ #include <sys/types.h>
+ #include <sys/stat.h>
+ #include <sys/param.h>
+@@ -45,6 +46,7 @@ struct symbol_conf symbol_conf = {
  	.demangle		= true,
+ 	.demangle_kernel	= false,
+ 	.cumulate_callchain	= true,
++	.time_quantum		= 100 * NSEC_PER_MSEC, /* 100ms */
+ 	.show_hist_headers	= true,
+ 	.symfs			= "",
+ 	.event_group		= true,
 diff --git a/tools/perf/util/symbol_conf.h b/tools/perf/util/symbol_conf.h
-index fffea68c1203..095a297c8b47 100644
+index 095a297c8b47..a5684a71b78e 100644
 --- a/tools/perf/util/symbol_conf.h
 +++ b/tools/perf/util/symbol_conf.h
-@@ -8,6 +8,7 @@ struct strlist;
- struct intlist;
- 
- struct symbol_conf {
-+	bool		nanosecs;
- 	unsigned short	priv_size;
- 	bool		try_vmlinux_path,
- 			init_annotation,
+@@ -56,6 +56,7 @@ struct symbol_conf {
+ 			*sym_list_str,
+ 			*col_width_list_str,
+ 			*bt_stop_list_str;
++	unsigned long	time_quantum;
+        struct strlist	*dso_list,
+ 			*comm_list,
+ 			*sym_list,
 -- 
 2.20.1
 
