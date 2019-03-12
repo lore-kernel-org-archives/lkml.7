@@ -2,112 +2,148 @@ Return-Path: <SRS0=J4ZE=RP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,UNPARSEABLE_RELAY,
+	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AE4A1C43381
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 03:18:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 60FE9C10F06
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 03:18:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 749662148D
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 03:18:10 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="kri4cLDW"
+	by mail.kernel.org (Postfix) with ESMTP id 2A53B2148D
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 03:18:17 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726936AbfCLDSI (ORCPT
+        id S1726969AbfCLDSP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 11 Mar 2019 23:18:08 -0400
-Received: from mail-pg1-f195.google.com ([209.85.215.195]:43772 "EHLO
-        mail-pg1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726789AbfCLDSI (ORCPT
+        Mon, 11 Mar 2019 23:18:15 -0400
+Received: from Mailgw01.mediatek.com ([1.203.163.78]:16715 "EHLO
+        mailgw01.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1726789AbfCLDSP (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 11 Mar 2019 23:18:08 -0400
-Received: by mail-pg1-f195.google.com with SMTP id l11so682041pgq.10
-        for <linux-kernel@vger.kernel.org>; Mon, 11 Mar 2019 20:18:08 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id;
-        bh=wvA9T6/TnDxr0fiOhfgtvIIsBWhGjtxR6aGzmCB5ohY=;
-        b=kri4cLDWCODzwGPUwbtY9Xa2KfDEeQR53bKqNWFkCSE9yvfKOovBO5dDoGr50D6EPc
-         z51hq3TUHsPphx5Gz/D0Py9VPmbwfog+VQes5CroS6Fh4QLdt1uEqtXGBLzsV89oKjvI
-         V+zAGjSTiMHyXxa2jpHwu9YzB5ZhpQKUYxhy7y10lwRtlQClHuOOGmb1hQT5qr57vSpr
-         xJ3UyHpB/6RTKhoHQ/4COKPRttKZ+KyUyXl3O4Fo/hAn334ewaAqBb8dX0VQgDL3q+rS
-         mvRFI7/eD6mQJbr3h/+yw3llnqiURkYLs7o0LaGR7pgTr9/QgxzvpNLwARoUemo7kSHb
-         DEuA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id;
-        bh=wvA9T6/TnDxr0fiOhfgtvIIsBWhGjtxR6aGzmCB5ohY=;
-        b=KPvurNniW2thy43EiuterngbIX2OfJBT5SwL9bBF8wEjUa7lQs8/nhfUQtxeO4DOYj
-         w4iEsi0Lk4qELFSkTYBWdOflzoHMBCFnvbnjnKlYPsLMlC1ZKrs2ymPA2i9vyvqnzA8b
-         l7+TwPSV3GxFhI1bpQL2jYYJMiIic4AVkrDHZs5R9IHLaeKJDblkLlj+aQqs3c9O7R1e
-         09C1SLg6AAMzfNtcnNUjvAqdWvpLFA1tMt2cUbLHgALbOk2VFKFybznDWCAVLtfJbRHX
-         FbJBf6i6BE74C7NpZvbSQCWV8DsmyJCn7iiSHDRuNX1oyGxUzJfvDw9dRS6r5uy5zCKY
-         SZGg==
-X-Gm-Message-State: APjAAAVBB1SeBmeCNIy5m++7nXs/jBEWbezPFApUMr+WQkSbybHosn0e
-        Wvd8SfTAmhwKUcF7ZPxVF1I=
-X-Google-Smtp-Source: APXvYqzn7QIkcHg3lI8BqigZNhUFyVgzsvLqx1PMjinIeLexhzcz3868YdO2UcFDD8pM+n2wr7DnvQ==
-X-Received: by 2002:a63:6985:: with SMTP id e127mr33231054pgc.101.1552360687866;
-        Mon, 11 Mar 2019 20:18:07 -0700 (PDT)
-Received: from ubuntu14_04.bitmain.com (61-220-100-83.HINET-IP.hinet.net. [61.220.100.83])
-        by smtp.gmail.com with ESMTPSA id l12sm16255575pgn.83.2019.03.11.20.18.04
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Mon, 11 Mar 2019 20:18:07 -0700 (PDT)
-From:   pierre Kuo <vichy.kuo@gmail.com>
-To:     Catalin Marinas <catalin.marinas@arm.com>,
-        Will Deacon <will.deacon@arm.com>
-Cc:     linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        pierre Kuo <vichy.kuo@gmail.com>
-Subject: [PATCH 1/1] initrd: move initrd_start calculate within linear mapping range check
-Date:   Tue, 12 Mar 2019 11:17:20 +0800
-Message-Id: <20190312031720.6263-1-vichy.kuo@gmail.com>
-X-Mailer: git-send-email 2.17.1
+        Mon, 11 Mar 2019 23:18:15 -0400
+X-UUID: 491e3b8309b4438c8441825f71f14c55-20190312
+X-UUID: 491e3b8309b4438c8441825f71f14c55-20190312
+Received: from mtkcas36.mediatek.inc [(172.27.4.253)] by mailgw01.mediatek.com
+        (envelope-from <chunfeng.yun@mediatek.com>)
+        (mailgw01.mediatek.com ESMTP with TLS)
+        with ESMTP id 376617760; Tue, 12 Mar 2019 11:18:10 +0800
+Received: from MTKCAS32.mediatek.inc (172.27.4.184) by MTKMBS31N2.mediatek.inc
+ (172.27.4.87) with Microsoft SMTP Server (TLS) id 15.0.1395.4; Tue, 12 Mar
+ 2019 11:18:09 +0800
+Received: from [10.17.3.153] (172.27.4.253) by MTKCAS32.mediatek.inc
+ (172.27.4.170) with Microsoft SMTP Server id 15.0.1395.4 via Frontend
+ Transport; Tue, 12 Mar 2019 11:18:08 +0800
+Message-ID: <1552360688.10179.55.camel@mhfsdcap03>
+Subject: Re: [PATCH 1/5] dt-bindings: connector: add optional properties for
+ Type-B
+From:   Chunfeng Yun <chunfeng.yun@mediatek.com>
+To:     Hans de Goede <hdegoede@redhat.com>
+CC:     Rob Herring <robh+dt@kernel.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Heikki Krogerus <heikki.krogerus@linux.intel.com>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        Adam Thomson <Adam.Thomson.Opensource@diasemi.com>,
+        Li Jun <jun.li@nxp.com>,
+        "Badhri Jagan Sridharan" <badhri@google.com>,
+        Andy Shevchenko <andy.shevchenko@gmail.com>,
+        Min Guo <min.guo@mediatek.com>, <devicetree@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>, <linux-usb@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <linux-mediatek@lists.infradead.org>
+Date:   Tue, 12 Mar 2019 11:18:08 +0800
+In-Reply-To: <c8084259-74d3-c85f-1275-854826c935a0@redhat.com>
+References: <1552025622-15582-1-git-send-email-chunfeng.yun@mediatek.com>
+         <1552025622-15582-2-git-send-email-chunfeng.yun@mediatek.com>
+         <693b11e7-fa9e-ab1f-561a-beb758b1872f@redhat.com>
+         <1552282383.10179.21.camel@mhfsdcap03>
+         <c8084259-74d3-c85f-1275-854826c935a0@redhat.com>
+Content-Type: text/plain; charset="UTF-8"
+X-Mailer: Evolution 3.2.3-0ubuntu6 
+Content-Transfer-Encoding: 7bit
+MIME-Version: 1.0
+X-MTK:  N
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-in the previous case, initrd_start and initrd_end can be successfully
-returned even (base < memblock_start_of_DRAM()) or (base + size >
-memblock_start_of_DRAM() + linear_region_size).
+Hi,
+On Mon, 2019-03-11 at 09:06 +0100, Hans de Goede wrote:
+> Hi,
+> 
+> On 11-03-19 06:33, Chunfeng Yun wrote:
+> > Hi,
+> > 
+> > On Fri, 2019-03-08 at 13:07 +0100, Hans de Goede wrote:
+> >> Hi,
+> >>
+> >> On 08-03-19 07:13, Chunfeng Yun wrote:
+> >>> Add id-gpios, vbus-gpios, vbus-supply and pinctrl properties for
+> >>> usb-b-connector
+> >>>
+> >>> Signed-off-by: Chunfeng Yun <chunfeng.yun@mediatek.com>
+> >>> ---
+> >>>    .../devicetree/bindings/connector/usb-connector.txt    | 10 ++++++++++
+> >>>    1 file changed, 10 insertions(+)
+> >>>
+> >>> diff --git a/Documentation/devicetree/bindings/connector/usb-connector.txt b/Documentation/devicetree/bindings/connector/usb-connector.txt
+> >>> index a9a2f2fc44f2..7a07b0f4f973 100644
+> >>> --- a/Documentation/devicetree/bindings/connector/usb-connector.txt
+> >>> +++ b/Documentation/devicetree/bindings/connector/usb-connector.txt
+> >>> @@ -17,6 +17,16 @@ Optional properties:
+> >>>    - self-powered: Set this property if the usb device that has its own power
+> >>>      source.
+> >>>    
+> >>> +Optional properties for usb-b-connector:
+> >>> +- id-gpios: gpio for USB ID pin.
+> >>
+> >> What about boards where the ID pin is *not* connected to a GPIO,
+> >> but e.g. to a special pin on the PMIC which can also detect
+> >> an ACA adapter ? Currently this case is handled by extcon
+> >> drivers, but we have no way to set e.g. vbus-supply for the
+> >> connector. Maybe in this case the usb-connector node should
+> >> be a child of the PMIC node ?
+> > Yes, it would be, PMIC is in charger of detecting the status of ID pin
+> 
+> Ok, then I think this should be documented too.
+> 
+> >> And in many cases there also is a mux to switch the datalines
+> >> between the host and device(gadget) controllers, how should
+> >> that be described in this model?  See the new usb-role-switch
+> >> code under drivers/usb/roles
+> >>
+> >> In some cases the mux is controlled through a gpio, so we
+> >> may want to add a "mux-gpios" here in which case we also
+> >> need to define what 0/1 means.
+> > I'm not sure, the mux seems not belong to this connector,
+> > and may need another driver to register usb-role-switch,
+> > similar to:
+> > 
+> > [v2,2/2] usb: typec: add typec switch via GPIO control
+> > https://patchwork.kernel.org/patch/10834327/
+> 
+> Right the mux/role-switch will need a driver, but the "owner"
+> of the usb_connector, e.g. the PMIC or the owner of the
+> id GPIO pin needs to know which device is the role-switch so
+> that it can set the role correctly based on the id-pin.
+> 
+> Your binding already contains Vbus info, allowing the owner
+> of the usb_connector to enable/disable Vbus based on the id-pin,
+> but the owner will also be responsible for setting the role-switch.
+In this patch series, I make usb_connector driver enable/disable Vbus,
+but not the parent(USB controller) of usb_connector which registers a
+usb-role-switch, which way do you think it is better? 
 
-That means even linear mapping range check fail for initrd_start and
-initrd_end, it still can get virtual address. Here we put
-initrd_start/initrd_end to be calculated only when linear mapping check
-pass.
+Thanks
+> 
+> Note we cannot simply assume there will be only one role-switch,
+> we really need some link from the usb_connector to the role-switch
+> (or if it is a GPIO driven role-switch simply a role-switch-gpios
+> member in the usb_connector).
+> 
+> Regards,
+> 
+> Hans
+> 
 
-Signed-off-by: pierre Kuo <vichy.kuo@gmail.com>
----
- arch/arm64/mm/init.c | 8 +++-----
- 1 file changed, 3 insertions(+), 5 deletions(-)
-
-diff --git a/arch/arm64/mm/init.c b/arch/arm64/mm/init.c
-index 7205a9085b4d..1adf418de685 100644
---- a/arch/arm64/mm/init.c
-+++ b/arch/arm64/mm/init.c
-@@ -425,6 +425,9 @@ void __init arm64_memblock_init(void)
- 			memblock_remove(base, size); /* clear MEMBLOCK_ flags */
- 			memblock_add(base, size);
- 			memblock_reserve(base, size);
-+			/* the generic initrd code expects virtual addresses */
-+			initrd_start = __phys_to_virt(phys_initrd_start);
-+			initrd_end = initrd_start + phys_initrd_size;
- 		}
- 	}
- 
-@@ -450,11 +453,6 @@ void __init arm64_memblock_init(void)
- 	 * pagetables with memblock.
- 	 */
- 	memblock_reserve(__pa_symbol(_text), _end - _text);
--	if (IS_ENABLED(CONFIG_BLK_DEV_INITRD) && phys_initrd_size) {
--		/* the generic initrd code expects virtual addresses */
--		initrd_start = __phys_to_virt(phys_initrd_start);
--		initrd_end = initrd_start + phys_initrd_size;
--	}
- 
- 	early_init_fdt_scan_reserved_mem();
- 
--- 
-2.17.1
 
