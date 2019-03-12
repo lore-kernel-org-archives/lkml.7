@@ -2,138 +2,139 @@ Return-Path: <SRS0=J4ZE=RP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
+X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 895DCC43381
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 17:40:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DFCEFC43381
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 17:40:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 668982087C
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 17:40:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B4B402087C
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 17:40:09 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1552412409;
+	bh=ouXu/OaX7uOn5kPU0xE4f69+pGek/rqm+AkfMfMK3yc=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=gRpYUawnv8hFg12xrMObq63u8nnxQ8M8Sk9haNa/O497+5UIP0iGmH0ZsL5E9qfGx
+	 9Q6kVQFUbCJHDx98AfASRmn+irx+nKQAS0nraOTe1toryxaQgpfR2OfU3a6zrBDS0a
+	 4op/HnBhtPYFxSawrW3ioNEpYJ/EBbZfw5jUvGf0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729394AbfCLRkA (ORCPT
+        id S1729510AbfCLRkI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 12 Mar 2019 13:40:00 -0400
-Received: from foss.arm.com ([217.140.101.70]:46732 "EHLO foss.arm.com"
+        Tue, 12 Mar 2019 13:40:08 -0400
+Received: from mail.kernel.org ([198.145.29.99]:58070 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729292AbfCLRj5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 12 Mar 2019 13:39:57 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.72.51.249])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id F2EDDA78;
-        Tue, 12 Mar 2019 10:39:56 -0700 (PDT)
-Received: from [10.37.10.23] (unknown [10.37.10.23])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 5C7C93F59C;
-        Tue, 12 Mar 2019 10:39:52 -0700 (PDT)
-Subject: Re: xen: Can't insert balloon page into VM userspace (WAS Re:
- [Xen-devel] [linux-linus bisection] complete test-arm64-arm64-xl-xsm)
-To:     David Hildenbrand <david@redhat.com>,
-        Matthew Wilcox <willy@infradead.org>
-Cc:     osstest service owner <osstest-admin@xenproject.org>,
-        xen-devel@lists.xenproject.org, Juergen Gross <jgross@suse.com>,
-        Konrad Rzeszutek Wilk <konrad.wilk@oracle.com>,
-        Boris Ostrovsky <boris.ostrovsky@oracle.com>,
-        Stefano Stabellini <sstabellini@kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Kees Cook <keescook@chromium.org>, k.khlebnikov@samsung.com,
-        Julien Freche <jfreche@vmware.com>,
-        Nadav Amit <namit@vmware.com>,
-        "VMware, Inc." <pv-drivers@vmware.com>, linux-mm@kvack.org
-References: <E1h3Uiq-0002L6-Ij@osstest.test-lab.xenproject.org>
- <80211e70-5f54-9421-8e8f-2a4fc758ce39@arm.com>
- <46118631-61d4-adb6-6ffc-4e7c62ea3da9@arm.com>
- <20190312171421.GJ19508@bombadil.infradead.org>
- <e0b64793-260d-5e70-0544-e7290509b605@redhat.com>
-From:   Julien Grall <julien.grall@arm.com>
-Message-ID: <180a9edf-855e-6a29-5724-cc0f929de71c@arm.com>
-Date:   Tue, 12 Mar 2019 17:39:50 +0000
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.5.1
+        id S1729045AbfCLRQQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 12 Mar 2019 13:16:16 -0400
+Received: from localhost (unknown [104.133.8.98])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id D213E217D4;
+        Tue, 12 Mar 2019 17:16:14 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1552410974;
+        bh=ouXu/OaX7uOn5kPU0xE4f69+pGek/rqm+AkfMfMK3yc=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=WgdFInIhQHmtlsej5yrfFUUebZAz3ha+4GmbvHU5u+zXt8HyBS344iSe3an6DXwh/
+         Wlc0AubO9UTL25K21xgYxlfndBImo8KRMXd5037BtcgVdo5JOHLumvmT2nNiOpoAB7
+         yG97b4oJzZp8B79AQeA5yiqciTybCNrSbuDAF3rw=
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     linux-kernel@vger.kernel.org
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        stable@vger.kernel.org, Denys Dmytriyenko <denys@ti.com>,
+        Fathi Boudra <fathi.boudra@linaro.org>,
+        Shuah Khan <shuah@kernel.org>, Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.14 065/135] selftests: timers: use LDLIBS instead of LDFLAGS
+Date:   Tue, 12 Mar 2019 10:08:32 -0700
+Message-Id: <20190312170347.289415475@linuxfoundation.org>
+X-Mailer: git-send-email 2.21.0
+In-Reply-To: <20190312170341.127810985@linuxfoundation.org>
+References: <20190312170341.127810985@linuxfoundation.org>
+User-Agent: quilt/0.65
+X-stable: review
+X-Patchwork-Hint: ignore
 MIME-Version: 1.0
-In-Reply-To: <e0b64793-260d-5e70-0544-e7290509b605@redhat.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi David,
+4.14-stable review patch.  If anyone has any objections, please let me know.
 
-On 3/12/19 5:18 PM, David Hildenbrand wrote:
-> On 12.03.19 18:14, Matthew Wilcox wrote:
->> On Tue, Mar 12, 2019 at 05:05:39PM +0000, Julien Grall wrote:
->>> On 3/12/19 3:59 PM, Julien Grall wrote:
->>>> It looks like all the arm test for linus [1] and next [2] tree
->>>> are now failing. x86 seems to be mostly ok.
->>>>
->>>> The bisector fingered the following commit:
->>>>
->>>> commit 0ee930e6cafa048c1925893d0ca89918b2814f2c
->>>> Author: Matthew Wilcox <willy@infradead.org>
->>>> Date:   Tue Mar 5 15:46:06 2019 -0800
->>>>
->>>>       mm/memory.c: prevent mapping typed pages to userspace
->>>>       Pages which use page_type must never be mapped to userspace as it would
->>>>       destroy their page type.  Add an explicit check for this instead of
->>>>       assuming that kernel drivers always get this right.
->>
->> Oh good, it found a real problem.
->>
->>> It turns out the problem is because the balloon driver will call
->>> __SetPageOffline() on allocated page. Therefore the page has a type and
->>> vm_insert_pages will deny the insertion.
->>>
->>> My knowledge is quite limited in this area. So I am not sure how we can
->>> solve the problem.
->>>
->>> I would appreciate if someone could provide input of to fix the mapping.
->>
->> I don't know the balloon driver, so I don't know why it was doing this,
->> but what it was doing was Wrong and has been since 2014 with:
->>
->> commit d6d86c0a7f8ddc5b38cf089222cb1d9540762dc2
->> Author: Konstantin Khlebnikov <k.khlebnikov@samsung.com>
->> Date:   Thu Oct 9 15:29:27 2014 -0700
->>
->>      mm/balloon_compaction: redesign ballooned pages management
->>
->> If ballooned pages are supposed to be mapped into userspace, you can't mark
->> them as ballooned pages using the mapcount field.
->>
-> 
-> Asking myself why anybody would want to map balloon inflated pages into
-> user space (this just sounds plain wrong but my understanding to what
-> XEN balloon driver does might be limited), but I assume the easy fix
-> would be to revert
+------------------
 
-Balloon pages are used to map foreign guest pages. As backend PV drivers 
-may live in userspace (e.g QEMU, Xenconsoled...) we need to be able to
-to insert balloon pages in the VM.
+[ Upstream commit 7d4e591bc051d3382c45caaa2530969fb42ed23d ]
 
-> 
-> 
-> commit 2f085ff37d08ecbc7849d5abb9424bd7927dda1d
+posix_timers fails to build due to undefined reference errors:
 
-I guess you meant 77c4adf6a6df6f8f39807eaed48eb73d0eb4261e?
+ aarch64-linaro-linux-gcc --sysroot=/build/tmp-rpb-glibc/sysroots/hikey
+ -O2 -pipe -g -feliminate-unused-debug-types -O3 -Wl,-no-as-needed -Wall
+ -DKTEST  -Wl,-O1 -Wl,--hash-style=gnu -Wl,--as-needed -lrt -lpthread
+ posix_timers.c
+ -o /build/tmp-rpb-glibc/work/hikey-linaro-linux/kselftests/4.12-r0/linux-4.12-rc7/tools/testing/selftests/timers/posix_timers
+ /tmp/cc1FTZzT.o: In function `check_timer_create':
+ /usr/src/debug/kselftests/4.12-r0/linux-4.12-rc7/tools/testing/selftests/timers/posix_timers.c:157:
+ undefined reference to `timer_create'
+ /usr/src/debug/kselftests/4.12-r0/linux-4.12-rc7/tools/testing/selftests/timers/posix_timers.c:170:
+ undefined reference to `timer_settime'
+ collect2: error: ld returned 1 exit status
 
-I have reverted the patch and can now access the guest console. Is there 
-a way to keep this patch and at the same time mapping the page in the 
-userspace?
+It's GNU Make and linker specific.
 
+The default Makefile rule looks like:
 
-> Author: David Hildenbrand <david@redhat.com>
-> Date:   Wed Mar 6 11:42:24 2019 +1100
-> 
->      xen/balloon: mark inflated pages PG_offline
-> 
->      Mark inflated and never onlined pages PG_offline, to tell the world that
->      the content is stale and should not be dumped.
-> 
-> 
+$(CC) $(CFLAGS) $(LDFLAGS) $@ $^ $(LDLIBS)
 
-Cheers,
+When linking is done by gcc itself, no issue, but when it needs to be passed
+to proper ld, only LDLIBS follows and then ld cannot know what libs to link
+with.
 
+More detail:
+https://www.gnu.org/software/make/manual/html_node/Implicit-Variables.html
+
+LDFLAGS
+Extra flags to give to compilers when they are supposed to invoke the linker,
+‘ld’, such as -L. Libraries (-lfoo) should be added to the LDLIBS variable
+instead.
+
+LDLIBS
+Library flags or names given to compilers when they are supposed to invoke the
+linker, ‘ld’. LOADLIBES is a deprecated (but still supported) alternative to
+LDLIBS. Non-library linker flags, such as -L, should go in the LDFLAGS
+variable.
+
+https://lkml.org/lkml/2010/2/10/362
+
+tools/perf: libraries must come after objects
+
+Link order matters, use LDLIBS instead of LDFLAGS to properly link against
+libpthread.
+
+Signed-off-by: Denys Dmytriyenko <denys@ti.com>
+Signed-off-by: Fathi Boudra <fathi.boudra@linaro.org>
+Signed-off-by: Shuah Khan <shuah@kernel.org>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
+---
+ tools/testing/selftests/timers/Makefile | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/tools/testing/selftests/timers/Makefile b/tools/testing/selftests/timers/Makefile
+index 3496680981f2..d937e45532d8 100644
+--- a/tools/testing/selftests/timers/Makefile
++++ b/tools/testing/selftests/timers/Makefile
+@@ -1,6 +1,6 @@
+ # SPDX-License-Identifier: GPL-2.0
+ CFLAGS += -O3 -Wl,-no-as-needed -Wall
+-LDFLAGS += -lrt -lpthread -lm
++LDLIBS += -lrt -lpthread -lm
+ 
+ # these are all "safe" tests that don't modify
+ # system time or require escalated privileges
 -- 
-Julien Grall
+2.19.1
+
+
+
