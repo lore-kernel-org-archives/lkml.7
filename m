@@ -2,140 +2,118 @@ Return-Path: <SRS0=J4ZE=RP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_MUTT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 87CC8C10F00
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 13:42:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A6110C43381
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 13:45:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 56D292147C
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 13:42:12 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1552398132;
-	bh=h8/VRoGEIFxhVZzPMK3EN+z2WLQlW8+m38g6dMRwdPo=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=UjYq4o3pw+SlYGq72xsEChz+8vuV+1vpx0en0VVn4aSYJg2RvBVhR1OheTQkExTD2
-	 BOeOv5f078ZSRiOlecKV+nnBM+vzCtVGbmM8AwIE9Ld59C4ZpxqHReuNEDekC6RjNE
-	 cIyfLoYVU562X+9KQ3pQx7W3+m8ngK6fGp1qdVxc=
+	by mail.kernel.org (Postfix) with ESMTP id 6BF0B2147C
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 13:45:16 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=baylibre-com.20150623.gappssmtp.com header.i=@baylibre-com.20150623.gappssmtp.com header.b="x8+JA5GC"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726556AbfCLNmL (ORCPT
+        id S1726628AbfCLNpO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 12 Mar 2019 09:42:11 -0400
-Received: from mail-oi1-f194.google.com ([209.85.167.194]:37821 "EHLO
-        mail-oi1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725874AbfCLNmL (ORCPT
+        Tue, 12 Mar 2019 09:45:14 -0400
+Received: from mail-ot1-f66.google.com ([209.85.210.66]:34227 "EHLO
+        mail-ot1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725774AbfCLNpO (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 12 Mar 2019 09:42:11 -0400
-Received: by mail-oi1-f194.google.com with SMTP id w66so2093891oia.4;
-        Tue, 12 Mar 2019 06:42:10 -0700 (PDT)
+        Tue, 12 Mar 2019 09:45:14 -0400
+Received: by mail-ot1-f66.google.com with SMTP id r19so2524600otn.1
+        for <linux-kernel@vger.kernel.org>; Tue, 12 Mar 2019 06:45:13 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=baylibre-com.20150623.gappssmtp.com; s=20150623;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc:content-transfer-encoding;
+        bh=7tCQ4cCXOyvwuYzH7M5bEOmVDuY2wMmX5oUwXlTGw0k=;
+        b=x8+JA5GCWKmesTtncgXxYdRADk2orsN/HoHyKaKJ4eA1ZKbR/Ja/VoC6z3UmXIm//5
+         o8P2gpaSENFD85BDDcuGcFm1hGbwGxaEHilQyXLvRVI1EEMfek8eusQFABOf2ABAtxNr
+         Sm7Xv+4Ts66Ye/w0/iCHUAs3DVQ8r0ytU2BpvITeJaQKzFohhXtkNDuCoB/8ovPbOksl
+         y3VcPhennx/5s83X1TWE+juqyiUK+Z3AZi7TtJMUBY62Z7gYB4nTvK+5EVnmSdowaFMA
+         r7j4/GBjMHIxOzAWoa9I33jeARF+4ou/GuhVYc/3Qg8ojhbVoqQLyM0bzwM91s56KCaa
+         C5gw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=HfcLv1/QrBGNjOWRj6KsbXECfCitu3ITt5OND6TyLp8=;
-        b=gLYQjQj48JxAJztNK5xBtS1TzHpK846ASLCrtnEOcgW+SYK/9g6KQHaf4YwRQEXs+/
-         Y3fTo9EYu+kRPU90q2KaxxJAWm3Y7DccGerDNFR88f3dzegNDChYvGXu7svba6GWds+e
-         sVoiWbdLjvC+9a9pOkmH6252Cq+mORtteev/Np3jTaks+BZqVEQfrOMx2/1brcErY39u
-         Uo1Te7Z2wZ7AnOvz7ltU7oEva/zTZextAQpVPqbOIT1dWfBNJ7tZ27qZpY15B7D9F6lS
-         wCq+9XwZ3r/A7/75pH0LxQApT9QcHizpCwuwW/YnBvmzK9a0Qk6nAEf62jirb7FOPsqf
-         dcsw==
-X-Gm-Message-State: APjAAAWIKcyVPiu0n1WHry+hFXKx1duyznd+quWJwuIdDBo1YSX6mzNA
-        83+gugSssVx2pJ5W85vPyakIXic=
-X-Google-Smtp-Source: APXvYqwYEevY2oWR9RU4BlZqVu0LMG+77i6mtsJVfO93pDoJFh2SwxY11++65Bu3oKQuppDIY1WIcw==
-X-Received: by 2002:aca:5906:: with SMTP id n6mr1664288oib.154.1552398129677;
-        Tue, 12 Mar 2019 06:42:09 -0700 (PDT)
-Received: from localhost ([70.231.7.113])
-        by smtp.gmail.com with ESMTPSA id q1sm3444268oth.42.2019.03.12.06.42.09
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Tue, 12 Mar 2019 06:42:09 -0700 (PDT)
-Date:   Tue, 12 Mar 2019 08:42:08 -0500
-From:   Rob Herring <robh@kernel.org>
-To:     Samuel Holland <samuel@sholland.org>
-Cc:     Maxime Ripard <maxime.ripard@bootlin.com>,
-        Chen-Yu Tsai <wens@csie.org>,
-        Jassi Brar <jassisinghbrar@gmail.com>,
-        Michael Turquette <mturquette@baylibre.com>,
-        Stephen Boyd <sboyd@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-clk@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-sunxi@googlegroups.com
-Subject: Re: [PATCH v3 11/15] [NOT FOR MERGE] dt-bindings: Add a binding for
- a mailbox-backed interrupt controller
-Message-ID: <20190312134208.GA2017@bogus>
-References: <20190302042951.53671-1-samuel@sholland.org>
- <20190302042951.53671-12-samuel@sholland.org>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=7tCQ4cCXOyvwuYzH7M5bEOmVDuY2wMmX5oUwXlTGw0k=;
+        b=c4NAYHPRv1UWmPOyiM2s5MkmZDZXRrwfG5Oysu+nqYqI6K1eZIqTvjUxCaN1fesSba
+         1khK8HzI0ONQ2NC+JDZ9F3OaOecilpRM6MJTygu7ZqzZ+rMor9SGkvOdYmd9bRrDSObV
+         PsNTmrHRPpsl6D+2AIXnr63QenBYtTTfjs5NBxGB/J+rIewzGe+5FsqTQIgF+Xx6i7xy
+         AOhqdHXQljyOmOuH2vYp0GsmaRGC0IDvowKTvwKwozpoyt2oMcmTGHQuwK7jc9b+ZIxd
+         TRUkKm35KqBD8U2H7mwuHcj/CXGaBjmpf8eDVt7couDSHMsZqJ8LZappTCXaTzVn6+Su
+         6QRg==
+X-Gm-Message-State: APjAAAVsoGPpC8igug9YfuayOWf/R9fQZcwCy+NL7kvhlOGcILWRZCSo
+        HFx2mGO/UYW9r9L3WTpbfBlw02Ccfq5QUgh7Q/XuUw==
+X-Google-Smtp-Source: APXvYqzZKjYYJt2P9auk/7hDbivJePBrkNATC7s7t1riXLX5O1tpAVlcBocPNcfMSBk2PInGnSXaA0kkXZyguIRKbW8=
+X-Received: by 2002:a9d:65c2:: with SMTP id z2mr22424809oth.301.1552398313120;
+ Tue, 12 Mar 2019 06:45:13 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190302042951.53671-12-samuel@sholland.org>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+References: <1552330521-4276-23-git-send-email-info@metux.net> <1552333701-22712-1-git-send-email-info@metux.net>
+In-Reply-To: <1552333701-22712-1-git-send-email-info@metux.net>
+From:   Bartosz Golaszewski <bgolaszewski@baylibre.com>
+Date:   Tue, 12 Mar 2019 14:45:01 +0100
+Message-ID: <CAMpxmJWCpfm0E15k0vAcxOKFTGdaFkmqK-VXD+orVE65H1Uk2g@mail.gmail.com>
+Subject: Re: [PATCH] drivers: gpio: octeon: use devm_platform_ioremap_resource()
+To:     "Enrico Weigelt, metux IT consult" <info@metux.net>
+Cc:     LKML <linux-kernel@vger.kernel.org>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        linux-gpio <linux-gpio@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Mar 01, 2019 at 10:29:47PM -0600, Samuel Holland wrote:
-> This is a somewhat generic binding for an interrupt controller/forwarder
-> implemented in firmware and communicated with using a mailbox.
-> 
-> Signed-off-by: Samuel Holland <samuel@sholland.org>
+pon., 11 mar 2019 o 20:48 Enrico Weigelt, metux IT consult
+<info@metux.net> napisa=C5=82(a):
+>
+> Use the new helper that wraps the calls to platform_get_resource()
+> and devm_ioremap_resource() together.
+>
+> Signed-off-by: Enrico Weigelt, metux IT consult <info@metux.net>
 > ---
->  .../interrupt-controller/mbox-intc.txt        | 33 +++++++++++++++++++
->  1 file changed, 33 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/interrupt-controller/mbox-intc.txt
-> 
-> diff --git a/Documentation/devicetree/bindings/interrupt-controller/mbox-intc.txt b/Documentation/devicetree/bindings/interrupt-controller/mbox-intc.txt
-> new file mode 100644
-> index 000000000000..a0eb7904ca83
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/interrupt-controller/mbox-intc.txt
-> @@ -0,0 +1,33 @@
-> +Mailbox-backed Interrupt Controller
-> +===================================
+>  drivers/gpio/gpio-octeon.c | 4 +---
+>  1 file changed, 1 insertion(+), 3 deletions(-)
+>
+> diff --git a/drivers/gpio/gpio-octeon.c b/drivers/gpio/gpio-octeon.c
+> index 1b19c88..afb0e8a 100644
+> --- a/drivers/gpio/gpio-octeon.c
+> +++ b/drivers/gpio/gpio-octeon.c
+> @@ -82,7 +82,6 @@ static int octeon_gpio_probe(struct platform_device *pd=
+ev)
+>  {
+>         struct octeon_gpio *gpio;
+>         struct gpio_chip *chip;
+> -       struct resource *res_mem;
+>         void __iomem *reg_base;
+>         int err =3D 0;
+>
+> @@ -91,8 +90,7 @@ static int octeon_gpio_probe(struct platform_device *pd=
+ev)
+>                 return -ENOMEM;
+>         chip =3D &gpio->chip;
+>
+> -       res_mem =3D platform_get_resource(pdev, IORESOURCE_MEM, 0);
+> -       reg_base =3D devm_ioremap_resource(&pdev->dev, res_mem);
+> +       reg_base =3D devm_platform_ioremap_resource(pdev, 0);
+>         if (IS_ERR(reg_base))
+>                 return PTR_ERR(reg_base);
+>
+> --
+> 1.9.1
+>
 
-Probably never really going to be generic as every mailbox protocol is 
-different.
+Can you make this a part of the bigger series and resend together with
+subject line fixes?
 
-> +
-> +This binding represents an interrupt controller implemented in firmware,
-> +that uses a mailbox channel to signal and acknowledge interrupts.
-> +
-> +Device Node:
-> +============
-> +
-> +Required properties:
-> +--------------------
-> +- compatible:		Must be one of the following strings:
-> +			- allwinner,sunxi-msgbox-intc
-> +- interrupt-controller:	Signifies that this node is an interrupt controller.
-> +- #interrupt-cells:	Must be 1.
+Also: maybe consider adding a coccinelle script for that. When I added
+that function I noticed there are 1200+ instances in the kernel that
+need fixing. I think we'll be better off automating it.
 
-No edge/level control?
-
-> +- mboxes:		phandle for the mailbox controller and channel
-> +			specifier. If the mailbox controller has unidirectional
-> +			channels, two entries are required (see below).
-> +- mbox-names:		Only required for unidirectional mailbox channels. In
-> +			that case, it must contain the strings "tx" and "rx"
-> +			(where "tx" and "rx" are from Linux's perspective, not
-
-/Linux/the OS/
-
-> +			the direction the interrupts are traveling).
-> +
-> +Example:
-> +--------
-> +
-> +	msgbox_intc: interrupt-controller {
-> +		compatible = "allwinner,sunxi-msgbox-intc";
-> +		interrupt-controller;
-> +		#interrupt-cells = <1>;
-> +		mboxes = <&msgbox 6>, <&msgbox 7>;
-> +		mbox-names = "tx", "rx";
-> +	};
-> -- 
-> 2.19.2
-> 
+Bart
