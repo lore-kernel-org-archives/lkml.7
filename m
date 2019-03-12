@@ -2,163 +2,143 @@ Return-Path: <SRS0=J4ZE=RP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_PASS,URIBL_BLOCKED,USER_IN_DEF_DKIM_WL autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 52DE0C43381
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 01:35:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3EAC7C43381
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 01:39:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0EB162171F
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 01:35:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F307D2084F
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 01:39:04 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=armh.onmicrosoft.com header.i=@armh.onmicrosoft.com header.b="DPU9JSEW"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="k7eUGz8M"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726703AbfCLBfK (ORCPT
+        id S1726711AbfCLBjD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 11 Mar 2019 21:35:10 -0400
-Received: from mail-eopbgr00089.outbound.protection.outlook.com ([40.107.0.89]:10828
-        "EHLO EUR02-AM5-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726431AbfCLBfK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 11 Mar 2019 21:35:10 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=armh.onmicrosoft.com;
- s=selector1-arm-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=JtxqqtMg0mtNwODkrTI4yLRXkpzI+Ahn54L9/mLVH28=;
- b=DPU9JSEWJMq3Zf0F/9XWBz7+QoBMHffDk0O1VPiRmgm7nCyO8vwTL/raDXLRQD8Rg3P6rU+//1jBH1j/fWdN75t90J0PnwDjsUOFWLkvaKZo06D2Y82CsYVgymPswS8+YzJQ01D7mfUeDgmUGtEjcQf/uRMf/Nfw+OWNCzOAjNM=
-Received: from AM4PR08MB2929.eurprd08.prod.outlook.com (10.171.190.138) by
- AM4PR08MB0755.eurprd08.prod.outlook.com (10.164.82.145) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.1686.18; Tue, 12 Mar 2019 01:34:44 +0000
-Received: from AM4PR08MB2929.eurprd08.prod.outlook.com
- ([fe80::e522:c03f:3d0c:f4ce]) by AM4PR08MB2929.eurprd08.prod.outlook.com
- ([fe80::e522:c03f:3d0c:f4ce%4]) with mapi id 15.20.1686.021; Tue, 12 Mar 2019
- 01:34:44 +0000
-From:   "Haibo Xu (Arm Technology China)" <Haibo.Xu@arm.com>
-To:     Sudeep Holla <Sudeep.Holla@arm.com>
-CC:     "x86@kernel.org" <x86@kernel.org>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linuxppc-dev@lists.ozlabs.org" <linuxppc-dev@lists.ozlabs.org>,
-        Catalin Marinas <Catalin.Marinas@arm.com>,
-        Will Deacon <Will.Deacon@arm.com>,
-        Oleg Nesterov <oleg@redhat.com>,
-        Paul Mackerras <paulus@samba.org>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>,
-        Richard Weinberger <richard@nod.at>,
-        "jdike@addtoit.com" <jdike@addtoit.com>,
-        Steve Capper <Steve.Capper@arm.com>,
-        "Bin Lu (Arm Technology China)" <Bin.Lu@arm.com>,
-        Andy Lutomirski <luto@kernel.org>,
-        Borislav Petkov <bp@alien8.de>
-Subject: Re: [PATCH 3/6] x86: clean up _TIF_SYSCALL_EMU handling using
- ptrace_syscall_enter hook
-Thread-Topic: [PATCH 3/6] x86: clean up _TIF_SYSCALL_EMU handling using
- ptrace_syscall_enter hook
-Thread-Index: AQHUz5P9ZKULSdDQbEW1h9vbYNE6xaX7KHCAgAAd14CAAQzrgIAKf6aAgAB1ewA=
-Date:   Tue, 12 Mar 2019 01:34:44 +0000
-Message-ID: <65b00ea1-f784-4fb4-2a98-49fa44d9fa8f@arm.com>
-References: <20190228183220.15626-1-sudeep.holla@arm.com>
- <20190228183220.15626-4-sudeep.holla@arm.com>
- <eb9ef619-4af8-71e1-5aee-0b6294ac488b@arm.com>
- <20190304101205.GA1504@e107155-lin>
- <96d59a68-e5e2-86d9-c707-a79aad438b76@arm.com>
- <20190311183403.GA31062@e107155-lin>
-In-Reply-To: <20190311183403.GA31062@e107155-lin>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-clientproxiedby: HK2PR0302CA0011.apcprd03.prod.outlook.com
- (2603:1096:202::21) To AM4PR08MB2929.eurprd08.prod.outlook.com
- (2603:10a6:205:c::10)
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=Haibo.Xu@arm.com; 
-x-ms-exchange-messagesentrepresentingtype: 1
-x-originating-ip: [113.29.88.7]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: fef0931c-6e28-422a-8e2a-08d6a68ae7b3
-x-ms-office365-filtering-ht: Tenant
-x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(7168020)(4627221)(201703031133081)(201702281549075)(8990200)(5600127)(711020)(4605104)(4618075)(2017052603328)(7153060)(7193020);SRVR:AM4PR08MB0755;
-x-ms-traffictypediagnostic: AM4PR08MB0755:
-x-microsoft-exchange-diagnostics: 1;AM4PR08MB0755;20:sa024CKCUP9ygamxCffnfnGzSUtIY6f71NbBS4cbExAALXdZzTEpUU3Jitcezf+FfwuyPYzDTZSK4GN3ZxKURSyQPZCBUYwPcsbg5NXGw71hzJtEV5FwMexLVgPh584dZJyHQ7uRvse+zsef87zDGz9FJVKv2pgDm/HAnl1Nnh8=
-x-microsoft-antispam-prvs: <AM4PR08MB07550371EA02A78BD313F3BE85490@AM4PR08MB0755.eurprd08.prod.outlook.com>
-x-forefront-prvs: 09749A275C
-x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(396003)(136003)(346002)(376002)(366004)(39860400002)(189003)(199004)(40434004)(52116002)(6506007)(386003)(71200400001)(99286004)(6636002)(76176011)(71190400001)(8936002)(53936002)(31686004)(229853002)(186003)(53546011)(6486002)(478600001)(72206003)(6436002)(6512007)(14454004)(256004)(26005)(55236004)(5024004)(14444005)(102836004)(7736002)(305945005)(25786009)(36756003)(4326008)(81156014)(81166006)(31696002)(8676002)(3846002)(6862004)(7416002)(68736007)(86362001)(5660300002)(106356001)(486006)(2616005)(11346002)(316002)(446003)(6116002)(105586002)(6246003)(476003)(37006003)(97736004)(54906003)(93886005)(2906002)(66066001);DIR:OUT;SFP:1101;SCL:1;SRVR:AM4PR08MB0755;H:AM4PR08MB2929.eurprd08.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
-received-spf: None (protection.outlook.com: arm.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam-message-info: pEbiBfy7XcTMnKLK49xK9k03MxcDh+YzEFQsi4oQMddSssaIJp8zO2sb9H4KfM/KY5nC2SPtKVi4PBGkqWLIUW5PhP2oDqU2fJrPGJRLI7Mzd/hLwLqxO/Fcx3Qge7O8UQ3z3UyvJpEjglEdb+WiJUjPcEFLL7dG65Mx3um2d5bacDhDYQ1S5ZFqqq9wWd7xJNvTmUf6796hOlIoEJbUdsyR41MPz7eOtt+piXppZ4j3qmjrXokeZw1Oj5e506F90pAromPcgwy+h7jOMTNzdsF6PCjEjvhn9E3YZLUy781TgLOsllt6WKJ/hOKcVE6zlB5Uib3qnEg4G5hKZvbviXauGomKzBSAoRTPm8PGsFLGghf0ajj0mZ9KygXHrxZbdGvnigmpCruw4YZKD4uZKqB2aZVqr1zkufLB2RuysdQ=
-Content-Type: text/plain; charset="utf-8"
-Content-ID: <57866709C2BE224FA97105DAF41E7E6A@eurprd08.prod.outlook.com>
-Content-Transfer-Encoding: base64
+        Mon, 11 Mar 2019 21:39:03 -0400
+Received: from mail-qk1-f194.google.com ([209.85.222.194]:43922 "EHLO
+        mail-qk1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726637AbfCLBjD (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 11 Mar 2019 21:39:03 -0400
+Received: by mail-qk1-f194.google.com with SMTP id s26so499348qkm.10
+        for <linux-kernel@vger.kernel.org>; Mon, 11 Mar 2019 18:39:02 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=HBZnBBRZF0aLfxcwwEv9vKZUR9S58Xw6VP7CJ7jv6AE=;
+        b=k7eUGz8MMFIl5qWLHfu9QVq8W5YLH22rwBpuI72b90BbmMeHxIiPG+BjVy0BhjdiDu
+         RB4ZWLXoPwrFtNlBynOfm86eZ4xkpXJAH/f56W5JDjk4/Z0RAd5g8+toZvn/Ggz7dIU6
+         I7Rkt7yXkoaOpPEmcmIL8GWw49mhJduFS8UxGgguWTlVzcnYqbUsbsMi67dn8+mnAU4w
+         1XYCAQPMA26wKuMyhs5C3Ct193/3Zuyi2pfkzREBLincMllKXof6MyO3A3PfRlFnouxc
+         B5a/toaBabQcir7pcdgJoCiWWnLrsmVEPgT7vvNo0heYK/BYwLGHfN1jApGINjLd+LC0
+         2O5w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=HBZnBBRZF0aLfxcwwEv9vKZUR9S58Xw6VP7CJ7jv6AE=;
+        b=rwz1NqamztG9H60rqU/68T5dDMW8BiTj2J/mewPBjIwNhEe/MHdaFDqWupp8ftLGQB
+         VrXr+fc16/0dY7TEc81ZiIfDTQ+VvAzbLJow3fr9Zb2l8AHHnMLeTEPaP7Msf7z7cBY9
+         2IdFnZYif/z5ztygXDYKu0gL7U+6JA9WWS/hLA2SUpWx0IuVSJdRfUzpsCkL0Jt6cQ2G
+         wQSmCDtdECjDR2w9IdRMJpL/JSAyyPNMAcCSk6ju9z+CTKPJILMzVHZb0SH9E2nDWyMW
+         YWCFzGVdEaLXpxp8bSw+dZHxG/mTn+O+zW9b6mY6Fy4yCvF2uhUbvYzg2dbtOCglN4GE
+         DVjA==
+X-Gm-Message-State: APjAAAWvkkTqa1H8AJ1a9ekFk9pjU+lrsSVRnokaoOekwApmjA85GHLV
+        RXkbc2ku3mdHI4JOezfIDY8V+gTDJu05xGIndEzOWQ==
+X-Google-Smtp-Source: APXvYqxgAHowETo2Xnx0G2/DpKzzuRp2FwZcY5+8I6FaFuJqYjuBUznYBRjFojfNsQDU2A9ACiKbjjpIfzXlVfcYIU0=
+X-Received: by 2002:a37:ef19:: with SMTP id j25mr3463022qkk.176.1552354741560;
+ Mon, 11 Mar 2019 18:39:01 -0700 (PDT)
 MIME-Version: 1.0
-X-OriginatorOrg: arm.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: fef0931c-6e28-422a-8e2a-08d6a68ae7b3
-X-MS-Exchange-CrossTenant-originalarrivaltime: 12 Mar 2019 01:34:44.4617
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: f34e5979-57d9-4aaa-ad4d-b122a662184d
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: AM4PR08MB0755
+References: <20190308140251.GC25768@kroah.com> <CAMuHMdUmnrJtu8bBeUgtiU6y_TLHM27z1WxpPia4dXMpApeijw@mail.gmail.com>
+ <20190309071648.GE3882@kroah.com> <CAMuHMdUT+UGt9p2QhOXzAtCUmqy-a8YN-ceDa-0qANJE53pWBA@mail.gmail.com>
+ <20190309121141.GA30173@kroah.com> <b7296377-9e0c-aed7-61f0-93d24d1ceddd@opersys.com>
+ <CAMuHMdV8+XTyGf1ZJ+gMf=zQpzqh3-+b7wgi+gAmXQ6HpUAw3A@mail.gmail.com>
+ <3e84e1ef-e266-e983-5874-6c26ac7f38b8@opersys.com> <20190311193612.4f09bf11@oasis.local.home>
+ <CAKOZuetHG0O-CiO6h5tD7aht_MT70ebwWMMSPkRUHdiM3wVq0Q@mail.gmail.com>
+ <20190312003912.GA170478@google.com> <20190311212823.60684182@oasis.local.home>
+In-Reply-To: <20190311212823.60684182@oasis.local.home>
+From:   Joel Fernandes <joelaf@google.com>
+Date:   Mon, 11 Mar 2019 18:38:49 -0700
+Message-ID: <CAJWu+oqsD_wHGWfzj6POFowiY2qcu04auVzkA6Lu9R+LR4gkrQ@mail.gmail.com>
+Subject: Re: [PATCH v4 1/2] Provide in-kernel headers for making it easy to
+ extend the kernel
+To:     Steven Rostedt <rostedt@goodmis.org>
+Cc:     Joel Fernandes <joel@joelfernandes.org>,
+        Daniel Colascione <dancol@google.com>,
+        Karim Yaghmour <karim.yaghmour@opersys.com>,
+        Geert Uytterhoeven <geert@linux-m68k.org>,
+        Greg KH <gregkh@linuxfoundation.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Alexei Starovoitov <ast@kernel.org>,
+        atish patra <atishp04@gmail.com>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Dietmar Eggemann <dietmar.eggemann@arm.com>,
+        Guenter Roeck <groeck@chromium.org>,
+        Jonathan Corbet <corbet@lwn.net>,
+        Kees Cook <keescook@chromium.org>,
+        Android Kernel Team <kernel-team@android.com>,
+        "open list:DOCUMENTATION" <linux-doc@vger.kernel.org>,
+        "open list:KERNEL SELFTEST FRAMEWORK" 
+        <linux-kselftest@vger.kernel.org>,
+        linux-trace-devel@vger.kernel.org,
+        Manoj Rao <linux@manojrajarao.com>,
+        Masahiro Yamada <yamada.masahiro@socionext.com>,
+        Masami Hiramatsu <mhiramat@kernel.org>,
+        Qais Yousef <qais.yousef@arm.com>,
+        Randy Dunlap <rdunlap@infradead.org>,
+        Shuah Khan <shuah@kernel.org>, Yonghong Song <yhs@fb.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-T24gMjAxOS8zLzEyIDI6MzQsIFN1ZGVlcCBIb2xsYSB3cm90ZToNCj4gKEkgdGhvdWdodCBJIGhh
-ZCBzZW50IHRoaXMgZW1haWwsIGxhc3QgVHVlc2RheSBpdHNlbGYsIGJ1dCBzYXcgdGhpcyBpbiBt
-eQ0KPiBkcmFmdCB0b2RheSwgc29tZXRoaW5nIHdlbnQgd3JvbmcsIHNvcnJ5IGZvciB0aGUgZGVs
-YXkpDQo+DQo+IE9uIFR1ZSwgTWFyIDA1LCAyMDE5IGF0IDAyOjE0OjQ3QU0gKzAwMDAsIEhhaWJv
-IFh1IChBcm0gVGVjaG5vbG9neSBDaGluYSkgd3JvdGU6DQo+PiBPbiAyMDE5LzMvNCAxODoxMiwg
-U3VkZWVwIEhvbGxhIHdyb3RlOg0KPj4+IE9uIE1vbiwgTWFyIDA0LCAyMDE5IGF0IDA4OjI1OjI4
-QU0gKzAwMDAsIEhhaWJvIFh1IChBcm0gVGVjaG5vbG9neSBDaGluYSkgd3JvdGU6DQo+Pj4+IE9u
-IDIwMTkvMy8xIDI6MzIsIFN1ZGVlcCBIb2xsYSB3cm90ZToNCj4+Pj4+IE5vdyB0aGF0IHdlIGhh
-dmUgYSBuZXcgaG9vayBwdHJhY2Vfc3lzY2FsbF9lbnRlciB0aGF0IGNhbiBiZSBjYWxsZWQgZnJv
-bQ0KPj4+Pj4gc3lzY2FsbCBlbnRyeSBjb2RlIGFuZCBpdCBoYW5kbGVzIFBUUkFDRV9TWVNFTVUg
-aW4gZ2VuZXJpYyBjb2RlLCB3ZQ0KPj4+Pj4gY2FuIGRvIHNvbWUgY2xlYW51cCB1c2luZyB0aGUg
-c2FtZSBpbiBzeXNjYWxsX3RyYWNlX2VudGVyLg0KPj4+Pj4NCj4+Pj4+IEZ1cnRoZXIgdGhlIGV4
-dHJhIGxvZ2ljIHRvIGZpbmQgc2luZ2xlIHN0ZXBwaW5nIFBUUkFDRV9TWVNFTVVfU0lOR0xFU1RF
-UA0KPj4+Pj4gaW4gc3lzY2FsbF9zbG93X2V4aXRfd29yayBzZWVtcyB1bm5lY2Vzc2FyeS4gTGV0
-J3MgcmVtb3ZlIHRoZSBzYW1lLg0KPj4+Pg0KPj4+PiBJIHRoaW5rIHdlIHNob3VsZCBub3QgY2hh
-bmdlIHRoZSBsb2dpYyBoZXJlLiBJcyBzbywgaXQgd2lsbCBkb3VibGUgdGhlIHJlcG9ydCBvZiBz
-eXNjYWxsDQo+Pj4+IHdoZW4gUFRSQUNFX1NZU0VNVV9TSU5HTEVTVEVQIGlzIGVuYWJsZWQuDQo+
-Pj4+DQo+Pj4NCj4+PiBJIGRvbid0IHRoaW5rIHRoYXQgc2hvdWxkIGhhcHBlbiwgYnV0IEkgbWF5
-IGJlIG1pc3Npbmcgc29tZXRoaW5nLg0KPj4+IENhbiB5b3UgZXhwbGFpbiBob3cgPw0KPj4+DQo+
-Pg0KPj4gV2hlbiBQVFJBQ0VfU1lTRU1VX1NJTkdMRVNURVAgaXMgZW5hYmxlZCwgYm90aCB0aGUg
-X1RJRl9TWVNDQUxMX0VNVSBhbmQNCj4+IF9USUZfU0lOR0xFU1RFUCBmbGFncyBhcmUgc2V0LCBi
-dXQgcHRyYWNlIG9ubHkgbmVlZCB0byByZXBvcnQoc2VuZCBTSUdUUkFQKQ0KPj4gYXQgdGhlIGVu
-dHJ5IG9mIGEgc3lzdGVtIGNhbGwsIG5vIG5lZWQgdG8gcmVwb3J0IGF0IHRoZSBleGl0IG9mIGEg
-c3lzdGVtDQo+PiBjYWxsLg0KPj4NCj4gU29ycnksIGJ1dCBJIHN0aWxsIG5vdCBnZXQgaXQsIHdl
-IGhhdmU6DQo+DQo+IHN0ZXAgPSAoKGZsYWdzICYgKF9USUZfU0lOR0xFU1RFUCB8IF9USUZfU1lT
-Q0FMTF9FTVUpKSA9PSBfVElGX1NJTkdMRVNURVApOw0KPg0KPiBGb3IgbWUsIHRoaXMgaXMgc2Ft
-ZSBhczoNCj4gc3RlcCA9ICgoZmxhZ3MgJiBfVElGX1NJTkdMRVNURVApID09IF9USUZfU0lOR0xF
-U1RFUCkNCj4gb3INCj4gaWYgKGZsYWdzICYgX1RJRl9TSU5HTEVTVEVQKQ0KPiBzdGVwID0gdHJ1
-ZTsNCj4NCg0KSSBkb24ndCB0aGluayBzbyEgQXMgSSBtZW50aW9uZWQgaW4gdGhlIGxhc3QgZW1h
-aWwgbG9vcCwgd2hlbiBQVFJBQ0VfU1lTRU1VX1NJTkdMRVNURVANCmlzIGVuYWJsZWQsIGJvdGgg
-dGhlIF9USUZfU1lTQ0FMTF9FTVUgYW5kIF9USUZfU0lOR0xFU1RFUCBmbGFncyBhcmUgc2V0LCBp
-biB3aGljaCBjYXNlDQp0aGUgc3RlcCBzaG91bGQgYmUgImZhbHNlIiBmb3IgdGhlIG9sZCBsb2dp
-Yy4gQnV0IHdpdGggdGhlIG5ldyBsb2dpYywgdGhlIHN0ZXAgaXMgInRydWUiLg0KDQo+IFNvIHdo
-ZW4gUFRSQUNFX1NZU0VNVV9TSU5HTEVTVEVQLCBfVElGX1NZU0NBTExfRU1VIGFuZCBfVElGX1NJ
-TkdMRVNURVANCj4gYXJlIHNldCBhbmQgc3RlcCBldmFsdWF0ZXMgdG8gdHJ1ZS4NCj4NCj4gU28g
-ZHJvcHBpbmcgX1RJRl9TWVNDQUxMX0VNVSBoZXJlIHNob3VsZCBiZSBmaW5lLiBBbSBJIHN0aWxs
-IG1pc3NpbmcNCj4gc29tZXRoaW5nID8NCj4NCj4gLS0NCj4gUmVnYXJkcywNCj4gU3VkZWVwDQo+
-DQoNCkZvciB0aGUgUFRSQUNFX1NZU0VNVV9TSU5HTEVTVEVQIHJlcXVlc3QsIHB0cmFjZSBvbmx5
-IG5lZWQgdG8gcmVwb3J0KHNlbmQgU0lHVFJBUCkNCmF0IHRoZSBlbnRyeSBvZiBhIHN5c3RlbSBj
-YWxsLCBubyBuZWVkIHRvIHJlcG9ydCBhdCB0aGUgZXhpdCBvZiBhIHN5c3RlbSBjYWxsLlRoYXQn
-cw0Kd2h5IHRoZSBvbGQgbG9naWMte3N0ZXAgPSAoKGZsYWdzICYgKF9USUZfU0lOR0xFU1RFUCB8
-IF9USUZfU1lTQ0FMTF9FTVUpKSA9PSBfVElGX1NJTkdMRVNURVApfQ0KaGVyZSB0cnkgdG8gZmls
-dGVyIG91dCB0aGUgc3BlY2lhbCBjYXNlKFBUUkFDRV9TWVNFTVVfU0lOR0xFU1RFUCkuDQoNCkFu
-b3RoZXIgd2F5IHRvIG1ha2Ugc3VyZSB0aGUgbG9naWMgaXMgZmluZSwgeW91IGNhbiBydW4gc29t
-ZSB0ZXN0cyB3aXRoIHJlc3BlY3QgdG8gYm90aCBsb2dpYywNCmFuZCB0byBjaGVjayB3aGV0aGVy
-IHRoZXkgaGF2ZSB0aGUgc2FtZSBiZWhhdmlvci4NCg0KUmVnYXJkcywNCg0KSGFpYm8NCklNUE9S
-VEFOVCBOT1RJQ0U6IFRoZSBjb250ZW50cyBvZiB0aGlzIGVtYWlsIGFuZCBhbnkgYXR0YWNobWVu
-dHMgYXJlIGNvbmZpZGVudGlhbCBhbmQgbWF5IGFsc28gYmUgcHJpdmlsZWdlZC4gSWYgeW91IGFy
-ZSBub3QgdGhlIGludGVuZGVkIHJlY2lwaWVudCwgcGxlYXNlIG5vdGlmeSB0aGUgc2VuZGVyIGlt
-bWVkaWF0ZWx5IGFuZCBkbyBub3QgZGlzY2xvc2UgdGhlIGNvbnRlbnRzIHRvIGFueSBvdGhlciBw
-ZXJzb24sIHVzZSBpdCBmb3IgYW55IHB1cnBvc2UsIG9yIHN0b3JlIG9yIGNvcHkgdGhlIGluZm9y
-bWF0aW9uIGluIGFueSBtZWRpdW0uIFRoYW5rIHlvdS4NCg==
+On Mon, Mar 11, 2019 at 6:28 PM Steven Rostedt <rostedt@goodmis.org> wrote:
+>
+> On Mon, 11 Mar 2019 20:39:12 -0400
+> Joel Fernandes <joel@joelfernandes.org> wrote:
+>
+> > I think even though the kernel-headers can't have information about all data
+> > structures, they do already contain a lot of data structure definitions we
+> > need already. And anything needed can/should arguably be moved to include/ if
+> > they are really needed for kernel extension by something "external" to the
+> > kernel such as kernel modules or eBPF, right?
+>
+> That's not my worry. I would like to be able to easily walk data
+> structures from within the kernel, without having to do a lot of work
+> in userspace to get that information. The kprobe_events could then be
+> passed type casts or such to access data fields of arguments to
+> functions and such.
+
+Ok.
+
+> > In any case, such a solution such as what Steve suggested, still cannot do
+> > what we can with headers - such as build kernel modules on the fly using the
+> > C-compiler without any auto-generation of C code from any debug artifiacts.
+> > Think systemtap working with the module-backend without any need for
+> > linux-headers package on the file system. So such a solution would still be a
+> > bit orthogonal in scope to what this proposed solution can solve IMO.
+> >
+>
+> With the information I would like to have, it would be trivial to read
+> the data to create the header files needed for modules.
+
+But there are macros and other #define things too. We lose all of them
+and can't recreate them from just DWARF (AFAIK). Including
+include/generated/autoconf.h which #defines the CONFIG options. For
+that we either need headers, or full kernel's sources with build
+artifacts.
+
+I do see a use case for the debug info you are talking about as you
+mentioned for the kprobe_events argument list types, and I already
+thought about it. But it does not seem to work for all the use cases I
+am referring to here.
+
+thanks,
+
+ - Joel
