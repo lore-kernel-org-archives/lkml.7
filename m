@@ -2,55 +2,56 @@ Return-Path: <SRS0=J4ZE=RP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+X-Spam-Status: No, score=-14.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 589CCC4360F
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 18:10:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 87B5DC10F0B
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 18:10:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 26AF12087C
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 18:10:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 515B1205C9
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 18:10:57 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1552414250;
-	bh=2VUWaV9TSrO4/NurSoS+w0B4KzGiFz6VfJltvY01mCs=;
+	s=default; t=1552414257;
+	bh=TFRIsLVic/O+RLsMhA7fZpDXFpBlFWSv6DFH+9le0Ac=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=V/D3uS6Z68FzXi4iFSEONoqtMDPNwJiBGw3qXSqKBEaemGX88V6l/1U5bNhucUn+T
-	 M2PhoQ1oSiUPUu2cDh0Cz+dq+AR8MX0zgHm1imE4N4ZZN32gT8gc2OLojajEQNyREr
-	 X667sOz5OuxP3v+kSLyfdqNeyrUdh8dV9isXDF3A=
+	b=CF0jr0JkrW+AjmB1HsS8OvUoxfGPvNNidDl2GfqBkwg3s2E8Y15IDEJ1L1qOGYcd8
+	 xY8FL3hDCDXwvOqyADDeXPrbHxw6LTDQ/LL1Y4CkojkbhivyboN/j04dkydaexX7zC
+	 SfeRE1MJl3Cc45iGUV1I7bLINEUhB6xAVce5H5/c=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727138AbfCLRLu (ORCPT
+        id S1729581AbfCLSKt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 12 Mar 2019 13:11:50 -0400
-Received: from mail.kernel.org ([198.145.29.99]:45448 "EHLO mail.kernel.org"
+        Tue, 12 Mar 2019 14:10:49 -0400
+Received: from mail.kernel.org ([198.145.29.99]:45740 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727053AbfCLRLl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 12 Mar 2019 13:11:41 -0400
+        id S1727133AbfCLRLu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 12 Mar 2019 13:11:50 -0400
 Received: from localhost (unknown [104.133.8.98])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 5EA50214AE;
-        Tue, 12 Mar 2019 17:11:40 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 7475721741;
+        Tue, 12 Mar 2019 17:11:49 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1552410700;
-        bh=2VUWaV9TSrO4/NurSoS+w0B4KzGiFz6VfJltvY01mCs=;
+        s=default; t=1552410709;
+        bh=TFRIsLVic/O+RLsMhA7fZpDXFpBlFWSv6DFH+9le0Ac=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=r1OvNrV9J/o6f0xDbdmLhedHUl7h3ULRHr5Z8LM3TL/VWMJhn2pK5+wJlI/5X6p94
-         BbrDb01el8P/GV+0QY5EkciiBdfqsu44Lc2+1DmmFUF120BCeE7NI7pvdau8hw5Hjm
-         72+XVqSEtPHdyuFYbDmm2W/YEQST2At7fnDCnxBQ=
+        b=wfN7pKaxOIFwOuHgqMFepGEQOzApUz0/tMdvF1djppLFXWnl7v71IzYUeo6FOZxPZ
+         lvb5D6xxxrbqUHRJpkXlfB9powYqPM3uAX/ALDuDXcT2uu6i6t2jSTxuAUz6mCEoOX
+         rck5xzTBJ7pURlGWgY+JGAotR/dS2jE+RrnVWe4s=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Stephane Eranian <eranian@google.com>,
-        Jiri Olsa <jolsa@kernel.org>, Andi Kleen <ak@linux.intel.com>,
-        Kan Liang <kan.liang@linux.intel.com>,
-        Peter Zijlstra <peterz@infradead.org>,
+        stable@vger.kernel.org, Eduardo Habkost <ehabkost@redhat.com>,
+        Thiago Macieira <thiago.macieira@intel.com>,
+        Adrian Hunter <adrian.hunter@intel.com>,
+        Jiri Olsa <jolsa@kernel.org>,
+        Namhyung Kim <namhyung@kernel.org>,
         Arnaldo Carvalho de Melo <acme@redhat.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.20 010/171] perf tools: Handle TOPOLOGY headers with no CPU
-Date:   Tue, 12 Mar 2019 10:06:30 -0700
-Message-Id: <20190312170348.773046564@linuxfoundation.org>
+Subject: [PATCH 4.20 009/171] perf python: Remove -fstack-clash-protection when building with some clang versions
+Date:   Tue, 12 Mar 2019 10:06:29 -0700
+Message-Id: <20190312170348.683796579@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190312170347.868927101@linuxfoundation.org>
 References: <20190312170347.868927101@linuxfoundation.org>
@@ -69,65 +70,41 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-[ Upstream commit 1497e804d1a6e2bd9107ddf64b0310449f4673eb ]
+[ Upstream commit 94ec1eb711db69be1414b56b3160b816e86a5c5b ]
 
-This patch fixes an issue in cpumap.c when used with the TOPOLOGY
-header. In some configurations, some NUMA nodes may have no CPU (empty
-cpulist). Yet a cpumap map must be created otherwise perf abort with an
-error. This patch handles this case by creating a dummy map.
+These options are not present in some (all?) clang versions, so when we
+build for a distro that has a gcc new enough to have these options and
+that the distro python build config settings use them but clang doesn't
+support, b00m.
 
-  Before:
+This is the case with fedora rawhide (now gearing towards f30), so check
+if clang has the  and remove the missing ones from CFLAGS.
 
-  $ perf record -o - -e cycles noploop 2 | perf script -i -
-  0x6e8 [0x6c]: failed to process type: 80
-
-  After:
-
-  $ perf record -o - -e cycles noploop 2 | perf script -i -
-  noploop for 2 seconds
-
-Signed-off-by: Stephane Eranian <eranian@google.com>
-Acked-by: Jiri Olsa <jolsa@kernel.org>
-Cc: Andi Kleen <ak@linux.intel.com>
-Cc: Kan Liang <kan.liang@linux.intel.com>
-Cc: Peter Zijlstra <peterz@infradead.org>
-Link: http://lkml.kernel.org/r/1547885559-1657-1-git-send-email-eranian@google.com
+Cc: Eduardo Habkost <ehabkost@redhat.com>
+Cc: Thiago Macieira <thiago.macieira@intel.com>
+Cc: Adrian Hunter <adrian.hunter@intel.com>
+Cc: Jiri Olsa <jolsa@kernel.org>
+Cc: Namhyung Kim <namhyung@kernel.org>
+Link: https://lkml.kernel.org/n/tip-5q50q9w458yawgxf9ez54jbp@git.kernel.org
 Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- tools/perf/util/cpumap.c | 11 +++++++++--
- 1 file changed, 9 insertions(+), 2 deletions(-)
+ tools/perf/util/setup.py | 2 ++
+ 1 file changed, 2 insertions(+)
 
-diff --git a/tools/perf/util/cpumap.c b/tools/perf/util/cpumap.c
-index 1ccbd3342069..383674f448fc 100644
---- a/tools/perf/util/cpumap.c
-+++ b/tools/perf/util/cpumap.c
-@@ -134,7 +134,12 @@ struct cpu_map *cpu_map__new(const char *cpu_list)
- 	if (!cpu_list)
- 		return cpu_map__read_all_cpu_map();
+diff --git a/tools/perf/util/setup.py b/tools/perf/util/setup.py
+index 63f758c655d5..64d1f36dee99 100644
+--- a/tools/perf/util/setup.py
++++ b/tools/perf/util/setup.py
+@@ -17,6 +17,8 @@ if cc == "clang":
+             vars[var] = sub("-mcet", "", vars[var])
+         if not clang_has_option("-fcf-protection"):
+             vars[var] = sub("-fcf-protection", "", vars[var])
++        if not clang_has_option("-fstack-clash-protection"):
++            vars[var] = sub("-fstack-clash-protection", "", vars[var])
  
--	if (!isdigit(*cpu_list))
-+	/*
-+	 * must handle the case of empty cpumap to cover
-+	 * TOPOLOGY header for NUMA nodes with no CPU
-+	 * ( e.g., because of CPU hotplug)
-+	 */
-+	if (!isdigit(*cpu_list) && *cpu_list != '\0')
- 		goto out;
+ from distutils.core import setup, Extension
  
- 	while (isdigit(*cpu_list)) {
-@@ -181,8 +186,10 @@ struct cpu_map *cpu_map__new(const char *cpu_list)
- 
- 	if (nr_cpus > 0)
- 		cpus = cpu_map__trim_new(nr_cpus, tmp_cpus);
--	else
-+	else if (*cpu_list != '\0')
- 		cpus = cpu_map__default_new();
-+	else
-+		cpus = cpu_map__dummy_new();
- invalid:
- 	free(tmp_cpus);
- out:
 -- 
 2.19.1
 
