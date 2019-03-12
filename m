@@ -4,52 +4,53 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9ADA9C43381
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 17:18:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0ACC8C43381
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 17:18:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5E3EE2171F
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 17:18:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CDF60217D4
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 17:18:04 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1552411080;
-	bh=+dyc4u5Pjrtp+lyKuVmITt3heCrD5IxHy+IyFSg5zTc=;
+	s=default; t=1552411084;
+	bh=/i8lCKvC/QskHrD9Sn5I6ypKmA67exwl2AD4/s7XgW0=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=hjUS5jOsx08prduadwLiy/6ysb3bzMnqLRVRayXQHkPMzMhKkc9jnE1RlhZbffKJT
-	 xHyNcaTiVe+d1HOeZNCWa532t75eBZ7ybvEhu6XM8EIBLnsU6xqLi5khDqoFzomps8
-	 eY1O0uhXaDwfXAMsV1HxJPA5nsSvtP9tl4k1xm0w=
+	b=E425kQHw6xh3kEpww4/2qYL2/sMA2phg7hG91JRGxMWkm4kXa85x4U3pH5NVLuYG4
+	 zl2SkIuMXKkNLsBcmxoFt0Q0RkbVB2c2ofJ6rgXG5n75c/w8cy9KhWEYs0D9q425A/
+	 N7CVYzyZb2OttGgf8MXoM4AUCZeSet5wVpferNtk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729862AbfCLRR7 (ORCPT
+        id S1729902AbfCLRSD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 12 Mar 2019 13:17:59 -0400
-Received: from mail.kernel.org ([198.145.29.99]:60412 "EHLO mail.kernel.org"
+        Tue, 12 Mar 2019 13:18:03 -0400
+Received: from mail.kernel.org ([198.145.29.99]:60744 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729437AbfCLRRH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 12 Mar 2019 13:17:07 -0400
+        id S1729498AbfCLRRO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 12 Mar 2019 13:17:14 -0400
 Received: from localhost (unknown [104.133.8.98])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id EADAF206DF;
-        Tue, 12 Mar 2019 17:17:06 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 6F92821872;
+        Tue, 12 Mar 2019 17:17:13 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1552411027;
-        bh=+dyc4u5Pjrtp+lyKuVmITt3heCrD5IxHy+IyFSg5zTc=;
+        s=default; t=1552411033;
+        bh=/i8lCKvC/QskHrD9Sn5I6ypKmA67exwl2AD4/s7XgW0=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=qKcQa1Um9QsKbF9onaniBfjnvJjcyQAjmYZhI2++vu21J9z2rxjvzAE2f24Fl2HLl
-         xo/YQxEun41rH+ZpDMgv6BmuJZc2DpizKvkXMzFmn3DtZvOKruzByQsRzU2HBQacrB
-         rHfVHxt18gmrrU/9PvXgVXF7Jo4KB711jjStsTb4=
+        b=lCsdYEidWQvHSJrTKqidV2frP2EuIi7HhTuyVv7+oXoeTPXp2Z2wQsDp0dtHNd9nr
+         kpt+jDdDM6zhIKglLWNlUxlaM55oTkvBoqjubsSfMCGopHhK3L5rSCZXYCey0qbSZp
+         mnwqQHZkJmOuOhah3BuuidUNA+grKC7mV6i2no2M=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Mark Syms <mark.syms@citrix.com>,
-        Andreas Gruenbacher <agruenba@redhat.com>,
-        Bob Peterson <rpeterso@redhat.com>
-Subject: [PATCH 4.14 129/135] gfs2: Fix missed wakeups in find_insert_glock
-Date:   Tue, 12 Mar 2019 10:09:36 -0700
-Message-Id: <20190312170353.028376705@linuxfoundation.org>
+        stable@vger.kernel.org, Ido Schimmel <idosch@mellanox.com>,
+        Amit Cohen <amitc@mellanox.com>,
+        "David S. Miller" <davem@davemloft.net>
+Subject: [PATCH 4.9 10/96] ip6mr: Do not call __IP6_INC_STATS() from preemptible context
+Date:   Tue, 12 Mar 2019 10:09:28 -0700
+Message-Id: <20190312171035.331103933@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
-In-Reply-To: <20190312170341.127810985@linuxfoundation.org>
-References: <20190312170341.127810985@linuxfoundation.org>
+In-Reply-To: <20190312171034.530434962@linuxfoundation.org>
+References: <20190312171034.530434962@linuxfoundation.org>
 User-Agent: quilt/0.65
 X-stable: review
 X-Patchwork-Hint: ignore
@@ -61,42 +62,71 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-4.14-stable review patch.  If anyone has any objections, please let me know.
+4.9-stable review patch.  If anyone has any objections, please let me know.
 
 ------------------
 
-From: Andreas Gruenbacher <agruenba@redhat.com>
+From: Ido Schimmel <idosch@mellanox.com>
 
-commit 605b0487f0bc1ae9963bf52ece0f5c8055186f81 upstream.
+[ Upstream commit 87c11f1ddbbad38ad8bad47af133a8208985fbdf ]
 
-Mark Syms has reported seeing tasks that are stuck waiting in
-find_insert_glock.  It turns out that struct lm_lockname contains four padding
-bytes on 64-bit architectures that function glock_waitqueue doesn't skip when
-hashing the glock name.  As a result, we can end up waking up the wrong
-waitqueue, and the waiting tasks may be stuck forever.
+Similar to commit 44f49dd8b5a6 ("ipmr: fix possible race resulting from
+improper usage of IP_INC_STATS_BH() in preemptible context."), we cannot
+assume preemption is disabled when incrementing the counter and
+accessing a per-CPU variable.
 
-Fix that by using ht_parms.key_len instead of sizeof(struct lm_lockname) for
-the key length.
+Preemption can be enabled when we add a route in process context that
+corresponds to packets stored in the unresolved queue, which are then
+forwarded using this route [1].
 
-Reported-by: Mark Syms <mark.syms@citrix.com>
-Signed-off-by: Andreas Gruenbacher <agruenba@redhat.com>
-Signed-off-by: Bob Peterson <rpeterso@redhat.com>
+Fix this by using IP6_INC_STATS() which takes care of disabling
+preemption on architectures where it is needed.
+
+[1]
+[  157.451447] BUG: using __this_cpu_add() in preemptible [00000000] code: smcrouted/2314
+[  157.460409] caller is ip6mr_forward2+0x73e/0x10e0
+[  157.460434] CPU: 3 PID: 2314 Comm: smcrouted Not tainted 5.0.0-rc7-custom-03635-g22f2712113f1 #1336
+[  157.460449] Hardware name: Mellanox Technologies Ltd. MSN2100-CB2FO/SA001017, BIOS 5.6.5 06/07/2016
+[  157.460461] Call Trace:
+[  157.460486]  dump_stack+0xf9/0x1be
+[  157.460553]  check_preemption_disabled+0x1d6/0x200
+[  157.460576]  ip6mr_forward2+0x73e/0x10e0
+[  157.460705]  ip6_mr_forward+0x9a0/0x1510
+[  157.460771]  ip6mr_mfc_add+0x16b3/0x1e00
+[  157.461155]  ip6_mroute_setsockopt+0x3cb/0x13c0
+[  157.461384]  do_ipv6_setsockopt.isra.8+0x348/0x4060
+[  157.462013]  ipv6_setsockopt+0x90/0x110
+[  157.462036]  rawv6_setsockopt+0x4a/0x120
+[  157.462058]  __sys_setsockopt+0x16b/0x340
+[  157.462198]  __x64_sys_setsockopt+0xbf/0x160
+[  157.462220]  do_syscall_64+0x14d/0x610
+[  157.462349]  entry_SYSCALL_64_after_hwframe+0x49/0xbe
+
+Fixes: 0912ea38de61 ("[IPV6] MROUTE: Add stats in multicast routing module method ip6_mr_forward().")
+Signed-off-by: Ido Schimmel <idosch@mellanox.com>
+Reported-by: Amit Cohen <amitc@mellanox.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-
 ---
- fs/gfs2/glock.c |    2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ net/ipv6/ip6mr.c |    8 ++++----
+ 1 file changed, 4 insertions(+), 4 deletions(-)
 
---- a/fs/gfs2/glock.c
-+++ b/fs/gfs2/glock.c
-@@ -107,7 +107,7 @@ static int glock_wake_function(wait_queu
+--- a/net/ipv6/ip6mr.c
++++ b/net/ipv6/ip6mr.c
+@@ -1992,10 +1992,10 @@ int ip6mr_compat_ioctl(struct sock *sk,
  
- static wait_queue_head_t *glock_waitqueue(struct lm_lockname *name)
+ static inline int ip6mr_forward2_finish(struct net *net, struct sock *sk, struct sk_buff *skb)
  {
--	u32 hash = jhash2((u32 *)name, sizeof(*name) / 4, 0);
-+	u32 hash = jhash2((u32 *)name, ht_parms.key_len / 4, 0);
- 
- 	return glock_wait_table + hash_32(hash, GLOCK_WAIT_TABLE_BITS);
+-	__IP6_INC_STATS(net, ip6_dst_idev(skb_dst(skb)),
+-			IPSTATS_MIB_OUTFORWDATAGRAMS);
+-	__IP6_ADD_STATS(net, ip6_dst_idev(skb_dst(skb)),
+-			IPSTATS_MIB_OUTOCTETS, skb->len);
++	IP6_INC_STATS(net, ip6_dst_idev(skb_dst(skb)),
++		      IPSTATS_MIB_OUTFORWDATAGRAMS);
++	IP6_ADD_STATS(net, ip6_dst_idev(skb_dst(skb)),
++		      IPSTATS_MIB_OUTOCTETS, skb->len);
+ 	return dst_output(net, sk, skb);
  }
+ 
 
 
