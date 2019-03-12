@@ -2,184 +2,102 @@ Return-Path: <SRS0=J4ZE=RP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7296FC43381
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 01:57:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 31850C43381
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 01:58:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4927F214AE
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 01:57:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id ED227214AE
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 01:58:15 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="AI1aZ9ak"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726817AbfCLB47 (ORCPT
+        id S1726822AbfCLB6O (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 11 Mar 2019 21:56:59 -0400
-Received: from inva021.nxp.com ([92.121.34.21]:41190 "EHLO inva021.nxp.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726774AbfCLB4x (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 11 Mar 2019 21:56:53 -0400
-Received: from inva021.nxp.com (localhost [127.0.0.1])
-        by inva021.eu-rdc02.nxp.com (Postfix) with ESMTP id 2E36D2000A8;
-        Tue, 12 Mar 2019 02:56:50 +0100 (CET)
-Received: from invc005.ap-rdc01.nxp.com (invc005.ap-rdc01.nxp.com [165.114.16.14])
-        by inva021.eu-rdc02.nxp.com (Postfix) with ESMTP id 077AE200042;
-        Tue, 12 Mar 2019 02:56:45 +0100 (CET)
-Received: from titan.ap.freescale.net (TITAN.ap.freescale.net [10.192.208.233])
-        by invc005.ap-rdc01.nxp.com (Postfix) with ESMTP id B9AF2402DB;
-        Tue, 12 Mar 2019 09:56:38 +0800 (SGT)
-From:   Peng Ma <peng.ma@nxp.com>
-To:     axboe@kernel.dk, robh+dt@kernel.org, mark.rutland@arm.com,
-        shawnguo@kernel.org, leoyang.li@nxp.com
-Cc:     linux-ide@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        Peng Ma <peng.ma@nxp.com>
-Subject: [v7 3/3] ahci: qoriq: add lx2160 platforms support
-Date:   Tue, 12 Mar 2019 09:50:19 +0800
-Message-Id: <20190312015019.30628-3-peng.ma@nxp.com>
-X-Mailer: git-send-email 2.14.1
-In-Reply-To: <20190312015019.30628-1-peng.ma@nxp.com>
-References: <20190312015019.30628-1-peng.ma@nxp.com>
-X-Virus-Scanned: ClamAV using ClamSMTP
+        Mon, 11 Mar 2019 21:58:14 -0400
+Received: from mail-ua1-f65.google.com ([209.85.222.65]:42667 "EHLO
+        mail-ua1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726534AbfCLB6N (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 11 Mar 2019 21:58:13 -0400
+Received: by mail-ua1-f65.google.com with SMTP id s26so261307uao.9;
+        Mon, 11 Mar 2019 18:58:12 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=04Cjv9Dobjc3gTE2CQiiLdUkyBY+xIpz5hgmSh15OBE=;
+        b=AI1aZ9aklgB5/zpChAhzEkROfTeOGXpQHMIirfg5c2iVgBDsGfvCe6cl7zXLIlKLf6
+         v22Nf227bjpfkufraf3ROUqh7Tzi0DlVLP/Z38RgDAw+srBfK0cQ/SOhEYIRQdkpCRcz
+         am8FvVx723ATlCft4FTo0TMeLhYOV4ttbTQfxcbB/YgLmXrKQGXCvJ+58/wURUPKZq3y
+         rTxNqLYjh7keUILJfFEXcFT4FaynKNw6EIlfTrzUn5EnSiZiPHFMqMdRQJv+TUdVl7d5
+         7CXxcStbkdn7vCpU956FiHy6bqj6b1bUA/M1/es/i/vUVCXODLoLgZknRo+NxJNs8t7P
+         pF7g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=04Cjv9Dobjc3gTE2CQiiLdUkyBY+xIpz5hgmSh15OBE=;
+        b=lzp+PZGpXVJI66FWV3605Waos4N7V99W73CTOr8FcZYlXKVveeOVOuu1yL+Ul84YmS
+         lVh45vnFPXe8uNO4B4bnBJAyCjjvKPheirCNyJg24+aaqhC+T5TOlwGvSPy7KDg5tqJQ
+         ZSPfr9iQpqIs1UycV2v/Md+TlYNmSnM0LrCN0OUS+m/ycgmthElkFZz/NAbPkbORhiEV
+         8H3AvkJvnOx8kYDQKIb7hTAY7bBpVi/FEp2UcMRFutaFdDk9AinRwW+C8wKD5hgg1w3Y
+         wllQCVKxvurc3NXQz7fi97aZlPiejnCiyYjeA1wAn3obvTqNKqXVWkngQWkpF5a8GbIG
+         UCAQ==
+X-Gm-Message-State: APjAAAVfm77CTEoBqAK127FC+T7rLUfiHeEIGNEBtJ8iUJAdhLliaENG
+        f7aSVUcWAhS+W9UZoGcpfnffkPVm4GtJ5yFQzh6yzJgU
+X-Google-Smtp-Source: APXvYqwytXFYbD+hTlIjN2ogX1sd6U3CjXllIDFRYWZpOjIJdA/S8R5YjAoak9JTP2UxHDqd4XK5i1zWUw5w/Dy0ICU=
+X-Received: by 2002:ab0:73da:: with SMTP id m26mr17322497uaq.71.1552355892360;
+ Mon, 11 Mar 2019 18:58:12 -0700 (PDT)
+MIME-Version: 1.0
+References: <20190219074500.16454-1-vichy.kuo@gmail.com> <CAL_Jsq+wUGxeQUMJd0eu52QadvLvkkT=36q9e1Qbru2gEsUGCw@mail.gmail.com>
+ <CAOVJa8HUx-8Ok8yMm91UmXpo39KAipt6C1BsfOL1c0Q_kqs1Vg@mail.gmail.com>
+In-Reply-To: <CAOVJa8HUx-8Ok8yMm91UmXpo39KAipt6C1BsfOL1c0Q_kqs1Vg@mail.gmail.com>
+From:   pierre kuo <vichy.kuo@gmail.com>
+Date:   Tue, 12 Mar 2019 09:58:00 +0800
+Message-ID: <CAOVJa8FROiP7e=p_4Bs=QxiwcdqD5ydrrO=6G2GX2TJkQh9U8A@mail.gmail.com>
+Subject: Re: [PATCH 1/1] of: reserved_mem: fix reserve memory leak
+To:     Rob Herring <robh+dt@kernel.org>
+Cc:     Marek Szyprowski <m.szyprowski@samsung.com>,
+        Frank Rowand <frowand.list@gmail.com>,
+        devicetree@vger.kernel.org,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Lx2160a is a new introduced soc which supports ATA3.0
+hi Rob, Marek and Frank:
+> > > The __reserved_mem_init_node will call region specific reserved memory
+> > > init codes, but once all compatibled init codes failed, the memory region
+> > > will left in memory.reserved and cause leakage.
+> > >
+> > > Take cma reserve memory DTS for example, if user declare 1MB size,
+> > > which is not align to (PAGE_SIZE << max(MAX_ORDER - 1,
+> > > pageblock_order)), rmem_cma_setup will return -EINVAL.
+> > > Meanwhile, rmem_dma_setup will also return -EINVAL since "reusable"
+> > > property is not set. If finally there is no reserved memory init pick up
+> > > this memory, kernel will left the 1MB leak in memory.reserved.
+> > >
+> > > This patch will remove this kind of memory from memory.reserved, only
+> > > when __reserved_mem_init_node return neither 0 nor -ENOENT.
+> >
+> > I'm not sure that un-reserving memory on error is the correct
+> > behavior. It may be fine for something like CMA, but if it is some
+> > shared memory used by another processor in the system not reserving it
+> > would probably never be correct.
+>
+> In this patch, we un-reserving memory ONLY if explicit compatible matching fail.
+> That mean driver found something wrong while matching and let OS know.
+> (But reserved-memory without compatible property will not be affected.)
+>
+> So per ur explaination, there would be cases that driver reported
+> matching memory fail,
+> but the memory is still needed by another processor?
 
-Signed-off-by: Peng Ma <peng.ma@nxp.com>
----
-changed for V7:
-	- no changed.
-
- drivers/ata/ahci_qoriq.c |   52 +++++++++++++++++++++++++++++++---------------
- 1 files changed, 35 insertions(+), 17 deletions(-)
-
-diff --git a/drivers/ata/ahci_qoriq.c b/drivers/ata/ahci_qoriq.c
-index ce59253..08dbb86 100644
---- a/drivers/ata/ahci_qoriq.c
-+++ b/drivers/ata/ahci_qoriq.c
-@@ -58,6 +58,7 @@ enum ahci_qoriq_type {
- 	AHCI_LS1046A,
- 	AHCI_LS1088A,
- 	AHCI_LS2088A,
-+	AHCI_LX2160A,
- };
- 
- struct ahci_qoriq_priv {
-@@ -67,6 +68,8 @@ struct ahci_qoriq_priv {
- 	bool is_dmacoherent;
- };
- 
-+static bool ecc_initialized;
-+
- static const struct of_device_id ahci_qoriq_of_match[] = {
- 	{ .compatible = "fsl,ls1021a-ahci", .data = (void *)AHCI_LS1021A},
- 	{ .compatible = "fsl,ls1043a-ahci", .data = (void *)AHCI_LS1043A},
-@@ -74,6 +77,7 @@ struct ahci_qoriq_priv {
- 	{ .compatible = "fsl,ls1046a-ahci", .data = (void *)AHCI_LS1046A},
- 	{ .compatible = "fsl,ls1088a-ahci", .data = (void *)AHCI_LS1088A},
- 	{ .compatible = "fsl,ls2088a-ahci", .data = (void *)AHCI_LS2088A},
-+	{ .compatible = "fsl,lx2160a-ahci", .data = (void *)AHCI_LX2160A},
- 	{},
- };
- MODULE_DEVICE_TABLE(of, ahci_qoriq_of_match);
-@@ -165,9 +169,10 @@ static int ahci_qoriq_phy_init(struct ahci_host_priv *hpriv)
- 
- 	switch (qpriv->type) {
- 	case AHCI_LS1021A:
--		if (!qpriv->ecc_addr)
-+		if (!(qpriv->ecc_addr || ecc_initialized))
- 			return -EINVAL;
--		writel(SATA_ECC_DISABLE, qpriv->ecc_addr);
-+		else if (qpriv->ecc_addr && !ecc_initialized)
-+			writel(SATA_ECC_DISABLE, qpriv->ecc_addr);
- 		writel(AHCI_PORT_PHY_1_CFG, reg_base + PORT_PHY1);
- 		writel(LS1021A_PORT_PHY2, reg_base + PORT_PHY2);
- 		writel(LS1021A_PORT_PHY3, reg_base + PORT_PHY3);
-@@ -180,10 +185,12 @@ static int ahci_qoriq_phy_init(struct ahci_host_priv *hpriv)
- 		break;
- 
- 	case AHCI_LS1043A:
--		if (!qpriv->ecc_addr)
-+		if (!(qpriv->ecc_addr || ecc_initialized))
- 			return -EINVAL;
--		writel(readl(qpriv->ecc_addr) | ECC_DIS_ARMV8_CH2,
--				qpriv->ecc_addr);
-+		else if (qpriv->ecc_addr && !ecc_initialized)
-+			writel(readl(qpriv->ecc_addr) |
-+			       ECC_DIS_ARMV8_CH2,
-+			       qpriv->ecc_addr);
- 		writel(AHCI_PORT_PHY_1_CFG, reg_base + PORT_PHY1);
- 		writel(AHCI_PORT_PHY2_CFG, reg_base + PORT_PHY2);
- 		writel(AHCI_PORT_PHY3_CFG, reg_base + PORT_PHY3);
-@@ -202,10 +209,12 @@ static int ahci_qoriq_phy_init(struct ahci_host_priv *hpriv)
- 		break;
- 
- 	case AHCI_LS1046A:
--		if (!qpriv->ecc_addr)
-+		if (!(qpriv->ecc_addr || ecc_initialized))
- 			return -EINVAL;
--		writel(readl(qpriv->ecc_addr) | ECC_DIS_ARMV8_CH2,
--				qpriv->ecc_addr);
-+		else if (qpriv->ecc_addr && !ecc_initialized)
-+			writel(readl(qpriv->ecc_addr) |
-+			       ECC_DIS_ARMV8_CH2,
-+			       qpriv->ecc_addr);
- 		writel(AHCI_PORT_PHY_1_CFG, reg_base + PORT_PHY1);
- 		writel(AHCI_PORT_PHY2_CFG, reg_base + PORT_PHY2);
- 		writel(AHCI_PORT_PHY3_CFG, reg_base + PORT_PHY3);
-@@ -215,10 +224,13 @@ static int ahci_qoriq_phy_init(struct ahci_host_priv *hpriv)
- 		break;
- 
- 	case AHCI_LS1088A:
--		if (!qpriv->ecc_addr)
-+	case AHCI_LX2160A:
-+		if (!(qpriv->ecc_addr || ecc_initialized))
- 			return -EINVAL;
--		writel(readl(qpriv->ecc_addr) | ECC_DIS_LS1088A,
--		       qpriv->ecc_addr);
-+		else if (qpriv->ecc_addr && !ecc_initialized)
-+			writel(readl(qpriv->ecc_addr) |
-+			       ECC_DIS_LS1088A,
-+			       qpriv->ecc_addr);
- 		writel(AHCI_PORT_PHY_1_CFG, reg_base + PORT_PHY1);
- 		writel(AHCI_PORT_PHY2_CFG, reg_base + PORT_PHY2);
- 		writel(AHCI_PORT_PHY3_CFG, reg_base + PORT_PHY3);
-@@ -237,6 +249,7 @@ static int ahci_qoriq_phy_init(struct ahci_host_priv *hpriv)
- 		break;
- 	}
- 
-+	ecc_initialized = true;
- 	return 0;
- }
- 
-@@ -264,13 +277,18 @@ static int ahci_qoriq_probe(struct platform_device *pdev)
- 
- 	qoriq_priv->type = (enum ahci_qoriq_type)of_id->data;
- 
--	res = platform_get_resource_byname(pdev, IORESOURCE_MEM,
--			"sata-ecc");
--	if (res) {
--		qoriq_priv->ecc_addr = devm_ioremap_resource(dev, res);
--		if (IS_ERR(qoriq_priv->ecc_addr))
--			return PTR_ERR(qoriq_priv->ecc_addr);
-+	if (unlikely(!ecc_initialized)) {
-+		res = platform_get_resource_byname(pdev,
-+						   IORESOURCE_MEM,
-+						   "sata-ecc");
-+		if (res) {
-+			qoriq_priv->ecc_addr =
-+				devm_ioremap_resource(dev, res);
-+			if (IS_ERR(qoriq_priv->ecc_addr))
-+				return PTR_ERR(qoriq_priv->ecc_addr);
-+		}
- 	}
-+
- 	qoriq_priv->is_dmacoherent = of_dma_is_coherent(np);
- 
- 	rc = ahci_platform_enable_resources(hpriv);
--- 
-1.7.1
-
+Would you mind to give some comment and suggestion for this patch?
+Sincerely appreciate ur kind help.
