@@ -2,104 +2,83 @@ Return-Path: <SRS0=J4ZE=RP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_NEOMUTT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,
+	USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 973E2C43381
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 15:50:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A85CEC43381
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 15:51:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6C7D920693
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 15:50:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 756C2214AE
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 15:51:04 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1552405864;
+	bh=77Md7eECce7WAa/7FZhR2kFzc5N9tqArh1C7mGI/UnI=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=Vw3gOhAhh8+prnPtuUNq9hPwG+oEvdXNb1p6XP46C5hvYmFBDOkaPTOlw7QCcrjWe
+	 ifI3P7rhTObsT6yocZBnR5NIIh6vuvqyaiJfd1qFWcWiriBXDREWJ0t89YlUM/4xJV
+	 8tinKLsYJ75/NT+FxrrNJM5S9i9MQgl0dLigDAW8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726629AbfCLPuu (ORCPT
+        id S1726746AbfCLPvD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 12 Mar 2019 11:50:50 -0400
-Received: from usa-sjc-mx-foss1.foss.arm.com ([217.140.101.70]:44562 "EHLO
-        foss.arm.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726255AbfCLPuu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 12 Mar 2019 11:50:50 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.72.51.249])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 6FFE4165C;
-        Tue, 12 Mar 2019 08:50:49 -0700 (PDT)
-Received: from e110439-lin (e110439-lin.cambridge.arm.com [10.1.194.43])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 7B4103F71D;
-        Tue, 12 Mar 2019 08:50:46 -0700 (PDT)
-Date:   Tue, 12 Mar 2019 15:50:43 +0000
-From:   Patrick Bellasi <patrick.bellasi@arm.com>
-To:     Peter Zijlstra <peterz@infradead.org>
-Cc:     linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org,
-        linux-api@vger.kernel.org, Ingo Molnar <mingo@redhat.com>,
-        Tejun Heo <tj@kernel.org>,
-        "Rafael J . Wysocki" <rafael.j.wysocki@intel.com>,
-        Vincent Guittot <vincent.guittot@linaro.org>,
-        Viresh Kumar <viresh.kumar@linaro.org>,
-        Paul Turner <pjt@google.com>,
-        Quentin Perret <quentin.perret@arm.com>,
-        Dietmar Eggemann <dietmar.eggemann@arm.com>,
-        Morten Rasmussen <morten.rasmussen@arm.com>,
-        Juri Lelli <juri.lelli@redhat.com>,
-        Todd Kjos <tkjos@google.com>,
-        Joel Fernandes <joelaf@google.com>,
-        Steve Muckle <smuckle@google.com>,
-        Suren Baghdasaryan <surenb@google.com>
-Subject: Re: [PATCH v7 01/15] sched/core: uclamp: Add CPU's clamp buckets
- refcounting
-Message-ID: <20190312155043.vj3fiutnsovjti2x@e110439-lin>
-References: <20190208100554.32196-1-patrick.bellasi@arm.com>
- <20190208100554.32196-2-patrick.bellasi@arm.com>
- <20190312152059.GA5922@hirez.programming.kicks-ass.net>
+        Tue, 12 Mar 2019 11:51:03 -0400
+Received: from mail-ot1-f65.google.com ([209.85.210.65]:44513 "EHLO
+        mail-ot1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725894AbfCLPvC (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 12 Mar 2019 11:51:02 -0400
+Received: by mail-ot1-f65.google.com with SMTP id g1so2889082otj.11;
+        Tue, 12 Mar 2019 08:51:02 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=HE171z4zPhp8G7GdDNda6NR6SYYoaM2bZnT0C4uYjAo=;
+        b=Nhm+YjwEqRCfaawJ4rO10DWAtnNwL+JYo6Ll5ROl8Xbu1IoCor9QSNVQPtaex840wo
+         2jXiNwk+q9cmxspZOcDtNkEitrS+kG48VMSlICOA7Vgnz9ay9KABn9/s9CebwOyE9tr7
+         WeCQ89m6Wj2gjdKESYKuKzU5gP0YsBaKsmwcYo41MI3IAolKv0ZvSWYJ9ht7ZcN4CisC
+         GYL1u29jsjx2BaHNNHlL9Qu05PUMpyPYmahuEfeyyibMTlNFNy66h3gdKxsYfUtksrwT
+         Jc9VLrcjBBBzMsEwiQJaOegaPdfg4av8v6SY4NnB1IB82V7K3XuoYfge52bbMPrrJC2f
+         OM8Q==
+X-Gm-Message-State: APjAAAW25NVGJA0kgmOzX+2KvtDMPEaZH5rTZaKHVoQbawCXMg74hxZv
+        rzP+q7Y4F9BQM6eQKzGPxg==
+X-Google-Smtp-Source: APXvYqyV5Tvyq8CfAnHtD1thS+DCmfx2Y4Jco+n2riyeliCpPkEU1o7T/7r/7ZTVJKrvK2fBSJgZ8g==
+X-Received: by 2002:a05:6830:108f:: with SMTP id y15mr15570325oto.49.1552405861478;
+        Tue, 12 Mar 2019 08:51:01 -0700 (PDT)
+Received: from localhost (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
+        by smtp.gmail.com with ESMTPSA id j21sm3561503otr.28.2019.03.12.08.51.00
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Tue, 12 Mar 2019 08:51:00 -0700 (PDT)
+Date:   Tue, 12 Mar 2019 10:51:00 -0500
+From:   Rob Herring <robh@kernel.org>
+To:     pisa@cmp.felk.cvut.cz
+Cc:     devicetree@vger.kernel.org, mkl@pengutronix.de,
+        linux-can@vger.kernel.org, wg@grandegger.com, davem@davemloft.net,
+        robh+dt@kernel.org, mark.rutland@arm.com, netdev@vger.kernel.org,
+        linux-kernel@vger.kernel.org, martin.jerabek01@gmail.com,
+        ondrej.ille@gmail.com, Pavel Pisa <pisa@cmp.felk.cvut.cz>
+Subject: Re: [PATCH v2 1/2] dt-bindings: vendor-prefix: add prefix for Czech
+ Technical University in Prague.
+Message-ID: <20190312155100.GA24416@bogus>
+References: <cover.1551287365.git.pisa@cmp.felk.cvut.cz>
+ <c8988d37b193d7e713fa8f4916a6fb2787c37bef.1551287365.git.pisa@cmp.felk.cvut.cz>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20190312152059.GA5922@hirez.programming.kicks-ass.net>
-User-Agent: NeoMutt/20180716
+In-Reply-To: <c8988d37b193d7e713fa8f4916a6fb2787c37bef.1551287365.git.pisa@cmp.felk.cvut.cz>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 12-Mar 16:20, Peter Zijlstra wrote:
-> On Fri, Feb 08, 2019 at 10:05:40AM +0000, Patrick Bellasi wrote:
-> > +/* Integer ceil-rounded range for each bucket */
-> > +#define UCLAMP_BUCKET_DELTA ((SCHED_CAPACITY_SCALE / UCLAMP_BUCKETS) + 1)
+On Wed, 27 Feb 2019 18:26:28 +0100, pisa@cmp.felk.cvut.cz wrote:
+> From: Pavel Pisa <pisa@cmp.felk.cvut.cz>
 > 
-> Uhm, should that not me ((x+y-1)/y), aka. DIV_ROUND_UP(x,y) ?
+> Signed-off-by: Pavel Pisa <pisa@cmp.felk.cvut.cz>
+> ---
+>  Documentation/devicetree/bindings/vendor-prefixes.txt | 1 +
+>  1 file changed, 1 insertion(+)
+> 
 
-Well, there is certainly some rounding to be done...
-
-> The above would give 4 for 9/3, which is clearly buggered.
-
-.. still the math above should work fine within the boundaries we
-define for UCLAMP_BUCKET_DELTA (5..20 groups) and considering that
-SCHED_CAPACITY_SCALE will never be smaller then 1024.
-
-The above is designed to shrink the topmost bucket wrt all the others
-but it will never be smaller than ~30%.
-
-Here are the start values computed for each bucket using the math
-above and the computed shrinking percentage for the topmost bucket:
-
-bukets size: 205, top bucket start@820 (err:  0.49%), buckets: {0: 0, 1: 205, 2: 410, 3: 615, 4: 820}
-bukets size: 171, top bucket start@855 (err:  1.17%), buckets: {0: 0, 1: 171, 2: 342, 3: 513, 4: 684, 5: 855}
-bukets size: 147, top bucket start@882 (err:  3.40%), buckets: {0: 0, 1: 147, 2: 294, 3: 441, 4: 588, 5: 735, 6: 882}
-bukets size: 129, top bucket start@903 (err:  6.20%), buckets: {0: 0, 1: 129, 2: 258, 3: 387, 4: 516, 5: 645, 6: 774, 7: 903}
-bukets size: 114, top bucket start@912 (err:  1.75%), buckets: {0: 0, 1: 114, 2: 228, 3: 342, 4: 456, 5: 570, 6: 684, 7: 798, 8: 912}
-bukets size: 103, top bucket start@927 (err:  5.83%), buckets: {0: 0, 1: 103, 2: 206, 3: 309, 4: 412, 5: 515, 6: 618, 7: 721, 8: 824, 9: 927}
-bukets size:  94, top bucket start@940 (err: 10.64%), buckets: {0: 0, 1:  94, 2: 188, 3: 282, 4: 376, 5: 470, 6: 564, 7: 658, 8: 752, 9: 846, 10: 940}
-bukets size:  86, top bucket start@946 (err:  9.30%), buckets: {0: 0, 1:  86, 2: 172, 3: 258, 4: 344, 5: 430, 6: 516, 7: 602, 8: 688, 9: 774, 10: 860, 11: 946}
-bukets size:  79, top bucket start@948 (err:  3.80%), buckets: {0: 0, 1:  79, 2: 158, 3: 237, 4: 316, 5: 395, 6: 474, 7: 553, 8: 632, 9: 711, 10: 790, 11: 869, 12: 948}
-bukets size:  74, top bucket start@962 (err: 16.22%), buckets: {0: 0, 1:  74, 2: 148, 3: 222, 4: 296, 5: 370, 6: 444, 7: 518, 8: 592, 9: 666, 10: 740, 11: 814, 12: 888, 13: 962}
-bukets size:  69, top bucket start@966 (err: 15.94%), buckets: {0: 0, 1:  69, 2: 138, 3: 207, 4: 276, 5: 345, 6: 414, 7: 483, 8: 552, 9: 621, 10: 690, 11: 759, 12: 828, 13: 897, 14: 966}
-bukets size:  65, top bucket start@975 (err: 24.62%), buckets: {0: 0, 1:  65, 2: 130, 3: 195, 4: 260, 5: 325, 6: 390, 7: 455, 8: 520, 9: 585, 10: 650, 11: 715, 12: 780, 13: 845, 14: 910, 15: 975}
-bukets size:  61, top bucket start@976 (err: 21.31%), buckets: {0: 0, 1:  61, 2: 122, 3: 183, 4: 244, 5: 305, 6: 366, 7: 427, 8: 488, 9: 549, 10: 610, 11: 671, 12: 732, 13: 793, 14: 854, 15: 915, 16: 976}
-bukets size:  57, top bucket start@969 (err:  3.51%), buckets: {0: 0, 1:  57, 2: 114, 3: 171, 4: 228, 5: 285, 6: 342, 7: 399, 8: 456, 9: 513, 10: 570, 11: 627, 12: 684, 13: 741, 14: 798, 15: 855, 16: 912, 17: 969}
-bukets size:  54, top bucket start@972 (err:  3.70%), buckets: {0: 0, 1:  54, 2: 108, 3: 162, 4: 216, 5: 270, 6: 324, 7: 378, 8: 432, 9: 486, 10: 540, 11: 594, 12: 648, 13: 702, 14: 756, 15: 810, 16: 864, 17: 918, 18: 972}
-bukets size:  52, top bucket start@988 (err: 30.77%), buckets: {0: 0, 1:  52, 2: 104, 3: 156, 4: 208, 5: 260, 6: 312, 7: 364, 8: 416, 9: 468, 10: 520, 11: 572, 12: 624, 13: 676, 14: 728, 15: 780, 16: 832, 17: 884, 18: 936, 19: 988}
-
-Does that makes sense?
-
--- 
-#include <best/regards.h>
-
-Patrick Bellasi
+Reviewed-by: Rob Herring <robh@kernel.org>
