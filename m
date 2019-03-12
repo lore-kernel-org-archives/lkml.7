@@ -2,146 +2,120 @@ Return-Path: <SRS0=J4ZE=RP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_PASS autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 05B37C43381
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 18:03:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F356AC43381
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 18:03:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C621E214AF
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 18:03:14 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1552413794;
-	bh=a0oytfARmBA8nk8UsHsNzcvQ3W99CX4ejXRxtke/j7Q=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=XxOHJ39C4S2eUYidtnSvg9zs7cFqkXjfAYGao7VyTOzbJBsjDPbLSkZY/0t/u7YTX
-	 Iqcu7U+M8c1kDUIKYINJNYmRDzKUAvXy4sD0I0suhFElbgoK5TrPe5JoZnDV1tVqVU
-	 GLNWStM1lG/XuEjLWFVLFlM7EEJ0GattBJjleKAM=
+	by mail.kernel.org (Postfix) with ESMTP id CFEAC214AF
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 18:03:19 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728726AbfCLSDN (ORCPT
+        id S1728820AbfCLSDS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 12 Mar 2019 14:03:13 -0400
-Received: from mail.kernel.org ([198.145.29.99]:48978 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727707AbfCLRM4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 12 Mar 2019 13:12:56 -0400
-Received: from localhost (unknown [104.133.8.98])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id BCEFC217F4;
-        Tue, 12 Mar 2019 17:12:55 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1552410775;
-        bh=a0oytfARmBA8nk8UsHsNzcvQ3W99CX4ejXRxtke/j7Q=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=ziPcqWAkzHHdDsBM1Ce/w3CelkhoVZCH40OtXSJOgpn5ULtJ1goIt5xcWqy3Om6Uj
-         Yw6AZfIeJoveWhXJ4m32SX3x3gDsYl4TWST+sQNfZonz/MQnyEVNNKM/kyZGR/plg4
-         j8rdKzVos1HhTKfvpYlaNCYDFGigKBqwALrGg99o=
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     linux-kernel@vger.kernel.org
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Eric Dumazet <eric.dumazet@gmail.com>,
-        Alexei Starovoitov <ast@kernel.org>,
-        Martin KaFai Lau <kafai@fb.com>,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.20 114/171] bpf: Fix syscalls stackmap lookup potential deadlock
-Date:   Tue, 12 Mar 2019 10:08:14 -0700
-Message-Id: <20190312170357.712585962@linuxfoundation.org>
-X-Mailer: git-send-email 2.21.0
-In-Reply-To: <20190312170347.868927101@linuxfoundation.org>
-References: <20190312170347.868927101@linuxfoundation.org>
-User-Agent: quilt/0.65
-X-stable: review
-X-Patchwork-Hint: ignore
+        Tue, 12 Mar 2019 14:03:18 -0400
+Received: from usa-sjc-mx-foss1.foss.arm.com ([217.140.101.70]:47506 "EHLO
+        foss.arm.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727699AbfCLSDQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 12 Mar 2019 14:03:16 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.72.51.249])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 8E851A78;
+        Tue, 12 Mar 2019 11:03:15 -0700 (PDT)
+Received: from [10.1.196.92] (usa-sjc-imap-foss1.foss.arm.com [10.72.51.249])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id E83E33F59C;
+        Tue, 12 Mar 2019 11:03:14 -0700 (PDT)
+Subject: Re: [PATCH 0/4] irqchip/gic-v3-its: free_lpi_range tweaks
+To:     Rasmus Villemoes <linux@rasmusvillemoes.dk>,
+        linux-kernel@vger.kernel.org
+Cc:     stable@vger.kernel.org
+References: <20190312173350.4025-1-linux@rasmusvillemoes.dk>
+From:   Marc Zyngier <marc.zyngier@arm.com>
+Openpgp: preference=signencrypt
+Autocrypt: addr=marc.zyngier@arm.com; prefer-encrypt=mutual; keydata=
+ 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
+Organization: ARM Ltd
+Message-ID: <e0a7becd-9098-e264-b509-a6bcd5279a7a@arm.com>
+Date:   Tue, 12 Mar 2019 18:03:13 +0000
+User-Agent: Mozilla/5.0 (X11; Linux aarch64; rv:60.0) Gecko/20100101
+ Thunderbird/60.5.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+In-Reply-To: <20190312173350.4025-1-linux@rasmusvillemoes.dk>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-4.20-stable review patch.  If anyone has any objections, please let me know.
+Hi Rasmus,
 
-------------------
+On 12/03/2019 17:33, Rasmus Villemoes wrote:
+> I noticed that the O(n log n) behaviour of free_lpi_range could easily
+> be made O(n) (patch 4), though I don't suppose n is ever large enough
+> to actually matter. While there, I also stumbled on two other
+> micro-optimizations (2 and 3).
 
-[ Upstream commit 7c4cd051add3d00bbff008a133c936c515eaa8fe ]
+n is usually in the range 1 .. nr_cpus, so pretty small, even on the
+biggest machines we have around (256 threads). And actually, nobody ever
+frees LPIs, because hey, why would you?
 
-The map_lookup_elem used to not acquiring spinlock
-in order to optimize the reader.
+> Then while writing the commit log for the last patch, I noticed that
+> the cmp callback I was removing was actually buggy, so I went back and
+> added a patch in front suitable for -stable. I'll leave it to others
+> to decide if it's important enough for that.
 
-It was true until commit 557c0c6e7df8 ("bpf: convert stackmap to pre-allocation")
-The syscall's map_lookup_elem(stackmap) calls bpf_stackmap_copy().
-bpf_stackmap_copy() may find the elem no longer needed after the copy is done.
-If that is the case, pcpu_freelist_push() saves this elem for reuse later.
-This push requires a spinlock.
+Thanks for that. I'll have a look at the whole thing anyway (I've just
+glanced over it so far).
 
-If a tracing bpf_prog got run in the middle of the syscall's
-map_lookup_elem(stackmap) and this tracing bpf_prog is calling
-bpf_get_stackid(stackmap) which also requires the same pcpu_freelist's
-spinlock, it may end up with a dead lock situation as reported by
-Eric Dumazet in https://patchwork.ozlabs.org/patch/1030266/
+> Please note that this is only compile-tested.
 
-The situation is the same as the syscall's map_update_elem() which
-needs to acquire the pcpu_freelist's spinlock and could race
-with tracing bpf_prog.  Hence, this patch fixes it by protecting
-bpf_stackmap_copy() with this_cpu_inc(bpf_prog_active)
-to prevent tracing bpf_prog from running.
+Right, this needs some actual testing then. /me needs to build a guest
+that shakes the allocator a bit.
 
-A later syscall's map_lookup_elem commit f1a2e44a3aec ("bpf: add queue and stack maps")
-also acquires a spinlock and races with tracing bpf_prog similarly.
-Hence, this patch is forward looking and protects the majority
-of the map lookups.  bpf_map_offload_lookup_elem() is the exception
-since it is for network bpf_prog only (i.e. never called by tracing
-bpf_prog).
+Cheers,
 
-Fixes: 557c0c6e7df8 ("bpf: convert stackmap to pre-allocation")
-Reported-by: Eric Dumazet <eric.dumazet@gmail.com>
-Acked-by: Alexei Starovoitov <ast@kernel.org>
-Signed-off-by: Martin KaFai Lau <kafai@fb.com>
-Signed-off-by: Alexei Starovoitov <ast@kernel.org>
-Signed-off-by: Daniel Borkmann <daniel@iogearbox.net>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
----
- kernel/bpf/syscall.c | 12 ++++++++++--
- 1 file changed, 10 insertions(+), 2 deletions(-)
-
-diff --git a/kernel/bpf/syscall.c b/kernel/bpf/syscall.c
-index cf5040fd5434..5f03ddf7b615 100644
---- a/kernel/bpf/syscall.c
-+++ b/kernel/bpf/syscall.c
-@@ -712,8 +712,13 @@ static int map_lookup_elem(union bpf_attr *attr)
- 
- 	if (bpf_map_is_dev_bound(map)) {
- 		err = bpf_map_offload_lookup_elem(map, key, value);
--	} else if (map->map_type == BPF_MAP_TYPE_PERCPU_HASH ||
--		   map->map_type == BPF_MAP_TYPE_LRU_PERCPU_HASH) {
-+		goto done;
-+	}
-+
-+	preempt_disable();
-+	this_cpu_inc(bpf_prog_active);
-+	if (map->map_type == BPF_MAP_TYPE_PERCPU_HASH ||
-+	    map->map_type == BPF_MAP_TYPE_LRU_PERCPU_HASH) {
- 		err = bpf_percpu_hash_copy(map, key, value);
- 	} else if (map->map_type == BPF_MAP_TYPE_PERCPU_ARRAY) {
- 		err = bpf_percpu_array_copy(map, key, value);
-@@ -743,7 +748,10 @@ static int map_lookup_elem(union bpf_attr *attr)
- 		}
- 		rcu_read_unlock();
- 	}
-+	this_cpu_dec(bpf_prog_active);
-+	preempt_enable();
- 
-+done:
- 	if (err)
- 		goto free_value;
- 
+	M.
 -- 
-2.19.1
-
-
-
+Jazz is not dead. It just smells funny...
