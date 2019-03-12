@@ -2,116 +2,94 @@ Return-Path: <SRS0=J4ZE=RP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6FB65C43381
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 07:59:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 79AADC43381
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 08:00:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2F728214AE
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 07:59:59 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=umn.edu header.i=@umn.edu header.b="Ch9vuvjy"
+	by mail.kernel.org (Postfix) with ESMTP id 52BBB214AE
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 08:00:48 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727178AbfCLH75 (ORCPT
+        id S1727451AbfCLIAq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 12 Mar 2019 03:59:57 -0400
-Received: from mta-p8.oit.umn.edu ([134.84.196.208]:56324 "EHLO
-        mta-p8.oit.umn.edu" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726614AbfCLH75 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 12 Mar 2019 03:59:57 -0400
-Received: from localhost (unknown [127.0.0.1])
-        by mta-p8.oit.umn.edu (Postfix) with ESMTP id E7C3CA99
-        for <linux-kernel@vger.kernel.org>; Tue, 12 Mar 2019 07:59:55 +0000 (UTC)
-X-Virus-Scanned: amavisd-new at umn.edu
-Received: from mta-p8.oit.umn.edu ([127.0.0.1])
-        by localhost (mta-p8.oit.umn.edu [127.0.0.1]) (amavisd-new, port 10024)
-        with ESMTP id uIQRTyV2V7Xu for <linux-kernel@vger.kernel.org>;
-        Tue, 12 Mar 2019 02:59:55 -0500 (CDT)
-Received: from mail-io1-f70.google.com (mail-io1-f70.google.com [209.85.166.70])
-        (using TLSv1.2 with cipher AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mta-p8.oit.umn.edu (Postfix) with ESMTPS id B6462AA5
-        for <linux-kernel@vger.kernel.org>; Tue, 12 Mar 2019 02:59:55 -0500 (CDT)
-Received: by mail-io1-f70.google.com with SMTP id e9so1227481iob.4
-        for <linux-kernel@vger.kernel.org>; Tue, 12 Mar 2019 00:59:55 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=umn.edu; s=google;
-        h=from:to:cc:subject:date:message-id;
-        bh=1nkZcVU0GvUzDc/ZYNTpuRtHlao+2b0Vm1VZH2b1N8U=;
-        b=Ch9vuvjydJ4EhQPIcG7puULxC+JRbV5Chpg2PLSeQh+EyWOBrybWR1/nJNODcDbxaI
-         PQskGTtnLDWIo5/AU/BTCwwMJnVQgJs3ekRvPcMXx9Pp984XlFYGe7ufnX/NcpnSoEor
-         UorOHxgCM15q/CNDL8doF8cO90EcjUkKKvp+pmPW36YpXU7aK0nB1MOgA+u6Z8i4gMZn
-         XjmF4beVRrUNsqrgPHlNdEt3BVcTXDjYdAjqBsVNp7sxXBsHUXYnqQFn5cNQPRmM3rlM
-         snfDcGx7lXb78OO0gkXQ/5Yi3ibqv00LObONxyBOn9Ul81VHh61U4k69iGjjy3XnLsIC
-         EwnQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id;
-        bh=1nkZcVU0GvUzDc/ZYNTpuRtHlao+2b0Vm1VZH2b1N8U=;
-        b=UAqEP4ibNVfvh7cNQGN74cjljM44UJzRXgphkIe1mQGpjlplEceFDm1vY2VMpP4sFZ
-         feWIa9qJs+GmU97FuQx9FqNv4Ulls3lR0desKGngeR+TfSxWRQYNStZqSyc02lO56Kc3
-         pQzLKMpjDLiiNt3w7KMTylUWP/Hy/5166ol9UpVNesaI4llgKcI5n94wVb1X3bL5cPPa
-         zzhMt/LHUwbGUmZAWvKd7WFonVaeExiHstTIF3zvPgushXOiV5yK132BmAA2BA8ZKbC2
-         kcIs/MmiATnG5vkgV7mXXyXucF5gt0sX8NEQ1Ec5cbVRlMkbJ3ZlfvjAOaLG+M0Zuj7e
-         vZpQ==
-X-Gm-Message-State: APjAAAU+BSORs5IKLXQdQOaf+xz1fT43L9toqM8uzdNv8wv4jS813zBo
-        kJCW8tFY5xPAz930tkkCYNyTbyqd5WQgvDB3HPjqTQYclSkAIDH4cVj0/tIYeVQwN3juu28vfmH
-        U3ybxQq4cZ/BREbLbjGX3EhhbiTHq
-X-Received: by 2002:a02:4083:: with SMTP id n125mr21568212jaa.63.1552377595298;
-        Tue, 12 Mar 2019 00:59:55 -0700 (PDT)
-X-Google-Smtp-Source: APXvYqyOfP+9mqD+1XLGDv4RfFO3LOxcYkCR4RoLYjEACGFPQr+ni9W5LMOCuUKOkpHRPxMIwUeagA==
-X-Received: by 2002:a02:4083:: with SMTP id n125mr21568200jaa.63.1552377595059;
-        Tue, 12 Mar 2019 00:59:55 -0700 (PDT)
-Received: from bee.dtc.umn.edu (cs-bee-u.cs.umn.edu. [128.101.106.63])
-        by smtp.gmail.com with ESMTPSA id u12sm3391365iop.77.2019.03.12.00.59.53
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Tue, 12 Mar 2019 00:59:54 -0700 (PDT)
-From:   Kangjie Lu <kjlu@umn.edu>
-To:     kjlu@umn.edu
-Cc:     pakki001@umn.edu, Ping-Ke Shih <pkshih@realtek.com>,
-        Kalle Valo <kvalo@codeaurora.org>,
-        "David S. Miller" <davem@davemloft.net>,
-        Larry Finger <Larry.Finger@lwfinger.net>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Ingo Molnar <mingo@kernel.org>,
-        Randy Dunlap <rdunlap@infradead.org>,
-        linux-wireless@vger.kernel.org, netdev@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH] net: rtl8192c: fix a potential NULL pointer dereference
-Date:   Tue, 12 Mar 2019 02:59:46 -0500
-Message-Id: <20190312075948.1569-1-kjlu@umn.edu>
-X-Mailer: git-send-email 2.17.1
+        Tue, 12 Mar 2019 04:00:46 -0400
+Received: from mga07.intel.com ([134.134.136.100]:32377 "EHLO mga07.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727089AbfCLIAq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 12 Mar 2019 04:00:46 -0400
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga001.fm.intel.com ([10.253.24.23])
+  by orsmga105.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 12 Mar 2019 01:00:45 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.58,470,1544515200"; 
+   d="scan'208";a="154206711"
+Received: from hkrasnod-mobl.ger.corp.intel.com (HELO localhost) ([10.252.62.84])
+  by fmsmga001.fm.intel.com with ESMTP; 12 Mar 2019 01:00:37 -0700
+From:   Jani Nikula <jani.nikula@linux.intel.com>
+To:     Al Viro <viro@zeniv.linux.org.uk>,
+        syzbot <syzbot+1505c80c74256c6118a5@syzkaller.appspotmail.com>
+Cc:     airlied@linux.ie, akpm@linux-foundation.org, amir73il@gmail.com,
+        chris@chris-wilson.co.uk, darrick.wong@oracle.com,
+        david@fromorbit.com, dri-devel@lists.freedesktop.org,
+        dvyukov@google.com, eparis@redhat.com, hannes@cmpxchg.org,
+        hughd@google.com, intel-gfx@lists.freedesktop.org, jack@suse.cz,
+        joonas.lahtinen@linux.intel.com, jrdr.linux@gmail.com,
+        linux-kernel@vger.kernel.org, linux-mm@kvack.org, mingo@redhat.com,
+        mszeredi@redhat.com, penguin-kernel@i-love.sakura.ne.jp,
+        peterz@infradead.org, rodrigo.vivi@intel.com,
+        syzkaller-bugs@googlegroups.com, willy@infradead.org
+Subject: Re: INFO: rcu detected stall in sys_sendfile64 (2)
+In-Reply-To: <20190312040829.GQ2217@ZenIV.linux.org.uk>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+References: <00000000000010b2fc057fcdfaba@google.com> <0000000000008c75b50583ddb5f8@google.com> <20190312040829.GQ2217@ZenIV.linux.org.uk>
+Date:   Tue, 12 Mar 2019 10:00:36 +0200
+Message-ID: <871s3cfrob.fsf@intel.com>
+MIME-Version: 1.0
+Content-Type: text/plain
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-In case dev_alloc_skb fails, the fix safely returns to avoid
-potential NULL pointer dereference.
+On Tue, 12 Mar 2019, Al Viro <viro@zeniv.linux.org.uk> wrote:
+> On Mon, Mar 11, 2019 at 08:59:00PM -0700, syzbot wrote:
+>> syzbot has bisected this bug to:
+>> 
+>> commit 34e07e42c55aeaa78e93b057a6664e2ecde3fadb
+>> Author: Chris Wilson <chris@chris-wilson.co.uk>
+>> Date:   Thu Feb 8 10:54:48 2018 +0000
+>> 
+>>     drm/i915: Add missing kerneldoc for 'ent' in i915_driver_init_early
+>> 
+>> bisection log:  https://syzkaller.appspot.com/x/bisect.txt?x=13220283200000
+>> start commit:   34e07e42 drm/i915: Add missing kerneldoc for 'ent' in i915..
+>> git tree:       upstream
+>> final crash:    https://syzkaller.appspot.com/x/report.txt?x=10a20283200000
+>> console output: https://syzkaller.appspot.com/x/log.txt?x=17220283200000
+>> kernel config:  https://syzkaller.appspot.com/x/.config?x=abc3dc9b7a900258
+>> dashboard link: https://syzkaller.appspot.com/bug?extid=1505c80c74256c6118a5
+>> userspace arch: amd64
+>> syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=12c4dc28c00000
+>> C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=15df4108c00000
+>> 
+>> Reported-by: syzbot+1505c80c74256c6118a5@syzkaller.appspotmail.com
+>> Fixes: 34e07e42 ("drm/i915: Add missing kerneldoc for 'ent' in
+>> i915_driver_init_early")
+>
+> Umm...  Might be a good idea to add some plausibility filters - it is,
+> in theory, possible that adding a line in a comment changes behaviour
+> (without compiler bugs, even - playing with __LINE__ is all it would
+> take), but the odds that it's _not_ a false positive are very low.
 
-Signed-off-by: Kangjie Lu <kjlu@umn.edu>
----
- drivers/net/wireless/realtek/rtlwifi/rtl8192c/fw_common.c | 3 +++
- 1 file changed, 3 insertions(+)
+If it's not a false positive, it's bound to be good source material for
+IOCCC.
 
-diff --git a/drivers/net/wireless/realtek/rtlwifi/rtl8192c/fw_common.c b/drivers/net/wireless/realtek/rtlwifi/rtl8192c/fw_common.c
-index 18c76990a089..9042fc044c7e 100644
---- a/drivers/net/wireless/realtek/rtlwifi/rtl8192c/fw_common.c
-+++ b/drivers/net/wireless/realtek/rtlwifi/rtl8192c/fw_common.c
-@@ -623,6 +623,9 @@ void rtl92c_set_fw_rsvdpagepkt(struct ieee80211_hw *hw,
- 		      u1rsvdpageloc, 3);
- 
- 	skb = dev_alloc_skb(totalpacketlen);
-+	if (!skb)
-+		return;
-+
- 	skb_put_data(skb, &reserved_page_packet, totalpacketlen);
- 
- 	if (cmd_send_packet)
+BR,
+Jani.
+
+
 -- 
-2.17.1
-
+Jani Nikula, Intel Open Source Graphics Center
