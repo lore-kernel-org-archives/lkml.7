@@ -4,51 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 020D7C43381
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 18:05:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 51BF8C4360F
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 18:05:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BBF2C2087C
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 18:05:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1BE9E205C9
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 18:05:22 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1552413917;
-	bh=8IfmPEyHmslxKt59XpZTWy9lmBPPVN6c06+wGZVna50=;
+	s=default; t=1552413922;
+	bh=SVmJFjC2VeraPGqAJHZpCcOs2fhRTm/d8UN3HDmlTjs=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=EFzakHPW7I1NQ0Zo9ML3hF0sQuD63LFkc41joiCPG8YYxiDSaIZERWnw7uyjQY2Tg
-	 sfEGdLvMUAffYxXq2YuTid9U+Hj7O8B1AGxzYodG2nqiXGtwCc7H6ciN/PqSOtmmhx
-	 zZWYWBYC0aB7eneIgtZGDoIHuVkLEWyQh+39HIIE=
+	b=kBvHlDVAdMeLaLqZkeAl3COxanIwMS6aFn94U8ifnFbyHw/BlEnjMm0hacYEPRiIx
+	 iKqJ1/yiK6J5REdYVbuHrDkmnabMC4DRQoa3k0cq+K7GcXd4jmv14BoEHM3cWqkXr7
+	 Zqj9omfldkXGWyRakBHheLK7nfcIF9Ip+DfEemq0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728257AbfCLSFP (ORCPT
+        id S1727582AbfCLRMj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 12 Mar 2019 14:05:15 -0400
-Received: from mail.kernel.org ([198.145.29.99]:48336 "EHLO mail.kernel.org"
+        Tue, 12 Mar 2019 13:12:39 -0400
+Received: from mail.kernel.org ([198.145.29.99]:47332 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727590AbfCLRMl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 12 Mar 2019 13:12:41 -0400
+        id S1727405AbfCLRMV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 12 Mar 2019 13:12:21 -0400
 Received: from localhost (unknown [104.133.8.98])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id DDF50217F9;
-        Tue, 12 Mar 2019 17:12:40 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 4677E217F4;
+        Tue, 12 Mar 2019 17:12:20 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1552410761;
-        bh=8IfmPEyHmslxKt59XpZTWy9lmBPPVN6c06+wGZVna50=;
+        s=default; t=1552410740;
+        bh=SVmJFjC2VeraPGqAJHZpCcOs2fhRTm/d8UN3HDmlTjs=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=KxEtyxrKvCaizQ9bB87bI1/wjsNnA2p6Kwt3LMfV8VVBU9e3MF6TyStTY7DgePoZf
-         gw3KuC8rLKVfnC8efSO6mJVBC+cjLMBHHJOEZirl0Q4PZKWuG7rriTp/fNIwAibJtF
-         P73+wqsWBIo+cgTArm23AkYgFI8RLh8845SqBSCI=
+        b=qK369J+DGCmfy7lN33FJfsP2dVPZRUVQ0LzoW+otBAS+Cbz01MK4GcSYfMbzPSj0l
+         5WAe+sdPDd9A2Z8VV7cFm7Mpp0xStVgVvt03q9QmIukwYcBrFy5wY7osW7d3bDhFPI
+         DE/sUEXI7WUZS+cqNkNWu65CHU0CDkHO2zjYSMzE=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Felix Fietkau <nbd@nbd.name>,
-        Sven Eckelmann <sven@narfation.org>,
-        Simon Wunderlich <sw@simonwunderlich.de>,
+        stable@vger.kernel.org, Manish Chopra <manishc@marvell.com>,
+        Ariel Elior <aelior@marvell.com>,
+        "David S. Miller" <davem@davemloft.net>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.20 093/171] batman-adv: release station info tidstats
-Date:   Tue, 12 Mar 2019 10:07:53 -0700
-Message-Id: <20190312170355.976935399@linuxfoundation.org>
+Subject: [PATCH 4.20 044/171] qed: Fix system crash in ll2 xmit
+Date:   Tue, 12 Mar 2019 10:07:04 -0700
+Message-Id: <20190312170351.924954259@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190312170347.868927101@linuxfoundation.org>
 References: <20190312170347.868927101@linuxfoundation.org>
@@ -67,41 +67,82 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-[ Upstream commit 7d652669b61d702c6e62a39579d17f6881670ab6 ]
+[ Upstream commit 7c81626a3c37e4ac320b8ad785694ba498f24794 ]
 
-With the addition of TXQ stats in the per-tid statistics the struct
-station_info grew significantly. This resulted in stack size warnings
-due to the structure itself being above the limit for the warnings.
+Cache number of fragments in the skb locally as in case
+of linear skb (with zero fragments), tx completion
+(or freeing of skb) may happen before driver tries
+to get number of frgaments from the skb which could
+lead to stale access to an already freed skb.
 
-To work around this, the TID array was allocated dynamically. Also a
-function to free this content was introduced with commit 7ea3e110f2f8
-("cfg80211: release station info tidstats where needed") but the necessary
-changes were not provided for batman-adv's B.A.T.M.A.N. V implementation.
-
-Signed-off-by: Felix Fietkau <nbd@nbd.name>
-Fixes: 8689c051a201 ("cfg80211: dynamically allocate per-tid stats for station info")
-[sven@narfation.org: add commit message]
-Signed-off-by: Sven Eckelmann <sven@narfation.org>
-Signed-off-by: Simon Wunderlich <sw@simonwunderlich.de>
+Signed-off-by: Manish Chopra <manishc@marvell.com>
+Signed-off-by: Ariel Elior <aelior@marvell.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- net/batman-adv/bat_v_elp.c | 3 +++
- 1 file changed, 3 insertions(+)
+ drivers/net/ethernet/qlogic/qed/qed_ll2.c | 20 +++++++++++++++-----
+ 1 file changed, 15 insertions(+), 5 deletions(-)
 
-diff --git a/net/batman-adv/bat_v_elp.c b/net/batman-adv/bat_v_elp.c
-index e8090f099eb8..ef0dec20c7d8 100644
---- a/net/batman-adv/bat_v_elp.c
-+++ b/net/batman-adv/bat_v_elp.c
-@@ -104,6 +104,9 @@ static u32 batadv_v_elp_get_throughput(struct batadv_hardif_neigh_node *neigh)
+diff --git a/drivers/net/ethernet/qlogic/qed/qed_ll2.c b/drivers/net/ethernet/qlogic/qed/qed_ll2.c
+index 9e728ec82c21..25f67c0d5c57 100644
+--- a/drivers/net/ethernet/qlogic/qed/qed_ll2.c
++++ b/drivers/net/ethernet/qlogic/qed/qed_ll2.c
+@@ -2441,19 +2441,24 @@ static int qed_ll2_start_xmit(struct qed_dev *cdev, struct sk_buff *skb,
+ {
+ 	struct qed_ll2_tx_pkt_info pkt;
+ 	const skb_frag_t *frag;
++	u8 flags = 0, nr_frags;
+ 	int rc = -EINVAL, i;
+ 	dma_addr_t mapping;
+ 	u16 vlan = 0;
+-	u8 flags = 0;
  
- 		ret = cfg80211_get_station(real_netdev, neigh->addr, &sinfo);
+ 	if (unlikely(skb->ip_summed != CHECKSUM_NONE)) {
+ 		DP_INFO(cdev, "Cannot transmit a checksummed packet\n");
+ 		return -EINVAL;
+ 	}
  
-+		/* free the TID stats immediately */
-+		cfg80211_sinfo_release_content(&sinfo);
+-	if (1 + skb_shinfo(skb)->nr_frags > CORE_LL2_TX_MAX_BDS_PER_PACKET) {
++	/* Cache number of fragments from SKB since SKB may be freed by
++	 * the completion routine after calling qed_ll2_prepare_tx_packet()
++	 */
++	nr_frags = skb_shinfo(skb)->nr_frags;
 +
- 		dev_put(real_netdev);
- 		if (ret == -ENOENT) {
- 			/* Node is not associated anymore! It would be
++	if (1 + nr_frags > CORE_LL2_TX_MAX_BDS_PER_PACKET) {
+ 		DP_ERR(cdev, "Cannot transmit a packet with %d fragments\n",
+-		       1 + skb_shinfo(skb)->nr_frags);
++		       1 + nr_frags);
+ 		return -EINVAL;
+ 	}
+ 
+@@ -2475,7 +2480,7 @@ static int qed_ll2_start_xmit(struct qed_dev *cdev, struct sk_buff *skb,
+ 	}
+ 
+ 	memset(&pkt, 0, sizeof(pkt));
+-	pkt.num_of_bds = 1 + skb_shinfo(skb)->nr_frags;
++	pkt.num_of_bds = 1 + nr_frags;
+ 	pkt.vlan = vlan;
+ 	pkt.bd_flags = flags;
+ 	pkt.tx_dest = QED_LL2_TX_DEST_NW;
+@@ -2486,12 +2491,17 @@ static int qed_ll2_start_xmit(struct qed_dev *cdev, struct sk_buff *skb,
+ 	    test_bit(QED_LL2_XMIT_FLAGS_FIP_DISCOVERY, &xmit_flags))
+ 		pkt.remove_stag = true;
+ 
++	/* qed_ll2_prepare_tx_packet() may actually send the packet if
++	 * there are no fragments in the skb and subsequently the completion
++	 * routine may run and free the SKB, so no dereferencing the SKB
++	 * beyond this point unless skb has any fragments.
++	 */
+ 	rc = qed_ll2_prepare_tx_packet(&cdev->hwfns[0], cdev->ll2->handle,
+ 				       &pkt, 1);
+ 	if (rc)
+ 		goto err;
+ 
+-	for (i = 0; i < skb_shinfo(skb)->nr_frags; i++) {
++	for (i = 0; i < nr_frags; i++) {
+ 		frag = &skb_shinfo(skb)->frags[i];
+ 
+ 		mapping = skb_frag_dma_map(&cdev->pdev->dev, frag, 0,
 -- 
 2.19.1
 
