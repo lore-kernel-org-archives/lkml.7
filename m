@@ -2,206 +2,140 @@ Return-Path: <SRS0=J4ZE=RP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_MUTT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0366AC43381
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 13:38:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 87CC8C10F00
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 13:42:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C4CD62075C
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 13:38:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 56D292147C
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 13:42:12 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1552398132;
+	bh=h8/VRoGEIFxhVZzPMK3EN+z2WLQlW8+m38g6dMRwdPo=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=UjYq4o3pw+SlYGq72xsEChz+8vuV+1vpx0en0VVn4aSYJg2RvBVhR1OheTQkExTD2
+	 BOeOv5f078ZSRiOlecKV+nnBM+vzCtVGbmM8AwIE9Ld59C4ZpxqHReuNEDekC6RjNE
+	 cIyfLoYVU562X+9KQ3pQx7W3+m8ngK6fGp1qdVxc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726814AbfCLNiX (ORCPT
+        id S1726556AbfCLNmL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 12 Mar 2019 09:38:23 -0400
-Received: from szxga04-in.huawei.com ([45.249.212.190]:4675 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1725774AbfCLNiV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 12 Mar 2019 09:38:21 -0400
-Received: from DGGEMS403-HUB.china.huawei.com (unknown [172.30.72.60])
-        by Forcepoint Email with ESMTP id 77D1FE6603A2B2CFAEB4;
-        Tue, 12 Mar 2019 21:38:17 +0800 (CST)
-Received: from localhost (10.202.226.61) by DGGEMS403-HUB.china.huawei.com
- (10.3.19.203) with Microsoft SMTP Server id 14.3.408.0; Tue, 12 Mar 2019
- 21:38:11 +0800
-Date:   Tue, 12 Mar 2019 13:37:56 +0000
-From:   Jonathan Cameron <jonathan.cameron@huawei.com>
-To:     Keith Busch <kbusch@kernel.org>
-CC:     "Busch, Keith" <keith.busch@intel.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linux-acpi@vger.kernel.org" <linux-acpi@vger.kernel.org>,
-        "linux-mm@kvack.org" <linux-mm@kvack.org>,
-        "linux-api@vger.kernel.org" <linux-api@vger.kernel.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Rafael Wysocki <rafael@kernel.org>,
-        "Hansen, Dave" <dave.hansen@intel.com>,
-        "Williams, Dan J" <dan.j.williams@intel.com>
-Subject: Re: [PATCHv7 10/10] doc/mm: New documentation for memory
- performance
-Message-ID: <20190312133756.000066c7@huawei.com>
-In-Reply-To: <20190311201632.GG10411@localhost.localdomain>
-References: <20190227225038.20438-1-keith.busch@intel.com>
-        <20190227225038.20438-11-keith.busch@intel.com>
-        <20190311113843.00006b47@huawei.com>
-        <20190311201632.GG10411@localhost.localdomain>
-Organization: Huawei
-X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; i686-w64-mingw32)
+        Tue, 12 Mar 2019 09:42:11 -0400
+Received: from mail-oi1-f194.google.com ([209.85.167.194]:37821 "EHLO
+        mail-oi1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725874AbfCLNmL (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 12 Mar 2019 09:42:11 -0400
+Received: by mail-oi1-f194.google.com with SMTP id w66so2093891oia.4;
+        Tue, 12 Mar 2019 06:42:10 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=HfcLv1/QrBGNjOWRj6KsbXECfCitu3ITt5OND6TyLp8=;
+        b=gLYQjQj48JxAJztNK5xBtS1TzHpK846ASLCrtnEOcgW+SYK/9g6KQHaf4YwRQEXs+/
+         Y3fTo9EYu+kRPU90q2KaxxJAWm3Y7DccGerDNFR88f3dzegNDChYvGXu7svba6GWds+e
+         sVoiWbdLjvC+9a9pOkmH6252Cq+mORtteev/Np3jTaks+BZqVEQfrOMx2/1brcErY39u
+         Uo1Te7Z2wZ7AnOvz7ltU7oEva/zTZextAQpVPqbOIT1dWfBNJ7tZ27qZpY15B7D9F6lS
+         wCq+9XwZ3r/A7/75pH0LxQApT9QcHizpCwuwW/YnBvmzK9a0Qk6nAEf62jirb7FOPsqf
+         dcsw==
+X-Gm-Message-State: APjAAAWIKcyVPiu0n1WHry+hFXKx1duyznd+quWJwuIdDBo1YSX6mzNA
+        83+gugSssVx2pJ5W85vPyakIXic=
+X-Google-Smtp-Source: APXvYqwYEevY2oWR9RU4BlZqVu0LMG+77i6mtsJVfO93pDoJFh2SwxY11++65Bu3oKQuppDIY1WIcw==
+X-Received: by 2002:aca:5906:: with SMTP id n6mr1664288oib.154.1552398129677;
+        Tue, 12 Mar 2019 06:42:09 -0700 (PDT)
+Received: from localhost ([70.231.7.113])
+        by smtp.gmail.com with ESMTPSA id q1sm3444268oth.42.2019.03.12.06.42.09
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Tue, 12 Mar 2019 06:42:09 -0700 (PDT)
+Date:   Tue, 12 Mar 2019 08:42:08 -0500
+From:   Rob Herring <robh@kernel.org>
+To:     Samuel Holland <samuel@sholland.org>
+Cc:     Maxime Ripard <maxime.ripard@bootlin.com>,
+        Chen-Yu Tsai <wens@csie.org>,
+        Jassi Brar <jassisinghbrar@gmail.com>,
+        Michael Turquette <mturquette@baylibre.com>,
+        Stephen Boyd <sboyd@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-clk@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-sunxi@googlegroups.com
+Subject: Re: [PATCH v3 11/15] [NOT FOR MERGE] dt-bindings: Add a binding for
+ a mailbox-backed interrupt controller
+Message-ID: <20190312134208.GA2017@bogus>
+References: <20190302042951.53671-1-samuel@sholland.org>
+ <20190302042951.53671-12-samuel@sholland.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="US-ASCII"
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.202.226.61]
-X-CFilter-Loop: Reflected
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190302042951.53671-12-samuel@sholland.org>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, 11 Mar 2019 14:16:33 -0600
-Keith Busch <kbusch@kernel.org> wrote:
-
-> On Mon, Mar 11, 2019 at 04:38:43AM -0700, Jonathan Cameron wrote:
-> > On Wed, 27 Feb 2019 15:50:38 -0700
-> > Keith Busch <keith.busch@intel.com> wrote:
-> >   
-> > > Platforms may provide system memory where some physical address ranges
-> > > perform differently than others, or is side cached by the system.  
-> > The magic 'side cached' term still here in the patch description, ideally
-> > wants cleaning up.
-> >   
-> > > 
-> > > Add documentation describing a high level overview of such systems and the
-> > > perforamnce and caching attributes the kernel provides for applications  
-> > performance
-> >   
-> > > wishing to query this information.
-> > > 
-> > > Reviewed-by: Mike Rapoport <rppt@linux.ibm.com>
-> > > Signed-off-by: Keith Busch <keith.busch@intel.com>  
-> > 
-> > A few comments inline. Mostly the weird corner cases that I miss understood
-> > in one of the earlier versions of the code.
-> > 
-> > Whilst I think perhaps that one section could be tweaked a tiny bit I'm basically
-> > happy with this if you don't want to.
-> > 
-> > Reviewed-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
-> >   
-> > > ---
-> > >  Documentation/admin-guide/mm/numaperf.rst | 164 ++++++++++++++++++++++++++++++
-> > >  1 file changed, 164 insertions(+)
-> > >  create mode 100644 Documentation/admin-guide/mm/numaperf.rst
-> > > 
-> > > diff --git a/Documentation/admin-guide/mm/numaperf.rst b/Documentation/admin-guide/mm/numaperf.rst
-> > > new file mode 100644
-> > > index 000000000000..d32756b9be48
-> > > --- /dev/null
-> > > +++ b/Documentation/admin-guide/mm/numaperf.rst
-> > > @@ -0,0 +1,164 @@
-> > > +.. _numaperf:
-> > > +
-> > > +=============
-> > > +NUMA Locality
-> > > +=============
-> > > +
-> > > +Some platforms may have multiple types of memory attached to a compute
-> > > +node. These disparate memory ranges may share some characteristics, such
-> > > +as CPU cache coherence, but may have different performance. For example,
-> > > +different media types and buses affect bandwidth and latency.
-> > > +
-> > > +A system supports such heterogeneous memory by grouping each memory type
-> > > +under different domains, or "nodes", based on locality and performance
-> > > +characteristics.  Some memory may share the same node as a CPU, and others
-> > > +are provided as memory only nodes. While memory only nodes do not provide
-> > > +CPUs, they may still be local to one or more compute nodes relative to
-> > > +other nodes. The following diagram shows one such example of two compute
-> > > +nodes with local memory and a memory only node for each of compute node:
-> > > +
-> > > + +------------------+     +------------------+
-> > > + | Compute Node 0   +-----+ Compute Node 1   |
-> > > + | Local Node0 Mem  |     | Local Node1 Mem  |
-> > > + +--------+---------+     +--------+---------+
-> > > +          |                        |
-> > > + +--------+---------+     +--------+---------+
-> > > + | Slower Node2 Mem |     | Slower Node3 Mem |
-> > > + +------------------+     +--------+---------+
-> > > +
-> > > +A "memory initiator" is a node containing one or more devices such as
-> > > +CPUs or separate memory I/O devices that can initiate memory requests.
-> > > +A "memory target" is a node containing one or more physical address
-> > > +ranges accessible from one or more memory initiators.
-> > > +
-> > > +When multiple memory initiators exist, they may not all have the same
-> > > +performance when accessing a given memory target. Each initiator-target
-> > > +pair may be organized into different ranked access classes to represent
-> > > +this relationship.   
-> > 
-> > This concept is a bit vague at the moment. Largely because only access0
-> > is actually defined.  We should definitely keep a close eye on any others
-> > that are defined in future to make sure this text is still valid.
-> > 
-> > I can certainly see it being used for different ideas of 'best' rather
-> > than simply best and second best etc.  
+On Fri, Mar 01, 2019 at 10:29:47PM -0600, Samuel Holland wrote:
+> This is a somewhat generic binding for an interrupt controller/forwarder
+> implemented in firmware and communicated with using a mailbox.
 > 
-> I tried to make the interface flexible to future extension, but I'm
-> still not sure how potential users would want to see something like
-> all pair-wise attributes, so I had some trouble trying to capture that
-> in words.
-
-Agreed, it is definitely non obvious.  We might end up with something
-totally different like Jerome is proposing anyway.  Let's address
-this when it happens!
-
->  
-> > > The highest performing initiator to a given target
-> > > +is considered to be one of that target's local initiators, and given
-> > > +the highest access class, 0. Any given target may have one or more
-> > > +local initiators, and any given initiator may have multiple local
-> > > +memory targets.
-> > > +
-> > > +To aid applications matching memory targets with their initiators, the
-> > > +kernel provides symlinks to each other. The following example lists the
-> > > +relationship for the access class "0" memory initiators and targets, which is
-> > > +the of nodes with the highest performing access relationship::
-> > > +
-> > > +	# symlinks -v /sys/devices/system/node/nodeX/access0/targets/
-> > > +	relative: /sys/devices/system/node/nodeX/access0/targets/nodeY -> ../../nodeY  
-> > 
-> > So this one perhaps needs a bit more description - I would put it after initiators
-> > which precisely fits the description you have here now.
-> > 
-> > "targets contains those nodes for which this initiator is the best possible initiator."
-> > 
-> > which is subtly different form
-> > 
-> > "targets contains those nodes to which this node has the highest
-> > performing access characteristics."
-> > 
-> > For example in my test case:
-> > * 4 nodes with local memory and cpu, 1 node remote and equal distant from all of the
-> >   initiators,
-> > 
-> > targets for the compute nodes contains both themselves and the remote node, to which
-> > the characteristics are of course worse. As you point out before, we need to look
-> > in 
-> > node0/access0/targets/node0/access0/initiators 
-> > node0/access0/targets/node4/access0/initiators 
-> > to get the relevant characteristics and work out that node0 is 'nearer' itself
-> > (obviously this is a bit of a silly case, but we could have no memory node0 and
-> > be talking about node4 and node5.
-> > 
-> > I am happy with the actual interface, this is just a question about whether we can tweak
-> > this text to be slightly clearer.  
+> Signed-off-by: Samuel Holland <samuel@sholland.org>
+> ---
+>  .../interrupt-controller/mbox-intc.txt        | 33 +++++++++++++++++++
+>  1 file changed, 33 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/interrupt-controller/mbox-intc.txt
 > 
-> Sure, I mention this in patch 4's commit message. Probably worth
-> repeating here:
+> diff --git a/Documentation/devicetree/bindings/interrupt-controller/mbox-intc.txt b/Documentation/devicetree/bindings/interrupt-controller/mbox-intc.txt
+> new file mode 100644
+> index 000000000000..a0eb7904ca83
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/interrupt-controller/mbox-intc.txt
+> @@ -0,0 +1,33 @@
+> +Mailbox-backed Interrupt Controller
+> +===================================
+
+Probably never really going to be generic as every mailbox protocol is 
+different.
+
+> +
+> +This binding represents an interrupt controller implemented in firmware,
+> +that uses a mailbox channel to signal and acknowledge interrupts.
+> +
+> +Device Node:
+> +============
+> +
+> +Required properties:
+> +--------------------
+> +- compatible:		Must be one of the following strings:
+> +			- allwinner,sunxi-msgbox-intc
+> +- interrupt-controller:	Signifies that this node is an interrupt controller.
+> +- #interrupt-cells:	Must be 1.
+
+No edge/level control?
+
+> +- mboxes:		phandle for the mailbox controller and channel
+> +			specifier. If the mailbox controller has unidirectional
+> +			channels, two entries are required (see below).
+> +- mbox-names:		Only required for unidirectional mailbox channels. In
+> +			that case, it must contain the strings "tx" and "rx"
+> +			(where "tx" and "rx" are from Linux's perspective, not
+
+/Linux/the OS/
+
+> +			the direction the interrupts are traveling).
+> +
+> +Example:
+> +--------
+> +
+> +	msgbox_intc: interrupt-controller {
+> +		compatible = "allwinner,sunxi-msgbox-intc";
+> +		interrupt-controller;
+> +		#interrupt-cells = <1>;
+> +		mboxes = <&msgbox 6>, <&msgbox 7>;
+> +		mbox-names = "tx", "rx";
+> +	};
+> -- 
+> 2.19.2
 > 
->     A memory initiator may have multiple memory targets in the same access
->     class. The target memory's initiators in a given class indicate the
->     nodes access characteristics share the same performance relative to other
->     linked initiator nodes. Each target within an initiator's access class,
->     though, do not necessarily perform the same as each other.
-That sounds good to me.
-
-
-
