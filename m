@@ -2,168 +2,197 @@ Return-Path: <SRS0=J4ZE=RP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_MUTT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 32C7DC43381
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 11:33:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D851EC43381
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 11:37:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F3D062075C
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 11:32:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9D25A2175B
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 11:37:40 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="bx4Y47Yj"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726406AbfCLLc6 (ORCPT
+        id S1726456AbfCLLhj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 12 Mar 2019 07:32:58 -0400
-Received: from foss.arm.com ([217.140.101.70]:40842 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725811AbfCLLc6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 12 Mar 2019 07:32:58 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.72.51.249])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 6ACC1374;
-        Tue, 12 Mar 2019 04:32:57 -0700 (PDT)
-Received: from [10.1.196.92] (usa-sjc-imap-foss1.foss.arm.com [10.72.51.249])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 561723F59C;
-        Tue, 12 Mar 2019 04:32:55 -0700 (PDT)
-Subject: Re: [RFC] Question about TLB flush while set Stage-2 huge pages
-To:     Zheng Xiang <zhengxiang9@huawei.com>, christoffer.dall@arm.com,
-        catalin.marinas@arm.com, will.deacon@arm.com,
-        suzuki.poulose@arm.com, james.morse@arm.com
-Cc:     linux-arm-kernel@lists.infradead.org, kvmarm@lists.cs.columbia.edu,
-        linux-kernel@vger.kernel.org,
-        Wang Haibin <wanghaibin.wang@huawei.com>,
-        "yuzenghui@huawei.com" <yuzenghui@huawei.com>,
-        lious.lilei@hisilicon.com, lishuo1@hisilicon.com
-References: <5f712cc6-0874-adbe-add6-46f5de24f36f@huawei.com>
-From:   Marc Zyngier <marc.zyngier@arm.com>
-Openpgp: preference=signencrypt
-Autocrypt: addr=marc.zyngier@arm.com; prefer-encrypt=mutual; keydata=
- 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
-Organization: ARM Ltd
-Message-ID: <e2a94937-c324-e2d6-7e61-3f998e6e6e22@arm.com>
-Date:   Tue, 12 Mar 2019 11:32:53 +0000
-User-Agent: Mozilla/5.0 (X11; Linux aarch64; rv:60.0) Gecko/20100101
- Thunderbird/60.5.1
+        Tue, 12 Mar 2019 07:37:39 -0400
+Received: from mail-wm1-f68.google.com ([209.85.128.68]:37004 "EHLO
+        mail-wm1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725844AbfCLLhi (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 12 Mar 2019 07:37:38 -0400
+Received: by mail-wm1-f68.google.com with SMTP id x10so2216966wmg.2;
+        Tue, 12 Mar 2019 04:37:35 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=02NJNpf9xftt9Jxg0i5VP4bGJO4Ftj6yP7T1GxfxOPE=;
+        b=bx4Y47YjIpRBe7OWb9QtvJgqhUob/ITaPZ3DfJ3dLEmnKZm78W3K2Z+BbBfq38jo45
+         KAXiwiTLGXWYs5zyyEQovUIkx+PWta3mgmVSFTEBq5Vz8etCcTueDXuF9e3M78wo396t
+         NSe43a4FHz/Ha3RFbG3WtIcpr+WKArT0/53e7JDYc3sWAE6wXO3V2bV6dp/y6DFTrAVu
+         MUyLUBirhGRgHWFh74QJ9VR88Hrk7MoCLOBCVSVn4xHf0YQzpqCpA1H8yxJ/qOY68i21
+         42nmgUjlcftaxi54Ss70s6dwZobrdWzEwvwD5bsr2cpi4+oZpP8+4VaqNbSViOY7AmbT
+         nWNQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=02NJNpf9xftt9Jxg0i5VP4bGJO4Ftj6yP7T1GxfxOPE=;
+        b=C2V3TUCcv1Z9gBp3dqNUhSq1FCWyNTU0Nbk0tqK8RPej0+DZhHcXM02ogv6fy9299w
+         KGF9LqGtU7BnpJNh8kfx9lijcNq4iYxys8Dl/Xkgup94AvDYyYPU4UHTz3SRTq6JK3yP
+         +nPSPjfOpGXt3X2XSV2/J2SD3ziw4SEmyTQ43fAlsq20hhhddvGyc0alQ9mY8YqUMsoI
+         /vsjZB8k7V4CM+k2ztJI0yHuiTCNlCYFkzTbHiTI9fbZYwpFhle0IER6z2VkWIpAajmO
+         JPTuqes0HqXeD8JzeJqy69ygjjYEw2XNFfsZzDTpTua4DVRwwDAQlHXf8Wov/LMPYxhm
+         DHWA==
+X-Gm-Message-State: APjAAAWR6vqBsw/zqSC4+YIKCBSNzKXxoshokUiTXtl98RqX4pzNK5kG
+        eCA0zSRQkT1xD0eirKydzvkQEUeE
+X-Google-Smtp-Source: APXvYqzR56N0XUCoqRCTiH1vFQODSsgDZ827Abey7jAuHhEk0wmWhBnL/XIVmbafF3pnviSFlHj1NQ==
+X-Received: by 2002:a1c:9694:: with SMTP id y142mr2019570wmd.98.1552390655001;
+        Tue, 12 Mar 2019 04:37:35 -0700 (PDT)
+Received: from localhost (pD9E51D2D.dip0.t-ipconnect.de. [217.229.29.45])
+        by smtp.gmail.com with ESMTPSA id n6sm12475415wrt.23.2019.03.12.04.37.33
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Tue, 12 Mar 2019 04:37:33 -0700 (PDT)
+Date:   Tue, 12 Mar 2019 12:37:32 +0100
+From:   Thierry Reding <thierry.reding@gmail.com>
+To:     "Enrico Weigelt, metux IT consult" <info@metux.net>
+Cc:     linux-kernel@vger.kernel.org, linus.walleij@linaro.org,
+        bgolaszewski@baylibre.com, andrew@aj.id.au, f.fainelli@gmail.com,
+        sbranden@broadcom.com, bcm-kernel-feedback-list@broadcom.com,
+        hoan@os.amperecomputing.com, orsonzhai@gmail.com,
+        baolin.wang@linaro.org, zhang.lyra@gmail.com,
+        keguang.zhang@gmail.com, vz@mleia.com, matthias.bgg@gmail.com,
+        grygorii.strashko@ti.com, ssantosh@kernel.org, khilman@kernel.org,
+        robert.jarzmik@free.fr, yamada.masahiro@socionext.com,
+        jun.nie@linaro.org, shawnguo@kernel.org,
+        linux-gpio@vger.kernel.org, linux-mips@vger.kernel.org,
+        linux-pwm@vger.kernel.org, linux-omap@vger.kernel.org,
+        linux-tegra@vger.kernel.org
+Subject: Re: [PATCH 38/42] drivers: gpio: vr41xx: use
+ devm_platform_ioremap_resource()
+Message-ID: <20190312113732.GG31026@ulmo>
+References: <1552330521-4276-1-git-send-email-info@metux.net>
+ <1552330521-4276-38-git-send-email-info@metux.net>
 MIME-Version: 1.0
-In-Reply-To: <5f712cc6-0874-adbe-add6-46f5de24f36f@huawei.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature"; boundary="9Iq5ULCa7nGtWwZS"
+Content-Disposition: inline
+In-Reply-To: <1552330521-4276-38-git-send-email-info@metux.net>
+User-Agent: Mutt/1.11.3 (2019-02-01)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Zheng,
 
-On 11/03/2019 16:31, Zheng Xiang wrote:
-> Hi all,
-> 
-> While a page is merged into a transparent huge page, KVM will invalidate Stage-2 for
-> the base address of the huge page and the whole of Stage-1.
-> However, this just only invalidates the first page within the huge page and the other
-> pages are not invalidated, see bellow:
-> 
->     +---------------+--------------+
->     |abcde       2MB-Page          |
->     +---------------+--------------+
-> 
->     TLB before setting new pmd:
->     +---------------+--------------+
->     |      VA       |    PAGESIZE  |
->     +---------------+--------------+
->     |      a        |      4KB     |
->     +---------------+--------------+
->     |      b        |      4KB     |
->     +---------------+--------------+
->     |      c        |      4KB     |
->     +---------------+--------------+
->     |      d        |      4KB     |
->     +---------------+--------------+
-> 
->     TLB after setting new pmd:
->     +---------------+--------------+
->     |      VA       |    PAGESIZE  |
->     +---------------+--------------+
->     |      a        |      2MB     |
->     +---------------+--------------+
->     |      b        |      4KB     |
->     +---------------+--------------+
->     |      c        |      4KB     |
->     +---------------+--------------+
->     |      d        |      4KB     |
->     +---------------+--------------+
-> 
-> When VM access *b* address, it will hit the TLB and result in TLB conflict aborts or other potential exceptions.
+--9Iq5ULCa7nGtWwZS
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-That's really bad. I can only imagine two scenarios:
+On Mon, Mar 11, 2019 at 07:55:17PM +0100, Enrico Weigelt, metux IT consult =
+wrote:
+> Use the new helper that wraps the calls to platform_get_resource()
+> and devm_ioremap_resource() together.
+>=20
+> this driver deserves a bit more cleanup, to get rid of the global
+> variable giu_base, which makes it single-instance-only.
+>=20
+> Signed-off-by: Enrico Weigelt, metux IT consult <info@metux.net>
+> ---
+>  drivers/gpio/gpio-vr41xx.c | 19 +++++--------------
+>  1 file changed, 5 insertions(+), 14 deletions(-)
+>=20
+> diff --git a/drivers/gpio/gpio-vr41xx.c b/drivers/gpio/gpio-vr41xx.c
+> index b13a49c..98cd715 100644
+> --- a/drivers/gpio/gpio-vr41xx.c
+> +++ b/drivers/gpio/gpio-vr41xx.c
+> @@ -467,10 +467,9 @@ static int vr41xx_gpio_to_irq(struct gpio_chip *chip=
+, unsigned offset)
+> =20
+>  static int giu_probe(struct platform_device *pdev)
+>  {
+> -	struct resource *res;
+>  	unsigned int trigger, i, pin;
+>  	struct irq_chip *chip;
+> -	int irq, ret;
+> +	int irq;
+> =20
+>  	switch (pdev->id) {
+>  	case GPIO_50PINS_PULLUPDOWN:
+> @@ -489,21 +488,14 @@ static int giu_probe(struct platform_device *pdev)
+>  		return -ENODEV;
+>  	}
+> =20
+> -	res =3D platform_get_resource(pdev, IORESOURCE_MEM, 0);
+> -	if (!res)
+> -		return -EBUSY;
+> -
+> -	giu_base =3D ioremap(res->start, resource_size(res));
+> -	if (!giu_base)
+> -		return -ENOMEM;
+> +	giu_base =3D devm_platform_ioremap_resource(pdev, 0);
+> +	if (IS_ERR(giu_base))
+> +		return PTR_ERR(giu_base);
 
-1) We fail to unmap a,b,c,d (and potentially another 508 PTEs), loosing
-the PTE table in the process, and place the PMD instead. I can't see
-this happening.
+The driver currently doesn't request the memory described in the
+resource, so technically you're changing behaviour here and with your
+change the driver could now fail if somebody else has already claimed
+the memory.
 
-2) We fail to invalidate on unmap, and that slightly less bad (but still
-quite bad).
+Looking at arch/mips/vr41xx there doesn't seem to be an overlap between
+the memory region used by the GIU device and any others, so this should
+be safe. Not sure anyone still has hardware for this around to give it
+a spin.
 
-Which of the two cases are you seeing?
+Thierry
 
-> For example, we need to keep tracking of the VM memory dirty pages when VM is in live migration.
-> KVM will set the memslot READONLY and split the huge pages.
-> After live migration is canceled and abort, the pages will be merged into THP.
-> The later access to these pages which are READONLY will cause level-3 Permission Fault until they are invalidated.
-> 
-> So should we invalidate the tlb entries for all relative pages(e.g a,b,c,d), like __flush_tlb_range()?
-> Or we can call __kvm_tlb_flush_vmid() to invalidate all tlb entries.
+> =20
+>  	vr41xx_gpio_chip.parent =3D &pdev->dev;
+> =20
+> -	ret =3D gpiochip_add_data(&vr41xx_gpio_chip, NULL);
+> -	if (!ret) {
+> -		iounmap(giu_base);
+> +	if (gpiochip_add_data(&vr41xx_gpio_chip, NULL))
+>  		return -ENODEV;
+> -	}
+> =20
+>  	giu_write(GIUINTENL, 0);
+>  	giu_write(GIUINTENH, 0);
+> @@ -534,7 +526,6 @@ static int giu_probe(struct platform_device *pdev)
+>  static int giu_remove(struct platform_device *pdev)
+>  {
+>  	if (giu_base) {
+> -		iounmap(giu_base);
+>  		giu_base =3D NULL;
+>  	}
+> =20
+> --=20
+> 1.9.1
+>=20
 
-We should perform an invalidate on each unmap. unmap_stage2_range seems
-to do the right thing. __flush_tlb_range only caters for Stage1
-mappings, and __kvm_tlb_flush_vmid() is too big a hammer, as it nukes
-TLBs for the whole VM.
+--9Iq5ULCa7nGtWwZS
+Content-Type: application/pgp-signature; name="signature.asc"
 
-I'd really like to understand what you're seeing, and how to reproduce
-it. Do you have a minimal example I could run on my own HW?
+-----BEGIN PGP SIGNATURE-----
 
-Thanks,
+iQIzBAABCAAdFiEEiOrDCAFJzPfAjcif3SOs138+s6EFAlyHmfwACgkQ3SOs138+
+s6GpPw/+PO40QInzGgfRGJGf5fQ2uQKUwIiH2EQxp0L7tmyvF/ZYodNb2Oy16DM4
+ypJlpKtRU8udgnhj6h4Jr+rJ50Ak5Nz26aBltA0XVBpUm7eEfLbA3egfup3BtXDR
+eERmniHeC83brj+qd2ttpngN0p4RF06BiUtpqWQwYbPaM6ZRhZfqRr5Y3m673vRn
+Wm/uKpNVXJ+LjqDEbbwuawy9icfTjPK9u4x5W80H1Qw4AnQEH66cB6isB7kXCKNT
+hVA1AKnc2wor3HEQxNBhGESwg5j1tzBYQK6RJ6fVB9cnpOFQGjPCIjYsyJdNf1wc
+T27zc3UEL4Sy20crfEzVMaP23khdcdUFlyqLfnPfY3JmUT4NhhZr0FVUGP9iUHPa
+hLDtXwUEt+Ojol9uIAyT8OePfSm797Xpk6t+WVpt3H8hrXvXdo77NGUUZXG/IInq
+QAMeV/yN/iNOnUguWe7xjBHQLuVUbm+yuNCgKWFG+DOOKYjN8TLmuju1SeHHj/fx
+wge65+PnS+SiHzaNz8icRZHaH9VWSGS2qCvEcMuoGJZjGyz3ajaqdzSVfm0TsnIT
+R87r1B46OZC++ztZicofvfGtc1vInwaE8F1ikjKxa5VJoFofssI0HnzU+WHrgfcs
+PO9mqyLDHjv569YoyX7NcEWdtXotVJT/GlYdkkI+SN70/7Va+4M=
+=BSp7
+-----END PGP SIGNATURE-----
 
-	M.
--- 
-Jazz is not dead. It just smells funny...
+--9Iq5ULCa7nGtWwZS--
