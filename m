@@ -2,126 +2,151 @@ Return-Path: <SRS0=J4ZE=RP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_NEOMUTT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_MUTT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E5B8DC10F00
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 15:35:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C7EE4C43381
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 15:35:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C2250214AF
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 15:35:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9BB3E2083D
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 15:35:37 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726792AbfCLPfI (ORCPT
+        id S1726808AbfCLPfg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 12 Mar 2019 11:35:08 -0400
-Received: from nat.nue.novell.com ([195.135.221.2]:46023 "EHLO suse.de"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726218AbfCLPfI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 12 Mar 2019 11:35:08 -0400
-Received: by suse.de (Postfix, from userid 1000)
-        id 87303453F; Tue, 12 Mar 2019 16:35:06 +0100 (CET)
-Date:   Tue, 12 Mar 2019 16:35:06 +0100
-From:   Oscar Salvador <osalvador@suse.de>
-To:     Qian Cai <cai@lca.pw>
-Cc:     akpm@linux-foundation.org, mhocko@suse.com, vbabka@suse.cz,
-        linux-mm@kvack.org, linux-kernel@vger.kernel.org
-Subject: Re: [RESEND PATCH] mm/hotplug: don't reset pagetype flags for offline
-Message-ID: <20190312153458.qvmrblg3pnokgx4d@d104.suse.de>
-References: <20190310200102.88014-1-cai@lca.pw>
+        Tue, 12 Mar 2019 11:35:36 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:26127 "EHLO mx1.redhat.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726218AbfCLPff (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 12 Mar 2019 11:35:35 -0400
+Received: from smtp.corp.redhat.com (int-mx06.intmail.prod.int.phx2.redhat.com [10.5.11.16])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id 9722F308FED2;
+        Tue, 12 Mar 2019 15:35:33 +0000 (UTC)
+Received: from redhat.com (ovpn-117-131.phx2.redhat.com [10.3.117.131])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id 0C7025C280;
+        Tue, 12 Mar 2019 15:35:30 +0000 (UTC)
+Date:   Tue, 12 Mar 2019 11:35:29 -0400
+From:   Jerome Glisse <jglisse@redhat.com>
+To:     Christopher Lameter <cl@linux.com>
+Cc:     john.hubbard@gmail.com, Andrew Morton <akpm@linux-foundation.org>,
+        linux-mm@kvack.org, Al Viro <viro@zeniv.linux.org.uk>,
+        Christian Benvenuti <benve@cisco.com>,
+        Christoph Hellwig <hch@infradead.org>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Dave Chinner <david@fromorbit.com>,
+        Dennis Dalessandro <dennis.dalessandro@intel.com>,
+        Doug Ledford <dledford@redhat.com>,
+        Ira Weiny <ira.weiny@intel.com>, Jan Kara <jack@suse.cz>,
+        Jason Gunthorpe <jgg@ziepe.ca>,
+        Matthew Wilcox <willy@infradead.org>,
+        Michal Hocko <mhocko@kernel.org>,
+        Mike Rapoport <rppt@linux.ibm.com>,
+        Mike Marciniszyn <mike.marciniszyn@intel.com>,
+        Ralph Campbell <rcampbell@nvidia.com>,
+        Tom Talpey <tom@talpey.com>,
+        LKML <linux-kernel@vger.kernel.org>,
+        linux-fsdevel@vger.kernel.org, John Hubbard <jhubbard@nvidia.com>
+Subject: Re: [PATCH v3 0/1] mm: introduce put_user_page*(), placeholder
+ versions
+Message-ID: <20190312153528.GB3233@redhat.com>
+References: <20190306235455.26348-1-jhubbard@nvidia.com>
+ <010001695b4631cd-f4b8fcbf-a760-4267-afce-fb7969e3ff87-000000@email.amazonses.com>
+ <20190308190704.GC5618@redhat.com>
+ <01000169703e5495-2815ba73-34e8-45d5-b970-45784f653a34-000000@email.amazonses.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=iso-8859-1
 Content-Disposition: inline
-In-Reply-To: <20190310200102.88014-1-cai@lca.pw>
-User-Agent: NeoMutt/20170421 (1.8.2)
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <01000169703e5495-2815ba73-34e8-45d5-b970-45784f653a34-000000@email.amazonses.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.16
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.49]); Tue, 12 Mar 2019 15:35:35 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sun, Mar 10, 2019 at 04:01:02PM -0400, Qian Cai wrote:
-> The commit f1dd2cd13c4b ("mm, memory_hotplug: do not associate hotadded
-> memory to zones until online") introduced move_pfn_range_to_zone() which
-> calls memmap_init_zone() during onlining a memory block.
-> memmap_init_zone() will reset pagetype flags and makes migrate type to
-> be MOVABLE.
+On Tue, Mar 12, 2019 at 04:52:07AM +0000, Christopher Lameter wrote:
+> On Fri, 8 Mar 2019, Jerome Glisse wrote:
 > 
-> However, in __offline_pages(), it also call undo_isolate_page_range()
-> after offline_isolated_pages() to do the same thing. Due to
-> the commit 2ce13640b3f4 ("mm: __first_valid_page skip over offline
-> pages") changed __first_valid_page() to skip offline pages,
-> undo_isolate_page_range() here just waste CPU cycles looping around the
-> offlining PFN range while doing nothing, because __first_valid_page()
-> will return NULL as offline_isolated_pages() has already marked all
-> memory sections within the pfn range as offline via
-> offline_mem_sections().
+> > >
+> > > It would good if that understanding would be enforced somehow given the problems
+> > > that we see.
+> >
+> > This has been discuss extensively already. GUP usage is now widespread in
+> > multiple drivers, removing that would regress userspace ie break existing
+> > application. We all know what the rules for that is.
 > 
-> Also, after calling the "useless" undo_isolate_page_range() here, it
-> reaches the point of no returning by notifying MEM_OFFLINE. Those pages
-> will be marked as MIGRATE_MOVABLE again once onlining. In addition, fix
-> an incorrect comment along the way.
+> The applications that work are using anonymous memory and memory
+> filesystems. I have never seen use cases with a real filesystem and would
+> have objected if someone tried something crazy like that.
 > 
-> Signed-off-by: Qian Cai <cai@lca.pw>
+> Because someone was able to get away with weird ways of abusing the system
+> it not an argument that we should continue to allow such things. In fact
+> we have repeatedly ensured that the kernel works reliably by improving the
+> kernel so that a proper failure is occurring.
 
-Reviewed-by: Oscar Salvador <osalvador@suse.de>
+Driver doing GUP on mmap of regular file is something that seems to
+already have widespread user (in the RDMA devices at least). So they
+are active users and they were never told that what they are doing
+was illegal.
 
-One thing I noticed when looking at start_isolate_page_range and 
-undo_isolate_page_range functions, is that start_isolate_page_range increments
-the number of isolated pageblocks, while undo_isolate_page_range does the counter
-part.
-Since undo_isolate_page_range is really never called during offlining,
-we leave zone->nr_isolate_pageblock with a stale value.
+Note that i am personaly fine with breaking device driver that can not
+abide by mmu notifier but the consensus seems that it is not fine to
+do so.
 
-I __think__  this does not matter much.
-We only get to check whether a zone got isolated pageblocks in
-has_isolate_pageblock(), and this is called from:
-
-free_one_page
-free_pcppages_bulk
-__free_one_page
-
-With a quick glance, the only difference in has_isolate_pageblock() returning
-true or false, seems to be that those functions perform some extra checks in
-case the zone reports to have isolated pageblocks.
-
-I wonder if we should set nr_isolate_pageblock back to its original value
-before start_isolate_page_range.
-
-> ---
->  mm/memory_hotplug.c | 2 --
->  mm/sparse.c         | 2 +-
->  2 files changed, 1 insertion(+), 3 deletions(-)
+> > > > In fact, the GUP documentation even recommends that pattern.
+> > >
+> > > Isnt that pattern safe for anonymous memory and memory filesystems like
+> > > hugetlbfs etc? Which is the common use case.
+> >
+> > Still an issue in respect to swapout ie if anon/shmem page was map
+> > read only in preparation for swapout and we do not report the page
+> > as dirty what endup in swap might lack what was written last through
+> > GUP.
 > 
-> diff --git a/mm/memory_hotplug.c b/mm/memory_hotplug.c
-> index 6b05576fb4ec..46017040b2f8 100644
-> --- a/mm/memory_hotplug.c
-> +++ b/mm/memory_hotplug.c
-> @@ -1655,8 +1655,6 @@ static int __ref __offline_pages(unsigned long start_pfn,
->  	/* Ok, all of our target is isolated.
->  	   We cannot do rollback at this point. */
->  	offline_isolated_pages(start_pfn, end_pfn);
-> -	/* reset pagetype flags and makes migrate type to be MOVABLE */
-> -	undo_isolate_page_range(start_pfn, end_pfn, MIGRATE_MOVABLE);
->  	/* removal success */
->  	adjust_managed_page_count(pfn_to_page(start_pfn), -offlined_pages);
->  	zone->present_pages -= offlined_pages;
-> diff --git a/mm/sparse.c b/mm/sparse.c
-> index 77a0554fa5bd..b3771f35a0ed 100644
-> --- a/mm/sparse.c
-> +++ b/mm/sparse.c
-> @@ -556,7 +556,7 @@ void online_mem_sections(unsigned long start_pfn, unsigned long end_pfn)
->  }
->  
->  #ifdef CONFIG_MEMORY_HOTREMOVE
-> -/* Mark all memory sections within the pfn range as online */
-> +/* Mark all memory sections within the pfn range as offline */
->  void offline_mem_sections(unsigned long start_pfn, unsigned long end_pfn)
->  {
->  	unsigned long pfn;
-> -- 
-> 2.17.2 (Apple Git-113)
-> 
+> Well swapout cannot occur if the page is pinned and those pages are also
+> often mlocked.
 
--- 
-Oscar Salvador
-SUSE L3
+I would need to check the swapout code but i believe the write to disk
+can happen before the pin checks happens. I believe the event flow is:
+map read only, allocate swap, write to disk, try to free page which
+checks for pin. So that you could write stale data to disk and the GUP
+going away before you perform the pin checks.
+
+They are other thing to take into account and that need proper page
+dirtying, like soft dirtyness for instance.
+
+
+> > >
+> > > Yes you now have the filesystem as well as the GUP pinner claiming
+> > > authority over the contents of a single memory segment. Maybe better not
+> > > allow that?
+> >
+> > This goes back to regressing existing driver with existing users.
+> 
+> There is no regression if that behavior never really worked.
+
+Well RDMA driver maintainer seems to report that this has been a valid
+and working workload for their users.
+
+
+> > > Two filesystem trying to sync one memory segment both believing to have
+> > > exclusive access and we want to sort this out. Why? Dont allow this.
+> >
+> > This is allowed, it always was, forbidding that case now would regress
+> > existing application and it would also means that we are modifying the
+> > API we expose to userspace. So again this is not something we can block
+> > without regressing existing user.
+> 
+> We have always stopped the user from doing obviously stupid and risky
+> things. It would be logical to do it here as well.
+
+While i would rather only allow device that can handle mmu notifier
+it is just not acceptable to regress existing user and they do seem
+to exist and had working setup going on for a while.
+
+Cheers,
+Jérôme
