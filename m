@@ -7,61 +7,51 @@ X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 46645C43381
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 17:28:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E1858C43381
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 17:28:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1208F206DF
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 17:28:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B1D67206DF
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 17:28:07 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1552411685;
-	bh=GSlcgqPz2C8S/vTZ1cBcsHjMedW9LaOoukhi/fnEdOU=;
+	s=default; t=1552411687;
+	bh=LQl1chsSHNUmMs7IqAx6fjm1qOMV8hJbYUn4xW39Bpk=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=oBvG/bwn5wTJOkLUy/EFvJ5ymcGIJbnBhbxVvDebhRr4LjF8rdoU7mW6w+ju3tjG6
-	 zCv7HU0P251PMdV/C4RNVptHK7OU+Lhb4WpLrZV0AZlueHg1xHMNk5BsQBCV/r+IJK
-	 qve+kFal1tWvJDVQ96P5FVuG7M4c03EI8wgXtCRc=
+	b=GQ9Vzch4ujSnEBn7qIKVzhdl7+52uvaLTmwttrTlePeNP1HX5UbUWTiTibTA1HZ2a
+	 WhWcwbJHRSOnRC9emXVid+OCIA03QuYo+ZO4YsJJAdkjrdX5KqPJx7Uobw3PL3FhHh
+	 OuL5GTCqD6G+JcsVFAMgEYT8RWo74lBDpvdkytSI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729654AbfCLRRe (ORCPT
+        id S1729794AbfCLR2G (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 12 Mar 2019 13:17:34 -0400
-Received: from mail.kernel.org ([198.145.29.99]:58454 "EHLO mail.kernel.org"
+        Tue, 12 Mar 2019 13:28:06 -0400
+Received: from mail.kernel.org ([198.145.29.99]:33536 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727877AbfCLRQZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 12 Mar 2019 13:16:25 -0400
+        id S1729651AbfCLRRe (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 12 Mar 2019 13:17:34 -0400
 Received: from localhost (unknown [104.133.8.98])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id DDF7B217D4;
-        Tue, 12 Mar 2019 17:16:24 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 2953121873;
+        Tue, 12 Mar 2019 17:17:33 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1552410985;
-        bh=GSlcgqPz2C8S/vTZ1cBcsHjMedW9LaOoukhi/fnEdOU=;
+        s=default; t=1552411053;
+        bh=LQl1chsSHNUmMs7IqAx6fjm1qOMV8hJbYUn4xW39Bpk=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=DsZJ3SChah0tQgCsTv4+VtA9u9b3qlK99KBS71j2tdqJsRfByF+wLcD+4ZUeCzob7
-         3MWSoznSQ0/PAP4lnP2T5wSIr+1zeWr+KAISr9vAMMFg6veN2an481DB2dNNJy4mqp
-         ZstLRz4/XhKBf7BYNr+rLQs/A249lfF0eYny+QuM=
+        b=uaIL+I1koscMmDZak3PBlHLyEb8OTTlPtdEVSGsVUA6TzFDfJbU1J69+MUAwHL7Ur
+         5a0vgWouMQhNWPgBMJ4gv4NShBzywG8ru3IZB0GH+Slr9DMsmYmdCCdOTrRe4U/5jQ
+         YHKk2gFjz32cJZJoxbPdV2ve6bSsxFU6If5JbG4c=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Dave Young <dyoung@redhat.com>,
-        Kairui Song <kasong@redhat.com>, Borislav Petkov <bp@suse.de>,
-        AKASHI Takahiro <takahiro.akashi@linaro.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Ard Biesheuvel <ard.biesheuvel@linaro.org>, bhe@redhat.com,
-        David Howells <dhowells@redhat.com>, erik.schmauss@intel.com,
-        fanc.fnst@cn.fujitsu.com, "H. Peter Anvin" <hpa@zytor.com>,
-        Ingo Molnar <mingo@redhat.com>, kexec@lists.infradead.org,
-        lenb@kernel.org, linux-acpi@vger.kernel.org,
-        Philipp Rudo <prudo@linux.vnet.ibm.com>,
-        rafael.j.wysocki@intel.com, robert.moore@intel.com,
-        Thomas Gleixner <tglx@linutronix.de>, x86-ml <x86@kernel.org>,
-        Yannik Sembritzki <yannik@sembritzki.me>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.14 079/135] x86/kexec: Dont setup EFI info if EFI runtime is not enabled
-Date:   Tue, 12 Mar 2019 10:08:46 -0700
-Message-Id: <20190312170348.458719720@linuxfoundation.org>
+        stable@vger.kernel.org, Joerg Roedel <joro@8bytes.org>,
+        Suravee Suthikulpanit <suravee.suthikulpanit@amd.com>,
+        Jerry Snitselaar <jsnitsel@redhat.com>,
+        Joerg Roedel <jroedel@suse.de>, Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.9 38/96] iommu/amd: Call free_iova_fast with pfn in map_sg
+Date:   Tue, 12 Mar 2019 10:09:56 -0700
+Message-Id: <20190312171037.390838646@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
-In-Reply-To: <20190312170341.127810985@linuxfoundation.org>
-References: <20190312170341.127810985@linuxfoundation.org>
+In-Reply-To: <20190312171034.530434962@linuxfoundation.org>
+References: <20190312171034.530434962@linuxfoundation.org>
 User-Agent: quilt/0.65
 X-stable: review
 X-Patchwork-Hint: ignore
@@ -73,72 +63,40 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-4.14-stable review patch.  If anyone has any objections, please let me know.
+4.9-stable review patch.  If anyone has any objections, please let me know.
 
 ------------------
 
-[ Upstream commit 2aa958c99c7fd3162b089a1a56a34a0cdb778de1 ]
+[ Upstream commit 51d8838d66d3249508940d8f59b07701f2129723 ]
 
-Kexec-ing a kernel with "efi=noruntime" on the first kernel's command
-line causes the following null pointer dereference:
+In the error path of map_sg, free_iova_fast is being called with
+address instead of the pfn. This results in a bad value getting into
+the rcache, and can result in hitting a BUG_ON when
+iova_magazine_free_pfns is called.
 
-  BUG: unable to handle kernel NULL pointer dereference at 0000000000000000
-  #PF error: [normal kernel read fault]
-  Call Trace:
-   efi_runtime_map_copy+0x28/0x30
-   bzImage64_load+0x688/0x872
-   arch_kexec_kernel_image_load+0x6d/0x70
-   kimage_file_alloc_init+0x13e/0x220
-   __x64_sys_kexec_file_load+0x144/0x290
-   do_syscall_64+0x55/0x1a0
-   entry_SYSCALL_64_after_hwframe+0x44/0xa9
-
-Just skip the EFI info setup if EFI runtime services are not enabled.
-
- [ bp: Massage commit message. ]
-
-Suggested-by: Dave Young <dyoung@redhat.com>
-Signed-off-by: Kairui Song <kasong@redhat.com>
-Signed-off-by: Borislav Petkov <bp@suse.de>
-Acked-by: Dave Young <dyoung@redhat.com>
-Cc: AKASHI Takahiro <takahiro.akashi@linaro.org>
-Cc: Andrew Morton <akpm@linux-foundation.org>
-Cc: Ard Biesheuvel <ard.biesheuvel@linaro.org>
-Cc: bhe@redhat.com
-Cc: David Howells <dhowells@redhat.com>
-Cc: erik.schmauss@intel.com
-Cc: fanc.fnst@cn.fujitsu.com
-Cc: "H. Peter Anvin" <hpa@zytor.com>
-Cc: Ingo Molnar <mingo@redhat.com>
-Cc: kexec@lists.infradead.org
-Cc: lenb@kernel.org
-Cc: linux-acpi@vger.kernel.org
-Cc: Philipp Rudo <prudo@linux.vnet.ibm.com>
-Cc: rafael.j.wysocki@intel.com
-Cc: robert.moore@intel.com
-Cc: Thomas Gleixner <tglx@linutronix.de>
-Cc: x86-ml <x86@kernel.org>
-Cc: Yannik Sembritzki <yannik@sembritzki.me>
-Link: https://lkml.kernel.org/r/20190118111310.29589-2-kasong@redhat.com
+Cc: Joerg Roedel <joro@8bytes.org>
+Cc: Suravee Suthikulpanit <suravee.suthikulpanit@amd.com>
+Signed-off-by: Jerry Snitselaar <jsnitsel@redhat.com>
+Fixes: 80187fd39dcb ("iommu/amd: Optimize map_sg and unmap_sg")
+Signed-off-by: Joerg Roedel <jroedel@suse.de>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/x86/kernel/kexec-bzimage64.c | 3 +++
- 1 file changed, 3 insertions(+)
+ drivers/iommu/amd_iommu.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/arch/x86/kernel/kexec-bzimage64.c b/arch/x86/kernel/kexec-bzimage64.c
-index 928b0c6083c9..4d948d87f01c 100644
---- a/arch/x86/kernel/kexec-bzimage64.c
-+++ b/arch/x86/kernel/kexec-bzimage64.c
-@@ -167,6 +167,9 @@ setup_efi_state(struct boot_params *params, unsigned long params_load_addr,
- 	struct efi_info *current_ei = &boot_params.efi_info;
- 	struct efi_info *ei = &params->efi_info;
+diff --git a/drivers/iommu/amd_iommu.c b/drivers/iommu/amd_iommu.c
+index e984418ffa2a..e413a4ef3c5c 100644
+--- a/drivers/iommu/amd_iommu.c
++++ b/drivers/iommu/amd_iommu.c
+@@ -2617,7 +2617,7 @@ static int map_sg(struct device *dev, struct scatterlist *sglist,
+ 	}
  
-+	if (!efi_enabled(EFI_RUNTIME_SERVICES))
-+		return 0;
-+
- 	if (!current_ei->efi_memmap_size)
- 		return 0;
+ out_free_iova:
+-	free_iova_fast(&dma_dom->iovad, address, npages);
++	free_iova_fast(&dma_dom->iovad, address >> PAGE_SHIFT, npages);
  
+ out_err:
+ 	return 0;
 -- 
 2.19.1
 
