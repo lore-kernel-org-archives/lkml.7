@@ -2,266 +2,132 @@ Return-Path: <SRS0=J4ZE=RP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIMWL_WL_MED,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2C8BAC43381
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 18:05:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B638FC10F00
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 18:06:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DA3A22147C
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 18:05:55 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=fb.com header.i=@fb.com header.b="ejRv1O3Q";
-	dkim=pass (1024-bit key) header.d=fb.onmicrosoft.com header.i=@fb.onmicrosoft.com header.b="KgvJqOeJ"
+	by mail.kernel.org (Postfix) with ESMTP id 861C82147C
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 18:06:02 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1552413962;
+	bh=/cH5SQc84jquL9TjX31n3KHquDzWlD9malWBQPCb1kA=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=2WOLcYknJ4shUF9NGdile3KH35JBvfhP478j3YO4FdO14KG+Us/yuHVwiZC0Kay7U
+	 6iYJ9CoiZiu/pKrK66wMhdhiUK40oLxNjzt8n2PdRfoX42kQ8MjBdwu0w76Fo/lb5g
+	 emOG9sTe2Ks3Hb6RPdJoNCPuwPo9yl6sREuxhZeQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729168AbfCLSFu (ORCPT
+        id S1727532AbfCLRMd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 12 Mar 2019 14:05:50 -0400
-Received: from mx0a-00082601.pphosted.com ([67.231.145.42]:54620 "EHLO
-        mx0a-00082601.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726722AbfCLSFp (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 12 Mar 2019 14:05:45 -0400
-Received: from pps.filterd (m0109334.ppops.net [127.0.0.1])
-        by mx0a-00082601.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x2CI2tbv023074;
-        Tue, 12 Mar 2019 11:05:29 -0700
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=fb.com; h=from : to : cc : subject
- : date : message-id : references : in-reply-to : content-type : content-id
- : content-transfer-encoding : mime-version; s=facebook;
- bh=6Ws3AIdbpT34KncUDlT96q/8l4bC8vf7Sa0gpmMAouw=;
- b=ejRv1O3QkHjC2LPTJglsnvuZ2Mv9sEQqLemmivqBQZIVDEHfzDQZVAuxdpR+onFx2M7I
- R5ecoo1wUvQVMQ2GvMxTSagf9pRNAfOlyx7lB2zhmvY19Bgpzq80Do2KLE/myNgUPSm3
- gl2J2ImM94AG5zpI9FDoHZKStSSfF2llHoY= 
-Received: from maileast.thefacebook.com ([199.201.65.23])
-        by mx0a-00082601.pphosted.com with ESMTP id 2r6f6j8xtb-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-SHA384 bits=256 verify=NOT);
-        Tue, 12 Mar 2019 11:05:28 -0700
-Received: from frc-mbx08.TheFacebook.com (192.168.155.29) by
- frc-hub06.TheFacebook.com (192.168.177.76) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA384) id
- 15.1.1713.5; Tue, 12 Mar 2019 11:00:25 -0700
-Received: from frc-hub04.TheFacebook.com (192.168.177.74) by
- frc-mbx08.TheFacebook.com (192.168.155.29) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA384) id
- 15.1.1713.5; Tue, 12 Mar 2019 11:00:25 -0700
-Received: from NAM02-SN1-obe.outbound.protection.outlook.com (192.168.183.28)
- by o365-in.thefacebook.com (192.168.177.74) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA384) id 15.1.1713.5
- via Frontend Transport; Tue, 12 Mar 2019 11:00:25 -0700
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=fb.onmicrosoft.com;
- s=selector1-fb-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=6Ws3AIdbpT34KncUDlT96q/8l4bC8vf7Sa0gpmMAouw=;
- b=KgvJqOeJHy4E4dmODiDb6j5FbkFzjezHKH5QUcHSQlgML9z3iuUgW5g+VLafvSMoRvFYdQsKFCSTVy9RL4TCZPSGaphgsDHEtmMGqCEsd+QnivAdOGcAFnFZp+YPPCgWYm9hoKLHdJZJBgRNzuGKEWfUO0klwzW7aL1yj3jWf/Y=
-Received: from BYAPR15MB2631.namprd15.prod.outlook.com (20.179.156.24) by
- BYAPR15MB3159.namprd15.prod.outlook.com (20.178.207.220) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.1686.19; Tue, 12 Mar 2019 18:00:09 +0000
-Received: from BYAPR15MB2631.namprd15.prod.outlook.com
- ([fe80::790e:7294:b086:9ded]) by BYAPR15MB2631.namprd15.prod.outlook.com
- ([fe80::790e:7294:b086:9ded%2]) with mapi id 15.20.1686.021; Tue, 12 Mar 2019
- 18:00:09 +0000
-From:   Roman Gushchin <guro@fb.com>
-To:     "Tobin C. Harding" <me@tobin.cc>
-CC:     "Tobin C. Harding" <tobin@kernel.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Christopher Lameter <cl@linux.com>,
-        Pekka Enberg <penberg@cs.helsinki.fi>,
-        Matthew Wilcox <willy@infradead.org>,
-        "Tycho Andersen" <tycho@tycho.ws>,
-        "linux-mm@kvack.org" <linux-mm@kvack.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: Re: [RFC 04/15] slub: Enable Slab Movable Objects (SMO)
-Thread-Topic: [RFC 04/15] slub: Enable Slab Movable Objects (SMO)
-Thread-Index: AQHU1WWOlMss86oUX0OspYov/G2S1KYGmQIAgACnOACAAQ/MAA==
-Date:   Tue, 12 Mar 2019 18:00:09 +0000
-Message-ID: <20190312175958.GA31407@tower.DHCP.thefacebook.com>
-References: <20190308041426.16654-1-tobin@kernel.org>
- <20190308041426.16654-5-tobin@kernel.org>
- <20190311224842.GC7915@tower.DHCP.thefacebook.com>
- <20190312014712.GF9362@eros.localdomain>
-In-Reply-To: <20190312014712.GF9362@eros.localdomain>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-clientproxiedby: MWHPR1301CA0018.namprd13.prod.outlook.com
- (2603:10b6:301:29::31) To BYAPR15MB2631.namprd15.prod.outlook.com
- (2603:10b6:a03:152::24)
-x-ms-exchange-messagesentrepresentingtype: 1
-x-originating-ip: [2620:10d:c090:200::2:d3a0]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: 923feb45-9ecd-4b02-534c-08d6a71490cf
-x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600127)(711020)(4605104)(2017052603328)(7153060)(7193020);SRVR:BYAPR15MB3159;
-x-ms-traffictypediagnostic: BYAPR15MB3159:
-x-microsoft-exchange-diagnostics: 1;BYAPR15MB3159;20:+ulgd+cC+WcT4q2RwZ6I8BT1sdE+AfWTOEqCwcBjhMpyRaSFLUTfW/dXSfa+DmWB0yujhw6RsWx3EnwWlvcJW4m0cgJu89YqzkCZLlBObgR3BXgortvpDrlQxnIJeCx93bAZdpsZWzS9dNkp5ZJzqKWhXbtM9jsqBAvQ7dczRF8=
-x-microsoft-antispam-prvs: <BYAPR15MB315991C75D0827E975FDE105BE490@BYAPR15MB3159.namprd15.prod.outlook.com>
-x-forefront-prvs: 09749A275C
-x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(136003)(366004)(396003)(346002)(376002)(39860400002)(189003)(199004)(52314003)(186003)(46003)(8676002)(106356001)(6246003)(81166006)(81156014)(25786009)(33656002)(14454004)(478600001)(6506007)(102836004)(52116002)(386003)(71190400001)(8936002)(229853002)(76176011)(68736007)(6116002)(4326008)(71200400001)(6512007)(9686003)(476003)(11346002)(446003)(53936002)(486006)(6436002)(99286004)(6486002)(2906002)(7736002)(305945005)(86362001)(316002)(14444005)(93886005)(256004)(1076003)(5660300002)(6916009)(105586002)(54906003)(97736004);DIR:OUT;SFP:1102;SCL:1;SRVR:BYAPR15MB3159;H:BYAPR15MB2631.namprd15.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
-received-spf: None (protection.outlook.com: fb.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam-message-info: 05YkwGLcmrv07Rd/Wgqz9MJxu23uFHUInNh2+aJzbtwZOlU8hzCFEof85Pm+35TC+tzqq+YxXztS3x61A+tkYUAwr6MBRItsr28/61dW0YvqQPzH18QIXn2Pr1zYt6zgnTdoDpADAfLWOs5YpSnrpgQTmFbrYw//cR2muwwmBXzt9CwmovqKtEqgy5GBSsd0lP8ZvCly9Cu78XZ8lxAUy30JHCT9U/Ql+J9Sotapm+CgSU8tKN0mzDnvuaGeu4zhvnN1nKPHJijPUoUjKAOf55B6/9CQ77s2TG3ybz7jBB2tiSaus+X6YXqQcvg8D0FZ/75eZw8rJ7dQQcweTnXefFXpUkcmYECuRCLsQO92xINqiTXgXjd71+P94qkiRAOmnuda1DdtEp57Jzz5qD3gkohnKCqw9hVFyqDzhNvgmDk=
-Content-Type: text/plain; charset="us-ascii"
-Content-ID: <431E5C4F4C688345ABB7F7F3714A6E90@namprd15.prod.outlook.com>
-Content-Transfer-Encoding: quoted-printable
+        Tue, 12 Mar 2019 13:12:33 -0400
+Received: from mail.kernel.org ([198.145.29.99]:46834 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727324AbfCLRMM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 12 Mar 2019 13:12:12 -0400
+Received: from localhost (unknown [104.133.8.98])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id B79F62083D;
+        Tue, 12 Mar 2019 17:12:11 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1552410731;
+        bh=/cH5SQc84jquL9TjX31n3KHquDzWlD9malWBQPCb1kA=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=0fkiFeDt9AMgL24us8dpA15bHgxx6tImdzK5BmslgaImVQLSl0uzvtvUZhpk+yEEq
+         AjltytPlFLICiVL0IndjJ+vAJk4Mgn0CPi5drHFm5Bp1ydjVXwziTodNovjyUCuB/Z
+         E072uijgeiRT8ZFUeAdMY9okWOdSoTOBOg2nlCXY=
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     linux-kernel@vger.kernel.org
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        stable@vger.kernel.org, Kan Liang <kan.liang@linux.intel.com>,
+        Qiuxu Zhuo <qiuxu.zhuo@intel.com>,
+        Tony Luck <tony.luck@intel.com>, Borislav Petkov <bp@suse.de>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Aristeu Rozanski <aris@redhat.com>,
+        "H. Peter Anvin" <hpa@zytor.com>, Ingo Molnar <mingo@redhat.com>,
+        linux-edac <linux-edac@vger.kernel.org>,
+        Mauro Carvalho Chehab <mchehab@s-opensource.com>,
+        Megha Dey <megha.dey@linux.intel.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Rajneesh Bhardwaj <rajneesh.bhardwaj@intel.com>,
+        Thomas Gleixner <tglx@linutronix.de>, x86-ml <x86@kernel.org>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.20 052/171] x86/cpu: Add Atom Tremont (Jacobsville)
+Date:   Tue, 12 Mar 2019 10:07:12 -0700
+Message-Id: <20190312170352.587524536@linuxfoundation.org>
+X-Mailer: git-send-email 2.21.0
+In-Reply-To: <20190312170347.868927101@linuxfoundation.org>
+References: <20190312170347.868927101@linuxfoundation.org>
+User-Agent: quilt/0.65
+X-stable: review
+X-Patchwork-Hint: ignore
 MIME-Version: 1.0
-X-MS-Exchange-CrossTenant-Network-Message-Id: 923feb45-9ecd-4b02-534c-08d6a71490cf
-X-MS-Exchange-CrossTenant-originalarrivaltime: 12 Mar 2019 18:00:09.3276
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 8ae927fe-1255-47a7-a2af-5f3a069daaa2
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: BYAPR15MB3159
-X-OriginatorOrg: fb.com
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-03-12_10:,,
- signatures=0
-X-Proofpoint-Spam-Reason: safe
-X-FB-Internal: Safe
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Mar 12, 2019 at 12:47:12PM +1100, Tobin C. Harding wrote:
-> On Mon, Mar 11, 2019 at 10:48:45PM +0000, Roman Gushchin wrote:
-> > On Fri, Mar 08, 2019 at 03:14:15PM +1100, Tobin C. Harding wrote:
-> > > We have now in place a mechanism for adding callbacks to a cache in
-> > > order to be able to implement object migration.
-> > >=20
-> > > Add a function __move() that implements SMO by moving all objects in =
-a
-> > > slab page using the isolate/migrate callback methods.
-> > >=20
-> > > Co-developed-by: Christoph Lameter <cl@linux.com>
-> > > Signed-off-by: Tobin C. Harding <tobin@kernel.org>
-> > > ---
-> > >  mm/slub.c | 85 +++++++++++++++++++++++++++++++++++++++++++++++++++++=
-++
-> > >  1 file changed, 85 insertions(+)
-> > >=20
-> > > diff --git a/mm/slub.c b/mm/slub.c
-> > > index 0133168d1089..6ce866b420f1 100644
-> > > --- a/mm/slub.c
-> > > +++ b/mm/slub.c
-> > > @@ -4325,6 +4325,91 @@ int __kmem_cache_create(struct kmem_cache *s, =
-slab_flags_t flags)
-> > >  	return err;
-> > >  }
-> > > =20
-> > > +/*
-> > > + * Allocate a slab scratch space that is sufficient to keep pointers=
- to
-> > > + * individual objects for all objects in cache and also a bitmap for=
- the
-> > > + * objects (used to mark which objects are active).
-> > > + */
-> > > +static inline void *alloc_scratch(struct kmem_cache *s)
-> > > +{
-> > > +	unsigned int size =3D oo_objects(s->max);
-> > > +
-> > > +	return kmalloc(size * sizeof(void *) +
-> > > +		       BITS_TO_LONGS(size) * sizeof(unsigned long),
-> > > +		       GFP_KERNEL);
-> >=20
-> > I wonder how big this allocation can be?
-> > Given that the reason for migration is probably highly fragmented memor=
-y,
-> > we probably don't want to have a high-order allocation here. So maybe
-> > kvmalloc()?
-> >=20
-> > > +}
-> > > +
-> > > +/*
-> > > + * __move() - Move all objects in the given slab.
-> > > + * @page: The slab we are working on.
-> > > + * @scratch: Pointer to scratch space.
-> > > + * @node: The target node to move objects to.
-> > > + *
-> > > + * If the target node is not the current node then the object is mov=
-ed
-> > > + * to the target node.  If the target node is the current node then =
-this
-> > > + * is an effective way of defragmentation since the current slab pag=
-e
-> > > + * with its object is exempt from allocation.
-> > > + */
-> > > +static void __move(struct page *page, void *scratch, int node)
-> > > +{
-> >=20
-> > __move() isn't a very explanatory name. kmem_cache_move() (as in Christ=
-opher's
-> > version) is much better, IMO. Or maybe move_slab_objects()?
->=20
-> How about move_slab_page()?  We use kmem_cache_move() later in the
-> series.  __move() moves all objects in the given page but not all
-> objects in this cache (which kmem_cache_move() later does).  Open to
-> further suggestions though, naming things is hard :)
->=20
-> Christopher's original patch uses kmem_cache_move() for a function that
-> only moves objects from within partial slabs, I changed it because I did
-> not think this name suitably describes the behaviour.  So from the
-> original I rename:
->=20
-> 	__move() -> __defrag()
-> 	kmem_cache_move() -> __move()
-> =09
-> And reuse kmem_cache_move() for move _all_ objects (includes full list).
->=20
-> With this set applied we have the call chains
->=20
-> kmem_cache_shrink()		# Defined in slab_common.c, exported to kernel.
->  -> __kmem_cache_shrink()	# Defined in slub.c
->    -> __defrag()		# Unconditionally (i.e 100%)
->      -> __move()
->=20
-> kmem_cache_defrag()		# Exported to kernel
->  -> __defrag()
->    -> __move()
->=20
-> move_store()			# sysfs
->  -> kmem_cache_move()
->    -> __move()
->  or
->  -> __move_all_objects_to()
->    -> kmem_cache_move()
->      -> __move()
->=20
->=20
-> Suggested improvements?
+4.20-stable review patch.  If anyone has any objections, please let me know.
 
-move_slab_page() looks good to me. I don't have a strong opinion on naming =
-here,
-I just think that unique names are always preferred even for static functio=
-ns
-(that's why I don't like __move()). Also, it's not clear what '__' means he=
-re.
-So maybe move_slab_page(), defrag_kmem_node(), etc? Or something like this.
+------------------
 
->=20
-> > Also, it's usually better to avoid adding new functions without calling=
- them.
-> > Maybe it's possible to merge this patch with (9)?
->=20
-> Understood.  The reason behind this is that I attempted to break this
-> set up separating the implementation of SMO with the addition of each
-> feature.  This function is only called when features are implemented to
-> use SMO, I did not want to elevate any feature above any other by
-> including it in this patch.  I'm open to suggestions on how to order
-> though, also I'm happy to order it differently if/when we do PATCH
-> version.  Is that acceptable for the RFC versions?
+[ Upstream commit 00ae831dfe4474ef6029558f5eb3ef0332d80043 ]
 
-The general rule is that any patch should be self-sufficient.
-If it's required to look into further patches to understand why something
-has been done, it makes the review process harder.
+Add the Atom Tremont model number to the Intel family list.
 
-I think it's possible to make the patchset to conform this rule with
-some almost cosmetic changes, e.g. move some changes from one patch
-to another, add some comments, etc.
+[ Tony: Also update comment at head of file to say "_X" suffix is
+  also used for microserver parts. ]
 
-Anyway, it's definitely fine for an RFC, just something to think of
-in the next version.
+Signed-off-by: Kan Liang <kan.liang@linux.intel.com>
+Signed-off-by: Qiuxu Zhuo <qiuxu.zhuo@intel.com>
+Signed-off-by: Tony Luck <tony.luck@intel.com>
+Signed-off-by: Borislav Petkov <bp@suse.de>
+Cc: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Cc: Aristeu Rozanski <aris@redhat.com>
+Cc: "H. Peter Anvin" <hpa@zytor.com>
+Cc: Ingo Molnar <mingo@redhat.com>
+Cc: linux-edac <linux-edac@vger.kernel.org>
+Cc: Mauro Carvalho Chehab <mchehab@s-opensource.com>
+Cc: Megha Dey <megha.dey@linux.intel.com>
+Cc: Peter Zijlstra <peterz@infradead.org>
+Cc: Qiuxu Zhuo <qiuxu.zhuo@intel.com>
+Cc: Rajneesh Bhardwaj <rajneesh.bhardwaj@intel.com>
+Cc: Thomas Gleixner <tglx@linutronix.de>
+Cc: x86-ml <x86@kernel.org>
+Link: https://lkml.kernel.org/r/20190125195902.17109-4-tony.luck@intel.com
+Signed-off-by: Sasha Levin <sashal@kernel.org>
+---
+ arch/x86/include/asm/intel-family.h | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
-Thanks!
+diff --git a/arch/x86/include/asm/intel-family.h b/arch/x86/include/asm/intel-family.h
+index 0dd6b0f4000e..d9a9993af882 100644
+--- a/arch/x86/include/asm/intel-family.h
++++ b/arch/x86/include/asm/intel-family.h
+@@ -6,7 +6,7 @@
+  * "Big Core" Processors (Branded as Core, Xeon, etc...)
+  *
+  * The "_X" parts are generally the EP and EX Xeons, or the
+- * "Extreme" ones, like Broadwell-E.
++ * "Extreme" ones, like Broadwell-E, or Atom microserver.
+  *
+  * While adding a new CPUID for a new microarchitecture, add a new
+  * group to keep logically sorted out in chronological order. Within
+@@ -71,6 +71,7 @@
+ #define INTEL_FAM6_ATOM_GOLDMONT	0x5C /* Apollo Lake */
+ #define INTEL_FAM6_ATOM_GOLDMONT_X	0x5F /* Denverton */
+ #define INTEL_FAM6_ATOM_GOLDMONT_PLUS	0x7A /* Gemini Lake */
++#define INTEL_FAM6_ATOM_TREMONT_X	0x86 /* Jacobsville */
+ 
+ /* Xeon Phi */
+ 
+-- 
+2.19.1
+
+
+
