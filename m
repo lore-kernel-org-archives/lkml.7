@@ -2,53 +2,54 @@ Return-Path: <SRS0=J4ZE=RP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-11.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8060EC43381
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 17:14:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 22A82C43381
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 17:14:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5670D21872
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 17:14:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E91B22183E
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 17:14:17 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1552410855;
-	bh=N12a1QoYsGmzIvAkZ4ts/mdCd2Ym6Fl+RPc8i3AGGjY=;
+	s=default; t=1552410858;
+	bh=kixqxUifwfzAPAjbW+2zbJ4t4vgynvC7Ij8IRZtnhMk=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=UULchbPbJeBZwWnXR0WbMZ+49mHSq5VcTsS7f1/5XR4TbRi6zksOaNyHjCIF5oXLU
-	 JByqn9vcjYb0Trab1s2wtpMD1fHfZK+pVsmunhLDFVSfQKUuMQ18MVufNyU9ZxODUE
-	 0UGddIaH1y0wNvZubjEj7cRFYq3bswam99QymTkk=
+	b=JfAC68CHNNr+h0v+zXvd9X9Yqnt3oC2ZYvye/PGz6nphdtp0dDCAgdblkRNoBCGLT
+	 YeHkvVRpai2oqtbhfDGjxXF5O517b9iYiLmMl9YPVkWaqWKlEy4RJUKahf1mSXzjCI
+	 oXqLGmlAbE6Nw3FWdj8xqSeT+AHYZhcGFRhBTUqQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728277AbfCLROO (ORCPT
+        id S1728290AbfCLROQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 12 Mar 2019 13:14:14 -0400
-Received: from mail.kernel.org ([198.145.29.99]:50538 "EHLO mail.kernel.org"
+        Tue, 12 Mar 2019 13:14:16 -0400
+Received: from mail.kernel.org ([198.145.29.99]:50790 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727956AbfCLRNb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 12 Mar 2019 13:13:31 -0400
+        id S1727980AbfCLRNf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 12 Mar 2019 13:13:35 -0400
 Received: from localhost (unknown [104.133.8.98])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 9E95A2184C;
-        Tue, 12 Mar 2019 17:13:30 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 633F52183F;
+        Tue, 12 Mar 2019 17:13:34 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1552410810;
-        bh=N12a1QoYsGmzIvAkZ4ts/mdCd2Ym6Fl+RPc8i3AGGjY=;
+        s=default; t=1552410814;
+        bh=kixqxUifwfzAPAjbW+2zbJ4t4vgynvC7Ij8IRZtnhMk=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=ZdVV4J0dfEYMLXQE531aXbSg9m1Jq7pzc5P3UkfNcSEJpFa5dTq0+LRjnmIj1vZGK
-         C1koHuLc+ZxkU2r8fYnjXyRgIBZuZlPp69bWFhn6q+QgH2nQplHn/N5qfMh5nbe6jl
-         hydg7zK+J5qOhD4AJwPOFuIs8Ty6SA7VjWXMI66Y=
+        b=POoHaugHYRa4/xDF8wJtvvZoGpEjDig3NXeijqzc5i8KT/Y7sUJ25ZbzUj+3b+4iX
+         gZ4CMcZrQK/ZJTZoU0ntAta4gG59+jx1EjgKd3N87YyFRSB7Au7AXXtOUOXV0h5/Ne
+         75MZDaJylHKU26tMVCWV8uFuuQQc0MJNIV5LMN6k=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Heiner Kallweit <hkallweit1@gmail.com>,
-        Mika Westerberg <mika.westerberg@linux.intel.com>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>
-Subject: [PATCH 4.20 162/171] Revert "PCI/PME: Implement runtime PM callbacks"
-Date:   Tue, 12 Mar 2019 10:09:02 -0700
-Message-Id: <20190312170401.347153140@linuxfoundation.org>
+        stable@vger.kernel.org,
+        Martin Blumenstingl <martin.blumenstingl@googlemail.com>,
+        "Daniel F. Dickinson" <cshored@thecshore.com>,
+        Kalle Valo <kvalo@codeaurora.org>,
+        Christian Lamparter <chunkeey@gmail.com>
+Subject: [PATCH 4.20 167/171] ath9k: Avoid OF no-EEPROM quirks without qca,no-eeprom
+Date:   Tue, 12 Mar 2019 10:09:07 -0700
+Message-Id: <20190312170401.904559812@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190312170347.868927101@linuxfoundation.org>
 References: <20190312170347.868927101@linuxfoundation.org>
@@ -67,76 +68,88 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-From: Mika Westerberg <mika.westerberg@linux.intel.com>
+From: Daniel F. Dickinson <cshored@thecshore.com>
 
-commit c528f7bd362b097eeeafa6fbbeccd9750b79c7ba upstream.
+commit ce938231bd3b1d7af3cbd8836f084801090470e1 upstream.
 
-This reverts commit 0e157e52860441cb26051f131dd0b5ae3187a07b.
+ath9k_of_init() function[0] was initially written on the assumption that
+if someone had an explicit ath9k OF node that "there must be something
+wrong, why would someone add an OF node if everything is fine"[1]
+(Quoting Martin Blumenstingl <martin.blumenstingl@googlemail.com>)
 
-Heiner reported that the commit in question prevents his network adapter
-from triggering PME and waking up when network cable is plugged.
+"it turns out it's not that simple. with your requirements I'm now aware
+of two use-cases where the current code in ath9k_of_init() doesn't work
+without modifications"[1]
 
-The commit tried to prevent root port waking up from D3cold immediately but
-looks like disabing root port PME interrupt is not the right way to fix
-that issue so revert it now.  The patch following proposes an alternative
-solution to that issue.
+The "your requirements" Martin speaks of is the result of the fact that I
+have a device (PowerCloud Systems CR5000) has some kind of default - not
+unique mac address - set and requires to set the correct MAC address via
+mac-address devicetree property, however:
 
-Link: https://bugzilla.kernel.org/show_bug.cgi?id=202103
-Fixes: 0e157e528604 ("PCI/PME: Implement runtime PM callbacks")
-Reported-by: Heiner Kallweit <hkallweit1@gmail.com>
-Tested-by: Heiner Kallweit <hkallweit1@gmail.com>
-Signed-off-by: Mika Westerberg <mika.westerberg@linux.intel.com>
-Signed-off-by: Bjorn Helgaas <bhelgaas@google.com>
-Acked-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
-CC: stable@vger.kernel.org	# v4.20+
+"some cards come with a physical EEPROM chip [or OTP] so "qca,no-eeprom"
+should not be set (your use-case). in this case AH_USE_EEPROM should be
+set (which is the default when there is no OF node)"[1]
+
+The other use case is:
+
+the firmware on some PowerMac G5 seems to add a OF node for the ath9k
+card automatically. depending on the EEPROM on the card AH_NO_EEP_SWAP
+should be unset (which is the default when there is no OF node). see [3]
+
+After this patch to ath9k_of_init() the new behavior will be:
+
+    if there's no OF node then everything is the same as before
+    if there's an empty OF node then ath9k will use the hardware EEPROM
+      (before ath9k would fail to initialize because no EEPROM data was
+      provided by userspace)
+    if there's an OF node with only a MAC address then ath9k will use
+      the MAC address and the hardware EEPROM (see the case above)
+    with "qca,no-eeprom" EEPROM data from userspace will be requested.
+      the behavior here will not change
+[1]
+
+Martin provides additional background on EEPROM swapping[1].
+
+Thanks to Christian Lamparter <chunkeey@gmail.com> for all his help on
+troubleshooting this issue and the basis for this patch.
+
+[0]https://elixir.bootlin.com/linux/v4.20-rc7/source/drivers/net/wireless/ath/ath9k/init.c#L615
+[1]https://github.com/openwrt/openwrt/pull/1645#issuecomment-448027058
+[2]https://github.com/openwrt/openwrt/pull/1613
+[3]https://patchwork.kernel.org/patch/10241731/
+
+Fixes: 138b41253d9c ("ath9k: parse the device configuration from an OF node")
+Reviewed-by: Martin Blumenstingl <martin.blumenstingl@googlemail.com>
+Tested-by: Martin Blumenstingl <martin.blumenstingl@googlemail.com>
+Signed-off-by: Daniel F. Dickinson <cshored@thecshore.com>
+Signed-off-by: Kalle Valo <kvalo@codeaurora.org>
+Cc: Christian Lamparter <chunkeey@gmail.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/pci/pcie/pme.c |   27 ---------------------------
- 1 file changed, 27 deletions(-)
+ drivers/net/wireless/ath/ath9k/init.c |    6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
 
---- a/drivers/pci/pcie/pme.c
-+++ b/drivers/pci/pcie/pme.c
-@@ -432,31 +432,6 @@ static void pcie_pme_remove(struct pcie_
- 	kfree(get_service_data(srv));
+--- a/drivers/net/wireless/ath/ath9k/init.c
++++ b/drivers/net/wireless/ath/ath9k/init.c
+@@ -636,15 +636,15 @@ static int ath9k_of_init(struct ath_soft
+ 		ret = ath9k_eeprom_request(sc, eeprom_name);
+ 		if (ret)
+ 			return ret;
++
++		ah->ah_flags &= ~AH_USE_EEPROM;
++		ah->ah_flags |= AH_NO_EEP_SWAP;
+ 	}
+ 
+ 	mac = of_get_mac_address(np);
+ 	if (mac)
+ 		ether_addr_copy(common->macaddr, mac);
+ 
+-	ah->ah_flags &= ~AH_USE_EEPROM;
+-	ah->ah_flags |= AH_NO_EEP_SWAP;
+-
+ 	return 0;
  }
  
--static int pcie_pme_runtime_suspend(struct pcie_device *srv)
--{
--	struct pcie_pme_service_data *data = get_service_data(srv);
--
--	spin_lock_irq(&data->lock);
--	pcie_pme_interrupt_enable(srv->port, false);
--	pcie_clear_root_pme_status(srv->port);
--	data->noirq = true;
--	spin_unlock_irq(&data->lock);
--
--	return 0;
--}
--
--static int pcie_pme_runtime_resume(struct pcie_device *srv)
--{
--	struct pcie_pme_service_data *data = get_service_data(srv);
--
--	spin_lock_irq(&data->lock);
--	pcie_pme_interrupt_enable(srv->port, true);
--	data->noirq = false;
--	spin_unlock_irq(&data->lock);
--
--	return 0;
--}
--
- static struct pcie_port_service_driver pcie_pme_driver = {
- 	.name		= "pcie_pme",
- 	.port_type	= PCI_EXP_TYPE_ROOT_PORT,
-@@ -464,8 +439,6 @@ static struct pcie_port_service_driver p
- 
- 	.probe		= pcie_pme_probe,
- 	.suspend	= pcie_pme_suspend,
--	.runtime_suspend = pcie_pme_runtime_suspend,
--	.runtime_resume	= pcie_pme_runtime_resume,
- 	.resume		= pcie_pme_resume,
- 	.remove		= pcie_pme_remove,
- };
 
 
