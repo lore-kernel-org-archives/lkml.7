@@ -4,51 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 25E94C43381
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 17:54:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 91C05C43381
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 17:54:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id ED106205C9
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 17:54:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 56FD4205C9
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 17:54:46 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1552413279;
-	bh=1dNwFVDz8lHRMuujSu3tsbGnWcceyYymBVaJgltluPc=;
+	s=default; t=1552413286;
+	bh=2lgupegosZNqsafGzD/mZk6uGLedWQMHbKP97cxQCb0=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=PJZfFl5Pxf+QXtgQ2ktezXv7lYcwzq1Dl7+dvpWz7ZZPj19FhBmUvXN7p/F187p09
-	 8XV5u8Reh37vcZbuctRZ9AKpri0D1BFQ/KQ4B7TxlsX1c2x464jWjpxj0eIAfa+S/4
-	 JvsAh/fO8bJIlKNsbWXQQm8mJh+cLugvqYQx8F2Q=
+	b=MeOe4Hjcxqk5U2j17zbkE2V/SdftiZWZ/sm3fokUSkVQh/nbRSRdge89XdCdkW4wu
+	 Ox6SvQOVzsG2EAnVzh3a8qFZIpTD2kjhuu0OoLZGEDyufCbwUy92FLTHsvrMm5H9cx
+	 ZBZXEuhpBQWcIY/0GVRmFWQ3EI/spbaCicb3WRKw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728679AbfCLRyh (ORCPT
+        id S1728755AbfCLRyp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 12 Mar 2019 13:54:37 -0400
-Received: from mail.kernel.org ([198.145.29.99]:52374 "EHLO mail.kernel.org"
+        Tue, 12 Mar 2019 13:54:45 -0400
+Received: from mail.kernel.org ([198.145.29.99]:52292 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728259AbfCLROK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 12 Mar 2019 13:14:10 -0400
+        id S1728251AbfCLROJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 12 Mar 2019 13:14:09 -0400
 Received: from localhost (unknown [104.133.8.98])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 3A06721850;
-        Tue, 12 Mar 2019 17:14:10 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id C46C3217F9;
+        Tue, 12 Mar 2019 17:14:08 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1552410850;
-        bh=1dNwFVDz8lHRMuujSu3tsbGnWcceyYymBVaJgltluPc=;
+        s=default; t=1552410848;
+        bh=2lgupegosZNqsafGzD/mZk6uGLedWQMHbKP97cxQCb0=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=NDKFSvo+n9T8OpXTP/TzaD5JAF/6gjYTY9ejM0sYFKYrJb6bRr61Es3+q2srdzOqe
-         nw98SdgYcgLopLkbkcBxXLOWcCbK3fLEU3sFdbYP/kOrZRDC0X2MAKaWyNhCiVyjeA
-         i0gNH7mwmkjTHE9hiHKyX4V6e2KdDoVDDmTlfHqY=
+        b=R1iAr2rMveSmzz4meKl52RttFYPkhpK46dmVsSfBG+W/4LqsP4NUwFHFkDuMiTI8C
+         WzTBXDJbjcn+ji0kB155ZcAvDoi2u/atFGRUXSP3LVH9K+Lq890N1BTQ9GGX+g70SD
+         OtXHISiEPeC09P9/WacgrKcF0avq+9vwDuw204LQ=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Sinan Kaya <okaya@kernel.org>,
-        Andy Shevchenko <andy.shevchenko@gmail.com>,
-        "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>,
+        stable@vger.kernel.org, Dan Carpenter <dan.carpenter@oracle.com>,
+        "Martin K. Petersen" <martin.petersen@oracle.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 044/149] platform/x86: Fix unmet dependency warning for ACPI_CMPC
-Date:   Tue, 12 Mar 2019 10:07:42 -0700
-Message-Id: <20190312170353.441806048@linuxfoundation.org>
+Subject: [PATCH 4.19 042/149] scsi: bnx2fc: Fix error handling in probe()
+Date:   Tue, 12 Mar 2019 10:07:40 -0700
+Message-Id: <20190312170353.264768632@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190312170349.421581206@linuxfoundation.org>
 References: <20190312170349.421581206@linuxfoundation.org>
@@ -67,41 +66,49 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-[ Upstream commit d58bf90a32a33becec78c3034e781735049fcd25 ]
+[ Upstream commit b2d3492fc591b1fb46b81d79ca1fc44cac6ae0ae ]
 
-Add BACKLIGHT_LCD_SUPPORT for ACPI_CMPC to fix the
-warning: unmet direct dependencies detected for BACKLIGHT_CLASS_DEVICE.
+There are two issues here.  First if cmgr->hba is not set early enough then
+it leads to a NULL dereference.  Second if we don't completely initialize
+cmgr->io_bdt_pool[] then we end up dereferencing uninitialized pointers.
 
-ACPI_CMPC selects BACKLIGHT_CLASS_DEVICE but BACKLIGHT_CLASS_DEVICE
-depends on BACKLIGHT_LCD_SUPPORT.
-
-Copy BACKLIGHT_LCD_SUPPORT dependency into ACPI_CMPC to fix
-
-WARNING: unmet direct dependencies detected for BACKLIGHT_CLASS_DEVICE
-  Depends on [n]: HAS_IOMEM [=y] && BACKLIGHT_LCD_SUPPORT [=n]
-  Selected by [y]:
-  - ACPI_CMPC [=y] && X86 [=y] && X86_PLATFORM_DEVICES [=y] && ACPI [=y] && INPUT [=y] && (RFKILL [=n] || RFKILL [=n]=n)
-
-Signed-off-by: Sinan Kaya <okaya@kernel.org>
-Acked-by: Andy Shevchenko <andy.shevchenko@gmail.com>
-Signed-off-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
+Fixes: 853e2bd2103a ("[SCSI] bnx2fc: Broadcom FCoE offload driver")
+Signed-off-by: Dan Carpenter <dan.carpenter@oracle.com>
+Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/platform/x86/Kconfig | 1 +
- 1 file changed, 1 insertion(+)
+ drivers/scsi/bnx2fc/bnx2fc_io.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/platform/x86/Kconfig b/drivers/platform/x86/Kconfig
-index 0c1aa6c314f5..96afca4648d5 100644
---- a/drivers/platform/x86/Kconfig
-+++ b/drivers/platform/x86/Kconfig
-@@ -856,6 +856,7 @@ config TOSHIBA_WMI
- config ACPI_CMPC
- 	tristate "CMPC Laptop Extras"
- 	depends on ACPI && INPUT
-+	depends on BACKLIGHT_LCD_SUPPORT
- 	depends on RFKILL || RFKILL=n
- 	select BACKLIGHT_CLASS_DEVICE
- 	help
+diff --git a/drivers/scsi/bnx2fc/bnx2fc_io.c b/drivers/scsi/bnx2fc/bnx2fc_io.c
+index 350257c13a5b..bc9f2a2365f4 100644
+--- a/drivers/scsi/bnx2fc/bnx2fc_io.c
++++ b/drivers/scsi/bnx2fc/bnx2fc_io.c
+@@ -240,6 +240,7 @@ struct bnx2fc_cmd_mgr *bnx2fc_cmd_mgr_alloc(struct bnx2fc_hba *hba)
+ 		return NULL;
+ 	}
+ 
++	cmgr->hba = hba;
+ 	cmgr->free_list = kcalloc(arr_sz, sizeof(*cmgr->free_list),
+ 				  GFP_KERNEL);
+ 	if (!cmgr->free_list) {
+@@ -256,7 +257,6 @@ struct bnx2fc_cmd_mgr *bnx2fc_cmd_mgr_alloc(struct bnx2fc_hba *hba)
+ 		goto mem_err;
+ 	}
+ 
+-	cmgr->hba = hba;
+ 	cmgr->cmds = (struct bnx2fc_cmd **)(cmgr + 1);
+ 
+ 	for (i = 0; i < arr_sz; i++)  {
+@@ -295,7 +295,7 @@ struct bnx2fc_cmd_mgr *bnx2fc_cmd_mgr_alloc(struct bnx2fc_hba *hba)
+ 
+ 	/* Allocate pool of io_bdts - one for each bnx2fc_cmd */
+ 	mem_size = num_ios * sizeof(struct io_bdt *);
+-	cmgr->io_bdt_pool = kmalloc(mem_size, GFP_KERNEL);
++	cmgr->io_bdt_pool = kzalloc(mem_size, GFP_KERNEL);
+ 	if (!cmgr->io_bdt_pool) {
+ 		printk(KERN_ERR PFX "failed to alloc io_bdt_pool\n");
+ 		goto mem_err;
 -- 
 2.19.1
 
