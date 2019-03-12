@@ -2,180 +2,99 @@ Return-Path: <SRS0=J4ZE=RP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 17FC9C43381
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 18:16:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3FB1DC43381
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 18:17:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CE604213A2
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 18:16:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0CCBD2087C
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 18:17:25 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=armh.onmicrosoft.com header.i=@armh.onmicrosoft.com header.b="WEEbOIVj"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="U44tSkfv"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727303AbfCLSQZ (ORCPT
+        id S1728051AbfCLSRY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 12 Mar 2019 14:16:25 -0400
-Received: from mail-eopbgr150088.outbound.protection.outlook.com ([40.107.15.88]:52547
-        "EHLO EUR01-DB5-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726415AbfCLSQW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 12 Mar 2019 14:16:22 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=armh.onmicrosoft.com;
- s=selector1-arm-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=e28KKf4VMf+YS+AdQqcxt10NRQ10CwblxvP0/6BZOvs=;
- b=WEEbOIVjC5s4VemrntuhimHlPd6qk5M6SNfUIzTWKcIGx50XgbAPPd7iX/0pfmBMY3B/HqZ5xwh/QbUPUpZQq+Bh4tClGBxTJQsg+/qS4q/jKbQqLSj8ci8mtGTe19pN/pW5SxkHe7uJv3L0ulufIzGvopsmlWJ4kos2hM42PNY=
-Received: from AM0PR08MB3891.eurprd08.prod.outlook.com (20.178.82.147) by
- AM0PR08MB5138.eurprd08.prod.outlook.com (10.255.30.207) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.1709.13; Tue, 12 Mar 2019 18:16:13 +0000
-Received: from AM0PR08MB3891.eurprd08.prod.outlook.com
- ([fe80::28b7:8370:ebf7:591c]) by AM0PR08MB3891.eurprd08.prod.outlook.com
- ([fe80::28b7:8370:ebf7:591c%4]) with mapi id 15.20.1686.021; Tue, 12 Mar 2019
- 18:16:13 +0000
-From:   Ayan Halder <Ayan.Halder@arm.com>
-To:     Ayan Halder <Ayan.Halder@arm.com>,
-        Liviu Dudau <Liviu.Dudau@arm.com>,
-        Brian Starkey <Brian.Starkey@arm.com>,
-        "malidp@foss.arm.com" <malidp@foss.arm.com>,
-        "maarten.lankhorst@linux.intel.com" 
-        <maarten.lankhorst@linux.intel.com>,
-        "maxime.ripard@bootlin.com" <maxime.ripard@bootlin.com>,
-        "sean@poorly.run" <sean@poorly.run>,
-        "airlied@linux.ie" <airlied@linux.ie>,
-        "daniel@ffwll.ch" <daniel@ffwll.ch>,
-        "dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "alyssa@rosenzweig.io" <alyssa@rosenzweig.io>
-CC:     nd <nd@arm.com>
-Subject: [PATCH v4 04/10] drm/arm/malidp:- Added support for new YUV formats
- for DP500, DP550 and DP650
-Thread-Topic: [PATCH v4 04/10] drm/arm/malidp:- Added support for new YUV
- formats for DP500, DP550 and DP650
-Thread-Index: AQHU2P+tqJozVjLgsUGlRDgVDtbnEA==
-Date:   Tue, 12 Mar 2019 18:16:13 +0000
-Message-ID: <1552414556-5756-4-git-send-email-ayan.halder@arm.com>
-References: <1552414556-5756-1-git-send-email-ayan.halder@arm.com>
-In-Reply-To: <1552414556-5756-1-git-send-email-ayan.halder@arm.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-clientproxiedby: LO2P265CA0188.GBRP265.PROD.OUTLOOK.COM
- (2603:10a6:600:a::32) To AM0PR08MB3891.eurprd08.prod.outlook.com
- (2603:10a6:208:109::19)
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=Ayan.Halder@arm.com; 
-x-ms-exchange-messagesentrepresentingtype: 1
-x-mailer: git-send-email 2.7.4
-x-originating-ip: [217.140.106.55]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: c6fb4227-c2c8-47a8-f4c0-08d6a716cf74
-x-ms-office365-filtering-ht: Tenant
-x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600127)(711020)(4605104)(4618075)(2017052603328)(7153060)(7193020);SRVR:AM0PR08MB5138;
-x-ms-traffictypediagnostic: AM0PR08MB5138:
-nodisclaimer: True
-x-microsoft-antispam-prvs: <AM0PR08MB51385E12F6668A8A108637EFE4490@AM0PR08MB5138.eurprd08.prod.outlook.com>
-x-forefront-prvs: 09749A275C
-x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(136003)(39860400002)(396003)(346002)(376002)(366004)(199004)(189003)(2501003)(8936002)(6116002)(76176011)(4326008)(3846002)(53936002)(81156014)(81166006)(106356001)(8676002)(6512007)(102836004)(14454004)(105586002)(386003)(186003)(6506007)(256004)(99286004)(5660300002)(52116002)(14444005)(2906002)(97736004)(68736007)(476003)(446003)(2201001)(50226002)(36756003)(6436002)(44832011)(86362001)(316002)(486006)(6486002)(11346002)(2616005)(478600001)(71200400001)(71190400001)(25786009)(110136005)(7736002)(72206003)(305945005)(66066001)(26005)(921003)(1121003);DIR:OUT;SFP:1101;SCL:1;SRVR:AM0PR08MB5138;H:AM0PR08MB3891.eurprd08.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
-received-spf: None (protection.outlook.com: arm.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam-message-info: n2du3SHYsIfr1PXM1iFqncTgLGbJ/FMJyQDN0lGVvVKsv8XjKGpzgR01XcrvwOtvfHw7wjF9i0irnPhZXtJlM+HwlOqK6G2M7hrOGtLyGK306HfBdBvLOVTGbQQYqOMNNbIHFxJeiEFlUqDOQUPWAq3F7cCeUt6WpeGMZT/sAHZpnwaZQAYJcLwbx8TVcwzgeWNDjjh7rFlHyS8X6+BzgwiqZwFEDRdOlE4BEklHi7S8Ki4irg4JHFek+xsiXpFYiAc1GlE6/OUJ5pWu9EHl6a9xnTHjAbZMCeXhYxyxgyraGgXxibEftNh9/Af5eUmFx2F1pCNhkbM/xloCiFDrLO93L2DsGVyGyZ8A8w8De/hvK7mRCGWlRperKoO6Iwa68bom3Fi902ZUxgtjdic/G3CD6qbOraV2cK/2HSxGw0g=
-Content-Type: text/plain; charset="iso-8859-1"
-Content-Transfer-Encoding: quoted-printable
+        Tue, 12 Mar 2019 14:17:24 -0400
+Received: from mail-ed1-f68.google.com ([209.85.208.68]:43369 "EHLO
+        mail-ed1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726955AbfCLSRX (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 12 Mar 2019 14:17:23 -0400
+Received: by mail-ed1-f68.google.com with SMTP id m35so3122807ede.10;
+        Tue, 12 Mar 2019 11:17:22 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=subject:from:to:cc:references:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=LfmXygKDkeuu68yqiycFMP+CjNL+pM54Kl+cqYcWaDI=;
+        b=U44tSkfvdGX8s+daWTt8qJfEObvxJ2BV018GDjvPegimxXT/FjAgnw+pR62XK5HVue
+         oahUB99J3kyuefu0b4Vlr8R3eTkybWljN5ojH8XW7UhmlOzbQepLqi+C6RKEGeqRZShP
+         BsJ4PAdQl/bmUmoc3gHUtOwcB4Snl9o+ZiG2Wmt+YVsTa47KWt0nXdhBwrucj9nRVJ49
+         63iFE+wS/LqpJuB7xJEnRoKvmpwo69fBJj7N/TJPZPtUK3zVIWGg82JY35RRpvYnOBVp
+         +FVzGxZjBVnpI0dc9R/1DwA+9YQ46t8OZi3Vv476EUd4A2pl/ZobRrtWiUf2CdKGK8VW
+         mhEQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:from:to:cc:references:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=LfmXygKDkeuu68yqiycFMP+CjNL+pM54Kl+cqYcWaDI=;
+        b=MjfMq86oBBDX1lQSa40WFv/dIXBWD0Fhi9yTvsYNVn/UjFaAHWmoCKH5R/DxW8TJAY
+         p/xAcG5KYjHT+7kHPM+jtZCAZIxjtENPhocgjV1cq9OUL2X6L1ThR9tuqQO3hbroD1Jw
+         xhvxObUq3Zg7QNuiHag8KJPYj4/HIEnjTPeevjDAUH1Vc44/LhXbelMFNgDDVL8ews7w
+         kXhcXMo/XB11JnLaUWnigEWG7L6zMgOpI3STjjoV6DF/MkMqirq1ZYrNVVXjs/xeoK1S
+         3t+0GLOwi7N5YC9YByhNqVrx7gNx4oZLUZ22vtju4BZNqnxECX4nUN8n95wNFjFRBIib
+         Pr5w==
+X-Gm-Message-State: APjAAAW0Nob59WRN/Bc5aZdooNzmnCFuYVI1f/vT6GNmEs0x6UgZycZa
+        QcuZPMnC1YNIkjb/Qo2tnpE=
+X-Google-Smtp-Source: APXvYqxzdJPga8oPyzSp59tVYuI5vbitURc/rU33S5FkKKDHOL912xUIIfOl3kGwjVNnttSsIHNSVg==
+X-Received: by 2002:a17:906:2e9b:: with SMTP id o27mr26460419eji.98.1552414236414;
+        Tue, 12 Mar 2019 11:10:36 -0700 (PDT)
+Received: from [192.168.2.1] (ip51ccf9cd.speed.planet.nl. [81.204.249.205])
+        by smtp.gmail.com with ESMTPSA id z20sm3835595eja.6.2019.03.12.11.10.35
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Tue, 12 Mar 2019 11:10:35 -0700 (PDT)
+Subject: Re: [PATCH v3 1/4] drm: rockchip: introduce rk3066 hdmi
+From:   Johan Jonker <jbx6244@gmail.com>
+To:     Sam Ravnborg <sam@ravnborg.org>
+Cc:     heiko@sntech.de, mark.rutland@arm.com, devicetree@vger.kernel.org,
+        airlied@linux.ie, dri-devel@lists.freedesktop.org,
+        linux-kernel@vger.kernel.org, linux-rockchip@lists.infradead.org,
+        robh+dt@kernel.org, linux-arm-kernel@lists.infradead.org
+References: <20190302104116.1535-1-jbx6244@gmail.com>
+ <20190302104116.1535-2-jbx6244@gmail.com>
+ <20190303202308.GD13157@ravnborg.org>
+ <b6b818d5-8c24-e01a-572e-97c1754c80e8@gmail.com>
+Message-ID: <d53892e0-17f9-1c7f-b7d3-2794fad09207@gmail.com>
+Date:   Tue, 12 Mar 2019 19:10:33 +0100
+User-Agent: Mozilla/5.0 (X11; Linux i686; rv:60.0) Gecko/20100101
+ Thunderbird/60.4.0
 MIME-Version: 1.0
-X-OriginatorOrg: arm.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: c6fb4227-c2c8-47a8-f4c0-08d6a716cf74
-X-MS-Exchange-CrossTenant-originalarrivaltime: 12 Mar 2019 18:16:13.3733
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: f34e5979-57d9-4aaa-ad4d-b122a662184d
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: AM0PR08MB5138
+In-Reply-To: <b6b818d5-8c24-e01a-572e-97c1754c80e8@gmail.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Ayan Kumar Halder <ayan.halder@arm.com>
+On 3/4/19 11:48 PM, Johan Jonker wrote:
+>
+> With regard to the bugs something between rc1 and rc8 results
+> in a freeze on poweroff. Power domain doesn't seem to turn off
+> the vop and hdmi in rc8.
 
-We have added support for some AFBC only pixel formats like :-
-DRM_FORMAT_YUV420_8BIT (single plane YUV 420 8 bit format)
-DRM_FORMAT_VUY888 (single plane YUV 444 8 bit format)
-DRM_FORMAT_VUY101010 (single plane YUV 444 10 bit format)
-DRM_FORMAT_YUV420_10BIT (single plane YUV 420 10 bit format)
+The bug is due to a patch revert earlier this year.
+To shutdown MK808 one can continue to use the patch at the link below
+until this issue is fix by them.
 
-Generally, these formats are supported by our hardware using the same
-hw-ids as the equivalent multi plane pixel formats.
+drm/rockchip: shutdown drm subsystem on shutdown
+https://patchwork.kernel.org/patch/10556151/
 
-Also we have added support for XYUV 444 8 and 10 bit formats
-
-Changes since v3 (series):
-- Added the ack
-- Rebased on the latest drm-misc-next
-
-Signed-off-by: Ayan Kumar Halder <ayan.halder@arm.com>
-Reviewed-by: Liviu Dudau <liviu.dudau@arm.com>
-Acked-by: Alyssa Rosenzweig <alyssa@rosenzweig.io>
----
- drivers/gpu/drm/arm/malidp_hw.c | 22 +++++++++++++++++++++-
- 1 file changed, 21 insertions(+), 1 deletion(-)
-
-diff --git a/drivers/gpu/drm/arm/malidp_hw.c b/drivers/gpu/drm/arm/malidp_h=
-w.c
-index 64c2ca3..b4a0e11 100644
---- a/drivers/gpu/drm/arm/malidp_hw.c
-+++ b/drivers/gpu/drm/arm/malidp_hw.c
-@@ -49,6 +49,12 @@ static const struct malidp_format_id malidp500_de_format=
-s[] =3D {
- 	{ DRM_FORMAT_YUYV, DE_VIDEO1, 13 },
- 	{ DRM_FORMAT_NV12, DE_VIDEO1 | SE_MEMWRITE, 14 },
- 	{ DRM_FORMAT_YUV420, DE_VIDEO1, 15 },
-+	{ DRM_FORMAT_XYUV8888, DE_VIDEO1, 16 },
-+	/* These are supported with AFBC only */
-+	{ DRM_FORMAT_YUV420_8BIT, DE_VIDEO1, 14 },
-+	{ DRM_FORMAT_VUY888, DE_VIDEO1, 16 },
-+	{ DRM_FORMAT_VUY101010, DE_VIDEO1, 17 },
-+	{ DRM_FORMAT_YUV420_10BIT, DE_VIDEO1, 18 }
- };
-=20
- #define MALIDP_ID(__group, __format) \
-@@ -74,11 +80,25 @@ static const struct malidp_format_id malidp500_de_forma=
-ts[] =3D {
- 	{ DRM_FORMAT_ABGR1555, DE_VIDEO1 | DE_GRAPHICS1 | DE_VIDEO2, MALIDP_ID(4,=
- 1) }, \
- 	{ DRM_FORMAT_RGB565, DE_VIDEO1 | DE_GRAPHICS1 | DE_VIDEO2, MALIDP_ID(4, 2=
-) }, \
- 	{ DRM_FORMAT_BGR565, DE_VIDEO1 | DE_GRAPHICS1 | DE_VIDEO2, MALIDP_ID(4, 3=
-) }, \
-+	/* This is only supported with linear modifier */	\
-+	{ DRM_FORMAT_XYUV8888, DE_VIDEO1 | DE_VIDEO2, MALIDP_ID(5, 0) },\
-+	/* This is only supported with AFBC modifier */		\
-+	{ DRM_FORMAT_VUY888, DE_VIDEO1 | DE_VIDEO2, MALIDP_ID(5, 0) }, \
- 	{ DRM_FORMAT_YUYV, DE_VIDEO1 | DE_VIDEO2, MALIDP_ID(5, 2) },	\
-+	/* This is only supported with linear modifier */ \
- 	{ DRM_FORMAT_UYVY, DE_VIDEO1 | DE_VIDEO2, MALIDP_ID(5, 3) },	\
- 	{ DRM_FORMAT_NV12, DE_VIDEO1 | DE_VIDEO2 | SE_MEMWRITE, MALIDP_ID(5, 6) }=
-,	\
-+	/* This is only supported with AFBC modifier */ \
-+	{ DRM_FORMAT_YUV420_8BIT, DE_VIDEO1 | DE_VIDEO2, MALIDP_ID(5, 6) }, \
- 	{ DRM_FORMAT_YUV420, DE_VIDEO1 | DE_VIDEO2, MALIDP_ID(5, 7) }, \
--	{ DRM_FORMAT_X0L2, DE_VIDEO1 | DE_VIDEO2, MALIDP_ID(6, 6)}
-+	/* This is only supported with linear modifier */ \
-+	{ DRM_FORMAT_XVYU2101010, DE_VIDEO1 | DE_VIDEO2, MALIDP_ID(6, 0)}, \
-+	/* This is only supported with AFBC modifier */ \
-+	{ DRM_FORMAT_VUY101010, DE_VIDEO1 | DE_VIDEO2, MALIDP_ID(6, 0)}, \
-+	{ DRM_FORMAT_X0L2, DE_VIDEO1 | DE_VIDEO2, MALIDP_ID(6, 6)}, \
-+	/* This is only supported with AFBC modifier */ \
-+	{ DRM_FORMAT_YUV420_10BIT, DE_VIDEO1 | DE_VIDEO2, MALIDP_ID(6, 7)}, \
-+	{ DRM_FORMAT_P010, DE_VIDEO1 | DE_VIDEO2, MALIDP_ID(6, 7)}
-=20
- static const struct malidp_format_id malidp550_de_formats[] =3D {
- 	MALIDP_COMMON_FORMATS,
---=20
-2.7.4
-
+[for-4.20] Revert "drm/rockchip: Allow driver to be shutdown on
+reboot/kexec"
+https://patchwork.kernel.org/patch/10714725/
