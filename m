@@ -2,53 +2,55 @@ Return-Path: <SRS0=J4ZE=RP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+X-Spam-Status: No, score=-14.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 017ABC43381
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 17:22:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2974BC43381
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 17:22:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C1161214AF
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 17:22:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F001D214AF
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 17:22:51 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1552411363;
-	bh=qKzhmXVxPvtf3IWamqpvGLG7us/nyBImMJ8xfUVgrIA=;
+	s=default; t=1552411372;
+	bh=o8lD9tSbp9ApZjlr9mo2obkGHL8cVXsk2uq8vf66654=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Ny6OVNM5azjDk9Xzb2HEYgbeOLILU0UVeeY4ZxHBRO4frEpFc6zTtiZyXen6LReRd
-	 ZvfCyIdS1899RGc28s4nQWKHmn+7nkILNXoVBMENRoQoLQVfWSeNHTs135Pemu9leY
-	 Gx1y1wLpQSHHgyhgj9lMkjT4lidxXtHpdFOkauGA=
+	b=owt+LAN+qjh/RePCg0ADa+B4QZhnQzAXXUwZHy41lveNiLI3n4nwTdtDEGRu9VcRN
+	 8FBWYeAyeUIKOFQAkGHwxAoIJbSl0wBpkg/bPeCqal/ryh2NR1GvdXSwo1obi9j1Er
+	 5YS9Q3e1Bu2Qd4VTuZj8ebSuxxfMhm1qH3uNfCio=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729957AbfCLRWm (ORCPT
+        id S1730062AbfCLRWu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 12 Mar 2019 13:22:42 -0400
-Received: from mail.kernel.org ([198.145.29.99]:35236 "EHLO mail.kernel.org"
+        Tue, 12 Mar 2019 13:22:50 -0400
+Received: from mail.kernel.org ([198.145.29.99]:35080 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729928AbfCLRSH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 12 Mar 2019 13:18:07 -0400
+        id S1729907AbfCLRSF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 12 Mar 2019 13:18:05 -0400
 Received: from localhost (unknown [104.133.8.98])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 6648B218AE;
-        Tue, 12 Mar 2019 17:18:06 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 28FCA2171F;
+        Tue, 12 Mar 2019 17:18:04 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1552411086;
-        bh=qKzhmXVxPvtf3IWamqpvGLG7us/nyBImMJ8xfUVgrIA=;
+        s=default; t=1552411084;
+        bh=o8lD9tSbp9ApZjlr9mo2obkGHL8cVXsk2uq8vf66654=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=scyVDTI0bIC2zRpx2J+yzHUn/d0GP1z4Z4Rmy2u4RrAX0bQTfeCmPtgNE+elf8hlP
-         a97h4LuU0H6FjxTrVdusKhVRpGcBoYnSXKyGOEoc4n4Uq1ASax5wgHZjRWv5NWkIWI
-         8uXsXQ6XCOWeORB29MjGGzA6WWUjcHfcfWYFkkpA=
+        b=tfK0MRmLyqxDVz3VZ/bAkmG5ELLhgaq3rPZBOc1br3eOoBxjxgZgo6QHCLxPcy7Rx
+         l66bFzIeq6E0y7FLe1oVLk73Cpqul/CvZ8nxifxqGVMkR8jzwr8AxZGNFn+A378yh5
+         zVWay72Bfcf4eeIDn3RPs0HwwX2fuiQcquk0KqOA=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Ian Kent <raven@themaw.net>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
+        stable@vger.kernel.org, Michael Petlan <mpetlan@redhat.com>,
+        Adrian Hunter <adrian.hunter@intel.com>,
+        Jiri Olsa <jolsa@redhat.com>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Arnaldo Carvalho de Melo <acme@redhat.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.9 64/96] autofs: fix error return in autofs_fill_super()
-Date:   Tue, 12 Mar 2019 10:10:22 -0700
-Message-Id: <20190312171039.374457711@linuxfoundation.org>
+Subject: [PATCH 4.9 80/96] perf trace: Support multiple "vfs_getname" probes
+Date:   Tue, 12 Mar 2019 10:10:38 -0700
+Message-Id: <20190312171040.616315236@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190312171034.530434962@linuxfoundation.org>
 References: <20190312171034.530434962@linuxfoundation.org>
@@ -67,37 +69,99 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-[ Upstream commit f585b283e3f025754c45bbe7533fc6e5c4643700 ]
+[ Upstream commit 6ab3bc240ade47a0f52bc16d97edd9accbe0024e ]
 
-In autofs_fill_super() on error of get inode/make root dentry the return
-should be ENOMEM as this is the only failure case of the called
-functions.
+With a suitably defined "probe:vfs_getname" probe, 'perf trace' can
+"beautify" its output, so syscalls like open() or openat() can print the
+"filename" argument instead of just its hex address, like:
 
-Link: http://lkml.kernel.org/r/154725123240.11260.796773942606871359.stgit@pluto-themaw-net
-Signed-off-by: Ian Kent <raven@themaw.net>
-Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
-Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
+  $ perf trace -e open -- touch /dev/null
+  [...]
+       0.590 ( 0.014 ms): touch/18063 open(filename: /dev/null, flags: CREAT|NOCTTY|NONBLOCK|WRONLY, mode: IRUGO|IWUGO) = 3
+  [...]
+
+The output without such beautifier looks like:
+
+     0.529 ( 0.011 ms): touch/18075 open(filename: 0xc78cf288, flags: CREAT|NOCTTY|NONBLOCK|WRONLY, mode: IRUGO|IWUGO) = 3
+
+However, when the vfs_getname probe expands to multiple probes and it is
+not the first one that is hit, the beautifier fails, as following:
+
+     0.326 ( 0.010 ms): touch/18072 open(filename: , flags: CREAT|NOCTTY|NONBLOCK|WRONLY, mode: IRUGO|IWUGO) = 3
+
+Fix it by hooking into all the expanded probes (inlines), now, for instance:
+
+  [root@quaco ~]# perf probe -l
+    probe:vfs_getname    (on getname_flags:73@fs/namei.c with pathname)
+    probe:vfs_getname_1  (on getname_flags:73@fs/namei.c with pathname)
+  [root@quaco ~]# perf trace -e open* sleep 1
+       0.010 ( 0.005 ms): sleep/5588 openat(dfd: CWD, filename: /etc/ld.so.cache, flags: RDONLY|CLOEXEC)   = 3
+       0.029 ( 0.006 ms): sleep/5588 openat(dfd: CWD, filename: /lib64/libc.so.6, flags: RDONLY|CLOEXEC)   = 3
+       0.194 ( 0.008 ms): sleep/5588 openat(dfd: CWD, filename: /usr/lib/locale/locale-archive, flags: RDONLY|CLOEXEC) = 3
+  [root@quaco ~]#
+
+Works, further verified with:
+
+  [root@quaco ~]# perf test vfs
+  65: Use vfs_getname probe to get syscall args filenames   : Ok
+  66: Add vfs_getname probe to get syscall args filenames   : Ok
+  67: Check open filename arg using perf trace + vfs_getname: Ok
+  [root@quaco ~]#
+
+Reported-by: Michael Petlan <mpetlan@redhat.com>
+Tested-by: Michael Petlan <mpetlan@redhat.com>
+Cc: Adrian Hunter <adrian.hunter@intel.com>
+Cc: Jiri Olsa <jolsa@redhat.com>
+Cc: Namhyung Kim <namhyung@kernel.org>
+Link: https://lkml.kernel.org/n/tip-mv8kolk17xla1smvmp3qabv1@git.kernel.org
+Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- fs/autofs4/inode.c | 4 +++-
- 1 file changed, 3 insertions(+), 1 deletion(-)
+ tools/perf/builtin-trace.c | 25 ++++++++++++++++++-------
+ 1 file changed, 18 insertions(+), 7 deletions(-)
 
-diff --git a/fs/autofs4/inode.c b/fs/autofs4/inode.c
-index ce0c6ea96a87..d9a3264909d0 100644
---- a/fs/autofs4/inode.c
-+++ b/fs/autofs4/inode.c
-@@ -259,8 +259,10 @@ int autofs4_fill_super(struct super_block *s, void *data, int silent)
- 	}
- 	root_inode = autofs4_get_inode(s, S_IFDIR | 0755);
- 	root = d_make_root(root_inode);
--	if (!root)
-+	if (!root) {
-+		ret = -ENOMEM;
- 		goto fail_ino;
-+	}
- 	pipe = NULL;
+diff --git a/tools/perf/builtin-trace.c b/tools/perf/builtin-trace.c
+index 0fd8bfb77f65..6e568d361edf 100644
+--- a/tools/perf/builtin-trace.c
++++ b/tools/perf/builtin-trace.c
+@@ -2059,19 +2059,30 @@ static size_t trace__fprintf_thread_summary(struct trace *trace, FILE *fp);
  
- 	root->d_fsdata = ino;
+ static bool perf_evlist__add_vfs_getname(struct perf_evlist *evlist)
+ {
+-	struct perf_evsel *evsel = perf_evsel__newtp("probe", "vfs_getname");
++	bool found = false;
++	struct perf_evsel *evsel, *tmp;
++	struct parse_events_error err = { .idx = 0, };
++	int ret = parse_events(evlist, "probe:vfs_getname*", &err);
+ 
+-	if (IS_ERR(evsel))
++	if (ret)
+ 		return false;
+ 
+-	if (perf_evsel__field(evsel, "pathname") == NULL) {
++	evlist__for_each_entry_safe(evlist, evsel, tmp) {
++		if (!strstarts(perf_evsel__name(evsel), "probe:vfs_getname"))
++			continue;
++
++		if (perf_evsel__field(evsel, "pathname")) {
++			evsel->handler = trace__vfs_getname;
++			found = true;
++			continue;
++		}
++
++		list_del_init(&evsel->node);
++		evsel->evlist = NULL;
+ 		perf_evsel__delete(evsel);
+-		return false;
+ 	}
+ 
+-	evsel->handler = trace__vfs_getname;
+-	perf_evlist__add(evlist, evsel);
+-	return true;
++	return found;
+ }
+ 
+ static struct perf_evsel *perf_evsel__new_pgfault(u64 config)
 -- 
 2.19.1
 
