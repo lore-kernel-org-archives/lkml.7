@@ -3,191 +3,171 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
 X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED
-	autolearn=ham autolearn_force=no version=3.4.0
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,UNPARSEABLE_RELAY,
+	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B52D7C43381
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 02:11:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 571BEC43381
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 02:18:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 793B7214AE
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 02:11:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 19A2A2087C
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 02:18:45 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726858AbfCLCLG (ORCPT
+        id S1726746AbfCLCSm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 11 Mar 2019 22:11:06 -0400
-Received: from szxga04-in.huawei.com ([45.249.212.190]:4672 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726649AbfCLCLE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 11 Mar 2019 22:11:04 -0400
-Received: from DGGEMS409-HUB.china.huawei.com (unknown [172.30.72.59])
-        by Forcepoint Email with ESMTP id 0E24B9A9AC8165639C78;
-        Tue, 12 Mar 2019 10:11:01 +0800 (CST)
-Received: from [127.0.0.1] (10.177.31.96) by DGGEMS409-HUB.china.huawei.com
- (10.3.19.209) with Microsoft SMTP Server id 14.3.408.0; Tue, 12 Mar 2019
- 10:10:58 +0800
-Subject: Re: [PATCH] proc/sysctl: Fix NULL pointer dereference in put_links
-To:     Luis Chamberlain <mcgrof@kernel.org>
-References: <20190304135438.29792-1-yuehaibing@huawei.com>
- <03aafd33-f9d5-4a48-b123-7a6b2e7f16e7@huawei.com>
- <CAB=NE6UF=2pWzOFY2PqpXyuDV3qSa7R8bpMAw-6qF9Z7Ly=PEw@mail.gmail.com>
- <43f6b8c5-a9eb-c77d-0c52-dbc3c45b4dc7@huawei.com>
-CC:     Kees Cook <keescook@chromium.org>,
-        Alexey Dobriyan <adobriyan@gmail.com>, <ast@kernel.org>,
-        <daniel@iogearbox.net>, Al Viro <viro@zeniv.linux.org.uk>,
-        <linux-kernel@vger.kernel.org>, <netdev@vger.kernel.org>,
-        <linux-fsdevel@vger.kernel.org>, <bpf@vger.kernel.org>
-From:   YueHaibing <yuehaibing@huawei.com>
-Message-ID: <e5d45b4e-b821-f993-7e88-6b0c35159d5e@huawei.com>
-Date:   Tue, 12 Mar 2019 10:10:53 +0800
-User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:45.0) Gecko/20100101
- Thunderbird/45.2.0
+        Mon, 11 Mar 2019 22:18:42 -0400
+Received: from Mailgw01.mediatek.com ([1.203.163.78]:17877 "EHLO
+        mailgw01.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1726316AbfCLCSm (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 11 Mar 2019 22:18:42 -0400
+X-UUID: a12a79d006a74e179eb8ccdfeea05c9c-20190312
+X-UUID: a12a79d006a74e179eb8ccdfeea05c9c-20190312
+Received: from mtkcas35.mediatek.inc [(172.27.4.253)] by mailgw01.mediatek.com
+        (envelope-from <chunfeng.yun@mediatek.com>)
+        (mailgw01.mediatek.com ESMTP with TLS)
+        with ESMTP id 84296105; Tue, 12 Mar 2019 10:18:37 +0800
+Received: from MTKCAS36.mediatek.inc (172.27.4.186) by MTKMBS31N2.mediatek.inc
+ (172.27.4.87) with Microsoft SMTP Server (TLS) id 15.0.1395.4; Tue, 12 Mar
+ 2019 10:18:35 +0800
+Received: from [10.17.3.153] (172.27.4.253) by MTKCAS36.mediatek.inc
+ (172.27.4.170) with Microsoft SMTP Server id 15.0.1395.4 via Frontend
+ Transport; Tue, 12 Mar 2019 10:18:33 +0800
+Message-ID: <1552357113.10179.32.camel@mhfsdcap03>
+Subject: Re: [PATCH 1/5] dt-bindings: connector: add optional properties for
+ Type-B
+From:   Chunfeng Yun <chunfeng.yun@mediatek.com>
+To:     Hans de Goede <hdegoede@redhat.com>, Jun Li <jun.li@nxp.com>
+CC:     Rob Herring <robh+dt@kernel.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Heikki Krogerus <heikki.krogerus@linux.intel.com>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        Adam Thomson <Adam.Thomson.Opensource@diasemi.com>,
+        Li Jun <jun.li@nxp.com>,
+        "Badhri Jagan Sridharan" <badhri@google.com>,
+        Andy Shevchenko <andy.shevchenko@gmail.com>,
+        Min Guo <min.guo@mediatek.com>, <devicetree@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>, <linux-usb@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <linux-mediatek@lists.infradead.org>
+Date:   Tue, 12 Mar 2019 10:18:33 +0800
+In-Reply-To: <e5eed281-ee9b-6e1c-caea-1372329316be@redhat.com>
+References: <1552025622-15582-1-git-send-email-chunfeng.yun@mediatek.com>
+         <1552025622-15582-2-git-send-email-chunfeng.yun@mediatek.com>
+         <693b11e7-fa9e-ab1f-561a-beb758b1872f@redhat.com>
+         <1552282383.10179.21.camel@mhfsdcap03>
+         <c8084259-74d3-c85f-1275-854826c935a0@redhat.com>
+         <3684aa62-68ad-13ef-7c6e-2b57f7cd62b8@redhat.com>
+         <e5eed281-ee9b-6e1c-caea-1372329316be@redhat.com>
+Content-Type: text/plain; charset="UTF-8"
+X-Mailer: Evolution 3.2.3-0ubuntu6 
+Content-Transfer-Encoding: 7bit
 MIME-Version: 1.0
-In-Reply-To: <43f6b8c5-a9eb-c77d-0c52-dbc3c45b4dc7@huawei.com>
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-X-Originating-IP: [10.177.31.96]
-X-CFilter-Loop: Reflected
+X-MTK:  N
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-T24gMjAxOS8zLzkgMjA6MjcsIFl1ZUhhaWJpbmcgd3JvdGU6DQo+IE9uIDIwMTkvMy85IDEx
-OjU4LCBMdWlzIENoYW1iZXJsYWluIHdyb3RlOg0KPj4gSSBzbyBleGNpdGVkIGFib3V0IHRo
-ZSByZXBvcnQsIHRoYW5rcyB0aGlzIGlzIGF3ZXNvbWUgd29yayEhIEhvd2V2ZXIgaXQgc2Vl
-bWVkIHBvc3NpYmx5IGxpa2UgYSBwYXBlci1vdmVyIGEgZGlmZmVyZW50IGlzc3VlLiBJJ20g
-bm90IGNvbnZpbmNlZCB5ZXQuDQo+Pg0KPj4gSWYgcHJlZmVyIGEgYml0IG1vcmUgaW52ZXN0
-aWdhdGlvbiB1bnRpbCB3ZSBjYW4gYmUgMTAwJSBzdXJlLiBBdCB0aGlzIHBvaW50IG15IHBv
-c2l0aW9uIHdvdWxkIGJlIHRoaXMgaXMgbW9yZSBvZiBhIHJpc2sgZm9yIG1vcmUgcmVncmVz
-c2lvbnMgYW5kIHRoYXQncyBhbiBvZmYgZmVlbGluZyBmb3IgYSBmaXguDQo+Pg0KPj4gICBM
-dWlzDQo+IA0KPiBUaGlzIGlzc3VlIG9jY3VycyBsaWtlIHRoaXM6DQo+IA0KPiBfX3JlZ2lz
-dGVyX3N5c2N0bF90YWJsZQ0KPiAgICAgIC0tPmdldF9zdWJkaXINCj4gICAgICAJLS0+bmV3
-X2RpciAgLy9jcmVhdGUgJ25ldycgZGlyDQo+ICAgICAgICAgICAgIC0tPmluaXRfaGVhZGVy
-ICAvLyAmbmV3LT5oZWFkZXItPnBhcmVudCA9IE5VTEwNCj4gICAgICAgICAtLT5pbnNlcnRf
-aGVhZGVyDQo+ICAgICAgICAgICAgIC0tPiBpbnNlcnRfbGlua3MNCj4gCQktLT5uZXdfbGlu
-a3MNCj4gCQkJLS0+a3phbGxvYyAgLy9mYWlsZWQNCj4gCQktLT4mbmV3LT5oZWFkZXItPnBh
-cmVudCA9IE5VTEwNCj4gCS0tPmRyb3Bfc3lzY3RsX3RhYmxlKCZuZXctPmhlYWRlcikgLy9J
-biBlcnIgcGF0aCBvZiBnZXRfc3ViZGlyDQo+IAkJLS0+cHV0X2xpbmtzIC8vY2FsbCB4bGF0
-ZV9kaXIgd2hvc2UgMm5kIHBhcmFtIGlzICcmbmV3LT5oZWFkZXItPnBhcmVudCcNCj4gCQkJ
-LS0+IHhsYXRlX2RpciAgLy9hY2Nlc3MgZGlyLT5oZWFkZXIsaG93ZXZlciAnZGlyJyBpcyBO
-VUxMIHdoaWNoIGNvbWVzIGZyb20gJyZuZXctPmhlYWRlci0+cGFyZW50Jw0KPiANCj4gUGxl
-YXNlIGNvcnJlY3QgbWUgaWYgdGhpcyBpcyBpbmNvcnJlY3QuDQoNCkhlbGxvLA0KDQpBbnkg
-Y29tbWVudCB3aWxsIGJlIGFwcHJlY2lhdGVkLg0KDQo+IAkNCj4+DQo+PiBPbiBGcmksIE1h
-ciA4LCAyMDE5LCA4OjA0IFBNIFl1ZUhhaWJpbmcgPHl1ZWhhaWJpbmdAaHVhd2VpLmNvbSA8
-bWFpbHRvOnl1ZWhhaWJpbmdAaHVhd2VpLmNvbT4+IHdyb3RlOg0KPj4NCj4+ICAgICArY2Mg
-QWwgVmlybw0KPj4NCj4+ICAgICBPbiAyMDE5LzMvNCAyMTo1NCwgWXVlIEhhaWJpbmcgd3Jv
-dGU6DQo+PiAgICAgPiBGcm9tOiBZdWVIYWliaW5nIDx5dWVoYWliaW5nQGh1YXdlaS5jb20g
-PG1haWx0bzp5dWVoYWliaW5nQGh1YXdlaS5jb20+Pg0KPj4gICAgID4NCj4+ICAgICA+IFN5
-emthbGxlciByZXBvcnQgdGhpczoNCj4+ICAgICA+DQo+PiAgICAgPiBrYXNhbjogR1BGIGNv
-dWxkIGJlIGNhdXNlZCBieSBOVUxMLXB0ciBkZXJlZiBvciB1c2VyIG1lbW9yeSBhY2Nlc3MN
-Cj4+ICAgICA+IGdlbmVyYWwgcHJvdGVjdGlvbiBmYXVsdDogMDAwMCBbIzFdIFNNUCBLQVNB
-TiBQVEkNCj4+ICAgICA+IENQVTogMSBQSUQ6IDUzNzMgQ29tbTogc3l6LWV4ZWN1dG9yLjAg
-Tm90IHRhaW50ZWQgNS4wLjAtcmM4KyAjMw0KPj4gICAgID4gSGFyZHdhcmUgbmFtZTogUUVN
-VSBTdGFuZGFyZCBQQyAoaTQ0MEZYICsgUElJWCwgMTk5NiksIEJJT1MgMS4xMC4yLTF1YnVu
-dHUxIDA0LzAxLzIwMTQNCj4+ICAgICA+IFJJUDogMDAxMDpwdXRfbGlua3MrMHgxMDEvMHg0
-NDAgZnMvcHJvYy9wcm9jX3N5c2N0bC5jOjE1OTkNCj4+ICAgICA+IENvZGU6IDAwIDBmIDg1
-IDNhIDAzIDAwIDAwIDQ4IDhiIDQzIDM4IDQ4IDg5IDQ0IDI0IDIwIDQ4IDgzIGMwIDM4IDQ4
-IDg5IGMyIDQ4IDg5IDQ0IDI0IDI4IDQ4IGI4IDAwIDAwIDAwIDAwIDAwIGZjIGZmIGRmIDQ4
-IGMxIGVhIDAzIDw4MD4gM2MgMDIgMDAgMGYgODUgZmUgMDIgMDAgMDAgNDggOGIgNzQgMjQg
-MjAgNDggYzcgYzcgNjAgMmEgOWQgOTENCj4+ICAgICA+IFJTUDogMDAxODpmZmZmODg4MWQ4
-MjhmMjM4IEVGTEFHUzogMDAwMTAyMDINCj4+ICAgICA+IFJBWDogZGZmZmZjMDAwMDAwMDAw
-MCBSQlg6IGZmZmY4ODgxZTAxYjExNDAgUkNYOiBmZmZmZmZmZjhlZTk4MjY3DQo+PiAgICAg
-PiBSRFg6IDAwMDAwMDAwMDAwMDAwMDcgUlNJOiBmZmZmYzkwMDAxNDc5MDAwIFJESTogZmZm
-Zjg4ODFlMDFiMTE3OA0KPj4gICAgID4gUkJQOiBkZmZmZmMwMDAwMDAwMDAwIFIwODogZmZm
-ZmVkMTAzZWUyNzI1OSBSMDk6IGZmZmZlZDEwM2VlMjcyNTkNCj4+ICAgICA+IFIxMDogMDAw
-MDAwMDAwMDAwMDAwMSBSMTE6IGZmZmZlZDEwM2VlMjcyNTggUjEyOiBmZmZmZmZmZmZmZmZm
-ZmY0DQo+PiAgICAgPiBSMTM6IDAwMDAwMDAwMDAwMDAwMDYgUjE0OiBmZmZmODg4MWY1OTgz
-OGMwIFIxNTogZGZmZmZjMDAwMDAwMDAwMA0KPj4gICAgID4gRlM6ICAwMDAwN2YwNzIyNTRm
-NzAwKDAwMDApIEdTOmZmZmY4ODgxZjcxMDAwMDAoMDAwMCkga25sR1M6MDAwMDAwMDAwMDAw
-MDAwMA0KPj4gICAgID4gQ1M6ICAwMDEwIERTOiAwMDAwIEVTOiAwMDAwIENSMDogMDAwMDAw
-MDA4MDA1MDAzMw0KPj4gICAgID4gQ1IyOiAwMDAwN2ZmZjhiMjg2NjY4IENSMzogMDAwMDAw
-MDFmMDU0MjAwMiBDUjQ6IDAwMDAwMDAwMDA3NjA2ZTANCj4+ICAgICA+IERSMDogMDAwMDAw
-MDAwMDAwMDAwMCBEUjE6IDAwMDAwMDAwMDAwMDAwMDAgRFIyOiAwMDAwMDAwMDAwMDAwMDAw
-DQo+PiAgICAgPiBEUjM6IDAwMDAwMDAwMDAwMDAwMDAgRFI2OiAwMDAwMDAwMGZmZmUwZmYw
-IERSNzogMDAwMDAwMDAwMDAwMDQwMA0KPj4gICAgID4gUEtSVTogNTU1NTU1NTQNCj4+ICAg
-ICA+IENhbGwgVHJhY2U6DQo+PiAgICAgPiAgZHJvcF9zeXNjdGxfdGFibGUrMHgxNTIvMHg5
-ZjAgZnMvcHJvYy9wcm9jX3N5c2N0bC5jOjE2MjkNCj4+ICAgICA+ICBnZXRfc3ViZGlyIGZz
-L3Byb2MvcHJvY19zeXNjdGwuYzoxMDIyIFtpbmxpbmVdDQo+PiAgICAgPiAgX19yZWdpc3Rl
-cl9zeXNjdGxfdGFibGUrMHhkNjUvMHgxMDkwIGZzL3Byb2MvcHJvY19zeXNjdGwuYzoxMzM1
-DQo+PiAgICAgPiAgPyAweGZmZmZmZmZmYzFhMTgwMDANCj4+ICAgICA+ICBicl9uZXRmaWx0
-ZXJfaW5pdCsweGJjLzB4MTAwMCBbYnJfbmV0ZmlsdGVyXQ0KPj4gICAgID4gID8gMHhmZmZm
-ZmZmZmMxYTE4MDAwDQo+PiAgICAgPiAgPyAweGZmZmZmZmZmYzFhMTgwMDANCj4+ICAgICA+
-ICBkb19vbmVfaW5pdGNhbGwrMHhmYS8weDVjYSBpbml0L21haW4uYzo4ODcNCj4+ICAgICA+
-ICBkb19pbml0X21vZHVsZSsweDIwNC8weDVmNiBrZXJuZWwvbW9kdWxlLmM6MzQ2MA0KPj4g
-ICAgID4gIGxvYWRfbW9kdWxlKzB4NjZiMi8weDg1NzAga2VybmVsL21vZHVsZS5jOjM4MDgN
-Cj4+ICAgICA+ICBfX2RvX3N5c19maW5pdF9tb2R1bGUrMHgyMzgvMHgyYTAga2VybmVsL21v
-ZHVsZS5jOjM5MDINCj4+ICAgICA+ICBkb19zeXNjYWxsXzY0KzB4MTQ3LzB4NjAwIGFyY2gv
-eDg2L2VudHJ5L2NvbW1vbi5jOjI5MA0KPj4gICAgID4gIGVudHJ5X1NZU0NBTExfNjRfYWZ0
-ZXJfaHdmcmFtZSsweDQ5LzB4YmUNCj4+ICAgICA+IFJJUDogMDAzMzoweDQ2MmU5OQ0KPj4g
-ICAgID4gQ29kZTogZjcgZDggNjQgODkgMDIgYjggZmYgZmYgZmYgZmYgYzMgNjYgMGYgMWYg
-NDQgMDAgMDAgNDggODkgZjggNDggODkgZjcgNDggODkgZDYgNDggODkgY2EgNGQgODkgYzIg
-NGQgODkgYzggNGMgOGIgNGMgMjQgMDggMGYgMDUgPDQ4PiAzZCAwMSBmMCBmZiBmZiA3MyAw
-MSBjMyA0OCBjNyBjMSBiYyBmZiBmZiBmZiBmNyBkOCA2NCA4OSAwMSA0OA0KPj4gICAgID4g
-UlNQOiAwMDJiOjAwMDA3ZjA3MjI1NGVjNTggRUZMQUdTOiAwMDAwMDI0NiBPUklHX1JBWDog
-MDAwMDAwMDAwMDAwMDEzOQ0KPj4gICAgID4gUkFYOiBmZmZmZmZmZmZmZmZmZmRhIFJCWDog
-MDAwMDAwMDAwMDczYmYwMCBSQ1g6IDAwMDAwMDAwMDA0NjJlOTkNCj4+ICAgICA+IFJEWDog
-MDAwMDAwMDAwMDAwMDAwMCBSU0k6IDAwMDAwMDAwMjAwMDAyODAgUkRJOiAwMDAwMDAwMDAw
-MDAwMDAzDQo+PiAgICAgPiBSQlA6IDAwMDA3ZjA3MjI1NGVjNzAgUjA4OiAwMDAwMDAwMDAw
-MDAwMDAwIFIwOTogMDAwMDAwMDAwMDAwMDAwMA0KPj4gICAgID4gUjEwOiAwMDAwMDAwMDAw
-MDAwMDAwIFIxMTogMDAwMDAwMDAwMDAwMDI0NiBSMTI6IDAwMDA3ZjA3MjI1NGY2YmMNCj4+
-ICAgICA+IFIxMzogMDAwMDAwMDAwMDRiY2VmYSBSMTQ6IDAwMDAwMDAwMDA2ZjZmYjAgUjE1
-OiAwMDAwMDAwMDAwMDAwMDA0DQo+PiAgICAgPiBNb2R1bGVzIGxpbmtlZCBpbjogYnJfbmV0
-ZmlsdGVyKCspIGR2Yl91c2JfZGlidXNiX21jX2NvbW1vbiBkaWIzMDAwbWMgZGlieDAwMF9j
-b21tb24gZHZiX3VzYl9kaWJ1c2JfY29tbW9uIGR2Yl91c2JfZHcyMTAyIGR2Yl91c2IgY2xh
-c3NtYXRlX2xhcHRvcCBwYWxtYXNfcmVndWxhdG9yIGNuIHZpZGVvYnVmMl92NGwyIHY0bDJf
-Y29tbW9uIHNuZF9zb2NfYmQyODYyMyBtcHRiYXNlIHNuZF91c2JfdXN4Mnkgc25kX3VzYm1p
-ZGlfbGliIHNuZF9yYXdtaWRpIHdtaSBsaWJudmRpbW0gbG9ja2Qgc3VucnBjIGdyYWNlIHJj
-X2t3b3JsZF9wYzE1MHUgcmNfY29yZSBydGNfZGE5MDYzIHNoYTFfc3NzZTMgaTJjX2Nyb3Nf
-ZWNfdHVubmVsIGFkeGwzNHhfc3BpIGFkeGwzNHggbmZuZXRsaW5rIGxpYjgwMjExIGk1NTAw
-X3RlbXAgZHZiX2FzMTAyIGR2Yl9jb3JlIHZpZGVvYnVmMl9jb21tb24gdmlkZW9kZXYgbWVk
-aWEgdmlkZW9idWYyX3ZtYWxsb2MgdmlkZW9idWYyX21lbW9wcyB1ZGNfY29yZSBsbmJwMjIg
-bGVkc19scDM5NTIgaGlkX3JvY2NhdF9yeW9zIHMxZDEzeHh4ZmIgbXRkIHZwb3J0X2dlbmV2
-ZSBvcGVudnN3aXRjaCBuZl9jb25uY291bnQgbmZfbmF0X2lwdjYgbnNoIGdlbmV2ZSB1ZHBf
-dHVubmVsIGlwNl91ZHBfdHVubmVsIHNuZF9zb2NfbXQ2MzUxIHNpc19hZ3AgcGh5bGluayBz
-bmRfc29jX2FkYXUxNzYxX3NwaSBzbmRfc29jX2FkYXUxNzYxIHNuZF9zb2NfYWRhdTE3eDEg
-c25kX3NvY19jb3JlIHNuZF9wY21fZG1hZW5naW5lIGFjOTdfYnVzIHNuZF9jb21wcmVzcyBz
-bmRfc29jX2FkYXVfdXRpbHMgc25kX3NvY19zaWdtYWRzcF9yZWdtYXAgc25kX3NvY19zaWdt
-YWRzcCByYWlkX2NsYXNzIGhpZF9yb2NjYXRfa29uZXB1cmUgaGlkX3JvY2NhdF9jb21tb24g
-aGlkX3JvY2NhdCBjMnBvcnRfZHVyYW1hcjIxNTAgY29yZSBtZGlvX2JjbV91bmltYWMgaXB0
-YWJsZV9zZWN1cml0eSBpcHRhYmxlX3JhdyBpcHRhYmxlX21hbmdsZQ0KPj4gICAgID4gIGlw
-dGFibGVfbmF0IG5mX25hdF9pcHY0IG5mX25hdCBuZl9jb25udHJhY2sgbmZfZGVmcmFnX2lw
-djYgbmZfZGVmcmFnX2lwdjQgaXB0YWJsZV9maWx0ZXIgYnBmaWx0ZXIgaXA2X3Z0aSBpcF92
-dGkgaXBfZ3JlIGlwaXAgc2l0IHR1bm5lbDQgaXBfdHVubmVsIGhzciB2ZXRoIG5ldGRldnNp
-bSBkZXZsaW5rIHZ4Y2FuIGJhdG1hbl9hZHYgY2ZnODAyMTEgcmZraWxsIGNobmxfbmV0IGNh
-aWYgbmxtb24gZHVtbXkgdGVhbSBib25kaW5nIHZjYW4gYnJpZGdlIHN0cCBsbGMgaXA2X2dy
-ZSBncmUgaXA2X3R1bm5lbCB0dW5uZWw2IHR1biBjcmN0MTBkaWZfcGNsbXVsIGNyYzMyX3Bj
-bG11bCBjcmMzMmNfaW50ZWwgZ2hhc2hfY2xtdWxuaV9pbnRlbCBqb3lkZXYgbW91c2VkZXYg
-aWRlX3BjaV9nZW5lcmljIHBpaXggYWVzbmlfaW50ZWwgYWVzX3g4Nl82NCBpZGVfY29yZSBj
-cnlwdG9fc2ltZCBhdGtiZCBjcnlwdGQgZ2x1ZV9oZWxwZXIgc2VyaW9fcmF3IGF0YV9nZW5l
-cmljIHBhdGFfYWNwaSBpMmNfcGlpeDQgZmxvcHB5IHNjaF9mcV9jb2RlbCBpcF90YWJsZXMg
-eF90YWJsZXMgaXB2NiBbbGFzdCB1bmxvYWRlZDogbG03M10NCj4+ICAgICA+IER1bXBpbmcg
-ZnRyYWNlIGJ1ZmZlcjoNCj4+ICAgICA+ICAgIChmdHJhY2UgYnVmZmVyIGVtcHR5KQ0KPj4g
-ICAgID4gLS0tWyBlbmQgdHJhY2UgNzcwMDIwZGUzODk2MWZkMCBdLS0tDQo+PiAgICAgPg0K
-Pj4gICAgID4gQSBuZXcgZGlyIGVudHJ5IGNhbiBiZSBjcmVhdGVkIGluIGdldF9zdWJkaXIg
-YW5kIGl0cyBoZWFkZXItPnBhcmVudCBpcyBzZXQNCj4+ICAgICA+IHRvIE5VTEwuIE9ubHkg
-YWZ0ZXIgaW5zZXJ0X2hlYWRlciBzdWNjZXNzLCBpdCB3aWxsIGJlIHNldCB0byAnZGlyJy4N
-Cj4+ICAgICA+IEhvd2V2ZXIgaW4gZXJyIGhhbmRsaW5nIHBhdGggb2YgZ2V0X3N1YmRpciwg
-ZHJvcF9zeXNjdGxfdGFibGUgbWF5YmUgY2FsbGVkDQo+PiAgICAgPiBvbiAnbmV3LT5oZWFk
-ZXInIHJlZ2FyZGxlc3MgdmFsdWUgb2YgaGVhZGVyLT5wYXJlbnQuIFRoZW4gcHV0X2xpbmtz
-DQo+PiAgICAgPiBiZSBjYWxsZWQsIHdoaWNoIHRyaWdnZXJzIE5VTEwtcHRyIGRlcmVmIHdo
-ZW4gYWNjZXNzIHRoZSBtZW1iZXIgb2YNCj4+ICAgICA+IGhlYWRlci0+cGFyZW50IGluIHhs
-YXRlX2Rpci4NCj4+ICAgICA+DQo+PiAgICAgPiBSZXBvcnRlZC1ieTogSHVsayBSb2JvdCA8
-aHVsa2NpQGh1YXdlaS5jb20gPG1haWx0bzpodWxrY2lAaHVhd2VpLmNvbT4+DQo+PiAgICAg
-PiBGaXhlczogMGU0N2M5OWQ3ZmUyNSAoInN5c2N0bDogUmVwbGFjZSByb290X2xpc3Qgd2l0
-aCBsaW5rcyBiZXR3ZWVuIHN5c2N0bF90YWJsZV9zZXRzIikNCj4+ICAgICA+IFNpZ25lZC1v
-ZmYtYnk6IFl1ZUhhaWJpbmcgPHl1ZWhhaWJpbmdAaHVhd2VpLmNvbSA8bWFpbHRvOnl1ZWhh
-aWJpbmdAaHVhd2VpLmNvbT4+DQo+PiAgICAgPiAtLS0NCj4+ICAgICA+ICBmcy9wcm9jL3By
-b2Nfc3lzY3RsLmMgfCAzICsrLQ0KPj4gICAgID4gIDEgZmlsZSBjaGFuZ2VkLCAyIGluc2Vy
-dGlvbnMoKyksIDEgZGVsZXRpb24oLSkNCj4+ICAgICA+DQo+PiAgICAgPiBkaWZmIC0tZ2l0
-IGEvZnMvcHJvYy9wcm9jX3N5c2N0bC5jIGIvZnMvcHJvYy9wcm9jX3N5c2N0bC5jDQo+PiAg
-ICAgPiBpbmRleCA0ZDU5OGEzLi40YzJhMDVhIDEwMDY0NA0KPj4gICAgID4gLS0tIGEvZnMv
-cHJvYy9wcm9jX3N5c2N0bC5jDQo+PiAgICAgPiArKysgYi9mcy9wcm9jL3Byb2Nfc3lzY3Rs
-LmMNCj4+ICAgICA+IEBAIC0xNjI2LDcgKzE2MjYsOCBAQCBzdGF0aWMgdm9pZCBkcm9wX3N5
-c2N0bF90YWJsZShzdHJ1Y3QgY3RsX3RhYmxlX2hlYWRlciAqaGVhZGVyKQ0KPj4gICAgID4g
-ICAgICAgaWYgKC0taGVhZGVyLT5ucmVnKQ0KPj4gICAgID4gICAgICAgICAgICAgICByZXR1
-cm47DQo+PiAgICAgPiANCj4+ICAgICA+IC0gICAgIHB1dF9saW5rcyhoZWFkZXIpOw0KPj4g
-ICAgID4gKyAgICAgaWYgKHBhcmVudCkNCj4+ICAgICA+ICsgICAgICAgICAgICAgcHV0X2xp
-bmtzKGhlYWRlcik7DQo+PiAgICAgPiAgICAgICBzdGFydF91bnJlZ2lzdGVyaW5nKGhlYWRl
-cik7DQo+PiAgICAgPiAgICAgICBpZiAoIS0taGVhZGVyLT5jb3VudCkNCj4+ICAgICA+ICAg
-ICAgICAgICAgICAga2ZyZWVfcmN1KGhlYWRlciwgcmN1KTsNCj4+ICAgICA+DQo+Pg0K
+Hi Jun,
+
+   Please pay attention to Hans' comments for your patch
+
+On Mon, 2019-03-11 at 12:04 +0100, Hans de Goede wrote:
+> Hi,
+> 
+> On 11-03-19 12:00, Hans de Goede wrote:
+> > Hi,
+> > 
+> > On 11-03-19 09:06, Hans de Goede wrote:
+> >> Hi,
+> >>
+> >> On 11-03-19 06:33, Chunfeng Yun wrote:
+> >>> Hi,
+> >>>
+> >>> On Fri, 2019-03-08 at 13:07 +0100, Hans de Goede wrote:
+> >>>> Hi,
+> >>>>
+> >>>> On 08-03-19 07:13, Chunfeng Yun wrote:
+> >>>>> Add id-gpios, vbus-gpios, vbus-supply and pinctrl properties for
+> >>>>> usb-b-connector
+> >>>>>
+> >>>>> Signed-off-by: Chunfeng Yun <chunfeng.yun@mediatek.com>
+> >>>>> ---
+> >>>>>    .../devicetree/bindings/connector/usb-connector.txt    | 10 ++++++++++
+> >>>>>    1 file changed, 10 insertions(+)
+> >>>>>
+> >>>>> diff --git a/Documentation/devicetree/bindings/connector/usb-connector.txt b/Documentation/devicetree/bindings/connector/usb-connector.txt
+> >>>>> index a9a2f2fc44f2..7a07b0f4f973 100644
+> >>>>> --- a/Documentation/devicetree/bindings/connector/usb-connector.txt
+> >>>>> +++ b/Documentation/devicetree/bindings/connector/usb-connector.txt
+> >>>>> @@ -17,6 +17,16 @@ Optional properties:
+> >>>>>    - self-powered: Set this property if the usb device that has its own power
+> >>>>>      source.
+> >>>>> +Optional properties for usb-b-connector:
+> >>>>> +- id-gpios: gpio for USB ID pin.
+> >>>>
+> >>>> What about boards where the ID pin is *not* connected to a GPIO,
+> >>>> but e.g. to a special pin on the PMIC which can also detect
+> >>>> an ACA adapter ? Currently this case is handled by extcon
+> >>>> drivers, but we have no way to set e.g. vbus-supply for the
+> >>>> connector. Maybe in this case the usb-connector node should
+> >>>> be a child of the PMIC node ?
+> >>> Yes, it would be, PMIC is in charger of detecting the status of ID pin
+> >>
+> >> Ok, then I think this should be documented too.
+> >>
+> >>>> And in many cases there also is a mux to switch the datalines
+> >>>> between the host and device(gadget) controllers, how should
+> >>>> that be described in this model?  See the new usb-role-switch
+> >>>> code under drivers/usb/roles
+> >>>>
+> >>>> In some cases the mux is controlled through a gpio, so we
+> >>>> may want to add a "mux-gpios" here in which case we also
+> >>>> need to define what 0/1 means.
+> >>> I'm not sure, the mux seems not belong to this connector,
+> >>> and may need another driver to register usb-role-switch,
+> >>> similar to:
+> >>>
+> >>> [v2,2/2] usb: typec: add typec switch via GPIO control
+> >>> https://patchwork.kernel.org/patch/10834327/
+> >>
+> >> Right the mux/role-switch will need a driver, but the "owner"
+> >> of the usb_connector, e.g. the PMIC or the owner of the
+> >> id GPIO pin needs to know which device is the role-switch so
+> >> that it can set the role correctly based on the id-pin.
+> >>
+> >> Your binding already contains Vbus info, allowing the owner
+> >> of the usb_connector to enable/disable Vbus based on the id-pin,
+> >> but the owner will also be responsible for setting the role-switch.
+> >>
+> >> Note we cannot simply assume there will be only one role-switch,
+> >> we really need some link from the usb_connector to the role-switch
+> >> (or if it is a GPIO driven role-switch simply a role-switch-gpios
+> >> member in the usb_connector).
+> > 
+> > I see now in your "[PATCH v3 1/2] dt-bindings: usb: add documentation for
+> > typec switch via GPIO" that you plan to use a
+> > Documentation/devicetree/bindings/graph.txt style binding for this,
+> > adding a remote-endpoint to the orientation-switch (in that patch), or
+> > to the role-switch.
+> > 
+> > But a Type-C port can have both an orientation-switch and a role-switch
+> > (and a mux if it supports e.g. DP-altmode), how is the driver driving
+> > the device which has the actual usb_c_connecter child-node to which
+> > the remote-endpoints for both the orientation- and the role-switch points
+> > supposed to figure out which is which ?
+> > 
+> > Also it feels the wrong-way around to me to have the orientation-switch
+> > point to the usb_c_connector, to me it would make more sense to have
+> > the usb_c_connector point to a port on the orientation-switch.
+> 
+> I just noticed you put an "orientation-switch" bool property in the device
+> which has the orientation-switch property, if we do something similar for
+> the role-switch then that should solve this.
+> 
+> Regards,
+> 
+> Hans
+
 
