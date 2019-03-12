@@ -2,118 +2,92 @@ Return-Path: <SRS0=J4ZE=RP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_PASS autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AFC3FC10F00
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 23:02:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9DB96C4360F
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 23:03:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 75588213A2
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 23:02:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 69319213A2
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 23:03:00 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernelci-org.20150623.gappssmtp.com header.i=@kernelci-org.20150623.gappssmtp.com header.b="wgk0KgIe"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="M5fz5uux"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726905AbfCLXCO (ORCPT
+        id S1727174AbfCLXC7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 12 Mar 2019 19:02:14 -0400
-Received: from mail-ed1-f66.google.com ([209.85.208.66]:45716 "EHLO
-        mail-ed1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726372AbfCLXCN (ORCPT
+        Tue, 12 Mar 2019 19:02:59 -0400
+Received: from mail-yw1-f67.google.com ([209.85.161.67]:35939 "EHLO
+        mail-yw1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726372AbfCLXC6 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 12 Mar 2019 19:02:13 -0400
-Received: by mail-ed1-f66.google.com with SMTP id f19so3739304eds.12
-        for <linux-kernel@vger.kernel.org>; Tue, 12 Mar 2019 16:02:12 -0700 (PDT)
+        Tue, 12 Mar 2019 19:02:58 -0400
+Received: by mail-yw1-f67.google.com with SMTP id 189so3570826ywi.3
+        for <linux-kernel@vger.kernel.org>; Tue, 12 Mar 2019 16:02:58 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=kernelci-org.20150623.gappssmtp.com; s=20150623;
-        h=message-id:date:mime-version:content-transfer-encoding:in-reply-to
-         :references:subject:to:from:cc;
-        bh=TukHVb3WaEgxLt7yExeUDi+K7VyxiTEJd8lYQFTKbHQ=;
-        b=wgk0KgIe+gE8hguSfD+TtgkisgBQohZMnlPsDtGJ2Xc/Vr3zMi8WjfUQnlzikS/cxb
-         24eZLuKGGuVdNte67oiHSN3bJWzcFJ9lib+yfdKVh16OGRAr9ucvo2NI3nGJwk6BBVpd
-         xysG4/5vUZyR35sbhvESTCeCA+tWpANhtP+M8IJN9OD/o4xsb00VLXpR6CuEdZCwfNeu
-         nzceFkPCdUlI34ddYwqYe+JNrGfSFsSR838mVeZxlh8Ykf8PlpTylgAO4HUwOLihZx4F
-         H257Ao8VJ8PLYwZeIrsrjKhXJ4+NcGIyD9HzKKxH6pXu6aRK7EJEQXY+0XlmNAPynqL5
-         hCTQ==
+        d=chromium.org; s=google;
+        h=from:mime-version:date:message-id:subject:to:cc;
+        bh=kyeyndBeis+cZ9ZBS+wXHyZNayIj+cUD/tEONnLncjo=;
+        b=M5fz5uuxQbjqIikJnavv/M7svP4ZOVofse4yY5leo3YxJm958uq2kXygBKATDpju3b
+         lsUe3ukWUjahmc7Iptc/AweovQb1j+OENgmE2tLjLgZiW16tJrwrpjzmfeuUN3XD4wh8
+         TLD/aRsytHNnS8xGA4xCd7xof97Hp2zION5Fk=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:message-id:date:mime-version
-         :content-transfer-encoding:in-reply-to:references:subject:to:from:cc;
-        bh=TukHVb3WaEgxLt7yExeUDi+K7VyxiTEJd8lYQFTKbHQ=;
-        b=cJtZHzOv7AR1ucgEfvWD0IeVji1PoPeKncDvXTgyYFEARCr2LT8W0eA183gcyrWWUh
-         zmiPhQZsP4G6dKpymr6GYnC8AOiTzy4LAJz6s+3vUYttS7HsysnXBn1ZkW7l0uixFJ/9
-         sIWWZI/zmPzwONouNPDiJJN1VMy/bujtfAhn2n9yu46tfyLulCDVc5sRVc87juHPfJym
-         1/0auRnw+7Rket/TGcH5bHiccu0tMRP6c0OoW9AVdQI+ZXRgrIEYb35ujI7/vAlY3YUH
-         sS/9iJmeWU5FYnU56Jfv7j1jbEBI0A9Z0K1fLK5o3YJE8qt5FcffNSUD9nJ+JWTeghzH
-         BByw==
-X-Gm-Message-State: APjAAAUMbcnyVx9fHY7ZO8Zx4eDPUjf8G9+yOnTZ1iYh5kEIHs3FXHzc
-        5AH3yN+pFqEu3ZTJCrSJ2rK43A==
-X-Google-Smtp-Source: APXvYqxTGcYwvOVVikbTVHXiSDi7Qcg+1iTm0iA7FhOXGJ//CHBCYGNnhR5YWgM6DeOCXnTXr+DuTw==
-X-Received: by 2002:a17:906:c38c:: with SMTP id t12mr6841579ejz.142.1552431731572;
-        Tue, 12 Mar 2019 16:02:11 -0700 (PDT)
-Received: from [148.251.42.114] ([2a01:4f8:201:9271::2])
-        by smtp.gmail.com with ESMTPSA id a9sm29047eje.37.2019.03.12.16.02.10
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Tue, 12 Mar 2019 16:02:10 -0700 (PDT)
-Message-ID: <5c883a72.1c69fb81.b8e2e.017f@mx.google.com>
-Date:   Tue, 12 Mar 2019 16:02:10 -0700 (PDT)
-Content-Type: text/plain; charset="utf-8"
+        h=x-gm-message-state:from:mime-version:date:message-id:subject:to:cc;
+        bh=kyeyndBeis+cZ9ZBS+wXHyZNayIj+cUD/tEONnLncjo=;
+        b=USY/iNfbYZmmWGgMQhi7lMgMu1p1MnBC8xMxb3QUeuQDBdsppyz9zEnrod88HNLHGX
+         93vnG9TxCYB0EZkoczJ//Iyn/Mq5MZxM4MWoLxP8U2XQMEh3K4b4QREkF5FO05fKACxp
+         q/yOi5ouG5LsKSaBYTCHUhvehxuIHX4u8c9U0vX2kapQwdX5NOJ1IlaWqRDb4cwU1coF
+         fnjRVaggei586YfBJoohZVTiKv5X1OpqfxIyyCs72S6xmzNE/lA6nRQ8Ceml97zmriV6
+         N1M2l/tkIpqu6QyyBrpi8Wd8TQkR2Z3X5ec7CthifIoqmYXMLIfCEVcK+p8VX2fcK+SN
+         D+bA==
+X-Gm-Message-State: APjAAAVkUe7xFi+2Sxph11y9lIekDlrR6HJftBfaNjZxfMRXPS0wsX1Q
+        6K+SWmRU/PhXASD7JRO0Cqlfbdy7OiOc4u/Te+GePQSt
+X-Google-Smtp-Source: APXvYqzHIJZ7Vtljd8PvSpFNNV9E4FomgwacZqaheNQrdMClbAbgJuf2lqsfwXgoqi6+tNVBBLfgmMzvg5aJ6sk8xlQ=
+X-Received: by 2002:a81:37c1:: with SMTP id e184mr11458067ywa.166.1552431778282;
+ Tue, 12 Mar 2019 16:02:58 -0700 (PDT)
+Received: from 764776645087 named unknown by gmailapi.google.com with
+ HTTPREST; Tue, 12 Mar 2019 16:02:57 -0700
+From:   Matthias Kaehlcke <mka@chromium.org>
+X-Mailer: git-send-email 2.21.0.360.g471c308f928-goog
 MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-X-Kernelci-Kernel: v4.9.162-97-g605129cbbd38
-X-Kernelci-Report-Type: boot
-X-Kernelci-Tree: stable-rc
-X-Kernelci-Branch: linux-4.9.y
-In-Reply-To: <20190312171034.530434962@linuxfoundation.org>
-References: <20190312171034.530434962@linuxfoundation.org>
-Subject: Re: [PATCH 4.9 00/96] 4.9.163-stable review
-To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        linux-kernel@vger.kernel.org
-From:   "kernelci.org bot" <bot@kernelci.org>
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        torvalds@linux-foundation.org, akpm@linux-foundation.org,
-        linux@roeck-us.net, shuah@kernel.org, patches@kernelci.org,
-        ben.hutchings@codethink.co.uk, lkft-triage@lists.linaro.org,
-        stable@vger.kernel.org
+Date:   Tue, 12 Mar 2019 16:02:57 -0700
+Message-ID: <CAG5bF+TdR-A8x9L5vxA9qQFFa46coHXWdbgCKJNnmK-k3mr9dw@mail.gmail.com>
+Subject: [PATCH] Bluetooth: btqca: Fix misspelling of 'baudrate'
+To:     Marcel Holtmann <marcel@holtmann.org>,
+        Johan Hedberg <johan.hedberg@gmail.com>
+Cc:     linux-bluetooth@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Balakrishna Godavarthi <bgodavar@codeaurora.org>,
+        Hemantg <hemantg@codeaurora.org>,
+        Rocky Liao <rjliao@codeaurora.org>,
+        Harish Bandi <c-hbandi@codeaurora.org>,
+        Matthias Kaehlcke <mka@chromium.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-stable-rc/linux-4.9.y boot: 92 boots: 1 failed, 91 passed (v4.9.162-97-g605=
-129cbbd38)
+Rename the misspelled struct 'qca_bardrate' to 'qca_baudrate'
 
-Full Boot Summary: https://kernelci.org/boot/all/job/stable-rc/branch/linux=
--4.9.y/kernel/v4.9.162-97-g605129cbbd38/
-Full Build Summary: https://kernelci.org/build/stable-rc/branch/linux-4.9.y=
-/kernel/v4.9.162-97-g605129cbbd38/
-
-Tree: stable-rc
-Branch: linux-4.9.y
-Git Describe: v4.9.162-97-g605129cbbd38
-Git Commit: 605129cbbd389949c754d0a23ce49030adae8f17
-Git URL: https://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stabl=
-e-rc.git
-Tested: 47 unique boards, 21 SoC families, 13 builds out of 193
-
-Boot Regressions Detected:
-
-arm:
-
-    qcom_defconfig:
-        gcc-7:
-          qcom-apq8064-cm-qs600:
-              lab-baylibre-seattle: new failure (last pass: v4.9.162-94-g03=
-84d1b03fc9)
-
-Boot Failure Detected:
-
-arm:
-
-    qcom_defconfig:
-        gcc-7:
-            qcom-apq8064-cm-qs600: 1 failed lab
-
+Signed-off-by: Matthias Kaehlcke <mka@chromium.org>
 ---
-For more info write to <info@kernelci.org>
+ drivers/bluetooth/btqca.h | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/drivers/bluetooth/btqca.h b/drivers/bluetooth/btqca.h
+index c72c56ea7480..6fdc25d7bba7 100644
+--- a/drivers/bluetooth/btqca.h
++++ b/drivers/bluetooth/btqca.h
+@@ -41,7 +41,7 @@
+ #define QCA_WCN3990_POWERON_PULSE	0xFC
+ #define QCA_WCN3990_POWEROFF_PULSE	0xC0
+
+-enum qca_bardrate {
++enum qca_baudrate {
+ 	QCA_BAUDRATE_115200 	= 0,
+ 	QCA_BAUDRATE_57600,
+ 	QCA_BAUDRATE_38400,
+-- 
+2.21.0.360.g471c308f928-goog
