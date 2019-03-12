@@ -7,38 +7,38 @@ X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CA74DC43381
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 18:00:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1690EC43381
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 18:00:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 993EF205C9
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 18:00:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D0A9F205C9
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 18:00:47 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1552413641;
-	bh=QZ/k4YRISDdehHLCMFZFGo01JKvkyGOM6OiQnhptscM=;
+	s=default; t=1552413647;
+	bh=Q5oIS3rmWG5yPufoSNTjShYOdEbmq9dK06BBOVuJbLg=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=l3Fzv6SI2oGrKoFgJweUWxZpTiZe6lAsn040QN0XoGz53hSFpp9fe52t3siPdfmbi
-	 oLQuYBJQEz0eaeKdcbCZDOnuv0dtFwr8B+h7P+PB/wjJbDqhPffJOR9PTZP3MaRpUM
-	 A6t2I1eqeH+dIyd2B6KmKcmuncc6WbqoI1Hzpn6s=
+	b=JHbHpRUEmzUc60+NCP1AQRjaz7nyiv59DhqBNHm/nphW/H1iyq7DRkhqH5zoGs9LE
+	 ZxKSfgaXmjaaLOJrqY6Tzjt9zbq1AZIYnADDNrrdxDCtD4ctMAtYV3J1SpGrGIxt2G
+	 AmSV3m83kWJAV8iDYOjcpjFUC2+izSqyAupda7w0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728563AbfCLSAk (ORCPT
+        id S1728606AbfCLSAq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 12 Mar 2019 14:00:40 -0400
-Received: from mail.kernel.org ([198.145.29.99]:49988 "EHLO mail.kernel.org"
+        Tue, 12 Mar 2019 14:00:46 -0400
+Received: from mail.kernel.org ([198.145.29.99]:49898 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727873AbfCLRNS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 12 Mar 2019 13:13:18 -0400
+        id S1727869AbfCLRNR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 12 Mar 2019 13:13:17 -0400
 Received: from localhost (unknown [104.133.8.98])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 8CE1C2177E;
-        Tue, 12 Mar 2019 17:13:17 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id DA69D2173C;
+        Tue, 12 Mar 2019 17:13:16 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
         s=default; t=1552410797;
-        bh=QZ/k4YRISDdehHLCMFZFGo01JKvkyGOM6OiQnhptscM=;
+        bh=Q5oIS3rmWG5yPufoSNTjShYOdEbmq9dK06BBOVuJbLg=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=NyOb3/CW/zCIwT6fdvjI7qwkxO7ak7niKsLL+De4tz9lKP776cyUXLYh6lHxqoewm
-         vtOWUrkAN3kUVQPYRSKttl2FEdZGCTkoJJ8nDBv/oWMPzvrhfZkpHOm1cZNuagNyRy
-         lFmalgWPaZFgx0fH633BHlFwWY4iIfxh5B7ZWI+E=
+        b=HCYM1KR/rHmzY9Um/tsUlYINBa7h1LnSFd4oXOQgZxPf/zwWkvNLoMamOC/MmVK8R
+         MY7o87Vg2mQkXk5u3bqNtCcRmlHobY7zHXYwYubIMUkbHqalcvWYXoS7WlktrBkiT3
+         OHr0urGXbx0xAQkJWf/42f0KQSpxGna/Rt6B02yY=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
@@ -47,9 +47,9 @@ Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         Ariel Elior <aelior@marvell.com>,
         "David S. Miller" <davem@davemloft.net>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.20 144/171] qede: Fix system crash on configuring channels.
-Date:   Tue, 12 Mar 2019 10:08:44 -0700
-Message-Id: <20190312170400.016069234@linuxfoundation.org>
+Subject: [PATCH 4.20 143/171] qed: Consider TX tcs while deriving the max num_queues for PF.
+Date:   Tue, 12 Mar 2019 10:08:43 -0700
+Message-Id: <20190312170359.947938673@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190312170347.868927101@linuxfoundation.org>
 References: <20190312170347.868927101@linuxfoundation.org>
@@ -68,93 +68,42 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-[ Upstream commit 0aa4febb420d91df5b56b1864a2465765da85f4b ]
+[ Upstream commit fb1faab74ddef9ec2d841d54e5d0912a097b3abe ]
 
-Under heavy traffic load, when changing number of channels via
-ethtool (ethtool -L) which will cause interface to be reloaded,
-it was observed that some packets gets transmitted on old TX
-channel/queue id which doesn't really exist after the channel
-configuration leads to system crash.
-
-Add a safeguard in the driver by validating queue id through
-ndo_select_queue() which is called before the ndo_start_xmit().
+Max supported queues is derived incorrectly in the case of multi-CoS.
+Need to consider TCs while calculating num_queues for PF.
 
 Signed-off-by: Sudarsana Reddy Kalluru <skalluru@marvell.com>
 Signed-off-by: Ariel Elior <aelior@marvell.com>
 Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/ethernet/qlogic/qede/qede.h      |  3 +++
- drivers/net/ethernet/qlogic/qede/qede_fp.c   | 13 +++++++++++++
- drivers/net/ethernet/qlogic/qede/qede_main.c |  3 +++
- 3 files changed, 19 insertions(+)
+ drivers/net/ethernet/qlogic/qed/qed_l2.c | 5 +++--
+ 1 file changed, 3 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/net/ethernet/qlogic/qede/qede.h b/drivers/net/ethernet/qlogic/qede/qede.h
-index de98a974673b..4b875f652ecd 100644
---- a/drivers/net/ethernet/qlogic/qede/qede.h
-+++ b/drivers/net/ethernet/qlogic/qede/qede.h
-@@ -489,6 +489,9 @@ struct qede_reload_args {
+diff --git a/drivers/net/ethernet/qlogic/qed/qed_l2.c b/drivers/net/ethernet/qlogic/qed/qed_l2.c
+index e68ca83ae915..64ac95ca4df2 100644
+--- a/drivers/net/ethernet/qlogic/qed/qed_l2.c
++++ b/drivers/net/ethernet/qlogic/qed/qed_l2.c
+@@ -2216,7 +2216,7 @@ static int qed_fill_eth_dev_info(struct qed_dev *cdev,
+ 			u16 num_queues = 0;
  
- /* Datapath functions definition */
- netdev_tx_t qede_start_xmit(struct sk_buff *skb, struct net_device *ndev);
-+u16 qede_select_queue(struct net_device *dev, struct sk_buff *skb,
-+		      struct net_device *sb_dev,
-+		      select_queue_fallback_t fallback);
- netdev_features_t qede_features_check(struct sk_buff *skb,
- 				      struct net_device *dev,
- 				      netdev_features_t features);
-diff --git a/drivers/net/ethernet/qlogic/qede/qede_fp.c b/drivers/net/ethernet/qlogic/qede/qede_fp.c
-index 1a78027de071..a96da16f3404 100644
---- a/drivers/net/ethernet/qlogic/qede/qede_fp.c
-+++ b/drivers/net/ethernet/qlogic/qede/qede_fp.c
-@@ -1695,6 +1695,19 @@ netdev_tx_t qede_start_xmit(struct sk_buff *skb, struct net_device *ndev)
- 	return NETDEV_TX_OK;
- }
+ 			/* Since the feature controls only queue-zones,
+-			 * make sure we have the contexts [rx, tx, xdp] to
++			 * make sure we have the contexts [rx, xdp, tcs] to
+ 			 * match.
+ 			 */
+ 			for_each_hwfn(cdev, i) {
+@@ -2226,7 +2226,8 @@ static int qed_fill_eth_dev_info(struct qed_dev *cdev,
+ 				u16 cids;
  
-+u16 qede_select_queue(struct net_device *dev, struct sk_buff *skb,
-+		      struct net_device *sb_dev,
-+		      select_queue_fallback_t fallback)
-+{
-+	struct qede_dev *edev = netdev_priv(dev);
-+	int total_txq;
-+
-+	total_txq = QEDE_TSS_COUNT(edev) * edev->dev_info.num_tc;
-+
-+	return QEDE_TSS_COUNT(edev) ?
-+		fallback(dev, skb, NULL) % total_txq :  0;
-+}
-+
- /* 8B udp header + 8B base tunnel header + 32B option length */
- #define QEDE_MAX_TUN_HDR_LEN 48
+ 				cids = hwfn->pf_params.eth_pf_params.num_cons;
+-				num_queues += min_t(u16, l2_queues, cids / 3);
++				cids /= (2 + info->num_tc);
++				num_queues += min_t(u16, l2_queues, cids);
+ 			}
  
-diff --git a/drivers/net/ethernet/qlogic/qede/qede_main.c b/drivers/net/ethernet/qlogic/qede/qede_main.c
-index 46d0f2eaa0c0..f3d9c40c4115 100644
---- a/drivers/net/ethernet/qlogic/qede/qede_main.c
-+++ b/drivers/net/ethernet/qlogic/qede/qede_main.c
-@@ -631,6 +631,7 @@ static const struct net_device_ops qede_netdev_ops = {
- 	.ndo_open = qede_open,
- 	.ndo_stop = qede_close,
- 	.ndo_start_xmit = qede_start_xmit,
-+	.ndo_select_queue = qede_select_queue,
- 	.ndo_set_rx_mode = qede_set_rx_mode,
- 	.ndo_set_mac_address = qede_set_mac_addr,
- 	.ndo_validate_addr = eth_validate_addr,
-@@ -666,6 +667,7 @@ static const struct net_device_ops qede_netdev_vf_ops = {
- 	.ndo_open = qede_open,
- 	.ndo_stop = qede_close,
- 	.ndo_start_xmit = qede_start_xmit,
-+	.ndo_select_queue = qede_select_queue,
- 	.ndo_set_rx_mode = qede_set_rx_mode,
- 	.ndo_set_mac_address = qede_set_mac_addr,
- 	.ndo_validate_addr = eth_validate_addr,
-@@ -684,6 +686,7 @@ static const struct net_device_ops qede_netdev_vf_xdp_ops = {
- 	.ndo_open = qede_open,
- 	.ndo_stop = qede_close,
- 	.ndo_start_xmit = qede_start_xmit,
-+	.ndo_select_queue = qede_select_queue,
- 	.ndo_set_rx_mode = qede_set_rx_mode,
- 	.ndo_set_mac_address = qede_set_mac_addr,
- 	.ndo_validate_addr = eth_validate_addr,
+ 			/* queues might theoretically be >256, but interrupts'
 -- 
 2.19.1
 
