@@ -2,429 +2,111 @@ Return-Path: <SRS0=J4ZE=RP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5DBF9C43381
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 19:01:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CEF95C4360F
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 19:03:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 17FEB2087C
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 19:01:49 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="fGLEa43W"
+	by mail.kernel.org (Postfix) with ESMTP id A364F2087C
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 19:03:57 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727235AbfCLTBr (ORCPT
+        id S1727220AbfCLTD4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 12 Mar 2019 15:01:47 -0400
-Received: from mail-it1-f193.google.com ([209.85.166.193]:51581 "EHLO
-        mail-it1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726815AbfCLTBr (ORCPT
+        Tue, 12 Mar 2019 15:03:56 -0400
+Received: from mail-vk1-f196.google.com ([209.85.221.196]:39530 "EHLO
+        mail-vk1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726815AbfCLTDz (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 12 Mar 2019 15:01:47 -0400
-Received: by mail-it1-f193.google.com with SMTP id e24so6255445itl.1;
-        Tue, 12 Mar 2019 12:01:46 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id;
-        bh=/WY186pZEkhv66KsoaOMTZw4RCYDW0Ke8bRloUi7n8Q=;
-        b=fGLEa43Wcyodxpkp1Zx8QutVk1gPq/QAzb3iiABr1AWmB3gW2OReWu3S/Rk3YpLFAv
-         bk9E2Z8u3bcGaB84B2/BumJpccXbnHmAYRCMRlDQPRhgTY+IvPn8u1+HaoED3apoVkwf
-         DrPbOFm0MIuQNj3sKwJPN2X2GOwEh3p8lOfn4ZmQgy95FdP6GYR5TZEb7bKzxqzFMOs7
-         zj+ZJwxyx9fXgXIU2o03hN2jbnKP2rR7tnBMdWl9VHPWdL5a+NJ0Us38sTtxO66MA0GM
-         bMmBTizJoj2zwsJW7aYvOty3oRYF5PXYK/N/+jZ0ZfvVp8E2xgKcL9UlcbqhBq4Rtl3A
-         W21g==
+        Tue, 12 Mar 2019 15:03:55 -0400
+Received: by mail-vk1-f196.google.com with SMTP id i68so923961vke.6;
+        Tue, 12 Mar 2019 12:03:54 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id;
-        bh=/WY186pZEkhv66KsoaOMTZw4RCYDW0Ke8bRloUi7n8Q=;
-        b=V1HmQSmQulU4527ANoLtOKYU1rpm5vnHKZb2N/AuEPRDcQ7HmNab6wQuQ8YAkydj4N
-         J6ddZJfoCyOWR+QaP6LXWla8UOfpF9KhHl8B69MqcgJhHSkSAWdhk7BMIwJ8ZdUysiIN
-         /7SCOyGcIROhrpxvR5kMDYrI1xdTT3nMfNyy18QU5ydi7z2YzjsQ9jHWAZyzDkietWfs
-         nIuKxdSEWsWnrnuVcKtdcSYvXO1K/5W71Oh4m04VphEtVkSaCXr1y6+yqB4CgTOBJDRK
-         zbCKx1wS7ySg4OxRvhjdCJ8LR94aTZb9bQldsf3SJT4jzUd+AyIbWSKU2E3sGUEkVtfz
-         6zsQ==
-X-Gm-Message-State: APjAAAU2w29/JfwvHv8Gn5hGL3ZjOLn3gube0En7p+ypI4WVOiYjce4L
-        x/Vg3chjsUAoxg+BJ/z5piJTCyA1
-X-Google-Smtp-Source: APXvYqyFxF7vW/8gef8ID7fSkD+dkrxAFN+1HMlwArPbxS+b4FJZfvA5+CVcvyPfw0mpapEkEdfLng==
-X-Received: by 2002:a05:6638:348:: with SMTP id x8mr11705866jap.79.1552417305586;
-        Tue, 12 Mar 2019 12:01:45 -0700 (PDT)
-Received: from aford-OptiPlex-7050.logicpd.com ([174.46.170.158])
-        by smtp.gmail.com with ESMTPSA id m26sm705201iti.6.2019.03.12.12.01.44
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Tue, 12 Mar 2019 12:01:44 -0700 (PDT)
-From:   Adam Ford <aford173@gmail.com>
-To:     linux-input@vger.kernel.org
-Cc:     adam.ford@logicpd.com, Adam Ford <aford173@gmail.com>,
-        Dmitry Torokhov <dmitry.torokhov@gmail.com>,
-        Henrik Rydberg <rydberg@bitmath.org>,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH] Input: ili2117a - Add support for Ilitek ILI2117A based touchscreens
-Date:   Tue, 12 Mar 2019 14:01:37 -0500
-Message-Id: <20190312190137.8138-1-aford173@gmail.com>
-X-Mailer: git-send-email 2.17.1
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=o1h8G2iyppaSn5rKfpYOUBhQRQuqezP7Kg2IErjp+EA=;
+        b=EHGP08rL4yyEBQmnct5qRGCau3m54e/qoobYz6xhmJv9w+l3VI9Z86j7C+lWHGcZaW
+         lpAiTQ5LbCFW2i/m7VVtbrWuEXIhEevuRy4Z/Wp9Y2zr9dJofukDnmJym93gCiaoo8w+
+         skXv7/QjyNcgRaaJt/z5qlKi66qtV3oVJFcKzkxAGJqSXq/ChvN8zmpUZ38b+SUyieRq
+         AMHsXm5+M1AbvT5WQh/Fyqd4KSYU6WvW73t9oImKMhbGYOmFrt4vgIdYsjQmu4KnCzD4
+         lgLeaaG97KM9FdSL4oB0A6r2YvGaHl5HWCzrCZbqpHyae4H4unxVa58bYKiZDDJLgO/t
+         Ghww==
+X-Gm-Message-State: APjAAAVZvl8yLthEbq51SeeBxixHs/9pUdl5iPx7sEV2mm585/BUsloN
+        oE7kOI66OP9kHtjqy8T2+ox/EU8K9Cw15LoBtP0=
+X-Google-Smtp-Source: APXvYqyG0EpO51Ka5tScRa2tTtFpdAjL0eb073YLi8XoTlB5laUBxhwpiaPFTCz1oiyWaXkJQp0h5wzZSLs0shLzTaQ=
+X-Received: by 2002:a1f:95d5:: with SMTP id x204mr20915557vkd.72.1552417433842;
+ Tue, 12 Mar 2019 12:03:53 -0700 (PDT)
+MIME-Version: 1.0
+References: <1552330521-4276-1-git-send-email-info@metux.net> <1552330521-4276-26-git-send-email-info@metux.net>
+In-Reply-To: <1552330521-4276-26-git-send-email-info@metux.net>
+From:   Geert Uytterhoeven <geert@linux-m68k.org>
+Date:   Tue, 12 Mar 2019 20:03:42 +0100
+Message-ID: <CAMuHMdX7HCHJiKYXVMzYrHmjjDy6YbLntZbep_AKsLY3bxpZWA@mail.gmail.com>
+Subject: Re: [PATCH 26/42] drivers: gpio: rcar: pendantic formatting
+To:     "Enrico Weigelt, metux IT consult" <info@metux.net>
+Cc:     Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        Andrew Jeffery <andrew@aj.id.au>,
+        Florian Fainelli <f.fainelli@gmail.com>,
+        Scott Branden <sbranden@broadcom.com>,
+        bcm-kernel-feedback-list@broadcom.com, hoan@os.amperecomputing.com,
+        Orson Zhai <orsonzhai@gmail.com>,
+        Baolin Wang <baolin.wang@linaro.org>,
+        Lyra Zhang <zhang.lyra@gmail.com>, keguang.zhang@gmail.com,
+        vz@mleia.com, Matthias Brugger <matthias.bgg@gmail.com>,
+        Thierry Reding <thierry.reding@gmail.com>,
+        Grygorii Strashko <grygorii.strashko@ti.com>,
+        Santosh Shilimkar <ssantosh@kernel.org>,
+        Kevin Hilman <khilman@kernel.org>,
+        Robert Jarzmik <robert.jarzmik@free.fr>,
+        Masahiro Yamada <yamada.masahiro@socionext.com>,
+        Jun Nie <jun.nie@linaro.org>, Shawn Guo <shawnguo@kernel.org>,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        linux-mips@vger.kernel.org,
+        Linux PWM List <linux-pwm@vger.kernel.org>,
+        "open list:TI ETHERNET SWITCH DRIVER (CPSW)" 
+        <linux-omap@vger.kernel.org>,
+        linux-tegra <linux-tegra@vger.kernel.org>,
+        Linux-Renesas <linux-renesas-soc@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This driver supports the ILI2117A touch controller.  This is
-different than the ILI210x and it uses different register and
-algorithm so it's a separate driver rather than integrating with
-the other.
+CC linux-renesas-soc
 
-Signed-off-by: Adam Ford <aford173@gmail.com>
+On Mon, Mar 11, 2019 at 7:57 PM Enrico Weigelt, metux IT consult
+<info@metux.net> wrote:
+> a tab sneaked in, where it shouldn't be.
+>
+> Signed-off-by: Enrico Weigelt, metux IT consult <info@metux.net>
 
-diff --git a/drivers/input/touchscreen/Kconfig b/drivers/input/touchscreen/Kconfig
-index 6c16aaeb4191..ff7cd369514e 100644
---- a/drivers/input/touchscreen/Kconfig
-+++ b/drivers/input/touchscreen/Kconfig
-@@ -416,6 +416,18 @@ config TOUCHSCREEN_ILI210X
- 	  To compile this driver as a module, choose M here: the
- 	  module will be called ili210x.
- 
-+config TOUCHSCREEN_ILI2117A
-+	tristate "Ilitek ILI2117A Multi-Touch Controller"
-+	depends on I2C
-+	help
-+	  Say Y here if you have a ILI2117A based touchscreen
-+	  controller.
-+
-+	  If unsure, say N.
-+
-+	  To compile this driver as a module, choose M here: the
-+	  module will be called ili2117a.
-+
- config TOUCHSCREEN_IPROC
- 	tristate "IPROC touch panel driver support"
- 	depends on ARCH_BCM_IPROC || COMPILE_TEST
-diff --git a/drivers/input/touchscreen/Makefile b/drivers/input/touchscreen/Makefile
-index fcc7605fba8d..0290d503bed1 100644
---- a/drivers/input/touchscreen/Makefile
-+++ b/drivers/input/touchscreen/Makefile
-@@ -46,6 +46,7 @@ obj-$(CONFIG_TOUCHSCREEN_FUJITSU)	+= fujitsu_ts.o
- obj-$(CONFIG_TOUCHSCREEN_GOODIX)	+= goodix.o
- obj-$(CONFIG_TOUCHSCREEN_HIDEEP)	+= hideep.o
- obj-$(CONFIG_TOUCHSCREEN_ILI210X)	+= ili210x.o
-+obj-$(CONFIG_TOUCHSCREEN_ILI2117A)      += ili2117a.o
- obj-$(CONFIG_TOUCHSCREEN_IMX6UL_TSC)	+= imx6ul_tsc.o
- obj-$(CONFIG_TOUCHSCREEN_INEXIO)	+= inexio.o
- obj-$(CONFIG_TOUCHSCREEN_IPROC)		+= bcm_iproc_tsc.o
-diff --git a/drivers/input/touchscreen/ili2117a.c b/drivers/input/touchscreen/ili2117a.c
-new file mode 100644
-index 000000000000..c47874ee89f4
---- /dev/null
-+++ b/drivers/input/touchscreen/ili2117a.c
-@@ -0,0 +1,308 @@
-+/* SPDX-License-Identifier: GPL-2.0 */
-+
-+#include <linux/module.h>
-+#include <linux/i2c.h>
-+#include <linux/interrupt.h>
-+#include <linux/slab.h>
-+#include <linux/input.h>
-+#include <linux/input/mt.h>
-+#include <linux/delay.h>
-+#include <linux/workqueue.h>
-+
-+#define MAX_TOUCHES		10
-+#define DEFAULT_POLL_PERIOD	20
-+#define MAX_X			((1 << 12) - 1)
-+#define MAX_Y			((1 << 12) - 1)
-+
-+/* Touchscreen commands */
-+#define TOUCH_INFO	0x00
-+
-+struct finger {
-+	u8 xy;
-+	u8 x;
-+	u8 y;
-+	u8 c_sum;
-+} __packed;
-+
-+struct touchdata {
-+	u8 packet_id;
-+	struct finger finger[MAX_TOUCHES];
-+	u8 key;
-+	u8 checksum;
-+} __packed;
-+
-+
-+struct ili2117a {
-+	struct i2c_client *client;
-+	struct input_dev *input;
-+	bool (*get_pendown_state)(void);
-+	unsigned int poll_period;
-+	struct delayed_work dwork;
-+	int max_touch;
-+};
-+
-+static int ili2117a_read_reg(struct i2c_client *client, u8 reg, void *buf,
-+			    size_t len)
-+{
-+	struct i2c_msg msg[2] = {
-+		{
-+			.addr	= client->addr,
-+			.flags	= 0,
-+			.len	= 1,
-+			.buf	= &reg,
-+		},
-+		{
-+			.addr	= client->addr,
-+			.flags	= I2C_M_RD,
-+			.len	= len,
-+			.buf	= buf,
-+		}
-+	};
-+
-+	if (i2c_transfer(client->adapter, msg, 2) != 2) {
-+		dev_err(&client->dev, "i2c transfer failed\n");
-+		return -EIO;
-+	}
-+
-+	return 0;
-+}
-+
-+static bool ili2117a_report_events(struct input_dev *input,
-+				  const struct touchdata *touchdata,
-+				  int max_touch)
-+{
-+	int i;
-+	bool touch;
-+	bool pen_down = 0;
-+	u16 x = 0xfff;
-+	u16 y = 0xfff;
-+	const struct finger *finger;
-+
-+	for (i = 0; i < max_touch; i++) {
-+		touch = 0;
-+		input_mt_slot(input, i);
-+		finger = &touchdata->finger[i];
-+
-+		x = finger->x | (((finger->xy & 0xf0) >> 4) << 8);
-+		y = finger->y | ((finger->xy & 0x0f) << 8);
-+
-+		/* This driver returns 0xfff if there is no touch */
-+		if (x != 0xfff && y != 0xfff) {
-+			touch = 1;
-+			pen_down = 1;
-+		}
-+
-+		input_mt_report_slot_state(input, MT_TOOL_FINGER, touch);
-+
-+		if (touch) {
-+			input_report_abs(input, ABS_MT_POSITION_X, x);
-+			input_report_abs(input, ABS_MT_POSITION_Y, y);
-+		}
-+	}
-+
-+	input_mt_report_pointer_emulation(input, false);
-+	input_sync(input);
-+	return pen_down;
-+}
-+
-+static void ili2117a_work(struct work_struct *work)
-+{
-+	struct ili2117a *priv = container_of(work, struct ili2117a,
-+					    dwork.work);
-+	struct i2c_client *client = priv->client;
-+	struct touchdata touchdata;
-+	int error;
-+	bool status;
-+
-+	error = ili2117a_read_reg(client, TOUCH_INFO,
-+				  (uint8_t *) &touchdata, sizeof(touchdata));
-+
-+	if (error) {
-+		dev_err(&client->dev,
-+			"Unable to get touchdata, err = %d\n", error);
-+		return;
-+	}
-+
-+	status = ili2117a_report_events(priv->input, &touchdata,
-+					priv->max_touch);
-+
-+	if (status) {
-+		schedule_delayed_work(&priv->dwork,
-+				      msecs_to_jiffies(priv->poll_period));
-+	}
-+}
-+
-+static irqreturn_t ili2117a_irq(int irq, void *irq_data)
-+{
-+	struct ili2117a *priv = irq_data;
-+
-+	schedule_delayed_work(&priv->dwork, 0);
-+
-+	return IRQ_HANDLED;
-+}
-+
-+static struct attribute *ili2117a_attributes[] = {
-+	NULL,
-+};
-+
-+static const struct attribute_group ili2117a_attr_group = {
-+	.attrs = ili2117a_attributes,
-+};
-+
-+static int ili2117a_i2c_probe(struct i2c_client *client,
-+				       const struct i2c_device_id *id)
-+{
-+	struct device *dev = &client->dev;
-+	struct ili2117a *priv;
-+	struct input_dev *input;
-+	int error;
-+	int poll_period;
-+	int max_touch;
-+
-+	if (client->irq <= 0) {
-+		dev_err(dev, "No IRQ!\n");
-+		return -EINVAL;
-+	}
-+
-+	priv = kzalloc(sizeof(*priv), GFP_KERNEL);
-+	input = input_allocate_device();
-+	if (!priv || !input) {
-+		error = -ENOMEM;
-+		goto err_free_mem;
-+	}
-+
-+	priv->client = client;
-+	priv->input = input;
-+
-+	error = device_property_read_u32(dev, "ili2117a,poll-period",
-+					 &poll_period);
-+	priv->poll_period = error ? DEFAULT_POLL_PERIOD : poll_period;
-+
-+	error = device_property_read_u32(dev, "ili2117a,max-touch",
-+					 &max_touch);
-+	if (max_touch > MAX_TOUCHES)
-+		max_touch = MAX_TOUCHES;
-+	priv->max_touch = error ? MAX_TOUCHES : max_touch;
-+
-+	INIT_DELAYED_WORK(&priv->dwork, ili2117a_work);
-+
-+	/* Setup input device */
-+	input->name = "ili2117a Touchscreen";
-+	input->id.bustype = BUS_I2C;
-+	input->dev.parent = dev;
-+
-+	__set_bit(EV_SYN, input->evbit);
-+	__set_bit(EV_KEY, input->evbit);
-+	__set_bit(EV_ABS, input->evbit);
-+	__set_bit(BTN_TOUCH, input->keybit);
-+
-+	/* Single touch */
-+	input_set_abs_params(input, ABS_X, 0, MAX_X, 0, 0);
-+	input_set_abs_params(input, ABS_Y, 0, MAX_Y, 0, 0);
-+
-+	/* Multi touch */
-+	input_mt_init_slots(input, priv->max_touch, 0);
-+	input_set_abs_params(input, ABS_MT_POSITION_X, 0, MAX_X, 0, 0);
-+	input_set_abs_params(input, ABS_MT_POSITION_Y, 0, MAX_Y, 0, 0);
-+
-+	i2c_set_clientdata(client, priv);
-+
-+	error = devm_request_threaded_irq(dev, client->irq, NULL,
-+					  ili2117a_irq,
-+					  IRQF_TRIGGER_RISING | IRQF_ONESHOT,
-+					  client->name, priv);
-+
-+	if (error) {
-+		dev_err(dev, "Failed to request irq, err: %d\n", error);
-+		goto err_free_mem;
-+	}
-+
-+	error = sysfs_create_group(&dev->kobj, &ili2117a_attr_group);
-+	if (error) {
-+		dev_err(dev, "Unable to create sysfs attributes, err: %d\n",
-+			error);
-+		goto err_free_irq;
-+	}
-+
-+	error = input_register_device(priv->input);
-+	if (error) {
-+		dev_err(dev, "Cannot register input device, err: %d\n", error);
-+		goto err_remove_sysfs;
-+	}
-+
-+	device_init_wakeup(dev, 1);
-+	return 0;
-+
-+err_remove_sysfs:
-+	sysfs_remove_group(&dev->kobj, &ili2117a_attr_group);
-+err_free_irq:
-+	free_irq(client->irq, priv);
-+err_free_mem:
-+	input_free_device(input);
-+	kfree(priv);
-+	return error;
-+}
-+
-+static int ili2117a_i2c_remove(struct i2c_client *client)
-+{
-+	struct ili2117a *priv = i2c_get_clientdata(client);
-+
-+	sysfs_remove_group(&client->dev.kobj, &ili2117a_attr_group);
-+	free_irq(priv->client->irq, priv);
-+	cancel_delayed_work_sync(&priv->dwork);
-+	input_unregister_device(priv->input);
-+	kfree(priv);
-+
-+	return 0;
-+}
-+
-+static int __maybe_unused ili2117a_i2c_suspend(struct device *dev)
-+{
-+	struct i2c_client *client = to_i2c_client(dev);
-+
-+	if (device_may_wakeup(&client->dev))
-+		enable_irq_wake(client->irq);
-+
-+	return 0;
-+}
-+
-+static int __maybe_unused ili2117a_i2c_resume(struct device *dev)
-+{
-+	struct i2c_client *client = to_i2c_client(dev);
-+
-+	if (device_may_wakeup(&client->dev))
-+		disable_irq_wake(client->irq);
-+
-+	return 0;
-+}
-+
-+static SIMPLE_DEV_PM_OPS(ili2117a_i2c_pm,
-+			 ili2117a_i2c_suspend, ili2117a_i2c_resume);
-+
-+static const struct of_device_id ili_match_table[] = {
-+	{ .compatible = "ilitek,ili2117a" },
-+	{ },
-+};
-+
-+static const struct i2c_device_id ili2117a_i2c_id[] = {
-+	{ "ili2117a", 0 },
-+	{ }
-+};
-+MODULE_DEVICE_TABLE(i2c, ili2117a_i2c_id);
-+
-+static struct i2c_driver ili2117a_ts_driver = {
-+	.driver = {
-+		.name = "ili2117a_i2c",
-+		.pm = &ili2117a_i2c_pm,
-+		.of_match_table = of_match_ptr(ili_match_table),
-+	},
-+	.id_table = ili2117a_i2c_id,
-+	.probe = ili2117a_i2c_probe,
-+	.remove = ili2117a_i2c_remove,
-+};
-+
-+module_i2c_driver(ili2117a_ts_driver);
-+
-+MODULE_AUTHOR("Adam Ford <adam.ford@logicpd.com>");
-+MODULE_DESCRIPTION("ili2117a I2C Touchscreen Driver");
-+MODULE_LICENSE("GPL");
+With Thierry's comments addressed:
+Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
+
+> --- a/drivers/gpio/gpio-rcar.c
+> +++ b/drivers/gpio/gpio-rcar.c
+> @@ -490,7 +490,7 @@ static int gpio_rcar_probe(struct platform_device *pdev)
+>         irq_chip->irq_unmask = gpio_rcar_irq_enable;
+>         irq_chip->irq_set_type = gpio_rcar_irq_set_type;
+>         irq_chip->irq_set_wake = gpio_rcar_irq_set_wake;
+> -       irq_chip->flags = IRQCHIP_SET_TYPE_MASKED | IRQCHIP_MASK_ON_SUSPEND;
+> +       irq_chip->flags = IRQCHIP_SET_TYPE_MASKED | IRQCHIP_MASK_ON_SUSPEND;
+>
+>         ret = gpiochip_add_data(gpio_chip, p);
+>         if (ret) {
+
+Gr{oetje,eeting}s,
+
+                        Geert
+
 -- 
-2.17.1
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
 
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
