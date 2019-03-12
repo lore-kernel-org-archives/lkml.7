@@ -2,73 +2,70 @@ Return-Path: <SRS0=J4ZE=RP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_NEOMUTT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8BB7AC43381
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 06:59:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 25057C43381
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 07:01:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 64252214AF
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 06:59:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DB4D7214D8
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 07:01:52 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727448AbfCLG7a (ORCPT
+        id S1727251AbfCLHBv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 12 Mar 2019 02:59:30 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:54388 "EHLO mx1.redhat.com"
+        Tue, 12 Mar 2019 03:01:51 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:51496 "EHLO mx1.redhat.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727274AbfCLG73 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 12 Mar 2019 02:59:29 -0400
-Received: from smtp.corp.redhat.com (int-mx01.intmail.prod.int.phx2.redhat.com [10.5.11.11])
+        id S1726633AbfCLHBu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 12 Mar 2019 03:01:50 -0400
+Received: from smtp.corp.redhat.com (int-mx04.intmail.prod.int.phx2.redhat.com [10.5.11.14])
         (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id 574233082AEE;
-        Tue, 12 Mar 2019 06:59:29 +0000 (UTC)
-Received: from sirius.home.kraxel.org (ovpn-117-175.ams2.redhat.com [10.36.117.175])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id BB091600C5;
-        Tue, 12 Mar 2019 06:59:28 +0000 (UTC)
-Received: by sirius.home.kraxel.org (Postfix, from userid 1000)
-        id B0CD711AA4; Tue, 12 Mar 2019 07:59:27 +0100 (CET)
-Date:   Tue, 12 Mar 2019 07:59:27 +0100
-From:   Gerd Hoffmann <kraxel@redhat.com>
-To:     Rodrigo Siqueira <rodrigosiqueiramelo@gmail.com>
-Cc:     Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
-        Maxime Ripard <maxime.ripard@bootlin.com>,
-        Sean Paul <sean@poorly.run>, David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] drm/atomic-helper: Validate pointer before dereference
-Message-ID: <20190312065927.fnroygpyso4rumob@sirius.home.kraxel.org>
-References: <20190311210120.fdixvenmqjoxuoqt@smtp.gmail.com>
+        by mx1.redhat.com (Postfix) with ESMTPS id 58D4E30832D8;
+        Tue, 12 Mar 2019 07:01:50 +0000 (UTC)
+Received: from warthog.procyon.org.uk (ovpn-121-148.rdu2.redhat.com [10.10.121.148])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 0F13D5DA62;
+        Tue, 12 Mar 2019 07:01:48 +0000 (UTC)
+Organization: Red Hat UK Ltd. Registered Address: Red Hat UK Ltd, Amberley
+        Place, 107-111 Peascod Street, Windsor, Berkshire, SI4 1TE, United
+        Kingdom.
+        Registered in England and Wales under Company Registration No. 3798903
+From:   David Howells <dhowells@redhat.com>
+In-Reply-To: <alpine.DEB.2.21.999.1903112235120.21644@trent.utfs.org>
+References: <alpine.DEB.2.21.999.1903112235120.21644@trent.utfs.org> <alpine.DEB.2.21.999.1903080954040.21644@trent.utfs.org> <alpine.DEB.2.21.999.1903060943320.1662@trent.utfs.org> <22096.1551878195@warthog.procyon.org.uk> <alpine.DEB.2.21.999.1903051616350.4505@trent.utfs.org> <10106.1551892803@warthog.procyon.org.uk> <17155.1552056554@warthog.procyon.org.uk> <2827.1552315718@warthog.procyon.org.uk>
+To:     Christian Kujau <lists@nerdbynature.de>
+Cc:     dhowells@redhat.com, linux-kernel@vger.kernel.org,
+        Anna Schumaker <anna.schumaker@netapp.com>,
+        Steve Dickson <steved@redhat.com>
+Subject: Re: FS-Cache: Duplicate cookie detected
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190311210120.fdixvenmqjoxuoqt@smtp.gmail.com>
-User-Agent: NeoMutt/20180716
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.11
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.45]); Tue, 12 Mar 2019 06:59:29 +0000 (UTC)
+Content-Type: text/plain; charset="us-ascii"
+Content-ID: <8938.1552374108.1@warthog.procyon.org.uk>
+Date:   Tue, 12 Mar 2019 07:01:48 +0000
+Message-ID: <8939.1552374108@warthog.procyon.org.uk>
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.14
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.44]); Tue, 12 Mar 2019 07:01:50 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-  Hi,
+Christian Kujau <lists@nerdbynature.de> wrote:
 
-> -			if (funcs->atomic_enable)
-> -				funcs->atomic_enable(crtc, old_crtc_state);
-> -			else
-> -				funcs->commit(crtc);
-> +			if (funcs) {
-> +				if (funcs->atomic_enable)
-> +					funcs->atomic_enable(crtc,
-> +							     old_crtc_state);
-> +				else if (funcs->atomic_enable)
+> My /usr/local/src mount was mounted with vers=4.2 (default), while 
+> nfstest_cache was mounting its test-mount with vers=4.1! Apart from the 
+> different rsize/wsize values, the version number stood out. And indeed, 
+> when I mount my regular NFS mount /usr/local/src with vers=4.1, the 
+> "duplicate cookie" is no longer printed.
 
-"if (funcs->commit)" I guess?
+Yeah - NFS superblocks are differentiated by a whole host of parameters,
+including protocol version number, and caches aren't shared between
+superblocks because this introduces a tricky coherency problem.
 
-> +					funcs->commit(crtc);
-> +			}
+The issue is that NFS superblocks to the same place do not currently manage
+coherency (inode attributes, data) between themselves, except via the server.
 
-cheers,
-  Gerd
+However, if "fsc" isn't given on the mount commandline, the superblock
+probably shouldn't get a server-level cookie if we can avoid it.
 
+David
