@@ -4,50 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7D71AC43381
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 17:45:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 58C71C43381
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 17:45:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 511D0206DF
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 17:45:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1FDF52087C
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 17:45:21 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1552412713;
-	bh=Sxdxtzh7FNroS1OEZCtK/uUCmxGygYkD+99jl7isi7E=;
+	s=default; t=1552412721;
+	bh=sQFyO456Kez7m7440dAXnhGbm++OePFJAfaWqAsq1Ww=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=QImK+TR2LGe1mfPnYANKrp03Vsrjwwu5Jzpg8jPBw6bWSIqz9VZN4CTpaJhqJTZ+0
-	 8Q1e6/xXePHoC7D7OfbQvhV5LeI8ziteIo02AvTasHmuRVx9nWEtNfbEnlan+pZfc7
-	 1D/S38xuRIKU++kXX+TfpnllOxz9xA9p0Dsi1J6g=
+	b=2rKr7b2RLnf0B/opNCTW+Q+QLCR2ZWjUdxW34czdmOfqQwR8fHiHHN1R/anHRZNVE
+	 JS4tbyYqJbK5lZwtbqfprCex8neX64nuGU4Vbfi8oAPM9E1D57JSHidH70+Ntt4WE1
+	 Tf6e8aLng/qKsjeNBEm4SwE8jN8Ty/MouPkDgjmk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728935AbfCLRpM (ORCPT
+        id S1729017AbfCLRpU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 12 Mar 2019 13:45:12 -0400
-Received: from mail.kernel.org ([198.145.29.99]:56188 "EHLO mail.kernel.org"
+        Tue, 12 Mar 2019 13:45:20 -0400
+Received: from mail.kernel.org ([198.145.29.99]:56100 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728760AbfCLRPd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 12 Mar 2019 13:15:33 -0400
+        id S1728753AbfCLRPb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 12 Mar 2019 13:15:31 -0400
 Received: from localhost (unknown [104.133.8.98])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 8D2992171F;
-        Tue, 12 Mar 2019 17:15:32 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 170D02183F;
+        Tue, 12 Mar 2019 17:15:31 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1552410932;
-        bh=Sxdxtzh7FNroS1OEZCtK/uUCmxGygYkD+99jl7isi7E=;
+        s=default; t=1552410931;
+        bh=sQFyO456Kez7m7440dAXnhGbm++OePFJAfaWqAsq1Ww=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=j4Pkzs9DTWom0N+Ul7KFgqeztUiXsfGgXXMOfr+5IGU4lgi0gZFM94o8dOGK1x4ve
-         H9S7TXP+yPNP/OJszxu0dfUuWP6fade3STojBvN9cgQ5/qB9jXYnTrSeSfZUh3g/US
-         SH/F8vtfvqbjESEP1fJK7S96m4OypBaOJL6l7jFM=
+        b=H3wI+7Ovi5f9k2eOmZ3sRB3C4/xqmZjuRFFU+aDwgTUpiO8/a9BLKJ+BkPNRUI/mm
+         SqN0CN/bCVZ/r/J9UmrnLuUClEwdMujrpZil0dWXWW3DjNa13Gnn4NiuPt0UIkLpxV
+         erd/gkM1BEqzlgFzniRZ2hegDmAHiVOuitYQcxWE=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         stable@vger.kernel.org,
         "Peter Zijlstra (Intel)" <peterz@infradead.org>,
         Thomas Gleixner <tglx@linutronix.de>
-Subject: [PATCH 4.19 148/149] x86: Add TSX Force Abort CPUID/MSR
-Date:   Tue, 12 Mar 2019 10:09:26 -0700
-Message-Id: <20190312170401.801315747@linuxfoundation.org>
+Subject: [PATCH 4.19 146/149] perf/x86/intel: Make cpuc allocations consistent
+Date:   Tue, 12 Mar 2019 10:09:24 -0700
+Message-Id: <20190312170401.524962264@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190312170349.421581206@linuxfoundation.org>
 References: <20190312170349.421581206@linuxfoundation.org>
@@ -68,49 +68,167 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: "Peter Zijlstra (Intel)" <peterz@infradead.org>
 
-commit 52f64909409c17adf54fcf5f9751e0544ca3a6b4 upstream
+commit d01b1f96a82e5dd7841a1d39db3abfdaf95f70ab upstream
 
-Skylake systems will receive a microcode update to address a TSX
-errata. This microcode will (by default) clobber PMC3 when TSX
-instructions are (speculatively or not) executed.
-
-It also provides an MSR to cause all TSX transaction to abort and
-preserve PMC3.
-
-Add the CPUID enumeration and MSR definition.
+The cpuc data structure allocation is different between fake and real
+cpuc's; use the same code to init/free both.
 
 Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
 Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- arch/x86/include/asm/cpufeatures.h |    1 +
- arch/x86/include/asm/msr-index.h   |    6 ++++++
- 2 files changed, 7 insertions(+)
+ arch/x86/events/core.c       |   13 +++++--------
+ arch/x86/events/intel/core.c |   29 ++++++++++++++++++-----------
+ arch/x86/events/perf_event.h |   11 ++++++++---
+ 3 files changed, 31 insertions(+), 22 deletions(-)
 
---- a/arch/x86/include/asm/cpufeatures.h
-+++ b/arch/x86/include/asm/cpufeatures.h
-@@ -340,6 +340,7 @@
- /* Intel-defined CPU features, CPUID level 0x00000007:0 (EDX), word 18 */
- #define X86_FEATURE_AVX512_4VNNIW	(18*32+ 2) /* AVX-512 Neural Network Instructions */
- #define X86_FEATURE_AVX512_4FMAPS	(18*32+ 3) /* AVX-512 Multiply Accumulation Single precision */
-+#define X86_FEATURE_TSX_FORCE_ABORT	(18*32+13) /* "" TSX_FORCE_ABORT */
- #define X86_FEATURE_PCONFIG		(18*32+18) /* Intel PCONFIG */
- #define X86_FEATURE_SPEC_CTRL		(18*32+26) /* "" Speculation Control (IBRS + IBPB) */
- #define X86_FEATURE_INTEL_STIBP		(18*32+27) /* "" Single Thread Indirect Branch Predictors */
---- a/arch/x86/include/asm/msr-index.h
-+++ b/arch/x86/include/asm/msr-index.h
-@@ -629,6 +629,12 @@
+--- a/arch/x86/events/core.c
++++ b/arch/x86/events/core.c
+@@ -1970,7 +1970,7 @@ static int x86_pmu_commit_txn(struct pmu
+  */
+ static void free_fake_cpuc(struct cpu_hw_events *cpuc)
+ {
+-	kfree(cpuc->shared_regs);
++	intel_cpuc_finish(cpuc);
+ 	kfree(cpuc);
+ }
  
- #define MSR_IA32_TSC_DEADLINE		0x000006E0
+@@ -1982,14 +1982,11 @@ static struct cpu_hw_events *allocate_fa
+ 	cpuc = kzalloc(sizeof(*cpuc), GFP_KERNEL);
+ 	if (!cpuc)
+ 		return ERR_PTR(-ENOMEM);
+-
+-	/* only needed, if we have extra_regs */
+-	if (x86_pmu.extra_regs) {
+-		cpuc->shared_regs = allocate_shared_regs(cpu);
+-		if (!cpuc->shared_regs)
+-			goto error;
+-	}
+ 	cpuc->is_fake = 1;
++
++	if (intel_cpuc_prepare(cpuc, cpu))
++		goto error;
++
+ 	return cpuc;
+ error:
+ 	free_fake_cpuc(cpuc);
+--- a/arch/x86/events/intel/core.c
++++ b/arch/x86/events/intel/core.c
+@@ -3282,7 +3282,7 @@ ssize_t intel_event_sysfs_show(char *pag
+ 	return x86_event_sysfs_show(page, config, event);
+ }
  
+-struct intel_shared_regs *allocate_shared_regs(int cpu)
++static struct intel_shared_regs *allocate_shared_regs(int cpu)
+ {
+ 	struct intel_shared_regs *regs;
+ 	int i;
+@@ -3314,10 +3314,9 @@ static struct intel_excl_cntrs *allocate
+ 	return c;
+ }
+ 
+-static int intel_pmu_cpu_prepare(int cpu)
+-{
+-	struct cpu_hw_events *cpuc = &per_cpu(cpu_hw_events, cpu);
+ 
++int intel_cpuc_prepare(struct cpu_hw_events *cpuc, int cpu)
++{
+ 	if (x86_pmu.extra_regs || x86_pmu.lbr_sel_map) {
+ 		cpuc->shared_regs = allocate_shared_regs(cpu);
+ 		if (!cpuc->shared_regs)
+@@ -3327,7 +3326,7 @@ static int intel_pmu_cpu_prepare(int cpu
+ 	if (x86_pmu.flags & PMU_FL_EXCL_CNTRS) {
+ 		size_t sz = X86_PMC_IDX_MAX * sizeof(struct event_constraint);
+ 
+-		cpuc->constraint_list = kzalloc(sz, GFP_KERNEL);
++		cpuc->constraint_list = kzalloc_node(sz, GFP_KERNEL, cpu_to_node(cpu));
+ 		if (!cpuc->constraint_list)
+ 			goto err_shared_regs;
+ 
+@@ -3352,6 +3351,11 @@ err:
+ 	return -ENOMEM;
+ }
+ 
++static int intel_pmu_cpu_prepare(int cpu)
++{
++	return intel_cpuc_prepare(&per_cpu(cpu_hw_events, cpu), cpu);
++}
 +
-+#define MSR_TSX_FORCE_ABORT		0x0000010F
+ static void flip_smm_bit(void *data)
+ {
+ 	unsigned long set = *(unsigned long *)data;
+@@ -3423,9 +3427,8 @@ static void intel_pmu_cpu_starting(int c
+ 	}
+ }
+ 
+-static void free_excl_cntrs(int cpu)
++static void free_excl_cntrs(struct cpu_hw_events *cpuc)
+ {
+-	struct cpu_hw_events *cpuc = &per_cpu(cpu_hw_events, cpu);
+ 	struct intel_excl_cntrs *c;
+ 
+ 	c = cpuc->excl_cntrs;
+@@ -3443,9 +3446,8 @@ static void intel_pmu_cpu_dying(int cpu)
+ 	fini_debug_store_on_cpu(cpu);
+ }
+ 
+-static void intel_pmu_cpu_dead(int cpu)
++void intel_cpuc_finish(struct cpu_hw_events *cpuc)
+ {
+-	struct cpu_hw_events *cpuc = &per_cpu(cpu_hw_events, cpu);
+ 	struct intel_shared_regs *pc;
+ 
+ 	pc = cpuc->shared_regs;
+@@ -3455,7 +3457,12 @@ static void intel_pmu_cpu_dead(int cpu)
+ 		cpuc->shared_regs = NULL;
+ 	}
+ 
+-	free_excl_cntrs(cpu);
++	free_excl_cntrs(cpuc);
++}
 +
-+#define MSR_TFA_RTM_FORCE_ABORT_BIT	0
-+#define MSR_TFA_RTM_FORCE_ABORT		BIT_ULL(MSR_TFA_RTM_FORCE_ABORT_BIT)
++static void intel_pmu_cpu_dead(int cpu)
++{
++	intel_cpuc_finish(&per_cpu(cpu_hw_events, cpu));
+ }
+ 
+ static void intel_pmu_sched_task(struct perf_event_context *ctx,
+@@ -4515,7 +4522,7 @@ static __init int fixup_ht_bug(void)
+ 	hardlockup_detector_perf_restart();
+ 
+ 	for_each_online_cpu(c)
+-		free_excl_cntrs(c);
++		free_excl_cntrs(&per_cpu(cpu_hw_events, c));
+ 
+ 	cpus_read_unlock();
+ 	pr_info("PMU erratum BJ122, BV98, HSD29 workaround disabled, HT off\n");
+--- a/arch/x86/events/perf_event.h
++++ b/arch/x86/events/perf_event.h
+@@ -887,7 +887,8 @@ struct event_constraint *
+ x86_get_event_constraints(struct cpu_hw_events *cpuc, int idx,
+ 			  struct perf_event *event);
+ 
+-struct intel_shared_regs *allocate_shared_regs(int cpu);
++extern int intel_cpuc_prepare(struct cpu_hw_events *cpuc, int cpu);
++extern void intel_cpuc_finish(struct cpu_hw_events *cpuc);
+ 
+ int intel_pmu_init(void);
+ 
+@@ -1023,9 +1024,13 @@ static inline int intel_pmu_init(void)
+ 	return 0;
+ }
+ 
+-static inline struct intel_shared_regs *allocate_shared_regs(int cpu)
++static inline int intel_cpuc_prepare(struct cpu_hw_event *cpuc, int cpu)
++{
++	return 0;
++}
 +
- /* P4/Xeon+ specific */
- #define MSR_IA32_MCG_EAX		0x00000180
- #define MSR_IA32_MCG_EBX		0x00000181
++static inline void intel_cpuc_finish(struct cpu_hw_event *cpuc)
+ {
+-	return NULL;
+ }
+ 
+ static inline int is_ht_workaround_enabled(void)
 
 
