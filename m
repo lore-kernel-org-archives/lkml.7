@@ -2,213 +2,119 @@ Return-Path: <SRS0=J4ZE=RP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6FF23C43381
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 16:04:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7B763C43381
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 16:05:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 33D972054F
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 16:04:50 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1552406690;
-	bh=Q/fIDY9FyBRREBJPvrPeX+hIyuQfQhyLoGrBK0bqzdM=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=0Xd38oYbcYSsCE5F1z4kgOd8Sy6Lc4SygUgcJ8h6OTITsywHd4NNrSVa27xJSzvly
-	 ssEmMcQY68owU5BZny4glF5hkAzcJClW+qD0AtUt56OYsTpuRAC/auI2impgR+F+9W
-	 4jR7TdG1Kv5BI5XyLQUDAPEABQVK+3n0i/8hf6Jk=
+	by mail.kernel.org (Postfix) with ESMTP id 4721A2054F
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 16:05:56 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="OU18r5JX"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726630AbfCLQEt (ORCPT
+        id S1726559AbfCLQFy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 12 Mar 2019 12:04:49 -0400
-Received: from mail-ot1-f65.google.com ([209.85.210.65]:38673 "EHLO
-        mail-ot1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726365AbfCLQEs (ORCPT
+        Tue, 12 Mar 2019 12:05:54 -0400
+Received: from mail-oi1-f196.google.com ([209.85.167.196]:37261 "EHLO
+        mail-oi1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725894AbfCLQFy (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 12 Mar 2019 12:04:48 -0400
-Received: by mail-ot1-f65.google.com with SMTP id m1so2965553otf.5;
-        Tue, 12 Mar 2019 09:04:47 -0700 (PDT)
+        Tue, 12 Mar 2019 12:05:54 -0400
+Received: by mail-oi1-f196.google.com with SMTP id w66so2534028oia.4
+        for <linux-kernel@vger.kernel.org>; Tue, 12 Mar 2019 09:05:53 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=JQK4P7oIuX8yYDSIeh7wV+xqkzOVF0UCQ2O/+xiRagc=;
+        b=OU18r5JXhhOyZeWF99RY1nql8Dapbf2BFk7+d1lRve5W6ONee9n4NW9Z3iWJQrLk3s
+         wJghfaGTWKqXTd6116yGO6I8RMQnKgBcMZ0jTdJYJm+OqXdOp7umV+NAAwQV3tJEokGn
+         KOsWASTxe4VCvgBbgF00tOxbCwBRlYObFqjfg=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=1U77x4dBnfLm15KIoly1ARxvisexMqp9b6NfCc0Y8n4=;
-        b=Q1gDf40tfINA8lmHGXt+NkdIhblgTgB+w8QS4G+6hM1oDUkT5Ok/zBKxQLSwri13yH
-         m+o07f1mIzrqAXSDV1IoeaQJbQwFMmqQ9v5W8fv12LdwjaAKF+Xn5nfaCgGaaxGoW1px
-         9dUS3pUrmIr6ANTUHyMKKbudVIgXA52+n/GvMWD+qBzoEalvMZR1oH9o1V5+K8Gd26rw
-         EjHwyNv3jQyNZE71OnqyJjaqvC3zC8P/1ojkK8Ph2zENN3oVu+FV4M0zeJbAmp0ZSPFj
-         M+FkHrEd5xWxTEwy879Z45IhOgri69+l1Z48JaoswSa+lKEhjejPa4OrOdcE9aYoKpBh
-         jrKw==
-X-Gm-Message-State: APjAAAUyphgzZ7vQh7oezBk6LhIFUk31ARqgriWrXjKaZf1FsxYO9vl4
-        sBOR4D4+ZYbwwOzQ4lgUNQ==
-X-Google-Smtp-Source: APXvYqzXCP3SFTff0FlnB0ah0ik91HhUWHUcn6d4MmzYFhEAHLQ0t+s1xJDZ6eAgES/HyJb1VokyDg==
-X-Received: by 2002:a9d:76c5:: with SMTP id p5mr22929627otl.283.1552406687301;
-        Tue, 12 Mar 2019 09:04:47 -0700 (PDT)
-Received: from localhost (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
-        by smtp.gmail.com with ESMTPSA id u5sm3561632otb.62.2019.03.12.09.04.46
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Tue, 12 Mar 2019 09:04:46 -0700 (PDT)
-Date:   Tue, 12 Mar 2019 11:04:45 -0500
-From:   Rob Herring <robh@kernel.org>
-To:     thor.thayer@linux.intel.com
-Cc:     bp@alien8.de, dinguyen@kernel.org, mark.rutland@arm.com,
-        mchehab@kernel.org, devicetree@vger.kernel.org,
-        linux-edac@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCHv2 2/5] Documentation: dt: edac: Add Stratix10 Peripheral
- bindings
-Message-ID: <20190312160445.GA8802@bogus>
-References: <1551288445-22335-1-git-send-email-thor.thayer@linux.intel.com>
- <1551288445-22335-3-git-send-email-thor.thayer@linux.intel.com>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=JQK4P7oIuX8yYDSIeh7wV+xqkzOVF0UCQ2O/+xiRagc=;
+        b=H8+sh8S4/kM0NSVNqeuhqakrrLAHKt87xofa9OcNLTVgTQxsxD360evI7bgnUW5RkI
+         1BbqmgvKyorT47yrLwQWO31l0KxqgniLjXmCH+j/GUB784SC4CyPv12WNIyDrw0pKLUF
+         2bo5j1rq9fmmfe0PF2/YCl1hEtXVQllCCNGogbQG7RTKa19SGVrSFSxNngZ4aavQo/CM
+         6+xpahM0eAPi9/YuFp44rbirkVFp6D/TxclsACVuPYOJTQYe/XBtaGwsxj4ktIW5A4lo
+         yV+5yc/6jxINTOsiY2BBGaVfq0SW+oiqvWqeMSU3uyfEY6do/glawA6pvBBd1rtCdS7i
+         50tQ==
+X-Gm-Message-State: APjAAAWTnldT5296OJTLlz+gpiMP4cqkLXpFoL9+BX6N4UrHLnpCmRlq
+        y/vbvJwRE/Jqc/r6ab2zKg0r5ueQl80=
+X-Google-Smtp-Source: APXvYqzRFYiGOuWVSeDClOVLaEePfRN0O5DbBuaNOwMs8egcb1qqqKzEf8ndfTQfneFrrB+pjxgfbw==
+X-Received: by 2002:aca:4911:: with SMTP id w17mr2128589oia.36.1552406752925;
+        Tue, 12 Mar 2019 09:05:52 -0700 (PDT)
+Received: from mail-oi1-f173.google.com (mail-oi1-f173.google.com. [209.85.167.173])
+        by smtp.gmail.com with ESMTPSA id o17sm1292889otl.27.2019.03.12.09.05.51
+        for <linux-kernel@vger.kernel.org>
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Tue, 12 Mar 2019 09:05:51 -0700 (PDT)
+Received: by mail-oi1-f173.google.com with SMTP id a15so2387005oid.5
+        for <linux-kernel@vger.kernel.org>; Tue, 12 Mar 2019 09:05:51 -0700 (PDT)
+X-Received: by 2002:aca:d803:: with SMTP id p3mr2046883oig.111.1552406749668;
+ Tue, 12 Mar 2019 09:05:49 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <1551288445-22335-3-git-send-email-thor.thayer@linux.intel.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+References: <20190308203801.57920-1-ncrews@chromium.org> <CAE_wzQ-Ds5a9iPuLTpV5mBHBtoUUh_-fRw66s0Su7eOifygqKQ@mail.gmail.com>
+ <20190308221307.GB16125@amd>
+In-Reply-To: <20190308221307.GB16125@amd>
+From:   Nick Crews <ncrews@chromium.org>
+Date:   Tue, 12 Mar 2019 10:05:38 -0600
+X-Gmail-Original-Message-ID: <CAHX4x85Ve+AHvcO1dPN9x6P3X8RV=rSzoWbYp=S-OeDnjGmOaQ@mail.gmail.com>
+Message-ID: <CAHX4x85Ve+AHvcO1dPN9x6P3X8RV=rSzoWbYp=S-OeDnjGmOaQ@mail.gmail.com>
+Subject: Re: [PATCH] platform/chrome: Add Wilco EC keyboard backlight LEDs support
+To:     Pavel Machek <pavel@ucw.cz>
+Cc:     Dmitry Torokhov <dtor@chromium.org>,
+        Enric Balletbo i Serra <enric.balletbo@collabora.com>,
+        Benson Leung <bleung@chromium.org>, linux-leds@vger.kernel.org,
+        jacek.anaszewski@gmail.com, lkml <linux-kernel@vger.kernel.org>,
+        Duncan Laurie <dlaurie@chromium.org>,
+        Daniel Erat <derat@google.com>,
+        Guenter Roeck <groeck@google.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Feb 27, 2019 at 11:27:22AM -0600, thor.thayer@linux.intel.com wrote:
-> From: Thor Thayer <thor.thayer@linux.intel.com>
-> 
-> Add peripheral bindings for Stratix10 EDAC to capture
-> the differences between the ARM64 and ARM32 architecture.
+> > > Some Wilco devices do not support a keyboard backlight. This
+> > > is checked in probe(), and in this case the sysfs entry will
+> > > not appear, and everything will behave normally.
+> >
+> > It would be even better if we did not register platform device if EC
+> > does not support backlight.
 
-What's the difference? Sounds like 2 different chips, so Stratix10 or 
-s10 is not specific enough perhaps.
+Good point Dmitry. I would imagine this would entail exposing the
+keyboard_leds_exist() function. What is the best practice for doing that?
+I could either imagine EXPORT_SYMBOL_GPL()ing that function, but
+that would require making the core driver dependent upon this keyboard
+backlight driver in a circular dependency, so there would have to be some
+refactoring. The other option I see would be to add this entire driver to
+the core module.
 
-> 
-> Signed-off-by: Thor Thayer <thor.thayer@linux.intel.com>
-> ---
-> v2 No change
-> ---
->  .../devicetree/bindings/edac/socfpga-eccmgr.txt    | 106 +++++++++++++++++++++
->  1 file changed, 106 insertions(+)
-> 
-> diff --git a/Documentation/devicetree/bindings/edac/socfpga-eccmgr.txt b/Documentation/devicetree/bindings/edac/socfpga-eccmgr.txt
-> index a0ac50e15912..a0fa80c53d2a 100644
-> --- a/Documentation/devicetree/bindings/edac/socfpga-eccmgr.txt
-> +++ b/Documentation/devicetree/bindings/edac/socfpga-eccmgr.txt
-> @@ -258,6 +258,49 @@ Required Properties:
->  - compatible : Should be "altr,sdram-edac-s10"
->  - interrupts : Should be single bit error interrupt.
->  
-> +On-Chip RAM ECC
-> +Required Properties:
-> +- compatible      : Should be "altr,socfpga-s10-ocram-ecc"
-> +- reg             : Address and size for ECC block registers.
-> +- altr,ecc-parent : phandle to parent OCRAM node.
-> +- interrupts      : Should be single bit error interrupt.
-> +
-> +Ethernet FIFO ECC
-> +Required Properties:
-> +- compatible      : Should be "altr,socfpga-s10-eth-mac-ecc"
-> +- reg             : Address and size for ECC block registers.
-> +- altr,ecc-parent : phandle to parent Ethernet node.
-> +- interrupts      : Should be single bit error interrupt.
-> +
-> +NAND FIFO ECC
-> +Required Properties:
-> +- compatible      : Should be "altr,socfpga-s10-nand-ecc"
-> +- reg             : Address and size for ECC block registers.
-> +- altr,ecc-parent : phandle to parent NAND node.
-> +- interrupts      : Should be single bit error interrupt.
-> +
-> +DMA FIFO ECC
-> +Required Properties:
-> +- compatible      : Should be "altr,socfpga-s10-dma-ecc"
-> +- reg             : Address and size for ECC block registers.
-> +- altr,ecc-parent : phandle to parent DMA node.
-> +- interrupts      : Should be single bit error interrupt.
-> +
-> +USB FIFO ECC
-> +Required Properties:
-> +- compatible      : Should be "altr,socfpga-s10-usb-ecc"
-> +- reg             : Address and size for ECC block registers.
-> +- altr,ecc-parent : phandle to parent USB node.
-> +- interrupts      : Should be single bit error interrupt.
-> +
-> +SDMMC FIFO ECC
-> +Required Properties:
-> +- compatible      : Should be "altr,socfpga-s10-sdmmc-ecc"
-> +- reg             : Address and size for ECC block registers.
-> +- altr,ecc-parent : phandle to parent SD/MMC node.
-> +- interrupts      : Should be single bit error interrupt for port A
-> +		    and then single bit error interrupt for port B.
-> +
->  Example:
->  
->  	eccmgr {
-> @@ -274,4 +317,67 @@ Example:
->  			compatible = "altr,sdram-edac-s10";
->  			interrupts = <16 IRQ_TYPE_LEVEL_HIGH>;
->  		};
-> +
-> +		ocram-ecc@ff8cc000 {
-> +			compatible = "altr,socfpga-s10-ocram-ecc";
-> +			reg = <ff8cc000 0x100>;
-> +			altr,ecc-parent = <&ocram>;
-> +			interrupts = <1 IRQ_TYPE_LEVEL_HIGH>;
-> +		};
-> +
-> +		emac0-rx-ecc@ff8c0000 {
-> +			compatible = "altr,socfpga-s10-eth-mac-ecc";
-> +			reg = <0xff8c0000 0x100>;
-> +			altr,ecc-parent = <&gmac0>;
-> +			interrupts = <4 IRQ_TYPE_LEVEL_HIGH>;
-> +		};
-> +
-> +		emac0-tx-ecc@ff8c0400 {
-> +			compatible = "altr,socfpga-s10-eth-mac-ecc";
-> +			reg = <0xff8c0400 0x100>;
-> +			altr,ecc-parent = <&gmac0>;
-> +			interrupts = <5 IRQ_TYPE_LEVEL_HIGH>'
-> +		};
-> +
-> +		nand-buf-ecc@ff8c8000 {
-> +			compatible = "altr,socfpga-s10-nand-ecc";
-> +			reg = <0xff8c8000 0x100>;
-> +			altr,ecc-parent = <&nand>;
-> +			interrupts = <11 IRQ_TYPE_LEVEL_HIGH>;
-> +		};
-> +
-> +		nand-rd-ecc@ff8c8400 {
-> +			compatible = "altr,socfpga-s10-nand-ecc";
-> +			reg = <0xff8c8400 0x100>;
-> +			altr,ecc-parent = <&nand>;
-> +			interrupts = <13 IRQ_TYPE_LEVEL_HIGH>;
-> +		};
-> +
-> +		nand-wr-ecc@ff8c8800 {
-> +			compatible = "altr,socfpga-s10-nand-ecc";
-> +			reg = <0xff8c8800 0x100>;
-> +			altr,ecc-parent = <&nand>;
-> +			interrupts = <12 IRQ_TYPE_LEVEL_HIGH>;
-> +		};
-> +
-> +		dma-ecc@ff8c9000 {
-> +			compatible = "altr,socfpga-s10-dma-ecc";
-> +			reg = <0xff8c9000 0x100>;
-> +			altr,ecc-parent = <&pdma>;
-> +			interrupts = <10 IRQ_TYPE_LEVEL_HIGH>;
-> +
-> +		usb0-ecc@ff8c4000 {
-> +			compatible = "altr,socfpga-s10-usb-ecc";
-> +			reg = <0xff8c4000 0x100>;
-> +			altr,ecc-parent = <&usb0>;
-> +			interrupts = <2 IRQ_TYPE_LEVEL_HIGH>;
-> +		};
-> +
-> +		sdmmc-ecc@ff8c8c00 {
-> +			compatible = "altr,socfpga-s10-sdmmc-ecc";
-> +			reg = <0xff8c8c00 0x100>;
-> +			altr,ecc-parent = <&mmc>;
-> +			interrupts = <14 IRQ_TYPE_LEVEL_HIGH>,
-> +				     <15 IRQ_TYPE_LEVEL_HIGH>;
-> +		};
->  	};
-> -- 
-> 2.7.4
-> 
+Just so I learn something, I don't see performance or stability
+concerns with adding one unused platform device, is your rationale
+that it would just be cleaner code?
+
+> >
+> > > +       data->led.brightness_set = keyboard_led_set_brightness;
+> > > +       data->led.brightness_get = keyboard_led_get_brightness;
+> >
+> > wilco_ec_mailbox() may sleep, so you need to assign it to
+> > led.brightness_set_blocking.
+
+Yes, thanks for the catch.
+
+>
+> Hmm. Seeing get method there... can the EC change the brightness
+> without command from kernel?
+
+No, the EC will never do that, good point. Therefore it looks like
+I can just remove the get_brightness() function and the core
+library will do the right thing.
+
+Thanks,
+Nick
