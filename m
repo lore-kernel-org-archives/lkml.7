@@ -2,87 +2,100 @@ Return-Path: <SRS0=J4ZE=RP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.0 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 88290C43381
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 21:11:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8F66BC43381
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 21:13:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4EC5221734
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 21:11:37 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=baylibre-com.20150623.gappssmtp.com header.i=@baylibre-com.20150623.gappssmtp.com header.b="ALVqQgtX"
+	by mail.kernel.org (Postfix) with ESMTP id 65A9D2147C
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 21:13:14 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727008AbfCLVLg (ORCPT
+        id S1726791AbfCLVNM convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 12 Mar 2019 17:11:36 -0400
-Received: from mail-pf1-f195.google.com ([209.85.210.195]:35280 "EHLO
-        mail-pf1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726905AbfCLVLa (ORCPT
+        Tue, 12 Mar 2019 17:13:12 -0400
+Received: from mail-ot1-f67.google.com ([209.85.210.67]:45076 "EHLO
+        mail-ot1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726396AbfCLVNM (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 12 Mar 2019 17:11:30 -0400
-Received: by mail-pf1-f195.google.com with SMTP id j5so2733710pfa.2
-        for <linux-kernel@vger.kernel.org>; Tue, 12 Mar 2019 14:11:30 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=baylibre-com.20150623.gappssmtp.com; s=20150623;
-        h=from:to:cc:subject:in-reply-to:references:date:message-id
-         :mime-version;
-        bh=8FaLs0MolUkifKeut3/wUXNuJGPWfQPncZ9agSOKA0Q=;
-        b=ALVqQgtXlNZVUUqHThyPjzn0W+AoLu4mN9ZK0RH3nC0IgbYhDojpCQiqwj6B2RFYIz
-         hPaUFessrqXzSI3a/zKmys36xNz6X7HvCzaTN+wEMJmsVKQRywL5CrOa+eTBVQCjJ0vZ
-         nx+xKpoJvUaInFhhD0GTy+hZeyo0D3w6VtbiWbGYICyAfiuDPRajCfIBT5wUvH9dlJne
-         wh7uc7iF3z/0QQzcpwegxQuXSyD7TBBM2rmFnBadhqBCgUBBh1hCKccvoZ4PQoSoo0mI
-         ccR+7mLP2mICl1zZAHLDoOw3zrjtPHhY6QWeKD1rzNU7m9HNHV989aQfgLdt/STdNKlw
-         iBzQ==
+        Tue, 12 Mar 2019 17:13:12 -0400
+Received: by mail-ot1-f67.google.com with SMTP id i12so3823350otp.12
+        for <linux-kernel@vger.kernel.org>; Tue, 12 Mar 2019 14:13:12 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:in-reply-to:references:date
-         :message-id:mime-version;
-        bh=8FaLs0MolUkifKeut3/wUXNuJGPWfQPncZ9agSOKA0Q=;
-        b=snoVXlcl6PEVc7tpd+8yVnajZvfHT8lSa0T+0O+68SyNY0SQdUWmVw8/j4lmQBX3rr
-         /9dmxRCJwPkcmZKB76Q7ah+0zEDvTEuvgoJz4EuzcFEox76BVRG1Z8aQmjJby3Hnexlx
-         HfCKyerkRznQmpb1GTyKMtQgWqxmRl/BzyyHBWsLMDrVpWso6gXDYasPUhait0huQhM/
-         9ocL31iPmTHKrqmgUKIDW/r+j09N3/+NL7L610sRDNJ/Tbbidy3OS7yf4F8+MKQ/qS2m
-         9TwTQipEcWPKQa8ppkr1SNn7afhCm6VVDg8c/BL9N/itqbrLyZjpEeoeuAdnyLxutPUf
-         8VPw==
-X-Gm-Message-State: APjAAAUpjZJTY3Q1Len5cPEYqU4/oCkfYxrYfvLEy8uSsYqkb1nd89v5
-        IGxrQHdX687twf7/d4taOU2Aow==
-X-Google-Smtp-Source: APXvYqyy/Qj5qoa/rx3Pq31XNygHSUvbFNRdVg+L7X7Gvvh6Vzy+u95YbPocDPi/WjrfngE/rX/5UQ==
-X-Received: by 2002:a17:902:b201:: with SMTP id t1mr5825153plr.55.1552425089579;
-        Tue, 12 Mar 2019 14:11:29 -0700 (PDT)
-Received: from localhost ([2601:602:9200:a1a5:1daf:3f96:9f7f:33ba])
-        by smtp.googlemail.com with ESMTPSA id v8sm13118551pfm.174.2019.03.12.14.11.28
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Tue, 12 Mar 2019 14:11:29 -0700 (PDT)
-From:   Kevin Hilman <khilman@baylibre.com>
-To:     Neil Armstrong <narmstrong@baylibre.com>
-Cc:     Neil Armstrong <narmstrong@baylibre.com>,
-        linux-amlogic@lists.infradead.org,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 6/9] arm64: dts: meson: g12a: Add UART A, B & C nodes and pins
-In-Reply-To: <draft-7hd0mvu7pp.fsf@baylibre.com>
-References: <draft-7hd0mvu7pp.fsf@baylibre.com>
-Date:   Tue, 12 Mar 2019 14:11:28 -0700
-Message-ID: <7h8sxju7b3.fsf@baylibre.com>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=3jmJXa4rzUEjqLYYUxVP8wSbrNr3+v4uEdwLGkO9joA=;
+        b=H7MJE2O98BdH+vFlWKRztqDkhCGuXZuxUJWqLWglZ4PCh+Ixok7F+DAjXfYgfJy6N5
+         2DDUl3J0436L+Ur53yZVHhAI3QyluXbVmG2Kh42g1Ew/3+LjIw8TUaqvK7aBfP1LPfIj
+         7aGzlQj2GHkmZ2XinJ5NGLgUFpaHDNg63nj3KJw4IhN05H8mP4HgxyM57Ly7JShrpZ78
+         Z5LpEh3G7gvsmhcFxPV40brjkE+T1Etn5wrRx26W2f94ekj7kNkjO2pjEh0t1mASl1ax
+         iePiBUV1Juts6iX43DEJBAgkXsm6fpIoJRyJjXQjT+948JqrPe0muZOWJfCqds3Gw84V
+         n2kQ==
+X-Gm-Message-State: APjAAAUMYr6Jw/yEIFnrIsiyEaeSKxgZHMPeYxYG0TLC2RXRjFs3SpOe
+        8qwKOg4RxZe4aZpeuaZoTzrleZ4VvQpJKtNjxlUbZw==
+X-Google-Smtp-Source: APXvYqzN2+BHlrw2pWgucJMJKUY//qSZUyb7RDQg4jcbZNAvYOwJ1WSHOgGonfgzc6DOPGRUWj2muPjZQ2TYGJJThIE=
+X-Received: by 2002:a9d:5616:: with SMTP id e22mr25903782oti.365.1552425191717;
+ Tue, 12 Mar 2019 14:13:11 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain
+References: <20190312202008.29681-1-malat@debian.org> <57a0d93c-8784-d6af-a5fb-75e31455ae57@c-s.fr>
+In-Reply-To: <57a0d93c-8784-d6af-a5fb-75e31455ae57@c-s.fr>
+From:   Mathieu Malaterre <malat@debian.org>
+Date:   Tue, 12 Mar 2019 22:12:59 +0100
+Message-ID: <CA+7wUsyA698UtNLni7wi3=cKjbCd1V71YA0sxDtMD=MmQvQxTQ@mail.gmail.com>
+Subject: Re: [PATCH] powerpc: sstep: Mark variable `rc` as unused in function 'analyse_instr'
+To:     Christophe Leroy <christophe.leroy@c-s.fr>
+Cc:     Michael Ellerman <mpe@ellerman.id.au>,
+        Paul Mackerras <paulus@samba.org>,
+        linuxppc-dev <linuxppc-dev@lists.ozlabs.org>,
+        LKML <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8BIT
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Kevin Hilman <khilman@baylibre.com> writes:
-
-> Neil Armstrong <narmstrong@baylibre.com> writes:
+On Tue, Mar 12, 2019 at 9:56 PM Christophe Leroy
+<christophe.leroy@c-s.fr> wrote:
 >
->> This patch adds the 2 UART nodes in the EE power domain with the corresponding
->> pinctrl nodes.
->>
->> Signed-off-by: Neil Armstrong <narmstrong@baylibre.com>
 >
-> Similar to PATCH 4/9, are you wanting to move this to the board series?
+>
+> Le 12/03/2019 à 21:20, Mathieu Malaterre a écrit :
+> > Add gcc attribute unused for `rc` variable.
+> >
+> > Fix warnings treated as errors with W=1:
+> >
+> >    arch/powerpc/lib/sstep.c:1172:31: error: variable 'rc' set but not used [-Werror=unused-but-set-variable]
+> >
+> > Signed-off-by: Mathieu Malaterre <malat@debian.org>
+> > ---
+> >   arch/powerpc/lib/sstep.c | 2 +-
+> >   1 file changed, 1 insertion(+), 1 deletion(-)
+> >
+> > diff --git a/arch/powerpc/lib/sstep.c b/arch/powerpc/lib/sstep.c
+> > index 3d33fb509ef4..32d092f62ae0 100644
+> > --- a/arch/powerpc/lib/sstep.c
+> > +++ b/arch/powerpc/lib/sstep.c
+> > @@ -1169,7 +1169,7 @@ static nokprobe_inline int trap_compare(long v1, long v2)
+> >   int analyse_instr(struct instruction_op *op, const struct pt_regs *regs,
+> >                 unsigned int instr)
+> >   {
+> > -     unsigned int opcode, ra, rb, rc, rd, spr, u;
+> > +     unsigned int opcode, ra, rb, rc __maybe_unused, rd, spr, u;
+>
+> I think it would be better to enclose 'rc' inside a #ifdef CONFIG_PPC64
 
-Nevermind, I misunderstood how you were splitting up the two series.  
+Hum odd, I would have bet you would have suggested me to use
+IS_ENABLED with some crazy scheme (I was not able to mix it with the
+switch case nicely).
 
-Kevin
+Anyway I'll try your suggestion and post a v2.
+
+> Christophe
+>
+> >       unsigned long int imm;
+> >       unsigned long int val, val2;
+> >       unsigned int mb, me, sh;
+> >
