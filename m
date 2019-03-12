@@ -2,122 +2,113 @@ Return-Path: <SRS0=J4ZE=RP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+X-Spam-Status: No, score=-11.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5FA64C43381
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 17:22:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A48CDC43381
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 17:22:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2A0B2206DF
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 17:22:13 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1552411333;
-	bh=0c1gC9KHLLotoLG+fu8m2RbtGCyJckNtIsZYP2/U/XU=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=dd+nxIbZlLOqTgVT/zkTSwT5VcIjdfELsArEAIt6SLCiM6aXyUgcVNw2u6AgM7MwW
-	 tHg+f2mPlKRgfd5KhX2wppWFXu+bPysFzP5Z2540kp059e3A48oaDeB2U4Gfv+JxQy
-	 PRPqk4R4i31BrWrGIVTNxi7Rs899tkBMAddB0CMw=
+	by mail.kernel.org (Postfix) with ESMTP id 74F98206DF
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 17:22:19 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="awy48E1m"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729559AbfCLRWL (ORCPT
+        id S1728846AbfCLRWS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 12 Mar 2019 13:22:11 -0400
-Received: from mail.kernel.org ([198.145.29.99]:35402 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729956AbfCLRSK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 12 Mar 2019 13:18:10 -0400
-Received: from localhost (unknown [104.133.8.98])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 67CD72184C;
-        Tue, 12 Mar 2019 17:18:09 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1552411089;
-        bh=0c1gC9KHLLotoLG+fu8m2RbtGCyJckNtIsZYP2/U/XU=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=a9ru/f6KRR5CiNeyWSqX4V8nZTkOrfaMkytU5XT3X0QdWhUiHzi0v3NgIlZTA9kye
-         Usx1AUXTX4Jk4+ZGdH3V29mTvtTufPpZ1rb0RnSgDXnLQrYyGA36kqX35nw7fM3+T3
-         KmABiccFydCTJoQCXchzaRT8/YaCSyETDqT3D5co=
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     linux-kernel@vger.kernel.org
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Anders Roxell <anders.roxell@linaro.org>,
-        Felipe Balbi <felipe.balbi@linux.intel.com>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.9 68/96] usb: phy: fix link errors
-Date:   Tue, 12 Mar 2019 10:10:26 -0700
-Message-Id: <20190312171039.724096063@linuxfoundation.org>
-X-Mailer: git-send-email 2.21.0
-In-Reply-To: <20190312171034.530434962@linuxfoundation.org>
-References: <20190312171034.530434962@linuxfoundation.org>
-User-Agent: quilt/0.65
-X-stable: review
-X-Patchwork-Hint: ignore
+        Tue, 12 Mar 2019 13:22:18 -0400
+Received: from mail-qt1-f195.google.com ([209.85.160.195]:36865 "EHLO
+        mail-qt1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729624AbfCLRWQ (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 12 Mar 2019 13:22:16 -0400
+Received: by mail-qt1-f195.google.com with SMTP id z17so3482316qtn.4;
+        Tue, 12 Mar 2019 10:22:16 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=YesIhy2UsGnwSXTgVK14T/DbKOCbRD/Fkz2D7iXOGmE=;
+        b=awy48E1mw52XmF33VF9wAJhOqXhiu1nO5hcKrPCieiIU3oa/nTc6QG9WXoMWTY3BZi
+         B1AV4aN95KUiOMahv6mDDh5G2wWItD3HL0nMLxD/YaZcNhMsMULsn82/4W5ADUxDzZtO
+         TS9lT0BwDa7+msf/zYaA+pzCr57EOOoaJdW/sIDkflLlY6T80CDRV2Fu1c3YLwisbEGm
+         mnLeJhwcJRVg/eDm3mUnRx4hHThT4TxJ6DmzCxf/TCyi9bdGUDMmKTFuyg5UtNLIvpBv
+         CRdI2l0C1LEPwLwuLREeYoMzA7D4O8QXXG+W5jrtWRL9fX2ljG7JyQaA91RNBUt/OdxZ
+         CHBQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=YesIhy2UsGnwSXTgVK14T/DbKOCbRD/Fkz2D7iXOGmE=;
+        b=huiSEMLKaUof3SRooiYGqKI7Mv2Ktr7F2dv2Nz2guCxZji6G8fDem1uqT9rIVwrmqZ
+         hD4DPfas8dswKhIcjnWT+7mjlGfIk0fsirvoRGGf+q3dMWTm/mLoES0uDdhAZn9RTFF2
+         i5HlPI6DNgvW+yODrA8FhehU4+iql3M9a16KtTmFtloNi2C+JuvPl8pu/uHFYipto9DY
+         TADN33stZRNwiy+ffjo8xafsSj/9oHH2EUHGDE+/FTjLFQdpemufex8laZViSayRSfl6
+         lzzSPjhc1v7qQROKI8atxpZUXSLXgr5ymd+HU67EqRI461kBJ9POR85TKfLkrB072En2
+         qzHw==
+X-Gm-Message-State: APjAAAXG7BvFmWvyjnIb3usrT0tNvLYG0nfp5vAakfew92IYdyjOwaUK
+        74ca0iFk2GjlWu4AGX03bp78U87rfP8sxa9kzOg=
+X-Google-Smtp-Source: APXvYqx4qbyD0KKLsdCoL2GLJqLBXI/Cq2MsbKQOJmciAHIelmusfuwbbjAkBpU+GovsgCGNWp4MF55l70PdiMzkncE=
+X-Received: by 2002:a0c:b524:: with SMTP id d36mr31091687qve.48.1552411335629;
+ Tue, 12 Mar 2019 10:22:15 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+References: <20190304224854.12494-1-pakki001@umn.edu> <854b0e4a-35e4-4666-5d05-c1f9ffaceae8@suse.com>
+In-Reply-To: <854b0e4a-35e4-4666-5d05-c1f9ffaceae8@suse.com>
+From:   Song Liu <liu.song.a23@gmail.com>
+Date:   Tue, 12 Mar 2019 10:22:04 -0700
+Message-ID: <CAPhsuW5JDsRZSJY+AggEMkk59kt025NLeTV6zC2fpfv9_qTw-g@mail.gmail.com>
+Subject: Re: [PATCH] md: Fix failed allocation of md_register_thread
+To:     Guoqing Jiang <gqjiang@suse.com>
+Cc:     Aditya Pakki <pakki001@umn.edu>, kjlu@umn.edu,
+        Shaohua Li <shli@kernel.org>,
+        linux-raid <linux-raid@vger.kernel.org>,
+        open list <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-4.9-stable review patch.  If anyone has any objections, please let me know.
+On Thu, Mar 7, 2019 at 7:13 PM Guoqing Jiang <gqjiang@suse.com> wrote:
+>
+>
+>
+> On 3/5/19 6:48 AM, Aditya Pakki wrote:
+> > mddev->sync_thread can be set to NULL on kzalloc failure downstream.
+> > The patch checks for such a scenario and frees allocated resources.
+> >
+> > Signed-off-by: Aditya Pakki <pakki001@umn.edu>
 
-------------------
+Applied to https://github.com/liu-song-6/linux/tree/for-5.1/md-post
 
-[ Upstream commit f2105d42597f4d10e431b195d69e96dccaf9b012 ]
+@Guoqing, I added your Acked-by to the commit and also the raid5 fix.
 
-Fix link errors when CONFIG_FSL_USB2_OTG is enabled and USB_OTG_FSM is
-set to module then the following link error occurs.
+Thanks,
+Song
 
-aarch64-linux-gnu-ld: drivers/usb/phy/phy-fsl-usb.o: in function `fsl_otg_ioctl':
-drivers/usb/phy/phy-fsl-usb.c:1083: undefined reference to `otg_statemachine'
-aarch64-linux-gnu-ld: drivers/usb/phy/phy-fsl-usb.c:1083:(.text+0x574): relocation truncated to fit: R_AARCH64_CALL26 against undefined symbol `otg_statemachine'
-aarch64-linux-gnu-ld: drivers/usb/phy/phy-fsl-usb.o: in function `fsl_otg_start_srp':
-drivers/usb/phy/phy-fsl-usb.c:674: undefined reference to `otg_statemachine'
-aarch64-linux-gnu-ld: drivers/usb/phy/phy-fsl-usb.c:674:(.text+0x61c): relocation truncated to fit: R_AARCH64_CALL26 against undefined symbol `otg_statemachine'
-aarch64-linux-gnu-ld: drivers/usb/phy/phy-fsl-usb.o: in function `fsl_otg_set_host':
-drivers/usb/phy/phy-fsl-usb.c:593: undefined reference to `otg_statemachine'
-aarch64-linux-gnu-ld: drivers/usb/phy/phy-fsl-usb.c:593:(.text+0x7a4): relocation truncated to fit: R_AARCH64_CALL26 against undefined symbol `otg_statemachine'
-aarch64-linux-gnu-ld: drivers/usb/phy/phy-fsl-usb.o: in function `fsl_otg_start_hnp':
-drivers/usb/phy/phy-fsl-usb.c:695: undefined reference to `otg_statemachine'
-aarch64-linux-gnu-ld: drivers/usb/phy/phy-fsl-usb.c:695:(.text+0x858): relocation truncated to fit: R_AARCH64_CALL26 against undefined symbol `otg_statemachine'
-aarch64-linux-gnu-ld: drivers/usb/phy/phy-fsl-usb.o: in function `a_wait_enum':
-drivers/usb/phy/phy-fsl-usb.c:274: undefined reference to `otg_statemachine'
-aarch64-linux-gnu-ld: drivers/usb/phy/phy-fsl-usb.c:274:(.text+0x16f0): relocation truncated to fit: R_AARCH64_CALL26 against undefined symbol `otg_statemachine'
-aarch64-linux-gnu-ld: drivers/usb/phy/phy-fsl-usb.o:drivers/usb/phy/phy-fsl-usb.c:619: more undefined references to `otg_statemachine' follow
-aarch64-linux-gnu-ld: drivers/usb/phy/phy-fsl-usb.o: in function `fsl_otg_set_peripheral':
-drivers/usb/phy/phy-fsl-usb.c:619:(.text+0x1fa0): relocation truncated to fit: R_AARCH64_CALL26 against undefined symbol `otg_statemachine'
-make[1]: *** [Makefile:1020: vmlinux] Error 1
-make[1]: Target 'Image' not remade because of errors.
-make: *** [Makefile:152: sub-make] Error 2
-make: Target 'Image' not remade because of errors.
-
-Rework so that FSL_USB2_OTG depends on that the USB_OTG_FSM is builtin.
-
-Signed-off-by: Anders Roxell <anders.roxell@linaro.org>
-Signed-off-by: Felipe Balbi <felipe.balbi@linux.intel.com>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
----
- drivers/usb/phy/Kconfig | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
-
-diff --git a/drivers/usb/phy/Kconfig b/drivers/usb/phy/Kconfig
-index 125cea1c3c8d..19ce615455c1 100644
---- a/drivers/usb/phy/Kconfig
-+++ b/drivers/usb/phy/Kconfig
-@@ -20,7 +20,7 @@ config AB8500_USB
- 
- config FSL_USB2_OTG
- 	bool "Freescale USB OTG Transceiver Driver"
--	depends on USB_EHCI_FSL && USB_FSL_USB2 && USB_OTG_FSM && PM
-+	depends on USB_EHCI_FSL && USB_FSL_USB2 && USB_OTG_FSM=y && PM
- 	depends on USB_GADGET || !USB_GADGET # if USB_GADGET=m, this can't be 'y'
- 	select USB_PHY
- 	help
--- 
-2.19.1
-
-
-
+> > ---
+> >   drivers/md/raid10.c | 2 ++
+> >   1 file changed, 2 insertions(+)
+> >
+> > diff --git a/drivers/md/raid10.c b/drivers/md/raid10.c
+> > index abb5d382f64d..f52b4d9bcd24 100644
+> > --- a/drivers/md/raid10.c
+> > +++ b/drivers/md/raid10.c
+> > @@ -3939,6 +3939,8 @@ static int raid10_run(struct mddev *mddev)
+> >               set_bit(MD_RECOVERY_RUNNING, &mddev->recovery);
+> >               mddev->sync_thread = md_register_thread(md_do_sync, mddev,
+> >                                                       "reshape");
+> > +             if (!mddev->sync_thread)
+> > +                     goto out_free_conf;
+> >       }
+> >
+> >       return 0;
+>
+> Could you make the change for raid5 as well? It also doesn't check the
+> failure
+> in raid5_run.
+>
+> Thanks,
+> Guoqing
