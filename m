@@ -2,54 +2,56 @@ Return-Path: <SRS0=J4ZE=RP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D4084C10F00
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 17:44:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BF35BC43381
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 17:44:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A47EE214AE
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 17:44:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8890C21734
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 17:44:50 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1552412680;
-	bh=R0HY1DxLZW5S8d5YDtBikJvfw3XUMWp1gPHpMHfmeXs=;
+	s=default; t=1552412690;
+	bh=VCH/G+KIXd6g5L0dzj1SnSoVgCGgYq1HLrAKiUfCrps=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=GTukfLZ8dOB0pPzSRVHS4VkgDUb459cE2qkCQAY0YtkALMRlaItNxuXsHYkPRR1LR
-	 HDPJFF4GjViMC5HZRNQXBkMaQY3V9IkEH6RnXXaTwn5f6KEmM26vFMqVU0gKSPO0Gr
-	 7IbzQxFizEi7xqeRtC+lMv3I+KbEcVjxhwBTSgeU=
+	b=VrUkWZEWydhg4s2Qwm7DXxduhkUEqAAEjUI5UwFZkiQOqEIf+Aoqga3c2OleDOgo/
+	 cDZuY1UHtwkR8sdRlMSAUJQzQnlffeCCZnHf8vyiDO/jNgklkql0rM0wZ4GFHTgw7p
+	 gWcm/rnesKGXw0TkxGtrRDk+45kj6m2QmGsfMbn0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729409AbfCLRoj (ORCPT
+        id S1727523AbfCLRPj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 12 Mar 2019 13:44:39 -0400
-Received: from mail.kernel.org ([198.145.29.99]:56506 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728821AbfCLRPj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Tue, 12 Mar 2019 13:15:39 -0400
+Received: from mail.kernel.org ([198.145.29.99]:54260 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728537AbfCLROy (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 12 Mar 2019 13:14:54 -0400
 Received: from localhost (unknown [104.133.8.98])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 4C17D217D4;
-        Tue, 12 Mar 2019 17:15:38 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id BB3A1206DF;
+        Tue, 12 Mar 2019 17:14:52 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1552410938;
-        bh=R0HY1DxLZW5S8d5YDtBikJvfw3XUMWp1gPHpMHfmeXs=;
+        s=default; t=1552410892;
+        bh=VCH/G+KIXd6g5L0dzj1SnSoVgCGgYq1HLrAKiUfCrps=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=2Ai9sBBQpN8x6HB+j/pYEcdUKc1IXbzcWiuxcZ5RvvGMycK3T+MsXTwP1bNkwkm/f
-         HS8AVXWGhU1ie0qRi3dkjvqLUCg7pzVjU6lPz8Zo+hSSXayZcMNAl5OkXOTAcIJbVu
-         NKkNgw9Q334mmysjFdZoN2mHb6zxs0+9B54zaky8=
+        b=M2QVypm8I2HSahIQA3qSdPStK1juAVnQ/dsMYF1mmZiEDDhRGrJXIr9fmiMyIFKpX
+         MnzBpYaywB7XGqmz3o4BvNhuu9cKQLClFv/Eb7cM+G1BNGILRnn1ELZ5zCsPbE3jQe
+         fWiGivM64fGKe63atJ+tB0j10gr3GD2bmsxFYb2M=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Michael Chan <michael.chan@broadcom.com>,
-        "David S. Miller" <davem@davemloft.net>
-Subject: [PATCH 4.14 014/135] bnxt_en: Drop oversize TX packets to prevent errors.
-Date:   Tue, 12 Mar 2019 10:07:41 -0700
-Message-Id: <20190312170342.431157891@linuxfoundation.org>
+        stable@vger.kernel.org, Heyi Guo <guoheyi@huawei.com>,
+        Heyi Guo <heyi.guo@linaro.org>,
+        Marc Zyngier <marc.zyngier@arm.com>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.19 082/149] irqchip/gic-v4: Fix occasional VLPI drop
+Date:   Tue, 12 Mar 2019 10:08:20 -0700
+Message-Id: <20190312170356.573944329@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
-In-Reply-To: <20190312170341.127810985@linuxfoundation.org>
-References: <20190312170341.127810985@linuxfoundation.org>
+In-Reply-To: <20190312170349.421581206@linuxfoundation.org>
+References: <20190312170349.421581206@linuxfoundation.org>
 User-Agent: quilt/0.65
 X-stable: review
 X-Patchwork-Hint: ignore
@@ -61,49 +63,142 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-4.14-stable review patch.  If anyone has any objections, please let me know.
+4.19-stable review patch.  If anyone has any objections, please let me know.
 
 ------------------
 
-From: Michael Chan <michael.chan@broadcom.com>
+[ Upstream commit 6479450f72c1391c03f08affe0d0110f41ae7ca0 ]
 
-[ Upstream commit 2b3c6885386020b1b9d92d45e8349637e27d1f66 ]
+1. In current implementation, every VLPI will temporarily be mapped to
+the first CPU in system (normally CPU0) and then moved to the real
+scheduled CPU later.
 
-There have been reports of oversize UDP packets being sent to the
-driver to be transmitted, causing error conditions.  The issue is
-likely caused by the dst of the SKB switching between 'lo' with
-64K MTU and the hardware device with a smaller MTU.  Patches are
-being proposed by Mahesh Bandewar <maheshb@google.com> to fix the
-issue.
+2. So there is a time window and a VLPI may be sent to CPU0 instead of
+the real scheduled vCPU, in a multi-CPU virtual machine.
 
-In the meantime, add a quick length check in the driver to prevent
-the error.  The driver uses the TX packet size as index to look up an
-array to setup the TX BD.  The array is large enough to support all MTU
-sizes supported by the driver.  The oversize TX packet causes the
-driver to index beyond the array and put garbage values into the
-TX BD.  Add a simple check to prevent this.
+3. However, CPU0 may have not been scheduled as a virtual CPU after
+system boots up, so the value of its GICR_VPROPBASER is unknown at
+that moment.
 
-Signed-off-by: Michael Chan <michael.chan@broadcom.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+4. If the INTID of VLPI is larger than 2^(GICR_VPROPBASER.IDbits+1),
+while IDbits is also in unknown state, GIC will behave as if the VLPI
+is out of range and simply drop it, which results in interrupt missing
+in Guest.
+
+As no code will clear GICR_VPROPBASER at runtime, we can safely
+initialize the IDbits field at boot time for each CPU to get rid of
+this issue.
+
+We also clear Valid bit of GICR_VPENDBASER in case any ancient
+programming gets left in and causes memory corrupting. A new function
+its_clear_vpend_valid() is added to reuse the code in
+its_vpe_deschedule().
+
+Fixes: e643d8034036 ("irqchip/gic-v3-its: Add VPE scheduling")
+Signed-off-by: Heyi Guo <guoheyi@huawei.com>
+Signed-off-by: Heyi Guo <heyi.guo@linaro.org>
+Signed-off-by: Marc Zyngier <marc.zyngier@arm.com>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/ethernet/broadcom/bnxt/bnxt.c |    6 ++++++
- 1 file changed, 6 insertions(+)
+ drivers/irqchip/irq-gic-v3-its.c | 66 ++++++++++++++++++++++++--------
+ 1 file changed, 49 insertions(+), 17 deletions(-)
 
---- a/drivers/net/ethernet/broadcom/bnxt/bnxt.c
-+++ b/drivers/net/ethernet/broadcom/bnxt/bnxt.c
-@@ -447,6 +447,12 @@ normal_tx:
- 	}
+diff --git a/drivers/irqchip/irq-gic-v3-its.c b/drivers/irqchip/irq-gic-v3-its.c
+index 4c2246fe5dbe..d9a880108315 100644
+--- a/drivers/irqchip/irq-gic-v3-its.c
++++ b/drivers/irqchip/irq-gic-v3-its.c
+@@ -1951,6 +1951,29 @@ static void its_free_pending_table(struct page *pt)
+ 		   get_order(max_t(u32, LPI_PENDBASE_SZ, SZ_64K)));
+ }
  
- 	length >>= 9;
-+	if (unlikely(length >= ARRAY_SIZE(bnxt_lhint_arr))) {
-+		dev_warn_ratelimited(&pdev->dev, "Dropped oversize %d bytes TX packet.\n",
-+				     skb->len);
-+		i = 0;
-+		goto tx_dma_error;
++static u64 its_clear_vpend_valid(void __iomem *vlpi_base)
++{
++	u32 count = 1000000;	/* 1s! */
++	bool clean;
++	u64 val;
++
++	val = gits_read_vpendbaser(vlpi_base + GICR_VPENDBASER);
++	val &= ~GICR_VPENDBASER_Valid;
++	gits_write_vpendbaser(val, vlpi_base + GICR_VPENDBASER);
++
++	do {
++		val = gits_read_vpendbaser(vlpi_base + GICR_VPENDBASER);
++		clean = !(val & GICR_VPENDBASER_Dirty);
++		if (!clean) {
++			count--;
++			cpu_relax();
++			udelay(1);
++		}
++	} while (!clean && count);
++
++	return val;
++}
++
+ static void its_cpu_init_lpis(void)
+ {
+ 	void __iomem *rbase = gic_data_rdist_rd_base();
+@@ -2024,6 +2047,30 @@ static void its_cpu_init_lpis(void)
+ 	val |= GICR_CTLR_ENABLE_LPIS;
+ 	writel_relaxed(val, rbase + GICR_CTLR);
+ 
++	if (gic_rdists->has_vlpis) {
++		void __iomem *vlpi_base = gic_data_rdist_vlpi_base();
++
++		/*
++		 * It's possible for CPU to receive VLPIs before it is
++		 * sheduled as a vPE, especially for the first CPU, and the
++		 * VLPI with INTID larger than 2^(IDbits+1) will be considered
++		 * as out of range and dropped by GIC.
++		 * So we initialize IDbits to known value to avoid VLPI drop.
++		 */
++		val = (LPI_NRBITS - 1) & GICR_VPROPBASER_IDBITS_MASK;
++		pr_debug("GICv4: CPU%d: Init IDbits to 0x%llx for GICR_VPROPBASER\n",
++			smp_processor_id(), val);
++		gits_write_vpropbaser(val, vlpi_base + GICR_VPROPBASER);
++
++		/*
++		 * Also clear Valid bit of GICR_VPENDBASER, in case some
++		 * ancient programming gets left in and has possibility of
++		 * corrupting memory.
++		 */
++		val = its_clear_vpend_valid(vlpi_base);
++		WARN_ON(val & GICR_VPENDBASER_Dirty);
 +	}
- 	flags |= bnxt_lhint_arr[length];
- 	txbd->tx_bd_len_flags_type = cpu_to_le32(flags);
++
+ 	/* Make sure the GIC has seen the above */
+ 	dsb(sy);
+ }
+@@ -2644,26 +2691,11 @@ static void its_vpe_schedule(struct its_vpe *vpe)
+ static void its_vpe_deschedule(struct its_vpe *vpe)
+ {
+ 	void __iomem *vlpi_base = gic_data_rdist_vlpi_base();
+-	u32 count = 1000000;	/* 1s! */
+-	bool clean;
+ 	u64 val;
  
+-	/* We're being scheduled out */
+-	val = gits_read_vpendbaser(vlpi_base + GICR_VPENDBASER);
+-	val &= ~GICR_VPENDBASER_Valid;
+-	gits_write_vpendbaser(val, vlpi_base + GICR_VPENDBASER);
+-
+-	do {
+-		val = gits_read_vpendbaser(vlpi_base + GICR_VPENDBASER);
+-		clean = !(val & GICR_VPENDBASER_Dirty);
+-		if (!clean) {
+-			count--;
+-			cpu_relax();
+-			udelay(1);
+-		}
+-	} while (!clean && count);
++	val = its_clear_vpend_valid(vlpi_base);
+ 
+-	if (unlikely(!clean && !count)) {
++	if (unlikely(val & GICR_VPENDBASER_Dirty)) {
+ 		pr_err_ratelimited("ITS virtual pending table not cleaning\n");
+ 		vpe->idai = false;
+ 		vpe->pending_last = true;
+-- 
+2.19.1
+
 
 
