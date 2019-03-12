@@ -2,55 +2,54 @@ Return-Path: <SRS0=J4ZE=RP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E57E8C43381
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 17:41:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 14556C43381
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 17:41:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B93E5206DF
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 17:41:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D2C28206DF
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 17:41:39 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1552412494;
-	bh=0miijYDLD9k3zGgFr0pZC8kOiFQek4Hslqp+0F2DcIs=;
+	s=default; t=1552412499;
+	bh=yFqUeBKk7uxIbvvuwkhJg4YfewCg7+vTo8if1fKA6Fs=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=JwxuKnSDj2tzqtseBcWjtNiWDd1gD5ZOozLmOfMEJKDtfmbRY4PyGcyubcYtwi4DW
-	 h498egZL7UTSMJmbSVyS7vbpp/y39eDogcZ9m9Bz/Sz8ieYwJJoU7gIr+z7vNWoxNM
-	 jl7Ye7lWJfVv710BUWRdLgjexOFk0tP34YyFiRJU=
+	b=vK/a9fCWqogVZ1XxlcbIYrqc2CtgO0GG/ksSkLyAF17Tvd270ZuGlLK8yk1uT68Hw
+	 NVqOZ1XPzS3n9c3Nu+r9nUlKLhCWp/FAMemB/lmkyNEG/VuqTDIslW+eb0DmeCjauE
+	 YRGk2EWL9XrAlv1RqjcsVf+dBZ4+k8d8aLti4MRE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728994AbfCLRQG (ORCPT
+        id S1729085AbfCLRli (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 12 Mar 2019 13:16:06 -0400
-Received: from mail.kernel.org ([198.145.29.99]:55044 "EHLO mail.kernel.org"
+        Tue, 12 Mar 2019 13:41:38 -0400
+Received: from mail.kernel.org ([198.145.29.99]:57638 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728623AbfCLRPI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 12 Mar 2019 13:15:08 -0400
+        id S1728983AbfCLRQF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 12 Mar 2019 13:16:05 -0400
 Received: from localhost (unknown [104.133.8.98])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 1C76E217D4;
-        Tue, 12 Mar 2019 17:15:07 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id A98C82183F;
+        Tue, 12 Mar 2019 17:16:04 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1552410907;
-        bh=0miijYDLD9k3zGgFr0pZC8kOiFQek4Hslqp+0F2DcIs=;
+        s=default; t=1552410964;
+        bh=yFqUeBKk7uxIbvvuwkhJg4YfewCg7+vTo8if1fKA6Fs=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=g75V/Nb42oKEaPGxcZ2Kw1HO6/+jRrpn9pFy17X4Kqbq6chR76KtGwgCK97P8BXjQ
-         N17N8zEgleEHjxAh2MejMrMivP4LEkOvOKYVTgEGmFjtr4de3Mx8xkKHSFKBFlUA3G
-         MyJj3gfx5nfbc/jb1aOL31Y1nzPeaRB3+NC/47n4=
+        b=Gdlqag32PbV8Sd3EuUzo4ccfbzyXG23oUUodKb4BnDUKGex8/CVvZXoA4+DtSEcBq
+         C+gJlIZl2jBIOJt/C0u+8tEukaTkpV4ARcc0PHuNSv1IkySkqwU6Bk4FOhN3FdY36f
+         mb0SEVJxFbksJFuRSPZ/GfIObrd7hrCzYcT8Dvpc=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Dan Williams <dan.j.williams@intel.com>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Vinod Koul <vkoul@kernel.org>, Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 101/149] dmaengine: dmatest: Abort test in case of mapping error
-Date:   Tue, 12 Mar 2019 10:08:39 -0700
-Message-Id: <20190312170358.020758649@linuxfoundation.org>
+        stable@vger.kernel.org, Liu Xiang <liu.xiang6@zte.com.cn>,
+        Paul Burton <paul.burton@mips.com>, linux-mips@vger.kernel.org
+Subject: [PATCH 4.14 037/135] MIPS: irq: Allocate accurate order pages for irq stack
+Date:   Tue, 12 Mar 2019 10:08:04 -0700
+Message-Id: <20190312170344.506796683@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
-In-Reply-To: <20190312170349.421581206@linuxfoundation.org>
-References: <20190312170349.421581206@linuxfoundation.org>
+In-Reply-To: <20190312170341.127810985@linuxfoundation.org>
+References: <20190312170341.127810985@linuxfoundation.org>
 User-Agent: quilt/0.65
 X-stable: review
 X-Patchwork-Hint: ignore
@@ -62,125 +61,48 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-4.19-stable review patch.  If anyone has any objections, please let me know.
+4.14-stable review patch.  If anyone has any objections, please let me know.
 
 ------------------
 
-[ Upstream commit 6454368a804c4955ccd116236037536f81e5b1f1 ]
+From: Liu Xiang <liu.xiang6@zte.com.cn>
 
-In case of mapping error the DMA addresses are invalid and continuing
-will screw system memory or potentially something else.
+commit 72faa7a773ca59336f3c889e878de81445c5a85c upstream.
 
-[  222.480310] dmatest: dma0chan7-copy0: summary 1 tests, 3 failures 6 iops 349 KB/s (0)
-...
-[  240.912725] check: Corrupted low memory at 00000000c7c75ac9 (2940 phys) = 5656000000000000
-[  240.921998] check: Corrupted low memory at 000000005715a1cd (2948 phys) = 279f2aca5595ab2b
-[  240.931280] check: Corrupted low memory at 000000002f4024c0 (2950 phys) = 5e5624f349e793cf
-...
+The irq_pages is the number of pages for irq stack, but not the
+order which is needed by __get_free_pages().
+We can use get_order() to calculate the accurate order.
 
-Abort any test if mapping failed.
+Signed-off-by: Liu Xiang <liu.xiang6@zte.com.cn>
+Signed-off-by: Paul Burton <paul.burton@mips.com>
+Fixes: fe8bd18ffea5 ("MIPS: Introduce irq_stack")
+Cc: linux-mips@vger.kernel.org
+Cc: stable@vger.kernel.org # v4.11+
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
-Fixes: 4076e755dbec ("dmatest: convert to dmaengine_unmap_data")
-Cc: Dan Williams <dan.j.williams@intel.com>
-Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Signed-off-by: Vinod Koul <vkoul@kernel.org>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/dma/dmatest.c | 28 ++++++++++++----------------
- 1 file changed, 12 insertions(+), 16 deletions(-)
+ arch/mips/kernel/irq.c |    4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/dma/dmatest.c b/drivers/dma/dmatest.c
-index aa1712beb0cc..7b7fba0c9253 100644
---- a/drivers/dma/dmatest.c
-+++ b/drivers/dma/dmatest.c
-@@ -642,11 +642,9 @@ static int dmatest_func(void *data)
- 			srcs[i] = um->addr[i] + src_off;
- 			ret = dma_mapping_error(dev->dev, um->addr[i]);
- 			if (ret) {
--				dmaengine_unmap_put(um);
- 				result("src mapping error", total_tests,
- 				       src_off, dst_off, len, ret);
--				failed_tests++;
--				continue;
-+				goto error_unmap_continue;
- 			}
- 			um->to_cnt++;
- 		}
-@@ -661,11 +659,9 @@ static int dmatest_func(void *data)
- 					       DMA_BIDIRECTIONAL);
- 			ret = dma_mapping_error(dev->dev, dsts[i]);
- 			if (ret) {
--				dmaengine_unmap_put(um);
- 				result("dst mapping error", total_tests,
- 				       src_off, dst_off, len, ret);
--				failed_tests++;
--				continue;
-+				goto error_unmap_continue;
- 			}
- 			um->bidi_cnt++;
- 		}
-@@ -693,12 +689,10 @@ static int dmatest_func(void *data)
- 		}
+--- a/arch/mips/kernel/irq.c
++++ b/arch/mips/kernel/irq.c
+@@ -52,6 +52,7 @@ asmlinkage void spurious_interrupt(void)
+ void __init init_IRQ(void)
+ {
+ 	int i;
++	unsigned int order = get_order(IRQ_STACK_SIZE);
  
- 		if (!tx) {
--			dmaengine_unmap_put(um);
- 			result("prep error", total_tests, src_off,
- 			       dst_off, len, ret);
- 			msleep(100);
--			failed_tests++;
--			continue;
-+			goto error_unmap_continue;
- 		}
+ 	for (i = 0; i < NR_IRQS; i++)
+ 		irq_set_noprobe(i);
+@@ -62,8 +63,7 @@ void __init init_IRQ(void)
+ 	arch_init_irq();
  
- 		done->done = false;
-@@ -707,12 +701,10 @@ static int dmatest_func(void *data)
- 		cookie = tx->tx_submit(tx);
+ 	for_each_possible_cpu(i) {
+-		int irq_pages = IRQ_STACK_SIZE / PAGE_SIZE;
+-		void *s = (void *)__get_free_pages(GFP_KERNEL, irq_pages);
++		void *s = (void *)__get_free_pages(GFP_KERNEL, order);
  
- 		if (dma_submit_error(cookie)) {
--			dmaengine_unmap_put(um);
- 			result("submit error", total_tests, src_off,
- 			       dst_off, len, ret);
- 			msleep(100);
--			failed_tests++;
--			continue;
-+			goto error_unmap_continue;
- 		}
- 		dma_async_issue_pending(chan);
- 
-@@ -725,16 +717,14 @@ static int dmatest_func(void *data)
- 			dmaengine_unmap_put(um);
- 			result("test timed out", total_tests, src_off, dst_off,
- 			       len, 0);
--			failed_tests++;
--			continue;
-+			goto error_unmap_continue;
- 		} else if (status != DMA_COMPLETE) {
- 			dmaengine_unmap_put(um);
- 			result(status == DMA_ERROR ?
- 			       "completion error status" :
- 			       "completion busy status", total_tests, src_off,
- 			       dst_off, len, ret);
--			failed_tests++;
--			continue;
-+			goto error_unmap_continue;
- 		}
- 
- 		dmaengine_unmap_put(um);
-@@ -779,6 +769,12 @@ static int dmatest_func(void *data)
- 			verbose_result("test passed", total_tests, src_off,
- 				       dst_off, len, 0);
- 		}
-+
-+		continue;
-+
-+error_unmap_continue:
-+		dmaengine_unmap_put(um);
-+		failed_tests++;
- 	}
- 	ktime = ktime_sub(ktime_get(), ktime);
- 	ktime = ktime_sub(ktime, comparetime);
--- 
-2.19.1
-
+ 		irq_stack[i] = s;
+ 		pr_debug("CPU%d IRQ stack at 0x%p - 0x%p\n", i,
 
 
