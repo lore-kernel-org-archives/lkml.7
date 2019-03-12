@@ -2,158 +2,304 @@ Return-Path: <SRS0=J4ZE=RP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_NEOMUTT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 30FC8C43381
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 12:27:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9011CC43381
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 12:28:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EEED820657
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 12:27:17 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="QbxQz77T"
+	by mail.kernel.org (Postfix) with ESMTP id 540A02147A
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 12:28:15 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1552393695;
+	bh=RfMRDnH1eEt84Aj4yukahn+u48BjxguJ/6f9pQE5oIk=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=mTSjbnvBEmH1a6C3W1ROJffKehI/90zKQ+ePFAQzyu4hE4CyZ2kb3gNVDUAyzdJq3
+	 xlmotfLt687fcnIWZZnw1vYbK/4DCF1q9PpiOANNJVX+An77OovyWxwbgmYS96rSR4
+	 bfnIclIDi0fGeGCAnIjuiepgJa59ibEIoY5tBV5I=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726703AbfCLM1Q (ORCPT
+        id S1726193AbfCLM2O (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 12 Mar 2019 08:27:16 -0400
-Received: from mail-wr1-f65.google.com ([209.85.221.65]:45681 "EHLO
-        mail-wr1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726284AbfCLM1Q (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 12 Mar 2019 08:27:16 -0400
-Received: by mail-wr1-f65.google.com with SMTP id h99so1471295wrh.12
-        for <linux-kernel@vger.kernel.org>; Tue, 12 Mar 2019 05:27:14 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=vvg0MSJblpzxKFZiJBKUrB9yVh4oMAzNMDxux+emkOM=;
-        b=QbxQz77TINAiYtAP0Foi5rUjGmFlGSJphnWE1JAYaY47Xog4rzZZCLCkiKn2OD9jRX
-         iPSqw7LboWkbkwnuG8O7lot8Vmf5F0hAD7MePI02OFIPj7G/SRuEPQH9fjA1DQXWW0U3
-         tAGI4Bd4MtNpY2OjVr4KMGmAxMuXMWD7uS2kmNEjrP3yLwNWzlcvJz3WHhrnb3f4HwNR
-         fXpy9uR0h384VQeMcboyd8JS9ICxC1pTmwfezQO8aLineIfnZiWys/W88y2XD8+5d/nx
-         ghLv449og03QIVLC6BY/lAx7riOzmxCAJaQzlarI1L8a2Zztyy8nhZd42BiGgHipCaR4
-         8gtg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=vvg0MSJblpzxKFZiJBKUrB9yVh4oMAzNMDxux+emkOM=;
-        b=oYlBtW6RtQt1nSc5Jt4XxEad0Rj1L9DgA0eS56aizL2D8dck2OWb+gaKS2OtEg1Sn1
-         ycqWWUTHcR2ak7lYUoSKIhofMTfYYWcMd2tOoZSbVTYSZnNMKD/8zogoaZG3aEE39z5h
-         2d8WfDesx4wmM9r9MrgfpkSTahQruQqU/O45m26jDcR/z8NGc5UGbuqQgaROjpX5Nkwo
-         GBMTCDjqN4V0soSfVS+GlNfrid7ccGrAez8+toVWS4+mizhmtyvqSDx31Ft4QSYMCayc
-         6u4Trb6nhvDYBGg5YqShfo2yswr+8Tt68S9rcecjpyLWEC6NSZ7n2Lc+4DGmK2Jz6/6n
-         8A6g==
-X-Gm-Message-State: APjAAAWDmXYYB5K6UkI57Z+iV5g5dbLFF83jFLJoPh/XD/HfB8VaJRRk
-        WduqfwdANWGwBEvGvcYsCBwaMw==
-X-Google-Smtp-Source: APXvYqxQo/sWkzNQIDoHcb0MbfzNbzDxEr878iRRLRXE9CXGx9+JGC+MF3bqObR+cUUj7LGJrlaSmg==
-X-Received: by 2002:adf:f78e:: with SMTP id q14mr26263871wrp.227.1552393633704;
-        Tue, 12 Mar 2019 05:27:13 -0700 (PDT)
-Received: from holly.lan (cpc141214-aztw34-2-0-cust773.18-1.cable.virginm.net. [86.9.19.6])
-        by smtp.gmail.com with ESMTPSA id o63sm2473251wmo.46.2019.03.12.05.27.12
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Tue, 12 Mar 2019 05:27:12 -0700 (PDT)
-Date:   Tue, 12 Mar 2019 12:27:11 +0000
-From:   Daniel Thompson <daniel.thompson@linaro.org>
-To:     Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-Cc:     linux@armlinux.org.uk, xuwei5@hisilicon.com,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        linus.walleij@linaro.org, peter.griffin@linaro.org,
-        guodong.xu@linaro.org, haojian.zhuang@linaro.org
-Subject: Re: [PATCH 1/2] amba: Take device out of reset before reading pid
- and cid values
-Message-ID: <20190312122711.b2ibipico2dgavl7@holly.lan>
-References: <20190309015635.5401-1-manivannan.sadhasivam@linaro.org>
- <20190309015635.5401-2-manivannan.sadhasivam@linaro.org>
+        Tue, 12 Mar 2019 08:28:14 -0400
+Received: from mail.kernel.org ([198.145.29.99]:54724 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725874AbfCLM2N (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 12 Mar 2019 08:28:13 -0400
+Received: from mail-ot1-f45.google.com (mail-ot1-f45.google.com [209.85.210.45])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 4D1E22147A
+        for <linux-kernel@vger.kernel.org>; Tue, 12 Mar 2019 12:28:12 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1552393692;
+        bh=RfMRDnH1eEt84Aj4yukahn+u48BjxguJ/6f9pQE5oIk=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=0f5lc6xqHH9qSgTCD3dq2oeTyxqvKCZxhoOE4/THZ5Vtu1KKLQlWd+ST/zAQVdBCV
+         QQpq54vbSzlY3P0sF0gO8pd30yU0cBK579zyBcuRG3vNINuFw7hgKKMZ2RfFy4C/rQ
+         HKkojTXUWQZPs0TyTusdrxBRhD3NeHodYFOSjvOo=
+Received: by mail-ot1-f45.google.com with SMTP id b3so2281811otp.4
+        for <linux-kernel@vger.kernel.org>; Tue, 12 Mar 2019 05:28:12 -0700 (PDT)
+X-Gm-Message-State: APjAAAVgWWg20m1Y7bRa7ZubJJmG1IbGRiHDmBjUreR8FMu4RpGo0VMH
+        Z5wGF2BOSbbfAXs7kiw6vQN8MoNRA004brbFkspjaA==
+X-Google-Smtp-Source: APXvYqz0vB0J2+h3DL6He37eQCNIvCvUy9T/ByTelc9RVPeWJshavRtenpxLsfspEWltM8H6JuWe2cTn4mOc5Ue2w4Y=
+X-Received: by 2002:a9d:7390:: with SMTP id j16mr23496214otk.231.1552393691537;
+ Tue, 12 Mar 2019 05:28:11 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190309015635.5401-2-manivannan.sadhasivam@linaro.org>
-User-Agent: NeoMutt/20180716
+References: <20190312091520.8863-1-jiaxun.yang@flygoat.com> <20190312091520.8863-5-jiaxun.yang@flygoat.com>
+In-Reply-To: <20190312091520.8863-5-jiaxun.yang@flygoat.com>
+From:   Rob Herring <robh@kernel.org>
+Date:   Tue, 12 Mar 2019 07:28:00 -0500
+X-Gmail-Original-Message-ID: <CABGGiszYh0uE_ybrfhK2byz4XZVAm9wvL5tQg0R85nnLt4c1iw@mail.gmail.com>
+Message-ID: <CABGGiszYh0uE_ybrfhK2byz4XZVAm9wvL5tQg0R85nnLt4c1iw@mail.gmail.com>
+Subject: Re: [PATCH 4/4] MIPS: Loongson32: dts: add ls1b & ls1c
+To:     Jiaxun Yang <jiaxun.yang@flygoat.com>
+Cc:     linux-mips@vger.kernel.org, paul.burton@mips.com,
+        keguang.zhang@gmail.com,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat, Mar 09, 2019 at 07:26:34AM +0530, Manivannan Sadhasivam wrote:
-> For the AMBA Primecell devices having the reset lines wired, it is
-> necessary to take them out of reset before reading the pid and cid values.
-> Earlier we were dependent on the bootloader to do this but a more cleaner
-> approach would be to do it in the kernel itself. Hence, this commit
-> deasserts the reset line just before reading the pid and cid values.
-> 
-> Suggested-by: Daniel Thompson <daniel.thompson@linaro.org>
-> Signed-off-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+On Tue, Mar 12, 2019 at 4:16 AM Jiaxun Yang <jiaxun.yang@flygoat.com> wrote=
+:
+>
+> Add devicetree skeleton for ls1b and ls1c
+>
+> Signed-off-by: Jiaxun Yang <jiaxun.yang@flygoat.com>
 > ---
->  drivers/amba/bus.c | 9 +++++++++
->  1 file changed, 9 insertions(+)
-> 
-> diff --git a/drivers/amba/bus.c b/drivers/amba/bus.c
-> index 41b706403ef7..da8f1aac5315 100644
-> --- a/drivers/amba/bus.c
-> +++ b/drivers/amba/bus.c
-> @@ -21,6 +21,7 @@
->  #include <linux/limits.h>
->  #include <linux/clk/clk-conf.h>
->  #include <linux/platform_device.h>
-> +#include <linux/reset.h>
->  
->  #include <asm/irq.h>
->  
-> @@ -352,6 +353,7 @@ static void amba_device_release(struct device *dev)
->  
->  static int amba_device_try_add(struct amba_device *dev, struct resource *parent)
->  {
-> +	struct reset_control *rst;
->  	u32 size;
->  	void __iomem *tmp;
->  	int i, ret;
-> @@ -388,6 +390,13 @@ static int amba_device_try_add(struct amba_device *dev, struct resource *parent)
->  	if (ret == 0) {
->  		u32 pid, cid;
->  
-> +		/* De-assert the reset line to take the device out of reset */
-> +		rst = reset_control_get_optional_exclusive(&dev->dev, NULL);
-> +		if (IS_ERR(rst))
-> +			return PTR_ERR(rst);
+>  arch/mips/boot/dts/loongson/Makefile  |   6 ++
+>  arch/mips/boot/dts/loongson/ls1b.dts  |  21 +++++
+>  arch/mips/boot/dts/loongson/ls1c.dts  |  25 ++++++
+>  arch/mips/boot/dts/loongson/ls1x.dtsi | 117 ++++++++++++++++++++++++++
+>  4 files changed, 169 insertions(+)
+>  create mode 100644 arch/mips/boot/dts/loongson/Makefile
+>  create mode 100644 arch/mips/boot/dts/loongson/ls1b.dts
+>  create mode 100644 arch/mips/boot/dts/loongson/ls1c.dts
+>  create mode 100644 arch/mips/boot/dts/loongson/ls1x.dtsi
+>
+> diff --git a/arch/mips/boot/dts/loongson/Makefile b/arch/mips/boot/dts/lo=
+ongson/Makefile
+> new file mode 100644
+> index 000000000000..447801568f33
+> --- /dev/null
+> +++ b/arch/mips/boot/dts/loongson/Makefile
+> @@ -0,0 +1,6 @@
+> +# SPDX-License-Identifier: GPL-2.0
+> +dtb-$(CONFIG_LOONGSON1_LS1B)   +=3D ls1b.dtb
+> +
+> +dtb-$(CONFIG_LOONGSON1_LS1B)   +=3D ls1c.dtb
+> +
+> +obj-$(CONFIG_BUILTIN_DTB)      +=3D $(addsuffix .o, $(dtb-y))
+> diff --git a/arch/mips/boot/dts/loongson/ls1b.dts b/arch/mips/boot/dts/lo=
+ongson/ls1b.dts
+> new file mode 100644
+> index 000000000000..6d40dc502acf
+> --- /dev/null
+> +++ b/arch/mips/boot/dts/loongson/ls1b.dts
+> @@ -0,0 +1,21 @@
+> +// SPDX-License-Identifier: GPL-2.0
+> +/*
+> + * Copyright (c) 2019 Jiaxun Yang <jiaxun.yang@flygoat.com>
+> + */
+> +
+> +/dts-v1/;
+> +#include <ls1x.dtsi>
+> +
+> +/ {
+> +       model =3D "Loongson LS1B";
+> +       compatible =3D "loongson,ls1b";
 
-It is really correct to propagate an error if we cannot get exclusive
-ownership of the reset line.
-
-With drivers for vendor specific cells it is ok to "just know" that the
-reset line is never shared but we cannot know this for generic cells and
-we certainly can't know this for the bus.
-
-I think it *might* be OK to propagate an error if you used
-reset_control_get_optional_shared() instead because if that reports an
-error than arguably we have either a mistake in the DT or a bug in the
-driver we are sharing a reset with.
-
+Documented?
 
 > +
-> +		reset_control_deassert(rst);
-
-Perhaps we might also need to explain why we can ignore -ENOTSUPP
-here. Perhaps something like the following based on the comment
-found in in reset_control_deassert():
-
-		/*
-		 * -ENOTSUPP means occurs when the reset controller
-		 * does not implement .deassert(), in which case the
-		 * the reset lines should be self-deasserting (and
-		 * deasserted by default).
-		 */
-		WARN_ON(deassert did not return 0 or -ENOTSUPP);
+> +};
 > +
->  		/*
->  		 * Read pid and cid based on size of resource
->  		 * they are located at end of region
+> +&ehci0 {
+> +       status =3D "okay";
+> +};
+> +
+> +&ohci0 {
+> +       status =3D "okay";
+> +};
+> \ No newline at end of file
 
-This looks like it will leak the control reference... shouldn't there
-be a put after you have read the pid/cid?
+Fix this.
 
+> diff --git a/arch/mips/boot/dts/loongson/ls1c.dts b/arch/mips/boot/dts/lo=
+ongson/ls1c.dts
+> new file mode 100644
+> index 000000000000..778d205a586e
+> --- /dev/null
+> +++ b/arch/mips/boot/dts/loongson/ls1c.dts
+> @@ -0,0 +1,25 @@
+> +// SPDX-License-Identifier: GPL-2.0
+> +/*
+> + * Copyright (c) 2019 Jiaxun Yang <jiaxun.yang@flygoat.com>
+> + */
+> +
+> +/dts-v1/;
+> +#include <ls1x.dtsi>
+> +
+> +/ {
+> +       model =3D "Loongson LS1C300A";
+> +       compatible =3D "loongson,ls1c300a";
+> +
+> +};
+> +
+> +&platintc4 {
+> +       status =3D "okay";
+> +};
+> +
+> +&ehci0 {
+> +       status =3D "okay";
+> +};
+> +
+> +&ohci0 {
+> +       status =3D "okay";
+> +};
+> \ No newline at end of file
+> diff --git a/arch/mips/boot/dts/loongson/ls1x.dtsi b/arch/mips/boot/dts/l=
+oongson/ls1x.dtsi
+> new file mode 100644
+> index 000000000000..f808e4328fd8
+> --- /dev/null
+> +++ b/arch/mips/boot/dts/loongson/ls1x.dtsi
+> @@ -0,0 +1,117 @@
+> +// SPDX-License-Identifier: GPL-2.0
+> +/*
+> + * Copyright (c) 2019 Jiaxun Yang <jiaxun.yang@flygoat.com>
+> + */
+> +
+> +/dts-v1/;
+> +#include <dt-bindings/interrupt-controller/irq.h>
+> +
+> +
+> +/ {
+> +    #address-cells =3D <1>;
+> +       #size-cells =3D <1>;
+> +
+> +       cpus {
+> +               #address-cells =3D <1>;
+> +               #size-cells =3D <0>;
+> +
+> +               cpu@0 {
+> +                       device_type =3D "cpu";
+> +                       reg =3D <0>;
 
-Daniel.
+Needs a (documented) compatible string.
+
+> +               };
+> +       };
+> +
+> +       cpu_intc: interrupt-controller {
+> +               #address-cells =3D <0>;
+> +               compatible =3D "mti,cpu-interrupt-controller";
+> +
+> +               interrupt-controller;
+> +               #interrupt-cells =3D <1>;
+> +       };
+> +
+> +       soc {
+> +               #address-cells =3D <1>;
+> +               #size-cells =3D <1>;
+> +
+> +               compatible =3D "simple-bus";
+> +               ranges;
+> +
+> +
+> +               platintc0: interrupt-controller@1fd01040 {
+> +                       compatible =3D "loongson,ls1x-intc";
+> +                       reg =3D <0x1fd01040 0x18>;
+> +
+> +                       interrupt-controller;
+> +                       #interrupt-cells =3D <2>;
+> +
+> +                       interrupt-parent =3D <&cpu_intc>;
+> +                       interrupts =3D <2>;
+> +               };
+> +
+> +               platintc1: interrupt-controller@1fd01058 {
+> +                       compatible =3D "loongson,ls1x-intc";
+> +                       reg =3D <0x1fd01058 0x18>;
+> +
+> +                       interrupt-controller;
+> +                       #interrupt-cells =3D <2>;
+> +
+> +                       interrupt-parent =3D <&cpu_intc>;
+> +                       interrupts =3D <3>;
+> +               };
+> +
+> +               platintc2: interrupt-controller@1fd01070 {
+> +                       compatible =3D "loongson,ls1x-intc";
+> +                       reg =3D <0x1fd01070 0x18>;
+> +
+> +                       interrupt-controller;
+> +                       #interrupt-cells =3D <2>;
+> +
+> +                       interrupt-parent =3D <&cpu_intc>;
+> +                       interrupts =3D <4>;
+> +               };
+> +
+> +               platintc3: interrupt-controller@1fd01088 {
+> +                       compatible =3D "loongson,ls1x-intc";
+> +                       reg =3D <0x1fd01088 0x18>;
+> +
+> +                       interrupt-controller;
+> +                       #interrupt-cells =3D <2>;
+> +
+> +                       interrupt-parent =3D <&cpu_intc>;
+> +                       interrupts =3D <5>;
+> +               };
+> +
+> +               platintc4: interrupt-controller@1fd010a0 {
+> +                       compatible =3D "loongson,ls1x-intc";
+> +                       reg =3D <0x1fd010a0 0x18>;
+> +
+> +                       interrupt-controller;
+> +                       #interrupt-cells =3D <2>;
+> +
+> +                       interrupt-parent =3D <&cpu_intc>;
+> +                       interrupts =3D <6>;
+> +
+> +           status =3D "disabled";
+
+Some indentation problem.
+
+> +               };
+> +
+> +               ehci0: usb@1fe20000 {
+> +                       compatible =3D "generic-ehci";
+
+It would be better to add a chip specific compatible here. Most all
+USB controllers have some quirks.
+
+> +                       reg =3D <0x1fe20000 0x100>;
+> +                       interrupt-parent =3D <&platintc1>;
+> +                       interrupts =3D <0 IRQ_TYPE_LEVEL_HIGH>;
+> +
+> +           status =3D "disabled";
+> +                       };
+> +
+> +               ohci0: usb@1fe28000 {
+> +                       compatible =3D "generic-ohci";
+> +                       reg =3D <0x1fe28000 0x100>;
+> +                       interrupt-parent =3D <&platintc1>;
+> +                       interrupts =3D <1 IRQ_TYPE_LEVEL_HIGH>;
+> +
+> +           status =3D "disabled";
+> +                       };
+
+Don't you need a serial port or something for a console?
+
+> +
+> +       };
+> +};
+> +\ =E6=96=87=E4=BB=B6=E5=B0=BE=E6=B2=A1=E6=9C=89=E6=8D=A2=E8=A1=8C=E7=AC=
+=A6
+> --
+> 2.20.1
+>
