@@ -2,113 +2,104 @@ Return-Path: <SRS0=J4ZE=RP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A1364C43381
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 17:52:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6C333C43381
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 17:52:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 69A06205C9
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 17:52:35 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1552413155;
-	bh=UY4sQtI/RwRrKg7VD/Pbm06wmDUuHTgERBt6Ts9nwrI=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=CLZCCUIZsHBzDh6PggHSZ0PqYsUhRWGqEh+t0QBhNlZB4Pq5tDGCjyDUZWPpzXGqW
-	 UwHXqE+BwaeC4wlHAtctdjW6UuJAN7QiDQxA8cuF9IWWucZa5YkWwDgVFM6ZpwEdiB
-	 aTl27DrAloLcXrfb7sufYbvKSAEZM+uc55H6gilc=
+	by mail.kernel.org (Postfix) with ESMTP id 3D8BC205C9
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 17:52:42 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="Tj32NjeP"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728374AbfCLRwd (ORCPT
+        id S1728516AbfCLRwl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 12 Mar 2019 13:52:33 -0400
-Received: from mail.kernel.org ([198.145.29.99]:53076 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728354AbfCLRO0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 12 Mar 2019 13:52:41 -0400
+Received: from bombadil.infradead.org ([198.137.202.133]:52404 "EHLO
+        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726692AbfCLRO0 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
         Tue, 12 Mar 2019 13:14:26 -0400
-Received: from localhost (unknown [104.133.8.98])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 2551F21850;
-        Tue, 12 Mar 2019 17:14:26 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1552410866;
-        bh=UY4sQtI/RwRrKg7VD/Pbm06wmDUuHTgERBt6Ts9nwrI=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=RAKMS2gOpsM/UbaFP4G+MHfbiy8wsbAJbN6ROlPG6rA3uziNx2/vcpuhep8zLHSnH
-         z+SCaO0TMnGy6xGFsZI6TomqysweTwoBmqGR59ECpsool5jy/mav63T0Lp7O8Qnlsp
-         dkgwqwPQPJEbh/JckLMY2p0/rol9ysnrc1SD1CGQ=
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     linux-kernel@vger.kernel.org
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Martin Blumenstingl <martin.blumenstingl@googlemail.com>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Anand Moon <linux.amoon@gmail.com>,
-        Kevin Hilman <khilman@baylibre.com>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 066/149] ARM: dts: meson8b: odroidc1: mark the SD card detection GPIO active-low
-Date:   Tue, 12 Mar 2019 10:08:04 -0700
-Message-Id: <20190312170355.238969846@linuxfoundation.org>
-X-Mailer: git-send-email 2.21.0
-In-Reply-To: <20190312170349.421581206@linuxfoundation.org>
-References: <20190312170349.421581206@linuxfoundation.org>
-User-Agent: quilt/0.65
-X-stable: review
-X-Patchwork-Hint: ignore
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
+        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=230SxmBFj0CarYJqxw8BlXT5FM8fCROKpq+2bHkGdlo=; b=Tj32NjePxjUsmkEjqkLxiHNw1
+        Dq2MT3TJlBRfi3Y5NnjBDk0s0EweaLHROW2FkBIoagTnzjZwu+62Z2k4cmXZ6xvKO8tCqVCbwC89M
+        O2TZMeFtNgncUjsUqA1sOGxk+SAcb02OrfpORBguPKFKQJ/hAusPAJWA6fW2vYc5q7UcQDbcEmG+S
+        9JXb7vu5bfU6tS7C1pdEq2NV91qD7Kfb4ts7F82G3nJzFeoLZZnr4pJuMf9288awplKXHtCxo5dzu
+        68dviPy441t94N5Oh+B+hxojBIzgjeJr2PJguSlyYWR8Zs61GC361dQWAHggIPssoaARwY7ZMqZpc
+        aSxcGtrsQ==;
+Received: from willy by bombadil.infradead.org with local (Exim 4.90_1 #2 (Red Hat Linux))
+        id 1h3kyr-0002MN-ID; Tue, 12 Mar 2019 17:14:21 +0000
+Date:   Tue, 12 Mar 2019 10:14:21 -0700
+From:   Matthew Wilcox <willy@infradead.org>
+To:     Julien Grall <julien.grall@arm.com>
+Cc:     osstest service owner <osstest-admin@xenproject.org>,
+        xen-devel@lists.xenproject.org, Juergen Gross <jgross@suse.com>,
+        Konrad Rzeszutek Wilk <konrad.wilk@oracle.com>,
+        Boris Ostrovsky <boris.ostrovsky@oracle.com>,
+        Stefano Stabellini <sstabellini@kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Kees Cook <keescook@chromium.org>, david@redhat.com,
+        k.khlebnikov@samsung.com, Julien Freche <jfreche@vmware.com>,
+        Nadav Amit <namit@vmware.com>,
+        "VMware, Inc." <pv-drivers@vmware.com>, linux-mm@kvack.org
+Subject: Re: xen: Can't insert balloon page into VM userspace (WAS Re:
+ [Xen-devel] [linux-linus bisection] complete test-arm64-arm64-xl-xsm)
+Message-ID: <20190312171421.GJ19508@bombadil.infradead.org>
+References: <E1h3Uiq-0002L6-Ij@osstest.test-lab.xenproject.org>
+ <80211e70-5f54-9421-8e8f-2a4fc758ce39@arm.com>
+ <46118631-61d4-adb6-6ffc-4e7c62ea3da9@arm.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <46118631-61d4-adb6-6ffc-4e7c62ea3da9@arm.com>
+User-Agent: Mutt/1.9.2 (2017-12-15)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-4.19-stable review patch.  If anyone has any objections, please let me know.
+On Tue, Mar 12, 2019 at 05:05:39PM +0000, Julien Grall wrote:
+> On 3/12/19 3:59 PM, Julien Grall wrote:
+> > It looks like all the arm test for linus [1] and next [2] tree
+> > are now failing. x86 seems to be mostly ok.
+> > 
+> > The bisector fingered the following commit:
+> > 
+> > commit 0ee930e6cafa048c1925893d0ca89918b2814f2c
+> > Author: Matthew Wilcox <willy@infradead.org>
+> > Date:   Tue Mar 5 15:46:06 2019 -0800
+> > 
+> >      mm/memory.c: prevent mapping typed pages to userspace
+> >      Pages which use page_type must never be mapped to userspace as it would
+> >      destroy their page type.  Add an explicit check for this instead of
+> >      assuming that kernel drivers always get this right.
 
-------------------
+Oh good, it found a real problem.
 
-[ Upstream commit 3fb348e030319f20ebbde082a449d4bf8a96f2fd ]
+> It turns out the problem is because the balloon driver will call
+> __SetPageOffline() on allocated page. Therefore the page has a type and
+> vm_insert_pages will deny the insertion.
+> 
+> My knowledge is quite limited in this area. So I am not sure how we can
+> solve the problem.
+> 
+> I would appreciate if someone could provide input of to fix the mapping.
 
-After commit 89a5e15bcba87d ("gpio/mmc/of: Respect polarity in the device
-tree") SD cards are not detected anymore.
+I don't know the balloon driver, so I don't know why it was doing this,
+but what it was doing was Wrong and has been since 2014 with:
 
-The CD GPIO is "active low" on Odroid-C1. The MMC dt-bindings specify:
-"[...] using the "cd-inverted" property means, that the CD line is active
-high, i.e. it is high, when a card is inserted".
+commit d6d86c0a7f8ddc5b38cf089222cb1d9540762dc2
+Author: Konstantin Khlebnikov <k.khlebnikov@samsung.com>
+Date:   Thu Oct 9 15:29:27 2014 -0700
 
-Fix the description of the SD card by marking it as GPIO_ACTIVE_LOW and
-drop the "cd-inverted" property. This makes the definition consistent
-with the existing dt-bindings and fixes the check whether an SD card is
-inserted.
+    mm/balloon_compaction: redesign ballooned pages management
 
-Fixes: e03efbce6bebf5 ("ARM: dts: meson8b-odroidc1: add microSD support")
-Signed-off-by: Martin Blumenstingl <martin.blumenstingl@googlemail.com>
-Reviewed-by: Linus Walleij <linus.walleij@linaro.org>
-Tested-by: Anand Moon <linux.amoon@gmail.com>
-Signed-off-by: Kevin Hilman <khilman@baylibre.com>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
----
- arch/arm/boot/dts/meson8b-odroidc1.dts | 3 +--
- 1 file changed, 1 insertion(+), 2 deletions(-)
-
-diff --git a/arch/arm/boot/dts/meson8b-odroidc1.dts b/arch/arm/boot/dts/meson8b-odroidc1.dts
-index 9e48936e2d8d..8fdeeffecbdb 100644
---- a/arch/arm/boot/dts/meson8b-odroidc1.dts
-+++ b/arch/arm/boot/dts/meson8b-odroidc1.dts
-@@ -171,8 +171,7 @@
- 		cap-sd-highspeed;
- 		disable-wp;
- 
--		cd-gpios = <&gpio CARD_6 GPIO_ACTIVE_HIGH>;
--		cd-inverted;
-+		cd-gpios = <&gpio CARD_6 GPIO_ACTIVE_LOW>;
- 
- 		vmmc-supply = <&tflash_vdd>;
- 		vqmmc-supply = <&tf_io>;
--- 
-2.19.1
-
-
-
+If ballooned pages are supposed to be mapped into userspace, you can't mark
+them as ballooned pages using the mapcount field.
