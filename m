@@ -4,52 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DB035C43381
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 17:12:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 837D1C43381
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 17:12:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A95AB2184D
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 17:12:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5427C2186A
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 17:12:28 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1552410741;
-	bh=KHrh7oLVWgWzzIPspY+2+7Cu5s3//46tCOi4tWc20bI=;
+	s=default; t=1552410748;
+	bh=BH3YbTtp/aSAl6f6hEFWVfSwx+3Xwt0ijTDqGTZqI04=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Qr+wHNTFoSCF5tUyRU1a0/M20GL1XxDF9ABKaXS+uaLK86xPQMhbZpVF9CLWD5e3s
-	 g+6I1x3YPWUdH1SCfQGX9KR/1gF6aS37sXx9uwfLQMNYMeiOaJeYMhIJjxZC+QrWHs
-	 Q/psumzUXGIviz/XNJO2CCMomDSogv3fOHS5XD+Q=
+	b=ItTH7g/IrykjWu79/LWNMFsWS8djKy0CkLNdsiXJzauFqLb2vQViF1JtKB0pLY8rY
+	 PU1y4OCj4zxgHdnGvjFUDNoHTCsq1Hkp18uFB7KybUOXEWOezLmQdxg4LoIGmuF/de
+	 5GRDpNFD/JfnsY3bqUonWM39Yreuc6kruSHLCnpY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727404AbfCLRMU (ORCPT
+        id S1727479AbfCLRM0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 12 Mar 2019 13:12:20 -0400
-Received: from mail.kernel.org ([198.145.29.99]:46500 "EHLO mail.kernel.org"
+        Tue, 12 Mar 2019 13:12:26 -0400
+Received: from mail.kernel.org ([198.145.29.99]:46722 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727271AbfCLRMF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 12 Mar 2019 13:12:05 -0400
+        id S1727304AbfCLRMI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 12 Mar 2019 13:12:08 -0400
 Received: from localhost (unknown [104.133.8.98])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id CAC7E214AF;
-        Tue, 12 Mar 2019 17:12:03 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 30621214AF;
+        Tue, 12 Mar 2019 17:12:08 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1552410723;
-        bh=KHrh7oLVWgWzzIPspY+2+7Cu5s3//46tCOi4tWc20bI=;
+        s=default; t=1552410728;
+        bh=BH3YbTtp/aSAl6f6hEFWVfSwx+3Xwt0ijTDqGTZqI04=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=UrEl+JVwvLHp9NAu86Nq107/LZY3dIuTEceLoPgmVFq4he7xKHd8PHZY4Xs9h3Ac8
-         D57xR8CrAtkgHsB34/cWT1EM3yAArRCPUcvzCCP1Cbd7MPcd6iFbW1zzHVpXmbra18
-         mKPKJdX1knhV4/ESB3JSZcqtH5i3hzD1Fl0SvKWQ=
+        b=YSIXOOQx3Ra2QRG3xsDwKPP82Qm5pSMnMT9ZziZ1RhJmwZMdKRA235sAoZJX4QWd/
+         gCSYRokz7aqPBJxUG2NWTDFROpfBXY8HeGGbsOf1KIq8XqYM9gaCA7KhIDhnJTtCS2
+         SOZ/hv95RA3qIeVULJGzZDFWTyESTaRPfHqk29rU=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Feras Daoud <ferasda@mellanox.com>,
-        Erez Shitrit <erezsh@mellanox.com>,
-        Leon Romanovsky <leonro@mellanox.com>,
-        Jason Gunthorpe <jgg@mellanox.com>,
+        stable@vger.kernel.org, Douglas Gilbert <dgilbert@interlog.com>,
+        Bart Van Assche <bvanassche@acm.org>,
+        "Martin K. Petersen" <martin.petersen@oracle.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.20 023/171] IB/ipoib: Fix for use-after-free in ipoib_cm_tx_start
-Date:   Tue, 12 Mar 2019 10:06:43 -0700
-Message-Id: <20190312170349.966693387@linuxfoundation.org>
+Subject: [PATCH 4.20 047/171] scsi: scsi_debug: fix write_same with virtual_gb problem
+Date:   Tue, 12 Mar 2019 10:07:07 -0700
+Message-Id: <20190312170352.180302473@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190312170347.868927101@linuxfoundation.org>
 References: <20190312170347.868927101@linuxfoundation.org>
@@ -68,144 +67,124 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-[ Upstream commit 6ab4aba00f811a5265acc4d3eb1863bb3ca60562 ]
+[ Upstream commit 40d07b523cf434f252b134c86b1f8f2d907ffb0b ]
 
-The following BUG was reported by kasan:
+The WRITE SAME(10) and (16) implementations didn't take account of the
+buffer wrap required when the virtual_gb parameter is greater than 0.
 
- BUG: KASAN: use-after-free in ipoib_cm_tx_start+0x430/0x1390 [ib_ipoib]
- Read of size 80 at addr ffff88034c30bcd0 by task kworker/u16:1/24020
+Fix that and rename the fake_store() function to lba2fake_store() to lessen
+confusion with the global fake_storep pointer. Bump version date.
 
- Workqueue: ipoib_wq ipoib_cm_tx_start [ib_ipoib]
- Call Trace:
-  dump_stack+0x9a/0xeb
-  print_address_description+0xe3/0x2e0
-  kasan_report+0x18a/0x2e0
-  ? ipoib_cm_tx_start+0x430/0x1390 [ib_ipoib]
-  memcpy+0x1f/0x50
-  ipoib_cm_tx_start+0x430/0x1390 [ib_ipoib]
-  ? kvm_clock_read+0x1f/0x30
-  ? ipoib_cm_skb_reap+0x610/0x610 [ib_ipoib]
-  ? __lock_is_held+0xc2/0x170
-  ? process_one_work+0x880/0x1960
-  ? process_one_work+0x912/0x1960
-  process_one_work+0x912/0x1960
-  ? wq_pool_ids_show+0x310/0x310
-  ? lock_acquire+0x145/0x440
-  worker_thread+0x87/0xbb0
-  ? process_one_work+0x1960/0x1960
-  kthread+0x314/0x3d0
-  ? kthread_create_worker_on_cpu+0xc0/0xc0
-  ret_from_fork+0x3a/0x50
-
- Allocated by task 0:
-  kasan_kmalloc+0xa0/0xd0
-  kmem_cache_alloc_trace+0x168/0x3e0
-  path_rec_create+0xa2/0x1f0 [ib_ipoib]
-  ipoib_start_xmit+0xa98/0x19e0 [ib_ipoib]
-  dev_hard_start_xmit+0x159/0x8d0
-  sch_direct_xmit+0x226/0xb40
-  __dev_queue_xmit+0x1d63/0x2950
-  neigh_update+0x889/0x1770
-  arp_process+0xc47/0x21f0
-  arp_rcv+0x462/0x760
-  __netif_receive_skb_core+0x1546/0x2da0
-  netif_receive_skb_internal+0xf2/0x590
-  napi_gro_receive+0x28e/0x390
-  ipoib_ib_handle_rx_wc_rss+0x873/0x1b60 [ib_ipoib]
-  ipoib_rx_poll_rss+0x17d/0x320 [ib_ipoib]
-  net_rx_action+0x427/0xe30
-  __do_softirq+0x28e/0xc42
-
- Freed by task 26680:
-  __kasan_slab_free+0x11d/0x160
-  kfree+0xf5/0x360
-  ipoib_flush_paths+0x532/0x9d0 [ib_ipoib]
-  ipoib_set_mode_rss+0x1ad/0x560 [ib_ipoib]
-  set_mode+0xc8/0x150 [ib_ipoib]
-  kernfs_fop_write+0x279/0x440
-  __vfs_write+0xd8/0x5c0
-  vfs_write+0x15e/0x470
-  ksys_write+0xb8/0x180
-  do_syscall_64+0x9b/0x420
-  entry_SYSCALL_64_after_hwframe+0x49/0xbe
-
- The buggy address belongs to the object at ffff88034c30bcc8
-                which belongs to the cache kmalloc-512 of size 512
- The buggy address is located 8 bytes inside of
-                512-byte region [ffff88034c30bcc8, ffff88034c30bec8)
- The buggy address belongs to the page:
-
-The following race between change mode and xmit flow is the reason for
-this use-after-free:
-
-Change mode     Send packet 1 to GID XX      Send packet 2 to GID XX
-     |                    |                             |
-   start                  |                             |
-     |                    |                             |
-     |                    |                             |
-     |         Create new path for GID XX               |
-     |           and update neigh path                  |
-     |                    |                             |
-     |                    |                             |
-     |                    |                             |
- flush_paths              |                             |
-                          |                             |
-               queue_work(cm.start_task)                |
-                          |                 Path for GID XX not found
-                          |                      create new path
-                          |
-                          |
-               start_task runs with old
-                    released path
-
-There is no locking to protect the lifetime of the path through the
-ipoib_cm_tx struct, so delete it entirely and always use the newly looked
-up path under the priv->lock.
-
-Fixes: 546481c2816e ("IB/ipoib: Fix memory corruption in ipoib cm mode connect flow")
-Signed-off-by: Feras Daoud <ferasda@mellanox.com>
-Reviewed-by: Erez Shitrit <erezsh@mellanox.com>
-Signed-off-by: Leon Romanovsky <leonro@mellanox.com>
-Signed-off-by: Jason Gunthorpe <jgg@mellanox.com>
+Signed-off-by: Douglas Gilbert <dgilbert@interlog.com>
+Reported-by: Bart Van Assche <bvanassche@acm.org>
+Tested by: Bart Van Assche <bvanassche@acm.org>
+Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/infiniband/ulp/ipoib/ipoib.h    | 1 -
- drivers/infiniband/ulp/ipoib/ipoib_cm.c | 3 +--
- 2 files changed, 1 insertion(+), 3 deletions(-)
+ drivers/scsi/scsi_debug.c | 41 ++++++++++++++++++++-------------------
+ 1 file changed, 21 insertions(+), 20 deletions(-)
 
-diff --git a/drivers/infiniband/ulp/ipoib/ipoib.h b/drivers/infiniband/ulp/ipoib/ipoib.h
-index 1da119d901a9..73e808c1e6ad 100644
---- a/drivers/infiniband/ulp/ipoib/ipoib.h
-+++ b/drivers/infiniband/ulp/ipoib/ipoib.h
-@@ -248,7 +248,6 @@ struct ipoib_cm_tx {
- 	struct list_head     list;
- 	struct net_device   *dev;
- 	struct ipoib_neigh  *neigh;
--	struct ipoib_path   *path;
- 	struct ipoib_tx_buf *tx_ring;
- 	unsigned int	     tx_head;
- 	unsigned int	     tx_tail;
-diff --git a/drivers/infiniband/ulp/ipoib/ipoib_cm.c b/drivers/infiniband/ulp/ipoib/ipoib_cm.c
-index 0428e01e8f69..aa9dcfc36cd3 100644
---- a/drivers/infiniband/ulp/ipoib/ipoib_cm.c
-+++ b/drivers/infiniband/ulp/ipoib/ipoib_cm.c
-@@ -1312,7 +1312,6 @@ struct ipoib_cm_tx *ipoib_cm_create_tx(struct net_device *dev, struct ipoib_path
+diff --git a/drivers/scsi/scsi_debug.c b/drivers/scsi/scsi_debug.c
+index 60bcc6df97a9..65305b3848bc 100644
+--- a/drivers/scsi/scsi_debug.c
++++ b/drivers/scsi/scsi_debug.c
+@@ -62,7 +62,7 @@
  
- 	neigh->cm = tx;
- 	tx->neigh = neigh;
--	tx->path = path;
- 	tx->dev = dev;
- 	list_add(&tx->list, &priv->cm.start_list);
- 	set_bit(IPOIB_FLAG_INITIALIZED, &tx->flags);
-@@ -1371,7 +1370,7 @@ static void ipoib_cm_tx_start(struct work_struct *work)
- 				neigh->daddr + QPN_AND_OPTIONS_OFFSET);
- 			goto free_neigh;
- 		}
--		memcpy(&pathrec, &p->path->pathrec, sizeof(pathrec));
-+		memcpy(&pathrec, &path->pathrec, sizeof(pathrec));
+ /* make sure inq_product_rev string corresponds to this version */
+ #define SDEBUG_VERSION "0188"	/* format to fit INQUIRY revision field */
+-static const char *sdebug_version_date = "20180128";
++static const char *sdebug_version_date = "20190125";
  
- 		spin_unlock_irqrestore(&priv->lock, flags);
- 		netif_tx_unlock_bh(dev);
+ #define MY_NAME "scsi_debug"
+ 
+@@ -735,7 +735,7 @@ static inline bool scsi_debug_lbp(void)
+ 		(sdebug_lbpu || sdebug_lbpws || sdebug_lbpws10);
+ }
+ 
+-static void *fake_store(unsigned long long lba)
++static void *lba2fake_store(unsigned long long lba)
+ {
+ 	lba = do_div(lba, sdebug_store_sectors);
+ 
+@@ -2514,8 +2514,8 @@ static int do_device_access(struct scsi_cmnd *scmd, u32 sg_skip, u64 lba,
+ 	return ret;
+ }
+ 
+-/* If fake_store(lba,num) compares equal to arr(num), then copy top half of
+- * arr into fake_store(lba,num) and return true. If comparison fails then
++/* If lba2fake_store(lba,num) compares equal to arr(num), then copy top half of
++ * arr into lba2fake_store(lba,num) and return true. If comparison fails then
+  * return false. */
+ static bool comp_write_worker(u64 lba, u32 num, const u8 *arr)
+ {
+@@ -2643,7 +2643,7 @@ static int prot_verify_read(struct scsi_cmnd *SCpnt, sector_t start_sec,
+ 		if (sdt->app_tag == cpu_to_be16(0xffff))
+ 			continue;
+ 
+-		ret = dif_verify(sdt, fake_store(sector), sector, ei_lba);
++		ret = dif_verify(sdt, lba2fake_store(sector), sector, ei_lba);
+ 		if (ret) {
+ 			dif_errors++;
+ 			return ret;
+@@ -3261,10 +3261,12 @@ static int resp_write_scat(struct scsi_cmnd *scp,
+ static int resp_write_same(struct scsi_cmnd *scp, u64 lba, u32 num,
+ 			   u32 ei_lba, bool unmap, bool ndob)
+ {
++	int ret;
+ 	unsigned long iflags;
+ 	unsigned long long i;
+-	int ret;
+-	u64 lba_off;
++	u32 lb_size = sdebug_sector_size;
++	u64 block, lbaa;
++	u8 *fs1p;
+ 
+ 	ret = check_device_access_params(scp, lba, num);
+ 	if (ret)
+@@ -3276,31 +3278,30 @@ static int resp_write_same(struct scsi_cmnd *scp, u64 lba, u32 num,
+ 		unmap_region(lba, num);
+ 		goto out;
+ 	}
+-
+-	lba_off = lba * sdebug_sector_size;
++	lbaa = lba;
++	block = do_div(lbaa, sdebug_store_sectors);
+ 	/* if ndob then zero 1 logical block, else fetch 1 logical block */
++	fs1p = fake_storep + (block * lb_size);
+ 	if (ndob) {
+-		memset(fake_storep + lba_off, 0, sdebug_sector_size);
++		memset(fs1p, 0, lb_size);
+ 		ret = 0;
+ 	} else
+-		ret = fetch_to_dev_buffer(scp, fake_storep + lba_off,
+-					  sdebug_sector_size);
++		ret = fetch_to_dev_buffer(scp, fs1p, lb_size);
+ 
+ 	if (-1 == ret) {
+ 		write_unlock_irqrestore(&atomic_rw, iflags);
+ 		return DID_ERROR << 16;
+-	} else if (sdebug_verbose && !ndob && (ret < sdebug_sector_size))
++	} else if (sdebug_verbose && !ndob && (ret < lb_size))
+ 		sdev_printk(KERN_INFO, scp->device,
+ 			    "%s: %s: lb size=%u, IO sent=%d bytes\n",
+-			    my_name, "write same",
+-			    sdebug_sector_size, ret);
++			    my_name, "write same", lb_size, ret);
+ 
+ 	/* Copy first sector to remaining blocks */
+-	for (i = 1 ; i < num ; i++)
+-		memcpy(fake_storep + ((lba + i) * sdebug_sector_size),
+-		       fake_storep + lba_off,
+-		       sdebug_sector_size);
+-
++	for (i = 1 ; i < num ; i++) {
++		lbaa = lba + i;
++		block = do_div(lbaa, sdebug_store_sectors);
++		memmove(fake_storep + (block * lb_size), fs1p, lb_size);
++	}
+ 	if (scsi_debug_lbp())
+ 		map_region(lba, num);
+ out:
 -- 
 2.19.1
 
