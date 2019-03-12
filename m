@@ -2,111 +2,164 @@ Return-Path: <SRS0=J4ZE=RP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.0 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,
+	USER_AGENT_NEOMUTT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 64694C43381
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 07:48:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 640D3C43381
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 07:49:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 35643214AF
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 07:48:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1CAF3214AF
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 07:49:57 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=shutemov-name.20150623.gappssmtp.com header.i=@shutemov-name.20150623.gappssmtp.com header.b="dp0W2MNX"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727042AbfCLHsD (ORCPT
+        id S1727425AbfCLHt4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 12 Mar 2019 03:48:03 -0400
-Received: from outbound.smtp.vt.edu ([198.82.183.121]:53614 "EHLO
-        omr1.cc.vt.edu" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1726463AbfCLHsC (ORCPT
+        Tue, 12 Mar 2019 03:49:56 -0400
+Received: from mail-pg1-f193.google.com ([209.85.215.193]:38897 "EHLO
+        mail-pg1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726582AbfCLHtz (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 12 Mar 2019 03:48:02 -0400
-Received: from mr2.cc.vt.edu (mr2.cc.ipv6.vt.edu [IPv6:2607:b400:92:8400:0:90:e077:bf22])
-        by omr1.cc.vt.edu (8.14.4/8.14.4) with ESMTP id x2C7m0lj022847
-        for <linux-kernel@vger.kernel.org>; Tue, 12 Mar 2019 03:48:00 -0400
-Received: from mail-qt1-f197.google.com (mail-qt1-f197.google.com [209.85.160.197])
-        by mr2.cc.vt.edu (8.14.7/8.14.7) with ESMTP id x2C7ltLQ010130
-        for <linux-kernel@vger.kernel.org>; Tue, 12 Mar 2019 03:48:00 -0400
-Received: by mail-qt1-f197.google.com with SMTP id i3so1483114qtc.7
-        for <linux-kernel@vger.kernel.org>; Tue, 12 Mar 2019 00:48:00 -0700 (PDT)
+        Tue, 12 Mar 2019 03:49:55 -0400
+Received: by mail-pg1-f193.google.com with SMTP id m2so1190772pgl.5
+        for <linux-kernel@vger.kernel.org>; Tue, 12 Mar 2019 00:49:55 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=shutemov-name.20150623.gappssmtp.com; s=20150623;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=/olhjbpJtT1r+7uavB4KWlJpqCZECUEc8ErNDYVV/Hk=;
+        b=dp0W2MNXHHwMurb7064PydUXyMqSIuX9WHN8wbk1FpKFfs4OSrPwv7gmXApzlzCY2d
+         GbbBJMVpiYY2uZEAAZkZHZlQEcn6et3K8/ApQZ+AJo72JyN+d/lPasNL5as3MpAt+37N
+         J1q2apNjiRCSEBFvuFoVBn9oMKRzzx1ccQ/3yoBjkjweP2R8E9kNu4A3BZwXtmDNPYUc
+         BFvryNedtwL8eFbTaB9tqxqIprA7NJBu6Fa+m5yuAFOBcbnfMPeiRxIp8HL4Pb2jMb8/
+         pyegpYg2Sae3wkHR/n1VnhwN5fk7MQGU3ivU1LKCIPnZ1EUZaFByAGTW3vnECAXEyRyW
+         f9SQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:from:to:cc:subject:mime-version:date
-         :message-id;
-        bh=xTgDnXCD9HPnn/Lo/1BOnzwJRpZqsjZo/xIqSJRlodE=;
-        b=CE7YUbUapxjlU1AkxjMxj1LI8+j7R7MQC5cq0flWyQe0hn0GMPUzvnj/4FzqSJt3fU
-         Mk1OkZQ0yS/QJPTrkvDPhm7jRDilXSDOmlfiELcEUCG7FxGQ7ZAgjTOxc2+QZ4UQPazS
-         BeGOH5b7S3Kg9KTgpUWNpjJthLM2R8epTqoXauKJZjST6Un21kRI7dA9xfHDdwr0KlkF
-         pE6pHrN8Jnd2jI1+9Fs/HkTNj4TNPWht61L/GrLj9z44lPEXK4q6ZDJh/yHWYJ5YXRGm
-         8TG9ZZ15Rc6mnkw7vd8NXnQU4+Li/k5tnefa2DyZSS5fHyiBES/dBsWBpe8FoP2rmvO/
-         H3rg==
-X-Gm-Message-State: APjAAAWdVJ7qBUbutWPMKPsTbg0Uc9Ykk4zef4lr3VWazkcB3GuGM/at
-        XSS9154vxeQmX+q2IPCMmqWsHPcdQTJwLV01DpTQ+aWSPlzt7CWpgqtSg8UaUs693FlGLm+tHbs
-        E0OUekxzuoiY2GilzzOQxkLC2Th6o8wRw+o8=
-X-Received: by 2002:ac8:33dd:: with SMTP id d29mr4978915qtb.320.1552376875537;
-        Tue, 12 Mar 2019 00:47:55 -0700 (PDT)
-X-Google-Smtp-Source: APXvYqxj7TspTzTbfjd6p6lOYPlTyNiJYhiy7qbYnaNvTO1uIw0Vxj4s1BUBAvx7QJTaO2TySEY6VA==
-X-Received: by 2002:ac8:33dd:: with SMTP id d29mr4978905qtb.320.1552376875274;
-        Tue, 12 Mar 2019 00:47:55 -0700 (PDT)
-Received: from turing-police ([2601:5c0:c001:4341::3b7])
-        by smtp.gmail.com with ESMTPSA id g123sm11485594qkg.0.2019.03.12.00.47.53
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Tue, 12 Mar 2019 00:47:54 -0700 (PDT)
-From:   "Valdis Kl=?utf-8?Q?=c4=93?=tnieks" <valdis.kletnieks@vt.edu>
-X-Google-Original-From: "Valdis Kl=?utf-8?Q?=c4=93?=tnieks" <Valdis.Kletnieks@vt.edu>
-X-Mailer: exmh version 2.9.0 11/07/2018 with nmh-1.7+dev
-To:     Dave Hansen <dave.hansen@linux.intel.com>,
-        Andy Lutomirski <luto@kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>
-cc:     x86@kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH] b/arch/x86/mm/pti.c - make local symbols static
-Mime-Version: 1.0
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=/olhjbpJtT1r+7uavB4KWlJpqCZECUEc8ErNDYVV/Hk=;
+        b=mdEWv4DD1H1GVv+HDmXx/qzQNcpmRG4oAXrYpySMK1R/2YZU6HN2zuqTJv5nkW5m+J
+         PCSvfD8+Efz45fDNJMAH6C0gdtNQ5e9vQp0or9pBS0wTU2EmskM8RcUk+HSjUCaR7X5g
+         2RRTIn4wBJCRBDm8CEn+Q9J9eNSfmby0vCeU6wupLPfna7fPwmhCSqjxAhdIg8k8KNjR
+         1tmo00S8r5kVwBj4I8a2HTGBX7rfsSRE+6tQYcuhdcAzeNRTqxewmPSTQo7OnRGSUzv+
+         THWa3oZZmPbO+2OGbLXa3iWt0vOAdcwXKExc1svH1RuHTuNphAeS5BGbKA3LQUd3K+Si
+         dpvw==
+X-Gm-Message-State: APjAAAVKAOCWfmx+I1cHOI9lbUlnPF8ZckCOnkfZK6CsxIfzsW9jecP2
+        EmGBD8b+otiOUB+BaLFKa8z8gg==
+X-Google-Smtp-Source: APXvYqxhoObJjZuttW1IPJrOnClfmIL5opPUfwHN9lGtlRAK/7XJitiZM5dBu2mlrfC7DZuBgNTIUQ==
+X-Received: by 2002:aa7:8d42:: with SMTP id s2mr37450966pfe.116.1552376994892;
+        Tue, 12 Mar 2019 00:49:54 -0700 (PDT)
+Received: from kshutemo-mobl1.localdomain (fmdmzpr04-ext.fm.intel.com. [192.55.54.39])
+        by smtp.gmail.com with ESMTPSA id x1sm13580445pge.73.2019.03.12.00.49.53
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Tue, 12 Mar 2019 00:49:54 -0700 (PDT)
+Received: by kshutemo-mobl1.localdomain (Postfix, from userid 1000)
+        id B21DA3011CA; Tue, 12 Mar 2019 10:49:51 +0300 (+03)
+Date:   Tue, 12 Mar 2019 10:49:51 +0300
+From:   "Kirill A. Shutemov" <kirill@shutemov.name>
+To:     Peter Xu <peterx@redhat.com>
+Cc:     linux-kernel@vger.kernel.org, Paolo Bonzini <pbonzini@redhat.com>,
+        Hugh Dickins <hughd@google.com>,
+        Luis Chamberlain <mcgrof@kernel.org>,
+        Maxime Coquelin <maxime.coquelin@redhat.com>,
+        kvm@vger.kernel.org, Jerome Glisse <jglisse@redhat.com>,
+        Pavel Emelyanov <xemul@virtuozzo.com>,
+        Johannes Weiner <hannes@cmpxchg.org>,
+        Martin Cracauer <cracauer@cons.org>,
+        Denis Plotnikov <dplotnikov@virtuozzo.com>, linux-mm@kvack.org,
+        Marty McFadden <mcfadden8@llnl.gov>,
+        Maya Gokhale <gokhale2@llnl.gov>,
+        Mike Kravetz <mike.kravetz@oracle.com>,
+        Andrea Arcangeli <aarcange@redhat.com>,
+        Mike Rapoport <rppt@linux.vnet.ibm.com>,
+        Kees Cook <keescook@chromium.org>,
+        Mel Gorman <mgorman@suse.de>, linux-fsdevel@vger.kernel.org,
+        "Dr . David Alan Gilbert" <dgilbert@redhat.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        linux-api@vger.kernel.org
+Subject: Re: [PATCH 0/3] userfaultfd: allow to forbid unprivileged users
+Message-ID: <20190312074951.i2md3npcjcceywqj@kshutemo-mobl1>
+References: <20190311093701.15734-1-peterx@redhat.com>
+MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Date:   Tue, 12 Mar 2019 03:47:53 -0400
-Message-ID: <27680.1552376873@turing-police>
+Content-Disposition: inline
+In-Reply-To: <20190311093701.15734-1-peterx@redhat.com>
+User-Agent: NeoMutt/20180716
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-With 'make C=2 W=1', sparse and gcc both complain:
+On Mon, Mar 11, 2019 at 05:36:58PM +0800, Peter Xu wrote:
+> Hi,
+> 
+> (The idea comes from Andrea, and following discussions with Mike and
+>  other people)
+> 
+> This patchset introduces a new sysctl flag to allow the admin to
+> forbid users from using userfaultfd:
+> 
+>   $ cat /proc/sys/vm/unprivileged_userfaultfd
+>   [disabled] enabled kvm
 
-  CHECK   arch/x86/mm/pti.c
-arch/x86/mm/pti.c:84:3: warning: symbol 'pti_mode' was not declared. Should it be static?
-arch/x86/mm/pti.c:605:6: warning: symbol 'pti_set_kernel_image_nonglobal' was not declared. Should it be static?
-  CC      arch/x86/mm/pti.o
-arch/x86/mm/pti.c:605:6: warning: no previous prototype for 'pti_set_kernel_image_nonglobal' [-Wmissing-prototypes]
-  605 | void pti_set_kernel_image_nonglobal(void)
-      |      ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+CC linux-api@
 
-And indeed, the function at line 605 is only used locally. 'pti_mode' is more
-subtle - there is another pti_mode in drivers/hwtracing/intel_th/pti.c, but
-it's an array declared static, not an enum
+This is unusual way to return current value for sysctl. Does it work fine
+with sysctl tool?
 
-Make both variables static.
+Have you considered to place the switch into /sys/kernel/mm instead?
+I doubt it's the last tunable for userfaultfd. Maybe we should have an
+directory for it under /sys/kernel/mm?
 
-Signed-off-by: Valdis Kletnieks <valdis.kletnieks@vt.edu>
+>   - When set to "disabled", all unprivileged users are forbidden to
+>     use userfaultfd syscalls.
+> 
+>   - When set to "enabled", all users are allowed to use userfaultfd
+>     syscalls.
+> 
+>   - When set to "kvm", all unprivileged users are forbidden to use the
+>     userfaultfd syscalls, except the user who has permission to open
+>     /dev/kvm.
+> 
+> This new flag can add one more layer of security to reduce the attack
+> surface of the kernel by abusing userfaultfd.  Here we grant the
+> thread userfaultfd permission by checking against CAP_SYS_PTRACE
+> capability.  By default, the value is "disabled" which is the most
+> strict policy.  Distributions can have their own perferred value.
+> 
+> The "kvm" entry is a bit special here only to make sure that existing
+> users like QEMU/KVM won't break by this newly introduced flag.  What
+> we need to do is simply set the "unprivileged_userfaultfd" flag to
+> "kvm" here to automatically grant userfaultfd permission for processes
+> like QEMU/KVM without extra code to tweak these flags in the admin
+> code.
+> 
+> Patch 1:  The interface patch to introduce the flag
+> 
+> Patch 2:  The KVM related changes to detect opening of /dev/kvm
+> 
+> Patch 3:  Apply the flag to userfaultfd syscalls
+> 
+> All comments would be greatly welcomed.  Thanks,
+> 
+> Peter Xu (3):
+>   userfaultfd/sysctl: introduce unprivileged_userfaultfd
+>   kvm/mm: introduce MMF_USERFAULTFD_ALLOW flag
+>   userfaultfd: apply unprivileged_userfaultfd check
+> 
+>  fs/userfaultfd.c               | 121 +++++++++++++++++++++++++++++++++
+>  include/linux/sched/coredump.h |   1 +
+>  include/linux/userfaultfd_k.h  |   5 ++
+>  init/Kconfig                   |  11 +++
+>  kernel/sysctl.c                |  11 +++
+>  virt/kvm/kvm_main.c            |   7 ++
+>  6 files changed, 156 insertions(+)
+> 
+> -- 
+> 2.17.1
+> 
 
----
-diff --git a/arch/x86/mm/pti.c b/arch/x86/mm/pti.c
-index 4fee5c3003ed..139b28a01ce4 100644
---- a/arch/x86/mm/pti.c
-+++ b/arch/x86/mm/pti.c
-@@ -77,7 +77,7 @@ static void __init pti_print_if_secure(const char *reason)
- 		pr_info("%s\n", reason);
- }
- 
--enum pti_mode {
-+static enum pti_mode {
- 	PTI_AUTO = 0,
- 	PTI_FORCE_OFF,
- 	PTI_FORCE_ON
-@@ -602,7 +602,7 @@ static void pti_clone_kernel_text(void)
- 	set_memory_global(start, (end_global - start) >> PAGE_SHIFT);
- }
- 
--void pti_set_kernel_image_nonglobal(void)
-+static void pti_set_kernel_image_nonglobal(void)
- {
- 	/*
- 	 * The identity map is created with PMDs, regardless of the
-
+-- 
+ Kirill A. Shutemov
