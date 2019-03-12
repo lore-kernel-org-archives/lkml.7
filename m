@@ -7,50 +7,51 @@ X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A36EDC43381
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 17:39:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5E105C43381
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 17:39:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 767F62171F
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 17:39:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 31BB42087C
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 17:39:59 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1552412395;
-	bh=8v4VPzLD6WPRtg4XsXBEBK8rNKcdi4XI+D+MFAop5QA=;
+	s=default; t=1552412399;
+	bh=7C7HzkP0naJ2gjGOQA1o1FBLea4LBi8osBETpBfnjRE=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=y3KLUc4HbgVTaelQ4tadj1KzwcCs+3h9fF9A8eB/8LRU0Qt3QOjRfau/fR09EY9zh
-	 FWdtq5fGYYOTS/KHbNI3i7go7T3I8kvcDgWblxCWxzQUUkwFMvQ3ZrFgAhQjmISi1R
-	 gcXUoCQv4OJrD5YMRsQeSs+aWj02n2zV4dA+n+pk=
+	b=NApB+Va72FmFwOg7UaUMDW2KzB0+EaGeWQNeyRV6QPR98rBpmYT0/MLvVBuqnNSy0
+	 pm08DS9RidiVyjvqPSsHCzPtMrpRXE9/4eo2+8YmFz+tMSfbshfhEc4X0df7xZCjQ2
+	 lx/fkFrrn0eoVItOiBy25g9od7WHPN9xcRbC7nLI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729064AbfCLRQR (ORCPT
+        id S1729314AbfCLRj5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 12 Mar 2019 13:16:17 -0400
-Received: from mail.kernel.org ([198.145.29.99]:55552 "EHLO mail.kernel.org"
+        Tue, 12 Mar 2019 13:39:57 -0400
+Received: from mail.kernel.org ([198.145.29.99]:58140 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728668AbfCLRPS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 12 Mar 2019 13:15:18 -0400
+        id S1729057AbfCLRQR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 12 Mar 2019 13:16:17 -0400
 Received: from localhost (unknown [104.133.8.98])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 6EDB421871;
-        Tue, 12 Mar 2019 17:15:17 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 480572171F;
+        Tue, 12 Mar 2019 17:16:16 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1552410917;
-        bh=8v4VPzLD6WPRtg4XsXBEBK8rNKcdi4XI+D+MFAop5QA=;
+        s=default; t=1552410976;
+        bh=7C7HzkP0naJ2gjGOQA1o1FBLea4LBi8osBETpBfnjRE=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=x9f9B93P/8ogHvpt/HEznX18i+1UDKWw0mcuLlAf24B0LElwp5PRpiBcCLfyaa1M8
-         XlYRxWNWtrVFT2iwHECCZTNvR+zUKMskN8hal/2nUzzplg1EUL1QfAOIfOxx7CtNPd
-         rk9Sc07pN+VFzsjRMUUdSTQE2OKQzcA2I58WBbSs=
+        b=xoonFR38dhaNoqFAlB5GYpg9R5EdDslus4hRXjjplnBIeBOdpINShe4DZvpEFHR6u
+         PEfaX9S4kxRTFA5PBbOH3SRsQ3JmKZnjP3UJelU6uX/LfDgtE8/2gra75bInHlXcXd
+         5B36w6jvnnBhn0jstC+tFzCYMuFof1bhNvYWWJc8=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Taehee Yoo <ap420073@gmail.com>,
-        Pablo Neira Ayuso <pablo@netfilter.org>,
+        stable@vger.kernel.org, Manish Chopra <manishc@marvell.com>,
+        Ariel Elior <aelior@marvell.com>,
+        "David S. Miller" <davem@davemloft.net>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 136/149] netfilter: xt_TEE: add missing code to get interface index in checkentry.
-Date:   Tue, 12 Mar 2019 10:09:14 -0700
-Message-Id: <20190312170400.735421504@linuxfoundation.org>
+Subject: [PATCH 4.14 067/135] qed: Fix bug in tx promiscuous mode settings
+Date:   Tue, 12 Mar 2019 10:08:34 -0700
+Message-Id: <20190312170347.476778812@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
-In-Reply-To: <20190312170349.421581206@linuxfoundation.org>
-References: <20190312170349.421581206@linuxfoundation.org>
+In-Reply-To: <20190312170341.127810985@linuxfoundation.org>
+References: <20190312170341.127810985@linuxfoundation.org>
 User-Agent: quilt/0.65
 X-stable: review
 X-Patchwork-Hint: ignore
@@ -62,49 +63,57 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-4.19-stable review patch.  If anyone has any objections, please let me know.
+4.14-stable review patch.  If anyone has any objections, please let me know.
 
 ------------------
 
-[ Upstream commit 18c0ab87364ac5128a152055fdcb1d27e01caf01 ]
+[ Upstream commit 9e71a15d8b5bbce25c637f7f8833cd3f45b65646 ]
 
-checkentry(tee_tg_check) should initialize priv->oif from dev if possible.
-But only netdevice notifier handler can set that.
-Hence priv->oif is always -1 until notifier handler is called.
+When running tx switched traffic between VNICs
+created via a bridge(to which VFs are added),
+adapter drops the unicast packets in tx flow due to
+VNIC's ucast mac being unknown to it. But VF interfaces
+being in promiscuous mode should have caused adapter
+to accept all the unknown ucast packets. Later, it
+was found that driver doesn't really configure tx
+promiscuous mode settings to accept all unknown unicast macs.
 
-Fixes: 9e2f6c5d78db ("netfilter: Rework xt_TEE netdevice notifier")
-Signed-off-by: Taehee Yoo <ap420073@gmail.com>
-Signed-off-by: Pablo Neira Ayuso <pablo@netfilter.org>
+This patch fixes tx promiscuous mode settings to accept all
+unknown/unmatched unicast macs and works out the scenario.
+
+Signed-off-by: Manish Chopra <manishc@marvell.com>
+Signed-off-by: Ariel Elior <aelior@marvell.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- net/netfilter/xt_TEE.c | 7 +++++++
- 1 file changed, 7 insertions(+)
+ drivers/net/ethernet/qlogic/qed/qed_l2.c | 7 ++++++-
+ 1 file changed, 6 insertions(+), 1 deletion(-)
 
-diff --git a/net/netfilter/xt_TEE.c b/net/netfilter/xt_TEE.c
-index 673ad2099f97..1dae02a97ee3 100644
---- a/net/netfilter/xt_TEE.c
-+++ b/net/netfilter/xt_TEE.c
-@@ -104,6 +104,8 @@ static int tee_tg_check(const struct xt_tgchk_param *par)
- 		return -EINVAL;
+diff --git a/drivers/net/ethernet/qlogic/qed/qed_l2.c b/drivers/net/ethernet/qlogic/qed/qed_l2.c
+index 83c1c4fa102b..5191b575d57b 100644
+--- a/drivers/net/ethernet/qlogic/qed/qed_l2.c
++++ b/drivers/net/ethernet/qlogic/qed/qed_l2.c
+@@ -607,6 +607,10 @@ qed_sp_update_accept_mode(struct qed_hwfn *p_hwfn,
+ 			  (!!(accept_filter & QED_ACCEPT_MCAST_MATCHED) &&
+ 			   !!(accept_filter & QED_ACCEPT_MCAST_UNMATCHED)));
  
- 	if (info->oif[0]) {
-+		struct net_device *dev;
++		SET_FIELD(state, ETH_VPORT_TX_MODE_UCAST_ACCEPT_ALL,
++			  (!!(accept_filter & QED_ACCEPT_UCAST_MATCHED) &&
++			   !!(accept_filter & QED_ACCEPT_UCAST_UNMATCHED)));
 +
- 		if (info->oif[sizeof(info->oif)-1] != '\0')
- 			return -EINVAL;
+ 		SET_FIELD(state, ETH_VPORT_TX_MODE_BCAST_ACCEPT_ALL,
+ 			  !!(accept_filter & QED_ACCEPT_BCAST));
  
-@@ -115,6 +117,11 @@ static int tee_tg_check(const struct xt_tgchk_param *par)
- 		priv->oif     = -1;
- 		info->priv    = priv;
- 
-+		dev = dev_get_by_name(par->net, info->oif);
-+		if (dev) {
-+			priv->oif = dev->ifindex;
-+			dev_put(dev);
-+		}
- 		mutex_lock(&tn->lock);
- 		list_add(&priv->list, &tn->priv_list);
- 		mutex_unlock(&tn->lock);
+@@ -2640,7 +2644,8 @@ static int qed_configure_filter_rx_mode(struct qed_dev *cdev,
+ 	if (type == QED_FILTER_RX_MODE_TYPE_PROMISC) {
+ 		accept_flags.rx_accept_filter |= QED_ACCEPT_UCAST_UNMATCHED |
+ 						 QED_ACCEPT_MCAST_UNMATCHED;
+-		accept_flags.tx_accept_filter |= QED_ACCEPT_MCAST_UNMATCHED;
++		accept_flags.tx_accept_filter |= QED_ACCEPT_UCAST_UNMATCHED |
++						 QED_ACCEPT_MCAST_UNMATCHED;
+ 	} else if (type == QED_FILTER_RX_MODE_TYPE_MULTI_PROMISC) {
+ 		accept_flags.rx_accept_filter |= QED_ACCEPT_MCAST_UNMATCHED;
+ 		accept_flags.tx_accept_filter |= QED_ACCEPT_MCAST_UNMATCHED;
 -- 
 2.19.1
 
