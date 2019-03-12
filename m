@@ -2,69 +2,119 @@ Return-Path: <SRS0=J4ZE=RP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.3 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_MUTT autolearn=ham autolearn_force=no
+X-Spam-Status: No, score=-3.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E8811C43381
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 02:22:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 15946C43381
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 02:23:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B0D3E2087C
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 02:22:48 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="O8gq/Rs5"
+	by mail.kernel.org (Postfix) with ESMTP id E23C52087C
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 02:23:08 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726756AbfCLCWr (ORCPT
+        id S1726802AbfCLCXH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 11 Mar 2019 22:22:47 -0400
-Received: from bombadil.infradead.org ([198.137.202.133]:39092 "EHLO
-        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726536AbfCLCWq (ORCPT
+        Mon, 11 Mar 2019 22:23:07 -0400
+Received: from bhuna.collabora.co.uk ([46.235.227.227]:56742 "EHLO
+        bhuna.collabora.co.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726536AbfCLCXH (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 11 Mar 2019 22:22:46 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
-        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=t0cNe1GovyGwojRM6XuvVZugMvmXJbVzAhjtLdKGn8Q=; b=O8gq/Rs5C/jwwI/el3to8Mbnp
-        Pj/iFU5dBbSBlriuARyVb1JqIVEU8PImjKkXRTBU0GQYBH46WNSiW9COBbusPo48EZQjhjehKKhDN
-        tlhauBd+2NdWHykJXcT/bjUNoG4MEuGICXlhTTlnbNGK0h00EaqWbLSg7G7zM9rmAx72p3R7NpYVP
-        WioNBNMLQyzvZYd1Jq05dUJJkQVdbsCstnQx4aeoqSYNIC1qUIQbnLnzu/WKJ8UAYjiVO4NHwuVUW
-        wHtuJZ4imrUGZjwRCLCJ0A7f9G6PgqpYhUSTeOLWCdfE1oTP7/NNkBIhfugir3SAR2Pjo1b5HoDc1
-        zpcjTC/qw==;
-Received: from willy by bombadil.infradead.org with local (Exim 4.90_1 #2 (Red Hat Linux))
-        id 1h3X41-0007Tt-PK; Tue, 12 Mar 2019 02:22:45 +0000
-Date:   Mon, 11 Mar 2019 19:22:45 -0700
-From:   Matthew Wilcox <willy@infradead.org>
-To:     Linus Torvalds <torvalds@linux-foundation.org>
-Cc:     Leon Romanovsky <leonro@mellanox.com>,
-        Jason Gunthorpe <jgg@mellanox.com>,
-        Linux List Kernel Mailing <linux-kernel@vger.kernel.org>
-Subject: Re: [GIT PULL] XArray updates for 5.1-rc1
-Message-ID: <20190312022245.GG19508@bombadil.infradead.org>
-References: <20190311182829.GE19508@bombadil.infradead.org>
- <CAHk-=wg1hqVm0rxF66MU2NkWGD8qPLmbebHV1pFNjhNuCGaGnA@mail.gmail.com>
+        Mon, 11 Mar 2019 22:23:07 -0400
+Received: from localhost.localdomain (unknown [IPv6:2804:431:9719:798c:6bb0:a97a:4a09:e6d8])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        (Authenticated sender: koike)
+        by bhuna.collabora.co.uk (Postfix) with ESMTPSA id 0E9D3260933;
+        Tue, 12 Mar 2019 02:22:51 +0000 (GMT)
+From:   Helen Koike <helen.koike@collabora.com>
+To:     dri-devel@lists.freedesktop.org, nicholas.kazlauskas@amd.com
+Cc:     andrey.grodzovsky@amd.com, daniel.vetter@ffwll.ch,
+        linux-kernel@vger.kernel.org, Tomasz Figa <tfiga@chromium.org>,
+        boris.brezillon@collabora.com, David Airlie <airlied@linux.ie>,
+        Sean Paul <seanpaul@google.com>, kernel@collabora.com,
+        harry.wentland@amd.com,
+        =?UTF-8?q?St=C3=A9phane=20Marchesin?= <marcheu@google.com>,
+        Helen Koike <helen.koike@collabora.com>,
+        Sean Paul <sean@poorly.run>, Sandy Huang <hjc@rock-chips.com>,
+        Russell King <rmk+kernel@armlinux.org.uk>, eric@anholt.net,
+        Alex Deucher <alexander.deucher@amd.com>,
+        Bhawanpreet Lakha <Bhawanpreet.Lakha@amd.com>,
+        "David (ChunMing) Zhou" <David1.Zhou@amd.com>,
+        Anthony Koo <Anthony.Koo@amd.com>,
+        amd-gfx@lists.freedesktop.org, linux-rockchip@lists.infradead.org,
+        =?UTF-8?q?Ville=20Syrj=C3=A4l=C3=A4?= 
+        <ville.syrjala@linux.intel.com>, Rob Clark <robdclark@gmail.com>,
+        =?UTF-8?q?Heiko=20St=C3=BCbner?= <heiko@sntech.de>,
+        Leo Li <sunpeng.li@amd.com>, linux-arm-msm@vger.kernel.org,
+        =?UTF-8?q?Christian=20K=C3=B6nig?= <christian.koenig@amd.com>,
+        linux-arm-kernel@lists.infradead.org,
+        David Francis <David.Francis@amd.com>,
+        Mikita Lipski <mikita.lipski@amd.com>,
+        Mamta Shukla <mamtashukla555@gmail.com>,
+        Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
+        Maxime Ripard <maxime.ripard@bootlin.com>,
+        freedreno@lists.freedesktop.org, Sean Paul <seanpaul@chromium.org>,
+        Daniel Vetter <daniel@ffwll.ch>
+Subject: [PATCH v2 0/5] drm: Fix fb changes for async updates
+Date:   Mon, 11 Mar 2019 23:21:58 -0300
+Message-Id: <20190312022204.2775-1-helen.koike@collabora.com>
+X-Mailer: git-send-email 2.20.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAHk-=wg1hqVm0rxF66MU2NkWGD8qPLmbebHV1pFNjhNuCGaGnA@mail.gmail.com>
-User-Agent: Mutt/1.9.2 (2017-12-15)
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Mar 11, 2019 at 06:39:41PM -0700, Linus Torvalds wrote:
-> On Mon, Mar 11, 2019 at 11:28 AM Matthew Wilcox <willy@infradead.org> wrote:
-> >
-> >   git://git.infradead.org/users/willy/linux-dax.git xarray
-> 
-> You forgot to tag it, and I don't pull from external untrusted sites
-> without signed tags..
-> 
-> Please? I know you can do it, because you've done it successfully in the past...
+Hello,
 
-Oops.  xarray-5.1-rc1 tag now created and pushed out.  Thanks.
+This series fixes the slow down in performance introduced by
+"[PATCH v2] drm: Block fb changes for async plane updates" where async update
+falls back to a sync update, causing igt failures of type:
+
+    "CRITICAL: completed 97 cursor updated in a period of 30 flips, we
+    expect to complete approximately 15360 updates, with the threshold set
+    at 7680"
+
+Please read the commit message of "drm: don't block fb changes for async
+plane updates" to understand how it works.
+
+I tested on the rockchip, on i915 and on vc4 with igt plane_cursor_legacy and
+kms_cursor_legacy and I didn't see any regressions.
+
+I couldn't test on MSM and AMD because I don't have the hardware
+I would appreciate if anyone could help me testing those.
+
+v1 link: https://patchwork.kernel.org/cover/10837847/
+
+Thanks!
+Helen
+
+Changes in v2:
+- added reviewed-by tag
+- update CC stable and Fixes tag
+- Added reviewed-by tag
+- updated CC stable and Fixes tag
+- Change the order of the patch in the series, add this as the last one.
+- Add documentation
+- s/ballanced/balanced
+
+Helen Koike (5):
+  drm/rockchip: fix fb references in async update
+  drm/amd: fix fb references in async update
+  drm/msm: fix fb references in async update
+  drm/vc4: fix fb references in async update
+  drm: don't block fb changes for async plane updates
+
+ .../gpu/drm/amd/display/amdgpu_dm/amdgpu_dm.c |  3 +-
+ drivers/gpu/drm/drm_atomic_helper.c           | 20 ++++-----
+ drivers/gpu/drm/msm/disp/mdp5/mdp5_plane.c    |  4 ++
+ drivers/gpu/drm/rockchip/rockchip_drm_vop.c   | 42 +++++++++++--------
+ drivers/gpu/drm/vc4/vc4_plane.c               |  2 +-
+ include/drm/drm_modeset_helper_vtables.h      |  5 +++
+ 6 files changed, 45 insertions(+), 31 deletions(-)
+
+-- 
+2.20.1
+
