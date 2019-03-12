@@ -2,100 +2,102 @@ Return-Path: <SRS0=J4ZE=RP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B650DC43381
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 16:31:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 136ABC43381
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 16:31:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8D76C2147C
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 16:31:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D60232083D
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 16:31:47 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=sifive.com header.i=@sifive.com header.b="DNt6cZ2D"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726889AbfCLQbK (ORCPT
+        id S1726890AbfCLQbq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 12 Mar 2019 12:31:10 -0400
-Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:40636 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726329AbfCLQbH (ORCPT
+        Tue, 12 Mar 2019 12:31:46 -0400
+Received: from mail-it1-f195.google.com ([209.85.166.195]:33392 "EHLO
+        mail-it1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726418AbfCLQbp (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 12 Mar 2019 12:31:07 -0400
-Received: from pps.filterd (m0098420.ppops.net [127.0.0.1])
-        by mx0b-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x2CGPCAC191485
-        for <linux-kernel@vger.kernel.org>; Tue, 12 Mar 2019 12:31:06 -0400
-Received: from e13.ny.us.ibm.com (e13.ny.us.ibm.com [129.33.205.203])
-        by mx0b-001b2d01.pphosted.com with ESMTP id 2r6fbb47rh-1
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
-        for <linux-kernel@vger.kernel.org>; Tue, 12 Mar 2019 12:31:05 -0400
-Received: from localhost
-        by e13.ny.us.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
-        for <linux-kernel@vger.kernel.org> from <bauerman@linux.ibm.com>;
-        Tue, 12 Mar 2019 16:31:05 -0000
-Received: from b01cxnp23034.gho.pok.ibm.com (9.57.198.29)
-        by e13.ny.us.ibm.com (146.89.104.200) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
-        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
-        Tue, 12 Mar 2019 16:31:03 -0000
-Received: from b01ledav006.gho.pok.ibm.com (b01ledav006.gho.pok.ibm.com [9.57.199.111])
-        by b01cxnp23034.gho.pok.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x2CGV2dd20316200
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Tue, 12 Mar 2019 16:31:02 GMT
-Received: from b01ledav006.gho.pok.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 50359AC05E;
-        Tue, 12 Mar 2019 16:31:02 +0000 (GMT)
-Received: from b01ledav006.gho.pok.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 3D731AC05B;
-        Tue, 12 Mar 2019 16:31:01 +0000 (GMT)
-Received: from morokweng.localdomain (unknown [9.85.178.152])
-        by b01ledav006.gho.pok.ibm.com (Postfix) with ESMTPS;
-        Tue, 12 Mar 2019 16:31:01 +0000 (GMT)
-References: <20190311193517.23756-1-bauerman@linux.ibm.com> <20190312093246.GA18313@in.ibm.com>
-User-agent: mu4e 1.0; emacs 26.1
-From:   Thiago Jung Bauermann <bauerman@linux.ibm.com>
-To:     ego@linux.vnet.ibm.com
-Cc:     linuxppc-dev@lists.ozlabs.org, linux-kernel@vger.kernel.org,
-        Michael Bringmann <mwb@linux.vnet.ibm.com>,
-        Tyrel Datwyler <tyreld@linux.vnet.ibm.com>,
-        Vaidyanathan Srinivasan <svaidy@linux.vnet.ibm.com>
-Subject: Re: [PATCH v3] powerpc/pseries: Only wait for dying CPU after call to rtas_stop_self()
-In-reply-to: <20190312093246.GA18313@in.ibm.com>
-Date:   Tue, 12 Mar 2019 13:30:56 -0300
+        Tue, 12 Mar 2019 12:31:45 -0400
+Received: by mail-it1-f195.google.com with SMTP id f186so2850552ita.0
+        for <linux-kernel@vger.kernel.org>; Tue, 12 Mar 2019 09:31:45 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=sifive.com; s=google;
+        h=date:from:to:cc:subject:in-reply-to:message-id:references
+         :user-agent:mime-version;
+        bh=IbgbBi+8n3MFHsUq65bw1T1rwYayxXQqXSiYF0JhQfQ=;
+        b=DNt6cZ2DTEUJAQShjH93uvUcBOI2DjxRwyy3sIIlFSFJUYCDOZfJqvX4T1526qLZwH
+         nXL3JwmOoo+/3JZTUAwbBSqtEmBI6gtb1eI2qZ36us6Uq1pvIQSvmWvvq3WNV5AmYk4u
+         35WiV9xD/mRCE7ygpVMnnLmduXK5Pnq4ix9dfe+mm+ww3ibb++mfs2PS+hPXfGQUlCe7
+         BQHqTbJkBewvr05turtBqAbSWrhD52CiOj5vdz5hW3WsUAcVYk2RcJAZSqXSVo8SSNKj
+         KYPpVEZcgrlEJXollTmMgQwElDTTA4SviNEvwUeAz6UpgkWIxWytG4T2xp7mPSzpaVwO
+         WDfQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:in-reply-to:message-id
+         :references:user-agent:mime-version;
+        bh=IbgbBi+8n3MFHsUq65bw1T1rwYayxXQqXSiYF0JhQfQ=;
+        b=Vy4kiBaX8FkrXa4RaSzOVB5EGLV3M2Pp4fczhN43dopOmnvfTUZEuHQRrrBpc+Nvs1
+         ZeMrmaQGqL5d2BkkClTO30y+niwsGjinnqvYXeC7LA7iCGS2q2aCa0qJwcYuPMmFIlLZ
+         uSv0stGUCbDhjDNGb1TJI3629CNS+fVEdAVy80LTMx+xTEmGoYDP7/51VT+AvyVlu9Ai
+         jzPiyoylBut8GCkUnmldN0A5TTi4sF4aydd0joytW/r4TUCVnj2f+bReath4NGyJGjqq
+         L4WoSVYsBQZRCLdYl8rlb5P+j6CrRt6T5agdYqiO8x17k2jgYSdh7Ccs9QTGURCV0siN
+         vZzw==
+X-Gm-Message-State: APjAAAUDbuiBnUqxFb9oEiYQNyLN+2UW29hOPm4KQLQ8fQLjOGmyNkNd
+        f/D9dhO4BbcXv8ZV+oh0VFmxYQ==
+X-Google-Smtp-Source: APXvYqwYOg26ugumoEGWODgzph3ouM8fQofOgdLeW9BQmVCQMF4UcThFlh9BhU3lTfSw10nHhU9bkQ==
+X-Received: by 2002:a02:59dc:: with SMTP id v89mr21644578jad.98.1552408304931;
+        Tue, 12 Mar 2019 09:31:44 -0700 (PDT)
+Received: from localhost (c-73-95-159-87.hsd1.co.comcast.net. [73.95.159.87])
+        by smtp.gmail.com with ESMTPSA id z4sm3747331ior.27.2019.03.12.09.31.44
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Tue, 12 Mar 2019 09:31:44 -0700 (PDT)
+Date:   Tue, 12 Mar 2019 09:31:43 -0700 (PDT)
+From:   Paul Walmsley <paul.walmsley@sifive.com>
+X-X-Sender: paulw@viisi.sifive.com
+To:     Yash Shah <yash.shah@sifive.com>
+cc:     linux-riscv@lists.infradead.org, linux-edac@vger.kernel.org,
+        palmer@sifive.com, paul.walmsley@sifive.com,
+        linux-kernel@vger.kernel.org, robh+dt@kernel.org,
+        mark.rutland@arm.com, aou@eecs.berkeley.edu, bp@alien8.de,
+        mchehab@kernel.org, devicetree@vger.kernel.org
+Subject: Re: [PATCH 2/2] sifive: edac: Add EDAC driver for Sifive l2 Cache
+ Controller
+In-Reply-To: <1552382461-13051-3-git-send-email-yash.shah@sifive.com>
+Message-ID: <alpine.DEB.2.21.9999.1903120927450.26459@viisi.sifive.com>
+References: <1552382461-13051-1-git-send-email-yash.shah@sifive.com> <1552382461-13051-3-git-send-email-yash.shah@sifive.com>
+User-Agent: Alpine 2.21.9999 (DEB 301 2018-08-15)
 MIME-Version: 1.0
-Content-Type: text/plain
-X-TM-AS-GCONF: 00
-x-cbid: 19031216-0064-0000-0000-000003B8B0B5
-X-IBM-SpamModules-Scores: 
-X-IBM-SpamModules-Versions: BY=3.00010745; HX=3.00000242; KW=3.00000007;
- PH=3.00000004; SC=3.00000281; SDB=6.01173360; UDB=6.00613474; IPR=6.00954019;
- MB=3.00025948; MTD=3.00000008; XFM=3.00000015; UTC=2019-03-12 16:31:04
-X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
-x-cbparentid: 19031216-0065-0000-0000-00003CB259EB
-Message-Id: <877ed42gxr.fsf@morokweng.localdomain>
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-03-12_09:,,
- signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
- malwarescore=0 suspectscore=1 phishscore=0 bulkscore=0 spamscore=0
- clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
- mlxlogscore=621 adultscore=0 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.0.1-1810050000 definitions=main-1903120114
+Content-Type: text/plain; charset=US-ASCII
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Hello Yash,
 
-Gautham R Shenoy <ego@linux.vnet.ibm.com> writes:
+On Tue, 12 Mar 2019, Yash Shah wrote:
 
->> Signed-off-by: Thiago Jung Bauermann <bauerman@linux.ibm.com>
->
-> Thanks for this version. I have tested the patch and we no longer see
-> the "Querying DEAD? cpu X (Y) shows 2" message.
->
->
-> Tested-and-Reviewed-by: Gautham R. Shenoy <ego@linux.vnet.ibm.com>
+> Add driver for the SiFive L2 cache controller
+> on the HiFive Unleashed board
 
-Thanks for reviewing and testing the patch!
+This should read "for the SiFive FU540-C000 chip" or something similar.  
+The L2 cache controller is not specific to the HiFive Unleashed board.
 
--- 
-Thiago Jung Bauermann
-IBM Linux Technology Center
+Could you also please describe in your patch description:
 
+1. what features this driver supports - in other words, why would it be 
+used
+
+2. and, if this driver was written based on any other drivers, please just 
+briefly credit them.  For example, the use of the "teardown_*" function 
+names suggest that this driver is at least partially based on
+i10nm_base.c, skx_base.c, or pnd2_edac.c ?
+
+
+thanks,
+
+- Paul
