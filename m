@@ -2,127 +2,78 @@ Return-Path: <SRS0=J4ZE=RP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 37510C4360F
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 14:14:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8EDC9C10F00
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 14:17:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 05050206DF
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 14:14:27 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel-dk.20150623.gappssmtp.com header.i=@kernel-dk.20150623.gappssmtp.com header.b="bmAGvsiK"
+	by mail.kernel.org (Postfix) with ESMTP id 66B962177E
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 14:17:56 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726799AbfCLOOZ (ORCPT
+        id S1726814AbfCLORy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 12 Mar 2019 10:14:25 -0400
-Received: from mail-it1-f196.google.com ([209.85.166.196]:54971 "EHLO
-        mail-it1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726670AbfCLOOZ (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 12 Mar 2019 10:14:25 -0400
-Received: by mail-it1-f196.google.com with SMTP id w18so4581210itj.4
-        for <linux-kernel@vger.kernel.org>; Tue, 12 Mar 2019 07:14:24 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=kernel-dk.20150623.gappssmtp.com; s=20150623;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=WPEzUqrUlXj3yDrdg0MOJMX4r/4tJ7hapj8BQdP1FLk=;
-        b=bmAGvsiKMWyvolxzZd9mXudTcd9veR7EssmZDF5+qpugTz5oKCJyteH9feH/OjVNNN
-         WAVSeWM0Z5dyP6dQO/UWHN/X6pv9l4TkWuvRTLgxb4dRuKuE5vtDygtEX0JVzDGpMf9v
-         KmPxCsbys62ddHyhIH+CMv5f0xp0W5N5QOoPA3wjuwmC+A6tenK9lDx17JbzEzJ1p33r
-         wBvDTTCziOC0qGCyoQQ08h9+QZHFnEaCp1qPWbYzWRKkyqKYkdKG5zfpmh161kxCEtCp
-         cDG1IkHAcFNI1PDVzSEx8Sc1H8cxbLBGK/w4Usu54711RH+gNehAsV/8B2RSghPz5PRq
-         31xw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=WPEzUqrUlXj3yDrdg0MOJMX4r/4tJ7hapj8BQdP1FLk=;
-        b=SAP5BcU1dkb9FvFZYwO5NmjNdO4KTGc7ejzHWAPRiHJJCbViGQZ5CJXjPBtswpweS6
-         3K6D6D5ElYpdw1g20BfMLn+1YYlxRdKDNbt2vx2RctNtgMYegAWrOU++7VuGeviBiod2
-         aGED7fWgvB8OQ1hSRnHNavUx/u63jbQlhyQffzB7hr1Q5Cbv779cJxJUTByjxb4WbqSg
-         g0DZiBxwqiuLRhFjvpRKR6YBt7ew5M8cRrSVy0imWA6UapuUJaXCeOIMRn7dxsNrGeHE
-         +FNBw9IZ2PhnqCLYEyMq4qvbZ0fVyzkHQH5gwbs8M/MX5QmPeaUhpDGaod1MMLSd4lEQ
-         8vvQ==
-X-Gm-Message-State: APjAAAXS70AMGdoTXAff2yf/ls7Yce81uNkiPnmwRIeIc6JSxEKWRPQT
-        P9zSOa6TNoqCL3xtUEwNubvvIA==
-X-Google-Smtp-Source: APXvYqwE18XcST9CsE9SBfOPHJLjRMtSkXsQB+fbh+WiS3IOOzXLCGgm8k8zDg4wiX0QVGajKbSGKA==
-X-Received: by 2002:a24:5382:: with SMTP id n124mr2073604itb.4.1552400063617;
-        Tue, 12 Mar 2019 07:14:23 -0700 (PDT)
-Received: from [192.168.1.158] ([216.160.245.98])
-        by smtp.gmail.com with ESMTPSA id y18sm3652936ioa.56.2019.03.12.07.14.22
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Tue, 12 Mar 2019 07:14:22 -0700 (PDT)
-Subject: Re: kernel 5.0 blk_clear_pm_only triggers a warning during resume
-To:     Jisheng Zhang <Jisheng.Zhang@synaptics.com>,
-        "James E.J. Bottomley" <jejb@linux.ibm.com>,
-        "Martin K. Petersen" <martin.petersen@oracle.com>
-Cc:     "linux-scsi@vger.kernel.org" <linux-scsi@vger.kernel.org>,
-        "linux-block@vger.kernel.org" <linux-block@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Bart Van Assche <bvanassche@acm.org>
-References: <20190312132826.12c5f166@xhacker.debian>
-From:   Jens Axboe <axboe@kernel.dk>
-Message-ID: <3c17c64e-20ca-3aac-0918-0a45095b38e8@kernel.dk>
-Date:   Tue, 12 Mar 2019 08:14:21 -0600
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.5.1
+        Tue, 12 Mar 2019 10:17:54 -0400
+Received: from mx2.suse.de ([195.135.220.15]:57704 "EHLO mx1.suse.de"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726671AbfCLORy (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 12 Mar 2019 10:17:54 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx1.suse.de (Postfix) with ESMTP id A6765B642;
+        Tue, 12 Mar 2019 14:17:52 +0000 (UTC)
+From:   Vlastimil Babka <vbabka@suse.cz>
+To:     Andrew Morton <akpm@linux-foundation.org>
+Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
+        Jann Horn <jannh@google.com>, Michal Hocko <mhocko@kernel.org>,
+        linux-mm@kvack.org, linux-kernel@vger.kernel.org,
+        linux-api@vger.kernel.org, Vlastimil Babka <vbabka@suse.cz>,
+        Andy Lutomirski <luto@amacapital.net>,
+        Cyril Hrubis <chrubis@suse.cz>, Daniel Gruss <daniel@gruss.cc>,
+        Dave Chinner <david@fromorbit.com>,
+        Dominique Martinet <asmadeus@codewreck.org>,
+        Jiri Kosina <jikos@kernel.org>, Jiri Kosina <jkosina@suse.cz>,
+        Josh Snyder <joshs@netflix.com>,
+        Kevin Easton <kevin@guarana.org>,
+        "Kirill A. Shutemov" <kirill@shutemov.name>,
+        Matthew Wilcox <willy@infradead.org>,
+        Michal Hocko <mhocko@suse.com>, Tejun Heo <tj@kernel.org>
+Subject: [PATCH v2 0/2] prevent mincore() page cache leaks
+Date:   Tue, 12 Mar 2019 15:17:06 +0100
+Message-Id: <20190312141708.6652-1-vbabka@suse.cz>
+X-Mailer: git-send-email 2.20.1
+In-Reply-To: <20190130124420.1834-1-vbabka@suse.cz>
+References: <20190130124420.1834-1-vbabka@suse.cz>
 MIME-Version: 1.0
-In-Reply-To: <20190312132826.12c5f166@xhacker.debian>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 3/11/19 11:35 PM, Jisheng Zhang wrote:
-> Hi,
-> 
-> kernel version: 5.0
-> 
-> I got below warning during resume:
-> 
-> [  673.658888] sd 0:0:0:0: [sda] Starting disk
-> [  673.658899] WARNING: CPU: 3 PID: 1039 at blk_clear_pm_only+0x2a/0x30
-> [  673.658902] CPU: 3 PID: 1039 Comm: kworker/u8:49 Not tainted 5.0.0+ #1
-> [  673.658902] sd 2:0:0:0: [sdb] Starting disk
-> [  673.658903] Hardware name: LENOVO 4180F42/4180F42, BIOS 83ET75WW (1.45 ) 05/10/2013
-> [  673.658906] Workqueue: events_unbound async_run_entry_fn
-> [  673.658909] RIP: 0010:blk_clear_pm_only+0x2a/0x30
-> [  673.658911] Code: b8 ff ff ff ff f0 0f c1 87 80 00 00 00 83 e8 01 78 18 74 01 c3 48 81 c7 58 05 00 00 31 c9 31 d2 be 03 00 00 00 e9 36 97 e2 ff <0f> 0b c3 0f 1f 00 48 81 c7 90 00 00 00 e9 04 01 3a 00 0f 1f 40 00
-> [  673.658911] RSP: 0000:ffff8881115a7e48 EFLAGS: 00010297
-> [  673.658913] RAX: 00000000ffffffff RBX: ffff888118d42800 RCX: ffff8881194c9a00
-> [  673.658914] RDX: ffff888118ab1a00 RSI: 0000000000000000 RDI: ffff888117e70000
-> [  673.658915] RBP: ffff888118d42f90 R08: 0000000000000004 R09: 000000000001f900
-> [  673.658915] R10: 0000000045698a8e R11: 0000000000000010 R12: ffff888119421000
-> [  673.658916] R13: 0000000000000000 R14: ffff88800030ea80 R15: 0ffff88811942100
-> [  673.658918] FS:  0000000000000000(0000) GS:ffff88811a180000(0000) knlGS:0000000000000000
-> [  673.658918] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-> [  673.658919] CR2: 0000000000000000 CR3: 000000000200c001 CR4: 00000000000606e0
-> [  673.658920] Call Trace:
-> [  673.658924]  ? scsi_device_resume+0x28/0x50
-> [  673.658926]  ? scsi_dev_type_resume+0x2b/0x80
-> [  673.658927]  ? async_run_entry_fn+0x2c/0xd0
-> [  673.658930]  ? process_one_work+0x1f0/0x3f0
-> [  673.658932]  ? worker_thread+0x28/0x3c0
-> [  673.658933]  ? process_one_work+0x3f0/0x3f0
-> [  673.658935]  ? kthread+0x10c/0x130
-> [  673.658936]  ? __kthread_create_on_node+0x150/0x150
-> [  673.658938]  ? ret_from_fork+0x1f/0x30
-> [  673.658940] ---[ end trace ce18772de33e283e ]---
-> 
-> 
-> I notice that commit 388b4e6a00bb3 ("scsi: core: Avoid that system resume
-> triggers a kernel warning") tried to fix the warning in the same code path
-> perhaps, it isn't enough.
+Here's a new version of the mincore() patches, with feedback from Andrew Morton
+applied. The IOCB_NOWAIT patch was dropped since David Chinner pointed out it's
+incomplete. We definitely want the first patch, while for the second Linus
+said:
 
-Adding Bart, the author of the patch you are referring to.
+  I think that's fine, and probably the right thing to do, but I also
+  suspect that nobody actually cares ;(
+
+Whether or not somebody cares, we should hear of no breakage. If somebody does
+care after all, without second patch we might hear of breakage, so I would
+suggest applying it. It's not that complicated after all (famous last words?)
+
+
+Jiri Kosina (1):
+  mm/mincore: make mincore() more conservative
+
+Vlastimil Babka (1):
+  mm/mincore: provide mapped status when cached status is not allowed
+
+ mm/mincore.c | 80 ++++++++++++++++++++++++++++++++++++++++++++--------
+ 1 file changed, 68 insertions(+), 12 deletions(-)
 
 -- 
-Jens Axboe
+2.20.1
 
