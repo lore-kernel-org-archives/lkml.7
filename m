@@ -2,147 +2,136 @@ Return-Path: <SRS0=J4ZE=RP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_PASS autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 73CD7C43381
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 20:53:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 56534C43381
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 20:56:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3D314213A2
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 20:53:48 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=hansenpartnership.com header.i=@hansenpartnership.com header.b="xlq9MgHs"
+	by mail.kernel.org (Postfix) with ESMTP id 21A00213A2
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 20:56:37 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726886AbfCLUxq (ORCPT
+        id S1726527AbfCLU4f (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 12 Mar 2019 16:53:46 -0400
-Received: from bedivere.hansenpartnership.com ([66.63.167.143]:46982 "EHLO
-        bedivere.hansenpartnership.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726612AbfCLUxk (ORCPT
+        Tue, 12 Mar 2019 16:56:35 -0400
+Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:35638 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726329AbfCLU4f (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 12 Mar 2019 16:53:40 -0400
-Received: from localhost (localhost [127.0.0.1])
-        by bedivere.hansenpartnership.com (Postfix) with ESMTP id 33B738EE1ED;
-        Tue, 12 Mar 2019 13:53:39 -0700 (PDT)
-Received: from bedivere.hansenpartnership.com ([127.0.0.1])
-        by localhost (bedivere.hansenpartnership.com [127.0.0.1]) (amavisd-new, port 10024)
-        with ESMTP id wLorcc8lOR75; Tue, 12 Mar 2019 13:53:39 -0700 (PDT)
-Received: from [153.66.254.194] (unknown [50.35.68.20])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by bedivere.hansenpartnership.com (Postfix) with ESMTPSA id 688588EE0F5;
-        Tue, 12 Mar 2019 13:53:38 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=hansenpartnership.com;
-        s=20151216; t=1552424018;
-        bh=xBXu18RoJWJ5B4KHNewRd2Rk9PRsAei+eBQI4KiIbeY=;
-        h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
-        b=xlq9MgHsTme9IiV3l5DS1bhGe2e2yBGv5xMnFuAUo3FND/cNBSgTYhs2hLcTvBHBt
-         YXaNutNhc7CQMLA18VtnBZRLFNVrMv8VFLcdGmoUhK+Sy6721n6yei9bvNTLp1k2xB
-         VUr8feAFN96BKuJ90nrtw4xh7PaBspbU6h6RJU4k=
-Message-ID: <1552424017.14432.11.camel@HansenPartnership.com>
-Subject: Re: [RFC PATCH V2 0/5] vhost: accelerate metadata access through
- vmap()
-From:   James Bottomley <James.Bottomley@HansenPartnership.com>
-To:     Andrea Arcangeli <aarcange@redhat.com>
-Cc:     "Michael S. Tsirkin" <mst@redhat.com>,
-        Jason Wang <jasowang@redhat.com>,
-        David Miller <davem@davemloft.net>, hch@infradead.org,
-        kvm@vger.kernel.org, virtualization@lists.linux-foundation.org,
-        netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
-        peterx@redhat.com, linux-mm@kvack.org,
-        linux-arm-kernel@lists.infradead.org, linux-parisc@vger.kernel.org
-Date:   Tue, 12 Mar 2019 13:53:37 -0700
-In-Reply-To: <20190312200450.GA25147@redhat.com>
-References: <20190308141220.GA21082@infradead.org>
-         <56374231-7ba7-0227-8d6d-4d968d71b4d6@redhat.com>
-         <20190311095405-mutt-send-email-mst@kernel.org>
-         <20190311.111413.1140896328197448401.davem@davemloft.net>
-         <6b6dcc4a-2f08-ba67-0423-35787f3b966c@redhat.com>
-         <20190311235140-mutt-send-email-mst@kernel.org>
-         <76c353ed-d6de-99a9-76f9-f258074c1462@redhat.com>
-         <20190312075033-mutt-send-email-mst@kernel.org>
-         <1552405610.3083.17.camel@HansenPartnership.com>
-         <20190312200450.GA25147@redhat.com>
+        Tue, 12 Mar 2019 16:56:35 -0400
+Received: from pps.filterd (m0098399.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x2CKhfeT085060
+        for <linux-kernel@vger.kernel.org>; Tue, 12 Mar 2019 16:56:34 -0400
+Received: from e06smtp05.uk.ibm.com (e06smtp05.uk.ibm.com [195.75.94.101])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 2r6h93t8py-1
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
+        for <linux-kernel@vger.kernel.org>; Tue, 12 Mar 2019 16:56:33 -0400
+Received: from localhost
+        by e06smtp05.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
+        for <linux-kernel@vger.kernel.org> from <zohar@linux.ibm.com>;
+        Tue, 12 Mar 2019 20:56:31 -0000
+Received: from b06cxnps4074.portsmouth.uk.ibm.com (9.149.109.196)
+        by e06smtp05.uk.ibm.com (192.168.101.135) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
+        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
+        Tue, 12 Mar 2019 20:56:27 -0000
+Received: from d06av22.portsmouth.uk.ibm.com (d06av22.portsmouth.uk.ibm.com [9.149.105.58])
+        by b06cxnps4074.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x2CKuRgD22282462
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Tue, 12 Mar 2019 20:56:27 GMT
+Received: from d06av22.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id E12814C046;
+        Tue, 12 Mar 2019 20:56:26 +0000 (GMT)
+Received: from d06av22.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id B2FB14C04A;
+        Tue, 12 Mar 2019 20:56:25 +0000 (GMT)
+Received: from localhost.localdomain (unknown [9.80.93.217])
+        by d06av22.portsmouth.uk.ibm.com (Postfix) with ESMTP;
+        Tue, 12 Mar 2019 20:56:25 +0000 (GMT)
+Subject: Re: [PATCH] tpm: Make timeout logic simpler and more robust
+From:   Mimi Zohar <zohar@linux.ibm.com>
+To:     Calvin Owens <calvinowens@fb.com>
+Cc:     Peter Huewe <peterhuewe@gmx.de>,
+        Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>,
+        Jason Gunthorpe <jgg@ziepe.ca>, Arnd Bergmann <arnd@arndb.de>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        "linux-integrity@vger.kernel.org" <linux-integrity@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Kernel Team <Kernel-team@fb.com>
+Date:   Tue, 12 Mar 2019 16:56:15 -0400
+In-Reply-To: <20190312200820.GB5058@Haydn>
+References: <358e89ed2b766d51b5f57abf31ab7a925ac63379.1552348123.git.calvinowens@fb.com>
+         <1552410298.24794.73.camel@linux.ibm.com> <20190312200820.GB5058@Haydn>
 Content-Type: text/plain; charset="UTF-8"
-X-Mailer: Evolution 3.26.6 
+X-Mailer: Evolution 3.20.5 (3.20.5-1.fc24) 
 Mime-Version: 1.0
 Content-Transfer-Encoding: 8bit
+X-TM-AS-GCONF: 00
+x-cbid: 19031220-0020-0000-0000-00000321CCEE
+X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
+x-cbparentid: 19031220-0021-0000-0000-00002173FA8D
+Message-Id: <1552424175.24794.105.camel@linux.ibm.com>
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-03-12_12:,,
+ signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
+ malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
+ clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
+ mlxlogscore=999 adultscore=0 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.0.1-1810050000 definitions=main-1903120140
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, 2019-03-12 at 16:04 -0400, Andrea Arcangeli wrote:
-> On Tue, Mar 12, 2019 at 08:46:50AM -0700, James Bottomley wrote:
-> > On Tue, 2019-03-12 at 07:54 -0400, Michael S. Tsirkin wrote:
-> > > On Tue, Mar 12, 2019 at 03:17:00PM +0800, Jason Wang wrote:
-> > > > 
-> > > > On 2019/3/12 ä¸Šåˆ11:52, Michael S. Tsirkin wrote:
-> > > > > On Tue, Mar 12, 2019 at 10:59:09AM +0800, Jason Wang wrote:
-> > 
-> > [...]
-> > > > At least for -stable, we need the flush?
-> > > > 
-> > > > 
-> > > > > Three atomic ops per bit is way to expensive.
-> > > > 
-> > > > 
-> > > > Yes.
-> > > > 
-> > > > Thanks
+On Tue, 2019-03-12 at 20:08 +0000, Calvin Owens wrote:
+> On Tuesday 03/12 at 13:04 -0400, Mimi Zohar wrote:
+> > On Mon, 2019-03-11 at 16:54 -0700, Calvin Owens wrote:
+> > > We're having lots of problems with TPM commands timing out, and we're
+> > > seeing these problems across lots of different hardware (both v1/v2).
 > > > 
-> > > See James's reply - I stand corrected we do kunmap so no need to
-> > > flush.
+> > > I instrumented the driver to collect latency data, but I wasn't able to
+> > > find any specific timeout to fix: it seems like many of them are too
+> > > aggressive. So I tried replacing all the timeout logic with a single
+> > > universal long timeout, and found that makes our TPMs 100% reliable.
+> > > 
+> > > Given that this timeout logic is very complex, problematic, and appears
+> > > to serve no real purpose, I propose simply deleting all of it.
 > > 
-> > Well, I said that's what we do on Parisc.  The cachetlb document
-> > definitely says if you alter the data between kmap and kunmap you
-> > are responsible for the flush.  It's just that flush_dcache_page()
-> > is a no-op on x86 so they never remember to add it and since it
-> > will crash parisc if you get it wrong we finally gave up trying to
-> > make them.
-> > 
-> > But that's the point: it is a no-op on your favourite architecture
-> > so it costs you nothing to add it.
+> > Normally before sending such a massive change like this, included in
+> > the bug report or patch description, there would be some indication as
+> > to which kernel introduced a regression.  Has this always been a
+> > problem? Is this something new? How new?
 > 
-> Yes, the fact Parisc gave up and is doing it on kunmap is reasonable
-> approach for Parisc, but it doesn't move the needle as far as vhost
-> common code is concerned, because other archs don't flush any cache
-> on kunmap.
+> Honestly we've always had problems with flakiness from these devices,
+> but it seems to have regressed sometime between 4.11 and 4.16.
+
+Well, that's a start.  Around 4.10 is when we started noticing TPM
+performance issues due to the change in the kernel timer scheduling.
+ This resulted in commit a233a0289cf9 ("tpm: msleep() delays - replace
+with usleep_range() in i2c nuvoton driver"), which was upstreamed in
+4.12.
+
+At the other end, James was referring to commit "424eaf910c32 tpm:
+reduce polling time to usecs for even finer granularity", which was
+introduced in 4.18.
+
 > 
-> So either all other archs give up trying to optimize, or vhost still
-> has to call flush_dcache_page() after kunmap.
+> I wish a had a better answer for you: we need on the order of a hundred
+> machines to see the difference, and setting up these 100+ machine tests
+> is unfortunately involved enough that e.g. bisecting it just isn't
+> feasible :/
 
-I've got to say: optimize what?  What code do we ever have in the
-kernel that kmap's a page and then doesn't do anything with it? You can
-guarantee that on kunmap the page is either referenced (needs
-invalidating) or updated (needs flushing). The in-kernel use of kmap is
-always
+> What I can say for sure is that this patch makes everything much better
+> for us. If there's anything in particular you'd like me to test, I have
+> an army of machines I'm happy to put to use, let me know :)
 
-kmap
-do something with the mapped page
-kunmap
+I would assume not all of your machines are the same nor have the same
+TPM.  Could you verify that this problem is across the board, not
+limited to a particular TPM.
 
-In a very short interval.  It seems just a simplification to make
-kunmap do the flush if needed rather than try to have the users
-remember.  The thing which makes this really simple is that on most
-architectures flush and invalidate is the same operation.  If you
-really want to optimize you can use the referenced and dirty bits on
-the kmapped pte to tell you what operation to do, but if your flush is
-your invalidate, you simply assume the data needs flushing on kunmap
-without checking anything.
+BTW, are you seeing this problem with both TPM 1.2 or 2.0?
 
-> Which means after we fix vhost to add the flush_dcache_page after
-> kunmap, Parisc will get a double hit (but it also means Parisc was
-> the only one of those archs needed explicit cache flushes, where
-> vhost worked correctly so far.. so it kinds of proofs your point of
-> giving up being the safe choice).
+thanks!
 
-What double hit?  If there's no cache to flush then cache flush is a
-no-op.  It's also a highly piplineable no-op because the CPU has the L1
-cache within easy reach.  The only event when flush takes a large
-amount time is if we actually have dirty data to write back to main
-memory.
-
-James
+Mimi
 
