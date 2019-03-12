@@ -4,52 +4,53 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 637C0C43381
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 17:39:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A36EDC43381
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 17:39:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 368FF2087C
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 17:39:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 767F62171F
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 17:39:55 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1552412392;
-	bh=rcgj4uFqzecp/VfI3X3sGGN8roB1SMjVWPrNfOob1QA=;
+	s=default; t=1552412395;
+	bh=8v4VPzLD6WPRtg4XsXBEBK8rNKcdi4XI+D+MFAop5QA=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=ZDJJXSWTI/mzu8tJIu9j3HqrPy13R0+ZfKy2eWWGi44H7CEjso39CMPH/CiZqR2sH
-	 yc1i81TKyuTbF7zxUcoi7gj27Mojr+lhMpSfDigScKNyhaS8J4xN9kdc1UB67dAu5I
-	 9b35WiQ0JHpOXlWKj5YiezIEvRzoqdZiZRh8XGZ4=
+	b=y3KLUc4HbgVTaelQ4tadj1KzwcCs+3h9fF9A8eB/8LRU0Qt3QOjRfau/fR09EY9zh
+	 FWdtq5fGYYOTS/KHbNI3i7go7T3I8kvcDgWblxCWxzQUUkwFMvQ3ZrFgAhQjmISi1R
+	 gcXUoCQv4OJrD5YMRsQeSs+aWj02n2zV4dA+n+pk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729276AbfCLRjt (ORCPT
+        id S1729064AbfCLRQR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 12 Mar 2019 13:39:49 -0400
-Received: from mail.kernel.org ([198.145.29.99]:57956 "EHLO mail.kernel.org"
+        Tue, 12 Mar 2019 13:16:17 -0400
+Received: from mail.kernel.org ([198.145.29.99]:55552 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729067AbfCLRQS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 12 Mar 2019 13:16:18 -0400
+        id S1728668AbfCLRPS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 12 Mar 2019 13:15:18 -0400
 Received: from localhost (unknown [104.133.8.98])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B155E2183F;
-        Tue, 12 Mar 2019 17:16:17 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 6EDB421871;
+        Tue, 12 Mar 2019 17:15:17 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1552410977;
-        bh=rcgj4uFqzecp/VfI3X3sGGN8roB1SMjVWPrNfOob1QA=;
+        s=default; t=1552410917;
+        bh=8v4VPzLD6WPRtg4XsXBEBK8rNKcdi4XI+D+MFAop5QA=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=MdqBFiuQs1QkHPMBUiv5ur7zQQPcc70Zr5GJ/XrNZdnHw7fqUe/Qc6BkbKYlTFsXS
-         c9qSFUVx4xB+Bt3DSEt3u/5X27jz9T5Jia+VQmbk7w7vG3PSxMqIKNXksdccHSJQ0P
-         22MOA88UtXLo1mXHJAi2qaUH5t7pJZCF6PWSsKME=
+        b=x9f9B93P/8ogHvpt/HEznX18i+1UDKWw0mcuLlAf24B0LElwp5PRpiBcCLfyaa1M8
+         XlYRxWNWtrVFT2iwHECCZTNvR+zUKMskN8hal/2nUzzplg1EUL1QfAOIfOxx7CtNPd
+         rk9Sc07pN+VFzsjRMUUdSTQE2OKQzcA2I58WBbSs=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Colin Ian King <colin.king@canonical.com>,
-        Shuah Khan <shuah@kernel.org>, Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.14 053/135] selftests: cpu-hotplug: fix case where CPUs offline > CPUs present
-Date:   Tue, 12 Mar 2019 10:08:20 -0700
-Message-Id: <20190312170346.068561418@linuxfoundation.org>
+        stable@vger.kernel.org, Taehee Yoo <ap420073@gmail.com>,
+        Pablo Neira Ayuso <pablo@netfilter.org>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.19 136/149] netfilter: xt_TEE: add missing code to get interface index in checkentry.
+Date:   Tue, 12 Mar 2019 10:09:14 -0700
+Message-Id: <20190312170400.735421504@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
-In-Reply-To: <20190312170341.127810985@linuxfoundation.org>
-References: <20190312170341.127810985@linuxfoundation.org>
+In-Reply-To: <20190312170349.421581206@linuxfoundation.org>
+References: <20190312170349.421581206@linuxfoundation.org>
 User-Agent: quilt/0.65
 X-stable: review
 X-Patchwork-Hint: ignore
@@ -61,68 +62,49 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-4.14-stable review patch.  If anyone has any objections, please let me know.
+4.19-stable review patch.  If anyone has any objections, please let me know.
 
 ------------------
 
-[ Upstream commit 2b531b6137834a55857a337ac17510d6436b6fbb ]
+[ Upstream commit 18c0ab87364ac5128a152055fdcb1d27e01caf01 ]
 
-The cpu-hotplug test assumes that we can offline the maximum CPU as
-described by /sys/devices/system/cpu/offline.  However, in the case
-where the number of CPUs exceeds like kernel configuration then
-the offline count can be greater than the present count and we end
-up trying to test the offlining of a CPU that is not available to
-offline.  Fix this by testing the maximum present CPU instead.
+checkentry(tee_tg_check) should initialize priv->oif from dev if possible.
+But only netdevice notifier handler can set that.
+Hence priv->oif is always -1 until notifier handler is called.
 
-Also, the test currently offlines the CPU and does not online it,
-so fix this by onlining the CPU after the test.
-
-Fixes: d89dffa976bc ("fault-injection: add selftests for cpu and memory hotplug")
-Signed-off-by: Colin Ian King <colin.king@canonical.com>
-Signed-off-by: Shuah Khan <shuah@kernel.org>
+Fixes: 9e2f6c5d78db ("netfilter: Rework xt_TEE netdevice notifier")
+Signed-off-by: Taehee Yoo <ap420073@gmail.com>
+Signed-off-by: Pablo Neira Ayuso <pablo@netfilter.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- .../selftests/cpu-hotplug/cpu-on-off-test.sh        | 13 ++++++++++---
- 1 file changed, 10 insertions(+), 3 deletions(-)
+ net/netfilter/xt_TEE.c | 7 +++++++
+ 1 file changed, 7 insertions(+)
 
-diff --git a/tools/testing/selftests/cpu-hotplug/cpu-on-off-test.sh b/tools/testing/selftests/cpu-hotplug/cpu-on-off-test.sh
-index f3a8933c1275..49ccd2293343 100755
---- a/tools/testing/selftests/cpu-hotplug/cpu-on-off-test.sh
-+++ b/tools/testing/selftests/cpu-hotplug/cpu-on-off-test.sh
-@@ -35,6 +35,10 @@ prerequisite()
- 		exit 0
- 	fi
+diff --git a/net/netfilter/xt_TEE.c b/net/netfilter/xt_TEE.c
+index 673ad2099f97..1dae02a97ee3 100644
+--- a/net/netfilter/xt_TEE.c
++++ b/net/netfilter/xt_TEE.c
+@@ -104,6 +104,8 @@ static int tee_tg_check(const struct xt_tgchk_param *par)
+ 		return -EINVAL;
  
-+	present_cpus=`cat $SYSFS/devices/system/cpu/present`
-+	present_max=${present_cpus##*-}
-+	echo "present_cpus = $present_cpus present_max = $present_max"
+ 	if (info->oif[0]) {
++		struct net_device *dev;
 +
- 	echo -e "\t Cpus in online state: $online_cpus"
+ 		if (info->oif[sizeof(info->oif)-1] != '\0')
+ 			return -EINVAL;
  
- 	offline_cpus=`cat $SYSFS/devices/system/cpu/offline`
-@@ -149,6 +153,8 @@ online_cpus=0
- online_max=0
- offline_cpus=0
- offline_max=0
-+present_cpus=0
-+present_max=0
+@@ -115,6 +117,11 @@ static int tee_tg_check(const struct xt_tgchk_param *par)
+ 		priv->oif     = -1;
+ 		info->priv    = priv;
  
- while getopts e:ahp: opt; do
- 	case $opt in
-@@ -188,9 +194,10 @@ if [ $allcpus -eq 0 ]; then
- 	online_cpu_expect_success $online_max
- 
- 	if [[ $offline_cpus -gt 0 ]]; then
--		echo -e "\t offline to online to offline: cpu $offline_max"
--		online_cpu_expect_success $offline_max
--		offline_cpu_expect_success $offline_max
-+		echo -e "\t offline to online to offline: cpu $present_max"
-+		online_cpu_expect_success $present_max
-+		offline_cpu_expect_success $present_max
-+		online_cpu $present_max
- 	fi
- 	exit 0
- else
++		dev = dev_get_by_name(par->net, info->oif);
++		if (dev) {
++			priv->oif = dev->ifindex;
++			dev_put(dev);
++		}
+ 		mutex_lock(&tn->lock);
+ 		list_add(&priv->list, &tn->priv_list);
+ 		mutex_unlock(&tn->lock);
 -- 
 2.19.1
 
