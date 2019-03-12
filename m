@@ -2,141 +2,124 @@ Return-Path: <SRS0=J4ZE=RP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7D8AAC43381
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 17:22:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CC7EDC43381
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 17:23:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5010D206DF
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 17:22:57 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="cpR19JXd"
+	by mail.kernel.org (Postfix) with ESMTP id 9C88C206DF
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 17:23:07 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1552411387;
+	bh=43OSHyfE5MUyfMbY7vOHWDSFzIxNLvinf4oaWQz+RHg=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=DSO3An5k1DP6QO2OWrdy8es5QwAadCGtSrgcpm/el3t0lUiYzii22YKQGZPPRJi4n
+	 b/Thps0eZuUtO28Pcv0rytK9OUO05DI5ejNCu8fBnUjNVHHup2Uua8WB5GPK9BQy9v
+	 KpCYefG7bxBdJDQbMx1q5SRixCKfwOWk21pUjfZc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730073AbfCLRW4 (ORCPT
+        id S1730078AbfCLRXG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 12 Mar 2019 13:22:56 -0400
-Received: from aserp2130.oracle.com ([141.146.126.79]:48294 "EHLO
-        aserp2130.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726833AbfCLRWy (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 12 Mar 2019 13:22:54 -0400
-Received: from pps.filterd (aserp2130.oracle.com [127.0.0.1])
-        by aserp2130.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x2CHEY8U159031;
-        Tue, 12 Mar 2019 17:22:48 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=mime-version :
- message-id : date : from : to : cc : subject : content-type :
- content-transfer-encoding; s=corp-2018-07-02;
- bh=iOjG49OepcYwW0hFgqwiU+e6H/1osYxSanFbyDuWEf0=;
- b=cpR19JXd90mLmPVgD7ys+E3oaDO8XW940yzSZ4KqYPNTllwjq+6dPBSjEgth2r1ChE9/
- disihy+TtFn/KMhCh+JK8mzfPp4c6mZFu8SZ9IrRCXsUCn17xAr5sg7Cnyf4CRdN1Hmf
- bd2lcu9g91buKXYCu/n7s8hl2/tG/5tyqtJBenequkQqKGU7DDZORRPvY8YNgqB15Wme
- XsnSudBR4NbBH53GtZUnanYgHaNmVDNMIoXmFiSaE9/sDAvpkZP3YHfCnvwzHFQaVp62
- cQqi6i8q4gURRb5bjg7ptAviTUhHPO7CfkvcZNnrUP3K0fMb633vmY5VBpZb/3PTm4M8 fA== 
-Received: from userv0021.oracle.com (userv0021.oracle.com [156.151.31.71])
-        by aserp2130.oracle.com with ESMTP id 2r430epmm8-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Tue, 12 Mar 2019 17:22:48 +0000
-Received: from userv0121.oracle.com (userv0121.oracle.com [156.151.31.72])
-        by userv0021.oracle.com (8.14.4/8.14.4) with ESMTP id x2CHMlV5016709
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Tue, 12 Mar 2019 17:22:47 GMT
-Received: from abhmp0003.oracle.com (abhmp0003.oracle.com [141.146.116.9])
-        by userv0121.oracle.com (8.14.4/8.13.8) with ESMTP id x2CHMlDf018500;
-        Tue, 12 Mar 2019 17:22:47 GMT
+        Tue, 12 Mar 2019 13:23:06 -0400
+Received: from mail.kernel.org ([198.145.29.99]:34984 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1729896AbfCLRSE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 12 Mar 2019 13:18:04 -0400
+Received: from localhost (unknown [104.133.8.98])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 6BFB82087C;
+        Tue, 12 Mar 2019 17:18:03 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1552411083;
+        bh=43OSHyfE5MUyfMbY7vOHWDSFzIxNLvinf4oaWQz+RHg=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=yA1dpUILfyI029JidbWwlHQvs3xitOTNb7XkP9GFbaF4gNsG0Rb+n7mCM1Y/aVuWs
+         qePUUBmnnWWc6DhTD2phg+S5+wsEo9Lwy/m2sQLuI4l7DU9vZd18dxliRcpIZY01kl
+         L6tNcnMhqsra9bEfInBQyGPua63jZ5snqFawwt8Q=
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     linux-kernel@vger.kernel.org
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        stable@vger.kernel.org, Jan Kara <jack@suse.cz>,
+        Michal Hocko <mhocko@suse.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Al Viro <viro@ZenIV.linux.org.uk>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.9 62/96] fs/drop_caches.c: avoid softlockups in drop_pagecache_sb()
+Date:   Tue, 12 Mar 2019 10:10:20 -0700
+Message-Id: <20190312171039.222529485@linuxfoundation.org>
+X-Mailer: git-send-email 2.21.0
+In-Reply-To: <20190312171034.530434962@linuxfoundation.org>
+References: <20190312171034.530434962@linuxfoundation.org>
+User-Agent: quilt/0.65
+X-stable: review
+X-Patchwork-Hint: ignore
 MIME-Version: 1.0
-Message-ID: <e4afe4c5-0262-4500-aeec-60f30734b4fc@default>
-Date:   Tue, 12 Mar 2019 10:22:46 -0700 (PDT)
-From:   Dongli Zhang <dongli.zhang@oracle.com>
-To:     <virtualization@lists.linux-foundation.org>,
-        <linux-block@vger.kernel.org>
-Cc:     <mst@redhat.com>, <axboe@kernel.dk>, <jasowang@redhat.com>,
-        <linux-kernel@vger.kernel.org>
-Subject: virtio-blk: should num_vqs be limited by num_possible_cpus()?
-X-Mailer: Zimbra on Oracle Beehive
 Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
-Content-Disposition: inline
-X-Proofpoint-Virus-Version: vendor=nai engine=5900 definitions=9193 signatures=668685
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
- suspectscore=0 phishscore=0 bulkscore=0 spamscore=0 clxscore=1015
- lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=999 adultscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1810050000
- definitions=main-1903120118
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-I observed that there is one msix vector for config and one shared vector
-for all queues in below qemu cmdline, when the num-queues for virtio-blk
-is more than the number of possible cpus:
+4.9-stable review patch.  If anyone has any objections, please let me know.
 
-qemu: "-smp 4" while "-device virtio-blk-pci,drive=3Ddrive-0,id=3Dvirtblk0,=
-num-queues=3D6"
+------------------
 
-# cat /proc/interrupts=20
-           CPU0       CPU1       CPU2       CPU3
-... ...
- 24:          0          0          0          0   PCI-MSI 65536-edge      =
-virtio0-config
- 25:          0          0          0         59   PCI-MSI 65537-edge      =
-virtio0-virtqueues
-... ...
+[ Upstream commit c27d82f52f75fc9d8d9d40d120d2a96fdeeada5e ]
 
+When superblock has lots of inodes without any pagecache (like is the
+case for /proc), drop_pagecache_sb() will iterate through all of them
+without dropping sb->s_inode_list_lock which can lead to softlockups
+(one of our customers hit this).
 
-However, when num-queues is the same as number of possible cpus:
+Fix the problem by going to the slow path and doing cond_resched() in
+case the process needs rescheduling.
 
-qemu: "-smp 4" while "-device virtio-blk-pci,drive=3Ddrive-0,id=3Dvirtblk0,=
-num-queues=3D4"
+Link: http://lkml.kernel.org/r/20190114085343.15011-1-jack@suse.cz
+Signed-off-by: Jan Kara <jack@suse.cz>
+Acked-by: Michal Hocko <mhocko@suse.com>
+Reviewed-by: Andrew Morton <akpm@linux-foundation.org>
+Cc: Al Viro <viro@ZenIV.linux.org.uk>
+Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
+Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
+---
+ fs/drop_caches.c | 8 +++++++-
+ 1 file changed, 7 insertions(+), 1 deletion(-)
 
-# cat /proc/interrupts=20
-           CPU0       CPU1       CPU2       CPU3
-... ...=20
- 24:          0          0          0          0   PCI-MSI 65536-edge      =
-virtio0-config
- 25:          2          0          0          0   PCI-MSI 65537-edge      =
-virtio0-req.0
- 26:          0         35          0          0   PCI-MSI 65538-edge      =
-virtio0-req.1
- 27:          0          0         32          0   PCI-MSI 65539-edge      =
-virtio0-req.2
- 28:          0          0          0          0   PCI-MSI 65540-edge      =
-virtio0-req.3
-... ...
-
-In above case, there is one msix vector per queue.
-
-
-This is because the max number of queues is not limited by the number of
-possible cpus.
-
-By default, nvme (regardless about write_queues and poll_queues) and
-xen-blkfront limit the number of queues with num_possible_cpus().
-
-
-Is this by design on purpose, or can we fix with below?
-
-
-diff --git a/drivers/block/virtio_blk.c b/drivers/block/virtio_blk.c
-index 4bc083b..df95ce3 100644
---- a/drivers/block/virtio_blk.c
-+++ b/drivers/block/virtio_blk.c
-@@ -513,6 +513,8 @@ static int init_vq(struct virtio_blk *vblk)
- =09if (err)
- =09=09num_vqs =3D 1;
-=20
-+=09num_vqs =3D min(num_possible_cpus(), num_vqs);
-+
- =09vblk->vqs =3D kmalloc_array(num_vqs, sizeof(*vblk->vqs), GFP_KERNEL);
- =09if (!vblk->vqs)
- =09=09return -ENOMEM;
---
+diff --git a/fs/drop_caches.c b/fs/drop_caches.c
+index d72d52b90433..280460fef066 100644
+--- a/fs/drop_caches.c
++++ b/fs/drop_caches.c
+@@ -20,8 +20,13 @@ static void drop_pagecache_sb(struct super_block *sb, void *unused)
+ 	spin_lock(&sb->s_inode_list_lock);
+ 	list_for_each_entry(inode, &sb->s_inodes, i_sb_list) {
+ 		spin_lock(&inode->i_lock);
++		/*
++		 * We must skip inodes in unusual state. We may also skip
++		 * inodes without pages but we deliberately won't in case
++		 * we need to reschedule to avoid softlockups.
++		 */
+ 		if ((inode->i_state & (I_FREEING|I_WILL_FREE|I_NEW)) ||
+-		    (inode->i_mapping->nrpages == 0)) {
++		    (inode->i_mapping->nrpages == 0 && !need_resched())) {
+ 			spin_unlock(&inode->i_lock);
+ 			continue;
+ 		}
+@@ -29,6 +34,7 @@ static void drop_pagecache_sb(struct super_block *sb, void *unused)
+ 		spin_unlock(&inode->i_lock);
+ 		spin_unlock(&sb->s_inode_list_lock);
+ 
++		cond_resched();
+ 		invalidate_mapping_pages(inode->i_mapping, 0, -1);
+ 		iput(toput_inode);
+ 		toput_inode = inode;
+-- 
+2.19.1
 
 
-PS: The same issue is applicable to virtio-scsi as well.
 
-Thank you very much!
-
-Dongli Zhang
