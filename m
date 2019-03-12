@@ -2,157 +2,94 @@ Return-Path: <SRS0=J4ZE=RP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 00E9FC43381
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 13:08:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 13CC5C43381
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 13:09:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B5A16214AE
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 13:08:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CC144214AE
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 13:09:48 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1552396188;
+	bh=PX650x90Bhz98ZoPKVYQLCrxLpyDGvLwe1QSH76azFY=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=DW8cEpp4fsQbbKBJpNUVUEy4+Rr8PAwSNvcvYIE+1SNfhS3M7BONo8W7SJ36dSzRd
+	 ne9Tvp6G9dXYdhPQVQZzkWy8XilX3+VTbMILy0jNjJD0dodBaz7RQVdg4t/Og00lIi
+	 fCBEzO3tKlU6WCqzjG6gffMYyY3VdpjvdRBVdB2A=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726365AbfCLNH7 convert rfc822-to-8bit (ORCPT
+        id S1726628AbfCLNJr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 12 Mar 2019 09:07:59 -0400
-Received: from gloria.sntech.de ([185.11.138.130]:60038 "EHLO gloria.sntech.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725774AbfCLNH7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 12 Mar 2019 09:07:59 -0400
-Received: from we0652.dip.tu-dresden.de ([141.76.178.140] helo=phil.localnet)
-        by gloria.sntech.de with esmtpsa (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.89)
-        (envelope-from <heiko@sntech.de>)
-        id 1h3h88-0001ln-59; Tue, 12 Mar 2019 14:07:40 +0100
-From:   Heiko Stuebner <heiko@sntech.de>
-To:     Christoph Muellner <christoph.muellner@theobroma-systems.com>
-Cc:     robh+dt@kernel.org, mark.rutland@arm.com, shawn.lin@rock-chips.com,
-        Philipp Tomsich <philipp.tomsich@theobroma-systems.com>,
-        Kishon Vijay Abraham I <kishon@ti.com>,
-        Brian Norris <briannorris@chromium.org>,
-        Matthias Brugger <mbrugger@suse.com>,
-        Enric Balletbo i Serra <enric.balletbo@collabora.com>,
-        Klaus Goger <klaus.goger@theobroma-systems.com>,
-        Douglas Anderson <dianders@chromium.org>,
-        Viresh Kumar <viresh.kumar@linaro.org>,
-        Jeffy Chen <jeffy.chen@rock-chips.com>,
-        Vicente Bergas <vicencb@gmail.com>,
-        Randy Li <ayaka@soulik.info>,
-        Tony Xie <tony.xie@rock-chips.com>,
-        Ezequiel Garcia <ezequiel@collabora.com>,
-        Lin Huang <hl@rock-chips.com>, linux-kernel@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-rockchip@lists.infradead.org
-Subject: Re: [PATCH v2 1/4] phy: rockchip-emmc: Allow to set drive impedance via DTS.
-Date:   Tue, 12 Mar 2019 14:07:39 +0100
-Message-ID: <1571188.ajMNexS2DJ@phil>
-In-Reply-To: <20190307084159.25236-1-christoph.muellner@theobroma-systems.com>
-References: <20190307084159.25236-1-christoph.muellner@theobroma-systems.com>
+        Tue, 12 Mar 2019 09:09:47 -0400
+Received: from mail-ot1-f65.google.com ([209.85.210.65]:46341 "EHLO
+        mail-ot1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725774AbfCLNJr (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 12 Mar 2019 09:09:47 -0400
+Received: by mail-ot1-f65.google.com with SMTP id c18so2341613otl.13;
+        Tue, 12 Mar 2019 06:09:47 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=6cWu7mCQK4yHxmb1PZh2AHixxCfb0dETjCGN2iq84C0=;
+        b=Rk5kc9joIzw96LZKoLl/RKLBbCA4ZlwlDxnwQrfTZJbyfsGYUfSCzKxfKabzuXv6yp
+         jOMMC6BNRWnWVvLoSoXnq9g4BuF55JvMeq9Yn1ueRY9qSfWNm69OUwZqYQTlMwMlgOZA
+         lVd8wyGtVOPBiz6wM2MW+8dd2eQgxzGGlPwuSQs8zBek8uIFGUeUWpizf0OAJGf3VItf
+         MGZDllpZu++0u8be6MMc1j6r/kvRZAHislTPnJ9p+/kOBOSf9QSUKTegl8Lx9tCm7mpi
+         FNuqSPqkOazDJDe6CSG7lahjfp47OlyH1xTuVLX9fW1i9QwkIfeFyZr5rZZTsvrzNg/2
+         tmxw==
+X-Gm-Message-State: APjAAAXAkwuHaN/j2TwWBjEtGIjB7q7WkUSU47m/63l0sBDnd6+iv1eg
+        43ZYyLYAGkLIwqvi6ZiDEQ==
+X-Google-Smtp-Source: APXvYqy97UOlHRxO+tmQz9AnJPpgkCeb1CCuO4HFaL8VUuvZyIBLe+g/c63M8KOhlc+cyDyxF+BsFg==
+X-Received: by 2002:a9d:4b17:: with SMTP id q23mr25393otf.35.1552396186345;
+        Tue, 12 Mar 2019 06:09:46 -0700 (PDT)
+Received: from localhost ([70.231.7.113])
+        by smtp.gmail.com with ESMTPSA id i8sm3428575oib.44.2019.03.12.06.09.45
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Tue, 12 Mar 2019 06:09:45 -0700 (PDT)
+Date:   Tue, 12 Mar 2019 08:09:45 -0500
+From:   Rob Herring <robh@kernel.org>
+To:     Anson Huang <anson.huang@nxp.com>
+Cc:     "robh+dt@kernel.org" <robh+dt@kernel.org>,
+        "mark.rutland@arm.com" <mark.rutland@arm.com>,
+        "shawnguo@kernel.org" <shawnguo@kernel.org>,
+        "s.hauer@pengutronix.de" <s.hauer@pengutronix.de>,
+        "kernel@pengutronix.de" <kernel@pengutronix.de>,
+        "festevam@gmail.com" <festevam@gmail.com>,
+        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>,
+        dl-linux-imx <linux-imx@nxp.com>
+Subject: Re: [PATCH V5 1/4] dt-bindings: memory-controllers: freescale: add
+ MMDC  binding doc
+Message-ID: <20190312130945.GA31098@bogus>
+References: <1552357127-1283-1-git-send-email-Anson.Huang@nxp.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8BIT
-Content-Type: text/plain; charset="iso-8859-1"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <1552357127-1283-1-git-send-email-Anson.Huang@nxp.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Am Donnerstag, 7. März 2019, 09:41:53 CET schrieb Christoph Muellner:
-> The rockchip-emmc PHY can be configured with different
-> drive impedance values. Currenlty a value of 50 Ohm is
-> hard coded into the driver.
+On Tue, 12 Mar 2019 02:24:08 +0000, Anson Huang wrote:
+> Freescale MMDC (Multi Mode DDR Controller) driver is supported
+> since i.MX6Q, but not yet documented, this patch adds binding
+> doc for MMDC module driver.
 > 
-> This patch introduces the DTS property 'drive-impedance-ohm'
-> for the rockchip-emmc phy node, which uses the value from the DTS
-> to setup the drive impedance accordingly.
-> 
-> Signed-off-by: Christoph Muellner <christoph.muellner@theobroma-systems.com>
-> Signed-off-by: Philipp Tomsich <philipp.tomsich@theobroma-systems.com>
-
-change itself looks good
-Reviewed-by: Heiko Stuebner <heiko@sntech.de>
-
-Though I cannot say too much about the electrical side.
-
-
-Heiko
-
+> Signed-off-by: Anson Huang <Anson.Huang@nxp.com>
 > ---
->  drivers/phy/rockchip/phy-rockchip-emmc.c | 30 ++++++++++++++++++++++++++++--
->  1 file changed, 28 insertions(+), 2 deletions(-)
-> 
-> diff --git a/drivers/phy/rockchip/phy-rockchip-emmc.c b/drivers/phy/rockchip/phy-rockchip-emmc.c
-> index 19bf84f0bc67..b804c6bf4b55 100644
-> --- a/drivers/phy/rockchip/phy-rockchip-emmc.c
-> +++ b/drivers/phy/rockchip/phy-rockchip-emmc.c
-> @@ -87,6 +87,7 @@ struct rockchip_emmc_phy {
->  	unsigned int	reg_offset;
->  	struct regmap	*reg_base;
->  	struct clk	*emmcclk;
-> +	unsigned int drive_impedance;
->  };
->  
->  static int rockchip_emmc_phy_power(struct phy *phy, bool on_off)
-> @@ -281,10 +282,10 @@ static int rockchip_emmc_phy_power_on(struct phy *phy)
->  {
->  	struct rockchip_emmc_phy *rk_phy = phy_get_drvdata(phy);
->  
-> -	/* Drive impedance: 50 Ohm */
-> +	/* Drive impedance: from DTS */
->  	regmap_write(rk_phy->reg_base,
->  		     rk_phy->reg_offset + GRF_EMMCPHY_CON6,
-> -		     HIWORD_UPDATE(PHYCTRL_DR_50OHM,
-> +		     HIWORD_UPDATE(rk_phy->drive_impedance,
->  				   PHYCTRL_DR_MASK,
->  				   PHYCTRL_DR_SHIFT));
->  
-> @@ -314,6 +315,26 @@ static const struct phy_ops ops = {
->  	.owner		= THIS_MODULE,
->  };
->  
-> +static u32 convert_drive_impedance_ohm(struct platform_device *pdev, u32 dr_ohm)
-> +{
-> +	switch (dr_ohm) {
-> +	case 100:
-> +		return PHYCTRL_DR_100OHM;
-> +	case 66:
-> +		return PHYCTRL_DR_66OHM;
-> +	case 50:
-> +		return PHYCTRL_DR_50OHM;
-> +	case 40:
-> +		return PHYCTRL_DR_40OHM;
-> +	case 33:
-> +		return PHYCTRL_DR_33OHM;
-> +	}
-> +
-> +	dev_warn(&pdev->dev, "Invalid value %u for drive-impedance-ohm.\n",
-> +		 dr_ohm);
-> +	return PHYCTRL_DR_50OHM;
-> +}
-> +
->  static int rockchip_emmc_phy_probe(struct platform_device *pdev)
->  {
->  	struct device *dev = &pdev->dev;
-> @@ -322,6 +343,7 @@ static int rockchip_emmc_phy_probe(struct platform_device *pdev)
->  	struct phy_provider *phy_provider;
->  	struct regmap *grf;
->  	unsigned int reg_offset;
-> +	u32 val;
->  
->  	if (!dev->parent || !dev->parent->of_node)
->  		return -ENODEV;
-> @@ -344,6 +366,10 @@ static int rockchip_emmc_phy_probe(struct platform_device *pdev)
->  
->  	rk_phy->reg_offset = reg_offset;
->  	rk_phy->reg_base = grf;
-> +	rk_phy->drive_impedance = PHYCTRL_DR_50OHM;
-> +
-> +	if (!of_property_read_u32(dev->of_node, "drive-impedance-ohm", &val))
-> +		rk_phy->drive_impedance = convert_drive_impedance_ohm(pdev, val);
->  
->  	generic_phy = devm_phy_create(dev, dev->of_node, &ops);
->  	if (IS_ERR(generic_phy)) {
+> Changes since V4:
+> 	- update mmdc1 example.
+> ---
+>  .../bindings/memory-controllers/fsl/mmdc.txt       | 35 ++++++++++++++++++++++
+>  1 file changed, 35 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/memory-controllers/fsl/mmdc.txt
 > 
 
-
-
-
+Reviewed-by: Rob Herring <robh@kernel.org>
