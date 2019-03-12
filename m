@@ -2,190 +2,118 @@ Return-Path: <SRS0=J4ZE=RP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
 	SIGNED_OFF_BY,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EFEA3C43381
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 21:02:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C9351C43381
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 21:07:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B7D7E214AE
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 21:02:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 93A4C214AE
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 21:07:02 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=baylibre-com.20150623.gappssmtp.com header.i=@baylibre-com.20150623.gappssmtp.com header.b="eB/Ww7os"
+	dkim=pass (1024-bit key) header.d=c-s.fr header.i=@c-s.fr header.b="J0hH/exY"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726786AbfCLVCs (ORCPT
+        id S1726599AbfCLVHB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 12 Mar 2019 17:02:48 -0400
-Received: from mail-pg1-f194.google.com ([209.85.215.194]:43860 "EHLO
-        mail-pg1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726284AbfCLVCs (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 12 Mar 2019 17:02:48 -0400
-Received: by mail-pg1-f194.google.com with SMTP id l11so2719210pgq.10
-        for <linux-kernel@vger.kernel.org>; Tue, 12 Mar 2019 14:02:47 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=baylibre-com.20150623.gappssmtp.com; s=20150623;
-        h=from:to:cc:subject:in-reply-to:references:date:message-id
-         :mime-version;
-        bh=s1zAivap7ECwynYe4xnVyvyJ8rC0V8FIe7PE8u9zfRQ=;
-        b=eB/Ww7os4vu6TCDty5HZIcM8A5fEpeK8Sg857UyvOmz+ZrRNseLtbo2x68efFdLvvH
-         2Adu4yDCZXj8vFZtVdL9X3FjHcw9/p1mEjOzj+yyh20cpC5AZZIucn3cITVDpn8os2Oq
-         Ld4uWb5a5BCBgielP5mXu0oQ6VoeT6CToO941JkRRMtw3Knqz3CLchfEAd0TYCNo6t4C
-         2l/mkUAgG54L8fZw29svQqK8moR0lRmV1GIfxk7OhOs1TsWY27n4KDiJM2f7PQaV80KA
-         1DE0nfBrYCfubh5GbrSo/X24lHdOovbhGnxn4BOZ2eyqBIePj3PJ0PgahWVFfa40y0Xq
-         eDwA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:in-reply-to:references:date
-         :message-id:mime-version;
-        bh=s1zAivap7ECwynYe4xnVyvyJ8rC0V8FIe7PE8u9zfRQ=;
-        b=Pzz527b+gcwyzHO+lTJqUNrzd+T5erDzvJSCy5jVRcx1PMar9gM9FVFGbK0nL439YJ
-         8r3Kho0ZXof3miZAuscPFaSsTLDOQQcRZwzHLIqvko50YjLTXeXzC0ynh+VcZG05tNOV
-         NX6oOuNBJDLEd3xO/ufxHcIrDL8M0NiF3gcqFsewETW7cmRM6SENQMdb+xz9oOLb9uY2
-         bROLZmtNVpYetqgOylnl4nDOP6dKcLm8dQdPDqKb2+c0KzNPjGGR6kqBfteVCUtOB9IP
-         FQt/zNFfPgZF8QnboKbEh7W4YSIBMdVhL+Zs1spbuPArs/LFBlthaOKq1EGYQvJ7xleq
-         WyvA==
-X-Gm-Message-State: APjAAAVfZCeh9ocF9OhaRyDwUPd3X9Ds/RBT9O8G+JMzdm8shcgWJ90K
-        C3Yfv9mqploYDhB1ncZPoNWszQ==
-X-Google-Smtp-Source: APXvYqwcYN+hh84jUZuAHGI1ZxzE4OR034TULZaPm2fef+FgtZiXl3TM7o/j3jKlW8Y/kpPLjIfXmw==
-X-Received: by 2002:a63:fc49:: with SMTP id r9mr36671226pgk.447.1552424566702;
-        Tue, 12 Mar 2019 14:02:46 -0700 (PDT)
-Received: from localhost ([2601:602:9200:a1a5:1daf:3f96:9f7f:33ba])
-        by smtp.googlemail.com with ESMTPSA id q62sm22235827pfi.183.2019.03.12.14.02.45
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Tue, 12 Mar 2019 14:02:46 -0700 (PDT)
-From:   Kevin Hilman <khilman@baylibre.com>
-To:     Neil Armstrong <narmstrong@baylibre.com>
-Cc:     Neil Armstrong <narmstrong@baylibre.com>,
-        linux-amlogic@lists.infradead.org,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 6/9] arm64: dts: meson: g12a: Add UART A, B & C nodes and pins
-In-Reply-To: <20190307151342.7381-7-narmstrong@baylibre.com>
-References: <20190307151342.7381-1-narmstrong@baylibre.com> <20190307151342.7381-7-narmstrong@baylibre.com>
-Date:   Tue, 12 Mar 2019 14:02:45 -0700
-Message-ID: <7hbm2fu7pm.fsf@baylibre.com>
+        Tue, 12 Mar 2019 17:07:01 -0400
+Received: from pegase1.c-s.fr ([93.17.236.30]:48226 "EHLO pegase1.c-s.fr"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726141AbfCLVHA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 12 Mar 2019 17:07:00 -0400
+Received: from localhost (mailhub1-int [192.168.12.234])
+        by localhost (Postfix) with ESMTP id 44JnbQ3ftMz9tyk6;
+        Tue, 12 Mar 2019 22:06:58 +0100 (CET)
+Authentication-Results: localhost; dkim=pass
+        reason="1024-bit key; insecure key"
+        header.d=c-s.fr header.i=@c-s.fr header.b=J0hH/exY; dkim-adsp=pass;
+        dkim-atps=neutral
+X-Virus-Scanned: Debian amavisd-new at c-s.fr
+Received: from pegase1.c-s.fr ([192.168.12.234])
+        by localhost (pegase1.c-s.fr [192.168.12.234]) (amavisd-new, port 10024)
+        with ESMTP id z67DVygoNA5z; Tue, 12 Mar 2019 22:06:58 +0100 (CET)
+Received: from messagerie.si.c-s.fr (messagerie.si.c-s.fr [192.168.25.192])
+        by pegase1.c-s.fr (Postfix) with ESMTP id 44JnbQ2NJ4z9tyk5;
+        Tue, 12 Mar 2019 22:06:58 +0100 (CET)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=c-s.fr; s=mail;
+        t=1552424818; bh=zBYhOEYLXrz7PJI1Po72HlbOH12xnUkoCduJPKrRJmQ=;
+        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
+        b=J0hH/exY/s5vF5+d4+F/msn0zj+YTfieD1SSNtio+35WR1mqo7TowrF4hIsPrT9b+
+         6Zx6yW+c31cwN2b/3eD4lql/ZXZLqkBh5DaTJIEF7ZKq02VWkis6OXpysbR9VXu1Tk
+         /iBxzr5ww9MCYJtWvlmD4SQot6lZnqkGTeOEeoFs=
+Received: from localhost (localhost [127.0.0.1])
+        by messagerie.si.c-s.fr (Postfix) with ESMTP id 633118B8B1;
+        Tue, 12 Mar 2019 22:06:58 +0100 (CET)
+X-Virus-Scanned: amavisd-new at c-s.fr
+Received: from messagerie.si.c-s.fr ([127.0.0.1])
+        by localhost (messagerie.si.c-s.fr [127.0.0.1]) (amavisd-new, port 10023)
+        with ESMTP id hwek6NOpjogc; Tue, 12 Mar 2019 22:06:58 +0100 (CET)
+Received: from po16846vm.idsi0.si.c-s.fr (unknown [192.168.4.90])
+        by messagerie.si.c-s.fr (Postfix) with ESMTP id 00E548B8A7;
+        Tue, 12 Mar 2019 22:06:57 +0100 (CET)
+Subject: Re: [PATCH] powerpc/64s: Mark 'dummy_copy_buffer' as used
+To:     Mathieu Malaterre <malat@debian.org>,
+        Michael Ellerman <mpe@ellerman.id.au>
+Cc:     linux-kernel@vger.kernel.org, Nicholas Piggin <npiggin@gmail.com>,
+        Paul Mackerras <paulus@samba.org>,
+        linuxppc-dev@lists.ozlabs.org
+References: <20190312202921.31331-1-malat@debian.org>
+From:   Christophe Leroy <christophe.leroy@c-s.fr>
+Message-ID: <38359442-e219-18ad-926b-42a6e5ab4e7d@c-s.fr>
+Date:   Tue, 12 Mar 2019 21:06:56 +0000
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:52.0) Gecko/20100101
+ Thunderbird/52.7.0
 MIME-Version: 1.0
-Content-Type: text/plain
+In-Reply-To: <20190312202921.31331-1-malat@debian.org>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Neil Armstrong <narmstrong@baylibre.com> writes:
+On 03/12/2019 08:29 PM, Mathieu Malaterre wrote:
+> In commit 07d2a628bc00 ("powerpc/64s: Avoid cpabort in context switch
+> when possible") a buffer 'dummy_copy_buffer' was introduced. gcc does
+> not see this buffer being used in the inline assembly within function
+> '__switch_to', explicitly marked this variable as being used.
+> 
+> Prefer using '__aligned' to get passed line over 80 characters warning
+> in checkpatch.
 
-> This patch adds the 2 UART nodes in the EE power domain with the corresponding
-> pinctrl nodes.
->
-> Signed-off-by: Neil Armstrong <narmstrong@baylibre.com>
+Powerpc accepts 90 characters, use arch/powerpc/tools/checkpatch.sh
 
-Similar to PATCH 4/9, are you wanting to move this to the board series?
+> 
+> This remove the following warning:
+> 
+>    arch/powerpc/kernel/process.c:1156:17: error: 'dummy_copy_buffer' defined but not used [-Werror=unused-const-variable=]
 
-Kevin
+commit 2bf1071a8d50 ("powerpc/64s: Remove POWER9 DD1 support") has 
+removed the fonction using 'dummy_copy_buffer' so you should remove it 
+completely.
 
+Christophe
+
+
+> 
+> Cc: Nicholas Piggin <npiggin@gmail.com>
+> Signed-off-by: Mathieu Malaterre <malat@debian.org>
 > ---
->  arch/arm64/boot/dts/amlogic/meson-g12a.dtsi | 82 +++++++++++++++++++++
->  1 file changed, 82 insertions(+)
->
-> diff --git a/arch/arm64/boot/dts/amlogic/meson-g12a.dtsi b/arch/arm64/boot/dts/amlogic/meson-g12a.dtsi
-> index 2a700bb45d04..50e2cd36e08b 100644
-> --- a/arch/arm64/boot/dts/amlogic/meson-g12a.dtsi
-> +++ b/arch/arm64/boot/dts/amlogic/meson-g12a.dtsi
-> @@ -113,6 +113,61 @@
->  						#gpio-cells = <2>;
->  						gpio-ranges = <&periphs_pinctrl 0 0 86>;
->  					};
-> +
-> +					uart_a_pins: uart_a {
-> +						mux {
-> +							groups = "uart_a_tx",
-> +								 "uart_a_rx";
-> +							function = "uart_a";
-> +							bias-disable;
-> +						};
-> +					};
-> +
-> +					uart_a_cts_rts_pins: uart_a_cts_rts {
-> +						mux {
-> +							groups = "uart_a_cts",
-> +								 "uart_a_rts";
-> +							function = "uart_a";
-> +							bias-disable;
-> +						};
-> +					};
-> +
-> +					uart_ao_a_c_pins: uart_ao_a_c {
-> +						mux {
-> +							groups = "uart_ao_a_rx_c",
-> +								 "uart_ao_a_tx_c";
-> +							function = "uart_ao_a_c";
-> +							bias-disable;
-> +						};
-> +					};
-> +
-> +					uart_b_pins: uart_b {
-> +						mux {
-> +							groups = "uart_b_tx",
-> +								 "uart_b_rx";
-> +							function = "uart_b";
-> +							bias-disable;
-> +						};
-> +					};
-> +
-> +					uart_c_pins: uart_c {
-> +						mux {
-> +							groups = "uart_c_tx",
-> +								 "uart_c_rx";
-> +							function = "uart_c";
-> +							bias-disable;
-> +						};
-> +					};
-> +
-> +					uart_c_cts_rts_pins: uart_c_cts_rts {
-> +						mux {
-> +							groups = "uart_c_cts",
-> +								 "uart_c_rts";
-> +							function = "uart_c";
-> +							bias-disable;
-> +						};
-> +					};
-> +				};
->  			};
->  
->  			hiu: bus@3c000 {
-> @@ -256,6 +311,33 @@
->  				compatible = "amlogic,meson-g12a-clk-measure";
->  				reg = <0x0 0x18000 0x0 0x10>;
->  			};
-> +
-> +			uart_C: serial@22000 {
-> +				compatible = "amlogic,meson-gx-uart";
-> +				reg = <0x0 0x22000 0x0 0x18>;
-> +				interrupts = <GIC_SPI 93 IRQ_TYPE_EDGE_RISING>;
-> +				clocks = <&xtal>, <&clkc CLKID_UART1>, <&xtal>;
-> +				clock-names = "xtal", "pclk", "baud";
-> +				status = "disabled";
-> +			};
-> +
-> +			uart_B: serial@23000 {
-> +				compatible = "amlogic,meson-gx-uart";
-> +				reg = <0x0 0x23000 0x0 0x18>;
-> +				interrupts = <GIC_SPI 75 IRQ_TYPE_EDGE_RISING>;
-> +				clocks = <&xtal>, <&clkc CLKID_UART1>, <&xtal>;
-> +				clock-names = "xtal", "pclk", "baud";
-> +				status = "disabled";
-> +			};
-> +
-> +			uart_A: serial@24000 {
-> +				compatible = "amlogic,meson-gx-uart";
-> +				reg = <0x0 0x24000 0x0 0x18>;
-> +				interrupts = <GIC_SPI 26 IRQ_TYPE_EDGE_RISING>;
-> +				clocks = <&xtal>, <&clkc CLKID_UART0>, <&xtal>;
-> +				clock-names = "xtal", "pclk", "baud";
-> +				status = "disabled";
-> +			};
->  		};
->  	};
->  
-> -- 
-> 2.20.1
+>   arch/powerpc/kernel/process.c | 2 +-
+>   1 file changed, 1 insertion(+), 1 deletion(-)
+> 
+> diff --git a/arch/powerpc/kernel/process.c b/arch/powerpc/kernel/process.c
+> index 77e44275d025..5acf63d45802 100644
+> --- a/arch/powerpc/kernel/process.c
+> +++ b/arch/powerpc/kernel/process.c
+> @@ -1153,7 +1153,7 @@ static inline void restore_sprs(struct thread_struct *old_thread,
+>   
+>   #ifdef CONFIG_PPC_BOOK3S_64
+>   #define CP_SIZE 128
+> -static const u8 dummy_copy_buffer[CP_SIZE] __attribute__((aligned(CP_SIZE)));
+> +static const u8 dummy_copy_buffer[CP_SIZE] __aligned(CP_SIZE) __used;
+>   #endif
+>   
+>   struct task_struct *__switch_to(struct task_struct *prev,
+> 
