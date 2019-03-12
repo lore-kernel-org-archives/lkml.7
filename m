@@ -2,56 +2,55 @@ Return-Path: <SRS0=J4ZE=RP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6A283C43381
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 17:53:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8FE9DC4360F
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 17:53:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 38DDE2173C
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 17:53:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 611152087C
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 17:53:05 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1552413180;
-	bh=iPjYLLU3jCJ9HdrOZQlrkb1fiYtVHyOHe1AoMZC8sZk=;
+	s=default; t=1552413185;
+	bh=ad5y20xZYFReHl8EPErNC9f0En/4xBecIgRU93YB7Lc=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=J3iDNSAD4BK+5nOX9pWdy94fOA6xWPocIwa7jiJNF9kAvlNKjlwu8FFyZBYYUGIlV
-	 sdQFMFvqvI/C65o4d0ge2UUkIizbTQiFfNI5viMPWVK4Hh76UAMq80KOb07y80fLMt
-	 A4U9uLDkO5LwyRgPRGn0frTWkrYj9qQLRlfsVsPQ=
+	b=nBEZZ+e97GywyfiGmGOpW/yvixBL5//VgorlM+lHUF2KK/kXSpU+DlqDckhn6Ardp
+	 PuvZJYfJdoliDY/ohF7T8AQv25LpVaaEB9XtAKHyt6sgBSWLcdSPrXfjcAWMXTKCvy
+	 yBz9Tb/0cgruGNS/bwPk1FO+DoWCTo1gxjS7RPaM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729137AbfCLRw7 (ORCPT
+        id S1728329AbfCLROW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 12 Mar 2019 13:52:59 -0400
-Received: from mail.kernel.org ([198.145.29.99]:52992 "EHLO mail.kernel.org"
+        Tue, 12 Mar 2019 13:14:22 -0400
+Received: from mail.kernel.org ([198.145.29.99]:50866 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728334AbfCLROX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 12 Mar 2019 13:14:23 -0400
+        id S1727990AbfCLRNh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 12 Mar 2019 13:13:37 -0400
 Received: from localhost (unknown [104.133.8.98])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 838D1217F9;
-        Tue, 12 Mar 2019 17:14:22 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id EC9322183F;
+        Tue, 12 Mar 2019 17:13:35 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1552410862;
-        bh=iPjYLLU3jCJ9HdrOZQlrkb1fiYtVHyOHe1AoMZC8sZk=;
+        s=default; t=1552410816;
+        bh=ad5y20xZYFReHl8EPErNC9f0En/4xBecIgRU93YB7Lc=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=ONmGhWSZMEcSRP4A2XdELPtkvh0gxvKtxodQHQ5m/E4XC4lmjRY2qyvCWkK2t0YOS
-         xUdsUq2/ZyaPuxPUoQGQYpUazHnkXukZltUQmQj5F1A4buNe0HUDb+NmXDHmepqajp
-         rAuYwL7rlefa2kZsmzgy0XXUjeH6vf2CBajRweTs=
+        b=tznPZsPL9UR4tieDNcurcqaoHPBpqT2i3BCoa+YVy8ljrDWEpw9UZLACIaXtKTSo1
+         u58c9IhC0wOrVkxxFsTHgclCkhyrW/XBkmZJvKmZRkhLJBUxFXMXfE8j+L3CD8RAbO
+         pZV5eTIiMA0yhRD3xt6ZPrWaFu4hRUfK3pjZ7z+4=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Douglas Gilbert <dgilbert@interlog.com>,
-        Bart Van Assche <bvanassche@acm.org>,
-        "Martin K. Petersen" <martin.petersen@oracle.com>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 041/149] scsi: scsi_debug: fix write_same with virtual_gb problem
-Date:   Tue, 12 Mar 2019 10:07:39 -0700
-Message-Id: <20190312170353.183370524@linuxfoundation.org>
+        stable@vger.kernel.org,
+        "Peter Zijlstra (Intel)" <peterz@infradead.org>,
+        Thomas Gleixner <tglx@linutronix.de>
+Subject: [PATCH 4.20 168/171] perf/x86/intel: Make cpuc allocations consistent
+Date:   Tue, 12 Mar 2019 10:09:08 -0700
+Message-Id: <20190312170402.015527046@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
-In-Reply-To: <20190312170349.421581206@linuxfoundation.org>
-References: <20190312170349.421581206@linuxfoundation.org>
+In-Reply-To: <20190312170347.868927101@linuxfoundation.org>
+References: <20190312170347.868927101@linuxfoundation.org>
 User-Agent: quilt/0.65
 X-stable: review
 X-Patchwork-Hint: ignore
@@ -63,130 +62,173 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-4.19-stable review patch.  If anyone has any objections, please let me know.
+4.20-stable review patch.  If anyone has any objections, please let me know.
 
 ------------------
 
-[ Upstream commit 40d07b523cf434f252b134c86b1f8f2d907ffb0b ]
+From: "Peter Zijlstra (Intel)" <peterz@infradead.org>
 
-The WRITE SAME(10) and (16) implementations didn't take account of the
-buffer wrap required when the virtual_gb parameter is greater than 0.
+commit d01b1f96a82e5dd7841a1d39db3abfdaf95f70ab upstream
 
-Fix that and rename the fake_store() function to lba2fake_store() to lessen
-confusion with the global fake_storep pointer. Bump version date.
+The cpuc data structure allocation is different between fake and real
+cpuc's; use the same code to init/free both.
 
-Signed-off-by: Douglas Gilbert <dgilbert@interlog.com>
-Reported-by: Bart Van Assche <bvanassche@acm.org>
-Tested by: Bart Van Assche <bvanassche@acm.org>
-Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
+Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
+Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- drivers/scsi/scsi_debug.c | 41 ++++++++++++++++++++-------------------
- 1 file changed, 21 insertions(+), 20 deletions(-)
+ arch/x86/events/core.c       |   13 +++++--------
+ arch/x86/events/intel/core.c |   29 ++++++++++++++++++-----------
+ arch/x86/events/perf_event.h |   11 ++++++++---
+ 3 files changed, 31 insertions(+), 22 deletions(-)
 
-diff --git a/drivers/scsi/scsi_debug.c b/drivers/scsi/scsi_debug.c
-index 60bcc6df97a9..65305b3848bc 100644
---- a/drivers/scsi/scsi_debug.c
-+++ b/drivers/scsi/scsi_debug.c
-@@ -62,7 +62,7 @@
- 
- /* make sure inq_product_rev string corresponds to this version */
- #define SDEBUG_VERSION "0188"	/* format to fit INQUIRY revision field */
--static const char *sdebug_version_date = "20180128";
-+static const char *sdebug_version_date = "20190125";
- 
- #define MY_NAME "scsi_debug"
- 
-@@ -735,7 +735,7 @@ static inline bool scsi_debug_lbp(void)
- 		(sdebug_lbpu || sdebug_lbpws || sdebug_lbpws10);
+--- a/arch/x86/events/core.c
++++ b/arch/x86/events/core.c
+@@ -1995,7 +1995,7 @@ static int x86_pmu_commit_txn(struct pmu
+  */
+ static void free_fake_cpuc(struct cpu_hw_events *cpuc)
+ {
+-	kfree(cpuc->shared_regs);
++	intel_cpuc_finish(cpuc);
+ 	kfree(cpuc);
  }
  
--static void *fake_store(unsigned long long lba)
-+static void *lba2fake_store(unsigned long long lba)
- {
- 	lba = do_div(lba, sdebug_store_sectors);
- 
-@@ -2514,8 +2514,8 @@ static int do_device_access(struct scsi_cmnd *scmd, u32 sg_skip, u64 lba,
- 	return ret;
+@@ -2007,14 +2007,11 @@ static struct cpu_hw_events *allocate_fa
+ 	cpuc = kzalloc(sizeof(*cpuc), GFP_KERNEL);
+ 	if (!cpuc)
+ 		return ERR_PTR(-ENOMEM);
+-
+-	/* only needed, if we have extra_regs */
+-	if (x86_pmu.extra_regs) {
+-		cpuc->shared_regs = allocate_shared_regs(cpu);
+-		if (!cpuc->shared_regs)
+-			goto error;
+-	}
+ 	cpuc->is_fake = 1;
++
++	if (intel_cpuc_prepare(cpuc, cpu))
++		goto error;
++
+ 	return cpuc;
+ error:
+ 	free_fake_cpuc(cpuc);
+--- a/arch/x86/events/intel/core.c
++++ b/arch/x86/events/intel/core.c
+@@ -3398,7 +3398,7 @@ ssize_t intel_event_sysfs_show(char *pag
+ 	return x86_event_sysfs_show(page, config, event);
  }
  
--/* If fake_store(lba,num) compares equal to arr(num), then copy top half of
-- * arr into fake_store(lba,num) and return true. If comparison fails then
-+/* If lba2fake_store(lba,num) compares equal to arr(num), then copy top half of
-+ * arr into lba2fake_store(lba,num) and return true. If comparison fails then
-  * return false. */
- static bool comp_write_worker(u64 lba, u32 num, const u8 *arr)
+-struct intel_shared_regs *allocate_shared_regs(int cpu)
++static struct intel_shared_regs *allocate_shared_regs(int cpu)
  {
-@@ -2643,7 +2643,7 @@ static int prot_verify_read(struct scsi_cmnd *SCpnt, sector_t start_sec,
- 		if (sdt->app_tag == cpu_to_be16(0xffff))
- 			continue;
+ 	struct intel_shared_regs *regs;
+ 	int i;
+@@ -3430,10 +3430,9 @@ static struct intel_excl_cntrs *allocate
+ 	return c;
+ }
  
--		ret = dif_verify(sdt, fake_store(sector), sector, ei_lba);
-+		ret = dif_verify(sdt, lba2fake_store(sector), sector, ei_lba);
- 		if (ret) {
- 			dif_errors++;
- 			return ret;
-@@ -3261,10 +3261,12 @@ static int resp_write_scat(struct scsi_cmnd *scp,
- static int resp_write_same(struct scsi_cmnd *scp, u64 lba, u32 num,
- 			   u32 ei_lba, bool unmap, bool ndob)
+-static int intel_pmu_cpu_prepare(int cpu)
+-{
+-	struct cpu_hw_events *cpuc = &per_cpu(cpu_hw_events, cpu);
+ 
++int intel_cpuc_prepare(struct cpu_hw_events *cpuc, int cpu)
++{
+ 	if (x86_pmu.extra_regs || x86_pmu.lbr_sel_map) {
+ 		cpuc->shared_regs = allocate_shared_regs(cpu);
+ 		if (!cpuc->shared_regs)
+@@ -3443,7 +3442,7 @@ static int intel_pmu_cpu_prepare(int cpu
+ 	if (x86_pmu.flags & PMU_FL_EXCL_CNTRS) {
+ 		size_t sz = X86_PMC_IDX_MAX * sizeof(struct event_constraint);
+ 
+-		cpuc->constraint_list = kzalloc(sz, GFP_KERNEL);
++		cpuc->constraint_list = kzalloc_node(sz, GFP_KERNEL, cpu_to_node(cpu));
+ 		if (!cpuc->constraint_list)
+ 			goto err_shared_regs;
+ 
+@@ -3468,6 +3467,11 @@ err:
+ 	return -ENOMEM;
+ }
+ 
++static int intel_pmu_cpu_prepare(int cpu)
++{
++	return intel_cpuc_prepare(&per_cpu(cpu_hw_events, cpu), cpu);
++}
++
+ static void flip_smm_bit(void *data)
  {
-+	int ret;
- 	unsigned long iflags;
- 	unsigned long long i;
--	int ret;
--	u64 lba_off;
-+	u32 lb_size = sdebug_sector_size;
-+	u64 block, lbaa;
-+	u8 *fs1p;
- 
- 	ret = check_device_access_params(scp, lba, num);
- 	if (ret)
-@@ -3276,31 +3278,30 @@ static int resp_write_same(struct scsi_cmnd *scp, u64 lba, u32 num,
- 		unmap_region(lba, num);
- 		goto out;
+ 	unsigned long set = *(unsigned long *)data;
+@@ -3542,9 +3546,8 @@ static void intel_pmu_cpu_starting(int c
  	}
--
--	lba_off = lba * sdebug_sector_size;
-+	lbaa = lba;
-+	block = do_div(lbaa, sdebug_store_sectors);
- 	/* if ndob then zero 1 logical block, else fetch 1 logical block */
-+	fs1p = fake_storep + (block * lb_size);
- 	if (ndob) {
--		memset(fake_storep + lba_off, 0, sdebug_sector_size);
-+		memset(fs1p, 0, lb_size);
- 		ret = 0;
- 	} else
--		ret = fetch_to_dev_buffer(scp, fake_storep + lba_off,
--					  sdebug_sector_size);
-+		ret = fetch_to_dev_buffer(scp, fs1p, lb_size);
+ }
  
- 	if (-1 == ret) {
- 		write_unlock_irqrestore(&atomic_rw, iflags);
- 		return DID_ERROR << 16;
--	} else if (sdebug_verbose && !ndob && (ret < sdebug_sector_size))
-+	} else if (sdebug_verbose && !ndob && (ret < lb_size))
- 		sdev_printk(KERN_INFO, scp->device,
- 			    "%s: %s: lb size=%u, IO sent=%d bytes\n",
--			    my_name, "write same",
--			    sdebug_sector_size, ret);
-+			    my_name, "write same", lb_size, ret);
+-static void free_excl_cntrs(int cpu)
++static void free_excl_cntrs(struct cpu_hw_events *cpuc)
+ {
+-	struct cpu_hw_events *cpuc = &per_cpu(cpu_hw_events, cpu);
+ 	struct intel_excl_cntrs *c;
  
- 	/* Copy first sector to remaining blocks */
--	for (i = 1 ; i < num ; i++)
--		memcpy(fake_storep + ((lba + i) * sdebug_sector_size),
--		       fake_storep + lba_off,
--		       sdebug_sector_size);
--
-+	for (i = 1 ; i < num ; i++) {
-+		lbaa = lba + i;
-+		block = do_div(lbaa, sdebug_store_sectors);
-+		memmove(fake_storep + (block * lb_size), fs1p, lb_size);
-+	}
- 	if (scsi_debug_lbp())
- 		map_region(lba, num);
- out:
--- 
-2.19.1
-
+ 	c = cpuc->excl_cntrs;
+@@ -3565,9 +3568,8 @@ static void intel_pmu_cpu_dying(int cpu)
+ 		disable_counter_freeze();
+ }
+ 
+-static void intel_pmu_cpu_dead(int cpu)
++void intel_cpuc_finish(struct cpu_hw_events *cpuc)
+ {
+-	struct cpu_hw_events *cpuc = &per_cpu(cpu_hw_events, cpu);
+ 	struct intel_shared_regs *pc;
+ 
+ 	pc = cpuc->shared_regs;
+@@ -3577,7 +3579,12 @@ static void intel_pmu_cpu_dead(int cpu)
+ 		cpuc->shared_regs = NULL;
+ 	}
+ 
+-	free_excl_cntrs(cpu);
++	free_excl_cntrs(cpuc);
++}
++
++static void intel_pmu_cpu_dead(int cpu)
++{
++	intel_cpuc_finish(&per_cpu(cpu_hw_events, cpu));
+ }
+ 
+ static void intel_pmu_sched_task(struct perf_event_context *ctx,
+@@ -4715,7 +4722,7 @@ static __init int fixup_ht_bug(void)
+ 	hardlockup_detector_perf_restart();
+ 
+ 	for_each_online_cpu(c)
+-		free_excl_cntrs(c);
++		free_excl_cntrs(&per_cpu(cpu_hw_events, c));
+ 
+ 	cpus_read_unlock();
+ 	pr_info("PMU erratum BJ122, BV98, HSD29 workaround disabled, HT off\n");
+--- a/arch/x86/events/perf_event.h
++++ b/arch/x86/events/perf_event.h
+@@ -889,7 +889,8 @@ struct event_constraint *
+ x86_get_event_constraints(struct cpu_hw_events *cpuc, int idx,
+ 			  struct perf_event *event);
+ 
+-struct intel_shared_regs *allocate_shared_regs(int cpu);
++extern int intel_cpuc_prepare(struct cpu_hw_events *cpuc, int cpu);
++extern void intel_cpuc_finish(struct cpu_hw_events *cpuc);
+ 
+ int intel_pmu_init(void);
+ 
+@@ -1025,9 +1026,13 @@ static inline int intel_pmu_init(void)
+ 	return 0;
+ }
+ 
+-static inline struct intel_shared_regs *allocate_shared_regs(int cpu)
++static inline int intel_cpuc_prepare(struct cpu_hw_event *cpuc, int cpu)
++{
++	return 0;
++}
++
++static inline void intel_cpuc_finish(struct cpu_hw_event *cpuc)
+ {
+-	return NULL;
+ }
+ 
+ static inline int is_ht_workaround_enabled(void)
 
 
