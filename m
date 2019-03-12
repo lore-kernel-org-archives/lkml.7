@@ -2,150 +2,115 @@ Return-Path: <SRS0=J4ZE=RP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,URIBL_BLOCKED
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 12B3DC43381
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 14:03:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 71E77C10F00
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 14:04:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D174C2087C
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 14:03:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 447E921734
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 14:04:06 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="upitj2pd"
+	dkim=pass (2048-bit key) header.d=baylibre-com.20150623.gappssmtp.com header.i=@baylibre-com.20150623.gappssmtp.com header.b="xXGa1xhP"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726794AbfCLODL (ORCPT
+        id S1726814AbfCLOEE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 12 Mar 2019 10:03:11 -0400
-Received: from mail-ua1-f46.google.com ([209.85.222.46]:39427 "EHLO
-        mail-ua1-f46.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726395AbfCLODK (ORCPT
+        Tue, 12 Mar 2019 10:04:04 -0400
+Received: from mail-oi1-f193.google.com ([209.85.167.193]:43208 "EHLO
+        mail-oi1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725895AbfCLOEE (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 12 Mar 2019 10:03:10 -0400
-Received: by mail-ua1-f46.google.com with SMTP id s15so816575uap.6
-        for <linux-kernel@vger.kernel.org>; Tue, 12 Mar 2019 07:03:09 -0700 (PDT)
+        Tue, 12 Mar 2019 10:04:04 -0400
+Received: by mail-oi1-f193.google.com with SMTP id i8so2124960oib.10
+        for <linux-kernel@vger.kernel.org>; Tue, 12 Mar 2019 07:04:03 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
+        d=baylibre-com.20150623.gappssmtp.com; s=20150623;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=KvaI0VCBVCzTg+3CN9M2PU/lJ1a9ZkyRLn/CJ2kOuIk=;
-        b=upitj2pdA9z4IducWBk84T+ll0TxWaillRih4wY/PCZEefKdSb5ILHNiIyZfLoVNv9
-         WE+AUu1HBag1IbBeavJSV0p1D0PdHdo7SDTio4UyxYAil/x1zmydzxQUqGAAv0njx8GK
-         9HS0Nn8h+A9WGMfpqmeJQjFIRcEAfbv5cTHZlhhbTlp/H+n7bUzvEj3gS+P2q0PB56FX
-         orajZ5X3WfFXk4Iyxa4ZzJXOZxe8rpzFbrnGj8nEYpY6WBvzccFEYNE45yflVpcrt+SZ
-         FCV16YQNdqI7eSjGT/TkSxI1l5dN1MLLRG768t5Ex8jh3D8zd8+fut7oa2nh9lIwEPiM
-         Mk4A==
+         :cc:content-transfer-encoding;
+        bh=RC9n/L2urRzMIddaEkM47GUXLJfkJCfKnT+zLB1fxyQ=;
+        b=xXGa1xhPq962PZh/0M3j4mAOlmZhS6NFDXzo4vogkbyqv8U/tAbx8VNHJd6v5gaJbq
+         iGPH2tBC8fkPtNUdDfrARZkcdTs9pn6H7O9/hI80ITNHS0D1dz4jr2y2Fb+w3ZCGYfCE
+         A4mGfJj1LXwVSWhi/LvnZ6mfPUrMgPy61gAjgvpnWxvleAq+h6HXaEMYRJxwZVWCmRmq
+         CQ87C8MPJdouValtJ3f2b6kP2ucp6E2Oxmpv+N5ezPOzbEMBLqVYMG1ZZ6L944+2pORs
+         UX9YOCdpXCFbej3zSL4snoaAfGWMegeigvwjUU+7ia/FQcyNWZr8FXPErpNcFtn4MuC0
+         7C1w==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=KvaI0VCBVCzTg+3CN9M2PU/lJ1a9ZkyRLn/CJ2kOuIk=;
-        b=NQHdBu7k1bkUg8d/hPgfrd9DuLLB3494JMryrbCNw9NmuMpoQdufT3s2IhQFXwhpKj
-         SQjJv5DUEi6wIgoPMZLlp8mr+reMcqdMmG/YenXWTbXpTyyUCyJp8iNDWunm3gi4uLvZ
-         RmwCo765doDsdBOYLoHITGr1X1KCyWpHaNO8cRlxi0eOh71LeGQmW7ZrAJ2Jdvsv5jhU
-         6goi27dhCvn8vEbjbJjmcnFn2YmSv0Q4YRddARM2g+iitZij3nvqvYzquzN/e7hJapho
-         ONoSabTyAdF03cHIKU6xr8K+vG6sh2LJFKNLDw6OyRrBC52v7jTLRX96luOOkTH1Okl5
-         P64g==
-X-Gm-Message-State: APjAAAVrnTFHTIx0mCvSYaYXOTynGAMsXWkYdlgSVYa82kG9awJ/pCFD
-        OTExSWkdvFc8zrg+lYsJiGrfKnAsTicnjaIpU7c=
-X-Google-Smtp-Source: APXvYqy6XhBwtFoMwZq0HDm9m4Uzw7JNBFdW4J1FiaBosJaBZmncW9aniaEAZwiIHokYb4uR5LhqZvLUw31QuYiTuns=
-X-Received: by 2002:ab0:7483:: with SMTP id n3mr19892981uap.131.1552399389065;
- Tue, 12 Mar 2019 07:03:09 -0700 (PDT)
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=RC9n/L2urRzMIddaEkM47GUXLJfkJCfKnT+zLB1fxyQ=;
+        b=H35LF4f12FG4JMVbfWQGJREapy/YItTxtBIYDfJJ6XAevUbwYfAhNFwDrXqBv6bd12
+         w/r8ZiB63pkQ5xHT6HGR1mRCs9JjCZSg+GVxAGIHcJutYv1Z5bXr3Nek0V3p9idJSOdU
+         83IyKm92sCsoXKtg7UM9wbRM/66DnXTPc3xP28B7HoKU7nXAH///uj6WXUbHOs0WuHn3
+         t1mhNz9zQ8ujstbTOOsCpCp4avD1R3+qcymGu/i79VY9C3Pc8Nv/6s8yQOMMbpwWkr/x
+         wjVb+2CHr36rsqZTKA6QT5/QjBU+Rh80bgtHTcTbVKm5rthhiXHpQyWrXrWnd30va2wY
+         WeLQ==
+X-Gm-Message-State: APjAAAVoNq+Y9rzNHjiXL9t3Y2R5NVoG1wwTQywnXnmrZrUBFUxWNz9X
+        gbYaGtSDv/MckcL51q38mdXiR+m4Q2dhif+m1uH4QQ==
+X-Google-Smtp-Source: APXvYqyO6Ri3cTvigCbe4KdbtZeEZKJtgtqAvWC8KsVCZmDNW8WB/VAD7yQrl9q0/Vf+C2xe+YiOvgpi4jzuwHVVbrk=
+X-Received: by 2002:aca:4dca:: with SMTP id a193mr1806746oib.21.1552399443282;
+ Tue, 12 Mar 2019 07:04:03 -0700 (PDT)
 MIME-Version: 1.0
-References: <CAOuPNLgobR4ejPs_ZUuXpRwkURH0sfb1LD27TKhGg=wrwhUvZg@mail.gmail.com>
- <2c5d240eabdb56913f4abcc9aacf2b6b@mailhost.ics.forth.gr>
-In-Reply-To: <2c5d240eabdb56913f4abcc9aacf2b6b@mailhost.ics.forth.gr>
-From:   Pintu Agarwal <pintu.ping@gmail.com>
-Date:   Tue, 12 Mar 2019 19:32:57 +0530
-Message-ID: <CAOuPNLg4dfoovZ_eqL5XvNW3Ak9dGeCVr=vbG6G5t4Rxo-nC9Q@mail.gmail.com>
-Subject: Re: ssh session with qemu-arm using busybox
-To:     Nick Kossifidis <mick@ics.forth.gr>
-Cc:     open list <linux-kernel@vger.kernel.org>,
-        kernelnewbies@kernelnewbies.org,
-        linux-arm-kernel@lists.infradead.org,
-        linux-riscv@lists.infradead.org, qemu-devel@nongnu.org
+References: <20190312132852.20115-1-brgl@bgdev.pl> <c86234af-a83a-712a-8dc8-0ec2a5dad103@oracle.com>
+In-Reply-To: <c86234af-a83a-712a-8dc8-0ec2a5dad103@oracle.com>
+From:   Bartosz Golaszewski <bgolaszewski@baylibre.com>
+Date:   Tue, 12 Mar 2019 15:03:52 +0100
+Message-ID: <CAMpxmJVeeMRPaXMKp29mE08pKFU4RRMetY=9-pWmazLg3DMLbg@mail.gmail.com>
+Subject: Re: [PATCH] mm: remove unused variable
+To:     Khalid Aziz <khalid.aziz@oracle.com>
+Cc:     Bartosz Golaszewski <brgl@bgdev.pl>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Anthony Yznaga <anthony.yznaga@oracle.com>,
+        "Aneesh Kumar K . V" <aneesh.kumar@linux.ibm.com>,
+        =?UTF-8?B?SsOpcsO0bWUgR2xpc3Nl?= <jglisse@redhat.com>,
+        linux-mm@kvack.org, LKML <linux-kernel@vger.kernel.org>
 Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+wt., 12 mar 2019 o 14:59 Khalid Aziz <khalid.aziz@oracle.com> napisa=C5=82(=
+a):
 >
-> -netdev user,id=unet,hostfwd=tcp::2222-:22 \
-> -net user \
+> On 3/12/19 7:28 AM, Bartosz Golaszewski wrote:
+> > From: Bartosz Golaszewski <bgolaszewski@baylibre.com>
+> >
+> > The mm variable is set but unused. Remove it.
 >
-> and you 'll get guest's port 22 to be forwarded to hosts port 2222, so
-> you can do
+> It is used. Look further down for calls to set_pte_at().
 >
-> ssh root@localhost:2222
+> --
+> Khalid
 >
-> from the host.
+> >
+> > Signed-off-by: Bartosz Golaszewski <bgolaszewski@baylibre.com>
+> > ---
+> >  mm/mprotect.c | 1 -
+> >  1 file changed, 1 deletion(-)
+> >
+> > diff --git a/mm/mprotect.c b/mm/mprotect.c
+> > index 028c724dcb1a..130dac3ad04f 100644
+> > --- a/mm/mprotect.c
+> > +++ b/mm/mprotect.c
+> > @@ -39,7 +39,6 @@ static unsigned long change_pte_range(struct vm_area_=
+struct *vma, pmd_t *pmd,
+> >               unsigned long addr, unsigned long end, pgprot_t newprot,
+> >               int dirty_accountable, int prot_numa)
+> >  {
+> > -     struct mm_struct *mm =3D vma->vm_mm;
+> >       pte_t *pte, oldpte;
+> >       spinlock_t *ptl;
+> >       unsigned long pages =3D 0;
+> >
+>
 >
 
-I tried many different options, but unfortunately none worked for me.
-1)
-qemu-system-arm -M vexpress-a9 -m 1024M -kernel
-../KERNEL/linux/arch/arm/boot/zImage -dtb
-../KERNEL/linux/arch/arm/boot/dts/vexpress-v2p-ca9.dtb -initrd
-rootfs.img.gz -append "console=ttyAMA0 root=/dev/ram rdinit=/sbin/init
-ip=dhcp" -nographic -smp 4 -netdev user,id=unet,hostfwd=tcp::2222-:22
--net user
+Oops, I blindly assumed the compiler is right, sorry for that. GCC
+complains it's unused when building usermode linux. I guess it's a
+matter of how set_pte_at() is defined for ARCH=3Dum. I'll take a second
+look.
 
-With this the eth0 interface is removed, and I see this message
-(although login works):
-qemu-system-arm: warning: hub 0 with no nics
-qemu-system-arm: warning: netdev unet has no peer
-Booting Linux on physical CPU 0x0
-<skip>
-NET: Registered protocol family 17
-<skip>
-Run /sbin/init as init process
-ifconfig: SIOCSIFADDR: No such device
-route: SIOCADDRT: Network is unreachable
-
-But, ssh is still not working.
-ssh root@localhost:2222
-ssh: Could not resolve hostname localhost:2222: Name or service not known
-
-
-2) if I give "-net nic" I get eth0 interface but still ssh does not work.
-qemu-system-arm: warning: netdev unet has no peer
-Booting Linux on physical CPU 0x0
-
-3) With this there is no error, but still ssh not working
-qemu-system-arm -M vexpress-a9 -m 1024M -kernel
-../KERNEL/linux/arch/arm/boot/zImage -dtb
-../KERNEL/linux/arch/arm/boot/dts/vexpress-v2p-ca9.dtb -initrd
-rootfs.img.gz -append "console=ttyAMA0 root=/dev/ram
-rdinit=/sbin/init" -nographic -netdev
-user,id=net0,hostfwd=tcp::2222-:22 -device
-virtio-net-device,netdev=net0 -net user -net nic
-
-ssh root@localhost:2222
-ssh: Could not resolve hostname localhost:2222: Name or service not known
-
-4) I also followed the steps mentioned in the below document, but its
-same result:
-https://wiki.qemu.org/Documentation/Networking
-
--------------
-So, I have some doubts:
-- Do, I need anything to be configured on host PC as well ?
-  I am using Ubuntu 16.04 desktop, and it is connected to only one
-office LAN network
-- Do I need any network configuration changes on host ?
-- Do I need to enable any thing in kernel side ?
-- I am using minimal busybox and I see there is no "ssh" command
-there. Do I need a different busybox or a dropbear ?
-- Will it work easily with buildroot ?
-- Is there any precompiled arm32-rootfs image present somewhere, which
-which ssh can work by default ?
-  Because, I really don't care much about user side, so any arm-rootfs
-should be fine for me
-- I haven't really explored "bridge/tap" network yet. Is that worth to
-try in these conditions.
-
-
-Regards,
-Pintu
+Bart
