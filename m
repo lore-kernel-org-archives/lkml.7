@@ -2,55 +2,53 @@ Return-Path: <SRS0=J4ZE=RP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-14.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BA94DC43381
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 17:32:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AA11FC43381
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 17:32:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8B1202087C
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 17:32:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7BD752087C
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 17:32:47 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1552411961;
-	bh=YvzDEsnyBOg+O9VLOP8HFQJKaii5pZp1M3eVQMbqnVY=;
+	s=default; t=1552411967;
+	bh=WryVRHgBihhi/BZKySB2jFmhH1U6qx0oJiZVRTJoXmg=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=ekn0WxpM8RNuDrApbgk1h0YKw4/f9G8g8uBnES9n6o8z2xi1kCEBKb3anaEn2+qhs
-	 QeRlSIsd4YZJVdKhz10dEjhbZ/+l4gH1jhYiFmOGZxY7iBbUlHKPVw/RXltmfkCCM3
-	 i6BiQueu+QOuvSWHSJbxsqd1i7XY+6XVS18t7W6k=
+	b=V21CQquFOJ/wT9aA65liLED/P16NqbJOY2gUSeZJhTyut8KYoSkVd9fiO8w3s9meR
+	 zM6KzK9xV2XYv2k+ZGvKFUnkDMBoTf+GnmDsAoscwCv+5tQHtZM1u1h+JBG5AgyX7i
+	 Hi9SedByTo4w9c9q3EJgcCMIvvUvWyhCl0tFMW7A=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729499AbfCLRcj (ORCPT
+        id S1729571AbfCLRcp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 12 Mar 2019 13:32:39 -0400
-Received: from mail.kernel.org ([198.145.29.99]:60220 "EHLO mail.kernel.org"
+        Tue, 12 Mar 2019 13:32:45 -0400
+Received: from mail.kernel.org ([198.145.29.99]:60104 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728047AbfCLRRE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 12 Mar 2019 13:17:04 -0400
+        id S1729410AbfCLRRC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 12 Mar 2019 13:17:02 -0400
 Received: from localhost (unknown [104.133.8.98])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 8D1EB2171F;
-        Tue, 12 Mar 2019 17:17:03 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 7F2462087C;
+        Tue, 12 Mar 2019 17:17:01 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1552411023;
-        bh=YvzDEsnyBOg+O9VLOP8HFQJKaii5pZp1M3eVQMbqnVY=;
+        s=default; t=1552411021;
+        bh=WryVRHgBihhi/BZKySB2jFmhH1U6qx0oJiZVRTJoXmg=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=tGZoytl5GWmAin0vOr3mWUTbgUzscmglSTUmMisvi53mZR8GyRxUDtpaz2e966/tJ
-         bcV4ddEbRmlMD72gKK9T/3SpI36+V2cFkNKMfvIFt33oMJZXELUToZ5hRRqPUdKAYK
-         5bsSTIFabyuApzBzVYGAfWN0HO736xy+JXNj8I9I=
+        b=YvBqCcUsrBolI41zIrt7CZcLoaEsvQ8bBA+dqnT5VO7TlnL5hHloKYFRvlpULRiP2
+         xXT62ozsjPvlL9CDCeL6YNIUa2SPYgHAs+yzlXYnTeeoeD8FibjS87bONZbtGL+YHE
+         NPJcm3w9OY0znM62U2zMPqbLTXGd4J1EvCpuI9Zs=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Michael Petlan <mpetlan@redhat.com>,
-        Adrian Hunter <adrian.hunter@intel.com>,
-        Jiri Olsa <jolsa@redhat.com>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Arnaldo Carvalho de Melo <acme@redhat.com>,
+        stable@vger.kernel.org, Martynas Pumputis <martynas@weave.works>,
+        Florian Westphal <fw@strlen.de>,
+        Pablo Neira Ayuso <pablo@netfilter.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.14 113/135] perf trace: Support multiple "vfs_getname" probes
-Date:   Tue, 12 Mar 2019 10:09:20 -0700
-Message-Id: <20190312170351.630894396@linuxfoundation.org>
+Subject: [PATCH 4.14 110/135] netfilter: nf_nat: skip nat clash resolution for same-origin entries
+Date:   Tue, 12 Mar 2019 10:09:17 -0700
+Message-Id: <20190312170351.339370619@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190312170341.127810985@linuxfoundation.org>
 References: <20190312170341.127810985@linuxfoundation.org>
@@ -69,99 +67,69 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-[ Upstream commit 6ab3bc240ade47a0f52bc16d97edd9accbe0024e ]
+[ Upstream commit 4e35c1cb9460240e983a01745b5f29fe3a4d8e39 ]
 
-With a suitably defined "probe:vfs_getname" probe, 'perf trace' can
-"beautify" its output, so syscalls like open() or openat() can print the
-"filename" argument instead of just its hex address, like:
+It is possible that two concurrent packets originating from the same
+socket of a connection-less protocol (e.g. UDP) can end up having
+different IP_CT_DIR_REPLY tuples which results in one of the packets
+being dropped.
 
-  $ perf trace -e open -- touch /dev/null
-  [...]
-       0.590 ( 0.014 ms): touch/18063 open(filename: /dev/null, flags: CREAT|NOCTTY|NONBLOCK|WRONLY, mode: IRUGO|IWUGO) = 3
-  [...]
+To illustrate this, consider the following simplified scenario:
 
-The output without such beautifier looks like:
+1. Packet A and B are sent at the same time from two different threads
+   by same UDP socket.  No matching conntrack entry exists yet.
+   Both packets cause allocation of a new conntrack entry.
+2. get_unique_tuple gets called for A.  No clashing entry found.
+   conntrack entry for A is added to main conntrack table.
+3. get_unique_tuple is called for B and will find that the reply
+   tuple of B is already taken by A.
+   It will allocate a new UDP source port for B to resolve the clash.
+4. conntrack entry for B cannot be added to main conntrack table
+   because its ORIGINAL direction is clashing with A and the REPLY
+   directions of A and B are not the same anymore due to UDP source
+   port reallocation done in step 3.
 
-     0.529 ( 0.011 ms): touch/18075 open(filename: 0xc78cf288, flags: CREAT|NOCTTY|NONBLOCK|WRONLY, mode: IRUGO|IWUGO) = 3
+This patch modifies nf_conntrack_tuple_taken so it doesn't consider
+colliding reply tuples if the IP_CT_DIR_ORIGINAL tuples are equal.
 
-However, when the vfs_getname probe expands to multiple probes and it is
-not the first one that is hit, the beautifier fails, as following:
+[ Florian: simplify patch to not use .allow_clash setting
+  and always ignore identical flows ]
 
-     0.326 ( 0.010 ms): touch/18072 open(filename: , flags: CREAT|NOCTTY|NONBLOCK|WRONLY, mode: IRUGO|IWUGO) = 3
-
-Fix it by hooking into all the expanded probes (inlines), now, for instance:
-
-  [root@quaco ~]# perf probe -l
-    probe:vfs_getname    (on getname_flags:73@fs/namei.c with pathname)
-    probe:vfs_getname_1  (on getname_flags:73@fs/namei.c with pathname)
-  [root@quaco ~]# perf trace -e open* sleep 1
-       0.010 ( 0.005 ms): sleep/5588 openat(dfd: CWD, filename: /etc/ld.so.cache, flags: RDONLY|CLOEXEC)   = 3
-       0.029 ( 0.006 ms): sleep/5588 openat(dfd: CWD, filename: /lib64/libc.so.6, flags: RDONLY|CLOEXEC)   = 3
-       0.194 ( 0.008 ms): sleep/5588 openat(dfd: CWD, filename: /usr/lib/locale/locale-archive, flags: RDONLY|CLOEXEC) = 3
-  [root@quaco ~]#
-
-Works, further verified with:
-
-  [root@quaco ~]# perf test vfs
-  65: Use vfs_getname probe to get syscall args filenames   : Ok
-  66: Add vfs_getname probe to get syscall args filenames   : Ok
-  67: Check open filename arg using perf trace + vfs_getname: Ok
-  [root@quaco ~]#
-
-Reported-by: Michael Petlan <mpetlan@redhat.com>
-Tested-by: Michael Petlan <mpetlan@redhat.com>
-Cc: Adrian Hunter <adrian.hunter@intel.com>
-Cc: Jiri Olsa <jolsa@redhat.com>
-Cc: Namhyung Kim <namhyung@kernel.org>
-Link: https://lkml.kernel.org/n/tip-mv8kolk17xla1smvmp3qabv1@git.kernel.org
-Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
+Signed-off-by: Martynas Pumputis <martynas@weave.works>
+Signed-off-by: Florian Westphal <fw@strlen.de>
+Signed-off-by: Pablo Neira Ayuso <pablo@netfilter.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- tools/perf/builtin-trace.c | 25 ++++++++++++++++++-------
- 1 file changed, 18 insertions(+), 7 deletions(-)
+ net/netfilter/nf_conntrack_core.c | 16 ++++++++++++++++
+ 1 file changed, 16 insertions(+)
 
-diff --git a/tools/perf/builtin-trace.c b/tools/perf/builtin-trace.c
-index 8e3c4ec00017..b224bf3f2b99 100644
---- a/tools/perf/builtin-trace.c
-+++ b/tools/perf/builtin-trace.c
-@@ -2109,19 +2109,30 @@ static size_t trace__fprintf_thread_summary(struct trace *trace, FILE *fp);
+diff --git a/net/netfilter/nf_conntrack_core.c b/net/netfilter/nf_conntrack_core.c
+index b793b55d1488..f07357ba9629 100644
+--- a/net/netfilter/nf_conntrack_core.c
++++ b/net/netfilter/nf_conntrack_core.c
+@@ -869,6 +869,22 @@ nf_conntrack_tuple_taken(const struct nf_conntrack_tuple *tuple,
+ 		}
  
- static bool perf_evlist__add_vfs_getname(struct perf_evlist *evlist)
- {
--	struct perf_evsel *evsel = perf_evsel__newtp("probe", "vfs_getname");
-+	bool found = false;
-+	struct perf_evsel *evsel, *tmp;
-+	struct parse_events_error err = { .idx = 0, };
-+	int ret = parse_events(evlist, "probe:vfs_getname*", &err);
- 
--	if (IS_ERR(evsel))
-+	if (ret)
- 		return false;
- 
--	if (perf_evsel__field(evsel, "pathname") == NULL) {
-+	evlist__for_each_entry_safe(evlist, evsel, tmp) {
-+		if (!strstarts(perf_evsel__name(evsel), "probe:vfs_getname"))
-+			continue;
+ 		if (nf_ct_key_equal(h, tuple, zone, net)) {
++			/* Tuple is taken already, so caller will need to find
++			 * a new source port to use.
++			 *
++			 * Only exception:
++			 * If the *original tuples* are identical, then both
++			 * conntracks refer to the same flow.
++			 * This is a rare situation, it can occur e.g. when
++			 * more than one UDP packet is sent from same socket
++			 * in different threads.
++			 *
++			 * Let nf_ct_resolve_clash() deal with this later.
++			 */
++			if (nf_ct_tuple_equal(&ignored_conntrack->tuplehash[IP_CT_DIR_ORIGINAL].tuple,
++					      &ct->tuplehash[IP_CT_DIR_ORIGINAL].tuple))
++				continue;
 +
-+		if (perf_evsel__field(evsel, "pathname")) {
-+			evsel->handler = trace__vfs_getname;
-+			found = true;
-+			continue;
-+		}
-+
-+		list_del_init(&evsel->node);
-+		evsel->evlist = NULL;
- 		perf_evsel__delete(evsel);
--		return false;
- 	}
- 
--	evsel->handler = trace__vfs_getname;
--	perf_evlist__add(evlist, evsel);
--	return true;
-+	return found;
- }
- 
- static struct perf_evsel *perf_evsel__new_pgfault(u64 config)
+ 			NF_CT_STAT_INC_ATOMIC(net, found);
+ 			rcu_read_unlock();
+ 			return 1;
 -- 
 2.19.1
 
