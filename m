@@ -2,51 +2,52 @@ Return-Path: <SRS0=J4ZE=RP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BD265C10F00
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 17:11:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2F942C43381
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 17:11:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 73CE32087C
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 17:11:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F3F90214AE
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 17:11:27 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1552410683;
-	bh=OG2e6sOf651rv7KcDQAm0tbw9JVATQGdq79jJAAg2q8=;
+	s=default; t=1552410688;
+	bh=HuHjYqOnVWr76QnTBR12RjR26g7G8LjnJtx7twIcrBk=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=inw/IyalbP2HYJyv8hSIMCTdl4tyNER8i2yhLbuD+4A0AhKj0sXktzHf0OlrbBxTB
-	 nHZ2u5t37j7JRI51J8wSnpv3pkNsN9UWQJQT55nxsCwlORqtySkpKv591AS/xVy4MV
-	 6E8ZtkJBWDmcl4x1rXq1VxzjaV4oUVBs+cCpDA/k=
+	b=a9lRnqh8HZzxOsO51Z/VfLPFsQWiWkF1TbBP8aoV+TVFdIe2G/9CSrtnydqwflHGT
+	 qX85MIr+IVbOyTwuCJOdBJLMhhyWypwSOI8CYKXHnxSwKQyl020JXODn0/l24VW6Rr
+	 xTUKkZ8PBk9L4FX5cOynTAqpMIFIlH19M+pQ6EYY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726835AbfCLRLW (ORCPT
+        id S1726918AbfCLRL0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 12 Mar 2019 13:11:22 -0400
-Received: from mail.kernel.org ([198.145.29.99]:44440 "EHLO mail.kernel.org"
+        Tue, 12 Mar 2019 13:11:26 -0400
+Received: from mail.kernel.org ([198.145.29.99]:44630 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726372AbfCLRLW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 12 Mar 2019 13:11:22 -0400
+        id S1726892AbfCLRLZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 12 Mar 2019 13:11:25 -0400
 Received: from localhost (unknown [104.133.8.98])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 69E8A214AE;
-        Tue, 12 Mar 2019 17:11:21 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 651CE2087C;
+        Tue, 12 Mar 2019 17:11:24 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1552410681;
-        bh=OG2e6sOf651rv7KcDQAm0tbw9JVATQGdq79jJAAg2q8=;
+        s=default; t=1552410684;
+        bh=HuHjYqOnVWr76QnTBR12RjR26g7G8LjnJtx7twIcrBk=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=H+d3tTURmGVB8kx+AYhed+FvDaVQGOQE8p/7yHZJesMP+z/S3ZvkVE97dnvQrx5z0
-         XgveVjFdgkSHsRoPyRw1odFGIt8TIHW///pmv58uBx9RdU2EjUzMVhYJtexukdSyu1
-         LBDgxKbLl8rqaSFSCamJ/qjLgyti0v3wRE02eNBs=
+        b=PWG7YWd1B7vqA/VbsRu6nq+N42TOmNj50U4s1XkUzHUZkV7aOyf3eH73utyYM5eKY
+         kpprN96HR6I9E+bZV6oBUd8IUBs0fpXM5aWyLtDSGQheENS9DLu7Gu2UdCOycGFq7E
+         pmIrsiwSxiYLIRhnmEbqRyqgZ5q7WnOO3j40YpfU=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Jason Gerecke <jason.gerecke@wacom.com>,
-        Dmitry Torokhov <dmitry.torokhov@gmail.com>
-Subject: [PATCH 5.0 02/25] Input: wacom_serial4 - add support for Wacom ArtPad II tablet
-Date:   Tue, 12 Mar 2019 10:08:40 -0700
-Message-Id: <20190312170403.793014251@linuxfoundation.org>
+        stable@vger.kernel.org, Christian Holpert <christian@holpert.de>,
+        Sean Young <sean@mess.org>,
+        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
+Subject: [PATCH 5.0 14/25] media: Revert "media: rc: some events are dropped by userspace"
+Date:   Tue, 12 Mar 2019 10:08:52 -0700
+Message-Id: <20190312170404.596258547@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190312170403.643852550@linuxfoundation.org>
 References: <20190312170403.643852550@linuxfoundation.org>
@@ -65,43 +66,70 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-From: Jason Gerecke <jason.gerecke@wacom.com>
+From: Sean Young <sean@mess.org>
 
-commit 44fc95e218a09d7966a9d448941fdb003f6bb69f upstream.
+commit 05f0edadcc5fccdfc0676825b3e70e75dc0a8a84 upstream.
 
-Tablet initially begins communicating at 9600 baud, so this command
-should be used to connect to the device:
+When an rc device is created, we do not know what key codes it will
+support, since a new keymap might be loaded at some later point. So,
+we set all keybit in the input device.
 
-    $ inputattach --daemon --baud 9600 --wacom_iv /dev/ttyS0
+The uevent for the input device includes all the key codes, of which
+there are now 768. This overflows the size of the uevent
+(UEVENT_BUFFER_SIZE) and no event is generated.
 
-https://github.com/linuxwacom/xf86-input-wacom/issues/40
+Revert for now until we figure out a different solution.
 
-Signed-off-by: Jason Gerecke <jason.gerecke@wacom.com>
-Cc: stable@vger.kernel.org
-Signed-off-by: Dmitry Torokhov <dmitry.torokhov@gmail.com>
+This reverts commit fec225a04330d0f222d24feb5bea045526031675.
+
+Cc: <stable@vger.kernel.org> # 4.20+
+Reported-by: Christian Holpert <christian@holpert.de>
+Signed-off-by: Sean Young <sean@mess.org>
+Signed-off-by: Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/input/tablet/wacom_serial4.c |    2 ++
- 1 file changed, 2 insertions(+)
+ drivers/media/rc/rc-main.c |   13 ++++++++++++-
+ 1 file changed, 12 insertions(+), 1 deletion(-)
 
---- a/drivers/input/tablet/wacom_serial4.c
-+++ b/drivers/input/tablet/wacom_serial4.c
-@@ -187,6 +187,7 @@ enum {
- 	MODEL_DIGITIZER_II	= 0x5544, /* UD */
- 	MODEL_GRAPHIRE		= 0x4554, /* ET */
- 	MODEL_PENPARTNER	= 0x4354, /* CT */
-+	MODEL_ARTPAD_II		= 0x4B54, /* KT */
- };
+--- a/drivers/media/rc/rc-main.c
++++ b/drivers/media/rc/rc-main.c
+@@ -274,6 +274,7 @@ static unsigned int ir_update_mapping(st
+ 				      unsigned int new_keycode)
+ {
+ 	int old_keycode = rc_map->scan[index].keycode;
++	int i;
  
- static void wacom_handle_model_response(struct wacom *wacom)
-@@ -245,6 +246,7 @@ static void wacom_handle_model_response(
- 		wacom->flags = F_HAS_STYLUS2 | F_HAS_SCROLLWHEEL;
- 		break;
+ 	/* Did the user wish to remove the mapping? */
+ 	if (new_keycode == KEY_RESERVED || new_keycode == KEY_UNKNOWN) {
+@@ -288,9 +289,20 @@ static unsigned int ir_update_mapping(st
+ 			old_keycode == KEY_RESERVED ? "New" : "Replacing",
+ 			rc_map->scan[index].scancode, new_keycode);
+ 		rc_map->scan[index].keycode = new_keycode;
++		__set_bit(new_keycode, dev->input_dev->keybit);
+ 	}
  
-+	case MODEL_ARTPAD_II:
- 	case MODEL_DIGITIZER_II:
- 		wacom->dev->name = "Wacom Digitizer II";
- 		wacom->dev->id.version = MODEL_DIGITIZER_II;
+ 	if (old_keycode != KEY_RESERVED) {
++		/* A previous mapping was updated... */
++		__clear_bit(old_keycode, dev->input_dev->keybit);
++		/* ... but another scancode might use the same keycode */
++		for (i = 0; i < rc_map->len; i++) {
++			if (rc_map->scan[i].keycode == old_keycode) {
++				__set_bit(old_keycode, dev->input_dev->keybit);
++				break;
++			}
++		}
++
+ 		/* Possibly shrink the keytable, failure is not a problem */
+ 		ir_resize_table(dev, rc_map, GFP_ATOMIC);
+ 	}
+@@ -1750,7 +1762,6 @@ static int rc_prepare_rx_device(struct r
+ 	set_bit(EV_REP, dev->input_dev->evbit);
+ 	set_bit(EV_MSC, dev->input_dev->evbit);
+ 	set_bit(MSC_SCAN, dev->input_dev->mscbit);
+-	bitmap_fill(dev->input_dev->keybit, KEY_CNT);
+ 
+ 	/* Pointer/mouse events */
+ 	set_bit(EV_REL, dev->input_dev->evbit);
 
 
