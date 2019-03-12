@@ -2,104 +2,127 @@ Return-Path: <SRS0=J4ZE=RP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6C333C43381
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 17:52:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 34EE9C43381
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 17:52:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3D8BC205C9
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 17:52:42 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="Tj32NjeP"
+	by mail.kernel.org (Postfix) with ESMTP id 090D921773
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 17:52:45 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1552413166;
+	bh=pgJyLPFlcyHUJ9OhpGO932TO4nuFuDWiDTTZwEcloME=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=Q5c4IOcYKVW288zXjjI9O2ZJPbXpK0wONvrtIGmoX1XOOvGTGB8dm9F11YXnyO3Z3
+	 +XXDF+fTpQkShrfSLgGqR4r4lpZZiITrwk4Fpi/hiq5Wxd3gC0D6qbLU/mOgv+kfyq
+	 nTs6mUKLehV+Zs0Vqd2DJsstvxOESsRplfjMnTCM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728516AbfCLRwl (ORCPT
+        id S1728804AbfCLRwo (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 12 Mar 2019 13:52:41 -0400
-Received: from bombadil.infradead.org ([198.137.202.133]:52404 "EHLO
-        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726692AbfCLRO0 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 12 Mar 2019 13:14:26 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
-        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=230SxmBFj0CarYJqxw8BlXT5FM8fCROKpq+2bHkGdlo=; b=Tj32NjePxjUsmkEjqkLxiHNw1
-        Dq2MT3TJlBRfi3Y5NnjBDk0s0EweaLHROW2FkBIoagTnzjZwu+62Z2k4cmXZ6xvKO8tCqVCbwC89M
-        O2TZMeFtNgncUjsUqA1sOGxk+SAcb02OrfpORBguPKFKQJ/hAusPAJWA6fW2vYc5q7UcQDbcEmG+S
-        9JXb7vu5bfU6tS7C1pdEq2NV91qD7Kfb4ts7F82G3nJzFeoLZZnr4pJuMf9288awplKXHtCxo5dzu
-        68dviPy441t94N5Oh+B+hxojBIzgjeJr2PJguSlyYWR8Zs61GC361dQWAHggIPssoaARwY7ZMqZpc
-        aSxcGtrsQ==;
-Received: from willy by bombadil.infradead.org with local (Exim 4.90_1 #2 (Red Hat Linux))
-        id 1h3kyr-0002MN-ID; Tue, 12 Mar 2019 17:14:21 +0000
-Date:   Tue, 12 Mar 2019 10:14:21 -0700
-From:   Matthew Wilcox <willy@infradead.org>
-To:     Julien Grall <julien.grall@arm.com>
-Cc:     osstest service owner <osstest-admin@xenproject.org>,
-        xen-devel@lists.xenproject.org, Juergen Gross <jgross@suse.com>,
-        Konrad Rzeszutek Wilk <konrad.wilk@oracle.com>,
-        Boris Ostrovsky <boris.ostrovsky@oracle.com>,
-        Stefano Stabellini <sstabellini@kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Kees Cook <keescook@chromium.org>, david@redhat.com,
-        k.khlebnikov@samsung.com, Julien Freche <jfreche@vmware.com>,
-        Nadav Amit <namit@vmware.com>,
-        "VMware, Inc." <pv-drivers@vmware.com>, linux-mm@kvack.org
-Subject: Re: xen: Can't insert balloon page into VM userspace (WAS Re:
- [Xen-devel] [linux-linus bisection] complete test-arm64-arm64-xl-xsm)
-Message-ID: <20190312171421.GJ19508@bombadil.infradead.org>
-References: <E1h3Uiq-0002L6-Ij@osstest.test-lab.xenproject.org>
- <80211e70-5f54-9421-8e8f-2a4fc758ce39@arm.com>
- <46118631-61d4-adb6-6ffc-4e7c62ea3da9@arm.com>
+        Tue, 12 Mar 2019 13:52:44 -0400
+Received: from mail.kernel.org ([198.145.29.99]:53100 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728352AbfCLROZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 12 Mar 2019 13:14:25 -0400
+Received: from localhost (unknown [104.133.8.98])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 6449121741;
+        Tue, 12 Mar 2019 17:14:25 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1552410865;
+        bh=pgJyLPFlcyHUJ9OhpGO932TO4nuFuDWiDTTZwEcloME=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=Jq1gg1AOvcaUHZ0q90cpeTfnN4aUvzmms+Urw82F/hUHCJrJIQ9oYO5r8jOt3l1nu
+         jW13w4fU5njZYL0Q/CwsNr/ZO/e7h9HZoRhep75nCvn0kVr5x4qnvv+Ui1ARnbblMe
+         w/wVoVZwNyTQHuhZTSqhgrBZNt2y9/pB8bDpOZiI=
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     linux-kernel@vger.kernel.org
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        stable@vger.kernel.org, Carlo Caione <ccaione@baylibre.com>,
+        Martin Blumenstingl <martin.blumenstingl@googlemail.com>,
+        Kevin Hilman <khilman@baylibre.com>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.19 065/149] arm: dts: meson: Fix IRQ trigger type for macirq
+Date:   Tue, 12 Mar 2019 10:08:03 -0700
+Message-Id: <20190312170355.155071343@linuxfoundation.org>
+X-Mailer: git-send-email 2.21.0
+In-Reply-To: <20190312170349.421581206@linuxfoundation.org>
+References: <20190312170349.421581206@linuxfoundation.org>
+User-Agent: quilt/0.65
+X-stable: review
+X-Patchwork-Hint: ignore
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <46118631-61d4-adb6-6ffc-4e7c62ea3da9@arm.com>
-User-Agent: Mutt/1.9.2 (2017-12-15)
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Mar 12, 2019 at 05:05:39PM +0000, Julien Grall wrote:
-> On 3/12/19 3:59 PM, Julien Grall wrote:
-> > It looks like all the arm test for linus [1] and next [2] tree
-> > are now failing. x86 seems to be mostly ok.
-> > 
-> > The bisector fingered the following commit:
-> > 
-> > commit 0ee930e6cafa048c1925893d0ca89918b2814f2c
-> > Author: Matthew Wilcox <willy@infradead.org>
-> > Date:   Tue Mar 5 15:46:06 2019 -0800
-> > 
-> >      mm/memory.c: prevent mapping typed pages to userspace
-> >      Pages which use page_type must never be mapped to userspace as it would
-> >      destroy their page type.  Add an explicit check for this instead of
-> >      assuming that kernel drivers always get this right.
+4.19-stable review patch.  If anyone has any objections, please let me know.
 
-Oh good, it found a real problem.
+------------------
 
-> It turns out the problem is because the balloon driver will call
-> __SetPageOffline() on allocated page. Therefore the page has a type and
-> vm_insert_pages will deny the insertion.
-> 
-> My knowledge is quite limited in this area. So I am not sure how we can
-> solve the problem.
-> 
-> I would appreciate if someone could provide input of to fix the mapping.
+[ Upstream commit e35e26b26e955c53e61c154ba26b9bb15da6b858 ]
 
-I don't know the balloon driver, so I don't know why it was doing this,
-but what it was doing was Wrong and has been since 2014 with:
+A long running stress test on a custom board shipping an AXG SoCs and a
+Realtek RTL8211F PHY revealed that after a few hours the connection
+speed would drop drastically, from ~1000Mbps to ~3Mbps. At the same time
+the 'macirq' (eth0) IRQ would stop being triggered at all and as
+consequence the GMAC IRQs never ACKed.
 
-commit d6d86c0a7f8ddc5b38cf089222cb1d9540762dc2
-Author: Konstantin Khlebnikov <k.khlebnikov@samsung.com>
-Date:   Thu Oct 9 15:29:27 2014 -0700
+After a painful investigation the problem seemed to be due to a wrong
+defined IRQ type for the GMAC IRQ that should be LEVEL_HIGH instead of
+EDGE_RISING.
 
-    mm/balloon_compaction: redesign ballooned pages management
+The change in the macirq IRQ type also solved another long standing
+issue affecting this SoC/PHY where EEE was causing the network
+connection to die after stressing it with iperf3 (even though much
+sooner). It's now possible to remove the 'eee-broken-1000t' quirk as
+well.
 
-If ballooned pages are supposed to be mapped into userspace, you can't mark
-them as ballooned pages using the mapcount field.
+Fixes: 9c15795a4f96 ("ARM: dts: meson8b-odroidc1: ethernet support")
+Signed-off-by: Carlo Caione <ccaione@baylibre.com>
+Reviewed-by: Martin Blumenstingl <martin.blumenstingl@googlemail.com>
+Tested-by: Martin Blumenstingl <martin.blumenstingl@googlemail.com>
+Signed-off-by: Kevin Hilman <khilman@baylibre.com>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
+---
+ arch/arm/boot/dts/meson.dtsi           | 2 +-
+ arch/arm/boot/dts/meson8b-odroidc1.dts | 1 -
+ 2 files changed, 1 insertion(+), 2 deletions(-)
+
+diff --git a/arch/arm/boot/dts/meson.dtsi b/arch/arm/boot/dts/meson.dtsi
+index 0d9faf1a51ea..a86b89086334 100644
+--- a/arch/arm/boot/dts/meson.dtsi
++++ b/arch/arm/boot/dts/meson.dtsi
+@@ -263,7 +263,7 @@
+ 			compatible = "amlogic,meson6-dwmac", "snps,dwmac";
+ 			reg = <0xc9410000 0x10000
+ 			       0xc1108108 0x4>;
+-			interrupts = <GIC_SPI 8 IRQ_TYPE_EDGE_RISING>;
++			interrupts = <GIC_SPI 8 IRQ_TYPE_LEVEL_HIGH>;
+ 			interrupt-names = "macirq";
+ 			status = "disabled";
+ 		};
+diff --git a/arch/arm/boot/dts/meson8b-odroidc1.dts b/arch/arm/boot/dts/meson8b-odroidc1.dts
+index ef3177d3da3d..9e48936e2d8d 100644
+--- a/arch/arm/boot/dts/meson8b-odroidc1.dts
++++ b/arch/arm/boot/dts/meson8b-odroidc1.dts
+@@ -125,7 +125,6 @@
+ 		/* Realtek RTL8211F (0x001cc916) */
+ 		eth_phy: ethernet-phy@0 {
+ 			reg = <0>;
+-			eee-broken-1000t;
+ 			interrupt-parent = <&gpio_intc>;
+ 			/* GPIOH_3 */
+ 			interrupts = <17 IRQ_TYPE_LEVEL_LOW>;
+-- 
+2.19.1
+
+
+
