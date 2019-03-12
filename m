@@ -2,161 +2,120 @@ Return-Path: <SRS0=J4ZE=RP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_PASS autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.8 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 806F5C43381
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 18:14:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 11C47C43381
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 18:14:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5136020693
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 18:14:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CFCEA2087C
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 18:14:18 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="UUGIQVVy";
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="kasUnOmq"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727500AbfCLSOO (ORCPT
+        id S1727567AbfCLSOR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 12 Mar 2019 14:14:14 -0400
-Received: from smtp.ctxuk.citrix.com ([185.25.65.24]:15910 "EHLO
-        SMTP.EU.CITRIX.COM" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727003AbfCLSOK (ORCPT
+        Tue, 12 Mar 2019 14:14:17 -0400
+Received: from smtp.codeaurora.org ([198.145.29.96]:58076 "EHLO
+        smtp.codeaurora.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727327AbfCLSOO (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 12 Mar 2019 14:14:10 -0400
-X-IronPort-AV: E=Sophos;i="5.58,471,1544486400"; 
-   d="scan'208";a="87173174"
-Subject: Re: [Xen-devel] xen: Can't insert balloon page into VM userspace (WAS
- Re: [linux-linus bisection] complete test-arm64-arm64-xl-xsm)
-To:     Boris Ostrovsky <boris.ostrovsky@oracle.com>,
-        David Hildenbrand <david@redhat.com>,
-        Matthew Wilcox <willy@infradead.org>,
-        Julien Grall <julien.grall@arm.com>
-CC:     Juergen Gross <jgross@suse.com>, <k.khlebnikov@samsung.com>,
-        Stefano Stabellini <sstabellini@kernel.org>,
+        Tue, 12 Mar 2019 14:14:14 -0400
+Received: by smtp.codeaurora.org (Postfix, from userid 1000)
+        id 9F2CF61A88; Tue, 12 Mar 2019 18:14:09 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
+        s=default; t=1552414452;
+        bh=VfoQ9P+nBV3qLb1P5GFp8/EbXMKBz+LBU60OvazZA68=;
+        h=From:To:Cc:Subject:Date:From;
+        b=UUGIQVVylF3H8pQoU6D2lESNVWcX9WfTVLKXccV0Gevh02RsKOQmt5XHkcsPO+8mN
+         1I+N3ZQYtGpDi5jr9t3v+fxnUbAkgOIUqqwtPc4xXFYAIEG3k7qqV4ArnxWHlO2s3L
+         Oa4/wCh/DqgEDTjd5pQuO9n3uM+Tj6cJjRPq7VDY=
+Received: from jcrouse1-lnx.qualcomm.com (i-global254.qualcomm.com [199.106.103.254])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-SHA256 (128/128 bits))
+        (No client certificate requested)
+        (Authenticated sender: jcrouse@smtp.codeaurora.org)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id 80F6B619B1;
+        Tue, 12 Mar 2019 18:14:05 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
+        s=default; t=1552414447;
+        bh=VfoQ9P+nBV3qLb1P5GFp8/EbXMKBz+LBU60OvazZA68=;
+        h=From:To:Cc:Subject:Date:From;
+        b=kasUnOmq7pYyOiMC/Jm9UKzf34zQZbFOFwKU5PzuHxCQUZAz2HoJI5Am9gXXfe3so
+         h2KICw3FVFB+HpulmDBBtnuGuJ/pAntOOHR9s1iaunTxbfAe3zdhZBoKC99W4umcbl
+         TmNPssS5xHQua16yrVOiLrmRP0XYeg3w1m3mgqf8=
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 80F6B619B1
+Authentication-Results: pdx-caf-mail.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
+Authentication-Results: pdx-caf-mail.web.codeaurora.org; spf=none smtp.mailfrom=jcrouse@codeaurora.org
+From:   Jordan Crouse <jcrouse@codeaurora.org>
+To:     freedreno@lists.freedesktop.org
+Cc:     Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Sean Paul <sean@poorly.run>, Arnd Bergmann <arnd@arndb.de>,
+        Thomas Zimmermann <tzimmermann@suse.de>,
+        Sharat Masetty <smasetty@codeaurora.org>,
+        dri-devel@lists.freedesktop.org, Rob Herring <robh+dt@kernel.org>,
+        David Airlie <airlied@linux.ie>,
+        Douglas Anderson <dianders@chromium.org>,
+        Rob Clark <robdclark@gmail.com>,
+        David Brown <david.brown@linaro.org>,
+        devicetree@vger.kernel.org, linux-arm-msm@vger.kernel.org,
+        Andy Gross <andy.gross@linaro.org>,
+        Daniel Mack <daniel@zonque.org>,
         Kees Cook <keescook@chromium.org>,
-        Konrad Rzeszutek Wilk <konrad.wilk@oracle.com>,
-        "VMware, Inc." <pv-drivers@vmware.com>,
-        osstest service owner <osstest-admin@xenproject.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        <linux-mm@kvack.org>, Julien Freche <jfreche@vmware.com>,
-        Nadav Amit <namit@vmware.com>, <xen-devel@lists.xenproject.org>
-References: <E1h3Uiq-0002L6-Ij@osstest.test-lab.xenproject.org>
- <80211e70-5f54-9421-8e8f-2a4fc758ce39@arm.com>
- <46118631-61d4-adb6-6ffc-4e7c62ea3da9@arm.com>
- <20190312171421.GJ19508@bombadil.infradead.org>
- <e0b64793-260d-5e70-0544-e7290509b605@redhat.com>
- <45323ea0-2a50-8891-830e-e1f8a8ed23ea@citrix.com>
- <f4b40d91-9c41-60ed-6b4e-df47af8e5292@oracle.com>
-From:   Andrew Cooper <andrew.cooper3@citrix.com>
-Openpgp: preference=signencrypt
-Autocrypt: addr=andrew.cooper3@citrix.com; prefer-encrypt=mutual; keydata=
- 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
- 6+ahAA==
-Message-ID: <6e5309b3-2910-b556-da8d-05b529de1d18@citrix.com>
-Date:   Tue, 12 Mar 2019 18:11:14 +0000
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.5.1
-MIME-Version: 1.0
-In-Reply-To: <f4b40d91-9c41-60ed-6b4e-df47af8e5292@oracle.com>
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Content-Language: en-GB
-X-ClientProxiedBy: AMSPEX02CAS02.citrite.net (10.69.22.113) To
- AMSPEX02CL02.citrite.net (10.69.22.126)
+        linux-kernel@vger.kernel.org, Jonathan Marek <jonathan@marek.ca>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Mamta Shukla <mamtashukla555@gmail.com>,
+        Daniel Vetter <daniel@ffwll.ch>
+Subject: [PATCH v1 0/4] drm/msm/a6xx: Add support for zap shader
+Date:   Tue, 12 Mar 2019 12:13:38 -0600
+Message-Id: <1552414422-9568-1-git-send-email-jcrouse@codeaurora.org>
+X-Mailer: git-send-email 2.7.4
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 12/03/2019 18:02, Boris Ostrovsky wrote:
-> On 3/12/19 1:24 PM, Andrew Cooper wrote:
->> On 12/03/2019 17:18, David Hildenbrand wrote:
->>> On 12.03.19 18:14, Matthew Wilcox wrote:
->>>> On Tue, Mar 12, 2019 at 05:05:39PM +0000, Julien Grall wrote:
->>>>> On 3/12/19 3:59 PM, Julien Grall wrote:
->>>>>> It looks like all the arm test for linus [1] and next [2] tree
->>>>>> are now failing. x86 seems to be mostly ok.
->>>>>>
->>>>>> The bisector fingered the following commit:
->>>>>>
->>>>>> commit 0ee930e6cafa048c1925893d0ca89918b2814f2c
->>>>>> Author: Matthew Wilcox <willy@infradead.org>
->>>>>> Date:   Tue Mar 5 15:46:06 2019 -0800
->>>>>>
->>>>>>      mm/memory.c: prevent mapping typed pages to userspace
->>>>>>      Pages which use page_type must never be mapped to userspace as it would
->>>>>>      destroy their page type.  Add an explicit check for this instead of
->>>>>>      assuming that kernel drivers always get this right.
->>>> Oh good, it found a real problem.
->>>>
->>>>> It turns out the problem is because the balloon driver will call
->>>>> __SetPageOffline() on allocated page. Therefore the page has a type and
->>>>> vm_insert_pages will deny the insertion.
->>>>>
->>>>> My knowledge is quite limited in this area. So I am not sure how we can
->>>>> solve the problem.
->>>>>
->>>>> I would appreciate if someone could provide input of to fix the mapping.
->>>> I don't know the balloon driver, so I don't know why it was doing this,
->>>> but what it was doing was Wrong and has been since 2014 with:
->>>>
->>>> commit d6d86c0a7f8ddc5b38cf089222cb1d9540762dc2
->>>> Author: Konstantin Khlebnikov <k.khlebnikov@samsung.com>
->>>> Date:   Thu Oct 9 15:29:27 2014 -0700
->>>>
->>>>     mm/balloon_compaction: redesign ballooned pages management
->>>>
->>>> If ballooned pages are supposed to be mapped into userspace, you can't mark
->>>> them as ballooned pages using the mapcount field.
->>>>
->>> Asking myself why anybody would want to map balloon inflated pages into
->>> user space (this just sounds plain wrong but my understanding to what
->>> XEN balloon driver does might be limited), but I assume the easy fix
->>> would be to revert
->> I suspect the bug here is that the balloon driver is (ab)used for a
->> second purpose
-> Yes. And its name is alloc_xenballooned_pages().
 
-FWIW, I did express my views that this was a BadIdea(tm) when that logic
-was first introduced.
+This patch series adds support for loading the zap shader on a6xx and using it
+to get the GPU out of secure mode.
 
-But yes - now is clearly the time to fix this properly.
+The Adreno a5xx and a6xx GPUs boot in "secure" mode which restricts the memory
+the GPU is allowed to use. To get the GPU out of secure mode we need to write
+to a register. However some bootloaders block access to this register and
+require that the GPU instead perform a sequence to pull the GPU out of secure
+mode. This sequence requires a special "zap" shader that will execute in
+secure mode, clear out all the internal GPU settings and then transition to
+in-secure mode.
 
-~Andrew
+This series adds support for loading and using the zap shader on a6xx assuming
+that the shader exists and that the bootloader supports the secure mode. If any
+part of the sequence fails then fall back to writing the register. If we get it
+wrong, then writing to the register will trigger a protection mode error and
+the system will go down.
+
+The actual zap shader works almost identically to the one on 5xx outside of
+a minor workaround for system resume. The first patch moves the a5xx specific
+support to the generic adreno driver. The second patch add support for the
+zap shader and the final two patches add the DT bindings and DT settings for
+setting up the reserved memory that the shader requires.
+
+
+Jordan Crouse (4):
+  drm/msm/gpu: Move zap shader loading to adreno
+  drm/msm/a6xx: Add zap shader load
+  dt-bindings: drm/msm/gpu: Document a5xx / a6xx zap shader region
+  arm64: dts: sdm845: Add zap shader region for GPU
+
+ .../devicetree/bindings/display/msm/gpu.txt        |   7 ++
+ arch/arm64/boot/dts/qcom/sdm845.dtsi               |  11 ++
+ drivers/gpu/drm/msm/adreno/a5xx_gpu.c              | 109 +-------------------
+ drivers/gpu/drm/msm/adreno/a6xx_gpu.c              |  38 ++++++-
+ drivers/gpu/drm/msm/adreno/adreno_device.c         |   1 +
+ drivers/gpu/drm/msm/adreno/adreno_gpu.c            | 113 +++++++++++++++++++++
+ drivers/gpu/drm/msm/adreno/adreno_gpu.h            |   6 ++
+ 7 files changed, 176 insertions(+), 109 deletions(-)
+
+-- 
+2.7.4
+
