@@ -6,28 +6,28 @@ X-Spam-Status: No, score=-8.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_MUTT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 569CFC43381
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 14:22:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D520BC43381
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 14:23:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 235652075C
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 14:22:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AAAF52075C
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 14:23:10 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726914AbfCLOWI (ORCPT
+        id S1726862AbfCLOXJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 12 Mar 2019 10:22:08 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:34522 "EHLO mx1.redhat.com"
+        Tue, 12 Mar 2019 10:23:09 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:57016 "EHLO mx1.redhat.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726657AbfCLOWG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 12 Mar 2019 10:22:06 -0400
+        id S1725894AbfCLOXJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 12 Mar 2019 10:23:09 -0400
 Received: from smtp.corp.redhat.com (int-mx07.intmail.prod.int.phx2.redhat.com [10.5.11.22])
         (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id F16DF307E044;
-        Tue, 12 Mar 2019 14:22:05 +0000 (UTC)
+        by mx1.redhat.com (Postfix) with ESMTPS id A2C3F73C;
+        Tue, 12 Mar 2019 14:23:08 +0000 (UTC)
 Received: from redhat.com (ovpn-122-134.rdu2.redhat.com [10.10.122.134])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id 0CFB510018F9;
-        Tue, 12 Mar 2019 14:22:04 +0000 (UTC)
-Date:   Tue, 12 Mar 2019 09:22:02 -0500
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id 9E9ED10018F9;
+        Tue, 12 Mar 2019 14:23:07 +0000 (UTC)
+Date:   Tue, 12 Mar 2019 09:23:05 -0500
 From:   Bill O'Donnell <billodo@redhat.com>
 To:     "Darrick J. Wong" <darrick.wong@oracle.com>
 Cc:     linux-xfs@vger.kernel.org,
@@ -35,65 +35,95 @@ Cc:     linux-xfs@vger.kernel.org,
         linux-kernel@vger.kernel.org,
         Nick Desaulniers <ndesaulniers@google.com>,
         clang-built-linux@googlegroups.com
-Subject: Re: [PATCH 1/2] xfs: zero initialize highstale and lowstale in
- xfs_dir2_leaf_addname
-Message-ID: <20190312142202.GA28037@redhat.com>
+Subject: Re: [PATCH 2/2] xfs: clean up xfs_dir2_leaf_addname
+Message-ID: <20190312142305.GB28037@redhat.com>
 References: <20190311161948.GC4359@magnolia>
+ <20190311162232.GD4359@magnolia>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20190311161948.GC4359@magnolia>
+In-Reply-To: <20190311162232.GD4359@magnolia>
 User-Agent: Mutt/1.11.3 (2019-02-01)
 X-Scanned-By: MIMEDefang 2.84 on 10.5.11.22
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.42]); Tue, 12 Mar 2019 14:22:06 +0000 (UTC)
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.29]); Tue, 12 Mar 2019 14:23:08 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Mar 11, 2019 at 09:19:48AM -0700, Darrick J. Wong wrote:
+On Mon, Mar 11, 2019 at 09:22:32AM -0700, Darrick J. Wong wrote:
 > From: Darrick J. Wong <darrick.wong@oracle.com>
 > 
-> Smatch complains about the following:
-> 
-> fs/xfs/libxfs/xfs_dir2_leaf.c:848 xfs_dir2_leaf_addname() error:
-> uninitialized symbol 'lowstale'.
-> 
-> fs/xfs/libxfs/xfs_dir2_leaf.c:849 xfs_dir2_leaf_addname() error:
-> uninitialized symbol 'highstale'.
-> 
-> I don't think there's any incorrect behavior associated with the
-> uninitialized variable, but as the author of the previous zero-init
-> patch points out, it's best not to be passing around pointers to
-> uninitialized stack areas.
+> Remove typedefs and consolidate local variable initialization.
 > 
 > Signed-off-by: Darrick J. Wong <darrick.wong@oracle.com>
 
 Reviewed-by: Bill O'Donnell <billodo@redhat.com>
 
 > ---
->  fs/xfs/libxfs/xfs_dir2_leaf.c |    4 ++--
->  1 file changed, 2 insertions(+), 2 deletions(-)
+>  fs/xfs/libxfs/xfs_dir2_leaf.c |   33 +++++++++++++++------------------
+>  1 file changed, 15 insertions(+), 18 deletions(-)
 > 
 > diff --git a/fs/xfs/libxfs/xfs_dir2_leaf.c b/fs/xfs/libxfs/xfs_dir2_leaf.c
-> index 9a3767818c50..2abf945e5844 100644
+> index 2abf945e5844..9c2a0a13ed61 100644
 > --- a/fs/xfs/libxfs/xfs_dir2_leaf.c
 > +++ b/fs/xfs/libxfs/xfs_dir2_leaf.c
-> @@ -574,7 +574,7 @@ xfs_dir2_leaf_addname(
->  	xfs_dir2_data_unused_t	*dup;		/* data unused entry */
+> @@ -563,43 +563,40 @@ xfs_dir3_leaf_find_entry(
+>   */
+>  int						/* error */
+>  xfs_dir2_leaf_addname(
+> -	xfs_da_args_t		*args)		/* operation arguments */
+> +	struct xfs_da_args	*args)		/* operation arguments */
+>  {
+> +	struct xfs_dir3_icleaf_hdr leafhdr;
+> +	struct xfs_trans	*tp = args->trans;
+>  	__be16			*bestsp;	/* freespace table in leaf */
+> -	int			compact;	/* need to compact leaves */
+> -	xfs_dir2_data_hdr_t	*hdr;		/* data block header */
+> +	__be16			*tagp;		/* end of data entry */
+>  	struct xfs_buf		*dbp;		/* data block buffer */
+> -	xfs_dir2_data_entry_t	*dep;		/* data block entry */
+> -	xfs_inode_t		*dp;		/* incore directory inode */
+> -	xfs_dir2_data_unused_t	*dup;		/* data unused entry */
+> +	struct xfs_buf		*lbp;		/* leaf's buffer */
+> +	struct xfs_dir2_leaf	*leaf;		/* leaf structure */
+> +	struct xfs_inode	*dp = args->dp;	/* incore directory inode */
+> +	struct xfs_dir2_data_hdr *hdr;		/* data block header */
+> +	struct xfs_dir2_data_entry *dep;	/* data block entry */
+> +	struct xfs_dir2_leaf_entry *lep;	/* leaf entry table pointer */
+> +	struct xfs_dir2_leaf_entry *ents;
+> +	struct xfs_dir2_data_unused *dup;	/* data unused entry */
+> +	struct xfs_dir2_leaf_tail *ltp;		/* leaf tail pointer */
+> +	struct xfs_dir2_data_free *bf;		/* bestfree table */
+> +	int			compact;	/* need to compact leaves */
 >  	int			error;		/* error return value */
 >  	int			grown;		/* allocated new data block */
-> -	int			highstale;	/* index of next stale leaf */
-> +	int			highstale = 0;	/* index of next stale leaf */
+>  	int			highstale = 0;	/* index of next stale leaf */
 >  	int			i;		/* temporary, index */
 >  	int			index;		/* leaf table position */
->  	struct xfs_buf		*lbp;		/* leaf's buffer */
-> @@ -583,7 +583,7 @@ xfs_dir2_leaf_addname(
->  	xfs_dir2_leaf_entry_t	*lep;		/* leaf entry table pointer */
+> -	struct xfs_buf		*lbp;		/* leaf's buffer */
+> -	xfs_dir2_leaf_t		*leaf;		/* leaf structure */
+>  	int			length;		/* length of new entry */
+> -	xfs_dir2_leaf_entry_t	*lep;		/* leaf entry table pointer */
 >  	int			lfloglow;	/* low leaf logging index */
 >  	int			lfloghigh;	/* high leaf logging index */
-> -	int			lowstale;	/* index of prev stale leaf */
-> +	int			lowstale = 0;	/* index of prev stale leaf */
->  	xfs_dir2_leaf_tail_t	*ltp;		/* leaf tail pointer */
+>  	int			lowstale = 0;	/* index of prev stale leaf */
+> -	xfs_dir2_leaf_tail_t	*ltp;		/* leaf tail pointer */
 >  	int			needbytes;	/* leaf block bytes needed */
 >  	int			needlog;	/* need to log data header */
+>  	int			needscan;	/* need to rescan data free */
+> -	__be16			*tagp;		/* end of data entry */
+> -	xfs_trans_t		*tp;		/* transaction pointer */
+>  	xfs_dir2_db_t		use_block;	/* data block number */
+> -	struct xfs_dir2_data_free *bf;		/* bestfree table */
+> -	struct xfs_dir2_leaf_entry *ents;
+> -	struct xfs_dir3_icleaf_hdr leafhdr;
+>  
+>  	trace_xfs_dir2_leaf_addname(args);
+>  
+> -	dp = args->dp;
+> -	tp = args->trans;
+> -
+>  	error = xfs_dir3_leaf_read(tp, dp, args->geo->leafblk, -1, &lbp);
+>  	if (error)
+>  		return error;
