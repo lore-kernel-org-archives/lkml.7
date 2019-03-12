@@ -2,155 +2,83 @@ Return-Path: <SRS0=J4ZE=RP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_PASS,URIBL_BLOCKED,USER_AGENT_NEOMUTT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_MUTT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 52795C10F00
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 13:17:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 545F1C43381
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 13:17:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2BC66214D8
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 13:17:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1B27E2171F
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 13:17:35 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="s5z1g5m9"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726671AbfCLNRU (ORCPT
+        id S1726760AbfCLNRe (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 12 Mar 2019 09:17:20 -0400
-Received: from metis.ext.pengutronix.de ([85.220.165.71]:54555 "EHLO
-        metis.ext.pengutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726304AbfCLNRU (ORCPT
+        Tue, 12 Mar 2019 09:17:34 -0400
+Received: from userp2130.oracle.com ([156.151.31.86]:38836 "EHLO
+        userp2130.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726304AbfCLNRe (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 12 Mar 2019 09:17:20 -0400
-Received: from pty.hi.pengutronix.de ([2001:67c:670:100:1d::c5])
-        by metis.ext.pengutronix.de with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.89)
-        (envelope-from <ukl@pengutronix.de>)
-        id 1h3hHN-0004BE-Cq; Tue, 12 Mar 2019 14:17:13 +0100
-Received: from ukl by pty.hi.pengutronix.de with local (Exim 4.89)
-        (envelope-from <ukl@pengutronix.de>)
-        id 1h3hHM-0006Qn-El; Tue, 12 Mar 2019 14:17:12 +0100
-Date:   Tue, 12 Mar 2019 14:17:12 +0100
-From:   Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= 
-        <u.kleine-koenig@pengutronix.de>
-To:     Thierry Reding <thierry.reding@gmail.com>
-Cc:     Yash Shah <yash.shah@sifive.com>, palmer@sifive.com,
-        linux-pwm@vger.kernel.org, linux-riscv@lists.infradead.org,
-        robh+dt@kernel.org, mark.rutland@arm.com,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        sachin.ghadi@sifive.com, paul.walmsley@sifive.com
-Subject: Re: [PATCH v9 2/2] pwm: sifive: Add a driver for SiFive SoC PWM
-Message-ID: <20190312131712.rxiarnthcfrsgdqn@pengutronix.de>
-References: <1552378289-27245-1-git-send-email-yash.shah@sifive.com>
- <1552378289-27245-3-git-send-email-yash.shah@sifive.com>
- <20190312091739.fhv2hb2ll2eamdsn@pengutronix.de>
- <20190312121218.GM31026@ulmo>
+        Tue, 12 Mar 2019 09:17:34 -0400
+Received: from pps.filterd (userp2130.oracle.com [127.0.0.1])
+        by userp2130.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x2CD8pLL077593;
+        Tue, 12 Mar 2019 13:17:26 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=date : from : to : cc
+ : subject : message-id : references : mime-version : content-type :
+ in-reply-to; s=corp-2018-07-02;
+ bh=qFOffKMVPcv/YuN+HsoAb3qzANxioKMhh3KIzlNjHck=;
+ b=s5z1g5m9hgfNhBxFPeO4vi2DcSywT6yVyY+n7veZtVUu5rMxqwrH6wpGQufmCBEEi/qW
+ omOyBRYDo1YP+kP6Jj0NJSoyQsbKzltHRxeZY3LcaeLECXDWH1EmPyq8kUkfdmJlRox8
+ EFlOhDjcozGo4KZ6ooSQgXLRWIx1X8MAIwutAci6MP5KetEKSoJv8DgpIrgmsV6B0s7k
+ xWYJBS5kJf7/shb6OLq5CTi7LqAcqNtHlbtJSNjFLU26SQhUM9IFivnWQyqeJQctCiQp
+ 77WFqfYseF/AAIP+Pipj3GwBzRWxfJ+13+gxaK70U92cPugvRCSKfGNAOJ4GnTWTOVgG 4A== 
+Received: from userv0021.oracle.com (userv0021.oracle.com [156.151.31.71])
+        by userp2130.oracle.com with ESMTP id 2r44wu4h6f-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Tue, 12 Mar 2019 13:17:26 +0000
+Received: from userv0121.oracle.com (userv0121.oracle.com [156.151.31.72])
+        by userv0021.oracle.com (8.14.4/8.14.4) with ESMTP id x2CDHQ3H016762
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Tue, 12 Mar 2019 13:17:26 GMT
+Received: from abhmp0020.oracle.com (abhmp0020.oracle.com [141.146.116.26])
+        by userv0121.oracle.com (8.14.4/8.13.8) with ESMTP id x2CDHOwL021703;
+        Tue, 12 Mar 2019 13:17:25 GMT
+Received: from kadam (/197.157.0.23)
+        by default (Oracle Beehive Gateway v4.0)
+        with ESMTP ; Tue, 12 Mar 2019 06:17:24 -0700
+Date:   Tue, 12 Mar 2019 16:17:16 +0300
+From:   Dan Carpenter <dan.carpenter@oracle.com>
+To:     "Milan P. Gandhi" <mgandhi@redhat.com>
+Cc:     kernel-janitors@vger.kernel.org, qla2xxx-upstream@qlogic.com,
+        jejb@linux.ibm.com, martin.petersen@oracle.com,
+        linux-scsi@vger.kernel.org, linux-kernel@vger.kernel.org,
+        julia.lawall@lip6.fr
+Subject: Re: [PATCH 0/2] scsi: qla2xxx: Fix for a formatting issue and typo
+ in qla_bsg.c
+Message-ID: <20190312131716.GJ2412@kadam>
+References: <20190312124937.GA13922@machine1>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20190312121218.GM31026@ulmo>
-User-Agent: NeoMutt/20170113 (1.7.2)
-X-SA-Exim-Connect-IP: 2001:67c:670:100:1d::c5
-X-SA-Exim-Mail-From: ukl@pengutronix.de
-X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
-X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
+In-Reply-To: <20190312124937.GA13922@machine1>
+User-Agent: Mutt/1.9.4 (2018-02-28)
+X-Proofpoint-Virus-Version: vendor=nai engine=5900 definitions=9192 signatures=668685
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
+ suspectscore=0 phishscore=0 bulkscore=0 spamscore=0 clxscore=1015
+ lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=681 adultscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1810050000
+ definitions=main-1903120094
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Mar 12, 2019 at 01:12:18PM +0100, Thierry Reding wrote:
-> On Tue, Mar 12, 2019 at 10:17:39AM +0100, Uwe Kleine-König wrote:
-> > Hello,
-> > 
-> > there are just a few minor things left I commented below.
-> > 
-> > On Tue, Mar 12, 2019 at 01:41:29PM +0530, Yash Shah wrote:
-> > > +#define div_u64_round(a, b) \
-> > > +	({typeof(b) __b = b; div_u64((a) + __b / 2, __b); })
-> > 
-> > Parenthesis around b please. I guess I didn't had them in my suggestion
-> > either, sorry for that.
-> 
-> We don't really need the parentheses here, do we? The only operator that
-> has lower priority than the assignment is the comma operator, and that's
-> not going to work in the macro anyway, unless you put it inside a pair
-> of parentheses, in which case, well, you have the parentheses already.
+Looks good.  It might take a while for the maintainers to get around to
+this because the merge window is open and it's a low priority cleanup.
 
-I thought that, too, but using parenthesis just always is a safe bet and
-prevents people stumbling over this and spending time to come to the
-conclusion that it is actually safe without them.
+regards,
+dan carpenter
 
-> > > +static int pwm_sifive_enable(struct pwm_chip *chip, bool enable)
-> > > +{
-> > > +	struct pwm_sifive_ddata *pwm = pwm_sifive_chip_to_ddata(chip);
-> > > +	int ret;
-> > > +
-> > > +	if (enable) {
-> > > +		ret = clk_enable(pwm->clk);
-> > > +		if (ret) {
-> > > +			dev_err(pwm->chip.dev, "Enable clk failed:%d\n", ret);
-> > > +			return ret;
-> > > +		}
-> > > +	}
-> > > +
-> > > +	if (!enable)
-> > > +		clk_disable(pwm->clk);
-> > > +
-> > > +	return 0;
-> > > +}
-> > 
-> > There is only a single caller for this function. I wonder if it is
-> > trivial enough to fold it into pwm_sifive_apply.
-> 
-> I think this is fine. pwm_sifive_apply() is already fairly long at this
-> point, so might as well split things up a little.
-
-I don't have a strong opinion here, so keeping as is is fine for me.
-
-> > There are a few other things that could be improved, but I think they
-> > could be addressed later. For some of these I don't even know what to
-> > suggest, for some Thierry might not agree it is worth fixing:
-> > 
-> >  - rounding
-> >    how to round? When should a request declined, when is rounding ok?
-> >    There is still "if (state->period != pwm->approx_period) return -EBUSY"
-> >    in this driver. This is better than before, but if state-period ==
-> >    pwm->approx_period + 1 the result (if accepted) might be the same as
-> >    without the +1 and so returning -EBUSY for one case and accepting the
-> >    other is strange.
-> 
-> Perhaps a good idea would be to reject a configuration only after we've
-> determined that it is incompatible? If we're really going to end up with
-> the same configuration within a given margin of period or duty cycle and
-> we can't do much about it, there's little point in rejecting such
-> configurations.
-
-It seems we agree here. Is this important enough to delay taking this
-driver further? Currently the driver rejects too broad so if it annoys
-someone this can still be fixed later and there is only little harm
-(assuming correct error handling in the consumers).
-
-> >  - don't call PWM API functions designed for consumers (here: pwm_get_state)
-> 
-> Agreed. The driver can just access pwm_device.state directly.
-
-I wouldn't do this either. IMHO the driver should only look into its
-hardware registers instead of using framework interna (or consumer API
-calls).
-
-> >  - Move div_u64_round to include/linux/math64.h
-> 
-> Looks to me like DIV_ROUND_CLOSEST_ULL() is already pretty much this.
-> The only difference that I can see is that the divisor is 32-bit, but
-> since we pass in state->period, that already works fine.
-
-num (i.e. the divident) should be a u64, but it isn't. This needs
-fixing. But I agree that DIV_ROUND_CLOSEST_ULL should be good enough
-then.
-
-Best regards
-Uwe
-
--- 
-Pengutronix e.K.                           | Uwe Kleine-König            |
-Industrial Linux Solutions                 | http://www.pengutronix.de/  |
