@@ -7,38 +7,38 @@ X-Spam-Status: No, score=-6.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_PASS,UNWANTED_LANGUAGE_BODY,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5B0DAC4360F
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 02:02:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EC916C43381
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 02:03:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 290D8214AF
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 02:02:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BA4CD21741
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 02:03:05 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1552356179;
-	bh=4dV8mTbsNPNKZ39ADX1qjVPYHKHeC2PTdOOpVaPi9Vs=;
+	s=default; t=1552356185;
+	bh=xHRjrUNsCPbOvruSjLCNLNw42U/FXo25L0ZXkkWViXA=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=kM1xb0nR6u2ZidwUJhYKjhnY6jkBZqtqLxdn/9zSXCyYztLUNebPAXv3LbooldCfP
-	 a7SwRhpgo8nqp7AzyHTvILtz2a15POGI8DA6Aazejn5WLtfRlUzoUmhe6RHKrv161Z
-	 OyPalWZm8Kw7P2onCXNI2aP3ExmLsMIRDmwtJgHw=
+	b=cAD84dfCNRdO0zoXdT7X2wtK8jZUFx247Va7Imt2ZPXlTjjbZe6u/Xbb7vkGxLteR
+	 bYn1AGelqwXnLtXdx/kDCmFRT3pJFrmC/5iknLycJRPEdraN/Uz0PDc1WDlgW96EDg
+	 mxtRmvP1ykWW3o5XI75jbbdu5v6K4amh9WmX9+wk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726961AbfCLCC5 (ORCPT
+        id S1726975AbfCLCDE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 11 Mar 2019 22:02:57 -0400
-Received: from mail.kernel.org ([198.145.29.99]:36788 "EHLO mail.kernel.org"
+        Mon, 11 Mar 2019 22:03:04 -0400
+Received: from mail.kernel.org ([198.145.29.99]:36838 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726896AbfCLCCz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 11 Mar 2019 22:02:55 -0400
+        id S1726896AbfCLCC7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 11 Mar 2019 22:02:59 -0400
 Received: from quaco.meukeo.local (unknown [179.97.35.11])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 662962175B;
-        Tue, 12 Mar 2019 02:02:50 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 98714214AE;
+        Tue, 12 Mar 2019 02:02:55 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1552356175;
-        bh=4dV8mTbsNPNKZ39ADX1qjVPYHKHeC2PTdOOpVaPi9Vs=;
+        s=default; t=1552356179;
+        bh=xHRjrUNsCPbOvruSjLCNLNw42U/FXo25L0ZXkkWViXA=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=UhM6ye+HRpua/AtpPHKwmWzaYTQpOVNJjU9yCGvVgQa9ontYffCmo/rwZKj9BSYgw
-         MEAZDhgS3ImOhKQmU4NMMP3cVECfsjJ/ZISFAYcTIxgGY32OoVgo7xUIRSJYK2N2lJ
-         vdqlH8xW3CpQuyi92XJHS7VsEiEMcHzk70hadgYI=
+        b=vFv+cG1aQh7N7ThW1RZWDi4K4BTRbbmuEj98OLZCyYIFDwRgtjEGIWdwQ2grGksvl
+         gtkDIr5JvO8dPAx+wEIgKIduNLAwTbo9ZajJEYyhwZ/BkpQ4xslZ3gN4UHzWDyiv3s
+         FjiILyzutsTpNXYqz/zMQ+JhedSyAhRy1xqSJy6M=
 From:   Arnaldo Carvalho de Melo <acme@kernel.org>
 To:     Ingo Molnar <mingo@kernel.org>
 Cc:     Jiri Olsa <jolsa@kernel.org>, Namhyung Kim <namhyung@kernel.org>,
@@ -51,9 +51,9 @@ Cc:     Jiri Olsa <jolsa@kernel.org>, Namhyung Kim <namhyung@kernel.org>,
         Peter Zijlstra <peterz@infradead.org>,
         Stephane Eranian <eranian@google.com>,
         Arnaldo Carvalho de Melo <acme@redhat.com>
-Subject: [PATCH 10/30] perf data: Add perf_data__update_dir() function
-Date:   Mon, 11 Mar 2019 23:01:44 -0300
-Message-Id: <20190312020204.22092-11-acme@kernel.org>
+Subject: [PATCH 11/30] perf data: Make perf_data__size() work over directory
+Date:   Mon, 11 Mar 2019 23:01:45 -0300
+Message-Id: <20190312020204.22092-12-acme@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190312020204.22092-1-acme@kernel.org>
 References: <20190312020204.22092-1-acme@kernel.org>
@@ -66,8 +66,8 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Jiri Olsa <jolsa@kernel.org>
 
-Add perf_data__update_dir() to update the size for every file within the
-perf.data directory.
+Make perf_data__size() return proper size for directory data, summing up
+all the individual file sizes.
 
 Signed-off-by: Jiri Olsa <jolsa@kernel.org>
 Cc: Adrian Hunter <adrian.hunter@intel.com>
@@ -77,53 +77,59 @@ Cc: Andi Kleen <ak@linux.intel.com>
 Cc: Namhyung Kim <namhyung@kernel.org>
 Cc: Peter Zijlstra <peterz@infradead.org>
 Cc: Stephane Eranian <eranian@google.com>
-Link: http://lkml.kernel.org/r/20190308134745.5057-4-jolsa@kernel.org
+Link: http://lkml.kernel.org/r/20190308134745.5057-5-jolsa@kernel.org
 Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 ---
- tools/perf/util/data.c | 20 ++++++++++++++++++++
- tools/perf/util/data.h |  1 +
- 2 files changed, 21 insertions(+)
+ tools/perf/util/data.c | 17 +++++++++++++++++
+ tools/perf/util/data.h |  6 +-----
+ 2 files changed, 18 insertions(+), 5 deletions(-)
 
 diff --git a/tools/perf/util/data.c b/tools/perf/util/data.c
-index 18fa8d4614eb..5d0f26aef77f 100644
+index 5d0f26aef77f..b71c441cafbb 100644
 --- a/tools/perf/util/data.c
 +++ b/tools/perf/util/data.c
-@@ -124,6 +124,26 @@ int perf_data__open_dir(struct perf_data *data)
+@@ -393,3 +393,20 @@ int perf_data__switch(struct perf_data *data,
+ 	free(new_filepath);
  	return ret;
  }
- 
-+int perf_data__update_dir(struct perf_data *data)
++
++unsigned long perf_data__size(struct perf_data *data)
 +{
++	u64 size = data->file.size;
 +	int i;
 +
-+	if (WARN_ON(!data->is_dir))
-+		return -EINVAL;
++	if (!data->is_dir)
++		return size;
 +
 +	for (i = 0; i < data->dir.nr; i++) {
 +		struct perf_data_file *file = &data->dir.files[i];
-+		struct stat st;
 +
-+		if (fstat(file->fd, &st))
-+			return -1;
-+
-+		file->size = st.st_size;
++		size += file->size;
 +	}
 +
-+	return 0;
++	return size;
 +}
-+
- static bool check_pipe(struct perf_data *data)
- {
- 	struct stat st;
 diff --git a/tools/perf/util/data.h b/tools/perf/util/data.h
-index 06aefeda311f..0deeb1af9f54 100644
+index 0deeb1af9f54..d342469bdfda 100644
 --- a/tools/perf/util/data.h
 +++ b/tools/perf/util/data.h
-@@ -79,4 +79,5 @@ int perf_data__switch(struct perf_data *data,
- int perf_data__create_dir(struct perf_data *data, int nr);
+@@ -54,11 +54,6 @@ static inline int perf_data__fd(struct perf_data *data)
+ 	return data->file.fd;
+ }
+ 
+-static inline unsigned long perf_data__size(struct perf_data *data)
+-{
+-	return data->file.size;
+-}
+-
+ int perf_data__open(struct perf_data *data);
+ void perf_data__close(struct perf_data *data);
+ ssize_t perf_data__write(struct perf_data *data,
+@@ -80,4 +75,5 @@ int perf_data__create_dir(struct perf_data *data, int nr);
  int perf_data__open_dir(struct perf_data *data);
  void perf_data__close_dir(struct perf_data *data);
-+int perf_data__update_dir(struct perf_data *data);
+ int perf_data__update_dir(struct perf_data *data);
++unsigned long perf_data__size(struct perf_data *data);
  #endif /* __PERF_DATA_H */
 -- 
 2.20.1
