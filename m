@@ -2,51 +2,53 @@ Return-Path: <SRS0=J4ZE=RP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7138DC4360F
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 17:22:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 017ABC43381
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 17:22:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 43CB6214AF
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 17:22:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C1161214AF
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 17:22:43 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1552411358;
-	bh=Z3NwA8ZtwTzFBpVK2imb7wjYNVY7vQka9yMQCJ3eaYQ=;
+	s=default; t=1552411363;
+	bh=qKzhmXVxPvtf3IWamqpvGLG7us/nyBImMJ8xfUVgrIA=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=1zkRsKUs4c9lrfz8iXOCv5b6ESmtp8DsWiAe5ad0Tn8UaprtM+MN2fWGSoKiSUPDu
-	 Lvw8hda1GWnydAuyzt06NyP2qX83F2A/uGvxtDLsE+hiK9r34oKnJlkKWUO4Ajrlut
-	 oRD7vrZoSkjBBgysA3C5zDVFtpckYG2kXQwXpdz8=
+	b=Ny6OVNM5azjDk9Xzb2HEYgbeOLILU0UVeeY4ZxHBRO4frEpFc6zTtiZyXen6LReRd
+	 ZvfCyIdS1899RGc28s4nQWKHmn+7nkILNXoVBMENRoQoLQVfWSeNHTs135Pemu9leY
+	 Gx1y1wLpQSHHgyhgj9lMkjT4lidxXtHpdFOkauGA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729931AbfCLRSH (ORCPT
+        id S1729957AbfCLRWm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 12 Mar 2019 13:18:07 -0400
-Received: from mail.kernel.org ([198.145.29.99]:60946 "EHLO mail.kernel.org"
+        Tue, 12 Mar 2019 13:22:42 -0400
+Received: from mail.kernel.org ([198.145.29.99]:35236 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729527AbfCLRRR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 12 Mar 2019 13:17:17 -0400
+        id S1729928AbfCLRSH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 12 Mar 2019 13:18:07 -0400
 Received: from localhost (unknown [104.133.8.98])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id EA9CF2171F;
-        Tue, 12 Mar 2019 17:17:16 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 6648B218AE;
+        Tue, 12 Mar 2019 17:18:06 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1552411037;
-        bh=Z3NwA8ZtwTzFBpVK2imb7wjYNVY7vQka9yMQCJ3eaYQ=;
+        s=default; t=1552411086;
+        bh=qKzhmXVxPvtf3IWamqpvGLG7us/nyBImMJ8xfUVgrIA=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=JHlLOOqLknFPYRs6ADNEYMO/kwBagOU+Gu2Yxr9Txeydf2vAvAzZpmO9DCogdMZVQ
-         48gDKVX7r89YiZsT1+SB/lYF7IG/sSUf5+MSZTtSdjUa3cp3YBq/wabBVHfS94wDnS
-         iCM5/golOuuA/N6U0B2zJkkffrKsUFaKLMPsaEIA=
+        b=scyVDTI0bIC2zRpx2J+yzHUn/d0GP1z4Z4Rmy2u4RrAX0bQTfeCmPtgNE+elf8hlP
+         a97h4LuU0H6FjxTrVdusKhVRpGcBoYnSXKyGOEoc4n4Uq1ASax5wgHZjRWv5NWkIWI
+         8uXsXQ6XCOWeORB29MjGGzA6WWUjcHfcfWYFkkpA=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Haiyang Zhang <haiyangz@microsoft.com>,
-        "David S. Miller" <davem@davemloft.net>
-Subject: [PATCH 4.9 15/96] hv_netvsc: Fix IP header checksum for coalesced packets
-Date:   Tue, 12 Mar 2019 10:09:33 -0700
-Message-Id: <20190312171035.701747106@linuxfoundation.org>
+        stable@vger.kernel.org, Ian Kent <raven@themaw.net>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.9 64/96] autofs: fix error return in autofs_fill_super()
+Date:   Tue, 12 Mar 2019 10:10:22 -0700
+Message-Id: <20190312171039.374457711@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190312171034.530434962@linuxfoundation.org>
 References: <20190312171034.530434962@linuxfoundation.org>
@@ -65,59 +67,39 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-From: Haiyang Zhang <haiyangz@microsoft.com>
+[ Upstream commit f585b283e3f025754c45bbe7533fc6e5c4643700 ]
 
-[ Upstream commit bf48648d650db1146b75b9bd358502431e86cf4f ]
+In autofs_fill_super() on error of get inode/make root dentry the return
+should be ENOMEM as this is the only failure case of the called
+functions.
 
-Incoming packets may have IP header checksum verified by the host.
-They may not have IP header checksum computed after coalescing.
-This patch re-compute the checksum when necessary, otherwise the
-packets may be dropped, because Linux network stack always checks it.
-
-Signed-off-by: Haiyang Zhang <haiyangz@microsoft.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Link: http://lkml.kernel.org/r/154725123240.11260.796773942606871359.stgit@pluto-themaw-net
+Signed-off-by: Ian Kent <raven@themaw.net>
+Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
+Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/hyperv/netvsc_drv.c |   22 +++++++++++++++++++---
- 1 file changed, 19 insertions(+), 3 deletions(-)
+ fs/autofs4/inode.c | 4 +++-
+ 1 file changed, 3 insertions(+), 1 deletion(-)
 
---- a/drivers/net/hyperv/netvsc_drv.c
-+++ b/drivers/net/hyperv/netvsc_drv.c
-@@ -593,6 +593,14 @@ void netvsc_linkstatus_callback(struct h
- 	schedule_delayed_work(&ndev_ctx->dwork, 0);
- }
+diff --git a/fs/autofs4/inode.c b/fs/autofs4/inode.c
+index ce0c6ea96a87..d9a3264909d0 100644
+--- a/fs/autofs4/inode.c
++++ b/fs/autofs4/inode.c
+@@ -259,8 +259,10 @@ int autofs4_fill_super(struct super_block *s, void *data, int silent)
+ 	}
+ 	root_inode = autofs4_get_inode(s, S_IFDIR | 0755);
+ 	root = d_make_root(root_inode);
+-	if (!root)
++	if (!root) {
++		ret = -ENOMEM;
+ 		goto fail_ino;
++	}
+ 	pipe = NULL;
  
-+static void netvsc_comp_ipcsum(struct sk_buff *skb)
-+{
-+	struct iphdr *iph = (struct iphdr *)skb->data;
-+
-+	iph->check = 0;
-+	iph->check = ip_fast_csum(iph, iph->ihl);
-+}
-+
- static struct sk_buff *netvsc_alloc_recv_skb(struct net_device *net,
- 				struct hv_netvsc_packet *packet,
- 				struct ndis_tcp_ip_checksum_info *csum_info,
-@@ -616,9 +624,17 @@ static struct sk_buff *netvsc_alloc_recv
- 	/* skb is already created with CHECKSUM_NONE */
- 	skb_checksum_none_assert(skb);
- 
--	/*
--	 * In Linux, the IP checksum is always checked.
--	 * Do L4 checksum offload if enabled and present.
-+	/* Incoming packets may have IP header checksum verified by the host.
-+	 * They may not have IP header checksum computed after coalescing.
-+	 * We compute it here if the flags are set, because on Linux, the IP
-+	 * checksum is always checked.
-+	 */
-+	if (csum_info && csum_info->receive.ip_checksum_value_invalid &&
-+	    csum_info->receive.ip_checksum_succeeded &&
-+	    skb->protocol == htons(ETH_P_IP))
-+		netvsc_comp_ipcsum(skb);
-+
-+	/* Do L4 checksum offload if enabled and present.
- 	 */
- 	if (csum_info && (net->features & NETIF_F_RXCSUM)) {
- 		if (csum_info->receive.tcp_checksum_succeeded ||
+ 	root->d_fsdata = ino;
+-- 
+2.19.1
+
 
 
