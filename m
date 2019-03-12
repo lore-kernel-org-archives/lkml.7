@@ -4,53 +4,54 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CEBECC43381
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 17:14:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0ED38C43381
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 17:14:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A0D8E206DF
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 17:14:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D1A80217F5
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 17:14:38 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1552410876;
-	bh=ZvHyKjdHj5FZC0vFUTRYfDkC67Pi9SVddLeE0bqKqhU=;
+	s=default; t=1552410878;
+	bh=75ZUn/mIRRk9x0oksHMZnD4fzhCLuETtfHgnV5Hm6ro=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=rRlr5Wdom4Ht6ks0pjlu8X3cbe9f54wxvYN/WxTCmso1S8dPTxrtmeV4N6M4W/F+B
-	 WMVnWXWIOR8Sk2NrvHv/YD89y7mWSocZZwApOkRwOj/w6pjN5S6AGMBEZVWjh/3TBw
-	 G/662zTKsLmFGp/uaovNorWiDoEtWJ2TZefqHK+o=
+	b=TB7CDKCrCsZYPuYHlJv5FofIgmGBOV4+iDBOWUk3vjWbZhw+XqG1ceVwoLwZ4PbTx
+	 C4wzH2dhCG459qjxaoIKc50pkooU+wx22QQCsszOhWZsN4kwsUq0rzSdad/dY4NBYT
+	 P60qVMFh43D0R4ebF2izOQAKoHNo6mgzAPdEdRes=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728413AbfCLROf (ORCPT
+        id S1728431AbfCLROh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 12 Mar 2019 13:14:35 -0400
-Received: from mail.kernel.org ([198.145.29.99]:51236 "EHLO mail.kernel.org"
+        Tue, 12 Mar 2019 13:14:37 -0400
+Received: from mail.kernel.org ([198.145.29.99]:51400 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728084AbfCLRNs (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 12 Mar 2019 13:13:48 -0400
+        id S1728096AbfCLRNu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 12 Mar 2019 13:13:50 -0400
 Received: from localhost (unknown [104.133.8.98])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 48FD82183E;
-        Tue, 12 Mar 2019 17:13:47 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id B811221850;
+        Tue, 12 Mar 2019 17:13:48 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1552410827;
-        bh=ZvHyKjdHj5FZC0vFUTRYfDkC67Pi9SVddLeE0bqKqhU=;
+        s=default; t=1552410828;
+        bh=75ZUn/mIRRk9x0oksHMZnD4fzhCLuETtfHgnV5Hm6ro=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=uqs4cHEodWqCgunbIHkYhgYogloQwA6ie5Fb+zoo/Ox0/EiMhQCTa8FvsNvwcigmF
-         DpV6DiDj8tMsV+df+zxrTKtf3hOBtwSXMq4MEZdfiTxmS6HEqH4mryn/ouxsVISkGv
-         wCKehrc6KvDULlHqg/Pn3/cFBvCQ+nYfFzAs3xDU=
+        b=KpuQhi7txmuo/J9OIYfxJDVO4JFcY4YRRXNz2gv27ZcsjORTYiSAuuM5LfsFxTABO
+         qhOJDhgvcQc1StfZnt+8qwpCMLZqsPDKHQxkN8spTGtjJpkkXLj15+PgogfX0y35+G
+         rZSpACVea2Aztbz7ShhCx6oofg1IfHquM8cer8k0=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Stephane Eranian <eranian@google.com>,
-        Andi Kleen <ak@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>,
+        stable@vger.kernel.org, Tony Jones <tonyj@suse.de>,
+        Jiri Olsa <jolsa@kernel.org>,
         Arnaldo Carvalho de Melo <acme@redhat.com>,
-        Kan Liang <kan.liang@linux.intel.com>,
-        Peter Zijlstra <peterz@infradead.org>,
+        Ravi Bangoria <ravi.bangoria@linux.ibm.com>,
+        Andi Kleen <ak@linux.intel.com>,
+        Jin Yao <yao.jin@linux.intel.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 004/149] perf core: Fix perf_proc_update_handler() bug
-Date:   Tue, 12 Mar 2019 10:07:02 -0700
-Message-Id: <20190312170349.833402758@linuxfoundation.org>
+Subject: [PATCH 4.19 006/149] perf script: Fix crash when processing recorded stat data
+Date:   Tue, 12 Mar 2019 10:07:04 -0700
+Message-Id: <20190312170350.018664512@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190312170349.421581206@linuxfoundation.org>
 References: <20190312170349.421581206@linuxfoundation.org>
@@ -69,82 +70,99 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-[ Upstream commit 1a51c5da5acc6c188c917ba572eebac5f8793432 ]
+[ Upstream commit 8bf8c6da53c2265aea365a1de6038f118f522113 ]
 
-The perf_proc_update_handler() handles /proc/sys/kernel/perf_event_max_sample_rate
-syctl variable.  When the PMU IRQ handler timing monitoring is disabled, i.e,
-when /proc/sys/kernel/perf_cpu_time_max_percent is equal to 0 or 100,
-then no modification to sysctl_perf_event_sample_rate is allowed to prevent
-possible hang from wrong values.
+While updating perf to work with Python3 and Python2 I noticed that the
+stat-cpi script was dumping core.
 
-The problem is that the test to prevent modification is made after the
-sysctl variable is modified in perf_proc_update_handler().
+$ perf  stat -e cycles,instructions record -o /tmp/perf.data /bin/false
 
-You get an error:
+ Performance counter stats for '/bin/false':
 
-  $ echo 10001 >/proc/sys/kernel/perf_event_max_sample_rate
-  echo: write error: invalid argument
+           802,148      cycles
 
-But the value is still modified causing all sorts of inconsistencies:
+           604,622      instructions                                                       802,148      cycles
+           604,622      instructions
 
-  $ cat /proc/sys/kernel/perf_event_max_sample_rate
-  10001
+       0.001445842 seconds time elapsed
 
-This patch fixes the problem by moving the parsing of the value after
-the test.
+$ perf script -i /tmp/perf.data -s scripts/python/stat-cpi.py
+Segmentation fault (core dumped)
+...
+...
+    rblist=rblist@entry=0xb2a200 <rt_stat>,
+    new_entry=new_entry@entry=0x7ffcb755c310) at util/rblist.c:33
+    ctx=<optimized out>, type=<optimized out>, create=<optimized out>,
+    cpu=<optimized out>, evsel=<optimized out>) at util/stat-shadow.c:118
+    ctx=<optimized out>, type=<optimized out>, st=<optimized out>)
+    at util/stat-shadow.c:196
+    count=count@entry=727442, cpu=cpu@entry=0, st=0xb2a200 <rt_stat>)
+    at util/stat-shadow.c:239
+    config=config@entry=0xafeb40 <stat_config>,
+    counter=counter@entry=0x133c6e0) at util/stat.c:372
+...
+...
+
+The issue is that since 1fcd03946b52 perf_stat__update_shadow_stats now calls
+update_runtime_stat passing rt_stat rather than calling update_stats but
+perf_stat__init_shadow_stats has never been called to initialize rt_stat in
+the script path processing recorded stat data.
+
+Since I can't see any reason why perf_stat__init_shadow_stats() is presently
+initialized like it is in builtin-script.c::perf_sample__fprint_metric()
+[4bd1bef8bba2f] I'm proposing it instead be initialized once in __cmd_script
 
 Committer testing:
 
-  # echo 100 > /proc/sys/kernel/perf_cpu_time_max_percent
-  # echo 10001 > /proc/sys/kernel/perf_event_max_sample_rate
-  -bash: echo: write error: Invalid argument
-  # cat /proc/sys/kernel/perf_event_max_sample_rate
-  10001
+After applying the patch:
+
+  # perf script -i /tmp/perf.data -s tools/perf/scripts/python/stat-cpi.py
+       0.001970: cpu -1, thread -1 -> cpi 1.709079 (1075684/629394)
   #
 
-Signed-off-by: Stephane Eranian <eranian@google.com>
-Reviewed-by: Andi Kleen <ak@linux.intel.com>
+No segfault.
+
+Signed-off-by: Tony Jones <tonyj@suse.de>
 Reviewed-by: Jiri Olsa <jolsa@kernel.org>
 Tested-by: Arnaldo Carvalho de Melo <acme@redhat.com>
-Cc: Kan Liang <kan.liang@linux.intel.com>
-Cc: Peter Zijlstra <peterz@infradead.org>
-Link: http://lkml.kernel.org/r/1547169436-6266-1-git-send-email-eranian@google.com
+Tested-by: Ravi Bangoria <ravi.bangoria@linux.ibm.com>
+Cc: Andi Kleen <ak@linux.intel.com>
+Cc: Jin Yao <yao.jin@linux.intel.com>
+Fixes: 1fcd03946b52 ("perf stat: Update per-thread shadow stats")
+Link: http://lkml.kernel.org/r/20190120191414.12925-1-tonyj@suse.de
 Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- kernel/events/core.c | 14 +++++++-------
- 1 file changed, 7 insertions(+), 7 deletions(-)
+ tools/perf/builtin-script.c | 7 ++-----
+ 1 file changed, 2 insertions(+), 5 deletions(-)
 
-diff --git a/kernel/events/core.c b/kernel/events/core.c
-index 4fb9d5054618..aa996a0854b9 100644
---- a/kernel/events/core.c
-+++ b/kernel/events/core.c
-@@ -436,18 +436,18 @@ int perf_proc_update_handler(struct ctl_table *table, int write,
- 		void __user *buffer, size_t *lenp,
- 		loff_t *ppos)
- {
--	int ret = proc_dointvec_minmax(table, write, buffer, lenp, ppos);
--
--	if (ret || !write)
--		return ret;
--
-+	int ret;
-+	int perf_cpu = sysctl_perf_cpu_time_max_percent;
- 	/*
- 	 * If throttling is disabled don't allow the write:
- 	 */
--	if (sysctl_perf_cpu_time_max_percent == 100 ||
--	    sysctl_perf_cpu_time_max_percent == 0)
-+	if (write && (perf_cpu == 100 || perf_cpu == 0))
- 		return -EINVAL;
+diff --git a/tools/perf/builtin-script.c b/tools/perf/builtin-script.c
+index ce2aee11e360..53c11fc0855e 100644
+--- a/tools/perf/builtin-script.c
++++ b/tools/perf/builtin-script.c
+@@ -1589,13 +1589,8 @@ static void perf_sample__fprint_metric(struct perf_script *script,
+ 		.force_header = false,
+ 	};
+ 	struct perf_evsel *ev2;
+-	static bool init;
+ 	u64 val;
  
-+	ret = proc_dointvec_minmax(table, write, buffer, lenp, ppos);
-+	if (ret || !write)
-+		return ret;
+-	if (!init) {
+-		perf_stat__init_shadow_stats();
+-		init = true;
+-	}
+ 	if (!evsel->stats)
+ 		perf_evlist__alloc_stats(script->session->evlist, false);
+ 	if (evsel_script(evsel->leader)->gnum++ == 0)
+@@ -2214,6 +2209,8 @@ static int __cmd_script(struct perf_script *script)
+ 
+ 	signal(SIGINT, sig_handler);
+ 
++	perf_stat__init_shadow_stats();
 +
- 	max_samples_per_tick = DIV_ROUND_UP(sysctl_perf_event_sample_rate, HZ);
- 	perf_sample_period_ns = NSEC_PER_SEC / sysctl_perf_event_sample_rate;
- 	update_perf_cpu_limits();
+ 	/* override event processing functions */
+ 	if (script->show_task_events) {
+ 		script->tool.comm = process_comm_event;
 -- 
 2.19.1
 
