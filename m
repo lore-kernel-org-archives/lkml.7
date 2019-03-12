@@ -2,243 +2,150 @@ Return-Path: <SRS0=J4ZE=RP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 436E0C43381
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 05:03:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C943AC43381
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 05:03:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0BDC7214AF
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 05:03:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 96CF62084F
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 05:03:35 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="YP4NCvvk"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727039AbfCLFDX (ORCPT
+        id S1727076AbfCLFDe (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 12 Mar 2019 01:03:23 -0400
-Received: from mga04.intel.com ([192.55.52.120]:61390 "EHLO mga04.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725792AbfCLFDX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 12 Mar 2019 01:03:23 -0400
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga002.fm.intel.com ([10.253.24.26])
-  by fmsmga104.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 11 Mar 2019 22:03:22 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.58,469,1544515200"; 
-   d="scan'208";a="150825430"
-Received: from linux.intel.com ([10.54.29.200])
-  by fmsmga002.fm.intel.com with ESMTP; 11 Mar 2019 22:03:22 -0700
-Received: from [10.252.11.175] (abudanko-mobl.ccr.corp.intel.com [10.252.11.175])
-        by linux.intel.com (Postfix) with ESMTP id 854DB58048A;
-        Mon, 11 Mar 2019 22:03:19 -0700 (PDT)
-Subject: [PATCH v7 01/12] feature: implement libzstd check, LIBZSTD_DIR and
- NO_LIBZSTD defines
-From:   Alexey Budankov <alexey.budankov@linux.intel.com>
-To:     Arnaldo Carvalho de Melo <acme@kernel.org>
-Cc:     Jiri Olsa <jolsa@redhat.com>, Namhyung Kim <namhyung@kernel.org>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Ingo Molnar <mingo@redhat.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Andi Kleen <ak@linux.intel.com>,
-        linux-kernel <linux-kernel@vger.kernel.org>
-References: <5f3a8326-58a0-816e-ad61-31c111232c7a@linux.intel.com>
-Organization: Intel Corp.
-Message-ID: <fa4a9695-ee44-fde2-8ad1-f2fb4d5b5241@linux.intel.com>
-Date:   Tue, 12 Mar 2019 08:03:17 +0300
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
- Thunderbird/60.5.1
+        Tue, 12 Mar 2019 01:03:34 -0400
+Received: from mail-wr1-f68.google.com ([209.85.221.68]:42472 "EHLO
+        mail-wr1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725792AbfCLFDd (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 12 Mar 2019 01:03:33 -0400
+Received: by mail-wr1-f68.google.com with SMTP id o9so1149573wrv.9;
+        Mon, 11 Mar 2019 22:03:32 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :content-transfer-encoding;
+        bh=ujeKSdpurBvV0kIlQTS8l+E4O7rsoHG6auAAX6bWdjg=;
+        b=YP4NCvvktxdjsBQ4kpouI+hBDkjSQrSh5cSzVQUaZ1yv0SpDVZKXlkC30d6ToVDTDQ
+         0B0CHyrrP/xS7UvlJo1zAiEmW6o6c6x4JKHCf9EB1w4XaxCDIm3VvQGgUN1L7vaC1via
+         InztyNxiEUEWhUZx045zkH9qXWURPur75slg5tDvuDPeYB0Yxxg1d9OD4W6avgDo4wCu
+         HN0orKnQrSTJo60/rGXRWSq+0hUb+yLG/fVHLTntYdDw6tqTqCjzzFo/VnSpbT83Dg9k
+         Z+AFucFdYUmc/2ZNriSZooPJQXhOtGBzKPVDx5+ox6+Fzac7QFYyLXGE9j/mIWOA2niU
+         4HhA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:content-transfer-encoding;
+        bh=ujeKSdpurBvV0kIlQTS8l+E4O7rsoHG6auAAX6bWdjg=;
+        b=otSHRdWK6Lfe+H+HlkeRTJHlP5J0Nh9nORTqrK+y/3pkmBbDurcikghAHhwtuYuHE1
+         DaCVnxmCjcl6demL2kqOFoEQp7NufzdUSAGb+8TRvYVAQZex75EfnCQ7utQLIGNus6RI
+         0TpzsDM0YxRL1JePlNqnx7gNYBz/lJaiRZiKEvuhgUvbKJKexB0xKqW0t49ZKemsdvv9
+         aL1fU/pa4Eq35RSrAidnIq4Mp/ZJfFcusjWcWuITnNNW4xAPlBx3bYnlaGrMTwYBBBtr
+         uW3dUhhvp36CTw5uYJ+Bqfo2mScG3k7LZpIoZqzoxvESDrWzf+3ZD2XkN8HhZVl7ayQu
+         lhgg==
+X-Gm-Message-State: APjAAAUAUuMbSBUTm2GaZGYS564bLNxIUE2bOX13fa+Q+OS1RJV/dhVo
+        jWgHm0kNBhbKjrB5DNUyph8vmjgZQEDEYlKCjms=
+X-Google-Smtp-Source: APXvYqz5qxCINOo98D+9cdo1pshRGoNbHhuBoLK84jz3klQpgmyx68G46fn2j7nnXCygpaug+O4Td4E98Hz3WALRbSU=
+X-Received: by 2002:adf:9167:: with SMTP id j94mr23629743wrj.106.1552367011278;
+ Mon, 11 Mar 2019 22:03:31 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <5f3a8326-58a0-816e-ad61-31c111232c7a@linux.intel.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+References: <20181125161859.GA5277@arx-s1> <20181220175009.GF9408@ulmo> <CAJeuY7-StNNDpBPyw1JH5Jmc-NhDw67F6Veh0S2tBTmENCTY8Q@mail.gmail.com>
+In-Reply-To: <CAJeuY7-StNNDpBPyw1JH5Jmc-NhDw67F6Veh0S2tBTmENCTY8Q@mail.gmail.com>
+From:   Hao Zhang <hao5781286@gmail.com>
+Date:   Tue, 12 Mar 2019 13:03:19 +0800
+Message-ID: <CAJeuY7_gx=PBhF4t40nCCWia-aq1G3t9D9nKS7ejOh56t2RkHQ@mail.gmail.com>
+Subject: Fwd: [PATCH v3 1/6] Documentation: ARM: sunxi: pwm: add Allwinner sun8i.
+To:     Mark Rutland <mark.rutland@arm.com>,
+        Maxime Ripard <maxime.ripard@bootlin.com>,
+        Chen-Yu Tsai <wens@csie.org>,
+        Michael Turquette <mturquette@baylibre.com>, sboyd@kernel.org,
+        linux-gpio@vger.kernel.org,
+        open list <linux-kernel@vger.kernel.org>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>,
+        "moderated list:ARM/Allwinner sunXi SoC support" 
+        <linux-arm-kernel@lists.infradead.org>, linux-pwm@vger.kernel.org,
+        linux-sunxi@googlegroups.com, Hao Zhang <hao5781286@gmail.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+---------- Forwarded message ---------
+From: Hao Zhang <hao5781286@gmail.com>
+Date: 2019=E5=B9=B43=E6=9C=8812=E6=97=A5=E5=91=A8=E4=BA=8C =E4=B8=8B=E5=8D=
+=8812:59
+Subject: Re: [PATCH v3 1/6] Documentation: ARM: sunxi: pwm: add Allwinner s=
+un8i.
+To: Thierry Reding <thierry.reding@gmail.com>
 
-Implement libzstd feature check, NO_LIBZSTD and LIBZSTD_DIR defines
-to override Zstd library sources or disable the feature from the
-command line:
 
-  $ make -C tools/perf LIBZSTD_DIR=/path/to/zstd/sources/ clean all
-  $ make -C tools/perf NO_LIBZSTD=1 clean all
+Thierry Reding <thierry.reding@gmail.com> =E4=BA=8E2018=E5=B9=B412=E6=9C=88=
+21=E6=97=A5=E5=91=A8=E4=BA=94 =E4=B8=8A=E5=8D=881:50=E5=86=99=E9=81=93=EF=
+=BC=9A
+>
+> On Mon, Nov 26, 2018 at 12:18:59AM +0800, Hao Zhang wrote:
+> > This patch adds Allwinner sun8i pwm binding document.
+> >
+> > Signed-off-by: Hao Zhang <hao5781286@gmail.com>
+> > ---
+> >  .../devicetree/bindings/pwm/pwm-sun8i.txt          | 24 ++++++++++++++=
+++++++++
+> >  1 file changed, 24 insertions(+)
+> >  create mode 100644 Documentation/devicetree/bindings/pwm/pwm-sun8i.txt
+> >
+> > diff --git a/Documentation/devicetree/bindings/pwm/pwm-sun8i.txt b/Docu=
+mentation/devicetree/bindings/pwm/pwm-sun8i.txt
+> > new file mode 100644
+> > index 0000000..7531d85
+> > --- /dev/null
+> > +++ b/Documentation/devicetree/bindings/pwm/pwm-sun8i.txt
+> > @@ -0,0 +1,24 @@
+> > +Allwinner sun8i R40/V40/T3 SoC PWM controller
+> > +
+> > +Required properties:
+> > +  - compatible: Should be one of:
+> > +    - "allwinner,sun8i-r40-pwm"
+> > +  - reg: Physical base address and length of the controller's register=
+s
+> > +  - interrupts: Should contain interrupt.
+> > +  - clocks: From common clock binding, handle to the parent clock.
+> > +  - clock-names: Must contain the clock names described just above.
+> > +  - pwm-channels: PWM channels of the controller.
+>
+> Why do you need this? In the cover letter you say:
+>
+>         "The sun8i R40/T3/V40 PWM has 8 PWM channals ..."
+>
+> Why does this need to be specified in the DT?
 
-Auto detection feature status is reported just before compilation starts.
-If your system has some version of the zstd library preinstalled then
-the build system finds and uses it during the build.
+T3 PWM has 8 channals, i think it is necessary to tell user how to
+specify it Instead of
+hardcode the channal myself :)
 
-If you still prefer to compile with some other version of zstd library
-you have capability to refer the compilation to that version using 
-LIBZSTD_DIR define.
+Thanks for review :)
 
-Signed-off-by: Alexey Budankov <alexey.budankov@linux.intel.com>
----
- tools/build/Makefile.feature       |  6 ++++--
- tools/build/feature/Makefile       |  6 +++++-
- tools/build/feature/test-all.c     |  5 +++++
- tools/build/feature/test-libzstd.c | 12 ++++++++++++
- tools/perf/Makefile.config         | 20 ++++++++++++++++++++
- tools/perf/Makefile.perf           |  3 +++
- tools/perf/builtin-version.c       |  2 ++
- 7 files changed, 51 insertions(+), 3 deletions(-)
- create mode 100644 tools/build/feature/test-libzstd.c
-
-diff --git a/tools/build/Makefile.feature b/tools/build/Makefile.feature
-index 61e46d54a67c..adf791cbd726 100644
---- a/tools/build/Makefile.feature
-+++ b/tools/build/Makefile.feature
-@@ -66,7 +66,8 @@ FEATURE_TESTS_BASIC :=                  \
-         sched_getcpu			\
-         sdt				\
-         setns				\
--        libaio
-+        libaio				\
-+        libzstd
- 
- # FEATURE_TESTS_BASIC + FEATURE_TESTS_EXTRA is the complete list
- # of all feature tests
-@@ -118,7 +119,8 @@ FEATURE_DISPLAY ?=              \
-          lzma                   \
-          get_cpuid              \
-          bpf			\
--         libaio
-+         libaio			\
-+         libzstd
- 
- # Set FEATURE_CHECK_(C|LD)FLAGS-all for all FEATURE_TESTS features.
- # If in the future we need per-feature checks/flags for features not
-diff --git a/tools/build/feature/Makefile b/tools/build/feature/Makefile
-index 7ceb4441b627..4b8244ee65ce 100644
---- a/tools/build/feature/Makefile
-+++ b/tools/build/feature/Makefile
-@@ -62,7 +62,8 @@ FILES=                                          \
-          test-clang.bin				\
-          test-llvm.bin				\
-          test-llvm-version.bin			\
--         test-libaio.bin
-+         test-libaio.bin			\
-+         test-libzstd.bin
- 
- FILES := $(addprefix $(OUTPUT),$(FILES))
- 
-@@ -301,6 +302,9 @@ $(OUTPUT)test-clang.bin:
- $(OUTPUT)test-libaio.bin:
- 	$(BUILD) -lrt
- 
-+$(OUTPUT)test-libzstd.bin:
-+	$(BUILD) -lzstd
-+
- ###############################
- 
- clean:
-diff --git a/tools/build/feature/test-all.c b/tools/build/feature/test-all.c
-index e903b86b742f..b0dda7db2a17 100644
---- a/tools/build/feature/test-all.c
-+++ b/tools/build/feature/test-all.c
-@@ -178,6 +178,10 @@
- # include "test-reallocarray.c"
- #undef main
- 
-+#define main main_test_zstd
-+# include "test-libzstd.c"
-+#undef main
-+
- int main(int argc, char *argv[])
- {
- 	main_test_libpython();
-@@ -219,6 +223,7 @@ int main(int argc, char *argv[])
- 	main_test_setns();
- 	main_test_libaio();
- 	main_test_reallocarray();
-+	main_test_libzstd();
- 
- 	return 0;
- }
-diff --git a/tools/build/feature/test-libzstd.c b/tools/build/feature/test-libzstd.c
-new file mode 100644
-index 000000000000..55268c01b84d
---- /dev/null
-+++ b/tools/build/feature/test-libzstd.c
-@@ -0,0 +1,12 @@
-+// SPDX-License-Identifier: GPL-2.0
-+#include <zstd.h>
-+
-+int main(void)
-+{
-+	ZSTD_CStream	*cstream;
-+
-+	cstream = ZSTD_createCStream();
-+	ZSTD_freeCStream(cstream);
-+
-+	return 0;
-+}
-diff --git a/tools/perf/Makefile.config b/tools/perf/Makefile.config
-index 0f11d5891301..4949bdb16a66 100644
---- a/tools/perf/Makefile.config
-+++ b/tools/perf/Makefile.config
-@@ -152,6 +152,13 @@ endif
- FEATURE_CHECK_CFLAGS-libbabeltrace := $(LIBBABELTRACE_CFLAGS)
- FEATURE_CHECK_LDFLAGS-libbabeltrace := $(LIBBABELTRACE_LDFLAGS) -lbabeltrace-ctf
- 
-+ifdef LIBZSTD_DIR
-+  LIBZSTD_CFLAGS  := -I$(LIBZSTD_DIR)/lib
-+  LIBZSTD_LDFLAGS := -L$(LIBZSTD_DIR)/lib
-+endif
-+FEATURE_CHECK_CFLAGS-libzstd := $(LIBZSTD_CFLAGS)
-+FEATURE_CHECK_LDFLAGS-libzstd := $(LIBZSTD_LDFLAGS)
-+
- FEATURE_CHECK_CFLAGS-bpf = -I. -I$(srctree)/tools/include -I$(srctree)/tools/arch/$(SRCARCH)/include/uapi -I$(srctree)/tools/include/uapi
- # include ARCH specific config
- -include $(src-perf)/arch/$(SRCARCH)/Makefile
-@@ -782,6 +789,19 @@ ifndef NO_LZMA
-   endif
- endif
- 
-+ifndef NO_LIBZSTD
-+  ifeq ($(feature-libzstd), 1)
-+    CFLAGS += -DHAVE_ZSTD_SUPPORT
-+    CFLAGS += $(LIBZSTD_CFLAGS)
-+    LDFLAGS += $(LIBZSTD_LDFLAGS)
-+    EXTLIBS += -lzstd
-+    $(call detected,CONFIG_ZSTD)
-+  else
-+    msg := $(warning No libzstd found, disables trace compression, please install libzstd-dev[el] and/or set LIBZSTD_DIR);
-+    NO_LIBZSTD := 1
-+  endif
-+endif
-+
- ifndef NO_BACKTRACE
-   ifeq ($(feature-backtrace), 1)
-     CFLAGS += -DHAVE_BACKTRACE_SUPPORT
-diff --git a/tools/perf/Makefile.perf b/tools/perf/Makefile.perf
-index 01f7555fd933..06b927ee6ee3 100644
---- a/tools/perf/Makefile.perf
-+++ b/tools/perf/Makefile.perf
-@@ -108,6 +108,9 @@ include ../scripts/utilities.mak
- # streaming for record mode. Currently Posix AIO trace streaming is
- # supported only when linking with glibc.
- #
-+# Define NO_LIBZSTD if you do not want support of Zstandard based runtime
-+# trace compression in record mode.
-+#
- 
- # As per kernel Makefile, avoid funny character set dependencies
- unexport LC_ALL
-diff --git a/tools/perf/builtin-version.c b/tools/perf/builtin-version.c
-index 50df168be326..f470144d1a70 100644
---- a/tools/perf/builtin-version.c
-+++ b/tools/perf/builtin-version.c
-@@ -78,6 +78,8 @@ static void library_status(void)
- 	STATUS(HAVE_LZMA_SUPPORT, lzma);
- 	STATUS(HAVE_AUXTRACE_SUPPORT, get_cpuid);
- 	STATUS(HAVE_LIBBPF_SUPPORT, bpf);
-+	STATUS(HAVE_AIO_SUPPORT, aio);
-+	STATUS(HAVE_ZSTD_SUPPORT, zstd);
- }
- 
- int cmd_version(int argc, const char **argv)
--- 
-2.20.1
-
+>
+> Thierry
+> -----BEGIN PGP SIGNATURE-----
+>
+> iQIzBAABCAAdFiEEiOrDCAFJzPfAjcif3SOs138+s6EFAlwb1k4ACgkQ3SOs138+
+> s6EOyA//auHjqjKwvjCLwWgHXdVr26cFUnFn/Ml6ZHHRe+oLCiYsatv4AZfGFvZ7
+> CIGWN3zUu9c5YoDOd1isauQYgRtTsShWYC4gPxFFK9hWfb8f3o/wG60whkNDuvLL
+> 1SAQ/KJTC01LQIEXfHlb60EPvKCtt4YUQG4PkTGBGOHSO+MhWQHRLy5aLaq+d3yH
+> KHaDZ0PuZvYNnFWi7W/ggraiIlRToPH8HanFzGew+gUfPjClrczjrGqgn8u0bAL6
+> MuKDMHLgjI/D8cs7XIaXc/OCPsp69B4JGrRJsxYh0KGKthaYDeKAUERpvsltDhGT
+> oTB55mJPZlriaiEOSwPrj+M0JQe9AnUIBVEiSIP2dSn8+rcSlWd10ysEjnCH/Ea7
+> ARkamiRCk2hgOhZlDZcm+hjh7VxnJinaYahGFXMszpVgCScHT/fjZKexGqX8NJa8
+> EWRJjeJaS1jLpLb7ZhM0iZrhzSC638G/5z3+1CWmyxwOvICb0FXzQDCTNSm1t8DO
+> NicV26tAWMIvDEW5PcTqrJaSvQmNrr4MiBiqocKs4N+ZA7Ey8JQW0oUFzwiwD6Ew
+> HaOuVXDlha1SZNK2tEnTDsTctXefl+eB7xeQ8MOHPp3yeKrpQlj4gHSyNOboEaXR
+> 8el/ZC1gGYHPeFGPSgXTbRNFwNY8/9GKPfP5cUgLc+e1B7oWAHg=3D
+> =3D9v1O
+> -----END PGP SIGNATURE-----
