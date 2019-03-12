@@ -2,145 +2,162 @@ Return-Path: <SRS0=J4ZE=RP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-13.5 required=3.0
+	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_MUTT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 47BA0C43381
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 14:07:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9AF3CC43381
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 14:09:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0ECBD2087C
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 14:07:08 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=wdc.com header.i=@wdc.com header.b="LqyTcA5G";
-	dkim=pass (1024-bit key) header.d=sharedspace.onmicrosoft.com header.i=@sharedspace.onmicrosoft.com header.b="Ee1G/XRD"
+	by mail.kernel.org (Postfix) with ESMTP id 6FFF02087C
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 14:09:35 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726760AbfCLOHG (ORCPT
+        id S1726754AbfCLOJe (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 12 Mar 2019 10:07:06 -0400
-Received: from esa2.hgst.iphmx.com ([68.232.143.124]:3532 "EHLO
-        esa2.hgst.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726192AbfCLOHG (ORCPT
+        Tue, 12 Mar 2019 10:09:34 -0400
+Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:40996 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726192AbfCLOJd (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 12 Mar 2019 10:07:06 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
-  d=wdc.com; i=@wdc.com; q=dns/txt; s=dkim.wdc.com;
-  t=1552399637; x=1583935637;
-  h=from:to:cc:subject:date:message-id:references:
-   in-reply-to:content-transfer-encoding:mime-version;
-  bh=b58DFWAOLPpT0e5MgJ3PF3Dc++JzJCKfBHdLecNHaNY=;
-  b=LqyTcA5GZO+WpMIuSnqWLF+x0b8+SeuqAGgOayNr265SvdnXfX53b8an
-   sb/mSOhIOJfxy17SQuSztXInDXOQbtYCl3I7Q8jmmEttX9yYpAu3r1SE7
-   MDIpkkAdGrJZj8J3L24TSDs4UseduQSvWtgPQj9agOzofPxOWLND5CRbI
-   c73KQ+RxnDdqpQ9a/wSqz78YMK+aWI9DLiqAh9sthB32x2Hfn89VgoR5X
-   koTWznqBANgi7Nb9nMRSRw8pJs1BowpNWvTHIbYA7VcBVjADEWuRbvQ0H
-   bEPOfRVpCqgXJ31jZam+L9DzzS05ennazdKEzkFuTMLsxffKY0hkktEiS
-   Q==;
-X-IronPort-AV: E=Sophos;i="5.58,471,1544457600"; 
-   d="scan'208";a="201821970"
-Received: from mail-bl2nam02lp2053.outbound.protection.outlook.com (HELO NAM02-BL2-obe.outbound.protection.outlook.com) ([104.47.38.53])
-  by ob1.hgst.iphmx.com with ESMTP; 12 Mar 2019 22:07:06 +0800
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=sharedspace.onmicrosoft.com; s=selector1-wdc-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=/dFYOQ1+eGBvfPjxvLcIiy2dKBRUWPCImiXyWcsUdvc=;
- b=Ee1G/XRDhFTUsk4QhT0DvbBbZabsRmWYYzsOpxzlThcfRz62+I5x5Hg5lSA3Lh781Cs2wnAwXB50CttSyeQOKhWKuHLwAVC5AGDL1t2tuyp7ESsxljYPttZDaH2Z3lie+riCQfaFrJehmHYa0YlBuYib90xMM1Ls6Cj2zw3LvO8=
-Received: from SN6PR04MB4925.namprd04.prod.outlook.com (52.135.114.82) by
- SN6PR04MB4048.namprd04.prod.outlook.com (52.135.82.145) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.1709.13; Tue, 12 Mar 2019 14:06:56 +0000
-Received: from SN6PR04MB4925.namprd04.prod.outlook.com
- ([fe80::f4d4:a300:2010:195a]) by SN6PR04MB4925.namprd04.prod.outlook.com
- ([fe80::f4d4:a300:2010:195a%3]) with mapi id 15.20.1686.021; Tue, 12 Mar 2019
- 14:06:56 +0000
-From:   Avri Altman <Avri.Altman@wdc.com>
-To:     Rajendra Nayak <rnayak@codeaurora.org>,
-        "vinholikatti@gmail.com" <vinholikatti@gmail.com>,
-        "alim.akhtar@samsung.com" <alim.akhtar@samsung.com>,
-        "pedrom.Sousa@synopsys.com" <pedrom.Sousa@synopsys.com>
-CC:     "subhashj@codeaurora.org" <subhashj@codeaurora.org>,
-        "asutoshd@codeaurora.org" <asutoshd@codeaurora.org>,
-        "linux-scsi@vger.kernel.org" <linux-scsi@vger.kernel.org>,
-        "linux-arm-msm@vger.kernel.org" <linux-arm-msm@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: RE: [PATCH 2/3] scsi: ufs: Add error checks for pm_runtime_get_sync()
-Thread-Topic: [PATCH 2/3] scsi: ufs: Add error checks for
- pm_runtime_get_sync()
-Thread-Index: AQHU1YlcVXMbJLB9xUOqEjKn0KHaPKYIDUYA
-Date:   Tue, 12 Mar 2019 14:06:56 +0000
-Message-ID: <SN6PR04MB49256D55A9EFCE6F0579BC3BFC490@SN6PR04MB4925.namprd04.prod.outlook.com>
-References: <20190308083053.30631-1-rnayak@codeaurora.org>
- <20190308083053.30631-3-rnayak@codeaurora.org>
-In-Reply-To: <20190308083053.30631-3-rnayak@codeaurora.org>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=Avri.Altman@wdc.com; 
-x-originating-ip: [212.25.79.133]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: d48b66bc-c0e4-4e96-62d3-08d6a6f3fca4
-x-ms-office365-filtering-ht: Tenant
-x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600127)(711020)(4605104)(4618075)(2017052603328)(7153060)(7193020);SRVR:SN6PR04MB4048;
-x-ms-traffictypediagnostic: SN6PR04MB4048:
-wdcipoutbound: EOP-TRUE
-x-microsoft-antispam-prvs: <SN6PR04MB4048A5335DF49ECA2B6B3204FC490@SN6PR04MB4048.namprd04.prod.outlook.com>
-x-forefront-prvs: 09749A275C
-x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(376002)(346002)(366004)(39860400002)(136003)(396003)(189003)(199004)(81156014)(7736002)(76176011)(8676002)(54906003)(81166006)(305945005)(102836004)(110136005)(229853002)(25786009)(6506007)(97736004)(316002)(68736007)(72206003)(4326008)(99286004)(14454004)(8936002)(6436002)(74316002)(66066001)(7696005)(14444005)(5660300002)(71200400001)(71190400001)(53936002)(33656002)(52536013)(105586002)(106356001)(2501003)(256004)(2906002)(446003)(486006)(6246003)(11346002)(476003)(86362001)(55016002)(478600001)(2201001)(3846002)(6116002)(26005)(186003)(9686003);DIR:OUT;SFP:1102;SCL:1;SRVR:SN6PR04MB4048;H:SN6PR04MB4925.namprd04.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam-message-info: KuN4E+8XluBUXyypysiZNBHg5LEPhW1+LmPVz7NKdhkc3+Iq49PGYVmTOwGZ73r6C8nuJNRr/p2aZbHpp0EB4NuvkYA44+Uyrt81UDQqD9BGZsuZhK4f2Hdn1AFqTvexIWdETIq0gGsPqKa2u0pOnGyElAo8C923E71dmSZ9EX9iKKVaZ7A69KPX8t8WG64jubL7SnwtsFLAxx0PJNnEmh4bb3v2vHVUnLH0H6pu4Av8JgSUXUfHyhnRdiQlxo2vtuLKdK5XLtdPbXb9eRk5UuxfmjsxM/y2A3u//r9aPuDlM1i1q6oYrmZec+dUANBnhuBI9pGwzN8O2h2uMEbeXBBTW64My8VpiegngKNnsmMrXunR/kRTIteyfUhrgvzpjq3RppCecHzf2fYT8gtIlagdxVQ3IlrjBGtet3FXudU=
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
+        Tue, 12 Mar 2019 10:09:33 -0400
+Received: from pps.filterd (m0098393.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x2CE9UcJ037546
+        for <linux-kernel@vger.kernel.org>; Tue, 12 Mar 2019 10:09:32 -0400
+Received: from e12.ny.us.ibm.com (e12.ny.us.ibm.com [129.33.205.202])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 2r6d2yn9wn-1
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
+        for <linux-kernel@vger.kernel.org>; Tue, 12 Mar 2019 10:09:31 -0400
+Received: from localhost
+        by e12.ny.us.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
+        for <linux-kernel@vger.kernel.org> from <paulmck@linux.vnet.ibm.com>;
+        Tue, 12 Mar 2019 14:09:25 -0000
+Received: from b01cxnp23033.gho.pok.ibm.com (9.57.198.28)
+        by e12.ny.us.ibm.com (146.89.104.199) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
+        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
+        Tue, 12 Mar 2019 14:09:21 -0000
+Received: from b01ledav003.gho.pok.ibm.com (b01ledav003.gho.pok.ibm.com [9.57.199.108])
+        by b01cxnp23033.gho.pok.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x2CE9K8516842772
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Tue, 12 Mar 2019 14:09:20 GMT
+Received: from b01ledav003.gho.pok.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 85287B2065;
+        Tue, 12 Mar 2019 14:09:20 +0000 (GMT)
+Received: from b01ledav003.gho.pok.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 6768DB2064;
+        Tue, 12 Mar 2019 14:09:20 +0000 (GMT)
+Received: from paulmck-ThinkPad-W541 (unknown [9.70.82.188])
+        by b01ledav003.gho.pok.ibm.com (Postfix) with ESMTP;
+        Tue, 12 Mar 2019 14:09:20 +0000 (GMT)
+Received: by paulmck-ThinkPad-W541 (Postfix, from userid 1000)
+        id 3296B16C6A7D; Tue, 12 Mar 2019 07:09:23 -0700 (PDT)
+Date:   Tue, 12 Mar 2019 07:09:23 -0700
+From:   "Paul E. McKenney" <paulmck@linux.ibm.com>
+To:     Neeraj Upadhyay <neeraju@codeaurora.org>
+Cc:     Steven Rostedt <rostedt@goodmis.org>, josh@joshtriplett.org,
+        mathieu.desnoyers@efficios.com, jiangshanlai@gmail.com,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] rcu/tree: Fix self wakeups for grace period kthread
+Reply-To: paulmck@linux.ibm.com
+References: <1552038378-11166-1-git-send-email-neeraju@codeaurora.org>
+ <20190311215027.2f3458a1@oasis.local.home>
+ <579cd03a-17a7-5729-46b3-ffcc4afee0e5@codeaurora.org>
 MIME-Version: 1.0
-X-OriginatorOrg: wdc.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: d48b66bc-c0e4-4e96-62d3-08d6a6f3fca4
-X-MS-Exchange-CrossTenant-originalarrivaltime: 12 Mar 2019 14:06:56.4368
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: b61c8803-16f3-4c35-9b17-6f65f441df86
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: SN6PR04MB4048
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <579cd03a-17a7-5729-46b3-ffcc4afee0e5@codeaurora.org>
+User-Agent: Mutt/1.5.21 (2010-09-15)
+X-TM-AS-GCONF: 00
+x-cbid: 19031214-0060-0000-0000-0000031AD6F7
+X-IBM-SpamModules-Scores: 
+X-IBM-SpamModules-Versions: BY=3.00010745; HX=3.00000242; KW=3.00000007;
+ PH=3.00000004; SC=3.00000281; SDB=6.01173312; UDB=6.00613445; IPR=6.00953972;
+ MB=3.00025946; MTD=3.00000008; XFM=3.00000015; UTC=2019-03-12 14:09:24
+X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
+x-cbparentid: 19031214-0061-0000-0000-00004895912B
+Message-Id: <20190312140923.GU13351@linux.ibm.com>
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-03-12_08:,,
+ signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
+ malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
+ clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
+ mlxlogscore=999 adultscore=0 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.0.1-1810050000 definitions=main-1903120100
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi,
->=20
-> Add an error check for pm_runtime_get_sync(), ignoring this can
-> hide issues with the runtime pm handling in the driver.
-Can you elaborate on those issues?
-I guess you've encountered some during your bring-up.
+On Tue, Mar 12, 2019 at 05:25:28PM +0530, Neeraj Upadhyay wrote:
+> On 3/12/19 7:20 AM, Steven Rostedt wrote:
+> >On Fri,  8 Mar 2019 15:16:18 +0530
+> >Neeraj Upadhyay <neeraju@codeaurora.org> wrote:
+> >
+> >>Update the code to match the comment that self wakeup of
+> >>grace period kthread is allowed from interrupt handler, and
+> >>softirq handler, running in the grace period kthread's
+> >>context. Present code allows self wakeups from all
+> >>interrupt contexts - nmi, softirq and hardirq contexts.
+> >
+> >That's not actually the issue. But it appears that we return if we
+> >simply have BH disabled, which I don't think we want, and we don't care
+> >about NMI as NMI should never call this code.
+> >
+> >I think your patch is correct, but the change log is not.
 
->=20
-> Signed-off-by: Rajendra Nayak <rnayak@codeaurora.org>
-> ---
->  drivers/scsi/ufs/ufshcd.c | 5 ++++-
->  1 file changed, 4 insertions(+), 1 deletion(-)
->=20
-> diff --git a/drivers/scsi/ufs/ufshcd.c b/drivers/scsi/ufs/ufshcd.c
-> index 2ddf24466a62..060dc38cc582 100644
-> --- a/drivers/scsi/ufs/ufshcd.c
-> +++ b/drivers/scsi/ufs/ufshcd.c
-> @@ -8357,7 +8357,10 @@ int ufshcd_init(struct ufs_hba *hba, void __iomem
-> *mmio_base, unsigned int irq)
->  	}
->=20
->  	/* Hold auto suspend until async scan completes */
-> -	pm_runtime_get_sync(dev);
-> +	err =3D pm_runtime_get_sync(dev);
-> +	if (err < 0)
-> +		goto out_remove_scsi_host;
-> +
->  	atomic_set(&hba->scsi_block_reqs_cnt, 0);
->  	/*
->  	 * We are assuming that device wasn't put in sleep/power-down
-On your first patch you are incrementing the device's usage counter,
-To avoid any suspend during probe, but this comment above state
- some assumption of this very same issue.
-Is it still valid?
+How about this?
 
-Thanks,
-Avri
+	The current rcu_gp_kthread_wake() function uses in_interrupt()
+	and thus does a self-wakeup from all interrupt contexts,
+	including the pointless case where the GP kthread happens to be
+	running with bottom halves disabled, along with the impossible
+	case where the GP kthread is running within an NMI handler (you
+	are not supposed to invoke rcu_gp_kthread_wake() from within an
+	NMI handler.  This commit therefore replaces the in_interrupt()
+	with in_irq(), so that the self-wakeups happen only from handlers
+	for hardware interrupts and softirqs.  This also makes the code
+	match the comment.
+
+							Thanx, Paul
+
+> >-- Steve
+> >
+> 
+> Hi Steve, sorry, I don't understand fully, why we want to not return
+> in BH disabled case. From the commit logs and lkml discussion, there
+> is a case where GP kthread is interrupted in the wait event path and
+> rcu_gp_kthread_wake() is called in softirq handler (I am not sure
+> about interrupt handler case; how rcu_gp_kthread_wake() is called
+> from that path).
+> 
+> https://github.com/torvalds/linux/commit/1d1f898df6586c5ea9aeaf349f13089c6fa37903
+> 
+> Thanks
+> Neeraj
+> >
+> >>
+> >>Signed-off-by: Neeraj Upadhyay <neeraju@codeaurora.org>
+> >>---
+> >>  kernel/rcu/tree.c | 2 +-
+> >>  1 file changed, 1 insertion(+), 1 deletion(-)
+> >>
+> >>diff --git a/kernel/rcu/tree.c b/kernel/rcu/tree.c
+> >>index acd6ccf..57cac6d 100644
+> >>--- a/kernel/rcu/tree.c
+> >>+++ b/kernel/rcu/tree.c
+> >>@@ -1585,7 +1585,7 @@ static bool rcu_future_gp_cleanup(struct rcu_node *rnp)
+> >>  static void rcu_gp_kthread_wake(void)
+> >>  {
+> >>  	if ((current == rcu_state.gp_kthread &&
+> >>-	     !in_interrupt() && !in_serving_softirq()) ||
+> >>+	     !in_irq() && !in_serving_softirq()) ||
+> >>  	    !READ_ONCE(rcu_state.gp_flags) ||
+> >>  	    !rcu_state.gp_kthread)
+> >>  		return;
+> >
+> 
+> -- 
+> QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a
+> member of the Code Aurora Forum, hosted by The Linux Foundation
+> 
+
