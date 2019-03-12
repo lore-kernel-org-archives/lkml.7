@@ -4,51 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AA11FC43381
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 17:32:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 972DEC43381
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 17:32:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7BD752087C
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 17:32:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6A79A2087C
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 17:32:50 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1552411967;
-	bh=WryVRHgBihhi/BZKySB2jFmhH1U6qx0oJiZVRTJoXmg=;
+	s=default; t=1552411970;
+	bh=LMqy7teeOo+4VmO62iW6201RqYoTALtu9JdHbrSmJ2c=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=V21CQquFOJ/wT9aA65liLED/P16NqbJOY2gUSeZJhTyut8KYoSkVd9fiO8w3s9meR
-	 zM6KzK9xV2XYv2k+ZGvKFUnkDMBoTf+GnmDsAoscwCv+5tQHtZM1u1h+JBG5AgyX7i
-	 Hi9SedByTo4w9c9q3EJgcCMIvvUvWyhCl0tFMW7A=
+	b=YvZFIJxvBDixl7R6I6IfJt9V9+7BB0+fYp7vXifOrfwzm73NQLwC+k3VN7WruaXWU
+	 fCpKecA2vvfwaqHkKJ6nPnLQQokRa0BlTAT1fA0Y8E3Dx038IZU9wIb4YHVl/Mfiq1
+	 ToDcBy14MZIrX4pbJdPmBMTs8ZQZ0bmLAasm4L4E=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729571AbfCLRcp (ORCPT
+        id S1726690AbfCLRcn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 12 Mar 2019 13:32:45 -0400
-Received: from mail.kernel.org ([198.145.29.99]:60104 "EHLO mail.kernel.org"
+        Tue, 12 Mar 2019 13:32:43 -0400
+Received: from mail.kernel.org ([198.145.29.99]:60160 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729410AbfCLRRC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S1729413AbfCLRRC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Tue, 12 Mar 2019 13:17:02 -0400
 Received: from localhost (unknown [104.133.8.98])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 7F2462087C;
-        Tue, 12 Mar 2019 17:17:01 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 40FC12184E;
+        Tue, 12 Mar 2019 17:17:02 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1552411021;
-        bh=WryVRHgBihhi/BZKySB2jFmhH1U6qx0oJiZVRTJoXmg=;
+        s=default; t=1552411022;
+        bh=LMqy7teeOo+4VmO62iW6201RqYoTALtu9JdHbrSmJ2c=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=YvBqCcUsrBolI41zIrt7CZcLoaEsvQ8bBA+dqnT5VO7TlnL5hHloKYFRvlpULRiP2
-         xXT62ozsjPvlL9CDCeL6YNIUa2SPYgHAs+yzlXYnTeeoeD8FibjS87bONZbtGL+YHE
-         NPJcm3w9OY0znM62U2zMPqbLTXGd4J1EvCpuI9Zs=
+        b=clFtX+I+Olm590ux/AiGMlOlDh9+bHP9x1H31IQLbpYdlqaYBMRp9kGzw3O+SdSH6
+         /i9Na0u6NJ7vCF4YwBQVuDv0LOvPPq5lLXgnfROtSkX7pzL0hT+jN2luYgIKRh8p54
+         djwkkET+JNkoTSOPkw+kBhjxEDePYxcMSBIeMOcA=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Martynas Pumputis <martynas@weave.works>,
-        Florian Westphal <fw@strlen.de>,
-        Pablo Neira Ayuso <pablo@netfilter.org>,
+        stable@vger.kernel.org, Julian Wiedmann <jwi@linux.ibm.com>,
+        Alexandra Winter <wintera@linux.ibm.com>,
+        "David S. Miller" <davem@davemloft.net>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.14 110/135] netfilter: nf_nat: skip nat clash resolution for same-origin entries
-Date:   Tue, 12 Mar 2019 10:09:17 -0700
-Message-Id: <20190312170351.339370619@linuxfoundation.org>
+Subject: [PATCH 4.14 111/135] s390/qeth: fix use-after-free in error path
+Date:   Tue, 12 Mar 2019 10:09:18 -0700
+Message-Id: <20190312170351.448069085@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190312170341.127810985@linuxfoundation.org>
 References: <20190312170341.127810985@linuxfoundation.org>
@@ -67,69 +67,68 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-[ Upstream commit 4e35c1cb9460240e983a01745b5f29fe3a4d8e39 ]
+[ Upstream commit afa0c5904ba16d59b0454f7ee4c807dae350f432 ]
 
-It is possible that two concurrent packets originating from the same
-socket of a connection-less protocol (e.g. UDP) can end up having
-different IP_CT_DIR_REPLY tuples which results in one of the packets
-being dropped.
+The error path in qeth_alloc_qdio_buffers() that takes care of
+cleaning up the Output Queues is buggy. It first frees the queue, but
+then calls qeth_clear_outq_buffers() with that very queue struct.
 
-To illustrate this, consider the following simplified scenario:
+Make the call to qeth_clear_outq_buffers() part of the free action
+(in the correct order), and while at it fix the naming of the helper.
 
-1. Packet A and B are sent at the same time from two different threads
-   by same UDP socket.  No matching conntrack entry exists yet.
-   Both packets cause allocation of a new conntrack entry.
-2. get_unique_tuple gets called for A.  No clashing entry found.
-   conntrack entry for A is added to main conntrack table.
-3. get_unique_tuple is called for B and will find that the reply
-   tuple of B is already taken by A.
-   It will allocate a new UDP source port for B to resolve the clash.
-4. conntrack entry for B cannot be added to main conntrack table
-   because its ORIGINAL direction is clashing with A and the REPLY
-   directions of A and B are not the same anymore due to UDP source
-   port reallocation done in step 3.
-
-This patch modifies nf_conntrack_tuple_taken so it doesn't consider
-colliding reply tuples if the IP_CT_DIR_ORIGINAL tuples are equal.
-
-[ Florian: simplify patch to not use .allow_clash setting
-  and always ignore identical flows ]
-
-Signed-off-by: Martynas Pumputis <martynas@weave.works>
-Signed-off-by: Florian Westphal <fw@strlen.de>
-Signed-off-by: Pablo Neira Ayuso <pablo@netfilter.org>
+Fixes: 0da9581ddb0f ("qeth: exploit asynchronous delivery of storage blocks")
+Signed-off-by: Julian Wiedmann <jwi@linux.ibm.com>
+Reviewed-by: Alexandra Winter <wintera@linux.ibm.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- net/netfilter/nf_conntrack_core.c | 16 ++++++++++++++++
- 1 file changed, 16 insertions(+)
+ drivers/s390/net/qeth_core_main.c | 15 ++++++---------
+ 1 file changed, 6 insertions(+), 9 deletions(-)
 
-diff --git a/net/netfilter/nf_conntrack_core.c b/net/netfilter/nf_conntrack_core.c
-index b793b55d1488..f07357ba9629 100644
---- a/net/netfilter/nf_conntrack_core.c
-+++ b/net/netfilter/nf_conntrack_core.c
-@@ -869,6 +869,22 @@ nf_conntrack_tuple_taken(const struct nf_conntrack_tuple *tuple,
- 		}
+diff --git a/drivers/s390/net/qeth_core_main.c b/drivers/s390/net/qeth_core_main.c
+index 69ef5f4060ed..6566fceef38d 100644
+--- a/drivers/s390/net/qeth_core_main.c
++++ b/drivers/s390/net/qeth_core_main.c
+@@ -2472,11 +2472,12 @@ static int qeth_init_qdio_out_buf(struct qeth_qdio_out_q *q, int bidx)
+ 	return rc;
+ }
  
- 		if (nf_ct_key_equal(h, tuple, zone, net)) {
-+			/* Tuple is taken already, so caller will need to find
-+			 * a new source port to use.
-+			 *
-+			 * Only exception:
-+			 * If the *original tuples* are identical, then both
-+			 * conntracks refer to the same flow.
-+			 * This is a rare situation, it can occur e.g. when
-+			 * more than one UDP packet is sent from same socket
-+			 * in different threads.
-+			 *
-+			 * Let nf_ct_resolve_clash() deal with this later.
-+			 */
-+			if (nf_ct_tuple_equal(&ignored_conntrack->tuplehash[IP_CT_DIR_ORIGINAL].tuple,
-+					      &ct->tuplehash[IP_CT_DIR_ORIGINAL].tuple))
-+				continue;
-+
- 			NF_CT_STAT_INC_ATOMIC(net, found);
- 			rcu_read_unlock();
- 			return 1;
+-static void qeth_free_qdio_out_buf(struct qeth_qdio_out_q *q)
++static void qeth_free_output_queue(struct qeth_qdio_out_q *q)
+ {
+ 	if (!q)
+ 		return;
+ 
++	qeth_clear_outq_buffers(q, 1);
+ 	qdio_free_buffers(q->qdio_bufs, QDIO_MAX_BUFFERS_PER_Q);
+ 	kfree(q);
+ }
+@@ -2549,10 +2550,8 @@ static int qeth_alloc_qdio_buffers(struct qeth_card *card)
+ 		card->qdio.out_qs[i]->bufs[j] = NULL;
+ 	}
+ out_freeoutq:
+-	while (i > 0) {
+-		qeth_free_qdio_out_buf(card->qdio.out_qs[--i]);
+-		qeth_clear_outq_buffers(card->qdio.out_qs[i], 1);
+-	}
++	while (i > 0)
++		qeth_free_output_queue(card->qdio.out_qs[--i]);
+ 	kfree(card->qdio.out_qs);
+ 	card->qdio.out_qs = NULL;
+ out_freepool:
+@@ -2585,10 +2584,8 @@ static void qeth_free_qdio_buffers(struct qeth_card *card)
+ 	qeth_free_buffer_pool(card);
+ 	/* free outbound qdio_qs */
+ 	if (card->qdio.out_qs) {
+-		for (i = 0; i < card->qdio.no_out_queues; ++i) {
+-			qeth_clear_outq_buffers(card->qdio.out_qs[i], 1);
+-			qeth_free_qdio_out_buf(card->qdio.out_qs[i]);
+-		}
++		for (i = 0; i < card->qdio.no_out_queues; i++)
++			qeth_free_output_queue(card->qdio.out_qs[i]);
+ 		kfree(card->qdio.out_qs);
+ 		card->qdio.out_qs = NULL;
+ 	}
 -- 
 2.19.1
 
