@@ -7,46 +7,47 @@ X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 71D6AC43381
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 18:04:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0BD81C43381
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 18:04:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 396FA205C9
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 18:04:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D15EC2087C
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 18:04:54 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1552413885;
-	bh=8Vw+/7V+NPQvteLRMVGxKVB1GrwgeuykL1Mgsvc4g7w=;
+	s=default; t=1552413894;
+	bh=+NAVTPjCeUb78Qn+L3gdWJHXGbsq08VUxZs8tpScz+w=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=gvO8fU6rK3Ef86fI5IzoPJy7thc3YeyYW+x6A+a1kbmJKbcr17b3+S1QS9gxwJuQ8
-	 ZwpTDqxo3oJyeea7R2cfJ/4/88eMWKkE0I713vNb68p2DgshfMueJTtD/QxJB/18H2
-	 C01rK54MEc8DlUNI3mDEUHPzidWoaQlXwsM0bLDo=
+	b=Ahx7CspQtVSMyIhMbfcz7QDt+vkgI31oVVRsPQNo6PJkibqnTFzhhY43ZRuIzSHbP
+	 cjLx6k8btefzuC6qmeoPfGnJW7r5R44wO0HFZCybKg0oBQukZcmzC5SztJJ3CSIkCO
+	 SUOiudMjiPZZaenQcuVOgHL3OiyUI+kBnRUn4kpg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729145AbfCLSEn (ORCPT
+        id S1729174AbfCLSEx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 12 Mar 2019 14:04:43 -0400
+        Tue, 12 Mar 2019 14:04:53 -0400
 Received: from mail.kernel.org ([198.145.29.99]:48446 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727630AbfCLRMq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 12 Mar 2019 13:12:46 -0400
+        id S1727609AbfCLRMn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 12 Mar 2019 13:12:43 -0400
 Received: from localhost (unknown [104.133.8.98])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B74BF217D4;
-        Tue, 12 Mar 2019 17:12:45 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id E8B3C21841;
+        Tue, 12 Mar 2019 17:12:42 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1552410765;
-        bh=8Vw+/7V+NPQvteLRMVGxKVB1GrwgeuykL1Mgsvc4g7w=;
+        s=default; t=1552410763;
+        bh=+NAVTPjCeUb78Qn+L3gdWJHXGbsq08VUxZs8tpScz+w=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=RKJzwJkaV4AKrbjKagnbwe6q69ShF1OCNna7Z7F5Kdj7gQ6yWC2JhXavr2fnHgMj3
-         t9a2nDHK51fvczeJGjO+24tS9BRBtjeJ98g2iXpflM0Ui0Uj/HsVICDGKUEBB0ik0a
-         RJZ9jbxGbrWQ2eAcHXpf3cXnEPpl2gmVB+uHI69w=
+        b=XJcKAZL8juYwRABHRLtLV653OCixC8noyn7HSA+zJvVmXtssltTgFFKOFXwi8RPGR
+         R2dwkKiIXv49Dp07gXNumGVLY/cljGF3Pef4c3WT22G87ZRKA+Msm76BFXInXgUmzf
+         ft/70T6e+fbdeA1op1ueJkXe/cETmwlhsPEu2K4Y=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Marc Zyngier <marc.zyngier@arm.com>,
+        stable@vger.kernel.org, Anders Roxell <anders.roxell@linaro.org>,
+        Felipe Balbi <felipe.balbi@linux.intel.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.20 099/171] irqchip/gic-v3-its: Gracefully fail on LPI exhaustion
-Date:   Tue, 12 Mar 2019 10:07:59 -0700
-Message-Id: <20190312170356.518402753@linuxfoundation.org>
+Subject: [PATCH 4.20 096/171] usb: phy: fix link errors
+Date:   Tue, 12 Mar 2019 10:07:56 -0700
+Message-Id: <20190312170356.266840136@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190312170347.868927101@linuxfoundation.org>
 References: <20190312170347.868927101@linuxfoundation.org>
@@ -65,33 +66,56 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-[ Upstream commit 45725e0fc3e7fe52fedb94f59806ec50e9618682 ]
+[ Upstream commit f2105d42597f4d10e431b195d69e96dccaf9b012 ]
 
-In the unlikely event that we cannot find any available LPI in the
-system, we should gracefully return an error instead of carrying
-on with no LPI allocated at all.
+Fix link errors when CONFIG_FSL_USB2_OTG is enabled and USB_OTG_FSM is
+set to module then the following link error occurs.
 
-Fixes: 38dd7c494cf6 ("irqchip/gic-v3-its: Drop chunk allocation compatibility")
-Signed-off-by: Marc Zyngier <marc.zyngier@arm.com>
+aarch64-linux-gnu-ld: drivers/usb/phy/phy-fsl-usb.o: in function `fsl_otg_ioctl':
+drivers/usb/phy/phy-fsl-usb.c:1083: undefined reference to `otg_statemachine'
+aarch64-linux-gnu-ld: drivers/usb/phy/phy-fsl-usb.c:1083:(.text+0x574): relocation truncated to fit: R_AARCH64_CALL26 against undefined symbol `otg_statemachine'
+aarch64-linux-gnu-ld: drivers/usb/phy/phy-fsl-usb.o: in function `fsl_otg_start_srp':
+drivers/usb/phy/phy-fsl-usb.c:674: undefined reference to `otg_statemachine'
+aarch64-linux-gnu-ld: drivers/usb/phy/phy-fsl-usb.c:674:(.text+0x61c): relocation truncated to fit: R_AARCH64_CALL26 against undefined symbol `otg_statemachine'
+aarch64-linux-gnu-ld: drivers/usb/phy/phy-fsl-usb.o: in function `fsl_otg_set_host':
+drivers/usb/phy/phy-fsl-usb.c:593: undefined reference to `otg_statemachine'
+aarch64-linux-gnu-ld: drivers/usb/phy/phy-fsl-usb.c:593:(.text+0x7a4): relocation truncated to fit: R_AARCH64_CALL26 against undefined symbol `otg_statemachine'
+aarch64-linux-gnu-ld: drivers/usb/phy/phy-fsl-usb.o: in function `fsl_otg_start_hnp':
+drivers/usb/phy/phy-fsl-usb.c:695: undefined reference to `otg_statemachine'
+aarch64-linux-gnu-ld: drivers/usb/phy/phy-fsl-usb.c:695:(.text+0x858): relocation truncated to fit: R_AARCH64_CALL26 against undefined symbol `otg_statemachine'
+aarch64-linux-gnu-ld: drivers/usb/phy/phy-fsl-usb.o: in function `a_wait_enum':
+drivers/usb/phy/phy-fsl-usb.c:274: undefined reference to `otg_statemachine'
+aarch64-linux-gnu-ld: drivers/usb/phy/phy-fsl-usb.c:274:(.text+0x16f0): relocation truncated to fit: R_AARCH64_CALL26 against undefined symbol `otg_statemachine'
+aarch64-linux-gnu-ld: drivers/usb/phy/phy-fsl-usb.o:drivers/usb/phy/phy-fsl-usb.c:619: more undefined references to `otg_statemachine' follow
+aarch64-linux-gnu-ld: drivers/usb/phy/phy-fsl-usb.o: in function `fsl_otg_set_peripheral':
+drivers/usb/phy/phy-fsl-usb.c:619:(.text+0x1fa0): relocation truncated to fit: R_AARCH64_CALL26 against undefined symbol `otg_statemachine'
+make[1]: *** [Makefile:1020: vmlinux] Error 1
+make[1]: Target 'Image' not remade because of errors.
+make: *** [Makefile:152: sub-make] Error 2
+make: Target 'Image' not remade because of errors.
+
+Rework so that FSL_USB2_OTG depends on that the USB_OTG_FSM is builtin.
+
+Signed-off-by: Anders Roxell <anders.roxell@linaro.org>
+Signed-off-by: Felipe Balbi <felipe.balbi@linux.intel.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/irqchip/irq-gic-v3-its.c | 3 +++
- 1 file changed, 3 insertions(+)
+ drivers/usb/phy/Kconfig | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/irqchip/irq-gic-v3-its.c b/drivers/irqchip/irq-gic-v3-its.c
-index f25ec92f23ee..c3aba3fc818d 100644
---- a/drivers/irqchip/irq-gic-v3-its.c
-+++ b/drivers/irqchip/irq-gic-v3-its.c
-@@ -1586,6 +1586,9 @@ static unsigned long *its_lpi_alloc(int nr_irqs, u32 *base, int *nr_ids)
- 		nr_irqs /= 2;
- 	} while (nr_irqs > 0);
+diff --git a/drivers/usb/phy/Kconfig b/drivers/usb/phy/Kconfig
+index d7312eed6088..91ea3083e7ad 100644
+--- a/drivers/usb/phy/Kconfig
++++ b/drivers/usb/phy/Kconfig
+@@ -21,7 +21,7 @@ config AB8500_USB
  
-+	if (!nr_irqs)
-+		err = -ENOSPC;
-+
- 	if (err)
- 		goto out;
- 
+ config FSL_USB2_OTG
+ 	bool "Freescale USB OTG Transceiver Driver"
+-	depends on USB_EHCI_FSL && USB_FSL_USB2 && USB_OTG_FSM && PM
++	depends on USB_EHCI_FSL && USB_FSL_USB2 && USB_OTG_FSM=y && PM
+ 	depends on USB_GADGET || !USB_GADGET # if USB_GADGET=m, this can't be 'y'
+ 	select USB_PHY
+ 	help
 -- 
 2.19.1
 
