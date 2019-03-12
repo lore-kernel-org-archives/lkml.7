@@ -2,256 +2,152 @@ Return-Path: <SRS0=J4ZE=RP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_MUTT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 31189C43381
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 17:45:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 730A4C4360F
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 17:45:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id ECA702087C
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 17:45:23 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1552412724;
-	bh=PwDcnXjQzTdZLnEkiTjrAYW9ex7OKCuOxglj770SoXY=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=OLuhf1UJPlY64WiOZ1llTAkmBBmNVeq6oYXFV96ZnleL7xvvhsoBQbbcibMxjgD33
-	 mdgXRefHum1GUCctGVLrF8WWAxcebGK4KCAUSHVKorF1SCYNbBIsL7QFMNmGpYK9xB
-	 068B0iwOyeyBjCvdYlOuZobInNoV0Om0j8TZrRLg=
+	by mail.kernel.org (Postfix) with ESMTP id 4D3CA21734
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 17:45:30 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729115AbfCLRpW (ORCPT
+        id S1729134AbfCLRp3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 12 Mar 2019 13:45:22 -0400
-Received: from mail.kernel.org ([198.145.29.99]:56054 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728742AbfCLRPb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 12 Mar 2019 13:15:31 -0400
-Received: from localhost (unknown [104.133.8.98])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 0AB71217D8;
-        Tue, 12 Mar 2019 17:15:30 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1552410930;
-        bh=PwDcnXjQzTdZLnEkiTjrAYW9ex7OKCuOxglj770SoXY=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=ddRVVyHDm4di6K85Ga8l7p3GQD0p44Flt1d9OF4eN8Z7bmysdWkY7rBckoYnkdocI
-         MbWAEoVR8N9pMQjAaf2UIVq5V/pYegP3ZYUwvMajLT94skYnCwZf8WpRfrDoTcebGb
-         Pe+joyiQkRxmRNitrHO4mamHIC2XexjtkEQOfrQU=
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     linux-kernel@vger.kernel.org
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Liu Bo <bo.liu@linux.alibaba.com>,
-        Jens Axboe <axboe@kernel.dk>, Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 121/149] blk-iolatency: fix IO hang due to negative inflight counter
-Date:   Tue, 12 Mar 2019 10:08:59 -0700
-Message-Id: <20190312170359.583172835@linuxfoundation.org>
-X-Mailer: git-send-email 2.21.0
-In-Reply-To: <20190312170349.421581206@linuxfoundation.org>
-References: <20190312170349.421581206@linuxfoundation.org>
-User-Agent: quilt/0.65
-X-stable: review
-X-Patchwork-Hint: ignore
+        Tue, 12 Mar 2019 13:45:29 -0400
+Received: from mail-oi1-f194.google.com ([209.85.167.194]:36055 "EHLO
+        mail-oi1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726255AbfCLRp0 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 12 Mar 2019 13:45:26 -0400
+Received: by mail-oi1-f194.google.com with SMTP id t206so2837019oib.3
+        for <linux-kernel@vger.kernel.org>; Tue, 12 Mar 2019 10:45:26 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=HccK+fYLtqpEZfMwiBe6D8C3e7wDwbf9WW50Z/PProI=;
+        b=UXNMbyYBza5sJEFoi1/vcgDkbRLTW1TfQ7IWFmCzFM9vheV8fRROMdOmbLAejVlrUp
+         9aSZfDWZvU/PVz+jnc2ofMq4GYdqNKDT5/4GcTtA3u8fcrpko5Gs2/KD//JeR49SlgSr
+         hYer0d2p/b3AM1yQ8qvRW8CD1SbfFLdtlz0NRjEHUQz6xkWGL4QKM+CW5C/rdw7Fcz/3
+         it6oMNcPj7aBu6y1Fw8F38EOeFQQn1JJwAUPDoNEUpNKDtnqnnmp+Y+LydZxMvfI2lU5
+         bahUvBbQ4Xo/2rvZcDClJEVOdSGkC9n3Q7b7nJJPS7Dm4UUE4cRkLqciXDebAzrBy23+
+         X29w==
+X-Gm-Message-State: APjAAAVpPzP+4G5V7ZwlE3Gu2ens9gHpOvXjnNQmcce+Ifn7dEGV3sgy
+        HE1Ycx6Eq7zZ8DpPeFJ5vu8=
+X-Google-Smtp-Source: APXvYqye0hnmv7pAGXdBIolazCUN2OVPVRFmxBCKF9wVuEGFBFrjN4yDlavLRNISW9yrF7O+Mdtchg==
+X-Received: by 2002:aca:6cc9:: with SMTP id h192mr2487951oic.161.1552412726061;
+        Tue, 12 Mar 2019 10:45:26 -0700 (PDT)
+Received: from sultan-box.localdomain ([107.193.118.89])
+        by smtp.gmail.com with ESMTPSA id x3sm3536175otg.52.2019.03.12.10.45.24
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Tue, 12 Mar 2019 10:45:25 -0700 (PDT)
+Date:   Tue, 12 Mar 2019 10:45:20 -0700
+From:   Sultan Alsawaf <sultan@kerneltoast.com>
+To:     Tim Murray <timmurray@google.com>
+Cc:     Michal Hocko <mhocko@kernel.org>,
+        Suren Baghdasaryan <surenb@google.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Arve =?iso-8859-1?B?SGr4bm5lduVn?= <arve@android.com>,
+        Todd Kjos <tkjos@android.com>,
+        Martijn Coenen <maco@android.com>,
+        Joel Fernandes <joel@joelfernandes.org>,
+        Christian Brauner <christian@brauner.io>,
+        Ingo Molnar <mingo@redhat.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        LKML <linux-kernel@vger.kernel.org>, devel@driverdev.osuosl.org,
+        linux-mm <linux-mm@kvack.org>
+Subject: Re: [RFC] simple_lmk: Introduce Simple Low Memory Killer for Android
+Message-ID: <20190312174520.GA9276@sultan-box.localdomain>
+References: <20190310203403.27915-1-sultan@kerneltoast.com>
+ <20190311174320.GC5721@dhcp22.suse.cz>
+ <20190311175800.GA5522@sultan-box.localdomain>
+ <CAJuCfpHTjXejo+u--3MLZZj7kWQVbptyya4yp1GLE3hB=BBX7w@mail.gmail.com>
+ <20190311204626.GA3119@sultan-box.localdomain>
+ <CAJuCfpGpBxofTT-ANEEY+dFCSdwkQswox3s8Uk9Eq0BnK9i0iA@mail.gmail.com>
+ <20190312080532.GE5721@dhcp22.suse.cz>
+ <20190312163741.GA2762@sultan-box.localdomain>
+ <CAEe=Sxn_uayj48wo7oqf8mNZ7QAGJUQVmkPcHcuEGjA_Z8ELeQ@mail.gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAEe=Sxn_uayj48wo7oqf8mNZ7QAGJUQVmkPcHcuEGjA_Z8ELeQ@mail.gmail.com>
+User-Agent: Mutt/1.11.3 (2019-02-01)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-4.19-stable review patch.  If anyone has any objections, please let me know.
+On Tue, Mar 12, 2019 at 10:17:43AM -0700, Tim Murray wrote:
+> Knowing whether a SIGKILL'd process has finished reclaiming is as far
+> as I know not possible without something like procfds. That's where
+> the 100ms timeout in lmkd comes in. lowmemorykiller and lmkd both
+> attempt to wait up to 100ms for reclaim to finish by checking for the
+> continued existence of the thread that received the SIGKILL, but this
+> really means that they wait up to 100ms for the _thread_ to finish,
+> which doesn't tell you anything about the memory used by that process.
+> If those threads terminate early and lowmemorykiller/lmkd get a signal
+> to kill again, then there may be two processes competing for CPU time
+> to reclaim memory. That doesn't reclaim any faster and may be an
+> unnecessary kill.
+> ...
+> - offer a way to wait for process termination so lmkd can tell when
+> reclaim has finished and know when killing another process is
+> appropriate
 
-------------------
-
-[ Upstream commit 8c772a9bfc7c07c76f4a58b58910452fbb20843b ]
-
-Our test reported the following stack, and vmcore showed that
-->inflight counter is -1.
-
-[ffffc9003fcc38d0] __schedule at ffffffff8173d95d
-[ffffc9003fcc3958] schedule at ffffffff8173de26
-[ffffc9003fcc3970] io_schedule at ffffffff810bb6b6
-[ffffc9003fcc3988] blkcg_iolatency_throttle at ffffffff813911cb
-[ffffc9003fcc3a20] rq_qos_throttle at ffffffff813847f3
-[ffffc9003fcc3a48] blk_mq_make_request at ffffffff8137468a
-[ffffc9003fcc3b08] generic_make_request at ffffffff81368b49
-[ffffc9003fcc3b68] submit_bio at ffffffff81368d7d
-[ffffc9003fcc3bb8] ext4_io_submit at ffffffffa031be00 [ext4]
-[ffffc9003fcc3c00] ext4_writepages at ffffffffa03163de [ext4]
-[ffffc9003fcc3d68] do_writepages at ffffffff811c49ae
-[ffffc9003fcc3d78] __filemap_fdatawrite_range at ffffffff811b6188
-[ffffc9003fcc3e30] filemap_write_and_wait_range at ffffffff811b6301
-[ffffc9003fcc3e60] ext4_sync_file at ffffffffa030cee8 [ext4]
-[ffffc9003fcc3ea8] vfs_fsync_range at ffffffff8128594b
-[ffffc9003fcc3ee8] do_fsync at ffffffff81285abd
-[ffffc9003fcc3f18] sys_fsync at ffffffff81285d50
-[ffffc9003fcc3f28] do_syscall_64 at ffffffff81003c04
-[ffffc9003fcc3f50] entry_SYSCALL_64_after_swapgs at ffffffff81742b8e
-
-The ->inflight counter may be negative (-1) if
-
-1) blk-iolatency was disabled when the IO was issued,
-
-2) blk-iolatency was enabled before this IO reached its endio,
-
-3) the ->inflight counter is decreased from 0 to -1 in endio()
-
-In fact the hang can be easily reproduced by the below script,
-
-H=/sys/fs/cgroup/unified/
-P=/sys/fs/cgroup/unified/test
-
-echo "+io" > $H/cgroup.subtree_control
-mkdir -p $P
-
-echo $$ > $P/cgroup.procs
-
-xfs_io -f -d -c "pwrite 0 4k" /dev/sdg
-
-echo "`cat /sys/block/sdg/dev` target=1000000" > $P/io.latency
-
-xfs_io -f -d -c "pwrite 0 4k" /dev/sdg
-
-This fixes the problem by freezing the queue so that while
-enabling/disabling iolatency, there is no inflight rq running.
-
-Note that quiesce_queue is not needed as this only updating iolatency
-configuration about which dispatching request_queue doesn't care.
-
-Signed-off-by: Liu Bo <bo.liu@linux.alibaba.com>
-Signed-off-by: Jens Axboe <axboe@kernel.dk>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
----
- block/blk-iolatency.c | 52 +++++++++++++++++++++++++++++++++++++------
- 1 file changed, 45 insertions(+), 7 deletions(-)
-
-diff --git a/block/blk-iolatency.c b/block/blk-iolatency.c
-index 19923f8a029d..b154e057ca67 100644
---- a/block/blk-iolatency.c
-+++ b/block/blk-iolatency.c
-@@ -72,6 +72,7 @@
- #include <linux/sched/loadavg.h>
- #include <linux/sched/signal.h>
- #include <trace/events/block.h>
-+#include <linux/blk-mq.h>
- #include "blk-rq-qos.h"
- #include "blk-stat.h"
+Should be pretty easy with something like this:
+diff --git a/include/linux/sched.h b/include/linux/sched.h
+index 1549584a1..6ac478af2 100644
+--- a/include/linux/sched.h
++++ b/include/linux/sched.h
+@@ -1199,6 +1199,7 @@ struct task_struct {
+ 	unsigned long			lowest_stack;
+ 	unsigned long			prev_lowest_stack;
+ #endif
++	ktime_t sigkill_time;
  
-@@ -568,6 +569,9 @@ static void blkcg_iolatency_done_bio(struct rq_qos *rqos, struct bio *bio)
- 		return;
+ 	/*
+ 	 * New fields for task_struct should be added above here, so that
+diff --git a/kernel/fork.c b/kernel/fork.c
+index 9dcd18aa2..0ae182777 100644
+--- a/kernel/fork.c
++++ b/kernel/fork.c
+@@ -435,6 +435,8 @@ void put_task_stack(struct task_struct *tsk)
  
- 	enabled = blk_iolatency_enabled(iolat->blkiolat);
-+	if (!enabled)
-+		return;
-+
- 	while (blkg && blkg->parent) {
- 		iolat = blkg_to_lat(blkg);
- 		if (!iolat) {
-@@ -577,7 +581,7 @@ static void blkcg_iolatency_done_bio(struct rq_qos *rqos, struct bio *bio)
- 		rqw = &iolat->rq_wait;
- 
- 		atomic_dec(&rqw->inflight);
--		if (!enabled || iolat->min_lat_nsec == 0)
-+		if (iolat->min_lat_nsec == 0)
- 			goto next;
- 		iolatency_record_time(iolat, &bio->bi_issue, now,
- 				      issue_as_root);
-@@ -721,10 +725,13 @@ int blk_iolatency_init(struct request_queue *q)
- 	return 0;
- }
- 
--static void iolatency_set_min_lat_nsec(struct blkcg_gq *blkg, u64 val)
-+/*
-+ * return 1 for enabling iolatency, return -1 for disabling iolatency, otherwise
-+ * return 0.
-+ */
-+static int iolatency_set_min_lat_nsec(struct blkcg_gq *blkg, u64 val)
+ void free_task(struct task_struct *tsk)
  {
- 	struct iolatency_grp *iolat = blkg_to_lat(blkg);
--	struct blk_iolatency *blkiolat = iolat->blkiolat;
- 	u64 oldval = iolat->min_lat_nsec;
- 
- 	iolat->min_lat_nsec = val;
-@@ -733,9 +740,10 @@ static void iolatency_set_min_lat_nsec(struct blkcg_gq *blkg, u64 val)
- 				    BLKIOLATENCY_MAX_WIN_SIZE);
- 
- 	if (!oldval && val)
--		atomic_inc(&blkiolat->enabled);
-+		return 1;
- 	if (oldval && !val)
--		atomic_dec(&blkiolat->enabled);
-+		return -1;
-+	return 0;
++	ktime_t sigkill_time = tsk->sigkill_time;
++	pid_t pid = tsk->pid;
+ #ifndef CONFIG_THREAD_INFO_IN_TASK
+ 	/*
+ 	 * The task is finally done with both the stack and thread_info,
+@@ -455,6 +457,9 @@ void free_task(struct task_struct *tsk)
+ 	if (tsk->flags & PF_KTHREAD)
+ 		free_kthread_struct(tsk);
+ 	free_task_struct(tsk);
++	if (sigkill_time)
++		printk("%d killed after %lld us\n", pid,
++		       ktime_us_delta(ktime_get(), sigkill_time));
  }
+ EXPORT_SYMBOL(free_task);
  
- static void iolatency_clear_scaling(struct blkcg_gq *blkg)
-@@ -768,6 +776,7 @@ static ssize_t iolatency_set_limit(struct kernfs_open_file *of, char *buf,
- 	u64 lat_val = 0;
- 	u64 oldval;
- 	int ret;
-+	int enable = 0;
+@@ -1881,6 +1886,7 @@ static __latent_entropy struct task_struct *copy_process(
+ 	p->sequential_io	= 0;
+ 	p->sequential_io_avg	= 0;
+ #endif
++	p->sigkill_time = 0;
  
- 	ret = blkg_conf_prep(blkcg, &blkcg_policy_iolatency, buf, &ctx);
- 	if (ret)
-@@ -803,7 +812,12 @@ static ssize_t iolatency_set_limit(struct kernfs_open_file *of, char *buf,
- 	blkg = ctx.blkg;
- 	oldval = iolat->min_lat_nsec;
- 
--	iolatency_set_min_lat_nsec(blkg, lat_val);
-+	enable = iolatency_set_min_lat_nsec(blkg, lat_val);
-+	if (enable) {
-+		WARN_ON_ONCE(!blk_get_queue(blkg->q));
-+		blkg_get(blkg);
-+	}
-+
- 	if (oldval != iolat->min_lat_nsec) {
- 		iolatency_clear_scaling(blkg);
+ 	/* Perform scheduler related setup. Assign this task to a CPU. */
+ 	retval = sched_fork(clone_flags, p);
+diff --git a/kernel/signal.c b/kernel/signal.c
+index 5d53183e2..1142c8811 100644
+--- a/kernel/signal.c
++++ b/kernel/signal.c
+@@ -1168,6 +1168,8 @@ static int __send_signal(int sig, struct kernel_siginfo *info, struct task_struc
  	}
-@@ -811,6 +825,24 @@ static ssize_t iolatency_set_limit(struct kernfs_open_file *of, char *buf,
- 	ret = 0;
- out:
- 	blkg_conf_finish(&ctx);
-+	if (ret == 0 && enable) {
-+		struct iolatency_grp *tmp = blkg_to_lat(blkg);
-+		struct blk_iolatency *blkiolat = tmp->blkiolat;
-+
-+		blk_mq_freeze_queue(blkg->q);
-+
-+		if (enable == 1)
-+			atomic_inc(&blkiolat->enabled);
-+		else if (enable == -1)
-+			atomic_dec(&blkiolat->enabled);
-+		else
-+			WARN_ON_ONCE(1);
-+
-+		blk_mq_unfreeze_queue(blkg->q);
-+
-+		blkg_put(blkg);
-+		blk_put_queue(blkg->q);
-+	}
- 	return ret ?: nbytes;
- }
  
-@@ -910,8 +942,14 @@ static void iolatency_pd_offline(struct blkg_policy_data *pd)
- {
- 	struct iolatency_grp *iolat = pd_to_lat(pd);
- 	struct blkcg_gq *blkg = lat_to_blkg(iolat);
-+	struct blk_iolatency *blkiolat = iolat->blkiolat;
-+	int ret;
- 
--	iolatency_set_min_lat_nsec(blkg, 0);
-+	ret = iolatency_set_min_lat_nsec(blkg, 0);
-+	if (ret == 1)
-+		atomic_inc(&blkiolat->enabled);
-+	if (ret == -1)
-+		atomic_dec(&blkiolat->enabled);
- 	iolatency_clear_scaling(blkg);
- }
- 
--- 
-2.19.1
-
-
-
+ out_set:
++	if (sig == SIGKILL)
++		t->sigkill_time = ktime_get();
+ 	signalfd_notify(t, sig);
+ 	sigaddset(&pending->signal, sig);
