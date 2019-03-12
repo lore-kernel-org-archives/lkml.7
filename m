@@ -2,125 +2,134 @@ Return-Path: <SRS0=J4ZE=RP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_PASS autolearn=unavailable autolearn_force=no
+X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 95A57C43381
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 07:17:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CF087C43381
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 07:17:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6717D214D8
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 07:17:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 98E29214AE
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 07:17:24 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="ry0B4Y2o"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727479AbfCLHRN (ORCPT
+        id S1727495AbfCLHRX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 12 Mar 2019 03:17:13 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:42256 "EHLO mx1.redhat.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727301AbfCLHRM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 12 Mar 2019 03:17:12 -0400
-Received: from smtp.corp.redhat.com (int-mx01.intmail.prod.int.phx2.redhat.com [10.5.11.11])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id 1B71B307D84D;
-        Tue, 12 Mar 2019 07:17:12 +0000 (UTC)
-Received: from [10.72.12.17] (ovpn-12-17.pek2.redhat.com [10.72.12.17])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 074E9600C5;
-        Tue, 12 Mar 2019 07:17:01 +0000 (UTC)
-Subject: Re: [RFC PATCH V2 0/5] vhost: accelerate metadata access through
- vmap()
-To:     "Michael S. Tsirkin" <mst@redhat.com>
-Cc:     David Miller <davem@davemloft.net>, hch@infradead.org,
-        kvm@vger.kernel.org, virtualization@lists.linux-foundation.org,
-        netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
-        peterx@redhat.com, linux-mm@kvack.org, aarcange@redhat.com,
-        linux-arm-kernel@lists.infradead.org, linux-parisc@vger.kernel.org
-References: <20190308141220.GA21082@infradead.org>
- <56374231-7ba7-0227-8d6d-4d968d71b4d6@redhat.com>
- <20190311095405-mutt-send-email-mst@kernel.org>
- <20190311.111413.1140896328197448401.davem@davemloft.net>
- <6b6dcc4a-2f08-ba67-0423-35787f3b966c@redhat.com>
- <20190311235140-mutt-send-email-mst@kernel.org>
-From:   Jason Wang <jasowang@redhat.com>
-Message-ID: <76c353ed-d6de-99a9-76f9-f258074c1462@redhat.com>
-Date:   Tue, 12 Mar 2019 15:17:00 +0800
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.5.1
-MIME-Version: 1.0
-In-Reply-To: <20190311235140-mutt-send-email-mst@kernel.org>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 8bit
-Content-Language: en-US
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.11
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.48]); Tue, 12 Mar 2019 07:17:12 +0000 (UTC)
+        Tue, 12 Mar 2019 03:17:23 -0400
+Received: from mailout3.samsung.com ([203.254.224.33]:35237 "EHLO
+        mailout3.samsung.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727451AbfCLHRW (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 12 Mar 2019 03:17:22 -0400
+Received: from epcas1p2.samsung.com (unknown [182.195.41.46])
+        by mailout3.samsung.com (KnoxPortal) with ESMTP id 20190312071720epoutp03078b53e711c12a5bff9858b3ebbffd87~LJN-qRSau2625126251epoutp03L
+        for <linux-kernel@vger.kernel.org>; Tue, 12 Mar 2019 07:17:20 +0000 (GMT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 mailout3.samsung.com 20190312071720epoutp03078b53e711c12a5bff9858b3ebbffd87~LJN-qRSau2625126251epoutp03L
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
+        s=mail20170921; t=1552375040;
+        bh=1IBBrG+WqDmcIXONxlC9RellrcYTCsmaFnxlYD9xyHw=;
+        h=Subject:Reply-To:From:To:CC:In-Reply-To:Date:References:From;
+        b=ry0B4Y2ohcqWbXdhxG/6sEtOZy3lvZPdIFwkcR2160e7sviEyV5apj6pv+occSWQ4
+         4c4zYxeIjJ0VG/JHzeSZ1b93iYGeVjC50JWzFzG7g6pP356DN0JBRpQCarwAhfenJa
+         Wm1kWtCokb2Mpx1mc+0bL5BcWqmT6rD9wLxeSfig=
+Received: from epsmges1p3.samsung.com (unknown [182.195.40.157]) by
+        epcas1p2.samsung.com (KnoxPortal) with ESMTP id
+        20190312071717epcas1p2b7342c992e6b3087f62739a2593a023e~LJN9Gt1bf1340513405epcas1p2V;
+        Tue, 12 Mar 2019 07:17:17 +0000 (GMT)
+X-AuditID: b6c32a37-f19ff7000000102f-31-5c875cfa7ed9
+Received: from epcas1p3.samsung.com ( [182.195.41.47]) by
+        epsmges1p3.samsung.com (Symantec Messaging Gateway) with SMTP id
+        C0.42.04143.AFC578C5; Tue, 12 Mar 2019 16:17:14 +0900 (KST)
+Mime-Version: 1.0
+Subject: RE: [PATCH v5] PM / devfreq: Restart previous governor if new
+ governor fails to start
+Reply-To: myungjoo.ham@samsung.com
+From:   MyungJoo Ham <myungjoo.ham@samsung.com>
+To:     Chanwoo Choi <cw00.choi@samsung.com>,
+        Sibi Sankar <sibis@codeaurora.org>
+CC:     Kyungmin Park <kyungmin.park@samsung.com>,
+        "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "linux-arm-msm-owner@vger.kernel.org" 
+        <linux-arm-msm-owner@vger.kernel.org>,
+        Saravana Kannan <skannan@codeaurora.org>
+X-Priority: 3
+X-Content-Kind-Code: NORMAL
+In-Reply-To: <20190311100630.12952-1-sibis@codeaurora.org>
+X-Drm-Type: N,general
+X-Msg-Generator: Mail
+X-Msg-Type: PERSONAL
+X-Reply-Demand: N
+Message-ID: <20190312071714epcms1p20e78a537f8cb0d7d04e4fd077916fd51@epcms1p2>
+Date:   Tue, 12 Mar 2019 16:17:14 +0900
+X-CMS-MailID: 20190312071714epcms1p20e78a537f8cb0d7d04e4fd077916fd51
+Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="utf-8"
+CMS-TYPE: 101P
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFvrHKsWRmVeSWpSXmKPExsWy7bCmvu6vmPYYgyuvrC2uf3nOanG26Q27
+        xe/FE9gtLu+aw2bxufcIo8W1he9ZLQ5cnMjmwO5xua+XyaNvyypGj8+b5AKYo7JtMlITU1KL
+        FFLzkvNTMvPSbZW8g+Od403NDAx1DS0tzJUU8hJzU22VXHwCdN0yc4CWKymUJeaUAoUCEouL
+        lfTtbIryS0tSFTLyi0tslVILUnIKLAv0ihNzi0vz0vWS83OtDA0MjEyBChOyM/Ye/8ZcsIej
+        Yvf3FtYGxpdsXYycHBICJhIfdjewdzFycQgJ7GCUOPn2HpDDwcErICjxd4cwSI2wQILEq1UH
+        GUFsIQEliYab+5gh4voSHQ+2gcXZBHQltm64ywLSKiLgI7H4qiTISGaBRUwSH88cYYXYxSsx
+        o/0pC4QtLbF9+VZGkHpOASuJv1sFIcKiEjdXv2WHsd8fm88IYYtItN47ywxhC0o8+LmbEWbM
+        jCn/oUZWS1ybvhjsFQmBFkaJ3tVToIr0Jc7MPQn2L6+Ar8SmCQ/B4iwCqhJ7fz6FqnGRWH4F
+        4hdmAXmJ7W/nMIPcxiygKbF+lz5EmE/i3dceuFd2zHvCBGGrSRzavQTqZhmJ09MXQt3pIXH3
+        9AMWSNA2Mkr0/DvJNIFRfhYidGch2TYLYdsCRuZVjGKpBcW56anFhgXGyBG6iRGc9rTMdzBu
+        OOdziFGAg1GJh9ehuC1GiDWxrLgy9xCjBAezkghvl317jBBvSmJlVWpRfnxRaU5q8SFGU6Cn
+        JzJLiSbnA1NyXkm8oamRsbGxhYmhmamhoZI473oH5xghgfTEktTs1NSC1CKYPiYOTqkGxpK0
+        q93vV9t16FRstLW1cX9plrUivdFJNqhfzN6avX7Tal6OfF29yFINpZpHpTH9rl9Wbl/dU8r2
+        fTl3nuFB109HZ7xQuexzWWhRN3+KyAmVVpFrx6WKN3z1+uIaesRB5vbjjLoDgn/OyzdPPT5/
+        0cMl3FW7Gvt/xf7KOF6X3S38eBFDQes7JZbijERDLeai4kQAPyZexJEDAAA=
+DLP-Filter: Pass
+X-CFilter-Loop: Reflected
+X-CMS-RootMailID: 20190311100759epcas5p41fc634cd67a99b39cd25c4129e489c4c
+References: <20190311100630.12952-1-sibis@codeaurora.org>
+        <CGME20190311100759epcas5p41fc634cd67a99b39cd25c4129e489c4c@epcms1p2>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+>From: Saravana Kannan <skannan@codeaurora.org>
+>
+>If the new governor fails to start, switch back to old governor so that the
+>devfreq state is not left in some weird limbo.
+>
+>[Mjungjoo: assume fatal on revert failure and set df->governor to NULL]
+>Signed-off-by: Sibi Sankar <sibis@codeaurora.org>
+>Signed-off-by: Saravana Kannan <skannan@codeaurora.org>
+>Reviewed-by: Chanwoo Choi <cw00.choi@samsung.com>
 
-On 2019/3/12 上午11:52, Michael S. Tsirkin wrote:
-> On Tue, Mar 12, 2019 at 10:59:09AM +0800, Jason Wang wrote:
->> On 2019/3/12 上午2:14, David Miller wrote:
->>> From: "Michael S. Tsirkin" <mst@redhat.com>
->>> Date: Mon, 11 Mar 2019 09:59:28 -0400
->>>
->>>> On Mon, Mar 11, 2019 at 03:13:17PM +0800, Jason Wang wrote:
->>>>> On 2019/3/8 下午10:12, Christoph Hellwig wrote:
->>>>>> On Wed, Mar 06, 2019 at 02:18:07AM -0500, Jason Wang wrote:
->>>>>>> This series tries to access virtqueue metadata through kernel virtual
->>>>>>> address instead of copy_user() friends since they had too much
->>>>>>> overheads like checks, spec barriers or even hardware feature
->>>>>>> toggling. This is done through setup kernel address through vmap() and
->>>>>>> resigter MMU notifier for invalidation.
->>>>>>>
->>>>>>> Test shows about 24% improvement on TX PPS. TCP_STREAM doesn't see
->>>>>>> obvious improvement.
->>>>>> How is this going to work for CPUs with virtually tagged caches?
->>>>> Anything different that you worry?
->>>> If caches have virtual tags then kernel and userspace view of memory
->>>> might not be automatically in sync if they access memory
->>>> through different virtual addresses. You need to do things like
->>>> flush_cache_page, probably multiple times.
->>> "flush_dcache_page()"
->>
->> I get this. Then I think the current set_bit_to_user() is suspicious, we
->> probably miss a flush_dcache_page() there:
->>
->>
->> static int set_bit_to_user(int nr, void __user *addr)
->> {
->>          unsigned long log = (unsigned long)addr;
->>          struct page *page;
->>          void *base;
->>          int bit = nr + (log % PAGE_SIZE) * 8;
->>          int r;
->>
->>          r = get_user_pages_fast(log, 1, 1, &page);
->>          if (r < 0)
->>                  return r;
->>          BUG_ON(r != 1);
->>          base = kmap_atomic(page);
->>          set_bit(bit, base);
->>          kunmap_atomic(base);
->>          set_page_dirty_lock(page);
->>          put_page(page);
->>          return 0;
->> }
->>
->> Thanks
-> I think you are right. The correct fix though is to re-implement
-> it using asm and handling pagefault, not gup.
+I'll modify WARN->ERROR for the case when it's fatal:
+
+>+		if (ret) {
+>+			dev_warn(dev,
+>+				 "%s: reverting to Governor %s failed (%d)\n",
+>+				 __func__, df->governor_name, ret);
+>+			df->governor = NULL;
+>+		}
+
+Acked-by: MyungJoo Ham <myungjoo.ham@samsung.com>
 
 
-I agree but it needs to introduce new helpers in asm  for all archs 
-which is not trivial. At least for -stable, we need the flush?
-
-
-> Three atomic ops per bit is way to expensive.
-
-
-Yes.
-
-Thanks
-
+>---
+>V5:
+>* assume fatal on revert failure and set df->governor to NULL
+>
+>V4:
+>* Removed prev_governor check.
+>
+>V3:
+>* Fix NULL deref for real this time.
+>* Addressed some style preferences.
+>
+>V2:
+>* Fixed typo in commit text
+>* Fixed potential NULL deref
+>
+> drivers/devfreq/devfreq.c | 16 ++++++++++++++--
+> 1 file changed, 14 insertions(+), 2 deletions(-)
+>
