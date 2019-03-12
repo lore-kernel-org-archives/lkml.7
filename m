@@ -4,51 +4,61 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 32652C43381
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 17:53:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7BD7FC43381
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 17:53:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 069322087C
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 17:53:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4C0922087C
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 17:53:38 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1552413211;
-	bh=Q5RpZ6XgkiZm7VAhwkx98W2rGBm0tf4xOEmuIEZHLNA=;
+	s=default; t=1552413218;
+	bh=TwdbgXLlbrPqZErgpejAtcKx4FT+EDSP9XQgUH2yVTI=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=G8IxidAEcZ++hxwl9vJZjWKkpDS0gPqeU6vO9BxsurWzpkSIwtWtKmOCE9n+wbQ5H
-	 TiInHRLiGAoC1GzUy5fjtCObKEgMNgroQs9iYYzhgnW8NaF5l/e8H4zoTQBiR9zN6Y
-	 4y6OMPMFmI1BV/atgCggEaGFNvJImSI7WbnQmO0A=
+	b=NlvCk9PmSD6sDZHojTAnZEaQdeZ2trppEIoBDMT3+30NRaGKM22d6hRyzxcM3KGFO
+	 yMQbVlsEQ5FFDi0nGw8Iv1gAqLAlM4YlLdPdsCAyMAZpI3v2eiSrIl736DCZb0aRat
+	 mXhmrG/CNsbcWC6EQBbK8VGRQFimx0qmLZ0zskv8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728944AbfCLRx3 (ORCPT
+        id S1728860AbfCLRxh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 12 Mar 2019 13:53:29 -0400
-Received: from mail.kernel.org ([198.145.29.99]:52798 "EHLO mail.kernel.org"
+        Tue, 12 Mar 2019 13:53:37 -0400
+Received: from mail.kernel.org ([198.145.29.99]:52688 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728302AbfCLROS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 12 Mar 2019 13:14:18 -0400
+        id S1728293AbfCLROR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 12 Mar 2019 13:14:17 -0400
 Received: from localhost (unknown [104.133.8.98])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 2BC172183E;
-        Tue, 12 Mar 2019 17:14:18 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id BADAA21871;
+        Tue, 12 Mar 2019 17:14:16 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1552410858;
-        bh=Q5RpZ6XgkiZm7VAhwkx98W2rGBm0tf4xOEmuIEZHLNA=;
+        s=default; t=1552410856;
+        bh=TwdbgXLlbrPqZErgpejAtcKx4FT+EDSP9XQgUH2yVTI=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=hSRuge+aXPWjpzrzNWxMER8cccSPWBSZIi6p26y/bfdQdRMd4drArBg7hiYXoUoWx
-         5fTmQ4qc3V2TMEHMD8inWI7q343rC5Fyl8h059h9IRm2VSh2FOBvio4S/jnOQfsWjg
-         LWBePInTaDQypMr+URXiDNQc7+Rneko4eBZub0/k=
+        b=m5jdeaAiRycqIh2d2vtz/Sw+kIIvoswfPnP+ARmrE8XzUwBg1qUFannWBHYqOLdK1
+         H88+GJCvod/0VzsolcSU/BqGFnScX8hAy1V3sjZPhbwyAT6DzO9th2hTScfoTUeCKn
+         xErEhULMSDPFWc81QZc1vN0cjK7rauIKYXdnwZtw=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Manish Chopra <manishc@marvell.com>,
-        Ariel Elior <aelior@marvell.com>,
-        "David S. Miller" <davem@davemloft.net>,
+        stable@vger.kernel.org, Dave Young <dyoung@redhat.com>,
+        Kairui Song <kasong@redhat.com>, Borislav Petkov <bp@suse.de>,
+        AKASHI Takahiro <takahiro.akashi@linaro.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Ard Biesheuvel <ard.biesheuvel@linaro.org>, bhe@redhat.com,
+        David Howells <dhowells@redhat.com>, erik.schmauss@intel.com,
+        fanc.fnst@cn.fujitsu.com, "H. Peter Anvin" <hpa@zytor.com>,
+        Ingo Molnar <mingo@redhat.com>, kexec@lists.infradead.org,
+        lenb@kernel.org, linux-acpi@vger.kernel.org,
+        Philipp Rudo <prudo@linux.vnet.ibm.com>,
+        rafael.j.wysocki@intel.com, robert.moore@intel.com,
+        Thomas Gleixner <tglx@linutronix.de>, x86-ml <x86@kernel.org>,
+        Yannik Sembritzki <yannik@sembritzki.me>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 035/149] qed: Fix bug in tx promiscuous mode settings
-Date:   Tue, 12 Mar 2019 10:07:33 -0700
-Message-Id: <20190312170352.645506027@linuxfoundation.org>
+Subject: [PATCH 4.19 052/149] x86/kexec: Dont setup EFI info if EFI runtime is not enabled
+Date:   Tue, 12 Mar 2019 10:07:50 -0700
+Message-Id: <20190312170354.103306285@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190312170349.421581206@linuxfoundation.org>
 References: <20190312170349.421581206@linuxfoundation.org>
@@ -67,53 +77,68 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-[ Upstream commit 9e71a15d8b5bbce25c637f7f8833cd3f45b65646 ]
+[ Upstream commit 2aa958c99c7fd3162b089a1a56a34a0cdb778de1 ]
 
-When running tx switched traffic between VNICs
-created via a bridge(to which VFs are added),
-adapter drops the unicast packets in tx flow due to
-VNIC's ucast mac being unknown to it. But VF interfaces
-being in promiscuous mode should have caused adapter
-to accept all the unknown ucast packets. Later, it
-was found that driver doesn't really configure tx
-promiscuous mode settings to accept all unknown unicast macs.
+Kexec-ing a kernel with "efi=noruntime" on the first kernel's command
+line causes the following null pointer dereference:
 
-This patch fixes tx promiscuous mode settings to accept all
-unknown/unmatched unicast macs and works out the scenario.
+  BUG: unable to handle kernel NULL pointer dereference at 0000000000000000
+  #PF error: [normal kernel read fault]
+  Call Trace:
+   efi_runtime_map_copy+0x28/0x30
+   bzImage64_load+0x688/0x872
+   arch_kexec_kernel_image_load+0x6d/0x70
+   kimage_file_alloc_init+0x13e/0x220
+   __x64_sys_kexec_file_load+0x144/0x290
+   do_syscall_64+0x55/0x1a0
+   entry_SYSCALL_64_after_hwframe+0x44/0xa9
 
-Signed-off-by: Manish Chopra <manishc@marvell.com>
-Signed-off-by: Ariel Elior <aelior@marvell.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
+Just skip the EFI info setup if EFI runtime services are not enabled.
+
+ [ bp: Massage commit message. ]
+
+Suggested-by: Dave Young <dyoung@redhat.com>
+Signed-off-by: Kairui Song <kasong@redhat.com>
+Signed-off-by: Borislav Petkov <bp@suse.de>
+Acked-by: Dave Young <dyoung@redhat.com>
+Cc: AKASHI Takahiro <takahiro.akashi@linaro.org>
+Cc: Andrew Morton <akpm@linux-foundation.org>
+Cc: Ard Biesheuvel <ard.biesheuvel@linaro.org>
+Cc: bhe@redhat.com
+Cc: David Howells <dhowells@redhat.com>
+Cc: erik.schmauss@intel.com
+Cc: fanc.fnst@cn.fujitsu.com
+Cc: "H. Peter Anvin" <hpa@zytor.com>
+Cc: Ingo Molnar <mingo@redhat.com>
+Cc: kexec@lists.infradead.org
+Cc: lenb@kernel.org
+Cc: linux-acpi@vger.kernel.org
+Cc: Philipp Rudo <prudo@linux.vnet.ibm.com>
+Cc: rafael.j.wysocki@intel.com
+Cc: robert.moore@intel.com
+Cc: Thomas Gleixner <tglx@linutronix.de>
+Cc: x86-ml <x86@kernel.org>
+Cc: Yannik Sembritzki <yannik@sembritzki.me>
+Link: https://lkml.kernel.org/r/20190118111310.29589-2-kasong@redhat.com
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/ethernet/qlogic/qed/qed_l2.c | 7 ++++++-
- 1 file changed, 6 insertions(+), 1 deletion(-)
+ arch/x86/kernel/kexec-bzimage64.c | 3 +++
+ 1 file changed, 3 insertions(+)
 
-diff --git a/drivers/net/ethernet/qlogic/qed/qed_l2.c b/drivers/net/ethernet/qlogic/qed/qed_l2.c
-index 67c02ea93906..b8baa6fcef8e 100644
---- a/drivers/net/ethernet/qlogic/qed/qed_l2.c
-+++ b/drivers/net/ethernet/qlogic/qed/qed_l2.c
-@@ -609,6 +609,10 @@ qed_sp_update_accept_mode(struct qed_hwfn *p_hwfn,
- 			  (!!(accept_filter & QED_ACCEPT_MCAST_MATCHED) &&
- 			   !!(accept_filter & QED_ACCEPT_MCAST_UNMATCHED)));
+diff --git a/arch/x86/kernel/kexec-bzimage64.c b/arch/x86/kernel/kexec-bzimage64.c
+index 278cd07228dd..9490a2845f14 100644
+--- a/arch/x86/kernel/kexec-bzimage64.c
++++ b/arch/x86/kernel/kexec-bzimage64.c
+@@ -167,6 +167,9 @@ setup_efi_state(struct boot_params *params, unsigned long params_load_addr,
+ 	struct efi_info *current_ei = &boot_params.efi_info;
+ 	struct efi_info *ei = &params->efi_info;
  
-+		SET_FIELD(state, ETH_VPORT_TX_MODE_UCAST_ACCEPT_ALL,
-+			  (!!(accept_filter & QED_ACCEPT_UCAST_MATCHED) &&
-+			   !!(accept_filter & QED_ACCEPT_UCAST_UNMATCHED)));
++	if (!efi_enabled(EFI_RUNTIME_SERVICES))
++		return 0;
 +
- 		SET_FIELD(state, ETH_VPORT_TX_MODE_BCAST_ACCEPT_ALL,
- 			  !!(accept_filter & QED_ACCEPT_BCAST));
+ 	if (!current_ei->efi_memmap_size)
+ 		return 0;
  
-@@ -2688,7 +2692,8 @@ static int qed_configure_filter_rx_mode(struct qed_dev *cdev,
- 	if (type == QED_FILTER_RX_MODE_TYPE_PROMISC) {
- 		accept_flags.rx_accept_filter |= QED_ACCEPT_UCAST_UNMATCHED |
- 						 QED_ACCEPT_MCAST_UNMATCHED;
--		accept_flags.tx_accept_filter |= QED_ACCEPT_MCAST_UNMATCHED;
-+		accept_flags.tx_accept_filter |= QED_ACCEPT_UCAST_UNMATCHED |
-+						 QED_ACCEPT_MCAST_UNMATCHED;
- 	} else if (type == QED_FILTER_RX_MODE_TYPE_MULTI_PROMISC) {
- 		accept_flags.rx_accept_filter |= QED_ACCEPT_MCAST_UNMATCHED;
- 		accept_flags.tx_accept_filter |= QED_ACCEPT_MCAST_UNMATCHED;
 -- 
 2.19.1
 
