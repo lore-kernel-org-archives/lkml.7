@@ -2,108 +2,96 @@ Return-Path: <SRS0=J4ZE=RP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,URIBL_BLOCKED
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C2E7CC43381
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 18:14:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B8ABDC43381
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 18:14:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9325E2087C
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 18:14:00 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1552414440;
-	bh=/rJgdU2pud1ahYGueo3MbrAYmysweVFgQXmwULKe6PI=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=zzhAPjkn58wPD8PV4w1KqEGtYhuYGpP0f0RIqNs5U7g2owgQAChY6dquCTFPEb/dp
-	 uT/qe3Pfe/5lEPL3P/pKyruVyD139hchm5sbmXBwxzMIgkaitIeF+JaYXtFbDjcfWC
-	 xLqmbN/HoHAmfns7sZAbYhSC4H4P4xHo4Haah/Yk=
+	by mail.kernel.org (Postfix) with ESMTP id 80C2F2087C
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 18:14:03 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="S/mo7T0X"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727395AbfCLSN7 (ORCPT
+        id S1727488AbfCLSOB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 12 Mar 2019 14:13:59 -0400
-Received: from mail.kernel.org ([198.145.29.99]:44508 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726643AbfCLRLX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 12 Mar 2019 14:14:01 -0400
+Received: from mail-oi1-f195.google.com ([209.85.167.195]:36266 "EHLO
+        mail-oi1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726869AbfCLRLX (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
         Tue, 12 Mar 2019 13:11:23 -0400
-Received: from localhost (unknown [104.133.8.98])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id C8BE32173C;
-        Tue, 12 Mar 2019 17:11:22 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1552410682;
-        bh=/rJgdU2pud1ahYGueo3MbrAYmysweVFgQXmwULKe6PI=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=BJaYriWMLlc7sZ0dTRwvWoMBrlyDea0xZLnUyhVLTkjDE995cxpLFbOuee2NjjshL
-         1rNs4NydbsUPDvevy0Y6nzU/T+9iOXF5VhYhDbpzEtrdLWxCptriiM6GkUxJqxD2ur
-         dyWD5KcSjJ5CX9c9tqPGxMQXw1+kdFux+AHxL0/s=
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     linux-kernel@vger.kernel.org
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Marek Szyprowski <m.szyprowski@samsung.com>,
-        Krzysztof Kozlowski <krzk@kernel.org>,
-        Arnd Bergmann <arnd@arndb.de>
-Subject: [PATCH 5.0 12/25] ARM: dts: exynos: Fix max voltage for buck8 regulator on Odroid XU3/XU4
-Date:   Tue, 12 Mar 2019 10:08:50 -0700
-Message-Id: <20190312170404.451980264@linuxfoundation.org>
-X-Mailer: git-send-email 2.21.0
-In-Reply-To: <20190312170403.643852550@linuxfoundation.org>
-References: <20190312170403.643852550@linuxfoundation.org>
-User-Agent: quilt/0.65
-X-stable: review
-X-Patchwork-Hint: ignore
+Received: by mail-oi1-f195.google.com with SMTP id t206so2740449oib.3
+        for <linux-kernel@vger.kernel.org>; Tue, 12 Mar 2019 10:11:23 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=/34JM6n4jbLorpMWeteTyQIhtscAMn+/Mff17ZFVkU8=;
+        b=S/mo7T0XDqYtcBFjmUlbV/oyhvFiTCNm/epZWXkiPLvjtcsPHrYEEglAzU+RTSFght
+         8zRaHlifKBynuBUhuvezFleWhnfuj/eWIj3+4OeBLYSuiVuDCr513q6qfse1Lf8nUwLU
+         z08hOGUhGhVgwnlB40ptpXwoBhvfzoSaUHlsHHxkQcb/qcAlq8c0w010DQ5zs+uZthKW
+         MG/0UKmBoecOdLkrxmhlLkgInZ0yRCsO+7xPkOm44GyzAs4Q05JO1s93EQX72QfcFA+I
+         i8kNZq7wMB34N5MZE/nzJFGJ3xzbGUtxsdls80lSKuQnl8pxHgyT08r+0mBAPp+MW3X3
+         2eKQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=/34JM6n4jbLorpMWeteTyQIhtscAMn+/Mff17ZFVkU8=;
+        b=RLIIWUn/bXpWJC+6I09jyNAFuzDlzGZdmx2XzT371bugFvibAHXU3QEz90nqoB4wK7
+         5abFWkb4Cm1vXlGFhDnrNMHxqvTtxpF6w859QOuIjDDb6r5Qp2FAy1RPVC6dyS6zqKxy
+         8d7mRL8MftnWjQWZpQ7JvqK8LxlOTBWT6RFXF5aBktj9+gA1k7Fd/wi4pX1fbjvGOwL4
+         YtYFvVCytnkhL1T9R0Vkm28wJJH50zeSZmU6wPay4vVai/kfPZE+KsCYrqCcd4VgaeV4
+         rxasPQwIfxKFS2L3zUNSdeUagVARmcspPravyzfzMO+trPBe9so0gQywe4aNSypqbBfj
+         JjaQ==
+X-Gm-Message-State: APjAAAXrHkfLoPUXmju1bJGlcEb7LZpG6tftn1VU+f4M7MyBmTJ5OKiE
+        zwLt0PGjZEa6eYiFzEVspfjrxDWOwFhX8OupqqE=
+X-Google-Smtp-Source: APXvYqxV6uRSGhGzdtVh9u1BbIyZqPM8caDx+PHty/Pyl48dNS0u9ii/K0stY7FYyt+4FVfFo/fB0Yh6bddX0KSsk8g=
+X-Received: by 2002:aca:e6d5:: with SMTP id d204mr2450438oih.77.1552410681983;
+ Tue, 12 Mar 2019 10:11:21 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+References: <20190124201251.15159-1-TheSven73@googlemail.com>
+ <CAGngYiWFU-VnG=ODLWaUf0yp69qaU2GSd9exdHvyi6Ko1ib9qw@mail.gmail.com>
+ <20190208121916.GE23483@kroah.com> <CAGngYiVVNitd5SDLah-kxP69W6XHYHOQrOz=DnevuGnqoHD7HA@mail.gmail.com>
+ <20190208141400.GA22162@kroah.com> <CAGngYiXZtNcqQ3JGgavBxypo75WtAT7T-X4DQFNWD8kQcifU8g@mail.gmail.com>
+ <20190311191339.GA5628@kroah.com>
+In-Reply-To: <20190311191339.GA5628@kroah.com>
+From:   Sven Van Asbroeck <thesven73@gmail.com>
+Date:   Tue, 12 Mar 2019 13:11:11 -0400
+Message-ID: <CAGngYiVB=6627d31ad5ajfrmBtV5_pDLudKkBuPNyNnqkssBAA@mail.gmail.com>
+Subject: Re: [PATCH v8 0/6] Add Fieldbus subsystem + support HMS Profinet card
+To:     Greg KH <gregkh@linuxfoundation.org>
+Cc:     robh+dt@kernel.org, Linus Walleij <linus.walleij@linaro.org>,
+        Lee Jones <lee.jones@linaro.org>, mark.rutland@arm.com,
+        =?UTF-8?Q?Andreas_F=C3=A4rber?= <afaerber@suse.de>,
+        treding@nvidia.com, David Lechner <david@lechnology.com>,
+        noralf@tronnes.org, johan@kernel.org,
+        Michal Simek <monstr@monstr.eu>, michal.vokac@ysoft.com,
+        Arnd Bergmann <arnd@arndb.de>, john.garry@huawei.com,
+        geert+renesas@glider.be, robin.murphy@arm.com,
+        Paul Gortmaker <paul.gortmaker@windriver.com>,
+        sebastien.bourdelin@savoirfairelinux.com, icenowy@aosc.io,
+        Stuart Yoder <stuyoder@gmail.com>, maxime.ripard@bootlin.com,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-5.0-stable review patch.  If anyone has any objections, please let me know.
+On Mon, Mar 11, 2019 at 3:13 PM Greg KH <gregkh@linuxfoundation.org> wrote:
+>
+> That sounds like a good plan, I'll take that.  Want to respin the
+> patches with the code in drivers/staging/ and I'll be glad to queue them
+> up after 5.1-rc1 is out.
 
-------------------
+Andreas Farber suggested that the patchset may have more success reaching
+its target audience by cross-posting in netdev, and maybe linux-serial +
+linux-gpio. Does that sound ok? Any other group where the patchset might
+be welcome?
 
-From: Marek Szyprowski <m.szyprowski@samsung.com>
-
-commit a3238924a820c1d7c977b632b769f3b5690cba09 upstream.
-
-The maximum voltage value for buck8 regulator on Odroid XU3/XU4 boards is
-set too low. Increase it to the 2000mV as specified on the board schematic.
-So far the board worked fine, because of the bug in the PMIC driver, which
-used incorrect step value for that regulator. It interpreted the voltage
-value set by the bootloader as 1225mV and kept it unchanged. The regulator
-driver has been however fixed recently in the commit 56b5d4ea778c
-("regulator: s2mps11: Fix steps for buck7, buck8 and LDO35"), what results
-in reading the proper buck8 value and forcing it to 1500mV on boot. This
-is not enough for proper board operation and results in eMMC errors during
-heavy IO traffic. Increasing maximum voltage value for buck8 restores
-original driver behavior and fixes eMMC issues.
-
-Signed-off-by: Marek Szyprowski <m.szyprowski@samsung.com>
-Fixes: 86a2d2ac5e5d ("ARM: dts: Add dts file for Odroid XU3 board")
-Fixes: 56b5d4ea778c ("regulator: s2mps11: Fix steps for buck7, buck8 and LDO35")
-Cc: <stable@vger.kernel.org>
-Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
-Signed-off-by: Arnd Bergmann <arnd@arndb.de>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-
----
- arch/arm/boot/dts/exynos5422-odroid-core.dtsi |    2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
-
---- a/arch/arm/boot/dts/exynos5422-odroid-core.dtsi
-+++ b/arch/arm/boot/dts/exynos5422-odroid-core.dtsi
-@@ -468,7 +468,7 @@
- 			buck8_reg: BUCK8 {
- 				regulator-name = "vdd_1.8v_ldo";
- 				regulator-min-microvolt = <800000>;
--				regulator-max-microvolt = <1500000>;
-+				regulator-max-microvolt = <2000000>;
- 				regulator-always-on;
- 				regulator-boot-on;
- 			};
-
-
+Greg, are you ok with holding off taking the patch for a few days, to give
+the netdev/serial/gpio people a chance to react?
