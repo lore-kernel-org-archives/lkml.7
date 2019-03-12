@@ -2,431 +2,377 @@ Return-Path: <SRS0=J4ZE=RP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 03A8AC43381
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 17:46:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1572CC43381
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 17:46:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A28712147C
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 17:46:44 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="tGA9PBAD"
+	by mail.kernel.org (Postfix) with ESMTP id C592221734
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 17:46:47 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1552412807;
+	bh=dt5SL7OZabpYfBMlhCmY4omMpAtSV7SvhQwK5UOtm28=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=stZwiavPTfG2id5BXiO8AHp7eQ0TfFqpB57gH9WuK1ZmX0ONleZ15jeZYU72StAnA
+	 iequo0wN8JGNHwyHynpNmerCYwTzlCnaZNw3gz0hqrgAV1eeWc/I9kDADMId2wrrze
+	 xVVbSb1+B6DfhzxTcntKuAibValwUdBZZOxZA618=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728676AbfCLRqn (ORCPT
+        id S1729480AbfCLRqq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 12 Mar 2019 13:46:43 -0400
-Received: from lelv0143.ext.ti.com ([198.47.23.248]:45266 "EHLO
-        lelv0143.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726848AbfCLRqj (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 12 Mar 2019 13:46:39 -0400
-Received: from lelv0265.itg.ti.com ([10.180.67.224])
-        by lelv0143.ext.ti.com (8.15.2/8.15.2) with ESMTP id x2CHkR2I017701;
-        Tue, 12 Mar 2019 12:46:27 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1552412787;
-        bh=xazboJ7Ws/6+Hr3M9Mz6qQLlSGd5ciU63H6tPbwjxIU=;
-        h=Subject:To:CC:References:From:Date:In-Reply-To;
-        b=tGA9PBADVYoVMDK8lAx6V/V2oTo8DffFf0EYC9lNsExO5qOUekAiincqKjyK6DX/R
-         GIbSElgQbZqAYMqj3oNnes370Pc+qooqAwgIdIRt6Xtm1wXjs7sK9tgGnsn0KJsQKy
-         CNmZfJWCcVQ+dKCF22RY6iOvBGaC4fqnZyB3azJM=
-Received: from DFLE114.ent.ti.com (dfle114.ent.ti.com [10.64.6.35])
-        by lelv0265.itg.ti.com (8.15.2/8.15.2) with ESMTPS id x2CHkR5W113522
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Tue, 12 Mar 2019 12:46:27 -0500
-Received: from DFLE115.ent.ti.com (10.64.6.36) by DFLE114.ent.ti.com
- (10.64.6.35) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1591.10; Tue, 12
- Mar 2019 12:46:26 -0500
-Received: from dflp32.itg.ti.com (10.64.6.15) by DFLE115.ent.ti.com
- (10.64.6.36) with Microsoft SMTP Server (version=TLS1_0,
- cipher=TLS_RSA_WITH_AES_256_CBC_SHA) id 15.1.1591.10 via Frontend Transport;
- Tue, 12 Mar 2019 12:46:26 -0500
-Received: from [172.22.79.221] (ileax41-snat.itg.ti.com [10.172.224.153])
-        by dflp32.itg.ti.com (8.14.3/8.13.8) with ESMTP id x2CHkQP1003683;
-        Tue, 12 Mar 2019 12:46:26 -0500
-Subject: Re: [PATCH 02/25] leds: core: Add support for composing LED class
- device names
-To:     Jacek Anaszewski <jacek.anaszewski@gmail.com>,
-        <linux-leds@vger.kernel.org>
-CC:     <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <pavel@ucw.cz>, <robh@kernel.org>,
-        Baolin Wang <baolin.wang@linaro.org>,
-        Daniel Mack <daniel@zonque.org>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Oleh Kravchenko <oleg@kaa.org.ua>,
-        Sakari Ailus <sakari.ailus@linux.intel.com>
-References: <20190310182836.20841-1-jacek.anaszewski@gmail.com>
- <20190310182836.20841-3-jacek.anaszewski@gmail.com>
- <79bf90e1-f1df-c015-d3ed-6294bda7f1fb@ti.com>
- <db4c776a-88fe-6872-5aa5-da0ac43521b7@gmail.com>
-From:   Dan Murphy <dmurphy@ti.com>
-Message-ID: <98196e9b-6e62-023c-2f50-c589115bd82c@ti.com>
-Date:   Tue, 12 Mar 2019 12:46:08 -0500
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.5.3
+        Tue, 12 Mar 2019 13:46:46 -0400
+Received: from mail.kernel.org ([198.145.29.99]:55628 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727369AbfCLRPT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 12 Mar 2019 13:15:19 -0400
+Received: from localhost (unknown [104.133.8.98])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id E512621741;
+        Tue, 12 Mar 2019 17:15:18 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1552410919;
+        bh=dt5SL7OZabpYfBMlhCmY4omMpAtSV7SvhQwK5UOtm28=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=J/bPb12SlFbUULQ7s0P8ZxF+T3vTIJPNoCnUd76nhIj6BrT+tGFdklHDfGsynbh6Y
+         pjOWx1zKQV5otWnS7HIa6xI5FnpjxByRKPrCXsChr2PfuStbPjlvpH7YBzFFEhAIRD
+         M2bMviY/2rLWo+ASd9yvtgrSDBbzIYpTqeRDvD00=
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Chao Yu <yuchao0@huawei.com>, Gao Xiang <gaoxiang25@huawei.com>
+Subject: [PATCH 4.19 138/149] staging: erofs: add error handling for xattr submodule
+Date:   Tue, 12 Mar 2019 10:09:16 -0700
+Message-Id: <20190312170400.885172363@linuxfoundation.org>
+X-Mailer: git-send-email 2.21.0
+In-Reply-To: <20190312170349.421581206@linuxfoundation.org>
+References: <20190312170349.421581206@linuxfoundation.org>
+User-Agent: quilt/0.65
+X-stable: review
+X-Patchwork-Hint: ignore
 MIME-Version: 1.0
-In-Reply-To: <db4c776a-88fe-6872-5aa5-da0ac43521b7@gmail.com>
-Content-Type: text/plain; charset="utf-8"
-Content-Language: en-US
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 3/12/19 12:28 PM, Jacek Anaszewski wrote:
-> Hi Dan,
-> 
-> On 3/12/19 6:15 PM, Dan Murphy wrote:
->> On 3/10/19 1:28 PM, Jacek Anaszewski wrote:
->>> Add public led_compose_name() API for composing LED class device
->>> name basing on fwnode_handle data. The function composes device name
->>> according to either a new <color:function> pattern or the legacy
->>> <devicename:color:function> pattern. The decision on using the
->>> particular pattern is made basing on whether fwnode contains new
->>> "function" and "color" properties, or the legacy "label" proeprty.
->>>
->>> Backwards compatibility with in-driver hard-coded LED class device
->>> names is assured thanks to the default_desc argument.
->>>
->>> In case none of the aforementioned properties was found, then, for OF
->>> nodes, the node name is adopted for LED class device name.
->>>
->>> Alongside these changes added is a new tool - tools/leds/get_led_device_info.sh.
->>> The tool allows retrieving details of a LED class device's parent device,
->>> which proves that getting rid of a devicename section from LED name pattern
->>> is justified since this information is already available in sysfs.
->>>
->>> Signed-off-by: Jacek Anaszewski <jacek.anaszewski@gmail.com>
->>> Cc: Baolin Wang <baolin.wang@linaro.org>
->>> Cc: Daniel Mack <daniel@zonque.org>
->>> Cc: Dan Murphy <dmurphy@ti.com>
->>> Cc: Linus Walleij <linus.walleij@linaro.org>
->>> Cc: Oleh Kravchenko <oleg@kaa.org.ua>
->>> Cc: Sakari Ailus <sakari.ailus@linux.intel.com>
->>> ---
->>>   Documentation/leds/leds-class.txt | 20 +++++++++-
->>>   drivers/leds/led-core.c           | 82 +++++++++++++++++++++++++++++++++++++++
->>>   include/linux/leds.h              | 31 +++++++++++++++
->>>   tools/leds/get_led_device_info.sh | 81 ++++++++++++++++++++++++++++++++++++++
->>>   4 files changed, 213 insertions(+), 1 deletion(-)
->>>   create mode 100755 tools/leds/get_led_device_info.sh
->>>
->>> diff --git a/Documentation/leds/leds-class.txt b/Documentation/leds/leds-class.txt
->>> index 8b39cc6b03ee..866fe87063d4 100644
->>> --- a/Documentation/leds/leds-class.txt
->>> +++ b/Documentation/leds/leds-class.txt
->>> @@ -43,7 +43,22 @@ LED Device Naming
->>>     Is currently of the form:
->>>   -"devicename:colour:function"
->>> +"colour:function"
->>> +
->>> +There might be still LED class drivers around using "devicename:colour:function"
->>> +naming pattern, but the "devicename" section is now deprecated since it used
->>> +to convey information that was already available in the sysfs, like product
->>> +name. There is a tool (tools/leds/get_led_device_info.sh) available for
->>> +retrieving that information per a LED class device.
->>> +
->>> +Associations with other devices, like network ones, should be defined
->>> +via LED triggr mechanism. This approach is applied by some of wireless
->>> +network drivers that create triggers dynamically and incorporate phy
->>> +name into its name. On the other hand input subsystem offers LED - input
->>> +bridge (drivers/input/input-leds.c) for exposing keyboard LEDs as LED class
->>> +devices. The get_led_device_info.sh script has support for retrieving related
->>> +input device node name. Should it support discovery of associations between
->>> +LEDs and other subsystems, please don't hesitate to submit a relevant patch.
->>>     There have been calls for LED properties such as colour to be exported as
->>>   individual led class attributes. As a solution which doesn't incur as much
->>> @@ -51,6 +66,9 @@ overhead, I suggest these become part of the device name. The naming scheme
->>>   above leaves scope for further attributes should they be needed. If sections
->>>   of the name don't apply, just leave that section blank.
->>>   +Please also keep in mind that LED subsystem has a protection against LED name
->>> +conflict. It adds numerical suffix (e.g. "_1", "_2", "_3" etc.) to the requested
->>> +LED class device name in case it is already in use.
->>>     Brightness setting API
->>>   ======================
->>> diff --git a/drivers/leds/led-core.c b/drivers/leds/led-core.c
->>> index ede4fa0ac2cc..bad92250d1d5 100644
->>> --- a/drivers/leds/led-core.c
->>> +++ b/drivers/leds/led-core.c
->>> @@ -16,6 +16,8 @@
->>>   #include <linux/list.h>
->>>   #include <linux/module.h>
->>>   #include <linux/mutex.h>
->>> +#include <linux/of.h>
->>> +#include <linux/property.h>
->>>   #include <linux/rwsem.h>
->>>   #include "leds.h"
->>>   @@ -327,3 +329,83 @@ void led_sysfs_enable(struct led_classdev *led_cdev)
->>>       led_cdev->flags &= ~LED_SYSFS_DISABLE;
->>>   }
->>>   EXPORT_SYMBOL_GPL(led_sysfs_enable);
->>> +
->>> +static void led_parse_properties(struct fwnode_handle *fwnode,
->>> +                 struct led_properties *props)
->>> +{
->>> +    int ret;
->>> +
->>> +    if (!fwnode)
->>> +        return;
->>> +
->>> +    if (fwnode_property_present(fwnode, "label")) {
->>> +        ret = fwnode_property_read_string(fwnode, "label", &props->label);
->>> +        if (ret)
->>> +            pr_err("Error parsing \'label\' property (%d)\n", ret);
->>> +        return;
->>> +    }
->>> +
->>> +    if (fwnode_property_present(fwnode, "function")) {
->>> +        ret = fwnode_property_read_string(fwnode, "function", &props->function);
->>> +        if (ret)
->>> +            pr_err("Error parsing \'function\' property (%d)\n", ret);
->>> +    } else {
->>> +        pr_info("\'function\' property not found\n");
->>> +    }
->>> +
->>> +    if (fwnode_property_present(fwnode, "color")) {
->>> +        ret = fwnode_property_read_string(fwnode, "color", &props->color);
->>> +        if (ret)
->>> +            pr_info("Error parsing \'color\' property (%d)\n", ret);
->>> +    } else {
->>> +        pr_info("\'color\' property not found\n");
->>> +    }
->>> +}
->>> +
->>> +int led_compose_name(struct fwnode_handle *fwnode, const char *led_hw_name,
->>> +             const char *default_desc, char *led_classdev_name)
->>> +{
->>> +    struct led_properties props = {};
->>> +
->>> +    if (!led_classdev_name)
->>> +        return -EINVAL;
->>> +
->>> +    led_parse_properties(fwnode, &props);
->>> +
->>> +    if (props.label) {
->>> +        /*
->>> +         * Presence of 'label' DT property implies legacy LED name,
->>> +         * formatted as <devicename:color:function>, with possible
->>> +         * section omission if doesn't apply to given device.
->>> +         *
->>> +         * If no led_hw_name has been passed, then it indicates that
->>> +         * DT label should be used as-is for LED class device name.
->>> +         * Otherwise the label is prepended with led_hw_name to compose
->>> +         * the final LED class device name.
->>> +         */
->>> +        if (!led_hw_name) {
->>> +            strncpy(led_classdev_name, props.label,
->>> +                LED_MAX_NAME_SIZE);
->>> +        } else {
->>> +            snprintf(led_classdev_name, LED_MAX_NAME_SIZE, "%s:%s",
->>> +                 led_hw_name, props.label);
->>> +        }
->>> +    } else if (props.function || props.color) {
->>> +        snprintf(led_classdev_name, LED_MAX_NAME_SIZE, "%s:%s",
->>> +             props.color ?: "", props.function ?: "");
->>> +    } else if (default_desc) {
->>> +        if (!led_hw_name) {
->>> +            pr_err("Legacy LED naming requires devicename segment");
->>> +            return -EINVAL;
->>> +        }
->>> +        snprintf(led_classdev_name, LED_MAX_NAME_SIZE, "%s:%s",
->>> +             led_hw_name, default_desc);
->>> +    } else if (is_of_node(fwnode)) {
->>> +        strncpy(led_classdev_name, to_of_node(fwnode)->name,
->>> +            LED_MAX_NAME_SIZE);
->>> +    } else
->>> +        return -EINVAL;
->>> +
->>> +    return 0;
->>> +}
->>> +EXPORT_SYMBOL_GPL(led_compose_name);
+4.19-stable review patch.  If anyone has any objections, please let me know.
 
-I was thinking a bit more about this.
-Why do we want to export this function to have the drivers call it?
-Can't we just set the required parameters in the led_class struct?
-
-struct led_properties can be extended to set the needed strings in the LED driver.
-The pointer to this struct can be set in the LED driver for the class
-
-Then we can just call compose_name during class registration.
-
-If we add the fwnode to the struct this may help in the multi-color registration as we could pick off
-the parent node and look for the specific labels/handles.
-
-
->>> diff --git a/include/linux/leds.h b/include/linux/leds.h
->>> index bffb4315fd66..c2936fc989d4 100644
->>> --- a/include/linux/leds.h
->>> +++ b/include/linux/leds.h
->>> @@ -252,6 +252,31 @@ extern void led_sysfs_disable(struct led_classdev *led_cdev);
->>>   extern void led_sysfs_enable(struct led_classdev *led_cdev);
->>>     /**
->>> + * led_compose_name - compose LED class device name
->>> + * @child: child fwnode_handle describing a LED,
->>> + *       or a group of synchronized LEDs.
->>> + * @led_hw_name: name of the LED controller, used when falling back to legacy
->>> + *         LED naming; it should be set to NULL in new LED class drivers
->>> + * @default_desc: default <color:function> tuple, for backwards compatibility
->>> + *          with in-driver hard-coded LED names used as a fallback when
->>> + *          "label" DT property is absent; it should be set to NULL
->>> + *          in new LED class drivers
->>> + * @led_classdev_name: composed LED class device name
->>> + *
->>> + * Create LED class device name basing on the configuration provided by the
->>> + * board firmware. The name can have a legacy form <devicename:color:function>,
->>> + * or a new form <color:function>. The latter is chosen if "label" property is
->>> + * absent and at least one of "color" or "function" is present in the fwnode,
->>> + * leaving the section blank if the related property is absent. In case none
->>> + * of the aforementioned properties is found, then, for OF nodes, the node name
->>> + * is adopted for LED class device name.
->>> + *
->>> + * Returns: 0 on success or negative error value on failure
->>> + */
->>> +extern int led_compose_name(struct fwnode_handle *child, const char *led_hw_name,
->>> +                const char *default_desc, char *led_classdev_name);
->>> +
->>> +/**
->>>    * led_sysfs_is_disabled - check if LED sysfs interface is disabled
->>>    * @led_cdev: the LED to query
->>>    *
->>> @@ -428,6 +453,12 @@ struct led_platform_data {
->>>       struct led_info    *leds;
->>>   };
->>>   +struct led_properties {
->>> +    const char *color;
->>> +    const char *function;
->>> +    const char *label;
->>> +};
->>> +
->>>   struct gpio_desc;
->>>   typedef int (*gpio_blink_set_t)(struct gpio_desc *desc, int state,
->>>                   unsigned long *delay_on,
->>> diff --git a/tools/leds/get_led_device_info.sh b/tools/leds/get_led_device_info.sh
->>> new file mode 100755
->>> index 000000000000..4671aa690e4a
->>> --- /dev/null
->>> +++ b/tools/leds/get_led_device_info.sh
->>> @@ -0,0 +1,81 @@
->>> +#!/bin/sh
->>> +# SPDX-License-Identifier: GPL-2.0
->>> +
->>
->> Is there a way to give usage or help here?  It's not entirely clear what the argument to pass in is.
-> 
-> It is in the first statement of this script - see below.
-> It is customary to print help when unexpected arguments or a number
-> thereof is given.
-> 
-> I can print help also when "--help" is passed.
-> 
-
-OK.  Maybe doing --help or --? would be to much.  Maybe a bit better help message I could not tell that
-was an error message.
-
-maybe
-
-echo "usage: get_led_device_info.sh LED_CDEV_PATH"
-
->> maybe if $1 = "?" then print usage
->>
->> Dan
->>
->>
->>> +if [ $# -ne 1 ]; then
->>> +    echo "get_led_devicename.sh LED_CDEV_PATH"
-> 
-> s/get_led_devicename/get_led_device_info/
-> 
-> It is a leftover from earlier stage of development.
-> 
->>> +    exit 1
->>> +fi
->>> +
->>> +led_cdev_path=`echo $1 | sed s'/\/$//'`
->>> +
->>> +ls "$led_cdev_path/brightness" > /dev/null 2>&1
->>> +if [ $? -ne 0 ]; then
->>> +    echo "Device \"$led_cdev_path\" does not exist."
->>> +    exit 1
->>> +fi
->>> +
->>> +bus=`readlink $led_cdev_path/device/subsystem | sed s'/.*\///'`
->>> +usb_subdev=`readlink $led_cdev_path | grep usb | sed s'/\(.*usb[0-9]*\/[0-9]*-[0-9]*\)\/.*/\1/'`
->>> +ls "$led_cdev_path/device/of_node/compatible" > /dev/null 2>&1
->>> +of_node_missing=$?
->>> +
->>> +if [ "$bus" = "input" ]; then
->>> +    input_node=`readlink $led_cdev_path/device | sed s'/.*\///'`
->>> +    if [ ! -z $usb_subdev ]; then
->>> +        bus="usb"
->>> +    fi
->>> +fi
->>> +
->>> +if [ "$bus" = "usb" ]; then
->>> +    usb_interface=`readlink $led_cdev_path | sed s'/.*\(usb[0-9]*\)/\1/' | cut -d \/ -f 3`
->>> +    driver=`readlink $usb_interface/driver | sed s'/.*\///'`
->>> +    cd $led_cdev_path/../$usb_subdev
->>> +    idVendor=`cat idVendor`
->>> +    idProduct=`cat idProduct`
->>> +    manufacturer=`cat manufacturer`
->>> +    product=`cat product`
->>> +elif [ "$bus" = "input" ]; then
->>> +    cd $led_cdev_path
->>> +    product=`cat device/name`
->>> +    driver=`cat device/device/driver/description`
->>> +elif [ $of_node_missing -eq 0 ]; then
->>> +    cd $led_cdev_path
->>> +    compatible=`cat device/of_node/compatible`
->>> +    if [ "$compatible" = "gpio-leds" ]; then
->>> +        driver="leds-gpio"
->>> +    elif [ "$compatible" = "pwm-leds" ]; then
->>> +        driver="leds-pwm"
->>> +    else
->>> +        manufacturer=`echo $compatible | cut -d, -f1`
->>> +        product=`echo $compatible | cut -d, -f2`
->>> +    fi
->>> +else
->>> +    echo "Unknown device type."
->>> +    exit 1
->>> +fi
->>> +
->>> +printf "bus:\t\t\t$bus\n"
->>> +
->>> +if [ ! -z "$idVendor" ]; then
->>> +    printf "idVendor:\t\t$idVendor\n"
->>> +fi
->>> +
->>> +if [ ! -z "$idProduct" ]; then
->>> +    printf "idProduct:\t\t$idProduct\n"
->>> +fi
->>> +
->>> +if [ ! -z "$manufacturer" ]; then
->>> +    printf "manufacturer:\t\t$manufacturer\n"
->>> +fi
->>> +
->>> +if [ ! -z "$product" ]; then
->>> +    printf "product:\t\t$product\n"
->>> +fi
->>> +
->>> +if [ ! -z "$driver" ]; then
->>> +    printf "driver:\t\t\t$driver\n"
->>> +fi
->>> +
->>> +if [ ! -z "$input_node" ]; then
->>> +    printf "associated input node:\t$input_node\n"
->>> +fi
->>>
->>
->>
-> 
-
-
--- 
 ------------------
-Dan Murphy
+
+From: Gao Xiang <gaoxiang25@huawei.com>
+
+commit cadf1ccf1b0021d0b7a9347e102ac5258f9f98c8 upstream.
+
+This patch enhances the missing error handling code for
+xattr submodule, which improves the stability for the rare cases.
+
+Reviewed-by: Chao Yu <yuchao0@huawei.com>
+Signed-off-by: Chao Yu <yuchao0@huawei.com>
+Signed-off-by: Gao Xiang <gaoxiang25@huawei.com>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+---
+ drivers/staging/erofs/internal.h |    5 +
+ drivers/staging/erofs/xattr.c    |  112 +++++++++++++++++++++++++++------------
+ 2 files changed, 81 insertions(+), 36 deletions(-)
+
+--- a/drivers/staging/erofs/internal.h
++++ b/drivers/staging/erofs/internal.h
+@@ -485,8 +485,9 @@ struct erofs_map_blocks_iter {
+ };
+ 
+ 
+-static inline struct page *erofs_get_inline_page(struct inode *inode,
+-	erofs_blk_t blkaddr)
++static inline struct page *
++erofs_get_inline_page(struct inode *inode,
++		      erofs_blk_t blkaddr)
+ {
+ 	return erofs_get_meta_page(inode->i_sb,
+ 		blkaddr, S_ISDIR(inode->i_mode));
+--- a/drivers/staging/erofs/xattr.c
++++ b/drivers/staging/erofs/xattr.c
+@@ -24,16 +24,25 @@ struct xattr_iter {
+ 
+ static inline void xattr_iter_end(struct xattr_iter *it, bool atomic)
+ {
+-	/* only init_inode_xattrs use non-atomic once */
++	/* the only user of kunmap() is 'init_inode_xattrs' */
+ 	if (unlikely(!atomic))
+ 		kunmap(it->page);
+ 	else
+ 		kunmap_atomic(it->kaddr);
++
+ 	unlock_page(it->page);
+ 	put_page(it->page);
+ }
+ 
+-static void init_inode_xattrs(struct inode *inode)
++static inline void xattr_iter_end_final(struct xattr_iter *it)
++{
++	if (!it->page)
++		return;
++
++	xattr_iter_end(it, true);
++}
++
++static int init_inode_xattrs(struct inode *inode)
+ {
+ 	struct xattr_iter it;
+ 	unsigned i;
+@@ -43,7 +52,7 @@ static void init_inode_xattrs(struct ino
+ 	bool atomic_map;
+ 
+ 	if (likely(inode_has_inited_xattr(inode)))
+-		return;
++		return 0;
+ 
+ 	vi = EROFS_V(inode);
+ 	BUG_ON(!vi->xattr_isize);
+@@ -53,7 +62,8 @@ static void init_inode_xattrs(struct ino
+ 	it.ofs = erofs_blkoff(iloc(sbi, vi->nid) + vi->inode_isize);
+ 
+ 	it.page = erofs_get_inline_page(inode, it.blkaddr);
+-	BUG_ON(IS_ERR(it.page));
++	if (IS_ERR(it.page))
++		return PTR_ERR(it.page);
+ 
+ 	/* read in shared xattr array (non-atomic, see kmalloc below) */
+ 	it.kaddr = kmap(it.page);
+@@ -62,9 +72,12 @@ static void init_inode_xattrs(struct ino
+ 	ih = (struct erofs_xattr_ibody_header *)(it.kaddr + it.ofs);
+ 
+ 	vi->xattr_shared_count = ih->h_shared_count;
+-	vi->xattr_shared_xattrs = (unsigned *)kmalloc_array(
+-		vi->xattr_shared_count, sizeof(unsigned),
+-		GFP_KERNEL | __GFP_NOFAIL);
++	vi->xattr_shared_xattrs = kmalloc_array(vi->xattr_shared_count,
++						sizeof(uint), GFP_KERNEL);
++	if (!vi->xattr_shared_xattrs) {
++		xattr_iter_end(&it, atomic_map);
++		return -ENOMEM;
++	}
+ 
+ 	/* let's skip ibody header */
+ 	it.ofs += sizeof(struct erofs_xattr_ibody_header);
+@@ -77,7 +90,8 @@ static void init_inode_xattrs(struct ino
+ 
+ 			it.page = erofs_get_meta_page(inode->i_sb,
+ 				++it.blkaddr, S_ISDIR(inode->i_mode));
+-			BUG_ON(IS_ERR(it.page));
++			if (IS_ERR(it.page))
++				return PTR_ERR(it.page);
+ 
+ 			it.kaddr = kmap_atomic(it.page);
+ 			atomic_map = true;
+@@ -90,6 +104,7 @@ static void init_inode_xattrs(struct ino
+ 	xattr_iter_end(&it, atomic_map);
+ 
+ 	inode_set_inited_xattr(inode);
++	return 0;
+ }
+ 
+ struct xattr_iter_handlers {
+@@ -99,18 +114,25 @@ struct xattr_iter_handlers {
+ 	void (*value)(struct xattr_iter *, unsigned, char *, unsigned);
+ };
+ 
+-static void xattr_iter_fixup(struct xattr_iter *it)
++static inline int xattr_iter_fixup(struct xattr_iter *it)
+ {
+-	if (unlikely(it->ofs >= EROFS_BLKSIZ)) {
+-		xattr_iter_end(it, true);
++	if (it->ofs < EROFS_BLKSIZ)
++		return 0;
+ 
+-		it->blkaddr += erofs_blknr(it->ofs);
+-		it->page = erofs_get_meta_page(it->sb, it->blkaddr, false);
+-		BUG_ON(IS_ERR(it->page));
++	xattr_iter_end(it, true);
+ 
+-		it->kaddr = kmap_atomic(it->page);
+-		it->ofs = erofs_blkoff(it->ofs);
++	it->blkaddr += erofs_blknr(it->ofs);
++	it->page = erofs_get_meta_page(it->sb, it->blkaddr, false);
++	if (IS_ERR(it->page)) {
++		int err = PTR_ERR(it->page);
++
++		it->page = NULL;
++		return err;
+ 	}
++
++	it->kaddr = kmap_atomic(it->page);
++	it->ofs = erofs_blkoff(it->ofs);
++	return 0;
+ }
+ 
+ static int inline_xattr_iter_begin(struct xattr_iter *it,
+@@ -132,21 +154,24 @@ static int inline_xattr_iter_begin(struc
+ 	it->ofs = erofs_blkoff(iloc(sbi, vi->nid) + inline_xattr_ofs);
+ 
+ 	it->page = erofs_get_inline_page(inode, it->blkaddr);
+-	BUG_ON(IS_ERR(it->page));
+-	it->kaddr = kmap_atomic(it->page);
++	if (IS_ERR(it->page))
++		return PTR_ERR(it->page);
+ 
++	it->kaddr = kmap_atomic(it->page);
+ 	return vi->xattr_isize - xattr_header_sz;
+ }
+ 
+ static int xattr_foreach(struct xattr_iter *it,
+-	struct xattr_iter_handlers *op, unsigned *tlimit)
++	const struct xattr_iter_handlers *op, unsigned int *tlimit)
+ {
+ 	struct erofs_xattr_entry entry;
+ 	unsigned value_sz, processed, slice;
+ 	int err;
+ 
+ 	/* 0. fixup blkaddr, ofs, ipage */
+-	xattr_iter_fixup(it);
++	err = xattr_iter_fixup(it);
++	if (err)
++		return err;
+ 
+ 	/*
+ 	 * 1. read xattr entry to the memory,
+@@ -178,7 +203,9 @@ static int xattr_foreach(struct xattr_it
+ 		if (it->ofs >= EROFS_BLKSIZ) {
+ 			BUG_ON(it->ofs > EROFS_BLKSIZ);
+ 
+-			xattr_iter_fixup(it);
++			err = xattr_iter_fixup(it);
++			if (err)
++				goto out;
+ 			it->ofs = 0;
+ 		}
+ 
+@@ -210,7 +237,10 @@ static int xattr_foreach(struct xattr_it
+ 	while (processed < value_sz) {
+ 		if (it->ofs >= EROFS_BLKSIZ) {
+ 			BUG_ON(it->ofs > EROFS_BLKSIZ);
+-			xattr_iter_fixup(it);
++
++			err = xattr_iter_fixup(it);
++			if (err)
++				goto out;
+ 			it->ofs = 0;
+ 		}
+ 
+@@ -270,7 +300,7 @@ static void xattr_copyvalue(struct xattr
+ 	memcpy(it->buffer + processed, buf, len);
+ }
+ 
+-static struct xattr_iter_handlers find_xattr_handlers = {
++static const struct xattr_iter_handlers find_xattr_handlers = {
+ 	.entry = xattr_entrymatch,
+ 	.name = xattr_namematch,
+ 	.alloc_buffer = xattr_checkbuffer,
+@@ -291,8 +321,11 @@ static int inline_getxattr(struct inode
+ 		ret = xattr_foreach(&it->it, &find_xattr_handlers, &remaining);
+ 		if (ret >= 0)
+ 			break;
++
++		if (ret != -ENOATTR)	/* -ENOMEM, -EIO, etc. */
++			break;
+ 	}
+-	xattr_iter_end(&it->it, true);
++	xattr_iter_end_final(&it->it);
+ 
+ 	return ret < 0 ? ret : it->buffer_size;
+ }
+@@ -315,8 +348,10 @@ static int shared_getxattr(struct inode
+ 				xattr_iter_end(&it->it, true);
+ 
+ 			it->it.page = erofs_get_meta_page(inode->i_sb,
+-				blkaddr, false);
+-			BUG_ON(IS_ERR(it->it.page));
++							  blkaddr, false);
++			if (IS_ERR(it->it.page))
++				return PTR_ERR(it->it.page);
++
+ 			it->it.kaddr = kmap_atomic(it->it.page);
+ 			it->it.blkaddr = blkaddr;
+ 		}
+@@ -324,9 +359,12 @@ static int shared_getxattr(struct inode
+ 		ret = xattr_foreach(&it->it, &find_xattr_handlers, NULL);
+ 		if (ret >= 0)
+ 			break;
++
++		if (ret != -ENOATTR)	/* -ENOMEM, -EIO, etc. */
++			break;
+ 	}
+ 	if (vi->xattr_shared_count)
+-		xattr_iter_end(&it->it, true);
++		xattr_iter_end_final(&it->it);
+ 
+ 	return ret < 0 ? ret : it->buffer_size;
+ }
+@@ -351,7 +389,9 @@ int erofs_getxattr(struct inode *inode,
+ 	if (unlikely(name == NULL))
+ 		return -EINVAL;
+ 
+-	init_inode_xattrs(inode);
++	ret = init_inode_xattrs(inode);
++	if (ret)
++		return ret;
+ 
+ 	it.index = index;
+ 
+@@ -494,7 +534,7 @@ static int xattr_skipvalue(struct xattr_
+ 	return 1;
+ }
+ 
+-static struct xattr_iter_handlers list_xattr_handlers = {
++static const struct xattr_iter_handlers list_xattr_handlers = {
+ 	.entry = xattr_entrylist,
+ 	.name = xattr_namelist,
+ 	.alloc_buffer = xattr_skipvalue,
+@@ -516,7 +556,7 @@ static int inline_listxattr(struct listx
+ 		if (ret < 0)
+ 			break;
+ 	}
+-	xattr_iter_end(&it->it, true);
++	xattr_iter_end_final(&it->it);
+ 	return ret < 0 ? ret : it->buffer_ofs;
+ }
+ 
+@@ -538,8 +578,10 @@ static int shared_listxattr(struct listx
+ 				xattr_iter_end(&it->it, true);
+ 
+ 			it->it.page = erofs_get_meta_page(inode->i_sb,
+-				blkaddr, false);
+-			BUG_ON(IS_ERR(it->it.page));
++							  blkaddr, false);
++			if (IS_ERR(it->it.page))
++				return PTR_ERR(it->it.page);
++
+ 			it->it.kaddr = kmap_atomic(it->it.page);
+ 			it->it.blkaddr = blkaddr;
+ 		}
+@@ -549,7 +591,7 @@ static int shared_listxattr(struct listx
+ 			break;
+ 	}
+ 	if (vi->xattr_shared_count)
+-		xattr_iter_end(&it->it, true);
++		xattr_iter_end_final(&it->it);
+ 
+ 	return ret < 0 ? ret : it->buffer_ofs;
+ }
+@@ -560,7 +602,9 @@ ssize_t erofs_listxattr(struct dentry *d
+ 	int ret;
+ 	struct listxattr_iter it;
+ 
+-	init_inode_xattrs(d_inode(dentry));
++	ret = init_inode_xattrs(d_inode(dentry));
++	if (ret)
++		return ret;
+ 
+ 	it.dentry = dentry;
+ 	it.buffer = buffer;
+
+
