@@ -2,261 +2,138 @@ Return-Path: <SRS0=J4ZE=RP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS autolearn=ham
+X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F3D39C43381
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 17:35:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3765CC43381
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 17:36:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BC3E02171F
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 17:35:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0BA84214AE
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 17:36:00 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1552412160;
+	bh=5Any1mhLvb7c+BFqZtPophl2lVeMZ8oRx/LxMcducJw=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=UkjLCW1zGZrtFUluU3AG0Q0aN7E5A0fJUe7ZDQcMlBXf9irIbJHHCwjcBx0oXTI+l
+	 ufdEw5pnF6sn6SbSD4tL/TuWRrP0OZ6Sez+g1jl0goXgGlm4ELTJtYl0f0sMG56HEq
+	 mlnFm4VZEokVKL26I5Ml2PWa+cpLLSfsSsVNvvmQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729833AbfCLRfl convert rfc822-to-8bit (ORCPT
+        id S1730173AbfCLRf7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 12 Mar 2019 13:35:41 -0400
-Received: from terminus.zytor.com ([198.137.202.136]:42805 "EHLO
-        mail.zytor.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726716AbfCLRfg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 12 Mar 2019 13:35:36 -0400
-Received: from wld62.hos.anvin.org (c-73-231-201-241.hsd1.ca.comcast.net [73.231.201.241])
-        (authenticated bits=0)
-        by mail.zytor.com (8.15.2/8.15.2) with ESMTPSA id x2CHZ3WV307183
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NO);
-        Tue, 12 Mar 2019 10:35:13 -0700
-Date:   Tue, 12 Mar 2019 10:34:54 -0700
-User-Agent: K-9 Mail for Android
-In-Reply-To: <20190311150423.15979-2-ross.philipson@oracle.com>
-References: <20190311150423.15979-1-ross.philipson@oracle.com> <20190311150423.15979-2-ross.philipson@oracle.com>
+        Tue, 12 Mar 2019 13:35:59 -0400
+Received: from mail.kernel.org ([198.145.29.99]:59534 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1729320AbfCLRQt (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 12 Mar 2019 13:16:49 -0400
+Received: from localhost (unknown [104.133.8.98])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 0900D217D4;
+        Tue, 12 Mar 2019 17:16:49 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1552411009;
+        bh=5Any1mhLvb7c+BFqZtPophl2lVeMZ8oRx/LxMcducJw=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=KC8cbKM3EFag8C+n9jid4QfYVJvIsDBVYfhjFLb5/lA1dV3HM64peOG5XVCGs5uJh
+         i6EBMUofGpawphgOcaw4OoaynZD3zI0dWhHwvtlcVswWN467Dw1NfeLTh0Qes+Rifu
+         Mg7fhs1bcCosGCPHb90rUTiOIBNmA1I7YQrKk9/Q=
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     linux-kernel@vger.kernel.org
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        stable@vger.kernel.org, Jose Abreu <joabreu@synopsys.com>,
+        Joao Pinto <jpinto@synopsys.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Giuseppe Cavallaro <peppe.cavallaro@st.com>,
+        Alexandre Torgue <alexandre.torgue@st.com>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.14 096/135] net: stmmac: Fallback to Platform Data clock in Watchdog conversion
+Date:   Tue, 12 Mar 2019 10:09:03 -0700
+Message-Id: <20190312170350.046682370@linuxfoundation.org>
+X-Mailer: git-send-email 2.21.0
+In-Reply-To: <20190312170341.127810985@linuxfoundation.org>
+References: <20190312170341.127810985@linuxfoundation.org>
+User-Agent: quilt/0.65
+X-stable: review
+X-Patchwork-Hint: ignore
 MIME-Version: 1.0
-Content-Type: text/plain;
- charset=utf-8
-Content-Transfer-Encoding: 8BIT
-Subject: Re: [PATCH 1/1] x86: Secure Launch boot protocol
-To:     Ross Philipson <ross.philipson@oracle.com>,
-        linux-kernel@vger.kernel.org, linux-doc@vger.kernel.org
-CC:     x86@kernel.org, tglx@linutronix.de, mingo@redhat.com, bp@alien8.de,
-        corbet@lwn.net, konrad.wilk@oracle.com, kanth.ghatraju@oracle.com,
-        daniel.kiper@oracle.com, boris.ostrovsky@oracle.com,
-        dpsmith@apertussolutions.com, ross.philipson@oracle.com
-From:   hpa@zytor.com
-Message-ID: <018B6986-0C7F-4C76-88ED-1548BC77E5AA@zytor.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On March 11, 2019 8:04:23 AM PDT, Ross Philipson <ross.philipson@oracle.com> wrote:
->The open source project called Trenchboot aims to make Linux directly
->bootable
->into a secure late launch environment via Intel TXT or AMD SKINIT.
->Though the
->project name is Trenchboot, this new feature is referred to as Secure
->Launch.
->In this scheme, the entire Linux image becomes the Measured Launch
->Environment
->(MLE). This term comes from the Intel TXT specification and means the
->image
->whose measurement is rooted in the TXT hardware. AMD's SKINIT does
->something
->similar with the same end result. For TXT, see the "Intel Trusted
->Execution
->Technology" specification. For SKINIT, see the "AMD64 Architecture
->Programmer’s Manual Volume 2: System Programming", section 15.27.
->
->The boot protocol extension introduces a new Linux boot parameter in
->the
->setup_header to convey the offset of the MLE header within the
->compressed kernel
->image (NOTE the MLE header is in the uncompressed protected mode entry
->portion).
->This header is used to initiate the entire secure late launch process.
->The
->header offset is written using the same method that is used to setup
->the
->handover_offset of the EFI handover protocol.
->
->Signed-off-by: Ross Philipson <ross.philipson@oracle.com>
->Reviewed-by: Daniel Kiper <daniel.kiper@oracle.com>
->---
-> Documentation/x86/boot.txt            | 15 +++++++++++++++
-> arch/x86/Kconfig                      |  7 +++++++
-> arch/x86/boot/Makefile                |  2 +-
-> arch/x86/boot/header.S                |  3 ++-
-> arch/x86/boot/tools/build.c           | 16 ++++++++++++++++
-> arch/x86/include/uapi/asm/bootparam.h |  1 +
-> 6 files changed, 42 insertions(+), 2 deletions(-)
->
->diff --git a/Documentation/x86/boot.txt b/Documentation/x86/boot.txt
->index f4c2a97bfdbd..958acd71815f 100644
->--- a/Documentation/x86/boot.txt
->+++ b/Documentation/x86/boot.txt
->@@ -61,6 +61,9 @@ Protocol 2.12:	(Kernel 3.8) Added the xloadflags
->field and extension fields
-> 		to struct boot_params for loading bzImage and ramdisk
-> 		above 4G in 64bit.
-> 
->+Protocol 2.14:	(Kernel 5.1) Added a field for offset of measured
->launch
->+		environment (MLE) header.
->+
-> **** MEMORY LAYOUT
-> 
-> The traditional memory map for the kernel loader, used for Image or
->@@ -197,6 +200,7 @@ Offset	Proto	Name		Meaning
-> 0258/8	2.10+	pref_address	Preferred loading address
-> 0260/4	2.10+	init_size	Linear memory required during initialization
-> 0264/4	2.11+	handover_offset	Offset of handover entry point
->+0268/4	2.14+	mle_header_offset Offset of measured launch environement
->header
-> 
->(1) For backwards compatibility, if the setup_sects field contains 0,
->the
->     real value is 4.
->@@ -744,6 +748,17 @@ Offset/size:	0x264/4
-> 
->   See EFI HANDOVER PROTOCOL below for more details.
-> 
->+Field name:	mle_header_offset
->+Type:		read
->+Offset/size:	0x268/4
->+
->+  This field is the offset from the beginning of the kernel image to
->+  the measured launch environment header structure. Boot loaders
->launching
->+  a kernel using Intel TXT or AMD SKINT secure late launch features
->use
->+  this header to set up the launch environment. It is called
->mle_header
->+  and is embedded in the Linux image in the uncompressed protected
->mode
->+  entry region.
->+
-> 
-> **** THE IMAGE CHECKSUM
-> 
->diff --git a/arch/x86/Kconfig b/arch/x86/Kconfig
->index 68261430fe6e..508f1cc6795f 100644
->--- a/arch/x86/Kconfig
->+++ b/arch/x86/Kconfig
->@@ -1965,6 +1965,13 @@ config EFI_MIXED
-> 
-> 	   If unsure, say N.
-> 
->+config SECURE_LAUNCH_STUB
->+       bool "Secure Launch stub support"
->+       depends on X86_64
->+       ---help---
->+         This kernel feature allows a bzImage to be loaded directly
->+         through Intel TXT or AMD SKINIT measured launch.
->+
-> config SECCOMP
-> 	def_bool y
-> 	prompt "Enable seccomp to safely compute untrusted bytecode"
->diff --git a/arch/x86/boot/Makefile b/arch/x86/boot/Makefile
->index 9b5adae9cc40..03c989bb36ab 100644
->--- a/arch/x86/boot/Makefile
->+++ b/arch/x86/boot/Makefile
->@@ -87,7 +87,7 @@ $(obj)/vmlinux.bin: $(obj)/compressed/vmlinux FORCE
-> 
-> SETUP_OBJS = $(addprefix $(obj)/,$(setup-y))
-> 
->-sed-zoffset := -e 's/^\([0-9a-fA-F]*\) [ABCDGRSTVW]
->\(startup_32\|startup_64\|efi32_stub_entry\|efi64_stub_entry\|efi_pe_entry\|input_data\|_end\|_ehead\|_text\|z_.*\)$$/\#define
->ZO_\2 0x\1/p'
->+sed-zoffset := -e 's/^\([0-9a-fA-F]*\) [ABCDGRSTVW]
->\(startup_32\|startup_64\|efi32_stub_entry\|efi64_stub_entry\|efi_pe_entry\|mle_header\|input_data\|_end\|_ehead\|_text\|z_.*\)$$/\#define
->ZO_\2 0x\1/p'
-> 
-> quiet_cmd_zoffset = ZOFFSET $@
->       cmd_zoffset = $(NM) $< | sed -n $(sed-zoffset) > $@
->diff --git a/arch/x86/boot/header.S b/arch/x86/boot/header.S
->index 850b8762e889..9f8f8c1db11a 100644
->--- a/arch/x86/boot/header.S
->+++ b/arch/x86/boot/header.S
->@@ -300,7 +300,7 @@ _start:
-> 	# Part 2 of the header, from the old setup.S
-> 
-> 		.ascii	"HdrS"		# header signature
->-		.word	0x020d		# header version number (>= 0x0105)
->+		.word	0x020e		# header version number (>= 0x0105)
-> 					# or else old loadlin-1.5 will fail)
-> 		.globl realmode_swtch
-> realmode_swtch:	.word	0, 0		# default_switch, SETUPSEG
->@@ -557,6 +557,7 @@ pref_address:		.quad LOAD_PHYSICAL_ADDR	# preferred
->load addr
-> 
-> init_size:		.long INIT_SIZE		# kernel initialization size
-> handover_offset:	.long 0			# Filled in by build.c
->+mle_header_offset:	.long 0			# Filled in by build.c
-> 
-># End of setup header
->#####################################################
-> 
->diff --git a/arch/x86/boot/tools/build.c b/arch/x86/boot/tools/build.c
->index a93d44e58f9c..0dd6f1ffc66d 100644
->--- a/arch/x86/boot/tools/build.c
->+++ b/arch/x86/boot/tools/build.c
->@@ -56,6 +56,7 @@ u8 buf[SETUP_SECT_MAX*512];
-> unsigned long efi32_stub_entry;
-> unsigned long efi64_stub_entry;
-> unsigned long efi_pe_entry;
->+unsigned long mle_header;
-> unsigned long startup_64;
-> 
->/*----------------------------------------------------------------------*/
->@@ -289,6 +290,18 @@ static inline int reserve_pecoff_reloc_section(int
->c)
-> }
-> #endif /* CONFIG_EFI_STUB */
-> 
->+#ifdef CONFIG_SECURE_LAUNCH_STUB
->+
->+static void slaunch_stub_entry_update(void)
->+{
->+	put_unaligned_le32(mle_header, &buf[0x268]);
->+}
->+
->+#else
->+
->+static void slaunch_stub_entry_update(void) {}
->+
->+#endif /* CONFIG_SECURE_LAUNCH_STUB */
-> 
-> /*
->* Parse zoffset.h and find the entry points. We could just #include
->zoffset.h
->@@ -321,6 +334,7 @@ static void parse_zoffset(char *fname)
-> 		PARSE_ZOFS(p, efi32_stub_entry);
-> 		PARSE_ZOFS(p, efi64_stub_entry);
-> 		PARSE_ZOFS(p, efi_pe_entry);
->+		PARSE_ZOFS(p, mle_header);
-> 		PARSE_ZOFS(p, startup_64);
-> 
-> 		p = strchr(p, '\n');
->@@ -410,6 +424,8 @@ int main(int argc, char ** argv)
-> 
-> 	efi_stub_entry_update();
-> 
->+	slaunch_stub_entry_update();
->+
-> 	crc = partial_crc32(buf, i, crc);
-> 	if (fwrite(buf, 1, i, dest) != i)
-> 		die("Writing setup failed");
->diff --git a/arch/x86/include/uapi/asm/bootparam.h
->b/arch/x86/include/uapi/asm/bootparam.h
->index 60733f137e9a..92cd63c99c9e 100644
->--- a/arch/x86/include/uapi/asm/bootparam.h
->+++ b/arch/x86/include/uapi/asm/bootparam.h
->@@ -86,6 +86,7 @@ struct setup_header {
-> 	__u64	pref_address;
-> 	__u32	init_size;
-> 	__u32	handover_offset;
->+	__u32	mle_header_offset;
-> } __attribute__((packed));
-> 
-> struct sys_desc_table {
+4.14-stable review patch.  If anyone has any objections, please let me know.
 
-Double NAK – I'm in a meeting right now but with clarify shortly.
+------------------
+
+[ Upstream commit 4ec5302fa906ec9d86597b236f62315bacdb9622 ]
+
+If we don't have DT then stmmac_clk will not be available. Let's add a
+new Platform Data field so that we can specify the refclk by this mean.
+
+This way we can still use the coalesce command in PCI based setups.
+
+Signed-off-by: Jose Abreu <joabreu@synopsys.com>
+Cc: Joao Pinto <jpinto@synopsys.com>
+Cc: David S. Miller <davem@davemloft.net>
+Cc: Giuseppe Cavallaro <peppe.cavallaro@st.com>
+Cc: Alexandre Torgue <alexandre.torgue@st.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
+---
+ .../net/ethernet/stmicro/stmmac/stmmac_ethtool.c   | 14 ++++++++++----
+ include/linux/stmmac.h                             |  1 +
+ 2 files changed, 11 insertions(+), 4 deletions(-)
+
+diff --git a/drivers/net/ethernet/stmicro/stmmac/stmmac_ethtool.c b/drivers/net/ethernet/stmicro/stmmac/stmmac_ethtool.c
+index c3c6335cbe9a..ecddd9948788 100644
+--- a/drivers/net/ethernet/stmicro/stmmac/stmmac_ethtool.c
++++ b/drivers/net/ethernet/stmicro/stmmac/stmmac_ethtool.c
+@@ -702,8 +702,11 @@ static u32 stmmac_usec2riwt(u32 usec, struct stmmac_priv *priv)
+ {
+ 	unsigned long clk = clk_get_rate(priv->plat->stmmac_clk);
+ 
+-	if (!clk)
+-		return 0;
++	if (!clk) {
++		clk = priv->plat->clk_ref_rate;
++		if (!clk)
++			return 0;
++	}
+ 
+ 	return (usec * (clk / 1000000)) / 256;
+ }
+@@ -712,8 +715,11 @@ static u32 stmmac_riwt2usec(u32 riwt, struct stmmac_priv *priv)
+ {
+ 	unsigned long clk = clk_get_rate(priv->plat->stmmac_clk);
+ 
+-	if (!clk)
+-		return 0;
++	if (!clk) {
++		clk = priv->plat->clk_ref_rate;
++		if (!clk)
++			return 0;
++	}
+ 
+ 	return (riwt * 256) / (clk / 1000000);
+ }
+diff --git a/include/linux/stmmac.h b/include/linux/stmmac.h
+index 32feac5bbd75..5844105a482b 100644
+--- a/include/linux/stmmac.h
++++ b/include/linux/stmmac.h
+@@ -183,6 +183,7 @@ struct plat_stmmacenet_data {
+ 	struct clk *pclk;
+ 	struct clk *clk_ptp_ref;
+ 	unsigned int clk_ptp_rate;
++	unsigned int clk_ref_rate;
+ 	struct reset_control *stmmac_rst;
+ 	struct stmmac_axi *axi;
+ 	int has_gmac4;
 -- 
-Sent from my Android device with K-9 Mail. Please excuse my brevity.
+2.19.1
+
+
+
