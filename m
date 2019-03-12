@@ -2,114 +2,243 @@ Return-Path: <SRS0=J4ZE=RP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E08C8C43381
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 05:02:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 436E0C43381
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 05:03:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9A3DD2084F
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 05:02:14 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=umn.edu header.i=@umn.edu header.b="BGWYUwch"
+	by mail.kernel.org (Postfix) with ESMTP id 0BDC7214AF
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 05:03:25 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727018AbfCLFCN (ORCPT
+        id S1727039AbfCLFDX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 12 Mar 2019 01:02:13 -0400
-Received: from mta-p6.oit.umn.edu ([134.84.196.206]:34904 "EHLO
-        mta-p6.oit.umn.edu" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726754AbfCLFCM (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 12 Mar 2019 01:02:12 -0400
-Received: from localhost (unknown [127.0.0.1])
-        by mta-p6.oit.umn.edu (Postfix) with ESMTP id 13457A00
-        for <linux-kernel@vger.kernel.org>; Tue, 12 Mar 2019 05:02:11 +0000 (UTC)
-X-Virus-Scanned: amavisd-new at umn.edu
-Received: from mta-p6.oit.umn.edu ([127.0.0.1])
-        by localhost (mta-p6.oit.umn.edu [127.0.0.1]) (amavisd-new, port 10024)
-        with ESMTP id ydLaZqEjNMGg for <linux-kernel@vger.kernel.org>;
-        Tue, 12 Mar 2019 00:02:10 -0500 (CDT)
-Received: from mail-io1-f70.google.com (mail-io1-f70.google.com [209.85.166.70])
-        (using TLSv1.2 with cipher AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mta-p6.oit.umn.edu (Postfix) with ESMTPS id D8CE29D1
-        for <linux-kernel@vger.kernel.org>; Tue, 12 Mar 2019 00:02:10 -0500 (CDT)
-Received: by mail-io1-f70.google.com with SMTP id v3so971734iol.3
-        for <linux-kernel@vger.kernel.org>; Mon, 11 Mar 2019 22:02:10 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=umn.edu; s=google;
-        h=from:to:cc:subject:date:message-id;
-        bh=GfdWM9SSU7KfpdKIZzPpOpuTjbGIrvUY//TTRkRyo1k=;
-        b=BGWYUwchhNVeCgZBoDBH4UKpaQr5T0h/RgqAWCNl/5B0vE8wmK9V3uDs4mQCMyM2Dw
-         hlrYClNJE3J1YsOfT/SxnI+c+Ct9QRroNMaoIKI4Vk9w391yIwAZhAe6KY7IfpAqRgjV
-         v8JKG1+vAztwb6UxUxiiGfxm+Gv/RmJfPi2CSYjMjtStawpQxBSR3o2zC8mIcF93JopG
-         yO7j54hOjWUMz/lf1YXZnnDR8vlqyMt6dbS0pvm/ATzoU2An+JXUFehfBV09pUv71RPh
-         3CxM0iP2/IBnegfxtgOawVUo2GlL6zmlG7zUPngNKbn27i1n7UGcvzPxXa+K7ZJZ+rK2
-         FYtA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id;
-        bh=GfdWM9SSU7KfpdKIZzPpOpuTjbGIrvUY//TTRkRyo1k=;
-        b=MR4kIm47+ohwRitg3IFl+gh1pD8aEqAKqvQ9W+Lg7v5llx31H04N7OrRK4FKWlgB6Y
-         xjfo1g8x+UfYCJNUXx/VoN4LAkV0wieTbxI4DEyLpDCgn/qcJ/+Xb6JeBmrRnb+KmF0L
-         DFMJ+TevinZ2P8nrlX+YhD0xK367CYKUEI8SYvJZPxmJYzhGN/cTeZvl9v7KSuP01E2d
-         e7U55QDygTWBiMivpYi+5pTJdMV4ONS5hqJ3qkSirehH6YfB2rlSLkNDakBK4W4xFBXt
-         EFV9UjHqvcNZzXMPOaX+r4Qj3ApCXdh2Cq51dlLZmtM4Tn6TZrE8/uWniDobs1l3koml
-         +OPQ==
-X-Gm-Message-State: APjAAAVCN2Kf7pettBLKGPFbPI8EYHOQlhZ5yLIMFBOXfm60sWNxij9/
-        02eGerwa1IzZr8Ldh06keuq+pyO/lGGduYVIOu3n5/KoTwXNPkK0EKUp65pZp5pztv9RSF/XFU6
-        aV3jOov2+ABGZGHPoaTADhqdzwyIm
-X-Received: by 2002:a02:85ec:: with SMTP id d99mr11811794jai.116.1552366930473;
-        Mon, 11 Mar 2019 22:02:10 -0700 (PDT)
-X-Google-Smtp-Source: APXvYqxslqLpIgRl8QFYE5oUsL0JMPs46bt4QOb6Wyfx39EPkn4L1aPkB54MDW4k2WFHG2cSAulelA==
-X-Received: by 2002:a02:85ec:: with SMTP id d99mr11811778jai.116.1552366930212;
-        Mon, 11 Mar 2019 22:02:10 -0700 (PDT)
-Received: from bee.dtc.umn.edu (cs-bee-u.cs.umn.edu. [128.101.106.63])
-        by smtp.gmail.com with ESMTPSA id e11sm3170229iog.79.2019.03.11.22.02.09
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Mon, 11 Mar 2019 22:02:09 -0700 (PDT)
-From:   Kangjie Lu <kjlu@umn.edu>
-To:     kjlu@umn.edu
-Cc:     pakki001@umn.edu, "K. Y. Srinivasan" <kys@microsoft.com>,
-        Haiyang Zhang <haiyangz@microsoft.com>,
-        Stephen Hemminger <sthemmin@microsoft.com>,
-        Sasha Levin <sashal@kernel.org>,
-        "David S. Miller" <davem@davemloft.net>,
-        linux-hyperv@vger.kernel.org, netdev@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH v2] hv_netvsc: fix a possible NULL pointer dereference in netvsc_get_ethtool_stats()
-Date:   Tue, 12 Mar 2019 00:01:49 -0500
-Message-Id: <20190312050149.3032-1-kjlu@umn.edu>
-X-Mailer: git-send-email 2.17.1
+        Tue, 12 Mar 2019 01:03:23 -0400
+Received: from mga04.intel.com ([192.55.52.120]:61390 "EHLO mga04.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725792AbfCLFDX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 12 Mar 2019 01:03:23 -0400
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga002.fm.intel.com ([10.253.24.26])
+  by fmsmga104.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 11 Mar 2019 22:03:22 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.58,469,1544515200"; 
+   d="scan'208";a="150825430"
+Received: from linux.intel.com ([10.54.29.200])
+  by fmsmga002.fm.intel.com with ESMTP; 11 Mar 2019 22:03:22 -0700
+Received: from [10.252.11.175] (abudanko-mobl.ccr.corp.intel.com [10.252.11.175])
+        by linux.intel.com (Postfix) with ESMTP id 854DB58048A;
+        Mon, 11 Mar 2019 22:03:19 -0700 (PDT)
+Subject: [PATCH v7 01/12] feature: implement libzstd check, LIBZSTD_DIR and
+ NO_LIBZSTD defines
+From:   Alexey Budankov <alexey.budankov@linux.intel.com>
+To:     Arnaldo Carvalho de Melo <acme@kernel.org>
+Cc:     Jiri Olsa <jolsa@redhat.com>, Namhyung Kim <namhyung@kernel.org>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Ingo Molnar <mingo@redhat.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Andi Kleen <ak@linux.intel.com>,
+        linux-kernel <linux-kernel@vger.kernel.org>
+References: <5f3a8326-58a0-816e-ad61-31c111232c7a@linux.intel.com>
+Organization: Intel Corp.
+Message-ID: <fa4a9695-ee44-fde2-8ad1-f2fb4d5b5241@linux.intel.com>
+Date:   Tue, 12 Mar 2019 08:03:17 +0300
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
+ Thunderbird/60.5.1
+MIME-Version: 1.0
+In-Reply-To: <5f3a8326-58a0-816e-ad61-31c111232c7a@linux.intel.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-In case kvmalloc_array fails, we should stop using it to avoid
-NULL pointer dereference.
 
-Signed-off-by: Kangjie Lu <kjlu@umn.edu>
+Implement libzstd feature check, NO_LIBZSTD and LIBZSTD_DIR defines
+to override Zstd library sources or disable the feature from the
+command line:
+
+  $ make -C tools/perf LIBZSTD_DIR=/path/to/zstd/sources/ clean all
+  $ make -C tools/perf NO_LIBZSTD=1 clean all
+
+Auto detection feature status is reported just before compilation starts.
+If your system has some version of the zstd library preinstalled then
+the build system finds and uses it during the build.
+
+If you still prefer to compile with some other version of zstd library
+you have capability to refer the compilation to that version using 
+LIBZSTD_DIR define.
+
+Signed-off-by: Alexey Budankov <alexey.budankov@linux.intel.com>
 ---
- drivers/net/hyperv/netvsc_drv.c | 3 +++
- 1 file changed, 3 insertions(+)
+ tools/build/Makefile.feature       |  6 ++++--
+ tools/build/feature/Makefile       |  6 +++++-
+ tools/build/feature/test-all.c     |  5 +++++
+ tools/build/feature/test-libzstd.c | 12 ++++++++++++
+ tools/perf/Makefile.config         | 20 ++++++++++++++++++++
+ tools/perf/Makefile.perf           |  3 +++
+ tools/perf/builtin-version.c       |  2 ++
+ 7 files changed, 51 insertions(+), 3 deletions(-)
+ create mode 100644 tools/build/feature/test-libzstd.c
 
-diff --git a/drivers/net/hyperv/netvsc_drv.c b/drivers/net/hyperv/netvsc_drv.c
-index cf4897043e83..4b3a03029fe8 100644
---- a/drivers/net/hyperv/netvsc_drv.c
-+++ b/drivers/net/hyperv/netvsc_drv.c
-@@ -1426,6 +1426,9 @@ static void netvsc_get_ethtool_stats(struct net_device *dev,
- 	pcpu_sum = kvmalloc_array(num_possible_cpus(),
- 				  sizeof(struct netvsc_ethtool_pcpu_stats),
- 				  GFP_KERNEL);
-+	if (!pcpu_sum)
-+		return;
+diff --git a/tools/build/Makefile.feature b/tools/build/Makefile.feature
+index 61e46d54a67c..adf791cbd726 100644
+--- a/tools/build/Makefile.feature
++++ b/tools/build/Makefile.feature
+@@ -66,7 +66,8 @@ FEATURE_TESTS_BASIC :=                  \
+         sched_getcpu			\
+         sdt				\
+         setns				\
+-        libaio
++        libaio				\
++        libzstd
+ 
+ # FEATURE_TESTS_BASIC + FEATURE_TESTS_EXTRA is the complete list
+ # of all feature tests
+@@ -118,7 +119,8 @@ FEATURE_DISPLAY ?=              \
+          lzma                   \
+          get_cpuid              \
+          bpf			\
+-         libaio
++         libaio			\
++         libzstd
+ 
+ # Set FEATURE_CHECK_(C|LD)FLAGS-all for all FEATURE_TESTS features.
+ # If in the future we need per-feature checks/flags for features not
+diff --git a/tools/build/feature/Makefile b/tools/build/feature/Makefile
+index 7ceb4441b627..4b8244ee65ce 100644
+--- a/tools/build/feature/Makefile
++++ b/tools/build/feature/Makefile
+@@ -62,7 +62,8 @@ FILES=                                          \
+          test-clang.bin				\
+          test-llvm.bin				\
+          test-llvm-version.bin			\
+-         test-libaio.bin
++         test-libaio.bin			\
++         test-libzstd.bin
+ 
+ FILES := $(addprefix $(OUTPUT),$(FILES))
+ 
+@@ -301,6 +302,9 @@ $(OUTPUT)test-clang.bin:
+ $(OUTPUT)test-libaio.bin:
+ 	$(BUILD) -lrt
+ 
++$(OUTPUT)test-libzstd.bin:
++	$(BUILD) -lzstd
 +
- 	netvsc_get_pcpu_stats(dev, pcpu_sum);
- 	for_each_present_cpu(cpu) {
- 		struct netvsc_ethtool_pcpu_stats *this_sum = &pcpu_sum[cpu];
+ ###############################
+ 
+ clean:
+diff --git a/tools/build/feature/test-all.c b/tools/build/feature/test-all.c
+index e903b86b742f..b0dda7db2a17 100644
+--- a/tools/build/feature/test-all.c
++++ b/tools/build/feature/test-all.c
+@@ -178,6 +178,10 @@
+ # include "test-reallocarray.c"
+ #undef main
+ 
++#define main main_test_zstd
++# include "test-libzstd.c"
++#undef main
++
+ int main(int argc, char *argv[])
+ {
+ 	main_test_libpython();
+@@ -219,6 +223,7 @@ int main(int argc, char *argv[])
+ 	main_test_setns();
+ 	main_test_libaio();
+ 	main_test_reallocarray();
++	main_test_libzstd();
+ 
+ 	return 0;
+ }
+diff --git a/tools/build/feature/test-libzstd.c b/tools/build/feature/test-libzstd.c
+new file mode 100644
+index 000000000000..55268c01b84d
+--- /dev/null
++++ b/tools/build/feature/test-libzstd.c
+@@ -0,0 +1,12 @@
++// SPDX-License-Identifier: GPL-2.0
++#include <zstd.h>
++
++int main(void)
++{
++	ZSTD_CStream	*cstream;
++
++	cstream = ZSTD_createCStream();
++	ZSTD_freeCStream(cstream);
++
++	return 0;
++}
+diff --git a/tools/perf/Makefile.config b/tools/perf/Makefile.config
+index 0f11d5891301..4949bdb16a66 100644
+--- a/tools/perf/Makefile.config
++++ b/tools/perf/Makefile.config
+@@ -152,6 +152,13 @@ endif
+ FEATURE_CHECK_CFLAGS-libbabeltrace := $(LIBBABELTRACE_CFLAGS)
+ FEATURE_CHECK_LDFLAGS-libbabeltrace := $(LIBBABELTRACE_LDFLAGS) -lbabeltrace-ctf
+ 
++ifdef LIBZSTD_DIR
++  LIBZSTD_CFLAGS  := -I$(LIBZSTD_DIR)/lib
++  LIBZSTD_LDFLAGS := -L$(LIBZSTD_DIR)/lib
++endif
++FEATURE_CHECK_CFLAGS-libzstd := $(LIBZSTD_CFLAGS)
++FEATURE_CHECK_LDFLAGS-libzstd := $(LIBZSTD_LDFLAGS)
++
+ FEATURE_CHECK_CFLAGS-bpf = -I. -I$(srctree)/tools/include -I$(srctree)/tools/arch/$(SRCARCH)/include/uapi -I$(srctree)/tools/include/uapi
+ # include ARCH specific config
+ -include $(src-perf)/arch/$(SRCARCH)/Makefile
+@@ -782,6 +789,19 @@ ifndef NO_LZMA
+   endif
+ endif
+ 
++ifndef NO_LIBZSTD
++  ifeq ($(feature-libzstd), 1)
++    CFLAGS += -DHAVE_ZSTD_SUPPORT
++    CFLAGS += $(LIBZSTD_CFLAGS)
++    LDFLAGS += $(LIBZSTD_LDFLAGS)
++    EXTLIBS += -lzstd
++    $(call detected,CONFIG_ZSTD)
++  else
++    msg := $(warning No libzstd found, disables trace compression, please install libzstd-dev[el] and/or set LIBZSTD_DIR);
++    NO_LIBZSTD := 1
++  endif
++endif
++
+ ifndef NO_BACKTRACE
+   ifeq ($(feature-backtrace), 1)
+     CFLAGS += -DHAVE_BACKTRACE_SUPPORT
+diff --git a/tools/perf/Makefile.perf b/tools/perf/Makefile.perf
+index 01f7555fd933..06b927ee6ee3 100644
+--- a/tools/perf/Makefile.perf
++++ b/tools/perf/Makefile.perf
+@@ -108,6 +108,9 @@ include ../scripts/utilities.mak
+ # streaming for record mode. Currently Posix AIO trace streaming is
+ # supported only when linking with glibc.
+ #
++# Define NO_LIBZSTD if you do not want support of Zstandard based runtime
++# trace compression in record mode.
++#
+ 
+ # As per kernel Makefile, avoid funny character set dependencies
+ unexport LC_ALL
+diff --git a/tools/perf/builtin-version.c b/tools/perf/builtin-version.c
+index 50df168be326..f470144d1a70 100644
+--- a/tools/perf/builtin-version.c
++++ b/tools/perf/builtin-version.c
+@@ -78,6 +78,8 @@ static void library_status(void)
+ 	STATUS(HAVE_LZMA_SUPPORT, lzma);
+ 	STATUS(HAVE_AUXTRACE_SUPPORT, get_cpuid);
+ 	STATUS(HAVE_LIBBPF_SUPPORT, bpf);
++	STATUS(HAVE_AIO_SUPPORT, aio);
++	STATUS(HAVE_ZSTD_SUPPORT, zstd);
+ }
+ 
+ int cmd_version(int argc, const char **argv)
 -- 
-2.17.1
+2.20.1
 
