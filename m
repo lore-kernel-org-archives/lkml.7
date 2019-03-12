@@ -2,133 +2,637 @@ Return-Path: <SRS0=J4ZE=RP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_PASS autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_PASS,UPPERCASE_75_100 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4B29DC43381
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 06:26:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 88D17C43381
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 06:26:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1BFFE2171F
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 06:26:15 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1552371975;
-	bh=Wq1B8fb8/O8y4XGqMAIvrv0er9jHAIxGZ1LVS8oxmPo=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
-	b=qDBUlE6+LMeMrj32+cvrTniqqxHc6eagdWMCJYBOaMDTPA+Fd74SA/cEa7DGTDK3G
-	 cyZRbe7X48RlEr6ksPwRcc+pclffmTbGFQzlamXW9GNcek2K0wHHYcoWs4C+fyg9p1
-	 nvCHoM9uf0+Al75MXm2uz92rAFqnTwwvjZ8+3zMo=
+	by mail.kernel.org (Postfix) with ESMTP id 44C112171F
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 06:26:17 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Lz4sdtKt"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727175AbfCLG0L (ORCPT
+        id S1727249AbfCLG0P (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 12 Mar 2019 02:26:11 -0400
-Received: from mail.kernel.org ([198.145.29.99]:52890 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725855AbfCLG0L (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 12 Mar 2019 02:26:11 -0400
-Received: from devnote2 (NE2965lan1.rev.em-net.ne.jp [210.141.244.193])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id ADD56214AE;
-        Tue, 12 Mar 2019 06:26:07 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1552371970;
-        bh=Wq1B8fb8/O8y4XGqMAIvrv0er9jHAIxGZ1LVS8oxmPo=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=c08Sj4hExWeXsNsEzqpS+V8lQ9l7gLsm6Od4k78ufdtm29/zxBcggj69hJytDB+q3
-         cdqn4Z4D/1dks7XtsBRq8VW3ZGLG5rbRtcsZ8zdDoyAy9maTaAItPV7NOWWsneEhHj
-         D1LxtJTVheBUnNgVbNbO26nlkawSKh/Pxk8W6QIQ=
-Date:   Tue, 12 Mar 2019 15:26:05 +0900
-From:   Masami Hiramatsu <mhiramat@kernel.org>
-To:     Masami Hiramatsu <mhiramat@kernel.org>
-Cc:     Tom Zanussi <zanussi@kernel.org>, rostedt@goodmis.org,
-        tglx@linutronix.de, namhyung@kernel.org, bigeasy@linutronix.de,
-        joel@joelfernandes.org, linux-kernel@vger.kernel.org,
-        linux-rt-users@vger.kernel.org
-Subject: Re: [RFC PATCH v3 0/5] tracing: common error_log for ftrace
-Message-Id: <20190312152605.00150aae7b781137005e9ebf@kernel.org>
-In-Reply-To: <20190305230646.e7f99c46f86c0e099ac0cd30@kernel.org>
-References: <cover.1551741458.git.tom.zanussi@linux.intel.com>
-        <20190305230646.e7f99c46f86c0e099ac0cd30@kernel.org>
-X-Mailer: Sylpheed 3.5.1 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
-Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+        Tue, 12 Mar 2019 02:26:15 -0400
+Received: from mail-ed1-f65.google.com ([209.85.208.65]:35232 "EHLO
+        mail-ed1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725855AbfCLG0O (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 12 Mar 2019 02:26:14 -0400
+Received: by mail-ed1-f65.google.com with SMTP id g19so1289247edp.2;
+        Mon, 11 Mar 2019 23:26:12 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=kmewFlAJvJcgrbRXJIKwraYKtAid1rBQB0c0wNZpe98=;
+        b=Lz4sdtKtiT+f60qOjnUvG3IyEE7mjTJGVAAvZZhP5YetCK/OBHDLiPjSwk4cgZ3Sxz
+         Zw0jqT++qFl4q6jJt088jpclrWQF8MqA0H8ChwRW2DezD4HUFaviSC2wz5Rz0XjmJa0x
+         qo9ZjZUzb9DYccKMDzyUkQ+phv+eQnsyZAemPhzK/nl8NMEQFMXZtrkdK7wJnUIM8VfQ
+         Eo1dMOSXlOU+QVV+GpNf4HGR0xwnQqG4zcHAIYjzIRReDtpjWXCp9EE0l7eSop605Gvf
+         ulJ5cfwK4+fQkoef/6D/OMUUxd2Q0hx+vuveMnPcIZQiURC/KuP+dY83HkGeC05Cj5rJ
+         qrdg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=kmewFlAJvJcgrbRXJIKwraYKtAid1rBQB0c0wNZpe98=;
+        b=bi9aDAPZdZJXHe3CUvbGlpWRj65XQ35Ff/OAqDxojaNJ83XWq5GGhKbhWcFd2fLM0c
+         FfHo/xZ820Oydq20TtjWWN1lr0VZXPeYeNqfThjnAQmRehOp2HoR88A5lTZgBqmK/qWL
+         hX+yCUlDquzELo0ItYPYoUwiwOQdIzzaYRf5vPVbO72lDFnRo1XpKXZniT2GtehczfAl
+         94wK6482w4SfnAR7JDbc/sPxixfNgnhcKZuVZKrD8OspA960+bTpc1uQKcPjYCCnC3Yv
+         beth6h2UYCWYaXwCq2sJx3UPNax6NGHJjbCwgisgk4qnP+WpJ0SaZ07j8/2iIxSfJ2rS
+         MIHA==
+X-Gm-Message-State: APjAAAVgy7z6bSHTxFMuwm1ACSMGkQoAJwVsTsGfXBCS5XnhZtNaC+bE
+        FC3zZbhixLh2cDrIDiBesaCzbdGUZTdvMuHJFFI=
+X-Google-Smtp-Source: APXvYqzhLtgCzfWb+/oAmBYPb9bPfYBNXYb9yFDDBHhbF+hoZnxF3TRjkgyw5AOs0qAk9mpYAqAPXkROIcnWIUCC9kM=
+X-Received: by 2002:a05:6402:650:: with SMTP id u16mr1966175edx.148.1552371971203;
+ Mon, 11 Mar 2019 23:26:11 -0700 (PDT)
+MIME-Version: 1.0
+References: <20190311234655.30357-1-angus@akkea.ca> <20190311234655.30357-4-angus@akkea.ca>
+In-Reply-To: <20190311234655.30357-4-angus@akkea.ca>
+From:   Daniel Baluta <daniel.baluta@gmail.com>
+Date:   Tue, 12 Mar 2019 08:25:59 +0200
+Message-ID: <CAEnQRZBvjf42N5GEg_9QEwRGUs_vW6b6GnEEW3F+HA2f8ms+dg@mail.gmail.com>
+Subject: Re: [PATCH 3/3] arm64: librem5-devkit: Add defconfig for the Librem5 devkit
+To:     "Angus Ainslie (Purism)" <angus@akkea.ca>
+Cc:     Mark Rutland <mark.rutland@arm.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Shawn Guo <shawnguo@kernel.org>,
+        Fabio Estevam <festevam@gmail.com>,
+        Pengutronix Kernel Team <kernel@pengutronix.de>,
+        Lucas Stach <l.stach@pengutronix.de>,
+        Abel Vesa <abel.vesa@nxp.com>,
+        Daniel Baluta <daniel.baluta@nxp.com>, agx@sigxcpu.org,
+        dl-linux-imx <linux-imx@nxp.com>,
+        Devicetree List <devicetree@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Tom,
+On Tue, Mar 12, 2019 at 1:47 AM Angus Ainslie (Purism) <angus@akkea.ca> wrote:
+>
+> Signed-off-by: Angus Ainslie (Purism) <angus@akkea.ca>
+Hi Angus,
 
-On Tue, 5 Mar 2019 23:06:46 +0900
-Masami Hiramatsu <mhiramat@kernel.org> wrote:
+My impression was that for arm64 world there will be only one
+defconfig. So, I'm not
+sure if this patch would be acceptable.
 
-> On Mon,  4 Mar 2019 17:36:43 -0600
-
-> > Changes from v2:
-> > 
-> >   - Added [n] numbering as suggested by Masami
-> 
-
-Hmm, this seems a bit different what I suggested.
-
-I'm trying to port probe event's error report on
-your error log, and I found that the number is
-just shifted as below.
-
-When I filled the log with errors.
-=============
-/sys/kernel/debug/tracing # cat error_log 
-[1] trace_kprobe: error: Invalid unsigned integer string
-  Command: r10aa00:foo/bar vfs
-            ^
-...
-
-[7] trace_kprobe: error: Group name must follow C naming convention
-  Command: p:a-b/bar vfs_read
-             ^
-[8] trace_kprobe: error: Event name is too long
-  Command: p:a/barrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrr vfs_read
-=============
-
-And do one more error, 
-
-=============
-/sys/kernel/debug/tracing # cat error_log 
-[1] trace_kprobe: error: Maxactive is too big
-  Command: r0xaa00:foo/bar vfs
-
-....
-
-[7] trace_kprobe: error: Event name is too long
-  Command: p:a/barrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrr vfs_read
-               ^
-[8] trace_kprobe: error: Event name must follow C naming convention
-  Command: p:a/bar.c vfs_read
-               ^
-=============
-
-The number of logs are changed :(  This can confuse users.
-I think it is better to keep the number as a unique number for
-each entry as below.
-
-=============
-/sys/kernel/debug/tracing # cat error_log 
-[2] trace_kprobe: error: Maxactive is too big
-  Command: r0xaa00:foo/bar vfs
-
-....
-
-[8] trace_kprobe: error: Event name is too long
-  Command: p:a/barrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrr vfs_read
-               ^
-[9] trace_kprobe: error: Event name must follow C naming convention
-  Command: p:a/bar.c vfs_read
-               ^
-=============
-
-Thank you,
-
--- 
-Masami Hiramatsu <mhiramat@kernel.org>
+thanks,
+Daniel.
+> ---
+>  arch/arm64/configs/librem5-devkit_defconfig | 534 ++++++++++++++++++++
+>  1 file changed, 534 insertions(+)
+>  create mode 100644 arch/arm64/configs/librem5-devkit_defconfig
+>
+> diff --git a/arch/arm64/configs/librem5-devkit_defconfig b/arch/arm64/configs/librem5-devkit_defconfig
+> new file mode 100644
+> index 000000000000..98198b5335c8
+> --- /dev/null
+> +++ b/arch/arm64/configs/librem5-devkit_defconfig
+> @@ -0,0 +1,534 @@
+> +CONFIG_SYSVIPC=y
+> +CONFIG_POSIX_MQUEUE=y
+> +CONFIG_AUDIT=y
+> +CONFIG_GENERIC_IRQ_DEBUGFS=y
+> +CONFIG_NO_HZ_IDLE=y
+> +CONFIG_HIGH_RES_TIMERS=y
+> +CONFIG_PREEMPT=y
+> +CONFIG_BSD_PROCESS_ACCT=y
+> +CONFIG_BSD_PROCESS_ACCT_V3=y
+> +CONFIG_TASKSTATS=y
+> +CONFIG_TASK_DELAY_ACCT=y
+> +CONFIG_TASK_XACCT=y
+> +CONFIG_TASK_IO_ACCOUNTING=y
+> +CONFIG_PSI=y
+> +CONFIG_PSI_DEFAULT_DISABLED=y
+> +CONFIG_IKCONFIG=y
+> +CONFIG_IKCONFIG_PROC=y
+> +CONFIG_MEMCG=y
+> +CONFIG_MEMCG_SWAP=y
+> +CONFIG_BLK_CGROUP=y
+> +CONFIG_CGROUP_PIDS=y
+> +CONFIG_CGROUP_HUGETLB=y
+> +CONFIG_CPUSETS=y
+> +CONFIG_CGROUP_DEVICE=y
+> +CONFIG_CGROUP_CPUACCT=y
+> +CONFIG_CGROUP_PERF=y
+> +CONFIG_USER_NS=y
+> +CONFIG_SCHED_AUTOGROUP=y
+> +CONFIG_RELAY=y
+> +CONFIG_BLK_DEV_INITRD=y
+> +CONFIG_KALLSYMS_ALL=y
+> +# CONFIG_COMPAT_BRK is not set
+> +CONFIG_PROFILING=y
+> +CONFIG_ARCH_MXC=y
+> +# CONFIG_ARM64_ERRATUM_1188873 is not set
+> +# CONFIG_ARM64_ERRATUM_1165522 is not set
+> +# CONFIG_ARM64_ERRATUM_1286807 is not set
+> +CONFIG_ARM64_VA_BITS_48=y
+> +CONFIG_SCHED_MC=y
+> +CONFIG_NR_CPUS=64
+> +CONFIG_SECCOMP=y
+> +# CONFIG_ARM64_SVE is not set
+> +CONFIG_COMPAT=y
+> +CONFIG_PM_DEBUG=y
+> +CONFIG_PM_TEST_SUSPEND=y
+> +CONFIG_ENERGY_MODEL=y
+> +CONFIG_CPU_FREQ=y
+> +CONFIG_CPU_FREQ_STAT=y
+> +CONFIG_CPU_FREQ_DEFAULT_GOV_ONDEMAND=y
+> +CONFIG_CPU_FREQ_GOV_POWERSAVE=y
+> +CONFIG_CPU_FREQ_GOV_USERSPACE=y
+> +CONFIG_CPU_FREQ_GOV_CONSERVATIVE=y
+> +CONFIG_CPU_FREQ_GOV_SCHEDUTIL=y
+> +CONFIG_CPUFREQ_DT=y
+> +CONFIG_ARM_SCPI_PROTOCOL=y
+> +# CONFIG_EFI_ARMSTUB_DTB_LOADER is not set
+> +CONFIG_ACPI=y
+> +CONFIG_VIRTUALIZATION=y
+> +CONFIG_ARM64_CRYPTO=y
+> +CONFIG_CRYPTO_SHA256_ARM64=y
+> +CONFIG_CRYPTO_SHA1_ARM64_CE=m
+> +CONFIG_CRYPTO_SHA2_ARM64_CE=m
+> +CONFIG_CRYPTO_SHA512_ARM64_CE=m
+> +CONFIG_CRYPTO_SHA3_ARM64=m
+> +CONFIG_CRYPTO_SM3_ARM64_CE=m
+> +CONFIG_CRYPTO_SM4_ARM64_CE=m
+> +CONFIG_CRYPTO_GHASH_ARM64_CE=m
+> +CONFIG_CRYPTO_CRCT10DIF_ARM64_CE=m
+> +CONFIG_CRYPTO_AES_ARM64_CE=y
+> +CONFIG_CRYPTO_AES_ARM64_CE_CCM=m
+> +CONFIG_CRYPTO_AES_ARM64_CE_BLK=m
+> +CONFIG_CRYPTO_CHACHA20_NEON=m
+> +CONFIG_CRYPTO_NHPOLY1305_NEON=m
+> +CONFIG_CRYPTO_AES_ARM64_BS=m
+> +CONFIG_JUMP_LABEL=y
+> +# CONFIG_VMAP_STACK is not set
+> +CONFIG_MODULES=y
+> +CONFIG_MODULE_UNLOAD=y
+> +CONFIG_MQ_IOSCHED_DEADLINE=m
+> +CONFIG_MQ_IOSCHED_KYBER=m
+> +CONFIG_IOSCHED_BFQ=m
+> +# CONFIG_CORE_DUMP_DEFAULT_ELF_HEADERS is not set
+> +CONFIG_KSM=y
+> +CONFIG_TRANSPARENT_HUGEPAGE=y
+> +CONFIG_CMA=y
+> +CONFIG_NET=y
+> +CONFIG_PACKET=y
+> +CONFIG_UNIX=y
+> +CONFIG_TLS=m
+> +CONFIG_INET=y
+> +CONFIG_IP_MULTICAST=y
+> +CONFIG_IP_PNP=y
+> +CONFIG_IP_PNP_DHCP=y
+> +CONFIG_IP_PNP_BOOTP=y
+> +CONFIG_INET_RAW_DIAG=m
+> +CONFIG_IPV6=m
+> +CONFIG_NETFILTER=y
+> +CONFIG_NF_CONNTRACK=m
+> +CONFIG_NF_LOG_NETDEV=m
+> +CONFIG_NF_CONNTRACK_EVENTS=y
+> +# CONFIG_NF_CT_PROTO_DCCP is not set
+> +# CONFIG_NF_CT_PROTO_SCTP is not set
+> +# CONFIG_NF_CT_PROTO_UDPLITE is not set
+> +CONFIG_NETFILTER_XT_TARGET_CHECKSUM=m
+> +CONFIG_NETFILTER_XT_TARGET_LOG=m
+> +CONFIG_NETFILTER_XT_MATCH_ADDRTYPE=m
+> +CONFIG_NETFILTER_XT_MATCH_CONNTRACK=m
+> +CONFIG_NETFILTER_XT_MATCH_OSF=m
+> +CONFIG_NF_SOCKET_IPV4=m
+> +CONFIG_NF_TPROXY_IPV4=m
+> +CONFIG_IP_NF_IPTABLES=m
+> +CONFIG_IP_NF_FILTER=m
+> +CONFIG_IP_NF_TARGET_REJECT=m
+> +CONFIG_IP_NF_NAT=m
+> +CONFIG_IP_NF_TARGET_MASQUERADE=m
+> +CONFIG_IP_NF_MANGLE=m
+> +CONFIG_NF_SOCKET_IPV6=m
+> +CONFIG_NF_TPROXY_IPV6=m
+> +CONFIG_IP6_NF_IPTABLES=m
+> +CONFIG_IP6_NF_MATCH_SRH=m
+> +CONFIG_IP6_NF_FILTER=m
+> +CONFIG_IP6_NF_TARGET_REJECT=m
+> +CONFIG_IP6_NF_MANGLE=m
+> +CONFIG_IP6_NF_NAT=m
+> +CONFIG_IP6_NF_TARGET_MASQUERADE=m
+> +CONFIG_BRIDGE=m
+> +CONFIG_BRIDGE_VLAN_FILTERING=y
+> +CONFIG_VLAN_8021Q=m
+> +CONFIG_VLAN_8021Q_GVRP=y
+> +CONFIG_VLAN_8021Q_MVRP=y
+> +CONFIG_LLC2=y
+> +CONFIG_DNS_RESOLVER=y
+> +CONFIG_BPF_JIT=y
+> +CONFIG_BT=m
+> +CONFIG_BT_RFCOMM=m
+> +CONFIG_BT_BNEP=m
+> +CONFIG_BT_HIDP=m
+> +CONFIG_BT_LEDS=y
+> +CONFIG_BT_HCIUART=m
+> +CONFIG_BT_HCIUART_BCSP=y
+> +CONFIG_BT_HCIUART_ATH3K=y
+> +CONFIG_BT_HCIUART_3WIRE=y
+> +CONFIG_BT_HCIUART_BCM=y
+> +CONFIG_BT_HCIUART_QCA=y
+> +CONFIG_BT_HCIVHCI=m
+> +CONFIG_NET_9P=y
+> +CONFIG_NET_9P_VIRTIO=y
+> +CONFIG_FAILOVER=y
+> +CONFIG_PCI=y
+> +CONFIG_PCIEPORTBUS=y
+> +CONFIG_PCI_IOV=y
+> +CONFIG_PCI_HOST_GENERIC=y
+> +CONFIG_PCIE_XILINX=y
+> +CONFIG_PCI_XGENE=y
+> +CONFIG_UEVENT_HELPER_PATH="/sbin/hotplug"
+> +CONFIG_DEVTMPFS=y
+> +CONFIG_DEVTMPFS_MOUNT=y
+> +CONFIG_FW_LOADER_USER_HELPER=y
+> +CONFIG_FW_LOADER_USER_HELPER_FALLBACK=y
+> +CONFIG_DEBUG_DRIVER=y
+> +CONFIG_IMX_WEIM=y
+> +CONFIG_VEXPRESS_CONFIG=y
+> +CONFIG_GNSS=m
+> +CONFIG_BLK_DEV_LOOP=y
+> +CONFIG_SRAM=y
+> +CONFIG_EEPROM_EE1004=m
+> +# CONFIG_SCSI_PROC_FS is not set
+> +CONFIG_BLK_DEV_SD=y
+> +CONFIG_SCSI_SAS_LIBSAS=y
+> +CONFIG_SCSI_SAS_ATA=y
+> +CONFIG_ATA=y
+> +CONFIG_SATA_AHCI=y
+> +CONFIG_SATA_AHCI_PLATFORM=y
+> +CONFIG_AHCI_IMX=m
+> +# CONFIG_ATA_SFF is not set
+> +CONFIG_NETDEVICES=y
+> +CONFIG_MACVLAN=m
+> +CONFIG_MACVTAP=m
+> +CONFIG_TUN=m
+> +CONFIG_VETH=m
+> +# CONFIG_NET_VENDOR_3COM is not set
+> +# CONFIG_NET_VENDOR_ADAPTEC is not set
+> +# CONFIG_NET_VENDOR_AGERE is not set
+> +# CONFIG_NET_VENDOR_ALACRITECH is not set
+> +# CONFIG_NET_VENDOR_ALTEON is not set
+> +# CONFIG_NET_VENDOR_AMAZON is not set
+> +# CONFIG_NET_VENDOR_AMD is not set
+> +# CONFIG_NET_VENDOR_AQUANTIA is not set
+> +# CONFIG_NET_VENDOR_ARC is not set
+> +# CONFIG_NET_VENDOR_ATHEROS is not set
+> +# CONFIG_NET_VENDOR_AURORA is not set
+> +# CONFIG_NET_VENDOR_BROADCOM is not set
+> +# CONFIG_NET_VENDOR_BROCADE is not set
+> +# CONFIG_NET_VENDOR_CAVIUM is not set
+> +# CONFIG_NET_VENDOR_CHELSIO is not set
+> +# CONFIG_NET_VENDOR_CISCO is not set
+> +# CONFIG_NET_VENDOR_CORTINA is not set
+> +# CONFIG_NET_VENDOR_DLINK is not set
+> +# CONFIG_NET_VENDOR_EMULEX is not set
+> +# CONFIG_NET_VENDOR_EZCHIP is not set
+> +CONFIG_FEC=y
+> +# CONFIG_NET_VENDOR_HISILICON is not set
+> +# CONFIG_NET_VENDOR_HP is not set
+> +# CONFIG_NET_VENDOR_HUAWEI is not set
+> +# CONFIG_NET_VENDOR_INTEL is not set
+> +# CONFIG_NET_VENDOR_MARVELL is not set
+> +# CONFIG_NET_VENDOR_MELLANOX is not set
+> +# CONFIG_NET_VENDOR_MICREL is not set
+> +# CONFIG_NET_VENDOR_MICROCHIP is not set
+> +# CONFIG_NET_VENDOR_MICROSEMI is not set
+> +# CONFIG_NET_VENDOR_MYRI is not set
+> +# CONFIG_NET_VENDOR_NATSEMI is not set
+> +# CONFIG_NET_VENDOR_NETRONOME is not set
+> +# CONFIG_NET_VENDOR_NI is not set
+> +# CONFIG_NET_VENDOR_NVIDIA is not set
+> +# CONFIG_NET_VENDOR_OKI is not set
+> +# CONFIG_NET_VENDOR_QLOGIC is not set
+> +# CONFIG_NET_VENDOR_QUALCOMM is not set
+> +# CONFIG_NET_VENDOR_REALTEK is not set
+> +# CONFIG_NET_VENDOR_ROCKER is not set
+> +# CONFIG_NET_VENDOR_SAMSUNG is not set
+> +# CONFIG_NET_VENDOR_SEEQ is not set
+> +# CONFIG_NET_VENDOR_SOLARFLARE is not set
+> +# CONFIG_NET_VENDOR_SILAN is not set
+> +# CONFIG_NET_VENDOR_SIS is not set
+> +# CONFIG_NET_VENDOR_SMSC is not set
+> +# CONFIG_NET_VENDOR_SOCIONEXT is not set
+> +# CONFIG_NET_VENDOR_STMICRO is not set
+> +# CONFIG_NET_VENDOR_SUN is not set
+> +# CONFIG_NET_VENDOR_SYNOPSYS is not set
+> +# CONFIG_NET_VENDOR_TEHUTI is not set
+> +# CONFIG_NET_VENDOR_TI is not set
+> +# CONFIG_NET_VENDOR_VIA is not set
+> +# CONFIG_NET_VENDOR_WIZNET is not set
+> +# CONFIG_WLAN is not set
+> +CONFIG_INPUT_POLLDEV=y
+> +CONFIG_INPUT_MATRIXKMAP=y
+> +CONFIG_INPUT_MOUSEDEV=y
+> +CONFIG_INPUT_MOUSEDEV_PSAUX=y
+> +CONFIG_INPUT_EVDEV=y
+> +CONFIG_KEYBOARD_GPIO=y
+> +CONFIG_KEYBOARD_IMX=m
+> +# CONFIG_SERIO_SERPORT is not set
+> +CONFIG_LEGACY_PTY_COUNT=16
+> +CONFIG_SERIAL_8250=y
+> +CONFIG_SERIAL_8250_CONSOLE=y
+> +# CONFIG_SERIAL_8250_EXAR is not set
+> +CONFIG_SERIAL_8250_DW=y
+> +CONFIG_SERIAL_OF_PLATFORM=y
+> +CONFIG_SERIAL_AMBA_PL011=y
+> +CONFIG_SERIAL_AMBA_PL011_CONSOLE=y
+> +CONFIG_SERIAL_IMX=y
+> +CONFIG_SERIAL_IMX_CONSOLE=y
+> +CONFIG_SERIAL_XILINX_PS_UART=y
+> +CONFIG_SERIAL_XILINX_PS_UART_CONSOLE=y
+> +CONFIG_SERIAL_FSL_LPUART=y
+> +CONFIG_SERIAL_FSL_LPUART_CONSOLE=y
+> +CONFIG_SERIAL_DEV_BUS=y
+> +CONFIG_VIRTIO_CONSOLE=y
+> +CONFIG_HW_RANDOM=y
+> +CONFIG_HW_RANDOM_IMX_RNGC=m
+> +# CONFIG_HW_RANDOM_CAVIUM is not set
+> +CONFIG_I2C_CHARDEV=y
+> +CONFIG_I2C_MUX_PCA954x=y
+> +CONFIG_I2C_DESIGNWARE_PLATFORM=y
+> +CONFIG_I2C_IMX=y
+> +CONFIG_I2C_IMX_LPI2C=y
+> +CONFIG_I2C_CROS_EC_TUNNEL=y
+> +CONFIG_I2C_SLAVE=y
+> +CONFIG_SPI=y
+> +CONFIG_SPI_MEM=y
+> +CONFIG_SPI_BITBANG=y
+> +CONFIG_SPI_FSL_LPSPI=y
+> +CONFIG_SPI_IMX=m
+> +CONFIG_SPI_PL022=y
+> +CONFIG_SPI_SPIDEV=m
+> +CONFIG_SPMI=y
+> +CONFIG_PINCTRL=y
+> +CONFIG_PINCTRL_SINGLE=y
+> +CONFIG_PINCTRL_MAX77620=y
+> +CONFIG_PINCTRL_IMX8MQ=y
+> +CONFIG_GPIOLIB=y
+> +CONFIG_GPIO_SYSFS=y
+> +CONFIG_GPIO_DWAPB=y
+> +CONFIG_GPIO_PL061=y
+> +CONFIG_GPIO_XGENE=y
+> +CONFIG_GPIO_PCA953X=y
+> +CONFIG_GPIO_PCA953X_IRQ=y
+> +CONFIG_GPIO_MAX77620=y
+> +CONFIG_POWER_RESET_VEXPRESS=y
+> +CONFIG_POWER_RESET_XGENE=y
+> +CONFIG_POWER_RESET_SYSCON=y
+> +CONFIG_CHARGER_BQ25890=y
+> +CONFIG_SENSORS_ARM_SCPI=y
+> +CONFIG_SENSORS_LM90=m
+> +CONFIG_SENSORS_INA2XX=m
+> +CONFIG_THERMAL_WRITABLE_TRIPS=y
+> +CONFIG_THERMAL_GOV_POWER_ALLOCATOR=y
+> +CONFIG_CPU_THERMAL=y
+> +CONFIG_THERMAL_EMULATION=y
+> +CONFIG_IMX_THERMAL=y
+> +CONFIG_QORIQ_THERMAL=y
+> +CONFIG_WATCHDOG=y
+> +CONFIG_IMX2_WDT=m
+> +CONFIG_MFD_CROS_EC=y
+> +CONFIG_MFD_MAX77620=y
+> +CONFIG_MFD_SEC_CORE=y
+> +CONFIG_MFD_ROHM_BD718XX=y
+> +CONFIG_REGULATOR=y
+> +CONFIG_REGULATOR_FIXED_VOLTAGE=y
+> +CONFIG_REGULATOR_BD718XX=y
+> +CONFIG_REGULATOR_GPIO=y
+> +CONFIG_REGULATOR_MAX77620=y
+> +CONFIG_REGULATOR_PFUZE100=y
+> +CONFIG_REGULATOR_PWM=y
+> +CONFIG_REGULATOR_QCOM_SPMI=y
+> +CONFIG_REGULATOR_S2MPS11=y
+> +CONFIG_MEDIA_SUPPORT=y
+> +CONFIG_MEDIA_CAMERA_SUPPORT=y
+> +CONFIG_MEDIA_CONTROLLER=y
+> +CONFIG_VIDEO_V4L2_SUBDEV_API=y
+> +CONFIG_V4L_PLATFORM_DRIVERS=y
+> +CONFIG_V4L_MEM2MEM_DRIVERS=y
+> +CONFIG_VIDEO_IMX_PXP=m
+> +CONFIG_DRM=y
+> +CONFIG_DRM_I2C_NXP_TDA9950=m
+> +CONFIG_DRM_NOUVEAU=m
+> +CONFIG_DRM_PANEL_SIMPLE=m
+> +CONFIG_DRM_I2C_ADV7511=y
+> +CONFIG_DRM_HISI_KIRIN=m
+> +CONFIG_DRM_MXSFB=y
+> +CONFIG_FB_ARMCLCD=y
+> +CONFIG_BACKLIGHT_GENERIC=m
+> +CONFIG_BACKLIGHT_LP855X=m
+> +CONFIG_LOGO=y
+> +# CONFIG_LOGO_LINUX_MONO is not set
+> +# CONFIG_LOGO_LINUX_VGA16 is not set
+> +# CONFIG_HID_REDRAGON is not set
+> +CONFIG_HID_MULTITOUCH=y
+> +CONFIG_USB=m
+> +CONFIG_USB_OTG=y
+> +CONFIG_USB_OTG_FSM=m
+> +CONFIG_USB_XHCI_HCD=m
+> +CONFIG_USB_EHCI_HCD=m
+> +CONFIG_USB_EHCI_MXC=m
+> +CONFIG_USB_EHCI_HCD_PLATFORM=m
+> +CONFIG_USB_ACM=m
+> +CONFIG_USB_STORAGE=m
+> +CONFIG_USB_STORAGE_REALTEK=m
+> +CONFIG_USB_STORAGE_DATAFAB=m
+> +CONFIG_USB_STORAGE_FREECOM=m
+> +CONFIG_USB_STORAGE_ISD200=m
+> +CONFIG_USB_STORAGE_USBAT=m
+> +CONFIG_USB_STORAGE_SDDR09=m
+> +CONFIG_USB_STORAGE_SDDR55=m
+> +CONFIG_USB_STORAGE_JUMPSHOT=m
+> +CONFIG_USB_STORAGE_ALAUDA=m
+> +CONFIG_USB_STORAGE_ONETOUCH=m
+> +CONFIG_USB_STORAGE_KARMA=m
+> +CONFIG_USB_STORAGE_CYPRESS_ATACB=m
+> +CONFIG_USB_STORAGE_ENE_UB6250=m
+> +CONFIG_USB_UAS=m
+> +CONFIG_USB_DWC3=m
+> +CONFIG_USB_SERIAL=m
+> +CONFIG_USB_SERIAL_GENERIC=y
+> +CONFIG_USB_SERIAL_SIMPLE=m
+> +CONFIG_USB_SERIAL_FTDI_SIO=m
+> +CONFIG_USB_SERIAL_PL2303=m
+> +CONFIG_USB_SERIAL_QCAUX=m
+> +CONFIG_USB_SERIAL_QUALCOMM=m
+> +CONFIG_USB_SERIAL_SIERRAWIRELESS=m
+> +CONFIG_USB_SERIAL_OPTION=m
+> +CONFIG_USB_MXS_PHY=m
+> +CONFIG_USB_ULPI=y
+> +CONFIG_USB_GADGET=m
+> +CONFIG_USB_FSL_USB2=m
+> +CONFIG_USB_CONFIGFS=m
+> +CONFIG_USB_CONFIGFS_SERIAL=y
+> +CONFIG_USB_CONFIGFS_ACM=y
+> +CONFIG_USB_CONFIGFS_OBEX=y
+> +CONFIG_USB_CONFIGFS_NCM=y
+> +CONFIG_USB_CONFIGFS_ECM=y
+> +CONFIG_USB_CONFIGFS_ECM_SUBSET=y
+> +CONFIG_USB_CONFIGFS_RNDIS=y
+> +CONFIG_USB_CONFIGFS_EEM=y
+> +CONFIG_USB_CONFIGFS_MASS_STORAGE=y
+> +CONFIG_USB_CONFIGFS_F_LB_SS=y
+> +CONFIG_USB_CONFIGFS_F_FS=y
+> +CONFIG_USB_CONFIGFS_F_HID=y
+> +CONFIG_USB_CONFIGFS_F_UVC=y
+> +CONFIG_USB_CONFIGFS_F_PRINTER=y
+> +CONFIG_USB_ETH=m
+> +CONFIG_USB_G_NCM=m
+> +CONFIG_USB_GADGETFS=m
+> +CONFIG_USB_FUNCTIONFS=m
+> +CONFIG_USB_FUNCTIONFS_RNDIS=y
+> +CONFIG_USB_FUNCTIONFS_GENERIC=y
+> +CONFIG_USB_MASS_STORAGE=m
+> +CONFIG_USB_G_SERIAL=m
+> +CONFIG_USB_G_PRINTER=m
+> +CONFIG_USB_CDC_COMPOSITE=m
+> +CONFIG_USB_G_ACM_MS=m
+> +CONFIG_USB_G_MULTI=m
+> +CONFIG_TYPEC=m
+> +CONFIG_TYPEC_TCPM=m
+> +CONFIG_TYPEC_TCPCI=m
+> +CONFIG_TYPEC_RT1711H=m
+> +CONFIG_TYPEC_UCSI=m
+> +CONFIG_UCSI_ACPI=m
+> +CONFIG_USB_ULPI_BUS=m
+> +CONFIG_MMC=y
+> +CONFIG_MMC_BLOCK_MINORS=32
+> +CONFIG_MMC_ARMMMCI=y
+> +CONFIG_MMC_SDHCI=y
+> +CONFIG_MMC_SDHCI_PLTFM=y
+> +CONFIG_MMC_SDHCI_ESDHC_IMX=y
+> +CONFIG_MMC_SPI=y
+> +CONFIG_NEW_LEDS=y
+> +CONFIG_LEDS_CLASS=y
+> +CONFIG_LEDS_GPIO=y
+> +CONFIG_LEDS_PWM=y
+> +CONFIG_LEDS_SYSCON=y
+> +CONFIG_LEDS_TRIGGER_HEARTBEAT=y
+> +CONFIG_LEDS_TRIGGER_CPU=y
+> +CONFIG_RTC_CLASS=y
+> +CONFIG_RTC_DRV_MAX77686=y
+> +CONFIG_RTC_DRV_M41T80=y
+> +CONFIG_RTC_DRV_S5M=y
+> +CONFIG_RTC_DRV_DS3232=y
+> +CONFIG_RTC_DRV_EFI=y
+> +CONFIG_RTC_DRV_PL031=y
+> +CONFIG_RTC_DRV_SNVS=y
+> +CONFIG_DMADEVICES=y
+> +CONFIG_IMX_SDMA=m
+> +# CONFIG_MX3_IPU is not set
+> +# CONFIG_VIRTIO_MENU is not set
+> +CONFIG_STAGING=y
+> +CONFIG_COMMON_CLK_VERSATILE=y
+> +# CONFIG_COMMON_CLK_XGENE is not set
+> +CONFIG_CLK_IMX8MQ=y
+> +# CONFIG_HISILICON_ERRATUM_161010101 is not set
+> +# CONFIG_ARM64_ERRATUM_858921 is not set
+> +CONFIG_ARM_TIMER_SP804=y
+> +CONFIG_MAILBOX=y
+> +CONFIG_ARM_MHU=y
+> +CONFIG_IMX_MBOX=y
+> +CONFIG_ARM_SMMU=y
+> +CONFIG_ARM_SMMU_V3=y
+> +CONFIG_RPMSG_VIRTIO=y
+> +CONFIG_IIO=y
+> +CONFIG_PWM=y
+> +CONFIG_RESET_CONTROLLER=y
+> +CONFIG_PHY_XGENE=y
+> +CONFIG_EXT2_FS=y
+> +CONFIG_EXT3_FS=y
+> +CONFIG_EXT4_FS_POSIX_ACL=y
+> +CONFIG_FANOTIFY=y
+> +CONFIG_FANOTIFY_ACCESS_PERMISSIONS=y
+> +CONFIG_AUTOFS4_FS=y
+> +CONFIG_FUSE_FS=m
+> +CONFIG_CUSE=m
+> +CONFIG_VFAT_FS=y
+> +CONFIG_TMPFS=y
+> +CONFIG_HUGETLBFS=y
+> +CONFIG_CONFIGFS_FS=y
+> +CONFIG_EFIVAR_FS=y
+> +CONFIG_SQUASHFS=y
+> +CONFIG_NFS_FS=y
+> +# CONFIG_NFS_V2 is not set
+> +CONFIG_ROOT_NFS=y
+> +# CONFIG_RPCSEC_GSS_KRB5 is not set
+> +CONFIG_SUNRPC_DEBUG=y
+> +CONFIG_NLS_CODEPAGE_437=y
+> +CONFIG_NLS_ISO8859_1=y
+> +CONFIG_KEYS=y
+> +CONFIG_SECURITY=y
+> +# CONFIG_INTEGRITY is not set
+> +CONFIG_CRYPTO_RSA=y
+> +CONFIG_CRYPTO_ECDH=y
+> +CONFIG_CRYPTO_CRYPTD=y
+> +CONFIG_CRYPTO_AUTHENC=y
+> +CONFIG_CRYPTO_TEST=m
+> +CONFIG_CRYPTO_CCM=y
+> +CONFIG_CRYPTO_GCM=y
+> +CONFIG_CRYPTO_CHACHA20POLY1305=y
+> +CONFIG_CRYPTO_ECHAINIV=y
+> +CONFIG_CRYPTO_CBC=y
+> +CONFIG_CRYPTO_CTS=y
+> +CONFIG_CRYPTO_LRW=y
+> +CONFIG_CRYPTO_OFB=m
+> +CONFIG_CRYPTO_XTS=y
+> +CONFIG_CRYPTO_CMAC=y
+> +CONFIG_CRYPTO_MD4=y
+> +CONFIG_CRYPTO_MD5=y
+> +CONFIG_CRYPTO_RMD128=m
+> +CONFIG_CRYPTO_RMD160=m
+> +CONFIG_CRYPTO_RMD256=m
+> +CONFIG_CRYPTO_RMD320=m
+> +CONFIG_CRYPTO_SHA1=y
+> +CONFIG_CRYPTO_SHA512=y
+> +CONFIG_CRYPTO_STREEBOG=m
+> +CONFIG_CRYPTO_TGR192=m
+> +CONFIG_CRYPTO_WP512=m
+> +CONFIG_CRYPTO_ARC4=y
+> +CONFIG_CRYPTO_BLOWFISH=y
+> +CONFIG_CRYPTO_CAMELLIA=y
+> +CONFIG_CRYPTO_CAST5=y
+> +CONFIG_CRYPTO_CAST6=y
+> +CONFIG_CRYPTO_DES=y
+> +CONFIG_CRYPTO_SERPENT=y
+> +CONFIG_CRYPTO_TWOFISH=y
+> +CONFIG_CRYPTO_DEFLATE=y
+> +CONFIG_CRYPTO_LZO=y
+> +CONFIG_CRYPTO_ANSI_CPRNG=y
+> +CONFIG_ASYMMETRIC_KEY_TYPE=y
+> +CONFIG_ASYMMETRIC_PUBLIC_KEY_SUBTYPE=y
+> +CONFIG_X509_CERTIFICATE_PARSER=y
+> +CONFIG_PKCS7_MESSAGE_PARSER=y
+> +CONFIG_SYSTEM_TRUSTED_KEYRING=y
+> +CONFIG_CRC_T10DIF=y
+> +CONFIG_CRC64=y
+> +CONFIG_LIBCRC32C=m
+> +CONFIG_DMA_CMA=y
+> +CONFIG_CMA_SIZE_MBYTES=320
+> +CONFIG_PRINTK_TIME=y
+> +CONFIG_MAGIC_SYSRQ=y
+> +CONFIG_DEBUG_KERNEL=y
+> +CONFIG_DETECT_HUNG_TASK=y
+> +# CONFIG_SCHED_DEBUG is not set
+> +# CONFIG_DEBUG_PREEMPT is not set
+> +# CONFIG_FTRACE is not set
+> +# CONFIG_RUNTIME_TESTING_MENU is not set
+> +CONFIG_MEMTEST=y
+> +# CONFIG_STRICT_DEVMEM is not set
+> --
+> 2.17.1
+>
