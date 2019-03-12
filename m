@@ -7,48 +7,47 @@ X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 51BF8C4360F
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 18:05:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E0E55C43381
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 18:05:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1BE9E205C9
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 18:05:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B0C8C205C9
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 18:05:26 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1552413922;
-	bh=SVmJFjC2VeraPGqAJHZpCcOs2fhRTm/d8UN3HDmlTjs=;
+	s=default; t=1552413926;
+	bh=2+f/W6oiNq8/wEKYnKmYnCE/jlWKyAuzIpIslB8bIcE=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=kBvHlDVAdMeLaLqZkeAl3COxanIwMS6aFn94U8ifnFbyHw/BlEnjMm0hacYEPRiIx
-	 iKqJ1/yiK6J5REdYVbuHrDkmnabMC4DRQoa3k0cq+K7GcXd4jmv14BoEHM3cWqkXr7
-	 Zqj9omfldkXGWyRakBHheLK7nfcIF9Ip+DfEemq0=
+	b=En90Ni6PXM2WXquTekuToHYEUayMEAF5s3f0jlAazqsYDV5K29NvozuQeMuTNkOJk
+	 jAwxHmiM7mO8k/cfMg+dbIoClytMhDagQ9pYqgZ8voQciCAL7X4sBiSyic8iZGzkto
+	 mBg65ZXaPSgYqQR3pdQW/qvIjtwonSsxDoAXrQXs=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727582AbfCLRMj (ORCPT
+        id S1728617AbfCLSFZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 12 Mar 2019 13:12:39 -0400
-Received: from mail.kernel.org ([198.145.29.99]:47332 "EHLO mail.kernel.org"
+        Tue, 12 Mar 2019 14:05:25 -0400
+Received: from mail.kernel.org ([198.145.29.99]:48272 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727405AbfCLRMV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 12 Mar 2019 13:12:21 -0400
+        id S1727581AbfCLRMk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 12 Mar 2019 13:12:40 -0400
 Received: from localhost (unknown [104.133.8.98])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 4677E217F4;
-        Tue, 12 Mar 2019 17:12:20 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 7F202206DF;
+        Tue, 12 Mar 2019 17:12:39 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1552410740;
-        bh=SVmJFjC2VeraPGqAJHZpCcOs2fhRTm/d8UN3HDmlTjs=;
+        s=default; t=1552410759;
+        bh=2+f/W6oiNq8/wEKYnKmYnCE/jlWKyAuzIpIslB8bIcE=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=qK369J+DGCmfy7lN33FJfsP2dVPZRUVQ0LzoW+otBAS+Cbz01MK4GcSYfMbzPSj0l
-         5WAe+sdPDd9A2Z8VV7cFm7Mpp0xStVgVvt03q9QmIukwYcBrFy5wY7osW7d3bDhFPI
-         DE/sUEXI7WUZS+cqNkNWu65CHU0CDkHO2zjYSMzE=
+        b=snfuTwge5Wc8pm60Q+p95dD92+c/b7+FXx0NlCg5SzqiOhN1HiiFbVJ7d4HIWPHQY
+         a0WjdTIxExtn8LN6EC24rn8gHaDzLvhKxglSNU/fxaQKzdxGfJPwQXSNz46NDsPD9s
+         rwtPUq+N1qh8LbMfgXll/OZPYvi7vNQT/vqkMdIM=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Manish Chopra <manishc@marvell.com>,
-        Ariel Elior <aelior@marvell.com>,
-        "David S. Miller" <davem@davemloft.net>,
+        stable@vger.kernel.org, Heiko Schocher <hs@denx.de>,
+        Tony Lindgren <tony@atomide.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.20 044/171] qed: Fix system crash in ll2 xmit
-Date:   Tue, 12 Mar 2019 10:07:04 -0700
-Message-Id: <20190312170351.924954259@linuxfoundation.org>
+Subject: [PATCH 4.20 091/171] ARM: dts: am335x-shc.dts: fix wrong cd pin level
+Date:   Tue, 12 Mar 2019 10:07:51 -0700
+Message-Id: <20190312170355.800033027@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190312170347.868927101@linuxfoundation.org>
 References: <20190312170347.868927101@linuxfoundation.org>
@@ -67,82 +66,31 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-[ Upstream commit 7c81626a3c37e4ac320b8ad785694ba498f24794 ]
+[ Upstream commit 063c20e12f8bbbc10cabc2413606b140085beb62 ]
 
-Cache number of fragments in the skb locally as in case
-of linear skb (with zero fragments), tx completion
-(or freeing of skb) may happen before driver tries
-to get number of frgaments from the skb which could
-lead to stale access to an already freed skb.
+cd pin on mmc1 is GPIO_ACTIVE_LOW not GPIO_ACTIVE_HIGH
 
-Signed-off-by: Manish Chopra <manishc@marvell.com>
-Signed-off-by: Ariel Elior <aelior@marvell.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
+Fixes: e63201f19438 ("mmc: omap_hsmmc: Delete platform data GPIO CD and WP")
+Signed-off-by: Heiko Schocher <hs@denx.de>
+Signed-off-by: Tony Lindgren <tony@atomide.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/ethernet/qlogic/qed/qed_ll2.c | 20 +++++++++++++++-----
- 1 file changed, 15 insertions(+), 5 deletions(-)
+ arch/arm/boot/dts/am335x-shc.dts | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/net/ethernet/qlogic/qed/qed_ll2.c b/drivers/net/ethernet/qlogic/qed/qed_ll2.c
-index 9e728ec82c21..25f67c0d5c57 100644
---- a/drivers/net/ethernet/qlogic/qed/qed_ll2.c
-+++ b/drivers/net/ethernet/qlogic/qed/qed_ll2.c
-@@ -2441,19 +2441,24 @@ static int qed_ll2_start_xmit(struct qed_dev *cdev, struct sk_buff *skb,
- {
- 	struct qed_ll2_tx_pkt_info pkt;
- 	const skb_frag_t *frag;
-+	u8 flags = 0, nr_frags;
- 	int rc = -EINVAL, i;
- 	dma_addr_t mapping;
- 	u16 vlan = 0;
--	u8 flags = 0;
- 
- 	if (unlikely(skb->ip_summed != CHECKSUM_NONE)) {
- 		DP_INFO(cdev, "Cannot transmit a checksummed packet\n");
- 		return -EINVAL;
- 	}
- 
--	if (1 + skb_shinfo(skb)->nr_frags > CORE_LL2_TX_MAX_BDS_PER_PACKET) {
-+	/* Cache number of fragments from SKB since SKB may be freed by
-+	 * the completion routine after calling qed_ll2_prepare_tx_packet()
-+	 */
-+	nr_frags = skb_shinfo(skb)->nr_frags;
-+
-+	if (1 + nr_frags > CORE_LL2_TX_MAX_BDS_PER_PACKET) {
- 		DP_ERR(cdev, "Cannot transmit a packet with %d fragments\n",
--		       1 + skb_shinfo(skb)->nr_frags);
-+		       1 + nr_frags);
- 		return -EINVAL;
- 	}
- 
-@@ -2475,7 +2480,7 @@ static int qed_ll2_start_xmit(struct qed_dev *cdev, struct sk_buff *skb,
- 	}
- 
- 	memset(&pkt, 0, sizeof(pkt));
--	pkt.num_of_bds = 1 + skb_shinfo(skb)->nr_frags;
-+	pkt.num_of_bds = 1 + nr_frags;
- 	pkt.vlan = vlan;
- 	pkt.bd_flags = flags;
- 	pkt.tx_dest = QED_LL2_TX_DEST_NW;
-@@ -2486,12 +2491,17 @@ static int qed_ll2_start_xmit(struct qed_dev *cdev, struct sk_buff *skb,
- 	    test_bit(QED_LL2_XMIT_FLAGS_FIP_DISCOVERY, &xmit_flags))
- 		pkt.remove_stag = true;
- 
-+	/* qed_ll2_prepare_tx_packet() may actually send the packet if
-+	 * there are no fragments in the skb and subsequently the completion
-+	 * routine may run and free the SKB, so no dereferencing the SKB
-+	 * beyond this point unless skb has any fragments.
-+	 */
- 	rc = qed_ll2_prepare_tx_packet(&cdev->hwfns[0], cdev->ll2->handle,
- 				       &pkt, 1);
- 	if (rc)
- 		goto err;
- 
--	for (i = 0; i < skb_shinfo(skb)->nr_frags; i++) {
-+	for (i = 0; i < nr_frags; i++) {
- 		frag = &skb_shinfo(skb)->frags[i];
- 
- 		mapping = skb_frag_dma_map(&cdev->pdev->dev, frag, 0,
+diff --git a/arch/arm/boot/dts/am335x-shc.dts b/arch/arm/boot/dts/am335x-shc.dts
+index 1d925ed2b102..8fbbad11a80c 100644
+--- a/arch/arm/boot/dts/am335x-shc.dts
++++ b/arch/arm/boot/dts/am335x-shc.dts
+@@ -215,7 +215,7 @@
+ 	pinctrl-names = "default";
+ 	pinctrl-0 = <&mmc1_pins>;
+ 	bus-width = <0x4>;
+-	cd-gpios = <&gpio0 6 GPIO_ACTIVE_HIGH>;
++	cd-gpios = <&gpio0 6 GPIO_ACTIVE_LOW>;
+ 	cd-inverted;
+ 	max-frequency = <26000000>;
+ 	vmmc-supply = <&vmmcsd_fixed>;
 -- 
 2.19.1
 
