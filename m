@@ -2,193 +2,98 @@ Return-Path: <SRS0=J4ZE=RP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_PASS,URIBL_BLOCKED,USER_AGENT_MUTT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id ED5A4C4360F
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 15:25:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 074B6C43381
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 15:26:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B8BE72054F
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 15:25:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D60072147C
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 15:26:56 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726733AbfCLPZz (ORCPT
+        id S1726741AbfCLP0z (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 12 Mar 2019 11:25:55 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:48606 "EHLO mx1.redhat.com"
+        Tue, 12 Mar 2019 11:26:55 -0400
+Received: from mail.kernel.org ([198.145.29.99]:35088 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725894AbfCLPZz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 12 Mar 2019 11:25:55 -0400
-Received: from smtp.corp.redhat.com (int-mx05.intmail.prod.int.phx2.redhat.com [10.5.11.15])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        id S1726360AbfCLP0y (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 12 Mar 2019 11:26:54 -0400
+Received: from gandalf.local.home (cpe-66-24-58-225.stny.res.rr.com [66.24.58.225])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id 9322D7F6CE;
-        Tue, 12 Mar 2019 15:25:54 +0000 (UTC)
-Received: from redhat.com (ovpn-117-131.phx2.redhat.com [10.3.117.131])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id B17ED5D706;
-        Tue, 12 Mar 2019 15:25:53 +0000 (UTC)
-Date:   Tue, 12 Mar 2019 11:25:51 -0400
-From:   Jerome Glisse <jglisse@redhat.com>
-To:     Dan Williams <dan.j.williams@intel.com>
-Cc:     Andrew Morton <akpm@linux-foundation.org>,
-        Linux MM <linux-mm@kvack.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Ralph Campbell <rcampbell@nvidia.com>,
-        John Hubbard <jhubbard@nvidia.com>,
-        linux-fsdevel <linux-fsdevel@vger.kernel.org>
-Subject: Re: [PATCH 09/10] mm/hmm: allow to mirror vma of a file on a DAX
- backed filesystem
-Message-ID: <20190312152551.GA3233@redhat.com>
-References: <CAPcyv4jS7Y=DLOjRHbdRfwBEpxe_r7wpv0ixTGmL7kL_ThaQFA@mail.gmail.com>
- <20190130183616.GB5061@redhat.com>
- <CAPcyv4hB4p6po1+-hJ4Podxoan35w+T6uZJzqbw=zvj5XdeNVQ@mail.gmail.com>
- <20190131041641.GK5061@redhat.com>
- <CAPcyv4gb+r==riKFXkVZ7gGdnKe62yBmZ7xOa4uBBByhnK9Tzg@mail.gmail.com>
- <20190305141635.8134e310ba7187bc39532cd3@linux-foundation.org>
- <CAA9_cmd2Z62Z5CSXvne4rj3aPSpNhS0Gxt+kZytz0bVEuzvc=A@mail.gmail.com>
- <20190307094654.35391e0066396b204d133927@linux-foundation.org>
- <20190307185623.GD3835@redhat.com>
- <CAPcyv4gkxmmkB0nofVOvkmV7HcuBDb+1VLR9CSsp+m-QLX_mxA@mail.gmail.com>
+        by mail.kernel.org (Postfix) with ESMTPSA id E13A82054F;
+        Tue, 12 Mar 2019 15:26:51 +0000 (UTC)
+Date:   Tue, 12 Mar 2019 11:26:50 -0400
+From:   Steven Rostedt <rostedt@goodmis.org>
+To:     Alexei Starovoitov <alexei.starovoitov@gmail.com>
+Cc:     Joel Fernandes <joel@joelfernandes.org>,
+        Daniel Colascione <dancol@google.com>,
+        Karim Yaghmour <karim.yaghmour@opersys.com>,
+        Geert Uytterhoeven <geert@linux-m68k.org>,
+        Greg KH <gregkh@linuxfoundation.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Alexei Starovoitov <ast@kernel.org>,
+        atish patra <atishp04@gmail.com>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Dietmar Eggemann <dietmar.eggemann@arm.com>,
+        Guenter Roeck <groeck@chromium.org>,
+        Jonathan Corbet <corbet@lwn.net>,
+        Kees Cook <keescook@chromium.org>,
+        Android Kernel Team <kernel-team@android.com>,
+        "open list:DOCUMENTATION" <linux-doc@vger.kernel.org>,
+        "open list:KERNEL SELFTEST FRAMEWORK" 
+        <linux-kselftest@vger.kernel.org>,
+        linux-trace-devel@vger.kernel.org,
+        Manoj Rao <linux@manojrajarao.com>,
+        Masahiro Yamada <yamada.masahiro@socionext.com>,
+        Masami Hiramatsu <mhiramat@kernel.org>,
+        Qais Yousef <qais.yousef@arm.com>,
+        Randy Dunlap <rdunlap@infradead.org>,
+        Shuah Khan <shuah@kernel.org>, Yonghong Song <yhs@fb.com>
+Subject: Re: [PATCH v4 1/2] Provide in-kernel headers for making it easy to
+ extend the kernel
+Message-ID: <20190312112650.680e27c4@gandalf.local.home>
+In-Reply-To: <20190312014522.jfxg3pdav2piuaqs@ast-mbp>
+References: <20190309071648.GE3882@kroah.com>
+        <CAMuHMdUT+UGt9p2QhOXzAtCUmqy-a8YN-ceDa-0qANJE53pWBA@mail.gmail.com>
+        <20190309121141.GA30173@kroah.com>
+        <b7296377-9e0c-aed7-61f0-93d24d1ceddd@opersys.com>
+        <CAMuHMdV8+XTyGf1ZJ+gMf=zQpzqh3-+b7wgi+gAmXQ6HpUAw3A@mail.gmail.com>
+        <3e84e1ef-e266-e983-5874-6c26ac7f38b8@opersys.com>
+        <20190311193612.4f09bf11@oasis.local.home>
+        <CAKOZuetHG0O-CiO6h5tD7aht_MT70ebwWMMSPkRUHdiM3wVq0Q@mail.gmail.com>
+        <20190312003912.GA170478@google.com>
+        <20190311212823.60684182@oasis.local.home>
+        <20190312014522.jfxg3pdav2piuaqs@ast-mbp>
+X-Mailer: Claws Mail 3.16.0 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <CAPcyv4gkxmmkB0nofVOvkmV7HcuBDb+1VLR9CSsp+m-QLX_mxA@mail.gmail.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.15
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.25]); Tue, 12 Mar 2019 15:25:54 +0000 (UTC)
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Mar 11, 2019 at 08:13:53PM -0700, Dan Williams wrote:
-> On Thu, Mar 7, 2019 at 10:56 AM Jerome Glisse <jglisse@redhat.com> wrote:
-> >
-> > On Thu, Mar 07, 2019 at 09:46:54AM -0800, Andrew Morton wrote:
-> > > On Tue, 5 Mar 2019 20:20:10 -0800 Dan Williams <dan.j.williams@intel.com> wrote:
-> > >
-> > > > My hesitation would be drastically reduced if there was a plan to
-> > > > avoid dangling unconsumed symbols and functionality. Specifically one
-> > > > or more of the following suggestions:
-> > > >
-> > > > * EXPORT_SYMBOL_GPL on all exports to avoid a growing liability
-> > > > surface for out-of-tree consumers to come grumble at us when we
-> > > > continue to refactor the kernel as we are wont to do.
-> > >
-> > > The existing patches use EXPORT_SYMBOL() so that's a sticking point.
-> > > Jerome, what would happen is we made these EXPORT_SYMBOL_GPL()?
-> >
-> > So Dan argue that GPL export solve the problem of out of tree user and
-> > my personnal experience is that it does not. The GPU sub-system has tons
-> > of GPL drivers that are not upstream and we never felt that we were bound
-> > to support them in anyway. We always were very clear that if you are not
-> > upstream that you do not have any voice on changes we do.
-> >
-> > So my exeperience is that GPL does not help here. It is just about being
-> > clear and ignoring anyone who does not have an upstream driver ie we have
-> > free hands to update HMM in anyway as long as we keep supporting the
-> > upstream user.
-> >
-> > That being said if the GPL aspect is that much important to some then
-> > fine let switch all HMM symbol to GPL.
-> 
-> I should add that I would not be opposed to moving symbols to
-> non-GPL-only over time, but that should be based on our experience
-> with the stability and utility of the implementation. For brand new
-> symbols there's just no data to argue that we can / should keep the
-> interface stable, or that the interface exposes something fragile that
-> we'd rather not export at all. That experience gathering and thrash is
-> best constrained to upstream GPL-only drivers that are signing up to
-> participate in that maturation process.
-> 
-> So I think it is important from a practical perspective and is a lower
-> risk way to run this HMM experiment of "merge infrastructure way in
-> advance of an upstream user".
-> 
-> > > > * A commitment to consume newly exported symbols in the same merge
-> > > > window, or the following merge window. When that goal is missed revert
-> > > > the functionality until such time that it can be consumed, or
-> > > > otherwise abandoned.
-> > >
-> > > It sounds like we can tick this box.
-> >
-> > I wouldn't be too strick either, when adding something in release N
-> > the driver change in N+1 can miss N+1 because of bug or regression
-> > and be push to N+2.
-> >
-> > I think a better stance here is that if we do not get any sign-off
-> > on the feature from driver maintainer for which the feature is intended
-> > then we just do not merge.
-> 
-> Agree, no driver maintainer sign-off then no merge.
-> 
-> > If after few release we still can not get
-> > the driver to use it then we revert.
-> 
-> As long as it is made clear to the driver maintainer that they have
-> one cycle to consume it then we can have a conversation if it is too
-> early to merge the infrastructure. If no one has time to consume the
-> feature, why rush dead code into the kernel? Also, waiting 2 cycles
-> means the infrastructure that was hard to review without a user is now
-> even harder to review because any review momentum has been lost by the
-> time the user show up, so we're better off keeping them close together
-> in time.
+On Mon, 11 Mar 2019 18:45:24 -0700
+Alexei Starovoitov <alexei.starovoitov@gmail.com> wrote:
 
-Miss-understanding here, in first post the infrastructure and the driver
-bit get posted just like have been doing lately. So that you know that
-you have working user with the feature and what is left is pushing the
-driver bits throught the appropriate tree. So driver maintainer support
-is about knowing that they want the feature and have some confidence
-that it looks ready.
+> what you're asking for we already have. It's called BTF.
 
-It also means you can review the infrastructure along side user of it.
+Cool.
 
-> 
-> 
-> > It just feels dumb to revert at N+1 just to get it back in N+2 as
-> > the driver bit get fix.
-> 
-> No, I think it just means the infrastructure went in too early if a
-> driver can't consume it in a development cycle. Lets revisit if it
-> becomes a problem in practice.
+> pahole takes vmlinux dwarf and convert it into ~1Mbyte of BTF that includes
+> all kernel types.
+> With gzip it can be compressed further if necessary.
+> We also have a prototype to generate all_vmlinux_types.h from BTF.
+> But it's not a substitute for kernel headers.
+> We've had a long discussion during last LPC regarding this:
+> http://vger.kernel.org/lpc-bpf2018.html#session-2
+> tldr: many tracing use cases will be solved with BTF, but kernel headers
+> are here to stay.
 
-Well that's just dumb to have hard guideline like that. Many things
-can lead to missing deadline. For instance bug i am refering too might
-have nothing to do with the feature, it can be something related to
-integrating the feature an unforseen side effect. So i believe a better
-guideline is that driver maintainer rejecting the feature rather than
-just failure to meet one deadline.
+Is this work a result of that session? (I was only able to attend part
+of the BPF sessions due to conflicts). I guess I should watch the
+videos.
 
-
-> > > > * No new symbol exports and functionality while existing symbols go unconsumed.
-> > >
-> > > Unsure about this one?
-> >
-> > With nouveau upstream now everything is use. ODP will use some of the
-> > symbol too. PPC has patchset posted to use lot of HMM too. I have been
-> > working with other vendor that have patchset being work on to use HMM
-> > too.
-> >
-> > I have not done all those function just for the fun of it :) They do
-> > have real use and user. It took a longtime to get nouveau because of
-> > userspace we had a lot of catchup to do in mesa and llvm and we are
-> > still very rough there.
-> 
-> Sure, this one is less of a concern if we can stick to tighter
-> timelines between infrastructure and driver consumer merge.
-
-Issue is that consumer timeline can be hard to know, sometimes
-the consumer go over few revision (like ppc for instance) and
-not because of the infrastructure but for other reasons. So
-reverting the infrastructure just because user had its timeline
-change is not productive. User missing one cycle means they would
-get delayed for 2 cycles ie reupstreaming the infrastructure in
-next cycle and repushing the user the cycle after. This sounds
-like a total wastage of everyone times. While keeping the infra-
-structure would allow the timeline to slip by just one cycle.
-
-Spirit of the rule is better than blind application of rule.
-
-Cheers,
-Jérôme
+-- Steve
