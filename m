@@ -2,117 +2,113 @@ Return-Path: <SRS0=J4ZE=RP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_MUTT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 77EC6C43381
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 08:26:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6B1D9C43381
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 08:28:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 25C122147C
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 08:26:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 33E96214AF
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 08:28:19 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1552379176;
-	bh=l2HsO194GmzSjaZJ7s/9hf4Ym+X28F8Jw7yOi+Dx7sI=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=F62eS6iUWe/5ctybCoitpXqaML1jKrHsBIVK4Lk045e0LF1wdPD58/CP11sQ6toYz
-	 X78tEEZp2yaXcQ8k6bHJf/xipL1gpNe+tE6xT8cOHkv0NJO17xSDdvW3lVxT1E0Wyb
-	 e41IaMCuWZA6wC0IGZpR1XLbrRz6PCPo8p72rVG0=
+	s=default; t=1552379299;
+	bh=jZirjo9XoP+WJTKzvU1KMFFOPs9e6fF0EwD5ghYcX80=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=nCMQZPd6nask6P7fJe57DAdZUSJ5m0Y05cAa2Czy1Mo7ZT5tCeyZ3hZlWE9VxCDh9
+	 k8NJ5/zURjClxtg0in/HCsKmytiXdPSB0wJh3+aG5CuYMCmXsA0VtBjuToh4B1v2bG
+	 fU4u84HUMAfbixChSc6SrXEFn+YEErKv9Vyg2sDc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727456AbfCLI0P (ORCPT
+        id S1727565AbfCLI2R (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 12 Mar 2019 04:26:15 -0400
-Received: from mx2.suse.de ([195.135.220.15]:46018 "EHLO mx1.suse.de"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1725832AbfCLI0O (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 12 Mar 2019 04:26:14 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx1.suse.de (Postfix) with ESMTP id 1BA30B157;
-        Tue, 12 Mar 2019 08:26:13 +0000 (UTC)
-Date:   Tue, 12 Mar 2019 09:26:12 +0100
-From:   Michal Hocko <mhocko@kernel.org>
-To:     Pi-Hsun Shih <pihsun@chromium.org>
-Cc:     Andrew Morton <akpm@linux-foundation.org>,
-        Matthew Wilcox <willy@infradead.org>,
-        Johannes Weiner <hannes@cmpxchg.org>,
-        Stephen Rothwell <sfr@canb.auug.org.au>,
-        Minchan Kim <minchan@kernel.org>,
-        Huang Ying <ying.huang@intel.com>,
-        Wei Yang <richard.weiyang@gmail.com>,
-        Yang Shi <yang.shi@linux.alibaba.com>,
-        Aaron Lu <aaron.lu@intel.com>, Tejun Heo <tj@kernel.org>,
-        Omar Sandoval <osandov@fb.com>,
-        open list <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH v2] mm/swap: Use offsetof instead of custom __swapoffset
- macro.
-Message-ID: <20190312082612.GH5721@dhcp22.suse.cz>
-References: <20190307094653.119425-1-pihsun@chromium.org>
- <20190312081902.223764-1-pihsun@chromium.org>
+        Tue, 12 Mar 2019 04:28:17 -0400
+Received: from mail.kernel.org ([198.145.29.99]:45866 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726735AbfCLI2Q (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 12 Mar 2019 04:28:16 -0400
+Received: from mail-wr1-f49.google.com (mail-wr1-f49.google.com [209.85.221.49])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 08A772171F;
+        Tue, 12 Mar 2019 08:28:16 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1552379296;
+        bh=jZirjo9XoP+WJTKzvU1KMFFOPs9e6fF0EwD5ghYcX80=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=lEiabhXNrjc+vUb1pKGa24aEELX3M0nxIdhPwRivSuiBEIRaPcicamJ9UHJElYKfE
+         CPk6/t+HCVPJ89wEpbeFOiNcXL4sPfY2/jTgYq4pH8EutTmG+izWJWpa7rMJxwLBRM
+         Bp3jmENsoh9jwL5z+7E8bmrrVsaBPTYbUSmJMGGU=
+Received: by mail-wr1-f49.google.com with SMTP id g18so1655834wru.3;
+        Tue, 12 Mar 2019 01:28:15 -0700 (PDT)
+X-Gm-Message-State: APjAAAUe8lepWUHiR2Wi6cxGwhnCcho7RB+3ez+x6jiYrqddbki9Rquw
+        kZMCZhoq4dmz25EuTowHeACwLIp8l3PjBgKVE18=
+X-Google-Smtp-Source: APXvYqzfIaMx6yCHo345BdiT1k/wlIeUlQosE7RoLWPPReeP0P1F/DeelCObWYHeMDCwjjLglbfKAtJU4CiBrU49fJQ=
+X-Received: by 2002:a5d:4741:: with SMTP id o1mr3694066wrs.188.1552379294450;
+ Tue, 12 Mar 2019 01:28:14 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190312081902.223764-1-pihsun@chromium.org>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+References: <20190312073241.27495-1-kjlu@umn.edu>
+In-Reply-To: <20190312073241.27495-1-kjlu@umn.edu>
+From:   Chen-Yu Tsai <wens@kernel.org>
+Date:   Tue, 12 Mar 2019 16:28:01 +0800
+X-Gmail-Original-Message-ID: <CAGb2v66GgA9zc_7ZU_Sb_PkgcYwbFoa+JFS3A-7RKApR31pOow@mail.gmail.com>
+Message-ID: <CAGb2v66GgA9zc_7ZU_Sb_PkgcYwbFoa+JFS3A-7RKApR31pOow@mail.gmail.com>
+Subject: Re: [PATCH] net: stmmac: fix a potential NULL pointer dereference
+To:     Kangjie Lu <kjlu@umn.edu>
+Cc:     Alexandre Torgue <alexandre.torgue@st.com>,
+        netdev <netdev@vger.kernel.org>,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        linux-stm32@st-md-mailman.stormreply.com,
+        Jose Abreu <joabreu@synopsys.com>,
+        Maxime Coquelin <mcoquelin.stm32@gmail.com>, pakki001@umn.edu,
+        Giuseppe Cavallaro <peppe.cavallaro@st.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue 12-03-19 16:18:59, Pi-Hsun Shih wrote:
-> Use offsetof to calculate offset of a field to take advantage of
-> compiler built-in version when possible, and avoid UBSAN warning when
-> compiling with Clang:
-> 
-> UBSAN: Undefined behaviour in mm/swapfile.c:3010:38
-> member access within null pointer of type 'union swap_header'
-> CPU: 6 PID: 1833 Comm: swapon Tainted: G S                4.19.23 #43
-> Call trace:
->  dump_backtrace+0x0/0x194
->  show_stack+0x20/0x2c
->  __dump_stack+0x20/0x28
->  dump_stack+0x70/0x94
->  ubsan_epilogue+0x14/0x44
->  ubsan_type_mismatch_common+0xf4/0xfc
->  __ubsan_handle_type_mismatch_v1+0x34/0x54
->  __se_sys_swapon+0x654/0x1084
->  __arm64_sys_swapon+0x1c/0x24
->  el0_svc_common+0xa8/0x150
->  el0_svc_compat_handler+0x2c/0x38
->  el0_svc_compat+0x8/0x18
-> 
-> Signed-off-by: Pi-Hsun Shih <pihsun@chromium.org>
-
-Yes this makes more sense. I still think the warning is bogus but
-whatever. A cleanup is worth it.
-
-Acked-by: Michal Hocko <mhocko@suse.com>
-
+On Tue, Mar 12, 2019 at 3:32 PM Kangjie Lu <kjlu@umn.edu> wrote:
+>
+> In case of_device_get_match_data fails, the fix return -ENOMEM
+> to avoid the NULL pointer dereference.
+>
+> Signed-off-by: Kangjie Lu <kjlu@umn.edu>
 > ---
->  include/linux/swap.h | 4 ++--
->  1 file changed, 2 insertions(+), 2 deletions(-)
-> 
-> diff --git a/include/linux/swap.h b/include/linux/swap.h
-> index fc50e21b3b88..4bfb5c4ac108 100644
-> --- a/include/linux/swap.h
-> +++ b/include/linux/swap.h
-> @@ -157,9 +157,9 @@ struct swap_extent {
->  /*
->   * Max bad pages in the new format..
->   */
-> -#define __swapoffset(x) ((unsigned long)&((union swap_header *)0)->x)
->  #define MAX_SWAP_BADPAGES \
-> -	((__swapoffset(magic.magic) - __swapoffset(info.badpages)) / sizeof(int))
-> +	((offsetof(union swap_header, magic.magic) - \
-> +	  offsetof(union swap_header, info.badpages)) / sizeof(int))
->  
->  enum {
->  	SWP_USED	= (1 << 0),	/* is slot in swap_info[] used? */
-> -- 
-> 2.21.0.360.g471c308f928-goog
-> 
+>  drivers/net/ethernet/stmicro/stmmac/dwmac-dwc-qos-eth.c | 2 ++
+>  1 file changed, 2 insertions(+)
+>
+> diff --git a/drivers/net/ethernet/stmicro/stmmac/dwmac-dwc-qos-eth.c b/drivers/net/ethernet/stmicro/stmmac/dwmac-dwc-qos-eth.c
+> index 3256e5cbad27..344ead5949b1 100644
+> --- a/drivers/net/ethernet/stmicro/stmmac/dwmac-dwc-qos-eth.c
+> +++ b/drivers/net/ethernet/stmicro/stmmac/dwmac-dwc-qos-eth.c
+> @@ -485,6 +485,8 @@ static int dwc_eth_dwmac_remove(struct platform_device *pdev)
+>         int err;
+>
+>         data = of_device_get_match_data(&pdev->dev);
+> +       if (!data)
+> +               return -EINVAL;
 
--- 
-Michal Hocko
-SUSE Labs
+You say -ENOMEM in the commit message, but -EINVAL here.
+
+Also, all compatible strings within this driver have data attached
+to them. The only possible case for this to return NULL is if the
+user is screwing around with the kernel, such as creating a platform
+device matching the driver name. This is not the intended way to
+use it, and IMHO the kernel has the right to blow up in the user's
+face.
+
+ChenYu
+
+>
+>         err = stmmac_dvr_remove(&pdev->dev);
+>         if (err < 0)
+> --
+> 2.17.1
+>
+>
+> _______________________________________________
+> linux-arm-kernel mailing list
+> linux-arm-kernel@lists.infradead.org
+> http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
