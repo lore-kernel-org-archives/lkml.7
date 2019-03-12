@@ -4,49 +4,52 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A2F57C43381
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 17:31:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DD85EC43381
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 17:31:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 69311206DF
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 17:31:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A1C232171F
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 17:31:47 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1552411900;
-	bh=r9FyuzUaMkY+NKLBvsOsD/XkV/PD1DRxFBnrIJxCrCo=;
+	s=default; t=1552411907;
+	bh=SOQlOCp+dE/bbfWiR5UZl4rzAB5zL4HMJTofoDyg3rg=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=FdxCv0ZVqWfQJDDh9hsTziHsBFK3MqyfpMyE/FXeYWbKvdStbSgGGLFyqJPC65L6T
-	 6mjrtnOiyfRuhgDDwPr7IL1mx2IRxHKIl8m3q8GoZFUdhO6U7agXSIA4MZuzcB42Es
-	 YPVNoBkpDWl4RG4v4+zML+tsLWTaTge+ppAxaCps=
+	b=yVUdvEHW9zNty1lSDtDKPCZ1TwsCK8booZ2j6udvpuQFT8h3jSq8mAKbeQOV2qN46
+	 VlKld/+ojHeV5p27hKwsDYN2f1PZNpYRwYAYp7SAzDJ+4U3oLsdpCpkBYN3ZzlRjGQ
+	 5m+feO2Ea1pQ3KB57S8550FFPfn4OyMjETA8lv7U=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729600AbfCLRbi (ORCPT
+        id S1729626AbfCLRbq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 12 Mar 2019 13:31:38 -0400
-Received: from mail.kernel.org ([198.145.29.99]:60412 "EHLO mail.kernel.org"
+        Tue, 12 Mar 2019 13:31:46 -0400
+Received: from mail.kernel.org ([198.145.29.99]:60292 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729459AbfCLRRK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 12 Mar 2019 13:17:10 -0400
+        id S1729456AbfCLRRJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 12 Mar 2019 13:17:09 -0400
 Received: from localhost (unknown [104.133.8.98])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 20B592171F;
-        Tue, 12 Mar 2019 17:17:09 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 5B07F217D4;
+        Tue, 12 Mar 2019 17:17:08 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1552411029;
-        bh=r9FyuzUaMkY+NKLBvsOsD/XkV/PD1DRxFBnrIJxCrCo=;
+        s=default; t=1552411028;
+        bh=SOQlOCp+dE/bbfWiR5UZl4rzAB5zL4HMJTofoDyg3rg=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Mvk/aYAoGECSRwtdwRrw9CSNYNYwmNiZ+tKDEGxazlVvyzBWnmHX2uttrCB1vvTXp
-         BjPGwznF+dYWTNadpKplte3pWeuopJO3UquSaAJhzkGW09eisjkPUEE1VeKDi8BtjD
-         TGqMpmj+gh33wsr3hTWUyXiC2bvUjDoMxcJeKM4w=
+        b=mnsW3/i5t4k+UvNL/IbV129HmU36z8Czfh94IxCn/gaJ/4tOvgDOXP/kWqER32PPn
+         Tq3NB7Xip1bVEidXgTuvw8KJuDHQxrx/0txkpm3+ZLZkoLkvVuLoYfge+AHhoGYioA
+         oI+ifjHSWTecUqKmNFEjTD/ihUMHgH4exk+roKao=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         stable@vger.kernel.org,
-        "Peter Zijlstra (Intel)" <peterz@infradead.org>,
-        Thomas Gleixner <tglx@linutronix.de>
-Subject: [PATCH 4.14 132/135] perf/x86/intel: Make cpuc allocations consistent
-Date:   Tue, 12 Mar 2019 10:09:39 -0700
-Message-Id: <20190312170353.325992189@linuxfoundation.org>
+        Geert Uytterhoeven <geert+renesas@glider.be>,
+        Christoph Hellwig <hch@lst.de>,
+        "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>,
+        Robin Murphy <robin.murphy@arm.com>
+Subject: [PATCH 4.14 131/135] driver core: Postpone DMA tear-down until after devres release
+Date:   Tue, 12 Mar 2019 10:09:38 -0700
+Message-Id: <20190312170353.224593829@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190312170341.127810985@linuxfoundation.org>
 References: <20190312170341.127810985@linuxfoundation.org>
@@ -65,169 +68,116 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-From: "Peter Zijlstra (Intel)" <peterz@infradead.org>
+From: Geert Uytterhoeven <geert+renesas@glider.be>
 
-commit d01b1f96a82e5dd7841a1d39db3abfdaf95f70ab upstream
+commit 376991db4b6464e906d699ef07681e2ffa8ab08c upstream.
 
-The cpuc data structure allocation is different between fake and real
-cpuc's; use the same code to init/free both.
+When unbinding the (IOMMU-enabled) R-Car SATA device on Salvator-XS
+(R-Car H3 ES2.0), in preparation of rebinding against vfio-platform for
+device pass-through for virtualization:
 
-Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
-Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
+    echo ee300000.sata > /sys/bus/platform/drivers/sata_rcar/unbind
+
+the kernel crashes with:
+
+    Unable to handle kernel paging request at virtual address ffffffbf029ffffc
+    Mem abort info:
+      ESR = 0x96000006
+      Exception class = DABT (current EL), IL = 32 bits
+      SET = 0, FnV = 0
+      EA = 0, S1PTW = 0
+    Data abort info:
+      ISV = 0, ISS = 0x00000006
+      CM = 0, WnR = 0
+    swapper pgtable: 4k pages, 39-bit VAs, pgdp = 000000007e8c586c
+    [ffffffbf029ffffc] pgd=000000073bfc6003, pud=000000073bfc6003, pmd=0000000000000000
+    Internal error: Oops: 96000006 [#1] SMP
+    Modules linked in:
+    CPU: 0 PID: 1098 Comm: bash Not tainted 5.0.0-rc5-salvator-x-00452-g37596f884f4318ef #287
+    Hardware name: Renesas Salvator-X 2nd version board based on r8a7795 ES2.0+ (DT)
+    pstate: 60400005 (nZCv daif +PAN -UAO)
+    pc : __free_pages+0x8/0x58
+    lr : __dma_direct_free_pages+0x50/0x5c
+    sp : ffffff801268baa0
+    x29: ffffff801268baa0 x28: 0000000000000000
+    x27: ffffffc6f9c60bf0 x26: ffffffc6f9c60bf0
+    x25: ffffffc6f9c60810 x24: 0000000000000000
+    x23: 00000000fffff000 x22: ffffff8012145000
+    x21: 0000000000000800 x20: ffffffbf029fffc8
+    x19: 0000000000000000 x18: ffffffc6f86c42c8
+    x17: 0000000000000000 x16: 0000000000000070
+    x15: 0000000000000003 x14: 0000000000000000
+    x13: ffffff801103d7f8 x12: 0000000000000028
+    x11: ffffff8011117604 x10: 0000000000009ad8
+    x9 : ffffff80110126d0 x8 : ffffffc6f7563000
+    x7 : 6b6b6b6b6b6b6b6b x6 : 0000000000000018
+    x5 : ffffff8011cf3cc8 x4 : 0000000000004000
+    x3 : 0000000000080000 x2 : 0000000000000001
+    x1 : 0000000000000000 x0 : ffffffbf029fffc8
+    Process bash (pid: 1098, stack limit = 0x00000000c38e3e32)
+    Call trace:
+     __free_pages+0x8/0x58
+     __dma_direct_free_pages+0x50/0x5c
+     arch_dma_free+0x1c/0x98
+     dma_direct_free+0x14/0x24
+     dma_free_attrs+0x9c/0xdc
+     dmam_release+0x18/0x20
+     release_nodes+0x25c/0x28c
+     devres_release_all+0x48/0x4c
+     device_release_driver_internal+0x184/0x1f0
+     device_release_driver+0x14/0x1c
+     unbind_store+0x70/0xb8
+     drv_attr_store+0x24/0x34
+     sysfs_kf_write+0x4c/0x64
+     kernfs_fop_write+0x154/0x1c4
+     __vfs_write+0x34/0x164
+     vfs_write+0xb4/0x16c
+     ksys_write+0x5c/0xbc
+     __arm64_sys_write+0x14/0x1c
+     el0_svc_common+0x98/0x114
+     el0_svc_handler+0x1c/0x24
+     el0_svc+0x8/0xc
+    Code: d51b4234 17fffffa a9bf7bfd 910003fd (b9403404)
+    ---[ end trace 8c564cdd3a1a840f ]---
+
+While I've bisected this to commit e8e683ae9a736407 ("iommu/of: Fix
+probe-deferral"), and reverting that commit on post-v5.0-rc4 kernels
+does fix the problem, this turned out to be a red herring.
+
+On arm64, arch_teardown_dma_ops() resets dev->dma_ops to NULL.
+Hence if a driver has used a managed DMA allocation API, the allocated
+DMA memory will be freed using the direct DMA ops, while it may have
+been allocated using a custom DMA ops (iommu_dma_ops in this case).
+
+Fix this by reversing the order of the calls to devres_release_all() and
+arch_teardown_dma_ops().
+
+Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
+Acked-by: Christoph Hellwig <hch@lst.de>
+Reviewed-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
+Cc: stable <stable@vger.kernel.org>
+Reviewed-by: Robin Murphy <robin.murphy@arm.com>
+[rm: backport for 4.12-4.19 - kernels before 5.0 will not see
+ the crash above, but may get silent memory corruption instead]
+Signed-off-by: Robin Murphy <robin.murphy@arm.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
----
- arch/x86/events/core.c       |   13 +++++--------
- arch/x86/events/intel/core.c |   29 ++++++++++++++++++-----------
- arch/x86/events/perf_event.h |   11 ++++++++---
- 3 files changed, 31 insertions(+), 22 deletions(-)
 
---- a/arch/x86/events/core.c
-+++ b/arch/x86/events/core.c
-@@ -1968,7 +1968,7 @@ static int x86_pmu_commit_txn(struct pmu
-  */
- static void free_fake_cpuc(struct cpu_hw_events *cpuc)
- {
--	kfree(cpuc->shared_regs);
-+	intel_cpuc_finish(cpuc);
- 	kfree(cpuc);
- }
+---
+ drivers/base/dd.c |    2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+--- a/drivers/base/dd.c
++++ b/drivers/base/dd.c
+@@ -850,9 +850,9 @@ static void __device_release_driver(stru
+ 			drv->remove(dev);
  
-@@ -1980,14 +1980,11 @@ static struct cpu_hw_events *allocate_fa
- 	cpuc = kzalloc(sizeof(*cpuc), GFP_KERNEL);
- 	if (!cpuc)
- 		return ERR_PTR(-ENOMEM);
--
--	/* only needed, if we have extra_regs */
--	if (x86_pmu.extra_regs) {
--		cpuc->shared_regs = allocate_shared_regs(cpu);
--		if (!cpuc->shared_regs)
--			goto error;
--	}
- 	cpuc->is_fake = 1;
-+
-+	if (intel_cpuc_prepare(cpuc, cpu))
-+		goto error;
-+
- 	return cpuc;
- error:
- 	free_fake_cpuc(cpuc);
---- a/arch/x86/events/intel/core.c
-+++ b/arch/x86/events/intel/core.c
-@@ -3262,7 +3262,7 @@ ssize_t intel_event_sysfs_show(char *pag
- 	return x86_event_sysfs_show(page, config, event);
- }
+ 		device_links_driver_cleanup(dev);
+-		dma_deconfigure(dev);
  
--struct intel_shared_regs *allocate_shared_regs(int cpu)
-+static struct intel_shared_regs *allocate_shared_regs(int cpu)
- {
- 	struct intel_shared_regs *regs;
- 	int i;
-@@ -3294,10 +3294,9 @@ static struct intel_excl_cntrs *allocate
- 	return c;
- }
- 
--static int intel_pmu_cpu_prepare(int cpu)
--{
--	struct cpu_hw_events *cpuc = &per_cpu(cpu_hw_events, cpu);
- 
-+int intel_cpuc_prepare(struct cpu_hw_events *cpuc, int cpu)
-+{
- 	if (x86_pmu.extra_regs || x86_pmu.lbr_sel_map) {
- 		cpuc->shared_regs = allocate_shared_regs(cpu);
- 		if (!cpuc->shared_regs)
-@@ -3307,7 +3306,7 @@ static int intel_pmu_cpu_prepare(int cpu
- 	if (x86_pmu.flags & PMU_FL_EXCL_CNTRS) {
- 		size_t sz = X86_PMC_IDX_MAX * sizeof(struct event_constraint);
- 
--		cpuc->constraint_list = kzalloc(sz, GFP_KERNEL);
-+		cpuc->constraint_list = kzalloc_node(sz, GFP_KERNEL, cpu_to_node(cpu));
- 		if (!cpuc->constraint_list)
- 			goto err_shared_regs;
- 
-@@ -3332,6 +3331,11 @@ err:
- 	return -ENOMEM;
- }
- 
-+static int intel_pmu_cpu_prepare(int cpu)
-+{
-+	return intel_cpuc_prepare(&per_cpu(cpu_hw_events, cpu), cpu);
-+}
-+
- static void flip_smm_bit(void *data)
- {
- 	unsigned long set = *(unsigned long *)data;
-@@ -3403,9 +3407,8 @@ static void intel_pmu_cpu_starting(int c
- 	}
- }
- 
--static void free_excl_cntrs(int cpu)
-+static void free_excl_cntrs(struct cpu_hw_events *cpuc)
- {
--	struct cpu_hw_events *cpuc = &per_cpu(cpu_hw_events, cpu);
- 	struct intel_excl_cntrs *c;
- 
- 	c = cpuc->excl_cntrs;
-@@ -3423,9 +3426,8 @@ static void intel_pmu_cpu_dying(int cpu)
- 	fini_debug_store_on_cpu(cpu);
- }
- 
--static void intel_pmu_cpu_dead(int cpu)
-+void intel_cpuc_finish(struct cpu_hw_events *cpuc)
- {
--	struct cpu_hw_events *cpuc = &per_cpu(cpu_hw_events, cpu);
- 	struct intel_shared_regs *pc;
- 
- 	pc = cpuc->shared_regs;
-@@ -3435,7 +3437,12 @@ static void intel_pmu_cpu_dead(int cpu)
- 		cpuc->shared_regs = NULL;
- 	}
- 
--	free_excl_cntrs(cpu);
-+	free_excl_cntrs(cpuc);
-+}
-+
-+static void intel_pmu_cpu_dead(int cpu)
-+{
-+	intel_cpuc_finish(&per_cpu(cpu_hw_events, cpu));
- }
- 
- static void intel_pmu_sched_task(struct perf_event_context *ctx,
-@@ -4494,7 +4501,7 @@ static __init int fixup_ht_bug(void)
- 	hardlockup_detector_perf_restart();
- 
- 	for_each_online_cpu(c)
--		free_excl_cntrs(c);
-+		free_excl_cntrs(&per_cpu(cpu_hw_events, c));
- 
- 	cpus_read_unlock();
- 	pr_info("PMU erratum BJ122, BV98, HSD29 workaround disabled, HT off\n");
---- a/arch/x86/events/perf_event.h
-+++ b/arch/x86/events/perf_event.h
-@@ -880,7 +880,8 @@ struct event_constraint *
- x86_get_event_constraints(struct cpu_hw_events *cpuc, int idx,
- 			  struct perf_event *event);
- 
--struct intel_shared_regs *allocate_shared_regs(int cpu);
-+extern int intel_cpuc_prepare(struct cpu_hw_events *cpuc, int cpu);
-+extern void intel_cpuc_finish(struct cpu_hw_events *cpuc);
- 
- int intel_pmu_init(void);
- 
-@@ -1014,9 +1015,13 @@ static inline int intel_pmu_init(void)
- 	return 0;
- }
- 
--static inline struct intel_shared_regs *allocate_shared_regs(int cpu)
-+static inline int intel_cpuc_prepare(struct cpu_hw_event *cpuc, int cpu)
-+{
-+	return 0;
-+}
-+
-+static inline void intel_cpuc_finish(struct cpu_hw_event *cpuc)
- {
--	return NULL;
- }
- 
- static inline int is_ht_workaround_enabled(void)
+ 		devres_release_all(dev);
++		dma_deconfigure(dev);
+ 		dev->driver = NULL;
+ 		dev_set_drvdata(dev, NULL);
+ 		if (dev->pm_domain && dev->pm_domain->dismiss)
 
 
