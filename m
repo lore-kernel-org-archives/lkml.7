@@ -2,171 +2,70 @@ Return-Path: <SRS0=J4ZE=RP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2CB09C43381
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 18:14:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CCB1BC43381
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 18:15:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F2DAE2087C
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 18:14:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A87C02147C
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 18:15:05 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727184AbfCLSO5 convert rfc822-to-8bit (ORCPT
+        id S1727374AbfCLSPD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 12 Mar 2019 14:14:57 -0400
-Received: from gloria.sntech.de ([185.11.138.130]:33926 "EHLO gloria.sntech.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726360AbfCLRLX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 12 Mar 2019 13:11:23 -0400
-Received: from ip5f5a6320.dynamic.kabel-deutschland.de ([95.90.99.32] helo=diego.localnet)
-        by gloria.sntech.de with esmtpsa (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.89)
-        (envelope-from <heiko@sntech.de>)
-        id 1h3kvZ-0003W6-6y; Tue, 12 Mar 2019 18:10:57 +0100
-From:   Heiko =?ISO-8859-1?Q?St=FCbner?= <heiko@sntech.de>
-To:     Christoph =?ISO-8859-1?Q?M=FCllner?= 
-        <christoph.muellner@theobroma-systems.com>
-Cc:     Adrian Hunter <adrian.hunter@intel.com>, robh+dt@kernel.org,
-        mark.rutland@arm.com, shawn.lin@rock-chips.com,
-        ulf.hansson@linaro.org,
-        Philipp Tomsich <philipp.tomsich@theobroma-systems.com>,
-        Michal Simek <michal.simek@xilinx.com>,
-        Douglas Anderson <dianders@chromium.org>,
-        Viresh Kumar <viresh.kumar@linaro.org>,
-        Enric Balletbo i Serra <enric.balletbo@collabora.com>,
-        Vicente Bergas <vicencb@gmail.com>,
-        Emil Renner Berthing <kernel@esmil.dk>,
-        Randy Li <ayaka@soulik.info>,
-        Tony Xie <tony.xie@rock-chips.com>,
-        Ezequiel Garcia <ezequiel@collabora.com>,
-        Klaus Goger <klaus.goger@theobroma-systems.com>,
-        Lin Huang <hl@rock-chips.com>, linux-mmc@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org,
-        linux-rockchip@lists.infradead.org
-Subject: Re: [PATCH v2 2/3] dt-bindings: mmc: Add a new property disable-cqe-dcmd.
-Date:   Tue, 12 Mar 2019 18:10:56 +0100
-Message-ID: <2038789.ZmMFo7ZELZ@diego>
-In-Reply-To: <D7EF0176-0EBD-4401-83BE-E7F951F88CAA@theobroma-systems.com>
-References: <20190307084329.25416-1-christoph.muellner@theobroma-systems.com> <4793843.T1TZ7EF8k3@phil> <D7EF0176-0EBD-4401-83BE-E7F951F88CAA@theobroma-systems.com>
+        Tue, 12 Mar 2019 14:15:03 -0400
+Received: from cloudserver094114.home.pl ([79.96.170.134]:51285 "EHLO
+        cloudserver094114.home.pl" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726360AbfCLSPB (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 12 Mar 2019 14:15:01 -0400
+Received: from 79.184.254.189.ipv4.supernova.orange.pl (79.184.254.189) (HELO aspire.rjw.lan)
+ by serwer1319399.home.pl (79.96.170.134) with SMTP (IdeaSmtpServer 0.83.213)
+ id 037178ca2d11ea07; Tue, 12 Mar 2019 19:14:58 +0100
+From:   "Rafael J. Wysocki" <rjw@rjwysocki.net>
+To:     Linux PM <linux-pm@vger.kernel.org>
+Cc:     LKML <linux-kernel@vger.kernel.org>,
+        Kees Cook <keescook@chromium.org>
+Subject: [PATCH] cpuidle: governor: Add new governors to cpuidle_governors again
+Date:   Tue, 12 Mar 2019 19:13:13 +0100
+Message-ID: <5539737.TtKXfUnNfs@aspire.rjw.lan>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8BIT
-Content-Type: text/plain; charset="iso-8859-1"
+Content-Transfer-Encoding: 7Bit
+Content-Type: text/plain; charset="us-ascii"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Christoph,
+From: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
 
-Am Dienstag, 12. März 2019, 15:46:44 CET schrieb Christoph Müllner:
-> > On 12.03.2019, at 14:17, Heiko Stuebner <heiko@sntech.de> wrote:
-> > 
-> > Am Freitag, 8. März 2019, 14:10:45 CET schrieb Christoph Müllner:
-> >>> On 08.03.2019, at 13:46, Adrian Hunter <adrian.hunter@intel.com> wrote:
-> >>> 
-> >>> On 7/03/19 10:43 AM, Christoph Muellner wrote:
-> >>>> This patch documents the new property disable-cqe-dcmd
-> >>>> for the Arasan eMMC 5.1 driver.
-> >>>> 
-> >>>> Signed-off-by: Christoph Muellner
-> >>>> <christoph.muellner@theobroma-systems.com> Signed-off-by: Philipp
-> >>>> Tomsich <philipp.tomsich@theobroma-systems.com> ---
-> >>>> Documentation/devicetree/bindings/mmc/arasan,sdhci.txt | 4 ++++
-> >>>> 1 file changed, 4 insertions(+)
-> >>>> 
-> >>>> diff --git a/Documentation/devicetree/bindings/mmc/arasan,sdhci.txt
-> >>>> b/Documentation/devicetree/bindings/mmc/arasan,sdhci.txt index
-> >>>> 1edbb049cccb..ec699bf98b7c 100644
-> >>>> --- a/Documentation/devicetree/bindings/mmc/arasan,sdhci.txt
-> >>>> +++ b/Documentation/devicetree/bindings/mmc/arasan,sdhci.txt
-> >>>> 
-> >>>> @@ -44,6 +44,10 @@ Optional Properties:
-> >>>>    properly. Test mode can be used to force the controller to function.
-> >>>>  
-> >>>>  - xlnx,int-clock-stable-broken: when present, the controller always
-> >>>>  reports
-> >>>>  
-> >>>>    that the internal clock is stable even when it is not.
-> >>>> 
-> >>>> +  - disable-cqe-dcmd: The eMMC 5.1 standard specifies direct commands
-> >>>> (DCMDs) +    as part of the command queue engine (CQE). On controllers
-> >>>> with a CQHCI, +    such as the Arasan eMMC 5.1 host controller, the
-> >>>> driver has to enable DCMDs. +    This is done unless disable-cqe-dcmd
-> >>>> is specified.
-> > 
-> > This needs a rewording please. See below for hw-description vs. driver, so
-> > the description should be centered around why this is a property of the hw
-> > [like faulty controller implementation or whatever]
-> 
-> I understand, that you prefer a HW-specific name for a property
-> over one, that explains the actual effect.
+After commit 61cb5758d3c4 ("cpuidle: Add cpuidle.governor= command
+line parameter") new cpuidle governors are not added to the list
+of available governors, so governor selection via sysfs doesn't
+work as expected (even though it is rarely used anyway).
 
-Actually I think the property-name is just fine :-) .
+Fix that by making cpuidle_register_governor() add new governors to
+cpuidle_governors again.
 
-The description might profit from a rewording though. Aka not driver-
-centric but hw-centric, describing why some controllers may need the
-option to disable these dcmds (controller bugs or whatever).
+Fixes: 61cb5758d3c4 ("cpuidle: Add cpuidle.governor= command line parameter")
+Reported-by: Kees Cook <keescook@chromium.org>
+Cc: 5.0+ <stable@vger.kernel.org> # 5.0+
+Signed-off-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
+---
+ drivers/cpuidle/governor.c |    1 +
+ 1 file changed, 1 insertion(+)
 
-
-Heiko
-
-
-
-> However, using disable-<feature> (which is always a directive for the driver
-> and not a HW description) is not uncommon:
-> 
-> * disable-wp should be "no-wp-line-connection"
-> * disable-over-current -> "no-over-current-line-connection"
-> * srp-disable -> "not-existing-srp-implementation"
-> * ...
-> 
-> But I don't mind using something else.
-> Would "broken-cqe-dcmd" (like broken-cd or broken-flash-reset) be ok?
-> Or other suggestions?
-> 
-> Also I'd like to mention, that my first implementation was
-> "supports-cqe-dcmd". I guess that would be a good choice, if it would have
-> been there
-> from the beginning. Introducing it now, would silently disable DCMD
-> for existing DTBs. Therefore I went on to "disable-cqe-dcmd".
-> 
-> >>> If "supports-cqe" is in mmc.txt, should "disable-cqe-dcmd" be there
-> >>> also?
-> >> 
-> >> The file mmc.txt says on top:
-> >> "These properties are common to multiple MMC host controllers".
-> >> As my patchset introduces "disable-cqe-dcmd" just for sdhci-of-arasan,
-> >> I would say it should not go into that file.
-> >> 
-> >> Also I wonder why "supports-cqe" is in mmc.txt, because
-> >> only sdhci-tegra.c is evaluating that property.
-> >> So I would expect it to be documented in
-> >> Documentation/devicetree/bindings/mmc/nvidia,tegra20-sdhci.txt
-> >> 
-> >> However, I see that "disable-cqe-dcmd" could go into other drivers as
-> >> well.
-> >> But is this enough to document it in mmc.txt?
-> > 
-> > Devicetree is always about describing the hardware capabilites and never
-> > about the actual nitty-gritty of driver implementation, aka it is not
-> > meant
-> > as a space for hardware-independent config-settings or such.
-> > 
-> > As for only tegra evaluating this, is probably because it is still so new,
-> > like january 2019 and Rob explicitly suggested it becoming common [0],
-> > which suggests that the disable-cqe-dcmds should probably also be common.
-> So mmc.txt lists "standardised" names for properties to reduce the risk
-> of having similar, but distinct names for different MMC drivers.
-> So whenever you want to introduce a new property for a driver,
-> check if there isn't already something defined in mmc.txt.
-> 
-> When seeing it this way, it clearly makes sense to have the property there.
-> 
-> Thanks,
-> Christoph
-
-
-
+Index: linux-pm/drivers/cpuidle/governor.c
+===================================================================
+--- linux-pm.orig/drivers/cpuidle/governor.c
++++ linux-pm/drivers/cpuidle/governor.c
+@@ -89,6 +89,7 @@ int cpuidle_register_governor(struct cpu
+ 	mutex_lock(&cpuidle_lock);
+ 	if (__cpuidle_find_governor(gov->name) == NULL) {
+ 		ret = 0;
++		list_add_tail(&gov->governor_list, &cpuidle_governors);
+ 		if (!cpuidle_curr_governor ||
+ 		    !strncasecmp(param_governor, gov->name, CPUIDLE_NAME_LEN) ||
+ 		    (cpuidle_curr_governor->rating < gov->rating &&
 
