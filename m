@@ -2,328 +2,103 @@ Return-Path: <SRS0=J4ZE=RP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2DB3BC43381
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 09:32:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C2DE7C43381
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 09:32:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E2623214AE
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 09:32:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9CCEF214AE
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 09:32:22 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726524AbfCLJcR (ORCPT
+        id S1726273AbfCLJcQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 12 Mar 2019 05:32:17 -0400
-Received: from bhuna.collabora.co.uk ([46.235.227.227]:58436 "EHLO
-        bhuna.collabora.co.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725767AbfCLJcQ (ORCPT
+        Tue, 12 Mar 2019 05:32:16 -0400
+Received: from cloudserver094114.home.pl ([79.96.170.134]:58833 "EHLO
+        cloudserver094114.home.pl" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725811AbfCLJcQ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Tue, 12 Mar 2019 05:32:16 -0400
-Received: from localhost (unknown [IPv6:2a01:e0a:2c:6930:5cf4:84a1:2763:fe0d])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        (Authenticated sender: bbrezillon)
-        by bhuna.collabora.co.uk (Postfix) with ESMTPSA id 1FF38280747;
-        Tue, 12 Mar 2019 09:32:13 +0000 (GMT)
-Date:   Tue, 12 Mar 2019 10:32:09 +0100
-From:   Boris Brezillon <boris.brezillon@collabora.com>
-To:     Daniel Vetter <daniel@ffwll.ch>, Sean Paul <seanpaul@google.com>,
-        =?UTF-8?B?U3TDqXBoYW5l?= Marchesin <marcheu@google.com>,
-        Eric Anholt <eric@anholt.net>
-Cc:     "Kazlauskas, Nicholas" <Nicholas.Kazlauskas@amd.com>,
-        Helen Koike <helen.koike@collabora.com>,
-        "dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>,
-        "Grodzovsky, Andrey" <Andrey.Grodzovsky@amd.com>,
-        "daniel.vetter@ffwll.ch" <daniel.vetter@ffwll.ch>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Tomasz Figa <tfiga@chromium.org>,
-        David Airlie <airlied@linux.ie>,
-        "kernel@collabora.com" <kernel@collabora.com>,
-        "Wentland, Harry" <Harry.Wentland@amd.com>
-Subject: Re: [PATCH 1/5] drm: don't block fb changes for async plane updates
-Message-ID: <20190312103209.57e05982@collabora.com>
-In-Reply-To: <20190311195127.GT2665@phenom.ffwll.local>
-References: <20190304144909.6267-1-helen.koike@collabora.com>
-        <20190304144909.6267-2-helen.koike@collabora.com>
-        <e2eb91f5-25e3-d030-74d8-de2348de5600@amd.com>
-        <20190311110616.6b474865@collabora.com>
-        <01f2b3ba-434a-f61f-e8e8-85f3c9107a5c@amd.com>
-        <20190311152009.7c55b797@collabora.com>
-        <20190311195127.GT2665@phenom.ffwll.local>
-Organization: Collabora
-X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; x86_64-redhat-linux-gnu)
+Received: from 79.184.254.189.ipv4.supernova.orange.pl (79.184.254.189) (HELO aspire.rjw.lan)
+ by serwer1319399.home.pl (79.96.170.134) with SMTP (IdeaSmtpServer 0.83.213)
+ id e29ca2db912c608e; Tue, 12 Mar 2019 10:32:14 +0100
+From:   "Rafael J. Wysocki" <rjw@rjwysocki.net>
+To:     Linux ACPI <linux-acpi@vger.kernel.org>
+Cc:     LKML <linux-kernel@vger.kernel.org>,
+        Nathan Chancellor <natechancellor@gmail.com>
+Subject: [PATCH] ACPI: sysfs: Prevent get_status() from returning acpi_status
+Date:   Tue, 12 Mar 2019 10:30:29 +0100
+Message-ID: <53542709.3ZnE1UDn36@aspire.rjw.lan>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 7Bit
+Content-Type: text/plain; charset="us-ascii"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, 11 Mar 2019 20:51:27 +0100
-Daniel Vetter <daniel@ffwll.ch> wrote:
+From: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
 
-> On Mon, Mar 11, 2019 at 03:20:09PM +0100, Boris Brezillon wrote:
-> > On Mon, 11 Mar 2019 13:15:23 +0000
-> > "Kazlauskas, Nicholas" <Nicholas.Kazlauskas@amd.com> wrote:
-> >   
-> > > On 3/11/19 6:06 AM, Boris Brezillon wrote:  
-> > > > Hello Nicholas,
-> > > > 
-> > > > On Mon, 4 Mar 2019 15:46:49 +0000
-> > > > "Kazlauskas, Nicholas" <Nicholas.Kazlauskas@amd.com> wrote:
-> > > >     
-> > > >> On 3/4/19 9:49 AM, Helen Koike wrote:    
-> > > >>> In the case of a normal sync update, the preparation of framebuffers (be
-> > > >>> it calling drm_atomic_helper_prepare_planes() or doing setups with
-> > > >>> drm_framebuffer_get()) are performed in the new_state and the respective
-> > > >>> cleanups are performed in the old_state.
-> > > >>>
-> > > >>> In the case of async updates, the preparation is also done in the
-> > > >>> new_state but the cleanups are done in the new_state (because updates
-> > > >>> are performed in place, i.e. in the current state).
-> > > >>>
-> > > >>> The current code blocks async udpates when the fb is changed, turning
-> > > >>> async updates into sync updates, slowing down cursor updates and
-> > > >>> introducing regressions in igt tests with errors of type:
-> > > >>>
-> > > >>> "CRITICAL: completed 97 cursor updated in a period of 30 flips, we
-> > > >>> expect to complete approximately 15360 updates, with the threshold set
-> > > >>> at 7680"
-> > > >>>
-> > > >>> Fb changes in async updates were prevented to avoid the following scenario:
-> > > >>>
-> > > >>> - Async update, oldfb = NULL, newfb = fb1, prepare fb1, cleanup fb1
-> > > >>> - Async update, oldfb = fb1, newfb = fb2, prepare fb2, cleanup fb2
-> > > >>> - Non-async commit, oldfb = fb2, newfb = fb1, prepare fb1, cleanup fb2 (wrong)
-> > > >>> Where we have a single call to prepare fb2 but double cleanup call to fb2.
-> > > >>>
-> > > >>> To solve the above problems, instead of blocking async fb changes, we
-> > > >>> place the old framebuffer in the new_state object, so when the code
-> > > >>> performs cleanups in the new_state it will cleanup the old_fb and we
-> > > >>> will have the following scenario instead:
-> > > >>>
-> > > >>> - Async update, oldfb = NULL, newfb = fb1, prepare fb1, no cleanup
-> > > >>> - Async update, oldfb = fb1, newfb = fb2, prepare fb2, cleanup fb1
-> > > >>> - Non-async commit, oldfb = fb2, newfb = fb1, prepare fb1, cleanup fb2
-> > > >>>
-> > > >>> Where calls to prepare/cleanup are ballanced.
-> > > >>>
-> > > >>> Cc: <stable@vger.kernel.org> # v4.14+: 25dc194b34dd: drm: Block fb changes for async plane updates
-> > > >>> Fixes: 25dc194b34dd ("drm: Block fb changes for async plane updates")
-> > > >>> Suggested-by: Boris Brezillon <boris.brezillon@collabora.com>
-> > > >>> Signed-off-by: Helen Koike <helen.koike@collabora.com>
-> > > >>>
-> > > >>> ---
-> > > >>> Hello,
-> > > >>>
-> > > >>> As mentioned in the cover letter,
-> > > >>> I tested on the rockchip and on i915 (with a patch I am still working on for
-> > > >>> replacing cursors by async update), with igt plane_cursor_legacy and
-> > > >>> kms_cursor_legacy and I didn't see any regressions.
-> > > >>> I couldn't test on MSM and AMD because I don't have the hardware (and I am
-> > > >>> having some issues testing on vc4) and I would appreciate if anyone could help
-> > > >>> me testing those.
-> > > >>>
-> > > >>> I also think it would be a better solution if, instead of having async
-> > > >>> to do in-place updates in the current state, the async path should be
-> > > >>> equivalent to a syncronous update, i.e., modifying new_state and
-> > > >>> performing a flip
-> > > >>> IMHO, the only difference between sync and async should be that async update
-> > > >>> doesn't wait for vblank and applies the changes immeditally to the hw,
-> > > >>> but the code path could be almost the same.
-> > > >>> But for now I think this solution is ok (swaping new_fb/old_fb), and
-> > > >>> then we can adjust things little by little, what do you think?
-> > > >>>
-> > > >>> Thanks!
-> > > >>> Helen
-> > > >>>
-> > > >>>    drivers/gpu/drm/drm_atomic_helper.c | 20 ++++++++++----------
-> > > >>>    1 file changed, 10 insertions(+), 10 deletions(-)
-> > > >>>
-> > > >>> diff --git a/drivers/gpu/drm/drm_atomic_helper.c b/drivers/gpu/drm/drm_atomic_helper.c
-> > > >>> index 540a77a2ade9..e7eb96f1efc2 100644
-> > > >>> --- a/drivers/gpu/drm/drm_atomic_helper.c
-> > > >>> +++ b/drivers/gpu/drm/drm_atomic_helper.c
-> > > >>> @@ -1608,15 +1608,6 @@ int drm_atomic_helper_async_check(struct drm_device *dev,
-> > > >>>    	    old_plane_state->crtc != new_plane_state->crtc)
-> > > >>>    		return -EINVAL;
-> > > >>>    
-> > > >>> -	/*
-> > > >>> -	 * FIXME: Since prepare_fb and cleanup_fb are always called on
-> > > >>> -	 * the new_plane_state for async updates we need to block framebuffer
-> > > >>> -	 * changes. This prevents use of a fb that's been cleaned up and
-> > > >>> -	 * double cleanups from occuring.
-> > > >>> -	 */
-> > > >>> -	if (old_plane_state->fb != new_plane_state->fb)
-> > > >>> -		return -EINVAL;
-> > > >>> -
-> > > >>>    	funcs = plane->helper_private;
-> > > >>>    	if (!funcs->atomic_async_update)
-> > > >>>    		return -EINVAL;
-> > > >>> @@ -1657,6 +1648,9 @@ void drm_atomic_helper_async_commit(struct drm_device *dev,
-> > > >>>    	int i;
-> > > >>>    
-> > > >>>    	for_each_new_plane_in_state(state, plane, plane_state, i) {
-> > > >>> +		struct drm_framebuffer *new_fb = plane_state->fb;
-> > > >>> +		struct drm_framebuffer *old_fb = plane->state->fb;
-> > > >>> +
-> > > >>>    		funcs = plane->helper_private;
-> > > >>>    		funcs->atomic_async_update(plane, plane_state);
-> > > >>>    
-> > > >>> @@ -1665,11 +1659,17 @@ void drm_atomic_helper_async_commit(struct drm_device *dev,
-> > > >>>    		 * plane->state in-place, make sure at least common
-> > > >>>    		 * properties have been properly updated.
-> > > >>>    		 */
-> > > >>> -		WARN_ON_ONCE(plane->state->fb != plane_state->fb);
-> > > >>> +		WARN_ON_ONCE(plane->state->fb != new_fb);
-> > > >>>    		WARN_ON_ONCE(plane->state->crtc_x != plane_state->crtc_x);
-> > > >>>    		WARN_ON_ONCE(plane->state->crtc_y != plane_state->crtc_y);
-> > > >>>    		WARN_ON_ONCE(plane->state->src_x != plane_state->src_x);
-> > > >>>    		WARN_ON_ONCE(plane->state->src_y != plane_state->src_y);
-> > > >>> +
-> > > >>> +		/*
-> > > >>> +		 * Make sure the FBs have been swapped so that cleanups in the
-> > > >>> +		 * new_state performs a cleanup in the old FB.
-> > > >>> +		 */
-> > > >>> +		WARN_ON_ONCE(plane_state->fb != old_fb);    
-> > > >>
-> > > >> I personally think this approach is fine and the WARN_ON s are good for
-> > > >> catching drivers that want to use these in the future.    
-> > > > 
-> > > > Well, I agree this change is the way to go for a short-term solution
-> > > > to relax the old_fb == new_fb constraint, but I keep thinking this whole
-> > > > "update plane_state in place" is a recipe for trouble and just make
-> > > > things more complicated for drivers for no obvious reasons. Look at the
-> > > > VC4 implem [1] if you need a proof that things can get messy pretty
-> > > > quickly.
-> > > > 
-> > > > All this state-fields-copying steps could be skipped if the core was
-> > > > simply swapping the old/new states as is done in the sync update path.
-> > > > 
-> > > > [1]https://elixir.bootlin.com/linux/v5.0-rc7/source/drivers/gpu/drm/vc4/vc4_plane.c#L878    
-> > > 
-> > > I completely agree with this view FWIW. I had a discussion with Daniel 
-> > > about this when I had posted the original block FB changes patch.
-> > > 
-> > > - The plane object needs to be locked in order for async state to be updated
-> > > - Blocking commit work holds the lock for the plane, async update won't 
-> > > happen
-> > > - Non-blocking commit work that's still ongoing won't have hw_done 
-> > > signaled and drm_atomic_helper_async_check will block the async update
-> > > 
-> > > So this looks safe in theory, with the exception of the call to 
-> > > drm_atomic_helper_cleanup_planes occuring after hw_done is signaled.  
-> > 
-> > Isn't it also the case in the sync update path?
-> >   
-> > > 
-> > > I believe that the behavior of this function still remains the same even 
-> > > if plane->state is swapped to something else during the call (since 
-> > > old_plane_state should never be equal to plane->state if the commit 
-> > > succeeded and the plane is in the commit), but I'm not sure that's 
-> > > something we'd want to rely on.
-> > > 
-> > > I think other than that issue, you could probably just:
-> > > 
-> > > drm_atomic_helper_prepare_planes(...);
-> > > drm_atomic_helper_swap_state(...);
-> > > drm_atomic_state_get(state);  
-> > 
-> > Why do we need a state_get() here? AFAICT, it's done this way in the
-> > sync update path because of the non-blocking semantic where the state
-> > might be released by the caller before it's been applied by the commit
-> > worker.
-> >   
-> > > drm_atomic_helper_async_commit(...);
-> > > drm_atomic_helper_cleanup_planes(dev, state);
-> > > 
-> > > and it would work as expected. But there still may be other things I'm 
-> > > missing or haven't considered here.  
-> > 
-> > Actually, when I said we could swap states, I was not necessarily
-> > thinking about re-using drm_atomic_helper_swap_state(), but instead
-> > swap states directly in drm_atomic_helper_async_commit():
-> > 
-> > 	for_each_oldnew_plane_in_state(state, plane, old_plane_state,
-> > 				       new_plane_state, i) {
-> > 		WARN_ON(plane->state != old_plane_state);
-> > 		old_plane_state->state = state;
-> > 		new_plane_state->state = NULL;
-> > 		state->planes[i].state = old_plane_state;
-> > 		plane->state = new_plane_state;
-> > 
-> > 		funcs = plane->helper_private;
-> > 		funcs->atomic_async_update(plane, new_plane_state);
-> > 	}
-> > 
-> > This way we would avoid the WARN_ON() lines we have in
-> > drm_atomic_helper_async_commit() to check that things have been
-> > properly updated in-place, and we would also get rid of the driver
-> > code copying the plane_state property that can change during an async
-> > update.
-> > 
-> > But, as you said, I might be missing other potential issues.  
-> 
-> Ok I dug around again, and I think I reconstructed the problem again.
+The return value of get_status() is passed to user space on errors,
+so it should not return acpi_status values then.  Make it return
+error values that are meaningful for user space instead.
 
-Great!
+This also makes a Clang warning regarding the initialization of a
+local variable in get_status() go away.
 
-> 
-> The issue is the lifetimes of state structs. The nonblocking commit worker
-> doesn't hold a reference onto the new states at all. The only reason those
-> new states cannot disappear is that the next atomic comit touching the
-> same states waits for crtc_commit.hw_done before it pushes its own update
-> through (and then goes and releases those state structures).
+Reported-by: Nathan Chancellor <natechancellor@gmail.com>
+Reviewed-by: Nathan Chancellor <natechancellor@gmail.com>
+Signed-off-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
+---
 
-By disappear I guess you mean when it's replaced in plane->state by a
-subsequent atomic commit that places them in the old_state slot and
-release them as part of the drm_atomic_state_put() call when returning
-from a non-blocking atomic update. Any reason we couldn't retain
-new_state refs until we're done manipulating them to overcome this
-problem?
+Resend with a proper changelog and tags from Nathan.
 
-> 
-> The old state has no such issue, since each commit takes ownership of the
-> old state and then releases it. And can do that any time after hw_done.
+---
+ drivers/acpi/sysfs.c |   21 ++++++++++++---------
+ 1 file changed, 12 insertions(+), 9 deletions(-)
 
-I'd expect the wait on hw_done to be needed anyway for async commits
-going after sync ones. As the comment says, if we don't wait for
-hw_done, the async update settings might be overridden by the sync
-update ones.
+Index: linux-pm/drivers/acpi/sysfs.c
+===================================================================
+--- linux-pm.orig/drivers/acpi/sysfs.c
++++ linux-pm/drivers/acpi/sysfs.c
+@@ -648,26 +648,29 @@ static void acpi_global_event_handler(u3
+ 	}
+ }
+ 
+-static int get_status(u32 index, acpi_event_status *status,
++static int get_status(u32 index, acpi_event_status *ret,
+ 		      acpi_handle *handle)
+ {
+-	int result;
++	acpi_status status;
+ 
+ 	if (index >= num_gpes + ACPI_NUM_FIXED_EVENTS)
+ 		return -EINVAL;
+ 
+ 	if (index < num_gpes) {
+-		result = acpi_get_gpe_device(index, handle);
+-		if (result) {
++		status = acpi_get_gpe_device(index, handle);
++		if (ACPI_FAILURE(status)) {
+ 			ACPI_EXCEPTION((AE_INFO, AE_NOT_FOUND,
+ 					"Invalid GPE 0x%x", index));
+-			return result;
++			return -ENXIO;
+ 		}
+-		result = acpi_get_gpe_status(*handle, index, status);
+-	} else if (index < (num_gpes + ACPI_NUM_FIXED_EVENTS))
+-		result = acpi_get_event_status(index - num_gpes, status);
++		status = acpi_get_gpe_status(*handle, index, ret);
++	} else {
++		status = acpi_get_event_status(index - num_gpes, ret);
++	}
++	if (ACPI_FAILURE(status))
++		return -EIO;
+ 
+-	return result;
++	return 0;
+ }
+ 
+ static ssize_t counter_show(struct kobject *kobj,
 
-> 
-> Now with the current async code that's no issue, because we do check for
-> hw_done. The trouble is that hw_done is a kernel-internal implementation
-> detail. The only think userspace can observe is flip_done, and that's
-> what's used for -EBUSY for normal page-flips. For cursor this kinda
-> doesn't matter, because these two should be fairly close together (in most
-> cases hw_done even happens before flip_done, but that depends upon the
-> driver). So the occasional silent fallback to a synchronous commit doesn't
-> really matter.
-> 
-> What we could do is just wait for hw_done for async commits, but that's
-> kinda not cool either since it blocks (again cursor is ill-defined enough
-> that it doesn't matter). And pushing async updates to a worker means we
-> need to greatly extend the crtc_commit tracking (at least to each plane
-> state). I think most of that exist now, since we had to add it anyway for
-> planes which can be reassigned between crtc.
-
-To be honest, I don't know what the semantic of async commit should be.
-Does async (update things between 2 VBLANKS at the risk of causing
-tearing) necessarily implies non-blocking (return before the update is
-actually pushed to the HW)?
-
-> 
-> tldr; maybe we can do the full swapping now?
-> 
-> I agree it feels like the cleaner solution, but definitely need a pile of
-> igt tests to make sure we can mix&match between async and sync commits and
-> nothing blows up. And sync commits need to use reassignment of planes to
-> different crtcs plus nonblocking commit (I think amd hw can do all that,
-> or at least I've seen prep patches).
-
-Yes, that'd be great to have that in place, especially if we want to
-expose async atomic commits to userspace (right now it's only used for
-legacy cursor updates).
