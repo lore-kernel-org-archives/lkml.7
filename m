@@ -4,50 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C14CAC43381
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 17:55:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E99B5C43381
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 17:55:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 93B4C205C9
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 17:55:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id ABB4F205C9
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 17:55:45 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1552413338;
-	bh=7nlxmL3NhxMuZY/2yZPB+024HKnW17YOPNP2a1U1Q7Y=;
+	s=default; t=1552413345;
+	bh=nvevWVk9GUL7opvbDwE1xnrdXUxF9elZ2jongweUGP0=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=toIcvzQYTifIws5Utuxa7XP9vSNXtLISdPGVbS0EMGm2jQkovCFljKcWyPjX0rSab
-	 36IRSSk1s3MqR/Eg3jFa4qw7DxDMhNhzJvh8qGinMCIo4YO9El9z0U8EjLrnK9A4vp
-	 uxaKGo0VHJHI7XrrSb55PmpyJ0RjiTD8fbgCIjUs=
+	b=FK3eOYrUZXpD4BUrLsRN/T7kewOSpFhExK3gkzwBEaVt7kVGB63AwqxwENVC0Hlhe
+	 5v7o462YMb5q7WtZmOQJAfcoeth9LzWCp50siuMNfGDSD7tl6NSJmx2okmXilXi5+6
+	 hBaj94a6qJsHpmmlUZY3Jx9/lYiC/AD/mCUzm/EE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728587AbfCLRzh (ORCPT
+        id S1728940AbfCLRzo (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 12 Mar 2019 13:55:37 -0400
-Received: from mail.kernel.org ([198.145.29.99]:52012 "EHLO mail.kernel.org"
+        Tue, 12 Mar 2019 13:55:44 -0400
+Received: from mail.kernel.org ([198.145.29.99]:51982 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728210AbfCLROC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S1728203AbfCLROC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Tue, 12 Mar 2019 13:14:02 -0400
 Received: from localhost (unknown [104.133.8.98])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 2986E217F9;
-        Tue, 12 Mar 2019 17:14:02 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 664782184E;
+        Tue, 12 Mar 2019 17:14:01 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1552410842;
-        bh=7nlxmL3NhxMuZY/2yZPB+024HKnW17YOPNP2a1U1Q7Y=;
+        s=default; t=1552410841;
+        bh=nvevWVk9GUL7opvbDwE1xnrdXUxF9elZ2jongweUGP0=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=SJWUni5J2GwojRbFYbVVIWIBfboWfXLDaJxeOdwtJ8rfw6PRuawyqilO3RsGpHj50
-         LyquzFUrcxdXSywoqWqjiYvTG9VAP83k6/vNIATRWbyxkxYa4FVtg8wqeMVsi+q9d3
-         hHiPaCT6ggilYRx0f5dk78fwvS5BDFM7PASBd+R8=
+        b=I59BDaZ+3+CFo0yk0LZb8xUi/+MghEdYFjGBxzCxsSj380Ld4/OsvqryNLnR9umjS
+         0WIRC+sbYzOxGm01LiJjxvY39jt04Qj44Pv4SNirMO5F1I9V7u5f4atgqSZaVCYjsw
+         UQRUDglBbV6PC0VC5NqWEV7gHC/iiLfIlHTZUxEQ=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Taniya Das <tdas@codeaurora.org>,
-        Stephen Boyd <sboyd@kernel.org>,
+        stable@vger.kernel.org, Andrew Lunn <andrew@lunn.ch>,
+        Stefan Agner <stefan@agner.ch>,
+        Linus Walleij <linus.walleij@linaro.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 014/149] clk: qcom: gcc: Use active only source for CPUSS clocks
-Date:   Tue, 12 Mar 2019 10:07:12 -0700
-Message-Id: <20190312170350.765836812@linuxfoundation.org>
+Subject: [PATCH 4.19 031/149] gpio: vf610: Mask all GPIO interrupts
+Date:   Tue, 12 Mar 2019 10:07:29 -0700
+Message-Id: <20190312170352.312845856@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190312170349.421581206@linuxfoundation.org>
 References: <20190312170349.421581206@linuxfoundation.org>
@@ -66,67 +67,50 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-[ Upstream commit 9ff1a3b4912528f853048ccd9757ba6a2cc75557 ]
+[ Upstream commit 7ae710f9f8b2cf95297e7bbfe1c09789a7dc43d4 ]
 
-The clocks of the CPUSS such as "gcc_cpuss_ahb_clk_src" is a CRITICAL
-clock and needs to vote on the active only source of XO, so as to keep
-the vote as long as CPUSS is active. Similar rbcpr_clk_src is also has
-the same requirement.
+On SoC reset all GPIO interrupts are disable. However, if kexec is
+used to boot into a new kernel, the SoC does not experience a
+reset. Hence GPIO interrupts can be left enabled from the previous
+kernel. It is then possible for the interrupt to fire before an
+interrupt handler is registered, resulting in the kernel complaining
+of an "unexpected IRQ trap", the interrupt is never cleared, and so
+fires again, resulting in an interrupt storm.
 
-Signed-off-by: Taniya Das <tdas@codeaurora.org>
-Fixes: 06391eddb60a ("clk: qcom: Add Global Clock controller (GCC) driver for SDM845")
-Signed-off-by: Stephen Boyd <sboyd@kernel.org>
+Disable all GPIO interrupts before registering the GPIO IRQ chip.
+
+Fixes: 7f2691a19627 ("gpio: vf610: add gpiolib/IRQ chip driver for Vybrid")
+Signed-off-by: Andrew Lunn <andrew@lunn.ch>
+Acked-by: Stefan Agner <stefan@agner.ch>
+Signed-off-by: Linus Walleij <linus.walleij@linaro.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/clk/qcom/gcc-sdm845.c | 14 ++++++++++----
- 1 file changed, 10 insertions(+), 4 deletions(-)
+ drivers/gpio/gpio-vf610.c | 5 +++++
+ 1 file changed, 5 insertions(+)
 
-diff --git a/drivers/clk/qcom/gcc-sdm845.c b/drivers/clk/qcom/gcc-sdm845.c
-index fa1a196350f1..3bf11a620094 100644
---- a/drivers/clk/qcom/gcc-sdm845.c
-+++ b/drivers/clk/qcom/gcc-sdm845.c
-@@ -131,8 +131,8 @@ static const char * const gcc_parent_names_6[] = {
- 	"core_bi_pll_test_se",
- };
+diff --git a/drivers/gpio/gpio-vf610.c b/drivers/gpio/gpio-vf610.c
+index d4ad6d0e02a2..7e09ce75ffb2 100644
+--- a/drivers/gpio/gpio-vf610.c
++++ b/drivers/gpio/gpio-vf610.c
+@@ -259,6 +259,7 @@ static int vf610_gpio_probe(struct platform_device *pdev)
+ 	struct vf610_gpio_port *port;
+ 	struct resource *iores;
+ 	struct gpio_chip *gc;
++	int i;
+ 	int ret;
  
--static const char * const gcc_parent_names_7[] = {
--	"bi_tcxo",
-+static const char * const gcc_parent_names_7_ao[] = {
-+	"bi_tcxo_ao",
- 	"gpll0",
- 	"gpll0_out_even",
- 	"core_bi_pll_test_se",
-@@ -144,6 +144,12 @@ static const char * const gcc_parent_names_8[] = {
- 	"core_bi_pll_test_se",
- };
+ 	port = devm_kzalloc(&pdev->dev, sizeof(*port), GFP_KERNEL);
+@@ -298,6 +299,10 @@ static int vf610_gpio_probe(struct platform_device *pdev)
+ 	if (ret < 0)
+ 		return ret;
  
-+static const char * const gcc_parent_names_8_ao[] = {
-+	"bi_tcxo_ao",
-+	"gpll0",
-+	"core_bi_pll_test_se",
-+};
++	/* Mask all GPIO interrupts */
++	for (i = 0; i < gc->ngpio; i++)
++		vf610_gpio_writel(0, port->base + PORT_PCR(i));
 +
- static const struct parent_map gcc_parent_map_10[] = {
- 	{ P_BI_TCXO, 0 },
- 	{ P_GPLL0_OUT_MAIN, 1 },
-@@ -226,7 +232,7 @@ static struct clk_rcg2 gcc_cpuss_ahb_clk_src = {
- 	.freq_tbl = ftbl_gcc_cpuss_ahb_clk_src,
- 	.clkr.hw.init = &(struct clk_init_data){
- 		.name = "gcc_cpuss_ahb_clk_src",
--		.parent_names = gcc_parent_names_7,
-+		.parent_names = gcc_parent_names_7_ao,
- 		.num_parents = 4,
- 		.ops = &clk_rcg2_ops,
- 	},
-@@ -245,7 +251,7 @@ static struct clk_rcg2 gcc_cpuss_rbcpr_clk_src = {
- 	.freq_tbl = ftbl_gcc_cpuss_rbcpr_clk_src,
- 	.clkr.hw.init = &(struct clk_init_data){
- 		.name = "gcc_cpuss_rbcpr_clk_src",
--		.parent_names = gcc_parent_names_8,
-+		.parent_names = gcc_parent_names_8_ao,
- 		.num_parents = 3,
- 		.ops = &clk_rcg2_ops,
- 	},
+ 	/* Clear the interrupt status register for all GPIO's */
+ 	vf610_gpio_writel(~0, port->base + PORT_ISFR);
+ 
 -- 
 2.19.1
 
