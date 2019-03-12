@@ -4,63 +4,63 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-8.5 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_PASS,USER_AGENT_MUTT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_PASS,USER_AGENT_MUTT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E456EC43381
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 12:43:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 27934C43381
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 12:43:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A53C1206BA
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 12:43:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DF5CA2173C
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 12:43:09 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1552394581;
-	bh=1oHltpQ4lkh06gXs72OL3mso/f7aF4C3lN/226bVHBI=;
+	s=default; t=1552394590;
+	bh=e4B3wowrJHOViQr0LeLiMhp3WQXnXBnHCjgkLE5Zo+E=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=04X33ekwoAL5g3FLYxxBJH+ZEp3JzEHnFgesOEZ14UrQm9kw8muexMwAU3UXee8Of
-	 ApI8srPHzY36O5kzSrBqHQQFL9y59ucoCx+j9AUocQfvTT+68fhxe+fcchXbkiKLC+
-	 7WC2LDhTRefTZt8+DmIXX86qMDDZheQxAfZHuYZw=
+	b=ksrOYLJCzkSWyMa7ngb0Rt9L+cyrNKldoz/uzIHk/dwz5lSEFaJC1NY4/JPJ6PBYJ
+	 cBY1dgSj17//jOi1rCFUarJIZ07tz6AT0XBflNP32xlMNs8wm43NGO2qyh5hOxpq3l
+	 82fE/crswwseRwtVar7tlqtJBmwanfqsY4ySI+Yc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726657AbfCLMm7 (ORCPT
+        id S1726703AbfCLMnI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 12 Mar 2019 08:42:59 -0400
-Received: from mail.kernel.org ([198.145.29.99]:35606 "EHLO mail.kernel.org"
+        Tue, 12 Mar 2019 08:43:08 -0400
+Received: from mail.kernel.org ([198.145.29.99]:35736 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726192AbfCLMm6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 12 Mar 2019 08:42:58 -0400
+        id S1726192AbfCLMnI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 12 Mar 2019 08:43:08 -0400
 Received: from localhost (unknown [12.27.65.221])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 4F2A4214D8;
-        Tue, 12 Mar 2019 12:42:57 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 485AA214D8;
+        Tue, 12 Mar 2019 12:43:06 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1552394577;
-        bh=1oHltpQ4lkh06gXs72OL3mso/f7aF4C3lN/226bVHBI=;
+        s=default; t=1552394586;
+        bh=e4B3wowrJHOViQr0LeLiMhp3WQXnXBnHCjgkLE5Zo+E=;
         h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=dKnQ92ZXmrid/ezqZFJ1NU0Uj2/Wj1LmrFDp3IhEcYP3FTaPqgyQTuoJsHwIOfwUr
-         GasQyuOBrfA/w8SYl14HaRdLk+QqJNOJb3g/MkIFP0WeUFMk4PnFAaSgb8MS2oWcWB
-         11Ahpd9L4do4X/G3gkGf2mxzCRd3TQOzY2bcVnTI=
-Date:   Tue, 12 Mar 2019 05:42:56 -0700
+        b=hZzOHRM78FkCdr2lJAfuXG68FZ7titp2H3uzfV9wNL++tplT+gX10ZKts42PY19r3
+         4gfBKjg0c3I1qUVFNazMN00zyNnP9kN+NKIFTyOWtvGrsFnHsnSX0Z02a8pQbwUDLf
+         girTrS9KVui2zPsmjFQYs9dVSAFzyFust15QdARY=
+Date:   Tue, 12 Mar 2019 05:43:05 -0700
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     Gao Xiang <gaoxiang25@huawei.com>
 Cc:     stable@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>,
         linux-erofs@lists.ozlabs.org, Chao Yu <yuchao0@huawei.com>,
         Chao Yu <chao@kernel.org>, Miao Xie <miaoxie@huawei.com>,
         Fang Wei <fangwei1@huawei.com>
-Subject: Re: [PATCH for-4.20] staging: erofs: keep corrupted fs from crashing
- kernel in erofs_namei()
-Message-ID: <20190312124256.GC14713@kroah.com>
-References: <20190311024023.46037-1-gaoxiang25@huawei.com>
+Subject: Re: [PATCH RESEND for-5.0 1/2] staging: erofs: keep corrupted fs
+ from crashing kernel in erofs_namei()
+Message-ID: <20190312124305.GD14713@kroah.com>
+References: <20190311022932.13539-1-gaoxiang25@huawei.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20190311024023.46037-1-gaoxiang25@huawei.com>
+In-Reply-To: <20190311022932.13539-1-gaoxiang25@huawei.com>
 User-Agent: Mutt/1.11.3 (2019-02-01)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Mar 11, 2019 at 10:40:23AM +0800, Gao Xiang wrote:
+On Mon, Mar 11, 2019 at 10:29:31AM +0800, Gao Xiang wrote:
 > commit 419d6efc50e94bcf5d6b35cd8c71f79edadec564 upstream.
 > 
 > As Al pointed out, "
@@ -88,8 +88,12 @@ On Mon, Mar 11, 2019 at 10:40:23AM +0800, Gao Xiang wrote:
 > Signed-off-by: Gao Xiang <gaoxiang25@huawei.com>
 > ---
 > 
+> resend:
+>  - add LKML and linux-erofs mailing list to cc
+> 
 > This series resolves the following conflicts:
->  FAILED: patch "[PATCH] staging: erofs: keep corrupted fs from crashing kernel in" failed to apply to 4.20-stable tree
+> FAILED: patch "[PATCH] staging: erofs: keep corrupted fs from crashing kernel in" failed to apply to 5.0-stable tree
+> FAILED: patch "[PATCH] staging: erofs: compressed_pages should not be accessed again" failed to apply to 5.0-stable tree
 > 
 >  drivers/staging/erofs/namei.c | 183 ++++++++++++++++++++++--------------------
 >  1 file changed, 97 insertions(+), 86 deletions(-)
@@ -373,7 +377,8 @@ On Mon, Mar 11, 2019 at 10:40:23AM +0800, Gao Xiang wrote:
 >  		*nid = le64_to_cpu(de->nid);
 > -- 
 > 2.14.5
+>
 
-now applied, thanks.
+Now applied, thanks.
 
 greg k-h
