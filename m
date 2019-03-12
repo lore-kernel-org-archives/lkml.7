@@ -2,100 +2,97 @@ Return-Path: <SRS0=J4ZE=RP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PULL_REQUEST,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_PASS,URIBL_BLOCKED,USER_AGENT_MUTT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E50EEC43381
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 12:09:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9B1ECC43381
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 12:09:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A172A206BA
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 12:09:42 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1552392582;
-	bh=h8O3iXcm/GhHsnAmotZ6jKi9eUWTDBPtpEPiFTTZT44=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=q6si/rScVgPsaTzKrvZc4hi3l4VJKW8Im1PRVPjE4hbCLvQyxa7/RA/Dx09rLws3U
-	 j98un1SEF/8spYgAonYoKu/KOTFYjiXaUdoR2q9pj5kyGUETjLHjrzaZwtkoGR295I
-	 OxE7keLS/F86dHy7InKG9GHlMKbvJiEtQ2GHrG0k=
+	by mail.kernel.org (Postfix) with ESMTP id 70A9920883
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 12:09:53 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726639AbfCLMJl (ORCPT
+        id S1726716AbfCLMJv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 12 Mar 2019 08:09:41 -0400
-Received: from mail.kernel.org ([198.145.29.99]:47900 "EHLO mail.kernel.org"
+        Tue, 12 Mar 2019 08:09:51 -0400
+Received: from foss.arm.com ([217.140.101.70]:41326 "EHLO foss.arm.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725873AbfCLMJl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 12 Mar 2019 08:09:41 -0400
-Received: from mail-qt1-f173.google.com (mail-qt1-f173.google.com [209.85.160.173])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 51FA520883;
-        Tue, 12 Mar 2019 12:09:40 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1552392580;
-        bh=h8O3iXcm/GhHsnAmotZ6jKi9eUWTDBPtpEPiFTTZT44=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=t0C/OJCsa2GCcGEiPrXIpoid5t1afTf76YaR4JksMY4XzfiXE70zDtj+FfkeyOZH6
-         1lTH1RZwO+kIm/vNECPuG734bDDGKMb/g7w5WMNbaw6sJfiRf15s5Vqj/dkGbgBUY7
-         EVR2PxddoigNvuIHnxqJl5FbHJZ0AwJ9wT71zZMk=
-Received: by mail-qt1-f173.google.com with SMTP id z17so2183490qtn.4;
-        Tue, 12 Mar 2019 05:09:40 -0700 (PDT)
-X-Gm-Message-State: APjAAAWLwykzBeB4mRWEZisT1tFwJyaSNgVgx/hpevDUyNoaICT2EBWQ
-        iKr0dgq/afKxzrYiVARAHUqZy/PA8jAI/MgmaBY=
-X-Google-Smtp-Source: APXvYqyMCdccq+/Qm+ukfcopRVwgWXClpQg2H2v1axIotX/o/RLnLYzI23lqTS6TnOJlWlPaAz3XbC5KO6nvoHM0yXI=
-X-Received: by 2002:ac8:2d68:: with SMTP id o37mr28721699qta.377.1552392579546;
- Tue, 12 Mar 2019 05:09:39 -0700 (PDT)
+        id S1725873AbfCLMJu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 12 Mar 2019 08:09:50 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.72.51.249])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id C3310374;
+        Tue, 12 Mar 2019 05:09:49 -0700 (PDT)
+Received: from e107155-lin (e107155-lin.cambridge.arm.com [10.1.196.42])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id CFA633F59C;
+        Tue, 12 Mar 2019 05:09:46 -0700 (PDT)
+Date:   Tue, 12 Mar 2019 12:09:44 +0000
+From:   Sudeep Holla <sudeep.holla@arm.com>
+To:     Andy Lutomirski <luto@kernel.org>
+Cc:     "Haibo Xu (Arm Technology China)" <Haibo.Xu@arm.com>,
+        "x86@kernel.org" <x86@kernel.org>,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "linuxppc-dev@lists.ozlabs.org" <linuxppc-dev@lists.ozlabs.org>,
+        Catalin Marinas <Catalin.Marinas@arm.com>,
+        Will Deacon <Will.Deacon@arm.com>,
+        Oleg Nesterov <oleg@redhat.com>,
+        Paul Mackerras <paulus@samba.org>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>,
+        Richard Weinberger <richard@nod.at>,
+        "jdike@addtoit.com" <jdike@addtoit.com>,
+        Steve Capper <Steve.Capper@arm.com>,
+        "Bin Lu (Arm Technology China)" <Bin.Lu@arm.com>,
+        Borislav Petkov <bp@alien8.de>
+Subject: Re: [PATCH 3/6] x86: clean up _TIF_SYSCALL_EMU handling using
+ ptrace_syscall_enter hook
+Message-ID: <20190312120944.GB13825@e107155-lin>
+References: <20190228183220.15626-1-sudeep.holla@arm.com>
+ <20190228183220.15626-4-sudeep.holla@arm.com>
+ <eb9ef619-4af8-71e1-5aee-0b6294ac488b@arm.com>
+ <20190304101205.GA1504@e107155-lin>
+ <96d59a68-e5e2-86d9-c707-a79aad438b76@arm.com>
+ <20190311183403.GA31062@e107155-lin>
+ <65b00ea1-f784-4fb4-2a98-49fa44d9fa8f@arm.com>
+ <CALCETrWiF5FKUTmt4jOZJxJr6B_66NFj9TaA3Tnv1uorfkwTMg@mail.gmail.com>
 MIME-Version: 1.0
-References: <84b02324ea2fb251b4037dee8994306a@codeaurora.org>
-In-Reply-To: <84b02324ea2fb251b4037dee8994306a@codeaurora.org>
-From:   Josh Boyer <jwboyer@kernel.org>
-Date:   Tue, 12 Mar 2019 08:09:28 -0400
-X-Gmail-Original-Message-ID: <CA+5PVA5awD_uMvhKR-KdN_io5g3s2YZBVao1Tj6wWtcBUY9W1w@mail.gmail.com>
-Message-ID: <CA+5PVA5awD_uMvhKR-KdN_io5g3s2YZBVao1Tj6wWtcBUY9W1w@mail.gmail.com>
-Subject: Re: Fw files for QCA BT Chip QCA6174
-To:     Balakrishna Godavarthi <bgodavar@codeaurora.org>
-Cc:     Hemantg <hemantg@codeaurora.org>,
-        Linux Firmware <linux-firmware@kernel.org>,
-        BlueZ development <linux-bluetooth@vger.kernel.org>,
-        Linux-arm Msm <linux-arm-msm@vger.kernel.org>,
-        "Linux-Kernel@Vger. Kernel. Org" <linux-kernel@vger.kernel.org>,
-        rjliao@codeauroa.com
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CALCETrWiF5FKUTmt4jOZJxJr6B_66NFj9TaA3Tnv1uorfkwTMg@mail.gmail.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Mar 6, 2019 at 11:40 AM Balakrishna Godavarthi
-<bgodavar@codeaurora.org> wrote:
->
->
-> Hi,
->
-> The following changes since commit
-> 54b0a748c8966c93aaa8726402e0b69cb51cd5d2:
->
->    WHENCE: Correct errant entries (2019-02-21 07:21:45 -0500)
->
-> are available in the Git repository at:
->
->    https://github.com/bgodavar/qca6174_bt_fw.git
->
-> for you to fetch changes up to c99beda7e0368961d024ddc8e45a46f118100cc7:
->
->    QCA: Add the fw files for BT Chip QCA6174. (2019-02-25 15:36:36 +0530)
->
-> ----------------------------------------------------------------
-> Balakrishna Godavarthi (1):
->        QCA: Add the fw files for BT Chip QCA6174.
->
->   WHENCE                    |   2 ++
->   qca/nvm_00440302.bin      | Bin 0 -> 2010 bytes
->   qca/rampatch_00440302.bin | Bin 0 -> 64940 bytes
->   3 files changed, 2 insertions(+)
->   create mode 100644 qca/nvm_00440302.bin
->   create mode 100644 qca/rampatch_00440302.bin
+On Mon, Mar 11, 2019 at 08:04:39PM -0700, Andy Lutomirski wrote:
+> On Mon, Mar 11, 2019 at 6:35 PM Haibo Xu (Arm Technology China)
+> <Haibo.Xu@arm.com> wrote:
+> >
 
-Pulled and pushed out.
+[...]
 
-josh
+> > For the PTRACE_SYSEMU_SINGLESTEP request, ptrace only need to report(send
+> > SIGTRAP) at the entry of a system call, no need to report at the exit of a
+> > system call.That's why the old logic-{step = ((flags & (_TIF_SINGLESTEP |
+> > _TIF_SYSCALL_EMU)) == _TIF_SINGLESTEP)} here try to filter out the special
+> > case(PTRACE_SYSEMU_SINGLESTEP).
+> >
+> > Another way to make sure the logic is fine, you can run some tests with
+> > respect to both logic, and to check whether they have the same behavior.
+>
+> tools/testing/selftests/x86/ptrace_syscall.c has a test intended to
+> exercise this.  Can one of you either confirm that it does exercise it
+> and that it still passes or can you improve the test?
+>
+I did run the tests which didn't flag anything. I haven't looked at the
+details of test implementation, but seem to miss this case. I will see
+what can be improved(if it's possible). Also I think single_step_syscall
+is the one I need to look for this particular one. Both single_step_syscall
+ptrace_syscall reported no errors.
+
+--
+Regards,
+Sudeep
