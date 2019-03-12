@@ -4,51 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8EA85C43381
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 18:13:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C2E7CC43381
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 18:14:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 44FDF2087C
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 18:13:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9325E2087C
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 18:14:00 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1552414430;
-	bh=4wfqkpIUMHEm2vEQ7gfw4YZZ2zDsR90v2VcF35suMak=;
+	s=default; t=1552414440;
+	bh=/rJgdU2pud1ahYGueo3MbrAYmysweVFgQXmwULKe6PI=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=WSyFgseZlYr7+A6cav6V+sDC2qvujydgDhUL0cmdLHMVYdHRLApeHMfdX+7gflXae
-	 a123QyhfmAIRvhU2T05k3XGtFjGuEXSKGyvKcnlGk456nF8AkOhZ0zZ58L4VpTOYGR
-	 TbhSy07Ds2IzQkDhiHso4aJFjhsjvtxwR3kYyPV8=
+	b=zzhAPjkn58wPD8PV4w1KqEGtYhuYGpP0f0RIqNs5U7g2owgQAChY6dquCTFPEb/dp
+	 uT/qe3Pfe/5lEPL3P/pKyruVyD139hchm5sbmXBwxzMIgkaitIeF+JaYXtFbDjcfWC
+	 xLqmbN/HoHAmfns7sZAbYhSC4H4P4xHo4Haah/Yk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727348AbfCLSNt (ORCPT
+        id S1727395AbfCLSN7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 12 Mar 2019 14:13:49 -0400
-Received: from mail.kernel.org ([198.145.29.99]:44660 "EHLO mail.kernel.org"
+        Tue, 12 Mar 2019 14:13:59 -0400
+Received: from mail.kernel.org ([198.145.29.99]:44508 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726895AbfCLRL0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 12 Mar 2019 13:11:26 -0400
+        id S1726643AbfCLRLX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 12 Mar 2019 13:11:23 -0400
 Received: from localhost (unknown [104.133.8.98])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 2459A214AE;
-        Tue, 12 Mar 2019 17:11:25 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id C8BE32173C;
+        Tue, 12 Mar 2019 17:11:22 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1552410685;
-        bh=4wfqkpIUMHEm2vEQ7gfw4YZZ2zDsR90v2VcF35suMak=;
+        s=default; t=1552410682;
+        bh=/rJgdU2pud1ahYGueo3MbrAYmysweVFgQXmwULKe6PI=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=u10DegxbPlmfstaHrHwNVv4eHYFayBaBr12+LNz3fa1P6PLPrOYAiE1bWcA1UyqLK
-         DzdW9ID/Tqna9BZdLh9HkmyPbKe+LTkjqSW0iaysw1rfhW8/3XibDebSsHjSsSWHqY
-         n8+yJ6xN1bJuQzzCKjXyVnUn6y5u7bejZXm9K7n4=
+        b=BJaYriWMLlc7sZ0dTRwvWoMBrlyDea0xZLnUyhVLTkjDE995cxpLFbOuee2NjjshL
+         1rNs4NydbsUPDvevy0Y6nzU/T+9iOXF5VhYhDbpzEtrdLWxCptriiM6GkUxJqxD2ur
+         dyWD5KcSjJ5CX9c9tqPGxMQXw1+kdFux+AHxL0/s=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Heiner Kallweit <hkallweit1@gmail.com>,
-        Mika Westerberg <mika.westerberg@linux.intel.com>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>
-Subject: [PATCH 5.0 15/25] Revert "PCI/PME: Implement runtime PM callbacks"
-Date:   Tue, 12 Mar 2019 10:08:53 -0700
-Message-Id: <20190312170404.677900794@linuxfoundation.org>
+        stable@vger.kernel.org,
+        Marek Szyprowski <m.szyprowski@samsung.com>,
+        Krzysztof Kozlowski <krzk@kernel.org>,
+        Arnd Bergmann <arnd@arndb.de>
+Subject: [PATCH 5.0 12/25] ARM: dts: exynos: Fix max voltage for buck8 regulator on Odroid XU3/XU4
+Date:   Tue, 12 Mar 2019 10:08:50 -0700
+Message-Id: <20190312170404.451980264@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190312170403.643852550@linuxfoundation.org>
 References: <20190312170403.643852550@linuxfoundation.org>
@@ -67,76 +66,44 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-From: Mika Westerberg <mika.westerberg@linux.intel.com>
+From: Marek Szyprowski <m.szyprowski@samsung.com>
 
-commit c528f7bd362b097eeeafa6fbbeccd9750b79c7ba upstream.
+commit a3238924a820c1d7c977b632b769f3b5690cba09 upstream.
 
-This reverts commit 0e157e52860441cb26051f131dd0b5ae3187a07b.
+The maximum voltage value for buck8 regulator on Odroid XU3/XU4 boards is
+set too low. Increase it to the 2000mV as specified on the board schematic.
+So far the board worked fine, because of the bug in the PMIC driver, which
+used incorrect step value for that regulator. It interpreted the voltage
+value set by the bootloader as 1225mV and kept it unchanged. The regulator
+driver has been however fixed recently in the commit 56b5d4ea778c
+("regulator: s2mps11: Fix steps for buck7, buck8 and LDO35"), what results
+in reading the proper buck8 value and forcing it to 1500mV on boot. This
+is not enough for proper board operation and results in eMMC errors during
+heavy IO traffic. Increasing maximum voltage value for buck8 restores
+original driver behavior and fixes eMMC issues.
 
-Heiner reported that the commit in question prevents his network adapter
-from triggering PME and waking up when network cable is plugged.
-
-The commit tried to prevent root port waking up from D3cold immediately but
-looks like disabing root port PME interrupt is not the right way to fix
-that issue so revert it now.  The patch following proposes an alternative
-solution to that issue.
-
-Link: https://bugzilla.kernel.org/show_bug.cgi?id=202103
-Fixes: 0e157e528604 ("PCI/PME: Implement runtime PM callbacks")
-Reported-by: Heiner Kallweit <hkallweit1@gmail.com>
-Tested-by: Heiner Kallweit <hkallweit1@gmail.com>
-Signed-off-by: Mika Westerberg <mika.westerberg@linux.intel.com>
-Signed-off-by: Bjorn Helgaas <bhelgaas@google.com>
-Acked-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
-CC: stable@vger.kernel.org	# v4.20+
+Signed-off-by: Marek Szyprowski <m.szyprowski@samsung.com>
+Fixes: 86a2d2ac5e5d ("ARM: dts: Add dts file for Odroid XU3 board")
+Fixes: 56b5d4ea778c ("regulator: s2mps11: Fix steps for buck7, buck8 and LDO35")
+Cc: <stable@vger.kernel.org>
+Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
+Signed-off-by: Arnd Bergmann <arnd@arndb.de>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/pci/pcie/pme.c |   27 ---------------------------
- 1 file changed, 27 deletions(-)
+ arch/arm/boot/dts/exynos5422-odroid-core.dtsi |    2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
---- a/drivers/pci/pcie/pme.c
-+++ b/drivers/pci/pcie/pme.c
-@@ -432,31 +432,6 @@ static void pcie_pme_remove(struct pcie_
- 	kfree(get_service_data(srv));
- }
- 
--static int pcie_pme_runtime_suspend(struct pcie_device *srv)
--{
--	struct pcie_pme_service_data *data = get_service_data(srv);
--
--	spin_lock_irq(&data->lock);
--	pcie_pme_interrupt_enable(srv->port, false);
--	pcie_clear_root_pme_status(srv->port);
--	data->noirq = true;
--	spin_unlock_irq(&data->lock);
--
--	return 0;
--}
--
--static int pcie_pme_runtime_resume(struct pcie_device *srv)
--{
--	struct pcie_pme_service_data *data = get_service_data(srv);
--
--	spin_lock_irq(&data->lock);
--	pcie_pme_interrupt_enable(srv->port, true);
--	data->noirq = false;
--	spin_unlock_irq(&data->lock);
--
--	return 0;
--}
--
- static struct pcie_port_service_driver pcie_pme_driver = {
- 	.name		= "pcie_pme",
- 	.port_type	= PCI_EXP_TYPE_ROOT_PORT,
-@@ -464,8 +439,6 @@ static struct pcie_port_service_driver p
- 
- 	.probe		= pcie_pme_probe,
- 	.suspend	= pcie_pme_suspend,
--	.runtime_suspend = pcie_pme_runtime_suspend,
--	.runtime_resume	= pcie_pme_runtime_resume,
- 	.resume		= pcie_pme_resume,
- 	.remove		= pcie_pme_remove,
- };
+--- a/arch/arm/boot/dts/exynos5422-odroid-core.dtsi
++++ b/arch/arm/boot/dts/exynos5422-odroid-core.dtsi
+@@ -468,7 +468,7 @@
+ 			buck8_reg: BUCK8 {
+ 				regulator-name = "vdd_1.8v_ldo";
+ 				regulator-min-microvolt = <800000>;
+-				regulator-max-microvolt = <1500000>;
++				regulator-max-microvolt = <2000000>;
+ 				regulator-always-on;
+ 				regulator-boot-on;
+ 			};
 
 
