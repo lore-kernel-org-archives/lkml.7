@@ -2,194 +2,173 @@ Return-Path: <SRS0=J4ZE=RP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.0 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-16.2 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FSL_HELO_FAKE,HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PULL_REQUEST,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_MUTT,USER_IN_DEF_DKIM_WL autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 157D7C43381
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 04:39:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F3655C43381
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 04:39:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CCFE52087C
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 04:39:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B800D214AF
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 04:39:17 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=xilinx.onmicrosoft.com header.i=@xilinx.onmicrosoft.com header.b="AjM+hife"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="Ev0fnqSy"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726812AbfCLEjA (ORCPT
+        id S1726898AbfCLEjQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 12 Mar 2019 00:39:00 -0400
-Received: from mail-eopbgr760070.outbound.protection.outlook.com ([40.107.76.70]:47462
-        "EHLO NAM02-CY1-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1725848AbfCLEjA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 12 Mar 2019 00:39:00 -0400
+        Tue, 12 Mar 2019 00:39:16 -0400
+Received: from mail-pg1-f195.google.com ([209.85.215.195]:42845 "EHLO
+        mail-pg1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725848AbfCLEjQ (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 12 Mar 2019 00:39:16 -0400
+Received: by mail-pg1-f195.google.com with SMTP id b2so832853pgl.9
+        for <linux-kernel@vger.kernel.org>; Mon, 11 Mar 2019 21:39:15 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=xilinx.onmicrosoft.com; s=selector1-xilinx-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=BzUaijgA+tso8g91qAKKbGPfPVV8rlWyBQT2/Q0RQ2U=;
- b=AjM+hifeFDLRY89Ogqnqd7Q3QVN1Quk5bCxk6wqATjZ5Zjq+r5B51hAVUlPnp30J+jlD0Ar3KFHweV17ux44QXdfE8C943FKz0BmoSCNJq+Hrt2JsSrBVu18ktM2rL0IQMOTWOQqERQzqG8QRN9MauwRRf480rqlqqHp7mWKHkc=
-Received: from CY4PR02MB2709.namprd02.prod.outlook.com (10.175.80.9) by
- CY4PR02MB3253.namprd02.prod.outlook.com (10.165.88.148) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.1686.18; Tue, 12 Mar 2019 04:38:17 +0000
-Received: from CY4PR02MB2709.namprd02.prod.outlook.com
- ([fe80::bc8d:c1a1:e7d9:2983]) by CY4PR02MB2709.namprd02.prod.outlook.com
- ([fe80::bc8d:c1a1:e7d9:2983%11]) with mapi id 15.20.1686.021; Tue, 12 Mar
- 2019 04:38:17 +0000
-From:   Vishal Sagar <vsagar@xilinx.com>
-To:     Rob Herring <robh@kernel.org>,
-        Vishal Sagar <vishal.sagar@xilinx.com>
-CC:     Hyun Kwon <hyunk@xilinx.com>,
-        "laurent.pinchart@ideasonboard.com" 
-        <laurent.pinchart@ideasonboard.com>,
-        "mchehab@kernel.org" <mchehab@kernel.org>,
-        "robh+dt@kernel.org" <robh+dt@kernel.org>,
-        "mark.rutland@arm.com" <mark.rutland@arm.com>,
-        Michal Simek <michals@xilinx.com>,
-        "linux-media@vger.kernel.org" <linux-media@vger.kernel.org>,
-        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
-        "sakari.ailus@linux.intel.com" <sakari.ailus@linux.intel.com>,
-        "hans.verkuil@cisco.com" <hans.verkuil@cisco.com>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Dinesh Kumar <dineshk@xilinx.com>,
-        Sandip Kothari <sandipk@xilinx.com>,
-        Vishal Sagar <vishal.sagar@xilinx.com>
-Subject: RE: [PATCH v5 1/2] media: dt-bindings: media: xilinx: Add Xilinx MIPI
- CSI-2 Rx Subsystem
-Thread-Topic: [PATCH v5 1/2] media: dt-bindings: media: xilinx: Add Xilinx
- MIPI CSI-2 Rx Subsystem
-Thread-Index: AQHU1+9k1Y7bX2mJwEG8jY2Ju1imtKYHB1AAgABjSuA=
-Date:   Tue, 12 Mar 2019 04:38:17 +0000
-Message-ID: <CY4PR02MB27096C056A79EDF5B62AC7E6A7490@CY4PR02MB2709.namprd02.prod.outlook.com>
-References: <1552297257-145919-1-git-send-email-vishal.sagar@xilinx.com>
- <1552297257-145919-2-git-send-email-vishal.sagar@xilinx.com>
- <20190311224140.GA23484@bogus>
-In-Reply-To: <20190311224140.GA23484@bogus>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-Auto-Response-Suppress: DR, RN, NRN, OOF, AutoReply
-X-MS-TNEF-Correlator: 
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=vsagar@xilinx.com; 
-x-originating-ip: [149.199.50.133]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: 9654e4c1-1956-49bb-8f47-08d6a6a48c4a
-x-ms-office365-filtering-ht: Tenant
-x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600127)(711020)(4605104)(4618075)(2017052603328)(7153060)(7193020);SRVR:CY4PR02MB3253;
-x-ms-traffictypediagnostic: CY4PR02MB3253:
-x-microsoft-exchange-diagnostics: =?us-ascii?Q?1;CY4PR02MB3253;23:EtCyG34+QhAV62CAnN0K9jBRN7XsmHMOnpcjniHrV?=
- =?us-ascii?Q?KYU2qo5o/WCKnx/tt6i55Si5tY+YHADCUGvUaEqn3Cu1OgztgsFaumpF6mVt?=
- =?us-ascii?Q?q9/fFb7hNvKu8XohVrr1WmG/PVwLH3LTWTXoDIL8muVXoDoUKv9srQWSZehO?=
- =?us-ascii?Q?WsLdv/EApyGq/Mb0Vc+Ny2Xnk9r2kak7yUMuqhsDCp/oyzqCk03jgBNijhu8?=
- =?us-ascii?Q?Z3nXS0cCk4S34U8EMmIAwTU1mT78/SpBYpRqsrSUpgKwD2qxDrHHkAeDQEkD?=
- =?us-ascii?Q?oUg3FkiTdrqg0puzJLsSYFWUkQ695vjtQgPPaJ9k61tEc/v5n1s6QPU9OUEB?=
- =?us-ascii?Q?JT7ThDSfGhZo+n5420VJoK7gN6GqOGrbjXXtLyXhyOn0hROWKJJkofNnJYlB?=
- =?us-ascii?Q?26/3wIze1+BqGbkedClCM92IVBpLlPiJoBtAGgZk+FZKTc9NdCS2ihrntB3u?=
- =?us-ascii?Q?zpHpkx4fkBUKSZ4Oi6IWFEIMZUduXcH2+w4nlk1R6kmQmmjLFWoHy+FzOHMd?=
- =?us-ascii?Q?pDUuWqDqEajhFTLAub/aX5LFKP9A+tF/1qq1+MoAi6Xgn1eBFbVljSFn/FvO?=
- =?us-ascii?Q?c7O678qDUSMT1A7Pypwpi6cFlS3awMagqHpiOYgm1WkckmVemKw+KxXp/ADJ?=
- =?us-ascii?Q?JDsyJp4cKxkWvE77oY16iQSX+bm9R4c2ezJUXsbvT/cVEDSdwlJ5WvfS7nSb?=
- =?us-ascii?Q?Y5CjCfMxtTjdweJ22O6F6tcS4rG08bD1uzsvbj4SZGGgH2kct9lnCgTc6YUb?=
- =?us-ascii?Q?nQMOFQHlvYi1vzv54fWs1S3cKEM2TSQ888AuFOzH25nfRqo5cNRVp9OM+9ir?=
- =?us-ascii?Q?0iN0moEFhyfRrMBBy0gyNdNMuY7a06pfSa2GMFHGY079AtwI4saQqwnOVeGE?=
- =?us-ascii?Q?KqFnN6AD86zRhbtcHirjJYIjqsDsRGsnT91d5igOPJ2woy0zgtEFIZy/hAsf?=
- =?us-ascii?Q?bZplbMbC29wSBrQbCRfIPWItdPPRi8tJqhr3KDEpOruqGAhVOj9tx4CS/STw?=
- =?us-ascii?Q?y77yxBdg2YEsgW+Yrnsx49Iv9kJFBkzkmWt5sTpgLeQKRuF9g+k4bXYmcPGy?=
- =?us-ascii?Q?Zfa+xcr6Pa1T5woKBDe+iL6Hiy3UJ4Tkd6vM3J07j9qH+p2TVOAfIdQJr3Dj?=
- =?us-ascii?Q?RvEK3fKW0Q7WhrkU/oY4oU6VYUw8MgNCNjLt6ZlLvDLuBj5bONyLONR+ePZS?=
- =?us-ascii?Q?jhRu7XKYvzhcO282cpR40DhIZR8i+3mbYd6SJ2Lz/gkGlvfr/qUfOFbenNs6?=
- =?us-ascii?Q?2yXJVU9nRQa+aVPSDoUR5DxYEL6gq9b7JmJg6vjfJidSTUBBCmeJywQMHZbe?=
- =?us-ascii?Q?+iKmsbcPH1iFE0FpU5PoDo0IFZkoZd/TWmPHzfJNdZ7?=
-x-microsoft-antispam-prvs: <CY4PR02MB3253BE90C46572E29C3DE232A7490@CY4PR02MB3253.namprd02.prod.outlook.com>
-x-forefront-prvs: 09749A275C
-x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(346002)(396003)(39850400004)(136003)(366004)(376002)(199004)(189003)(51914003)(13464003)(26005)(11346002)(316002)(6246003)(7416002)(2906002)(446003)(7736002)(105586002)(6636002)(107886003)(186003)(25786009)(4326008)(14454004)(106356001)(68736007)(8676002)(74316002)(305945005)(8936002)(81156014)(81166006)(99286004)(478600001)(486006)(33656002)(476003)(102836004)(3846002)(6116002)(7696005)(229853002)(76176011)(66066001)(53546011)(6506007)(97736004)(6436002)(110136005)(86362001)(5660300002)(256004)(54906003)(53936002)(71190400001)(71200400001)(9686003)(52536013)(55016002);DIR:OUT;SFP:1101;SCL:1;SRVR:CY4PR02MB3253;H:CY4PR02MB2709.namprd02.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
-received-spf: None (protection.outlook.com: xilinx.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam-message-info: /VvmXPoJFbOY8IW4lJxzfl2QN057GN1hpRoEbJ0Xteo7489yxU8MHyOlZfnSKREM4YZowN/14eIQU2PrOa3FT8CcybE9AT0bD+phaEAacTx9/FbOtbummk4+1ns4ODBaDzOZkbSrKot0xdCKv1tnV5gLVYyKpc8ED48L/kDLIGVQ5U1EPwLdwC/EUONWz0At0MOjuqEBwvJM19pjJrs1w7U1k4TksCIAP3ROeUSyyocOFHBN65yDvkzB1YsA7zw88qfqMVIdrkSbnnHi3QDHL1JjMzvBO4dRWn/NdLrhgq0FYI26wHHFEcQuIWBHYpts+RRADWVaOcXqTuKgBh+Vrd7VMVIq5mNTkfIVmymL9pk6BoXiT2OB4L0SVDSA4Yys64HqQhJhC6WjDVzNlhjiEgkk65y3JJ6tOwrxvrUxtwY=
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
+        d=google.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:mime-version:content-disposition
+         :user-agent;
+        bh=3TitDM4xhzNwj5D+o7ycj+hOBD4Cq648vCERN4zGarM=;
+        b=Ev0fnqSyCTfPQbclKyvWftCULeJZKVM8NNiAqOZ07d++VVOV4qPHtj71bEieAbEUNJ
+         O3phMyrxmj/aMEQFj8bvEt7Dj8oXbLtCA+I/z2KSVhiDuGONZ9qmIMHLfSsl8VCD07rE
+         b3cgcjrKAVSbqUpFEGjT+v0o1lFFbU/WI01CoviWUwwl1PIyI1z9QnSZx7N5Apl4rZj1
+         O4FDvVfy/dOK6UMWzxaREz0fB+h3viNGvWlBKuHauB01ktmKhEeDbqLNNfWCoO8A9LYB
+         gfQq+nw71LWlRV0DDJ9aMPNoZ75Gv9etrnJOAC5n06Cs4B5nNQwG+PmgIB7Ls0GDHqKN
+         YG+w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:mime-version
+         :content-disposition:user-agent;
+        bh=3TitDM4xhzNwj5D+o7ycj+hOBD4Cq648vCERN4zGarM=;
+        b=e3yyRtn26OEigoCRelsxBmSkvmKPoI+Dl1QtFBFlrm0w1Dvb9hvooqehyPQQ6bOw+Q
+         7ogNt6f5lozagDlMZcmjjMZ0b+dO1DndThjVi/GObNSK2NOiGG/mgLTqgEXI5WwE4uzH
+         TbRZJIBspdnt7K9yl+6W/ok6TOOAYl/otQgrv/Wc4hdjcpkrCCQLgdWv3T4jefvOdIct
+         jrmOaa8OP1rHQW18FLnIdBI1ZrgvVn1iARpWG7UKDsksL4bOWc8A/zpuTqMzKIwK+oje
+         QyZhewYhIsRVtE49ulYVN7/PJLW21thcrTU67ZBCX5CYXXnUEV9+OtfTHPhibXtFMmeJ
+         pPng==
+X-Gm-Message-State: APjAAAUrMYoWKmLwcdQsiuYGgHu4+MbgxO3YhsM16/xJA/LXluUFzs9z
+        eFVB5EfKKjqQZSAJnhX30TbJkJjiniY=
+X-Google-Smtp-Source: APXvYqx58YnUT+JrPauJST7V92E0Depp6nx0NihEt8nETFVfSNT7XF6MrijgKlvBhxTaS7reNmH+zg==
+X-Received: by 2002:a17:902:421:: with SMTP id 30mr36884339ple.142.1552365554165;
+        Mon, 11 Mar 2019 21:39:14 -0700 (PDT)
+Received: from google.com ([2620:15c:202:1:c562:226a:6d78:2ae4])
+        by smtp.gmail.com with ESMTPSA id h9sm4669484pgk.22.2019.03.11.21.39.12
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Mon, 11 Mar 2019 21:39:12 -0700 (PDT)
+Date:   Mon, 11 Mar 2019 21:39:08 -0700
+From:   Benson Leung <bleung@google.com>
+To:     torvalds@linux-foundation.org, linux-kernel@vger.kernel.org,
+        enric.balletbo@collabora.com
+Cc:     linux-kernel@vger.kernel.org, bleung@chromium.org,
+        bleung@google.com
+Subject: [GIT PULL] chrome-platform updates for v5.1
+Message-ID: <20190312043908.GA261883@google.com>
 MIME-Version: 1.0
-X-OriginatorOrg: xilinx.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 9654e4c1-1956-49bb-8f47-08d6a6a48c4a
-X-MS-Exchange-CrossTenant-originalarrivaltime: 12 Mar 2019 04:38:17.6796
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 657af505-d5df-48d0-8300-c31994686c5c
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: CY4PR02MB3253
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="BOKacYhQ+x31HxR3"
+Content-Disposition: inline
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Rob,
 
-> -----Original Message-----
-> From: Rob Herring [mailto:robh@kernel.org]
-> Sent: Tuesday, March 12, 2019 4:12 AM
-> To: Vishal Sagar <vishal.sagar@xilinx.com>
-> Cc: Hyun Kwon <hyunk@xilinx.com>; laurent.pinchart@ideasonboard.com;
-> mchehab@kernel.org; robh+dt@kernel.org; mark.rutland@arm.com; Michal
-> Simek <michals@xilinx.com>; linux-media@vger.kernel.org;
-> devicetree@vger.kernel.org; sakari.ailus@linux.intel.com;
-> hans.verkuil@cisco.com; linux-arm-kernel@lists.infradead.org; linux-
-> kernel@vger.kernel.org; Dinesh Kumar <dineshk@xilinx.com>; Sandip Kothari
-> <sandipk@xilinx.com>; Vishal Sagar <vishal.sagar@xilinx.com>
-> Subject: Re: [PATCH v5 1/2] media: dt-bindings: media: xilinx: Add Xilinx=
- MIPI
-> CSI-2 Rx Subsystem
->=20
-> EXTERNAL EMAIL
->=20
-> On Mon, 11 Mar 2019 15:10:56 +0530, Vishal Sagar wrote:
-> > Add bindings documentation for Xilinx MIPI CSI-2 Rx Subsystem.
-> >
-> > The Xilinx MIPI CSI-2 Rx Subsystem consists of a CSI-2 Rx controller, a
-> > DPHY in Rx mode, an optional I2C controller and a Video Format Bridge.
-> >
-> > Signed-off-by: Vishal Sagar <vishal.sagar@xilinx.com>
-> > Reviewed-by: Hyun Kwon <hyun.kwon@xilinx.com>
-> > ---
-> > v5
-> > - Incorporated comments by Luca Cersoli
-> > - Removed DPHY clock from description and example
-> > - Removed bayer pattern from device tree MIPI CSI IP
-> >   doesn't deal with bayer pattern.
-> >
-> > v4
-> > - Added reviewed by Hyun Kwon
-> >
-> > v3
-> > - removed interrupt parent as suggested by Rob
-> > - removed dphy clock
-> > - moved vfb to optional properties
-> > - Added required and optional port properties section
-> > - Added endpoint property section
-> >
-> > v2
-> > - updated the compatible string to latest version supported
-> > - removed DPHY related parameters
-> > - added CSI v2.0 related property (including VCX for supporting upto 16
-> >   virtual channels).
-> > - modified csi-pxl-format from string to unsigned int type where the va=
-lue
-> >   is as per the CSI specification
-> > - Defined port 0 and port 1 as sink and source ports.
-> > - Removed max-lanes property as suggested by Rob and Sakari
-> >
-> >  .../bindings/media/xilinx/xlnx,csi2rxss.txt        | 118
-> +++++++++++++++++++++
-> >  1 file changed, 118 insertions(+)
-> >  create mode 100644
-> Documentation/devicetree/bindings/media/xilinx/xlnx,csi2rxss.txt
-> >
->=20
-> Reviewed-by: Rob Herring <robh@kernel.org>
+--BOKacYhQ+x31HxR3
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-Thanks for the review. :)=20
+Hi Linus,
 
-Regards
-Vishal Sagar
+The following changes since commit 49a57857aeea06ca831043acbb0fa5e0f50602fd:
+
+  Linux 5.0-rc3 (2019-01-21 13:14:44 +1300)
+
+are available in the Git repository at:
+
+  git://git.kernel.org/pub/scm/linux/kernel/git/chrome-platform/linux.git t=
+ags/tag-chrome-platform-for-v5.1
+
+for you to fetch changes up to 2794449576a6024e203eca5cc2c1a3ae33102b8e:
+
+  platform/chrome: fix wilco-ec dependencies (2019-03-05 11:35:46 +0100)
+
+----------------------------------------------------------------
+chrome platform changes for v5.1
+
+1. SPDX identifier cleanup for platform/chrome
+2. Cleanup series between mfd and chrome/platform, moving
+   cros-ec attributes from mfd/cros_ec_dev to sub-drivers in platform/chrom=
+e.
+3. Wilco EC driver
+4. Maintainership change to new group repository.
+
+----------------------------------------------------------------
+Arnd Bergmann (1):
+      platform/chrome: fix wilco-ec dependencies
+
+Enric Balletbo i Serra (20):
+      mfd / platform: cros_ec: Use devm_mfd_add_devices
+      mfd / platform: cros_ec: Move lightbar attributes to its own driver
+      mfd / platform: cros_ec: Move vbc attributes to its own driver
+      mfd / platform: cros_ec: Move debugfs attributes to its own driver
+      mfd / platform: cros_ec: Move device sysfs attributes to its own driv=
+er
+      mfd / platform: cros_ec_vbc: Instantiate only if the EC has a VBC NVR=
+AM
+      platform/chrome: cros_ec_lightbar: Instantiate only if the EC has a l=
+ightbar
+      platform/chrome: cromeos_pstore: switch to SPDX identifier
+      platform/chrome: cros_ec_debugfs: switch to SPDX identifier
+      platform/chrome: cros_ec_lightbar: switch to SPDX identifier
+      platform/chrome: cros_ec_sysfs: switch to SPDX identifier
+      platform/chrome: cros_ec_vbc: switch to SPDX identifier
+      platform/chrome: cros_ec_i2c: switch to SPDX identifier
+      platform/chrome: cros_ec_lpc: switch to SPDX identifier
+      platform/chrome: cros_ec_proto: switch to SPDX identifier
+      platform/chrome: cros_ec_spi: switch to SPDX identifier
+      platform/chrome: cros_kbd_led_backlight: switch to SPDX identifier
+      platform/chrome: cros_ec_lightbar: remove pr_fmt() define
+      platform/chrome: cros_ec_sysfs: remove pr_fmt() define
+      MAINTAINERS: chrome-platform: change the git tree to a chrome-platfor=
+m group git tree
+
+Nick Crews (4):
+      platform/chrome: cros_ec: Remove cros_ec dependency in lpc_mec
+      platform/chrome: Add new driver for Wilco EC
+
+Thank you,
+Benson
+--=20
+Benson Leung
+Staff Software Engineer
+Chrome OS Kernel
+Google Inc.
+bleung@google.com
+Chromium OS Project
+bleung@chromium.org
+
+--BOKacYhQ+x31HxR3
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAABCgAdFiEE6gYDF28Li+nEiKLaHwn1ewov5lgFAlyHN+kACgkQHwn1ewov
+5lhNAQ/+J4HhtTPcF0Qo5ZUiYNjyU0lTTt5eI1zLvhxHr47FIFQcggnMkbOmEmFM
+qkz63ffdYQWPvelxb9/dW58aq65uuEmGnmOuwVIGKWskpTIz4HTbWdnKsxeXsgt4
+bHXZi2ZvHoUl9LP05fxfJZrpRKrA9I0S7hQWYFwJt/6WXZdKi6tITt7WZWsIflyF
+c9xkDgpI+odAaINLD42V0j5ZlmE/RV96taUxBUwWcwvtBaEIP7DkiGRLzZEWDq/e
+Kzx5yBJ3sAPGoAbGpTj2buFv5SPOMM81fxBkNSde6C0oksSXMAXOK554F4TvzoVX
+uO+ISoR2S7Va7TCMNs1B3VZl2kQiiqp4Lbjnw8g9zMZlvy+2HkLLoYiOl+DzJ7lR
+Q/VOV3JuUR90F1EqNIroU3iVaCcq6vTi6FUoVM0olwPc52aks/Q/DRiE/Gcq458u
+Ch8tUuycvukzWmekHo85N/EprjEVjzK78QdM+JVCPBJSXDWWqyA6ML6N5l53ZHc8
+djV92xHuUyyO+uGJgJznp39+MtNjjswoarxeHQs7FkUkqkXD2nGekibvRW6QBF+5
+IGQTw3PryYNNuUaVCY3QWS+Z0ax1omXywlAfrkVKcDHXk3l3dIX3B6zwtlB+zvAe
+FkBW4xY8DtvQ7fn1QNfYwHV/nRORsWAea1MVYivwAA3UfXs2U6A=
+=5JE8
+-----END PGP SIGNATURE-----
+
+--BOKacYhQ+x31HxR3--
