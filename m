@@ -2,128 +2,69 @@ Return-Path: <SRS0=J4ZE=RP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_PASS autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-3.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_PASS,
+	UNWANTED_LANGUAGE_BODY autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 049E8C4360F
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 16:59:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D578AC43381
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 17:00:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C86132087C
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 16:59:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A7AC7214AF
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 17:00:18 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1552410018;
+	bh=kTU5PTMsXMLoeyNCnDTF7uFni7kYIBP3NBUHzKReQXQ=;
+	h=Subject:From:In-Reply-To:References:Date:To:Cc:List-ID:From;
+	b=u+KMbIwdouQrr93e6eAW4NYEw50wKzbXWBb9MzEpbExc8XYZe/TJgoydYW0CiMuKW
+	 pp8yHv0NITHKoM2JM6ZdhzU0buE5Kp5X843654TohRJHMCwgnPOLnUtD0j6ZYquiQm
+	 kDzvOoHeTqp8L6PUqDYRyJBWTCzFyi9j3/ZydRXY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726802AbfCLQ7u (ORCPT
+        id S1726865AbfCLRAR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 12 Mar 2019 12:59:50 -0400
-Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:38084 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1725894AbfCLQ7u (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 12 Mar 2019 12:59:50 -0400
-Received: from pps.filterd (m0098419.ppops.net [127.0.0.1])
-        by mx0b-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x2CGsg8I041997
-        for <linux-kernel@vger.kernel.org>; Tue, 12 Mar 2019 12:59:48 -0400
-Received: from e06smtp05.uk.ibm.com (e06smtp05.uk.ibm.com [195.75.94.101])
-        by mx0b-001b2d01.pphosted.com with ESMTP id 2r6g06jxg6-1
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
-        for <linux-kernel@vger.kernel.org>; Tue, 12 Mar 2019 12:59:48 -0400
-Received: from localhost
-        by e06smtp05.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
-        for <linux-kernel@vger.kernel.org> from <zohar@linux.ibm.com>;
-        Tue, 12 Mar 2019 16:59:46 -0000
-Received: from b06cxnps4075.portsmouth.uk.ibm.com (9.149.109.197)
-        by e06smtp05.uk.ibm.com (192.168.101.135) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
-        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
-        Tue, 12 Mar 2019 16:59:42 -0000
-Received: from d06av25.portsmouth.uk.ibm.com (d06av25.portsmouth.uk.ibm.com [9.149.105.61])
-        by b06cxnps4075.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x2CGxfKE35193084
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Tue, 12 Mar 2019 16:59:41 GMT
-Received: from d06av25.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 5F74411C05B;
-        Tue, 12 Mar 2019 16:59:41 +0000 (GMT)
-Received: from d06av25.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 031C511C054;
-        Tue, 12 Mar 2019 16:59:40 +0000 (GMT)
-Received: from localhost.localdomain (unknown [9.80.93.217])
-        by d06av25.portsmouth.uk.ibm.com (Postfix) with ESMTP;
-        Tue, 12 Mar 2019 16:59:39 +0000 (GMT)
-Subject: Re: [PATCH] tpm: Make timeout logic simpler and more robust
-From:   Mimi Zohar <zohar@linux.ibm.com>
-To:     James Bottomley <James.Bottomley@HansenPartnership.com>,
-        Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>,
-        Peter =?ISO-8859-1?Q?H=FCwe?= <PeterHuewe@gmx.de>
-Cc:     Calvin Owens <calvinowens@fb.com>, Peter Huewe <peterhuewe@gmx.de>,
-        Jason Gunthorpe <jgg@ziepe.ca>, Arnd Bergmann <arnd@arndb.de>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        linux-integrity@vger.kernel.org, linux-kernel@vger.kernel.org,
-        kernel-team@fb.com
-Date:   Tue, 12 Mar 2019 12:59:29 -0400
-In-Reply-To: <1552401766.3083.3.camel@HansenPartnership.com>
-References: <358e89ed2b766d51b5f57abf31ab7a925ac63379.1552348123.git.calvinowens@fb.com>
-         <1552350463.23859.8.camel@HansenPartnership.com>
-         <20190312125028.GC9243@linux.intel.com>
-         <1552401766.3083.3.camel@HansenPartnership.com>
-Content-Type: text/plain; charset="UTF-8"
-X-Mailer: Evolution 3.20.5 (3.20.5-1.fc24) 
-Mime-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-TM-AS-GCONF: 00
-x-cbid: 19031216-0020-0000-0000-00000321B9A2
-X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
-x-cbparentid: 19031216-0021-0000-0000-00002173E630
-Message-Id: <1552409969.24794.68.camel@linux.ibm.com>
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-03-12_09:,,
- signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
- malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
- clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
- mlxlogscore=999 adultscore=0 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.0.1-1810050000 definitions=main-1903120116
+        Tue, 12 Mar 2019 13:00:17 -0400
+Received: from mail.kernel.org ([198.145.29.99]:34712 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726272AbfCLRAQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 12 Mar 2019 13:00:16 -0400
+Subject: Re: [GIT PULL] chrome-platform updates for v5.1
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1552410016;
+        bh=kTU5PTMsXMLoeyNCnDTF7uFni7kYIBP3NBUHzKReQXQ=;
+        h=From:In-Reply-To:References:Date:To:Cc:From;
+        b=Ov6NCPgqtJZMKQbtlcbIK38nkwc8kYkvY80e40xiEP1YAUz6GxjcoDwjEwad9pJYr
+         enxVkMYqgC0bDhYopVW5OPta7Pc97GaAN9B7STLGzZLVmj2yO7eZiSvQQEQHJeeki5
+         OkYowkLOAoDOO0ZLjGbf0ahMO9PBTT/KTOl5WI24=
+From:   pr-tracker-bot@kernel.org
+In-Reply-To: <20190312043908.GA261883@google.com>
+References: <20190312043908.GA261883@google.com>
+X-PR-Tracked-List-Id: <linux-kernel.vger.kernel.org>
+X-PR-Tracked-Message-Id: <20190312043908.GA261883@google.com>
+X-PR-Tracked-Remote: git://git.kernel.org/pub/scm/linux/kernel/git/chrome-platform/linux.git
+ tags/tag-chrome-platform-for-v5.1
+X-PR-Tracked-Commit-Id: 2794449576a6024e203eca5cc2c1a3ae33102b8e
+X-PR-Merge-Tree: torvalds/linux.git
+X-PR-Merge-Refname: refs/heads/master
+X-PR-Merge-Commit-Id: f47d633134f7033e3d0c667419d9f8afd69e308d
+Message-Id: <155241001616.28785.13981190410539877525.pr-tracker-bot@kernel.org>
+Date:   Tue, 12 Mar 2019 17:00:16 +0000
+To:     Benson Leung <bleung@google.com>
+Cc:     torvalds@linux-foundation.org, linux-kernel@vger.kernel.org,
+        enric.balletbo@collabora.com, linux-kernel@vger.kernel.org,
+        bleung@chromium.org, bleung@google.com
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, 2019-03-12 at 07:42 -0700, James Bottomley wrote:
-> On Tue, 2019-03-12 at 14:50 +0200, Jarkko Sakkinen wrote:
-> > On Mon, Mar 11, 2019 at 05:27:43PM -0700, James Bottomley wrote:
-> > > On Mon, 2019-03-11 at 16:54 -0700, Calvin Owens wrote:
-> > > > e're having lots of problems with TPM commands timing out, and
-> > > > we're seeing these problems across lots of different hardware
-> > > > (both v1/v2).
-> > > > 
-> > > > I instrumented the driver to collect latency data, but I wasn't
-> > > > able to find any specific timeout to fix: it seems like many of
-> > > > them are too aggressive. So I tried replacing all the timeout
-> > > > logic with a single universal long timeout, and found that makes
-> > > > our TPMs 100% reliable.
-> > > > 
-> > > > Given that this timeout logic is very complex, problematic, and
-> > > > appears to serve no real purpose, I propose simply deleting all
-> > > > of it.
-> > > 
-> > > "no real purpose" is a bit strong given that all these timeouts are
-> > > standards mandated.  The purpose stated by the standards is that
-> > > there needs to be a way of differentiating the TPM crashed from the
-> > > TPM is taking a very long time to respond.  For a normally
-> > > functioning TPM it looks complex and unnecessary, but for a
-> > > malfunctioning one it's a lifesaver.
-> > 
-> > Standards should be only followed when they make practical sense and
-> > ignored when not. The range is only up to 2s anyway.
-> 
-> I don't disagree ... and I'm certainly not going to defend the TCG
-> because I do think the complexity of some of its standards contributed
-> to the lack of use of TPM 1.2.
-> 
-> However, I am saying we should root cause this problem rather than take
-> a blind shot at the apparent timeout complexity.  My timeout
-> instability is definitely related to the polling adjustments, so it's
-> not unreasonable to think Facebooks might be as well.
+The pull request you sent on Mon, 11 Mar 2019 21:39:08 -0700:
 
-James, I thought Peter sent you a tis "debug" tool to help you debug
-the problem you're seeing.  Whatever happened?
+> git://git.kernel.org/pub/scm/linux/kernel/git/chrome-platform/linux.git tags/tag-chrome-platform-for-v5.1
 
-Mimi
+has been merged into torvalds/linux.git:
+https://git.kernel.org/torvalds/c/f47d633134f7033e3d0c667419d9f8afd69e308d
 
+Thank you!
+
+-- 
+Deet-doot-dot, I am a bot.
+https://korg.wiki.kernel.org/userdoc/prtracker
