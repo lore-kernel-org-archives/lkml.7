@@ -2,119 +2,80 @@ Return-Path: <SRS0=J4ZE=RP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_MUTT autolearn=unavailable
+X-Spam-Status: No, score=-6.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 41EB4C43381
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 14:58:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CC50BC43381
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 14:58:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 111CD2075C
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 14:58:39 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1552402719;
-	bh=LKf2N3fvQyKyfuMqRjgYcYFzh86ITZWLkUchBgw6WPo=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=SJ+6LF7B5T42w4hNkG1h9UHgu0/jTooN0aseG5LOE2OLxenDX5xhWg7hL3m7yPEDW
-	 GJgrf4grEwF/RwKG5aO8+9+tQm3Q1TqGt4pWP5x+JJ1vu/559rph6G11kAZW1FNamX
-	 YdolIsV0MwGhG9aATjCbsERBcLmuHJ77sHgynYp0=
+	by mail.kernel.org (Postfix) with ESMTP id 940792075C
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 14:58:43 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726854AbfCLO6X (ORCPT
+        id S1726831AbfCLO6W (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 12 Mar 2019 10:58:23 -0400
-Received: from mx2.suse.de ([195.135.220.15]:37028 "EHLO mx1.suse.de"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726514AbfCLO6Q (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 12 Mar 2019 10:58:22 -0400
+Received: from mout.kundenserver.de ([217.72.192.74]:36227 "EHLO
+        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726192AbfCLO6Q (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
         Tue, 12 Mar 2019 10:58:16 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx1.suse.de (Postfix) with ESMTP id 44819B682;
-        Tue, 12 Mar 2019 14:58:15 +0000 (UTC)
-Date:   Tue, 12 Mar 2019 15:58:13 +0100
-From:   Michal Hocko <mhocko@kernel.org>
-To:     Laurent Dufour <ldufour@linux.ibm.com>
-Cc:     linux-kernel@vger.kernel.org, linux-mm@kvack.org,
-        stable@vger.kernel.org, Christoph Lameter <cl@linux.com>,
-        Pekka Enberg <penberg@kernel.org>,
-        David Rientjes <rientjes@google.com>,
-        Joonsoo Kim <iamjoonsoo.kim@lge.com>,
-        Andrew Morton <akpm@linux-foundation.org>
-Subject: Re: [PATCH] mm/slab: protect cache_reap() against CPU and memory hot
- plug operations
-Message-ID: <20190312145813.GS5721@dhcp22.suse.cz>
-References: <20190311191701.24325-1-ldufour@linux.ibm.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190311191701.24325-1-ldufour@linux.ibm.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Received: from orion.localdomain ([77.4.190.91]) by mrelayeu.kundenserver.de
+ (mreue106 [212.227.15.183]) with ESMTPSA (Nemesis) id
+ 1MI4gb-1hF3Vf2OON-00F8u7; Tue, 12 Mar 2019 15:58:00 +0100
+From:   "Enrico Weigelt, metux IT consult" <info@metux.net>
+To:     gregkh@linuxfoundation.org, jslaby@suse.com,
+        linux-serial@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [PATCH 6/8] drivers: tty: serial: vt8500: use memres
+Date:   Tue, 12 Mar 2019 15:57:38 +0100
+Message-Id: <1552402660-31730-7-git-send-email-info@metux.net>
+X-Mailer: git-send-email 1.9.1
+In-Reply-To: <1552402660-31730-1-git-send-email-info@metux.net>
+References: <1552402660-31730-1-git-send-email-info@metux.net>
+X-Provags-ID: V03:K1:AgJO3cLcCylRAK+ZkkUPH8ZzUYqtkBvDjuIylVSweQEavq0/gER
+ hM7F/mldy0krgUUTNMmpw7EOzl7iws1gVwzwWNFHJEC15k4xBIJV3zUeRdjbhUGUluIW7Jp
+ Ymx7KvileiDAsmR2GmaX/VmHorcxkxVmw4mDBDUDcTTMFbMiLgIsca3A0ZzsyOqA6wEpLbX
+ +tOOc3SChDLeXlwhr2B1A==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:x2F99PDas8A=:/7ezgjleH+kNbOCm03elRX
+ do6DtxXBSYz2yHdeFOfYNcJHm3k58dwe8ehw9rML33bc2/zuynnDyP9A9ZCBSIAME0XhDjg9P
+ 2+esKVJz/ldNeeXzpbTdEOT2N2EBYj8zxT9UVlfjHS6WlnmR3Xj4TVwbs47v62oNIpwuFy0va
+ wDDc0+RrFzbkUo/wVRHBUiqlSn8xcqgJcNgZQhdyUYiDe6rRJJHRXmJgDROwzLdTWbfFqEIEu
+ hlULjanBwfwelQFpO0Cb7r/6tGLJNyl5U74MBd2sQ4nfWBfDXPhH6znOwnBeL2QU2YAT4N5DA
+ oahSukcxuOxMK+TD85e4hovv0scfk9dJqqlyh4gl/doVPamgOUDQHhsfeztiZQhKTW9PJGYl3
+ AIfo+8fwK1Qzsaxt5aploTuVfm6zsJBCjdptEehVFxTky/PKv/o0Dc1Ig7kifZlEWfWpWKmZb
+ QzIKqeRhRQYAT14cKs/XK1Kd/C5ONgLLFwpn4ofmz1Ch2opgIrQn5CHyTYfITKqlVM+IsJsu1
+ VB51XP2VvI1nIW4CTw13Gn2qiceDKD8Q+YGH2A5YQ41gK08VwBQSWPPXaWdJj4ediGVPqnM1r
+ 1HcKsJotx4SH9Qis0ZiUkwYkXZ35JWQycxv8xLdKQBNEWflrV+j0fisEdXBfW/P4c9e9aVRZ4
+ s50/DkU/8njTRyGeC6DtaBG7eN0IIGKtP6cP+pPZQBvCmpjj6VbbGrpalQ/HZ7PkhLaih2lgC
+ hQJDfjUAtp1sZI8fCH1l/6VEtaVUJ4PR99uTEg==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon 11-03-19 20:17:01, Laurent Dufour wrote:
-> The commit 95402b382901 ("cpu-hotplug: replace per-subsystem mutexes with
-> get_online_cpus()") remove the CPU_LOCK_ACQUIRE operation which was use to
-> grap the cache_chain_mutex lock which was protecting cache_reap() against
-> CPU hot plug operations.
-> 
-> Later the commit 18004c5d4084 ("mm, sl[aou]b: Use a common mutex
-> definition") changed cache_chain_mutex to slab_mutex but this didn't help
-> fixing the missing the cache_reap() protection against CPU hot plug
-> operations.
-> 
-> Here we are stopping the per cpu worker while holding the slab_mutex to
-> ensure that cache_reap() is not running in our back and will not be
-> triggered anymore for this cpu.
-> 
-> This patch fixes that race leading to SLAB's data corruption when CPU
-> hotplug are triggered. We hit it while doing partition migration on PowerVM
-> leading to CPU reconfiguration through the CPU hotplug mechanism.
+---
+ drivers/tty/serial/vt8500_serial.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-What is the actual race? slab_offline_cpu calls cancel_delayed_work_sync
-so it removes a pending item and waits for the item to finish if they run
-concurently. So why do we need an additional lock?
-
-> This fix is covering kernel containing to the commit 6731d4f12315 ("slab:
-> Convert to hotplug state machine"), ie 4.9.1, earlier kernel needs a
-> slightly different patch.
-> 
-> Cc: stable@vger.kernel.org
-> Cc: Christoph Lameter <cl@linux.com>
-> Cc: Pekka Enberg <penberg@kernel.org>
-> Cc: David Rientjes <rientjes@google.com>
-> Cc: Joonsoo Kim <iamjoonsoo.kim@lge.com>
-> Cc: Andrew Morton <akpm@linux-foundation.org>
-> Signed-off-by: Laurent Dufour <ldufour@linux.ibm.com>
-> ---
->  mm/slab.c | 2 ++
->  1 file changed, 2 insertions(+)
-> 
-> diff --git a/mm/slab.c b/mm/slab.c
-> index 28652e4218e0..ba499d90f27f 100644
-> --- a/mm/slab.c
-> +++ b/mm/slab.c
-> @@ -1103,6 +1103,7 @@ static int slab_online_cpu(unsigned int cpu)
->  
->  static int slab_offline_cpu(unsigned int cpu)
->  {
-> +	mutex_lock(&slab_mutex);
->  	/*
->  	 * Shutdown cache reaper. Note that the slab_mutex is held so
->  	 * that if cache_reap() is invoked it cannot do anything
-> @@ -1112,6 +1113,7 @@ static int slab_offline_cpu(unsigned int cpu)
->  	cancel_delayed_work_sync(&per_cpu(slab_reap_work, cpu));
->  	/* Now the cache_reaper is guaranteed to be not running. */
->  	per_cpu(slab_reap_work, cpu).work.func = NULL;
-> +	mutex_unlock(&slab_mutex);
->  	return 0;
->  }
->  
-> -- 
-> 2.21.0
-
+diff --git a/drivers/tty/serial/vt8500_serial.c b/drivers/tty/serial/vt8500_serial.c
+index 3d58e9b..331a9dd 100644
+--- a/drivers/tty/serial/vt8500_serial.c
++++ b/drivers/tty/serial/vt8500_serial.c
+@@ -696,13 +696,13 @@ static int vt8500_serial_probe(struct platform_device *pdev)
+ 				      );
+ 	vt8500_port->uart.type = PORT_VT8500;
+ 	vt8500_port->uart.iotype = UPIO_MEM;
+-	vt8500_port->uart.mapbase = mmres->start;
+ 	vt8500_port->uart.irq = irqres->start;
+ 	vt8500_port->uart.fifosize = 16;
+ 	vt8500_port->uart.ops = &vt8500_uart_pops;
+ 	vt8500_port->uart.line = port;
+ 	vt8500_port->uart.dev = &pdev->dev;
+ 	vt8500_port->uart.flags = UPF_IOREMAP | UPF_BOOT_AUTOCONF;
++	uart_memres_set(&vt8500_port->uart, *mmres);
+ 
+ 	/* Serial core uses the magic "16" everywhere - adjust for it */
+ 	vt8500_port->uart.uartclk = 16 * clk_get_rate(vt8500_port->clk) /
 -- 
-Michal Hocko
-SUSE Labs
+1.9.1
+
