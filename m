@@ -2,203 +2,159 @@ Return-Path: <SRS0=J4ZE=RP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.6 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIMWL_WL_MED,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 38FFBC43381
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 00:20:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B4711C43381
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 00:22:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E87582087C
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 00:20:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 764BB214AF
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 00:22:49 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="YlrQgeSr"
+	dkim=pass (1024-bit key) header.d=fb.com header.i=@fb.com header.b="G9ml4em5";
+	dkim=pass (1024-bit key) header.d=fb.onmicrosoft.com header.i=@fb.onmicrosoft.com header.b="bF+DyOyS"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726561AbfCLAUd (ORCPT
+        id S1726564AbfCLAWr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 11 Mar 2019 20:20:33 -0400
-Received: from mail-qt1-f195.google.com ([209.85.160.195]:40838 "EHLO
-        mail-qt1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726396AbfCLAUc (ORCPT
+        Mon, 11 Mar 2019 20:22:47 -0400
+Received: from mx0a-00082601.pphosted.com ([67.231.145.42]:51246 "EHLO
+        mx0a-00082601.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726209AbfCLAWr (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 11 Mar 2019 20:20:32 -0400
-Received: by mail-qt1-f195.google.com with SMTP id f11so682963qti.7
-        for <linux-kernel@vger.kernel.org>; Mon, 11 Mar 2019 17:20:31 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=UT0ImJxTjHCkD4z2A531RVNWlnRVlywYZW2iWfcNVqA=;
-        b=YlrQgeSrk1hr14+o0Jh36NvnjwmvireGJFK8QFKx4aTqfkTVUXRKfE9ERO7BrX/Oax
-         jkUnhCvYXqdrahMzvG0SEXJOsjPwTDZPumKSnFm0qWHZ2I0cyr0WeMxKnRdItr0n+NHN
-         JKylKQkfUUgjeM+H1afQj02gGwYaPpTt1iArUR41/0IFjrHP+qAQ/hzhE0p8hzPU03t2
-         5tKgdU3w4agtJQW9h7ISEAOhghFunJdS5DSuAZGJGacpubYJC0pmECn8PeDctoBXCljN
-         gd9Vp6lnpkJ/Ql2+mVt6XmGwvbyBrKBbhRc0piSyziJGCuUSLAE8xm3+Z4JdmRQXNeYe
-         wwEw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=UT0ImJxTjHCkD4z2A531RVNWlnRVlywYZW2iWfcNVqA=;
-        b=LiEfDUZtSH7ul/uw9FROCa+slNrbismyL87ZgY2Kzl1ckayO4H2Lb6KS2AND51HGh6
-         b8CL5TYkIQuyOMlQ2mfBs/Mj3YPv9XtFFZmeQJKBeaBeETgS1aZMqjeTvdIJnEcOCuwj
-         yuueTYDsP9jqZpi9zPLvIQ+wbilVdVBSbZD4ERipOcRqOqZHyiwsrCRO0StVceF9dGGj
-         18+m6QVVwc+y0RydDMqkamWWpnCOeDkCEGiKK0BhEBxwo9+9ETBtfwquc/edSeMDZYib
-         ZNsnsNGcLHaVP3HUhbkPnAOzPoNHv1BET5rOZxW1iC3DVGoU1LW5GGgs9BQE/X2C0QI0
-         C6PQ==
-X-Gm-Message-State: APjAAAUxyBWb/v+LHtf4l65e0dlKCHO70buMAK3O7rpTlVf/CTqevnyS
-        mb2uwTS3/VBEiXfhi5pGSHgA7B7+vtUtyVlywkJlOQ==
-X-Google-Smtp-Source: APXvYqxBfnO/tXZ5gRIGb8OjhquzDZtHdRosWpXhXgas3qBgAW5w7saBa73iYy25TxnGmIyFBqiKw7BjcrvZ6c+j3gU=
-X-Received: by 2002:ac8:2827:: with SMTP id 36mr27428681qtq.359.1552350030998;
- Mon, 11 Mar 2019 17:20:30 -0700 (PDT)
+        Mon, 11 Mar 2019 20:22:47 -0400
+Received: from pps.filterd (m0109333.ppops.net [127.0.0.1])
+        by mx0a-00082601.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x2C0Jx8X017217;
+        Mon, 11 Mar 2019 17:22:33 -0700
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=fb.com; h=from : to : cc : subject
+ : date : message-id : references : in-reply-to : content-type : content-id
+ : content-transfer-encoding : mime-version; s=facebook;
+ bh=EZUqru2XFA5VyKAwuANLKreMYk6ZO87OW0FfveLT9y4=;
+ b=G9ml4em5BCO/lqLZGZt5AvoH7hA6+qsLgHLzABO+2Vueb3GfZ4wIH4oJOu3MYtuz48mg
+ j1Z5cXS0VpGhhEOwlz/E7jWIL+N8SOUyLNGb649+M/9LX7Cd86Gpd5ADaTSNEgyDQJZ6
+ E4tt9aYU/0/3dPTL+EcYilykz8qjiEAkUUI= 
+Received: from mail.thefacebook.com ([199.201.64.23])
+        by mx0a-00082601.pphosted.com with ESMTP id 2r61ckr7db-2
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-SHA384 bits=256 verify=NOT);
+        Mon, 11 Mar 2019 17:22:33 -0700
+Received: from prn-mbx05.TheFacebook.com (2620:10d:c081:6::19) by
+ prn-hub02.TheFacebook.com (2620:10d:c081:35::126) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA384) id
+ 15.1.1713.5; Mon, 11 Mar 2019 17:22:33 -0700
+Received: from prn-hub02.TheFacebook.com (2620:10d:c081:35::126) by
+ prn-mbx05.TheFacebook.com (2620:10d:c081:6::19) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA384) id
+ 15.1.1713.5; Mon, 11 Mar 2019 17:22:32 -0700
+Received: from NAM05-BY2-obe.outbound.protection.outlook.com (192.168.54.28)
+ by o365-in.thefacebook.com (192.168.16.26) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA384) id 15.1.1713.5
+ via Frontend Transport; Mon, 11 Mar 2019 17:22:32 -0700
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=fb.onmicrosoft.com;
+ s=selector1-fb-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=EZUqru2XFA5VyKAwuANLKreMYk6ZO87OW0FfveLT9y4=;
+ b=bF+DyOySXhu+4pwXikPEc4GJsCWTZL0xJ5kxyBMuxWeSSZsB1jHm8Y+nbOyPoCobst3S9mjrxGExJQSRyg6eY4QVBu1ceDGMs/GTolx9CJ/a8IfhPjan1HgZFKZXHZU4k0J85qDOWwsjpT5fC22D3+DihSyt4aDkcGJ06fLJuxA=
+Received: from BYAPR15MB2631.namprd15.prod.outlook.com (20.179.156.24) by
+ BYAPR15MB2277.namprd15.prod.outlook.com (52.135.197.25) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.1686.18; Tue, 12 Mar 2019 00:22:23 +0000
+Received: from BYAPR15MB2631.namprd15.prod.outlook.com
+ ([fe80::790e:7294:b086:9ded]) by BYAPR15MB2631.namprd15.prod.outlook.com
+ ([fe80::790e:7294:b086:9ded%2]) with mapi id 15.20.1686.021; Tue, 12 Mar 2019
+ 00:22:23 +0000
+From:   Roman Gushchin <guro@fb.com>
+To:     Matthew Wilcox <willy@infradead.org>
+CC:     "Tobin C. Harding" <tobin@kernel.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Christoph Lameter <cl@linux.com>,
+        Pekka Enberg <penberg@kernel.org>,
+        David Rientjes <rientjes@google.com>,
+        Joonsoo Kim <iamjoonsoo.kim@lge.com>,
+        "linux-mm@kvack.org" <linux-mm@kvack.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH 0/4] mm: Use slab_list list_head instead of lru
+Thread-Topic: [PATCH 0/4] mm: Use slab_list list_head instead of lru
+Thread-Index: AQHU16bt6o0Uju0YQ0mKx1ZofK0W1KYGcySAgACefICAABJggA==
+Date:   Tue, 12 Mar 2019 00:22:23 +0000
+Message-ID: <20190312002217.GA31718@tower.DHCP.thefacebook.com>
+References: <20190311010744.5862-1-tobin@kernel.org>
+ <20190311204919.GA20002@tower.DHCP.thefacebook.com>
+ <20190311231633.GF19508@bombadil.infradead.org>
+In-Reply-To: <20190311231633.GF19508@bombadil.infradead.org>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-clientproxiedby: MWHPR12CA0051.namprd12.prod.outlook.com
+ (2603:10b6:300:103::13) To BYAPR15MB2631.namprd15.prod.outlook.com
+ (2603:10b6:a03:152::24)
+x-ms-exchange-messagesentrepresentingtype: 1
+x-originating-ip: [2620:10d:c090:200::1:b487]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: 99105728-2c96-4369-0985-08d6a680cc2b
+x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600127)(711020)(4605104)(2017052603328)(7153060)(7193020);SRVR:BYAPR15MB2277;
+x-ms-traffictypediagnostic: BYAPR15MB2277:
+x-microsoft-exchange-diagnostics: 1;BYAPR15MB2277;20:j2HEAzGPQrT12A5YakqCjunL279UwwJ2XjS9VQcb0yDsReL20QOPljntn9jVIBhFN3QhA1W5x7BsI5q6nv9lNb8yuV6cL/yfMBZcNzHvBupLRAanCywaYW9+TeUmYNdjWC7IRw7kXRM3Pvf11VgLpz20edHOd3DtWSxIFKLGswI=
+x-microsoft-antispam-prvs: <BYAPR15MB2277084A6807D17C1D90A778BE490@BYAPR15MB2277.namprd15.prod.outlook.com>
+x-forefront-prvs: 09749A275C
+x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(39860400002)(396003)(376002)(366004)(136003)(346002)(189003)(199004)(6506007)(105586002)(76176011)(386003)(8936002)(316002)(6246003)(99286004)(4326008)(8676002)(14454004)(25786009)(54906003)(478600001)(52116002)(33656002)(106356001)(86362001)(6486002)(229853002)(256004)(81156014)(6916009)(81166006)(2906002)(53936002)(5660300002)(6436002)(9686003)(486006)(446003)(476003)(71200400001)(71190400001)(6512007)(46003)(102836004)(7736002)(97736004)(6116002)(305945005)(68736007)(1076003)(186003)(11346002);DIR:OUT;SFP:1102;SCL:1;SRVR:BYAPR15MB2277;H:BYAPR15MB2631.namprd15.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
+received-spf: None (protection.outlook.com: fb.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam-message-info: FDh92YlZhSWl4jGk6TDt7nuSmVStS1n3fSuB75VwysyYmEiCP/CndcMBMn37ptykSxzFFa7Do4fa3m9XjUrV3542EKEbUppSaei8CkOmYJEN8hGVId8QqBOCM+7UD5qMem9xuw2bRu6MLdnjGNmGkP9E+m4eg35ux3YRC4ZNIDY45/kNnG0V+2jJr6eZgyklIseI5DZDEGNKEb2w+AJnSujmZeJHOLvBzYzTt2vDfOFfLV1EYvlIR+y4etXrjszX/L541m4PigyHMbfVMP11aMlsHqi0RWwiHcY+4ep5SzFDfM+F2j4YJDxhSLzdvZlIU/zxhIft9J6MHMdj8vvDftN/3RbWKOUNsSkUR6BWG6rv4JzxgsQGi2qGuErlNrdBQjc53C0MxSqBX4y5wpkOYzE1in7ExI1ECLZn09G0x8I=
+Content-Type: text/plain; charset="us-ascii"
+Content-ID: <1C0F0C1D7F614A47853BB28A21E359F7@namprd15.prod.outlook.com>
+Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
-References: <20190218165620.383905466@infradead.org> <CAHk-=wh32Zgp+bN7G1KH7SuCiY1YSJ41Y-_eWpfWubGjqq2_dw@mail.gmail.com>
- <20190222124544.GY9565@techsingularity.net> <14a9adf7-9b50-1dfa-0c35-d04e976081c2@oracle.com>
- <CAERHkru9DzvszvdGHWp8PhEAqeUc-wVR1Gey-KtQ6aMRLx68bQ@mail.gmail.com>
- <19d5d492-a4c1-b3c8-cae4-da2fdfcb872b@oracle.com> <ac10b8fd-da1a-2cc2-afee-4e2b9b4278ee@oracle.com>
-In-Reply-To: <ac10b8fd-da1a-2cc2-afee-4e2b9b4278ee@oracle.com>
-From:   Greg Kerr <kerrnel@google.com>
-Date:   Mon, 11 Mar 2019 17:20:19 -0700
-Message-ID: <CAJGSLMuLVDXhffOWbnzt8-P7u68OODkN_pwvSt9MBH5mbyAfQQ@mail.gmail.com>
-Subject: Re: [RFC][PATCH 00/16] sched: Core scheduling
-To:     Subhra Mazumdar <subhra.mazumdar@oracle.com>
-Cc:     Aubrey Li <aubrey.intel@gmail.com>,
-        Mel Gorman <mgorman@techsingularity.net>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Paul Turner <pjt@google.com>,
-        Tim Chen <tim.c.chen@linux.intel.com>,
-        Linux List Kernel Mailing <linux-kernel@vger.kernel.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        "Fr?d?ric Weisbecker" <fweisbec@gmail.com>,
-        Kees Cook <keescook@chromium.org>, Greg Kerr <greg@kerrnel.com>
-Content-Type: text/plain; charset="UTF-8"
+X-MS-Exchange-CrossTenant-Network-Message-Id: 99105728-2c96-4369-0985-08d6a680cc2b
+X-MS-Exchange-CrossTenant-originalarrivaltime: 12 Mar 2019 00:22:23.3192
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 8ae927fe-1255-47a7-a2af-5f3a069daaa2
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: BYAPR15MB2277
+X-OriginatorOrg: fb.com
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-03-11_17:,,
+ signatures=0
+X-Proofpoint-Spam-Reason: safe
+X-FB-Internal: Safe
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Mar 11, 2019 at 4:36 PM Subhra Mazumdar
-<subhra.mazumdar@oracle.com> wrote:
->
->
-> On 3/11/19 11:34 AM, Subhra Mazumdar wrote:
-> >
-> > On 3/10/19 9:23 PM, Aubrey Li wrote:
-> >> On Sat, Mar 9, 2019 at 3:50 AM Subhra Mazumdar
-> >> <subhra.mazumdar@oracle.com> wrote:
-> >>> expected. Most of the performance recovery happens in patch 15 which,
-> >>> unfortunately, is also the one that introduces the hard lockup.
-> >>>
-> >> After applied Subhra's patch, the following is triggered by enabling
-> >> core sched when a cgroup is
-> >> under heavy load.
-> >>
-> > It seems you are facing some other deadlock where printk is involved.
-> > Can you
-> > drop the last patch (patch 16 sched: Debug bits...) and try?
-> >
-> > Thanks,
-> > Subhra
-> >
-> Never Mind, I am seeing the same lockdep deadlock output even w/o patch
-> 16. Btw
-> the NULL fix had something missing, following works.
+On Mon, Mar 11, 2019 at 04:16:33PM -0700, Matthew Wilcox wrote:
+> On Mon, Mar 11, 2019 at 08:49:23PM +0000, Roman Gushchin wrote:
+> > The patchset looks good to me, however I'd add some clarifications
+> > why switching from lru to slab_list is safe.
+> >=20
+> > My understanding is that the slab_list fields isn't currently in use,
+> > but it's not that obvious that putting slab_list and next/pages/pobject=
+s
+> > fields into a union is safe (for the slub case).
+>=20
+> It's already in a union.
+>=20
+> struct page {
+>         union {
+>                 struct {        /* Page cache and anonymous pages */
+>                         struct list_head lru;
+> ...
+>                 struct {        /* slab, slob and slub */
+>                         union {
+>                                 struct list_head slab_list;     /* uses l=
+ru */
+>                                 struct {        /* Partial pages */
+>                                         struct page *next;
+>=20
+> slab_list and lru are in the same bits.  Once this patch set is in,
+> we can remove the enigmatic 'uses lru' comment that I added.
 
-Is this panic below, which occurs when I tag the first process,
-related or known? If not, I will debug it tomorrow.
+Ah, perfect, thanks! Makes total sense then.
 
-[   46.831828] BUG: unable to handle kernel NULL pointer dereference
-at 0000000000000000
-[   46.831829] core sched enabled
-[   46.834261] #PF error: [WRITE]
-[   46.834899] PGD 0 P4D 0
-[   46.835438] Oops: 0002 [#1] SMP PTI
-[   46.836158] CPU: 0 PID: 11 Comm: migration/0 Not tainted
-5.0.0everyday-glory-03949-g2d8fdbb66245-dirty #7
-[   46.838206] Hardware name: QEMU Standard PC (i440FX + PIIX, 1996),
-BIOS 1.10.2-1 04/01/2014
-[   46.839844] RIP: 0010:_raw_spin_lock+0x7/0x20
-[   46.840448] Code: 00 00 00 65 81 05 25 ca 5c 51 00 02 00 00 31 c0
-ba ff 00 00 00 f0 0f b1 17 74 05 e9 93 80 46 ff f3 c3 90 31 c0 ba 01
-00 00 00 <f0> 0f b1 17 74 07 89 c6 e9 1c 6e 46 ff f3 c3 66 2e 0f 1f 84
-00 00
-[   46.843000] RSP: 0018:ffffb9d300cabe38 EFLAGS: 00010046
-[   46.843744] RAX: 0000000000000000 RBX: 0000000000000000 RCX: 0000000000000004
-[   46.844709] RDX: 0000000000000001 RSI: ffffffffaea435ae RDI: 0000000000000000
-[   46.845689] RBP: ffffb9d300cabed8 R08: 0000000000000000 R09: 0000000000020800
-[   46.846651] R10: ffffffffaf603ea0 R11: 0000000000000001 R12: ffffffffaf6576c0
-[   46.847619] R13: ffff9a57366c8000 R14: ffff9a5737401300 R15: ffffffffade868f0
-[   46.848584] FS:  0000000000000000(0000) GS:ffff9a5737a00000(0000)
-knlGS:0000000000000000
-[   46.849680] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-[   46.850455] CR2: 0000000000000000 CR3: 00000001d36fa000 CR4: 00000000000006f0
-[   46.851415] DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
-[   46.852371] DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
-[   46.853326] Call Trace:
-[   46.853678]  __schedule+0x139/0x11f0
-[   46.854167]  ? cpumask_next+0x16/0x20
-[   46.854668]  ? cpu_stop_queue_work+0xc0/0xc0
-[   46.855252]  ? sort_range+0x20/0x20
-[   46.855742]  schedule+0x4e/0x60
-[   46.856171]  smpboot_thread_fn+0x12a/0x160
-[   46.856725]  kthread+0x112/0x120
-[   46.857164]  ? kthread_stop+0xf0/0xf0
-[   46.857661]  ret_from_fork+0x35/0x40
-[   46.858146] Modules linked in:
-[   46.858562] CR2: 0000000000000000
-[   46.859022] ---[ end trace e9fff08f17bfd2be ]---
+Tobin, can you, please, add a note to the commit message?
+With the note:
+Reviewed-by: Roman Gushchin <guro@fb.com>
 
-- Greg
-
->
-> --------->8------------
->
-> diff --git a/kernel/sched/fair.c b/kernel/sched/fair.c
-> index 1d0dac4..27cbc64 100644
-> --- a/kernel/sched/fair.c
-> +++ b/kernel/sched/fair.c
-> @@ -4131,7 +4131,7 @@ pick_next_entity(struct cfs_rq *cfs_rq, struct
-> sched_entity *curr)
->           * Avoid running the skip buddy, if running something else can
->           * be done without getting too unfair.
-> */
-> -       if (cfs_rq->skip == se) {
-> +       if (cfs_rq->skip && cfs_rq->skip == se) {
->                  struct sched_entity *second;
->
->                  if (se == curr) {
-> @@ -4149,13 +4149,15 @@ pick_next_entity(struct cfs_rq *cfs_rq, struct
-> sched_entity *curr)
-> /*
->           * Prefer last buddy, try to return the CPU to a preempted task.
-> */
-> -       if (cfs_rq->last && wakeup_preempt_entity(cfs_rq->last, left) < 1)
-> +       if (left && cfs_rq->last && wakeup_preempt_entity(cfs_rq->last,
-> left)
-> +           < 1)
->                  se = cfs_rq->last;
->
-> /*
->           * Someone really wants this to run. If it's not unfair, run it.
-> */
-> -       if (cfs_rq->next && wakeup_preempt_entity(cfs_rq->next, left) < 1)
-> +       if (left && cfs_rq->next && wakeup_preempt_entity(cfs_rq->next,
-> left)
-> +           < 1)
->                  se = cfs_rq->next;
->
->          clear_buddies(cfs_rq, se);
-> @@ -6958,6 +6960,9 @@ pick_task_fair(struct rq *rq)
->
->                  se = pick_next_entity(cfs_rq, NULL);
->
-> +               if (!(se || curr))
-> +                       return NULL;
-> +
->                  if (curr) {
->                          if (se && curr->on_rq)
-> update_curr(cfs_rq);
->
+Thank you!
