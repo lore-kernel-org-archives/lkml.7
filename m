@@ -7,47 +7,47 @@ X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 31B2BC43381
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 17:42:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CB5E6C43381
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 17:42:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 01AAB21773
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 17:42:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9DAC021734
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 17:42:37 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1552412550;
-	bh=7Is0rueDIq6J2yu3F3DD+mkiYZ9srEkdZ6V2LnYR3Zo=;
+	s=default; t=1552412557;
+	bh=UY2kBkV2e9l/KGrFwczm1NkHnmte9s0hWgV8g+o2cBQ=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=UX9uZnZADFAbqJwecSV0YzNNZBgruMl69UbaGMod2qf88ZAtV3CD1SypXMRs1FsN0
-	 3uzMBVOjJou5jMmeLCSJpnnTZo4ihljTgQDnbbm8yxaycylntxiDyexmeN/cJW0Nuf
-	 68P3SjvtAZWxKv9GY4Kkw0tGmwhvpEngC8zx564k=
+	b=2jFKO6Mxp/vTZXbLcdWYNgR+JPLByrVBJQGaiAvA8Zo7059NDCrwgvElPhchPShzf
+	 MG9fEwe3+YWcSp5lWJzHPCugDT47IyDZKu+6IuqV4qB4fy7AkJKv/TRRxCtdXcvfWk
+	 lhDl1kdHW8UAH4I3ZyLr1QzJWS+CnwqsvdnRdrpo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729362AbfCLRm2 (ORCPT
+        id S1729185AbfCLRmg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 12 Mar 2019 13:42:28 -0400
-Received: from mail.kernel.org ([198.145.29.99]:57292 "EHLO mail.kernel.org"
+        Tue, 12 Mar 2019 13:42:36 -0400
+Received: from mail.kernel.org ([198.145.29.99]:57216 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728940AbfCLRP6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 12 Mar 2019 13:15:58 -0400
+        id S1728923AbfCLRP4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 12 Mar 2019 13:15:56 -0400
 Received: from localhost (unknown [104.133.8.98])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 43FDD217D4;
-        Tue, 12 Mar 2019 17:15:57 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 1BCE821850;
+        Tue, 12 Mar 2019 17:15:55 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1552410957;
-        bh=7Is0rueDIq6J2yu3F3DD+mkiYZ9srEkdZ6V2LnYR3Zo=;
+        s=default; t=1552410955;
+        bh=UY2kBkV2e9l/KGrFwczm1NkHnmte9s0hWgV8g+o2cBQ=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=0yCkDIbACVRc4ek2oU0MsjUr3iTfQJ1pD7LHSdpPfHdw5KgHGlWVqjEKlOK1yKjrt
-         u54663dT43wr4f9Kiz6YmgmDWtoM+s3Im+lFtokSAbWO1IlIftzppMtxD94cZkfwlh
-         HA6x+zXSIfKTwvouBii/2+k+4Eb1qKSYiwcK5tP8=
+        b=QE+fnJuMMqqzZ9XiZOy9vtcc8TZlhRyzgGS6/mqKDzEy1G7IuDCQdf4hfKNUduIVG
+         vmxOrAA0jtDLYtgJtyEtA8wKS7rHhEQn+jFY9haDs+9gzgBBwhJqLuHGLZQTRwscvv
+         Gb5yEaGg8p5SkisK9c7PkgqF6uYaEQwUPJKpQ7Ks=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Sergey Nazarov <s-nazarov@yandex.ru>,
-        Paul Moore <paul@paul-moore.com>,
+        stable@vger.kernel.org, Igor Druzhinin <igor.druzhinin@citrix.com>,
+        Paul Durrant <paul.durrant@citrix.com>,
         "David S. Miller" <davem@davemloft.net>
-Subject: [PATCH 4.14 027/135] net: avoid use IPCB in cipso_v4_error
-Date:   Tue, 12 Mar 2019 10:07:54 -0700
-Message-Id: <20190312170343.653075789@linuxfoundation.org>
+Subject: [PATCH 4.14 024/135] xen-netback: dont populate the hash cache on XenBus disconnect
+Date:   Tue, 12 Mar 2019 10:07:51 -0700
+Message-Id: <20190312170343.347675274@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190312170341.127810985@linuxfoundation.org>
 References: <20190312170341.127810985@linuxfoundation.org>
@@ -66,103 +66,55 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-From: Nazarov Sergey <s-nazarov@yandex.ru>
+From: Igor Druzhinin <igor.druzhinin@citrix.com>
 
-[ Upstream commit 3da1ed7ac398f34fff1694017a07054d69c5f5c5 ]
+[ Upstream commit a2288d4e355992d369c50c45d017a85f6061ff71 ]
 
-Extract IP options in cipso_v4_error and use __icmp_send.
+Occasionally, during the disconnection procedure on XenBus which
+includes hash cache deinitialization there might be some packets
+still in-flight on other processors. Handling of these packets includes
+hashing and hash cache population that finally results in hash cache
+data structure corruption.
 
-Signed-off-by: Sergey Nazarov <s-nazarov@yandex.ru>
-Acked-by: Paul Moore <paul@paul-moore.com>
+In order to avoid this we prevent hashing of those packets if there
+are no queues initialized. In that case RCU protection of queues guards
+the hash cache as well.
+
+Signed-off-by: Igor Druzhinin <igor.druzhinin@citrix.com>
+Reviewed-by: Paul Durrant <paul.durrant@citrix.com>
 Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- include/net/ip.h      |    2 ++
- net/ipv4/cipso_ipv4.c |   17 +++++++++++++++--
- net/ipv4/ip_options.c |   22 +++++++++++++++++-----
- 3 files changed, 34 insertions(+), 7 deletions(-)
+ drivers/net/xen-netback/hash.c      |    2 ++
+ drivers/net/xen-netback/interface.c |    7 +++++++
+ 2 files changed, 9 insertions(+)
 
---- a/include/net/ip.h
-+++ b/include/net/ip.h
-@@ -593,6 +593,8 @@ static inline int ip_options_echo(struct
- }
- 
- void ip_options_fragment(struct sk_buff *skb);
-+int __ip_options_compile(struct net *net, struct ip_options *opt,
-+			 struct sk_buff *skb, __be32 *info);
- int ip_options_compile(struct net *net, struct ip_options *opt,
- 		       struct sk_buff *skb);
- int ip_options_get(struct net *net, struct ip_options_rcu **optp,
---- a/net/ipv4/cipso_ipv4.c
-+++ b/net/ipv4/cipso_ipv4.c
-@@ -1736,13 +1736,26 @@ validate_return:
-  */
- void cipso_v4_error(struct sk_buff *skb, int error, u32 gateway)
- {
-+	unsigned char optbuf[sizeof(struct ip_options) + 40];
-+	struct ip_options *opt = (struct ip_options *)optbuf;
-+
- 	if (ip_hdr(skb)->protocol == IPPROTO_ICMP || error != -EACCES)
+--- a/drivers/net/xen-netback/hash.c
++++ b/drivers/net/xen-netback/hash.c
+@@ -435,6 +435,8 @@ void xenvif_init_hash(struct xenvif *vif
+ 	if (xenvif_hash_cache_size == 0)
  		return;
  
-+	/*
-+	 * We might be called above the IP layer,
-+	 * so we can not use icmp_send and IPCB here.
-+	 */
++	BUG_ON(vif->hash.cache.count);
 +
-+	memset(opt, 0, sizeof(struct ip_options));
-+	opt->optlen = ip_hdr(skb)->ihl*4 - sizeof(struct iphdr);
-+	if (__ip_options_compile(dev_net(skb->dev), opt, skb, NULL))
-+		return;
-+
- 	if (gateway)
--		icmp_send(skb, ICMP_DEST_UNREACH, ICMP_NET_ANO, 0);
-+		__icmp_send(skb, ICMP_DEST_UNREACH, ICMP_NET_ANO, 0, opt);
- 	else
--		icmp_send(skb, ICMP_DEST_UNREACH, ICMP_HOST_ANO, 0);
-+		__icmp_send(skb, ICMP_DEST_UNREACH, ICMP_HOST_ANO, 0, opt);
+ 	spin_lock_init(&vif->hash.cache.lock);
+ 	INIT_LIST_HEAD(&vif->hash.cache.list);
  }
- 
- /**
---- a/net/ipv4/ip_options.c
-+++ b/net/ipv4/ip_options.c
-@@ -251,8 +251,9 @@ static void spec_dst_fill(__be32 *spec_d
-  * If opt == NULL, then skb->data should point to IP header.
-  */
- 
--int ip_options_compile(struct net *net,
--		       struct ip_options *opt, struct sk_buff *skb)
-+int __ip_options_compile(struct net *net,
-+			 struct ip_options *opt, struct sk_buff *skb,
-+			 __be32 *info)
+--- a/drivers/net/xen-netback/interface.c
++++ b/drivers/net/xen-netback/interface.c
+@@ -153,6 +153,13 @@ static u16 xenvif_select_queue(struct ne
  {
- 	__be32 spec_dst = htonl(INADDR_ANY);
- 	unsigned char *pp_ptr = NULL;
-@@ -468,11 +469,22 @@ eol:
- 		return 0;
- 
- error:
--	if (skb) {
--		icmp_send(skb, ICMP_PARAMETERPROB, 0, htonl((pp_ptr-iph)<<24));
--	}
-+	if (info)
-+		*info = htonl((pp_ptr-iph)<<24);
- 	return -EINVAL;
- }
+ 	struct xenvif *vif = netdev_priv(dev);
+ 	unsigned int size = vif->hash.size;
++	unsigned int num_queues;
 +
-+int ip_options_compile(struct net *net,
-+		       struct ip_options *opt, struct sk_buff *skb)
-+{
-+	int ret;
-+	__be32 info;
-+
-+	ret = __ip_options_compile(net, opt, skb, &info);
-+	if (ret != 0 && skb)
-+		icmp_send(skb, ICMP_PARAMETERPROB, 0, info);
-+	return ret;
-+}
- EXPORT_SYMBOL(ip_options_compile);
++	/* If queues are not set up internally - always return 0
++	 * as the packet going to be dropped anyway */
++	num_queues = READ_ONCE(vif->num_queues);
++	if (num_queues < 1)
++		return 0;
  
- /*
+ 	if (vif->hash.alg == XEN_NETIF_CTRL_HASH_ALGORITHM_NONE)
+ 		return fallback(dev, skb) % dev->real_num_tx_queues;
 
 
