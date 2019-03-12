@@ -2,147 +2,79 @@ Return-Path: <SRS0=J4ZE=RP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,NORMAL_HTTP_TO_IP,SPF_PASS,UNPARSEABLE_RELAY,URIBL_BLOCKED
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_PASS,URIBL_BLOCKED,USER_AGENT_MUTT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D809EC43381
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 04:06:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0901CC43381
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 04:09:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A2CF5214AE
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 04:06:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D01BE214AE
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 04:08:59 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725894AbfCLEGt (ORCPT
+        id S1725917AbfCLEI6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 12 Mar 2019 00:06:49 -0400
-Received: from out30-56.freemail.mail.aliyun.com ([115.124.30.56]:53387 "EHLO
-        out30-56.freemail.mail.aliyun.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1725811AbfCLEGt (ORCPT
+        Tue, 12 Mar 2019 00:08:58 -0400
+Received: from zeniv.linux.org.uk ([195.92.253.2]:36448 "EHLO
+        ZenIV.linux.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725710AbfCLEI5 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 12 Mar 2019 00:06:49 -0400
-X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R341e4;CH=green;DM=||false|;FP=0|-1|-1|-1|0|-1|-1|-1;HT=e01f04397;MF=alex.shi@linux.alibaba.com;NM=1;PH=DS;RN=4;SR=0;TI=SMTPD_---0TMWNB9D_1552363605;
-Received: from Alexs-MacBook-Pro.local(mailfrom:alex.shi@linux.alibaba.com fp:SMTPD_---0TMWNB9D_1552363605)
-          by smtp.aliyun-inc.com(127.0.0.1);
-          Tue, 12 Mar 2019 12:06:46 +0800
-Subject: Re: [PATCH v4 00/31] clean up and reorg Chinese kernel docs
-To:     corbet@lwn.net, harryxiyou@gmail.com, linux-doc@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-References: <20190312032501.62056-1-alex.shi@linux.alibaba.com>
-From:   Alex Shi <alex.shi@linux.alibaba.com>
-Message-ID: <4e9fbf0d-cf9a-63a3-4e94-902b1ae5a6cf@linux.alibaba.com>
-Date:   Tue, 12 Mar 2019 12:06:45 +0800
-User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.14; rv:60.0)
- Gecko/20100101 Thunderbird/60.5.0
+        Tue, 12 Mar 2019 00:08:57 -0400
+Received: from viro by ZenIV.linux.org.uk with local (Exim 4.92 #3 (Red Hat Linux))
+        id 1h3YiL-0003ts-SD; Tue, 12 Mar 2019 04:08:30 +0000
+Date:   Tue, 12 Mar 2019 04:08:29 +0000
+From:   Al Viro <viro@zeniv.linux.org.uk>
+To:     syzbot <syzbot+1505c80c74256c6118a5@syzkaller.appspotmail.com>
+Cc:     airlied@linux.ie, akpm@linux-foundation.org, amir73il@gmail.com,
+        chris@chris-wilson.co.uk, darrick.wong@oracle.com,
+        david@fromorbit.com, dri-devel@lists.freedesktop.org,
+        dvyukov@google.com, eparis@redhat.com, hannes@cmpxchg.org,
+        hughd@google.com, intel-gfx@lists.freedesktop.org, jack@suse.cz,
+        jani.nikula@linux.intel.com, joonas.lahtinen@linux.intel.com,
+        jrdr.linux@gmail.com, linux-kernel@vger.kernel.org,
+        linux-mm@kvack.org, mingo@redhat.com, mszeredi@redhat.com,
+        penguin-kernel@i-love.sakura.ne.jp, peterz@infradead.org,
+        rodrigo.vivi@intel.com, syzkaller-bugs@googlegroups.com,
+        willy@infradead.org
+Subject: Re: INFO: rcu detected stall in sys_sendfile64 (2)
+Message-ID: <20190312040829.GQ2217@ZenIV.linux.org.uk>
+References: <00000000000010b2fc057fcdfaba@google.com>
+ <0000000000008c75b50583ddb5f8@google.com>
 MIME-Version: 1.0
-In-Reply-To: <20190312032501.62056-1-alex.shi@linux.alibaba.com>
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 8bit
-Content-Language: en-US
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <0000000000008c75b50583ddb5f8@google.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Corbet,
+On Mon, Mar 11, 2019 at 08:59:00PM -0700, syzbot wrote:
+> syzbot has bisected this bug to:
+> 
+> commit 34e07e42c55aeaa78e93b057a6664e2ecde3fadb
+> Author: Chris Wilson <chris@chris-wilson.co.uk>
+> Date:   Thu Feb 8 10:54:48 2018 +0000
+> 
+>     drm/i915: Add missing kerneldoc for 'ent' in i915_driver_init_early
+> 
+> bisection log:  https://syzkaller.appspot.com/x/bisect.txt?x=13220283200000
+> start commit:   34e07e42 drm/i915: Add missing kerneldoc for 'ent' in i915..
+> git tree:       upstream
+> final crash:    https://syzkaller.appspot.com/x/report.txt?x=10a20283200000
+> console output: https://syzkaller.appspot.com/x/log.txt?x=17220283200000
+> kernel config:  https://syzkaller.appspot.com/x/.config?x=abc3dc9b7a900258
+> dashboard link: https://syzkaller.appspot.com/bug?extid=1505c80c74256c6118a5
+> userspace arch: amd64
+> syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=12c4dc28c00000
+> C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=15df4108c00000
+> 
+> Reported-by: syzbot+1505c80c74256c6118a5@syzkaller.appspotmail.com
+> Fixes: 34e07e42 ("drm/i915: Add missing kerneldoc for 'ent' in
+> i915_driver_init_early")
 
-This series is ok for pick up.
-
-Thanks!
-Alex
-
-On 2019/3/12 11:24 上午, Alex Shi wrote:
-> Hi All,
->
-> The following patches change existing Chinese kernel docs to rst format
-> and reorg them to make them alive in 'make htmldocs'.
->
-> you can view the generated htmldocs from:
-> 	http://176.122.172.82/translations/zh_CN/index.html 
->
-> Or make and review docs on your self box:
->
-> 	make htmldocs SPHINXDIRS=translations/zh_CN 
-> 	lynx Documentation/output/translations/zh_CN/index.html
->
-> Any comments are appreciated!
->
-> V4 changes:
-> 1, Add Harry's signed-off as his ack.
->
-> V3 changes:
-> 1, fix a zh_CN/index.rst display issue
-> 2, update .mailmap for zh_CN transolators'r email address
->
-> V2 changes:
-> 1, change the disclaimer file to Chinese version,
-> 2, replace the obsolete translator's email address in related files.
-> 3, fix couple of format issues in couple files
->
-> Cheers!
-> Alex
->
-> Alex Shi (31):
->   docs/zh_CN: add disclaimer file
->   docs/zh_CN: move process related docs into process dir
->   docs/zh_CN: change Chinese index to know process dir
->   docs/zh_CN: add index file into process dir
->   docs/zh_CN: rename HOWTO into process directory
->   docs/zh_CN: howto format changes
->   docs/zh_CN: rename SubmittingPatches for html links
->   docs/zh_CN: format the submitting-patches doc to rst
->   docs/zh_CN: rename stable_kernel_rules doc
->   docs/zh_CN: rst format change for stable-kernel-rules
->   docs/zh_CN: rename email-clients.txt as email-clients.rst
->   docs/zh_CN: do rst format for email-clients.rst
->   docs/zh_CN: rename volatile-consider-harmful doc
->   docs/zh_CN: volatile doc format changes
->   docs/zh_CN: rename SubmittingDrivers
->   docs/zh_CN: format submitting drivers as rst
->   docs/zh_CN: rename magic-numbers as rst doc
->   docs/zh_CN: format the magic-number doc as rst
->   docs/zh_CN: rename stable_api_nonsense.txt as stable-api-nonsense.rst
->   docs/zh_CN: format stable-api-nonsense
->   docs/zh_CN: update Li Yang's email address
->   mailmap: update Li Yang's email address
->   docs/zh_CN: update Zhang Wei's email address
->   mailmap: update email address for Triplex
->   docs/zh_CN: update TripleX chung's email address
->   docs/zh_CN: fix rst format errors in howto.rst
->   docs/zh_CN: fix indent issue in stable-api-nonsense file
->   docs/zh_CN: fix indent issue in submitting-drivers
->   docs/zh_CN: remove zh-kernel.org in MAINTAINERS
->   mailmap: update my obsolete email address
->   docs/zh_CN: fix rst format issue in submitting-patch
->
->  .mailmap                                      |   6 +
->  .../translations/zh_CN/disclaimer-zh_CN.rst   |   9 ++
->  Documentation/translations/zh_CN/index.rst    |  17 +-
->  .../translations/zh_CN/magic-number.txt       | 153 ------------------
->  .../translations/zh_CN/oops-tracing.txt       |   2 +-
->  .../zh_CN/{ => process}/coding-style.rst      |   0
->  .../email-clients.rst}                        |  53 +++---
->  .../zh_CN/{HOWTO => process/howto.rst}        |  69 +++++---
->  .../translations/zh_CN/process/index.rst      |  53 ++++++
->  .../zh_CN/process/magic-number.rst            | 151 +++++++++++++++++
->  .../stable-api-nonsense.rst}                  |  67 ++++----
->  .../stable-kernel-rules.rst}                  |  32 ++--
->  .../submitting-drivers.rst}                   |  34 ++--
->  .../submitting-patches.rst}                   |  58 +++----
->  .../volatile-considered-harmful.rst}          |  35 ++--
->  Documentation/translations/zh_CN/sparse.txt   |   6 +-
->  MAINTAINERS                                   |   1 -
->  17 files changed, 407 insertions(+), 339 deletions(-)
->  create mode 100644 Documentation/translations/zh_CN/disclaimer-zh_CN.rst
->  delete mode 100644 Documentation/translations/zh_CN/magic-number.txt
->  rename Documentation/translations/zh_CN/{ => process}/coding-style.rst (100%)
->  rename Documentation/translations/zh_CN/{email-clients.txt => process/email-clients.rst} (82%)
->  rename Documentation/translations/zh_CN/{HOWTO => process/howto.rst} (95%)
->  create mode 100644 Documentation/translations/zh_CN/process/index.rst
->  create mode 100644 Documentation/translations/zh_CN/process/magic-number.rst
->  rename Documentation/translations/zh_CN/{stable_api_nonsense.txt => process/stable-api-nonsense.rst} (80%)
->  rename Documentation/translations/zh_CN/{stable_kernel_rules.txt => process/stable-kernel-rules.rst} (76%)
->  rename Documentation/translations/zh_CN/{SubmittingDrivers => process/submitting-drivers.rst} (86%)
->  rename Documentation/translations/zh_CN/{SubmittingPatches => process/submitting-patches.rst} (92%)
->  rename Documentation/translations/zh_CN/{volatile-considered-harmful.txt => process/volatile-considered-harmful.rst} (81%)
->
-
+Umm...  Might be a good idea to add some plausibility filters - it is,
+in theory, possible that adding a line in a comment changes behaviour
+(without compiler bugs, even - playing with __LINE__ is all it would
+take), but the odds that it's _not_ a false positive are very low.
