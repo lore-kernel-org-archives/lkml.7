@@ -6,34 +6,35 @@ X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,UNPARSEABLE_RELAY,
 	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7C4FDC43381
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 03:04:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 31BE8C43381
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 03:04:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5323F214AE
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 03:04:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0C19F2054F
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 03:04:16 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726983AbfCLDCI (ORCPT
+        id S1727339AbfCLDEO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 11 Mar 2019 23:02:08 -0400
-Received: from out30-132.freemail.mail.aliyun.com ([115.124.30.132]:58105 "EHLO
-        out30-132.freemail.mail.aliyun.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726876AbfCLDCC (ORCPT
+        Mon, 11 Mar 2019 23:04:14 -0400
+Received: from out30-43.freemail.mail.aliyun.com ([115.124.30.43]:38419 "EHLO
+        out30-43.freemail.mail.aliyun.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726921AbfCLDCF (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 11 Mar 2019 23:02:02 -0400
-X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R161e4;CH=green;DM=||false|;FP=0|-1|-1|-1|0|-1|-1|-1;HT=e01f04397;MF=alex.shi@linux.alibaba.com;NM=1;PH=DS;RN=9;SR=0;TI=SMTPD_---0TMWPcOD_1552359717;
-Received: from localhost(mailfrom:alex.shi@linux.alibaba.com fp:SMTPD_---0TMWPcOD_1552359717)
+        Mon, 11 Mar 2019 23:02:05 -0400
+X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R101e4;CH=green;DM=||false|;FP=0|-1|-1|-1|0|-1|-1|-1;HT=e01f04389;MF=alex.shi@linux.alibaba.com;NM=1;PH=DS;RN=10;SR=0;TI=SMTPD_---0TMWKlcF_1552359721;
+Received: from localhost(mailfrom:alex.shi@linux.alibaba.com fp:SMTPD_---0TMWKlcF_1552359721)
           by smtp.aliyun-inc.com(127.0.0.1);
-          Tue, 12 Mar 2019 11:01:58 +0800
+          Tue, 12 Mar 2019 11:02:02 +0800
 From:   Alex Shi <alex.shi@linux.alibaba.com>
 To:     corbet@lwn.net, harryxiyou@gmail.com, linux-doc@vger.kernel.org,
         linux-kernel@vger.kernel.org
 Cc:     Alex Shi <alex.shi@linux.alibaba.com>,
+        TripleX Chung <xxx.phy@gmail.com>,
         Li Zefan <lizefan@huawei.com>,
         Shawn Guo <shawn.guo@linaro.org>,
         Fengguang Wu <fengguang.wu@intel.com>, Coly Li <colyli@suse.de>
-Subject: [PATCH v4 04/31] docs/zh_CN: add index file into process dir
-Date:   Tue, 12 Mar 2019 11:01:02 +0800
-Message-Id: <20190312030129.47511-5-alex.shi@linux.alibaba.com>
+Subject: [PATCH v4 10/31] docs/zh_CN: rst format change for stable-kernel-rules
+Date:   Tue, 12 Mar 2019 11:01:08 +0800
+Message-Id: <20190312030129.47511-11-alex.shi@linux.alibaba.com>
 X-Mailer: git-send-email 2.19.1.856.g8858448bb
 In-Reply-To: <20190312030129.47511-1-alex.shi@linux.alibaba.com>
 References: <20190312030129.47511-1-alex.shi@linux.alibaba.com>
@@ -45,77 +46,90 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+to Make it readble with rst format.
+
 Signed-off-by: Alex Shi <alex.shi@linux.alibaba.com>
 Cc: Harry Wei <harryxiyou@gmail.com>
 Cc: Jonathan Corbet <corbet@lwn.net>
+Cc: TripleX Chung <xxx.phy@gmail.com>
 Cc: Li Zefan <lizefan@huawei.com>
 Cc: Shawn Guo <shawn.guo@linaro.org>
 Cc: Fengguang Wu <fengguang.wu@intel.com>
 Cc: Coly Li <colyli@suse.de>
 ---
- .../translations/zh_CN/process/index.rst      | 53 +++++++++++++++++++
- 1 file changed, 53 insertions(+)
- create mode 100644 Documentation/translations/zh_CN/process/index.rst
+ .../zh_CN/process/stable-kernel-rules.rst     | 32 +++++++++----------
+ 1 file changed, 15 insertions(+), 17 deletions(-)
 
-diff --git a/Documentation/translations/zh_CN/process/index.rst b/Documentation/translations/zh_CN/process/index.rst
-new file mode 100644
-index 000000000000..03939e1a7b92
---- /dev/null
-+++ b/Documentation/translations/zh_CN/process/index.rst
-@@ -0,0 +1,53 @@
-+.. raw:: latex
-+
-+	\renewcommand\thesection*
-+	\renewcommand\thesubsection*
-+
+diff --git a/Documentation/translations/zh_CN/process/stable-kernel-rules.rst b/Documentation/translations/zh_CN/process/stable-kernel-rules.rst
+index db4ba5a0c39a..425d06f99ac2 100644
+--- a/Documentation/translations/zh_CN/process/stable-kernel-rules.rst
++++ b/Documentation/translations/zh_CN/process/stable-kernel-rules.rst
+@@ -1,31 +1,26 @@
+-Chinese translated version of Documentation/process/stable-kernel-rules.rst
++.. _cn_stable_kernel_rules:
+ 
+-If you have any comment or update to the content, please contact the
+-original document maintainer directly.  However, if you have a problem
+-communicating in English you can also ask the Chinese maintainer for
+-help.  Contact the Chinese maintainer if this translation is outdated
+-or if there is a problem with the translation.
 +.. include:: ../disclaimer-zh_CN.rst
-+
-+:Original: :ref:`Documentation/process/index.rst <process_index>`
-+:Translator: Alex Shi <alex.shi@linux.alibaba.com>
-+
-+.. _cn_process_index:
-+
-+与Linux 内核社区一起工作
-+========================
-+
-+那么你想成为Linux内核开发人员？ 欢迎！ 不但从技术意义上讲有很多关于内核的知识
-+需要学，而且了解我们社区的工作方式也很重要。 阅读这些文章可以让您以更轻松地,
-+麻烦最少的方式将更改合并到内核。
-+
-+以下是每位开发人员应阅读的基本指南。
-+
-+.. toctree::
-+   :maxdepth: 1
-+
-+   howto
-+   submitting-patches
-+   coding-style
-+   email-clients
-+
-+其它大多数开发人员感兴趣的社区指南：
-+
-+
-+.. toctree::
-+   :maxdepth: 1
-+
-+   submitting-drivers
-+   stable-api-nonsense
-+   stable-kernel-rules
-+
-+这些是一些总体技术指南，由于缺乏更好的地方，现在已经放在这里
-+
-+.. toctree::
-+   :maxdepth: 1
-+
-+   magic-number
-+   volatile-considered-harmful
-+
-+.. only::  subproject and html
-+
-+   目录
-+   ====
-+
-+   * :ref:`genindex`
+ 
+-Chinese maintainer: TripleX Chung <triplex@zh-kernel.org>
+----------------------------------------------------------------------
+-Documentation/process/stable-kernel-rules.rst 的中文翻译
++:Original: :ref:`Documentation/process/stable-kernel-rules.rst <stable_kernel_rules>`
+ 
+ 如果想评论或更新本文的内容，请直接联系原文档的维护者。如果你使用英文
+ 交流有困难的话，也可以向中文版维护者求助。如果本翻译更新不及时或者翻
+-译存在问题，请联系中文版维护者。
++译存在问题，请联系中文版维护者::
+ 
++        中文版维护者： 钟宇  TripleX Chung <triplex@zh-kernel.org>
++        中文版翻译者： 钟宇  TripleX Chung <triplex@zh-kernel.org>
++        中文版校译者：
++            - 李阳  Li Yang <leo@zh-kernel.org>
++            - Kangkai Yin <e12051@motorola.com>
+ 
+-中文版维护者： 钟宇  TripleX Chung <triplex@zh-kernel.org>
+-中文版翻译者： 钟宇  TripleX Chung <triplex@zh-kernel.org>
+-中文版校译者： 李阳  Li Yang <leo@zh-kernel.org>
+-               Kangkai Yin <e12051@motorola.com>
+-
+-以下为正文
+----------------------------------------------------------------------
++所有你想知道的事情 - 关于linux稳定版发布
++========================================
+ 
+ 关于Linux 2.6稳定版发布，所有你想知道的事情。
+ 
+ 关于哪些类型的补丁可以被接收进入稳定版代码树，哪些不可以的规则：
++----------------------------------------------------------------
+ 
+   - 必须是显而易见的正确，并且经过测试的。
+   - 连同上下文，不能大于100行。
+@@ -41,6 +36,7 @@ Documentation/process/stable-kernel-rules.rst 的中文翻译
+   - 必须遵循Documentation/process/submitting-patches.rst里的规则。
+ 
+ 向稳定版代码树提交补丁的过程：
++------------------------------
+ 
+   - 在确认了补丁符合以上的规则后，将补丁发送到stable@vger.kernel.org。
+   - 如果补丁被接受到队列里，发送者会收到一个ACK回复，如果没有被接受，收
+@@ -49,6 +45,7 @@ Documentation/process/stable-kernel-rules.rst 的中文翻译
+   - 安全方面的补丁不要发到这个列表，应该发送到security@kernel.org。
+ 
+ 审查周期：
++----------
+ 
+   - 当稳定版的维护者决定开始一个审查周期，补丁将被发送到审查委员会，以
+     及被补丁影响的领域的维护者（除非提交者就是该领域的维护者）并且抄送
+@@ -63,4 +60,5 @@ Documentation/process/stable-kernel-rules.rst 的中文翻译
+     通常的审查周期。请联系内核安全小组以获得关于这个过程的更多细节。
+ 
+ 审查委员会：
++------------
+   - 由一些自愿承担这项任务的内核开发者，和几个非志愿的组成。
 -- 
 2.19.1.856.g8858448bb
 
