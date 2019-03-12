@@ -2,193 +2,163 @@ Return-Path: <SRS0=J4ZE=RP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7B8E5C10F06
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 01:34:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 52DE0C43381
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 01:35:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 413142084F
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 01:34:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0EB162171F
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 01:35:11 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="qOyNYXF2"
+	dkim=pass (1024-bit key) header.d=armh.onmicrosoft.com header.i=@armh.onmicrosoft.com header.b="DPU9JSEW"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726668AbfCLBev (ORCPT
+        id S1726703AbfCLBfK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 11 Mar 2019 21:34:51 -0400
-Received: from merlin.infradead.org ([205.233.59.134]:57744 "EHLO
-        merlin.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726431AbfCLBev (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 11 Mar 2019 21:34:51 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=merlin.20170209; h=Content-Transfer-Encoding:Content-Type:
-        In-Reply-To:MIME-Version:Date:Message-ID:References:Cc:To:From:Subject:Sender
-        :Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
-        Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
-        List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-        bh=ABBIpJ9khKxMfKx7eqgU0kcE99GiBOw+nQ4Hr61nFvU=; b=qOyNYXF23+BGUsDp8nVauzAlZf
-        HpRWwPj4Fklo9dKN2Mea7Pj0HZtdPPA80FY/mNJPvL2/m65BzeZhSI1Hks7f9Mmv5zo9XUqCu8NsO
-        qSa3KHko0I9dAYtqC882qs5PKBPCLw+Z/qlLNZ6W7N17H0gVV5K3mMEzHo84UPXRKdgQ20jsCuzxJ
-        vHiSzsFCSWQl9l7fKSb8j3QyUOjlL/1ZustcI128PEY0If70V8zLTTzsY4cKpUQi11PiAmPbF5Kdw
-        wRH+4Y3DdE0Wcg3ErFo//EcpiLAk2vkIXvX4ZykmjQKp5sGflpX7sXLihy4/t6uSGaoAUVUYbVPRm
-        J/Y+Xi4A==;
-Received: from static-50-53-52-16.bvtn.or.frontiernet.net ([50.53.52.16] helo=dragon.dunlab)
-        by merlin.infradead.org with esmtpsa (Exim 4.90_1 #2 (Red Hat Linux))
-        id 1h3WJa-0007hs-Fu; Tue, 12 Mar 2019 01:34:46 +0000
-Subject: Re: paride/pf.c: blk-mq use-after-free (kernel v5.0)
-From:   Randy Dunlap <rdunlap@infradead.org>
-To:     linux-block <linux-block@vger.kernel.org>, axboe <axboe@kernel.dk>
-Cc:     LKML <linux-kernel@vger.kernel.org>, Tim Waugh <tim@cyberelk.net>,
-        linux-parport@lists.infradead.org
-References: <30c63b2d-92d2-51be-40f0-62cada110388@infradead.org>
-Message-ID: <7d24a06f-f219-e50a-e8f8-915a6cc1b796@infradead.org>
-Date:   Mon, 11 Mar 2019 18:34:12 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.5.1
-MIME-Version: 1.0
-In-Reply-To: <30c63b2d-92d2-51be-40f0-62cada110388@infradead.org>
-Content-Type: text/plain; charset=utf-8
+        Mon, 11 Mar 2019 21:35:10 -0400
+Received: from mail-eopbgr00089.outbound.protection.outlook.com ([40.107.0.89]:10828
+        "EHLO EUR02-AM5-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726431AbfCLBfK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 11 Mar 2019 21:35:10 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=armh.onmicrosoft.com;
+ s=selector1-arm-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=JtxqqtMg0mtNwODkrTI4yLRXkpzI+Ahn54L9/mLVH28=;
+ b=DPU9JSEWJMq3Zf0F/9XWBz7+QoBMHffDk0O1VPiRmgm7nCyO8vwTL/raDXLRQD8Rg3P6rU+//1jBH1j/fWdN75t90J0PnwDjsUOFWLkvaKZo06D2Y82CsYVgymPswS8+YzJQ01D7mfUeDgmUGtEjcQf/uRMf/Nfw+OWNCzOAjNM=
+Received: from AM4PR08MB2929.eurprd08.prod.outlook.com (10.171.190.138) by
+ AM4PR08MB0755.eurprd08.prod.outlook.com (10.164.82.145) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.1686.18; Tue, 12 Mar 2019 01:34:44 +0000
+Received: from AM4PR08MB2929.eurprd08.prod.outlook.com
+ ([fe80::e522:c03f:3d0c:f4ce]) by AM4PR08MB2929.eurprd08.prod.outlook.com
+ ([fe80::e522:c03f:3d0c:f4ce%4]) with mapi id 15.20.1686.021; Tue, 12 Mar 2019
+ 01:34:44 +0000
+From:   "Haibo Xu (Arm Technology China)" <Haibo.Xu@arm.com>
+To:     Sudeep Holla <Sudeep.Holla@arm.com>
+CC:     "x86@kernel.org" <x86@kernel.org>,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "linuxppc-dev@lists.ozlabs.org" <linuxppc-dev@lists.ozlabs.org>,
+        Catalin Marinas <Catalin.Marinas@arm.com>,
+        Will Deacon <Will.Deacon@arm.com>,
+        Oleg Nesterov <oleg@redhat.com>,
+        Paul Mackerras <paulus@samba.org>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>,
+        Richard Weinberger <richard@nod.at>,
+        "jdike@addtoit.com" <jdike@addtoit.com>,
+        Steve Capper <Steve.Capper@arm.com>,
+        "Bin Lu (Arm Technology China)" <Bin.Lu@arm.com>,
+        Andy Lutomirski <luto@kernel.org>,
+        Borislav Petkov <bp@alien8.de>
+Subject: Re: [PATCH 3/6] x86: clean up _TIF_SYSCALL_EMU handling using
+ ptrace_syscall_enter hook
+Thread-Topic: [PATCH 3/6] x86: clean up _TIF_SYSCALL_EMU handling using
+ ptrace_syscall_enter hook
+Thread-Index: AQHUz5P9ZKULSdDQbEW1h9vbYNE6xaX7KHCAgAAd14CAAQzrgIAKf6aAgAB1ewA=
+Date:   Tue, 12 Mar 2019 01:34:44 +0000
+Message-ID: <65b00ea1-f784-4fb4-2a98-49fa44d9fa8f@arm.com>
+References: <20190228183220.15626-1-sudeep.holla@arm.com>
+ <20190228183220.15626-4-sudeep.holla@arm.com>
+ <eb9ef619-4af8-71e1-5aee-0b6294ac488b@arm.com>
+ <20190304101205.GA1504@e107155-lin>
+ <96d59a68-e5e2-86d9-c707-a79aad438b76@arm.com>
+ <20190311183403.GA31062@e107155-lin>
+In-Reply-To: <20190311183403.GA31062@e107155-lin>
+Accept-Language: en-US
 Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-clientproxiedby: HK2PR0302CA0011.apcprd03.prod.outlook.com
+ (2603:1096:202::21) To AM4PR08MB2929.eurprd08.prod.outlook.com
+ (2603:10a6:205:c::10)
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=Haibo.Xu@arm.com; 
+x-ms-exchange-messagesentrepresentingtype: 1
+x-originating-ip: [113.29.88.7]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: fef0931c-6e28-422a-8e2a-08d6a68ae7b3
+x-ms-office365-filtering-ht: Tenant
+x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(7168020)(4627221)(201703031133081)(201702281549075)(8990200)(5600127)(711020)(4605104)(4618075)(2017052603328)(7153060)(7193020);SRVR:AM4PR08MB0755;
+x-ms-traffictypediagnostic: AM4PR08MB0755:
+x-microsoft-exchange-diagnostics: 1;AM4PR08MB0755;20:sa024CKCUP9ygamxCffnfnGzSUtIY6f71NbBS4cbExAALXdZzTEpUU3Jitcezf+FfwuyPYzDTZSK4GN3ZxKURSyQPZCBUYwPcsbg5NXGw71hzJtEV5FwMexLVgPh584dZJyHQ7uRvse+zsef87zDGz9FJVKv2pgDm/HAnl1Nnh8=
+x-microsoft-antispam-prvs: <AM4PR08MB07550371EA02A78BD313F3BE85490@AM4PR08MB0755.eurprd08.prod.outlook.com>
+x-forefront-prvs: 09749A275C
+x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(396003)(136003)(346002)(376002)(366004)(39860400002)(189003)(199004)(40434004)(52116002)(6506007)(386003)(71200400001)(99286004)(6636002)(76176011)(71190400001)(8936002)(53936002)(31686004)(229853002)(186003)(53546011)(6486002)(478600001)(72206003)(6436002)(6512007)(14454004)(256004)(26005)(55236004)(5024004)(14444005)(102836004)(7736002)(305945005)(25786009)(36756003)(4326008)(81156014)(81166006)(31696002)(8676002)(3846002)(6862004)(7416002)(68736007)(86362001)(5660300002)(106356001)(486006)(2616005)(11346002)(316002)(446003)(6116002)(105586002)(6246003)(476003)(37006003)(97736004)(54906003)(93886005)(2906002)(66066001);DIR:OUT;SFP:1101;SCL:1;SRVR:AM4PR08MB0755;H:AM4PR08MB2929.eurprd08.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
+received-spf: None (protection.outlook.com: arm.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam-message-info: pEbiBfy7XcTMnKLK49xK9k03MxcDh+YzEFQsi4oQMddSssaIJp8zO2sb9H4KfM/KY5nC2SPtKVi4PBGkqWLIUW5PhP2oDqU2fJrPGJRLI7Mzd/hLwLqxO/Fcx3Qge7O8UQ3z3UyvJpEjglEdb+WiJUjPcEFLL7dG65Mx3um2d5bacDhDYQ1S5ZFqqq9wWd7xJNvTmUf6796hOlIoEJbUdsyR41MPz7eOtt+piXppZ4j3qmjrXokeZw1Oj5e506F90pAromPcgwy+h7jOMTNzdsF6PCjEjvhn9E3YZLUy781TgLOsllt6WKJ/hOKcVE6zlB5Uib3qnEg4G5hKZvbviXauGomKzBSAoRTPm8PGsFLGghf0ajj0mZ9KygXHrxZbdGvnigmpCruw4YZKD4uZKqB2aZVqr1zkufLB2RuysdQ=
+Content-Type: text/plain; charset="utf-8"
+Content-ID: <57866709C2BE224FA97105DAF41E7E6A@eurprd08.prod.outlook.com>
+Content-Transfer-Encoding: base64
+MIME-Version: 1.0
+X-OriginatorOrg: arm.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: fef0931c-6e28-422a-8e2a-08d6a68ae7b3
+X-MS-Exchange-CrossTenant-originalarrivaltime: 12 Mar 2019 01:34:44.4617
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: f34e5979-57d9-4aaa-ad4d-b122a662184d
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: AM4PR08MB0755
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 3/11/19 6:25 PM, Randy Dunlap wrote:
-> [Has this already been addressed/fixed?]
-> 
-
-Same bug occurs with paride/pcd.c driver.
-
-> 
-> [ 1688.055696] calling  pf_init+0x0/0x1000 [pf] @ 8572
-> [ 1688.058871] pf: pf version 1.04, major 47, cluster 64, nice 0
-> [ 1688.064381] pf: No ATAPI disk detected
-> [ 1688.064783] initcall pf_init+0x0/0x1000 [pf] returned -19 after 8827 usecs
-> [ 1688.322562] calling  pf_init+0x0/0x1000 [pf] @ 8582
-> [ 1688.323566] ==================================================================
-> [ 1688.323621] BUG: KASAN: use-after-free in __cpuhp_state_add_instance_cpuslocked+0x33f/0x430
-> [ 1688.323669] Write of size 8 at addr ffff888117051810 by task modprobe/8582
-> 
-> [ 1688.323729] CPU: 3 PID: 8582 Comm: modprobe Not tainted 5.0.0mod #2
-> [ 1688.323767] Hardware name: TOSHIBA PORTEGE R835/Portable PC, BIOS Version 4.10   01/08/2013
-> [ 1688.323812] Call Trace:
-> [ 1688.323840]  dump_stack+0x7b/0xb5
-> [ 1688.323874]  print_address_description+0x6e/0x360
-> [ 1688.323916]  kasan_report+0x11a/0x198
-> [ 1688.323948]  ? __cpuhp_state_add_instance_cpuslocked+0x33f/0x430
-> [ 1688.323993]  ? __cpuhp_state_add_instance_cpuslocked+0x33f/0x430
-> [ 1688.324035]  __asan_report_store8_noabort+0x17/0x20
-> [ 1688.324070]  __cpuhp_state_add_instance_cpuslocked+0x33f/0x430
-> [ 1688.324108]  ? blk_mq_realloc_hw_ctxs+0x409/0xfb0
-> [ 1688.324142]  ? __might_sleep+0xa1/0x1b0
-> [ 1688.324178]  ? lockdep_init_map+0x115/0x5e0
-> [ 1688.324215]  __cpuhp_state_add_instance+0x78/0xf0
-> [ 1688.324249]  blk_mq_realloc_hw_ctxs+0x409/0xfb0
-> [ 1688.324279]  ? kasan_unpoison_shadow+0x35/0x50
-> [ 1688.324311]  ? __kasan_kmalloc.constprop.8+0xa7/0xd0
-> [ 1688.324362]  blk_mq_init_allocated_queue+0x404/0x1a00
-> [ 1688.324395]  ? blk_throtl_init+0x431/0x620
-> [ 1688.324430]  ? blkcg_init_queue+0x102/0x190
-> [ 1688.324475]  blk_mq_init_queue+0x56/0x80
-> [ 1688.324507]  blk_mq_init_sq_queue+0x144/0x1a0
-> [ 1688.324547]  pf_init+0x9f/0x1000 [pf]
-> [ 1688.324575]  ? 0xffffffffc0a48000
-> [ 1688.324605]  ? ktime_get+0xba/0x160
-> [ 1688.324634]  ? 0xffffffffc0a48000
-> [ 1688.324662]  do_one_initcall+0xab/0x2ad
-> [ 1688.324692]  ? initcall_blacklisted+0x190/0x190
-> [ 1688.324723]  ? kasan_unpoison_shadow+0x35/0x50
-> [ 1688.324759]  ? kasan_unpoison_shadow+0x35/0x50
-> [ 1688.324788]  ? kasan_unpoison_shadow+0x35/0x50
-> [ 1688.324819]  ? kasan_poison_shadow+0x2f/0x40
-> [ 1688.324849]  ? __asan_register_globals+0x5a/0x70
-> [ 1688.324888]  do_init_module+0x1c7/0x548
-> [ 1688.324926]  load_module+0x445d/0x5de0
-> [ 1688.324999]  ? layout_and_allocate+0x2d00/0x2d00
-> [ 1688.325035]  ? kernel_read+0x90/0x130
-> [ 1688.325074]  ? kasan_check_write+0x14/0x20
-> [ 1688.325105]  ? kernel_read_file+0x24a/0x640
-> [ 1688.325179]  __do_sys_finit_module+0x193/0x1b0
-> [ 1688.325209]  ? __do_sys_finit_module+0x193/0x1b0
-> [ 1688.325242]  ? __ia32_sys_init_module+0xa0/0xa0
-> [ 1688.325275]  ? vfs_statx_fd+0x45/0x80
-> [ 1688.325306]  ? kasan_check_write+0x14/0x20
-> [ 1688.325335]  ? fput+0x18/0x130
-> [ 1688.325363]  ? ksys_mmap_pgoff+0x3d9/0xb50
-> [ 1688.325416]  __x64_sys_finit_module+0x6e/0xb0
-> [ 1688.325442]  ? __x64_sys_newfstat+0x4f/0x70
-> [ 1688.325469]  do_syscall_64+0xaa/0x310
-> [ 1688.325501]  ? prepare_exit_to_usermode+0x8b/0x150
-> [ 1688.325536]  entry_SYSCALL_64_after_hwframe+0x44/0xa9
-> [ 1688.325567] RIP: 0033:0x7f17f52bd129
-> [ 1688.325595] Code: 00 f3 c3 66 2e 0f 1f 84 00 00 00 00 00 0f 1f 40 00 48 89 f8 48 89 f7 48 89 d6 48 89 ca 4d 89 c2 4d 89 c8 4c 8b 4c 24 08 0f 05 <48> 3d 01 f0 ff ff 73 01 c3 48 8b 0d 3f 0d 2c 00 f7 d8 64 89 01 48
-> [ 1688.325679] RSP: 002b:00007fff2e723e38 EFLAGS: 00000246 ORIG_RAX: 0000000000000139
-> [ 1688.325718] RAX: ffffffffffffffda RBX: 00005565f67c0b10 RCX: 00007f17f52bd129
-> [ 1688.325740] RDX: 0000000000000000 RSI: 00005565f65ae548 RDI: 0000000000000003
-> [ 1688.325762] RBP: 00005565f65ae548 R08: 0000000000000000 R09: 00005565f67c0400
-> [ 1688.325783] R10: 0000000000000003 R11: 0000000000000246 R12: 0000000000040000
-> [ 1688.325805] R13: 00005565f67c0c40 R14: 0000000000000000 R15: 00005565f67c0b10
-> 
-> [ 1688.325848] Allocated by task 8572:
-> [ 1688.325864]  save_stack+0x43/0xd0
-> [ 1688.325879]  __kasan_kmalloc.constprop.8+0xa7/0xd0
-> [ 1688.325896]  kasan_kmalloc+0x9/0x10
-> [ 1688.325912]  blk_mq_realloc_hw_ctxs+0x18b/0xfb0
-> [ 1688.325929]  blk_mq_init_allocated_queue+0x404/0x1a00
-> [ 1688.325948]  blk_mq_init_queue+0x56/0x80
-> [ 1688.325964]  blk_mq_init_sq_queue+0x144/0x1a0
-> [ 1688.325983]  pf_init+0x9f/0x1000 [pf]
-> [ 1688.325998]  do_one_initcall+0xab/0x2ad
-> [ 1688.326013]  do_init_module+0x1c7/0x548
-> [ 1688.326028]  load_module+0x445d/0x5de0
-> [ 1688.326043]  __do_sys_finit_module+0x193/0x1b0
-> [ 1688.326059]  __x64_sys_finit_module+0x6e/0xb0
-> [ 1688.326075]  do_syscall_64+0xaa/0x310
-> [ 1688.326097]  entry_SYSCALL_64_after_hwframe+0x44/0xa9
-> 
-> [ 1688.326142] Freed by task 2217:
-> [ 1688.326160]  save_stack+0x43/0xd0
-> [ 1688.326174]  __kasan_slab_free+0x137/0x190
-> [ 1688.326191]  kasan_slab_free+0xe/0x10
-> [ 1688.326206]  kfree+0xb0/0x1b0
-> [ 1688.326220]  blk_mq_hw_sysfs_release+0x6f/0x90
-> [ 1688.326237]  kobject_put+0x153/0x420
-> [ 1688.326252]  blk_mq_release+0xbc/0x160
-> [ 1688.326267]  __blk_release_queue+0x178/0x320
-> [ 1688.326284]  process_one_work+0x9fb/0x1710
-> [ 1688.326299]  worker_thread+0x85/0xee0
-> [ 1688.326315]  kthread+0x349/0x410
-> [ 1688.326329]  ret_from_fork+0x35/0x40
-> 
-> [ 1688.326353] The buggy address belongs to the object at ffff888117051588
->                 which belongs to the cache kmalloc-1k of size 1024
-> [ 1688.326388] The buggy address is located 648 bytes inside of
->                 1024-byte region [ffff888117051588, ffff888117051988)
-> [ 1688.326421] The buggy address belongs to the page:
-> [ 1688.326439] page:ffffea00045c1400 count:1 mapcount:0 mapping:ffff888107c16940 index:0x0 compound_mapcount: 0
-> [ 1688.326469] flags: 0x17ffffc0010200(slab|head)
-> [ 1688.326488] raw: 0017ffffc0010200 ffffea0004502408 ffffea00042c6408 ffff888107c16940
-> [ 1688.326512] raw: 0000000000000000 0000000000170017 00000001ffffffff 0000000000000000
-> [ 1688.326535] page dumped because: kasan: bad access detected
-> 
-> [ 1688.326562] Memory state around the buggy address:
-> [ 1688.326579]  ffff888117051700: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
-> [ 1688.326602]  ffff888117051780: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
-> [ 1688.326624] >ffff888117051800: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
-> [ 1688.326646]                          ^
-> [ 1688.326660]  ffff888117051880: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
-> [ 1688.326684]  ffff888117051900: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
-> [ 1688.326705] ==================================================================
-> [ 1688.326726] Disabling lock debugging due to kernel taint
-> [ 1688.328731] pf: pf version 1.04, major 47, cluster 64, nice 0
-> [ 1688.336493] pf: No ATAPI disk detected
-> [ 1688.336730] initcall pf_init+0x0/0x1000 [pf] returned -19 after 13791 usecs
-> 
-
-
--- 
-~Randy
+T24gMjAxOS8zLzEyIDI6MzQsIFN1ZGVlcCBIb2xsYSB3cm90ZToNCj4gKEkgdGhvdWdodCBJIGhh
+ZCBzZW50IHRoaXMgZW1haWwsIGxhc3QgVHVlc2RheSBpdHNlbGYsIGJ1dCBzYXcgdGhpcyBpbiBt
+eQ0KPiBkcmFmdCB0b2RheSwgc29tZXRoaW5nIHdlbnQgd3JvbmcsIHNvcnJ5IGZvciB0aGUgZGVs
+YXkpDQo+DQo+IE9uIFR1ZSwgTWFyIDA1LCAyMDE5IGF0IDAyOjE0OjQ3QU0gKzAwMDAsIEhhaWJv
+IFh1IChBcm0gVGVjaG5vbG9neSBDaGluYSkgd3JvdGU6DQo+PiBPbiAyMDE5LzMvNCAxODoxMiwg
+U3VkZWVwIEhvbGxhIHdyb3RlOg0KPj4+IE9uIE1vbiwgTWFyIDA0LCAyMDE5IGF0IDA4OjI1OjI4
+QU0gKzAwMDAsIEhhaWJvIFh1IChBcm0gVGVjaG5vbG9neSBDaGluYSkgd3JvdGU6DQo+Pj4+IE9u
+IDIwMTkvMy8xIDI6MzIsIFN1ZGVlcCBIb2xsYSB3cm90ZToNCj4+Pj4+IE5vdyB0aGF0IHdlIGhh
+dmUgYSBuZXcgaG9vayBwdHJhY2Vfc3lzY2FsbF9lbnRlciB0aGF0IGNhbiBiZSBjYWxsZWQgZnJv
+bQ0KPj4+Pj4gc3lzY2FsbCBlbnRyeSBjb2RlIGFuZCBpdCBoYW5kbGVzIFBUUkFDRV9TWVNFTVUg
+aW4gZ2VuZXJpYyBjb2RlLCB3ZQ0KPj4+Pj4gY2FuIGRvIHNvbWUgY2xlYW51cCB1c2luZyB0aGUg
+c2FtZSBpbiBzeXNjYWxsX3RyYWNlX2VudGVyLg0KPj4+Pj4NCj4+Pj4+IEZ1cnRoZXIgdGhlIGV4
+dHJhIGxvZ2ljIHRvIGZpbmQgc2luZ2xlIHN0ZXBwaW5nIFBUUkFDRV9TWVNFTVVfU0lOR0xFU1RF
+UA0KPj4+Pj4gaW4gc3lzY2FsbF9zbG93X2V4aXRfd29yayBzZWVtcyB1bm5lY2Vzc2FyeS4gTGV0
+J3MgcmVtb3ZlIHRoZSBzYW1lLg0KPj4+Pg0KPj4+PiBJIHRoaW5rIHdlIHNob3VsZCBub3QgY2hh
+bmdlIHRoZSBsb2dpYyBoZXJlLiBJcyBzbywgaXQgd2lsbCBkb3VibGUgdGhlIHJlcG9ydCBvZiBz
+eXNjYWxsDQo+Pj4+IHdoZW4gUFRSQUNFX1NZU0VNVV9TSU5HTEVTVEVQIGlzIGVuYWJsZWQuDQo+
+Pj4+DQo+Pj4NCj4+PiBJIGRvbid0IHRoaW5rIHRoYXQgc2hvdWxkIGhhcHBlbiwgYnV0IEkgbWF5
+IGJlIG1pc3Npbmcgc29tZXRoaW5nLg0KPj4+IENhbiB5b3UgZXhwbGFpbiBob3cgPw0KPj4+DQo+
+Pg0KPj4gV2hlbiBQVFJBQ0VfU1lTRU1VX1NJTkdMRVNURVAgaXMgZW5hYmxlZCwgYm90aCB0aGUg
+X1RJRl9TWVNDQUxMX0VNVSBhbmQNCj4+IF9USUZfU0lOR0xFU1RFUCBmbGFncyBhcmUgc2V0LCBi
+dXQgcHRyYWNlIG9ubHkgbmVlZCB0byByZXBvcnQoc2VuZCBTSUdUUkFQKQ0KPj4gYXQgdGhlIGVu
+dHJ5IG9mIGEgc3lzdGVtIGNhbGwsIG5vIG5lZWQgdG8gcmVwb3J0IGF0IHRoZSBleGl0IG9mIGEg
+c3lzdGVtDQo+PiBjYWxsLg0KPj4NCj4gU29ycnksIGJ1dCBJIHN0aWxsIG5vdCBnZXQgaXQsIHdl
+IGhhdmU6DQo+DQo+IHN0ZXAgPSAoKGZsYWdzICYgKF9USUZfU0lOR0xFU1RFUCB8IF9USUZfU1lT
+Q0FMTF9FTVUpKSA9PSBfVElGX1NJTkdMRVNURVApOw0KPg0KPiBGb3IgbWUsIHRoaXMgaXMgc2Ft
+ZSBhczoNCj4gc3RlcCA9ICgoZmxhZ3MgJiBfVElGX1NJTkdMRVNURVApID09IF9USUZfU0lOR0xF
+U1RFUCkNCj4gb3INCj4gaWYgKGZsYWdzICYgX1RJRl9TSU5HTEVTVEVQKQ0KPiBzdGVwID0gdHJ1
+ZTsNCj4NCg0KSSBkb24ndCB0aGluayBzbyEgQXMgSSBtZW50aW9uZWQgaW4gdGhlIGxhc3QgZW1h
+aWwgbG9vcCwgd2hlbiBQVFJBQ0VfU1lTRU1VX1NJTkdMRVNURVANCmlzIGVuYWJsZWQsIGJvdGgg
+dGhlIF9USUZfU1lTQ0FMTF9FTVUgYW5kIF9USUZfU0lOR0xFU1RFUCBmbGFncyBhcmUgc2V0LCBp
+biB3aGljaCBjYXNlDQp0aGUgc3RlcCBzaG91bGQgYmUgImZhbHNlIiBmb3IgdGhlIG9sZCBsb2dp
+Yy4gQnV0IHdpdGggdGhlIG5ldyBsb2dpYywgdGhlIHN0ZXAgaXMgInRydWUiLg0KDQo+IFNvIHdo
+ZW4gUFRSQUNFX1NZU0VNVV9TSU5HTEVTVEVQLCBfVElGX1NZU0NBTExfRU1VIGFuZCBfVElGX1NJ
+TkdMRVNURVANCj4gYXJlIHNldCBhbmQgc3RlcCBldmFsdWF0ZXMgdG8gdHJ1ZS4NCj4NCj4gU28g
+ZHJvcHBpbmcgX1RJRl9TWVNDQUxMX0VNVSBoZXJlIHNob3VsZCBiZSBmaW5lLiBBbSBJIHN0aWxs
+IG1pc3NpbmcNCj4gc29tZXRoaW5nID8NCj4NCj4gLS0NCj4gUmVnYXJkcywNCj4gU3VkZWVwDQo+
+DQoNCkZvciB0aGUgUFRSQUNFX1NZU0VNVV9TSU5HTEVTVEVQIHJlcXVlc3QsIHB0cmFjZSBvbmx5
+IG5lZWQgdG8gcmVwb3J0KHNlbmQgU0lHVFJBUCkNCmF0IHRoZSBlbnRyeSBvZiBhIHN5c3RlbSBj
+YWxsLCBubyBuZWVkIHRvIHJlcG9ydCBhdCB0aGUgZXhpdCBvZiBhIHN5c3RlbSBjYWxsLlRoYXQn
+cw0Kd2h5IHRoZSBvbGQgbG9naWMte3N0ZXAgPSAoKGZsYWdzICYgKF9USUZfU0lOR0xFU1RFUCB8
+IF9USUZfU1lTQ0FMTF9FTVUpKSA9PSBfVElGX1NJTkdMRVNURVApfQ0KaGVyZSB0cnkgdG8gZmls
+dGVyIG91dCB0aGUgc3BlY2lhbCBjYXNlKFBUUkFDRV9TWVNFTVVfU0lOR0xFU1RFUCkuDQoNCkFu
+b3RoZXIgd2F5IHRvIG1ha2Ugc3VyZSB0aGUgbG9naWMgaXMgZmluZSwgeW91IGNhbiBydW4gc29t
+ZSB0ZXN0cyB3aXRoIHJlc3BlY3QgdG8gYm90aCBsb2dpYywNCmFuZCB0byBjaGVjayB3aGV0aGVy
+IHRoZXkgaGF2ZSB0aGUgc2FtZSBiZWhhdmlvci4NCg0KUmVnYXJkcywNCg0KSGFpYm8NCklNUE9S
+VEFOVCBOT1RJQ0U6IFRoZSBjb250ZW50cyBvZiB0aGlzIGVtYWlsIGFuZCBhbnkgYXR0YWNobWVu
+dHMgYXJlIGNvbmZpZGVudGlhbCBhbmQgbWF5IGFsc28gYmUgcHJpdmlsZWdlZC4gSWYgeW91IGFy
+ZSBub3QgdGhlIGludGVuZGVkIHJlY2lwaWVudCwgcGxlYXNlIG5vdGlmeSB0aGUgc2VuZGVyIGlt
+bWVkaWF0ZWx5IGFuZCBkbyBub3QgZGlzY2xvc2UgdGhlIGNvbnRlbnRzIHRvIGFueSBvdGhlciBw
+ZXJzb24sIHVzZSBpdCBmb3IgYW55IHB1cnBvc2UsIG9yIHN0b3JlIG9yIGNvcHkgdGhlIGluZm9y
+bWF0aW9uIGluIGFueSBtZWRpdW0uIFRoYW5rIHlvdS4NCg==
