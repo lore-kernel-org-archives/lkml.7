@@ -4,49 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E1FE2C43381
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 18:08:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 438E8C43381
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 18:08:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B3195205C9
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 18:08:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 03CE5205C9
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 18:08:20 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1552414089;
-	bh=Dalb/1gXK7IzBw0qT16blcVACn+i6lC3nL0gfEh3Oq0=;
+	s=default; t=1552414100;
+	bh=Gv6TUmZ4OulDP+6ra1hCGi4Xts0aktHHfvz3yJNPpS8=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=H0uEDREp50uBw31kn7I5pt4qnaaJCtLhVyAsiRahuhaWUHtbLVuIf8YUqdvFQOMQM
-	 Mscc0V/H1kVQd8iDxuYciG9Iun7kH+YTczV/XujUYITD6iZLm/Ro8FrYWeoK2gPt3J
-	 B/Ad9aJjGlGYx5CJn+eEBlbH/NkUbqW4iPhLZvPA=
+	b=PSpnshdimzdZxDtEkQ1fvWBacEqaS9yk6idCggOOTMtRQes+df3tmlWVyg82AHNao
+	 w+eNt1VatfvAtkA6OyqIuSKNUY1dmRlcEe8bcvvliU2bnWYfcQfMmgyxi1oEdNsFAa
+	 wnA5RuWnpz1Ua+XqyBYR7LttgJuthaE23LqCWprk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727977AbfCLSII (ORCPT
+        id S1727766AbfCLSIT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 12 Mar 2019 14:08:08 -0400
-Received: from mail.kernel.org ([198.145.29.99]:47140 "EHLO mail.kernel.org"
+        Tue, 12 Mar 2019 14:08:19 -0400
+Received: from mail.kernel.org ([198.145.29.99]:46834 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727361AbfCLRMR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 12 Mar 2019 13:12:17 -0400
+        id S1727348AbfCLRMP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 12 Mar 2019 13:12:15 -0400
 Received: from localhost (unknown [104.133.8.98])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 1A28A217D4;
-        Tue, 12 Mar 2019 17:12:16 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id A0042217F4;
+        Tue, 12 Mar 2019 17:12:14 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1552410736;
-        bh=Dalb/1gXK7IzBw0qT16blcVACn+i6lC3nL0gfEh3Oq0=;
+        s=default; t=1552410734;
+        bh=Gv6TUmZ4OulDP+6ra1hCGi4Xts0aktHHfvz3yJNPpS8=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=gLASFNtbfbqdRu72NK7T0JCk4NTXzvMl/FAwTXcXqLiVP8CrU14NQWdbLjU2/OvwD
-         smSRKFR3HpK0Cz4+zaZMFj7Qw6ZN/bTLSs/k13xtRppsj+Z4FIoXdIFepoHzPP8E9c
-         Y715/Zj0FsyIbK0SZRVshofcfBNK5lYRWMbqH0fI=
+        b=tu9ZBClURyJwl8YkcR8xCeNUZqefahN2ifK1+l79M3EXuwLoMZwl2PyZkBm/OSHDO
+         SWOPpblXvgUVuoszzRAIqkHoTDP7ntsW/if9qfE4LKvyoNVUOAWSi/1gjCU1Lq0uQz
+         rnuv600nNbZEQfX0m0mne3dIW1xTkf4cHTRnlH4E=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Fathi Boudra <fathi.boudra@linaro.org>,
-        Shuah Khan <shuah@kernel.org>, Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.20 038/171] selftests: net: use LDLIBS instead of LDFLAGS
-Date:   Tue, 12 Mar 2019 10:06:58 -0700
-Message-Id: <20190312170351.352882702@linuxfoundation.org>
+        stable@vger.kernel.org, Ronnie Sahlberg <lsahlber@redhat.com>,
+        Steve French <stfrench@microsoft.com>,
+        Pavel Shilovsky <pshilov@microsoft.com>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.20 055/171] cifs: fix computation for MAX_SMB2_HDR_SIZE
+Date:   Tue, 12 Mar 2019 10:07:15 -0700
+Message-Id: <20190312170352.872809191@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190312170347.868927101@linuxfoundation.org>
 References: <20190312170347.868927101@linuxfoundation.org>
@@ -65,75 +67,33 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-[ Upstream commit 870f193d48c25a97d61a8e6c04e3c29a2c606850 ]
+[ Upstream commit 58d15ed1203f4d858c339ea4d7dafa94bd2a56d3 ]
 
-reuseport_bpf_numa fails to build due to undefined reference errors:
+The size of the fixed part of the create response is 88 bytes not 56.
 
- aarch64-linaro-linux-gcc
- --sysroot=/build/tmp-rpb-glibc/sysroots/hikey -Wall
- -Wl,--no-as-needed -O2 -g -I../../../../usr/include/  -Wl,-O1
- -Wl,--hash-style=gnu -Wl,--as-needed -lnuma  reuseport_bpf_numa.c
- -o
- /build/tmp-rpb-glibc/work/hikey-linaro-linux/kselftests/4.12-r0/linux-4.12-rc7/tools/testing/selftests/net/reuseport_bpf_numa
- /tmp/ccfUuExT.o: In function `send_from_node':
- /build/tmp-rpb-glibc/work/hikey-linaro-linux/kselftests/4.12-r0/linux-4.12-rc7/tools/testing/selftests/net/reuseport_bpf_numa.c:138:
- undefined reference to `numa_run_on_node'
- /tmp/ccfUuExT.o: In function `main':
- /build/tmp-rpb-glibc/work/hikey-linaro-linux/kselftests/4.12-r0/linux-4.12-rc7/tools/testing/selftests/net/reuseport_bpf_numa.c:230:
- undefined reference to `numa_available'
- /build/tmp-rpb-glibc/work/hikey-linaro-linux/kselftests/4.12-r0/linux-4.12-rc7/tools/testing/selftests/net/reuseport_bpf_numa.c:233:
- undefined reference to `numa_max_node'
-
-It's GNU Make and linker specific.
-
-The default Makefile rule looks like:
-
-$(CC) $(CFLAGS) $(LDFLAGS) $@ $^ $(LDLIBS)
-
-When linking is done by gcc itself, no issue, but when it needs to be passed
-to proper ld, only LDLIBS follows and then ld cannot know what libs to link
-with.
-
-More detail:
-https://www.gnu.org/software/make/manual/html_node/Implicit-Variables.html
-
-LDFLAGS
-Extra flags to give to compilers when they are supposed to invoke the linker,
-‘ld’, such as -L. Libraries (-lfoo) should be added to the LDLIBS variable
-instead.
-
-LDLIBS
-Library flags or names given to compilers when they are supposed to invoke the
-linker, ‘ld’. LOADLIBES is a deprecated (but still supported) alternative to
-LDLIBS. Non-library linker flags, such as -L, should go in the LDFLAGS
-variable.
-
-https://lkml.org/lkml/2010/2/10/362
-
-tools/perf: libraries must come after objects
-
-Link order matters, use LDLIBS instead of LDFLAGS to properly link against
-libnuma.
-
-Signed-off-by: Fathi Boudra <fathi.boudra@linaro.org>
-Signed-off-by: Shuah Khan <shuah@kernel.org>
+Signed-off-by: Ronnie Sahlberg <lsahlber@redhat.com>
+Signed-off-by: Steve French <stfrench@microsoft.com>
+Reviewed-by: Pavel Shilovsky <pshilov@microsoft.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- tools/testing/selftests/net/Makefile | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ fs/cifs/smb2pdu.h | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/tools/testing/selftests/net/Makefile b/tools/testing/selftests/net/Makefile
-index 923570a9708a..68e2295e7589 100644
---- a/tools/testing/selftests/net/Makefile
-+++ b/tools/testing/selftests/net/Makefile
-@@ -19,6 +19,6 @@ TEST_GEN_PROGS += reuseport_dualstack reuseaddr_conflict tls
- KSFT_KHDR_INSTALL := 1
- include ../lib.mk
+diff --git a/fs/cifs/smb2pdu.h b/fs/cifs/smb2pdu.h
+index 5671d5ee7f58..eaf39fb71f8b 100644
+--- a/fs/cifs/smb2pdu.h
++++ b/fs/cifs/smb2pdu.h
+@@ -84,8 +84,8 @@
  
--$(OUTPUT)/reuseport_bpf_numa: LDFLAGS += -lnuma
-+$(OUTPUT)/reuseport_bpf_numa: LDLIBS += -lnuma
- $(OUTPUT)/tcp_mmap: LDFLAGS += -lpthread
- $(OUTPUT)/tcp_inq: LDFLAGS += -lpthread
+ #define NUMBER_OF_SMB2_COMMANDS	0x0013
+ 
+-/* 4 len + 52 transform hdr + 64 hdr + 56 create rsp */
+-#define MAX_SMB2_HDR_SIZE 0x00b0
++/* 52 transform hdr + 64 hdr + 88 create rsp */
++#define MAX_SMB2_HDR_SIZE 204
+ 
+ #define SMB2_PROTO_NUMBER cpu_to_le32(0x424d53fe)
+ #define SMB2_TRANSFORM_PROTO_NUM cpu_to_le32(0x424d53fd)
 -- 
 2.19.1
 
