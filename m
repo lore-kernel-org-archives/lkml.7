@@ -2,210 +2,145 @@ Return-Path: <SRS0=J4ZE=RP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_MUTT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 063E7C43381
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 19:06:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 29E69C43381
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 19:08:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C684B2087C
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 19:06:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D89602087C
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 19:08:50 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726815AbfCLTGL (ORCPT
+        id S1727175AbfCLTIt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 12 Mar 2019 15:06:11 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:47234 "EHLO mx1.redhat.com"
+        Tue, 12 Mar 2019 15:08:49 -0400
+Received: from mga02.intel.com ([134.134.136.20]:5364 "EHLO mga02.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727118AbfCLTGK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 12 Mar 2019 15:06:10 -0400
-Received: from smtp.corp.redhat.com (int-mx06.intmail.prod.int.phx2.redhat.com [10.5.11.16])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id D11B5A146A;
-        Tue, 12 Mar 2019 19:06:09 +0000 (UTC)
-Received: from redhat.com (ovpn-117-131.phx2.redhat.com [10.3.117.131])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id DCDEE66857;
-        Tue, 12 Mar 2019 19:06:08 +0000 (UTC)
-Date:   Tue, 12 Mar 2019 15:06:07 -0400
-From:   Jerome Glisse <jglisse@redhat.com>
-To:     Dan Williams <dan.j.williams@intel.com>
-Cc:     Andrew Morton <akpm@linux-foundation.org>,
-        Linux MM <linux-mm@kvack.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Ralph Campbell <rcampbell@nvidia.com>,
-        John Hubbard <jhubbard@nvidia.com>,
-        linux-fsdevel <linux-fsdevel@vger.kernel.org>
-Subject: Re: [PATCH 09/10] mm/hmm: allow to mirror vma of a file on a DAX
- backed filesystem
-Message-ID: <20190312190606.GA15675@redhat.com>
-References: <CAPcyv4hB4p6po1+-hJ4Podxoan35w+T6uZJzqbw=zvj5XdeNVQ@mail.gmail.com>
- <20190131041641.GK5061@redhat.com>
- <CAPcyv4gb+r==riKFXkVZ7gGdnKe62yBmZ7xOa4uBBByhnK9Tzg@mail.gmail.com>
- <20190305141635.8134e310ba7187bc39532cd3@linux-foundation.org>
- <CAA9_cmd2Z62Z5CSXvne4rj3aPSpNhS0Gxt+kZytz0bVEuzvc=A@mail.gmail.com>
- <20190307094654.35391e0066396b204d133927@linux-foundation.org>
- <20190307185623.GD3835@redhat.com>
- <CAPcyv4gkxmmkB0nofVOvkmV7HcuBDb+1VLR9CSsp+m-QLX_mxA@mail.gmail.com>
- <20190312152551.GA3233@redhat.com>
- <CAPcyv4iYzTVpP+4iezH1BekawwPwJYiMvk2GZDzfzFLUnO+RgA@mail.gmail.com>
+        id S1726892AbfCLTIt (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 12 Mar 2019 15:08:49 -0400
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga004.jf.intel.com ([10.7.209.38])
+  by orsmga101.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 12 Mar 2019 12:08:48 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.58,471,1544515200"; 
+   d="scan'208";a="282047437"
+Received: from guptapadev.jf.intel.com (HELO guptapadev.amr) ([10.7.198.56])
+  by orsmga004.jf.intel.com with ESMTP; 12 Mar 2019 12:08:48 -0700
+Subject: Re: [RFC][PATCH 00/16] sched: Core scheduling
+To:     Peter Zijlstra <peterz@infradead.org>
+Cc:     Aubrey Li <aubrey.intel@gmail.com>,
+        Mel Gorman <mgorman@techsingularity.net>,
+        Ingo Molnar <mingo@kernel.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Paul Turner <pjt@google.com>,
+        Tim Chen <tim.c.chen@linux.intel.com>,
+        Linux List Kernel Mailing <linux-kernel@vger.kernel.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Fr?d?ric Weisbecker <fweisbec@gmail.com>,
+        Kees Cook <keescook@chromium.org>,
+        Greg Kerr <kerrnel@google.com>,
+        Subhra Mazumdar <subhra.mazumdar@oracle.com>
+References: <20190218165620.383905466@infradead.org>
+ <CAHk-=wh32Zgp+bN7G1KH7SuCiY1YSJ41Y-_eWpfWubGjqq2_dw@mail.gmail.com>
+ <20190222124544.GY9565@techsingularity.net>
+ <14a9adf7-9b50-1dfa-0c35-d04e976081c2@oracle.com>
+ <CAERHkru9DzvszvdGHWp8PhEAqeUc-wVR1Gey-KtQ6aMRLx68bQ@mail.gmail.com>
+ <19d5d492-a4c1-b3c8-cae4-da2fdfcb872b@oracle.com>
+From:   Pawan Gupta <pawan.kumar.gupta@linux.intel.com>
+Openpgp: preference=signencrypt
+Autocrypt: addr=pawan.kumar.gupta@linux.intel.com; keydata=
+ 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
+ m/wHiAuVkdCC09ylqYQ5rRGb2g==
+Message-ID: <2f67558f-2720-9ef6-7d69-5436e0da6537@linux.intel.com>
+Date:   Tue, 12 Mar 2019 12:07:31 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.5.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
+In-Reply-To: <19d5d492-a4c1-b3c8-cae4-da2fdfcb872b@oracle.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <CAPcyv4iYzTVpP+4iezH1BekawwPwJYiMvk2GZDzfzFLUnO+RgA@mail.gmail.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.16
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.27]); Tue, 12 Mar 2019 19:06:10 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Mar 12, 2019 at 09:06:12AM -0700, Dan Williams wrote:
-> On Tue, Mar 12, 2019 at 8:26 AM Jerome Glisse <jglisse@redhat.com> wrote:
-> >
-> > On Mon, Mar 11, 2019 at 08:13:53PM -0700, Dan Williams wrote:
-> > > On Thu, Mar 7, 2019 at 10:56 AM Jerome Glisse <jglisse@redhat.com> wrote:
-> > > >
-> > > > On Thu, Mar 07, 2019 at 09:46:54AM -0800, Andrew Morton wrote:
-> > > > > On Tue, 5 Mar 2019 20:20:10 -0800 Dan Williams <dan.j.williams@intel.com> wrote:
-> > > > >
-> > > > > > My hesitation would be drastically reduced if there was a plan to
-> > > > > > avoid dangling unconsumed symbols and functionality. Specifically one
-> > > > > > or more of the following suggestions:
-> > > > > >
-> > > > > > * EXPORT_SYMBOL_GPL on all exports to avoid a growing liability
-> > > > > > surface for out-of-tree consumers to come grumble at us when we
-> > > > > > continue to refactor the kernel as we are wont to do.
-> > > > >
-> > > > > The existing patches use EXPORT_SYMBOL() so that's a sticking point.
-> > > > > Jerome, what would happen is we made these EXPORT_SYMBOL_GPL()?
-> > > >
-> > > > So Dan argue that GPL export solve the problem of out of tree user and
-> > > > my personnal experience is that it does not. The GPU sub-system has tons
-> > > > of GPL drivers that are not upstream and we never felt that we were bound
-> > > > to support them in anyway. We always were very clear that if you are not
-> > > > upstream that you do not have any voice on changes we do.
-> > > >
-> > > > So my exeperience is that GPL does not help here. It is just about being
-> > > > clear and ignoring anyone who does not have an upstream driver ie we have
-> > > > free hands to update HMM in anyway as long as we keep supporting the
-> > > > upstream user.
-> > > >
-> > > > That being said if the GPL aspect is that much important to some then
-> > > > fine let switch all HMM symbol to GPL.
-> > >
-> > > I should add that I would not be opposed to moving symbols to
-> > > non-GPL-only over time, but that should be based on our experience
-> > > with the stability and utility of the implementation. For brand new
-> > > symbols there's just no data to argue that we can / should keep the
-> > > interface stable, or that the interface exposes something fragile that
-> > > we'd rather not export at all. That experience gathering and thrash is
-> > > best constrained to upstream GPL-only drivers that are signing up to
-> > > participate in that maturation process.
-> > >
-> > > So I think it is important from a practical perspective and is a lower
-> > > risk way to run this HMM experiment of "merge infrastructure way in
-> > > advance of an upstream user".
-> > >
-> > > > > > * A commitment to consume newly exported symbols in the same merge
-> > > > > > window, or the following merge window. When that goal is missed revert
-> > > > > > the functionality until such time that it can be consumed, or
-> > > > > > otherwise abandoned.
-> > > > >
-> > > > > It sounds like we can tick this box.
-> > > >
-> > > > I wouldn't be too strick either, when adding something in release N
-> > > > the driver change in N+1 can miss N+1 because of bug or regression
-> > > > and be push to N+2.
-> > > >
-> > > > I think a better stance here is that if we do not get any sign-off
-> > > > on the feature from driver maintainer for which the feature is intended
-> > > > then we just do not merge.
-> > >
-> > > Agree, no driver maintainer sign-off then no merge.
-> > >
-> > > > If after few release we still can not get
-> > > > the driver to use it then we revert.
-> > >
-> > > As long as it is made clear to the driver maintainer that they have
-> > > one cycle to consume it then we can have a conversation if it is too
-> > > early to merge the infrastructure. If no one has time to consume the
-> > > feature, why rush dead code into the kernel? Also, waiting 2 cycles
-> > > means the infrastructure that was hard to review without a user is now
-> > > even harder to review because any review momentum has been lost by the
-> > > time the user show up, so we're better off keeping them close together
-> > > in time.
-> >
-> > Miss-understanding here, in first post the infrastructure and the driver
-> > bit get posted just like have been doing lately. So that you know that
-> > you have working user with the feature and what is left is pushing the
-> > driver bits throught the appropriate tree. So driver maintainer support
-> > is about knowing that they want the feature and have some confidence
-> > that it looks ready.
-> >
-> > It also means you can review the infrastructure along side user of it.
-> 
-> Sounds good.
-> 
-> > > > It just feels dumb to revert at N+1 just to get it back in N+2 as
-> > > > the driver bit get fix.
-> > >
-> > > No, I think it just means the infrastructure went in too early if a
-> > > driver can't consume it in a development cycle. Lets revisit if it
-> > > becomes a problem in practice.
-> >
-> > Well that's just dumb to have hard guideline like that. Many things
-> > can lead to missing deadline. For instance bug i am refering too might
-> > have nothing to do with the feature, it can be something related to
-> > integrating the feature an unforseen side effect. So i believe a better
-> > guideline is that driver maintainer rejecting the feature rather than
-> > just failure to meet one deadline.
-> 
-> The history of the Linux kernel disagrees with this statement. It's
-> only HMM that has recently ignored precedent and pushed to land
-> infrastructure in advance of consumers, a one cycle constraint is
-> already generous in that light.
-> 
-> > > > > > * No new symbol exports and functionality while existing symbols go unconsumed.
-> > > > >
-> > > > > Unsure about this one?
-> > > >
-> > > > With nouveau upstream now everything is use. ODP will use some of the
-> > > > symbol too. PPC has patchset posted to use lot of HMM too. I have been
-> > > > working with other vendor that have patchset being work on to use HMM
-> > > > too.
-> > > >
-> > > > I have not done all those function just for the fun of it :) They do
-> > > > have real use and user. It took a longtime to get nouveau because of
-> > > > userspace we had a lot of catchup to do in mesa and llvm and we are
-> > > > still very rough there.
-> > >
-> > > Sure, this one is less of a concern if we can stick to tighter
-> > > timelines between infrastructure and driver consumer merge.
-> >
-> > Issue is that consumer timeline can be hard to know, sometimes
-> > the consumer go over few revision (like ppc for instance) and
-> > not because of the infrastructure but for other reasons. So
-> > reverting the infrastructure just because user had its timeline
-> > change is not productive. User missing one cycle means they would
-> > get delayed for 2 cycles ie reupstreaming the infrastructure in
-> > next cycle and repushing the user the cycle after. This sounds
-> > like a total wastage of everyone times. While keeping the infra-
-> > structure would allow the timeline to slip by just one cycle.
-> >
-> > Spirit of the rule is better than blind application of rule.
-> 
-> Again, I fail to see why HMM is suddenly unable to make forward
-> progress when the infrastructure that came before it was merged with
-> consumers in the same development cycle.
-> 
-> A gate to upstream merge is about the only lever a reviewer has to
-> push for change, and these requests to uncouple the consumer only
-> serve to weaken that review tool in my mind.
+Hi,
 
-Well let just agree to disagree and leave it at that and stop
-wasting each other time
+With core scheduling LTP reports 2 new failures related to cgroups(memcg_stat_rss and memcg_move_charge_at_immigrate). I will try to debug it.
 
-Jérôme
+Also "perf sched map" indicates there might be a small window when 2 processes in different cgroups run together on one core.
+In below case B0 and D0(stress-ng-cpu and sysbench) belong to 2 different cgroups with cpu.tag enabled.
+
+$ perf sched map
+
+  *A0                                 382.266600 secs A0 => kworker/0:1-eve:51
+  *B0                                 382.266612 secs B0 => stress-ng-cpu:7956
+  *A0                                 382.394597 secs 
+  *B0                                 382.394609 secs 
+   B0             *C0                 382.494459 secs C0 => i915/signal:0:450
+   B0             *D0                 382.494468 secs D0 => sysbench:8088
+  *.               D0                 382.494472 secs .  => swapper:0
+   .              *C0                 383.095787 secs 
+  *B0              C0                 383.095792 secs 
+   B0             *D0                 383.095820 secs
+  *A0              D0                 383.096587 secs
+
+In some cases I dont see an IPI getting sent to sibling cpu when 2 incompatible processes are picked. Like is below logs at timestamp 382.146250
+"stress-ng-cpu" is picked when "sysbench" is running on the sibling cpu.
+
+  kworker/0:1-51    [000] d...   382.146246: __schedule: cpu(0): selected: stress-ng-cpu/7956 ffff9945bad29200
+  kworker/0:1-51    [000] d...   382.146246: __schedule: max: stress-ng-cpu/7956 ffff9945bad29200
+  kworker/0:1-51    [000] d...   382.146247: __prio_less: (swapper/4/0;140,0,0) ?< (sysbench/8088;140,34783671987,0)
+  kworker/0:1-51    [000] d...   382.146248: __prio_less: (stress-ng-cpu/7956;119,34817170203,0) ?< (sysbench/8088;119,34783671987,0)
+  kworker/0:1-51    [000] d...   382.146249: __schedule: cpu(4): selected: sysbench/8088 ffff9945a7405200
+  kworker/0:1-51    [000] d...   382.146249: __prio_less: (stress-ng-cpu/7956;119,34817170203,0) ?< (sysbench/8088;119,34783671987,0)
+  kworker/0:1-51    [000] d...   382.146250: __schedule: picked: stress-ng-cpu/7956 ffff9945bad29200
+  kworker/0:1-51    [000] d...   382.146251: __switch_to: Pawan: cpu(0) switching to stress-ng-cpu
+  kworker/0:1-51    [000] d...   382.146251: __switch_to: Pawan: cpu(4) running sysbench
+stress-ng-cpu-7956  [000] dN..   382.274234: __schedule: cpu(0): selected: kworker/0:1/51 0
+stress-ng-cpu-7956  [000] dN..   382.274235: __schedule: max: kworker/0:1/51 0
+stress-ng-cpu-7956  [000] dN..   382.274235: __schedule: cpu(4): selected: sysbench/8088 ffff9945a7405200
+stress-ng-cpu-7956  [000] dN..   382.274237: __prio_less: (kworker/0:1/51;119,50744489595,0) ?< (sysbench/8088;119,34911643157,0)
+stress-ng-cpu-7956  [000] dN..   382.274237: __schedule: picked: kworker/0:1/51 0
+stress-ng-cpu-7956  [000] d...   382.274239: __switch_to: Pawan: cpu(0) switching to kworker/0:1
+stress-ng-cpu-7956  [000] d...   382.274239: __switch_to: Pawan: cpu(4) running sysbench
+
+-Pawan
