@@ -2,165 +2,118 @@ Return-Path: <SRS0=J4ZE=RP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_PASS autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3971AC10F0B
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 22:57:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AFC3FC10F00
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 23:02:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F130B213A2
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 22:57:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 75588213A2
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 23:02:15 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=hansenpartnership.com header.i=@hansenpartnership.com header.b="TOJYB90P"
+	dkim=pass (2048-bit key) header.d=kernelci-org.20150623.gappssmtp.com header.i=@kernelci-org.20150623.gappssmtp.com header.b="wgk0KgIe"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727318AbfCLW5T (ORCPT
+        id S1726905AbfCLXCO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 12 Mar 2019 18:57:19 -0400
-Received: from bedivere.hansenpartnership.com ([66.63.167.143]:49232 "EHLO
-        bedivere.hansenpartnership.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726372AbfCLW5T (ORCPT
+        Tue, 12 Mar 2019 19:02:14 -0400
+Received: from mail-ed1-f66.google.com ([209.85.208.66]:45716 "EHLO
+        mail-ed1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726372AbfCLXCN (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 12 Mar 2019 18:57:19 -0400
-Received: from localhost (localhost [127.0.0.1])
-        by bedivere.hansenpartnership.com (Postfix) with ESMTP id BB7C38EE20E;
-        Tue, 12 Mar 2019 15:57:17 -0700 (PDT)
-Received: from bedivere.hansenpartnership.com ([127.0.0.1])
-        by localhost (bedivere.hansenpartnership.com [127.0.0.1]) (amavisd-new, port 10024)
-        with ESMTP id bIXGJAv6LSQ8; Tue, 12 Mar 2019 15:57:17 -0700 (PDT)
-Received: from [153.66.254.194] (unknown [50.35.68.20])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by bedivere.hansenpartnership.com (Postfix) with ESMTPSA id D55418EE0F5;
-        Tue, 12 Mar 2019 15:57:16 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=hansenpartnership.com;
-        s=20151216; t=1552431437;
-        bh=nqauZTMjLIlCtdjWAuZ6B+xT+zykoUqdVHDcgv40x8U=;
-        h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
-        b=TOJYB90P8bGGBEgy/p2OzDozxFdWmdmTmVmEbZ2kxfHjm8Wnvw7af8NCL1GtxlDfT
-         CejvYaJVYV9EA/FkWkrN20QgY7XgolCcEnHjrMbejdgOOXNh3wKjFfiVxVq932K3Dx
-         h2zVGng+Z8FhH1B/f+R4JyloBXH9kXZ0FY4mGKB4=
-Message-ID: <1552431434.14432.47.camel@HansenPartnership.com>
-Subject: Re: [RFC PATCH V2 0/5] vhost: accelerate metadata access through
- vmap()
-From:   James Bottomley <James.Bottomley@HansenPartnership.com>
-To:     Andrea Arcangeli <aarcange@redhat.com>
-Cc:     "Michael S. Tsirkin" <mst@redhat.com>,
-        Jason Wang <jasowang@redhat.com>,
-        David Miller <davem@davemloft.net>, hch@infradead.org,
-        kvm@vger.kernel.org, virtualization@lists.linux-foundation.org,
-        netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
-        peterx@redhat.com, linux-mm@kvack.org,
-        linux-arm-kernel@lists.infradead.org, linux-parisc@vger.kernel.org
-Date:   Tue, 12 Mar 2019 15:57:14 -0700
-In-Reply-To: <20190312225032.GD25147@redhat.com>
-References: <20190311235140-mutt-send-email-mst@kernel.org>
-         <76c353ed-d6de-99a9-76f9-f258074c1462@redhat.com>
-         <20190312075033-mutt-send-email-mst@kernel.org>
-         <1552405610.3083.17.camel@HansenPartnership.com>
-         <20190312200450.GA25147@redhat.com>
-         <1552424017.14432.11.camel@HansenPartnership.com>
-         <20190312211117.GB25147@redhat.com>
-         <1552425555.14432.14.camel@HansenPartnership.com>
-         <20190312215321.GC25147@redhat.com>
-         <1552428174.14432.39.camel@HansenPartnership.com>
-         <20190312225032.GD25147@redhat.com>
-Content-Type: text/plain; charset="UTF-8"
-X-Mailer: Evolution 3.26.6 
-Mime-Version: 1.0
-Content-Transfer-Encoding: 7bit
+        Tue, 12 Mar 2019 19:02:13 -0400
+Received: by mail-ed1-f66.google.com with SMTP id f19so3739304eds.12
+        for <linux-kernel@vger.kernel.org>; Tue, 12 Mar 2019 16:02:12 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=kernelci-org.20150623.gappssmtp.com; s=20150623;
+        h=message-id:date:mime-version:content-transfer-encoding:in-reply-to
+         :references:subject:to:from:cc;
+        bh=TukHVb3WaEgxLt7yExeUDi+K7VyxiTEJd8lYQFTKbHQ=;
+        b=wgk0KgIe+gE8hguSfD+TtgkisgBQohZMnlPsDtGJ2Xc/Vr3zMi8WjfUQnlzikS/cxb
+         24eZLuKGGuVdNte67oiHSN3bJWzcFJ9lib+yfdKVh16OGRAr9ucvo2NI3nGJwk6BBVpd
+         xysG4/5vUZyR35sbhvESTCeCA+tWpANhtP+M8IJN9OD/o4xsb00VLXpR6CuEdZCwfNeu
+         nzceFkPCdUlI34ddYwqYe+JNrGfSFsSR838mVeZxlh8Ykf8PlpTylgAO4HUwOLihZx4F
+         H257Ao8VJ8PLYwZeIrsrjKhXJ4+NcGIyD9HzKKxH6pXu6aRK7EJEQXY+0XlmNAPynqL5
+         hCTQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:message-id:date:mime-version
+         :content-transfer-encoding:in-reply-to:references:subject:to:from:cc;
+        bh=TukHVb3WaEgxLt7yExeUDi+K7VyxiTEJd8lYQFTKbHQ=;
+        b=cJtZHzOv7AR1ucgEfvWD0IeVji1PoPeKncDvXTgyYFEARCr2LT8W0eA183gcyrWWUh
+         zmiPhQZsP4G6dKpymr6GYnC8AOiTzy4LAJz6s+3vUYttS7HsysnXBn1ZkW7l0uixFJ/9
+         sIWWZI/zmPzwONouNPDiJJN1VMy/bujtfAhn2n9yu46tfyLulCDVc5sRVc87juHPfJym
+         1/0auRnw+7Rket/TGcH5bHiccu0tMRP6c0OoW9AVdQI+ZXRgrIEYb35ujI7/vAlY3YUH
+         sS/9iJmeWU5FYnU56Jfv7j1jbEBI0A9Z0K1fLK5o3YJE8qt5FcffNSUD9nJ+JWTeghzH
+         BByw==
+X-Gm-Message-State: APjAAAUMbcnyVx9fHY7ZO8Zx4eDPUjf8G9+yOnTZ1iYh5kEIHs3FXHzc
+        5AH3yN+pFqEu3ZTJCrSJ2rK43A==
+X-Google-Smtp-Source: APXvYqxTGcYwvOVVikbTVHXiSDi7Qcg+1iTm0iA7FhOXGJ//CHBCYGNnhR5YWgM6DeOCXnTXr+DuTw==
+X-Received: by 2002:a17:906:c38c:: with SMTP id t12mr6841579ejz.142.1552431731572;
+        Tue, 12 Mar 2019 16:02:11 -0700 (PDT)
+Received: from [148.251.42.114] ([2a01:4f8:201:9271::2])
+        by smtp.gmail.com with ESMTPSA id a9sm29047eje.37.2019.03.12.16.02.10
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Tue, 12 Mar 2019 16:02:10 -0700 (PDT)
+Message-ID: <5c883a72.1c69fb81.b8e2e.017f@mx.google.com>
+Date:   Tue, 12 Mar 2019 16:02:10 -0700 (PDT)
+Content-Type: text/plain; charset="utf-8"
+MIME-Version: 1.0
+Content-Transfer-Encoding: quoted-printable
+X-Kernelci-Kernel: v4.9.162-97-g605129cbbd38
+X-Kernelci-Report-Type: boot
+X-Kernelci-Tree: stable-rc
+X-Kernelci-Branch: linux-4.9.y
+In-Reply-To: <20190312171034.530434962@linuxfoundation.org>
+References: <20190312171034.530434962@linuxfoundation.org>
+Subject: Re: [PATCH 4.9 00/96] 4.9.163-stable review
+To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        linux-kernel@vger.kernel.org
+From:   "kernelci.org bot" <bot@kernelci.org>
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        torvalds@linux-foundation.org, akpm@linux-foundation.org,
+        linux@roeck-us.net, shuah@kernel.org, patches@kernelci.org,
+        ben.hutchings@codethink.co.uk, lkft-triage@lists.linaro.org,
+        stable@vger.kernel.org
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, 2019-03-12 at 18:50 -0400, Andrea Arcangeli wrote:
-> On Tue, Mar 12, 2019 at 03:02:54PM -0700, James Bottomley wrote:
-> > I'm sure there must be workarounds elsewhere in the other arch code
-> > otherwise things like this, which appear all over drivers/,
-> > wouldn't
-> > work:
-> > 
-> > drivers/scsi/isci/request.c:1430
-> > 
-> > 	kaddr = kmap_atomic(page);
-> > 	memcpy(kaddr + sg->offset, src_addr, copy_len);
-> > 	kunmap_atomic(kaddr);
-> > 
-> 
-> Are you sure "page" is an userland page with an alias address?
-> 
-> 	sg->page_link = (unsigned long)virt_to_page(addr);
+stable-rc/linux-4.9.y boot: 92 boots: 1 failed, 91 passed (v4.9.162-97-g605=
+129cbbd38)
 
-Yes, it's an element of a scatter gather list, which may be either a
-kernel page or a user page, but is usually the latter.
+Full Boot Summary: https://kernelci.org/boot/all/job/stable-rc/branch/linux=
+-4.9.y/kernel/v4.9.162-97-g605129cbbd38/
+Full Build Summary: https://kernelci.org/build/stable-rc/branch/linux-4.9.y=
+/kernel/v4.9.162-97-g605129cbbd38/
 
-> page_link seems to point to kernel memory.
-> 
-> I found an apparent solution like parisc on arm 32bit:
-> 
-> void __kunmap_atomic(void *kvaddr)
-> {
-> 	unsigned long vaddr = (unsigned long) kvaddr & PAGE_MASK;
-> 	int idx, type;
-> 
-> 	if (kvaddr >= (void *)FIXADDR_START) {
-> 		type = kmap_atomic_idx();
-> 		idx = FIX_KMAP_BEGIN + type + KM_TYPE_NR *
-> smp_processor_id();
-> 
-> 		if (cache_is_vivt())
-> 			__cpuc_flush_dcache_area((void *)vaddr,
-> PAGE_SIZE);
-> 
-> However on arm 64bit kunmap_atomic is not implemented at all and
-> other 32bit implementations don't do it, for example sparc seems to
-> do the cache flush too if the kernel is built with
-> CONFIG_DEBUG_HIGHMEM (which makes the flushing conditional to the
-> debug option).
-> 
-> The kunmap_atomic where fixmap is used, is flushing the tlb lazily so
-> even on 32bit you can't even be sure if there was a tlb flush for
-> each single page you unmapped, so it's hard to see how the above can
-> work safe, is "page" would have been an userland page mapped with
-> aliased CPU cache.
-> 
-> > the sequence dirties the kernel virtual address but doesn't flush
-> > before doing kunmap.  There are hundreds of other examples which is
-> > why I think adding flush_kernel_dcache_page() is an already lost
-> > cause.
-> 
-> In lots of cases kmap is needed to just modify kernel memory not to
-> modify userland memory (where get/put_user is more commonly used
-> instead..), there's no cache aliasing in such case.
+Tree: stable-rc
+Branch: linux-4.9.y
+Git Describe: v4.9.162-97-g605129cbbd38
+Git Commit: 605129cbbd389949c754d0a23ce49030adae8f17
+Git URL: https://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stabl=
+e-rc.git
+Tested: 47 unique boards, 21 SoC families, 13 builds out of 193
 
-That's why I picked drivers/  The use case in there is mostly kmap to
-put a special value into a scatter gather list entry.
+Boot Regressions Detected:
 
-> > Actually copy_user_page() is unused in the main kernel.  The big
-> > problem is copy_user_highpage() but that's mostly highly optimised
-> > by the VIPT architectures (in other words you can fiddle with kmap
-> > without impacting it).
-> 
-> copy_user_page is not unused, it's called precisely by
-> copy_user_highpage, which is why the cache flushes are done inside
-> copy_user_page.
-> 
-> static inline void copy_user_highpage(struct page *to, struct page
-> *from,
-> 	unsigned long vaddr, struct vm_area_struct *vma)
-> {
-> 	char *vfrom, *vto;
-> 
-> 	vfrom = kmap_atomic(from);
-> 	vto = kmap_atomic(to);
-> 	copy_user_page(vto, vfrom, vaddr, to);
-> 	kunmap_atomic(vto);
-> 	kunmap_atomic(vfrom);
-> }
+arm:
 
-That's the asm/generic implementation.  Most VIPT architectures
-override it.
+    qcom_defconfig:
+        gcc-7:
+          qcom-apq8064-cm-qs600:
+              lab-baylibre-seattle: new failure (last pass: v4.9.162-94-g03=
+84d1b03fc9)
 
-James
+Boot Failure Detected:
 
+arm:
+
+    qcom_defconfig:
+        gcc-7:
+            qcom-apq8064-cm-qs600: 1 failed lab
+
+---
+For more info write to <info@kernelci.org>
