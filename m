@@ -4,49 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CCE8CC4360F
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 18:10:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4D207C43381
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 18:10:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9416A2175B
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 18:10:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1E7882063F
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 18:10:26 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1552414222;
-	bh=LurI/UZyCedM7BjCh5jtb/QXezeOxqIcmixx3QHN4Qk=;
+	s=default; t=1552414226;
+	bh=kVys6Jf+lSlbdwfzkNKbkWcnpwlGb9rQ3UUOuyQRLp4=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=meXSpTcAmlWX48cpInASyCkJHS+gFBFtXmLBzw/AMnFRuUaCoYwpuYcVpgQPfk82L
-	 TS8bfDqYmPjZBdr0xKhZWYwlv2Ij5NZkXAu+F+7cBa1MwKszDmmmrQ64WNw/YrZvzg
-	 10MAghKFmx8kh5b6tWNm5np7TwZSJ2JY6vbr+df4=
+	b=sBBA3UuLVBlPuATknvXDVWzgof77wA+lEXfM2xkngFlm0iM4LGSpS/8tKZi7DUey3
+	 Ai9nY00arCeH33fcCzujkFHfdvh/0cd1R4Z9WmJ0tvvrL2ZQflqXBuIqXGCh4HbsCh
+	 N6vjC8/wnoDsddjW5GmktJSoGhRcrtlp/UqhfzjY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729275AbfCLSKV (ORCPT
+        id S1727199AbfCLRLz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 12 Mar 2019 14:10:21 -0400
-Received: from mail.kernel.org ([198.145.29.99]:46126 "EHLO mail.kernel.org"
+        Tue, 12 Mar 2019 13:11:55 -0400
+Received: from mail.kernel.org ([198.145.29.99]:45602 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727204AbfCLRL4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 12 Mar 2019 13:11:56 -0400
+        id S1727089AbfCLRLp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 12 Mar 2019 13:11:45 -0400
 Received: from localhost (unknown [104.133.8.98])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 7F8472171F;
-        Tue, 12 Mar 2019 17:11:55 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 3EFBE2083D;
+        Tue, 12 Mar 2019 17:11:44 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1552410715;
-        bh=LurI/UZyCedM7BjCh5jtb/QXezeOxqIcmixx3QHN4Qk=;
+        s=default; t=1552410704;
+        bh=kVys6Jf+lSlbdwfzkNKbkWcnpwlGb9rQ3UUOuyQRLp4=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=DB7YJ6mHVSAhDBvsBr4MkBohq2kkJeNQEhk7GVeCLtbNREUs1AX3JfSIxNXoa6SWR
-         KVVi5x6yL1hnZCfaGwvvYJ5xKbxy40WAKGARZc7+LsEB9UoQdCvBQ//GUIDgpBVMpN
-         KtwahoW0jBSdOpToX4VipSSWN/e7fcvDkhs++F7o=
+        b=XieZ7kfSyxGPtuQiBgDWVfDh8RttLzr+yIew5S9wAynWDtEU3muVeWjuE5ReVUT41
+         ANCATbihBrx+8M2Ibq3Xn03EpysVz3HIl0wGJT3nW28lME8+4eOOe21n4UetmH7xtu
+         glrrOHR4I6GanCFHp9QLsC0R4rREw8XlkEZbcAqw=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Max Filippov <jcmvbkbc@gmail.com>,
+        stable@vger.kernel.org, Su Yanjun <suyj.fnst@cn.fujitsu.com>,
+        Steffen Klassert <steffen.klassert@secunet.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.20 030/171] xtensa: SMP: limit number of possible CPUs by NR_CPUS
-Date:   Tue, 12 Mar 2019 10:06:50 -0700
-Message-Id: <20190312170350.590070363@linuxfoundation.org>
+Subject: [PATCH 4.20 002/171] vti4: Fix a ipip packet processing bug in IPCOMP virtual tunnel
+Date:   Tue, 12 Mar 2019 10:06:22 -0700
+Message-Id: <20190312170348.079818908@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190312170347.868927101@linuxfoundation.org>
 References: <20190312170347.868927101@linuxfoundation.org>
@@ -65,47 +66,117 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-[ Upstream commit 25384ce5f9530def39421597b1457d9462df6455 ]
+[ Upstream commit dd9ee3444014e8f28c0eefc9fffc9ac9c5248c12 ]
 
-This fixes the following warning at boot when the kernel is booted on a
-board with more CPU cores than was configured in NR_CPUS:
+Recently we run a network test over ipcomp virtual tunnel.We find that
+if a ipv4 packet needs fragment, then the peer can't receive
+it.
 
-  smp_init_cpus: Core Count = 8
-  smp_init_cpus: Core Id = 0
-  ------------[ cut here ]------------
-  WARNING: CPU: 0 PID: 0 at include/linux/cpumask.h:121 smp_init_cpus+0x54/0x74
-  Modules linked in:
-  CPU: 0 PID: 0 Comm: swapper Not tainted 5.0.0-rc3-00015-g1459333f88a0 #124
-  Call Trace:
-    __warn$part$3+0x6a/0x7c
-    warn_slowpath_null+0x35/0x3c
-    smp_init_cpus+0x54/0x74
-    setup_arch+0x1c0/0x1d0
-    start_kernel+0x44/0x310
-    _startup+0x107/0x107
+We deep into the code and find that when packet need fragment the smaller
+fragment will be encapsulated by ipip not ipcomp. So when the ipip packet
+goes into xfrm, it's skb->dev is not properly set. The ipv4 reassembly code
+always set skb'dev to the last fragment's dev. After ipv4 defrag processing,
+when the kernel rp_filter parameter is set, the skb will be drop by -EXDEV
+error.
 
-Signed-off-by: Max Filippov <jcmvbkbc@gmail.com>
+This patch adds compatible support for the ipip process in ipcomp virtual tunnel.
+
+Signed-off-by: Su Yanjun <suyj.fnst@cn.fujitsu.com>
+Signed-off-by: Steffen Klassert <steffen.klassert@secunet.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/xtensa/kernel/smp.c | 5 +++++
- 1 file changed, 5 insertions(+)
+ net/ipv4/ip_vti.c | 50 +++++++++++++++++++++++++++++++++++++++++++++++
+ 1 file changed, 50 insertions(+)
 
-diff --git a/arch/xtensa/kernel/smp.c b/arch/xtensa/kernel/smp.c
-index 80be6449c497..be1f280c322c 100644
---- a/arch/xtensa/kernel/smp.c
-+++ b/arch/xtensa/kernel/smp.c
-@@ -96,6 +96,11 @@ void __init smp_init_cpus(void)
- 	pr_info("%s: Core Count = %d\n", __func__, ncpus);
- 	pr_info("%s: Core Id = %d\n", __func__, core_id);
+diff --git a/net/ipv4/ip_vti.c b/net/ipv4/ip_vti.c
+index d7b43e700023..68a21bf75dd0 100644
+--- a/net/ipv4/ip_vti.c
++++ b/net/ipv4/ip_vti.c
+@@ -74,6 +74,33 @@ static int vti_input(struct sk_buff *skb, int nexthdr, __be32 spi,
+ 	return 0;
+ }
  
-+	if (ncpus > NR_CPUS) {
-+		ncpus = NR_CPUS;
-+		pr_info("%s: limiting core count by %d\n", __func__, ncpus);
++static int vti_input_ipip(struct sk_buff *skb, int nexthdr, __be32 spi,
++		     int encap_type)
++{
++	struct ip_tunnel *tunnel;
++	const struct iphdr *iph = ip_hdr(skb);
++	struct net *net = dev_net(skb->dev);
++	struct ip_tunnel_net *itn = net_generic(net, vti_net_id);
++
++	tunnel = ip_tunnel_lookup(itn, skb->dev->ifindex, TUNNEL_NO_KEY,
++				  iph->saddr, iph->daddr, 0);
++	if (tunnel) {
++		if (!xfrm4_policy_check(NULL, XFRM_POLICY_IN, skb))
++			goto drop;
++
++		XFRM_TUNNEL_SKB_CB(skb)->tunnel.ip4 = tunnel;
++
++		skb->dev = tunnel->dev;
++
++		return xfrm_input(skb, nexthdr, spi, encap_type);
 +	}
 +
- 	for (i = 0; i < ncpus; ++i)
- 		set_cpu_possible(i, true);
++	return -EINVAL;
++drop:
++	kfree_skb(skb);
++	return 0;
++}
++
+ static int vti_rcv(struct sk_buff *skb)
+ {
+ 	XFRM_SPI_SKB_CB(skb)->family = AF_INET;
+@@ -82,6 +109,14 @@ static int vti_rcv(struct sk_buff *skb)
+ 	return vti_input(skb, ip_hdr(skb)->protocol, 0, 0);
  }
+ 
++static int vti_rcv_ipip(struct sk_buff *skb)
++{
++	XFRM_SPI_SKB_CB(skb)->family = AF_INET;
++	XFRM_SPI_SKB_CB(skb)->daddroff = offsetof(struct iphdr, daddr);
++
++	return vti_input_ipip(skb, ip_hdr(skb)->protocol, ip_hdr(skb)->saddr, 0);
++}
++
+ static int vti_rcv_cb(struct sk_buff *skb, int err)
+ {
+ 	unsigned short family;
+@@ -435,6 +470,12 @@ static struct xfrm4_protocol vti_ipcomp4_protocol __read_mostly = {
+ 	.priority	=	100,
+ };
+ 
++static struct xfrm_tunnel ipip_handler __read_mostly = {
++	.handler	=	vti_rcv_ipip,
++	.err_handler	=	vti4_err,
++	.priority	=	0,
++};
++
+ static int __net_init vti_init_net(struct net *net)
+ {
+ 	int err;
+@@ -603,6 +644,13 @@ static int __init vti_init(void)
+ 	if (err < 0)
+ 		goto xfrm_proto_comp_failed;
+ 
++	msg = "ipip tunnel";
++	err = xfrm4_tunnel_register(&ipip_handler, AF_INET);
++	if (err < 0) {
++		pr_info("%s: cant't register tunnel\n",__func__);
++		goto xfrm_tunnel_failed;
++	}
++
+ 	msg = "netlink interface";
+ 	err = rtnl_link_register(&vti_link_ops);
+ 	if (err < 0)
+@@ -612,6 +660,8 @@ static int __init vti_init(void)
+ 
+ rtnl_link_failed:
+ 	xfrm4_protocol_deregister(&vti_ipcomp4_protocol, IPPROTO_COMP);
++xfrm_tunnel_failed:
++	xfrm4_tunnel_deregister(&ipip_handler, AF_INET);
+ xfrm_proto_comp_failed:
+ 	xfrm4_protocol_deregister(&vti_ah4_protocol, IPPROTO_AH);
+ xfrm_proto_ah_failed:
 -- 
 2.19.1
 
