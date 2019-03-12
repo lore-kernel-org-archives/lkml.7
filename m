@@ -2,56 +2,57 @@ Return-Path: <SRS0=J4ZE=RP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+X-Spam-Status: No, score=-11.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B2A29C43381
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 17:23:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 30478C43381
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 17:23:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 84C2D214AE
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 17:23:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EFBFA214AE
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 17:23:27 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1552411402;
-	bh=KH8n86j6o8OwUdCbrCGKDfhSVeFGu2wbo1HvtG23JR8=;
+	s=default; t=1552411408;
+	bh=fIFrTEEK6RJdBZ5sPq5diOLk9Bjr7/XncdOi21SpDn8=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=VK1jzcMwI1ewk4G2HPdbAF9yrs8OJiGOnmuYjou9AOlchVcQDSopRBlekeRsgX69P
-	 eq/Yl7o0Q6cuouLdS4hlo/JFuJY6V8dgpByVn/GSHYumfOLoyKWi030dKxeVkiF6ur
-	 Ofd023JBavjTMfK1sPi7xdQ75zpuZ1xmxIZTEjhk=
+	b=G/Gu+FNslnLWtYDfWqwVSIvlmOJug/o1jE+0g653FuWHbEIhLrzHL52ax1NZv32Tw
+	 IWh4vD7Ar5GmqOEuyk4zEu3ST74ZZJiZ+sOqhMjOoRirpdWrgUWT58Lw7b+Ks7W/UC
+	 iNYjfl8MlfWgfrwH+3LXkSkYuIIFtnQ8tLyDxtBY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730101AbfCLRXV (ORCPT
+        id S1729875AbfCLRSB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 12 Mar 2019 13:23:21 -0400
-Received: from mail.kernel.org ([198.145.29.99]:34946 "EHLO mail.kernel.org"
+        Tue, 12 Mar 2019 13:18:01 -0400
+Received: from mail.kernel.org ([198.145.29.99]:60252 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729878AbfCLRSC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 12 Mar 2019 13:18:02 -0400
+        id S1728609AbfCLRRI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 12 Mar 2019 13:17:08 -0400
 Received: from localhost (unknown [104.133.8.98])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 515502171F;
-        Tue, 12 Mar 2019 17:18:01 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id A320F2171F;
+        Tue, 12 Mar 2019 17:17:07 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1552411081;
-        bh=KH8n86j6o8OwUdCbrCGKDfhSVeFGu2wbo1HvtG23JR8=;
+        s=default; t=1552411027;
+        bh=fIFrTEEK6RJdBZ5sPq5diOLk9Bjr7/XncdOi21SpDn8=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=gVLuh/ODBZQaxaKDqUdEA3P/RrMLIMYXydkrp1HHmlbkrNx3G1laCWZpy+lSlDiwF
-         eYPa6dZh/njRLG6aE1wzVy48/1ohmBqTWvLog7L12BiQ6VgVYtQgjrPA7dzPGWgw4T
-         ce6obVVU7Nl3/9NK02HL50+O9Rw5nJ8sw2gabrXw=
+        b=JMFSCf9US+/wCOZ8NAuRzGnZMov2awj569ejCMpAaTlaz/QfxJafYuKahw8OA5Gjx
+         M5PGljFmP9KqVaFqkk22xhzJu+SXmSZbPjmzlbytlVUUdzrAwAQ5bzDbPnFGvuCVMx
+         bCo708TOancc9wSiUXt/VPrm4XNdK/YVW6Xo9hY8=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Martynas Pumputis <martynas@weave.works>,
-        Florian Westphal <fw@strlen.de>,
-        Pablo Neira Ayuso <pablo@netfilter.org>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.9 77/96] netfilter: nf_nat: skip nat clash resolution for same-origin entries
-Date:   Tue, 12 Mar 2019 10:10:35 -0700
-Message-Id: <20190312171040.405575028@linuxfoundation.org>
+        stable@vger.kernel.org,
+        Martin Blumenstingl <martin.blumenstingl@googlemail.com>,
+        "Daniel F. Dickinson" <cshored@thecshore.com>,
+        Kalle Valo <kvalo@codeaurora.org>,
+        Christian Lamparter <chunkeey@gmail.com>
+Subject: [PATCH 4.14 130/135] ath9k: Avoid OF no-EEPROM quirks without qca,no-eeprom
+Date:   Tue, 12 Mar 2019 10:09:37 -0700
+Message-Id: <20190312170353.129620428@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
-In-Reply-To: <20190312171034.530434962@linuxfoundation.org>
-References: <20190312171034.530434962@linuxfoundation.org>
+In-Reply-To: <20190312170341.127810985@linuxfoundation.org>
+References: <20190312170341.127810985@linuxfoundation.org>
 User-Agent: quilt/0.65
 X-stable: review
 X-Patchwork-Hint: ignore
@@ -63,75 +64,92 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-4.9-stable review patch.  If anyone has any objections, please let me know.
+4.14-stable review patch.  If anyone has any objections, please let me know.
 
 ------------------
 
-[ Upstream commit 4e35c1cb9460240e983a01745b5f29fe3a4d8e39 ]
+From: Daniel F. Dickinson <cshored@thecshore.com>
 
-It is possible that two concurrent packets originating from the same
-socket of a connection-less protocol (e.g. UDP) can end up having
-different IP_CT_DIR_REPLY tuples which results in one of the packets
-being dropped.
+commit ce938231bd3b1d7af3cbd8836f084801090470e1 upstream.
 
-To illustrate this, consider the following simplified scenario:
+ath9k_of_init() function[0] was initially written on the assumption that
+if someone had an explicit ath9k OF node that "there must be something
+wrong, why would someone add an OF node if everything is fine"[1]
+(Quoting Martin Blumenstingl <martin.blumenstingl@googlemail.com>)
 
-1. Packet A and B are sent at the same time from two different threads
-   by same UDP socket.  No matching conntrack entry exists yet.
-   Both packets cause allocation of a new conntrack entry.
-2. get_unique_tuple gets called for A.  No clashing entry found.
-   conntrack entry for A is added to main conntrack table.
-3. get_unique_tuple is called for B and will find that the reply
-   tuple of B is already taken by A.
-   It will allocate a new UDP source port for B to resolve the clash.
-4. conntrack entry for B cannot be added to main conntrack table
-   because its ORIGINAL direction is clashing with A and the REPLY
-   directions of A and B are not the same anymore due to UDP source
-   port reallocation done in step 3.
+"it turns out it's not that simple. with your requirements I'm now aware
+of two use-cases where the current code in ath9k_of_init() doesn't work
+without modifications"[1]
 
-This patch modifies nf_conntrack_tuple_taken so it doesn't consider
-colliding reply tuples if the IP_CT_DIR_ORIGINAL tuples are equal.
+The "your requirements" Martin speaks of is the result of the fact that I
+have a device (PowerCloud Systems CR5000) has some kind of default - not
+unique mac address - set and requires to set the correct MAC address via
+mac-address devicetree property, however:
 
-[ Florian: simplify patch to not use .allow_clash setting
-  and always ignore identical flows ]
+"some cards come with a physical EEPROM chip [or OTP] so "qca,no-eeprom"
+should not be set (your use-case). in this case AH_USE_EEPROM should be
+set (which is the default when there is no OF node)"[1]
 
-Signed-off-by: Martynas Pumputis <martynas@weave.works>
-Signed-off-by: Florian Westphal <fw@strlen.de>
-Signed-off-by: Pablo Neira Ayuso <pablo@netfilter.org>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
+The other use case is:
+
+the firmware on some PowerMac G5 seems to add a OF node for the ath9k
+card automatically. depending on the EEPROM on the card AH_NO_EEP_SWAP
+should be unset (which is the default when there is no OF node). see [3]
+
+After this patch to ath9k_of_init() the new behavior will be:
+
+    if there's no OF node then everything is the same as before
+    if there's an empty OF node then ath9k will use the hardware EEPROM
+      (before ath9k would fail to initialize because no EEPROM data was
+      provided by userspace)
+    if there's an OF node with only a MAC address then ath9k will use
+      the MAC address and the hardware EEPROM (see the case above)
+    with "qca,no-eeprom" EEPROM data from userspace will be requested.
+      the behavior here will not change
+[1]
+
+Martin provides additional background on EEPROM swapping[1].
+
+Thanks to Christian Lamparter <chunkeey@gmail.com> for all his help on
+troubleshooting this issue and the basis for this patch.
+
+[0]https://elixir.bootlin.com/linux/v4.20-rc7/source/drivers/net/wireless/ath/ath9k/init.c#L615
+[1]https://github.com/openwrt/openwrt/pull/1645#issuecomment-448027058
+[2]https://github.com/openwrt/openwrt/pull/1613
+[3]https://patchwork.kernel.org/patch/10241731/
+
+Fixes: 138b41253d9c ("ath9k: parse the device configuration from an OF node")
+Reviewed-by: Martin Blumenstingl <martin.blumenstingl@googlemail.com>
+Tested-by: Martin Blumenstingl <martin.blumenstingl@googlemail.com>
+Signed-off-by: Daniel F. Dickinson <cshored@thecshore.com>
+Signed-off-by: Kalle Valo <kvalo@codeaurora.org>
+Cc: Christian Lamparter <chunkeey@gmail.com>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+
 ---
- net/netfilter/nf_conntrack_core.c | 16 ++++++++++++++++
- 1 file changed, 16 insertions(+)
+ drivers/net/wireless/ath/ath9k/init.c |    6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
 
-diff --git a/net/netfilter/nf_conntrack_core.c b/net/netfilter/nf_conntrack_core.c
-index 19b3f4fbea52..df1d5618b008 100644
---- a/net/netfilter/nf_conntrack_core.c
-+++ b/net/netfilter/nf_conntrack_core.c
-@@ -855,6 +855,22 @@ nf_conntrack_tuple_taken(const struct nf_conntrack_tuple *tuple,
- 		}
- 
- 		if (nf_ct_key_equal(h, tuple, zone, net)) {
-+			/* Tuple is taken already, so caller will need to find
-+			 * a new source port to use.
-+			 *
-+			 * Only exception:
-+			 * If the *original tuples* are identical, then both
-+			 * conntracks refer to the same flow.
-+			 * This is a rare situation, it can occur e.g. when
-+			 * more than one UDP packet is sent from same socket
-+			 * in different threads.
-+			 *
-+			 * Let nf_ct_resolve_clash() deal with this later.
-+			 */
-+			if (nf_ct_tuple_equal(&ignored_conntrack->tuplehash[IP_CT_DIR_ORIGINAL].tuple,
-+					      &ct->tuplehash[IP_CT_DIR_ORIGINAL].tuple))
-+				continue;
+--- a/drivers/net/wireless/ath/ath9k/init.c
++++ b/drivers/net/wireless/ath/ath9k/init.c
+@@ -580,15 +580,15 @@ static int ath9k_of_init(struct ath_soft
+ 		ret = ath9k_eeprom_request(sc, eeprom_name);
+ 		if (ret)
+ 			return ret;
 +
- 			NF_CT_STAT_INC_ATOMIC(net, found);
- 			rcu_read_unlock();
- 			return 1;
--- 
-2.19.1
-
++		ah->ah_flags &= ~AH_USE_EEPROM;
++		ah->ah_flags |= AH_NO_EEP_SWAP;
+ 	}
+ 
+ 	mac = of_get_mac_address(np);
+ 	if (mac)
+ 		ether_addr_copy(common->macaddr, mac);
+ 
+-	ah->ah_flags &= ~AH_USE_EEPROM;
+-	ah->ah_flags |= AH_NO_EEP_SWAP;
+-
+ 	return 0;
+ }
+ 
 
 
