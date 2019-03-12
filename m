@@ -2,161 +2,165 @@ Return-Path: <SRS0=J4ZE=RP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C0CC5C43381
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 17:23:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CF9B0C43381
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 17:23:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7BF0F21852
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 17:23:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A1B9A206DF
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 17:23:54 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1552411434;
+	bh=yLIBXgIYg42usoCHmf+dkwStU3KhRHWdYsmEaixheZc=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=NKaFJtR9VZ1gLBN3rUujZhxL4N5je5b4OI2tY2J3z8PXDK0VghM6jFuLbZx24z0S9
+	 7f1sxIkRUGycV7DvNx7BM7o+eDXvddN8ry/UwxTeh8VMhTYPt3s5MY2/fbz6FNAkNe
+	 pumXCR5UmvZ6O7RMPNC2CfQBUHg00XGUHHR97UQk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730008AbfCLRXv (ORCPT
+        id S1730121AbfCLRXx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 12 Mar 2019 13:23:51 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:41639 "EHLO mx1.redhat.com"
+        Tue, 12 Mar 2019 13:23:53 -0400
+Received: from mail.kernel.org ([198.145.29.99]:34736 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727438AbfCLRXs (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 12 Mar 2019 13:23:48 -0400
-Received: from smtp.corp.redhat.com (int-mx07.intmail.prod.int.phx2.redhat.com [10.5.11.22])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        id S1729829AbfCLRR5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 12 Mar 2019 13:17:57 -0400
+Received: from localhost (unknown [104.133.8.98])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id 77D2E30F10B8;
-        Tue, 12 Mar 2019 17:23:47 +0000 (UTC)
-Received: from [10.36.117.44] (ovpn-117-44.ams2.redhat.com [10.36.117.44])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 4452B1001E63;
-        Tue, 12 Mar 2019 17:23:44 +0000 (UTC)
-Subject: Re: xen: Can't insert balloon page into VM userspace (WAS Re:
- [Xen-devel] [linux-linus bisection] complete test-arm64-arm64-xl-xsm)
-To:     Matthew Wilcox <willy@infradead.org>,
-        Julien Grall <julien.grall@arm.com>
-Cc:     osstest service owner <osstest-admin@xenproject.org>,
-        xen-devel@lists.xenproject.org, Juergen Gross <jgross@suse.com>,
-        Konrad Rzeszutek Wilk <konrad.wilk@oracle.com>,
-        Boris Ostrovsky <boris.ostrovsky@oracle.com>,
-        Stefano Stabellini <sstabellini@kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Kees Cook <keescook@chromium.org>, k.khlebnikov@samsung.com,
-        Julien Freche <jfreche@vmware.com>,
-        Nadav Amit <namit@vmware.com>,
-        "VMware, Inc." <pv-drivers@vmware.com>, linux-mm@kvack.org
-References: <E1h3Uiq-0002L6-Ij@osstest.test-lab.xenproject.org>
- <80211e70-5f54-9421-8e8f-2a4fc758ce39@arm.com>
- <46118631-61d4-adb6-6ffc-4e7c62ea3da9@arm.com>
- <20190312171421.GJ19508@bombadil.infradead.org>
-From:   David Hildenbrand <david@redhat.com>
-Openpgp: preference=signencrypt
-Autocrypt: addr=david@redhat.com; prefer-encrypt=mutual; keydata=
- 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
- SE+xAvmumFBY
-Organization: Red Hat GmbH
-Message-ID: <28a72642-d0db-214c-2bf2-d1a6c6e03d92@redhat.com>
-Date:   Tue, 12 Mar 2019 18:23:43 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.4.0
+        by mail.kernel.org (Postfix) with ESMTPSA id D9BE821850;
+        Tue, 12 Mar 2019 17:17:56 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1552411077;
+        bh=yLIBXgIYg42usoCHmf+dkwStU3KhRHWdYsmEaixheZc=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=Ooe2/0+Zc5K8M2M8vk4CgUgrSAgD7aplOCcPz2lLcOyVb7+05XI1hNYPNbnxiOXmp
+         EW+C0qfuwFYgMJqpTUSg719jIkH81UEFBXdc57KF0ibeR2MPC4lhLNAKakcxh8YX9e
+         moglffRDGNxmsoikkFj7AikFlTs7viIDF1IG2BfY=
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     linux-kernel@vger.kernel.org
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        stable@vger.kernel.org,
+        Codrin Ciubotariu <codrin.ciubotariu@microchip.com>,
+        Ludovic Desroches <ludovic.desroches@microchip.com>,
+        Vinod Koul <vkoul@kernel.org>, Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.9 71/96] dmaengine: at_xdmac: Fix wrongfull report of a channel as in use
+Date:   Tue, 12 Mar 2019 10:10:29 -0700
+Message-Id: <20190312171039.978394570@linuxfoundation.org>
+X-Mailer: git-send-email 2.21.0
+In-Reply-To: <20190312171034.530434962@linuxfoundation.org>
+References: <20190312171034.530434962@linuxfoundation.org>
+User-Agent: quilt/0.65
+X-stable: review
+X-Patchwork-Hint: ignore
 MIME-Version: 1.0
-In-Reply-To: <20190312171421.GJ19508@bombadil.infradead.org>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Scanned-By: MIMEDefang 2.84 on 10.5.11.22
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.47]); Tue, 12 Mar 2019 17:23:47 +0000 (UTC)
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 12.03.19 18:14, Matthew Wilcox wrote:
-> On Tue, Mar 12, 2019 at 05:05:39PM +0000, Julien Grall wrote:
->> On 3/12/19 3:59 PM, Julien Grall wrote:
->>> It looks like all the arm test for linus [1] and next [2] tree
->>> are now failing. x86 seems to be mostly ok.
->>>
->>> The bisector fingered the following commit:
->>>
->>> commit 0ee930e6cafa048c1925893d0ca89918b2814f2c
->>> Author: Matthew Wilcox <willy@infradead.org>
->>> Date:   Tue Mar 5 15:46:06 2019 -0800
->>>
->>>      mm/memory.c: prevent mapping typed pages to userspace
->>>      Pages which use page_type must never be mapped to userspace as it would
->>>      destroy their page type.  Add an explicit check for this instead of
->>>      assuming that kernel drivers always get this right.
-> 
-> Oh good, it found a real problem.
-> 
->> It turns out the problem is because the balloon driver will call
->> __SetPageOffline() on allocated page. Therefore the page has a type and
->> vm_insert_pages will deny the insertion.
->>
->> My knowledge is quite limited in this area. So I am not sure how we can
->> solve the problem.
->>
->> I would appreciate if someone could provide input of to fix the mapping.
-> 
-> I don't know the balloon driver, so I don't know why it was doing this,
-> but what it was doing was Wrong and has been since 2014 with:
+4.9-stable review patch.  If anyone has any objections, please let me know.
 
-Just to clarify on that point, XEN balloon does not use balloon
-compaction as far as I know (only virtio-balloon and as far as I know
-now also vmware balloon). Both of them don't map any such pages to user
-space, so it never was and isn't a problem.
+------------------
 
-> 
-> commit d6d86c0a7f8ddc5b38cf089222cb1d9540762dc2
-> Author: Konstantin Khlebnikov <k.khlebnikov@samsung.com>
-> Date:   Thu Oct 9 15:29:27 2014 -0700
-> 
->     mm/balloon_compaction: redesign ballooned pages management
-> 
-> If ballooned pages are supposed to be mapped into userspace, you can't mark
-> them as ballooned pages using the mapcount field.
-> 
+[ Upstream commit dc3f595b6617ebc0307e0ce151e8f2f2b2489b95 ]
 
+atchan->status variable is used to store two different information:
+ - pass channel interrupts status from interrupt handler to tasklet;
+ - channel information like whether it is cyclic or paused;
 
+This causes a bug when device_terminate_all() is called,
+(AT_XDMAC_CHAN_IS_CYCLIC cleared on atchan->status) and then a late End
+of Block interrupt arrives (AT_XDMAC_CIS_BIS), which sets bit 0 of
+atchan->status. Bit 0 is also used for AT_XDMAC_CHAN_IS_CYCLIC, so when
+a new descriptor for a cyclic transfer is created, the driver reports
+the channel as in use:
+
+if (test_and_set_bit(AT_XDMAC_CHAN_IS_CYCLIC, &atchan->status)) {
+	dev_err(chan2dev(chan), "channel currently used\n");
+	return NULL;
+}
+
+This patch fixes the bug by adding a different struct member to keep
+the interrupts status separated from the channel status bits.
+
+Fixes: e1f7c9eee707 ("dmaengine: at_xdmac: creation of the atmel eXtended DMA Controller driver")
+Signed-off-by: Codrin Ciubotariu <codrin.ciubotariu@microchip.com>
+Acked-by: Ludovic Desroches <ludovic.desroches@microchip.com>
+Signed-off-by: Vinod Koul <vkoul@kernel.org>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
+---
+ drivers/dma/at_xdmac.c | 19 ++++++++++---------
+ 1 file changed, 10 insertions(+), 9 deletions(-)
+
+diff --git a/drivers/dma/at_xdmac.c b/drivers/dma/at_xdmac.c
+index ee7b48d5243c..b222dd7afe8e 100644
+--- a/drivers/dma/at_xdmac.c
++++ b/drivers/dma/at_xdmac.c
+@@ -203,6 +203,7 @@ struct at_xdmac_chan {
+ 	u32				save_cim;
+ 	u32				save_cnda;
+ 	u32				save_cndc;
++	u32				irq_status;
+ 	unsigned long			status;
+ 	struct tasklet_struct		tasklet;
+ 	struct dma_slave_config		sconfig;
+@@ -1582,8 +1583,8 @@ static void at_xdmac_tasklet(unsigned long data)
+ 	struct at_xdmac_desc	*desc;
+ 	u32			error_mask;
+ 
+-	dev_dbg(chan2dev(&atchan->chan), "%s: status=0x%08lx\n",
+-		 __func__, atchan->status);
++	dev_dbg(chan2dev(&atchan->chan), "%s: status=0x%08x\n",
++		__func__, atchan->irq_status);
+ 
+ 	error_mask = AT_XDMAC_CIS_RBEIS
+ 		     | AT_XDMAC_CIS_WBEIS
+@@ -1591,15 +1592,15 @@ static void at_xdmac_tasklet(unsigned long data)
+ 
+ 	if (at_xdmac_chan_is_cyclic(atchan)) {
+ 		at_xdmac_handle_cyclic(atchan);
+-	} else if ((atchan->status & AT_XDMAC_CIS_LIS)
+-		   || (atchan->status & error_mask)) {
++	} else if ((atchan->irq_status & AT_XDMAC_CIS_LIS)
++		   || (atchan->irq_status & error_mask)) {
+ 		struct dma_async_tx_descriptor  *txd;
+ 
+-		if (atchan->status & AT_XDMAC_CIS_RBEIS)
++		if (atchan->irq_status & AT_XDMAC_CIS_RBEIS)
+ 			dev_err(chan2dev(&atchan->chan), "read bus error!!!");
+-		if (atchan->status & AT_XDMAC_CIS_WBEIS)
++		if (atchan->irq_status & AT_XDMAC_CIS_WBEIS)
+ 			dev_err(chan2dev(&atchan->chan), "write bus error!!!");
+-		if (atchan->status & AT_XDMAC_CIS_ROIS)
++		if (atchan->irq_status & AT_XDMAC_CIS_ROIS)
+ 			dev_err(chan2dev(&atchan->chan), "request overflow error!!!");
+ 
+ 		spin_lock_bh(&atchan->lock);
+@@ -1654,7 +1655,7 @@ static irqreturn_t at_xdmac_interrupt(int irq, void *dev_id)
+ 			atchan = &atxdmac->chan[i];
+ 			chan_imr = at_xdmac_chan_read(atchan, AT_XDMAC_CIM);
+ 			chan_status = at_xdmac_chan_read(atchan, AT_XDMAC_CIS);
+-			atchan->status = chan_status & chan_imr;
++			atchan->irq_status = chan_status & chan_imr;
+ 			dev_vdbg(atxdmac->dma.dev,
+ 				 "%s: chan%d: imr=0x%x, status=0x%x\n",
+ 				 __func__, i, chan_imr, chan_status);
+@@ -1668,7 +1669,7 @@ static irqreturn_t at_xdmac_interrupt(int irq, void *dev_id)
+ 				 at_xdmac_chan_read(atchan, AT_XDMAC_CDA),
+ 				 at_xdmac_chan_read(atchan, AT_XDMAC_CUBC));
+ 
+-			if (atchan->status & (AT_XDMAC_CIS_RBEIS | AT_XDMAC_CIS_WBEIS))
++			if (atchan->irq_status & (AT_XDMAC_CIS_RBEIS | AT_XDMAC_CIS_WBEIS))
+ 				at_xdmac_write(atxdmac, AT_XDMAC_GD, atchan->mask);
+ 
+ 			tasklet_schedule(&atchan->tasklet);
 -- 
+2.19.1
 
-Thanks,
 
-David / dhildenb
+
