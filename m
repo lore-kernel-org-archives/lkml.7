@@ -4,50 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C4533C43381
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 17:14:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CE058C43381
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 17:14:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 951C321741
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 17:14:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9ECC721874
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 17:14:55 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1552410891;
-	bh=M4nwY7OdKHA2J8gnBptO46wjmPcQeljnjGyIqJAladI=;
+	s=default; t=1552410895;
+	bh=EYomO/K0ZvVrR3ZUXqCthgz/ulcvwcsM1pWbtBEW3VU=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=AOMw83roQSU/PZ/J5Vz3epF8SQeiLJkuGWOqHgSYDdbVVcYUJv0wypRHFAKathHIY
-	 +xsomj5vDxmXxHf9SbTrpcVHvQ1H18f/Xzk6BhjVA/A+mkIpXFh+dtTEI135bUDUVW
-	 ON5Ivn7wwVQBkd4HNCLl1sTkObJWRuFrSBKX5Rs8=
+	b=nf6HwOY4vhL0/2+sy0x0ewEzOdVO8bm/aSMdGNaUh55p5y9ci4rLI//7qmXKpM60s
+	 ybv6n1d8OFGyOl6MMmIMnhToRTAMLX3im7ydtfiXgZgcSrgCkNPyElaOeFOwJJjVMA
+	 hwy9basfKm+kxUpCi5k1wG1gUqBCKQS2aQaEG30E=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728512AbfCLROu (ORCPT
+        id S1728539AbfCLROx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 12 Mar 2019 13:14:50 -0400
-Received: from mail.kernel.org ([198.145.29.99]:51958 "EHLO mail.kernel.org"
+        Tue, 12 Mar 2019 13:14:53 -0400
+Received: from mail.kernel.org ([198.145.29.99]:52268 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728194AbfCLROB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 12 Mar 2019 13:14:01 -0400
+        id S1728248AbfCLROJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 12 Mar 2019 13:14:09 -0400
 Received: from localhost (unknown [104.133.8.98])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id AD5E22173C;
-        Tue, 12 Mar 2019 17:14:00 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id F3EE62173C;
+        Tue, 12 Mar 2019 17:14:07 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1552410840;
-        bh=M4nwY7OdKHA2J8gnBptO46wjmPcQeljnjGyIqJAladI=;
+        s=default; t=1552410848;
+        bh=EYomO/K0ZvVrR3ZUXqCthgz/ulcvwcsM1pWbtBEW3VU=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=WqfYKFRCYJPKvZqW0WdkilxKJkMzbbkM94DjdGSzL3siUYAQIjFwIjz7E6U+b26sP
-         4DT2v2ZqzCVZfQ9/fs0l9zlHkoA330XV4brC44JP6ZMddV92AM1q8K02yoDf5gWj92
-         MEdfuobGjo2YcAYGYWj1pKqagYpBC1AlS6P9sMUY=
+        b=LZeTcMRJYJMJgIMkO5UurYnz2eVYO90f8IRQp0uMovev4//32Ti0zWNdi0EFW2m4Z
+         6U/Obf5EBBanQB2ChVp9PAcRMqs9DTA/XKmOQqEguZ60ky8OOgMY1PLXLRQIlRsw3p
+         tRpyU+WqSNymBDlMfEbNrxdn3fAxi68RVn6gttdY=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Dan Carpenter <dan.carpenter@oracle.com>,
-        Tero Kristo <t-kristo@ti.com>, Stephen Boyd <sboyd@kernel.org>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 013/149] clk: ti: Fix error handling in ti_clk_parse_divider_data()
-Date:   Tue, 12 Mar 2019 10:07:11 -0700
-Message-Id: <20190312170350.679677128@linuxfoundation.org>
+        stable@vger.kernel.org, Denys Dmytriyenko <denys@ti.com>,
+        Fathi Boudra <fathi.boudra@linaro.org>,
+        Shuah Khan <shuah@kernel.org>, Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.19 033/149] selftests: timers: use LDLIBS instead of LDFLAGS
+Date:   Tue, 12 Mar 2019 10:07:31 -0700
+Message-Id: <20190312170352.473279365@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190312170349.421581206@linuxfoundation.org>
 References: <20190312170349.421581206@linuxfoundation.org>
@@ -66,64 +66,73 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-[ Upstream commit 303aef8b84272d73999a3207dd05bbe10ed89dc5 ]
+[ Upstream commit 7d4e591bc051d3382c45caaa2530969fb42ed23d ]
 
-The ti_clk_parse_divider_data() function is only called from
-_get_div_table_from_setup().  That function doesn't look at the return
-value but instead looks at the "*table" pointer.  In this case, if the
-kcalloc() fails then *table is NULL (which means success).  It should
-instead be an error pointer.
+posix_timers fails to build due to undefined reference errors:
 
-The ti_clk_parse_divider_data() function has two callers.  One checks
-for errors and the other doesn't.  I have fixed it so now both handle
-errors.
+ aarch64-linaro-linux-gcc --sysroot=/build/tmp-rpb-glibc/sysroots/hikey
+ -O2 -pipe -g -feliminate-unused-debug-types -O3 -Wl,-no-as-needed -Wall
+ -DKTEST  -Wl,-O1 -Wl,--hash-style=gnu -Wl,--as-needed -lrt -lpthread
+ posix_timers.c
+ -o /build/tmp-rpb-glibc/work/hikey-linaro-linux/kselftests/4.12-r0/linux-4.12-rc7/tools/testing/selftests/timers/posix_timers
+ /tmp/cc1FTZzT.o: In function `check_timer_create':
+ /usr/src/debug/kselftests/4.12-r0/linux-4.12-rc7/tools/testing/selftests/timers/posix_timers.c:157:
+ undefined reference to `timer_create'
+ /usr/src/debug/kselftests/4.12-r0/linux-4.12-rc7/tools/testing/selftests/timers/posix_timers.c:170:
+ undefined reference to `timer_settime'
+ collect2: error: ld returned 1 exit status
 
-Fixes: 4f6be5655dc9 ("clk: ti: divider: add driver internal API for parsing divider data")
-Signed-off-by: Dan Carpenter <dan.carpenter@oracle.com>
-Acked-by: Tero Kristo <t-kristo@ti.com>
-Signed-off-by: Stephen Boyd <sboyd@kernel.org>
+It's GNU Make and linker specific.
+
+The default Makefile rule looks like:
+
+$(CC) $(CFLAGS) $(LDFLAGS) $@ $^ $(LDLIBS)
+
+When linking is done by gcc itself, no issue, but when it needs to be passed
+to proper ld, only LDLIBS follows and then ld cannot know what libs to link
+with.
+
+More detail:
+https://www.gnu.org/software/make/manual/html_node/Implicit-Variables.html
+
+LDFLAGS
+Extra flags to give to compilers when they are supposed to invoke the linker,
+‘ld’, such as -L. Libraries (-lfoo) should be added to the LDLIBS variable
+instead.
+
+LDLIBS
+Library flags or names given to compilers when they are supposed to invoke the
+linker, ‘ld’. LOADLIBES is a deprecated (but still supported) alternative to
+LDLIBS. Non-library linker flags, such as -L, should go in the LDFLAGS
+variable.
+
+https://lkml.org/lkml/2010/2/10/362
+
+tools/perf: libraries must come after objects
+
+Link order matters, use LDLIBS instead of LDFLAGS to properly link against
+libpthread.
+
+Signed-off-by: Denys Dmytriyenko <denys@ti.com>
+Signed-off-by: Fathi Boudra <fathi.boudra@linaro.org>
+Signed-off-by: Shuah Khan <shuah@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/clk/ti/divider.c | 11 ++++++++++-
- 1 file changed, 10 insertions(+), 1 deletion(-)
+ tools/testing/selftests/timers/Makefile | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/clk/ti/divider.c b/drivers/clk/ti/divider.c
-index ccfb4d9a152a..079f0beda8b6 100644
---- a/drivers/clk/ti/divider.c
-+++ b/drivers/clk/ti/divider.c
-@@ -367,8 +367,10 @@ int ti_clk_parse_divider_data(int *div_table, int num_dividers, int max_div,
- 	num_dividers = i;
+diff --git a/tools/testing/selftests/timers/Makefile b/tools/testing/selftests/timers/Makefile
+index c02683cfb6c9..7656c7ce79d9 100644
+--- a/tools/testing/selftests/timers/Makefile
++++ b/tools/testing/selftests/timers/Makefile
+@@ -1,6 +1,6 @@
+ # SPDX-License-Identifier: GPL-2.0
+ CFLAGS += -O3 -Wl,-no-as-needed -Wall
+-LDFLAGS += -lrt -lpthread -lm
++LDLIBS += -lrt -lpthread -lm
  
- 	tmp = kcalloc(valid_div + 1, sizeof(*tmp), GFP_KERNEL);
--	if (!tmp)
-+	if (!tmp) {
-+		*table = ERR_PTR(-ENOMEM);
- 		return -ENOMEM;
-+	}
- 
- 	valid_div = 0;
- 	*width = 0;
-@@ -403,6 +405,7 @@ struct clk_hw *ti_clk_build_component_div(struct ti_clk_divider *setup)
- {
- 	struct clk_omap_divider *div;
- 	struct clk_omap_reg *reg;
-+	int ret;
- 
- 	if (!setup)
- 		return NULL;
-@@ -422,6 +425,12 @@ struct clk_hw *ti_clk_build_component_div(struct ti_clk_divider *setup)
- 		div->flags |= CLK_DIVIDER_POWER_OF_TWO;
- 
- 	div->table = _get_div_table_from_setup(setup, &div->width);
-+	if (IS_ERR(div->table)) {
-+		ret = PTR_ERR(div->table);
-+		kfree(div);
-+		return ERR_PTR(ret);
-+	}
-+
- 
- 	div->shift = setup->bit_shift;
- 	div->latch = -EINVAL;
+ # these are all "safe" tests that don't modify
+ # system time or require escalated privileges
 -- 
 2.19.1
 
