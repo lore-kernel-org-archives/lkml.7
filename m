@@ -4,50 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E7915C43381
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 17:16:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DA465C43381
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 17:16:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BC0B721872
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 17:16:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A2954217F5
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 17:16:56 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1552411012;
-	bh=Y1W3Pxep1bl+W2N2K9GF1QSWco+jsdgLqhlhjQZkqHs=;
+	s=default; t=1552411016;
+	bh=2U0Acx/tVmXNoFfRpGFrOgrq9i1/qogXMqkI6hCeFk8=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=W35bn6Botmd2NtImYGxC0eXpbhyAvEH3wYqDgmSJdvJquYK+87FIjMp547/5yH+2M
-	 1ALDlUYv7S0zR63BQvctdQJuJLN1BqhR/VMobogHbMBJog/JyAZIhIZRl0t26gY8c4
-	 V5wXiCJiPn+65xUoFSjKIi5uJu9X+A2b4n1uJhyc=
+	b=PEUTF0F7SSfZ2juW0DHa1bODcpxxt81ZNBfvYbkj3uVhJz260C+esWizQie/T3oMf
+	 t6Q4A9ClnZCUaS/WCyC1+3XIX+BMS8r5YsD6PcaTGIft9fJ9txYd8r+5L1iuiyfdTB
+	 mr4oz3DE7LC3m2fDNzYvc/fWJJ/yqyGPxQTftVr0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729340AbfCLRQv (ORCPT
+        id S1729367AbfCLRQz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 12 Mar 2019 13:16:51 -0400
-Received: from mail.kernel.org ([198.145.29.99]:56866 "EHLO mail.kernel.org"
+        Tue, 12 Mar 2019 13:16:55 -0400
+Received: from mail.kernel.org ([198.145.29.99]:57034 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728867AbfCLRPr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 12 Mar 2019 13:15:47 -0400
+        id S1728894AbfCLRPv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 12 Mar 2019 13:15:51 -0400
 Received: from localhost (unknown [104.133.8.98])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id AAFB821850;
-        Tue, 12 Mar 2019 17:15:46 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id DE0392087C;
+        Tue, 12 Mar 2019 17:15:50 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1552410946;
-        bh=Y1W3Pxep1bl+W2N2K9GF1QSWco+jsdgLqhlhjQZkqHs=;
+        s=default; t=1552410951;
+        bh=2U0Acx/tVmXNoFfRpGFrOgrq9i1/qogXMqkI6hCeFk8=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=gJ6T0ctfsm+0kE4p8xQnRg6fXkhvc1lg8XhGoHMxFeueUt82jztRFI5JIVxh9+lkK
-         F91x3yvEIp3QO0qgyHdWHjHZIKgFnyRqNaXOWip3woQUX0L71ZeohDAWd+gn75VgvH
-         bAoyenG0gu78xoVp5NDm31xH1bHS4JWcyKjSrqzY=
+        b=AmRpF7kAzougjx2/UDQf1kztI9BMs2S86y6zWjHB2i4RUnhJiSN5gbo/h7SOqWaWo
+         dIH9k+8wF3l7exsagUTWPEWWO3klH/B+AXBoZWeWqlo9UcGYlcQvcwMg+THNsN4p7Q
+         swGivCi8oYXrc0qvOm08P8V4V81yb+Uqg1n6v+7w=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Kai-Heng Feng <kai.heng.feng@canonical.com>,
+        stable@vger.kernel.org, Timur Celik <mail@timurcelik.de>,
+        Eric Dumazet <edumazet@google.com>,
         "David S. Miller" <davem@davemloft.net>
-Subject: [PATCH 4.14 011/135] sky2: Disable MSI on Dell Inspiron 1545 and Gateway P-79
-Date:   Tue, 12 Mar 2019 10:07:38 -0700
-Message-Id: <20190312170342.181614260@linuxfoundation.org>
+Subject: [PATCH 4.14 032/135] tun: remove unnecessary memory barrier
+Date:   Tue, 12 Mar 2019 10:07:59 -0700
+Message-Id: <20190312170344.091432513@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190312170341.127810985@linuxfoundation.org>
 References: <20190312170341.127810985@linuxfoundation.org>
@@ -66,82 +66,31 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-From: Kai-Heng Feng <kai.heng.feng@canonical.com>
+From: Timur Celik <mail@timurcelik.de>
 
-[ Upstream commit b33b7cd6fd86478dd2890a9abeb6f036aa01fdf7 ]
+[ Upstream commit ecef67cb10db7b83b3b71c61dbb29aa070ab0112 ]
 
-Some sky2 chips fire IRQ after S3, before the driver is fully resumed:
-[ 686.804877] do_IRQ: 1.37 No irq handler for vector
+Replace set_current_state with __set_current_state since no memory
+barrier is needed at this point.
 
-This is likely a platform bug that device isn't fully quiesced during
-S3. Use MSI-X, maskable MSI or INTx can prevent this issue from
-happening.
-
-Since MSI-X and maskable MSI are not supported by this device, fallback
-to use INTx on affected platforms.
-
-BugLink: https://bugs.launchpad.net/bugs/1807259
-BugLink: https://bugs.launchpad.net/bugs/1809843
-Signed-off-by: Kai-Heng Feng <kai.heng.feng@canonical.com>
+Signed-off-by: Timur Celik <mail@timurcelik.de>
+Reviewed-by: Eric Dumazet <edumazet@google.com>
 Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- drivers/net/ethernet/marvell/sky2.c |   24 +++++++++++++++++++++++-
- 1 file changed, 23 insertions(+), 1 deletion(-)
+ drivers/net/tun.c |    2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
---- a/drivers/net/ethernet/marvell/sky2.c
-+++ b/drivers/net/ethernet/marvell/sky2.c
-@@ -46,6 +46,7 @@
- #include <linux/mii.h>
- #include <linux/of_device.h>
- #include <linux/of_net.h>
-+#include <linux/dmi.h>
- 
- #include <asm/irq.h>
- 
-@@ -93,7 +94,7 @@ static int copybreak __read_mostly = 128
- module_param(copybreak, int, 0);
- MODULE_PARM_DESC(copybreak, "Receive copy threshold");
- 
--static int disable_msi = 0;
-+static int disable_msi = -1;
- module_param(disable_msi, int, 0);
- MODULE_PARM_DESC(disable_msi, "Disable Message Signaled Interrupt (MSI)");
- 
-@@ -4931,6 +4932,24 @@ static const char *sky2_name(u8 chipid,
- 	return buf;
- }
- 
-+static const struct dmi_system_id msi_blacklist[] = {
-+	{
-+		.ident = "Dell Inspiron 1545",
-+		.matches = {
-+			DMI_MATCH(DMI_SYS_VENDOR, "Dell Inc."),
-+			DMI_MATCH(DMI_PRODUCT_NAME, "Inspiron 1545"),
-+		},
-+	},
-+	{
-+		.ident = "Gateway P-79",
-+		.matches = {
-+			DMI_MATCH(DMI_SYS_VENDOR, "Gateway"),
-+			DMI_MATCH(DMI_PRODUCT_NAME, "P-79"),
-+		},
-+	},
-+	{}
-+};
-+
- static int sky2_probe(struct pci_dev *pdev, const struct pci_device_id *ent)
- {
- 	struct net_device *dev, *dev1;
-@@ -5042,6 +5061,9 @@ static int sky2_probe(struct pci_dev *pd
- 		goto err_out_free_pci;
+--- a/drivers/net/tun.c
++++ b/drivers/net/tun.c
+@@ -1732,7 +1732,7 @@ static struct sk_buff *tun_ring_recv(str
+ 		schedule();
  	}
  
-+	if (disable_msi == -1)
-+		disable_msi = !!dmi_check_system(msi_blacklist);
-+
- 	if (!disable_msi && pci_enable_msi(pdev) == 0) {
- 		err = sky2_test_msi(hw);
- 		if (err) {
+-	set_current_state(TASK_RUNNING);
++	__set_current_state(TASK_RUNNING);
+ 	remove_wait_queue(&tfile->wq.wait, &wait);
+ 
+ out:
 
 
