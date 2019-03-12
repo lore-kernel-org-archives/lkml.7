@@ -6,82 +6,85 @@ X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,
 	USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E6562C43381
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 18:22:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 313DBC43381
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 18:23:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A6D5F2087C
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 18:22:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EAEA52087C
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 18:23:16 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1552414926;
-	bh=11SzsYRFB0GDLMTPFbsik0z5C6qlE36Wwo9bMaMNwUo=;
+	s=default; t=1552414997;
+	bh=huYHMCu+cV5JB7avjgeCUAJv3Pq146LAtAkavCDPi+E=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=KTiJfhyhe/ImTe3vvvfRjTZOYcngmPFKj376ZB84viyBZOz9bWpRui2JiRPz0ePx/
-	 HlgYJJ7PB72tyBtw7lfGlodNYg4OVZhFodog4lhlWFqXpNzA8Hmf6QUHW/Gk5LGXSV
-	 UJ17VTTPo0Yf8qavtOfRjw7xP6Mj+E+zxjnGrAZQ=
+	b=VDIA+RiHGQNyj6ii3x8yYhqnHeXEIxgNnB4sHAr4cnCW30qW0/Sm3e54KZezMrIzy
+	 hew3GWre2VcevJjQ+GYE7ycrg9KIQXbZluW41RucLkb+ifIng40s9r6VC0LmcwiDNw
+	 5QYowB4G6adJhSYnzCN1MZIL4IabQNbP3cIRGg88=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726891AbfCLSWF (ORCPT
+        id S1726934AbfCLSXP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 12 Mar 2019 14:22:05 -0400
-Received: from mail-oi1-f195.google.com ([209.85.167.195]:37756 "EHLO
-        mail-oi1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726426AbfCLSWF (ORCPT
+        Tue, 12 Mar 2019 14:23:15 -0400
+Received: from mail-oi1-f193.google.com ([209.85.167.193]:37851 "EHLO
+        mail-oi1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726329AbfCLSXP (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 12 Mar 2019 14:22:05 -0400
-Received: by mail-oi1-f195.google.com with SMTP id w66so2932279oia.4;
-        Tue, 12 Mar 2019 11:22:04 -0700 (PDT)
+        Tue, 12 Mar 2019 14:23:15 -0400
+Received: by mail-oi1-f193.google.com with SMTP id w66so2935249oia.4;
+        Tue, 12 Mar 2019 11:23:14 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
          :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=rguTurrJna+8BSqp49mlXLN0HCpHPcyyxJFG5nxAGS8=;
-        b=Lp57G4k5ev0j5crZF5K2X5T5zT+cTEpliEpOMlISxKdqIxGa2fz0auhOpAfgso5et7
-         7n6CGP+2dxqqx4lmMBXdb4TrPuUvVU73Nbz7TUqQdLO/Jyx723GmyfzDf+vHvi0jeqne
-         FqrP3x2Z8t175RlIL4Vc39PUCyT3jBgU7TclSuQz45bkKX/22JdpVsO4liCiewlKdPCQ
-         +q2e8rYoeXazIYgbv+J9g3LbTl3kz1EMchNanvWpWrYNM7UPghW5BjcxHmkBLFSU0uGf
-         0hT2W3wAaQBUgEoNbEj3YB5l+JQfzx/RTi3+XHDjONJc86wKjHNayucJ1Z0Oul/mkAgz
-         u5LA==
-X-Gm-Message-State: APjAAAXhQVs3T/xvvrlY/VnaT2K3LTgeYnGUPtvEZdWalm7JfiOnY/AN
-        rAwrstsG+Yy+FkOFsrdp2w==
-X-Google-Smtp-Source: APXvYqwQIa0daORTx/syEQJunCO/5M6phMgbGl3Y59mpIjS/gUQnS4tmcRGM8UgLgIBCzqHb47b9LA==
-X-Received: by 2002:aca:e690:: with SMTP id d138mr2635347oih.109.1552414923979;
-        Tue, 12 Mar 2019 11:22:03 -0700 (PDT)
+        bh=MtR/uROcIP2ZKKxWXfoHxV1cDC5Gi853VTEPlMwB4SA=;
+        b=B9gWmdFxQYIxrTh2Hxs6jlASqWotQNnwC/gFVk83bkDMbB73IY5GdkN26Jjo9kewQj
+         3yKKa1wKQaOQ/dToCfZ2zR2dwb94rV5+n5H4Ga+51IWnxrRucp7yUTnbIrDPzgl5I1hj
+         LK1LZf/tNitkZn9OYFEsIYYrcwN1RvXdl5yE6GTSShJWHyYiXSJG5rFQ+0YKBRkhvPc5
+         PJhPEyRxQ1cACen/8jt6n92651ggD8CpR8OSvw7/GcVtitkWoppWwDk21oo/V79QRKgN
+         r/58gZyTSZV90B1MbtKnVps5AxE6KgJNVbu3HzTPlQ3GyJ828whxTRFGXzUDN2xACR9m
+         Xwlg==
+X-Gm-Message-State: APjAAAW6rSo6pr8pprE+uQW00PBSoBk2+VRWOMS3vu+j6zm8Jtjulfjy
+        WoCz1bXE1jaXmVPFn3gjfg==
+X-Google-Smtp-Source: APXvYqx+pOkxpw30qVr1Yg4ci3ubTz+pAp7YBtpcJF8ds1zk+6ersy64sxKubxp4HG4AbWgsGpOVvg==
+X-Received: by 2002:aca:df45:: with SMTP id w66mr2462110oig.94.1552414994459;
+        Tue, 12 Mar 2019 11:23:14 -0700 (PDT)
 Received: from localhost (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
-        by smtp.gmail.com with ESMTPSA id i16sm3597245oto.77.2019.03.12.11.22.03
+        by smtp.gmail.com with ESMTPSA id w22sm3820004oth.45.2019.03.12.11.23.13
         (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Tue, 12 Mar 2019 11:22:03 -0700 (PDT)
-Date:   Tue, 12 Mar 2019 13:22:02 -0500
+        Tue, 12 Mar 2019 11:23:13 -0700 (PDT)
+Date:   Tue, 12 Mar 2019 13:23:12 -0500
 From:   Rob Herring <robh@kernel.org>
-To:     Baolin Wang <baolin.wang@linaro.org>
-Cc:     gregkh@linuxfoundation.org, jslaby@suse.com, robh+dt@kernel.org,
-        mark.rutland@arm.com, orsonzhai@gmail.com, zhang.lyra@gmail.com,
-        baolin.wang@linaro.org, broonie@kernel.org, lanqing.liu@unisoc.com,
-        linux-serial@vger.kernel.org, linux-kernel@vger.kernel.org,
-        devicetree@vger.kernel.org
-Subject: Re: [PATCH v2 3/4] dt-bindings: serial: sprd: Add dma properties to
- support DMA mode
-Message-ID: <20190312182202.GA10396@bogus>
-References: <cover.1551689518.git.baolin.wang@linaro.org>
- <5ef1bbcf1d78829f28377a599d81d0adc7d61ef1.1551689518.git.baolin.wang@linaro.org>
+To:     Neil Armstrong <narmstrong@baylibre.com>
+Cc:     gregkh@linuxfoundation.org, hminas@synopsys.com, balbi@kernel.org,
+        kishon@ti.com, devicetree@vger.kernel.org,
+        Neil Armstrong <narmstrong@baylibre.com>,
+        Martin Blumenstingl <martin.blumenstingl@googlemail.com>,
+        linux-usb@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-amlogic@lists.infradead.org,
+        linux-arm-kernel@lists.infradead.org
+Subject: Re: [PATCH v2 2/8] dt-bindings: phy: Add Amlogic G12A USB3+PCIE
+ Combo PHY  Bindings
+Message-ID: <20190312182312.GA12396@bogus>
+References: <20190304103846.2060-1-narmstrong@baylibre.com>
+ <20190304103846.2060-3-narmstrong@baylibre.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <5ef1bbcf1d78829f28377a599d81d0adc7d61ef1.1551689518.git.baolin.wang@linaro.org>
+In-Reply-To: <20190304103846.2060-3-narmstrong@baylibre.com>
 User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon,  4 Mar 2019 16:58:23 +0800, Baolin Wang wrote:
-> From: Lanqing Liu <lanqing.liu@unisoc.com>
+On Mon,  4 Mar 2019 11:38:40 +0100, Neil Armstrong wrote:
+> Add the Amlogic G12A Family USB3 + PCIE Combo PHY Bindings.
 > 
-> This patch adds dmas and dma-names properties for the UART DMA mode.
+> This PHY can provide exclusively USB3 or PCIE support on shared I/Os.
 > 
-> Signed-off-by: Lanqing Liu <lanqing.liu@unisoc.com>
-> Signed-off-by: Baolin Wang <baolin.wang@linaro.org>
+> Signed-off-by: Neil Armstrong <narmstrong@baylibre.com>
+> Reviewed-by: Martin Blumenstingl <martin.blumenstingl@googlemail.com>
 > ---
->  .../devicetree/bindings/serial/sprd-uart.txt       |    6 ++++++
->  1 file changed, 6 insertions(+)
+>  .../bindings/phy/meson-g12a-usb3-pcie-phy.txt | 22 +++++++++++++++++++
+>  1 file changed, 22 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/phy/meson-g12a-usb3-pcie-phy.txt
 > 
 
 Reviewed-by: Rob Herring <robh@kernel.org>
