@@ -4,63 +4,66 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-8.8 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 542F1C43381
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 18:14:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CAD1AC43381
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 18:14:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 25BE42087C
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 18:14:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 91629213A2
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 18:14:38 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="eWuUHuxk";
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="AAuNZPUl"
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="M3ehYlM3";
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="NHINJMBr"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727653AbfCLSOf (ORCPT
+        id S1727710AbfCLSOh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 12 Mar 2019 14:14:35 -0400
-Received: from smtp.codeaurora.org ([198.145.29.96]:58586 "EHLO
+        Tue, 12 Mar 2019 14:14:37 -0400
+Received: from smtp.codeaurora.org ([198.145.29.96]:58244 "EHLO
         smtp.codeaurora.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727524AbfCLSOT (ORCPT
+        with ESMTP id S1727522AbfCLSOQ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 12 Mar 2019 14:14:19 -0400
+        Tue, 12 Mar 2019 14:14:16 -0400
 Received: by smtp.codeaurora.org (Postfix, from userid 1000)
-        id 1A8CD61F48; Tue, 12 Mar 2019 18:14:14 +0000 (UTC)
+        id E52C761AA2; Tue, 12 Mar 2019 18:14:12 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
-        s=default; t=1552414459;
-        bh=TItnokO3ptuUROJyjnRI1pbipmM6zmQ9NJP7PbJyjek=;
+        s=default; t=1552414455;
+        bh=XavfODKbiYd3VUlO1pljeUXeZYLnBdMdaR2DWcS0Jjs=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=eWuUHuxkrjuxdvr198s0t4+cD34AtoW/OTnmcvEi4MLp7OIIxMYpljwe/eSF2K9Jd
-         hiu68X8h8FQ2y+B2fD9SWS0saDojjV45wWfdXpQ4VcK6N71ToJTxiTcyFha06JwJay
-         URp1t8cui3kNUU3foGHcxbaId5Z2OWwHONWAhDHk=
+        b=M3ehYlM3ux2SwmB7hkQOS42TY8kjmVX4Ap6TEqsMh6Rhxq1pXpd3pzLrJeP1tIZCi
+         A42TddoRBmadbVQRKhSf2sbKo049PQWKA5T41ffg+aSNqijIQk7TdC3b+DcgRsAhuz
+         F5qFXCgHBPngnK1FPqqX5oZYvJ6+MLcwQixoSaw4=
 Received: from jcrouse1-lnx.qualcomm.com (i-global254.qualcomm.com [199.106.103.254])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-SHA256 (128/128 bits))
         (No client certificate requested)
         (Authenticated sender: jcrouse@smtp.codeaurora.org)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id B52A661A9A;
-        Tue, 12 Mar 2019 18:14:11 +0000 (UTC)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id CCF87619D0;
+        Tue, 12 Mar 2019 18:14:09 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
-        s=default; t=1552414453;
-        bh=TItnokO3ptuUROJyjnRI1pbipmM6zmQ9NJP7PbJyjek=;
+        s=default; t=1552414451;
+        bh=XavfODKbiYd3VUlO1pljeUXeZYLnBdMdaR2DWcS0Jjs=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=AAuNZPUl4HGrkDvywbmZLIrmwCgAT99CXt3UyjnfgXtvoVfmhmjkGscVYyPIrPhZC
-         srvYSOYGl2hR0fCCrd8clCm6z9LqzCRjNk6AQ5oiK6GrsRI44fX61Ty1P5OJa0zb0m
-         hqUJhmF8vhdhfShO+D6h12UoEYmYsryogyzWnMZQ=
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org B52A661A9A
+        b=NHINJMBrQ0nIJTVSwRpCmKbfxfoKgfYSE2MAJhuC3lVNa2ZAcXEygzmoqtAk6GsgF
+         KgfdQEgjVEvMXyUqdsiQxr+0RYXn0J9kV5ISd80p6z/HfbjiNtFUw/2b9KqJ3XsVkB
+         WE7+3leoW/0oglufdV7Q3Cz1f6j72CswhobHqy0Q=
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org CCF87619D0
 Authentication-Results: pdx-caf-mail.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
 Authentication-Results: pdx-caf-mail.web.codeaurora.org; spf=none smtp.mailfrom=jcrouse@codeaurora.org
 From:   Jordan Crouse <jcrouse@codeaurora.org>
 To:     freedreno@lists.freedesktop.org
 Cc:     Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Sean Paul <sean@poorly.run>, devicetree@vger.kernel.org,
+        Arnd Bergmann <arnd@arndb.de>, Sean Paul <sean@poorly.run>,
+        Thomas Zimmermann <tzimmermann@suse.de>,
         linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org,
-        dri-devel@lists.freedesktop.org, Rob Herring <robh+dt@kernel.org>,
-        Rob Clark <robdclark@gmail.com>,
+        dri-devel@lists.freedesktop.org, Rob Clark <robdclark@gmail.com>,
         David Airlie <airlied@linux.ie>,
-        Mark Rutland <mark.rutland@arm.com>,
+        Jonathan Marek <jonathan@marek.ca>,
+        Daniel Mack <daniel@zonque.org>,
+        Mamta Shukla <mamtashukla555@gmail.com>,
         Daniel Vetter <daniel@ffwll.ch>
-Subject: [PATCH v1 3/4] dt-bindings: drm/msm/gpu: Document a5xx / a6xx zap shader region
-Date:   Tue, 12 Mar 2019 12:13:41 -0600
-Message-Id: <1552414422-9568-4-git-send-email-jcrouse@codeaurora.org>
+Subject: [PATCH v1 2/4] drm/msm/a6xx: Add zap shader load
+Date:   Tue, 12 Mar 2019 12:13:40 -0600
+Message-Id: <1552414422-9568-3-git-send-email-jcrouse@codeaurora.org>
 X-Mailer: git-send-email 2.7.4
 In-Reply-To: <1552414422-9568-1-git-send-email-jcrouse@codeaurora.org>
 References: <1552414422-9568-1-git-send-email-jcrouse@codeaurora.org>
@@ -69,39 +72,100 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Describe the zap-shader node that defines a reserved memory region
-to store the zap shader.
+The a6xx GPU powers on in secure mode which restricts what memory it can
+write to. To get out of secure mode the GPU driver can write to
+REG_A6XX_RBBM_SECVID_TRUST_CNTL but on targets that are "secure" that
+register region is blocked and writes will cause the system to go down.
+
+For those targets we need to execute a special sequence that involves
+loadinga special shader that clears the GPU registers and use a PM4
+sequence to pull the GPU out of secure. Add support for loading the zap
+shader and executing the secure sequence. For targets that do not support
+SCM or the specific SCM sequence this should fail and we would fall back
+to writing the register.
 
 Signed-off-by: Jordan Crouse <jcrouse@codeaurora.org>
 ---
 
- Documentation/devicetree/bindings/display/msm/gpu.txt | 7 +++++++
- 1 file changed, 7 insertions(+)
+ drivers/gpu/drm/msm/adreno/a6xx_gpu.c      | 38 +++++++++++++++++++++++++++++-
+ drivers/gpu/drm/msm/adreno/adreno_device.c |  1 +
+ 2 files changed, 38 insertions(+), 1 deletion(-)
 
-diff --git a/Documentation/devicetree/bindings/display/msm/gpu.txt b/Documentation/devicetree/bindings/display/msm/gpu.txt
-index aad1aef..1e6d870 100644
---- a/Documentation/devicetree/bindings/display/msm/gpu.txt
-+++ b/Documentation/devicetree/bindings/display/msm/gpu.txt
-@@ -25,6 +25,9 @@ Required properties:
- - qcom,gmu: For GMU attached devices a phandle to the GMU device that will
-   control the power for the GPU. Applicable targets:
-     - qcom,adreno-630.2
-+- zap-shader: For a5xx and a6xx devices this node contains a memory-region that
-+  points to reserved memory to store the zap shader that can be used to help
-+  bring the GPU out of secure mode.
+diff --git a/drivers/gpu/drm/msm/adreno/a6xx_gpu.c b/drivers/gpu/drm/msm/adreno/a6xx_gpu.c
+index fefe773..5983e47 100644
+--- a/drivers/gpu/drm/msm/adreno/a6xx_gpu.c
++++ b/drivers/gpu/drm/msm/adreno/a6xx_gpu.c
+@@ -10,6 +10,8 @@
  
- Example 3xx/4xx/a5xx:
+ #include <linux/devfreq.h>
  
-@@ -71,5 +74,9 @@ Example a6xx (with GMU):
- 		operating-points-v2 = <&gpu_opp_table>;
- 
- 		qcom,gmu = <&gmu>;
++#define GPU_PAS_ID 13
 +
-+		zap-shader {
-+			memory-region = <&zap_shader_region>;
-+		};
- 	};
+ static inline bool _a6xx_check_idle(struct msm_gpu *gpu)
+ {
+ 	struct adreno_gpu *adreno_gpu = to_adreno_gpu(gpu);
+@@ -343,6 +345,20 @@ static int a6xx_ucode_init(struct msm_gpu *gpu)
+ 	return 0;
+ }
+ 
++static int a6xx_zap_shader_init(struct msm_gpu *gpu)
++{
++	static bool loaded;
++	int ret;
++
++	if (loaded)
++		return 0;
++
++	ret = adreno_zap_shader_load(gpu, GPU_PAS_ID);
++
++	loaded = !ret;
++	return ret;
++}
++
+ #define A6XX_INT_MASK (A6XX_RBBM_INT_0_MASK_CP_AHB_ERROR | \
+ 	  A6XX_RBBM_INT_0_MASK_RBBM_ATB_ASYNCFIFO_OVERFLOW | \
+ 	  A6XX_RBBM_INT_0_MASK_CP_HW_ERROR | \
+@@ -491,7 +507,27 @@ static int a6xx_hw_init(struct msm_gpu *gpu)
+ 	if (ret)
+ 		goto out;
+ 
+-	gpu_write(gpu, REG_A6XX_RBBM_SECVID_TRUST_CNTL, 0x0);
++	/*
++	 * Try to load a zap shader into the secure world. If successful
++	 * we can use the CP to switch out of secure mode. If not then we
++	 * have no resource but to try to switch ourselves out manually. If we
++	 * guessed wrong then access to the RBBM_SECVID_TRUST_CNTL register will
++	 * be blocked and a permissions violation will soon follow.
++	 */
++	ret = a6xx_zap_shader_init(gpu);
++	if (!ret) {
++		OUT_PKT7(gpu->rb[0], CP_SET_SECURE_MODE, 1);
++		OUT_RING(gpu->rb[0], 0x00000000);
++
++		a6xx_flush(gpu, gpu->rb[0]);
++		if (!a6xx_idle(gpu, gpu->rb[0]))
++			return -EINVAL;
++	} else {
++		/* Print a warning so if we die, we know why */
++		dev_warn_once(gpu->dev->dev,
++			"Zap shader not enabled - using SECVID_TRUST_CNTL instead\n");
++		gpu_write(gpu, REG_A6XX_RBBM_SECVID_TRUST_CNTL, 0x0);
++	}
+ 
+ out:
+ 	/*
+diff --git a/drivers/gpu/drm/msm/adreno/adreno_device.c b/drivers/gpu/drm/msm/adreno/adreno_device.c
+index 714ed65..ead5f6a 100644
+--- a/drivers/gpu/drm/msm/adreno/adreno_device.c
++++ b/drivers/gpu/drm/msm/adreno/adreno_device.c
+@@ -155,6 +155,7 @@ static const struct adreno_info gpulist[] = {
+ 		.gmem = SZ_1M,
+ 		.inactive_period = DRM_MSM_INACTIVE_PERIOD,
+ 		.init = a6xx_gpu_init,
++		.zapfw = "a630_zap.mdt",
+ 	},
  };
+ 
 -- 
 2.7.4
 
