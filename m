@@ -6,76 +6,93 @@ X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1064CC43381
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 00:50:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 45BDDC43381
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 00:50:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DCDE52084F
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 00:50:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1FB642084F
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 00:50:29 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726673AbfCLAuX (ORCPT
+        id S1726699AbfCLAu1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 11 Mar 2019 20:50:23 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:54088 "EHLO mx1.redhat.com"
+        Mon, 11 Mar 2019 20:50:27 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:49758 "EHLO mx1.redhat.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726581AbfCLAuV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 11 Mar 2019 20:50:21 -0400
+        id S1726581AbfCLAuY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 11 Mar 2019 20:50:24 -0400
 Received: from smtp.corp.redhat.com (int-mx06.intmail.prod.int.phx2.redhat.com [10.5.11.16])
         (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id 1A48D30821DF;
-        Tue, 12 Mar 2019 00:50:21 +0000 (UTC)
+        by mx1.redhat.com (Postfix) with ESMTPS id 96B88C070E0B;
+        Tue, 12 Mar 2019 00:50:24 +0000 (UTC)
 Received: from MiWiFi-R3L-srv.redhat.com (ovpn-12-19.pek2.redhat.com [10.72.12.19])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 1C29A5C220;
-        Tue, 12 Mar 2019 00:50:17 +0000 (UTC)
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 97E1A5C220;
+        Tue, 12 Mar 2019 00:50:21 +0000 (UTC)
 From:   Baoquan He <bhe@redhat.com>
 To:     linux-kernel@vger.kernel.org
 Cc:     tglx@linutronix.de, kirill.shutemov@linux.intel.com,
         mingo@kernel.org, bp@alien8.de, hpa@zytor.com, dyoung@redhat.com,
         x86@kernel.org, Baoquan He <bhe@redhat.com>
-Subject: [PATCH v2 2/3] x86/kexec/64: Error out if try to jump to old 4-level kernel from 5-level kernel
-Date:   Tue, 12 Mar 2019 08:50:03 +0800
-Message-Id: <20190312005004.19182-3-bhe@redhat.com>
+Subject: [PATCH v2 3/3] x86/kdump/64: Change the upper limit of crashkernel reservation
+Date:   Tue, 12 Mar 2019 08:50:04 +0800
+Message-Id: <20190312005004.19182-4-bhe@redhat.com>
 In-Reply-To: <20190312005004.19182-1-bhe@redhat.com>
 References: <20190312005004.19182-1-bhe@redhat.com>
 X-Scanned-By: MIMEDefang 2.79 on 10.5.11.16
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.47]); Tue, 12 Mar 2019 00:50:21 +0000 (UTC)
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.31]); Tue, 12 Mar 2019 00:50:24 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-In relocate_kernel() CR4.LA57 flag is set before kexec jumping if
-the kernel has 5-level paging enabled. Then in boot/compressed/head_64.S,
-it will check if the booting kernel is in 4-level or 5-level paging
-mode, and handle accordingly. However, the old kernel which doesn't
-contain the 5-level codes doesn't know how to cope with it, then #GP
-triggered.
+Restrict kdump to only reserve crashkernel below 64TB. Since the kdump
+jumping may be from 5-level to 4-level, and the kdump kernel is put
+above 64TB in 5-level kernel, then the jumping will fail. And the
+crashkernel reservation is done during the 1st kernel bootup, there's
+no way to detect the paging mode of kdump kernel at that time.
 
-Instead of triggering #GP during kexec kernel boot, error out during
-kexec loading if find out we are trying to jump to old 4-level kernel
-from 5-level kernel.
+Hence change the upper limit of crashkernel reservation to 64TB
+on x86_64.
 
 Signed-off-by: Baoquan He <bhe@redhat.com>
 ---
- arch/x86/kernel/kexec-bzimage64.c | 5 +++++
- 1 file changed, 5 insertions(+)
+ arch/x86/kernel/setup.c | 18 ++++++++++++++----
+ 1 file changed, 14 insertions(+), 4 deletions(-)
 
-diff --git a/arch/x86/kernel/kexec-bzimage64.c b/arch/x86/kernel/kexec-bzimage64.c
-index 1f3b77367948..4c9c079b5673 100644
---- a/arch/x86/kernel/kexec-bzimage64.c
-+++ b/arch/x86/kernel/kexec-bzimage64.c
-@@ -321,6 +321,11 @@ static int bzImage64_probe(const char *buf, unsigned long len)
- 		return ret;
- 	}
+diff --git a/arch/x86/kernel/setup.c b/arch/x86/kernel/setup.c
+index 3d872a527cd9..d4d1366738a4 100644
+--- a/arch/x86/kernel/setup.c
++++ b/arch/x86/kernel/setup.c
+@@ -451,16 +451,26 @@ static void __init memblock_x86_reserve_range_setup_data(void)
+ #define CRASH_ALIGN		(16 << 20)
  
-+	if (!(header->xloadflags & XLF_5LEVEL) && pgtable_l5_enabled()) {
-+		pr_err("Can not jump to old 4-level kernel from 5-level kernel.\n");
-+		return ret;
-+	}
-+
- 	/* I've got a bzImage */
- 	pr_debug("It's a relocatable bzImage64\n");
- 	ret = 0;
+ /*
+- * Keep the crash kernel below this limit.  On 32 bits earlier kernels
+- * would limit the kernel to the low 512 MiB due to mapping restrictions.
+- * On 64bit, old kexec-tools need to under 896MiB.
++ * Keep the crash kernel below this limit.
++ *
++ * On 32 bits earlier kernels would limit the kernel to the low
++ * 512 MiB due to mapping restrictions.
++ *
++ * On 64bit, old kexec-tools need to be under 896MiB. The later
++ * supports to put kernel above 4G, up to system RAM top. Here
++ * kdump kernel need be restricted to be under 64TB, which is
++ * the upper limit of system RAM in 4-level paing mode. Since
++ * the kdump jumping could be from 5-level to 4-level, the jumping
++ * will fail if kernel is put above 64TB, and there's no way to
++ * detect the paging mode of the kernel which will be loaded for
++ * dumping during the 1st kernel bootup.
+  */
+ #ifdef CONFIG_X86_32
+ # define CRASH_ADDR_LOW_MAX	(512 << 20)
+ # define CRASH_ADDR_HIGH_MAX	(512 << 20)
+ #else
+ # define CRASH_ADDR_LOW_MAX	(896UL << 20)
+-# define CRASH_ADDR_HIGH_MAX	MAXMEM
++# define CRASH_ADDR_HIGH_MAX	(1ULL < 46)
+ #endif
+ 
+ static int __init reserve_crashkernel_low(void)
 -- 
 2.17.2
 
