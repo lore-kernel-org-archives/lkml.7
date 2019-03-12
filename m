@@ -7,47 +7,48 @@ X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5B8A5C43381
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 18:07:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C241BC43381
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 18:07:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2672C2147C
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 18:07:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9321E2087C
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 18:07:38 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1552414048;
-	bh=kLJco1phXiCRn4BjWT1axPOkmjFfheCa+lCfaTZo2V0=;
+	s=default; t=1552414058;
+	bh=4BluRIqSIzUm4xHbDoh4fjdn2BL1H1b29RBrrSLG+Ec=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=wacKMFXPnN4SUhCj+ptopOtLkI8w3bHxnMtw4OqHcq8yo32vqP5cquZ36M8ZXzV1v
-	 MXSlubDW2dCzsJBA6Tfn+aCKZS4r5aMKxKAEiB8A60oKl/2Blqr1jQHXC2ZTNOFdiR
-	 h5vz95u09GuvwEzU5bHq7rAh7WnQbfuv0W36Ai94=
+	b=r8qeTeCZp4YXaM4M5BEoDHE6E8uVsZyAuSRHYWxdNIOzovQ8j/Hw08GyYpmmFhlT2
+	 l2hnQJCt4vRLzMbnHWWjPmDcYFXjdhCWvSAQNNnNV2MrIbVVjWjHZlTbVXD2UKVi0R
+	 mscJ71AFaC+qfwry1AgJlUwJW6j0sECVN0oUOPj0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728546AbfCLSH0 (ORCPT
+        id S1728100AbfCLSHh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 12 Mar 2019 14:07:26 -0400
-Received: from mail.kernel.org ([198.145.29.99]:47358 "EHLO mail.kernel.org"
+        Tue, 12 Mar 2019 14:07:37 -0400
+Received: from mail.kernel.org ([198.145.29.99]:47302 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727412AbfCLRMV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 12 Mar 2019 13:12:21 -0400
+        id S1727394AbfCLRMU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 12 Mar 2019 13:12:20 -0400
 Received: from localhost (unknown [104.133.8.98])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id F3C4521841;
-        Tue, 12 Mar 2019 17:12:20 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 8B9412177E;
+        Tue, 12 Mar 2019 17:12:19 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1552410741;
-        bh=kLJco1phXiCRn4BjWT1axPOkmjFfheCa+lCfaTZo2V0=;
+        s=default; t=1552410739;
+        bh=4BluRIqSIzUm4xHbDoh4fjdn2BL1H1b29RBrrSLG+Ec=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=dWx7WZG5yVDw0d6IU/9TEQkynlOiVWpAkc2JMH5Jxdt4M7BvVzfZ1ziyHH9G2F1zM
-         V5+2a/jmbqClv0jItEEbW45DRrS0FIU1qIbZT59rjkTshVG5aTPb2Ky1zicpr/DmCb
-         +wj47nMcltzmqJg7L6w3nv7uklbJuHrRKoIgmNA8=
+        b=z8ROuXDU0TUyeTG0AvAxIi2AfmtM5om0Msa3O/B/tzEOmcLb1GHRBHl66rQId9GAk
+         I0RYtqYGC7bkRV26f+bB1MuA3n77npjf6Ckfpuu2m03YzRTFAUH1bBZOmjvmCpyxmP
+         47zSZH5kxY8uhz7Sci/gJZgy5F565DxPvl+DeElo=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Alexey Khoroshilov <khoroshilov@ispras.ru>,
+        stable@vger.kernel.org, Manish Chopra <manishc@marvell.com>,
+        Ariel Elior <aelior@marvell.com>,
         "David S. Miller" <davem@davemloft.net>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.20 035/171] net: stmmac: dwmac-rk: fix error handling in rk_gmac_powerup()
-Date:   Tue, 12 Mar 2019 10:06:55 -0700
-Message-Id: <20190312170351.076907192@linuxfoundation.org>
+Subject: [PATCH 4.20 043/171] qed: Fix VF probe failure while FLR
+Date:   Tue, 12 Mar 2019 10:07:03 -0700
+Message-Id: <20190312170351.831277041@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190312170347.868927101@linuxfoundation.org>
 References: <20190312170347.868927101@linuxfoundation.org>
@@ -66,35 +67,55 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-[ Upstream commit c69c29a1a0a8f68cd87e98ba4a5a79fb8ef2a58c ]
+[ Upstream commit 327852ec64205bb651be391a069784872098a3b2 ]
 
-If phy_power_on() fails in rk_gmac_powerup(), clocks are left enabled.
+VFs may hit VF-PF channel timeout while probing, as in some
+cases it was observed that VF FLR and VF "acquire" message
+transaction (i.e first message from VF to PF in VF's probe flow)
+could occur simultaneously which could lead VF to fail sending
+"acquire" message to PF as VF is marked disabled from HW perspective
+due to FLR, which will result into channel timeout and VF probe failure.
 
-Found by Linux Driver Verification project (linuxtesting.org).
+In such cases, try retrying VF "acquire" message so that in later
+attempts it could be successful to pass message to PF after the VF
+FLR is completed and can be probed successfully.
 
-Signed-off-by: Alexey Khoroshilov <khoroshilov@ispras.ru>
+Signed-off-by: Manish Chopra <manishc@marvell.com>
+Signed-off-by: Ariel Elior <aelior@marvell.com>
 Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/ethernet/stmicro/stmmac/dwmac-rk.c | 4 +++-
- 1 file changed, 3 insertions(+), 1 deletion(-)
+ drivers/net/ethernet/qlogic/qed/qed_vf.c | 10 ++++++++++
+ 1 file changed, 10 insertions(+)
 
-diff --git a/drivers/net/ethernet/stmicro/stmmac/dwmac-rk.c b/drivers/net/ethernet/stmicro/stmmac/dwmac-rk.c
-index 7b923362ee55..3b174eae77c1 100644
---- a/drivers/net/ethernet/stmicro/stmmac/dwmac-rk.c
-+++ b/drivers/net/ethernet/stmicro/stmmac/dwmac-rk.c
-@@ -1342,8 +1342,10 @@ static int rk_gmac_powerup(struct rk_priv_data *bsp_priv)
- 	}
+diff --git a/drivers/net/ethernet/qlogic/qed/qed_vf.c b/drivers/net/ethernet/qlogic/qed/qed_vf.c
+index b6cccf44bf40..5dda547772c1 100644
+--- a/drivers/net/ethernet/qlogic/qed/qed_vf.c
++++ b/drivers/net/ethernet/qlogic/qed/qed_vf.c
+@@ -261,6 +261,7 @@ static int qed_vf_pf_acquire(struct qed_hwfn *p_hwfn)
+ 	struct pfvf_acquire_resp_tlv *resp = &p_iov->pf2vf_reply->acquire_resp;
+ 	struct pf_vf_pfdev_info *pfdev_info = &resp->pfdev_info;
+ 	struct vf_pf_resc_request *p_resc;
++	u8 retry_cnt = VF_ACQUIRE_THRESH;
+ 	bool resources_acquired = false;
+ 	struct vfpf_acquire_tlv *req;
+ 	int rc = 0, attempts = 0;
+@@ -314,6 +315,15 @@ static int qed_vf_pf_acquire(struct qed_hwfn *p_hwfn)
  
- 	ret = phy_power_on(bsp_priv, true);
--	if (ret)
-+	if (ret) {
-+		gmac_clk_enable(bsp_priv, false);
- 		return ret;
-+	}
+ 		/* send acquire request */
+ 		rc = qed_send_msg2pf(p_hwfn, &resp->hdr.status, sizeof(*resp));
++
++		/* Re-try acquire in case of vf-pf hw channel timeout */
++		if (retry_cnt && rc == -EBUSY) {
++			DP_VERBOSE(p_hwfn, QED_MSG_IOV,
++				   "VF retrying to acquire due to VPC timeout\n");
++			retry_cnt--;
++			continue;
++		}
++
+ 		if (rc)
+ 			goto exit;
  
- 	pm_runtime_enable(dev);
- 	pm_runtime_get_sync(dev);
 -- 
 2.19.1
 
