@@ -2,196 +2,155 @@ Return-Path: <SRS0=J4ZE=RP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED autolearn=ham
+X-Spam-Status: No, score=-3.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_PASS,URIBL_BLOCKED,USER_AGENT_NEOMUTT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5B53BC43381
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 13:13:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 52795C10F00
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 13:17:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3291C214AE
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 13:13:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2BC66214D8
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 13:17:22 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726732AbfCLNNd convert rfc822-to-8bit (ORCPT
+        id S1726671AbfCLNRU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 12 Mar 2019 09:13:33 -0400
-Received: from relay3-d.mail.gandi.net ([217.70.183.195]:43343 "EHLO
-        relay3-d.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725895AbfCLNNc (ORCPT
+        Tue, 12 Mar 2019 09:17:20 -0400
+Received: from metis.ext.pengutronix.de ([85.220.165.71]:54555 "EHLO
+        metis.ext.pengutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726304AbfCLNRU (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 12 Mar 2019 09:13:32 -0400
-X-Originating-IP: 90.88.22.102
-Received: from xps13 (aaubervilliers-681-1-80-102.w90-88.abo.wanadoo.fr [90.88.22.102])
-        (Authenticated sender: miquel.raynal@bootlin.com)
-        by relay3-d.mail.gandi.net (Postfix) with ESMTPSA id A803160014;
-        Tue, 12 Mar 2019 13:13:28 +0000 (UTC)
-Date:   Tue, 12 Mar 2019 14:13:27 +0100
-From:   Miquel Raynal <miquel.raynal@bootlin.com>
-To:     Masahiro Yamada <yamada.masahiro@socionext.com>
-Cc:     Boris Brezillon <bbrezillon@kernel.org>,
-        Richard Weinberger <richard@nod.at>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Marek Vasut <marek.vasut@gmail.com>,
-        linux-mtd <linux-mtd@lists.infradead.org>,
-        Brian Norris <computersforpeace@gmail.com>,
-        David Woodhouse <dwmw2@infradead.org>
-Subject: Re: [PATCH v3 2/9] mtd: rawnand: denali: refactor syndrome layout
- handling for raw access
-Message-ID: <20190312141327.31c6af3f@xps13>
-In-Reply-To: <CAK7LNAT_h7o4Rbzsgmd8Z6G3Pq3Uhvdqyhp2-ArCb8hfnreEpA@mail.gmail.com>
-References: <1552380290-19951-1-git-send-email-yamada.masahiro@socionext.com>
-        <1552380290-19951-3-git-send-email-yamada.masahiro@socionext.com>
-        <20190312112811.1af0bb00@xps13>
-        <CAK7LNATud=QTQ4FGxt1FtSZ06-Boa-jiROp7-wOj192FgXTNLw@mail.gmail.com>
-        <20190312115425.612bcdf2@xps13>
-        <CAK7LNAT_h7o4Rbzsgmd8Z6G3Pq3Uhvdqyhp2-ArCb8hfnreEpA@mail.gmail.com>
-Organization: Bootlin
-X-Mailer: Claws Mail 3.17.1 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+        Tue, 12 Mar 2019 09:17:20 -0400
+Received: from pty.hi.pengutronix.de ([2001:67c:670:100:1d::c5])
+        by metis.ext.pengutronix.de with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.89)
+        (envelope-from <ukl@pengutronix.de>)
+        id 1h3hHN-0004BE-Cq; Tue, 12 Mar 2019 14:17:13 +0100
+Received: from ukl by pty.hi.pengutronix.de with local (Exim 4.89)
+        (envelope-from <ukl@pengutronix.de>)
+        id 1h3hHM-0006Qn-El; Tue, 12 Mar 2019 14:17:12 +0100
+Date:   Tue, 12 Mar 2019 14:17:12 +0100
+From:   Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= 
+        <u.kleine-koenig@pengutronix.de>
+To:     Thierry Reding <thierry.reding@gmail.com>
+Cc:     Yash Shah <yash.shah@sifive.com>, palmer@sifive.com,
+        linux-pwm@vger.kernel.org, linux-riscv@lists.infradead.org,
+        robh+dt@kernel.org, mark.rutland@arm.com,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        sachin.ghadi@sifive.com, paul.walmsley@sifive.com
+Subject: Re: [PATCH v9 2/2] pwm: sifive: Add a driver for SiFive SoC PWM
+Message-ID: <20190312131712.rxiarnthcfrsgdqn@pengutronix.de>
+References: <1552378289-27245-1-git-send-email-yash.shah@sifive.com>
+ <1552378289-27245-3-git-send-email-yash.shah@sifive.com>
+ <20190312091739.fhv2hb2ll2eamdsn@pengutronix.de>
+ <20190312121218.GM31026@ulmo>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8BIT
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20190312121218.GM31026@ulmo>
+User-Agent: NeoMutt/20170113 (1.7.2)
+X-SA-Exim-Connect-IP: 2001:67c:670:100:1d::c5
+X-SA-Exim-Mail-From: ukl@pengutronix.de
+X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
+X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Masahiro,
+On Tue, Mar 12, 2019 at 01:12:18PM +0100, Thierry Reding wrote:
+> On Tue, Mar 12, 2019 at 10:17:39AM +0100, Uwe Kleine-König wrote:
+> > Hello,
+> > 
+> > there are just a few minor things left I commented below.
+> > 
+> > On Tue, Mar 12, 2019 at 01:41:29PM +0530, Yash Shah wrote:
+> > > +#define div_u64_round(a, b) \
+> > > +	({typeof(b) __b = b; div_u64((a) + __b / 2, __b); })
+> > 
+> > Parenthesis around b please. I guess I didn't had them in my suggestion
+> > either, sorry for that.
+> 
+> We don't really need the parentheses here, do we? The only operator that
+> has lower priority than the assignment is the comma operator, and that's
+> not going to work in the macro anyway, unless you put it inside a pair
+> of parentheses, in which case, well, you have the parentheses already.
 
-Masahiro Yamada <yamada.masahiro@socionext.com> wrote on Tue, 12 Mar
-2019 20:07:27 +0900:
+I thought that, too, but using parenthesis just always is a safe bet and
+prevents people stumbling over this and spending time to come to the
+conclusion that it is actually safe without them.
 
-> Hi Miquel,
+> > > +static int pwm_sifive_enable(struct pwm_chip *chip, bool enable)
+> > > +{
+> > > +	struct pwm_sifive_ddata *pwm = pwm_sifive_chip_to_ddata(chip);
+> > > +	int ret;
+> > > +
+> > > +	if (enable) {
+> > > +		ret = clk_enable(pwm->clk);
+> > > +		if (ret) {
+> > > +			dev_err(pwm->chip.dev, "Enable clk failed:%d\n", ret);
+> > > +			return ret;
+> > > +		}
+> > > +	}
+> > > +
+> > > +	if (!enable)
+> > > +		clk_disable(pwm->clk);
+> > > +
+> > > +	return 0;
+> > > +}
+> > 
+> > There is only a single caller for this function. I wonder if it is
+> > trivial enough to fold it into pwm_sifive_apply.
 > 
-> 
-> On Tue, Mar 12, 2019 at 7:54 PM Miquel Raynal <miquel.raynal@bootlin.com> wrote:
-> >
-> > Hi Masahiro,
-> >
-> > Masahiro Yamada <yamada.masahiro@socionext.com> wrote on Tue, 12 Mar
-> > 2019 19:51:21 +0900:
-> >  
-> > > On Tue, Mar 12, 2019 at 7:28 PM Miquel Raynal <miquel.raynal@bootlin.com> wrote:  
-> > > >
-> > > > Hi Masahiro,
-> > > >
-> > > > Masahiro Yamada <yamada.masahiro@socionext.com> wrote on Tue, 12 Mar
-> > > > 2019 17:44:43 +0900:
-> > > >  
-> > > > > The Denali IP adopts the syndrome page layout (payload and ECC are
-> > > > > interleaved). The *_page_raw() and *_oob() callbacks are complicated
-> > > > > because they must hide the underlying layout used by the hardware,
-> > > > > and always return contiguous in-band and out-of-band data.
-> > > > >
-> > > > > Currently, similar code is duplicated to reorganize the data layout.
-> > > > > For example, denali_read_page_raw() and denali_write_page_raw() look
-> > > > > almost the same.
-> > > > >
-> > > > > The idea for refactoring is to split the code into two parts:
-> > > > >   [1] conversion of page layout
-> > > > >   [2] what to do at every ECC chunk boundary
-> > > > >
-> > > > > For [1], I wrote denali_raw_payload_op() and denali_raw_oob_op().
-> > > > > They manipulate data for the Denali controller's specific page layout
-> > > > > of in-band, out-of-band, respectively.
-> > > > >
-> > > > > The difference between write and read is just the operation at
-> > > > > ECC chunk boundaries. For example, denali_read_oob() calls
-> > > > > nand_change_read_column_op(), whereas denali_write_oob() calls
-> > > > > nand_change_write_column_op(). So, I implemented [2] as a callback
-> > > > > passed into [1].
-> > > > >
-> > > > > Signed-off-by: Masahiro Yamada <yamada.masahiro@socionext.com>
-> > > > > ---
-> > > > >  
-> > > >
-> > > > [...]
-> > > >  
-> > > > >  static int denali_read_page_raw(struct nand_chip *chip, uint8_t *buf,
-> > > > >                               int oob_required, int page)
-> > > > >  {
-> > > > > +     struct denali_nand_info *denali = to_denali(chip);
-> > > > >       struct mtd_info *mtd = nand_to_mtd(chip);
-> > > > > -     struct denali_nand_info *denali = mtd_to_denali(mtd);
-> > > > > -     int writesize = mtd->writesize;
-> > > > > -     int oobsize = mtd->oobsize;
-> > > > > -     int ecc_steps = chip->ecc.steps;
-> > > > > -     int ecc_size = chip->ecc.size;
-> > > > > -     int ecc_bytes = chip->ecc.bytes;
-> > > > >       void *tmp_buf = denali->buf;
-> > > > > -     int oob_skip = denali->oob_skip_bytes;
-> > > > > -     size_t size = writesize + oobsize;
-> > > > > -     int ret, i, pos, len;
-> > > > > +     size_t size = mtd->writesize + mtd->oobsize;
-> > > > > +     int ret;
-> > > > > +
-> > > > > +     if (!buf)
-> > > > > +             return -EINVAL;
-> > > > >
-> > > > >       ret = denali_data_xfer(chip, tmp_buf, size, page, 1, 0);
-> > > > >       if (ret)
-> > > > >               return ret;
-> > > > >
-> > > > > -     /* Arrange the buffer for syndrome payload/ecc layout */
-> > > > > -     if (buf) {
-> > > > > -             for (i = 0; i < ecc_steps; i++) {
-> > > > > -                     pos = i * (ecc_size + ecc_bytes);
-> > > > > -                     len = ecc_size;
-> > > > > -
-> > > > > -                     if (pos >= writesize)
-> > > > > -                             pos += oob_skip;
-> > > > > -                     else if (pos + len > writesize)
-> > > > > -                             len = writesize - pos;
-> > > > > -
-> > > > > -                     memcpy(buf, tmp_buf + pos, len);
-> > > > > -                     buf += len;
-> > > > > -                     if (len < ecc_size) {
-> > > > > -                             len = ecc_size - len;
-> > > > > -                             memcpy(buf, tmp_buf + writesize + oob_skip,
-> > > > > -                                    len);
-> > > > > -                             buf += len;
-> > > > > -                     }
-> > > > > -             }
-> > > > > -     }
-> > > > > +     ret = denali_raw_payload_op(chip, buf, denali_memcpy_in, tmp_buf);  
-> > > >
-> > > > Honestly, I still don't like passing denali_memcpy_in/out as parameter.
-> > > >
-> > > > Besides that, once you'll have added helpers to avoid abusing the
-> > > > ternary operator in 4/9, the rest looks fine by me.
-> > > >  
-> > >
-> > >
-> > > Do you have any suggestion?  
-> >
-> > Maybe register these two helpers at probe as controller specific hooks,
-> > then just pass an in/out boolean to the function?
-> >  
-> 
-> Sorry, I do not understand.
-> 
-> Are you suggesting to do like follows in probe ?
-> 
-> denali->change_column_read_raw = denali_memcpy_in;
-> denali->change_column_write_raw = denali_memcpy_out;
-> denali->change_column_read_oob = denali_change_read_column_op;
-> denali->change_column_write_oob = denali_change_write_column_op;
-> 
-> 
-> All the 4 hooks are always needed
-> regardless of any probed features.
-> 
-> 
-> The result is just textual replacement
-> denali_* with denali->*.
-> 
-> What's the point of copying fixed function addresses
-> to denali structure?
-> 
-> 
+> I think this is fine. pwm_sifive_apply() is already fairly long at this
+> point, so might as well split things up a little.
 
-What I don't like is the function pointer as a function parameter. You
-can use the functions defined statically if you prefer as long as the
-parameter is just a boolean for instance?
+I don't have a strong opinion here, so keeping as is is fine for me.
 
-Thanks,
-MiquÃ¨l
+> > There are a few other things that could be improved, but I think they
+> > could be addressed later. For some of these I don't even know what to
+> > suggest, for some Thierry might not agree it is worth fixing:
+> > 
+> >  - rounding
+> >    how to round? When should a request declined, when is rounding ok?
+> >    There is still "if (state->period != pwm->approx_period) return -EBUSY"
+> >    in this driver. This is better than before, but if state-period ==
+> >    pwm->approx_period + 1 the result (if accepted) might be the same as
+> >    without the +1 and so returning -EBUSY for one case and accepting the
+> >    other is strange.
+> 
+> Perhaps a good idea would be to reject a configuration only after we've
+> determined that it is incompatible? If we're really going to end up with
+> the same configuration within a given margin of period or duty cycle and
+> we can't do much about it, there's little point in rejecting such
+> configurations.
+
+It seems we agree here. Is this important enough to delay taking this
+driver further? Currently the driver rejects too broad so if it annoys
+someone this can still be fixed later and there is only little harm
+(assuming correct error handling in the consumers).
+
+> >  - don't call PWM API functions designed for consumers (here: pwm_get_state)
+> 
+> Agreed. The driver can just access pwm_device.state directly.
+
+I wouldn't do this either. IMHO the driver should only look into its
+hardware registers instead of using framework interna (or consumer API
+calls).
+
+> >  - Move div_u64_round to include/linux/math64.h
+> 
+> Looks to me like DIV_ROUND_CLOSEST_ULL() is already pretty much this.
+> The only difference that I can see is that the divisor is 32-bit, but
+> since we pass in state->period, that already works fine.
+
+num (i.e. the divident) should be a u64, but it isn't. This needs
+fixing. But I agree that DIV_ROUND_CLOSEST_ULL should be good enough
+then.
+
+Best regards
+Uwe
+
+-- 
+Pengutronix e.K.                           | Uwe Kleine-König            |
+Industrial Linux Solutions                 | http://www.pengutronix.de/  |
