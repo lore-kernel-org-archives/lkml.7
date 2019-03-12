@@ -7,48 +7,47 @@ X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E6A01C43381
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 17:49:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4FB78C43381
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 17:49:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AD0132147C
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 17:49:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1EE1921773
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 17:49:51 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1552412987;
-	bh=VEgicaEHlfH2RGmK4y7iKqZ9yM/dLMhJ0zsxGtNuX0A=;
+	s=default; t=1552412991;
+	bh=mbgsTL9TsZ3krTIC1oHZPWV4aNTtDIeAvCYWSYLkNIg=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=UGwjz00rpkRdoSux6FPJcuEoutFzkj+A/8k6gNAN3mgnNrwz3NG2xLc1suBljl8J0
-	 kzTblJBeQgLMuTzXJuMeYc9uJyvIguB8B3bym+GYq2ZXBcjoTK2wK+aZqUEbLosRZN
-	 2IAcBG8NgJ6ZX79GoyBQ9R0LxeBIqVcss7zFY2Dg=
+	b=tz2bAm55ssadYdQkIrELmYXbu29C+93KxKZXcdF2Dy5uamBPSddTk2c+iB1A4W2x0
+	 3jjS/VKLHfePCoxNQLLRmBkD7YLYQu6a94fAR59mF+xZiAZWqsUzafI0g2DJrE6EuY
+	 S7Odf+JZ39+XjhMJw4esWnPOy2wpZXZ9iHDx1PN0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728494AbfCLROs (ORCPT
+        id S1728795AbfCLRtt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 12 Mar 2019 13:14:48 -0400
-Received: from mail.kernel.org ([198.145.29.99]:51930 "EHLO mail.kernel.org"
+        Tue, 12 Mar 2019 13:49:49 -0400
+Received: from mail.kernel.org ([198.145.29.99]:54086 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727346AbfCLROA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 12 Mar 2019 13:14:00 -0400
+        id S1727446AbfCLROr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 12 Mar 2019 13:14:47 -0400
 Received: from localhost (unknown [104.133.8.98])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id C8112206DF;
-        Tue, 12 Mar 2019 17:13:59 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 2E56E206DF;
+        Tue, 12 Mar 2019 17:14:47 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1552410840;
-        bh=VEgicaEHlfH2RGmK4y7iKqZ9yM/dLMhJ0zsxGtNuX0A=;
+        s=default; t=1552410887;
+        bh=mbgsTL9TsZ3krTIC1oHZPWV4aNTtDIeAvCYWSYLkNIg=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=u0Xb3nQOZ+NZdMpJqnzTblWuxg17jESohqTIh0rnctuBncZRGfpHWemoyzxw/TR+I
-         R5ekVOvH90PwOV5X4Agde8dyJDuFc19KYd4Z8bQ4a1++atVCQI9NU4Nnu2BDx2XMbQ
-         fBgNTRzAkvWLBpSO5B5BEUCDBJINWJ3IEuyNsh7w=
+        b=xTUG+9jUGm7iONTHaCnN+RmT3klrK3VvaunxG6KQICWrGcUOI/OC1QhWhIur5oG7g
+         r7TB24L+7MtwpLNz4z835H5oBNRYAhZdp6LZjJx/dFOKj3WqxsaiAsvcaVX2UZmsi/
+         gM7AMHg2jgAQ/K1vZAL+PzJTLQGEaMorXqZFjH5U=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Francesco Ruggeri <fruggeri@arista.com>,
-        Florian Westphal <fw@strlen.de>,
-        Pablo Neira Ayuso <pablo@netfilter.org>,
+        stable@vger.kernel.org, Peng Hao <peng.hao2@zte.com.cn>,
+        Robert Jarzmik <robert.jarzmik@free.fr>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 030/149] netfilter: ebtables: compat: un-break 32bit setsockopt when no rules are present
-Date:   Tue, 12 Mar 2019 10:07:28 -0700
-Message-Id: <20190312170352.242393474@linuxfoundation.org>
+Subject: [PATCH 4.19 077/149] ARM: pxa: ssp: unneeded to free devm_ allocated data
+Date:   Tue, 12 Mar 2019 10:08:15 -0700
+Message-Id: <20190312170356.082944661@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190312170349.421581206@linuxfoundation.org>
 References: <20190312170349.421581206@linuxfoundation.org>
@@ -67,46 +66,41 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-[ Upstream commit 2035f3ff8eaa29cfb5c8e2160b0f6e85eeb21a95 ]
+[ Upstream commit ba16adeb346387eb2d1ada69003588be96f098fa ]
 
-Unlike ip(6)tables ebtables only counts user-defined chains.
+devm_ allocated data will be automatically freed. The free
+of devm_ allocated data is invalid.
 
-The effect is that a 32bit ebtables binary on a 64bit kernel can do
-'ebtables -N FOO' only after adding at least one rule, else the request
-fails with -EINVAL.
-
-This is a similar fix as done in
-3f1e53abff84 ("netfilter: ebtables: don't attempt to allocate 0-sized compat array").
-
-Fixes: 7d7d7e02111e9 ("netfilter: compat: reject huge allocation requests")
-Reported-by: Francesco Ruggeri <fruggeri@arista.com>
-Signed-off-by: Florian Westphal <fw@strlen.de>
-Signed-off-by: Pablo Neira Ayuso <pablo@netfilter.org>
+Fixes: 1c459de1e645 ("ARM: pxa: ssp: use devm_ functions")
+Signed-off-by: Peng Hao <peng.hao2@zte.com.cn>
+[title's prefix changed]
+Signed-off-by: Robert Jarzmik <robert.jarzmik@free.fr>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- net/bridge/netfilter/ebtables.c | 9 ++++++---
- 1 file changed, 6 insertions(+), 3 deletions(-)
+ arch/arm/plat-pxa/ssp.c | 3 ---
+ 1 file changed, 3 deletions(-)
 
-diff --git a/net/bridge/netfilter/ebtables.c b/net/bridge/netfilter/ebtables.c
-index 5e55cef0cec3..6693e209efe8 100644
---- a/net/bridge/netfilter/ebtables.c
-+++ b/net/bridge/netfilter/ebtables.c
-@@ -2293,9 +2293,12 @@ static int compat_do_replace(struct net *net, void __user *user,
+diff --git a/arch/arm/plat-pxa/ssp.c b/arch/arm/plat-pxa/ssp.c
+index ed36dcab80f1..f51919974183 100644
+--- a/arch/arm/plat-pxa/ssp.c
++++ b/arch/arm/plat-pxa/ssp.c
+@@ -190,8 +190,6 @@ static int pxa_ssp_remove(struct platform_device *pdev)
+ 	if (ssp == NULL)
+ 		return -ENODEV;
  
- 	xt_compat_lock(NFPROTO_BRIDGE);
+-	iounmap(ssp->mmio_base);
+-
+ 	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
+ 	release_mem_region(res->start, resource_size(res));
  
--	ret = xt_compat_init_offsets(NFPROTO_BRIDGE, tmp.nentries);
--	if (ret < 0)
--		goto out_unlock;
-+	if (tmp.nentries) {
-+		ret = xt_compat_init_offsets(NFPROTO_BRIDGE, tmp.nentries);
-+		if (ret < 0)
-+			goto out_unlock;
-+	}
-+
- 	ret = compat_copy_entries(entries_tmp, tmp.entries_size, &state);
- 	if (ret < 0)
- 		goto out_unlock;
+@@ -201,7 +199,6 @@ static int pxa_ssp_remove(struct platform_device *pdev)
+ 	list_del(&ssp->node);
+ 	mutex_unlock(&ssp_lock);
+ 
+-	kfree(ssp);
+ 	return 0;
+ }
+ 
 -- 
 2.19.1
 
