@@ -7,51 +7,50 @@ X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E290AC43381
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 17:42:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DDBB7C43381
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 17:42:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AEF7F2087C
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 17:42:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AEC062087C
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 17:42:07 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1552412520;
-	bh=dXRKznSmBbFEImi9tp48SclAGmkcqODaDwyfF7aHnL8=;
+	s=default; t=1552412527;
+	bh=oGf+5LegI56IgcTMe7d5Lc16yUWmJTa+ihAuOpei0lg=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=QFXvgS4BsbAlDlZKq5itk9+w9mX/Vpv0ZpqyodWPX97/eqMXUhDKaExTxJBSufuUb
-	 4GgXvfkIPdUSgBHurCrfnj8AQH6tncJYc+I4Pyx0An1s4r4jjU/ECilBnqC+9ewnfn
-	 6aEpyljcTsCLW9jiU2eqQpso9wF0SR4JIF9lRs9M=
+	b=ScOT9N8TxnevA3qOYMnKP90zCe6nQz7p1U5vuIZ90eaRnRwLJbaOZO7wtFQayYuWT
+	 LTdnqdl1huQJzXfBsMC3R99jPe2EqsXtpuDE7rA1M3sAkMlMD/Z6SyrsoxAWgE1MOa
+	 mYzq03gXlesfNSodVXCB8r/COxC52tXBPpaH8BDY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729530AbfCLRl7 (ORCPT
+        id S1729608AbfCLRmG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 12 Mar 2019 13:41:59 -0400
-Received: from mail.kernel.org ([198.145.29.99]:57488 "EHLO mail.kernel.org"
+        Tue, 12 Mar 2019 13:42:06 -0400
+Received: from mail.kernel.org ([198.145.29.99]:57266 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728970AbfCLRQC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 12 Mar 2019 13:16:02 -0400
+        id S1728965AbfCLRQB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 12 Mar 2019 13:16:01 -0400
 Received: from localhost (unknown [104.133.8.98])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id BEC97217D4;
+        by mail.kernel.org (Postfix) with ESMTPSA id 0AB8921741;
         Tue, 12 Mar 2019 17:16:01 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
         s=default; t=1552410961;
-        bh=dXRKznSmBbFEImi9tp48SclAGmkcqODaDwyfF7aHnL8=;
+        bh=oGf+5LegI56IgcTMe7d5Lc16yUWmJTa+ihAuOpei0lg=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=BTYGpgwf1ID5Dmv3Dm2t0nYdj/r2ceXz/zrHUGmYwTKcyPyonAGJRq16l9pxsVdMG
-         3HzcxQHUTiZtbosxMlutK86QnKN0f/l6CQGBdnPoJ8l0T+oBhTd0L9WfiGbXT1LfAE
-         vviboWqYOE89ZEkAxmNZ3a3vP77Rn0Am8qw/jSS8=
+        b=mbqgMOzlrPskpPY+KZevR5FdbDv073b6FEqkq4OlXVfYpHPxw1suk6cIsbArKQ2Tz
+         IEoUrEV9wXcRynlDFkS8Iy+j8r4TWdU6L3XrCXUNeTZyvnkWm9douhvqA747msL+4M
+         4mng++it5P+TA1WgSbPPbUl3GSCctZeOwgXH5Ivk=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        "Michael J. Ruhl" <michael.j.ruhl@intel.com>,
-        Brian Welty <brian.welty@intel.com>,
-        Mike Marciniszyn <mike.marciniszyn@intel.com>,
-        Dennis Dalessandro <dennis.dalessandro@intel.com>,
-        Jason Gunthorpe <jgg@mellanox.com>,
+        stable@vger.kernel.org, Stephane Eranian <eranian@google.com>,
+        Jiri Olsa <jolsa@kernel.org>, Andi Kleen <ak@linux.intel.com>,
+        Kan Liang <kan.liang@linux.intel.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Arnaldo Carvalho de Melo <acme@redhat.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.14 047/135] IB/{hfi1, qib}: Fix WC.byte_len calculation for UD_SEND_WITH_IMM
-Date:   Tue, 12 Mar 2019 10:08:14 -0700
-Message-Id: <20190312170345.477808142@linuxfoundation.org>
+Subject: [PATCH 4.14 046/135] perf tools: Handle TOPOLOGY headers with no CPU
+Date:   Tue, 12 Mar 2019 10:08:13 -0700
+Message-Id: <20190312170345.381710194@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190312170341.127810985@linuxfoundation.org>
 References: <20190312170341.127810985@linuxfoundation.org>
@@ -70,55 +69,65 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-[ Upstream commit 904bba211acc2112fdf866e5a2bc6cd9ecd0de1b ]
+[ Upstream commit 1497e804d1a6e2bd9107ddf64b0310449f4673eb ]
 
-The work completion length for a receiving a UD send with immediate is
-short by 4 bytes causing application using this opcode to fail.
+This patch fixes an issue in cpumap.c when used with the TOPOLOGY
+header. In some configurations, some NUMA nodes may have no CPU (empty
+cpulist). Yet a cpumap map must be created otherwise perf abort with an
+error. This patch handles this case by creating a dummy map.
 
-The UD receive logic incorrectly subtracts 4 bytes for immediate
-value. These bytes are already included in header length and are used to
-calculate header/payload split, so the result is these 4 bytes are
-subtracted twice, once when the header length subtracted from the overall
-length and once again in the UD opcode specific path.
+  Before:
 
-Remove the extra subtraction when handling the opcode.
+  $ perf record -o - -e cycles noploop 2 | perf script -i -
+  0x6e8 [0x6c]: failed to process type: 80
 
-Fixes: 7724105686e7 ("IB/hfi1: add driver files")
-Reviewed-by: Michael J. Ruhl <michael.j.ruhl@intel.com>
-Signed-off-by: Brian Welty <brian.welty@intel.com>
-Signed-off-by: Mike Marciniszyn <mike.marciniszyn@intel.com>
-Signed-off-by: Dennis Dalessandro <dennis.dalessandro@intel.com>
-Signed-off-by: Jason Gunthorpe <jgg@mellanox.com>
+  After:
+
+  $ perf record -o - -e cycles noploop 2 | perf script -i -
+  noploop for 2 seconds
+
+Signed-off-by: Stephane Eranian <eranian@google.com>
+Acked-by: Jiri Olsa <jolsa@kernel.org>
+Cc: Andi Kleen <ak@linux.intel.com>
+Cc: Kan Liang <kan.liang@linux.intel.com>
+Cc: Peter Zijlstra <peterz@infradead.org>
+Link: http://lkml.kernel.org/r/1547885559-1657-1-git-send-email-eranian@google.com
+Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/infiniband/hw/hfi1/ud.c    | 1 -
- drivers/infiniband/hw/qib/qib_ud.c | 1 -
- 2 files changed, 2 deletions(-)
+ tools/perf/util/cpumap.c | 11 +++++++++--
+ 1 file changed, 9 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/infiniband/hw/hfi1/ud.c b/drivers/infiniband/hw/hfi1/ud.c
-index 37abd150fad3..74aff88c593d 100644
---- a/drivers/infiniband/hw/hfi1/ud.c
-+++ b/drivers/infiniband/hw/hfi1/ud.c
-@@ -954,7 +954,6 @@ void hfi1_ud_rcv(struct hfi1_packet *packet)
- 	    opcode == IB_OPCODE_UD_SEND_ONLY_WITH_IMMEDIATE) {
- 		wc.ex.imm_data = ohdr->u.ud.imm_data;
- 		wc.wc_flags = IB_WC_WITH_IMM;
--		tlen -= sizeof(u32);
- 	} else if (opcode == IB_OPCODE_UD_SEND_ONLY) {
- 		wc.ex.imm_data = 0;
- 		wc.wc_flags = 0;
-diff --git a/drivers/infiniband/hw/qib/qib_ud.c b/drivers/infiniband/hw/qib/qib_ud.c
-index be4907453ac4..5ef144e4a4cb 100644
---- a/drivers/infiniband/hw/qib/qib_ud.c
-+++ b/drivers/infiniband/hw/qib/qib_ud.c
-@@ -515,7 +515,6 @@ void qib_ud_rcv(struct qib_ibport *ibp, struct ib_header *hdr,
- 	    opcode == IB_OPCODE_UD_SEND_ONLY_WITH_IMMEDIATE) {
- 		wc.ex.imm_data = ohdr->u.ud.imm_data;
- 		wc.wc_flags = IB_WC_WITH_IMM;
--		tlen -= sizeof(u32);
- 	} else if (opcode == IB_OPCODE_UD_SEND_ONLY) {
- 		wc.ex.imm_data = 0;
- 		wc.wc_flags = 0;
+diff --git a/tools/perf/util/cpumap.c b/tools/perf/util/cpumap.c
+index 1ccbd3342069..383674f448fc 100644
+--- a/tools/perf/util/cpumap.c
++++ b/tools/perf/util/cpumap.c
+@@ -134,7 +134,12 @@ struct cpu_map *cpu_map__new(const char *cpu_list)
+ 	if (!cpu_list)
+ 		return cpu_map__read_all_cpu_map();
+ 
+-	if (!isdigit(*cpu_list))
++	/*
++	 * must handle the case of empty cpumap to cover
++	 * TOPOLOGY header for NUMA nodes with no CPU
++	 * ( e.g., because of CPU hotplug)
++	 */
++	if (!isdigit(*cpu_list) && *cpu_list != '\0')
+ 		goto out;
+ 
+ 	while (isdigit(*cpu_list)) {
+@@ -181,8 +186,10 @@ struct cpu_map *cpu_map__new(const char *cpu_list)
+ 
+ 	if (nr_cpus > 0)
+ 		cpus = cpu_map__trim_new(nr_cpus, tmp_cpus);
+-	else
++	else if (*cpu_list != '\0')
+ 		cpus = cpu_map__default_new();
++	else
++		cpus = cpu_map__dummy_new();
+ invalid:
+ 	free(tmp_cpus);
+ out:
 -- 
 2.19.1
 
