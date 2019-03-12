@@ -2,130 +2,127 @@ Return-Path: <SRS0=J4ZE=RP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DDD97C43381
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 06:12:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 48B8FC43381
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 06:16:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AC73B214AE
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 06:12:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0D5E1214AE
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 06:16:55 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=umn.edu header.i=@umn.edu header.b="gMLEjxwp"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727092AbfCLGMs (ORCPT
+        id S1727067AbfCLGQy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 12 Mar 2019 02:12:48 -0400
-Received: from mga04.intel.com ([192.55.52.120]:23186 "EHLO mga04.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726670AbfCLGMs (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 12 Mar 2019 02:12:48 -0400
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga006.jf.intel.com ([10.7.209.51])
-  by fmsmga104.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 11 Mar 2019 23:12:47 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.58,470,1544515200"; 
-   d="scan'208";a="126173695"
-Received: from allen-box.sh.intel.com (HELO [10.239.159.136]) ([10.239.159.136])
-  by orsmga006.jf.intel.com with ESMTP; 11 Mar 2019 23:12:45 -0700
-Cc:     baolu.lu@linux.intel.com, iommu@lists.linux-foundation.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v1 0/9] Bounce buffer for untrusted devices
-To:     David Woodhouse <dwmw2@infradead.org>,
-        Joerg Roedel <joro@8bytes.org>, ashok.raj@intel.com,
-        jacob.jun.pan@intel.com, alan.cox@intel.com, kevin.tian@intel.com,
-        mika.westerberg@linux.intel.com, pengfei.xu@intel.com
-References: <20190312060005.12189-1-baolu.lu@linux.intel.com>
-From:   Lu Baolu <baolu.lu@linux.intel.com>
-Message-ID: <b818f647-766e-71f0-779e-1c997fd6a144@linux.intel.com>
-Date:   Tue, 12 Mar 2019 14:07:23 +0800
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.4.0
-MIME-Version: 1.0
-In-Reply-To: <20190312060005.12189-1-baolu.lu@linux.intel.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+        Tue, 12 Mar 2019 02:16:54 -0400
+Received: from mta-p8.oit.umn.edu ([134.84.196.208]:41360 "EHLO
+        mta-p8.oit.umn.edu" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726670AbfCLGQx (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 12 Mar 2019 02:16:53 -0400
+Received: from localhost (unknown [127.0.0.1])
+        by mta-p8.oit.umn.edu (Postfix) with ESMTP id 0ECB9A98
+        for <linux-kernel@vger.kernel.org>; Tue, 12 Mar 2019 06:16:52 +0000 (UTC)
+X-Virus-Scanned: amavisd-new at umn.edu
+Received: from mta-p8.oit.umn.edu ([127.0.0.1])
+        by localhost (mta-p8.oit.umn.edu [127.0.0.1]) (amavisd-new, port 10024)
+        with ESMTP id 3DUipOhhZ4i2 for <linux-kernel@vger.kernel.org>;
+        Tue, 12 Mar 2019 01:16:51 -0500 (CDT)
+Received: from mail-it1-f197.google.com (mail-it1-f197.google.com [209.85.166.197])
+        (using TLSv1.2 with cipher AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mta-p8.oit.umn.edu (Postfix) with ESMTPS id CD83C7B7
+        for <linux-kernel@vger.kernel.org>; Tue, 12 Mar 2019 01:16:51 -0500 (CDT)
+Received: by mail-it1-f197.google.com with SMTP id q141so1349770itc.2
+        for <linux-kernel@vger.kernel.org>; Mon, 11 Mar 2019 23:16:51 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=umn.edu; s=google;
+        h=from:to:cc:subject:date:message-id:in-reply-to:references;
+        bh=/iMNiJvfEscsi58jKgoeUADcaa6upF9XiWwfnWbBtSg=;
+        b=gMLEjxwp9VC5wOoH+FEHXOF799h6e4TOQXgsJkkJXCMMPF50e6hp5NJY686kGaiBGw
+         cWAHuWyo0IOz5bJ/m9S5AMgJk1rDvqHrw9kODDp87UW6oA6NTOJLl6K33R7cjlgMOada
+         6/fwtFIFoRu9x7cq6YIo4Z9E/DB2DEfnE7D6Julq3+22AbmkjEZqA6vZ1A4SLqZCu4KS
+         EiRBWbrZ3h7fNdFWIBD22VONRp8/aReneQcnV4Wc5TXYqcLP+Lz9DtKzTtqC2UhfFg53
+         Tzpk1erq0jlOZMDNPZ4zRL1EUQl3Tapq/hSUqRXlhmgJSdCXkCLqil8huo1OM5u5OFSO
+         8SQg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references;
+        bh=/iMNiJvfEscsi58jKgoeUADcaa6upF9XiWwfnWbBtSg=;
+        b=qy6V8DnD/NICyjuzEO2FnSE7E/oyva8B570QuBWrQSPQt26pWcXuuicfBn7ofzbdhi
+         ghBGLZetf5xp7/paKT6vGRjVhayOPWcAH1/7Sgu2qa4ml9yJbB1QLdnjj0c4dW+Q7xS6
+         V/UdFrCttYKQNn/ofblxsHYerVzH6HMrRNExvh9IZu+BOiJ2c4HvXDigc16e1GH2avC/
+         TduJe3wjANvd7sXqqxaQyRU7Yc615ialyADs8NUWajwof+ZW33PRFMpqkekEBux+HjSb
+         j8ue9jPJCsjgowWsDGcQrRwYrZnP9BfKAduJ92lz1P3iPCjy2X5yvpQUROpbA0fjgfAp
+         PcNw==
+X-Gm-Message-State: APjAAAUynlEFS/u6tTTsa5sbyjvA0LYngWZ/WEwbebbXBXA0lS1KZCx9
+        SOOOAWZgezLJpCcZjj4sway8cye0Qy0Y9+7QeKSoQDTmyc2M5YkfLTiP/E+RwG42dEY5Uvs5Xzy
+        J33JCWFmquUiFdVZzrmquSsaLw/xd
+X-Received: by 2002:a02:660e:: with SMTP id k14mr20460852jac.34.1552371411417;
+        Mon, 11 Mar 2019 23:16:51 -0700 (PDT)
+X-Google-Smtp-Source: APXvYqzOvYXxmfTmxihR8aYpzT8CwZJj0t8G9koKU38XFrwh38WgcFvImiJg9A4u9D8BZjjjqy3GaA==
+X-Received: by 2002:a02:660e:: with SMTP id k14mr20460843jac.34.1552371411118;
+        Mon, 11 Mar 2019 23:16:51 -0700 (PDT)
+Received: from bee.dtc.umn.edu (cs-bee-u.cs.umn.edu. [128.101.106.63])
+        by smtp.gmail.com with ESMTPSA id d135sm848697itd.43.2019.03.11.23.16.49
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Mon, 11 Mar 2019 23:16:50 -0700 (PDT)
+From:   Kangjie Lu <kjlu@umn.edu>
+To:     kjlu@umn.edu
+Cc:     pakki001@umn.edu, Jiri Kosina <jikos@kernel.org>,
+        Benjamin Tissoires <benjamin.tissoires@redhat.com>,
+        linux-input@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [PATCH v2] hid: logitech: check the return value of create_singlethread_workqueue
+Date:   Tue, 12 Mar 2019 01:16:28 -0500
+Message-Id: <20190312061628.13869-1-kjlu@umn.edu>
+X-Mailer: git-send-email 2.17.1
+In-Reply-To: <CAO-hwJLwvZvhPPKU7r74xtKsp_P5VBZ2964iQhgBR5zF-ZM7wg@mail.gmail.com>
+References: <CAO-hwJLwvZvhPPKU7r74xtKsp_P5VBZ2964iQhgBR5zF-ZM7wg@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Should be titled as "iommu/vt-d: Bounce buffer for untrusted devices".
-Sorry for the inconvenience.
+create_singlethread_workqueue may fail and return NULL. The fix
+checks if it is NULL to avoid NULL pointer dereference.
+Also, the fix moves the call of create_singlethread_workqueue
+earlier to avoid resource-release issues.
 
-On 3/12/19 1:59 PM, Lu Baolu wrote:
-> An external PCI device is a PCI peripheral device connected
-> to the system through an external bus, such as Thunderbolt.
-> What makes it different is that it can't be trusted to the
-> same degree as the devices build into the system. Generally,
-> a trusted PCIe device will DMA into the designated buffers
-> and not overrun or otherwise write outside the specified
-> bounds. But it's different for an external device. The minimum
-> IOMMU mapping granularity is one page (4k), so for DMA transfers
-> smaller than that a malicious PCIe device can access the whole
-> page of memory even if it does not belong to the driver in
-> question. This opens a possibility for DMA attack. For more
-> information about DMA attacks imposed by an untrusted PCI/PCIe
-> device, please refer to [2].
-> 
-> This implements bounce buffer for the untrusted external
-> devices. The transfers should be limited in isolated pages
-> so the IOMMU window does not cover memory outside of what
-> the driver expects. Full pages within a buffer could be
-> directly mapped in IOMMU page table, but for partial pages
-> we use bounce page instead.
-> 
-> In addition, the IOMMU mappings cached in the IOTLB for
-> untrusted devices should be invalidated immediately after
-> the unmap operation. Otherwise, the IOMMU window is left
-> open to attacks.
-> 
-> The implementation of bounce buffers for untrusted devices
-> will cause a little performance overhead, but we didn't see
-> any user experience problems. The users could use the kernel
-> parameter of "intel_iommu=nobounce" to remove the performance
-> overhead if they trust their devices enough.
-> 
-> The Thunderbolt vulnerabiltiies is public and has a nice
-> name as Thunderclap nowadays. Please refer to [1] [3] for
-> more information. This patch series aims to mitigate the
-> concerns.
-> 
-> The bounce buffer idea:
-> 
-> Based-on-idea-by: Mika Westerberg <mika.westerberg@intel.com>
-> Based-on-idea-by: Ashok Raj <ashok.raj@intel.com>
-> Based-on-idea-by: Alan Cox <alan.cox@intel.com>
-> 
-> The patch series has been tested by:
-> 
-> Tested-by: Xu Pengfei <pengfei.xu@intel.com>
-> Tested-by: Mika Westerberg <mika.westerberg@intel.com>
-> 
-> [1] https://thunderclap.io/
-> [2] https://thunderclap.io/thunderclap-paper-ndss2019.pdf
-> [3] https://christian.kellner.me/2019/02/27/thunderclap-and-linux/
-> 
-> Lu Baolu (9):
->    iommu/vt-d: Add trace events for domain map/unmap
->    iommu/vt-d: Add helpers for domain mapping/unmapping
->    iommu/vt-d: Add address walk helper
->    iommu/vt-d: Add bounce buffer API for domain map/unmap
->    iommu/vt-d: Add bounce buffer API for dma sync
->    iommu/vt-d: Check whether device requires bounce buffer
->    iommu/vt-d: Add dma sync ops for untrusted devices
->    iommu/vt-d: Flush IOTLB for untrusted device in time
->    iommu/vt-d: Use bounce buffer for untrusted devices
-> 
->   .../admin-guide/kernel-parameters.txt         |   5 +
->   drivers/iommu/Makefile                        |   1 +
->   drivers/iommu/intel-iommu.c                   | 360 ++++++++++--
->   drivers/iommu/intel-pgtable.c                 | 518 ++++++++++++++++++
->   drivers/iommu/intel-trace.c                   |  14 +
->   include/linux/intel-iommu.h                   |  24 +
->   include/trace/events/intel_iommu.h            | 132 +++++
->   7 files changed, 1010 insertions(+), 44 deletions(-)
->   create mode 100644 drivers/iommu/intel-pgtable.c
->   create mode 100644 drivers/iommu/intel-trace.c
->   create mode 100644 include/trace/events/intel_iommu.h
-> 
+Signed-off-by: Kangjie Lu <kjlu@umn.edu>
+---
+ drivers/hid/hid-logitech-hidpp.c | 8 ++++++--
+ 1 file changed, 6 insertions(+), 2 deletions(-)
+
+diff --git a/drivers/hid/hid-logitech-hidpp.c b/drivers/hid/hid-logitech-hidpp.c
+index 15ed6177a7a3..1b7c336cae6d 100644
+--- a/drivers/hid/hid-logitech-hidpp.c
++++ b/drivers/hid/hid-logitech-hidpp.c
+@@ -2106,6 +2106,12 @@ static int hidpp_ff_init(struct hidpp_device *hidpp, u8 feature_index)
+ 	data = kzalloc(sizeof(*data), GFP_KERNEL);
+ 	if (!data)
+ 		return -ENOMEM;
++
++	/* init the hardware command queue */
++	data->wq = create_singlethread_workqueue("hidpp-ff-sendqueue");
++	if (!data->wq)
++		return -ENOMEM;
++
+ 	data->effect_ids = kcalloc(num_slots, sizeof(int), GFP_KERNEL);
+ 	if (!data->effect_ids) {
+ 		kfree(data);
+@@ -2154,8 +2160,6 @@ static int hidpp_ff_init(struct hidpp_device *hidpp, u8 feature_index)
+ 	data->gain = error ? 0xffff : get_unaligned_be16(&response.fap.params[0]);
+ 	/* ignore boost value at response.fap.params[2] */
+ 
+-	/* init the hardware command queue */
+-	data->wq = create_singlethread_workqueue("hidpp-ff-sendqueue");
+ 	atomic_set(&data->workqueue_size, 0);
+ 
+ 	/* initialize with zero autocenter to get wheel in usable state */
+-- 
+2.17.1
+
