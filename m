@@ -4,55 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3D04AC43381
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 17:13:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7D88BC43381
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 17:13:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 064D621841
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 17:13:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 441AB2177E
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 17:13:10 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1552410786;
-	bh=F1s0tK7LblyBUY+xyYWqgLd1xd07CWEIf5C/L8i8WKU=;
+	s=default; t=1552410790;
+	bh=mX0sh2GfgL7Z1nv5hL8Z55PaKNbPQJjJ12cSoUi3ADs=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=G0nwnEImstFvrXI4NfxCIdI/vtYoq0Wob0wKr9NrQ/2u+6tIknnQ/5tnsWoE+dp9o
-	 LZSzNkmMBmaSQonmgBjSJ6+TZ3E4gQ6sy6m15t2tYbDe99euMGPKlQ0TyjOSr57Zrz
-	 mJhPSN4nYQqu3qxATPCkCk8ZVSXCaM6/LJ1fbolM=
+	b=WbdMQINiOjCXJP1YtArcWlFq0cGWQ9yJyCK02SvI6RRA4yuFgJ6mdIAFBLSn4E1Po
+	 zdV+qpoyC/x2Dp7dwEwfhKQAFRU6h52tIr58xcAWe3rjIGxCVOlVzlJ6Y3KcO66k9S
+	 sNcHsNBSLTtzfm4lFykUi8Gx2aFbYFE6n+Q35LW0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727772AbfCLRNF (ORCPT
+        id S1727806AbfCLRNI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 12 Mar 2019 13:13:05 -0400
-Received: from mail.kernel.org ([198.145.29.99]:48006 "EHLO mail.kernel.org"
+        Tue, 12 Mar 2019 13:13:08 -0400
+Received: from mail.kernel.org ([198.145.29.99]:48196 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727547AbfCLRMf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 12 Mar 2019 13:12:35 -0400
+        id S1727568AbfCLRMh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 12 Mar 2019 13:12:37 -0400
 Received: from localhost (unknown [104.133.8.98])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 1DD8C206DF;
-        Tue, 12 Mar 2019 17:12:35 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 4AB01217F9;
+        Tue, 12 Mar 2019 17:12:37 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1552410755;
-        bh=F1s0tK7LblyBUY+xyYWqgLd1xd07CWEIf5C/L8i8WKU=;
+        s=default; t=1552410757;
+        bh=mX0sh2GfgL7Z1nv5hL8Z55PaKNbPQJjJ12cSoUi3ADs=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=q9AfEg85wbdzrHjGh0UsC05y7BUgG1HX5NNsy9AFKt7IBJjkMWEBMvWNS8YZwZIBC
-         1Z7v9KCzWGzCO99Ra/7HB9YZqBBx5foq1iXHG13e5prbD4QtBNPeut8MlrB6nEnHvu
-         LA7OTwET+8GbVeXnDcbF9na1sRpC8iNMdvJd+VQQ=
+        b=HOK3F/RA9oCoVogH+1e/VFa+ep9j6SnQQoyhEdHXV0uYXPjDb07FkEWbp5xO2mYSn
+         LcJIpb5mJB010LhwcIUgyBGJX2VaVVMk2Hpp89UYWh/l3iACAlHA1kHwu4gT9MUK4i
+         kz68wZD08exjShHnio0PnvT8pV0lZ1DO2o4kXvrw=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Johannes Weiner <hannes@cmpxchg.org>,
-        Suren Baghdasaryan <surenb@google.com>,
-        Tejun Heo <tj@kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Lai Jiangshan <jiangshanlai@gmail.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
+        stable@vger.kernel.org,
+        Geert Uytterhoeven <geert+renesas@glider.be>,
+        Simon Horman <horms+renesas@verge.net.au>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.20 065/171] psi: fix aggregation idle shut-off
-Date:   Tue, 12 Mar 2019 10:07:25 -0700
-Message-Id: <20190312170353.800914596@linuxfoundation.org>
+Subject: [PATCH 4.20 080/171] arm64: dts: renesas: r8a7796: Enable DMA for SCIF2
+Date:   Tue, 12 Mar 2019 10:07:40 -0700
+Message-Id: <20190312170354.951369853@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190312170347.868927101@linuxfoundation.org>
 References: <20190312170347.868927101@linuxfoundation.org>
@@ -71,182 +67,32 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-[ Upstream commit 1b69ac6b40ebd85eed73e4dbccde2a36961ab990 ]
+[ Upstream commit 97f26702bc95b5c3a72671d5c6675e4d6ee0a2f4 ]
 
-psi has provisions to shut off the periodic aggregation worker when
-there is a period of no task activity - and thus no data that needs
-aggregating.  However, while developing psi monitoring, Suren noticed
-that the aggregation clock currently won't stay shut off for good.
+SCIF2 on R-Car M3-W can be used with both DMAC1 and DMAC2.
 
-Debugging this revealed a flaw in the idle design: an aggregation run
-will see no task activity and decide to go to sleep; shortly thereafter,
-the kworker thread that executed the aggregation will go idle and cause
-a scheduling change, during which the psi callback will kick the
-!pending worker again.  This will ping-pong forever, and is equivalent
-to having no shut-off logic at all (but with more code!)
-
-Fix this by exempting aggregation workers from psi's clock waking logic
-when the state change is them going to sleep.  To do this, tag workers
-with the last work function they executed, and if in psi we see a worker
-going to sleep after aggregating psi data, we will not reschedule the
-aggregation work item.
-
-What if the worker is also executing other items before or after?
-
-Any psi state times that were incurred by work items preceding the
-aggregation work will have been collected from the per-cpu buckets
-during the aggregation itself.  If there are work items following the
-aggregation work, the worker's last_func tag will be overwritten and the
-aggregator will be kept alive to process this genuine new activity.
-
-If the aggregation work is the last thing the worker does, and we decide
-to go idle, the brief period of non-idle time incurred between the
-aggregation run and the kworker's dequeue will be stranded in the
-per-cpu buckets until the clock is woken by later activity.  But that
-should not be a problem.  The buckets can hold 4s worth of time, and
-future activity will wake the clock with a 2s delay, giving us 2s worth
-of data we can leave behind when disabling aggregation.  If it takes a
-worker more than two seconds to go idle after it finishes its last work
-item, we likely have bigger problems in the system, and won't notice one
-sample that was averaged with a bogus per-CPU weight.
-
-Link: http://lkml.kernel.org/r/20190116193501.1910-1-hannes@cmpxchg.org
-Fixes: eb414681d5a0 ("psi: pressure stall information for CPU, memory, and IO")
-Signed-off-by: Johannes Weiner <hannes@cmpxchg.org>
-Reported-by: Suren Baghdasaryan <surenb@google.com>
-Acked-by: Tejun Heo <tj@kernel.org>
-Cc: Peter Zijlstra <peterz@infradead.org>
-Cc: Lai Jiangshan <jiangshanlai@gmail.com>
-Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
-Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
+Fixes: dbcae5ea4bd27409 ("arm64: dts: r8a7796: Enable SCIF DMA")
+Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
+Signed-off-by: Simon Horman <horms+renesas@verge.net.au>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- kernel/sched/psi.c          | 21 +++++++++++++++++----
- kernel/workqueue.c          | 23 +++++++++++++++++++++++
- kernel/workqueue_internal.h |  6 +++++-
- 3 files changed, 45 insertions(+), 5 deletions(-)
+ arch/arm64/boot/dts/renesas/r8a7796.dtsi | 3 +++
+ 1 file changed, 3 insertions(+)
 
-diff --git a/kernel/sched/psi.c b/kernel/sched/psi.c
-index fe24de3fbc93..c3484785b179 100644
---- a/kernel/sched/psi.c
-+++ b/kernel/sched/psi.c
-@@ -124,6 +124,7 @@
-  * sampling of the aggregate task states would be.
-  */
- 
-+#include "../workqueue_internal.h"
- #include <linux/sched/loadavg.h>
- #include <linux/seq_file.h>
- #include <linux/proc_fs.h>
-@@ -480,9 +481,6 @@ static void psi_group_change(struct psi_group *group, int cpu,
- 			groupc->tasks[t]++;
- 
- 	write_seqcount_end(&groupc->seq);
--
--	if (!delayed_work_pending(&group->clock_work))
--		schedule_delayed_work(&group->clock_work, PSI_FREQ);
- }
- 
- static struct psi_group *iterate_groups(struct task_struct *task, void **iter)
-@@ -513,6 +511,7 @@ void psi_task_change(struct task_struct *task, int clear, int set)
- {
- 	int cpu = task_cpu(task);
- 	struct psi_group *group;
-+	bool wake_clock = true;
- 	void *iter = NULL;
- 
- 	if (!task->pid)
-@@ -530,8 +529,22 @@ void psi_task_change(struct task_struct *task, int clear, int set)
- 	task->psi_flags &= ~clear;
- 	task->psi_flags |= set;
- 
--	while ((group = iterate_groups(task, &iter)))
-+	/*
-+	 * Periodic aggregation shuts off if there is a period of no
-+	 * task changes, so we wake it back up if necessary. However,
-+	 * don't do this if the task change is the aggregation worker
-+	 * itself going to sleep, or we'll ping-pong forever.
-+	 */
-+	if (unlikely((clear & TSK_RUNNING) &&
-+		     (task->flags & PF_WQ_WORKER) &&
-+		     wq_worker_last_func(task) == psi_update_work))
-+		wake_clock = false;
-+
-+	while ((group = iterate_groups(task, &iter))) {
- 		psi_group_change(group, cpu, clear, set);
-+		if (wake_clock && !delayed_work_pending(&group->clock_work))
-+			schedule_delayed_work(&group->clock_work, PSI_FREQ);
-+	}
- }
- 
- void psi_memstall_tick(struct task_struct *task, int cpu)
-diff --git a/kernel/workqueue.c b/kernel/workqueue.c
-index 0280deac392e..288b2105bbb1 100644
---- a/kernel/workqueue.c
-+++ b/kernel/workqueue.c
-@@ -909,6 +909,26 @@ struct task_struct *wq_worker_sleeping(struct task_struct *task)
- 	return to_wakeup ? to_wakeup->task : NULL;
- }
- 
-+/**
-+ * wq_worker_last_func - retrieve worker's last work function
-+ *
-+ * Determine the last function a worker executed. This is called from
-+ * the scheduler to get a worker's last known identity.
-+ *
-+ * CONTEXT:
-+ * spin_lock_irq(rq->lock)
-+ *
-+ * Return:
-+ * The last work function %current executed as a worker, NULL if it
-+ * hasn't executed any work yet.
-+ */
-+work_func_t wq_worker_last_func(struct task_struct *task)
-+{
-+	struct worker *worker = kthread_data(task);
-+
-+	return worker->last_func;
-+}
-+
- /**
-  * worker_set_flags - set worker flags and adjust nr_running accordingly
-  * @worker: self
-@@ -2184,6 +2204,9 @@ __acquires(&pool->lock)
- 	if (unlikely(cpu_intensive))
- 		worker_clr_flags(worker, WORKER_CPU_INTENSIVE);
- 
-+	/* tag the worker for identification in schedule() */
-+	worker->last_func = worker->current_func;
-+
- 	/* we're done with it, release */
- 	hash_del(&worker->hentry);
- 	worker->current_work = NULL;
-diff --git a/kernel/workqueue_internal.h b/kernel/workqueue_internal.h
-index 66fbb5a9e633..cb68b03ca89a 100644
---- a/kernel/workqueue_internal.h
-+++ b/kernel/workqueue_internal.h
-@@ -53,6 +53,9 @@ struct worker {
- 
- 	/* used only by rescuers to point to the target workqueue */
- 	struct workqueue_struct	*rescue_wq;	/* I: the workqueue to rescue */
-+
-+	/* used by the scheduler to determine a worker's last known identity */
-+	work_func_t		last_func;
- };
- 
- /**
-@@ -67,9 +70,10 @@ static inline struct worker *current_wq_worker(void)
- 
- /*
-  * Scheduler hooks for concurrency managed workqueue.  Only to be used from
-- * sched/core.c and workqueue.c.
-+ * sched/ and workqueue.c.
-  */
- void wq_worker_waking_up(struct task_struct *task, int cpu);
- struct task_struct *wq_worker_sleeping(struct task_struct *task);
-+work_func_t wq_worker_last_func(struct task_struct *task);
- 
- #endif /* _KERNEL_WORKQUEUE_INTERNAL_H */
+diff --git a/arch/arm64/boot/dts/renesas/r8a7796.dtsi b/arch/arm64/boot/dts/renesas/r8a7796.dtsi
+index 1ec6aaa520c1..09320caea54e 100644
+--- a/arch/arm64/boot/dts/renesas/r8a7796.dtsi
++++ b/arch/arm64/boot/dts/renesas/r8a7796.dtsi
+@@ -1160,6 +1160,9 @@
+ 				 <&cpg CPG_CORE R8A7796_CLK_S3D1>,
+ 				 <&scif_clk>;
+ 			clock-names = "fck", "brg_int", "scif_clk";
++			dmas = <&dmac1 0x13>, <&dmac1 0x12>,
++			       <&dmac2 0x13>, <&dmac2 0x12>;
++			dma-names = "tx", "rx", "tx", "rx";
+ 			power-domains = <&sysc R8A7796_PD_ALWAYS_ON>;
+ 			resets = <&cpg 310>;
+ 			status = "disabled";
 -- 
 2.19.1
 
