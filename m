@@ -2,338 +2,147 @@ Return-Path: <SRS0=J4ZE=RP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.0 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,NORMAL_HTTP_TO_IP,SPF_PASS,UNPARSEABLE_RELAY,URIBL_BLOCKED
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1FBAEC43381
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 04:02:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D809EC43381
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 04:06:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D2123214AE
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 04:02:21 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernelci-org.20150623.gappssmtp.com header.i=@kernelci-org.20150623.gappssmtp.com header.b="WQcZu+Zi"
+	by mail.kernel.org (Postfix) with ESMTP id A2CF5214AE
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 04:06:50 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725882AbfCLECT (ORCPT
+        id S1725894AbfCLEGt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 12 Mar 2019 00:02:19 -0400
-Received: from mail-wr1-f68.google.com ([209.85.221.68]:45528 "EHLO
-        mail-wr1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725710AbfCLECT (ORCPT
+        Tue, 12 Mar 2019 00:06:49 -0400
+Received: from out30-56.freemail.mail.aliyun.com ([115.124.30.56]:53387 "EHLO
+        out30-56.freemail.mail.aliyun.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1725811AbfCLEGt (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 12 Mar 2019 00:02:19 -0400
-Received: by mail-wr1-f68.google.com with SMTP id h99so67466wrh.12
-        for <linux-kernel@vger.kernel.org>; Mon, 11 Mar 2019 21:02:17 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=kernelci-org.20150623.gappssmtp.com; s=20150623;
-        h=message-id:date:mime-version:content-transfer-encoding:subject:to
-         :from:cc;
-        bh=XgnFbmTiGMBOiFR7bdf6JFofqh4zrwzGSYk+aT0CfhI=;
-        b=WQcZu+ZiWJz18/dKENCpNUG0HFX4M6gN1u3qY1+lY8bgDiN9O2whzGoWLsLvXNmiK3
-         Euyy96AqcpbE01NCYxpOr/iblYKwqFSNaviKfYFJv5j1bOu/5tDiI2qboX0UP9KJUtGQ
-         QLR8oF54W3sVeI/MtW76kUP3y3vbJuvx/s1VtRY4TTahmSdD15PRinGorVzw+Vsj06N/
-         r+4lUyO+9z2tQ7EZIqHAnXzmrjd5GobskICuudTttDTxQZEMrod4zgbfF4oIhrG4O6NI
-         cqxM7BHu5+ittuNj8um0OfoIhSiZrZY/5FkM57Kjza4MAjahtUp92nXqUETBtRblCaAx
-         dLcw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:message-id:date:mime-version
-         :content-transfer-encoding:subject:to:from:cc;
-        bh=XgnFbmTiGMBOiFR7bdf6JFofqh4zrwzGSYk+aT0CfhI=;
-        b=OOb/rgaxhLev56aQAR6XT6Ydu5R4C9Xu744WunMYta3dpuaKCr31K/O7ejYZ9lElnM
-         t5Nru2wQ1olPAolaN52O2Fd98CFLXtBDqIJV7FV1lSyTptmRSud+4kqgZfw4ZKpMtkKJ
-         Jlz9PsULBVh1VCHKBDkpX52zs7/mEnzDkIvTZV/K5sC+tJckRo83ZxCJnYmt+gi8mGFz
-         NY85sio0FccxLcoLxlLTNRFaIZLwy7y/g+ic53qfaT/U/wAdDuRYAvnuEpTawEJWoLd4
-         tZPeD4bXW2f0gBM4lhpx9M90JvurrG6frpdiuOFK3cRArCYvilLpjz/4/iePZ/NhIE8A
-         C/eg==
-X-Gm-Message-State: APjAAAXkTMHzkviX5uXytIPyI47G4Quj8t0S9ojZrQvW8O84NQk67/su
-        pQq6aiq/DwF8tZLUg05wuCmsGA==
-X-Google-Smtp-Source: APXvYqyCg/ueVEJC+kTkNvImCswRnFms54ZuSWPr1hJdU3qEDnmyDt3bmiXCmYErpIPvHVSzYMU2cA==
-X-Received: by 2002:a5d:6387:: with SMTP id p7mr3700028wru.206.1552363336709;
-        Mon, 11 Mar 2019 21:02:16 -0700 (PDT)
-Received: from [148.251.42.114] ([2a01:4f8:201:9271::2])
-        by smtp.gmail.com with ESMTPSA id f68sm3687167wmg.5.2019.03.11.21.02.15
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Mon, 11 Mar 2019 21:02:16 -0700 (PDT)
-Message-ID: <5c872f48.1c69fb81.985c2.1e26@mx.google.com>
-Date:   Mon, 11 Mar 2019 21:02:16 -0700 (PDT)
-Content-Type: text/plain; charset="utf-8"
+        Tue, 12 Mar 2019 00:06:49 -0400
+X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R341e4;CH=green;DM=||false|;FP=0|-1|-1|-1|0|-1|-1|-1;HT=e01f04397;MF=alex.shi@linux.alibaba.com;NM=1;PH=DS;RN=4;SR=0;TI=SMTPD_---0TMWNB9D_1552363605;
+Received: from Alexs-MacBook-Pro.local(mailfrom:alex.shi@linux.alibaba.com fp:SMTPD_---0TMWNB9D_1552363605)
+          by smtp.aliyun-inc.com(127.0.0.1);
+          Tue, 12 Mar 2019 12:06:46 +0800
+Subject: Re: [PATCH v4 00/31] clean up and reorg Chinese kernel docs
+To:     corbet@lwn.net, harryxiyou@gmail.com, linux-doc@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+References: <20190312032501.62056-1-alex.shi@linux.alibaba.com>
+From:   Alex Shi <alex.shi@linux.alibaba.com>
+Message-ID: <4e9fbf0d-cf9a-63a3-4e94-902b1ae5a6cf@linux.alibaba.com>
+Date:   Tue, 12 Mar 2019 12:06:45 +0800
+User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.14; rv:60.0)
+ Gecko/20100101 Thunderbird/60.5.0
 MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-X-Kernelci-Kernel: v5.0-10530-g6bc3fe8e7e17
-X-Kernelci-Report-Type: bisect
-X-Kernelci-Tree: mainline
-X-Kernelci-Lab-Name: lab-collabora
-X-Kernelci-Branch: master
-Subject: mainline/master boot bisection: v5.0-10530-g6bc3fe8e7e17 on peach-pi
-To:     tomeu.vizoso@collabora.com, guillaume.tucker@collabora.com,
-        broonie@kernel.org, matthew.hart@linaro.org,
-        Herbert Xu <herbert@gondor.apana.org.au>, khilman@baylibre.com,
-        enric.balletbo@collabora.com,
-        Kamil Konieczny <k.konieczny@partner.samsung.com>,
-        Krzysztof Kozlowski <krzk@kernel.org>
-From:   "kernelci.org bot" <bot@kernelci.org>
-Cc:     linux-crypto@vger.kernel.org, linux-samsung-soc@vger.kernel.org,
-        Vladimir Zapolskiy <vz@mleia.com>,
-        linux-kernel@vger.kernel.org,
-        "David S. Miller" <davem@davemloft.net>
+In-Reply-To: <20190312032501.62056-1-alex.shi@linux.alibaba.com>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 8bit
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
-* This automated bisection report was sent to you on the basis  *
-* that you may be involved with the breaking commit it has      *
-* found.  No manual investigation has been done to verify it,   *
-* and the root cause of the problem may be somewhere else.      *
-* Hope this helps!                                              *
-* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
+Hi Corbet,
 
-mainline/master boot bisection: v5.0-10530-g6bc3fe8e7e17 on peach-pi
+This series is ok for pick up.
 
-Summary:
-  Start:      6bc3fe8e7e17 tools: mark 'test_vmalloc.sh' executable
-  Details:    https://kernelci.org/boot/id/5c86c90059b5149c7bfe60e7
-  Plain log:  https://storage.kernelci.org//mainline/master/v5.0-10530-g6bc=
-3fe8e7e17/arm/exynos_defconfig/gcc-7/lab-collabora/boot-exynos5800-peach-pi=
-.txt
-  HTML log:   https://storage.kernelci.org//mainline/master/v5.0-10530-g6bc=
-3fe8e7e17/arm/exynos_defconfig/gcc-7/lab-collabora/boot-exynos5800-peach-pi=
-.html
-  Result:     0918f18c7179 crypto: s5p - add AES support for Exynos5433
+Thanks!
+Alex
 
-Checks:
-  revert:     PASS
-  verify:     PASS
+On 2019/3/12 11:24 上午, Alex Shi wrote:
+> Hi All,
+>
+> The following patches change existing Chinese kernel docs to rst format
+> and reorg them to make them alive in 'make htmldocs'.
+>
+> you can view the generated htmldocs from:
+> 	http://176.122.172.82/translations/zh_CN/index.html 
+>
+> Or make and review docs on your self box:
+>
+> 	make htmldocs SPHINXDIRS=translations/zh_CN 
+> 	lynx Documentation/output/translations/zh_CN/index.html
+>
+> Any comments are appreciated!
+>
+> V4 changes:
+> 1, Add Harry's signed-off as his ack.
+>
+> V3 changes:
+> 1, fix a zh_CN/index.rst display issue
+> 2, update .mailmap for zh_CN transolators'r email address
+>
+> V2 changes:
+> 1, change the disclaimer file to Chinese version,
+> 2, replace the obsolete translator's email address in related files.
+> 3, fix couple of format issues in couple files
+>
+> Cheers!
+> Alex
+>
+> Alex Shi (31):
+>   docs/zh_CN: add disclaimer file
+>   docs/zh_CN: move process related docs into process dir
+>   docs/zh_CN: change Chinese index to know process dir
+>   docs/zh_CN: add index file into process dir
+>   docs/zh_CN: rename HOWTO into process directory
+>   docs/zh_CN: howto format changes
+>   docs/zh_CN: rename SubmittingPatches for html links
+>   docs/zh_CN: format the submitting-patches doc to rst
+>   docs/zh_CN: rename stable_kernel_rules doc
+>   docs/zh_CN: rst format change for stable-kernel-rules
+>   docs/zh_CN: rename email-clients.txt as email-clients.rst
+>   docs/zh_CN: do rst format for email-clients.rst
+>   docs/zh_CN: rename volatile-consider-harmful doc
+>   docs/zh_CN: volatile doc format changes
+>   docs/zh_CN: rename SubmittingDrivers
+>   docs/zh_CN: format submitting drivers as rst
+>   docs/zh_CN: rename magic-numbers as rst doc
+>   docs/zh_CN: format the magic-number doc as rst
+>   docs/zh_CN: rename stable_api_nonsense.txt as stable-api-nonsense.rst
+>   docs/zh_CN: format stable-api-nonsense
+>   docs/zh_CN: update Li Yang's email address
+>   mailmap: update Li Yang's email address
+>   docs/zh_CN: update Zhang Wei's email address
+>   mailmap: update email address for Triplex
+>   docs/zh_CN: update TripleX chung's email address
+>   docs/zh_CN: fix rst format errors in howto.rst
+>   docs/zh_CN: fix indent issue in stable-api-nonsense file
+>   docs/zh_CN: fix indent issue in submitting-drivers
+>   docs/zh_CN: remove zh-kernel.org in MAINTAINERS
+>   mailmap: update my obsolete email address
+>   docs/zh_CN: fix rst format issue in submitting-patch
+>
+>  .mailmap                                      |   6 +
+>  .../translations/zh_CN/disclaimer-zh_CN.rst   |   9 ++
+>  Documentation/translations/zh_CN/index.rst    |  17 +-
+>  .../translations/zh_CN/magic-number.txt       | 153 ------------------
+>  .../translations/zh_CN/oops-tracing.txt       |   2 +-
+>  .../zh_CN/{ => process}/coding-style.rst      |   0
+>  .../email-clients.rst}                        |  53 +++---
+>  .../zh_CN/{HOWTO => process/howto.rst}        |  69 +++++---
+>  .../translations/zh_CN/process/index.rst      |  53 ++++++
+>  .../zh_CN/process/magic-number.rst            | 151 +++++++++++++++++
+>  .../stable-api-nonsense.rst}                  |  67 ++++----
+>  .../stable-kernel-rules.rst}                  |  32 ++--
+>  .../submitting-drivers.rst}                   |  34 ++--
+>  .../submitting-patches.rst}                   |  58 +++----
+>  .../volatile-considered-harmful.rst}          |  35 ++--
+>  Documentation/translations/zh_CN/sparse.txt   |   6 +-
+>  MAINTAINERS                                   |   1 -
+>  17 files changed, 407 insertions(+), 339 deletions(-)
+>  create mode 100644 Documentation/translations/zh_CN/disclaimer-zh_CN.rst
+>  delete mode 100644 Documentation/translations/zh_CN/magic-number.txt
+>  rename Documentation/translations/zh_CN/{ => process}/coding-style.rst (100%)
+>  rename Documentation/translations/zh_CN/{email-clients.txt => process/email-clients.rst} (82%)
+>  rename Documentation/translations/zh_CN/{HOWTO => process/howto.rst} (95%)
+>  create mode 100644 Documentation/translations/zh_CN/process/index.rst
+>  create mode 100644 Documentation/translations/zh_CN/process/magic-number.rst
+>  rename Documentation/translations/zh_CN/{stable_api_nonsense.txt => process/stable-api-nonsense.rst} (80%)
+>  rename Documentation/translations/zh_CN/{stable_kernel_rules.txt => process/stable-kernel-rules.rst} (76%)
+>  rename Documentation/translations/zh_CN/{SubmittingDrivers => process/submitting-drivers.rst} (86%)
+>  rename Documentation/translations/zh_CN/{SubmittingPatches => process/submitting-patches.rst} (92%)
+>  rename Documentation/translations/zh_CN/{volatile-considered-harmful.txt => process/volatile-considered-harmful.rst} (81%)
+>
 
-Parameters:
-  Tree:       mainline
-  URL:        git://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.=
-git
-  Branch:     master
-  Target:     peach-pi
-  CPU arch:   arm
-  Lab:        lab-collabora
-  Compiler:   gcc-7
-  Config:     exynos_defconfig
-  Test suite: boot
-
-Breaking commit found:
-
----------------------------------------------------------------------------=
-----
-commit 0918f18c7179e8cdf718d01531a81b28130b4217
-Author: Kamil Konieczny <k.konieczny@partner.samsung.com>
-Date:   Fri Feb 22 13:21:44 2019 +0100
-
-    crypto: s5p - add AES support for Exynos5433
-    =
-
-    Add AES crypto HW acceleration for Exynos5433, with the help of SlimSSS=
- IP.
-    =
-
-    Reviewed-by: Krzysztof Kozlowski <krzk@kernel.org>
-    Signed-off-by: Kamil Konieczny <k.konieczny@partner.samsung.com>
-    Signed-off-by: Herbert Xu <herbert@gondor.apana.org.au>
-
-diff --git a/drivers/crypto/s5p-sss.c b/drivers/crypto/s5p-sss.c
-index 8d0afdc220ff..f4e625cf53ca 100644
---- a/drivers/crypto/s5p-sss.c
-+++ b/drivers/crypto/s5p-sss.c
-@@ -232,6 +232,7 @@
-  * struct samsung_aes_variant - platform specific SSS driver data
-  * @aes_offset: AES register offset from SSS module's base.
-  * @hash_offset: HASH register offset from SSS module's base.
-+ * @clk_names: names of clocks needed to run SSS IP
-  *
-  * Specifies platform specific configuration of SSS module.
-  * Note: A structure for driver specific platform data is used for future
-@@ -240,6 +241,7 @@
- struct samsung_aes_variant {
- 	unsigned int			aes_offset;
- 	unsigned int			hash_offset;
-+	const char			*clk_names[];
- };
- =
-
- struct s5p_aes_reqctx {
-@@ -296,6 +298,7 @@ struct s5p_aes_ctx {
- struct s5p_aes_dev {
- 	struct device			*dev;
- 	struct clk			*clk;
-+	struct clk			*pclk;
- 	void __iomem			*ioaddr;
- 	void __iomem			*aes_ioaddr;
- 	int				irq_fc;
-@@ -384,11 +387,19 @@ struct s5p_hash_ctx {
- static const struct samsung_aes_variant s5p_aes_data =3D {
- 	.aes_offset	=3D 0x4000,
- 	.hash_offset	=3D 0x6000,
-+	.clk_names	=3D { "secss", },
- };
- =
-
- static const struct samsung_aes_variant exynos_aes_data =3D {
- 	.aes_offset	=3D 0x200,
- 	.hash_offset	=3D 0x400,
-+	.clk_names	=3D { "secss", },
-+};
-+
-+static const struct samsung_aes_variant exynos5433_slim_aes_data =3D {
-+	.aes_offset	=3D 0x400,
-+	.hash_offset	=3D 0x800,
-+	.clk_names	=3D { "pclk", "aclk", },
- };
- =
-
- static const struct of_device_id s5p_sss_dt_match[] =3D {
-@@ -400,6 +411,10 @@ static const struct of_device_id s5p_sss_dt_match[] =
-=3D {
- 		.compatible =3D "samsung,exynos4210-secss",
- 		.data =3D &exynos_aes_data,
- 	},
-+	{
-+		.compatible =3D "samsung,exynos5433-slim-sss",
-+		.data =3D &exynos5433_slim_aes_data,
-+	},
- 	{ },
- };
- MODULE_DEVICE_TABLE(of, s5p_sss_dt_match);
-@@ -2218,18 +2233,39 @@ static int s5p_aes_probe(struct platform_device *pd=
-ev)
- 			return PTR_ERR(pdata->ioaddr);
- 	}
- =
-
--	pdata->clk =3D devm_clk_get(dev, "secss");
-+	pdata->clk =3D devm_clk_get(dev, variant->clk_names[0]);
- 	if (IS_ERR(pdata->clk)) {
--		dev_err(dev, "failed to find secss clock source\n");
-+		dev_err(dev, "failed to find secss clock %s\n",
-+			variant->clk_names[0]);
- 		return -ENOENT;
- 	}
- =
-
- 	err =3D clk_prepare_enable(pdata->clk);
- 	if (err < 0) {
--		dev_err(dev, "Enabling SSS clk failed, err %d\n", err);
-+		dev_err(dev, "Enabling clock %s failed, err %d\n",
-+			variant->clk_names[0], err);
- 		return err;
- 	}
- =
-
-+	if (variant->clk_names[1]) {
-+		pdata->pclk =3D devm_clk_get(dev, variant->clk_names[1]);
-+		if (IS_ERR(pdata->pclk)) {
-+			dev_err(dev, "failed to find clock %s\n",
-+				variant->clk_names[1]);
-+			err =3D -ENOENT;
-+			goto err_clk;
-+		}
-+
-+		err =3D clk_prepare_enable(pdata->pclk);
-+		if (err < 0) {
-+			dev_err(dev, "Enabling clock %s failed, err %d\n",
-+				variant->clk_names[0], err);
-+			goto err_clk;
-+		}
-+	} else {
-+		pdata->pclk =3D NULL;
-+	}
-+
- 	spin_lock_init(&pdata->lock);
- 	spin_lock_init(&pdata->hash_lock);
- =
-
-@@ -2305,8 +2341,11 @@ static int s5p_aes_probe(struct platform_device *pde=
-v)
- 	tasklet_kill(&pdata->tasklet);
- =
-
- err_irq:
--	clk_disable_unprepare(pdata->clk);
-+	if (pdata->pclk)
-+		clk_disable_unprepare(pdata->pclk);
- =
-
-+err_clk:
-+	clk_disable_unprepare(pdata->clk);
- 	s5p_dev =3D NULL;
- =
-
- 	return err;
-@@ -2333,6 +2372,9 @@ static int s5p_aes_remove(struct platform_device *pde=
-v)
- 		pdata->use_hash =3D false;
- 	}
- =
-
-+	if (pdata->pclk)
-+		clk_disable_unprepare(pdata->pclk);
-+
- 	clk_disable_unprepare(pdata->clk);
- 	s5p_dev =3D NULL;
----------------------------------------------------------------------------=
-----
-
-
-Git bisection log:
-
----------------------------------------------------------------------------=
-----
-git bisect start
-# good: [cd2a3bf02625ffad02a6b9f7df758ee36cf12769] Merge tag 'leds-for-5.1-=
-rc1' of git://git.kernel.org/pub/scm/linux/kernel/git/j.anaszewski/linux-le=
-ds
-git bisect good cd2a3bf02625ffad02a6b9f7df758ee36cf12769
-# bad: [6bc3fe8e7e172d5584e529a04cf9eec946428768] tools: mark 'test_vmalloc=
-.sh' executable
-git bisect bad 6bc3fe8e7e172d5584e529a04cf9eec946428768
-# bad: [da2577fe63f865cd9dc785a42c29c0071f567a35] Merge tag 'sound-5.1-rc1'=
- of git://git.kernel.org/pub/scm/linux/kernel/git/tiwai/sound
-git bisect bad da2577fe63f865cd9dc785a42c29c0071f567a35
-# good: [6456300356433873309a1cae6aa05e77d6b59153] Merge git://git.kernel.o=
-rg/pub/scm/linux/kernel/git/davem/net-next
-git bisect good 6456300356433873309a1cae6aa05e77d6b59153
-# bad: [6ad63dec9c2c80710896edd1996e56c54a230870] Merge tag 'armsoc-dt' of =
-git://git.kernel.org/pub/scm/linux/kernel/git/soc/soc
-git bisect bad 6ad63dec9c2c80710896edd1996e56c54a230870
-# bad: [203b6609e0ede49eb0b97008b1150c69e9d2ffd3] Merge branch 'perf-core-f=
-or-linus' of git://git.kernel.org/pub/scm/linux/kernel/git/tip/tip
-git bisect bad 203b6609e0ede49eb0b97008b1150c69e9d2ffd3
-# bad: [edaed168e135f8ec87b27b567a367cbb041f2243] Merge branch 'x86-pti-for=
--linus' of git://git.kernel.org/pub/scm/linux/kernel/git/tip/tip
-git bisect bad edaed168e135f8ec87b27b567a367cbb041f2243
-# bad: [45f5532a2f65afeda9e8a02bf1aca15c2b4c9be8] Merge tag 'm68k-for-v5.1-=
-tag1' of git://git.kernel.org/pub/scm/linux/kernel/git/geert/linux-m68k
-git bisect bad 45f5532a2f65afeda9e8a02bf1aca15c2b4c9be8
-# good: [eb5e6730db98fcc4b51148b4a819fa4bf864ae54] crypto: testmgr - skip c=
-rc32c context test for ahash algorithms
-git bisect good eb5e6730db98fcc4b51148b4a819fa4bf864ae54
-# good: [9dd24d4ef3e81683b3c73299f95dce5ef34881d0] Merge git://git.kernel.o=
-rg/pub/scm/linux/kernel/git/leo/linux next
-git bisect good 9dd24d4ef3e81683b3c73299f95dce5ef34881d0
-# good: [8e731ee5e2a5aa37b736c05ee2562e1169af866e] crypto: caam - fix DMA m=
-apping xcbc key twice
-git bisect good 8e731ee5e2a5aa37b736c05ee2562e1169af866e
-# bad: [eac616557050737a8d6ef6fe0322d0980ff0ffde] x86: Deprecate a.out supp=
-ort
-git bisect bad eac616557050737a8d6ef6fe0322d0980ff0ffde
-# good: [41798036430015ad45137db2d4c213cd77fd0251] crypto: cavium/zip - fix=
- collision with generic cra_driver_name
-git bisect good 41798036430015ad45137db2d4c213cd77fd0251
-# bad: [0918f18c7179e8cdf718d01531a81b28130b4217] crypto: s5p - add AES sup=
-port for Exynos5433
-git bisect bad 0918f18c7179e8cdf718d01531a81b28130b4217
-# good: [d3ff9f851b7ad892df8dc168f0d589308fb42ac3] dt-bindings: crypto: doc=
-ument Exynos5433 SlimSSS
-git bisect good d3ff9f851b7ad892df8dc168f0d589308fb42ac3
-# first bad commit: [0918f18c7179e8cdf718d01531a81b28130b4217] crypto: s5p =
-- add AES support for Exynos5433
----------------------------------------------------------------------------=
-----
