@@ -4,48 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 58D25C4360F
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 17:16:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DF0A6C43381
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 17:16:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 218792184C
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 17:16:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B055221850
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 17:16:49 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1552411004;
-	bh=TA2zowierDGPOCPC53kCdWYdaeP+raACKTNZiJ7PtPM=;
+	s=default; t=1552411009;
+	bh=CS0pHxLn/0ufRQqFHzkRYelSyH2kCdHDGuJOLAeCW74=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=MrFjgFy6AAcwA5GKeWG34B4GClaE6X3pwWiSWQAlbsK7jmlq9rtNpo6LqmIb+/Cgg
-	 l2qoI7L4EJqXivtmWQt1v7AfFyNT2jpHObcbUxZQpdU5+QOkLCmRCixdltk/1ge/70
-	 v7RaKEXMlbdbanybODYzhXnjSHH0qTAdlUgTxrSY=
+	b=L9XC0r5nyUdcJ2UGh+nig2DAlrw38qdlZpT7oLSI6R/cX8gCmXFS/9icOk918fiaG
+	 exr7Urmda91VZNgFWuGVxRbCh5ge0wXNz8y1RmhhfrWayvExP6LLcOUXS2+Ib9mVRj
+	 H46+8d2uSnaRUiK4WqfzPSfEaKKK5NwSgWqkn+ts=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729256AbfCLRQm (ORCPT
+        id S1729313AbfCLRQs (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 12 Mar 2019 13:16:42 -0400
-Received: from mail.kernel.org ([198.145.29.99]:56404 "EHLO mail.kernel.org"
+        Tue, 12 Mar 2019 13:16:48 -0400
+Received: from mail.kernel.org ([198.145.29.99]:56770 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728798AbfCLRPg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 12 Mar 2019 13:15:36 -0400
+        id S1728864AbfCLRPp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 12 Mar 2019 13:15:45 -0400
 Received: from localhost (unknown [104.133.8.98])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 34344218AE;
-        Tue, 12 Mar 2019 17:15:36 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 84BAE2087C;
+        Tue, 12 Mar 2019 17:15:44 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1552410936;
-        bh=TA2zowierDGPOCPC53kCdWYdaeP+raACKTNZiJ7PtPM=;
+        s=default; t=1552410944;
+        bh=CS0pHxLn/0ufRQqFHzkRYelSyH2kCdHDGuJOLAeCW74=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=WfztKEp5Nc4Hpdu1G05wyOkGULG5dfN//iJRyAoQiay3ACwnMnXodgOMH/c3BO3Ss
-         aeLP/UVFThhC8tOowjhLhIx7zTMdqtDppUTMYI8ZRbxjVZ1cyAo97MqUO385hXYHR5
-         11Ar2V35a3B7Ein/QH9XF09FF5ix3eXCaFBhFyno=
+        b=nw2apn+RhdG/Ad7IDde5KBOVUPBsdTLwWOtUDuLdYUkrK8X4DEZAoHGZBJ1gXL/c4
+         Tuydk7ubJt9nctrVmFO7p+CjNtjzDD+bXdSLBDLKR2MRcBRKs6tLf4JuFwyTo9czye
+         WOhHapePXu0qS/gEe+tbXoaSqliaHC57+ymrEK9Y=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Ivan Mironov <mironov.ivan@gmail.com>,
-        Johan Hovold <johan@kernel.org>
-Subject: [PATCH 4.14 003/135] USB: serial: cp210x: add ID for Ingenico 3070
-Date:   Tue, 12 Mar 2019 10:07:30 -0700
-Message-Id: <20190312170341.440125673@linuxfoundation.org>
+        stable@vger.kernel.org, Ido Schimmel <idosch@mellanox.com>,
+        Amit Cohen <amitc@mellanox.com>,
+        "David S. Miller" <davem@davemloft.net>
+Subject: [PATCH 4.14 008/135] ip6mr: Do not call __IP6_INC_STATS() from preemptible context
+Date:   Tue, 12 Mar 2019 10:07:35 -0700
+Message-Id: <20190312170341.931048433@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190312170341.127810985@linuxfoundation.org>
 References: <20190312170341.127810985@linuxfoundation.org>
@@ -64,39 +66,67 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-From: Ivan Mironov <mironov.ivan@gmail.com>
+From: Ido Schimmel <idosch@mellanox.com>
 
-commit dd9d3d86b08d6a106830364879c42c78db85389c upstream.
+[ Upstream commit 87c11f1ddbbad38ad8bad47af133a8208985fbdf ]
 
-Here is how this device appears in kernel log:
+Similar to commit 44f49dd8b5a6 ("ipmr: fix possible race resulting from
+improper usage of IP_INC_STATS_BH() in preemptible context."), we cannot
+assume preemption is disabled when incrementing the counter and
+accessing a per-CPU variable.
 
-	usb 3-1: new full-speed USB device number 18 using xhci_hcd
-	usb 3-1: New USB device found, idVendor=0b00, idProduct=3070
-	usb 3-1: New USB device strings: Mfr=1, Product=2, SerialNumber=3
-	usb 3-1: Product: Ingenico 3070
-	usb 3-1: Manufacturer: Silicon Labs
-	usb 3-1: SerialNumber: 0001
+Preemption can be enabled when we add a route in process context that
+corresponds to packets stored in the unresolved queue, which are then
+forwarded using this route [1].
 
-Apparently this is a POS terminal with embedded USB-to-Serial converter.
+Fix this by using IP6_INC_STATS() which takes care of disabling
+preemption on architectures where it is needed.
 
-Cc: stable@vger.kernel.org
-Signed-off-by: Ivan Mironov <mironov.ivan@gmail.com>
-Signed-off-by: Johan Hovold <johan@kernel.org>
+[1]
+[  157.451447] BUG: using __this_cpu_add() in preemptible [00000000] code: smcrouted/2314
+[  157.460409] caller is ip6mr_forward2+0x73e/0x10e0
+[  157.460434] CPU: 3 PID: 2314 Comm: smcrouted Not tainted 5.0.0-rc7-custom-03635-g22f2712113f1 #1336
+[  157.460449] Hardware name: Mellanox Technologies Ltd. MSN2100-CB2FO/SA001017, BIOS 5.6.5 06/07/2016
+[  157.460461] Call Trace:
+[  157.460486]  dump_stack+0xf9/0x1be
+[  157.460553]  check_preemption_disabled+0x1d6/0x200
+[  157.460576]  ip6mr_forward2+0x73e/0x10e0
+[  157.460705]  ip6_mr_forward+0x9a0/0x1510
+[  157.460771]  ip6mr_mfc_add+0x16b3/0x1e00
+[  157.461155]  ip6_mroute_setsockopt+0x3cb/0x13c0
+[  157.461384]  do_ipv6_setsockopt.isra.8+0x348/0x4060
+[  157.462013]  ipv6_setsockopt+0x90/0x110
+[  157.462036]  rawv6_setsockopt+0x4a/0x120
+[  157.462058]  __sys_setsockopt+0x16b/0x340
+[  157.462198]  __x64_sys_setsockopt+0xbf/0x160
+[  157.462220]  do_syscall_64+0x14d/0x610
+[  157.462349]  entry_SYSCALL_64_after_hwframe+0x49/0xbe
+
+Fixes: 0912ea38de61 ("[IPV6] MROUTE: Add stats in multicast routing module method ip6_mr_forward().")
+Signed-off-by: Ido Schimmel <idosch@mellanox.com>
+Reported-by: Amit Cohen <amitc@mellanox.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-
 ---
- drivers/usb/serial/cp210x.c |    1 +
- 1 file changed, 1 insertion(+)
+ net/ipv6/ip6mr.c |    8 ++++----
+ 1 file changed, 4 insertions(+), 4 deletions(-)
 
---- a/drivers/usb/serial/cp210x.c
-+++ b/drivers/usb/serial/cp210x.c
-@@ -64,6 +64,7 @@ static const struct usb_device_id id_tab
- 	{ USB_DEVICE(0x08e6, 0x5501) }, /* Gemalto Prox-PU/CU contactless smartcard reader */
- 	{ USB_DEVICE(0x08FD, 0x000A) }, /* Digianswer A/S , ZigBee/802.15.4 MAC Device */
- 	{ USB_DEVICE(0x0908, 0x01FF) }, /* Siemens RUGGEDCOM USB Serial Console */
-+	{ USB_DEVICE(0x0B00, 0x3070) }, /* Ingenico 3070 */
- 	{ USB_DEVICE(0x0BED, 0x1100) }, /* MEI (TM) Cashflow-SC Bill/Voucher Acceptor */
- 	{ USB_DEVICE(0x0BED, 0x1101) }, /* MEI series 2000 Combo Acceptor */
- 	{ USB_DEVICE(0x0FCF, 0x1003) }, /* Dynastream ANT development board */
+--- a/net/ipv6/ip6mr.c
++++ b/net/ipv6/ip6mr.c
+@@ -2002,10 +2002,10 @@ int ip6mr_compat_ioctl(struct sock *sk,
+ 
+ static inline int ip6mr_forward2_finish(struct net *net, struct sock *sk, struct sk_buff *skb)
+ {
+-	__IP6_INC_STATS(net, ip6_dst_idev(skb_dst(skb)),
+-			IPSTATS_MIB_OUTFORWDATAGRAMS);
+-	__IP6_ADD_STATS(net, ip6_dst_idev(skb_dst(skb)),
+-			IPSTATS_MIB_OUTOCTETS, skb->len);
++	IP6_INC_STATS(net, ip6_dst_idev(skb_dst(skb)),
++		      IPSTATS_MIB_OUTFORWDATAGRAMS);
++	IP6_ADD_STATS(net, ip6_dst_idev(skb_dst(skb)),
++		      IPSTATS_MIB_OUTOCTETS, skb->len);
+ 	return dst_output(net, sk, skb);
+ }
+ 
 
 
