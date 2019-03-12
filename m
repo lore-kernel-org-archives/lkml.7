@@ -4,53 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 20B98C43381
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 17:57:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 689ABC43381
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 17:57:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D80A0205C9
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 17:57:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 296C4214AF
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 17:57:37 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1552413449;
-	bh=oiEOkrPL94butYRM+PNYdBuL6EHt3u+bFQy+ZTmUx1Q=;
+	s=default; t=1552413457;
+	bh=XKj66m+DyBjCG7lfEMwPn0WIxoJIiBrLCxnJZ4p5gp8=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=y8Lff34a+APhPQYPPpsTpT+sAj/xxN1I7/K58+CXEBtL2ZHDVGu/xvOHZ44ab4PZ0
-	 EIF7MXGU7+R4v9NOx1SPGnUEUXj3zmztl8mNnnqZtr48JA7S4K04ZRd5czGEeujCfc
-	 gwqDOg97BO7GkNCmkUH+koy6BQeVNfJrPUAHe0J8=
+	b=AB15NfD4ioEGei6dgCUdil7j0vpJWxirCPUj18RU112gdq+l26+0dgVSrMh6/439S
+	 0biGOufSFWOkSex2Ff0jjkJ7hXTpTfiqmkgzsaGqOJW9Pa47n31miR4Wq2mMRBV21g
+	 VGAJOZNJY8dx/SdV+MYtIBTiZsO1ie3A87zllUQo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728271AbfCLR51 (ORCPT
+        id S1728402AbfCLR5f (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 12 Mar 2019 13:57:27 -0400
+        Tue, 12 Mar 2019 13:57:35 -0400
 Received: from mail.kernel.org ([198.145.29.99]:51214 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728090AbfCLRNs (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 12 Mar 2019 13:13:48 -0400
+        id S1728073AbfCLRNr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 12 Mar 2019 13:13:47 -0400
 Received: from localhost (unknown [104.133.8.98])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 0434A217F5;
-        Tue, 12 Mar 2019 17:13:47 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 91D3B2171F;
+        Tue, 12 Mar 2019 17:13:46 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1552410828;
-        bh=oiEOkrPL94butYRM+PNYdBuL6EHt3u+bFQy+ZTmUx1Q=;
+        s=default; t=1552410826;
+        bh=XKj66m+DyBjCG7lfEMwPn0WIxoJIiBrLCxnJZ4p5gp8=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=gLZ+gqgIQU+Ch831sd4ECKcBVvi0iqHygNzo9AtC7+lJNnByIr/F3O5dADXfMLazU
-         W17kJDqiqWAIXtC6hSmGZfZYAbrDQqqMf+vWZstVEjTNO4enzSA7vquGGy/Y97/LZO
-         zw9k6rG044IM6BIGxhBk7abXyDxtBOts6MpSrMr4=
+        b=MiQKmgABS9/sJOKwSxxteb98fgYBibN+1JRKYl4dw6lDPwy7Vkqr0O+0qFJeh2xDx
+         Z587nv+PWYWYTloXpA+doz1/yd6PCXqc97iwpG3fOLiXkpjeJCklDbFvLHIRhrt1ST
+         37t5/OHt5OsJ3tDSkzAcUKWDXjr/WSkGP+G5vhXs=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Stephane Eranian <eranian@google.com>,
-        Jiri Olsa <jolsa@kernel.org>, Andi Kleen <ak@linux.intel.com>,
-        Kan Liang <kan.liang@linux.intel.com>,
-        Peter Zijlstra <peterz@infradead.org>,
+        stable@vger.kernel.org, Andi Kleen <ak@linux.intel.com>,
         Arnaldo Carvalho de Melo <acme@redhat.com>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 005/149] perf tools: Handle TOPOLOGY headers with no CPU
-Date:   Tue, 12 Mar 2019 10:07:03 -0700
-Message-Id: <20190312170349.928871445@linuxfoundation.org>
+        Jiri Olsa <jolsa@kernel.org>, Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.19 003/149] perf script: Fix crash with printing mixed trace point and other events
+Date:   Tue, 12 Mar 2019 10:07:01 -0700
+Message-Id: <20190312170349.735068011@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190312170349.421581206@linuxfoundation.org>
 References: <20190312170349.421581206@linuxfoundation.org>
@@ -69,65 +66,80 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-[ Upstream commit 1497e804d1a6e2bd9107ddf64b0310449f4673eb ]
+[ Upstream commit 96167167b6e17b25c0e05ecc31119b73baeab094 ]
 
-This patch fixes an issue in cpumap.c when used with the TOPOLOGY
-header. In some configurations, some NUMA nodes may have no CPU (empty
-cpulist). Yet a cpumap map must be created otherwise perf abort with an
-error. This patch handles this case by creating a dummy map.
+'perf script' crashes currently when printing mixed trace points and
+other events because the trace format does not handle events without
+trace meta data. Add a simple check to avoid that.
 
-  Before:
+  % cat > test.c
+  main()
+  {
+      printf("Hello world\n");
+  }
+  ^D
+  % gcc -g -o test test.c
+  % sudo perf probe -x test 'test.c:3'
+  % perf record -e '{cpu/cpu-cycles,period=10000/,probe_test:main}:S' ./test
+  % perf script
+  <segfault>
 
-  $ perf record -o - -e cycles noploop 2 | perf script -i -
-  0x6e8 [0x6c]: failed to process type: 80
+Committer testing:
 
-  After:
+Before:
 
-  $ perf record -o - -e cycles noploop 2 | perf script -i -
-  noploop for 2 seconds
+  # perf probe -x /lib64/libc-2.28.so malloc
+  Added new event:
+    probe_libc:malloc    (on malloc in /usr/lib64/libc-2.28.so)
 
-Signed-off-by: Stephane Eranian <eranian@google.com>
+  You can now use it in all perf tools, such as:
+
+	perf record -e probe_libc:malloc -aR sleep 1
+
+  # perf probe -l
+  probe_libc:malloc    (on __libc_malloc@malloc/malloc.c in /usr/lib64/libc-2.28.so)
+  # perf record -e '{cpu/cpu-cycles,period=10000/,probe_libc:*}:S' sleep 1
+  [ perf record: Woken up 1 times to write data ]
+  [ perf record: Captured and wrote 0.023 MB perf.data (40 samples) ]
+  # perf script
+  Segmentation fault (core dumped)
+  ^C
+  #
+
+After:
+
+  # perf script | head -6
+     sleep 2888 94796.944981: 16198 cpu/cpu-cycles,period=10000/: ffffffff925dc04f get_random_u32+0x1f (/lib/modules/5.0.0-rc2+/build/vmlinux)
+     sleep 2888 [-01] 94796.944981: probe_libc:malloc:
+     sleep 2888 94796.944983:  4713 cpu/cpu-cycles,period=10000/: ffffffff922763af change_protection+0xcf (/lib/modules/5.0.0-rc2+/build/vmlinux)
+     sleep 2888 [-01] 94796.944983: probe_libc:malloc:
+     sleep 2888 94796.944986:  9934 cpu/cpu-cycles,period=10000/: ffffffff922777e0 move_page_tables+0x0 (/lib/modules/5.0.0-rc2+/build/vmlinux)
+     sleep 2888 [-01] 94796.944986: probe_libc:malloc:
+  #
+
+Signed-off-by: Andi Kleen <ak@linux.intel.com>
+Tested-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 Acked-by: Jiri Olsa <jolsa@kernel.org>
-Cc: Andi Kleen <ak@linux.intel.com>
-Cc: Kan Liang <kan.liang@linux.intel.com>
-Cc: Peter Zijlstra <peterz@infradead.org>
-Link: http://lkml.kernel.org/r/1547885559-1657-1-git-send-email-eranian@google.com
+Link: http://lkml.kernel.org/r/20190117194834.21940-1-andi@firstfloor.org
 Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- tools/perf/util/cpumap.c | 11 +++++++++--
- 1 file changed, 9 insertions(+), 2 deletions(-)
+ tools/perf/builtin-script.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/tools/perf/util/cpumap.c b/tools/perf/util/cpumap.c
-index 1ccbd3342069..383674f448fc 100644
---- a/tools/perf/util/cpumap.c
-+++ b/tools/perf/util/cpumap.c
-@@ -134,7 +134,12 @@ struct cpu_map *cpu_map__new(const char *cpu_list)
- 	if (!cpu_list)
- 		return cpu_map__read_all_cpu_map();
+diff --git a/tools/perf/builtin-script.c b/tools/perf/builtin-script.c
+index 6c1e7ceedcf3..ce2aee11e360 100644
+--- a/tools/perf/builtin-script.c
++++ b/tools/perf/builtin-script.c
+@@ -1658,7 +1658,7 @@ static void process_event(struct perf_script *script,
+ 		return;
+ 	}
  
--	if (!isdigit(*cpu_list))
-+	/*
-+	 * must handle the case of empty cpumap to cover
-+	 * TOPOLOGY header for NUMA nodes with no CPU
-+	 * ( e.g., because of CPU hotplug)
-+	 */
-+	if (!isdigit(*cpu_list) && *cpu_list != '\0')
- 		goto out;
- 
- 	while (isdigit(*cpu_list)) {
-@@ -181,8 +186,10 @@ struct cpu_map *cpu_map__new(const char *cpu_list)
- 
- 	if (nr_cpus > 0)
- 		cpus = cpu_map__trim_new(nr_cpus, tmp_cpus);
--	else
-+	else if (*cpu_list != '\0')
- 		cpus = cpu_map__default_new();
-+	else
-+		cpus = cpu_map__dummy_new();
- invalid:
- 	free(tmp_cpus);
- out:
+-	if (PRINT_FIELD(TRACE)) {
++	if (PRINT_FIELD(TRACE) && sample->raw_data) {
+ 		event_format__fprintf(evsel->tp_format, sample->cpu,
+ 				      sample->raw_data, sample->raw_size, fp);
+ 	}
 -- 
 2.19.1
 
