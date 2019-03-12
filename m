@@ -4,61 +4,52 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7BD7FC43381
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 17:53:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 886B0C43381
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 17:53:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4C0922087C
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 17:53:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 560EB21734
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 17:53:49 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1552413218;
-	bh=TwdbgXLlbrPqZErgpejAtcKx4FT+EDSP9XQgUH2yVTI=;
+	s=default; t=1552413229;
+	bh=S4Nnv6JZp6dY9VawqO3zd1D5zWAx0M7vB0neWOwJzaQ=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=NlvCk9PmSD6sDZHojTAnZEaQdeZ2trppEIoBDMT3+30NRaGKM22d6hRyzxcM3KGFO
-	 yMQbVlsEQ5FFDi0nGw8Iv1gAqLAlM4YlLdPdsCAyMAZpI3v2eiSrIl736DCZb0aRat
-	 mXhmrG/CNsbcWC6EQBbK8VGRQFimx0qmLZ0zskv8=
+	b=SRJJGDa7q/m5kNPcmr+s0iWdYhYqJUeQjmsyumghACkd7xv0WQiK01JNU/IZeL7Mk
+	 JQpjGjUvJWbiG91/n2bvhZoVubJFAqXbUyM7Ym5UnYuFFaOgoNOgHxBpX2eXBQdxSu
+	 2u37M2CszIXsvA9oaJ4Bp1HB52Hmgh2QepC9qOW8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728860AbfCLRxh (ORCPT
+        id S1729572AbfCLRxs (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 12 Mar 2019 13:53:37 -0400
-Received: from mail.kernel.org ([198.145.29.99]:52688 "EHLO mail.kernel.org"
+        Tue, 12 Mar 2019 13:53:48 -0400
+Received: from mail.kernel.org ([198.145.29.99]:52544 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728293AbfCLROR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 12 Mar 2019 13:14:17 -0400
+        id S1728276AbfCLROO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 12 Mar 2019 13:14:14 -0400
 Received: from localhost (unknown [104.133.8.98])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id BADAA21871;
-        Tue, 12 Mar 2019 17:14:16 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id DB67E2173C;
+        Tue, 12 Mar 2019 17:14:13 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1552410856;
-        bh=TwdbgXLlbrPqZErgpejAtcKx4FT+EDSP9XQgUH2yVTI=;
+        s=default; t=1552410854;
+        bh=S4Nnv6JZp6dY9VawqO3zd1D5zWAx0M7vB0neWOwJzaQ=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=m5jdeaAiRycqIh2d2vtz/Sw+kIIvoswfPnP+ARmrE8XzUwBg1qUFannWBHYqOLdK1
-         H88+GJCvod/0VzsolcSU/BqGFnScX8hAy1V3sjZPhbwyAT6DzO9th2hTScfoTUeCKn
-         xErEhULMSDPFWc81QZc1vN0cjK7rauIKYXdnwZtw=
+        b=YQuUwsIzN3ywtM5sepjeYbsrLdLq1AKZF12Rt5jgU898RS+kWyUBknXO9Qi63DkNQ
+         BwzgVTK3CrfQQRp9i1V+WlhFDOQPA4MfLpwKiBCvFlaJNUdnur27rqILYen2qFrPd9
+         ypNAPf2kcf4gpxUMN0yKmmDYbcpxTKcVYfcsiadg=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Dave Young <dyoung@redhat.com>,
-        Kairui Song <kasong@redhat.com>, Borislav Petkov <bp@suse.de>,
-        AKASHI Takahiro <takahiro.akashi@linaro.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Ard Biesheuvel <ard.biesheuvel@linaro.org>, bhe@redhat.com,
-        David Howells <dhowells@redhat.com>, erik.schmauss@intel.com,
-        fanc.fnst@cn.fujitsu.com, "H. Peter Anvin" <hpa@zytor.com>,
-        Ingo Molnar <mingo@redhat.com>, kexec@lists.infradead.org,
-        lenb@kernel.org, linux-acpi@vger.kernel.org,
-        Philipp Rudo <prudo@linux.vnet.ibm.com>,
-        rafael.j.wysocki@intel.com, robert.moore@intel.com,
+        stable@vger.kernel.org, Tom Lendacky <thomas.lendacky@amd.com>,
+        Borislav Petkov <bp@suse.de>, "H. Peter Anvin" <hpa@zytor.com>,
+        Ingo Molnar <mingo@redhat.com>,
         Thomas Gleixner <tglx@linutronix.de>, x86-ml <x86@kernel.org>,
-        Yannik Sembritzki <yannik@sembritzki.me>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 052/149] x86/kexec: Dont setup EFI info if EFI runtime is not enabled
-Date:   Tue, 12 Mar 2019 10:07:50 -0700
-Message-Id: <20190312170354.103306285@linuxfoundation.org>
+Subject: [PATCH 4.19 049/149] x86/microcode/amd: Dont falsely trick the late loading mechanism
+Date:   Tue, 12 Mar 2019 10:07:47 -0700
+Message-Id: <20190312170353.883748154@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190312170349.421581206@linuxfoundation.org>
 References: <20190312170349.421581206@linuxfoundation.org>
@@ -77,68 +68,64 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-[ Upstream commit 2aa958c99c7fd3162b089a1a56a34a0cdb778de1 ]
+[ Upstream commit 912139cfbfa6a2bc1da052314d2c29338dae1f6a ]
 
-Kexec-ing a kernel with "efi=noruntime" on the first kernel's command
-line causes the following null pointer dereference:
+The load_microcode_amd() function searches for microcode patches and
+attempts to apply a microcode patch if it is of different level than the
+currently installed level.
 
-  BUG: unable to handle kernel NULL pointer dereference at 0000000000000000
-  #PF error: [normal kernel read fault]
-  Call Trace:
-   efi_runtime_map_copy+0x28/0x30
-   bzImage64_load+0x688/0x872
-   arch_kexec_kernel_image_load+0x6d/0x70
-   kimage_file_alloc_init+0x13e/0x220
-   __x64_sys_kexec_file_load+0x144/0x290
-   do_syscall_64+0x55/0x1a0
-   entry_SYSCALL_64_after_hwframe+0x44/0xa9
+While the processor won't actually load a level that is less than
+what is already installed, the logic wrongly returns UCODE_NEW thus
+signaling to its caller reload_store() that a late loading should be
+attempted.
 
-Just skip the EFI info setup if EFI runtime services are not enabled.
+If the file-system contains an older microcode revision than what is
+currently running, such a late microcode reload can result in these
+misleading messages:
 
- [ bp: Massage commit message. ]
+  x86/CPU: CPU features have changed after loading microcode, but might not take effect.
+  x86/CPU: Please consider either early loading through initrd/built-in or a potential BIOS update.
 
-Suggested-by: Dave Young <dyoung@redhat.com>
-Signed-off-by: Kairui Song <kasong@redhat.com>
+These messages were issued on a system where SME/SEV are not
+enabled by the BIOS (MSR C001_0010[23] = 0b) because during boot,
+early_detect_mem_encrypt() is called and cleared the SME and SEV
+features in this case.
+
+However, after the wrong late load attempt, get_cpu_cap() is called and
+reloads the SME and SEV feature bits, resulting in the messages.
+
+Update the microcode level check to not attempt microcode loading if the
+current level is greater than(!) and not only equal to the current patch
+level.
+
+ [ bp: massage commit message. ]
+
+Fixes: 2613f36ed965 ("x86/microcode: Attempt late loading only when new microcode is present")
+Signed-off-by: Tom Lendacky <thomas.lendacky@amd.com>
 Signed-off-by: Borislav Petkov <bp@suse.de>
-Acked-by: Dave Young <dyoung@redhat.com>
-Cc: AKASHI Takahiro <takahiro.akashi@linaro.org>
-Cc: Andrew Morton <akpm@linux-foundation.org>
-Cc: Ard Biesheuvel <ard.biesheuvel@linaro.org>
-Cc: bhe@redhat.com
-Cc: David Howells <dhowells@redhat.com>
-Cc: erik.schmauss@intel.com
-Cc: fanc.fnst@cn.fujitsu.com
 Cc: "H. Peter Anvin" <hpa@zytor.com>
 Cc: Ingo Molnar <mingo@redhat.com>
-Cc: kexec@lists.infradead.org
-Cc: lenb@kernel.org
-Cc: linux-acpi@vger.kernel.org
-Cc: Philipp Rudo <prudo@linux.vnet.ibm.com>
-Cc: rafael.j.wysocki@intel.com
-Cc: robert.moore@intel.com
 Cc: Thomas Gleixner <tglx@linutronix.de>
 Cc: x86-ml <x86@kernel.org>
-Cc: Yannik Sembritzki <yannik@sembritzki.me>
-Link: https://lkml.kernel.org/r/20190118111310.29589-2-kasong@redhat.com
+Link: https://lkml.kernel.org/r/154894518427.9406.8246222496874202773.stgit@tlendack-t1.amdoffice.net
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/x86/kernel/kexec-bzimage64.c | 3 +++
- 1 file changed, 3 insertions(+)
+ arch/x86/kernel/cpu/microcode/amd.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/arch/x86/kernel/kexec-bzimage64.c b/arch/x86/kernel/kexec-bzimage64.c
-index 278cd07228dd..9490a2845f14 100644
---- a/arch/x86/kernel/kexec-bzimage64.c
-+++ b/arch/x86/kernel/kexec-bzimage64.c
-@@ -167,6 +167,9 @@ setup_efi_state(struct boot_params *params, unsigned long params_load_addr,
- 	struct efi_info *current_ei = &boot_params.efi_info;
- 	struct efi_info *ei = &params->efi_info;
+diff --git a/arch/x86/kernel/cpu/microcode/amd.c b/arch/x86/kernel/cpu/microcode/amd.c
+index 07b5fc00b188..a4e7e100ed26 100644
+--- a/arch/x86/kernel/cpu/microcode/amd.c
++++ b/arch/x86/kernel/cpu/microcode/amd.c
+@@ -707,7 +707,7 @@ load_microcode_amd(bool save, u8 family, const u8 *data, size_t size)
+ 	if (!p) {
+ 		return ret;
+ 	} else {
+-		if (boot_cpu_data.microcode == p->patch_id)
++		if (boot_cpu_data.microcode >= p->patch_id)
+ 			return ret;
  
-+	if (!efi_enabled(EFI_RUNTIME_SERVICES))
-+		return 0;
-+
- 	if (!current_ei->efi_memmap_size)
- 		return 0;
- 
+ 		ret = UCODE_NEW;
 -- 
 2.19.1
 
