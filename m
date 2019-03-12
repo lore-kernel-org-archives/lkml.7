@@ -2,98 +2,118 @@ Return-Path: <SRS0=J4ZE=RP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_NEOMUTT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4D69DC43381
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 12:39:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 43269C43381
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 12:42:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 209E72147C
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 12:39:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 07D3421734
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 12:42:54 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=mm-sol.com header.i=@mm-sol.com header.b="OuvbnS/Y"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726539AbfCLMjB (ORCPT
+        id S1726534AbfCLMmx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 12 Mar 2019 08:39:01 -0400
-Received: from mx2.suse.de ([195.135.220.15]:39904 "EHLO mx1.suse.de"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1725895AbfCLMjA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 12 Mar 2019 08:39:00 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx1.suse.de (Postfix) with ESMTP id 3F052AF7B;
-        Tue, 12 Mar 2019 12:38:59 +0000 (UTC)
-Date:   Tue, 12 Mar 2019 13:38:57 +0100
-From:   Petr Mladek <pmladek@suse.com>
-To:     Sergey Senozhatsky <sergey.senozhatsky.work@gmail.com>
-Cc:     John Ogness <john.ogness@linutronix.de>,
-        linux-kernel@vger.kernel.org,
-        Peter Zijlstra <peterz@infradead.org>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Daniel Wang <wonderfly@google.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Alan Cox <gnomes@lxorguk.ukuu.org.uk>,
-        Jiri Slaby <jslaby@suse.com>,
-        Peter Feiner <pfeiner@google.com>,
-        linux-serial@vger.kernel.org,
-        Sergey Senozhatsky <sergey.senozhatsky@gmail.com>
-Subject: Re: [RFC PATCH v1 00/25] printk: new implementation
-Message-ID: <20190312123857.juatd6fwtfmqajze@pathway.suse.cz>
-References: <20190212143003.48446-1-john.ogness@linutronix.de>
- <20190213025520.GA5803@jagdpanzerIV>
- <874l9721hf.fsf@linutronix.de>
- <20190304052335.GA6648@jagdpanzerIV>
- <87lg1rggcz.fsf@linutronix.de>
- <20190311105411.GA368@jagdpanzerIV>
+        Tue, 12 Mar 2019 08:42:53 -0400
+Received: from ns.mm-sol.com ([37.157.136.199]:37519 "EHLO extserv.mm-sol.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725957AbfCLMmw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 12 Mar 2019 08:42:52 -0400
+Received: from [192.168.27.209] (unknown [37.157.136.206])
+        by extserv.mm-sol.com (Postfix) with ESMTPSA id 05188CE28;
+        Tue, 12 Mar 2019 14:42:49 +0200 (EET)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=mm-sol.com; s=201706;
+        t=1552394569; bh=XuDKOdFZ35K3ZnPCJITHm6krw2gbYBRCmyJSsNPuA8o=;
+        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
+        b=OuvbnS/Yf1Aa11Mtn6WEwzs7oSuUM/2g08KPfivpySQH2Guc+8DlV6nPU4qDzDvL8
+         ZtxTuhnbv27+XTQYXWIT6rf01j/lwdUUnA+qXC5wntmAnkIj/Fe3q2DoqDUL48u7bI
+         sugMCih2UHw4Uca8geEmDHV2kY66wmb8lBxu2OtEwpO3rJAD1vBTYaAmlvsHW+Ui3w
+         aAUdrXihzBmZtXUibigEGBpW4L01ji2o6T2juVqbFy+SvW/6zFODKMr3ODt57npN6t
+         CFFFf6xkZprcdvR3JuM5NrLvqmKinRd9bwIloNU2Jz3+N2Xu6cR4p3DqF7DzWQhYRr
+         9vWZVro9hGq1A==
+Subject: Re: [RFC PATCH v1] PCI: qcom: Use quirk to override incorrect device
+ class
+To:     Marc Gonzalez <marc.w.gonzalez@free.fr>,
+        Bjorn Helgaas <bhelgaas@google.com>
+Cc:     Andy Gross <andy.gross@linaro.org>,
+        David Brown <david.brown@linaro.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        PCI <linux-pci@vger.kernel.org>,
+        MSM <linux-arm-msm@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Jeffrey Hugo <jhugo@codeaurora.org>
+References: <94bb3f22-c5a7-1891-9d89-42a520e9a592@free.fr>
+From:   Stanimir Varbanov <svarbanov@mm-sol.com>
+Message-ID: <65321fe3-ca29-c454-63ae-98a46c2e5158@mm-sol.com>
+Date:   Tue, 12 Mar 2019 14:42:46 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.5.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190311105411.GA368@jagdpanzerIV>
-User-Agent: NeoMutt/20170421 (1.8.2)
+In-Reply-To: <94bb3f22-c5a7-1891-9d89-42a520e9a592@free.fr>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon 2019-03-11 19:54:11, Sergey Senozhatsky wrote:
-> On (03/07/19 10:53), John Ogness wrote:
-> > Since all current console drivers are already irq safe, I'm
-> > wondering if using irq_work to handle the emergency printing for console
-> > drivers without write_atomic() would help. (If the printk caller is in a
-> > context that write() supports, then write() could be called directly.)
-> > This would also demand that the irq-safe requirements for write() are
-> > not relaxed. The printk-kthread might still be faster than irq_work, but
-> > it might increase reliability if an irq_work is triggered as an extra
-> > precaution.
+Hi Marc,
+
+Thanks for the patch!
+
+On 3/11/19 4:56 PM, Marc Gonzalez wrote:
+> Some chips report an incorrect device class. Override the incorrect
+> value using a quirk, instead of code in the read function.
 > 
-> Hmm. OK. So one of the things with printk is that it's fully sequential.
-> We call console drivers one by one. Slow consoles can affect what appears
-> on the fast consoles; fast console have no impact on slow ones.
+> Signed-off-by: Marc Gonzalez <marc.w.gonzalez@free.fr>
+> ---
+> FWIW, this quirk is no longer required on recent chips:
+> msm8996 (tested by Stanimir), msm8998 (tested by me), sdm845 (untested) are unaffected
+> apq/ipq8064 is affected => what is the device ID for these chips?
+> others?
 > 
-> 	call_console_drivers()
-> 		for_each_console(c)
-> 			c->write(c, text, text_len);
+> Stanimir added: "this will become a real problem (now we use the driver as RC)
+> when someone decide to use it as an endpoint"
+> ---
+>  drivers/pci/controller/dwc/pcie-qcom.c | 14 ++++++--------
+>  1 file changed, 6 insertions(+), 8 deletions(-)
 > 
-> So a list of (slow_serial serial netcon) console drivers is a camel train;
-> fast netcon is not fast anymore, and slow consoles sometimes are the reason
-> we have dropped messages. And if we drop messages we drop them for all
-> consoles, including fast netcon. Turning that sequential pipline into a
-> bunch of per-console kthreads/irq and letting fast consoles to be fast is
-> not a completely bad thing. Let's think more about this, I'd like to read
-> more opinions.
+> diff --git a/drivers/pci/controller/dwc/pcie-qcom.c b/drivers/pci/controller/dwc/pcie-qcom.c
+> index 3de5510fd3d5..94da2c9c2ad5 100644
+> --- a/drivers/pci/controller/dwc/pcie-qcom.c
+> +++ b/drivers/pci/controller/dwc/pcie-qcom.c
+> @@ -1136,17 +1136,15 @@ static int qcom_pcie_rd_own_conf(struct pcie_port *pp, int where, int size,
+>  {
+>  	struct dw_pcie *pci = to_dw_pcie_from_pp(pp);
+>  
+> -	/* the device class is not reported correctly from the register */
+> -	if (where == PCI_CLASS_REVISION && size == 4) {
+> -		*val = readl(pci->dbi_base + PCI_CLASS_REVISION);
+> -		*val &= 0xff;	/* keep revision id */
+> -		*val |= PCI_CLASS_BRIDGE_PCI << 16;
+> -		return PCIBIOS_SUCCESSFUL;
+> -	}
+> -
 
-Per-console kthread sounds interesting but there is the problem with
-reliability. I mean that kthread need not get scheduled.
+once you dropped the above snippet this function becomes absolutely
+useless so please delete it at all and also from qcom_pcie_dw_ops.
 
-Some of these problems might get solved by the per-console loglevel
-patchset.
+>  	return dw_pcie_read(pci->dbi_base + where, size, val);
+>  }
+>  
+> +static void qcom_fixup_class(struct pci_dev *dev)
+> +{
+> +	dev->class = PCI_CLASS_BRIDGE_PCI << 8;
+> +}
+> +DECLARE_PCI_FIXUP_EARLY(PCI_VENDOR_ID_QCOM, PCI_ANY_ID, qcom_fixup_class);
 
-Sigh, any feature might be useful in some situation. But we always
-have to consider the cost and the gain. I wonder how common is
-to actively use two consoles at the same time and what would
-be the motivation.
+I wonder, in case that dw_pcie_setup_rc() already has a write to
+PCI_CLASS_DEVICE configuration register to set it as a bridge do we
+still need to do the above fixup?
 
-Best Regards,
-Petr
+-- 
+regards,
+Stan
