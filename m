@@ -4,105 +4,106 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-11.0 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PULL_REQUEST,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_PASS autolearn=unavailable
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_PASS autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8356AC43381
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 23:13:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 752DEC43381
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 23:21:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5178B2087C
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 23:13:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 334C22147C
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 23:21:06 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=paul-moore-com.20150623.gappssmtp.com header.i=@paul-moore-com.20150623.gappssmtp.com header.b="DbCsVLRI"
+	dkim=pass (2048-bit key) header.d=intel-com.20150623.gappssmtp.com header.i=@intel-com.20150623.gappssmtp.com header.b="UQuKc5lC"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727392AbfCLXND (ORCPT
+        id S1727356AbfCLXVE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 12 Mar 2019 19:13:03 -0400
-Received: from mail-lf1-f67.google.com ([209.85.167.67]:44375 "EHLO
-        mail-lf1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726867AbfCLXND (ORCPT
+        Tue, 12 Mar 2019 19:21:04 -0400
+Received: from mail-ot1-f66.google.com ([209.85.210.66]:45801 "EHLO
+        mail-ot1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726758AbfCLXVE (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 12 Mar 2019 19:13:03 -0400
-Received: by mail-lf1-f67.google.com with SMTP id u9so24856lfe.11
-        for <linux-kernel@vger.kernel.org>; Tue, 12 Mar 2019 16:13:01 -0700 (PDT)
+        Tue, 12 Mar 2019 19:21:04 -0400
+Received: by mail-ot1-f66.google.com with SMTP id i12so50397otp.12
+        for <linux-kernel@vger.kernel.org>; Tue, 12 Mar 2019 16:21:03 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=paul-moore-com.20150623.gappssmtp.com; s=20150623;
+        d=intel-com.20150623.gappssmtp.com; s=20150623;
         h=mime-version:from:date:message-id:subject:to:cc;
-        bh=kv+IpuE8uhKkAeCRq+EUgrdWk4JSgDpUpl0p5lmX99c=;
-        b=DbCsVLRI7Rzb1qFJBmylu0TkkOCC0GrWU42XnTvHdfNKGun6F/S5sJ7BSIr5gCFBg7
-         b0Np6SdkzlbqQrFpuDIKhyR9YaAw0abSVFjyITC0HswDuQuNOHtckwszyiAXGWsN2fqA
-         ZhMcQBzj0w9C4hmh7wZHgFe5mmLHPDjbNyjAgxGx3pfvNwPGXMlgWhFFpuJHwsjdsasE
-         sFbveHhYK/tfmTxgOU3k5ipnf3G0AeAxsG1Ns2Qf59qWQHuFBYqdXLTiEQrBg3Wq/8PM
-         1iAtYQHuPtJM6iyz4yQvQ41LojtAWQeU4WZm8qlpeSDQqEaH+y6v940Sw5YudnGTjJ5C
-         nfPg==
+        bh=1jJQacBl3c4YFvB1tFugqbGSybVgDP2s6ootgfTR99U=;
+        b=UQuKc5lCR3pnU4XP9WfMNSwDpOJZWMz+NU9ufjhnsOZa0bFH2TtEAALZsM4rwOAS4F
+         OfZ2g8L7+R31dIKKvITQ7GrJ3VMAVQCynLONkv68PrKlxSNUtvaYU/tN8mYCuK4jKkPS
+         7spd18/NHnQzuC1/7zmW/vFReNaRKtQFM8/FlCruZ/lF5S20bs2FHuSbOS85FKK9whhM
+         LEh+odraUNitDlRgEBAgVIj9fOMe6ddA5yeTu1wQyQe5igwpARNtRxZjIyJwI9Gy5S+H
+         s9VElplmkU3uDmKSBV4q2V246I155iTVMEjKWSER5P8KQwpgMwpbdluwnpUayXFvFjmA
+         6xxw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:from:date:message-id:subject:to:cc;
-        bh=kv+IpuE8uhKkAeCRq+EUgrdWk4JSgDpUpl0p5lmX99c=;
-        b=IZ5FNwifBhcqeuuFikPJM1lbFjdBf1FfsPg6Pi7elCAGWkqXPCUz1Hn3m5DhGtpBVn
-         /iYXaTwpI17mDMkUIWCLycCiFF0USMcypfJyDMzodSkuK13hGNWk/Kh4ulC7N1OEEk52
-         f2yaCKzz82fXMvJEslvtJkEvqFYMXLr1TLTlmQZpECpkH44RfZRrLakpAL2qJow7hOaQ
-         7PxGNzualZoCwaOPCOR52c02Mt7ofJiG3VJYyo7FEJj45m8tFykQg16NUeGIbmyWLkku
-         9emlKLT30/sjLeFrK90CBn7gMiRCOzrnbykLiNk1kQ51nB3/L4dkZaobAbnkq11Cr0Ce
-         42Zw==
-X-Gm-Message-State: APjAAAUgvWD7u+WIysVSENoji/zJ4JLmmavkQstCBXCNc9ayoV6NZxnP
-        MpeBkzTJ9ZKmFnOJQHR/98+WdEVdt4J7O7TmjzZ2
-X-Google-Smtp-Source: APXvYqzpQxT+BBNyzwnOKQ3hXZ2wyAi5055PXgoi8dlhpluTarvFUAV4NSC4tnwEFJ6OVlGudllaz3nRHtuEME3QcPs=
-X-Received: by 2002:ac2:42da:: with SMTP id n26mr15461113lfl.91.1552432380824;
- Tue, 12 Mar 2019 16:13:00 -0700 (PDT)
+        bh=1jJQacBl3c4YFvB1tFugqbGSybVgDP2s6ootgfTR99U=;
+        b=czJLpplQhKXT/wpt/h8eG5dYVDOsdUhSgM6YXcidsFyYCAinJt4J8nwcOvd/+eeZ43
+         VI+MBwtv1UKj9A9KZi7gSE3nEA/2Y01LdtnDVosetg40Va8CituPW9/TolT6cv0SXNgt
+         ahSlcqKelN18fPjGRemxfMSVADieB0pZk8v4ZYaQe6FzzyGFLcqwIbOm5lqy14XicUg9
+         yhfBjJMTmH9KZ0le6MEQ/JePko56lJLkGPjuQiaZX88aW4DhbAqoo6Ns1ZZJjy34IDvo
+         LTMW+VUwfkEaCntcxleK2RbQ+DgDXbdL3jeFvmY9iI0tGQ8sLZuoJi4Kx4RCJ/i6Ygx/
+         u74Q==
+X-Gm-Message-State: APjAAAUIOfLrMm4BK2fSzi0MLC+vSEXKolh+GDjqshYkl11nR4ENCVDO
+        sfVz3v8cDNltOgxO6cHkw3jvRcdTsW1tS7SAtEDJjOc0acc=
+X-Google-Smtp-Source: APXvYqy1bAAdK2iisYU9Kh1JPeTVRptRjRrYN650HOAUj8YCQ8GahFgnADDoyJdWedQW54TPdXzY0UxN4cxmoGpoaEA=
+X-Received: by 2002:a9d:224a:: with SMTP id o68mr13547159ota.214.1552432863421;
+ Tue, 12 Mar 2019 16:21:03 -0700 (PDT)
 MIME-Version: 1.0
-From:   Paul Moore <paul@paul-moore.com>
-Date:   Tue, 12 Mar 2019 19:12:50 -0400
-Message-ID: <CAHC9VhTNWou2axPZ5SeCD0pML_r6=r1Wok1U=ggONUR14O+mQw@mail.gmail.com>
-Subject: [GIT PULL] SELinux fixes for v5.1 (#1)
+From:   Dan Williams <dan.j.williams@intel.com>
+Date:   Tue, 12 Mar 2019 16:20:52 -0700
+Message-ID: <CAPcyv4g5NH=4wKs7+V3hTw1Qv6peBQbb7xCyjjQn3bhj7J0WTw@mail.gmail.com>
+Subject: [GIT PULL] Filesystem-DAX fixes for 5.1
 To:     Linus Torvalds <torvalds@linux-foundation.org>
-Cc:     selinux@vger.kernel.org, linux-security-module@vger.kernel.org,
-        linux-kernel@vger.kernel.org
+Cc:     linux-nvdimm <linux-nvdimm@lists.01.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Linus,
+Hi Linus, please pull from:
 
-Two small fixes for SELinux in v5.1: one adds a buffer length check to
-the SELinux SCTP code, the other ensures that the SELinux labeling for
-a NFS mount is not disabled if the filesystem is mounted twice.
-Please pull for v5.1-rc1.
+  git://git.kernel.org/pub/scm/linux/kernel/git/nvdimm/nvdimm tags/fsdax-for-5.1
 
-Thanks,
--Paul
+...to receive a small collection of cleanups and an Xarray fix for
+v5.1-rc1. It has soaked in -next without issue, although the Xarray
+fix was recently re-flowed to fix up a tracepoint argument and add
+Jan's reviewed-by.
 
---
-The following changes since commit 45189a1998e00f6375ebd49d1e18161acddd73de:
+---
 
- selinux: fix avc audit messages (2019-02-05 12:34:33 -0500)
+The following changes since commit d13937116f1e82bf508a6325111b322c30c85eb9:
+
+  Linux 5.0-rc6 (2019-02-10 14:42:20 -0800)
 
 are available in the Git repository at:
 
- git://git.kernel.org/pub/scm/linux/kernel/git/pcmoore/selinux.git
-   tags/selinux-pr-20190312
+  git://git.kernel.org/pub/scm/linux/kernel/git/nvdimm/nvdimm tags/fsdax-for-5.1
 
-for you to fetch changes up to 3815a245b50124f0865415dcb606a034e97494d4:
+for you to fetch changes up to e4b3448bc346fedf36db64124a664a959995b085:
 
- security/selinux: fix SECURITY_LSM_NATIVE_LABELS on reused superblock
-   (2019-03-11 16:13:17 -0400)
+  dax: Flush partial PMDs correctly (2019-03-01 17:24:48 -0800)
 
 ----------------------------------------------------------------
-selinux/stable-5.1 PR 20190312
+filesystem-dax for 5.1
+
+* Fix handling of PMD-sized entries in the Xarray that lead to a crash
+  scenario.
+
+* Miscellaneous cleanups and small fixes
 
 ----------------------------------------------------------------
-J. Bruce Fields (1):
-     security/selinux: fix SECURITY_LSM_NATIVE_LABELS on reused superblock
+Ira Weiny (1):
+      fs/dax: NIT fix comment regarding start/end vs range
 
-Xin Long (1):
-     selinux: add the missing walk_size + len check in
-              selinux_sctp_bind_connect
+Matthew Wilcox (1):
+      dax: Flush partial PMDs correctly
 
-security/selinux/hooks.c | 8 +++++++-
-1 file changed, 7 insertions(+), 1 deletion(-)
+Souptick Joarder (1):
+      fs/dax: Convert to use vmf_error()
 
--- 
-paul moore
-www.paul-moore.com
+ fs/dax.c | 25 +++++++++++--------------
+ 1 file changed, 11 insertions(+), 14 deletions(-)
