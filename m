@@ -2,167 +2,209 @@ Return-Path: <SRS0=J4ZE=RP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIMWL_WL_MED,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_PASS autolearn=unavailable autolearn_force=no
+X-Spam-Status: No, score=-4.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_PASS autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 041D0C43381
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 19:42:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5FE4AC43381
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 19:46:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B843F214AE
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 19:42:05 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=fb.com header.i=@fb.com header.b="GIHDRyAz";
-	dkim=pass (1024-bit key) header.d=fb.onmicrosoft.com header.i=@fb.onmicrosoft.com header.b="D1lnHzNq"
+	by mail.kernel.org (Postfix) with ESMTP id 23C262087C
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 19:46:27 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727122AbfCLTmE (ORCPT
+        id S1726728AbfCLTqZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 12 Mar 2019 15:42:04 -0400
-Received: from mx0a-00082601.pphosted.com ([67.231.145.42]:42330 "EHLO
-        mx0a-00082601.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726501AbfCLTmD (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 12 Mar 2019 15:42:03 -0400
-Received: from pps.filterd (m0148461.ppops.net [127.0.0.1])
-        by mx0a-00082601.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x2CJRRhS020070;
-        Tue, 12 Mar 2019 12:41:55 -0700
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=fb.com; h=from : to : cc : subject
- : date : message-id : references : in-reply-to : content-type : content-id
- : content-transfer-encoding : mime-version; s=facebook;
- bh=k5dwIh0pXW/bPgm9wj0ITKSXz77/W94/t/zCqtaIyVA=;
- b=GIHDRyAzER0PiJ6mc5QrmeASmnPCK8et948vhXILrCSlHCGBJxgHoHo5svIhsQh+LapW
- JLhMFUxoShaEBVLv4P6vxdBBUBSLQemblD2YBaWDowzZ3K3GLrseOV7LG+f9ji6swRGW
- 1x1gUZUl9/jE0lTINPQxkvTKvnYrTCPniEU= 
-Received: from mail.thefacebook.com ([199.201.64.23])
-        by mx0a-00082601.pphosted.com with ESMTP id 2r6juug2k0-13
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-SHA384 bits=256 verify=NOT);
-        Tue, 12 Mar 2019 12:41:55 -0700
-Received: from prn-mbx05.TheFacebook.com (2620:10d:c081:6::19) by
- prn-hub05.TheFacebook.com (2620:10d:c081:35::129) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA384) id
- 15.1.1713.5; Tue, 12 Mar 2019 12:41:38 -0700
-Received: from prn-hub03.TheFacebook.com (2620:10d:c081:35::127) by
- prn-mbx05.TheFacebook.com (2620:10d:c081:6::19) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA384) id
- 15.1.1713.5; Tue, 12 Mar 2019 12:41:38 -0700
-Received: from NAM03-BY2-obe.outbound.protection.outlook.com (192.168.54.28)
- by o365-in.thefacebook.com (192.168.16.27) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA384) id 15.1.1713.5
- via Frontend Transport; Tue, 12 Mar 2019 12:41:38 -0700
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=fb.onmicrosoft.com;
- s=selector1-fb-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=k5dwIh0pXW/bPgm9wj0ITKSXz77/W94/t/zCqtaIyVA=;
- b=D1lnHzNqy+MXo2280a8aC6Y4AwhfpJzRDrIqVHJN2hcapiVg0Tn62C+hnSkAVNOlW+zezhBsMEUBK+q21YgZ/aKvcwjATe6DezpMhN1NrQNWoK9nl7RzXT2RL65jbgF3oobw6zdGjf/L5GVxoTwdXRpJtq7xCZKIGAWyDplgTs0=
-Received: from MWHPR15MB1264.namprd15.prod.outlook.com (10.175.3.14) by
- MWHPR15MB1311.namprd15.prod.outlook.com (10.175.3.137) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.1686.20; Tue, 12 Mar 2019 19:41:36 +0000
-Received: from MWHPR15MB1264.namprd15.prod.outlook.com
- ([fe80::cc6:7ec2:94ef:f8cb]) by MWHPR15MB1264.namprd15.prod.outlook.com
- ([fe80::cc6:7ec2:94ef:f8cb%9]) with mapi id 15.20.1709.011; Tue, 12 Mar 2019
- 19:41:36 +0000
-From:   Calvin Owens <calvinowens@fb.com>
-To:     Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
-CC:     James Bottomley <James.Bottomley@HansenPartnership.com>,
-        Peter Huewe <peterhuewe@gmx.de>,
-        Jason Gunthorpe <jgg@ziepe.ca>, Arnd Bergmann <arnd@arndb.de>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        "linux-integrity@vger.kernel.org" <linux-integrity@vger.kernel.org>,
+        Tue, 12 Mar 2019 15:46:25 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:57260 "EHLO mx1.redhat.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726329AbfCLTqZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 12 Mar 2019 15:46:25 -0400
+Received: from smtp.corp.redhat.com (int-mx07.intmail.prod.int.phx2.redhat.com [10.5.11.22])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id 7611B30833C0;
+        Tue, 12 Mar 2019 19:46:24 +0000 (UTC)
+Received: from [10.36.116.121] (ovpn-116-121.ams2.redhat.com [10.36.116.121])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 17BB21001E70;
+        Tue, 12 Mar 2019 19:46:20 +0000 (UTC)
+Subject: Re: [Xen-devel] xen: Can't insert balloon page into VM userspace (WAS
+ Re: [linux-linus bisection] complete test-arm64-arm64-xl-xsm)
+From:   David Hildenbrand <david@redhat.com>
+To:     Boris Ostrovsky <boris.ostrovsky@oracle.com>,
+        Andrew Cooper <andrew.cooper3@citrix.com>,
+        Matthew Wilcox <willy@infradead.org>,
+        Julien Grall <julien.grall@arm.com>
+Cc:     Juergen Gross <jgross@suse.com>, k.khlebnikov@samsung.com,
+        Stefano Stabellini <sstabellini@kernel.org>,
+        Kees Cook <keescook@chromium.org>,
+        Konrad Rzeszutek Wilk <konrad.wilk@oracle.com>,
+        "VMware, Inc." <pv-drivers@vmware.com>,
+        osstest service owner <osstest-admin@xenproject.org>,
         "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Kernel Team <Kernel-team@fb.com>
-Subject: Re: [PATCH] tpm: Make timeout logic simpler and more robust
-Thread-Topic: [PATCH] tpm: Make timeout logic simpler and more robust
-Thread-Index: AQHU2GXGLeYW3Qpbpky5KjnMPwFs0aYHJAWAgADPhQCAAB9hAIAAD9uAgABDnAA=
-Date:   Tue, 12 Mar 2019 19:41:36 +0000
-Message-ID: <20190312194130.GA5058@Haydn>
-References: <358e89ed2b766d51b5f57abf31ab7a925ac63379.1552348123.git.calvinowens@fb.com>
- <1552350463.23859.8.camel@HansenPartnership.com>
- <20190312125028.GC9243@linux.intel.com>
- <1552401766.3083.3.camel@HansenPartnership.com>
- <20190312153931.GA9927@linux.intel.com>
-In-Reply-To: <20190312153931.GA9927@linux.intel.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-clientproxiedby: MWHPR04CA0095.namprd04.prod.outlook.com
- (2603:10b6:301:3a::36) To MWHPR15MB1264.namprd15.prod.outlook.com
- (2603:10b6:320:24::14)
-x-ms-exchange-messagesentrepresentingtype: 1
-x-originating-ip: [2620:10d:c090:200::ce7e]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: ee58eb31-ad11-4df7-bfdc-08d6a722bcd9
-x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600127)(711020)(4605104)(2017052603328)(7153060)(7193020);SRVR:MWHPR15MB1311;
-x-ms-traffictypediagnostic: MWHPR15MB1311:
-x-microsoft-exchange-diagnostics: 1;MWHPR15MB1311;20:CeV0rlT67cwFERmIpL89lsxooKCpFGk2eX5EWmUb6ogPyuMCCMJgH/qa3nJhNBTzDxl2ux9MuLPiUc2saJULBtmmwR9l8Vg+LuSJhlCDUr8oLMAWbf7PVbHUq5XjoECDdq8IZFJK7IKyiH+CW70sayrwgbLCyaA3ZByoxunPRho=
-x-microsoft-antispam-prvs: <MWHPR15MB13112E4584292DDF04B9C34ECE490@MWHPR15MB1311.namprd15.prod.outlook.com>
-x-forefront-prvs: 09749A275C
-x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(7916004)(346002)(366004)(396003)(39850400004)(136003)(376002)(189003)(199004)(316002)(33716001)(386003)(53936002)(97736004)(186003)(6246003)(76176011)(5660300002)(81156014)(102836004)(6506007)(93886005)(6916009)(81166006)(1076003)(8936002)(52116002)(14454004)(8676002)(99286004)(478600001)(106356001)(71200400001)(446003)(305945005)(7736002)(6436002)(105586002)(9686003)(54906003)(476003)(6512007)(11346002)(86362001)(46003)(4326008)(33656002)(71190400001)(229853002)(68736007)(6486002)(6116002)(25786009)(2906002)(256004)(486006);DIR:OUT;SFP:1102;SCL:1;SRVR:MWHPR15MB1311;H:MWHPR15MB1264.namprd15.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
-received-spf: None (protection.outlook.com: fb.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam-message-info: UnA3hUm8XTBDELx17a4GtxGKTQ3MUNgI6apG3pt0CVa1a2rvqa6ZVVzeyBss/N10vO4dOFFoUbXKtQr6JSrjJBQyHw8D3wHMZ88aSj4xzwYOwgs7bE/Kf+r/mMiAymvStORmQOT5QYchKtRVgg6xCQxDs1FfQL7+bbPuzznnZVt3XyFEHsS0gkPM8Y35AF1A3UvREYZml1lK4ZyPe4/l7BgG1Gj8aXJhSpUAWH2EPSNIOwp+Dn7fygPSO6DH+Nnhnp68nHkCgpj0dMb0gzv4GLJ8nbuEmufZ+nYDn4KNtU/tS/n0/BRkfAeaLCe1sUrH3+Zhbc1DyjqgDy9483xoVTlVwQK8kJK+8X+U2C/3N1vQOeCSbZTiPrDWSvuLf3SW+4wyHaajhQEGkhJ1ufaLRIgTCdrcJDMSLHq7QMszE3Y=
-Content-Type: text/plain; charset="utf-8"
-Content-ID: <B6C192D1BED14549857863A9859CC914@namprd15.prod.outlook.com>
-Content-Transfer-Encoding: base64
+        linux-mm@kvack.org, Julien Freche <jfreche@vmware.com>,
+        Nadav Amit <namit@vmware.com>, xen-devel@lists.xenproject.org
+References: <E1h3Uiq-0002L6-Ij@osstest.test-lab.xenproject.org>
+ <80211e70-5f54-9421-8e8f-2a4fc758ce39@arm.com>
+ <46118631-61d4-adb6-6ffc-4e7c62ea3da9@arm.com>
+ <20190312171421.GJ19508@bombadil.infradead.org>
+ <e0b64793-260d-5e70-0544-e7290509b605@redhat.com>
+ <45323ea0-2a50-8891-830e-e1f8a8ed23ea@citrix.com>
+ <f4b40d91-9c41-60ed-6b4e-df47af8e5292@oracle.com>
+ <9a40e1ff-7605-e822-a1d2-502a12d0fba7@redhat.com>
+Openpgp: preference=signencrypt
+Autocrypt: addr=david@redhat.com; prefer-encrypt=mutual; keydata=
+ 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
+ SE+xAvmumFBY
+Organization: Red Hat GmbH
+Message-ID: <6f8aca6c-355b-7862-75aa-68fe566f76fb@redhat.com>
+Date:   Tue, 12 Mar 2019 20:46:20 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.4.0
 MIME-Version: 1.0
-X-MS-Exchange-CrossTenant-Network-Message-Id: ee58eb31-ad11-4df7-bfdc-08d6a722bcd9
-X-MS-Exchange-CrossTenant-originalarrivaltime: 12 Mar 2019 19:41:36.3501
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 8ae927fe-1255-47a7-a2af-5f3a069daaa2
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: MWHPR15MB1311
-X-OriginatorOrg: fb.com
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-03-12_11:,,
- signatures=0
-X-Proofpoint-Spam-Reason: safe
-X-FB-Internal: Safe
+In-Reply-To: <9a40e1ff-7605-e822-a1d2-502a12d0fba7@redhat.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-Scanned-By: MIMEDefang 2.84 on 10.5.11.22
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.44]); Tue, 12 Mar 2019 19:46:24 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-T24gVHVlc2RheSAwMy8xMiBhdCAxNzozOSArMDIwMCwgSmFya2tvIFNha2tpbmVuIHdyb3RlOg0K
-PiBPbiBUdWUsIE1hciAxMiwgMjAxOSBhdCAwNzo0Mjo0NkFNIC0wNzAwLCBKYW1lcyBCb3R0b21s
-ZXkgd3JvdGU6DQo+ID4gT24gVHVlLCAyMDE5LTAzLTEyIGF0IDE0OjUwICswMjAwLCBKYXJra28g
-U2Fra2luZW4gd3JvdGU6DQo+ID4gPiBPbiBNb24sIE1hciAxMSwgMjAxOSBhdCAwNToyNzo0M1BN
-IC0wNzAwLCBKYW1lcyBCb3R0b21sZXkgd3JvdGU6DQo+ID4gPiA+IE9uIE1vbiwgMjAxOS0wMy0x
-MSBhdCAxNjo1NCAtMDcwMCwgQ2FsdmluIE93ZW5zIHdyb3RlOg0KPiA+ID4gPiA+IGUncmUgaGF2
-aW5nIGxvdHMgb2YgcHJvYmxlbXMgd2l0aCBUUE0gY29tbWFuZHMgdGltaW5nIG91dCwgYW5kDQo+
-ID4gPiA+ID4gd2UncmUgc2VlaW5nIHRoZXNlIHByb2JsZW1zIGFjcm9zcyBsb3RzIG9mIGRpZmZl
-cmVudCBoYXJkd2FyZQ0KPiA+ID4gPiA+IChib3RoIHYxL3YyKS4NCj4gPiA+ID4gPiANCj4gPiA+
-ID4gPiBJIGluc3RydW1lbnRlZCB0aGUgZHJpdmVyIHRvIGNvbGxlY3QgbGF0ZW5jeSBkYXRhLCBi
-dXQgSSB3YXNuJ3QNCj4gPiA+ID4gPiBhYmxlIHRvIGZpbmQgYW55IHNwZWNpZmljIHRpbWVvdXQg
-dG8gZml4OiBpdCBzZWVtcyBsaWtlIG1hbnkgb2YNCj4gPiA+ID4gPiB0aGVtIGFyZSB0b28gYWdn
-cmVzc2l2ZS4gU28gSSB0cmllZCByZXBsYWNpbmcgYWxsIHRoZSB0aW1lb3V0DQo+ID4gPiA+ID4g
-bG9naWMgd2l0aCBhIHNpbmdsZSB1bml2ZXJzYWwgbG9uZyB0aW1lb3V0LCBhbmQgZm91bmQgdGhh
-dCBtYWtlcw0KPiA+ID4gPiA+IG91ciBUUE1zIDEwMCUgcmVsaWFibGUuDQo+ID4gPiA+ID4gDQo+
-ID4gPiA+ID4gR2l2ZW4gdGhhdCB0aGlzIHRpbWVvdXQgbG9naWMgaXMgdmVyeSBjb21wbGV4LCBw
-cm9ibGVtYXRpYywgYW5kDQo+ID4gPiA+ID4gYXBwZWFycyB0byBzZXJ2ZSBubyByZWFsIHB1cnBv
-c2UsIEkgcHJvcG9zZSBzaW1wbHkgZGVsZXRpbmcgYWxsDQo+ID4gPiA+ID4gb2YgaXQuDQo+ID4g
-PiA+IA0KPiA+ID4gPiAibm8gcmVhbCBwdXJwb3NlIiBpcyBhIGJpdCBzdHJvbmcgZ2l2ZW4gdGhh
-dCBhbGwgdGhlc2UgdGltZW91dHMgYXJlDQo+ID4gPiA+IHN0YW5kYXJkcyBtYW5kYXRlZC4gIFRo
-ZSBwdXJwb3NlIHN0YXRlZCBieSB0aGUgc3RhbmRhcmRzIGlzIHRoYXQNCj4gPiA+ID4gdGhlcmUg
-bmVlZHMgdG8gYmUgYSB3YXkgb2YgZGlmZmVyZW50aWF0aW5nIHRoZSBUUE0gY3Jhc2hlZCBmcm9t
-IHRoZQ0KPiA+ID4gPiBUUE0gaXMgdGFraW5nIGEgdmVyeSBsb25nIHRpbWUgdG8gcmVzcG9uZC4g
-IEZvciBhIG5vcm1hbGx5DQo+ID4gPiA+IGZ1bmN0aW9uaW5nIFRQTSBpdCBsb29rcyBjb21wbGV4
-IGFuZCB1bm5lY2Vzc2FyeSwgYnV0IGZvciBhDQo+ID4gPiA+IG1hbGZ1bmN0aW9uaW5nIG9uZSBp
-dCdzIGEgbGlmZXNhdmVyLg0KPiA+ID4gDQo+ID4gPiBTdGFuZGFyZHMgc2hvdWxkIGJlIG9ubHkg
-Zm9sbG93ZWQgd2hlbiB0aGV5IG1ha2UgcHJhY3RpY2FsIHNlbnNlIGFuZA0KPiA+ID4gaWdub3Jl
-ZCB3aGVuIG5vdC4gVGhlIHJhbmdlIGlzIG9ubHkgdXAgdG8gMnMgYW55d2F5Lg0KPiA+IA0KPiA+
-IEkgZG9uJ3QgZGlzYWdyZWUgLi4uIGFuZCBJJ20gY2VydGFpbmx5IG5vdCBnb2luZyB0byBkZWZl
-bmQgdGhlIFRDRw0KPiA+IGJlY2F1c2UgSSBkbyB0aGluayB0aGUgY29tcGxleGl0eSBvZiBzb21l
-IG9mIGl0cyBzdGFuZGFyZHMgY29udHJpYnV0ZWQNCj4gPiB0byB0aGUgbGFjayBvZiB1c2Ugb2Yg
-VFBNIDEuMi4NCj4gPiANCj4gPiBIb3dldmVyLCBJIGFtIHNheWluZyB3ZSBzaG91bGQgcm9vdCBj
-YXVzZSB0aGlzIHByb2JsZW0gcmF0aGVyIHRoYW4gdGFrZQ0KPiA+IGEgYmxpbmQgc2hvdCBhdCB0
-aGUgYXBwYXJlbnQgdGltZW91dCBjb21wbGV4aXR5LiAgTXkgdGltZW91dA0KPiA+IGluc3RhYmls
-aXR5IGlzIGRlZmluaXRlbHkgcmVsYXRlZCB0byB0aGUgcG9sbGluZyBhZGp1c3RtZW50cywgc28g
-aXQncw0KPiA+IG5vdCB1bnJlYXNvbmFibGUgdG8gdGhpbmsgRmFjZWJvb2tzIG1pZ2h0IGJlIGFz
-IHdlbGwuDQo+IA0KPiBZZWFoLCByZWZlcnJpbmcgdG8gbXkgcmV2aWV3IGNvbW1lbnQsIEkgdGhp
-bmsgdGhlIHZlcnkgZmlyc3QgdGhpbmcNCj4gdGhhdCBzaG91bGQgYmUgZG9uZSBpcyB0byBzcGxp
-dCBwYXRjaCBpbnRvIHR3by4gVGhlbiB3ZSBjYW4gcHJvYmFibHkNCj4gZ2l2ZSBiZXR0ZXIgZmVl
-ZGJhY2suDQoNCkFic29sdXRlbHksIHdpbGwgZG8uDQoNClRoYW5rcywNCkNhbHZpbg0KIA0KPiAv
-SmFya2tvDQo=
+On 12.03.19 19:23, David Hildenbrand wrote:
+> On 12.03.19 19:02, Boris Ostrovsky wrote:
+>> On 3/12/19 1:24 PM, Andrew Cooper wrote:
+>>> On 12/03/2019 17:18, David Hildenbrand wrote:
+>>>> On 12.03.19 18:14, Matthew Wilcox wrote:
+>>>>> On Tue, Mar 12, 2019 at 05:05:39PM +0000, Julien Grall wrote:
+>>>>>> On 3/12/19 3:59 PM, Julien Grall wrote:
+>>>>>>> It looks like all the arm test for linus [1] and next [2] tree
+>>>>>>> are now failing. x86 seems to be mostly ok.
+>>>>>>>
+>>>>>>> The bisector fingered the following commit:
+>>>>>>>
+>>>>>>> commit 0ee930e6cafa048c1925893d0ca89918b2814f2c
+>>>>>>> Author: Matthew Wilcox <willy@infradead.org>
+>>>>>>> Date:   Tue Mar 5 15:46:06 2019 -0800
+>>>>>>>
+>>>>>>>      mm/memory.c: prevent mapping typed pages to userspace
+>>>>>>>      Pages which use page_type must never be mapped to userspace as it would
+>>>>>>>      destroy their page type.  Add an explicit check for this instead of
+>>>>>>>      assuming that kernel drivers always get this right.
+>>>>> Oh good, it found a real problem.
+>>>>>
+>>>>>> It turns out the problem is because the balloon driver will call
+>>>>>> __SetPageOffline() on allocated page. Therefore the page has a type and
+>>>>>> vm_insert_pages will deny the insertion.
+>>>>>>
+>>>>>> My knowledge is quite limited in this area. So I am not sure how we can
+>>>>>> solve the problem.
+>>>>>>
+>>>>>> I would appreciate if someone could provide input of to fix the mapping.
+>>>>> I don't know the balloon driver, so I don't know why it was doing this,
+>>>>> but what it was doing was Wrong and has been since 2014 with:
+>>>>>
+>>>>> commit d6d86c0a7f8ddc5b38cf089222cb1d9540762dc2
+>>>>> Author: Konstantin Khlebnikov <k.khlebnikov@samsung.com>
+>>>>> Date:   Thu Oct 9 15:29:27 2014 -0700
+>>>>>
+>>>>>     mm/balloon_compaction: redesign ballooned pages management
+>>>>>
+>>>>> If ballooned pages are supposed to be mapped into userspace, you can't mark
+>>>>> them as ballooned pages using the mapcount field.
+>>>>>
+>>>> Asking myself why anybody would want to map balloon inflated pages into
+>>>> user space (this just sounds plain wrong but my understanding to what
+>>>> XEN balloon driver does might be limited), but I assume the easy fix
+>>>> would be to revert
+>>> I suspect the bug here is that the balloon driver is (ab)used for a
+>>> second purpose
+>>
+>> Yes. And its name is alloc_xenballooned_pages().
+>>
+> 
+> Haven't had a look at the code yet, but would another temporary fix be
+> to clear/set PG_offline when allocating/freeing a ballooned page?
+> (assuming here that only such pages will be mapped to user space)
+> 
+
+I guess something like this could do the trick if I understood it correctly:
+
+diff --git a/drivers/xen/balloon.c b/drivers/xen/balloon.c
+index 39b229f9e256..d37dd5bb7a8f 100644
+--- a/drivers/xen/balloon.c
++++ b/drivers/xen/balloon.c
+@@ -604,6 +604,7 @@ int alloc_xenballooned_pages(int nr_pages, struct
+page **pages)
+        while (pgno < nr_pages) {
+                page = balloon_retrieve(true);
+                if (page) {
++                       __ClearPageOffline(page);
+                        pages[pgno++] = page;
+ #ifdef CONFIG_XEN_HAVE_PVMMU
+                        /*
+@@ -645,8 +646,10 @@ void free_xenballooned_pages(int nr_pages, struct
+page **pages)
+        mutex_lock(&balloon_mutex);
+
+        for (i = 0; i < nr_pages; i++) {
+-               if (pages[i])
++               if (pages[i]) {
++                       __SetPageOffline(pages[i]);
+                        balloon_append(pages[i]);
++               }
+        }
+
+        balloon_stats.target_unpopulated -= nr_pages;
+
+
+At least this way, the pages allocated (and thus eventually mapped to
+user space) would not be marked, but the other ones would remain marked
+and could be excluded by makedumptool.
+
+-- 
+
+Thanks,
+
+David / dhildenb
