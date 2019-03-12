@@ -2,135 +2,91 @@ Return-Path: <SRS0=J4ZE=RP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_MUTT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5E0F9C43381
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 09:59:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E638CC43381
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 09:59:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 27716214AF
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 09:59:03 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ZfaOoRgx"
+	by mail.kernel.org (Postfix) with ESMTP id BF06D214AF
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 09:59:25 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726339AbfCLJ7B (ORCPT
+        id S1726485AbfCLJ7Y (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 12 Mar 2019 05:59:01 -0400
-Received: from mail-pg1-f194.google.com ([209.85.215.194]:39838 "EHLO
-        mail-pg1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725767AbfCLJ7B (ORCPT
+        Tue, 12 Mar 2019 05:59:24 -0400
+Received: from youngberry.canonical.com ([91.189.89.112]:36092 "EHLO
+        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725767AbfCLJ7Y (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 12 Mar 2019 05:59:01 -0400
-Received: by mail-pg1-f194.google.com with SMTP id h8so1420572pgp.6;
-        Tue, 12 Mar 2019 02:59:00 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=DrBMEo14gljPsBlnBZRcetvDKROEIzqhX7gkoad9ZWY=;
-        b=ZfaOoRgxZe+wF5WNawiRqTsNbp0LudTUxFc+FWR0VSvwMV/jK+jI3FXI7YYQRP8ED5
-         sdteQZZlIUPCBHjuVjd4/kFTCa2Ah6EEEFeMjdIA0D/+MCxEH8AZ+ozhP2hfyEoR6+SG
-         WTbmaEj0hW+Uvahgq0kyrzSTWsI9tS6g6Cly4jGgVyN9r/WolSMUTC7tqY2pCyw+BvYf
-         bRIm1LBz4kcrEkWaMF/g0VPabF/bnHfIKZuKtVq1ekls6M2D4qeQ/pCnoFkP3xmF1OIY
-         6jIBOaQ7tY0hmuSysxjVI8gFLTKCptnyUgbFRw5xO1A16nwNiSC2YzChZk0DJHlpYBBE
-         uZ8w==
+        Tue, 12 Mar 2019 05:59:24 -0400
+Received: from mail-pg1-f200.google.com ([209.85.215.200])
+        by youngberry.canonical.com with esmtps (TLS1.0:RSA_AES_128_CBC_SHA1:16)
+        (Exim 4.76)
+        (envelope-from <po-hsu.lin@canonical.com>)
+        id 1h3eBt-0003kp-RV
+        for linux-kernel@vger.kernel.org; Tue, 12 Mar 2019 09:59:22 +0000
+Received: by mail-pg1-f200.google.com with SMTP id y1so2127458pgo.0
+        for <linux-kernel@vger.kernel.org>; Tue, 12 Mar 2019 02:59:21 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=DrBMEo14gljPsBlnBZRcetvDKROEIzqhX7gkoad9ZWY=;
-        b=rqJxxZcvVgVhrk2BMfdE6zVe1y2FbTsm4cgJ5Tc3HlFAWwvXjqBX8/PMyjBPB6DqzH
-         vlT3RXPI0PVqUjQd9LGtmjL0VIHSNpeD646N918ZJrWTIzCgX6kTjBvjvC83jCiWw6Z8
-         hlozC8P4UAjoxr1VN+vkpi0rgTHGdCvq5/AdPF0CFgzghXFkrczIdExb/bKG6Dpqwo4T
-         sTgibkWpEQsaVkV0JBVw6tGMSxv6dAN8PSMOwPVeVXG1dAg38E6hPbnLPYTvXFbnQ5CE
-         b2XMYHiooW2LjwLzUV9hY0vpO3XEuquK3ZaFHawHlbG6BMSRkqjSmVHvcMntrc6tKrC0
-         v6QQ==
-X-Gm-Message-State: APjAAAUMtkSU9oB70bpORR/Wa5lv8PzRvGc/UT4VfP42Uu+qdJQYzSdW
-        D30yyCxTtubY8AtspypfZL0=
-X-Google-Smtp-Source: APXvYqwu87CnRlaW7daYCn/Jqg97CU5ZzBo001aPjxk4Bhc1SWQzvnHRe+4eJZYfmTrNZ8Rd7o7c/g==
-X-Received: by 2002:a17:902:9304:: with SMTP id bc4mr39575786plb.81.1552384740312;
-        Tue, 12 Mar 2019 02:59:00 -0700 (PDT)
-Received: from localhost ([175.223.49.170])
-        by smtp.gmail.com with ESMTPSA id f3sm12160763pfn.100.2019.03.12.02.58.58
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Tue, 12 Mar 2019 02:58:59 -0700 (PDT)
-Date:   Tue, 12 Mar 2019 18:58:56 +0900
-From:   Sergey Senozhatsky <sergey.senozhatsky.work@gmail.com>
-To:     John Ogness <john.ogness@linutronix.de>
-Cc:     Sergey Senozhatsky <sergey.senozhatsky.work@gmail.com>,
-        Sergey Senozhatsky <sergey.senozhatsky@gmail.com>,
-        linux-kernel@vger.kernel.org,
-        Peter Zijlstra <peterz@infradead.org>,
-        Petr Mladek <pmladek@suse.com>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Daniel Wang <wonderfly@google.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Alan Cox <gnomes@lxorguk.ukuu.org.uk>,
-        Jiri Slaby <jslaby@suse.com>,
-        Peter Feiner <pfeiner@google.com>, linux-serial@vger.kernel.org
-Subject: Re: [RFC PATCH v1 08/25] printk: add ring buffer and kthread
-Message-ID: <20190312095856.GA426@jagdpanzerIV>
-References: <20190212143003.48446-1-john.ogness@linutronix.de>
- <20190212143003.48446-9-john.ogness@linutronix.de>
- <20190304073856.GA552@jagdpanzerIV>
- <20190304100044.GC21004@jagdpanzerIV>
- <20190304110703.GA960@tigerII.localdomain>
- <87o96p9gtx.fsf@linutronix.de>
- <20190307051530.GC4893@jagdpanzerIV>
- <87va0pznsq.fsf@linutronix.de>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <87va0pznsq.fsf@linutronix.de>
-User-Agent: Mutt/1.11.3 (2019-02-01)
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=jusRkWJSy8oqkA4FSVnA9QAWyZ3aU9dHEMXjZIwG3MU=;
+        b=DtLBENwcc6jyboMvcIz//yspCUVCvW03Rm4V2sqgP846sUiAzIph0POJTeUIdrj8/t
+         qqBH/zavexah3ZvgmFeUR3liALPjUe0CVQ74q41s1RcIRENAteLSqhFb2p32YHzYZPTi
+         1hJCKjdoAzlYOJ6RatpUlvi6kQIUBAKaJ9YGS7QK2ZLvNacQuca5hRRWLhx+zB6J1jQy
+         +0RdAujnOQC5zsKKmtK/nTMsdlb1cd7atUVOPb7S+kVTzhW9E1dgQS9Ref+dUxhw5UjY
+         bB7nQ/UJ/okIxMJn2YN1Ay/+0ldqzRro4qoLBizVnTnODl6ph2VJAAsKXzabBHDod49+
+         fXZg==
+X-Gm-Message-State: APjAAAXnFzW52WPYVE0ZBL5l58+gLgMqaUaYqoMhvXkrdQ6UA1Cpc9C0
+        +jVy72NKY5cKS6HHd2O7cegmtHcDJ8CgUjynT6u52J3BcmTXUDVaSVMdeUTMVvrzdWjwchbazlb
+        XBMQFgvpWedejR3uzRNwMQ9SkcQICNhOkYMuj67Je
+X-Received: by 2002:aa7:8157:: with SMTP id d23mr37751306pfn.67.1552384760434;
+        Tue, 12 Mar 2019 02:59:20 -0700 (PDT)
+X-Google-Smtp-Source: APXvYqwN3x9ZJxiP8V2pxD6rdUNTwubW7lCxJqbN4eDQvc8yB6u5cwM6lJNS/NBUyna+yGb/T8nyLQ==
+X-Received: by 2002:aa7:8157:: with SMTP id d23mr37751286pfn.67.1552384760189;
+        Tue, 12 Mar 2019 02:59:20 -0700 (PDT)
+Received: from localhost.localdomain (61-220-137-37.HINET-IP.hinet.net. [61.220.137.37])
+        by smtp.gmail.com with ESMTPSA id g71sm18328045pfg.157.2019.03.12.02.59.18
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Tue, 12 Mar 2019 02:59:19 -0700 (PDT)
+From:   Po-Hsu Lin <po-hsu.lin@canonical.com>
+To:     shuah@kernel.org, linux-kselftest@vger.kernel.org
+Cc:     linux-kernel@vger.kernel.org
+Subject: [PATCH] selftests: cpu-hotplug: check hotplug dir for the CONFIG_HOTPLUG_CPU
+Date:   Tue, 12 Mar 2019 17:58:45 +0800
+Message-Id: <20190312095845.17541-1-po-hsu.lin@canonical.com>
+X-Mailer: git-send-email 2.17.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On (03/11/19 11:51), John Ogness wrote:
-> > In new printk design the tasks are still affected by printing floods.
-> > Tasks have to line up and (busy) wait for each other, regardless of
-> > contexts.
-> 
-> They only line up and busy wait is to add the informational message to
-> the ring buffer. The current printk implementation is the same in this
-> respect. And as you've noted, the logbuf spinlock is not a source of
-> latencies.
+When the CONFIG_HOTPLUG_CPU is not set, there won't be a "hotplug"
+directory in /sys/devices/system/cpu/. Make use of this fact to check
+if we need to skip this test.
 
-I was talking about prb_lock().
+Signed-off-by: Po-Hsu Lin <po-hsu.lin@canonical.com>
+---
+ tools/testing/selftests/cpu-hotplug/cpu-on-off-test.sh | 5 +++++
+ 1 file changed, 5 insertions(+)
 
-> > When I do ./a.out --loglevel=X  I have a clear understanding that
-> > all messages which fall into [critical, X] range will be in the logs,
-> > because I told that application that those messages are important to
-> > me right now. And it used to be the same with the kernel loglevel.
-> 
-> The loglevel is not related to logging. It specifies the amount of
-> console printing. But I will assume you are referring to creating log
-> files by having an external device store the console printing.
+diff --git a/tools/testing/selftests/cpu-hotplug/cpu-on-off-test.sh b/tools/testing/selftests/cpu-hotplug/cpu-on-off-test.sh
+index 0d26b5e..27275a1 100755
+--- a/tools/testing/selftests/cpu-hotplug/cpu-on-off-test.sh
++++ b/tools/testing/selftests/cpu-hotplug/cpu-on-off-test.sh
+@@ -23,6 +23,11 @@ prerequisite()
+ 		exit $ksft_skip
+ 	fi
+ 
++	if [ ! -d $SYSFS/devices/system/cpu/hotplug/ ]; then
++		echo $msg CONFIG_HOTPLUG_CPU needs to be enabled >&2
++		exit $ksft_skip
++	fi
++
+ 	if ! ls $SYSFS/devices/system/cpu/cpu* > /dev/null 2>&1; then
+ 		echo $msg cpu hotplug is not supported >&2
+ 		exit $ksft_skip
+-- 
+2.7.4
 
-Right. E.g. screenlog.0
-
-> > But now the kernel will do its own thing:
-> >
-> >   - what the kernel considers important will go into the logs
-> >   - what the kernel doesn't consider important _maybe_ will end up
-> >     in the logs (preemptible printk kthread). And this is where
-> >     loglevel now. After the _maybe_ part.
-> 
-> "what the kernel considers" is a configuration option of the
-> administrator. The administrator can increase the verbocity of the
-> console (loglevel) without having negative effects on the system
-> itself. Also, if the system were to suddenly crash, those crash messages
-> shouldn't be in jeopardy just because the verbocity of the console was
-> turned up.
-
-Right. I'm not very sure about yet another knob which everyone
-should figure out. I guess I won't be surprised to find out that
-people set it to loglevel value.
-
-	-ss
