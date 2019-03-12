@@ -2,85 +2,147 @@ Return-Path: <SRS0=J4ZE=RP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_MUTT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_PASS autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2FC78C43381
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 11:53:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 32029C10F00
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 11:54:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 067B620657
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 11:53:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0AF1920657
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 11:54:09 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726512AbfCLLxT (ORCPT
+        id S1726619AbfCLLyH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 12 Mar 2019 07:53:19 -0400
-Received: from mail-pf1-f195.google.com ([209.85.210.195]:43708 "EHLO
-        mail-pf1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725874AbfCLLxT (ORCPT
+        Tue, 12 Mar 2019 07:54:07 -0400
+Received: from mail-qk1-f195.google.com ([209.85.222.195]:42593 "EHLO
+        mail-qk1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726280AbfCLLyH (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 12 Mar 2019 07:53:19 -0400
-Received: by mail-pf1-f195.google.com with SMTP id q17so1637541pfh.10
-        for <linux-kernel@vger.kernel.org>; Tue, 12 Mar 2019 04:53:18 -0700 (PDT)
+        Tue, 12 Mar 2019 07:54:07 -0400
+Received: by mail-qk1-f195.google.com with SMTP id b74so1188201qkg.9
+        for <linux-kernel@vger.kernel.org>; Tue, 12 Mar 2019 04:54:06 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:mime-version
-         :content-disposition:signed-off-by:user-agent;
-        bh=b76zxPjoS5QtkEv0yNzG+P4rbYVcCluhsfbeAcEKgyA=;
-        b=lOhNPEzHdI0qQGu9cUtKYgB3J/WtSjo71v3E8+Qg5VR9iLGQW+s5coLsbXiGxjzlFA
-         vz5ekiqaBWwmEha312cVAD+pr6+MTShM6U1Eq7N37YEbZvADZWtzrXN6RhG3EOWMd2O5
-         d/heoUX+GOqbWWk3MJ8rx8X8C/JCOoj05h7AcG3Hh+O+30S2vn49b/44y2BNt7/4tsEi
-         1PKLwKwuBPHnRDbKNmUSNcjBzyIDcT1VBEhAcFnM2iS/xHzydXhTj6lNmvsvghHcFd+0
-         k54cVLZcIzYxqDG1a3ZSdgM1oBRfWW1Tmf8JWin1eG/M2pZTDod9TowhcWVsoO+vnZIz
-         GkRg==
-X-Gm-Message-State: APjAAAXmMdsEgOOXFLSMTM+XRnck93N09vmdUoTVNMExweKuU5LEWIGJ
-        cKj8dCiSztzkICV2Q/kaTW4tefQZAhjphg==
-X-Google-Smtp-Source: APXvYqxtKMw3mpqg9MkK+btzkRfXxL2dYCYtp51GJLisHGAEAn91TGgbgVhc7vagrOCz20T/5PWL8Q==
-X-Received: by 2002:a63:2a86:: with SMTP id q128mr7932044pgq.424.1552391598229;
-        Tue, 12 Mar 2019 04:53:18 -0700 (PDT)
-Received: from machine1 ([125.16.97.112])
-        by smtp.gmail.com with ESMTPSA id k74sm23384040pfb.172.2019.03.12.04.53.15
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:content-transfer-encoding
+         :in-reply-to;
+        bh=2kYB1p/b/VSU9SsB3LoLb0aZfIgS7NS7Z3NfTbSHKls=;
+        b=TJaq8OMOb6xptJ/Vrj/JdccB9d9YeZFaLzQdhwmCsHjFPALw4xTSKVE1REMbJaXQSq
+         k3x/QuUVL0i/ltMf+Fcthmp4gEoKiiebgEPR7AgssMN3Ja/S/b9MO5en+I72YY4W4R61
+         wQm3ldlG0CuMb+jKqzug0/alFtPA0LOM0/gd6xZmCVoQHDovYTHMR/GJIpLT6xT+t4K9
+         kf9epAm7liE5lsHeWbsprlHkJEmlN/2s01QTlnLxiXb/6f8zg4KgR6KZBXHCfHxbKlrL
+         fK2+BgnBXC3xYoS0HsMYbMfKFPF6t7eTUoW+YYm/Sc/uwoT7/A4bFO/4EPJWfOLbmHp2
+         OnWA==
+X-Gm-Message-State: APjAAAU3M0P1eubEPekn8kgOZAFhFHwWDFzJQEJtCOs3GjPRBGdFrkz8
+        5fE6DlD4WgmVzwqyVdrslY0nfA==
+X-Google-Smtp-Source: APXvYqxlYyfklOn1Ixv2yLTKmxFig1ic497FcTleSgokOtZQtp/NrlhMzHsNN0QtF+AybUzOKVjxPQ==
+X-Received: by 2002:ae9:ec13:: with SMTP id h19mr17835707qkg.345.1552391646180;
+        Tue, 12 Mar 2019 04:54:06 -0700 (PDT)
+Received: from redhat.com (pool-173-76-246-42.bstnma.fios.verizon.net. [173.76.246.42])
+        by smtp.gmail.com with ESMTPSA id s186sm2889766qkb.57.2019.03.12.04.54.03
         (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Tue, 12 Mar 2019 04:53:17 -0700 (PDT)
-Date:   Tue, 12 Mar 2019 17:23:13 +0530
-From:   "Milan P. Gandhi" <mgandhi@redhat.com>
-To:     kernel-janitors@vger.kernel.org
-Cc:     qla2xxx-upstream@qlogic.com, jejb@linux.ibm.com,
-        martin.petersen@oracle.com, linux-scsi@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH] scsi: qla2xxx: Fix a small typo in qla_bsg.c
-Message-ID: <20190312115313.GA12695@machine1>
+        Tue, 12 Mar 2019 04:54:04 -0700 (PDT)
+Date:   Tue, 12 Mar 2019 07:54:02 -0400
+From:   "Michael S. Tsirkin" <mst@redhat.com>
+To:     Jason Wang <jasowang@redhat.com>
+Cc:     David Miller <davem@davemloft.net>, hch@infradead.org,
+        kvm@vger.kernel.org, virtualization@lists.linux-foundation.org,
+        netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
+        peterx@redhat.com, linux-mm@kvack.org, aarcange@redhat.com,
+        linux-arm-kernel@lists.infradead.org, linux-parisc@vger.kernel.org
+Subject: Re: [RFC PATCH V2 0/5] vhost: accelerate metadata access through
+ vmap()
+Message-ID: <20190312075033-mutt-send-email-mst@kernel.org>
+References: <20190308141220.GA21082@infradead.org>
+ <56374231-7ba7-0227-8d6d-4d968d71b4d6@redhat.com>
+ <20190311095405-mutt-send-email-mst@kernel.org>
+ <20190311.111413.1140896328197448401.davem@davemloft.net>
+ <6b6dcc4a-2f08-ba67-0423-35787f3b966c@redhat.com>
+ <20190311235140-mutt-send-email-mst@kernel.org>
+ <76c353ed-d6de-99a9-76f9-f258074c1462@redhat.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-Signed-off-by: Milan P. Gandhi <mgandhi@redhat.com>
-User-Agent: Mutt/1.9.2 (2017-12-15)
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <76c353ed-d6de-99a9-76f9-f258074c1462@redhat.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This patch fixes a minor formatting issue with comment section and a
-typo for 'iiDMA' cmd in drivers/scsi/qla2xxx/qla_bsg.c
+On Tue, Mar 12, 2019 at 03:17:00PM +0800, Jason Wang wrote:
+> 
+> On 2019/3/12 上午11:52, Michael S. Tsirkin wrote:
+> > On Tue, Mar 12, 2019 at 10:59:09AM +0800, Jason Wang wrote:
+> > > On 2019/3/12 上午2:14, David Miller wrote:
+> > > > From: "Michael S. Tsirkin" <mst@redhat.com>
+> > > > Date: Mon, 11 Mar 2019 09:59:28 -0400
+> > > > 
+> > > > > On Mon, Mar 11, 2019 at 03:13:17PM +0800, Jason Wang wrote:
+> > > > > > On 2019/3/8 下午10:12, Christoph Hellwig wrote:
+> > > > > > > On Wed, Mar 06, 2019 at 02:18:07AM -0500, Jason Wang wrote:
+> > > > > > > > This series tries to access virtqueue metadata through kernel virtual
+> > > > > > > > address instead of copy_user() friends since they had too much
+> > > > > > > > overheads like checks, spec barriers or even hardware feature
+> > > > > > > > toggling. This is done through setup kernel address through vmap() and
+> > > > > > > > resigter MMU notifier for invalidation.
+> > > > > > > > 
+> > > > > > > > Test shows about 24% improvement on TX PPS. TCP_STREAM doesn't see
+> > > > > > > > obvious improvement.
+> > > > > > > How is this going to work for CPUs with virtually tagged caches?
+> > > > > > Anything different that you worry?
+> > > > > If caches have virtual tags then kernel and userspace view of memory
+> > > > > might not be automatically in sync if they access memory
+> > > > > through different virtual addresses. You need to do things like
+> > > > > flush_cache_page, probably multiple times.
+> > > > "flush_dcache_page()"
+> > > 
+> > > I get this. Then I think the current set_bit_to_user() is suspicious, we
+> > > probably miss a flush_dcache_page() there:
+> > > 
+> > > 
+> > > static int set_bit_to_user(int nr, void __user *addr)
+> > > {
+> > >          unsigned long log = (unsigned long)addr;
+> > >          struct page *page;
+> > >          void *base;
+> > >          int bit = nr + (log % PAGE_SIZE) * 8;
+> > >          int r;
+> > > 
+> > >          r = get_user_pages_fast(log, 1, 1, &page);
+> > >          if (r < 0)
+> > >                  return r;
+> > >          BUG_ON(r != 1);
+> > >          base = kmap_atomic(page);
+> > >          set_bit(bit, base);
+> > >          kunmap_atomic(base);
+> > >          set_page_dirty_lock(page);
+> > >          put_page(page);
+> > >          return 0;
+> > > }
+> > > 
+> > > Thanks
+> > I think you are right. The correct fix though is to re-implement
+> > it using asm and handling pagefault, not gup.
+> 
+> 
+> I agree but it needs to introduce new helpers in asm  for all archs which is
+> not trivial.
 
-Signed-off-by: Milan P. Gandhi <mgandhi@redhat.com>
----
-diff --git a/drivers/scsi/qla2xxx/qla_bsg.c b/drivers/scsi/qla2xxx/qla_bsg.c
-index 17d42658ad9a..2353be988907 100644
---- a/drivers/scsi/qla2xxx/qla_bsg.c
-+++ b/drivers/scsi/qla2xxx/qla_bsg.c
-@@ -1,4 +1,4 @@
--	/*
-+/*
-  * QLogic Fibre Channel HBA Driver
-  * Copyright (c)  2003-2014 QLogic Corporation
-  *
-@@ -1354,7 +1354,7 @@ qla24xx_iidma(struct bsg_job *bsg_job)
- 
- 	if (rval) {
- 		ql_log(ql_log_warn, vha, 0x704c,
--		    "iIDMA cmd failed for %8phN -- "
-+		    "iiDMA cmd failed for %8phN -- "
- 		    "%04x %x %04x %04x.\n", fcport->port_name,
- 		    rval, fcport->fp_speed, mb[0], mb[1]);
- 		rval = (DID_ERROR << 16);
+We can have a generic implementation using kmap.
+
+> At least for -stable, we need the flush?
+> 
+> 
+> > Three atomic ops per bit is way to expensive.
+> 
+> 
+> Yes.
+> 
+> Thanks
+
+See James's reply - I stand corrected we do kunmap so no need to flush.
+
+-- 
+MST
