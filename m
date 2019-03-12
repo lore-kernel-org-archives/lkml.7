@@ -1,69 +1,161 @@
 Return-Path: <SRS0=J4ZE=RP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
-X-Spam-Level: 
-X-Spam-Status: No, score=-6.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_PASS
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Level: *
+X-Spam-Status: No, score=1.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FSL_HELO_FAKE,MAILING_LIST_MULTI,SPF_PASS,
+	USER_AGENT_MUTT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E4265C43381
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 22:20:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DC300C43381
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 22:31:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AF5882177E
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 22:20:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AA1432173C
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 22:31:19 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1552429234;
-	bh=gLIqelwBsaGnE6if3DF2fFJcjU+K1RwsOdxS/OE3xNs=;
-	h=Subject:From:In-Reply-To:References:Date:To:Cc:List-ID:From;
-	b=Hu7Rfkq8+Fwnjwn1AnMioioIb1G/4r/U8ppCF1cHK/LPWQ2j/xN5r1scoSyYmDt9I
-	 RS9b6QBgOUTnSduUmpMMpDFZf+AG52e2BN34LnL4qV6DXKykdOJC/+qT/ADRCbPMVi
-	 Wgne1Q50Idh7jyKqkFlM1oJdKuvxnbZeytvnZ+pk=
+	s=default; t=1552429879;
+	bh=E9LjOuH7NlwjEdXrTTN9jNJ+sUFTiiXDJcLC3CteIKM=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=SrRUXpIwYNtughb1o2Xn3BELaDHduQnEqbNG+afWG7phZa1qVEOCKCz7oDmdys3X3
+	 BPn3X35k4cXAhMc3lDmL+KZhdVjLdExYSs50k1W/QEj1+ZI2oRZK1MivYHAQtb1c1M
+	 o083C7VhXCypY22edB4F+jpiJaXzJqjwv3Cd9/tM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727446AbfCLWUZ (ORCPT
+        id S1726559AbfCLWbS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 12 Mar 2019 18:20:25 -0400
-Received: from mail.kernel.org ([198.145.29.99]:43240 "EHLO mail.kernel.org"
+        Tue, 12 Mar 2019 18:31:18 -0400
+Received: from mail.kernel.org ([198.145.29.99]:48076 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727365AbfCLWUX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 12 Mar 2019 18:20:23 -0400
-Subject: Re: [GIT PULL] Ceph updates for 5.1-rc1
+        id S1726280AbfCLWbS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 12 Mar 2019 18:31:18 -0400
+Received: from gmail.com (unknown [104.132.1.77])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 7197A2077B;
+        Tue, 12 Mar 2019 22:31:16 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1552429222;
-        bh=gLIqelwBsaGnE6if3DF2fFJcjU+K1RwsOdxS/OE3xNs=;
-        h=From:In-Reply-To:References:Date:To:Cc:From;
-        b=iTE+/sTh0RxfPoHvqSE8FIbOE99TzBMlEzmqqy2p6tz2e21lyNDswwfumcsajXHJf
-         zT0gF9Lfg9rzwLHEhkpdgRaqIaa9rbfqymhRZuUBniTBcGGNIDgRQJT4lHKsGYTgFA
-         ae5xTwGE4fOsBd1MVy7rZD3r4HN3hfpp4jYdx8SU=
-From:   pr-tracker-bot@kernel.org
-In-Reply-To: <20190312175017.27764-1-idryomov@gmail.com>
-References: <20190312175017.27764-1-idryomov@gmail.com>
-X-PR-Tracked-List-Id: <linux-kernel.vger.kernel.org>
-X-PR-Tracked-Message-Id: <20190312175017.27764-1-idryomov@gmail.com>
-X-PR-Tracked-Remote: https://github.com/ceph/ceph-client.git
- tags/ceph-for-5.1-rc1
-X-PR-Tracked-Commit-Id: d11ae8e0a76afc506071831854348f2ea1f3290e
-X-PR-Merge-Tree: torvalds/linux.git
-X-PR-Merge-Refname: refs/heads/master
-X-PR-Merge-Commit-Id: 2b0a80b0d0bb0a3db74588279bf851b28c6c4705
-Message-Id: <155242922270.11942.12559361231257770995.pr-tracker-bot@kernel.org>
-Date:   Tue, 12 Mar 2019 22:20:22 +0000
-To:     Ilya Dryomov <idryomov@gmail.com>
-Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
-        ceph-devel@vger.kernel.org, linux-kernel@vger.kernel.org
+        s=default; t=1552429876;
+        bh=E9LjOuH7NlwjEdXrTTN9jNJ+sUFTiiXDJcLC3CteIKM=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=mgDX2Ja0bynZtaS+WaK0y1rIkv62DHI1nWFmMJVzq0Ab5gTiYtd3ESuN0la/2mzia
+         ssElYhG4GEHO30ZyTTSfAA+ij6UvykwLWf125Q6r7jfYwZtx7X8+AhTPaf2rYFUvRK
+         scu7n6Pk8F6/V+jQh3VeCW6SbeYVd0gpGU7wmV0E=
+Date:   Tue, 12 Mar 2019 15:31:15 -0700
+From:   Eric Biggers <ebiggers@kernel.org>
+To:     Dmitry Vyukov <dvyukov@google.com>
+Cc:     Andrew Morton <akpm@linux-foundation.org>,
+        syzbot <syzbot+fa11f9da42b46cea3b4a@syzkaller.appspotmail.com>,
+        cgroups@vger.kernel.org, Johannes Weiner <hannes@cmpxchg.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Linux-MM <linux-mm@kvack.org>, Michal Hocko <mhocko@kernel.org>,
+        Michal Hocko <mhocko@suse.com>,
+        Stephen Rothwell <sfr@canb.auug.org.au>,
+        Shakeel Butt <shakeelb@google.com>,
+        syzkaller-bugs <syzkaller-bugs@googlegroups.com>,
+        Vladimir Davydov <vdavydov.dev@gmail.com>
+Subject: Re: KASAN: null-ptr-deref Read in reclaim_high
+Message-ID: <20190312223113.GA38846@gmail.com>
+References: <0000000000001fd5780583d1433f@google.com>
+ <20190311163747.f56cceebd9c2661e4519bdfc@linux-foundation.org>
+ <CACT4Y+byKQSOCte3JS9XOnyr+aVSEFtBvLxG2-HUrZX3-82Hcg@mail.gmail.com>
+ <20190311232541.db8571d2e3e0ca636785f31f@linux-foundation.org>
+ <20190312064300.GB9123@sol.localdomain>
+ <CACT4Y+Z1rkS5bf3x9Y+0ke=zZ+mM2F5+vN-JtSQpjD09STRNdw@mail.gmail.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CACT4Y+Z1rkS5bf3x9Y+0ke=zZ+mM2F5+vN-JtSQpjD09STRNdw@mail.gmail.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The pull request you sent on Tue, 12 Mar 2019 18:50:17 +0100:
+Hi Dmitry,
 
-> https://github.com/ceph/ceph-client.git tags/ceph-for-5.1-rc1
+On Tue, Mar 12, 2019 at 09:21:09AM +0100, 'Dmitry Vyukov' via syzkaller-bugs wrote:
+> On Tue, Mar 12, 2019 at 7:43 AM Eric Biggers <ebiggers@kernel.org> wrote:
+> >
+> > On Mon, Mar 11, 2019 at 11:25:41PM -0700, Andrew Morton wrote:
+> > > On Tue, 12 Mar 2019 07:08:38 +0100 Dmitry Vyukov <dvyukov@google.com> wrote:
+> > >
+> > > > On Tue, Mar 12, 2019 at 12:37 AM Andrew Morton
+> > > > <akpm@linux-foundation.org> wrote:
+> > > > >
+> > > > > On Mon, 11 Mar 2019 06:08:01 -0700 syzbot <syzbot+fa11f9da42b46cea3b4a@syzkaller.appspotmail.com> wrote:
+> > > > >
+> > > > > > syzbot has bisected this bug to:
+> > > > > >
+> > > > > > commit 29a4b8e275d1f10c51c7891362877ef6cffae9e7
+> > > > > > Author: Shakeel Butt <shakeelb@google.com>
+> > > > > > Date:   Wed Jan 9 22:02:21 2019 +0000
+> > > > > >
+> > > > > >      memcg: schedule high reclaim for remote memcgs on high_work
+> > > > > >
+> > > > > > bisection log:  https://syzkaller.appspot.com/x/bisect.txt?x=155bf5db200000
+> > > > > > start commit:   29a4b8e2 memcg: schedule high reclaim for remote memcgs on..
+> > > > > > git tree:       linux-next
+> > > > > > final crash:    https://syzkaller.appspot.com/x/report.txt?x=175bf5db200000
+> > > > > > console output: https://syzkaller.appspot.com/x/log.txt?x=135bf5db200000
+> > > > > > kernel config:  https://syzkaller.appspot.com/x/.config?x=611f89e5b6868db
+> > > > > > dashboard link: https://syzkaller.appspot.com/bug?extid=fa11f9da42b46cea3b4a
+> > > > > > userspace arch: amd64
+> > > > > > syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=14259017400000
+> > > > > > C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=141630a0c00000
+> > > > > >
+> > > > > > Reported-by: syzbot+fa11f9da42b46cea3b4a@syzkaller.appspotmail.com
+> > > > > > Fixes: 29a4b8e2 ("memcg: schedule high reclaim for remote memcgs on
+> > > > > > high_work")
+> > > > >
+> > > > > The following patch
+> > > > > memcg-schedule-high-reclaim-for-remote-memcgs-on-high_work-v3.patch
+> > > > > might have fixed this.  Was it applied?
+> > > >
+> > > > Hi Andrew,
+> > > >
+> > > > You mean if the patch was applied during the bisection?
+> > > > No, it wasn't. Bisection is very specifically done on the same tree
+> > > > where the bug was hit. There are already too many factors that make
+> > > > the result flaky/wrong/inconclusive without changing the tree state.
+> > > > Now, if syzbot would know about any pending fix for this bug, then it
+> > > > would not do the bisection at all. But it have not seen any patch in
+> > > > upstream/linux-next with the Reported-by tag, nor it received any syz
+> > > > fix commands for this bugs. Should have been it aware of the fix? How?
+> > >
+> > > memcg-schedule-high-reclaim-for-remote-memcgs-on-high_work-v3.patch was
+> > > added to linux-next on Jan 10.  I take it that this bug was hit when
+> > > testing the entire linux-next tree, so we can assume that
+> > > memcg-schedule-high-reclaim-for-remote-memcgs-on-high_work-v3.patch
+> > > does not fix it, correct?
+> > >
+> > > In which case, over to Shakeel!
+> > >
+> >
+> > I don't understand what happened here.  First, the syzbot report doesn't say
+> > which linux-next version was tested (which it should), but I get:
+> >
+> > $ git tag --contains 29a4b8e275d1f10c51c7891362877ef6cffae9e7
+> > next-20190110
+> > next-20190111
+> > next-20190114
+> > next-20190115
+> > next-20190116
+> >
+> > That's almost 2 months old, yet this bug was just reported now.  Why?
+> 
+> Hi Eric,
+> 
+> This bug was reported on Jan 10:
+> https://syzkaller.appspot.com/bug?extid=fa11f9da42b46cea3b4a
+> https://groups.google.com/forum/#!msg/syzkaller-bugs/5YkhNUg2PFY/4-B5M7bDCAAJ
+> 
+> The start revision of the bisection process (provided) is the same
+> that was used to create the reproducer. The end revision and bisection
+> log are provided in the email.
+> 
+> How can we improve the format to make it more clear?
+> 
 
-has been merged into torvalds/linux.git:
-https://git.kernel.org/torvalds/c/2b0a80b0d0bb0a3db74588279bf851b28c6c4705
+syzbot started a new thread rather than sending the bisection result in the
+existing thread.  So I thought it was a new bug report, as did everyone else
+probably.
 
-Thank you!
-
--- 
-Deet-doot-dot, I am a bot.
-https://korg.wiki.kernel.org/userdoc/prtracker
+- Eric
