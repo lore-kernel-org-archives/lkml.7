@@ -2,242 +2,161 @@ Return-Path: <SRS0=J4ZE=RP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.5 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_PASS,USER_AGENT_MUTT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DC998C10F00
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 12:44:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9C5EAC43381
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 12:45:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A17A0214D8
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 12:44:07 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1552394647;
-	bh=iDmTigBJmIE8LZYaENOkngqjl0nhAtLQY+yB7sNcAxQ=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=nEZULuio4vaPCKlbOvA3ZtL3pJSk/UB1tMxtcPcYFeOpxSjk+Rm6evdI2wT1D1Afz
-	 JCofgzHxzamROPXxttMTGSPkOAGSdINMDC/y2MLBNwX3N+Thy5y8DLSoR55GLxkzcF
-	 HNnFljFqB/fn9B7rj7VPEaHEn2ze1m96wannV5ZQ=
+	by mail.kernel.org (Postfix) with ESMTP id 760F9206BA
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 12:45:49 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726794AbfCLMoG (ORCPT
+        id S1726579AbfCLMps (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 12 Mar 2019 08:44:06 -0400
-Received: from mail.kernel.org ([198.145.29.99]:36106 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726255AbfCLMoG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 12 Mar 2019 08:44:06 -0400
-Received: from localhost (unknown [12.27.65.221])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 6FC67206BA;
-        Tue, 12 Mar 2019 12:44:04 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1552394644;
-        bh=iDmTigBJmIE8LZYaENOkngqjl0nhAtLQY+yB7sNcAxQ=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=lm2Fm0WPeOv7qpbtCTa86JSDZU1fE84hBGp4iPwE7TSSAemJgX8Iis+XNm2U2qznC
-         56BC4Wq4ElEZyJk2Xl0ngKw9ElUGTvjJnk64LihwYc+qrd+3q0tffEAX1FMpR6brl2
-         Sls6tvSEwGdFufzrN8NXgnijWVd505Nmw3sejO6w=
-Date:   Tue, 12 Mar 2019 05:44:04 -0700
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     Gao Xiang <gaoxiang25@huawei.com>
-Cc:     stable@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>,
-        linux-erofs@lists.ozlabs.org, Chao Yu <yuchao0@huawei.com>,
-        Chao Yu <chao@kernel.org>, Miao Xie <miaoxie@huawei.com>,
-        Fang Wei <fangwei1@huawei.com>
-Subject: Re: [PATCH RESEND for-5.0 2/2] staging: erofs: compressed_pages
- should not be accessed again after freed
-Message-ID: <20190312124404.GE14713@kroah.com>
-References: <20190311022932.13539-1-gaoxiang25@huawei.com>
- <20190311022932.13539-2-gaoxiang25@huawei.com>
+        Tue, 12 Mar 2019 08:45:48 -0400
+Received: from mail-ed1-f65.google.com ([209.85.208.65]:43695 "EHLO
+        mail-ed1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726284AbfCLMpr (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 12 Mar 2019 08:45:47 -0400
+Received: by mail-ed1-f65.google.com with SMTP id m35so2135840ede.10
+        for <linux-kernel@vger.kernel.org>; Tue, 12 Mar 2019 05:45:46 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=SQpSkb2z+kLeEzvXRt/FvYe7fWI5HmkDQf9Mmh9Uxzo=;
+        b=psoKypdXPBEp+DaInRx+UY1pUfHqqe/403nUX0UsOgtl9usTCkNRo16Qg9r6HLgrsH
+         BJywFalVvxibFr2bG1odZHo0D43oB/u8uYTTZz9440I1PiQOMGQRFRy6fQ6asEPIH1cf
+         dmr7Yusa3kAq0Janu6PljM/SBlaf0v3FzWWWLwPDcIOf8xzk8GM6cQqd+qUaF0iUnErQ
+         nxmliOHv7s8ZRGd+54oFULFl0aZOs184TahGV3UjKWnQyiAwrpY7CT3Ewk7XNQhQk9MH
+         bdTf87Xiar1kL27AZKl3UZj6K2dn83MMQiKE6zbh39FL6PcuC4nhKmi9KriswTAi/7Kp
+         UJkA==
+X-Gm-Message-State: APjAAAUFNfN0VBKtD1QqlrkP0sb0ZkihTRVqlOBeEhAGL2tX7j3frdC7
+        pmmHYBKVFklNL+SYUgzQ+2tZLA==
+X-Google-Smtp-Source: APXvYqzyiL2+2DmIDMeL0MortoUB8IwbMYbn0HEEkQsXmv52rLpQDQt0CI7HcACbAMb1ZIm+e3dt1A==
+X-Received: by 2002:a17:906:2a9b:: with SMTP id l27mr25849667eje.89.1552394745755;
+        Tue, 12 Mar 2019 05:45:45 -0700 (PDT)
+Received: from shalem.localdomain (546A5441.cm-12-3b.dynamic.ziggo.nl. [84.106.84.65])
+        by smtp.gmail.com with ESMTPSA id l15sm3648070ejn.77.2019.03.12.05.45.44
+        (version=TLS1_3 cipher=AEAD-AES128-GCM-SHA256 bits=128/128);
+        Tue, 12 Mar 2019 05:45:45 -0700 (PDT)
+Subject: Re: [PATCH 1/5] dt-bindings: connector: add optional properties for
+ Type-B
+To:     Chunfeng Yun <chunfeng.yun@mediatek.com>
+Cc:     Rob Herring <robh+dt@kernel.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Heikki Krogerus <heikki.krogerus@linux.intel.com>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        Adam Thomson <Adam.Thomson.Opensource@diasemi.com>,
+        Li Jun <jun.li@nxp.com>,
+        Badhri Jagan Sridharan <badhri@google.com>,
+        Andy Shevchenko <andy.shevchenko@gmail.com>,
+        Min Guo <min.guo@mediatek.com>, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-usb@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org,
+        linux-mediatek@lists.infradead.org
+References: <1552025622-15582-1-git-send-email-chunfeng.yun@mediatek.com>
+ <1552025622-15582-2-git-send-email-chunfeng.yun@mediatek.com>
+ <693b11e7-fa9e-ab1f-561a-beb758b1872f@redhat.com>
+ <1552282383.10179.21.camel@mhfsdcap03>
+ <c8084259-74d3-c85f-1275-854826c935a0@redhat.com>
+ <1552360688.10179.55.camel@mhfsdcap03>
+From:   Hans de Goede <hdegoede@redhat.com>
+Message-ID: <464f1021-4c5e-9137-489d-65fd578575d3@redhat.com>
+Date:   Tue, 12 Mar 2019 13:45:44 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.5.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190311022932.13539-2-gaoxiang25@huawei.com>
-User-Agent: Mutt/1.11.3 (2019-02-01)
+In-Reply-To: <1552360688.10179.55.camel@mhfsdcap03>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Mar 11, 2019 at 10:29:32AM +0800, Gao Xiang wrote:
-> commit af692e117cb8cd9d3d844d413095775abc1217f9 upstream.
-> 
-> This patch resolves the following page use-after-free issue,
-> z_erofs_vle_unzip:
->     ...
->     for (i = 0; i < nr_pages; ++i) {
->         ...
->         z_erofs_onlinepage_endio(page);  (1)
->     }
-> 
->     for (i = 0; i < clusterpages; ++i) {
->         page = compressed_pages[i];
-> 
->         if (page->mapping == mngda)      (2)
->             continue;
->         /* recycle all individual staging pages */
->         (void)z_erofs_gather_if_stagingpage(page_pool, page); (3)
->         WRITE_ONCE(compressed_pages[i], NULL);
->     }
->     ...
-> 
-> After (1) is executed, page is freed and could be then reused, if
-> compressed_pages is scanned after that, it could fall info (2) or
-> (3) by mistake and that could finally be in a mess.
-> 
-> This patch aims to solve the above issue only with little changes
-> as much as possible in order to make the fix backport easier.
-> 
-> Fixes: 3883a79abd02 ("staging: erofs: introduce VLE decompression support")
-> Cc: <stable@vger.kernel.org> # 4.19+
-> Reviewed-by: Chao Yu <yuchao0@huawei.com>
-> Signed-off-by: Gao Xiang <gaoxiang25@huawei.com>
-> ---
->  drivers/staging/erofs/unzip_vle.c     | 38 ++++++++++++++++++-----------------
->  drivers/staging/erofs/unzip_vle.h     |  3 +--
->  drivers/staging/erofs/unzip_vle_lz4.c | 19 ++++++++----------
->  3 files changed, 29 insertions(+), 31 deletions(-)
-> 
-> diff --git a/drivers/staging/erofs/unzip_vle.c b/drivers/staging/erofs/unzip_vle.c
-> index ca2e8fd78959..ab30d14ded06 100644
-> --- a/drivers/staging/erofs/unzip_vle.c
-> +++ b/drivers/staging/erofs/unzip_vle.c
-> @@ -1017,11 +1017,10 @@ static int z_erofs_vle_unzip(struct super_block *sb,
->  	if (llen > grp->llen)
->  		llen = grp->llen;
->  
-> -	err = z_erofs_vle_unzip_fast_percpu(compressed_pages,
-> -		clusterpages, pages, llen, work->pageofs,
-> -		z_erofs_onlinepage_endio);
-> +	err = z_erofs_vle_unzip_fast_percpu(compressed_pages, clusterpages,
-> +					    pages, llen, work->pageofs);
->  	if (err != -ENOTSUPP)
-> -		goto out_percpu;
-> +		goto out;
->  
->  	if (sparsemem_pages >= nr_pages)
->  		goto skip_allocpage;
-> @@ -1042,8 +1041,25 @@ static int z_erofs_vle_unzip(struct super_block *sb,
->  	erofs_vunmap(vout, nr_pages);
->  
->  out:
-> +	/* must handle all compressed pages before endding pages */
-> +	for (i = 0; i < clusterpages; ++i) {
-> +		page = compressed_pages[i];
-> +
-> +#ifdef EROFS_FS_HAS_MANAGED_CACHE
-> +		if (page->mapping == MNGD_MAPPING(sbi))
-> +			continue;
-> +#endif
-> +		/* recycle all individual staging pages */
-> +		(void)z_erofs_gather_if_stagingpage(page_pool, page);
-> +
-> +		WRITE_ONCE(compressed_pages[i], NULL);
-> +	}
-> +
->  	for (i = 0; i < nr_pages; ++i) {
->  		page = pages[i];
-> +		if (!page)
-> +			continue;
-> +
->  		DBG_BUGON(!page->mapping);
->  
->  		/* recycle all individual staging pages */
-> @@ -1056,20 +1072,6 @@ static int z_erofs_vle_unzip(struct super_block *sb,
->  		z_erofs_onlinepage_endio(page);
->  	}
->  
-> -out_percpu:
-> -	for (i = 0; i < clusterpages; ++i) {
-> -		page = compressed_pages[i];
-> -
-> -#ifdef EROFS_FS_HAS_MANAGED_CACHE
-> -		if (page->mapping == MNGD_MAPPING(sbi))
-> -			continue;
-> -#endif
-> -		/* recycle all individual staging pages */
-> -		(void)z_erofs_gather_if_stagingpage(page_pool, page);
-> -
-> -		WRITE_ONCE(compressed_pages[i], NULL);
-> -	}
-> -
->  	if (pages == z_pagemap_global)
->  		mutex_unlock(&z_pagemap_global_lock);
->  	else if (unlikely(pages != pages_onstack))
-> diff --git a/drivers/staging/erofs/unzip_vle.h b/drivers/staging/erofs/unzip_vle.h
-> index 5a4e1b62c0d1..c0dfd6906aa8 100644
-> --- a/drivers/staging/erofs/unzip_vle.h
-> +++ b/drivers/staging/erofs/unzip_vle.h
-> @@ -218,8 +218,7 @@ extern int z_erofs_vle_plain_copy(struct page **compressed_pages,
->  
->  extern int z_erofs_vle_unzip_fast_percpu(struct page **compressed_pages,
->  	unsigned clusterpages, struct page **pages,
-> -	unsigned outlen, unsigned short pageofs,
-> -	void (*endio)(struct page *));
-> +	unsigned int outlen, unsigned short pageofs);
->  
->  extern int z_erofs_vle_unzip_vmap(struct page **compressed_pages,
->  	unsigned clusterpages, void *vaddr, unsigned llen,
-> diff --git a/drivers/staging/erofs/unzip_vle_lz4.c b/drivers/staging/erofs/unzip_vle_lz4.c
-> index 52797bd89da1..f471b894c848 100644
-> --- a/drivers/staging/erofs/unzip_vle_lz4.c
-> +++ b/drivers/staging/erofs/unzip_vle_lz4.c
-> @@ -125,8 +125,7 @@ int z_erofs_vle_unzip_fast_percpu(struct page **compressed_pages,
->  				  unsigned int clusterpages,
->  				  struct page **pages,
->  				  unsigned int outlen,
-> -				  unsigned short pageofs,
-> -				  void (*endio)(struct page *))
-> +				  unsigned short pageofs)
->  {
->  	void *vin, *vout;
->  	unsigned int nr_pages, i, j;
-> @@ -148,19 +147,16 @@ int z_erofs_vle_unzip_fast_percpu(struct page **compressed_pages,
->  	ret = z_erofs_unzip_lz4(vin, vout + pageofs,
->  				clusterpages * PAGE_SIZE, outlen);
->  
-> -	if (ret >= 0) {
-> -		outlen = ret;
-> -		ret = 0;
-> -	}
-> +	if (ret < 0)
-> +		goto out;
-> +	ret = 0;
->  
->  	for (i = 0; i < nr_pages; ++i) {
->  		j = min((unsigned int)PAGE_SIZE - pageofs, outlen);
->  
->  		if (pages[i]) {
-> -			if (ret < 0) {
-> -				SetPageError(pages[i]);
-> -			} else if (clusterpages == 1 &&
-> -				   pages[i] == compressed_pages[0]) {
-> +			if (clusterpages == 1 &&
-> +			    pages[i] == compressed_pages[0]) {
->  				memcpy(vin + pageofs, vout + pageofs, j);
->  			} else {
->  				void *dst = kmap_atomic(pages[i]);
-> @@ -168,12 +164,13 @@ int z_erofs_vle_unzip_fast_percpu(struct page **compressed_pages,
->  				memcpy(dst + pageofs, vout + pageofs, j);
->  				kunmap_atomic(dst);
->  			}
-> -			endio(pages[i]);
->  		}
->  		vout += PAGE_SIZE;
->  		outlen -= j;
->  		pageofs = 0;
->  	}
-> +
-> +out:
->  	preempt_enable();
->  
->  	if (clusterpages == 1)
-> -- 
-> 2.14.5
->
+Hi,
 
-Now applied, thanks.
+On 12-03-19 04:18, Chunfeng Yun wrote:
+> Hi,
+> On Mon, 2019-03-11 at 09:06 +0100, Hans de Goede wrote:
+>> Hi,
+>>
+>> On 11-03-19 06:33, Chunfeng Yun wrote:
+>>> Hi,
+>>>
+>>> On Fri, 2019-03-08 at 13:07 +0100, Hans de Goede wrote:
+>>>> Hi,
+>>>>
+>>>> On 08-03-19 07:13, Chunfeng Yun wrote:
+>>>>> Add id-gpios, vbus-gpios, vbus-supply and pinctrl properties for
+>>>>> usb-b-connector
+>>>>>
+>>>>> Signed-off-by: Chunfeng Yun <chunfeng.yun@mediatek.com>
+>>>>> ---
+>>>>>     .../devicetree/bindings/connector/usb-connector.txt    | 10 ++++++++++
+>>>>>     1 file changed, 10 insertions(+)
+>>>>>
+>>>>> diff --git a/Documentation/devicetree/bindings/connector/usb-connector.txt b/Documentation/devicetree/bindings/connector/usb-connector.txt
+>>>>> index a9a2f2fc44f2..7a07b0f4f973 100644
+>>>>> --- a/Documentation/devicetree/bindings/connector/usb-connector.txt
+>>>>> +++ b/Documentation/devicetree/bindings/connector/usb-connector.txt
+>>>>> @@ -17,6 +17,16 @@ Optional properties:
+>>>>>     - self-powered: Set this property if the usb device that has its own power
+>>>>>       source.
+>>>>>     
+>>>>> +Optional properties for usb-b-connector:
+>>>>> +- id-gpios: gpio for USB ID pin.
+>>>>
+>>>> What about boards where the ID pin is *not* connected to a GPIO,
+>>>> but e.g. to a special pin on the PMIC which can also detect
+>>>> an ACA adapter ? Currently this case is handled by extcon
+>>>> drivers, but we have no way to set e.g. vbus-supply for the
+>>>> connector. Maybe in this case the usb-connector node should
+>>>> be a child of the PMIC node ?
+>>> Yes, it would be, PMIC is in charger of detecting the status of ID pin
+>>
+>> Ok, then I think this should be documented too.
+>>
+>>>> And in many cases there also is a mux to switch the datalines
+>>>> between the host and device(gadget) controllers, how should
+>>>> that be described in this model?  See the new usb-role-switch
+>>>> code under drivers/usb/roles
+>>>>
+>>>> In some cases the mux is controlled through a gpio, so we
+>>>> may want to add a "mux-gpios" here in which case we also
+>>>> need to define what 0/1 means.
+>>> I'm not sure, the mux seems not belong to this connector,
+>>> and may need another driver to register usb-role-switch,
+>>> similar to:
+>>>
+>>> [v2,2/2] usb: typec: add typec switch via GPIO control
+>>> https://patchwork.kernel.org/patch/10834327/
+>>
+>> Right the mux/role-switch will need a driver, but the "owner"
+>> of the usb_connector, e.g. the PMIC or the owner of the
+>> id GPIO pin needs to know which device is the role-switch so
+>> that it can set the role correctly based on the id-pin.
+>>
+>> Your binding already contains Vbus info, allowing the owner
+>> of the usb_connector to enable/disable Vbus based on the id-pin,
+>> but the owner will also be responsible for setting the role-switch.
+> In this patch series, I make usb_connector driver enable/disable Vbus,
+> but not the parent(USB controller) of usb_connector which registers a
+> usb-role-switch, which way do you think it is better?
 
-greg k-h
+IMHO there should not be a driver for the usb_connector child-node,
+only for the parent-device of that child-node.
+
+There are going to be too many specific setups surrounding PMICs to
+be able to do a single generic driver for the connector.
+
+Regards,
+
+Hans
+
