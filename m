@@ -2,78 +2,101 @@ Return-Path: <SRS0=J4ZE=RP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.5 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,
-	USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.8 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 66636C43381
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 12:02:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D9FC7C10F00
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 12:02:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2927E2084F
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 12:02:15 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1552392135;
-	bh=37aoO7sQylW2/1zvp/kiFUjPxX1zAnimK78dIt+s9qM=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=vFFU6Pb4IT8j1gQPsPAoRdoQHLB3fl9qujUnM1NrTBKURofHfHr3QcDGEkk++4JjD
-	 k0xdycCA17aM9fCeI6oqWtZElFFlPnJDUaCNChiKYMPLREJbFF+Fb+BFNH/Uc1VzYF
-	 C1uorxJlPFVyIw7pM/Xhaug2y+MjRjsqz1cTxQ1k=
+	by mail.kernel.org (Postfix) with ESMTP id A7F3D20883
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 12:02:30 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=hartkopp.net header.i=@hartkopp.net header.b="oUZXCL95"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726422AbfCLMCN (ORCPT
+        id S1726624AbfCLMC3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 12 Mar 2019 08:02:13 -0400
-Received: from mail.kernel.org ([198.145.29.99]:44838 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725844AbfCLMCN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 12 Mar 2019 08:02:13 -0400
-Received: from localhost (unknown [12.27.65.221])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 90E7D206BA;
-        Tue, 12 Mar 2019 12:02:12 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1552392132;
-        bh=37aoO7sQylW2/1zvp/kiFUjPxX1zAnimK78dIt+s9qM=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=Ct57JQsjWhxN1K7RAg1iNfqBb1kaUX3QP2ZCi3uJdGnfhbReeetBmF9vTDg5NQyIA
-         wiW+4i94yIp+rZIDyJx+b0Vtt1w1gifkBsh+C4g+Ssg5u+RPU1pnzVNcRjNTfzjvOC
-         NW8zmuIvoeCGty3StDBCJIIR73QBaBAGh33FO1Hw=
-Date:   Tue, 12 Mar 2019 05:02:12 -0700
-From:   Greg KH <gregkh@linuxfoundation.org>
-To:     maowenan <maowenan@huawei.com>
-Cc:     Larry.Finger@lwfinger.net, straube.linux@gmail.com,
-        jananis37@gmail.com, devel@driverdev.osuosl.org,
-        linux-kernel@vger.kernel.org, kernel-janitors@vger.kernel.org,
-        davem@davemloft.net
-Subject: Re: [PATCH net] staging: rtl8188eu: use is_zero_ether_addr() instead
- of memcmp()
-Message-ID: <20190312120212.GA30183@kroah.com>
-References: <20190309032600.98732-1-maowenan@huawei.com>
- <951c83d2-fa0d-11ed-96a9-cee620c9c096@huawei.com>
+        Tue, 12 Mar 2019 08:02:29 -0400
+Received: from mo4-p01-ob.smtp.rzone.de ([85.215.255.53]:25789 "EHLO
+        mo4-p01-ob.smtp.rzone.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725844AbfCLMC2 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 12 Mar 2019 08:02:28 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; t=1552392143;
+        s=strato-dkim-0002; d=hartkopp.net;
+        h=In-Reply-To:Date:Message-ID:From:References:To:Subject:
+        X-RZG-CLASS-ID:X-RZG-AUTH:From:Subject:Sender;
+        bh=P5/PVrxkOtneOBmRAzRCH23Ow+mn9LtOrfvfD94JTQI=;
+        b=oUZXCL958GhknvxpCYsX0KtwOAWpMzTar8o1xA/gTZAXGNeggsapWuiSDf0f5Oz41x
+        yuo8i4fYBuBuKTW1shvUGna+mrwfnPh4LrbNRDf84Sz/0Z1+90wq2PXmfTbJqjjqATh4
+        ICnWaxmiRORJ/Nwnu2jf+c2WjAKjZd8Yfu688F0k8s8v3XVjuN0RNMDbW/6sd/UmSfGa
+        jMHc6fyP1wJJtKn/W01k5TK6jxo+NijYUjzqlFB8NsqBzSby518OvgNL2xMDU1z8P4cL
+        s7VurMDXbHoqCy+UsJEqqxeY5Qo9nhnJT6+isp09lsn0s8ifCRZwv+kApr/aSDWUS940
+        ouOg==
+X-RZG-AUTH: ":P2MHfkW8eP4Mre39l357AZT/I7AY/7nT2yrDxb8mjG14FZxedJy6qgO1onXMaVuOBdyp/nutbxfg"
+X-RZG-CLASS-ID: mo00
+Received: from [192.168.1.119]
+        by smtp.strato.de (RZmta 44.13 AUTH)
+        with ESMTPSA id e06351v2CC1xuWH
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (curve secp521r1 with 521 ECDH bits, eq. 15360 bits RSA))
+        (Client did not present a certificate);
+        Tue, 12 Mar 2019 13:01:59 +0100 (CET)
+Subject: Re: WARNING in hsr_forward_skb
+To:     syzbot <syzbot+fdce8f2a8903f3ba0e6b@syzkaller.appspotmail.com>,
+        arvid.brodin@alten.se, axboe@fb.com, axboe@kernel.dk,
+        davem@davemloft.net, hch@lst.de, linux-block@vger.kernel.org,
+        linux-can@vger.kernel.org, linux-kernel@vger.kernel.org,
+        ming.lei@redhat.com, mkl@pengutronix.de, netdev@vger.kernel.org,
+        syzkaller-bugs@googlegroups.com
+References: <0000000000004cfa120583e1dfc3@google.com>
+From:   Oliver Hartkopp <socketcan@hartkopp.net>
+Message-ID: <7dd5ffca-803d-9d5e-7fa4-f9eed2249d26@hartkopp.net>
+Date:   Tue, 12 Mar 2019 13:01:54 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.5.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <951c83d2-fa0d-11ed-96a9-cee620c9c096@huawei.com>
-User-Agent: Mutt/1.11.3 (2019-02-01)
+In-Reply-To: <0000000000004cfa120583e1dfc3@google.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Mar 12, 2019 at 02:29:29PM +0800, maowenan wrote:
-> ping...
+Hi all,
+
+I'm not sure why a Kernel 4.12.0-rc2+ is used here, but I do not get any 
+problems on the my latest 5.0.0-06622-g1fc1cd8399ab tree and I strongly 
+assume this patch showing up in 4.12-rc6
+
+https://git.kernel.org/pub/scm/linux/kernel/git/stable/linux.git/commit?id=74b7b490886852582d986a33443c2ffa50970169
+
+fixes the problem.
+
+Best regards,
+Oliver
+
+On 3/12/19 9:57 AM, syzbot wrote:
+> syzbot has bisected this bug to:
 > 
-> On 2019/3/9 11:26, Mao Wenan wrote:
-
-What?  You got an automated email from my patch system saying that I can
-not do anything with this patch until after 5.1-rc1 is out, due to the
-merge window.  Why did that not answer the question ahead of time as to
-why this patch was not responded to?
-
-Also, it's only been 3 days, please relax, for a clean-up patch, it can
-take weeks before they are reviewed as they are obvious at the bottom of
-everyone's priority queue.
-
-so all is good, just wait.
-
-greg k-h
+> commit ab42f35d9cb5ac49b5a2a11f940e74f58f207280
+> Author: Ming Lei <ming.lei@redhat.com>
+> Date:   Fri May 26 11:53:19 2017 +0000
+> 
+>      blk-mq: merge bio into sw queue before plugging
+> 
+> bisection log:  https://syzkaller.appspot.com/x/bisect.txt?x=16e68713200000
+> start commit:   ab42f35d blk-mq: merge bio into sw queue before plugging
+> git tree:       upstream
+> final crash:    https://syzkaller.appspot.com/x/report.txt?x=15e68713200000
+> console output: https://syzkaller.appspot.com/x/log.txt?x=11e68713200000
+> kernel config:  https://syzkaller.appspot.com/x/.config?x=5e7dc790609552d7
+> dashboard link: 
+> https://syzkaller.appspot.com/bug?extid=fdce8f2a8903f3ba0e6b
+> userspace arch: amd64
+> syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=15f6d1fd400000
+> C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=17290fdd400000
+> 
+> Reported-by: syzbot+fdce8f2a8903f3ba0e6b@syzkaller.appspotmail.com
+> Fixes: ab42f35d ("blk-mq: merge bio into sw queue before plugging")
