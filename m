@@ -7,47 +7,46 @@ X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2A5CEC43381
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 17:11:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D2C74C43381
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 17:11:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E7E07217D9
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 17:11:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A34F5214AE
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 17:11:48 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1552410699;
-	bh=RF9sT/ibTIzIT/AXrglLP9NxrHm6Y+TzagscqqU85vA=;
+	s=default; t=1552410708;
+	bh=9Auvx8DwUw+Ac8CnAXYP1kW19nufdx7vDVXTgrMk/TU=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Sdft6LeQ/aQQ1DdL0eau6lAp+8mIH1V5F+dYUL/768hpYI8LqzUDSaC/2qufBBpz5
-	 Dg2099VpiXOez7TP3ot19NsTAR+LpSwP1apd+KaPIbh+n8HuecOULldkh6KfhZl5gk
-	 EXf95b9guP1ssQUxtwXlzz8DJoK/ojhVGRDNHeh4=
+	b=a79BOGkAobxRYvSUiqF7w+KQLGUhHJIleC49brloI/cF0j55RvdXTxYzmtzWpKE5x
+	 fH9FQ/eAjHB0ezNXCDYhKtbIHxKq/mSGt5lqUnra5/BqI+RyMTv1lDZ7uT5FeUvnbV
+	 UytWBblItLC3qHHxr+VINiMNLn5R+9eXxaxggLjk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727032AbfCLRLi (ORCPT
+        id S1727113AbfCLRLq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 12 Mar 2019 13:11:38 -0400
-Received: from mail.kernel.org ([198.145.29.99]:44858 "EHLO mail.kernel.org"
+        Tue, 12 Mar 2019 13:11:46 -0400
+Received: from mail.kernel.org ([198.145.29.99]:45380 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726954AbfCLRLa (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 12 Mar 2019 13:11:30 -0400
+        id S1727044AbfCLRLk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 12 Mar 2019 13:11:40 -0400
 Received: from localhost (unknown [104.133.8.98])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 7FB9B217D4;
-        Tue, 12 Mar 2019 17:11:29 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id E2C40217D8;
+        Tue, 12 Mar 2019 17:11:38 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1552410689;
-        bh=RF9sT/ibTIzIT/AXrglLP9NxrHm6Y+TzagscqqU85vA=;
+        s=default; t=1552410699;
+        bh=9Auvx8DwUw+Ac8CnAXYP1kW19nufdx7vDVXTgrMk/TU=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=gQR9KAj77BVMrfk4UwSF6TUANkw/X2oV0QB4TtLvUz2DdUzQvFByNki6VilM989M5
-         2EW5cTkHcrNINWMY1fuHIM6Xor6+84HmZh6lIB6pmaM0U5ccymzTRkc1fKwtZ0qG5z
-         /aCR8CoD8dfhhRXEpp4RsrUbcMZyLQDRvfCUf/Zg=
+        b=PZbJpBILEqD7HFD/gBZqzU6tYPkM4+aD1jHs3fLPYOnhhzWTFNFWtHtvN6gAw39DK
+         Tbzg6W68f6CpclUEvskimi88/uXeMPomLsw6M2RcrSyZ1zn1DW9QPyXP1jOFldIWP9
+         v207qLETZOcx7sUHD5L1FSoQSZ4IW81Q1wigkA+A=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        "Gustavo A. R. Silva" <gustavo@embeddedor.com>,
-        "Martin K. Petersen" <martin.petersen@oracle.com>
-Subject: [PATCH 5.0 05/25] scsi: aacraid: Fix missing break in switch statement
-Date:   Tue, 12 Mar 2019 10:08:43 -0700
-Message-Id: <20190312170403.976490686@linuxfoundation.org>
+        stable@vger.kernel.org, Gao Xiang <gaoxiang25@huawei.com>,
+        Chao Yu <yuchao0@huawei.com>
+Subject: [PATCH 5.0 19/25] staging: erofs: compressed_pages should not be accessed again after freed
+Date:   Tue, 12 Mar 2019 10:08:57 -0700
+Message-Id: <20190312170404.975178350@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190312170403.643852550@linuxfoundation.org>
 References: <20190312170403.643852550@linuxfoundation.org>
@@ -66,38 +65,176 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-From: Gustavo A. R. Silva <gustavo@embeddedor.com>
+From: Gao Xiang <gaoxiang25@huawei.com>
 
-commit 5e420fe635813e5746b296cfc8fff4853ae205a2 upstream.
+commit af692e117cb8cd9d3d844d413095775abc1217f9 upstream.
 
-Add missing break statement and fix identation issue.
+This patch resolves the following page use-after-free issue,
+z_erofs_vle_unzip:
+    ...
+    for (i = 0; i < nr_pages; ++i) {
+        ...
+        z_erofs_onlinepage_endio(page);  (1)
+    }
 
-This bug was found thanks to the ongoing efforts to enable
--Wimplicit-fallthrough.
+    for (i = 0; i < clusterpages; ++i) {
+        page = compressed_pages[i];
 
-Fixes: 9cb62fa24e0d ("aacraid: Log firmware AIF messages")
-Cc: stable@vger.kernel.org
-Signed-off-by: Gustavo A. R. Silva <gustavo@embeddedor.com>
-Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
+        if (page->mapping == mngda)      (2)
+            continue;
+        /* recycle all individual staging pages */
+        (void)z_erofs_gather_if_stagingpage(page_pool, page); (3)
+        WRITE_ONCE(compressed_pages[i], NULL);
+    }
+    ...
+
+After (1) is executed, page is freed and could be then reused, if
+compressed_pages is scanned after that, it could fall info (2) or
+(3) by mistake and that could finally be in a mess.
+
+This patch aims to solve the above issue only with little changes
+as much as possible in order to make the fix backport easier.
+
+Fixes: 3883a79abd02 ("staging: erofs: introduce VLE decompression support")
+Cc: <stable@vger.kernel.org> # 4.19+
+Signed-off-by: Gao Xiang <gaoxiang25@huawei.com>
+Reviewed-by: Chao Yu <yuchao0@huawei.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
----
- drivers/scsi/aacraid/commsup.c |    5 +++--
- 1 file changed, 3 insertions(+), 2 deletions(-)
 
---- a/drivers/scsi/aacraid/commsup.c
-+++ b/drivers/scsi/aacraid/commsup.c
-@@ -1303,8 +1303,9 @@ static void aac_handle_aif(struct aac_de
- 				  ADD : DELETE;
- 				break;
- 			}
--			case AifBuManagerEvent:
--				aac_handle_aif_bu(dev, aifcmd);
-+			break;
-+		case AifBuManagerEvent:
-+			aac_handle_aif_bu(dev, aifcmd);
- 			break;
- 		}
+---
+ drivers/staging/erofs/unzip_vle.c     |   38 +++++++++++++++++-----------------
+ drivers/staging/erofs/unzip_vle.h     |    3 --
+ drivers/staging/erofs/unzip_vle_lz4.c |   19 +++++++----------
+ 3 files changed, 29 insertions(+), 31 deletions(-)
+
+--- a/drivers/staging/erofs/unzip_vle.c
++++ b/drivers/staging/erofs/unzip_vle.c
+@@ -1017,11 +1017,10 @@ repeat:
+ 	if (llen > grp->llen)
+ 		llen = grp->llen;
  
+-	err = z_erofs_vle_unzip_fast_percpu(compressed_pages,
+-		clusterpages, pages, llen, work->pageofs,
+-		z_erofs_onlinepage_endio);
++	err = z_erofs_vle_unzip_fast_percpu(compressed_pages, clusterpages,
++					    pages, llen, work->pageofs);
+ 	if (err != -ENOTSUPP)
+-		goto out_percpu;
++		goto out;
+ 
+ 	if (sparsemem_pages >= nr_pages)
+ 		goto skip_allocpage;
+@@ -1042,8 +1041,25 @@ skip_allocpage:
+ 	erofs_vunmap(vout, nr_pages);
+ 
+ out:
++	/* must handle all compressed pages before endding pages */
++	for (i = 0; i < clusterpages; ++i) {
++		page = compressed_pages[i];
++
++#ifdef EROFS_FS_HAS_MANAGED_CACHE
++		if (page->mapping == MNGD_MAPPING(sbi))
++			continue;
++#endif
++		/* recycle all individual staging pages */
++		(void)z_erofs_gather_if_stagingpage(page_pool, page);
++
++		WRITE_ONCE(compressed_pages[i], NULL);
++	}
++
+ 	for (i = 0; i < nr_pages; ++i) {
+ 		page = pages[i];
++		if (!page)
++			continue;
++
+ 		DBG_BUGON(!page->mapping);
+ 
+ 		/* recycle all individual staging pages */
+@@ -1056,20 +1072,6 @@ out:
+ 		z_erofs_onlinepage_endio(page);
+ 	}
+ 
+-out_percpu:
+-	for (i = 0; i < clusterpages; ++i) {
+-		page = compressed_pages[i];
+-
+-#ifdef EROFS_FS_HAS_MANAGED_CACHE
+-		if (page->mapping == MNGD_MAPPING(sbi))
+-			continue;
+-#endif
+-		/* recycle all individual staging pages */
+-		(void)z_erofs_gather_if_stagingpage(page_pool, page);
+-
+-		WRITE_ONCE(compressed_pages[i], NULL);
+-	}
+-
+ 	if (pages == z_pagemap_global)
+ 		mutex_unlock(&z_pagemap_global_lock);
+ 	else if (unlikely(pages != pages_onstack))
+--- a/drivers/staging/erofs/unzip_vle.h
++++ b/drivers/staging/erofs/unzip_vle.h
+@@ -218,8 +218,7 @@ extern int z_erofs_vle_plain_copy(struct
+ 
+ extern int z_erofs_vle_unzip_fast_percpu(struct page **compressed_pages,
+ 	unsigned clusterpages, struct page **pages,
+-	unsigned outlen, unsigned short pageofs,
+-	void (*endio)(struct page *));
++	unsigned int outlen, unsigned short pageofs);
+ 
+ extern int z_erofs_vle_unzip_vmap(struct page **compressed_pages,
+ 	unsigned clusterpages, void *vaddr, unsigned llen,
+--- a/drivers/staging/erofs/unzip_vle_lz4.c
++++ b/drivers/staging/erofs/unzip_vle_lz4.c
+@@ -125,8 +125,7 @@ int z_erofs_vle_unzip_fast_percpu(struct
+ 				  unsigned int clusterpages,
+ 				  struct page **pages,
+ 				  unsigned int outlen,
+-				  unsigned short pageofs,
+-				  void (*endio)(struct page *))
++				  unsigned short pageofs)
+ {
+ 	void *vin, *vout;
+ 	unsigned int nr_pages, i, j;
+@@ -148,19 +147,16 @@ int z_erofs_vle_unzip_fast_percpu(struct
+ 	ret = z_erofs_unzip_lz4(vin, vout + pageofs,
+ 				clusterpages * PAGE_SIZE, outlen);
+ 
+-	if (ret >= 0) {
+-		outlen = ret;
+-		ret = 0;
+-	}
++	if (ret < 0)
++		goto out;
++	ret = 0;
+ 
+ 	for (i = 0; i < nr_pages; ++i) {
+ 		j = min((unsigned int)PAGE_SIZE - pageofs, outlen);
+ 
+ 		if (pages[i]) {
+-			if (ret < 0) {
+-				SetPageError(pages[i]);
+-			} else if (clusterpages == 1 &&
+-				   pages[i] == compressed_pages[0]) {
++			if (clusterpages == 1 &&
++			    pages[i] == compressed_pages[0]) {
+ 				memcpy(vin + pageofs, vout + pageofs, j);
+ 			} else {
+ 				void *dst = kmap_atomic(pages[i]);
+@@ -168,12 +164,13 @@ int z_erofs_vle_unzip_fast_percpu(struct
+ 				memcpy(dst + pageofs, vout + pageofs, j);
+ 				kunmap_atomic(dst);
+ 			}
+-			endio(pages[i]);
+ 		}
+ 		vout += PAGE_SIZE;
+ 		outlen -= j;
+ 		pageofs = 0;
+ 	}
++
++out:
+ 	preempt_enable();
+ 
+ 	if (clusterpages == 1)
 
 
