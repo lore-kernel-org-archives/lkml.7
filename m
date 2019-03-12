@@ -4,51 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EECFDC43381
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 17:48:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4F383C43381
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 17:48:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C0B012173C
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 17:48:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1F7A32087C
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 17:48:29 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1552412901;
-	bh=X+sgWuEzyB0G/Lz1u2Z4bxbknIgiOYcVvQ4GbMYRTjk=;
+	s=default; t=1552412909;
+	bh=Ul5r+3kTF4BnSmnINmcXayxxV3/YBOb7ka73iAwojdg=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=YTl8Iv/Wos9KiDXQ2rFYzcuB34dDbQWAY6noPqaE0N09sRkwGooynvEz2tqWnyzE+
-	 dQt5jP+rv3CAFSDQo62iillwzeRD1uXjG9dM81CSN494uRt2hY0JDQG6Fh5YMjDaaP
-	 6zi1UMFrhq9/hK6V32/G2BTz4060BhyVmEVBdXgQ=
+	b=sEOQAWNMRxazsCBxOEqg5jBYkR8nFkKnFc7dW1W51eka+ZZcD3dAz92TJF8AJxgT2
+	 WT8bP9kkTY4wp5RmA5U0gaD89Aof7gFUPYyio6JP5Wvm74Rmb7tB6p/sPc82XXgGD1
+	 at+p7K8cEPKI62J5wPNeDY11iWHsARzUHzyHVmEM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728888AbfCLRsU (ORCPT
+        id S1728819AbfCLRs1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 12 Mar 2019 13:48:20 -0400
-Received: from mail.kernel.org ([198.145.29.99]:54802 "EHLO mail.kernel.org"
+        Tue, 12 Mar 2019 13:48:27 -0400
+Received: from mail.kernel.org ([198.145.29.99]:54726 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727782AbfCLRPD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 12 Mar 2019 13:15:03 -0400
+        id S1728585AbfCLRPB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 12 Mar 2019 13:15:01 -0400
 Received: from localhost (unknown [104.133.8.98])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D478C21850;
-        Tue, 12 Mar 2019 17:15:01 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 7203A206DF;
+        Tue, 12 Mar 2019 17:15:00 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1552410901;
-        bh=X+sgWuEzyB0G/Lz1u2Z4bxbknIgiOYcVvQ4GbMYRTjk=;
+        s=default; t=1552410900;
+        bh=Ul5r+3kTF4BnSmnINmcXayxxV3/YBOb7ka73iAwojdg=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=M1wt2XepCB05Cosexli5RT5B3IQDrqgNgBKMt507fG0Uy+dic2PbdkCYxC1oVAKx9
-         XLQ3LNYgr85rk3q+OOX8IKD9pi6CJHq7SJjYBDT2ZIw/uSW4S7FuIYX9mPsKyDLSAs
-         tkKo106gPHWE/WF9g21XGrAa1yf67z3xCxDNsJ3w=
+        b=g642HuJqZ031hNrA1pzLYeWyy3dbjnIh37+7rUvyJSnNjImXUzMPqqxR27BVUJV+1
+         81CQ4+/h4zkWCawSUThLxf5T7Z+hEw7E0hbd9HpXpA+eGlk/AX062NG6FYQbgMaskC
+         62W+bWxYzz5KFcuEy3UHlOW+jlBL/uAIrrd68YvE=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Wen Xiong <wenxiong@us.ibm.com>,
-        Keith Busch <keith.busch@intel.com>,
-        Chaitanya Kulkarni <chaitanya.kulkarni@wdc.com>,
-        Christoph Hellwig <hch@lst.de>, Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 115/149] nvme: lock NS list changes while handling command effects
-Date:   Tue, 12 Mar 2019 10:08:53 -0700
-Message-Id: <20190312170359.124779056@linuxfoundation.org>
+        stable@vger.kernel.org, Keerthy <j-keerthy@ti.com>,
+        Tony Lindgren <tony@atomide.com>, Vignesh R <vigneshr@ti.com>,
+        Wolfram Sang <wsa@the-dreams.de>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.19 113/149] i2c: omap: Use noirq system sleep pm ops to idle device for suspend
+Date:   Tue, 12 Mar 2019 10:08:51 -0700
+Message-Id: <20190312170358.954998908@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190312170349.421581206@linuxfoundation.org>
 References: <20190312170349.421581206@linuxfoundation.org>
@@ -67,94 +67,90 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-[ Upstream commit e7ad43c3eda6a1690c4c3c341f95dc1c6898da83 ]
+[ Upstream commit c6e2bd956936d925748581e4d0294f10f1d92f2c ]
 
-If a controller supports the NS Change Notification, the namespace
-scan_work is automatically triggered after attaching a new namespace.
+We currently get the following error with pixcir_ts driver during a
+suspend resume cycle:
 
-Occasionally the namespace scan_work may append the new namespace to the
-list before the admin command effects handling is completed. The effects
-handling unfreezes namespaces, but if it unfreezes the newly attached
-namespace, its request_queue freeze depth will be off and we'll hit the
-warning in blk_mq_unfreeze_queue().
+omap_i2c 4802a000.i2c: controller timed out
+pixcir_ts 1-005c: pixcir_int_enable: can't read reg 0x34 : -110
+pixcir_ts 1-005c: Failed to disable interrupt generation: -110
+pixcir_ts 1-005c: Failed to stop
+dpm_run_callback(): pixcir_i2c_ts_resume+0x0/0x98
+[pixcir_i2c_ts] returns -110
+PM: Device 1-005c failed to resume: error -110
 
-On the next namespace add, we will fail to freeze that queue due to the
-previous bad accounting and deadlock waiting for frozen.
+And at least am437x based devices with pixcir_ts will fail to resume
+to a touchscreen that is configured as the wakeup-source in device
+tree for these devices.
 
-Fix that by preventing scan work from altering the namespace list while
-command effects handling needs to pair freeze with unfreeze.
+This is because pixcir_ts tries to reconfigure it's registers for
+noirq suspend which fails. This also leaves i2c-omap in enabled state
+for suspend.
 
-Reported-by: Wen Xiong <wenxiong@us.ibm.com>
-Tested-by: Wen Xiong <wenxiong@us.ibm.com>
-Signed-off-by: Keith Busch <keith.busch@intel.com>
-Reviewed-by: Chaitanya Kulkarni <chaitanya.kulkarni@wdc.com>
-Signed-off-by: Christoph Hellwig <hch@lst.de>
+Let's fix the pixcir_ts issue and make sure i2c-omap is suspended by
+adding SET_NOIRQ_SYSTEM_SLEEP_PM_OPS.
+
+Let's also get rid of some ifdefs while at it and replace them with
+__maybe_unused as SET_RUNTIME_PM_OPS and SET_NOIRQ_SYSTEM_SLEEP_PM_OPS
+already deal with the various PM Kconfig options.
+
+Reported-by: Keerthy <j-keerthy@ti.com>
+Signed-off-by: Tony Lindgren <tony@atomide.com>
+Acked-by: Vignesh R <vigneshr@ti.com>
+Signed-off-by: Wolfram Sang <wsa@the-dreams.de>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/nvme/host/core.c | 8 +++++++-
- drivers/nvme/host/nvme.h | 1 +
- 2 files changed, 8 insertions(+), 1 deletion(-)
+ drivers/i2c/busses/i2c-omap.c | 13 +++++--------
+ 1 file changed, 5 insertions(+), 8 deletions(-)
 
-diff --git a/drivers/nvme/host/core.c b/drivers/nvme/host/core.c
-index e0d2b7473901..2cdb3032ca0f 100644
---- a/drivers/nvme/host/core.c
-+++ b/drivers/nvme/host/core.c
-@@ -1182,6 +1182,7 @@ static u32 nvme_passthru_start(struct nvme_ctrl *ctrl, struct nvme_ns *ns,
- 	 * effects say only one namespace is affected.
- 	 */
- 	if (effects & (NVME_CMD_EFFECTS_LBCC | NVME_CMD_EFFECTS_CSE_MASK)) {
-+		mutex_lock(&ctrl->scan_lock);
- 		nvme_start_freeze(ctrl);
- 		nvme_wait_freeze(ctrl);
- 	}
-@@ -1210,8 +1211,10 @@ static void nvme_passthru_end(struct nvme_ctrl *ctrl, u32 effects)
- 	 */
- 	if (effects & NVME_CMD_EFFECTS_LBCC)
- 		nvme_update_formats(ctrl);
--	if (effects & (NVME_CMD_EFFECTS_LBCC | NVME_CMD_EFFECTS_CSE_MASK))
-+	if (effects & (NVME_CMD_EFFECTS_LBCC | NVME_CMD_EFFECTS_CSE_MASK)) {
- 		nvme_unfreeze(ctrl);
-+		mutex_unlock(&ctrl->scan_lock);
-+	}
- 	if (effects & NVME_CMD_EFFECTS_CCC)
- 		nvme_init_identify(ctrl);
- 	if (effects & (NVME_CMD_EFFECTS_NIC | NVME_CMD_EFFECTS_NCC))
-@@ -3292,6 +3295,7 @@ static void nvme_scan_work(struct work_struct *work)
- 	if (nvme_identify_ctrl(ctrl, &id))
- 		return;
+diff --git a/drivers/i2c/busses/i2c-omap.c b/drivers/i2c/busses/i2c-omap.c
+index 65d06a819307..2ac86096ddd9 100644
+--- a/drivers/i2c/busses/i2c-omap.c
++++ b/drivers/i2c/busses/i2c-omap.c
+@@ -1498,8 +1498,7 @@ static int omap_i2c_remove(struct platform_device *pdev)
+ 	return 0;
+ }
  
-+	mutex_lock(&ctrl->scan_lock);
- 	nn = le32_to_cpu(id->nn);
- 	if (ctrl->vs >= NVME_VS(1, 1, 0) &&
- 	    !(ctrl->quirks & NVME_QUIRK_IDENTIFY_CNS)) {
-@@ -3300,6 +3304,7 @@ static void nvme_scan_work(struct work_struct *work)
- 	}
- 	nvme_scan_ns_sequential(ctrl, nn);
- out_free_id:
-+	mutex_unlock(&ctrl->scan_lock);
- 	kfree(id);
- 	down_write(&ctrl->namespaces_rwsem);
- 	list_sort(NULL, &ctrl->namespaces, ns_cmp);
-@@ -3535,6 +3540,7 @@ int nvme_init_ctrl(struct nvme_ctrl *ctrl, struct device *dev,
+-#ifdef CONFIG_PM
+-static int omap_i2c_runtime_suspend(struct device *dev)
++static int __maybe_unused omap_i2c_runtime_suspend(struct device *dev)
+ {
+ 	struct omap_i2c_dev *omap = dev_get_drvdata(dev);
  
- 	ctrl->state = NVME_CTRL_NEW;
- 	spin_lock_init(&ctrl->lock);
-+	mutex_init(&ctrl->scan_lock);
- 	INIT_LIST_HEAD(&ctrl->namespaces);
- 	init_rwsem(&ctrl->namespaces_rwsem);
- 	ctrl->dev = dev;
-diff --git a/drivers/nvme/host/nvme.h b/drivers/nvme/host/nvme.h
-index 60220de2db52..e82cdaec81c9 100644
---- a/drivers/nvme/host/nvme.h
-+++ b/drivers/nvme/host/nvme.h
-@@ -148,6 +148,7 @@ struct nvme_ctrl {
- 	enum nvme_ctrl_state state;
- 	bool identified;
- 	spinlock_t lock;
-+	struct mutex scan_lock;
- 	const struct nvme_ctrl_ops *ops;
- 	struct request_queue *admin_q;
- 	struct request_queue *connect_q;
+@@ -1525,7 +1524,7 @@ static int omap_i2c_runtime_suspend(struct device *dev)
+ 	return 0;
+ }
+ 
+-static int omap_i2c_runtime_resume(struct device *dev)
++static int __maybe_unused omap_i2c_runtime_resume(struct device *dev)
+ {
+ 	struct omap_i2c_dev *omap = dev_get_drvdata(dev);
+ 
+@@ -1540,20 +1539,18 @@ static int omap_i2c_runtime_resume(struct device *dev)
+ }
+ 
+ static const struct dev_pm_ops omap_i2c_pm_ops = {
++	SET_NOIRQ_SYSTEM_SLEEP_PM_OPS(pm_runtime_force_suspend,
++				      pm_runtime_force_resume)
+ 	SET_RUNTIME_PM_OPS(omap_i2c_runtime_suspend,
+ 			   omap_i2c_runtime_resume, NULL)
+ };
+-#define OMAP_I2C_PM_OPS (&omap_i2c_pm_ops)
+-#else
+-#define OMAP_I2C_PM_OPS NULL
+-#endif /* CONFIG_PM */
+ 
+ static struct platform_driver omap_i2c_driver = {
+ 	.probe		= omap_i2c_probe,
+ 	.remove		= omap_i2c_remove,
+ 	.driver		= {
+ 		.name	= "omap_i2c",
+-		.pm	= OMAP_I2C_PM_OPS,
++		.pm	= &omap_i2c_pm_ops,
+ 		.of_match_table = of_match_ptr(omap_i2c_of_match),
+ 	},
+ };
 -- 
 2.19.1
 
