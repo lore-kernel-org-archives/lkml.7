@@ -2,141 +2,100 @@ Return-Path: <SRS0=J4ZE=RP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_MUTT
+X-Spam-Status: No, score=-1.0 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 94630C43381
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 20:24:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CDF2EC43381
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 20:25:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5B709214AE
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 20:24:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 93A392171F
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 20:25:28 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="EwvbBZ4K"
+	dkim=pass (2048-bit key) header.d=baylibre-com.20150623.gappssmtp.com header.i=@baylibre-com.20150623.gappssmtp.com header.b="D7cUhY81"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727300AbfCLUYK (ORCPT
+        id S1727332AbfCLUZ1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 12 Mar 2019 16:24:10 -0400
-Received: from mail-wr1-f66.google.com ([209.85.221.66]:43381 "EHLO
-        mail-wr1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726656AbfCLUYJ (ORCPT
+        Tue, 12 Mar 2019 16:25:27 -0400
+Received: from mail-pg1-f193.google.com ([209.85.215.193]:33892 "EHLO
+        mail-pg1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726534AbfCLUZ0 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 12 Mar 2019 16:24:09 -0400
-Received: by mail-wr1-f66.google.com with SMTP id d17so4117952wre.10
-        for <linux-kernel@vger.kernel.org>; Tue, 12 Mar 2019 13:24:08 -0700 (PDT)
+        Tue, 12 Mar 2019 16:25:26 -0400
+Received: by mail-pg1-f193.google.com with SMTP id v12so2698011pgq.1
+        for <linux-kernel@vger.kernel.org>; Tue, 12 Mar 2019 13:25:26 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=JTXNBwk8SCiPTwAEie/bcnT4XkESteANRpMaJv1ngqI=;
-        b=EwvbBZ4KSMOuBKHyRmLX6z3TyXLAhR1nLk0khhlMf3j0373hDL2h2s6Fsc4jSIPldk
-         OqxCPbneplHA1MCHSI6+nxj6ysDiRKK4t/9es28FexZ+HM/+TzAryOOO9iSx7pDbw3iY
-         kyOQBtLrgmOoiwlkL0GVJe0zmmjSfMKmbphXkj6TuYw/2cX6IQ2CcHfwX1oU/OZeTENW
-         i73uqbf4FP7f0d2iSZvO+W5WGpAmOgSzQbfhi/8zKgoAMlJE0Jf9DmW2/ZYVBFougdHn
-         +K8vyJ2MsAsr9ChERcoA1tmSp1/4o9vMe6KFa/ptvCziDvdDExBztbZsAj1vrITDrGGw
-         meMw==
+        d=baylibre-com.20150623.gappssmtp.com; s=20150623;
+        h=from:to:cc:subject:in-reply-to:references:date:message-id
+         :mime-version;
+        bh=UjIkLDF+WPlQwj3k/SSeB4jZh/jn2w9+5oluq0KnIUs=;
+        b=D7cUhY81VVg8b5cI72uuLyMu/I0u4rPjDpmIgRiXo66lt2wY4Q8p+ac0J32Hi5oD1b
+         n9x7imRmVjkzMu5YkGZMv4n4I/tRbEAamoWvNbymMmcO3D1SlsSiDQanBX9h1v8bhmKG
+         JCiij8MlXbO/2OmQvuSgYbFBlzTB1Rld99b+f4IXw7mvCdo6iou221Wqzdy2nuLsf8FI
+         Y+XyXrwCi6+hXZLEsrQ+A685yMGnakU8O0AjnYUy1hG4CqZ6xJ7JErevPlobUVSphUwg
+         qeEwYpMFWN9Am9T86VnCj2vGmqMupCXEB8lGlVep3uoootcCvqU0DRCFP0wteC3e9/Lr
+         /Fcw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=JTXNBwk8SCiPTwAEie/bcnT4XkESteANRpMaJv1ngqI=;
-        b=SSkMIDFIq5T6Op7Zczn1buwwk7x9xfexJZ2eTLLXvf2YlHjyH7EqJaAMlffKKqCN0W
-         b0VZ1dZKkZwu8IpG6qz1k/TRPRuzDFI/zjrPVYDwEAgd6h1+nqY58ELACI/ScFl13WCu
-         IWf821hRtT4l9GxWkHFBtHfHt+XVNNrQU1O4Kub4ANVmS7bqbvB3RVO3lzhA7f5o86yV
-         UBDN7sBT977Rvlk+88B4GSpJsbATg35IKMm4vn+1ux726wsaZzP8UevgCDjzOSrEL7nf
-         2DUO3X3AsSzauz2rUpddHv5/Hg/ozQD6DKIb4gcHH88gs0CfVjN6By5Rq4/wamhmLEUE
-         kruw==
-X-Gm-Message-State: APjAAAWdaeZUEFvY080Z6z+/I8m5D/XREue+7D2nVBNYy4F45AricAp6
-        V/SjVYxtoAc9iUiLuAmHpBStmow=
-X-Google-Smtp-Source: APXvYqx7j5/F1Qh/kWWTwH5pHpOp+LL+LGaoNRjnN4KFYc8QL8IRkMrnCmK7rjSCECJsQfE1Wg1OXQ==
-X-Received: by 2002:adf:f9c7:: with SMTP id w7mr9710187wrr.311.1552422248151;
-        Tue, 12 Mar 2019 13:24:08 -0700 (PDT)
-Received: from avx2 ([46.53.244.57])
-        by smtp.gmail.com with ESMTPSA id 62sm11075174wra.46.2019.03.12.13.24.07
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Tue, 12 Mar 2019 13:24:07 -0700 (PDT)
-Date:   Tue, 12 Mar 2019 23:24:05 +0300
-From:   Alexey Dobriyan <adobriyan@gmail.com>
-To:     Andrew Morton <akpm@linux-foundation.org>
-Cc:     linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] Drop -Wdeclaration-after-statement
-Message-ID: <20190312202405.GB9013@avx2>
-References: <20190310133535.GA20473@avx2>
- <20190311173845.53c2e4e4d2257a3701fa2033@linux-foundation.org>
- <20190312172447.GA10166@avx2>
- <20190312125017.b1f5af3350434ca05b5fe35e@linux-foundation.org>
+        h=x-gm-message-state:from:to:cc:subject:in-reply-to:references:date
+         :message-id:mime-version;
+        bh=UjIkLDF+WPlQwj3k/SSeB4jZh/jn2w9+5oluq0KnIUs=;
+        b=uAv3NR40HC/ja4A966FoCTk+AoOBVnc68EFYtxl9m4s7UdOr4PZFrdLZWKnldTNGTF
+         OS0hBy3TlqdvR2ZGtuwy2ezQutGfqTObRG6TSiMFlOswE414ZYJ9ilFARU2MYRexlU6w
+         gGUiv5tvwtjxltoUdDKpNsupqqIRngrTPG6rmVoX4QOU1Ol3NVU5rm9oxO2LUi6XhOk3
+         l+U6NQZnUKJUlubeFJ8FzmtznpZ51HmKwGxE0FnZTJE4nurcujoU2Wbo19rL5F+8yw/O
+         rt9NyIDZIOGoE7eu+8ITkUZklAfaVnI5khi0TG1qzPBgTzKw1TorUTGUJrJz58WJU3ZB
+         eXTg==
+X-Gm-Message-State: APjAAAVuXmI+EV00auOc/27m1h9Wte1qJVehnoucjOb9HyDT9YG2JiJD
+        yLbeMFBfgoelte/RN4uyamArrNaHo5yaJQ==
+X-Google-Smtp-Source: APXvYqziQRiTJeiwGTiIRDq9NYpwFOikItHR6HFTIuUY+EDHlVCfxIGM/negzlpNYOslqFYPlyWr0Q==
+X-Received: by 2002:a65:6489:: with SMTP id e9mr36608788pgv.260.1552422325658;
+        Tue, 12 Mar 2019 13:25:25 -0700 (PDT)
+Received: from localhost ([2601:602:9200:a1a5:1daf:3f96:9f7f:33ba])
+        by smtp.googlemail.com with ESMTPSA id e15sm4545527pgk.30.2019.03.12.13.25.24
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Tue, 12 Mar 2019 13:25:24 -0700 (PDT)
+From:   Kevin Hilman <khilman@baylibre.com>
+To:     Neil Armstrong <narmstrong@baylibre.com>
+Cc:     Neil Armstrong <narmstrong@baylibre.com>,
+        linux-amlogic@lists.infradead.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2 0/3] arm64: meson: Add SoC ID detection for G12A
+In-Reply-To: <20190307140147.22047-1-narmstrong@baylibre.com>
+References: <20190307140147.22047-1-narmstrong@baylibre.com>
+Date:   Tue, 12 Mar 2019 13:25:23 -0700
+Message-ID: <7hlg1ju9fw.fsf@baylibre.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20190312125017.b1f5af3350434ca05b5fe35e@linux-foundation.org>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Type: text/plain
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Mar 12, 2019 at 12:50:17PM -0700, Andrew Morton wrote:
-> On Tue, 12 Mar 2019 20:24:47 +0300 Alexey Dobriyan <adobriyan@gmail.com> wrote:
-> 
-> > On Mon, Mar 11, 2019 at 05:38:45PM -0700, Andrew Morton wrote:
-> > > On Sun, 10 Mar 2019 16:35:35 +0300 Alexey Dobriyan <adobriyan@gmail.com> wrote:
-> > > 
-> > > > Newly added static_assert() is formally a declaration, which will give
-> > > > a warning if used in the middle of the function.
-> > > > 
-> > > > ...
-> > > >
-> > > > --- a/Makefile
-> > > > +++ b/Makefile
-> > > > @@ -792,9 +792,6 @@ endif
-> > > >  # arch Makefile may override CC so keep this after arch Makefile is included
-> > > >  NOSTDINC_FLAGS += -nostdinc -isystem $(shell $(CC) -print-file-name=include)
-> > > >  
-> > > > -# warn about C99 declaration after statement
-> > > > -KBUILD_CFLAGS += -Wdeclaration-after-statement
-> > > > -
-> > > >  # Variable Length Arrays (VLAs) should not be used anywhere in the kernel
-> > > >  KBUILD_CFLAGS += $(call cc-option,-Wvla)
-> > > 
-> > > I do wish your changelogs were more elaborate :(
-> > 
-> > > So the proposal is to disable -Wdeclaration-after-statement in all
-> > > cases for all time because static_assert() doesn't work correctly?
-> > 
-> > Yes. I converted 2 cases in /proc to static_assert() and you can't write
-> > 
-> > 	{
-> > 		[code]
-> > 		static_assert()
-> > 	}
-> > 
-> > without a warning because static_assert() is declaration.
-> > So people would move BUILD_BUG_ON() to where it doesn't belong.
-> 
-> Sure.
-> 
-> > > Surely there's something we can do to squish the static_assert() issue
-> > > while retaining -Wdeclaration-after-statement?
-> > 
-> > It is not good in my opinion to stick to -Wdeclaration-after-statement.
-> 
-> Why?
-> 
-> > > Perhaps by making
-> > > static_assert() a nop if -Wdeclaration-after-statement is in use. 
-> > > Perhaps simply by putting { } around the static_assert()?
-> > 
-> > Making a statement out of it would disable current cases where it is
-> > placed in headers.
-> 
-> I think you mean cases where static_assert() is used outside functions?
-> 
-> We could have two versions of it, one for use inside functions, one for
-> use outside functions?
+Neil Armstrong <narmstrong@baylibre.com> writes:
 
-I don't know. It was made a declaration in the standard specifically
-to have only one name which is a good thing.
+> This patchset :
+> - Fixes the package id detection for S905 variants and AXG packages
+> - Adds new SoC IDs and Packages IDs for G12A/G12B, and S805X/Y
+> - Adds Add AO Secure node for G12A dtsi
+>
+> Changes since v1:
+> - Added G12B S922X package ID
+> - Added G12A S905D2 package ID
+> - Fixed patch 2 commit message
 
-Just count the number of BUILD_BUG_* variants, it is ridiculous for such
-a simple thing. Or even better, all *alloc* variants. :^)
+Series queued for v5.2.
+
+> Neil Armstrong (3):
+>   soc: amlogic: gx-socinfo: Add mask for each SoC packages
+>   soc: amlogic: gx-socinfo: Add new SoC IDs and Packages IDs
+
+Applied to branch: v5.2/drivers.
+
+>   arm64: dts: meson-g12a: Add AO Secure node
+
+Applied to v5.2/dt64,
+
+Thanks for all the new SoC detection!
+
+Kevin
