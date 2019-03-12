@@ -2,162 +2,123 @@ Return-Path: <SRS0=J4ZE=RP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.5 required=3.0
-	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_MUTT autolearn=ham
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9AF3CC43381
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 14:09:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9B9EAC4360F
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 14:11:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6FFF02087C
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 14:09:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5E134214AF
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 14:11:27 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="t+FrO7/W"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726754AbfCLOJe (ORCPT
+        id S1726775AbfCLOL0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 12 Mar 2019 10:09:34 -0400
-Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:40996 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726192AbfCLOJd (ORCPT
+        Tue, 12 Mar 2019 10:11:26 -0400
+Received: from mail-it1-f193.google.com ([209.85.166.193]:53892 "EHLO
+        mail-it1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726192AbfCLOLZ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 12 Mar 2019 10:09:33 -0400
-Received: from pps.filterd (m0098393.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x2CE9UcJ037546
-        for <linux-kernel@vger.kernel.org>; Tue, 12 Mar 2019 10:09:32 -0400
-Received: from e12.ny.us.ibm.com (e12.ny.us.ibm.com [129.33.205.202])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 2r6d2yn9wn-1
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
-        for <linux-kernel@vger.kernel.org>; Tue, 12 Mar 2019 10:09:31 -0400
-Received: from localhost
-        by e12.ny.us.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
-        for <linux-kernel@vger.kernel.org> from <paulmck@linux.vnet.ibm.com>;
-        Tue, 12 Mar 2019 14:09:25 -0000
-Received: from b01cxnp23033.gho.pok.ibm.com (9.57.198.28)
-        by e12.ny.us.ibm.com (146.89.104.199) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
-        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
-        Tue, 12 Mar 2019 14:09:21 -0000
-Received: from b01ledav003.gho.pok.ibm.com (b01ledav003.gho.pok.ibm.com [9.57.199.108])
-        by b01cxnp23033.gho.pok.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x2CE9K8516842772
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Tue, 12 Mar 2019 14:09:20 GMT
-Received: from b01ledav003.gho.pok.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 85287B2065;
-        Tue, 12 Mar 2019 14:09:20 +0000 (GMT)
-Received: from b01ledav003.gho.pok.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 6768DB2064;
-        Tue, 12 Mar 2019 14:09:20 +0000 (GMT)
-Received: from paulmck-ThinkPad-W541 (unknown [9.70.82.188])
-        by b01ledav003.gho.pok.ibm.com (Postfix) with ESMTP;
-        Tue, 12 Mar 2019 14:09:20 +0000 (GMT)
-Received: by paulmck-ThinkPad-W541 (Postfix, from userid 1000)
-        id 3296B16C6A7D; Tue, 12 Mar 2019 07:09:23 -0700 (PDT)
-Date:   Tue, 12 Mar 2019 07:09:23 -0700
-From:   "Paul E. McKenney" <paulmck@linux.ibm.com>
-To:     Neeraj Upadhyay <neeraju@codeaurora.org>
-Cc:     Steven Rostedt <rostedt@goodmis.org>, josh@joshtriplett.org,
-        mathieu.desnoyers@efficios.com, jiangshanlai@gmail.com,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] rcu/tree: Fix self wakeups for grace period kthread
-Reply-To: paulmck@linux.ibm.com
-References: <1552038378-11166-1-git-send-email-neeraju@codeaurora.org>
- <20190311215027.2f3458a1@oasis.local.home>
- <579cd03a-17a7-5729-46b3-ffcc4afee0e5@codeaurora.org>
+        Tue, 12 Mar 2019 10:11:25 -0400
+Received: by mail-it1-f193.google.com with SMTP id x189so4565909itd.3
+        for <linux-kernel@vger.kernel.org>; Tue, 12 Mar 2019 07:11:24 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=h7plJKK7CMAfrjjVhJmorscumrWINpd8NhhS/I9a1N4=;
+        b=t+FrO7/WFFNvRRbG9RKQnGKwO5ptegBmevRSjLlq+7PjEMRUwdPgKwe0hXNEUb/Cn6
+         jim3QVCnCg4R4TWqZE5xvDaRi/dP5AQucB8wpSTpdV0uixu82PlOea9Fh1LFNSRiIn/Z
+         aUPbsFd77rzjjGO1imhp385V1WblN5P7JFu/JJYZaydEkyyu2xHwbR9MwWds/aUQzGlb
+         XGRmm/h38oXpONofHzxTvmxIn93AP8gLorGkTYJR+johXKhADDfK82ATA7PvFnFJh/D+
+         4+wiqAhl7pDA7pvC/FhzCdGhoW7P5Sg92OIjPZ205JWeZaj/0gvhpJTqle+0Ff7CHNhR
+         E5Gg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=h7plJKK7CMAfrjjVhJmorscumrWINpd8NhhS/I9a1N4=;
+        b=RFp8MnBcKkE2cp3YmJ/ahMTp0YT6wNK9/nCaWy+HupBLbXHvbVIRqGoq1IvJirQnUG
+         rWPusuna8z4VCVWWgqsvtgd7aRU/7CbE5xpnWcpGYL64hSEx0h/YbQHKrRkK3THEsu4s
+         eQAGAAsVnJIbf0b64p4pCxscDbo4F8DWzziARNJuTmSo+9q6IUIm7MO/fHhqQvdCyUf8
+         2EPA++GBbVLBRE12NxIxvvmbdC94ctvQj0Z/7nsapX30+xmMy8+cRn0BglfV5f4jmXEE
+         sRdVAvtf35qGhj7hYFr/pfgyJj/bAQi6j2vnNigakWG+xzo2J1nL/kTF9N7vbGLltnI+
+         Bvjw==
+X-Gm-Message-State: APjAAAV15dbdEHEy/4dRe5a5fJ2UGF0urx/gXfM4879/lA9F1DRR48EO
+        hN/AM446rUfkCLF9hCBqlBRBYWj7aesK79wqxUY=
+X-Google-Smtp-Source: APXvYqymm3PEvBUzrEOe9DRQXJEMkaeITUai5JGJMbusc/VPi1OO4e9F1mdeyLn9p3ChVrjpKIjFtfyySdpQPkE10Ow=
+X-Received: by 2002:a24:ee89:: with SMTP id b131mr348404iti.97.1552399884412;
+ Tue, 12 Mar 2019 07:11:24 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <579cd03a-17a7-5729-46b3-ffcc4afee0e5@codeaurora.org>
-User-Agent: Mutt/1.5.21 (2010-09-15)
-X-TM-AS-GCONF: 00
-x-cbid: 19031214-0060-0000-0000-0000031AD6F7
-X-IBM-SpamModules-Scores: 
-X-IBM-SpamModules-Versions: BY=3.00010745; HX=3.00000242; KW=3.00000007;
- PH=3.00000004; SC=3.00000281; SDB=6.01173312; UDB=6.00613445; IPR=6.00953972;
- MB=3.00025946; MTD=3.00000008; XFM=3.00000015; UTC=2019-03-12 14:09:24
-X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
-x-cbparentid: 19031214-0061-0000-0000-00004895912B
-Message-Id: <20190312140923.GU13351@linux.ibm.com>
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-03-12_08:,,
- signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
- malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
- clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
- mlxlogscore=999 adultscore=0 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.0.1-1810050000 definitions=main-1903120100
+References: <1551425934-28068-1-git-send-email-laoar.shao@gmail.com>
+ <20190311084743.GX5232@dhcp22.suse.cz> <CALOAHbDHM1mJ3X9x3vFpDagd81T+hrb7_xdqM12x6JQXuHqwxA@mail.gmail.com>
+ <20190312133816.GR5721@dhcp22.suse.cz>
+In-Reply-To: <20190312133816.GR5721@dhcp22.suse.cz>
+From:   Yafang Shao <laoar.shao@gmail.com>
+Date:   Tue, 12 Mar 2019 22:10:48 +0800
+Message-ID: <CALOAHbA6FG97tkKLJQSYocmgYRYJGa=5ULV1AK92+dw=MtKZJA@mail.gmail.com>
+Subject: Re: [PATCH] mm: vmscan: show zone type in kswapd tracepoints
+To:     Michal Hocko <mhocko@kernel.org>
+Cc:     Vlastimil Babka <vbabka@suse.cz>,
+        Souptick Joarder <jrdr.linux@gmail.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Linux MM <linux-mm@kvack.org>,
+        LKML <linux-kernel@vger.kernel.org>, shaoyafang@didiglobal.com
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Mar 12, 2019 at 05:25:28PM +0530, Neeraj Upadhyay wrote:
-> On 3/12/19 7:20 AM, Steven Rostedt wrote:
-> >On Fri,  8 Mar 2019 15:16:18 +0530
-> >Neeraj Upadhyay <neeraju@codeaurora.org> wrote:
+On Tue, Mar 12, 2019 at 9:38 PM Michal Hocko <mhocko@kernel.org> wrote:
+>
+> On Tue 12-03-19 19:04:43, Yafang Shao wrote:
+> > On Mon, Mar 11, 2019 at 4:47 PM Michal Hocko <mhocko@kernel.org> wrote:
+> > >
+> > > On Fri 01-03-19 15:38:54, Yafang Shao wrote:
+> > > > If we want to know the zone type, we have to check whether
+> > > > CONFIG_ZONE_DMA, CONFIG_ZONE_DMA32 and CONFIG_HIGHMEM are set or not,
+> > > > that's not so convenient.
+> > > >
+> > > > We'd better show the zone type directly.
+> > >
+> > > I do agree that zone number is quite PITA to process in general but do
+> > > we really need this information in the first place? Why do we even care?
+> > >
 > >
-> >>Update the code to match the comment that self wakeup of
-> >>grace period kthread is allowed from interrupt handler, and
-> >>softirq handler, running in the grace period kthread's
-> >>context. Present code allows self wakeups from all
-> >>interrupt contexts - nmi, softirq and hardirq contexts.
-> >
-> >That's not actually the issue. But it appears that we return if we
-> >simply have BH disabled, which I don't think we want, and we don't care
-> >about NMI as NMI should never call this code.
-> >
-> >I think your patch is correct, but the change log is not.
+> > Sometimes we want to know this event occurs in which zone, then we can
+> > get the information of this zone,
+> > for example via /proc/zoneinfo.
+> > It could give us more information for debugging.
+>
+> Could you be more specific please?
+>
 
-How about this?
+Honestly speaking,  this one hasn't help us fix the real issue yet.
 
-	The current rcu_gp_kthread_wake() function uses in_interrupt()
-	and thus does a self-wakeup from all interrupt contexts,
-	including the pointless case where the GP kthread happens to be
-	running with bottom halves disabled, along with the impossible
-	case where the GP kthread is running within an NMI handler (you
-	are not supposed to invoke rcu_gp_kthread_wake() from within an
-	NMI handler.  This commit therefore replaces the in_interrupt()
-	with in_irq(), so that the self-wakeups happen only from handlers
-	for hardware interrupts and softirqs.  This also makes the code
-	match the comment.
-
-							Thanx, Paul
-
-> >-- Steve
+> > > Zones are an MM internal implementation details and the more we export
+> > > to the userspace the more we are going to argue about breaking userspace
+> > > when touching them. So I would rather not export that information unless
+> > > it is terribly useful.
+> > >
 > >
-> 
-> Hi Steve, sorry, I don't understand fully, why we want to not return
-> in BH disabled case. From the commit logs and lkml discussion, there
-> is a case where GP kthread is interrupted in the wait event path and
-> rcu_gp_kthread_wake() is called in softirq handler (I am not sure
-> about interrupt handler case; how rcu_gp_kthread_wake() is called
-> from that path).
-> 
-> https://github.com/torvalds/linux/commit/1d1f898df6586c5ea9aeaf349f13089c6fa37903
-> 
-> Thanks
-> Neeraj
+> > I 'm not sure whether zone type is  terribly useful or not, but the
+> > 'zid' is useless at all.
 > >
-> >>
-> >>Signed-off-by: Neeraj Upadhyay <neeraju@codeaurora.org>
-> >>---
-> >>  kernel/rcu/tree.c | 2 +-
-> >>  1 file changed, 1 insertion(+), 1 deletion(-)
-> >>
-> >>diff --git a/kernel/rcu/tree.c b/kernel/rcu/tree.c
-> >>index acd6ccf..57cac6d 100644
-> >>--- a/kernel/rcu/tree.c
-> >>+++ b/kernel/rcu/tree.c
-> >>@@ -1585,7 +1585,7 @@ static bool rcu_future_gp_cleanup(struct rcu_node *rnp)
-> >>  static void rcu_gp_kthread_wake(void)
-> >>  {
-> >>  	if ((current == rcu_state.gp_kthread &&
-> >>-	     !in_interrupt() && !in_serving_softirq()) ||
-> >>+	     !in_irq() && !in_serving_softirq()) ||
-> >>  	    !READ_ONCE(rcu_state.gp_flags) ||
-> >>  	    !rcu_state.gp_kthread)
-> >>  		return;
+> > I don't agree that Zones are MM internal.
+> > We can get the zone type in many ways, for example /proc/zoneinfo.
 > >
-> 
-> -- 
-> QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a
-> member of the Code Aurora Forum, hosted by The Linux Foundation
-> 
+> > If we show this event occurs in which zone, we'd better show the zone type,
+> > or we should drop this 'zid'.
+>
+> Yes, I am suggesting the later. If somebody really needs it then I would
+> like to see a _specific_ usecase. Then we can add the proper name.
 
+This 'zid' always seems like a noise currently.
+I will send a patch to drop this one.
+
+Thanks
+Yafang
