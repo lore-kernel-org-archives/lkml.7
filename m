@@ -4,53 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AE12EC43381
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 18:00:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4263CC43381
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 18:00:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7DD15214AF
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 18:00:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 03322214AF
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 18:00:27 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1552413621;
-	bh=+A9nv/HwCG3gWFmWNLrFeLhCgVwNGpMzKy7Rzf1xqWA=;
+	s=default; t=1552413627;
+	bh=6XNrrTvVy1QOul8jqwharAlHnm4MW6mbR65A/bL3Hqs=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=gPdc8m+KugO2cMfN0P2rBBu/tbFkwT72eL5P91l/g36FvlyQ202QaZdKIGixHiPwY
-	 IkJ0DNC7kWDh8gjIB37AnB5n5QV0zNjmVyHO3RXCY5TnWYX74FovbrUv4zOSy65QoZ
-	 c6QL64la4ZmIO25SBEOT1Yh1HA2bfpofG+kskF+k=
+	b=FzCWyVRKrs4aafjaI4gRr5myI0tIzU5dBlT5+fPA+WxZEV93kFsxXRnwBJvqEGhts
+	 l234c64TYZ7NOwsgJQ0S2zC9RArnxRjvJg3xCszhsFeRf8wJfTnSo1+Lv4tupuCvc6
+	 p0EKuzF7gxlRh4rmoz9N2SCZF0QVPNiPPhWjLoUM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727926AbfCLRN0 (ORCPT
+        id S1728399AbfCLSAZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 12 Mar 2019 13:13:26 -0400
-Received: from mail.kernel.org ([198.145.29.99]:48758 "EHLO mail.kernel.org"
+        Tue, 12 Mar 2019 14:00:25 -0400
+Received: from mail.kernel.org ([198.145.29.99]:50364 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727658AbfCLRMu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 12 Mar 2019 13:12:50 -0400
+        id S1727088AbfCLRNZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 12 Mar 2019 13:13:25 -0400
 Received: from localhost (unknown [104.133.8.98])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 05B7A2173C;
-        Tue, 12 Mar 2019 17:12:49 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id D794E217D4;
+        Tue, 12 Mar 2019 17:13:24 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1552410770;
-        bh=+A9nv/HwCG3gWFmWNLrFeLhCgVwNGpMzKy7Rzf1xqWA=;
+        s=default; t=1552410805;
+        bh=6XNrrTvVy1QOul8jqwharAlHnm4MW6mbR65A/bL3Hqs=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=uj+NreZgXKyS9P1rdSqPCoWEdj0xTX9Vu+tBzyYdcI3uwHGUBXtTWGxJZ9bY1Ob+r
-         /ZiTp6uDyRd9EnapZy2zwBFNI3xbKrqnSPK/n5DU8cW3tWifyVupdu3mwzdgxA1O2q
-         9lCkjbXqXB1HOdbCnrIpPhFBv7Lf0qLdyVemvqGs=
+        b=L8CvJy3s3u72vZ4T45XmY5l0vahOQwOeaEy0af4210X7fTBNQxUEwyoVeXRJnOumh
+         Vw+wxogoEMdDa7L1oYTaihjIdOBReBy+JSDP6Xr7cnTSuVwYbRfqokciDAdnUuvS9E
+         QHS1ydlhUhQ9kAifqAp+cljnZOYjhYXCgApZTtC4=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Lance Digby <ldigby@redhat.com>,
-        Jiri Olsa <jolsa@kernel.org>,
-        Quentin Monnet <quentin.monnet@netronome.com>,
-        Jakub Kicinski <jakub.kicinski@netronome.com>,
-        Daniel Borkmann <daniel@iogearbox.net>,
+        stable@vger.kernel.org, Ross Lagerwall <ross.lagerwall@citrix.com>,
+        Hannes Reinecke <hare@suse.com>,
+        "Martin K. Petersen" <martin.petersen@oracle.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.20 085/171] bpftool: Fix prog dump by tag
-Date:   Tue, 12 Mar 2019 10:07:45 -0700
-Message-Id: <20190312170355.340356530@linuxfoundation.org>
+Subject: [PATCH 4.20 133/171] Revert "scsi: libfc: Add WARN_ON() when deleting rports"
+Date:   Tue, 12 Mar 2019 10:08:33 -0700
+Message-Id: <20190312170359.167317611@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190312170347.868927101@linuxfoundation.org>
 References: <20190312170347.868927101@linuxfoundation.org>
@@ -69,68 +67,40 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-[ Upstream commit 752bcf80f5549c9901b2e8bc77b2138de55b1026 ]
+[ Upstream commit d8f6382a7d026989029e2e50c515df954488459b ]
 
-Lance reported an issue with bpftool not being able to
-dump program if there are more programs loaded and you
-want to dump any but the first program, like:
+This reverts commit bbc0f8bd88abefb0f27998f40a073634a3a2db89.
 
-  # bpftool prog
-  28: kprobe  name trace_req_start  tag 1dfc28ba8b3dd597  gpl
-  	loaded_at 2019-01-18T17:02:40+1100  uid 0
-  	xlated 112B  jited 109B  memlock 4096B  map_ids 13
-  29: kprobe  name trace_req_compl  tag 5b6a5ecc6030a683  gpl
-  	loaded_at 2019-01-18T17:02:40+1100  uid 0
-  	xlated 928B  jited 575B  memlock 4096B  map_ids 13,14
-  #  bpftool prog dum jited tag 1dfc28ba8b3dd597
-   0:	push   %rbp
-   1:	mov    %rsp,%rbp
-  ...
+It added a warning whose intent was to check whether the rport was still
+linked into the peer list. It doesn't work as intended and gives false
+positive warnings for two reasons:
 
-  #  bpftool prog dum jited tag 5b6a5ecc6030a683
-  Error: can't get prog info (29): Bad address
+1) If the rport is never linked into the peer list it will not be
+considered empty since the list_head is never initialized.
 
-The problem is in the prog_fd_by_tag function not cleaning
-the struct bpf_prog_info before another request, so the
-previous program length is still in there and kernel assumes
-it needs to dump the program, which fails because there's no
-user pointer set.
+2) If the rport is deleted from the peer list using list_del_rcu(), then
+the list_head is in an undefined state and it is not considered empty.
 
-Moving the struct bpf_prog_info declaration into the loop,
-so it gets cleaned before each query.
-
-Fixes: 71bb428fe2c1 ("tools: bpf: add bpftool")
-Reported-by: Lance Digby <ldigby@redhat.com>
-Signed-off-by: Jiri Olsa <jolsa@kernel.org>
-Reviewed-by: Quentin Monnet <quentin.monnet@netronome.com>
-Acked-by: Jakub Kicinski <jakub.kicinski@netronome.com>
-Signed-off-by: Daniel Borkmann <daniel@iogearbox.net>
+Signed-off-by: Ross Lagerwall <ross.lagerwall@citrix.com>
+Reviewed-by: Hannes Reinecke <hare@suse.com>
+Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- tools/bpf/bpftool/prog.c | 5 +++--
- 1 file changed, 3 insertions(+), 2 deletions(-)
+ drivers/scsi/libfc/fc_rport.c | 1 -
+ 1 file changed, 1 deletion(-)
 
-diff --git a/tools/bpf/bpftool/prog.c b/tools/bpf/bpftool/prog.c
-index 69b01a6158bd..91b9de5f4e17 100644
---- a/tools/bpf/bpftool/prog.c
-+++ b/tools/bpf/bpftool/prog.c
-@@ -130,13 +130,14 @@ static void print_boot_time(__u64 nsecs, char *buf, unsigned int size)
+diff --git a/drivers/scsi/libfc/fc_rport.c b/drivers/scsi/libfc/fc_rport.c
+index 1e1c0f1b9e69..8ed2113f5a1e 100644
+--- a/drivers/scsi/libfc/fc_rport.c
++++ b/drivers/scsi/libfc/fc_rport.c
+@@ -184,7 +184,6 @@ void fc_rport_destroy(struct kref *kref)
+ 	struct fc_rport_priv *rdata;
  
- static int prog_fd_by_tag(unsigned char *tag)
- {
--	struct bpf_prog_info info = {};
--	__u32 len = sizeof(info);
- 	unsigned int id = 0;
- 	int err;
- 	int fd;
- 
- 	while (true) {
-+		struct bpf_prog_info info = {};
-+		__u32 len = sizeof(info);
-+
- 		err = bpf_prog_get_next_id(id, &id);
- 		if (err) {
- 			p_err("%s", strerror(errno));
+ 	rdata = container_of(kref, struct fc_rport_priv, kref);
+-	WARN_ON(!list_empty(&rdata->peers));
+ 	kfree_rcu(rdata, rcu);
+ }
+ EXPORT_SYMBOL(fc_rport_destroy);
 -- 
 2.19.1
 
