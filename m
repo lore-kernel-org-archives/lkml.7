@@ -4,49 +4,58 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4922BC43381
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 17:18:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4948CC43381
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 17:18:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1A38E217F5
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 17:18:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1B492217D8
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 17:18:32 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1552411108;
-	bh=hBqQY+DGl1LAMXUAZiHeya/EKKAUgMIAD9MZJbYUI6U=;
+	s=default; t=1552411112;
+	bh=jUK6kMOKYtUjTaTr1auy4+4etKCPLbjv9pKS6qP0X0M=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=tqIV0UeJfjQdoMAupYdXdekmJDrXcemjAOCoNiYuRcwIKDs2SpTgvKexCnbFheBBc
-	 SKK0MHGK36a9BqDZLuUPTHsdN1uXCbuonJ7PZgoWyVGgXQjR2GYi5GFyG97CeNWDr+
-	 hE4UyeLCMKDMPrM5Qx/pVTWiYUQjzyRScMgcEyD8=
+	b=pSG/DKwtTczarZkqgD0VHW7V2mft2kq81ge9zUsimInceUyPBo/99r/jj8Ar/7yEr
+	 N2wpiqSpDzkJp1JpbsNXLIxirA1Xtz8koApXznJHVwsnOgGDF7JCd4ruQB7FkqvClo
+	 6IQnBWv+cQrlIRydP7vx/kwDHSHGDOCVHR93jtYg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730087AbfCLRS0 (ORCPT
+        id S1730108AbfCLRSa (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 12 Mar 2019 13:18:26 -0400
-Received: from mail.kernel.org ([198.145.29.99]:34434 "EHLO mail.kernel.org"
+        Tue, 12 Mar 2019 13:18:30 -0400
+Received: from mail.kernel.org ([198.145.29.99]:34664 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729775AbfCLRRv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 12 Mar 2019 13:17:51 -0400
+        id S1729809AbfCLRR4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 12 Mar 2019 13:17:56 -0400
 Received: from localhost (unknown [104.133.8.98])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 72E002087C;
-        Tue, 12 Mar 2019 17:17:50 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 60513217D4;
+        Tue, 12 Mar 2019 17:17:55 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1552411070;
-        bh=hBqQY+DGl1LAMXUAZiHeya/EKKAUgMIAD9MZJbYUI6U=;
+        s=default; t=1552411075;
+        bh=jUK6kMOKYtUjTaTr1auy4+4etKCPLbjv9pKS6qP0X0M=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=xtRY9qCOoEgow+J5/EgNAXVbsCfbwUjZyCa35VroiPKVilnIUyoAzZgHv6k0HzBd0
-         69Fw3XJ8Fw/GSIj3DU4COwpuA/P/23b8xcivnq2UMRISrKanLNT7t/uNU/5yPZmENM
-         jovZqtMviLf3XEs45TSNoUu/0obpDgbJjondyPzQ=
+        b=xXJRkPjmOSiwtJLdARvXaI+zHKNgxdMg3HWApHYMjkzshvI0sv75/ZUbNH2BTYfPp
+         Bl/KVncD67Ty2ngEjK8hnGvgnMyXk01EPbc2UfuxkQlAvxvkxbY1pjMQDX7avJEf4Q
+         s714Wy21SbmOvyEtPUeYMLm7wKV2k+C9eqJLut+g=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Max Filippov <jcmvbkbc@gmail.com>,
+        stable@vger.kernel.org, Michal Hocko <mhocko@suse.com>,
+        Mikhail Zaslonko <zaslonko@linux.ibm.com>,
+        Mikhail Gavrilov <mikhail.v.gavrilov@gmail.com>,
+        Oscar Salvador <osalvador@suse.de>,
+        Gerald Schaefer <gerald.schaefer@de.ibm.com>,
+        Heiko Carstens <heiko.carstens@de.ibm.com>,
+        Martin Schwidefsky <schwidefsky@de.ibm.com>,
+        Pavel Tatashin <pasha.tatashin@soleen.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.9 43/96] xtensa: SMP: fix secondary CPU initialization
-Date:   Tue, 12 Mar 2019 10:10:01 -0700
-Message-Id: <20190312171037.795076296@linuxfoundation.org>
+Subject: [PATCH 4.9 61/96] mm, memory_hotplug: test_pages_in_a_zone do not pass the end of zone
+Date:   Tue, 12 Mar 2019 10:10:19 -0700
+Message-Id: <20190312171039.153545928@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190312171034.530434962@linuxfoundation.org>
 References: <20190312171034.530434962@linuxfoundation.org>
@@ -65,126 +74,71 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-[ Upstream commit 32a7726c4f4aadfabdb82440d84f88a5a2c8fe13 ]
+[ Upstream commit 24feb47c5fa5b825efb0151f28906dfdad027e61 ]
 
-- add missing memory barriers to the secondary CPU synchronization spin
-  loops; add comment to the matching memory barrier in the boot_secondary
-  and __cpu_die functions;
-- use READ_ONCE/WRITE_ONCE to access cpu_start_id/cpu_start_ccount
-  instead of reading/writing them directly;
-- re-initialize cpu_running every time before starting secondary CPU to
-  flush possible previous CPU startup results.
+If memory end is not aligned with the sparse memory section boundary,
+the mapping of such a section is only partly initialized.  This may lead
+to VM_BUG_ON due to uninitialized struct pages access from
+test_pages_in_a_zone() function triggered by memory_hotplug sysfs
+handlers.
 
-Signed-off-by: Max Filippov <jcmvbkbc@gmail.com>
+Here are the the panic examples:
+ CONFIG_DEBUG_VM_PGFLAGS=y
+ kernel parameter mem=2050M
+ --------------------------
+ page:000003d082008000 is uninitialized and poisoned
+ page dumped because: VM_BUG_ON_PAGE(PagePoisoned(p))
+ Call Trace:
+   test_pages_in_a_zone+0xde/0x160
+   show_valid_zones+0x5c/0x190
+   dev_attr_show+0x34/0x70
+   sysfs_kf_seq_show+0xc8/0x148
+   seq_read+0x204/0x480
+   __vfs_read+0x32/0x178
+   vfs_read+0x82/0x138
+   ksys_read+0x5a/0xb0
+   system_call+0xdc/0x2d8
+ Last Breaking-Event-Address:
+   test_pages_in_a_zone+0xde/0x160
+ Kernel panic - not syncing: Fatal exception: panic_on_oops
+
+Fix this by checking whether the pfn to check is within the zone.
+
+[mhocko@suse.com: separated this change from http://lkml.kernel.org/r/20181105150401.97287-2-zaslonko@linux.ibm.com]
+Link: http://lkml.kernel.org/r/20190128144506.15603-3-mhocko@kernel.org
+
+[mhocko@suse.com: separated this change from
+http://lkml.kernel.org/r/20181105150401.97287-2-zaslonko@linux.ibm.com]
+Signed-off-by: Michal Hocko <mhocko@suse.com>
+Signed-off-by: Mikhail Zaslonko <zaslonko@linux.ibm.com>
+Tested-by: Mikhail Gavrilov <mikhail.v.gavrilov@gmail.com>
+Reviewed-by: Oscar Salvador <osalvador@suse.de>
+Tested-by: Gerald Schaefer <gerald.schaefer@de.ibm.com>
+Cc: Heiko Carstens <heiko.carstens@de.ibm.com>
+Cc: Martin Schwidefsky <schwidefsky@de.ibm.com>
+Cc: Mikhail Gavrilov <mikhail.v.gavrilov@gmail.com>
+Cc: Pavel Tatashin <pasha.tatashin@soleen.com>
+Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
+Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/xtensa/kernel/head.S |  5 ++++-
- arch/xtensa/kernel/smp.c  | 34 +++++++++++++++++++++-------------
- 2 files changed, 25 insertions(+), 14 deletions(-)
+ mm/memory_hotplug.c | 3 +++
+ 1 file changed, 3 insertions(+)
 
-diff --git a/arch/xtensa/kernel/head.S b/arch/xtensa/kernel/head.S
-index 27c8e07ace43..29f445b410b3 100644
---- a/arch/xtensa/kernel/head.S
-+++ b/arch/xtensa/kernel/head.S
-@@ -281,12 +281,13 @@ should_never_return:
- 
- 	movi	a2, cpu_start_ccount
- 1:
-+	memw
- 	l32i	a3, a2, 0
- 	beqi	a3, 0, 1b
- 	movi	a3, 0
- 	s32i	a3, a2, 0
--	memw
- 1:
-+	memw
- 	l32i	a3, a2, 0
- 	beqi	a3, 0, 1b
- 	wsr	a3, ccount
-@@ -323,11 +324,13 @@ ENTRY(cpu_restart)
- 	rsr	a0, prid
- 	neg	a2, a0
- 	movi	a3, cpu_start_id
-+	memw
- 	s32i	a2, a3, 0
- #if XCHAL_DCACHE_IS_WRITEBACK
- 	dhwbi	a3, 0
- #endif
- 1:
-+	memw
- 	l32i	a2, a3, 0
- 	dhi	a3, 0
- 	bne	a2, a0, 1b
-diff --git a/arch/xtensa/kernel/smp.c b/arch/xtensa/kernel/smp.c
-index fc4ad21a5ed4..fd0f0b50e021 100644
---- a/arch/xtensa/kernel/smp.c
-+++ b/arch/xtensa/kernel/smp.c
-@@ -192,9 +192,11 @@ static int boot_secondary(unsigned int cpu, struct task_struct *ts)
- 	int i;
- 
- #ifdef CONFIG_HOTPLUG_CPU
--	cpu_start_id = cpu;
--	system_flush_invalidate_dcache_range(
--			(unsigned long)&cpu_start_id, sizeof(cpu_start_id));
-+	WRITE_ONCE(cpu_start_id, cpu);
-+	/* Pairs with the third memw in the cpu_restart */
-+	mb();
-+	system_flush_invalidate_dcache_range((unsigned long)&cpu_start_id,
-+					     sizeof(cpu_start_id));
- #endif
- 	smp_call_function_single(0, mx_cpu_start, (void *)cpu, 1);
- 
-@@ -203,18 +205,21 @@ static int boot_secondary(unsigned int cpu, struct task_struct *ts)
- 			ccount = get_ccount();
- 		while (!ccount);
- 
--		cpu_start_ccount = ccount;
-+		WRITE_ONCE(cpu_start_ccount, ccount);
- 
--		while (time_before(jiffies, timeout)) {
-+		do {
-+			/*
-+			 * Pairs with the first two memws in the
-+			 * .Lboot_secondary.
-+			 */
- 			mb();
--			if (!cpu_start_ccount)
--				break;
--		}
-+			ccount = READ_ONCE(cpu_start_ccount);
-+		} while (ccount && time_before(jiffies, timeout));
- 
--		if (cpu_start_ccount) {
-+		if (ccount) {
- 			smp_call_function_single(0, mx_cpu_stop,
--					(void *)cpu, 1);
--			cpu_start_ccount = 0;
-+						 (void *)cpu, 1);
-+			WRITE_ONCE(cpu_start_ccount, 0);
- 			return -EIO;
- 		}
- 	}
-@@ -234,6 +239,7 @@ int __cpu_up(unsigned int cpu, struct task_struct *idle)
- 	pr_debug("%s: Calling wakeup_secondary(cpu:%d, idle:%p, sp: %08lx)\n",
- 			__func__, cpu, idle, start_info.stack);
- 
-+	init_completion(&cpu_running);
- 	ret = boot_secondary(cpu, idle);
- 	if (ret == 0) {
- 		wait_for_completion_timeout(&cpu_running,
-@@ -295,8 +301,10 @@ void __cpu_die(unsigned int cpu)
- 	unsigned long timeout = jiffies + msecs_to_jiffies(1000);
- 	while (time_before(jiffies, timeout)) {
- 		system_invalidate_dcache_range((unsigned long)&cpu_start_id,
--				sizeof(cpu_start_id));
--		if (cpu_start_id == -cpu) {
-+					       sizeof(cpu_start_id));
-+		/* Pairs with the second memw in the cpu_restart */
-+		mb();
-+		if (READ_ONCE(cpu_start_id) == -cpu) {
- 			platform_cpu_kill(cpu);
- 			return;
- 		}
+diff --git a/mm/memory_hotplug.c b/mm/memory_hotplug.c
+index a03a401f11b6..b4c8d7b9ab82 100644
+--- a/mm/memory_hotplug.c
++++ b/mm/memory_hotplug.c
+@@ -1512,6 +1512,9 @@ int test_pages_in_a_zone(unsigned long start_pfn, unsigned long end_pfn,
+ 				i++;
+ 			if (i == MAX_ORDER_NR_PAGES || pfn + i >= end_pfn)
+ 				continue;
++			/* Check if we got outside of the zone */
++			if (zone && !zone_spans_pfn(zone, pfn + i))
++				return 0;
+ 			page = pfn_to_page(pfn + i);
+ 			if (zone && page_zone(page) != zone)
+ 				return 0;
 -- 
 2.19.1
 
