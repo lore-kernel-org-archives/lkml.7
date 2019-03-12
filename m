@@ -2,62 +2,59 @@ Return-Path: <SRS0=J4ZE=RP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+X-Spam-Status: No, score=-14.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B638FC10F00
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 18:06:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DA55EC43381
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 18:06:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 861C82147C
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 18:06:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AC436205C9
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 18:06:05 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1552413962;
-	bh=/cH5SQc84jquL9TjX31n3KHquDzWlD9malWBQPCb1kA=;
+	s=default; t=1552413965;
+	bh=7tfMRPys/JBVyMfISNySf0skRqcdL2gLgG8iSMqxuAI=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=2WOLcYknJ4shUF9NGdile3KH35JBvfhP478j3YO4FdO14KG+Us/yuHVwiZC0Kay7U
-	 6iYJ9CoiZiu/pKrK66wMhdhiUK40oLxNjzt8n2PdRfoX42kQ8MjBdwu0w76Fo/lb5g
-	 emOG9sTe2Ks3Hb6RPdJoNCPuwPo9yl6sREuxhZeQ=
+	b=JDsJMbuNrtZTUBX4G5h97FFEemUwgzrhxf76LX27irZGqOTe2HuATsrk8XZ2ljtuz
+	 vbZz9ph1U3hxq6UxoFVQdcUKTtfnLKMNEJ2vxymcMT2DhhzX5x6mTW8F1xA417iIyb
+	 CEbJyw+tiC7cD0Yw+5zYfsioP4N8LDrsWvNJvekE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727532AbfCLRMd (ORCPT
+        id S1728629AbfCLSGE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 12 Mar 2019 13:12:33 -0400
-Received: from mail.kernel.org ([198.145.29.99]:46834 "EHLO mail.kernel.org"
+        Tue, 12 Mar 2019 14:06:04 -0400
+Received: from mail.kernel.org ([198.145.29.99]:48006 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727324AbfCLRMM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 12 Mar 2019 13:12:12 -0400
+        id S1727531AbfCLRMe (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 12 Mar 2019 13:12:34 -0400
 Received: from localhost (unknown [104.133.8.98])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B79F62083D;
-        Tue, 12 Mar 2019 17:12:11 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 0EA6121852;
+        Tue, 12 Mar 2019 17:12:33 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1552410731;
-        bh=/cH5SQc84jquL9TjX31n3KHquDzWlD9malWBQPCb1kA=;
+        s=default; t=1552410753;
+        bh=7tfMRPys/JBVyMfISNySf0skRqcdL2gLgG8iSMqxuAI=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=0fkiFeDt9AMgL24us8dpA15bHgxx6tImdzK5BmslgaImVQLSl0uzvtvUZhpk+yEEq
-         AjltytPlFLICiVL0IndjJ+vAJk4Mgn0CPi5drHFm5Bp1ydjVXwziTodNovjyUCuB/Z
-         E072uijgeiRT8ZFUeAdMY9okWOdSoTOBOg2nlCXY=
+        b=ZChBKlKfbIGNaq7vs9Q1mtBGtLd2neMlTxgJT9yfRLQlnmCYGy5a6O8sdDxXnYBOz
+         uslc5e7pgzTnozaABVJKuhK2bYJM5ShOC673+goVVkPdqqlrIQaNObKP6iQNY+pAkd
+         OX0+FoxyiiFtS//q0y0wK177FK86aImFU+Qxv6E4=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Kan Liang <kan.liang@linux.intel.com>,
-        Qiuxu Zhuo <qiuxu.zhuo@intel.com>,
-        Tony Luck <tony.luck@intel.com>, Borislav Petkov <bp@suse.de>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Aristeu Rozanski <aris@redhat.com>,
-        "H. Peter Anvin" <hpa@zytor.com>, Ingo Molnar <mingo@redhat.com>,
-        linux-edac <linux-edac@vger.kernel.org>,
-        Mauro Carvalho Chehab <mchehab@s-opensource.com>,
-        Megha Dey <megha.dey@linux.intel.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Rajneesh Bhardwaj <rajneesh.bhardwaj@intel.com>,
-        Thomas Gleixner <tglx@linutronix.de>, x86-ml <x86@kernel.org>,
+        stable@vger.kernel.org, Qian Cai <cai@lca.pw>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        "H. Peter Anvin" <hpa@zytor.com>,
+        Andrey Ryabinin <aryabinin@virtuozzo.com>,
+        Alexander Potapenko <glider@google.com>,
+        Dmitry Vyukov <dvyukov@google.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.20 052/171] x86/cpu: Add Atom Tremont (Jacobsville)
-Date:   Tue, 12 Mar 2019 10:07:12 -0700
-Message-Id: <20190312170352.587524536@linuxfoundation.org>
+Subject: [PATCH 4.20 062/171] x86_64: increase stack size for KASAN_EXTRA
+Date:   Tue, 12 Mar 2019 10:07:22 -0700
+Message-Id: <20190312170353.545553186@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190312170347.868927101@linuxfoundation.org>
 References: <20190312170347.868927101@linuxfoundation.org>
@@ -76,56 +73,80 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-[ Upstream commit 00ae831dfe4474ef6029558f5eb3ef0332d80043 ]
+[ Upstream commit a8e911d13540487942d53137c156bd7707f66e5d ]
 
-Add the Atom Tremont model number to the Intel family list.
+If the kernel is configured with KASAN_EXTRA, the stack size is
+increasted significantly because this option sets "-fstack-reuse" to
+"none" in GCC [1].  As a result, it triggers stack overrun quite often
+with 32k stack size compiled using GCC 8.  For example, this reproducer
 
-[ Tony: Also update comment at head of file to say "_X" suffix is
-  also used for microserver parts. ]
+  https://github.com/linux-test-project/ltp/blob/master/testcases/kernel/syscalls/madvise/madvise06.c
 
-Signed-off-by: Kan Liang <kan.liang@linux.intel.com>
-Signed-off-by: Qiuxu Zhuo <qiuxu.zhuo@intel.com>
-Signed-off-by: Tony Luck <tony.luck@intel.com>
-Signed-off-by: Borislav Petkov <bp@suse.de>
-Cc: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Cc: Aristeu Rozanski <aris@redhat.com>
-Cc: "H. Peter Anvin" <hpa@zytor.com>
-Cc: Ingo Molnar <mingo@redhat.com>
-Cc: linux-edac <linux-edac@vger.kernel.org>
-Cc: Mauro Carvalho Chehab <mchehab@s-opensource.com>
-Cc: Megha Dey <megha.dey@linux.intel.com>
-Cc: Peter Zijlstra <peterz@infradead.org>
-Cc: Qiuxu Zhuo <qiuxu.zhuo@intel.com>
-Cc: Rajneesh Bhardwaj <rajneesh.bhardwaj@intel.com>
+triggers a "corrupted stack end detected inside scheduler" very reliably
+with CONFIG_SCHED_STACK_END_CHECK enabled.
+
+There are just too many functions that could have a large stack with
+KASAN_EXTRA due to large local variables that have been called over and
+over again without being able to reuse the stacks.  Some noticiable ones
+are
+
+  size
+  7648 shrink_page_list
+  3584 xfs_rmap_convert
+  3312 migrate_page_move_mapping
+  3312 dev_ethtool
+  3200 migrate_misplaced_transhuge_page
+  3168 copy_process
+
+There are other 49 functions are over 2k in size while compiling kernel
+with "-Wframe-larger-than=" even with a related minimal config on this
+machine.  Hence, it is too much work to change Makefiles for each object
+to compile without "-fsanitize-address-use-after-scope" individually.
+
+[1] https://gcc.gnu.org/bugzilla/show_bug.cgi?id=81715#c23
+
+Although there is a patch in GCC 9 to help the situation, GCC 9 probably
+won't be released in a few months and then it probably take another
+6-month to 1-year for all major distros to include it as a default.
+Hence, the stack usage with KASAN_EXTRA can be revisited again in 2020
+when GCC 9 is everywhere.  Until then, this patch will help users avoid
+stack overrun.
+
+This has already been fixed for arm64 for the same reason via
+6e8830674ea ("arm64: kasan: Increase stack size for KASAN_EXTRA").
+
+Link: http://lkml.kernel.org/r/20190109215209.2903-1-cai@lca.pw
+Signed-off-by: Qian Cai <cai@lca.pw>
 Cc: Thomas Gleixner <tglx@linutronix.de>
-Cc: x86-ml <x86@kernel.org>
-Link: https://lkml.kernel.org/r/20190125195902.17109-4-tony.luck@intel.com
+Cc: Ingo Molnar <mingo@redhat.com>
+Cc: Borislav Petkov <bp@alien8.de>
+Cc: "H. Peter Anvin" <hpa@zytor.com>
+Cc: Andrey Ryabinin <aryabinin@virtuozzo.com>
+Cc: Alexander Potapenko <glider@google.com>
+Cc: Dmitry Vyukov <dvyukov@google.com>
+Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
+Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/x86/include/asm/intel-family.h | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+ arch/x86/include/asm/page_64_types.h | 4 ++++
+ 1 file changed, 4 insertions(+)
 
-diff --git a/arch/x86/include/asm/intel-family.h b/arch/x86/include/asm/intel-family.h
-index 0dd6b0f4000e..d9a9993af882 100644
---- a/arch/x86/include/asm/intel-family.h
-+++ b/arch/x86/include/asm/intel-family.h
-@@ -6,7 +6,7 @@
-  * "Big Core" Processors (Branded as Core, Xeon, etc...)
-  *
-  * The "_X" parts are generally the EP and EX Xeons, or the
-- * "Extreme" ones, like Broadwell-E.
-+ * "Extreme" ones, like Broadwell-E, or Atom microserver.
-  *
-  * While adding a new CPUID for a new microarchitecture, add a new
-  * group to keep logically sorted out in chronological order. Within
-@@ -71,6 +71,7 @@
- #define INTEL_FAM6_ATOM_GOLDMONT	0x5C /* Apollo Lake */
- #define INTEL_FAM6_ATOM_GOLDMONT_X	0x5F /* Denverton */
- #define INTEL_FAM6_ATOM_GOLDMONT_PLUS	0x7A /* Gemini Lake */
-+#define INTEL_FAM6_ATOM_TREMONT_X	0x86 /* Jacobsville */
+diff --git a/arch/x86/include/asm/page_64_types.h b/arch/x86/include/asm/page_64_types.h
+index 8f657286d599..0ce558a8150d 100644
+--- a/arch/x86/include/asm/page_64_types.h
++++ b/arch/x86/include/asm/page_64_types.h
+@@ -7,7 +7,11 @@
+ #endif
  
- /* Xeon Phi */
- 
+ #ifdef CONFIG_KASAN
++#ifdef CONFIG_KASAN_EXTRA
++#define KASAN_STACK_ORDER 2
++#else
+ #define KASAN_STACK_ORDER 1
++#endif
+ #else
+ #define KASAN_STACK_ORDER 0
+ #endif
 -- 
 2.19.1
 
