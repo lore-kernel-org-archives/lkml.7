@@ -7,48 +7,55 @@ X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 543F9C43381
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 17:47:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C5816C10F00
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 17:47:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 274502147C
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 17:47:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 96F1C2087C
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 17:47:49 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1552412859;
-	bh=yeu5hGaVgpuGh7cfn72v+P+rc+paDZlro9hN4So6P7Q=;
+	s=default; t=1552412869;
+	bh=4xi9SNDvPTEt9wPlV9REBLE1fFbZTFU3Yht7WYhNLS4=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=vk1pZa/jG+cilqCBomZIrOhtx6dzzTfKqdygMPlHqA87RQK8Jfkp8D7rAF7Cng3kS
-	 tb9UlQULSPpKKfHVP99dv2xIOgEC9x9/ew0QgeGFiylyqOS7QSXtsSYAEHRAS3d4go
-	 CEGs2wrALwI3Qkv92DKVpefubi6Pq4pJ0zCQ0j5k=
+	b=Jyy3xV4WcL/N5/RAA+IccYCScV9Ygo6a5dUtVm9JKNR52qDpEKnQU63FXjkzAklwY
+	 jG3widpgk634GXruFH/x03kKLVMy8ovkvPC/zQFCGStlzdeE6dB3lEX6QwoHWT7pPV
+	 wzq9Da7hb4WWnxYFiCWPHlu3KxvKoZ0Y5VXgMxjU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729852AbfCLRrh (ORCPT
+        id S1728628AbfCLRPI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 12 Mar 2019 13:47:37 -0400
-Received: from mail.kernel.org ([198.145.29.99]:55170 "EHLO mail.kernel.org"
+        Tue, 12 Mar 2019 13:15:08 -0400
+Received: from mail.kernel.org ([198.145.29.99]:53034 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728633AbfCLRPK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 12 Mar 2019 13:15:10 -0400
+        id S1728344AbfCLROZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 12 Mar 2019 13:14:25 -0400
 Received: from localhost (unknown [104.133.8.98])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 5CC9F217D4;
-        Tue, 12 Mar 2019 17:15:09 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id F02D92184C;
+        Tue, 12 Mar 2019 17:14:23 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1552410909;
-        bh=yeu5hGaVgpuGh7cfn72v+P+rc+paDZlro9hN4So6P7Q=;
+        s=default; t=1552410864;
+        bh=4xi9SNDvPTEt9wPlV9REBLE1fFbZTFU3Yht7WYhNLS4=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=WlckK9n94AXOY3SbmUnfRmOJ4nimkyxgHhgbwaE5GmSSyb5PCHIKevm64GX705Hpz
-         tXwcM6C/83GWC8OcBcHYCxf/5Scl6FzO1RBy3CT6BjaEiL9oVa9ye11se1H8b/C3EL
-         I7VxdVFCgyICPtLd0i/5J/aw30BGLxCVSR+cwX3c=
+        b=ONMXdsI5UZaVc2nCaeaCZYoGPX2rhqL9wzIGDyvPtEWhSgtMuZ1PQwQ4OcTcoRQV+
+         Htrerzx+Y6NANOLDkUPQsFu/RH5dSY1zdHNaHZQUQJ7YgoHsWaba2+kIg+ZmNbgG4H
+         sYgE9gFbR9dGDp7vOKaOPOA+S4vjN4TzwTDZWo8c=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Martynas Pumputis <martynas@weave.works>,
-        Florian Westphal <fw@strlen.de>,
-        Pablo Neira Ayuso <pablo@netfilter.org>,
+        stable@vger.kernel.org, Michal Hocko <mhocko@suse.com>,
+        Mikhail Zaslonko <zaslonko@linux.ibm.com>,
+        Gerald Schaefer <gerald.schaefer@de.ibm.com>,
+        Mikhail Gavrilov <mikhail.v.gavrilov@gmail.com>,
+        Oscar Salvador <osalvador@suse.de>,
+        Pavel Tatashin <pasha.tatashin@soleen.com>,
+        Heiko Carstens <heiko.carstens@de.ibm.com>,
+        Martin Schwidefsky <schwidefsky@de.ibm.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 104/149] netfilter: nf_nat: skip nat clash resolution for same-origin entries
-Date:   Tue, 12 Mar 2019 10:08:42 -0700
-Message-Id: <20190312170358.257456315@linuxfoundation.org>
+Subject: [PATCH 4.19 055/149] mm, memory_hotplug: is_mem_section_removable do not pass the end of a zone
+Date:   Tue, 12 Mar 2019 10:07:53 -0700
+Message-Id: <20190312170354.344231485@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190312170349.421581206@linuxfoundation.org>
 References: <20190312170349.421581206@linuxfoundation.org>
@@ -67,69 +74,87 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-[ Upstream commit 4e35c1cb9460240e983a01745b5f29fe3a4d8e39 ]
+[ Upstream commit efad4e475c312456edb3c789d0996d12ed744c13 ]
 
-It is possible that two concurrent packets originating from the same
-socket of a connection-less protocol (e.g. UDP) can end up having
-different IP_CT_DIR_REPLY tuples which results in one of the packets
-being dropped.
+Patch series "mm, memory_hotplug: fix uninitialized pages fallouts", v2.
 
-To illustrate this, consider the following simplified scenario:
+Mikhail Zaslonko has posted fixes for the two bugs quite some time ago
+[1].  I have pushed back on those fixes because I believed that it is
+much better to plug the problem at the initialization time rather than
+play whack-a-mole all over the hotplug code and find all the places
+which expect the full memory section to be initialized.
 
-1. Packet A and B are sent at the same time from two different threads
-   by same UDP socket.  No matching conntrack entry exists yet.
-   Both packets cause allocation of a new conntrack entry.
-2. get_unique_tuple gets called for A.  No clashing entry found.
-   conntrack entry for A is added to main conntrack table.
-3. get_unique_tuple is called for B and will find that the reply
-   tuple of B is already taken by A.
-   It will allocate a new UDP source port for B to resolve the clash.
-4. conntrack entry for B cannot be added to main conntrack table
-   because its ORIGINAL direction is clashing with A and the REPLY
-   directions of A and B are not the same anymore due to UDP source
-   port reallocation done in step 3.
+We have ended up with commit 2830bf6f05fb ("mm, memory_hotplug:
+initialize struct pages for the full memory section") merged and cause a
+regression [2][3].  The reason is that there might be memory layouts
+when two NUMA nodes share the same memory section so the merged fix is
+simply incorrect.
 
-This patch modifies nf_conntrack_tuple_taken so it doesn't consider
-colliding reply tuples if the IP_CT_DIR_ORIGINAL tuples are equal.
+In order to plug this hole we really have to be zone range aware in
+those handlers.  I have split up the original patch into two.  One is
+unchanged (patch 2) and I took a different approach for `removable'
+crash.
 
-[ Florian: simplify patch to not use .allow_clash setting
-  and always ignore identical flows ]
+[1] http://lkml.kernel.org/r/20181105150401.97287-2-zaslonko@linux.ibm.com
+[2] https://bugzilla.redhat.com/show_bug.cgi?id=1666948
+[3] http://lkml.kernel.org/r/20190125163938.GA20411@dhcp22.suse.cz
 
-Signed-off-by: Martynas Pumputis <martynas@weave.works>
-Signed-off-by: Florian Westphal <fw@strlen.de>
-Signed-off-by: Pablo Neira Ayuso <pablo@netfilter.org>
+This patch (of 2):
+
+Mikhail has reported the following VM_BUG_ON triggered when reading sysfs
+removable state of a memory block:
+
+ page:000003d08300c000 is uninitialized and poisoned
+ page dumped because: VM_BUG_ON_PAGE(PagePoisoned(p))
+ Call Trace:
+   is_mem_section_removable+0xb4/0x190
+   show_mem_removable+0x9a/0xd8
+   dev_attr_show+0x34/0x70
+   sysfs_kf_seq_show+0xc8/0x148
+   seq_read+0x204/0x480
+   __vfs_read+0x32/0x178
+   vfs_read+0x82/0x138
+   ksys_read+0x5a/0xb0
+   system_call+0xdc/0x2d8
+ Last Breaking-Event-Address:
+   is_mem_section_removable+0xb4/0x190
+ Kernel panic - not syncing: Fatal exception: panic_on_oops
+
+The reason is that the memory block spans the zone boundary and we are
+stumbling over an unitialized struct page.  Fix this by enforcing zone
+range in is_mem_section_removable so that we never run away from a zone.
+
+Link: http://lkml.kernel.org/r/20190128144506.15603-2-mhocko@kernel.org
+Signed-off-by: Michal Hocko <mhocko@suse.com>
+Reported-by: Mikhail Zaslonko <zaslonko@linux.ibm.com>
+Debugged-by: Mikhail Zaslonko <zaslonko@linux.ibm.com>
+Tested-by: Gerald Schaefer <gerald.schaefer@de.ibm.com>
+Tested-by: Mikhail Gavrilov <mikhail.v.gavrilov@gmail.com>
+Reviewed-by: Oscar Salvador <osalvador@suse.de>
+Cc: Pavel Tatashin <pasha.tatashin@soleen.com>
+Cc: Heiko Carstens <heiko.carstens@de.ibm.com>
+Cc: Martin Schwidefsky <schwidefsky@de.ibm.com>
+Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
+Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- net/netfilter/nf_conntrack_core.c | 16 ++++++++++++++++
- 1 file changed, 16 insertions(+)
+ mm/memory_hotplug.c | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
-diff --git a/net/netfilter/nf_conntrack_core.c b/net/netfilter/nf_conntrack_core.c
-index 277d02a8cac8..895171a2e1f1 100644
---- a/net/netfilter/nf_conntrack_core.c
-+++ b/net/netfilter/nf_conntrack_core.c
-@@ -1007,6 +1007,22 @@ nf_conntrack_tuple_taken(const struct nf_conntrack_tuple *tuple,
- 		}
+diff --git a/mm/memory_hotplug.c b/mm/memory_hotplug.c
+index c6119ad3561e..34cde04f346d 100644
+--- a/mm/memory_hotplug.c
++++ b/mm/memory_hotplug.c
+@@ -1258,7 +1258,8 @@ static bool is_pageblock_removable_nolock(struct page *page)
+ bool is_mem_section_removable(unsigned long start_pfn, unsigned long nr_pages)
+ {
+ 	struct page *page = pfn_to_page(start_pfn);
+-	struct page *end_page = page + nr_pages;
++	unsigned long end_pfn = min(start_pfn + nr_pages, zone_end_pfn(page_zone(page)));
++	struct page *end_page = pfn_to_page(end_pfn);
  
- 		if (nf_ct_key_equal(h, tuple, zone, net)) {
-+			/* Tuple is taken already, so caller will need to find
-+			 * a new source port to use.
-+			 *
-+			 * Only exception:
-+			 * If the *original tuples* are identical, then both
-+			 * conntracks refer to the same flow.
-+			 * This is a rare situation, it can occur e.g. when
-+			 * more than one UDP packet is sent from same socket
-+			 * in different threads.
-+			 *
-+			 * Let nf_ct_resolve_clash() deal with this later.
-+			 */
-+			if (nf_ct_tuple_equal(&ignored_conntrack->tuplehash[IP_CT_DIR_ORIGINAL].tuple,
-+					      &ct->tuplehash[IP_CT_DIR_ORIGINAL].tuple))
-+				continue;
-+
- 			NF_CT_STAT_INC_ATOMIC(net, found);
- 			rcu_read_unlock();
- 			return 1;
+ 	/* Check the starting page of each pageblock within the range */
+ 	for (; page < end_page; page = next_active_pageblock(page)) {
 -- 
 2.19.1
 
