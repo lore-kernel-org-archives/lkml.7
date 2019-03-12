@@ -2,154 +2,98 @@ Return-Path: <SRS0=J4ZE=RP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 406D3C43381
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 14:47:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7BCDCC43381
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 14:47:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 137E92087C
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 14:47:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4955D2087C
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 14:47:53 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726852AbfCLOrI convert rfc822-to-8bit (ORCPT
+        id S1726858AbfCLOrw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 12 Mar 2019 10:47:08 -0400
-Received: from vegas.theobroma-systems.com ([144.76.126.164]:50289 "EHLO
-        mail.theobroma-systems.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726255AbfCLOrI (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 12 Mar 2019 10:47:08 -0400
-Received: from ip092042140082.rev.nessus.at ([92.42.140.82]:50669 helo=[10.2.146.249])
-        by mail.theobroma-systems.com with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
-        (Exim 4.80)
-        (envelope-from <christoph.muellner@theobroma-systems.com>)
-        id 1h3ig1-0004Xr-94; Tue, 12 Mar 2019 15:46:45 +0100
-Content-Type: text/plain;
-        charset=utf-8
-Mime-Version: 1.0 (Mac OS X Mail 11.5 \(3445.9.1\))
-Subject: Re: [PATCH v2 2/3] dt-bindings: mmc: Add a new property
- disable-cqe-dcmd.
-From:   =?utf-8?Q?Christoph_M=C3=BCllner?= 
-        <christoph.muellner@theobroma-systems.com>
-In-Reply-To: <4793843.T1TZ7EF8k3@phil>
-Date:   Tue, 12 Mar 2019 15:46:44 +0100
-Cc:     Adrian Hunter <adrian.hunter@intel.com>, robh+dt@kernel.org,
-        mark.rutland@arm.com, shawn.lin@rock-chips.com,
-        ulf.hansson@linaro.org,
-        Philipp Tomsich <philipp.tomsich@theobroma-systems.com>,
-        Michal Simek <michal.simek@xilinx.com>,
-        Douglas Anderson <dianders@chromium.org>,
-        Viresh Kumar <viresh.kumar@linaro.org>,
-        Enric Balletbo i Serra <enric.balletbo@collabora.com>,
-        Vicente Bergas <vicencb@gmail.com>,
-        Emil Renner Berthing <kernel@esmil.dk>,
-        Randy Li <ayaka@soulik.info>,
-        Tony Xie <tony.xie@rock-chips.com>,
-        Ezequiel Garcia <ezequiel@collabora.com>,
-        Klaus Goger <klaus.goger@theobroma-systems.com>,
-        Lin Huang <hl@rock-chips.com>, linux-mmc@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org,
-        linux-rockchip@lists.infradead.org
-Content-Transfer-Encoding: 8BIT
-Message-Id: <D7EF0176-0EBD-4401-83BE-E7F951F88CAA@theobroma-systems.com>
-References: <20190307084329.25416-1-christoph.muellner@theobroma-systems.com>
- <37a96eda-196e-bacf-7ae2-5b9354c70273@intel.com>
- <3BCC2A27-3AF4-4E5E-BBD4-6A5B49831D3C@theobroma-systems.com>
- <4793843.T1TZ7EF8k3@phil>
-To:     Heiko Stuebner <heiko@sntech.de>
-X-Mailer: Apple Mail (2.3445.9.1)
+        Tue, 12 Mar 2019 10:47:52 -0400
+Received: from mga12.intel.com ([192.55.52.136]:1761 "EHLO mga12.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726304AbfCLOrv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 12 Mar 2019 10:47:51 -0400
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga008.fm.intel.com ([10.253.24.58])
+  by fmsmga106.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 12 Mar 2019 07:47:51 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.58,471,1544515200"; 
+   d="scan'208";a="130976207"
+Received: from mylly.fi.intel.com (HELO [10.237.72.56]) ([10.237.72.56])
+  by fmsmga008.fm.intel.com with ESMTP; 12 Mar 2019 07:47:49 -0700
+Subject: Re: [PATCH 1/2] i2c: i2c-designware-platdrv: Allow a dynamic adap. nr
+ without an ACPI fwnode
+To:     Hans de Goede <hdegoede@redhat.com>,
+        Wolfram Sang <wsa@the-dreams.de>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Mika Westerberg <mika.westerberg@linux.intel.com>,
+        Lee Jones <lee.jones@linaro.org>
+Cc:     linux-i2c@vger.kernel.org, linux-acpi@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+References: <20190311112216.31391-1-hdegoede@redhat.com>
+ <20190311112216.31391-2-hdegoede@redhat.com>
+From:   Jarkko Nikula <jarkko.nikula@linux.intel.com>
+Message-ID: <c519b0ea-670d-defe-5870-c6258c19ff74@linux.intel.com>
+Date:   Tue, 12 Mar 2019 16:47:48 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.5.1
+MIME-Version: 1.0
+In-Reply-To: <20190311112216.31391-2-hdegoede@redhat.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Hi
 
-> On 12.03.2019, at 14:17, Heiko Stuebner <heiko@sntech.de> wrote:
+On 3/11/19 1:22 PM, Hans de Goede wrote:
+> Before this commit the i2c-designware-platdrv assumes that if the pdev
+> has an apci-companion it should use a dynamic adapter-nr and otherwise
+> it will use pdev->id as adapter-nr.
 > 
-> Am Freitag, 8. März 2019, 14:10:45 CET schrieb Christoph Müllner:
->> 
->>> On 08.03.2019, at 13:46, Adrian Hunter <adrian.hunter@intel.com> wrote:
->>> 
->>> On 7/03/19 10:43 AM, Christoph Muellner wrote:
->>>> This patch documents the new property disable-cqe-dcmd
->>>> for the Arasan eMMC 5.1 driver.
->>>> 
->>>> Signed-off-by: Christoph Muellner <christoph.muellner@theobroma-systems.com>
->>>> Signed-off-by: Philipp Tomsich <philipp.tomsich@theobroma-systems.com>
->>>> ---
->>>> Documentation/devicetree/bindings/mmc/arasan,sdhci.txt | 4 ++++
->>>> 1 file changed, 4 insertions(+)
->>>> 
->>>> diff --git a/Documentation/devicetree/bindings/mmc/arasan,sdhci.txt b/Documentation/devicetree/bindings/mmc/arasan,sdhci.txt
->>>> index 1edbb049cccb..ec699bf98b7c 100644
->>>> --- a/Documentation/devicetree/bindings/mmc/arasan,sdhci.txt
->>>> +++ b/Documentation/devicetree/bindings/mmc/arasan,sdhci.txt
->>>> @@ -44,6 +44,10 @@ Optional Properties:
->>>>    properly. Test mode can be used to force the controller to function.
->>>>  - xlnx,int-clock-stable-broken: when present, the controller always reports
->>>>    that the internal clock is stable even when it is not.
->>>> +  - disable-cqe-dcmd: The eMMC 5.1 standard specifies direct commands (DCMDs)
->>>> +    as part of the command queue engine (CQE). On controllers with a CQHCI,
->>>> +    such as the Arasan eMMC 5.1 host controller, the driver has to enable DCMDs.
->>>> +    This is done unless disable-cqe-dcmd is specified.
+> On some devices e.g. the Apollo Lake using Acer TravelMate Spin B118,
+> some of the LPSS i2c-adapters are enumerated through PCI and do not have
+> an ACPI fwnode. These devices are handled as mfd devices so they end up
+> using the i2c-designware-platdrv driver.
 > 
-> This needs a rewording please. See below for hw-description vs. driver, so
-> the description should be centered around why this is a property of the hw
-> [like faulty controller implementation or whatever]
-
-I understand, that you prefer a HW-specific name for a property
-over one, that explains the actual effect.
-However, using disable-<feature> (which is always a directive for the driver
-and not a HW description) is not uncommon:
-
-* disable-wp should be "no-wp-line-connection"
-* disable-over-current -> "no-over-current-line-connection"
-* srp-disable -> "not-existing-srp-implementation"
-* ...
-
-But I don't mind using something else.
-Would "broken-cqe-dcmd" (like broken-cd or broken-flash-reset) be ok?
-Or other suggestions?
-
-Also I'd like to mention, that my first implementation was "supports-cqe-dcmd".
-I guess that would be a good choice, if it would have been there
-from the beginning. Introducing it now, would silently disable DCMD
-for existing DTBs. Therefore I went on to "disable-cqe-dcmd".
-
+> This results in the i2c-adapter being registered with the mfd generated
+> pdev->id as adapter-nr, which conflicts with existing adapters, triggering
+> a WARN(id < 0, "couldn't get idr") in i2c-core-base.c and causing the
+> adapter registration to fail.
 > 
-> 
->>> If "supports-cqe" is in mmc.txt, should "disable-cqe-dcmd" be there also?
->> 
->> The file mmc.txt says on top:
->> "These properties are common to multiple MMC host controllers".
->> As my patchset introduces "disable-cqe-dcmd" just for sdhci-of-arasan,
->> I would say it should not go into that file.
->> 
->> Also I wonder why "supports-cqe" is in mmc.txt, because
->> only sdhci-tegra.c is evaluating that property.
->> So I would expect it to be documented in
->> Documentation/devicetree/bindings/mmc/nvidia,tegra20-sdhci.txt
->> 
->> However, I see that "disable-cqe-dcmd" could go into other drivers as well.
->> But is this enough to document it in mmc.txt?
-> 
-> Devicetree is always about describing the hardware capabilites and never
-> about the actual nitty-gritty of driver implementation, aka it is not meant
-> as a space for hardware-independent config-settings or such.
-> 
-> As for only tegra evaluating this, is probably because it is still so new, like
-> january 2019 and Rob explicitly suggested it becoming common [0], which
-> suggests that the disable-cqe-dcmds should probably also be common.
+I went thinking would we get a regression if we switch the 
+i2c-designware-platdrv to dynamic numbering unconditionally?
 
-So mmc.txt lists "standardised" names for properties to reduce the risk
-of having similar, but distinct names for different MMC drivers.
-So whenever you want to introduce a new property for a driver,
-check if there isn't already something defined in mmc.txt.
+Only drivers/mfd/intel-lpss.c and drivers/mfd/intel_quark_i2c_gpio.c 
+register platform device "i2c_designware" and otherwise in the driver 
+itself for known ACPI IDs and device tree bindings.
 
-When seeing it this way, it clearly makes sense to have the property there.
+Things should be fine for ACPI cases if slave devices are also described 
+in ACPI tables. As far as I've understood with device tree matching 
+adapter number is irrelevant in slave device registration?
 
-Thanks,
-Christoph
+Andy: could you tell by commit 918fe70cf475 ("mfd: intel_quark_i2c_gpio: 
+support devices behind i2c bus") are those devices described in ACPI or 
+in some i2c_board_infos with referring to fixed adapter number either in 
+or out of kernel tree code?
 
+Then drivers/platform/chrome/chromeos_laptop.c is the only code 
+searching for adapter named as "Synopsys DesignWare I2C adapter" without 
+assuming any fixed adapter numbering.
+
+What's unclear to me can there be device tree cases where i2c-designware 
+probing comes with pdev->id not starting from zero or in different 
+order? I.e. would it make difference do we use pdev->id or dynamic 
+adapter numbering?
+
+-- 
+Jarkko
