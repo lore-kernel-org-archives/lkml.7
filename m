@@ -7,49 +7,48 @@ X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3555BC43381
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 18:07:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BED26C43381
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 18:07:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F01012173C
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 18:07:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 86572205C9
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 18:07:19 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1552414035;
-	bh=GJ6XayUpeMpEkHSnxWVk9oBsJs7zIftirT4wQlnNT04=;
+	s=default; t=1552414039;
+	bh=owFihbw4Ces9cKHqh3QpHHBeSeDLGsZMrNgTXmHvi+k=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=GiUoTu0i/tZwTK4YoykQ/uTjrocuTTCbmera7kc1AwmAjR0SQbAG1gr2v7Bon49de
-	 a5N/il1RaK8PF7vVv8WyhE1QtN5qek6KRwpsvlNg9fwoBdgVyNGcojWZKkgjBkRiDp
-	 GVou3LxC3dMjvI5GuysStPSxZ7PdC8bam239Ibuw=
+	b=eRWn9Bi2dvfs0zQf2Whfd+5glcf2fr6KkdkSweucBpKz0uAyOoWKf8zxdsfyUqzrc
+	 QVi3Nif3+pzvl+JDrLTsKLZX5TR4vjove+vWotqMpWU+AaQenO6M1OszABonM/royU
+	 Oi4D0d4agaHPdbhl8weyH7SW5wf6tBShoD7IfFrc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728065AbfCLSHN (ORCPT
+        id S1726854AbfCLRMW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 12 Mar 2019 14:07:13 -0400
-Received: from mail.kernel.org ([198.145.29.99]:47272 "EHLO mail.kernel.org"
+        Tue, 12 Mar 2019 13:12:22 -0400
+Received: from mail.kernel.org ([198.145.29.99]:46556 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727425AbfCLRMX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 12 Mar 2019 13:12:23 -0400
+        id S1727278AbfCLRMG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 12 Mar 2019 13:12:06 -0400
 Received: from localhost (unknown [104.133.8.98])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id DC5C52171F;
-        Tue, 12 Mar 2019 17:12:22 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 506C8206DF;
+        Tue, 12 Mar 2019 17:12:05 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1552410743;
-        bh=GJ6XayUpeMpEkHSnxWVk9oBsJs7zIftirT4wQlnNT04=;
+        s=default; t=1552410725;
+        bh=owFihbw4Ces9cKHqh3QpHHBeSeDLGsZMrNgTXmHvi+k=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=kr0UGpSHw7s8hfWQPBaj7sRWbnt0kUXBLNTIIHVtfAh1IO3uwvZ8cLtSBBECUhBfu
-         Yf7fyQDl71XsaOXOT98p6obuqy9W41sljqL6bQaUAuwx5dt4ln4HSpNcE0AGRh9ySu
-         LrmWpmjI3NdfA7hmvO7HLMlcUYgseNEmgAQUuyH8=
+        b=gwceAs4lDI+ru3H4dl4nzY3WKEwiHQ2LRSxLS3bv1+O1n4cy/9iU3w6Ldw8Lsp6Ha
+         Qg00pyu29gmFt/mxcKLW+OkFX4mhLIWSYPQV0sRumFcM2r9CfZuWo7eQu7H3ukdqSa
+         WjmXg+K76gn5nvUqrzz7LgrDPqOTeIizHGUg5caQ=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Pan Bian <bianpan2016@163.com>,
-        Ian Kent <raven@themaw.net>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
+        stable@vger.kernel.org, Guo Ren <ren_guo@c-sky.com>,
+        Mao Han <mao_han@c-sky.com>,
+        Palmer Dabbelt <palmer@sifive.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.20 068/171] autofs: drop dentry reference only when it is never used
-Date:   Tue, 12 Mar 2019 10:07:28 -0700
-Message-Id: <20190312170354.026391964@linuxfoundation.org>
+Subject: [PATCH 4.20 015/171] riscv: fixup max_low_pfn with PFN_DOWN.
+Date:   Tue, 12 Mar 2019 10:06:35 -0700
+Message-Id: <20190312170349.218819799@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190312170347.868927101@linuxfoundation.org>
 References: <20190312170347.868927101@linuxfoundation.org>
@@ -68,43 +67,45 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-[ Upstream commit 63ce5f552beb9bdb41546b3a26c4374758b21815 ]
+[ Upstream commit 28198c4639b39899a728ac89aea29d2a7a72562f ]
 
-autofs_expire_run() calls dput(dentry) to drop the reference count of
-dentry.  However, dentry is read via autofs_dentry_ino(dentry) after
-that.  This may result in a use-free-bug.  The patch drops the reference
-count of dentry only when it is never used.
+max_low_pfn should be pfn_size not byte_size.
 
-Link: http://lkml.kernel.org/r/154725122396.11260.16053424107144453867.stgit@pluto-themaw-net
-Signed-off-by: Pan Bian <bianpan2016@163.com>
-Signed-off-by: Ian Kent <raven@themaw.net>
-Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
-Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
+Signed-off-by: Guo Ren <ren_guo@c-sky.com>
+Signed-off-by: Mao Han <mao_han@c-sky.com>
+Signed-off-by: Palmer Dabbelt <palmer@sifive.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- fs/autofs/expire.c | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+ arch/riscv/kernel/setup.c | 2 +-
+ arch/riscv/mm/init.c      | 3 ++-
+ 2 files changed, 3 insertions(+), 2 deletions(-)
 
-diff --git a/fs/autofs/expire.c b/fs/autofs/expire.c
-index d441244b79df..28d9c2b1b3bb 100644
---- a/fs/autofs/expire.c
-+++ b/fs/autofs/expire.c
-@@ -596,7 +596,6 @@ int autofs_expire_run(struct super_block *sb,
- 	pkt.len = dentry->d_name.len;
- 	memcpy(pkt.name, dentry->d_name.name, pkt.len);
- 	pkt.name[pkt.len] = '\0';
--	dput(dentry);
+diff --git a/arch/riscv/kernel/setup.c b/arch/riscv/kernel/setup.c
+index 2c290e6aaa6e..6d652826b5cb 100644
+--- a/arch/riscv/kernel/setup.c
++++ b/arch/riscv/kernel/setup.c
+@@ -196,7 +196,7 @@ static void __init setup_bootmem(void)
+ 	BUG_ON(mem_size == 0);
  
- 	if (copy_to_user(pkt_p, &pkt, sizeof(struct autofs_packet_expire)))
- 		ret = -EFAULT;
-@@ -609,6 +608,8 @@ int autofs_expire_run(struct super_block *sb,
- 	complete_all(&ino->expire_complete);
- 	spin_unlock(&sbi->fs_lock);
+ 	set_max_mapnr(PFN_DOWN(mem_size));
+-	max_low_pfn = memblock_end_of_DRAM();
++	max_low_pfn = PFN_DOWN(memblock_end_of_DRAM());
  
-+	dput(dentry);
-+
- 	return ret;
- }
+ #ifdef CONFIG_BLK_DEV_INITRD
+ 	setup_initrd();
+diff --git a/arch/riscv/mm/init.c b/arch/riscv/mm/init.c
+index 1d9bfaff60bc..658ebf645f42 100644
+--- a/arch/riscv/mm/init.c
++++ b/arch/riscv/mm/init.c
+@@ -28,7 +28,8 @@ static void __init zone_sizes_init(void)
+ 	unsigned long max_zone_pfns[MAX_NR_ZONES] = { 0, };
+ 
+ #ifdef CONFIG_ZONE_DMA32
+-	max_zone_pfns[ZONE_DMA32] = PFN_DOWN(min(4UL * SZ_1G, max_low_pfn));
++	max_zone_pfns[ZONE_DMA32] = PFN_DOWN(min(4UL * SZ_1G,
++			(unsigned long) PFN_PHYS(max_low_pfn)));
+ #endif
+ 	max_zone_pfns[ZONE_NORMAL] = max_low_pfn;
  
 -- 
 2.19.1
