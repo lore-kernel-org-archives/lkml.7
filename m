@@ -2,249 +2,151 @@ Return-Path: <SRS0=J4ZE=RP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.0 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,
+	URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7C4DBC4360F
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 04:41:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E198EC10F00
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 04:42:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 37B79214AF
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 04:41:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A6D8C214AE
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 04:42:27 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=xilinx.onmicrosoft.com header.i=@xilinx.onmicrosoft.com header.b="IGjFpx+N"
+	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="cqVNwX2v"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727021AbfCLElj (ORCPT
+        id S1726953AbfCLEm0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 12 Mar 2019 00:41:39 -0400
-Received: from mail-eopbgr710042.outbound.protection.outlook.com ([40.107.71.42]:8992
-        "EHLO NAM05-BY2-obe.outbound.protection.outlook.com"
+        Tue, 12 Mar 2019 00:42:26 -0400
+Received: from mail-eopbgr140054.outbound.protection.outlook.com ([40.107.14.54]:15220
+        "EHLO EUR01-VE1-obe.outbound.protection.outlook.com"
         rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1725848AbfCLEli (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 12 Mar 2019 00:41:38 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=xilinx.onmicrosoft.com; s=selector1-xilinx-com;
+        id S1725811AbfCLEm0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 12 Mar 2019 00:42:26 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector1;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=PkXKKQ3yIwmzLmJ+JXVKRegBOGrfhgrFdtsBxENWbrM=;
- b=IGjFpx+N9yvMcOpxlNUDfvZCgbrFNE+yWVSSLVC56TwpRJIZ2wJL/B1aoBtNJNrvC696mG5Vlv8xqGSWRWUHXzLHxRpg6bJY4J0miqBRMzhDZFhYTSCT5ynrjynKZLeXvrUqYIhDyybfQWYiRhiTMZtIORyWVhsIfmWy00l4BpA=
-Received: from MN2PR02CA0024.namprd02.prod.outlook.com (2603:10b6:208:fc::37)
- by BN6PR02MB2369.namprd02.prod.outlook.com (2603:10b6:404:2d::11) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.1686.18; Tue, 12 Mar
- 2019 04:41:34 +0000
-Received: from CY1NAM02FT056.eop-nam02.prod.protection.outlook.com
- (2a01:111:f400:7e45::206) by MN2PR02CA0024.outlook.office365.com
- (2603:10b6:208:fc::37) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.1686.18 via Frontend
- Transport; Tue, 12 Mar 2019 04:41:34 +0000
-Authentication-Results: spf=pass (sender IP is 149.199.60.83)
- smtp.mailfrom=xilinx.com; vger.kernel.org; dkim=none (message not signed)
- header.d=none;vger.kernel.org; dmarc=bestguesspass action=none
- header.from=xilinx.com;
-Received-SPF: Pass (protection.outlook.com: domain of xilinx.com designates
- 149.199.60.83 as permitted sender) receiver=protection.outlook.com;
- client-ip=149.199.60.83; helo=xsj-pvapsmtpgw01;
-Received: from xsj-pvapsmtpgw01 (149.199.60.83) by
- CY1NAM02FT056.mail.protection.outlook.com (10.152.74.160) with Microsoft SMTP
- Server (version=TLS1_0, cipher=TLS_RSA_WITH_AES_256_CBC_SHA) id 15.20.1686.19
- via Frontend Transport; Tue, 12 Mar 2019 04:41:33 +0000
-Received: from unknown-38-66.xilinx.com ([149.199.38.66] helo=xsj-pvapsmtp01)
-        by xsj-pvapsmtpgw01 with esmtp (Exim 4.63)
-        (envelope-from <vishal.sagar@xilinx.com>)
-        id 1h3ZEK-0000Fg-Jx; Mon, 11 Mar 2019 21:41:32 -0700
-Received: from [127.0.0.1] (helo=localhost)
-        by xsj-pvapsmtp01 with smtp (Exim 4.63)
-        (envelope-from <vishal.sagar@xilinx.com>)
-        id 1h3ZEF-00021w-GQ; Mon, 11 Mar 2019 21:41:27 -0700
-Received: from xsj-pvapsmtp01 (mail.xilinx.com [149.199.38.66] (may be forged))
-        by xsj-smtp-dlp1.xlnx.xilinx.com (8.13.8/8.13.1) with ESMTP id x2C4fJON014041;
-        Mon, 11 Mar 2019 21:41:19 -0700
-Received: from [172.23.29.77] (helo=xhdyacto-vnc1.xilinx.com)
-        by xsj-pvapsmtp01 with esmtp (Exim 4.63)
-        (envelope-from <vishal.sagar@xilinx.com>)
-        id 1h3ZE7-0001yN-8y; Mon, 11 Mar 2019 21:41:19 -0700
-From:   Vishal Sagar <vishal.sagar@xilinx.com>
-To:     Hyun Kwon <hyunk@xilinx.com>, <laurent.pinchart@ideasonboard.com>,
-        <mchehab@kernel.org>, <robh+dt@kernel.org>, <mark.rutland@arm.com>,
-        Michal Simek <michals@xilinx.com>,
-        <linux-media@vger.kernel.org>, <devicetree@vger.kernel.org>,
-        <sakari.ailus@linux.intel.com>, <hans.verkuil@cisco.com>,
+ bh=YgPZQRYYgq1tUDCJ0ITOpoSuoCFvtlzNBuIhiY4cz0s=;
+ b=cqVNwX2vxY2/z/YHXE3LFfNq7v+dibMCe3Y6cV7ibfPaTRiRMCMtk1nkf3nbxIitvZZaBvpkWlmpjHEMNCvN/kCh2etbBZovnAuqYVniuQKuYVdIjZvZ77IZhOS7TBcpGqZJJ2LsyGk4US+5kCWtAUgdfCShvwt4T9I2VJECOGc=
+Received: from AM6PR04MB5781.eurprd04.prod.outlook.com (20.179.3.19) by
+ AM6PR04MB4997.eurprd04.prod.outlook.com (20.177.33.216) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.1686.20; Tue, 12 Mar 2019 04:42:19 +0000
+Received: from AM6PR04MB5781.eurprd04.prod.outlook.com
+ ([fe80::30cc:e034:1f7a:2cc7]) by AM6PR04MB5781.eurprd04.prod.outlook.com
+ ([fe80::30cc:e034:1f7a:2cc7%2]) with mapi id 15.20.1686.021; Tue, 12 Mar 2019
+ 04:42:19 +0000
+From:   "Z.q. Hou" <zhiqiang.hou@nxp.com>
+To:     Bjorn Helgaas <helgaas@kernel.org>
+CC:     "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
+        "linux-arm-kernel@lists.infradead.org" 
         <linux-arm-kernel@lists.infradead.org>,
-        <linux-kernel@vger.kernel.org>, Dinesh Kumar <dineshk@xilinx.com>,
-        Sandip Kothari <sandipk@xilinx.com>
-CC:     Vishal Sagar <vishal.sagar@xilinx.com>
-Subject: [PATCH v6 0/2] Add support for Xilinx CSI2 Receiver Subsystem
-Date:   Tue, 12 Mar 2019 10:05:28 +0530
-Message-ID: <1552365330-21155-1-git-send-email-vishal.sagar@xilinx.com>
-X-Mailer: git-send-email 2.7.4
-X-RCIS-Action: ALLOW
-X-TM-AS-Product-Ver: IMSS-7.1.0.1224-8.2.0.1013-23620.005
-X-TM-AS-User-Approved-Sender: Yes;Yes
-X-EOPAttributedMessage: 0
-X-MS-Office365-Filtering-HT: Tenant
-X-Forefront-Antispam-Report: CIP:149.199.60.83;IPV:NLI;CTRY:US;EFV:NLI;SFV:NSPM;SFS:(10009020)(346002)(376002)(136003)(39860400002)(396003)(2980300002)(199004)(189003)(48376002)(50226002)(2906002)(16586007)(36386004)(316002)(6636002)(50466002)(305945005)(14444005)(478600001)(9786002)(81156014)(4326008)(106002)(63266004)(8676002)(81166006)(110136005)(51416003)(7416002)(7696005)(107886003)(8936002)(2201001)(126002)(26005)(44832011)(106466001)(476003)(86362001)(486006)(356004)(2616005)(6666004)(5660300002)(426003)(47776003)(336012)(77096007)(186003)(36756003)(921003)(42866002)(83996005)(1121003)(2101003);DIR:OUT;SFP:1101;SCL:1;SRVR:BN6PR02MB2369;H:xsj-pvapsmtpgw01;FPR:;SPF:Pass;LANG:en;PTR:unknown-60-83.xilinx.com;A:1;MX:1;
+        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "robh+dt@kernel.org" <robh+dt@kernel.org>,
+        "mark.rutland@arm.com" <mark.rutland@arm.com>,
+        "l.subrahmanya@mobiveil.co.in" <l.subrahmanya@mobiveil.co.in>,
+        "shawnguo@kernel.org" <shawnguo@kernel.org>,
+        Leo Li <leoyang.li@nxp.com>,
+        "lorenzo.pieralisi@arm.com" <lorenzo.pieralisi@arm.com>,
+        "catalin.marinas@arm.com" <catalin.marinas@arm.com>,
+        "will.deacon@arm.com" <will.deacon@arm.com>,
+        "M.h. Lian" <minghuan.lian@nxp.com>,
+        Xiaowei Bao <xiaowei.bao@nxp.com>,
+        Mingkai Hu <mingkai.hu@nxp.com>
+Subject: RE: [PATCHv4 10/28] PCI: mobiveil: fix the INTx process error
+Thread-Topic: [PATCHv4 10/28] PCI: mobiveil: fix the INTx process error
+Thread-Index: AQHU1+0si14PzdOFlUat22euDKg75aYGd9SAgADz9gA=
+Date:   Tue, 12 Mar 2019 04:42:19 +0000
+Message-ID: <AM6PR04MB57814BDE85B6A51ABF4FD80384490@AM6PR04MB5781.eurprd04.prod.outlook.com>
+References: <20190311093130.7209-1-Zhiqiang.Hou@nxp.com>
+ <20190311093130.7209-11-Zhiqiang.Hou@nxp.com>
+ <20190311140803.GF214730@google.com>
+In-Reply-To: <20190311140803.GF214730@google.com>
+Accept-Language: zh-CN, en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=zhiqiang.hou@nxp.com; 
+x-originating-ip: [192.88.170.1]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: b45fbd52-bf29-4dbd-0e76-08d6a6a51c77
+x-ms-office365-filtering-ht: Tenant
+x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600127)(711020)(4605104)(4618075)(2017052603328)(7153060)(7193020);SRVR:AM6PR04MB4997;
+x-ms-traffictypediagnostic: AM6PR04MB4997:
+x-microsoft-exchange-diagnostics: =?gb2312?B?MTtBTTZQUjA0TUI0OTk3OzIzOktKcG1vTHYyUDVjVVJiRnF1ZDl6QTFCTDdk?=
+ =?gb2312?B?VDdETnRWWkxGLzM4dGZHQUdjVmUwOWk5M3h6QmxTVWc4Uy9wWjNkdnVnWXk5?=
+ =?gb2312?B?UjFmbmJJTTNEaUltRzNRM24vZGxjYVNxaDY0Z1Z6KzZmMUJtbS92RnpDaXlU?=
+ =?gb2312?B?YjltVHIyMStmU2R3Yzg4ak5lT1dTak45MTBHdE5zbmphVC83bFloWVViNExV?=
+ =?gb2312?B?YnAzYTMxMUZBWGYwc014ZmQzaDNWSnU5N0xSaTQwV2FDVDZVcnY0L01LMXZl?=
+ =?gb2312?B?cVMvVStJSjA3LzQ5K0NCN0RXTzZaalFLQmxiUUdyME5ENVc5aCs4WnR3d3pY?=
+ =?gb2312?B?d1pxSnFsdnlLQld1ZTFieFVobkw3M3BvbVVIRExxeFhrU2U2cUllckxhMlBQ?=
+ =?gb2312?B?UG1vT2dvL0U1WGQ1OXo3TWRPVUcycWtMZjZqNGN1TTBJSGdQT3FBbG51MUJB?=
+ =?gb2312?B?ZUVxNXdTaUdrbC92eW9INm9KVUtYL0tqeWZyb3lpZGJSeVovSU1RZ0x4MlFI?=
+ =?gb2312?B?Z2VDbUNwZktzMnJsWWxJT3hpY1hmeldWbUhobjNodENWRWxhYW1ncEJBbi9x?=
+ =?gb2312?B?Q1VMU0dYQ3BlY0VzZEllSXVVdTJHNGkrUlVnbTFnMGZGenVsK0Jqc3hQNjVm?=
+ =?gb2312?B?SVlQMjJZVi8yV2RQdEYrcDF4ZlZPYjFGSzN1MHR3dC9FK3BpeXZTUmwrWWZ4?=
+ =?gb2312?B?V3BJa0JNL1ZJR29WUDRPYjVlQlpkZzUwSlE2aEdtdEhheEd6clBmVDArZll0?=
+ =?gb2312?B?Sytpb09GN0M3akUzYzRsWjBib0ZtQUduSXI2L1ZVdEY2OUNKZ2JPSEgxbFEx?=
+ =?gb2312?B?MnlVRTgrODFNODZtMVZuY3ZZOEhVVjZEcG5BcFhpZVRSSytsejVDWXpvR09B?=
+ =?gb2312?B?MlA4bHg0bDYydDNwRE4zRkorS2YrODc0WGZJcWtEdmN3Qkw2eUFUQitaOFVv?=
+ =?gb2312?B?U2N6S1UxSFFWMi9KZUhGQkVDaVk4ZUZrUmdSTlhHMFZOYzJwMXFHNzQ4ZTI4?=
+ =?gb2312?B?TjBIcmtNVytJTHMrOHdQcUMyMHhYNlVZc3dUYUJkczdLYzVJNU5hTk45Zk51?=
+ =?gb2312?B?WU50ZTlSS1kzd1ZuSml6cG5mNlozbm4zdlg3akdhM1JZbVgyWXdRMTExSEg5?=
+ =?gb2312?B?U293cUlYRWl1OVpmdHJHdzBBVnhMYTk5cVZ5c0w2M2ZlNFhmYVV2aDF4d21H?=
+ =?gb2312?B?c3JONEl1QW9pMnFkbGV5bEJMZ0RCb0ZJdTlEZHI3a1NDNU1Pbk4zbm9XdFMv?=
+ =?gb2312?B?cHhGQmVGQ3pGekwvQU9Tb3lBVUlmZW4wVnpyYWRuQ3A2NWVKZjU4eDIyTWcr?=
+ =?gb2312?B?cTljUncwRUxMUFpqM2EzSm9UUGcrNy9FSytsbjh0cVNNMldzVExKMDRzaENF?=
+ =?gb2312?B?MWdhN1VlZzhwMlorYmUxUDY0ak1QSGRQcXQwWnMxb3dWRkpOZ2xFL21nSHJu?=
+ =?gb2312?B?RFRKbloyaG82Z2RrclZaTEQrY200N0lpVld3WkZBbENzeCtrOU5lQmp5cFBo?=
+ =?gb2312?B?UHlYL2k0elhnYXZWU01VSCswM1pFRXhUa0pzS1RMcHhEVHN6NU0vVEJRU3FW?=
+ =?gb2312?B?Y0tsSFBpUW9RQ3lOWXBPdXpUZkJ4RFBZWERkcjdrZzBWcnVsVmdVQmdzR3lk?=
+ =?gb2312?B?N2RNV2crdko0M2FzS2E2dk5OY2tZQWgra2tISU1jaFB0RVpsN0ZMTTVma3VZ?=
+ =?gb2312?Q?wxi7UJA+KYA9Dk0Z92IARq++gq9WRU8PEUMCZbi?=
+x-microsoft-antispam-prvs: <AM6PR04MB4997033D60172E36BED0AAD484490@AM6PR04MB4997.eurprd04.prod.outlook.com>
+x-forefront-prvs: 09749A275C
+x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(136003)(376002)(366004)(396003)(39860400002)(346002)(13464003)(189003)(199004)(5660300002)(6506007)(52536013)(53546011)(186003)(229853002)(6436002)(6116002)(102836004)(68736007)(81156014)(3846002)(81166006)(71190400001)(66066001)(86362001)(71200400001)(99286004)(9686003)(256004)(105586002)(106356001)(8676002)(316002)(55016002)(54906003)(26005)(486006)(53936002)(76176011)(14454004)(8936002)(33656002)(478600001)(2906002)(74316002)(6246003)(7736002)(7696005)(446003)(97736004)(305945005)(11346002)(4326008)(25786009)(7416002)(476003)(6916009);DIR:OUT;SFP:1101;SCL:1;SRVR:AM6PR04MB4997;H:AM6PR04MB5781.eurprd04.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
+received-spf: None (protection.outlook.com: nxp.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam-message-info: D16n7ag3mN0OFLdj3u8Ggsb9oWUAtIScSVyK9U+1adbIwKazJnpzEptuOnBW+Jp+p+MMJZbPJQxCfEaKOa9QEBiguD2dqhJIGgGER6PKIRwT/cvFSuz87QZTZx72yImYK7G2Q9gxvggGZ5HvkRko/UmgydfLfnTvpZhxLlLKKz0AJ50FFvO4iLShoUEWS8PQ5h5L10AgCToY+6GCrB70CPgRrWqC8ush3dAhzz9r6W7+u48Y6b2nZ4N6gcSYac+3PA7lfq59a4Gp4d+D8RR2SHFAzE+zrQT/krfAogCdZHagoK0GyCEwANjrnoxO+JDYkjSStXGcE71JhRCX3I1KPzmH+s6Qx2lVj+IFo+IuIK7dji/g2C2Ad+kDzWO2MriWsr7d/3nhT+Qp08rpCr+5c7c1J7lLYHSz+QnPpfCsmgk=
+Content-Type: text/plain; charset="gb2312"
+Content-Transfer-Encoding: base64
 MIME-Version: 1.0
-Content-Type: text/plain
-X-MS-PublicTrafficType: Email
-X-MS-Office365-Filtering-Correlation-Id: f2ae5a72-df0c-4435-ee08-08d6a6a50105
-X-Microsoft-Antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600127)(711020)(4605104)(4608103)(4709054)(2017052603328)(7153060);SRVR:BN6PR02MB2369;
-X-MS-TrafficTypeDiagnostic: BN6PR02MB2369:
-X-Microsoft-Exchange-Diagnostics: 1;BN6PR02MB2369;20:RMCQUz8SwnXN0wuFeiz1C0HJDQvCX70lDjZtrT7XmoVq9oYSVPDt8XHEtt71mDeVpczpTHmftVCVzdDh+g4GSlq51yvQQquf6g66NKOc0/rJlAFCRp7FhUjCYGVfwElOR2GQdph6Wraqr0p0aKTA3Ox53Z3r6JOSY39OIvDwqU8+pgVn07t1sA2dzcGjUynz5olKneE/uEdqh3XNlcIgdha5vQPKM6KW473gSnlBAFMA+d7pHjEQb02xz+U+/vWgSfhPkCI3hojKt5Cggr5KLUVtjqLI+b/R68xVoCxkDMmoEWtzMtvmaVi3eclF0a5+4xjU4hi3tYVyr2U4yswq4cpBXpqKxketz34tx4zECW5z5GUaZEyZD1k+IPOzweQNtvgOfjePFHMtyNK0uFh7tCxS5FVKsmHzSpkN2BJpZpDuqwFr1YhSUOjdbwWIL/pD4Vg2qSEzyJaVX1WjBt24UOtN9KUykYz33/zELbDDeCQPzqHVKB0I4BB6gwjK0rGs
-X-Microsoft-Antispam-PRVS: <BN6PR02MB236909D37CD4495C0329854FF6490@BN6PR02MB2369.namprd02.prod.outlook.com>
-X-Forefront-PRVS: 09749A275C
-X-Microsoft-Exchange-Diagnostics: =?us-ascii?Q?1;BN6PR02MB2369;23:aQ9zy7OoMrevQHHy4MotDlrfXdDOhqR3fB6eZ2HNr?=
- =?us-ascii?Q?i7GNJz1v8ARPjE3tClJNcCQuWZ04XBX3rx7yeAzKl5fmXZKjTJgfzVM3tzin?=
- =?us-ascii?Q?Fe+PCnrZk9O5my+gUedtihBAENTfo/i4044UJ0cMxJM74cX9pBgwSpKAbPvl?=
- =?us-ascii?Q?Xn6eOW83BRSr0Z5gqlESnfgVMcyir6gay/g0c1S5OeiDeCeOHkO7Qh0R3WL+?=
- =?us-ascii?Q?mZZeboK7ueX+qgeqyY6j6FP7H1OF5JY1r38R15cCgbpCeu+f6vt31dMbXd3x?=
- =?us-ascii?Q?9hKvsvw8on1xPxMc4c5AoAhZtts3rIh2zYviGF2svXJIKMUBM1SNawjwdNNM?=
- =?us-ascii?Q?7K9z9I03wQnaBGqSaokkwrlziKiUIB+AjnB1jhJ2pSP7xxlC4BygNPJ4xTOo?=
- =?us-ascii?Q?FUYa6xZKp6Q0mV4MZMISicl9scWwmwtTGi5sj3c8StchdfmTS9vu0kBehAet?=
- =?us-ascii?Q?nToDa/e1gFegm8rLhgYM8CM81NX0ebpXD5cpmSoDBuppz4C+CUx+/NAvDOzw?=
- =?us-ascii?Q?xdrikzSDphNR5vmNSLp4QVt0Qy/V35Ntu1+GiK0A2x+fwsIxhcLpA+vVMwP6?=
- =?us-ascii?Q?pVEDvV4G7l0OykyGELM/vs0OBMRwYtUGGnTQT+Oatpx/7Qs4/9zxYldvHeNQ?=
- =?us-ascii?Q?a4ksZ8nAjbOOpTk5AA/TzPG5uzH+8P9Gk9o3o3WBLQQt3Xwcub3kd8MgdPEw?=
- =?us-ascii?Q?edY0R6Y3xAYxNBe0IsI4VKwoGJosxq7hRq6tOh0+JRjHBvlyl5eJAy0R970D?=
- =?us-ascii?Q?18MIDdeFMRH5o3qMiQH6usaNyBd1YPpwigqWTMABmJN6NMppcwBuWJnAXmFM?=
- =?us-ascii?Q?ipYzF2hM6vlvxb0fxe08CqmU6LCyrI3ii35ie5rGLqe83jrC3s4IB30acbF7?=
- =?us-ascii?Q?LlB2vaypAJYbOqgz855AUswS5vmxIhfT1W0mDDb87KEl5t+fBT7WpeAddzED?=
- =?us-ascii?Q?KmqZIWPYFUsjCyoZmrkDWAaYeE6zR1lzQ3i0ZBXYO88Hszryz+89MTL7PBS1?=
- =?us-ascii?Q?YKG7beV3fwFMiftL19xHjXDO3/TUVkXrgyEMlQr/tZPK298rMocc1yeN6vNR?=
- =?us-ascii?Q?oc7wgn/yjWNo8bPBJQlh0A/w/uyKSgEZNSbP0VHY7tC1FoqqtuqfnoMfLraN?=
- =?us-ascii?Q?+nyXjWFHnm7hy0rCt197Arw25Pnq8zTlB0BaNLcU1i0qc7GF9fjKRslkSUVe?=
- =?us-ascii?Q?n7/zxKPlCNcHNzHEerJOu8p0lRBzjF+jzNb?=
-X-MS-Exchange-SenderADCheck: 1
-X-Microsoft-Antispam-Message-Info: bmZyrWypDyZeR+cfSwz6TJFqFP8Yqz6qgfniw1qBV9qi0Hio6LKxOAskeCjbNabE1C0ncEX/8nKhRKB+HsYUK2XY3gV5C42rPk9Kaz5bhjviL+50Ijf3HZSksBAW+b8GO9LnePUFhghhWGxzCqSA9aQpcyrK2hHm/fWbSfZsOqI/IAChhWPg5B2V9VZL8xyT0FxCy5qT+BRmfm2sHHpW4oKvbY/7hbh4e3FQ0UDB5h+QKhPdPEyB5nr1ZJIaTBDGbR2wxKbiQxibvEisKyoDJoH4DrZ5JbwI8tW9nmDtYFmUbxWxVv9z8KWvBVt34DFSc2iEm03Mb2WTUKeKHUCRSbLOO63+gW9nqlifFDHq5Uyek+tJ4c/IGetycRPPJaHfrVaCnmV1k+LcJE7LF6eoShR+dg6ExQfik/T9jTb1auc=
-X-OriginatorOrg: xilinx.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 12 Mar 2019 04:41:33.0549
+X-OriginatorOrg: nxp.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: b45fbd52-bf29-4dbd-0e76-08d6a6a51c77
+X-MS-Exchange-CrossTenant-originalarrivaltime: 12 Mar 2019 04:42:19.6522
  (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: f2ae5a72-df0c-4435-ee08-08d6a6a50105
-X-MS-Exchange-CrossTenant-Id: 657af505-d5df-48d0-8300-c31994686c5c
-X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=657af505-d5df-48d0-8300-c31994686c5c;Ip=[149.199.60.83];Helo=[xsj-pvapsmtpgw01]
-X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: BN6PR02MB2369
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: AM6PR04MB4997
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Xilinx MIPI CSI-2 Receiver Subsystem
-------------------------------------
-
-The Xilinx MIPI CSI-2 Receiver Subsystem Soft IP consists of a DPHY which
-gets the data, an optional I2C, a CSI-2 Receiver which parses the data and
-converts it into AXIS data.
-This stream output maybe connected to a Xilinx Video Format Bridge.
-The maximum number of lanes supported is fixed in the design.
-The number of active lanes can be programmed.
-For e.g. the design may set maximum lanes as 4 but if the camera sensor has
-only 1 lane then the active lanes shall be set as 1.
-
-The pixel format set in design acts as a filter allowing only the selected
-data type or RAW8 data packets. The D-PHY register access can be gated in
-the design. The base address of the DPHY depends on whether the internal
-Xilinx I2C controller is enabled or not in design.
-
-The device driver registers the MIPI CSI2 Rx Subsystem as a V4L2 sub device
-having 2 pads. The sink pad is connected to the MIPI camera sensor and
-output pad is connected to the video node.
-Refer to xlnx,csi2rxss.txt for device tree node details.
-
-This driver helps configure the number of active lanes to be set, setting
-and handling interrupts and IP core enable. It logs the number of events
-occurring according to their type between streaming ON and OFF.
-It generates a v4l2 event for each short packet data received.
-The application can then dequeue this event and get the requisite data
-from the event structure.
-
-It adds new V4L2 controls which are used to get the event counter values
-and reset the subsystem.
-
-The Xilinx CSI-2 Rx Subsystem outputs an AXI4 Stream data which can be
-used for image processing. This data follows the video formats mentioned
-in Xilinx UG934 when the Video Format Bridge is enabled.
-
-v6
-- 1/2
-  - Added minor comment by Luca
-  - Added Reviewed by Rob Herring
-- 2/2
-  - No change
-
-v5
-- 1/2
-  - Removed the DPHY clock description and dt node.
-  - removed bayer pattern as CSI doesn't deal with it.
-- 2/2
-  - removed bayer pattern as CSI doesn't deal with it.
-  - add YUV422 10bpc media bus format.
-
-v4
-- 1/2
-  - Added reviewed by Hyun Kwon
-- 2/2
-  - Removed irq member from core structure
-  - Consolidated IP config prints in xcsi2rxss_log_ipconfig()
-  - Return -EINVAL in case of invalid ioctl
-  - Code formatting
-  - Added reviewed by Hyun Kwon
-
-v3
-- 1/2
-  - removed interrupt parent as suggested by Rob
-  - removed dphy clock
-  - moved vfb to optional properties
-  - Added required and optional port properties section
-  - Added endpoint property section
-- 2/2
- - Fixed comments given by Hyun.
- - Removed DPHY 200 MHz clock. This will be controlled by DPHY driver
- - Minor code formatting
- - en_csi_v20 and vfb members removed from struct and made local to dt parsing
- - lock description updated
- - changed to ratelimited type for all dev prints in irq handler
- - Removed YUV 422 10bpc media format
-
-v2
-- 1/2
-  - updated the compatible string to latest version supported
-  - removed DPHY related parameters
-  - added CSI v2.0 related property (including VCX for supporting upto 16
-    virtual channels).
-  - modified csi-pxl-format from string to unsigned int type where the value
-    is as per the CSI specification
-  - Defined port 0 and port 1 as sink and source ports.
-  - Removed max-lanes property as suggested by Rob and Sakari
-
-- 2/2
-  - Fixed comments given by Hyun and Sakari.
-  - Made all bitmask using BIT() and GENMASK()
-  - Removed unused definitions
-  - Removed DPHY access. This will be done by separate DPHY PHY driver.
-  - Added support for CSI v2.0 for YUV 422 10bpc, RAW16, RAW20 and extra
-    virtual channels
-  - Fixed the ports as sink and source
-  - Now use the v4l2fwnode API to get number of data-lanes
-  - Added clock framework support
-  - Removed the close() function
-  - updated the set format function
-  - Support only VFB enabled config
-
-Vishal Sagar (2):
-  media: dt-bindings: media: xilinx: Add Xilinx MIPI CSI-2 Rx Subsystem
-  media: v4l: xilinx: Add Xilinx MIPI CSI-2 Rx Subsystem driver
-
- .../bindings/media/xilinx/xlnx,csi2rxss.txt        |  118 ++
- drivers/media/platform/xilinx/Kconfig              |   10 +
- drivers/media/platform/xilinx/Makefile             |    1 +
- drivers/media/platform/xilinx/xilinx-csi2rxss.c    | 1465 ++++++++++++++++++++
- include/uapi/linux/xilinx-v4l2-controls.h          |   14 +
- include/uapi/linux/xilinx-v4l2-events.h            |   25 +
- 6 files changed, 1633 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/media/xilinx/xlnx,csi2rxss.txt
- create mode 100644 drivers/media/platform/xilinx/xilinx-csi2rxss.c
- create mode 100644 include/uapi/linux/xilinx-v4l2-events.h
-
--- 
-2.7.4
-
+SGkgQmpvcm4sDQoNClRoYW5rcyBhIGxvdCBmb3IgeW91ciBjb21tZW50cyENCg0KPiAtLS0tLU9y
+aWdpbmFsIE1lc3NhZ2UtLS0tLQ0KPiBGcm9tOiBCam9ybiBIZWxnYWFzIFttYWlsdG86aGVsZ2Fh
+c0BrZXJuZWwub3JnXQ0KPiBTZW50OiAyMDE5xOoz1MIxMcjVIDIyOjA4DQo+IFRvOiBaLnEuIEhv
+dSA8emhpcWlhbmcuaG91QG54cC5jb20+DQo+IENjOiBsaW51eC1wY2lAdmdlci5rZXJuZWwub3Jn
+OyBsaW51eC1hcm0ta2VybmVsQGxpc3RzLmluZnJhZGVhZC5vcmc7DQo+IGRldmljZXRyZWVAdmdl
+ci5rZXJuZWwub3JnOyBsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnOw0KPiByb2JoK2R0QGtl
+cm5lbC5vcmc7IG1hcmsucnV0bGFuZEBhcm0uY29tOyBsLnN1YnJhaG1hbnlhQG1vYml2ZWlsLmNv
+LmluOw0KPiBzaGF3bmd1b0BrZXJuZWwub3JnOyBMZW8gTGkgPGxlb3lhbmcubGlAbnhwLmNvbT47
+DQo+IGxvcmVuem8ucGllcmFsaXNpQGFybS5jb207IGNhdGFsaW4ubWFyaW5hc0Bhcm0uY29tOw0K
+PiB3aWxsLmRlYWNvbkBhcm0uY29tOyBNLmguIExpYW4gPG1pbmdodWFuLmxpYW5AbnhwLmNvbT47
+IFhpYW93ZWkgQmFvDQo+IDx4aWFvd2VpLmJhb0BueHAuY29tPjsgTWluZ2thaSBIdSA8bWluZ2th
+aS5odUBueHAuY29tPg0KPiBTdWJqZWN0OiBSZTogW1BBVENIdjQgMTAvMjhdIFBDSTogbW9iaXZl
+aWw6IGZpeCB0aGUgSU5UeCBwcm9jZXNzIGVycm9yDQo+IA0KPiBPbiBNb24sIE1hciAxMSwgMjAx
+OSBhdCAwOTozMToxNkFNICswMDAwLCBaLnEuIEhvdSB3cm90ZToNCj4gPiBGcm9tOiBIb3UgWmhp
+cWlhbmcgPFpoaXFpYW5nLkhvdUBueHAuY29tPg0KPiA+DQo+ID4gSW4gdGhlIGxvb3AgYmxvY2ss
+IHRoZXJlIGlzIG5vdCBjb2RlIGNoYW5nZSB0aGUgbG9vcCBrZXksIHRoaXMgcGF0Y2gNCj4gPiB1
+cGRhdGVkIHRoZSBsb29wIGtleSBieSByZS1yZWFkIHRoZSBJTlR4IHN0YXR1cyByZWdpc3Rlci4N
+Cj4gPg0KPiA+IFRoaXMgcGF0Y2ggYWxzbyBjaGFuZ2UgdG8gY2xlYXIgdGhlIGhhbmRsZWQgSU5U
+eCBzdGF0dXMuDQo+ID4NCj4gPiBOb3RlOiBOZWVkIE1WIHRvIHRlc3QgdGhpcyBmaXguDQo+ID4N
+Cj4gPiBGaXhlczogOWFmNmJjYjExZTEyICgiUENJOiBtb2JpdmVpbDogQWRkIE1vYml2ZWlsIFBD
+SWUgSG9zdCBCcmlkZ2UgSVANCj4gPiBkcml2ZXIiKQ0KPiANCj4gVGhlICJGaXhlczoiIGxpbmUg
+c2hvdWxkIGJlIGFsbCBvbiBvbmUgbGluZSwgd2l0aG91dCBhIG5ld2xpbmUgaW4gdGhlIG1pZGRs
+ZSwNCj4gZXZlbiBpZiBpdCBleGNlZWRzIDgwIGNvbHVtbnMuICBUaGF0J3MganVzdCB0byBtYWtl
+IGl0IGVhc2llciBmb3IgcHJvZ3JhbXMgdG8NCj4gcGFyc2UgdGhlIGxvZ3MuDQoNCldpbGwgZml4
+IGluIHY1Lg0KDQpUaGFua3MsDQpaaGlxaWFuZw0K
