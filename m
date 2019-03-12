@@ -4,49 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C9CF5C43381
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 18:11:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4CBDCC43381
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 18:11:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8E920205C9
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 18:11:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id ECCC0205C9
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 18:11:41 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1552414291;
-	bh=frMGLSDIt0EFRHP5EAgm4ASXqeRu6y+CQHOm3ajtv3o=;
+	s=default; t=1552414302;
+	bh=YErT1KwjE5QQt6aJnskbcVsSmAHNwaqf1qXzXPPPWJQ=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=mBPMQuZVPbJI/2/vh+hzhm1qkNnDGSjDHVPq9Sz9FZaIA55nKs9ULZOkelrX75gMq
-	 eSFpBIeIuhESeu6ij65jgllAl6T7W+8F4pICjp7Kn24eehSW1qKx7A1mTQEop4p4Fy
-	 A21n7NtgKyr+PJCbiZhYLJhai417YV0nrGaLJg5c=
+	b=HaF+yE1ZQnOOmVwdyYz5yEU9GqZ6dDR14V9ugoUCGtg+S00shRyKyX4N9r4cUSIvq
+	 rnw+03EHzZVYvnH0xDMWEvMLW+IXtp/l0UsaApv30Gt3thOTPRjZhNPWjMG2CgR0HN
+	 6t7keLGHzPm9wMjmhj9B7DHE61QPF0hOKTtkgiYQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727875AbfCLSL3 (ORCPT
+        id S1727034AbfCLSLk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 12 Mar 2019 14:11:29 -0400
-Received: from mail.kernel.org ([198.145.29.99]:45342 "EHLO mail.kernel.org"
+        Tue, 12 Mar 2019 14:11:40 -0400
+Received: from mail.kernel.org ([198.145.29.99]:45320 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727034AbfCLRLj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 12 Mar 2019 13:11:39 -0400
+        id S1727030AbfCLRLi (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 12 Mar 2019 13:11:38 -0400
 Received: from localhost (unknown [104.133.8.98])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 38D0A21741;
-        Tue, 12 Mar 2019 17:11:38 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 789A62173C;
+        Tue, 12 Mar 2019 17:11:37 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1552410698;
-        bh=frMGLSDIt0EFRHP5EAgm4ASXqeRu6y+CQHOm3ajtv3o=;
+        s=default; t=1552410697;
+        bh=YErT1KwjE5QQt6aJnskbcVsSmAHNwaqf1qXzXPPPWJQ=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=ydf1MMwnSdIhKPZrUxxzYmBgEOBn/af9LnC9doS+pZYe+9RxchZqEqw2rmW1cbxjI
-         8UBrOf5gO0s5CtuRluK5xOv2QDcO4oY3lYVY3Nc6+nFSi0ZAt1cCWtHvCv/Tf9o54r
-         Ue5KIjyNr/6fXw2xx0JtfEUkyWGCm6hClc/ttsjs=
+        b=ySd9M0vg9637HwZLQgG57Be2ii5vNu6S0cyCT90Rkv/e6zjVTI1agvXy1VJKoFb/E
+         4AM2VZrDxSJ9//E9Anc9UqLzTHCXL89QY3XU3lF/tqJQa4k92qJcW9dId8fwabRGqD
+         14swjl4OSeIcdMkx+WdPEqp5maB0ZbRoocswryYY=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         stable@vger.kernel.org,
         "Peter Zijlstra (Intel)" <peterz@infradead.org>,
         Thomas Gleixner <tglx@linutronix.de>
-Subject: [PATCH 5.0 25/25] perf/x86/intel: Implement support for TSX Force Abort
-Date:   Tue, 12 Mar 2019 10:09:03 -0700
-Message-Id: <20190312170405.612480217@linuxfoundation.org>
+Subject: [PATCH 5.0 24/25] x86: Add TSX Force Abort CPUID/MSR
+Date:   Tue, 12 Mar 2019 10:09:02 -0700
+Message-Id: <20190312170405.516113706@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190312170403.643852550@linuxfoundation.org>
 References: <20190312170403.643852550@linuxfoundation.org>
@@ -67,178 +68,47 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: "Peter Zijlstra (Intel)" <peterz@infradead.org>
 
-Skylake (and later) will receive a microcode update to address a TSX
-errata. This microcode will, on execution of a TSX instruction
-(speculative or not) use (clobber) PMC3. This update will also provide
-a new MSR to change this behaviour along with a CPUID bit to enumerate
-the presence of this new MSR.
+Skylake systems will receive a microcode update to address a TSX
+errata. This microcode will (by default) clobber PMC3 when TSX
+instructions are (speculatively or not) executed.
 
-When the MSR gets set; the microcode will no longer use PMC3 but will
-Force Abort every TSX transaction (upon executing COMMIT).
+It also provides an MSR to cause all TSX transaction to abort and
+preserve PMC3.
 
-When TSX Force Abort (TFA) is allowed (default); the MSR gets set when
-PMC3 gets scheduled and cleared when, after scheduling, PMC3 is
-unused.
-
-When TFA is not allowed; clear PMC3 from all constraints such that it
-will not get used.
+Add the CPUID enumeration and MSR definition.
 
 Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
 Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- arch/x86/events/intel/core.c |   74 +++++++++++++++++++++++++++++++++++++++++--
- arch/x86/events/perf_event.h |    6 +++
- 2 files changed, 77 insertions(+), 3 deletions(-)
+ arch/x86/include/asm/cpufeatures.h |    1 +
+ arch/x86/include/asm/msr-index.h   |    6 ++++++
+ 2 files changed, 7 insertions(+)
 
---- a/arch/x86/events/intel/core.c
-+++ b/arch/x86/events/intel/core.c
-@@ -1999,6 +1999,39 @@ static void intel_pmu_nhm_enable_all(int
- 	intel_pmu_enable_all(added);
- }
+--- a/arch/x86/include/asm/cpufeatures.h
++++ b/arch/x86/include/asm/cpufeatures.h
+@@ -344,6 +344,7 @@
+ /* Intel-defined CPU features, CPUID level 0x00000007:0 (EDX), word 18 */
+ #define X86_FEATURE_AVX512_4VNNIW	(18*32+ 2) /* AVX-512 Neural Network Instructions */
+ #define X86_FEATURE_AVX512_4FMAPS	(18*32+ 3) /* AVX-512 Multiply Accumulation Single precision */
++#define X86_FEATURE_TSX_FORCE_ABORT	(18*32+13) /* "" TSX_FORCE_ABORT */
+ #define X86_FEATURE_PCONFIG		(18*32+18) /* Intel PCONFIG */
+ #define X86_FEATURE_SPEC_CTRL		(18*32+26) /* "" Speculation Control (IBRS + IBPB) */
+ #define X86_FEATURE_INTEL_STIBP		(18*32+27) /* "" Single Thread Indirect Branch Predictors */
+--- a/arch/x86/include/asm/msr-index.h
++++ b/arch/x86/include/asm/msr-index.h
+@@ -666,6 +666,12 @@
  
-+static void intel_set_tfa(struct cpu_hw_events *cpuc, bool on)
-+{
-+	u64 val = on ? MSR_TFA_RTM_FORCE_ABORT : 0;
-+
-+	if (cpuc->tfa_shadow != val) {
-+		cpuc->tfa_shadow = val;
-+		wrmsrl(MSR_TSX_FORCE_ABORT, val);
-+	}
-+}
-+
-+static void intel_tfa_commit_scheduling(struct cpu_hw_events *cpuc, int idx, int cntr)
-+{
-+	/*
-+	 * We're going to use PMC3, make sure TFA is set before we touch it.
-+	 */
-+	if (cntr == 3 && !cpuc->is_fake)
-+		intel_set_tfa(cpuc, true);
-+}
-+
-+static void intel_tfa_pmu_enable_all(int added)
-+{
-+	struct cpu_hw_events *cpuc = this_cpu_ptr(&cpu_hw_events);
-+
-+	/*
-+	 * If we find PMC3 is no longer used when we enable the PMU, we can
-+	 * clear TFA.
-+	 */
-+	if (!test_bit(3, cpuc->active_mask))
-+		intel_set_tfa(cpuc, false);
-+
-+	intel_pmu_enable_all(added);
-+}
-+
- static void enable_counter_freeze(void)
- {
- 	update_debugctlmsr(get_debugctlmsr() |
-@@ -3354,6 +3387,26 @@ glp_get_event_constraints(struct cpu_hw_
- 	return c;
- }
+ #define MSR_IA32_TSC_DEADLINE		0x000006E0
  
-+static bool allow_tsx_force_abort = true;
 +
-+static struct event_constraint *
-+tfa_get_event_constraints(struct cpu_hw_events *cpuc, int idx,
-+			  struct perf_event *event)
-+{
-+	struct event_constraint *c = hsw_get_event_constraints(cpuc, idx, event);
++#define MSR_TSX_FORCE_ABORT		0x0000010F
 +
-+	/*
-+	 * Without TFA we must not use PMC3.
-+	 */
-+	if (!allow_tsx_force_abort && test_bit(3, c->idxmsk)) {
-+		c = dyn_constraint(cpuc, c, idx);
-+		c->idxmsk64 &= ~(1ULL << 3);
-+		c->weight--;
-+	}
++#define MSR_TFA_RTM_FORCE_ABORT_BIT	0
++#define MSR_TFA_RTM_FORCE_ABORT		BIT_ULL(MSR_TFA_RTM_FORCE_ABORT_BIT)
 +
-+	return c;
-+}
-+
- /*
-  * Broadwell:
-  *
-@@ -3448,13 +3501,15 @@ int intel_cpuc_prepare(struct cpu_hw_eve
- 			goto err;
- 	}
- 
--	if (x86_pmu.flags & PMU_FL_EXCL_CNTRS) {
-+	if (x86_pmu.flags & (PMU_FL_EXCL_CNTRS | PMU_FL_TFA)) {
- 		size_t sz = X86_PMC_IDX_MAX * sizeof(struct event_constraint);
- 
- 		cpuc->constraint_list = kzalloc_node(sz, GFP_KERNEL, cpu_to_node(cpu));
- 		if (!cpuc->constraint_list)
- 			goto err_shared_regs;
-+	}
- 
-+	if (x86_pmu.flags & PMU_FL_EXCL_CNTRS) {
- 		cpuc->excl_cntrs = allocate_excl_cntrs(cpu);
- 		if (!cpuc->excl_cntrs)
- 			goto err_constraint_list;
-@@ -3564,9 +3619,10 @@ static void free_excl_cntrs(struct cpu_h
- 		if (c->core_id == -1 || --c->refcnt == 0)
- 			kfree(c);
- 		cpuc->excl_cntrs = NULL;
--		kfree(cpuc->constraint_list);
--		cpuc->constraint_list = NULL;
- 	}
-+
-+	kfree(cpuc->constraint_list);
-+	cpuc->constraint_list = NULL;
- }
- 
- static void intel_pmu_cpu_dying(int cpu)
-@@ -4086,8 +4142,11 @@ static struct attribute *intel_pmu_caps_
-        NULL
- };
- 
-+DEVICE_BOOL_ATTR(allow_tsx_force_abort, 0644, allow_tsx_force_abort);
-+
- static struct attribute *intel_pmu_attrs[] = {
- 	&dev_attr_freeze_on_smi.attr,
-+	NULL, /* &dev_attr_allow_tsx_force_abort.attr.attr */
- 	NULL,
- };
- 
-@@ -4580,6 +4639,15 @@ __init int intel_pmu_init(void)
- 		tsx_attr = hsw_tsx_events_attrs;
- 		intel_pmu_pebs_data_source_skl(
- 			boot_cpu_data.x86_model == INTEL_FAM6_SKYLAKE_X);
-+
-+		if (boot_cpu_has(X86_FEATURE_TSX_FORCE_ABORT)) {
-+			x86_pmu.flags |= PMU_FL_TFA;
-+			x86_pmu.get_event_constraints = tfa_get_event_constraints;
-+			x86_pmu.enable_all = intel_tfa_pmu_enable_all;
-+			x86_pmu.commit_scheduling = intel_tfa_commit_scheduling;
-+			intel_pmu_attrs[1] = &dev_attr_allow_tsx_force_abort.attr.attr;
-+		}
-+
- 		pr_cont("Skylake events, ");
- 		name = "skylake";
- 		break;
---- a/arch/x86/events/perf_event.h
-+++ b/arch/x86/events/perf_event.h
-@@ -243,6 +243,11 @@ struct cpu_hw_events {
- 	int excl_thread_id; /* 0 or 1 */
- 
- 	/*
-+	 * SKL TSX_FORCE_ABORT shadow
-+	 */
-+	u64				tfa_shadow;
-+
-+	/*
- 	 * AMD specific bits
- 	 */
- 	struct amd_nb			*amd_nb;
-@@ -681,6 +686,7 @@ do {									\
- #define PMU_FL_EXCL_CNTRS	0x4 /* has exclusive counter requirements  */
- #define PMU_FL_EXCL_ENABLED	0x8 /* exclusive counter active */
- #define PMU_FL_PEBS_ALL		0x10 /* all events are valid PEBS events */
-+#define PMU_FL_TFA		0x20 /* deal with TSX force abort */
- 
- #define EVENT_VAR(_id)  event_attr_##_id
- #define EVENT_PTR(_id) &event_attr_##_id.attr.attr
+ /* P4/Xeon+ specific */
+ #define MSR_IA32_MCG_EAX		0x00000180
+ #define MSR_IA32_MCG_EBX		0x00000181
 
 
