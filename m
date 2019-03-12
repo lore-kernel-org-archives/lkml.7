@@ -2,87 +2,132 @@ Return-Path: <SRS0=J4ZE=RP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_NEOMUTT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 92161C43381
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 08:07:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E8A99C43381
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 08:07:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6AD9D214D8
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 08:07:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B1E3D214AE
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 08:07:51 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1552378071;
+	bh=Tvjet4ftyHbZxfuOm8lUk4sy6NygoiCOBU/oc/z3J0k=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=Ho/DyOGba7vR1k35rFC19id9yhWmmlxtf8pPofVVAGYN2WRpBZZYho68TdHN2LPhI
+	 WKMu93T1OF9OwDPqMa/aCXqx15P4bmDaiX0dblcEEo6rhxKjO0d0+9pQx7Lsl1bk+6
+	 BQo204FtZBsTswXXiTGDwxplYGjc1aVc+b8pVElQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727532AbfCLIHK (ORCPT
+        id S1727541AbfCLIHu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 12 Mar 2019 04:07:10 -0400
-Received: from relay8-d.mail.gandi.net ([217.70.183.201]:48827 "EHLO
-        relay8-d.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726714AbfCLIHK (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 12 Mar 2019 04:07:10 -0400
-X-Originating-IP: 90.88.150.179
-Received: from localhost (aaubervilliers-681-1-31-179.w90-88.abo.wanadoo.fr [90.88.150.179])
-        (Authenticated sender: maxime.ripard@bootlin.com)
-        by relay8-d.mail.gandi.net (Postfix) with ESMTPSA id 106441BF204;
-        Tue, 12 Mar 2019 08:07:04 +0000 (UTC)
-Date:   Tue, 12 Mar 2019 09:07:04 +0100
-From:   Maxime Ripard <maxime.ripard@bootlin.com>
-To:     Kangjie Lu <kjlu@umn.edu>
-Cc:     pakki001@umn.edu, Giuseppe Cavallaro <peppe.cavallaro@st.com>,
-        Alexandre Torgue <alexandre.torgue@st.com>,
-        Jose Abreu <joabreu@synopsys.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        Chen-Yu Tsai <wens@csie.org>,
-        Maxime Coquelin <mcoquelin.stm32@gmail.com>,
-        netdev@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-stm32@st-md-mailman.stormreply.com,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] net: dwmac-sun8i: fix a missing check of of_get_phy_mode
-Message-ID: <20190312080704.jjzv62qsrtcje7gd@flea>
-References: <20190312075040.32115-1-kjlu@umn.edu>
+        Tue, 12 Mar 2019 04:07:50 -0400
+Received: from mx2.suse.de ([195.135.220.15]:42968 "EHLO mx1.suse.de"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1725906AbfCLIHt (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 12 Mar 2019 04:07:49 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx1.suse.de (Postfix) with ESMTP id A97BEB609;
+        Tue, 12 Mar 2019 08:07:47 +0000 (UTC)
+Date:   Tue, 12 Mar 2019 09:07:46 +0100
+From:   Michal Hocko <mhocko@kernel.org>
+To:     Pi-Hsun Shih <pihsun@chromium.org>
+Cc:     Andrew Morton <akpm@linux-foundation.org>,
+        Matthew Wilcox <willy@infradead.org>,
+        Johannes Weiner <hannes@cmpxchg.org>,
+        Vlastimil Babka <vbabka@suse.cz>,
+        Minchan Kim <minchan@kernel.org>,
+        Omar Sandoval <osandov@fb.com>,
+        Huang Ying <ying.huang@intel.com>, Tejun Heo <tj@kernel.org>,
+        Wei Yang <richard.weiyang@gmail.com>,
+        open list <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH] mm/swap: Avoid undefined behavior in __swapoffset
+Message-ID: <20190312080746.GF5721@dhcp22.suse.cz>
+References: <20190307094653.119425-1-pihsun@chromium.org>
+ <20190307122313.GA30234@dhcp22.suse.cz>
+ <CANdKZ0ez+y1rCEGszqzJp4Oz94dMpTF6NCR11yGVZaJyM1ZD4A@mail.gmail.com>
+ <20190307132353.GB30234@dhcp22.suse.cz>
+ <CANdKZ0fgLLPyY8CatjFHMFfwAwSq1T77=aGFc+-ZLEpVdm=hLQ@mail.gmail.com>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="mqil5gvgnush4ee5"
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20190312075040.32115-1-kjlu@umn.edu>
-User-Agent: NeoMutt/20180716
+In-Reply-To: <CANdKZ0fgLLPyY8CatjFHMFfwAwSq1T77=aGFc+-ZLEpVdm=hLQ@mail.gmail.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Tue 12-03-19 15:02:38, Pi-Hsun Shih wrote:
+> On Thu, Mar 7, 2019 at 9:23 PM Michal Hocko <mhocko@kernel.org> wrote:
+> >
+> > On Thu 07-03-19 20:47:52, Pi-Hsun Shih wrote:
+> > > On Thu, Mar 7, 2019 at 8:23 PM Michal Hocko <mhocko@kernel.org> wrote:
+> > > >
+> > > > On Thu 07-03-19 17:46:50, Pi-Hsun Shih wrote:
+> > > > > Use offsetof to calculate offset of a field to avoid UBSAN warning like:
+> > > > >
+> > > > > ===================================================================
+> > > > > UBSAN: Undefined behaviour in mm/swapfile.c:3010:38
+> > > > > member access within null pointer of type 'union swap_header'
+> > > > > CPU: 6 PID: 1833 Comm: swapon Tainted: G S                4.19.23 #43
+> > > > > Call trace:
+> > > > >  dump_backtrace+0x0/0x194
+> > > > >  show_stack+0x20/0x2c
+> > > > >  __dump_stack+0x20/0x28
+> > > > >  dump_stack+0x70/0x94
+> > > > >  ubsan_epilogue+0x14/0x44
+> > > > >  ubsan_type_mismatch_common+0xf4/0xfc
+> > > > >  __ubsan_handle_type_mismatch_v1+0x34/0x54
+> > > > >  __se_sys_swapon+0x654/0x1084
+> > > > >  __arm64_sys_swapon+0x1c/0x24
+> > > > >  el0_svc_common+0xa8/0x150
+> > > > >  el0_svc_compat_handler+0x2c/0x38
+> > > > >  el0_svc_compat+0x8/0x18
+> > > > > ==================================================================
+> > > >
+> > > > Could you be more specific about what exactly is undefined here and
+> > > > why offsetof is any better. AFAIR it uses the same construct unless a
+> > > > compiler defines a built in.
+> > > >
+> > > > I do not object the change itself because it is cleaner to use the
+> > > > existing helper but I am wondering why this is fixing ubsan. Is ubsan
+> > > > defining the compiler variant and consider it safe?
+> > > >
+> > >
+> > > The undefined behavior is from trying to accessing a member of NULL,
+> > > even not using it value but only use the address.
+> >
+> > Hmm, we've been using this trick for ages and I do not remember any
+> > compiler to complain as there is no real access. I am not sure what the
+> > C standard has to tell about that but I presume reasonable compilers
+> > will not abuse the UB here.
+> >
+> 
+> Some more testing shows that GCC optimize the
+> ((size_t)&((type*)0)->member) to a constant in the result binary, and
+> never emit any UBSAN checks on the statement.
+> Clang doesn't optimize it to a constant in -O0, optimize it to a
+> constant in -O1 or above, and always emit the
+> __ubsan_handle_type_mismatch check when "-fsanitize=undefined" is
+> given.
+> So this UBSAN warning only happens when kernel is compiled by clang, not GCC.
+> 
+> From what I've found, it's a UB from C standard view point
+> (https://software.intel.com/en-us/blogs/2015/04/20/null-pointer-dereferencing-causes-undefined-behavior),
+> but I agree that probably no reasonable compilers would abuse the UB
+> here.
 
---mqil5gvgnush4ee5
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+I really do not want to go and lawyering about the standard here but
+getting an address of an offset based on NULL ptr is not really
+dereferencing of a NULL ptr. At least this was not the case for ages
+and no compiler can afford to change it because there is quite a lot of
+userspace to rely on this construct.
 
-On Tue, Mar 12, 2019 at 02:50:40AM -0500, Kangjie Lu wrote:
-> of_get_phy_mode may fail and return a negative error code;
-> the fix checks the return value of of_get_phy_mode and
-> returns -EINVAL of it fails.
->=20
-> Signed-off-by: Kangjie Lu <kjlu@umn.edu>
-
-Acked-by: Maxime Ripard <maxime.ripard@bootlin.com>
-
-Thanks!
-Maxime
-
---=20
-Maxime Ripard, Bootlin
-Embedded Linux and Kernel engineering
-https://bootlin.com
-
---mqil5gvgnush4ee5
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iHUEABYIAB0WIQRcEzekXsqa64kGDp7j7w1vZxhRxQUCXIdoqAAKCRDj7w1vZxhR
-xcMUAPsGMGKv+6UsUy6tuiVORbIt7imnYRlNhwI6m9mlLPLZfgEA6zrDadYI0wyC
-4KgOSMsMnF5zZKMm0854otRXGbEEogQ=
-=LZgo
------END PGP SIGNATURE-----
-
---mqil5gvgnush4ee5--
+But as I've said using offseoff is nicer so I completely support a patch
+that get's read of a custom redefinition of it or open code directly.
+But calling it an UB is a bit of stretch.
+-- 
+Michal Hocko
+SUSE Labs
