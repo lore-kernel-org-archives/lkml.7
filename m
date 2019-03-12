@@ -2,127 +2,91 @@ Return-Path: <SRS0=J4ZE=RP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 47CEEC43381
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 08:15:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 18E88C43381
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 08:18:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 04329214AE
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 08:15:40 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=umn.edu header.i=@umn.edu header.b="LaQ/m0r8"
+	by mail.kernel.org (Postfix) with ESMTP id E55242147C
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 08:18:06 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727419AbfCLIPi (ORCPT
+        id S1727498AbfCLISF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 12 Mar 2019 04:15:38 -0400
-Received: from mta-p6.oit.umn.edu ([134.84.196.206]:47578 "EHLO
-        mta-p6.oit.umn.edu" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725832AbfCLIPh (ORCPT
+        Tue, 12 Mar 2019 04:18:05 -0400
+Received: from outbound.smtp.vt.edu ([198.82.183.121]:43468 "EHLO
+        omr1.cc.vt.edu" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1726218AbfCLISE (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 12 Mar 2019 04:15:37 -0400
-Received: from localhost (unknown [127.0.0.1])
-        by mta-p6.oit.umn.edu (Postfix) with ESMTP id 15149B5C
-        for <linux-kernel@vger.kernel.org>; Tue, 12 Mar 2019 08:15:36 +0000 (UTC)
-X-Virus-Scanned: amavisd-new at umn.edu
-Received: from mta-p6.oit.umn.edu ([127.0.0.1])
-        by localhost (mta-p6.oit.umn.edu [127.0.0.1]) (amavisd-new, port 10024)
-        with ESMTP id pkvbLE6kC99g for <linux-kernel@vger.kernel.org>;
-        Tue, 12 Mar 2019 03:15:35 -0500 (CDT)
-Received: from mail-io1-f72.google.com (mail-io1-f72.google.com [209.85.166.72])
-        (using TLSv1.2 with cipher AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mta-p6.oit.umn.edu (Postfix) with ESMTPS id DDF20B3D
-        for <linux-kernel@vger.kernel.org>; Tue, 12 Mar 2019 03:15:35 -0500 (CDT)
-Received: by mail-io1-f72.google.com with SMTP id p143so1232157iod.19
-        for <linux-kernel@vger.kernel.org>; Tue, 12 Mar 2019 01:15:35 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=umn.edu; s=google;
-        h=from:to:cc:subject:date:message-id;
-        bh=D52gZKic/kaXc1i1hUThp3TEp/h/NmLMpSvJunvUEZw=;
-        b=LaQ/m0r8sDi26ETNVkiPDhcpxYotjlJesrU9Y9Nv/2cSxiN6NmdeobHZtZKb2JeKoR
-         f49xGy7BfgfZX3nu7gWXRI9SpSTQchlQ3Nj4xnsMOzBjQ83bt/Y+DtQyooCdTDQIcoHs
-         tCQJ+2fbSL1nf3gnOvmeWdiPDjOGEagAFtHq2JQlqZhAibIIlCb6UiY6j1DHXYOKneKj
-         yCiPljolxWgBc7XJt7bUdLbsfvUnGGVBJwk4TzkdL6kBSsUox3a6KpksqYTzCqjU70Ep
-         uCdWyeB+44gCjXnEFVrYBCfE8BtXBOKdMxV+5d826FbKtzxQSkb3zrxqP1WaZFM1jCkG
-         rkEQ==
+        Tue, 12 Mar 2019 04:18:04 -0400
+Received: from mr6.cc.vt.edu (mr6.cc.ipv6.vt.edu [IPv6:2607:b400:92:8500:0:af:2d00:4488])
+        by omr1.cc.vt.edu (8.14.4/8.14.4) with ESMTP id x2C8I3Hj007567
+        for <linux-kernel@vger.kernel.org>; Tue, 12 Mar 2019 04:18:03 -0400
+Received: from mail-qk1-f198.google.com (mail-qk1-f198.google.com [209.85.222.198])
+        by mr6.cc.vt.edu (8.14.7/8.14.7) with ESMTP id x2C8HwQr025117
+        for <linux-kernel@vger.kernel.org>; Tue, 12 Mar 2019 04:18:03 -0400
+Received: by mail-qk1-f198.google.com with SMTP id x63so1549896qka.5
+        for <linux-kernel@vger.kernel.org>; Tue, 12 Mar 2019 01:18:03 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id;
-        bh=D52gZKic/kaXc1i1hUThp3TEp/h/NmLMpSvJunvUEZw=;
-        b=rdIG2t7cSKN952D4LmDUX/hlljziBKIHqdOiKC/VwWrzUkpyoGWdR/WLPVu27ZkW5k
-         0H1mrgLPFlmsqRkqdEl0bACHIEtFj0APffPe2Z34VeyU1MLVeZS9l0OsKhaGpJd/inSD
-         kVpQrmhKaowvXNgnu7wJgTpslZbY5gJc35TTyQMv3TK0VJ3HyyZdWs9pxS84KGcfpuSk
-         VMPBv1c6en9cmavx220SUrW140bZl4EUSw1lbyuTiaHoUwrrKhO3uh4c0mOLQ9FrTnM4
-         oOjW1uV7JjmWStGnZSHjQFvgphFbFF1z4szL/hrjDg9pypAcLkdcU/aZLip8q/k/DR5J
-         TV7A==
-X-Gm-Message-State: APjAAAU8XaT2C3K+17FiB/fMd0cH+BeFrflpd6SaJ84H0jQ/TkRTZSVf
-        zXDx+sLfhoVXnr5YvX+TYKEjzW5LiY2/vLkQ1gku7DenJicqvwTjaQJkKlglWlg0TdPiBLQzpyR
-        Tjuvy1mPpEYyfbRYfHY4XjV2YzjKL
-X-Received: by 2002:a24:3ac5:: with SMTP id m188mr1238456itm.109.1552378535386;
-        Tue, 12 Mar 2019 01:15:35 -0700 (PDT)
-X-Google-Smtp-Source: APXvYqwyR42N2k5Bx5GvyqkcRoP2BgeZvHfzqloKG6zHV23b+KTF+R7ReuZI34beY/yRk53/KQy2bg==
-X-Received: by 2002:a24:3ac5:: with SMTP id m188mr1238445itm.109.1552378535113;
-        Tue, 12 Mar 2019 01:15:35 -0700 (PDT)
-Received: from bee.dtc.umn.edu (cs-bee-u.cs.umn.edu. [128.101.106.63])
-        by smtp.gmail.com with ESMTPSA id z24sm3238862ioi.67.2019.03.12.01.15.33
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Tue, 12 Mar 2019 01:15:34 -0700 (PDT)
-From:   Kangjie Lu <kjlu@umn.edu>
-To:     kjlu@umn.edu
-Cc:     pakki001@umn.edu, Dan Williams <dan.j.williams@intel.com>,
-        Ross Zwisler <zwisler@kernel.org>,
-        Vishal Verma <vishal.l.verma@intel.com>,
-        Dave Jiang <dave.jiang@intel.com>, linux-nvdimm@lists.01.org,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH] nvdimm: btt_devs: fix a NULL pointer dereference and a memory leak
-Date:   Tue, 12 Mar 2019 03:15:29 -0500
-Message-Id: <20190312081529.4889-1-kjlu@umn.edu>
-X-Mailer: git-send-email 2.17.1
+        h=x-gm-message-state:sender:from:to:cc:subject:mime-version:date
+         :message-id;
+        bh=a5fefyGPzt6Suby/X7/1ngqQeRywBmqZs9LR1l3n53c=;
+        b=py8hODrzySkC4tlsE36TdJjVRLRcOlqpUr96ktk53zNQcUu7ZT5tuV3Ol71wlD8epc
+         gTjCljmKfJYP3TUw4aG8isi4Uz9kB4dWOhit5hiNjxr3FB6Vb0WhplXqhlOI8WJmT6Rk
+         vVAfb6vb0E0jkhE9pbxeYpTb582PsGELFIKNhebr7QjEt7dm57ROgXocFQMgpuRoJrzR
+         23a9r3lRsOcF5mjpdscnTlRZip9+S03ZWCRPC3+NBi6/9i2BF1nFIfr+lhtp1MW+Gyw4
+         R0EBzr8g5xzgGBlAZPPh+sAcGO77M23nfw8vKKMAbUf2abofAkfNkrWLHbzoYKezQTiv
+         r9CQ==
+X-Gm-Message-State: APjAAAU/fMaB5k89g1S894MpOlLOSHR46G6bmL6zo1pxPEowg9AgtjRW
+        0lZyiz7QK7y2gLyd+7UV7b8H+dd/DLztj0r9x4LrSNsuOJuGTcl+DDXDMZogpC80yjkn2NL26hv
+        0EuzrRCwaiT+lzka35TP/43yUxB0yTEbS974=
+X-Received: by 2002:ac8:148b:: with SMTP id l11mr27844534qtj.290.1552378678196;
+        Tue, 12 Mar 2019 01:17:58 -0700 (PDT)
+X-Google-Smtp-Source: APXvYqzD1qYsUVUXSZvX2Hmy2RXMzhpCAE81mNlPPtga3PihkCH/lZ0mYdrwI53rFB6zExNHqtt7lQ==
+X-Received: by 2002:ac8:148b:: with SMTP id l11mr27844528qtj.290.1552378678028;
+        Tue, 12 Mar 2019 01:17:58 -0700 (PDT)
+Received: from turing-police ([2601:5c0:c001:4341::3b7])
+        by smtp.gmail.com with ESMTPSA id s187sm3534657qkh.76.2019.03.12.01.17.56
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Tue, 12 Mar 2019 01:17:56 -0700 (PDT)
+From:   "Valdis Kl=?utf-8?Q?=c4=93?=tnieks" <valdis.kletnieks@vt.edu>
+X-Google-Original-From: "Valdis Kl=?utf-8?Q?=c4=93?=tnieks" <Valdis.Kletnieks@vt.edu>
+X-Mailer: exmh version 2.9.0 11/07/2018 with nmh-1.7+dev
+To:     Thomas Gleixner <tglx@linutronix.de>
+cc:     linux-kernel@vger.kernel.org
+Subject: [PATCH] kernel/irq/devres.c - fix kerneldoc comment
+Mime-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Date:   Tue, 12 Mar 2019 04:17:56 -0400
+Message-ID: <31207.1552378676@turing-police>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-In case kmemdup fails, the fix releases resources and returns to
-avoid the NULL pointer dereference.
-Also, the error paths in the following code should release
-resources to avoid memory leaks.
+Building with 'make W=1' complains:
 
-Signed-off-by: Kangjie Lu <kjlu@umn.edu>
+  CC      kernel/irq/devres.o
+kernel/irq/devres.c:104: warning: Excess function parameter 'thread_fn' description in 'devm_request_any_context_irq'
+
+Fix up the kerneldoc comment
+
+Signed-off-by: Valdis Kletnieks <valdis.kletnieks@vt.edu>
+
 ---
- drivers/nvdimm/btt_devs.c | 8 +++++++-
- 1 file changed, 7 insertions(+), 1 deletion(-)
-
-diff --git a/drivers/nvdimm/btt_devs.c b/drivers/nvdimm/btt_devs.c
-index 795ad4ff35ca..565ea0b6f765 100644
---- a/drivers/nvdimm/btt_devs.c
-+++ b/drivers/nvdimm/btt_devs.c
-@@ -196,8 +196,13 @@ static struct device *__nd_btt_create(struct nd_region *nd_region,
- 	}
- 
- 	nd_btt->lbasize = lbasize;
--	if (uuid)
-+	if (uuid) {
- 		uuid = kmemdup(uuid, 16, GFP_KERNEL);
-+		if (!uuid) {
-+			kfree(nd_btt);
-+			return NULL;
-+		}
-+	}
- 	nd_btt->uuid = uuid;
- 	dev = &nd_btt->dev;
- 	dev_set_name(dev, "btt%d.%d", nd_region->id, nd_btt->id);
-@@ -209,6 +214,7 @@ static struct device *__nd_btt_create(struct nd_region *nd_region,
- 		dev_dbg(&ndns->dev, "failed, already claimed by %s\n",
- 				dev_name(ndns->claim));
- 		put_device(dev);
-+		kfree(uuid);
- 		return NULL;
- 	}
- 	return dev;
--- 
-2.17.1
+diff --git a/kernel/irq/devres.c b/kernel/irq/devres.c
+index 5d5378ea0afe..f808c6a97dcc 100644
+--- a/kernel/irq/devres.c
++++ b/kernel/irq/devres.c
+@@ -84,8 +84,6 @@ EXPORT_SYMBOL(devm_request_threaded_irq);
+  *	@dev: device to request interrupt for
+  *	@irq: Interrupt line to allocate
+  *	@handler: Function to be called when the IRQ occurs
+- *	@thread_fn: function to be called in a threaded interrupt context. NULL
+- *		    for devices which handle everything in @handler
+  *	@irqflags: Interrupt type flags
+  *	@devname: An ascii name for the claiming device, dev_name(dev) if NULL
+  *	@dev_id: A cookie passed back to the handler function
 
