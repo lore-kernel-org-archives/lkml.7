@@ -2,169 +2,164 @@ Return-Path: <SRS0=J4ZE=RP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_MUTT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 61A6AC43381
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 15:52:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 98174C43381
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 15:52:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2F2B220693
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 15:52:46 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="cfYw3vGh"
+	by mail.kernel.org (Postfix) with ESMTP id 7336D20693
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 15:52:52 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726528AbfCLPwp (ORCPT
+        id S1726728AbfCLPwv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 12 Mar 2019 11:52:45 -0400
-Received: from mail-pg1-f193.google.com ([209.85.215.193]:36018 "EHLO
-        mail-pg1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725917AbfCLPwo (ORCPT
+        Tue, 12 Mar 2019 11:52:51 -0400
+Received: from bhuna.collabora.co.uk ([46.235.227.227]:60194 "EHLO
+        bhuna.collabora.co.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725917AbfCLPwu (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 12 Mar 2019 11:52:44 -0400
-Received: by mail-pg1-f193.google.com with SMTP id r124so2152326pgr.3
-        for <linux-kernel@vger.kernel.org>; Tue, 12 Mar 2019 08:52:43 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:content-transfer-encoding:in-reply-to
-         :user-agent;
-        bh=kCeY8EfNcf3m/u9+AbfHhmbxZhu8wEhh5kmg/4MjREY=;
-        b=cfYw3vGh3/pbSvCvvdbm4moJ7S0RRKtebTwoAZfGcmlzGVZoGTMnilBFttRXFAitWP
-         t2ohR1fVZ/4OgN15kD2EHJFmJA13DA1HZeq9sE9uxCL2Hu6p8mgcBZ3Z0WVwZAF5s1qO
-         wFnaWThFbDnHmNNZFN1E1rvHVhzk0oXrTfC3A=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:content-transfer-encoding
-         :in-reply-to:user-agent;
-        bh=kCeY8EfNcf3m/u9+AbfHhmbxZhu8wEhh5kmg/4MjREY=;
-        b=G/YqZO6GGP+yENZihgrK/dmYbAhL2Gn3HPseYTQhjs08Be6C49ZdoxY7thJHGR4APR
-         JIvy83CdZMIcYK9KaEvd862w35b2kkOMdIASR6+gy+GKCgPtQ16xXgPmDtiH5OobvEuQ
-         cTBd/djRs3Nvh9d6K6ETJlCVXNnmVfqN39+Cg0HgfRNPQd4V364oVAKNujge8naDGvhA
-         q8m91t2Zd0k7D4m5tHmmnBgGz7aBJ80BMxeYlTDN2e+15aM9VcjDcgkb42C+akRa1RjJ
-         QifktndFq1RDROiOREcdBJdXyn7GcfgX2vk84J/df+lCyXzbpUrXIvinYOsiJrH5YKur
-         iWiA==
-X-Gm-Message-State: APjAAAVRugU3EFURyhFk40RVyJP+Y3Tgma/7RBemRKcO17gnJFW07iuC
-        Tgt0lfI3oY7i1MoR+3VX73MNQPoVG44=
-X-Google-Smtp-Source: APXvYqxO4GsR18qiIRJjLUhrVVCCfaCQIKYaTitwonLG6N1V7Evu/AvsfiZ9IrMQm7bDQ9xNnSAdGg==
-X-Received: by 2002:a17:902:a5c6:: with SMTP id t6mr11191806plq.221.1552405963491;
-        Tue, 12 Mar 2019 08:52:43 -0700 (PDT)
-Received: from localhost ([2620:15c:202:1:75a:3f6e:21d:9374])
-        by smtp.gmail.com with ESMTPSA id f192sm24494872pfc.180.2019.03.12.08.52.42
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Tue, 12 Mar 2019 08:52:42 -0700 (PDT)
-Date:   Tue, 12 Mar 2019 08:52:41 -0700
-From:   Matthias Kaehlcke <mka@chromium.org>
-To:     rjliao@codeaurora.org
-Cc:     Balakrishna Godavarthi <bgodavar@codeaurora.org>,
-        marcel@holtmann.org, johan.hedberg@gmail.com,
-        linux-kernel@vger.kernel.org, linux-bluetooth@vger.kernel.org,
-        hemantg@codeaurora.org, linux-arm-msm@vger.kernel.org
-Subject: Re: [PATCH v1] Bluetooth: hci_qca: Enable the ldisc for ROME for x86
- platforms.
-Message-ID: <20190312155241.GB200579@google.com>
-References: <20190307101722.25871-1-bgodavar@codeaurora.org>
- <20190307204224.GD138592@google.com>
- <6e0abe10b3ed44053e92ad6a21c75d93@codeaurora.org>
- <20190308185232.GB69116@google.com>
- <1042d21dde881e886541d32b8f0dff63@codeaurora.org>
+        Tue, 12 Mar 2019 11:52:50 -0400
+Received: from localhost (unknown [IPv6:2a01:e0a:2c:6930:5cf4:84a1:2763:fe0d])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        (Authenticated sender: bbrezillon)
+        by bhuna.collabora.co.uk (Postfix) with ESMTPSA id 84B2A26D7C8;
+        Tue, 12 Mar 2019 15:52:46 +0000 (GMT)
+Date:   Tue, 12 Mar 2019 16:52:43 +0100
+From:   Boris Brezillon <boris.brezillon@collabora.com>
+To:     Helen Koike <helen.koike@collabora.com>
+Cc:     dri-devel@lists.freedesktop.org, nicholas.kazlauskas@amd.com,
+        andrey.grodzovsky@amd.com, daniel.vetter@ffwll.ch,
+        linux-kernel@vger.kernel.org, Tomasz Figa <tfiga@chromium.org>,
+        David Airlie <airlied@linux.ie>,
+        Sean Paul <seanpaul@google.com>, kernel@collabora.com,
+        harry.wentland@amd.com,
+        =?UTF-8?B?U3TDqXBoYW5l?= Marchesin <marcheu@google.com>,
+        Sandy Huang <hjc@rock-chips.com>,
+        linux-rockchip@lists.infradead.org,
+        Heiko =?UTF-8?B?U3TDvGJuZXI=?= <heiko@sntech.de>,
+        linux-arm-kernel@lists.infradead.org,
+        Daniel Vetter <daniel@ffwll.ch>
+Subject: Re: [PATCH v2 1/5] drm/rockchip: fix fb references in async update
+Message-ID: <20190312165243.5b771e4a@collabora.com>
+In-Reply-To: <f888a2d0-c6b1-8995-7254-ba2923dd22f9@collabora.com>
+References: <20190312022204.2775-1-helen.koike@collabora.com>
+        <20190312022204.2775-2-helen.koike@collabora.com>
+        <20190312073438.05ad8173@collabora.com>
+        <f888a2d0-c6b1-8995-7254-ba2923dd22f9@collabora.com>
+Organization: Collabora
+X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; x86_64-redhat-linux-gnu)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <1042d21dde881e886541d32b8f0dff63@codeaurora.org>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Rocky,
+On Tue, 12 Mar 2019 12:34:45 -0300
+Helen Koike <helen.koike@collabora.com> wrote:
 
-On Tue, Mar 12, 2019 at 05:01:59PM +0800, rjliao@codeaurora.org wrote:
-> 在 2019-03-09 02:52，Matthias Kaehlcke 写道：
-> > On Fri, Mar 08, 2019 at 10:43:14AM +0530, Balakrishna Godavarthi wrote:
-> > > Hi Matthias,
-> > > 
-> > > On 2019-03-08 02:12, Matthias Kaehlcke wrote:
-> > > > Hi Balakrishna,
-> > > >
-> > > > On Thu, Mar 07, 2019 at 03:47:22PM +0530, Balakrishna Godavarthi wrote:
-> > > > > When using btattach to setup Rome over ldisc we observed a crash
-> > > > > in qca_setup as it will try to access the serdev which is not
-> > > > > available in the ldisc proto. This patch will fix the crash by
-> > > > > support both the ldisc and serdev way in the qca hci_uart driver.
-> > > > >
-> > > > > Signed-off-by: Balakrishna Godavarthi <bgodavar@codeaurora.org>
-> > > >
-> > > > Oh, I wasn't aware of the instantiation through ldisc and was actually
-> > > > considering to *remove* some of the seemingly unnecessary serdev
-> > > > checks.
-> > > >
-> > > > > ---
-> > > > >  drivers/bluetooth/hci_qca.c | 47
-> > > > > ++++++++++++++++++++++---------------
-> > > > >  1 file changed, 28 insertions(+), 19 deletions(-)
-> > > > >
-> > > > > diff --git a/drivers/bluetooth/hci_qca.c b/drivers/bluetooth/hci_qca.c
-> > > > > index 237aea34b69f..0a5c98d46864 100644
-> > > > > --- a/drivers/bluetooth/hci_qca.c
-> > > > > +++ b/drivers/bluetooth/hci_qca.c
-> > > > > @@ -963,7 +963,7 @@ static int qca_set_baudrate(struct hci_dev
-> > > > > *hdev, uint8_t baudrate)
-> > > > >  {
-> > > > >  	struct hci_uart *hu = hci_get_drvdata(hdev);
-> > > > >  	struct qca_data *qca = hu->priv;
-> > > > > -	struct qca_serdev *qcadev;
-> > > > > +	struct qca_serdev *qcadev = NULL;
-> > > >
-> > > > In many cases the only field that is accessed is qcadev->btsoc_type. I
-> > > > think something like 'qca_get_soc_type(struct hci_dev *hdev / struct
-> > > > hci_uart *hu)' would make things more readable.
-> > > >
-> > > [Bala]: sure will update this in other patch once this change is
-> > > landed as
-> > > this has to
-> > >         go in priority as we have crash coming.
+> On 3/12/19 3:34 AM, Boris Brezillon wrote:
+> > On Mon, 11 Mar 2019 23:21:59 -0300
+> > Helen Koike <helen.koike@collabora.com> wrote:
+> >   
+> >> In the case of async update, modifications are done in place, i.e. in the
+> >> current plane state, so the new_state is prepared and the new_state is
+> >> cleanup up (instead of the old_state, diferrently on what happen in a  
 > > 
-> > That's not how things should work, especially for fairly trivial
-> > changes. It requires reviewers to first spent time to review the patch
-> > that adds clutter and later spend more time to review the one that
-> > removes it. It's also easier to get a clean patch merged in the first
-> > place, rather than a noisy one.
+> >   ^ cleaned up				^ differently (but maybe
+> > "unlike what happens" is more appropriate here).
+> >   
+> >> normal sync update).
+> >> To cleanup the old_fb properly, it needs to be placed in the new_state
+> >> in the end of async_update, so cleanup call will unreference the old_fb
+> >> correctly.
+> >>
+> >> Also, the previous code had a:
+> >>
+> >> 	plane_state = plane->funcs->atomic_duplicate_state(plane);
+> >> 	...
+> >> 	swap(plane_state, plane->state);
+> >>
+> >> 	if (plane->state->fb && plane->state->fb != new_state->fb) {
+> >> 	...
+> >> 	}
+> >>
+> >> Which was wrong, as the fb were just assigned to be equal, so this if
+> >> statement nevers evaluates to true.
+> >>
+> >> Another details is that the function drm_crtc_vblank_get() can only be
+> >> called when vop->is_enabled is true, otherwise it has no effect and
+> >> trows a WARN_ON().
+> >>
+> >> Calling drm_atomic_set_fb_for_plane() (which get a referent of the new
+> >> fb and pus the old fb) is not required, as it is taken care by
+> >> drm_mode_cursor_universal() when calling
+> >> drm_atomic_helper_update_plane().
+> >>
+> >> Signed-off-by: Helen Koike <helen.koike@collabora.com>
+> >>
+> >> ---
+> >> Hello,
+> >>
+> >> I tested on the rockchip ficus v1.1 using igt plane_cursor_legacy and
+> >> kms_cursor_legacy and I didn't see any regressions.
+> >>
+> >> Changes in v2: None
+> >>
+> >>  drivers/gpu/drm/rockchip/rockchip_drm_vop.c | 42 ++++++++++++---------
+> >>  1 file changed, 24 insertions(+), 18 deletions(-)
+> >>
+> >> diff --git a/drivers/gpu/drm/rockchip/rockchip_drm_vop.c b/drivers/gpu/drm/rockchip/rockchip_drm_vop.c
+> >> index c7d4c6073ea5..a1ee8c156a7b 100644
+> >> --- a/drivers/gpu/drm/rockchip/rockchip_drm_vop.c
+> >> +++ b/drivers/gpu/drm/rockchip/rockchip_drm_vop.c
+> >> @@ -912,30 +912,31 @@ static void vop_plane_atomic_async_update(struct drm_plane *plane,
+> >>  					  struct drm_plane_state *new_state)
+> >>  {
+> >>  	struct vop *vop = to_vop(plane->state->crtc);
+> >> -	struct drm_plane_state *plane_state;
+> >> +	struct drm_framebuffer *old_fb = plane->state->fb;
+> >>  
+> >> -	plane_state = plane->funcs->atomic_duplicate_state(plane);
+> >> -	plane_state->crtc_x = new_state->crtc_x;
+> >> -	plane_state->crtc_y = new_state->crtc_y;
+> >> -	plane_state->crtc_h = new_state->crtc_h;
+> >> -	plane_state->crtc_w = new_state->crtc_w;
+> >> -	plane_state->src_x = new_state->src_x;
+> >> -	plane_state->src_y = new_state->src_y;
+> >> -	plane_state->src_h = new_state->src_h;
+> >> -	plane_state->src_w = new_state->src_w;
+> >> -
+> >> -	if (plane_state->fb != new_state->fb)
+> >> -		drm_atomic_set_fb_for_plane(plane_state, new_state->fb);
+> >> -
+> >> -	swap(plane_state, plane->state);
+> >> -
+> >> -	if (plane->state->fb && plane->state->fb != new_state->fb) {
+> >> +	/*
+> >> +	 * A scanout can still be occurring, so we can't drop the reference to
+> >> +	 * the old framebuffer. To solve this we get a reference to old_fb and
+> >> +	 * set a worker to release it later.  
 > > 
-> > Anyway, here is my take at it:
-> > https://lore.kernel.org/patchwork/patch/1049014/
-> > 
-> > Please help with testing for ROME, unless you disagree with the
-> > approach.
-> > 
-> > Thanks
-> > 
-> > Matthias
+> > Hm, doesn't look like an async update to me if we have to wait for the
+> > next VBLANK to happen to get the new content on the screen. Maybe we
+> > should reject async updates when old_fb != new_fb in the rk  
+> > ->async_check() hook.  
 > 
-> Hi Matthias,
-> 
-> I will test your patch and update to you, and you are correct that AR3002 is
-> not part of Rome family, you should use QCA_ROME as the default return of
-> qca_soc_type.
+> Unless I am misunderstanding this, we don't wait here, we just grab a
+> reference to the fb in case it is being still used by the hw, so it
+> doesn't get released prematurely.
 
-Thanks for the confirmation!
+I was just reacting to the comment that says the new FB should stay
+around until the next VBLANK event happens. If the FB must stay around
+that probably means the HW is still using, which made me wonder if this
+HW actually supports async update (where async means "update now and
+don't care about about tearing"). Or maybe it takes some time to switch
+to the new FB and waiting for the next VBLANK to release the old FB was
+an easy solution to not wait for the flip to actually happen in
+->async_update() (which is kind of a combination of async+non-blocking).
 
-> Could you also loop me in
-> https://lore.kernel.org/patchwork/patch/1049014/?
-
-This patch has been superseded by a newer version:
-
-https://lore.kernel.org/patchwork/patch/1049696/
-
-It already landed in bluetooth-next.
-
-Testing with Rome and ldisc would still be appreciated, since I don't
-have such a configuration.
-
-Thanks
-
-Matthias
+Anyway, let's keep it like that.
