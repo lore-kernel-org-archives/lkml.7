@@ -7,47 +7,49 @@ X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D9D82C4360F
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 18:03:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EA7F0C43381
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 18:03:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A132B205C9
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 18:03:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B9CD9205C9
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 18:03:57 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1552413836;
-	bh=3b5ndDRnNHw1sBQ6Do28qcLRFUD28gNhvaxmL/uN6GI=;
+	s=default; t=1552413837;
+	bh=0SoUTuN3P5J55ngqJwQFbuzt6wrt5yNt2TWQ53ezmIg=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=HTmIx4m3CjQOInv5VGZSRKH5VJ5pKyH9f5iKMdITVTpAMQrwFJLUR+mta1z6ln1Mo
-	 bB8+780Ig45L4v7zpk6NChKN0dYgopRQsbouC9PLuyinr4CtN0YMMsv94m3Dh6kFd6
-	 bEDQ4DtQ4T8LtD/gMdXszTRtxs+pUTJA1jtNX9Wc=
+	b=pov9Vw1mdS6LqNiRTaYqc6XZJ63lj40EFlNLSHvuWMiy4mNQ2DuwtYVw2ugoq8kk+
+	 /Nzj8JSREnUXK20mLH9FRb7OsZK8gZU8xZnbi5heNYu0CQn6Feh5aZwRPY/Bvr6CUF
+	 hZRBZ1cExxq6rL7+B2+FNJS/sgkJMGk0QO6OGZkA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727662AbfCLRMv (ORCPT
+        id S1728946AbfCLSD4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 12 Mar 2019 13:12:51 -0400
-Received: from mail.kernel.org ([198.145.29.99]:47618 "EHLO mail.kernel.org"
+        Tue, 12 Mar 2019 14:03:56 -0400
+Received: from mail.kernel.org ([198.145.29.99]:48810 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727473AbfCLRM0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 12 Mar 2019 13:12:26 -0400
+        id S1727665AbfCLRMw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 12 Mar 2019 13:12:52 -0400
 Received: from localhost (unknown [104.133.8.98])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 72B9C2171F;
-        Tue, 12 Mar 2019 17:12:26 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 753962177E;
+        Tue, 12 Mar 2019 17:12:51 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1552410746;
-        bh=3b5ndDRnNHw1sBQ6Do28qcLRFUD28gNhvaxmL/uN6GI=;
+        s=default; t=1552410771;
+        bh=0SoUTuN3P5J55ngqJwQFbuzt6wrt5yNt2TWQ53ezmIg=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=CxVaooejBjF0ElhPhhU9geXwUCciVasX/Tm9H/uV2JPZS02v/0SGxQAitog5NTEy0
-         dYRVzkJ5z19BTv837QE3veLxb5/7olbb0p8YspRAbfScf35doEztXPNbfbUwhWd0l/
-         Vugb21VXS7/VkBaxnoQe6sbUOKcpoeoTVioNniQY=
+        b=G+kp46844Z7zIOkD/lL1d/X2YlNbf4YErysAKbDePQyYvLLU9ILoBgOf90IqbwMYt
+         2Zjw25n1hlwRg/PoPtvlPKDB7xZhZ1zpsXqJUQ4qi7kI4CHoACPz+rIw7Hb1GPT7K2
+         bxFG+u+BSB7RSNA1K/E7tRzwMpW4Irnp6p7OCLOQ=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Jernej Skrabec <jernej.skrabec@siol.net>,
-        Maxime Ripard <maxime.ripard@bootlin.com>,
+        stable@vger.kernel.org, Yafang Shao <laoar.shao@gmail.com>,
+        Martin KaFai Lau <kafai@fb.com>,
+        Lawrence Brakmo <brakmo@fb.com>,
+        Daniel Borkmann <daniel@iogearbox.net>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.20 073/171] ARM: dts: sun8i: h3: Add ethernet0 alias to Beelink X2
-Date:   Tue, 12 Mar 2019 10:07:33 -0700
-Message-Id: <20190312170354.405607725@linuxfoundation.org>
+Subject: [PATCH 4.20 087/171] bpf: sock recvbuff must be limited by rmem_max in bpf_setsockopt()
+Date:   Tue, 12 Mar 2019 10:07:47 -0700
+Message-Id: <20190312170355.484082017@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190312170347.868927101@linuxfoundation.org>
 References: <20190312170347.868927101@linuxfoundation.org>
@@ -66,36 +68,38 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-[ Upstream commit cc4bddade114b696ab27c1a77cfc7040151306da ]
+[ Upstream commit c9e4576743eeda8d24dedc164d65b78877f9a98c ]
 
-Because "ethernet0" alias is missing, U-Boot doesn't generate board
-specific MAC address. Effect of this is random MAC address every boot
-and thus new IP address is assigned to the board.
+When sock recvbuff is set by bpf_setsockopt(), the value must by
+limited by rmem_max. It is the same with sendbuff.
 
-Fix this by adding alias.
-
-Fixes: 7389172fc3ed ("ARM: dts: sun8i: h3: Enable dwmac-sun8i on the Beelink X2")
-Signed-off-by: Jernej Skrabec <jernej.skrabec@siol.net>
-[Maxime: Removed unneeded comment]
-Signed-off-by: Maxime Ripard <maxime.ripard@bootlin.com>
+Fixes: 8c4b4c7e9ff0 ("bpf: Add setsockopt helper function to bpf")
+Signed-off-by: Yafang Shao <laoar.shao@gmail.com>
+Acked-by: Martin KaFai Lau <kafai@fb.com>
+Acked-by: Lawrence Brakmo <brakmo@fb.com>
+Signed-off-by: Daniel Borkmann <daniel@iogearbox.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/arm/boot/dts/sun8i-h3-beelink-x2.dts | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ net/core/filter.c | 2 ++
+ 1 file changed, 2 insertions(+)
 
-diff --git a/arch/arm/boot/dts/sun8i-h3-beelink-x2.dts b/arch/arm/boot/dts/sun8i-h3-beelink-x2.dts
-index 5d23667dc2d2..25540b7694d5 100644
---- a/arch/arm/boot/dts/sun8i-h3-beelink-x2.dts
-+++ b/arch/arm/boot/dts/sun8i-h3-beelink-x2.dts
-@@ -53,7 +53,7 @@
- 
- 	aliases {
- 		serial0 = &uart0;
--		/* ethernet0 is the H3 emac, defined in sun8i-h3.dtsi */
-+		ethernet0 = &emac;
- 		ethernet1 = &sdiowifi;
- 	};
- 
+diff --git a/net/core/filter.c b/net/core/filter.c
+index 16350f8c8815..821050957aca 100644
+--- a/net/core/filter.c
++++ b/net/core/filter.c
+@@ -3927,10 +3927,12 @@ BPF_CALL_5(bpf_setsockopt, struct bpf_sock_ops_kern *, bpf_sock,
+ 		/* Only some socketops are supported */
+ 		switch (optname) {
+ 		case SO_RCVBUF:
++			val = min_t(u32, val, sysctl_rmem_max);
+ 			sk->sk_userlocks |= SOCK_RCVBUF_LOCK;
+ 			sk->sk_rcvbuf = max_t(int, val * 2, SOCK_MIN_RCVBUF);
+ 			break;
+ 		case SO_SNDBUF:
++			val = min_t(u32, val, sysctl_wmem_max);
+ 			sk->sk_userlocks |= SOCK_SNDBUF_LOCK;
+ 			sk->sk_sndbuf = max_t(int, val * 2, SOCK_MIN_SNDBUF);
+ 			break;
 -- 
 2.19.1
 
