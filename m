@@ -2,60 +2,54 @@ Return-Path: <SRS0=J4ZE=RP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6028CC43381
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 17:21:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E821AC43381
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 17:21:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 323912171F
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 17:21:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A64952171F
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 17:21:56 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1552411311;
-	bh=viLosYjOmroQvmKNqsvm1viV290P1G6elfN8/xIl52U=;
+	s=default; t=1552411316;
+	bh=s0jMhxEfY2NrpUnxK/DK8KfHvi5ZoR1Kg2cEBCpHp38=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=sg1wF+xN+qJxlua9Lx6GLyvOKdH8Kwa4N6E/j+YddjXWEEnt874G2/zlCMVki1lRV
-	 4ihsZNFNTNQa7TMvNAZHvJLphWXKBaF6Bwn24ak98TD77xS9GCLv5g8MeiuaKzS6Am
-	 qRXVf181zDrYSJhv1av/IwltWegYlsWDk/qQDJuM=
+	b=WG+E9L4M35AWs1/0k3+8WI7jw4lSYIbQLK5WWXfrMcqFNbxd8Zwi0+KtCfEdL8E1Y
+	 B57IaSd9P+RQhTYofqkvezjlELbkqVQHSUlM03Zch5KfVeREpu+bBjO95H7UHHmhRL
+	 B2DUVEOuTELCAuLZg1/WOH5/xqx0EmGOSUHugYWw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729916AbfCLRVu (ORCPT
+        id S1729968AbfCLRSL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 12 Mar 2019 13:21:50 -0400
-Received: from mail.kernel.org ([198.145.29.99]:35474 "EHLO mail.kernel.org"
+        Tue, 12 Mar 2019 13:18:11 -0400
+Received: from mail.kernel.org ([198.145.29.99]:33122 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729970AbfCLRSM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 12 Mar 2019 13:18:12 -0400
+        id S1729574AbfCLRRZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 12 Mar 2019 13:17:25 -0400
 Received: from localhost (unknown [104.133.8.98])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D525D2087C;
-        Tue, 12 Mar 2019 17:18:10 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 87ACA217F5;
+        Tue, 12 Mar 2019 17:17:24 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1552411090;
-        bh=viLosYjOmroQvmKNqsvm1viV290P1G6elfN8/xIl52U=;
+        s=default; t=1552411044;
+        bh=s0jMhxEfY2NrpUnxK/DK8KfHvi5ZoR1Kg2cEBCpHp38=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=NASFniRBiHDUbdW4tSPDGLxg8+jnh5iCg/2ct8Fu63D2+C+/r6VSo8FEepGwg3IjN
-         J9vgRUpqAIsJc2226vX29TkqtgX8U2P8lbv+l2Y0v/PCkjXFlCWBxSaq1pKdEwhCgF
-         +6EH9tQLn8RFQFlteTZrHTAnZAUdOyV7tpiJQlrI=
+        b=mMwV2yzKP4FRZEjRmHbZDTJruqps1lrswB/iIYJ0yFL8F8xa9YNAOK4TTAI6D+DE2
+         KEfIcymugcYOXNq/UMWPyLUVZPKDyOq4ZrpQkKOnsxini3EYxDsC+HguNFjn7nuzFz
+         HXq7Bz2xysXKWkMs2GnctHc2GTjs8NBYVbEGj+zQ=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Michal Hocko <mhocko@suse.com>,
-        Mikhail Zaslonko <zaslonko@linux.ibm.com>,
-        Gerald Schaefer <gerald.schaefer@de.ibm.com>,
-        Mikhail Gavrilov <mikhail.v.gavrilov@gmail.com>,
-        Oscar Salvador <osalvador@suse.de>,
-        Pavel Tatashin <pasha.tatashin@soleen.com>,
-        Heiko Carstens <heiko.carstens@de.ibm.com>,
-        Martin Schwidefsky <schwidefsky@de.ibm.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.9 60/96] mm, memory_hotplug: is_mem_section_removable do not pass the end of a zone
-Date:   Tue, 12 Mar 2019 10:10:18 -0700
-Message-Id: <20190312171039.070193771@linuxfoundation.org>
+        stable@vger.kernel.org, Qing Xia <saberlily.xia@hisilicon.com>,
+        Jing Xia <jing.xia@unisoc.com>,
+        Yuming Han <yuming.han@unisoc.com>,
+        Zhaoyang Huang <zhaoyang.huang@unisoc.com>,
+        Orson Zhai <orson.zhai@unisoc.com>
+Subject: [PATCH 4.9 09/96] staging: android: ion: fix sys heap pools gfp_flags
+Date:   Tue, 12 Mar 2019 10:09:27 -0700
+Message-Id: <20190312171035.262194302@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190312171034.530434962@linuxfoundation.org>
 References: <20190312171034.530434962@linuxfoundation.org>
@@ -74,89 +68,39 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-[ Upstream commit efad4e475c312456edb3c789d0996d12ed744c13 ]
+From: Qing Xia <saberlily.xia@hisilicon.com>
 
-Patch series "mm, memory_hotplug: fix uninitialized pages fallouts", v2.
+commit 9bcf065e28122588a6cbee08cf847826dacbb438 upstream.
 
-Mikhail Zaslonko has posted fixes for the two bugs quite some time ago
-[1].  I have pushed back on those fixes because I believed that it is
-much better to plug the problem at the initialization time rather than
-play whack-a-mole all over the hotplug code and find all the places
-which expect the full memory section to be initialized.
+In the first loop, gfp_flags will be modified to high_order_gfp_flags,
+and there will be no chance to change back to low_order_gfp_flags.
 
-We have ended up with commit 2830bf6f05fb ("mm, memory_hotplug:
-initialize struct pages for the full memory section") merged and cause a
-regression [2][3].  The reason is that there might be memory layouts
-when two NUMA nodes share the same memory section so the merged fix is
-simply incorrect.
+Fixes: e7f63771b60e ("ION: Sys_heap: Add cached pool to spead up cached buffer alloc")
+Signed-off-by: Qing Xia <saberlily.xia@hisilicon.com>
+Cc: stable <stable@vger.kernel.org>
+Signed-off-by: Jing Xia <jing.xia@unisoc.com>
+Reviewed-by: Yuming Han <yuming.han@unisoc.com>
+Reviewed-by: Zhaoyang Huang <zhaoyang.huang@unisoc.com>
+Reviewed-by: Orson Zhai <orson.zhai@unisoc.com>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
-In order to plug this hole we really have to be zone range aware in
-those handlers.  I have split up the original patch into two.  One is
-unchanged (patch 2) and I took a different approach for `removable'
-crash.
-
-[1] http://lkml.kernel.org/r/20181105150401.97287-2-zaslonko@linux.ibm.com
-[2] https://bugzilla.redhat.com/show_bug.cgi?id=1666948
-[3] http://lkml.kernel.org/r/20190125163938.GA20411@dhcp22.suse.cz
-
-This patch (of 2):
-
-Mikhail has reported the following VM_BUG_ON triggered when reading sysfs
-removable state of a memory block:
-
- page:000003d08300c000 is uninitialized and poisoned
- page dumped because: VM_BUG_ON_PAGE(PagePoisoned(p))
- Call Trace:
-   is_mem_section_removable+0xb4/0x190
-   show_mem_removable+0x9a/0xd8
-   dev_attr_show+0x34/0x70
-   sysfs_kf_seq_show+0xc8/0x148
-   seq_read+0x204/0x480
-   __vfs_read+0x32/0x178
-   vfs_read+0x82/0x138
-   ksys_read+0x5a/0xb0
-   system_call+0xdc/0x2d8
- Last Breaking-Event-Address:
-   is_mem_section_removable+0xb4/0x190
- Kernel panic - not syncing: Fatal exception: panic_on_oops
-
-The reason is that the memory block spans the zone boundary and we are
-stumbling over an unitialized struct page.  Fix this by enforcing zone
-range in is_mem_section_removable so that we never run away from a zone.
-
-Link: http://lkml.kernel.org/r/20190128144506.15603-2-mhocko@kernel.org
-Signed-off-by: Michal Hocko <mhocko@suse.com>
-Reported-by: Mikhail Zaslonko <zaslonko@linux.ibm.com>
-Debugged-by: Mikhail Zaslonko <zaslonko@linux.ibm.com>
-Tested-by: Gerald Schaefer <gerald.schaefer@de.ibm.com>
-Tested-by: Mikhail Gavrilov <mikhail.v.gavrilov@gmail.com>
-Reviewed-by: Oscar Salvador <osalvador@suse.de>
-Cc: Pavel Tatashin <pasha.tatashin@soleen.com>
-Cc: Heiko Carstens <heiko.carstens@de.ibm.com>
-Cc: Martin Schwidefsky <schwidefsky@de.ibm.com>
-Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
-Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- mm/memory_hotplug.c | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+ drivers/staging/android/ion/ion_system_heap.c |    2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/mm/memory_hotplug.c b/mm/memory_hotplug.c
-index e4c271298074..a03a401f11b6 100644
---- a/mm/memory_hotplug.c
-+++ b/mm/memory_hotplug.c
-@@ -1471,7 +1471,8 @@ static struct page *next_active_pageblock(struct page *page)
- bool is_mem_section_removable(unsigned long start_pfn, unsigned long nr_pages)
+--- a/drivers/staging/android/ion/ion_system_heap.c
++++ b/drivers/staging/android/ion/ion_system_heap.c
+@@ -307,10 +307,10 @@ static int ion_system_heap_create_pools(
+ 					bool cached)
  {
- 	struct page *page = pfn_to_page(start_pfn);
--	struct page *end_page = page + nr_pages;
-+	unsigned long end_pfn = min(start_pfn + nr_pages, zone_end_pfn(page_zone(page)));
-+	struct page *end_page = pfn_to_page(end_pfn);
+ 	int i;
+-	gfp_t gfp_flags = low_order_gfp_flags;
  
- 	/* Check the starting page of each pageblock within the range */
- 	for (; page < end_page; page = next_active_pageblock(page)) {
--- 
-2.19.1
-
+ 	for (i = 0; i < NUM_ORDERS; i++) {
+ 		struct ion_page_pool *pool;
++		gfp_t gfp_flags = low_order_gfp_flags;
+ 
+ 		if (orders[i] > 4)
+ 			gfp_flags = high_order_gfp_flags;
 
 
