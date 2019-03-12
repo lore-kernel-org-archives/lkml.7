@@ -4,52 +4,55 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A34E7C10F00
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 17:56:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4A431C43381
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 17:56:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5EFF62147C
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 17:56:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 20A832147C
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 17:56:19 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1552413377;
-	bh=zJJwltqKkip36lK9vQYyjFK29RwRKaYM6lIzUip/0ig=;
+	s=default; t=1552413379;
+	bh=90UOFU5bfMmobSl5Gd5SIGDblbli5eSDvyqqyN5bfvA=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Ah21+0xPJF7A7nc8hIAE0/E8fO+HlD3MbyXXocCTo+XnuSIN00BU13AKujVN2/nEQ
-	 P3VldKBAjzaFj1f+m3HFp9oM57XKLG+pXgU+FwjTclZIh9tdtAO2PzpXXtRk+Y5dKh
-	 hW1a2VnNlao/nHmnjU6diaiF/bqpwni1Dcwrdug4=
+	b=st2SGis0EbP7ZA7RXlg7dkubHxnyGJe6qrT3aZzQ8yGqJD+9+EdpvuJWcc79r54vQ
+	 kFmgElLlLkP8AY8QYqU6MqjkeEKliUnB67WsoTqaE8If/emHFImJ9m/zYLjvK0QreS
+	 pPDXKtzGuEURcL35tYuachLyTk4/yYl9/T9+AaRg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728160AbfCLRN5 (ORCPT
+        id S1728261AbfCLR4S (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 12 Mar 2019 13:13:57 -0400
-Received: from mail.kernel.org ([198.145.29.99]:50070 "EHLO mail.kernel.org"
+        Tue, 12 Mar 2019 13:56:18 -0400
+Received: from mail.kernel.org ([198.145.29.99]:51822 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727882AbfCLRNU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 12 Mar 2019 13:13:20 -0400
+        id S1728157AbfCLRN5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 12 Mar 2019 13:13:57 -0400
 Received: from localhost (unknown [104.133.8.98])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 0315E217D9;
-        Tue, 12 Mar 2019 17:13:18 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 7FB28206DF;
+        Tue, 12 Mar 2019 17:13:56 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1552410799;
-        bh=zJJwltqKkip36lK9vQYyjFK29RwRKaYM6lIzUip/0ig=;
+        s=default; t=1552410836;
+        bh=90UOFU5bfMmobSl5Gd5SIGDblbli5eSDvyqqyN5bfvA=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=r4h9q8lDjA935y5wl7MKYiwzLgi3l6uRLN9FpcAHTc88YlGPVIjayH4UiETalh9w3
-         blcVsxiJb26sA/AKCdOfVAkm6XTINtfIVh/RBAHjnaYURmYsHkZKWK3BzSo+FVrtYl
-         HERSiMGXF6kdX4xbKXnHpYvNv3eIyLbpLEd7D30A=
+        b=ahThoQdfAn8eBYswOvjj+QhDbXCkXiIuCD98/QuzBYnWM69X6VTghOWX29OaQREw1
+         0zrnwXXa1UWAd4dZmfDSxlMOg318xdG06r4BCDGJHjHwNKh6VsJ2lRoDuwckke+hhg
+         1a39s/8t5ENfjTXCfotcUaZa3EJcMlCTNeUIovqI=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Liu Bo <bo.liu@linux.alibaba.com>,
-        Jens Axboe <axboe@kernel.dk>, Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.20 145/171] blk-iolatency: fix IO hang due to negative inflight counter
-Date:   Tue, 12 Mar 2019 10:08:45 -0700
-Message-Id: <20190312170400.091048401@linuxfoundation.org>
+        stable@vger.kernel.org, Alexey Khoroshilov <khoroshilov@ispras.ru>,
+        Yonglong Liu <liuyonglong@huawei.com>,
+        Peng Li <lipeng321@huawei.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.19 026/149] net: hns: Fix for missing of_node_put() after of_parse_phandle()
+Date:   Tue, 12 Mar 2019 10:07:24 -0700
+Message-Id: <20190312170351.913319992@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
-In-Reply-To: <20190312170347.868927101@linuxfoundation.org>
-References: <20190312170347.868927101@linuxfoundation.org>
+In-Reply-To: <20190312170349.421581206@linuxfoundation.org>
+References: <20190312170349.421581206@linuxfoundation.org>
 User-Agent: quilt/0.65
 X-stable: review
 X-Patchwork-Hint: ignore
@@ -61,195 +64,53 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-4.20-stable review patch.  If anyone has any objections, please let me know.
+4.19-stable review patch.  If anyone has any objections, please let me know.
 
 ------------------
 
-[ Upstream commit 8c772a9bfc7c07c76f4a58b58910452fbb20843b ]
+[ Upstream commit 263c6d75f9a544a3c2f8f6a26de4f4808d8f59cf ]
 
-Our test reported the following stack, and vmcore showed that
-->inflight counter is -1.
+In hns enet driver, we use of_parse_handle() to get hold of the
+device node related to "ae-handle" but we have missed to put
+the node reference using of_node_put() after we are done using
+the node. This patch fixes it.
 
-[ffffc9003fcc38d0] __schedule at ffffffff8173d95d
-[ffffc9003fcc3958] schedule at ffffffff8173de26
-[ffffc9003fcc3970] io_schedule at ffffffff810bb6b6
-[ffffc9003fcc3988] blkcg_iolatency_throttle at ffffffff813911cb
-[ffffc9003fcc3a20] rq_qos_throttle at ffffffff813847f3
-[ffffc9003fcc3a48] blk_mq_make_request at ffffffff8137468a
-[ffffc9003fcc3b08] generic_make_request at ffffffff81368b49
-[ffffc9003fcc3b68] submit_bio at ffffffff81368d7d
-[ffffc9003fcc3bb8] ext4_io_submit at ffffffffa031be00 [ext4]
-[ffffc9003fcc3c00] ext4_writepages at ffffffffa03163de [ext4]
-[ffffc9003fcc3d68] do_writepages at ffffffff811c49ae
-[ffffc9003fcc3d78] __filemap_fdatawrite_range at ffffffff811b6188
-[ffffc9003fcc3e30] filemap_write_and_wait_range at ffffffff811b6301
-[ffffc9003fcc3e60] ext4_sync_file at ffffffffa030cee8 [ext4]
-[ffffc9003fcc3ea8] vfs_fsync_range at ffffffff8128594b
-[ffffc9003fcc3ee8] do_fsync at ffffffff81285abd
-[ffffc9003fcc3f18] sys_fsync at ffffffff81285d50
-[ffffc9003fcc3f28] do_syscall_64 at ffffffff81003c04
-[ffffc9003fcc3f50] entry_SYSCALL_64_after_swapgs at ffffffff81742b8e
+Note:
+This problem is stated in Link: https://lkml.org/lkml/2018/12/22/217
 
-The ->inflight counter may be negative (-1) if
-
-1) blk-iolatency was disabled when the IO was issued,
-
-2) blk-iolatency was enabled before this IO reached its endio,
-
-3) the ->inflight counter is decreased from 0 to -1 in endio()
-
-In fact the hang can be easily reproduced by the below script,
-
-H=/sys/fs/cgroup/unified/
-P=/sys/fs/cgroup/unified/test
-
-echo "+io" > $H/cgroup.subtree_control
-mkdir -p $P
-
-echo $$ > $P/cgroup.procs
-
-xfs_io -f -d -c "pwrite 0 4k" /dev/sdg
-
-echo "`cat /sys/block/sdg/dev` target=1000000" > $P/io.latency
-
-xfs_io -f -d -c "pwrite 0 4k" /dev/sdg
-
-This fixes the problem by freezing the queue so that while
-enabling/disabling iolatency, there is no inflight rq running.
-
-Note that quiesce_queue is not needed as this only updating iolatency
-configuration about which dispatching request_queue doesn't care.
-
-Signed-off-by: Liu Bo <bo.liu@linux.alibaba.com>
-Signed-off-by: Jens Axboe <axboe@kernel.dk>
+Fixes: 48189d6aaf1e ("net: hns: enet specifies a reference to dsaf")
+Reported-by: Alexey Khoroshilov <khoroshilov@ispras.ru>
+Signed-off-by: Yonglong Liu <liuyonglong@huawei.com>
+Signed-off-by: Peng Li <lipeng321@huawei.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- block/blk-iolatency.c | 52 +++++++++++++++++++++++++++++++++++++------
- 1 file changed, 45 insertions(+), 7 deletions(-)
+ drivers/net/ethernet/hisilicon/hns/hns_enet.c | 5 +++++
+ 1 file changed, 5 insertions(+)
 
-diff --git a/block/blk-iolatency.c b/block/blk-iolatency.c
-index 38c35c32aff2..c1c72b42dda0 100644
---- a/block/blk-iolatency.c
-+++ b/block/blk-iolatency.c
-@@ -72,6 +72,7 @@
- #include <linux/sched/loadavg.h>
- #include <linux/sched/signal.h>
- #include <trace/events/block.h>
-+#include <linux/blk-mq.h>
- #include "blk-rq-qos.h"
- #include "blk-stat.h"
+diff --git a/drivers/net/ethernet/hisilicon/hns/hns_enet.c b/drivers/net/ethernet/hisilicon/hns/hns_enet.c
+index 6242249c9f4c..b043370c2685 100644
+--- a/drivers/net/ethernet/hisilicon/hns/hns_enet.c
++++ b/drivers/net/ethernet/hisilicon/hns/hns_enet.c
+@@ -2419,6 +2419,8 @@ static int hns_nic_dev_probe(struct platform_device *pdev)
+ out_notify_fail:
+ 	(void)cancel_work_sync(&priv->service_task);
+ out_read_prop_fail:
++	/* safe for ACPI FW */
++	of_node_put(to_of_node(priv->fwnode));
+ 	free_netdev(ndev);
+ 	return ret;
+ }
+@@ -2448,6 +2450,9 @@ static int hns_nic_dev_remove(struct platform_device *pdev)
+ 	set_bit(NIC_STATE_REMOVING, &priv->state);
+ 	(void)cancel_work_sync(&priv->service_task);
  
-@@ -648,6 +649,9 @@ static void blkcg_iolatency_done_bio(struct rq_qos *rqos, struct bio *bio)
- 		return;
- 
- 	enabled = blk_iolatency_enabled(iolat->blkiolat);
-+	if (!enabled)
-+		return;
++	/* safe for ACPI FW */
++	of_node_put(to_of_node(priv->fwnode));
 +
- 	while (blkg && blkg->parent) {
- 		iolat = blkg_to_lat(blkg);
- 		if (!iolat) {
-@@ -657,7 +661,7 @@ static void blkcg_iolatency_done_bio(struct rq_qos *rqos, struct bio *bio)
- 		rqw = &iolat->rq_wait;
- 
- 		atomic_dec(&rqw->inflight);
--		if (!enabled || iolat->min_lat_nsec == 0)
-+		if (iolat->min_lat_nsec == 0)
- 			goto next;
- 		iolatency_record_time(iolat, &bio->bi_issue, now,
- 				      issue_as_root);
-@@ -801,10 +805,13 @@ int blk_iolatency_init(struct request_queue *q)
+ 	free_netdev(ndev);
  	return 0;
  }
- 
--static void iolatency_set_min_lat_nsec(struct blkcg_gq *blkg, u64 val)
-+/*
-+ * return 1 for enabling iolatency, return -1 for disabling iolatency, otherwise
-+ * return 0.
-+ */
-+static int iolatency_set_min_lat_nsec(struct blkcg_gq *blkg, u64 val)
- {
- 	struct iolatency_grp *iolat = blkg_to_lat(blkg);
--	struct blk_iolatency *blkiolat = iolat->blkiolat;
- 	u64 oldval = iolat->min_lat_nsec;
- 
- 	iolat->min_lat_nsec = val;
-@@ -813,9 +820,10 @@ static void iolatency_set_min_lat_nsec(struct blkcg_gq *blkg, u64 val)
- 				    BLKIOLATENCY_MAX_WIN_SIZE);
- 
- 	if (!oldval && val)
--		atomic_inc(&blkiolat->enabled);
-+		return 1;
- 	if (oldval && !val)
--		atomic_dec(&blkiolat->enabled);
-+		return -1;
-+	return 0;
- }
- 
- static void iolatency_clear_scaling(struct blkcg_gq *blkg)
-@@ -847,6 +855,7 @@ static ssize_t iolatency_set_limit(struct kernfs_open_file *of, char *buf,
- 	u64 lat_val = 0;
- 	u64 oldval;
- 	int ret;
-+	int enable = 0;
- 
- 	ret = blkg_conf_prep(blkcg, &blkcg_policy_iolatency, buf, &ctx);
- 	if (ret)
-@@ -881,7 +890,12 @@ static ssize_t iolatency_set_limit(struct kernfs_open_file *of, char *buf,
- 	blkg = ctx.blkg;
- 	oldval = iolat->min_lat_nsec;
- 
--	iolatency_set_min_lat_nsec(blkg, lat_val);
-+	enable = iolatency_set_min_lat_nsec(blkg, lat_val);
-+	if (enable) {
-+		WARN_ON_ONCE(!blk_get_queue(blkg->q));
-+		blkg_get(blkg);
-+	}
-+
- 	if (oldval != iolat->min_lat_nsec) {
- 		iolatency_clear_scaling(blkg);
- 	}
-@@ -889,6 +903,24 @@ static ssize_t iolatency_set_limit(struct kernfs_open_file *of, char *buf,
- 	ret = 0;
- out:
- 	blkg_conf_finish(&ctx);
-+	if (ret == 0 && enable) {
-+		struct iolatency_grp *tmp = blkg_to_lat(blkg);
-+		struct blk_iolatency *blkiolat = tmp->blkiolat;
-+
-+		blk_mq_freeze_queue(blkg->q);
-+
-+		if (enable == 1)
-+			atomic_inc(&blkiolat->enabled);
-+		else if (enable == -1)
-+			atomic_dec(&blkiolat->enabled);
-+		else
-+			WARN_ON_ONCE(1);
-+
-+		blk_mq_unfreeze_queue(blkg->q);
-+
-+		blkg_put(blkg);
-+		blk_put_queue(blkg->q);
-+	}
- 	return ret ?: nbytes;
- }
- 
-@@ -1024,8 +1056,14 @@ static void iolatency_pd_offline(struct blkg_policy_data *pd)
- {
- 	struct iolatency_grp *iolat = pd_to_lat(pd);
- 	struct blkcg_gq *blkg = lat_to_blkg(iolat);
-+	struct blk_iolatency *blkiolat = iolat->blkiolat;
-+	int ret;
- 
--	iolatency_set_min_lat_nsec(blkg, 0);
-+	ret = iolatency_set_min_lat_nsec(blkg, 0);
-+	if (ret == 1)
-+		atomic_inc(&blkiolat->enabled);
-+	if (ret == -1)
-+		atomic_dec(&blkiolat->enabled);
- 	iolatency_clear_scaling(blkg);
- }
- 
 -- 
 2.19.1
 
