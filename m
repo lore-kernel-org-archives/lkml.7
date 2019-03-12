@@ -2,111 +2,144 @@ Return-Path: <SRS0=J4ZE=RP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=FREEMAIL_FORGED_FROMDOMAIN,
-	FREEMAIL_FROM,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7816CC43381
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 17:19:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id ACBC7C43381
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 17:19:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 543A0206DF
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 17:19:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7DF082087C
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 17:19:30 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1552411170;
+	bh=g93+PPOcNcMixw48RymxLC9ys/+odly9dcmA2T+GXY0=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=N0CAQF0GC6QR8z5J0yOzA2qMUjaLOsEytGtOZnphOiApic0t8XUcZbCG1gtBrpK0Y
+	 mAci6Im/gmwuGN+i1K8qZZrcmileOeGQGdV/i5K5d7igBUQwUZCm+BJgOHt9trFN2F
+	 0dpiOH+SDeF+Zdl3Hgn0Sa7TwxZt9l/okhPa+4X8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729357AbfCLRTX (ORCPT
+        id S1729055AbfCLRS7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 12 Mar 2019 13:19:23 -0400
-Received: from smtp3-g21.free.fr ([212.27.42.3]:30073 "EHLO smtp3-g21.free.fr"
+        Tue, 12 Mar 2019 13:18:59 -0400
+Received: from mail.kernel.org ([198.145.29.99]:35474 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729350AbfCLRTB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 12 Mar 2019 13:19:01 -0400
-Received: from [192.168.108.8] (unknown [213.36.7.13])
-        (Authenticated sender: marc.w.gonzalez)
-        by smtp3-g21.free.fr (Postfix) with ESMTPSA id 5DF8313F8D5;
-        Tue, 12 Mar 2019 18:18:40 +0100 (CET)
-Subject: Re: [RFC PATCH v1] PCI: qcom: Use quirk to override incorrect device
- class
-To:     Stanimir Varbanov <svarbanov@mm-sol.com>,
-        Bjorn Helgaas <bhelgaas@google.com>
-Cc:     Andy Gross <andy.gross@linaro.org>,
-        David Brown <david.brown@linaro.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        PCI <linux-pci@vger.kernel.org>,
-        MSM <linux-arm-msm@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Jeffrey Hugo <jhugo@codeaurora.org>
-References: <94bb3f22-c5a7-1891-9d89-42a520e9a592@free.fr>
- <65321fe3-ca29-c454-63ae-98a46c2e5158@mm-sol.com>
-From:   Marc Gonzalez <marc.w.gonzalez@free.fr>
-Message-ID: <1205cbfb-ac06-63a5-9401-75d4e68b15b5@free.fr>
-Date:   Tue, 12 Mar 2019 18:18:40 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.5.1
+        id S1729979AbfCLRSM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 12 Mar 2019 13:18:12 -0400
+Received: from localhost (unknown [104.133.8.98])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 3938B206DF;
+        Tue, 12 Mar 2019 17:18:12 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1552411092;
+        bh=g93+PPOcNcMixw48RymxLC9ys/+odly9dcmA2T+GXY0=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=cE2qRUlVw8Qxap/IIBLTalaKKzZx2zLUQ9YmR6exJ7A+vd4LrEINXaJQLg3YTUQTl
+         tqHXmRYxonGZOoET68/WpJo6QRfN15k42GSW5c8Hm6rEKHPJJW0/q98NCIL/BXNi1P
+         eWoLLXWgmXTHbZBDDIq0K8X53wSwbHohT4bEUHuw=
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     linux-kernel@vger.kernel.org
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        stable@vger.kernel.org,
+        Vincent Whitchurch <vincent.whitchurch@axis.com>,
+        Russell King <rmk+kernel@armlinux.org.uk>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.9 92/96] ARM: 8781/1: Fix Thumb-2 syscall return for binutils 2.29+
+Date:   Tue, 12 Mar 2019 10:10:50 -0700
+Message-Id: <20190312171041.403754083@linuxfoundation.org>
+X-Mailer: git-send-email 2.21.0
+In-Reply-To: <20190312171034.530434962@linuxfoundation.org>
+References: <20190312171034.530434962@linuxfoundation.org>
+User-Agent: quilt/0.65
+X-stable: review
+X-Patchwork-Hint: ignore
 MIME-Version: 1.0
-In-Reply-To: <65321fe3-ca29-c454-63ae-98a46c2e5158@mm-sol.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 12/03/2019 13:42, Stanimir Varbanov wrote:
+4.9-stable review patch.  If anyone has any objections, please let me know.
 
-> On 3/11/19 4:56 PM, Marc Gonzalez wrote:
->
->> Some chips report an incorrect device class. Override the incorrect
->> value using a quirk, instead of code in the read function.
->>
->> Signed-off-by: Marc Gonzalez <marc.w.gonzalez@free.fr>
->> ---
->> FWIW, this quirk is no longer required on recent chips:
->> msm8996 (tested by Stanimir), msm8998 (tested by me), sdm845 (untested) are unaffected
->> apq/ipq8064 is affected => what is the device ID for these chips?
->> others?
->>
->> Stanimir added: "this will become a real problem (now we use the driver as RC)
->> when someone decide to use it as an endpoint"
->> ---
->>  drivers/pci/controller/dwc/pcie-qcom.c | 14 ++++++--------
->>  1 file changed, 6 insertions(+), 8 deletions(-)
->>
->> diff --git a/drivers/pci/controller/dwc/pcie-qcom.c b/drivers/pci/controller/dwc/pcie-qcom.c
->> index 3de5510fd3d5..94da2c9c2ad5 100644
->> --- a/drivers/pci/controller/dwc/pcie-qcom.c
->> +++ b/drivers/pci/controller/dwc/pcie-qcom.c
->> @@ -1136,17 +1136,15 @@ static int qcom_pcie_rd_own_conf(struct pcie_port *pp, int where, int size,
->>  {
->>  	struct dw_pcie *pci = to_dw_pcie_from_pp(pp);
->>  
->> -	/* the device class is not reported correctly from the register */
->> -	if (where == PCI_CLASS_REVISION && size == 4) {
->> -		*val = readl(pci->dbi_base + PCI_CLASS_REVISION);
->> -		*val &= 0xff;	/* keep revision id */
->> -		*val |= PCI_CLASS_BRIDGE_PCI << 16;
->> -		return PCIBIOS_SUCCESSFUL;
->> -	}
->> -
-> 
-> once you dropped the above snippet this function becomes absolutely
-> useless so please delete it at all and also from qcom_pcie_dw_ops.
+------------------
 
-Good catch.
+[ Upstream commit afc9f65e01cd114cb2cedf544d22239116ce0cc6 ]
 
->>  	return dw_pcie_read(pci->dbi_base + where, size, val);
->>  }
->>  
->> +static void qcom_fixup_class(struct pci_dev *dev)
->> +{
->> +	dev->class = PCI_CLASS_BRIDGE_PCI << 8;
->> +}
->> +DECLARE_PCI_FIXUP_EARLY(PCI_VENDOR_ID_QCOM, PCI_ANY_ID, qcom_fixup_class);
-> 
-> I wonder, in case that dw_pcie_setup_rc() already has a write to
-> PCI_CLASS_DEVICE configuration register to set it as a bridge do we
-> still need to do the above fixup?
+When building the kernel as Thumb-2 with binutils 2.29 or newer, if the
+assembler has seen the .type directive (via ENDPROC()) for a symbol, it
+automatically handles the setting of the lowest bit when the symbol is
+used with ADR.  The badr macro on the other hand handles this lowest bit
+manually.  This leads to a jump to a wrong address in the wrong state
+in the syscall return path:
 
-I don't know, I don't have an affected device. Unless the msm8998 /is/ affected,
-and dw_pcie_setup_rc() actually fixes it?
+ Internal error: Oops - undefined instruction: 0 [#2] SMP THUMB2
+ Modules linked in:
+ CPU: 0 PID: 652 Comm: modprobe Tainted: G      D           4.18.0-rc3+ #8
+ PC is at ret_fast_syscall+0x4/0x62
+ LR is at sys_brk+0x109/0x128
+ pc : [<80101004>]    lr : [<801c8a35>]    psr: 60000013
+ Flags: nZCv  IRQs on  FIQs on  Mode SVC_32  ISA ARM  Segment none
+ Control: 50c5387d  Table: 9e82006a  DAC: 00000051
+ Process modprobe (pid: 652, stack limit = 0x(ptrval))
 
-Regards.
+ 80101000 <ret_fast_syscall>:
+ 80101000:       b672            cpsid   i
+ 80101002:       f8d9 2008       ldr.w   r2, [r9, #8]
+ 80101006:       f1b2 4ffe       cmp.w   r2, #2130706432 ; 0x7f000000
+
+ 80101184 <local_restart>:
+ 80101184:       f8d9 a000       ldr.w   sl, [r9]
+ 80101188:       e92d 0030       stmdb   sp!, {r4, r5}
+ 8010118c:       f01a 0ff0       tst.w   sl, #240        ; 0xf0
+ 80101190:       d117            bne.n   801011c2 <__sys_trace>
+ 80101192:       46ba            mov     sl, r7
+ 80101194:       f5ba 7fc8       cmp.w   sl, #400        ; 0x190
+ 80101198:       bf28            it      cs
+ 8010119a:       f04f 0a00       movcs.w sl, #0
+ 8010119e:       f3af 8014       nop.w   {20}
+ 801011a2:       f2af 1ea2       subw    lr, pc, #418    ; 0x1a2
+
+To fix this, add a new symbol name which doesn't have ENDPROC used on it
+and use that with badr.  We can't remove the badr usage since that would
+would cause breakage with older binutils.
+
+Signed-off-by: Vincent Whitchurch <vincent.whitchurch@axis.com>
+Signed-off-by: Russell King <rmk+kernel@armlinux.org.uk>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
+---
+ arch/arm/kernel/entry-common.S |    4 +++-
+ 1 file changed, 3 insertions(+), 1 deletion(-)
+
+--- a/arch/arm/kernel/entry-common.S
++++ b/arch/arm/kernel/entry-common.S
+@@ -32,6 +32,7 @@
+  * features make this path too inefficient.
+  */
+ ret_fast_syscall:
++__ret_fast_syscall:
+  UNWIND(.fnstart	)
+  UNWIND(.cantunwind	)
+ 	disable_irq_notrace			@ disable interrupts
+@@ -57,6 +58,7 @@ fast_work_pending:
+  * r0 first to avoid needing to save registers around each C function call.
+  */
+ ret_fast_syscall:
++__ret_fast_syscall:
+  UNWIND(.fnstart	)
+  UNWIND(.cantunwind	)
+ 	str	r0, [sp, #S_R0 + S_OFF]!	@ save returned r0
+@@ -223,7 +225,7 @@ local_restart:
+ 	tst	r10, #_TIF_SYSCALL_WORK		@ are we tracing syscalls?
+ 	bne	__sys_trace
+ 
+-	invoke_syscall tbl, scno, r10, ret_fast_syscall
++	invoke_syscall tbl, scno, r10, __ret_fast_syscall
+ 
+ 	add	r1, sp, #S_OFF
+ 2:	cmp	scno, #(__ARM_NR_BASE - __NR_SYSCALL_BASE)
+
+
