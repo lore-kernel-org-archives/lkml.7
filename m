@@ -2,127 +2,99 @@ Return-Path: <SRS0=J4ZE=RP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_PASS,URIBL_BLOCKED,USER_AGENT_MUTT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0FCD9C10F00
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 09:37:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8E5CAC43381
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 09:37:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CA5E1214AE
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 09:37:53 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=nifty.com header.i=@nifty.com header.b="dr3Q7Yn1"
+	by mail.kernel.org (Postfix) with ESMTP id 5F4B6214AE
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 09:37:59 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726514AbfCLJhw (ORCPT
+        id S1726599AbfCLJh6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 12 Mar 2019 05:37:52 -0400
-Received: from conssluserg-03.nifty.com ([210.131.2.82]:35584 "EHLO
-        conssluserg-03.nifty.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725872AbfCLJhw (ORCPT
+        Tue, 12 Mar 2019 05:37:58 -0400
+Received: from atrey.karlin.mff.cuni.cz ([195.113.26.193]:57027 "EHLO
+        atrey.karlin.mff.cuni.cz" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725872AbfCLJh4 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 12 Mar 2019 05:37:52 -0400
-Received: from mail-vs1-f47.google.com (mail-vs1-f47.google.com [209.85.217.47]) (authenticated)
-        by conssluserg-03.nifty.com with ESMTP id x2C9bc4N025734;
-        Tue, 12 Mar 2019 18:37:39 +0900
-DKIM-Filter: OpenDKIM Filter v2.10.3 conssluserg-03.nifty.com x2C9bc4N025734
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nifty.com;
-        s=dec2015msa; t=1552383459;
-        bh=ZwNetbz2Pt1VbQ3sMujgqlvUPKsyRAIvytTsSjSWouY=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=dr3Q7Yn1oNl49u/CWFr5IdWcu4r4s5pvb2/u814G+6EtmzRJedwPGe7lGC0RakaCp
-         3U5G67m+Cwb3aaOz4febmp9/XhM9hmtm07RBtjoIdbt4Ocy8cNzLP5Yy2118r2OnI4
-         NbeWRCgJ+Pjqi8k2MgbYlEmcDXcGjyidyxQJ3tPIv0q9YIQM6fwhu8ucyx1WkArOTY
-         VEzZJJp33OiTK+sL/t2NpSBNMeLZIoW7b414DLIYaATms1l0yzWfIGMFu+sC/wG/Ix
-         J90PR6dU8PbVxff9QpiBZ1wFtrYfLF+nUi7Jt47H1DfqA3fxU1Np2OuNXPhVWO8JBG
-         Rah/xiRjE8Bsw==
-X-Nifty-SrcIP: [209.85.217.47]
-Received: by mail-vs1-f47.google.com with SMTP id z6so1083050vsc.0;
-        Tue, 12 Mar 2019 02:37:39 -0700 (PDT)
-X-Gm-Message-State: APjAAAWWYpBYktxvfJOmD0jGUfSV8SzcvQBVFVEnh3Bqz9lJncns+i2e
-        1GGw8hjrozOk4Qz5JqZiylrK+GBZIoHzfw0naQs=
-X-Google-Smtp-Source: APXvYqy0GicoiUjDHQPqr1bMylqGHRqWqoA0oMZbk7/8fXwYnNrtllNOICoxvo0jKZ/OXa0yDHocHqFcjfqoo4XqoPQ=
-X-Received: by 2002:a67:ea05:: with SMTP id g5mr1878298vso.179.1552383458248;
- Tue, 12 Mar 2019 02:37:38 -0700 (PDT)
+        Tue, 12 Mar 2019 05:37:56 -0400
+Received: by atrey.karlin.mff.cuni.cz (Postfix, from userid 512)
+        id C700380167; Tue, 12 Mar 2019 10:37:47 +0100 (CET)
+Date:   Tue, 12 Mar 2019 10:37:54 +0100
+From:   Pavel Machek <pavel@ucw.cz>
+To:     Alexey Dobriyan <adobriyan@gmail.com>
+Cc:     akpm@linux-foundation.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 1/4] elf: don't be afraid of overflow
+Message-ID: <20190312093754.GB28905@amd>
+References: <20190204202715.GA27482@avx2>
+ <20190311110423.GC14118@amd>
+ <20190311171006.GA2141@avx2>
 MIME-Version: 1.0
-References: <1552330521-4276-1-git-send-email-info@metux.net> <1552330521-4276-36-git-send-email-info@metux.net>
-In-Reply-To: <1552330521-4276-36-git-send-email-info@metux.net>
-From:   Masahiro Yamada <yamada.masahiro@socionext.com>
-Date:   Tue, 12 Mar 2019 18:37:02 +0900
-X-Gmail-Original-Message-ID: <CAK7LNASPyZVpN2JVT8v6qzXUNfu-dLqcwwSc-eZL+yMyMEFXCg@mail.gmail.com>
-Message-ID: <CAK7LNASPyZVpN2JVT8v6qzXUNfu-dLqcwwSc-eZL+yMyMEFXCg@mail.gmail.com>
-Subject: Re: [PATCH 36/42] drivers: gpio: uniphier: use devm_platform_ioremap_resource()
-To:     "Enrico Weigelt, metux IT consult" <info@metux.net>
-Cc:     Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        andrew@aj.id.au, Florian Fainelli <f.fainelli@gmail.com>,
-        Scott Branden <sbranden@broadcom.com>,
-        Broadcom Kernel Feedback List 
-        <bcm-kernel-feedback-list@broadcom.com>,
-        hoan@os.amperecomputing.com, orsonzhai@gmail.com,
-        baolin.wang@linaro.org, zhang.lyra@gmail.com,
-        keguang.zhang@gmail.com, Vladimir Zapolskiy <vz@mleia.com>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        Grygorii Strashko <grygorii.strashko@ti.com>,
-        Santosh Shilimkar <ssantosh@kernel.org>,
-        Kevin Hilman <khilman@kernel.org>,
-        Robert Jarzmik <robert.jarzmik@free.fr>,
-        Jun Nie <jun.nie@linaro.org>, Shawn Guo <shawnguo@kernel.org>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        linux-mips@vger.kernel.org, linux-pwm@vger.kernel.org,
-        Linux-OMAP <linux-omap@vger.kernel.org>,
-        linux-tegra@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: multipart/signed; micalg=pgp-sha1;
+        protocol="application/pgp-signature"; boundary="LyciRD1jyfeSSjG0"
+Content-Disposition: inline
+In-Reply-To: <20190311171006.GA2141@avx2>
+User-Agent: Mutt/1.5.23 (2014-03-12)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Mar 12, 2019 at 3:57 AM Enrico Weigelt, metux IT consult
-<info@metux.net> wrote:
->
-> Use the new helper that wraps the calls to platform_get_resource()
-> and devm_ioremap_resource() together.
->
-> Signed-off-by: Enrico Weigelt, metux IT consult <info@metux.net>
-> ---
 
+--LyciRD1jyfeSSjG0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-Acked-by: Masahiro Yamada <yamada.masahiro@socionext.com>
+On Mon 2019-03-11 20:10:06, Alexey Dobriyan wrote:
+> On Mon, Mar 11, 2019 at 12:04:23PM +0100, Pavel Machek wrote:
+> > On Mon 2019-02-04 23:27:15, Alexey Dobriyan wrote:
+> > > Number of ELF program headers is 16-bit by spec, so total size
+> > > comfortably fits into "unsigned int".
+> >=20
+> > If it can't overflow, gcc should know too, and optimize checks
+> > out... right?
+>=20
+> Turns out it doesn't.
 
+Tells me you are doing something wrong.
 
->  drivers/gpio/gpio-uniphier.c | 4 +---
->  1 file changed, 1 insertion(+), 3 deletions(-)
->
-> diff --git a/drivers/gpio/gpio-uniphier.c b/drivers/gpio/gpio-uniphier.c
-> index 0f662b2..93cdcc4 100644
-> --- a/drivers/gpio/gpio-uniphier.c
-> +++ b/drivers/gpio/gpio-uniphier.c
-> @@ -346,7 +346,6 @@ static int uniphier_gpio_probe(struct platform_device *pdev)
->         struct uniphier_gpio_priv *priv;
->         struct gpio_chip *chip;
->         struct irq_chip *irq_chip;
-> -       struct resource *regs;
->         unsigned int nregs;
->         u32 ngpios;
->         int ret;
-> @@ -370,8 +369,7 @@ static int uniphier_gpio_probe(struct platform_device *pdev)
->         if (!priv)
->                 return -ENOMEM;
->
-> -       regs = platform_get_resource(pdev, IORESOURCE_MEM, 0);
-> -       priv->regs = devm_ioremap_resource(dev, regs);
-> +       priv->regs = devm_platform_ioremap_resource(pdev, 0);
->         if (IS_ERR(priv->regs))
->                 return PTR_ERR(priv->regs);
->
-> --
-> 1.9.1
->
+> > > @@ -429,13 +430,9 @@ static struct elf_phdr *load_elf_phdrs(struct el=
+fhdr *elf_ex,
+> > >  		goto out;
+> > > =20
+> > >  	/* Sanity check the number of program headers... */
+> > > -	if (elf_ex->e_phnum < 1 ||
+> > > -		elf_ex->e_phnum > 65536U / sizeof(struct elf_phdr))
+> > > -		goto out;
+> > > -
+> > >  	/* ...and their total size. */
+> >=20
+> > This is just wrong. You removed check for zero, and I'm pretty sure
+> > sizeof() is not 1, so this one can trigger, too.
+>=20
+> No. ->e_phnum is 65535 max.
 
+That does not invalidate my argument.
 
--- 
-Best Regards
-Masahiro Yamada
+									Pavel
+--=20
+(english) http://www.livejournal.com/~pavelmachek
+(cesky, pictures) http://atrey.karlin.mff.cuni.cz/~pavel/picture/horses/blo=
+g.html
+
+--LyciRD1jyfeSSjG0
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1
+
+iEYEARECAAYFAlyHffIACgkQMOfwapXb+vIDHwCeIsw7EdmZvLlQ/5w8vzCv27Fy
+w/cAnjLhSltKflD/jpIUOwL1wqufvOxX
+=REi1
+-----END PGP SIGNATURE-----
+
+--LyciRD1jyfeSSjG0--
