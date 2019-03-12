@@ -2,138 +2,95 @@ Return-Path: <SRS0=J4ZE=RP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_NEOMUTT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1315AC43381
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 12:57:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6D0C7C43381
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 13:00:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D0882214D8
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 12:57:37 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="iibUy15w"
+	by mail.kernel.org (Postfix) with ESMTP id 315732147C
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 13:00:56 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726698AbfCLM5g (ORCPT
+        id S1726422AbfCLNAy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 12 Mar 2019 08:57:36 -0400
-Received: from mail-oi1-f196.google.com ([209.85.167.196]:41105 "EHLO
-        mail-oi1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725844AbfCLM5g (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 12 Mar 2019 08:57:36 -0400
-Received: by mail-oi1-f196.google.com with SMTP id e7so1942711oia.8;
-        Tue, 12 Mar 2019 05:57:35 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=sender:subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=QdpB0yqk9irxbeRBNZ4oj46IQGC+jIFBfKXVTxsbwZs=;
-        b=iibUy15wPV+3VYPJ1GYn2m5L5geb49SI/nEAh75OE8t4vdM2dQR+74rzR4BSg+tXOZ
-         Y98XIOc3va4Iaw9CKPpe3ODJ22foeHnm4MN0T1LkGDL6ViBGdmVgnUb/UMQBY7b5cevI
-         ZKZfhw2I4NmHvdDCsnWjqaxp0Kv0ycOu4W+aDp+qWzJUfU8tstsETXGOJc13eCCLn+Bv
-         IzPzBqQu3E99wwnb8dNzOYi8RzBKCkyp5ajleu/pVhFGBPC0rfTtlVfJwLhG2StY1CFk
-         4eocIWe0jRiwYPFZCBBGM8I1U7GBxS9JGEd+Ey90fb0sj876vbfGStp0As1AY+xeUmcC
-         +79Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:subject:to:cc:references:from:message-id
-         :date:user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=QdpB0yqk9irxbeRBNZ4oj46IQGC+jIFBfKXVTxsbwZs=;
-        b=giFaxsugJbxfRuk9Ep2JlQpkITrdRLdY3aXykwKvEhR8nlPzgk8Wx9tS+pbgW4EHXN
-         Op6Izd2U+nnAPTEli3HteTFLwk4eUWsV+Jkr3Os5e5leh4JQz3Htxc1SklOV6Y+4Jeit
-         Ug6zVBDSNTL9rCM/sCKT0jbPOB1CgrYtiLwjXF2f8fqIxQt3+Ajzl53tTd0d3MRagyY4
-         meL+qcdB8PM/9/uFVQIfbNLUHsPNCzEdJAeMAcbNYehDo2RXDOCFvh3yii8/USUmUEj5
-         KDl0rwJje1aUZ+P9CvVJEbnO85558T0IDbY1NUqxCU+L7U19sE2Tm2y5ooYrwQ9s5XL+
-         RD3w==
-X-Gm-Message-State: APjAAAWAYFZtqDCA9hdInHMe0LHcCvPkGPEIfR63k7Hoo9E8jaT2gau8
-        Jo566W4ZWKSpw91/kfGLIWTOnaDQ
-X-Google-Smtp-Source: APXvYqxTYssZqcVkqd2WiftErf3CWcuoZDU4RUT5rQ0mSHFxL+sP2Eq1cxR5zulm8zqbatlkjaD42Q==
-X-Received: by 2002:aca:3a0b:: with SMTP id h11mr1629034oia.97.1552395454741;
-        Tue, 12 Mar 2019 05:57:34 -0700 (PDT)
-Received: from localhost.localdomain (cpe-24-31-245-230.kc.res.rr.com. [24.31.245.230])
-        by smtp.gmail.com with ESMTPSA id n25sm3529851otj.76.2019.03.12.05.57.33
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Tue, 12 Mar 2019 05:57:33 -0700 (PDT)
-Subject: Re: [PATCH] drivers/net/wireless/realtek/rtlwifi/usb.c - fix some
- non-kerneldoc comments
-To:     =?UTF-8?Q?Valdis_Kl=c4=93tnieks?= <valdis.kletnieks@vt.edu>,
-        Ping-Ke Shih <pkshih@realtek.com>,
-        Kalle Valo <kvalo@codeaurora.org>,
-        "David S. Miller" <davem@davemloft.net>
-Cc:     linux-wireless@vger.kernel.org, netdev@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-References: <15731.1552388757@turing-police>
-From:   Larry Finger <Larry.Finger@lwfinger.net>
-Message-ID: <69ce20a8-4342-5852-20fa-1e7369b629f4@lwfinger.net>
-Date:   Tue, 12 Mar 2019 07:57:32 -0500
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.5.1
+        Tue, 12 Mar 2019 09:00:54 -0400
+Received: from sauhun.de ([88.99.104.3]:39072 "EHLO pokefinder.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725844AbfCLNAy (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 12 Mar 2019 09:00:54 -0400
+Received: from localhost (p54B335FE.dip0.t-ipconnect.de [84.179.53.254])
+        by pokefinder.org (Postfix) with ESMTPSA id 4E6C02C282F;
+        Tue, 12 Mar 2019 14:00:52 +0100 (CET)
+Date:   Tue, 12 Mar 2019 14:00:51 +0100
+From:   Wolfram Sang <wsa@the-dreams.de>
+To:     Bich HEMON <bich.hemon@st.com>
+Cc:     Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Maxime Coquelin <mcoquelin.stm32@gmail.com>,
+        Alexandre TORGUE <alexandre.torgue@st.com>,
+        Pierre Yves MORDRET <pierre-yves.mordret@st.com>,
+        "linux-i2c@vger.kernel.org" <linux-i2c@vger.kernel.org>,
+        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+        "linux-stm32@st-md-mailman.stormreply.com" 
+        <linux-stm32@st-md-mailman.stormreply.com>,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH] i2c: i2c-stm32f7: Fix SDADEL minimum formula
+Message-ID: <20190312130051.kngknb26tikzsm7j@ninjato>
+References: <1551885125-22295-1-git-send-email-bich.hemon@st.com>
+ <20190309101340.GH1340@kunai>
+ <20190309105021.GI1340@kunai>
+ <36e0aec2-8fb8-d584-daee-1b3427f1067e@st.com>
 MIME-Version: 1.0
-In-Reply-To: <15731.1552388757@turing-police>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature"; boundary="is76gvcv4mjw7ial"
+Content-Disposition: inline
+In-Reply-To: <36e0aec2-8fb8-d584-daee-1b3427f1067e@st.com>
+User-Agent: NeoMutt/20170113 (1.7.2)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 3/12/19 6:05 AM, Valdis Klētnieks wrote:
-> Building with W=1:
->    CC [M]  drivers/net/wireless/realtek/rtlwifi/usb.o
-> drivers/net/wireless/realtek/rtlwifi/usb.c:243: warning: Cannot understand  *
->   on line 243 - I thought it was a doc line
-> drivers/net/wireless/realtek/rtlwifi/usb.c:760: warning: Cannot understand  *
->   on line 760 - I thought it was a doc line
-> drivers/net/wireless/realtek/rtlwifi/usb.c:790: warning: Cannot understand  *
->   on line 790 - I thought it was a doc line
-> 
-> Fix comment blocks so they don't look like kerneldoc lines
-> 
-> Signed-off-by: Valdis Kletnieks <valdis.kletnieks@vt.edu>
-> 
-> diff --git a/drivers/net/wireless/realtek/rtlwifi/usb.c b/drivers/net/wireless/realtek/rtlwifi/usb.c
-> index e24fda5e9087..9478cc0d4f8b 100644
-> --- a/drivers/net/wireless/realtek/rtlwifi/usb.c
-> +++ b/drivers/net/wireless/realtek/rtlwifi/usb.c
-> @@ -239,7 +239,7 @@ static void _rtl_usb_io_handler_release(struct ieee80211_hw *hw)
->   	mutex_destroy(&rtlpriv->io.bb_mutex);
->   }
->   
-> -/**
-> +/*
->    *
->    *	Default aggregation handler. Do nothing and just return the oldest skb.
->    */
-> @@ -756,7 +756,7 @@ static int rtl_usb_start(struct ieee80211_hw *hw)
->   	return err;
->   }
->   
-> -/**
-> +/*
->    *
->    *
->    */
-> @@ -786,7 +786,7 @@ static void rtl_usb_cleanup(struct ieee80211_hw *hw)
->   	usb_kill_anchored_urbs(&rtlusb->tx_submitted);
->   }
->   
-> -/**
-> +/*
->    *
->    * We may add some struct into struct rtl_usb later. Do deinit here.
->    *
 
-As these comments are 1 line at most, I would have changed the first and third 
-instance to /* <contents of line> */, and deleted the second empty comment, but 
-the content of this patch is OK. The subject line needs to be changed. It should 
-start with "rtlwifi: rtl_usb: Fix some ...".
+--is76gvcv4mjw7ial
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-Once this change is made in v2, then
 
-Acked-by: Larry Finger <Larry.Finger@lwfinger.net>
+> > Do you have a Fixes tag for this?
+> >=20
+>=20
+> Fixes: aeb068c57214858b638d5ee627bb4a831f98771e ("i2c: i2c-stm32f7: add=
+=20
+> driver")
+>=20
+> Will you change the commit message or do you want me to resend the patch?
 
-Larry
+I'll fix it. Thanks for this info!
 
+
+--is76gvcv4mjw7ial
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAABCAAdFiEEOZGx6rniZ1Gk92RdFA3kzBSgKbYFAlyHrYMACgkQFA3kzBSg
+KbZT1g//bRBMzXRZ84ILbD3iczv55pWU32XqytQZVYE0B4meki6Az4h3se4n4AmM
+z8jL7OxLEmXzA22MbqRxhXvI3e3U3yBh65PGD2855Fv/Q9n/R7NxDEesvCU3aI+y
+O7eKUXMMqaOc1DcgiPw2dpxxsneUEYTtk7EE+1lYCOXK9BkXA9ZX7VQLg493bQxj
+RHRK/5+YK/Sj+mdaJktY73k3NZiB3qJ4gK9EoMVu+/W6wBpSHpknuSmFxPNUxUSF
+8UKETR0DvY0TOqYqpNdRLI8jR+UM2wTIe+yBLXK6oBSMFFkk3hanyfYt78VjVxlG
+lUnStJ18G7orGmwOpmf2xNX7kNgtz6CLgMFLX//AL9qouw8hhf2/SzNft+j4TDKx
+i3TcCGRV5tjGk/NMAHVhIPD9Qfbhs998uaNPFa91flnOALfGAL7Sjp8dT7I5APIG
+QB9qhQrBsQlg0pkm419Sa9A9F0PNWe1mwhP7rXBNpYU1S3fRPnyp0SPg4iSSIve0
+l4U+doq+3biw0Mb5WRhx28WrePKYXHe57PRx5Fm6wNHEkP401HeblF83Xo/bM+Zi
+y2SNRSNHWqVndxSiRt3/uQ543p+xzOQvwFuO3DTezJ+iizI6ukIGnWZAnQloTVIt
+P+HA478TJktkWOT7vXeS2b+hM5hFQbxoQ2yqnHcWuXn03vN6jEU=
+=WcWM
+-----END PGP SIGNATURE-----
+
+--is76gvcv4mjw7ial--
