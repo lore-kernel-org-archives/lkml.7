@@ -2,182 +2,84 @@ Return-Path: <SRS0=J4ZE=RP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_MUTT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5DE34C43381
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 14:39:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D6C9FC43381
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 14:40:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 222AE2147C
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 14:39:59 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="OHHcS5zi"
+	by mail.kernel.org (Postfix) with ESMTP id AD3D62147C
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 14:40:57 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726788AbfCLOj5 (ORCPT
+        id S1726803AbfCLOk4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 12 Mar 2019 10:39:57 -0400
-Received: from mail-qt1-f194.google.com ([209.85.160.194]:43540 "EHLO
-        mail-qt1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725894AbfCLOj5 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 12 Mar 2019 10:39:57 -0400
-Received: by mail-qt1-f194.google.com with SMTP id d16so2747859qtn.10
-        for <linux-kernel@vger.kernel.org>; Tue, 12 Mar 2019 07:39:56 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references;
-        bh=RlEUwtoo2fzvf8uoWm5turOiMD9NMoC+/ATe1cHwutQ=;
-        b=OHHcS5ziZtiFhzxZ/bnKX/q0vYd4JsxaV7IJkGTYX0NcsLupUMeym8hS/aYcnC5J09
-         qGNRxe/qy3iP71sjeoq24YhZMc33RyJwtQQWMIS07gXnsPBwJp8J/2tZe6vn9rpfxgF1
-         Vw5TRgk7ly5ow0KM0/StNNrdWVYbSkNdAJ2S4HhD3qKSSz4UqnZhXbdF/t8Ild4rVMtv
-         HXWziMPQP5IGxQlHOcF5VIfjexQfN0mkuIxjvihiVF2bc1RddSXNKN/NFAz0m2nV1VgA
-         W7Ifsku860mchwk9vIUXBjRIQyKIv8wDfnRdtmBNsEeqUg3E3SYYa63t3Q+DPSeZb3Vh
-         km/A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references;
-        bh=RlEUwtoo2fzvf8uoWm5turOiMD9NMoC+/ATe1cHwutQ=;
-        b=fN/uv5UnD0feM0fMoTtZAPyq5uYEG18haUdPz6Yw09zqLgL/V9emiTTuS7ihTbhX06
-         JDo0oPF9i7tTrzf+P6u1RJWXmIpkvgE8M8u2dyxSBI0a5oGsfXZJd23CvG11AerNMCeu
-         hrh3h37Jyu+V43s3o6baKoP9LpihLaaIYZt878F3hRcyu3wTEP/La3ig5761DnDFhoce
-         3O6ZdBopbs9iyZuE+8s8Obq9HaJeccXz7Y4xzpV9FdfcMIbs0eMWP0UL3Co/8eN7xzFG
-         Rv6Gb7+JLe5pa01NNPH6Vao3tQSm8ls0zE/OMGTnGOZNfDYraljh2sKx6pFy6vLoIDHe
-         MK7A==
-X-Gm-Message-State: APjAAAWyzTmwOMG2rYpCrsH2JwM0WVBFn8oKkOxv59VhmV693RNKfYYq
-        4K+ULn6mBb4SlfuWdDFMjPRu4GCP
-X-Google-Smtp-Source: APXvYqzv/iPpY7dwwykDk8Qm//s2Gq+3vv4man8pnpAuIgpnVA9o1KEeWnwImvj6YsT/HiwZmv6kKw==
-X-Received: by 2002:a0c:9e6b:: with SMTP id z43mr31175176qve.131.1552401595453;
-        Tue, 12 Mar 2019 07:39:55 -0700 (PDT)
-Received: from localhost.localdomain ([177.76.237.150])
-        by smtp.gmail.com with ESMTPSA id m88sm4616344qte.68.2019.03.12.07.39.53
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Tue, 12 Mar 2019 07:39:54 -0700 (PDT)
-From:   Guilherme T Maeoka <gui.mspace@gmail.com>
-To:     gregkh@linuxfoundation.org
-Cc:     devel@driverdev.osuosl.org, linux-kernel@vger.kernel.org,
-        Guilherme T Maeoka <gui.maeoka@gmail.com>
-Subject: [PATCH 2/2] Staging: rtl8723bs: os_dep: Invert if selection statement
-Date:   Tue, 12 Mar 2019 11:39:14 -0300
-Message-Id: <20190312143914.4471-2-gui.mspace@gmail.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20190312143914.4471-1-gui.mspace@gmail.com>
-References: <20190312143914.4471-1-gui.mspace@gmail.com>
+        Tue, 12 Mar 2019 10:40:56 -0400
+Received: from mga17.intel.com ([192.55.52.151]:10221 "EHLO mga17.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725894AbfCLOkz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 12 Mar 2019 10:40:55 -0400
+X-Amp-Result: UNKNOWN
+X-Amp-Original-Verdict: FILE UNKNOWN
+X-Amp-File-Uploaded: False
+Received: from orsmga002.jf.intel.com ([10.7.209.21])
+  by fmsmga107.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 12 Mar 2019 07:40:55 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.58,471,1544515200"; 
+   d="scan'208";a="141341129"
+Received: from smile.fi.intel.com (HELO smile) ([10.237.72.86])
+  by orsmga002.jf.intel.com with ESMTP; 12 Mar 2019 07:40:53 -0700
+Received: from andy by smile with local (Exim 4.92)
+        (envelope-from <andriy.shevchenko@linux.intel.com>)
+        id 1h3iaK-0007xM-PH; Tue, 12 Mar 2019 16:40:52 +0200
+Date:   Tue, 12 Mar 2019 16:40:52 +0200
+From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+To:     Geert Uytterhoeven <geert@linux-m68k.org>
+Cc:     Miguel Ojeda Sandonis <miguel.ojeda.sandonis@gmail.com>,
+        Willy Tarreau <willy@haproxy.com>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH v1 1/4] auxdisplay: hd44780: Fix memory leak on ->remove()
+Message-ID: <20190312144052.GC9224@smile.fi.intel.com>
+References: <20190312131830.4253-1-andriy.shevchenko@linux.intel.com>
+ <CAMuHMdVTKRJJDqtpgExmEmwnYcpF8h2xTtbXwKLnVmVPz0bZqw@mail.gmail.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAMuHMdVTKRJJDqtpgExmEmwnYcpF8h2xTtbXwKLnVmVPz0bZqw@mail.gmail.com>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Guilherme T Maeoka <gui.maeoka@gmail.com>
+On Tue, Mar 12, 2019 at 02:47:01PM +0100, Geert Uytterhoeven wrote:
+> On Tue, Mar 12, 2019 at 2:18 PM Andy Shevchenko
+> <andriy.shevchenko@linux.intel.com> wrote:
+> > We have to free on ->remove() the allocated resources on ->probe().
+> >
+> > Fixes: d47d88361fee ("auxdisplay: Add HD44780 Character LCD support")
+> > Cc: Geert Uytterhoeven <geert@linux-m68k.org>
+> > Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+> 
+> Thanks, nice catch!
+> 
+> (wearing a newer (and hopefully wiser ;-) hat than when I wrote the code)
+> 
+> While this is correct for the current implementation of struct charlcd_priv,
+> this may be a bit fragile.
 
-Change 'if (a)' to 'if (!a)' and return. Otherwise, continue with
-the previouly wrapped block of control. This reduces the indentation
-level by 2 and 1.
+This patch will be the same in the next version due to possibility to easy
+backport.
 
-I'm not if this commit contributes to the coding style.
+> What about adding a charlcd_free() wrapper, which can do kfree(to_priv(lcd)),
+> and be used in the probe failure path, too?
 
-Signed-off-by: Guilherme T Maeoka <gui.maeoka@gmail.com>
----
- drivers/staging/rtl8723bs/os_dep/sdio_intf.c | 73 +++++++++++---------
- 1 file changed, 40 insertions(+), 33 deletions(-)
+This has been partially done in the rest of the series, but I got your advise
+and will change to use to_priv() in v2. Thanks!
 
-diff --git a/drivers/staging/rtl8723bs/os_dep/sdio_intf.c b/drivers/staging/rtl8723bs/os_dep/sdio_intf.c
-index 86f1e090436e..54425ad28bfd 100644
---- a/drivers/staging/rtl8723bs/os_dep/sdio_intf.c
-+++ b/drivers/staging/rtl8723bs/os_dep/sdio_intf.c
-@@ -103,23 +103,27 @@ static void sdio_free_irq(struct dvobj_priv *dvobj)
- 	struct sdio_func *func;
- 	int err;
- 
--	if (dvobj->irq_alloc) {
--		psdio_data = &dvobj->intf_data;
--		func = psdio_data->func;
--
--		if (func) {
--			sdio_claim_host(func);
--			err = sdio_release_irq(func);
--			if (err) {
--				dvobj->drv_dbg.dbg_sdio_free_irq_error_cnt++;
--				DBG_871X_LEVEL(_drv_err_, "%s: sdio_release_irq FAIL(%d)!\n", __func__, err);
--			} else {
--				dvobj->drv_dbg.dbg_sdio_free_irq_cnt++;
--			}
--			sdio_release_host(func);
--		}
--		dvobj->irq_alloc = 0;
-+	if (!dvobj->irq_alloc)
-+		return;
-+
-+	psdio_data = &dvobj->intf_data;
-+	func = psdio_data->func;
-+	dvobj->irq_alloc = 0;
-+
-+	if (!func)
-+		return;
-+
-+	sdio_claim_host(func);
-+	err = sdio_release_irq(func);
-+	if (err) {
-+		dvobj->drv_dbg.dbg_sdio_free_irq_error_cnt++;
-+		DBG_871X_LEVEL(_drv_err_, "%s: sdio_release_irq FAIL(%d)!\n",
-+			       __func__, err);
-+	} else {
-+		dvobj->drv_dbg.dbg_sdio_free_irq_cnt++;
- 	}
-+
-+	sdio_release_host(func);
- }
- 
- #ifdef CONFIG_GPIO_WAKEUP
-@@ -219,26 +223,29 @@ static void sdio_deinit(struct dvobj_priv *dvobj)
- 
- 	func = dvobj->intf_data.func;
- 
--	if (func) {
--		sdio_claim_host(func);
--		err = sdio_disable_func(func);
--		if (err) {
--			dvobj->drv_dbg.dbg_sdio_deinit_error_cnt++;
--			DBG_8192C(KERN_ERR "%s: sdio_disable_func(%d)\n", __func__, err);
--		}
-+	if (!func)
-+		return;
- 
--		if (dvobj->irq_alloc) {
--			err = sdio_release_irq(func);
--			if (err) {
--				dvobj->drv_dbg.dbg_sdio_free_irq_error_cnt++;
--				DBG_8192C(KERN_ERR "%s: sdio_release_irq(%d)\n", __func__, err);
--			} else {
--				dvobj->drv_dbg.dbg_sdio_free_irq_cnt++;
--			}
--		}
-+	sdio_claim_host(func);
-+	err = sdio_disable_func(func);
-+	if (err) {
-+		dvobj->drv_dbg.dbg_sdio_deinit_error_cnt++;
-+		DBG_8192C(KERN_ERR "%s: sdio_disable_func(%d)\n",
-+			  __func__, err);
-+	}
- 
--		sdio_release_host(func);
-+	if (dvobj->irq_alloc) {
-+		err = sdio_release_irq(func);
-+		if (err) {
-+			dvobj->drv_dbg.dbg_sdio_free_irq_error_cnt++;
-+			DBG_8192C(KERN_ERR "%s: sdio_release_irq(%d)\n",
-+				  __func__, err);
-+		} else {
-+			dvobj->drv_dbg.dbg_sdio_free_irq_cnt++;
-+		}
- 	}
-+
-+	sdio_release_host(func);
- }
- 
- static struct dvobj_priv *sdio_dvobj_init(struct sdio_func *func)
 -- 
-2.17.1
+With Best Regards,
+Andy Shevchenko
+
 
