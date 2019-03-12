@@ -4,52 +4,55 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B3A45C43381
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 17:49:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8C3EEC43381
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 17:49:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 85A362147C
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 17:49:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5DC402087C
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 17:49:08 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1552412945;
-	bh=JHs03SfIIUzJrwaC8f1scmlwj/qUTm3lvsqbfx9mvzg=;
+	s=default; t=1552412948;
+	bh=CsDzlwYCYzhKwSYzpD1Steuixtfo1Q+M5IfVQv7AyUY=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=AUGiEPGB4dkMltpN+Xumk4KfmUmZOKDR2RkXbCELqi3QgILWVzCApffNiW7Mclr+k
-	 bhKKbigbq0EtkRD5qit87JENZnvIgYpHadKSVJLYtx6QmJJ4l0P7mPMWueCBht89u+
-	 8+yfwRLmxk7oeCpjLPZMGcrBnXIof66EuPdcjO4I=
+	b=Bm8Yvn4nbD/qgFYiGHIS+6V2Xizbzoua7QmyEXZZFVVUGHOABQLYQfOAwcXetyvVf
+	 kokeb75ECSFa8Agrs+Js/yiHaZGEjSBMwY7h+uMApyChYjMTFHbl55y4qSlzDLzOgZ
+	 b0I1QqGzSB2VEgVYxTvhCYDHPe9H9EiqubWTFCAU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727458AbfCLROw (ORCPT
+        id S1728720AbfCLRtH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 12 Mar 2019 13:14:52 -0400
-Received: from mail.kernel.org ([198.145.29.99]:52124 "EHLO mail.kernel.org"
+        Tue, 12 Mar 2019 13:49:07 -0400
+Received: from mail.kernel.org ([198.145.29.99]:54332 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728225AbfCLROF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 12 Mar 2019 13:14:05 -0400
+        id S1728524AbfCLROw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 12 Mar 2019 13:14:52 -0400
 Received: from localhost (unknown [104.133.8.98])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 5895C2173C;
-        Tue, 12 Mar 2019 17:14:04 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 506F821850;
+        Tue, 12 Mar 2019 17:14:51 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1552410844;
-        bh=JHs03SfIIUzJrwaC8f1scmlwj/qUTm3lvsqbfx9mvzg=;
+        s=default; t=1552410891;
+        bh=CsDzlwYCYzhKwSYzpD1Steuixtfo1Q+M5IfVQv7AyUY=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=d0oO7UxZEYHLHfHlFxlaHW0qsoWwYMKasCilBQIEm5ys4VBmOID/kZlDhs7c3zkAC
-         uRIX3G7/7w4fHEMm8QOK+mGokBmvp8HDPUfzVVRu+KKYruFhBgkRmKxTYkefW2Tj54
-         b+3QYKDY1E9shakJb2wzmAWSzbJ5ouYKHBuAAvqg=
+        b=B8zSFuJyQdbaI8rjQ/PR3oSgx4VX/V7ySAOcTZEADHRyWbvyiQsRsDMgkKoLeQf0g
+         haK6+9/VmnwMDth3u3MghxTYibAeo8c8ZdOlZf2p+I+g2jmas7SKNhyNUGwSMqrlZ7
+         sJ2c7w6uev+sBOmoMK7OxXh8hjtpwuZeUAqUDlXQ=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Feras Daoud <ferasda@mellanox.com>,
-        Erez Shitrit <erezsh@mellanox.com>,
-        Leon Romanovsky <leonro@mellanox.com>,
-        Jason Gunthorpe <jgg@mellanox.com>,
+        stable@vger.kernel.org, Zhou Yanjie <zhouyanjie@cduestc.edu.cn>,
+        Paul Burton <paul.burton@mips.com>,
+        linux-mips <linux-mips@vger.kernel.org>,
+        devicetree@vger.kernel.org, robh+dt@kernel.org,
+        ralf@linux-mips.org, jhogan@kernel.org, mark.rutland@arm.com,
+        malat@debian.org, ezequiel@collabora.co.uk, ulf.hansson@linaro.org,
+        syq <syq@debian.org>, "jiaxun.yang" <jiaxun.yang@flygoat.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 017/149] IB/ipoib: Fix for use-after-free in ipoib_cm_tx_start
-Date:   Tue, 12 Mar 2019 10:07:15 -0700
-Message-Id: <20190312170351.046666320@linuxfoundation.org>
+Subject: [PATCH 4.19 080/149] DTS: CI20: Fix bugs in ci20s device tree.
+Date:   Tue, 12 Mar 2019 10:08:18 -0700
+Message-Id: <20190312170356.380190683@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190312170349.421581206@linuxfoundation.org>
 References: <20190312170349.421581206@linuxfoundation.org>
@@ -68,144 +71,56 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-[ Upstream commit 6ab4aba00f811a5265acc4d3eb1863bb3ca60562 ]
+[ Upstream commit 1ca1c87f91d9dc50d6a38e2177b2032996e7901c ]
 
-The following BUG was reported by kasan:
+According to the Schematic, the hardware of ci20 leads to uart3,
+but not to uart2. Uart2 is miswritten in the original code.
 
- BUG: KASAN: use-after-free in ipoib_cm_tx_start+0x430/0x1390 [ib_ipoib]
- Read of size 80 at addr ffff88034c30bcd0 by task kworker/u16:1/24020
-
- Workqueue: ipoib_wq ipoib_cm_tx_start [ib_ipoib]
- Call Trace:
-  dump_stack+0x9a/0xeb
-  print_address_description+0xe3/0x2e0
-  kasan_report+0x18a/0x2e0
-  ? ipoib_cm_tx_start+0x430/0x1390 [ib_ipoib]
-  memcpy+0x1f/0x50
-  ipoib_cm_tx_start+0x430/0x1390 [ib_ipoib]
-  ? kvm_clock_read+0x1f/0x30
-  ? ipoib_cm_skb_reap+0x610/0x610 [ib_ipoib]
-  ? __lock_is_held+0xc2/0x170
-  ? process_one_work+0x880/0x1960
-  ? process_one_work+0x912/0x1960
-  process_one_work+0x912/0x1960
-  ? wq_pool_ids_show+0x310/0x310
-  ? lock_acquire+0x145/0x440
-  worker_thread+0x87/0xbb0
-  ? process_one_work+0x1960/0x1960
-  kthread+0x314/0x3d0
-  ? kthread_create_worker_on_cpu+0xc0/0xc0
-  ret_from_fork+0x3a/0x50
-
- Allocated by task 0:
-  kasan_kmalloc+0xa0/0xd0
-  kmem_cache_alloc_trace+0x168/0x3e0
-  path_rec_create+0xa2/0x1f0 [ib_ipoib]
-  ipoib_start_xmit+0xa98/0x19e0 [ib_ipoib]
-  dev_hard_start_xmit+0x159/0x8d0
-  sch_direct_xmit+0x226/0xb40
-  __dev_queue_xmit+0x1d63/0x2950
-  neigh_update+0x889/0x1770
-  arp_process+0xc47/0x21f0
-  arp_rcv+0x462/0x760
-  __netif_receive_skb_core+0x1546/0x2da0
-  netif_receive_skb_internal+0xf2/0x590
-  napi_gro_receive+0x28e/0x390
-  ipoib_ib_handle_rx_wc_rss+0x873/0x1b60 [ib_ipoib]
-  ipoib_rx_poll_rss+0x17d/0x320 [ib_ipoib]
-  net_rx_action+0x427/0xe30
-  __do_softirq+0x28e/0xc42
-
- Freed by task 26680:
-  __kasan_slab_free+0x11d/0x160
-  kfree+0xf5/0x360
-  ipoib_flush_paths+0x532/0x9d0 [ib_ipoib]
-  ipoib_set_mode_rss+0x1ad/0x560 [ib_ipoib]
-  set_mode+0xc8/0x150 [ib_ipoib]
-  kernfs_fop_write+0x279/0x440
-  __vfs_write+0xd8/0x5c0
-  vfs_write+0x15e/0x470
-  ksys_write+0xb8/0x180
-  do_syscall_64+0x9b/0x420
-  entry_SYSCALL_64_after_hwframe+0x49/0xbe
-
- The buggy address belongs to the object at ffff88034c30bcc8
-                which belongs to the cache kmalloc-512 of size 512
- The buggy address is located 8 bytes inside of
-                512-byte region [ffff88034c30bcc8, ffff88034c30bec8)
- The buggy address belongs to the page:
-
-The following race between change mode and xmit flow is the reason for
-this use-after-free:
-
-Change mode     Send packet 1 to GID XX      Send packet 2 to GID XX
-     |                    |                             |
-   start                  |                             |
-     |                    |                             |
-     |                    |                             |
-     |         Create new path for GID XX               |
-     |           and update neigh path                  |
-     |                    |                             |
-     |                    |                             |
-     |                    |                             |
- flush_paths              |                             |
-                          |                             |
-               queue_work(cm.start_task)                |
-                          |                 Path for GID XX not found
-                          |                      create new path
-                          |
-                          |
-               start_task runs with old
-                    released path
-
-There is no locking to protect the lifetime of the path through the
-ipoib_cm_tx struct, so delete it entirely and always use the newly looked
-up path under the priv->lock.
-
-Fixes: 546481c2816e ("IB/ipoib: Fix memory corruption in ipoib cm mode connect flow")
-Signed-off-by: Feras Daoud <ferasda@mellanox.com>
-Reviewed-by: Erez Shitrit <erezsh@mellanox.com>
-Signed-off-by: Leon Romanovsky <leonro@mellanox.com>
-Signed-off-by: Jason Gunthorpe <jgg@mellanox.com>
+Signed-off-by: Zhou Yanjie <zhouyanjie@cduestc.edu.cn>
+Signed-off-by: Paul Burton <paul.burton@mips.com>
+Cc: linux-mips <linux-mips@vger.kernel.org>
+Cc: linux-kernel <linux-kernel@vger.kernel.org>
+Cc: devicetree@vger.kernel.org
+Cc: robh+dt@kernel.org
+Cc: ralf@linux-mips.org
+Cc: jhogan@kernel.org
+Cc: mark.rutland@arm.com
+Cc: malat@debian.org
+Cc: ezequiel@collabora.co.uk
+Cc: ulf.hansson@linaro.org
+Cc: syq <syq@debian.org>
+Cc: jiaxun.yang <jiaxun.yang@flygoat.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/infiniband/ulp/ipoib/ipoib.h    | 1 -
- drivers/infiniband/ulp/ipoib/ipoib_cm.c | 3 +--
- 2 files changed, 1 insertion(+), 3 deletions(-)
+ arch/mips/boot/dts/ingenic/ci20.dts | 8 ++++----
+ 1 file changed, 4 insertions(+), 4 deletions(-)
 
-diff --git a/drivers/infiniband/ulp/ipoib/ipoib.h b/drivers/infiniband/ulp/ipoib/ipoib.h
-index 1abe3c62f106..b22d02c9de90 100644
---- a/drivers/infiniband/ulp/ipoib/ipoib.h
-+++ b/drivers/infiniband/ulp/ipoib/ipoib.h
-@@ -248,7 +248,6 @@ struct ipoib_cm_tx {
- 	struct list_head     list;
- 	struct net_device   *dev;
- 	struct ipoib_neigh  *neigh;
--	struct ipoib_path   *path;
- 	struct ipoib_tx_buf *tx_ring;
- 	unsigned int	     tx_head;
- 	unsigned int	     tx_tail;
-diff --git a/drivers/infiniband/ulp/ipoib/ipoib_cm.c b/drivers/infiniband/ulp/ipoib/ipoib_cm.c
-index 0428e01e8f69..aa9dcfc36cd3 100644
---- a/drivers/infiniband/ulp/ipoib/ipoib_cm.c
-+++ b/drivers/infiniband/ulp/ipoib/ipoib_cm.c
-@@ -1312,7 +1312,6 @@ struct ipoib_cm_tx *ipoib_cm_create_tx(struct net_device *dev, struct ipoib_path
+diff --git a/arch/mips/boot/dts/ingenic/ci20.dts b/arch/mips/boot/dts/ingenic/ci20.dts
+index 50cff3cbcc6d..4f7b1fa31cf5 100644
+--- a/arch/mips/boot/dts/ingenic/ci20.dts
++++ b/arch/mips/boot/dts/ingenic/ci20.dts
+@@ -76,7 +76,7 @@
+ 	status = "okay";
  
- 	neigh->cm = tx;
- 	tx->neigh = neigh;
--	tx->path = path;
- 	tx->dev = dev;
- 	list_add(&tx->list, &priv->cm.start_list);
- 	set_bit(IPOIB_FLAG_INITIALIZED, &tx->flags);
-@@ -1371,7 +1370,7 @@ static void ipoib_cm_tx_start(struct work_struct *work)
- 				neigh->daddr + QPN_AND_OPTIONS_OFFSET);
- 			goto free_neigh;
- 		}
--		memcpy(&pathrec, &p->path->pathrec, sizeof(pathrec));
-+		memcpy(&pathrec, &path->pathrec, sizeof(pathrec));
+ 	pinctrl-names = "default";
+-	pinctrl-0 = <&pins_uart2>;
++	pinctrl-0 = <&pins_uart3>;
+ };
  
- 		spin_unlock_irqrestore(&priv->lock, flags);
- 		netif_tx_unlock_bh(dev);
+ &uart4 {
+@@ -196,9 +196,9 @@
+ 		bias-disable;
+ 	};
+ 
+-	pins_uart2: uart2 {
+-		function = "uart2";
+-		groups = "uart2-data", "uart2-hwflow";
++	pins_uart3: uart3 {
++		function = "uart3";
++		groups = "uart3-data", "uart3-hwflow";
+ 		bias-disable;
+ 	};
+ 
 -- 
 2.19.1
 
