@@ -2,110 +2,82 @@ Return-Path: <SRS0=J4ZE=RP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_PASS autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,
+	USER_AGENT_MUTT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 06D18C43381
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 18:32:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 97362C43381
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 18:36:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CD683206DF
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 18:32:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5CBEA2077B
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 18:36:05 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1552415765;
+	bh=3tAs8BS6SAK3HlWXbUsKByx9EV+tAy0fjRmYHRwtNZs=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=DxftDZ+Y3ks2bTvzto17e3W8WDSHvWs6TIUhWegU348QMdhbCMG1zsdG9JXHotEP8
+	 vuQIQL5M+ygOrawKFNb34eWyurljeeBgroLt7pVGjs3BGDoB1xQ9zIUokozXwik17M
+	 iXw71362ykuk9AUqrXX6heI7FoPBV8wnhplnb2YY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727025AbfCLScU (ORCPT
+        id S1726912AbfCLSgD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 12 Mar 2019 14:32:20 -0400
-Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:40910 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726946AbfCLScU (ORCPT
+        Tue, 12 Mar 2019 14:36:03 -0400
+Received: from mail-oi1-f196.google.com ([209.85.167.196]:46870 "EHLO
+        mail-oi1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726412AbfCLSgD (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 12 Mar 2019 14:32:20 -0400
-Received: from pps.filterd (m0098394.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x2CISjlO053947
-        for <linux-kernel@vger.kernel.org>; Tue, 12 Mar 2019 14:32:18 -0400
-Received: from e06smtp05.uk.ibm.com (e06smtp05.uk.ibm.com [195.75.94.101])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 2r6gjmnxw2-1
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
-        for <linux-kernel@vger.kernel.org>; Tue, 12 Mar 2019 14:32:18 -0400
-Received: from localhost
-        by e06smtp05.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
-        for <linux-kernel@vger.kernel.org> from <zohar@linux.ibm.com>;
-        Tue, 12 Mar 2019 18:32:16 -0000
-Received: from b06cxnps4074.portsmouth.uk.ibm.com (9.149.109.196)
-        by e06smtp05.uk.ibm.com (192.168.101.135) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
-        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
-        Tue, 12 Mar 2019 18:32:12 -0000
-Received: from d06av24.portsmouth.uk.ibm.com (mk.ibm.com [9.149.105.60])
-        by b06cxnps4074.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x2CIWB4l25559154
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Tue, 12 Mar 2019 18:32:12 GMT
-Received: from d06av24.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id DE03842042;
-        Tue, 12 Mar 2019 18:32:11 +0000 (GMT)
-Received: from d06av24.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id A252D4204B;
-        Tue, 12 Mar 2019 18:32:10 +0000 (GMT)
-Received: from localhost.localdomain (unknown [9.80.93.217])
-        by d06av24.portsmouth.uk.ibm.com (Postfix) with ESMTP;
-        Tue, 12 Mar 2019 18:32:10 +0000 (GMT)
-Subject: Re: [PATCH] tpm: Make timeout logic simpler and more robust
-From:   Mimi Zohar <zohar@linux.ibm.com>
-To:     James Bottomley <James.Bottomley@HansenPartnership.com>,
-        Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>,
-        Peter =?ISO-8859-1?Q?H=FCwe?= <PeterHuewe@gmx.de>
-Cc:     Calvin Owens <calvinowens@fb.com>, Jason Gunthorpe <jgg@ziepe.ca>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        linux-integrity@vger.kernel.org, linux-kernel@vger.kernel.org,
-        kernel-team@fb.com
-Date:   Tue, 12 Mar 2019 14:32:00 -0400
-In-Reply-To: <1552410856.3083.28.camel@HansenPartnership.com>
-References: <358e89ed2b766d51b5f57abf31ab7a925ac63379.1552348123.git.calvinowens@fb.com>
-         <1552350463.23859.8.camel@HansenPartnership.com>
-         <20190312125028.GC9243@linux.intel.com>
-         <1552401766.3083.3.camel@HansenPartnership.com>
-         <1552409969.24794.68.camel@linux.ibm.com>
-         <1552410856.3083.28.camel@HansenPartnership.com>
-Content-Type: text/plain; charset="UTF-8"
-X-Mailer: Evolution 3.20.5 (3.20.5-1.fc24) 
-Mime-Version: 1.0
-Content-Transfer-Encoding: 7bit
-X-TM-AS-GCONF: 00
-x-cbid: 19031218-0020-0000-0000-00000321C0AC
-X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
-x-cbparentid: 19031218-0021-0000-0000-00002173EDB1
-Message-Id: <1552415520.24794.87.camel@linux.ibm.com>
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-03-12_10:,,
- signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
- malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
- clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
- mlxlogscore=999 adultscore=0 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.0.1-1810050000 definitions=main-1903120125
+        Tue, 12 Mar 2019 14:36:03 -0400
+Received: by mail-oi1-f196.google.com with SMTP id j10so2916936oij.13;
+        Tue, 12 Mar 2019 11:36:02 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=kPCtGJIPSajO7cpW3hg3I0j1qe6OnlLYLlcyK9Ff3HA=;
+        b=fxfphI74MxE+dYljFbFHo73KpjybrhlNh9fI12PLrsUYqc02Ii2Ii44w9Zdt4HV9yt
+         uia7R6hSlJnfay2hsouyfCQhDYlfel8ndywrWQ1Mj+agQUzhYCjHGGqURg4C+4SPuwX4
+         vyGN7ahXBW5LzkgNoYaSC6Yi5x585lngAD8g9YCdYmfUfmNtRGRC80WsG6rNlbCdxXXk
+         6i9dDPBd4QpmbRFiBh2lCXEtn0oYLXMdw5nelSrAvvuXcbZgnmAkiKXV/jpFoUIOqgpL
+         zR9uS5MW8Vk5jvE1tRnvU2Psu9JxN68GWrVk7RW5mGUdQVIMoDTgRm32xF42ERZag4HM
+         ooFQ==
+X-Gm-Message-State: APjAAAXarrOH04vuzZyUvn98/BJv+2OSPuxZGi/uuYAJfaRGlKXUSQPz
+        933ZOkmfmukI9nB5iuembA==
+X-Google-Smtp-Source: APXvYqzCWUls0CfRJz9KMObFGGmFReVYLY3rfqf+6DEpYTi8C/9zO6obEAMUKBtnRcinqXHquKbJ4g==
+X-Received: by 2002:aca:55cb:: with SMTP id j194mr2437911oib.39.1552415761963;
+        Tue, 12 Mar 2019 11:36:01 -0700 (PDT)
+Received: from localhost (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
+        by smtp.gmail.com with ESMTPSA id b2sm956271oih.1.2019.03.12.11.36.01
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Tue, 12 Mar 2019 11:36:01 -0700 (PDT)
+Date:   Tue, 12 Mar 2019 13:36:00 -0500
+From:   Rob Herring <robh@kernel.org>
+To:     Robert Yang <decatf@gmail.com>
+Cc:     Jonathan Cameron <jic23@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>, linux-iio@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Robert Yang <decatf@gmail.com>
+Subject: Re: [PATCH v2 1/3] dt-bindings: Add vendor prefix for Kionix, Inc.
+Message-ID: <20190312183600.GA903@bogus>
+References: <20190304151912.11485-1-decatf@gmail.com>
+ <20190304151912.11485-2-decatf@gmail.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190304151912.11485-2-decatf@gmail.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, 2019-03-12 at 10:14 -0700, James Bottomley wrote:
-
-> > > However, I am saying we should root cause this problem rather than
-> > > take a blind shot at the apparent timeout complexity.  My timeout
-> > > instability is definitely related to the polling adjustments, so
-> > > it's not unreasonable to think Facebooks might be as well.
-> > 
-> > James, I thought Peter sent you a tis "debug" tool to help you debug
-> > the problem you're seeing.  Whatever happened?
-
-https://patchwork.kernel.org/patch/10520247/#22107607
-
+On Mon,  4 Mar 2019 10:19:10 -0500, Robert Yang wrote:
+> Kionix manufactured MEMs sensors. There are Kionix acceleromoter sensor
+> drivers which can be used with device tree.
 > 
-> No, not seen one.  I have tried to debug the problem, but it's really
-> odd: my TPM is a polled nuvoton (so no irq line).  If you poll the data
-> ready bit on my TPM too often, it simply drops off the bus and every
-> TPM operation after that times out.  The only way to recover is to
-> reboot.
-> 
-> James
+> Signed-off-by: Robert Yang <decatf@gmail.com>
+> ---
+>  Documentation/devicetree/bindings/vendor-prefixes.txt | 1 +
+>  1 file changed, 1 insertion(+)
 > 
 
+Reviewed-by: Rob Herring <robh@kernel.org>
