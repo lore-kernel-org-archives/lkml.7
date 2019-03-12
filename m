@@ -2,59 +2,55 @@ Return-Path: <SRS0=J4ZE=RP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-14.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 850B3C43381
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 17:25:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8A221C43381
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 17:25:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5698E214AF
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 17:25:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4F4662171F
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 17:25:39 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1552411530;
-	bh=idErId8STJQ9fMQFEYEPH7giSFKpS2RzaluTcJyqCmk=;
+	s=default; t=1552411539;
+	bh=r4e9QC4PLi2VjwmK56vRItYF0sGGtQKRnKFijds7W6s=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=HnKUehl1UVBi3EeH7dRbHiX8HyPfM4S6szMVsD09qP+tPw6TI4yQJhPIcyxdAQbt2
-	 jIZJxZ+OmorFu/j4/icOL6jKJU9JLU+CcLqtXd2/HMicY494mmaDVhgA8Tok3S35Om
-	 pYepjNt5OJKiNVTFt7UPZ1EHv/9RPrdZoJhQrILQ=
+	b=AZm+TL1rkC4+yPbalkwMLvJvX/Gt40fwYT3f39+Gi+JVfwHw4BpvYq/1YjfO0pOOy
+	 byZg495FVe3roJ104H3OVTrDcVGq5wgrX+cB2X8RfXtas1xVMV8xbPTpdCnT32d5PY
+	 FMXfIOkdTvNA0I1/NtPlT+ogvwLJqBvwBnMag2MM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729990AbfCLRZ3 (ORCPT
+        id S1730096AbfCLRZh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 12 Mar 2019 13:25:29 -0400
-Received: from mail.kernel.org ([198.145.29.99]:34332 "EHLO mail.kernel.org"
+        Tue, 12 Mar 2019 13:25:37 -0400
+Received: from mail.kernel.org ([198.145.29.99]:34290 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729766AbfCLRRu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 12 Mar 2019 13:17:50 -0400
+        id S1729759AbfCLRRt (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 12 Mar 2019 13:17:49 -0400
 Received: from localhost (unknown [104.133.8.98])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 0ABB8206DF;
-        Tue, 12 Mar 2019 17:17:49 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 5298B2087C;
+        Tue, 12 Mar 2019 17:17:48 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1552411069;
-        bh=idErId8STJQ9fMQFEYEPH7giSFKpS2RzaluTcJyqCmk=;
+        s=default; t=1552411068;
+        bh=r4e9QC4PLi2VjwmK56vRItYF0sGGtQKRnKFijds7W6s=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=NDaU0uJ9+GvLkSyElHiLXPB8Sb5k9jho6UVkP0JjBnhmfoCgO82FngcEHjYUa67Cs
-         Z5SNU019zkhtxj+AVbjSK16DJmGkiOnBt+PuK+XO+YUErNPq53Q53+ykdUmp9kUgCn
-         IJi872fCTDLD7kaE9nTuucIIRJ8Ckht8vTP6kYY8=
+        b=KldZs1zL4Yngk4dEW4yYV/GWoTHZy+g5E2NhKOSaXoxY5Q3uhoTKDJ2rdzP7wS4vF
+         ypOCkYyiJAbeCRrwqiZyRe/rfJo/VYgnd+hB2sDxxqe+DELQXzKLUHr95HmGxWu1Hi
+         mqrg8tjr+XXP/5+7Qwb0npjIVLu+xMABpUETrr5c=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Qian Cai <cai@lca.pw>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        "H. Peter Anvin" <hpa@zytor.com>,
-        Andrey Ryabinin <aryabinin@virtuozzo.com>,
-        Alexander Potapenko <glider@google.com>,
-        Dmitry Vyukov <dvyukov@google.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.9 59/96] x86_64: increase stack size for KASAN_EXTRA
-Date:   Tue, 12 Mar 2019 10:10:17 -0700
-Message-Id: <20190312171038.973041723@linuxfoundation.org>
+        stable@vger.kernel.org,
+        Boris Ostrovsky <boris.ostrovsky@oracle.com>,
+        Joerg Roedel <joro@8bytes.org>,
+        Brijesh Singh <brijesh.singh@amd.com>,
+        Suravee Suthikulpanit <suravee.suthikulpanit@amd.com>,
+        Joerg Roedel <jroedel@suse.de>, Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.9 41/96] iommu/amd: Fix IOMMU page flush when detach device from a domain
+Date:   Tue, 12 Mar 2019 10:09:59 -0700
+Message-Id: <20190312171037.626976211@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190312171034.530434962@linuxfoundation.org>
 References: <20190312171034.530434962@linuxfoundation.org>
@@ -73,80 +69,79 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-[ Upstream commit a8e911d13540487942d53137c156bd7707f66e5d ]
+[ Upstream commit 9825bd94e3a2baae1f4874767ae3a7d4c049720e ]
 
-If the kernel is configured with KASAN_EXTRA, the stack size is
-increasted significantly because this option sets "-fstack-reuse" to
-"none" in GCC [1].  As a result, it triggers stack overrun quite often
-with 32k stack size compiled using GCC 8.  For example, this reproducer
+When a VM is terminated, the VFIO driver detaches all pass-through
+devices from VFIO domain by clearing domain id and page table root
+pointer from each device table entry (DTE), and then invalidates
+the DTE. Then, the VFIO driver unmap pages and invalidate IOMMU pages.
 
-  https://github.com/linux-test-project/ltp/blob/master/testcases/kernel/syscalls/madvise/madvise06.c
+Currently, the IOMMU driver keeps track of which IOMMU and how many
+devices are attached to the domain. When invalidate IOMMU pages,
+the driver checks if the IOMMU is still attached to the domain before
+issuing the invalidate page command.
 
-triggers a "corrupted stack end detected inside scheduler" very reliably
-with CONFIG_SCHED_STACK_END_CHECK enabled.
+However, since VFIO has already detached all devices from the domain,
+the subsequent INVALIDATE_IOMMU_PAGES commands are being skipped as
+there is no IOMMU attached to the domain. This results in data
+corruption and could cause the PCI device to end up in indeterministic
+state.
 
-There are just too many functions that could have a large stack with
-KASAN_EXTRA due to large local variables that have been called over and
-over again without being able to reuse the stacks.  Some noticiable ones
-are
+Fix this by invalidate IOMMU pages when detach a device, and
+before decrementing the per-domain device reference counts.
 
-  size
-  7648 shrink_page_list
-  3584 xfs_rmap_convert
-  3312 migrate_page_move_mapping
-  3312 dev_ethtool
-  3200 migrate_misplaced_transhuge_page
-  3168 copy_process
-
-There are other 49 functions are over 2k in size while compiling kernel
-with "-Wframe-larger-than=" even with a related minimal config on this
-machine.  Hence, it is too much work to change Makefiles for each object
-to compile without "-fsanitize-address-use-after-scope" individually.
-
-[1] https://gcc.gnu.org/bugzilla/show_bug.cgi?id=81715#c23
-
-Although there is a patch in GCC 9 to help the situation, GCC 9 probably
-won't be released in a few months and then it probably take another
-6-month to 1-year for all major distros to include it as a default.
-Hence, the stack usage with KASAN_EXTRA can be revisited again in 2020
-when GCC 9 is everywhere.  Until then, this patch will help users avoid
-stack overrun.
-
-This has already been fixed for arm64 for the same reason via
-6e8830674ea ("arm64: kasan: Increase stack size for KASAN_EXTRA").
-
-Link: http://lkml.kernel.org/r/20190109215209.2903-1-cai@lca.pw
-Signed-off-by: Qian Cai <cai@lca.pw>
-Cc: Thomas Gleixner <tglx@linutronix.de>
-Cc: Ingo Molnar <mingo@redhat.com>
-Cc: Borislav Petkov <bp@alien8.de>
-Cc: "H. Peter Anvin" <hpa@zytor.com>
-Cc: Andrey Ryabinin <aryabinin@virtuozzo.com>
-Cc: Alexander Potapenko <glider@google.com>
-Cc: Dmitry Vyukov <dvyukov@google.com>
-Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
-Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
+Cc: Boris Ostrovsky <boris.ostrovsky@oracle.com>
+Suggested-by: Joerg Roedel <joro@8bytes.org>
+Co-developed-by: Brijesh Singh <brijesh.singh@amd.com>
+Signed-off-by: Brijesh Singh <brijesh.singh@amd.com>
+Signed-off-by: Suravee Suthikulpanit <suravee.suthikulpanit@amd.com>
+Fixes: 6de8ad9b9ee0 ('x86/amd-iommu: Make iommu_flush_pages aware of multiple IOMMUs')
+Signed-off-by: Joerg Roedel <jroedel@suse.de>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/x86/include/asm/page_64_types.h | 4 ++++
- 1 file changed, 4 insertions(+)
+ drivers/iommu/amd_iommu.c | 15 +++++++++++----
+ 1 file changed, 11 insertions(+), 4 deletions(-)
 
-diff --git a/arch/x86/include/asm/page_64_types.h b/arch/x86/include/asm/page_64_types.h
-index 9215e0527647..390fdd39e0e2 100644
---- a/arch/x86/include/asm/page_64_types.h
-+++ b/arch/x86/include/asm/page_64_types.h
-@@ -6,7 +6,11 @@
- #endif
+diff --git a/drivers/iommu/amd_iommu.c b/drivers/iommu/amd_iommu.c
+index b182839d36cb..ca22483d253f 100644
+--- a/drivers/iommu/amd_iommu.c
++++ b/drivers/iommu/amd_iommu.c
+@@ -1896,6 +1896,7 @@ static void do_attach(struct iommu_dev_data *dev_data,
  
- #ifdef CONFIG_KASAN
-+#ifdef CONFIG_KASAN_EXTRA
-+#define KASAN_STACK_ORDER 2
-+#else
- #define KASAN_STACK_ORDER 1
-+#endif
- #else
- #define KASAN_STACK_ORDER 0
- #endif
+ static void do_detach(struct iommu_dev_data *dev_data)
+ {
++	struct protection_domain *domain = dev_data->domain;
+ 	struct amd_iommu *iommu;
+ 	u16 alias;
+ 
+@@ -1911,10 +1912,6 @@ static void do_detach(struct iommu_dev_data *dev_data)
+ 	iommu = amd_iommu_rlookup_table[dev_data->devid];
+ 	alias = dev_data->alias;
+ 
+-	/* decrease reference counters */
+-	dev_data->domain->dev_iommu[iommu->index] -= 1;
+-	dev_data->domain->dev_cnt                 -= 1;
+-
+ 	/* Update data structures */
+ 	dev_data->domain = NULL;
+ 	list_del(&dev_data->list);
+@@ -1924,6 +1921,16 @@ static void do_detach(struct iommu_dev_data *dev_data)
+ 
+ 	/* Flush the DTE entry */
+ 	device_flush_dte(dev_data);
++
++	/* Flush IOTLB */
++	domain_flush_tlb_pde(domain);
++
++	/* Wait for the flushes to finish */
++	domain_flush_complete(domain);
++
++	/* decrease reference counters - needs to happen after the flushes */
++	domain->dev_iommu[iommu->index] -= 1;
++	domain->dev_cnt                 -= 1;
+ }
+ 
+ /*
 -- 
 2.19.1
 
