@@ -2,53 +2,52 @@ Return-Path: <SRS0=J4ZE=RP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D9F81C43381
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 17:36:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D6880C43381
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 17:36:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AEAF8214AE
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 17:36:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A98442087C
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 17:36:27 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1552412180;
-	bh=cNlmYuZMUYc1zkO+bLqxp3C8WJvRiTT7V9nenDKHvfw=;
+	s=default; t=1552412187;
+	bh=xXMzt3YIcOOmXF70lVUAMu//DZquNKqX29V/E0sJ2DE=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=z1G1+ejZCNnyk4Suc2XX+2kuQRQtuHDodJiKvhth9+rBzvgofc7bDxvh/SjY48r06
-	 j68MNm2pgw/8Yqvkz9mNu+ohtEpmWKxx0T0PmiOxaZMXugdVoLrE3km9e3N5tIbCaN
-	 sW521YTdy1gZOejgLtIwl538ZQGr/reDrpXhk7vg=
+	b=AYVd4vDOit9zhhPJdlnmB4+SZKqfIiDH+8KsrIBtbccLApJiQY+AwLaNDbvcxhzXK
+	 3TgCTd8u6WV9gzNaImURBxhLn33Qru5FeSOWEJ/NI4U4X8OBB/qQlEg8Rkk+pChQEX
+	 ZkZEQtY8GJMiTIQTtDxPNr04gr2t3B54ur8NF8DI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729439AbfCLRgT (ORCPT
+        id S1729271AbfCLRQp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 12 Mar 2019 13:36:19 -0400
-Received: from mail.kernel.org ([198.145.29.99]:59398 "EHLO mail.kernel.org"
+        Tue, 12 Mar 2019 13:16:45 -0400
+Received: from mail.kernel.org ([198.145.29.99]:56340 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729284AbfCLRQq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 12 Mar 2019 13:16:46 -0400
+        id S1728803AbfCLRPi (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 12 Mar 2019 13:15:38 -0400
 Received: from localhost (unknown [104.133.8.98])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 12DC8217D4;
-        Tue, 12 Mar 2019 17:16:46 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id DE3AB2087C;
+        Tue, 12 Mar 2019 17:15:36 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1552411006;
-        bh=cNlmYuZMUYc1zkO+bLqxp3C8WJvRiTT7V9nenDKHvfw=;
+        s=default; t=1552410937;
+        bh=xXMzt3YIcOOmXF70lVUAMu//DZquNKqX29V/E0sJ2DE=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=PqLQ1Cvlh0c7y1GLlneg8uuDOz9zUKJVvOm5EVMwcbjijJr3P8XYeG7krfJopo1dM
-         OGeFMW0570cUnFNrHoO1GQBQ8GOvDpRKIJXtQldv8Mb+7N9hBnCdCQhAnYyxhC5fC8
-         DPdUNVIC5Dq+QWO5TYaP2p54BvHhn4VKNK13XDsw=
+        b=P5hgpXYVqkJ7WuRbO2xW+fPSAtLfgsteh2M4DdCI5iYVEdTVZ6IfrK0JmS8MXJ6yC
+         ssu6cRo/pd84NytApuloOatQ6ae65k9LvqxplKEzGhh1NnLozpFHrkiImWiRRxHSFA
+         0co5mAYtkg2zWn9wWNFC1PCdlAik/3lGEAWEiQng=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Srinivas Kandagatla <srinivas.kandagatla@linaro.org>,
-        Andy Gross <andy.gross@linaro.org>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.14 092/135] arm64: dts: add msm8996 compatible to gicv3
-Date:   Tue, 12 Mar 2019 10:08:59 -0700
-Message-Id: <20190312170349.659906049@linuxfoundation.org>
+        stable@vger.kernel.org, Ido Schimmel <idosch@mellanox.com>,
+        Amit Cohen <amitc@mellanox.com>,
+        Jiri Pirko <jiri@mellanox.com>,
+        "David S. Miller" <davem@davemloft.net>
+Subject: [PATCH 4.14 012/135] team: Free BPF filter when unregistering netdev
+Date:   Tue, 12 Mar 2019 10:07:39 -0700
+Message-Id: <20190312170342.270611078@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190312170341.127810985@linuxfoundation.org>
 References: <20190312170341.127810985@linuxfoundation.org>
@@ -67,38 +66,99 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-[ Upstream commit 2a81efb0de0e33f2d2c83154af0bd3ce389b3269 ]
+From: Ido Schimmel <idosch@mellanox.com>
 
-Add compatible to gicv3 node to enable quirk required to restrict writing
-to GICR_WAKER register which is restricted on msm8996 SoC in Hypervisor.
+[ Upstream commit 692c31bd4054212312396b1d303bffab2c5b93a7 ]
 
-With this quirk MSM8996 can at least boot out of mainline, which can help
-community to work with boards based on MSM8996.
+When team is used in loadbalance mode a BPF filter can be used to
+provide a hash which will determine the Tx port.
 
-Without this patch Qualcomm DB820c board reboots on mainline.
+When the netdev is later unregistered the filter is not freed which
+results in memory leaks [1].
 
-Signed-off-by: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
-Signed-off-by: Andy Gross <andy.gross@linaro.org>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
+Fix by freeing the program and the corresponding filter when
+unregistering the netdev.
+
+[1]
+unreferenced object 0xffff8881dbc47cc8 (size 16):
+  comm "teamd", pid 3068, jiffies 4294997779 (age 438.247s)
+  hex dump (first 16 bytes):
+    a3 00 6b 6b 6b 6b 6b 6b 88 a5 82 e1 81 88 ff ff  ..kkkkkk........
+  backtrace:
+    [<000000008a3b47e3>] team_nl_cmd_options_set+0x88f/0x11b0
+    [<00000000c4f4f27e>] genl_family_rcv_msg+0x78f/0x1080
+    [<00000000610ef838>] genl_rcv_msg+0xca/0x170
+    [<00000000a281df93>] netlink_rcv_skb+0x132/0x380
+    [<000000004d9448a2>] genl_rcv+0x29/0x40
+    [<000000000321b2f4>] netlink_unicast+0x4c0/0x690
+    [<000000008c25dffb>] netlink_sendmsg+0x929/0xe10
+    [<00000000068298c5>] sock_sendmsg+0xc8/0x110
+    [<0000000082a61ff0>] ___sys_sendmsg+0x77a/0x8f0
+    [<00000000663ae29d>] __sys_sendmsg+0xf7/0x250
+    [<0000000027c5f11a>] do_syscall_64+0x14d/0x610
+    [<000000006cfbc8d3>] entry_SYSCALL_64_after_hwframe+0x49/0xbe
+    [<00000000e23197e2>] 0xffffffffffffffff
+unreferenced object 0xffff8881e182a588 (size 2048):
+  comm "teamd", pid 3068, jiffies 4294997780 (age 438.247s)
+  hex dump (first 32 bytes):
+    20 00 00 00 02 00 00 00 30 00 00 00 28 f0 ff ff   .......0...(...
+    07 00 00 00 00 00 00 00 28 00 00 00 00 00 00 00  ........(.......
+  backtrace:
+    [<000000002daf01fb>] lb_bpf_func_set+0x45c/0x6d0
+    [<000000008a3b47e3>] team_nl_cmd_options_set+0x88f/0x11b0
+    [<00000000c4f4f27e>] genl_family_rcv_msg+0x78f/0x1080
+    [<00000000610ef838>] genl_rcv_msg+0xca/0x170
+    [<00000000a281df93>] netlink_rcv_skb+0x132/0x380
+    [<000000004d9448a2>] genl_rcv+0x29/0x40
+    [<000000000321b2f4>] netlink_unicast+0x4c0/0x690
+    [<000000008c25dffb>] netlink_sendmsg+0x929/0xe10
+    [<00000000068298c5>] sock_sendmsg+0xc8/0x110
+    [<0000000082a61ff0>] ___sys_sendmsg+0x77a/0x8f0
+    [<00000000663ae29d>] __sys_sendmsg+0xf7/0x250
+    [<0000000027c5f11a>] do_syscall_64+0x14d/0x610
+    [<000000006cfbc8d3>] entry_SYSCALL_64_after_hwframe+0x49/0xbe
+    [<00000000e23197e2>] 0xffffffffffffffff
+
+Fixes: 01d7f30a9f96 ("team: add loadbalance mode")
+Signed-off-by: Ido Schimmel <idosch@mellanox.com>
+Reported-by: Amit Cohen <amitc@mellanox.com>
+Acked-by: Jiri Pirko <jiri@mellanox.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- arch/arm64/boot/dts/qcom/msm8996.dtsi | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/net/team/team_mode_loadbalance.c |   15 +++++++++++++++
+ 1 file changed, 15 insertions(+)
 
-diff --git a/arch/arm64/boot/dts/qcom/msm8996.dtsi b/arch/arm64/boot/dts/qcom/msm8996.dtsi
-index ab00be277c6f..6f372ec055dd 100644
---- a/arch/arm64/boot/dts/qcom/msm8996.dtsi
-+++ b/arch/arm64/boot/dts/qcom/msm8996.dtsi
-@@ -359,7 +359,7 @@
- 		};
+--- a/drivers/net/team/team_mode_loadbalance.c
++++ b/drivers/net/team/team_mode_loadbalance.c
+@@ -319,6 +319,20 @@ static int lb_bpf_func_set(struct team *
+ 	return 0;
+ }
  
- 		intc: interrupt-controller@9bc0000 {
--			compatible = "arm,gic-v3";
-+			compatible = "qcom,msm8996-gic-v3", "arm,gic-v3";
- 			#interrupt-cells = <3>;
- 			interrupt-controller;
- 			#redistributor-regions = <1>;
--- 
-2.19.1
-
++static void lb_bpf_func_free(struct team *team)
++{
++	struct lb_priv *lb_priv = get_lb_priv(team);
++	struct bpf_prog *fp;
++
++	if (!lb_priv->ex->orig_fprog)
++		return;
++
++	__fprog_destroy(lb_priv->ex->orig_fprog);
++	fp = rcu_dereference_protected(lb_priv->fp,
++				       lockdep_is_held(&team->lock));
++	bpf_prog_destroy(fp);
++}
++
+ static int lb_tx_method_get(struct team *team, struct team_gsetter_ctx *ctx)
+ {
+ 	struct lb_priv *lb_priv = get_lb_priv(team);
+@@ -633,6 +647,7 @@ static void lb_exit(struct team *team)
+ 
+ 	team_options_unregister(team, lb_options,
+ 				ARRAY_SIZE(lb_options));
++	lb_bpf_func_free(team);
+ 	cancel_delayed_work_sync(&lb_priv->ex->stats.refresh_dw);
+ 	free_percpu(lb_priv->pcpu_stats);
+ 	kfree(lb_priv->ex);
 
 
