@@ -6,34 +6,34 @@ X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,UNPARSEABLE_RELAY,
 	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6A5C3C43381
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 03:03:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7CE1BC43381
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 03:04:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4360D214AE
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 03:03:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 57E07214AE
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 03:04:00 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727321AbfCLDDz (ORCPT
+        id S1727329AbfCLDD6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 11 Mar 2019 23:03:55 -0400
-Received: from out30-54.freemail.mail.aliyun.com ([115.124.30.54]:43087 "EHLO
-        out30-54.freemail.mail.aliyun.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726973AbfCLDCJ (ORCPT
+        Mon, 11 Mar 2019 23:03:58 -0400
+Received: from out4437.biz.mail.alibaba.com ([47.88.44.37]:13342 "EHLO
+        out4437.biz.mail.alibaba.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726993AbfCLDCJ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Mon, 11 Mar 2019 23:02:09 -0400
-X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R151e4;CH=green;DM=||false|;FP=0|-1|-1|-1|0|-1|-1|-1;HT=e01f04446;MF=alex.shi@linux.alibaba.com;NM=1;PH=DS;RN=10;SR=0;TI=SMTPD_---0TMW6jBr_1552359725;
-Received: from localhost(mailfrom:alex.shi@linux.alibaba.com fp:SMTPD_---0TMW6jBr_1552359725)
+X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R821e4;CH=green;DM=||false|;FP=0|-1|-1|-1|0|-1|-1|-1;HT=e01f04392;MF=alex.shi@linux.alibaba.com;NM=1;PH=DS;RN=9;SR=0;TI=SMTPD_---0TMW6jC8_1552359726;
+Received: from localhost(mailfrom:alex.shi@linux.alibaba.com fp:SMTPD_---0TMW6jC8_1552359726)
           by smtp.aliyun-inc.com(127.0.0.1);
-          Tue, 12 Mar 2019 11:02:05 +0800
+          Tue, 12 Mar 2019 11:02:07 +0800
 From:   Alex Shi <alex.shi@linux.alibaba.com>
 To:     corbet@lwn.net, harryxiyou@gmail.com, linux-doc@vger.kernel.org,
         linux-kernel@vger.kernel.org
 Cc:     Alex Shi <alex.shi@linux.alibaba.com>,
-        Li Yang <leoyang.li@nxp.com>, Li Zefan <lizefan@huawei.com>,
+        Li Zefan <lizefan@huawei.com>,
         Shawn Guo <shawn.guo@linaro.org>,
         Fengguang Wu <fengguang.wu@intel.com>, Coly Li <colyli@suse.de>
-Subject: [PATCH v4 15/31] docs/zh_CN: rename SubmittingDrivers
-Date:   Tue, 12 Mar 2019 11:01:13 +0800
-Message-Id: <20190312030129.47511-16-alex.shi@linux.alibaba.com>
+Subject: [PATCH v4 17/31] docs/zh_CN: rename magic-numbers as rst doc
+Date:   Tue, 12 Mar 2019 11:01:15 +0800
+Message-Id: <20190312030129.47511-18-alex.shi@linux.alibaba.com>
 X-Mailer: git-send-email 2.19.1.856.g8858448bb
 In-Reply-To: <20190312030129.47511-1-alex.shi@linux.alibaba.com>
 References: <20190312030129.47511-1-alex.shi@linux.alibaba.com>
@@ -44,25 +44,25 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Rename the file to make it available in html etc docs making.
+to Make it available in html etc doc making
 
 Signed-off-by: Alex Shi <alex.shi@linux.alibaba.com>
 Cc: Harry Wei <harryxiyou@gmail.com>
 Cc: Jonathan Corbet <corbet@lwn.net>
-Cc: Li Yang <leoyang.li@nxp.com>
+Cc: Jia Wei Wei <harryxiyou@gmail.com>
 Cc: Li Zefan <lizefan@huawei.com>
 Cc: Shawn Guo <shawn.guo@linaro.org>
 Cc: Fengguang Wu <fengguang.wu@intel.com>
 Cc: Coly Li <colyli@suse.de>
 ---
- .../zh_CN/process/{SubmittingDrivers => submitting-drivers.rst}   | 0
+ .../zh_CN/process/{magic-number.txt => magic-number.rst}          | 0
  1 file changed, 0 insertions(+), 0 deletions(-)
- rename Documentation/translations/zh_CN/process/{SubmittingDrivers => submitting-drivers.rst} (100%)
+ rename Documentation/translations/zh_CN/process/{magic-number.txt => magic-number.rst} (100%)
 
-diff --git a/Documentation/translations/zh_CN/process/SubmittingDrivers b/Documentation/translations/zh_CN/process/submitting-drivers.rst
+diff --git a/Documentation/translations/zh_CN/process/magic-number.txt b/Documentation/translations/zh_CN/process/magic-number.rst
 similarity index 100%
-rename from Documentation/translations/zh_CN/process/SubmittingDrivers
-rename to Documentation/translations/zh_CN/process/submitting-drivers.rst
+rename from Documentation/translations/zh_CN/process/magic-number.txt
+rename to Documentation/translations/zh_CN/process/magic-number.rst
 -- 
 2.19.1.856.g8858448bb
 
