@@ -7,48 +7,48 @@ X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 25BC8C43381
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 17:26:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 26C60C43381
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 17:26:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E273C214AF
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 17:26:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E0A9E2171F
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 17:26:17 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1552411571;
-	bh=ttv73ICBKtlBnm/NKC20hHNqfZLSCANMdxoaUm7vqhY=;
+	s=default; t=1552411578;
+	bh=1jwe0NsfKzgZASabOHZGlSP8AE8ffrSvz80gJdieLOU=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=OiqzfdtriLAKc+LTLoHgQcz0QRtapIcTKNcBVY0LSeZ9jLzMZFpp7an0lcl+SKBTJ
-	 Y2FHgB2lpc8jo8l4JO51I6SIDn3I008AqIY9J6ZPYBcwD9ygsc5+Zbhgh59I+quYqw
-	 wxOIY4mb1wPFcwNZoM1XHH6E8m1KfM4j2nv4jMao=
+	b=pglfPqKA1AWDOjM9z+sjjN66tGSsAH+JuanPI6G2tz0i3XnZM9Z7XNLluMnrluO0u
+	 Cn45WRyqRcGzJNYdoB2gcfiHW9dqFAQRusBTLO0zFclWoAsZqIkJ4aimHAu6NmlZh6
+	 xOEZbgEgiPdSuzQkeaFRw9uKe9273eUUfAJBOdU4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727896AbfCLR0J (ORCPT
+        id S1730320AbfCLR0F (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 12 Mar 2019 13:26:09 -0400
-Received: from mail.kernel.org ([198.145.29.99]:34106 "EHLO mail.kernel.org"
+        Tue, 12 Mar 2019 13:26:05 -0400
+Received: from mail.kernel.org ([198.145.29.99]:34134 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729743AbfCLRRp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 12 Mar 2019 13:17:45 -0400
+        id S1729207AbfCLRRq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 12 Mar 2019 13:17:46 -0400
 Received: from localhost (unknown [104.133.8.98])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B4388217F5;
-        Tue, 12 Mar 2019 17:17:44 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 7216721741;
+        Tue, 12 Mar 2019 17:17:45 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1552411064;
-        bh=ttv73ICBKtlBnm/NKC20hHNqfZLSCANMdxoaUm7vqhY=;
+        s=default; t=1552411065;
+        bh=1jwe0NsfKzgZASabOHZGlSP8AE8ffrSvz80gJdieLOU=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=k+L94ymtep4CiMiudIV3oX/h1Dak8jQctEKP1Et1YO/8N/1dCZlfSLlej84WNGJ9z
-         h17Q0gXgxKCRZfsiCJ/YpfM3R+zKR6EH0/9xdYgmW9WO1zr6DL3hzuDtiQQpCId/ta
-         hMBkYceK6DNlbdvJxw0T0n5CdPWMk9YPibO8qb3Y=
+        b=0F1pb7lzwEtPE3XHQ4adPwmEpLG229kKhVRaWzM2/2Sqne7xVsf3HV5iTl2G1qRuD
+         DIWVdTIdv211EkFBJhSKkLGgX7KPYPLQseMjsqWouUstHtHA/BFZDLwnN258jTRIDY
+         N89vo/nvNUH9wmvQiPvBxuuVXOFb9kztd9o7mHeo=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Ming Lu <ming.lu@citrix.com>,
-        Hannes Reinecke <hare@suse.com>,
-        "Martin K. Petersen" <martin.petersen@oracle.com>,
+        stable@vger.kernel.org, Sinan Kaya <okaya@kernel.org>,
+        Andy Shevchenko <andy.shevchenko@gmail.com>,
+        "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.9 54/96] scsi: libfc: free skb when receiving invalid flogi resp
-Date:   Tue, 12 Mar 2019 10:10:12 -0700
-Message-Id: <20190312171038.605994268@linuxfoundation.org>
+Subject: [PATCH 4.9 55/96] platform/x86: Fix unmet dependency warning for SAMSUNG_Q10
+Date:   Tue, 12 Mar 2019 10:10:13 -0700
+Message-Id: <20190312171038.676703972@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190312171034.530434962@linuxfoundation.org>
 References: <20190312171034.530434962@linuxfoundation.org>
@@ -67,54 +67,41 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-[ Upstream commit 5d8fc4a9f0eec20b6c07895022a6bea3fb6dfb38 ]
+[ Upstream commit 0ee4b5f801b73b83a9fb3921d725f2162fd4a2e5 ]
 
-The issue to be fixed in this commit is when libfc found it received a
-invalid FLOGI response from FC switch, it would return without freeing the
-fc frame, which is just the skb data. This would cause memory leak if FC
-switch keeps sending invalid FLOGI responses.
+Add BACKLIGHT_LCD_SUPPORT for SAMSUNG_Q10 to fix the
+warning: unmet direct dependencies detected for BACKLIGHT_CLASS_DEVICE.
 
-This fix is just to make it execute `fc_frame_free(fp)` before returning
-from function `fc_lport_flogi_resp`.
+SAMSUNG_Q10 selects BACKLIGHT_CLASS_DEVICE but BACKLIGHT_CLASS_DEVICE
+depends on BACKLIGHT_LCD_SUPPORT.
 
-Signed-off-by: Ming Lu <ming.lu@citrix.com>
-Reviewed-by: Hannes Reinecke <hare@suse.com>
-Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
+Copy BACKLIGHT_LCD_SUPPORT dependency into SAMSUNG_Q10 to fix:
+
+WARNING: unmet direct dependencies detected for BACKLIGHT_CLASS_DEVICE
+  Depends on [n]: HAS_IOMEM [=y] && BACKLIGHT_LCD_SUPPORT [=n]
+  Selected by [y]:
+  - SAMSUNG_Q10 [=y] && X86 [=y] && X86_PLATFORM_DEVICES [=y] && ACPI [=y]
+
+Signed-off-by: Sinan Kaya <okaya@kernel.org>
+Acked-by: Andy Shevchenko <andy.shevchenko@gmail.com>
+Signed-off-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/scsi/libfc/fc_lport.c | 6 +++---
- 1 file changed, 3 insertions(+), 3 deletions(-)
+ drivers/platform/x86/Kconfig | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/drivers/scsi/libfc/fc_lport.c b/drivers/scsi/libfc/fc_lport.c
-index 50c71678a156..ae93f45f9cd8 100644
---- a/drivers/scsi/libfc/fc_lport.c
-+++ b/drivers/scsi/libfc/fc_lport.c
-@@ -1736,14 +1736,14 @@ void fc_lport_flogi_resp(struct fc_seq *sp, struct fc_frame *fp,
- 	    fc_frame_payload_op(fp) != ELS_LS_ACC) {
- 		FC_LPORT_DBG(lport, "FLOGI not accepted or bad response\n");
- 		fc_lport_error(lport, fp);
--		goto err;
-+		goto out;
- 	}
- 
- 	flp = fc_frame_payload_get(fp, sizeof(*flp));
- 	if (!flp) {
- 		FC_LPORT_DBG(lport, "FLOGI bad response\n");
- 		fc_lport_error(lport, fp);
--		goto err;
-+		goto out;
- 	}
- 
- 	mfs = ntohs(flp->fl_csp.sp_bb_data) &
-@@ -1753,7 +1753,7 @@ void fc_lport_flogi_resp(struct fc_seq *sp, struct fc_frame *fp,
- 		FC_LPORT_DBG(lport, "FLOGI bad mfs:%hu response, "
- 			     "lport->mfs:%hu\n", mfs, lport->mfs);
- 		fc_lport_error(lport, fp);
--		goto err;
-+		goto out;
- 	}
- 
- 	if (mfs <= lport->mfs) {
+diff --git a/drivers/platform/x86/Kconfig b/drivers/platform/x86/Kconfig
+index b8a21d7b25d4..1d81149c9ea4 100644
+--- a/drivers/platform/x86/Kconfig
++++ b/drivers/platform/x86/Kconfig
+@@ -945,6 +945,7 @@ config INTEL_OAKTRAIL
+ config SAMSUNG_Q10
+ 	tristate "Samsung Q10 Extras"
+ 	depends on ACPI
++	depends on BACKLIGHT_LCD_SUPPORT
+ 	select BACKLIGHT_CLASS_DEVICE
+ 	---help---
+ 	  This driver provides support for backlight control on Samsung Q10
 -- 
 2.19.1
 
