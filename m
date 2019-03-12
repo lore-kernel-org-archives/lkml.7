@@ -2,119 +2,100 @@ Return-Path: <SRS0=J4ZE=RP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS autolearn=ham
+X-Spam-Status: No, score=-4.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 00448C43381
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 15:03:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 986FEC43381
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 15:04:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BF7402075C
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 15:03:25 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=lucaceresoli.net header.i=@lucaceresoli.net header.b="4/Au2Asr"
+	by mail.kernel.org (Postfix) with ESMTP id 6F30F20693
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 15:04:42 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726833AbfCLPDY (ORCPT
+        id S1726551AbfCLPEl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 12 Mar 2019 11:03:24 -0400
-Received: from hostingweb31-40.netsons.net ([89.40.174.40]:57065 "EHLO
-        hostingweb31-40.netsons.net" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1725894AbfCLPDY (ORCPT
+        Tue, 12 Mar 2019 11:04:41 -0400
+Received: from mail-vk1-f193.google.com ([209.85.221.193]:36197 "EHLO
+        mail-vk1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725894AbfCLPEk (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 12 Mar 2019 11:03:24 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=lucaceresoli.net; s=default; h=Content-Transfer-Encoding:Content-Type:
-        In-Reply-To:MIME-Version:Date:Message-ID:From:References:Cc:To:Subject:Sender
-        :Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
-        Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
-        List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-        bh=Yut3vJ2kSCA6KUuEog7i+w2ZYC8lyu24Pkl3B9ZWaEI=; b=4/Au2Asr0UYm5hBf77liw8HAXL
-        8tzaybJiMR/s8QNO47UhUuBOztb6ObwBPgq7e2RW+Uc1/FNC22h1fcJjuWcgxCjHNRXolVnYZWLrU
-        rl5ocurB+qMBHkr7MkA8OtaJ/NLIVwOW8K1PGvm/92XM4Dpg8R1g//iUE7iqixVG9NtI=;
-Received: from [109.168.11.45] (port=55626 helo=[192.168.101.76])
-        by hostingweb31.netsons.net with esmtpsa (TLSv1.2:ECDHE-RSA-AES128-GCM-SHA256:128)
-        (Exim 4.91)
-        (envelope-from <luca@lucaceresoli.net>)
-        id 1h3iw4-00Finm-IM; Tue, 12 Mar 2019 16:03:20 +0100
-Subject: Re: [PATCH v6 1/2] media: dt-bindings: media: xilinx: Add Xilinx MIPI
- CSI-2 Rx Subsystem
-To:     Vishal Sagar <vsagar@xilinx.com>,
-        Sakari Ailus <sakari.ailus@linux.intel.com>,
-        Vishal Sagar <vishal.sagar@xilinx.com>
-Cc:     Hyun Kwon <hyunk@xilinx.com>,
-        "laurent.pinchart@ideasonboard.com" 
-        <laurent.pinchart@ideasonboard.com>,
-        "mchehab@kernel.org" <mchehab@kernel.org>,
-        "robh+dt@kernel.org" <robh+dt@kernel.org>,
-        "mark.rutland@arm.com" <mark.rutland@arm.com>,
-        Michal Simek <michals@xilinx.com>,
-        "linux-media@vger.kernel.org" <linux-media@vger.kernel.org>,
-        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
-        "hans.verkuil@cisco.com" <hans.verkuil@cisco.com>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Dinesh Kumar <dineshk@xilinx.com>,
-        Sandip Kothari <sandipk@xilinx.com>
-References: <1552365330-21155-1-git-send-email-vishal.sagar@xilinx.com>
- <1552365330-21155-2-git-send-email-vishal.sagar@xilinx.com>
- <20190312102118.6ianedkzscr7gdba@kekkonen.localdomain>
- <DM5PR02MB2713DB568A4AD713BE3B2621A7490@DM5PR02MB2713.namprd02.prod.outlook.com>
-From:   Luca Ceresoli <luca@lucaceresoli.net>
-Message-ID: <ff914561-a021-9405-8b26-11d4a5cc605d@lucaceresoli.net>
-Date:   Tue, 12 Mar 2019 16:03:19 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.5.1
+        Tue, 12 Mar 2019 11:04:40 -0400
+Received: by mail-vk1-f193.google.com with SMTP id v131so725381vkd.3
+        for <linux-kernel@vger.kernel.org>; Tue, 12 Mar 2019 08:04:40 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=LC2uMFVcIfOFBJyr6Lnd0zST40zv6r9ebxtQOl8nm4I=;
+        b=EbZ7M3SITWXVWlqv/lSm2uBObGaeH7I6b+2G4Qq9+Nxj3sPOTr3jVnYtS3bMt/1yNv
+         OB8ptX/9B5i12v7Bv869wi1p+LwI7gJadtF/RHqpszxn4Of5J7/j0tetg7Wne/uN2D5B
+         zhs81NF4p8fSomCG15jGDqiHDiB94R6R9b0GEhUa4oZw4MiNIwssyKBL6UX1NsvD0mjl
+         x/1HpPoE3WfNHiutx3EJNwBZZThxHC2I+3TyVpGudYry5ESJ7SZ7Lh26S3jVO1klZq5L
+         HuWeopSxpq7EWCq5YB4Tsn8QP9BoL46nPa/4ItX9Jexs+6WjglHbV6isLlFfK7arfEdM
+         gFGg==
+X-Gm-Message-State: APjAAAXeZ35nUZDxseKSUMAfJP9xpjOjODYKRcxcKP+3xgkRXBmBurt0
+        WsMh3IpWRdTfUhQwoa5CBIGNox+6xutHavWFm98=
+X-Google-Smtp-Source: APXvYqzy7HwD9ZC59g5IYcnbKxewy5ha05SopJ3St6n1IT3KKZBrWsmOQ/Mk/qBKadpEUi8c5icf2kF4OByduGoL9Fo=
+X-Received: by 2002:a1f:711:: with SMTP id 17mr20617046vkh.65.1552403079861;
+ Tue, 12 Mar 2019 08:04:39 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <DM5PR02MB2713DB568A4AD713BE3B2621A7490@DM5PR02MB2713.namprd02.prod.outlook.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-AntiAbuse: This header was added to track abuse, please include it with any abuse report
-X-AntiAbuse: Primary Hostname - hostingweb31.netsons.net
-X-AntiAbuse: Original Domain - vger.kernel.org
-X-AntiAbuse: Originator/Caller UID/GID - [47 12] / [47 12]
-X-AntiAbuse: Sender Address Domain - lucaceresoli.net
-X-Get-Message-Sender-Via: hostingweb31.netsons.net: authenticated_id: luca+lucaceresoli.net/only user confirmed/virtual account not confirmed
-X-Authenticated-Sender: hostingweb31.netsons.net: luca@lucaceresoli.net
-X-Source: 
-X-Source-Args: 
-X-Source-Dir: 
+References: <20190312131830.4253-1-andriy.shevchenko@linux.intel.com>
+ <CAMuHMdVTKRJJDqtpgExmEmwnYcpF8h2xTtbXwKLnVmVPz0bZqw@mail.gmail.com> <20190312144052.GC9224@smile.fi.intel.com>
+In-Reply-To: <20190312144052.GC9224@smile.fi.intel.com>
+From:   Geert Uytterhoeven <geert@linux-m68k.org>
+Date:   Tue, 12 Mar 2019 16:04:27 +0100
+Message-ID: <CAMuHMdUwEdNHdSGHT2urXFm4T74yYVEfHkQJqsZGsQhveqC17g@mail.gmail.com>
+Subject: Re: [PATCH v1 1/4] auxdisplay: hd44780: Fix memory leak on ->remove()
+To:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Cc:     Miguel Ojeda Sandonis <miguel.ojeda.sandonis@gmail.com>,
+        Willy Tarreau <willy@haproxy.com>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Vishal, Sakari,
+Hi Andy,
 
-On 12/03/19 15:45, Vishal Sagar wrote:
->>> +- xlnx,en-csi-v2-0: Present if CSI v2 is enabled in IP configuration.
->>> +- xlnx,en-vcx: When present, there are maximum 16 virtual channels, else
->>> +  only 4. This is present only if xlnx,en-csi-v2-0 is present.
->>> +- xlnx,en-active-lanes: present if the number of active lanes can be
->>> +  reconfigured at runtime in the Protocol Configuration Register.
->>> +  If present, the V4L2_CID_XILINX_MIPICSISS_ACT_LANES control is added.
->>> +  Otherwise all lanes, as set in IP configuration, are always active.
->>
->> The bindings document hardware, therefore a V4L2 control name doesn't
->> belong here.
->>
-> Ok. I will remove this and revert to original description as below -
-> 
-> xlnx,en-active-lanes: present if the number of active lanes can be
-> re-configured at runtime in the Protocol Configuration Register
+On Tue, Mar 12, 2019 at 3:40 PM Andy Shevchenko
+<andriy.shevchenko@linux.intel.com> wrote:
+> On Tue, Mar 12, 2019 at 02:47:01PM +0100, Geert Uytterhoeven wrote:
+> > On Tue, Mar 12, 2019 at 2:18 PM Andy Shevchenko
+> > <andriy.shevchenko@linux.intel.com> wrote:
+> > > We have to free on ->remove() the allocated resources on ->probe().
+> > >
+> > > Fixes: d47d88361fee ("auxdisplay: Add HD44780 Character LCD support")
+> > > Cc: Geert Uytterhoeven <geert@linux-m68k.org>
+> > > Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+> >
+> > Thanks, nice catch!
+> >
+> > (wearing a newer (and hopefully wiser ;-) hat than when I wrote the code)
+> >
+> > While this is correct for the current implementation of struct charlcd_priv,
+> > this may be a bit fragile.
+>
+> This patch will be the same in the next version due to possibility to easy
+> backport.
 
-I'm to blame here as I suggested that text. However I still find the
-original wording was ambiguous: my initial reading of it was close to
-the opposite of the intended meaning. xlnx,en-active-lanes means "a
-register exists to configure the active lanes at runtime" and I just
-care that this is stated clearly and unambiguously.
+OK.
 
-If we cannot mention a control name here, why not just dropping it:
+> > What about adding a charlcd_free() wrapper, which can do kfree(to_priv(lcd)),
+> > and be used in the probe failure path, too?
+>
+> This has been partially done in the rest of the series, but I got your advise
+> and will change to use to_priv() in v2. Thanks!
 
-- xlnx,en-active-lanes: present if the number of active lanes can be
-  reconfigured at runtime in the Protocol Configuration Register.
-  Otherwise all lanes are always active.
+Ah, hadn't noticed the rest of the series. Will review...
 
--- 
-Luca
+Gr{oetje,eeting}s,
+
+                        Geert
+
+--
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
