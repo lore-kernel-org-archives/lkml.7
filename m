@@ -4,51 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C8D3CC43381
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 17:17:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 50977C43381
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 17:17:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9C22B217D4
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 17:17:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1677A217D8
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 17:17:08 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1552411025;
-	bh=gVNcN8tg/KN3C9r9vsB4HItNehwF9hlPkjzC4MmQQiM=;
+	s=default; t=1552411028;
+	bh=74no4vfZFSfXgDRRKVOO3FiXPoLSQuQ3hBLreIO/aBw=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=YIdQMZNeuPswvr+uE4MKGHtaT/tRBbdqVR2jKm9wWaVO9XF1aw9xP/j/slBCErtS4
-	 okW0M0IVYopo8hx+AmO4g3MvqgFfqR5ZZ5aJ2xOFTgKYVX6s4t6aw0UNnJqtUsa6lQ
-	 79t4aovlTA7eoBe/Rq8oTeaZCCT3HN40f181KU2I=
+	b=i8MQYqMq59oKpLoHmh19zGK6EJKJeUK0L+LwzXWlXgcGLoICaH8SYpbUqWIpq6WI3
+	 ytQDg8DgEV7D5ysP3wxrM5eWWZdLFZZFp5QxqGiqcyZLIWqj357DqD//F5s4/mHOW/
+	 VFlTU+XUXLDx3fd8h2dQTGSqEpLA3MqfBE+MqvPY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729419AbfCLRRD (ORCPT
+        id S1729434AbfCLRRH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 12 Mar 2019 13:17:03 -0400
-Received: from mail.kernel.org ([198.145.29.99]:57246 "EHLO mail.kernel.org"
+        Tue, 12 Mar 2019 13:17:07 -0400
+Received: from mail.kernel.org ([198.145.29.99]:57342 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728930AbfCLRP4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 12 Mar 2019 13:15:56 -0400
+        id S1728945AbfCLRP6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 12 Mar 2019 13:15:58 -0400
 Received: from localhost (unknown [104.133.8.98])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id CF4DC2171F;
-        Tue, 12 Mar 2019 17:15:55 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 00E662183F;
+        Tue, 12 Mar 2019 17:15:57 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1552410955;
-        bh=gVNcN8tg/KN3C9r9vsB4HItNehwF9hlPkjzC4MmQQiM=;
+        s=default; t=1552410958;
+        bh=74no4vfZFSfXgDRRKVOO3FiXPoLSQuQ3hBLreIO/aBw=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=mqU9oHbQ9Y2k7gWenph08ixw8jBC9H+9TxM9YI6monyKvX2JmLrsFR40GndMshgQ+
-         u0aG7K1OuhoVPWtdl3u9TqcszNurW3wB1JJKKkZ3lkvJYLIaKbNPF64Kkb+9sBgJdo
-         //9A+JiRf5Dd1E81NG+3bU0gTEvnw7v3S7Yp8bss=
+        b=EYlxB6Run5sKabsk/Z9qAkDDLarKl8fGrSA+vMN6ZIy4mrsMn4o4SDcVxGZ2Ps6In
+         x9DDfDbuOfvIqindG9ffyv60EYonqRGt07kPlahzPVCvkYkov6XbgS3gt8LAAJw2PP
+         L3JYFixUZeYcT22BUupiLF0h8xfAGjOTpxmORNTw=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Paul Durrant <paul.durrant@citrix.com>,
-        Igor Druzhinin <igor.druzhinin@citrix.com>,
-        Wei Liu <wei.liu2@citrix.com>,
+        stable@vger.kernel.org, David Ahern <dsahern@gmail.com>,
         "David S. Miller" <davem@davemloft.net>
-Subject: [PATCH 4.14 025/135] xen-netback: fix occasional leak of grant ref mappings under memory pressure
-Date:   Tue, 12 Mar 2019 10:07:52 -0700
-Message-Id: <20190312170343.458765087@linuxfoundation.org>
+Subject: [PATCH 4.14 028/135] ipv4: Return error for RTA_VIA attribute
+Date:   Tue, 12 Mar 2019 10:07:55 -0700
+Message-Id: <20190312170343.749756467@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190312170341.127810985@linuxfoundation.org>
 References: <20190312170341.127810985@linuxfoundation.org>
@@ -67,64 +65,44 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-From: Igor Druzhinin <igor.druzhinin@citrix.com>
+From: David Ahern <dsahern@gmail.com>
 
-[ Upstream commit 99e87f56b48f490fb16b6e0f74691c1e664dea95 ]
+[ Upstream commit b6e9e5df4ecf100f6a10ab2ade8e46d47a4b9779 ]
 
-Zero-copy callback flag is not yet set on frag list skb at the moment
-xenvif_handle_frag_list() returns -ENOMEM. This eventually results in
-leaking grant ref mappings since xenvif_zerocopy_callback() is never
-called for these fragments. Those eventually build up and cause Xen
-to kill Dom0 as the slots get reused for new mappings:
+IPv4 currently does not support nexthops outside of the AF_INET family.
+Specifically, it does not handle RTA_VIA attribute. If it is passed
+in a route add request, the actual route added only uses the device
+which is clearly not what the user intended:
 
-"d0v0 Attempt to implicitly unmap a granted PTE c010000329fce005"
+  $ ip ro add 172.16.1.0/24 via inet6 2001:db8:1::1 dev eth0
+  $ ip ro ls
+  ...
+  172.16.1.0/24 dev eth0
 
-That behavior is observed under certain workloads where sudden spikes
-of page cache writes coexist with active atomic skb allocations from
-network traffic. Additionally, rework the logic to deal with frag_list
-deallocation in a single place.
+Catch this and fail the route add:
+  $ ip ro add 172.16.1.0/24 via inet6 2001:db8:1::1 dev eth0
+  Error: IPv4 does not support RTA_VIA attribute.
 
-Signed-off-by: Paul Durrant <paul.durrant@citrix.com>
-Signed-off-by: Igor Druzhinin <igor.druzhinin@citrix.com>
-Acked-by: Wei Liu <wei.liu2@citrix.com>
+Fixes: 03c0566542f4c ("mpls: Netlink commands to add, remove, and dump routes")
+Signed-off-by: David Ahern <dsahern@gmail.com>
 Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- drivers/net/xen-netback/netback.c |   10 +++++-----
- 1 file changed, 5 insertions(+), 5 deletions(-)
+ net/ipv4/fib_frontend.c |    4 ++++
+ 1 file changed, 4 insertions(+)
 
---- a/drivers/net/xen-netback/netback.c
-+++ b/drivers/net/xen-netback/netback.c
-@@ -1074,11 +1074,6 @@ static int xenvif_handle_frag_list(struc
- 		skb_frag_size_set(&frags[i], len);
- 	}
- 
--	/* Copied all the bits from the frag list -- free it. */
--	skb_frag_list_init(skb);
--	xenvif_skb_zerocopy_prepare(queue, nskb);
--	kfree_skb(nskb);
--
- 	/* Release all the original (foreign) frags. */
- 	for (f = 0; f < skb_shinfo(skb)->nr_frags; f++)
- 		skb_frag_unref(skb, f);
-@@ -1147,6 +1142,8 @@ static int xenvif_tx_submit(struct xenvi
- 		xenvif_fill_frags(queue, skb);
- 
- 		if (unlikely(skb_has_frag_list(skb))) {
-+			struct sk_buff *nskb = skb_shinfo(skb)->frag_list;
-+			xenvif_skb_zerocopy_prepare(queue, nskb);
- 			if (xenvif_handle_frag_list(queue, skb)) {
- 				if (net_ratelimit())
- 					netdev_err(queue->vif->dev,
-@@ -1155,6 +1152,9 @@ static int xenvif_tx_submit(struct xenvi
- 				kfree_skb(skb);
- 				continue;
- 			}
-+			/* Copied all the bits from the frag list -- free it. */
-+			skb_frag_list_init(skb);
-+			kfree_skb(nskb);
- 		}
- 
- 		skb->dev      = queue->vif->dev;
+--- a/net/ipv4/fib_frontend.c
++++ b/net/ipv4/fib_frontend.c
+@@ -675,6 +675,10 @@ static int rtm_to_fib_config(struct net
+ 		case RTA_GATEWAY:
+ 			cfg->fc_gw = nla_get_be32(attr);
+ 			break;
++		case RTA_VIA:
++			NL_SET_ERR_MSG(extack, "IPv4 does not support RTA_VIA attribute");
++			err = -EINVAL;
++			goto errout;
+ 		case RTA_PRIORITY:
+ 			cfg->fc_priority = nla_get_u32(attr);
+ 			break;
 
 
