@@ -4,41 +4,41 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8FE4DC43381
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 17:53:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 32652C43381
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 17:53:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 62A4921734
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 17:53:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 069322087C
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 17:53:31 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1552413203;
-	bh=H8x5CRypONBW6wPU2E0MSgZwvTHOPS7ACM7KBvPGWKw=;
+	s=default; t=1552413211;
+	bh=Q5RpZ6XgkiZm7VAhwkx98W2rGBm0tf4xOEmuIEZHLNA=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=BJE+36FZM+IEa38wsvydhEtV0FmcCZbn4CY6s8aJeG3bqatpthRk06F8z5i6GP1Ie
-	 wJF4N25WFBhZm2+RbrU5EElrpOQyAtJBBLdf//Fjebp4L5hsSstc4PBR6la47ncA2G
-	 Xq3G5fmZB2Cwu9otIMlmy3C6bdgz8oFmjWyAnsDo=
+	b=G8IxidAEcZ++hxwl9vJZjWKkpDS0gPqeU6vO9BxsurWzpkSIwtWtKmOCE9n+wbQ5H
+	 TiInHRLiGAoC1GzUy5fjtCObKEgMNgroQs9iYYzhgnW8NaF5l/e8H4zoTQBiR9zN6Y
+	 4y6OMPMFmI1BV/atgCggEaGFNvJImSI7WbnQmO0A=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728605AbfCLRxR (ORCPT
+        id S1728944AbfCLRx3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 12 Mar 2019 13:53:17 -0400
-Received: from mail.kernel.org ([198.145.29.99]:52822 "EHLO mail.kernel.org"
+        Tue, 12 Mar 2019 13:53:29 -0400
+Received: from mail.kernel.org ([198.145.29.99]:52798 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728309AbfCLROU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 12 Mar 2019 13:14:20 -0400
+        id S1728302AbfCLROS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 12 Mar 2019 13:14:18 -0400
 Received: from localhost (unknown [104.133.8.98])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D1CDC21741;
+        by mail.kernel.org (Postfix) with ESMTPSA id 2BC172183E;
         Tue, 12 Mar 2019 17:14:18 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
         s=default; t=1552410858;
-        bh=H8x5CRypONBW6wPU2E0MSgZwvTHOPS7ACM7KBvPGWKw=;
+        bh=Q5RpZ6XgkiZm7VAhwkx98W2rGBm0tf4xOEmuIEZHLNA=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=n8ld9tSgYaz7vw/Yukd3SyFaRk2s3Fe1VdLGuqodOf1OKfnr+UTCRpgbagSfx3KcB
-         3V9K2QUYHU9ml9lHpUCcoKnxeBVeDcKmEif4wN3uWw9XvEqD2emlz1dbGZ7Cyr00zm
-         O0yxLC1nZReKDdbnKa4yCoo/a7JyoLiGCmOtNNhw=
+        b=hSRuge+aXPWjpzrzNWxMER8cccSPWBSZIi6p26y/bfdQdRMd4drArBg7hiYXoUoWx
+         5fTmQ4qc3V2TMEHMD8inWI7q343rC5Fyl8h059h9IRm2VSh2FOBvio4S/jnOQfsWjg
+         LWBePInTaDQypMr+URXiDNQc7+Rneko4eBZub0/k=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
@@ -46,9 +46,9 @@ Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         Ariel Elior <aelior@marvell.com>,
         "David S. Miller" <davem@davemloft.net>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 036/149] qed: Fix LACP pdu drops for VFs
-Date:   Tue, 12 Mar 2019 10:07:34 -0700
-Message-Id: <20190312170352.740194587@linuxfoundation.org>
+Subject: [PATCH 4.19 035/149] qed: Fix bug in tx promiscuous mode settings
+Date:   Tue, 12 Mar 2019 10:07:33 -0700
+Message-Id: <20190312170352.645506027@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190312170349.421581206@linuxfoundation.org>
 References: <20190312170349.421581206@linuxfoundation.org>
@@ -67,92 +67,53 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-[ Upstream commit ff9296966e5e00b0d0d00477b2365a178f0f06a3 ]
+[ Upstream commit 9e71a15d8b5bbce25c637f7f8833cd3f45b65646 ]
 
-VF is always configured to drop control frames
-(with reserved mac addresses) but to work LACP
-on the VFs, it would require LACP control frames
-to be forwarded or transmitted successfully.
+When running tx switched traffic between VNICs
+created via a bridge(to which VFs are added),
+adapter drops the unicast packets in tx flow due to
+VNIC's ucast mac being unknown to it. But VF interfaces
+being in promiscuous mode should have caused adapter
+to accept all the unknown ucast packets. Later, it
+was found that driver doesn't really configure tx
+promiscuous mode settings to accept all unknown unicast macs.
 
-This patch fixes this in such a way that trusted VFs
-(marked through ndo_set_vf_trust) would be allowed to
-pass the control frames such as LACP pdus.
+This patch fixes tx promiscuous mode settings to accept all
+unknown/unmatched unicast macs and works out the scenario.
 
 Signed-off-by: Manish Chopra <manishc@marvell.com>
 Signed-off-by: Ariel Elior <aelior@marvell.com>
 Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/ethernet/qlogic/qed/qed_l2.c    |  5 +++++
- drivers/net/ethernet/qlogic/qed/qed_l2.h    |  3 +++
- drivers/net/ethernet/qlogic/qed/qed_sriov.c | 10 ++++++++--
- 3 files changed, 16 insertions(+), 2 deletions(-)
+ drivers/net/ethernet/qlogic/qed/qed_l2.c | 7 ++++++-
+ 1 file changed, 6 insertions(+), 1 deletion(-)
 
 diff --git a/drivers/net/ethernet/qlogic/qed/qed_l2.c b/drivers/net/ethernet/qlogic/qed/qed_l2.c
-index b8baa6fcef8e..e68ca83ae915 100644
+index 67c02ea93906..b8baa6fcef8e 100644
 --- a/drivers/net/ethernet/qlogic/qed/qed_l2.c
 +++ b/drivers/net/ethernet/qlogic/qed/qed_l2.c
-@@ -748,6 +748,11 @@ int qed_sp_vport_update(struct qed_hwfn *p_hwfn,
- 		return rc;
- 	}
+@@ -609,6 +609,10 @@ qed_sp_update_accept_mode(struct qed_hwfn *p_hwfn,
+ 			  (!!(accept_filter & QED_ACCEPT_MCAST_MATCHED) &&
+ 			   !!(accept_filter & QED_ACCEPT_MCAST_UNMATCHED)));
  
-+	if (p_params->update_ctl_frame_check) {
-+		p_cmn->ctl_frame_mac_check_en = p_params->mac_chk_en;
-+		p_cmn->ctl_frame_ethtype_check_en = p_params->ethtype_chk_en;
-+	}
++		SET_FIELD(state, ETH_VPORT_TX_MODE_UCAST_ACCEPT_ALL,
++			  (!!(accept_filter & QED_ACCEPT_UCAST_MATCHED) &&
++			   !!(accept_filter & QED_ACCEPT_UCAST_UNMATCHED)));
 +
- 	/* Update mcast bins for VFs, PF doesn't use this functionality */
- 	qed_sp_update_mcast_bin(p_hwfn, p_ramrod, p_params);
+ 		SET_FIELD(state, ETH_VPORT_TX_MODE_BCAST_ACCEPT_ALL,
+ 			  !!(accept_filter & QED_ACCEPT_BCAST));
  
-diff --git a/drivers/net/ethernet/qlogic/qed/qed_l2.h b/drivers/net/ethernet/qlogic/qed/qed_l2.h
-index 8d80f1095d17..7127d5aaac42 100644
---- a/drivers/net/ethernet/qlogic/qed/qed_l2.h
-+++ b/drivers/net/ethernet/qlogic/qed/qed_l2.h
-@@ -219,6 +219,9 @@ struct qed_sp_vport_update_params {
- 	struct qed_rss_params		*rss_params;
- 	struct qed_filter_accept_flags	accept_flags;
- 	struct qed_sge_tpa_params	*sge_tpa_params;
-+	u8				update_ctl_frame_check;
-+	u8				mac_chk_en;
-+	u8				ethtype_chk_en;
- };
- 
- int qed_sp_vport_update(struct qed_hwfn *p_hwfn,
-diff --git a/drivers/net/ethernet/qlogic/qed/qed_sriov.c b/drivers/net/ethernet/qlogic/qed/qed_sriov.c
-index ca6290fa0f30..71a7af134dd8 100644
---- a/drivers/net/ethernet/qlogic/qed/qed_sriov.c
-+++ b/drivers/net/ethernet/qlogic/qed/qed_sriov.c
-@@ -1969,7 +1969,9 @@ static void qed_iov_vf_mbx_start_vport(struct qed_hwfn *p_hwfn,
- 	params.vport_id = vf->vport_id;
- 	params.max_buffers_per_cqe = start->max_buffers_per_cqe;
- 	params.mtu = vf->mtu;
--	params.check_mac = true;
-+
-+	/* Non trusted VFs should enable control frame filtering */
-+	params.check_mac = !vf->p_vf_info.is_trusted_configured;
- 
- 	rc = qed_sp_eth_vport_start(p_hwfn, &params);
- 	if (rc) {
-@@ -5130,6 +5132,9 @@ static void qed_iov_handle_trust_change(struct qed_hwfn *hwfn)
- 		params.opaque_fid = vf->opaque_fid;
- 		params.vport_id = vf->vport_id;
- 
-+		params.update_ctl_frame_check = 1;
-+		params.mac_chk_en = !vf_info->is_trusted_configured;
-+
- 		if (vf_info->rx_accept_mode & mask) {
- 			flags->update_rx_mode_config = 1;
- 			flags->rx_accept_filter = vf_info->rx_accept_mode;
-@@ -5147,7 +5152,8 @@ static void qed_iov_handle_trust_change(struct qed_hwfn *hwfn)
- 		}
- 
- 		if (flags->update_rx_mode_config ||
--		    flags->update_tx_mode_config)
-+		    flags->update_tx_mode_config ||
-+		    params.update_ctl_frame_check)
- 			qed_sp_vport_update(hwfn, &params,
- 					    QED_SPQ_MODE_EBLOCK, NULL);
- 	}
+@@ -2688,7 +2692,8 @@ static int qed_configure_filter_rx_mode(struct qed_dev *cdev,
+ 	if (type == QED_FILTER_RX_MODE_TYPE_PROMISC) {
+ 		accept_flags.rx_accept_filter |= QED_ACCEPT_UCAST_UNMATCHED |
+ 						 QED_ACCEPT_MCAST_UNMATCHED;
+-		accept_flags.tx_accept_filter |= QED_ACCEPT_MCAST_UNMATCHED;
++		accept_flags.tx_accept_filter |= QED_ACCEPT_UCAST_UNMATCHED |
++						 QED_ACCEPT_MCAST_UNMATCHED;
+ 	} else if (type == QED_FILTER_RX_MODE_TYPE_MULTI_PROMISC) {
+ 		accept_flags.rx_accept_filter |= QED_ACCEPT_MCAST_UNMATCHED;
+ 		accept_flags.tx_accept_filter |= QED_ACCEPT_MCAST_UNMATCHED;
 -- 
 2.19.1
 
