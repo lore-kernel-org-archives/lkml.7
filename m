@@ -7,49 +7,48 @@ X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 81702C43381
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 18:08:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8648FC43381
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 18:08:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 420682087C
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 18:08:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 50D9B21773
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 18:08:55 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1552414133;
-	bh=8mY5KHVtibOZlB4ZnARHtsed2sk1nZcvBwJd82aM34E=;
+	s=default; t=1552414135;
+	bh=M8COW1q4tXAq0WQxdWnnlpwEUxJDwKsXLSgkTsxTVuE=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=D2C0V6kTn9gHftOOiM1g++08xl38Cu8suN1QQO0Z1dLhSLz3q7h2Uc1/vSl2WJNcX
-	 hE9Wxbm2byE0054Nn6wOfl6yxsexzOfjw1yw+0kOW05l7CXE/doAmIyEh5Ul5eFBA4
-	 xzw6VyV0pxRegFBvPoxNcpzxFxAVeUm+jrE1as9k=
+	b=GVK0C9nBnln0ZozYcRmD6D7374tSnOBZQo5WqlMMQU247Qo3mU2M/3Bf4/7OvZD7F
+	 AxZoTQaIfOPfOahYCx2RCGkCrfGeD6f+cIlp1AvP7j70CkZ2olwYPFN/ahpzIgiiXG
+	 xK/exwpJ1vW74xQJBSW9bmCmeQ45SfwkOaqSQ8Bo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727318AbfCLRMK (ORCPT
+        id S1728254AbfCLSIx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 12 Mar 2019 13:12:10 -0400
-Received: from mail.kernel.org ([198.145.29.99]:46202 "EHLO mail.kernel.org"
+        Tue, 12 Mar 2019 14:08:53 -0400
+Received: from mail.kernel.org ([198.145.29.99]:46834 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727223AbfCLRL5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 12 Mar 2019 13:11:57 -0400
+        id S1727317AbfCLRML (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 12 Mar 2019 13:12:11 -0400
 Received: from localhost (unknown [104.133.8.98])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 38C28206DF;
-        Tue, 12 Mar 2019 17:11:57 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 5828A2083D;
+        Tue, 12 Mar 2019 17:12:10 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1552410717;
-        bh=8mY5KHVtibOZlB4ZnARHtsed2sk1nZcvBwJd82aM34E=;
+        s=default; t=1552410730;
+        bh=M8COW1q4tXAq0WQxdWnnlpwEUxJDwKsXLSgkTsxTVuE=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=a/iR16CxLFRGLa2AZcSx5yUpa2+FNyo7tPfnHGSXZUI/YM1qkljs1uOvc4J6QqE3p
-         LxM41BnvdaZ/Sff2xs52600Vak0gj7tANXQXF7B5bhD8TOi7wuMrH3RR9jrAosHbSa
-         5gMf80+UzXxAMmewWlR7nUZ90VSR830MD1nVjxZc=
+        b=gzwEauEb9Lp4+cx1NRdPU71DVCt4Ke4NRIpmKZOrJ9BVItLIJuIxvBli4zpT250p2
+         Z0Mjnl7Bl9i2YRnQEQzgGmZ8a54yuxsKzyUTEkntaYrlITJX/xGz9r/MqoP2t4fkRC
+         4MhH+PBjU94C4ssNe5kWtfHXfbi2oR8IzTxMG6AA=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Alexey Khoroshilov <khoroshilov@ispras.ru>,
-        Yonglong Liu <liuyonglong@huawei.com>,
-        Peng Li <lipeng321@huawei.com>,
-        "David S. Miller" <davem@davemloft.net>,
+        stable@vger.kernel.org, Sinan Kaya <okaya@kernel.org>,
+        Andy Shevchenko <andy.shevchenko@gmail.com>,
+        "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.20 032/171] net: hns: Fix for missing of_node_put() after of_parse_phandle()
-Date:   Tue, 12 Mar 2019 10:06:52 -0700
-Message-Id: <20190312170350.786672708@linuxfoundation.org>
+Subject: [PATCH 4.20 050/171] platform/x86: Fix unmet dependency warning for ACPI_CMPC
+Date:   Tue, 12 Mar 2019 10:07:10 -0700
+Message-Id: <20190312170352.421367223@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190312170347.868927101@linuxfoundation.org>
 References: <20190312170347.868927101@linuxfoundation.org>
@@ -68,49 +67,41 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-[ Upstream commit 263c6d75f9a544a3c2f8f6a26de4f4808d8f59cf ]
+[ Upstream commit d58bf90a32a33becec78c3034e781735049fcd25 ]
 
-In hns enet driver, we use of_parse_handle() to get hold of the
-device node related to "ae-handle" but we have missed to put
-the node reference using of_node_put() after we are done using
-the node. This patch fixes it.
+Add BACKLIGHT_LCD_SUPPORT for ACPI_CMPC to fix the
+warning: unmet direct dependencies detected for BACKLIGHT_CLASS_DEVICE.
 
-Note:
-This problem is stated in Link: https://lkml.org/lkml/2018/12/22/217
+ACPI_CMPC selects BACKLIGHT_CLASS_DEVICE but BACKLIGHT_CLASS_DEVICE
+depends on BACKLIGHT_LCD_SUPPORT.
 
-Fixes: 48189d6aaf1e ("net: hns: enet specifies a reference to dsaf")
-Reported-by: Alexey Khoroshilov <khoroshilov@ispras.ru>
-Signed-off-by: Yonglong Liu <liuyonglong@huawei.com>
-Signed-off-by: Peng Li <lipeng321@huawei.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
+Copy BACKLIGHT_LCD_SUPPORT dependency into ACPI_CMPC to fix
+
+WARNING: unmet direct dependencies detected for BACKLIGHT_CLASS_DEVICE
+  Depends on [n]: HAS_IOMEM [=y] && BACKLIGHT_LCD_SUPPORT [=n]
+  Selected by [y]:
+  - ACPI_CMPC [=y] && X86 [=y] && X86_PLATFORM_DEVICES [=y] && ACPI [=y] && INPUT [=y] && (RFKILL [=n] || RFKILL [=n]=n)
+
+Signed-off-by: Sinan Kaya <okaya@kernel.org>
+Acked-by: Andy Shevchenko <andy.shevchenko@gmail.com>
+Signed-off-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/ethernet/hisilicon/hns/hns_enet.c | 5 +++++
- 1 file changed, 5 insertions(+)
+ drivers/platform/x86/Kconfig | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/drivers/net/ethernet/hisilicon/hns/hns_enet.c b/drivers/net/ethernet/hisilicon/hns/hns_enet.c
-index 6242249c9f4c..b043370c2685 100644
---- a/drivers/net/ethernet/hisilicon/hns/hns_enet.c
-+++ b/drivers/net/ethernet/hisilicon/hns/hns_enet.c
-@@ -2419,6 +2419,8 @@ static int hns_nic_dev_probe(struct platform_device *pdev)
- out_notify_fail:
- 	(void)cancel_work_sync(&priv->service_task);
- out_read_prop_fail:
-+	/* safe for ACPI FW */
-+	of_node_put(to_of_node(priv->fwnode));
- 	free_netdev(ndev);
- 	return ret;
- }
-@@ -2448,6 +2450,9 @@ static int hns_nic_dev_remove(struct platform_device *pdev)
- 	set_bit(NIC_STATE_REMOVING, &priv->state);
- 	(void)cancel_work_sync(&priv->service_task);
- 
-+	/* safe for ACPI FW */
-+	of_node_put(to_of_node(priv->fwnode));
-+
- 	free_netdev(ndev);
- 	return 0;
- }
+diff --git a/drivers/platform/x86/Kconfig b/drivers/platform/x86/Kconfig
+index 54f6a40c75c6..458f92aac92e 100644
+--- a/drivers/platform/x86/Kconfig
++++ b/drivers/platform/x86/Kconfig
+@@ -901,6 +901,7 @@ config TOSHIBA_WMI
+ config ACPI_CMPC
+ 	tristate "CMPC Laptop Extras"
+ 	depends on ACPI && INPUT
++	depends on BACKLIGHT_LCD_SUPPORT
+ 	depends on RFKILL || RFKILL=n
+ 	select BACKLIGHT_CLASS_DEVICE
+ 	help
 -- 
 2.19.1
 
