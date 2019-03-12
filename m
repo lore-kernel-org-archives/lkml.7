@@ -2,126 +2,120 @@ Return-Path: <SRS0=J4ZE=RP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_PASS,
-	USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C67E6C43381
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 18:51:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 63C78C4360F
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 18:51:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8DAA82147C
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 18:51:01 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1552416661;
-	bh=DEqyzLHUHAyMTqMI0/4aM5ydiivX4x8vNjvsXrpZOLA=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=NrR7OUyjGvx0Zsu62WdlRB85udos7fuqhhwoCFMxUoAWtS1vFA4NVGRu0C0oiP2Eu
-	 pWimD/VgHzBUoOa3dxPSiP2lltu778K26IcAxXbCTMtXqkxgseppxev0E65IqmS+5Q
-	 ii3Za1PHkuaTckkqj4EwMC5VaA2DI321kIXW6do4=
+	by mail.kernel.org (Postfix) with ESMTP id 3390B21734
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 18:51:11 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=brauner.io header.i=@brauner.io header.b="ReZ7TFra"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727152AbfCLSvA (ORCPT
+        id S1727036AbfCLSvJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 12 Mar 2019 14:51:00 -0400
-Received: from mail.kernel.org ([198.145.29.99]:40244 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727041AbfCLSu7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 12 Mar 2019 14:50:59 -0400
-Received: from localhost (unknown [104.132.1.80])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id AF376206BA;
-        Tue, 12 Mar 2019 18:50:58 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1552416658;
-        bh=DEqyzLHUHAyMTqMI0/4aM5ydiivX4x8vNjvsXrpZOLA=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=Sfn/u6VuUrd87OGYfaR05JJtVFKZfRl+WG6yqtn+TEp2n8NA8nFWLZnxFosLv876k
-         A8gDdom8awK4gN88W8UTstHzi0ReON/Ud4aEfojuts0L4P5zOKPuDsldNTi/QYpVk4
-         4OJPeVMl079ML8JJeChBYy6PVPmFFzI0Idsb3W70=
-Date:   Tue, 12 Mar 2019 11:50:57 -0700
-From:   Jaegeuk Kim <jaegeuk@kernel.org>
-To:     Chao Yu <yuchao0@huawei.com>
-Cc:     Chao Yu <chao@kernel.org>, linux-f2fs-devel@lists.sourceforge.net,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2] f2fs: fix to check inline_xattr_size boundary
- correctly
-Message-ID: <20190312185057.GB45421@jaegeuk-macbookpro.roam.corp.google.com>
-References: <20190214160825.4973-1-chao@kernel.org>
- <82ef0ff8-452c-1894-6776-41c70ad7654b@huawei.com>
+        Tue, 12 Mar 2019 14:51:09 -0400
+Received: from mail-lj1-f195.google.com ([209.85.208.195]:46067 "EHLO
+        mail-lj1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725894AbfCLSvJ (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 12 Mar 2019 14:51:09 -0400
+Received: by mail-lj1-f195.google.com with SMTP id d24so3249727ljc.12
+        for <linux-kernel@vger.kernel.org>; Tue, 12 Mar 2019 11:51:07 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=brauner.io; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=Mm1QjN0w8dacwGXEVgLh1zGRWMMMxD/FUwmSzd/yuf8=;
+        b=ReZ7TFratJ9POYe6uENAlwtgGehDAzQ2wCByC5K5jWadZKihhqNohXxG6TJQKQPbQM
+         Z2fBsTi4n9dUsdHgFXbDNVqnCfzUp8UG4J4TXogC9BIeJE7mVvjgjdV2QKQ3EWDZsVcV
+         0GWRm/8L5yezYHi9shNQtX5EWu81grR7bJQvyzJrys7kBYxQc3TCEXJvVb9cv3oR7YTA
+         jRoAVYCvsLhSmCgM3v71misWrrC8WCrbGHvpbwr0Yw5zMIvqGbFjLKdxO/jWUO/eNMv5
+         zkj8CKXLtQ2OxjJPT/o56vzm5sk5BpJ26RbliroOVQqmDBfM/pwErxR90ONVv/lB84ox
+         F7IA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=Mm1QjN0w8dacwGXEVgLh1zGRWMMMxD/FUwmSzd/yuf8=;
+        b=GxX319c6uMcOAehrUGGGTAT0d7SpHDX8mHAlFuHDT8J5MuYSO0OkzCAOss467pqtbG
+         Vkrcjk+nPF/k9z2dt6d/pjZQoR9MLctXSQ78B1aOQsJWA27A1K5YMmb1Vdk6STWdz+x4
+         Duwg3uIFzFS0HMZyKdiCcD2HR8SCHEa11QC5nb5x0HcXG0+i2JKW0reROF/LyqKLCq4f
+         Q4Z+nmwI9jICJYFxEVZQD0TsQxrugKQWfMj4EaPkMTLbO1ZzNL6tXlM0M7udlDr6BRql
+         UOzqVAalPxiM86fl4wFYEiLzXxZv7khD6UVEVWn8NoJlSzKe0GGw1WBq2ZtiZpPeidvN
+         TJ2Q==
+X-Gm-Message-State: APjAAAXAASiVfdVJDv6aUEXaQfp6DMyi2cU8QiTWpEE7OCKyYoT/byyx
+        Oo296m9hmQovwAltUghxQqP3Bgv2k8pqswcrjUxSvg==
+X-Google-Smtp-Source: APXvYqw042Y405TkkYroyypqXMMWe0ijN5HML/93iYXw+M+g2oYOWyTaRT6QzClpgaL7ftG8FMaffrhutNYfqB9ApDI=
+X-Received: by 2002:a2e:b014:: with SMTP id y20mr10013024ljk.116.1552416666852;
+ Tue, 12 Mar 2019 11:51:06 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <82ef0ff8-452c-1894-6776-41c70ad7654b@huawei.com>
-User-Agent: Mutt/1.8.2 (2017-04-18)
+References: <20190310203403.27915-1-sultan@kerneltoast.com>
+ <20190311174320.GC5721@dhcp22.suse.cz> <20190311175800.GA5522@sultan-box.localdomain>
+ <CAJuCfpHTjXejo+u--3MLZZj7kWQVbptyya4yp1GLE3hB=BBX7w@mail.gmail.com>
+ <20190311204626.GA3119@sultan-box.localdomain> <CAJuCfpGpBxofTT-ANEEY+dFCSdwkQswox3s8Uk9Eq0BnK9i0iA@mail.gmail.com>
+ <20190312080532.GE5721@dhcp22.suse.cz> <20190312163741.GA2762@sultan-box.localdomain>
+ <CAEe=Sxn_uayj48wo7oqf8mNZ7QAGJUQVmkPcHcuEGjA_Z8ELeQ@mail.gmail.com>
+ <20190312174520.GA9276@sultan-box.localdomain> <CAEe=Sx=MxzBB46WxuwHTQcocBkx1UW+fmVOa3VWv_eUferzVYw@mail.gmail.com>
+In-Reply-To: <CAEe=Sx=MxzBB46WxuwHTQcocBkx1UW+fmVOa3VWv_eUferzVYw@mail.gmail.com>
+From:   Christian Brauner <christian@brauner.io>
+Date:   Tue, 12 Mar 2019 19:50:56 +0100
+Message-ID: <CAHrFyr7wJsNAQ_NPAsBDA-g7useeetgJ-MBod40SQAmf08sXJw@mail.gmail.com>
+Subject: Re: [RFC] simple_lmk: Introduce Simple Low Memory Killer for Android
+To:     Tim Murray <timmurray@google.com>
+Cc:     Sultan Alsawaf <sultan@kerneltoast.com>,
+        Michal Hocko <mhocko@kernel.org>,
+        Suren Baghdasaryan <surenb@google.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        =?UTF-8?B?QXJ2ZSBIasO4bm5ldsOlZw==?= <arve@android.com>,
+        Todd Kjos <tkjos@android.com>,
+        Martijn Coenen <maco@android.com>,
+        Joel Fernandes <joel@joelfernandes.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        linux-drivers <devel@driverdev.osuosl.org>,
+        linux-mm <linux-mm@kvack.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 03/04, Chao Yu wrote:
-> Hi Jaegeuk,
-> 
-> On 2019/2/15 0:08, Chao Yu wrote:
-> > ---
-> > v2:
-> > - fix lower bound check, inline xattr size should be larger than
-> > xattr_header's size at least.
-> 
-> ...
-> 
-> > +		if (F2FS_OPTION(sbi).inline_xattr_size <
-> > +			sizeof(struct f2fs_xattr_header) / sizeof(__le32)
-> 
-> No sure we should set this low bound as above... now I guess original
-> non-zero check is enough.
-> 
-> How do you think of setting inline_xattr_size range as
-> (0, MAX_INLINE_XATTR_SIZE]?
+On Tue, Mar 12, 2019 at 7:43 PM Tim Murray <timmurray@google.com> wrote:
+>
+> On Tue, Mar 12, 2019 at 10:45 AM Sultan Alsawaf <sultan@kerneltoast.com> wrote:
+> >
+> > On Tue, Mar 12, 2019 at 10:17:43AM -0700, Tim Murray wrote:
+> > > Knowing whether a SIGKILL'd process has finished reclaiming is as far
+> > > as I know not possible without something like procfds. That's where
+> > > the 100ms timeout in lmkd comes in. lowmemorykiller and lmkd both
+> > > attempt to wait up to 100ms for reclaim to finish by checking for the
+> > > continued existence of the thread that received the SIGKILL, but this
+> > > really means that they wait up to 100ms for the _thread_ to finish,
+> > > which doesn't tell you anything about the memory used by that process.
+> > > If those threads terminate early and lowmemorykiller/lmkd get a signal
+> > > to kill again, then there may be two processes competing for CPU time
+> > > to reclaim memory. That doesn't reclaim any faster and may be an
+> > > unnecessary kill.
+> > > ...
+> > > - offer a way to wait for process termination so lmkd can tell when
+> > > reclaim has finished and know when killing another process is
+> > > appropriate
+> >
+> > Should be pretty easy with something like this:
+>
+> Yeah, that's in the spirit of what I was suggesting, but there are lot
+> of edge cases around how to get that data out efficiently and PID
+> reuse (it's a real issue--often the Android apps that are causing
+> memory pressure are also constantly creating/destroying threads).
+>
+> I believe procfds or a similar mechanism will be a good solution to this.
 
-How about this?
+Fwiw, I am working on this and have send a PR for inclusion in 5.1:
+https://lore.kernel.org/lkml/20190312135245.27591-1-christian@brauner.io/
+There's also a tree to track this work.
 
----
- fs/f2fs/super.c | 17 +++++++++++------
- 1 file changed, 11 insertions(+), 6 deletions(-)
-
-diff --git a/fs/f2fs/super.c b/fs/f2fs/super.c
-index 42eb5c86330a..96302a428fdc 100644
---- a/fs/f2fs/super.c
-+++ b/fs/f2fs/super.c
-@@ -821,6 +821,8 @@ static int parse_options(struct super_block *sb, char *options)
- 	}
- 
- 	if (test_opt(sbi, INLINE_XATTR_SIZE)) {
-+		int min_size, max_size;
-+
- 		if (!f2fs_sb_has_extra_attr(sbi) ||
- 			!f2fs_sb_has_flexible_inline_xattr(sbi)) {
- 			f2fs_msg(sb, KERN_ERR,
-@@ -834,15 +836,18 @@ static int parse_options(struct super_block *sb, char *options)
- 					"set with inline_xattr option");
- 			return -EINVAL;
- 		}
--		if (F2FS_OPTION(sbi).inline_xattr_size <
--			sizeof(struct f2fs_xattr_header) / sizeof(__le32) ||
--			F2FS_OPTION(sbi).inline_xattr_size >
--			DEF_ADDRS_PER_INODE -
-+
-+		min_size = sizeof(struct f2fs_xattr_header) / sizeof(__le32);
-+		max_size = DEF_ADDRS_PER_INODE -
- 			F2FS_TOTAL_EXTRA_ATTR_SIZE / sizeof(__le32) -
- 			DEF_INLINE_RESERVED_SIZE -
--			MIN_INLINE_DENTRY_SIZE / sizeof(__le32)) {
-+			MIN_INLINE_DENTRY_SIZE / sizeof(__le32);
-+
-+		if (F2FS_OPTION(sbi).inline_xattr_size < min ||
-+				F2FS_OPTION(sbi).inline_xattr_size > max) {
- 			f2fs_msg(sb, KERN_ERR,
--					"inline xattr size is out of range");
-+				"inline xattr size is out of range: %d ~ %d",
-+				min, max);
- 			return -EINVAL;
- 		}
- 	}
--- 
-2.19.0.605.g01d371f741-goog
-
+Christian
