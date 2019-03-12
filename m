@@ -4,53 +4,53 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4B7A4C43381
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 17:28:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3B398C43381
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 17:28:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 11B872054F
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 17:28:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0D3B52054F
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 17:28:30 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1552411707;
-	bh=ApzyuoMcf/6lTBeLx5KFM6bVaqyi7gAOqwwJx/+5KB4=;
+	s=default; t=1552411710;
+	bh=aHVuDXTHxhEXvg6//V8Vjw1hEo/l6MuWUIFiScQfMqQ=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=AXvofls51urMaIpd4+m02+a99cinPuvOraNVE+bkbXCMtZsx3jrTx6BcoTiScqZRY
-	 hsX+evx3OMOdg0bsz5vZ2bvdCsykkd9ErtLo90XauoXamMZr7NNsh/7JKzqBROELmr
-	 RbFOGH4C6CjrNkTrMbzKmabcQStHZBIjIBb+PtcU=
+	b=ppp8xborJnRjad0vNsdTsMZauitbWN3F30EHp6xDturE2hKBkBmLVgFZwh6qH581p
+	 m58T6FGWqn857ukxgKoScZrYNATHMuRqiZjhowBGe7aNnFc1FfmHmVzk8lzQgbdUlG
+	 GHArpP46yL00dtgnNQd/qB3K3FIp78AwlL/Pq6Fc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729856AbfCLR2Z (ORCPT
+        id S1729869AbfCLR22 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 12 Mar 2019 13:28:25 -0400
-Received: from mail.kernel.org ([198.145.29.99]:33438 "EHLO mail.kernel.org"
+        Tue, 12 Mar 2019 13:28:28 -0400
+Received: from mail.kernel.org ([198.145.29.99]:33398 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729109AbfCLRRc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S1729633AbfCLRRc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Tue, 12 Mar 2019 13:17:32 -0400
 Received: from localhost (unknown [104.133.8.98])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id BC03F21741;
+        by mail.kernel.org (Postfix) with ESMTPSA id 0AA6C21850;
         Tue, 12 Mar 2019 17:17:31 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
         s=default; t=1552411051;
-        bh=ApzyuoMcf/6lTBeLx5KFM6bVaqyi7gAOqwwJx/+5KB4=;
+        bh=aHVuDXTHxhEXvg6//V8Vjw1hEo/l6MuWUIFiScQfMqQ=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=I+HBTGI2u4yHbAnZ9ZB3xjK6+KA4qeBTjiV6LIkMyX/JOudjJyG9QKkjwb9zq9TIK
-         kmiE2rgx5SSvAkQ2fyXl188HftMv2EmbAY59LDLp97a1kBHCSXOJ0Ohimr3KwW3icU
-         8WQwbJXH7pAVhYwVvNOUxxzo4gfVm74YGN2kvrdg=
+        b=JURZJ4iAqeISpb7xf9A8FIGkivYkt5vJO55rgDy4x5UppXUzLGIdvyjERhvsUzw8R
+         DubV9HuxJcl120YCryfch22Sqw9P53/EjBtHGuv98sPDTzxQPVijSxGGGEoC7j2ba+
+         tLbXz8VQm5od09MyHT4z/miUMECSNdL2e9T0W7N0=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         stable@vger.kernel.org, Stephane Eranian <eranian@google.com>,
-        Jiri Olsa <jolsa@kernel.org>, Andi Kleen <ak@linux.intel.com>,
+        Andi Kleen <ak@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>,
+        Arnaldo Carvalho de Melo <acme@redhat.com>,
         Kan Liang <kan.liang@linux.intel.com>,
         Peter Zijlstra <peterz@infradead.org>,
-        Arnaldo Carvalho de Melo <acme@redhat.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.9 36/96] perf tools: Handle TOPOLOGY headers with no CPU
-Date:   Tue, 12 Mar 2019 10:09:54 -0700
-Message-Id: <20190312171037.228092067@linuxfoundation.org>
+Subject: [PATCH 4.9 35/96] perf core: Fix perf_proc_update_handler() bug
+Date:   Tue, 12 Mar 2019 10:09:53 -0700
+Message-Id: <20190312171037.164023244@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190312171034.530434962@linuxfoundation.org>
 References: <20190312171034.530434962@linuxfoundation.org>
@@ -69,65 +69,82 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-[ Upstream commit 1497e804d1a6e2bd9107ddf64b0310449f4673eb ]
+[ Upstream commit 1a51c5da5acc6c188c917ba572eebac5f8793432 ]
 
-This patch fixes an issue in cpumap.c when used with the TOPOLOGY
-header. In some configurations, some NUMA nodes may have no CPU (empty
-cpulist). Yet a cpumap map must be created otherwise perf abort with an
-error. This patch handles this case by creating a dummy map.
+The perf_proc_update_handler() handles /proc/sys/kernel/perf_event_max_sample_rate
+syctl variable.  When the PMU IRQ handler timing monitoring is disabled, i.e,
+when /proc/sys/kernel/perf_cpu_time_max_percent is equal to 0 or 100,
+then no modification to sysctl_perf_event_sample_rate is allowed to prevent
+possible hang from wrong values.
 
-  Before:
+The problem is that the test to prevent modification is made after the
+sysctl variable is modified in perf_proc_update_handler().
 
-  $ perf record -o - -e cycles noploop 2 | perf script -i -
-  0x6e8 [0x6c]: failed to process type: 80
+You get an error:
 
-  After:
+  $ echo 10001 >/proc/sys/kernel/perf_event_max_sample_rate
+  echo: write error: invalid argument
 
-  $ perf record -o - -e cycles noploop 2 | perf script -i -
-  noploop for 2 seconds
+But the value is still modified causing all sorts of inconsistencies:
+
+  $ cat /proc/sys/kernel/perf_event_max_sample_rate
+  10001
+
+This patch fixes the problem by moving the parsing of the value after
+the test.
+
+Committer testing:
+
+  # echo 100 > /proc/sys/kernel/perf_cpu_time_max_percent
+  # echo 10001 > /proc/sys/kernel/perf_event_max_sample_rate
+  -bash: echo: write error: Invalid argument
+  # cat /proc/sys/kernel/perf_event_max_sample_rate
+  10001
+  #
 
 Signed-off-by: Stephane Eranian <eranian@google.com>
-Acked-by: Jiri Olsa <jolsa@kernel.org>
-Cc: Andi Kleen <ak@linux.intel.com>
+Reviewed-by: Andi Kleen <ak@linux.intel.com>
+Reviewed-by: Jiri Olsa <jolsa@kernel.org>
+Tested-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 Cc: Kan Liang <kan.liang@linux.intel.com>
 Cc: Peter Zijlstra <peterz@infradead.org>
-Link: http://lkml.kernel.org/r/1547885559-1657-1-git-send-email-eranian@google.com
+Link: http://lkml.kernel.org/r/1547169436-6266-1-git-send-email-eranian@google.com
 Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- tools/perf/util/cpumap.c | 11 +++++++++--
- 1 file changed, 9 insertions(+), 2 deletions(-)
+ kernel/events/core.c | 14 +++++++-------
+ 1 file changed, 7 insertions(+), 7 deletions(-)
 
-diff --git a/tools/perf/util/cpumap.c b/tools/perf/util/cpumap.c
-index 2c0b52264a46..a625cb1500f9 100644
---- a/tools/perf/util/cpumap.c
-+++ b/tools/perf/util/cpumap.c
-@@ -129,7 +129,12 @@ struct cpu_map *cpu_map__new(const char *cpu_list)
- 	if (!cpu_list)
- 		return cpu_map__read_all_cpu_map();
+diff --git a/kernel/events/core.c b/kernel/events/core.c
+index 17339506f9f8..5cbb2eda80b5 100644
+--- a/kernel/events/core.c
++++ b/kernel/events/core.c
+@@ -428,18 +428,18 @@ int perf_proc_update_handler(struct ctl_table *table, int write,
+ 		void __user *buffer, size_t *lenp,
+ 		loff_t *ppos)
+ {
+-	int ret = proc_dointvec_minmax(table, write, buffer, lenp, ppos);
+-
+-	if (ret || !write)
+-		return ret;
+-
++	int ret;
++	int perf_cpu = sysctl_perf_cpu_time_max_percent;
+ 	/*
+ 	 * If throttling is disabled don't allow the write:
+ 	 */
+-	if (sysctl_perf_cpu_time_max_percent == 100 ||
+-	    sysctl_perf_cpu_time_max_percent == 0)
++	if (write && (perf_cpu == 100 || perf_cpu == 0))
+ 		return -EINVAL;
  
--	if (!isdigit(*cpu_list))
-+	/*
-+	 * must handle the case of empty cpumap to cover
-+	 * TOPOLOGY header for NUMA nodes with no CPU
-+	 * ( e.g., because of CPU hotplug)
-+	 */
-+	if (!isdigit(*cpu_list) && *cpu_list != '\0')
- 		goto out;
- 
- 	while (isdigit(*cpu_list)) {
-@@ -176,8 +181,10 @@ struct cpu_map *cpu_map__new(const char *cpu_list)
- 
- 	if (nr_cpus > 0)
- 		cpus = cpu_map__trim_new(nr_cpus, tmp_cpus);
--	else
-+	else if (*cpu_list != '\0')
- 		cpus = cpu_map__default_new();
-+	else
-+		cpus = cpu_map__dummy_new();
- invalid:
- 	free(tmp_cpus);
- out:
++	ret = proc_dointvec_minmax(table, write, buffer, lenp, ppos);
++	if (ret || !write)
++		return ret;
++
+ 	max_samples_per_tick = DIV_ROUND_UP(sysctl_perf_event_sample_rate, HZ);
+ 	perf_sample_period_ns = NSEC_PER_SEC / sysctl_perf_event_sample_rate;
+ 	update_perf_cpu_limits();
 -- 
 2.19.1
 
