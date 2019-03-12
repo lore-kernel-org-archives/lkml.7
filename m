@@ -2,149 +2,75 @@ Return-Path: <SRS0=J4ZE=RP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=FREEMAIL_FORGED_FROMDOMAIN,
+	FREEMAIL_FROM,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 46EE0C43381
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 17:35:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 54575C43381
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 17:35:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1A02B206DF
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 17:35:15 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1552412115;
-	bh=uHqbiq2323LrZfdZEBFK21XzrSuQDYkkN0OT2Xylsdk=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=AbFxFTNYFfiBu339zC2VV/1bj1NCszBv0B1ApVouYUQDOs2OyyXqLUt6xcJC/wggg
-	 L+nNFm5ShE3Y8HBd3inXMQCQxewj4k4vJiGSpRDPFWs5qLyfmZO+yBWhqOp7DQo9Wj
-	 JarquMhyrwHObjWZWZ8rpY+pbaxQqvuorKEIJa8E=
+	by mail.kernel.org (Postfix) with ESMTP id 311EB206DF
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 17:35:21 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729636AbfCLRfM (ORCPT
+        id S1729822AbfCLRfT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 12 Mar 2019 13:35:12 -0400
-Received: from mail.kernel.org ([198.145.29.99]:59658 "EHLO mail.kernel.org"
+        Tue, 12 Mar 2019 13:35:19 -0400
+Received: from smtp3-g21.free.fr ([212.27.42.3]:56654 "EHLO smtp3-g21.free.fr"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729354AbfCLRQy (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 12 Mar 2019 13:16:54 -0400
-Received: from localhost (unknown [104.133.8.98])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 5F7CA2087C;
-        Tue, 12 Mar 2019 17:16:53 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1552411013;
-        bh=uHqbiq2323LrZfdZEBFK21XzrSuQDYkkN0OT2Xylsdk=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=GMqqp/OMFOhkJQhj+ccOOTx7jKir5PZJqi7DpMT+TMvKoqfAPImZ5xO1BXEJYJg/1
-         z67ont1ftSP39QkHdVtFBpjmPjj2uR++PU7hjlqul+pJufk9djvvNlPewnBCyfTVfN
-         RGYjivuQa87R66Sm/QDIpWOCNXdCxQtzxF7FsPfY=
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     linux-kernel@vger.kernel.org
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Manish Chopra <manishc@marvell.com>,
-        Ariel Elior <aelior@marvell.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.14 118/135] qed: Fix EQ full firmware assert.
-Date:   Tue, 12 Mar 2019 10:09:25 -0700
-Message-Id: <20190312170352.094335679@linuxfoundation.org>
-X-Mailer: git-send-email 2.21.0
-In-Reply-To: <20190312170341.127810985@linuxfoundation.org>
-References: <20190312170341.127810985@linuxfoundation.org>
-User-Agent: quilt/0.65
-X-stable: review
-X-Patchwork-Hint: ignore
+        id S1729354AbfCLRfQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 12 Mar 2019 13:35:16 -0400
+Received: from [192.168.108.8] (unknown [213.36.7.13])
+        (Authenticated sender: marc.w.gonzalez)
+        by smtp3-g21.free.fr (Postfix) with ESMTPSA id 9C78313F8E2;
+        Tue, 12 Mar 2019 18:34:55 +0100 (CET)
+Subject: Re: [RFC PATCH v1] PCI: qcom: Use quirk to override incorrect device
+ class
+From:   Marc Gonzalez <marc.w.gonzalez@free.fr>
+To:     Stanimir Varbanov <svarbanov@mm-sol.com>,
+        Bjorn Helgaas <bhelgaas@google.com>
+Cc:     Andy Gross <andy.gross@linaro.org>,
+        David Brown <david.brown@linaro.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        PCI <linux-pci@vger.kernel.org>,
+        MSM <linux-arm-msm@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Jeffrey Hugo <jhugo@codeaurora.org>
+References: <94bb3f22-c5a7-1891-9d89-42a520e9a592@free.fr>
+ <65321fe3-ca29-c454-63ae-98a46c2e5158@mm-sol.com>
+ <1205cbfb-ac06-63a5-9401-75d4e68b15b5@free.fr>
+Message-ID: <38ad143b-3b07-4d19-8ccd-ca39fb51e53d@free.fr>
+Date:   Tue, 12 Mar 2019 18:34:55 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.5.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+In-Reply-To: <1205cbfb-ac06-63a5-9401-75d4e68b15b5@free.fr>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-4.14-stable review patch.  If anyone has any objections, please let me know.
+On 12/03/2019 18:18, Marc Gonzalez wrote:
 
-------------------
+> On 12/03/2019 13:42, Stanimir Varbanov wrote:
+> 
+>> I wonder, in case that dw_pcie_setup_rc() already has a write to
+>> PCI_CLASS_DEVICE configuration register to set it as a bridge do we
+>> still need to do the above fixup?
+> 
+> I don't know, I don't have an affected device. Unless the msm8998 /is/ affected,
+> and dw_pcie_setup_rc() actually fixes it?
 
-[ Upstream commit 660492bcf4a7561b5fdc13be0ae0b0c0a8c120be ]
+I think you hit the nail on the head...
 
-When slowpath messages are sent with high rate, the resulting
-events can lead to a FW assert in case they are not handled fast
-enough (Event Queue Full assert). Attempt to send queued slowpath
-messages only after the newly evacuated entries in the EQ ring
-are indicated to FW.
+If I comment out
+//dw_pcie_wr_own_conf(pp, PCI_CLASS_DEVICE, 2, PCI_CLASS_BRIDGE_PCI);
+from dw_pcie_setup_rc()
+then pci_class() returns 0xff000000 instead of 0x6040000
 
-Signed-off-by: Manish Chopra <manishc@marvell.com>
-Signed-off-by: Ariel Elior <aelior@marvell.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
----
- drivers/net/ethernet/qlogic/qed/qed_sp.h  |  1 +
- drivers/net/ethernet/qlogic/qed/qed_spq.c | 15 +++++++--------
- 2 files changed, 8 insertions(+), 8 deletions(-)
+So perhaps you're right: the quirk can be omitted altogether.
+Unless it is not possible to program the device class on older chips?
 
-diff --git a/drivers/net/ethernet/qlogic/qed/qed_sp.h b/drivers/net/ethernet/qlogic/qed/qed_sp.h
-index 01a213d4ee9c..e7192f3babc2 100644
---- a/drivers/net/ethernet/qlogic/qed/qed_sp.h
-+++ b/drivers/net/ethernet/qlogic/qed/qed_sp.h
-@@ -380,6 +380,7 @@ void qed_consq_setup(struct qed_hwfn *p_hwfn);
-  * @param p_hwfn
-  */
- void qed_consq_free(struct qed_hwfn *p_hwfn);
-+int qed_spq_pend_post(struct qed_hwfn *p_hwfn);
- 
- /**
-  * @file
-diff --git a/drivers/net/ethernet/qlogic/qed/qed_spq.c b/drivers/net/ethernet/qlogic/qed/qed_spq.c
-index 467755b6dd0b..01f8e2b5cb6c 100644
---- a/drivers/net/ethernet/qlogic/qed/qed_spq.c
-+++ b/drivers/net/ethernet/qlogic/qed/qed_spq.c
-@@ -404,6 +404,11 @@ int qed_eq_completion(struct qed_hwfn *p_hwfn, void *cookie)
- 
- 	qed_eq_prod_update(p_hwfn, qed_chain_get_prod_idx(p_chain));
- 
-+	/* Attempt to post pending requests */
-+	spin_lock_bh(&p_hwfn->p_spq->lock);
-+	rc = qed_spq_pend_post(p_hwfn);
-+	spin_unlock_bh(&p_hwfn->p_spq->lock);
-+
- 	return rc;
- }
- 
-@@ -747,7 +752,7 @@ static int qed_spq_post_list(struct qed_hwfn *p_hwfn,
- 	return 0;
- }
- 
--static int qed_spq_pend_post(struct qed_hwfn *p_hwfn)
-+int qed_spq_pend_post(struct qed_hwfn *p_hwfn)
- {
- 	struct qed_spq *p_spq = p_hwfn->p_spq;
- 	struct qed_spq_entry *p_ent = NULL;
-@@ -879,7 +884,6 @@ int qed_spq_completion(struct qed_hwfn *p_hwfn,
- 	struct qed_spq_entry	*p_ent = NULL;
- 	struct qed_spq_entry	*tmp;
- 	struct qed_spq_entry	*found = NULL;
--	int			rc;
- 
- 	if (!p_hwfn)
- 		return -EINVAL;
-@@ -937,12 +941,7 @@ int qed_spq_completion(struct qed_hwfn *p_hwfn,
- 		 */
- 		qed_spq_return_entry(p_hwfn, found);
- 
--	/* Attempt to post pending requests */
--	spin_lock_bh(&p_spq->lock);
--	rc = qed_spq_pend_post(p_hwfn);
--	spin_unlock_bh(&p_spq->lock);
--
--	return rc;
-+	return 0;
- }
- 
- int qed_consq_alloc(struct qed_hwfn *p_hwfn)
--- 
-2.19.1
-
-
-
+Regards.
