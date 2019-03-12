@@ -4,50 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 231C2C43381
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 17:21:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 34C39C43381
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 17:21:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E4D71206DF
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 17:21:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 04875206DF
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 17:21:31 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1552411283;
-	bh=oQVO3L0PISIl3bBHAsLS8w6s+eIj5Wc55DmY+ki32jM=;
+	s=default; t=1552411291;
+	bh=ZQxoONCrx9PQjsLJDKccm0qVLa4u7+B22MyHgniTOwg=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=MIQvGZbjdK7/OlWUo71O7xoJjA+MtE+cRdDm9LR/rlIyK1Pyy5m4ZzPBdTIpQPoQf
-	 f2XsJzRUwHtoCcUTA6U1juRovGNhNhkYTi1INuON090wCNWq2ADybbDL9QyI/UlDRs
-	 GSKTtaVcI5d5WbR7mTDV3OWD1jd7Td1raPRJ1s3E=
+	b=MIfwfeeZyfj1om0UgVlI2D10VTIV1MvP0KukEHlHIgDsyuh+UH6xXobI1tQhAc2fC
+	 yDss8gVxaMBUUYfnK46V5AEINcJwX1eb0/65PBcDaDBYFDaxyWKJBDlPN3l/H5dYWc
+	 AFY43U1D/5CuH7a2JdsmXWj6QtYoytQiTZnJVObE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729460AbfCLRVW (ORCPT
+        id S1729607AbfCLRV3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 12 Mar 2019 13:21:22 -0400
-Received: from mail.kernel.org ([198.145.29.99]:35688 "EHLO mail.kernel.org"
+        Tue, 12 Mar 2019 13:21:29 -0400
+Received: from mail.kernel.org ([198.145.29.99]:35644 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730005AbfCLRSP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 12 Mar 2019 13:18:15 -0400
+        id S1728567AbfCLRSO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 12 Mar 2019 13:18:14 -0400
 Received: from localhost (unknown [104.133.8.98])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D1D7A21850;
+        by mail.kernel.org (Postfix) with ESMTPSA id 3227E217D4;
         Tue, 12 Mar 2019 17:18:14 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
         s=default; t=1552411094;
-        bh=oQVO3L0PISIl3bBHAsLS8w6s+eIj5Wc55DmY+ki32jM=;
+        bh=ZQxoONCrx9PQjsLJDKccm0qVLa4u7+B22MyHgniTOwg=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=NEwMFxt7VGCwbCRu51KtewgVPYsADFmuxXVqWvZbx7MBiBCULEKtMiQ8XW0hDRkSg
-         r7CjY/TXUTXHUnAlQV6RZFC+hAXNKB6GFxQRO4cj1L1YqLeqGIW5M50KvRgPAqhvCg
-         TAKFUexgc6TmSNmB0WZlyzrZ4bB8EDT7bOEhziRM=
+        b=R+irYuJ6jgnuYuZWuLBQ/k2NBQG91JAEQCb/XY00eYtE1BAiB/oKxy8EpGKOOHX+/
+         rdG4NH1IVMA/zugnaYHPo4/Uworpq51y/+6RQrNO0gCTGZXxvctPCiSnq01mHeokv7
+         6q6jg6G/Zq5YVNVCdZgO1TTnh0Q29fkdxRZTqh/8=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         stable@vger.kernel.org,
         "Peter Zijlstra (Intel)" <peterz@infradead.org>,
         Thomas Gleixner <tglx@linutronix.de>
-Subject: [PATCH 4.9 96/96] x86: Add TSX Force Abort CPUID/MSR
-Date:   Tue, 12 Mar 2019 10:10:54 -0700
-Message-Id: <20190312171041.690853959@linuxfoundation.org>
+Subject: [PATCH 4.9 95/96] perf/x86/intel: Generalize dynamic constraint creation
+Date:   Tue, 12 Mar 2019 10:10:53 -0700
+Message-Id: <20190312171041.616887803@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190312171034.530434962@linuxfoundation.org>
 References: <20190312171034.530434962@linuxfoundation.org>
@@ -68,49 +68,83 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: "Peter Zijlstra (Intel)" <peterz@infradead.org>
 
-commit 52f64909409c17adf54fcf5f9751e0544ca3a6b4 upstream
+commit 11f8b2d65ca9029591c8df26bb6bd063c312b7fe upstream
 
-Skylake systems will receive a microcode update to address a TSX
-errata. This microcode will (by default) clobber PMC3 when TSX
-instructions are (speculatively or not) executed.
-
-It also provides an MSR to cause all TSX transaction to abort and
-preserve PMC3.
-
-Add the CPUID enumeration and MSR definition.
+Such that we can re-use it.
 
 Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
 Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- arch/x86/include/asm/cpufeatures.h |    1 +
- arch/x86/include/asm/msr-index.h   |    6 ++++++
- 2 files changed, 7 insertions(+)
+ arch/x86/events/intel/core.c |   51 +++++++++++++++++++++++++------------------
+ 1 file changed, 30 insertions(+), 21 deletions(-)
 
---- a/arch/x86/include/asm/cpufeatures.h
-+++ b/arch/x86/include/asm/cpufeatures.h
-@@ -314,6 +314,7 @@
- /* Intel-defined CPU features, CPUID level 0x00000007:0 (EDX), word 18 */
- #define X86_FEATURE_AVX512_4VNNIW	(18*32+ 2) /* AVX-512 Neural Network Instructions */
- #define X86_FEATURE_AVX512_4FMAPS	(18*32+ 3) /* AVX-512 Multiply Accumulation Single precision */
-+#define X86_FEATURE_TSX_FORCE_ABORT	(18*32+13) /* "" TSX_FORCE_ABORT */
- #define X86_FEATURE_PCONFIG		(18*32+18) /* Intel PCONFIG */
- #define X86_FEATURE_SPEC_CTRL		(18*32+26) /* "" Speculation Control (IBRS + IBPB) */
- #define X86_FEATURE_INTEL_STIBP		(18*32+27) /* "" Single Thread Indirect Branch Predictors */
---- a/arch/x86/include/asm/msr-index.h
-+++ b/arch/x86/include/asm/msr-index.h
-@@ -575,6 +575,12 @@
+--- a/arch/x86/events/intel/core.c
++++ b/arch/x86/events/intel/core.c
+@@ -2493,6 +2493,35 @@ intel_stop_scheduling(struct cpu_hw_even
+ }
  
- #define MSR_IA32_TSC_DEADLINE		0x000006E0
+ static struct event_constraint *
++dyn_constraint(struct cpu_hw_events *cpuc, struct event_constraint *c, int idx)
++{
++	WARN_ON_ONCE(!cpuc->constraint_list);
++
++	if (!(c->flags & PERF_X86_EVENT_DYNAMIC)) {
++		struct event_constraint *cx;
++
++		/*
++		 * grab pre-allocated constraint entry
++		 */
++		cx = &cpuc->constraint_list[idx];
++
++		/*
++		 * initialize dynamic constraint
++		 * with static constraint
++		 */
++		*cx = *c;
++
++		/*
++		 * mark constraint as dynamic
++		 */
++		cx->flags |= PERF_X86_EVENT_DYNAMIC;
++		c = cx;
++	}
++
++	return c;
++}
++
++static struct event_constraint *
+ intel_get_excl_constraints(struct cpu_hw_events *cpuc, struct perf_event *event,
+ 			   int idx, struct event_constraint *c)
+ {
+@@ -2522,27 +2551,7 @@ intel_get_excl_constraints(struct cpu_hw
+ 	 * only needed when constraint has not yet
+ 	 * been cloned (marked dynamic)
+ 	 */
+-	if (!(c->flags & PERF_X86_EVENT_DYNAMIC)) {
+-		struct event_constraint *cx;
+-
+-		/*
+-		 * grab pre-allocated constraint entry
+-		 */
+-		cx = &cpuc->constraint_list[idx];
+-
+-		/*
+-		 * initialize dynamic constraint
+-		 * with static constraint
+-		 */
+-		*cx = *c;
+-
+-		/*
+-		 * mark constraint as dynamic, so we
+-		 * can free it later on
+-		 */
+-		cx->flags |= PERF_X86_EVENT_DYNAMIC;
+-		c = cx;
+-	}
++	c = dyn_constraint(cpuc, c, idx);
  
-+
-+#define MSR_TSX_FORCE_ABORT		0x0000010F
-+
-+#define MSR_TFA_RTM_FORCE_ABORT_BIT	0
-+#define MSR_TFA_RTM_FORCE_ABORT		BIT_ULL(MSR_TFA_RTM_FORCE_ABORT_BIT)
-+
- /* P4/Xeon+ specific */
- #define MSR_IA32_MCG_EAX		0x00000180
- #define MSR_IA32_MCG_EBX		0x00000181
+ 	/*
+ 	 * From here on, the constraint is dynamic.
 
 
