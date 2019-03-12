@@ -2,129 +2,147 @@ Return-Path: <SRS0=J4ZE=RP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_PASS,USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 87E3BC43381
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 15:59:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 654ECC43381
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 16:01:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 56DCD2054F
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 15:59:24 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b="aJynixs3"
+	by mail.kernel.org (Postfix) with ESMTP id 3012A2054F
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 16:01:05 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1552406465;
+	bh=mxJciyXA1AfTEpQ82UzCG1J4ms0+hg9x48dWB2S2sz4=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=H8Rk/qrc/gSvvZEC530YO2c5JARSHaFfQDaJYxcmSGXF3Gwq93TyPCH9hT/x83s2F
+	 VCYjF0Mb1v1BZ6uBbdDP6Domdp8yCnqqBT/gBZY2jEamEVyhnPe/RreKkVXEIafhrY
+	 97h7cdVqrL1sGZAvpX18XJCwDSH31szVbHZ3g7cc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726510AbfCLP7W (ORCPT
+        id S1726674AbfCLQBE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 12 Mar 2019 11:59:22 -0400
-Received: from perceval.ideasonboard.com ([213.167.242.64]:60228 "EHLO
-        perceval.ideasonboard.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725917AbfCLP7W (ORCPT
+        Tue, 12 Mar 2019 12:01:04 -0400
+Received: from mail-oi1-f193.google.com ([209.85.167.193]:33898 "EHLO
+        mail-oi1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726388AbfCLQBD (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 12 Mar 2019 11:59:22 -0400
-Received: from [192.168.0.21] (cpc89242-aztw30-2-0-cust488.18-1.cable.virginm.net [86.31.129.233])
-        by perceval.ideasonboard.com (Postfix) with ESMTPSA id EFC0A33C;
-        Tue, 12 Mar 2019 16:59:18 +0100 (CET)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ideasonboard.com;
-        s=mail; t=1552406359;
-        bh=io54To9FxPECqduKv6dSKmWHoGUJ5duFHD+rfRjcPzY=;
-        h=Reply-To:Subject:To:Cc:References:From:Date:In-Reply-To:From;
-        b=aJynixs3pTeSwkK82DMMTlvEVqWz4T/vlx9ReEbCHIgf+ekcAepHdLVOHrDmlLm56
-         b1j/NDjqxQGmH1W9bulGCLUo8/Gq+4IvnCIq23qHpBRPklL+85lzVwB7qF2odoKupk
-         60KSVnXyz4cE4y9iXUHDaxixxHP3Sw3jxvG04x1M=
-Reply-To: kieran.bingham+renesas@ideasonboard.com
-Subject: Re: [PATCH v2] gpu: drm: atomic_helper: Fix spelling errors
-To:     =?UTF-8?B?VmlsbGUgU3lyasOkbMOk?= <ville.syrjala@linux.intel.com>
-Cc:     linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org,
-        linux-renesas-soc@vger.kernel.org,
-        Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
-        Maxime Ripard <maxime.ripard@bootlin.com>,
-        Sean Paul <sean@poorly.run>, David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>
-References: <20190312003307.14116-1-kieran.bingham+renesas@ideasonboard.com>
- <20190312151443.GE3888@intel.com>
-From:   Kieran Bingham <kieran.bingham+renesas@ideasonboard.com>
-Organization: Ideas on Board
-Message-ID: <7b0ff11c-68f3-4e2e-f969-27a14062158e@ideasonboard.com>
-Date:   Tue, 12 Mar 2019 15:59:15 +0000
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.4.0
+        Tue, 12 Mar 2019 12:01:03 -0400
+Received: by mail-oi1-f193.google.com with SMTP id g16so2531751oib.1;
+        Tue, 12 Mar 2019 09:01:03 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=WWfZSCPlNb0cDt1470GW9Ucs5VWxAtv3nEi3YLnM5RQ=;
+        b=e+GAQcX6mwRcVdVs6yj8spn5fIZE1kfjmANRLZDJ78mjKUiPZl/7vL6xDQDZLTQeLJ
+         M4uVZY+J2UnuQwdcnIB7yqoc9AjMAJnmcSohAieswA9iGeilRrpO83AOXCKMkgVdafip
+         sjfe5+fC171NU/CHFyTmEnmcDnGeVvGdSGL5lxBPgvMw9ujkj4oYOp8b/+yrQcea/HyO
+         2X24f6kE/htpYERZ5RMzzv1Vbmj/lfG1ZJbPvdOX1SmCfwZqMGztZUgq2O9hFi06YLjr
+         t/A3n1653lGWnv9SvTf21tPKeIP43DIJjTIuOuWNREqAZ2G6jz7E+QwrD0RHNjZCWD0U
+         K1lg==
+X-Gm-Message-State: APjAAAV9dVDWBo+cVsDo0KsBTXnvR7Cs1yPrq1C9T1GvjDL8kLY6Ypeo
+        0uX/xlVTrJ8Up/evrw7DKg==
+X-Google-Smtp-Source: APXvYqyGCqHidiUK6Na3V7DUf0II+6pLCmesAsGPFk5RCkcGKeFKaYkmB/q2wneKt1mDaLYbuKMwcw==
+X-Received: by 2002:aca:c78f:: with SMTP id x137mr1980360oif.124.1552406462545;
+        Tue, 12 Mar 2019 09:01:02 -0700 (PDT)
+Received: from localhost (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
+        by smtp.gmail.com with ESMTPSA id j15sm3667328oih.23.2019.03.12.09.00.57
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Tue, 12 Mar 2019 09:01:00 -0700 (PDT)
+Date:   Tue, 12 Mar 2019 11:00:57 -0500
+From:   Rob Herring <robh@kernel.org>
+To:     thor.thayer@linux.intel.com
+Cc:     bp@alien8.de, dinguyen@kernel.org, mark.rutland@arm.com,
+        mchehab@kernel.org, devicetree@vger.kernel.org,
+        linux-edac@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCHv2 1/5] Documentation: dt: edac: Fix Stratix10 IRQ bindings
+Message-ID: <20190312160057.GA31306@bogus>
+References: <1551288445-22335-1-git-send-email-thor.thayer@linux.intel.com>
+ <1551288445-22335-2-git-send-email-thor.thayer@linux.intel.com>
 MIME-Version: 1.0
-In-Reply-To: <20190312151443.GE3888@intel.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-GB
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <1551288445-22335-2-git-send-email-thor.thayer@linux.intel.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Ville,
-
-On 12/03/2019 15:14, Ville Syrjälä wrote:
-> On Tue, Mar 12, 2019 at 12:33:07AM +0000, Kieran Bingham wrote:
->> Trivial fixes identified while working on the DRM code.
->>
->>   s/artifically/artificially/
->>   s/achive/achieve/
->>
->> Signed-off-by: Kieran Bingham <kieran.bingham+renesas@ideasonboard.com>
->> ---
->>
->> v2: - Actually spell achieve correctly!
+On Wed, Feb 27, 2019 at 11:27:21AM -0600, thor.thayer@linux.intel.com wrote:
+> From: Thor Thayer <thor.thayer@linux.intel.com>
 > 
-> drm convention is to put this above the --- so that it gets included in
-> the commit msg.
-
-Oh - in linux-media these are just dropped.
-
-I'll try to remember this for my future work in DRM.
-
-I don't have commit access anyway, so can I presume whomever will pick
-this up will adjust if necessary?
-
-Or should I repost? (which might be a bit redundant just to move a patch
-version comment which would then increase again :D )
-
-
-> With that
-> Reviewed-by: Ville Syrjälä <ville.syrjala@linux.intel.com>
-
-Thanks,
---
-Regards
-
-Kieran
-
-
+> Fix Stratix10 ECC bindings to specify only the single
+> bit error. On Stratix10 double bit errors are handled
+> as SErrors instead of interrupts.
+> Indicate the differences between the ARM64 and ARM32
+> EDAC architecture in the bindings.
 > 
->>
->>  drivers/gpu/drm/drm_atomic_helper.c | 4 ++--
->>  1 file changed, 2 insertions(+), 2 deletions(-)
->>
->> diff --git a/drivers/gpu/drm/drm_atomic_helper.c b/drivers/gpu/drm/drm_atomic_helper.c
->> index 540a77a2ade9..2453678d1186 100644
->> --- a/drivers/gpu/drm/drm_atomic_helper.c
->> +++ b/drivers/gpu/drm/drm_atomic_helper.c
->> @@ -1752,7 +1752,7 @@ int drm_atomic_helper_commit(struct drm_device *dev,
->>  	 *
->>  	 * NOTE: Commit work has multiple phases, first hardware commit, then
->>  	 * cleanup. We want them to overlap, hence need system_unbound_wq to
->> -	 * make sure work items don't artifically stall on each another.
->> +	 * make sure work items don't artificially stall on each another.
->>  	 */
->>  
->>  	drm_atomic_state_get(state);
->> @@ -1786,7 +1786,7 @@ EXPORT_SYMBOL(drm_atomic_helper_commit);
->>   *
->>   * Asynchronous workers need to have sufficient parallelism to be able to run
->>   * different atomic commits on different CRTCs in parallel. The simplest way to
->> - * achive this is by running them on the &system_unbound_wq work queue. Note
->> + * achieve this is by running them on the &system_unbound_wq work queue. Note
->>   * that drivers are not required to split up atomic commits and run an
->>   * individual commit in parallel - userspace is supposed to do that if it cares.
->>   * But it might be beneficial to do that for modesets, since those necessarily
->> -- 
->> 2.19.1
+> Signed-off-by: Thor Thayer <thor.thayer@linux.intel.com>
+> ---
+> v2 No change
+> ---
+>  .../devicetree/bindings/edac/socfpga-eccmgr.txt    | 23 +++++++++++++++-------
+>  1 file changed, 16 insertions(+), 7 deletions(-)
 > 
+> diff --git a/Documentation/devicetree/bindings/edac/socfpga-eccmgr.txt b/Documentation/devicetree/bindings/edac/socfpga-eccmgr.txt
+> index 5626560a6cfd..a0ac50e15912 100644
+> --- a/Documentation/devicetree/bindings/edac/socfpga-eccmgr.txt
+> +++ b/Documentation/devicetree/bindings/edac/socfpga-eccmgr.txt
+> @@ -236,33 +236,42 @@ Stratix10 SoCFPGA ECC Manager
+>  The Stratix10 SoC ECC Manager handles the IRQs for each peripheral
+>  in a shared register similar to the Arria10. However, ECC requires
+>  access to registers that can only be read from Secure Monitor with
+> -SMC calls. Therefore the device tree is slightly different.
+> +SMC calls. Therefore the device tree is slightly different. Note that
+> +only 1 interrupt is sent because the double bit errors are treated as
+> +SErrors instead of IRQ.
+>  
+>  Required Properties:
+>  - compatible : Should be "altr,socfpga-s10-ecc-manager"
+> -- interrupts : Should be single bit error interrupt, then double bit error
+> -	interrupt.
+> +- altr,sysgr-syscon : phandle to Stratix10 System Manager Block
+> +	              containing the ECC manager registers.
 
+Seems this was already in use, but why not just make this node a child 
+of the System Manager Block and remove this phandle?
+
+> +- interrupts : Should be single bit error interrupt.
+>  - interrupt-controller : boolean indicator that ECC Manager is an interrupt controller
+>  - #interrupt-cells : must be set to 2.
+> +- #address-cells: must be 1
+> +- #size-cells: must be 1
+> +- ranges : standard definition, should translate from local addresses
+>  
+>  Subcomponents:
+>  
+>  SDRAM ECC
+>  Required Properties:
+>  - compatible : Should be "altr,sdram-edac-s10"
+> -- interrupts : Should be single bit error interrupt, then double bit error
+> -	interrupt, in this order.
+> +- interrupts : Should be single bit error interrupt.
+>  
+>  Example:
+>  
+>  	eccmgr {
+>  		compatible = "altr,socfpga-s10-ecc-manager";
+> -		interrupts = <0 15 4>, <0 95 4>;
+> +		altr,sysmgr-syscon = <&sysmgr>;
+> +		#address-cells = <1>;
+> +		#size-cells = <1>;
+> +		interrupts = <0 15 4>;
+>  		interrupt-controller;
+>  		#interrupt-cells = <2>;
+> +		ranges;
+>  
+>  		sdramedac {
+>  			compatible = "altr,sdram-edac-s10";
+> -			interrupts = <16 4>, <48 4>;
+> +			interrupts = <16 IRQ_TYPE_LEVEL_HIGH>;
+>  		};
+>  	};
+> -- 
+> 2.7.4
+> 
