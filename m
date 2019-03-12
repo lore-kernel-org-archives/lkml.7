@@ -7,49 +7,55 @@ X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0AE36C10F00
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 17:12:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D6DA6C43381
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 17:13:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C30F22183E
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 17:12:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9DCD7217F5
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 17:13:03 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1552410777;
-	bh=rDDaidtsB5XwLkohJYGh9k/L6n0B3eMDfMQPy0majLc=;
+	s=default; t=1552410783;
+	bh=spZWEIy18W5bA5lNNBUdvGCrGRAoXGkN6ldD1BlgFt4=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=LwxVfXbKgrMl4WplxPB3qcBmMc8o++ArELiAJaXeXLf/74PjFU146HHolU9ANyBXM
-	 TtJjzGNsJjQqc2ihUAMxNgSg04hkTSLd+fbl+o8nXeuj7IYQE6vqZqPrPDvzY/HDKG
-	 EcrsiO49HyxAq+ABmKBMArIpFKkSntdba72uBGlk=
+	b=OcfwL55qBz8nziG0chsVtQPpEUY04PsAuW235SFjvWUM8tlTGsXisCaHJjoEXDn0v
+	 8sFnuvk+3CG8ByNpwlhr5QJtEo/Aqg1rgpINrfN7nDHD/SgTnzVJ5BH1sBGb6xzc1/
+	 1N9QjOr9QauhxteTO+nIUea0LljU6f6f9koCsSew=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727713AbfCLRM4 (ORCPT
+        id S1727754AbfCLRNC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 12 Mar 2019 13:12:56 -0400
-Received: from mail.kernel.org ([198.145.29.99]:47824 "EHLO mail.kernel.org"
+        Tue, 12 Mar 2019 13:13:02 -0400
+Received: from mail.kernel.org ([198.145.29.99]:47946 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727507AbfCLRMa (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 12 Mar 2019 13:12:30 -0400
+        id S1727545AbfCLRMe (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 12 Mar 2019 13:12:34 -0400
 Received: from localhost (unknown [104.133.8.98])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 34CBA2171F;
-        Tue, 12 Mar 2019 17:12:30 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 69AF32184C;
+        Tue, 12 Mar 2019 17:12:34 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1552410750;
-        bh=rDDaidtsB5XwLkohJYGh9k/L6n0B3eMDfMQPy0majLc=;
+        s=default; t=1552410754;
+        bh=spZWEIy18W5bA5lNNBUdvGCrGRAoXGkN6ldD1BlgFt4=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=qB8F2Y2+PpOaj00yh+lYZlsu8SsE6K2MnG0kCQteUGnpsgPyeKqMEtK+smc6MDYGA
-         xeO523ZJXuISDPKrJxY/G1/f/vi3CrZYfLgLCxycV21Wkz5b9JYzjGDEBfLqnXBtOS
-         8znQ03iNs9MAdsO1TV51SLoX+Pxt19FoWbaXdXo4=
+        b=fqWSszAMjmxfdehMXW3ALJB0i6KWn/R3y5J0kXGipGIVlKTBqikc5rVFdH13uZH2N
+         g/bpFBAvQoAkD5FeDWWdnFXHPE0CQUa3VwPjStRAD4SAd1Qfz4cfGlZzsA+rpou/Oy
+         fmuWB6hVn23DK1dwGiW8ZaPzEiynD/r+2moATccc=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Martin Blumenstingl <martin.blumenstingl@googlemail.com>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Kevin Hilman <khilman@baylibre.com>,
+        stable@vger.kernel.org, Michal Hocko <mhocko@suse.com>,
+        Mikhail Zaslonko <zaslonko@linux.ibm.com>,
+        Mikhail Gavrilov <mikhail.v.gavrilov@gmail.com>,
+        Oscar Salvador <osalvador@suse.de>,
+        Gerald Schaefer <gerald.schaefer@de.ibm.com>,
+        Heiko Carstens <heiko.carstens@de.ibm.com>,
+        Martin Schwidefsky <schwidefsky@de.ibm.com>,
+        Pavel Tatashin <pasha.tatashin@soleen.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.20 077/171] ARM: dts: meson8m2: mxiii-plus: mark the SD card detection GPIO active-low
-Date:   Tue, 12 Mar 2019 10:07:37 -0700
-Message-Id: <20190312170354.720170892@linuxfoundation.org>
+Subject: [PATCH 4.20 064/171] mm, memory_hotplug: test_pages_in_a_zone do not pass the end of zone
+Date:   Tue, 12 Mar 2019 10:07:24 -0700
+Message-Id: <20190312170353.720863926@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190312170347.868927101@linuxfoundation.org>
 References: <20190312170347.868927101@linuxfoundation.org>
@@ -68,43 +74,71 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-[ Upstream commit 8615f5596335db0978cea593dcd0070dc5f8b116 ]
+[ Upstream commit 24feb47c5fa5b825efb0151f28906dfdad027e61 ]
 
-After commit 89a5e15bcba87d ("gpio/mmc/of: Respect polarity in the device
-tree") SD cards are not detected anymore.
+If memory end is not aligned with the sparse memory section boundary,
+the mapping of such a section is only partly initialized.  This may lead
+to VM_BUG_ON due to uninitialized struct pages access from
+test_pages_in_a_zone() function triggered by memory_hotplug sysfs
+handlers.
 
-The CD GPIO is "active low" on the MXIII-Plus. The MMC dt-bindings
-specify: "[...] using the "cd-inverted" property means, that the CD line
-is active high, i.e. it is high, when a card is inserted".
+Here are the the panic examples:
+ CONFIG_DEBUG_VM_PGFLAGS=y
+ kernel parameter mem=2050M
+ --------------------------
+ page:000003d082008000 is uninitialized and poisoned
+ page dumped because: VM_BUG_ON_PAGE(PagePoisoned(p))
+ Call Trace:
+   test_pages_in_a_zone+0xde/0x160
+   show_valid_zones+0x5c/0x190
+   dev_attr_show+0x34/0x70
+   sysfs_kf_seq_show+0xc8/0x148
+   seq_read+0x204/0x480
+   __vfs_read+0x32/0x178
+   vfs_read+0x82/0x138
+   ksys_read+0x5a/0xb0
+   system_call+0xdc/0x2d8
+ Last Breaking-Event-Address:
+   test_pages_in_a_zone+0xde/0x160
+ Kernel panic - not syncing: Fatal exception: panic_on_oops
 
-Fix the description of the SD card by marking it as GPIO_ACTIVE_LOW and
-drop the "cd-inverted" property. This makes the definition consistent
-with the existing dt-bindings and fixes the check whether an SD card is
-inserted.
+Fix this by checking whether the pfn to check is within the zone.
 
-Fixes: 35ee52bea66c74 ("ARM: dts: meson8m2: add support for the Tronsmart MXIII Plus")
-Signed-off-by: Martin Blumenstingl <martin.blumenstingl@googlemail.com>
-Reviewed-by: Linus Walleij <linus.walleij@linaro.org>
-Signed-off-by: Kevin Hilman <khilman@baylibre.com>
+[mhocko@suse.com: separated this change from http://lkml.kernel.org/r/20181105150401.97287-2-zaslonko@linux.ibm.com]
+Link: http://lkml.kernel.org/r/20190128144506.15603-3-mhocko@kernel.org
+
+[mhocko@suse.com: separated this change from
+http://lkml.kernel.org/r/20181105150401.97287-2-zaslonko@linux.ibm.com]
+Signed-off-by: Michal Hocko <mhocko@suse.com>
+Signed-off-by: Mikhail Zaslonko <zaslonko@linux.ibm.com>
+Tested-by: Mikhail Gavrilov <mikhail.v.gavrilov@gmail.com>
+Reviewed-by: Oscar Salvador <osalvador@suse.de>
+Tested-by: Gerald Schaefer <gerald.schaefer@de.ibm.com>
+Cc: Heiko Carstens <heiko.carstens@de.ibm.com>
+Cc: Martin Schwidefsky <schwidefsky@de.ibm.com>
+Cc: Mikhail Gavrilov <mikhail.v.gavrilov@gmail.com>
+Cc: Pavel Tatashin <pasha.tatashin@soleen.com>
+Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
+Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/arm/boot/dts/meson8m2-mxiii-plus.dts | 3 +--
- 1 file changed, 1 insertion(+), 2 deletions(-)
+ mm/memory_hotplug.c | 3 +++
+ 1 file changed, 3 insertions(+)
 
-diff --git a/arch/arm/boot/dts/meson8m2-mxiii-plus.dts b/arch/arm/boot/dts/meson8m2-mxiii-plus.dts
-index f5853610b20b..6ac02beb5fa7 100644
---- a/arch/arm/boot/dts/meson8m2-mxiii-plus.dts
-+++ b/arch/arm/boot/dts/meson8m2-mxiii-plus.dts
-@@ -206,8 +206,7 @@
- 		cap-sd-highspeed;
- 		disable-wp;
- 
--		cd-gpios = <&gpio CARD_6 GPIO_ACTIVE_HIGH>;
--		cd-inverted;
-+		cd-gpios = <&gpio CARD_6 GPIO_ACTIVE_LOW>;
- 
- 		vmmc-supply = <&vcc_3v3>;
- 	};
+diff --git a/mm/memory_hotplug.c b/mm/memory_hotplug.c
+index 5ce0d929ff48..488aa11495d2 100644
+--- a/mm/memory_hotplug.c
++++ b/mm/memory_hotplug.c
+@@ -1275,6 +1275,9 @@ int test_pages_in_a_zone(unsigned long start_pfn, unsigned long end_pfn,
+ 				i++;
+ 			if (i == MAX_ORDER_NR_PAGES || pfn + i >= end_pfn)
+ 				continue;
++			/* Check if we got outside of the zone */
++			if (zone && !zone_spans_pfn(zone, pfn + i))
++				return 0;
+ 			page = pfn_to_page(pfn + i);
+ 			if (zone && page_zone(page) != zone)
+ 				return 0;
 -- 
 2.19.1
 
