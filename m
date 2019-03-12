@@ -2,153 +2,128 @@ Return-Path: <SRS0=J4ZE=RP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_MUTT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_PASS autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C08F2C43381
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 16:59:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 049E8C4360F
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 16:59:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 83CAA2083D
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 16:59:32 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="ZBYG5KyF"
+	by mail.kernel.org (Postfix) with ESMTP id C86132087C
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 16:59:51 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726753AbfCLQ7b (ORCPT
+        id S1726802AbfCLQ7u (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 12 Mar 2019 12:59:31 -0400
-Received: from mail-pf1-f194.google.com ([209.85.210.194]:33659 "EHLO
-        mail-pf1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725894AbfCLQ7a (ORCPT
+        Tue, 12 Mar 2019 12:59:50 -0400
+Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:38084 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1725894AbfCLQ7u (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 12 Mar 2019 12:59:30 -0400
-Received: by mail-pf1-f194.google.com with SMTP id i19so2279063pfd.0
-        for <linux-kernel@vger.kernel.org>; Tue, 12 Mar 2019 09:59:29 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:content-transfer-encoding:in-reply-to
-         :user-agent;
-        bh=oZb6CACGM6VZGvUR+Ibx4EQn2QmozkbR6QSAW+dYXLM=;
-        b=ZBYG5KyFEqg9qtHysYtsux5REdr5/Qo34GKc4sM/GAFU9HTtpiNrI2jZ4f1KZ5OUh5
-         h2ckGFXe61F6zTG4AFfpTsqtfdXBwdcR3u8jtCT28kuRymKnTpnfcumMsmEmY96oLqhu
-         fgqobwQchJTVwZs4YQi4R/ZIIxiNjw+rddNCg=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:content-transfer-encoding
-         :in-reply-to:user-agent;
-        bh=oZb6CACGM6VZGvUR+Ibx4EQn2QmozkbR6QSAW+dYXLM=;
-        b=V9XRGpP13fM7Ro986PGn1Va4llRe8c0JDLVCTjLxmGrYg4LJ1A6gwNBvK11Nm2sqy8
-         Uaty2L0EDRstEJwx9T6MMYb/4cHyuqafJrX4lVM+mD2SGmi2OAxUoyqxukydu5JsHLVa
-         udgvY2UD0NnH6xvXpTCM1GBekaEVn5QXm+rjAluevItJfIXfui/mz6DcUicGKOBJN5cJ
-         aUHmcXiyyaAL6lQ1+MmdondxeKW6wF4955hC20yZ4bUjeZZhBaDeb7Nxis7RUhxg3WYa
-         xVwqBEw7mz1UONklp+IwWfHbxME6hErtkrIU8g066CS3DqGwOPr0UheootT+lEQwOkdU
-         BmyA==
-X-Gm-Message-State: APjAAAVH054BG7O4iVyU4hTPW6GG+TQhOMGHM4oFNNtCfpDOTqOwvOAH
-        ZNrCwt0iDdt9JPBmKn9C6Tf6CQ==
-X-Google-Smtp-Source: APXvYqxe5SwJVhPUTSQTsEzA0IpvKFD5QTPFOxGNLcPJAHj5DVSb5/WICaW9jbI6RmUpHtZ9sCWyig==
-X-Received: by 2002:a17:902:8f81:: with SMTP id z1mr41681710plo.265.1552409969614;
-        Tue, 12 Mar 2019 09:59:29 -0700 (PDT)
-Received: from localhost ([2620:15c:202:1:75a:3f6e:21d:9374])
-        by smtp.gmail.com with ESMTPSA id 11sm11887958pfh.131.2019.03.12.09.59.28
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Tue, 12 Mar 2019 09:59:28 -0700 (PDT)
-Date:   Tue, 12 Mar 2019 09:59:28 -0700
-From:   Matthias Kaehlcke <mka@chromium.org>
-To:     Harish Bandi <c-hbandi@codeaurora.org>
-Cc:     marcel@holtmann.org, johan.hedberg@gmail.com,
-        linux-kernel@vger.kernel.org, linux-bluetooth@vger.kernel.org,
-        hemantg@codeaurora.org, linux-arm-msm@vger.kernel.org,
-        bgodavar@codeaurora.org, anubhavg@codeaurora.org,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org
-Subject: Re: [PATCH v3 2/2] dt-bindings: net: bluetooth: Add device tree
- bindings for QTI chip wcn3998
-Message-ID: <20190312165928.GD200579@google.com>
-References: <1552393379-26330-1-git-send-email-c-hbandi@codeaurora.org>
- <1552393379-26330-3-git-send-email-c-hbandi@codeaurora.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
+        Tue, 12 Mar 2019 12:59:50 -0400
+Received: from pps.filterd (m0098419.ppops.net [127.0.0.1])
+        by mx0b-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x2CGsg8I041997
+        for <linux-kernel@vger.kernel.org>; Tue, 12 Mar 2019 12:59:48 -0400
+Received: from e06smtp05.uk.ibm.com (e06smtp05.uk.ibm.com [195.75.94.101])
+        by mx0b-001b2d01.pphosted.com with ESMTP id 2r6g06jxg6-1
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
+        for <linux-kernel@vger.kernel.org>; Tue, 12 Mar 2019 12:59:48 -0400
+Received: from localhost
+        by e06smtp05.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
+        for <linux-kernel@vger.kernel.org> from <zohar@linux.ibm.com>;
+        Tue, 12 Mar 2019 16:59:46 -0000
+Received: from b06cxnps4075.portsmouth.uk.ibm.com (9.149.109.197)
+        by e06smtp05.uk.ibm.com (192.168.101.135) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
+        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
+        Tue, 12 Mar 2019 16:59:42 -0000
+Received: from d06av25.portsmouth.uk.ibm.com (d06av25.portsmouth.uk.ibm.com [9.149.105.61])
+        by b06cxnps4075.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x2CGxfKE35193084
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Tue, 12 Mar 2019 16:59:41 GMT
+Received: from d06av25.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 5F74411C05B;
+        Tue, 12 Mar 2019 16:59:41 +0000 (GMT)
+Received: from d06av25.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 031C511C054;
+        Tue, 12 Mar 2019 16:59:40 +0000 (GMT)
+Received: from localhost.localdomain (unknown [9.80.93.217])
+        by d06av25.portsmouth.uk.ibm.com (Postfix) with ESMTP;
+        Tue, 12 Mar 2019 16:59:39 +0000 (GMT)
+Subject: Re: [PATCH] tpm: Make timeout logic simpler and more robust
+From:   Mimi Zohar <zohar@linux.ibm.com>
+To:     James Bottomley <James.Bottomley@HansenPartnership.com>,
+        Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>,
+        Peter =?ISO-8859-1?Q?H=FCwe?= <PeterHuewe@gmx.de>
+Cc:     Calvin Owens <calvinowens@fb.com>, Peter Huewe <peterhuewe@gmx.de>,
+        Jason Gunthorpe <jgg@ziepe.ca>, Arnd Bergmann <arnd@arndb.de>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        linux-integrity@vger.kernel.org, linux-kernel@vger.kernel.org,
+        kernel-team@fb.com
+Date:   Tue, 12 Mar 2019 12:59:29 -0400
+In-Reply-To: <1552401766.3083.3.camel@HansenPartnership.com>
+References: <358e89ed2b766d51b5f57abf31ab7a925ac63379.1552348123.git.calvinowens@fb.com>
+         <1552350463.23859.8.camel@HansenPartnership.com>
+         <20190312125028.GC9243@linux.intel.com>
+         <1552401766.3083.3.camel@HansenPartnership.com>
+Content-Type: text/plain; charset="UTF-8"
+X-Mailer: Evolution 3.20.5 (3.20.5-1.fc24) 
+Mime-Version: 1.0
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <1552393379-26330-3-git-send-email-c-hbandi@codeaurora.org>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+X-TM-AS-GCONF: 00
+x-cbid: 19031216-0020-0000-0000-00000321B9A2
+X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
+x-cbparentid: 19031216-0021-0000-0000-00002173E630
+Message-Id: <1552409969.24794.68.camel@linux.ibm.com>
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-03-12_09:,,
+ signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
+ malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
+ clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
+ mlxlogscore=999 adultscore=0 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.0.1-1810050000 definitions=main-1903120116
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-+DT folks
-
-Please add them in future versions (script/scripts/get_maintainer.pl
-<patches> should have listed them)
-
-On Tue, Mar 12, 2019 at 05:52:59PM +0530, Harish Bandi wrote:
-> This patch enables regulators for the Qualcomm Bluetooth wcn3998
-> controller.
-
-No, it doesn't.
-
-The next version should probably say something like "Add compatible
-string for the Qualcomm WCN3998 Bluetooth controller.
-
-Is there any particular reason why QCA drivers folks use 'wcn' instead
-of 'WCN'? The QCA documentations calls it WCN399x, so I'd suggest to
-consistently use the uppercase name in comments and documentation (and
-log messages?).
-
-> Signed-off-by: Harish Bandi <c-hbandi@codeaurora.org>
-> ---
-> changes in v3:
-> - updated to latest code base.
-
-This comment is useless, please describe what changed wrt the previous
-version.
-
-> ---
->  .../devicetree/bindings/net/qualcomm-bluetooth.txt        | 15 +++++++++++++++
->  1 file changed, 15 insertions(+)
+On Tue, 2019-03-12 at 07:42 -0700, James Bottomley wrote:
+> On Tue, 2019-03-12 at 14:50 +0200, Jarkko Sakkinen wrote:
+> > On Mon, Mar 11, 2019 at 05:27:43PM -0700, James Bottomley wrote:
+> > > On Mon, 2019-03-11 at 16:54 -0700, Calvin Owens wrote:
+> > > > e're having lots of problems with TPM commands timing out, and
+> > > > we're seeing these problems across lots of different hardware
+> > > > (both v1/v2).
+> > > > 
+> > > > I instrumented the driver to collect latency data, but I wasn't
+> > > > able to find any specific timeout to fix: it seems like many of
+> > > > them are too aggressive. So I tried replacing all the timeout
+> > > > logic with a single universal long timeout, and found that makes
+> > > > our TPMs 100% reliable.
+> > > > 
+> > > > Given that this timeout logic is very complex, problematic, and
+> > > > appears to serve no real purpose, I propose simply deleting all
+> > > > of it.
+> > > 
+> > > "no real purpose" is a bit strong given that all these timeouts are
+> > > standards mandated.  The purpose stated by the standards is that
+> > > there needs to be a way of differentiating the TPM crashed from the
+> > > TPM is taking a very long time to respond.  For a normally
+> > > functioning TPM it looks complex and unnecessary, but for a
+> > > malfunctioning one it's a lifesaver.
+> > 
+> > Standards should be only followed when they make practical sense and
+> > ignored when not. The range is only up to 2s anyway.
 > 
-> diff --git a/Documentation/devicetree/bindings/net/qualcomm-bluetooth.txt b/Documentation/devicetree/bindings/net/qualcomm-bluetooth.txt
-> index 824c0e2..1221535 100644
-> --- a/Documentation/devicetree/bindings/net/qualcomm-bluetooth.txt
-> +++ b/Documentation/devicetree/bindings/net/qualcomm-bluetooth.txt
-> @@ -53,3 +53,18 @@ serial@898000 {
->  		max-speed = <3200000>;
->  	};
->  };
-> +
-> +&blsp1_uart3 {
-> +	pinctrl-names = "default";
-> +	pinctrl-0 = <&blsp1_uart3_default>;
-> +	status = "okay";
-> +
-> +	bluetooth: wcn3998-bt {
-> +		compatible = "qcom,wcn3998-bt";
-> +		vddio-supply = <&vreg_l6_1p8>;
-> +		vddxo-supply = <&vreg_l5_1p8>;
-> +		vddrf-supply = <&vreg_s5_1p35>;
-> +		vddch0-supply = <&vdd_ch0_3p3>;
-> +		max-speed = <3200000>;
-> +	};
-> +};
-> \ No newline at end of file
+> I don't disagree ... and I'm certainly not going to defend the TCG
+> because I do think the complexity of some of its standards contributed
+> to the lack of use of TPM 1.2.
+> 
+> However, I am saying we should root cause this problem rather than take
+> a blind shot at the apparent timeout complexity.  My timeout
+> instability is definitely related to the polling adjustments, so it's
+> not unreasonable to think Facebooks might be as well.
 
-I think the example isn't really needed since it's essentially the
-same as the one for 'qcom,wcn3990-bt'.
+James, I thought Peter sent you a tis "debug" tool to help you debug
+the problem you're seeing.  Whatever happened?
 
-But the important part is missing: add the new compatible string under
-´Required properties´. You also want to update the documentation that
-mentiones 'qcom,wcn3990-bt' to 'qcom,wcn399x-bt' (assuming for now
-that other possible WCN399x chips would be similar).
+Mimi
 
-You mentioned in an earlier version of the series that there are
-multiple WCN3998 variants with different requirements for
-voltage/current. This seems to suggests that multiple compatible
-strings are needed to distinguish between them.
-
-Thanks
-
-Matthias
