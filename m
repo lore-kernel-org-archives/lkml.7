@@ -2,94 +2,96 @@ Return-Path: <SRS0=J4ZE=RP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 53BD0C4360F
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 09:33:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E439BC43381
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 09:34:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 202A32171F
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 09:33:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BC146214D8
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 09:34:09 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726627AbfCLJd5 (ORCPT
+        id S1726684AbfCLJeI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 12 Mar 2019 05:33:57 -0400
-Received: from outbound.smtp.vt.edu ([198.82.183.121]:41772 "EHLO
-        omr1.cc.vt.edu" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1725767AbfCLJd4 (ORCPT
+        Tue, 12 Mar 2019 05:34:08 -0400
+Received: from mout.kundenserver.de ([212.227.126.187]:58443 "EHLO
+        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725767AbfCLJeH (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 12 Mar 2019 05:33:56 -0400
-Received: from mr5.cc.vt.edu (mr5.cc.vt.edu [IPv6:2607:b400:92:8400:0:72:232:758b])
-        by omr1.cc.vt.edu (8.14.4/8.14.4) with ESMTP id x2C9Xt5I022678
-        for <linux-kernel@vger.kernel.org>; Tue, 12 Mar 2019 05:33:55 -0400
-Received: from mail-qt1-f199.google.com (mail-qt1-f199.google.com [209.85.160.199])
-        by mr5.cc.vt.edu (8.14.7/8.14.7) with ESMTP id x2C9XoOp026786
-        for <linux-kernel@vger.kernel.org>; Tue, 12 Mar 2019 05:33:55 -0400
-Received: by mail-qt1-f199.google.com with SMTP id p40so1673626qtb.10
-        for <linux-kernel@vger.kernel.org>; Tue, 12 Mar 2019 02:33:55 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:from:to:cc:subject:mime-version:date
-         :message-id;
-        bh=h2EUzRKNymAFYxMREUJkDmvCMy9QcNtYShMutgbFPqg=;
-        b=cMG/pCAMwRO9lzPaKEEu/OP9cVxhsgYlLNjnG5TpkQwDanNkNCALOu558sB8DlYnKH
-         hDMQKM2C92fsMxIQQPC+VaaFtrU/zc67fHQsmltcCaw6WKTIamXuHs+PvZr9WuO8rXrf
-         /CFRuZglrw3CJJf9rzgwJYJrmOHXxUdt/tXsbGdg/OzKBtN49+JcC8f0Eja164imW+iO
-         y/xR0SP1rtOmjbPLPlSRo2nl/LlxU1q2bWjLdwleyECWYLOx+Od9lIDLExRfYX3Gg6xW
-         dc/U+yaCZUhfzGI7VQwm/2Iqh1zILdjtcdOzMtgFnMbLUjTzIcVeT2iECYjvoWmmlXE6
-         gFmQ==
-X-Gm-Message-State: APjAAAXfpotUl0eF8kiO3lTDOUixQTejjDG/bz7nOBQjvIBHNgwTNVbY
-        xvra2v/dFVXEAugoqoiqn5W0eY8/f3x75vY6wmb+ftcnaP/L6zfvGus616Bvu7fYJ4sn6jUojzW
-        TnE+dLXPVBzaBqKpmnhsEQ+dd9C0+uxkYpHM=
-X-Received: by 2002:ae9:f809:: with SMTP id x9mr27937903qkh.84.1552383230533;
-        Tue, 12 Mar 2019 02:33:50 -0700 (PDT)
-X-Google-Smtp-Source: APXvYqygFHsD6RUqc7DNxwphlmq+omH2/x8pHh2K193LnLWG7H3nNArCqwZCpnrGekc3CpYpohLrmQ==
-X-Received: by 2002:ae9:f809:: with SMTP id x9mr27937893qkh.84.1552383230292;
-        Tue, 12 Mar 2019 02:33:50 -0700 (PDT)
-Received: from turing-police ([2601:5c0:c001:4341::3b7])
-        by smtp.gmail.com with ESMTPSA id o71sm1734575qka.18.2019.03.12.02.33.48
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Tue, 12 Mar 2019 02:33:49 -0700 (PDT)
-From:   "Valdis Kl=?utf-8?Q?=c4=93?=tnieks" <valdis.kletnieks@vt.edu>
-X-Google-Original-From: "Valdis Kl=?utf-8?Q?=c4=93?=tnieks" <Valdis.Kletnieks@vt.edu>
-X-Mailer: exmh version 2.9.0 11/07/2018 with nmh-1.7+dev
-To:     Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@kernel.org>
-cc:     linux-kernel@vger.kernel.org
-Subject: [PATCH] kernel/watchdog.c - make variables static
-Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Date:   Tue, 12 Mar 2019 05:33:48 -0400
-Message-ID: <7855.1552383228@turing-police>
+        Tue, 12 Mar 2019 05:34:07 -0400
+Received: from [192.168.1.110] ([77.4.190.91]) by mrelayeu.kundenserver.de
+ (mreue010 [212.227.15.167]) with ESMTPSA (Nemesis) id
+ 1MsI4Q-1gnklV3SlG-00tooP; Tue, 12 Mar 2019 10:33:47 +0100
+Subject: Re: [PATCH 16/42] drivers: gpio: janz-ttl: drop unneccessary temp
+ variable dev
+To:     Ben Dooks <ben.dooks@codethink.co.uk>,
+        "Enrico Weigelt, metux IT consult" <info@metux.net>,
+        linux-kernel@vger.kernel.org
+Cc:     linus.walleij@linaro.org, bgolaszewski@baylibre.com,
+        andrew@aj.id.au, f.fainelli@gmail.com, sbranden@broadcom.com,
+        bcm-kernel-feedback-list@broadcom.com, hoan@os.amperecomputing.com,
+        orsonzhai@gmail.com, baolin.wang@linaro.org, zhang.lyra@gmail.com,
+        keguang.zhang@gmail.com, vz@mleia.com, matthias.bgg@gmail.com,
+        thierry.reding@gmail.com, grygorii.strashko@ti.com,
+        ssantosh@kernel.org, khilman@kernel.org, robert.jarzmik@free.fr,
+        yamada.masahiro@socionext.com, jun.nie@linaro.org,
+        shawnguo@kernel.org, linux-gpio@vger.kernel.org,
+        linux-mips@vger.kernel.org, linux-pwm@vger.kernel.org,
+        linux-omap@vger.kernel.org, linux-tegra@vger.kernel.org
+References: <1552330521-4276-1-git-send-email-info@metux.net>
+ <1552330521-4276-16-git-send-email-info@metux.net>
+ <539b3cd4-8af3-d6d8-f5a9-2c426a1f0faa@codethink.co.uk>
+From:   "Enrico Weigelt, metux IT consult" <lkml@metux.net>
+Organization: metux IT consult
+Message-ID: <93ae13c0-da78-0e6a-358f-97e358c11f16@metux.net>
+Date:   Tue, 12 Mar 2019 10:33:44 +0100
+User-Agent: Mozilla/5.0 (X11; Linux i686 on x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.2.1
+MIME-Version: 1.0
+In-Reply-To: <539b3cd4-8af3-d6d8-f5a9-2c426a1f0faa@codethink.co.uk>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-Provags-ID: V03:K1:0SrY8q+Yz4chDSJzpBhN2boV3LJ1UlZAmHVRyM99spCvye5OLkk
+ Zds8FtZ69RIvK3HlXYCyP4G+r5qL+hFPB8hI2OhM5SaADJPrgAWEM0Cc8Xh2igD58Xpl5YF
+ 22lL9syOjmsohWU/gFSiWYTIccc6Gbc8qsehHRrLajNdqJPnxPSKDeMHXZWuhOWDpJVMs0W
+ EoMh6TNkXDUlKhJ2jpG/g==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:Hk2OouH5jz4=:9Ykb5WhMUxlKnMQEy9QfOf
+ Il/mMzRaXz+ura8Dpca4OIGfDt72rdJwsX7RK82NLEw+qPdYLJl/axniO96C45Resip9cb88x
+ Iqn++6Oc5CrXBmnJ7QVWUpstQb7FwNWaQOxTGlPxBktUsqytYmLcp1ygoZSUjdh6UL3K5rtZD
+ i9pIApnmkqGpEGe9SyOn4xVMiUlch/WgCS9lDSBpLQnZGROaYF9rixKuHSonPzbzql+c3HhZs
+ JaU+i+HZ5x5QxnobVIkT4FTx11v1PltlsYP7KE1Rj19UvNky1nACebUQS21Kk7fSnVZaVPtVq
+ WOIp6ZYxD514IERwDNc7hI6q2SMvusE74SMkdVaVeHqlXNR5/gX657YH1ntWVi6yeIdsL+o3Q
+ LUj0P4v4Qx3UA5h5EmY92BNrJ9X014TmO8R9KaR7hax3T4uDBX7D6VDLtE2m9iQpC92k8zVuL
+ mdWy7m3muG9BhYOgyXMoNB2wuLrK/pZ/a0fR3i1ZD6fHkPKPNEAonJbbsZ9ehZFOHRqy2ZA1I
+ KSHLaUL+83nhEegdDUmNGLQoGFezOkfuA07rjj+QmO4HFPR1ZngWQAA8w+swxGbT6gXfb1p14
+ 4Pmv2v0aHJ16XB/t12WuDfN3Npn34PTrOaktsh1vpKMVI8VU3HzdJeRazH4SiTa4qQ6RJNp0g
+ XjRAnrt5zAAbBa16qXyC7KhV/yDUGyejekx+LpLCqn9cfXSEdEJiPLLoKkPuU2hn1e6ct9nyF
+ CVnZoMkGjxc9zkBbkd+0pZew5n6GlsWXF31FnX2e3GfQwUnGTrTatEuwo2M=
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-sparse complains:
-  CHECK   kernel/watchdog.c
-kernel/watchdog.c:45:19: warning: symbol 'nmi_watchdog_available' was not declared. Should it be static?
-kernel/watchdog.c:47:16: warning: symbol 'watchdog_allowed_mask' was not declared. Should it be static?
+On 12.03.19 10:17, Ben Dooks wrote:
+> On 11/03/2019 18:54, Enrico Weigelt, metux IT consult wrote:
+>> don't need the temporary variable "dev", directly use &pdev->dev
+>>
+>> Signed-off-by: Enrico Weigelt, metux IT consult <info@metux.net>
+> 
+> This is quite usual to do, and I like it as it saves typing.
+> Personally I would say don't bother with this change.
 
-They're not referenced by name from anyplace else, make them static.
+hmm, both approaches have their valid arguments.
 
-Signed-off-by: Valdis Kletnieks <valdis.kletnieks@vt.edu>
+I'm not particularily biased to one or another ay, but I'd prefer
+having it consistent  everywhere.
 
-diff --git a/kernel/watchdog.c b/kernel/watchdog.c
-index 8fbfda94a67b..403c9bd90413 100644
---- a/kernel/watchdog.c
-+++ b/kernel/watchdog.c
-@@ -42,9 +42,9 @@ int __read_mostly watchdog_user_enabled = 1;
- int __read_mostly nmi_watchdog_user_enabled = NMI_WATCHDOG_DEFAULT;
- int __read_mostly soft_watchdog_user_enabled = 1;
- int __read_mostly watchdog_thresh = 10;
--int __read_mostly nmi_watchdog_available;
-+static int __read_mostly nmi_watchdog_available;
- 
--struct cpumask watchdog_allowed_mask __read_mostly;
-+static struct cpumask watchdog_allowed_mask __read_mostly;
- 
- struct cpumask watchdog_cpumask __read_mostly;
- unsigned long *watchdog_cpumask_bits = cpumask_bits(&watchdog_cpumask);
 
+--mtx
+
+-- 
+Enrico Weigelt, metux IT consult
+Free software and Linux embedded engineering
+info@metux.net -- +49-151-27565287
