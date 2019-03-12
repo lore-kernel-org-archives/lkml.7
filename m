@@ -7,79 +7,114 @@ X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_PASS,USER_AGENT_MUTT autolearn=unavailable autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 71ABCC43381
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 16:17:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7FEDEC43381
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 16:18:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 37E5D20657
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 16:17:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 494F32147C
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 16:18:07 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1552407430;
-	bh=QoIQn2kvJq08K8pZbEVuAhWc69BZ8y1i1Wa0T3DgTlA=;
+	s=default; t=1552407487;
+	bh=zjlL+GMe3QK8WSPfUp7FLw17V98DjLEQ/i81NIZ9WF0=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=x11mEMftexx2zPC73Nv/QI1rgAaXwkraNOK5Mgxel7O3dFkaBLHf5h7Z1WNmmSGIH
-	 zETTOc8ex1pCHnHDfDXn8ly7xMt5jH8loN8cIwn8Mg+ZJrAoMyJPGB6G7tC8DL0+ip
-	 DWe6MSUzyYY9egn4exdYAuzEjE6Jkpsd8G1r0MAg=
+	b=qF/uy3yaqFI6JwW1pfJkfLcJMFfXUEfhNGiUFFMOcJZJmK7dWl3D8Lfrxi3is4a+f
+	 q3Ntk6TIabXxvO4CVJ10kixJo7AkKagOC5YufIguYlm7cQf9cZXEptqI054oa3FQum
+	 qJRYMTGHsNm6kxGKTpauzJHWOZ9kMp4lNXBTbGz0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726438AbfCLQRI (ORCPT
+        id S1726680AbfCLQSF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 12 Mar 2019 12:17:08 -0400
-Received: from mx2.suse.de ([195.135.220.15]:52132 "EHLO mx1.suse.de"
+        Tue, 12 Mar 2019 12:18:05 -0400
+Received: from mx2.suse.de ([195.135.220.15]:52328 "EHLO mx1.suse.de"
         rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1725894AbfCLQRI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 12 Mar 2019 12:17:08 -0400
+        id S1726329AbfCLQSF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 12 Mar 2019 12:18:05 -0400
 X-Virus-Scanned: by amavisd-new at test-mx.suse.de
 Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx1.suse.de (Postfix) with ESMTP id 25416AC3C;
-        Tue, 12 Mar 2019 16:17:07 +0000 (UTC)
-Date:   Tue, 12 Mar 2019 17:17:05 +0100
+        by mx1.suse.de (Postfix) with ESMTP id 7CA88AC3C;
+        Tue, 12 Mar 2019 16:18:03 +0000 (UTC)
+Date:   Tue, 12 Mar 2019 17:18:03 +0100
 From:   Michal Hocko <mhocko@kernel.org>
 To:     Yafang Shao <laoar.shao@gmail.com>
 Cc:     vbabka@suse.cz, jrdr.linux@gmail.com, akpm@linux-foundation.org,
         linux-mm@kvack.org, linux-kernel@vger.kernel.org,
         shaoyafang@didiglobal.com
-Subject: Re: [PATCH] mm: compaction: show gfp flag names in
- try_to_compact_pages tracepoint
-Message-ID: <20190312161705.GB5721@dhcp22.suse.cz>
+Subject: Re: [PATCH] mm: compaction: some tracepoints should be defined only
+ when CONFIG_COMPACTION is set
+Message-ID: <20190312161803.GC5721@dhcp22.suse.cz>
 References: <1551501538-4092-1-git-send-email-laoar.shao@gmail.com>
+ <1551501538-4092-2-git-send-email-laoar.shao@gmail.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <1551501538-4092-1-git-send-email-laoar.shao@gmail.com>
+In-Reply-To: <1551501538-4092-2-git-send-email-laoar.shao@gmail.com>
 User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat 02-03-19 12:38:57, Yafang Shao wrote:
-> show the gfp flag names instead of the gfp_mask could make the trace
-> more convenient.
+On Sat 02-03-19 12:38:58, Yafang Shao wrote:
+> Only mm_compaction_isolate_{free, migrate}pages may be used when
+> CONFIG_COMPACTION is not set.
+> All others are used only when CONFIG_COMPACTION is set.
 
-Agreed
+Why is this an improvement?
 
 > Signed-off-by: Yafang Shao <laoar.shao@gmail.com>
-
-Acked-by: Michal Hocko <mhocko@suse.com>
-
 > ---
->  include/trace/events/compaction.h | 4 ++--
->  1 file changed, 2 insertions(+), 2 deletions(-)
+>  include/trace/events/compaction.h | 6 ++----
+>  1 file changed, 2 insertions(+), 4 deletions(-)
 > 
 > diff --git a/include/trace/events/compaction.h b/include/trace/events/compaction.h
-> index 6074eff..e66afb818 100644
+> index 6074eff..3e42078 100644
 > --- a/include/trace/events/compaction.h
 > +++ b/include/trace/events/compaction.h
-> @@ -189,9 +189,9 @@
->  		__entry->prio = prio;
->  	),
+> @@ -64,6 +64,7 @@
+>  	TP_ARGS(start_pfn, end_pfn, nr_scanned, nr_taken)
+>  );
 >  
-> -	TP_printk("order=%d gfp_mask=0x%x priority=%d",
-> +	TP_printk("order=%d gfp_mask=%s priority=%d",
->  		__entry->order,
-> -		__entry->gfp_mask,
-> +		show_gfp_flags(__entry->gfp_mask),
+> +#ifdef CONFIG_COMPACTION
+>  TRACE_EVENT(mm_compaction_migratepages,
+>  
+>  	TP_PROTO(unsigned long nr_all,
+> @@ -132,7 +133,6 @@
+>  		__entry->sync ? "sync" : "async")
+>  );
+>  
+> -#ifdef CONFIG_COMPACTION
+>  TRACE_EVENT(mm_compaction_end,
+>  	TP_PROTO(unsigned long zone_start, unsigned long migrate_pfn,
+>  		unsigned long free_pfn, unsigned long zone_end, bool sync,
+> @@ -166,7 +166,6 @@
+>  		__entry->sync ? "sync" : "async",
+>  		__print_symbolic(__entry->status, COMPACTION_STATUS))
+>  );
+> -#endif
+>  
+>  TRACE_EVENT(mm_compaction_try_to_compact_pages,
+>  
+> @@ -195,7 +194,6 @@
 >  		__entry->prio)
 >  );
+>  
+> -#ifdef CONFIG_COMPACTION
+>  DECLARE_EVENT_CLASS(mm_compaction_suitable_template,
+>  
+>  	TP_PROTO(struct zone *zone,
+> @@ -296,7 +294,6 @@
+>  
+>  	TP_ARGS(zone, order)
+>  );
+> -#endif
+>  
+>  TRACE_EVENT(mm_compaction_kcompactd_sleep,
+>  
+> @@ -352,6 +349,7 @@
+>  
+>  	TP_ARGS(nid, order, classzone_idx)
+>  );
+> +#endif
+>  
+>  #endif /* _TRACE_COMPACTION_H */
 >  
 > -- 
 > 1.8.3.1
