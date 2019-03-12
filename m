@@ -2,150 +2,182 @@ Return-Path: <SRS0=J4ZE=RP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+X-Spam-Status: No, score=-7.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+	SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C943AC43381
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 05:03:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B181FC43381
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 05:04:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 96CF62084F
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 05:03:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 81A25214AF
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 05:04:22 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="YP4NCvvk"
+	dkim=pass (2048-bit key) header.d=nifty.com header.i=@nifty.com header.b="K4mXtMWM"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727076AbfCLFDe (ORCPT
+        id S1727102AbfCLFEV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 12 Mar 2019 01:03:34 -0400
-Received: from mail-wr1-f68.google.com ([209.85.221.68]:42472 "EHLO
-        mail-wr1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725792AbfCLFDd (ORCPT
+        Tue, 12 Mar 2019 01:04:21 -0400
+Received: from conssluserg-01.nifty.com ([210.131.2.80]:44628 "EHLO
+        conssluserg-01.nifty.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725792AbfCLFEU (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 12 Mar 2019 01:03:33 -0400
-Received: by mail-wr1-f68.google.com with SMTP id o9so1149573wrv.9;
-        Mon, 11 Mar 2019 22:03:32 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :content-transfer-encoding;
-        bh=ujeKSdpurBvV0kIlQTS8l+E4O7rsoHG6auAAX6bWdjg=;
-        b=YP4NCvvktxdjsBQ4kpouI+hBDkjSQrSh5cSzVQUaZ1yv0SpDVZKXlkC30d6ToVDTDQ
-         0B0CHyrrP/xS7UvlJo1zAiEmW6o6c6x4JKHCf9EB1w4XaxCDIm3VvQGgUN1L7vaC1via
-         InztyNxiEUEWhUZx045zkH9qXWURPur75slg5tDvuDPeYB0Yxxg1d9OD4W6avgDo4wCu
-         HN0orKnQrSTJo60/rGXRWSq+0hUb+yLG/fVHLTntYdDw6tqTqCjzzFo/VnSpbT83Dg9k
-         Z+AFucFdYUmc/2ZNriSZooPJQXhOtGBzKPVDx5+ox6+Fzac7QFYyLXGE9j/mIWOA2niU
-         4HhA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:content-transfer-encoding;
-        bh=ujeKSdpurBvV0kIlQTS8l+E4O7rsoHG6auAAX6bWdjg=;
-        b=otSHRdWK6Lfe+H+HlkeRTJHlP5J0Nh9nORTqrK+y/3pkmBbDurcikghAHhwtuYuHE1
-         DaCVnxmCjcl6demL2kqOFoEQp7NufzdUSAGb+8TRvYVAQZex75EfnCQ7utQLIGNus6RI
-         0TpzsDM0YxRL1JePlNqnx7gNYBz/lJaiRZiKEvuhgUvbKJKexB0xKqW0t49ZKemsdvv9
-         aL1fU/pa4Eq35RSrAidnIq4Mp/ZJfFcusjWcWuITnNNW4xAPlBx3bYnlaGrMTwYBBBtr
-         uW3dUhhvp36CTw5uYJ+Bqfo2mScG3k7LZpIoZqzoxvESDrWzf+3ZD2XkN8HhZVl7ayQu
-         lhgg==
-X-Gm-Message-State: APjAAAUAUuMbSBUTm2GaZGYS564bLNxIUE2bOX13fa+Q+OS1RJV/dhVo
-        jWgHm0kNBhbKjrB5DNUyph8vmjgZQEDEYlKCjms=
-X-Google-Smtp-Source: APXvYqz5qxCINOo98D+9cdo1pshRGoNbHhuBoLK84jz3klQpgmyx68G46fn2j7nnXCygpaug+O4Td4E98Hz3WALRbSU=
-X-Received: by 2002:adf:9167:: with SMTP id j94mr23629743wrj.106.1552367011278;
- Mon, 11 Mar 2019 22:03:31 -0700 (PDT)
+        Tue, 12 Mar 2019 01:04:20 -0400
+Received: from mail-vs1-f48.google.com (mail-vs1-f48.google.com [209.85.217.48]) (authenticated)
+        by conssluserg-01.nifty.com with ESMTP id x2C540vB021135;
+        Tue, 12 Mar 2019 14:04:01 +0900
+DKIM-Filter: OpenDKIM Filter v2.10.3 conssluserg-01.nifty.com x2C540vB021135
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nifty.com;
+        s=dec2015msa; t=1552367041;
+        bh=PE8NgoRngZX0cVJ/0gzSXtKWk8b5vFFX7m/LbUwLHwQ=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=K4mXtMWMFMUnRzrLl4eQlNdrD2tmZBsf1rsmkdCqgSkrOmXFhrk0nzuls5ehs/bQ3
+         yQq6ksbDKgQQjr98xEqqibhbw3fMFHykB2I9Bbp+qzozP+RTBYnmTOzrLNxyaQQooB
+         fWQIi1pDrFmV5YNJbke+3bDYdgcZfOQZ3wua8xYdl07icy0+MXGOXL0EfsgWJbPu3j
+         qPm0NVw1Jv2KLRsJGF6XL+hg/H4s0MENaR/NBtHEwAdufXB2MFblk+ZTrXlb9gQAxm
+         qzxsLaLI3y5zerBr/CFFXQUAHkQ2MbvnKvW/NpFovKfSJYF/ANg4S/hz72r9LKEx2z
+         GDF8yCPtRzVUA==
+X-Nifty-SrcIP: [209.85.217.48]
+Received: by mail-vs1-f48.google.com with SMTP id y19so836212vsc.4;
+        Mon, 11 Mar 2019 22:04:01 -0700 (PDT)
+X-Gm-Message-State: APjAAAUT7S9g2MgBb2CdNgaO3yj02MP/A1V86Sz05wOx5DJYzXwtHp0W
+        L7SOshRYvSSnjExD6XDVzTF9EcwRXRwyEMwtCnE=
+X-Google-Smtp-Source: APXvYqytkrznqwTlxzlRF4D6N9DJYLu7Z+iELCYVKh1oEigFITvOalBON086FcDPGkxw/QFrPsOmV0o7mNXHTi1v91M=
+X-Received: by 2002:a67:7c04:: with SMTP id x4mr19143493vsc.155.1552367040187;
+ Mon, 11 Mar 2019 22:04:00 -0700 (PDT)
 MIME-Version: 1.0
-References: <20181125161859.GA5277@arx-s1> <20181220175009.GF9408@ulmo> <CAJeuY7-StNNDpBPyw1JH5Jmc-NhDw67F6Veh0S2tBTmENCTY8Q@mail.gmail.com>
-In-Reply-To: <CAJeuY7-StNNDpBPyw1JH5Jmc-NhDw67F6Veh0S2tBTmENCTY8Q@mail.gmail.com>
-From:   Hao Zhang <hao5781286@gmail.com>
-Date:   Tue, 12 Mar 2019 13:03:19 +0800
-Message-ID: <CAJeuY7_gx=PBhF4t40nCCWia-aq1G3t9D9nKS7ejOh56t2RkHQ@mail.gmail.com>
-Subject: Fwd: [PATCH v3 1/6] Documentation: ARM: sunxi: pwm: add Allwinner sun8i.
-To:     Mark Rutland <mark.rutland@arm.com>,
-        Maxime Ripard <maxime.ripard@bootlin.com>,
-        Chen-Yu Tsai <wens@csie.org>,
-        Michael Turquette <mturquette@baylibre.com>, sboyd@kernel.org,
-        linux-gpio@vger.kernel.org,
-        open list <linux-kernel@vger.kernel.org>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>,
-        "moderated list:ARM/Allwinner sunXi SoC support" 
-        <linux-arm-kernel@lists.infradead.org>, linux-pwm@vger.kernel.org,
-        linux-sunxi@googlegroups.com, Hao Zhang <hao5781286@gmail.com>
+References: <cover.1551598603.git.vilhelm.gray@gmail.com> <12b3a364ac7fc32194fa6f55911dd800aca92a56.1551598603.git.vilhelm.gray@gmail.com>
+In-Reply-To: <12b3a364ac7fc32194fa6f55911dd800aca92a56.1551598603.git.vilhelm.gray@gmail.com>
+From:   Masahiro Yamada <yamada.masahiro@socionext.com>
+Date:   Tue, 12 Mar 2019 14:03:24 +0900
+X-Gmail-Original-Message-ID: <CAK7LNATW7uKB2-wMytLSpb8dPLkWbirptCgU=LAq3PYRtgOuXg@mail.gmail.com>
+Message-ID: <CAK7LNATW7uKB2-wMytLSpb8dPLkWbirptCgU=LAq3PYRtgOuXg@mail.gmail.com>
+Subject: Re: [PATCH v9 1/9] bitops: Introduce the for_each_set_clump8 macro
+To:     William Breathitt Gray <vilhelm.gray@gmail.com>
+Cc:     Linus Walleij <linus.walleij@linaro.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        linux-arch <linux-arch@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Rasmus Villemoes <linux@rasmusvillemoes.dk>,
+        bgolaszewski@baylibre.com,
+        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
+        Andy Shevchenko <andy.shevchenko@gmail.com>,
+        Arnd Bergmann <arnd@arndb.de>
 Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
----------- Forwarded message ---------
-From: Hao Zhang <hao5781286@gmail.com>
-Date: 2019=E5=B9=B43=E6=9C=8812=E6=97=A5=E5=91=A8=E4=BA=8C =E4=B8=8B=E5=8D=
-=8812:59
-Subject: Re: [PATCH v3 1/6] Documentation: ARM: sunxi: pwm: add Allwinner s=
-un8i.
-To: Thierry Reding <thierry.reding@gmail.com>
+On Sun, Mar 3, 2019 at 4:48 PM William Breathitt Gray
+<vilhelm.gray@gmail.com> wrote:
+>
+> This macro iterates for each 8-bit group of bits (clump) with set bits,
+> within a bitmap memory region. For each iteration, "start" is set to the
+> bit offset of the found clump, while the respective clump value is
+> stored to the location pointed by "clump". Additionally, the
+> bitmap_get_value8 and bitmap_set_value8 functions are introduced to
+> respectively get and set an 8-bit value in a bitmap memory region.
+>
+> Suggested-by: Andy Shevchenko <andy.shevchenko@gmail.com>
+> Suggested-by: Rasmus Villemoes <linux@rasmusvillemoes.dk>
+> Cc: Arnd Bergmann <arnd@arndb.de>
+> Cc: Andrew Morton <akpm@linux-foundation.org>
+> Reviewed-by: Andy Shevchenko <andy.shevchenko@gmail.com>
+> Reviewed-by: Linus Walleij <linus.walleij@linaro.org>
+> Signed-off-by: William Breathitt Gray <vilhelm.gray@gmail.com>
+> ---
+>  include/asm-generic/bitops/find.h | 14 ++++++
+>  include/linux/bitops.h            |  5 ++
+>  lib/find_bit.c                    | 81 +++++++++++++++++++++++++++++++
+>  3 files changed, 100 insertions(+)
+>
+> diff --git a/include/asm-generic/bitops/find.h b/include/asm-generic/bitops/find.h
+> index 8a1ee10014de..9a76adff59c6 100644
+> --- a/include/asm-generic/bitops/find.h
+> +++ b/include/asm-generic/bitops/find.h
+> @@ -80,4 +80,18 @@ extern unsigned long find_first_zero_bit(const unsigned long *addr,
+>
+>  #endif /* CONFIG_GENERIC_FIND_FIRST_BIT */
+>
+> +unsigned long bitmap_get_value8(const unsigned long *const bitmap,
+> +                               const unsigned int size,
+> +                               const unsigned int start);
+> +
+> +void bitmap_set_value8(unsigned long *const bitmap, const unsigned int size,
+> +                      const unsigned long value, const unsigned int start);
+> +
+> +unsigned int find_next_clump8(unsigned long *const clump,
+> +                             const unsigned long *const addr,
+> +                             unsigned int offset, const unsigned int size);
+> +
+> +#define find_first_clump8(clump, bits, size) \
+> +       find_next_clump8((clump), (bits), 0, (size))
+> +
+>  #endif /*_ASM_GENERIC_BITOPS_FIND_H_ */
+> diff --git a/include/linux/bitops.h b/include/linux/bitops.h
+> index 705f7c442691..61c10f20079e 100644
+> --- a/include/linux/bitops.h
+> +++ b/include/linux/bitops.h
+> @@ -40,6 +40,11 @@ extern unsigned long __sw_hweight64(__u64 w);
+>              (bit) < (size);                                    \
+>              (bit) = find_next_zero_bit((addr), (size), (bit) + 1))
+>
+> +#define for_each_set_clump8(start, clump, bits, size) \
+> +       for ((start) = find_first_clump8(&(clump), (bits), (size)); \
+> +            (start) < (size); \
+> +            (start) = find_next_clump8(&(clump), (bits), (start) + 8, (size)))
+> +
+>  static inline int get_bitmask_order(unsigned int count)
+>  {
+>         int order;
+> diff --git a/lib/find_bit.c b/lib/find_bit.c
+> index ee3df93ba69a..c2af1f013ea2 100644
+> --- a/lib/find_bit.c
+> +++ b/lib/find_bit.c
+> @@ -218,3 +218,84 @@ EXPORT_SYMBOL(find_next_bit_le);
+>  #endif
+>
+>  #endif /* __BIG_ENDIAN */
+> +
+> +/**
+> + * bitmap_get_value8 - get an 8-bit value within a memory region
+> + * @bitmap: address to the bitmap memory region
+> + * @size: bitmap size in number of bits
+> + * @start: bit offset of the 8-bit value
+> + *
+> + * Returns the 8-bit value located at the @start bit offset within the @bitmap
+> + * memory region.
+> + */
+> +unsigned long bitmap_get_value8(const unsigned long *const bitmap,
+> +                               const unsigned int size,
+> +                               const unsigned int start)
 
 
-Thierry Reding <thierry.reding@gmail.com> =E4=BA=8E2018=E5=B9=B412=E6=9C=88=
-21=E6=97=A5=E5=91=A8=E4=BA=94 =E4=B8=8A=E5=8D=881:50=E5=86=99=E9=81=93=EF=
-=BC=9A
->
-> On Mon, Nov 26, 2018 at 12:18:59AM +0800, Hao Zhang wrote:
-> > This patch adds Allwinner sun8i pwm binding document.
-> >
-> > Signed-off-by: Hao Zhang <hao5781286@gmail.com>
-> > ---
-> >  .../devicetree/bindings/pwm/pwm-sun8i.txt          | 24 ++++++++++++++=
-++++++++
-> >  1 file changed, 24 insertions(+)
-> >  create mode 100644 Documentation/devicetree/bindings/pwm/pwm-sun8i.txt
-> >
-> > diff --git a/Documentation/devicetree/bindings/pwm/pwm-sun8i.txt b/Docu=
-mentation/devicetree/bindings/pwm/pwm-sun8i.txt
-> > new file mode 100644
-> > index 0000000..7531d85
-> > --- /dev/null
-> > +++ b/Documentation/devicetree/bindings/pwm/pwm-sun8i.txt
-> > @@ -0,0 +1,24 @@
-> > +Allwinner sun8i R40/V40/T3 SoC PWM controller
-> > +
-> > +Required properties:
-> > +  - compatible: Should be one of:
-> > +    - "allwinner,sun8i-r40-pwm"
-> > +  - reg: Physical base address and length of the controller's register=
-s
-> > +  - interrupts: Should contain interrupt.
-> > +  - clocks: From common clock binding, handle to the parent clock.
-> > +  - clock-names: Must contain the clock names described just above.
-> > +  - pwm-channels: PWM channels of the controller.
->
-> Why do you need this? In the cover letter you say:
->
->         "The sun8i R40/T3/V40 PWM has 8 PWM channals ..."
->
-> Why does this need to be specified in the DT?
+The comment says this function returns '8-bit value'.
 
-T3 PWM has 8 channals, i think it is necessary to tell user how to
-specify it Instead of
-hardcode the channal myself :)
+The return type should be 'u8' instead of 'unsigned long', then.
 
-Thanks for review :)
+Same for other helpers.
 
->
-> Thierry
-> -----BEGIN PGP SIGNATURE-----
->
-> iQIzBAABCAAdFiEEiOrDCAFJzPfAjcif3SOs138+s6EFAlwb1k4ACgkQ3SOs138+
-> s6EOyA//auHjqjKwvjCLwWgHXdVr26cFUnFn/Ml6ZHHRe+oLCiYsatv4AZfGFvZ7
-> CIGWN3zUu9c5YoDOd1isauQYgRtTsShWYC4gPxFFK9hWfb8f3o/wG60whkNDuvLL
-> 1SAQ/KJTC01LQIEXfHlb60EPvKCtt4YUQG4PkTGBGOHSO+MhWQHRLy5aLaq+d3yH
-> KHaDZ0PuZvYNnFWi7W/ggraiIlRToPH8HanFzGew+gUfPjClrczjrGqgn8u0bAL6
-> MuKDMHLgjI/D8cs7XIaXc/OCPsp69B4JGrRJsxYh0KGKthaYDeKAUERpvsltDhGT
-> oTB55mJPZlriaiEOSwPrj+M0JQe9AnUIBVEiSIP2dSn8+rcSlWd10ysEjnCH/Ea7
-> ARkamiRCk2hgOhZlDZcm+hjh7VxnJinaYahGFXMszpVgCScHT/fjZKexGqX8NJa8
-> EWRJjeJaS1jLpLb7ZhM0iZrhzSC638G/5z3+1CWmyxwOvICb0FXzQDCTNSm1t8DO
-> NicV26tAWMIvDEW5PcTqrJaSvQmNrr4MiBiqocKs4N+ZA7Ey8JQW0oUFzwiwD6Ew
-> HaOuVXDlha1SZNK2tEnTDsTctXefl+eB7xeQ8MOHPp3yeKrpQlj4gHSyNOboEaXR
-> 8el/ZC1gGYHPeFGPSgXTbRNFwNY8/9GKPfP5cUgLc+e1B7oWAHg=3D
-> =3D9v1O
-> -----END PGP SIGNATURE-----
+
+
+> +{
+> +       const size_t index = BIT_WORD(start);
+> +       const unsigned int offset = start % BITS_PER_LONG;
+> +       const unsigned int low_width = (offset + 8 > BITS_PER_LONG) ?
+> +                                      BITS_PER_LONG - offset : 8;
+> +       const unsigned long low = bitmap[index] >> offset;
+> +       const unsigned long high = (low_width < 8 && start + 8 <= size) ?
+> +                                  bitmap[index + 1] << low_width : 0;
+
+
+I do not know if we have a usecase
+where the 'start' is not multiple of 8, though.
+
+
+
+-- 
+Best Regards
+Masahiro Yamada
