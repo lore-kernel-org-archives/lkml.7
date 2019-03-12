@@ -4,52 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9C3CFC43381
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 18:05:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D4FE3C4360F
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 18:05:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6604E21734
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 18:05:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A702E214AF
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 18:05:45 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1552413939;
-	bh=qAeWiqtwp5bwBtW83/euPyB6J2yTSARzCCIZQm76hfM=;
+	s=default; t=1552413945;
+	bh=Frwsr9slltUR/hcjUJrNBF/lpgEVVAqYWD0dFP8fhI4=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Bdhx+Vh8OtxtylZ/sDzuSp5Fynx0Q8BkGW4yTGoOPVXHIOUD0kNAcybmSDiWe4fXQ
-	 uwGcx6rqhR0FrzoMsKAygJjij7bPpswq12agUr67mHPbdAt4Nih199thMUIvUTTVUS
-	 oLoRNUYExauo7jxHxVhl3J2LANIBRuT3LPPYchF4=
+	b=trCYLI+yGfGq+5BIBhkXUu5rej4n24XHV0nAhpGvLy+kQJEurkKOAE54Vt83cjq7C
+	 Hzx2M7waMU6EEPJ03K0MyY5a6cL+ZUMCs7eBy1XzEkx7J0o1KrmWRJtl453dHO7rxe
+	 tzaMmAQY6i0Hv41D3HTbhj1cGaej/1FeCgV/EbPM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728743AbfCLSFi (ORCPT
+        id S1726599AbfCLRMf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 12 Mar 2019 14:05:38 -0400
-Received: from mail.kernel.org ([198.145.29.99]:48172 "EHLO mail.kernel.org"
+        Tue, 12 Mar 2019 13:12:35 -0400
+Received: from mail.kernel.org ([198.145.29.99]:46810 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727562AbfCLRMh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 12 Mar 2019 13:12:37 -0400
+        id S1727333AbfCLRMN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 12 Mar 2019 13:12:13 -0400
 Received: from localhost (unknown [104.133.8.98])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 8FCC3217F5;
-        Tue, 12 Mar 2019 17:12:36 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 63F9E206DF;
+        Tue, 12 Mar 2019 17:12:12 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1552410756;
-        bh=qAeWiqtwp5bwBtW83/euPyB6J2yTSARzCCIZQm76hfM=;
+        s=default; t=1552410732;
+        bh=Frwsr9slltUR/hcjUJrNBF/lpgEVVAqYWD0dFP8fhI4=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=kF8g6N7e2qnmSTMzyBE/MFWgvOSFrzEB58Biwn0GlPUgYYKelGslBDDsWU82Xbk4/
-         ISdsXWarTXADGHNzXDokOgfjE4vf8zfswQOIC0HLic+72gcqe9Sl2xxfnKwPI+M82q
-         Xaik6rMu0CxB2n+D/HcWNfHGhFOBPkQ2SuXJ3BZI=
+        b=NlsmJj0gFW9lDtnfy3vnaa9be3L+4PLOaT4BuEwnObzExhMvrCc+coWlJtGqlKJGZ
+         9Og3kgjRghGewHMKGNBaluwLDONR/yQLRPc2ZivNeChqBkooMj4Zg3lIYaVcjC8iRC
+         bguIC7BM2JwsZ1Ktk4IMTHe4d0kNIY5Z2eRrgu9w=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Jordan Glover <Golden_Miller83@protonmail.ch>,
-        Petr Vorel <pvorel@suse.cz>,
-        John Johansen <john.johansen@canonical.com>,
+        stable@vger.kernel.org, Harini Katakam <harini.katakam@xilinx.com>,
+        "David S. Miller" <davem@davemloft.net>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.20 057/171] apparmor: Fix warning about unused function apparmor_ipv6_postroute
-Date:   Tue, 12 Mar 2019 10:07:17 -0700
-Message-Id: <20190312170353.062939563@linuxfoundation.org>
+Subject: [PATCH 4.20 053/171] net: macb: Apply RXUBR workaround only to versions with errata
+Date:   Tue, 12 Mar 2019 10:07:13 -0700
+Message-Id: <20190312170352.681741759@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190312170347.868927101@linuxfoundation.org>
 References: <20190312170347.868927101@linuxfoundation.org>
@@ -68,41 +66,153 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-[ Upstream commit a1a02062ad466052a34a8c4323143ccf9726eb52 ]
+[ Upstream commit e501070e4db0b67a4c17a5557d1e9d098f3db310 ]
 
-when compiled without CONFIG_IPV6:
-security/apparmor/lsm.c:1601:21: warning: ‘apparmor_ipv6_postroute’ defined but not used [-Wunused-function]
- static unsigned int apparmor_ipv6_postroute(void *priv,
-                     ^~~~~~~~~~~~~~~~~~~~~~~
+The interrupt handler contains a workaround for RX hang applicable
+to Zynq and AT91RM9200 only. Subsequent versions do not need this
+workaround. This workaround unnecessarily resets RX whenever RX used
+bit read is observed, which can be often under heavy traffic. There
+is no other action performed on RX UBR interrupt. Hence introduce a
+CAPS mask; enable this interrupt and workaround only on affected
+versions.
 
-Reported-by: Jordan Glover <Golden_Miller83@protonmail.ch>
-Tested-by: Jordan Glover <Golden_Miller83@protonmail.ch>
-Signed-off-by: Petr Vorel <pvorel@suse.cz>
-Signed-off-by: John Johansen <john.johansen@canonical.com>
+Signed-off-by: Harini Katakam <harini.katakam@xilinx.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- security/apparmor/lsm.c | 2 ++
- 1 file changed, 2 insertions(+)
+ drivers/net/ethernet/cadence/macb.h      |  3 +++
+ drivers/net/ethernet/cadence/macb_main.c | 28 ++++++++++++++----------
+ 2 files changed, 20 insertions(+), 11 deletions(-)
 
-diff --git a/security/apparmor/lsm.c b/security/apparmor/lsm.c
-index 42446a216f3b..7d1eeb084968 100644
---- a/security/apparmor/lsm.c
-+++ b/security/apparmor/lsm.c
-@@ -1598,12 +1598,14 @@ static unsigned int apparmor_ipv4_postroute(void *priv,
- 	return apparmor_ip_postroute(priv, skb, state);
- }
+diff --git a/drivers/net/ethernet/cadence/macb.h b/drivers/net/ethernet/cadence/macb.h
+index 3d45f4c92cf6..9bbaad9f3d63 100644
+--- a/drivers/net/ethernet/cadence/macb.h
++++ b/drivers/net/ethernet/cadence/macb.h
+@@ -643,6 +643,7 @@
+ #define MACB_CAPS_JUMBO				0x00000020
+ #define MACB_CAPS_GEM_HAS_PTP			0x00000040
+ #define MACB_CAPS_BD_RD_PREFETCH		0x00000080
++#define MACB_CAPS_NEEDS_RSTONUBR		0x00000100
+ #define MACB_CAPS_FIFO_MODE			0x10000000
+ #define MACB_CAPS_GIGABIT_MODE_AVAILABLE	0x20000000
+ #define MACB_CAPS_SG_DISABLED			0x40000000
+@@ -1214,6 +1215,8 @@ struct macb {
  
-+#if IS_ENABLED(CONFIG_IPV6)
- static unsigned int apparmor_ipv6_postroute(void *priv,
- 					    struct sk_buff *skb,
- 					    const struct nf_hook_state *state)
- {
- 	return apparmor_ip_postroute(priv, skb, state);
- }
-+#endif
+ 	int	rx_bd_rd_prefetch;
+ 	int	tx_bd_rd_prefetch;
++
++	u32	rx_intr_mask;
+ };
  
- static const struct nf_hook_ops apparmor_nf_ops[] = {
- 	{
+ #ifdef CONFIG_MACB_USE_HWSTAMP
+diff --git a/drivers/net/ethernet/cadence/macb_main.c b/drivers/net/ethernet/cadence/macb_main.c
+index 4c816e5a841f..73aa7969db96 100644
+--- a/drivers/net/ethernet/cadence/macb_main.c
++++ b/drivers/net/ethernet/cadence/macb_main.c
+@@ -56,8 +56,7 @@
+ /* level of occupied TX descriptors under which we wake up TX process */
+ #define MACB_TX_WAKEUP_THRESH(bp)	(3 * (bp)->tx_ring_size / 4)
+ 
+-#define MACB_RX_INT_FLAGS	(MACB_BIT(RCOMP) | MACB_BIT(RXUBR)	\
+-				 | MACB_BIT(ISR_ROVR))
++#define MACB_RX_INT_FLAGS	(MACB_BIT(RCOMP) | MACB_BIT(ISR_ROVR))
+ #define MACB_TX_ERR_FLAGS	(MACB_BIT(ISR_TUND)			\
+ 					| MACB_BIT(ISR_RLE)		\
+ 					| MACB_BIT(TXERR))
+@@ -1270,7 +1269,7 @@ static int macb_poll(struct napi_struct *napi, int budget)
+ 				queue_writel(queue, ISR, MACB_BIT(RCOMP));
+ 			napi_reschedule(napi);
+ 		} else {
+-			queue_writel(queue, IER, MACB_RX_INT_FLAGS);
++			queue_writel(queue, IER, bp->rx_intr_mask);
+ 		}
+ 	}
+ 
+@@ -1288,7 +1287,7 @@ static void macb_hresp_error_task(unsigned long data)
+ 	u32 ctrl;
+ 
+ 	for (q = 0, queue = bp->queues; q < bp->num_queues; ++q, ++queue) {
+-		queue_writel(queue, IDR, MACB_RX_INT_FLAGS |
++		queue_writel(queue, IDR, bp->rx_intr_mask |
+ 					 MACB_TX_INT_FLAGS |
+ 					 MACB_BIT(HRESP));
+ 	}
+@@ -1318,7 +1317,7 @@ static void macb_hresp_error_task(unsigned long data)
+ 
+ 		/* Enable interrupts */
+ 		queue_writel(queue, IER,
+-			     MACB_RX_INT_FLAGS |
++			     bp->rx_intr_mask |
+ 			     MACB_TX_INT_FLAGS |
+ 			     MACB_BIT(HRESP));
+ 	}
+@@ -1372,14 +1371,14 @@ static irqreturn_t macb_interrupt(int irq, void *dev_id)
+ 			    (unsigned int)(queue - bp->queues),
+ 			    (unsigned long)status);
+ 
+-		if (status & MACB_RX_INT_FLAGS) {
++		if (status & bp->rx_intr_mask) {
+ 			/* There's no point taking any more interrupts
+ 			 * until we have processed the buffers. The
+ 			 * scheduling call may fail if the poll routine
+ 			 * is already scheduled, so disable interrupts
+ 			 * now.
+ 			 */
+-			queue_writel(queue, IDR, MACB_RX_INT_FLAGS);
++			queue_writel(queue, IDR, bp->rx_intr_mask);
+ 			if (bp->caps & MACB_CAPS_ISR_CLEAR_ON_WRITE)
+ 				queue_writel(queue, ISR, MACB_BIT(RCOMP));
+ 
+@@ -1412,8 +1411,9 @@ static irqreturn_t macb_interrupt(int irq, void *dev_id)
+ 		/* There is a hardware issue under heavy load where DMA can
+ 		 * stop, this causes endless "used buffer descriptor read"
+ 		 * interrupts but it can be cleared by re-enabling RX. See
+-		 * the at91 manual, section 41.3.1 or the Zynq manual
+-		 * section 16.7.4 for details.
++		 * the at91rm9200 manual, section 41.3.1 or the Zynq manual
++		 * section 16.7.4 for details. RXUBR is only enabled for
++		 * these two versions.
+ 		 */
+ 		if (status & MACB_BIT(RXUBR)) {
+ 			ctrl = macb_readl(bp, NCR);
+@@ -2263,7 +2263,7 @@ static void macb_init_hw(struct macb *bp)
+ 
+ 		/* Enable interrupts */
+ 		queue_writel(queue, IER,
+-			     MACB_RX_INT_FLAGS |
++			     bp->rx_intr_mask |
+ 			     MACB_TX_INT_FLAGS |
+ 			     MACB_BIT(HRESP));
+ 	}
+@@ -3911,6 +3911,7 @@ static const struct macb_config sama5d4_config = {
+ };
+ 
+ static const struct macb_config emac_config = {
++	.caps = MACB_CAPS_NEEDS_RSTONUBR,
+ 	.clk_init = at91ether_clk_init,
+ 	.init = at91ether_init,
+ };
+@@ -3932,7 +3933,8 @@ static const struct macb_config zynqmp_config = {
+ };
+ 
+ static const struct macb_config zynq_config = {
+-	.caps = MACB_CAPS_GIGABIT_MODE_AVAILABLE | MACB_CAPS_NO_GIGABIT_HALF,
++	.caps = MACB_CAPS_GIGABIT_MODE_AVAILABLE | MACB_CAPS_NO_GIGABIT_HALF |
++		MACB_CAPS_NEEDS_RSTONUBR,
+ 	.dma_burst_length = 16,
+ 	.clk_init = macb_clk_init,
+ 	.init = macb_init,
+@@ -4087,6 +4089,10 @@ static int macb_probe(struct platform_device *pdev)
+ 						macb_dma_desc_get_size(bp);
+ 	}
+ 
++	bp->rx_intr_mask = MACB_RX_INT_FLAGS;
++	if (bp->caps & MACB_CAPS_NEEDS_RSTONUBR)
++		bp->rx_intr_mask |= MACB_BIT(RXUBR);
++
+ 	mac = of_get_mac_address(np);
+ 	if (mac) {
+ 		ether_addr_copy(bp->dev->dev_addr, mac);
 -- 
 2.19.1
 
