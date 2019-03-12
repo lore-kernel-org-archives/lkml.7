@@ -2,169 +2,160 @@ Return-Path: <SRS0=J4ZE=RP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_MUTT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A1463C4360F
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 07:02:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C9C9FC43381
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 07:03:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7BF4B214AF
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 07:02:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 965CB214AF
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 07:03:19 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="bKAe8+DL"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727360AbfCLHCD (ORCPT
+        id S1727384AbfCLHDR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 12 Mar 2019 03:02:03 -0400
-Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:37296 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726923AbfCLHCC (ORCPT
+        Tue, 12 Mar 2019 03:03:17 -0400
+Received: from mail-ed1-f67.google.com ([209.85.208.67]:46294 "EHLO
+        mail-ed1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725832AbfCLHDR (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 12 Mar 2019 03:02:02 -0400
-Received: from pps.filterd (m0098393.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x2C6tu64095180
-        for <linux-kernel@vger.kernel.org>; Tue, 12 Mar 2019 03:02:01 -0400
-Received: from e06smtp05.uk.ibm.com (e06smtp05.uk.ibm.com [195.75.94.101])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 2r66jectd5-1
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
-        for <linux-kernel@vger.kernel.org>; Tue, 12 Mar 2019 03:02:01 -0400
-Received: from localhost
-        by e06smtp05.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
-        for <linux-kernel@vger.kernel.org> from <rppt@linux.ibm.com>;
-        Tue, 12 Mar 2019 07:01:58 -0000
-Received: from b06cxnps3075.portsmouth.uk.ibm.com (9.149.109.195)
-        by e06smtp05.uk.ibm.com (192.168.101.135) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
-        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
-        Tue, 12 Mar 2019 07:01:51 -0000
-Received: from d06av22.portsmouth.uk.ibm.com (d06av22.portsmouth.uk.ibm.com [9.149.105.58])
-        by b06cxnps3075.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x2C71oPe55771332
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Tue, 12 Mar 2019 07:01:50 GMT
-Received: from d06av22.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id C76D34C194;
-        Tue, 12 Mar 2019 07:01:50 +0000 (GMT)
-Received: from d06av22.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 237144C191;
-        Tue, 12 Mar 2019 07:01:49 +0000 (GMT)
-Received: from rapoport-lnx (unknown [9.148.8.84])
-        by d06av22.portsmouth.uk.ibm.com (Postfix) with ESMTPS;
-        Tue, 12 Mar 2019 07:01:49 +0000 (GMT)
-Date:   Tue, 12 Mar 2019 09:01:47 +0200
-From:   Mike Rapoport <rppt@linux.ibm.com>
-To:     Peter Xu <peterx@redhat.com>
-Cc:     linux-kernel@vger.kernel.org, Paolo Bonzini <pbonzini@redhat.com>,
-        Hugh Dickins <hughd@google.com>,
-        Luis Chamberlain <mcgrof@kernel.org>,
-        Maxime Coquelin <maxime.coquelin@redhat.com>,
-        kvm@vger.kernel.org, Jerome Glisse <jglisse@redhat.com>,
-        Pavel Emelyanov <xemul@virtuozzo.com>,
-        Johannes Weiner <hannes@cmpxchg.org>,
-        Martin Cracauer <cracauer@cons.org>,
-        Denis Plotnikov <dplotnikov@virtuozzo.com>, linux-mm@kvack.org,
-        Marty McFadden <mcfadden8@llnl.gov>,
-        Maya Gokhale <gokhale2@llnl.gov>,
-        Mike Kravetz <mike.kravetz@oracle.com>,
-        Andrea Arcangeli <aarcange@redhat.com>,
-        Mike Rapoport <rppt@linux.vnet.ibm.com>,
-        Kees Cook <keescook@chromium.org>,
-        Mel Gorman <mgorman@suse.de>,
-        "Kirill A . Shutemov" <kirill@shutemov.name>,
-        linux-fsdevel@vger.kernel.org,
-        "Dr . David Alan Gilbert" <dgilbert@redhat.com>,
-        Andrew Morton <akpm@linux-foundation.org>
-Subject: Re: [PATCH 0/3] userfaultfd: allow to forbid unprivileged users
-References: <20190311093701.15734-1-peterx@redhat.com>
+        Tue, 12 Mar 2019 03:03:17 -0400
+Received: by mail-ed1-f67.google.com with SMTP id n17so1291836edt.13
+        for <linux-kernel@vger.kernel.org>; Tue, 12 Mar 2019 00:03:15 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=VtNK87TX7bSkrrAwYjvU3nK8TW2M2MqixTSikcn74+E=;
+        b=bKAe8+DLs7u151ppsAAmzRyy+tSlM1yZBfV1z0/4SPBllZkO0lcXKE80nUEqzhD6XP
+         cU1efPVKrXUyAcO52wOmUkaT7xQN/dw/Ua7Vq69nse4CRHjWenL5yGXH5vvv9uqjzFUK
+         1IBaN944XiI2OVLh1d8iFekLY7t4dkdjZAwuY=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=VtNK87TX7bSkrrAwYjvU3nK8TW2M2MqixTSikcn74+E=;
+        b=UyJUD9ge6+BI18V8o17atz8foTpFjQeACfqsNE2RY6ZekKo8YRHBSihVn8/h+bsgWd
+         S22BiXYOnAjupcjbbLxcxXxD61eUOu/iy8onXgqvoy75qHOppQRp3ERdeox73HNwxClo
+         GST+e2LI9wgvpztI91RSR/S9iPCLU3VBYRdV+z4KbD5dCdiThUJp/auWfIA0BfP8gBH/
+         a/bU7a39f8E9DOOFX1s/HgpRuUnSA9d0HVrzBemoDhIweAIxOXLzfPY08FZFThX+zw3F
+         qbpml5THi/PfqOIxS70dPTOiraXTZ5UVef5vvpHat5v7W6lIi6VUGg4F/Khr//o4RWu6
+         A79Q==
+X-Gm-Message-State: APjAAAUWzP37iANt4JOzp2Hg0CXcUrW3CMmuIzfb6DtlTHYs2MH4/vFO
+        DF7H5azncGqeK2yLR/ib15T+etX//OJOov7TyTYTrg==
+X-Google-Smtp-Source: APXvYqxA/3/WNxFfOyKUuAK0dGNx0JQqL9fcpfLveVq/sS2P/u9AEp7HCaaK65V9IRzr+l+w/bPceRCHRrw/PitKUIE=
+X-Received: by 2002:a50:bb21:: with SMTP id y30mr2102599ede.156.1552374194791;
+ Tue, 12 Mar 2019 00:03:14 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190311093701.15734-1-peterx@redhat.com>
-User-Agent: Mutt/1.5.24 (2015-08-30)
-X-TM-AS-GCONF: 00
-x-cbid: 19031207-0020-0000-0000-000003218323
-X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
-x-cbparentid: 19031207-0021-0000-0000-00002173AB87
-Message-Id: <20190312070147.GC9497@rapoport-lnx>
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-03-12_05:,,
- signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
- malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
- clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
- mlxlogscore=739 adultscore=0 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.0.1-1810050000 definitions=main-1903120052
+References: <20190307094653.119425-1-pihsun@chromium.org> <20190307122313.GA30234@dhcp22.suse.cz>
+ <CANdKZ0ez+y1rCEGszqzJp4Oz94dMpTF6NCR11yGVZaJyM1ZD4A@mail.gmail.com> <20190307132353.GB30234@dhcp22.suse.cz>
+In-Reply-To: <20190307132353.GB30234@dhcp22.suse.cz>
+From:   Pi-Hsun Shih <pihsun@chromium.org>
+Date:   Tue, 12 Mar 2019 15:02:38 +0800
+Message-ID: <CANdKZ0fgLLPyY8CatjFHMFfwAwSq1T77=aGFc+-ZLEpVdm=hLQ@mail.gmail.com>
+Subject: Re: [PATCH] mm/swap: Avoid undefined behavior in __swapoffset
+To:     Michal Hocko <mhocko@kernel.org>
+Cc:     Andrew Morton <akpm@linux-foundation.org>,
+        Matthew Wilcox <willy@infradead.org>,
+        Johannes Weiner <hannes@cmpxchg.org>,
+        Vlastimil Babka <vbabka@suse.cz>,
+        Minchan Kim <minchan@kernel.org>,
+        Omar Sandoval <osandov@fb.com>,
+        Huang Ying <ying.huang@intel.com>, Tejun Heo <tj@kernel.org>,
+        Wei Yang <richard.weiyang@gmail.com>,
+        open list <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Peter,
+On Thu, Mar 7, 2019 at 9:23 PM Michal Hocko <mhocko@kernel.org> wrote:
+>
+> On Thu 07-03-19 20:47:52, Pi-Hsun Shih wrote:
+> > On Thu, Mar 7, 2019 at 8:23 PM Michal Hocko <mhocko@kernel.org> wrote:
+> > >
+> > > On Thu 07-03-19 17:46:50, Pi-Hsun Shih wrote:
+> > > > Use offsetof to calculate offset of a field to avoid UBSAN warning like:
+> > > >
+> > > > ===================================================================
+> > > > UBSAN: Undefined behaviour in mm/swapfile.c:3010:38
+> > > > member access within null pointer of type 'union swap_header'
+> > > > CPU: 6 PID: 1833 Comm: swapon Tainted: G S                4.19.23 #43
+> > > > Call trace:
+> > > >  dump_backtrace+0x0/0x194
+> > > >  show_stack+0x20/0x2c
+> > > >  __dump_stack+0x20/0x28
+> > > >  dump_stack+0x70/0x94
+> > > >  ubsan_epilogue+0x14/0x44
+> > > >  ubsan_type_mismatch_common+0xf4/0xfc
+> > > >  __ubsan_handle_type_mismatch_v1+0x34/0x54
+> > > >  __se_sys_swapon+0x654/0x1084
+> > > >  __arm64_sys_swapon+0x1c/0x24
+> > > >  el0_svc_common+0xa8/0x150
+> > > >  el0_svc_compat_handler+0x2c/0x38
+> > > >  el0_svc_compat+0x8/0x18
+> > > > ==================================================================
+> > >
+> > > Could you be more specific about what exactly is undefined here and
+> > > why offsetof is any better. AFAIR it uses the same construct unless a
+> > > compiler defines a built in.
+> > >
+> > > I do not object the change itself because it is cleaner to use the
+> > > existing helper but I am wondering why this is fixing ubsan. Is ubsan
+> > > defining the compiler variant and consider it safe?
+> > >
+> >
+> > The undefined behavior is from trying to accessing a member of NULL,
+> > even not using it value but only use the address.
+>
+> Hmm, we've been using this trick for ages and I do not remember any
+> compiler to complain as there is no real access. I am not sure what the
+> C standard has to tell about that but I presume reasonable compilers
+> will not abuse the UB here.
+>
 
-On Mon, Mar 11, 2019 at 05:36:58PM +0800, Peter Xu wrote:
-> Hi,
-> 
-> (The idea comes from Andrea, and following discussions with Mike and
->  other people)
-> 
-> This patchset introduces a new sysctl flag to allow the admin to
-> forbid users from using userfaultfd:
-> 
->   $ cat /proc/sys/vm/unprivileged_userfaultfd
->   [disabled] enabled kvm
-> 
->   - When set to "disabled", all unprivileged users are forbidden to
->     use userfaultfd syscalls.
-> 
->   - When set to "enabled", all users are allowed to use userfaultfd
->     syscalls.
-> 
->   - When set to "kvm", all unprivileged users are forbidden to use the
->     userfaultfd syscalls, except the user who has permission to open
->     /dev/kvm.
-> 
-> This new flag can add one more layer of security to reduce the attack
-> surface of the kernel by abusing userfaultfd.  Here we grant the
-> thread userfaultfd permission by checking against CAP_SYS_PTRACE
-> capability.  By default, the value is "disabled" which is the most
-> strict policy.  Distributions can have their own perferred value.
-> 
-> The "kvm" entry is a bit special here only to make sure that existing
-> users like QEMU/KVM won't break by this newly introduced flag.  What
-> we need to do is simply set the "unprivileged_userfaultfd" flag to
-> "kvm" here to automatically grant userfaultfd permission for processes
-> like QEMU/KVM without extra code to tweak these flags in the admin
-> code.
-> 
-> Patch 1:  The interface patch to introduce the flag
-> 
-> Patch 2:  The KVM related changes to detect opening of /dev/kvm
-> 
-> Patch 3:  Apply the flag to userfaultfd syscalls
- 
-I'd appreciate to see "Patch 4: documentation update" ;-)
-It'd be also great to update the man pages after this is merged.
+Some more testing shows that GCC optimize the
+((size_t)&((type*)0)->member) to a constant in the result binary, and
+never emit any UBSAN checks on the statement.
+Clang doesn't optimize it to a constant in -O0, optimize it to a
+constant in -O1 or above, and always emit the
+__ubsan_handle_type_mismatch check when "-fsanitize=undefined" is
+given.
+So this UBSAN warning only happens when kernel is compiled by clang, not GCC.
 
-Except for the comment to patch 1, feel free to add
+From what I've found, it's a UB from C standard view point
+(https://software.intel.com/en-us/blogs/2015/04/20/null-pointer-dereferencing-causes-undefined-behavior),
+but I agree that probably no reasonable compilers would abuse the UB
+here.
 
-Reviewed-by: Mike Rapoport <rppt@linux.ibm.com>
+> > Since the compiler variant for offsetof is used for recent compiler
+> > (GCC >= 4 has support for it), ubsan would not warn if the compiler
+> > variant is used. For old compiler, I guess ubsan would complain on all
+> > offsetof uses.
+>
+> Is this the case for all compilers? If yes then we might want to drop
+> the non-compiler part. Btw.
+> $ git grep "#define offsetof"
+> drivers/gpu/drm/radeon/mkregtable.c:#define offsetof(TYPE, MEMBER) ((size_t) &((TYPE *)0)->MEMBER)
+> drivers/infiniband/core/uverbs_cmd.c:#define offsetof_after(_struct, _member)                                       \
+> include/linux/stddef.h:#define offsetof(TYPE, MEMBER)   __compiler_offsetof(TYPE, MEMBER)
+> include/linux/stddef.h:#define offsetof(TYPE, MEMBER)   ((size_t)&((TYPE *)0)->MEMBER)
+> include/linux/stddef.h:#define offsetofend(TYPE, MEMBER) \
+> samples/bpf/cookie_uid_helper_example.c:#define offsetof(type, member)  __builtin_offsetof(type, member)
+> scripts/kconfig/list.h:#define offsetof(TYPE, MEMBER) ((size_t) &((TYPE *)0)->MEMBER)
+> tools/include/linux/kernel.h:#define offsetof(TYPE, MEMBER) ((size_t) &((TYPE *)0)->MEMBER)
+> tools/testing/selftests/bpf/test_select_reuseport_kern.c:#define offsetof(TYPE, MEMBER) ((size_t) &((TYPE *)0)->MEMBER)
+> tools/usb/usbip/libsrc/list.h:#define offsetof(TYPE, MEMBER) ((size_t) &((TYPE *)0)->MEMBER)
+>
+> so there is much more to take care of. Not to mention any open coded
+> variants.
 
-> All comments would be greatly welcomed.  Thanks,
-> 
-> Peter Xu (3):
->   userfaultfd/sysctl: introduce unprivileged_userfaultfd
->   kvm/mm: introduce MMF_USERFAULTFD_ALLOW flag
->   userfaultfd: apply unprivileged_userfaultfd check
-> 
->  fs/userfaultfd.c               | 121 +++++++++++++++++++++++++++++++++
->  include/linux/sched/coredump.h |   1 +
->  include/linux/userfaultfd_k.h  |   5 ++
->  init/Kconfig                   |  11 +++
->  kernel/sysctl.c                |  11 +++
->  virt/kvm/kvm_main.c            |   7 ++
->  6 files changed, 156 insertions(+)
-> 
-> -- 
-> 2.17.1
-> 
+Did a "git grep '(0|NULL)\)->'" and there are about 25 of them that
+can be changed to use offsetof.
 
--- 
-Sincerely yours,
-Mike.
-
+> --
+> Michal Hocko
+> SUSE Labs
