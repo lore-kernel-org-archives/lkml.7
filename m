@@ -2,51 +2,52 @@ Return-Path: <SRS0=J4ZE=RP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E995AC43381
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 17:31:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 597E0C10F00
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 17:31:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BBD0F206DF
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 17:31:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1E586206DF
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 17:31:38 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1552411893;
-	bh=1tdeYFIXL7uYmksV6OONGB8Q/eBH0Ifxu3NGtf7CBZs=;
+	s=default; t=1552411898;
+	bh=8bBL2U1KXs41Wq6S4Dojk0vSBy7GSmFggSTI8u3xKMM=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=AeUz0mDXsBMsBNz2MTYKFEjmvkON0tOgvrQ/eMwAnqT672Zj++lPlEYXpsovOMqtF
-	 SwckK4zi5yHsOqm355jM1CRdU1MFjbeG3inuJ4fqtRFDZAwvnTiQKL8LocMzRDUaz9
-	 fPssCooYb++0PVpAVu+6D70VfCHkekipySEaPF5w=
+	b=JhwqhlrnTNkkcywFiW0f/m/5+IyJmGHy+JsEbNIgbDNsaTfBc+1+Oi3N6s+dciK8P
+	 hui4k2rgISbwB3bJySe2QDEip+ym5czzn6QgN2U7Iz2dYAMchxWutzO7g1rP6dWh4I
+	 C1OkllWLV57hMUdH6pgz+uXVgIv3lh/o9K/vxTSs=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729404AbfCLRbc (ORCPT
+        id S1729463AbfCLRRK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 12 Mar 2019 13:31:32 -0400
-Received: from mail.kernel.org ([198.145.29.99]:60252 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729464AbfCLRRK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Tue, 12 Mar 2019 13:17:10 -0400
+Received: from mail.kernel.org ([198.145.29.99]:57574 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728979AbfCLRQE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 12 Mar 2019 13:16:04 -0400
 Received: from localhost (unknown [104.133.8.98])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id CFA6E217D8;
-        Tue, 12 Mar 2019 17:17:09 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 3D2372184C;
+        Tue, 12 Mar 2019 17:16:03 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1552411029;
-        bh=1tdeYFIXL7uYmksV6OONGB8Q/eBH0Ifxu3NGtf7CBZs=;
+        s=default; t=1552410963;
+        bh=8bBL2U1KXs41Wq6S4Dojk0vSBy7GSmFggSTI8u3xKMM=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=CpqdtZdtF4ZtXe790sWUQOWAS6V2hT06dD5nClB/DLQiYlpSbZFRPvrhAHg4/2pM0
-         /igobZIwICbX9FQH91c5/uEgF45yrPYayTHY0pZluAodtiIr5C6S3cvlb/30B0yLqT
-         0yrAHJr9AAUEzapVr42tamKIh9VWBs/0U4tGsL28=
+        b=iKb0Ujbe6NvIb+UFUxqtiW3wuR1M1G6qvsKnzgmoeOp1/i7YHCOkf2tYzbXsVsutV
+         oQ3586QchpH/7Vb0s/Lb0cohLmYS2xhsTsfHMg3X1Ij363Xfj7enzCeE1alQ326g2H
+         mgg0jF9aXWRj43hhrNcMhIN20McinHFTET4M5GpU=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        "Peter Zijlstra (Intel)" <peterz@infradead.org>,
-        Thomas Gleixner <tglx@linutronix.de>
-Subject: [PATCH 4.14 133/135] perf/x86/intel: Generalize dynamic constraint creation
-Date:   Tue, 12 Mar 2019 10:09:40 -0700
-Message-Id: <20190312170353.414674067@linuxfoundation.org>
+        stable@vger.kernel.org, Joerg Roedel <joro@8bytes.org>,
+        Jerry Snitselaar <jsnitsel@redhat.com>,
+        Joerg Roedel <jroedel@suse.de>, Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.14 049/135] iommu/amd: Unmap all mapped pages in error path of map_sg
+Date:   Tue, 12 Mar 2019 10:08:16 -0700
+Message-Id: <20190312170345.676114236@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190312170341.127810985@linuxfoundation.org>
 References: <20190312170341.127810985@linuxfoundation.org>
@@ -65,85 +66,40 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-From: "Peter Zijlstra (Intel)" <peterz@infradead.org>
+[ Upstream commit f1724c0883bb0ce93b8dcb94b53dcca3b75ac9a7 ]
 
-commit 11f8b2d65ca9029591c8df26bb6bd063c312b7fe upstream
+In the error path of map_sg there is an incorrect if condition
+for breaking out of the loop that searches the scatterlist
+for mapped pages to unmap. Instead of breaking out of the
+loop once all the pages that were mapped have been unmapped,
+it will break out of the loop after it has unmapped 1 page.
+Fix the condition, so it breaks out of the loop only after
+all the mapped pages have been unmapped.
 
-Such that we can re-use it.
-
-Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
-Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Fixes: 80187fd39dcb ("iommu/amd: Optimize map_sg and unmap_sg")
+Cc: Joerg Roedel <joro@8bytes.org>
+Signed-off-by: Jerry Snitselaar <jsnitsel@redhat.com>
+Signed-off-by: Joerg Roedel <jroedel@suse.de>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/x86/events/intel/core.c |   51 +++++++++++++++++++++++++------------------
- 1 file changed, 30 insertions(+), 21 deletions(-)
+ drivers/iommu/amd_iommu.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
---- a/arch/x86/events/intel/core.c
-+++ b/arch/x86/events/intel/core.c
-@@ -2640,6 +2640,35 @@ intel_stop_scheduling(struct cpu_hw_even
- }
+diff --git a/drivers/iommu/amd_iommu.c b/drivers/iommu/amd_iommu.c
+index ded13a6afa66..0c0acf6fda87 100644
+--- a/drivers/iommu/amd_iommu.c
++++ b/drivers/iommu/amd_iommu.c
+@@ -2560,7 +2560,7 @@ static int map_sg(struct device *dev, struct scatterlist *sglist,
+ 			bus_addr  = address + s->dma_address + (j << PAGE_SHIFT);
+ 			iommu_unmap_page(domain, bus_addr, PAGE_SIZE);
  
- static struct event_constraint *
-+dyn_constraint(struct cpu_hw_events *cpuc, struct event_constraint *c, int idx)
-+{
-+	WARN_ON_ONCE(!cpuc->constraint_list);
-+
-+	if (!(c->flags & PERF_X86_EVENT_DYNAMIC)) {
-+		struct event_constraint *cx;
-+
-+		/*
-+		 * grab pre-allocated constraint entry
-+		 */
-+		cx = &cpuc->constraint_list[idx];
-+
-+		/*
-+		 * initialize dynamic constraint
-+		 * with static constraint
-+		 */
-+		*cx = *c;
-+
-+		/*
-+		 * mark constraint as dynamic
-+		 */
-+		cx->flags |= PERF_X86_EVENT_DYNAMIC;
-+		c = cx;
-+	}
-+
-+	return c;
-+}
-+
-+static struct event_constraint *
- intel_get_excl_constraints(struct cpu_hw_events *cpuc, struct perf_event *event,
- 			   int idx, struct event_constraint *c)
- {
-@@ -2669,27 +2698,7 @@ intel_get_excl_constraints(struct cpu_hw
- 	 * only needed when constraint has not yet
- 	 * been cloned (marked dynamic)
- 	 */
--	if (!(c->flags & PERF_X86_EVENT_DYNAMIC)) {
--		struct event_constraint *cx;
--
--		/*
--		 * grab pre-allocated constraint entry
--		 */
--		cx = &cpuc->constraint_list[idx];
--
--		/*
--		 * initialize dynamic constraint
--		 * with static constraint
--		 */
--		*cx = *c;
--
--		/*
--		 * mark constraint as dynamic, so we
--		 * can free it later on
--		 */
--		cx->flags |= PERF_X86_EVENT_DYNAMIC;
--		c = cx;
--	}
-+	c = dyn_constraint(cpuc, c, idx);
- 
- 	/*
- 	 * From here on, the constraint is dynamic.
+-			if (--mapped_pages)
++			if (--mapped_pages == 0)
+ 				goto out_free_iova;
+ 		}
+ 	}
+-- 
+2.19.1
+
 
 
