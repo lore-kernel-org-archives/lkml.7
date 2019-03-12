@@ -7,62 +7,62 @@ X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7BED6C43381
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 16:34:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C10A5C43381
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 16:34:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 490F1206DF
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 16:34:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 825792083D
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 16:34:21 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=ingics-com.20150623.gappssmtp.com header.i=@ingics-com.20150623.gappssmtp.com header.b="fO/4c98e"
+	dkim=pass (2048-bit key) header.d=ingics-com.20150623.gappssmtp.com header.i=@ingics-com.20150623.gappssmtp.com header.b="RFUocR9v"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726836AbfCLQeQ (ORCPT
+        id S1726885AbfCLQeU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 12 Mar 2019 12:34:16 -0400
-Received: from mail-pf1-f195.google.com ([209.85.210.195]:35037 "EHLO
-        mail-pf1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725894AbfCLQeO (ORCPT
+        Tue, 12 Mar 2019 12:34:20 -0400
+Received: from mail-pg1-f193.google.com ([209.85.215.193]:38986 "EHLO
+        mail-pg1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725894AbfCLQeR (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 12 Mar 2019 12:34:14 -0400
-Received: by mail-pf1-f195.google.com with SMTP id j5so2220835pfa.2
-        for <linux-kernel@vger.kernel.org>; Tue, 12 Mar 2019 09:34:14 -0700 (PDT)
+        Tue, 12 Mar 2019 12:34:17 -0400
+Received: by mail-pg1-f193.google.com with SMTP id h8so2224532pgp.6
+        for <linux-kernel@vger.kernel.org>; Tue, 12 Mar 2019 09:34:17 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=ingics-com.20150623.gappssmtp.com; s=20150623;
         h=from:to:cc:subject:date:message-id:in-reply-to:references;
-        bh=OHhJGOJIp4ugcDk8oMNZ0HOX5my0KraGmxIfjYsnEP8=;
-        b=fO/4c98e5oE8erxRI0xIAw1G96Rw5qTj/smgPLIVYtEvcFt8TFgti45+CPmkJh/1OK
-         u3ummGvFm1Kof8TnZG5OnMZ8AJWFk151IEPlJeuhrs4Q9Y8S1x5fJypdrnFEi0Ng+2Zw
-         Vq/hdYxEJtqk4VWdpLDLm8GAq/r9UvRTJhG4C7oRcStIGkMhI9CNfBE7qbJQW3q+q71I
-         qySjMIyd0LfWE7D8qt06pSBjp7TIggSb4tj72UNobVmV+s6M5jXEtjJ0Dyt8AiO8viLm
-         VbqRrNxEsobc8IHtaYVVuNRrhqvNIunxqY+7Y9KgoVrUnOLkqVJdvtRQ36jIHiHukXBI
-         PKHw==
+        bh=f/zsEZeqMZdnHG0gnDPSHsocMzMCL9dk/SiJdqz46P0=;
+        b=RFUocR9v8b7o3J64hVebo1qnGKNJEfpeU/KwhCpkewnpQwfwp2o2NmGrBXxxN0lQXN
+         bYaMn7c+gVwKS9+8GSHyEov8dkG9fi1rmPbc9e6pRFrrSdzYgSdASkvxwH/1wFIiAfI/
+         Zh4p299WjZmEqWFoU1tPJjxSleG2X54ItZCCHvt06NQFkc1x1Tr8wcGFHR001Znzd8GL
+         jw+hCFKWOrUcwfM+H0PWOJZgiGylMjzqF5ewrCIkA7ruqlC2ny/VSgDBVIrdrQdU2Y61
+         mHEbp4YjwoophLQzasS1Gh5FlLNWE2srns1FStCVzIs79tWQLhdjKCQxB+AW/hzMpUix
+         rJQQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references;
-        bh=OHhJGOJIp4ugcDk8oMNZ0HOX5my0KraGmxIfjYsnEP8=;
-        b=EPM0raz89cFmq4mlA/mFtExeO/FKBBY8enGaJCe+SvLqbM0CCF50HMyXvzj3Lv5ULn
-         9esma+HPIyYFU59XF+EsQFfar9YSMU1J1kQaI3tBujfj9iSmEUbChqayBQVqhedfiwcy
-         EOAyaWQcS955frgoA8JUjwzLV3uOHk8kVvARI6CHmNWS2ab+KJUMtdzTh4I3lYMRDf4f
-         HbQQcJVwuA1L85G132RZiMCMbo/4A+crMH+CzSbAYKsOW9NJHVppeqjAxnJxp5YW7dQj
-         7avek8k9uOVjO0iNVh9wLeta+BBH1yqu32Gac65qk2ZyKvDG01QO4CY1RQPp7x+nt33z
-         dbQg==
-X-Gm-Message-State: APjAAAWqiiaOAs65XBIzWr8PphVf9G6VS5yghim3PR4QNVyO4KfPhGKt
-        1sBM/SeA1XexSn1nh94R2ZvN/Q==
-X-Google-Smtp-Source: APXvYqxFdhrZEy7fFyoH9h704jccXB+KQAbKs+403dwYfVqavPGSAqH4Zz+FUIrA2H+ApqnwxYkHSg==
-X-Received: by 2002:a65:5108:: with SMTP id f8mr851500pgq.441.1552408453940;
-        Tue, 12 Mar 2019 09:34:13 -0700 (PDT)
+        bh=f/zsEZeqMZdnHG0gnDPSHsocMzMCL9dk/SiJdqz46P0=;
+        b=bBLqRKqG6RSleprg5XrfHkjopnfjj3witwokWRGzaEOS8bkd3DIJyt7Kmp/DDSYfTT
+         9OPeLKjAb6EZtmp+HRlX3HOoiMCAQqZAL19JDE43iLQ9dlxn+RCQBY6HbkoaQ5uieORE
+         qqa3ScKf3R3uFBLovPjPMm7jOdNkVxjaD2+7cjHbPtu+ATC/4OBJo2bJZ5mSyU22Byt/
+         3wsn4TEK7zbGf9MuTcBopnpbIpPOFys0slAeFvtm4aw9lRzwXw+FUb9fK1bwzm+TvdPm
+         4wdWySvjHCkbhA8/OPRdyLXJsEAe1xKXfVHbkS4aVaoKZ6HQTieionBOdoiN6mGzSO2u
+         tcyg==
+X-Gm-Message-State: APjAAAXCkFx4/JUZCf4cml3GYJxY+Y/JCnhf9+FQhgnWPAEEWIzF2F4Q
+        LV9IqgT5lDtHhR60bqq59sJ7Aw==
+X-Google-Smtp-Source: APXvYqyrAFyBSBgPpU/SZs6SXbkXTU6cKHm04CqLFSs5phBUUOKhwOuDsPDewjcbFis0pYQCqeIIIQ==
+X-Received: by 2002:a17:902:a24:: with SMTP id 33mr28059314plo.275.1552408456646;
+        Tue, 12 Mar 2019 09:34:16 -0700 (PDT)
 Received: from localhost.localdomain (220-133-186-239.HINET-IP.hinet.net. [220.133.186.239])
-        by smtp.gmail.com with ESMTPSA id s79sm17447467pfa.61.2019.03.12.09.34.11
+        by smtp.gmail.com with ESMTPSA id s79sm17447467pfa.61.2019.03.12.09.34.14
         (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Tue, 12 Mar 2019 09:34:13 -0700 (PDT)
+        Tue, 12 Mar 2019 09:34:15 -0700 (PDT)
 From:   Axel Lin <axel.lin@ingics.com>
 To:     Mark Brown <broonie@kernel.org>
 Cc:     Charles Keepax <ckeepax@opensource.cirrus.com>,
         patches@opensource.cirrus.com, Liam Girdwood <lgirdwood@gmail.com>,
         linux-kernel@vger.kernel.org, Axel Lin <axel.lin@ingics.com>
-Subject: [PATCH 2/4] regulator: wm8350: Select maximum current in specific range
-Date:   Wed, 13 Mar 2019 00:33:55 +0800
-Message-Id: <20190312163357.27785-2-axel.lin@ingics.com>
+Subject: [PATCH 3/4] regulator: wm831x-isink: Convert to use regulator_set/get_current_limit_regmap
+Date:   Wed, 13 Mar 2019 00:33:56 +0800
+Message-Id: <20190312163357.27785-3-axel.lin@ingics.com>
 X-Mailer: git-send-email 2.17.1
 In-Reply-To: <20190312163357.27785-1-axel.lin@ingics.com>
 References: <20190312163357.27785-1-axel.lin@ingics.com>
@@ -71,26 +71,111 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-.set_current_limit callback should select the current closest to max_uA.
+Use regulator_set/get_current_limit_regmap helpers to save some code.
 
 Signed-off-by: Axel Lin <axel.lin@ingics.com>
 ---
- drivers/regulator/wm8350-regulator.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/mfd/wm831x-core.c            |  2 +-
+ drivers/regulator/wm831x-isink.c     | 45 +++++-----------------------
+ include/linux/mfd/wm831x/regulator.h |  2 +-
+ 3 files changed, 9 insertions(+), 40 deletions(-)
 
-diff --git a/drivers/regulator/wm8350-regulator.c b/drivers/regulator/wm8350-regulator.c
-index a1c7dfee5c37..d1758a2bc769 100644
---- a/drivers/regulator/wm8350-regulator.c
-+++ b/drivers/regulator/wm8350-regulator.c
-@@ -99,7 +99,7 @@ static int get_isink_val(int min_uA, int max_uA, u16 *setting)
- {
- 	int i;
+diff --git a/drivers/mfd/wm831x-core.c b/drivers/mfd/wm831x-core.c
+index 25fbbaf39cb9..21bae64e0451 100644
+--- a/drivers/mfd/wm831x-core.c
++++ b/drivers/mfd/wm831x-core.c
+@@ -34,7 +34,7 @@
+ /* Current settings - values are 2*2^(reg_val/4) microamps.  These are
+  * exported since they are used by multiple drivers.
+  */
+-int wm831x_isinkv_values[WM831X_ISINK_MAX_ISEL + 1] = {
++const unsigned int wm831x_isinkv_values[WM831X_ISINK_MAX_ISEL + 1] = {
+ 	2,
+ 	2,
+ 	3,
+diff --git a/drivers/regulator/wm831x-isink.c b/drivers/regulator/wm831x-isink.c
+index 676a4701c986..c4bc3d3361aa 100644
+--- a/drivers/regulator/wm831x-isink.c
++++ b/drivers/regulator/wm831x-isink.c
+@@ -92,48 +92,12 @@ static int wm831x_isink_is_enabled(struct regulator_dev *rdev)
+ 		return 0;
+ }
  
--	for (i = 0; i < ARRAY_SIZE(isink_cur); i++) {
-+	for (i = ARRAY_SIZE(isink_cur) - 1; i >= 0; i--) {
- 		if (min_uA <= isink_cur[i] && max_uA >= isink_cur[i]) {
- 			*setting = i;
- 			return 0;
+-static int wm831x_isink_set_current(struct regulator_dev *rdev,
+-				    int min_uA, int max_uA)
+-{
+-	struct wm831x_isink *isink = rdev_get_drvdata(rdev);
+-	struct wm831x *wm831x = isink->wm831x;
+-	int ret, i;
+-
+-	for (i = ARRAY_SIZE(wm831x_isinkv_values) - 1; i >= 0; i--) {
+-		int val = wm831x_isinkv_values[i];
+-		if (min_uA <= val && val <= max_uA) {
+-			ret = wm831x_set_bits(wm831x, isink->reg,
+-					      WM831X_CS1_ISEL_MASK, i);
+-			return ret;
+-		}
+-	}
+-
+-	return -EINVAL;
+-}
+-
+-static int wm831x_isink_get_current(struct regulator_dev *rdev)
+-{
+-	struct wm831x_isink *isink = rdev_get_drvdata(rdev);
+-	struct wm831x *wm831x = isink->wm831x;
+-	int ret;
+-
+-	ret = wm831x_reg_read(wm831x, isink->reg);
+-	if (ret < 0)
+-		return ret;
+-
+-	ret &= WM831X_CS1_ISEL_MASK;
+-	if (ret > WM831X_ISINK_MAX_ISEL)
+-		ret = WM831X_ISINK_MAX_ISEL;
+-
+-	return wm831x_isinkv_values[ret];
+-}
+-
+ static const struct regulator_ops wm831x_isink_ops = {
+ 	.is_enabled = wm831x_isink_is_enabled,
+ 	.enable = wm831x_isink_enable,
+ 	.disable = wm831x_isink_disable,
+-	.set_current_limit = wm831x_isink_set_current,
+-	.get_current_limit = wm831x_isink_get_current,
++	.set_current_limit = regulator_set_current_limit_regmap,
++	.get_current_limit = regulator_get_current_limit_regmap,
+ };
+ 
+ static irqreturn_t wm831x_isink_irq(int irq, void *data)
+@@ -187,10 +151,15 @@ static int wm831x_isink_probe(struct platform_device *pdev)
+ 	isink->desc.ops = &wm831x_isink_ops;
+ 	isink->desc.type = REGULATOR_CURRENT;
+ 	isink->desc.owner = THIS_MODULE;
++	isink->desc.curr_table = wm831x_isinkv_values,
++	isink->desc.n_current_limits = ARRAY_SIZE(wm831x_isinkv_values),
++	isink->desc.csel_reg = isink->reg,
++	isink->desc.csel_mask = WM831X_CS1_ISEL_MASK,
+ 
+ 	config.dev = pdev->dev.parent;
+ 	config.init_data = pdata->isink[id];
+ 	config.driver_data = isink;
++	config.regmap = wm831x->regmap;
+ 
+ 	isink->regulator = devm_regulator_register(&pdev->dev, &isink->desc,
+ 						   &config);
+diff --git a/include/linux/mfd/wm831x/regulator.h b/include/linux/mfd/wm831x/regulator.h
+index 955d30fc6a27..30c587a0624c 100644
+--- a/include/linux/mfd/wm831x/regulator.h
++++ b/include/linux/mfd/wm831x/regulator.h
+@@ -1213,6 +1213,6 @@
+ #define WM831X_LDO1_OK_WIDTH                         1  /* LDO1_OK */
+ 
+ #define WM831X_ISINK_MAX_ISEL 55
+-extern int wm831x_isinkv_values[WM831X_ISINK_MAX_ISEL + 1];
++extern const unsigned int wm831x_isinkv_values[WM831X_ISINK_MAX_ISEL + 1];
+ 
+ #endif
 -- 
 2.17.1
 
