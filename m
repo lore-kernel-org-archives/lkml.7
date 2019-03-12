@@ -7,49 +7,48 @@ X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A1102C4360F
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 18:05:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6C8C8C4360F
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 18:05:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6A7C5205C9
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 18:05:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3DF6C2087C
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 18:05:32 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1552413930;
-	bh=1tqwP6ZmT9pyoF5lTfbMdEg+7hy6VWcWe59fJ+ueb2c=;
+	s=default; t=1552413932;
+	bh=3ITe1xz1es1DfVmVWqEm6M1rYGeoHPyYOxkpAhXN62A=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=wO9Bm1zKO+1yb2TOj7P84V5re/rnAi8v/KgXW2Up+vwt0lfgTjE4T5jpEVrC6rr9C
-	 Dl0QaOD6BJ+KtU5RKyfqsYumaBbZse+al/xFi4sfrcTmVm9fPbG5LnWIDUhhRuB/Gy
-	 CEv4miDJjy2CedoSOkc5RzAEaeQoTsbnZqNSeO3U=
+	b=16oNPvCT48cVIp7nh6ehcucTc4HRvfp2TX496Rq3KXcQSGJ0ai9xHbbTdv1ynBlpl
+	 l/V6U+UpKK1yul7yta7XL6Hz8hA1lqE3xrUDChWARS4JTQfEthB+jUMx6Xjluk16ft
+	 fmo0I6DIStd2sBqTTi+4hiWXoTn6j/gZpqOOM0cg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727566AbfCLRMh (ORCPT
+        id S1728779AbfCLSFa (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 12 Mar 2019 13:12:37 -0400
-Received: from mail.kernel.org ([198.145.29.99]:47100 "EHLO mail.kernel.org"
+        Tue, 12 Mar 2019 14:05:30 -0400
+Received: from mail.kernel.org ([198.145.29.99]:48222 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727356AbfCLRMQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 12 Mar 2019 13:12:16 -0400
+        id S1726656AbfCLRMi (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 12 Mar 2019 13:12:38 -0400
 Received: from localhost (unknown [104.133.8.98])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 5DF02206DF;
-        Tue, 12 Mar 2019 17:12:15 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 09CAE2183E;
+        Tue, 12 Mar 2019 17:12:38 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1552410735;
-        bh=1tqwP6ZmT9pyoF5lTfbMdEg+7hy6VWcWe59fJ+ueb2c=;
+        s=default; t=1552410758;
+        bh=3ITe1xz1es1DfVmVWqEm6M1rYGeoHPyYOxkpAhXN62A=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Xm1RdGLkSuLY3YL0m/qyHaWETd7yu4YpcK2RiMzSUG3+tjZRAd/MHxazb79z5UVM4
-         6iJZr1nOxcK++KXgZmTXwxiTq6sadhMmKC6xnH+Un41Psjfbbuoq/ADC5QKhZsDOVL
-         q0UfqHVfDVM385HpE5x5JYZNmH9bnruZdgcSOtCI=
+        b=m/8nHwAhGh1OQwbcJPxTPxdt15yfFovpPGU24C4t8+4vtrGcCAMfFTFWkionIjuXW
+         qMB7ahHJvl7eY/05zrazJ83AK0lJ7hgi9XO6WseFFqNjM3D2I90U9/Zfx+iebat9Sn
+         EpJWPXRk7uXSOAAFpxJP43mkfO6cLLsGFDbkLg3I=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Tom Lendacky <thomas.lendacky@amd.com>,
-        Borislav Petkov <bp@suse.de>, "H. Peter Anvin" <hpa@zytor.com>,
-        Ingo Molnar <mingo@redhat.com>,
-        Thomas Gleixner <tglx@linutronix.de>, x86-ml <x86@kernel.org>,
+        stable@vger.kernel.org, "H. Nikolaus Schaller" <hns@goldelico.com>,
+        Rob Herring <robh@kernel.org>,
+        Tony Lindgren <tony@atomide.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.20 056/171] x86/microcode/amd: Dont falsely trick the late loading mechanism
-Date:   Tue, 12 Mar 2019 10:07:16 -0700
-Message-Id: <20190312170352.966350589@linuxfoundation.org>
+Subject: [PATCH 4.20 089/171] ARM: dts: omap3-gta04: Fix graph_port warning
+Date:   Tue, 12 Mar 2019 10:07:49 -0700
+Message-Id: <20190312170355.644030365@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190312170347.868927101@linuxfoundation.org>
 References: <20190312170347.868927101@linuxfoundation.org>
@@ -68,64 +67,39 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-[ Upstream commit 912139cfbfa6a2bc1da052314d2c29338dae1f6a ]
+[ Upstream commit 5b90df44fd9b415d8c5d11b92746212a63d3c47f ]
 
-The load_microcode_amd() function searches for microcode patches and
-attempts to apply a microcode patch if it is of different level than the
-currently installed level.
+We're currently getting a warning with make dtbs:
 
-While the processor won't actually load a level that is less than
-what is already installed, the logic wrongly returns UCODE_NEW thus
-signaling to its caller reload_store() that a late loading should be
-attempted.
+arch/arm/boot/dts/omap3-gta04.dtsi:720.7-727.4: Warning (graph_port):
+/ocp@68000000/dss@48050000/encoder@48050c0 0/port: graph node unit
+address error, expected "0"
 
-If the file-system contains an older microcode revision than what is
-currently running, such a late microcode reload can result in these
-misleading messages:
-
-  x86/CPU: CPU features have changed after loading microcode, but might not take effect.
-  x86/CPU: Please consider either early loading through initrd/built-in or a potential BIOS update.
-
-These messages were issued on a system where SME/SEV are not
-enabled by the BIOS (MSR C001_0010[23] = 0b) because during boot,
-early_detect_mem_encrypt() is called and cleared the SME and SEV
-features in this case.
-
-However, after the wrong late load attempt, get_cpu_cap() is called and
-reloads the SME and SEV feature bits, resulting in the messages.
-
-Update the microcode level check to not attempt microcode loading if the
-current level is greater than(!) and not only equal to the current patch
-level.
-
- [ bp: massage commit message. ]
-
-Fixes: 2613f36ed965 ("x86/microcode: Attempt late loading only when new microcode is present")
-Signed-off-by: Tom Lendacky <thomas.lendacky@amd.com>
-Signed-off-by: Borislav Petkov <bp@suse.de>
-Cc: "H. Peter Anvin" <hpa@zytor.com>
-Cc: Ingo Molnar <mingo@redhat.com>
-Cc: Thomas Gleixner <tglx@linutronix.de>
-Cc: x86-ml <x86@kernel.org>
-Link: https://lkml.kernel.org/r/154894518427.9406.8246222496874202773.stgit@tlendack-t1.amdoffice.net
+Tested-by: H. Nikolaus Schaller <hns@goldelico.com>
+Acked-by: Rob Herring <robh@kernel.org>
+Signed-off-by: H. Nikolaus Schaller <hns@goldelico.com>
+Signed-off-by: Tony Lindgren <tony@atomide.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/x86/kernel/cpu/microcode/amd.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ arch/arm/boot/dts/omap3-gta04.dtsi | 4 ----
+ 1 file changed, 4 deletions(-)
 
-diff --git a/arch/x86/kernel/cpu/microcode/amd.c b/arch/x86/kernel/cpu/microcode/amd.c
-index 07b5fc00b188..a4e7e100ed26 100644
---- a/arch/x86/kernel/cpu/microcode/amd.c
-+++ b/arch/x86/kernel/cpu/microcode/amd.c
-@@ -707,7 +707,7 @@ load_microcode_amd(bool save, u8 family, const u8 *data, size_t size)
- 	if (!p) {
- 		return ret;
- 	} else {
--		if (boot_cpu_data.microcode == p->patch_id)
-+		if (boot_cpu_data.microcode >= p->patch_id)
- 			return ret;
+diff --git a/arch/arm/boot/dts/omap3-gta04.dtsi b/arch/arm/boot/dts/omap3-gta04.dtsi
+index d5fe55392230..68e675258906 100644
+--- a/arch/arm/boot/dts/omap3-gta04.dtsi
++++ b/arch/arm/boot/dts/omap3-gta04.dtsi
+@@ -714,11 +714,7 @@
  
- 		ret = UCODE_NEW;
+ 	vdda-supply = <&vdac>;
+ 
+-	#address-cells = <1>;
+-	#size-cells = <0>;
+-
+ 	port {
+-		reg = <0>;
+ 		venc_out: endpoint {
+ 			remote-endpoint = <&opa_in>;
+ 			ti,channels = <1>;
 -- 
 2.19.1
 
