@@ -7,49 +7,49 @@ X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5B2FFC43381
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 17:56:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9D223C43381
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 17:56:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2A6442147C
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 17:56:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5395D2087C
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 17:56:49 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1552413404;
-	bh=drPhLWY8XODTa1u9ahcQ1ouw7yyabgEGkJ8EXc9enns=;
+	s=default; t=1552413409;
+	bh=mtQIKaLnU+KIxKh3ea1kSdS5zkmucnpfTilaEy9VMSE=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=uoapYvf4D5NkypSxi9UFYpfcQY1vkeYvnqAtRrTtmL5A7t+4Q+7xFKrtUTggkDZKu
-	 E1e7poTVZT7SwbsTq3YsLsTiCWjHkzV/Bq2b/yqnz371kcjEb7dbE4dv87OOuTq5LY
-	 vMwoCA9i+Uxb0DBOAH6iWthu6UsoHsANHF22iMWk=
+	b=NXVZEQdRXNSVKURtfskrk831m8wWvqrVfi5brEQ95iQ7U2Q/AvCY/ccPI9hiVjXZb
+	 6QubBl7hUFI9CafJLJHKw+psKE45NOAFvboOiTAyvkz6JboeO+e9wQTnMFyUgq52Sn
+	 LOK7x0U/ZjDQ9A0WveTB7FK9dVSG+kfUsK2psUfI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727255AbfCLRNz (ORCPT
+        id S1728931AbfCLR4s (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 12 Mar 2019 13:13:55 -0400
-Received: from mail.kernel.org ([198.145.29.99]:49744 "EHLO mail.kernel.org"
+        Tue, 12 Mar 2019 13:56:48 -0400
+Received: from mail.kernel.org ([198.145.29.99]:51660 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727887AbfCLRNU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 12 Mar 2019 13:13:20 -0400
+        id S1728132AbfCLRNx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 12 Mar 2019 13:13:53 -0400
 Received: from localhost (unknown [104.133.8.98])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B338C2173C;
-        Tue, 12 Mar 2019 17:13:19 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id E163B2171F;
+        Tue, 12 Mar 2019 17:13:52 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1552410799;
-        bh=drPhLWY8XODTa1u9ahcQ1ouw7yyabgEGkJ8EXc9enns=;
+        s=default; t=1552410833;
+        bh=mtQIKaLnU+KIxKh3ea1kSdS5zkmucnpfTilaEy9VMSE=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=smbBQP1oQlqvsvL9HzLuit2/2StCpodBof41YSRN0U4EuiGvb5HmBI7Jr1QCAKMud
-         okEniJQQnTcls5EzH9W9mhQWNN5SybqgbLUYb7Uue1VI6MG2JZL4IOapCONoj0zDd0
-         FR9T/euDGwU89HcNW67VbJhWQQwzz2aTcHmEkYG8=
+        b=W7uFgqSpFLmaaeEytN0dMuCvdxSBE0+b9dQooT+exfp+eGT4L1IFy87h70yxcXNMT
+         dqfVMMPvpzAcs4qs2ly08/7JgUfHmwY24MIhVtyaaNkPwjGBfWbBFi/Djc4vJyx6OY
+         B4gnwFzI+JPAVHA7ubjbPHrmMEbwTMaHx9rYDEnQ=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Keith Busch <keith.busch@intel.com>,
-        Christoph Hellwig <hch@lst.de>, Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.20 146/171] nvme-pci: add missing unlock for reset error
-Date:   Tue, 12 Mar 2019 10:08:46 -0700
-Message-Id: <20190312170400.169268829@linuxfoundation.org>
+        stable@vger.kernel.org, Max Filippov <jcmvbkbc@gmail.com>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.19 021/149] xtensa: SMP: mark each possible CPU as present
+Date:   Tue, 12 Mar 2019 10:07:19 -0700
+Message-Id: <20190312170351.423368967@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
-In-Reply-To: <20190312170347.868927101@linuxfoundation.org>
-References: <20190312170347.868927101@linuxfoundation.org>
+In-Reply-To: <20190312170349.421581206@linuxfoundation.org>
+References: <20190312170349.421581206@linuxfoundation.org>
 User-Agent: quilt/0.65
 X-stable: review
 X-Patchwork-Hint: ignore
@@ -61,56 +61,34 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-4.20-stable review patch.  If anyone has any objections, please let me know.
+4.19-stable review patch.  If anyone has any objections, please let me know.
 
 ------------------
 
-[ Upstream commit 4726bcf30fad37cc555cd9dcd6c73f2b2668c879 ]
+[ Upstream commit 8b1c42cdd7181200dc1fff39dcb6ac1a3fac2c25 ]
 
-The reset work holds a mutex to prevent races with removal modifying the
-same resources, but was unlocking only on success. Unlock on failure
-too.
+Otherwise it is impossible to enable CPUs after booting with 'maxcpus'
+parameter.
 
-Fixes: 5c959d73dba64 ("nvme-pci: fix rapid add remove sequence")
-Signed-off-by: Keith Busch <keith.busch@intel.com>
-Signed-off-by: Christoph Hellwig <hch@lst.de>
+Signed-off-by: Max Filippov <jcmvbkbc@gmail.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/nvme/host/pci.c | 8 +++++---
- 1 file changed, 5 insertions(+), 3 deletions(-)
+ arch/xtensa/kernel/smp.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/nvme/host/pci.c b/drivers/nvme/host/pci.c
-index 439b9f4eb246..5c58e0ffa3ac 100644
---- a/drivers/nvme/host/pci.c
-+++ b/drivers/nvme/host/pci.c
-@@ -2283,15 +2283,15 @@ static void nvme_reset_work(struct work_struct *work)
- 	mutex_lock(&dev->shutdown_lock);
- 	result = nvme_pci_enable(dev);
- 	if (result)
--		goto out;
-+		goto out_unlock;
+diff --git a/arch/xtensa/kernel/smp.c b/arch/xtensa/kernel/smp.c
+index c9fc2c4f71b3..80be6449c497 100644
+--- a/arch/xtensa/kernel/smp.c
++++ b/arch/xtensa/kernel/smp.c
+@@ -83,7 +83,7 @@ void __init smp_prepare_cpus(unsigned int max_cpus)
+ {
+ 	unsigned i;
  
- 	result = nvme_pci_configure_admin_queue(dev);
- 	if (result)
--		goto out;
-+		goto out_unlock;
- 
- 	result = nvme_alloc_admin_tags(dev);
- 	if (result)
--		goto out;
-+		goto out_unlock;
- 
- 	/*
- 	 * Limit the max command size to prevent iod->sg allocations going
-@@ -2374,6 +2374,8 @@ static void nvme_reset_work(struct work_struct *work)
- 	nvme_start_ctrl(&dev->ctrl);
- 	return;
- 
-+ out_unlock:
-+	mutex_unlock(&dev->shutdown_lock);
-  out:
- 	nvme_remove_dead_ctrl(dev, result);
+-	for (i = 0; i < max_cpus; ++i)
++	for_each_possible_cpu(i)
+ 		set_cpu_present(i, true);
  }
+ 
 -- 
 2.19.1
 
