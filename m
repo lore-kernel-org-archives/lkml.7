@@ -4,50 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0ACC8C43381
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 17:18:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6E55CC43381
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 17:18:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CDF60217D4
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 17:18:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 422E5217D4
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 17:18:06 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1552411084;
-	bh=/i8lCKvC/QskHrD9Sn5I6ypKmA67exwl2AD4/s7XgW0=;
+	s=default; t=1552411086;
+	bh=Z7oIPbyBjc+hoDSFyh78VptdveT0U9yssFgt7ZcNpGo=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=E425kQHw6xh3kEpww4/2qYL2/sMA2phg7hG91JRGxMWkm4kXa85x4U3pH5NVLuYG4
-	 zl2SkIuMXKkNLsBcmxoFt0Q0RkbVB2c2ofJ6rgXG5n75c/w8cy9KhWEYs0D9q425A/
-	 N7CVYzyZb2OttGgf8MXoM4AUCZeSet5wVpferNtk=
+	b=jZo/d02nB3h8XCck8pFq7oqjiS/DkpCGLBnFh7K9SII52OntoAaADU0Zaezo2e3gJ
+	 nLN9R4fv08evj1W/IXy0dkYdKg1gFZqQugDuCVEbfUl2hqF+8TO/v90SaC7srRte9c
+	 prgClc82/c59lUIdCEywgK/RDoEJiwx6sTClR84Y=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729902AbfCLRSD (ORCPT
+        id S1729915AbfCLRSE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 12 Mar 2019 13:18:03 -0400
-Received: from mail.kernel.org ([198.145.29.99]:60744 "EHLO mail.kernel.org"
+        Tue, 12 Mar 2019 13:18:04 -0400
+Received: from mail.kernel.org ([198.145.29.99]:60796 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729498AbfCLRRO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S1729502AbfCLRRO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Tue, 12 Mar 2019 13:17:14 -0400
 Received: from localhost (unknown [104.133.8.98])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 6F92821872;
-        Tue, 12 Mar 2019 17:17:13 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 17BC021855;
+        Tue, 12 Mar 2019 17:17:14 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1552411033;
-        bh=/i8lCKvC/QskHrD9Sn5I6ypKmA67exwl2AD4/s7XgW0=;
+        s=default; t=1552411034;
+        bh=Z7oIPbyBjc+hoDSFyh78VptdveT0U9yssFgt7ZcNpGo=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=lCsdYEidWQvHSJrTKqidV2frP2EuIi7HhTuyVv7+oXoeTPXp2Z2wQsDp0dtHNd9nr
-         kpt+jDdDM6zhIKglLWNlUxlaM55oTkvBoqjubsSfMCGopHhK3L5rSCZXYCey0qbSZp
-         mnwqQHZkJmOuOhah3BuuidUNA+grKC7mV6i2no2M=
+        b=lny1RoRFJRsxgohRgwYuHCX+DXFYtseZNclk7GIhptXn7dYepv6SIMaeG01Jz9TAp
+         wclk9HAON06g2H+Y+iVPPLpJwM3rgvnN7O8nlbQ55jTYQgxMWYJaXDNqVAVKaJi2B9
+         ujX+VFTs8mrwD7FaxEydFhaZRgQ7+f5ah1Jg2ob0=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Ido Schimmel <idosch@mellanox.com>,
-        Amit Cohen <amitc@mellanox.com>,
+        stable@vger.kernel.org, Hulk Robot <hulkci@huawei.com>,
+        YueHaibing <yuehaibing@huawei.com>,
         "David S. Miller" <davem@davemloft.net>
-Subject: [PATCH 4.9 10/96] ip6mr: Do not call __IP6_INC_STATS() from preemptible context
-Date:   Tue, 12 Mar 2019 10:09:28 -0700
-Message-Id: <20190312171035.331103933@linuxfoundation.org>
+Subject: [PATCH 4.9 11/96] net-sysfs: Fix mem leak in netdev_register_kobject
+Date:   Tue, 12 Mar 2019 10:09:29 -0700
+Message-Id: <20190312171035.402074289@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190312171034.530434962@linuxfoundation.org>
 References: <20190312171034.530434962@linuxfoundation.org>
@@ -66,66 +66,54 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-From: Ido Schimmel <idosch@mellanox.com>
+From: YueHaibing <yuehaibing@huawei.com>
 
-[ Upstream commit 87c11f1ddbbad38ad8bad47af133a8208985fbdf ]
+[ Upstream commit 895a5e96dbd6386c8e78e5b78e067dcc67b7f0ab ]
 
-Similar to commit 44f49dd8b5a6 ("ipmr: fix possible race resulting from
-improper usage of IP_INC_STATS_BH() in preemptible context."), we cannot
-assume preemption is disabled when incrementing the counter and
-accessing a per-CPU variable.
+syzkaller report this:
+BUG: memory leak
+unreferenced object 0xffff88837a71a500 (size 256):
+  comm "syz-executor.2", pid 9770, jiffies 4297825125 (age 17.843s)
+  hex dump (first 32 bytes):
+    00 00 00 00 ad 4e ad de ff ff ff ff 00 00 00 00  .....N..........
+    ff ff ff ff ff ff ff ff 20 c0 ef 86 ff ff ff ff  ........ .......
+  backtrace:
+    [<00000000db12624b>] netdev_register_kobject+0x124/0x2e0 net/core/net-sysfs.c:1751
+    [<00000000dc49a994>] register_netdevice+0xcc1/0x1270 net/core/dev.c:8516
+    [<00000000e5f3fea0>] tun_set_iff drivers/net/tun.c:2649 [inline]
+    [<00000000e5f3fea0>] __tun_chr_ioctl+0x2218/0x3d20 drivers/net/tun.c:2883
+    [<000000001b8ac127>] vfs_ioctl fs/ioctl.c:46 [inline]
+    [<000000001b8ac127>] do_vfs_ioctl+0x1a5/0x10e0 fs/ioctl.c:690
+    [<0000000079b269f8>] ksys_ioctl+0x89/0xa0 fs/ioctl.c:705
+    [<00000000de649beb>] __do_sys_ioctl fs/ioctl.c:712 [inline]
+    [<00000000de649beb>] __se_sys_ioctl fs/ioctl.c:710 [inline]
+    [<00000000de649beb>] __x64_sys_ioctl+0x74/0xb0 fs/ioctl.c:710
+    [<000000007ebded1e>] do_syscall_64+0xc8/0x580 arch/x86/entry/common.c:290
+    [<00000000db315d36>] entry_SYSCALL_64_after_hwframe+0x49/0xbe
+    [<00000000115be9bb>] 0xffffffffffffffff
 
-Preemption can be enabled when we add a route in process context that
-corresponds to packets stored in the unresolved queue, which are then
-forwarded using this route [1].
+It should call kset_unregister to free 'dev->queues_kset'
+in error path of register_queue_kobjects, otherwise will cause a mem leak.
 
-Fix this by using IP6_INC_STATS() which takes care of disabling
-preemption on architectures where it is needed.
-
-[1]
-[  157.451447] BUG: using __this_cpu_add() in preemptible [00000000] code: smcrouted/2314
-[  157.460409] caller is ip6mr_forward2+0x73e/0x10e0
-[  157.460434] CPU: 3 PID: 2314 Comm: smcrouted Not tainted 5.0.0-rc7-custom-03635-g22f2712113f1 #1336
-[  157.460449] Hardware name: Mellanox Technologies Ltd. MSN2100-CB2FO/SA001017, BIOS 5.6.5 06/07/2016
-[  157.460461] Call Trace:
-[  157.460486]  dump_stack+0xf9/0x1be
-[  157.460553]  check_preemption_disabled+0x1d6/0x200
-[  157.460576]  ip6mr_forward2+0x73e/0x10e0
-[  157.460705]  ip6_mr_forward+0x9a0/0x1510
-[  157.460771]  ip6mr_mfc_add+0x16b3/0x1e00
-[  157.461155]  ip6_mroute_setsockopt+0x3cb/0x13c0
-[  157.461384]  do_ipv6_setsockopt.isra.8+0x348/0x4060
-[  157.462013]  ipv6_setsockopt+0x90/0x110
-[  157.462036]  rawv6_setsockopt+0x4a/0x120
-[  157.462058]  __sys_setsockopt+0x16b/0x340
-[  157.462198]  __x64_sys_setsockopt+0xbf/0x160
-[  157.462220]  do_syscall_64+0x14d/0x610
-[  157.462349]  entry_SYSCALL_64_after_hwframe+0x49/0xbe
-
-Fixes: 0912ea38de61 ("[IPV6] MROUTE: Add stats in multicast routing module method ip6_mr_forward().")
-Signed-off-by: Ido Schimmel <idosch@mellanox.com>
-Reported-by: Amit Cohen <amitc@mellanox.com>
+Reported-by: Hulk Robot <hulkci@huawei.com>
+Fixes: 1d24eb4815d1 ("xps: Transmit Packet Steering")
+Signed-off-by: YueHaibing <yuehaibing@huawei.com>
 Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- net/ipv6/ip6mr.c |    8 ++++----
- 1 file changed, 4 insertions(+), 4 deletions(-)
+ net/core/net-sysfs.c |    3 +++
+ 1 file changed, 3 insertions(+)
 
---- a/net/ipv6/ip6mr.c
-+++ b/net/ipv6/ip6mr.c
-@@ -1992,10 +1992,10 @@ int ip6mr_compat_ioctl(struct sock *sk,
- 
- static inline int ip6mr_forward2_finish(struct net *net, struct sock *sk, struct sk_buff *skb)
- {
--	__IP6_INC_STATS(net, ip6_dst_idev(skb_dst(skb)),
--			IPSTATS_MIB_OUTFORWDATAGRAMS);
--	__IP6_ADD_STATS(net, ip6_dst_idev(skb_dst(skb)),
--			IPSTATS_MIB_OUTOCTETS, skb->len);
-+	IP6_INC_STATS(net, ip6_dst_idev(skb_dst(skb)),
-+		      IPSTATS_MIB_OUTFORWDATAGRAMS);
-+	IP6_ADD_STATS(net, ip6_dst_idev(skb_dst(skb)),
-+		      IPSTATS_MIB_OUTOCTETS, skb->len);
- 	return dst_output(net, sk, skb);
+--- a/net/core/net-sysfs.c
++++ b/net/core/net-sysfs.c
+@@ -1380,6 +1380,9 @@ static int register_queue_kobjects(struc
+ error:
+ 	netdev_queue_update_kobjects(dev, txq, 0);
+ 	net_rx_queue_update_kobjects(dev, rxq, 0);
++#ifdef CONFIG_SYSFS
++	kset_unregister(dev->queues_kset);
++#endif
+ 	return error;
  }
  
 
