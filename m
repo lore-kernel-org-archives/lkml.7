@@ -7,55 +7,49 @@ X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4948CC43381
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 17:18:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2A00EC10F00
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 17:18:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1B492217D8
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 17:18:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F11BD2183F
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 17:18:35 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1552411112;
-	bh=jUK6kMOKYtUjTaTr1auy4+4etKCPLbjv9pKS6qP0X0M=;
+	s=default; t=1552411116;
+	bh=Z+kfzAbXaPrjW6g/uNYf6JWeA00Ak/0dO3ab+xY2fkk=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=pSG/DKwtTczarZkqgD0VHW7V2mft2kq81ge9zUsimInceUyPBo/99r/jj8Ar/7yEr
-	 N2wpiqSpDzkJp1JpbsNXLIxirA1Xtz8koApXznJHVwsnOgGDF7JCd4ruQB7FkqvClo
-	 6IQnBWv+cQrlIRydP7vx/kwDHSHGDOCVHR93jtYg=
+	b=JqbvG69kPvazhU/p/C7kjyhbMJ8ssPcZTVF+VpQ43FLm0OD/hO5eHvMxAFWsbshb+
+	 Ld/6Ge8zEPexXuuH3yXwhkXpphhYsBn/rO8404Vfe+U6XUHHCBPspKWEGjYopVQ6wD
+	 OwcpyNbij+MxiPOKDEGTvij5/vq95dQIXVbn/njg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730108AbfCLRSa (ORCPT
+        id S1729122AbfCLRSe (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 12 Mar 2019 13:18:30 -0400
-Received: from mail.kernel.org ([198.145.29.99]:34664 "EHLO mail.kernel.org"
+        Tue, 12 Mar 2019 13:18:34 -0400
+Received: from mail.kernel.org ([198.145.29.99]:34764 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729809AbfCLRR4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 12 Mar 2019 13:17:56 -0400
+        id S1728408AbfCLRR6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 12 Mar 2019 13:17:58 -0400
 Received: from localhost (unknown [104.133.8.98])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 60513217D4;
-        Tue, 12 Mar 2019 17:17:55 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 996932087C;
+        Tue, 12 Mar 2019 17:17:57 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1552411075;
-        bh=jUK6kMOKYtUjTaTr1auy4+4etKCPLbjv9pKS6qP0X0M=;
+        s=default; t=1552411077;
+        bh=Z+kfzAbXaPrjW6g/uNYf6JWeA00Ak/0dO3ab+xY2fkk=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=xXJRkPjmOSiwtJLdARvXaI+zHKNgxdMg3HWApHYMjkzshvI0sv75/ZUbNH2BTYfPp
-         Bl/KVncD67Ty2ngEjK8hnGvgnMyXk01EPbc2UfuxkQlAvxvkxbY1pjMQDX7avJEf4Q
-         s714Wy21SbmOvyEtPUeYMLm7wKV2k+C9eqJLut+g=
+        b=bO5uPyoCt4H+mvpest/UDfeZmwFhmR8BSkkaQKCw5pE34TZCwQvRr7NK96PzF+Ccn
+         J1gSJg2hDuTnRyIPWISGtwEAwkds0L/UbrRGGdw+qPTaPs+qdRj/Bgv+0ojZl+TQ3v
+         d4RCr8obrUea/zlt/wrjsF8BAbX11FisoKPz+6uw=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Michal Hocko <mhocko@suse.com>,
-        Mikhail Zaslonko <zaslonko@linux.ibm.com>,
-        Mikhail Gavrilov <mikhail.v.gavrilov@gmail.com>,
-        Oscar Salvador <osalvador@suse.de>,
-        Gerald Schaefer <gerald.schaefer@de.ibm.com>,
-        Heiko Carstens <heiko.carstens@de.ibm.com>,
-        Martin Schwidefsky <schwidefsky@de.ibm.com>,
-        Pavel Tatashin <pasha.tatashin@soleen.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
+        stable@vger.kernel.org, Yan Fu <yafu@redhat.com>,
+        Stefano Garzarella <sgarzare@redhat.com>,
+        Stefan Hajnoczi <stefanha@redhat.com>,
+        "David S. Miller" <davem@davemloft.net>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.9 61/96] mm, memory_hotplug: test_pages_in_a_zone do not pass the end of zone
-Date:   Tue, 12 Mar 2019 10:10:19 -0700
-Message-Id: <20190312171039.153545928@linuxfoundation.org>
+Subject: [PATCH 4.9 72/96] vsock/virtio: fix kernel panic after device hot-unplug
+Date:   Tue, 12 Mar 2019 10:10:30 -0700
+Message-Id: <20190312171040.050387931@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190312171034.530434962@linuxfoundation.org>
 References: <20190312171034.530434962@linuxfoundation.org>
@@ -74,71 +68,99 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-[ Upstream commit 24feb47c5fa5b825efb0151f28906dfdad027e61 ]
+[ Upstream commit 22b5c0b63f32568e130fa2df4ba23efce3eb495b ]
 
-If memory end is not aligned with the sparse memory section boundary,
-the mapping of such a section is only partly initialized.  This may lead
-to VM_BUG_ON due to uninitialized struct pages access from
-test_pages_in_a_zone() function triggered by memory_hotplug sysfs
-handlers.
+virtio_vsock_remove() invokes the vsock_core_exit() also if there
+are opened sockets for the AF_VSOCK protocol family. In this way
+the vsock "transport" pointer is set to NULL, triggering the
+kernel panic at the first socket activity.
 
-Here are the the panic examples:
- CONFIG_DEBUG_VM_PGFLAGS=y
- kernel parameter mem=2050M
- --------------------------
- page:000003d082008000 is uninitialized and poisoned
- page dumped because: VM_BUG_ON_PAGE(PagePoisoned(p))
- Call Trace:
-   test_pages_in_a_zone+0xde/0x160
-   show_valid_zones+0x5c/0x190
-   dev_attr_show+0x34/0x70
-   sysfs_kf_seq_show+0xc8/0x148
-   seq_read+0x204/0x480
-   __vfs_read+0x32/0x178
-   vfs_read+0x82/0x138
-   ksys_read+0x5a/0xb0
-   system_call+0xdc/0x2d8
- Last Breaking-Event-Address:
-   test_pages_in_a_zone+0xde/0x160
- Kernel panic - not syncing: Fatal exception: panic_on_oops
+This patch move the vsock_core_init()/vsock_core_exit() in the
+virtio_vsock respectively in module_init and module_exit functions,
+that cannot be invoked until there are open sockets.
 
-Fix this by checking whether the pfn to check is within the zone.
-
-[mhocko@suse.com: separated this change from http://lkml.kernel.org/r/20181105150401.97287-2-zaslonko@linux.ibm.com]
-Link: http://lkml.kernel.org/r/20190128144506.15603-3-mhocko@kernel.org
-
-[mhocko@suse.com: separated this change from
-http://lkml.kernel.org/r/20181105150401.97287-2-zaslonko@linux.ibm.com]
-Signed-off-by: Michal Hocko <mhocko@suse.com>
-Signed-off-by: Mikhail Zaslonko <zaslonko@linux.ibm.com>
-Tested-by: Mikhail Gavrilov <mikhail.v.gavrilov@gmail.com>
-Reviewed-by: Oscar Salvador <osalvador@suse.de>
-Tested-by: Gerald Schaefer <gerald.schaefer@de.ibm.com>
-Cc: Heiko Carstens <heiko.carstens@de.ibm.com>
-Cc: Martin Schwidefsky <schwidefsky@de.ibm.com>
-Cc: Mikhail Gavrilov <mikhail.v.gavrilov@gmail.com>
-Cc: Pavel Tatashin <pasha.tatashin@soleen.com>
-Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
-Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
+Bugzilla: https://bugzilla.redhat.com/show_bug.cgi?id=1609699
+Reported-by: Yan Fu <yafu@redhat.com>
+Signed-off-by: Stefano Garzarella <sgarzare@redhat.com>
+Acked-by: Stefan Hajnoczi <stefanha@redhat.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- mm/memory_hotplug.c | 3 +++
- 1 file changed, 3 insertions(+)
+ net/vmw_vsock/virtio_transport.c | 26 ++++++++++++++++++--------
+ 1 file changed, 18 insertions(+), 8 deletions(-)
 
-diff --git a/mm/memory_hotplug.c b/mm/memory_hotplug.c
-index a03a401f11b6..b4c8d7b9ab82 100644
---- a/mm/memory_hotplug.c
-+++ b/mm/memory_hotplug.c
-@@ -1512,6 +1512,9 @@ int test_pages_in_a_zone(unsigned long start_pfn, unsigned long end_pfn,
- 				i++;
- 			if (i == MAX_ORDER_NR_PAGES || pfn + i >= end_pfn)
- 				continue;
-+			/* Check if we got outside of the zone */
-+			if (zone && !zone_spans_pfn(zone, pfn + i))
-+				return 0;
- 			page = pfn_to_page(pfn + i);
- 			if (zone && page_zone(page) != zone)
- 				return 0;
+diff --git a/net/vmw_vsock/virtio_transport.c b/net/vmw_vsock/virtio_transport.c
+index 936d7eee62d0..6cbc08d82e7f 100644
+--- a/net/vmw_vsock/virtio_transport.c
++++ b/net/vmw_vsock/virtio_transport.c
+@@ -71,6 +71,9 @@ static u32 virtio_transport_get_local_cid(void)
+ {
+ 	struct virtio_vsock *vsock = virtio_vsock_get();
+ 
++	if (!vsock)
++		return VMADDR_CID_ANY;
++
+ 	return vsock->guest_cid;
+ }
+ 
+@@ -495,10 +498,6 @@ static int virtio_vsock_probe(struct virtio_device *vdev)
+ 
+ 	virtio_vsock_update_guest_cid(vsock);
+ 
+-	ret = vsock_core_init(&virtio_transport.transport);
+-	if (ret < 0)
+-		goto out_vqs;
+-
+ 	vsock->rx_buf_nr = 0;
+ 	vsock->rx_buf_max_nr = 0;
+ 	atomic_set(&vsock->queued_replies, 0);
+@@ -526,8 +525,6 @@ static int virtio_vsock_probe(struct virtio_device *vdev)
+ 	mutex_unlock(&the_virtio_vsock_mutex);
+ 	return 0;
+ 
+-out_vqs:
+-	vsock->vdev->config->del_vqs(vsock->vdev);
+ out:
+ 	kfree(vsock);
+ 	mutex_unlock(&the_virtio_vsock_mutex);
+@@ -567,7 +564,6 @@ static void virtio_vsock_remove(struct virtio_device *vdev)
+ 
+ 	mutex_lock(&the_virtio_vsock_mutex);
+ 	the_virtio_vsock = NULL;
+-	vsock_core_exit();
+ 	mutex_unlock(&the_virtio_vsock_mutex);
+ 
+ 	vdev->config->del_vqs(vdev);
+@@ -600,14 +596,28 @@ static int __init virtio_vsock_init(void)
+ 	virtio_vsock_workqueue = alloc_workqueue("virtio_vsock", 0, 0);
+ 	if (!virtio_vsock_workqueue)
+ 		return -ENOMEM;
++
+ 	ret = register_virtio_driver(&virtio_vsock_driver);
+ 	if (ret)
+-		destroy_workqueue(virtio_vsock_workqueue);
++		goto out_wq;
++
++	ret = vsock_core_init(&virtio_transport.transport);
++	if (ret)
++		goto out_vdr;
++
++	return 0;
++
++out_vdr:
++	unregister_virtio_driver(&virtio_vsock_driver);
++out_wq:
++	destroy_workqueue(virtio_vsock_workqueue);
+ 	return ret;
++
+ }
+ 
+ static void __exit virtio_vsock_exit(void)
+ {
++	vsock_core_exit();
+ 	unregister_virtio_driver(&virtio_vsock_driver);
+ 	destroy_workqueue(virtio_vsock_workqueue);
+ }
 -- 
 2.19.1
 
