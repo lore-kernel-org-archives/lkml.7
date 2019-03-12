@@ -4,51 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AC367C43381
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 17:13:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D3C35C4360F
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 17:13:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7D7D821741
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 17:13:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9F3CB218A1
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 17:13:51 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1552410830;
-	bh=iu/rx8+smMhE6V1ipDV2sxibTpts0WimzCH18VioIx0=;
+	s=default; t=1552410831;
+	bh=jysny0CJvbkdU9dyemd/IHq1zGEhrE+kX6yxwDMZZxA=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Yx0NdKcEZSFCv/WSsKMVrTP2LqWmvPwU1VmS66JIikfEgMMK8ZPRUqIJ41Twdw1K2
-	 UPIs0MG5IjH6sEW+19kdj0pEcwXtN0Fpn+qWaqqezp/lI+z8cZuxd6jNIxHl7Z5gCT
-	 jKjz21uIBbIZ2aOWYLMcBDp9fuYSUCU2cRxMlAAs=
+	b=BS5ElQ2VI3jisvHTKBtaa7SnPaLlrLvlWj9L/YGt+66/LsFJlrvFpDY9VH+Pq4Klj
+	 GKFI/y5C7VshfGQ2FdXFHJV/QpsOqDb8kQ1jtX7qtbPO04lpgmWLiBn7IdCVzqbDRt
+	 9zv4pCzVGNS+sBadXmGTfC1k2L601COT4sLx02is=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728099AbfCLRNt (ORCPT
+        id S1728111AbfCLRNu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 12 Mar 2019 13:13:49 -0400
+        Tue, 12 Mar 2019 13:13:50 -0400
 Received: from mail.kernel.org ([198.145.29.99]:49744 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727584AbfCLRNN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 12 Mar 2019 13:13:13 -0400
+        id S1727846AbfCLRNP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 12 Mar 2019 13:13:15 -0400
 Received: from localhost (unknown [104.133.8.98])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 85EDE217D4;
-        Tue, 12 Mar 2019 17:13:12 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id B7AC3217D4;
+        Tue, 12 Mar 2019 17:13:14 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1552410792;
-        bh=iu/rx8+smMhE6V1ipDV2sxibTpts0WimzCH18VioIx0=;
+        s=default; t=1552410794;
+        bh=jysny0CJvbkdU9dyemd/IHq1zGEhrE+kX6yxwDMZZxA=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=vCX3VVGaXO5mGZajuNN1k2NiYJXjGjZBtzryX6b4Ysddoru7AWogDis1luHtVHqj/
-         6U6ZDSKSHMkllp6QW/CpBTxT7518f9AIPuexxKF7W8IldlyhhpPPgbXLrND0hgP6HV
-         Z8Uh2tR9OOAdqHGAkHjWkUVSPuu9C3hD7r9fUPuE=
+        b=H0lIBGg5juPD2jjSnHQ6SSd+LoCWdkE1PDOuj6DFJOBcC+jTzdqte4/k7U7p1gSJw
+         qaZvbxlJ+LX6lL9+bUrbnR2ak6pQbDRw961mB+PILprESm3OUzT5wrTkb1oPNJOdjz
+         4a/hOzes06d1hpJqplJCYIF0BUttoCi0SV8jZfEw=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
-        Tomi Valkeinen <tomi.valkeinen@ti.com>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.20 137/171] drm/omap: dsi: Fix OF platform depopulate
-Date:   Tue, 12 Mar 2019 10:08:37 -0700
-Message-Id: <20190312170359.482790895@linuxfoundation.org>
+        stable@vger.kernel.org, Alex Gagniuc <Alex_Gagniuc@Dellteam.com>,
+        Keith Busch <keith.busch@intel.com>,
+        Alex Gagniuc <mr.nuke.me@gmail.com>,
+        Christoph Hellwig <hch@lst.de>, Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.20 140/171] nvme-pci: fix rapid add remove sequence
+Date:   Tue, 12 Mar 2019 10:08:40 -0700
+Message-Id: <20190312170359.715739642@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190312170347.868927101@linuxfoundation.org>
 References: <20190312170347.868927101@linuxfoundation.org>
@@ -67,47 +67,69 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-[ Upstream commit 0940c52742de0d2f70ba687bfd5fe8aa38c5f27d ]
+[ Upstream commit 5c959d73dba6495ec01d04c206ee679d61ccb2b0 ]
 
-Commit edb715dffdee ("drm/omap: dss: dsi: Move initialization code from
-bind to probe") moved the of_platform_populate() call from dsi_bind() to
-dsi_probe(), but failed to move the corresponding
-of_platform_depopulate() from dsi_unbind() to dsi_remove(). This results
-in OF child devices being potentially removed multiple times. Fix it by
-placing the of_platform_depopulate() call where it belongs.
+A surprise removal may fail to tear down request queues if it is racing
+with the initial asynchronous probe. If that happens, the remove path
+won't see the queue resources to tear down, and the controller reset
+path may create a new request queue on a removed device, but will not
+be able to make forward progress, deadlocking the pci removal.
 
-Fixes: edb715dffdee ("drm/omap: dss: dsi: Move initialization code from bind to probe")
-Signed-off-by: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-Reviewed-by: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-Signed-off-by: Tomi Valkeinen <tomi.valkeinen@ti.com>
-Link: https://patchwork.freedesktop.org/patch/msgid/20190111035120.20668-4-laurent.pinchart@ideasonboard.com
+Protect setting up non-blocking resources from a shutdown by holding the
+same mutex, and transition to the CONNECTING state after these resources
+are initialized so the probe path may see the dead controller state
+before dispatching new IO.
+
+Link: https://bugzilla.kernel.org/show_bug.cgi?id=202081
+Reported-by: Alex Gagniuc <Alex_Gagniuc@Dellteam.com>
+Signed-off-by: Keith Busch <keith.busch@intel.com>
+Tested-by: Alex Gagniuc <mr.nuke.me@gmail.com>
+Signed-off-by: Christoph Hellwig <hch@lst.de>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/gpu/drm/omapdrm/dss/dsi.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ drivers/nvme/host/pci.c | 22 ++++++++++++----------
+ 1 file changed, 12 insertions(+), 10 deletions(-)
 
-diff --git a/drivers/gpu/drm/omapdrm/dss/dsi.c b/drivers/gpu/drm/omapdrm/dss/dsi.c
-index 277f9dd2ec8c..b5685018d830 100644
---- a/drivers/gpu/drm/omapdrm/dss/dsi.c
-+++ b/drivers/gpu/drm/omapdrm/dss/dsi.c
-@@ -5104,8 +5104,6 @@ static void dsi_unbind(struct device *dev, struct device *master, void *data)
- 	dss_debugfs_remove_file(dsi->debugfs.irqs);
- 	dss_debugfs_remove_file(dsi->debugfs.regs);
+diff --git a/drivers/nvme/host/pci.c b/drivers/nvme/host/pci.c
+index c0d01048ce4d..439b9f4eb246 100644
+--- a/drivers/nvme/host/pci.c
++++ b/drivers/nvme/host/pci.c
+@@ -2280,16 +2280,7 @@ static void nvme_reset_work(struct work_struct *work)
+ 	if (dev->ctrl.ctrl_config & NVME_CC_ENABLE)
+ 		nvme_dev_disable(dev, false);
  
--	of_platform_depopulate(dev);
+-	/*
+-	 * Introduce CONNECTING state from nvme-fc/rdma transports to mark the
+-	 * initializing procedure here.
+-	 */
+-	if (!nvme_change_ctrl_state(&dev->ctrl, NVME_CTRL_CONNECTING)) {
+-		dev_warn(dev->ctrl.device,
+-			"failed to mark controller CONNECTING\n");
+-		goto out;
+-	}
 -
- 	WARN_ON(dsi->scp_clk_refcount > 0);
- 
- 	dss_pll_unregister(&dsi->pll);
-@@ -5457,6 +5455,8 @@ static int dsi_remove(struct platform_device *pdev)
- 
- 	dsi_uninit_output(dsi);
- 
-+	of_platform_depopulate(&pdev->dev);
++	mutex_lock(&dev->shutdown_lock);
+ 	result = nvme_pci_enable(dev);
+ 	if (result)
+ 		goto out;
+@@ -2308,6 +2299,17 @@ static void nvme_reset_work(struct work_struct *work)
+ 	 */
+ 	dev->ctrl.max_hw_sectors = NVME_MAX_KB_SZ << 1;
+ 	dev->ctrl.max_segments = NVME_MAX_SEGS;
++	mutex_unlock(&dev->shutdown_lock);
 +
- 	pm_runtime_disable(&pdev->dev);
++	/*
++	 * Introduce CONNECTING state from nvme-fc/rdma transports to mark the
++	 * initializing procedure here.
++	 */
++	if (!nvme_change_ctrl_state(&dev->ctrl, NVME_CTRL_CONNECTING)) {
++		dev_warn(dev->ctrl.device,
++			"failed to mark controller CONNECTING\n");
++		goto out;
++	}
  
- 	if (dsi->vdds_dsi_reg != NULL && dsi->vdds_dsi_enabled) {
+ 	result = nvme_init_identify(&dev->ctrl);
+ 	if (result)
 -- 
 2.19.1
 
