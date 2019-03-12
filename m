@@ -2,60 +2,60 @@ Return-Path: <SRS0=J4ZE=RP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-14.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 959ACC43381
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 09:00:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D9EA4C43381
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 09:00:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 638562147C
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 09:00:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A4E3A2147C
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 09:00:31 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="Ue6lNa/I"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="rrDaoIOH"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727750AbfCLJAY (ORCPT
+        id S1727766AbfCLJA3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 12 Mar 2019 05:00:24 -0400
-Received: from mail-wm1-f68.google.com ([209.85.128.68]:55249 "EHLO
-        mail-wm1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727736AbfCLJAU (ORCPT
+        Tue, 12 Mar 2019 05:00:29 -0400
+Received: from mail-wr1-f67.google.com ([209.85.221.67]:37018 "EHLO
+        mail-wr1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727726AbfCLJAS (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 12 Mar 2019 05:00:20 -0400
-Received: by mail-wm1-f68.google.com with SMTP id f3so1721658wmj.4
-        for <linux-kernel@vger.kernel.org>; Tue, 12 Mar 2019 02:00:19 -0700 (PDT)
+        Tue, 12 Mar 2019 05:00:18 -0400
+Received: by mail-wr1-f67.google.com with SMTP id y15so1751187wro.4
+        for <linux-kernel@vger.kernel.org>; Tue, 12 Mar 2019 02:00:17 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=aRWEDuQLWzp3URwu3pEoQcxfbAgAvx//BghTXCmLhvY=;
-        b=Ue6lNa/IGugqpb8G8XwSn8P7Ea14AkFs7WXIwTTyDArhtqfVLe0x3+HLZ1T0DZ8Eax
-         bX96iBvYX9PsZ/0+POi5uuLv3jY2F6mBSw/KOYquh2SAh0cu6KOD70ebJOREmvaT84oZ
-         sQbnWzznM8V3rUlztaVZXXoK5f0w5feFoxvisAda+4oE2oZOREV9NEhUbTQtarSNKwiL
-         O03BotWBaW0vcvh+ZbkyfSo9RbUyadc1eZT2AubADPr8PJlYnV3xymmFJAfgk8slXdDP
-         4lBS0LHpSh1cEjLjI4YscAfY+e1V7MA1Ld3rURKRiBcKMjdg9JqMJOKGa83KTnZYHQPt
-         Bh5A==
+        bh=uB6F8nkcc+jXPBDeIaz78K4jgn2LvnmUlQ+OCREpF+E=;
+        b=rrDaoIOHvvi1Hid8Z/1X9MJv6gwLoS8LoXZbdj6oUdt7UFvECfEJ4m+nd7XmpWb3YE
+         lXm+YDALDH3MtZ+vzNGBMFG0m2ZY8j8uDlf+jmxHpp0Nr9AOXi2P2uy3+wn83FrcedIz
+         3H/7SMt8j3yGMXKQBns/Oan2hMEiW4J+A8jZiH78kvm+zaHdUZG/OVDPEG/eaQC6ct88
+         N9iPEdgAYVjW0D/wWQ3bH83ieHgR4LbYBtq+zEiGn2XCozM68fPT9c3zL9JwC90l5j+Z
+         MjKJfOWGV//Oepcv8HhCU+H1rhg98ZqtVBhc/vLWO/DN/YlMYOP5kIQyK8pjJwQJaR73
+         mu9g==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=aRWEDuQLWzp3URwu3pEoQcxfbAgAvx//BghTXCmLhvY=;
-        b=S52ZBSjsGzKZqZi3PdJRgEXBrnNsjbxP4+m4nondAd8N9F5Z62xcWzw25W+zaI+23v
-         s2/RQACFTak15IGvo6X8AtVnafmS+jax5COCRatIuoyVIM7DcNfWu+lgzYlj6udEUSv5
-         qRn1pBuh/UBEZTMnS4cvVyTCcYU4w7ehriPHtO1DMgsxJNgOalNLlkmbFFZxPUUK//bq
-         Jrc03pd0FQSX2kP9KdI9c0T6pwz4tgZkVEqEg4iUmcUHhOMXiVNgHjCpWdKs4yReeAgc
-         6WiCOclh7mTFt8oHs1HhuYMM98tKF743uP+4k9dq58Ox0m8/1U0kXS52u0uL08yQ706d
-         hwkQ==
-X-Gm-Message-State: APjAAAX2MQsSZzPE5/2iXHgksIZCvrOtx9OGmhPMfR5DDwERBSvtTkW4
-        WwPw5HuTOZ1R6TU+c0rm5rTi6A==
-X-Google-Smtp-Source: APXvYqywtnTOoBnMyi9evXjAv4mjAywoKGxROLD64v41L651SZ1Vx1BFCqLajmRwnelI1shMipILYg==
-X-Received: by 2002:a7b:cb8e:: with SMTP id m14mr1444020wmi.64.1552381218249;
-        Tue, 12 Mar 2019 02:00:18 -0700 (PDT)
+        bh=uB6F8nkcc+jXPBDeIaz78K4jgn2LvnmUlQ+OCREpF+E=;
+        b=oJeQYQMXMyPMqsIn+vNdaoh+/q3nNz4AK3kXXH0ZHBMWC3+M/lbXn8hpg8bwRlXtAj
+         oLg+Dq0MH4rj6SXrKOan2QjU3h+QsxKJCLh0t0L5zV8UgaVU4PQ+/eVDaZwyMW6N1nAl
+         IMiaV3n8D1E5DeSc/RmPVKo8sohndMRYFwJu78ncbIBNDmu+TNfYxxaoMN2RgOwt1NOX
+         Cxro5AG4wEtQTYyBIOFGHyFqbQc2P4zNXGy3gDe3EGDv7ocftH9Uz6Q3P46RQf0uzUYD
+         gGsrUDMAWS8i0VLFqKjOO4qaJAo5ECwkd+1jq2ZVh0Bdf4fWvrjuysBYFdfb3GlbzxKj
+         T94A==
+X-Gm-Message-State: APjAAAWR2rbyP7dM+0Eud4FTtDgq973EkjHybdqYYALtg4g4LMrsuTul
+        wNWgGb4VTuLxCt5talx7O5W1VQ==
+X-Google-Smtp-Source: APXvYqwtuDkW8vwYjQJx9QJeLRpVimDrPGoeFfYyOMEUoWVuvouT9okOK3TDWF25e4FO2e0evztqVg==
+X-Received: by 2002:adf:dfd2:: with SMTP id q18mr2267713wrn.259.1552381216921;
+        Tue, 12 Mar 2019 02:00:16 -0700 (PDT)
 Received: from localhost.localdomain ([84.33.65.66])
-        by smtp.gmail.com with ESMTPSA id y20sm3953043wmi.34.2019.03.12.02.00.16
+        by smtp.gmail.com with ESMTPSA id y20sm3953043wmi.34.2019.03.12.02.00.15
         (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Tue, 12 Mar 2019 02:00:17 -0700 (PDT)
+        Tue, 12 Mar 2019 02:00:16 -0700 (PDT)
 From:   Paolo Valente <paolo.valente@linaro.org>
 To:     Jens Axboe <axboe@kernel.dk>
 Cc:     linux-block@vger.kernel.org, linux-kernel@vger.kernel.org,
@@ -64,71 +64,82 @@ Cc:     linux-block@vger.kernel.org, linux-kernel@vger.kernel.org,
         oleksandr@natalenko.name, fra.fra.800@gmail.com,
         alessio.masola@gmail.com, holger@applied-asynchrony.com,
         Paolo Valente <paolo.valente@linaro.org>
-Subject: [PATCH BUGFIX IMPROVEMENT V3 9/9] doc, block, bfq: add information on bfq execution time
-Date:   Tue, 12 Mar 2019 09:59:35 +0100
-Message-Id: <20190312085935.11340-10-paolo.valente@linaro.org>
+Subject: [PATCH BUGFIX IMPROVEMENT V3 8/9] block, bfq: save & resume weight on a queue merge/split
+Date:   Tue, 12 Mar 2019 09:59:34 +0100
+Message-Id: <20190312085935.11340-9-paolo.valente@linaro.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190312085935.11340-1-paolo.valente@linaro.org>
 References: <20190312085935.11340-1-paolo.valente@linaro.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The execution time of BFQ has been slightly lowered. Report the new
-execution time in BFQ documentation.
+From: Francesco Pollicino <fra.fra.800@gmail.com>
 
+bfq saves the state of a queue each time a merge occurs, to be
+able to resume such a state when the queue is associated again
+with its original process, on a split.
+
+Unfortunately bfq does not save & restore also the weight of the
+queue. If the weight is not correctly resumed when the queue is
+recycled, then the weight of the recycled queue could differ
+from the weight of the original queue.
+
+This commit adds the missing save & resume of the weight.
+
+Tested-by: Holger Hoffstätte <holger@applied-asynchrony.com>
+Tested-by: Oleksandr Natalenko <oleksandr@natalenko.name>
+Signed-off-by: Francesco Pollicino <fra.fra.800@gmail.com>
 Signed-off-by: Paolo Valente <paolo.valente@linaro.org>
 ---
- Documentation/block/bfq-iosched.txt | 29 ++++++++++++++++++++++-------
- 1 file changed, 22 insertions(+), 7 deletions(-)
+ block/bfq-iosched.c | 2 ++
+ block/bfq-iosched.h | 9 +++++++++
+ 2 files changed, 11 insertions(+)
 
-diff --git a/Documentation/block/bfq-iosched.txt b/Documentation/block/bfq-iosched.txt
-index 98a8dd5ee385..1a0f2ac02eb6 100644
---- a/Documentation/block/bfq-iosched.txt
-+++ b/Documentation/block/bfq-iosched.txt
-@@ -20,13 +20,26 @@ for that device, by setting low_latency to 0. See Section 3 for
- details on how to configure BFQ for the desired tradeoff between
- latency and throughput, or on how to maximize throughput.
+diff --git a/block/bfq-iosched.c b/block/bfq-iosched.c
+index 7d95d9c01036..1712d12340c0 100644
+--- a/block/bfq-iosched.c
++++ b/block/bfq-iosched.c
+@@ -1028,6 +1028,7 @@ bfq_bfqq_resume_state(struct bfq_queue *bfqq, struct bfq_data *bfqd,
+ 	else
+ 		bfq_clear_bfqq_IO_bound(bfqq);
  
--BFQ has a non-null overhead, which limits the maximum IOPS that a CPU
--can process for a device scheduled with BFQ. To give an idea of the
--limits on slow or average CPUs, here are, first, the limits of BFQ for
--three different CPUs, on, respectively, an average laptop, an old
--desktop, and a cheap embedded system, in case full hierarchical
--support is enabled (i.e., CONFIG_BFQ_GROUP_IOSCHED is set), but
--CONFIG_DEBUG_BLK_CGROUP is not set (Section 4-2):
-+As every I/O scheduler, BFQ adds some overhead to per-I/O-request
-+processing. To give an idea of this overhead, the total,
-+single-lock-protected, per-request processing time of BFQ---i.e., the
-+sum of the execution times of the request insertion, dispatch and
-+completion hooks---is, e.g., 1.9 us on an Intel Core i7-2760QM@2.40GHz
-+(dated CPU for notebooks; time measured with simple code
-+instrumentation, and using the throughput-sync.sh script of the S
-+suite [1], in performance-profiling mode). To put this result into
-+context, the total, single-lock-protected, per-request execution time
-+of the lightest I/O scheduler available in blk-mq, mq-deadline, is 0.7
-+us (mq-deadline is ~800 LOC, against ~10500 LOC for BFQ).
++	bfqq->entity.new_weight = bic->saved_weight;
+ 	bfqq->ttime = bic->saved_ttime;
+ 	bfqq->wr_coeff = bic->saved_wr_coeff;
+ 	bfqq->wr_start_at_switch_to_srt = bic->saved_wr_start_at_switch_to_srt;
+@@ -2502,6 +2503,7 @@ static void bfq_bfqq_save_state(struct bfq_queue *bfqq)
+ 	if (!bic)
+ 		return;
+ 
++	bic->saved_weight = bfqq->entity.orig_weight;
+ 	bic->saved_ttime = bfqq->ttime;
+ 	bic->saved_has_short_ttime = bfq_bfqq_has_short_ttime(bfqq);
+ 	bic->saved_IO_bound = bfq_bfqq_IO_bound(bfqq);
+diff --git a/block/bfq-iosched.h b/block/bfq-iosched.h
+index 67e63c276c7a..60c148728cc5 100644
+--- a/block/bfq-iosched.h
++++ b/block/bfq-iosched.h
+@@ -404,6 +404,15 @@ struct bfq_io_cq {
+ 	 */
+ 	bool was_in_burst_list;
+ 
++	/*
++	 * Save the weight when a merge occurs, to be able
++	 * to restore it in case of split. If the weight is not
++	 * correctly resumed when the queue is recycled,
++	 * then the weight of the recycled queue could differ
++	 * from the weight of the original queue.
++	 */
++	unsigned int saved_weight;
 +
-+Scheduling overhead further limits the maximum IOPS that a CPU can
-+process (already limited by the execution of the rest of the I/O
-+stack). To give an idea of the limits with BFQ, on slow or average
-+CPUs, here are, first, the limits of BFQ for three different CPUs, on,
-+respectively, an average laptop, an old desktop, and a cheap embedded
-+system, in case full hierarchical support is enabled (i.e.,
-+CONFIG_BFQ_GROUP_IOSCHED is set), but CONFIG_DEBUG_BLK_CGROUP is not
-+set (Section 4-2):
- - Intel i7-4850HQ: 400 KIOPS
- - AMD A8-3850: 250 KIOPS
- - ARM CortexTM-A53 Octa-core: 80 KIOPS
-@@ -566,3 +579,5 @@ applications. Unset this tunable if you need/want to control weights.
-     Slightly extended version:
-     http://algogroup.unimore.it/people/paolo/disk_sched/bfq-v1-suite-
- 							results.pdf
-+
-+[3] https://github.com/Algodev-github/S
+ 	/*
+ 	 * Similar to previous fields: save wr information.
+ 	 */
 -- 
 2.20.1
 
