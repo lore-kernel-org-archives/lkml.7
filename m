@@ -2,111 +2,108 @@ Return-Path: <SRS0=J4ZE=RP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_PASS autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0C5B9C43381
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 18:52:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9A045C43381
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 18:54:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D02C6206BA
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 18:52:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 689B7206BA
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 18:54:43 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=jnbr.me header.i=@jnbr.me header.b="hirI8xAL"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726996AbfCLSwx (ORCPT
+        id S1727041AbfCLSyl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 12 Mar 2019 14:52:53 -0400
-Received: from mout.kundenserver.de ([212.227.126.133]:34329 "EHLO
-        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726339AbfCLSww (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 12 Mar 2019 14:52:52 -0400
-Received: from [192.168.1.110] ([77.4.190.91]) by mrelayeu.kundenserver.de
- (mreue009 [212.227.15.167]) with ESMTPSA (Nemesis) id
- 1MFsdD-1hGm1n2TzL-00HQPk; Tue, 12 Mar 2019 19:52:48 +0100
-To:     LKML <linux-kernel@vger.kernel.org>, linux-kbuild@vger.kernel.org,
-        Masahiro Yamada <yamada.masahiro@socionext.com>
-From:   "Enrico Weigelt, metux IT consult" <info@metux.net>
-Openpgp: preference=signencrypt
-Autocrypt: addr=info@metux.net; prefer-encrypt=mutual; keydata=
- xsBNBFrdoikBCADPd0lZAMqHA9mCQsKCelvoRicAR4dp2VkgTEOAqjiQwQktBXQ0IB/7KOVc
- kk7zOytB0GtgANMOyi1JAtIHQhpM/RxvJfAMHX9/woe4YNgO51tkoqYyQGx0/UIkhVdk4+lZ
- WoffmBA3+Rz2niu98utrqkyAFFoQ3AaBjBIpLVH3sqTlMp5sLb9X+4CyWv18FlyPL13vqIb6
- 7QU7tJnAM7A81mrTj0/XNrrAHDA71+d7URAoAO613lv6qCQGPFZCy/Oi+hNAPAl3dY1oO6K1
- xVRvIQR+S0hDyENencONiFBW0Yj7x8pDqnMOpzVgPkfE7STykF84w3j69SX8Ky9CzD6XABEB
- AAHNMkVucmljbyBXZWlnZWx0IChtZXR1eCBJVCBjb25zdWx0KSA8aW5mb0BtZXR1eC5uZXQ+
- wsB4BBMBAgAiBQJa3aIpAhsDBgsJCAcDAgYVCAIJCgsEFgIDAQIeAQIXgAAKCRBQdN5H3K5O
- MqUyB/9ZHkkB9oMbE7kM5BwsC1LjzKU1nZ5eNjlbH9w7ax21tYnVU3kN2yKcQYJ4Xx/37fAV
- v/TcCA/Mh9+RKizuS5P/8Zgbl5UZqAeZwG2OEHn8guYUHOTEIS3VYl0hqi6gkiBxJOvnCmXl
- y7QLU/230xAKMiBaRKkrmWOLL++cYAmVF9n2arwjULiSDli5cOy5Fp8nJTLiBZDE78oYr0uz
- BS7ySXIri8N4pdhfezRFrOSP4FcRhSI0fhvkEEAWWF/8cdOrIq6pFXwcl7Fd/f9D109l9/RF
- gWk4vqFyqRC4gq2tcI3IgBK/6zEJDffPQRU8x6ofLaP0B+VQD1Hsont40gNHzsBNBFrdoikB
- CADf+V/VUBWY/QKKrdrCLW7hELI0Srw2Deh/Mgm7eenRM+R2W6S0ijAt9QASwveb8LhqwsQB
- S45cI3sl+pYFK1W7MFWnQ2mPW8LHhQUFEWECE0Rvt5TKobV5RUy7JE49zBv9FC+MLG6Q74TO
- HKUZfhPf2JB4uD4jOVQImiSdzmIn9Hegay7y7SxrsjxSaXq6y01+ClYh4RKQbowczDVYAyWx
- 5jDLEkIXiHZmRnXjWcjrUCi48e+Gxnjz4h8g1MXW9JpBAs/J09Sp1hCrMZUb41f7aetBdbba
- 1v8OJrJh/dpwfkQ2AaM3YX3j8FpiVCb0RfmUuO9XCeKagoCwnaVrDo9HABEBAAHCwF8EGAEC
- AAkFAlrdoikCGwwACgkQUHTeR9yuTjICaAf/RKhQo7Q5r5qI1ik69/umgPck5kV0OxuW+rZd
- 9fsBEJruFYiQSPgU4EAqNrbYrcFYk5o82tk47ifRNIsi73LKBdmQT3ryjjEIRQKFmFcENAXr
- fcGzG3TjI3yXbUhoAq3onzPd5iJVuqm0FA2MLGYcVeM6z6okiJk4K4Oryp2Dz6mU+G7iy4S6
- dxhRnfPumGvusOiEI6vrlHPY6QWGzXlgGRlMi/x3fsiGLUmz/Q/yEELkzdsu1iJmLDMi2EmQ
- ikabQlXN9BkOgXU+4fMPFWTT60EQYkUO8lPiAeycws6oZ5mPwuJfZe48yv9D8QtFVcF8nMTp
- UWyGgOw+ALLA6Sr+Cg==
-Subject: Standalone version of Kconfig
-Message-ID: <088f45cb-204e-4fa4-1062-5574ef97cb8a@metux.net>
-Date:   Tue, 12 Mar 2019 19:52:46 +0100
-User-Agent: Mozilla/5.0 (X11; Linux i686 on x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.2.1
+        Tue, 12 Mar 2019 14:54:41 -0400
+Received: from mail.jnbr.me ([104.238.167.236]:58948 "EHLO jnbr.me"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726339AbfCLSyl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 12 Mar 2019 14:54:41 -0400
+X-Greylist: delayed 400 seconds by postgrey-1.27 at vger.kernel.org; Tue, 12 Mar 2019 14:54:40 EDT
+Received: from jnbr.me (localhost [127.0.0.1])
+        by jnbr.me (OpenSMTPD) with ESMTP id 038819f9;
+        Tue, 12 Mar 2019 18:48:02 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha1; c=relaxed; d=jnbr.me; h=date:from:to
+        :subject:message-id:mime-version:content-type
+        :content-transfer-encoding; s=default; bh=ZaWRsaxVb3MJMKkrHrpBl0
+        Ut4Uk=; b=hirI8xALzVz/shyh8aZq5ML0ofpb7IJhJXAZbOZxdh7WIMp309nlxN
+        wzm9HWj8bGeF+n3x8e3oe5Rb6fX9fzvajQ+P9AHznaCYIqyhprHU14MTjZEhi0sj
+        4gZdZJSjbC5nyJKx2aK158TWS0o8dAvw4K6HHVC5jHFE30EhA+bIg=
+DomainKey-Signature: a=rsa-sha1; c=nofws; d=jnbr.me; h=date:from:to
+        :subject:message-id:mime-version:content-type
+        :content-transfer-encoding; q=dns; s=default; b=CrPs/NJSjjQv3NZv
+        d4j+xVBRyux/jJoVl14MkvSr2WEKzlswBL/9XoidvhZUMzCWkFRA4kblZWDGf/5u
+        +hCZU2jHWYFbEQXXO6oAQ63pDyWZ3VICrrC1Qy6IQkaLbStHZTL7ThnKNtA+RCQc
+        W0teYfoWQylU6TDYS8TvpvzWWGE=
+Received: from t440s.fritz.box (2001:470:1f0b:19:8a02:e83:1af2:885d [IPv6:2001:470:1f0b:19:8a02:e83:1af2:885d])
+        by mail.jnbr.me (OpenSMTPD) with ESMTPSA id 2cbaaa6d (TLSv1.2:ECDHE-RSA-AES256-GCM-SHA384:256:NO);
+        Tue, 12 Mar 2019 18:48:02 +0000 (UTC)
+Date:   Tue, 12 Mar 2019 19:47:58 +0100
+From:   Johannes Brechtmann <johannes@jnbr.me>
+To:     Paul Moore <paul@paul-moore.com>,
+        Stephen Smalley <sds@tycho.nsa.gov>,
+        Eric Paris <eparis@parisplace.org>, selinux@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH] selinux: use kernel definition of PF_MAX in scripts
+Message-ID: <20190312194758.6f411a8b@t440s.fritz.box>
+X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; x86_64-unknown-linux-musl)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
-X-Provags-ID: V03:K1:7869LQXWJRHmcaGcu5y3lBNdHhPMaH2Z1TtX/79P3C1wKbH6j/w
- xBINaEU/MipDBALj1AdcKCoauG4oatQmlVwYBE6119ZB/lyCjWpfRKWCAIflEdOqutEIwTz
- nWjS9nPHvrzItodU+5T1GevIc35IH3XK7FUHwLs/6o61SJYUNNKi+dgvzyU3Y54YTEzjOju
- 14XqK8LhRb5FZFrcUhsAA==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:PttRPFFo8/o=:/JAVm6iclCAAX2I5GyJ3MJ
- b0IgH+CBKt13yH6eVeTKo/5LN0OKfT9w+LlkWkmI3XfibJ++FhpSIpl5cWW5lPJaJwWxqL2GE
- i/zrJeV3GXXJaq80qzzWdbOolupaZMDBghSsLIedyDuektw8rs5ToArLxEjVpSEmg5FYOyoQL
- d3h5pALIYo2+5QprIFtVRN58mBldrTIK2bSPbpRzQ3q+dyrLpnfQcSWUc1BZpUaHhUqQMUCwW
- eJS+lpwkUQ6eZUBX+CKDXTwUltm045r0bu6jsoRq74oRdjClGFTctGrtmXwYlnEVgtoztJG4c
- +gOcfMx1SfRe0NxgOqWvQ+T+mQ7l6bYf0DuKByLkOwALGkf/2GpBovobcnjpgx/QANsgOfJzS
- P80CmC6xBjCZtdcrLvovAxnlHaTbCE+UExU3i8Nf1CGucjqiRPGGpEzOX4jgZY4oL178zbBYb
- tGfrM7EZMsh8ErxrLDfzkSwZCC8o7jlauLxWf2jlIhx1aY0oqfJOBieXFjbvK8zdvSD3HXXPr
- LbpwCdJSz+DRWtkcksS33akZMB8eWOChyOnhFwyVxpIIZyGRwZFhyUgTPOGurn+pvxQagVB5C
- BTIQeQNEGEa1zxvKmnhNhz+kx4hyiK6PMBn2zkzAsY5JmK9EuWgErp8niVolb9CR9oR1Z2Otc
- jW/gPKcQi/8UAHKwctayTsRdX/PxfOTwHkMKTAjJpb7DI2YCNU53vudFUKVpykCeF/tJduAGO
- 33YvZTISpZfa/jgnaj3bDCrQI9YsSELB9FQ2tHLLa0w6/SuQ8AbXGk0/d7I=
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hello folks,
+=46rom 1892b9ff8045bac6fe166802b2d8a8a3111c1e0c Mon Sep 17 00:00:00 2001
+From: Johannes Brechtmann <johannes@jnbr.me>
+Date: Tue, 12 Mar 2019 17:50:12 +0100
+Subject: [PATCH] selinux: use kernel definition of PF_MAX in scripts
 
+Building selinux scripts of old releases on a current host fails with:
 
-YFYI: I've started a standalone version of Kconfig, which can be used
-other programs. There have been some attempts to do so, but none seem
-to be still alive.
+    In file included from scripts/selinux/genheaders/genheaders.c:19:
+    ./security/selinux/include/classmap.h:245:2: error: #error New
+    address family defined, please update secclass_map.
 
-I intend to keep it alive for a long time and sync it w/ the kernel
-regularily. The program is meant to be installed just as any other
-program (not as part as some other, like it already is in the kernel
-or busybox, etc) and I'm going to package it to some distros, too.
+Fix the issue by including linux/socket.h from kernel instead of
+sys/socket.h from host.
 
-At the moment, I'm just supporting menuconfig (other versions follow).
-Later, I'll also makefile includes for common stuff (eg. handle module
-targets like we do in the kernel, etc).
+Signed-off-by: Johannes Brechtmann <johannes@jnbr.me>
+---
+ scripts/selinux/genheaders/genheaders.c | 2 +-
+ scripts/selinux/mdp/mdp.c               | 2 +-
+ 2 files changed, 2 insertions(+), 2 deletions(-)
 
-I'll yet have to find a decent way for syncing w/ the kernel, while
-retaining history. Maybe some filter-branch + rebase voodoo ;-)
+diff --git a/scripts/selinux/genheaders/genheaders.c b/scripts/selinux/genh=
+eaders/genheaders.c
+index 1ceedea847dd..6db7e07fbc4c 100644
+--- a/scripts/selinux/genheaders/genheaders.c
++++ b/scripts/selinux/genheaders/genheaders.c
+@@ -9,7 +9,7 @@
+ #include <string.h>
+ #include <errno.h>
+ #include <ctype.h>
+-#include <sys/socket.h>
++#include <linux/socket.h>
+=20
+ struct security_class_mapping {
+ 	const char *name;
+diff --git a/scripts/selinux/mdp/mdp.c b/scripts/selinux/mdp/mdp.c
+index 073fe7537f6c..744d9fc9c0bd 100644
+--- a/scripts/selinux/mdp/mdp.c
++++ b/scripts/selinux/mdp/mdp.c
+@@ -32,7 +32,7 @@
+ #include <stdlib.h>
+ #include <unistd.h>
+ #include <string.h>
+-#include <sys/socket.h>
++#include <linux/socket.h>
+=20
+ static void usage(char *name)
+ {
+--=20
+2.21.0
 
-Feel free to play around :)
-
-https://github.com/metux/kconfig
-
---mtx
-
--- 
-Enrico Weigelt, metux IT consult
-Free software and Linux embedded engineering
-info@metux.net -- +49-151-27565287
