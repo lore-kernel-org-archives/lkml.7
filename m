@@ -4,51 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 93B08C43381
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 18:01:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8063DC43381
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 18:01:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6523D2173C
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 18:01:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4FF5E205C9
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 18:01:26 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1552413677;
-	bh=kLMcvt54jUyMa8fUvuZRSrEkyGzzoOUEdFkvDC/BYL8=;
+	s=default; t=1552413686;
+	bh=5kHaqUmfpLMXkY+5HePOO2XMbhU6BtfMp74J1+Gcgtc=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=NNxqy7zTgz78O4OI58StA4hyTF6axGWaTtz58wy3Zg+qlZn3v0SRp+3h41hnUWqTF
-	 La+J6+yJIf9qoD+db40FadMp21t6gou4X426RcnRQ/KyabmohHHouWE/ROyBmOLzOg
-	 edcDBK5ozHOve7nkwzkHe5jwI4eYgdXT1O5XwnvA=
+	b=Gpt3CQZrswFSizlk/iGgB//xFr35DM94hLlJIBXi9U+vYboPU3gZPzfunYtkXD1fl
+	 uS/n8+TQfVxQjQ6oD6fxA6THA7JbL2Zhn5TsTgbZL8YGKFw0CrKoV9S/Gi1DK7W3y9
+	 1YSq7USug6LKJVkseHqXBsuj2FF7Jgpmv8/wC9iU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728227AbfCLSBP (ORCPT
+        id S1728017AbfCLSBY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 12 Mar 2019 14:01:15 -0400
-Received: from mail.kernel.org ([198.145.29.99]:49786 "EHLO mail.kernel.org"
+        Tue, 12 Mar 2019 14:01:24 -0400
+Received: from mail.kernel.org ([198.145.29.99]:49536 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727842AbfCLRNO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 12 Mar 2019 13:13:14 -0400
+        id S1727834AbfCLRNM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 12 Mar 2019 13:13:12 -0400
 Received: from localhost (unknown [104.133.8.98])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 437722177E;
-        Tue, 12 Mar 2019 17:13:13 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id C990D2183E;
+        Tue, 12 Mar 2019 17:13:11 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1552410793;
-        bh=kLMcvt54jUyMa8fUvuZRSrEkyGzzoOUEdFkvDC/BYL8=;
+        s=default; t=1552410791;
+        bh=5kHaqUmfpLMXkY+5HePOO2XMbhU6BtfMp74J1+Gcgtc=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=FWV7PhyxdciHB/Gpyiz6918DUgzVc6HlIv3hibXCjMGkL9/RzZ7gexmmRtz+sclZg
-         FWrbNFVYLnKSwULIqE2Havtix4SVqoVHt2SiYBmEXq2vpB3+Qh11bRI81aqdFptmI2
-         Pk1yMwOJKvZ02DSlAYvA/PogkBcGFoSXRIYEzLBo=
+        b=2Q/Y3k/glKW76ls1Wk0YH72dUkH3FO3NG2+tcMtf69SCHfyDPo9O6ZzUnlsj511q/
+         vRrkDh0N5dSP6tx2ZN8UMmniepG4OcntM48HybNddcs3nX7djywDEICSrHG9WGWzGC
+         tqjvd1REKhAkxvhmwgdD9J85+0mYUC5g164BOh9Y=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
+        stable@vger.kernel.org, Tomi Valkeinen <tomi.valkeinen@ti.com>,
         Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
-        Tomi Valkeinen <tomi.valkeinen@ti.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.20 138/171] drm/omap: dsi: Hack-fix DSI bus flags
-Date:   Tue, 12 Mar 2019 10:08:38 -0700
-Message-Id: <20190312170359.563760416@linuxfoundation.org>
+Subject: [PATCH 4.20 136/171] drm/omap: dsi: Fix crash in DSI debug dumps
+Date:   Tue, 12 Mar 2019 10:08:36 -0700
+Message-Id: <20190312170359.396944642@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190312170347.868927101@linuxfoundation.org>
 References: <20190312170347.868927101@linuxfoundation.org>
@@ -67,52 +66,73 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-[ Upstream commit 6297388e1eddd2f1345cea5892156223995bcf2d ]
+[ Upstream commit 4df04ac9b37f278c48bb696289aff8f81226af4b ]
 
-Since commit b4935e3a3cfa ("drm/omap: Store bus flags in the
-omap_dss_device structure") video mode flags are managed by the omapdss
-(and later omapdrm) core based on bus flags stored in omap_dss_device.
-This works fine for all devices whose video modes are set by the omapdss
-and omapdrm core, but breaks DSI operation as the DSI still uses legacy
-code paths and sets the DISPC timings manually.
+Reading any of the DSI debugfs files results in a crash, as wrong
+pointer is passed to the dump functions, and the dump functions use a
+wrong pointer. This patch fixes DSI debug dumps.
 
-To fix the problem properly we should move the DSI encoder to the new
-encoder model. This will however require a considerable amount of work.
-Restore DSI operation by adding back video mode flags handling in the
-DSI encoder driver as a hack in the meantime.
-
-Fixes: b4935e3a3cfa ("drm/omap: Store bus flags in the omap_dss_device structure")
-Signed-off-by: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-Reviewed-by: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+Fixes: f3ed97f9ae7d ("drm/omap: dsi: Simplify debugfs implementation")
 Signed-off-by: Tomi Valkeinen <tomi.valkeinen@ti.com>
-Link: https://patchwork.freedesktop.org/patch/msgid/20190111035120.20668-5-laurent.pinchart@ideasonboard.com
+Reviewed-by: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+Signed-off-by: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+Signed-off-by: Tomi Valkeinen <tomi.valkeinen@ti.com>
+Link: https://patchwork.freedesktop.org/patch/msgid/20190111035120.20668-3-laurent.pinchart@ideasonboard.com
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/gpu/drm/omapdrm/dss/dsi.c | 11 +++++++++++
- 1 file changed, 11 insertions(+)
+ drivers/gpu/drm/omapdrm/dss/dsi.c | 12 ++++++------
+ 1 file changed, 6 insertions(+), 6 deletions(-)
 
 diff --git a/drivers/gpu/drm/omapdrm/dss/dsi.c b/drivers/gpu/drm/omapdrm/dss/dsi.c
-index b5685018d830..64fb788b6647 100644
+index 00a9c2ab9e6c..277f9dd2ec8c 100644
 --- a/drivers/gpu/drm/omapdrm/dss/dsi.c
 +++ b/drivers/gpu/drm/omapdrm/dss/dsi.c
-@@ -4751,6 +4751,17 @@ static int dsi_set_config(struct omap_dss_device *dssdev,
- 	dsi->vm.flags |= DISPLAY_FLAGS_HSYNC_HIGH;
- 	dsi->vm.flags &= ~DISPLAY_FLAGS_VSYNC_LOW;
- 	dsi->vm.flags |= DISPLAY_FLAGS_VSYNC_HIGH;
-+	/*
-+	 * HACK: These flags should be handled through the omap_dss_device bus
-+	 * flags, but this will only be possible when the DSI encoder will be
-+	 * converted to the omapdrm-managed encoder model.
-+	 */
-+	dsi->vm.flags &= ~DISPLAY_FLAGS_PIXDATA_NEGEDGE;
-+	dsi->vm.flags |= DISPLAY_FLAGS_PIXDATA_POSEDGE;
-+	dsi->vm.flags &= ~DISPLAY_FLAGS_DE_LOW;
-+	dsi->vm.flags |= DISPLAY_FLAGS_DE_HIGH;
-+	dsi->vm.flags &= ~DISPLAY_FLAGS_SYNC_POSEDGE;
-+	dsi->vm.flags |= DISPLAY_FLAGS_SYNC_NEGEDGE;
+@@ -1406,7 +1406,7 @@ static void dsi_pll_disable(struct dss_pll *pll)
  
- 	dss_mgr_set_timings(&dsi->output, &dsi->vm);
+ static int dsi_dump_dsi_clocks(struct seq_file *s, void *p)
+ {
+-	struct dsi_data *dsi = p;
++	struct dsi_data *dsi = s->private;
+ 	struct dss_pll_clock_info *cinfo = &dsi->pll.cinfo;
+ 	enum dss_clk_source dispc_clk_src, dsi_clk_src;
+ 	int dsi_module = dsi->module_id;
+@@ -1467,7 +1467,7 @@ static int dsi_dump_dsi_clocks(struct seq_file *s, void *p)
+ #ifdef CONFIG_OMAP2_DSS_COLLECT_IRQ_STATS
+ static int dsi_dump_dsi_irqs(struct seq_file *s, void *p)
+ {
+-	struct dsi_data *dsi = p;
++	struct dsi_data *dsi = s->private;
+ 	unsigned long flags;
+ 	struct dsi_irq_stats stats;
  
+@@ -1558,7 +1558,7 @@ static int dsi_dump_dsi_irqs(struct seq_file *s, void *p)
+ 
+ static int dsi_dump_dsi_regs(struct seq_file *s, void *p)
+ {
+-	struct dsi_data *dsi = p;
++	struct dsi_data *dsi = s->private;
+ 
+ 	if (dsi_runtime_get(dsi))
+ 		return 0;
+@@ -5083,15 +5083,15 @@ static int dsi_bind(struct device *dev, struct device *master, void *data)
+ 
+ 	snprintf(name, sizeof(name), "dsi%u_regs", dsi->module_id + 1);
+ 	dsi->debugfs.regs = dss_debugfs_create_file(dss, name,
+-						    dsi_dump_dsi_regs, &dsi);
++						    dsi_dump_dsi_regs, dsi);
+ #ifdef CONFIG_OMAP2_DSS_COLLECT_IRQ_STATS
+ 	snprintf(name, sizeof(name), "dsi%u_irqs", dsi->module_id + 1);
+ 	dsi->debugfs.irqs = dss_debugfs_create_file(dss, name,
+-						    dsi_dump_dsi_irqs, &dsi);
++						    dsi_dump_dsi_irqs, dsi);
+ #endif
+ 	snprintf(name, sizeof(name), "dsi%u_clks", dsi->module_id + 1);
+ 	dsi->debugfs.clks = dss_debugfs_create_file(dss, name,
+-						    dsi_dump_dsi_clocks, &dsi);
++						    dsi_dump_dsi_clocks, dsi);
+ 
+ 	return 0;
+ }
 -- 
 2.19.1
 
