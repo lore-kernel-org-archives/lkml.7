@@ -2,144 +2,190 @@ Return-Path: <SRS0=J4ZE=RP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIMWL_WL_MED,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 979F1C43381
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 21:00:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EFEA3C43381
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 21:02:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 558A82171F
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 21:00:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B7D7E214AE
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 21:02:49 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=fb.com header.i=@fb.com header.b="aSTI5viQ";
-	dkim=pass (1024-bit key) header.d=fb.onmicrosoft.com header.i=@fb.onmicrosoft.com header.b="VizYWNBR"
+	dkim=pass (2048-bit key) header.d=baylibre-com.20150623.gappssmtp.com header.i=@baylibre-com.20150623.gappssmtp.com header.b="eB/Ww7os"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726616AbfCLVAq (ORCPT
+        id S1726786AbfCLVCs (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 12 Mar 2019 17:00:46 -0400
-Received: from mx0a-00082601.pphosted.com ([67.231.145.42]:48306 "EHLO
-        mx0a-00082601.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1725894AbfCLVAp (ORCPT
+        Tue, 12 Mar 2019 17:02:48 -0400
+Received: from mail-pg1-f194.google.com ([209.85.215.194]:43860 "EHLO
+        mail-pg1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726284AbfCLVCs (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 12 Mar 2019 17:00:45 -0400
-Received: from pps.filterd (m0044010.ppops.net [127.0.0.1])
-        by mx0a-00082601.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x2CKlxYd009561;
-        Tue, 12 Mar 2019 14:00:12 -0700
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=fb.com; h=from : to : cc : subject
- : date : message-id : references : in-reply-to : content-type : content-id
- : content-transfer-encoding : mime-version; s=facebook;
- bh=cY4mEZ4esDFzMlNbi+jsYnZctU3i88P5znUQCCG/DYE=;
- b=aSTI5viQgL9v/7Ud0mCBGfHt4TI2lUgMzxIuiAaZ8m8F0JXZxxR+nJ5y7sTqLn5Fb7C7
- O7IaD/n9apGECgk8E8pW8uvwYbhq4pAAKGpCopiw5fuOak9M9U1oqSLmT6G34iHUx9b7
- 0Bt54rr44FGE8mQ5bKmMRbQj/3NfUDA1Rvk= 
-Received: from mail.thefacebook.com ([199.201.64.23])
-        by mx0a-00082601.pphosted.com with ESMTP id 2r6km4g4qq-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-SHA384 bits=256 verify=NOT);
-        Tue, 12 Mar 2019 14:00:12 -0700
-Received: from prn-hub06.TheFacebook.com (2620:10d:c081:35::130) by
- prn-hub01.TheFacebook.com (2620:10d:c081:35::125) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA384) id
- 15.1.1713.5; Tue, 12 Mar 2019 14:00:09 -0700
-Received: from NAM05-BY2-obe.outbound.protection.outlook.com (192.168.54.28)
- by o365-in.thefacebook.com (192.168.16.30) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA384) id 15.1.1713.5
- via Frontend Transport; Tue, 12 Mar 2019 14:00:08 -0700
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=fb.onmicrosoft.com;
- s=selector1-fb-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=cY4mEZ4esDFzMlNbi+jsYnZctU3i88P5znUQCCG/DYE=;
- b=VizYWNBRf1FsnztOqASj+SIOj5qoNRtFc6FlBbd7iIreARbwdNlLJOKY1ZBf8Ho+YySk4RhboNPdFN/58HkaTjQoJdzDGX4OsBniHk1JRDt4pnf2BBxtVr8ytR64u0cS5LtWm4yMZT8BP3mOTjBGjJtxuw6UoIOWvplKiHWxrhM=
-Received: from MWHPR15MB1264.namprd15.prod.outlook.com (10.175.3.14) by
- MWHPR15MB1167.namprd15.prod.outlook.com (10.175.2.21) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.1686.19; Tue, 12 Mar 2019 21:00:07 +0000
-Received: from MWHPR15MB1264.namprd15.prod.outlook.com
- ([fe80::cc6:7ec2:94ef:f8cb]) by MWHPR15MB1264.namprd15.prod.outlook.com
- ([fe80::cc6:7ec2:94ef:f8cb%9]) with mapi id 15.20.1709.011; Tue, 12 Mar 2019
- 21:00:07 +0000
-From:   Calvin Owens <calvinowens@fb.com>
-To:     Sergey Senozhatsky <sergey.senozhatsky.work@gmail.com>
-CC:     Petr Mladek <pmladek@suse.com>,
-        Sergey Senozhatsky <sergey.senozhatsky@gmail.com>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        "Greg Kroah-Hartman" <gregkh@linuxfoundation.org>,
-        Jonathan Corbet <corbet@lwn.net>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linux-serial@vger.kernel.org" <linux-serial@vger.kernel.org>
-Subject: Re: [PATCH 1/4] printk: Introduce per-console loglevel setting
-Thread-Topic: [PATCH 1/4] printk: Introduce per-console loglevel setting
-Thread-Index: AQHU0JG3e/ht7zPQPUuht9he6Dkc8qYBF9cAgAd0JgA=
-Date:   Tue, 12 Mar 2019 21:00:07 +0000
-Message-ID: <20190312210004.GC5982@Haydn>
-References: <cover.1551486732.git.calvinowens@fb.com>
- <06cd267ef5439a9391368423b608959f5f1b1a63.1551486732.git.calvinowens@fb.com>
- <20190308031032.GA30056@jagdpanzerIV>
-In-Reply-To: <20190308031032.GA30056@jagdpanzerIV>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-clientproxiedby: MWHPR1201CA0008.namprd12.prod.outlook.com
- (2603:10b6:301:4a::18) To MWHPR15MB1264.namprd15.prod.outlook.com
- (2603:10b6:320:24::14)
-x-ms-exchange-messagesentrepresentingtype: 1
-x-originating-ip: [2620:10d:c090:200::ce7e]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: 1661ac0d-1d49-4682-3fbe-08d6a72db4f0
-x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600127)(711020)(4605104)(2017052603328)(7153060)(7193020);SRVR:MWHPR15MB1167;
-x-ms-traffictypediagnostic: MWHPR15MB1167:
-x-microsoft-exchange-diagnostics: 1;MWHPR15MB1167;20:iNdytKEEIX0lMlBE7WKRSI7Ws2VpPvaajlH86RwjGVxEbPSutqzzrnXeLcumRGuE9uJrmPO3n1tMiGXq7Ha8OCjQiAWHIQ3pwIxRh7fwvvJRsHAUVdQi8oiqK1otUC7MxuQmIoy+UCLgtQxwPZ9Y51y2VN98VxrfvaDsA4MZY0U=
-x-microsoft-antispam-prvs: <MWHPR15MB11670161D65EED7E265B64F9CE490@MWHPR15MB1167.namprd15.prod.outlook.com>
-x-forefront-prvs: 09749A275C
-x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(7916004)(366004)(376002)(136003)(39860400002)(346002)(396003)(189003)(199004)(305945005)(7736002)(316002)(54906003)(11346002)(446003)(46003)(33656002)(6486002)(9686003)(14454004)(229853002)(6512007)(33716001)(186003)(105586002)(81156014)(6436002)(68736007)(52116002)(8936002)(106356001)(6506007)(99286004)(102836004)(478600001)(386003)(76176011)(8676002)(5660300002)(81166006)(53936002)(476003)(4326008)(71200400001)(71190400001)(256004)(6116002)(6916009)(486006)(86362001)(2906002)(6246003)(1076003)(14444005)(25786009)(97736004);DIR:OUT;SFP:1102;SCL:1;SRVR:MWHPR15MB1167;H:MWHPR15MB1264.namprd15.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
-received-spf: None (protection.outlook.com: fb.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam-message-info: ACZWRGHpC5726V7YZMLjYIMfrQ5dY/wbx+v1TGzfFr0oavVCnB+9siQRi4LcvG5NwYQ0blymUp7EeC6pATEx/4UpegPaYnBL8JYuFWjFaHUe/bnNwFOkPYiBRcE4woKG6VTnxzJ7ZSU10S/ApPexdUN9fZ6iEklB6VxIK5WtFHOROCp26x2QVlTwSM3WuG1XHGamyPXH2Gxft5hEfG4XvWnrRNrW5sXlfmH2y/0aN3D4e8VRIEsrlKy7XAM/vzwrbbJ7zZQDvyS+S+hafnRd0c8mopS2D8cTTjVQP7H0Jspa2aUe2RdZ23BzVUV6zT5wPHzcYptIQQdrfKfFSU232tA8wH/8nuTsKpye6jkCMTN1qzgDyftrNzO4SrfpXvWbx1VMtgE852qTzDJYubliAWOrtJ2ZoqvB15pzNeKGXlo=
-Content-Type: text/plain; charset="utf-8"
-Content-ID: <082ACFE34DBB2146802CB7B5573FC382@namprd15.prod.outlook.com>
-Content-Transfer-Encoding: base64
+        Tue, 12 Mar 2019 17:02:48 -0400
+Received: by mail-pg1-f194.google.com with SMTP id l11so2719210pgq.10
+        for <linux-kernel@vger.kernel.org>; Tue, 12 Mar 2019 14:02:47 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=baylibre-com.20150623.gappssmtp.com; s=20150623;
+        h=from:to:cc:subject:in-reply-to:references:date:message-id
+         :mime-version;
+        bh=s1zAivap7ECwynYe4xnVyvyJ8rC0V8FIe7PE8u9zfRQ=;
+        b=eB/Ww7os4vu6TCDty5HZIcM8A5fEpeK8Sg857UyvOmz+ZrRNseLtbo2x68efFdLvvH
+         2Adu4yDCZXj8vFZtVdL9X3FjHcw9/p1mEjOzj+yyh20cpC5AZZIucn3cITVDpn8os2Oq
+         Ld4uWb5a5BCBgielP5mXu0oQ6VoeT6CToO941JkRRMtw3Knqz3CLchfEAd0TYCNo6t4C
+         2l/mkUAgG54L8fZw29svQqK8moR0lRmV1GIfxk7OhOs1TsWY27n4KDiJM2f7PQaV80KA
+         1DE0nfBrYCfubh5GbrSo/X24lHdOovbhGnxn4BOZ2eyqBIePj3PJ0PgahWVFfa40y0Xq
+         eDwA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:in-reply-to:references:date
+         :message-id:mime-version;
+        bh=s1zAivap7ECwynYe4xnVyvyJ8rC0V8FIe7PE8u9zfRQ=;
+        b=Pzz527b+gcwyzHO+lTJqUNrzd+T5erDzvJSCy5jVRcx1PMar9gM9FVFGbK0nL439YJ
+         8r3Kho0ZXof3miZAuscPFaSsTLDOQQcRZwzHLIqvko50YjLTXeXzC0ynh+VcZG05tNOV
+         NX6oOuNBJDLEd3xO/ufxHcIrDL8M0NiF3gcqFsewETW7cmRM6SENQMdb+xz9oOLb9uY2
+         bROLZmtNVpYetqgOylnl4nDOP6dKcLm8dQdPDqKb2+c0KzNPjGGR6kqBfteVCUtOB9IP
+         FQt/zNFfPgZF8QnboKbEh7W4YSIBMdVhL+Zs1spbuPArs/LFBlthaOKq1EGYQvJ7xleq
+         WyvA==
+X-Gm-Message-State: APjAAAVfZCeh9ocF9OhaRyDwUPd3X9Ds/RBT9O8G+JMzdm8shcgWJ90K
+        C3Yfv9mqploYDhB1ncZPoNWszQ==
+X-Google-Smtp-Source: APXvYqwcYN+hh84jUZuAHGI1ZxzE4OR034TULZaPm2fef+FgtZiXl3TM7o/j3jKlW8Y/kpPLjIfXmw==
+X-Received: by 2002:a63:fc49:: with SMTP id r9mr36671226pgk.447.1552424566702;
+        Tue, 12 Mar 2019 14:02:46 -0700 (PDT)
+Received: from localhost ([2601:602:9200:a1a5:1daf:3f96:9f7f:33ba])
+        by smtp.googlemail.com with ESMTPSA id q62sm22235827pfi.183.2019.03.12.14.02.45
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Tue, 12 Mar 2019 14:02:46 -0700 (PDT)
+From:   Kevin Hilman <khilman@baylibre.com>
+To:     Neil Armstrong <narmstrong@baylibre.com>
+Cc:     Neil Armstrong <narmstrong@baylibre.com>,
+        linux-amlogic@lists.infradead.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 6/9] arm64: dts: meson: g12a: Add UART A, B & C nodes and pins
+In-Reply-To: <20190307151342.7381-7-narmstrong@baylibre.com>
+References: <20190307151342.7381-1-narmstrong@baylibre.com> <20190307151342.7381-7-narmstrong@baylibre.com>
+Date:   Tue, 12 Mar 2019 14:02:45 -0700
+Message-ID: <7hbm2fu7pm.fsf@baylibre.com>
 MIME-Version: 1.0
-X-MS-Exchange-CrossTenant-Network-Message-Id: 1661ac0d-1d49-4682-3fbe-08d6a72db4f0
-X-MS-Exchange-CrossTenant-originalarrivaltime: 12 Mar 2019 21:00:07.4047
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 8ae927fe-1255-47a7-a2af-5f3a069daaa2
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: MWHPR15MB1167
-X-OriginatorOrg: fb.com
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-03-12_12:,,
- signatures=0
-X-Proofpoint-Spam-Reason: safe
-X-FB-Internal: Safe
+Content-Type: text/plain
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-T24gRnJpZGF5IDAzLzA4IGF0IDEyOjEwICswOTAwLCBTZXJnZXkgU2Vub3poYXRza3kgd3JvdGU6
-DQo+IE9uICgwMy8wMS8xOSAxNjo0OCksIENhbHZpbiBPd2VucyB3cm90ZToNCj4gWy4uXQ0KPiA+
-ICAJCW1zZyA9IGxvZ19mcm9tX2lkeChjb25zb2xlX2lkeCk7DQo+ID4gLQkJaWYgKHN1cHByZXNz
-X21lc3NhZ2VfcHJpbnRpbmcobXNnLT5sZXZlbCkpIHsNCj4gPiAtCQkJLyoNCj4gPiAtCQkJICog
-U2tpcCByZWNvcmQgd2UgaGF2ZSBidWZmZXJlZCBhbmQgYWxyZWFkeSBwcmludGVkDQo+ID4gLQkJ
-CSAqIGRpcmVjdGx5IHRvIHRoZSBjb25zb2xlIHdoZW4gd2UgcmVjZWl2ZWQgaXQsIGFuZA0KPiA+
-IC0JCQkgKiByZWNvcmQgdGhhdCBoYXMgbGV2ZWwgYWJvdmUgdGhlIGNvbnNvbGUgbG9nbGV2ZWwu
-DQo+ID4gLQkJCSAqLw0KPiA+IC0JCQljb25zb2xlX2lkeCA9IGxvZ19uZXh0KGNvbnNvbGVfaWR4
-KTsNCj4gPiAtCQkJY29uc29sZV9zZXErKzsNCj4gPiAtCQkJZ290byBza2lwOw0KPiA+IC0JCX0N
-Cj4gPiAgDQo+ID4gIAkJLyogT3V0cHV0IHRvIGFsbCBjb25zb2xlcyBvbmNlIG9sZCBtZXNzYWdl
-cyByZXBsYXllZC4gKi8NCj4gPiAgCQlpZiAodW5saWtlbHkoZXhjbHVzaXZlX2NvbnNvbGUgJiYN
-Cj4gPiBAQCAtMjQwNSw3ICsyNDAyLDcgQEAgdm9pZCBjb25zb2xlX3VubG9jayh2b2lkKQ0KPiA+
-ICAJCWNvbnNvbGVfbG9ja19zcGlubmluZ19lbmFibGUoKTsNCj4gPiAgDQo+ID4gIAkJc3RvcF9j
-cml0aWNhbF90aW1pbmdzKCk7CS8qIGRvbid0IHRyYWNlIHByaW50IGxhdGVuY3kgKi8NCj4gPiAt
-CQljYWxsX2NvbnNvbGVfZHJpdmVycyhleHRfdGV4dCwgZXh0X2xlbiwgdGV4dCwgbGVuKTsNCj4g
-PiArCQljYWxsX2NvbnNvbGVfZHJpdmVycyhleHRfdGV4dCwgZXh0X2xlbiwgdGV4dCwgbGVuLCBt
-c2ctPmxldmVsKTsNCj4gPiAgCQlzdGFydF9jcml0aWNhbF90aW1pbmdzKCk7DQo+IA0KPiBTbyBp
-dCBzZWVtcyB0aGF0IG5vdyB3ZSBhbHdheXMgZm9ybWF0IHRoZSB0ZXh0IGFuZCBleHQgbWVzc2Fn
-ZSAoaWYNCj4gbmVlZGVkKSBhbmQgb25seSB0aGVuIGNoZWNrIGlmIHRoZXJlIGlzIGF0IGxlYXN0
-IG9uZSBjb25zb2xlIHdlIGNhbg0KPiBwcmludCB0aGF0IG1lc3NhZ2Ugb24uDQo+IA0KPiBDYW4g
-d2UgaXRlcmF0ZSB0aGUgY29uc29sZXMgZmlyc3QgYW5kIGNoZWNrIGlmIG1zZyBpcyB3b3J0aA0K
-PiB0aGUgZWZmb3J0IChwZXIgY29uc29sZSBzdXBwcmVzc19tZXNzYWdlX3ByaW50aW5nKCkpIGFu
-ZCBvbmx5DQo+IGlmIGl0IGlzIGRvIGFsbCB0aGUgZm9ybWF0dGluZyBhbmQgY2FsbCBjb25zb2xl
-IGRyaXZlcnM/DQoNCk1ha2VzIHNlbnNlLCB3aWxsIGRvLg0KDQpUaGFua3MsDQpDYWx2aW4NCiAN
-Cj4gCS1zcw0K
+Neil Armstrong <narmstrong@baylibre.com> writes:
+
+> This patch adds the 2 UART nodes in the EE power domain with the corresponding
+> pinctrl nodes.
+>
+> Signed-off-by: Neil Armstrong <narmstrong@baylibre.com>
+
+Similar to PATCH 4/9, are you wanting to move this to the board series?
+
+Kevin
+
+> ---
+>  arch/arm64/boot/dts/amlogic/meson-g12a.dtsi | 82 +++++++++++++++++++++
+>  1 file changed, 82 insertions(+)
+>
+> diff --git a/arch/arm64/boot/dts/amlogic/meson-g12a.dtsi b/arch/arm64/boot/dts/amlogic/meson-g12a.dtsi
+> index 2a700bb45d04..50e2cd36e08b 100644
+> --- a/arch/arm64/boot/dts/amlogic/meson-g12a.dtsi
+> +++ b/arch/arm64/boot/dts/amlogic/meson-g12a.dtsi
+> @@ -113,6 +113,61 @@
+>  						#gpio-cells = <2>;
+>  						gpio-ranges = <&periphs_pinctrl 0 0 86>;
+>  					};
+> +
+> +					uart_a_pins: uart_a {
+> +						mux {
+> +							groups = "uart_a_tx",
+> +								 "uart_a_rx";
+> +							function = "uart_a";
+> +							bias-disable;
+> +						};
+> +					};
+> +
+> +					uart_a_cts_rts_pins: uart_a_cts_rts {
+> +						mux {
+> +							groups = "uart_a_cts",
+> +								 "uart_a_rts";
+> +							function = "uart_a";
+> +							bias-disable;
+> +						};
+> +					};
+> +
+> +					uart_ao_a_c_pins: uart_ao_a_c {
+> +						mux {
+> +							groups = "uart_ao_a_rx_c",
+> +								 "uart_ao_a_tx_c";
+> +							function = "uart_ao_a_c";
+> +							bias-disable;
+> +						};
+> +					};
+> +
+> +					uart_b_pins: uart_b {
+> +						mux {
+> +							groups = "uart_b_tx",
+> +								 "uart_b_rx";
+> +							function = "uart_b";
+> +							bias-disable;
+> +						};
+> +					};
+> +
+> +					uart_c_pins: uart_c {
+> +						mux {
+> +							groups = "uart_c_tx",
+> +								 "uart_c_rx";
+> +							function = "uart_c";
+> +							bias-disable;
+> +						};
+> +					};
+> +
+> +					uart_c_cts_rts_pins: uart_c_cts_rts {
+> +						mux {
+> +							groups = "uart_c_cts",
+> +								 "uart_c_rts";
+> +							function = "uart_c";
+> +							bias-disable;
+> +						};
+> +					};
+> +				};
+>  			};
+>  
+>  			hiu: bus@3c000 {
+> @@ -256,6 +311,33 @@
+>  				compatible = "amlogic,meson-g12a-clk-measure";
+>  				reg = <0x0 0x18000 0x0 0x10>;
+>  			};
+> +
+> +			uart_C: serial@22000 {
+> +				compatible = "amlogic,meson-gx-uart";
+> +				reg = <0x0 0x22000 0x0 0x18>;
+> +				interrupts = <GIC_SPI 93 IRQ_TYPE_EDGE_RISING>;
+> +				clocks = <&xtal>, <&clkc CLKID_UART1>, <&xtal>;
+> +				clock-names = "xtal", "pclk", "baud";
+> +				status = "disabled";
+> +			};
+> +
+> +			uart_B: serial@23000 {
+> +				compatible = "amlogic,meson-gx-uart";
+> +				reg = <0x0 0x23000 0x0 0x18>;
+> +				interrupts = <GIC_SPI 75 IRQ_TYPE_EDGE_RISING>;
+> +				clocks = <&xtal>, <&clkc CLKID_UART1>, <&xtal>;
+> +				clock-names = "xtal", "pclk", "baud";
+> +				status = "disabled";
+> +			};
+> +
+> +			uart_A: serial@24000 {
+> +				compatible = "amlogic,meson-gx-uart";
+> +				reg = <0x0 0x24000 0x0 0x18>;
+> +				interrupts = <GIC_SPI 26 IRQ_TYPE_EDGE_RISING>;
+> +				clocks = <&xtal>, <&clkc CLKID_UART0>, <&xtal>;
+> +				clock-names = "xtal", "pclk", "baud";
+> +				status = "disabled";
+> +			};
+>  		};
+>  	};
+>  
+> -- 
+> 2.20.1
