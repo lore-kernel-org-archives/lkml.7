@@ -2,101 +2,132 @@ Return-Path: <SRS0=J4ZE=RP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.0 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_PASS autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C0BC9C43381
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 07:50:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6D256C4360F
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 07:52:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8F34821734
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 07:50:57 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=cogentembedded-com.20150623.gappssmtp.com header.i=@cogentembedded-com.20150623.gappssmtp.com header.b="nL6edNcN"
+	by mail.kernel.org (Postfix) with ESMTP id 470C1214AF
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 07:52:09 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727522AbfCLHu4 (ORCPT
+        id S1727524AbfCLHwI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 12 Mar 2019 03:50:56 -0400
-Received: from mail-lj1-f194.google.com ([209.85.208.194]:42414 "EHLO
-        mail-lj1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727496AbfCLHuy (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 12 Mar 2019 03:50:54 -0400
-Received: by mail-lj1-f194.google.com with SMTP id l16so1379581ljc.9
-        for <linux-kernel@vger.kernel.org>; Tue, 12 Mar 2019 00:50:53 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=cogentembedded-com.20150623.gappssmtp.com; s=20150623;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=lnU9zKsisr81L2NGsir7iwTiY7wAfYbdURDx3qKzauM=;
-        b=nL6edNcNdoLIeojmaL/OM9EpeyX06cb85+Zai/WGk7pN5xbExTz8DBEC4qcD+PxPsY
-         iQroLrHJgO+/n9Odj/+DZXN/4m2MOSHpzwmA9Fz7Etxsz9x+JqmgedeW60WDU2vO4pOB
-         n36+O8p+H5a0//3/BQTz+w9ZGYUHQCFxva/9XIbKFNECgloDTcF0S+qJa1bOOk41cZg2
-         96w99cMrdd1mBSJ09kBkzv7dHKKd5jLljB0nT2Kc6d/YSH15y2GXzUI4ApOTfh6mUe7T
-         7szdrPl6HmloFIs3bW+hvy2tpZ1w5wlZc+1S8vM24kZggZzlp+sKogkGZw2GncgCpesJ
-         XKfQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=lnU9zKsisr81L2NGsir7iwTiY7wAfYbdURDx3qKzauM=;
-        b=Rz6GHRmRYYM/Jua9wwmZzNFdvQot/D84sKqerqWCv7f6b7zxHd0DXUzpR5A9oFLrC1
-         OAKA6RzpB39q49PFYo4glfvu036NaP0TFX+ZO4+QCdjOcnthawgmN0INxjVPpQmKsNve
-         jOwnWpiDIsragHxgaNB+wJCS1UAKxixQ1sRtyeYJmhKmQBFbIFbzTFr33eqtf4GSkYL7
-         XixULgB/LTKsymLX9rfMUu4LmCryE3LyUsKx/pek2P7fQxEhy/qoTPHL6TUJMb4MuxF6
-         Tv/2dzomgM1czF9x0xMLIIF58trLW9l6Lg/6cn5Cm+p8xyB6Zqb+4qJhSTiLQd7LldbS
-         +tjg==
-X-Gm-Message-State: APjAAAXaXh1ef9HO9Z7HA6kulu4CgefK2FPQqI23FyoKgIBUduhMGpJu
-        NPqEE7UwRyDC/i6MAI4BoVb3chCzCOM=
-X-Google-Smtp-Source: APXvYqwYgMBQkzIv9vO4GqoxstFKMlnUb6zgA+ZOseQrfbG2FvFYQnINNGLseiE6MT2qWQvSCkcXpg==
-X-Received: by 2002:a2e:408:: with SMTP id 8mr18986228lje.15.1552377052445;
-        Tue, 12 Mar 2019 00:50:52 -0700 (PDT)
-Received: from [192.168.0.199] ([31.173.87.174])
-        by smtp.gmail.com with ESMTPSA id u26sm1445142lfi.41.2019.03.12.00.50.50
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Tue, 12 Mar 2019 00:50:51 -0700 (PDT)
-Subject: Re: [PATCH v3] net: sh_eth: fix a missing check of of_get_phy_mode
-To:     Kangjie Lu <kjlu@umn.edu>
-Cc:     pakki001@umn.edu, "David S. Miller" <davem@davemloft.net>,
-        Vladimir Zapolskiy <vladimir_zapolskiy@mentor.com>,
-        Geert Uytterhoeven <geert+renesas@glider.be>,
-        Vladimir Barinov <vladimir.barinov@cogentembedded.com>,
-        Chris Brandt <chris.brandt@renesas.com>,
-        netdev@vger.kernel.org, linux-renesas-soc@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-References: <902bc3a0-94b5-cf00-6b41-f2724744fbe6@cogentembedded.com>
- <20190312074319.31161-1-kjlu@umn.edu>
-From:   Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
-Message-ID: <698b8971-75dc-e7a1-0d05-1a095e3fd34f@cogentembedded.com>
-Date:   Tue, 12 Mar 2019 10:50:44 +0300
-User-Agent: Mozilla/5.0 (Windows NT 6.3; WOW64; rv:60.0) Gecko/20100101
- Thunderbird/60.5.3
+        Tue, 12 Mar 2019 03:52:08 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:14794 "EHLO mx1.redhat.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725832AbfCLHwH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 12 Mar 2019 03:52:07 -0400
+Received: from smtp.corp.redhat.com (int-mx04.intmail.prod.int.phx2.redhat.com [10.5.11.14])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id 4FA493082200;
+        Tue, 12 Mar 2019 07:52:07 +0000 (UTC)
+Received: from [10.72.12.17] (ovpn-12-17.pek2.redhat.com [10.72.12.17])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 07EDA5DD74;
+        Tue, 12 Mar 2019 07:51:55 +0000 (UTC)
+Subject: Re: [RFC PATCH V2 0/5] vhost: accelerate metadata access through
+ vmap()
+To:     James Bottomley <James.Bottomley@HansenPartnership.com>,
+        David Miller <davem@davemloft.net>, mst@redhat.com
+Cc:     hch@infradead.org, kvm@vger.kernel.org,
+        virtualization@lists.linux-foundation.org, netdev@vger.kernel.org,
+        linux-kernel@vger.kernel.org, peterx@redhat.com,
+        linux-mm@kvack.org, aarcange@redhat.com,
+        linux-arm-kernel@lists.infradead.org, linux-parisc@vger.kernel.org
+References: <20190308141220.GA21082@infradead.org>
+ <56374231-7ba7-0227-8d6d-4d968d71b4d6@redhat.com>
+ <20190311095405-mutt-send-email-mst@kernel.org>
+ <20190311.111413.1140896328197448401.davem@davemloft.net>
+ <6b6dcc4a-2f08-ba67-0423-35787f3b966c@redhat.com>
+ <1552367685.23859.22.camel@HansenPartnership.com>
+From:   Jason Wang <jasowang@redhat.com>
+Message-ID: <f9e52313-0a06-22b6-140c-ded75eecde20@redhat.com>
+Date:   Tue, 12 Mar 2019 15:51:53 +0800
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.5.1
 MIME-Version: 1.0
-In-Reply-To: <20190312074319.31161-1-kjlu@umn.edu>
+In-Reply-To: <1552367685.23859.22.camel@HansenPartnership.com>
 Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 8bit
 Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.14
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.47]); Tue, 12 Mar 2019 07:52:07 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 12.03.2019 10:43, Kangjie Lu wrote:
 
-> of_get_phy_mode may fail and return a negative error code;
-> the fix checks the return value of of_get_phy_mode and
-> returns NULL of it fails.
-> 
-> Signed-off-by: Kangjie Lu <kjlu@umn.edu>
+On 2019/3/12 下午1:14, James Bottomley wrote:
+> On Tue, 2019-03-12 at 10:59 +0800, Jason Wang wrote:
+>> On 2019/3/12 上午2:14, David Miller wrote:
+>>> From: "Michael S. Tsirkin" <mst@redhat.com>
+>>> Date: Mon, 11 Mar 2019 09:59:28 -0400
+>>>
+>>>> On Mon, Mar 11, 2019 at 03:13:17PM +0800, Jason Wang wrote:
+>>>>> On 2019/3/8 下午10:12, Christoph Hellwig wrote:
+>>>>>> On Wed, Mar 06, 2019 at 02:18:07AM -0500, Jason Wang wrote:
+>>>>>>> This series tries to access virtqueue metadata through
+>>>>>>> kernel virtual
+>>>>>>> address instead of copy_user() friends since they had too
+>>>>>>> much
+>>>>>>> overheads like checks, spec barriers or even hardware
+>>>>>>> feature
+>>>>>>> toggling. This is done through setup kernel address through
+>>>>>>> vmap() and
+>>>>>>> resigter MMU notifier for invalidation.
+>>>>>>>
+>>>>>>> Test shows about 24% improvement on TX PPS. TCP_STREAM
+>>>>>>> doesn't see
+>>>>>>> obvious improvement.
+>>>>>> How is this going to work for CPUs with virtually tagged
+>>>>>> caches?
+>>>>> Anything different that you worry?
+>>>> If caches have virtual tags then kernel and userspace view of
+>>>> memory
+>>>> might not be automatically in sync if they access memory
+>>>> through different virtual addresses. You need to do things like
+>>>> flush_cache_page, probably multiple times.
+>>> "flush_dcache_page()"
+>>
+>> I get this. Then I think the current set_bit_to_user() is suspicious,
+>> we
+>> probably miss a flush_dcache_page() there:
+>>
+>>
+>> static int set_bit_to_user(int nr, void __user *addr)
+>> {
+>>           unsigned long log = (unsigned long)addr;
+>>           struct page *page;
+>>           void *base;
+>>           int bit = nr + (log % PAGE_SIZE) * 8;
+>>           int r;
+>>
+>>           r = get_user_pages_fast(log, 1, 1, &page);
+>>           if (r < 0)
+>>                   return r;
+>>           BUG_ON(r != 1);
+>>           base = kmap_atomic(page);
+>>           set_bit(bit, base);
+>>           kunmap_atomic(base);
+> This sequence should be OK.  get_user_pages() contains a flush which
+> clears the cache above the user virtual address, so on kmap, the page
+> is coherent at the new alias.  On parisc at least, kunmap embodies a
+> flush_dcache_page() which pushes any changes in the cache above the
+> kernel virtual address back to main memory and makes it coherent again
+> for the user alias to pick it up.
 
-Fixes: b356e978e92f ("sh_eth: add device tree support")
-Reviewed-by: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
 
-> ---
+It would be good if kmap()/kunmap() can do this but looks like we can 
+not assume this? For example, sparc's flush_dcache_page() doesn't do 
+flush_dcache_page(). And bio_copy_data_iter() do flush_dcache_page() 
+after kunmap_atomic().
 
-    It's a good practice to describe the changes between the patch versions here.
+Thanks
 
-[...]
 
-MBR, Sergei
+>
+> James
+>
