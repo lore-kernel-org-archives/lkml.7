@@ -2,81 +2,129 @@ Return-Path: <SRS0=J4ZE=RP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_MUTT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 28598C4360F
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 15:57:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 87E3BC43381
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 15:59:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DFA912147C
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 15:57:33 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1552406254;
-	bh=uFGF56FNDC++i8l3obPT4y6Bwd0/w+W7yiW6upID07w=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=J+KUJeJgnd3zHd6/CVo7Yju/wERQ4JVnRyhVx2ajR9ERYszfxaq6+U/3KbIqCpLdO
-	 tumWdDdlAv65Cbn4BSqfTzPGiqAh9qwoXZJWH+7ex4EcpU50kZlyg0uNGMU1AyDsF3
-	 5qDsOb7szM+ByY/gcqKEy7QUivd0ls2cRmAkcm34=
+	by mail.kernel.org (Postfix) with ESMTP id 56DCD2054F
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 15:59:24 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b="aJynixs3"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726612AbfCLP5c (ORCPT
+        id S1726510AbfCLP7W (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 12 Mar 2019 11:57:32 -0400
-Received: from mx2.suse.de ([195.135.220.15]:48552 "EHLO mx1.suse.de"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726272AbfCLP5c (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 12 Mar 2019 11:57:32 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx1.suse.de (Postfix) with ESMTP id 2DB6EAC5F;
-        Tue, 12 Mar 2019 15:57:31 +0000 (UTC)
-Date:   Tue, 12 Mar 2019 16:57:30 +0100
-From:   Michal Hocko <mhocko@kernel.org>
-To:     Oscar Salvador <osalvador@suse.de>
-Cc:     Qian Cai <cai@lca.pw>, akpm@linux-foundation.org, vbabka@suse.cz,
-        linux-mm@kvack.org, linux-kernel@vger.kernel.org
-Subject: Re: [RESEND PATCH] mm/hotplug: don't reset pagetype flags for offline
-Message-ID: <20190312155730.GZ5721@dhcp22.suse.cz>
-References: <20190310200102.88014-1-cai@lca.pw>
- <20190312153458.qvmrblg3pnokgx4d@d104.suse.de>
+        Tue, 12 Mar 2019 11:59:22 -0400
+Received: from perceval.ideasonboard.com ([213.167.242.64]:60228 "EHLO
+        perceval.ideasonboard.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725917AbfCLP7W (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 12 Mar 2019 11:59:22 -0400
+Received: from [192.168.0.21] (cpc89242-aztw30-2-0-cust488.18-1.cable.virginm.net [86.31.129.233])
+        by perceval.ideasonboard.com (Postfix) with ESMTPSA id EFC0A33C;
+        Tue, 12 Mar 2019 16:59:18 +0100 (CET)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ideasonboard.com;
+        s=mail; t=1552406359;
+        bh=io54To9FxPECqduKv6dSKmWHoGUJ5duFHD+rfRjcPzY=;
+        h=Reply-To:Subject:To:Cc:References:From:Date:In-Reply-To:From;
+        b=aJynixs3pTeSwkK82DMMTlvEVqWz4T/vlx9ReEbCHIgf+ekcAepHdLVOHrDmlLm56
+         b1j/NDjqxQGmH1W9bulGCLUo8/Gq+4IvnCIq23qHpBRPklL+85lzVwB7qF2odoKupk
+         60KSVnXyz4cE4y9iXUHDaxixxHP3Sw3jxvG04x1M=
+Reply-To: kieran.bingham+renesas@ideasonboard.com
+Subject: Re: [PATCH v2] gpu: drm: atomic_helper: Fix spelling errors
+To:     =?UTF-8?B?VmlsbGUgU3lyasOkbMOk?= <ville.syrjala@linux.intel.com>
+Cc:     linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org,
+        linux-renesas-soc@vger.kernel.org,
+        Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
+        Maxime Ripard <maxime.ripard@bootlin.com>,
+        Sean Paul <sean@poorly.run>, David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>
+References: <20190312003307.14116-1-kieran.bingham+renesas@ideasonboard.com>
+ <20190312151443.GE3888@intel.com>
+From:   Kieran Bingham <kieran.bingham+renesas@ideasonboard.com>
+Organization: Ideas on Board
+Message-ID: <7b0ff11c-68f3-4e2e-f969-27a14062158e@ideasonboard.com>
+Date:   Tue, 12 Mar 2019 15:59:15 +0000
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.4.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190312153458.qvmrblg3pnokgx4d@d104.suse.de>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <20190312151443.GE3888@intel.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-GB
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue 12-03-19 16:35:06, Oscar Salvador wrote:
-[...]
-> One thing I noticed when looking at start_isolate_page_range and 
-> undo_isolate_page_range functions, is that start_isolate_page_range increments
-> the number of isolated pageblocks, while undo_isolate_page_range does the counter
-> part.
-> Since undo_isolate_page_range is really never called during offlining,
-> we leave zone->nr_isolate_pageblock with a stale value.
+Hi Ville,
+
+On 12/03/2019 15:14, Ville Syrjälä wrote:
+> On Tue, Mar 12, 2019 at 12:33:07AM +0000, Kieran Bingham wrote:
+>> Trivial fixes identified while working on the DRM code.
+>>
+>>   s/artifically/artificially/
+>>   s/achive/achieve/
+>>
+>> Signed-off-by: Kieran Bingham <kieran.bingham+renesas@ideasonboard.com>
+>> ---
+>>
+>> v2: - Actually spell achieve correctly!
 > 
-> I __think__  this does not matter much.
-> We only get to check whether a zone got isolated pageblocks in
-> has_isolate_pageblock(), and this is called from:
+> drm convention is to put this above the --- so that it gets included in
+> the commit msg.
+
+Oh - in linux-media these are just dropped.
+
+I'll try to remember this for my future work in DRM.
+
+I don't have commit access anyway, so can I presume whomever will pick
+this up will adjust if necessary?
+
+Or should I repost? (which might be a bit redundant just to move a patch
+version comment which would then increase again :D )
+
+
+> With that
+> Reviewed-by: Ville Syrjälä <ville.syrjala@linux.intel.com>
+
+Thanks,
+--
+Regards
+
+Kieran
+
+
 > 
-> free_one_page
-> free_pcppages_bulk
-> __free_one_page
-
-It forces those into slow(er) path. So it makes a difference.
-
-> With a quick glance, the only difference in has_isolate_pageblock() returning
-> true or false, seems to be that those functions perform some extra checks in
-> case the zone reports to have isolated pageblocks.
+>>
+>>  drivers/gpu/drm/drm_atomic_helper.c | 4 ++--
+>>  1 file changed, 2 insertions(+), 2 deletions(-)
+>>
+>> diff --git a/drivers/gpu/drm/drm_atomic_helper.c b/drivers/gpu/drm/drm_atomic_helper.c
+>> index 540a77a2ade9..2453678d1186 100644
+>> --- a/drivers/gpu/drm/drm_atomic_helper.c
+>> +++ b/drivers/gpu/drm/drm_atomic_helper.c
+>> @@ -1752,7 +1752,7 @@ int drm_atomic_helper_commit(struct drm_device *dev,
+>>  	 *
+>>  	 * NOTE: Commit work has multiple phases, first hardware commit, then
+>>  	 * cleanup. We want them to overlap, hence need system_unbound_wq to
+>> -	 * make sure work items don't artifically stall on each another.
+>> +	 * make sure work items don't artificially stall on each another.
+>>  	 */
+>>  
+>>  	drm_atomic_state_get(state);
+>> @@ -1786,7 +1786,7 @@ EXPORT_SYMBOL(drm_atomic_helper_commit);
+>>   *
+>>   * Asynchronous workers need to have sufficient parallelism to be able to run
+>>   * different atomic commits on different CRTCs in parallel. The simplest way to
+>> - * achive this is by running them on the &system_unbound_wq work queue. Note
+>> + * achieve this is by running them on the &system_unbound_wq work queue. Note
+>>   * that drivers are not required to split up atomic commits and run an
+>>   * individual commit in parallel - userspace is supposed to do that if it cares.
+>>   * But it might be beneficial to do that for modesets, since those necessarily
+>> -- 
+>> 2.19.1
 > 
-> I wonder if we should set nr_isolate_pageblock back to its original value
-> before start_isolate_page_range.
 
-Yes. And that would be a fixup to my 2ce13640b3f4.
-
--- 
-Michal Hocko
-SUSE Labs
