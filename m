@@ -2,95 +2,338 @@ Return-Path: <SRS0=dUEL=RQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.8 required=3.0 tests=DATE_IN_PAST_03_06,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BAB51C43381
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 Mar 2019 00:10:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EEC30C43381
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 Mar 2019 00:31:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 92194214AE
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 Mar 2019 00:10:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AB3142077B
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 Mar 2019 00:31:36 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="DOcYpTzo"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727603AbfCMAKq (ORCPT
+        id S1726435AbfCMA3E (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 12 Mar 2019 20:10:46 -0400
-Received: from mga07.intel.com ([134.134.136.100]:26407 "EHLO mga07.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726280AbfCMAKp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 12 Mar 2019 20:10:45 -0400
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga002.fm.intel.com ([10.253.24.26])
-  by orsmga105.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 12 Mar 2019 17:10:44 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.58,472,1544515200"; 
-   d="scan'208";a="151147834"
-Received: from fmsmsx107.amr.corp.intel.com ([10.18.124.205])
-  by fmsmga002.fm.intel.com with ESMTP; 12 Mar 2019 17:10:42 -0700
-Received: from fmsmsx114.amr.corp.intel.com (10.18.116.8) by
- fmsmsx107.amr.corp.intel.com (10.18.124.205) with Microsoft SMTP Server (TLS)
- id 14.3.408.0; Tue, 12 Mar 2019 17:10:44 -0700
-Received: from fmsmsx113.amr.corp.intel.com ([169.254.13.56]) by
- FMSMSX114.amr.corp.intel.com ([10.18.116.8]) with mapi id 14.03.0415.000;
- Tue, 12 Mar 2019 17:10:43 -0700
-From:   "Verma, Vishal L" <vishal.l.verma@intel.com>
-To:     "Williams, Dan J" <dan.j.williams@intel.com>,
-        "linux-nvdimm@lists.01.org" <linux-nvdimm@lists.01.org>
-CC:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH] acpi/nfit: Always dump _DSM output payload
-Thread-Topic: [PATCH] acpi/nfit: Always dump _DSM output payload
-Thread-Index: AQHU2R2myvooYryHh0ycVhPwQ26eQqYJJYCA
-Date:   Wed, 13 Mar 2019 00:10:42 +0000
-Message-ID: <7b33acb9a5741f06bbac7dae307a74a300a5422f.camel@intel.com>
-References: <155242666957.581839.11006696811038518218.stgit@dwillia2-desk3.amr.corp.intel.com>
-In-Reply-To: <155242666957.581839.11006696811038518218.stgit@dwillia2-desk3.amr.corp.intel.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-user-agent: Evolution 3.30.5 (3.30.5-1.fc29) 
-x-originating-ip: [10.232.112.185]
-Content-Type: text/plain; charset="utf-8"
-Content-ID: <E2362C3AD847C34FB36B5A1260D4BFF0@intel.com>
-Content-Transfer-Encoding: base64
-MIME-Version: 1.0
+        Tue, 12 Mar 2019 20:29:04 -0400
+Received: from mail-pf1-f194.google.com ([209.85.210.194]:38631 "EHLO
+        mail-pf1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726309AbfCMA3D (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 12 Mar 2019 20:29:03 -0400
+Received: by mail-pf1-f194.google.com with SMTP id n125so91518pfn.5
+        for <linux-kernel@vger.kernel.org>; Tue, 12 Mar 2019 17:29:02 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id;
+        bh=Envoy7eTrribuN722v44J5VnFLReYNXuAQsI//t4lgw=;
+        b=DOcYpTzobVFUXwZm/8jtIz+TtmFH5yrKRzDEE5mPpjT/I1o6izd8xCEftQljWY7c2E
+         MI8gI/nJkGya/W4klCkeEB3Mqr2dUlp8c3tdVK1YGvg3eoqnfa/YKQPnpGs/wDu/9ydk
+         ub8Ndm+RmiILTp4IXZ4W8SzF/eFsGcmIxldeL0inhSRBTu5KNrMUemm/3rWehCc8I/7M
+         r/hI5CBkM0134qXqF052Av1SAxKMxjHuJPeB0FhFHrPMNE6QFgBOxPbFbg90BXrfxhMp
+         vpQTDoYbH7+xgxjN/C6KVLqe/0sI1enfIrFS63c5LaZsz2RgBvlmJnKLT/XQwUPaXlJN
+         fe0A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=Envoy7eTrribuN722v44J5VnFLReYNXuAQsI//t4lgw=;
+        b=RQKoViU8jQHlGZyLr01OsQzwpuXmLzDAbVTDK5EyTcjQb6xSDyjGgZ7BMV9TgDsIEo
+         ACsEySyus0TI5QiV1FkMYAH/xdM0OEjCFO7+rKo3fYsBYPpA4mp11cBPIMx4us/cY3fJ
+         s7MwpQ3l8QUFGpCij6eudMbkDHnsb9ARxfw+skTEG60xbJAFkSxq7X2cDvokNB48j7Zk
+         jBHlCnSZp23Q6lkjDGOtqoftmLUVUn4rzTvgAlh6Ddhsyc6qrQbV6zIzRQ7gVzB98suN
+         K5cWlzh3i+NiuTa16nvoGGn9zLmHiqysFtwTzqb1IcGRUVgEJ5v0VU8Oa7gA81oqVIw5
+         AbiQ==
+X-Gm-Message-State: APjAAAWolJza3LRo1SXsWVdJkiyUXcK56iP4uuFnlNe33E73tffBr11H
+        aq61mv6QmEoQT87vfZgkF55KQ0llLXs=
+X-Google-Smtp-Source: APXvYqzoxoOivt6yUp9Eq6TnkkzmFifQK6nSYsFDC8a+jI7vyt2GQW9QKqtSE27ihlNyAI6C9Sdrnw==
+X-Received: by 2002:a63:c307:: with SMTP id c7mr37849061pgd.386.1552436942356;
+        Tue, 12 Mar 2019 17:29:02 -0700 (PDT)
+Received: from localhost.localdomain ([122.172.151.49])
+        by smtp.googlemail.com with ESMTPSA id m64sm23598591pfi.149.2019.03.12.17.28.54
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Tue, 12 Mar 2019 17:29:01 -0700 (PDT)
+From:   Arshad Hussain <arshad.super@gmail.com>
+To:     linux-erofs@lists.ozlabs.org
+Cc:     gaoxiang25@huawei.com, devel@driverdev.osuosl.org,
+        linux-kernel@vger.kernel.org, gregkh@linuxfoundation.org,
+        yuchao0@huawei.com
+Subject: [PATCH] [PATCH 1/1] staging: erofs: Add function comment for erofs/super.c
+Date:   Wed, 13 Mar 2019 02:36:40 +0530
+Message-Id: <20190312210640.2175-1-arshad.super@gmail.com>
+X-Mailer: git-send-email 2.14.5
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-T24gVHVlLCAyMDE5LTAzLTEyIGF0IDE0OjM3IC0wNzAwLCBEYW4gV2lsbGlhbXMgd3JvdGU6DQo+
-IFRoZSBkeW5hbWljLWRlYnVnIHN0YXRlbWVudHMgZm9yIGNvbW1hbmQgcGF5bG9hZCBvdXRwdXQg
-b25seSBnZXQNCj4gZW1pdHRlZA0KPiB3aGVuIHRoZSBjb21tYW5kIGlzIG5vdCBORF9DTURfQ0FM
-TC4gTW92ZSB0aGUgb3V0cHV0IHBheWxvYWQgZHVtcGluZw0KPiBhaGVhZCBvZiB0aGUgZWFybHkg
-cmV0dXJuIHBhdGggZm9yIE5EX0NNRF9DQUxMLg0KPiANCj4gRml4ZXM6IDMxZWNhNzZiYTJmYzkg
-KCIuLi53aGl0ZWxpc3RlZCBkaW1tIGNvbW1hbmQgbWFyc2hhbGluZw0KPiBtZWNoYW5pc20iKQ0K
-PiBSZXBvcnRlZC1ieTogVmlzaGFsIFZlcm1hIDx2aXNoYWwubC52ZXJtYUBpbnRlbC5jb20+DQo+
-IFNpZ25lZC1vZmYtYnk6IERhbiBXaWxsaWFtcyA8ZGFuLmoud2lsbGlhbXNAaW50ZWwuY29tPg0K
-PiAtLS0NCj4gIGRyaXZlcnMvYWNwaS9uZml0L2NvcmUuYyB8ICAgMTIgKysrKysrLS0tLS0tDQo+
-ICAxIGZpbGUgY2hhbmdlZCwgNiBpbnNlcnRpb25zKCspLCA2IGRlbGV0aW9ucygtKQ0KPiANCg0K
-TG9va3MgZ29vZCB0byBtZSwNClJldmlld2VkLWJ5OiBWaXNoYWwgVmVybWEgPHZpc2hhbC5sLnZl
-cm1hQGludGVsLmNvbT4NCg0KPiBkaWZmIC0tZ2l0IGEvZHJpdmVycy9hY3BpL25maXQvY29yZS5j
-IGIvZHJpdmVycy9hY3BpL25maXQvY29yZS5jDQo+IGluZGV4IGEyMmUyZjJiYmI3NS4uYzkzNjdl
-Nzg1MjFiIDEwMDY0NA0KPiAtLS0gYS9kcml2ZXJzL2FjcGkvbmZpdC9jb3JlLmMNCj4gKysrIGIv
-ZHJpdmVycy9hY3BpL25maXQvY29yZS5jDQo+IEBAIC01NDYsNiArNTQ2LDEyIEBAIGludCBhY3Bp
-X25maXRfY3RsKHN0cnVjdCBudmRpbW1fYnVzX2Rlc2NyaXB0b3INCj4gKm5kX2Rlc2MsIHN0cnVj
-dCBudmRpbW0gKm52ZGltbSwNCj4gIAkJZ290byBvdXQ7DQo+ICAJfQ0KPiAgDQo+ICsJZGV2X2Ri
-ZyhkZXYsICIlcyBjbWQ6ICVzIG91dHB1dCBsZW5ndGg6ICVkXG4iLCBkaW1tX25hbWUsDQo+ICsJ
-CQljbWRfbmFtZSwgb3V0X29iai0+YnVmZmVyLmxlbmd0aCk7DQo+ICsJcHJpbnRfaGV4X2R1bXBf
-ZGVidWcoY21kX25hbWUsIERVTVBfUFJFRklYX09GRlNFVCwgNCwgNCwNCj4gKwkJCW91dF9vYmot
-PmJ1ZmZlci5wb2ludGVyLA0KPiArCQkJbWluX3QodTMyLCAxMjgsIG91dF9vYmotPmJ1ZmZlci5s
-ZW5ndGgpLCB0cnVlKTsNCj4gKw0KPiAgCWlmIChjYWxsX3BrZykgew0KPiAgCQljYWxsX3BrZy0+
-bmRfZndfc2l6ZSA9IG91dF9vYmotPmJ1ZmZlci5sZW5ndGg7DQo+ICAJCW1lbWNweShjYWxsX3Br
-Zy0+bmRfcGF5bG9hZCArIGNhbGxfcGtnLT5uZF9zaXplX2luLA0KPiBAQCAtNTY0LDEyICs1NzAs
-NiBAQCBpbnQgYWNwaV9uZml0X2N0bChzdHJ1Y3QgbnZkaW1tX2J1c19kZXNjcmlwdG9yDQo+ICpu
-ZF9kZXNjLCBzdHJ1Y3QgbnZkaW1tICpudmRpbW0sDQo+ICAJCXJldHVybiAwOw0KPiAgCX0NCj4g
-IA0KPiAtCWRldl9kYmcoZGV2LCAiJXMgY21kOiAlcyBvdXRwdXQgbGVuZ3RoOiAlZFxuIiwgZGlt
-bV9uYW1lLA0KPiAtCQkJY21kX25hbWUsIG91dF9vYmotPmJ1ZmZlci5sZW5ndGgpOw0KPiAtCXBy
-aW50X2hleF9kdW1wX2RlYnVnKGNtZF9uYW1lLCBEVU1QX1BSRUZJWF9PRkZTRVQsIDQsIDQsDQo+
-IC0JCQlvdXRfb2JqLT5idWZmZXIucG9pbnRlciwNCj4gLQkJCW1pbl90KHUzMiwgMTI4LCBvdXRf
-b2JqLT5idWZmZXIubGVuZ3RoKSwgdHJ1ZSk7DQo+IC0NCj4gIAlmb3IgKGkgPSAwLCBvZmZzZXQg
-PSAwOyBpIDwgZGVzYy0+b3V0X251bTsgaSsrKSB7DQo+ICAJCXUzMiBvdXRfc2l6ZSA9IG5kX2Nt
-ZF9vdXRfc2l6ZShudmRpbW0sIGNtZCwgZGVzYywgaSwNCj4gYnVmLA0KPiAgCQkJCSh1MzIgKikg
-b3V0X29iai0+YnVmZmVyLnBvaW50ZXIsDQo+IA0KDQo=
+This patch adds functions comment for file erofs/super.c in
+sphinx format.
+
+Signed-off-by: Arshad Hussain <arshad.super@gmail.com>
+---
+ drivers/staging/erofs/super.c | 135 ++++++++++++++++++++++++++++++++++++++++--
+ 1 file changed, 131 insertions(+), 4 deletions(-)
+
+diff --git a/drivers/staging/erofs/super.c b/drivers/staging/erofs/super.c
+index 15c784fba879..60bfc3e8db7a 100644
+--- a/drivers/staging/erofs/super.c
++++ b/drivers/staging/erofs/super.c
+@@ -30,6 +30,11 @@ static void init_once(void *ptr)
+ 	inode_init_once(&vi->vfs_inode);
+ }
+ 
++/**
++ * erofs_init_inode_cache(): Create & initialize inode cache
++ *
++ * Returns: 0 on Success. Errno Otherwise.
++ */
+ static int __init erofs_init_inode_cache(void)
+ {
+ 	erofs_inode_cachep = kmem_cache_create("erofs_inode",
+@@ -39,11 +44,21 @@ static int __init erofs_init_inode_cache(void)
+ 	return erofs_inode_cachep != NULL ? 0 : -ENOMEM;
+ }
+ 
++/**
++ * erofs_exit_inode_cache(): Destroy inode cache
++ */
+ static void erofs_exit_inode_cache(void)
+ {
+ 	kmem_cache_destroy(erofs_inode_cachep);
+ }
+ 
++/**
++ * alloc_inode(): Allocate and initialize inode
++ *
++ * @sb: VFS superblock structure
++ *
++ * Returns: Pointer to inode structure
++ */
+ static struct inode *alloc_inode(struct super_block *sb)
+ {
+ 	struct erofs_vnode *vi =
+@@ -57,6 +72,11 @@ static struct inode *alloc_inode(struct super_block *sb)
+ 	return &vi->vfs_inode;
+ }
+ 
++/**
++ * i_callback(): Release slab Memory
++ *
++ * @head: RCU callback structure
++ */
+ static void i_callback(struct rcu_head *head)
+ {
+ 	struct inode *inode = container_of(head, struct inode, i_rcu);
+@@ -71,11 +91,23 @@ static void i_callback(struct rcu_head *head)
+ 	kmem_cache_free(erofs_inode_cachep, vi);
+ }
+ 
++/**
++ * destroy_inode(): Release Inode Resources allocated by alloc_inode()
++ *
++ * @inode: VFS Inode structure
++ */
+ static void destroy_inode(struct inode *inode)
+ {
+ 	call_rcu(&inode->i_rcu, i_callback);
+ }
+ 
++/**
++ * superblock_read(): Read superblock into buffer
++ *
++ * @sb: VFS Superblock structure
++ *
++ * Returns: 0 on Success. Errno otherwise
++ */
+ static int superblock_read(struct super_block *sb)
+ {
+ 	struct erofs_sb_info *sbi;
+@@ -230,6 +262,14 @@ static match_table_t erofs_tokens = {
+ 	{Opt_err, NULL}
+ };
+ 
++/**
++ * parse_options(): Parse and set additional mount option for erofs
++ *
++ * @sb: VFS superblock structure
++ * @options: Mount options
++ *
++ * Returns: 0 on Success. Errno otherwise
++ */
+ static int parse_options(struct super_block *sb, char *options)
+ {
+ 	substring_t args[MAX_OPT_ARGS];
+@@ -351,6 +391,22 @@ static struct inode *erofs_init_managed_cache(struct super_block *sb)
+ 
+ #endif
+ 
++/**
++ * erofs_read_super(): Helper function to erofs_fill_super()
++ *
++ * @sb: VFS superblock structure
++ * @dev_name: Name of device where erofs is mounted
++ * @data: Additional mount options
++ * @silent: if TRUE print message on error.
++ * 	    Silent/quite otherwise
++ *
++ * Helper function to actual callback function erofs_fill_super
++ * This function sets the blocksize. Reads the superblock into
++ * buffer. Parses and sets mount options. Populates root inode
++ * and creates root directory.
++ *
++ * Returns: 0 on Success. Errno otherwise
++ */
+ static int erofs_read_super(struct super_block *sb,
+ 	const char *dev_name, void *data, int silent)
+ {
+@@ -472,8 +528,12 @@ static int erofs_read_super(struct super_block *sb,
+ 	return err;
+ }
+ 
+-/*
+- * could be triggered after deactivate_locked_super()
++/**
++ * erofs_put_super(): Free superblock structure
++ *
++ * @sb: VFS superblock structure
++ *
++ * Could be triggered after deactivate_locked_super()
+  * is called, thus including umount and failed to initialize.
+  */
+ static void erofs_put_super(struct super_block *sb)
+@@ -513,7 +573,20 @@ struct erofs_mount_private {
+ 	char *options;
+ };
+ 
+-/* support mount_bdev() with options */
++/**
++ * erofs_fill_super(): Fill erofs superblock
++ *
++ * @sb: VFS superblock structure
++ * @_priv: Additional Mount options
++ * @silent: if TRUE print message on error.
++ * 	    Silent/quite otherwise
++ *
++ * This function fills erofs superblock information into
++ * the VFS superblock stucture. Additionally it supports
++ * mount_bdev() with options
++ *
++ * Returns: 0 on Success
++ */
+ static int erofs_fill_super(struct super_block *sb,
+ 	void *_priv, int silent)
+ {
+@@ -523,6 +596,17 @@ static int erofs_fill_super(struct super_block *sb,
+ 		priv->options, silent);
+ }
+ 
++/**
++ * erofs_mount(): Function called when erofs is mounted
++ *
++ * @fs_type: Describes the erofs filesystem
++ * @flags: Mount flags/options
++ * @dev_name: Name of device where erofs is mounted
++ * @data: Mount options
++ *
++ * Returns: Pointer to VFS dentry structure.
++ * 	    The root dentry.
++ */
+ static struct dentry *erofs_mount(
+ 	struct file_system_type *fs_type, int flags,
+ 	const char *dev_name, void *data)
+@@ -532,10 +616,21 @@ static struct dentry *erofs_mount(
+ 		.options = data
+ 	};
+ 
++	/*
++	 * Mount filesystem residing on a block device
++	 * provide a callback (erofs_fill_super)  to
++	 * populate superblock
++	 */
+ 	return mount_bdev(fs_type, flags, dev_name,
+ 		&priv, erofs_fill_super);
+ }
+ 
++/**
++ * erofs_kill_sb(): Called when erofs is getting shutdown/killed 
++ *
++ * @sb: VFS superblock structure
++ *
++ */
+ static void erofs_kill_sb(struct super_block *sb)
+ {
+ 	kill_block_super(sb);
+@@ -550,6 +645,11 @@ static struct file_system_type erofs_fs_type = {
+ };
+ MODULE_ALIAS_FS("erofs");
+ 
++/**
++ * erofs_module_init(): Called when module is loaded
++ *
++ * returns: 0 on Success. Error Otherwise
++ */
+ static int __init erofs_module_init(void)
+ {
+ 	int err;
+@@ -586,6 +686,9 @@ static int __init erofs_module_init(void)
+ 	return err;
+ }
+ 
++/**
++ * erofs_module_exit(): Called when module is un-loaded
++ */
+ static void __exit erofs_module_exit(void)
+ {
+ 	unregister_filesystem(&erofs_fs_type);
+@@ -595,7 +698,14 @@ static void __exit erofs_module_exit(void)
+ 	infoln("successfully finalize erofs");
+ }
+ 
+-/* get filesystem statistics */
++/**
++ * erofs_statfs(): Get erofs statistics
++ *
++ * @dentry: Directory from where stats is collected
++ * @buf: Buffer where stats info is stored
++ *
++ * Returns: 0 on Success
++ */
+ static int erofs_statfs(struct dentry *dentry, struct kstatfs *buf)
+ {
+ 	struct super_block *sb = dentry->d_sb;
+@@ -617,6 +727,14 @@ static int erofs_statfs(struct dentry *dentry, struct kstatfs *buf)
+ 	return 0;
+ }
+ 
++/**
++ * erofs_show_options(): Show currently active mount options
++ *
++ * @seq: Sequence interface (iterator)
++ * @root: VFS dentry structure of mounted FS
++ *
++ * Returns: 0 on Success, < 0 on error
++ */
+ static int erofs_show_options(struct seq_file *seq, struct dentry *root)
+ {
+ 	struct erofs_sb_info *sbi __maybe_unused = EROFS_SB(root->d_sb);
+@@ -639,6 +757,15 @@ static int erofs_show_options(struct seq_file *seq, struct dentry *root)
+ 	return 0;
+ }
+ 
++/**
++ * erofs_remount(): Called when erofs is remounted
++ *
++ * @sb: VFS superblock structure
++ * @flags: Mount flags/options
++ * @data: Mount options
++ *
++ * Returns: 0 on Success. Errno otherwise
++ */
+ static int erofs_remount(struct super_block *sb, int *flags, char *data)
+ {
+ 	struct erofs_sb_info *sbi = EROFS_SB(sb);
+-- 
+2.14.3
+
