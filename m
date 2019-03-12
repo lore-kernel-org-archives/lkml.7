@@ -2,156 +2,116 @@ Return-Path: <SRS0=J4ZE=RP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_PASS,USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_PASS autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id ABAE8C43381
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 15:16:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D6192C43381
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 15:18:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 797C32054F
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 15:16:16 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="B/WY1KIf"
+	by mail.kernel.org (Postfix) with ESMTP id A89B02054F
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 15:18:19 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726964AbfCLPQO (ORCPT
+        id S1726580AbfCLPSS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 12 Mar 2019 11:16:14 -0400
-Received: from mail-qk1-f196.google.com ([209.85.222.196]:44009 "EHLO
-        mail-qk1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726932AbfCLPQN (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 12 Mar 2019 11:16:13 -0400
-Received: by mail-qk1-f196.google.com with SMTP id s26so1631097qkm.10;
-        Tue, 12 Mar 2019 08:16:12 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:date:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=fFCYhIuvjRfB7KrXIhHJEv/cs/BVWBAkCKgRESs/Q8Y=;
-        b=B/WY1KIfr7Yj5yci9MURcDxECFJaShuNGTQ5GzEz+CVbYMXaEEkE2OzWMBrSNY5Pag
-         bXDu/JvvhqVut5IZshMwtyPRw0vh+tV28gLh/XOo5IhlLcuFbJXXdK+cwigO5wFU4A8s
-         GS69TrIf3fU5eRB0oAO482vrdaunH8Uy/hfA3dGgQHTtm3nobsYEUIE3FCQjH6wAs6Rj
-         5j/ULO4FjRZ1TucWtZ9yrY/NTrsv50aD9GS4EeCmeNpyPmne/bj1BGOTNsuNxKPxvYAN
-         jKR++QynGOFF9eirJF+8l/P3iMspBUnZrJvSr0dSqdqYiToaEolNGxyuXUfCS5VnVili
-         rlUQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:date:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=fFCYhIuvjRfB7KrXIhHJEv/cs/BVWBAkCKgRESs/Q8Y=;
-        b=TClAKQUAk3dMfZroQzs1bVmPAk3+ONd8idZuBK/ovA4n0hBuztuxTzxl8OTqlgF3cE
-         MePf1AIr3xJvFhSognIw5Q7+XYnJbvQZFW6af9XucLmYR4T1yVa3q/ztpwM7nxBaTJX9
-         Rry1T+FhHS+Kw2VkOgrBcmKbs2+XFStZfbwiuLxmHDpPujvG7uvmm+AJdwU7ir90xkTW
-         A/ZbTO/W14jg5WWKslpcP/VyO+xBYO1lrEZRfdEbShTrrk5MzPK38YzIfxICQTKNnjvc
-         TGd8TUAA9MiQPn+4zy3fmWlzcAtoSsO8Mo2AeL5qMmAT0aTQJE1MBc3sQSM0X5TtD7v9
-         JWGg==
-X-Gm-Message-State: APjAAAWTuaRDoGun1pGFCr4Ha0Izz0oytM0GM+FirHQASWC5Udi3bnkD
-        +k3liA8PTMnA5iPV5V1FGVw=
-X-Google-Smtp-Source: APXvYqyGedcrr5R8BWqHiJBcwp8DLcorSIJBm/H9s+b6VqichNC7jmTDQaZXVZIHYLKsridklfF0ZQ==
-X-Received: by 2002:a37:e40e:: with SMTP id y14mr1643365qkf.232.1552403772054;
-        Tue, 12 Mar 2019 08:16:12 -0700 (PDT)
-Received: from quaco.ghostprotocols.net (177-59-123-113.3g.claro.net.br. [177.59.123.113])
-        by smtp.gmail.com with ESMTPSA id u31sm6227297qth.15.2019.03.12.08.16.10
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Tue, 12 Mar 2019 08:16:11 -0700 (PDT)
-From:   Arnaldo Carvalho de Melo <arnaldo.melo@gmail.com>
-X-Google-Original-From: Arnaldo Carvalho de Melo <acme@kernel.org>
-Received: by quaco.ghostprotocols.net (Postfix, from userid 1000)
-        id 31B044039C; Tue, 12 Mar 2019 12:16:08 -0300 (-03)
-Date:   Tue, 12 Mar 2019 12:16:08 -0300
-To:     Song Liu <songliubraving@fb.com>
-Cc:     bpf@vger.kernel.org, netdev@vger.kernel.org,
-        linux-kernel@vger.kernel.org, ast@kernel.org, daniel@iogearbox.net,
-        kernel-team@fb.com, peterz@infradead.org, acme@redhat.com,
-        jolsa@kernel.org, namhyung@kernel.org, sdf@fomichev.me
-Subject: Re: [PATCH v9 perf,bpf 09/15] perf, bpf: save btf information as
- headers to perf.data
-Message-ID: <20190312151608.GH4939@kernel.org>
-References: <20190312053051.2690567-1-songliubraving@fb.com>
- <20190312053051.2690567-10-songliubraving@fb.com>
- <20190312151405.GG4939@kernel.org>
+        Tue, 12 Mar 2019 11:18:18 -0400
+Received: from mga05.intel.com ([192.55.52.43]:41020 "EHLO mga05.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726339AbfCLPSR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 12 Mar 2019 11:18:17 -0400
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga003.jf.intel.com ([10.7.209.27])
+  by fmsmga105.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 12 Mar 2019 08:18:17 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.58,471,1544515200"; 
+   d="scan'208";a="133430143"
+Received: from ahduyck-desk1.jf.intel.com ([10.7.198.76])
+  by orsmga003.jf.intel.com with ESMTP; 12 Mar 2019 08:18:16 -0700
+Message-ID: <67c062b183fbd5651a9aa990e677d31673ff7580.camel@linux.intel.com>
+Subject: Re: [PATCH] iommu/amd: fix sg->dma_address for sg->offset bigger
+ than PAGE_SIZE
+From:   Alexander Duyck <alexander.h.duyck@linux.intel.com>
+To:     Stanislaw Gruszka <sgruszka@redhat.com>
+Cc:     Rosen Penev <rosenp@gmail.com>, Joerg Roedel <joro@8bytes.org>,
+        Lorenzo Bianconi <lorenzo.bianconi@redhat.com>,
+        linux-wireless <linux-wireless@vger.kernel.org>,
+        Samuel Sieb <samuel@sieb.net>,
+        iommu@lists.linux-foundation.org, linux-kernel@vger.kernel.org,
+        linux-nvme@lists.infradead.org, jan.viktorin@gmail.com
+Date:   Tue, 12 Mar 2019 08:18:16 -0700
+In-Reply-To: <20190312070832.GA2483@redhat.com>
+References: <20190226112407.GB2989@redhat.com>
+         <20190228090411.GA24938@redhat.com> <20190228104223.GA2749@redhat.com>
+         <20190228121948.GD6072@redhat.com> <20190228134029.GC1594@8bytes.org>
+         <20190304071037.GA2787@redhat.com>
+         <CAKxU2N-k-9DCYBv6W3CohL963dr3AeY3VHyt8FrUuo=BfacDsw@mail.gmail.com>
+         <20190311084319.GA3310@redhat.com> <20190311090314.GB3310@redhat.com>
+         <e0630ae9d9bee73d8a1ce3499ea9f77900e9cdfa.camel@linux.intel.com>
+         <20190312070832.GA2483@redhat.com>
+Content-Type: text/plain; charset="UTF-8"
+User-Agent: Evolution 3.30.5 (3.30.5-1.fc29) 
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190312151405.GG4939@kernel.org>
-X-Url:  http://acmel.wordpress.com
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Em Tue, Mar 12, 2019 at 12:14:05PM -0300, Arnaldo Carvalho de Melo escreveu:
-> Em Mon, Mar 11, 2019 at 10:30:45PM -0700, Song Liu escreveu:
-> > +static void print_bpf_btf(struct feat_fd *ff, FILE *fp)
-> > +{
-> > +	struct perf_env *env = &ff->ph->env;
-> > +	struct rb_root *root;
-> > +	struct rb_node *next;
-> > +
-> > +	down_read(&env->bpf_progs.lock);
-> > +
-> > +	root = &env->bpf_progs.btfs;
-> > +	next = rb_first(root);
-> > +
-> > +	while (next) {
-> > +		struct btf_node *node;
-> > +
-> > +		node = rb_entry(next, struct btf_node, rb_node);
-> > +		next = rb_next(&node->rb_node);
-> > +		fprintf(fp, "# btf info of id %u\n", node->id);
+On Tue, 2019-03-12 at 08:08 +0100, Stanislaw Gruszka wrote:
+> On Mon, Mar 11, 2019 at 08:47:44AM -0700, Alexander Duyck wrote:
+> > >  drivers/iommu/amd_iommu.c | 2 +-
+> > >  1 file changed, 1 insertion(+), 1 deletion(-)
+> > > 
+> > > diff --git a/drivers/iommu/amd_iommu.c b/drivers/iommu/amd_iommu.c
+> > > index 6b0760dafb3e..949621f33624 100644
+> > > --- a/drivers/iommu/amd_iommu.c
+> > > +++ b/drivers/iommu/amd_iommu.c
+> > > @@ -2604,7 +2604,7 @@ static int map_sg(struct device *dev, struct scatterlist *sglist,
+> > >  
+> > >  	/* Everything is mapped - write the right values into s->dma_address */
+> > >  	for_each_sg(sglist, s, nelems, i) {
+> > > -		s->dma_address += address + s->offset;
+> > > +		s->dma_address += address + (s->offset & ~PAGE_MASK);
+> > >  		s->dma_length   = s->length;
+> > >  	}
+> > >  
+> > 
+> > You should add a comment calling out that this is needed because the
+> > sg_phys(s) call above this is masked with PAGE_MASK. Then this makes
+> > much more sense. Otherwise I would have assumed you needed either the
+> > full offset or none.
 > 
-> So, I couldn't get this to work right now, and I have BPF programs that
-> are loaded and that have BTF info:
+> Would something like this 
 > 
-> [root@quaco ~]# bpftool prog | tail -6
-> 208: tracepoint  name sys_enter  tag 819967866022f1e1  gpl
-> 	loaded_at 2019-03-12T11:16:55-0300  uid 0
-> 	xlated 528B  jited 381B  memlock 4096B  map_ids 107,106,105
-> 209: tracepoint  name sys_exit  tag c1bd85c092d6e4aa  gpl
-> 	loaded_at 2019-03-12T11:16:55-0300  uid 0
-> 	xlated 256B  jited 191B  memlock 4096B  map_ids 107,106
-> [root@quaco ~]#
+> /*
+>  * Everything is mapped - write the right values into s->dma_address. 
+>  * Take into account s->offset can be bigger than page size and sg_phys(s)
+>  * address has to be aligned to page granularity.
+>  */
 > 
+> be appropriate ?
 > 
-> [root@quaco ~]# bpftool map  | tail -6
-> 105: perf_event_array  name __augmented_sys  flags 0x0
-> 	key 4B  value 4B  max_entries 8  memlock 4096B
-> 106: array  name syscalls  flags 0x0
-> 	key 4B  value 1B  max_entries 512  memlock 8192B
-> 107: hash  name pids_filtered  flags 0x0
-> 	key 4B  value 1B  max_entries 64  memlock 8192B
-> [root@quaco ~]#
+> Stanislaw
 > 
-> [root@quaco ~]# bpftool map dump id 107
-> [{
->         "key": 8104,
->         "value": true
->     },{
->         "key": 18868,
->         "value": true
->     }
-> ]
-> [root@quaco ~]# ps ax|egrep 8104\|18868 | grep -v grep
->  8104 pts/8    S+     0:07 trace -e recvmmsg
-> 18868 ?        Ssl   21:21 /usr/libexec/gnome-terminal-server
-> [root@quaco ~]#
-> 
-> So I was expecting to see those btf lines there :-\
-> 
-> All the patches up to this point I have already merged and tested in my
-> local branch.
-> 
-> Will continue right after lunch to try to figure out why this BTF info
-> isn't landing on this new header feature...
 
-I've pushed what I have to my git.kernel.org repo, branch
-tmp.perf/bpf-annotate.
+No, that isn't a good description. If you take a look at the code a few
+lines up you find:
+	phys_addr = (sg_phys(s) & PAGE_MASK) + (j << PAGE_SHIFT);
 
-git://git.kernel.org/pub/scm/linux/kernel/git/acme/linux.git tmp.perf/bpf-annotate
+Now if I am not mistaken the whole reason why you are having to make
+the change here is because the application of PAGE_MASK in this line.
+Basically what sg_phys() will do is take the address of the page,
+convert it to a physical address and add the offset. However what the
+mask is doing is limiting how much of that offset can be added. As a
+result you have to add the remainder that was masked out. So maybe a
+better comment would be something like:
 
-The HEAD is this cset.
+/*
+ * Add in the remaining piece of the scatter-gather offset that was 
+ * masked out when we were determining the physical address via
+ * (sg_phys(s) & PAGE_MASK) earlier.
+ */
 
-- Arnaldo
+
+
