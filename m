@@ -2,141 +2,93 @@ Return-Path: <SRS0=J4ZE=RP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.5 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,
+	USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CB5A9C43381
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 17:18:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DA08CC43381
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 17:19:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9E7F32184E
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 17:18:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9FD2B2087C
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 17:19:08 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1552411139;
-	bh=3f/9VH3Hq0FOtcN9vKMOQx5hDCYqB0rCgJGkd1iDq/E=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Z4VUbe3ePh80rl5ENGPf1WmvBa47PRCdbAFCU9NVWCRb+R4ooSRCwTfJhJaFOuvjh
-	 sY4R9DAMPowb3Ur7S5d08nZYPy3wsqLqjsUcpN9hoEFZ5J+nwPv6JQBix4JHjRHnxN
-	 4CTLQzsAf29y1lmCjT7tZWiFptXr1rFdyODsRD+s=
+	s=default; t=1552411148;
+	bh=5p9znZHy/+JE1vi+OsqhfdBBdHTrOeCF6XTukLuBhWs=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=m6+Md6cin42hpPwm24HQ4dpZnkrHmhO7JB5AWxbVyd5lYD9mILnfEZ5xn84my66QW
+	 EOAwv5J7R5Y1wg2dqJ1adeuUi27DzxevC1H4+umMISaD9whdi43uFv923mRMv1EZvi
+	 dx88jUOHlkCL7dV8VwiyoiE8YRp78ZpBkoiRcgZU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730186AbfCLRS6 (ORCPT
+        id S1729359AbfCLRTH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 12 Mar 2019 13:18:58 -0400
-Received: from mail.kernel.org ([198.145.29.99]:35438 "EHLO mail.kernel.org"
+        Tue, 12 Mar 2019 13:19:07 -0400
+Received: from mail.kernel.org ([198.145.29.99]:36040 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729972AbfCLRSM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 12 Mar 2019 13:18:12 -0400
+        id S1730065AbfCLRSX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 12 Mar 2019 13:18:23 -0400
 Received: from localhost (unknown [104.133.8.98])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 7C614217D4;
-        Tue, 12 Mar 2019 17:18:11 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 65197217D4;
+        Tue, 12 Mar 2019 17:18:22 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1552411091;
-        bh=3f/9VH3Hq0FOtcN9vKMOQx5hDCYqB0rCgJGkd1iDq/E=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Y5YI9PlmriedOOHSKHAhtmI7yyBAGxPKK6wet7xyCE/BT83sFhCjtpQ8vVCgKundn
-         qEXDZCV6ZeEyo/GvpydHmsUAqBU1P+edN4LuwUV+II5GQqp7FFLFeT2E+r8d33EXdJ
-         DMNJzTdD2yc6KUatMETEb0wFKT4mev3bfDKAWlrQ=
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     linux-kernel@vger.kernel.org
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Tetsuo Handa <penguin-kernel@I-love.SAKURA.ne.jp>,
-        Jan Kara <jack@suse.cz>, Dmitry Vyukov <dvyukov@google.com>,
-        Jens Axboe <axboe@kernel.dk>, Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.9 83/96] fs: ratelimit __find_get_block_slow() failure message.
-Date:   Tue, 12 Mar 2019 10:10:41 -0700
-Message-Id: <20190312171040.833378676@linuxfoundation.org>
-X-Mailer: git-send-email 2.21.0
-In-Reply-To: <20190312171034.530434962@linuxfoundation.org>
-References: <20190312171034.530434962@linuxfoundation.org>
-User-Agent: quilt/0.65
-X-stable: review
-X-Patchwork-Hint: ignore
+        s=default; t=1552411102;
+        bh=5p9znZHy/+JE1vi+OsqhfdBBdHTrOeCF6XTukLuBhWs=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=ySsDzLxKeqBgo+/qjpYQueLo5ZTZUxxxMSYeZJ/alXCgw/85sckZpl051XJFP7Mf6
+         O028/3vy/9FjJmpS3vkLvEPXeI+EqwTnAW7ZyUi3o21fZoIwhQsFiVNgKcWoe8Wg7s
+         bRfcPZp8sA3LkW4xCfJ0rI2cqX6ibmuuSWYiQS0w=
+Date:   Tue, 12 Mar 2019 10:13:36 -0700
+From:   Greg KH <gregkh@linuxfoundation.org>
+To:     Sven Van Asbroeck <thesven73@gmail.com>
+Cc:     robh+dt@kernel.org, Linus Walleij <linus.walleij@linaro.org>,
+        Lee Jones <lee.jones@linaro.org>, mark.rutland@arm.com,
+        Andreas =?iso-8859-1?Q?F=E4rber?= <afaerber@suse.de>,
+        treding@nvidia.com, David Lechner <david@lechnology.com>,
+        noralf@tronnes.org, johan@kernel.org,
+        Michal Simek <monstr@monstr.eu>, michal.vokac@ysoft.com,
+        Arnd Bergmann <arnd@arndb.de>, john.garry@huawei.com,
+        geert+renesas@glider.be, robin.murphy@arm.com,
+        Paul Gortmaker <paul.gortmaker@windriver.com>,
+        sebastien.bourdelin@savoirfairelinux.com, icenowy@aosc.io,
+        Stuart Yoder <stuyoder@gmail.com>, maxime.ripard@bootlin.com,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH v8 0/6] Add Fieldbus subsystem + support HMS Profinet card
+Message-ID: <20190312171336.GA29680@kroah.com>
+References: <20190124201251.15159-1-TheSven73@googlemail.com>
+ <CAGngYiWFU-VnG=ODLWaUf0yp69qaU2GSd9exdHvyi6Ko1ib9qw@mail.gmail.com>
+ <20190208121916.GE23483@kroah.com>
+ <CAGngYiVVNitd5SDLah-kxP69W6XHYHOQrOz=DnevuGnqoHD7HA@mail.gmail.com>
+ <20190208141400.GA22162@kroah.com>
+ <CAGngYiXZtNcqQ3JGgavBxypo75WtAT7T-X4DQFNWD8kQcifU8g@mail.gmail.com>
+ <20190311191339.GA5628@kroah.com>
+ <CAGngYiVB=6627d31ad5ajfrmBtV5_pDLudKkBuPNyNnqkssBAA@mail.gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAGngYiVB=6627d31ad5ajfrmBtV5_pDLudKkBuPNyNnqkssBAA@mail.gmail.com>
+User-Agent: Mutt/1.11.3 (2019-02-01)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-4.9-stable review patch.  If anyone has any objections, please let me know.
+On Tue, Mar 12, 2019 at 01:11:11PM -0400, Sven Van Asbroeck wrote:
+> On Mon, Mar 11, 2019 at 3:13 PM Greg KH <gregkh@linuxfoundation.org> wrote:
+> >
+> > That sounds like a good plan, I'll take that.  Want to respin the
+> > patches with the code in drivers/staging/ and I'll be glad to queue them
+> > up after 5.1-rc1 is out.
+> 
+> Andreas Farber suggested that the patchset may have more success reaching
+> its target audience by cross-posting in netdev, and maybe linux-serial +
+> linux-gpio. Does that sound ok? Any other group where the patchset might
+> be welcome?
+> 
+> Greg, are you ok with holding off taking the patch for a few days, to give
+> the netdev/serial/gpio people a chance to react?
 
-------------------
+I can't take anything until after 5.1-rc1 is out.  I have no rush,
+please take your time, get it right :)
 
-[ Upstream commit 43636c804df0126da669c261fc820fb22f62bfc2 ]
-
-When something let __find_get_block_slow() hit all_mapped path, it calls
-printk() for 100+ times per a second. But there is no need to print same
-message with such high frequency; it is just asking for stall warning, or
-at least bloating log files.
-
-  [  399.866302][T15342] __find_get_block_slow() failed. block=1, b_blocknr=8
-  [  399.873324][T15342] b_state=0x00000029, b_size=512
-  [  399.878403][T15342] device loop0 blocksize: 4096
-  [  399.883296][T15342] __find_get_block_slow() failed. block=1, b_blocknr=8
-  [  399.890400][T15342] b_state=0x00000029, b_size=512
-  [  399.895595][T15342] device loop0 blocksize: 4096
-  [  399.900556][T15342] __find_get_block_slow() failed. block=1, b_blocknr=8
-  [  399.907471][T15342] b_state=0x00000029, b_size=512
-  [  399.912506][T15342] device loop0 blocksize: 4096
-
-This patch reduces frequency to up to once per a second, in addition to
-concatenating three lines into one.
-
-  [  399.866302][T15342] __find_get_block_slow() failed. block=1, b_blocknr=8, b_state=0x00000029, b_size=512, device loop0 blocksize: 4096
-
-Signed-off-by: Tetsuo Handa <penguin-kernel@I-love.SAKURA.ne.jp>
-Reviewed-by: Jan Kara <jack@suse.cz>
-Cc: Dmitry Vyukov <dvyukov@google.com>
-Signed-off-by: Jens Axboe <axboe@kernel.dk>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
----
- fs/buffer.c | 19 ++++++++++---------
- 1 file changed, 10 insertions(+), 9 deletions(-)
-
-diff --git a/fs/buffer.c b/fs/buffer.c
-index 5d8f496d624e..e0d46d47e358 100644
---- a/fs/buffer.c
-+++ b/fs/buffer.c
-@@ -207,6 +207,7 @@ __find_get_block_slow(struct block_device *bdev, sector_t block)
- 	struct buffer_head *head;
- 	struct page *page;
- 	int all_mapped = 1;
-+	static DEFINE_RATELIMIT_STATE(last_warned, HZ, 1);
- 
- 	index = block >> (PAGE_SHIFT - bd_inode->i_blkbits);
- 	page = find_get_page_flags(bd_mapping, index, FGP_ACCESSED);
-@@ -234,15 +235,15 @@ __find_get_block_slow(struct block_device *bdev, sector_t block)
- 	 * file io on the block device and getblk.  It gets dealt with
- 	 * elsewhere, don't buffer_error if we had some unmapped buffers
- 	 */
--	if (all_mapped) {
--		printk("__find_get_block_slow() failed. "
--			"block=%llu, b_blocknr=%llu\n",
--			(unsigned long long)block,
--			(unsigned long long)bh->b_blocknr);
--		printk("b_state=0x%08lx, b_size=%zu\n",
--			bh->b_state, bh->b_size);
--		printk("device %pg blocksize: %d\n", bdev,
--			1 << bd_inode->i_blkbits);
-+	ratelimit_set_flags(&last_warned, RATELIMIT_MSG_ON_RELEASE);
-+	if (all_mapped && __ratelimit(&last_warned)) {
-+		printk("__find_get_block_slow() failed. block=%llu, "
-+		       "b_blocknr=%llu, b_state=0x%08lx, b_size=%zu, "
-+		       "device %pg blocksize: %d\n",
-+		       (unsigned long long)block,
-+		       (unsigned long long)bh->b_blocknr,
-+		       bh->b_state, bh->b_size, bdev,
-+		       1 << bd_inode->i_blkbits);
- 	}
- out_unlock:
- 	spin_unlock(&bd_mapping->private_lock);
--- 
-2.19.1
-
-
-
+greg k-h
