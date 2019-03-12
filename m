@@ -2,61 +2,55 @@ Return-Path: <SRS0=J4ZE=RP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DBF22C43381
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 17:23:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 90827C4360F
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 17:23:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AABE8214AE
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 17:23:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 55FB5214AE
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 17:23:19 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1552411395;
-	bh=npI/2QA4hvqe0G/lTl5+s+EEM9bsKycAwKX4oW6o90s=;
+	s=default; t=1552411399;
+	bh=A11wx1lZwFNCs24hY/mpPhBVBVHdrRfo1KWQth4Uw+I=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Unnf4fvDv/Q+9Xdh9RaEq9/hsEKB9u24+3lxwZ6mAMGYEdTJQ8gHiZdaeAo8vbQdF
-	 4pa/Oh1GsHTao4GJKInui8Kbxd+i/MOoqMF+ygeMA22Cw0p93lrjYEOtB5poZs1dKy
-	 7njL37XgM4E7HCHHsjeb5WemCwTS3pggPLa7xX6U=
+	b=W4Yld6vwYjhLS5zrEO1qvzffvsyweyxZ50Msy3bXOj+1WM9fMVWxUhRsiHOLn5+aY
+	 y/HP5wVWcKj3rcxfPLECe6ASzR09q36nb8So4shKET0cEswWf8M/dYgw5QzEe9Q87R
+	 C3A4z2jdXKg3ZhjKRUIa1MPePwGTmKNeq6iaJDcY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730093AbfCLRXO (ORCPT
+        id S1729811AbfCLRSC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 12 Mar 2019 13:23:14 -0400
-Received: from mail.kernel.org ([198.145.29.99]:34946 "EHLO mail.kernel.org"
+        Tue, 12 Mar 2019 13:18:02 -0400
+Received: from mail.kernel.org ([198.145.29.99]:60568 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729475AbfCLRSD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 12 Mar 2019 13:18:03 -0400
+        id S1729475AbfCLRRL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 12 Mar 2019 13:17:11 -0400
 Received: from localhost (unknown [104.133.8.98])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id A69BE206DF;
-        Tue, 12 Mar 2019 17:18:02 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id A11CC217F5;
+        Tue, 12 Mar 2019 17:17:10 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1552411082;
-        bh=npI/2QA4hvqe0G/lTl5+s+EEM9bsKycAwKX4oW6o90s=;
+        s=default; t=1552411030;
+        bh=A11wx1lZwFNCs24hY/mpPhBVBVHdrRfo1KWQth4Uw+I=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=jm6Taba3v2QEhfZxqUWvfQRBSbZJT6Nf87aOQ4cvWxBmEk1fjpFKAT+oefTja7maW
-         7SyG2WKej6HBeMziZTGWIFYrHJgBCKAS91Z/EFTtnxQOfFxTIiGf3X0sVpHJMzjlrq
-         6y1CJpJljISFQ2p5W1sV4sjBAdcSXGWYeLR9H6RE=
+        b=QGF3aBgliPUORIkOI35ehKeev4gn/yRPCQ3VP7KSEwMbgzUEcu0qDZCcjbc8yYlIv
+         2YhE7vGqaPG3uo+9HRGy+nURgyjE9vmxRJJHP6JqJhy9KZOrIjjPwUmJCRBzdyzy4z
+         RCzxMFWWzV7kwl1AQLdOEoT8kZUvM5L1ni90XRew=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Jiri Olsa <jolsa@kernel.org>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Masami Hiramatsu <mhiramat@kernel.org>,
-        Michael Petlan <mpetlan@redhat.com>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Nick Clifton <nickc@redhat.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Arnaldo Carvalho de Melo <acme@redhat.com>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.9 79/96] perf symbols: Filter out hidden symbols from labels
-Date:   Tue, 12 Mar 2019 10:10:37 -0700
-Message-Id: <20190312171040.542820589@linuxfoundation.org>
+        stable@vger.kernel.org,
+        "Peter Zijlstra (Intel)" <peterz@infradead.org>,
+        Thomas Gleixner <tglx@linutronix.de>
+Subject: [PATCH 4.14 134/135] x86: Add TSX Force Abort CPUID/MSR
+Date:   Tue, 12 Mar 2019 10:09:41 -0700
+Message-Id: <20190312170353.516068574@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
-In-Reply-To: <20190312171034.530434962@linuxfoundation.org>
-References: <20190312171034.530434962@linuxfoundation.org>
+In-Reply-To: <20190312170341.127810985@linuxfoundation.org>
+References: <20190312170341.127810985@linuxfoundation.org>
 User-Agent: quilt/0.65
 X-stable: review
 X-Patchwork-Hint: ignore
@@ -68,98 +62,55 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-4.9-stable review patch.  If anyone has any objections, please let me know.
+4.14-stable review patch.  If anyone has any objections, please let me know.
 
 ------------------
 
-[ Upstream commit 59a17706915fe5ea6f711e1f92d4fb706bce07fe ]
+From: "Peter Zijlstra (Intel)" <peterz@infradead.org>
 
-When perf is built with the annobin plugin (RHEL8 build) extra symbols
-are added to its binary:
+commit 52f64909409c17adf54fcf5f9751e0544ca3a6b4 upstream
 
-  # nm perf | grep annobin | head -10
-  0000000000241100 t .annobin_annotate.c
-  0000000000326490 t .annobin_annotate.c
-  0000000000249255 t .annobin_annotate.c_end
-  00000000003283a8 t .annobin_annotate.c_end
-  00000000001bce18 t .annobin_annotate.c_end.hot
-  00000000001bce18 t .annobin_annotate.c_end.hot
-  00000000001bc3e2 t .annobin_annotate.c_end.unlikely
-  00000000001bc400 t .annobin_annotate.c_end.unlikely
-  00000000001bce18 t .annobin_annotate.c.hot
-  00000000001bce18 t .annobin_annotate.c.hot
-  ...
+Skylake systems will receive a microcode update to address a TSX
+errata. This microcode will (by default) clobber PMC3 when TSX
+instructions are (speculatively or not) executed.
 
-Those symbols have no use for report or annotation and should be
-skipped.  Moreover they interfere with the DWARF unwind test on the PPC
-arch, where they are mixed with checked symbols and then the test fails:
+It also provides an MSR to cause all TSX transaction to abort and
+preserve PMC3.
 
-  # perf test dwarf -v
-  59: Test dwarf unwind                                     :
-  --- start ---
-  test child forked, pid 8515
-  unwind: .annobin_dwarf_unwind.c:ip = 0x10dba40dc (0x2740dc)
-  ...
-  got: .annobin_dwarf_unwind.c 0x10dba40dc, expecting test__arch_unwind_sample
-  unwind: failed with 'no error'
+Add the CPUID enumeration and MSR definition.
 
-The annobin symbols are defined as NOTYPE/LOCAL/HIDDEN:
-
-  # readelf -s ./perf | grep annobin | head -1
-    40: 00000000001bce4f     0 NOTYPE  LOCAL  HIDDEN    13 .annobin_init.c
-
-They can still pass the check for the label symbol. Adding check for
-HIDDEN and INTERNAL (as suggested by Nick below) visibility and filter
-out such symbols.
-
->   Just to be awkward, if you are going to ignore STV_HIDDEN
->   symbols then you should probably also ignore STV_INTERNAL ones
->   as well...  Annobin does not generate them, but you never know,
->   one day some other tool might create some.
-
-Signed-off-by: Jiri Olsa <jolsa@kernel.org>
-Cc: Alexander Shishkin <alexander.shishkin@linux.intel.com>
-Cc: Masami Hiramatsu <mhiramat@kernel.org>
-Cc: Michael Petlan <mpetlan@redhat.com>
-Cc: Namhyung Kim <namhyung@kernel.org>
-Cc: Nick Clifton <nickc@redhat.com>
-Cc: Peter Zijlstra <peterz@infradead.org>
-Link: http://lkml.kernel.org/r/20190128133526.GD15461@krava
-Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
+Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
+Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- tools/perf/util/symbol-elf.c | 9 ++++++++-
- 1 file changed, 8 insertions(+), 1 deletion(-)
+ arch/x86/include/asm/cpufeatures.h |    1 +
+ arch/x86/include/asm/msr-index.h   |    6 ++++++
+ 2 files changed, 7 insertions(+)
 
-diff --git a/tools/perf/util/symbol-elf.c b/tools/perf/util/symbol-elf.c
-index adbc6c02c3aa..20ba5a9aeae4 100644
---- a/tools/perf/util/symbol-elf.c
-+++ b/tools/perf/util/symbol-elf.c
-@@ -85,6 +85,11 @@ static inline uint8_t elf_sym__type(const GElf_Sym *sym)
- 	return GELF_ST_TYPE(sym->st_info);
- }
+--- a/arch/x86/include/asm/cpufeatures.h
++++ b/arch/x86/include/asm/cpufeatures.h
+@@ -339,6 +339,7 @@
+ /* Intel-defined CPU features, CPUID level 0x00000007:0 (EDX), word 18 */
+ #define X86_FEATURE_AVX512_4VNNIW	(18*32+ 2) /* AVX-512 Neural Network Instructions */
+ #define X86_FEATURE_AVX512_4FMAPS	(18*32+ 3) /* AVX-512 Multiply Accumulation Single precision */
++#define X86_FEATURE_TSX_FORCE_ABORT	(18*32+13) /* "" TSX_FORCE_ABORT */
+ #define X86_FEATURE_PCONFIG		(18*32+18) /* Intel PCONFIG */
+ #define X86_FEATURE_SPEC_CTRL		(18*32+26) /* "" Speculation Control (IBRS + IBPB) */
+ #define X86_FEATURE_INTEL_STIBP		(18*32+27) /* "" Single Thread Indirect Branch Predictors */
+--- a/arch/x86/include/asm/msr-index.h
++++ b/arch/x86/include/asm/msr-index.h
+@@ -610,6 +610,12 @@
  
-+static inline uint8_t elf_sym__visibility(const GElf_Sym *sym)
-+{
-+	return GELF_ST_VISIBILITY(sym->st_other);
-+}
+ #define MSR_IA32_TSC_DEADLINE		0x000006E0
+ 
 +
- #ifndef STT_GNU_IFUNC
- #define STT_GNU_IFUNC 10
- #endif
-@@ -109,7 +114,9 @@ static inline int elf_sym__is_label(const GElf_Sym *sym)
- 	return elf_sym__type(sym) == STT_NOTYPE &&
- 		sym->st_name != 0 &&
- 		sym->st_shndx != SHN_UNDEF &&
--		sym->st_shndx != SHN_ABS;
-+		sym->st_shndx != SHN_ABS &&
-+		elf_sym__visibility(sym) != STV_HIDDEN &&
-+		elf_sym__visibility(sym) != STV_INTERNAL;
- }
- 
- static bool elf_sym__is_a(GElf_Sym *sym, enum map_type type)
--- 
-2.19.1
-
++#define MSR_TSX_FORCE_ABORT		0x0000010F
++
++#define MSR_TFA_RTM_FORCE_ABORT_BIT	0
++#define MSR_TFA_RTM_FORCE_ABORT		BIT_ULL(MSR_TFA_RTM_FORCE_ABORT_BIT)
++
+ /* P4/Xeon+ specific */
+ #define MSR_IA32_MCG_EAX		0x00000180
+ #define MSR_IA32_MCG_EBX		0x00000181
 
 
