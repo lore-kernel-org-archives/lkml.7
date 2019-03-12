@@ -2,51 +2,60 @@ Return-Path: <SRS0=J4ZE=RP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0EE8BC43381
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 17:46:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 39F4CC4360F
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 17:46:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C8EBF2087C
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 17:46:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0E4F9206DF
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 17:46:20 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1552412776;
-	bh=/mxkAOO8VeHO0543/VWpY/YZ0DCHhWO35f/6wH5XyUs=;
+	s=default; t=1552412780;
+	bh=cYr5oW+F1n8CQhyCM2CS5ztkiqwlKH0Dj/QEvyoaSUs=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=qoHwwz0svJiI7MzCNSuHKTDBJGUqLQr7XLxPPwFco8U59XmbVLxs85ReNa1k3W4Z1
-	 0dRaD3ZYjI7MyH8KWa2rrxvRxM3FDQKsh0eSad8Q8f4JZjnJ7atmD2K8f553rvLDRa
-	 450cunJRYfjwnvtRsspJtNAwMdgAnlzR3FkPlx2o=
+	b=jamRsMynM68AOz/O2ca/gd53gP0X5d71s74RlrS/6qAR1gz6fk8eYqzzg6ftDF40A
+	 YDXyZx7QIbgBiMGbW7RlmbmxW8nfON9Cp5CNNhmW/aDesUkF8KRITZqmqpbPRJO5IV
+	 VJdhs9LD5zgysiyeUcTwyV3qA1eXfwQRVpkazDX4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728879AbfCLRqP (ORCPT
+        id S1728683AbfCLRPV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 12 Mar 2019 13:46:15 -0400
-Received: from mail.kernel.org ([198.145.29.99]:55750 "EHLO mail.kernel.org"
+        Tue, 12 Mar 2019 13:15:21 -0400
+Received: from mail.kernel.org ([198.145.29.99]:53380 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727448AbfCLRPX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 12 Mar 2019 13:15:23 -0400
+        id S1728394AbfCLROd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 12 Mar 2019 13:14:33 -0400
 Received: from localhost (unknown [104.133.8.98])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 9AC722183F;
-        Tue, 12 Mar 2019 17:15:22 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id B77712171F;
+        Tue, 12 Mar 2019 17:14:31 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1552410922;
-        bh=/mxkAOO8VeHO0543/VWpY/YZ0DCHhWO35f/6wH5XyUs=;
+        s=default; t=1552410871;
+        bh=cYr5oW+F1n8CQhyCM2CS5ztkiqwlKH0Dj/QEvyoaSUs=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=uSHFIOjJUJ1+X/hCnQlibEllMC2COtq1/ZTYEemmdlNxfyBYF4r2GGnIWKExo6gZ0
-         4SFdZJ1ME6mNikU+rA6YN0fGKviKnISuzBLbOkbbox01opuDdAXcbV+tFHeAlyQOwz
-         fV4/kTbCZumIw/nJqa7q/Ckao/E+n4EHW1TBuOE8=
+        b=QG6eQIcdpd6dol3wj31yO+EIU2ZBPqDmaYk9+vtdODarC/DE8qTi+O92hlG5g4orZ
+         ucakxd36DdzSVDfxpJ3IqQ9rJmuzgAsaRlWLzFJWkbFfyBmjkHMOyJjBK0CIzGJBWU
+         /SD/VmLl5vGBlsf6ifkGzROQNIQtmqqNZdAUt96U=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
+To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Al Viro <viro@ZenIV.linux.org.uk>,
-        Gao Xiang <gaoxiang25@huawei.com>
-Subject: [PATCH 4.19 142/149] staging: erofs: keep corrupted fs from crashing kernel in erofs_namei()
-Date:   Tue, 12 Mar 2019 10:09:20 -0700
-Message-Id: <20190312170401.210219451@linuxfoundation.org>
+        stable@vger.kernel.org, Michal Hocko <mhocko@suse.com>,
+        Mikhail Zaslonko <zaslonko@linux.ibm.com>,
+        Mikhail Gavrilov <mikhail.v.gavrilov@gmail.com>,
+        Oscar Salvador <osalvador@suse.de>,
+        Gerald Schaefer <gerald.schaefer@de.ibm.com>,
+        Heiko Carstens <heiko.carstens@de.ibm.com>,
+        Martin Schwidefsky <schwidefsky@de.ibm.com>,
+        Pavel Tatashin <pasha.tatashin@soleen.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.19 056/149] mm, memory_hotplug: test_pages_in_a_zone do not pass the end of zone
+Date:   Tue, 12 Mar 2019 10:07:54 -0700
+Message-Id: <20190312170354.415998109@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190312170349.421581206@linuxfoundation.org>
 References: <20190312170349.421581206@linuxfoundation.org>
@@ -65,315 +74,73 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-From: Gao Xiang <gaoxiang25@huawei.com>
+[ Upstream commit 24feb47c5fa5b825efb0151f28906dfdad027e61 ]
 
-commit 419d6efc50e94bcf5d6b35cd8c71f79edadec564 upstream.
+If memory end is not aligned with the sparse memory section boundary,
+the mapping of such a section is only partly initialized.  This may lead
+to VM_BUG_ON due to uninitialized struct pages access from
+test_pages_in_a_zone() function triggered by memory_hotplug sysfs
+handlers.
 
-As Al pointed out, "
-... and while we are at it, what happens to
-	unsigned int nameoff = le16_to_cpu(de[mid].nameoff);
-	unsigned int matched = min(startprfx, endprfx);
+Here are the the panic examples:
+ CONFIG_DEBUG_VM_PGFLAGS=y
+ kernel parameter mem=2050M
+ --------------------------
+ page:000003d082008000 is uninitialized and poisoned
+ page dumped because: VM_BUG_ON_PAGE(PagePoisoned(p))
+ Call Trace:
+   test_pages_in_a_zone+0xde/0x160
+   show_valid_zones+0x5c/0x190
+   dev_attr_show+0x34/0x70
+   sysfs_kf_seq_show+0xc8/0x148
+   seq_read+0x204/0x480
+   __vfs_read+0x32/0x178
+   vfs_read+0x82/0x138
+   ksys_read+0x5a/0xb0
+   system_call+0xdc/0x2d8
+ Last Breaking-Event-Address:
+   test_pages_in_a_zone+0xde/0x160
+ Kernel panic - not syncing: Fatal exception: panic_on_oops
 
-	struct qstr dname = QSTR_INIT(data + nameoff,
-		unlikely(mid >= ndirents - 1) ?
-			maxsize - nameoff :
-			le16_to_cpu(de[mid + 1].nameoff) - nameoff);
+Fix this by checking whether the pfn to check is within the zone.
 
-	/* string comparison without already matched prefix */
-	int ret = dirnamecmp(name, &dname, &matched);
-if le16_to_cpu(de[...].nameoff) is not monotonically increasing?  I.e.
-what's to prevent e.g. (unsigned)-1 ending up in dname.len?
+[mhocko@suse.com: separated this change from http://lkml.kernel.org/r/20181105150401.97287-2-zaslonko@linux.ibm.com]
+Link: http://lkml.kernel.org/r/20190128144506.15603-3-mhocko@kernel.org
 
-Corrupted fs image shouldn't oops the kernel.. "
-
-Revisit the related lookup flow to address the issue.
-
-Fixes: d72d1ce60174 ("staging: erofs: add namei functions")
-Cc: <stable@vger.kernel.org> # 4.19+
-Suggested-by: Al Viro <viro@ZenIV.linux.org.uk>
-Signed-off-by: Gao Xiang <gaoxiang25@huawei.com>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+[mhocko@suse.com: separated this change from
+http://lkml.kernel.org/r/20181105150401.97287-2-zaslonko@linux.ibm.com]
+Signed-off-by: Michal Hocko <mhocko@suse.com>
+Signed-off-by: Mikhail Zaslonko <zaslonko@linux.ibm.com>
+Tested-by: Mikhail Gavrilov <mikhail.v.gavrilov@gmail.com>
+Reviewed-by: Oscar Salvador <osalvador@suse.de>
+Tested-by: Gerald Schaefer <gerald.schaefer@de.ibm.com>
+Cc: Heiko Carstens <heiko.carstens@de.ibm.com>
+Cc: Martin Schwidefsky <schwidefsky@de.ibm.com>
+Cc: Mikhail Gavrilov <mikhail.v.gavrilov@gmail.com>
+Cc: Pavel Tatashin <pasha.tatashin@soleen.com>
+Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
+Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/staging/erofs/namei.c |  189 ++++++++++++++++++++++--------------------
- 1 file changed, 100 insertions(+), 89 deletions(-)
+ mm/memory_hotplug.c | 3 +++
+ 1 file changed, 3 insertions(+)
 
---- a/drivers/staging/erofs/namei.c
-+++ b/drivers/staging/erofs/namei.c
-@@ -15,74 +15,77 @@
- 
- #include <trace/events/erofs.h>
- 
--/* based on the value of qn->len is accurate */
--static inline int dirnamecmp(struct qstr *qn,
--	struct qstr *qd, unsigned *matched)
-+struct erofs_qstr {
-+	const unsigned char *name;
-+	const unsigned char *end;
-+};
-+
-+/* based on the end of qn is accurate and it must have the trailing '\0' */
-+static inline int dirnamecmp(const struct erofs_qstr *qn,
-+			     const struct erofs_qstr *qd,
-+			     unsigned int *matched)
- {
--	unsigned i = *matched, len = min(qn->len, qd->len);
--loop:
--	if (unlikely(i >= len)) {
--		*matched = i;
--		if (qn->len < qd->len) {
--			/*
--			 * actually (qn->len == qd->len)
--			 * when qd->name[i] == '\0'
--			 */
--			return qd->name[i] == '\0' ? 0 : -1;
--		}
--		return (qn->len > qd->len);
--	}
-+	unsigned int i = *matched;
- 
--	if (qn->name[i] != qd->name[i]) {
--		*matched = i;
--		return qn->name[i] > qd->name[i] ? 1 : -1;
-+	/*
-+	 * on-disk error, let's only BUG_ON in the debugging mode.
-+	 * otherwise, it will return 1 to just skip the invalid name
-+	 * and go on (in consideration of the lookup performance).
-+	 */
-+	DBG_BUGON(qd->name > qd->end);
-+
-+	/* qd could not have trailing '\0' */
-+	/* However it is absolutely safe if < qd->end */
-+	while (qd->name + i < qd->end && qd->name[i] != '\0') {
-+		if (qn->name[i] != qd->name[i]) {
-+			*matched = i;
-+			return qn->name[i] > qd->name[i] ? 1 : -1;
-+		}
-+		++i;
- 	}
--
--	++i;
--	goto loop;
-+	*matched = i;
-+	/* See comments in __d_alloc on the terminating NUL character */
-+	return qn->name[i] == '\0' ? 0 : 1;
- }
- 
--static struct erofs_dirent *find_target_dirent(
--	struct qstr *name,
--	u8 *data, int maxsize)
-+#define nameoff_from_disk(off, sz)	(le16_to_cpu(off) & ((sz) - 1))
-+
-+static struct erofs_dirent *find_target_dirent(struct erofs_qstr *name,
-+					       u8 *data,
-+					       unsigned int dirblksize,
-+					       const int ndirents)
- {
--	unsigned ndirents, head, back;
--	unsigned startprfx, endprfx;
-+	int head, back;
-+	unsigned int startprfx, endprfx;
- 	struct erofs_dirent *const de = (struct erofs_dirent *)data;
- 
--	/* make sure that maxsize is valid */
--	BUG_ON(maxsize < sizeof(struct erofs_dirent));
--
--	ndirents = le16_to_cpu(de->nameoff) / sizeof(*de);
--
--	/* corrupted dir (may be unnecessary...) */
--	BUG_ON(!ndirents);
--
--	head = 0;
-+	/* since the 1st dirent has been evaluated previously */
-+	head = 1;
- 	back = ndirents - 1;
- 	startprfx = endprfx = 0;
- 
- 	while (head <= back) {
--		unsigned mid = head + (back - head) / 2;
--		unsigned nameoff = le16_to_cpu(de[mid].nameoff);
--		unsigned matched = min(startprfx, endprfx);
--
--		struct qstr dname = QSTR_INIT(data + nameoff,
--			unlikely(mid >= ndirents - 1) ?
--				maxsize - nameoff :
--				le16_to_cpu(de[mid + 1].nameoff) - nameoff);
-+		const int mid = head + (back - head) / 2;
-+		const int nameoff = nameoff_from_disk(de[mid].nameoff,
-+						      dirblksize);
-+		unsigned int matched = min(startprfx, endprfx);
-+		struct erofs_qstr dname = {
-+			.name = data + nameoff,
-+			.end = unlikely(mid >= ndirents - 1) ?
-+				data + dirblksize :
-+				data + nameoff_from_disk(de[mid + 1].nameoff,
-+							 dirblksize)
-+		};
- 
- 		/* string comparison without already matched prefix */
- 		int ret = dirnamecmp(name, &dname, &matched);
- 
--		if (unlikely(!ret))
-+		if (unlikely(!ret)) {
- 			return de + mid;
--		else if (ret > 0) {
-+		} else if (ret > 0) {
- 			head = mid + 1;
- 			startprfx = matched;
--		} else if (unlikely(mid < 1))	/* fix "mid" overflow */
--			break;
--		else {
-+		} else {
- 			back = mid - 1;
- 			endprfx = matched;
- 		}
-@@ -91,12 +94,12 @@ static struct erofs_dirent *find_target_
- 	return ERR_PTR(-ENOENT);
- }
- 
--static struct page *find_target_block_classic(
--	struct inode *dir,
--	struct qstr *name, int *_diff)
-+static struct page *find_target_block_classic(struct inode *dir,
-+					      struct erofs_qstr *name,
-+					      int *_ndirents)
- {
--	unsigned startprfx, endprfx;
--	unsigned head, back;
-+	unsigned int startprfx, endprfx;
-+	int head, back;
- 	struct address_space *const mapping = dir->i_mapping;
- 	struct page *candidate = ERR_PTR(-ENOENT);
- 
-@@ -105,41 +108,43 @@ static struct page *find_target_block_cl
- 	back = inode_datablocks(dir) - 1;
- 
- 	while (head <= back) {
--		unsigned mid = head + (back - head) / 2;
-+		const int mid = head + (back - head) / 2;
- 		struct page *page = read_mapping_page(mapping, mid, NULL);
- 
--		if (IS_ERR(page)) {
--exact_out:
--			if (!IS_ERR(candidate)) /* valid candidate */
--				put_page(candidate);
--			return page;
--		} else {
--			int diff;
--			unsigned ndirents, matched;
--			struct qstr dname;
-+		if (!IS_ERR(page)) {
- 			struct erofs_dirent *de = kmap_atomic(page);
--			unsigned nameoff = le16_to_cpu(de->nameoff);
--
--			ndirents = nameoff / sizeof(*de);
-+			const int nameoff = nameoff_from_disk(de->nameoff,
-+							      EROFS_BLKSIZ);
-+			const int ndirents = nameoff / sizeof(*de);
-+			int diff;
-+			unsigned int matched;
-+			struct erofs_qstr dname;
- 
--			/* corrupted dir (should have one entry at least) */
--			BUG_ON(!ndirents || nameoff > PAGE_SIZE);
-+			if (unlikely(!ndirents)) {
-+				DBG_BUGON(1);
-+				kunmap_atomic(de);
-+				put_page(page);
-+				page = ERR_PTR(-EIO);
-+				goto out;
-+			}
- 
- 			matched = min(startprfx, endprfx);
- 
- 			dname.name = (u8 *)de + nameoff;
--			dname.len = ndirents == 1 ?
--				/* since the rest of the last page is 0 */
--				EROFS_BLKSIZ - nameoff
--				: le16_to_cpu(de[1].nameoff) - nameoff;
-+			if (ndirents == 1)
-+				dname.end = (u8 *)de + EROFS_BLKSIZ;
-+			else
-+				dname.end = (u8 *)de +
-+					nameoff_from_disk(de[1].nameoff,
-+							  EROFS_BLKSIZ);
- 
- 			/* string comparison without already matched prefix */
- 			diff = dirnamecmp(name, &dname, &matched);
- 			kunmap_atomic(de);
- 
- 			if (unlikely(!diff)) {
--				*_diff = 0;
--				goto exact_out;
-+				*_ndirents = 0;
-+				goto out;
- 			} else if (diff > 0) {
- 				head = mid + 1;
- 				startprfx = matched;
-@@ -147,45 +152,51 @@ exact_out:
- 				if (likely(!IS_ERR(candidate)))
- 					put_page(candidate);
- 				candidate = page;
-+				*_ndirents = ndirents;
- 			} else {
- 				put_page(page);
- 
--				if (unlikely(mid < 1))	/* fix "mid" overflow */
--					break;
--
- 				back = mid - 1;
- 				endprfx = matched;
- 			}
-+			continue;
- 		}
-+out:		/* free if the candidate is valid */
-+		if (!IS_ERR(candidate))
-+			put_page(candidate);
-+		return page;
- 	}
--	*_diff = 1;
- 	return candidate;
- }
- 
- int erofs_namei(struct inode *dir,
--	struct qstr *name,
--	erofs_nid_t *nid, unsigned *d_type)
-+		struct qstr *name,
-+		erofs_nid_t *nid, unsigned int *d_type)
- {
--	int diff;
-+	int ndirents;
- 	struct page *page;
--	u8 *data;
-+	void *data;
- 	struct erofs_dirent *de;
-+	struct erofs_qstr qn;
- 
- 	if (unlikely(!dir->i_size))
- 		return -ENOENT;
- 
--	diff = 1;
--	page = find_target_block_classic(dir, name, &diff);
-+	qn.name = name->name;
-+	qn.end = name->name + name->len;
-+
-+	ndirents = 0;
-+	page = find_target_block_classic(dir, &qn, &ndirents);
- 
- 	if (unlikely(IS_ERR(page)))
- 		return PTR_ERR(page);
- 
- 	data = kmap_atomic(page);
- 	/* the target page has been mapped */
--	de = likely(diff) ?
--		/* since the rest of the last page is 0 */
--		find_target_dirent(name, data, EROFS_BLKSIZ) :
--		(struct erofs_dirent *)data;
-+	if (ndirents)
-+		de = find_target_dirent(&qn, data, EROFS_BLKSIZ, ndirents);
-+	else
-+		de = (struct erofs_dirent *)data;
- 
- 	if (likely(!IS_ERR(de))) {
- 		*nid = le64_to_cpu(de->nid);
+diff --git a/mm/memory_hotplug.c b/mm/memory_hotplug.c
+index 34cde04f346d..ff93a57e1694 100644
+--- a/mm/memory_hotplug.c
++++ b/mm/memory_hotplug.c
+@@ -1299,6 +1299,9 @@ int test_pages_in_a_zone(unsigned long start_pfn, unsigned long end_pfn,
+ 				i++;
+ 			if (i == MAX_ORDER_NR_PAGES || pfn + i >= end_pfn)
+ 				continue;
++			/* Check if we got outside of the zone */
++			if (zone && !zone_spans_pfn(zone, pfn + i))
++				return 0;
+ 			page = pfn_to_page(pfn + i);
+ 			if (zone && page_zone(page) != zone)
+ 				return 0;
+-- 
+2.19.1
+
 
 
