@@ -4,52 +4,53 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 886B0C43381
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 17:53:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DC5CEC43381
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 17:53:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 560EB21734
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 17:53:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AF91E21734
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 17:53:53 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1552413229;
-	bh=S4Nnv6JZp6dY9VawqO3zd1D5zWAx0M7vB0neWOwJzaQ=;
+	s=default; t=1552413233;
+	bh=kPhVsSOUda0XGK3FMydXXYqX79wMdprLv3/I8kA2GR4=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=SRJJGDa7q/m5kNPcmr+s0iWdYhYqJUeQjmsyumghACkd7xv0WQiK01JNU/IZeL7Mk
-	 JQpjGjUvJWbiG91/n2bvhZoVubJFAqXbUyM7Ym5UnYuFFaOgoNOgHxBpX2eXBQdxSu
-	 2u37M2CszIXsvA9oaJ4Bp1HB52Hmgh2QepC9qOW8=
+	b=YZ2gTdTHgk2brnpJc5+Ogdz2B5pZ/fU4Yx/7dqsy1dne501dIxYXmRc7i35jVyiYW
+	 LIZ2KmAwPy1nPS17LCI3sgiR+Ts/h+cFnR9zrgbbkFmoKNUB4mAAAS5B//bWb8MPfS
+	 KNT03wbmDGGJizQdvJsq3sWE5FQVOvIA9mHK0KDI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729572AbfCLRxs (ORCPT
+        id S1728593AbfCLRxq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 12 Mar 2019 13:53:48 -0400
-Received: from mail.kernel.org ([198.145.29.99]:52544 "EHLO mail.kernel.org"
+        Tue, 12 Mar 2019 13:53:46 -0400
+Received: from mail.kernel.org ([198.145.29.99]:52590 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728276AbfCLROO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 12 Mar 2019 13:14:14 -0400
+        id S1728284AbfCLROP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 12 Mar 2019 13:14:15 -0400
 Received: from localhost (unknown [104.133.8.98])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id DB67E2173C;
-        Tue, 12 Mar 2019 17:14:13 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 9957921741;
+        Tue, 12 Mar 2019 17:14:14 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
         s=default; t=1552410854;
-        bh=S4Nnv6JZp6dY9VawqO3zd1D5zWAx0M7vB0neWOwJzaQ=;
+        bh=kPhVsSOUda0XGK3FMydXXYqX79wMdprLv3/I8kA2GR4=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=YQuUwsIzN3ywtM5sepjeYbsrLdLq1AKZF12Rt5jgU898RS+kWyUBknXO9Qi63DkNQ
-         BwzgVTK3CrfQQRp9i1V+WlhFDOQPA4MfLpwKiBCvFlaJNUdnur27rqILYen2qFrPd9
-         ypNAPf2kcf4gpxUMN0yKmmDYbcpxTKcVYfcsiadg=
+        b=nGgwWcG6DtvyB+fsMs4o5v8+uHzJlakqfuxWJXTFb6P7Vv2URRSt0ChKpu2xIyEjp
+         sNTQX79F4VRfPQVoXsVcnPdpzSmsZ7m1t1O8+pAUKEocfO54dIhZVcuXAMuq7G+w23
+         NLmIofjtjNGQ339t3dAig7PVrc0tqcs3bHYyqhgY=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Tom Lendacky <thomas.lendacky@amd.com>,
-        Borislav Petkov <bp@suse.de>, "H. Peter Anvin" <hpa@zytor.com>,
-        Ingo Molnar <mingo@redhat.com>,
-        Thomas Gleixner <tglx@linutronix.de>, x86-ml <x86@kernel.org>,
+        stable@vger.kernel.org,
+        Christoffer Dall <christoffer.dall@arm.com>,
+        James Morse <james.morse@arm.com>,
+        Masami Hiramatsu <mhiramat@kernel.org>,
+        Will Deacon <will.deacon@arm.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 049/149] x86/microcode/amd: Dont falsely trick the late loading mechanism
-Date:   Tue, 12 Mar 2019 10:07:47 -0700
-Message-Id: <20190312170353.883748154@linuxfoundation.org>
+Subject: [PATCH 4.19 050/149] arm64: kprobe: Always blacklist the KVM world-switch code
+Date:   Tue, 12 Mar 2019 10:07:48 -0700
+Message-Id: <20190312170353.960116595@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190312170349.421581206@linuxfoundation.org>
 References: <20190312170349.421581206@linuxfoundation.org>
@@ -68,64 +69,54 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-[ Upstream commit 912139cfbfa6a2bc1da052314d2c29338dae1f6a ]
+[ Upstream commit f2b3d8566d81deaca31f4e3163def0bea7746e11 ]
 
-The load_microcode_amd() function searches for microcode patches and
-attempts to apply a microcode patch if it is of different level than the
-currently installed level.
+On systems with VHE the kernel and KVM's world-switch code run at the
+same exception level. Code that is only used on a VHE system does not
+need to be annotated as __hyp_text as it can reside anywhere in the
+ kernel text.
 
-While the processor won't actually load a level that is less than
-what is already installed, the logic wrongly returns UCODE_NEW thus
-signaling to its caller reload_store() that a late loading should be
-attempted.
+__hyp_text was also used to prevent kprobes from patching breakpoint
+instructions into this region, as this code runs at a different
+exception level. While this is no longer true with VHE, KVM still
+switches VBAR_EL1, meaning a kprobe's breakpoint executed in the
+world-switch code will cause a hyp-panic.
 
-If the file-system contains an older microcode revision than what is
-currently running, such a late microcode reload can result in these
-misleading messages:
+Move the __hyp_text check in the kprobes blacklist so it applies on
+VHE systems too, to cover the common code and guest enter/exit
+assembly.
 
-  x86/CPU: CPU features have changed after loading microcode, but might not take effect.
-  x86/CPU: Please consider either early loading through initrd/built-in or a potential BIOS update.
-
-These messages were issued on a system where SME/SEV are not
-enabled by the BIOS (MSR C001_0010[23] = 0b) because during boot,
-early_detect_mem_encrypt() is called and cleared the SME and SEV
-features in this case.
-
-However, after the wrong late load attempt, get_cpu_cap() is called and
-reloads the SME and SEV feature bits, resulting in the messages.
-
-Update the microcode level check to not attempt microcode loading if the
-current level is greater than(!) and not only equal to the current patch
-level.
-
- [ bp: massage commit message. ]
-
-Fixes: 2613f36ed965 ("x86/microcode: Attempt late loading only when new microcode is present")
-Signed-off-by: Tom Lendacky <thomas.lendacky@amd.com>
-Signed-off-by: Borislav Petkov <bp@suse.de>
-Cc: "H. Peter Anvin" <hpa@zytor.com>
-Cc: Ingo Molnar <mingo@redhat.com>
-Cc: Thomas Gleixner <tglx@linutronix.de>
-Cc: x86-ml <x86@kernel.org>
-Link: https://lkml.kernel.org/r/154894518427.9406.8246222496874202773.stgit@tlendack-t1.amdoffice.net
+Fixes: 888b3c8720e0 ("arm64: Treat all entry code as non-kprobe-able")
+Reviewed-by: Christoffer Dall <christoffer.dall@arm.com>
+Signed-off-by: James Morse <james.morse@arm.com>
+Acked-by: Masami Hiramatsu <mhiramat@kernel.org>
+Signed-off-by: Will Deacon <will.deacon@arm.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/x86/kernel/cpu/microcode/amd.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ arch/arm64/kernel/probes/kprobes.c | 6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
 
-diff --git a/arch/x86/kernel/cpu/microcode/amd.c b/arch/x86/kernel/cpu/microcode/amd.c
-index 07b5fc00b188..a4e7e100ed26 100644
---- a/arch/x86/kernel/cpu/microcode/amd.c
-+++ b/arch/x86/kernel/cpu/microcode/amd.c
-@@ -707,7 +707,7 @@ load_microcode_amd(bool save, u8 family, const u8 *data, size_t size)
- 	if (!p) {
- 		return ret;
- 	} else {
--		if (boot_cpu_data.microcode == p->patch_id)
-+		if (boot_cpu_data.microcode >= p->patch_id)
- 			return ret;
+diff --git a/arch/arm64/kernel/probes/kprobes.c b/arch/arm64/kernel/probes/kprobes.c
+index b5a367d4bba6..30bb13797034 100644
+--- a/arch/arm64/kernel/probes/kprobes.c
++++ b/arch/arm64/kernel/probes/kprobes.c
+@@ -478,13 +478,13 @@ bool arch_within_kprobe_blacklist(unsigned long addr)
+ 	    addr < (unsigned long)__entry_text_end) ||
+ 	    (addr >= (unsigned long)__idmap_text_start &&
+ 	    addr < (unsigned long)__idmap_text_end) ||
++	    (addr >= (unsigned long)__hyp_text_start &&
++	    addr < (unsigned long)__hyp_text_end) ||
+ 	    !!search_exception_tables(addr))
+ 		return true;
  
- 		ret = UCODE_NEW;
+ 	if (!is_kernel_in_hyp_mode()) {
+-		if ((addr >= (unsigned long)__hyp_text_start &&
+-		    addr < (unsigned long)__hyp_text_end) ||
+-		    (addr >= (unsigned long)__hyp_idmap_text_start &&
++		if ((addr >= (unsigned long)__hyp_idmap_text_start &&
+ 		    addr < (unsigned long)__hyp_idmap_text_end))
+ 			return true;
+ 	}
 -- 
 2.19.1
 
