@@ -2,187 +2,108 @@ Return-Path: <SRS0=J4ZE=RP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED
+X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_NEOMUTT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AB121C43381
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 15:36:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6A999C43381
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 15:37:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 80D732083D
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 15:36:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 40A84217D8
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 15:37:04 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726585AbfCLPg6 convert rfc822-to-8bit (ORCPT
+        id S1726743AbfCLPhC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 12 Mar 2019 11:36:58 -0400
-Received: from mga17.intel.com ([192.55.52.151]:14486 "EHLO mga17.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726192AbfCLPg5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 12 Mar 2019 11:36:57 -0400
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga001.fm.intel.com ([10.253.24.23])
-  by fmsmga107.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 12 Mar 2019 08:36:57 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.58,471,1544515200"; 
-   d="scan'208";a="154322835"
-Received: from fmsmsx106.amr.corp.intel.com ([10.18.124.204])
-  by fmsmga001.fm.intel.com with ESMTP; 12 Mar 2019 08:36:57 -0700
-Received: from FMSMSX110.amr.corp.intel.com (10.18.116.10) by
- FMSMSX106.amr.corp.intel.com (10.18.124.204) with Microsoft SMTP Server (TLS)
- id 14.3.408.0; Tue, 12 Mar 2019 08:36:57 -0700
-Received: from fmsmsx124.amr.corp.intel.com ([169.254.8.86]) by
- FMSMSX110.amr.corp.intel.com ([169.254.14.3]) with mapi id 14.03.0415.000;
- Tue, 12 Mar 2019 08:36:56 -0700
-From:   "Saleem, Shiraz" <shiraz.saleem@intel.com>
-To:     Kangjie Lu <kjlu@umn.edu>
-CC:     "pakki001@umn.edu" <pakki001@umn.edu>,
-        "Latif, Faisal" <faisal.latif@intel.com>,
-        Doug Ledford <dledford@redhat.com>,
-        Jason Gunthorpe <jgg@ziepe.ca>,
-        "linux-rdma@vger.kernel.org" <linux-rdma@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: RE: [PATCH] infiniband: i40iw: fix potential NULL pointer
- dereferences
-Thread-Topic: [PATCH] infiniband: i40iw: fix potential NULL pointer
- dereferences
-Thread-Index: AQHU1jjcRI9xjU7ZKUeZYb8WAnw3mqYIJNzA
-Date:   Tue, 12 Mar 2019 15:36:56 +0000
-Message-ID: <9DD61F30A802C4429A01CA4200E302A7A5A6B1A0@fmsmsx124.amr.corp.intel.com>
-References: <20190309052750.16139-1-kjlu@umn.edu>
-In-Reply-To: <20190309052750.16139-1-kjlu@umn.edu>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-originating-ip: [10.1.200.107]
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 8BIT
+        Tue, 12 Mar 2019 11:37:02 -0400
+Received: from relay9-d.mail.gandi.net ([217.70.183.199]:57793 "EHLO
+        relay9-d.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725917AbfCLPg7 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 12 Mar 2019 11:36:59 -0400
+X-Originating-IP: 90.88.22.102
+Received: from localhost (aaubervilliers-681-1-80-102.w90-88.abo.wanadoo.fr [90.88.22.102])
+        (Authenticated sender: maxime.ripard@bootlin.com)
+        by relay9-d.mail.gandi.net (Postfix) with ESMTPSA id BF6E6FF80A;
+        Tue, 12 Mar 2019 15:36:54 +0000 (UTC)
+Date:   Tue, 12 Mar 2019 16:36:54 +0100
+From:   Maxime Ripard <maxime.ripard@bootlin.com>
+To:     Icenowy Zheng <icenowy@aosc.io>
+Cc:     Rob Herring <robh+dt@kernel.org>, Chen-Yu Tsai <wens@csie.org>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Jagan Teki <jagan@amarulasolutions.com>,
+        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-kernel@vger.kernel.org, linux-clk@vger.kernel.org,
+        linux-gpio@vger.kernel.org, linux-sunxi@googlegroups.com
+Subject: Re: [PATCH 04/14] pinctrl: sunxi: v3: really introduce support for V3
+Message-ID: <20190312153654.25r5orlw7qjtlhbt@flea>
+References: <20190312152256.35574-1-icenowy@aosc.io>
+ <20190312152256.35574-5-icenowy@aosc.io>
 MIME-Version: 1.0
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature"; boundary="s44e46kj3dzvjmpr"
+Content-Disposition: inline
+In-Reply-To: <20190312152256.35574-5-icenowy@aosc.io>
+User-Agent: NeoMutt/20180716
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
->Subject: [PATCH] infiniband: i40iw: fix potential NULL pointer dereferences
->
->alloc_ordered_workqueue may fail and return NULL. Let's check its return value
->to ensure it is not NULL so as to avoid potential NULL pointer dereferences.
->
->Signed-off-by: Kangjie Lu <kjlu@umn.edu>
->---
-> drivers/infiniband/hw/i40iw/i40iw_cm.c | 12 ++++++++++++
-> 1 file changed, 12 insertions(+)
->
->diff --git a/drivers/infiniband/hw/i40iw/i40iw_cm.c
->b/drivers/infiniband/hw/i40iw/i40iw_cm.c
->index 206cfb0016f8..ad9b4f235e30 100644
->--- a/drivers/infiniband/hw/i40iw/i40iw_cm.c
->+++ b/drivers/infiniband/hw/i40iw/i40iw_cm.c
->@@ -3256,9 +3256,21 @@ void i40iw_setup_cm_core(struct i40iw_device
->*iwdev)
->
-> 	cm_core->event_wq = alloc_ordered_workqueue("iwewq",
-> 						    WQ_MEM_RECLAIM);
->+	if (!cm_core->event_wq) {
->+		i40iw_debug(cm_core->dev,
->+				I40IW_DEBUG_CM,
->+				"%s allocate event work queue failed\n",
->+				__func__);
->+	}
->
-> 	cm_core->disconn_wq = alloc_ordered_workqueue("iwdwq",
-> 						      WQ_MEM_RECLAIM);
->+	if (!cm_core->disconn_wq) {
->+		i40iw_debug(cm_core->dev,
->+				I40IW_DEBUG_CM,
->+				"%s allocate disconnect work queue failed\n",
->+				__func__);
->+	}
-> }
 
-Hi Kangjie - Just doing a debug print doesn't suffice. We need to fail the i40iw_open() and unwind correctly.
+--s44e46kj3dzvjmpr
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-Perhaps something like this would be required.
+On Tue, Mar 12, 2019 at 11:22:46PM +0800, Icenowy Zheng wrote:
+> Introduce the GPIO pins that is only available on V3 (not on V3s) to the
+> V3 pinctrl driver.
+>=20
+> Signed-off-by: Icenowy Zheng <icenowy@aosc.io>
+> ---
+>  drivers/pinctrl/sunxi/pinctrl-sun8i-v3.c | 291 +++++++++++++++++++++--
+>  drivers/pinctrl/sunxi/pinctrl-sunxi.h    |   2 +
+>  2 files changed, 275 insertions(+), 18 deletions(-)
+>=20
+> diff --git a/drivers/pinctrl/sunxi/pinctrl-sun8i-v3.c b/drivers/pinctrl/s=
+unxi/pinctrl-sun8i-v3.c
+> index 6704ce8e5e3d..54c210871a95 100644
+> --- a/drivers/pinctrl/sunxi/pinctrl-sun8i-v3.c
+> +++ b/drivers/pinctrl/sunxi/pinctrl-sun8i-v3.c
+> @@ -1,5 +1,5 @@
+>  /*
+> - * Allwinner V3s SoCs pinctrl driver.
+> + * Allwinner V3/V3s SoCs pinctrl driver.
+>   *
+>   * Copyright (C) 2016 Icenowy Zheng <icenowy@aosc.xyz>
+>   *
+> @@ -23,7 +23,7 @@
+> =20
+>  #include "pinctrl-sunxi.h"
+> =20
+> -static const struct sunxi_desc_pin sun8i_v3s_pins[] =3D {
+> +static const struct sunxi_desc_pin sun8i_v3_v3s_pins[] =3D {
 
-diff --git a/drivers/infiniband/hw/i40iw/i40iw.h b/drivers/infiniband/hw/i40iw/i40iw.h
-index 2f2b442..8feec35 100644
---- a/drivers/infiniband/hw/i40iw/i40iw.h
-+++ b/drivers/infiniband/hw/i40iw/i40iw.h
-@@ -552,7 +552,7 @@ enum i40iw_status_code i40iw_obj_aligned_mem(struct i40iw_device *iwdev,
+I'm not sure all that remaining is worth it to be honest. It adds a
+lot of noise for no particular reason (and the same goes for renaming
+the file itself).
 
- void i40iw_request_reset(struct i40iw_device *iwdev);
- void i40iw_destroy_rdma_device(struct i40iw_ib_device *iwibdev);
--void i40iw_setup_cm_core(struct i40iw_device *iwdev);
-+int i40iw_setup_cm_core(struct i40iw_device *iwdev);
- void i40iw_cleanup_cm_core(struct i40iw_cm_core *cm_core);
- void i40iw_process_ceq(struct i40iw_device *, struct i40iw_ceq *iwceq);
- void i40iw_process_aeq(struct i40iw_device *);
-diff --git a/drivers/infiniband/hw/i40iw/i40iw_cm.c b/drivers/infiniband/hw/i40iw/i40iw_cm.c
-index 206cfb0..dcc5fea 100644
---- a/drivers/infiniband/hw/i40iw/i40iw_cm.c
-+++ b/drivers/infiniband/hw/i40iw/i40iw_cm.c
-@@ -3237,7 +3237,7 @@ void i40iw_receive_ilq(struct i40iw_sc_vsi *vsi, struct i40iw_puda_buf *rbuf)
-  * core
-  * @iwdev: iwarp device structure
-  */
--void i40iw_setup_cm_core(struct i40iw_device *iwdev)
-+int i40iw_setup_cm_core(struct i40iw_device *iwdev)
- {
-        struct i40iw_cm_core *cm_core = &iwdev->cm_core;
+Maxime
 
-@@ -3256,9 +3256,20 @@ void i40iw_setup_cm_core(struct i40iw_device *iwdev)
+--=20
+Maxime Ripard, Bootlin
+Embedded Linux and Kernel engineering
+https://bootlin.com
 
-        cm_core->event_wq = alloc_ordered_workqueue("iwewq",
-                                                    WQ_MEM_RECLAIM);
--
-+       if (!cm_core->event_wq)
-+               goto error;
-+       
-        cm_core->disconn_wq = alloc_ordered_workqueue("iwdwq",
-                                                      WQ_MEM_RECLAIM);
-+       if (!cm_core->disconn_wq)
-+               goto error;
-+
-+       return 0;
-+error:
-+       i40iw_cleanup_cm_core(&iwdev->cm_core);
-+       i40iw_pr_err("fail to setup CM core");
-+
-+       return -ENOMEM;
- }
+--s44e46kj3dzvjmpr
+Content-Type: application/pgp-signature; name="signature.asc"
 
- /**
-@@ -3278,8 +3289,10 @@ void i40iw_cleanup_cm_core(struct i40iw_cm_core *cm_core)
-                del_timer_sync(&cm_core->tcp_timer);
-        spin_unlock_irqrestore(&cm_core->ht_lock, flags);
+-----BEGIN PGP SIGNATURE-----
 
--       destroy_workqueue(cm_core->event_wq);
--       destroy_workqueue(cm_core->disconn_wq);
-+       if (cm_core->event_wq)
-+               destroy_workqueue(cm_core->event_wq);
-+       if (cm_core->disconn_wq)
-+               destroy_workqueue(cm_core->disconn_wq);
- }
+iHUEABYIAB0WIQRcEzekXsqa64kGDp7j7w1vZxhRxQUCXIfSFgAKCRDj7w1vZxhR
+xeMoAP9cCIzeT8Xt0BOkFXCLT5N0x8WG+hu1LJdL68F4nFyYBwEAjKgt55dGpvYI
+Ct/rlZuXdLVvzId1pYTvBgYdBH9H8QA=
+=pRN9
+-----END PGP SIGNATURE-----
 
- /**
-diff --git a/drivers/infiniband/hw/i40iw/i40iw_main.c b/drivers/infiniband/hw/i40iw/i40iw_main.c
-index 68095f0..10932ba 100644
---- a/drivers/infiniband/hw/i40iw/i40iw_main.c
-+++ b/drivers/infiniband/hw/i40iw/i40iw_main.c
-@@ -1641,7 +1641,10 @@ static int i40iw_open(struct i40e_info *ldev, struct i40e_client *client)
-        iwdev = &hdl->device;
-        iwdev->hdl = hdl;
-        dev = &iwdev->sc_dev;
--       i40iw_setup_cm_core(iwdev);
-+       if (i40iw_setup_cm_core(iwdev)) {
-+               kfree(iwdev->hdl);
-+               return -ENOMEM;
-+       }
-
-        dev->back_dev = (void *)iwdev;
-        iwdev->ldev = &hdl->ldev;
--- 
-1.8.3.1
-
-Shiraz
+--s44e46kj3dzvjmpr--
