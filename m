@@ -2,263 +2,210 @@ Return-Path: <SRS0=J4ZE=RP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_MUTT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C0566C43381
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 19:04:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 063E7C43381
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 19:06:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 813F52147C
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 19:04:50 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1552417490;
-	bh=566iRbhkG58LUX+noFzqfjU1O5aniRwMQtk68c3QXuE=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=wF0QSrZocvbtQFzLz3pZrhXrNlxeiyGKGXlSO4tcEpLvZFajaDS4WO62Zm3G//jaL
-	 vCy9/PaqfHArA9qWkTauXGmEQX0J/AvMmryqSzhEErv3vdYRgXah57sYKsO0lLFwqR
-	 vnwZlnKkBMuj+QUodls0GVpUz0HbowhJfGmBUHr0=
+	by mail.kernel.org (Postfix) with ESMTP id C684B2087C
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 19:06:12 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727237AbfCLTEs (ORCPT
+        id S1726815AbfCLTGL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 12 Mar 2019 15:04:48 -0400
-Received: from mail.kernel.org ([198.145.29.99]:50468 "EHLO mail.kernel.org"
+        Tue, 12 Mar 2019 15:06:11 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:47234 "EHLO mx1.redhat.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726815AbfCLTEs (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 12 Mar 2019 15:04:48 -0400
-Received: from localhost (unknown [104.132.1.80])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        id S1727118AbfCLTGK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 12 Mar 2019 15:06:10 -0400
+Received: from smtp.corp.redhat.com (int-mx06.intmail.prod.int.phx2.redhat.com [10.5.11.16])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 1D1E82087C;
-        Tue, 12 Mar 2019 19:04:47 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1552417487;
-        bh=566iRbhkG58LUX+noFzqfjU1O5aniRwMQtk68c3QXuE=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=Go3KZzHcYxY8D+tWP113sAb96ReNcy3J9FJO3HDpt/XQcOQdSvC3wh1L6N7FBCO/8
-         okPhy0kgGxVLrkPz3KDfaFJIdbywU+dct1JN9+6lw+sDZ+Yx5ayG9vzJSYFcr0MWFi
-         GCzjIbUsAJJiKET6D866RRukuzV9kz/qCfDRsqeA=
-Date:   Tue, 12 Mar 2019 12:04:46 -0700
-From:   Jaegeuk Kim <jaegeuk@kernel.org>
-To:     Chao Yu <yuchao0@huawei.com>
-Cc:     linux-f2fs-devel@lists.sourceforge.net,
-        linux-kernel@vger.kernel.org, chao@kernel.org
-Subject: Re: [PATCH v3] f2fs: fix to add refcount once page is tagged
- PG_private
-Message-ID: <20190312190446.GC45421@jaegeuk-macbookpro.roam.corp.google.com>
-References: <20190306093059.80014-1-yuchao0@huawei.com>
+        by mx1.redhat.com (Postfix) with ESMTPS id D11B5A146A;
+        Tue, 12 Mar 2019 19:06:09 +0000 (UTC)
+Received: from redhat.com (ovpn-117-131.phx2.redhat.com [10.3.117.131])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id DCDEE66857;
+        Tue, 12 Mar 2019 19:06:08 +0000 (UTC)
+Date:   Tue, 12 Mar 2019 15:06:07 -0400
+From:   Jerome Glisse <jglisse@redhat.com>
+To:     Dan Williams <dan.j.williams@intel.com>
+Cc:     Andrew Morton <akpm@linux-foundation.org>,
+        Linux MM <linux-mm@kvack.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Ralph Campbell <rcampbell@nvidia.com>,
+        John Hubbard <jhubbard@nvidia.com>,
+        linux-fsdevel <linux-fsdevel@vger.kernel.org>
+Subject: Re: [PATCH 09/10] mm/hmm: allow to mirror vma of a file on a DAX
+ backed filesystem
+Message-ID: <20190312190606.GA15675@redhat.com>
+References: <CAPcyv4hB4p6po1+-hJ4Podxoan35w+T6uZJzqbw=zvj5XdeNVQ@mail.gmail.com>
+ <20190131041641.GK5061@redhat.com>
+ <CAPcyv4gb+r==riKFXkVZ7gGdnKe62yBmZ7xOa4uBBByhnK9Tzg@mail.gmail.com>
+ <20190305141635.8134e310ba7187bc39532cd3@linux-foundation.org>
+ <CAA9_cmd2Z62Z5CSXvne4rj3aPSpNhS0Gxt+kZytz0bVEuzvc=A@mail.gmail.com>
+ <20190307094654.35391e0066396b204d133927@linux-foundation.org>
+ <20190307185623.GD3835@redhat.com>
+ <CAPcyv4gkxmmkB0nofVOvkmV7HcuBDb+1VLR9CSsp+m-QLX_mxA@mail.gmail.com>
+ <20190312152551.GA3233@redhat.com>
+ <CAPcyv4iYzTVpP+4iezH1BekawwPwJYiMvk2GZDzfzFLUnO+RgA@mail.gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=iso-8859-1
 Content-Disposition: inline
-In-Reply-To: <20190306093059.80014-1-yuchao0@huawei.com>
-User-Agent: Mutt/1.8.2 (2017-04-18)
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <CAPcyv4iYzTVpP+4iezH1BekawwPwJYiMvk2GZDzfzFLUnO+RgA@mail.gmail.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.16
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.27]); Tue, 12 Mar 2019 19:06:10 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 03/06, Chao Yu wrote:
-> As Gao Xiang reported in bugzilla:
+On Tue, Mar 12, 2019 at 09:06:12AM -0700, Dan Williams wrote:
+> On Tue, Mar 12, 2019 at 8:26 AM Jerome Glisse <jglisse@redhat.com> wrote:
+> >
+> > On Mon, Mar 11, 2019 at 08:13:53PM -0700, Dan Williams wrote:
+> > > On Thu, Mar 7, 2019 at 10:56 AM Jerome Glisse <jglisse@redhat.com> wrote:
+> > > >
+> > > > On Thu, Mar 07, 2019 at 09:46:54AM -0800, Andrew Morton wrote:
+> > > > > On Tue, 5 Mar 2019 20:20:10 -0800 Dan Williams <dan.j.williams@intel.com> wrote:
+> > > > >
+> > > > > > My hesitation would be drastically reduced if there was a plan to
+> > > > > > avoid dangling unconsumed symbols and functionality. Specifically one
+> > > > > > or more of the following suggestions:
+> > > > > >
+> > > > > > * EXPORT_SYMBOL_GPL on all exports to avoid a growing liability
+> > > > > > surface for out-of-tree consumers to come grumble at us when we
+> > > > > > continue to refactor the kernel as we are wont to do.
+> > > > >
+> > > > > The existing patches use EXPORT_SYMBOL() so that's a sticking point.
+> > > > > Jerome, what would happen is we made these EXPORT_SYMBOL_GPL()?
+> > > >
+> > > > So Dan argue that GPL export solve the problem of out of tree user and
+> > > > my personnal experience is that it does not. The GPU sub-system has tons
+> > > > of GPL drivers that are not upstream and we never felt that we were bound
+> > > > to support them in anyway. We always were very clear that if you are not
+> > > > upstream that you do not have any voice on changes we do.
+> > > >
+> > > > So my exeperience is that GPL does not help here. It is just about being
+> > > > clear and ignoring anyone who does not have an upstream driver ie we have
+> > > > free hands to update HMM in anyway as long as we keep supporting the
+> > > > upstream user.
+> > > >
+> > > > That being said if the GPL aspect is that much important to some then
+> > > > fine let switch all HMM symbol to GPL.
+> > >
+> > > I should add that I would not be opposed to moving symbols to
+> > > non-GPL-only over time, but that should be based on our experience
+> > > with the stability and utility of the implementation. For brand new
+> > > symbols there's just no data to argue that we can / should keep the
+> > > interface stable, or that the interface exposes something fragile that
+> > > we'd rather not export at all. That experience gathering and thrash is
+> > > best constrained to upstream GPL-only drivers that are signing up to
+> > > participate in that maturation process.
+> > >
+> > > So I think it is important from a practical perspective and is a lower
+> > > risk way to run this HMM experiment of "merge infrastructure way in
+> > > advance of an upstream user".
+> > >
+> > > > > > * A commitment to consume newly exported symbols in the same merge
+> > > > > > window, or the following merge window. When that goal is missed revert
+> > > > > > the functionality until such time that it can be consumed, or
+> > > > > > otherwise abandoned.
+> > > > >
+> > > > > It sounds like we can tick this box.
+> > > >
+> > > > I wouldn't be too strick either, when adding something in release N
+> > > > the driver change in N+1 can miss N+1 because of bug or regression
+> > > > and be push to N+2.
+> > > >
+> > > > I think a better stance here is that if we do not get any sign-off
+> > > > on the feature from driver maintainer for which the feature is intended
+> > > > then we just do not merge.
+> > >
+> > > Agree, no driver maintainer sign-off then no merge.
+> > >
+> > > > If after few release we still can not get
+> > > > the driver to use it then we revert.
+> > >
+> > > As long as it is made clear to the driver maintainer that they have
+> > > one cycle to consume it then we can have a conversation if it is too
+> > > early to merge the infrastructure. If no one has time to consume the
+> > > feature, why rush dead code into the kernel? Also, waiting 2 cycles
+> > > means the infrastructure that was hard to review without a user is now
+> > > even harder to review because any review momentum has been lost by the
+> > > time the user show up, so we're better off keeping them close together
+> > > in time.
+> >
+> > Miss-understanding here, in first post the infrastructure and the driver
+> > bit get posted just like have been doing lately. So that you know that
+> > you have working user with the feature and what is left is pushing the
+> > driver bits throught the appropriate tree. So driver maintainer support
+> > is about knowing that they want the feature and have some confidence
+> > that it looks ready.
+> >
+> > It also means you can review the infrastructure along side user of it.
 > 
-> https://bugzilla.kernel.org/show_bug.cgi?id=202749
+> Sounds good.
 > 
-> f2fs may skip pageout() due to incorrect page reference count.
+> > > > It just feels dumb to revert at N+1 just to get it back in N+2 as
+> > > > the driver bit get fix.
+> > >
+> > > No, I think it just means the infrastructure went in too early if a
+> > > driver can't consume it in a development cycle. Lets revisit if it
+> > > becomes a problem in practice.
+> >
+> > Well that's just dumb to have hard guideline like that. Many things
+> > can lead to missing deadline. For instance bug i am refering too might
+> > have nothing to do with the feature, it can be something related to
+> > integrating the feature an unforseen side effect. So i believe a better
+> > guideline is that driver maintainer rejecting the feature rather than
+> > just failure to meet one deadline.
 > 
-> The problem here is that MM defined the rule [1] very clearly that
-> once page was set with PG_private flag, we should increment the
-> refcount in that page, also main flows like pageout(), migrate_page()
-> will assume there is one additional page reference count if
-> page_has_private() returns true.
+> The history of the Linux kernel disagrees with this statement. It's
+> only HMM that has recently ignored precedent and pushed to land
+> infrastructure in advance of consumers, a one cycle constraint is
+> already generous in that light.
 > 
-> But currently, f2fs won't add/del refcount when changing PG_private
-> flag. Anyway, f2fs should follow MM's rule to make MM's related flows
-> running as expected.
+> > > > > > * No new symbol exports and functionality while existing symbols go unconsumed.
+> > > > >
+> > > > > Unsure about this one?
+> > > >
+> > > > With nouveau upstream now everything is use. ODP will use some of the
+> > > > symbol too. PPC has patchset posted to use lot of HMM too. I have been
+> > > > working with other vendor that have patchset being work on to use HMM
+> > > > too.
+> > > >
+> > > > I have not done all those function just for the fun of it :) They do
+> > > > have real use and user. It took a longtime to get nouveau because of
+> > > > userspace we had a lot of catchup to do in mesa and llvm and we are
+> > > > still very rough there.
+> > >
+> > > Sure, this one is less of a concern if we can stick to tighter
+> > > timelines between infrastructure and driver consumer merge.
+> >
+> > Issue is that consumer timeline can be hard to know, sometimes
+> > the consumer go over few revision (like ppc for instance) and
+> > not because of the infrastructure but for other reasons. So
+> > reverting the infrastructure just because user had its timeline
+> > change is not productive. User missing one cycle means they would
+> > get delayed for 2 cycles ie reupstreaming the infrastructure in
+> > next cycle and repushing the user the cycle after. This sounds
+> > like a total wastage of everyone times. While keeping the infra-
+> > structure would allow the timeline to slip by just one cycle.
+> >
+> > Spirit of the rule is better than blind application of rule.
 > 
-> [1] https://lore.kernel.org/lkml/2b19b3c4-2bc4-15fa-15cc-27a13e5c7af1@aol.com/
+> Again, I fail to see why HMM is suddenly unable to make forward
+> progress when the infrastructure that came before it was merged with
+> consumers in the same development cycle.
 > 
-> Reported-by: Gao Xiang <gaoxiang25@huawei.com>
-> Signed-off-by: Chao Yu <yuchao0@huawei.com>
-> ---
-> v3:
-> - wrap page->private assignment into f2fs_set_page_private() as suggested
-> by Gao Xiang.
->  fs/f2fs/checkpoint.c |  4 ++--
->  fs/f2fs/data.c       | 21 ++++++++-------------
->  fs/f2fs/dir.c        |  2 +-
->  fs/f2fs/f2fs.h       | 21 +++++++++++++++++++++
->  fs/f2fs/node.c       |  2 +-
->  fs/f2fs/segment.c    |  9 +++------
->  6 files changed, 36 insertions(+), 23 deletions(-)
-> 
-> diff --git a/fs/f2fs/checkpoint.c b/fs/f2fs/checkpoint.c
-> index c65a1e8e1e95..a98e1b02279e 100644
-> --- a/fs/f2fs/checkpoint.c
-> +++ b/fs/f2fs/checkpoint.c
-> @@ -406,7 +406,7 @@ static int f2fs_set_meta_page_dirty(struct page *page)
->  	if (!PageDirty(page)) {
->  		__set_page_dirty_nobuffers(page);
->  		inc_page_count(F2FS_P_SB(page), F2FS_DIRTY_META);
-> -		SetPagePrivate(page);
-> +		f2fs_set_page_private(page, 0);
->  		f2fs_trace_pid(page);
->  		return 1;
->  	}
-> @@ -957,7 +957,7 @@ void f2fs_update_dirty_page(struct inode *inode, struct page *page)
->  	inode_inc_dirty_pages(inode);
->  	spin_unlock(&sbi->inode_lock[type]);
->  
-> -	SetPagePrivate(page);
-> +	f2fs_set_page_private(page, 0);
->  	f2fs_trace_pid(page);
->  }
->  
-> diff --git a/fs/f2fs/data.c b/fs/f2fs/data.c
-> index 3f3becd46362..992045d1584e 100644
-> --- a/fs/f2fs/data.c
-> +++ b/fs/f2fs/data.c
-> @@ -2715,8 +2715,7 @@ void f2fs_invalidate_page(struct page *page, unsigned int offset,
->  	if (IS_ATOMIC_WRITTEN_PAGE(page))
->  		return f2fs_drop_inmem_page(inode, page);
->  
-> -	set_page_private(page, 0);
-> -	ClearPagePrivate(page);
-> +	f2fs_clear_page_private(page);
->  }
->  
->  int f2fs_release_page(struct page *page, gfp_t wait)
-> @@ -2730,8 +2729,7 @@ int f2fs_release_page(struct page *page, gfp_t wait)
->  		return 0;
->  
->  	clear_cold_data(page);
-> -	set_page_private(page, 0);
-> -	ClearPagePrivate(page);
-> +	f2fs_clear_page_private(page);
->  	return 1;
->  }
->  
-> @@ -2799,12 +2797,8 @@ int f2fs_migrate_page(struct address_space *mapping,
->  			return -EAGAIN;
->  	}
->  
-> -	/*
-> -	 * A reference is expected if PagePrivate set when move mapping,
-> -	 * however F2FS breaks this for maintaining dirty page counts when
-> -	 * truncating pages. So here adjusting the 'extra_count' make it work.
-> -	 */
-> -	extra_count = (atomic_written ? 1 : 0) - page_has_private(page);
-> +	/* one extra reference was held for atomic_write page */
-> +	extra_count = atomic_written ? 1 : 0;
->  	rc = migrate_page_move_mapping(mapping, newpage,
->  				page, mode, extra_count);
->  	if (rc != MIGRATEPAGE_SUCCESS) {
-> @@ -2825,9 +2819,10 @@ int f2fs_migrate_page(struct address_space *mapping,
->  		get_page(newpage);
->  	}
->  
-> -	if (PagePrivate(page))
-> -		SetPagePrivate(newpage);
-> -	set_page_private(newpage, page_private(page));
-> +	if (PagePrivate(page)) {
-> +		f2fs_set_page_private(newpage, page_private(page));
-> +		f2fs_clear_page_private(page);
-> +	}
->  
->  	if (mode != MIGRATE_SYNC_NO_COPY)
->  		migrate_page_copy(newpage, page);
-> diff --git a/fs/f2fs/dir.c b/fs/f2fs/dir.c
-> index 103f3686a045..fb647e58edb5 100644
-> --- a/fs/f2fs/dir.c
-> +++ b/fs/f2fs/dir.c
-> @@ -728,7 +728,7 @@ void f2fs_delete_entry(struct f2fs_dir_entry *dentry, struct page *page,
->  		!f2fs_truncate_hole(dir, page->index, page->index + 1)) {
->  		f2fs_clear_page_cache_dirty_tag(page);
->  		clear_page_dirty_for_io(page);
-> -		ClearPagePrivate(page);
-> +		f2fs_clear_page_private(page);
->  		ClearPageUptodate(page);
->  		clear_cold_data(page);
->  		inode_dec_dirty_pages(dir);
-> diff --git a/fs/f2fs/f2fs.h b/fs/f2fs/f2fs.h
-> index 3007759dd2dd..1e9e780f3db7 100644
-> --- a/fs/f2fs/f2fs.h
-> +++ b/fs/f2fs/f2fs.h
-> @@ -2835,6 +2835,27 @@ static inline bool is_valid_data_blkaddr(struct f2fs_sb_info *sbi,
->  	return true;
->  }
->  
-> +static inline void f2fs_set_page_private(struct page *page,
-> +						unsigned long date)
+> A gate to upstream merge is about the only lever a reviewer has to
+> push for change, and these requests to uncouple the consumer only
+> serve to weaken that review tool in my mind.
 
-I fixed to use "data".
+Well let just agree to disagree and leave it at that and stop
+wasting each other time
 
-> +{
-> +	if (PagePrivate(page))
-> +		return;
-> +
-> +	get_page(page);
-> +	SetPagePrivate(page);
-> +	set_page_private(page, date);
-> +}
-> +
-> +static inline void f2fs_clear_page_private(struct page *page)
-> +{
-> +	if (!PagePrivate(page))
-> +		return;
-> +
-> +	set_page_private(page, 0);
-> +	ClearPagePrivate(page);
-> +	f2fs_put_page(page, 0);
-> +}
-> +
->  /*
->   * file.c
->   */
-> diff --git a/fs/f2fs/node.c b/fs/f2fs/node.c
-> index f6ff84e29749..3f99ab288695 100644
-> --- a/fs/f2fs/node.c
-> +++ b/fs/f2fs/node.c
-> @@ -1961,7 +1961,7 @@ static int f2fs_set_node_page_dirty(struct page *page)
->  	if (!PageDirty(page)) {
->  		__set_page_dirty_nobuffers(page);
->  		inc_page_count(F2FS_P_SB(page), F2FS_DIRTY_NODES);
-> -		SetPagePrivate(page);
-> +		f2fs_set_page_private(page, 0);
->  		f2fs_trace_pid(page);
->  		return 1;
->  	}
-> diff --git a/fs/f2fs/segment.c b/fs/f2fs/segment.c
-> index e730c334abba..aa7fe79b62b2 100644
-> --- a/fs/f2fs/segment.c
-> +++ b/fs/f2fs/segment.c
-> @@ -191,8 +191,7 @@ void f2fs_register_inmem_page(struct inode *inode, struct page *page)
->  
->  	f2fs_trace_pid(page);
->  
-> -	set_page_private(page, (unsigned long)ATOMIC_WRITTEN_PAGE);
-> -	SetPagePrivate(page);
-> +	f2fs_set_page_private(page, (unsigned long)ATOMIC_WRITTEN_PAGE);
->  
->  	new = f2fs_kmem_cache_alloc(inmem_entry_slab, GFP_NOFS);
->  
-> @@ -280,8 +279,7 @@ static int __revoke_inmem_pages(struct inode *inode,
->  			ClearPageUptodate(page);
->  			clear_cold_data(page);
->  		}
-> -		set_page_private(page, 0);
-> -		ClearPagePrivate(page);
-> +		f2fs_clear_page_private(page);
->  		f2fs_put_page(page, 1);
->  
->  		list_del(&cur->list);
-> @@ -370,8 +368,7 @@ void f2fs_drop_inmem_page(struct inode *inode, struct page *page)
->  	kmem_cache_free(inmem_entry_slab, cur);
->  
->  	ClearPageUptodate(page);
-> -	set_page_private(page, 0);
-> -	ClearPagePrivate(page);
-> +	f2fs_clear_page_private(page);
->  	f2fs_put_page(page, 0);
->  
->  	trace_f2fs_commit_inmem_page(page, INMEM_INVALIDATE);
-> -- 
-> 2.18.0.rc1
+Jérôme
