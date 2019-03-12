@@ -4,51 +4,53 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4785EC43381
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 18:00:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AE12EC43381
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 18:00:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 139B0214AF
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 18:00:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7DD15214AF
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 18:00:21 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1552413612;
-	bh=3vH00exyIQyNbX1NgPWY1DGyFajZzYi3+9s1khJuGOM=;
+	s=default; t=1552413621;
+	bh=+A9nv/HwCG3gWFmWNLrFeLhCgVwNGpMzKy7Rzf1xqWA=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=SCIgxkSLEhuGFxgXWsj5vZElP+MGyAsUmOsb4S2UIr1pHr0tIFpccua58SbMOZMjP
-	 /wui1VdfFPMNc+incH6ijLVM1jQltvjQe2VXEANOJo7ro6gUv6ebUk2VoedBrkVBn4
-	 z35juU4FylLc87XGFtm2SXEjozkYyQQJUXiM5/Wg=
+	b=gPdc8m+KugO2cMfN0P2rBBu/tbFkwT72eL5P91l/g36FvlyQ202QaZdKIGixHiPwY
+	 IkJ0DNC7kWDh8gjIB37AnB5n5QV0zNjmVyHO3RXCY5TnWYX74FovbrUv4zOSy65QoZ
+	 c6QL64la4ZmIO25SBEOT1Yh1HA2bfpofG+kskF+k=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728151AbfCLSAK (ORCPT
+        id S1727926AbfCLRN0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 12 Mar 2019 14:00:10 -0400
-Received: from mail.kernel.org ([198.145.29.99]:50412 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727925AbfCLRN0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Tue, 12 Mar 2019 13:13:26 -0400
+Received: from mail.kernel.org ([198.145.29.99]:48758 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727658AbfCLRMu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 12 Mar 2019 13:12:50 -0400
 Received: from localhost (unknown [104.133.8.98])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 9869D2183F;
-        Tue, 12 Mar 2019 17:13:25 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 05B7A2173C;
+        Tue, 12 Mar 2019 17:12:49 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1552410805;
-        bh=3vH00exyIQyNbX1NgPWY1DGyFajZzYi3+9s1khJuGOM=;
+        s=default; t=1552410770;
+        bh=+A9nv/HwCG3gWFmWNLrFeLhCgVwNGpMzKy7Rzf1xqWA=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=UuQMh+ggMzgf6bVWf76Y33BTZq+WCAAn6E/2rX3H4dCdwc9+9TYM0F7oLJIZfKLuc
-         +sLHGQyguRMcwzdLmcJDIKZF4IuUXYnLvv5OPaquGEedQ36GU4PxNIGThAz/WGdKy9
-         sK0qP571oPGIqK2BzkTfp2HN8Yp6W6qY+meXvAE0=
+        b=uj+NreZgXKyS9P1rdSqPCoWEdj0xTX9Vu+tBzyYdcI3uwHGUBXtTWGxJZ9bY1Ob+r
+         /ZiTp6uDyRd9EnapZy2zwBFNI3xbKrqnSPK/n5DU8cW3tWifyVupdu3mwzdgxA1O2q
+         9lCkjbXqXB1HOdbCnrIpPhFBv7Lf0qLdyVemvqGs=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Keerthy <j-keerthy@ti.com>,
-        Tony Lindgren <tony@atomide.com>, Vignesh R <vigneshr@ti.com>,
-        Wolfram Sang <wsa@the-dreams.de>,
+        stable@vger.kernel.org, Lance Digby <ldigby@redhat.com>,
+        Jiri Olsa <jolsa@kernel.org>,
+        Quentin Monnet <quentin.monnet@netronome.com>,
+        Jakub Kicinski <jakub.kicinski@netronome.com>,
+        Daniel Borkmann <daniel@iogearbox.net>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.20 134/171] i2c: omap: Use noirq system sleep pm ops to idle device for suspend
-Date:   Tue, 12 Mar 2019 10:08:34 -0700
-Message-Id: <20190312170359.239895051@linuxfoundation.org>
+Subject: [PATCH 4.20 085/171] bpftool: Fix prog dump by tag
+Date:   Tue, 12 Mar 2019 10:07:45 -0700
+Message-Id: <20190312170355.340356530@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190312170347.868927101@linuxfoundation.org>
 References: <20190312170347.868927101@linuxfoundation.org>
@@ -67,90 +69,68 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-[ Upstream commit c6e2bd956936d925748581e4d0294f10f1d92f2c ]
+[ Upstream commit 752bcf80f5549c9901b2e8bc77b2138de55b1026 ]
 
-We currently get the following error with pixcir_ts driver during a
-suspend resume cycle:
+Lance reported an issue with bpftool not being able to
+dump program if there are more programs loaded and you
+want to dump any but the first program, like:
 
-omap_i2c 4802a000.i2c: controller timed out
-pixcir_ts 1-005c: pixcir_int_enable: can't read reg 0x34 : -110
-pixcir_ts 1-005c: Failed to disable interrupt generation: -110
-pixcir_ts 1-005c: Failed to stop
-dpm_run_callback(): pixcir_i2c_ts_resume+0x0/0x98
-[pixcir_i2c_ts] returns -110
-PM: Device 1-005c failed to resume: error -110
+  # bpftool prog
+  28: kprobe  name trace_req_start  tag 1dfc28ba8b3dd597  gpl
+  	loaded_at 2019-01-18T17:02:40+1100  uid 0
+  	xlated 112B  jited 109B  memlock 4096B  map_ids 13
+  29: kprobe  name trace_req_compl  tag 5b6a5ecc6030a683  gpl
+  	loaded_at 2019-01-18T17:02:40+1100  uid 0
+  	xlated 928B  jited 575B  memlock 4096B  map_ids 13,14
+  #  bpftool prog dum jited tag 1dfc28ba8b3dd597
+   0:	push   %rbp
+   1:	mov    %rsp,%rbp
+  ...
 
-And at least am437x based devices with pixcir_ts will fail to resume
-to a touchscreen that is configured as the wakeup-source in device
-tree for these devices.
+  #  bpftool prog dum jited tag 5b6a5ecc6030a683
+  Error: can't get prog info (29): Bad address
 
-This is because pixcir_ts tries to reconfigure it's registers for
-noirq suspend which fails. This also leaves i2c-omap in enabled state
-for suspend.
+The problem is in the prog_fd_by_tag function not cleaning
+the struct bpf_prog_info before another request, so the
+previous program length is still in there and kernel assumes
+it needs to dump the program, which fails because there's no
+user pointer set.
 
-Let's fix the pixcir_ts issue and make sure i2c-omap is suspended by
-adding SET_NOIRQ_SYSTEM_SLEEP_PM_OPS.
+Moving the struct bpf_prog_info declaration into the loop,
+so it gets cleaned before each query.
 
-Let's also get rid of some ifdefs while at it and replace them with
-__maybe_unused as SET_RUNTIME_PM_OPS and SET_NOIRQ_SYSTEM_SLEEP_PM_OPS
-already deal with the various PM Kconfig options.
-
-Reported-by: Keerthy <j-keerthy@ti.com>
-Signed-off-by: Tony Lindgren <tony@atomide.com>
-Acked-by: Vignesh R <vigneshr@ti.com>
-Signed-off-by: Wolfram Sang <wsa@the-dreams.de>
+Fixes: 71bb428fe2c1 ("tools: bpf: add bpftool")
+Reported-by: Lance Digby <ldigby@redhat.com>
+Signed-off-by: Jiri Olsa <jolsa@kernel.org>
+Reviewed-by: Quentin Monnet <quentin.monnet@netronome.com>
+Acked-by: Jakub Kicinski <jakub.kicinski@netronome.com>
+Signed-off-by: Daniel Borkmann <daniel@iogearbox.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/i2c/busses/i2c-omap.c | 13 +++++--------
- 1 file changed, 5 insertions(+), 8 deletions(-)
+ tools/bpf/bpftool/prog.c | 5 +++--
+ 1 file changed, 3 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/i2c/busses/i2c-omap.c b/drivers/i2c/busses/i2c-omap.c
-index b1086bfb0465..cd9c65f3d404 100644
---- a/drivers/i2c/busses/i2c-omap.c
-+++ b/drivers/i2c/busses/i2c-omap.c
-@@ -1500,8 +1500,7 @@ static int omap_i2c_remove(struct platform_device *pdev)
- 	return 0;
- }
+diff --git a/tools/bpf/bpftool/prog.c b/tools/bpf/bpftool/prog.c
+index 69b01a6158bd..91b9de5f4e17 100644
+--- a/tools/bpf/bpftool/prog.c
++++ b/tools/bpf/bpftool/prog.c
+@@ -130,13 +130,14 @@ static void print_boot_time(__u64 nsecs, char *buf, unsigned int size)
  
--#ifdef CONFIG_PM
--static int omap_i2c_runtime_suspend(struct device *dev)
-+static int __maybe_unused omap_i2c_runtime_suspend(struct device *dev)
+ static int prog_fd_by_tag(unsigned char *tag)
  {
- 	struct omap_i2c_dev *omap = dev_get_drvdata(dev);
+-	struct bpf_prog_info info = {};
+-	__u32 len = sizeof(info);
+ 	unsigned int id = 0;
+ 	int err;
+ 	int fd;
  
-@@ -1527,7 +1526,7 @@ static int omap_i2c_runtime_suspend(struct device *dev)
- 	return 0;
- }
- 
--static int omap_i2c_runtime_resume(struct device *dev)
-+static int __maybe_unused omap_i2c_runtime_resume(struct device *dev)
- {
- 	struct omap_i2c_dev *omap = dev_get_drvdata(dev);
- 
-@@ -1542,20 +1541,18 @@ static int omap_i2c_runtime_resume(struct device *dev)
- }
- 
- static const struct dev_pm_ops omap_i2c_pm_ops = {
-+	SET_NOIRQ_SYSTEM_SLEEP_PM_OPS(pm_runtime_force_suspend,
-+				      pm_runtime_force_resume)
- 	SET_RUNTIME_PM_OPS(omap_i2c_runtime_suspend,
- 			   omap_i2c_runtime_resume, NULL)
- };
--#define OMAP_I2C_PM_OPS (&omap_i2c_pm_ops)
--#else
--#define OMAP_I2C_PM_OPS NULL
--#endif /* CONFIG_PM */
- 
- static struct platform_driver omap_i2c_driver = {
- 	.probe		= omap_i2c_probe,
- 	.remove		= omap_i2c_remove,
- 	.driver		= {
- 		.name	= "omap_i2c",
--		.pm	= OMAP_I2C_PM_OPS,
-+		.pm	= &omap_i2c_pm_ops,
- 		.of_match_table = of_match_ptr(omap_i2c_of_match),
- 	},
- };
+ 	while (true) {
++		struct bpf_prog_info info = {};
++		__u32 len = sizeof(info);
++
+ 		err = bpf_prog_get_next_id(id, &id);
+ 		if (err) {
+ 			p_err("%s", strerror(errno));
 -- 
 2.19.1
 
