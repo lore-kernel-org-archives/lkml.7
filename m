@@ -4,49 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6046FC10F00
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 17:17:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 34908C43381
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 17:17:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 33C5E218A1
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 17:17:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F2164217D8
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 17:17:17 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1552411036;
-	bh=7aGcqU9p5FmslaUfI/MZO37IWz07uw6Oh7dwWpZ5L68=;
+	s=default; t=1552411038;
+	bh=FVn1Ww1+JbhWmSPTmOAgmGDt5IRZqhmQ+qzmU0qbjaw=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=VD7nxy+fEdg7epsHd2J+If3o4+N89RXgU+5NfePO3bWjB7UD+0khByVoU1oKNp1gS
-	 cpBOLXF0SbPhuaZ55Dm75c4V5jd/KIAJMZha0ZTrE2q43JATDC/QsEgZOTVol8Z9R/
-	 hKDjD44Ec0wbYrmAFwtJE1d+I5jSsXltlJdxLYTA=
+	b=f+OxZ7P/kYREcw/0EleqttFyzta+jp0CX4cYj4mL/iXO/kvbDjelsgBrnTMZXmosz
+	 KE6h3fhzmMVQMDcNMyw8amduzpMD0CY73kjr7gK0qF3kynKZTuYFvXy6NH4C0/TDjj
+	 yrUFJd9v7hk3nvMyLZBSgf7eIUW1i8De1wSXglLM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729504AbfCLRRO (ORCPT
+        id S1729520AbfCLRRQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 12 Mar 2019 13:17:14 -0400
-Received: from mail.kernel.org ([198.145.29.99]:57708 "EHLO mail.kernel.org"
+        Tue, 12 Mar 2019 13:17:16 -0400
+Received: from mail.kernel.org ([198.145.29.99]:57734 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729002AbfCLRQH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 12 Mar 2019 13:16:07 -0400
+        id S1728630AbfCLRQI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 12 Mar 2019 13:16:08 -0400
 Received: from localhost (unknown [104.133.8.98])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D702921741;
-        Tue, 12 Mar 2019 17:16:06 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 94E3D217D4;
+        Tue, 12 Mar 2019 17:16:07 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
         s=default; t=1552410967;
-        bh=7aGcqU9p5FmslaUfI/MZO37IWz07uw6Oh7dwWpZ5L68=;
+        bh=FVn1Ww1+JbhWmSPTmOAgmGDt5IRZqhmQ+qzmU0qbjaw=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=PtejYrx2eMpXk/kwYYxYIvUFXpiPxBPt/usgP6CweGS99HpCPI7FeTetxQqlVcFdg
-         M2h7lx9m1E1A7dINMoPDrhdcGBWEIP53IcFy//FGyXyN4aCyHe/94ydgRb9SB7xB8u
-         p/nUEJwWKtCNVV+wEomJ0T8S/3S9B6dcA8iyTDvQ=
+        b=Q2MHWLHZNE2DKBE4zqwxTIJY1CL42fTczd8wnJGJDGi2XQt99AY+y+wIwYdtkbB6D
+         WZXSwGTskPgsHKUhQGlJ0ztBxRO6qpq9k3RPT8mFO5Jx5ZEoFzvl2Hb4k6In1HBA0k
+         G5Ff24IxyeAHvwTC48FsaxJ+8zTd+E5h1PVDimWE=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Matthias Kaehlcke <mka@chromium.org>,
-        Douglas Anderson <dianders@chromium.org>,
-        Marcel Holtmann <marcel@holtmann.org>
-Subject: [PATCH 4.14 040/135] Bluetooth: Fix locking in bt_accept_enqueue() for BH context
-Date:   Tue, 12 Mar 2019 10:08:07 -0700
-Message-Id: <20190312170344.802749045@linuxfoundation.org>
+        stable@vger.kernel.org, YueHaibing <yuehaibing@huawei.com>,
+        Al Viro <viro@zeniv.linux.org.uk>,
+        Thibaut Sautereau <thibaut@sautereau.fr>
+Subject: [PATCH 4.14 041/135] exec: Fix mem leak in kernel_read_file
+Date:   Tue, 12 Mar 2019 10:08:08 -0700
+Message-Id: <20190312170344.891752555@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190312170341.127810985@linuxfoundation.org>
 References: <20190312170341.127810985@linuxfoundation.org>
@@ -65,131 +66,51 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-From: Matthias Kaehlcke <mka@chromium.org>
+From: YueHaibing <yuehaibing@huawei.com>
 
-commit c4f5627f7eeecde1bb6b646d8c0907b96dc2b2a6 upstream.
+commit f612acfae86af7ecad754ae6a46019be9da05b8e upstream.
 
-With commit e16337622016 ("Bluetooth: Handle bt_accept_enqueue() socket
-atomically") lock_sock[_nested]() is used to acquire the socket lock
-before manipulating the socket. lock_sock[_nested]() may block, which
-is problematic since bt_accept_enqueue() can be called in bottom half
-context (e.g. from rfcomm_connect_ind()):
+syzkaller report this:
+BUG: memory leak
+unreferenced object 0xffffc9000488d000 (size 9195520):
+  comm "syz-executor.0", pid 2752, jiffies 4294787496 (age 18.757s)
+  hex dump (first 32 bytes):
+    ff ff ff ff ff ff ff ff a8 00 00 00 01 00 00 00  ................
+    02 00 00 00 00 00 00 00 80 a1 7a c1 ff ff ff ff  ..........z.....
+  backtrace:
+    [<000000000863775c>] __vmalloc_node mm/vmalloc.c:1795 [inline]
+    [<000000000863775c>] __vmalloc_node_flags mm/vmalloc.c:1809 [inline]
+    [<000000000863775c>] vmalloc+0x8c/0xb0 mm/vmalloc.c:1831
+    [<000000003f668111>] kernel_read_file+0x58f/0x7d0 fs/exec.c:924
+    [<000000002385813f>] kernel_read_file_from_fd+0x49/0x80 fs/exec.c:993
+    [<0000000011953ff1>] __do_sys_finit_module+0x13b/0x2a0 kernel/module.c:3895
+    [<000000006f58491f>] do_syscall_64+0x147/0x600 arch/x86/entry/common.c:290
+    [<00000000ee78baf4>] entry_SYSCALL_64_after_hwframe+0x49/0xbe
+    [<00000000241f889b>] 0xffffffffffffffff
 
-[<ffffff80080d81ec>] __might_sleep+0x4c/0x80
-[<ffffff800876c7b0>] lock_sock_nested+0x24/0x58
-[<ffffff8000d7c27c>] bt_accept_enqueue+0x48/0xd4 [bluetooth]
-[<ffffff8000e67d8c>] rfcomm_connect_ind+0x190/0x218 [rfcomm]
+It should goto 'out_free' lable to free allocated buf while kernel_read
+fails.
 
-Add a parameter to bt_accept_enqueue() to indicate whether the
-function is called from BH context, and acquire the socket lock
-with bh_lock_sock_nested() if that's the case.
-
-Also adapt all callers of bt_accept_enqueue() to pass the new
-parameter:
-
-- l2cap_sock_new_connection_cb()
-  - uses lock_sock() to lock the parent socket => process context
-
-- rfcomm_connect_ind()
-  - acquires the parent socket lock with bh_lock_sock() => BH
-    context
-
-- __sco_chan_add()
-  - called from sco_chan_add(), which is called from sco_connect().
-    parent is NULL, hence bt_accept_enqueue() isn't called in this
-    code path and we can ignore it
-  - also called from sco_conn_ready(). uses bh_lock_sock() to acquire
-    the parent lock => BH context
-
-Fixes: e16337622016 ("Bluetooth: Handle bt_accept_enqueue() socket atomically")
-Signed-off-by: Matthias Kaehlcke <mka@chromium.org>
-Reviewed-by: Douglas Anderson <dianders@chromium.org>
-Signed-off-by: Marcel Holtmann <marcel@holtmann.org>
-Cc: stable@vger.kernel.org
+Fixes: 39d637af5aa7 ("vfs: forbid write access when reading a file into memory")
+Signed-off-by: YueHaibing <yuehaibing@huawei.com>
+Signed-off-by: Al Viro <viro@zeniv.linux.org.uk>
+Cc: Thibaut Sautereau <thibaut@sautereau.fr>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- include/net/bluetooth/bluetooth.h |    2 +-
- net/bluetooth/af_bluetooth.c      |   16 +++++++++++++---
- net/bluetooth/l2cap_sock.c        |    2 +-
- net/bluetooth/rfcomm/sock.c       |    2 +-
- net/bluetooth/sco.c               |    2 +-
- 5 files changed, 17 insertions(+), 7 deletions(-)
+ fs/exec.c |    2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
---- a/include/net/bluetooth/bluetooth.h
-+++ b/include/net/bluetooth/bluetooth.h
-@@ -273,7 +273,7 @@ int  bt_sock_ioctl(struct socket *sock,
- int  bt_sock_wait_state(struct sock *sk, int state, unsigned long timeo);
- int  bt_sock_wait_ready(struct sock *sk, unsigned long flags);
+--- a/fs/exec.c
++++ b/fs/exec.c
+@@ -925,7 +925,7 @@ int kernel_read_file(struct file *file,
+ 		bytes = kernel_read(file, *buf + pos, i_size - pos, &pos);
+ 		if (bytes < 0) {
+ 			ret = bytes;
+-			goto out;
++			goto out_free;
+ 		}
  
--void bt_accept_enqueue(struct sock *parent, struct sock *sk);
-+void bt_accept_enqueue(struct sock *parent, struct sock *sk, bool bh);
- void bt_accept_unlink(struct sock *sk);
- struct sock *bt_accept_dequeue(struct sock *parent, struct socket *newsock);
- 
---- a/net/bluetooth/af_bluetooth.c
-+++ b/net/bluetooth/af_bluetooth.c
-@@ -154,15 +154,25 @@ void bt_sock_unlink(struct bt_sock_list
- }
- EXPORT_SYMBOL(bt_sock_unlink);
- 
--void bt_accept_enqueue(struct sock *parent, struct sock *sk)
-+void bt_accept_enqueue(struct sock *parent, struct sock *sk, bool bh)
- {
- 	BT_DBG("parent %p, sk %p", parent, sk);
- 
- 	sock_hold(sk);
--	lock_sock_nested(sk, SINGLE_DEPTH_NESTING);
-+
-+	if (bh)
-+		bh_lock_sock_nested(sk);
-+	else
-+		lock_sock_nested(sk, SINGLE_DEPTH_NESTING);
-+
- 	list_add_tail(&bt_sk(sk)->accept_q, &bt_sk(parent)->accept_q);
- 	bt_sk(sk)->parent = parent;
--	release_sock(sk);
-+
-+	if (bh)
-+		bh_unlock_sock(sk);
-+	else
-+		release_sock(sk);
-+
- 	parent->sk_ack_backlog++;
- }
- EXPORT_SYMBOL(bt_accept_enqueue);
---- a/net/bluetooth/l2cap_sock.c
-+++ b/net/bluetooth/l2cap_sock.c
-@@ -1253,7 +1253,7 @@ static struct l2cap_chan *l2cap_sock_new
- 
- 	l2cap_sock_init(sk, parent);
- 
--	bt_accept_enqueue(parent, sk);
-+	bt_accept_enqueue(parent, sk, false);
- 
- 	release_sock(parent);
- 
---- a/net/bluetooth/rfcomm/sock.c
-+++ b/net/bluetooth/rfcomm/sock.c
-@@ -988,7 +988,7 @@ int rfcomm_connect_ind(struct rfcomm_ses
- 	rfcomm_pi(sk)->channel = channel;
- 
- 	sk->sk_state = BT_CONFIG;
--	bt_accept_enqueue(parent, sk);
-+	bt_accept_enqueue(parent, sk, true);
- 
- 	/* Accept connection and return socket DLC */
- 	*d = rfcomm_pi(sk)->dlc;
---- a/net/bluetooth/sco.c
-+++ b/net/bluetooth/sco.c
-@@ -193,7 +193,7 @@ static void __sco_chan_add(struct sco_co
- 	conn->sk = sk;
- 
- 	if (parent)
--		bt_accept_enqueue(parent, sk);
-+		bt_accept_enqueue(parent, sk, true);
- }
- 
- static int sco_chan_add(struct sco_conn *conn, struct sock *sk,
+ 		if (bytes == 0)
 
 
