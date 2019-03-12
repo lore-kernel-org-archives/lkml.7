@@ -4,50 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 91289C43381
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 17:26:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 640B5C43381
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 17:26:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5C020214AF
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 17:26:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2BE87214AE
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 17:26:40 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1552411591;
-	bh=2eEkeFv3Ijkx82mAt4FetS16ZxTvUki2475efXUyd+s=;
+	s=default; t=1552411600;
+	bh=ZCMPn74y+xtkxANTIeo5m/xp9nTKs1E1cuXFJRnQ7/M=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=aqs1ow53K1lJFzSIn+NTB7P3iIL4tBed/xZ5mpllmrcvslw5zzQhwowr/Vyk4uZPT
-	 jBdtZ9SfLSEkNjEtO7HsnpIJbcVbz2pXgAD9CsBLXzcBcp+kN3Uf2Ee5uyc+je2lhe
-	 V+nj3JWjV/A6Z1d4lFKtBfO46n8l4w3NMmDnUMX0=
+	b=dN5sQiJABGxzNFKyKKcmHV4ccnd6s+RnnJFQVCaqdmciUZV+EBT2aeU+SJ+T64kQd
+	 DUvaJ7RtQe2BH3+7wpbZIPKagcbWPP9OyH2pJXttho/s/x5Yte3CkGAjZ18O6D7xIB
+	 OPjUUM7M+QxAiU/vIOxceqAXy2EotCvXa5SsIzvA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728474AbfCLR0X (ORCPT
+        id S1728674AbfCLR0i (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 12 Mar 2019 13:26:23 -0400
-Received: from mail.kernel.org ([198.145.29.99]:34032 "EHLO mail.kernel.org"
+        Tue, 12 Mar 2019 13:26:38 -0400
+Received: from mail.kernel.org ([198.145.29.99]:33954 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728824AbfCLRRn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 12 Mar 2019 13:17:43 -0400
+        id S1729719AbfCLRRm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 12 Mar 2019 13:17:42 -0400
 Received: from localhost (unknown [104.133.8.98])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 3155621873;
-        Tue, 12 Mar 2019 17:17:43 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id B532921741;
+        Tue, 12 Mar 2019 17:17:41 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1552411063;
-        bh=2eEkeFv3Ijkx82mAt4FetS16ZxTvUki2475efXUyd+s=;
+        s=default; t=1552411061;
+        bh=ZCMPn74y+xtkxANTIeo5m/xp9nTKs1E1cuXFJRnQ7/M=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=AZ1V/OPTnUO54LEEE4JO7GiOezHu556+VRIVYbJPPGEV2WfJlpT674I9sVCP/PlV3
-         hf1uOgBwvSN0l6ziWnw9TYlgGouTa96yBSpdd+LejkxncZKYw8eVmzpMs2ge65/zei
-         HOBM6fMvVI6UTiC7TdD5VyK1Gt+cah58lUhOPUNY=
+        b=uSDVo7M5gkpXOlNY0uBknwY98FLKZSjHHjgoiA08Tyf1UlFMCuD3q3b8szGNg+GuP
+         Ud15GMHBy5gwmW6wJ10sB1zx3NTsUYEXXczmSOz4BvCpTJxxngMlJIDn0aV29yHhWA
+         210YVttwlG03pBiKu4ndK9Y+mP4WW5X7hwxlGK/U=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Yao Liu <yotta.liu@ucloud.cn>,
-        Anna Schumaker <Anna.Schumaker@Netapp.com>,
+        stable@vger.kernel.org, Alexey Khoroshilov <khoroshilov@ispras.ru>,
+        "David S. Miller" <davem@davemloft.net>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.9 52/96] nfs: Fix NULL pointer dereference of dev_name
-Date:   Tue, 12 Mar 2019 10:10:10 -0700
-Message-Id: <20190312171038.464069407@linuxfoundation.org>
+Subject: [PATCH 4.9 50/96] net: stmmac: dwmac-rk: fix error handling in rk_gmac_powerup()
+Date:   Tue, 12 Mar 2019 10:10:08 -0700
+Message-Id: <20190312171038.327529721@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190312171034.530434962@linuxfoundation.org>
 References: <20190312171034.530434962@linuxfoundation.org>
@@ -66,54 +66,35 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-[ Upstream commit 80ff00172407e0aad4b10b94ef0816fc3e7813cb ]
+[ Upstream commit c69c29a1a0a8f68cd87e98ba4a5a79fb8ef2a58c ]
 
-There is a NULL pointer dereference of dev_name in nfs_parse_devname()
+If phy_power_on() fails in rk_gmac_powerup(), clocks are left enabled.
 
-The oops looks something like:
+Found by Linux Driver Verification project (linuxtesting.org).
 
-  BUG: unable to handle kernel NULL pointer dereference at 0000000000000000
-  ...
-  RIP: 0010:nfs_fs_mount+0x3b6/0xc20 [nfs]
-  ...
-  Call Trace:
-   ? ida_alloc_range+0x34b/0x3d0
-   ? nfs_clone_super+0x80/0x80 [nfs]
-   ? nfs_free_parsed_mount_data+0x60/0x60 [nfs]
-   mount_fs+0x52/0x170
-   ? __init_waitqueue_head+0x3b/0x50
-   vfs_kern_mount+0x6b/0x170
-   do_mount+0x216/0xdc0
-   ksys_mount+0x83/0xd0
-   __x64_sys_mount+0x25/0x30
-   do_syscall_64+0x65/0x220
-   entry_SYSCALL_64_after_hwframe+0x49/0xbe
-
-Fix this by adding a NULL check on dev_name
-
-Signed-off-by: Yao Liu <yotta.liu@ucloud.cn>
-Signed-off-by: Anna Schumaker <Anna.Schumaker@Netapp.com>
+Signed-off-by: Alexey Khoroshilov <khoroshilov@ispras.ru>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- fs/nfs/super.c | 5 +++++
- 1 file changed, 5 insertions(+)
+ drivers/net/ethernet/stmicro/stmmac/dwmac-rk.c | 4 +++-
+ 1 file changed, 3 insertions(+), 1 deletion(-)
 
-diff --git a/fs/nfs/super.c b/fs/nfs/super.c
-index 35aef192a13f..659ad12e33ba 100644
---- a/fs/nfs/super.c
-+++ b/fs/nfs/super.c
-@@ -1904,6 +1904,11 @@ static int nfs_parse_devname(const char *dev_name,
- 	size_t len;
- 	char *end;
+diff --git a/drivers/net/ethernet/stmicro/stmmac/dwmac-rk.c b/drivers/net/ethernet/stmicro/stmmac/dwmac-rk.c
+index d80c88bd2bba..6e61bccc90b3 100644
+--- a/drivers/net/ethernet/stmicro/stmmac/dwmac-rk.c
++++ b/drivers/net/ethernet/stmicro/stmmac/dwmac-rk.c
+@@ -877,8 +877,10 @@ static int rk_gmac_powerup(struct rk_priv_data *bsp_priv)
+ 	}
  
-+	if (unlikely(!dev_name || !*dev_name)) {
-+		dfprintk(MOUNT, "NFS: device name not specified\n");
-+		return -EINVAL;
+ 	ret = phy_power_on(bsp_priv, true);
+-	if (ret)
++	if (ret) {
++		gmac_clk_enable(bsp_priv, false);
+ 		return ret;
 +	}
-+
- 	/* Is the host name protected with square brakcets? */
- 	if (*dev_name == '[') {
- 		end = strchr(++dev_name, ']');
+ 
+ 	ret = gmac_clk_enable(bsp_priv, true);
+ 	if (ret)
 -- 
 2.19.1
 
