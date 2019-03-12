@@ -7,48 +7,48 @@ X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8E68AC43381
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 17:15:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 19CE7C43381
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 17:16:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 53D7D217F5
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 17:15:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DEAD32184C
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 17:16:01 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1552410957;
-	bh=fyoiYFkmVdt54Ha06/C5gs1UBSUQYtcD8g5jgm/OS/4=;
+	s=default; t=1552410961;
+	bh=QCKkDbqY2YiRvsh021Z1mLq9Fyt5C9ryaAk39JDWT/I=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=kyUmIdfGvHJGM4xfooUXWtjhATbpMXUhgfRe0u6XAF79E8Rmri/r7iqv5KDf/SNAz
-	 EBvwPyXPJJxYw86vIzNJrr+k3VqzKrfr8L0KpABUiMKIwpGn4K7eSw7pNONTv1SlMP
-	 nayapg1c3cLx69z6qFEyEY73jldrx+11L8XOh3tY=
+	b=vOxp70u+hG1VkB2ktnYJI9NksQ/ZJp7LDz1ZdNKBu2za8GRpcX2CI3jjJg5AVPx1D
+	 ZY7cj6JApD2FQQiDG+UKv/vJKyZvwDRPRdnZcXJJiaYIOERlqYG2J9CKOuGKG61y/t
+	 hmfwkse+NAoawnEjPuAvVFL/2V75Gv3CAnxuVvDI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728932AbfCLRP4 (ORCPT
+        id S1728963AbfCLRQA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 12 Mar 2019 13:15:56 -0400
-Received: from mail.kernel.org ([198.145.29.99]:54774 "EHLO mail.kernel.org"
+        Tue, 12 Mar 2019 13:16:00 -0400
+Received: from mail.kernel.org ([198.145.29.99]:54940 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728588AbfCLRPC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 12 Mar 2019 13:15:02 -0400
+        id S1728614AbfCLRPF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 12 Mar 2019 13:15:05 -0400
 Received: from localhost (unknown [104.133.8.98])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 279922186A;
-        Tue, 12 Mar 2019 17:15:01 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id D8FD2217D4;
+        Tue, 12 Mar 2019 17:15:04 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1552410901;
-        bh=fyoiYFkmVdt54Ha06/C5gs1UBSUQYtcD8g5jgm/OS/4=;
+        s=default; t=1552410905;
+        bh=QCKkDbqY2YiRvsh021Z1mLq9Fyt5C9ryaAk39JDWT/I=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=eGYtQMSK+UQVdjT1cWX+0atkFA0tdgKn+FCDwTJ+2hvcGZ4ZZ2Q4IdyqbRvdCZfzx
-         YqMEXDH2vXjiI7bl0eKgTnrboILPEgkFeW0EtL7TYXHLM0Jv3pHbCTMWUygPEgr903
-         0S2LKZySEQkgYNcx4sQKu2bbQzgoUOKnQJHy7Mjg=
+        b=pwYklfp7hQvm/4MvkfSlIUa9Zm0g4GGhrI/RC9UJ2A/kfIQ8LVED3wmu1B98F4qOd
+         gLbFvoZZbMeI4c/Ly63yqieX4QZjwIJiwz4YLFqiGpVrO3oB4YQhxtqL0ucEorEAWU
+         BTbRjHLKCiy059+gVXXm4FV1wI8cAY6q3iFWWV4E=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Philip Yang <Philip.Yang@amd.com>,
-        =?UTF-8?q?Christian=20K=C3=B6nig?= <christian.koenig@amd.com>,
-        Alex Deucher <alexander.deucher@amd.com>,
+        stable@vger.kernel.org, Manish Chopra <manishc@marvell.com>,
+        Ariel Elior <aelior@marvell.com>,
+        "David S. Miller" <davem@davemloft.net>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 114/149] drm/amdgpu: use spin_lock_irqsave to protect vm_manager.pasid_idr
-Date:   Tue, 12 Mar 2019 10:08:52 -0700
-Message-Id: <20190312170359.036898726@linuxfoundation.org>
+Subject: [PATCH 4.19 118/149] qed: Fix EQ full firmware assert.
+Date:   Tue, 12 Mar 2019 10:08:56 -0700
+Message-Id: <20190312170359.353734716@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190312170349.421581206@linuxfoundation.org>
 References: <20190312170349.421581206@linuxfoundation.org>
@@ -67,41 +67,82 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-[ Upstream commit 0a5f49cbf9d6ad3721c16f8a6d823363ea7a160f ]
+[ Upstream commit 660492bcf4a7561b5fdc13be0ae0b0c0a8c120be ]
 
-amdgpu_vm_get_task_info is called from interrupt handler and sched timeout
-workqueue, we should use irq version spin_lock to avoid deadlock.
+When slowpath messages are sent with high rate, the resulting
+events can lead to a FW assert in case they are not handled fast
+enough (Event Queue Full assert). Attempt to send queued slowpath
+messages only after the newly evacuated entries in the EQ ring
+are indicated to FW.
 
-Signed-off-by: Philip Yang <Philip.Yang@amd.com>
-Reviewed-by: Christian König <christian.koenig@amd.com>
-Signed-off-by: Alex Deucher <alexander.deucher@amd.com>
+Signed-off-by: Manish Chopra <manishc@marvell.com>
+Signed-off-by: Ariel Elior <aelior@marvell.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/gpu/drm/amd/amdgpu/amdgpu_vm.c | 5 +++--
- 1 file changed, 3 insertions(+), 2 deletions(-)
+ drivers/net/ethernet/qlogic/qed/qed_sp.h  |  1 +
+ drivers/net/ethernet/qlogic/qed/qed_spq.c | 15 +++++++--------
+ 2 files changed, 8 insertions(+), 8 deletions(-)
 
-diff --git a/drivers/gpu/drm/amd/amdgpu/amdgpu_vm.c b/drivers/gpu/drm/amd/amdgpu/amdgpu_vm.c
-index 6a84526e20e0..49fe5084c53d 100644
---- a/drivers/gpu/drm/amd/amdgpu/amdgpu_vm.c
-+++ b/drivers/gpu/drm/amd/amdgpu/amdgpu_vm.c
-@@ -3011,14 +3011,15 @@ void amdgpu_vm_get_task_info(struct amdgpu_device *adev, unsigned int pasid,
- 			 struct amdgpu_task_info *task_info)
- {
- 	struct amdgpu_vm *vm;
-+	unsigned long flags;
- 
--	spin_lock(&adev->vm_manager.pasid_lock);
-+	spin_lock_irqsave(&adev->vm_manager.pasid_lock, flags);
- 
- 	vm = idr_find(&adev->vm_manager.pasid_idr, pasid);
- 	if (vm)
- 		*task_info = vm->task_info;
- 
--	spin_unlock(&adev->vm_manager.pasid_lock);
-+	spin_unlock_irqrestore(&adev->vm_manager.pasid_lock, flags);
- }
+diff --git a/drivers/net/ethernet/qlogic/qed/qed_sp.h b/drivers/net/ethernet/qlogic/qed/qed_sp.h
+index 3157c0d99441..dae2896e1d8e 100644
+--- a/drivers/net/ethernet/qlogic/qed/qed_sp.h
++++ b/drivers/net/ethernet/qlogic/qed/qed_sp.h
+@@ -380,6 +380,7 @@ void qed_consq_setup(struct qed_hwfn *p_hwfn);
+  * @param p_hwfn
+  */
+ void qed_consq_free(struct qed_hwfn *p_hwfn);
++int qed_spq_pend_post(struct qed_hwfn *p_hwfn);
  
  /**
+  * @file
+diff --git a/drivers/net/ethernet/qlogic/qed/qed_spq.c b/drivers/net/ethernet/qlogic/qed/qed_spq.c
+index 7106ad17afe2..a0ee847f379b 100644
+--- a/drivers/net/ethernet/qlogic/qed/qed_spq.c
++++ b/drivers/net/ethernet/qlogic/qed/qed_spq.c
+@@ -402,6 +402,11 @@ int qed_eq_completion(struct qed_hwfn *p_hwfn, void *cookie)
+ 
+ 	qed_eq_prod_update(p_hwfn, qed_chain_get_prod_idx(p_chain));
+ 
++	/* Attempt to post pending requests */
++	spin_lock_bh(&p_hwfn->p_spq->lock);
++	rc = qed_spq_pend_post(p_hwfn);
++	spin_unlock_bh(&p_hwfn->p_spq->lock);
++
+ 	return rc;
+ }
+ 
+@@ -745,7 +750,7 @@ static int qed_spq_post_list(struct qed_hwfn *p_hwfn,
+ 	return 0;
+ }
+ 
+-static int qed_spq_pend_post(struct qed_hwfn *p_hwfn)
++int qed_spq_pend_post(struct qed_hwfn *p_hwfn)
+ {
+ 	struct qed_spq *p_spq = p_hwfn->p_spq;
+ 	struct qed_spq_entry *p_ent = NULL;
+@@ -883,7 +888,6 @@ int qed_spq_completion(struct qed_hwfn *p_hwfn,
+ 	struct qed_spq_entry	*p_ent = NULL;
+ 	struct qed_spq_entry	*tmp;
+ 	struct qed_spq_entry	*found = NULL;
+-	int			rc;
+ 
+ 	if (!p_hwfn)
+ 		return -EINVAL;
+@@ -941,12 +945,7 @@ int qed_spq_completion(struct qed_hwfn *p_hwfn,
+ 		 */
+ 		qed_spq_return_entry(p_hwfn, found);
+ 
+-	/* Attempt to post pending requests */
+-	spin_lock_bh(&p_spq->lock);
+-	rc = qed_spq_pend_post(p_hwfn);
+-	spin_unlock_bh(&p_spq->lock);
+-
+-	return rc;
++	return 0;
+ }
+ 
+ int qed_consq_alloc(struct qed_hwfn *p_hwfn)
 -- 
 2.19.1
 
