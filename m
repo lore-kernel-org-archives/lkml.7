@@ -2,71 +2,51 @@ Return-Path: <SRS0=J4ZE=RP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-11.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CDBF2C4360F
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 17:19:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B18BAC43381
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 17:19:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A097F2087C
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 17:19:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 72A762087C
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 17:19:16 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1552411151;
-	bh=BxneGTLKh/7BewXOlo+d23aWaw0qoLeMJMpdQisvM64=;
+	s=default; t=1552411156;
+	bh=0lJMTnVu+SWxslWRvp6UxC7Jo+RtF0MkPmyDUkxSMVI=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=vRzL2TOLsqZAxvCQI5GA+oXs4s1jP9MkvtLLwuRbsb5HLcAqRuNKobE/hljlDPz4U
-	 KX+/i7Nmm9MCN66BmqlcIsmJE8CDgLGhAXxXpyrM6lNdtNzCSs2WyhY8svKf6oVOEM
-	 i/Wi0cTEZW3pROLr/djRRFGkrjE0TZpBg9Iy+r+c=
+	b=tqIB5aN3mztEYilBmXvQp15L7eOrQqrCwe6kmGsuINgiTzfq4d8/PS7otRfPUp4s9
+	 0Aa++kIKgEf0zSSdOl1nw4A+fBZloL4PNlbJaq1TblsWd7HE4dlwuv+F1NZBFVTmeB
+	 cb3qFvmZLCWJJ9tqJr7x5VZ5Wxsp/YFBp2JGifU0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730228AbfCLRTF (ORCPT
+        id S1730217AbfCLRTE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 12 Mar 2019 13:19:05 -0400
-Received: from mail.kernel.org ([198.145.29.99]:35940 "EHLO mail.kernel.org"
+        Tue, 12 Mar 2019 13:19:04 -0400
+Received: from mail.kernel.org ([198.145.29.99]:35710 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730042AbfCLRSV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 12 Mar 2019 13:18:21 -0400
+        id S1729606AbfCLRSQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 12 Mar 2019 13:18:16 -0400
 Received: from localhost (unknown [104.133.8.98])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 20BE3218A5;
-        Tue, 12 Mar 2019 17:18:20 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 7FCDF206DF;
+        Tue, 12 Mar 2019 17:18:15 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1552411100;
-        bh=BxneGTLKh/7BewXOlo+d23aWaw0qoLeMJMpdQisvM64=;
+        s=default; t=1552411095;
+        bh=0lJMTnVu+SWxslWRvp6UxC7Jo+RtF0MkPmyDUkxSMVI=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=OBR/yvEbJHqSP+0Za5D8EIJrKAPTfugze0IWnCKariXH62XRJlyU/OjUz5+xALuQA
-         BuwPlEV5nxdav6O1jVkjiPdUsRa02QO/380e5ai1htlD4SVuRHs7cdXZqYG8SBoTOQ
-         qQZ1q2PXtAcwD1LHUF8MQBkOPMcJyNuZ4Z38Lcig=
+        b=vPoiK3J4gq1rpzHMwDD80UcnbAQ+IOBNSajKbNIpYOuPd3g2SwdOXl/rTwdvrsoyN
+         /glksK9GpwsHTi7JGgjsYttEfv4OgtTRMZ8BbWK546jubAVj9dfwB2l66zbKsvLGrb
+         RipnUooQmKZvHoAB3w7hf3CMKrhcqfQlIFijCxE8=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Christian Koenig <christian.koenig@amd.com>,
-        Alex Deucher <alexander.deucher@amd.com>,
-        David Zhou <David1.Zhou@amd.com>,
-        Huang Rui <ray.huang@amd.com>,
-        Junwei Zhang <Jerry.Zhang@amd.com>,
-        Michel Daenzer <michel.daenzer@amd.com>,
-        David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
-        Maxime Ripard <maxime.ripard@bootlin.com>,
-        Sean Paul <sean@poorly.run>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        Will Deacon <will.deacon@arm.com>,
-        Christoph Hellwig <hch@infradead.org>,
-        Robin Murphy <robin.murphy@arm.com>,
-        amd-gfx list <amd-gfx@lists.freedesktop.org>,
-        dri-devel <dri-devel@lists.freedesktop.org>,
-        Carsten Haitzler <Carsten.Haitzler@arm.com>,
-        Ard Biesheuvel <ard.biesheuvel@linaro.org>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.9 91/96] drm: disable uncached DMA optimization for ARM and arm64
-Date:   Tue, 12 Mar 2019 10:10:49 -0700
-Message-Id: <20190312171041.331838640@linuxfoundation.org>
+        stable@vger.kernel.org, Jason Gerecke <jason.gerecke@wacom.com>,
+        Dmitry Torokhov <dmitry.torokhov@gmail.com>
+Subject: [PATCH 4.9 84/96] Input: wacom_serial4 - add support for Wacom ArtPad II tablet
+Date:   Tue, 12 Mar 2019 10:10:42 -0700
+Message-Id: <20190312171040.888392260@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190312171034.530434962@linuxfoundation.org>
 References: <20190312171034.530434962@linuxfoundation.org>
@@ -85,83 +65,43 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-[ Upstream commit e02f5c1bb2283cfcee68f2f0feddcc06150f13aa ]
+From: Jason Gerecke <jason.gerecke@wacom.com>
 
-The DRM driver stack is designed to work with cache coherent devices
-only, but permits an optimization to be enabled in some cases, where
-for some buffers, both the CPU and the GPU use uncached mappings,
-removing the need for DMA snooping and allocation in the CPU caches.
+commit 44fc95e218a09d7966a9d448941fdb003f6bb69f upstream.
 
-The use of uncached GPU mappings relies on the correct implementation
-of the PCIe NoSnoop TLP attribute by the platform, otherwise the GPU
-will use cached mappings nonetheless. On x86 platforms, this does not
-seem to matter, as uncached CPU mappings will snoop the caches in any
-case. However, on ARM and arm64, enabling this optimization on a
-platform where NoSnoop is ignored results in loss of coherency, which
-breaks correct operation of the device. Since we have no way of
-detecting whether NoSnoop works or not, just disable this
-optimization entirely for ARM and arm64.
+Tablet initially begins communicating at 9600 baud, so this command
+should be used to connect to the device:
 
-Cc: Christian Koenig <christian.koenig@amd.com>
-Cc: Alex Deucher <alexander.deucher@amd.com>
-Cc: David Zhou <David1.Zhou@amd.com>
-Cc: Huang Rui <ray.huang@amd.com>
-Cc: Junwei Zhang <Jerry.Zhang@amd.com>
-Cc: Michel Daenzer <michel.daenzer@amd.com>
-Cc: David Airlie <airlied@linux.ie>
-Cc: Daniel Vetter <daniel@ffwll.ch>
-Cc: Maarten Lankhorst <maarten.lankhorst@linux.intel.com>
-Cc: Maxime Ripard <maxime.ripard@bootlin.com>
-Cc: Sean Paul <sean@poorly.run>
-Cc: Michael Ellerman <mpe@ellerman.id.au>
-Cc: Benjamin Herrenschmidt <benh@kernel.crashing.org>
-Cc: Will Deacon <will.deacon@arm.com>
-Cc: Christoph Hellwig <hch@infradead.org>
-Cc: Robin Murphy <robin.murphy@arm.com>
-Cc: amd-gfx list <amd-gfx@lists.freedesktop.org>
-Cc: dri-devel <dri-devel@lists.freedesktop.org>
-Reported-by: Carsten Haitzler <Carsten.Haitzler@arm.com>
-Signed-off-by: Ard Biesheuvel <ard.biesheuvel@linaro.org>
-Reviewed-by: Christian König <christian.koenig@amd.com>
-Reviewed-by: Alex Deucher <alexander.deucher@amd.com>
-Link: https://patchwork.kernel.org/patch/10778815/
-Signed-off-by: Christian König <christian.koenig@amd.com>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
+    $ inputattach --daemon --baud 9600 --wacom_iv /dev/ttyS0
+
+https://github.com/linuxwacom/xf86-input-wacom/issues/40
+
+Signed-off-by: Jason Gerecke <jason.gerecke@wacom.com>
+Cc: stable@vger.kernel.org
+Signed-off-by: Dmitry Torokhov <dmitry.torokhov@gmail.com>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+
 ---
- include/drm/drm_cache.h | 18 ++++++++++++++++++
- 1 file changed, 18 insertions(+)
+ drivers/input/tablet/wacom_serial4.c |    2 ++
+ 1 file changed, 2 insertions(+)
 
-diff --git a/include/drm/drm_cache.h b/include/drm/drm_cache.h
-index cebecff536a3..c5fb6f871930 100644
---- a/include/drm/drm_cache.h
-+++ b/include/drm/drm_cache.h
-@@ -41,6 +41,24 @@ static inline bool drm_arch_can_wc_memory(void)
- 	return false;
- #elif defined(CONFIG_MIPS) && defined(CONFIG_CPU_LOONGSON3)
- 	return false;
-+#elif defined(CONFIG_ARM) || defined(CONFIG_ARM64)
-+	/*
-+	 * The DRM driver stack is designed to work with cache coherent devices
-+	 * only, but permits an optimization to be enabled in some cases, where
-+	 * for some buffers, both the CPU and the GPU use uncached mappings,
-+	 * removing the need for DMA snooping and allocation in the CPU caches.
-+	 *
-+	 * The use of uncached GPU mappings relies on the correct implementation
-+	 * of the PCIe NoSnoop TLP attribute by the platform, otherwise the GPU
-+	 * will use cached mappings nonetheless. On x86 platforms, this does not
-+	 * seem to matter, as uncached CPU mappings will snoop the caches in any
-+	 * case. However, on ARM and arm64, enabling this optimization on a
-+	 * platform where NoSnoop is ignored results in loss of coherency, which
-+	 * breaks correct operation of the device. Since we have no way of
-+	 * detecting whether NoSnoop works or not, just disable this
-+	 * optimization entirely for ARM and arm64.
-+	 */
-+	return false;
- #else
- 	return true;
- #endif
--- 
-2.19.1
-
+--- a/drivers/input/tablet/wacom_serial4.c
++++ b/drivers/input/tablet/wacom_serial4.c
+@@ -187,6 +187,7 @@ enum {
+ 	MODEL_DIGITIZER_II	= 0x5544, /* UD */
+ 	MODEL_GRAPHIRE		= 0x4554, /* ET */
+ 	MODEL_PENPARTNER	= 0x4354, /* CT */
++	MODEL_ARTPAD_II		= 0x4B54, /* KT */
+ };
+ 
+ static void wacom_handle_model_response(struct wacom *wacom)
+@@ -245,6 +246,7 @@ static void wacom_handle_model_response(
+ 		wacom->flags = F_HAS_STYLUS2 | F_HAS_SCROLLWHEEL;
+ 		break;
+ 
++	case MODEL_ARTPAD_II:
+ 	case MODEL_DIGITIZER_II:
+ 		wacom->dev->name = "Wacom Digitizer II";
+ 		wacom->dev->id.version = MODEL_DIGITIZER_II;
 
 
