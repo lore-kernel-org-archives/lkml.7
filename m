@@ -7,47 +7,46 @@ X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C9ABAC43381
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 17:30:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AC805C43381
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 17:30:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9A3CB206DF
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 17:30:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 749AB206DF
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 17:30:58 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1552411845;
-	bh=I7M9c45P2j7gj3w7HK1vB1GIQnzxchjmf4FP2eZyEZs=;
+	s=default; t=1552411858;
+	bh=+Cmo8Zzay1P4Aw4vEJP13dIaYoyQQwh5Yl0IT40REGs=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Rh1MpCoUDEq4m+xIB6NaYaS2pndFKC1iRh3Fnq/mA3MSn9nhLBf0XqrlZIEvxR+QS
-	 IAtCCWnCd6u5D53ToreGgTKi6Z/3wnWe3sszNCd3NF+VUVxbZ3Qab3K/yZynkn7Zwo
-	 nWQ9mlWkNKED8cf7meRWOhSFOcMPuCyeNG4aSrK8=
+	b=CRLteyZKRfIkxwdr6QYTtvLrqRMcYV5uZdQWQv0KUH+RUQo8nVKiVVS6rXq/KiDPN
+	 h65Uie7Iw48rz86vIwMVzg3yf8/+q0UHQ9Ge2j4oS+VCxinkmEdrI6ZXk1jL/ThpKK
+	 Mo4eITLkR8DOxV9AuIPeFpi6jcqsrbvrHsvS7+yA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729517AbfCLRao (ORCPT
+        id S1728148AbfCLRa5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 12 Mar 2019 13:30:44 -0400
-Received: from mail.kernel.org ([198.145.29.99]:60820 "EHLO mail.kernel.org"
+        Tue, 12 Mar 2019 13:30:57 -0400
+Received: from mail.kernel.org ([198.145.29.99]:60694 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728138AbfCLRRP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 12 Mar 2019 13:17:15 -0400
+        id S1729495AbfCLRRN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 12 Mar 2019 13:17:13 -0400
 Received: from localhost (unknown [104.133.8.98])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id C027821873;
-        Tue, 12 Mar 2019 17:17:14 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id B9FB5217D4;
+        Tue, 12 Mar 2019 17:17:12 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1552411034;
-        bh=I7M9c45P2j7gj3w7HK1vB1GIQnzxchjmf4FP2eZyEZs=;
+        s=default; t=1552411032;
+        bh=+Cmo8Zzay1P4Aw4vEJP13dIaYoyQQwh5Yl0IT40REGs=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=gJiVp88tRwY0wuq+EVGsjLHC4WRUuQf6TM/Zc2UaWp5P/UvlsnFap/NaZt9MQ2SwV
-         ZONRcbv6NqxrstEqcJg8ugkke4eFHojCcxuB4gyQJZLC+deyKri6hnAIc5SwSEV8DT
-         hE4agfa0vMAG7OyhdPzDbaMj39MEx/WHHnXACabM=
+        b=xu3AQ/Y0dU+u0skf0ahiYcHsmjIeq+feZ4wKIE5RWLsIaR5xjdjkIShYbKCH6a6ze
+         /6XSG/9yNYnbTBHXAddb4zcQ4TDoOTKSZDrPJbkpa8of/zTuRcIb5qm1CLNGEGsHXM
+         2ZY1Y23Ylye+XED2D/VdaS1cUMQEjkYVJiiwfmAA=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Kai-Heng Feng <kai.heng.feng@canonical.com>,
-        "David S. Miller" <davem@davemloft.net>
-Subject: [PATCH 4.9 12/96] sky2: Disable MSI on Dell Inspiron 1545 and Gateway P-79
-Date:   Tue, 12 Mar 2019 10:09:30 -0700
-Message-Id: <20190312171035.474112943@linuxfoundation.org>
+        stable@vger.kernel.org, Daniele Palmas <dnlplm@gmail.com>,
+        Johan Hovold <johan@kernel.org>
+Subject: [PATCH 4.9 01/96] USB: serial: option: add Telit ME910 ECM composition
+Date:   Tue, 12 Mar 2019 10:09:19 -0700
+Message-Id: <20190312171034.649356692@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190312171034.530434962@linuxfoundation.org>
 References: <20190312171034.530434962@linuxfoundation.org>
@@ -66,82 +65,31 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-From: Kai-Heng Feng <kai.heng.feng@canonical.com>
+From: Daniele Palmas <dnlplm@gmail.com>
 
-[ Upstream commit b33b7cd6fd86478dd2890a9abeb6f036aa01fdf7 ]
+commit 6431866b6707d27151be381252d6eef13025cfce upstream.
 
-Some sky2 chips fire IRQ after S3, before the driver is fully resumed:
-[ 686.804877] do_IRQ: 1.37 No irq handler for vector
+This patch adds Telit ME910 family ECM composition 0x1102.
 
-This is likely a platform bug that device isn't fully quiesced during
-S3. Use MSI-X, maskable MSI or INTx can prevent this issue from
-happening.
-
-Since MSI-X and maskable MSI are not supported by this device, fallback
-to use INTx on affected platforms.
-
-BugLink: https://bugs.launchpad.net/bugs/1807259
-BugLink: https://bugs.launchpad.net/bugs/1809843
-Signed-off-by: Kai-Heng Feng <kai.heng.feng@canonical.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
+Signed-off-by: Daniele Palmas <dnlplm@gmail.com>
+Cc: stable <stable@vger.kernel.org>
+Signed-off-by: Johan Hovold <johan@kernel.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
----
- drivers/net/ethernet/marvell/sky2.c |   24 +++++++++++++++++++++++-
- 1 file changed, 23 insertions(+), 1 deletion(-)
 
---- a/drivers/net/ethernet/marvell/sky2.c
-+++ b/drivers/net/ethernet/marvell/sky2.c
-@@ -46,6 +46,7 @@
- #include <linux/mii.h>
- #include <linux/of_device.h>
- #include <linux/of_net.h>
-+#include <linux/dmi.h>
- 
- #include <asm/irq.h>
- 
-@@ -93,7 +94,7 @@ static int copybreak __read_mostly = 128
- module_param(copybreak, int, 0);
- MODULE_PARM_DESC(copybreak, "Receive copy threshold");
- 
--static int disable_msi = 0;
-+static int disable_msi = -1;
- module_param(disable_msi, int, 0);
- MODULE_PARM_DESC(disable_msi, "Disable Message Signaled Interrupt (MSI)");
- 
-@@ -4923,6 +4924,24 @@ static const char *sky2_name(u8 chipid,
- 	return buf;
- }
- 
-+static const struct dmi_system_id msi_blacklist[] = {
-+	{
-+		.ident = "Dell Inspiron 1545",
-+		.matches = {
-+			DMI_MATCH(DMI_SYS_VENDOR, "Dell Inc."),
-+			DMI_MATCH(DMI_PRODUCT_NAME, "Inspiron 1545"),
-+		},
-+	},
-+	{
-+		.ident = "Gateway P-79",
-+		.matches = {
-+			DMI_MATCH(DMI_SYS_VENDOR, "Gateway"),
-+			DMI_MATCH(DMI_PRODUCT_NAME, "P-79"),
-+		},
-+	},
-+	{}
-+};
-+
- static int sky2_probe(struct pci_dev *pdev, const struct pci_device_id *ent)
- {
- 	struct net_device *dev, *dev1;
-@@ -5034,6 +5053,9 @@ static int sky2_probe(struct pci_dev *pd
- 		goto err_out_free_pci;
- 	}
- 
-+	if (disable_msi == -1)
-+		disable_msi = !!dmi_check_system(msi_blacklist);
-+
- 	if (!disable_msi && pci_enable_msi(pdev) == 0) {
- 		err = sky2_test_msi(hw);
- 		if (err) {
+---
+ drivers/usb/serial/option.c |    2 ++
+ 1 file changed, 2 insertions(+)
+
+--- a/drivers/usb/serial/option.c
++++ b/drivers/usb/serial/option.c
+@@ -1147,6 +1147,8 @@ static const struct usb_device_id option
+ 	  .driver_info = NCTRL(0) | RSVD(1) | RSVD(3) },
+ 	{ USB_DEVICE(TELIT_VENDOR_ID, TELIT_PRODUCT_ME910_DUAL_MODEM),
+ 	  .driver_info = NCTRL(0) | RSVD(3) },
++	{ USB_DEVICE_INTERFACE_CLASS(TELIT_VENDOR_ID, 0x1102, 0xff),	/* Telit ME910 (ECM) */
++	  .driver_info = NCTRL(0) },
+ 	{ USB_DEVICE(TELIT_VENDOR_ID, TELIT_PRODUCT_LE910),
+ 	  .driver_info = NCTRL(0) | RSVD(1) | RSVD(2) },
+ 	{ USB_DEVICE(TELIT_VENDOR_ID, TELIT_PRODUCT_LE910_USBCFG4),
 
 
