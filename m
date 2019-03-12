@@ -2,187 +2,279 @@ Return-Path: <SRS0=J4ZE=RP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 13F28C43381
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 15:48:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C9ADBC43381
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 15:48:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D60752147C
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 15:48:22 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=ingics-com.20150623.gappssmtp.com header.i=@ingics-com.20150623.gappssmtp.com header.b="pkfq31qR"
+	by mail.kernel.org (Postfix) with ESMTP id 95AD120693
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 15:48:42 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726372AbfCLPsV (ORCPT
+        id S1726839AbfCLPsl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 12 Mar 2019 11:48:21 -0400
-Received: from mail-pg1-f195.google.com ([209.85.215.195]:40249 "EHLO
-        mail-pg1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726781AbfCLPsU (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 12 Mar 2019 11:48:20 -0400
-Received: by mail-pg1-f195.google.com with SMTP id u9so2123200pgo.7
-        for <linux-kernel@vger.kernel.org>; Tue, 12 Mar 2019 08:48:19 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=ingics-com.20150623.gappssmtp.com; s=20150623;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references;
-        bh=GBeiotPEUXIQIpSG4JyMtK50/Y6RIlIjJ666gVLv4w8=;
-        b=pkfq31qR2dLHLRQ3aeyW9Buq8BjbPwdms5NhYuxwrSuwBBoobePBrXo5n+hn0CgJWo
-         t1hvxRzH2Q/yC0PlOOZ5L6sHG4MilwwY5aLlGeCLdmt36W+vXjhCUn/pRknmlYtu8Rp5
-         P0nCxbsKedFL19Zz0vfaLoq/x6Smc9fTlI/jAMHuCWqywg2sj3vs0yRcR2N50jPvDHxv
-         7Cg01Dj4RXY77X8FT73h/xY83nR45aVhWnx67ZbobhGqqYNz9feYyhktmPs+2AgXjbNM
-         iXaM163eL3sEs7yYXGbMv3eNOCu1NUTiZOBHvPMLWCmvUNaVn52sBtRCHL5ABQHQgfMw
-         hByA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references;
-        bh=GBeiotPEUXIQIpSG4JyMtK50/Y6RIlIjJ666gVLv4w8=;
-        b=D+pMU59v0deFqnIWmUAgUlLD70IKYLFuc3onypB/B7fC3b0iRCZ11VzS08KoYDNGji
-         JEtIASg3b/Uz0TJ7dgo9nvR+2qudROJURIp91HFD+Rcw+0soVMlSpY/iyfudr9tmTlTO
-         iiGAxKmrvfZ4yim+SfIBL7a5C11mMWmLsZAZLHhXB2wEgChSOwSTu6rOmYnMqqmWicv3
-         c1tWbXN/VnZeyoKzRLMtFJlOGmQj9Xb74dv9lWQ8u4TeTLKwqMwDHHVpuw8SLvBW8rDI
-         Xd5vMF/sTmH5TYMSH7z5VFnL67zistB8/7kSpmVaysaKOD+nZDmCgNj4zdXVWJYjTT1P
-         higg==
-X-Gm-Message-State: APjAAAU8Jai32fMAKE1d8um1UwyjnsqxTXV494GRw7kpfO9xNJvOOUgc
-        0Ffvq4/UovBn7RTzGrKlTMcl5Q==
-X-Google-Smtp-Source: APXvYqwY3N84rCBNFuz8G1jV225O+PMTG8EA/DtUEwj7cjc93yB0Ou5HGOtzjUvFQMbnO7611QXSKA==
-X-Received: by 2002:a63:6a08:: with SMTP id f8mr36040150pgc.165.1552405698474;
-        Tue, 12 Mar 2019 08:48:18 -0700 (PDT)
-Received: from localhost.localdomain (220-133-186-239.HINET-IP.hinet.net. [220.133.186.239])
-        by smtp.gmail.com with ESMTPSA id f192sm24468352pfc.180.2019.03.12.08.48.16
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Tue, 12 Mar 2019 08:48:17 -0700 (PDT)
-From:   Axel Lin <axel.lin@ingics.com>
-To:     Mark Brown <broonie@kernel.org>
-Cc:     Steve Twiss <stwiss.opensource@diasemi.com>,
-        Support Opensource <support.opensource@diasemi.com>,
-        Liam Girdwood <lgirdwood@gmail.com>,
-        linux-kernel@vger.kernel.org, Axel Lin <axel.lin@ingics.com>
-Subject: [PATCH 2/2] regulator: da9055: Convert to regulator core's simplified DT parsing code
-Date:   Tue, 12 Mar 2019 23:47:59 +0800
-Message-Id: <20190312154759.13774-2-axel.lin@ingics.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20190312154759.13774-1-axel.lin@ingics.com>
-References: <20190312154759.13774-1-axel.lin@ingics.com>
+        Tue, 12 Mar 2019 11:48:41 -0400
+Received: from foss.arm.com ([217.140.101.70]:44502 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726735AbfCLPsk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 12 Mar 2019 11:48:40 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.72.51.249])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id DDF0A165C;
+        Tue, 12 Mar 2019 08:48:39 -0700 (PDT)
+Received: from [10.1.196.92] (usa-sjc-imap-foss1.foss.arm.com [10.72.51.249])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 6F8483F71D;
+        Tue, 12 Mar 2019 08:48:37 -0700 (PDT)
+Subject: Re: [PATCH] KVM: arm/arm64: Set ICH_HCR_EN in guest anyway when using
+ gicv4
+To:     "Tangnianyao (ICT)" <tangnianyao@huawei.com>,
+        Christoffer Dall <christoffer.dall@arm.com>,
+        "james.morse@arm.com" <james.morse@arm.com>,
+        "julien.thierry@arm.com" <julien.thierry@arm.com>,
+        "suzuki.poulose@arm.com" <suzuki.poulose@arm.com>,
+        "catalin.marinas@arm.com" <catalin.marinas@arm.com>,
+        "will.deacon@arm.com" <will.deacon@arm.com>,
+        "alex.bennee@linaro.org" <alex.bennee@linaro.org>,
+        "mark.rutland@arm.com" <mark.rutland@arm.com>,
+        "andre.przywara@arm.com" <andre.przywara@arm.com>,
+        Zhangshaokun <zhangshaokun@hisilicon.com>,
+        "keescook@chromium.org" <keescook@chromium.org>,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>,
+        "kvmarm@lists.cs.columbia.edu" <kvmarm@lists.cs.columbia.edu>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+References: <F348A9E21A573744858FF7E5D32E29D81FEFA462@DGGEMI529-MBX.china.huawei.com>
+From:   Marc Zyngier <marc.zyngier@arm.com>
+Openpgp: preference=signencrypt
+Autocrypt: addr=marc.zyngier@arm.com; prefer-encrypt=mutual; keydata=
+ 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
+Organization: ARM Ltd
+Message-ID: <3993685d-a78f-2e73-e22a-8ade3b6a6279@arm.com>
+Date:   Tue, 12 Mar 2019 15:48:35 +0000
+User-Agent: Mozilla/5.0 (X11; Linux aarch64; rv:60.0) Gecko/20100101
+ Thunderbird/60.5.1
+MIME-Version: 1.0
+In-Reply-To: <F348A9E21A573744858FF7E5D32E29D81FEFA462@DGGEMI529-MBX.china.huawei.com>
+Content-Type: text/plain; charset=windows-1252
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Use regulator core's simplified DT parsing code to simply the driver
-implementation.
+Nianyao,
 
-Signed-off-by: Axel Lin <axel.lin@ingics.com>
----
- drivers/regulator/da9055-regulator.c | 67 +++-------------------------
- 1 file changed, 6 insertions(+), 61 deletions(-)
+Please do not send patches as HTML. Or any email as HTML. Please make
+sure that you only send plain text emails on any mailing list (see point
+#6 in Documentation/process/submitting-patches.rst).
 
-diff --git a/drivers/regulator/da9055-regulator.c b/drivers/regulator/da9055-regulator.c
-index 3c6fac793658..b7b4dddf5509 100644
---- a/drivers/regulator/da9055-regulator.c
-+++ b/drivers/regulator/da9055-regulator.c
-@@ -338,6 +338,8 @@ static const struct regulator_ops da9055_ldo_ops = {
- {\
- 	.reg_desc = {\
- 		.name = #_id,\
-+		.of_match = of_match_ptr(#_id),\
-+		.regulators_node = of_match_ptr("regulators"),\
- 		.ops = &da9055_ldo_ops,\
- 		.type = REGULATOR_VOLTAGE,\
- 		.id = DA9055_ID_##_id,\
-@@ -366,6 +368,8 @@ static const struct regulator_ops da9055_ldo_ops = {
- {\
- 	.reg_desc = {\
- 		.name = #_id,\
-+		.of_match = of_match_ptr(#_id),\
-+		.regulators_node = of_match_ptr("regulators"),\
- 		.ops = &da9055_buck_ops,\
- 		.type = REGULATOR_VOLTAGE,\
- 		.id = DA9055_ID_##_id,\
-@@ -507,59 +511,6 @@ static inline struct da9055_regulator_info *find_regulator_info(int id)
- 	return NULL;
- }
- 
--#ifdef CONFIG_OF
--static struct of_regulator_match da9055_reg_matches[] = {
--	{ .name = "BUCK1", },
--	{ .name = "BUCK2", },
--	{ .name = "LDO1", },
--	{ .name = "LDO2", },
--	{ .name = "LDO3", },
--	{ .name = "LDO4", },
--	{ .name = "LDO5", },
--	{ .name = "LDO6", },
--};
--
--static int da9055_regulator_dt_init(struct platform_device *pdev,
--				    struct da9055_regulator *regulator,
--				    struct regulator_config *config,
--				    int regid)
--{
--	struct device_node *nproot, *np;
--	int ret;
--
--	nproot = of_node_get(pdev->dev.parent->of_node);
--	if (!nproot)
--		return -ENODEV;
--
--	np = of_get_child_by_name(nproot, "regulators");
--	if (!np)
--		return -ENODEV;
--
--	ret = of_regulator_match(&pdev->dev, np, &da9055_reg_matches[regid], 1);
--	of_node_put(nproot);
--	if (ret < 0) {
--		dev_err(&pdev->dev, "Error matching regulator: %d\n", ret);
--		return ret;
--	}
--
--	config->init_data = da9055_reg_matches[regid].init_data;
--	config->of_node = da9055_reg_matches[regid].of_node;
--
--	if (!config->of_node)
--		return -ENODEV;
--
--	return 0;
--}
--#else
--static inline int da9055_regulator_dt_init(struct platform_device *pdev,
--				       struct da9055_regulator *regulator,
--				       struct regulator_config *config,
--				       int regid)
--{
--	return -ENODEV;
--}
--#endif /* CONFIG_OF */
--
- static int da9055_regulator_probe(struct platform_device *pdev)
- {
- 	struct regulator_config config = { };
-@@ -580,18 +531,12 @@ static int da9055_regulator_probe(struct platform_device *pdev)
- 	}
- 
- 	regulator->da9055 = da9055;
--	config.dev = &pdev->dev;
-+	config.dev = da9055->dev;
- 	config.driver_data = regulator;
- 	config.regmap = da9055->regmap;
- 
--	if (pdata) {
-+	if (pdata)
- 		config.init_data = pdata->regulators[pdev->id];
--	} else {
--		ret = da9055_regulator_dt_init(pdev, regulator, &config,
--					       pdev->id);
--		if (ret < 0)
--			return ret;
--	}
- 
- 	ret = da9055_gpio_init(regulator, &config, pdata, pdev->id);
- 	if (ret < 0)
+On 12/03/2019 12:22, Tangnianyao (ICT) wrote:
+> In gicv4, direct vlpi may be forward to PE without using LR or ap_list. If
+> 
+> ICH_HCR_EL2.En is 0 in guest, direct vlpi cannot be accepted by PE.
+> 
+> It will take long time for direct vlpi to be forwarded in some cases.
+> 
+> Direct vlpi has to wait for ICH_HCR_EL2.En=1 where some other interrupts
+> 
+> using LR need to be forwarded, because in kvm_vgic_flush_hwstate,
+> 
+> if ap_list is empty, it will return quickly not setting ICH_HCR_EL2.En.
+> 
+> To fix this, set ICH_HCR_EL2.En to 1 before returning to guest when
+> 
+> using GICv4.
+> 
+>  
+> 
+> Signed-off-by: Nianyao Tang <tangnianyao@huawei.com>
+> 
+> ---
+> 
+> arch/arm64/include/asm/kvm_asm.h |  1 +
+> 
+> virt/kvm/arm/hyp/vgic-v3-sr.c    | 10 ++++++++++
+> 
+> virt/kvm/arm/vgic/vgic-v4.c      |  8 ++++++++
+> 
+> 3 files changed, 19 insertions(+)
+> 
+>  
+> 
+> diff --git a/arch/arm64/include/asm/kvm_asm.h
+> b/arch/arm64/include/asm/kvm_asm.h
+> 
+> index f5b79e9..0581c4d 100644
+> 
+> --- a/arch/arm64/include/asm/kvm_asm.h
+> 
+> +++ b/arch/arm64/include/asm/kvm_asm.h
+> 
+> @@ -79,6 +79,7 @@
+> 
+> extern void __vgic_v3_init_lrs(void);
+> 
+>  extern u32 __kvm_get_mdcr_el2(void);
+> 
+> +extern void __vgic_v3_write_hcr(u32 vmcr);
+> 
+>  /* Home-grown __this_cpu_{ptr,read} variants that always work at HYP */
+> 
+> #define
+> __hyp_this_cpu_ptr(sym)                                                       
+> \
+> 
+> diff --git a/virt/kvm/arm/hyp/vgic-v3-sr.c b/virt/kvm/arm/hyp/vgic-v3-sr.c
+> 
+> index 264d92d..12027af 100644
+> 
+> --- a/virt/kvm/arm/hyp/vgic-v3-sr.c
+> 
+> +++ b/virt/kvm/arm/hyp/vgic-v3-sr.c
+> 
+> @@ -434,6 +434,16 @@ void __hyp_text __vgic_v3_write_vmcr(u32 vmcr)
+> 
+>        write_gicreg(vmcr, ICH_VMCR_EL2);
+> 
+> }
+> 
+> +u64 __hyp_text __vgic_v3_read_hcr(void)
+> 
+> +{
+> 
+> +       return read_gicreg(ICH_HCR_EL2);
+> 
+> +}
+> 
+> +
+> 
+> +void __hyp_text __vgic_v3_write_hcr(u32 vmcr)
+> 
+> +{
+> 
+> +       write_gicreg(vmcr, ICH_HCR_EL2);
+> 
+> +}
+
+This is HYP code...
+
+> 
+> +
+> 
+> #ifdef CONFIG_ARM64
+> 
+>  static int __hyp_text __vgic_v3_bpr_min(void)
+> 
+> diff --git a/virt/kvm/arm/vgic/vgic-v4.c b/virt/kvm/arm/vgic/vgic-v4.c
+> 
+> index 1ed5f22..515171a 100644
+> 
+> --- a/virt/kvm/arm/vgic/vgic-v4.c
+> 
+> +++ b/virt/kvm/arm/vgic/vgic-v4.c
+> 
+> @@ -208,6 +208,8 @@ int vgic_v4_sync_hwstate(struct kvm_vcpu *vcpu)
+> 
+>        if (!vgic_supports_direct_msis(vcpu->kvm))
+> 
+>                 return 0;
+> 
+> +       __vgic_v3_write_hcr(vcpu->arch.vgic_cpu.vgic_v3.vgic_hcr &
+> ~ICH_HCR_EN);
+
+And you've now crashed your non-VHE system by branching directly to code
+that cannot be executed at EL1.
+
+> 
+> +
+> 
+>        return its_schedule_vpe(&vcpu->arch.vgic_cpu.vgic_v3.its_vpe, false);
+> 
+> }
+> 
+> @@ -220,6 +222,12 @@ int vgic_v4_flush_hwstate(struct kvm_vcpu *vcpu)
+> 
+>                 return 0;
+> 
+>         /*
+> 
+> +       * Enable ICH_HCR_EL.En so that guest can accpet and handle direct
+> 
+> +       * vlpi.
+> 
+> +       */
+> 
+> +       __vgic_v3_write_hcr(vcpu->arch.vgic_cpu.vgic_v3.vgic_hcr);
+> 
+> +
+> 
+> +       /*
+> 
+>         * Before making the VPE resident, make sure the redistributor
+> 
+>         * corresponding to our current CPU expects us here. See the
+> 
+>         * doc in drivers/irqchip/irq-gic-v4.c to understand how this
+> 
+> -- 
+> 
+> 1.9.1
+> 
+>  
+> 
+>  
+> 
+
+Overall, this looks like the wrong approach. It is not the GICv4 code's
+job to do this, but the low-level code (either the load/put code for VHE
+or the save/restore code for non-VHE).
+
+It would certainly help if you could describe which context you're in
+(VHE, non-VHE). I suppose the former...
+
+Thanks,
+
+	M.
 -- 
-2.17.1
-
+Jazz is not dead. It just smells funny...
