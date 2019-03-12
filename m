@@ -2,94 +2,109 @@ Return-Path: <SRS0=J4ZE=RP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.5 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_MUTT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6DB1DC43381
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 16:32:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F1A0BC10F00
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 16:33:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 351962083D
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 16:32:37 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=sifive.com header.i=@sifive.com header.b="dfKIE2Nf"
+	by mail.kernel.org (Postfix) with ESMTP id C1AD92147C
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 16:33:05 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1552408385;
+	bh=45V6WHZtBHhMh2RK4oUj6EaslPNU+dibvt8x+PyCv34=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=ZmBqLUpc/Lx4iYe08YQxFH5vsSCstgYYJqF2VbDWSRV6WdLrJEh/PQyLVxis7fqIg
+	 /OPMC867yFJR/wG+fdaB+5P/x5bVJ5BBnxZbyl80mStilGRCC9zAyHp6p7GRh9AtGI
+	 rHOGghtC1MbWEnOEGzFqFXvhY29PdC1J2eQjsqJo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726807AbfCLQcg (ORCPT
+        id S1726859AbfCLQdE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 12 Mar 2019 12:32:36 -0400
-Received: from mail-it1-f194.google.com ([209.85.166.194]:38165 "EHLO
-        mail-it1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726599AbfCLQcf (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 12 Mar 2019 12:32:35 -0400
-Received: by mail-it1-f194.google.com with SMTP id k193so5518829ita.3
-        for <linux-kernel@vger.kernel.org>; Tue, 12 Mar 2019 09:32:35 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=sifive.com; s=google;
-        h=date:from:to:cc:subject:in-reply-to:message-id:references
-         :user-agent:mime-version;
-        bh=gFPryUrYS7vffowFXQWUEV10mJmyY/YdZ7f1r06JmoQ=;
-        b=dfKIE2NfkM1vbY8wnijPmACa8HbxZmobYXZDmNkxdvaGaEZ8xhN3UWs1e5MD/S1WJ3
-         isFQXldV6Kq66t3wBpaQh//8qrpd4KbKtwlmtQW9fcSxwc6WhI0Yal8D8PtyfkVT7i2Q
-         mXncVCDhyRqm4zCBrI4TbuQlXpKN/edSJkFc6UCA7vjl6mvm14XKJvijbfsxcwck8IFr
-         lHinf+2v9e/2TY610VVnP573iXUcRprUwaFbh1fL3D93coFWL0QqAYIssazHNkwWWOYk
-         jKWhBHKRoamWqkyO8KPdt+j4pIWevvmnJBAoKTGMJwbBbCxNLQH+Q0+YgGlAH6AMUpoX
-         lnXA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:in-reply-to:message-id
-         :references:user-agent:mime-version;
-        bh=gFPryUrYS7vffowFXQWUEV10mJmyY/YdZ7f1r06JmoQ=;
-        b=aI5YNMNt0/CkLosQcce6lumvK50riu5RvLBUWfIl2zelOFCiAulfrIMSPCUVF3DUl1
-         7X6EW7n+SJWGFNmrH3w4BYxU/Z9Xxbon3IhJ34TwjjKrdLQ8bm1yQCAQoUx/1cydrzDv
-         S1rgI6yBlOYqkVxqFL2FFL7a/OFo4CrXcwNm+EiSAzffM73rLA9Bi8yDD8/Q8jPHSzRV
-         voBbFBrEpq3qLKL4zl6p0+gDsbBRKRuXhz5jVNA8wLjxjCyu8XQRMmKNV/gE+QOY7Con
-         gPKTYA954X7XTVg2cWfUWQMPgQE0jRu38TJX6+xarNJ9t5f7d0n/iuswrmev/mgwhw/O
-         aAxw==
-X-Gm-Message-State: APjAAAWweRwIpU82M3lo3nzSwpgLUKnaJMc5IFUJ1iqeT8mVmENqWK3j
-        QGEY8HZlkJzsID7lHArETPfKWA==
-X-Google-Smtp-Source: APXvYqxLp9h0zjtRF4n6JGDP+pxpQKCzjZToo0WRnbmWm4O1Rkk2ahbUchLqaTOdbBFuAnv/WCCroQ==
-X-Received: by 2002:a24:1947:: with SMTP id b68mr2327795itb.121.1552408355047;
-        Tue, 12 Mar 2019 09:32:35 -0700 (PDT)
-Received: from localhost (c-73-95-159-87.hsd1.co.comcast.net. [73.95.159.87])
-        by smtp.gmail.com with ESMTPSA id f9sm379431ioo.24.2019.03.12.09.32.34
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Tue, 12 Mar 2019 09:32:34 -0700 (PDT)
-Date:   Tue, 12 Mar 2019 09:32:34 -0700 (PDT)
-From:   Paul Walmsley <paul.walmsley@sifive.com>
-X-X-Sender: paulw@viisi.sifive.com
-To:     Yash Shah <yash.shah@sifive.com>
-cc:     linux-riscv@lists.infradead.org, linux-edac@vger.kernel.org,
-        palmer@sifive.com, paul.walmsley@sifive.com,
-        linux-kernel@vger.kernel.org, robh+dt@kernel.org,
-        mark.rutland@arm.com, aou@eecs.berkeley.edu, bp@alien8.de,
-        mchehab@kernel.org, devicetree@vger.kernel.org
-Subject: Re: [PATCH 0/2] L2 Cache EDAC Support for HiFive Unleashed
-In-Reply-To: <1552382461-13051-1-git-send-email-yash.shah@sifive.com>
-Message-ID: <alpine.DEB.2.21.9999.1903120925400.26459@viisi.sifive.com>
-References: <1552382461-13051-1-git-send-email-yash.shah@sifive.com>
-User-Agent: Alpine 2.21.9999 (DEB 301 2018-08-15)
+        Tue, 12 Mar 2019 12:33:04 -0400
+Received: from mail.kernel.org ([198.145.29.99]:49356 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726174AbfCLQdE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 12 Mar 2019 12:33:04 -0400
+Received: from localhost (unknown [104.133.8.98])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 659F32083D;
+        Tue, 12 Mar 2019 16:33:03 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1552408383;
+        bh=45V6WHZtBHhMh2RK4oUj6EaslPNU+dibvt8x+PyCv34=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=BM+LtH5YL6NCXI6WfxhLMb4tvYmZnWWNsBsV1XirkInQY5c9Mgba1GciFK57g/hye
+         9ovF5VEuRaaYWClwfh3Op6r9XCxMJKF8pgaAzdJ56eDoLPVEtiGKANUmFI2YANBgvb
+         dZ1TRG4ClBZIgTwDyoN6XpUnTA6PFpL266+VJTyw=
+Date:   Tue, 12 Mar 2019 09:33:02 -0700
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     Matthias Brugger <matthias.bgg@gmail.com>
+Cc:     Erin Lo <erin.lo@mediatek.com>, Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Jason Cooper <jason@lakedaemon.net>,
+        Marc Zyngier <marc.zyngier@arm.com>,
+        Stephen Boyd <sboyd@codeaurora.org>,
+        devicetree@vger.kernel.org,
+        srv_heupstream <srv_heupstream@mediatek.com>,
+        linux-kernel@vger.kernel.org, linux-serial@vger.kernel.org,
+        linux-mediatek@lists.infradead.org,
+        linux-arm-kernel@lists.infradead.org, yingjoe.chen@mediatek.com,
+        mars.cheng@mediatek.com, eddie.huang@mediatek.com,
+        linux-clk@vger.kernel.org, zhiyong.tao@mediatek.com,
+        Mengqi.Zhang@mediatek.com
+Subject: Re: [PATCH v8 1/2] dt-bindings: serial: Add compatible for Mediatek
+ MT8183
+Message-ID: <20190312163302.GA13549@kroah.com>
+References: <1552294472-32929-1-git-send-email-erin.lo@mediatek.com>
+ <1552294472-32929-2-git-send-email-erin.lo@mediatek.com>
+ <d824b15d-49b4-ef6c-779a-0c21c8c05d62@gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <d824b15d-49b4-ef6c-779a-0c21c8c05d62@gmail.com>
+User-Agent: Mutt/1.11.3 (2019-02-01)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hello Yash,
+On Tue, Mar 12, 2019 at 03:41:57PM +0100, Matthias Brugger wrote:
+> 
+> 
+> On 11/03/2019 09:54, Erin Lo wrote:
+> > This adds dt-binding documentation of uart for Mediatek MT8183 SoC
+> > Platform.
+> > 
+> > Signed-off-by: Erin Lo <erin.lo@mediatek.com>
+> > Acked-by: Rob Herring <robh@kernel.org>
+> > ---
+> >  Documentation/devicetree/bindings/serial/mtk-uart.txt | 1 +
+> >  1 file changed, 1 insertion(+)
+> > 
+> > diff --git a/Documentation/devicetree/bindings/serial/mtk-uart.txt b/Documentation/devicetree/bindings/serial/mtk-uart.txt
+> > index 742cb47..bcfb131 100644
+> > --- a/Documentation/devicetree/bindings/serial/mtk-uart.txt
+> > +++ b/Documentation/devicetree/bindings/serial/mtk-uart.txt
+> > @@ -16,6 +16,7 @@ Required properties:
+> >    * "mediatek,mt8127-uart" for MT8127 compatible UARTS
+> >    * "mediatek,mt8135-uart" for MT8135 compatible UARTS
+> >    * "mediatek,mt8173-uart" for MT8173 compatible UARTS
+> > +  * "mediatek,mt8183-uart", "mediatek,mt6577-uart" for MT8183 compatible UARTS
+> >    * "mediatek,mt6577-uart" for MT6577 and all of the above
+> >  
+> >  - reg: The base address of the UART register bank.
+> > 
+> 
+> Acked-by: Matthias Brugger <matthias.bgg@gmail.com>
+> 
+> Greg will you take this through your branch or do you prefer me to queue it?
 
-On Tue, 12 Mar 2019, Yash Shah wrote:
-
-> This patch series adds a L2 Cache EDAC driver and DT documentation
-> for HiFive Unleashed board.
-
-This should also reference the "FU540-C000 chip" since there isn't 
-anything board-specific about it.
-
-Also - could you please describe in your patch 0 message what kernel 
-commit this driver has been tested on; or, if it's not a mainline commit, 
-what additional patches are needed to test it?
+I can take it, let's wait for 5.1-rc1 to come out first please.
 
 thanks,
 
-- Paul
+greg k-h
