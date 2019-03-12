@@ -2,85 +2,61 @@ Return-Path: <SRS0=J4ZE=RP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_MUTT autolearn=ham autolearn_force=no
+X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9DD0AC43381
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 10:12:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0300FC43381
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 10:14:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 74088214D8
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 10:12:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CF271214D8
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 10:14:19 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726690AbfCLKMx (ORCPT
+        id S1726615AbfCLKOR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 12 Mar 2019 06:12:53 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:2980 "EHLO mx1.redhat.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725811AbfCLKMx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 12 Mar 2019 06:12:53 -0400
-Received: from smtp.corp.redhat.com (int-mx07.intmail.prod.int.phx2.redhat.com [10.5.11.22])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id 4B2B53697F;
-        Tue, 12 Mar 2019 10:12:53 +0000 (UTC)
-Received: from localhost (ovpn-12-19.pek2.redhat.com [10.72.12.19])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id BD8261001DEA;
-        Tue, 12 Mar 2019 10:12:50 +0000 (UTC)
-Date:   Tue, 12 Mar 2019 18:12:48 +0800
-From:   Baoquan He <bhe@redhat.com>
-To:     "Kirill A. Shutemov" <kirill@shutemov.name>
-Cc:     linux-kernel@vger.kernel.org, tglx@linutronix.de,
-        kirill.shutemov@linux.intel.com, mingo@kernel.org, bp@alien8.de,
-        hpa@zytor.com, dyoung@redhat.com, x86@kernel.org
-Subject: Re: [PATCH v2 3/3] x86/kdump/64: Change the upper limit of
- crashkernel reservation
-Message-ID: <20190312101248.GM21116@MiWiFi-R3L-srv>
-References: <20190312005004.19182-1-bhe@redhat.com>
- <20190312005004.19182-4-bhe@redhat.com>
- <20190312094838.f4agowhd5rlaa3hn@kshutemo-mobl1>
+        Tue, 12 Mar 2019 06:14:17 -0400
+Received: from mx2.suse.de ([195.135.220.15]:38458 "EHLO mx1.suse.de"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1725882AbfCLKOR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 12 Mar 2019 06:14:17 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx1.suse.de (Postfix) with ESMTP id AA9B1AC24;
+        Tue, 12 Mar 2019 10:14:15 +0000 (UTC)
+From:   Andreas Schwab <schwab@suse.de>
+To:     Yash Shah <yash.shah@sifive.com>
+Cc:     palmer@sifive.com, linux-pwm@vger.kernel.org,
+        linux-riscv@lists.infradead.org, thierry.reding@gmail.com,
+        robh+dt@kernel.org, mark.rutland@arm.com,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        sachin.ghadi@sifive.com, paul.walmsley@sifive.com
+Subject: Re: [PATCH v9 0/2] PWM support for HiFive Unleashed
+References: <1552378289-27245-1-git-send-email-yash.shah@sifive.com>
+X-Yow:  It's OKAY --- I'm an INTELLECTUAL, too.
+Date:   Tue, 12 Mar 2019 11:14:15 +0100
+In-Reply-To: <1552378289-27245-1-git-send-email-yash.shah@sifive.com> (Yash
+        Shah's message of "Tue, 12 Mar 2019 13:41:27 +0530")
+Message-ID: <mvmimwotn60.fsf@suse.de>
+User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/26.1.92 (gnu/linux)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190312094838.f4agowhd5rlaa3hn@kshutemo-mobl1>
-User-Agent: Mutt/1.10.1 (2018-07-13)
-X-Scanned-By: MIMEDefang 2.84 on 10.5.11.22
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.30]); Tue, 12 Mar 2019 10:12:53 +0000 (UTC)
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 03/12/19 at 12:48pm, Kirill A. Shutemov wrote:
-> >  #ifdef CONFIG_X86_32
-> >  # define CRASH_ADDR_LOW_MAX	(512 << 20)
-> >  # define CRASH_ADDR_HIGH_MAX	(512 << 20)
-> >  #else
-> >  # define CRASH_ADDR_LOW_MAX	(896UL << 20)
-> > -# define CRASH_ADDR_HIGH_MAX	MAXMEM
-> > +# define CRASH_ADDR_HIGH_MAX	(1ULL < 46)
-> 
-> Maybe
-> 
-> # define CRASH_ADDR_HIGH_MAX (64UL << 40)
-> 
-> to match the notation for the rest of defines?
-> 
-Sure, I will replace it, and repost a whole patchset with your ack added
-on each patch. Thanks for your careful reviewing and great suggestions.
+On Mär 12 2019, Yash Shah <yash.shah@sifive.com> wrote:
 
-> 
-> Otherwise the patchset look good to me. You can use my ack for all of
-> them:
-> 
-> Acked-by: Kirill A. Shutemov <kirill.shutemov@linux.intel.com>
-> 
-> >  #endif
-> >  
-> >  static int __init reserve_crashkernel_low(void)
-> > -- 
-> > 2.17.2
-> > 
-> 
-> -- 
->  Kirill A. Shutemov
+> This patch series adds a PWM driver and DT documentation
+> for HiFive Unleashed board. The patches are mostly based on
+> Wesley's patch.
+
+Heartbeat trigger still doesn't work for me.
+
+Andreas.
+
+-- 
+Andreas Schwab, SUSE Labs, schwab@suse.de
+GPG Key fingerprint = 0196 BAD8 1CE9 1970 F4BE  1748 E4D4 88E3 0EEA B9D7
+"And now for something completely different."
