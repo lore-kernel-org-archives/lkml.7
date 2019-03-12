@@ -2,98 +2,150 @@ Return-Path: <SRS0=J4ZE=RP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,URIBL_BLOCKED
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 49CB8C43381
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 14:01:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 12B3DC43381
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 14:03:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1582D214AF
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 14:01:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D174C2087C
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 14:03:12 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=baylibre-com.20150623.gappssmtp.com header.i=@baylibre-com.20150623.gappssmtp.com header.b="fTvN6IOL"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="upitj2pd"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726831AbfCLOBO (ORCPT
+        id S1726794AbfCLODL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 12 Mar 2019 10:01:14 -0400
-Received: from mail-wr1-f68.google.com ([209.85.221.68]:38434 "EHLO
-        mail-wr1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725895AbfCLOBO (ORCPT
+        Tue, 12 Mar 2019 10:03:11 -0400
+Received: from mail-ua1-f46.google.com ([209.85.222.46]:39427 "EHLO
+        mail-ua1-f46.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726395AbfCLODK (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 12 Mar 2019 10:01:14 -0400
-Received: by mail-wr1-f68.google.com with SMTP id g12so2836732wrm.5
-        for <linux-kernel@vger.kernel.org>; Tue, 12 Mar 2019 07:01:13 -0700 (PDT)
+        Tue, 12 Mar 2019 10:03:10 -0400
+Received: by mail-ua1-f46.google.com with SMTP id s15so816575uap.6
+        for <linux-kernel@vger.kernel.org>; Tue, 12 Mar 2019 07:03:09 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=baylibre-com.20150623.gappssmtp.com; s=20150623;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=cCcwharzNZe1nK6/JgQp9uxJKQWrorv8LAay2fzCQY4=;
-        b=fTvN6IOLpvlYE+fqMRlyka8rjTBXbn8KaCEVccOGn0LyDbk11GEifH+Q1j5StaEsm9
-         vw4jX5MhDCN9BEUAxAbtOjf5ZHIX41slP/3xBp+wRNpbtc0nicobj12U9PRVi03wTKLl
-         KGJJ7Pbqt8y8xw8oNpkfYpS3wnI8PcXPOR7qwqPV4/pTGlIemUrwBjLyBKYrOsszmjua
-         qDTVasDpfIapL+o/Mg+3H//S3cCTLT6epRTtMIAwrBrGAWspJsxHeUijhpy9rbbbk7YZ
-         qjbnXUP7wqbSJaUuu3uBHNAbp3ExNMO0WDdEnnv2WkFpfZWCTZK8bAtayMzpxUeKeUoy
-         Rz4Q==
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=KvaI0VCBVCzTg+3CN9M2PU/lJ1a9ZkyRLn/CJ2kOuIk=;
+        b=upitj2pdA9z4IducWBk84T+ll0TxWaillRih4wY/PCZEefKdSb5ILHNiIyZfLoVNv9
+         WE+AUu1HBag1IbBeavJSV0p1D0PdHdo7SDTio4UyxYAil/x1zmydzxQUqGAAv0njx8GK
+         9HS0Nn8h+A9WGMfpqmeJQjFIRcEAfbv5cTHZlhhbTlp/H+n7bUzvEj3gS+P2q0PB56FX
+         orajZ5X3WfFXk4Iyxa4ZzJXOZxe8rpzFbrnGj8nEYpY6WBvzccFEYNE45yflVpcrt+SZ
+         FCV16YQNdqI7eSjGT/TkSxI1l5dN1MLLRG768t5Ex8jh3D8zd8+fut7oa2nh9lIwEPiM
+         Mk4A==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=cCcwharzNZe1nK6/JgQp9uxJKQWrorv8LAay2fzCQY4=;
-        b=GXkA3tOq8qXr3utrmJD9KIExzw+ONovAfLUosPcFnlSixyGIhX496Zitany1yaFk87
-         tyAyXAwSoa329pfUoe27VysUW6QZgo2IXRCfs7RAUyoTAB16TmHIrZOCmdzmUUNFZ+L7
-         MoJ7GOFZHO6RWaQrcSZFdb16/oyXCXagNM5ULs6b7vZLMctxsC+FGrD8hzd7M2TLTcmj
-         GNkXMB0NXpHS8vX/VtfYe5E1Ls1+BNfaz7emKp+0LwSb22aqdxYwUmNtkt7D06S6Da7C
-         waEWz0LZYtd1bp+/sa7TheFXt6QIS233IycQOJdeNMe97cQTo7LNJHqD1Rt+dv9fET+v
-         WexA==
-X-Gm-Message-State: APjAAAXX6aqgfA6iGjGjvpHcp6PVnNHq+TNScdo1r3VPrskagXrkPL7f
-        N078RPJWlm1DEsLZRfzlSKu+jmV+Q/I=
-X-Google-Smtp-Source: APXvYqxMyhKufBx+ocA8RTxjVzWtJ+4x0jZBTUsj4PvCylWqIdv9nXxU8gXRRdNQzumZBmVdKfdIdg==
-X-Received: by 2002:adf:face:: with SMTP id a14mr25902668wrs.320.1552399269328;
-        Tue, 12 Mar 2019 07:01:09 -0700 (PDT)
-Received: from [10.2.4.163] (aputeaux-684-1-27-140.w90-86.abo.wanadoo.fr. [90.86.252.140])
-        by smtp.gmail.com with ESMTPSA id v2sm2665870wme.29.2019.03.12.07.01.07
-        (version=TLS1_3 cipher=AEAD-AES128-GCM-SHA256 bits=128/128);
-        Tue, 12 Mar 2019 07:01:08 -0700 (PDT)
-Subject: Re: [RFC PATCH 1/2] Add support of imx7ulp to interconnect framework
-To:     Georgi Djakov <georgi.djakov@linaro.org>
-Cc:     linux-pm@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
-References: <20181117111905.29091-1-abailon@baylibre.com>
- <20181117111905.29091-2-abailon@baylibre.com>
- <3691c453-b2cb-df6f-d029-e82ac98733c7@linaro.org>
-From:   Alexandre Bailon <abailon@baylibre.com>
-Message-ID: <e83139fc-c127-5913-f4cd-c1fb8bc9af99@baylibre.com>
-Date:   Tue, 12 Mar 2019 15:01:37 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.4.0
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=KvaI0VCBVCzTg+3CN9M2PU/lJ1a9ZkyRLn/CJ2kOuIk=;
+        b=NQHdBu7k1bkUg8d/hPgfrd9DuLLB3494JMryrbCNw9NmuMpoQdufT3s2IhQFXwhpKj
+         SQjJv5DUEi6wIgoPMZLlp8mr+reMcqdMmG/YenXWTbXpTyyUCyJp8iNDWunm3gi4uLvZ
+         RmwCo765doDsdBOYLoHITGr1X1KCyWpHaNO8cRlxi0eOh71LeGQmW7ZrAJ2Jdvsv5jhU
+         6goi27dhCvn8vEbjbJjmcnFn2YmSv0Q4YRddARM2g+iitZij3nvqvYzquzN/e7hJapho
+         ONoSabTyAdF03cHIKU6xr8K+vG6sh2LJFKNLDw6OyRrBC52v7jTLRX96luOOkTH1Okl5
+         P64g==
+X-Gm-Message-State: APjAAAVrnTFHTIx0mCvSYaYXOTynGAMsXWkYdlgSVYa82kG9awJ/pCFD
+        OTExSWkdvFc8zrg+lYsJiGrfKnAsTicnjaIpU7c=
+X-Google-Smtp-Source: APXvYqy6XhBwtFoMwZq0HDm9m4Uzw7JNBFdW4J1FiaBosJaBZmncW9aniaEAZwiIHokYb4uR5LhqZvLUw31QuYiTuns=
+X-Received: by 2002:ab0:7483:: with SMTP id n3mr19892981uap.131.1552399389065;
+ Tue, 12 Mar 2019 07:03:09 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <3691c453-b2cb-df6f-d029-e82ac98733c7@linaro.org>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+References: <CAOuPNLgobR4ejPs_ZUuXpRwkURH0sfb1LD27TKhGg=wrwhUvZg@mail.gmail.com>
+ <2c5d240eabdb56913f4abcc9aacf2b6b@mailhost.ics.forth.gr>
+In-Reply-To: <2c5d240eabdb56913f4abcc9aacf2b6b@mailhost.ics.forth.gr>
+From:   Pintu Agarwal <pintu.ping@gmail.com>
+Date:   Tue, 12 Mar 2019 19:32:57 +0530
+Message-ID: <CAOuPNLg4dfoovZ_eqL5XvNW3Ak9dGeCVr=vbG6G5t4Rxo-nC9Q@mail.gmail.com>
+Subject: Re: ssh session with qemu-arm using busybox
+To:     Nick Kossifidis <mick@ics.forth.gr>
+Cc:     open list <linux-kernel@vger.kernel.org>,
+        kernelnewbies@kernelnewbies.org,
+        linux-arm-kernel@lists.infradead.org,
+        linux-riscv@lists.infradead.org, qemu-devel@nongnu.org
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Georgi,
+>
+> -netdev user,id=unet,hostfwd=tcp::2222-:22 \
+> -net user \
+>
+> and you 'll get guest's port 22 to be forwarded to hosts port 2222, so
+> you can do
+>
+> ssh root@localhost:2222
+>
+> from the host.
+>
 
-Sorry for the late response, I have just seen today that you have 
-reviewed my patch.
+I tried many different options, but unfortunately none worked for me.
+1)
+qemu-system-arm -M vexpress-a9 -m 1024M -kernel
+../KERNEL/linux/arch/arm/boot/zImage -dtb
+../KERNEL/linux/arch/arm/boot/dts/vexpress-v2p-ca9.dtb -initrd
+rootfs.img.gz -append "console=ttyAMA0 root=/dev/ram rdinit=/sbin/init
+ip=dhcp" -nographic -smp 4 -netdev user,id=unet,hostfwd=tcp::2222-:22
+-net user
 
-On 1/21/19 6:41 PM, Georgi Djakov wrote:
-> Thank you for working on this! I am expecting the next version.
-I'm going to send a new patchset soon.
-I have rewritten pretty much everything, to handle some hardware 
-limitations, and to be more generic.
-Anyways, most of your comments still makes sense for the new patchset so 
-I will fix them before to submit it.
-> 
-> BR,
-> Georgi
-> 
-Best Regards,
-Alexandre
+With this the eth0 interface is removed, and I see this message
+(although login works):
+qemu-system-arm: warning: hub 0 with no nics
+qemu-system-arm: warning: netdev unet has no peer
+Booting Linux on physical CPU 0x0
+<skip>
+NET: Registered protocol family 17
+<skip>
+Run /sbin/init as init process
+ifconfig: SIOCSIFADDR: No such device
+route: SIOCADDRT: Network is unreachable
 
+But, ssh is still not working.
+ssh root@localhost:2222
+ssh: Could not resolve hostname localhost:2222: Name or service not known
+
+
+2) if I give "-net nic" I get eth0 interface but still ssh does not work.
+qemu-system-arm: warning: netdev unet has no peer
+Booting Linux on physical CPU 0x0
+
+3) With this there is no error, but still ssh not working
+qemu-system-arm -M vexpress-a9 -m 1024M -kernel
+../KERNEL/linux/arch/arm/boot/zImage -dtb
+../KERNEL/linux/arch/arm/boot/dts/vexpress-v2p-ca9.dtb -initrd
+rootfs.img.gz -append "console=ttyAMA0 root=/dev/ram
+rdinit=/sbin/init" -nographic -netdev
+user,id=net0,hostfwd=tcp::2222-:22 -device
+virtio-net-device,netdev=net0 -net user -net nic
+
+ssh root@localhost:2222
+ssh: Could not resolve hostname localhost:2222: Name or service not known
+
+4) I also followed the steps mentioned in the below document, but its
+same result:
+https://wiki.qemu.org/Documentation/Networking
+
+-------------
+So, I have some doubts:
+- Do, I need anything to be configured on host PC as well ?
+  I am using Ubuntu 16.04 desktop, and it is connected to only one
+office LAN network
+- Do I need any network configuration changes on host ?
+- Do I need to enable any thing in kernel side ?
+- I am using minimal busybox and I see there is no "ssh" command
+there. Do I need a different busybox or a dropbear ?
+- Will it work easily with buildroot ?
+- Is there any precompiled arm32-rootfs image present somewhere, which
+which ssh can work by default ?
+  Because, I really don't care much about user side, so any arm-rootfs
+should be fine for me
+- I haven't really explored "bridge/tap" network yet. Is that worth to
+try in these conditions.
+
+
+Regards,
+Pintu
