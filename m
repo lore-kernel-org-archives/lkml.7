@@ -2,57 +2,56 @@ Return-Path: <SRS0=J4ZE=RP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT autolearn=ham
+X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 30478C43381
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 17:23:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 32174C43381
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 17:23:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EFBFA214AE
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 17:23:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EDC8E214AF
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 17:23:30 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1552411408;
-	bh=fIFrTEEK6RJdBZ5sPq5diOLk9Bjr7/XncdOi21SpDn8=;
+	s=default; t=1552411411;
+	bh=Mbs2IeuGspLBEvmb1T83/TYpMkqN/sd/vpXfHCtvYiI=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=G/Gu+FNslnLWtYDfWqwVSIvlmOJug/o1jE+0g653FuWHbEIhLrzHL52ax1NZv32Tw
-	 IWh4vD7Ar5GmqOEuyk4zEu3ST74ZZJiZ+sOqhMjOoRirpdWrgUWT58Lw7b+Ks7W/UC
-	 iNYjfl8MlfWgfrwH+3LXkSkYuIIFtnQ8tLyDxtBY=
+	b=AkVboJtpZbWZ8wt+RYVdm7cHCpHZM1+kjRLUYucCFCBHM1WIcsti7v1CGFVcDqUMU
+	 84rRxWTK8pR5nq3IvBIYxIBg5PU/90mrVigld1bYjcfjiuv30bBaw4Mc6oHAgYB4sM
+	 MhHQgDbBA2HMKUEJHtGFh/ruN5hqINGM5lMpKCIk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729875AbfCLRSB (ORCPT
+        id S1730111AbfCLRX3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 12 Mar 2019 13:18:01 -0400
-Received: from mail.kernel.org ([198.145.29.99]:60252 "EHLO mail.kernel.org"
+        Tue, 12 Mar 2019 13:23:29 -0400
+Received: from mail.kernel.org ([198.145.29.99]:34868 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728609AbfCLRRI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 12 Mar 2019 13:17:08 -0400
+        id S1729869AbfCLRSA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 12 Mar 2019 13:18:00 -0400
 Received: from localhost (unknown [104.133.8.98])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id A320F2171F;
-        Tue, 12 Mar 2019 17:17:07 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id D5DB02087C;
+        Tue, 12 Mar 2019 17:17:59 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1552411027;
-        bh=fIFrTEEK6RJdBZ5sPq5diOLk9Bjr7/XncdOi21SpDn8=;
+        s=default; t=1552411080;
+        bh=Mbs2IeuGspLBEvmb1T83/TYpMkqN/sd/vpXfHCtvYiI=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=JMFSCf9US+/wCOZ8NAuRzGnZMov2awj569ejCMpAaTlaz/QfxJafYuKahw8OA5Gjx
-         M5PGljFmP9KqVaFqkk22xhzJu+SXmSZbPjmzlbytlVUUdzrAwAQ5bzDbPnFGvuCVMx
-         bCo708TOancc9wSiUXt/VPrm4XNdK/YVW6Xo9hY8=
+        b=jYwr6AMCzso3wWsPjN9vdtLad/aPepRGxY7yMnXJOwfgBmKVtJD+8Y+lcx0cI4/ry
+         obMKyCq7+ZR/tOnLPnqnUPjT/41SmZtMm7akPPbK7WBNFNCkMqpDArV1fwNVjxaycx
+         6Z8XshEc7jIFA+IVXAZxCOaZVR1UHm8crB1Bt5k4=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Martin Blumenstingl <martin.blumenstingl@googlemail.com>,
-        "Daniel F. Dickinson" <cshored@thecshore.com>,
-        Kalle Valo <kvalo@codeaurora.org>,
-        Christian Lamparter <chunkeey@gmail.com>
-Subject: [PATCH 4.14 130/135] ath9k: Avoid OF no-EEPROM quirks without qca,no-eeprom
-Date:   Tue, 12 Mar 2019 10:09:37 -0700
-Message-Id: <20190312170353.129620428@linuxfoundation.org>
+        stable@vger.kernel.org, Naresh Kamboju <naresh.kamboju@linaro.org>,
+        Florian Westphal <fw@strlen.de>,
+        Pablo Neira Ayuso <pablo@netfilter.org>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.9 75/96] selftests: netfilter: fix config fragment CONFIG_NF_TABLES_INET
+Date:   Tue, 12 Mar 2019 10:10:33 -0700
+Message-Id: <20190312171040.257001369@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
-In-Reply-To: <20190312170341.127810985@linuxfoundation.org>
-References: <20190312170341.127810985@linuxfoundation.org>
+In-Reply-To: <20190312171034.530434962@linuxfoundation.org>
+References: <20190312171034.530434962@linuxfoundation.org>
 User-Agent: quilt/0.65
 X-stable: review
 X-Patchwork-Hint: ignore
@@ -64,92 +63,33 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-4.14-stable review patch.  If anyone has any objections, please let me know.
+4.9-stable review patch.  If anyone has any objections, please let me know.
 
 ------------------
 
-From: Daniel F. Dickinson <cshored@thecshore.com>
+[ Upstream commit 952b72f89ae23b316da8c1021b18d0c388ad6cc4 ]
 
-commit ce938231bd3b1d7af3cbd8836f084801090470e1 upstream.
+In selftests the config fragment for netfilter was added as
+NF_TABLES_INET=y and this patch correct it as CONFIG_NF_TABLES_INET=y
 
-ath9k_of_init() function[0] was initially written on the assumption that
-if someone had an explicit ath9k OF node that "there must be something
-wrong, why would someone add an OF node if everything is fine"[1]
-(Quoting Martin Blumenstingl <martin.blumenstingl@googlemail.com>)
-
-"it turns out it's not that simple. with your requirements I'm now aware
-of two use-cases where the current code in ath9k_of_init() doesn't work
-without modifications"[1]
-
-The "your requirements" Martin speaks of is the result of the fact that I
-have a device (PowerCloud Systems CR5000) has some kind of default - not
-unique mac address - set and requires to set the correct MAC address via
-mac-address devicetree property, however:
-
-"some cards come with a physical EEPROM chip [or OTP] so "qca,no-eeprom"
-should not be set (your use-case). in this case AH_USE_EEPROM should be
-set (which is the default when there is no OF node)"[1]
-
-The other use case is:
-
-the firmware on some PowerMac G5 seems to add a OF node for the ath9k
-card automatically. depending on the EEPROM on the card AH_NO_EEP_SWAP
-should be unset (which is the default when there is no OF node). see [3]
-
-After this patch to ath9k_of_init() the new behavior will be:
-
-    if there's no OF node then everything is the same as before
-    if there's an empty OF node then ath9k will use the hardware EEPROM
-      (before ath9k would fail to initialize because no EEPROM data was
-      provided by userspace)
-    if there's an OF node with only a MAC address then ath9k will use
-      the MAC address and the hardware EEPROM (see the case above)
-    with "qca,no-eeprom" EEPROM data from userspace will be requested.
-      the behavior here will not change
-[1]
-
-Martin provides additional background on EEPROM swapping[1].
-
-Thanks to Christian Lamparter <chunkeey@gmail.com> for all his help on
-troubleshooting this issue and the basis for this patch.
-
-[0]https://elixir.bootlin.com/linux/v4.20-rc7/source/drivers/net/wireless/ath/ath9k/init.c#L615
-[1]https://github.com/openwrt/openwrt/pull/1645#issuecomment-448027058
-[2]https://github.com/openwrt/openwrt/pull/1613
-[3]https://patchwork.kernel.org/patch/10241731/
-
-Fixes: 138b41253d9c ("ath9k: parse the device configuration from an OF node")
-Reviewed-by: Martin Blumenstingl <martin.blumenstingl@googlemail.com>
-Tested-by: Martin Blumenstingl <martin.blumenstingl@googlemail.com>
-Signed-off-by: Daniel F. Dickinson <cshored@thecshore.com>
-Signed-off-by: Kalle Valo <kvalo@codeaurora.org>
-Cc: Christian Lamparter <chunkeey@gmail.com>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-
+Signed-off-by: Naresh Kamboju <naresh.kamboju@linaro.org>
+Acked-by: Florian Westphal <fw@strlen.de>
+Signed-off-by: Pablo Neira Ayuso <pablo@netfilter.org>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/wireless/ath/ath9k/init.c |    6 +++---
- 1 file changed, 3 insertions(+), 3 deletions(-)
+ tools/testing/selftests/netfilter/config | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
---- a/drivers/net/wireless/ath/ath9k/init.c
-+++ b/drivers/net/wireless/ath/ath9k/init.c
-@@ -580,15 +580,15 @@ static int ath9k_of_init(struct ath_soft
- 		ret = ath9k_eeprom_request(sc, eeprom_name);
- 		if (ret)
- 			return ret;
-+
-+		ah->ah_flags &= ~AH_USE_EEPROM;
-+		ah->ah_flags |= AH_NO_EEP_SWAP;
- 	}
- 
- 	mac = of_get_mac_address(np);
- 	if (mac)
- 		ether_addr_copy(common->macaddr, mac);
- 
--	ah->ah_flags &= ~AH_USE_EEPROM;
--	ah->ah_flags |= AH_NO_EEP_SWAP;
--
- 	return 0;
- }
- 
+diff --git a/tools/testing/selftests/netfilter/config b/tools/testing/selftests/netfilter/config
+index 1017313e41a8..59caa8f71cd8 100644
+--- a/tools/testing/selftests/netfilter/config
++++ b/tools/testing/selftests/netfilter/config
+@@ -1,2 +1,2 @@
+ CONFIG_NET_NS=y
+-NF_TABLES_INET=y
++CONFIG_NF_TABLES_INET=y
+-- 
+2.19.1
+
 
 
