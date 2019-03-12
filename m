@@ -2,144 +2,111 @@ Return-Path: <SRS0=J4ZE=RP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.5 required=3.0
-	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PULL_REQUEST,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_PASS,USER_AGENT_MUTT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D258EC43381
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 19:59:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6BC1CC43381
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 20:00:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A677220449
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 19:59:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2BF5020449
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 20:00:11 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="HNfNGy6M"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726937AbfCLT7S (ORCPT
+        id S1727186AbfCLUAK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 12 Mar 2019 15:59:18 -0400
-Received: from outgoing-auth-1.mit.edu ([18.9.28.11]:53190 "EHLO
-        outgoing.mit.edu" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1726329AbfCLT7R (ORCPT
+        Tue, 12 Mar 2019 16:00:10 -0400
+Received: from aserp2130.oracle.com ([141.146.126.79]:56372 "EHLO
+        aserp2130.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726329AbfCLUAJ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 12 Mar 2019 15:59:17 -0400
-X-Greylist: delayed 491 seconds by postgrey-1.27 at vger.kernel.org; Tue, 12 Mar 2019 15:59:16 EDT
-Received: from callcc.thunk.org (guestnat-104-133-0-99.corp.google.com [104.133.0.99] (may be forged))
-        (authenticated bits=0)
-        (User authenticated as tytso@ATHENA.MIT.EDU)
-        by outgoing.mit.edu (8.14.7/8.12.4) with ESMTP id x2CJp0GK012123
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Tue, 12 Mar 2019 15:51:00 -0400
-Received: by callcc.thunk.org (Postfix, from userid 15806)
-        id B64FA4207E1; Tue, 12 Mar 2019 15:50:59 -0400 (EDT)
-Date:   Tue, 12 Mar 2019 15:50:59 -0400
-From:   "Theodore Ts'o" <tytso@mit.edu>
-To:     torvalds@linux-foundation.org
-Cc:     linux-kernel@vger.kernel.org, linux-ext4@vger.kernel.org
-Subject: [GIT PULL] ext4 changes for 5.1
-Message-ID: <20190312195059.GA19660@mit.edu>
-Mail-Followup-To: Theodore Ts'o <tytso@mit.edu>,
-        torvalds@linux-foundation.org, linux-kernel@vger.kernel.org,
-        linux-ext4@vger.kernel.org
+        Tue, 12 Mar 2019 16:00:09 -0400
+Received: from pps.filterd (aserp2130.oracle.com [127.0.0.1])
+        by aserp2130.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x2CJx5MX109207;
+        Tue, 12 Mar 2019 19:59:49 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=subject : to : cc :
+ references : from : message-id : date : mime-version : in-reply-to :
+ content-type : content-transfer-encoding; s=corp-2018-07-02;
+ bh=A9gtozJFv5iJI4Lopf5E2MEM4Cit9pl4LJXAm7hrIaU=;
+ b=HNfNGy6MLKML/gftAsYYxKcbb5V2y/J95OrbzuvtCMlRlroDupWboAUPv6W2O30oYMH3
+ ncwOenKTSc0IrwSt9A3qYnSVWRluJGESnk5sjN3vjVW7aTSPQmdNXjpWt4YEnnrtKoa6
+ JF6gUNTa/wls2MtPfUvnrqu+savyt/Nfvo/vc6kqFyds8BSDgVl9zn0/mJCChlEAyhgu
+ FB+t84+PjLGD/M4P79fuI+t4fXhgUFvRtz6t0p0Dp5gainpkfW40/LpfYsLm31TtG1t9
+ XPwJNkEEqvHugD4944rzrqiwu92EygE1hbnPSr+3JJKwjEQOZQ1v5PBAyGlH05P+kvhd ag== 
+Received: from userv0021.oracle.com (userv0021.oracle.com [156.151.31.71])
+        by aserp2130.oracle.com with ESMTP id 2r430eqf9m-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Tue, 12 Mar 2019 19:59:49 +0000
+Received: from userv0121.oracle.com (userv0121.oracle.com [156.151.31.72])
+        by userv0021.oracle.com (8.14.4/8.14.4) with ESMTP id x2CJxhY9015680
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Tue, 12 Mar 2019 19:59:43 GMT
+Received: from abhmp0004.oracle.com (abhmp0004.oracle.com [141.146.116.10])
+        by userv0121.oracle.com (8.14.4/8.13.8) with ESMTP id x2CJxbr9011784;
+        Tue, 12 Mar 2019 19:59:37 GMT
+Received: from [192.168.1.222] (/50.38.38.67)
+        by default (Oracle Beehive Gateway v4.0)
+        with ESMTP ; Tue, 12 Mar 2019 12:59:36 -0700
+Subject: Re: [PATCH 0/3] userfaultfd: allow to forbid unprivileged users
+To:     Peter Xu <peterx@redhat.com>, linux-kernel@vger.kernel.org
+Cc:     Paolo Bonzini <pbonzini@redhat.com>,
+        Hugh Dickins <hughd@google.com>,
+        Luis Chamberlain <mcgrof@kernel.org>,
+        Maxime Coquelin <maxime.coquelin@redhat.com>,
+        kvm@vger.kernel.org, Jerome Glisse <jglisse@redhat.com>,
+        Pavel Emelyanov <xemul@virtuozzo.com>,
+        Johannes Weiner <hannes@cmpxchg.org>,
+        Martin Cracauer <cracauer@cons.org>,
+        Denis Plotnikov <dplotnikov@virtuozzo.com>, linux-mm@kvack.org,
+        Marty McFadden <mcfadden8@llnl.gov>,
+        Maya Gokhale <gokhale2@llnl.gov>,
+        Andrea Arcangeli <aarcange@redhat.com>,
+        Mike Rapoport <rppt@linux.vnet.ibm.com>,
+        Kees Cook <keescook@chromium.org>,
+        Mel Gorman <mgorman@suse.de>,
+        "Kirill A . Shutemov" <kirill@shutemov.name>,
+        linux-fsdevel@vger.kernel.org,
+        "Dr . David Alan Gilbert" <dgilbert@redhat.com>,
+        Andrew Morton <akpm@linux-foundation.org>
+References: <20190311093701.15734-1-peterx@redhat.com>
+From:   Mike Kravetz <mike.kravetz@oracle.com>
+Message-ID: <58e63635-fc1b-cb53-a4d1-237e6b8b7236@oracle.com>
+Date:   Tue, 12 Mar 2019 12:59:34 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.5.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <20190311093701.15734-1-peterx@redhat.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-Proofpoint-Virus-Version: vendor=nai engine=5900 definitions=9193 signatures=668685
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
+ suspectscore=0 phishscore=0 bulkscore=0 spamscore=0 clxscore=1011
+ lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=681 adultscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1810050000
+ definitions=main-1903120135
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Sorry, I thought I had sent this a week ago, but I had failed to push
-the send button apparently...
+On 3/11/19 2:36 AM, Peter Xu wrote:
+> 
+> The "kvm" entry is a bit special here only to make sure that existing
+> users like QEMU/KVM won't break by this newly introduced flag.  What
+> we need to do is simply set the "unprivileged_userfaultfd" flag to
+> "kvm" here to automatically grant userfaultfd permission for processes
+> like QEMU/KVM without extra code to tweak these flags in the admin
+> code.
 
-The following changes since commit 49a57857aeea06ca831043acbb0fa5e0f50602fd:
+Another user is Oracle DB, specifically with hugetlbfs.  For them, we would
+like to add a special case like kvm described above.  The admin controls
+who can have access to hugetlbfs, so I think adding code to the open
+routine as in patch 2 of this series would seem to work.
 
-  Linux 5.0-rc3 (2019-01-21 13:14:44 +1300)
-
-are available in the Git repository at:
-
-  git://git.kernel.org/pub/scm/linux/kernel/git/tytso/ext4.git tags/ext4_for_linus
-
-for you to fetch changes up to 0df6f46995a9fc92a6b9e591428e77527dd9609a:
-
-  jbd2: jbd2_get_transaction does not need to return a value (2019-03-01 00:36:57 -0500)
-
-----------------------------------------------------------------
-A large number of bug fixes and cleanups.  One new feature to allow
-users to more easily find the jbd2 journal thread for a particular
-ext4 file system.
-
-----------------------------------------------------------------
-Andreas Dilger (1):
-      ext4: don't update s_rev_level if not required
-
-Dan Carpenter (1):
-      ext4: fix some error pointer dereferences
-
-Eric Whitney (1):
-      ext4: fix bigalloc cluster freeing when hole punching under load
-
-Geert Uytterhoeven (1):
-      ext4: Change debugging support help prefix from EXT4 to Ext4
-
-Jan Kara (1):
-      ext4: fix crash during online resizing
-
-Konstantin Khlebnikov (1):
-      ext4: add sysfs attr /sys/fs/ext4/<disk>/journal_task
-
-Liu Song (1):
-      jbd2: jbd2_get_transaction does not need to return a value
-
-Mathieu Malaterre (2):
-      ext4: annotate implicit fall throughs
-      ext4: annotate more implicit fall throughs
-
-Nikolay Borisov (1):
-      ext4: replace opencoded i_writecount usage with inode_is_open_for_write()
-
-Theodore Ts'o (4):
-      Revert "ext4: use ext4_write_inode() when fsyncing w/o a journal"
-      ext4: disallow files with EXT4_JOURNAL_DATA_FL from EXT4_IOC_SWAP_BOOT
-      jbd2: fix race when writing superblock
-      jbd2: fold jbd2_superblock_csum_{verify,set} into their callers
-
-Xiaoguang Wang (2):
-      jbd2: fix deadlock while checkpoint thread waits commit thread to finish
-      ext4: unlock unused_pages timely when doing writeback
-
-luojiajun (1):
-      jbd2: fix invalid descriptor block checksum
-
-yangerkun (4):
-      ext4: fix check of inode in swap_inode_boot_loader
-      ext4: cleanup pagecache before swap i_data
-      ext4: update quota information while swapping boot loader inode
-      ext4: add mask of ext4 flags to swap
-
-zhangyi (F) (5):
-      jbd2: clear dirty flag when revoking a buffer from an older transaction
-      jbd2: discard dirty data when forgetting an un-journalled buffer
-      ext4: cleanup clean_bdev_aliases() calls
-      jbd2: fix compile warning when using JBUFFER_TRACE
-      ext4: fix compile error when using BUFFER_TRACE
-
- Documentation/ABI/testing/sysfs-fs-ext4 |   7 +++
- fs/ext4/Kconfig                         |   2 +-
- fs/ext4/ext4.h                          |   9 ++-
- fs/ext4/extents.c                       |  29 ++++-----
- fs/ext4/fsync.c                         |  13 ++--
- fs/ext4/hash.c                          |   2 +
- fs/ext4/indirect.c                      |   6 ++
- fs/ext4/inode.c                         |  21 +++----
- fs/ext4/ioctl.c                         | 101 +++++++++++++++++++++++---------
- fs/ext4/mballoc.c                       |   7 +--
- fs/ext4/page-io.c                       |   4 +-
- fs/ext4/resize.c                        |   3 +-
- fs/ext4/super.c                         |   1 -
- fs/ext4/sysfs.c                         |  13 ++++
- fs/ext4/xattr.c                         |   3 +
- fs/jbd2/checkpoint.c                    |  17 +++++-
- fs/jbd2/commit.c                        |   6 +-
- fs/jbd2/journal.c                       |  90 ++++++++++++----------------
- fs/jbd2/transaction.c                   |  83 +++++++++++++++++++-------
- 19 files changed, 261 insertions(+), 156 deletions(-)
+However, I can imagine more special cases being added for other users.  And,
+once you have more than one special case then you may want to combine them.
+For example, kvm and hugetlbfs together.
+-- 
+Mike Kravetz
