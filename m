@@ -2,92 +2,81 @@ Return-Path: <SRS0=J4ZE=RP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_MUTT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 96859C43381
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 15:33:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 909FCC43381
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 15:33:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 61CBD2083D
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 15:33:21 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1552404801;
-	bh=ves5n6enpL+5V+AhpnpZHtzyJiCyHPWClcAOzEJHRhw=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=TrGiPze5+Pv4EhGW3YsjA/x5SrairMcO0NXUnt8jXpnol5uPh9eHOvz6xziqkVFlw
-	 ukZNXAfu+0SGvHwzdDmsai7/N2nn40Kv90q6IBqLSjqz/pQZYaSwqpxE00Gjpl+778
-	 sYzcyxFbVw1IYWWbLgCwxgieayHCDVamARFPUIZk=
+	by mail.kernel.org (Postfix) with ESMTP id 646DC2147C
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 15:33:32 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726890AbfCLPdU (ORCPT
+        id S1726910AbfCLPda (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 12 Mar 2019 11:33:20 -0400
-Received: from mx2.suse.de ([195.135.220.15]:44094 "EHLO mx1.suse.de"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726422AbfCLPdT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 12 Mar 2019 11:33:19 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx1.suse.de (Postfix) with ESMTP id 35CC6B69E;
-        Tue, 12 Mar 2019 15:33:17 +0000 (UTC)
-Date:   Tue, 12 Mar 2019 16:33:15 +0100
-From:   Michal Hocko <mhocko@kernel.org>
-To:     Matthew Wilcox <willy@infradead.org>
-Cc:     Suren Baghdasaryan <surenb@google.com>,
-        Sultan Alsawaf <sultan@kerneltoast.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Arve =?iso-8859-1?B?SGr4bm5lduVn?= <arve@android.com>,
-        Todd Kjos <tkjos@android.com>,
-        Martijn Coenen <maco@android.com>,
-        Joel Fernandes <joel@joelfernandes.org>,
-        Christian Brauner <christian@brauner.io>,
-        Ingo Molnar <mingo@redhat.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        LKML <linux-kernel@vger.kernel.org>, devel@driverdev.osuosl.org,
-        linux-mm <linux-mm@kvack.org>, Tim Murray <timmurray@google.com>
-Subject: Re: [RFC] simple_lmk: Introduce Simple Low Memory Killer for Android
-Message-ID: <20190312153315.GV5721@dhcp22.suse.cz>
-References: <20190310203403.27915-1-sultan@kerneltoast.com>
- <20190311174320.GC5721@dhcp22.suse.cz>
- <20190311175800.GA5522@sultan-box.localdomain>
- <CAJuCfpHTjXejo+u--3MLZZj7kWQVbptyya4yp1GLE3hB=BBX7w@mail.gmail.com>
- <20190311204626.GA3119@sultan-box.localdomain>
- <CAJuCfpGpBxofTT-ANEEY+dFCSdwkQswox3s8Uk9Eq0BnK9i0iA@mail.gmail.com>
- <20190312080532.GE5721@dhcp22.suse.cz>
- <20190312152541.GI19508@bombadil.infradead.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190312152541.GI19508@bombadil.infradead.org>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+        Tue, 12 Mar 2019 11:33:30 -0400
+Received: from hermes.aosc.io ([199.195.250.187]:40111 "EHLO hermes.aosc.io"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726711AbfCLPc7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 12 Mar 2019 11:32:59 -0400
+Received: from localhost (localhost [127.0.0.1]) (Authenticated sender: icenowy@aosc.io)
+        by hermes.aosc.io (Postfix) with ESMTPSA id 1610B15FCC6;
+        Tue, 12 Mar 2019 15:26:28 +0000 (UTC)
+From:   Icenowy Zheng <icenowy@aosc.io>
+To:     Rob Herring <robh+dt@kernel.org>,
+        Maxime Ripard <maxime.ripard@bootlin.com>,
+        Chen-Yu Tsai <wens@csie.org>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Jagan Teki <jagan@amarulasolutions.com>
+Cc:     devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-kernel@vger.kernel.org, linux-clk@vger.kernel.org,
+        linux-gpio@vger.kernel.org, linux-sunxi@googlegroups.com,
+        Icenowy Zheng <icenowy@aosc.io>
+Subject: [PATCH 12/14] ARM: dts: sun8i: V3/V3s/S3/S3L: add pinctrl for UART2 RX/TX
+Date:   Tue, 12 Mar 2019 23:22:54 +0800
+Message-Id: <20190312152256.35574-13-icenowy@aosc.io>
+In-Reply-To: <20190312152256.35574-1-icenowy@aosc.io>
+References: <20190312152256.35574-1-icenowy@aosc.io>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue 12-03-19 08:25:41, Matthew Wilcox wrote:
-> On Tue, Mar 12, 2019 at 09:05:32AM +0100, Michal Hocko wrote:
-> > On Mon 11-03-19 15:15:35, Suren Baghdasaryan wrote:
-> > > Yeah, killing speed is a well-known problem which we are considering
-> > > in LMKD. For example the recent LMKD change to assign process being
-> > > killed to a cpuset cgroup containing big cores cuts the kill time
-> > > considerably. This is not ideal and we are thinking about better ways
-> > > to expedite the cleanup process.
-> > 
-> > If you design is relies on the speed of killing then it is fundamentally
-> > flawed AFAICT. You cannot assume anything about how quickly a task dies.
-> > It might be blocked in an uninterruptible sleep or performin an
-> > operation which takes some time. Sure, oom_reaper might help here but
-> > still.
-> 
-> Many UNINTERRUPTIBLE sleeps can be converted to KILLABLE sleeps.  It just
-> needs someone to do the work.
+The UART2 RX/TX pins on Allwinner V3 series is at PB0/1, which is used
+as debugging UART on some boards.
 
-They can and should as much as possible. No question about that. But not
-all of them can and that is why nobody should be relying on that. That
-is the whole point of having the oom_reaper and async oom victim tear
-down.
+Add pinctrl node for them.
 
+Signed-off-by: Icenowy Zheng <icenowy@aosc.io>
+---
+ arch/arm/boot/dts/sun8i-v3s.dtsi | 7 +++++++
+ 1 file changed, 7 insertions(+)
+
+diff --git a/arch/arm/boot/dts/sun8i-v3s.dtsi b/arch/arm/boot/dts/sun8i-v3s.dtsi
+index 21e1806ca509..10795b5ec376 100644
+--- a/arch/arm/boot/dts/sun8i-v3s.dtsi
++++ b/arch/arm/boot/dts/sun8i-v3s.dtsi
+@@ -304,6 +304,11 @@
+ 				function = "uart0";
+ 			};
+ 
++			uart2_pins: uart2-pins {
++				pins = "PB0", "PB1";
++				function = "uart2";
++			};
++
+ 			mmc0_pins: mmc0-pins {
+ 				pins = "PF0", "PF1", "PF2", "PF3",
+ 				       "PF4", "PF5";
+@@ -377,6 +382,8 @@
+ 			reg-io-width = <4>;
+ 			clocks = <&ccu CLK_BUS_UART2>;
+ 			resets = <&ccu RST_BUS_UART2>;
++			pinctrl-0 = <&uart2_pins>;
++			pinctrl-names = "default";
+ 			status = "disabled";
+ 		};
+ 
 -- 
-Michal Hocko
-SUSE Labs
+2.18.1
+
