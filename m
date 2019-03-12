@@ -7,53 +7,47 @@ X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5D337C43381
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 17:48:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 58E7EC10F00
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 17:48:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2EEBB2175B
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 17:48:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 226082173C
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 17:48:58 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1552412932;
-	bh=/ciXxTgb6W/8AoTdx65+CQDi1rx4zcR8iAkMf56chNY=;
+	s=default; t=1552412938;
+	bh=zf3FyPapp3QQ0haG9WqdP21+9WWmHcr1SEngQUtczUk=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=lHehdRtMUcv2XZG2Sa7ZfHaaaDr3AC+jXTPN05c21JxFvMJhRRONHTNqSdq/UFITs
-	 eL40x2dMJ5UXh8PTRm4n3f7YsuedmW+w++ZsWjBCeRldhrOhEazWiqJYcMtuXdzufT
-	 IO/vbdKat28qulTTTdwToGshqDD04zwwhnAjw0SM=
+	b=zUIvQDJC8sC/yQmSyqVpK2jlcN+TQoqyWgyS6V2J/FvChHbPoYDbohn6p+l8vEOps
+	 /h9+xSl0/XormMjjLcaYPwmkD4lO68kozUtALzyC6yE20dsLVm3vyGu8dROLbzZD6m
+	 7a5iPrrdYIUMtuDUsVCMt/TuqpYGbXnrWMk88qzk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729278AbfCLRsu (ORCPT
+        id S1728556AbfCLRO4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 12 Mar 2019 13:48:50 -0400
-Received: from mail.kernel.org ([198.145.29.99]:54582 "EHLO mail.kernel.org"
+        Tue, 12 Mar 2019 13:14:56 -0400
+Received: from mail.kernel.org ([198.145.29.99]:52666 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728559AbfCLRO6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 12 Mar 2019 13:14:58 -0400
+        id S1728291AbfCLROQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 12 Mar 2019 13:14:16 -0400
 Received: from localhost (unknown [104.133.8.98])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id C9301206DF;
-        Tue, 12 Mar 2019 17:14:56 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 0D1ED217F9;
+        Tue, 12 Mar 2019 17:14:16 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1552410896;
-        bh=/ciXxTgb6W/8AoTdx65+CQDi1rx4zcR8iAkMf56chNY=;
+        s=default; t=1552410856;
+        bh=zf3FyPapp3QQ0haG9WqdP21+9WWmHcr1SEngQUtczUk=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=QaDLuHuYfrMUvG0brFoqmjwQWpkLwqAUMLJm4B69gWTQoSQUa5YD/ioaG+ouHbnLw
-         +4D15jKOkQiRTWozBJux1aaAYUfbShsIwMlDmhGrgCsxw0fLVP1mpnmerfESjpmam5
-         liM11h+ynl9Daiz5wJV8VO8IyuvvhXp1ONkbF1+A=
+        b=JZPZFz/z4ob+eBfUKSwAZrJoOUPGqODamxM100/wDMkNdaw0O6KvM5v8MfEvqdLPk
+         qWw5QMlPE1DAqGaIuvrx+XBJYFOnGCrsR0BQ1poDtlvlhlhRICTpU/o9H8lnucYOoU
+         1j8oFRl8hDP3uxs3tz+Oz/53WIgtc5aiUXbtuM1A=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Jiri Olsa <jolsa@kernel.org>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Masami Hiramatsu <mhiramat@kernel.org>,
-        Michael Petlan <mpetlan@redhat.com>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Nick Clifton <nickc@redhat.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Arnaldo Carvalho de Melo <acme@redhat.com>,
+        stable@vger.kernel.org, Yao Liu <yotta.liu@ucloud.cn>,
+        Anna Schumaker <Anna.Schumaker@Netapp.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 108/149] perf symbols: Filter out hidden symbols from labels
-Date:   Tue, 12 Mar 2019 10:08:46 -0700
-Message-Id: <20190312170358.566018492@linuxfoundation.org>
+Subject: [PATCH 4.19 034/149] nfs: Fix NULL pointer dereference of dev_name
+Date:   Tue, 12 Mar 2019 10:07:32 -0700
+Message-Id: <20190312170352.554891806@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190312170349.421581206@linuxfoundation.org>
 References: <20190312170349.421581206@linuxfoundation.org>
@@ -72,92 +66,54 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-[ Upstream commit 59a17706915fe5ea6f711e1f92d4fb706bce07fe ]
+[ Upstream commit 80ff00172407e0aad4b10b94ef0816fc3e7813cb ]
 
-When perf is built with the annobin plugin (RHEL8 build) extra symbols
-are added to its binary:
+There is a NULL pointer dereference of dev_name in nfs_parse_devname()
 
-  # nm perf | grep annobin | head -10
-  0000000000241100 t .annobin_annotate.c
-  0000000000326490 t .annobin_annotate.c
-  0000000000249255 t .annobin_annotate.c_end
-  00000000003283a8 t .annobin_annotate.c_end
-  00000000001bce18 t .annobin_annotate.c_end.hot
-  00000000001bce18 t .annobin_annotate.c_end.hot
-  00000000001bc3e2 t .annobin_annotate.c_end.unlikely
-  00000000001bc400 t .annobin_annotate.c_end.unlikely
-  00000000001bce18 t .annobin_annotate.c.hot
-  00000000001bce18 t .annobin_annotate.c.hot
+The oops looks something like:
+
+  BUG: unable to handle kernel NULL pointer dereference at 0000000000000000
   ...
-
-Those symbols have no use for report or annotation and should be
-skipped.  Moreover they interfere with the DWARF unwind test on the PPC
-arch, where they are mixed with checked symbols and then the test fails:
-
-  # perf test dwarf -v
-  59: Test dwarf unwind                                     :
-  --- start ---
-  test child forked, pid 8515
-  unwind: .annobin_dwarf_unwind.c:ip = 0x10dba40dc (0x2740dc)
+  RIP: 0010:nfs_fs_mount+0x3b6/0xc20 [nfs]
   ...
-  got: .annobin_dwarf_unwind.c 0x10dba40dc, expecting test__arch_unwind_sample
-  unwind: failed with 'no error'
+  Call Trace:
+   ? ida_alloc_range+0x34b/0x3d0
+   ? nfs_clone_super+0x80/0x80 [nfs]
+   ? nfs_free_parsed_mount_data+0x60/0x60 [nfs]
+   mount_fs+0x52/0x170
+   ? __init_waitqueue_head+0x3b/0x50
+   vfs_kern_mount+0x6b/0x170
+   do_mount+0x216/0xdc0
+   ksys_mount+0x83/0xd0
+   __x64_sys_mount+0x25/0x30
+   do_syscall_64+0x65/0x220
+   entry_SYSCALL_64_after_hwframe+0x49/0xbe
 
-The annobin symbols are defined as NOTYPE/LOCAL/HIDDEN:
+Fix this by adding a NULL check on dev_name
 
-  # readelf -s ./perf | grep annobin | head -1
-    40: 00000000001bce4f     0 NOTYPE  LOCAL  HIDDEN    13 .annobin_init.c
-
-They can still pass the check for the label symbol. Adding check for
-HIDDEN and INTERNAL (as suggested by Nick below) visibility and filter
-out such symbols.
-
->   Just to be awkward, if you are going to ignore STV_HIDDEN
->   symbols then you should probably also ignore STV_INTERNAL ones
->   as well...  Annobin does not generate them, but you never know,
->   one day some other tool might create some.
-
-Signed-off-by: Jiri Olsa <jolsa@kernel.org>
-Cc: Alexander Shishkin <alexander.shishkin@linux.intel.com>
-Cc: Masami Hiramatsu <mhiramat@kernel.org>
-Cc: Michael Petlan <mpetlan@redhat.com>
-Cc: Namhyung Kim <namhyung@kernel.org>
-Cc: Nick Clifton <nickc@redhat.com>
-Cc: Peter Zijlstra <peterz@infradead.org>
-Link: http://lkml.kernel.org/r/20190128133526.GD15461@krava
-Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
+Signed-off-by: Yao Liu <yotta.liu@ucloud.cn>
+Signed-off-by: Anna Schumaker <Anna.Schumaker@Netapp.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- tools/perf/util/symbol-elf.c | 9 ++++++++-
- 1 file changed, 8 insertions(+), 1 deletion(-)
+ fs/nfs/super.c | 5 +++++
+ 1 file changed, 5 insertions(+)
 
-diff --git a/tools/perf/util/symbol-elf.c b/tools/perf/util/symbol-elf.c
-index 6e70cc00c161..a701a8a48f00 100644
---- a/tools/perf/util/symbol-elf.c
-+++ b/tools/perf/util/symbol-elf.c
-@@ -87,6 +87,11 @@ static inline uint8_t elf_sym__type(const GElf_Sym *sym)
- 	return GELF_ST_TYPE(sym->st_info);
- }
+diff --git a/fs/nfs/super.c b/fs/nfs/super.c
+index 5ef2c71348bd..6b666d187907 100644
+--- a/fs/nfs/super.c
++++ b/fs/nfs/super.c
+@@ -1906,6 +1906,11 @@ static int nfs_parse_devname(const char *dev_name,
+ 	size_t len;
+ 	char *end;
  
-+static inline uint8_t elf_sym__visibility(const GElf_Sym *sym)
-+{
-+	return GELF_ST_VISIBILITY(sym->st_other);
-+}
++	if (unlikely(!dev_name || !*dev_name)) {
++		dfprintk(MOUNT, "NFS: device name not specified\n");
++		return -EINVAL;
++	}
 +
- #ifndef STT_GNU_IFUNC
- #define STT_GNU_IFUNC 10
- #endif
-@@ -111,7 +116,9 @@ static inline int elf_sym__is_label(const GElf_Sym *sym)
- 	return elf_sym__type(sym) == STT_NOTYPE &&
- 		sym->st_name != 0 &&
- 		sym->st_shndx != SHN_UNDEF &&
--		sym->st_shndx != SHN_ABS;
-+		sym->st_shndx != SHN_ABS &&
-+		elf_sym__visibility(sym) != STV_HIDDEN &&
-+		elf_sym__visibility(sym) != STV_INTERNAL;
- }
- 
- static bool elf_sym__filter(GElf_Sym *sym)
+ 	/* Is the host name protected with square brakcets? */
+ 	if (*dev_name == '[') {
+ 		end = strchr(++dev_name, ']');
 -- 
 2.19.1
 
