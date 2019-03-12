@@ -2,149 +2,164 @@ Return-Path: <SRS0=J4ZE=RP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 030BDC43381
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 02:04:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 81548C43381
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 02:04:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C85D921773
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 02:04:40 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1552356280;
-	bh=zP5HaEbyAi1/tHnsCx3bjeFJxS9yrQa45Kk4pAHlbNw=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=RTOdqOgBmoIo2//ISHxiI9osrP+c2NyXmcoD3Sw5mmbA2vR0zlbHgEJ/bT9D8VUrl
-	 lQRgBVMVuMmMO6oeybI240UEripAxWwzwJqwgtQ53g0wJEFaVYele5RjAQLZSgPyac
-	 VCysQ5ezejPHdnJfmwyylt1gsruHlf97H1yzCQxk=
+	by mail.kernel.org (Postfix) with ESMTP id 5B3C3214AE
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 02:04:47 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727073AbfCLCD1 (ORCPT
+        id S1726935AbfCLCEp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 11 Mar 2019 22:03:27 -0400
-Received: from mail.kernel.org ([198.145.29.99]:37264 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727008AbfCLCDY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 11 Mar 2019 22:03:24 -0400
-Received: from quaco.meukeo.local (unknown [179.97.35.11])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 35E49214AF;
-        Tue, 12 Mar 2019 02:03:19 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1552356203;
-        bh=zP5HaEbyAi1/tHnsCx3bjeFJxS9yrQa45Kk4pAHlbNw=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=mINZXMO+4rOOdhz7k7LPKfxuEJCFkcsxiDsus3+AIEpFWSyVFhE3Izq2Q3CftbRTO
-         iyucmsXCNIuMyBZHA3HRrYy9K4OsIWUAJ9x0zj4MOdy7TFi8hDR0KEpSTbd3sq0kNA
-         byPRJ/xrwKJABDsUSiw36WWdvH28uPcfI8l/ZTXc=
-From:   Arnaldo Carvalho de Melo <acme@kernel.org>
-To:     Ingo Molnar <mingo@kernel.org>
-Cc:     Jiri Olsa <jolsa@kernel.org>, Namhyung Kim <namhyung@kernel.org>,
-        Clark Williams <williams@redhat.com>,
-        linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
-        Tony Jones <tonyj@suse.de>,
-        Adrian Hunter <adrian.hunter@intel.com>,
-        Seeteena Thoufeek <s1seetee@linux.vnet.ibm.com>,
-        Arnaldo Carvalho de Melo <acme@redhat.com>
-Subject: [PATCH 17/30] perf script python: Add Python3 support to export-to-sqlite.py
-Date:   Mon, 11 Mar 2019 23:01:51 -0300
-Message-Id: <20190312020204.22092-18-acme@kernel.org>
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20190312020204.22092-1-acme@kernel.org>
-References: <20190312020204.22092-1-acme@kernel.org>
+        Mon, 11 Mar 2019 22:04:45 -0400
+Received: from szxga07-in.huawei.com ([45.249.212.35]:43518 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726616AbfCLCEk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 11 Mar 2019 22:04:40 -0400
+Received: from DGGEMS414-HUB.china.huawei.com (unknown [172.30.72.59])
+        by Forcepoint Email with ESMTP id DD00DF6DDB0A9B4B01F1;
+        Tue, 12 Mar 2019 10:04:38 +0800 (CST)
+Received: from localhost (10.177.31.96) by DGGEMS414-HUB.china.huawei.com
+ (10.3.19.214) with Microsoft SMTP Server id 14.3.408.0; Tue, 12 Mar 2019
+ 10:04:32 +0800
+From:   Yue Haibing <yuehaibing@huawei.com>
+To:     <davem@davemloft.net>, <joe@perches.com>,
+        <gregkh@linuxfoundation.org>
+CC:     <linux-kernel@vger.kernel.org>, <netdev@vger.kernel.org>,
+        YueHaibing <yuehaibing@huawei.com>
+Subject: [PATCH] appletalk: Fix potential NULL pointer dereference in unregister_snap_client
+Date:   Tue, 12 Mar 2019 10:04:26 +0800
+Message-ID: <20190312020426.4824-1-yuehaibing@huawei.com>
+X-Mailer: git-send-email 2.10.2.windows.1
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-Originating-IP: [10.177.31.96]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Tony Jones <tonyj@suse.de>
+From: YueHaibing <yuehaibing@huawei.com>
 
-Support both Python2 and Python3 in the export-to-sqlite.py script
+register_snap_client may return NULL, all the callers
+check it, but only print a warning. This will result in
+NULL pointer dereference in unregister_snap_client and other
+places.
 
-The use of 'from __future__' implies the minimum supported Python2 version
-is now v2.6
+It has always been used like this since v2.6
 
-Signed-off-by: Tony Jones <tonyj@suse.de>
-Acked-by: Adrian Hunter <adrian.hunter@intel.com>
-Link: http://lkml.kernel.org/r/20190309000518.2438-4-tonyj@suse.de
-Signed-off-by: Seeteena Thoufeek <s1seetee@linux.vnet.ibm.com>
-Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
+Reported-by: Dan Carpenter <dan.carpenter@oracle.com>
+Signed-off-by: YueHaibing <yuehaibing@huawei.com>
 ---
- tools/perf/scripts/python/export-to-sqlite.py | 23 +++++++++++--------
- 1 file changed, 14 insertions(+), 9 deletions(-)
+ include/linux/atalk.h |  2 +-
+ net/appletalk/aarp.c  | 13 ++++++++++---
+ net/appletalk/ddp.c   | 20 ++++++++++++--------
+ 3 files changed, 23 insertions(+), 12 deletions(-)
 
-diff --git a/tools/perf/scripts/python/export-to-sqlite.py b/tools/perf/scripts/python/export-to-sqlite.py
-index eb63e6c7107f..3da338243aed 100644
---- a/tools/perf/scripts/python/export-to-sqlite.py
-+++ b/tools/perf/scripts/python/export-to-sqlite.py
-@@ -10,6 +10,8 @@
- # FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for
- # more details.
+diff --git a/include/linux/atalk.h b/include/linux/atalk.h
+index 5a90f28..0e5265a 100644
+--- a/include/linux/atalk.h
++++ b/include/linux/atalk.h
+@@ -108,7 +108,7 @@ static __inline__ struct elapaarp *aarp_hdr(struct sk_buff *skb)
+ #define AARP_RESOLVE_TIME	(10 * HZ)
  
-+from __future__ import print_function
+ extern struct datalink_proto *ddp_dl, *aarp_dl;
+-extern void aarp_proto_init(void);
++extern int aarp_proto_init(void);
+ 
+ /* Inter module exports */
+ 
+diff --git a/net/appletalk/aarp.c b/net/appletalk/aarp.c
+index 49a16ce..d11372d 100644
+--- a/net/appletalk/aarp.c
++++ b/net/appletalk/aarp.c
+@@ -879,15 +879,22 @@ static struct notifier_block aarp_notifier = {
+ 
+ static unsigned char aarp_snap_id[] = { 0x00, 0x00, 0x00, 0x80, 0xF3 };
+ 
+-void __init aarp_proto_init(void)
++int __init aarp_proto_init(void)
+ {
++	int rc;
 +
- import os
- import sys
- import struct
-@@ -60,11 +62,14 @@ perf_db_export_mode = True
- perf_db_export_calls = False
- perf_db_export_callchains = False
+ 	aarp_dl = register_snap_client(aarp_snap_id, aarp_rcv);
+-	if (!aarp_dl)
++	if (!aarp_dl) {
+ 		printk(KERN_CRIT "Unable to register AARP with SNAP.\n");
++		return -ENOMEM;
++	}
+ 	timer_setup(&aarp_timer, aarp_expire_timeout, 0);
+ 	aarp_timer.expires  = jiffies + sysctl_aarp_expiry_time;
+ 	add_timer(&aarp_timer);
+-	register_netdevice_notifier(&aarp_notifier);
++	rc = register_netdevice_notifier(&aarp_notifier);
++	if (rc)
++		unregister_snap_client(aarp_dl);
++	return rc;
+ }
  
-+def printerr(*args, **keyword_args):
-+	print(*args, file=sys.stderr, **keyword_args)
+ /* Remove the AARP entries associated with a device. */
+diff --git a/net/appletalk/ddp.c b/net/appletalk/ddp.c
+index 795fbc6..709d254 100644
+--- a/net/appletalk/ddp.c
++++ b/net/appletalk/ddp.c
+@@ -1904,9 +1904,6 @@ static unsigned char ddp_snap_id[] = { 0x08, 0x00, 0x07, 0x80, 0x9B };
+ EXPORT_SYMBOL(atrtr_get_dev);
+ EXPORT_SYMBOL(atalk_find_dev_addr);
+ 
+-static const char atalk_err_snap[] __initconst =
+-	KERN_CRIT "Unable to register DDP with SNAP.\n";
+-
+ /* Called by proto.c on kernel start up */
+ static int __init atalk_init(void)
+ {
+@@ -1921,17 +1918,22 @@ static int __init atalk_init(void)
+ 		goto out_proto;
+ 
+ 	ddp_dl = register_snap_client(ddp_snap_id, atalk_rcv);
+-	if (!ddp_dl)
+-		printk(atalk_err_snap);
++	if (!ddp_dl) {
++		pr_crit("Unable to register DDP with SNAP.\n");
++		goto out_sock;
++	}
+ 
+ 	dev_add_pack(&ltalk_packet_type);
+ 	dev_add_pack(&ppptalk_packet_type);
+ 
+ 	rc = register_netdevice_notifier(&ddp_notifier);
+ 	if (rc)
+-		goto out_sock;
++		goto out_snap;
 +
- def usage():
--	print >> sys.stderr, "Usage is: export-to-sqlite.py <database name> [<columns>] [<calls>] [<callchains>]"
--	print >> sys.stderr, "where:	columns		'all' or 'branches'"
--	print >> sys.stderr, "		calls		'calls' => create calls and call_paths table"
--	print >> sys.stderr, "		callchains	'callchains' => create call_paths table"
-+	printerr("Usage is: export-to-sqlite.py <database name> [<columns>] [<calls>] [<callchains>]");
-+	printerr("where:	columns		'all' or 'branches'");
-+	printerr("		calls		'calls' => create calls and call_paths table");
-+	printerr("		callchains	'callchains' => create call_paths table");
- 	raise Exception("Too few arguments")
++	rc = aarp_proto_init();
++	if (rc)
++		goto out_dev;
  
- if (len(sys.argv) < 2):
-@@ -100,7 +105,7 @@ def do_query_(q):
- 		return
- 	raise Exception("Query failed: " + q.lastError().text())
- 
--print datetime.datetime.today(), "Creating database..."
-+print(datetime.datetime.today(), "Creating database ...")
- 
- db_exists = False
- try:
-@@ -378,7 +383,7 @@ if perf_db_export_calls:
- 	call_query.prepare("INSERT INTO calls VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)")
- 
- def trace_begin():
--	print datetime.datetime.today(), "Writing records..."
-+	print(datetime.datetime.today(), "Writing records...")
- 	do_query(query, 'BEGIN TRANSACTION')
- 	# id == 0 means unknown.  It is easier to create records for them than replace the zeroes with NULLs
- 	evsel_table(0, "unknown")
-@@ -397,14 +402,14 @@ unhandled_count = 0
- def trace_end():
- 	do_query(query, 'END TRANSACTION')
- 
--	print datetime.datetime.today(), "Adding indexes"
-+	print(datetime.datetime.today(), "Adding indexes")
- 	if perf_db_export_calls:
- 		do_query(query, 'CREATE INDEX pcpid_idx ON calls (parent_call_path_id)')
- 		do_query(query, 'CREATE INDEX pid_idx ON calls (parent_id)')
- 
- 	if (unhandled_count):
--		print datetime.datetime.today(), "Warning: ", unhandled_count, " unhandled events"
--	print datetime.datetime.today(), "Done"
-+		print(datetime.datetime.today(), "Warning: ", unhandled_count, " unhandled events")
-+	print(datetime.datetime.today(), "Done")
- 
- def trace_unhandled(event_name, context, event_fields_dict):
- 	global unhandled_count
+-	aarp_proto_init();
+ 	rc = atalk_proc_init();
+ 	if (rc)
+ 		goto out_aarp;
+@@ -1945,11 +1947,13 @@ static int __init atalk_init(void)
+ 	atalk_proc_exit();
+ out_aarp:
+ 	aarp_cleanup_module();
++out_dev:
+ 	unregister_netdevice_notifier(&ddp_notifier);
+-out_sock:
++out_snap:
+ 	dev_remove_pack(&ppptalk_packet_type);
+ 	dev_remove_pack(&ltalk_packet_type);
+ 	unregister_snap_client(ddp_dl);
++out_sock:
+ 	sock_unregister(PF_APPLETALK);
+ out_proto:
+ 	proto_unregister(&ddp_proto);
 -- 
-2.20.1
+2.7.0
+
 
