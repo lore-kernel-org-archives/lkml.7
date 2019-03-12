@@ -4,50 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1D44BC43381
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 17:27:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 600D7C43381
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 17:27:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E27542173C
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 17:27:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2DDCB2171F
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 17:27:56 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1552411670;
-	bh=y0uGJNQHFNUt4qmcnnHkvPcpmZ6bMrlX3CCv5odF8uI=;
+	s=default; t=1552411676;
+	bh=nRevLH+zr1a37U0j/mVmu2vLuSjYIQixjau9UW74pHg=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=cPmUCp+Ll8We78MW+QlcoCnvg7eYFgmKShuNGgTEkYvz+wByk+hPAZ5UL25vPWAmH
-	 ozAsC7q84MAVY6j/2yFccI5+gqU+YZIm58Hjiy1WgHdAeaOaPeNO3MpfjCbCesRPgS
-	 Hl40M53PW2qU9wzB/NIUEuQtilAgwNUf5xfp00KI=
+	b=xmYaPKZ2LJDhM5MSAtyh2mpnuKpVwzLqW+ae9jE4G0Ax0rsbI9Jit4Ys+HXCcjwTk
+	 wkBGWpFA8TX9jvCWNcSkOohZTUNnljgUVBRxAp62PvHxpAFSixcTVS9wediKec07UR
+	 A0j2xiDUK1u1yFxr1qObUqNXFJFPcrVloFmoH5rU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729675AbfCLR1s (ORCPT
+        id S1729763AbfCLR1y (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 12 Mar 2019 13:27:48 -0400
-Received: from mail.kernel.org ([198.145.29.99]:33574 "EHLO mail.kernel.org"
+        Tue, 12 Mar 2019 13:27:54 -0400
+Received: from mail.kernel.org ([198.145.29.99]:33606 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729660AbfCLRRg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 12 Mar 2019 13:17:36 -0400
+        id S1729657AbfCLRRf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 12 Mar 2019 13:17:35 -0400
 Received: from localhost (unknown [104.133.8.98])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 5ABF821741;
-        Tue, 12 Mar 2019 17:17:35 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id A30C42087C;
+        Tue, 12 Mar 2019 17:17:34 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1552411055;
-        bh=y0uGJNQHFNUt4qmcnnHkvPcpmZ6bMrlX3CCv5odF8uI=;
+        s=default; t=1552411054;
+        bh=nRevLH+zr1a37U0j/mVmu2vLuSjYIQixjau9UW74pHg=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=WjE0GbdFlmqXlyIoE+Y0ujOcAJno+rBS+j+quo7qk4ukuwRVh8PSQ01zEc7Fl1L0B
-         Brcxe7xLRwnmBo8QWLm5muX9veMcLxjco1SZeTn/nDCadrRJ3YZNDEpM8Sn6NQ9HoP
-         g+CcynmdowG27t265H5pmBg6cVxixCXE2Rkmn9nU=
+        b=xMQ8dP74WRMQHvUHZYkgE7aC9pZHtlfPnyMr2nrz/UJ7jG40sLa+beJ4loU6+PbAz
+         KKCfydJv1etciLe3uUbslZ8eXRsfvlhGpBf+2BfD/x0LklY2K3ecXWlyA1bvX/0mjZ
+         n7qWUppUXLwNPcVPSf+D3Srzf+P/n4goB1dnqtms=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Sergey Nazarov <s-nazarov@yandex.ru>,
-        Paul Moore <paul@paul-moore.com>,
+        stable@vger.kernel.org, Paul Durrant <paul.durrant@citrix.com>,
+        Igor Druzhinin <igor.druzhinin@citrix.com>,
+        Wei Liu <wei.liu2@citrix.com>,
         "David S. Miller" <davem@davemloft.net>
-Subject: [PATCH 4.9 23/96] net: Add __icmp_send helper.
-Date:   Tue, 12 Mar 2019 10:09:41 -0700
-Message-Id: <20190312171036.260305074@linuxfoundation.org>
+Subject: [PATCH 4.9 22/96] xen-netback: fix occasional leak of grant ref mappings under memory pressure
+Date:   Tue, 12 Mar 2019 10:09:40 -0700
+Message-Id: <20190312171036.191773014@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190312171034.530434962@linuxfoundation.org>
 References: <20190312171034.530434962@linuxfoundation.org>
@@ -66,75 +67,64 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-From: Nazarov Sergey <s-nazarov@yandex.ru>
+From: Igor Druzhinin <igor.druzhinin@citrix.com>
 
-[ Upstream commit 9ef6b42ad6fd7929dd1b6092cb02014e382c6a91 ]
+[ Upstream commit 99e87f56b48f490fb16b6e0f74691c1e664dea95 ]
 
-Add __icmp_send function having ip_options struct parameter
+Zero-copy callback flag is not yet set on frag list skb at the moment
+xenvif_handle_frag_list() returns -ENOMEM. This eventually results in
+leaking grant ref mappings since xenvif_zerocopy_callback() is never
+called for these fragments. Those eventually build up and cause Xen
+to kill Dom0 as the slots get reused for new mappings:
 
-Signed-off-by: Sergey Nazarov <s-nazarov@yandex.ru>
-Reviewed-by: Paul Moore <paul@paul-moore.com>
+"d0v0 Attempt to implicitly unmap a granted PTE c010000329fce005"
+
+That behavior is observed under certain workloads where sudden spikes
+of page cache writes coexist with active atomic skb allocations from
+network traffic. Additionally, rework the logic to deal with frag_list
+deallocation in a single place.
+
+Signed-off-by: Paul Durrant <paul.durrant@citrix.com>
+Signed-off-by: Igor Druzhinin <igor.druzhinin@citrix.com>
+Acked-by: Wei Liu <wei.liu2@citrix.com>
 Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- include/net/icmp.h |    9 ++++++++-
- net/ipv4/icmp.c    |    7 ++++---
- 2 files changed, 12 insertions(+), 4 deletions(-)
+ drivers/net/xen-netback/netback.c |   10 +++++-----
+ 1 file changed, 5 insertions(+), 5 deletions(-)
 
---- a/include/net/icmp.h
-+++ b/include/net/icmp.h
-@@ -22,6 +22,7 @@
+--- a/drivers/net/xen-netback/netback.c
++++ b/drivers/net/xen-netback/netback.c
+@@ -1074,11 +1074,6 @@ static int xenvif_handle_frag_list(struc
+ 		skb_frag_size_set(&frags[i], len);
+ 	}
  
- #include <net/inet_sock.h>
- #include <net/snmp.h>
-+#include <net/ip.h>
+-	/* Copied all the bits from the frag list -- free it. */
+-	skb_frag_list_init(skb);
+-	xenvif_skb_zerocopy_prepare(queue, nskb);
+-	kfree_skb(nskb);
+-
+ 	/* Release all the original (foreign) frags. */
+ 	for (f = 0; f < skb_shinfo(skb)->nr_frags; f++)
+ 		skb_frag_unref(skb, f);
+@@ -1147,6 +1142,8 @@ static int xenvif_tx_submit(struct xenvi
+ 		xenvif_fill_frags(queue, skb);
  
- struct icmp_err {
-   int		errno;
-@@ -39,7 +40,13 @@ struct net_proto_family;
- struct sk_buff;
- struct net;
+ 		if (unlikely(skb_has_frag_list(skb))) {
++			struct sk_buff *nskb = skb_shinfo(skb)->frag_list;
++			xenvif_skb_zerocopy_prepare(queue, nskb);
+ 			if (xenvif_handle_frag_list(queue, skb)) {
+ 				if (net_ratelimit())
+ 					netdev_err(queue->vif->dev,
+@@ -1155,6 +1152,9 @@ static int xenvif_tx_submit(struct xenvi
+ 				kfree_skb(skb);
+ 				continue;
+ 			}
++			/* Copied all the bits from the frag list -- free it. */
++			skb_frag_list_init(skb);
++			kfree_skb(nskb);
+ 		}
  
--void icmp_send(struct sk_buff *skb_in, int type, int code, __be32 info);
-+void __icmp_send(struct sk_buff *skb_in, int type, int code, __be32 info,
-+		 const struct ip_options *opt);
-+static inline void icmp_send(struct sk_buff *skb_in, int type, int code, __be32 info)
-+{
-+	__icmp_send(skb_in, type, code, info, &IPCB(skb_in)->opt);
-+}
-+
- int icmp_rcv(struct sk_buff *skb);
- void icmp_err(struct sk_buff *skb, u32 info);
- int icmp_init(void);
---- a/net/ipv4/icmp.c
-+++ b/net/ipv4/icmp.c
-@@ -565,7 +565,8 @@ relookup_failed:
-  *			MUST reply to only the first fragment.
-  */
- 
--void icmp_send(struct sk_buff *skb_in, int type, int code, __be32 info)
-+void __icmp_send(struct sk_buff *skb_in, int type, int code, __be32 info,
-+		 const struct ip_options *opt)
- {
- 	struct iphdr *iph;
- 	int room;
-@@ -679,7 +680,7 @@ void icmp_send(struct sk_buff *skb_in, i
- 					  iph->tos;
- 	mark = IP4_REPLY_MARK(net, skb_in->mark);
- 
--	if (ip_options_echo(&icmp_param->replyopts.opt.opt, skb_in))
-+	if (__ip_options_echo(&icmp_param->replyopts.opt.opt, skb_in, opt))
- 		goto out_unlock;
- 
- 
-@@ -731,7 +732,7 @@ out_free:
- 	kfree(icmp_param);
- out:;
- }
--EXPORT_SYMBOL(icmp_send);
-+EXPORT_SYMBOL(__icmp_send);
- 
- 
- static void icmp_socket_deliver(struct sk_buff *skb, u32 info)
+ 		skb->dev      = queue->vif->dev;
 
 
