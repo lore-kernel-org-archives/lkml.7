@@ -4,51 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EC9D2C43381
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 18:01:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8361BC43381
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 18:01:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BEA5E205C9
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 18:01:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 54B80205C9
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 18:01:40 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1552413692;
-	bh=3E7Y+jFTF6pggrBPwxeo2pEef+GGWto3x4OzBdY34QY=;
+	s=default; t=1552413700;
+	bh=B9LOU82fvSROLQkTZaLRax5A6S0zwpbmGXxZz51ibuY=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=x0leogJznv5Bc4K6hMhpzw1ZqZvT1/KPAmUO5UZ7d1kybwKbOej4v8AwawIFsCRW9
-	 kWnjcsX+PSQs7aCQ4gilPo7d/8W19TPn8AUWH0Vdzke5Eiqtoon1L2kLYIUrrnJ41w
-	 ePMmzKcv/MS38GlGtLPBtPOfPYrj2y73FYoH5hsY=
+	b=M7HWDA/RqwH/EalOyFw/RCgOfm0evOJMUOz1suClu2K8EoNYkIaa3hCodnRx17J8e
+	 +QKMNAc4/7bRbgM0aRlspxL93yVJ0iQjPU8VeHWrhas4lrPjE85WPAZ8TloinvHbWs
+	 y2upURr/BJcGJl3nYILxr/vJPs6EvGpEdG77G4qY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728724AbfCLSBb (ORCPT
+        id S1728558AbfCLSBj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 12 Mar 2019 14:01:31 -0400
-Received: from mail.kernel.org ([198.145.29.99]:49666 "EHLO mail.kernel.org"
+        Tue, 12 Mar 2019 14:01:39 -0400
+Received: from mail.kernel.org ([198.145.29.99]:49536 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727828AbfCLRNL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S1727820AbfCLRNL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Tue, 12 Mar 2019 13:13:11 -0400
 Received: from localhost (unknown [104.133.8.98])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 2315E2173C;
-        Tue, 12 Mar 2019 17:13:11 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 6AEAA217D4;
+        Tue, 12 Mar 2019 17:13:10 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1552410791;
-        bh=3E7Y+jFTF6pggrBPwxeo2pEef+GGWto3x4OzBdY34QY=;
+        s=default; t=1552410790;
+        bh=B9LOU82fvSROLQkTZaLRax5A6S0zwpbmGXxZz51ibuY=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=0F0aHlRxp0Lih6Nl7eKX5sdynDsgWYflr20KWjDOe9OSttZyHwZDexbWFgLJh8DUx
-         oRhYYjuKcsuh3GCl7yK5j/43upXBok3SqrzUTk7wcxKrxMNs6W/6prM1dBMtos3wKs
-         a1NdewMFjUZRaVVlqAb7mdXr51Rxe645heaHGxJU=
+        b=Q018Ldomh8IkOGBp8Mh0bTOjrlI/x2/qGeiKL7yNrf2gY/sGI7aWOTxFc59ztKpQy
+         9GAwkwGeI23RSV9JQtrSFB/GP86YVyk1l+GrGMm71WA9Gu9RuqkaPzDMVCxnRKEtG9
+         deRtQBaXqyBCoph4FU4gyAYSBo/zAtvsv/pDHd4E=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Philip Yang <Philip.Yang@amd.com>,
-        =?UTF-8?q?Christian=20K=C3=B6nig?= <christian.koenig@amd.com>,
-        Alex Deucher <alexander.deucher@amd.com>,
+        stable@vger.kernel.org, Julian Wiedmann <jwi@linux.ibm.com>,
+        Alexandra Winter <wintera@linux.ibm.com>,
+        "David S. Miller" <davem@davemloft.net>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.20 135/171] drm/amdgpu: use spin_lock_irqsave to protect vm_manager.pasid_idr
-Date:   Tue, 12 Mar 2019 10:08:35 -0700
-Message-Id: <20190312170359.319561746@linuxfoundation.org>
+Subject: [PATCH 4.20 126/171] s390/qeth: fix use-after-free in error path
+Date:   Tue, 12 Mar 2019 10:08:26 -0700
+Message-Id: <20190312170358.610986906@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190312170347.868927101@linuxfoundation.org>
 References: <20190312170347.868927101@linuxfoundation.org>
@@ -67,41 +67,68 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-[ Upstream commit 0a5f49cbf9d6ad3721c16f8a6d823363ea7a160f ]
+[ Upstream commit afa0c5904ba16d59b0454f7ee4c807dae350f432 ]
 
-amdgpu_vm_get_task_info is called from interrupt handler and sched timeout
-workqueue, we should use irq version spin_lock to avoid deadlock.
+The error path in qeth_alloc_qdio_buffers() that takes care of
+cleaning up the Output Queues is buggy. It first frees the queue, but
+then calls qeth_clear_outq_buffers() with that very queue struct.
 
-Signed-off-by: Philip Yang <Philip.Yang@amd.com>
-Reviewed-by: Christian König <christian.koenig@amd.com>
-Signed-off-by: Alex Deucher <alexander.deucher@amd.com>
+Make the call to qeth_clear_outq_buffers() part of the free action
+(in the correct order), and while at it fix the naming of the helper.
+
+Fixes: 0da9581ddb0f ("qeth: exploit asynchronous delivery of storage blocks")
+Signed-off-by: Julian Wiedmann <jwi@linux.ibm.com>
+Reviewed-by: Alexandra Winter <wintera@linux.ibm.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/gpu/drm/amd/amdgpu/amdgpu_vm.c | 5 +++--
- 1 file changed, 3 insertions(+), 2 deletions(-)
+ drivers/s390/net/qeth_core_main.c | 15 ++++++---------
+ 1 file changed, 6 insertions(+), 9 deletions(-)
 
-diff --git a/drivers/gpu/drm/amd/amdgpu/amdgpu_vm.c b/drivers/gpu/drm/amd/amdgpu/amdgpu_vm.c
-index 62df4bd0a0fc..16c83155ef5c 100644
---- a/drivers/gpu/drm/amd/amdgpu/amdgpu_vm.c
-+++ b/drivers/gpu/drm/amd/amdgpu/amdgpu_vm.c
-@@ -3405,14 +3405,15 @@ void amdgpu_vm_get_task_info(struct amdgpu_device *adev, unsigned int pasid,
- 			 struct amdgpu_task_info *task_info)
- {
- 	struct amdgpu_vm *vm;
-+	unsigned long flags;
- 
--	spin_lock(&adev->vm_manager.pasid_lock);
-+	spin_lock_irqsave(&adev->vm_manager.pasid_lock, flags);
- 
- 	vm = idr_find(&adev->vm_manager.pasid_idr, pasid);
- 	if (vm)
- 		*task_info = vm->task_info;
- 
--	spin_unlock(&adev->vm_manager.pasid_lock);
-+	spin_unlock_irqrestore(&adev->vm_manager.pasid_lock, flags);
+diff --git a/drivers/s390/net/qeth_core_main.c b/drivers/s390/net/qeth_core_main.c
+index 623ddda5d2ba..89cc172820ca 100644
+--- a/drivers/s390/net/qeth_core_main.c
++++ b/drivers/s390/net/qeth_core_main.c
+@@ -2397,11 +2397,12 @@ static int qeth_init_qdio_out_buf(struct qeth_qdio_out_q *q, int bidx)
+ 	return 0;
  }
  
- /**
+-static void qeth_free_qdio_out_buf(struct qeth_qdio_out_q *q)
++static void qeth_free_output_queue(struct qeth_qdio_out_q *q)
+ {
+ 	if (!q)
+ 		return;
+ 
++	qeth_clear_outq_buffers(q, 1);
+ 	qdio_free_buffers(q->qdio_bufs, QDIO_MAX_BUFFERS_PER_Q);
+ 	kfree(q);
+ }
+@@ -2475,10 +2476,8 @@ static int qeth_alloc_qdio_buffers(struct qeth_card *card)
+ 		card->qdio.out_qs[i]->bufs[j] = NULL;
+ 	}
+ out_freeoutq:
+-	while (i > 0) {
+-		qeth_free_qdio_out_buf(card->qdio.out_qs[--i]);
+-		qeth_clear_outq_buffers(card->qdio.out_qs[i], 1);
+-	}
++	while (i > 0)
++		qeth_free_output_queue(card->qdio.out_qs[--i]);
+ 	kfree(card->qdio.out_qs);
+ 	card->qdio.out_qs = NULL;
+ out_freepool:
+@@ -2511,10 +2510,8 @@ static void qeth_free_qdio_buffers(struct qeth_card *card)
+ 	qeth_free_buffer_pool(card);
+ 	/* free outbound qdio_qs */
+ 	if (card->qdio.out_qs) {
+-		for (i = 0; i < card->qdio.no_out_queues; ++i) {
+-			qeth_clear_outq_buffers(card->qdio.out_qs[i], 1);
+-			qeth_free_qdio_out_buf(card->qdio.out_qs[i]);
+-		}
++		for (i = 0; i < card->qdio.no_out_queues; i++)
++			qeth_free_output_queue(card->qdio.out_qs[i]);
+ 		kfree(card->qdio.out_qs);
+ 		card->qdio.out_qs = NULL;
+ 	}
 -- 
 2.19.1
 
