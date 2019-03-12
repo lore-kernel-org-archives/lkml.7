@@ -2,191 +2,196 @@ Return-Path: <SRS0=J4ZE=RP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_PASS,UNPARSEABLE_RELAY autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 36E17C43381
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 18:03:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C2CEFC43381
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 18:03:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 09920205C9
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 18:03:36 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1552413816;
-	bh=YAS7rbk2w4BoFsfE17iaQzeXeoOHn+dkr7vPk7J0dGU=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=hsjxjRzMpxvlojXaeGrDjmPQ8OQ9LkvQroSBErPaVmWN4XJ/Q83O7mNjQzRunNV2w
-	 iFzyEW98bGgJI2NCh50Wa98aZBjJIU4z1dHfxXl+mmsFppiZTXqiMf9xrS2RrX/qaH
-	 YLB1SlVGNmrljt09fXe+cI4LRTpQT9xTaUVcoyIQ=
+	by mail.kernel.org (Postfix) with ESMTP id 85AB021734
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 18:03:41 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="lUPTn3ae"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728859AbfCLSDe (ORCPT
+        id S1728874AbfCLSDj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 12 Mar 2019 14:03:34 -0400
-Received: from mail.kernel.org ([198.145.29.99]:48892 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727685AbfCLRMz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 12 Mar 2019 13:12:55 -0400
-Received: from localhost (unknown [104.133.8.98])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 9B4A4217D8;
-        Tue, 12 Mar 2019 17:12:53 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1552410773;
-        bh=YAS7rbk2w4BoFsfE17iaQzeXeoOHn+dkr7vPk7J0dGU=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=cQWPzeyA+Qwhm2BmlthK9nvw63YlO+qIbKIc/DZ8K6WZItR2rfOT5CK+Ar70qb77b
-         NSr3EuEy7Yg96HuI8mn68Ldndlc5HILeN8JR2OCYeonunyaI/tZlKinJVRQOiZau1X
-         PoDX3ch4m921He9jWzKNUB72l3J3d99sH4Zh5HEw=
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     linux-kernel@vger.kernel.org
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Chris Wilson <chris@chris-wilson.co.uk>,
-        Alex Deucher <alexander.deucher@amd.com>,
-        =?UTF-8?q?Christian=20K=C3=B6nig?= <christian.koenig@amd.com>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.20 103/171] drm/amdgpu: Transfer fences to dmabuf importer
-Date:   Tue, 12 Mar 2019 10:08:03 -0700
-Message-Id: <20190312170356.947364270@linuxfoundation.org>
-X-Mailer: git-send-email 2.21.0
-In-Reply-To: <20190312170347.868927101@linuxfoundation.org>
-References: <20190312170347.868927101@linuxfoundation.org>
-User-Agent: quilt/0.65
-X-stable: review
-X-Patchwork-Hint: ignore
+        Tue, 12 Mar 2019 14:03:39 -0400
+Received: from userp2120.oracle.com ([156.151.31.85]:49690 "EHLO
+        userp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727685AbfCLSDh (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 12 Mar 2019 14:03:37 -0400
+Received: from pps.filterd (userp2120.oracle.com [127.0.0.1])
+        by userp2120.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x2CHsUhM165160;
+        Tue, 12 Mar 2019 18:02:47 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=subject : to : cc :
+ references : from : message-id : date : mime-version : in-reply-to :
+ content-type : content-transfer-encoding; s=corp-2018-07-02;
+ bh=MVE2QKSq0HBi0ifLK6r/8roWIb0piqG77FSS+ol3O3k=;
+ b=lUPTn3aep3zmnAwsd9lPzfc99ETYH3Qjx6GygTykkFCImAJCUEektM/1jeOzXZRRLJO5
+ hGmRwMQL0Ixm+eCiWruqmOVDvAoHYS+e3vy6vyEmWoZlrDp31SiJBqNdGrh+6iYXt0W/
+ HX4oi0GJ/bA6vBa9bpC2trleOne6HMuLpQnA3aDYleqZnoGkOB50g6TXm6tlUVKxfSCd
+ lOrK8wohhuHrIbT0voPubsLuNfxbpp2Keyc7SsSNL2PZhu+4IJ8wct5bpvQgX6g++0lH
+ fdYhawXuSjjUhZaC76T9Qhb7Cl6kDUkJag0XHYdjjJj4Ym2m0H25uXbZOFccF9FB7R0d Xw== 
+Received: from aserv0022.oracle.com (aserv0022.oracle.com [141.146.126.234])
+        by userp2120.oracle.com with ESMTP id 2r464rebce-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Tue, 12 Mar 2019 18:02:46 +0000
+Received: from aserv0122.oracle.com (aserv0122.oracle.com [141.146.126.236])
+        by aserv0022.oracle.com (8.14.4/8.14.4) with ESMTP id x2CI2jwn017716
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Tue, 12 Mar 2019 18:02:45 GMT
+Received: from abhmp0006.oracle.com (abhmp0006.oracle.com [141.146.116.12])
+        by aserv0122.oracle.com (8.14.4/8.14.4) with ESMTP id x2CI2ikH025944;
+        Tue, 12 Mar 2019 18:02:44 GMT
+Received: from dhcp-burlington7-2nd-B-east-10-152-55-162.usdhcp.oraclecorp.com (/10.152.32.65)
+        by default (Oracle Beehive Gateway v4.0)
+        with ESMTP ; Tue, 12 Mar 2019 11:02:44 -0700
+Subject: Re: [Xen-devel] xen: Can't insert balloon page into VM userspace (WAS
+ Re: [linux-linus bisection] complete test-arm64-arm64-xl-xsm)
+To:     Andrew Cooper <andrew.cooper3@citrix.com>,
+        David Hildenbrand <david@redhat.com>,
+        Matthew Wilcox <willy@infradead.org>,
+        Julien Grall <julien.grall@arm.com>
+Cc:     Juergen Gross <jgross@suse.com>, k.khlebnikov@samsung.com,
+        Stefano Stabellini <sstabellini@kernel.org>,
+        Kees Cook <keescook@chromium.org>,
+        Konrad Rzeszutek Wilk <konrad.wilk@oracle.com>,
+        "VMware, Inc." <pv-drivers@vmware.com>,
+        osstest service owner <osstest-admin@xenproject.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        linux-mm@kvack.org, Julien Freche <jfreche@vmware.com>,
+        Nadav Amit <namit@vmware.com>, xen-devel@lists.xenproject.org
+References: <E1h3Uiq-0002L6-Ij@osstest.test-lab.xenproject.org>
+ <80211e70-5f54-9421-8e8f-2a4fc758ce39@arm.com>
+ <46118631-61d4-adb6-6ffc-4e7c62ea3da9@arm.com>
+ <20190312171421.GJ19508@bombadil.infradead.org>
+ <e0b64793-260d-5e70-0544-e7290509b605@redhat.com>
+ <45323ea0-2a50-8891-830e-e1f8a8ed23ea@citrix.com>
+From:   Boris Ostrovsky <boris.ostrovsky@oracle.com>
+Openpgp: preference=signencrypt
+Autocrypt: addr=boris.ostrovsky@oracle.com; prefer-encrypt=mutual; keydata=
+ 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
+ Jg6OxFYd01z+a+oL
+Message-ID: <f4b40d91-9c41-60ed-6b4e-df47af8e5292@oracle.com>
+Date:   Tue, 12 Mar 2019 14:02:31 -0400
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.4.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+In-Reply-To: <45323ea0-2a50-8891-830e-e1f8a8ed23ea@citrix.com>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 7bit
+Content-Language: en-US
+X-Proofpoint-Virus-Version: vendor=nai engine=5900 definitions=9193 signatures=668685
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
+ suspectscore=0 phishscore=0 bulkscore=0 spamscore=0 clxscore=1011
+ lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=999 adultscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1810050000
+ definitions=main-1903120122
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-4.20-stable review patch.  If anyone has any objections, please let me know.
+On 3/12/19 1:24 PM, Andrew Cooper wrote:
+> On 12/03/2019 17:18, David Hildenbrand wrote:
+>> On 12.03.19 18:14, Matthew Wilcox wrote:
+>>> On Tue, Mar 12, 2019 at 05:05:39PM +0000, Julien Grall wrote:
+>>>> On 3/12/19 3:59 PM, Julien Grall wrote:
+>>>>> It looks like all the arm test for linus [1] and next [2] tree
+>>>>> are now failing. x86 seems to be mostly ok.
+>>>>>
+>>>>> The bisector fingered the following commit:
+>>>>>
+>>>>> commit 0ee930e6cafa048c1925893d0ca89918b2814f2c
+>>>>> Author: Matthew Wilcox <willy@infradead.org>
+>>>>> Date:   Tue Mar 5 15:46:06 2019 -0800
+>>>>>
+>>>>>      mm/memory.c: prevent mapping typed pages to userspace
+>>>>>      Pages which use page_type must never be mapped to userspace as it would
+>>>>>      destroy their page type.  Add an explicit check for this instead of
+>>>>>      assuming that kernel drivers always get this right.
+>>> Oh good, it found a real problem.
+>>>
+>>>> It turns out the problem is because the balloon driver will call
+>>>> __SetPageOffline() on allocated page. Therefore the page has a type and
+>>>> vm_insert_pages will deny the insertion.
+>>>>
+>>>> My knowledge is quite limited in this area. So I am not sure how we can
+>>>> solve the problem.
+>>>>
+>>>> I would appreciate if someone could provide input of to fix the mapping.
+>>> I don't know the balloon driver, so I don't know why it was doing this,
+>>> but what it was doing was Wrong and has been since 2014 with:
+>>>
+>>> commit d6d86c0a7f8ddc5b38cf089222cb1d9540762dc2
+>>> Author: Konstantin Khlebnikov <k.khlebnikov@samsung.com>
+>>> Date:   Thu Oct 9 15:29:27 2014 -0700
+>>>
+>>>     mm/balloon_compaction: redesign ballooned pages management
+>>>
+>>> If ballooned pages are supposed to be mapped into userspace, you can't mark
+>>> them as ballooned pages using the mapcount field.
+>>>
+>> Asking myself why anybody would want to map balloon inflated pages into
+>> user space (this just sounds plain wrong but my understanding to what
+>> XEN balloon driver does might be limited), but I assume the easy fix
+>> would be to revert
+> I suspect the bug here is that the balloon driver is (ab)used for a
+> second purpose
 
-------------------
+Yes. And its name is alloc_xenballooned_pages().
 
-[ Upstream commit 6e11ea9de9576a644045ffdc2067c09bc2012eda ]
+-boris
 
-amdgpu only uses shared-fences internally, but dmabuf importers rely on
-implicit write hazard tracking via the reservation_object.fence_excl.
-For example, the importer use the write hazard for timing a page flip to
-only occur after the exporter has finished flushing its write into the
-surface. As such, on exporting a dmabuf, we must either flush all
-outstanding fences (for we do not know which are writes and should have
-been exclusive) or alternatively create a new exclusive fence that is
-the composite of all the existing shared fences, and so will only be
-signaled when all earlier fences are signaled (ensuring that we can not
-be signaled before the completion of any earlier write).
-
-v2: reservation_object is already locked by amdgpu_bo_reserve()
-v3: Replace looping with get_fences_rcu and special case the promotion
-of a single shared fence directly to an exclusive fence, bypassing the
-fence array.
-v4: Drop the fence array ref after assigning to reservation_object
-
-Bugzilla: https://bugs.freedesktop.org/show_bug.cgi?id=107341
-Testcase: igt/amd_prime/amd-to-i915
-References: 8e94a46c1770 ("drm/amdgpu: Attach exclusive fence to prime exported bo's. (v5)")
-Signed-off-by: Chris Wilson <chris@chris-wilson.co.uk>
-Cc: Alex Deucher <alexander.deucher@amd.com>
-Cc: "Christian König" <christian.koenig@amd.com>
-Reviewed-by: "Christian König" <christian.koenig@amd.com>
-Signed-off-by: Alex Deucher <alexander.deucher@amd.com>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
----
- drivers/gpu/drm/amd/amdgpu/amdgpu_prime.c | 59 ++++++++++++++++++++---
- 1 file changed, 51 insertions(+), 8 deletions(-)
-
-diff --git a/drivers/gpu/drm/amd/amdgpu/amdgpu_prime.c b/drivers/gpu/drm/amd/amdgpu/amdgpu_prime.c
-index e45e929aaab5..90a5970af4b7 100644
---- a/drivers/gpu/drm/amd/amdgpu/amdgpu_prime.c
-+++ b/drivers/gpu/drm/amd/amdgpu/amdgpu_prime.c
-@@ -38,6 +38,7 @@
- #include "amdgpu_gem.h"
- #include <drm/amdgpu_drm.h>
- #include <linux/dma-buf.h>
-+#include <linux/dma-fence-array.h>
- 
- static const struct dma_buf_ops amdgpu_dmabuf_ops;
- 
-@@ -189,6 +190,48 @@ amdgpu_gem_prime_import_sg_table(struct drm_device *dev,
- 	return ERR_PTR(ret);
- }
- 
-+static int
-+__reservation_object_make_exclusive(struct reservation_object *obj)
-+{
-+	struct dma_fence **fences;
-+	unsigned int count;
-+	int r;
-+
-+	if (!reservation_object_get_list(obj)) /* no shared fences to convert */
-+		return 0;
-+
-+	r = reservation_object_get_fences_rcu(obj, NULL, &count, &fences);
-+	if (r)
-+		return r;
-+
-+	if (count == 0) {
-+		/* Now that was unexpected. */
-+	} else if (count == 1) {
-+		reservation_object_add_excl_fence(obj, fences[0]);
-+		dma_fence_put(fences[0]);
-+		kfree(fences);
-+	} else {
-+		struct dma_fence_array *array;
-+
-+		array = dma_fence_array_create(count, fences,
-+					       dma_fence_context_alloc(1), 0,
-+					       false);
-+		if (!array)
-+			goto err_fences_put;
-+
-+		reservation_object_add_excl_fence(obj, &array->base);
-+		dma_fence_put(&array->base);
-+	}
-+
-+	return 0;
-+
-+err_fences_put:
-+	while (count--)
-+		dma_fence_put(fences[count]);
-+	kfree(fences);
-+	return -ENOMEM;
-+}
-+
- /**
-  * amdgpu_gem_map_attach - &dma_buf_ops.attach implementation
-  * @dma_buf: Shared DMA buffer
-@@ -220,16 +263,16 @@ static int amdgpu_gem_map_attach(struct dma_buf *dma_buf,
- 
- 	if (attach->dev->driver != adev->dev->driver) {
- 		/*
--		 * Wait for all shared fences to complete before we switch to future
--		 * use of exclusive fence on this prime shared bo.
-+		 * We only create shared fences for internal use, but importers
-+		 * of the dmabuf rely on exclusive fences for implicitly
-+		 * tracking write hazards. As any of the current fences may
-+		 * correspond to a write, we need to convert all existing
-+		 * fences on the reservation object into a single exclusive
-+		 * fence.
- 		 */
--		r = reservation_object_wait_timeout_rcu(bo->tbo.resv,
--							true, false,
--							MAX_SCHEDULE_TIMEOUT);
--		if (unlikely(r < 0)) {
--			DRM_DEBUG_PRIME("Fence wait failed: %li\n", r);
-+		r = __reservation_object_make_exclusive(bo->tbo.resv);
-+		if (r)
- 			goto error_unreserve;
--		}
- 	}
- 
- 	/* pin buffer into GTT */
--- 
-2.19.1
-
-
+>  - to create a hole in pfn space to map some other bits of
+> shared memory into.
+>
+> I think at the end of the day, what is needed is a struct page_info
+> which looks like normal RAM, but the backing for which can be altered by
+> hypercall to map other things.
+>
+> ~Andrew
 
