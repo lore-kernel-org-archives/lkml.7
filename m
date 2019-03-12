@@ -2,141 +2,177 @@ Return-Path: <SRS0=J4ZE=RP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_MUTT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 92E5CC43381
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 01:52:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5ACEFC10F06
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 01:54:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 632C0214AE
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 01:52:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 26638214AE
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 01:54:59 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=tobin.cc header.i=@tobin.cc header.b="Uf/KtrOT";
+	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="2HSi7Br/"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726712AbfCLBwc (ORCPT
+        id S1726734AbfCLBy5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 11 Mar 2019 21:52:32 -0400
-Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:41700 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726534AbfCLBwc (ORCPT
+        Mon, 11 Mar 2019 21:54:57 -0400
+Received: from out2-smtp.messagingengine.com ([66.111.4.26]:49787 "EHLO
+        out2-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726167AbfCLBy5 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 11 Mar 2019 21:52:32 -0400
-Received: from pps.filterd (m0098413.ppops.net [127.0.0.1])
-        by mx0b-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x2C1nJJk054532
-        for <linux-kernel@vger.kernel.org>; Mon, 11 Mar 2019 21:52:30 -0400
-Received: from e06smtp01.uk.ibm.com (e06smtp01.uk.ibm.com [195.75.94.97])
-        by mx0b-001b2d01.pphosted.com with ESMTP id 2r5x8wcgv4-1
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
-        for <linux-kernel@vger.kernel.org>; Mon, 11 Mar 2019 21:52:30 -0400
-Received: from localhost
-        by e06smtp01.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
-        for <linux-kernel@vger.kernel.org> from <zohar@linux.ibm.com>;
-        Tue, 12 Mar 2019 01:52:28 -0000
-Received: from b06cxnps3075.portsmouth.uk.ibm.com (9.149.109.195)
-        by e06smtp01.uk.ibm.com (192.168.101.131) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
-        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
-        Tue, 12 Mar 2019 01:52:25 -0000
-Received: from d06av24.portsmouth.uk.ibm.com (d06av24.portsmouth.uk.ibm.com [9.149.105.60])
-        by b06cxnps3075.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x2C1qOJ059047936
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Tue, 12 Mar 2019 01:52:24 GMT
-Received: from d06av24.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 96F4B42049;
-        Tue, 12 Mar 2019 01:52:24 +0000 (GMT)
-Received: from d06av24.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id CC1F44203F;
-        Tue, 12 Mar 2019 01:52:23 +0000 (GMT)
-Received: from localhost.localdomain (unknown [9.80.93.30])
-        by d06av24.portsmouth.uk.ibm.com (Postfix) with ESMTP;
-        Tue, 12 Mar 2019 01:52:23 +0000 (GMT)
-Subject: Re: [PULL REQUEST] Kernel lockdown patches for 5.2
-From:   Mimi Zohar <zohar@linux.ibm.com>
-To:     Matthew Garrett <mjg59@google.com>
-Cc:     James Morris <jmorris@namei.org>,
-        LSM List <linux-security-module@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        David Howells <dhowells@redhat.com>
-Date:   Mon, 11 Mar 2019 21:52:13 -0400
-In-Reply-To: <CACdnJuszfo4gTUD88p+8jeHU5e3hSdp+GEr8_=F1AMThPb7yWg@mail.gmail.com>
-References: <20190306235913.6631-1-matthewgarrett@google.com>
-         <1551930990.31706.279.camel@linux.ibm.com>
-         <CACdnJuuib7kYEw1o0Bh1p=X+MmJH+pqupECWnWTJ2e2jE2XRkg@mail.gmail.com>
-         <CACdnJuszfo4gTUD88p+8jeHU5e3hSdp+GEr8_=F1AMThPb7yWg@mail.gmail.com>
-Content-Type: text/plain; charset="UTF-8"
-X-Mailer: Evolution 3.20.5 (3.20.5-1.fc24) 
-Mime-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-TM-AS-GCONF: 00
-x-cbid: 19031201-4275-0000-0000-00000319D1DF
-X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
-x-cbparentid: 19031201-4276-0000-0000-000038283833
-Message-Id: <1552355533.24794.27.camel@linux.ibm.com>
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-03-12_01:,,
- signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
- malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
- clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
- mlxlogscore=999 adultscore=0 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.0.1-1810050000 definitions=main-1903120011
+        Mon, 11 Mar 2019 21:54:57 -0400
+Received: from compute5.internal (compute5.nyi.internal [10.202.2.45])
+        by mailout.nyi.internal (Postfix) with ESMTP id 3818023176;
+        Mon, 11 Mar 2019 21:54:56 -0400 (EDT)
+Received: from mailfrontend1 ([10.202.2.162])
+  by compute5.internal (MEProxy); Mon, 11 Mar 2019 21:54:56 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=tobin.cc; h=date
+        :from:to:cc:subject:message-id:references:mime-version
+        :content-type:in-reply-to; s=fm2; bh=DWxYFqFht/GTnBUrw50jGcXbdTj
+        gIErrdzyLX70BJKc=; b=Uf/KtrOTzgHM/DVKJ0i0SYM1puQbNeo5DjesYmUCojg
+        6eZDxn4eU6RurNSVtPL3EKm1kxCtoUmnnGkLStn2C62TmuywYz1t0+rqa9DbZVJY
+        FZhC0HMn1KXZ3W9R0hvDfQpF3upZTuXeKhc6tNAFIqf/AXrHWphWpSo72TKkjXr0
+        slBfXZzxZVqRe8lWzdX7bmfsN6CYQqM+uNnQlQmiLwRcGb/wWaEysYczOUmwag2Z
+        fvT6vKzqUW8GO3b7hgGanMz6uebyNM6LShiHH7Y6eHQfHjIoRQ48FiTre2ZqH7tn
+        6GYeQuIchvVTwEo00++K9cTyt6BwY45wGaH8NweGYlA==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+        messagingengine.com; h=cc:content-type:date:from:in-reply-to
+        :message-id:mime-version:references:subject:to:x-me-proxy
+        :x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=fm2; bh=DWxYFq
+        Fht/GTnBUrw50jGcXbdTjgIErrdzyLX70BJKc=; b=2HSi7Br/pN+UMckjZh3KC5
+        GZ1dG+6z2quFoSUwO4lPc64LxWCi1rfoF/shfxDC9swDyi7PJ74DdxYHDgIzs+xp
+        pbMS1p7nA9DoO6i5EeJm2ae0sgIJPvLQ4BQ8rBe9zVpxAl+vhvjv1N8ytz3hb87q
+        oKuZZYM9l6vMaNeezcsu5j8Dyqo3w8+VikvJjz76pHGsFhJwARlTJ+2clkzuBW9m
+        PHgD9wpIZdRAuG8WsYdvAIL19J1kvbxaGGeeVgXu8KiweL0nbCnIW1n4+/wcIGag
+        Ai7N7rGBCp0PCbaHZgUAHzOLDA7qMDzzhCI9jDkiLbmkji4KfihThzydv2CoLiSQ
+        ==
+X-ME-Sender: <xms:bhGHXIY1Sa3BMaDcyURcL8rGVRZLnuMQqFvGaOKcopmG7Z2C4KEG8w>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedutddrgeejgdefjecutefuodetggdotefrodftvf
+    curfhrohhfihhlvgemucfhrghsthforghilhdpqfgfvfdpuffrtefokffrpgfnqfghnecu
+    uegrihhlohhuthemuceftddtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenfg
+    hrlhcuvffnffculddutddmnecujfgurhepfffhvffukfhfgggtuggjofgfsehttdertdfo
+    redvnecuhfhrohhmpedfvfhosghinhcuvedrucfjrghrughinhhgfdcuoehmvgesthhosg
+    hinhdrtggtqeenucfkphepuddvgedrudeiledrvdefrddukeegnecurfgrrhgrmhepmhgr
+    ihhlfhhrohhmpehmvgesthhosghinhdrtggtnecuvehluhhsthgvrhfuihiivgeptd
+X-ME-Proxy: <xmx:bhGHXC-2KyZD3iH_YoXwop1pPkWXsZt6p2mdDJj_UAFUq3F-nqQirw>
+    <xmx:bhGHXGtG51OEbRvgVdl2ZbrP3bMYpEjyQDqJ2VKlJOpB6eb6u__PhA>
+    <xmx:bhGHXHFUgjSGEo9hBxyDTF5UYzjRLMmuTIL2evF0fJgPZz3Sob-10g>
+    <xmx:cBGHXBnWiRcQl4KU5xa1yQEVHMLBa74qRrtCe8EkfFs0o5tX2Ni0ng>
+Received: from localhost (124-169-23-184.dyn.iinet.net.au [124.169.23.184])
+        by mail.messagingengine.com (Postfix) with ESMTPA id 1F935E4173;
+        Mon, 11 Mar 2019 21:54:53 -0400 (EDT)
+Date:   Tue, 12 Mar 2019 12:54:32 +1100
+From:   "Tobin C. Harding" <me@tobin.cc>
+To:     Roman Gushchin <guro@fb.com>
+Cc:     "Tobin C. Harding" <tobin@kernel.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Christopher Lameter <cl@linux.com>,
+        Pekka Enberg <penberg@cs.helsinki.fi>,
+        Matthew Wilcox <willy@infradead.org>,
+        Tycho Andersen <tycho@tycho.ws>,
+        "linux-mm@kvack.org" <linux-mm@kvack.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: Re: [RFC 12/15] xarray: Implement migration function for objects
+Message-ID: <20190312015432.GI9362@eros.localdomain>
+References: <20190308041426.16654-1-tobin@kernel.org>
+ <20190308041426.16654-13-tobin@kernel.org>
+ <20190312001602.GB25059@tower.DHCP.thefacebook.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190312001602.GB25059@tower.DHCP.thefacebook.com>
+X-Mailer: Mutt 1.11.3 (2019-02-01)
+User-Agent: Mutt/1.11.3 (2019-02-01)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, 2019-03-11 at 17:42 -0700, Matthew Garrett wrote:
-> On Wed, Mar 6, 2019 at 8:24 PM Matthew Garrett <mjg59@google.com> wrote:
-> >
-> > On Wed, Mar 6, 2019 at 7:56 PM Mimi Zohar <zohar@linux.ibm.com> wrote:
-> > > The kexec and kernel modules patches in this patch set continues to
-> > > ignore IMA.  This patch set should up front either provide an
-> > > alternative solution to coordinate the different signature
-> > > verification methods or rely on the architecture specific policy for
-> > > that coordination.
-> >
-> > Hi Mimi,
-> >
-> > I'm working on a patch for this at the moment which can then be added
-> > to either patchset. Is there a tree that contains the proposed Power
-> > architecture policy? I want to make sure I don't accidentally end up
-> > depending on anything x86.
+On Tue, Mar 12, 2019 at 12:16:07AM +0000, Roman Gushchin wrote:
+> On Fri, Mar 08, 2019 at 03:14:23PM +1100, Tobin C. Harding wrote:
+> > Implement functions to migrate objects. This is based on
+> > initial code by Matthew Wilcox and was modified to work with
+> > slab object migration.
+> > 
+> > Co-developed-by: Christoph Lameter <cl@linux.com>
+> > Signed-off-by: Tobin C. Harding <tobin@kernel.org>
+> > ---
+> >  lib/radix-tree.c | 13 +++++++++++++
+> >  lib/xarray.c     | 44 ++++++++++++++++++++++++++++++++++++++++++++
+> >  2 files changed, 57 insertions(+)
+> > 
+> > diff --git a/lib/radix-tree.c b/lib/radix-tree.c
+> > index 14d51548bea6..9412c2853726 100644
+> > --- a/lib/radix-tree.c
+> > +++ b/lib/radix-tree.c
+> > @@ -1613,6 +1613,17 @@ static int radix_tree_cpu_dead(unsigned int cpu)
+> >  	return 0;
+> >  }
+> >  
+> > +extern void xa_object_migrate(void *tree_node, int numa_node);
+> > +
+> > +static void radix_tree_migrate(struct kmem_cache *s, void **objects, int nr,
+> > +			       int node, void *private)
+> > +{
+> > +	int i;
+> > +
+> > +	for (i = 0; i < nr; i++)
+> > +		xa_object_migrate(objects[i], node);
+> > +}
+> > +
+> >  void __init radix_tree_init(void)
+> >  {
+> >  	int ret;
+> > @@ -1627,4 +1638,6 @@ void __init radix_tree_init(void)
+> >  	ret = cpuhp_setup_state_nocalls(CPUHP_RADIX_DEAD, "lib/radix:dead",
+> >  					NULL, radix_tree_cpu_dead);
+> >  	WARN_ON(ret < 0);
+> > +	kmem_cache_setup_mobility(radix_tree_node_cachep, NULL,
+> > +				  radix_tree_migrate);
+> >  }
+> > diff --git a/lib/xarray.c b/lib/xarray.c
+> > index 81c3171ddde9..4f6f17c87769 100644
+> > --- a/lib/xarray.c
+> > +++ b/lib/xarray.c
+> > @@ -1950,6 +1950,50 @@ void xa_destroy(struct xarray *xa)
+> >  }
+> >  EXPORT_SYMBOL(xa_destroy);
+> >  
+> > +void xa_object_migrate(struct xa_node *node, int numa_node)
+> > +{
+> > +	struct xarray *xa = READ_ONCE(node->array);
+> > +	void __rcu **slot;
+> > +	struct xa_node *new_node;
+> > +	int i;
+> > +
+> > +	/* Freed or not yet in tree then skip */
+> > +	if (!xa || xa == XA_FREE_MARK)
+> > +		return;
 > 
-> I've been digging into this some more, and want to ensure that I get
-> the appropriate semantics. Are we happy with the x86 solution for
-> module signing (ie, if the arch policy is enabled and the kernel
-> supports module signatures, use module signatures rather than IMA
-> signatures)? 
-
-There's a slight nuance you're missing.  If the arch policy is enabled
-and the kernel supports module signatures, do not add an IMA appraise
-rule.  A custom policy could require an IMA signature, as well as the
-module appended signature.
-
-Saying only use the module signatures, even if the IMA custom policy
-contains a kernel module rule, doesn't make sense.
-
-> If so, that just leaves kexec. For platforms that support
-> PE signing for kernels (x86 and arm), are we ok punting to that?
-
-Similarly, if the custom policy has a kexec kernel image policy rule,
-it shouldn't be ignored.
-
-> If so
-> then to maintain the semantics we have for lockdown in general (ie, no
-> way for a user to modify ring 0 code) then I think that would mean
-> allowing kexec_file() only when the following criteria are met:
+> XA_FREE_MARK is equal to 0, so the second check is redundant.
 > 
-> 1) IMA is appraising kexec with digital signatures, either ima digital
-> signatures or ima hashes with associated EVM digital signatures
+> #define XA_MARK_0		((__force xa_mark_t)0U)
+> #define XA_MARK_1		((__force xa_mark_t)1U)
+> #define XA_MARK_2		((__force xa_mark_t)2U)
+> #define XA_PRESENT		((__force xa_mark_t)8U)
+> #define XA_MARK_MAX		XA_MARK_2
+> #define XA_FREE_MARK		XA_MARK_0
+> 
+> xa_node_free() sets node->array to XA_RCU_FREE, so maybe it's
+> what you need. I'm not sure however, Matthew should know better
 
-The kernel image could be signed with an appended signature as well.
+Cheers, will wait for his input.
 
-> 2) CONFIG_INTEGRITY_TRUSTED_KEYRING is set in order to prevent an
-> attacker being able to add a key to the keyring
+> > +
+> > +	new_node = kmem_cache_alloc_node(radix_tree_node_cachep,
+> > +					 GFP_KERNEL, numa_node);
+> 
+> We need to check here if the allocation was successful.
 
-Agreed
+Woops, bad Tobin.  Thanks.
 
-> Does this sound reasonable? Are there any further criteria that are
-> required for this?
 
-With the caveats described above.
-
-Mimi
-
+	Tobin.
