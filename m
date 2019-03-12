@@ -2,118 +2,378 @@ Return-Path: <SRS0=J4ZE=RP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.5 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_PASS,USER_AGENT_MUTT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 43269C43381
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 12:42:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E456EC43381
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 12:43:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 07D3421734
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 12:42:54 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=mm-sol.com header.i=@mm-sol.com header.b="OuvbnS/Y"
+	by mail.kernel.org (Postfix) with ESMTP id A53C1206BA
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 12:43:01 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1552394581;
+	bh=1oHltpQ4lkh06gXs72OL3mso/f7aF4C3lN/226bVHBI=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=04X33ekwoAL5g3FLYxxBJH+ZEp3JzEHnFgesOEZ14UrQm9kw8muexMwAU3UXee8Of
+	 ApI8srPHzY36O5kzSrBqHQQFL9y59ucoCx+j9AUocQfvTT+68fhxe+fcchXbkiKLC+
+	 7WC2LDhTRefTZt8+DmIXX86qMDDZheQxAfZHuYZw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726534AbfCLMmx (ORCPT
+        id S1726657AbfCLMm7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 12 Mar 2019 08:42:53 -0400
-Received: from ns.mm-sol.com ([37.157.136.199]:37519 "EHLO extserv.mm-sol.com"
+        Tue, 12 Mar 2019 08:42:59 -0400
+Received: from mail.kernel.org ([198.145.29.99]:35606 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725957AbfCLMmw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 12 Mar 2019 08:42:52 -0400
-Received: from [192.168.27.209] (unknown [37.157.136.206])
-        by extserv.mm-sol.com (Postfix) with ESMTPSA id 05188CE28;
-        Tue, 12 Mar 2019 14:42:49 +0200 (EET)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=mm-sol.com; s=201706;
-        t=1552394569; bh=XuDKOdFZ35K3ZnPCJITHm6krw2gbYBRCmyJSsNPuA8o=;
-        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
-        b=OuvbnS/Yf1Aa11Mtn6WEwzs7oSuUM/2g08KPfivpySQH2Guc+8DlV6nPU4qDzDvL8
-         ZtxTuhnbv27+XTQYXWIT6rf01j/lwdUUnA+qXC5wntmAnkIj/Fe3q2DoqDUL48u7bI
-         sugMCih2UHw4Uca8geEmDHV2kY66wmb8lBxu2OtEwpO3rJAD1vBTYaAmlvsHW+Ui3w
-         aAUdrXihzBmZtXUibigEGBpW4L01ji2o6T2juVqbFy+SvW/6zFODKMr3ODt57npN6t
-         CFFFf6xkZprcdvR3JuM5NrLvqmKinRd9bwIloNU2Jz3+N2Xu6cR4p3DqF7DzWQhYRr
-         9vWZVro9hGq1A==
-Subject: Re: [RFC PATCH v1] PCI: qcom: Use quirk to override incorrect device
- class
-To:     Marc Gonzalez <marc.w.gonzalez@free.fr>,
-        Bjorn Helgaas <bhelgaas@google.com>
-Cc:     Andy Gross <andy.gross@linaro.org>,
-        David Brown <david.brown@linaro.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        PCI <linux-pci@vger.kernel.org>,
-        MSM <linux-arm-msm@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Jeffrey Hugo <jhugo@codeaurora.org>
-References: <94bb3f22-c5a7-1891-9d89-42a520e9a592@free.fr>
-From:   Stanimir Varbanov <svarbanov@mm-sol.com>
-Message-ID: <65321fe3-ca29-c454-63ae-98a46c2e5158@mm-sol.com>
-Date:   Tue, 12 Mar 2019 14:42:46 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.5.1
+        id S1726192AbfCLMm6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 12 Mar 2019 08:42:58 -0400
+Received: from localhost (unknown [12.27.65.221])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 4F2A4214D8;
+        Tue, 12 Mar 2019 12:42:57 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1552394577;
+        bh=1oHltpQ4lkh06gXs72OL3mso/f7aF4C3lN/226bVHBI=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=dKnQ92ZXmrid/ezqZFJ1NU0Uj2/Wj1LmrFDp3IhEcYP3FTaPqgyQTuoJsHwIOfwUr
+         GasQyuOBrfA/w8SYl14HaRdLk+QqJNOJb3g/MkIFP0WeUFMk4PnFAaSgb8MS2oWcWB
+         11Ahpd9L4do4X/G3gkGf2mxzCRd3TQOzY2bcVnTI=
+Date:   Tue, 12 Mar 2019 05:42:56 -0700
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     Gao Xiang <gaoxiang25@huawei.com>
+Cc:     stable@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>,
+        linux-erofs@lists.ozlabs.org, Chao Yu <yuchao0@huawei.com>,
+        Chao Yu <chao@kernel.org>, Miao Xie <miaoxie@huawei.com>,
+        Fang Wei <fangwei1@huawei.com>
+Subject: Re: [PATCH for-4.20] staging: erofs: keep corrupted fs from crashing
+ kernel in erofs_namei()
+Message-ID: <20190312124256.GC14713@kroah.com>
+References: <20190311024023.46037-1-gaoxiang25@huawei.com>
 MIME-Version: 1.0
-In-Reply-To: <94bb3f22-c5a7-1891-9d89-42a520e9a592@free.fr>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190311024023.46037-1-gaoxiang25@huawei.com>
+User-Agent: Mutt/1.11.3 (2019-02-01)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Marc,
-
-Thanks for the patch!
-
-On 3/11/19 4:56 PM, Marc Gonzalez wrote:
-> Some chips report an incorrect device class. Override the incorrect
-> value using a quirk, instead of code in the read function.
+On Mon, Mar 11, 2019 at 10:40:23AM +0800, Gao Xiang wrote:
+> commit 419d6efc50e94bcf5d6b35cd8c71f79edadec564 upstream.
 > 
-> Signed-off-by: Marc Gonzalez <marc.w.gonzalez@free.fr>
+> As Al pointed out, "
+> ... and while we are at it, what happens to
+> 	unsigned int nameoff = le16_to_cpu(de[mid].nameoff);
+> 	unsigned int matched = min(startprfx, endprfx);
+> 
+> 	struct qstr dname = QSTR_INIT(data + nameoff,
+> 		unlikely(mid >= ndirents - 1) ?
+> 			maxsize - nameoff :
+> 			le16_to_cpu(de[mid + 1].nameoff) - nameoff);
+> 
+> 	/* string comparison without already matched prefix */
+> 	int ret = dirnamecmp(name, &dname, &matched);
+> if le16_to_cpu(de[...].nameoff) is not monotonically increasing?  I.e.
+> what's to prevent e.g. (unsigned)-1 ending up in dname.len?
+> 
+> Corrupted fs image shouldn't oops the kernel.. "
+> 
+> Revisit the related lookup flow to address the issue.
+> 
+> Fixes: d72d1ce60174 ("staging: erofs: add namei functions")
+> Cc: <stable@vger.kernel.org> # 4.19+
+> Suggested-by: Al Viro <viro@ZenIV.linux.org.uk>
+> Signed-off-by: Gao Xiang <gaoxiang25@huawei.com>
 > ---
-> FWIW, this quirk is no longer required on recent chips:
-> msm8996 (tested by Stanimir), msm8998 (tested by me), sdm845 (untested) are unaffected
-> apq/ipq8064 is affected => what is the device ID for these chips?
-> others?
 > 
-> Stanimir added: "this will become a real problem (now we use the driver as RC)
-> when someone decide to use it as an endpoint"
-> ---
->  drivers/pci/controller/dwc/pcie-qcom.c | 14 ++++++--------
->  1 file changed, 6 insertions(+), 8 deletions(-)
+> This series resolves the following conflicts:
+>  FAILED: patch "[PATCH] staging: erofs: keep corrupted fs from crashing kernel in" failed to apply to 4.20-stable tree
 > 
-> diff --git a/drivers/pci/controller/dwc/pcie-qcom.c b/drivers/pci/controller/dwc/pcie-qcom.c
-> index 3de5510fd3d5..94da2c9c2ad5 100644
-> --- a/drivers/pci/controller/dwc/pcie-qcom.c
-> +++ b/drivers/pci/controller/dwc/pcie-qcom.c
-> @@ -1136,17 +1136,15 @@ static int qcom_pcie_rd_own_conf(struct pcie_port *pp, int where, int size,
->  {
->  	struct dw_pcie *pci = to_dw_pcie_from_pp(pp);
+>  drivers/staging/erofs/namei.c | 183 ++++++++++++++++++++++--------------------
+>  1 file changed, 97 insertions(+), 86 deletions(-)
+> 
+> diff --git a/drivers/staging/erofs/namei.c b/drivers/staging/erofs/namei.c
+> index 5596c52e246d..ecc51ef0753f 100644
+> --- a/drivers/staging/erofs/namei.c
+> +++ b/drivers/staging/erofs/namei.c
+> @@ -15,74 +15,77 @@
 >  
-> -	/* the device class is not reported correctly from the register */
-> -	if (where == PCI_CLASS_REVISION && size == 4) {
-> -		*val = readl(pci->dbi_base + PCI_CLASS_REVISION);
-> -		*val &= 0xff;	/* keep revision id */
-> -		*val |= PCI_CLASS_BRIDGE_PCI << 16;
-> -		return PCIBIOS_SUCCESSFUL;
+>  #include <trace/events/erofs.h>
+>  
+> -/* based on the value of qn->len is accurate */
+> -static inline int dirnamecmp(struct qstr *qn,
+> -	struct qstr *qd, unsigned int *matched)
+> +struct erofs_qstr {
+> +	const unsigned char *name;
+> +	const unsigned char *end;
+> +};
+> +
+> +/* based on the end of qn is accurate and it must have the trailing '\0' */
+> +static inline int dirnamecmp(const struct erofs_qstr *qn,
+> +			     const struct erofs_qstr *qd,
+> +			     unsigned int *matched)
+>  {
+> -	unsigned int i = *matched, len = min(qn->len, qd->len);
+> -loop:
+> -	if (unlikely(i >= len)) {
+> -		*matched = i;
+> -		if (qn->len < qd->len) {
+> -			/*
+> -			 * actually (qn->len == qd->len)
+> -			 * when qd->name[i] == '\0'
+> -			 */
+> -			return qd->name[i] == '\0' ? 0 : -1;
+> +	unsigned int i = *matched;
+> +
+> +	/*
+> +	 * on-disk error, let's only BUG_ON in the debugging mode.
+> +	 * otherwise, it will return 1 to just skip the invalid name
+> +	 * and go on (in consideration of the lookup performance).
+> +	 */
+> +	DBG_BUGON(qd->name > qd->end);
+> +
+> +	/* qd could not have trailing '\0' */
+> +	/* However it is absolutely safe if < qd->end */
+> +	while (qd->name + i < qd->end && qd->name[i] != '\0') {
+> +		if (qn->name[i] != qd->name[i]) {
+> +			*matched = i;
+> +			return qn->name[i] > qd->name[i] ? 1 : -1;
+>  		}
+> -		return (qn->len > qd->len);
+> +		++i;
+>  	}
+> -
+> -	if (qn->name[i] != qd->name[i]) {
+> -		*matched = i;
+> -		return qn->name[i] > qd->name[i] ? 1 : -1;
 > -	}
 > -
-
-once you dropped the above snippet this function becomes absolutely
-useless so please delete it at all and also from qcom_pcie_dw_ops.
-
->  	return dw_pcie_read(pci->dbi_base + where, size, val);
+> -	++i;
+> -	goto loop;
+> +	*matched = i;
+> +	/* See comments in __d_alloc on the terminating NUL character */
+> +	return qn->name[i] == '\0' ? 0 : 1;
 >  }
 >  
-> +static void qcom_fixup_class(struct pci_dev *dev)
-> +{
-> +	dev->class = PCI_CLASS_BRIDGE_PCI << 8;
-> +}
-> +DECLARE_PCI_FIXUP_EARLY(PCI_VENDOR_ID_QCOM, PCI_ANY_ID, qcom_fixup_class);
+> -static struct erofs_dirent *find_target_dirent(
+> -	struct qstr *name,
+> -	u8 *data, int maxsize)
+> +#define nameoff_from_disk(off, sz)	(le16_to_cpu(off) & ((sz) - 1))
+> +
+> +static struct erofs_dirent *find_target_dirent(struct erofs_qstr *name,
+> +					       u8 *data,
+> +					       unsigned int dirblksize,
+> +					       const int ndirents)
+>  {
+> -	unsigned int ndirents, head, back;
+> +	int head, back;
+>  	unsigned int startprfx, endprfx;
+>  	struct erofs_dirent *const de = (struct erofs_dirent *)data;
+>  
+> -	/* make sure that maxsize is valid */
+> -	BUG_ON(maxsize < sizeof(struct erofs_dirent));
+> -
+> -	ndirents = le16_to_cpu(de->nameoff) / sizeof(*de);
+> -
+> -	/* corrupted dir (may be unnecessary...) */
+> -	BUG_ON(!ndirents);
+> -
+> -	head = 0;
+> +	/* since the 1st dirent has been evaluated previously */
+> +	head = 1;
+>  	back = ndirents - 1;
+>  	startprfx = endprfx = 0;
+>  
+>  	while (head <= back) {
+> -		unsigned int mid = head + (back - head) / 2;
+> -		unsigned int nameoff = le16_to_cpu(de[mid].nameoff);
+> +		const int mid = head + (back - head) / 2;
+> +		const int nameoff = nameoff_from_disk(de[mid].nameoff,
+> +						      dirblksize);
+>  		unsigned int matched = min(startprfx, endprfx);
+> -
+> -		struct qstr dname = QSTR_INIT(data + nameoff,
+> -			unlikely(mid >= ndirents - 1) ?
+> -				maxsize - nameoff :
+> -				le16_to_cpu(de[mid + 1].nameoff) - nameoff);
+> +		struct erofs_qstr dname = {
+> +			.name = data + nameoff,
+> +			.end = unlikely(mid >= ndirents - 1) ?
+> +				data + dirblksize :
+> +				data + nameoff_from_disk(de[mid + 1].nameoff,
+> +							 dirblksize)
+> +		};
+>  
+>  		/* string comparison without already matched prefix */
+>  		int ret = dirnamecmp(name, &dname, &matched);
+>  
+> -		if (unlikely(!ret))
+> +		if (unlikely(!ret)) {
+>  			return de + mid;
+> -		else if (ret > 0) {
+> +		} else if (ret > 0) {
+>  			head = mid + 1;
+>  			startprfx = matched;
+> -		} else if (unlikely(mid < 1))	/* fix "mid" overflow */
+> -			break;
+> -		else {
+> +		} else {
+>  			back = mid - 1;
+>  			endprfx = matched;
+>  		}
+> @@ -91,12 +94,12 @@ static struct erofs_dirent *find_target_dirent(
+>  	return ERR_PTR(-ENOENT);
+>  }
+>  
+> -static struct page *find_target_block_classic(
+> -	struct inode *dir,
+> -	struct qstr *name, int *_diff)
+> +static struct page *find_target_block_classic(struct inode *dir,
+> +					      struct erofs_qstr *name,
+> +					      int *_ndirents)
+>  {
+>  	unsigned int startprfx, endprfx;
+> -	unsigned int head, back;
+> +	int head, back;
+>  	struct address_space *const mapping = dir->i_mapping;
+>  	struct page *candidate = ERR_PTR(-ENOENT);
+>  
+> @@ -105,41 +108,43 @@ static struct page *find_target_block_classic(
+>  	back = inode_datablocks(dir) - 1;
+>  
+>  	while (head <= back) {
+> -		unsigned int mid = head + (back - head) / 2;
+> +		const int mid = head + (back - head) / 2;
+>  		struct page *page = read_mapping_page(mapping, mid, NULL);
+>  
+> -		if (IS_ERR(page)) {
+> -exact_out:
+> -			if (!IS_ERR(candidate)) /* valid candidate */
+> -				put_page(candidate);
+> -			return page;
+> -		} else {
+> -			int diff;
+> -			unsigned int ndirents, matched;
+> -			struct qstr dname;
+> +		if (!IS_ERR(page)) {
+>  			struct erofs_dirent *de = kmap_atomic(page);
+> -			unsigned int nameoff = le16_to_cpu(de->nameoff);
+> -
+> -			ndirents = nameoff / sizeof(*de);
+> +			const int nameoff = nameoff_from_disk(de->nameoff,
+> +							      EROFS_BLKSIZ);
+> +			const int ndirents = nameoff / sizeof(*de);
+> +			int diff;
+> +			unsigned int matched;
+> +			struct erofs_qstr dname;
+>  
+> -			/* corrupted dir (should have one entry at least) */
+> -			BUG_ON(!ndirents || nameoff > PAGE_SIZE);
+> +			if (unlikely(!ndirents)) {
+> +				DBG_BUGON(1);
+> +				kunmap_atomic(de);
+> +				put_page(page);
+> +				page = ERR_PTR(-EIO);
+> +				goto out;
+> +			}
+>  
+>  			matched = min(startprfx, endprfx);
+>  
+>  			dname.name = (u8 *)de + nameoff;
+> -			dname.len = ndirents == 1 ?
+> -				/* since the rest of the last page is 0 */
+> -				EROFS_BLKSIZ - nameoff
+> -				: le16_to_cpu(de[1].nameoff) - nameoff;
+> +			if (ndirents == 1)
+> +				dname.end = (u8 *)de + EROFS_BLKSIZ;
+> +			else
+> +				dname.end = (u8 *)de +
+> +					nameoff_from_disk(de[1].nameoff,
+> +							  EROFS_BLKSIZ);
+>  
+>  			/* string comparison without already matched prefix */
+>  			diff = dirnamecmp(name, &dname, &matched);
+>  			kunmap_atomic(de);
+>  
+>  			if (unlikely(!diff)) {
+> -				*_diff = 0;
+> -				goto exact_out;
+> +				*_ndirents = 0;
+> +				goto out;
+>  			} else if (diff > 0) {
+>  				head = mid + 1;
+>  				startprfx = matched;
+> @@ -147,45 +152,51 @@ static struct page *find_target_block_classic(
+>  				if (likely(!IS_ERR(candidate)))
+>  					put_page(candidate);
+>  				candidate = page;
+> +				*_ndirents = ndirents;
+>  			} else {
+>  				put_page(page);
+>  
+> -				if (unlikely(mid < 1))	/* fix "mid" overflow */
+> -					break;
+> -
+>  				back = mid - 1;
+>  				endprfx = matched;
+>  			}
+> +			continue;
+>  		}
+> +out:		/* free if the candidate is valid */
+> +		if (!IS_ERR(candidate))
+> +			put_page(candidate);
+> +		return page;
+>  	}
+> -	*_diff = 1;
+>  	return candidate;
+>  }
+>  
+>  int erofs_namei(struct inode *dir,
+> -	struct qstr *name,
+> -	erofs_nid_t *nid, unsigned int *d_type)
+> +		struct qstr *name,
+> +		erofs_nid_t *nid, unsigned int *d_type)
+>  {
+> -	int diff;
+> +	int ndirents;
+>  	struct page *page;
+> -	u8 *data;
+> +	void *data;
+>  	struct erofs_dirent *de;
+> +	struct erofs_qstr qn;
+>  
+>  	if (unlikely(!dir->i_size))
+>  		return -ENOENT;
+>  
+> -	diff = 1;
+> -	page = find_target_block_classic(dir, name, &diff);
+> +	qn.name = name->name;
+> +	qn.end = name->name + name->len;
+> +
+> +	ndirents = 0;
+> +	page = find_target_block_classic(dir, &qn, &ndirents);
+>  
+>  	if (unlikely(IS_ERR(page)))
+>  		return PTR_ERR(page);
+>  
+>  	data = kmap_atomic(page);
+>  	/* the target page has been mapped */
+> -	de = likely(diff) ?
+> -		/* since the rest of the last page is 0 */
+> -		find_target_dirent(name, data, EROFS_BLKSIZ) :
+> -		(struct erofs_dirent *)data;
+> +	if (ndirents)
+> +		de = find_target_dirent(&qn, data, EROFS_BLKSIZ, ndirents);
+> +	else
+> +		de = (struct erofs_dirent *)data;
+>  
+>  	if (likely(!IS_ERR(de))) {
+>  		*nid = le64_to_cpu(de->nid);
+> -- 
+> 2.14.5
 
-I wonder, in case that dw_pcie_setup_rc() already has a write to
-PCI_CLASS_DEVICE configuration register to set it as a bridge do we
-still need to do the above fixup?
+now applied, thanks.
 
--- 
-regards,
-Stan
+greg k-h
