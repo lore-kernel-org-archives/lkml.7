@@ -2,138 +2,149 @@ Return-Path: <SRS0=J4ZE=RP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED autolearn=ham
+X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AD205C43381
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 17:35:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 46EE0C43381
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 17:35:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7F976214AE
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 17:35:00 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="JUhVQ7f3"
+	by mail.kernel.org (Postfix) with ESMTP id 1A02B206DF
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 17:35:15 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1552412115;
+	bh=uHqbiq2323LrZfdZEBFK21XzrSuQDYkkN0OT2Xylsdk=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=AbFxFTNYFfiBu339zC2VV/1bj1NCszBv0B1ApVouYUQDOs2OyyXqLUt6xcJC/wggg
+	 L+nNFm5ShE3Y8HBd3inXMQCQxewj4k4vJiGSpRDPFWs5qLyfmZO+yBWhqOp7DQo9Wj
+	 JarquMhyrwHObjWZWZ8rpY+pbaxQqvuorKEIJa8E=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729812AbfCLRe7 (ORCPT
+        id S1729636AbfCLRfM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 12 Mar 2019 13:34:59 -0400
-Received: from fllv0016.ext.ti.com ([198.47.19.142]:48812 "EHLO
-        fllv0016.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728966AbfCLRez (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 12 Mar 2019 13:34:55 -0400
-Received: from lelv0265.itg.ti.com ([10.180.67.224])
-        by fllv0016.ext.ti.com (8.15.2/8.15.2) with ESMTP id x2CHYrJr082095;
-        Tue, 12 Mar 2019 12:34:53 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1552412093;
-        bh=5IN74cas7YzPe70PVw8u0CSKEPiMborvtVhoYXKDMmM=;
-        h=Subject:To:CC:References:From:Date:In-Reply-To;
-        b=JUhVQ7f3AFMZxwHg762N6FXAUUITtB0lmAWbBxUhp4Prycq8ZquOl87DWddI56FfN
-         9OHRojOP58AC8Q6Gxl0sSK6edBRHWYc9kYNNTzBiatHFH1F6NSb9tUuB3craOja0yY
-         ah7ysiUCdUwC94liO8va7bHekxJ4KMzkoP1pT63U=
-Received: from DLEE100.ent.ti.com (dlee100.ent.ti.com [157.170.170.30])
-        by lelv0265.itg.ti.com (8.15.2/8.15.2) with ESMTPS id x2CHYrZY099160
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Tue, 12 Mar 2019 12:34:53 -0500
-Received: from DLEE114.ent.ti.com (157.170.170.25) by DLEE100.ent.ti.com
- (157.170.170.30) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5; Tue, 12
- Mar 2019 12:34:52 -0500
-Received: from dlep33.itg.ti.com (157.170.170.75) by DLEE114.ent.ti.com
- (157.170.170.25) with Microsoft SMTP Server (version=TLS1_0,
- cipher=TLS_RSA_WITH_AES_256_CBC_SHA) id 15.1.1591.10 via Frontend Transport;
- Tue, 12 Mar 2019 12:34:52 -0500
-Received: from [172.22.88.180] (ileax41-snat.itg.ti.com [10.172.224.153])
-        by dlep33.itg.ti.com (8.14.3/8.13.8) with ESMTP id x2CHYmFN023532;
-        Tue, 12 Mar 2019 12:34:49 -0500
-Subject: Re: [PATCH v2 2/2] mmc: sdhci-omap: Don't finish_mrq() on a command
- error during tuning
-To:     Adrian Hunter <adrian.hunter@intel.com>,
-        <linux-kernel@vger.kernel.org>, <linux-mmc@vger.kernel.org>,
-        <linux-omap@vger.kernel.org>
-CC:     <ulf.hansson@linaro.org>, <kishon@ti.com>
-References: <20190301083824.23918-1-faiz_abbas@ti.com>
- <20190301083824.23918-3-faiz_abbas@ti.com>
- <0283e92e-9e01-227d-0987-7801dd88cf78@intel.com>
-From:   "Rizvi, Mohammad Faiz Abbas" <faiz_abbas@ti.com>
-Message-ID: <eb76397b-aa02-f1b8-ef0d-df7569275144@ti.com>
-Date:   Tue, 12 Mar 2019 23:04:47 +0530
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
- Thunderbird/60.5.3
+        Tue, 12 Mar 2019 13:35:12 -0400
+Received: from mail.kernel.org ([198.145.29.99]:59658 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1729354AbfCLRQy (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 12 Mar 2019 13:16:54 -0400
+Received: from localhost (unknown [104.133.8.98])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 5F7CA2087C;
+        Tue, 12 Mar 2019 17:16:53 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1552411013;
+        bh=uHqbiq2323LrZfdZEBFK21XzrSuQDYkkN0OT2Xylsdk=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=GMqqp/OMFOhkJQhj+ccOOTx7jKir5PZJqi7DpMT+TMvKoqfAPImZ5xO1BXEJYJg/1
+         z67ont1ftSP39QkHdVtFBpjmPjj2uR++PU7hjlqul+pJufk9djvvNlPewnBCyfTVfN
+         RGYjivuQa87R66Sm/QDIpWOCNXdCxQtzxF7FsPfY=
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     linux-kernel@vger.kernel.org
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        stable@vger.kernel.org, Manish Chopra <manishc@marvell.com>,
+        Ariel Elior <aelior@marvell.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.14 118/135] qed: Fix EQ full firmware assert.
+Date:   Tue, 12 Mar 2019 10:09:25 -0700
+Message-Id: <20190312170352.094335679@linuxfoundation.org>
+X-Mailer: git-send-email 2.21.0
+In-Reply-To: <20190312170341.127810985@linuxfoundation.org>
+References: <20190312170341.127810985@linuxfoundation.org>
+User-Agent: quilt/0.65
+X-stable: review
+X-Patchwork-Hint: ignore
 MIME-Version: 1.0
-In-Reply-To: <0283e92e-9e01-227d-0987-7801dd88cf78@intel.com>
-Content-Type: text/plain; charset="utf-8"
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Adrian,
+4.14-stable review patch.  If anyone has any objections, please let me know.
 
-On 3/6/2019 5:39 PM, Adrian Hunter wrote:
-> On 1/03/19 10:38 AM, Faiz Abbas wrote:
->> commit 5b0d62108b46 ("mmc: sdhci-omap: Add platform specific reset
->> callback") skips data resets during tuning operation. Because of this,
->> a data error or data finish interrupt might still arrive after a command
->> error has been handled and the mrq ended. This ends up with a "mmc0: Got
->> data interrupt 0x00000002 even though no data operation was in progress"
->> error message.
->>
->> Fix this by adding a platform specific callback for command errors. Mark
->> the mrq as a failure but wait for a data interrupt instead of calling
->> finish_mrq().
->>
->> Fixes: 5b0d62108b46 ("mmc: sdhci-omap: Add platform specific reset
->> callback")
->> Signed-off-by: Faiz Abbas <faiz_abbas@ti.com>
->> ---
->>  drivers/mmc/host/sdhci-omap.c | 24 ++++++++++++++++++++++++
->>  1 file changed, 24 insertions(+)
->>
->> diff --git a/drivers/mmc/host/sdhci-omap.c b/drivers/mmc/host/sdhci-omap.c
->> index b1a66ca3821a..67b361a403bc 100644
->> --- a/drivers/mmc/host/sdhci-omap.c
->> +++ b/drivers/mmc/host/sdhci-omap.c
->> @@ -797,6 +797,29 @@ void sdhci_omap_reset(struct sdhci_host *host, u8 mask)
->>  	sdhci_reset(host, mask);
->>  }
->>  
->> +void sdhci_omap_cmd_err(struct sdhci_host *host, u32 intmask, u32 *intmask_p)
->> +{
->> +	struct sdhci_pltfm_host *pltfm_host = sdhci_priv(host);
->> +	struct sdhci_omap_host *omap_host = sdhci_pltfm_priv(pltfm_host);
->> +
->> +	if (omap_host->is_tuning) {
->> +		/*
->> +		 * Since we are not resetting data lines during tuning
->> +		 * operation, data error or data complete interrupts
->> +		 * might still arrive. Mark this request as a failure
->> +		 * but still wait for the data interrupt
->> +		 */
->> +		if (intmask & SDHCI_INT_TIMEOUT)
->> +			host->cmd->error = -ETIMEDOUT;
->> +		else
->> +			host->cmd->error = -EILSEQ;
->> +
->> +		sdhci_finish_command(host);
->> +	} else {
->> +		sdhci_cmd_err(host, intmask, intmask_p);
->> +	}
->> +}
-> 
-> Could this be done by the existing ->irq() callback? i.e. mask the error
-> bits in intmask (have to write them back to SDHCI_INT_STATUS also) but set
-> cmd->error.
-> 
+------------------
 
-It is possible but I really don't want the callback to be unnecessarily
-called for every single interrupt that happens. I think we should only
-use the callback in the case of an actual error interrupt :-)
+[ Upstream commit 660492bcf4a7561b5fdc13be0ae0b0c0a8c120be ]
 
-Thanks,
-Faiz
+When slowpath messages are sent with high rate, the resulting
+events can lead to a FW assert in case they are not handled fast
+enough (Event Queue Full assert). Attempt to send queued slowpath
+messages only after the newly evacuated entries in the EQ ring
+are indicated to FW.
+
+Signed-off-by: Manish Chopra <manishc@marvell.com>
+Signed-off-by: Ariel Elior <aelior@marvell.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
+---
+ drivers/net/ethernet/qlogic/qed/qed_sp.h  |  1 +
+ drivers/net/ethernet/qlogic/qed/qed_spq.c | 15 +++++++--------
+ 2 files changed, 8 insertions(+), 8 deletions(-)
+
+diff --git a/drivers/net/ethernet/qlogic/qed/qed_sp.h b/drivers/net/ethernet/qlogic/qed/qed_sp.h
+index 01a213d4ee9c..e7192f3babc2 100644
+--- a/drivers/net/ethernet/qlogic/qed/qed_sp.h
++++ b/drivers/net/ethernet/qlogic/qed/qed_sp.h
+@@ -380,6 +380,7 @@ void qed_consq_setup(struct qed_hwfn *p_hwfn);
+  * @param p_hwfn
+  */
+ void qed_consq_free(struct qed_hwfn *p_hwfn);
++int qed_spq_pend_post(struct qed_hwfn *p_hwfn);
+ 
+ /**
+  * @file
+diff --git a/drivers/net/ethernet/qlogic/qed/qed_spq.c b/drivers/net/ethernet/qlogic/qed/qed_spq.c
+index 467755b6dd0b..01f8e2b5cb6c 100644
+--- a/drivers/net/ethernet/qlogic/qed/qed_spq.c
++++ b/drivers/net/ethernet/qlogic/qed/qed_spq.c
+@@ -404,6 +404,11 @@ int qed_eq_completion(struct qed_hwfn *p_hwfn, void *cookie)
+ 
+ 	qed_eq_prod_update(p_hwfn, qed_chain_get_prod_idx(p_chain));
+ 
++	/* Attempt to post pending requests */
++	spin_lock_bh(&p_hwfn->p_spq->lock);
++	rc = qed_spq_pend_post(p_hwfn);
++	spin_unlock_bh(&p_hwfn->p_spq->lock);
++
+ 	return rc;
+ }
+ 
+@@ -747,7 +752,7 @@ static int qed_spq_post_list(struct qed_hwfn *p_hwfn,
+ 	return 0;
+ }
+ 
+-static int qed_spq_pend_post(struct qed_hwfn *p_hwfn)
++int qed_spq_pend_post(struct qed_hwfn *p_hwfn)
+ {
+ 	struct qed_spq *p_spq = p_hwfn->p_spq;
+ 	struct qed_spq_entry *p_ent = NULL;
+@@ -879,7 +884,6 @@ int qed_spq_completion(struct qed_hwfn *p_hwfn,
+ 	struct qed_spq_entry	*p_ent = NULL;
+ 	struct qed_spq_entry	*tmp;
+ 	struct qed_spq_entry	*found = NULL;
+-	int			rc;
+ 
+ 	if (!p_hwfn)
+ 		return -EINVAL;
+@@ -937,12 +941,7 @@ int qed_spq_completion(struct qed_hwfn *p_hwfn,
+ 		 */
+ 		qed_spq_return_entry(p_hwfn, found);
+ 
+-	/* Attempt to post pending requests */
+-	spin_lock_bh(&p_spq->lock);
+-	rc = qed_spq_pend_post(p_hwfn);
+-	spin_unlock_bh(&p_spq->lock);
+-
+-	return rc;
++	return 0;
+ }
+ 
+ int qed_consq_alloc(struct qed_hwfn *p_hwfn)
+-- 
+2.19.1
+
+
+
