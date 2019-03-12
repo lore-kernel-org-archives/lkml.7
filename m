@@ -2,148 +2,99 @@ Return-Path: <SRS0=J4ZE=RP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,UNPARSEABLE_RELAY,
-	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_NEOMUTT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 60FE9C10F06
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 03:18:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 422DDC43381
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 03:25:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2A53B2148D
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 03:18:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 111CE2084F
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 03:25:26 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="xrD/pzQT"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726969AbfCLDSP (ORCPT
+        id S1726860AbfCLDZU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 11 Mar 2019 23:18:15 -0400
-Received: from Mailgw01.mediatek.com ([1.203.163.78]:16715 "EHLO
-        mailgw01.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1726789AbfCLDSP (ORCPT
+        Mon, 11 Mar 2019 23:25:20 -0400
+Received: from mail-pg1-f194.google.com ([209.85.215.194]:37086 "EHLO
+        mail-pg1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726534AbfCLDZU (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 11 Mar 2019 23:18:15 -0400
-X-UUID: 491e3b8309b4438c8441825f71f14c55-20190312
-X-UUID: 491e3b8309b4438c8441825f71f14c55-20190312
-Received: from mtkcas36.mediatek.inc [(172.27.4.253)] by mailgw01.mediatek.com
-        (envelope-from <chunfeng.yun@mediatek.com>)
-        (mailgw01.mediatek.com ESMTP with TLS)
-        with ESMTP id 376617760; Tue, 12 Mar 2019 11:18:10 +0800
-Received: from MTKCAS32.mediatek.inc (172.27.4.184) by MTKMBS31N2.mediatek.inc
- (172.27.4.87) with Microsoft SMTP Server (TLS) id 15.0.1395.4; Tue, 12 Mar
- 2019 11:18:09 +0800
-Received: from [10.17.3.153] (172.27.4.253) by MTKCAS32.mediatek.inc
- (172.27.4.170) with Microsoft SMTP Server id 15.0.1395.4 via Frontend
- Transport; Tue, 12 Mar 2019 11:18:08 +0800
-Message-ID: <1552360688.10179.55.camel@mhfsdcap03>
-Subject: Re: [PATCH 1/5] dt-bindings: connector: add optional properties for
- Type-B
-From:   Chunfeng Yun <chunfeng.yun@mediatek.com>
-To:     Hans de Goede <hdegoede@redhat.com>
-CC:     Rob Herring <robh+dt@kernel.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Heikki Krogerus <heikki.krogerus@linux.intel.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        Adam Thomson <Adam.Thomson.Opensource@diasemi.com>,
-        Li Jun <jun.li@nxp.com>,
-        "Badhri Jagan Sridharan" <badhri@google.com>,
-        Andy Shevchenko <andy.shevchenko@gmail.com>,
-        Min Guo <min.guo@mediatek.com>, <devicetree@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>, <linux-usb@vger.kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <linux-mediatek@lists.infradead.org>
-Date:   Tue, 12 Mar 2019 11:18:08 +0800
-In-Reply-To: <c8084259-74d3-c85f-1275-854826c935a0@redhat.com>
-References: <1552025622-15582-1-git-send-email-chunfeng.yun@mediatek.com>
-         <1552025622-15582-2-git-send-email-chunfeng.yun@mediatek.com>
-         <693b11e7-fa9e-ab1f-561a-beb758b1872f@redhat.com>
-         <1552282383.10179.21.camel@mhfsdcap03>
-         <c8084259-74d3-c85f-1275-854826c935a0@redhat.com>
-Content-Type: text/plain; charset="UTF-8"
-X-Mailer: Evolution 3.2.3-0ubuntu6 
-Content-Transfer-Encoding: 7bit
+        Mon, 11 Mar 2019 23:25:20 -0400
+Received: by mail-pg1-f194.google.com with SMTP id q206so721621pgq.4
+        for <linux-kernel@vger.kernel.org>; Mon, 11 Mar 2019 20:25:19 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=97IIXVxr0JRnVLVvGGNhouGmo2ox10byIzwCAWGZzF8=;
+        b=xrD/pzQTDVgul0ad5KmZlrdv4O1EWXZpzqTOR7oyrv9pNrkRk/whAhUGHOL5TLxGGP
+         9RQDU971YYwahTwRLrhg4REXS70ZuaIssuUfaqEfo0HTSf4fIby3YTRDhM5Ui3KMzgjF
+         zW2uQHIR/5nIDlroFi9A6Fn+JS6TGo4sptDtB/2hWaUgqPMy3i06CdiOEeQ4jlNczl+z
+         lJzDg7lKtI7+7fT+ARkPubULMfleWT6ej5AggfOphBxc9lkiwaJy6FC25fXdGjMrtnXx
+         bu90NmwLrtG3V2SA4teEGS/0H7Fy2N4hVC+r+sdtAXpyPY8j913NHwrJQXZbEyZ/J3Kt
+         3zIg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=97IIXVxr0JRnVLVvGGNhouGmo2ox10byIzwCAWGZzF8=;
+        b=F14puTa76L8uBZ1ubFaG+3Lvft87EEO70TpxUhLm8fFd/8PrZhEpaULkbhO0AGtsIz
+         dlWIZLsiTDjsOVnieIQdyjJrcmnJtZQrt9td4oknM8mK0AOOTKZZ7HMK3/TgeylrEabj
+         eq470tMfLRDvrcDVZeCvzjZcIjRz9UicTjxFSNb5/Z0OCjrtl9Ug9WHO3NbMPJsCkWkn
+         wjVzu+1nic1eU5E/QDx7cUnFGes5kZ56zrYHCGdeOndDC8CjMyA7hQRkNotfnflLQP9G
+         IT38yxLOg4w92NxuUmY38p2m8eCmiu4kVSlsD3knsqQZACS5t2c/wOWe5/MA8dwVvwXD
+         ux7w==
+X-Gm-Message-State: APjAAAX8ngD7uFG+KYQ+AuYSGKfFW1F913hUp8LoqgsDyliUAEnCQ2EP
+        I8MlUFqyyg6jDTAIRn3i2aCwA5UTv4M=
+X-Google-Smtp-Source: APXvYqzNwamPaXIwOAG/0tHKWKu4hFT9rcET3CmQgSoXNTl5taiUxn+Pxb9RY3jWvLm632eczBhE+Q==
+X-Received: by 2002:a17:902:2f43:: with SMTP id s61mr37947350plb.158.1552361119475;
+        Mon, 11 Mar 2019 20:25:19 -0700 (PDT)
+Received: from localhost ([122.166.134.37])
+        by smtp.gmail.com with ESMTPSA id n6sm9493616pgh.79.2019.03.11.20.25.18
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Mon, 11 Mar 2019 20:25:18 -0700 (PDT)
+Date:   Tue, 12 Mar 2019 08:55:16 +0530
+From:   Viresh Kumar <viresh.kumar@linaro.org>
+To:     "Rafael J. Wysocki" <rjw@rjwysocki.net>
+Cc:     Linux PM <linux-pm@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH] PM / wakeup: Drop wakeup_source_drop()
+Message-ID: <20190312032516.dme2wea6zt3v7eiu@vireshk-i7>
+References: <2820276.PxaWYKrF8K@aspire.rjw.lan>
 MIME-Version: 1.0
-X-MTK:  N
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <2820276.PxaWYKrF8K@aspire.rjw.lan>
+User-Agent: NeoMutt/20180323-120-3dd1ac
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi,
-On Mon, 2019-03-11 at 09:06 +0100, Hans de Goede wrote:
-> Hi,
+On 11-03-19, 12:53, Rafael J. Wysocki wrote:
+> From: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
 > 
-> On 11-03-19 06:33, Chunfeng Yun wrote:
-> > Hi,
-> > 
-> > On Fri, 2019-03-08 at 13:07 +0100, Hans de Goede wrote:
-> >> Hi,
-> >>
-> >> On 08-03-19 07:13, Chunfeng Yun wrote:
-> >>> Add id-gpios, vbus-gpios, vbus-supply and pinctrl properties for
-> >>> usb-b-connector
-> >>>
-> >>> Signed-off-by: Chunfeng Yun <chunfeng.yun@mediatek.com>
-> >>> ---
-> >>>    .../devicetree/bindings/connector/usb-connector.txt    | 10 ++++++++++
-> >>>    1 file changed, 10 insertions(+)
-> >>>
-> >>> diff --git a/Documentation/devicetree/bindings/connector/usb-connector.txt b/Documentation/devicetree/bindings/connector/usb-connector.txt
-> >>> index a9a2f2fc44f2..7a07b0f4f973 100644
-> >>> --- a/Documentation/devicetree/bindings/connector/usb-connector.txt
-> >>> +++ b/Documentation/devicetree/bindings/connector/usb-connector.txt
-> >>> @@ -17,6 +17,16 @@ Optional properties:
-> >>>    - self-powered: Set this property if the usb device that has its own power
-> >>>      source.
-> >>>    
-> >>> +Optional properties for usb-b-connector:
-> >>> +- id-gpios: gpio for USB ID pin.
-> >>
-> >> What about boards where the ID pin is *not* connected to a GPIO,
-> >> but e.g. to a special pin on the PMIC which can also detect
-> >> an ACA adapter ? Currently this case is handled by extcon
-> >> drivers, but we have no way to set e.g. vbus-supply for the
-> >> connector. Maybe in this case the usb-connector node should
-> >> be a child of the PMIC node ?
-> > Yes, it would be, PMIC is in charger of detecting the status of ID pin
+> After commit d856f39ac1cc ("PM / wakeup: Rework wakeup source timer
+> cancellation") wakeup_source_drop() is a trivial wrapper around
+> __pm_relax() and it has no users except for wakeup_source_destroy()
+> and wakeup_source_trash() which also has no users, so drop it along
+> with the latter and make wakeup_source_destroy() call __pm_relax()
+> directly.
 > 
-> Ok, then I think this should be documented too.
+> Signed-off-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
+> ---
 > 
-> >> And in many cases there also is a mux to switch the datalines
-> >> between the host and device(gadget) controllers, how should
-> >> that be described in this model?  See the new usb-role-switch
-> >> code under drivers/usb/roles
-> >>
-> >> In some cases the mux is controlled through a gpio, so we
-> >> may want to add a "mux-gpios" here in which case we also
-> >> need to define what 0/1 means.
-> > I'm not sure, the mux seems not belong to this connector,
-> > and may need another driver to register usb-role-switch,
-> > similar to:
-> > 
-> > [v2,2/2] usb: typec: add typec switch via GPIO control
-> > https://patchwork.kernel.org/patch/10834327/
+> Commit d856f39ac1cc is in the bleeding-edge branch of the linux-pm.git tree.
 > 
-> Right the mux/role-switch will need a driver, but the "owner"
-> of the usb_connector, e.g. the PMIC or the owner of the
-> id GPIO pin needs to know which device is the role-switch so
-> that it can set the role correctly based on the id-pin.
-> 
-> Your binding already contains Vbus info, allowing the owner
-> of the usb_connector to enable/disable Vbus based on the id-pin,
-> but the owner will also be responsible for setting the role-switch.
-In this patch series, I make usb_connector driver enable/disable Vbus,
-but not the parent(USB controller) of usb_connector which registers a
-usb-role-switch, which way do you think it is better? 
+> ---
+>  drivers/base/power/wakeup.c |   18 +-----------------
+>  include/linux/pm_wakeup.h   |    9 ---------
+>  2 files changed, 1 insertion(+), 26 deletions(-)
 
-Thanks
-> 
-> Note we cannot simply assume there will be only one role-switch,
-> we really need some link from the usb_connector to the role-switch
-> (or if it is a GPIO driven role-switch simply a role-switch-gpios
-> member in the usb_connector).
-> 
-> Regards,
-> 
-> Hans
-> 
+Acked-by: Viresh Kumar <viresh.kumar@linaro.org>
 
-
+-- 
+viresh
