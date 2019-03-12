@@ -4,112 +4,114 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 45A84C10F00
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 07:56:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6FB65C43381
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 07:59:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 16723214D8
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 07:56:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2F728214AE
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 07:59:59 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=umn.edu header.i=@umn.edu header.b="Rrwb3kUu"
+	dkim=pass (2048-bit key) header.d=umn.edu header.i=@umn.edu header.b="Ch9vuvjy"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727107AbfCLH4m (ORCPT
+        id S1727178AbfCLH75 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 12 Mar 2019 03:56:42 -0400
-Received: from mta-p6.oit.umn.edu ([134.84.196.206]:38096 "EHLO
-        mta-p6.oit.umn.edu" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726218AbfCLH4m (ORCPT
+        Tue, 12 Mar 2019 03:59:57 -0400
+Received: from mta-p8.oit.umn.edu ([134.84.196.208]:56324 "EHLO
+        mta-p8.oit.umn.edu" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726614AbfCLH75 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 12 Mar 2019 03:56:42 -0400
+        Tue, 12 Mar 2019 03:59:57 -0400
 Received: from localhost (unknown [127.0.0.1])
-        by mta-p6.oit.umn.edu (Postfix) with ESMTP id C3EB3B3D
-        for <linux-kernel@vger.kernel.org>; Tue, 12 Mar 2019 07:56:40 +0000 (UTC)
+        by mta-p8.oit.umn.edu (Postfix) with ESMTP id E7C3CA99
+        for <linux-kernel@vger.kernel.org>; Tue, 12 Mar 2019 07:59:55 +0000 (UTC)
 X-Virus-Scanned: amavisd-new at umn.edu
-Received: from mta-p6.oit.umn.edu ([127.0.0.1])
-        by localhost (mta-p6.oit.umn.edu [127.0.0.1]) (amavisd-new, port 10024)
-        with ESMTP id ya0QLOhEwT5U for <linux-kernel@vger.kernel.org>;
-        Tue, 12 Mar 2019 02:56:40 -0500 (CDT)
-Received: from mail-it1-f197.google.com (mail-it1-f197.google.com [209.85.166.197])
+Received: from mta-p8.oit.umn.edu ([127.0.0.1])
+        by localhost (mta-p8.oit.umn.edu [127.0.0.1]) (amavisd-new, port 10024)
+        with ESMTP id uIQRTyV2V7Xu for <linux-kernel@vger.kernel.org>;
+        Tue, 12 Mar 2019 02:59:55 -0500 (CDT)
+Received: from mail-io1-f70.google.com (mail-io1-f70.google.com [209.85.166.70])
         (using TLSv1.2 with cipher AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mta-p6.oit.umn.edu (Postfix) with ESMTPS id 8E38CA84
-        for <linux-kernel@vger.kernel.org>; Tue, 12 Mar 2019 02:56:40 -0500 (CDT)
-Received: by mail-it1-f197.google.com with SMTP id 9so1454449ita.8
-        for <linux-kernel@vger.kernel.org>; Tue, 12 Mar 2019 00:56:40 -0700 (PDT)
+        by mta-p8.oit.umn.edu (Postfix) with ESMTPS id B6462AA5
+        for <linux-kernel@vger.kernel.org>; Tue, 12 Mar 2019 02:59:55 -0500 (CDT)
+Received: by mail-io1-f70.google.com with SMTP id e9so1227481iob.4
+        for <linux-kernel@vger.kernel.org>; Tue, 12 Mar 2019 00:59:55 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=umn.edu; s=google;
         h=from:to:cc:subject:date:message-id;
-        bh=GHwL4zBqlKlQckqtsDRpff1AB+Nxp6P8f5kwUycKt+I=;
-        b=Rrwb3kUuQTLkon4rAku7XQ7Jg4lHHS8eKfKk7+CJayAofX14LiY/ADR2yL+fzWKzy/
-         yQFxzC1Xd9tahI3szGNNGQbqD6645mJg5E4tgzoql2LTQnvsAfobz/okxbkAuaRPZkTq
-         aEG1wFcTtu2t+15pLdM1RroMNIf4veY2WFEyp0H+FXiGgL74CxcrdfI5v06AQn6VCEAF
-         ZRE8j7dkwzGExBmRsLKH1Y2rhBezbVfJ6BQFfqGf2PbMHY2WSW5gvaUlitFQUKRxoJE+
-         zz2ze4xC5Ipl6ISpL1fqAEG5KH+mWcvBP7H0HR5MBqoEJZEcWONUYUTbJd+PwFP8h5FP
-         tTQw==
+        bh=1nkZcVU0GvUzDc/ZYNTpuRtHlao+2b0Vm1VZH2b1N8U=;
+        b=Ch9vuvjydJ4EhQPIcG7puULxC+JRbV5Chpg2PLSeQh+EyWOBrybWR1/nJNODcDbxaI
+         PQskGTtnLDWIo5/AU/BTCwwMJnVQgJs3ekRvPcMXx9Pp984XlFYGe7ufnX/NcpnSoEor
+         UorOHxgCM15q/CNDL8doF8cO90EcjUkKKvp+pmPW36YpXU7aK0nB1MOgA+u6Z8i4gMZn
+         XjmF4beVRrUNsqrgPHlNdEt3BVcTXDjYdAjqBsVNp7sxXBsHUXYnqQFn5cNQPRmM3rlM
+         snfDcGx7lXb78OO0gkXQ/5Yi3ibqv00LObONxyBOn9Ul81VHh61U4k69iGjjy3XnLsIC
+         EwnQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id;
-        bh=GHwL4zBqlKlQckqtsDRpff1AB+Nxp6P8f5kwUycKt+I=;
-        b=Wj2EKm4Mpqk7pQe44wv0y1G50o5Kx9HLuU0nE0rEDT+ShNxjd1B1IdcfOZiM3PRHKL
-         gaxVV9Ywl2RbJ7CanBRBpy+MZzku+Bdwvc5U93voPgwbgygrA7klwKfRWrOLTgyS8a2q
-         Mig5hSfOraQpcz+a+jA2KHPzQIArmkP/+pGJOmB6+xvfObH2NIdNopQ+StjEzGgkPMcN
-         eIo9IuBdsrlIlYHYdD8gzIzn+oq1018rKZb3srDWJHHeygfpBQJIA7c9FFi03hztFOiq
-         F4xFWwzEHOLviE+INzFxJjDUCcAcv9mJINheXKarRqdNsiI6BH/4a27Hjfz60n6W2tHf
-         w7pA==
-X-Gm-Message-State: APjAAAX/WYrlBzGs+9/I7vmrs0duLs6G/jnA5UE4lGrFcq3yk53iH4wU
-        rcek8QfQfR0F2iYZIFL6qieMq7X1TolaHfiR799ImTVc1dQNwyqfihKOjd0PXe4YcGtq23lWHVk
-        M3rt/zMkeMj9p7DruAN5EQxOjzk7q
-X-Received: by 2002:a6b:7219:: with SMTP id n25mr10363257ioc.117.1552377400155;
-        Tue, 12 Mar 2019 00:56:40 -0700 (PDT)
-X-Google-Smtp-Source: APXvYqwCOLy0p/Zx9y/3ip/ZQBpQCX4CLC4JCn7dfHgj8FIju2Odvfqkl6BklClOE5Sd+YohY31Vig==
-X-Received: by 2002:a6b:7219:: with SMTP id n25mr10363242ioc.117.1552377399938;
-        Tue, 12 Mar 2019 00:56:39 -0700 (PDT)
+        bh=1nkZcVU0GvUzDc/ZYNTpuRtHlao+2b0Vm1VZH2b1N8U=;
+        b=UAqEP4ibNVfvh7cNQGN74cjljM44UJzRXgphkIe1mQGpjlplEceFDm1vY2VMpP4sFZ
+         feWIa9qJs+GmU97FuQx9FqNv4Ulls3lR0desKGngeR+TfSxWRQYNStZqSyc02lO56Kc3
+         pQzLKMpjDLiiNt3w7KMTylUWP/Hy/5166ol9UpVNesaI4llgKcI5n94wVb1X3bL5cPPa
+         zzhMt/LHUwbGUmZAWvKd7WFonVaeExiHstTIF3zvPgushXOiV5yK132BmAA2BA8ZKbC2
+         kcIs/MmiATnG5vkgV7mXXyXucF5gt0sX8NEQ1Ec5cbVRlMkbJ3ZlfvjAOaLG+M0Zuj7e
+         vZpQ==
+X-Gm-Message-State: APjAAAU+BSORs5IKLXQdQOaf+xz1fT43L9toqM8uzdNv8wv4jS813zBo
+        kJCW8tFY5xPAz930tkkCYNyTbyqd5WQgvDB3HPjqTQYclSkAIDH4cVj0/tIYeVQwN3juu28vfmH
+        U3ybxQq4cZ/BREbLbjGX3EhhbiTHq
+X-Received: by 2002:a02:4083:: with SMTP id n125mr21568212jaa.63.1552377595298;
+        Tue, 12 Mar 2019 00:59:55 -0700 (PDT)
+X-Google-Smtp-Source: APXvYqyOfP+9mqD+1XLGDv4RfFO3LOxcYkCR4RoLYjEACGFPQr+ni9W5LMOCuUKOkpHRPxMIwUeagA==
+X-Received: by 2002:a02:4083:: with SMTP id n125mr21568200jaa.63.1552377595059;
+        Tue, 12 Mar 2019 00:59:55 -0700 (PDT)
 Received: from bee.dtc.umn.edu (cs-bee-u.cs.umn.edu. [128.101.106.63])
-        by smtp.gmail.com with ESMTPSA id s10sm2669419ioc.54.2019.03.12.00.56.38
+        by smtp.gmail.com with ESMTPSA id u12sm3391365iop.77.2019.03.12.00.59.53
         (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Tue, 12 Mar 2019 00:56:38 -0700 (PDT)
+        Tue, 12 Mar 2019 00:59:54 -0700 (PDT)
 From:   Kangjie Lu <kjlu@umn.edu>
 To:     kjlu@umn.edu
 Cc:     pakki001@umn.edu, Ping-Ke Shih <pkshih@realtek.com>,
         Kalle Valo <kvalo@codeaurora.org>,
         "David S. Miller" <davem@davemloft.net>,
+        Larry Finger <Larry.Finger@lwfinger.net>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Ingo Molnar <mingo@kernel.org>,
+        Randy Dunlap <rdunlap@infradead.org>,
         linux-wireless@vger.kernel.org, netdev@vger.kernel.org,
         linux-kernel@vger.kernel.org
-Subject: [PATCH] net: rtlwifi: fix a potential NULL pointer dereference
-Date:   Tue, 12 Mar 2019 02:56:33 -0500
-Message-Id: <20190312075633.573-1-kjlu@umn.edu>
+Subject: [PATCH] net: rtl8192c: fix a potential NULL pointer dereference
+Date:   Tue, 12 Mar 2019 02:59:46 -0500
+Message-Id: <20190312075948.1569-1-kjlu@umn.edu>
 X-Mailer: git-send-email 2.17.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-In case alloc_workqueue fails, the fix reports the error and
-returns to avoid NULL pointer dereference.
+In case dev_alloc_skb fails, the fix safely returns to avoid
+potential NULL pointer dereference.
 
 Signed-off-by: Kangjie Lu <kjlu@umn.edu>
 ---
- drivers/net/wireless/realtek/rtlwifi/base.c | 5 +++++
- 1 file changed, 5 insertions(+)
+ drivers/net/wireless/realtek/rtlwifi/rtl8192c/fw_common.c | 3 +++
+ 1 file changed, 3 insertions(+)
 
-diff --git a/drivers/net/wireless/realtek/rtlwifi/base.c b/drivers/net/wireless/realtek/rtlwifi/base.c
-index 217d2a7a43c7..ac746c322554 100644
---- a/drivers/net/wireless/realtek/rtlwifi/base.c
-+++ b/drivers/net/wireless/realtek/rtlwifi/base.c
-@@ -448,6 +448,11 @@ static void _rtl_init_deferred_work(struct ieee80211_hw *hw)
- 	/* <2> work queue */
- 	rtlpriv->works.hw = hw;
- 	rtlpriv->works.rtl_wq = alloc_workqueue("%s", 0, 0, rtlpriv->cfg->name);
-+	if (unlikely(!rtlpriv->works.rtl_wq)) {
-+		pr_err("Failed to allocate work queue\n");
+diff --git a/drivers/net/wireless/realtek/rtlwifi/rtl8192c/fw_common.c b/drivers/net/wireless/realtek/rtlwifi/rtl8192c/fw_common.c
+index 18c76990a089..9042fc044c7e 100644
+--- a/drivers/net/wireless/realtek/rtlwifi/rtl8192c/fw_common.c
++++ b/drivers/net/wireless/realtek/rtlwifi/rtl8192c/fw_common.c
+@@ -623,6 +623,9 @@ void rtl92c_set_fw_rsvdpagepkt(struct ieee80211_hw *hw,
+ 		      u1rsvdpageloc, 3);
+ 
+ 	skb = dev_alloc_skb(totalpacketlen);
++	if (!skb)
 +		return;
-+	}
 +
- 	INIT_DELAYED_WORK(&rtlpriv->works.watchdog_wq,
- 			  (void *)rtl_watchdog_wq_callback);
- 	INIT_DELAYED_WORK(&rtlpriv->works.ips_nic_off_wq,
+ 	skb_put_data(skb, &reserved_page_packet, totalpacketlen);
+ 
+ 	if (cmd_send_packet)
 -- 
 2.17.1
 
