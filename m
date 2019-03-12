@@ -2,177 +2,72 @@ Return-Path: <SRS0=J4ZE=RP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_MUTT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5ACEFC10F06
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 01:54:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E08C2C43381
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 01:56:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 26638214AE
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 01:54:59 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=tobin.cc header.i=@tobin.cc header.b="Uf/KtrOT";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="2HSi7Br/"
+	by mail.kernel.org (Postfix) with ESMTP id B2C59214D8
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 01:56:51 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726734AbfCLBy5 (ORCPT
+        id S1726768AbfCLB4u (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 11 Mar 2019 21:54:57 -0400
-Received: from out2-smtp.messagingengine.com ([66.111.4.26]:49787 "EHLO
-        out2-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726167AbfCLBy5 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 11 Mar 2019 21:54:57 -0400
-Received: from compute5.internal (compute5.nyi.internal [10.202.2.45])
-        by mailout.nyi.internal (Postfix) with ESMTP id 3818023176;
-        Mon, 11 Mar 2019 21:54:56 -0400 (EDT)
-Received: from mailfrontend1 ([10.202.2.162])
-  by compute5.internal (MEProxy); Mon, 11 Mar 2019 21:54:56 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=tobin.cc; h=date
-        :from:to:cc:subject:message-id:references:mime-version
-        :content-type:in-reply-to; s=fm2; bh=DWxYFqFht/GTnBUrw50jGcXbdTj
-        gIErrdzyLX70BJKc=; b=Uf/KtrOTzgHM/DVKJ0i0SYM1puQbNeo5DjesYmUCojg
-        6eZDxn4eU6RurNSVtPL3EKm1kxCtoUmnnGkLStn2C62TmuywYz1t0+rqa9DbZVJY
-        FZhC0HMn1KXZ3W9R0hvDfQpF3upZTuXeKhc6tNAFIqf/AXrHWphWpSo72TKkjXr0
-        slBfXZzxZVqRe8lWzdX7bmfsN6CYQqM+uNnQlQmiLwRcGb/wWaEysYczOUmwag2Z
-        fvT6vKzqUW8GO3b7hgGanMz6uebyNM6LShiHH7Y6eHQfHjIoRQ48FiTre2ZqH7tn
-        6GYeQuIchvVTwEo00++K9cTyt6BwY45wGaH8NweGYlA==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-        messagingengine.com; h=cc:content-type:date:from:in-reply-to
-        :message-id:mime-version:references:subject:to:x-me-proxy
-        :x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=fm2; bh=DWxYFq
-        Fht/GTnBUrw50jGcXbdTjgIErrdzyLX70BJKc=; b=2HSi7Br/pN+UMckjZh3KC5
-        GZ1dG+6z2quFoSUwO4lPc64LxWCi1rfoF/shfxDC9swDyi7PJ74DdxYHDgIzs+xp
-        pbMS1p7nA9DoO6i5EeJm2ae0sgIJPvLQ4BQ8rBe9zVpxAl+vhvjv1N8ytz3hb87q
-        oKuZZYM9l6vMaNeezcsu5j8Dyqo3w8+VikvJjz76pHGsFhJwARlTJ+2clkzuBW9m
-        PHgD9wpIZdRAuG8WsYdvAIL19J1kvbxaGGeeVgXu8KiweL0nbCnIW1n4+/wcIGag
-        Ai7N7rGBCp0PCbaHZgUAHzOLDA7qMDzzhCI9jDkiLbmkji4KfihThzydv2CoLiSQ
-        ==
-X-ME-Sender: <xms:bhGHXIY1Sa3BMaDcyURcL8rGVRZLnuMQqFvGaOKcopmG7Z2C4KEG8w>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedutddrgeejgdefjecutefuodetggdotefrodftvf
-    curfhrohhfihhlvgemucfhrghsthforghilhdpqfgfvfdpuffrtefokffrpgfnqfghnecu
-    uegrihhlohhuthemuceftddtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenfg
-    hrlhcuvffnffculddutddmnecujfgurhepfffhvffukfhfgggtuggjofgfsehttdertdfo
-    redvnecuhfhrohhmpedfvfhosghinhcuvedrucfjrghrughinhhgfdcuoehmvgesthhosg
-    hinhdrtggtqeenucfkphepuddvgedrudeiledrvdefrddukeegnecurfgrrhgrmhepmhgr
-    ihhlfhhrohhmpehmvgesthhosghinhdrtggtnecuvehluhhsthgvrhfuihiivgeptd
-X-ME-Proxy: <xmx:bhGHXC-2KyZD3iH_YoXwop1pPkWXsZt6p2mdDJj_UAFUq3F-nqQirw>
-    <xmx:bhGHXGtG51OEbRvgVdl2ZbrP3bMYpEjyQDqJ2VKlJOpB6eb6u__PhA>
-    <xmx:bhGHXHFUgjSGEo9hBxyDTF5UYzjRLMmuTIL2evF0fJgPZz3Sob-10g>
-    <xmx:cBGHXBnWiRcQl4KU5xa1yQEVHMLBa74qRrtCe8EkfFs0o5tX2Ni0ng>
-Received: from localhost (124-169-23-184.dyn.iinet.net.au [124.169.23.184])
-        by mail.messagingengine.com (Postfix) with ESMTPA id 1F935E4173;
-        Mon, 11 Mar 2019 21:54:53 -0400 (EDT)
-Date:   Tue, 12 Mar 2019 12:54:32 +1100
-From:   "Tobin C. Harding" <me@tobin.cc>
-To:     Roman Gushchin <guro@fb.com>
-Cc:     "Tobin C. Harding" <tobin@kernel.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Christopher Lameter <cl@linux.com>,
-        Pekka Enberg <penberg@cs.helsinki.fi>,
-        Matthew Wilcox <willy@infradead.org>,
-        Tycho Andersen <tycho@tycho.ws>,
-        "linux-mm@kvack.org" <linux-mm@kvack.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: Re: [RFC 12/15] xarray: Implement migration function for objects
-Message-ID: <20190312015432.GI9362@eros.localdomain>
-References: <20190308041426.16654-1-tobin@kernel.org>
- <20190308041426.16654-13-tobin@kernel.org>
- <20190312001602.GB25059@tower.DHCP.thefacebook.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190312001602.GB25059@tower.DHCP.thefacebook.com>
-X-Mailer: Mutt 1.11.3 (2019-02-01)
-User-Agent: Mutt/1.11.3 (2019-02-01)
+        Mon, 11 Mar 2019 21:56:50 -0400
+Received: from inva020.nxp.com ([92.121.34.13]:55812 "EHLO inva020.nxp.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726167AbfCLB4t (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 11 Mar 2019 21:56:49 -0400
+Received: from inva020.nxp.com (localhost [127.0.0.1])
+        by inva020.eu-rdc02.nxp.com (Postfix) with ESMTP id C88381A0343;
+        Tue, 12 Mar 2019 02:56:47 +0100 (CET)
+Received: from invc005.ap-rdc01.nxp.com (invc005.ap-rdc01.nxp.com [165.114.16.14])
+        by inva020.eu-rdc02.nxp.com (Postfix) with ESMTP id E8D1F1A027C;
+        Tue, 12 Mar 2019 02:56:42 +0100 (CET)
+Received: from titan.ap.freescale.net (TITAN.ap.freescale.net [10.192.208.233])
+        by invc005.ap-rdc01.nxp.com (Postfix) with ESMTP id 9B768402C9;
+        Tue, 12 Mar 2019 09:56:36 +0800 (SGT)
+From:   Peng Ma <peng.ma@nxp.com>
+To:     axboe@kernel.dk, robh+dt@kernel.org, mark.rutland@arm.com,
+        shawnguo@kernel.org, leoyang.li@nxp.com
+Cc:     linux-ide@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        Peng Ma <peng.ma@nxp.com>
+Subject: [v7 1/3] dt-bindings: ahci-fsl-qoriq: add lx2160a chip name to the list
+Date:   Tue, 12 Mar 2019 09:50:17 +0800
+Message-Id: <20190312015019.30628-1-peng.ma@nxp.com>
+X-Mailer: git-send-email 2.14.1
+X-Virus-Scanned: ClamAV using ClamSMTP
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Mar 12, 2019 at 12:16:07AM +0000, Roman Gushchin wrote:
-> On Fri, Mar 08, 2019 at 03:14:23PM +1100, Tobin C. Harding wrote:
-> > Implement functions to migrate objects. This is based on
-> > initial code by Matthew Wilcox and was modified to work with
-> > slab object migration.
-> > 
-> > Co-developed-by: Christoph Lameter <cl@linux.com>
-> > Signed-off-by: Tobin C. Harding <tobin@kernel.org>
-> > ---
-> >  lib/radix-tree.c | 13 +++++++++++++
-> >  lib/xarray.c     | 44 ++++++++++++++++++++++++++++++++++++++++++++
-> >  2 files changed, 57 insertions(+)
-> > 
-> > diff --git a/lib/radix-tree.c b/lib/radix-tree.c
-> > index 14d51548bea6..9412c2853726 100644
-> > --- a/lib/radix-tree.c
-> > +++ b/lib/radix-tree.c
-> > @@ -1613,6 +1613,17 @@ static int radix_tree_cpu_dead(unsigned int cpu)
-> >  	return 0;
-> >  }
-> >  
-> > +extern void xa_object_migrate(void *tree_node, int numa_node);
-> > +
-> > +static void radix_tree_migrate(struct kmem_cache *s, void **objects, int nr,
-> > +			       int node, void *private)
-> > +{
-> > +	int i;
-> > +
-> > +	for (i = 0; i < nr; i++)
-> > +		xa_object_migrate(objects[i], node);
-> > +}
-> > +
-> >  void __init radix_tree_init(void)
-> >  {
-> >  	int ret;
-> > @@ -1627,4 +1638,6 @@ void __init radix_tree_init(void)
-> >  	ret = cpuhp_setup_state_nocalls(CPUHP_RADIX_DEAD, "lib/radix:dead",
-> >  					NULL, radix_tree_cpu_dead);
-> >  	WARN_ON(ret < 0);
-> > +	kmem_cache_setup_mobility(radix_tree_node_cachep, NULL,
-> > +				  radix_tree_migrate);
-> >  }
-> > diff --git a/lib/xarray.c b/lib/xarray.c
-> > index 81c3171ddde9..4f6f17c87769 100644
-> > --- a/lib/xarray.c
-> > +++ b/lib/xarray.c
-> > @@ -1950,6 +1950,50 @@ void xa_destroy(struct xarray *xa)
-> >  }
-> >  EXPORT_SYMBOL(xa_destroy);
-> >  
-> > +void xa_object_migrate(struct xa_node *node, int numa_node)
-> > +{
-> > +	struct xarray *xa = READ_ONCE(node->array);
-> > +	void __rcu **slot;
-> > +	struct xa_node *new_node;
-> > +	int i;
-> > +
-> > +	/* Freed or not yet in tree then skip */
-> > +	if (!xa || xa == XA_FREE_MARK)
-> > +		return;
-> 
-> XA_FREE_MARK is equal to 0, so the second check is redundant.
-> 
-> #define XA_MARK_0		((__force xa_mark_t)0U)
-> #define XA_MARK_1		((__force xa_mark_t)1U)
-> #define XA_MARK_2		((__force xa_mark_t)2U)
-> #define XA_PRESENT		((__force xa_mark_t)8U)
-> #define XA_MARK_MAX		XA_MARK_2
-> #define XA_FREE_MARK		XA_MARK_0
-> 
-> xa_node_free() sets node->array to XA_RCU_FREE, so maybe it's
-> what you need. I'm not sure however, Matthew should know better
+Add lx2160a compatible to bindings documentation.
 
-Cheers, will wait for his input.
+Signed-off-by: Peng Ma <peng.ma@nxp.com>
+Reviewed-by: Rob Herring <robh@kernel.org>
+---
+changed for V7:
+	- add Reviewed by tag.
 
-> > +
-> > +	new_node = kmem_cache_alloc_node(radix_tree_node_cachep,
-> > +					 GFP_KERNEL, numa_node);
-> 
-> We need to check here if the allocation was successful.
+ .../devicetree/bindings/ata/ahci-fsl-qoriq.txt     |    2 +-
+ 1 files changed, 1 insertions(+), 1 deletions(-)
 
-Woops, bad Tobin.  Thanks.
+diff --git a/Documentation/devicetree/bindings/ata/ahci-fsl-qoriq.txt b/Documentation/devicetree/bindings/ata/ahci-fsl-qoriq.txt
+index 7c3ca0e..9ecc019 100644
+--- a/Documentation/devicetree/bindings/ata/ahci-fsl-qoriq.txt
++++ b/Documentation/devicetree/bindings/ata/ahci-fsl-qoriq.txt
+@@ -3,7 +3,7 @@ Binding for Freescale QorIQ AHCI SATA Controller
+ Required properties:
+   - reg: Physical base address and size of the controller's register area.
+   - compatible: Compatibility string. Must be 'fsl,<chip>-ahci', where
+-    chip could be ls1021a, ls1043a, ls1046a, ls1088a, ls2080a etc.
++    chip could be ls1021a, ls1043a, ls1046a, ls1088a, ls2080a, lx2160a, etc.
+   - clocks: Input clock specifier. Refer to common clock bindings.
+   - interrupts: Interrupt specifier. Refer to interrupt binding.
+ 
+-- 
+1.7.1
 
-
-	Tobin.
