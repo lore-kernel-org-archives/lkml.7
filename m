@@ -2,76 +2,171 @@ Return-Path: <SRS0=J4ZE=RP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_MUTT autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CB7E8C43381
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 00:38:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C1965C10F06
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 00:39:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8982A2087F
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 00:38:49 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1552351129;
-	bh=u1T9h5MtYqiDCiXeeGOncO72SRQji8BZkHgV5c5HfiI=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
-	b=neWCXytideL0nbayBe4YI71o3xiRHlMZdT/NdrhtmwOPoDup2H/2gF0bvUsRIU/AM
-	 INTwN9LYznpjSil0zW6b8DslT3OdUweWyE5rRDgqvbt6/MNQ8TNlfwJKER5y7vmRS7
-	 kZs+w9Y9p4xIo/b+8z4IgySfZXsPvE4RuUB7jd0s=
+	by mail.kernel.org (Postfix) with ESMTP id 870A120657
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 00:39:17 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=joelfernandes.org header.i=@joelfernandes.org header.b="JI0daxOZ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726539AbfCLAir (ORCPT
+        id S1726630AbfCLAjQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 11 Mar 2019 20:38:47 -0400
-Received: from mail.linuxfoundation.org ([140.211.169.12]:38886 "EHLO
-        mail.linuxfoundation.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726209AbfCLAir (ORCPT
+        Mon, 11 Mar 2019 20:39:16 -0400
+Received: from mail-qt1-f195.google.com ([209.85.160.195]:46341 "EHLO
+        mail-qt1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726418AbfCLAjQ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 11 Mar 2019 20:38:47 -0400
-Received: from localhost.localdomain (c-73-223-200-170.hsd1.ca.comcast.net [73.223.200.170])
-        by mail.linuxfoundation.org (Postfix) with ESMTPSA id B20C2CB7;
-        Tue, 12 Mar 2019 00:38:46 +0000 (UTC)
-Date:   Mon, 11 Mar 2019 17:38:45 -0700
-From:   Andrew Morton <akpm@linux-foundation.org>
-To:     Alexey Dobriyan <adobriyan@gmail.com>
-Cc:     linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] Drop -Wdeclaration-after-statement
-Message-Id: <20190311173845.53c2e4e4d2257a3701fa2033@linux-foundation.org>
-In-Reply-To: <20190310133535.GA20473@avx2>
-References: <20190310133535.GA20473@avx2>
-X-Mailer: Sylpheed 3.5.1 (GTK+ 2.24.31; x86_64-pc-linux-gnu)
-Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+        Mon, 11 Mar 2019 20:39:16 -0400
+Received: by mail-qt1-f195.google.com with SMTP id z25so673143qti.13
+        for <linux-kernel@vger.kernel.org>; Mon, 11 Mar 2019 17:39:15 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=joelfernandes.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=ly3PyJhiRQi4oId3Jp/I4y9kAhs1iw828BmSysRKyZ8=;
+        b=JI0daxOZRh0PkhQAbU8+ah7z11OagpX6fwhO38Lk6ozIcUs80I5Au1B/H+ckOkLRfN
+         pv0Vr4WfmVRnGaAADux+nuB0lVD4e/ey885zZbAXm25lq5Ax7MRtanG/DDVzyzpxFcZ7
+         M7hooDTN5M3QxYhOreCsGfWXjuOpQFimpUSkU=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=ly3PyJhiRQi4oId3Jp/I4y9kAhs1iw828BmSysRKyZ8=;
+        b=ZDiGvy+V0/08HUI1XjcpXZuO1vS7smv7cSbT4JjgPvC8fwaY/JFSUu8GvsLQXlUq3G
+         x8bMXUveiP7RuAgTwds8EysjRuxlXVykRX+kDNbw0xZFhaRmYEyvip/gHuQKQWa3nKZ5
+         FdCT9dOrDarE3O+ZYAmfRcapArVZq35PlF28lNDdu3rPIlUJ5AaBDiAduskLy9vElbR3
+         5KUY853eydmXlfe7jqCTp0W02tiuPgNQvblWAOoFk9K9NHkst5SFYSBEsExJnezdjgJL
+         k3JS+WcTQJcSk0BlkUeQyuxbacaEfFGssnututDmivVphVf3AYJ0MqtbWIABF5D1UREH
+         TxRA==
+X-Gm-Message-State: APjAAAUsmIDAkJKN0Jzs9jBZNoabTSgOnMG7CXE0Nw460nPCq557nwRd
+        ikL0dstm7w8EG2eCVXwvk8VFKA==
+X-Google-Smtp-Source: APXvYqz+iHMK77Oj/SvnFoapIG3HmPyK+b4/w/1OkGxjCjN0asdsP9LWAG5l+h/cqvR4h5vbjdEnBg==
+X-Received: by 2002:ac8:2527:: with SMTP id 36mr13155134qtm.308.1552351154545;
+        Mon, 11 Mar 2019 17:39:14 -0700 (PDT)
+Received: from localhost ([2620:0:1004:1100:cca9:fccc:8667:9bdc])
+        by smtp.gmail.com with ESMTPSA id u48sm132343qtu.89.2019.03.11.17.39.13
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Mon, 11 Mar 2019 17:39:13 -0700 (PDT)
+Date:   Mon, 11 Mar 2019 20:39:12 -0400
+From:   Joel Fernandes <joel@joelfernandes.org>
+To:     Daniel Colascione <dancol@google.com>
+Cc:     Steven Rostedt <rostedt@goodmis.org>,
+        Karim Yaghmour <karim.yaghmour@opersys.com>,
+        Geert Uytterhoeven <geert@linux-m68k.org>,
+        Greg KH <gregkh@linuxfoundation.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Alexei Starovoitov <ast@kernel.org>,
+        atish patra <atishp04@gmail.com>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Dietmar Eggemann <dietmar.eggemann@arm.com>,
+        Guenter Roeck <groeck@chromium.org>,
+        Jonathan Corbet <corbet@lwn.net>,
+        Kees Cook <keescook@chromium.org>,
+        Android Kernel Team <kernel-team@android.com>,
+        "open list:DOCUMENTATION" <linux-doc@vger.kernel.org>,
+        "open list:KERNEL SELFTEST FRAMEWORK" 
+        <linux-kselftest@vger.kernel.org>,
+        linux-trace-devel@vger.kernel.org,
+        Manoj Rao <linux@manojrajarao.com>,
+        Masahiro Yamada <yamada.masahiro@socionext.com>,
+        Masami Hiramatsu <mhiramat@kernel.org>,
+        Qais Yousef <qais.yousef@arm.com>,
+        Randy Dunlap <rdunlap@infradead.org>,
+        Shuah Khan <shuah@kernel.org>, Yonghong Song <yhs@fb.com>
+Subject: Re: [PATCH v4 1/2] Provide in-kernel headers for making it easy to
+ extend the kernel
+Message-ID: <20190312003912.GA170478@google.com>
+References: <20190308140251.GC25768@kroah.com>
+ <CAMuHMdUmnrJtu8bBeUgtiU6y_TLHM27z1WxpPia4dXMpApeijw@mail.gmail.com>
+ <20190309071648.GE3882@kroah.com>
+ <CAMuHMdUT+UGt9p2QhOXzAtCUmqy-a8YN-ceDa-0qANJE53pWBA@mail.gmail.com>
+ <20190309121141.GA30173@kroah.com>
+ <b7296377-9e0c-aed7-61f0-93d24d1ceddd@opersys.com>
+ <CAMuHMdV8+XTyGf1ZJ+gMf=zQpzqh3-+b7wgi+gAmXQ6HpUAw3A@mail.gmail.com>
+ <3e84e1ef-e266-e983-5874-6c26ac7f38b8@opersys.com>
+ <20190311193612.4f09bf11@oasis.local.home>
+ <CAKOZuetHG0O-CiO6h5tD7aht_MT70ebwWMMSPkRUHdiM3wVq0Q@mail.gmail.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAKOZuetHG0O-CiO6h5tD7aht_MT70ebwWMMSPkRUHdiM3wVq0Q@mail.gmail.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sun, 10 Mar 2019 16:35:35 +0300 Alexey Dobriyan <adobriyan@gmail.com> wrote:
-
-> Newly added static_assert() is formally a declaration, which will give
-> a warning if used in the middle of the function.
+On Mon, Mar 11, 2019 at 04:58:28PM -0700, Daniel Colascione wrote:
+> On Mon, Mar 11, 2019 at 4:37 PM Steven Rostedt <rostedt@goodmis.org> wrote:
+> >
+> > On Sat, 9 Mar 2019 16:44:31 -0500
+> > Karim Yaghmour <karim.yaghmour@opersys.com> wrote:
+> >
+> >
+> > > Sorry, I should've been clearer. I'm including eBPF/BCC into the
+> > > "user-space tools" here. That was in fact my prime motivation in
+> > > encouraging Joel at the last LPC to look at this. I've been integrating
+> > > the teaching of eBPF into my AOSP debugging and performance analysis
+> > > class (see CC courseware here:
+> > > http://www.opersys.com/training/android-debug-and-performance), and it
+> > > was pretty messy trying to show people how to benefit from such tools
+> > > under Android. Joel's present set of patches would obviate this problem.
+> >
+> > I've been reading this thread and staying out for the most part. But I
+> > was thinking about how I could use kernel headers for things like
+> > kprobes, and I want to mention the pony that I would like to have :-)
+> >
+> > Are headers really needed, and more importantly, are they enough? What
+> > if userspace is 32bit and the kernel is 64bit. Can ebpf scripts handle
+> > that?
 > 
-> ...
->
-> --- a/Makefile
-> +++ b/Makefile
-> @@ -792,9 +792,6 @@ endif
->  # arch Makefile may override CC so keep this after arch Makefile is included
->  NOSTDINC_FLAGS += -nostdinc -isystem $(shell $(CC) -print-file-name=include)
->  
-> -# warn about C99 declaration after statement
-> -KBUILD_CFLAGS += -Wdeclaration-after-statement
-> -
->  # Variable Length Arrays (VLAs) should not be used anywhere in the kernel
->  KBUILD_CFLAGS += $(call cc-option,-Wvla)
+> Why would eBPF care about the bit width of userspace? I've thought a
+> lot about inspecting user state from the kernel and have some weird
+> ideas in that area (e.g., why not register eBPF programs to unwind
+> user stacks?) --- but I think that Joel's work is independent of all
+> that. I'm curious what you think we can do about userspace. I wish we
+> could just compile the world with frame pointers, but we can't.
 
-I do wish your changelogs were more elaborate :(
+Yeah, most of the usecases for eBPF tracing are all instrumenting the kernel
+using kprobes.  There are some usecases that instrument userspace with
+uprobes but those don't need headers.
 
-So the proposal is to disable -Wdeclaration-after-statement in all
-cases for all time because static_assert() doesn't work correctly?
+> > What I would love, is a table that has all structures and their fields
+> > with information about their types, size and signed types. Like the
+> > format fields in the events directory. This way ebpf (and kprobes,
+> > internally in the kernel) could access this table and be able to know
+> > what the data structures of the kernel is).
+> 
+> Think of the headers as encoding this information and more and the C
+> compiler as a magical decoder ring. :-) I totally get the desire for a
+> metadata format a little less messy than C code, but as a practical
+> matter, a rich C-compilation pipeline already exists, and the
+> debuginfo you're proposing doesn't, except in the form of DWARF, which
+> I think would be even more controversial to embed in the kernel memory
+> image than headers are. A header blob provides a strict superset of
+> the information your scheme provides.
 
-Surely there's something we can do to squish the static_assert() issue
-while retaining -Wdeclaration-after-statement?  Perhaps by making
-static_assert() a nop if -Wdeclaration-after-statement is in use. 
-Perhaps simply by putting { } around the static_assert()?
+I think even though the kernel-headers can't have information about all data
+structures, they do already contain a lot of data structure definitions we
+need already. And anything needed can/should arguably be moved to include/ if
+they are really needed for kernel extension by something "external" to the
+kernel such as kernel modules or eBPF, right?
+
+In any case, such a solution such as what Steve suggested, still cannot do
+what we can with headers - such as build kernel modules on the fly using the
+C-compiler without any auto-generation of C code from any debug artifiacts.
+Think systemtap working with the module-backend without any need for
+linux-headers package on the file system. So such a solution would still be a
+bit orthogonal in scope to what this proposed solution can solve IMO.
+
+thanks,
+
+ - Joel
+
