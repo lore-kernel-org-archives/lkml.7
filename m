@@ -4,51 +4,48 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B9B96C43381
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 17:16:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 58D25C4360F
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 17:16:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 81D6C2184C
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 17:16:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 218792184C
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 17:16:44 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1552411001;
-	bh=/OcAz6cxhDDLttwtGLSh1+YPBIuJraaKjT6CqrQbJf8=;
+	s=default; t=1552411004;
+	bh=TA2zowierDGPOCPC53kCdWYdaeP+raACKTNZiJ7PtPM=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=n6uv5wzPB7/+eBa/W851aUqV43EPPrBCpW+Wl7gwsLgcgCP5FXSWmfNZdNSNBGVHq
-	 CMI6jcInvlgAYLZBppA0tZp2CloXvg9CBFTgl5nS4K/kKMHSFL/OfqVz4f6HLjwzIk
-	 /SKmnrFAf6jKWnNs2gc6w5cYfqwLAh3e4WQDnlOI=
+	b=MrFjgFy6AAcwA5GKeWG34B4GClaE6X3pwWiSWQAlbsK7jmlq9rtNpo6LqmIb+/Cgg
+	 l2qoI7L4EJqXivtmWQt1v7AfFyNT2jpHObcbUxZQpdU5+QOkLCmRCixdltk/1ge/70
+	 v7RaKEXMlbdbanybODYzhXnjSHH0qTAdlUgTxrSY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729240AbfCLRQk (ORCPT
+        id S1729256AbfCLRQm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 12 Mar 2019 13:16:40 -0400
-Received: from mail.kernel.org ([198.145.29.99]:56300 "EHLO mail.kernel.org"
+        Tue, 12 Mar 2019 13:16:42 -0400
+Received: from mail.kernel.org ([198.145.29.99]:56404 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728776AbfCLRPg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S1728798AbfCLRPg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Tue, 12 Mar 2019 13:15:36 -0400
 Received: from localhost (unknown [104.133.8.98])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id ACD232186A;
-        Tue, 12 Mar 2019 17:15:34 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 34344218AE;
+        Tue, 12 Mar 2019 17:15:36 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1552410934;
-        bh=/OcAz6cxhDDLttwtGLSh1+YPBIuJraaKjT6CqrQbJf8=;
+        s=default; t=1552410936;
+        bh=TA2zowierDGPOCPC53kCdWYdaeP+raACKTNZiJ7PtPM=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=BV7ubRNeuuuZxu4U/38xgBJmSP5KQCEiagRl8oREk8VcJFG8kQfgjyv2C+mc/OE9i
-         xObdpNChl6ivj5uLmdAONgBUCxv/XQxM3wtoYOpQFZY/cXlGoEb6FvRypyhY6mTEdW
-         zJ06VADl9l38xzwDS3h+WN40V2R1lC/abRLp9Jqc=
+        b=WfztKEp5Nc4Hpdu1G05wyOkGULG5dfN//iJRyAoQiay3ACwnMnXodgOMH/c3BO3Ss
+         aeLP/UVFThhC8tOowjhLhIx7zTMdqtDppUTMYI8ZRbxjVZ1cyAo97MqUO385hXYHR5
+         11Ar2V35a3B7Ein/QH9XF09FF5ix3eXCaFBhFyno=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Donghee Han <dh.han@samsung.com>,
-        Sangkyu Kim <skwith.kim@samsung.com>,
-        Viresh Kumar <viresh.kumar@linaro.org>,
-        "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>
-Subject: [PATCH 4.14 001/135] cpufreq: Use struct kobj_attribute instead of struct global_attr
-Date:   Tue, 12 Mar 2019 10:07:28 -0700
-Message-Id: <20190312170341.257404241@linuxfoundation.org>
+        stable@vger.kernel.org, Ivan Mironov <mironov.ivan@gmail.com>,
+        Johan Hovold <johan@kernel.org>
+Subject: [PATCH 4.14 003/135] USB: serial: cp210x: add ID for Ingenico 3070
+Date:   Tue, 12 Mar 2019 10:07:30 -0700
+Message-Id: <20190312170341.440125673@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190312170341.127810985@linuxfoundation.org>
 References: <20190312170341.127810985@linuxfoundation.org>
@@ -67,168 +64,39 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-From: Viresh Kumar <viresh.kumar@linaro.org>
+From: Ivan Mironov <mironov.ivan@gmail.com>
 
-commit 625c85a62cb7d3c79f6e16de3cfa972033658250 upstream.
+commit dd9d3d86b08d6a106830364879c42c78db85389c upstream.
 
-The cpufreq_global_kobject is created using kobject_create_and_add()
-helper, which assigns the kobj_type as dynamic_kobj_ktype and show/store
-routines are set to kobj_attr_show() and kobj_attr_store().
+Here is how this device appears in kernel log:
 
-These routines pass struct kobj_attribute as an argument to the
-show/store callbacks. But all the cpufreq files created using the
-cpufreq_global_kobject expect the argument to be of type struct
-attribute. Things work fine currently as no one accesses the "attr"
-argument. We may not see issues even if the argument is used, as struct
-kobj_attribute has struct attribute as its first element and so they
-will both get same address.
+	usb 3-1: new full-speed USB device number 18 using xhci_hcd
+	usb 3-1: New USB device found, idVendor=0b00, idProduct=3070
+	usb 3-1: New USB device strings: Mfr=1, Product=2, SerialNumber=3
+	usb 3-1: Product: Ingenico 3070
+	usb 3-1: Manufacturer: Silicon Labs
+	usb 3-1: SerialNumber: 0001
 
-But this is logically incorrect and we should rather use struct
-kobj_attribute instead of struct global_attr in the cpufreq core and
-drivers and the show/store callbacks should take struct kobj_attribute
-as argument instead.
+Apparently this is a POS terminal with embedded USB-to-Serial converter.
 
-This bug is caught using CFI CLANG builds in android kernel which
-catches mismatch in function prototypes for such callbacks.
-
-Reported-by: Donghee Han <dh.han@samsung.com>
-Reported-by: Sangkyu Kim <skwith.kim@samsung.com>
-Signed-off-by: Viresh Kumar <viresh.kumar@linaro.org>
-Signed-off-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
+Cc: stable@vger.kernel.org
+Signed-off-by: Ivan Mironov <mironov.ivan@gmail.com>
+Signed-off-by: Johan Hovold <johan@kernel.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/cpufreq/cpufreq.c      |    6 +++---
- drivers/cpufreq/intel_pstate.c |   18 +++++++++---------
- include/linux/cpufreq.h        |   12 ++----------
- 3 files changed, 14 insertions(+), 22 deletions(-)
+ drivers/usb/serial/cp210x.c |    1 +
+ 1 file changed, 1 insertion(+)
 
---- a/drivers/cpufreq/cpufreq.c
-+++ b/drivers/cpufreq/cpufreq.c
-@@ -554,13 +554,13 @@ EXPORT_SYMBOL_GPL(cpufreq_policy_transit
-  *                          SYSFS INTERFACE                          *
-  *********************************************************************/
- static ssize_t show_boost(struct kobject *kobj,
--				 struct attribute *attr, char *buf)
-+			  struct kobj_attribute *attr, char *buf)
- {
- 	return sprintf(buf, "%d\n", cpufreq_driver->boost_enabled);
- }
- 
--static ssize_t store_boost(struct kobject *kobj, struct attribute *attr,
--				  const char *buf, size_t count)
-+static ssize_t store_boost(struct kobject *kobj, struct kobj_attribute *attr,
-+			   const char *buf, size_t count)
- {
- 	int ret, enable;
- 
---- a/drivers/cpufreq/intel_pstate.c
-+++ b/drivers/cpufreq/intel_pstate.c
-@@ -811,7 +811,7 @@ static void intel_pstate_update_policies
- /************************** sysfs begin ************************/
- #define show_one(file_name, object)					\
- 	static ssize_t show_##file_name					\
--	(struct kobject *kobj, struct attribute *attr, char *buf)	\
-+	(struct kobject *kobj, struct kobj_attribute *attr, char *buf)	\
- 	{								\
- 		return sprintf(buf, "%u\n", global.object);		\
- 	}
-@@ -820,7 +820,7 @@ static ssize_t intel_pstate_show_status(
- static int intel_pstate_update_status(const char *buf, size_t size);
- 
- static ssize_t show_status(struct kobject *kobj,
--			   struct attribute *attr, char *buf)
-+			   struct kobj_attribute *attr, char *buf)
- {
- 	ssize_t ret;
- 
-@@ -831,7 +831,7 @@ static ssize_t show_status(struct kobjec
- 	return ret;
- }
- 
--static ssize_t store_status(struct kobject *a, struct attribute *b,
-+static ssize_t store_status(struct kobject *a, struct kobj_attribute *b,
- 			    const char *buf, size_t count)
- {
- 	char *p = memchr(buf, '\n', count);
-@@ -845,7 +845,7 @@ static ssize_t store_status(struct kobje
- }
- 
- static ssize_t show_turbo_pct(struct kobject *kobj,
--				struct attribute *attr, char *buf)
-+				struct kobj_attribute *attr, char *buf)
- {
- 	struct cpudata *cpu;
- 	int total, no_turbo, turbo_pct;
-@@ -871,7 +871,7 @@ static ssize_t show_turbo_pct(struct kob
- }
- 
- static ssize_t show_num_pstates(struct kobject *kobj,
--				struct attribute *attr, char *buf)
-+				struct kobj_attribute *attr, char *buf)
- {
- 	struct cpudata *cpu;
- 	int total;
-@@ -892,7 +892,7 @@ static ssize_t show_num_pstates(struct k
- }
- 
- static ssize_t show_no_turbo(struct kobject *kobj,
--			     struct attribute *attr, char *buf)
-+			     struct kobj_attribute *attr, char *buf)
- {
- 	ssize_t ret;
- 
-@@ -914,7 +914,7 @@ static ssize_t show_no_turbo(struct kobj
- 	return ret;
- }
- 
--static ssize_t store_no_turbo(struct kobject *a, struct attribute *b,
-+static ssize_t store_no_turbo(struct kobject *a, struct kobj_attribute *b,
- 			      const char *buf, size_t count)
- {
- 	unsigned int input;
-@@ -961,7 +961,7 @@ static ssize_t store_no_turbo(struct kob
- 	return count;
- }
- 
--static ssize_t store_max_perf_pct(struct kobject *a, struct attribute *b,
-+static ssize_t store_max_perf_pct(struct kobject *a, struct kobj_attribute *b,
- 				  const char *buf, size_t count)
- {
- 	unsigned int input;
-@@ -991,7 +991,7 @@ static ssize_t store_max_perf_pct(struct
- 	return count;
- }
- 
--static ssize_t store_min_perf_pct(struct kobject *a, struct attribute *b,
-+static ssize_t store_min_perf_pct(struct kobject *a, struct kobj_attribute *b,
- 				  const char *buf, size_t count)
- {
- 	unsigned int input;
---- a/include/linux/cpufreq.h
-+++ b/include/linux/cpufreq.h
-@@ -254,20 +254,12 @@ __ATTR(_name, 0644, show_##_name, store_
- static struct freq_attr _name =			\
- __ATTR(_name, 0200, NULL, store_##_name)
- 
--struct global_attr {
--	struct attribute attr;
--	ssize_t (*show)(struct kobject *kobj,
--			struct attribute *attr, char *buf);
--	ssize_t (*store)(struct kobject *a, struct attribute *b,
--			 const char *c, size_t count);
--};
--
- #define define_one_global_ro(_name)		\
--static struct global_attr _name =		\
-+static struct kobj_attribute _name =		\
- __ATTR(_name, 0444, show_##_name, NULL)
- 
- #define define_one_global_rw(_name)		\
--static struct global_attr _name =		\
-+static struct kobj_attribute _name =		\
- __ATTR(_name, 0644, show_##_name, store_##_name)
- 
- 
+--- a/drivers/usb/serial/cp210x.c
++++ b/drivers/usb/serial/cp210x.c
+@@ -64,6 +64,7 @@ static const struct usb_device_id id_tab
+ 	{ USB_DEVICE(0x08e6, 0x5501) }, /* Gemalto Prox-PU/CU contactless smartcard reader */
+ 	{ USB_DEVICE(0x08FD, 0x000A) }, /* Digianswer A/S , ZigBee/802.15.4 MAC Device */
+ 	{ USB_DEVICE(0x0908, 0x01FF) }, /* Siemens RUGGEDCOM USB Serial Console */
++	{ USB_DEVICE(0x0B00, 0x3070) }, /* Ingenico 3070 */
+ 	{ USB_DEVICE(0x0BED, 0x1100) }, /* MEI (TM) Cashflow-SC Bill/Voucher Acceptor */
+ 	{ USB_DEVICE(0x0BED, 0x1101) }, /* MEI series 2000 Combo Acceptor */
+ 	{ USB_DEVICE(0x0FCF, 0x1003) }, /* Dynastream ANT development board */
 
 
