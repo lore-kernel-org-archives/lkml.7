@@ -2,57 +2,55 @@ Return-Path: <SRS0=J4ZE=RP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+X-Spam-Status: No, score=-14.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4A590C4360F
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 17:48:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E117EC43381
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 17:48:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1D8E921734
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 17:48:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B460821734
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 17:48:46 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1552412923;
-	bh=Gw+EBEgyfHu8kwOXk3dYNZPyd3Mzfx710yQJOojNI74=;
+	s=default; t=1552412926;
+	bh=I6Op3mQP1O1QZDv0LuDCZ/KULWOxy+Clzu57sSoE0xQ=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=En2VirxaJUygqHW0FmQA4S7l94a6kqQGecFK5AxhbGZn5ThE04w5CEdJTjeOf7vPZ
-	 PY7e7DFjpcB0P2A+TSDGF7UMuh6TIV6nFrt2m0gvcSfC6WmiBIIPLtpSVCiWYJ/gq9
-	 DHg4trRbcaFGwXG2jR3FcIY3pgGQ1a71yuhhLsNo=
+	b=O60ZUCsh0UVlGQgaKNvnV5tlLVyILry/uNuNpFO0fnzeKr9kchaZMk1SKSCQWQnQZ
+	 8S3KcHydAS/R0wisiKnCon3rVwOznvEUEL0xleG+KwxUtDvqxeceJ8NxQ3sYOZ0NTK
+	 5D6M3wlclIhXqqO3/ireLi5FRP9FFyfrnq6nTYp4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728571AbfCLRO6 (ORCPT
+        id S1729105AbfCLRsp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 12 Mar 2019 13:14:58 -0400
-Received: from mail.kernel.org ([198.145.29.99]:52742 "EHLO mail.kernel.org"
+        Tue, 12 Mar 2019 13:48:45 -0400
+Received: from mail.kernel.org ([198.145.29.99]:54610 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728300AbfCLROT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 12 Mar 2019 13:14:19 -0400
+        id S1728565AbfCLRO6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 12 Mar 2019 13:14:58 -0400
 Received: from localhost (unknown [104.133.8.98])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 7524E21872;
-        Tue, 12 Mar 2019 17:14:17 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 83C5A21741;
+        Tue, 12 Mar 2019 17:14:57 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1552410857;
-        bh=Gw+EBEgyfHu8kwOXk3dYNZPyd3Mzfx710yQJOojNI74=;
+        s=default; t=1552410897;
+        bh=I6Op3mQP1O1QZDv0LuDCZ/KULWOxy+Clzu57sSoE0xQ=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=HJKIUrlxuJZh9DUbWHJp2p4B8uEhHib55HrK4N7zHI8R1+jRLoOpfIYz5GCkWWFFy
-         9vM8jMCDKGKkYm69mJeRNaCAD9URQ81xkwOok3V/BezMsKE+0I8iIkaMqrsUbRTdrv
-         eJQnFbtUWbXe2q1Pby0m9S2SBi59DJWIP/pNy1Jc=
+        b=pG1Vz0KVovI8hRdm0C+8p++o6EzrtMW2Cy/HTgCtqR8rLTwhg/zPJrzVTxPkGeBQK
+         j19HW0O2sV7tupUkPMiJ4b+Hy2eT3eAP0B+jyqdY5s3Pdyk6qqKzQtKag1WvhdDPuy
+         avw2FIJQnJHw3BR5+UN1jHSlJ7m+We9Cs6jqsY+E=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Alexey Dobriyan <adobriyan@gmail.com>,
-        =?UTF-8?q?Mateusz=20St=C4=99pie=C5=84?= 
-        <mateusz.stepien@netrounds.com>,
-        Ahmad Fatoum <a.fatoum@pengutronix.de>,
-        Al Viro <viro@zeniv.linux.org.uk>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
+        stable@vger.kernel.org, Michael Petlan <mpetlan@redhat.com>,
+        Adrian Hunter <adrian.hunter@intel.com>,
+        Jiri Olsa <jolsa@redhat.com>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Arnaldo Carvalho de Melo <acme@redhat.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 053/149] proc: fix /proc/net/* after setns(2)
-Date:   Tue, 12 Mar 2019 10:07:51 -0700
-Message-Id: <20190312170354.190116966@linuxfoundation.org>
+Subject: [PATCH 4.19 109/149] perf trace: Support multiple "vfs_getname" probes
+Date:   Tue, 12 Mar 2019 10:08:47 -0700
+Message-Id: <20190312170358.650239429@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190312170349.421581206@linuxfoundation.org>
 References: <20190312170349.421581206@linuxfoundation.org>
@@ -71,284 +69,99 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-[ Upstream commit 1fde6f21d90f8ba5da3cb9c54ca991ed72696c43 ]
+[ Upstream commit 6ab3bc240ade47a0f52bc16d97edd9accbe0024e ]
 
-/proc entries under /proc/net/* can't be cached into dcache because
-setns(2) can change current net namespace.
+With a suitably defined "probe:vfs_getname" probe, 'perf trace' can
+"beautify" its output, so syscalls like open() or openat() can print the
+"filename" argument instead of just its hex address, like:
 
-[akpm@linux-foundation.org: coding-style fixes]
-[akpm@linux-foundation.org: avoid vim miscolorization]
-[adobriyan@gmail.com: write test, add dummy ->d_revalidate hook: necessary if /proc/net/* is pinned at setns time]
-  Link: http://lkml.kernel.org/r/20190108192350.GA12034@avx2
-Link: http://lkml.kernel.org/r/20190107162336.GA9239@avx2
-Fixes: 1da4d377f943fe4194ffb9fb9c26cc58fad4dd24 ("proc: revalidate misc dentries")
-Signed-off-by: Alexey Dobriyan <adobriyan@gmail.com>
-Reported-by: Mateusz Stępień <mateusz.stepien@netrounds.com>
-Reported-by: Ahmad Fatoum <a.fatoum@pengutronix.de>
-Cc: Al Viro <viro@zeniv.linux.org.uk>
-Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
-Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
+  $ perf trace -e open -- touch /dev/null
+  [...]
+       0.590 ( 0.014 ms): touch/18063 open(filename: /dev/null, flags: CREAT|NOCTTY|NONBLOCK|WRONLY, mode: IRUGO|IWUGO) = 3
+  [...]
+
+The output without such beautifier looks like:
+
+     0.529 ( 0.011 ms): touch/18075 open(filename: 0xc78cf288, flags: CREAT|NOCTTY|NONBLOCK|WRONLY, mode: IRUGO|IWUGO) = 3
+
+However, when the vfs_getname probe expands to multiple probes and it is
+not the first one that is hit, the beautifier fails, as following:
+
+     0.326 ( 0.010 ms): touch/18072 open(filename: , flags: CREAT|NOCTTY|NONBLOCK|WRONLY, mode: IRUGO|IWUGO) = 3
+
+Fix it by hooking into all the expanded probes (inlines), now, for instance:
+
+  [root@quaco ~]# perf probe -l
+    probe:vfs_getname    (on getname_flags:73@fs/namei.c with pathname)
+    probe:vfs_getname_1  (on getname_flags:73@fs/namei.c with pathname)
+  [root@quaco ~]# perf trace -e open* sleep 1
+       0.010 ( 0.005 ms): sleep/5588 openat(dfd: CWD, filename: /etc/ld.so.cache, flags: RDONLY|CLOEXEC)   = 3
+       0.029 ( 0.006 ms): sleep/5588 openat(dfd: CWD, filename: /lib64/libc.so.6, flags: RDONLY|CLOEXEC)   = 3
+       0.194 ( 0.008 ms): sleep/5588 openat(dfd: CWD, filename: /usr/lib/locale/locale-archive, flags: RDONLY|CLOEXEC) = 3
+  [root@quaco ~]#
+
+Works, further verified with:
+
+  [root@quaco ~]# perf test vfs
+  65: Use vfs_getname probe to get syscall args filenames   : Ok
+  66: Add vfs_getname probe to get syscall args filenames   : Ok
+  67: Check open filename arg using perf trace + vfs_getname: Ok
+  [root@quaco ~]#
+
+Reported-by: Michael Petlan <mpetlan@redhat.com>
+Tested-by: Michael Petlan <mpetlan@redhat.com>
+Cc: Adrian Hunter <adrian.hunter@intel.com>
+Cc: Jiri Olsa <jolsa@redhat.com>
+Cc: Namhyung Kim <namhyung@kernel.org>
+Link: https://lkml.kernel.org/n/tip-mv8kolk17xla1smvmp3qabv1@git.kernel.org
+Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- fs/proc/generic.c                           |   4 +-
- fs/proc/internal.h                          |   1 +
- fs/proc/proc_net.c                          |  20 +++
- tools/testing/selftests/proc/.gitignore     |   1 +
- tools/testing/selftests/proc/Makefile       |   1 +
- tools/testing/selftests/proc/setns-dcache.c | 129 ++++++++++++++++++++
- 6 files changed, 155 insertions(+), 1 deletion(-)
- create mode 100644 tools/testing/selftests/proc/setns-dcache.c
+ tools/perf/builtin-trace.c | 25 ++++++++++++++++++-------
+ 1 file changed, 18 insertions(+), 7 deletions(-)
 
-diff --git a/fs/proc/generic.c b/fs/proc/generic.c
-index 8ae109429a88..e39bac94dead 100644
---- a/fs/proc/generic.c
-+++ b/fs/proc/generic.c
-@@ -256,7 +256,7 @@ struct dentry *proc_lookup_de(struct inode *dir, struct dentry *dentry,
- 		inode = proc_get_inode(dir->i_sb, de);
- 		if (!inode)
- 			return ERR_PTR(-ENOMEM);
--		d_set_d_op(dentry, &proc_misc_dentry_ops);
-+		d_set_d_op(dentry, de->proc_dops);
- 		return d_splice_alias(inode, dentry);
- 	}
- 	read_unlock(&proc_subdir_lock);
-@@ -429,6 +429,8 @@ static struct proc_dir_entry *__proc_create(struct proc_dir_entry **parent,
- 	INIT_LIST_HEAD(&ent->pde_openers);
- 	proc_set_user(ent, (*parent)->uid, (*parent)->gid);
+diff --git a/tools/perf/builtin-trace.c b/tools/perf/builtin-trace.c
+index 22ab8e67c760..3f43aedb384d 100644
+--- a/tools/perf/builtin-trace.c
++++ b/tools/perf/builtin-trace.c
+@@ -2263,19 +2263,30 @@ static size_t trace__fprintf_thread_summary(struct trace *trace, FILE *fp);
  
-+	ent->proc_dops = &proc_misc_dentry_ops;
-+
- out:
- 	return ent;
- }
-diff --git a/fs/proc/internal.h b/fs/proc/internal.h
-index 5185d7f6a51e..95b14196f284 100644
---- a/fs/proc/internal.h
-+++ b/fs/proc/internal.h
-@@ -44,6 +44,7 @@ struct proc_dir_entry {
- 	struct completion *pde_unload_completion;
- 	const struct inode_operations *proc_iops;
- 	const struct file_operations *proc_fops;
-+	const struct dentry_operations *proc_dops;
- 	union {
- 		const struct seq_operations *seq_ops;
- 		int (*single_show)(struct seq_file *, void *);
-diff --git a/fs/proc/proc_net.c b/fs/proc/proc_net.c
-index d5e0fcb3439e..a7b12435519e 100644
---- a/fs/proc/proc_net.c
-+++ b/fs/proc/proc_net.c
-@@ -38,6 +38,22 @@ static struct net *get_proc_net(const struct inode *inode)
- 	return maybe_get_net(PDE_NET(PDE(inode)));
- }
- 
-+static int proc_net_d_revalidate(struct dentry *dentry, unsigned int flags)
-+{
-+	return 0;
-+}
-+
-+static const struct dentry_operations proc_net_dentry_ops = {
-+	.d_revalidate	= proc_net_d_revalidate,
-+	.d_delete	= always_delete_dentry,
-+};
-+
-+static void pde_force_lookup(struct proc_dir_entry *pde)
-+{
-+	/* /proc/net/ entries can be changed under us by setns(CLONE_NEWNET) */
-+	pde->proc_dops = &proc_net_dentry_ops;
-+}
-+
- static int seq_open_net(struct inode *inode, struct file *file)
+ static bool perf_evlist__add_vfs_getname(struct perf_evlist *evlist)
  {
- 	unsigned int state_size = PDE(inode)->state_size;
-@@ -90,6 +106,7 @@ struct proc_dir_entry *proc_create_net_data(const char *name, umode_t mode,
- 	p = proc_create_reg(name, mode, &parent, data);
- 	if (!p)
- 		return NULL;
-+	pde_force_lookup(p);
- 	p->proc_fops = &proc_net_seq_fops;
- 	p->seq_ops = ops;
- 	p->state_size = state_size;
-@@ -133,6 +150,7 @@ struct proc_dir_entry *proc_create_net_data_write(const char *name, umode_t mode
- 	p = proc_create_reg(name, mode, &parent, data);
- 	if (!p)
- 		return NULL;
-+	pde_force_lookup(p);
- 	p->proc_fops = &proc_net_seq_fops;
- 	p->seq_ops = ops;
- 	p->state_size = state_size;
-@@ -181,6 +199,7 @@ struct proc_dir_entry *proc_create_net_single(const char *name, umode_t mode,
- 	p = proc_create_reg(name, mode, &parent, data);
- 	if (!p)
- 		return NULL;
-+	pde_force_lookup(p);
- 	p->proc_fops = &proc_net_single_fops;
- 	p->single_show = show;
- 	return proc_register(parent, p);
-@@ -223,6 +242,7 @@ struct proc_dir_entry *proc_create_net_single_write(const char *name, umode_t mo
- 	p = proc_create_reg(name, mode, &parent, data);
- 	if (!p)
- 		return NULL;
-+	pde_force_lookup(p);
- 	p->proc_fops = &proc_net_single_fops;
- 	p->single_show = show;
- 	p->write = write;
-diff --git a/tools/testing/selftests/proc/.gitignore b/tools/testing/selftests/proc/.gitignore
-index 82121a81681f..29bac5ef9a93 100644
---- a/tools/testing/selftests/proc/.gitignore
-+++ b/tools/testing/selftests/proc/.gitignore
-@@ -10,4 +10,5 @@
- /proc-uptime-002
- /read
- /self
-+/setns-dcache
- /thread-self
-diff --git a/tools/testing/selftests/proc/Makefile b/tools/testing/selftests/proc/Makefile
-index 1c12c34cf85d..434d033ee067 100644
---- a/tools/testing/selftests/proc/Makefile
-+++ b/tools/testing/selftests/proc/Makefile
-@@ -14,6 +14,7 @@ TEST_GEN_PROGS += proc-uptime-001
- TEST_GEN_PROGS += proc-uptime-002
- TEST_GEN_PROGS += read
- TEST_GEN_PROGS += self
-+TEST_GEN_PROGS += setns-dcache
- TEST_GEN_PROGS += thread-self
+-	struct perf_evsel *evsel = perf_evsel__newtp("probe", "vfs_getname");
++	bool found = false;
++	struct perf_evsel *evsel, *tmp;
++	struct parse_events_error err = { .idx = 0, };
++	int ret = parse_events(evlist, "probe:vfs_getname*", &err);
  
- include ../lib.mk
-diff --git a/tools/testing/selftests/proc/setns-dcache.c b/tools/testing/selftests/proc/setns-dcache.c
-new file mode 100644
-index 000000000000..60ab197a73fc
---- /dev/null
-+++ b/tools/testing/selftests/proc/setns-dcache.c
-@@ -0,0 +1,129 @@
-+/*
-+ * Copyright © 2019 Alexey Dobriyan <adobriyan@gmail.com>
-+ *
-+ * Permission to use, copy, modify, and distribute this software for any
-+ * purpose with or without fee is hereby granted, provided that the above
-+ * copyright notice and this permission notice appear in all copies.
-+ *
-+ * THE SOFTWARE IS PROVIDED "AS IS" AND THE AUTHOR DISCLAIMS ALL WARRANTIES
-+ * WITH REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF
-+ * MERCHANTABILITY AND FITNESS. IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR
-+ * ANY SPECIAL, DIRECT, INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES
-+ * WHATSOEVER RESULTING FROM LOSS OF USE, DATA OR PROFITS, WHETHER IN AN
-+ * ACTION OF CONTRACT, NEGLIGENCE OR OTHER TORTIOUS ACTION, ARISING OUT OF
-+ * OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
-+ */
-+/*
-+ * Test that setns(CLONE_NEWNET) points to new /proc/net content even
-+ * if old one is in dcache.
-+ *
-+ * FIXME /proc/net/unix is under CONFIG_UNIX which can be disabled.
-+ */
-+#undef NDEBUG
-+#include <assert.h>
-+#include <errno.h>
-+#include <sched.h>
-+#include <signal.h>
-+#include <stdio.h>
-+#include <stdlib.h>
-+#include <string.h>
-+#include <unistd.h>
-+#include <sys/types.h>
-+#include <sys/stat.h>
-+#include <fcntl.h>
-+#include <sys/socket.h>
+-	if (IS_ERR(evsel))
++	if (ret)
+ 		return false;
+ 
+-	if (perf_evsel__field(evsel, "pathname") == NULL) {
++	evlist__for_each_entry_safe(evlist, evsel, tmp) {
++		if (!strstarts(perf_evsel__name(evsel), "probe:vfs_getname"))
++			continue;
 +
-+static pid_t pid = -1;
-+
-+static void f(void)
-+{
-+	if (pid > 0) {
-+		kill(pid, SIGTERM);
-+	}
-+}
-+
-+int main(void)
-+{
-+	int fd[2];
-+	char _ = 0;
-+	int nsfd;
-+
-+	atexit(f);
-+
-+	/* Check for priviledges and syscall availability straight away. */
-+	if (unshare(CLONE_NEWNET) == -1) {
-+		if (errno == ENOSYS || errno == EPERM) {
-+			return 4;
-+		}
-+		return 1;
-+	}
-+	/* Distinguisher between two otherwise empty net namespaces. */
-+	if (socket(AF_UNIX, SOCK_STREAM, 0) == -1) {
-+		return 1;
-+	}
-+
-+	if (pipe(fd) == -1) {
-+		return 1;
-+	}
-+
-+	pid = fork();
-+	if (pid == -1) {
-+		return 1;
-+	}
-+
-+	if (pid == 0) {
-+		if (unshare(CLONE_NEWNET) == -1) {
-+			return 1;
++		if (perf_evsel__field(evsel, "pathname")) {
++			evsel->handler = trace__vfs_getname;
++			found = true;
++			continue;
 +		}
 +
-+		if (write(fd[1], &_, 1) != 1) {
-+			return 1;
-+		}
-+
-+		pause();
-+
-+		return 0;
-+	}
-+
-+	if (read(fd[0], &_, 1) != 1) {
-+		return 1;
-+	}
-+
-+	{
-+		char buf[64];
-+		snprintf(buf, sizeof(buf), "/proc/%u/ns/net", pid);
-+		nsfd = open(buf, O_RDONLY);
-+		if (nsfd == -1) {
-+			return 1;
-+		}
-+	}
-+
-+	/* Reliably pin dentry into dcache. */
-+	(void)open("/proc/net/unix", O_RDONLY);
-+
-+	if (setns(nsfd, CLONE_NEWNET) == -1) {
-+		return 1;
-+	}
-+
-+	kill(pid, SIGTERM);
-+	pid = 0;
-+
-+	{
-+		char buf[4096];
-+		ssize_t rv;
-+		int fd;
-+
-+		fd = open("/proc/net/unix", O_RDONLY);
-+		if (fd == -1) {
-+			return 1;
-+		}
-+
-+#define S "Num       RefCount Protocol Flags    Type St Inode Path\n"
-+		rv = read(fd, buf, sizeof(buf));
-+
-+		assert(rv == strlen(S));
-+		assert(memcmp(buf, S, strlen(S)) == 0);
-+	}
-+
-+	return 0;
-+}
++		list_del_init(&evsel->node);
++		evsel->evlist = NULL;
+ 		perf_evsel__delete(evsel);
+-		return false;
+ 	}
+ 
+-	evsel->handler = trace__vfs_getname;
+-	perf_evlist__add(evlist, evsel);
+-	return true;
++	return found;
+ }
+ 
+ static struct perf_evsel *perf_evsel__new_pgfault(u64 config)
 -- 
 2.19.1
 
