@@ -2,175 +2,135 @@ Return-Path: <SRS0=J4ZE=RP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_MUTT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CA8AFC43381
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 09:53:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5E0F9C43381
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 09:59:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A16542147C
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 09:53:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 27716214AF
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 09:59:03 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ZfaOoRgx"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726673AbfCLJxM (ORCPT
+        id S1726339AbfCLJ7B (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 12 Mar 2019 05:53:12 -0400
-Received: from usa-sjc-mx-foss1.foss.arm.com ([217.140.101.70]:39664 "EHLO
-        foss.arm.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725872AbfCLJxL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 12 Mar 2019 05:53:11 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.72.51.249])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id E5478A78;
-        Tue, 12 Mar 2019 02:53:10 -0700 (PDT)
-Received: from en101.cambridge.arm.com (en101.cambridge.arm.com [10.1.196.93])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPA id 250323F59C;
-        Tue, 12 Mar 2019 02:53:09 -0700 (PDT)
-From:   Suzuki K Poulose <suzuki.poulose@arm.com>
-To:     linux-arm-kernel@lists.infradead.org
-Cc:     linux-kernel@vger.kernel.org, kvm@vger.kernel.org,
-        kvmarm@lists.cs.columbia.edu, james.morse@arm.com,
-        julien.thierry@arm.com, Suzuki K Poulose <suzuki.poulose@arm.com>,
-        Zenghui Yu <yuzenghui@huawei.com>,
-        Christoffer Dall <christoffer.dall@arm.com>,
-        Marc Zyngier <marc.zyngier@arm.com>
-Subject: [PATCH] kvm: arm: Enforce PTE mappings at stage2 when needed
-Date:   Tue, 12 Mar 2019 09:52:51 +0000
-Message-Id: <1552384371-10772-1-git-send-email-suzuki.poulose@arm.com>
-X-Mailer: git-send-email 2.7.4
+        Tue, 12 Mar 2019 05:59:01 -0400
+Received: from mail-pg1-f194.google.com ([209.85.215.194]:39838 "EHLO
+        mail-pg1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725767AbfCLJ7B (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 12 Mar 2019 05:59:01 -0400
+Received: by mail-pg1-f194.google.com with SMTP id h8so1420572pgp.6;
+        Tue, 12 Mar 2019 02:59:00 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=DrBMEo14gljPsBlnBZRcetvDKROEIzqhX7gkoad9ZWY=;
+        b=ZfaOoRgxZe+wF5WNawiRqTsNbp0LudTUxFc+FWR0VSvwMV/jK+jI3FXI7YYQRP8ED5
+         sdteQZZlIUPCBHjuVjd4/kFTCa2Ah6EEEFeMjdIA0D/+MCxEH8AZ+ozhP2hfyEoR6+SG
+         WTbmaEj0hW+Uvahgq0kyrzSTWsI9tS6g6Cly4jGgVyN9r/WolSMUTC7tqY2pCyw+BvYf
+         bRIm1LBz4kcrEkWaMF/g0VPabF/bnHfIKZuKtVq1ekls6M2D4qeQ/pCnoFkP3xmF1OIY
+         6jIBOaQ7tY0hmuSysxjVI8gFLTKCptnyUgbFRw5xO1A16nwNiSC2YzChZk0DJHlpYBBE
+         uZ8w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=DrBMEo14gljPsBlnBZRcetvDKROEIzqhX7gkoad9ZWY=;
+        b=rqJxxZcvVgVhrk2BMfdE6zVe1y2FbTsm4cgJ5Tc3HlFAWwvXjqBX8/PMyjBPB6DqzH
+         vlT3RXPI0PVqUjQd9LGtmjL0VIHSNpeD646N918ZJrWTIzCgX6kTjBvjvC83jCiWw6Z8
+         hlozC8P4UAjoxr1VN+vkpi0rgTHGdCvq5/AdPF0CFgzghXFkrczIdExb/bKG6Dpqwo4T
+         sTgibkWpEQsaVkV0JBVw6tGMSxv6dAN8PSMOwPVeVXG1dAg38E6hPbnLPYTvXFbnQ5CE
+         b2XMYHiooW2LjwLzUV9hY0vpO3XEuquK3ZaFHawHlbG6BMSRkqjSmVHvcMntrc6tKrC0
+         v6QQ==
+X-Gm-Message-State: APjAAAUMtkSU9oB70bpORR/Wa5lv8PzRvGc/UT4VfP42Uu+qdJQYzSdW
+        D30yyCxTtubY8AtspypfZL0=
+X-Google-Smtp-Source: APXvYqwu87CnRlaW7daYCn/Jqg97CU5ZzBo001aPjxk4Bhc1SWQzvnHRe+4eJZYfmTrNZ8Rd7o7c/g==
+X-Received: by 2002:a17:902:9304:: with SMTP id bc4mr39575786plb.81.1552384740312;
+        Tue, 12 Mar 2019 02:59:00 -0700 (PDT)
+Received: from localhost ([175.223.49.170])
+        by smtp.gmail.com with ESMTPSA id f3sm12160763pfn.100.2019.03.12.02.58.58
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Tue, 12 Mar 2019 02:58:59 -0700 (PDT)
+Date:   Tue, 12 Mar 2019 18:58:56 +0900
+From:   Sergey Senozhatsky <sergey.senozhatsky.work@gmail.com>
+To:     John Ogness <john.ogness@linutronix.de>
+Cc:     Sergey Senozhatsky <sergey.senozhatsky.work@gmail.com>,
+        Sergey Senozhatsky <sergey.senozhatsky@gmail.com>,
+        linux-kernel@vger.kernel.org,
+        Peter Zijlstra <peterz@infradead.org>,
+        Petr Mladek <pmladek@suse.com>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Daniel Wang <wonderfly@google.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Alan Cox <gnomes@lxorguk.ukuu.org.uk>,
+        Jiri Slaby <jslaby@suse.com>,
+        Peter Feiner <pfeiner@google.com>, linux-serial@vger.kernel.org
+Subject: Re: [RFC PATCH v1 08/25] printk: add ring buffer and kthread
+Message-ID: <20190312095856.GA426@jagdpanzerIV>
+References: <20190212143003.48446-1-john.ogness@linutronix.de>
+ <20190212143003.48446-9-john.ogness@linutronix.de>
+ <20190304073856.GA552@jagdpanzerIV>
+ <20190304100044.GC21004@jagdpanzerIV>
+ <20190304110703.GA960@tigerII.localdomain>
+ <87o96p9gtx.fsf@linutronix.de>
+ <20190307051530.GC4893@jagdpanzerIV>
+ <87va0pznsq.fsf@linutronix.de>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <87va0pznsq.fsf@linutronix.de>
+User-Agent: Mutt/1.11.3 (2019-02-01)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-commit 6794ad5443a2118 ("KVM: arm/arm64: Fix unintended stage 2 PMD mappings")
-made the checks to skip huge mappings, stricter. However it introduced
-a bug where we still use huge mappings, ignoring the flag to
-use PTE mappings, by not reseting the vma_pagesize to PAGE_SIZE.
+On (03/11/19 11:51), John Ogness wrote:
+> > In new printk design the tasks are still affected by printing floods.
+> > Tasks have to line up and (busy) wait for each other, regardless of
+> > contexts.
+> 
+> They only line up and busy wait is to add the informational message to
+> the ring buffer. The current printk implementation is the same in this
+> respect. And as you've noted, the logbuf spinlock is not a source of
+> latencies.
 
-Also, the checks do not cover the PUD huge pages, that was
-under review during the same period. This patch fixes both
-the issues.
+I was talking about prb_lock().
 
-Fixes : 6794ad5443a2118 ("KVM: arm/arm64: Fix unintended stage 2 PMD mappings")
-Reported-by: Zenghui Yu <yuzenghui@huawei.com>
-Cc: Zenghui Yu <yuzenghui@huawei.com>
-Cc: Christoffer Dall <christoffer.dall@arm.com>
-Cc: Marc Zyngier <marc.zyngier@arm.com>
-Signed-off-by: Suzuki K Poulose <suzuki.poulose@arm.com>
----
- virt/kvm/arm/mmu.c | 43 +++++++++++++++++++++----------------------
- 1 file changed, 21 insertions(+), 22 deletions(-)
+> > When I do ./a.out --loglevel=X  I have a clear understanding that
+> > all messages which fall into [critical, X] range will be in the logs,
+> > because I told that application that those messages are important to
+> > me right now. And it used to be the same with the kernel loglevel.
+> 
+> The loglevel is not related to logging. It specifies the amount of
+> console printing. But I will assume you are referring to creating log
+> files by having an external device store the console printing.
 
-diff --git a/virt/kvm/arm/mmu.c b/virt/kvm/arm/mmu.c
-index 30251e2..66e0fbb5 100644
---- a/virt/kvm/arm/mmu.c
-+++ b/virt/kvm/arm/mmu.c
-@@ -1595,8 +1595,9 @@ static void kvm_send_hwpoison_signal(unsigned long address,
- 	send_sig_mceerr(BUS_MCEERR_AR, (void __user *)address, lsb, current);
- }
- 
--static bool fault_supports_stage2_pmd_mappings(struct kvm_memory_slot *memslot,
--					       unsigned long hva)
-+static bool fault_supports_stage2_huge_mapping(struct kvm_memory_slot *memslot,
-+					       unsigned long hva,
-+					       unsigned long map_size)
- {
- 	gpa_t gpa_start, gpa_end;
- 	hva_t uaddr_start, uaddr_end;
-@@ -1612,34 +1613,34 @@ static bool fault_supports_stage2_pmd_mappings(struct kvm_memory_slot *memslot,
- 
- 	/*
- 	 * Pages belonging to memslots that don't have the same alignment
--	 * within a PMD for userspace and IPA cannot be mapped with stage-2
--	 * PMD entries, because we'll end up mapping the wrong pages.
-+	 * within a PMD/PUD for userspace and IPA cannot be mapped with stage-2
-+	 * PMD/PUD entries, because we'll end up mapping the wrong pages.
- 	 *
- 	 * Consider a layout like the following:
- 	 *
- 	 *    memslot->userspace_addr:
- 	 *    +-----+--------------------+--------------------+---+
--	 *    |abcde|fgh  Stage-1 PMD    |    Stage-1 PMD   tv|xyz|
-+	 *    |abcde|fgh  Stage-1 block  |    Stage-1 block tv|xyz|
- 	 *    +-----+--------------------+--------------------+---+
- 	 *
- 	 *    memslot->base_gfn << PAGE_SIZE:
- 	 *      +---+--------------------+--------------------+-----+
--	 *      |abc|def  Stage-2 PMD    |    Stage-2 PMD     |tvxyz|
-+	 *      |abc|def  Stage-2 block  |    Stage-2 block   |tvxyz|
- 	 *      +---+--------------------+--------------------+-----+
- 	 *
--	 * If we create those stage-2 PMDs, we'll end up with this incorrect
-+	 * If we create those stage-2 blocks, we'll end up with this incorrect
- 	 * mapping:
- 	 *   d -> f
- 	 *   e -> g
- 	 *   f -> h
- 	 */
--	if ((gpa_start & ~S2_PMD_MASK) != (uaddr_start & ~S2_PMD_MASK))
-+	if ((gpa_start & (map_size - 1)) != (uaddr_start & (map_size - 1)))
- 		return false;
- 
- 	/*
- 	 * Next, let's make sure we're not trying to map anything not covered
--	 * by the memslot. This means we have to prohibit PMD size mappings
--	 * for the beginning and end of a non-PMD aligned and non-PMD sized
-+	 * by the memslot. This means we have to prohibit block size mappings
-+	 * for the beginning and end of a non-block aligned and non-block sized
- 	 * memory slot (illustrated by the head and tail parts of the
- 	 * userspace view above containing pages 'abcde' and 'xyz',
- 	 * respectively).
-@@ -1648,8 +1649,8 @@ static bool fault_supports_stage2_pmd_mappings(struct kvm_memory_slot *memslot,
- 	 * userspace_addr or the base_gfn, as both are equally aligned (per
- 	 * the check above) and equally sized.
- 	 */
--	return (hva & S2_PMD_MASK) >= uaddr_start &&
--	       (hva & S2_PMD_MASK) + S2_PMD_SIZE <= uaddr_end;
-+	return (hva & ~(map_size - 1)) >= uaddr_start &&
-+	       (hva & ~(map_size - 1)) + map_size <= uaddr_end;
- }
- 
- static int user_mem_abort(struct kvm_vcpu *vcpu, phys_addr_t fault_ipa,
-@@ -1678,12 +1679,6 @@ static int user_mem_abort(struct kvm_vcpu *vcpu, phys_addr_t fault_ipa,
- 		return -EFAULT;
- 	}
- 
--	if (!fault_supports_stage2_pmd_mappings(memslot, hva))
--		force_pte = true;
--
--	if (logging_active)
--		force_pte = true;
--
- 	/* Let's check if we will get back a huge page backed by hugetlbfs */
- 	down_read(&current->mm->mmap_sem);
- 	vma = find_vma_intersection(current->mm, hva, hva + 1);
-@@ -1694,6 +1689,12 @@ static int user_mem_abort(struct kvm_vcpu *vcpu, phys_addr_t fault_ipa,
- 	}
- 
- 	vma_pagesize = vma_kernel_pagesize(vma);
-+	if (logging_active ||
-+	    !fault_supports_stage2_huge_mapping(memslot, hva, vma_pagesize)) {
-+		force_pte = true;
-+		vma_pagesize = PAGE_SIZE;
-+	}
-+
- 	/*
- 	 * The stage2 has a minimum of 2 level table (For arm64 see
- 	 * kvm_arm_setup_stage2()). Hence, we are guaranteed that we can
-@@ -1701,11 +1702,9 @@ static int user_mem_abort(struct kvm_vcpu *vcpu, phys_addr_t fault_ipa,
- 	 * As for PUD huge maps, we must make sure that we have at least
- 	 * 3 levels, i.e, PMD is not folded.
- 	 */
--	if ((vma_pagesize == PMD_SIZE ||
--	     (vma_pagesize == PUD_SIZE && kvm_stage2_has_pmd(kvm))) &&
--	    !force_pte) {
-+	if (vma_pagesize == PMD_SIZE ||
-+	    (vma_pagesize == PUD_SIZE && kvm_stage2_has_pmd(kvm)))
- 		gfn = (fault_ipa & huge_page_mask(hstate_vma(vma))) >> PAGE_SHIFT;
--	}
- 	up_read(&current->mm->mmap_sem);
- 
- 	/* We need minimum second+third level pages */
--- 
-2.7.4
+Right. E.g. screenlog.0
 
+> > But now the kernel will do its own thing:
+> >
+> >   - what the kernel considers important will go into the logs
+> >   - what the kernel doesn't consider important _maybe_ will end up
+> >     in the logs (preemptible printk kthread). And this is where
+> >     loglevel now. After the _maybe_ part.
+> 
+> "what the kernel considers" is a configuration option of the
+> administrator. The administrator can increase the verbocity of the
+> console (loglevel) without having negative effects on the system
+> itself. Also, if the system were to suddenly crash, those crash messages
+> shouldn't be in jeopardy just because the verbocity of the console was
+> turned up.
+
+Right. I'm not very sure about yet another knob which everyone
+should figure out. I guess I won't be surprised to find out that
+people set it to loglevel value.
+
+	-ss
