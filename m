@@ -2,71 +2,52 @@ Return-Path: <SRS0=J4ZE=RP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CF1D2C43381
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 17:31:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D3E52C43381
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 17:31:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9717B2087C
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 17:31:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A7AC62087C
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 17:31:09 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1552411860;
-	bh=tE+hKSrppXi4h4U212ftd0/Ckuy9VBAyRNh5+TNbS0Q=;
+	s=default; t=1552411869;
+	bh=B+MJTYqfDH8uNi8eNGBu+IwH84JqKyXOhcBxHQMms78=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=LVVyDmIoE396hMWcrkMEA793y+rMSOTgajZiLBQOOHuTrNoJ0ZLDqPcq6FGmapnA5
-	 CCLwSTAFToNbuXyPQCCi9o/h/q54zjqNZwhPk+4vBv+W3XhDRtrwUsBPLkxzKa6DNR
-	 7idRs29724JUAp3P1qVZ0+Pe/+VuphQgj+mPH8kQ=
+	b=nRJux8lsbDJ8l1MwIdPO8QgxaPYpXhXLPECuZm9gJJI39wsjRoK29fCGgBKG5KJAy
+	 6OmeqPhq+BfjLCJBSEzytekkHdnHez+kyD+j5DdFlPdFLaogIj7ypYmrTVG2rLCxId
+	 ARS7rXqL9Hhd47zBkhqRchzOYDeO9diRCO9QsrLs=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729746AbfCLRa7 (ORCPT
+        id S1727945AbfCLRbI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 12 Mar 2019 13:30:59 -0400
-Received: from mail.kernel.org ([198.145.29.99]:60634 "EHLO mail.kernel.org"
+        Tue, 12 Mar 2019 13:31:08 -0400
+Received: from mail.kernel.org ([198.145.29.99]:60592 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729491AbfCLRRN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 12 Mar 2019 13:17:13 -0400
+        id S1728968AbfCLRRM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 12 Mar 2019 13:17:12 -0400
 Received: from localhost (unknown [104.133.8.98])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 14A062087C;
-        Tue, 12 Mar 2019 17:17:12 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 633F8206DF;
+        Tue, 12 Mar 2019 17:17:11 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1552411032;
-        bh=tE+hKSrppXi4h4U212ftd0/Ckuy9VBAyRNh5+TNbS0Q=;
+        s=default; t=1552411031;
+        bh=B+MJTYqfDH8uNi8eNGBu+IwH84JqKyXOhcBxHQMms78=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Cs454gDdOPs59G9LmzA/cOEc+x6vchue+7tpMNMH8jUOpGf5Q8cYG+vErWuZuoF1S
-         Q5jQUigTptnNyPzdAG5JEVFxrN8B2BIBCPdr28HpjkATQHAKyHqMrmLaJwXXdRXp6U
-         7SFX1GTkQoRgzT+kcNNMVZ8mTxo/8XkHc+bisfZo=
+        b=Y3yYZtm1cORky4gtHTM6JqnZkTFY6oCy45a/SQ1zjkGnYVW8wa+zqwGBNUQ2BpPuW
+         oYZdWKTOEzB2NTnv0Hih1o4MXAAubMlqBwJ7mSkzDUYLwSR3GmSpRH1elAqdjWV0cb
+         AeQ6+Rf+KkNhDmC68QC+SlTP18Q+CURe+vWjdLy0=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         stable@vger.kernel.org,
-        Christian Koenig <christian.koenig@amd.com>,
-        Alex Deucher <alexander.deucher@amd.com>,
-        David Zhou <David1.Zhou@amd.com>,
-        Huang Rui <ray.huang@amd.com>,
-        Junwei Zhang <Jerry.Zhang@amd.com>,
-        Michel Daenzer <michel.daenzer@amd.com>,
-        David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
-        Maxime Ripard <maxime.ripard@bootlin.com>,
-        Sean Paul <sean@poorly.run>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        Will Deacon <will.deacon@arm.com>,
-        Christoph Hellwig <hch@infradead.org>,
-        Robin Murphy <robin.murphy@arm.com>,
-        amd-gfx list <amd-gfx@lists.freedesktop.org>,
-        dri-devel <dri-devel@lists.freedesktop.org>,
-        Carsten Haitzler <Carsten.Haitzler@arm.com>,
-        Ard Biesheuvel <ard.biesheuvel@linaro.org>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.14 127/135] drm: disable uncached DMA optimization for ARM and arm64
-Date:   Tue, 12 Mar 2019 10:09:34 -0700
-Message-Id: <20190312170352.839578994@linuxfoundation.org>
+        "Peter Zijlstra (Intel)" <peterz@infradead.org>,
+        Thomas Gleixner <tglx@linutronix.de>
+Subject: [PATCH 4.14 135/135] perf/x86/intel: Implement support for TSX Force Abort
+Date:   Tue, 12 Mar 2019 10:09:42 -0700
+Message-Id: <20190312170353.610759957@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190312170341.127810985@linuxfoundation.org>
 References: <20190312170341.127810985@linuxfoundation.org>
@@ -85,83 +66,182 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-[ Upstream commit e02f5c1bb2283cfcee68f2f0feddcc06150f13aa ]
+From: "Peter Zijlstra (Intel)" <peterz@infradead.org>
 
-The DRM driver stack is designed to work with cache coherent devices
-only, but permits an optimization to be enabled in some cases, where
-for some buffers, both the CPU and the GPU use uncached mappings,
-removing the need for DMA snooping and allocation in the CPU caches.
+commit 400816f60c543153656ac74eaf7f36f6b7202378 upstream
 
-The use of uncached GPU mappings relies on the correct implementation
-of the PCIe NoSnoop TLP attribute by the platform, otherwise the GPU
-will use cached mappings nonetheless. On x86 platforms, this does not
-seem to matter, as uncached CPU mappings will snoop the caches in any
-case. However, on ARM and arm64, enabling this optimization on a
-platform where NoSnoop is ignored results in loss of coherency, which
-breaks correct operation of the device. Since we have no way of
-detecting whether NoSnoop works or not, just disable this
-optimization entirely for ARM and arm64.
+Skylake (and later) will receive a microcode update to address a TSX
+errata. This microcode will, on execution of a TSX instruction
+(speculative or not) use (clobber) PMC3. This update will also provide
+a new MSR to change this behaviour along with a CPUID bit to enumerate
+the presence of this new MSR.
 
-Cc: Christian Koenig <christian.koenig@amd.com>
-Cc: Alex Deucher <alexander.deucher@amd.com>
-Cc: David Zhou <David1.Zhou@amd.com>
-Cc: Huang Rui <ray.huang@amd.com>
-Cc: Junwei Zhang <Jerry.Zhang@amd.com>
-Cc: Michel Daenzer <michel.daenzer@amd.com>
-Cc: David Airlie <airlied@linux.ie>
-Cc: Daniel Vetter <daniel@ffwll.ch>
-Cc: Maarten Lankhorst <maarten.lankhorst@linux.intel.com>
-Cc: Maxime Ripard <maxime.ripard@bootlin.com>
-Cc: Sean Paul <sean@poorly.run>
-Cc: Michael Ellerman <mpe@ellerman.id.au>
-Cc: Benjamin Herrenschmidt <benh@kernel.crashing.org>
-Cc: Will Deacon <will.deacon@arm.com>
-Cc: Christoph Hellwig <hch@infradead.org>
-Cc: Robin Murphy <robin.murphy@arm.com>
-Cc: amd-gfx list <amd-gfx@lists.freedesktop.org>
-Cc: dri-devel <dri-devel@lists.freedesktop.org>
-Reported-by: Carsten Haitzler <Carsten.Haitzler@arm.com>
-Signed-off-by: Ard Biesheuvel <ard.biesheuvel@linaro.org>
-Reviewed-by: Christian König <christian.koenig@amd.com>
-Reviewed-by: Alex Deucher <alexander.deucher@amd.com>
-Link: https://patchwork.kernel.org/patch/10778815/
-Signed-off-by: Christian König <christian.koenig@amd.com>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
+When the MSR gets set; the microcode will no longer use PMC3 but will
+Force Abort every TSX transaction (upon executing COMMIT).
+
+When TSX Force Abort (TFA) is allowed (default); the MSR gets set when
+PMC3 gets scheduled and cleared when, after scheduling, PMC3 is
+unused.
+
+When TFA is not allowed; clear PMC3 from all constraints such that it
+will not get used.
+
+Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
+Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- include/drm/drm_cache.h | 18 ++++++++++++++++++
- 1 file changed, 18 insertions(+)
+ arch/x86/events/intel/core.c |   74 +++++++++++++++++++++++++++++++++++++++++--
+ arch/x86/events/perf_event.h |    6 +++
+ 2 files changed, 77 insertions(+), 3 deletions(-)
 
-diff --git a/include/drm/drm_cache.h b/include/drm/drm_cache.h
-index beab0f0d0cfb..250e2d13c61b 100644
---- a/include/drm/drm_cache.h
-+++ b/include/drm/drm_cache.h
-@@ -45,6 +45,24 @@ static inline bool drm_arch_can_wc_memory(void)
- 	return false;
- #elif defined(CONFIG_MIPS) && defined(CONFIG_CPU_LOONGSON3)
- 	return false;
-+#elif defined(CONFIG_ARM) || defined(CONFIG_ARM64)
+--- a/arch/x86/events/intel/core.c
++++ b/arch/x86/events/intel/core.c
+@@ -1995,6 +1995,39 @@ static void intel_pmu_nhm_enable_all(int
+ 	intel_pmu_enable_all(added);
+ }
+ 
++static void intel_set_tfa(struct cpu_hw_events *cpuc, bool on)
++{
++	u64 val = on ? MSR_TFA_RTM_FORCE_ABORT : 0;
++
++	if (cpuc->tfa_shadow != val) {
++		cpuc->tfa_shadow = val;
++		wrmsrl(MSR_TSX_FORCE_ABORT, val);
++	}
++}
++
++static void intel_tfa_commit_scheduling(struct cpu_hw_events *cpuc, int idx, int cntr)
++{
 +	/*
-+	 * The DRM driver stack is designed to work with cache coherent devices
-+	 * only, but permits an optimization to be enabled in some cases, where
-+	 * for some buffers, both the CPU and the GPU use uncached mappings,
-+	 * removing the need for DMA snooping and allocation in the CPU caches.
-+	 *
-+	 * The use of uncached GPU mappings relies on the correct implementation
-+	 * of the PCIe NoSnoop TLP attribute by the platform, otherwise the GPU
-+	 * will use cached mappings nonetheless. On x86 platforms, this does not
-+	 * seem to matter, as uncached CPU mappings will snoop the caches in any
-+	 * case. However, on ARM and arm64, enabling this optimization on a
-+	 * platform where NoSnoop is ignored results in loss of coherency, which
-+	 * breaks correct operation of the device. Since we have no way of
-+	 * detecting whether NoSnoop works or not, just disable this
-+	 * optimization entirely for ARM and arm64.
++	 * We're going to use PMC3, make sure TFA is set before we touch it.
 +	 */
-+	return false;
- #else
- 	return true;
- #endif
--- 
-2.19.1
-
++	if (cntr == 3 && !cpuc->is_fake)
++		intel_set_tfa(cpuc, true);
++}
++
++static void intel_tfa_pmu_enable_all(int added)
++{
++	struct cpu_hw_events *cpuc = this_cpu_ptr(&cpu_hw_events);
++
++	/*
++	 * If we find PMC3 is no longer used when we enable the PMU, we can
++	 * clear TFA.
++	 */
++	if (!test_bit(3, cpuc->active_mask))
++		intel_set_tfa(cpuc, false);
++
++	intel_pmu_enable_all(added);
++}
++
+ static inline u64 intel_pmu_get_status(void)
+ {
+ 	u64 status;
+@@ -3218,6 +3251,26 @@ glp_get_event_constraints(struct cpu_hw_
+ 	return c;
+ }
+ 
++static bool allow_tsx_force_abort = true;
++
++static struct event_constraint *
++tfa_get_event_constraints(struct cpu_hw_events *cpuc, int idx,
++			  struct perf_event *event)
++{
++	struct event_constraint *c = hsw_get_event_constraints(cpuc, idx, event);
++
++	/*
++	 * Without TFA we must not use PMC3.
++	 */
++	if (!allow_tsx_force_abort && test_bit(3, c->idxmsk)) {
++		c = dyn_constraint(cpuc, c, idx);
++		c->idxmsk64 &= ~(1ULL << 3);
++		c->weight--;
++	}
++
++	return c;
++}
++
+ /*
+  * Broadwell:
+  *
+@@ -3312,13 +3365,15 @@ int intel_cpuc_prepare(struct cpu_hw_eve
+ 			goto err;
+ 	}
+ 
+-	if (x86_pmu.flags & PMU_FL_EXCL_CNTRS) {
++	if (x86_pmu.flags & (PMU_FL_EXCL_CNTRS | PMU_FL_TFA)) {
+ 		size_t sz = X86_PMC_IDX_MAX * sizeof(struct event_constraint);
+ 
+ 		cpuc->constraint_list = kzalloc_node(sz, GFP_KERNEL, cpu_to_node(cpu));
+ 		if (!cpuc->constraint_list)
+ 			goto err_shared_regs;
++	}
+ 
++	if (x86_pmu.flags & PMU_FL_EXCL_CNTRS) {
+ 		cpuc->excl_cntrs = allocate_excl_cntrs(cpu);
+ 		if (!cpuc->excl_cntrs)
+ 			goto err_constraint_list;
+@@ -3425,9 +3480,10 @@ static void free_excl_cntrs(struct cpu_h
+ 		if (c->core_id == -1 || --c->refcnt == 0)
+ 			kfree(c);
+ 		cpuc->excl_cntrs = NULL;
+-		kfree(cpuc->constraint_list);
+-		cpuc->constraint_list = NULL;
+ 	}
++
++	kfree(cpuc->constraint_list);
++	cpuc->constraint_list = NULL;
+ }
+ 
+ static void intel_pmu_cpu_dying(int cpu)
+@@ -3912,8 +3968,11 @@ static struct attribute *intel_pmu_caps_
+        NULL
+ };
+ 
++DEVICE_BOOL_ATTR(allow_tsx_force_abort, 0644, allow_tsx_force_abort);
++
+ static struct attribute *intel_pmu_attrs[] = {
+ 	&dev_attr_freeze_on_smi.attr,
++	NULL, /* &dev_attr_allow_tsx_force_abort.attr.attr */
+ 	NULL,
+ };
+ 
+@@ -4369,6 +4428,15 @@ __init int intel_pmu_init(void)
+ 		x86_pmu.cpu_events = get_hsw_events_attrs();
+ 		intel_pmu_pebs_data_source_skl(
+ 			boot_cpu_data.x86_model == INTEL_FAM6_SKYLAKE_X);
++
++		if (boot_cpu_has(X86_FEATURE_TSX_FORCE_ABORT)) {
++			x86_pmu.flags |= PMU_FL_TFA;
++			x86_pmu.get_event_constraints = tfa_get_event_constraints;
++			x86_pmu.enable_all = intel_tfa_pmu_enable_all;
++			x86_pmu.commit_scheduling = intel_tfa_commit_scheduling;
++			intel_pmu_attrs[1] = &dev_attr_allow_tsx_force_abort.attr.attr;
++		}
++
+ 		pr_cont("Skylake events, ");
+ 		name = "skylake";
+ 		break;
+--- a/arch/x86/events/perf_event.h
++++ b/arch/x86/events/perf_event.h
+@@ -239,6 +239,11 @@ struct cpu_hw_events {
+ 	int excl_thread_id; /* 0 or 1 */
+ 
+ 	/*
++	 * SKL TSX_FORCE_ABORT shadow
++	 */
++	u64				tfa_shadow;
++
++	/*
+ 	 * AMD specific bits
+ 	 */
+ 	struct amd_nb			*amd_nb;
+@@ -672,6 +677,7 @@ do {									\
+ #define PMU_FL_HAS_RSP_1	0x2 /* has 2 equivalent offcore_rsp regs   */
+ #define PMU_FL_EXCL_CNTRS	0x4 /* has exclusive counter requirements  */
+ #define PMU_FL_EXCL_ENABLED	0x8 /* exclusive counter active */
++#define PMU_FL_TFA		0x20 /* deal with TSX force abort */
+ 
+ #define EVENT_VAR(_id)  event_attr_##_id
+ #define EVENT_PTR(_id) &event_attr_##_id.attr.attr
 
 
