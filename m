@@ -3,265 +3,112 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
 X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_PASS autolearn=unavailable autolearn_force=no
-	version=3.4.0
+	MAILING_LIST_MULTI,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3BAFCC10F00
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 19:46:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A93D5C43381
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 19:46:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 046C2214AF
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 19:46:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7F3592087C
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 19:46:56 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726930AbfCLTqc (ORCPT
+        id S1727085AbfCLTqy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 12 Mar 2019 15:46:32 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:36688 "EHLO mx1.redhat.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726775AbfCLTqb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 12 Mar 2019 15:46:31 -0400
-Received: from smtp.corp.redhat.com (int-mx02.intmail.prod.int.phx2.redhat.com [10.5.11.12])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id 0C1EA8F860;
-        Tue, 12 Mar 2019 19:46:31 +0000 (UTC)
-Received: from [10.18.17.32] (dhcp-17-32.bos.redhat.com [10.18.17.32])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id 5E22660BF7;
-        Tue, 12 Mar 2019 19:46:19 +0000 (UTC)
-From:   Nitesh Narayan Lal <nitesh@redhat.com>
-To:     Alexander Duyck <alexander.duyck@gmail.com>,
-        "Michael S. Tsirkin" <mst@redhat.com>
-Cc:     David Hildenbrand <david@redhat.com>,
-        kvm list <kvm@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        linux-mm <linux-mm@kvack.org>,
-        Paolo Bonzini <pbonzini@redhat.com>, lcapitulino@redhat.com,
-        pagupta@redhat.com, wei.w.wang@intel.com,
-        Yang Zhang <yang.zhang.wz@gmail.com>,
-        Rik van Riel <riel@surriel.com>, dodgen@google.com,
-        Konrad Rzeszutek Wilk <konrad.wilk@oracle.com>,
-        dhildenb@redhat.com, Andrea Arcangeli <aarcange@redhat.com>
-Subject: Re: [RFC][Patch v9 2/6] KVM: Enables the kernel to isolate guest free
- pages
-References: <20190306155048.12868-1-nitesh@redhat.com>
- <20190306155048.12868-3-nitesh@redhat.com>
- <CAKgT0UdDohCXZY3q9qhQsHw-2vKp_CAgvf2dd2e6U6KLsAkVng@mail.gmail.com>
- <2d9ae889-a9b9-7969-4455-ff36944f388b@redhat.com>
- <22e4b1cd-38a5-6642-8cbe-d68e4fcbb0b7@redhat.com>
- <CAKgT0UcAqGX26pcQLzFUevHsLu-CtiyOYe15uG3bkhGZ5BJKAg@mail.gmail.com>
- <78b604be-2129-a716-a7a6-f5b382c9fb9c@redhat.com>
- <CAKgT0Uc_z9Vi+JhQcJYX+J9c4J56RRSkzzegbb2=9xO-NY3dgw@mail.gmail.com>
- <20190307212845-mutt-send-email-mst@kernel.org>
- <CAKgT0Ucu3EMsYBfdKtEiprrn-VBZy3Y+0HdEp5b4PO2SQgGsRw@mail.gmail.com>
- <17d2afa6-556e-ec73-40dc-beac536b3f20@redhat.com>
- <CAKgT0UcdQZwHjmMBkSWmy_ZdShJCagjwomn13g+r7ZNJBRn1LQ@mail.gmail.com>
- <8f692047-4750-6827-1ee0-d3d354788f09@redhat.com>
- <CAKgT0UddT9CKg1uZo6ZODs9ARti-6XGm9Zvo+8QRZKUPSwzWMQ@mail.gmail.com>
-Organization: Red Hat Inc,
-Message-ID: <41ae8afe-72c9-58e6-0cbb-9375c91ce37a@redhat.com>
-Date:   Tue, 12 Mar 2019 15:46:15 -0400
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.4.0
+        Tue, 12 Mar 2019 15:46:54 -0400
+Received: from iolanthe.rowland.org ([192.131.102.54]:58770 "HELO
+        iolanthe.rowland.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with SMTP id S1726937AbfCLTqy (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 12 Mar 2019 15:46:54 -0400
+Received: (qmail 7719 invoked by uid 2102); 12 Mar 2019 15:46:53 -0400
+Received: from localhost (sendmail-bs@127.0.0.1)
+  by localhost with SMTP; 12 Mar 2019 15:46:53 -0400
+Date:   Tue, 12 Mar 2019 15:46:53 -0400 (EDT)
+From:   Alan Stern <stern@rowland.harvard.edu>
+X-X-Sender: stern@iolanthe.rowland.org
+To:     Ondrej Zary <linux@zary.sk>
+cc:     linux-usb@vger.kernel.org, <linux-kernel@vger.kernel.org>
+Subject: Re: Resetting dead USB controllers automatically?
+In-Reply-To: <201903121520.08430.linux@zary.sk>
+Message-ID: <Pine.LNX.4.44L0.1903121536480.1457-100000@iolanthe.rowland.org>
 MIME-Version: 1.0
-In-Reply-To: <CAKgT0UddT9CKg1uZo6ZODs9ARti-6XGm9Zvo+8QRZKUPSwzWMQ@mail.gmail.com>
-Content-Type: multipart/signed; micalg=pgp-sha256;
- protocol="application/pgp-signature";
- boundary="OxKmVXZle8XZPHQokqhweRMEdqZsPL0jS"
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.12
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.27]); Tue, 12 Mar 2019 19:46:31 +0000 (UTC)
+Content-Type: TEXT/PLAIN; charset=US-ASCII
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This is an OpenPGP/MIME signed message (RFC 4880 and 3156)
---OxKmVXZle8XZPHQokqhweRMEdqZsPL0jS
-Content-Type: multipart/mixed; boundary="Q2ysSGlqobWbBDV2hKjOD9Aas8wcksB0W";
- protected-headers="v1"
-From: Nitesh Narayan Lal <nitesh@redhat.com>
-To: Alexander Duyck <alexander.duyck@gmail.com>,
- "Michael S. Tsirkin" <mst@redhat.com>
-Cc: David Hildenbrand <david@redhat.com>, kvm list <kvm@vger.kernel.org>,
- LKML <linux-kernel@vger.kernel.org>, linux-mm <linux-mm@kvack.org>,
- Paolo Bonzini <pbonzini@redhat.com>, lcapitulino@redhat.com,
- pagupta@redhat.com, wei.w.wang@intel.com,
- Yang Zhang <yang.zhang.wz@gmail.com>, Rik van Riel <riel@surriel.com>,
- dodgen@google.com, Konrad Rzeszutek Wilk <konrad.wilk@oracle.com>,
- dhildenb@redhat.com, Andrea Arcangeli <aarcange@redhat.com>
-Message-ID: <41ae8afe-72c9-58e6-0cbb-9375c91ce37a@redhat.com>
-Subject: Re: [RFC][Patch v9 2/6] KVM: Enables the kernel to isolate guest free
- pages
+On Tue, 12 Mar 2019, Ondrej Zary wrote:
 
---Q2ysSGlqobWbBDV2hKjOD9Aas8wcksB0W
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
+> Hello,
+> my USB controller sometimes dies when plugging a device (maybe because of static):
+> 
+> [11197.529334] ehci-pci 0000:00:09.2: HC died; cleaning up
+> [11197.529883] uhci_hcd 0000:00:09.0: host system error, PCI problems?
+> [11197.529893] uhci_hcd 0000:00:09.0: host controller process error, something bad happened!
+> [11197.530568] usb 1-1: USB disconnect, device number 7
+> [11197.531224] uhci_hcd 0000:00:09.0: host system error, PCI problems?
+> [11197.531278] uhci_hcd 0000:00:09.0: host controller process error, something bad happened!
+> [11197.532155] uhci_hcd 0000:00:09.0: host system error, PCI problems?
+> [11197.532203] uhci_hcd 0000:00:09.0: host controller process error, something bad happened!
+> [11197.539798] uhci_hcd 0000:00:09.0: host system error, PCI problems?
+> [11197.539865] uhci_hcd 0000:00:09.0: host controller process error, something bad happened!
+> [11197.540092] uhci_hcd 0000:00:09.0: host system error, PCI problems?
+> [11197.540109] uhci_hcd 0000:00:09.0: host controller process error, something bad happened!
+> [11197.541210] uhci_hcd 0000:00:09.0: host system error, PCI problems?
+> [11197.541285] uhci_hcd 0000:00:09.0: host controller process error, something bad happened!
+> [11197.553179] usb 1-2: USB disconnect, device number 3
+> [11197.554087] usb 1-4: USB disconnect, device number 4
+> [11197.580154] uhci_hcd 0000:00:09.0: FGR not stopped yet!
+> [11197.943554] uhci_hcd 0000:00:09.0: host system error, PCI problems?
+> [11197.943717] uhci_hcd 0000:00:09.0: host controller process error, something bad happened!
+> [11197.943735] uhci_hcd 0000:00:09.0: host controller halted, very bad!
+> [11197.943794] uhci_hcd 0000:00:09.0: HCRESET not completed yet!
+> [11197.943809] uhci_hcd 0000:00:09.0: HC died; cleaning up
+> 
+> rmmod & modprobe isn't enough to fix it. Reboot is needed to make it work again.
+> Or something like this:
+> #!/bin/sh
+> rmmod ehci-pci
+> rmmod uhci-hcd
+> echo 1 >"/sys/bus/pci/devices/0000:00:09.0/remove"
+> echo 1 >"/sys/bus/pci/devices/0000:00:09.1/remove"
+> echo 1 >"/sys/bus/pci/devices/0000:00:09.2/remove"
+> echo 1 >/sys/bus/pci/rescan
+> modprobe uhci-hcd
+> 
+> I'm not the only one affected by this problem:
+> http://www.google.com/search?q=%22HC+died%3B+cleaning+up%22
 
-On 3/8/19 4:39 PM, Alexander Duyck wrote:
-> On Fri, Mar 8, 2019 at 11:39 AM Nitesh Narayan Lal <nitesh@redhat.com> =
-wrote:
->> On 3/8/19 2:25 PM, Alexander Duyck wrote:
->>> On Fri, Mar 8, 2019 at 11:10 AM Nitesh Narayan Lal <nitesh@redhat.com=
-> wrote:
->>>> On 3/8/19 1:06 PM, Alexander Duyck wrote:
->>>>> On Thu, Mar 7, 2019 at 6:32 PM Michael S. Tsirkin <mst@redhat.com> =
-wrote:
->>>>>> On Thu, Mar 07, 2019 at 02:35:53PM -0800, Alexander Duyck wrote:
->>>>>>> The only other thing I still want to try and see if I can do is t=
-o add
->>>>>>> a jiffies value to the page private data in the case of the buddy=
+It's noticeable that the majority of the reports listed by Google 
+concern xHCI controllers, not UHCI like yours.
 
->>>>>>> pages.
->>>>>> Actually there's one extra thing I think we should do, and that is=
- make
->>>>>> sure we do not leave less than X% off the free memory at a time.
->>>>>> This way chances of triggering an OOM are lower.
->>>>> If nothing else we could probably look at doing a watermark of some=
+> Maybe the uhci/ehci drivers (or the USB core?) could reset the controller automatically to improve reliability.
 
->>>>> sort so we have to have X amount of memory free but not hinted befo=
-re
->>>>> we will start providing the hints. It would just be a matter of
->>>>> tracking how much memory we have hinted on versus the amount of mem=
-ory
->>>>> that has been pulled from that pool.
->>>> This is to avoid false OOM in the guest?
->>> Partially, though it would still be possible. Basically it would just=
+Maybe.  Note that your script above interacts with the PCI core more
+than the USB core, however.  In addition, there are potential problems
+with this approach (for example, getting stuck in a loop that chews up
+large amounts of CPU time because the hardware is in such bad shape
+that resetting it doesn't help).
 
->>> be a way of determining when we have hinted "enough". Basically it
->>> doesn't do us much good to be hinting on free memory if the guest is
->>> already constrained and just going to reallocate the memory shortly
->>> after we hinted on it. The idea is with a watermark we can avoid
->>> hinting until we start having pages that are actually going to stay
->>> free for a while.
->>>
->>>>>  It is another reason why we
->>>>> probably want a bit in the buddy pages somewhere to indicate if a p=
-age
->>>>> has been hinted or not as we can then use that to determine if we h=
-ave
->>>>> to account for it in the statistics.
->>>> The one benefit which I can see of having an explicit bit is that it=
+Given that the problem is pretty rare, and given that it can be fixed
+by running a script like the one you list above, maybe there should be
+a userspace daemon that periodically checks for controller failures and
+tries to reset the hardware when appropriate.  Such a daemon could be
+more flexible than a kernel driver.
 
->>>> will help us to have a single hook away from the hot path within bud=
-dy
->>>> merging code (just like your arch_merge_page) and still avoid duplic=
-ate
->>>> hints while releasing pages.
->>>>
->>>> I still have to check PG_idle and PG_young which you mentioned but I=
+> Looks like someone thought about this before but it was never implemented.
+> There's a comment in ehci_handle_controller_death() function in drivers/usb/host/ehci-timer.c:
+> 	/* Not in process context, so don't try to reset the controller */
 
->>>> don't think we can reuse any existing bits.
->>> Those are bits that are already there for 64b. I think those exist in=
+No, you are misinterpreting that comment.  It doesn't mean resetting
+the controller in order to make the hardware start working again; it
+means resetting the controller to make sure that the hardware is idle
+and isn't doing anything bad or unexpected.
 
->>> the page extension for 32b systems. If I am not mistaken they are onl=
-y
->>> used in VMA mapped memory. What I was getting at is that those are th=
-e
->>> bits we could think about reusing.
->>>
->>>> If we really want to have something like a watermark, then can't we =
-use
->>>> zone->free_pages before isolating to see how many free pages are the=
-re
->>>> and put a threshold on it? (__isolate_free_page() does a similar thi=
-ng
->>>> but it does that on per request basis).
->>> Right. That is only part of it though since that tells you how many
->>> free pages are there. But how many of those free pages are hinted?
->>> That is the part we would need to track separately and then then
->>> compare to free_pages to determine if we need to start hinting on mor=
-e
->>> memory or not.
->> Only pages which are isolated will be hinted, and once a page is
->> isolated it will not be counted in the zone free pages.
->> Feel free to correct me if I am wrong.
-> You are correct up to here. When we isolate the page it isn't counted
-> against the free pages. However after we complete the hint we end up
-> taking it out of isolation and returning it to the "free" state, so it
-> will be counted against the free pages.
->
->> If I am understanding it correctly you only want to hint the idle page=
-s,
->> is that right?
-> Getting back to the ideas from our earlier discussion, we had 3 stages
-> for things. Free but not hinted, isolated due to hinting, and free and
-> hinted. So what we would need to do is identify the size of the first
-> pool that is free and not hinted by knowing the total number of free
-> pages, and then subtract the size of the pages that are hinted and
-> still free.
-To summarize, for now, I think it makes sense to stick with the current
-approach as this way we can avoid any locking in the allocation path and
-reduce the number of hypercalls for a bunch of MAX_ORDER - 1 page.
-For the next step other than the comments received in the code and what
-I mentioned in the cover email, I would like to do the following:
-1. Explore the watermark idea suggested by Alex and bring down memhog
-execution time if possible.
-2. Benchmark hinting v/s non-hinting more extensively.
-Let me know if you have any specific suggestions in terms of the tools I
-can run to do the same. (I am planning to run atleast netperf, hackbench
-and stress for this).
+Alan Stern
 
->
->>>>>>> With that we could track the age of the page so it becomes
->>>>>>> easier to only target pages that are truly going cold rather than=
+> The controller is:
+> 00:09.0 USB controller [0c03]: VIA Technologies, Inc. VT82xx/62xx UHCI USB 1.1 Controller [1106:3038] (rev 62)
+> 00:09.1 USB controller [0c03]: VIA Technologies, Inc. VT82xx/62xx UHCI USB 1.1 Controller [1106:3038] (rev 62)
+> 00:09.2 USB controller [0c03]: VIA Technologies, Inc. USB 2.0 [1106:3104] (rev 65)
 
->>>>>>> trying to grab pages that were added to the freelist recently.
->>>>>> I like that but I have a vague memory of discussing this with Rik =
-van
->>>>>> Riel and him saying it's actually better to take away recently use=
-d
->>>>>> ones. Can't see why would that be but maybe I remember wrong. Rik =
-- am I
->>>>>> just confused?
->>>>> It is probably to cut down on the need for disk writes in the case =
-of
->>>>> swap. If that is the case it ends up being a trade off.
->>>>>
->>>>> The sooner we hint the less likely it is that we will need to write=
- a
->>>>> given page to disk. However the sooner we hint, the more likely it =
-is
->>>>> we will need to trigger a page fault and pull back in a zero page t=
-o
->>>>> populate the last page we were working on. The sweet spot will be t=
-hat
->>>>> period of time that is somewhere in between so we don't trigger
->>>>> unnecessary page faults and we don't need to perform additional swa=
-p
->>>>> reads/writes.
->>>> --
->>>> Regards
->>>> Nitesh
->>>>
->> --
->> Regards
->> Nitesh
->>
---=20
-Regards
-Nitesh
-
-
---Q2ysSGlqobWbBDV2hKjOD9Aas8wcksB0W--
-
---OxKmVXZle8XZPHQokqhweRMEdqZsPL0jS
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: OpenPGP digital signature
-Content-Disposition: attachment; filename="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAEBCAAdFiEEkXcoRVGaqvbHPuAGo4ZA3AYyozkFAlyIDIgACgkQo4ZA3AYy
-ozl16w/+MPhJBHsfQs21XCb5Af8Ndn4Co95IeNoLaEbrqQlD+MovTAQhDLvOOltv
-eym/pc5iyzw1Uhma1LVjzVpRFH5Y9t+6VWRG0/hPNtNKNifzLC8jGAaxDVXZoJBW
-b47h1nFMImOaiE2OdFPyEPAxIAGMD4TGmHOUzZOAmD2181Q0lbjdleczK6anBhap
-cLpyUwZ9OlCAQlcJh6dQrZCHa/JG9ux6LP3mGMQMV3kndvw/OkWuB1MCN2T32NTS
-WmIdDBW3slioJX+YlIAlpaCVaZnIQRVR/b0gqboX8xAEIhMakh42DUZ8wDfRpHjC
-Y9pFLo8nTSUQ6oNTkHDlrfpmKOnUp8Qet8WhSGkyZLQdGA1NpLzngi8FPzlsq6ue
-kbUP1EkRP9UB0bCt47kat/C4ZSfgvR94Nh4aE0oU71iCcPM/lcHSI8F67nqKtphP
-/26tZoawnVIHPggNCY/kj2q/t5EIrqUdgY3wg0xoQnHigj75d3NM7sNq3vPcAexN
-DikwWwpaivcEt5Ff8CxsK41vqPRJ+X4XFizViYlUSjc0hQxMTLeqAkK68HtJ8b03
-gOW6wshrcobFN2I/f7YIKGW5aJVEu6EGhxyyLVZo1KW46PGHPWSIrk9eVfpRvAb0
-wREMTYRi/4u3/vT9CScZIh0I8aH/mI/pPX4iQHUpUbS29FfyvAI=
-=c52/
------END PGP SIGNATURE-----
-
---OxKmVXZle8XZPHQokqhweRMEdqZsPL0jS--
