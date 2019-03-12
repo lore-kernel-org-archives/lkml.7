@@ -7,47 +7,48 @@ X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 011FEC43381
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 17:30:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5F140C43381
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 17:30:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C7D62214AE
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 17:30:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 30623206DF
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 17:30:31 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1552411821;
-	bh=YVUyCY4LJ9u185fUuYteblF/WNkNrXhBmiOnqWQTh7w=;
+	s=default; t=1552411831;
+	bh=XBrmE+Np9bborTtTfbkZJov/SwRBYVWq2OgA8axxeSw=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=ZLFVmBDR06zNZIj3hRaV4I4TM8ePJbFddbMz1HxcDNpOFs9r4R0CA/R1kE9t1yQHq
-	 Ucnh/KppoOj60pFt4UhYdbscENWJST6cE4ezpd5O8XfZzsDmvR1bX5njtuluQ2A01n
-	 D7q86cW+jcBSgZGTcxJw37gjz+fE9Cz7ULW5b+9Y=
+	b=LyGTs2PMQbXa6n3w8zGSyZSomfDPPQwULxfgxfP74sAT3UaZZIxNhbzEBEt1W8Mle
+	 6qg8c8VZBbcgNobxzKvR1m521lTYHC+rZTPaWN3LbbbxnD/ZiLeTCgyRFMcS6KIIYd
+	 4uFDEah/XpSJD+NmayTFjy/sIl598DakufMUDdbs=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729540AbfCLRaO (ORCPT
+        id S1729016AbfCLRaa (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 12 Mar 2019 13:30:14 -0400
-Received: from mail.kernel.org ([198.145.29.99]:32792 "EHLO mail.kernel.org"
+        Tue, 12 Mar 2019 13:30:30 -0400
+Received: from mail.kernel.org ([198.145.29.99]:60796 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728636AbfCLRRT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 12 Mar 2019 13:17:19 -0400
+        id S1729513AbfCLRRQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 12 Mar 2019 13:17:16 -0400
 Received: from localhost (unknown [104.133.8.98])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 5106F21741;
-        Tue, 12 Mar 2019 17:17:18 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 76B8B21741;
+        Tue, 12 Mar 2019 17:17:15 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1552411038;
-        bh=YVUyCY4LJ9u185fUuYteblF/WNkNrXhBmiOnqWQTh7w=;
+        s=default; t=1552411035;
+        bh=XBrmE+Np9bborTtTfbkZJov/SwRBYVWq2OgA8axxeSw=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=oBXywWGwX7/bE7efHZoMnCJ0irxhXOmqy/UQNVlS1U0Egqm2GPEXGL2oplL4vUo0T
-         AdEF1w8oPdZ6bG6IaB6tp+mt2Z/XV9+rZEND3ckAqaFJ8UkR9UsbSGzOrvw6zlFOGT
-         G4rUkdaO2Xvp1BCU5gotkEs5IINfbwTJ6pAhIYBk=
+        b=GcMYcjpPytTD6kQiJ1uId1yAymenp/KAYYzDWXnnQ14SMn4AJQimW0vfcaESr7Gxg
+         0RB+F1LtBcpgeA6/+PvrdXXYBwsdfsjT4DyyycQySIoab4oOYrUqJpdvkLxV1uQyoT
+         250cV7KvpI4aFgENyWemg5AOxOyub0yTaTlT14Ao=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Jann Horn <jannh@google.com>,
-        Paul Moore <paul@paul-moore.com>,
+        stable@vger.kernel.org, Ido Schimmel <idosch@mellanox.com>,
+        Amit Cohen <amitc@mellanox.com>,
+        Jiri Pirko <jiri@mellanox.com>,
         "David S. Miller" <davem@davemloft.net>
-Subject: [PATCH 4.9 17/96] netlabel: fix out-of-bounds memory accesses
-Date:   Tue, 12 Mar 2019 10:09:35 -0700
-Message-Id: <20190312171035.848088242@linuxfoundation.org>
+Subject: [PATCH 4.9 13/96] team: Free BPF filter when unregistering netdev
+Date:   Tue, 12 Mar 2019 10:09:31 -0700
+Message-Id: <20190312171035.552113566@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190312171034.530434962@linuxfoundation.org>
 References: <20190312171034.530434962@linuxfoundation.org>
@@ -66,53 +67,99 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-From: Paul Moore <paul@paul-moore.com>
+From: Ido Schimmel <idosch@mellanox.com>
 
-[ Upstream commit 5578de4834fe0f2a34fedc7374be691443396d1f ]
+[ Upstream commit 692c31bd4054212312396b1d303bffab2c5b93a7 ]
 
-There are two array out-of-bounds memory accesses, one in
-cipso_v4_map_lvl_valid(), the other in netlbl_bitmap_walk().  Both
-errors are embarassingly simple, and the fixes are straightforward.
+When team is used in loadbalance mode a BPF filter can be used to
+provide a hash which will determine the Tx port.
 
-As a FYI for anyone backporting this patch to kernels prior to v4.8,
-you'll want to apply the netlbl_bitmap_walk() patch to
-cipso_v4_bitmap_walk() as netlbl_bitmap_walk() doesn't exist before
-Linux v4.8.
+When the netdev is later unregistered the filter is not freed which
+results in memory leaks [1].
 
-Reported-by: Jann Horn <jannh@google.com>
-Fixes: 446fda4f2682 ("[NetLabel]: CIPSOv4 engine")
-Fixes: 3faa8f982f95 ("netlabel: Move bitmap manipulation functions to the NetLabel core.")
-Signed-off-by: Paul Moore <paul@paul-moore.com>
+Fix by freeing the program and the corresponding filter when
+unregistering the netdev.
+
+[1]
+unreferenced object 0xffff8881dbc47cc8 (size 16):
+  comm "teamd", pid 3068, jiffies 4294997779 (age 438.247s)
+  hex dump (first 16 bytes):
+    a3 00 6b 6b 6b 6b 6b 6b 88 a5 82 e1 81 88 ff ff  ..kkkkkk........
+  backtrace:
+    [<000000008a3b47e3>] team_nl_cmd_options_set+0x88f/0x11b0
+    [<00000000c4f4f27e>] genl_family_rcv_msg+0x78f/0x1080
+    [<00000000610ef838>] genl_rcv_msg+0xca/0x170
+    [<00000000a281df93>] netlink_rcv_skb+0x132/0x380
+    [<000000004d9448a2>] genl_rcv+0x29/0x40
+    [<000000000321b2f4>] netlink_unicast+0x4c0/0x690
+    [<000000008c25dffb>] netlink_sendmsg+0x929/0xe10
+    [<00000000068298c5>] sock_sendmsg+0xc8/0x110
+    [<0000000082a61ff0>] ___sys_sendmsg+0x77a/0x8f0
+    [<00000000663ae29d>] __sys_sendmsg+0xf7/0x250
+    [<0000000027c5f11a>] do_syscall_64+0x14d/0x610
+    [<000000006cfbc8d3>] entry_SYSCALL_64_after_hwframe+0x49/0xbe
+    [<00000000e23197e2>] 0xffffffffffffffff
+unreferenced object 0xffff8881e182a588 (size 2048):
+  comm "teamd", pid 3068, jiffies 4294997780 (age 438.247s)
+  hex dump (first 32 bytes):
+    20 00 00 00 02 00 00 00 30 00 00 00 28 f0 ff ff   .......0...(...
+    07 00 00 00 00 00 00 00 28 00 00 00 00 00 00 00  ........(.......
+  backtrace:
+    [<000000002daf01fb>] lb_bpf_func_set+0x45c/0x6d0
+    [<000000008a3b47e3>] team_nl_cmd_options_set+0x88f/0x11b0
+    [<00000000c4f4f27e>] genl_family_rcv_msg+0x78f/0x1080
+    [<00000000610ef838>] genl_rcv_msg+0xca/0x170
+    [<00000000a281df93>] netlink_rcv_skb+0x132/0x380
+    [<000000004d9448a2>] genl_rcv+0x29/0x40
+    [<000000000321b2f4>] netlink_unicast+0x4c0/0x690
+    [<000000008c25dffb>] netlink_sendmsg+0x929/0xe10
+    [<00000000068298c5>] sock_sendmsg+0xc8/0x110
+    [<0000000082a61ff0>] ___sys_sendmsg+0x77a/0x8f0
+    [<00000000663ae29d>] __sys_sendmsg+0xf7/0x250
+    [<0000000027c5f11a>] do_syscall_64+0x14d/0x610
+    [<000000006cfbc8d3>] entry_SYSCALL_64_after_hwframe+0x49/0xbe
+    [<00000000e23197e2>] 0xffffffffffffffff
+
+Fixes: 01d7f30a9f96 ("team: add loadbalance mode")
+Signed-off-by: Ido Schimmel <idosch@mellanox.com>
+Reported-by: Amit Cohen <amitc@mellanox.com>
+Acked-by: Jiri Pirko <jiri@mellanox.com>
 Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- net/ipv4/cipso_ipv4.c        |    3 ++-
- net/netlabel/netlabel_kapi.c |    3 ++-
- 2 files changed, 4 insertions(+), 2 deletions(-)
+ drivers/net/team/team_mode_loadbalance.c |   15 +++++++++++++++
+ 1 file changed, 15 insertions(+)
 
---- a/net/ipv4/cipso_ipv4.c
-+++ b/net/ipv4/cipso_ipv4.c
-@@ -667,7 +667,8 @@ static int cipso_v4_map_lvl_valid(const
- 	case CIPSO_V4_MAP_PASS:
- 		return 0;
- 	case CIPSO_V4_MAP_TRANS:
--		if (doi_def->map.std->lvl.cipso[level] < CIPSO_V4_INV_LVL)
-+		if ((level < doi_def->map.std->lvl.cipso_size) &&
-+		    (doi_def->map.std->lvl.cipso[level] < CIPSO_V4_INV_LVL))
- 			return 0;
- 		break;
- 	}
---- a/net/netlabel/netlabel_kapi.c
-+++ b/net/netlabel/netlabel_kapi.c
-@@ -903,7 +903,8 @@ int netlbl_bitmap_walk(const unsigned ch
- 		    (state == 0 && (byte & bitmask) == 0))
- 			return bit_spot;
+--- a/drivers/net/team/team_mode_loadbalance.c
++++ b/drivers/net/team/team_mode_loadbalance.c
+@@ -319,6 +319,20 @@ static int lb_bpf_func_set(struct team *
+ 	return 0;
+ }
  
--		bit_spot++;
-+		if (++bit_spot >= bitmap_len)
-+			return -1;
- 		bitmask >>= 1;
- 		if (bitmask == 0) {
- 			byte = bitmap[++byte_offset];
++static void lb_bpf_func_free(struct team *team)
++{
++	struct lb_priv *lb_priv = get_lb_priv(team);
++	struct bpf_prog *fp;
++
++	if (!lb_priv->ex->orig_fprog)
++		return;
++
++	__fprog_destroy(lb_priv->ex->orig_fprog);
++	fp = rcu_dereference_protected(lb_priv->fp,
++				       lockdep_is_held(&team->lock));
++	bpf_prog_destroy(fp);
++}
++
+ static int lb_tx_method_get(struct team *team, struct team_gsetter_ctx *ctx)
+ {
+ 	struct lb_priv *lb_priv = get_lb_priv(team);
+@@ -633,6 +647,7 @@ static void lb_exit(struct team *team)
+ 
+ 	team_options_unregister(team, lb_options,
+ 				ARRAY_SIZE(lb_options));
++	lb_bpf_func_free(team);
+ 	cancel_delayed_work_sync(&lb_priv->ex->stats.refresh_dw);
+ 	free_percpu(lb_priv->pcpu_stats);
+ 	kfree(lb_priv->ex);
 
 
