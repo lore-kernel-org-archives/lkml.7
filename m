@@ -2,120 +2,100 @@ Return-Path: <SRS0=J4ZE=RP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-11.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PULL_REQUEST,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3809BC43381
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 12:09:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E50EEC43381
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 12:09:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1183F206BA
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 12:09:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A172A206BA
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 12:09:42 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1552392582;
+	bh=h8O3iXcm/GhHsnAmotZ6jKi9eUWTDBPtpEPiFTTZT44=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=q6si/rScVgPsaTzKrvZc4hi3l4VJKW8Im1PRVPjE4hbCLvQyxa7/RA/Dx09rLws3U
+	 j98un1SEF/8spYgAonYoKu/KOTFYjiXaUdoR2q9pj5kyGUETjLHjrzaZwtkoGR295I
+	 OxE7keLS/F86dHy7InKG9GHlMKbvJiEtQ2GHrG0k=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726496AbfCLMJ3 (ORCPT
+        id S1726639AbfCLMJl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 12 Mar 2019 08:09:29 -0400
-Received: from outbound.smtp.vt.edu ([198.82.183.121]:52712 "EHLO
-        omr1.cc.vt.edu" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1725873AbfCLMJ3 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 12 Mar 2019 08:09:29 -0400
-Received: from mr6.cc.vt.edu (mr6.cc.vt.edu [IPv6:2607:b400:92:8500:0:af:2d00:4488])
-        by omr1.cc.vt.edu (8.14.4/8.14.4) with ESMTP id x2CC9S9W007526
-        for <linux-kernel@vger.kernel.org>; Tue, 12 Mar 2019 08:09:28 -0400
-Received: from mail-qk1-f200.google.com (mail-qk1-f200.google.com [209.85.222.200])
-        by mr6.cc.vt.edu (8.14.7/8.14.7) with ESMTP id x2CC9NOK014247
-        for <linux-kernel@vger.kernel.org>; Tue, 12 Mar 2019 08:09:28 -0400
-Received: by mail-qk1-f200.google.com with SMTP id v67so1883412qkl.22
-        for <linux-kernel@vger.kernel.org>; Tue, 12 Mar 2019 05:09:28 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:from:to:cc:subject:mime-version:date
-         :message-id;
-        bh=gwCmIPWQyJ32wTejhqj6D720XvgzY4pG6gf2m+Oo8pI=;
-        b=FIOVW5Og7yZQpp9ysWBCiBviGVutGFXe/mIilqF3mw89XySo98Du1YQwfH/kBiVk9+
-         Urv0qUJypEdRywbf3SrSg1bo6Sj2npnzGQvT4X1H//eCgaMfwbdlSGOkRtf60OB8ySEv
-         /HNaook+RLKRePEVG9VAXGyUE46W7+rdQZabDqj/wGj5ULcIwYPKuGCAdGxGcxhF3/eP
-         +4XvoOnF1BaUfV8bmD6f2POKlYbs3fjottTFAPQVeroK1W8ORDHKLhukzvKxjJe7cl/E
-         lOYprGz61BCgbzfs2dDeVn9vYRqbY5Y46dK8aGN1Hn4Wt/agO4BDJizEA10TmRYCjZiE
-         T92A==
-X-Gm-Message-State: APjAAAXHN8THZp//lqHaHVMQ07MlBIqAHM/Ec/DstYIeZu4LTHisKWKG
-        z0yDJOPc/FH3UMB+AKT4G2t1Us9UJd/L4LC/ZvPGjda7qgktFV+zFJlAgS95wZDrqXAcELFugzd
-        XEsJcdO0b2dgwE5qWOPlSSh1o8RLGWokFmDY=
-X-Received: by 2002:a0c:b485:: with SMTP id c5mr30286225qve.78.1552392562773;
-        Tue, 12 Mar 2019 05:09:22 -0700 (PDT)
-X-Google-Smtp-Source: APXvYqwJcy1VtxnkZ1OSFcuiIZhAfN/YpuJdQLbnCN67ISqGcPXZcNQNwLfIuo+DUW/psw2AH2V6HA==
-X-Received: by 2002:a0c:b485:: with SMTP id c5mr30286214qve.78.1552392562599;
-        Tue, 12 Mar 2019 05:09:22 -0700 (PDT)
-Received: from turing-police ([2601:5c0:c001:4341::3b7])
-        by smtp.gmail.com with ESMTPSA id f6sm652716qtf.66.2019.03.12.05.09.21
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Tue, 12 Mar 2019 05:09:21 -0700 (PDT)
-From:   "Valdis Kl=?utf-8?Q?=c4=93?=tnieks" <valdis.kletnieks@vt.edu>
-X-Google-Original-From: "Valdis Kl=?utf-8?Q?=c4=93?=tnieks" <Valdis.Kletnieks@vt.edu>
-X-Mailer: exmh version 2.9.0 11/07/2018 with nmh-1.7+dev
-To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-cc:     devel@driverdev.osuosl.org, linux-kernel@vger.kernel.org
-Subject: [PATCH] drivers/staging/rtl8712 - fix up non-kerneldoc comments
-Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Date:   Tue, 12 Mar 2019 08:09:20 -0400
-Message-ID: <21795.1552392560@turing-police>
+        Tue, 12 Mar 2019 08:09:41 -0400
+Received: from mail.kernel.org ([198.145.29.99]:47900 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725873AbfCLMJl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 12 Mar 2019 08:09:41 -0400
+Received: from mail-qt1-f173.google.com (mail-qt1-f173.google.com [209.85.160.173])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 51FA520883;
+        Tue, 12 Mar 2019 12:09:40 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1552392580;
+        bh=h8O3iXcm/GhHsnAmotZ6jKi9eUWTDBPtpEPiFTTZT44=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=t0C/OJCsa2GCcGEiPrXIpoid5t1afTf76YaR4JksMY4XzfiXE70zDtj+FfkeyOZH6
+         1lTH1RZwO+kIm/vNECPuG734bDDGKMb/g7w5WMNbaw6sJfiRf15s5Vqj/dkGbgBUY7
+         EVR2PxddoigNvuIHnxqJl5FbHJZ0AwJ9wT71zZMk=
+Received: by mail-qt1-f173.google.com with SMTP id z17so2183490qtn.4;
+        Tue, 12 Mar 2019 05:09:40 -0700 (PDT)
+X-Gm-Message-State: APjAAAWLwykzBeB4mRWEZisT1tFwJyaSNgVgx/hpevDUyNoaICT2EBWQ
+        iKr0dgq/afKxzrYiVARAHUqZy/PA8jAI/MgmaBY=
+X-Google-Smtp-Source: APXvYqyMCdccq+/Qm+ukfcopRVwgWXClpQg2H2v1axIotX/o/RLnLYzI23lqTS6TnOJlWlPaAz3XbC5KO6nvoHM0yXI=
+X-Received: by 2002:ac8:2d68:: with SMTP id o37mr28721699qta.377.1552392579546;
+ Tue, 12 Mar 2019 05:09:39 -0700 (PDT)
+MIME-Version: 1.0
+References: <84b02324ea2fb251b4037dee8994306a@codeaurora.org>
+In-Reply-To: <84b02324ea2fb251b4037dee8994306a@codeaurora.org>
+From:   Josh Boyer <jwboyer@kernel.org>
+Date:   Tue, 12 Mar 2019 08:09:28 -0400
+X-Gmail-Original-Message-ID: <CA+5PVA5awD_uMvhKR-KdN_io5g3s2YZBVao1Tj6wWtcBUY9W1w@mail.gmail.com>
+Message-ID: <CA+5PVA5awD_uMvhKR-KdN_io5g3s2YZBVao1Tj6wWtcBUY9W1w@mail.gmail.com>
+Subject: Re: Fw files for QCA BT Chip QCA6174
+To:     Balakrishna Godavarthi <bgodavar@codeaurora.org>
+Cc:     Hemantg <hemantg@codeaurora.org>,
+        Linux Firmware <linux-firmware@kernel.org>,
+        BlueZ development <linux-bluetooth@vger.kernel.org>,
+        Linux-arm Msm <linux-arm-msm@vger.kernel.org>,
+        "Linux-Kernel@Vger. Kernel. Org" <linux-kernel@vger.kernel.org>,
+        rjliao@codeauroa.com
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Building with W=1 reports (among other things)
+On Wed, Mar 6, 2019 at 11:40 AM Balakrishna Godavarthi
+<bgodavar@codeaurora.org> wrote:
+>
+>
+> Hi,
+>
+> The following changes since commit
+> 54b0a748c8966c93aaa8726402e0b69cb51cd5d2:
+>
+>    WHENCE: Correct errant entries (2019-02-21 07:21:45 -0500)
+>
+> are available in the Git repository at:
+>
+>    https://github.com/bgodavar/qca6174_bt_fw.git
+>
+> for you to fetch changes up to c99beda7e0368961d024ddc8e45a46f118100cc7:
+>
+>    QCA: Add the fw files for BT Chip QCA6174. (2019-02-25 15:36:36 +0530)
+>
+> ----------------------------------------------------------------
+> Balakrishna Godavarthi (1):
+>        QCA: Add the fw files for BT Chip QCA6174.
+>
+>   WHENCE                    |   2 ++
+>   qca/nvm_00440302.bin      | Bin 0 -> 2010 bytes
+>   qca/rampatch_00440302.bin | Bin 0 -> 64940 bytes
+>   3 files changed, 2 insertions(+)
+>   create mode 100644 qca/nvm_00440302.bin
+>   create mode 100644 qca/rampatch_00440302.bin
 
-  CC [M]  drivers/staging/rtl8712/rtl871x_ioctl_linux.o
-drivers/staging/rtl8712/rtl871x_ioctl_linux.c:1106: warning: Cannot understand  *
- on line 1106 - I thought it was a doc line
+Pulled and pushed out.
 
-  CC [M]  drivers/staging/rtl8712/os_intfs.o
-drivers/staging/rtl8712/os_intfs.c:366: warning: Cannot understand  *
- on line 366 - I thought it was a doc line
-drivers/staging/rtl8712/os_intfs.c:434: warning: Cannot understand  *
- on line 434 - I thought it was a doc line
-
-Fix up the non-kerneldoc comments
-
-Signed-off-by: Valdis Kletnieks <valdis.kletnieks@vt.edu>
-
-
-diff --git a/drivers/staging/rtl8712/os_intfs.c b/drivers/staging/rtl8712/os_intfs.c
-index 2d3f38007299..fc797c3fbaed 100644
---- a/drivers/staging/rtl8712/os_intfs.c
-+++ b/drivers/staging/rtl8712/os_intfs.c
-@@ -362,7 +362,7 @@ static void enable_video_mode(struct _adapter *padapter, int cbw40_value)
- 	r8712_fw_cmd(padapter, intcmd);
- }
- 
--/**
-+/*
-  *
-  * This function intends to handle the activation of an interface
-  * i.e. when it is brought Up/Active from a Down state.
-@@ -430,7 +430,7 @@ static int netdev_open(struct net_device *pnetdev)
- 	return -1;
- }
- 
--/**
-+/*
-  *
-  * This function intends to handle the shutdown of an interface
-  * i.e. when it is brought Down from an Up/Active state.
-diff --git a/drivers/staging/rtl8712/rtl871x_ioctl_linux.c b/drivers/staging/rtl8712/rtl871x_ioctl_linux.c
-index e723357ac8c0..f49fed8cb0e7 100644
---- a/drivers/staging/rtl8712/rtl871x_ioctl_linux.c
-+++ b/drivers/staging/rtl8712/rtl871x_ioctl_linux.c
-@@ -1102,7 +1102,7 @@ static int r871x_wx_set_mlme(struct net_device *dev,
- 	return ret;
- }
- 
--/**
-+/*
-  *
-  * This function intends to handle the Set Scan command.
-  * Currently, the request comes via Wireless Extensions' SIOCSIWSCAN ioctl.
-
+josh
