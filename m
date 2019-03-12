@@ -7,48 +7,49 @@ X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 244BAC10F00
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 18:07:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3555BC43381
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 18:07:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DCBD32173C
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 18:07:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F01012173C
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 18:07:14 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1552414029;
-	bh=Er2fnYxoqvkpJmaxbgRNLg9D0ovEKsJp8wTV5mCY5eY=;
+	s=default; t=1552414035;
+	bh=GJ6XayUpeMpEkHSnxWVk9oBsJs7zIftirT4wQlnNT04=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=dBSA4iujoaaScWTNba1hDfzu4tUXViAseZMUgyBEAzs6a1eY7JDaCTERafDdt1t49
-	 nMlaJ0Epvs4+pgjzX9uMlfa6ojIHtfZ9uy5mAgu1I4K5tXnC6vu/1Tt5g6HlmBEHaZ
-	 AsZzPGnd/NZwsGfQa9VbjxRbVM7nAviD5Vw9Hevw=
+	b=GiUoTu0i/tZwTK4YoykQ/uTjrocuTTCbmera7kc1AwmAjR0SQbAG1gr2v7Bon49de
+	 a5N/il1RaK8PF7vVv8WyhE1QtN5qek6KRwpsvlNg9fwoBdgVyNGcojWZKkgjBkRiDp
+	 GVou3LxC3dMjvI5GuysStPSxZ7PdC8bam239Ibuw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727441AbfCLRMY (ORCPT
+        id S1728065AbfCLSHN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 12 Mar 2019 13:12:24 -0400
-Received: from mail.kernel.org ([198.145.29.99]:46600 "EHLO mail.kernel.org"
+        Tue, 12 Mar 2019 14:07:13 -0400
+Received: from mail.kernel.org ([198.145.29.99]:47272 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727282AbfCLRMG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 12 Mar 2019 13:12:06 -0400
+        id S1727425AbfCLRMX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 12 Mar 2019 13:12:23 -0400
 Received: from localhost (unknown [104.133.8.98])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 0E4D1217D4;
-        Tue, 12 Mar 2019 17:12:06 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id DC5C52171F;
+        Tue, 12 Mar 2019 17:12:22 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1552410726;
-        bh=Er2fnYxoqvkpJmaxbgRNLg9D0ovEKsJp8wTV5mCY5eY=;
+        s=default; t=1552410743;
+        bh=GJ6XayUpeMpEkHSnxWVk9oBsJs7zIftirT4wQlnNT04=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=UBzn9YObY/vhxCG0mUkerLNRvAL/x2d3ssS7kyBAGb1B1VWg81voG4GpkVg3ms5V/
-         1Y9vF2UABMpHuVeAZk4YtOlLn223kmDhjc4p9NWMPZVFDEGFvQPXh+2YBV5kGO3IMT
-         6XOBZc23eJINEAM5vdMVpVQLmXfh/JzfD0tAIWiE=
+        b=kr0UGpSHw7s8hfWQPBaj7sRWbnt0kUXBLNTIIHVtfAh1IO3uwvZ8cLtSBBECUhBfu
+         Yf7fyQDl71XsaOXOT98p6obuqy9W41sljqL6bQaUAuwx5dt4ln4HSpNcE0AGRh9ySu
+         LrmWpmjI3NdfA7hmvO7HLMlcUYgseNEmgAQUuyH8=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Francesco Ruggeri <fruggeri@arista.com>,
-        Florian Westphal <fw@strlen.de>,
-        Pablo Neira Ayuso <pablo@netfilter.org>,
+        stable@vger.kernel.org, Pan Bian <bianpan2016@163.com>,
+        Ian Kent <raven@themaw.net>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.20 036/171] netfilter: ebtables: compat: un-break 32bit setsockopt when no rules are present
-Date:   Tue, 12 Mar 2019 10:06:56 -0700
-Message-Id: <20190312170351.167906120@linuxfoundation.org>
+Subject: [PATCH 4.20 068/171] autofs: drop dentry reference only when it is never used
+Date:   Tue, 12 Mar 2019 10:07:28 -0700
+Message-Id: <20190312170354.026391964@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190312170347.868927101@linuxfoundation.org>
 References: <20190312170347.868927101@linuxfoundation.org>
@@ -67,46 +68,44 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-[ Upstream commit 2035f3ff8eaa29cfb5c8e2160b0f6e85eeb21a95 ]
+[ Upstream commit 63ce5f552beb9bdb41546b3a26c4374758b21815 ]
 
-Unlike ip(6)tables ebtables only counts user-defined chains.
+autofs_expire_run() calls dput(dentry) to drop the reference count of
+dentry.  However, dentry is read via autofs_dentry_ino(dentry) after
+that.  This may result in a use-free-bug.  The patch drops the reference
+count of dentry only when it is never used.
 
-The effect is that a 32bit ebtables binary on a 64bit kernel can do
-'ebtables -N FOO' only after adding at least one rule, else the request
-fails with -EINVAL.
-
-This is a similar fix as done in
-3f1e53abff84 ("netfilter: ebtables: don't attempt to allocate 0-sized compat array").
-
-Fixes: 7d7d7e02111e9 ("netfilter: compat: reject huge allocation requests")
-Reported-by: Francesco Ruggeri <fruggeri@arista.com>
-Signed-off-by: Florian Westphal <fw@strlen.de>
-Signed-off-by: Pablo Neira Ayuso <pablo@netfilter.org>
+Link: http://lkml.kernel.org/r/154725122396.11260.16053424107144453867.stgit@pluto-themaw-net
+Signed-off-by: Pan Bian <bianpan2016@163.com>
+Signed-off-by: Ian Kent <raven@themaw.net>
+Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
+Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- net/bridge/netfilter/ebtables.c | 9 ++++++---
- 1 file changed, 6 insertions(+), 3 deletions(-)
+ fs/autofs/expire.c | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
-diff --git a/net/bridge/netfilter/ebtables.c b/net/bridge/netfilter/ebtables.c
-index 5e55cef0cec3..6693e209efe8 100644
---- a/net/bridge/netfilter/ebtables.c
-+++ b/net/bridge/netfilter/ebtables.c
-@@ -2293,9 +2293,12 @@ static int compat_do_replace(struct net *net, void __user *user,
+diff --git a/fs/autofs/expire.c b/fs/autofs/expire.c
+index d441244b79df..28d9c2b1b3bb 100644
+--- a/fs/autofs/expire.c
++++ b/fs/autofs/expire.c
+@@ -596,7 +596,6 @@ int autofs_expire_run(struct super_block *sb,
+ 	pkt.len = dentry->d_name.len;
+ 	memcpy(pkt.name, dentry->d_name.name, pkt.len);
+ 	pkt.name[pkt.len] = '\0';
+-	dput(dentry);
  
- 	xt_compat_lock(NFPROTO_BRIDGE);
+ 	if (copy_to_user(pkt_p, &pkt, sizeof(struct autofs_packet_expire)))
+ 		ret = -EFAULT;
+@@ -609,6 +608,8 @@ int autofs_expire_run(struct super_block *sb,
+ 	complete_all(&ino->expire_complete);
+ 	spin_unlock(&sbi->fs_lock);
  
--	ret = xt_compat_init_offsets(NFPROTO_BRIDGE, tmp.nentries);
--	if (ret < 0)
--		goto out_unlock;
-+	if (tmp.nentries) {
-+		ret = xt_compat_init_offsets(NFPROTO_BRIDGE, tmp.nentries);
-+		if (ret < 0)
-+			goto out_unlock;
-+	}
++	dput(dentry);
 +
- 	ret = compat_copy_entries(entries_tmp, tmp.entries_size, &state);
- 	if (ret < 0)
- 		goto out_unlock;
+ 	return ret;
+ }
+ 
 -- 
 2.19.1
 
