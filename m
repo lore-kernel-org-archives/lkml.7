@@ -2,99 +2,113 @@ Return-Path: <SRS0=J4ZE=RP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_PASS autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EEABBC43381
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 07:06:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 995C0C43381
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 07:07:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B83BC214AF
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 07:06:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 64C35214AF
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 07:07:08 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=umn.edu header.i=@umn.edu header.b="pwW1Fq3s"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727302AbfCLHGI (ORCPT
+        id S1727374AbfCLHHG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 12 Mar 2019 03:06:08 -0400
-Received: from smtprelay0230.hostedemail.com ([216.40.44.230]:59412 "EHLO
-        smtprelay.hostedemail.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726218AbfCLHGI (ORCPT
+        Tue, 12 Mar 2019 03:07:06 -0400
+Received: from mta-p6.oit.umn.edu ([134.84.196.206]:58712 "EHLO
+        mta-p6.oit.umn.edu" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726209AbfCLHHG (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 12 Mar 2019 03:06:08 -0400
-Received: from filter.hostedemail.com (clb03-v110.bra.tucows.net [216.40.38.60])
-        by smtprelay01.hostedemail.com (Postfix) with ESMTP id C11F9100E86C5;
-        Tue, 12 Mar 2019 07:06:06 +0000 (UTC)
-X-Session-Marker: 6A6F6540706572636865732E636F6D
-X-HE-Tag: fifth34_3523854c1452c
-X-Filterd-Recvd-Size: 2978
-Received: from XPS-9350.home (unknown [47.151.153.53])
-        (Authenticated sender: joe@perches.com)
-        by omf06.hostedemail.com (Postfix) with ESMTPA;
-        Tue, 12 Mar 2019 07:06:05 +0000 (UTC)
-Message-ID: <0bee5aaaff4a4769d8f531552298feb2452f9026.camel@perches.com>
-Subject: Re: [PATCH net] staging: rtl8188eu: use is_zero_ether_addr()
- instead of memcmp()
-From:   Joe Perches <joe@perches.com>
-To:     maowenan <maowenan@huawei.com>, Larry.Finger@lwfinger.net,
-        gregkh@linuxfoundation.org, straube.linux@gmail.com,
-        jananis37@gmail.com, devel@driverdev.osuosl.org,
-        linux-kernel@vger.kernel.org, kernel-janitors@vger.kernel.org,
-        davem@davemloft.net
-Date:   Tue, 12 Mar 2019 00:06:04 -0700
-In-Reply-To: <22e39cdc-6c66-f08a-f2b3-e2637e0b810b@huawei.com>
-References: <20190309032600.98732-1-maowenan@huawei.com>
-         <951c83d2-fa0d-11ed-96a9-cee620c9c096@huawei.com>
-         <e192c19b35ba5a07ed6bea571546800cc3235282.camel@perches.com>
-         <22e39cdc-6c66-f08a-f2b3-e2637e0b810b@huawei.com>
-Content-Type: text/plain; charset="ISO-8859-1"
-User-Agent: Evolution 3.30.1-1build1 
-Mime-Version: 1.0
-Content-Transfer-Encoding: 7bit
+        Tue, 12 Mar 2019 03:07:06 -0400
+Received: from localhost (unknown [127.0.0.1])
+        by mta-p6.oit.umn.edu (Postfix) with ESMTP id 91E339D9
+        for <linux-kernel@vger.kernel.org>; Tue, 12 Mar 2019 07:07:04 +0000 (UTC)
+X-Virus-Scanned: amavisd-new at umn.edu
+Received: from mta-p6.oit.umn.edu ([127.0.0.1])
+        by localhost (mta-p6.oit.umn.edu [127.0.0.1]) (amavisd-new, port 10024)
+        with ESMTP id jhgiaA9XVOxr for <linux-kernel@vger.kernel.org>;
+        Tue, 12 Mar 2019 02:07:04 -0500 (CDT)
+Received: from mail-it1-f199.google.com (mail-it1-f199.google.com [209.85.166.199])
+        (using TLSv1.2 with cipher AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mta-p6.oit.umn.edu (Postfix) with ESMTPS id 63B69B29
+        for <linux-kernel@vger.kernel.org>; Tue, 12 Mar 2019 02:07:04 -0500 (CDT)
+Received: by mail-it1-f199.google.com with SMTP id 127so1416353itk.5
+        for <linux-kernel@vger.kernel.org>; Tue, 12 Mar 2019 00:07:04 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=umn.edu; s=google;
+        h=from:to:cc:subject:date:message-id;
+        bh=I0adBQm6SRwvdWTdamfcRPCdJqkyTewOxVjCdvmpccE=;
+        b=pwW1Fq3s7DBbNn7yHjOSa9+XUl1jo58MtWIPJ1Nlo061Dtry+kB6HfnDVeZZCgj5rw
+         4LKZgcLihtw7PUQYFFKlv1SrT7n8vu91YSF1H1kcisxMKo85Iru7oghr0IpV/R6QfhGp
+         2HUITK/Lltz1Xpsoudm1SoCbH4xSvjb7fKsBnBeKL5AW8VycE5yLRjuGF2JIEe1XGoEC
+         BdR6GzzyIRWdwVQ8923YiqZ31nUBSGgXD/oqZYBIDC+w4up4rB2JHtz9iIKm0HAeToYE
+         oxdFmxEEkCSd4Z34V/GpLlmfZB+KjOlx/0nV7dEODwqM2fwRrra3Da8/aD+jheotrBo1
+         96RQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=I0adBQm6SRwvdWTdamfcRPCdJqkyTewOxVjCdvmpccE=;
+        b=ZDL6wKFrhfGJ9pX7SjONe7LqcfDdx8aQLv47FA1CTtNHL67/cbJsuRZhpc/Km+394x
+         Ja439LSj4FG1N+Yz6b+xgGSEkBatqnEqEMVCS0tAxcRYGWtc/fRsTlE6IM8XkXl6aA0w
+         1gAWAuLz5XLdGw/gdX7+pcAsz9DLKms0ntf3vPY8lm6zFkasSR9Jo6yCV3aChHN03Q5f
+         Zqf9dnTTIl/0Ngzlx0HTmTJ8SnKbX/NqUisBnsJGIoYCoRxQtJ2wJ8voWkRArpsLbpdN
+         i40Y2OsQaA04421dA1jkr7rNFMF8T+gmgukJXCSnwRt5A0JQQ/yOV4J0HTwOgeD4DLin
+         W7ng==
+X-Gm-Message-State: APjAAAXhdASylRt6Z18J8TJ4CRgtZFNzN0GIr/9hnZ8OsAbO4mgaP8hB
+        4jyWwbuYPVOM765NW/6IDZCq/gIK4uiwr/kgkqU4MdFx2gFUK3BOuygg4LCC1II4ozZKIOtUEgR
+        8DmyjiHvH9VfWpUao+6ROt1IHCUKo
+X-Received: by 2002:a02:85ec:: with SMTP id d99mr12021320jai.116.1552374423975;
+        Tue, 12 Mar 2019 00:07:03 -0700 (PDT)
+X-Google-Smtp-Source: APXvYqzPFjrwasrk0dvfIHCziGlK/LKctjbPevuagozk2jEfKtll673tEMJou5ZHDR/C/iHTVwE+oA==
+X-Received: by 2002:a02:85ec:: with SMTP id d99mr12021308jai.116.1552374423731;
+        Tue, 12 Mar 2019 00:07:03 -0700 (PDT)
+Received: from bee.dtc.umn.edu (cs-bee-u.cs.umn.edu. [128.101.106.63])
+        by smtp.gmail.com with ESMTPSA id e11sm3253138iog.79.2019.03.12.00.07.02
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Tue, 12 Mar 2019 00:07:03 -0700 (PDT)
+From:   Kangjie Lu <kjlu@umn.edu>
+To:     kjlu@umn.edu
+Cc:     pakki001@umn.edu, GR-Linux-NIC-Dev@marvell.com,
+        "David S. Miller" <davem@davemloft.net>, netdev@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH v2] net: qlogic: fix a potential NULL pointer dereference
+Date:   Tue, 12 Mar 2019 02:06:47 -0500
+Message-Id: <20190312070647.20844-1-kjlu@umn.edu>
+X-Mailer: git-send-email 2.17.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, 2019-03-12 at 14:58 +0800, maowenan wrote:
-> On 2019/3/12 14:35, Joe Perches wrote:
-> > On Tue, 2019-03-12 at 14:29 +0800, maowenan wrote:
-> > > ping...
-> > > 
-> > > On 2019/3/9 11:26, Mao Wenan wrote:
-> > > > Using is_zero_ether_addr() instead of directly use
-> > > > memcmp() to determine if the ethernet address is all
-> > > > zeros.
-> > []
-> > > > diff --git a/drivers/staging/rtl8188eu/core/rtw_mlme.c b/drivers/staging/rtl8188eu/core/rtw_mlme.c
-> > []
-> > > > @@ -180,9 +180,8 @@ struct wlan_network *rtw_find_network(struct __queue *scanned_queue, u8 *addr)
-> > > >  {
-> > > >  	struct list_head *phead, *plist;
-> > > >  	struct wlan_network *pnetwork = NULL;
-> > > > -	u8 zero_addr[ETH_ALEN] = {0, 0, 0, 0, 0, 0};
-> > > >  
-> > > > -	if (!memcmp(zero_addr, addr, ETH_ALEN)) {
-> > > > +	if (is_zero_ether_addr(addr)) {
-> > 
-> > How did you verify that addr is __aligned(2)?
-> 
-> /**
->  * is_zero_ether_addr - Determine if give Ethernet address is all zeros.
->  * @addr: Pointer to a six-byte array containing the Ethernet address
->  *
->  * Return true if the address is all zeroes.
->  */
-> I think they are completely equivalent functions, no need to check addr is __aligned(2),
-> because addr may be defined as unsigned char MacAddress[ETH_ALEN]; the length is 6.
+In case create_singlethread_workqueue fails, the fix returns
+-ENOMEM to avoid NULL pointer dereference.
 
-Perhaps you are reading old documentation.
-(though the "Please note:" line is from 2013)
+Signed-off-by: Kangjie Lu <kjlu@umn.edu>
+---
+ drivers/net/ethernet/qlogic/qla3xxx.c | 6 ++++++
+ 1 file changed, 6 insertions(+)
 
-include/linux/etherdevice.h-/**
-include/linux/etherdevice.h- * is_zero_ether_addr - Determine if give Ethernet address is all zeros.
-include/linux/etherdevice.h- * @addr: Pointer to a six-byte array containing the Ethernet address
-include/linux/etherdevice.h- *
-include/linux/etherdevice.h- * Return true if the address is all zeroes.
-include/linux/etherdevice.h- *
-include/linux/etherdevice.h- * Please note: addr must be aligned to u16.
-
+diff --git a/drivers/net/ethernet/qlogic/qla3xxx.c b/drivers/net/ethernet/qlogic/qla3xxx.c
+index 10b075bc5959..b61b88cbc0c7 100644
+--- a/drivers/net/ethernet/qlogic/qla3xxx.c
++++ b/drivers/net/ethernet/qlogic/qla3xxx.c
+@@ -3886,6 +3886,12 @@ static int ql3xxx_probe(struct pci_dev *pdev,
+ 	netif_stop_queue(ndev);
+ 
+ 	qdev->workqueue = create_singlethread_workqueue(ndev->name);
++	if (!qdev->workqueue) {
++		unregister_netdev(ndev);
++		err = -ENOMEM;
++		goto err_out_iounmap;
++	}
++
+ 	INIT_DELAYED_WORK(&qdev->reset_work, ql_reset_work);
+ 	INIT_DELAYED_WORK(&qdev->tx_timeout_work, ql_tx_timeout_work);
+ 	INIT_DELAYED_WORK(&qdev->link_state_work, ql_link_state_machine_work);
+-- 
+2.17.1
 
