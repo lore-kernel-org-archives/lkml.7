@@ -2,83 +2,107 @@ Return-Path: <SRS0=J4ZE=RP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_MUTT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 24E46C43381
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 09:04:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 31E2BC43381
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 09:04:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EEA402147C
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 09:04:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EF2492147C
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 09:04:36 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727683AbfCLJE1 (ORCPT
+        id S1727699AbfCLJEf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 12 Mar 2019 05:04:27 -0400
-Received: from rtits2.realtek.com ([211.75.126.72]:49654 "EHLO
-        rtits2.realtek.com.tw" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726567AbfCLJE0 (ORCPT
+        Tue, 12 Mar 2019 05:04:35 -0400
+Received: from atrey.karlin.mff.cuni.cz ([195.113.26.193]:53514 "EHLO
+        atrey.karlin.mff.cuni.cz" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727546AbfCLJEe (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 12 Mar 2019 05:04:26 -0400
-Authenticated-By: 
-X-SpamFilter-By: BOX Solutions SpamTrap 5.62 with qID x2C93grR019438, This message is accepted by code: ctloc85258
-Received: from mail.realtek.com (rtitcas12.realtek.com.tw[172.21.6.16])
-        by rtits2.realtek.com.tw (8.15.2/2.57/5.78) with ESMTPS id x2C93grR019438
-        (version=TLSv1 cipher=DHE-RSA-AES256-SHA bits=256 verify=NOT);
-        Tue, 12 Mar 2019 17:03:42 +0800
-Received: from RTITMBSVM04.realtek.com.tw ([fe80::e404:880:2ef1:1aa1]) by
- RTITCAS12.realtek.com.tw ([::1]) with mapi id 14.03.0439.000; Tue, 12 Mar
- 2019 17:03:42 +0800
-From:   Pkshih <pkshih@realtek.com>
-To:     "kjlu@umn.edu" <kjlu@umn.edu>
-CC:     "mingo@kernel.org" <mingo@kernel.org>,
-        "Larry.Finger@lwfinger.net" <Larry.Finger@lwfinger.net>,
-        "rdunlap@infradead.org" <rdunlap@infradead.org>,
-        "pakki001@umn.edu" <pakki001@umn.edu>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "akpm@linux-foundation.org" <akpm@linux-foundation.org>,
-        "kvalo@codeaurora.org" <kvalo@codeaurora.org>,
-        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
-        "davem@davemloft.net" <davem@davemloft.net>,
-        "linux-wireless@vger.kernel.org" <linux-wireless@vger.kernel.org>
-Subject: Re: [PATCH] net: rtl8192c: fix a potential NULL pointer dereference
-Thread-Topic: [PATCH] net: rtl8192c: fix a potential NULL pointer dereference
-Thread-Index: AQHU2KmXrjPvinAiN0WrkKdotGttEqYHLYEA
-Date:   Tue, 12 Mar 2019 09:03:41 +0000
-Message-ID: <1552381414.27421.2.camel@realtek.com>
-References: <20190312075948.1569-1-kjlu@umn.edu>
-In-Reply-To: <20190312075948.1569-1-kjlu@umn.edu>
-Accept-Language: en-US, zh-TW
-Content-Language: zh-TW
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-originating-ip: [172.21.69.114]
-Content-Type: text/plain; charset="utf-8"
-Content-ID: <279208A04EF82A42A66D47A928DD58E2@realtek.com>
-Content-Transfer-Encoding: base64
+        Tue, 12 Mar 2019 05:04:34 -0400
+Received: by atrey.karlin.mff.cuni.cz (Postfix, from userid 512)
+        id 1861380449; Tue, 12 Mar 2019 10:04:24 +0100 (CET)
+Date:   Tue, 12 Mar 2019 10:04:30 +0100
+From:   Pavel Machek <pavel@ucw.cz>
+To:     Viresh Kumar <viresh.kumar@linaro.org>
+Cc:     "Rafael J. Wysocki" <rjw@rjwysocki.net>,
+        Len Brown <len.brown@intel.com>, linux-pm@vger.kernel.org,
+        Vincent Guittot <vincent.guittot@linaro.org>,
+        sunzhaosheng@hisilicon.com, jean.xupeng@hisilicon.com,
+        yuwei3@hisilicon.com, gengyanping@hisilicon.com,
+        peter.panshilin@hisilicon.com, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 1/2] PM / wakeup: Remove timer from wakeup_source_remove()
+Message-ID: <20190312090430.GA28905@amd>
+References: <621452804d6d22f72438614b6687f37282d883f5.1552038717.git.viresh.kumar@linaro.org>
+ <3100371.t8xxUOTPUa@aspire.rjw.lan>
+ <20190312032802.gsheaosu2dtawiyu@vireshk-i7>
 MIME-Version: 1.0
+Content-Type: multipart/signed; micalg=pgp-sha1;
+        protocol="application/pgp-signature"; boundary="VS++wcV0S1rZb1Fb"
+Content-Disposition: inline
+In-Reply-To: <20190312032802.gsheaosu2dtawiyu@vireshk-i7>
+User-Agent: Mutt/1.5.23 (2014-03-12)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-T24gVHVlLCAyMDE5LTAzLTEyIGF0IDAyOjU5IC0wNTAwLCBLYW5namllIEx1IHdyb3RlOg0KPiBJ
-biBjYXNlIGRldl9hbGxvY19za2IgZmFpbHMsIHRoZSBmaXggc2FmZWx5IHJldHVybnMgdG8gYXZv
-aWQNCj4gcG90ZW50aWFsIE5VTEwgcG9pbnRlciBkZXJlZmVyZW5jZS4NCj4gDQo+IFNpZ25lZC1v
-ZmYtYnk6IEthbmdqaWUgTHUgPGtqbHVAdW1uLmVkdT4NCj4gLS0tDQo+IMKgZHJpdmVycy9uZXQv
-d2lyZWxlc3MvcmVhbHRlay9ydGx3aWZpL3J0bDgxOTJjL2Z3X2NvbW1vbi5jIHwgMyArKysNCj4g
-wqAxIGZpbGUgY2hhbmdlZCwgMyBpbnNlcnRpb25zKCspDQo+IA0KPiBkaWZmIC0tZ2l0IGEvZHJp
-dmVycy9uZXQvd2lyZWxlc3MvcmVhbHRlay9ydGx3aWZpL3J0bDgxOTJjL2Z3X2NvbW1vbi5jDQo+
-IGIvZHJpdmVycy9uZXQvd2lyZWxlc3MvcmVhbHRlay9ydGx3aWZpL3J0bDgxOTJjL2Z3X2NvbW1v
-bi5jDQo+IGluZGV4IDE4Yzc2OTkwYTA4OS4uOTA0MmZjMDQ0YzdlIDEwMDY0NA0KPiAtLS0gYS9k
-cml2ZXJzL25ldC93aXJlbGVzcy9yZWFsdGVrL3J0bHdpZmkvcnRsODE5MmMvZndfY29tbW9uLmMN
-Cj4gKysrIGIvZHJpdmVycy9uZXQvd2lyZWxlc3MvcmVhbHRlay9ydGx3aWZpL3J0bDgxOTJjL2Z3
-X2NvbW1vbi5jDQo+IEBAIC02MjMsNiArNjIzLDkgQEAgdm9pZCBydGw5MmNfc2V0X2Z3X3JzdmRw
-YWdlcGt0KHN0cnVjdCBpZWVlODAyMTFfaHcgKmh3LA0KPiDCoAkJwqDCoMKgwqDCoMKgdTFyc3Zk
-cGFnZWxvYywgMyk7DQo+IMKgDQo+IMKgCXNrYiA9IGRldl9hbGxvY19za2IodG90YWxwYWNrZXRs
-ZW4pOw0KPiArCWlmICghc2tiKQ0KPiArCQlyZXR1cm47DQo+ICsNCj4gwqAJc2tiX3B1dF9kYXRh
-KHNrYiwgJnJlc2VydmVkX3BhZ2VfcGFja2V0LCB0b3RhbHBhY2tldGxlbik7DQo+IMKgDQo+IMKg
-CWlmIChjbWRfc2VuZF9wYWNrZXQpDQoNClRoZSBzdWJqZWN0IHByZWZpeCBzaG91bGQgYmUgJ3J0
-bHdpZmk6IC4uLicuDQoNCllvdXIgZml4IGlzIG9rLCBidXQgSSB3b3VsZCBsaWtlIHRvIGZpeCBh
-bGwgZmFpbGVkIGNhc2VzIG9mwqBkZXZfYWxsb2Nfc2tiKCkuDQpJIHdpbGwgc2VuZCBhbm90aGVy
-IHBhdGNoIHRvIGZpeCBhbGwgb2YgdGhlbS4NCg0KVGhhbmtzDQpQSw0KDQo=
+
+--VS++wcV0S1rZb1Fb
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
+
+On Tue 2019-03-12 08:58:02, Viresh Kumar wrote:
+> On 11-03-19, 13:05, Rafael J. Wysocki wrote:
+> > On Friday, March 8, 2019 10:53:11 AM CET Viresh Kumar wrote:
+> > > wakeup_source_remove() is the counterpart of wakeup_source_add() help=
+er
+> > > and must undo the initializations done by wakeup_source_add(). Curren=
+tly
+> > > the timer is initialized by wakeup_source_add() but removed from
+> > > wakeup_source_drop(), which doesn't look logically correct. Also it
+> > > should be okay to call wakeup_source_add() right after calling
+> > > wakeup_source_remove(), and in that case we may end up calling
+> > > timer_setup() for a potentially scheduled timer which is surely
+> > > incorrect.
+> > >=20
+> > > Move the timer removal part to wakeup_source_remove() instead.
+
+> >=20
+> > I've merged it with the [2/2], rewritten the subject and changelog and
+> > queued the result as commit d856f39ac1cc ("PM / wakeup: Rework wakeup
+> > source timer cancellation").
+>=20
+> Okay, thanks. We (Android guys) want this to be backported into 4.4+
+> kernels via the stable tree. Can we mark this for stable in the commit
+> itself ? Else I would be required to send this separately for all the
+> kernels. I should have marked it for stable initially though, sorry
+> about forgetting then.
+
+Greg is normally pretty agressive about backporting everything
+remotely looking like a fix...
+
+But better changelog would help. How is the bug actually affecting
+users?
+
+Best regards,
+									Pavel
+--=20
+(english) http://www.livejournal.com/~pavelmachek
+(cesky, pictures) http://atrey.karlin.mff.cuni.cz/~pavel/picture/horses/blo=
+g.html
+
+--VS++wcV0S1rZb1Fb
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1
+
+iEYEARECAAYFAlyHdh4ACgkQMOfwapXb+vJ2DQCfeIWIJeroQm4LfPM3u2gQrOpD
+mYMAoIWzIxYGUBarjk7KX845DqhcO8Gw
+=Yb7p
+-----END PGP SIGNATURE-----
+
+--VS++wcV0S1rZb1Fb--
