@@ -2,129 +2,108 @@ Return-Path: <SRS0=J4ZE=RP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 872EBC43381
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 19:48:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4FFD7C43381
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 19:50:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 51BC32087C
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 19:48:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 12E842087C
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 19:50:21 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1552420221;
+	bh=IuzcZJU89UVvkoC3bJKgUrD7EP5hKN7pAazl4EpUvxk=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
+	b=rKOUVQlaN4nKBfTrVurMT1wP3qlcFNqmkPV8GrQWCoK3OGqqxpQU+Gq71Hm3vR7c+
+	 Ci12lSO6TvUEMjLNvmgFmeVeMQPpJIKviMd8dq2KQ8uGP/xOwWLKALqzXBG108/pA3
+	 RfZaf3RGriBUs1zcRgv32iWJeWYf7vrRy0uzchnM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726963AbfCLTr7 (ORCPT
+        id S1726865AbfCLTuT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 12 Mar 2019 15:47:59 -0400
-Received: from gateway34.websitewelcome.com ([192.185.148.109]:47205 "EHLO
-        gateway34.websitewelcome.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726372AbfCLTr7 (ORCPT
+        Tue, 12 Mar 2019 15:50:19 -0400
+Received: from mail.linuxfoundation.org ([140.211.169.12]:55076 "EHLO
+        mail.linuxfoundation.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726372AbfCLTuT (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 12 Mar 2019 15:47:59 -0400
-Received: from cm13.websitewelcome.com (cm13.websitewelcome.com [100.42.49.6])
-        by gateway34.websitewelcome.com (Postfix) with ESMTP id DEFFCA37F89
-        for <linux-kernel@vger.kernel.org>; Tue, 12 Mar 2019 14:47:57 -0500 (CDT)
-Received: from gator4166.hostgator.com ([108.167.133.22])
-        by cmsmtp with SMTP
-        id 3nNVhfGsMYTGM3nNVhtfxi; Tue, 12 Mar 2019 14:47:57 -0500
-X-Authority-Reason: nr=8
-Received: from [189.250.104.39] (port=60080 helo=[192.168.1.76])
-        by gator4166.hostgator.com with esmtpsa (TLSv1.2:ECDHE-RSA-AES128-GCM-SHA256:128)
-        (Exim 4.91)
-        (envelope-from <gustavo@embeddedor.com>)
-        id 1h3nNU-003MwX-FL; Tue, 12 Mar 2019 14:47:57 -0500
-Subject: Re: [PATCH] nvmet-fc: use zero-sized array and struct_size() in
- kzalloc()
-To:     Christoph Hellwig <hch@lst.de>
-Cc:     James Smart <james.smart@broadcom.com>,
-        Sagi Grimberg <sagi@grimberg.me>,
-        linux-nvme@lists.infradead.org, linux-kernel@vger.kernel.org
-References: <20190223185108.GA6706@embeddedor> <20190312193359.GA5623@lst.de>
-From:   "Gustavo A. R. Silva" <gustavo@embeddedor.com>
-Openpgp: preference=signencrypt
-Autocrypt: addr=gustavo@embeddedor.com; keydata=
- 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
- VtSixD1uOgytAP7RWS474w==
-Message-ID: <736bf9ae-7576-79d2-c3e2-8e240c2d505e@embeddedor.com>
-Date:   Tue, 12 Mar 2019 14:47:55 -0500
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.5.1
-MIME-Version: 1.0
-In-Reply-To: <20190312193359.GA5623@lst.de>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
+        Tue, 12 Mar 2019 15:50:19 -0400
+Received: from akpm3.svl.corp.google.com (unknown [104.133.8.65])
+        by mail.linuxfoundation.org (Postfix) with ESMTPSA id 0942CE52;
+        Tue, 12 Mar 2019 19:50:18 +0000 (UTC)
+Date:   Tue, 12 Mar 2019 12:50:17 -0700
+From:   Andrew Morton <akpm@linux-foundation.org>
+To:     Alexey Dobriyan <adobriyan@gmail.com>
+Cc:     linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] Drop -Wdeclaration-after-statement
+Message-Id: <20190312125017.b1f5af3350434ca05b5fe35e@linux-foundation.org>
+In-Reply-To: <20190312172447.GA10166@avx2>
+References: <20190310133535.GA20473@avx2>
+        <20190311173845.53c2e4e4d2257a3701fa2033@linux-foundation.org>
+        <20190312172447.GA10166@avx2>
+X-Mailer: Sylpheed 3.6.0 (GTK+ 2.24.31; x86_64-pc-linux-gnu)
+Mime-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
-X-AntiAbuse: This header was added to track abuse, please include it with any abuse report
-X-AntiAbuse: Primary Hostname - gator4166.hostgator.com
-X-AntiAbuse: Original Domain - vger.kernel.org
-X-AntiAbuse: Originator/Caller UID/GID - [47 12] / [47 12]
-X-AntiAbuse: Sender Address Domain - embeddedor.com
-X-BWhitelist: no
-X-Source-IP: 189.250.104.39
-X-Source-L: No
-X-Exim-ID: 1h3nNU-003MwX-FL
-X-Source: 
-X-Source-Args: 
-X-Source-Dir: 
-X-Source-Sender: ([192.168.1.76]) [189.250.104.39]:60080
-X-Source-Auth: gustavo@embeddedor.com
-X-Email-Count: 5
-X-Source-Cap: Z3V6aWRpbmU7Z3V6aWRpbmU7Z2F0b3I0MTY2Lmhvc3RnYXRvci5jb20=
-X-Local-Domain: yes
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Tue, 12 Mar 2019 20:24:47 +0300 Alexey Dobriyan <adobriyan@gmail.com> wrote:
 
-
-On 3/12/19 2:33 PM, Christoph Hellwig wrote:
-> Thanks,
+> On Mon, Mar 11, 2019 at 05:38:45PM -0700, Andrew Morton wrote:
+> > On Sun, 10 Mar 2019 16:35:35 +0300 Alexey Dobriyan <adobriyan@gmail.com> wrote:
+> > 
+> > > Newly added static_assert() is formally a declaration, which will give
+> > > a warning if used in the middle of the function.
+> > > 
+> > > ...
+> > >
+> > > --- a/Makefile
+> > > +++ b/Makefile
+> > > @@ -792,9 +792,6 @@ endif
+> > >  # arch Makefile may override CC so keep this after arch Makefile is included
+> > >  NOSTDINC_FLAGS += -nostdinc -isystem $(shell $(CC) -print-file-name=include)
+> > >  
+> > > -# warn about C99 declaration after statement
+> > > -KBUILD_CFLAGS += -Wdeclaration-after-statement
+> > > -
+> > >  # Variable Length Arrays (VLAs) should not be used anywhere in the kernel
+> > >  KBUILD_CFLAGS += $(call cc-option,-Wvla)
+> > 
+> > I do wish your changelogs were more elaborate :(
 > 
-> applied to nvme-5.2.
+> > So the proposal is to disable -Wdeclaration-after-statement in all
+> > cases for all time because static_assert() doesn't work correctly?
 > 
+> Yes. I converted 2 cases in /proc to static_assert() and you can't write
+> 
+> 	{
+> 		[code]
+> 		static_assert()
+> 	}
+> 
+> without a warning because static_assert() is declaration.
+> So people would move BUILD_BUG_ON() to where it doesn't belong.
 
-Great.
+Sure.
 
-Thanks, Christoph.
+> > Surely there's something we can do to squish the static_assert() issue
+> > while retaining -Wdeclaration-after-statement?
+> 
+> It is not good in my opinion to stick to -Wdeclaration-after-statement.
 
---
-Gustavo
+Why?
+
+> > Perhaps by making
+> > static_assert() a nop if -Wdeclaration-after-statement is in use. 
+> > Perhaps simply by putting { } around the static_assert()?
+> 
+> Making a statement out of it would disable current cases where it is
+> placed in headers.
+
+I think you mean cases where static_assert() is used outside functions?
+
+We could have two versions of it, one for use inside functions, one for
+use outside functions?
+
