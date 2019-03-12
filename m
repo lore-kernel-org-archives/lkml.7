@@ -2,118 +2,161 @@ Return-Path: <SRS0=J4ZE=RP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A4636C43381
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 05:31:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 24C40C4360F
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 05:31:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6C29C21734
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 05:31:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E6DF9214AF
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 05:31:44 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=umn.edu header.i=@umn.edu header.b="SrhfHimQ"
+	dkim=pass (1024-bit key) header.d=fb.com header.i=@fb.com header.b="iWX512ru"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727511AbfCLFbe (ORCPT
+        id S1727471AbfCLFba (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 12 Mar 2019 01:31:34 -0400
-Received: from mta-p8.oit.umn.edu ([134.84.196.208]:59956 "EHLO
-        mta-p8.oit.umn.edu" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727484AbfCLFbb (ORCPT
+        Tue, 12 Mar 2019 01:31:30 -0400
+Received: from mx0a-00082601.pphosted.com ([67.231.145.42]:36446 "EHLO
+        mx0a-00082601.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1727418AbfCLFbZ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 12 Mar 2019 01:31:31 -0400
-Received: from localhost (unknown [127.0.0.1])
-        by mta-p8.oit.umn.edu (Postfix) with ESMTP id 5B5E6AA1
-        for <linux-kernel@vger.kernel.org>; Tue, 12 Mar 2019 05:31:30 +0000 (UTC)
-X-Virus-Scanned: amavisd-new at umn.edu
-Received: from mta-p8.oit.umn.edu ([127.0.0.1])
-        by localhost (mta-p8.oit.umn.edu [127.0.0.1]) (amavisd-new, port 10024)
-        with ESMTP id oWOiM0G2EdSc for <linux-kernel@vger.kernel.org>;
-        Tue, 12 Mar 2019 00:31:30 -0500 (CDT)
-Received: from mail-io1-f69.google.com (mail-io1-f69.google.com [209.85.166.69])
-        (using TLSv1.2 with cipher AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mta-p8.oit.umn.edu (Postfix) with ESMTPS id 2B006A3D
-        for <linux-kernel@vger.kernel.org>; Tue, 12 Mar 2019 00:31:30 -0500 (CDT)
-Received: by mail-io1-f69.google.com with SMTP id a9so991677iol.6
-        for <linux-kernel@vger.kernel.org>; Mon, 11 Mar 2019 22:31:30 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=umn.edu; s=google;
-        h=from:to:cc:subject:date:message-id;
-        bh=qO/rCpuBodEkloMdIkUNCA/uOUm0aMljN4/zI/6ygLk=;
-        b=SrhfHimQ6rI8W1KvqRKkj1iPyfKerOEX49LpaLKy8YT9JA83+BezmciiCb+G4DSSLJ
-         B4FFPr6MB+Fb3M4319tqnEtnQDZ5APhSN2rm9dVWoyw/JKGuw7Xp1rkmAMCXaRE468qr
-         Bv0LElc2aDdLZaBcpmBrbL2DOeHYrUsYBCecnyiKWip8SF4GKnbuUxcXc+0NXV52SSmG
-         CkmXDGkEY108HrGMqQj1F0Fd6G1/817xtV6uUPCohvCPhw7YQolpVds9ejrfJ2CCgHeT
-         gSro2Z7jFejbkyrITT6DfR8hEE1aFXGy2rapvHQyubXqcxeigQQa71Pn9NJfIzgRD2Zk
-         crFw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id;
-        bh=qO/rCpuBodEkloMdIkUNCA/uOUm0aMljN4/zI/6ygLk=;
-        b=VSf/tKXsfA0YB1k4w+Zqv058wGcUwLdNgSFtajfsUrzwAPbF7AObwUIlTOetYviK2Q
-         mmf0UxyM9jN247XpMlzW/SdCLshjZ/Gpmp4ZRVRA9/VRF39UDzvpg1E9qRDTR7MaVp0l
-         h3dUWFSy1Z6WUrKnULLQYxpIDmIfsMiqQM6lK7HJdu2VatAQrCcuxBxXT2Gaq5IOMAM4
-         ECXvvvHfTY9nfNIBQHWYfj5SNJyLnE+/FbXTKDzNPeF9Bhrhc/azfeLGHHHZFIBkigDs
-         brpg8II7zyslH6jAbDW0UcbIpAHm/KJ4qcX18QJoyVrGOEbL6Eoh4VLRjHURy9iT5r4B
-         ciFA==
-X-Gm-Message-State: APjAAAUPLJj6suJUS8V80Ba7HsshyKCMxqLiHenuDtoRaG8Vfaod4YZB
-        BOKaMerTAxQx0UHskiKE0TECQr3ZzKOlhxHX1ek32JRbIepFyP5wjdnVfKTMk8rFonZ+0whDW5k
-        5uG2MKcfnmSlkC2hsFyF0RS+4DPmH
-X-Received: by 2002:a5d:8b42:: with SMTP id c2mr2130658iot.192.1552368689759;
-        Mon, 11 Mar 2019 22:31:29 -0700 (PDT)
-X-Google-Smtp-Source: APXvYqxdBSTxobvPbXRF4tDfCHuxv1PyWpNNw4i37iz/swgwm1hsK96LrHZP+AQcdMI8d/me2NR2pg==
-X-Received: by 2002:a5d:8b42:: with SMTP id c2mr2130648iot.192.1552368689481;
-        Mon, 11 Mar 2019 22:31:29 -0700 (PDT)
-Received: from bee.dtc.umn.edu (cs-bee-u.cs.umn.edu. [128.101.106.63])
-        by smtp.gmail.com with ESMTPSA id p141sm789754itb.39.2019.03.11.22.31.28
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Mon, 11 Mar 2019 22:31:28 -0700 (PDT)
-From:   Kangjie Lu <kjlu@umn.edu>
-To:     kjlu@umn.edu
-Cc:     pakki001@umn.edu, Amitkumar Karwar <amitkarwar@gmail.com>,
-        Nishant Sarmukadam <nishants@marvell.com>,
-        Ganapathi Bhat <gbhat@marvell.com>,
-        Xinming Hu <huxinming820@gmail.com>,
-        Kalle Valo <kvalo@codeaurora.org>,
-        "David S. Miller" <davem@davemloft.net>,
-        linux-wireless@vger.kernel.org, netdev@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH v2] net: mwifiex: fix a NULL pointer dereference
-Date:   Tue, 12 Mar 2019 00:31:07 -0500
-Message-Id: <20190312053107.5790-1-kjlu@umn.edu>
+        Tue, 12 Mar 2019 01:31:25 -0400
+Received: from pps.filterd (m0044012.ppops.net [127.0.0.1])
+        by mx0a-00082601.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x2C5UKfw026757
+        for <linux-kernel@vger.kernel.org>; Mon, 11 Mar 2019 22:31:24 -0700
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=fb.com; h=from : to : cc : subject
+ : date : message-id : in-reply-to : references : mime-version :
+ content-type; s=facebook; bh=t29XrZKDOQAoITz6zkok4xCE2MtGKySahIol7M2A6JM=;
+ b=iWX512rusyNBQKmAzo1ar3BfetpxkX+Yca6z7WNFHokPjWv1sI4SmlYxLSiLhrtK4yE8
+ XcdZuGd0+OjBWB1yS9Gqt6d5C2u0NpLGAFuz3NjwsrtJFpWtMgPNDSEaKve0MaY2FItm
+ NRqZCp7yOG0Vt9vwzSH8HkQVLIFRjV7ocXk= 
+Received: from mail.thefacebook.com ([199.201.64.23])
+        by mx0a-00082601.pphosted.com with ESMTP id 2r64rs0986-6
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-SHA384 bits=256 verify=NOT)
+        for <linux-kernel@vger.kernel.org>; Mon, 11 Mar 2019 22:31:24 -0700
+Received: from mx-out.facebook.com (2620:10d:c081:10::13) by
+ mail.thefacebook.com (2620:10d:c081:35::125) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA) id 15.1.1713.5;
+ Mon, 11 Mar 2019 22:31:21 -0700
+Received: by devbig006.ftw2.facebook.com (Postfix, from userid 4523)
+        id A9BCB62E2019; Mon, 11 Mar 2019 22:31:21 -0700 (PDT)
+Smtp-Origin-Hostprefix: devbig
+From:   Song Liu <songliubraving@fb.com>
+Smtp-Origin-Hostname: devbig006.ftw2.facebook.com
+To:     <bpf@vger.kernel.org>, <netdev@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>
+CC:     <ast@kernel.org>, <daniel@iogearbox.net>, <kernel-team@fb.com>,
+        <peterz@infradead.org>, <acme@redhat.com>, <jolsa@kernel.org>,
+        <namhyung@kernel.org>, <sdf@fomichev.me>,
+        Song Liu <songliubraving@fb.com>
+Smtp-Origin-Cluster: ftw2c04
+Subject: [PATCH v9 perf,bpf 13/15] perf, bpf: process PERF_BPF_EVENT_PROG_LOAD for annotation
+Date:   Mon, 11 Mar 2019 22:30:49 -0700
+Message-ID: <20190312053051.2690567-14-songliubraving@fb.com>
 X-Mailer: git-send-email 2.17.1
+In-Reply-To: <20190312053051.2690567-1-songliubraving@fb.com>
+References: <20190312053051.2690567-1-songliubraving@fb.com>
+X-FB-Internal: Safe
+MIME-Version: 1.0
+Content-Type: text/plain
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-03-12_04:,,
+ signatures=0
+X-Proofpoint-Spam-Reason: safe
+X-FB-Internal: Safe
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-In case dev_alloc_skb fails, the fix returns -ENOMEM to avoid
-NULL pointer dereference.
+This patch adds processing of PERF_BPF_EVENT_PROG_LOAD, which sets proper
+DSO type/id/etc of memory regions mapped to BPF programs to
+DSO_BINARY_TYPE__BPF_PROG_INFO
 
-Signed-off-by: Kangjie Lu <kjlu@umn.edu>
+Signed-off-by: Song Liu <songliubraving@fb.com>
 ---
- drivers/net/wireless/marvell/mwifiex/cmdevt.c | 6 ++++++
- 1 file changed, 6 insertions(+)
+ tools/perf/util/bpf-event.c | 54 +++++++++++++++++++++++++++++++++++++
+ 1 file changed, 54 insertions(+)
 
-diff --git a/drivers/net/wireless/marvell/mwifiex/cmdevt.c b/drivers/net/wireless/marvell/mwifiex/cmdevt.c
-index 60db2b969e20..8c35441fd9b7 100644
---- a/drivers/net/wireless/marvell/mwifiex/cmdevt.c
-+++ b/drivers/net/wireless/marvell/mwifiex/cmdevt.c
-@@ -341,6 +341,12 @@ static int mwifiex_dnld_sleep_confirm_cmd(struct mwifiex_adapter *adapter)
- 		sleep_cfm_tmp =
- 			dev_alloc_skb(sizeof(struct mwifiex_opt_sleep_confirm)
- 				      + MWIFIEX_TYPE_LEN);
-+		if (!sleep_cfm_tmp) {
-+			mwifiex_dbg(adapter, ERROR,
-+				    "SLEEP_CFM: dev_alloc_skb failed\n");
-+			return -ENOMEM;
-+		}
+diff --git a/tools/perf/util/bpf-event.c b/tools/perf/util/bpf-event.c
+index e02a38a98d8d..af434de3a23e 100644
+--- a/tools/perf/util/bpf-event.c
++++ b/tools/perf/util/bpf-event.c
+@@ -12,6 +12,7 @@
+ #include "machine.h"
+ #include "env.h"
+ #include "session.h"
++#include "map.h"
+ 
+ #define ptr_to_u64(ptr)    ((__u64)(unsigned long)(ptr))
+ 
+@@ -25,12 +26,65 @@ static int snprintf_hex(char *buf, size_t size, unsigned char *data, size_t len)
+ 	return ret;
+ }
+ 
++static int machine__process_bpf_event_load(struct machine *machine,
++					   union perf_event *event,
++					   struct perf_sample *sample __maybe_unused)
++{
++	struct bpf_prog_info_linear *info_linear;
++	struct bpf_prog_info_node *info_node;
++	struct perf_env *env = machine->env;
++	int id = event->bpf_event.id;
++	unsigned int i;
 +
- 		skb_put(sleep_cfm_tmp, sizeof(struct mwifiex_opt_sleep_confirm)
- 			+ MWIFIEX_TYPE_LEN);
- 		put_unaligned_le32(MWIFIEX_USB_TYPE_CMD, sleep_cfm_tmp->data);
++	/* perf-record, no need to handle bpf-event */
++	if (env == NULL)
++		return 0;
++
++	info_node = perf_env__find_bpf_prog_info(env, id);
++	if (!info_node)
++		return 0;
++	info_linear = info_node->info_linear;
++
++	for (i = 0; i < info_linear->info.nr_jited_ksyms; i++) {
++		u64 *addrs = (u64 *)(info_linear->info.jited_ksyms);
++		u64 addr = addrs[i];
++		struct map *map;
++
++		map = map_groups__find(&machine->kmaps, addr);
++
++		if (map) {
++			map->dso->binary_type = DSO_BINARY_TYPE__BPF_PROG_INFO;
++			map->dso->bpf_prog.id = id;
++			map->dso->bpf_prog.sub_id = i;
++			map->dso->bpf_prog.env = env;
++		}
++	}
++	return 0;
++}
++
+ int machine__process_bpf_event(struct machine *machine __maybe_unused,
+ 			       union perf_event *event,
+ 			       struct perf_sample *sample __maybe_unused)
+ {
+ 	if (dump_trace)
+ 		perf_event__fprintf_bpf_event(event, stdout);
++
++	switch (event->bpf_event.type) {
++	case PERF_BPF_EVENT_PROG_LOAD:
++		return machine__process_bpf_event_load(machine, event, sample);
++
++	case PERF_BPF_EVENT_PROG_UNLOAD:
++		/*
++		 * Do not free bpf_prog_info and btf of the program here,
++		 * as annotation still need them. They will be freed at
++		 * the end of the session.
++		 */
++		break;
++	default:
++		pr_debug("unexpected bpf_event type of %d\n",
++			 event->bpf_event.type);
++		break;
++	}
+ 	return 0;
+ }
+ 
 -- 
 2.17.1
 
