@@ -4,56 +4,57 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3B398C43381
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 17:28:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C9A7BC43381
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 17:28:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0D3B52054F
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 17:28:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8F6E12054F
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 17:28:42 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1552411710;
-	bh=aHVuDXTHxhEXvg6//V8Vjw1hEo/l6MuWUIFiScQfMqQ=;
+	s=default; t=1552411722;
+	bh=YEsHCdjZ5nDH8cZZaXORDw7CTd4bJjIAxUV+7gaoDsE=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=ppp8xborJnRjad0vNsdTsMZauitbWN3F30EHp6xDturE2hKBkBmLVgFZwh6qH581p
-	 m58T6FGWqn857ukxgKoScZrYNATHMuRqiZjhowBGe7aNnFc1FfmHmVzk8lzQgbdUlG
-	 GHArpP46yL00dtgnNQd/qB3K3FIp78AwlL/Pq6Fc=
+	b=ijy9+fE9Md7U6gOKYZwKA5GrUnYMDGIK8icNjtmKu9Kb7o8iXaMlTZBziko+vajeh
+	 Sz+W1wdMEu3tDKHBHsG7O99GSP+A9NBULQuTxmNTANgHOKR3efZW+DZeP8+F0mxFaf
+	 QL/rSSUqtyn2lA9WWoF8ZgdfMKS9f8YBb6xfWpkA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729869AbfCLR22 (ORCPT
+        id S1729629AbfCLRRa (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 12 Mar 2019 13:28:28 -0400
-Received: from mail.kernel.org ([198.145.29.99]:33398 "EHLO mail.kernel.org"
+        Tue, 12 Mar 2019 13:17:30 -0400
+Received: from mail.kernel.org ([198.145.29.99]:58326 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729633AbfCLRRc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 12 Mar 2019 13:17:32 -0400
+        id S1729080AbfCLRQW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 12 Mar 2019 13:16:22 -0400
 Received: from localhost (unknown [104.133.8.98])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 0AA6C21850;
-        Tue, 12 Mar 2019 17:17:31 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 60ADC2087C;
+        Tue, 12 Mar 2019 17:16:21 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1552411051;
-        bh=aHVuDXTHxhEXvg6//V8Vjw1hEo/l6MuWUIFiScQfMqQ=;
+        s=default; t=1552410981;
+        bh=YEsHCdjZ5nDH8cZZaXORDw7CTd4bJjIAxUV+7gaoDsE=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=JURZJ4iAqeISpb7xf9A8FIGkivYkt5vJO55rgDy4x5UppXUzLGIdvyjERhvsUzw8R
-         DubV9HuxJcl120YCryfch22Sqw9P53/EjBtHGuv98sPDTzxQPVijSxGGGEoC7j2ba+
-         tLbXz8VQm5od09MyHT4z/miUMECSNdL2e9T0W7N0=
+        b=V6zrRvMCzuTfMaVW/hpvvRe5AjnwPIItkwgDDfH73TU0NgK7+7iIXpPJMGRxa1PK5
+         ATLelwJ/EwrCCetZ/rFZzyg/puAB7LoKLigj9ZbQxLYuzZUDSW66KxPhPA6vQA5hUI
+         p7vXNsSg/6lc2eNPEo3jIRB4atfFdgCkcNxE0E6U=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Stephane Eranian <eranian@google.com>,
-        Andi Kleen <ak@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>,
-        Arnaldo Carvalho de Melo <acme@redhat.com>,
-        Kan Liang <kan.liang@linux.intel.com>,
-        Peter Zijlstra <peterz@infradead.org>,
+        stable@vger.kernel.org,
+        Tomonori Sakita <tomonori.sakita@sord.co.jp>,
+        Atsushi Nemoto <atsushi.nemoto@sord.co.jp>,
+        Dalon L Westergreen <dalon.westergreen@linux.intel.com>,
+        Thor Thayer <thor.thayer@linux.intel.com>,
+        "David S. Miller" <davem@davemloft.net>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.9 35/96] perf core: Fix perf_proc_update_handler() bug
-Date:   Tue, 12 Mar 2019 10:09:53 -0700
-Message-Id: <20190312171037.164023244@linuxfoundation.org>
+Subject: [PATCH 4.14 058/135] net: altera_tse: fix msgdma_tx_completion on non-zero fill_level case
+Date:   Tue, 12 Mar 2019 10:08:25 -0700
+Message-Id: <20190312170346.653238122@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
-In-Reply-To: <20190312171034.530434962@linuxfoundation.org>
-References: <20190312171034.530434962@linuxfoundation.org>
+In-Reply-To: <20190312170341.127810985@linuxfoundation.org>
+References: <20190312170341.127810985@linuxfoundation.org>
 User-Agent: quilt/0.65
 X-stable: review
 X-Patchwork-Hint: ignore
@@ -65,86 +66,42 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-4.9-stable review patch.  If anyone has any objections, please let me know.
+4.14-stable review patch.  If anyone has any objections, please let me know.
 
 ------------------
 
-[ Upstream commit 1a51c5da5acc6c188c917ba572eebac5f8793432 ]
+[ Upstream commit 6571ebce112a21ec9be68ef2f53b96fcd41fd81b ]
 
-The perf_proc_update_handler() handles /proc/sys/kernel/perf_event_max_sample_rate
-syctl variable.  When the PMU IRQ handler timing monitoring is disabled, i.e,
-when /proc/sys/kernel/perf_cpu_time_max_percent is equal to 0 or 100,
-then no modification to sysctl_perf_event_sample_rate is allowed to prevent
-possible hang from wrong values.
+If fill_level was not zero and status was not BUSY,
+result of "tx_prod - tx_cons - inuse" might be zero.
+Subtracting 1 unconditionally results invalid negative return value
+on this case.
+Make sure not to return an negative value.
 
-The problem is that the test to prevent modification is made after the
-sysctl variable is modified in perf_proc_update_handler().
-
-You get an error:
-
-  $ echo 10001 >/proc/sys/kernel/perf_event_max_sample_rate
-  echo: write error: invalid argument
-
-But the value is still modified causing all sorts of inconsistencies:
-
-  $ cat /proc/sys/kernel/perf_event_max_sample_rate
-  10001
-
-This patch fixes the problem by moving the parsing of the value after
-the test.
-
-Committer testing:
-
-  # echo 100 > /proc/sys/kernel/perf_cpu_time_max_percent
-  # echo 10001 > /proc/sys/kernel/perf_event_max_sample_rate
-  -bash: echo: write error: Invalid argument
-  # cat /proc/sys/kernel/perf_event_max_sample_rate
-  10001
-  #
-
-Signed-off-by: Stephane Eranian <eranian@google.com>
-Reviewed-by: Andi Kleen <ak@linux.intel.com>
-Reviewed-by: Jiri Olsa <jolsa@kernel.org>
-Tested-by: Arnaldo Carvalho de Melo <acme@redhat.com>
-Cc: Kan Liang <kan.liang@linux.intel.com>
-Cc: Peter Zijlstra <peterz@infradead.org>
-Link: http://lkml.kernel.org/r/1547169436-6266-1-git-send-email-eranian@google.com
-Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
+Signed-off-by: Tomonori Sakita <tomonori.sakita@sord.co.jp>
+Signed-off-by: Atsushi Nemoto <atsushi.nemoto@sord.co.jp>
+Reviewed-by: Dalon L Westergreen <dalon.westergreen@linux.intel.com>
+Acked-by: Thor Thayer <thor.thayer@linux.intel.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- kernel/events/core.c | 14 +++++++-------
- 1 file changed, 7 insertions(+), 7 deletions(-)
+ drivers/net/ethernet/altera/altera_msgdma.c | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
-diff --git a/kernel/events/core.c b/kernel/events/core.c
-index 17339506f9f8..5cbb2eda80b5 100644
---- a/kernel/events/core.c
-+++ b/kernel/events/core.c
-@@ -428,18 +428,18 @@ int perf_proc_update_handler(struct ctl_table *table, int write,
- 		void __user *buffer, size_t *lenp,
- 		loff_t *ppos)
- {
--	int ret = proc_dointvec_minmax(table, write, buffer, lenp, ppos);
--
--	if (ret || !write)
--		return ret;
--
-+	int ret;
-+	int perf_cpu = sysctl_perf_cpu_time_max_percent;
- 	/*
- 	 * If throttling is disabled don't allow the write:
- 	 */
--	if (sysctl_perf_cpu_time_max_percent == 100 ||
--	    sysctl_perf_cpu_time_max_percent == 0)
-+	if (write && (perf_cpu == 100 || perf_cpu == 0))
- 		return -EINVAL;
+diff --git a/drivers/net/ethernet/altera/altera_msgdma.c b/drivers/net/ethernet/altera/altera_msgdma.c
+index 0fb986ba3290..0ae723f75341 100644
+--- a/drivers/net/ethernet/altera/altera_msgdma.c
++++ b/drivers/net/ethernet/altera/altera_msgdma.c
+@@ -145,7 +145,8 @@ u32 msgdma_tx_completions(struct altera_tse_private *priv)
+ 			& 0xffff;
  
-+	ret = proc_dointvec_minmax(table, write, buffer, lenp, ppos);
-+	if (ret || !write)
-+		return ret;
-+
- 	max_samples_per_tick = DIV_ROUND_UP(sysctl_perf_event_sample_rate, HZ);
- 	perf_sample_period_ns = NSEC_PER_SEC / sysctl_perf_event_sample_rate;
- 	update_perf_cpu_limits();
+ 	if (inuse) { /* Tx FIFO is not empty */
+-		ready = priv->tx_prod - priv->tx_cons - inuse - 1;
++		ready = max_t(int,
++			      priv->tx_prod - priv->tx_cons - inuse - 1, 0);
+ 	} else {
+ 		/* Check for buffered last packet */
+ 		status = csrrd32(priv->tx_dma_csr, msgdma_csroffs(status));
 -- 
 2.19.1
 
