@@ -2,166 +2,171 @@ Return-Path: <SRS0=J4ZE=RP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_PASS,URIBL_BLOCKED,USER_AGENT_NEOMUTT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BBFCBC43381
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 09:17:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 968C7C43381
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 09:17:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 82DD2214AF
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 09:17:44 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="e2KLH1yY"
+	by mail.kernel.org (Postfix) with ESMTP id 6FBB8214AF
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 09:17:50 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726451AbfCLJRn (ORCPT
+        id S1726571AbfCLJRs (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 12 Mar 2019 05:17:43 -0400
-Received: from mailout1.w1.samsung.com ([210.118.77.11]:40528 "EHLO
-        mailout1.w1.samsung.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725792AbfCLJRm (ORCPT
+        Tue, 12 Mar 2019 05:17:48 -0400
+Received: from metis.ext.pengutronix.de ([85.220.165.71]:53843 "EHLO
+        metis.ext.pengutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726193AbfCLJRr (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 12 Mar 2019 05:17:42 -0400
-Received: from eucas1p2.samsung.com (unknown [182.198.249.207])
-        by mailout1.w1.samsung.com (KnoxPortal) with ESMTP id 20190312091740euoutp015c1ee2b61af370bd830e32ef84a97182~LK3DS2Ts42346723467euoutp01c
-        for <linux-kernel@vger.kernel.org>; Tue, 12 Mar 2019 09:17:40 +0000 (GMT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 mailout1.w1.samsung.com 20190312091740euoutp015c1ee2b61af370bd830e32ef84a97182~LK3DS2Ts42346723467euoutp01c
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
-        s=mail20170921; t=1552382260;
-        bh=DDfIJ9ZP3Ka479zRB9Ni6TdKaIs++FvotXU2HTHyosw=;
-        h=Subject:To:Cc:From:Date:In-Reply-To:References:From;
-        b=e2KLH1yYYV8ArOYmEL0RnkM+Ll8gIDsZ+23Q0eErNg5R0S51/iarpd71y39bLUArW
-         IADsUcW016Ey/lOxwQuXCgNmURBzOg20eQ56YKkFCGg7wedtWx0U9U1w+THzrDgz01
-         abxjFAuUeLi8s7heO16WAJwE8BE55udDDebt1cp0=
-Received: from eusmges1new.samsung.com (unknown [203.254.199.242]) by
-        eucas1p1.samsung.com (KnoxPortal) with ESMTP id
-        20190312091739eucas1p1d04f72dad3bd456911b41b72d03bdd60~LK3CtEa_Y1851218512eucas1p1m;
-        Tue, 12 Mar 2019 09:17:39 +0000 (GMT)
-Received: from eucas1p2.samsung.com ( [182.198.249.207]) by
-        eusmges1new.samsung.com (EUCPMTA) with SMTP id 26.66.04441.339778C5; Tue, 12
-        Mar 2019 09:17:39 +0000 (GMT)
-Received: from eusmtrp1.samsung.com (unknown [182.198.249.138]) by
-        eucas1p1.samsung.com (KnoxPortal) with ESMTPA id
-        20190312091738eucas1p1a373509eae14bbb683e630d87bcb632c~LK3CAQbO00833908339eucas1p1F;
-        Tue, 12 Mar 2019 09:17:38 +0000 (GMT)
-Received: from eusmgms2.samsung.com (unknown [182.198.249.180]) by
-        eusmtrp1.samsung.com (KnoxPortal) with ESMTP id
-        20190312091738eusmtrp17984f6bffefd94be7c0cfd604d7dd7c9~LK3Bx7hy30087300873eusmtrp1Y;
-        Tue, 12 Mar 2019 09:17:38 +0000 (GMT)
-X-AuditID: cbfec7f2-5c9ff70000001159-c9-5c877933c418
-Received: from eusmtip2.samsung.com ( [203.254.199.222]) by
-        eusmgms2.samsung.com (EUCPMTA) with SMTP id 33.C8.04128.239778C5; Tue, 12
-        Mar 2019 09:17:38 +0000 (GMT)
-Received: from [106.120.51.20] (unknown [106.120.51.20]) by
-        eusmtip2.samsung.com (KnoxPortal) with ESMTPA id
-        20190312091737eusmtip2744f6b73da5e1c1a2272c01dee6e0ffe~LK3BNRarC1851818518eusmtip2c;
-        Tue, 12 Mar 2019 09:17:37 +0000 (GMT)
-Subject: Re: [PATCH v5 1/8] clk: samsung: add needed IDs for DMC clocks in
- Exynos5420
-To:     Rob Herring <robh@kernel.org>
-Cc:     devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-pm@vger.kernel.org, linux-samsung-soc@vger.kernel.org,
-        b.zolnierkie@samsung.com, krzk@kernel.org, kgene@kernel.org,
-        cw00.choi@samsung.com, kyungmin.park@samsung.com,
-        m.szyprowski@samsung.com, s.nawrocki@samsung.com,
-        myungjoo.ham@samsung.com
-From:   Lukasz Luba <l.luba@partner.samsung.com>
-Message-ID: <a8eafa27-1dc5-f4cf-9c1d-b4cbce80ec62@partner.samsung.com>
-Date:   Tue, 12 Mar 2019 10:18:14 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
-        Thunderbird/60.4.0
+        Tue, 12 Mar 2019 05:17:47 -0400
+Received: from pty.hi.pengutronix.de ([2001:67c:670:100:1d::c5])
+        by metis.ext.pengutronix.de with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.89)
+        (envelope-from <ukl@pengutronix.de>)
+        id 1h3dXZ-0002dH-9m; Tue, 12 Mar 2019 10:17:41 +0100
+Received: from ukl by pty.hi.pengutronix.de with local (Exim 4.89)
+        (envelope-from <ukl@pengutronix.de>)
+        id 1h3dXX-000766-ON; Tue, 12 Mar 2019 10:17:39 +0100
+Date:   Tue, 12 Mar 2019 10:17:39 +0100
+From:   Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= 
+        <u.kleine-koenig@pengutronix.de>
+To:     Yash Shah <yash.shah@sifive.com>
+Cc:     palmer@sifive.com, linux-pwm@vger.kernel.org,
+        linux-riscv@lists.infradead.org, thierry.reding@gmail.com,
+        robh+dt@kernel.org, mark.rutland@arm.com,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        sachin.ghadi@sifive.com, paul.walmsley@sifive.com
+Subject: Re: [PATCH v9 2/2] pwm: sifive: Add a driver for SiFive SoC PWM
+Message-ID: <20190312091739.fhv2hb2ll2eamdsn@pengutronix.de>
+References: <1552378289-27245-1-git-send-email-yash.shah@sifive.com>
+ <1552378289-27245-3-git-send-email-yash.shah@sifive.com>
 MIME-Version: 1.0
-In-Reply-To: <20190311220650.GB4082@bogus>
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Brightmail-Tracker: H4sIAAAAAAAAA02Sa0hTYRjHfXcuOzOPvU7LB0urSTehVdSH05UCM+lLRUGWQi07TGubtjMz
-        M0KDNi+ZouBl2hVJW9pFvDEv1RRHhi0NsbLAyGqVGrgNqcByO0p++z3/5/+8z/OHlyHkHVQY
-        k6wz8HqdSqOg/cnmnl+OdZsyTAkbpnMDucflDyluyP2V4m52v6S4wk8/CM7heCTl+i6PSbnX
-        1iqacxV0I67c0Snh6rs/SLnh7Fqa+9veKuW6xkzULja2wZJLx15rtKBYV0PEAeKY//ZTvCb5
-        HK9fv/OEf1JHk02aOrTwvM04RWYhR0AekjGAN0P+8H0qD/kzclyLILuvhBQLN4Ks0RyJWLgQ
-        5LY1SOdG/loHabFRg8D07TMhFuMIujxuyusKxkeg4s0n5OUQvAL+GEt9SwjcLoGmwaKZpxiG
-        xkpotZz1IotjoOzBfq+dxCvhntXmG12E46CrYMLHLA6C5xWjpJdlOAqy3D0+ncCh8G70pkTk
-        ZdAyXuW7B/CAFIZ/1yPx6mio6fXMcjB8tzfOplkKL0qukiIL0JdjoUW+CKbnrbOebdBl76e8
-        dxJ4LTy0rhfl3fCx20F7ZcCB8GY8SDwhEIqbywhRZiHHKBfda6Dx6iuJyIuhpq5UWoQU5nnB
-        zPPCmOeFMf/fewuRFhTKpwlaNS9s1PHpSkGlFdJ0amViirYBzXyqF9P2yVbkGThpQ5hBigDW
-        mWpMkFOqc0KG1oaAIRQhLKcxJcjZU6qMC7w+5bg+TcMLNrSEIRWhbKbfSLwcq1UG/gzPp/L6
-        ua6EkYVlofjj9t7fttuJ0RPu4r0jh5MrURv7bnm4Z0vLgTsxQ9mF/S46xinLTZ46GLX/mdJ5
-        /RB9x3m3wtnUmW9aIBj2PPFb/XHSsCqm+ui+TmWxBGND+BVtz9L3IxFfQjKV44Y4XWzlo9M9
-        T6uDXp3Y0XYj8u3WSWukul+ZUvfzUvrZlql8BSkkqTZGEXpB9Q+qV/v2UAMAAA==
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFrrAIsWRmVeSWpSXmKPExsVy+t/xe7pGle0xBtOfSVtsnLGe1eL6l+es
-        FvOPnGO16H/8mtni/PkN7BZnm96wW1zeNYfN4nPvEUaLGef3MVmsPXKX3eJ24wo2i/97drBb
-        HH7TzurA67FpVSebR9+WVYwenzfJBTBH6dkU5ZeWpCpk5BeX2CpFG1oY6RlaWugZmVjqGRqb
-        x1oZmSrp29mkpOZklqUW6dsl6GXs3XqIveA6f8Whtu8sDYzneboYOTkkBEwk/u+6ygZiCwks
-        ZZS4c14HIi4mMWnfdnYIW1jiz7UuoBouoJrXjBJNO6+ANQgLhEvMvPGYEcQWEVCU+N02jRWk
-        iFlgD5PEvLU3GSE6/jJKLH54h6WLkYODTUBPYseqQhCTV8BNYvo6f5BeFgFViZW7DoHNERWI
-        kPj4dB8TiM0rIChxcuYTFhCbU0BLouHLMbAaZgEziXmbHzJD2OISt57MZ4Kw5SW2v53DPIFR
-        aBaS9llIWmYhaZmFpGUBI8sqRpHU0uLc9NxiI73ixNzi0rx0veT83E2MwNjcduznlh2MXe+C
-        DzEKcDAq8fC+KGiLEWJNLCuuzD3EKMHBrCTCa5HTHiPEm5JYWZValB9fVJqTWnyI0RTouYnM
-        UqLJ+cC0kVcSb2hqaG5haWhubG5sZqEkznveoDJKSCA9sSQ1OzW1ILUIpo+Jg1OqgdF1avdD
-        L3btHIVla8uWMrk9qFj2YXX+NZYzfi0Tn88TOd8mvPjSh84qbU7NAssjJtIZDN2SDVXZjpfk
-        VuzayaqVYVMjFWtU8KPW7cuElz6WhzXP6zHUvBcysIzlOe3I8eTZy10vTVatbLcRmXvCpWLj
-        5Ax1E7cbfNHKcW7y70Wvnz+xJrjlghJLcUaioRZzUXEiAPqHOd3jAgAA
-X-CMS-MailID: 20190312091738eucas1p1a373509eae14bbb683e630d87bcb632c
-X-Msg-Generator: CA
-Content-Type: text/plain; charset="utf-8"
-X-RootMTR: 20190305101924eucas1p1147e3895a89a72c9db7d128d90dd3daa
-X-EPHeader: CA
-CMS-TYPE: 201P
-X-CMS-RootMailID: 20190305101924eucas1p1147e3895a89a72c9db7d128d90dd3daa
-References: <1551781151-5562-1-git-send-email-l.luba@partner.samsung.com>
-        <CGME20190305101924eucas1p1147e3895a89a72c9db7d128d90dd3daa@eucas1p1.samsung.com>
-        <1551781151-5562-2-git-send-email-l.luba@partner.samsung.com>
-        <20190311220650.GB4082@bogus>
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <1552378289-27245-3-git-send-email-yash.shah@sifive.com>
+User-Agent: NeoMutt/20170113 (1.7.2)
+X-SA-Exim-Connect-IP: 2001:67c:670:100:1d::c5
+X-SA-Exim-Mail-From: ukl@pengutronix.de
+X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
+X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Rob,
+Hello,
 
-On 3/11/19 11:06 PM, Rob Herring wrote:
-> On Tue,  5 Mar 2019 11:19:04 +0100, Lukasz Luba wrote:
->> Define new IDs for clocks used by Dynamic Memory Controller in
->> Exynos5422 SoC.
->>
->> Signed-off-by: Lukasz Luba <l.luba@partner.samsung.com>
->> ---
->>   include/dt-bindings/clock/exynos5420.h | 18 +++++++++++++++++-
->>   1 file changed, 17 insertions(+), 1 deletion(-)
->>
-> 
-> Please add Acked-by/Reviewed-by tags when posting new versions. However,
-> there's no need to repost patches *only* to add the tags. The upstream
-> maintainer will do that for acks received on the version they apply.
-> 
-> If a tag was not added on purpose, please state why and what changed.
-I have skipped your ACK because of the hack which is implemented in v5
-clocks. Chanwoo refused the driver code because it uses 2 registers from
-the clock register set without Common Clock Framework API.
-He said that he will not accept this code and I have to figure out new
-approach using CCF.
-Thus, I have modeled these two registers as 'gates', but these registers
-are for Dynamic Memory Controller PAUSE feature (which stops
-transactions) and the other is for switching between
-two set of registers with timings for the LPDDR3 memory (normal
-operation and alternative clock source operation aka 'bypass').
-These registers should be (in my opinion) in the DMC registers and not
-in the clocks.
+there are just a few minor things left I commented below.
 
-Sylwester pointed out offline that it could be done using regmap.
-These are the problematic clocks added in v5:
-+#define CLK_CDREX_PAUSE		531
-+#define CLK_CDREX_TIMING_SET	532
+On Tue, Mar 12, 2019 at 01:41:29PM +0530, Yash Shah wrote:
+> +#define div_u64_round(a, b) \
+> +	({typeof(b) __b = b; div_u64((a) + __b / 2, __b); })
 
-I have mentioned about it in the cover letter, but you are right I could
-also add a comment for this particular patch that I have skipped your
-ACK.
-Thank you for sharing the information about the process.
-I will keep it in mind next time and will add a comment below the commit
-message for a particular patch and explicit information in cover letter
-that I am not including an ACK.
+Parenthesis around b please. I guess I didn't had them in my suggestion
+either, sorry for that.
 
-Regards,
-Lukasz
-> 
-> 
+> +static int pwm_sifive_enable(struct pwm_chip *chip, bool enable)
+> +{
+> +	struct pwm_sifive_ddata *pwm = pwm_sifive_chip_to_ddata(chip);
+> +	int ret;
+> +
+> +	if (enable) {
+> +		ret = clk_enable(pwm->clk);
+> +		if (ret) {
+> +			dev_err(pwm->chip.dev, "Enable clk failed:%d\n", ret);
+> +			return ret;
+> +		}
+> +	}
+> +
+> +	if (!enable)
+> +		clk_disable(pwm->clk);
+> +
+> +	return 0;
+> +}
+
+There is only a single caller for this function. I wonder if it is
+trivial enough to fold it into pwm_sifive_apply.
+
+> +static int pwm_sifive_apply(struct pwm_chip *chip, struct pwm_device *dev,
+> +			    struct pwm_state *state)
+> +{
+> +	struct pwm_sifive_ddata *pwm = pwm_sifive_chip_to_ddata(chip);
+> +	unsigned int duty_cycle;
+> +	u32 frac;
+> +	struct pwm_state cur_state;
+> +	bool enabled;
+> +	int ret = 0;
+> +	unsigned long num;
+> +
+> +	if (state->polarity != PWM_POLARITY_INVERSED)
+> +		return -EINVAL;
+> +
+> +	ret = clk_enable(pwm->clk);
+> +	if (ret) {
+> +		dev_err(pwm->chip.dev, "Enable clk failed:%d\n", ret);
+> +		return ret;
+> +	}
+> +
+> +	mutex_lock(&pwm->lock);
+> +	pwm_get_state(dev, &cur_state);
+> +
+> +	enabled = cur_state.enabled;
+> +
+> +	if (state->period != pwm->approx_period) {
+> +		if (pwm->user_count != 1) {
+> +			ret = -EBUSY;
+> +			goto exit;
+> +		}
+> +		pwm->approx_period = state->period;
+> +		pwm_sifive_update_clock(pwm, clk_get_rate(pwm->clk));
+> +	}
+> +
+> +	duty_cycle = state->duty_cycle;
+> +	if (!state->enabled)
+> +		duty_cycle = 0;
+> +
+> +	num = (u64)duty_cycle * (1U << PWM_SIFIVE_CMPWIDTH);
+> +	frac = div_u64_round(num, state->period);
+> +	/* The hardware cannot generate a 100% duty cycle */
+> +	frac = min(frac, (1U << PWM_SIFIVE_CMPWIDTH) - 1);
+> +
+> +	writel(frac, pwm->regs + PWM_SIFIVE_PWMCMP0 +
+> +	       dev->hwpwm * PWM_SIFIVE_SIZE_PWMCMP);
+> +
+> +	if (state->enabled != enabled) {
+> +		ret = pwm_sifive_enable(chip, state->enabled);
+> +		if (ret)
+> +			goto exit;
+
+This goto is a noop.
+
+> +	}
+> +
+> +exit:
+> +	clk_disable(pwm->clk);
+> +	mutex_unlock(&pwm->lock);
+> +	return ret;
+> +}
+
+There are a few other things that could be improved, but I think they
+could be addressed later. For some of these I don't even know what to
+suggest, for some Thierry might not agree it is worth fixing:
+
+ - rounding
+   how to round? When should a request declined, when is rounding ok?
+   There is still "if (state->period != pwm->approx_period) return -EBUSY"
+   in this driver. This is better than before, but if state-period ==
+   pwm->approx_period + 1 the result (if accepted) might be the same as
+   without the +1 and so returning -EBUSY for one case and accepting the
+   other is strange.
+ - don't call PWM API functions designed for consumers (here: pwm_get_state)
+ - Move div_u64_round to include/linux/math64.h
+
+Best regards
+Uwe
+
+-- 
+Pengutronix e.K.                           | Uwe Kleine-König            |
+Industrial Linux Solutions                 | http://www.pengutronix.de/  |
