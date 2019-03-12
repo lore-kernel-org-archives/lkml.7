@@ -2,52 +2,53 @@ Return-Path: <SRS0=J4ZE=RP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
+X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 795AAC43381
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 17:47:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5E7AFC43381
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 17:47:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4C17C206DF
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 17:47:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2E652206DF
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 17:47:24 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1552412838;
-	bh=fS+qaNS9Z1KBk88WVj4PuqxR3683E5U010sTs9SrpIY=;
+	s=default; t=1552412844;
+	bh=4WhEFm+j/kjd9CcO/9DOyTaiXDZw/TV6ZnLAm6UoIDk=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=wboweGU+2LXIVZ3/5lEhsSGi0rhDL5LntyImq/v/5CZJYy9MyKEriyE+MEU/9LeJx
-	 mnoVqvXxrwcpVr3NCzMu4e6Dmm/YinwR01W6PYtw0Sl6Sm2orDWOta+dDcR5HEiAN5
-	 TfOYoQFiLfiSu2bFUQ/g4FuctpT3b12wpcI9FCyI=
+	b=D1T3+s6Iv4GnuHF7uQdiOYVJ2NfpVs+usn5N3xIS8rWZIFO9ghBYwxbu3N3cyWTQy
+	 0ESpQw0Fkq8MPcV7hhfn8YXfcdgLeBYGboNPb8bX2HJzSyL3u6SbR3DWJtP4HSSHp+
+	 HK+7+gw4Gna6f6lP2u+Ia6Q3AoRd5fEif7jxPB0s=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728954AbfCLRrQ (ORCPT
+        id S1729071AbfCLRrW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 12 Mar 2019 13:47:16 -0400
-Received: from mail.kernel.org ([198.145.29.99]:55384 "EHLO mail.kernel.org"
+        Tue, 12 Mar 2019 13:47:22 -0400
+Received: from mail.kernel.org ([198.145.29.99]:55290 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726585AbfCLRPP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 12 Mar 2019 13:15:15 -0400
+        id S1728646AbfCLRPN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 12 Mar 2019 13:15:13 -0400
 Received: from localhost (unknown [104.133.8.98])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id AB163217D8;
-        Tue, 12 Mar 2019 17:15:14 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 63E48217D4;
+        Tue, 12 Mar 2019 17:15:12 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1552410914;
-        bh=fS+qaNS9Z1KBk88WVj4PuqxR3683E5U010sTs9SrpIY=;
+        s=default; t=1552410912;
+        bh=4WhEFm+j/kjd9CcO/9DOyTaiXDZw/TV6ZnLAm6UoIDk=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=FR6x8nooMKeukELGEYjyyGjajS76yXBEM53RYUlIGOiviKkN1Nv79uzAQ5wsj3L6M
-         +wR7MlBOVlh4HpfNrgZy79+UOLIYjXpCY+77cdOPVPUb/6fdMqLBg285Gq1Rq6sQVp
-         EnJhvO70g7TJoy8ndskRPLrLLLBlV5o4sW8CU4P0=
+        b=bZ5QM1jHVA9GoWIHm6mqzqL4ZpE2s8OFjwWfebLw6UQymPdnHQjJI9tBju9XGoqQD
+         NdrBVAq7oLSP4TjSgiFZ94NPPX9mynaNYBX0IxbBIhUzAAosENeWF/8p8arDGgF9E9
+         2oajw8pVDyNhYzjg1zoa1qPZ6vZn1ULRIIlo69Dc=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         stable@vger.kernel.org,
-        Marek Szyprowski <m.szyprowski@samsung.com>,
-        Krzysztof Kozlowski <krzk@kernel.org>
-Subject: [PATCH 4.19 132/149] ARM: dts: exynos: Add minimal clkout parameters to Exynos3250 PMU
-Date:   Tue, 12 Mar 2019 10:09:10 -0700
-Message-Id: <20190312170400.441482644@linuxfoundation.org>
+        Codrin Ciubotariu <codrin.ciubotariu@microchip.com>,
+        Ludovic Desroches <ludovic.desroches@microchip.com>,
+        Vinod Koul <vkoul@kernel.org>, Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.19 098/149] dmaengine: at_xdmac: Fix wrongfull report of a channel as in use
+Date:   Tue, 12 Mar 2019 10:08:36 -0700
+Message-Id: <20190312170357.805189495@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190312170349.421581206@linuxfoundation.org>
 References: <20190312170349.421581206@linuxfoundation.org>
@@ -66,36 +67,100 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-From: Marek Szyprowski <m.szyprowski@samsung.com>
+[ Upstream commit dc3f595b6617ebc0307e0ce151e8f2f2b2489b95 ]
 
-commit a66352e005488ecb4b534ba1af58a9f671eba9b8 upstream.
+atchan->status variable is used to store two different information:
+ - pass channel interrupts status from interrupt handler to tasklet;
+ - channel information like whether it is cyclic or paused;
 
-Add minimal parameters needed by the Exynos CLKOUT driver to Exynos3250
-PMU node. This fixes the following warning on boot:
+This causes a bug when device_terminate_all() is called,
+(AT_XDMAC_CHAN_IS_CYCLIC cleared on atchan->status) and then a late End
+of Block interrupt arrives (AT_XDMAC_CIS_BIS), which sets bit 0 of
+atchan->status. Bit 0 is also used for AT_XDMAC_CHAN_IS_CYCLIC, so when
+a new descriptor for a cyclic transfer is created, the driver reports
+the channel as in use:
 
-exynos_clkout_init: failed to register clkout clock
+if (test_and_set_bit(AT_XDMAC_CHAN_IS_CYCLIC, &atchan->status)) {
+	dev_err(chan2dev(chan), "channel currently used\n");
+	return NULL;
+}
 
-Fixes: d19bb397e19e ("ARM: dts: exynos: Update PMU node with CLKOUT related data")
-Cc: <stable@vger.kernel.org>
-Signed-off-by: Marek Szyprowski <m.szyprowski@samsung.com>
-Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+This patch fixes the bug by adding a different struct member to keep
+the interrupts status separated from the channel status bits.
 
+Fixes: e1f7c9eee707 ("dmaengine: at_xdmac: creation of the atmel eXtended DMA Controller driver")
+Signed-off-by: Codrin Ciubotariu <codrin.ciubotariu@microchip.com>
+Acked-by: Ludovic Desroches <ludovic.desroches@microchip.com>
+Signed-off-by: Vinod Koul <vkoul@kernel.org>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/arm/boot/dts/exynos3250.dtsi |    3 +++
- 1 file changed, 3 insertions(+)
+ drivers/dma/at_xdmac.c | 19 ++++++++++---------
+ 1 file changed, 10 insertions(+), 9 deletions(-)
 
---- a/arch/arm/boot/dts/exynos3250.dtsi
-+++ b/arch/arm/boot/dts/exynos3250.dtsi
-@@ -168,6 +168,9 @@
- 			interrupt-controller;
- 			#interrupt-cells = <3>;
- 			interrupt-parent = <&gic>;
-+			clock-names = "clkout8";
-+			clocks = <&cmu CLK_FIN_PLL>;
-+			#clock-cells = <1>;
- 		};
+diff --git a/drivers/dma/at_xdmac.c b/drivers/dma/at_xdmac.c
+index 4bf72561667c..a75b95fac3bd 100644
+--- a/drivers/dma/at_xdmac.c
++++ b/drivers/dma/at_xdmac.c
+@@ -203,6 +203,7 @@ struct at_xdmac_chan {
+ 	u32				save_cim;
+ 	u32				save_cnda;
+ 	u32				save_cndc;
++	u32				irq_status;
+ 	unsigned long			status;
+ 	struct tasklet_struct		tasklet;
+ 	struct dma_slave_config		sconfig;
+@@ -1580,8 +1581,8 @@ static void at_xdmac_tasklet(unsigned long data)
+ 	struct at_xdmac_desc	*desc;
+ 	u32			error_mask;
  
- 		mipi_phy: video-phy {
+-	dev_dbg(chan2dev(&atchan->chan), "%s: status=0x%08lx\n",
+-		 __func__, atchan->status);
++	dev_dbg(chan2dev(&atchan->chan), "%s: status=0x%08x\n",
++		__func__, atchan->irq_status);
+ 
+ 	error_mask = AT_XDMAC_CIS_RBEIS
+ 		     | AT_XDMAC_CIS_WBEIS
+@@ -1589,15 +1590,15 @@ static void at_xdmac_tasklet(unsigned long data)
+ 
+ 	if (at_xdmac_chan_is_cyclic(atchan)) {
+ 		at_xdmac_handle_cyclic(atchan);
+-	} else if ((atchan->status & AT_XDMAC_CIS_LIS)
+-		   || (atchan->status & error_mask)) {
++	} else if ((atchan->irq_status & AT_XDMAC_CIS_LIS)
++		   || (atchan->irq_status & error_mask)) {
+ 		struct dma_async_tx_descriptor  *txd;
+ 
+-		if (atchan->status & AT_XDMAC_CIS_RBEIS)
++		if (atchan->irq_status & AT_XDMAC_CIS_RBEIS)
+ 			dev_err(chan2dev(&atchan->chan), "read bus error!!!");
+-		if (atchan->status & AT_XDMAC_CIS_WBEIS)
++		if (atchan->irq_status & AT_XDMAC_CIS_WBEIS)
+ 			dev_err(chan2dev(&atchan->chan), "write bus error!!!");
+-		if (atchan->status & AT_XDMAC_CIS_ROIS)
++		if (atchan->irq_status & AT_XDMAC_CIS_ROIS)
+ 			dev_err(chan2dev(&atchan->chan), "request overflow error!!!");
+ 
+ 		spin_lock_bh(&atchan->lock);
+@@ -1652,7 +1653,7 @@ static irqreturn_t at_xdmac_interrupt(int irq, void *dev_id)
+ 			atchan = &atxdmac->chan[i];
+ 			chan_imr = at_xdmac_chan_read(atchan, AT_XDMAC_CIM);
+ 			chan_status = at_xdmac_chan_read(atchan, AT_XDMAC_CIS);
+-			atchan->status = chan_status & chan_imr;
++			atchan->irq_status = chan_status & chan_imr;
+ 			dev_vdbg(atxdmac->dma.dev,
+ 				 "%s: chan%d: imr=0x%x, status=0x%x\n",
+ 				 __func__, i, chan_imr, chan_status);
+@@ -1666,7 +1667,7 @@ static irqreturn_t at_xdmac_interrupt(int irq, void *dev_id)
+ 				 at_xdmac_chan_read(atchan, AT_XDMAC_CDA),
+ 				 at_xdmac_chan_read(atchan, AT_XDMAC_CUBC));
+ 
+-			if (atchan->status & (AT_XDMAC_CIS_RBEIS | AT_XDMAC_CIS_WBEIS))
++			if (atchan->irq_status & (AT_XDMAC_CIS_RBEIS | AT_XDMAC_CIS_WBEIS))
+ 				at_xdmac_write(atxdmac, AT_XDMAC_GD, atchan->mask);
+ 
+ 			tasklet_schedule(&atchan->tasklet);
+-- 
+2.19.1
+
 
 
