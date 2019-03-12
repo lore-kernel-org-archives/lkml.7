@@ -2,100 +2,78 @@ Return-Path: <SRS0=J4ZE=RP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D1DCFC43381
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 14:56:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 77C2EC43381
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 14:58:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A78E22087C
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 14:56:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 463E52075C
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 14:58:18 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726802AbfCLO4M (ORCPT
+        id S1726561AbfCLO6Q (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 12 Mar 2019 10:56:12 -0400
-Received: from mail.kernel.org ([198.145.29.99]:41132 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725894AbfCLO4L (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 12 Mar 2019 10:56:11 -0400
-Received: from gandalf.local.home (cpe-66-24-58-225.stny.res.rr.com [66.24.58.225])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id AD8E32083D;
-        Tue, 12 Mar 2019 14:56:10 +0000 (UTC)
-Date:   Tue, 12 Mar 2019 10:56:08 -0400
-From:   Steven Rostedt <rostedt@goodmis.org>
-To:     "Paul E. McKenney" <paulmck@linux.ibm.com>
-Cc:     Neeraj Upadhyay <neeraju@codeaurora.org>, josh@joshtriplett.org,
-        mathieu.desnoyers@efficios.com, jiangshanlai@gmail.com,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] rcu/tree: Fix self wakeups for grace period kthread
-Message-ID: <20190312105608.15994a1d@gandalf.local.home>
-In-Reply-To: <20190312140923.GU13351@linux.ibm.com>
-References: <1552038378-11166-1-git-send-email-neeraju@codeaurora.org>
-        <20190311215027.2f3458a1@oasis.local.home>
-        <579cd03a-17a7-5729-46b3-ffcc4afee0e5@codeaurora.org>
-        <20190312140923.GU13351@linux.ibm.com>
-X-Mailer: Claws Mail 3.16.0 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
-MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+        Tue, 12 Mar 2019 10:58:16 -0400
+Received: from mout.kundenserver.de ([212.227.17.10]:36065 "EHLO
+        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725894AbfCLO6P (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 12 Mar 2019 10:58:15 -0400
+Received: from orion.localdomain ([77.4.190.91]) by mrelayeu.kundenserver.de
+ (mreue106 [212.227.15.183]) with ESMTPSA (Nemesis) id
+ 1Mlvr3-1gcOm42jjP-00ixwJ; Tue, 12 Mar 2019 15:57:59 +0100
+From:   "Enrico Weigelt, metux IT consult" <info@metux.net>
+To:     gregkh@linuxfoundation.org, jslaby@suse.com,
+        linux-serial@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [PATCH 2/8] drivers: tty: serial: 8250_dw: use devm_ioremap_resource()
+Date:   Tue, 12 Mar 2019 15:57:34 +0100
+Message-Id: <1552402660-31730-3-git-send-email-info@metux.net>
+X-Mailer: git-send-email 1.9.1
+In-Reply-To: <1552402660-31730-1-git-send-email-info@metux.net>
+References: <1552402660-31730-1-git-send-email-info@metux.net>
+X-Provags-ID: V03:K1:mblMkNuTecTkcBpGhvzB/G8Sk1bC4DqKonb3sLDp/4DfNJxR35u
+ cK4yRFymAJnxJLErND3a/aPH6H0ZTErTeCDLgP15drtSpo2fpcswotHbzp3lMw0H6qLYGIQ
+ CQrflMoSdU16it7leRGVq+92zEQMtoaC7Ty/hzGi+t6Wt6sQwoIlDJcZnQ14of3WT+HPkle
+ 5pJ+4Jxp3pFqQwZNWZHZA==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:uW7in9wQNQU=:MKgYyqK+jJYkWf25kW5Abk
+ uGHWWUBfkCjTGZ6jkRHf6OlWVATMFzNlp26+Pi+hZKc5slZQHBDPURq3gCspTsPKtL6I0ZdVz
+ mieM4+7V/btnCl4moqXHlQab4HQXyQK6Az+5v01gnSPh6+nVQuxuVKWu2ZytM8fwkmI57V0Tq
+ kMT5eftojsHK1frEjeStlfHbfrCQ6/JJ7A2Jw5wunU8WSiv5sMQsB0VsEsxNaOYu2l1z0T45G
+ 1geW1+YzhWampbWH0RKdpDHfvGNMWWxzxelWZrxua6FC/8eiwzzkIXrCDW9CLtTA92jdJ7cXm
+ I3qlg8L8Bg5Iu03n8RBskIUoJy64/Kehu8heLangBn8Q5n/HyuK5+GO9Hh5D4gN/OaXHAEQIK
+ GqIXN6Wp4HBLK4haqBgnshaf9yDLigC4uQGTfB55sXobL6DOkFkYigxX4eu3SuaQhqIdh0diB
+ EdS5NNijDUPYrAkq/rWrNDaEG1rRol/W/K9Rvqxw7VhjlJpmO+JrL1Hf4YbIAiAl3+YV4eYOU
+ m5M+yXANZViuJwjTeyxa2Gcj4ZPXxQ7raaimIIldsMxHRONYPfcRfAREkk3xPTLHdDw3a+xrm
+ vDcPNu+KfZcHmS7qOEL7LVWBMiAfxaiLaFJASpa5l8jDScJSe1TEoAMp9bzaYaVou95/vsRt0
+ rTUVa2LlI9tyw8mPThWFpubyqopJv5rnccb1BCq7r5NG0rrsUfKsnKzQLMDjCGzMFeilsnS2/
+ oJE4gs+8MJPuVcdNfDEs9910Iff5IrrNp5iF0g==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, 12 Mar 2019 07:09:23 -0700
-"Paul E. McKenney" <paulmck@linux.ibm.com> wrote:
+Use helper devm_ioremap_resource() to make the code a little bit
+shorter and easier to read.
 
-> On Tue, Mar 12, 2019 at 05:25:28PM +0530, Neeraj Upadhyay wrote:
-> > On 3/12/19 7:20 AM, Steven Rostedt wrote:  
-> > >On Fri,  8 Mar 2019 15:16:18 +0530
-> > >Neeraj Upadhyay <neeraju@codeaurora.org> wrote:
-> > >  
-> > >>Update the code to match the comment that self wakeup of
-> > >>grace period kthread is allowed from interrupt handler, and
-> > >>softirq handler, running in the grace period kthread's
-> > >>context. Present code allows self wakeups from all
-> > >>interrupt contexts - nmi, softirq and hardirq contexts.  
-> > >
-> > >That's not actually the issue. But it appears that we return if we
-> > >simply have BH disabled, which I don't think we want, and we don't care
-> > >about NMI as NMI should never call this code.
-> > >
-> > >I think your patch is correct, but the change log is not.  
-> 
-> How about this?
-> 
-> 	The current rcu_gp_kthread_wake() function uses in_interrupt()
-> 	and thus does a self-wakeup from all interrupt contexts,
-> 	including the pointless case where the GP kthread happens to be
-> 	running with bottom halves disabled, along with the impossible
-> 	case where the GP kthread is running within an NMI handler (you
-> 	are not supposed to invoke rcu_gp_kthread_wake() from within an
-> 	NMI handler.  This commit therefore replaces the in_interrupt()
-> 	with in_irq(), so that the self-wakeups happen only from handlers
-> 	for hardware interrupts and softirqs.  This also makes the code
-> 	match the comment.
+Signed-off-by: Enrico Weigelt, metux IT consult <info@metux.net>
+---
+ drivers/tty/serial/8250/8250_dw.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-Acked-by: Steven Rostedt (VMware) <rostedt@goodmis.org>
-
-> 
-> 							Thanx, Paul
-> 
-> > >-- Steve
-> > >  
-> > 
-> > Hi Steve, sorry, I don't understand fully, why we want to not return
-> > in BH disabled case. From the commit logs and lkml discussion, there
-> > is a case where GP kthread is interrupted in the wait event path and
-> > rcu_gp_kthread_wake() is called in softirq handler (I am not sure
-> > about interrupt handler case; how rcu_gp_kthread_wake() is called
-> > from that path).
-
-BH disabled case isn't a case where the kthread is preempted. It's just
-that the kthread disabled BH, and thus we want to return.
-
--- Steve
+diff --git a/drivers/tty/serial/8250/8250_dw.c b/drivers/tty/serial/8250/8250_dw.c
+index d31b975..f0a294d 100644
+--- a/drivers/tty/serial/8250/8250_dw.c
++++ b/drivers/tty/serial/8250/8250_dw.c
+@@ -526,7 +526,7 @@ static int dw8250_probe(struct platform_device *pdev)
+ 	p->set_ldisc	= dw8250_set_ldisc;
+ 	p->set_termios	= dw8250_set_termios;
+ 
+-	p->membase = devm_ioremap(dev, regs->start, resource_size(regs));
++	p->membase = devm_ioremap_resource(dev, regs);
+ 	if (!p->membase)
+ 		return -ENOMEM;
+ 
+-- 
+1.9.1
 
