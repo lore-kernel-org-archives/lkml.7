@@ -2,134 +2,194 @@ Return-Path: <SRS0=J4ZE=RP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.6 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_PASS,URIBL_BLOCKED,USER_IN_DEF_DKIM_WL autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id ACBE7C43381
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 17:17:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6046FC10F00
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 17:17:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7609D21855
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 17:17:13 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="pi0tluJs"
+	by mail.kernel.org (Postfix) with ESMTP id 33C5E218A1
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 17:17:16 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1552411036;
+	bh=7aGcqU9p5FmslaUfI/MZO37IWz07uw6Oh7dwWpZ5L68=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=VD7nxy+fEdg7epsHd2J+If3o4+N89RXgU+5NfePO3bWjB7UD+0khByVoU1oKNp1gS
+	 cpBOLXF0SbPhuaZ55Dm75c4V5jd/KIAJMZha0ZTrE2q43JATDC/QsEgZOTVol8Z9R/
+	 hKDjD44Ec0wbYrmAFwtJE1d+I5jSsXltlJdxLYTA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729490AbfCLRRM (ORCPT
+        id S1729504AbfCLRRO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 12 Mar 2019 13:17:12 -0400
-Received: from mail-it1-f195.google.com ([209.85.166.195]:40640 "EHLO
-        mail-it1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727686AbfCLRQH (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 12 Mar 2019 13:17:14 -0400
+Received: from mail.kernel.org ([198.145.29.99]:57708 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1729002AbfCLRQH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Tue, 12 Mar 2019 13:16:07 -0400
-Received: by mail-it1-f195.google.com with SMTP id l139so5722934ita.5
-        for <linux-kernel@vger.kernel.org>; Tue, 12 Mar 2019 10:16:06 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=l6pIbrAZqeanIq+lkaoDuEehGSh5g23Npj75n1AdN1M=;
-        b=pi0tluJs2cpb/QgGX3FUAq8gdvg/A1VbsXnyg32OfewnNpS7QDvoyoSrhRZoEb6HZb
-         0H3SSkCPtbxyD2kpZP5Uy5MtKWk5tEwURNM3aGwc36Tbgp7AqszkswsPIwcmOu1Tmz0D
-         Cj/KIy6fjjd82q66nsB73ed1Fpf7tfz4IZb98/bHk7lMp1e91NyzZNGWgfPO27MedTFJ
-         twUHHz/EM0xDO2tu9FJcF5m9KLbAWt0EHas5GdVpkJ02oRyZFGZHrEQKH9rFbHeZZGSf
-         o2PyJjUwM2jAOaxKEo6m5H0dDFvdm6d24/+3Suyw0X/IGOne09ZSd/dsIwf5GmFXeoNu
-         1zug==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=l6pIbrAZqeanIq+lkaoDuEehGSh5g23Npj75n1AdN1M=;
-        b=kNKUFAdpa4WI2ZuYngs8JA2Kpgs159Sk/pssP6OvM7uXFDQOsUI1dtmY/4pzPkb7DC
-         DUVARa80JJ8BfIM74dWW74F5qBYMAX9teKAuf3dVcb5pxlO15PhWFC/f+9MH9HTZXZA/
-         nMkDtrk2Ov+lGn8b9xIhA1WoWv9W+UMCrK/nVVYZ5anVMHhEciPyxMn+zMfr6fD73nE6
-         kJj+39ToWMaOyL2nwegF9zVmFuMZ2Kzt2RDYEvM1yu3MI3E0D4tpV1h7GILMIo7KMFBE
-         6Wcd3xjWnhKZLhNQW0VzyfBConv6tUMeNDdctCp7LF71EDQT03zk0KtddPCfk+9UzQsm
-         x4Cg==
-X-Gm-Message-State: APjAAAXpazFITkAVqQhYFo5laFs0KEeGhJmR2pHR1zVtyGXrhUJabBzA
-        BBMZO9ZOVpH09x9cKmY2Mdoc+RqNSFrfwgocReYGk0eTeR2mBQ==
-X-Google-Smtp-Source: APXvYqwAhNx8PsI1LGC2aT/kpErJbzGwss3mZUIkRX6xK8Yoe8s0jiy8CSuqqRhOUjw2IdKGPdpekSFQKCWMLvOSioA=
-X-Received: by 2002:a05:660c:3d1:: with SMTP id c17mr2482627itl.166.1552410966022;
- Tue, 12 Mar 2019 10:16:06 -0700 (PDT)
+Received: from localhost (unknown [104.133.8.98])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id D702921741;
+        Tue, 12 Mar 2019 17:16:06 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1552410967;
+        bh=7aGcqU9p5FmslaUfI/MZO37IWz07uw6Oh7dwWpZ5L68=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=PtejYrx2eMpXk/kwYYxYIvUFXpiPxBPt/usgP6CweGS99HpCPI7FeTetxQqlVcFdg
+         M2h7lx9m1E1A7dINMoPDrhdcGBWEIP53IcFy//FGyXyN4aCyHe/94ydgRb9SB7xB8u
+         p/nUEJwWKtCNVV+wEomJ0T8S/3S9B6dcA8iyTDvQ=
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     linux-kernel@vger.kernel.org
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        stable@vger.kernel.org, Matthias Kaehlcke <mka@chromium.org>,
+        Douglas Anderson <dianders@chromium.org>,
+        Marcel Holtmann <marcel@holtmann.org>
+Subject: [PATCH 4.14 040/135] Bluetooth: Fix locking in bt_accept_enqueue() for BH context
+Date:   Tue, 12 Mar 2019 10:08:07 -0700
+Message-Id: <20190312170344.802749045@linuxfoundation.org>
+X-Mailer: git-send-email 2.21.0
+In-Reply-To: <20190312170341.127810985@linuxfoundation.org>
+References: <20190312170341.127810985@linuxfoundation.org>
+User-Agent: quilt/0.65
+X-stable: review
+X-Patchwork-Hint: ignore
 MIME-Version: 1.0
-References: <00000000000010b2fc057fcdfaba@google.com> <0000000000008c75b50583ddb5f8@google.com>
- <20190312040829.GQ2217@ZenIV.linux.org.uk> <491ff1c3-91d6-eaa7-f551-46a4f8b90f5a@i-love.sakura.ne.jp>
-In-Reply-To: <491ff1c3-91d6-eaa7-f551-46a4f8b90f5a@i-love.sakura.ne.jp>
-From:   Dmitry Vyukov <dvyukov@google.com>
-Date:   Tue, 12 Mar 2019 18:15:54 +0100
-Message-ID: <CACT4Y+ahcZpJ1Q-TKkCJkyhzGc07XFusuwBcKjg_rfAeos8RWA@mail.gmail.com>
-Subject: Re: INFO: rcu detected stall in sys_sendfile64 (2)
-To:     Tetsuo Handa <penguin-kernel@i-love.sakura.ne.jp>
-Cc:     syzbot <syzbot+1505c80c74256c6118a5@syzkaller.appspotmail.com>,
-        syzkaller-bugs <syzkaller-bugs@googlegroups.com>,
-        Al Viro <viro@zeniv.linux.org.uk>,
-        LKML <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Mar 12, 2019 at 3:30 PM Tetsuo Handa
-<penguin-kernel@i-love.sakura.ne.jp> wrote:
->
-> (Moving most recipients to bcc: in order to avoid flooding.)
->
-> On 2019/03/12 13:08, Al Viro wrote:
-> > Umm...  Might be a good idea to add some plausibility filters - it is,
-> > in theory, possible that adding a line in a comment changes behaviour
-> > (without compiler bugs, even - playing with __LINE__ is all it would
-> > take), but the odds that it's _not_ a false positive are very low.
->
-> Well, 108 out of 168 tests done during this bisection failed to test.
-> With such high failure ratio, it is possible that by chance no crash
-> happened during few tests for specific commit; causing a wrong bisection
-> result. I expect that when trying to conclude "git bisect good" for
-> specific commit, the tests should be repeated until no crash happened
-> during 8 successful tests.
+4.14-stable review patch.  If anyone has any objections, please let me know.
 
-Added to https://github.com/google/syzkaller/issues/1051:
+------------------
 
-Tetsuo points out that if lots (say, 7/8) tests failed with infra
-problems, then we should retry/skip or something. This zeroes the
-effect of having multiple independent tests.
+From: Matthias Kaehlcke <mka@chromium.org>
 
-Thanks.
+commit c4f5627f7eeecde1bb6b646d8c0907b96dc2b2a6 upstream.
 
-> Also, this bisection is finding multiple different crash patterns, which
-> suggests that the crashed tests are not giving correct feedback to syzbot.
+With commit e16337622016 ("Bluetooth: Handle bt_accept_enqueue() socket
+atomically") lock_sock[_nested]() is used to acquire the socket lock
+before manipulating the socket. lock_sock[_nested]() may block, which
+is problematic since bt_accept_enqueue() can be called in bottom half
+context (e.g. from rfcomm_connect_ind()):
 
-Treating different crashes as just "crash" is intended. Kernel bugs
-can manifest in very different ways.
-Want fun, search for "bpf: sockhash, disallow bpf_tcp_close and update
-in parallel" in  https://syzkaller.appspot.com/?fixed=upstream
-It lead to 50+ different failure modes.
+[<ffffff80080d81ec>] __might_sleep+0x4c/0x80
+[<ffffff800876c7b0>] lock_sock_nested+0x24/0x58
+[<ffffff8000d7c27c>] bt_accept_enqueue+0x48/0xd4 [bluetooth]
+[<ffffff8000e67d8c>] rfcomm_connect_ind+0x190/0x218 [rfcomm]
 
-> $ grep -F 'run #' bisect.txt\?x\=13220283200000 | wc -l
-> 168
-> $ grep -F 'Connection timed out' bisect.txt\?x\=13220283200000 | wc -l
-> 108
-> $ grep -F 'crashed' bisect.txt\?x\=13220283200000
-> run #0: crashed: WARNING: ODEBUG bug in netdev_freemem
-> run #0: crashed: WARNING: ODEBUG bug in netdev_freemem
-> run #1: crashed: INFO: rcu detected stall in corrupted
-> run #0: crashed: INFO: rcu detected stall in sys_sendfile64
-> run #0: crashed: INFO: rcu detected stall in corrupted
-> run #4: crashed: INFO: rcu detected stall in sys_sendfile64
-> run #0: crashed: INFO: rcu detected stall in corrupted
-> run #1: crashed: INFO: rcu detected stall in corrupted
-> run #0: crashed: INFO: rcu detected stall in ext4_file_write_iter
-> run #0: crashed: INFO: rcu detected stall in corrupted
-> run #0: crashed: INFO: rcu detected stall in sendfile64
-> run #0: crashed: INFO: rcu detected stall in corrupted
-> run #1: crashed: INFO: rcu detected stall in sendfile64
-> run #0: crashed: INFO: rcu detected stall in ext4_file_write_iter
-> run #1: crashed: INFO: rcu detected stall in corrupted
-> run #0: crashed: INFO: rcu detected stall in corrupted
-> run #0: crashed: INFO: rcu detected stall in corrupted
-> run #0: crashed: INFO: rcu detected stall in corrupted
-> run #1: crashed: INFO: rcu detected stall in corrupted
-> run #0: crashed: INFO: rcu detected stall in corrupted
-> run #3: crashed: INFO: rcu detected stall in corrupted
-> run #0: crashed: INFO: rcu detected stall in do_iter_write
+Add a parameter to bt_accept_enqueue() to indicate whether the
+function is called from BH context, and acquire the socket lock
+with bh_lock_sock_nested() if that's the case.
+
+Also adapt all callers of bt_accept_enqueue() to pass the new
+parameter:
+
+- l2cap_sock_new_connection_cb()
+  - uses lock_sock() to lock the parent socket => process context
+
+- rfcomm_connect_ind()
+  - acquires the parent socket lock with bh_lock_sock() => BH
+    context
+
+- __sco_chan_add()
+  - called from sco_chan_add(), which is called from sco_connect().
+    parent is NULL, hence bt_accept_enqueue() isn't called in this
+    code path and we can ignore it
+  - also called from sco_conn_ready(). uses bh_lock_sock() to acquire
+    the parent lock => BH context
+
+Fixes: e16337622016 ("Bluetooth: Handle bt_accept_enqueue() socket atomically")
+Signed-off-by: Matthias Kaehlcke <mka@chromium.org>
+Reviewed-by: Douglas Anderson <dianders@chromium.org>
+Signed-off-by: Marcel Holtmann <marcel@holtmann.org>
+Cc: stable@vger.kernel.org
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+
+---
+ include/net/bluetooth/bluetooth.h |    2 +-
+ net/bluetooth/af_bluetooth.c      |   16 +++++++++++++---
+ net/bluetooth/l2cap_sock.c        |    2 +-
+ net/bluetooth/rfcomm/sock.c       |    2 +-
+ net/bluetooth/sco.c               |    2 +-
+ 5 files changed, 17 insertions(+), 7 deletions(-)
+
+--- a/include/net/bluetooth/bluetooth.h
++++ b/include/net/bluetooth/bluetooth.h
+@@ -273,7 +273,7 @@ int  bt_sock_ioctl(struct socket *sock,
+ int  bt_sock_wait_state(struct sock *sk, int state, unsigned long timeo);
+ int  bt_sock_wait_ready(struct sock *sk, unsigned long flags);
+ 
+-void bt_accept_enqueue(struct sock *parent, struct sock *sk);
++void bt_accept_enqueue(struct sock *parent, struct sock *sk, bool bh);
+ void bt_accept_unlink(struct sock *sk);
+ struct sock *bt_accept_dequeue(struct sock *parent, struct socket *newsock);
+ 
+--- a/net/bluetooth/af_bluetooth.c
++++ b/net/bluetooth/af_bluetooth.c
+@@ -154,15 +154,25 @@ void bt_sock_unlink(struct bt_sock_list
+ }
+ EXPORT_SYMBOL(bt_sock_unlink);
+ 
+-void bt_accept_enqueue(struct sock *parent, struct sock *sk)
++void bt_accept_enqueue(struct sock *parent, struct sock *sk, bool bh)
+ {
+ 	BT_DBG("parent %p, sk %p", parent, sk);
+ 
+ 	sock_hold(sk);
+-	lock_sock_nested(sk, SINGLE_DEPTH_NESTING);
++
++	if (bh)
++		bh_lock_sock_nested(sk);
++	else
++		lock_sock_nested(sk, SINGLE_DEPTH_NESTING);
++
+ 	list_add_tail(&bt_sk(sk)->accept_q, &bt_sk(parent)->accept_q);
+ 	bt_sk(sk)->parent = parent;
+-	release_sock(sk);
++
++	if (bh)
++		bh_unlock_sock(sk);
++	else
++		release_sock(sk);
++
+ 	parent->sk_ack_backlog++;
+ }
+ EXPORT_SYMBOL(bt_accept_enqueue);
+--- a/net/bluetooth/l2cap_sock.c
++++ b/net/bluetooth/l2cap_sock.c
+@@ -1253,7 +1253,7 @@ static struct l2cap_chan *l2cap_sock_new
+ 
+ 	l2cap_sock_init(sk, parent);
+ 
+-	bt_accept_enqueue(parent, sk);
++	bt_accept_enqueue(parent, sk, false);
+ 
+ 	release_sock(parent);
+ 
+--- a/net/bluetooth/rfcomm/sock.c
++++ b/net/bluetooth/rfcomm/sock.c
+@@ -988,7 +988,7 @@ int rfcomm_connect_ind(struct rfcomm_ses
+ 	rfcomm_pi(sk)->channel = channel;
+ 
+ 	sk->sk_state = BT_CONFIG;
+-	bt_accept_enqueue(parent, sk);
++	bt_accept_enqueue(parent, sk, true);
+ 
+ 	/* Accept connection and return socket DLC */
+ 	*d = rfcomm_pi(sk)->dlc;
+--- a/net/bluetooth/sco.c
++++ b/net/bluetooth/sco.c
+@@ -193,7 +193,7 @@ static void __sco_chan_add(struct sco_co
+ 	conn->sk = sk;
+ 
+ 	if (parent)
+-		bt_accept_enqueue(parent, sk);
++		bt_accept_enqueue(parent, sk, true);
+ }
+ 
+ static int sco_chan_add(struct sco_conn *conn, struct sock *sk,
+
+
