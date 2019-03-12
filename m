@@ -7,51 +7,51 @@ X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9D900C43381
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 17:57:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AA043C10F00
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 17:57:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6FC6421734
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 17:57:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 725E521734
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 17:57:57 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1552413470;
-	bh=XZz9T2XT3JJuW+QfvO1ssLiLbQjJ0oPDZqb0vLxPm7w=;
+	s=default; t=1552413477;
+	bh=LSrNUnl7tvD8p3jC1rSuHoR9OyFbw2KRR7wqIPJ+kNg=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=jZHuI/8EWQX5PYIfgTZMQeSi+1hmn6bce0h+yB9CbcYJHkaNUlDpUsemrKDBkF+kf
-	 5ftYvB1Yop1J7LUoSLNs35rkqZbZhfBkoHsNKenJyTyJS7gOTA3rCiz+tbpLkNXfeC
-	 uqijuKuH1uw3kwqi4QgA5aInjeOGoz4DHViTwsH0=
+	b=H5lE5aihWw64reZ79kns5LxoQXfWBQZ8tMG+LQ5cbA8CQdVDWVvir2aY/JKQ2aWvm
+	 OAsO7121LCsjLTLhvSNudtYMBLTBLJDWCnPPUM9HvOPcBKg7J1LvLBu4EMVnulDGBS
+	 zVUHOkJM5sBf8sod5DaFrQQfGayJbtis7bLvlffU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728256AbfCLR5s (ORCPT
+        id S1726422AbfCLRNp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 12 Mar 2019 13:57:48 -0400
-Received: from mail.kernel.org ([198.145.29.99]:51214 "EHLO mail.kernel.org"
+        Tue, 12 Mar 2019 13:13:45 -0400
+Received: from mail.kernel.org ([198.145.29.99]:49208 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727753AbfCLRNq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 12 Mar 2019 13:13:46 -0400
+        id S1727753AbfCLRNC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 12 Mar 2019 13:13:02 -0400
 Received: from localhost (unknown [104.133.8.98])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 2DB16217D4;
-        Tue, 12 Mar 2019 17:13:45 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 5507E2087C;
+        Tue, 12 Mar 2019 17:13:02 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1552410825;
-        bh=XZz9T2XT3JJuW+QfvO1ssLiLbQjJ0oPDZqb0vLxPm7w=;
+        s=default; t=1552410782;
+        bh=LSrNUnl7tvD8p3jC1rSuHoR9OyFbw2KRR7wqIPJ+kNg=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=D/eamEqoN6fInYfb3EQsrxZ8X8cW5ZnlSH6gaE/Dy2IksgdXw9pSSlWMq0h5oHe+/
-         vTpcQdMOh1lcyLFgp1zovaZ6oTYQZLcHv1b5ou7OV7Tx0CNkI4HXoH6LCQIYZgPIn2
-         umeujvLKVehNSyMMkbrUqHpiaoIq6vhIGBuL1S/E=
+        b=kDSEq4ZNDYzT+TNgwwqWlEoe14PCB04IBhh1Ezhwf9HQ8RauokB8ic9cWQyK23IZW
+         C9RRs7+xKPiYjHokqRrvNXrTkb33XUKJ/lsUC5G+xG7TxNmwIrumggOF/xivMnpJSF
+         TyNmNNYLKP27aEfOoIHI295jsnWKcYB7aBSCq9UE=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Guo Ren <ren_guo@c-sky.com>,
-        Mao Han <mao_han@c-sky.com>,
-        Palmer Dabbelt <palmer@sifive.com>,
+        stable@vger.kernel.org, Naresh Kamboju <naresh.kamboju@linaro.org>,
+        Florian Westphal <fw@strlen.de>,
+        Pablo Neira Ayuso <pablo@netfilter.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 010/149] riscv: fixup max_low_pfn with PFN_DOWN.
-Date:   Tue, 12 Mar 2019 10:07:08 -0700
-Message-Id: <20190312170350.391174762@linuxfoundation.org>
+Subject: [PATCH 4.20 122/171] selftests: netfilter: fix config fragment CONFIG_NF_TABLES_INET
+Date:   Tue, 12 Mar 2019 10:08:22 -0700
+Message-Id: <20190312170358.314214813@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
-In-Reply-To: <20190312170349.421581206@linuxfoundation.org>
-References: <20190312170349.421581206@linuxfoundation.org>
+In-Reply-To: <20190312170347.868927101@linuxfoundation.org>
+References: <20190312170347.868927101@linuxfoundation.org>
 User-Agent: quilt/0.65
 X-stable: review
 X-Patchwork-Hint: ignore
@@ -63,50 +63,31 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-4.19-stable review patch.  If anyone has any objections, please let me know.
+4.20-stable review patch.  If anyone has any objections, please let me know.
 
 ------------------
 
-[ Upstream commit 28198c4639b39899a728ac89aea29d2a7a72562f ]
+[ Upstream commit 952b72f89ae23b316da8c1021b18d0c388ad6cc4 ]
 
-max_low_pfn should be pfn_size not byte_size.
+In selftests the config fragment for netfilter was added as
+NF_TABLES_INET=y and this patch correct it as CONFIG_NF_TABLES_INET=y
 
-Signed-off-by: Guo Ren <ren_guo@c-sky.com>
-Signed-off-by: Mao Han <mao_han@c-sky.com>
-Signed-off-by: Palmer Dabbelt <palmer@sifive.com>
+Signed-off-by: Naresh Kamboju <naresh.kamboju@linaro.org>
+Acked-by: Florian Westphal <fw@strlen.de>
+Signed-off-by: Pablo Neira Ayuso <pablo@netfilter.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/riscv/kernel/setup.c | 2 +-
- arch/riscv/mm/init.c      | 3 ++-
- 2 files changed, 3 insertions(+), 2 deletions(-)
+ tools/testing/selftests/netfilter/config | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/arch/riscv/kernel/setup.c b/arch/riscv/kernel/setup.c
-index b2d26d9d8489..9713d4e8c22b 100644
---- a/arch/riscv/kernel/setup.c
-+++ b/arch/riscv/kernel/setup.c
-@@ -186,7 +186,7 @@ static void __init setup_bootmem(void)
- 	BUG_ON(mem_size == 0);
- 
- 	set_max_mapnr(PFN_DOWN(mem_size));
--	max_low_pfn = memblock_end_of_DRAM();
-+	max_low_pfn = PFN_DOWN(memblock_end_of_DRAM());
- 
- #ifdef CONFIG_BLK_DEV_INITRD
- 	setup_initrd();
-diff --git a/arch/riscv/mm/init.c b/arch/riscv/mm/init.c
-index 58a522f9bcc3..200a4b315e15 100644
---- a/arch/riscv/mm/init.c
-+++ b/arch/riscv/mm/init.c
-@@ -29,7 +29,8 @@ static void __init zone_sizes_init(void)
- 	unsigned long max_zone_pfns[MAX_NR_ZONES] = { 0, };
- 
- #ifdef CONFIG_ZONE_DMA32
--	max_zone_pfns[ZONE_DMA32] = PFN_DOWN(min(4UL * SZ_1G, max_low_pfn));
-+	max_zone_pfns[ZONE_DMA32] = PFN_DOWN(min(4UL * SZ_1G,
-+			(unsigned long) PFN_PHYS(max_low_pfn)));
- #endif
- 	max_zone_pfns[ZONE_NORMAL] = max_low_pfn;
- 
+diff --git a/tools/testing/selftests/netfilter/config b/tools/testing/selftests/netfilter/config
+index 1017313e41a8..59caa8f71cd8 100644
+--- a/tools/testing/selftests/netfilter/config
++++ b/tools/testing/selftests/netfilter/config
+@@ -1,2 +1,2 @@
+ CONFIG_NET_NS=y
+-NF_TABLES_INET=y
++CONFIG_NF_TABLES_INET=y
 -- 
 2.19.1
 
