@@ -2,164 +2,79 @@ Return-Path: <SRS0=J4ZE=RP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_MUTT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 246B4C43381
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 09:33:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A1032C43381
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 09:33:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E390F214AE
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 09:33:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7D1F6214AE
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 09:33:50 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726510AbfCLJdo (ORCPT
+        id S1726580AbfCLJdt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 12 Mar 2019 05:33:44 -0400
-Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:58334 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1725767AbfCLJdo (ORCPT
+        Tue, 12 Mar 2019 05:33:49 -0400
+Received: from cloudserver094114.home.pl ([79.96.170.134]:58971 "EHLO
+        cloudserver094114.home.pl" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725767AbfCLJdp (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 12 Mar 2019 05:33:44 -0400
-Received: from pps.filterd (m0098416.ppops.net [127.0.0.1])
-        by mx0b-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x2C9T5R9041927
-        for <linux-kernel@vger.kernel.org>; Tue, 12 Mar 2019 05:33:42 -0400
-Received: from e12.ny.us.ibm.com (e12.ny.us.ibm.com [129.33.205.202])
-        by mx0b-001b2d01.pphosted.com with ESMTP id 2r691a54en-1
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
-        for <linux-kernel@vger.kernel.org>; Tue, 12 Mar 2019 05:33:42 -0400
-Received: from localhost
-        by e12.ny.us.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
-        for <linux-kernel@vger.kernel.org> from <ego@linux.vnet.ibm.com>;
-        Tue, 12 Mar 2019 09:33:41 -0000
-Received: from b01cxnp22033.gho.pok.ibm.com (9.57.198.23)
-        by e12.ny.us.ibm.com (146.89.104.199) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
-        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
-        Tue, 12 Mar 2019 09:33:40 -0000
-Received: from b01ledav005.gho.pok.ibm.com (b01ledav005.gho.pok.ibm.com [9.57.199.110])
-        by b01cxnp22033.gho.pok.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x2C9XdW220185218
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Tue, 12 Mar 2019 09:33:39 GMT
-Received: from b01ledav005.gho.pok.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 244B6AE05C;
-        Tue, 12 Mar 2019 09:33:39 +0000 (GMT)
-Received: from b01ledav005.gho.pok.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 6E626AE062;
-        Tue, 12 Mar 2019 09:33:38 +0000 (GMT)
-Received: from sofia.ibm.com (unknown [9.102.1.56])
-        by b01ledav005.gho.pok.ibm.com (Postfix) with ESMTP;
-        Tue, 12 Mar 2019 09:33:38 +0000 (GMT)
-Received: by sofia.ibm.com (Postfix, from userid 1000)
-        id F0F7F2E2D40; Tue, 12 Mar 2019 15:02:46 +0530 (IST)
-Date:   Tue, 12 Mar 2019 15:02:46 +0530
-From:   Gautham R Shenoy <ego@linux.vnet.ibm.com>
-To:     Thiago Jung Bauermann <bauerman@linux.ibm.com>
-Cc:     linuxppc-dev@lists.ozlabs.org, linux-kernel@vger.kernel.org,
-        Gautham R Shenoy <ego@linux.vnet.ibm.com>,
-        Michael Bringmann <mwb@linux.vnet.ibm.com>,
-        Tyrel Datwyler <tyreld@linux.vnet.ibm.com>,
-        Vaidyanathan Srinivasan <svaidy@linux.vnet.ibm.com>
-Subject: Re: [PATCH v3] powerpc/pseries: Only wait for dying CPU after call
- to rtas_stop_self()
-Reply-To: ego@linux.vnet.ibm.com
-References: <20190311193517.23756-1-bauerman@linux.ibm.com>
+        Tue, 12 Mar 2019 05:33:45 -0400
+Received: from 79.184.254.189.ipv4.supernova.orange.pl (79.184.254.189) (HELO aspire.rjw.lan)
+ by serwer1319399.home.pl (79.96.170.134) with SMTP (IdeaSmtpServer 0.83.213)
+ id 1498e6cd187dbb19; Tue, 12 Mar 2019 10:33:43 +0100
+From:   "Rafael J. Wysocki" <rjw@rjwysocki.net>
+To:     Sudeep Holla <sudeep.holla@arm.com>,
+        Jeremy Linton <jeremy.linton@arm.com>
+Cc:     linux-acpi@vger.kernel.org, lenb@kernel.org,
+        Lorenzo.Pieralisi@arm.com, linux-arm-kernel@lists.infradead.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] ACPI/PPTT: Simplify leaf node detection.
+Date:   Tue, 12 Mar 2019 10:31:59 +0100
+Message-ID: <3893217.oT7ovuD9xH@aspire.rjw.lan>
+In-Reply-To: <20190304100208.GA32379@e107155-lin>
+References: <20190301185221.608501-1-jeremy.linton@arm.com> <20190304100208.GA32379@e107155-lin>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190311193517.23756-1-bauerman@linux.ibm.com>
-User-Agent: Mutt/1.5.23 (2014-03-12)
-X-TM-AS-GCONF: 00
-x-cbid: 19031209-0060-0000-0000-0000031ABAAF
-X-IBM-SpamModules-Scores: 
-X-IBM-SpamModules-Versions: BY=3.00010743; HX=3.00000242; KW=3.00000007;
- PH=3.00000004; SC=3.00000281; SDB=6.01173221; UDB=6.00613390; IPR=6.00953880;
- MB=3.00025943; MTD=3.00000008; XFM=3.00000015; UTC=2019-03-12 09:33:40
-X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
-x-cbparentid: 19031209-0061-0000-0000-0000489509C5
-Message-Id: <20190312093246.GA18313@in.ibm.com>
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-03-12_06:,,
- signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
- malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
- clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
- mlxlogscore=999 adultscore=0 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.0.1-1810050000 definitions=main-1903120069
+Content-Transfer-Encoding: 7Bit
+Content-Type: text/plain; charset="us-ascii"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hello Thiago,
+On Monday, March 4, 2019 11:02:08 AM CET Sudeep Holla wrote:
+> On Fri, Mar 01, 2019 at 12:52:21PM -0600, Jeremy Linton wrote:
+> > ACPI 6.3 bumps the PPTT table revision and adds a LEAF_NODE flag.
+> > This allows us to avoid a second pass through the table to assure
+> > that the node in question is a leaf.
+> >
+> 
+> Reviewed-by:Sudeep Holla <sudeep.holla@arm.com>
+> 
+> --
+> Regards,
+> Sudeep
+> 
+> > Signed-off-by: Jeremy Linton <jeremy.linton@arm.com>
+> > ---
+> >  drivers/acpi/pptt.c | 3 +++
+> >  1 file changed, 3 insertions(+)
+> >
+> > diff --git a/drivers/acpi/pptt.c b/drivers/acpi/pptt.c
+> > index ad31c50de3be..065c4fc245d1 100644
+> > --- a/drivers/acpi/pptt.c
+> > +++ b/drivers/acpi/pptt.c
+> > @@ -209,6 +209,9 @@ static int acpi_pptt_leaf_node(struct acpi_table_header *table_hdr,
+> >  	struct acpi_pptt_processor *cpu_node;
+> >  	u32 proc_sz;
+> >
+> > +	if (table_hdr->revision > 1)
+> > +		return (node->flags & ACPI_PPTT_ACPI_LEAF_NODE);
+> > +
+> >  	table_end = (unsigned long)table_hdr + table_hdr->length;
+> >  	node_entry = ACPI_PTR_DIFF(node, table_hdr);
+> >  	entry = ACPI_ADD_PTR(struct acpi_subtable_header, table_hdr,
+> > --
 
-On Mon, Mar 11, 2019 at 04:35:17PM -0300, Thiago Jung Bauermann wrote:
-> When testing DLPAR CPU add/remove on a system under stress,
-> pseries_cpu_die() doesn't wait long enough for a CPU to die:
-> 
-> [  446.983944] cpu 148 (hwid 148) Ready to die...
-> [  446.984062] cpu 149 (hwid 149) Ready to die...
-> [  446.993518] cpu 150 (hwid 150) Ready to die...
-> [  446.993543] Querying DEAD? cpu 150 (150) shows 2
-> [  446.994098] cpu 151 (hwid 151) Ready to die...
-> [  447.133726] cpu 136 (hwid 136) Ready to die...
-> [  447.403532] cpu 137 (hwid 137) Ready to die...
-> [  447.403772] cpu 138 (hwid 138) Ready to die...
-> [  447.403839] cpu 139 (hwid 139) Ready to die...
-> [  447.403887] cpu 140 (hwid 140) Ready to die...
-> [  447.403937] cpu 141 (hwid 141) Ready to die...
-> [  447.403979] cpu 142 (hwid 142) Ready to die...
-> [  447.404038] cpu 143 (hwid 143) Ready to die...
-> [  447.513546] cpu 128 (hwid 128) Ready to die...
-> [  447.693533] cpu 129 (hwid 129) Ready to die...
-> [  447.693999] cpu 130 (hwid 130) Ready to die...
-> [  447.703530] cpu 131 (hwid 131) Ready to die...
-> [  447.704087] Querying DEAD? cpu 132 (132) shows 2
-> [  447.704102] cpu 132 (hwid 132) Ready to die...
-> [  447.713534] cpu 133 (hwid 133) Ready to die...
-> [  447.714064] Querying DEAD? cpu 134 (134) shows 2
-> 
-> This is a race between one CPU stopping and another one calling
-> pseries_cpu_die() to wait for it to stop. That function does a short busy
-> loop calling RTAS query-cpu-stopped-state on the stopping CPU to verify
-> that it is stopped, but I think there's a lot for the stopping CPU to do
-> which may take longer than this loop allows.
-> 
-> As can be seen in the dmesg right before or after the "Querying DEAD?"
-> messages, if pseries_cpu_die() waited a little longer it would have seen
-> the CPU in the stopped state.
-> 
-> What I think is going on is that CPU 134 was inactive at the time it was
-> unplugged. In that case, dlpar_offline_cpu() calls H_PROD on that CPU and
-> immediately calls pseries_cpu_die(). Meanwhile, the prodded CPU activates
-> and start the process of stopping itself. The busy loop is not long enough
-> to allow for the CPU to wake up and complete the stopping process.
-> 
-> This can be a problem because if the busy loop finishes too early, then the
-> kernel may offline another CPU before the previous one finished dying,
-> which would lead to two concurrent calls to rtas-stop-self, which is
-> prohibited by the PAPR.
-> 
-> We can make the race a lot more even if we only start querying if the CPU
-> is stopped when the stopping CPU is close to call rtas_stop_self(). Since
-> pseries_mach_cpu_die() sets the CPU current state to offline almost
-> immediately before calling rtas_stop_self(), we use that as a signal that
-> it is either already stopped or very close to that point, and we can start
-> the busy loop.
-> 
-> As suggested by Michael Ellerman, this patch also changes the busy loop to
-> wait for a fixed amount of wall time. Based on the measurements that
-> Gautham did on a POWER9 system, in successful cases of
-> smp_query_cpu_stopped(cpu) returning affirmative, the maximum time spent
-> inside the loop was was 10 ms. This patch loops for 20 ms just be sure.
-> 
-> Signed-off-by: Thiago Jung Bauermann <bauerman@linux.ibm.com>
-
-Thanks for this version. I have tested the patch and we no longer see
-the "Querying DEAD? cpu X (Y) shows 2" message.
-
-
-Tested-and-Reviewed-by: Gautham R. Shenoy <ego@linux.vnet.ibm.com>
-
-
---
-Thanks and Regards
-gautham.
+Patch applied, thanks!
 
