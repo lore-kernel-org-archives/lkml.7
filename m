@@ -2,58 +2,53 @@ Return-Path: <SRS0=J4ZE=RP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4B9FEC4360F
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 17:23:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CBBD7C10F00
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 17:23:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1F3DA217F4
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 17:23:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A07CE217D4
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 17:23:50 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1552411426;
-	bh=P/nOo7cIVFX58E2W/z2nPmlxswPq2/meKMdJvABwKMU=;
+	s=default; t=1552411430;
+	bh=f934MpeFxRpGpWuCjSD+9ctHNQcl3806edZJAO7H+gE=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=HW5z7quLf1gziJ4Kt0zaVzMeZz+PbhoDgtPe6QlyxlJspvAs07OTLqy93pVjw7aLw
-	 MT6CrwPjS2roumq9vN9YbXlgCf1wOJbxktRJwln2AuYkImj851Bq5rdnBzXZJwcQO0
-	 eQ9jRzYEVhgh8iIGuDQk5IEujzy9pbfFkGECWsa0=
+	b=HLoCb+XlL0pQAn+Y9L4Qqg/bBIlr7CXLYxri9cQlJZSkRpnluA2CVXfypxqTQKk90
+	 ABhRQkj1dy3Er2w/u6TIxRR+AJsq1n79nnRZCUcMxDFaOAFCVlJvjba70c94oIbrGJ
+	 ngtZG6Won+Is5eUVwcvgKQTzqi8ryREkH3KlB3Zg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729849AbfCLRR6 (ORCPT
+        id S1729839AbfCLRR5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 12 Mar 2019 13:17:58 -0400
-Received: from mail.kernel.org ([198.145.29.99]:60186 "EHLO mail.kernel.org"
+        Tue, 12 Mar 2019 13:17:57 -0400
+Received: from mail.kernel.org ([198.145.29.99]:59996 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729417AbfCLRRD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 12 Mar 2019 13:17:03 -0400
+        id S1729385AbfCLRQ7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 12 Mar 2019 13:16:59 -0400
 Received: from localhost (unknown [104.133.8.98])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D16BA206DF;
-        Tue, 12 Mar 2019 17:17:02 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 8A3E12184E;
+        Tue, 12 Mar 2019 17:16:58 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1552411022;
-        bh=P/nOo7cIVFX58E2W/z2nPmlxswPq2/meKMdJvABwKMU=;
+        s=default; t=1552411018;
+        bh=f934MpeFxRpGpWuCjSD+9ctHNQcl3806edZJAO7H+gE=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=zdMIqLkj2Im2cioGk3OL/3KV2rt7IOEt+m2kb6hWFXikP48CGEkv1f4s4mxi+AIop
-         2B522SJi6LKcSORs58SlNyAILOzpiRyo3zM8W/aNno/YRRkFoiQRWsvLT6P3Wf88Dd
-         NK0vTMH+I/p8bqUZJK7sG2lxer57pYOKeg7aYZKk=
+        b=C7kM2E4qBOLGtPGmpsdu/29Pxt0dWsNAVR+++1v3JxJC9M9KkNAiiCdNbQS5X1wLN
+         QyONviMVkh9rYwSUf9RipaDZkBi/uwPwf5phmoq4d7TEbwCbhLBMk1QPxsP68kees9
+         5OsQWzJug1Z0XoPmCPPlbPPdm2WZ5qUN4I460OiY=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Jiri Olsa <jolsa@kernel.org>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Masami Hiramatsu <mhiramat@kernel.org>,
-        Michael Petlan <mpetlan@redhat.com>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Nick Clifton <nickc@redhat.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Arnaldo Carvalho de Melo <acme@redhat.com>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.14 112/135] perf symbols: Filter out hidden symbols from labels
-Date:   Tue, 12 Mar 2019 10:09:19 -0700
-Message-Id: <20190312170351.539189014@linuxfoundation.org>
+        stable@vger.kernel.org, Markus Reichl <m.reichl@fivetechno.de>,
+        Ulf Hansson <ulf.hansson@linaro.org>,
+        Marek Szyprowski <m.szyprowski@samsung.com>,
+        Krzysztof Kozlowski <krzk@kernel.org>
+Subject: [PATCH 4.14 125/135] ARM: dts: exynos: Fix pinctrl definition for eMMC RTSN line on Odroid X2/U3
+Date:   Tue, 12 Mar 2019 10:09:32 -0700
+Message-Id: <20190312170352.651075725@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190312170341.127810985@linuxfoundation.org>
 References: <20190312170341.127810985@linuxfoundation.org>
@@ -72,94 +67,72 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-[ Upstream commit 59a17706915fe5ea6f711e1f92d4fb706bce07fe ]
+From: Marek Szyprowski <m.szyprowski@samsung.com>
 
-When perf is built with the annobin plugin (RHEL8 build) extra symbols
-are added to its binary:
+commit ec33745bccc8f336957c751f4153421cc9ef5a54 upstream.
 
-  # nm perf | grep annobin | head -10
-  0000000000241100 t .annobin_annotate.c
-  0000000000326490 t .annobin_annotate.c
-  0000000000249255 t .annobin_annotate.c_end
-  00000000003283a8 t .annobin_annotate.c_end
-  00000000001bce18 t .annobin_annotate.c_end.hot
-  00000000001bce18 t .annobin_annotate.c_end.hot
-  00000000001bc3e2 t .annobin_annotate.c_end.unlikely
-  00000000001bc400 t .annobin_annotate.c_end.unlikely
-  00000000001bce18 t .annobin_annotate.c.hot
-  00000000001bce18 t .annobin_annotate.c.hot
-  ...
+Commit 225da7e65a03 ("ARM: dts: add eMMC reset line for
+exynos4412-odroid-common") added MMC power sequence for eMMC card of
+Odroid X2/U3. It reused generic sd1_cd pin control configuration node
+and only disabled pull-up. However that time the pinctrl configuration
+was not applied during MMC power sequence driver initialization. This
+has been changed later by commit d97a1e5d7cd2 ("mmc: pwrseq: convert to
+proper platform device").
 
-Those symbols have no use for report or annotation and should be
-skipped.  Moreover they interfere with the DWARF unwind test on the PPC
-arch, where they are mixed with checked symbols and then the test fails:
+It turned out then, that the provided pinctrl configuration is not
+correct, because the eMMC_RTSN line is being re-configured as 'special
+function/card detect function for mmc1 controller' not the simple
+'output', thus the power sequence driver doesn't really set the pin
+value. This in effect broke the reboot of Odroid X2/U3 boards. Fix this
+by providing separate node with eMMC_RTSN pin configuration.
 
-  # perf test dwarf -v
-  59: Test dwarf unwind                                     :
-  --- start ---
-  test child forked, pid 8515
-  unwind: .annobin_dwarf_unwind.c:ip = 0x10dba40dc (0x2740dc)
-  ...
-  got: .annobin_dwarf_unwind.c 0x10dba40dc, expecting test__arch_unwind_sample
-  unwind: failed with 'no error'
+Cc: <stable@vger.kernel.org>
+Reported-by: Markus Reichl <m.reichl@fivetechno.de>
+Suggested-by: Ulf Hansson <ulf.hansson@linaro.org>
+Fixes: 225da7e65a03 ("ARM: dts: add eMMC reset line for exynos4412-odroid-common")
+Signed-off-by: Marek Szyprowski <m.szyprowski@samsung.com>
+Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
-The annobin symbols are defined as NOTYPE/LOCAL/HIDDEN:
-
-  # readelf -s ./perf | grep annobin | head -1
-    40: 00000000001bce4f     0 NOTYPE  LOCAL  HIDDEN    13 .annobin_init.c
-
-They can still pass the check for the label symbol. Adding check for
-HIDDEN and INTERNAL (as suggested by Nick below) visibility and filter
-out such symbols.
-
->   Just to be awkward, if you are going to ignore STV_HIDDEN
->   symbols then you should probably also ignore STV_INTERNAL ones
->   as well...  Annobin does not generate them, but you never know,
->   one day some other tool might create some.
-
-Signed-off-by: Jiri Olsa <jolsa@kernel.org>
-Cc: Alexander Shishkin <alexander.shishkin@linux.intel.com>
-Cc: Masami Hiramatsu <mhiramat@kernel.org>
-Cc: Michael Petlan <mpetlan@redhat.com>
-Cc: Namhyung Kim <namhyung@kernel.org>
-Cc: Nick Clifton <nickc@redhat.com>
-Cc: Peter Zijlstra <peterz@infradead.org>
-Link: http://lkml.kernel.org/r/20190128133526.GD15461@krava
-Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- tools/perf/util/symbol-elf.c | 9 ++++++++-
- 1 file changed, 8 insertions(+), 1 deletion(-)
+ arch/arm/boot/dts/exynos4412-odroid-common.dtsi |   13 ++++++-------
+ 1 file changed, 6 insertions(+), 7 deletions(-)
 
-diff --git a/tools/perf/util/symbol-elf.c b/tools/perf/util/symbol-elf.c
-index 8ad4296de98b..3d39332b3a06 100644
---- a/tools/perf/util/symbol-elf.c
-+++ b/tools/perf/util/symbol-elf.c
-@@ -87,6 +87,11 @@ static inline uint8_t elf_sym__type(const GElf_Sym *sym)
- 	return GELF_ST_TYPE(sym->st_info);
- }
+--- a/arch/arm/boot/dts/exynos4412-odroid-common.dtsi
++++ b/arch/arm/boot/dts/exynos4412-odroid-common.dtsi
+@@ -60,7 +60,7 @@
+ 	};
  
-+static inline uint8_t elf_sym__visibility(const GElf_Sym *sym)
-+{
-+	return GELF_ST_VISIBILITY(sym->st_other);
-+}
+ 	emmc_pwrseq: pwrseq {
+-		pinctrl-0 = <&sd1_cd>;
++		pinctrl-0 = <&emmc_rstn>;
+ 		pinctrl-names = "default";
+ 		compatible = "mmc-pwrseq-emmc";
+ 		reset-gpios = <&gpk1 2 GPIO_ACTIVE_LOW>;
+@@ -161,12 +161,6 @@
+ 	cpu0-supply = <&buck2_reg>;
+ };
+ 
+-/* RSTN signal for eMMC */
+-&sd1_cd {
+-	samsung,pin-pud = <EXYNOS_PIN_PULL_NONE>;
+-	samsung,pin-drv = <EXYNOS4_PIN_DRV_LV1>;
+-};
+-
+ &pinctrl_1 {
+ 	gpio_power_key: power_key {
+ 		samsung,pins = "gpx1-3";
+@@ -184,6 +178,11 @@
+ 		samsung,pins = "gpx3-7";
+ 		samsung,pin-pud = <EXYNOS_PIN_PULL_DOWN>;
+ 	};
 +
- #ifndef STT_GNU_IFUNC
- #define STT_GNU_IFUNC 10
- #endif
-@@ -111,7 +116,9 @@ static inline int elf_sym__is_label(const GElf_Sym *sym)
- 	return elf_sym__type(sym) == STT_NOTYPE &&
- 		sym->st_name != 0 &&
- 		sym->st_shndx != SHN_UNDEF &&
--		sym->st_shndx != SHN_ABS;
-+		sym->st_shndx != SHN_ABS &&
-+		elf_sym__visibility(sym) != STV_HIDDEN &&
-+		elf_sym__visibility(sym) != STV_INTERNAL;
- }
++	emmc_rstn: emmc-rstn {
++		samsung,pins = "gpk1-2";
++		samsung,pin-pud = <EXYNOS_PIN_PULL_NONE>;
++	};
+ };
  
- static bool elf_sym__is_a(GElf_Sym *sym, enum map_type type)
--- 
-2.19.1
-
+ &ehci {
 
 
