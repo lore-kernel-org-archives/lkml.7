@@ -4,52 +4,53 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4C3F1C43381
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 18:04:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E60A5C10F00
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 18:05:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 18891214AF
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 18:04:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AEBEA2087C
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 18:05:04 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1552413899;
-	bh=N8phW9uRuWNzNstu14eZkXH4bE3oClTHRGDjLZC56uY=;
+	s=default; t=1552413904;
+	bh=L2PIsHTZNFxCGffKuf3UuUo7Y0rNJ09W1UE6YPYQS3M=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Qw+c9hU/oikh14WVjCxffQGieUa9T6ds7QZzgiW558fJAme5kqDi0dP314DZsSxCC
-	 NAKhFzsh9L/V4ZqkeGNw2sf/tiJzOwRnX71DKZifKY/l0qhPL5CUCS2z/9vdS0rjjM
-	 EeXgRgUbzBwV0x0NlL076DQYhRCEyBki07kLWoIk=
+	b=p/k/jDnFbOC8vQiOI03wpo9U5qX9rdA1EdGi+4ZrauuufHnnpNzhFVaGa0AEEfWvN
+	 uCHiz8tnGfVXiwy/8u4gQw+z92vvVfUfJuqGAY82H2JbF/OSEYmUfce08UcscEeV5z
+	 9s6YCAKBLH+WwoDpb+VKb99bFov7Lnpy4DgSiQwU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728715AbfCLSEv (ORCPT
+        id S1727602AbfCLRMm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 12 Mar 2019 14:04:51 -0400
-Received: from mail.kernel.org ([198.145.29.99]:48396 "EHLO mail.kernel.org"
+        Tue, 12 Mar 2019 13:12:42 -0400
+Received: from mail.kernel.org ([198.145.29.99]:47440 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727615AbfCLRMo (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 12 Mar 2019 13:12:44 -0400
+        id S1727420AbfCLRMX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 12 Mar 2019 13:12:23 -0400
 Received: from localhost (unknown [104.133.8.98])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id A8868206DF;
-        Tue, 12 Mar 2019 17:12:43 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 448A72184C;
+        Tue, 12 Mar 2019 17:12:22 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1552410763;
-        bh=N8phW9uRuWNzNstu14eZkXH4bE3oClTHRGDjLZC56uY=;
+        s=default; t=1552410742;
+        bh=L2PIsHTZNFxCGffKuf3UuUo7Y0rNJ09W1UE6YPYQS3M=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=ywc9Lly1LNYGgyHj8kaf3WLu2wwac0mg6rV/tcJ9szQIaxRKSv0OFgQqiR3HXXWIH
-         yO/uutj9tpN6Gt3yJiU9RaexpLpW32wwpGXV7jvuP+0GjGMc4YAAliWcR5LjuGmntQ
-         f7NZ9FjvYnLk1Dx9xlxS40ekfSUSQ6FeS1KdmbhI=
+        b=T1DlcjTpkQiGap6AF5EWHV1Npw+WGrbwZYuIDr59SaTL7lfv/6aT8G9l7MEqbwZvU
+         1Xwm28V5TNspsIUyPdU7deZiJK8m5cGckgDfmVPIs+5z1nePGHfgaECyfsnEf/oRVC
+         wjMsJgIzqjdjZOwMNXbDaz+SnKVN4ZBWDyNc9YMQ=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Marek Szyprowski <m.szyprowski@samsung.com>,
-        Alexey Khoroshilov <khoroshilov@ispras.ru>,
-        Felipe Balbi <felipe.balbi@linux.intel.com>,
+        stable@vger.kernel.org, Jan Kara <jack@suse.cz>,
+        Michal Hocko <mhocko@suse.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Al Viro <viro@ZenIV.linux.org.uk>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.20 097/171] usb: dwc3: exynos: Fix error handling of clk_prepare_enable
-Date:   Tue, 12 Mar 2019 10:07:57 -0700
-Message-Id: <20190312170356.346424616@linuxfoundation.org>
+Subject: [PATCH 4.20 067/171] fs/drop_caches.c: avoid softlockups in drop_pagecache_sb()
+Date:   Tue, 12 Mar 2019 10:07:27 -0700
+Message-Id: <20190312170353.948978221@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190312170347.868927101@linuxfoundation.org>
 References: <20190312170347.868927101@linuxfoundation.org>
@@ -68,45 +69,55 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-[ Upstream commit 512e6fb589bc18f9321457632e89b95017447db9 ]
+[ Upstream commit c27d82f52f75fc9d8d9d40d120d2a96fdeeada5e ]
 
-If clk_prepare_enable() fails in dwc3_exynos_probe() or in
-dwc3_exynos_resume(), exynos->clks[0] is left undisabled
-because of usage preincrement in while condition.
+When superblock has lots of inodes without any pagecache (like is the
+case for /proc), drop_pagecache_sb() will iterate through all of them
+without dropping sb->s_inode_list_lock which can lead to softlockups
+(one of our customers hit this).
 
-Found by Linux Driver Verification project (linuxtesting.org).
+Fix the problem by going to the slow path and doing cond_resched() in
+case the process needs rescheduling.
 
-Fixes: 9f2168367a0a ("usb: dwc3: exynos: Rework clock handling and prepare for new variants")
-Acked-by: Marek Szyprowski <m.szyprowski@samsung.com>
-Signed-off-by: Alexey Khoroshilov <khoroshilov@ispras.ru>
-Signed-off-by: Felipe Balbi <felipe.balbi@linux.intel.com>
+Link: http://lkml.kernel.org/r/20190114085343.15011-1-jack@suse.cz
+Signed-off-by: Jan Kara <jack@suse.cz>
+Acked-by: Michal Hocko <mhocko@suse.com>
+Reviewed-by: Andrew Morton <akpm@linux-foundation.org>
+Cc: Al Viro <viro@ZenIV.linux.org.uk>
+Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
+Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/usb/dwc3/dwc3-exynos.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ fs/drop_caches.c | 8 +++++++-
+ 1 file changed, 7 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/usb/dwc3/dwc3-exynos.c b/drivers/usb/dwc3/dwc3-exynos.c
-index cb7fcd7c0ad8..c1e9ea621f41 100644
---- a/drivers/usb/dwc3/dwc3-exynos.c
-+++ b/drivers/usb/dwc3/dwc3-exynos.c
-@@ -78,7 +78,7 @@ static int dwc3_exynos_probe(struct platform_device *pdev)
- 	for (i = 0; i < exynos->num_clks; i++) {
- 		ret = clk_prepare_enable(exynos->clks[i]);
- 		if (ret) {
--			while (--i > 0)
-+			while (i-- > 0)
- 				clk_disable_unprepare(exynos->clks[i]);
- 			return ret;
+diff --git a/fs/drop_caches.c b/fs/drop_caches.c
+index 82377017130f..d31b6c72b476 100644
+--- a/fs/drop_caches.c
++++ b/fs/drop_caches.c
+@@ -21,8 +21,13 @@ static void drop_pagecache_sb(struct super_block *sb, void *unused)
+ 	spin_lock(&sb->s_inode_list_lock);
+ 	list_for_each_entry(inode, &sb->s_inodes, i_sb_list) {
+ 		spin_lock(&inode->i_lock);
++		/*
++		 * We must skip inodes in unusual state. We may also skip
++		 * inodes without pages but we deliberately won't in case
++		 * we need to reschedule to avoid softlockups.
++		 */
+ 		if ((inode->i_state & (I_FREEING|I_WILL_FREE|I_NEW)) ||
+-		    (inode->i_mapping->nrpages == 0)) {
++		    (inode->i_mapping->nrpages == 0 && !need_resched())) {
+ 			spin_unlock(&inode->i_lock);
+ 			continue;
  		}
-@@ -223,7 +223,7 @@ static int dwc3_exynos_resume(struct device *dev)
- 	for (i = 0; i < exynos->num_clks; i++) {
- 		ret = clk_prepare_enable(exynos->clks[i]);
- 		if (ret) {
--			while (--i > 0)
-+			while (i-- > 0)
- 				clk_disable_unprepare(exynos->clks[i]);
- 			return ret;
- 		}
+@@ -30,6 +35,7 @@ static void drop_pagecache_sb(struct super_block *sb, void *unused)
+ 		spin_unlock(&inode->i_lock);
+ 		spin_unlock(&sb->s_inode_list_lock);
+ 
++		cond_resched();
+ 		invalidate_mapping_pages(inode->i_mapping, 0, -1);
+ 		iput(toput_inode);
+ 		toput_inode = inode;
 -- 
 2.19.1
 
