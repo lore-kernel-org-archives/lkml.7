@@ -5,110 +5,126 @@ X-Spam-Level:
 X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	MAILING_LIST_MULTI,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A93D5C43381
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 19:46:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 872EBC43381
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 19:48:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7F3592087C
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 19:46:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 51BC32087C
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 19:48:01 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727085AbfCLTqy (ORCPT
+        id S1726963AbfCLTr7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 12 Mar 2019 15:46:54 -0400
-Received: from iolanthe.rowland.org ([192.131.102.54]:58770 "HELO
-        iolanthe.rowland.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with SMTP id S1726937AbfCLTqy (ORCPT
+        Tue, 12 Mar 2019 15:47:59 -0400
+Received: from gateway34.websitewelcome.com ([192.185.148.109]:47205 "EHLO
+        gateway34.websitewelcome.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726372AbfCLTr7 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 12 Mar 2019 15:46:54 -0400
-Received: (qmail 7719 invoked by uid 2102); 12 Mar 2019 15:46:53 -0400
-Received: from localhost (sendmail-bs@127.0.0.1)
-  by localhost with SMTP; 12 Mar 2019 15:46:53 -0400
-Date:   Tue, 12 Mar 2019 15:46:53 -0400 (EDT)
-From:   Alan Stern <stern@rowland.harvard.edu>
-X-X-Sender: stern@iolanthe.rowland.org
-To:     Ondrej Zary <linux@zary.sk>
-cc:     linux-usb@vger.kernel.org, <linux-kernel@vger.kernel.org>
-Subject: Re: Resetting dead USB controllers automatically?
-In-Reply-To: <201903121520.08430.linux@zary.sk>
-Message-ID: <Pine.LNX.4.44L0.1903121536480.1457-100000@iolanthe.rowland.org>
+        Tue, 12 Mar 2019 15:47:59 -0400
+Received: from cm13.websitewelcome.com (cm13.websitewelcome.com [100.42.49.6])
+        by gateway34.websitewelcome.com (Postfix) with ESMTP id DEFFCA37F89
+        for <linux-kernel@vger.kernel.org>; Tue, 12 Mar 2019 14:47:57 -0500 (CDT)
+Received: from gator4166.hostgator.com ([108.167.133.22])
+        by cmsmtp with SMTP
+        id 3nNVhfGsMYTGM3nNVhtfxi; Tue, 12 Mar 2019 14:47:57 -0500
+X-Authority-Reason: nr=8
+Received: from [189.250.104.39] (port=60080 helo=[192.168.1.76])
+        by gator4166.hostgator.com with esmtpsa (TLSv1.2:ECDHE-RSA-AES128-GCM-SHA256:128)
+        (Exim 4.91)
+        (envelope-from <gustavo@embeddedor.com>)
+        id 1h3nNU-003MwX-FL; Tue, 12 Mar 2019 14:47:57 -0500
+Subject: Re: [PATCH] nvmet-fc: use zero-sized array and struct_size() in
+ kzalloc()
+To:     Christoph Hellwig <hch@lst.de>
+Cc:     James Smart <james.smart@broadcom.com>,
+        Sagi Grimberg <sagi@grimberg.me>,
+        linux-nvme@lists.infradead.org, linux-kernel@vger.kernel.org
+References: <20190223185108.GA6706@embeddedor> <20190312193359.GA5623@lst.de>
+From:   "Gustavo A. R. Silva" <gustavo@embeddedor.com>
+Openpgp: preference=signencrypt
+Autocrypt: addr=gustavo@embeddedor.com; keydata=
+ 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
+ VtSixD1uOgytAP7RWS474w==
+Message-ID: <736bf9ae-7576-79d2-c3e2-8e240c2d505e@embeddedor.com>
+Date:   Tue, 12 Mar 2019 14:47:55 -0500
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.5.1
 MIME-Version: 1.0
-Content-Type: TEXT/PLAIN; charset=US-ASCII
+In-Reply-To: <20190312193359.GA5623@lst.de>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-AntiAbuse: This header was added to track abuse, please include it with any abuse report
+X-AntiAbuse: Primary Hostname - gator4166.hostgator.com
+X-AntiAbuse: Original Domain - vger.kernel.org
+X-AntiAbuse: Originator/Caller UID/GID - [47 12] / [47 12]
+X-AntiAbuse: Sender Address Domain - embeddedor.com
+X-BWhitelist: no
+X-Source-IP: 189.250.104.39
+X-Source-L: No
+X-Exim-ID: 1h3nNU-003MwX-FL
+X-Source: 
+X-Source-Args: 
+X-Source-Dir: 
+X-Source-Sender: ([192.168.1.76]) [189.250.104.39]:60080
+X-Source-Auth: gustavo@embeddedor.com
+X-Email-Count: 5
+X-Source-Cap: Z3V6aWRpbmU7Z3V6aWRpbmU7Z2F0b3I0MTY2Lmhvc3RnYXRvci5jb20=
+X-Local-Domain: yes
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, 12 Mar 2019, Ondrej Zary wrote:
 
-> Hello,
-> my USB controller sometimes dies when plugging a device (maybe because of static):
+
+On 3/12/19 2:33 PM, Christoph Hellwig wrote:
+> Thanks,
 > 
-> [11197.529334] ehci-pci 0000:00:09.2: HC died; cleaning up
-> [11197.529883] uhci_hcd 0000:00:09.0: host system error, PCI problems?
-> [11197.529893] uhci_hcd 0000:00:09.0: host controller process error, something bad happened!
-> [11197.530568] usb 1-1: USB disconnect, device number 7
-> [11197.531224] uhci_hcd 0000:00:09.0: host system error, PCI problems?
-> [11197.531278] uhci_hcd 0000:00:09.0: host controller process error, something bad happened!
-> [11197.532155] uhci_hcd 0000:00:09.0: host system error, PCI problems?
-> [11197.532203] uhci_hcd 0000:00:09.0: host controller process error, something bad happened!
-> [11197.539798] uhci_hcd 0000:00:09.0: host system error, PCI problems?
-> [11197.539865] uhci_hcd 0000:00:09.0: host controller process error, something bad happened!
-> [11197.540092] uhci_hcd 0000:00:09.0: host system error, PCI problems?
-> [11197.540109] uhci_hcd 0000:00:09.0: host controller process error, something bad happened!
-> [11197.541210] uhci_hcd 0000:00:09.0: host system error, PCI problems?
-> [11197.541285] uhci_hcd 0000:00:09.0: host controller process error, something bad happened!
-> [11197.553179] usb 1-2: USB disconnect, device number 3
-> [11197.554087] usb 1-4: USB disconnect, device number 4
-> [11197.580154] uhci_hcd 0000:00:09.0: FGR not stopped yet!
-> [11197.943554] uhci_hcd 0000:00:09.0: host system error, PCI problems?
-> [11197.943717] uhci_hcd 0000:00:09.0: host controller process error, something bad happened!
-> [11197.943735] uhci_hcd 0000:00:09.0: host controller halted, very bad!
-> [11197.943794] uhci_hcd 0000:00:09.0: HCRESET not completed yet!
-> [11197.943809] uhci_hcd 0000:00:09.0: HC died; cleaning up
+> applied to nvme-5.2.
 > 
-> rmmod & modprobe isn't enough to fix it. Reboot is needed to make it work again.
-> Or something like this:
-> #!/bin/sh
-> rmmod ehci-pci
-> rmmod uhci-hcd
-> echo 1 >"/sys/bus/pci/devices/0000:00:09.0/remove"
-> echo 1 >"/sys/bus/pci/devices/0000:00:09.1/remove"
-> echo 1 >"/sys/bus/pci/devices/0000:00:09.2/remove"
-> echo 1 >/sys/bus/pci/rescan
-> modprobe uhci-hcd
-> 
-> I'm not the only one affected by this problem:
-> http://www.google.com/search?q=%22HC+died%3B+cleaning+up%22
 
-It's noticeable that the majority of the reports listed by Google 
-concern xHCI controllers, not UHCI like yours.
+Great.
 
-> Maybe the uhci/ehci drivers (or the USB core?) could reset the controller automatically to improve reliability.
+Thanks, Christoph.
 
-Maybe.  Note that your script above interacts with the PCI core more
-than the USB core, however.  In addition, there are potential problems
-with this approach (for example, getting stuck in a loop that chews up
-large amounts of CPU time because the hardware is in such bad shape
-that resetting it doesn't help).
-
-Given that the problem is pretty rare, and given that it can be fixed
-by running a script like the one you list above, maybe there should be
-a userspace daemon that periodically checks for controller failures and
-tries to reset the hardware when appropriate.  Such a daemon could be
-more flexible than a kernel driver.
-
-> Looks like someone thought about this before but it was never implemented.
-> There's a comment in ehci_handle_controller_death() function in drivers/usb/host/ehci-timer.c:
-> 	/* Not in process context, so don't try to reset the controller */
-
-No, you are misinterpreting that comment.  It doesn't mean resetting
-the controller in order to make the hardware start working again; it
-means resetting the controller to make sure that the hardware is idle
-and isn't doing anything bad or unexpected.
-
-Alan Stern
-
-> The controller is:
-> 00:09.0 USB controller [0c03]: VIA Technologies, Inc. VT82xx/62xx UHCI USB 1.1 Controller [1106:3038] (rev 62)
-> 00:09.1 USB controller [0c03]: VIA Technologies, Inc. VT82xx/62xx UHCI USB 1.1 Controller [1106:3038] (rev 62)
-> 00:09.2 USB controller [0c03]: VIA Technologies, Inc. USB 2.0 [1106:3104] (rev 65)
-
+--
+Gustavo
