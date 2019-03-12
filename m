@@ -2,88 +2,87 @@ Return-Path: <SRS0=J4ZE=RP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,
-	USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D8874C43381
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 18:42:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AB8B0C43381
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 18:43:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9FCCC205C9
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 18:42:56 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1552416176;
-	bh=mdDvoojjODlrZuVeLYKpkYHCEmlcWUCmKYznRpaUn5k=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=2IjHaGiikv37c4t/OyY0LAVtXtzdjkN2bWS2F7km2or2EMJYM7AStKDdTWuP1fUrW
-	 2EIgPzIOZJjGIF0Xo/wHSDaFchgIxoqKFwXZ9uuBF+N+ztkpXUYhO/O4TuIRDy+wih
-	 L+G3tg74b3h9Ftsadah4wenQcFBSqKMr67SCulIE=
+	by mail.kernel.org (Postfix) with ESMTP id 740A32147C
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 18:43:04 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=lechnology.com header.i=@lechnology.com header.b="dXEC5r1Q"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727060AbfCLSmz (ORCPT
+        id S1727080AbfCLSnD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 12 Mar 2019 14:42:55 -0400
-Received: from mail-ot1-f66.google.com ([209.85.210.66]:39109 "EHLO
-        mail-ot1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726415AbfCLSmy (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 12 Mar 2019 14:42:54 -0400
-Received: by mail-ot1-f66.google.com with SMTP id e15so3456079otk.6;
-        Tue, 12 Mar 2019 11:42:54 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=uAUQnioVC46pCTtiM5rsLrIReO2nGYI3AaxW1WGJlpg=;
-        b=nw6S0aOtehPdv5wqm1esRidDAP99M71HsjVZria1xnx7Zb4lQbmzXPx07mjsnyoNJH
-         FSNWvToZdV8H7rjAR8FvSkmw5nc8vFw1eFON4n5dDru2yC95uVG7vhLjVxzfUZRcjxks
-         Fmd1bSyGr3Mgtvrg980Puft548iuZ4FhELHGhctmZzidSzTWrykb1dlpTD0hiT2oiLoF
-         EODoapLN7j3VwZ3aomZHsKDC3tQdjXb/jbseOmDKq3nrckdFrFMSeAlk0jtkNR5yWcXJ
-         GvQu49f4yhRinsk739I9GnnPAR0DoY3B/YNLZARguh0dSNCtm7XkbvCpXXxZtZ8O3V6E
-         SbFA==
-X-Gm-Message-State: APjAAAUDDSKcJgjFZJ2W7iL2aWffIOsTFE2svB+m+vnwtJ7zwCoeSl5A
-        5m2tJRd1CzGdBeY8S1dqYw==
-X-Google-Smtp-Source: APXvYqxrq6Zut3N0FAMEqMhNlPyFWW5rXxB55A0nk6XtlDuIQlu4zWg/pbvFhUT89m9isL+sVEq4Nw==
-X-Received: by 2002:a9d:de4:: with SMTP id 91mr1303920ots.5.1552416173774;
-        Tue, 12 Mar 2019 11:42:53 -0700 (PDT)
-Received: from localhost (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
-        by smtp.gmail.com with ESMTPSA id q5sm3632596otf.73.2019.03.12.11.42.53
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Tue, 12 Mar 2019 11:42:53 -0700 (PDT)
-Date:   Tue, 12 Mar 2019 13:42:52 -0500
-From:   Rob Herring <robh@kernel.org>
-To:     Lubomir Rintel <lkundrak@v3.sk>
-Cc:     Russell King <linux@armlinux.org.uk>,
-        Mark Rutland <mark.rutland@arm.com>,
-        dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, Lubomir Rintel <lkundrak@v3.sk>
-Subject: Re: [PATCH v2 3/5] dt-bindings: display: armada: Improve the LCDC
- documentation
-Message-ID: <20190312184252.GA12611@bogus>
-References: <20190304202006.3863-1-lkundrak@v3.sk>
- <20190304202006.3863-4-lkundrak@v3.sk>
+        Tue, 12 Mar 2019 14:43:03 -0400
+Received: from vern.gendns.com ([98.142.107.122]:57450 "EHLO vern.gendns.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726412AbfCLSnC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 12 Mar 2019 14:43:02 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=lechnology.com; s=default; h=Content-Transfer-Encoding:Content-Type:
+        In-Reply-To:MIME-Version:Date:Message-ID:From:References:Cc:To:Subject:Sender
+        :Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
+        Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
+        List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+        bh=7erBN6YPpPk+Wgdiq5zkj4ka4Ol303vNck9i3O6UejI=; b=dXEC5r1Q3bkfhHNPKOamFl3eCn
+        mFAuO9Hm+qFbJ3N0GlNe9tBQCB3Qjn4+370Iwk+LagRLz2hCOfimeVuESPCudh/9diFeQcqpHLsZl
+        GaKVfRk8g8n/HYy0Cyqg69guEqlr+mcGwFTCDcGkLRUSjG6RI+JCTDeKOY5T6vJ0Gf5Xj1cLuu7TI
+        rDA38jw6e0tVcNMOkysCasewlnvALjNNg3QQ+Gme9zZc+zm6SgpI82lC9l6jSQftNSw9Ij1CRwttO
+        sgY+zqni5fnxEV1dyM0zCfCmKafdE6FB3q8T+W8SFzbKOpKc/Euy8Z+5uqtrJh7e4IMefNKjeCUru
+        pdjNzibw==;
+Received: from 108-198-5-147.lightspeed.okcbok.sbcglobal.net ([108.198.5.147]:37310 helo=[192.168.0.134])
+        by vern.gendns.com with esmtpsa (TLSv1.2:ECDHE-RSA-AES128-GCM-SHA256:128)
+        (Exim 4.91)
+        (envelope-from <david@lechnology.com>)
+        id 1h3mLc-0007Ut-Pz; Tue, 12 Mar 2019 14:41:56 -0400
+Subject: Re: [PATCH v3 07/11] ARM: davinci: dm355: switch to using the
+ clocksource driver
+To:     Bartosz Golaszewski <brgl@bgdev.pl>, Sekhar Nori <nsekhar@ti.com>,
+        Kevin Hilman <khilman@kernel.org>,
+        Daniel Lezcano <daniel.lezcano@linaro.org>,
+        Thomas Gleixner <tglx@linutronix.de>
+Cc:     linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        devicetree@vger.kernel.org,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>
+References: <20190226120633.18200-1-brgl@bgdev.pl>
+ <20190226120633.18200-8-brgl@bgdev.pl>
+From:   David Lechner <david@lechnology.com>
+Message-ID: <5ee788d9-791f-2179-f606-5a18f0524720@lechnology.com>
+Date:   Tue, 12 Mar 2019 13:43:00 -0500
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.4.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190304202006.3863-4-lkundrak@v3.sk>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <20190226120633.18200-8-brgl@bgdev.pl>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-AntiAbuse: This header was added to track abuse, please include it with any abuse report
+X-AntiAbuse: Primary Hostname - vern.gendns.com
+X-AntiAbuse: Original Domain - vger.kernel.org
+X-AntiAbuse: Originator/Caller UID/GID - [47 12] / [47 12]
+X-AntiAbuse: Sender Address Domain - lechnology.com
+X-Get-Message-Sender-Via: vern.gendns.com: authenticated_id: davidmain+lechnology.com/only user confirmed/virtual account not confirmed
+X-Authenticated-Sender: vern.gendns.com: davidmain@lechnology.com
+X-Source: 
+X-Source-Args: 
+X-Source-Dir: 
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon,  4 Mar 2019 21:20:04 +0100, Lubomir Rintel wrote:
-> The port is a child, not a property. And should be accompanied by an
-> example. Plus a pair of cosmetic changes that don't seem to deserve a
-> separate commit.
+On 2/26/19 6:06 AM, Bartosz Golaszewski wrote:
+> From: Bartosz Golaszewski <bgolaszewski@baylibre.com>
 > 
-> Signed-off-by: Lubomir Rintel <lkundrak@v3.sk>
+> We now have a proper clocksource driver for davinci. Switch the dm355
+> platform to using it.
 > 
+> Signed-off-by: Bartosz Golaszewski <bgolaszewski@baylibre.com>
 > ---
-> Changes since v1:
-> - Minor adjustments to the commit message wording.
-> 
->  .../bindings/display/marvell,armada-lcdc.txt     | 16 ++++++++++++++--
->  1 file changed, 14 insertions(+), 2 deletions(-)
-> 
 
-Reviewed-by: Rob Herring <robh@kernel.org>
+Reviewed-by: David Lechner <david@lechnology.com>
+
+
