@@ -2,173 +2,242 @@ Return-Path: <SRS0=J4ZE=RP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.5 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_PASS,USER_AGENT_MUTT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E65C0C43381
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 12:43:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DC998C10F00
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 12:44:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B0BB2206BA
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 12:43:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A17A0214D8
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 12:44:07 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1552394647;
+	bh=iDmTigBJmIE8LZYaENOkngqjl0nhAtLQY+yB7sNcAxQ=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=nEZULuio4vaPCKlbOvA3ZtL3pJSk/UB1tMxtcPcYFeOpxSjk+Rm6evdI2wT1D1Afz
+	 JCofgzHxzamROPXxttMTGSPkOAGSdINMDC/y2MLBNwX3N+Thy5y8DLSoR55GLxkzcF
+	 HNnFljFqB/fn9B7rj7VPEaHEn2ze1m96wannV5ZQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726771AbfCLMns (ORCPT
+        id S1726794AbfCLMoG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 12 Mar 2019 08:43:48 -0400
-Received: from mailproxy02.manitu.net ([217.11.48.66]:44406 "EHLO
-        mailproxy02.manitu.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726280AbfCLMns (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 12 Mar 2019 08:43:48 -0400
-Received: from [192.168.178.20] (aftr-88-217-180-81.dynamic.mnet-online.de [88.217.180.81])
+        Tue, 12 Mar 2019 08:44:06 -0400
+Received: from mail.kernel.org ([198.145.29.99]:36106 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726255AbfCLMoG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 12 Mar 2019 08:44:06 -0400
+Received: from localhost (unknown [12.27.65.221])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        (Authenticated sender: wg@grandegger.com)
-        by mailproxy02.manitu.net (Postfix) with ESMTPSA id A95EF10200DB;
-        Tue, 12 Mar 2019 13:48:09 +0100 (CET)
-Subject: Re: [PATCH v8 1/4] can: m_can: Create a m_can platform framework
-To:     Dan Murphy <dmurphy@ti.com>, mkl@pengutronix.de,
-        davem@davemloft.net
-Cc:     linux-can@vger.kernel.org, netdev@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-References: <20190312121254.8043-1-dmurphy@ti.com>
-From:   Wolfgang Grandegger <wg@grandegger.com>
-Openpgp: preference=signencrypt
-Autocrypt: addr=wg@grandegger.com; prefer-encrypt=mutual; keydata=
- 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
- 8QEfHnPzgykCs2DOOQ==
-Message-ID: <da6a94ba-e843-891f-cbbc-9ba1e9324f77@grandegger.com>
-Date:   Tue, 12 Mar 2019 13:43:41 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.2.1
+        by mail.kernel.org (Postfix) with ESMTPSA id 6FC67206BA;
+        Tue, 12 Mar 2019 12:44:04 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1552394644;
+        bh=iDmTigBJmIE8LZYaENOkngqjl0nhAtLQY+yB7sNcAxQ=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=lm2Fm0WPeOv7qpbtCTa86JSDZU1fE84hBGp4iPwE7TSSAemJgX8Iis+XNm2U2qznC
+         56BC4Wq4ElEZyJk2Xl0ngKw9ElUGTvjJnk64LihwYc+qrd+3q0tffEAX1FMpR6brl2
+         Sls6tvSEwGdFufzrN8NXgnijWVd505Nmw3sejO6w=
+Date:   Tue, 12 Mar 2019 05:44:04 -0700
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     Gao Xiang <gaoxiang25@huawei.com>
+Cc:     stable@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>,
+        linux-erofs@lists.ozlabs.org, Chao Yu <yuchao0@huawei.com>,
+        Chao Yu <chao@kernel.org>, Miao Xie <miaoxie@huawei.com>,
+        Fang Wei <fangwei1@huawei.com>
+Subject: Re: [PATCH RESEND for-5.0 2/2] staging: erofs: compressed_pages
+ should not be accessed again after freed
+Message-ID: <20190312124404.GE14713@kroah.com>
+References: <20190311022932.13539-1-gaoxiang25@huawei.com>
+ <20190311022932.13539-2-gaoxiang25@huawei.com>
 MIME-Version: 1.0
-In-Reply-To: <20190312121254.8043-1-dmurphy@ti.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-GB
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190311022932.13539-2-gaoxiang25@huawei.com>
+User-Agent: Mutt/1.11.3 (2019-02-01)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hello Dan,
-
-Am 12.03.19 um 13:12 schrieb Dan Murphy:
-> Create a m_can platform framework that peripherial
-> devices can register to and use common code and register sets.
-> The peripherial devices may provide read/write and configuration
-> support of the IP.
+On Mon, Mar 11, 2019 at 10:29:32AM +0800, Gao Xiang wrote:
+> commit af692e117cb8cd9d3d844d413095775abc1217f9 upstream.
 > 
-> Signed-off-by: Dan Murphy <dmurphy@ti.com>
+> This patch resolves the following page use-after-free issue,
+> z_erofs_vle_unzip:
+>     ...
+>     for (i = 0; i < nr_pages; ++i) {
+>         ...
+>         z_erofs_onlinepage_endio(page);  (1)
+>     }
+> 
+>     for (i = 0; i < clusterpages; ++i) {
+>         page = compressed_pages[i];
+> 
+>         if (page->mapping == mngda)      (2)
+>             continue;
+>         /* recycle all individual staging pages */
+>         (void)z_erofs_gather_if_stagingpage(page_pool, page); (3)
+>         WRITE_ONCE(compressed_pages[i], NULL);
+>     }
+>     ...
+> 
+> After (1) is executed, page is freed and could be then reused, if
+> compressed_pages is scanned after that, it could fall info (2) or
+> (3) by mistake and that could finally be in a mess.
+> 
+> This patch aims to solve the above issue only with little changes
+> as much as possible in order to make the fix backport easier.
+> 
+> Fixes: 3883a79abd02 ("staging: erofs: introduce VLE decompression support")
+> Cc: <stable@vger.kernel.org> # 4.19+
+> Reviewed-by: Chao Yu <yuchao0@huawei.com>
+> Signed-off-by: Gao Xiang <gaoxiang25@huawei.com>
 > ---
+>  drivers/staging/erofs/unzip_vle.c     | 38 ++++++++++++++++++-----------------
+>  drivers/staging/erofs/unzip_vle.h     |  3 +--
+>  drivers/staging/erofs/unzip_vle_lz4.c | 19 ++++++++----------
+>  3 files changed, 29 insertions(+), 31 deletions(-)
 > 
-> v8 - Added a clean function for the tx_skb, cleaned up skb on BUS_OFF and on xmit
-> BUSY - https://lore.kernel.org/patchwork/patch/1047980/
-> 
-> v7 - Fixed remaining new checkpatch issues, removed CSR setting, fixed tx hard
-> start function to return tx_busy, and renamed device callbacks - https://lore.kernel.org/patchwork/patch/1047220/
-> v6 - Squashed platform patch to this patch for bissectablity, fixed coding style
-> issues, updated Kconfig help, placed mcan reg offsets back into c file, renamed
-> priv->skb to priv->tx_skb and cleared perp interrupts at ISR start -
-> Patch 1 comments - https://lore.kernel.org/patchwork/patch/1042446/
-> Patch 2 comments - https://lore.kernel.org/patchwork/patch/1042442/
-> 
->  drivers/net/can/m_can/Kconfig          |  13 +-
->  drivers/net/can/m_can/Makefile         |   1 +
->  drivers/net/can/m_can/m_can.c          | 717 +++++++++++++------------
->  drivers/net/can/m_can/m_can.h          | 110 ++++
->  drivers/net/can/m_can/m_can_platform.c | 202 +++++++
->  5 files changed, 699 insertions(+), 344 deletions(-)
->  create mode 100644 drivers/net/can/m_can/m_can.h
->  create mode 100644 drivers/net/can/m_can/m_can_platform.c
-> 
-> diff --git a/drivers/net/can/m_can/Kconfig b/drivers/net/can/m_can/Kconfig
-> index 04f20dd39007..f7119fd72df4 100644
-> --- a/drivers/net/can/m_can/Kconfig
-> +++ b/drivers/net/can/m_can/Kconfig
-> @@ -1,5 +1,14 @@
->  config CAN_M_CAN
-> +	tristate "Bosch M_CAN support"
-> +	---help---
-> +	  Say Y here if you want support for Bosch M_CAN controller framework.
-> +	  This is common support for devices that embed the Bosch M_CAN IP.
+> diff --git a/drivers/staging/erofs/unzip_vle.c b/drivers/staging/erofs/unzip_vle.c
+> index ca2e8fd78959..ab30d14ded06 100644
+> --- a/drivers/staging/erofs/unzip_vle.c
+> +++ b/drivers/staging/erofs/unzip_vle.c
+> @@ -1017,11 +1017,10 @@ static int z_erofs_vle_unzip(struct super_block *sb,
+>  	if (llen > grp->llen)
+>  		llen = grp->llen;
+>  
+> -	err = z_erofs_vle_unzip_fast_percpu(compressed_pages,
+> -		clusterpages, pages, llen, work->pageofs,
+> -		z_erofs_onlinepage_endio);
+> +	err = z_erofs_vle_unzip_fast_percpu(compressed_pages, clusterpages,
+> +					    pages, llen, work->pageofs);
+>  	if (err != -ENOTSUPP)
+> -		goto out_percpu;
+> +		goto out;
+>  
+>  	if (sparsemem_pages >= nr_pages)
+>  		goto skip_allocpage;
+> @@ -1042,8 +1041,25 @@ static int z_erofs_vle_unzip(struct super_block *sb,
+>  	erofs_vunmap(vout, nr_pages);
+>  
+>  out:
+> +	/* must handle all compressed pages before endding pages */
+> +	for (i = 0; i < clusterpages; ++i) {
+> +		page = compressed_pages[i];
 > +
-> +config CAN_M_CAN_PLATFORM
-> +	tristate "Bosch M_CAN support for io-mapped devices"
->  	depends on HAS_IOMEM
-> -	tristate "Bosch M_CAN devices"
-> +	depends on CAN_M_CAN
->  	---help---
-> -	  Say Y here if you want to support for Bosch M_CAN controller.
-> +	  Say Y here if you want support for IO Mapped Bosch M_CAN controller.
-> +	  This support is for devices that have the Bosch M_CAN controller
-> +	  IP embedded into the device and the IP is IO Mapped to the processor.
-> diff --git a/drivers/net/can/m_can/Makefile b/drivers/net/can/m_can/Makefile
-> index 8bbd7f24f5be..057bbcdb3c74 100644
-> --- a/drivers/net/can/m_can/Makefile
-> +++ b/drivers/net/can/m_can/Makefile
-> @@ -3,3 +3,4 @@
->  #
+> +#ifdef EROFS_FS_HAS_MANAGED_CACHE
+> +		if (page->mapping == MNGD_MAPPING(sbi))
+> +			continue;
+> +#endif
+> +		/* recycle all individual staging pages */
+> +		(void)z_erofs_gather_if_stagingpage(page_pool, page);
+> +
+> +		WRITE_ONCE(compressed_pages[i], NULL);
+> +	}
+> +
+>  	for (i = 0; i < nr_pages; ++i) {
+>  		page = pages[i];
+> +		if (!page)
+> +			continue;
+> +
+>  		DBG_BUGON(!page->mapping);
 >  
->  obj-$(CONFIG_CAN_M_CAN) += m_can.o
-> +obj-$(CONFIG_CAN_M_CAN_PLATFORM) += m_can_platform.o
-
-... snip ...
-
-> diff --git a/drivers/net/can/m_can/m_can.c b/drivers/net/can/m_can/m_can.c
-> -static int m_can_dev_setup(struct platform_device *pdev, struct net_device *dev,
-> -			   void __iomem *addr)
-> +static int m_can_dev_setup(struct m_can_priv *m_can_dev)
+>  		/* recycle all individual staging pages */
+> @@ -1056,20 +1072,6 @@ static int z_erofs_vle_unzip(struct super_block *sb,
+>  		z_erofs_onlinepage_endio(page);
+>  	}
+>  
+> -out_percpu:
+> -	for (i = 0; i < clusterpages; ++i) {
+> -		page = compressed_pages[i];
+> -
+> -#ifdef EROFS_FS_HAS_MANAGED_CACHE
+> -		if (page->mapping == MNGD_MAPPING(sbi))
+> -			continue;
+> -#endif
+> -		/* recycle all individual staging pages */
+> -		(void)z_erofs_gather_if_stagingpage(page_pool, page);
+> -
+> -		WRITE_ONCE(compressed_pages[i], NULL);
+> -	}
+> -
+>  	if (pages == z_pagemap_global)
+>  		mutex_unlock(&z_pagemap_global_lock);
+>  	else if (unlikely(pages != pages_onstack))
+> diff --git a/drivers/staging/erofs/unzip_vle.h b/drivers/staging/erofs/unzip_vle.h
+> index 5a4e1b62c0d1..c0dfd6906aa8 100644
+> --- a/drivers/staging/erofs/unzip_vle.h
+> +++ b/drivers/staging/erofs/unzip_vle.h
+> @@ -218,8 +218,7 @@ extern int z_erofs_vle_plain_copy(struct page **compressed_pages,
+>  
+>  extern int z_erofs_vle_unzip_fast_percpu(struct page **compressed_pages,
+>  	unsigned clusterpages, struct page **pages,
+> -	unsigned outlen, unsigned short pageofs,
+> -	void (*endio)(struct page *));
+> +	unsigned int outlen, unsigned short pageofs);
+>  
+>  extern int z_erofs_vle_unzip_vmap(struct page **compressed_pages,
+>  	unsigned clusterpages, void *vaddr, unsigned llen,
+> diff --git a/drivers/staging/erofs/unzip_vle_lz4.c b/drivers/staging/erofs/unzip_vle_lz4.c
+> index 52797bd89da1..f471b894c848 100644
+> --- a/drivers/staging/erofs/unzip_vle_lz4.c
+> +++ b/drivers/staging/erofs/unzip_vle_lz4.c
+> @@ -125,8 +125,7 @@ int z_erofs_vle_unzip_fast_percpu(struct page **compressed_pages,
+>  				  unsigned int clusterpages,
+>  				  struct page **pages,
+>  				  unsigned int outlen,
+> -				  unsigned short pageofs,
+> -				  void (*endio)(struct page *))
+> +				  unsigned short pageofs)
 >  {
-> -	struct m_can_priv *priv;
-> +	struct net_device *dev = m_can_dev->net;
->  	int m_can_version;
+>  	void *vin, *vout;
+>  	unsigned int nr_pages, i, j;
+> @@ -148,19 +147,16 @@ int z_erofs_vle_unzip_fast_percpu(struct page **compressed_pages,
+>  	ret = z_erofs_unzip_lz4(vin, vout + pageofs,
+>  				clusterpages * PAGE_SIZE, outlen);
 >  
-> -	m_can_version = m_can_check_core_release(addr);
-> +	m_can_version = m_can_check_core_release(m_can_dev);
+> -	if (ret >= 0) {
+> -		outlen = ret;
+> -		ret = 0;
+> -	}
+> +	if (ret < 0)
+> +		goto out;
+> +	ret = 0;
+>  
+>  	for (i = 0; i < nr_pages; ++i) {
+>  		j = min((unsigned int)PAGE_SIZE - pageofs, outlen);
+>  
+>  		if (pages[i]) {
+> -			if (ret < 0) {
+> -				SetPageError(pages[i]);
+> -			} else if (clusterpages == 1 &&
+> -				   pages[i] == compressed_pages[0]) {
+> +			if (clusterpages == 1 &&
+> +			    pages[i] == compressed_pages[0]) {
+>  				memcpy(vin + pageofs, vout + pageofs, j);
+>  			} else {
+>  				void *dst = kmap_atomic(pages[i]);
+> @@ -168,12 +164,13 @@ int z_erofs_vle_unzip_fast_percpu(struct page **compressed_pages,
+>  				memcpy(dst + pageofs, vout + pageofs, j);
+>  				kunmap_atomic(dst);
+>  			}
+> -			endio(pages[i]);
+>  		}
+>  		vout += PAGE_SIZE;
+>  		outlen -= j;
+>  		pageofs = 0;
+>  	}
+> +
+> +out:
+>  	preempt_enable();
+>  
+>  	if (clusterpages == 1)
+> -- 
+> 2.14.5
+>
 
-What is m_can_version for the tcan4x5x?
+Now applied, thanks.
 
-... snip ...
-
-Wolfgang.
+greg k-h
