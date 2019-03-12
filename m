@@ -2,175 +2,98 @@ Return-Path: <SRS0=J4ZE=RP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=FREEMAIL_FORGED_FROMDOMAIN,
-	FREEMAIL_FROM,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_NEOMUTT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4C34CC43381
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 12:36:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4D69DC43381
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 12:39:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 261C3214AE
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 12:36:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 209E72147C
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 12:39:02 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726571AbfCLMgy (ORCPT
+        id S1726539AbfCLMjB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 12 Mar 2019 08:36:54 -0400
-Received: from smtp3-g21.free.fr ([212.27.42.3]:59430 "EHLO smtp3-g21.free.fr"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725894AbfCLMgy (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 12 Mar 2019 08:36:54 -0400
-Received: from [192.168.108.8] (unknown [213.36.7.13])
-        (Authenticated sender: marc.w.gonzalez)
-        by smtp3-g21.free.fr (Postfix) with ESMTPSA id 24FC313F8B8;
-        Tue, 12 Mar 2019 13:36:26 +0100 (CET)
-Subject: Re: [PATCH] arm64/io: Don't use WZR in writel
-To:     Marc Zyngier <marc.zyngier@arm.com>,
-        Will Deacon <will.deacon@arm.com>,
-        Robin Murphy <robin.murphy@arm.com>
-Cc:     Bjorn Andersson <bjorn.andersson@linaro.org>,
-        AngeloGioacchino Del Regno <kholk11@gmail.com>,
-        Jens Axboe <axboe@kernel.dk>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        MSM <linux-arm-msm@vger.kernel.org>,
-        Jeffrey Hugo <jhugo@codeaurora.org>
-References: <68b71c15f32341468a868f6418e4fcb375bc49ba.camel@gmail.com>
- <20190211105755.GB30880@fuggles.cambridge.arm.com>
- <38d8965a-cd41-17cf-1b95-8dd58c079be4@arm.com>
- <874c702b8af760aa8fae38d478c79e3ecba00515.camel@gmail.com>
- <235d20ef-3054-69d9-975d-25aebf32aad3@arm.com>
- <20190223181254.GC572@tuxbook-pro> <86zhqm8i6d.wl-marc.zyngier@arm.com>
- <20190224035356.GD572@tuxbook-pro>
-From:   Marc Gonzalez <marc.w.gonzalez@free.fr>
-Message-ID: <33d765b5-1807-fa6c-1ceb-99f09f7c8d5a@free.fr>
-Date:   Tue, 12 Mar 2019 13:36:25 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.5.1
+        Tue, 12 Mar 2019 08:39:01 -0400
+Received: from mx2.suse.de ([195.135.220.15]:39904 "EHLO mx1.suse.de"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1725895AbfCLMjA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 12 Mar 2019 08:39:00 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx1.suse.de (Postfix) with ESMTP id 3F052AF7B;
+        Tue, 12 Mar 2019 12:38:59 +0000 (UTC)
+Date:   Tue, 12 Mar 2019 13:38:57 +0100
+From:   Petr Mladek <pmladek@suse.com>
+To:     Sergey Senozhatsky <sergey.senozhatsky.work@gmail.com>
+Cc:     John Ogness <john.ogness@linutronix.de>,
+        linux-kernel@vger.kernel.org,
+        Peter Zijlstra <peterz@infradead.org>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Daniel Wang <wonderfly@google.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Alan Cox <gnomes@lxorguk.ukuu.org.uk>,
+        Jiri Slaby <jslaby@suse.com>,
+        Peter Feiner <pfeiner@google.com>,
+        linux-serial@vger.kernel.org,
+        Sergey Senozhatsky <sergey.senozhatsky@gmail.com>
+Subject: Re: [RFC PATCH v1 00/25] printk: new implementation
+Message-ID: <20190312123857.juatd6fwtfmqajze@pathway.suse.cz>
+References: <20190212143003.48446-1-john.ogness@linutronix.de>
+ <20190213025520.GA5803@jagdpanzerIV>
+ <874l9721hf.fsf@linutronix.de>
+ <20190304052335.GA6648@jagdpanzerIV>
+ <87lg1rggcz.fsf@linutronix.de>
+ <20190311105411.GA368@jagdpanzerIV>
 MIME-Version: 1.0
-In-Reply-To: <20190224035356.GD572@tuxbook-pro>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190311105411.GA368@jagdpanzerIV>
+User-Agent: NeoMutt/20170421 (1.8.2)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 24/02/2019 04:53, Bjorn Andersson wrote:
-
-> On Sat 23 Feb 10:37 PST 2019, Marc Zyngier wrote:
+On Mon 2019-03-11 19:54:11, Sergey Senozhatsky wrote:
+> On (03/07/19 10:53), John Ogness wrote:
+> > Since all current console drivers are already irq safe, I'm
+> > wondering if using irq_work to handle the emergency printing for console
+> > drivers without write_atomic() would help. (If the printk caller is in a
+> > context that write() supports, then write() could be called directly.)
+> > This would also demand that the irq-safe requirements for write() are
+> > not relaxed. The printk-kthread might still be faster than irq_work, but
+> > it might increase reliability if an irq_work is triggered as an extra
+> > precaution.
 > 
->> On Sat, 23 Feb 2019 18:12:54 +0000, Bjorn Andersson wrote:
->>>
->>> On Mon 11 Feb 06:59 PST 2019, Marc Zyngier wrote:
->>>
->>>> On 11/02/2019 14:29, AngeloGioacchino Del Regno wrote:
->>>>
->>>>> Also, just one more thing: yes this thing is going ARM64-wide and
->>>>> - from my findings - it's targeting certain Qualcomm SoCs, but...
->>>>> I'm not sure that only QC is affected by that, others may as well
->>>>> have the same stupid bug.
->>>>
->>>> At the moment, only QC SoCs seem to be affected, probably because
->>>> everyone else has debugged their hypervisor (or most likely doesn't
->>>> bother with shipping one).
->>>>
->>>> In all honesty, we need some information from QC here: which SoCs are
->>>> affected, what is the exact nature of the bug, can it be triggered from
->>>> EL0. Randomly papering over symptoms is not something I really like
->>>> doing, and is likely to generate problems on unaffected systems.
->>>
->>> The bug at hand is that the XZR is not deemed a valid source in the
->>> virtualization of the SMMU registers. It was identified and fixed for
->>> all platforms that are shipping kernels based on v4.9 or later.
->>
->> When you say "fixed": Do you mean fixed in the firmware? Or by adding
->> a workaround in the shipped kernel?
+> Hmm. OK. So one of the things with printk is that it's fully sequential.
+> We call console drivers one by one. Slow consoles can affect what appears
+> on the fast consoles; fast console have no impact on slow ones.
 > 
-> I mean that it's fixed in the firmware.
+> 	call_console_drivers()
+> 		for_each_console(c)
+> 			c->write(c, text, text_len);
 > 
->> If the former, is this part of an official QC statement, with an
->> associated erratum number?
-> 
-> I don't know, will get back to you on this one.
-> 
->> Is this really limited to the SMMU accesses?
-> 
-> Yes.
-> 
->>> As such Angelo's list of affected platforms covers the high-profile
->>> ones. In particular MSM8996 and MSM8998 is getting pretty good support
->>> upstream, if we can figure out a way around this issue.
->> 
->> We'd need an exhaustive list of the affected SoCs, and work out if we
->> can limit the hack to the SMMU driver (cc'ing Robin, who's the one
->> who'd know about it).
-> 
-> I will try to compose a list.
+> So a list of (slow_serial serial netcon) console drivers is a camel train;
+> fast netcon is not fast anymore, and slow consoles sometimes are the reason
+> we have dropped messages. And if we drop messages we drop them for all
+> consoles, including fast netcon. Turning that sequential pipline into a
+> bunch of per-console kthreads/irq and letting fast consoles to be fast is
+> not a completely bad thing. Let's think more about this, I'd like to read
+> more opinions.
 
-FWIW, I have just been bitten by this issue. I needed to enable an SMMU to
-filter PCIe EP accesses to system RAM (or something). I'm using an APQ8098
-MEDIABOX dev board. My system hangs in arm_smmu_device_reset() doing:
+Per-console kthread sounds interesting but there is the problem with
+reliability. I mean that kthread need not get scheduled.
 
-	/* Invalidate the TLB, just in case */
-	writel_relaxed(0, gr0_base + ARM_SMMU_GR0_TLBIALLH);
-	writel_relaxed(0, gr0_base + ARM_SMMU_GR0_TLBIALLNSNH);
+Some of these problems might get solved by the per-console loglevel
+patchset.
 
+Sigh, any feature might be useful in some situation. But we always
+have to consider the cost and the gain. I wonder how common is
+to actively use two consoles at the same time and what would
+be the motivation.
 
-With the 'Z' constraint, gcc generates:
-
-	str wzr, [x0]
-
-without the 'Z' constraint, gcc generates:
-
-	mov	w1, 0
-	str w1, [x0]
-
-
-I can work around the problem using the following patch:
-
-diff --git a/drivers/iommu/arm-smmu.c b/drivers/iommu/arm-smmu.c
-index 045d93884164..93117519aed8 100644
---- a/drivers/iommu/arm-smmu.c
-+++ b/drivers/iommu/arm-smmu.c
-@@ -59,6 +59,11 @@
- 
- #include "arm-smmu-regs.h"
- 
-+static inline void qcom_writel(u32 val, volatile void __iomem *addr)
-+{
-+	asm volatile("str %w0, [%1]" : : "r" (val), "r" (addr));
-+}
-+
- #define ARM_MMU500_ACTLR_CPRE		(1 << 1)
- 
- #define ARM_MMU500_ACR_CACHE_LOCK	(1 << 26)
-@@ -422,7 +427,7 @@ static void __arm_smmu_tlb_sync(struct arm_smmu_device *smmu,
- {
- 	unsigned int spin_cnt, delay;
- 
--	writel_relaxed(0, sync);
-+	qcom_writel(0, sync);
- 	for (delay = 1; delay < TLB_LOOP_TIMEOUT; delay *= 2) {
- 		for (spin_cnt = TLB_SPIN_COUNT; spin_cnt > 0; spin_cnt--) {
- 			if (!(readl_relaxed(status) & sTLBGSTATUS_GSACTIVE))
-@@ -1760,8 +1765,8 @@ static void arm_smmu_device_reset(struct arm_smmu_device *smmu)
- 	}
- 
- 	/* Invalidate the TLB, just in case */
--	writel_relaxed(0, gr0_base + ARM_SMMU_GR0_TLBIALLH);
--	writel_relaxed(0, gr0_base + ARM_SMMU_GR0_TLBIALLNSNH);
-+	qcom_writel(0, gr0_base + ARM_SMMU_GR0_TLBIALLH);
-+	qcom_writel(0, gr0_base + ARM_SMMU_GR0_TLBIALLNSNH);
- 
- 	reg = readl_relaxed(ARM_SMMU_GR0_NS(smmu) + ARM_SMMU_GR0_sCR0);
- 
-
-
-
-Can a quirk be used to work around the issue?
-Or can we just "pessimize" the 3 writes for everybody?
-(Might be cheaper than a test anyway)
-
-Regards.
+Best Regards,
+Petr
