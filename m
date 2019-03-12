@@ -7,47 +7,47 @@ X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DFCEFC43381
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 17:40:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id ACE17C43381
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 17:40:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B4B402087C
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 17:40:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 803AD2171F
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 17:40:13 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1552412409;
-	bh=ouXu/OaX7uOn5kPU0xE4f69+pGek/rqm+AkfMfMK3yc=;
+	s=default; t=1552412413;
+	bh=7NNu/woGCCXrFgZFX/fnbaD7B5SoyUs6s8v2nSBGivg=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=gRpYUawnv8hFg12xrMObq63u8nnxQ8M8Sk9haNa/O497+5UIP0iGmH0ZsL5E9qfGx
-	 9Q6kVQFUbCJHDx98AfASRmn+irx+nKQAS0nraOTe1toryxaQgpfR2OfU3a6zrBDS0a
-	 4op/HnBhtPYFxSawrW3ioNEpYJ/EBbZfw5jUvGf0=
+	b=V2USDJq83vzwNTieSGN1m5CP3NiVQ8K1TX+zS1y4rmhGLZUayR4xnDK4sVJAXuFQ9
+	 az+ykNJP4dy/31G3tH3M3/vKCZVBxOEXmt9ky1qCjtepnTVC/b5iI46FyW5eCXX43K
+	 8003QfVvjCzTLHbNEA0bwgNgWiPRfm53tzAnLLJI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729510AbfCLRkI (ORCPT
+        id S1729370AbfCLRkL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 12 Mar 2019 13:40:08 -0400
-Received: from mail.kernel.org ([198.145.29.99]:58070 "EHLO mail.kernel.org"
+        Tue, 12 Mar 2019 13:40:11 -0400
+Received: from mail.kernel.org ([198.145.29.99]:58100 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729045AbfCLRQQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S1727783AbfCLRQQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Tue, 12 Mar 2019 13:16:16 -0400
 Received: from localhost (unknown [104.133.8.98])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D213E217D4;
-        Tue, 12 Mar 2019 17:16:14 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 8C00B2186A;
+        Tue, 12 Mar 2019 17:16:15 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1552410974;
-        bh=ouXu/OaX7uOn5kPU0xE4f69+pGek/rqm+AkfMfMK3yc=;
+        s=default; t=1552410975;
+        bh=7NNu/woGCCXrFgZFX/fnbaD7B5SoyUs6s8v2nSBGivg=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=WgdFInIhQHmtlsej5yrfFUUebZAz3ha+4GmbvHU5u+zXt8HyBS344iSe3an6DXwh/
-         Wlc0AubO9UTL25K21xgYxlfndBImo8KRMXd5037BtcgVdo5JOHLumvmT2nNiOpoAB7
-         yG97b4oJzZp8B79AQeA5yiqciTybCNrSbuDAF3rw=
+        b=S3xTa1A9DsbvtxWHiyHClHLuPsPRfoPgKOE95rOHYCabt1Na6/rIdIQ024YOcCZZy
+         v2E7WRiN+RAE4eQ1O0YSUcswIZvDKbqtudkDE3Uus67xRQEkLZsAJsY3VUzWCmLyN/
+         oDuIkbKBQ6qbZhZ9m2nLH/M7vI9du6Ptk4DpLsjI=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Denys Dmytriyenko <denys@ti.com>,
-        Fathi Boudra <fathi.boudra@linaro.org>,
-        Shuah Khan <shuah@kernel.org>, Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.14 065/135] selftests: timers: use LDLIBS instead of LDFLAGS
-Date:   Tue, 12 Mar 2019 10:08:32 -0700
-Message-Id: <20190312170347.289415475@linuxfoundation.org>
+        stable@vger.kernel.org, Yao Liu <yotta.liu@ucloud.cn>,
+        Anna Schumaker <Anna.Schumaker@Netapp.com>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.14 066/135] nfs: Fix NULL pointer dereference of dev_name
+Date:   Tue, 12 Mar 2019 10:08:33 -0700
+Message-Id: <20190312170347.393615065@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190312170341.127810985@linuxfoundation.org>
 References: <20190312170341.127810985@linuxfoundation.org>
@@ -66,73 +66,54 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-[ Upstream commit 7d4e591bc051d3382c45caaa2530969fb42ed23d ]
+[ Upstream commit 80ff00172407e0aad4b10b94ef0816fc3e7813cb ]
 
-posix_timers fails to build due to undefined reference errors:
+There is a NULL pointer dereference of dev_name in nfs_parse_devname()
 
- aarch64-linaro-linux-gcc --sysroot=/build/tmp-rpb-glibc/sysroots/hikey
- -O2 -pipe -g -feliminate-unused-debug-types -O3 -Wl,-no-as-needed -Wall
- -DKTEST  -Wl,-O1 -Wl,--hash-style=gnu -Wl,--as-needed -lrt -lpthread
- posix_timers.c
- -o /build/tmp-rpb-glibc/work/hikey-linaro-linux/kselftests/4.12-r0/linux-4.12-rc7/tools/testing/selftests/timers/posix_timers
- /tmp/cc1FTZzT.o: In function `check_timer_create':
- /usr/src/debug/kselftests/4.12-r0/linux-4.12-rc7/tools/testing/selftests/timers/posix_timers.c:157:
- undefined reference to `timer_create'
- /usr/src/debug/kselftests/4.12-r0/linux-4.12-rc7/tools/testing/selftests/timers/posix_timers.c:170:
- undefined reference to `timer_settime'
- collect2: error: ld returned 1 exit status
+The oops looks something like:
 
-It's GNU Make and linker specific.
+  BUG: unable to handle kernel NULL pointer dereference at 0000000000000000
+  ...
+  RIP: 0010:nfs_fs_mount+0x3b6/0xc20 [nfs]
+  ...
+  Call Trace:
+   ? ida_alloc_range+0x34b/0x3d0
+   ? nfs_clone_super+0x80/0x80 [nfs]
+   ? nfs_free_parsed_mount_data+0x60/0x60 [nfs]
+   mount_fs+0x52/0x170
+   ? __init_waitqueue_head+0x3b/0x50
+   vfs_kern_mount+0x6b/0x170
+   do_mount+0x216/0xdc0
+   ksys_mount+0x83/0xd0
+   __x64_sys_mount+0x25/0x30
+   do_syscall_64+0x65/0x220
+   entry_SYSCALL_64_after_hwframe+0x49/0xbe
 
-The default Makefile rule looks like:
+Fix this by adding a NULL check on dev_name
 
-$(CC) $(CFLAGS) $(LDFLAGS) $@ $^ $(LDLIBS)
-
-When linking is done by gcc itself, no issue, but when it needs to be passed
-to proper ld, only LDLIBS follows and then ld cannot know what libs to link
-with.
-
-More detail:
-https://www.gnu.org/software/make/manual/html_node/Implicit-Variables.html
-
-LDFLAGS
-Extra flags to give to compilers when they are supposed to invoke the linker,
-‘ld’, such as -L. Libraries (-lfoo) should be added to the LDLIBS variable
-instead.
-
-LDLIBS
-Library flags or names given to compilers when they are supposed to invoke the
-linker, ‘ld’. LOADLIBES is a deprecated (but still supported) alternative to
-LDLIBS. Non-library linker flags, such as -L, should go in the LDFLAGS
-variable.
-
-https://lkml.org/lkml/2010/2/10/362
-
-tools/perf: libraries must come after objects
-
-Link order matters, use LDLIBS instead of LDFLAGS to properly link against
-libpthread.
-
-Signed-off-by: Denys Dmytriyenko <denys@ti.com>
-Signed-off-by: Fathi Boudra <fathi.boudra@linaro.org>
-Signed-off-by: Shuah Khan <shuah@kernel.org>
+Signed-off-by: Yao Liu <yotta.liu@ucloud.cn>
+Signed-off-by: Anna Schumaker <Anna.Schumaker@Netapp.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- tools/testing/selftests/timers/Makefile | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ fs/nfs/super.c | 5 +++++
+ 1 file changed, 5 insertions(+)
 
-diff --git a/tools/testing/selftests/timers/Makefile b/tools/testing/selftests/timers/Makefile
-index 3496680981f2..d937e45532d8 100644
---- a/tools/testing/selftests/timers/Makefile
-+++ b/tools/testing/selftests/timers/Makefile
-@@ -1,6 +1,6 @@
- # SPDX-License-Identifier: GPL-2.0
- CFLAGS += -O3 -Wl,-no-as-needed -Wall
--LDFLAGS += -lrt -lpthread -lm
-+LDLIBS += -lrt -lpthread -lm
+diff --git a/fs/nfs/super.c b/fs/nfs/super.c
+index 3c4aeb83e1c4..77d8d03344c8 100644
+--- a/fs/nfs/super.c
++++ b/fs/nfs/super.c
+@@ -1901,6 +1901,11 @@ static int nfs_parse_devname(const char *dev_name,
+ 	size_t len;
+ 	char *end;
  
- # these are all "safe" tests that don't modify
- # system time or require escalated privileges
++	if (unlikely(!dev_name || !*dev_name)) {
++		dfprintk(MOUNT, "NFS: device name not specified\n");
++		return -EINVAL;
++	}
++
+ 	/* Is the host name protected with square brakcets? */
+ 	if (*dev_name == '[') {
+ 		end = strchr(++dev_name, ']');
 -- 
 2.19.1
 
