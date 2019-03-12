@@ -4,51 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 26C60C43381
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 17:26:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 771EFC43381
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 17:26:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E0A9E2171F
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 17:26:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 35C14214AE
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 17:26:27 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1552411578;
-	bh=1jwe0NsfKzgZASabOHZGlSP8AE8ffrSvz80gJdieLOU=;
+	s=default; t=1552411587;
+	bh=cbQeOPkESNfYEoIa9aRe1Cmx8A6A/yEUGzDvZI2F6IE=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=pglfPqKA1AWDOjM9z+sjjN66tGSsAH+JuanPI6G2tz0i3XnZM9Z7XNLluMnrluO0u
-	 Cn45WRyqRcGzJNYdoB2gcfiHW9dqFAQRusBTLO0zFclWoAsZqIkJ4aimHAu6NmlZh6
-	 xOEZbgEgiPdSuzQkeaFRw9uKe9273eUUfAJBOdU4=
+	b=EdvZCITraTuOX/jTCS/gVp2hBWX5P5PtoijB7oupMTl0pD2Dl6nF6xqxXBJaYxjw4
+	 OT9GR9Y0c+PdTjz8GZe4hsIfCHZevH1voCzxW2CJFandbuHf8QZXDdEwYlFMvbsQFb
+	 Ix/2awl0XMdwfplfBSYoEL7sXDAaB4+X/IdSO7tI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730320AbfCLR0F (ORCPT
+        id S1728866AbfCLR0Z (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 12 Mar 2019 13:26:05 -0400
-Received: from mail.kernel.org ([198.145.29.99]:34134 "EHLO mail.kernel.org"
+        Tue, 12 Mar 2019 13:26:25 -0400
+Received: from mail.kernel.org ([198.145.29.99]:33976 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729207AbfCLRRq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 12 Mar 2019 13:17:46 -0400
+        id S1729726AbfCLRRn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 12 Mar 2019 13:17:43 -0400
 Received: from localhost (unknown [104.133.8.98])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 7216721741;
-        Tue, 12 Mar 2019 17:17:45 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 6E6052183F;
+        Tue, 12 Mar 2019 17:17:42 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1552411065;
-        bh=1jwe0NsfKzgZASabOHZGlSP8AE8ffrSvz80gJdieLOU=;
+        s=default; t=1552411062;
+        bh=cbQeOPkESNfYEoIa9aRe1Cmx8A6A/yEUGzDvZI2F6IE=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=0F1pb7lzwEtPE3XHQ4adPwmEpLG229kKhVRaWzM2/2Sqne7xVsf3HV5iTl2G1qRuD
-         DIWVdTIdv211EkFBJhSKkLGgX7KPYPLQseMjsqWouUstHtHA/BFZDLwnN258jTRIDY
-         N89vo/nvNUH9wmvQiPvBxuuVXOFb9kztd9o7mHeo=
+        b=IbNbQ/bca2v48EtmTnozkxVwm2l43EWgqC1D52A3j7+Fsg+6VQC56lqs6d0U4NRsk
+         GuR6a3Pe9zKf8uXFzLReV0GNioTn02YBQNyLRbfPLgBcPmBP9AMn6iCT07hcyyGYEk
+         zC6eJthVPvxffeCoh3auY148kBcCGyZiPephCVAg=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Sinan Kaya <okaya@kernel.org>,
-        Andy Shevchenko <andy.shevchenko@gmail.com>,
-        "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>,
+        stable@vger.kernel.org, Andrew Lunn <andrew@lunn.ch>,
+        Stefan Agner <stefan@agner.ch>,
+        Linus Walleij <linus.walleij@linaro.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.9 55/96] platform/x86: Fix unmet dependency warning for SAMSUNG_Q10
-Date:   Tue, 12 Mar 2019 10:10:13 -0700
-Message-Id: <20190312171038.676703972@linuxfoundation.org>
+Subject: [PATCH 4.9 51/96] gpio: vf610: Mask all GPIO interrupts
+Date:   Tue, 12 Mar 2019 10:10:09 -0700
+Message-Id: <20190312171038.395373682@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190312171034.530434962@linuxfoundation.org>
 References: <20190312171034.530434962@linuxfoundation.org>
@@ -67,41 +67,50 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-[ Upstream commit 0ee4b5f801b73b83a9fb3921d725f2162fd4a2e5 ]
+[ Upstream commit 7ae710f9f8b2cf95297e7bbfe1c09789a7dc43d4 ]
 
-Add BACKLIGHT_LCD_SUPPORT for SAMSUNG_Q10 to fix the
-warning: unmet direct dependencies detected for BACKLIGHT_CLASS_DEVICE.
+On SoC reset all GPIO interrupts are disable. However, if kexec is
+used to boot into a new kernel, the SoC does not experience a
+reset. Hence GPIO interrupts can be left enabled from the previous
+kernel. It is then possible for the interrupt to fire before an
+interrupt handler is registered, resulting in the kernel complaining
+of an "unexpected IRQ trap", the interrupt is never cleared, and so
+fires again, resulting in an interrupt storm.
 
-SAMSUNG_Q10 selects BACKLIGHT_CLASS_DEVICE but BACKLIGHT_CLASS_DEVICE
-depends on BACKLIGHT_LCD_SUPPORT.
+Disable all GPIO interrupts before registering the GPIO IRQ chip.
 
-Copy BACKLIGHT_LCD_SUPPORT dependency into SAMSUNG_Q10 to fix:
-
-WARNING: unmet direct dependencies detected for BACKLIGHT_CLASS_DEVICE
-  Depends on [n]: HAS_IOMEM [=y] && BACKLIGHT_LCD_SUPPORT [=n]
-  Selected by [y]:
-  - SAMSUNG_Q10 [=y] && X86 [=y] && X86_PLATFORM_DEVICES [=y] && ACPI [=y]
-
-Signed-off-by: Sinan Kaya <okaya@kernel.org>
-Acked-by: Andy Shevchenko <andy.shevchenko@gmail.com>
-Signed-off-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
+Fixes: 7f2691a19627 ("gpio: vf610: add gpiolib/IRQ chip driver for Vybrid")
+Signed-off-by: Andrew Lunn <andrew@lunn.ch>
+Acked-by: Stefan Agner <stefan@agner.ch>
+Signed-off-by: Linus Walleij <linus.walleij@linaro.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/platform/x86/Kconfig | 1 +
- 1 file changed, 1 insertion(+)
+ drivers/gpio/gpio-vf610.c | 5 +++++
+ 1 file changed, 5 insertions(+)
 
-diff --git a/drivers/platform/x86/Kconfig b/drivers/platform/x86/Kconfig
-index b8a21d7b25d4..1d81149c9ea4 100644
---- a/drivers/platform/x86/Kconfig
-+++ b/drivers/platform/x86/Kconfig
-@@ -945,6 +945,7 @@ config INTEL_OAKTRAIL
- config SAMSUNG_Q10
- 	tristate "Samsung Q10 Extras"
- 	depends on ACPI
-+	depends on BACKLIGHT_LCD_SUPPORT
- 	select BACKLIGHT_CLASS_DEVICE
- 	---help---
- 	  This driver provides support for backlight control on Samsung Q10
+diff --git a/drivers/gpio/gpio-vf610.c b/drivers/gpio/gpio-vf610.c
+index 3edb09cb9ee0..1f599bc08237 100644
+--- a/drivers/gpio/gpio-vf610.c
++++ b/drivers/gpio/gpio-vf610.c
+@@ -221,6 +221,7 @@ static int vf610_gpio_probe(struct platform_device *pdev)
+ 	struct vf610_gpio_port *port;
+ 	struct resource *iores;
+ 	struct gpio_chip *gc;
++	int i;
+ 	int ret;
+ 
+ 	port = devm_kzalloc(&pdev->dev, sizeof(*port), GFP_KERNEL);
+@@ -259,6 +260,10 @@ static int vf610_gpio_probe(struct platform_device *pdev)
+ 	if (ret < 0)
+ 		return ret;
+ 
++	/* Mask all GPIO interrupts */
++	for (i = 0; i < gc->ngpio; i++)
++		vf610_gpio_writel(0, port->base + PORT_PCR(i));
++
+ 	/* Clear the interrupt status register for all GPIO's */
+ 	vf610_gpio_writel(~0, port->base + PORT_ISFR);
+ 
 -- 
 2.19.1
 
