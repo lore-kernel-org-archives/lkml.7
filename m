@@ -6,24 +6,24 @@ X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,UNPARSEABLE_RELAY,
 	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 95F09C43381
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 03:27:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DED8DC43381
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 03:27:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6E35C214AF
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 03:27:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BA2072173C
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 03:27:58 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727434AbfCLD1u (ORCPT
+        id S1727442AbfCLD15 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 11 Mar 2019 23:27:50 -0400
-Received: from out30-56.freemail.mail.aliyun.com ([115.124.30.56]:50451 "EHLO
-        out30-56.freemail.mail.aliyun.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727004AbfCLDZh (ORCPT
+        Mon, 11 Mar 2019 23:27:57 -0400
+Received: from out4436.biz.mail.alibaba.com ([47.88.44.36]:60171 "EHLO
+        out4436.biz.mail.alibaba.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1727008AbfCLDZg (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 11 Mar 2019 23:25:37 -0400
-X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R131e4;CH=green;DM=||false|;FP=0|-1|-1|-1|0|-1|-1|-1;HT=e01f04455;MF=alex.shi@linux.alibaba.com;NM=1;PH=DS;RN=9;SR=0;TI=SMTPD_---0TMWLxhn_1552361134;
-Received: from localhost(mailfrom:alex.shi@linux.alibaba.com fp:SMTPD_---0TMWLxhn_1552361134)
+        Mon, 11 Mar 2019 23:25:36 -0400
+X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R211e4;CH=green;DM=||false|;FP=0|-1|-1|-1|0|-1|-1|-1;HT=e01f04446;MF=alex.shi@linux.alibaba.com;NM=1;PH=DS;RN=9;SR=0;TI=SMTPD_---0TMWMgws_1552361129;
+Received: from localhost(mailfrom:alex.shi@linux.alibaba.com fp:SMTPD_---0TMWMgws_1552361129)
           by smtp.aliyun-inc.com(127.0.0.1);
-          Tue, 12 Mar 2019 11:25:34 +0800
+          Tue, 12 Mar 2019 11:25:29 +0800
 From:   Alex Shi <alex.shi@linux.alibaba.com>
 To:     corbet@lwn.net, harryxiyou@gmail.com, linux-doc@vger.kernel.org,
         linux-kernel@vger.kernel.org
@@ -31,20 +31,19 @@ Cc:     Alex Shi <alex.shi@linux.alibaba.com>,
         Li Zefan <lizefan@huawei.com>,
         Shawn Guo <shawn.guo@linaro.org>,
         Fengguang Wu <fengguang.wu@intel.com>, Coly Li <colyli@suse.de>
-Subject: [PATCH v4 11/31] docs/zh_CN: rename email-clients.txt as email-clients.rst
-Date:   Tue, 12 Mar 2019 11:24:40 +0800
-Message-Id: <20190312032501.62056-12-alex.shi@linux.alibaba.com>
+Subject: [PATCH v4 04/31] docs/zh_CN: add index file into process dir
+Date:   Tue, 12 Mar 2019 11:24:33 +0800
+Message-Id: <20190312032501.62056-5-alex.shi@linux.alibaba.com>
 X-Mailer: git-send-email 2.19.1.856.g8858448bb
 In-Reply-To: <20190312032501.62056-1-alex.shi@linux.alibaba.com>
 References: <20190312032501.62056-1-alex.shi@linux.alibaba.com>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
-
-Make it available for html etc docs.
 
 Signed-off-by: Alex Shi <alex.shi@linux.alibaba.com>
 Cc: Harry Wei <harryxiyou@gmail.com>
@@ -55,14 +54,69 @@ Cc: Fengguang Wu <fengguang.wu@intel.com>
 Cc: Coly Li <colyli@suse.de>
 Signed-off-by: Weiwei Jia <harryxiyou@gmail.com>
 ---
- .../zh_CN/process/{email-clients.txt => email-clients.rst}        | 0
- 1 file changed, 0 insertions(+), 0 deletions(-)
- rename Documentation/translations/zh_CN/process/{email-clients.txt => email-clients.rst} (100%)
+ .../translations/zh_CN/process/index.rst      | 53 +++++++++++++++++++
+ 1 file changed, 53 insertions(+)
+ create mode 100644 Documentation/translations/zh_CN/process/index.rst
 
-diff --git a/Documentation/translations/zh_CN/process/email-clients.txt b/Documentation/translations/zh_CN/process/email-clients.rst
-similarity index 100%
-rename from Documentation/translations/zh_CN/process/email-clients.txt
-rename to Documentation/translations/zh_CN/process/email-clients.rst
+diff --git a/Documentation/translations/zh_CN/process/index.rst b/Documentation/translations/zh_CN/process/index.rst
+new file mode 100644
+index 000000000000..03939e1a7b92
+--- /dev/null
++++ b/Documentation/translations/zh_CN/process/index.rst
+@@ -0,0 +1,53 @@
++.. raw:: latex
++
++	\renewcommand\thesection*
++	\renewcommand\thesubsection*
++
++.. include:: ../disclaimer-zh_CN.rst
++
++:Original: :ref:`Documentation/process/index.rst <process_index>`
++:Translator: Alex Shi <alex.shi@linux.alibaba.com>
++
++.. _cn_process_index:
++
++与Linux 内核社区一起工作
++========================
++
++那么你想成为Linux内核开发人员？ 欢迎！ 不但从技术意义上讲有很多关于内核的知识
++需要学，而且了解我们社区的工作方式也很重要。 阅读这些文章可以让您以更轻松地,
++麻烦最少的方式将更改合并到内核。
++
++以下是每位开发人员应阅读的基本指南。
++
++.. toctree::
++   :maxdepth: 1
++
++   howto
++   submitting-patches
++   coding-style
++   email-clients
++
++其它大多数开发人员感兴趣的社区指南：
++
++
++.. toctree::
++   :maxdepth: 1
++
++   submitting-drivers
++   stable-api-nonsense
++   stable-kernel-rules
++
++这些是一些总体技术指南，由于缺乏更好的地方，现在已经放在这里
++
++.. toctree::
++   :maxdepth: 1
++
++   magic-number
++   volatile-considered-harmful
++
++.. only::  subproject and html
++
++   目录
++   ====
++
++   * :ref:`genindex`
 -- 
 2.19.1.856.g8858448bb
 
