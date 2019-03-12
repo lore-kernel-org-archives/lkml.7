@@ -2,157 +2,117 @@ Return-Path: <SRS0=J4ZE=RP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4F383C43381
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 17:48:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 51109C10F00
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 17:48:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1F7A32087C
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 17:48:29 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1552412909;
-	bh=Ul5r+3kTF4BnSmnINmcXayxxV3/YBOb7ka73iAwojdg=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=sEOQAWNMRxazsCBxOEqg5jBYkR8nFkKnFc7dW1W51eka+ZZcD3dAz92TJF8AJxgT2
-	 WT8bP9kkTY4wp5RmA5U0gaD89Aof7gFUPYyio6JP5Wvm74Rmb7tB6p/sPc82XXgGD1
-	 at+p7K8cEPKI62J5wPNeDY11iWHsARzUHzyHVmEM=
+	by mail.kernel.org (Postfix) with ESMTP id 18A662087C
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 17:48:33 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=hansenpartnership.com header.i=@hansenpartnership.com header.b="Kuajv41H"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728819AbfCLRs1 (ORCPT
+        id S1728586AbfCLRPA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 12 Mar 2019 13:48:27 -0400
-Received: from mail.kernel.org ([198.145.29.99]:54726 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728585AbfCLRPB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 12 Mar 2019 13:15:01 -0400
-Received: from localhost (unknown [104.133.8.98])
+        Tue, 12 Mar 2019 13:15:00 -0400
+Received: from bedivere.hansenpartnership.com ([66.63.167.143]:42764 "EHLO
+        bedivere.hansenpartnership.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1728308AbfCLROT (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 12 Mar 2019 13:14:19 -0400
+Received: from localhost (localhost [127.0.0.1])
+        by bedivere.hansenpartnership.com (Postfix) with ESMTP id 4CB748EE1ED;
+        Tue, 12 Mar 2019 10:14:18 -0700 (PDT)
+Received: from bedivere.hansenpartnership.com ([127.0.0.1])
+        by localhost (bedivere.hansenpartnership.com [127.0.0.1]) (amavisd-new, port 10024)
+        with ESMTP id GGGELzzPz0U3; Tue, 12 Mar 2019 10:14:18 -0700 (PDT)
+Received: from [153.66.254.194] (unknown [50.35.68.20])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 7203A206DF;
-        Tue, 12 Mar 2019 17:15:00 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1552410900;
-        bh=Ul5r+3kTF4BnSmnINmcXayxxV3/YBOb7ka73iAwojdg=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=g642HuJqZ031hNrA1pzLYeWyy3dbjnIh37+7rUvyJSnNjImXUzMPqqxR27BVUJV+1
-         81CQ4+/h4zkWCawSUThLxf5T7Z+hEw7E0hbd9HpXpA+eGlk/AX062NG6FYQbgMaskC
-         62W+bWxYzz5KFcuEy3UHlOW+jlBL/uAIrrd68YvE=
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     linux-kernel@vger.kernel.org
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Keerthy <j-keerthy@ti.com>,
-        Tony Lindgren <tony@atomide.com>, Vignesh R <vigneshr@ti.com>,
-        Wolfram Sang <wsa@the-dreams.de>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 113/149] i2c: omap: Use noirq system sleep pm ops to idle device for suspend
-Date:   Tue, 12 Mar 2019 10:08:51 -0700
-Message-Id: <20190312170358.954998908@linuxfoundation.org>
-X-Mailer: git-send-email 2.21.0
-In-Reply-To: <20190312170349.421581206@linuxfoundation.org>
-References: <20190312170349.421581206@linuxfoundation.org>
-User-Agent: quilt/0.65
-X-stable: review
-X-Patchwork-Hint: ignore
-MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+        by bedivere.hansenpartnership.com (Postfix) with ESMTPSA id 6C85C8EE0F5;
+        Tue, 12 Mar 2019 10:14:17 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=hansenpartnership.com;
+        s=20151216; t=1552410857;
+        bh=tFSJUgyUTyD2x9HYFCm+hG/UbCsyC2Au38/rg+6n56E=;
+        h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
+        b=Kuajv41HvPAn+dDf/f7Px9fAhh1+6dHIH0cq7RNNDZ2nrOtle0a+LodEoVBJPBb7r
+         XzGTcqVEXb3vPIZnpMmLLKPN9TjuOd5A59sXM91zGjld2jkT/qrV+ABHXMfWgMkn+E
+         9DzVp1wWM/WAkw+HsN6oOLSDUrAbW27YO66H1hKc=
+Message-ID: <1552410856.3083.28.camel@HansenPartnership.com>
+Subject: Re: [PATCH] tpm: Make timeout logic simpler and more robust
+From:   James Bottomley <James.Bottomley@HansenPartnership.com>
+To:     Mimi Zohar <zohar@linux.ibm.com>,
+        Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>,
+        Peter =?ISO-8859-1?Q?H=FCwe?= <PeterHuewe@gmx.de>
+Cc:     Calvin Owens <calvinowens@fb.com>, Jason Gunthorpe <jgg@ziepe.ca>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        linux-integrity@vger.kernel.org, linux-kernel@vger.kernel.org,
+        kernel-team@fb.com
+Date:   Tue, 12 Mar 2019 10:14:16 -0700
+In-Reply-To: <1552409969.24794.68.camel@linux.ibm.com>
+References: <358e89ed2b766d51b5f57abf31ab7a925ac63379.1552348123.git.calvinowens@fb.com>
+         <1552350463.23859.8.camel@HansenPartnership.com>
+         <20190312125028.GC9243@linux.intel.com>
+         <1552401766.3083.3.camel@HansenPartnership.com>
+         <1552409969.24794.68.camel@linux.ibm.com>
+Content-Type: text/plain; charset="UTF-8"
+X-Mailer: Evolution 3.26.6 
+Mime-Version: 1.0
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-4.19-stable review patch.  If anyone has any objections, please let me know.
+On Tue, 2019-03-12 at 12:59 -0400, Mimi Zohar wrote:
+> On Tue, 2019-03-12 at 07:42 -0700, James Bottomley wrote:
+> > On Tue, 2019-03-12 at 14:50 +0200, Jarkko Sakkinen wrote:
+> > > On Mon, Mar 11, 2019 at 05:27:43PM -0700, James Bottomley wrote:
+> > > > On Mon, 2019-03-11 at 16:54 -0700, Calvin Owens wrote:
+> > > > > e're having lots of problems with TPM commands timing out,
+> > > > > and we're seeing these problems across lots of different
+> > > > > hardware (both v1/v2).
+> > > > > 
+> > > > > I instrumented the driver to collect latency data, but I
+> > > > > wasn't able to find any specific timeout to fix: it seems
+> > > > > like many of them are too aggressive. So I tried replacing
+> > > > > all the timeout logic with a single universal long timeout,
+> > > > > and found that makes our TPMs 100% reliable.
+> > > > > 
+> > > > > Given that this timeout logic is very complex, problematic,
+> > > > > and appears to serve no real purpose, I propose simply
+> > > > > deleting all of it.
+> > > > 
+> > > > "no real purpose" is a bit strong given that all these timeouts
+> > > > are standards mandated.  The purpose stated by the standards is
+> > > > that there needs to be a way of differentiating the TPM crashed
+> > > > from the TPM is taking a very long time to respond.  For a
+> > > > normally functioning TPM it looks complex and unnecessary, but
+> > > > for a malfunctioning one it's a lifesaver.
+> > > 
+> > > Standards should be only followed when they make practical sense
+> > > and ignored when not. The range is only up to 2s anyway.
+> > 
+> > I don't disagree ... and I'm certainly not going to defend the TCG
+> > because I do think the complexity of some of its standards
+> > contributed to the lack of use of TPM 1.2.
+> > 
+> > However, I am saying we should root cause this problem rather than
+> > take a blind shot at the apparent timeout complexity.  My timeout
+> > instability is definitely related to the polling adjustments, so
+> > it's not unreasonable to think Facebooks might be as well.
+> 
+> James, I thought Peter sent you a tis "debug" tool to help you debug
+> the problem you're seeing.  Whatever happened?
 
-------------------
+No, not seen one.  I have tried to debug the problem, but it's really
+odd: my TPM is a polled nuvoton (so no irq line).  If you poll the data
+ready bit on my TPM too often, it simply drops off the bus and every
+TPM operation after that times out.  The only way to recover is to
+reboot.
 
-[ Upstream commit c6e2bd956936d925748581e4d0294f10f1d92f2c ]
-
-We currently get the following error with pixcir_ts driver during a
-suspend resume cycle:
-
-omap_i2c 4802a000.i2c: controller timed out
-pixcir_ts 1-005c: pixcir_int_enable: can't read reg 0x34 : -110
-pixcir_ts 1-005c: Failed to disable interrupt generation: -110
-pixcir_ts 1-005c: Failed to stop
-dpm_run_callback(): pixcir_i2c_ts_resume+0x0/0x98
-[pixcir_i2c_ts] returns -110
-PM: Device 1-005c failed to resume: error -110
-
-And at least am437x based devices with pixcir_ts will fail to resume
-to a touchscreen that is configured as the wakeup-source in device
-tree for these devices.
-
-This is because pixcir_ts tries to reconfigure it's registers for
-noirq suspend which fails. This also leaves i2c-omap in enabled state
-for suspend.
-
-Let's fix the pixcir_ts issue and make sure i2c-omap is suspended by
-adding SET_NOIRQ_SYSTEM_SLEEP_PM_OPS.
-
-Let's also get rid of some ifdefs while at it and replace them with
-__maybe_unused as SET_RUNTIME_PM_OPS and SET_NOIRQ_SYSTEM_SLEEP_PM_OPS
-already deal with the various PM Kconfig options.
-
-Reported-by: Keerthy <j-keerthy@ti.com>
-Signed-off-by: Tony Lindgren <tony@atomide.com>
-Acked-by: Vignesh R <vigneshr@ti.com>
-Signed-off-by: Wolfram Sang <wsa@the-dreams.de>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
----
- drivers/i2c/busses/i2c-omap.c | 13 +++++--------
- 1 file changed, 5 insertions(+), 8 deletions(-)
-
-diff --git a/drivers/i2c/busses/i2c-omap.c b/drivers/i2c/busses/i2c-omap.c
-index 65d06a819307..2ac86096ddd9 100644
---- a/drivers/i2c/busses/i2c-omap.c
-+++ b/drivers/i2c/busses/i2c-omap.c
-@@ -1498,8 +1498,7 @@ static int omap_i2c_remove(struct platform_device *pdev)
- 	return 0;
- }
- 
--#ifdef CONFIG_PM
--static int omap_i2c_runtime_suspend(struct device *dev)
-+static int __maybe_unused omap_i2c_runtime_suspend(struct device *dev)
- {
- 	struct omap_i2c_dev *omap = dev_get_drvdata(dev);
- 
-@@ -1525,7 +1524,7 @@ static int omap_i2c_runtime_suspend(struct device *dev)
- 	return 0;
- }
- 
--static int omap_i2c_runtime_resume(struct device *dev)
-+static int __maybe_unused omap_i2c_runtime_resume(struct device *dev)
- {
- 	struct omap_i2c_dev *omap = dev_get_drvdata(dev);
- 
-@@ -1540,20 +1539,18 @@ static int omap_i2c_runtime_resume(struct device *dev)
- }
- 
- static const struct dev_pm_ops omap_i2c_pm_ops = {
-+	SET_NOIRQ_SYSTEM_SLEEP_PM_OPS(pm_runtime_force_suspend,
-+				      pm_runtime_force_resume)
- 	SET_RUNTIME_PM_OPS(omap_i2c_runtime_suspend,
- 			   omap_i2c_runtime_resume, NULL)
- };
--#define OMAP_I2C_PM_OPS (&omap_i2c_pm_ops)
--#else
--#define OMAP_I2C_PM_OPS NULL
--#endif /* CONFIG_PM */
- 
- static struct platform_driver omap_i2c_driver = {
- 	.probe		= omap_i2c_probe,
- 	.remove		= omap_i2c_remove,
- 	.driver		= {
- 		.name	= "omap_i2c",
--		.pm	= OMAP_I2C_PM_OPS,
-+		.pm	= &omap_i2c_pm_ops,
- 		.of_match_table = of_match_ptr(omap_i2c_of_match),
- 	},
- };
--- 
-2.19.1
-
-
+James
 
