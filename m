@@ -6,63 +6,61 @@ X-Spam-Status: No, score=-6.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_PASS
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 96A79C43381
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 01:20:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7A165C43381
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 01:20:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 632F72171F
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 01:20:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4681A214AF
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 01:20:38 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1552353617;
-	bh=Wnk0q+CbhvWFTpRdlT0epmMGZR14yB324U8XK7qYnmA=;
+	s=default; t=1552353638;
+	bh=xa5kC5YzryJdodN0UlInO1ntlxrLHJ8KBE4JG1n52DI=;
 	h=Subject:From:In-Reply-To:References:Date:To:Cc:List-ID:From;
-	b=izwWcHwO7/2fudnWRa/RdFAeR/SORQpXssYc5kox/vkVsqsz0qbDzyyvhHyi1ykXo
-	 7OTLJ041o68+R8cfEvlvH3TaKw1XCQYeDILBUBzngTtvOZXwO7N1Rb6a7MJhAU7hr0
-	 zfHLcnaQsNN/mKC+qM6iMJn9W5tK5fYWIlRMWwPs=
+	b=bdNKzf1a+urC7COlzipAPMTNkym5FzmNDo9jgRdYF1HHPn/rG3XbJOr66PFWz2Z9P
+	 kRKPNjNzJ1bBoXGIf/YTWHcrZWrDhLPsz7fUn4K2v0ARsNddVDSZQoHBH0QDAX4ONN
+	 Gif3SMnhc1tG2WXmx85tbR4hNxmobfyulejTUkw8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726580AbfCLBUP (ORCPT
+        id S1726646AbfCLBUR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 11 Mar 2019 21:20:15 -0400
-Received: from mail.kernel.org ([198.145.29.99]:54412 "EHLO mail.kernel.org"
+        Mon, 11 Mar 2019 21:20:17 -0400
+Received: from mail.kernel.org ([198.145.29.99]:54424 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725932AbfCLBUP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 11 Mar 2019 21:20:15 -0400
-Subject: Re: [GIT PULL] tracing: Updates for v5.1
+        id S1725932AbfCLBUQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 11 Mar 2019 21:20:16 -0400
+Subject: Re: [GIT PULL] xen: fixes and features for 5.1-rc1
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1552353615;
-        bh=Wnk0q+CbhvWFTpRdlT0epmMGZR14yB324U8XK7qYnmA=;
+        s=default; t=1552353616;
+        bh=xa5kC5YzryJdodN0UlInO1ntlxrLHJ8KBE4JG1n52DI=;
         h=From:In-Reply-To:References:Date:To:Cc:From;
-        b=fGN70Gglv+uvjrB76bxO4rr8BUqfGdcBLeBA3HNNPF7uKpAtwSdViDxHNN3R0313A
-         XcjS7HQ+9mg9m/NFIfaf3CQ3funMdgoTkjsOXcTos/1IkqKDKoSrZgN8nxuUnMUCvg
-         txshhJ2eHOooe+fIofyNkzgd4udAM+76Kvad8w2U=
+        b=uUpF0xflvVrW7cy3EZgooWwX/m3vwK5RyW0pBlv0lle6kOzLXH/gleYJHiP5bCkVD
+         B2gXfjKG5DOygLvXcepUthIF18b/kKwPQWu+82EJiqKsHX/uHSkrXUA6LgoYnI8f60
+         fY2gdE0vkUHJjbCIE8Bxvqy5PbLFHGXLUS96H4i0=
 From:   pr-tracker-bot@kernel.org
-In-Reply-To: <20190310234019.64da3b0b@oasis.local.home>
-References: <20190310234019.64da3b0b@oasis.local.home>
+In-Reply-To: <20190311093951.18085-1-jgross@suse.com>
+References: <20190311093951.18085-1-jgross@suse.com>
 X-PR-Tracked-List-Id: <linux-kernel.vger.kernel.org>
-X-PR-Tracked-Message-Id: <20190310234019.64da3b0b@oasis.local.home>
-X-PR-Tracked-Remote: git://git.kernel.org/pub/scm/linux/kernel/git/rostedt/linux-trace.git
- trace-v5.1
-X-PR-Tracked-Commit-Id: 85f726a35e504418607b77c5e7da165dc1ea63ce
+X-PR-Tracked-Message-Id: <20190311093951.18085-1-jgross@suse.com>
+X-PR-Tracked-Remote: git://git.kernel.org/pub/scm/linux/kernel/git/xen/tip.git
+ for-linus-5.1a-rc1-tag
+X-PR-Tracked-Commit-Id: 01bd2ac2f55a1916d81dace12fa8d7ae1c79b5ea
 X-PR-Merge-Tree: torvalds/linux.git
 X-PR-Merge-Refname: refs/heads/master
-X-PR-Merge-Commit-Id: 6cdfa54cd22984ae785b0d496b53405d6da9ad1d
-Message-Id: <155235361504.2216.1846518876412959789.pr-tracker-bot@kernel.org>
+X-PR-Merge-Commit-Id: d14d7f14f177834788a276fc7b1317b539cedca2
+Message-Id: <155235361596.2216.14646913224859772431.pr-tracker-bot@kernel.org>
 Date:   Tue, 12 Mar 2019 01:20:15 +0000
-To:     Steven Rostedt <rostedt@goodmis.org>
-Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Ingo Molnar <mingo@kernel.org>,
-        Andrew Morton <akpm@linux-foundation.org>
+To:     Juergen Gross <jgross@suse.com>
+Cc:     torvalds@linux-foundation.org, linux-kernel@vger.kernel.org,
+        xen-devel@lists.xenproject.org, boris.ostrovsky@oracle.com
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The pull request you sent on Sun, 10 Mar 2019 23:40:19 -0400:
+The pull request you sent on Mon, 11 Mar 2019 10:39:51 +0100:
 
-> git://git.kernel.org/pub/scm/linux/kernel/git/rostedt/linux-trace.git trace-v5.1
+> git://git.kernel.org/pub/scm/linux/kernel/git/xen/tip.git for-linus-5.1a-rc1-tag
 
 has been merged into torvalds/linux.git:
-https://git.kernel.org/torvalds/c/6cdfa54cd22984ae785b0d496b53405d6da9ad1d
+https://git.kernel.org/torvalds/c/d14d7f14f177834788a276fc7b1317b539cedca2
 
 Thank you!
 
