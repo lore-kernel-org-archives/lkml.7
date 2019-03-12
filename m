@@ -4,50 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8FA1DC43381
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 17:20:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 938B2C43381
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 17:20:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 51305206DF
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 17:20:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 65D54214AF
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 17:20:45 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1552411237;
-	bh=hNeamPqUYfhKIqMsOlmx2GdaGQ5w0pwM2Ccygr/rSXE=;
+	s=default; t=1552411245;
+	bh=FufOljOqkvRzaqGVwTHk7kBhg+V0Q8hHSme7g/JxFTE=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=TkfAnu5o4bEPFOJln3T0miQjSScfKDMeSHQOzkJqqM/bXD5NMdqcpMfcpKX5Xa/mr
-	 LPD3PFn2hu9e3tQ8mmlroNwpCV/C4YMkgQ8nUT17axkbKNBr4RAS4i5YxcG2kDMkHk
-	 UMpdyQjNTxRt3XO4MM8woc0h5qvEiVNdXcQBttds=
+	b=iNCccPOFMcQeTqMqnKSkqUAp228rB9iQpXh+pfN42Ixq/uBMdhevNeQG3mMgyZkJD
+	 sMpJxzYSBe7ZMbOesVGZYmk+xxtFQP9qXJz57WMEvyhpjS/Mv+nQMCmOIsuRiLAqBb
+	 MY3jf+xrFRYr3uKT985PaG15DpvF8YaRZKNJb9g4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728016AbfCLRUg (ORCPT
+        id S1729019AbfCLRUn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 12 Mar 2019 13:20:36 -0400
-Received: from mail.kernel.org ([198.145.29.99]:35810 "EHLO mail.kernel.org"
+        Tue, 12 Mar 2019 13:20:43 -0400
+Received: from mail.kernel.org ([198.145.29.99]:35890 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730037AbfCLRSU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 12 Mar 2019 13:18:20 -0400
+        id S1730032AbfCLRST (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 12 Mar 2019 13:18:19 -0400
 Received: from localhost (unknown [104.133.8.98])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 7798A218A3;
-        Tue, 12 Mar 2019 17:18:19 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id BE2A1218A1;
+        Tue, 12 Mar 2019 17:18:18 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1552411099;
-        bh=hNeamPqUYfhKIqMsOlmx2GdaGQ5w0pwM2Ccygr/rSXE=;
+        s=default; t=1552411098;
+        bh=FufOljOqkvRzaqGVwTHk7kBhg+V0Q8hHSme7g/JxFTE=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=pbW4EXdcneaZk2w1zzm3lEtPMTY9f1Z6xGHs4TvfeR6Z+vR+I5/FWbWrxAg/MUScK
-         Am/3rW+y42pxvGaI5NonkvpHykTl+OZRXqFsZVyfggkqWT46PQidc4XwFkM9aqgkyv
-         5mUd/iVqy2fp97KSHh+/qExBW5yUM24x6ItIi+As=
+        b=Rf55SV/ULgFJpyw7APpMUlYWz655Jny3F5g2Rz7JzhPd63Mr1B9u3ceQ6nvAyx14z
+         lQpCiEU0t656ZrCOCojRxpQ5bZ3qjYYH2w+//wjQeFIuumDdE+xESj+Uu+bFYhtAn8
+         2o5nGNtQjAoFEXCTVnmMf7/0FRiJNX1GT40/jRB4=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
+        stable@vger.kernel.org, Markus Reichl <m.reichl@fivetechno.de>,
+        Ulf Hansson <ulf.hansson@linaro.org>,
         Marek Szyprowski <m.szyprowski@samsung.com>,
         Krzysztof Kozlowski <krzk@kernel.org>
-Subject: [PATCH 4.9 90/96] ARM: dts: exynos: Add minimal clkout parameters to Exynos3250 PMU
-Date:   Tue, 12 Mar 2019 10:10:48 -0700
-Message-Id: <20190312171041.263075637@linuxfoundation.org>
+Subject: [PATCH 4.9 89/96] ARM: dts: exynos: Fix pinctrl definition for eMMC RTSN line on Odroid X2/U3
+Date:   Tue, 12 Mar 2019 10:10:47 -0700
+Message-Id: <20190312171041.190959837@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190312171034.530434962@linuxfoundation.org>
 References: <20190312171034.530434962@linuxfoundation.org>
@@ -68,34 +69,70 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Marek Szyprowski <m.szyprowski@samsung.com>
 
-commit a66352e005488ecb4b534ba1af58a9f671eba9b8 upstream.
+commit ec33745bccc8f336957c751f4153421cc9ef5a54 upstream.
 
-Add minimal parameters needed by the Exynos CLKOUT driver to Exynos3250
-PMU node. This fixes the following warning on boot:
+Commit 225da7e65a03 ("ARM: dts: add eMMC reset line for
+exynos4412-odroid-common") added MMC power sequence for eMMC card of
+Odroid X2/U3. It reused generic sd1_cd pin control configuration node
+and only disabled pull-up. However that time the pinctrl configuration
+was not applied during MMC power sequence driver initialization. This
+has been changed later by commit d97a1e5d7cd2 ("mmc: pwrseq: convert to
+proper platform device").
 
-exynos_clkout_init: failed to register clkout clock
+It turned out then, that the provided pinctrl configuration is not
+correct, because the eMMC_RTSN line is being re-configured as 'special
+function/card detect function for mmc1 controller' not the simple
+'output', thus the power sequence driver doesn't really set the pin
+value. This in effect broke the reboot of Odroid X2/U3 boards. Fix this
+by providing separate node with eMMC_RTSN pin configuration.
 
-Fixes: d19bb397e19e ("ARM: dts: exynos: Update PMU node with CLKOUT related data")
 Cc: <stable@vger.kernel.org>
+Reported-by: Markus Reichl <m.reichl@fivetechno.de>
+Suggested-by: Ulf Hansson <ulf.hansson@linaro.org>
+Fixes: 225da7e65a03 ("ARM: dts: add eMMC reset line for exynos4412-odroid-common")
 Signed-off-by: Marek Szyprowski <m.szyprowski@samsung.com>
 Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- arch/arm/boot/dts/exynos3250.dtsi |    3 +++
- 1 file changed, 3 insertions(+)
+ arch/arm/boot/dts/exynos4412-odroid-common.dtsi |   13 ++++++-------
+ 1 file changed, 6 insertions(+), 7 deletions(-)
 
---- a/arch/arm/boot/dts/exynos3250.dtsi
-+++ b/arch/arm/boot/dts/exynos3250.dtsi
-@@ -170,6 +170,9 @@
- 			interrupt-controller;
- 			#interrupt-cells = <3>;
- 			interrupt-parent = <&gic>;
-+			clock-names = "clkout8";
-+			clocks = <&cmu CLK_FIN_PLL>;
-+			#clock-cells = <1>;
- 		};
+--- a/arch/arm/boot/dts/exynos4412-odroid-common.dtsi
++++ b/arch/arm/boot/dts/exynos4412-odroid-common.dtsi
+@@ -70,7 +70,7 @@
+ 	};
  
- 		mipi_phy: video-phy {
+ 	emmc_pwrseq: pwrseq {
+-		pinctrl-0 = <&sd1_cd>;
++		pinctrl-0 = <&emmc_rstn>;
+ 		pinctrl-names = "default";
+ 		compatible = "mmc-pwrseq-emmc";
+ 		reset-gpios = <&gpk1 2 GPIO_ACTIVE_LOW>;
+@@ -161,12 +161,6 @@
+ 	cpu0-supply = <&buck2_reg>;
+ };
+ 
+-/* RSTN signal for eMMC */
+-&sd1_cd {
+-	samsung,pin-pud = <EXYNOS_PIN_PULL_NONE>;
+-	samsung,pin-drv = <EXYNOS4_PIN_DRV_LV1>;
+-};
+-
+ &pinctrl_1 {
+ 	gpio_power_key: power_key {
+ 		samsung,pins = "gpx1-3";
+@@ -184,6 +178,11 @@
+ 		samsung,pins = "gpx3-7";
+ 		samsung,pin-pud = <EXYNOS_PIN_PULL_DOWN>;
+ 	};
++
++	emmc_rstn: emmc-rstn {
++		samsung,pins = "gpk1-2";
++		samsung,pin-pud = <EXYNOS_PIN_PULL_NONE>;
++	};
+ };
+ 
+ &ehci {
 
 
