@@ -7,50 +7,47 @@ X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1E3EBC43381
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 17:56:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D5DFCC43381
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 17:57:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D779A2087C
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 17:56:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8FE202175B
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 17:57:06 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1552413413;
-	bh=+Ded+RTZgEhVOrV7lpwGqAe98slpH5PBio9QDHr/boI=;
+	s=default; t=1552413426;
+	bh=KPjBbwYTc392Zb864tvG7fsa+jZUDjsdluEae1lGdB4=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=b9IzAlUk0fPMhZu7yrs9wxbuJysxQxcUd3+E38PhjuIspvnEtC7eZmkYZqcXVJDNT
-	 ydLvdxjyfhdAsRythn09ztXSDeo/+K1L0CW64uGhkRKfK49gDxRgrKUWCQLJFLW38L
-	 5vo1fWGvWYY9H84HJ225VO21baTvxUsPWArZt79M=
+	b=yTlGD4jPTHjxlf8BrtxhxLWKNmiZ7u+inuGxtHakReTIBoVdze2+UoUY3CmMJw6jR
+	 ceCs7tbdGjT+xTq6N3YYGfauoivKbKiwHWir/SrFuYJS3Rm1tm7sOjUnPU3BjVx23D
+	 sclHuQTmPUGP8mQ1ejDW2UkeWek709YCUsIx5IEc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728237AbfCLR4q (ORCPT
+        id S1728943AbfCLR5F (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 12 Mar 2019 13:56:46 -0400
+        Tue, 12 Mar 2019 13:57:05 -0400
 Received: from mail.kernel.org ([198.145.29.99]:51536 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728140AbfCLRNy (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 12 Mar 2019 13:13:54 -0400
+        id S1728119AbfCLRNv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 12 Mar 2019 13:13:51 -0400
 Received: from localhost (unknown [104.133.8.98])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 9EA3E2173C;
-        Tue, 12 Mar 2019 17:13:53 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id BE8EE2183F;
+        Tue, 12 Mar 2019 17:13:50 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1552410833;
-        bh=+Ded+RTZgEhVOrV7lpwGqAe98slpH5PBio9QDHr/boI=;
+        s=default; t=1552410830;
+        bh=KPjBbwYTc392Zb864tvG7fsa+jZUDjsdluEae1lGdB4=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Fx7JXm8gmgnDw91MVLaDT00ysDdHgmnnAOmLrwrZVfjBzdFOOFOsdHScHTrG6sm9u
-         VqIrfBtPNzvvdrqdsktuQDBgfL6m+2TjfWqPwawbHl5nM69W2c2DK7b9imuVm9W68X
-         Bj5Ne4fUuJVshlTk0i3X4WLRipDCYYUca3WsMqXU=
+        b=EQstjcnet2YtGAM/pluvDFewLRAj8MgtU1VuBOH8qN6A4x5FN1kJydgs2/SXd59a+
+         jr6k5GN/nyMFqJ1Op/BW+78VV4FvI5vbjzrsjutPodrnrm0z/FaTQvGT5O6kbk8JEt
+         frcPPWLtD5ceNk2sVsb6iHK8dJZCoSRJxhnyCRIg=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Piotr Jaroszynski <pjaroszynski@nvidia.com>,
-        Christoph Hellwig <hch@lst.de>,
-        Dave Chinner <dchinner@redhat.com>,
-        "Darrick J. Wong" <darrick.wong@oracle.com>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 022/149] iomap: get/put the page in iomap_page_create/release()
-Date:   Tue, 12 Mar 2019 10:07:20 -0700
-Message-Id: <20190312170351.570399439@linuxfoundation.org>
+        stable@vger.kernel.org, Joerg Roedel <joro@8bytes.org>,
+        Jerry Snitselaar <jsnitsel@redhat.com>,
+        Joerg Roedel <jroedel@suse.de>, Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.19 009/149] iommu/amd: Unmap all mapped pages in error path of map_sg
+Date:   Tue, 12 Mar 2019 10:07:07 -0700
+Message-Id: <20190312170350.285790499@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190312170349.421581206@linuxfoundation.org>
 References: <20190312170349.421581206@linuxfoundation.org>
@@ -69,75 +66,38 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-[ Upstream commit 8e47a457321ca1a74ad194ab5dcbca764bc70731 ]
+[ Upstream commit f1724c0883bb0ce93b8dcb94b53dcca3b75ac9a7 ]
 
-migrate_page_move_mapping() expects pages with private data set to have
-a page_count elevated by 1.  This is what used to happen for xfs through
-the buffer_heads code before the switch to iomap in commit 82cb14175e7d
-("xfs: add support for sub-pagesize writeback without buffer_heads").
-Not having the count elevated causes move_pages() to fail on memory
-mapped files coming from xfs.
+In the error path of map_sg there is an incorrect if condition
+for breaking out of the loop that searches the scatterlist
+for mapped pages to unmap. Instead of breaking out of the
+loop once all the pages that were mapped have been unmapped,
+it will break out of the loop after it has unmapped 1 page.
+Fix the condition, so it breaks out of the loop only after
+all the mapped pages have been unmapped.
 
-Make iomap compatible with the migrate_page_move_mapping() assumption by
-elevating the page count as part of iomap_page_create() and lowering it
-in iomap_page_release().
-
-It causes the move_pages() syscall to misbehave on memory mapped files
-from xfs.  It does not not move any pages, which I suppose is "just" a
-perf issue, but it also ends up returning a positive number which is out
-of spec for the syscall.  Talking to Michal Hocko, it sounds like
-returning positive numbers might be a necessary update to move_pages()
-anyway though.
-
-Fixes: 82cb14175e7d ("xfs: add support for sub-pagesize writeback without buffer_heads")
-Signed-off-by: Piotr Jaroszynski <pjaroszynski@nvidia.com>
-[hch: actually get/put the page iomap_migrate_page() to make it work
-      properly]
-Signed-off-by: Christoph Hellwig <hch@lst.de>
-Reviewed-by: Dave Chinner <dchinner@redhat.com>
-Reviewed-by: Darrick J. Wong <darrick.wong@oracle.com>
-Signed-off-by: Darrick J. Wong <darrick.wong@oracle.com>
+Fixes: 80187fd39dcb ("iommu/amd: Optimize map_sg and unmap_sg")
+Cc: Joerg Roedel <joro@8bytes.org>
+Signed-off-by: Jerry Snitselaar <jsnitsel@redhat.com>
+Signed-off-by: Joerg Roedel <jroedel@suse.de>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- fs/iomap.c | 9 +++++++++
- 1 file changed, 9 insertions(+)
+ drivers/iommu/amd_iommu.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/fs/iomap.c b/fs/iomap.c
-index e57fb1e534c5..2e3e64012db7 100644
---- a/fs/iomap.c
-+++ b/fs/iomap.c
-@@ -117,6 +117,12 @@ iomap_page_create(struct inode *inode, struct page *page)
- 	atomic_set(&iop->read_count, 0);
- 	atomic_set(&iop->write_count, 0);
- 	bitmap_zero(iop->uptodate, PAGE_SIZE / SECTOR_SIZE);
-+
-+	/*
-+	 * migrate_page_move_mapping() assumes that pages with private data have
-+	 * their count elevated by 1.
-+	 */
-+	get_page(page);
- 	set_page_private(page, (unsigned long)iop);
- 	SetPagePrivate(page);
- 	return iop;
-@@ -133,6 +139,7 @@ iomap_page_release(struct page *page)
- 	WARN_ON_ONCE(atomic_read(&iop->write_count));
- 	ClearPagePrivate(page);
- 	set_page_private(page, 0);
-+	put_page(page);
- 	kfree(iop);
- }
+diff --git a/drivers/iommu/amd_iommu.c b/drivers/iommu/amd_iommu.c
+index 2a5c05ca7fca..2ab87e3f07e6 100644
+--- a/drivers/iommu/amd_iommu.c
++++ b/drivers/iommu/amd_iommu.c
+@@ -2555,7 +2555,7 @@ static int map_sg(struct device *dev, struct scatterlist *sglist,
+ 			bus_addr  = address + s->dma_address + (j << PAGE_SHIFT);
+ 			iommu_unmap_page(domain, bus_addr, PAGE_SIZE);
  
-@@ -565,8 +572,10 @@ iomap_migrate_page(struct address_space *mapping, struct page *newpage,
- 
- 	if (page_has_private(page)) {
- 		ClearPagePrivate(page);
-+		get_page(newpage);
- 		set_page_private(newpage, page_private(page));
- 		set_page_private(page, 0);
-+		put_page(page);
- 		SetPagePrivate(newpage);
+-			if (--mapped_pages)
++			if (--mapped_pages == 0)
+ 				goto out_free_iova;
+ 		}
  	}
- 
 -- 
 2.19.1
 
