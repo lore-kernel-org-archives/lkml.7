@@ -7,48 +7,50 @@ X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AAF77C43381
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 17:52:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A1364C43381
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 17:52:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7A2EA2087C
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 17:52:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 69A06205C9
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 17:52:35 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1552413148;
-	bh=rEIOtqErgSa+Q5w2Pk9UbYJ4gITvMVw7bTMRTVZ9Ikc=;
+	s=default; t=1552413155;
+	bh=UY4sQtI/RwRrKg7VD/Pbm06wmDUuHTgERBt6Ts9nwrI=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=ExB8xCSEJDdwUFjS3OHKSZz8FptNyE2wJHrIZwHtC7O2iYSZWgMDc4Mef5xZI5s9T
-	 Up4hjbmLcbnOmcyZG5978Yd2QlNecyKhVpvmAeLnR0JCFYfsZ96B+Vj32LYi4e+zaK
-	 Mr0lSerssMMwq4iC6Y/BOnfdFzYV+scKzKDoup+M=
+	b=CLZCCUIZsHBzDh6PggHSZ0PqYsUhRWGqEh+t0QBhNlZB4Pq5tDGCjyDUZWPpzXGqW
+	 UwHXqE+BwaeC4wlHAtctdjW6UuJAN7QiDQxA8cuF9IWWucZa5YkWwDgVFM6ZpwEdiB
+	 aTl27DrAloLcXrfb7sufYbvKSAEZM+uc55H6gilc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728053AbfCLRwW (ORCPT
+        id S1728374AbfCLRwd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 12 Mar 2019 13:52:22 -0400
-Received: from mail.kernel.org ([198.145.29.99]:53230 "EHLO mail.kernel.org"
+        Tue, 12 Mar 2019 13:52:33 -0400
+Received: from mail.kernel.org ([198.145.29.99]:53076 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728366AbfCLRO2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 12 Mar 2019 13:14:28 -0400
+        id S1728354AbfCLRO0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 12 Mar 2019 13:14:26 -0400
 Received: from localhost (unknown [104.133.8.98])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 485682171F;
-        Tue, 12 Mar 2019 17:14:28 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 2551F21850;
+        Tue, 12 Mar 2019 17:14:26 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1552410868;
-        bh=rEIOtqErgSa+Q5w2Pk9UbYJ4gITvMVw7bTMRTVZ9Ikc=;
+        s=default; t=1552410866;
+        bh=UY4sQtI/RwRrKg7VD/Pbm06wmDUuHTgERBt6Ts9nwrI=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=gRxD47iAF2vKIRFoxCwGGcFF9AR6IJv5QBeprSHevt3+xmKodMOA/xk7GTnA+9O8Q
-         crVNnm9+uRxvC+lSUhnJtbwXm5E3thywOsZladsDXBOyKMCNSkGxlDmrzmS48nvqI9
-         jq3KfjmmB6ss/2xXAxjmkLhzz7KI/2TgGV+4B5aE=
+        b=RAKMS2gOpsM/UbaFP4G+MHfbiy8wsbAJbN6ROlPG6rA3uziNx2/vcpuhep8zLHSnH
+         z+SCaO0TMnGy6xGFsZI6TomqysweTwoBmqGR59ECpsool5jy/mav63T0Lp7O8Qnlsp
+         dkgwqwPQPJEbh/JckLMY2p0/rol9ysnrc1SD1CGQ=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         stable@vger.kernel.org,
-        Geert Uytterhoeven <geert+renesas@glider.be>,
-        Simon Horman <horms+renesas@verge.net.au>,
+        Martin Blumenstingl <martin.blumenstingl@googlemail.com>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Anand Moon <linux.amoon@gmail.com>,
+        Kevin Hilman <khilman@baylibre.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 069/149] arm64: dts: renesas: r8a7796: Enable DMA for SCIF2
-Date:   Tue, 12 Mar 2019 10:08:07 -0700
-Message-Id: <20190312170355.460838623@linuxfoundation.org>
+Subject: [PATCH 4.19 066/149] ARM: dts: meson8b: odroidc1: mark the SD card detection GPIO active-low
+Date:   Tue, 12 Mar 2019 10:08:04 -0700
+Message-Id: <20190312170355.238969846@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190312170349.421581206@linuxfoundation.org>
 References: <20190312170349.421581206@linuxfoundation.org>
@@ -67,32 +69,44 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-[ Upstream commit 97f26702bc95b5c3a72671d5c6675e4d6ee0a2f4 ]
+[ Upstream commit 3fb348e030319f20ebbde082a449d4bf8a96f2fd ]
 
-SCIF2 on R-Car M3-W can be used with both DMAC1 and DMAC2.
+After commit 89a5e15bcba87d ("gpio/mmc/of: Respect polarity in the device
+tree") SD cards are not detected anymore.
 
-Fixes: dbcae5ea4bd27409 ("arm64: dts: r8a7796: Enable SCIF DMA")
-Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
-Signed-off-by: Simon Horman <horms+renesas@verge.net.au>
+The CD GPIO is "active low" on Odroid-C1. The MMC dt-bindings specify:
+"[...] using the "cd-inverted" property means, that the CD line is active
+high, i.e. it is high, when a card is inserted".
+
+Fix the description of the SD card by marking it as GPIO_ACTIVE_LOW and
+drop the "cd-inverted" property. This makes the definition consistent
+with the existing dt-bindings and fixes the check whether an SD card is
+inserted.
+
+Fixes: e03efbce6bebf5 ("ARM: dts: meson8b-odroidc1: add microSD support")
+Signed-off-by: Martin Blumenstingl <martin.blumenstingl@googlemail.com>
+Reviewed-by: Linus Walleij <linus.walleij@linaro.org>
+Tested-by: Anand Moon <linux.amoon@gmail.com>
+Signed-off-by: Kevin Hilman <khilman@baylibre.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/arm64/boot/dts/renesas/r8a7796.dtsi | 3 +++
- 1 file changed, 3 insertions(+)
+ arch/arm/boot/dts/meson8b-odroidc1.dts | 3 +--
+ 1 file changed, 1 insertion(+), 2 deletions(-)
 
-diff --git a/arch/arm64/boot/dts/renesas/r8a7796.dtsi b/arch/arm64/boot/dts/renesas/r8a7796.dtsi
-index cbd35c00b4af..33cb0281c39c 100644
---- a/arch/arm64/boot/dts/renesas/r8a7796.dtsi
-+++ b/arch/arm64/boot/dts/renesas/r8a7796.dtsi
-@@ -1161,6 +1161,9 @@
- 				 <&cpg CPG_CORE R8A7796_CLK_S3D1>,
- 				 <&scif_clk>;
- 			clock-names = "fck", "brg_int", "scif_clk";
-+			dmas = <&dmac1 0x13>, <&dmac1 0x12>,
-+			       <&dmac2 0x13>, <&dmac2 0x12>;
-+			dma-names = "tx", "rx", "tx", "rx";
- 			power-domains = <&sysc R8A7796_PD_ALWAYS_ON>;
- 			resets = <&cpg 310>;
- 			status = "disabled";
+diff --git a/arch/arm/boot/dts/meson8b-odroidc1.dts b/arch/arm/boot/dts/meson8b-odroidc1.dts
+index 9e48936e2d8d..8fdeeffecbdb 100644
+--- a/arch/arm/boot/dts/meson8b-odroidc1.dts
++++ b/arch/arm/boot/dts/meson8b-odroidc1.dts
+@@ -171,8 +171,7 @@
+ 		cap-sd-highspeed;
+ 		disable-wp;
+ 
+-		cd-gpios = <&gpio CARD_6 GPIO_ACTIVE_HIGH>;
+-		cd-inverted;
++		cd-gpios = <&gpio CARD_6 GPIO_ACTIVE_LOW>;
+ 
+ 		vmmc-supply = <&tflash_vdd>;
+ 		vqmmc-supply = <&tf_io>;
 -- 
 2.19.1
 
