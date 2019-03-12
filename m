@@ -4,54 +4,54 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CF9B0C43381
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 17:23:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 10E17C43381
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 17:24:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A1B9A206DF
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 17:23:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D1BDE206DF
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 17:24:05 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1552411434;
-	bh=yLIBXgIYg42usoCHmf+dkwStU3KhRHWdYsmEaixheZc=;
+	s=default; t=1552411445;
+	bh=jWtSe6Bsoi8tRYEr5BM4TQb3RnNxYldFqpQTrBC6txk=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=NKaFJtR9VZ1gLBN3rUujZhxL4N5je5b4OI2tY2J3z8PXDK0VghM6jFuLbZx24z0S9
-	 7f1sxIkRUGycV7DvNx7BM7o+eDXvddN8ry/UwxTeh8VMhTYPt3s5MY2/fbz6FNAkNe
-	 pumXCR5UmvZ6O7RMPNC2CfQBUHg00XGUHHR97UQk=
+	b=0cOucNJdm+YEvOlJa4p9pWqh0n+/ptrIofhfgPZa08LIGlKUkfZpyCkatJZSPmJHQ
+	 xXkchpgOukJs2LShgdMW9CIgMtNGdSM9Ad3iJcrd29ArHdFqL8XvIeDTIhZsLs2HZt
+	 lM7Spaaa+KRcNxsxRc+3/zjUhNUhYRPMOqeAQYoM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730121AbfCLRXx (ORCPT
+        id S1729827AbfCLRR5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 12 Mar 2019 13:23:53 -0400
-Received: from mail.kernel.org ([198.145.29.99]:34736 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729829AbfCLRR5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Tue, 12 Mar 2019 13:17:57 -0400
+Received: from mail.kernel.org ([198.145.29.99]:59628 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1729345AbfCLRQw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 12 Mar 2019 13:16:52 -0400
 Received: from localhost (unknown [104.133.8.98])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D9BE821850;
-        Tue, 12 Mar 2019 17:17:56 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id DD916217F5;
+        Tue, 12 Mar 2019 17:16:51 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1552411077;
-        bh=yLIBXgIYg42usoCHmf+dkwStU3KhRHWdYsmEaixheZc=;
+        s=default; t=1552411012;
+        bh=jWtSe6Bsoi8tRYEr5BM4TQb3RnNxYldFqpQTrBC6txk=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Ooe2/0+Zc5K8M2M8vk4CgUgrSAgD7aplOCcPz2lLcOyVb7+05XI1hNYPNbnxiOXmp
-         EW+C0qfuwFYgMJqpTUSg719jIkH81UEFBXdc57KF0ibeR2MPC4lhLNAKakcxh8YX9e
-         moglffRDGNxmsoikkFj7AikFlTs7viIDF1IG2BfY=
+        b=k8dE0SArFSbp8xwwK9GH91bQWKz+yW9QPfUzdoFcVK8tX7oCHU7X3pedpkHvmn8Jk
+         e1y8eGauXXTKPO2aM4s8tGIj1mNMhC7/SENYG/ZqHzu2u7WOY2g4MswaJOzh62MBdn
+         WmdVJ8pTaXqrj3H66vCFHi8fb8FewEFCaH+6p3ic=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Codrin Ciubotariu <codrin.ciubotariu@microchip.com>,
-        Ludovic Desroches <ludovic.desroches@microchip.com>,
-        Vinod Koul <vkoul@kernel.org>, Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.9 71/96] dmaengine: at_xdmac: Fix wrongfull report of a channel as in use
-Date:   Tue, 12 Mar 2019 10:10:29 -0700
-Message-Id: <20190312171039.978394570@linuxfoundation.org>
+        stable@vger.kernel.org, Keerthy <j-keerthy@ti.com>,
+        Tony Lindgren <tony@atomide.com>, Vignesh R <vigneshr@ti.com>,
+        Wolfram Sang <wsa@the-dreams.de>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.14 116/135] i2c: omap: Use noirq system sleep pm ops to idle device for suspend
+Date:   Tue, 12 Mar 2019 10:09:23 -0700
+Message-Id: <20190312170351.909823348@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
-In-Reply-To: <20190312171034.530434962@linuxfoundation.org>
-References: <20190312171034.530434962@linuxfoundation.org>
+In-Reply-To: <20190312170341.127810985@linuxfoundation.org>
+References: <20190312170341.127810985@linuxfoundation.org>
 User-Agent: quilt/0.65
 X-stable: review
 X-Patchwork-Hint: ignore
@@ -63,102 +63,94 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-4.9-stable review patch.  If anyone has any objections, please let me know.
+4.14-stable review patch.  If anyone has any objections, please let me know.
 
 ------------------
 
-[ Upstream commit dc3f595b6617ebc0307e0ce151e8f2f2b2489b95 ]
+[ Upstream commit c6e2bd956936d925748581e4d0294f10f1d92f2c ]
 
-atchan->status variable is used to store two different information:
- - pass channel interrupts status from interrupt handler to tasklet;
- - channel information like whether it is cyclic or paused;
+We currently get the following error with pixcir_ts driver during a
+suspend resume cycle:
 
-This causes a bug when device_terminate_all() is called,
-(AT_XDMAC_CHAN_IS_CYCLIC cleared on atchan->status) and then a late End
-of Block interrupt arrives (AT_XDMAC_CIS_BIS), which sets bit 0 of
-atchan->status. Bit 0 is also used for AT_XDMAC_CHAN_IS_CYCLIC, so when
-a new descriptor for a cyclic transfer is created, the driver reports
-the channel as in use:
+omap_i2c 4802a000.i2c: controller timed out
+pixcir_ts 1-005c: pixcir_int_enable: can't read reg 0x34 : -110
+pixcir_ts 1-005c: Failed to disable interrupt generation: -110
+pixcir_ts 1-005c: Failed to stop
+dpm_run_callback(): pixcir_i2c_ts_resume+0x0/0x98
+[pixcir_i2c_ts] returns -110
+PM: Device 1-005c failed to resume: error -110
 
-if (test_and_set_bit(AT_XDMAC_CHAN_IS_CYCLIC, &atchan->status)) {
-	dev_err(chan2dev(chan), "channel currently used\n");
-	return NULL;
-}
+And at least am437x based devices with pixcir_ts will fail to resume
+to a touchscreen that is configured as the wakeup-source in device
+tree for these devices.
 
-This patch fixes the bug by adding a different struct member to keep
-the interrupts status separated from the channel status bits.
+This is because pixcir_ts tries to reconfigure it's registers for
+noirq suspend which fails. This also leaves i2c-omap in enabled state
+for suspend.
 
-Fixes: e1f7c9eee707 ("dmaengine: at_xdmac: creation of the atmel eXtended DMA Controller driver")
-Signed-off-by: Codrin Ciubotariu <codrin.ciubotariu@microchip.com>
-Acked-by: Ludovic Desroches <ludovic.desroches@microchip.com>
-Signed-off-by: Vinod Koul <vkoul@kernel.org>
+Let's fix the pixcir_ts issue and make sure i2c-omap is suspended by
+adding SET_NOIRQ_SYSTEM_SLEEP_PM_OPS.
+
+Let's also get rid of some ifdefs while at it and replace them with
+__maybe_unused as SET_RUNTIME_PM_OPS and SET_NOIRQ_SYSTEM_SLEEP_PM_OPS
+already deal with the various PM Kconfig options.
+
+Reported-by: Keerthy <j-keerthy@ti.com>
+Signed-off-by: Tony Lindgren <tony@atomide.com>
+Acked-by: Vignesh R <vigneshr@ti.com>
+Signed-off-by: Wolfram Sang <wsa@the-dreams.de>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/dma/at_xdmac.c | 19 ++++++++++---------
- 1 file changed, 10 insertions(+), 9 deletions(-)
+ drivers/i2c/busses/i2c-omap.c | 13 +++++--------
+ 1 file changed, 5 insertions(+), 8 deletions(-)
 
-diff --git a/drivers/dma/at_xdmac.c b/drivers/dma/at_xdmac.c
-index ee7b48d5243c..b222dd7afe8e 100644
---- a/drivers/dma/at_xdmac.c
-+++ b/drivers/dma/at_xdmac.c
-@@ -203,6 +203,7 @@ struct at_xdmac_chan {
- 	u32				save_cim;
- 	u32				save_cnda;
- 	u32				save_cndc;
-+	u32				irq_status;
- 	unsigned long			status;
- 	struct tasklet_struct		tasklet;
- 	struct dma_slave_config		sconfig;
-@@ -1582,8 +1583,8 @@ static void at_xdmac_tasklet(unsigned long data)
- 	struct at_xdmac_desc	*desc;
- 	u32			error_mask;
+diff --git a/drivers/i2c/busses/i2c-omap.c b/drivers/i2c/busses/i2c-omap.c
+index 23c2ea2baedc..12ba183693d6 100644
+--- a/drivers/i2c/busses/i2c-omap.c
++++ b/drivers/i2c/busses/i2c-omap.c
+@@ -1477,8 +1477,7 @@ static int omap_i2c_remove(struct platform_device *pdev)
+ 	return 0;
+ }
  
--	dev_dbg(chan2dev(&atchan->chan), "%s: status=0x%08lx\n",
--		 __func__, atchan->status);
-+	dev_dbg(chan2dev(&atchan->chan), "%s: status=0x%08x\n",
-+		__func__, atchan->irq_status);
+-#ifdef CONFIG_PM
+-static int omap_i2c_runtime_suspend(struct device *dev)
++static int __maybe_unused omap_i2c_runtime_suspend(struct device *dev)
+ {
+ 	struct omap_i2c_dev *omap = dev_get_drvdata(dev);
  
- 	error_mask = AT_XDMAC_CIS_RBEIS
- 		     | AT_XDMAC_CIS_WBEIS
-@@ -1591,15 +1592,15 @@ static void at_xdmac_tasklet(unsigned long data)
+@@ -1504,7 +1503,7 @@ static int omap_i2c_runtime_suspend(struct device *dev)
+ 	return 0;
+ }
  
- 	if (at_xdmac_chan_is_cyclic(atchan)) {
- 		at_xdmac_handle_cyclic(atchan);
--	} else if ((atchan->status & AT_XDMAC_CIS_LIS)
--		   || (atchan->status & error_mask)) {
-+	} else if ((atchan->irq_status & AT_XDMAC_CIS_LIS)
-+		   || (atchan->irq_status & error_mask)) {
- 		struct dma_async_tx_descriptor  *txd;
+-static int omap_i2c_runtime_resume(struct device *dev)
++static int __maybe_unused omap_i2c_runtime_resume(struct device *dev)
+ {
+ 	struct omap_i2c_dev *omap = dev_get_drvdata(dev);
  
--		if (atchan->status & AT_XDMAC_CIS_RBEIS)
-+		if (atchan->irq_status & AT_XDMAC_CIS_RBEIS)
- 			dev_err(chan2dev(&atchan->chan), "read bus error!!!");
--		if (atchan->status & AT_XDMAC_CIS_WBEIS)
-+		if (atchan->irq_status & AT_XDMAC_CIS_WBEIS)
- 			dev_err(chan2dev(&atchan->chan), "write bus error!!!");
--		if (atchan->status & AT_XDMAC_CIS_ROIS)
-+		if (atchan->irq_status & AT_XDMAC_CIS_ROIS)
- 			dev_err(chan2dev(&atchan->chan), "request overflow error!!!");
+@@ -1519,20 +1518,18 @@ static int omap_i2c_runtime_resume(struct device *dev)
+ }
  
- 		spin_lock_bh(&atchan->lock);
-@@ -1654,7 +1655,7 @@ static irqreturn_t at_xdmac_interrupt(int irq, void *dev_id)
- 			atchan = &atxdmac->chan[i];
- 			chan_imr = at_xdmac_chan_read(atchan, AT_XDMAC_CIM);
- 			chan_status = at_xdmac_chan_read(atchan, AT_XDMAC_CIS);
--			atchan->status = chan_status & chan_imr;
-+			atchan->irq_status = chan_status & chan_imr;
- 			dev_vdbg(atxdmac->dma.dev,
- 				 "%s: chan%d: imr=0x%x, status=0x%x\n",
- 				 __func__, i, chan_imr, chan_status);
-@@ -1668,7 +1669,7 @@ static irqreturn_t at_xdmac_interrupt(int irq, void *dev_id)
- 				 at_xdmac_chan_read(atchan, AT_XDMAC_CDA),
- 				 at_xdmac_chan_read(atchan, AT_XDMAC_CUBC));
+ static const struct dev_pm_ops omap_i2c_pm_ops = {
++	SET_NOIRQ_SYSTEM_SLEEP_PM_OPS(pm_runtime_force_suspend,
++				      pm_runtime_force_resume)
+ 	SET_RUNTIME_PM_OPS(omap_i2c_runtime_suspend,
+ 			   omap_i2c_runtime_resume, NULL)
+ };
+-#define OMAP_I2C_PM_OPS (&omap_i2c_pm_ops)
+-#else
+-#define OMAP_I2C_PM_OPS NULL
+-#endif /* CONFIG_PM */
  
--			if (atchan->status & (AT_XDMAC_CIS_RBEIS | AT_XDMAC_CIS_WBEIS))
-+			if (atchan->irq_status & (AT_XDMAC_CIS_RBEIS | AT_XDMAC_CIS_WBEIS))
- 				at_xdmac_write(atxdmac, AT_XDMAC_GD, atchan->mask);
- 
- 			tasklet_schedule(&atchan->tasklet);
+ static struct platform_driver omap_i2c_driver = {
+ 	.probe		= omap_i2c_probe,
+ 	.remove		= omap_i2c_remove,
+ 	.driver		= {
+ 		.name	= "omap_i2c",
+-		.pm	= OMAP_I2C_PM_OPS,
++		.pm	= &omap_i2c_pm_ops,
+ 		.of_match_table = of_match_ptr(omap_i2c_of_match),
+ 	},
+ };
 -- 
 2.19.1
 
