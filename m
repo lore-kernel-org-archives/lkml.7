@@ -2,53 +2,71 @@ Return-Path: <SRS0=J4ZE=RP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 81E0DC43381
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 17:47:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 247ADC43381
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 17:47:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 52D3A206DF
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 17:47:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E143B206DF
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 17:47:06 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1552412822;
-	bh=tWLPXllXn+aiEysrFirzKbOsNju6+tySAn9QQxLjZ+w=;
+	s=default; t=1552412827;
+	bh=lSDZ07B4cx11chIbe59u1OQ9QCcfoO42p8xo2tDJoxs=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=xRb0WAjHlsrz/9txtJzD/JOSOOCi0qWpnbMv0I16HBk9wnzRydhkcJWOTRzZhr82Q
-	 S241MNBxapTCOpAPGLdRmJG/9Mmto3HJQCsiT8Ny/SUz0hV0TFEu0UXOq7NoUnjlej
-	 caMEegEAC7huPK/GvuF1WK7V3dlGdytng1F3xbEc=
+	b=FREWkocAGVN5VNvIH4Dg+hoGi4s7hXQjkQSFU8pAgLIQzXtA+w3AZ89ru7Z8Jp8+J
+	 ON8O1maaJ1tsTZzJOJgGMVKHRICtqmyGlPWRdhl8zWHrJYaI8pRph31Wc1AsHIsy1/
+	 ETkwEw3UU0qL80Ni9IsyuE+njhMfjG3zRTyygtws=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729497AbfCLRrA (ORCPT
+        id S1729004AbfCLRq6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 12 Mar 2019 13:47:00 -0400
-Received: from mail.kernel.org ([198.145.29.99]:55428 "EHLO mail.kernel.org"
+        Tue, 12 Mar 2019 13:46:58 -0400
+Received: from mail.kernel.org ([198.145.29.99]:55460 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728658AbfCLRPQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 12 Mar 2019 13:15:16 -0400
+        id S1728662AbfCLRPR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 12 Mar 2019 13:15:17 -0400
 Received: from localhost (unknown [104.133.8.98])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 62FB721741;
-        Tue, 12 Mar 2019 17:15:15 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 0F9222184E;
+        Tue, 12 Mar 2019 17:15:16 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1552410915;
-        bh=tWLPXllXn+aiEysrFirzKbOsNju6+tySAn9QQxLjZ+w=;
+        s=default; t=1552410916;
+        bh=lSDZ07B4cx11chIbe59u1OQ9QCcfoO42p8xo2tDJoxs=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=VtUvBVcc+mCp5rMBlIBI6kVQX6dZmYwftAUxppIg9Kh8Td4q3iWwsghFDQ0F9Fbsm
-         IAIqkaIEiSjEDWlsrk/Uv84y/oB3EOb8JB49djYvBNhdLrQAwOnIoVAJqV2JhtFKJN
-         eLJ92x4Q+KqrW+for1FRgzUN0vEEZKVhIgBy9RTo=
+        b=rgOXHsyPDrUe5bM5oDj2tnBs/Lc0pqJnOIhIhdoR5IuFC4d++KaD+1ShdRc2Y/N3+
+         bt7nrsBOJQSABHWQiUK+Yse8WC7omty2j86xtcqaB/78b7BbKC+kbwvLbZt93K4d71
+         Et7SZAWxJLSXXcJ61vbpRUDzdUdNcgfwcTyNtlJU=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         stable@vger.kernel.org,
-        Marek Szyprowski <m.szyprowski@samsung.com>,
-        Krzysztof Kozlowski <krzk@kernel.org>,
-        Arnd Bergmann <arnd@arndb.de>
-Subject: [PATCH 4.19 133/149] ARM: dts: exynos: Fix max voltage for buck8 regulator on Odroid XU3/XU4
-Date:   Tue, 12 Mar 2019 10:09:11 -0700
-Message-Id: <20190312170400.519827729@linuxfoundation.org>
+        Christian Koenig <christian.koenig@amd.com>,
+        Alex Deucher <alexander.deucher@amd.com>,
+        David Zhou <David1.Zhou@amd.com>,
+        Huang Rui <ray.huang@amd.com>,
+        Junwei Zhang <Jerry.Zhang@amd.com>,
+        Michel Daenzer <michel.daenzer@amd.com>,
+        David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
+        Maxime Ripard <maxime.ripard@bootlin.com>,
+        Sean Paul <sean@poorly.run>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        Will Deacon <will.deacon@arm.com>,
+        Christoph Hellwig <hch@infradead.org>,
+        Robin Murphy <robin.murphy@arm.com>,
+        amd-gfx list <amd-gfx@lists.freedesktop.org>,
+        dri-devel <dri-devel@lists.freedesktop.org>,
+        Carsten Haitzler <Carsten.Haitzler@arm.com>,
+        Ard Biesheuvel <ard.biesheuvel@linaro.org>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.19 134/149] drm: disable uncached DMA optimization for ARM and arm64
+Date:   Tue, 12 Mar 2019 10:09:12 -0700
+Message-Id: <20190312170400.589983836@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190312170349.421581206@linuxfoundation.org>
 References: <20190312170349.421581206@linuxfoundation.org>
@@ -67,44 +85,83 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-From: Marek Szyprowski <m.szyprowski@samsung.com>
+[ Upstream commit e02f5c1bb2283cfcee68f2f0feddcc06150f13aa ]
 
-commit a3238924a820c1d7c977b632b769f3b5690cba09 upstream.
+The DRM driver stack is designed to work with cache coherent devices
+only, but permits an optimization to be enabled in some cases, where
+for some buffers, both the CPU and the GPU use uncached mappings,
+removing the need for DMA snooping and allocation in the CPU caches.
 
-The maximum voltage value for buck8 regulator on Odroid XU3/XU4 boards is
-set too low. Increase it to the 2000mV as specified on the board schematic.
-So far the board worked fine, because of the bug in the PMIC driver, which
-used incorrect step value for that regulator. It interpreted the voltage
-value set by the bootloader as 1225mV and kept it unchanged. The regulator
-driver has been however fixed recently in the commit 56b5d4ea778c
-("regulator: s2mps11: Fix steps for buck7, buck8 and LDO35"), what results
-in reading the proper buck8 value and forcing it to 1500mV on boot. This
-is not enough for proper board operation and results in eMMC errors during
-heavy IO traffic. Increasing maximum voltage value for buck8 restores
-original driver behavior and fixes eMMC issues.
+The use of uncached GPU mappings relies on the correct implementation
+of the PCIe NoSnoop TLP attribute by the platform, otherwise the GPU
+will use cached mappings nonetheless. On x86 platforms, this does not
+seem to matter, as uncached CPU mappings will snoop the caches in any
+case. However, on ARM and arm64, enabling this optimization on a
+platform where NoSnoop is ignored results in loss of coherency, which
+breaks correct operation of the device. Since we have no way of
+detecting whether NoSnoop works or not, just disable this
+optimization entirely for ARM and arm64.
 
-Signed-off-by: Marek Szyprowski <m.szyprowski@samsung.com>
-Fixes: 86a2d2ac5e5d ("ARM: dts: Add dts file for Odroid XU3 board")
-Fixes: 56b5d4ea778c ("regulator: s2mps11: Fix steps for buck7, buck8 and LDO35")
-Cc: <stable@vger.kernel.org>
-Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
-Signed-off-by: Arnd Bergmann <arnd@arndb.de>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-
+Cc: Christian Koenig <christian.koenig@amd.com>
+Cc: Alex Deucher <alexander.deucher@amd.com>
+Cc: David Zhou <David1.Zhou@amd.com>
+Cc: Huang Rui <ray.huang@amd.com>
+Cc: Junwei Zhang <Jerry.Zhang@amd.com>
+Cc: Michel Daenzer <michel.daenzer@amd.com>
+Cc: David Airlie <airlied@linux.ie>
+Cc: Daniel Vetter <daniel@ffwll.ch>
+Cc: Maarten Lankhorst <maarten.lankhorst@linux.intel.com>
+Cc: Maxime Ripard <maxime.ripard@bootlin.com>
+Cc: Sean Paul <sean@poorly.run>
+Cc: Michael Ellerman <mpe@ellerman.id.au>
+Cc: Benjamin Herrenschmidt <benh@kernel.crashing.org>
+Cc: Will Deacon <will.deacon@arm.com>
+Cc: Christoph Hellwig <hch@infradead.org>
+Cc: Robin Murphy <robin.murphy@arm.com>
+Cc: amd-gfx list <amd-gfx@lists.freedesktop.org>
+Cc: dri-devel <dri-devel@lists.freedesktop.org>
+Reported-by: Carsten Haitzler <Carsten.Haitzler@arm.com>
+Signed-off-by: Ard Biesheuvel <ard.biesheuvel@linaro.org>
+Reviewed-by: Christian König <christian.koenig@amd.com>
+Reviewed-by: Alex Deucher <alexander.deucher@amd.com>
+Link: https://patchwork.kernel.org/patch/10778815/
+Signed-off-by: Christian König <christian.koenig@amd.com>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/arm/boot/dts/exynos5422-odroid-core.dtsi |    2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ include/drm/drm_cache.h | 18 ++++++++++++++++++
+ 1 file changed, 18 insertions(+)
 
---- a/arch/arm/boot/dts/exynos5422-odroid-core.dtsi
-+++ b/arch/arm/boot/dts/exynos5422-odroid-core.dtsi
-@@ -334,7 +334,7 @@
- 			buck8_reg: BUCK8 {
- 				regulator-name = "vdd_1.8v_ldo";
- 				regulator-min-microvolt = <800000>;
--				regulator-max-microvolt = <1500000>;
-+				regulator-max-microvolt = <2000000>;
- 				regulator-always-on;
- 				regulator-boot-on;
- 			};
+diff --git a/include/drm/drm_cache.h b/include/drm/drm_cache.h
+index bfe1639df02d..97fc498dc767 100644
+--- a/include/drm/drm_cache.h
++++ b/include/drm/drm_cache.h
+@@ -47,6 +47,24 @@ static inline bool drm_arch_can_wc_memory(void)
+ 	return false;
+ #elif defined(CONFIG_MIPS) && defined(CONFIG_CPU_LOONGSON3)
+ 	return false;
++#elif defined(CONFIG_ARM) || defined(CONFIG_ARM64)
++	/*
++	 * The DRM driver stack is designed to work with cache coherent devices
++	 * only, but permits an optimization to be enabled in some cases, where
++	 * for some buffers, both the CPU and the GPU use uncached mappings,
++	 * removing the need for DMA snooping and allocation in the CPU caches.
++	 *
++	 * The use of uncached GPU mappings relies on the correct implementation
++	 * of the PCIe NoSnoop TLP attribute by the platform, otherwise the GPU
++	 * will use cached mappings nonetheless. On x86 platforms, this does not
++	 * seem to matter, as uncached CPU mappings will snoop the caches in any
++	 * case. However, on ARM and arm64, enabling this optimization on a
++	 * platform where NoSnoop is ignored results in loss of coherency, which
++	 * breaks correct operation of the device. Since we have no way of
++	 * detecting whether NoSnoop works or not, just disable this
++	 * optimization entirely for ARM and arm64.
++	 */
++	return false;
+ #else
+ 	return true;
+ #endif
+-- 
+2.19.1
+
 
 
