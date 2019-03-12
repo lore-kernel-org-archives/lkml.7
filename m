@@ -4,48 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6B0E7C43381
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 17:30:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C630FC43381
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 17:30:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3B67F214AE
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 17:30:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 991A0214AE
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 17:30:07 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1552411803;
-	bh=c6i7NYSkmlaqHD1eInaeTAETGrnoAAf3ga8rHSZEgFU=;
+	s=default; t=1552411807;
+	bh=hUvacjgJrtFiS3NZqGVP5ghXL0bdXlJDJbt7vOeoHqw=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Jr0y2Aa8N17JEEpVOB1tBrnxPM1w9qztH1S3ZBPbyyfUhPBWc1H31QT2fArAacWER
-	 elCPSkqNRYzQebFQBmkENY71CBWeaIKCYSPirjw5LANm17F0Zl7W9R8PXuWXPe8sM5
-	 OhBDxXQZ3YskEqxeRg2D5SAPf/k9WOoQZbVxZeaE=
+	b=MBCkzD6OqBeellH3FdwwMNLgjjkkaAlbK6dSabCQwEhtjlRCQKjGRJPHs9M/S7GeJ
+	 omP4X1ZzE8Iyv4NyIA0GrfAljETetm4WlCi2lpTKR7XxCt5/HDUS2X+8vjAyw149Yh
+	 8tiHItXmQ8aowxNGIymyLkLRswIsC/7MWqadOII8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729781AbfCLRaB (ORCPT
+        id S1729737AbfCLRaA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 12 Mar 2019 13:30:01 -0400
-Received: from mail.kernel.org ([198.145.29.99]:32870 "EHLO mail.kernel.org"
+        Tue, 12 Mar 2019 13:30:00 -0400
+Received: from mail.kernel.org ([198.145.29.99]:32898 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729540AbfCLRRU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 12 Mar 2019 13:17:20 -0400
+        id S1729546AbfCLRRV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 12 Mar 2019 13:17:21 -0400
 Received: from localhost (unknown [104.133.8.98])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id AFBDB206DF;
-        Tue, 12 Mar 2019 17:17:19 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 55F222087C;
+        Tue, 12 Mar 2019 17:17:20 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1552411039;
-        bh=c6i7NYSkmlaqHD1eInaeTAETGrnoAAf3ga8rHSZEgFU=;
+        s=default; t=1552411040;
+        bh=hUvacjgJrtFiS3NZqGVP5ghXL0bdXlJDJbt7vOeoHqw=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=cFtm6p2Vtg8tqw4UCB3g8Wb1By3UvAIYlJFjSX0jzD/KodmlTC2YOwhrM5hTKIPc7
-         hHTicerZ9Cp3RfHVFCPIjbIo4cBGuLG1uWREGBBzDU4sSQs9ASHJOoKnor64tuPmGr
-         jvw0sXmOaSn8It20nZPd/feCfAxvY06H7LArIIC8=
+        b=N2ogtvlA4jA7NJC2sdp3rn5MpcCUkRJ5upbwuQlZvs0JPS6gD8etvAnkIIxXH9xUh
+         36W1WH9aypkgTyO7kR/2UI7TRnu1uSWfjNSVLb+Ru6IeuMBYFIEpUCPNCfmKYvJNm2
+         QZ1qZcjRkXybRLxpxFqB44TnsVTjOmOFAvvw2N5o=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Ivan Mironov <mironov.ivan@gmail.com>,
+        stable@vger.kernel.org, Mans Rullgard <mans@mansr.com>,
         Johan Hovold <johan@kernel.org>
-Subject: [PATCH 4.9 02/96] USB: serial: cp210x: add ID for Ingenico 3070
-Date:   Tue, 12 Mar 2019 10:09:20 -0700
-Message-Id: <20190312171034.729784707@linuxfoundation.org>
+Subject: [PATCH 4.9 03/96] USB: serial: ftdi_sio: add ID for Hjelmslund Electronics USB485
+Date:   Tue, 12 Mar 2019 10:09:21 -0700
+Message-Id: <20190312171034.801446109@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190312171034.530434962@linuxfoundation.org>
 References: <20190312171034.530434962@linuxfoundation.org>
@@ -64,39 +65,47 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-From: Ivan Mironov <mironov.ivan@gmail.com>
+From: Mans Rullgard <mans@mansr.com>
 
-commit dd9d3d86b08d6a106830364879c42c78db85389c upstream.
+commit 8d7fa3d4ea3f0ca69554215e87411494e6346fdc upstream.
 
-Here is how this device appears in kernel log:
+This adds the USB ID of the Hjelmslund Electronics USB485 Iso stick.
 
-	usb 3-1: new full-speed USB device number 18 using xhci_hcd
-	usb 3-1: New USB device found, idVendor=0b00, idProduct=3070
-	usb 3-1: New USB device strings: Mfr=1, Product=2, SerialNumber=3
-	usb 3-1: Product: Ingenico 3070
-	usb 3-1: Manufacturer: Silicon Labs
-	usb 3-1: SerialNumber: 0001
-
-Apparently this is a POS terminal with embedded USB-to-Serial converter.
-
-Cc: stable@vger.kernel.org
-Signed-off-by: Ivan Mironov <mironov.ivan@gmail.com>
+Signed-off-by: Mans Rullgard <mans@mansr.com>
+Cc: stable <stable@vger.kernel.org>
 Signed-off-by: Johan Hovold <johan@kernel.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/usb/serial/cp210x.c |    1 +
- 1 file changed, 1 insertion(+)
+ drivers/usb/serial/ftdi_sio.c     |    2 ++
+ drivers/usb/serial/ftdi_sio_ids.h |    6 ++++++
+ 2 files changed, 8 insertions(+)
 
---- a/drivers/usb/serial/cp210x.c
-+++ b/drivers/usb/serial/cp210x.c
-@@ -58,6 +58,7 @@ static const struct usb_device_id id_tab
- 	{ USB_DEVICE(0x08e6, 0x5501) }, /* Gemalto Prox-PU/CU contactless smartcard reader */
- 	{ USB_DEVICE(0x08FD, 0x000A) }, /* Digianswer A/S , ZigBee/802.15.4 MAC Device */
- 	{ USB_DEVICE(0x0908, 0x01FF) }, /* Siemens RUGGEDCOM USB Serial Console */
-+	{ USB_DEVICE(0x0B00, 0x3070) }, /* Ingenico 3070 */
- 	{ USB_DEVICE(0x0BED, 0x1100) }, /* MEI (TM) Cashflow-SC Bill/Voucher Acceptor */
- 	{ USB_DEVICE(0x0BED, 0x1101) }, /* MEI series 2000 Combo Acceptor */
- 	{ USB_DEVICE(0x0FCF, 0x1003) }, /* Dynastream ANT development board */
+--- a/drivers/usb/serial/ftdi_sio.c
++++ b/drivers/usb/serial/ftdi_sio.c
+@@ -1020,6 +1020,8 @@ static const struct usb_device_id id_tab
+ 	{ USB_DEVICE(CYPRESS_VID, CYPRESS_WICED_BT_USB_PID) },
+ 	{ USB_DEVICE(CYPRESS_VID, CYPRESS_WICED_WL_USB_PID) },
+ 	{ USB_DEVICE(AIRBUS_DS_VID, AIRBUS_DS_P8GR) },
++	/* EZPrototypes devices */
++	{ USB_DEVICE(EZPROTOTYPES_VID, HJELMSLUND_USB485_ISO_PID) },
+ 	{ }					/* Terminating entry */
+ };
+ 
+--- a/drivers/usb/serial/ftdi_sio_ids.h
++++ b/drivers/usb/serial/ftdi_sio_ids.h
+@@ -1308,6 +1308,12 @@
+ #define IONICS_PLUGCOMPUTER_PID		0x0102
+ 
+ /*
++ * EZPrototypes (PID reseller)
++ */
++#define EZPROTOTYPES_VID		0x1c40
++#define HJELMSLUND_USB485_ISO_PID	0x0477
++
++/*
+  * Dresden Elektronik Sensor Terminal Board
+  */
+ #define DE_VID			0x1cf1 /* Vendor ID */
 
 
