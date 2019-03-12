@@ -4,61 +4,61 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-16.6 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT,
-	USER_IN_DEF_DKIM_WL autolearn=unavailable autolearn_force=no version=3.4.0
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT,USER_IN_DEF_DKIM_WL
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B0E63C10F06
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 00:58:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A6757C43381
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 00:58:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7BE99217D8
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 00:58:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 666F02087F
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 00:58:16 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="m2SSklts"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="HBNdWh+/"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726255AbfCLA6L (ORCPT
+        id S1726787AbfCLA6O (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 11 Mar 2019 20:58:11 -0400
-Received: from mail-io1-f73.google.com ([209.85.166.73]:33424 "EHLO
-        mail-io1-f73.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726752AbfCLA6G (ORCPT
+        Mon, 11 Mar 2019 20:58:14 -0400
+Received: from mail-it1-f201.google.com ([209.85.166.201]:50271 "EHLO
+        mail-it1-f201.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726764AbfCLA6K (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 11 Mar 2019 20:58:06 -0400
-Received: by mail-io1-f73.google.com with SMTP id n15so610226ioc.0
-        for <linux-kernel@vger.kernel.org>; Mon, 11 Mar 2019 17:58:06 -0700 (PDT)
+        Mon, 11 Mar 2019 20:58:10 -0400
+Received: by mail-it1-f201.google.com with SMTP id i63so794609itb.0
+        for <linux-kernel@vger.kernel.org>; Mon, 11 Mar 2019 17:58:09 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=google.com; s=20161025;
         h=date:in-reply-to:message-id:mime-version:references:subject:from:to
          :cc;
-        bh=0N1MhcRbdixhLcojGjz1JbD9gYvKsU3sALAMDz5L+zQ=;
-        b=m2SSklts5axBtBFT99k5kWRqt2k7AZ/UFLe5QDWp2m4MrS9nPTzvu+lW6Cw1GTX91x
-         q7m9lX4AdtHIlQvrmJR+9nAGmjI1Sxwo9tCXJq3a4TfLEoryCkDdcW+2PmNyW2gIWRBs
-         wTPKiJ0yJ7eAQJXABh3sNDsdXtcGTVXBZd0z6nTiMfX/ZIfTqQq83M55OBXw3KfljcNy
-         jwcNX81PR159z9bI7I9PlNagdpSG7F8sKSGKprXJJKepemxzBfeWNYASGdTYUFTIqFFc
-         lrAn/W9ub2uGjX9hl5ahbzfE78V49Svncz9HAlXjfo8dyifGlJnK9/F5LsE8kRnM/321
-         lOaA==
+        bh=GuInaEquY9cKCo+/R3bLL1KFcpfX5BwU8EHfq1hu08M=;
+        b=HBNdWh+/H/UQD3+xTCC5Gk1vTOFdi8buqG7IOzQCbqWRid+PcTT/T4iKPfX1Muy57H
+         mA9gcEpPcKUv1DaJBopn5SU1wwyHnz+qqvQzVQiKuH4IuAZHw8WmPDHRTekZ4RoJuPoI
+         k8fyIUxtuU7UBUmfFhSlmXIqDkwkNUo2QrkJLaPkIgWzkEwroQQwBNFou6cniBzdTUeU
+         pguYiLIcrrFrKPeCm6lJ2yAvRHkaGHnYB9ACSfOKeP/GH7Q1zppaEI6Nk5aSRMS5Mt3C
+         9GOsSCQ8e1rnKd9uYUOK1sUbi9ceU8L2Dtpr15+FePDmyFg81CK03OWXDcm0/xCUaK9T
+         fuqw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:in-reply-to:message-id:mime-version
          :references:subject:from:to:cc;
-        bh=0N1MhcRbdixhLcojGjz1JbD9gYvKsU3sALAMDz5L+zQ=;
-        b=DHKTfLqVZNgpTxlYmkKEMfIq9Nh+6s68j1lpTQe/d+vzU8RM5ohlnT2N8lRqM66ckk
-         XmfZLCXJg/g7etNT1B2Vg7WxlxV6z9sm5Ul74O0Tzy9ixACf5KvNsKeUWdywghbY36Ai
-         i0f3I+0GEb8xw5gmLzhYJ3tQXyPmuBlA0t7Nph3h6S/ltmqAhjtQoVvyAHhD/UW2WETQ
-         nR8bhTtxA9vFp2lCRiVc0iZ/ehRo5B9x/DfAiE77UCSl60nB/WRm5PXFP+pVJeBZ244x
-         CZ3F1RsExTfx4TRpTlxRgoYgGvVJ/AavSV3wHYpfbI2leYRQBsJ/99Zua54IQfaEykD5
-         FqVw==
-X-Gm-Message-State: APjAAAW+Y6TNPFitwzwa8cepJLn1Lqi6A+LhwdjdK5qckzpBiARW+euf
-        PEmFWR3xIQLOTQnHAILHCaZOn2cPZPs=
-X-Google-Smtp-Source: APXvYqw5KDZ39HU8Icwu4S6RpSSs7BszMpNyZQ5WJg5vOVgn5k90ODytif1OzlfBC2AtFGb/6BjcJbfFcJE=
-X-Received: by 2002:a24:5a04:: with SMTP id v4mr546460ita.37.1552352285759;
- Mon, 11 Mar 2019 17:58:05 -0700 (PDT)
-Date:   Mon, 11 Mar 2019 18:57:47 -0600
+        bh=GuInaEquY9cKCo+/R3bLL1KFcpfX5BwU8EHfq1hu08M=;
+        b=LLYysdWezUU73jj5wOk3r5vCSPTaN58sDcHZ0OJAF7wM17JjwdxZOCf0rmAcuL4tQe
+         RrrYEjaBhTi4Te9SNWaPAo7UCQGIF8ZJXzTe9nJfRouBSHaGm5eyzIoVYASQuFG8TYip
+         hEGeWSLx+AAeCdAzXed6ViEKD1Y8wGs2NV39/2vIt9C7WdtnC1YOc/HOkth4QMCfuDjk
+         D4LPWZFKtqooZzqB6vRaqrRkwDmcnzGrXXxf5t+dmrgrKKOOpLznOrFHUdy5zCmZvSbm
+         9SBWW+1LYMNDIHuC7m6UwFMqY6AL8VwwU36hdFvlsjG/8YIrD8MOYMqZkSPLZ3xtnMiS
+         5a+Q==
+X-Gm-Message-State: APjAAAWOvtl7KbqWSIIjemOh6QtzOglPJ9mCmJ7CzZRWEZpGTPrFfrtm
+        D8cJmBBCEy9aMHhooQkopDuZyIY3nr8=
+X-Google-Smtp-Source: APXvYqxhul1R8mnVTm2ANYck/U0sQICDmCd8jsCIgw/3U8ahE12sg7YNMdshwxSVxfvSc2y++gz3qAvURMY=
+X-Received: by 2002:a24:6b55:: with SMTP id v82mr545054itc.37.1552352288828;
+ Mon, 11 Mar 2019 17:58:08 -0700 (PDT)
+Date:   Mon, 11 Mar 2019 18:57:49 -0600
 In-Reply-To: <20190312005749.30166-1-yuzhao@google.com>
-Message-Id: <20190312005749.30166-2-yuzhao@google.com>
+Message-Id: <20190312005749.30166-4-yuzhao@google.com>
 Mime-Version: 1.0
 References: <20190310011906.254635-1-yuzhao@google.com> <20190312005749.30166-1-yuzhao@google.com>
 X-Mailer: git-send-email 2.21.0.360.g471c308f928-goog
-Subject: [PATCH v4 2/4] arm64: mm: don't call page table ctors for init_mm
+Subject: [PATCH v4 4/4] arm64: mm: enable per pmd page table lock
 From:   Yu Zhao <yuzhao@google.com>
 To:     Catalin Marinas <catalin.marinas@arm.com>,
         Will Deacon <will.deacon@arm.com>,
@@ -82,60 +82,82 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-init_mm doesn't require page table lock to be initialized at
-any level. Add a separate page table allocator for it, and the
-new one skips page table ctors.
+Switch from per mm_struct to per pmd page table lock by enabling
+ARCH_ENABLE_SPLIT_PMD_PTLOCK. This provides better granularity for
+large system.
 
-The ctors allocate memory when ALLOC_SPLIT_PTLOCKS is set. Not
-calling them avoids memory leak in case we call pte_free_kernel()
-on init_mm.
+I'm not sure if there is contention on mm->page_table_lock. Given
+the option comes at no cost (apart from initializing more spin
+locks), why not enable it now.
 
-Acked-by: Mark Rutland <mark.rutland@arm.com>
+We only do so when pmd is not folded, so we don't mistakenly call
+pgtable_pmd_page_ctor() on pud or p4d in pgd_pgtable_alloc().
+
 Signed-off-by: Yu Zhao <yuzhao@google.com>
 ---
- arch/arm64/mm/mmu.c | 15 +++++++++++++--
- 1 file changed, 13 insertions(+), 2 deletions(-)
+ arch/arm64/Kconfig               |  3 +++
+ arch/arm64/include/asm/pgalloc.h | 12 +++++++++++-
+ arch/arm64/include/asm/tlb.h     |  5 ++++-
+ 3 files changed, 18 insertions(+), 2 deletions(-)
 
-diff --git a/arch/arm64/mm/mmu.c b/arch/arm64/mm/mmu.c
-index f704b291f2c5..d1dc2a2777aa 100644
---- a/arch/arm64/mm/mmu.c
-+++ b/arch/arm64/mm/mmu.c
-@@ -370,6 +370,16 @@ static void __create_pgd_mapping(pgd_t *pgdir, phys_addr_t phys,
- 	} while (pgdp++, addr = next, addr != end);
+diff --git a/arch/arm64/Kconfig b/arch/arm64/Kconfig
+index cfbf307d6dc4..a3b1b789f766 100644
+--- a/arch/arm64/Kconfig
++++ b/arch/arm64/Kconfig
+@@ -872,6 +872,9 @@ config ARCH_WANT_HUGE_PMD_SHARE
+ config ARCH_HAS_CACHE_LINE_SIZE
+ 	def_bool y
+ 
++config ARCH_ENABLE_SPLIT_PMD_PTLOCK
++	def_bool y if PGTABLE_LEVELS > 2
++
+ config SECCOMP
+ 	bool "Enable seccomp to safely compute untrusted bytecode"
+ 	---help---
+diff --git a/arch/arm64/include/asm/pgalloc.h b/arch/arm64/include/asm/pgalloc.h
+index 52fa47c73bf0..dabba4b2c61f 100644
+--- a/arch/arm64/include/asm/pgalloc.h
++++ b/arch/arm64/include/asm/pgalloc.h
+@@ -33,12 +33,22 @@
+ 
+ static inline pmd_t *pmd_alloc_one(struct mm_struct *mm, unsigned long addr)
+ {
+-	return (pmd_t *)__get_free_page(PGALLOC_GFP);
++	struct page *page;
++
++	page = alloc_page(PGALLOC_GFP);
++	if (!page)
++		return NULL;
++	if (!pgtable_pmd_page_ctor(page)) {
++		__free_page(page);
++		return NULL;
++	}
++	return page_address(page);
  }
  
-+static phys_addr_t pgd_kernel_pgtable_alloc(int shift)
-+{
-+	void *ptr = (void *)__get_free_page(PGALLOC_GFP);
-+	BUG_ON(!ptr);
-+
-+	/* Ensure the zeroed page is visible to the page table walker */
-+	dsb(ishst);
-+	return __pa(ptr);
-+}
-+
- static phys_addr_t pgd_pgtable_alloc(int shift)
+ static inline void pmd_free(struct mm_struct *mm, pmd_t *pmdp)
  {
- 	void *ptr = (void *)__get_free_page(PGALLOC_GFP);
-@@ -594,7 +604,7 @@ static int __init map_entry_trampoline(void)
- 	/* Map only the text into the trampoline page table */
- 	memset(tramp_pg_dir, 0, PGD_SIZE);
- 	__create_pgd_mapping(tramp_pg_dir, pa_start, TRAMP_VALIAS, PAGE_SIZE,
--			     prot, pgd_pgtable_alloc, 0);
-+			     prot, pgd_kernel_pgtable_alloc, 0);
+ 	BUG_ON((unsigned long)pmdp & (PAGE_SIZE-1));
++	pgtable_pmd_page_dtor(virt_to_page(pmdp));
+ 	free_page((unsigned long)pmdp);
+ }
  
- 	/* Map both the text and data into the kernel page table */
- 	__set_fixmap(FIX_ENTRY_TRAMP_TEXT, pa_start, prot);
-@@ -1070,7 +1080,8 @@ int arch_add_memory(int nid, u64 start, u64 size, struct vmem_altmap *altmap,
- 		flags = NO_BLOCK_MAPPINGS | NO_CONT_MAPPINGS;
+diff --git a/arch/arm64/include/asm/tlb.h b/arch/arm64/include/asm/tlb.h
+index 106fdc951b6e..4e3becfed387 100644
+--- a/arch/arm64/include/asm/tlb.h
++++ b/arch/arm64/include/asm/tlb.h
+@@ -62,7 +62,10 @@ static inline void __pte_free_tlb(struct mmu_gather *tlb, pgtable_t pte,
+ static inline void __pmd_free_tlb(struct mmu_gather *tlb, pmd_t *pmdp,
+ 				  unsigned long addr)
+ {
+-	tlb_remove_table(tlb, virt_to_page(pmdp));
++	struct page *page = virt_to_page(pmdp);
++
++	pgtable_pmd_page_dtor(page);
++	tlb_remove_table(tlb, page);
+ }
+ #endif
  
- 	__create_pgd_mapping(swapper_pg_dir, start, __phys_to_virt(start),
--			     size, PAGE_KERNEL, pgd_pgtable_alloc, flags);
-+			     size, PAGE_KERNEL, pgd_kernel_pgtable_alloc,
-+			     flags);
- 
- 	return __add_pages(nid, start >> PAGE_SHIFT, size >> PAGE_SHIFT,
- 			   altmap, want_memblock);
 -- 
 2.21.0.360.g471c308f928-goog
 
