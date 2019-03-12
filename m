@@ -7,47 +7,47 @@ X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B1EABC43381
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 17:30:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 011FEC43381
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 17:30:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 749052087C
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 17:30:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C7D62214AE
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 17:30:21 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1552411817;
-	bh=b9F0UTbAkXSmU3NLcxTbpVzg0h98nFWCULdu2iQYbtA=;
+	s=default; t=1552411821;
+	bh=YVUyCY4LJ9u185fUuYteblF/WNkNrXhBmiOnqWQTh7w=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=R/6o0EpU8wpLGgxIPOg+3BNeduAPRaeag8lmMmnCyAekarlgpaZ1bbh5Hm07GAyAf
-	 J1JcjS5wkHCtLvEhlXExUK1p1qU+CncQMOyzg3J1dk++05NKKbi+G/5Jc0+XKS4Yk8
-	 /WN4WGYGUoQWKWsGuJnM9EBojVLOEV/24h5bjoxQ=
+	b=ZLFVmBDR06zNZIj3hRaV4I4TM8ePJbFddbMz1HxcDNpOFs9r4R0CA/R1kE9t1yQHq
+	 Ucnh/KppoOj60pFt4UhYdbscENWJST6cE4ezpd5O8XfZzsDmvR1bX5njtuluQ2A01n
+	 D7q86cW+jcBSgZGTcxJw37gjz+fE9Cz7ULW5b+9Y=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727563AbfCLRaQ (ORCPT
+        id S1729540AbfCLRaO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 12 Mar 2019 13:30:16 -0400
-Received: from mail.kernel.org ([198.145.29.99]:60974 "EHLO mail.kernel.org"
+        Tue, 12 Mar 2019 13:30:14 -0400
+Received: from mail.kernel.org ([198.145.29.99]:32792 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729535AbfCLRRS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 12 Mar 2019 13:17:18 -0400
+        id S1728636AbfCLRRT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 12 Mar 2019 13:17:19 -0400
 Received: from localhost (unknown [104.133.8.98])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 9C07C2087C;
-        Tue, 12 Mar 2019 17:17:17 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 5106F21741;
+        Tue, 12 Mar 2019 17:17:18 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1552411037;
-        bh=b9F0UTbAkXSmU3NLcxTbpVzg0h98nFWCULdu2iQYbtA=;
+        s=default; t=1552411038;
+        bh=YVUyCY4LJ9u185fUuYteblF/WNkNrXhBmiOnqWQTh7w=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=trfVzt3XBZai+2PxRJkxY5KUCvvXDg8zvjKewh4/oQa3/UmnzH7Ljxq1k18eKm1Yx
-         M3c5yXkRAL3/3pX7LUsy+nKbIQDVgKFkM5VMa8OG1g+Jgomjt2tygHWz+m8Z7MNqs8
-         PY1pH0/inW8AqFtS+b7UbPz8Zsy4Fzvvjn9i+bwg=
+        b=oBXywWGwX7/bE7efHZoMnCJ0irxhXOmqy/UQNVlS1U0Egqm2GPEXGL2oplL4vUo0T
+         AdEF1w8oPdZ6bG6IaB6tp+mt2Z/XV9+rZEND3ckAqaFJ8UkR9UsbSGzOrvw6zlFOGT
+         G4rUkdaO2Xvp1BCU5gotkEs5IINfbwTJ6pAhIYBk=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Chris Healy <Chris.Healy@zii.aero>,
-        Andrew Lunn <andrew@lunn.ch>,
+        stable@vger.kernel.org, Jann Horn <jannh@google.com>,
+        Paul Moore <paul@paul-moore.com>,
         "David S. Miller" <davem@davemloft.net>
-Subject: [PATCH 4.9 16/96] net: dsa: mv88e6xxx: Fix u64 statistics
-Date:   Tue, 12 Mar 2019 10:09:34 -0700
-Message-Id: <20190312171035.774825697@linuxfoundation.org>
+Subject: [PATCH 4.9 17/96] netlabel: fix out-of-bounds memory accesses
+Date:   Tue, 12 Mar 2019 10:09:35 -0700
+Message-Id: <20190312171035.848088242@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190312171034.530434962@linuxfoundation.org>
 References: <20190312171034.530434962@linuxfoundation.org>
@@ -66,33 +66,53 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-From: Andrew Lunn <andrew@lunn.ch>
+From: Paul Moore <paul@paul-moore.com>
 
-[ Upstream commit 6e46e2d821bb22b285ae8187959096b65d063b0d ]
+[ Upstream commit 5578de4834fe0f2a34fedc7374be691443396d1f ]
 
-The switch maintains u64 counters for the number of octets sent and
-received. These are kept as two u32's which need to be combined.  Fix
-the combing, which wrongly worked on u16's.
+There are two array out-of-bounds memory accesses, one in
+cipso_v4_map_lvl_valid(), the other in netlbl_bitmap_walk().  Both
+errors are embarassingly simple, and the fixes are straightforward.
 
-Fixes: 80c4627b2719 ("dsa: mv88x6xxx: Refactor getting a single statistic")
-Reported-by: Chris Healy <Chris.Healy@zii.aero>
-Signed-off-by: Andrew Lunn <andrew@lunn.ch>
+As a FYI for anyone backporting this patch to kernels prior to v4.8,
+you'll want to apply the netlbl_bitmap_walk() patch to
+cipso_v4_bitmap_walk() as netlbl_bitmap_walk() doesn't exist before
+Linux v4.8.
+
+Reported-by: Jann Horn <jannh@google.com>
+Fixes: 446fda4f2682 ("[NetLabel]: CIPSOv4 engine")
+Fixes: 3faa8f982f95 ("netlabel: Move bitmap manipulation functions to the NetLabel core.")
+Signed-off-by: Paul Moore <paul@paul-moore.com>
 Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- drivers/net/dsa/mv88e6xxx/chip.c |    2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ net/ipv4/cipso_ipv4.c        |    3 ++-
+ net/netlabel/netlabel_kapi.c |    3 ++-
+ 2 files changed, 4 insertions(+), 2 deletions(-)
 
---- a/drivers/net/dsa/mv88e6xxx/chip.c
-+++ b/drivers/net/dsa/mv88e6xxx/chip.c
-@@ -798,7 +798,7 @@ static uint64_t _mv88e6xxx_get_ethtool_s
- 		if (s->sizeof_stat == 8)
- 			_mv88e6xxx_stats_read(chip, s->reg + 1, &high);
+--- a/net/ipv4/cipso_ipv4.c
++++ b/net/ipv4/cipso_ipv4.c
+@@ -667,7 +667,8 @@ static int cipso_v4_map_lvl_valid(const
+ 	case CIPSO_V4_MAP_PASS:
+ 		return 0;
+ 	case CIPSO_V4_MAP_TRANS:
+-		if (doi_def->map.std->lvl.cipso[level] < CIPSO_V4_INV_LVL)
++		if ((level < doi_def->map.std->lvl.cipso_size) &&
++		    (doi_def->map.std->lvl.cipso[level] < CIPSO_V4_INV_LVL))
+ 			return 0;
+ 		break;
  	}
--	value = (((u64)high) << 16) | low;
-+	value = (((u64)high) << 32) | low;
- 	return value;
- }
+--- a/net/netlabel/netlabel_kapi.c
++++ b/net/netlabel/netlabel_kapi.c
+@@ -903,7 +903,8 @@ int netlbl_bitmap_walk(const unsigned ch
+ 		    (state == 0 && (byte & bitmask) == 0))
+ 			return bit_spot;
  
+-		bit_spot++;
++		if (++bit_spot >= bitmap_len)
++			return -1;
+ 		bitmask >>= 1;
+ 		if (bitmask == 0) {
+ 			byte = bitmap[++byte_offset];
 
 
