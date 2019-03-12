@@ -6,95 +6,77 @@ X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4A351C43381
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 10:31:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C3DEEC43381
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 10:31:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 24BC42147C
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 10:31:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9CF2A2147C
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 10:31:11 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726819AbfCLKbF (ORCPT
+        id S1726841AbfCLKbK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 12 Mar 2019 06:31:05 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:46350 "EHLO mx1.redhat.com"
+        Tue, 12 Mar 2019 06:31:10 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:56328 "EHLO mx1.redhat.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725873AbfCLKbF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 12 Mar 2019 06:31:05 -0400
+        id S1725873AbfCLKbI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 12 Mar 2019 06:31:08 -0400
 Received: from smtp.corp.redhat.com (int-mx07.intmail.prod.int.phx2.redhat.com [10.5.11.22])
         (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id E7241C057F42;
-        Tue, 12 Mar 2019 10:31:04 +0000 (UTC)
+        by mx1.redhat.com (Postfix) with ESMTPS id 97D65A768;
+        Tue, 12 Mar 2019 10:31:08 +0000 (UTC)
 Received: from MiWiFi-R3L-srv.redhat.com (ovpn-12-19.pek2.redhat.com [10.72.12.19])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id D14391001E63;
-        Tue, 12 Mar 2019 10:30:59 +0000 (UTC)
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 704A51001DED;
+        Tue, 12 Mar 2019 10:31:05 +0000 (UTC)
 From:   Baoquan He <bhe@redhat.com>
 To:     linux-kernel@vger.kernel.org
 Cc:     kirill.shutemov@linux.intel.com, tglx@linutronix.de,
         mingo@kernel.org, bp@alien8.de, hpa@zytor.com, dyoung@redhat.com,
         x86@kernel.org, Baoquan He <bhe@redhat.com>
-Subject: [PATCH v3 1/3] x86/boot: Add xloadflags bits for 5-level kernel checking
-Date:   Tue, 12 Mar 2019 18:30:49 +0800
-Message-Id: <20190312103051.18086-2-bhe@redhat.com>
+Subject: [PATCH v3 2/3] x86/kexec/64: Error out if try to jump to old 4-level kernel from 5-level kernel
+Date:   Tue, 12 Mar 2019 18:30:50 +0800
+Message-Id: <20190312103051.18086-3-bhe@redhat.com>
 In-Reply-To: <20190312103051.18086-1-bhe@redhat.com>
 References: <20190312103051.18086-1-bhe@redhat.com>
 X-Scanned-By: MIMEDefang 2.84 on 10.5.11.22
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.32]); Tue, 12 Mar 2019 10:31:05 +0000 (UTC)
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.29]); Tue, 12 Mar 2019 10:31:08 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add two bits XLF_5LEVEL and XLF_5LEVEL_ENABLED for 5-level kernel.
-Bit XLF_5LEVEL indicates if 5-level related code is contained
-in this kernel.
-Bit XLF_5LEVEL_ENABLED indicates if CONFIG_X86_5LEVEL=y is set.
+In relocate_kernel() CR4.LA57 flag is set before kexec jumping if
+the kernel has 5-level paging enabled. Then in boot/compressed/head_64.S,
+it will check if the booting kernel is in 4-level or 5-level paging
+mode, and handle accordingly. However, the old kernel which doesn't
+contain the 5-level codes doesn't know how to cope with it, then #GP
+triggered.
 
-They are being used in later patch to check if kexec/kdump kernel
-is loaded in right place.
+Instead of triggering #GP during kexec kernel boot, error out during
+kexec loading if find out we are trying to jump to old 4-level kernel
+from 5-level kernel.
 
 Signed-off-by: Baoquan He <bhe@redhat.com>
 Acked-by: Kirill A. Shutemov <kirill.shutemov@linux.intel.com>
 ---
- arch/x86/boot/header.S                | 12 +++++++++++-
- arch/x86/include/uapi/asm/bootparam.h |  2 ++
- 2 files changed, 13 insertions(+), 1 deletion(-)
+ arch/x86/kernel/kexec-bzimage64.c | 5 +++++
+ 1 file changed, 5 insertions(+)
 
-diff --git a/arch/x86/boot/header.S b/arch/x86/boot/header.S
-index 850b8762e889..be19f4199727 100644
---- a/arch/x86/boot/header.S
-+++ b/arch/x86/boot/header.S
-@@ -419,7 +419,17 @@ xloadflags:
- # define XLF4 0
- #endif
+diff --git a/arch/x86/kernel/kexec-bzimage64.c b/arch/x86/kernel/kexec-bzimage64.c
+index 1f3b77367948..4c9c079b5673 100644
+--- a/arch/x86/kernel/kexec-bzimage64.c
++++ b/arch/x86/kernel/kexec-bzimage64.c
+@@ -321,6 +321,11 @@ static int bzImage64_probe(const char *buf, unsigned long len)
+ 		return ret;
+ 	}
  
--			.word XLF0 | XLF1 | XLF23 | XLF4
-+#ifdef CONFIG_X86_64
-+#ifdef CONFIG_X86_5LEVEL
-+#define XLF56 (XLF_5LEVEL|XLF_5LEVEL_ENABLED)
-+#else
-+#define XLF56 XLF_5LEVEL
-+#endif
-+#else
-+#define XLF56 0
-+#endif
++	if (!(header->xloadflags & XLF_5LEVEL) && pgtable_l5_enabled()) {
++		pr_err("Can not jump to old 4-level kernel from 5-level kernel.\n");
++		return ret;
++	}
 +
-+			.word XLF0 | XLF1 | XLF23 | XLF4 | XLF56
- 
- cmdline_size:   .long   COMMAND_LINE_SIZE-1     #length of the command line,
-                                                 #added with boot protocol
-diff --git a/arch/x86/include/uapi/asm/bootparam.h b/arch/x86/include/uapi/asm/bootparam.h
-index 60733f137e9a..c895df5482c5 100644
---- a/arch/x86/include/uapi/asm/bootparam.h
-+++ b/arch/x86/include/uapi/asm/bootparam.h
-@@ -29,6 +29,8 @@
- #define XLF_EFI_HANDOVER_32		(1<<2)
- #define XLF_EFI_HANDOVER_64		(1<<3)
- #define XLF_EFI_KEXEC			(1<<4)
-+#define XLF_5LEVEL			(1<<5)
-+#define XLF_5LEVEL_ENABLED		(1<<6)
- 
- #ifndef __ASSEMBLY__
- 
+ 	/* I've got a bzImage */
+ 	pr_debug("It's a relocatable bzImage64\n");
+ 	ret = 0;
 -- 
 2.17.2
 
