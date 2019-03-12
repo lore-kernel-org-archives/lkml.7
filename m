@@ -2,100 +2,109 @@ Return-Path: <SRS0=J4ZE=RP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_MUTT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 986FEC43381
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 15:04:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5BFFCC43381
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 15:05:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6F30F20693
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 15:04:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 329B82147C
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 15:05:18 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726551AbfCLPEl (ORCPT
+        id S1726716AbfCLPFR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 12 Mar 2019 11:04:41 -0400
-Received: from mail-vk1-f193.google.com ([209.85.221.193]:36197 "EHLO
-        mail-vk1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725894AbfCLPEk (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 12 Mar 2019 11:04:40 -0400
-Received: by mail-vk1-f193.google.com with SMTP id v131so725381vkd.3
-        for <linux-kernel@vger.kernel.org>; Tue, 12 Mar 2019 08:04:40 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=LC2uMFVcIfOFBJyr6Lnd0zST40zv6r9ebxtQOl8nm4I=;
-        b=EbZ7M3SITWXVWlqv/lSm2uBObGaeH7I6b+2G4Qq9+Nxj3sPOTr3jVnYtS3bMt/1yNv
-         OB8ptX/9B5i12v7Bv869wi1p+LwI7gJadtF/RHqpszxn4Of5J7/j0tetg7Wne/uN2D5B
-         zhs81NF4p8fSomCG15jGDqiHDiB94R6R9b0GEhUa4oZw4MiNIwssyKBL6UX1NsvD0mjl
-         x/1HpPoE3WfNHiutx3EJNwBZZThxHC2I+3TyVpGudYry5ESJ7SZ7Lh26S3jVO1klZq5L
-         HuWeopSxpq7EWCq5YB4Tsn8QP9BoL46nPa/4ItX9Jexs+6WjglHbV6isLlFfK7arfEdM
-         gFGg==
-X-Gm-Message-State: APjAAAXeZ35nUZDxseKSUMAfJP9xpjOjODYKRcxcKP+3xgkRXBmBurt0
-        WsMh3IpWRdTfUhQwoa5CBIGNox+6xutHavWFm98=
-X-Google-Smtp-Source: APXvYqzy7HwD9ZC59g5IYcnbKxewy5ha05SopJ3St6n1IT3KKZBrWsmOQ/Mk/qBKadpEUi8c5icf2kF4OByduGoL9Fo=
-X-Received: by 2002:a1f:711:: with SMTP id 17mr20617046vkh.65.1552403079861;
- Tue, 12 Mar 2019 08:04:39 -0700 (PDT)
+        Tue, 12 Mar 2019 11:05:17 -0400
+Received: from mga04.intel.com ([192.55.52.120]:54652 "EHLO mga04.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725894AbfCLPFQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 12 Mar 2019 11:05:16 -0400
+X-Amp-Result: UNKNOWN
+X-Amp-Original-Verdict: FILE UNKNOWN
+X-Amp-File-Uploaded: False
+Received: from fmsmga008.fm.intel.com ([10.253.24.58])
+  by fmsmga104.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 12 Mar 2019 08:05:16 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.58,471,1544515200"; 
+   d="scan'208";a="130980841"
+Received: from smile.fi.intel.com (HELO smile) ([10.237.72.86])
+  by fmsmga008.fm.intel.com with ESMTP; 12 Mar 2019 08:05:14 -0700
+Received: from andy by smile with local (Exim 4.92)
+        (envelope-from <andriy.shevchenko@linux.intel.com>)
+        id 1h3ixt-00089O-D3; Tue, 12 Mar 2019 17:05:13 +0200
+Date:   Tue, 12 Mar 2019 17:05:13 +0200
+From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+To:     Jarkko Nikula <jarkko.nikula@linux.intel.com>
+Cc:     Hans de Goede <hdegoede@redhat.com>,
+        Wolfram Sang <wsa@the-dreams.de>,
+        Mika Westerberg <mika.westerberg@linux.intel.com>,
+        Lee Jones <lee.jones@linaro.org>, linux-i2c@vger.kernel.org,
+        linux-acpi@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 1/2] i2c: i2c-designware-platdrv: Allow a dynamic adap.
+ nr without an ACPI fwnode
+Message-ID: <20190312150513.GE9224@smile.fi.intel.com>
+References: <20190311112216.31391-1-hdegoede@redhat.com>
+ <20190311112216.31391-2-hdegoede@redhat.com>
+ <c519b0ea-670d-defe-5870-c6258c19ff74@linux.intel.com>
 MIME-Version: 1.0
-References: <20190312131830.4253-1-andriy.shevchenko@linux.intel.com>
- <CAMuHMdVTKRJJDqtpgExmEmwnYcpF8h2xTtbXwKLnVmVPz0bZqw@mail.gmail.com> <20190312144052.GC9224@smile.fi.intel.com>
-In-Reply-To: <20190312144052.GC9224@smile.fi.intel.com>
-From:   Geert Uytterhoeven <geert@linux-m68k.org>
-Date:   Tue, 12 Mar 2019 16:04:27 +0100
-Message-ID: <CAMuHMdUwEdNHdSGHT2urXFm4T74yYVEfHkQJqsZGsQhveqC17g@mail.gmail.com>
-Subject: Re: [PATCH v1 1/4] auxdisplay: hd44780: Fix memory leak on ->remove()
-To:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Cc:     Miguel Ojeda Sandonis <miguel.ojeda.sandonis@gmail.com>,
-        Willy Tarreau <willy@haproxy.com>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <c519b0ea-670d-defe-5870-c6258c19ff74@linux.intel.com>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Andy,
+On Tue, Mar 12, 2019 at 04:47:48PM +0200, Jarkko Nikula wrote:
+> On 3/11/19 1:22 PM, Hans de Goede wrote:
+> > Before this commit the i2c-designware-platdrv assumes that if the pdev
+> > has an apci-companion it should use a dynamic adapter-nr and otherwise
+> > it will use pdev->id as adapter-nr.
+> > 
+> > On some devices e.g. the Apollo Lake using Acer TravelMate Spin B118,
+> > some of the LPSS i2c-adapters are enumerated through PCI and do not have
+> > an ACPI fwnode. These devices are handled as mfd devices so they end up
+> > using the i2c-designware-platdrv driver.
+> > 
+> > This results in the i2c-adapter being registered with the mfd generated
+> > pdev->id as adapter-nr, which conflicts with existing adapters, triggering
+> > a WARN(id < 0, "couldn't get idr") in i2c-core-base.c and causing the
+> > adapter registration to fail.
+> > 
+> I went thinking would we get a regression if we switch the
+> i2c-designware-platdrv to dynamic numbering unconditionally?
+> 
+> Only drivers/mfd/intel-lpss.c and drivers/mfd/intel_quark_i2c_gpio.c
+> register platform device "i2c_designware" and otherwise in the driver itself
+> for known ACPI IDs and device tree bindings.
+> 
+> Things should be fine for ACPI cases if slave devices are also described in
+> ACPI tables. As far as I've understood with device tree matching adapter
+> number is irrelevant in slave device registration?
 
-On Tue, Mar 12, 2019 at 3:40 PM Andy Shevchenko
-<andriy.shevchenko@linux.intel.com> wrote:
-> On Tue, Mar 12, 2019 at 02:47:01PM +0100, Geert Uytterhoeven wrote:
-> > On Tue, Mar 12, 2019 at 2:18 PM Andy Shevchenko
-> > <andriy.shevchenko@linux.intel.com> wrote:
-> > > We have to free on ->remove() the allocated resources on ->probe().
-> > >
-> > > Fixes: d47d88361fee ("auxdisplay: Add HD44780 Character LCD support")
-> > > Cc: Geert Uytterhoeven <geert@linux-m68k.org>
-> > > Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-> >
-> > Thanks, nice catch!
-> >
-> > (wearing a newer (and hopefully wiser ;-) hat than when I wrote the code)
-> >
-> > While this is correct for the current implementation of struct charlcd_priv,
-> > this may be a bit fragile.
->
-> This patch will be the same in the next version due to possibility to easy
-> backport.
+Seems like Hans came to the same conclusion.
 
-OK.
+> Andy: could you tell by commit 918fe70cf475 ("mfd: intel_quark_i2c_gpio:
+> support devices behind i2c bus") are those devices described in ACPI or in
+> some i2c_board_infos with referring to fixed adapter number either in or out
+> of kernel tree code?
 
-> > What about adding a charlcd_free() wrapper, which can do kfree(to_priv(lcd)),
-> > and be used in the probe failure path, too?
->
-> This has been partially done in the rest of the series, but I got your advise
-> and will change to use to_priv() in v2. Thanks!
+As far as I remember they are coming from ACPI, but you may easily check on
+real hardware we have in our lab.
 
-Ah, hadn't noticed the rest of the series. Will review...
+> Then drivers/platform/chrome/chromeos_laptop.c is the only code searching
+> for adapter named as "Synopsys DesignWare I2C adapter" without assuming any
+> fixed adapter numbering.
 
-Gr{oetje,eeting}s,
+> What's unclear to me can there be device tree cases where i2c-designware
+> probing comes with pdev->id not starting from zero or in different order?
+> I.e. would it make difference do we use pdev->id or dynamic adapter
+> numbering?
 
-                        Geert
+-- 
+With Best Regards,
+Andy Shevchenko
 
---
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
 
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
