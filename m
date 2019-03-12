@@ -7,46 +7,47 @@ X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 531F9C43381
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 17:43:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 81125C43381
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 17:43:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 25B19214AE
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 17:43:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 551142087C
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 17:43:41 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1552412610;
-	bh=w0MzCKPPGRudVuB4PrzlFiIeM8ruuO+yJpt8S+RFztc=;
+	s=default; t=1552412621;
+	bh=LViOXtgSeHv7Ue4AyKYmeawMNpmGA496SEaNIBWLguQ=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=vrE/0H6uXqrcjfuvnDd4ORAg0rvzUsKUOwW0aPUGidqD+RqVFLp+B8+oHSuNE3bZr
-	 BJDBTm7pQKSh8P5UNUXnlyppfRia4fejgm0Huf2Z0KwLKCax7S5FRoeDJ0iUI9tFO2
-	 R4exbxoN3RjuJTGSiXm0zh7h56ZJQkbyW5JoWoOc=
+	b=W4G/LgJcdSoxUvz3mnjVRqMuDWOAhOHNdnPsHNb7i5aIyh0zcYPCKYgQp0Z63Lt20
+	 WbdZBBgjFjOVxNpQKYYkA2rHQwioDLpbkZEHQFDr664Qeonw5iXw0BmSEdYMrN2m8w
+	 tc+szmmu6v4e3tvpdS4b5hqcD1dp516T45Xmpl7Q=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729590AbfCLRn2 (ORCPT
+        id S1729297AbfCLRnk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 12 Mar 2019 13:43:28 -0400
-Received: from mail.kernel.org ([198.145.29.99]:56888 "EHLO mail.kernel.org"
+        Tue, 12 Mar 2019 13:43:40 -0400
+Received: from mail.kernel.org ([198.145.29.99]:56844 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728879AbfCLRPr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 12 Mar 2019 13:15:47 -0400
+        id S1728873AbfCLRPq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 12 Mar 2019 13:15:46 -0400
 Received: from localhost (unknown [104.133.8.98])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 5FC052087C;
-        Tue, 12 Mar 2019 17:15:47 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id EC4172183F;
+        Tue, 12 Mar 2019 17:15:45 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1552410947;
-        bh=w0MzCKPPGRudVuB4PrzlFiIeM8ruuO+yJpt8S+RFztc=;
+        s=default; t=1552410946;
+        bh=LViOXtgSeHv7Ue4AyKYmeawMNpmGA496SEaNIBWLguQ=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=eudkG5hRdnm4wvHDxbrsRHqjedzoo328LAYU+aE7E56PjegU2Dq0LI3t+msYBg1qE
-         TA6V8zVxcOlFcDLG3rySoxDMfgh9ag3gSHDPT7nUKRk4hpkd2q5gTA1vRyAc8msDly
-         nkBlKECzYkGVZZT2E8onynL6DHuMPOvfqV4oIJHw=
+        b=nmdtUvT6RZbO6sixDnMYySE/mMNO3LsAeNyvIT5xI2O+VmfkUa1zToOtMkvCpohhU
+         P57k4Nw6I7EVkAfJTsA8a6Tqi5kgA1wxqP2mRoJpwvJ+XbUVNY49KAElA6cSm+S5Ci
+         m6ZFccqINFrC7D0ARt8Hh/vT8qT7UUChSL6sBW3Q=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Daniele Palmas <dnlplm@gmail.com>,
-        Johan Hovold <johan@kernel.org>
-Subject: [PATCH 4.14 002/135] USB: serial: option: add Telit ME910 ECM composition
-Date:   Tue, 12 Mar 2019 10:07:29 -0700
-Message-Id: <20190312170341.344002704@linuxfoundation.org>
+        stable@vger.kernel.org, Hulk Robot <hulkci@huawei.com>,
+        YueHaibing <yuehaibing@huawei.com>,
+        "David S. Miller" <davem@davemloft.net>
+Subject: [PATCH 4.14 010/135] net-sysfs: Fix mem leak in netdev_register_kobject
+Date:   Tue, 12 Mar 2019 10:07:37 -0700
+Message-Id: <20190312170342.101341125@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190312170341.127810985@linuxfoundation.org>
 References: <20190312170341.127810985@linuxfoundation.org>
@@ -65,31 +66,55 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-From: Daniele Palmas <dnlplm@gmail.com>
+From: YueHaibing <yuehaibing@huawei.com>
 
-commit 6431866b6707d27151be381252d6eef13025cfce upstream.
+[ Upstream commit 895a5e96dbd6386c8e78e5b78e067dcc67b7f0ab ]
 
-This patch adds Telit ME910 family ECM composition 0x1102.
+syzkaller report this:
+BUG: memory leak
+unreferenced object 0xffff88837a71a500 (size 256):
+  comm "syz-executor.2", pid 9770, jiffies 4297825125 (age 17.843s)
+  hex dump (first 32 bytes):
+    00 00 00 00 ad 4e ad de ff ff ff ff 00 00 00 00  .....N..........
+    ff ff ff ff ff ff ff ff 20 c0 ef 86 ff ff ff ff  ........ .......
+  backtrace:
+    [<00000000db12624b>] netdev_register_kobject+0x124/0x2e0 net/core/net-sysfs.c:1751
+    [<00000000dc49a994>] register_netdevice+0xcc1/0x1270 net/core/dev.c:8516
+    [<00000000e5f3fea0>] tun_set_iff drivers/net/tun.c:2649 [inline]
+    [<00000000e5f3fea0>] __tun_chr_ioctl+0x2218/0x3d20 drivers/net/tun.c:2883
+    [<000000001b8ac127>] vfs_ioctl fs/ioctl.c:46 [inline]
+    [<000000001b8ac127>] do_vfs_ioctl+0x1a5/0x10e0 fs/ioctl.c:690
+    [<0000000079b269f8>] ksys_ioctl+0x89/0xa0 fs/ioctl.c:705
+    [<00000000de649beb>] __do_sys_ioctl fs/ioctl.c:712 [inline]
+    [<00000000de649beb>] __se_sys_ioctl fs/ioctl.c:710 [inline]
+    [<00000000de649beb>] __x64_sys_ioctl+0x74/0xb0 fs/ioctl.c:710
+    [<000000007ebded1e>] do_syscall_64+0xc8/0x580 arch/x86/entry/common.c:290
+    [<00000000db315d36>] entry_SYSCALL_64_after_hwframe+0x49/0xbe
+    [<00000000115be9bb>] 0xffffffffffffffff
 
-Signed-off-by: Daniele Palmas <dnlplm@gmail.com>
-Cc: stable <stable@vger.kernel.org>
-Signed-off-by: Johan Hovold <johan@kernel.org>
+It should call kset_unregister to free 'dev->queues_kset'
+in error path of register_queue_kobjects, otherwise will cause a mem leak.
+
+Reported-by: Hulk Robot <hulkci@huawei.com>
+Fixes: 1d24eb4815d1 ("xps: Transmit Packet Steering")
+Signed-off-by: YueHaibing <yuehaibing@huawei.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-
 ---
- drivers/usb/serial/option.c |    2 ++
- 1 file changed, 2 insertions(+)
+ net/core/net-sysfs.c |    3 +++
+ 1 file changed, 3 insertions(+)
 
---- a/drivers/usb/serial/option.c
-+++ b/drivers/usb/serial/option.c
-@@ -1151,6 +1151,8 @@ static const struct usb_device_id option
- 	  .driver_info = NCTRL(0) | RSVD(1) | RSVD(3) },
- 	{ USB_DEVICE(TELIT_VENDOR_ID, TELIT_PRODUCT_ME910_DUAL_MODEM),
- 	  .driver_info = NCTRL(0) | RSVD(3) },
-+	{ USB_DEVICE_INTERFACE_CLASS(TELIT_VENDOR_ID, 0x1102, 0xff),	/* Telit ME910 (ECM) */
-+	  .driver_info = NCTRL(0) },
- 	{ USB_DEVICE(TELIT_VENDOR_ID, TELIT_PRODUCT_LE910),
- 	  .driver_info = NCTRL(0) | RSVD(1) | RSVD(2) },
- 	{ USB_DEVICE(TELIT_VENDOR_ID, TELIT_PRODUCT_LE910_USBCFG4),
+--- a/net/core/net-sysfs.c
++++ b/net/core/net-sysfs.c
+@@ -1402,6 +1402,9 @@ static int register_queue_kobjects(struc
+ error:
+ 	netdev_queue_update_kobjects(dev, txq, 0);
+ 	net_rx_queue_update_kobjects(dev, rxq, 0);
++#ifdef CONFIG_SYSFS
++	kset_unregister(dev->queues_kset);
++#endif
+ 	return error;
+ }
+ 
 
 
