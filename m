@@ -4,53 +4,52 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E8857C43381
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 18:02:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D697CC43381
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 18:02:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B95F2205C9
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 18:02:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 980D6205C9
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 18:02:17 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1552413733;
-	bh=qI5WBH9y5QDOP1ttNISPMn1Xn8eegTsYr9tfQmNLf+c=;
+	s=default; t=1552413737;
+	bh=jqHHD2ErqTP4mhfq/+GgPz/pP9HzdIeiq8ZPFObdJzM=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=d0iqtezKOo987odHZvSZMFj/ITx6XekyosfeaFxLt5VB+v2KhKPUBYg8PHE/2Xjkd
-	 Z6Afi9xBeWsmUXmTSlpqTnn6P61eD4KEv+sAiqA5pb29BJ5CTey42XyDssjjGD4mA+
-	 Kbagrd+I68jiCzorm+/WEsr6lRLpbta+npTOg0e8=
+	b=dMOU9Bc5DXi3fTn7RlzRh7upcFpDg4Osc9afZTRCGzXvVT6J9/aFSiC8o3dKhKjF2
+	 RX55/wpTi9xlHbsy8dGrEVdiabH13/aJct00IWvzVyiavVjpebnpDbC5OW/ETWLSlc
+	 pqh+cwTOgmWOkqEFTQoHdtFQmSK4CajUTcd/FKH4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727109AbfCLSCL (ORCPT
+        id S1727791AbfCLRNH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 12 Mar 2019 14:02:11 -0400
-Received: from mail.kernel.org ([198.145.29.99]:49484 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727002AbfCLRNH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Tue, 12 Mar 2019 13:13:07 -0400
+Received: from mail.kernel.org ([198.145.29.99]:48138 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727555AbfCLRMg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 12 Mar 2019 13:12:36 -0400
 Received: from localhost (unknown [104.133.8.98])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D0AD6217D4;
-        Tue, 12 Mar 2019 17:13:06 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id C9BC921741;
+        Tue, 12 Mar 2019 17:12:35 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1552410786;
-        bh=qI5WBH9y5QDOP1ttNISPMn1Xn8eegTsYr9tfQmNLf+c=;
+        s=default; t=1552410755;
+        bh=jqHHD2ErqTP4mhfq/+GgPz/pP9HzdIeiq8ZPFObdJzM=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=BvjRzaQc//18DVsvQO4Gyfb1o3ZgXTUXHHr/dx8s+AZYz6+Bm19nOq4/AMcrU+FAc
-         yaYDgA2KkMdsmftqbVUGiAKePR2y6Jb+Du3NW3Jrr522S9Ee0se4pbokJf5JNb12vu
-         7zI2CTK8Xh1IYLGFw4+VJ2lziRDxhYYoC/Tj8O6I=
+        b=QbufFgZ9lwL0PK88l/VDU8K1M3eLsgMwthdvYMQuZ3bXS1YNoaSVXgsDm7gmihRWP
+         1IfC9dbp8/Uqg2RnuxbqFrDipZ+sn75cwtPe8LtXbvYhYzXmXaejZcWXfBCeh73s0J
+         7bX7mHkULRP2cQw9jM2BeOMQxzFM6b2o1jLxh0Bs=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Kees Cook <keescook@chromium.org>,
-        Tetsuo Handa <penguin-kernel@I-love.SAKURA.ne.jp>,
+        stable@vger.kernel.org, Dan Carpenter <dan.carpenter@oracle.com>,
+        Luis Chamberlain <mcgrof@kernel.org>,
         Andrew Morton <akpm@linux-foundation.org>,
-        David Rientjes <rientjes@google.com>,
-        Sasha Levin <sashal@kernel.org>,
-        syzbot+16c3a70e1e9b29346c43@syzkaller.appspotmail.com
-Subject: [PATCH 4.20 108/171] relay: check return of create_buf_file() properly
-Date:   Tue, 12 Mar 2019 10:08:08 -0700
-Message-Id: <20190312170357.296627486@linuxfoundation.org>
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.20 066/171] lib/test_kmod.c: potential double free in error handling
+Date:   Tue, 12 Mar 2019 10:07:26 -0700
+Message-Id: <20190312170353.870866511@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190312170347.868927101@linuxfoundation.org>
 References: <20190312170347.868927101@linuxfoundation.org>
@@ -69,50 +68,38 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-[ Upstream commit 2c1cf00eeacb784781cf1c9896b8af001246d339 ]
+[ Upstream commit db7ddeab3ce5d64c9696e70d61f45ea9909cd196 ]
 
-If create_buf_file() returns an error, don't try to reference it later
-as a valid dentry pointer.
+There is a copy and paste bug so we set "config->test_driver" to NULL
+twice instead of setting "config->test_fs".  Smatch complains that it
+leads to a double free:
 
-This problem was exposed when debugfs started to return errors instead
-of just NULL for some calls when they do not succeed properly.
+  lib/test_kmod.c:840 __kmod_config_init() warn: 'config->test_fs' double freed
 
-Also, the check for WARN_ON(dentry) was just wrong :)
-
-Reported-by: Kees Cook <keescook@chromium.org>
-Reported-and-tested-by: syzbot+16c3a70e1e9b29346c43@syzkaller.appspotmail.com
-Reported-by: Tetsuo Handa <penguin-kernel@I-love.SAKURA.ne.jp>
-Cc: Andrew Morton <akpm@linux-foundation.org>
-Cc: David Rientjes <rientjes@google.com>
-Fixes: ff9fb72bc077 ("debugfs: return error values, not NULL")
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Link: http://lkml.kernel.org/r/20190121140011.GA14283@kadam
+Fixes: d9c6a72d6fa2 ("kmod: add test driver to stress test the module loader")
+Signed-off-by: Dan Carpenter <dan.carpenter@oracle.com>
+Acked-by: Luis Chamberlain <mcgrof@kernel.org>
+Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
+Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- kernel/relay.c | 4 +++-
- 1 file changed, 3 insertions(+), 1 deletion(-)
+ lib/test_kmod.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/kernel/relay.c b/kernel/relay.c
-index 04f248644e06..9e0f52375487 100644
---- a/kernel/relay.c
-+++ b/kernel/relay.c
-@@ -428,6 +428,8 @@ static struct dentry *relay_create_buf_file(struct rchan *chan,
- 	dentry = chan->cb->create_buf_file(tmpname, chan->parent,
- 					   S_IRUSR, buf,
- 					   &chan->is_global);
-+	if (IS_ERR(dentry))
-+		dentry = NULL;
+diff --git a/lib/test_kmod.c b/lib/test_kmod.c
+index d82d022111e0..9cf77628fc91 100644
+--- a/lib/test_kmod.c
++++ b/lib/test_kmod.c
+@@ -632,7 +632,7 @@ static void __kmod_config_free(struct test_config *config)
+ 	config->test_driver = NULL;
  
- 	kfree(tmpname);
+ 	kfree_const(config->test_fs);
+-	config->test_driver = NULL;
++	config->test_fs = NULL;
+ }
  
-@@ -461,7 +463,7 @@ static struct rchan_buf *relay_open_buf(struct rchan *chan, unsigned int cpu)
- 		dentry = chan->cb->create_buf_file(NULL, NULL,
- 						   S_IRUSR, buf,
- 						   &chan->is_global);
--		if (WARN_ON(dentry))
-+		if (IS_ERR_OR_NULL(dentry))
- 			goto free_buf;
- 	}
- 
+ static void kmod_config_free(struct kmod_test_device *test_dev)
 -- 
 2.19.1
 
