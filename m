@@ -2,124 +2,208 @@ Return-Path: <SRS0=J4ZE=RP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0D2F3C43381
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 11:56:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3D536C43381
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 11:58:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D10EA20657
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 11:56:03 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="GChF3YJo"
+	by mail.kernel.org (Postfix) with ESMTP id 086D0206BA
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 11:58:03 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726670AbfCLL4C (ORCPT
+        id S1726534AbfCLL6B (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 12 Mar 2019 07:56:02 -0400
-Received: from mail-wr1-f67.google.com ([209.85.221.67]:35988 "EHLO
-        mail-wr1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725887AbfCLL4C (ORCPT
+        Tue, 12 Mar 2019 07:58:01 -0400
+Received: from atrey.karlin.mff.cuni.cz ([195.113.26.193]:43419 "EHLO
+        atrey.karlin.mff.cuni.cz" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725887AbfCLL6B (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 12 Mar 2019 07:56:02 -0400
-Received: by mail-wr1-f67.google.com with SMTP id g18so2392770wru.3
-        for <linux-kernel@vger.kernel.org>; Tue, 12 Mar 2019 04:56:00 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=from:to:cc:subject:date:message-id;
-        bh=sP1UMbnvXffQFvwNd2Kjky712sNdl4eU3YJAbGKjznc=;
-        b=GChF3YJos7jICxEpgt1qCMpaR0U4BrV05oTTishBHMbSLq1KNQXY5WE0v0RpAdAMHE
-         QCdqAkOr8Rw2m/UorsIgozuH9ZT3SA6FYR4ODWKoRme5IAOEnBEIRDqqmCe4N/j+oa3q
-         BKadL0GjhUp5u0FtnirgNZKB/YZW/F3i+zxQfFzk3kOJv6Htq5a2OfVHvmj6AZXfqsPo
-         /2Reiig3neOd5+04a3w2EbAbapE4CKSHMlBVvNoDdvk2g0Ke0TkDgfFOBRcnQUuVH+bL
-         kGN2vl51KFW+c+PrglW6p1LCFurTR9mkfK608cF2LzwgWmpXpvIBzrNizgi9SHM17DD5
-         z5xQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id;
-        bh=sP1UMbnvXffQFvwNd2Kjky712sNdl4eU3YJAbGKjznc=;
-        b=nHhSRNVajoPiwBPj7t3KMlBJSptYeAjfYmCR7x6mRk0JJCQlltV2eF8yoSZD1Fnh20
-         tG6t41hFXE5yNHpaAxw73C+CwNPZls7Hb5ojjjigkVWH9tnMPcxg5Xpa0RkAwzReS8hR
-         DfSglhViLyBUcIWZkhckSpie+FcOLV6cmBtoGizODRnWDCOF2zbBzUdLRICqd74iFcuo
-         /XG8cdsDidlDJgBqXMFx5/eosSSdy1e+lQbioITjnrljJilW/ZThH4coG+ecmQGVK71n
-         N19khjqBvUdfnhDDjxPNbylmjzZ+/b68ZMaL4ZXf/9FL1MM6UYg6+NpZqGFxfRsY6gzt
-         lesw==
-X-Gm-Message-State: APjAAAWxLI+scq+bsmq2CnYiXcc1djhBIEL/xU0EiElTmz55I1ovfEJL
-        CQ/kiEO2NupfzJlCknc/h5LhHQ==
-X-Google-Smtp-Source: APXvYqxP1fqkxdH3SMt1UhyP3rAzpRcs/W5gu+FiNtIcwHS2o+AOzxgI6S0Bj6Ty4h/8sLFSIzZ95g==
-X-Received: by 2002:adf:fd01:: with SMTP id e1mr18313385wrr.204.1552391760145;
-        Tue, 12 Mar 2019 04:56:00 -0700 (PDT)
-Received: from mms-0440.qualcomm.mm-sol.com ([37.157.136.206])
-        by smtp.gmail.com with ESMTPSA id x22sm2064990wmc.19.2019.03.12.04.55.58
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Tue, 12 Mar 2019 04:55:59 -0700 (PDT)
-From:   Stanimir Varbanov <stanimir.varbanov@linaro.org>
-To:     linux-media@vger.kernel.org
-Cc:     linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
-        Hans Verkuil <hverkuil@xs4all.nl>,
-        Stanimir Varbanov <stanimir.varbanov@linaro.org>
-Subject: [PATCH] venus: hfi_parser: fix Source Matcher errors
-Date:   Tue, 12 Mar 2019 13:55:42 +0200
-Message-Id: <20190312115542.15638-1-stanimir.varbanov@linaro.org>
-X-Mailer: git-send-email 2.17.1
+        Tue, 12 Mar 2019 07:58:01 -0400
+Received: by atrey.karlin.mff.cuni.cz (Postfix, from userid 512)
+        id AD1018057A; Tue, 12 Mar 2019 12:57:50 +0100 (CET)
+Date:   Tue, 12 Mar 2019 12:57:57 +0100
+From:   Pavel Machek <pavel@ucw.cz>
+To:     Thomas Gleixner <tglx@linutronix.de>
+Cc:     corbet@lwn.net, LKML <linux-kernel@vger.kernel.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>, x86@kernel.org,
+        Peter Zijlstra <peterz@infradead.org>,
+        Jiri Kosina <jkosina@suse.cz>,
+        Josh Poimboeuf <jpoimboe@redhat.com>,
+        Dave Hansen <dave.hansen@linux.intel.com>,
+        Andy Lutomirski <luto@kernel.org>,
+        Greg KH <gregkh@linuxfoundation.org>,
+        Konrad Rzeszutek Wilk <konrad.wilk@oracle.com>,
+        David Woodhouse <dwmw2@infradead.org>,
+        Tom Lendacky <thomas.lendacky@amd.com>,
+        Paolo Bonzini <pbonzini@redhat.com>,
+        Joerg Roedel <joro@8bytes.org>,
+        Tony Luck <tony.luck@intel.com>,
+        Salvatore Bonaccorso <carnil@debian.org>,
+        linux-doc@vger.kernel.org
+Subject: Re: [patch] Fix up l1ft documentation was Re: Taking a break - time
+ to look back
+Message-ID: <20190312115757.GA29955@amd>
+References: <alpine.DEB.2.21.1812200022580.1651@nanos.tec.linutronix.de>
+ <20190102235152.GA24163@amd>
+ <20190311102109.GA14118@amd>
+ <alpine.DEB.2.21.1903111403330.1691@nanos.tec.linutronix.de>
+ <20190311131341.GA28223@amd>
+ <alpine.DEB.2.21.1903112211180.1651@nanos.tec.linutronix.de>
+MIME-Version: 1.0
+Content-Type: multipart/signed; micalg=pgp-sha1;
+        protocol="application/pgp-signature"; boundary="xHFwDpU9dbj6ez1V"
+Content-Disposition: inline
+In-Reply-To: <alpine.DEB.2.21.1903112211180.1651@nanos.tec.linutronix.de>
+User-Agent: Mutt/1.5.23 (2014-03-12)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This fixes following Smatch errors:
 
-hfi_parser.c:103 parse_profile_level() error: memcpy() 'proflevel'
-too small (8 vs 128)
+--xHFwDpU9dbj6ez1V
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-hfi_parser.c:129 parse_caps() error: memcpy() 'cap'
-too small (16 vs 512)
+On Mon 2019-03-11 23:31:08, Thomas Gleixner wrote:
+> Pavel,
+>=20
+> On Mon, 11 Mar 2019, Pavel Machek wrote:
+> > On Mon 2019-03-11 14:05:07, Thomas Gleixner wrote:
+> > > Huch? Care to tell what's a lie instead of making bold statements?
+> >=20
+> > Take a care to look at the patch I submitted?
+> >=20
+> > Lie:
+> >=20
+> > # A system with an up to date kernel is protected against attacks from
+> > # malicious user space applications.
+> >=20
+> > 3GB system running 32bit kernel is not protected. Same is true for for
+> > really big 64bit systems.
+>=20
+> I agree that this statement is incorrect.
+>=20
+> Calling this a lie is a completly unjustified personal attack on those who
 
-Signed-off-by: Stanimir Varbanov <stanimir.varbanov@linaro.org>
----
- drivers/media/platform/qcom/venus/hfi_parser.c | 12 ++++++++++--
- 1 file changed, 10 insertions(+), 2 deletions(-)
+So how should it be called? I initally used less strong words, only to
+get "Care to tell what's a lie instead of making bold statements?"
+back. Also look at the timing of the thread.
 
-diff --git a/drivers/media/platform/qcom/venus/hfi_parser.c b/drivers/media/platform/qcom/venus/hfi_parser.c
-index 2293d936e49c..d8b34a7a825f 100644
---- a/drivers/media/platform/qcom/venus/hfi_parser.c
-+++ b/drivers/media/platform/qcom/venus/hfi_parser.c
-@@ -96,11 +96,15 @@ parse_profile_level(struct venus_core *core, u32 codecs, u32 domain, void *data)
- 	struct hfi_profile_level_supported *pl = data;
- 	struct hfi_profile_level *proflevel = pl->profile_level;
- 	struct hfi_profile_level pl_arr[HFI_MAX_PROFILE_COUNT] = {};
-+	unsigned int i;
- 
- 	if (pl->profile_count > HFI_MAX_PROFILE_COUNT)
- 		return;
- 
--	memcpy(pl_arr, proflevel, pl->profile_count * sizeof(*proflevel));
-+	for (i = 0; i < pl->profile_count; i++) {
-+		pl_arr[i] = *proflevel;
-+		proflevel++;
-+	}
- 
- 	for_each_codec(core->caps, ARRAY_SIZE(core->caps), codecs, domain,
- 		       fill_profile_level, pl_arr, pl->profile_count);
-@@ -122,11 +126,15 @@ parse_caps(struct venus_core *core, u32 codecs, u32 domain, void *data)
- 	struct hfi_capability *cap = caps->data;
- 	u32 num_caps = caps->num_capabilities;
- 	struct hfi_capability caps_arr[MAX_CAP_ENTRIES] = {};
-+	unsigned int i;
- 
- 	if (num_caps > MAX_CAP_ENTRIES)
- 		return;
- 
--	memcpy(caps_arr, cap, num_caps * sizeof(*cap));
-+	for (i = 0; i < num_caps; i++) {
-+		caps_arr[i] = *cap;
-+		cap++;
-+	}
- 
- 	for_each_codec(core->caps, ARRAY_SIZE(core->caps), codecs, domain,
- 		       fill_caps, caps_arr, num_caps);
--- 
-2.17.1
+> >     Ok, I guess L1TF was a lot of fun, and there was not time for a good
+> >     documentation.
+>=20
+> It's interesting that quite some people were actually happy about that
+> document. Sorry, that we weren't able to live up to your high
+> standards.
 
+Ok, now can we have that document updated to meet the standards?
+
+> > @@ -1,10 +1,11 @@
+> >  L1TF - L1 Terminal Fault
+> >  =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D
+> > =20
+> > -L1 Terminal Fault is a hardware vulnerability which allows unprivileged
+> > -speculative access to data which is available in the Level 1 Data Cache
+> > -when the page table entry controlling the virtual address, which is us=
+ed
+> > -for the access, has the Present bit cleared or other reserved bits set.
+> > +L1 Terminal Fault is a hardware vulnerability on most recent Intel x86
+>=20
+> The 'Affected processors' section right below this is very clear about th=
+is
+> being an Intel only issue (for now). So what exactly is the point of this
+> change?
+
+Making it very clear from the begining this is x86-only issue. Yes,
+you can kind-of figure it out from the next section... except for
+Intel StrongArm.
+
+Next sentence speaks about "present bit" of "page table entry". That
+may be confusing for people familiar with other architectures, which
+may not have such bit. We should mention this is x86 before using
+x86-specific terminology.
+
+> hardware. A 32bit kernel booted on a 64bit capable CPU has the same issue.
+> For further correctness, this needs to mention that !PAE enabled kernels
+> cannot do PTE inversion at all.
+
+Ok.
+
+> > 3GB system running 32bit kernel is not protected. Same is true for for
+> > really big 64bit systems.
+>=20
+> Where is the explanation for the 'really big 64bit systems' issue for
+> correctness sake?
+
+I don't know the detailed limits for each system; what about this?
+
+Signed-off-by: Pavel Machek <pavel@ucw.cz>
+
+									Pavel
+
+diff --git a/Documentation/admin-guide/l1tf.rst b/Documentation/admin-guide=
+/l1tf.rst
+index 9af9773..cbf02a4 100644
+--- a/Documentation/admin-guide/l1tf.rst
++++ b/Documentation/admin-guide/l1tf.rst
+@@ -1,10 +1,11 @@
+ L1TF - L1 Terminal Fault
+ =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
+=20
+-L1 Terminal Fault is a hardware vulnerability which allows unprivileged
+-speculative access to data which is available in the Level 1 Data Cache
+-when the page table entry controlling the virtual address, which is used
+-for the access, has the Present bit cleared or other reserved bits set.
++L1 Terminal Fault is a hardware vulnerability on most recent Intel x86
++CPUs which allows unprivileged speculative access to data which is
++available in the Level 1 Data Cache when the page table entry
++controlling the virtual address, which is used for the access, has the
++Present bit cleared or other reserved bits set.
+=20
+ Affected processors
+ -------------------
+@@ -76,12 +77,15 @@ Attack scenarios
+    deterministic and more practical.
+=20
+    The Linux kernel contains a mitigation for this attack vector, PTE
+-   inversion, which is permanently enabled and has no performance
+-   impact. The kernel ensures that the address bits of PTEs, which are not
+-   marked present, never point to cacheable physical memory space.
+-
+-   A system with an up to date kernel is protected against attacks from
+-   malicious user space applications.
++   inversion, which has no measurable performance impact in most
++   configurations. The kernel ensures that the address bits of PTEs,
++   which are not marked present, never point to cacheable physical
++   memory space. For mitigation to be effective, physical memory needs
++   to be limited in some configurations.
++
++   Mitigation is present in kernels v4.19 and newer, and in
++   recent -stable kernels. PAE needs to be enabled for mitigation to
++   work.
+=20
+ 2. Malicious guest in a virtual machine
+ ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+--=20
+(english) http://www.livejournal.com/~pavelmachek
+(cesky, pictures) http://atrey.karlin.mff.cuni.cz/~pavel/picture/horses/blo=
+g.html
+
+--xHFwDpU9dbj6ez1V
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1
+
+iEYEARECAAYFAlyHnsUACgkQMOfwapXb+vJM9QCeKbEXiW/YBjJn52kEdFLQvM1i
+FKsAoL4ebJhxukQko0/F+7OVRAj/YHpG
+=p7N6
+-----END PGP SIGNATURE-----
+
+--xHFwDpU9dbj6ez1V--
