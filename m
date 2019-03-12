@@ -7,51 +7,48 @@ X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EA47DC43381
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 18:01:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 22BDEC43381
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 18:01:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B02BA214AF
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 18:01:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E63D02175B
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 18:01:13 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1552413667;
-	bh=l64l3qvKN0bwfV1xBefE4uinW/cMvfop+Im88zymUro=;
+	s=default; t=1552413674;
+	bh=0T1emm7mQBrnaGKqurFeEz9gj4zC4k9+L53L5pSrExk=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=TwqIMInnci0DnmLY/MqABUFIvBHCjHLSweEg3c/0YHhMRnXqpJ9tlukoWA2hpfh4I
-	 QPUk4q6pNJl/iFF3t7Uq1MT8HO8hVK7UAPtQGUmWUaBhoR0doPVi+bBsjYARVfV6WM
-	 XqUDuZcO1Nzy4A29BIoeLlrxE6bHoeCHDHbH5DcY=
+	b=npRfyi4XE2HxUSkhcIOyReBEzfnacyB/IeT5b18I9wYR6OV7ImmAh866iN8KvKWjl
+	 yc5bIRhRMdBo/3piPYoRNAUHOljGyeAVkttQ2CFuLI5EL3ICREbyupiskkxEZKVK4C
+	 1YZimHbfrIzQUuf8fQql7T0OFDbW6xY5Ig11o7Cc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727850AbfCLRNP (ORCPT
+        id S1728368AbfCLSBL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 12 Mar 2019 13:13:15 -0400
-Received: from mail.kernel.org ([198.145.29.99]:48364 "EHLO mail.kernel.org"
+        Tue, 12 Mar 2019 14:01:11 -0400
+Received: from mail.kernel.org ([198.145.29.99]:49536 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727597AbfCLRMm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 12 Mar 2019 13:12:42 -0400
+        id S1727836AbfCLRNO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 12 Mar 2019 13:13:14 -0400
 Received: from localhost (unknown [104.133.8.98])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 8AFEE21741;
-        Tue, 12 Mar 2019 17:12:41 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 0343B2173C;
+        Tue, 12 Mar 2019 17:13:13 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1552410761;
-        bh=l64l3qvKN0bwfV1xBefE4uinW/cMvfop+Im88zymUro=;
+        s=default; t=1552410794;
+        bh=0T1emm7mQBrnaGKqurFeEz9gj4zC4k9+L53L5pSrExk=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=dRraTN9pwGWg1glQUa3fMcUEBQV5yQW1YGPXe7ftOQWO8TihtGclY4UZJUQ69NpcH
-         Qlc5FqBmK/7bzp66np77Xcf5pKZkqJBl/SeT1YdXTNC+wWu3goUZs1IW6xAbeSLunn
-         TWF44m5LorxZii3kl20JxJHzVCF0yc23DLydbQJ4=
+        b=ddaJ0yFa5hqgANOyJKPdIJhD5OdCzzNft0+4c4cIT+w5mnvs9a2C23Hp3bycKJikY
+         N0Y14X8PzNFce7KfsNJVzvUdoV4ik6oDUOvgKiSmwOXi0CbD7ikY7uOG2nrbTV6s8a
+         NS77bSXcglSNuhn1oJIXPTufBA806SHAI9hAQPFk=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Paul Cercueil <paul@crapouillou.net>,
-        Paul Burton <paul.burton@mips.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Ralf Baechle <ralf@linux-mips.org>,
-        James Hogan <jhogan@kernel.org>, devicetree@vger.kernel.org,
-        linux-mips@vger.kernel.org, Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.20 094/171] MIPS: DTS: jz4740: Correct interrupt number of DMA core
-Date:   Tue, 12 Mar 2019 10:07:54 -0700
-Message-Id: <20190312170356.078923649@linuxfoundation.org>
+        stable@vger.kernel.org, Wen Xiong <wenxiong@us.ibm.com>,
+        Keith Busch <keith.busch@intel.com>,
+        Chaitanya Kulkarni <chaitanya.kulkarni@wdc.com>,
+        Christoph Hellwig <hch@lst.de>, Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.20 139/171] nvme: lock NS list changes while handling command effects
+Date:   Tue, 12 Mar 2019 10:08:39 -0700
+Message-Id: <20190312170359.636858395@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190312170347.868927101@linuxfoundation.org>
 References: <20190312170347.868927101@linuxfoundation.org>
@@ -70,38 +67,94 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-[ Upstream commit 70999ec1c9d3f783a7232973cfc26971e5732758 ]
+[ Upstream commit e7ad43c3eda6a1690c4c3c341f95dc1c6898da83 ]
 
-The interrupt number set in the devicetree node of the DMA driver was
-wrong.
+If a controller supports the NS Change Notification, the namespace
+scan_work is automatically triggered after attaching a new namespace.
 
-Signed-off-by: Paul Cercueil <paul@crapouillou.net>
-Signed-off-by: Paul Burton <paul.burton@mips.com>
-Cc: Rob Herring <robh+dt@kernel.org>
-Cc: Mark Rutland <mark.rutland@arm.com>
-Cc: Ralf Baechle <ralf@linux-mips.org>
-Cc: James Hogan <jhogan@kernel.org>
-Cc: devicetree@vger.kernel.org
-Cc: linux-mips@vger.kernel.org
-Cc: linux-kernel@vger.kernel.org
+Occasionally the namespace scan_work may append the new namespace to the
+list before the admin command effects handling is completed. The effects
+handling unfreezes namespaces, but if it unfreezes the newly attached
+namespace, its request_queue freeze depth will be off and we'll hit the
+warning in blk_mq_unfreeze_queue().
+
+On the next namespace add, we will fail to freeze that queue due to the
+previous bad accounting and deadlock waiting for frozen.
+
+Fix that by preventing scan work from altering the namespace list while
+command effects handling needs to pair freeze with unfreeze.
+
+Reported-by: Wen Xiong <wenxiong@us.ibm.com>
+Tested-by: Wen Xiong <wenxiong@us.ibm.com>
+Signed-off-by: Keith Busch <keith.busch@intel.com>
+Reviewed-by: Chaitanya Kulkarni <chaitanya.kulkarni@wdc.com>
+Signed-off-by: Christoph Hellwig <hch@lst.de>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/mips/boot/dts/ingenic/jz4740.dtsi | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/nvme/host/core.c | 8 +++++++-
+ drivers/nvme/host/nvme.h | 1 +
+ 2 files changed, 8 insertions(+), 1 deletion(-)
 
-diff --git a/arch/mips/boot/dts/ingenic/jz4740.dtsi b/arch/mips/boot/dts/ingenic/jz4740.dtsi
-index 6fb16fd24035..2beb78a62b7d 100644
---- a/arch/mips/boot/dts/ingenic/jz4740.dtsi
-+++ b/arch/mips/boot/dts/ingenic/jz4740.dtsi
-@@ -161,7 +161,7 @@
- 		#dma-cells = <2>;
+diff --git a/drivers/nvme/host/core.c b/drivers/nvme/host/core.c
+index 5f9a5ef93969..21d7b646c73d 100644
+--- a/drivers/nvme/host/core.c
++++ b/drivers/nvme/host/core.c
+@@ -1182,6 +1182,7 @@ static u32 nvme_passthru_start(struct nvme_ctrl *ctrl, struct nvme_ns *ns,
+ 	 * effects say only one namespace is affected.
+ 	 */
+ 	if (effects & (NVME_CMD_EFFECTS_LBCC | NVME_CMD_EFFECTS_CSE_MASK)) {
++		mutex_lock(&ctrl->scan_lock);
+ 		nvme_start_freeze(ctrl);
+ 		nvme_wait_freeze(ctrl);
+ 	}
+@@ -1210,8 +1211,10 @@ static void nvme_passthru_end(struct nvme_ctrl *ctrl, u32 effects)
+ 	 */
+ 	if (effects & NVME_CMD_EFFECTS_LBCC)
+ 		nvme_update_formats(ctrl);
+-	if (effects & (NVME_CMD_EFFECTS_LBCC | NVME_CMD_EFFECTS_CSE_MASK))
++	if (effects & (NVME_CMD_EFFECTS_LBCC | NVME_CMD_EFFECTS_CSE_MASK)) {
+ 		nvme_unfreeze(ctrl);
++		mutex_unlock(&ctrl->scan_lock);
++	}
+ 	if (effects & NVME_CMD_EFFECTS_CCC)
+ 		nvme_init_identify(ctrl);
+ 	if (effects & (NVME_CMD_EFFECTS_NIC | NVME_CMD_EFFECTS_NCC))
+@@ -3300,6 +3303,7 @@ static void nvme_scan_work(struct work_struct *work)
+ 	if (nvme_identify_ctrl(ctrl, &id))
+ 		return;
  
- 		interrupt-parent = <&intc>;
--		interrupts = <29>;
-+		interrupts = <20>;
++	mutex_lock(&ctrl->scan_lock);
+ 	nn = le32_to_cpu(id->nn);
+ 	if (ctrl->vs >= NVME_VS(1, 1, 0) &&
+ 	    !(ctrl->quirks & NVME_QUIRK_IDENTIFY_CNS)) {
+@@ -3308,6 +3312,7 @@ static void nvme_scan_work(struct work_struct *work)
+ 	}
+ 	nvme_scan_ns_sequential(ctrl, nn);
+ out_free_id:
++	mutex_unlock(&ctrl->scan_lock);
+ 	kfree(id);
+ 	down_write(&ctrl->namespaces_rwsem);
+ 	list_sort(NULL, &ctrl->namespaces, ns_cmp);
+@@ -3550,6 +3555,7 @@ int nvme_init_ctrl(struct nvme_ctrl *ctrl, struct device *dev,
  
- 		clocks = <&cgu JZ4740_CLK_DMA>;
- 
+ 	ctrl->state = NVME_CTRL_NEW;
+ 	spin_lock_init(&ctrl->lock);
++	mutex_init(&ctrl->scan_lock);
+ 	INIT_LIST_HEAD(&ctrl->namespaces);
+ 	init_rwsem(&ctrl->namespaces_rwsem);
+ 	ctrl->dev = dev;
+diff --git a/drivers/nvme/host/nvme.h b/drivers/nvme/host/nvme.h
+index 6ffa99a10a60..5274881f9141 100644
+--- a/drivers/nvme/host/nvme.h
++++ b/drivers/nvme/host/nvme.h
+@@ -153,6 +153,7 @@ struct nvme_ctrl {
+ 	enum nvme_ctrl_state state;
+ 	bool identified;
+ 	spinlock_t lock;
++	struct mutex scan_lock;
+ 	const struct nvme_ctrl_ops *ops;
+ 	struct request_queue *admin_q;
+ 	struct request_queue *connect_q;
 -- 
 2.19.1
 
