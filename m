@@ -4,49 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4BC79C43381
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 09:16:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1F344C43381
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 09:16:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0C9CD214AF
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 09:16:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E349A2177E
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 09:16:05 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=flygoat.com header.i=@flygoat.com header.b="gGHMsVWI"
+	dkim=pass (1024-bit key) header.d=flygoat.com header.i=@flygoat.com header.b="brQhhlxZ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726612AbfCLJQB (ORCPT
+        id S1726640AbfCLJQF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 12 Mar 2019 05:16:01 -0400
-Received: from forward102p.mail.yandex.net ([77.88.28.102]:40519 "EHLO
-        forward102p.mail.yandex.net" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1725767AbfCLJP6 (ORCPT
+        Tue, 12 Mar 2019 05:16:05 -0400
+Received: from forward105j.mail.yandex.net ([5.45.198.248]:59334 "EHLO
+        forward105j.mail.yandex.net" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726597AbfCLJQC (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 12 Mar 2019 05:15:58 -0400
-Received: from mxback13j.mail.yandex.net (mxback13j.mail.yandex.net [IPv6:2a02:6b8:0:1619::88])
-        by forward102p.mail.yandex.net (Yandex) with ESMTP id 0B10C1D41ED6;
-        Tue, 12 Mar 2019 12:15:55 +0300 (MSK)
+        Tue, 12 Mar 2019 05:16:02 -0400
+Received: from mxback5j.mail.yandex.net (mxback5j.mail.yandex.net [IPv6:2a02:6b8:0:1619::10e])
+        by forward105j.mail.yandex.net (Yandex) with ESMTP id BAA23B21F9B;
+        Tue, 12 Mar 2019 12:15:59 +0300 (MSK)
 Received: from smtp1j.mail.yandex.net (smtp1j.mail.yandex.net [2a02:6b8:0:801::ab])
-        by mxback13j.mail.yandex.net (nwsmtp/Yandex) with ESMTP id 4rdbciSOk7-FsH4gH9V;
-        Tue, 12 Mar 2019 12:15:55 +0300
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=flygoat.com; s=mail; t=1552382155;
-        bh=NQs7Vs4+RubafiRsbEPCCFb3wPKMWzwehDxG+WHjzpk=;
+        by mxback5j.mail.yandex.net (nwsmtp/Yandex) with ESMTP id qf7LOJly07-FxeCHs2x;
+        Tue, 12 Mar 2019 12:15:59 +0300
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=flygoat.com; s=mail; t=1552382159;
+        bh=pPg0Xc1u/PW7WvNprCqCGm16GFnmZtiD8YEsqJzCnVA=;
         h=In-Reply-To:Subject:To:From:Message-Id:Cc:References:Date;
-        b=gGHMsVWI1HbvCv+Fz3ZnYyAdikGekTGpg5hIq+6qb1boaRwvaJz0y0D0l1c1g4x0s
-         WJLMSlCM86jSOnYWqw5W0+onT4Czy4zZbw4U/Gzpsjn/qBBYOoXa+EpMIRqOEaotDE
-         d0LFt0ic19X8jC5xN8oUhm79VfxI7JPqyQ3cQULc=
-Authentication-Results: mxback13j.mail.yandex.net; dkim=pass header.i=@flygoat.com
-Received: by smtp1j.mail.yandex.net (nwsmtp/Yandex) with ESMTPSA id HHvVQer8fs-FmdKx2dp;
-        Tue, 12 Mar 2019 12:15:51 +0300
+        b=brQhhlxZRmLoXk/teyihm8UXamywQbhs5o+yvxIqJ1a2N0SIxzgqFBphg5VfjwDka
+         LCcykXMbc1zjnaQJLvCf/lBoeuZDy00NO2mBl/Fn0PfO2II1i37zYqkWoVxSeeJh5U
+         H9wDcl4lJHDbf96LJ/3U+PaLShniLC9L/35ygJ5k=
+Authentication-Results: mxback5j.mail.yandex.net; dkim=pass header.i=@flygoat.com
+Received: by smtp1j.mail.yandex.net (nwsmtp/Yandex) with ESMTPSA id HHvVQer8fs-FtdKiDaP;
+        Tue, 12 Mar 2019 12:15:58 +0300
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (Client certificate not present)
 From:   Jiaxun Yang <jiaxun.yang@flygoat.com>
 To:     linux-mips@vger.kernel.org
 Cc:     paul.burton@mips.com, keguang.zhang@gmail.com,
         linux-kernel@vger.kernel.org, Jiaxun Yang <jiaxun.yang@flygoat.com>
-Subject: [PATCH 2/4] MIPS: Loongson32: Add DeviceTree support
-Date:   Tue, 12 Mar 2019 17:15:18 +0800
-Message-Id: <20190312091520.8863-3-jiaxun.yang@flygoat.com>
+Subject: [PATCH 3/4] MIPS: Loongson32: Kconfig merge CPU_LOONGSON1B&C
+Date:   Tue, 12 Mar 2019 17:15:19 +0800
+Message-Id: <20190312091520.8863-4-jiaxun.yang@flygoat.com>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190312091520.8863-1-jiaxun.yang@flygoat.com>
 References: <20190312091520.8863-1-jiaxun.yang@flygoat.com>
@@ -57,289 +57,121 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Initial DeviceTree support for loongson32
-Also remove the old IRQ driver since it have been replaced
-by generic LS1X_IRQ.
+Loongson-1B&C have totally identical GS232 core, so merge
+them into same CPU config.
 
 Signed-off-by: Jiaxun Yang <jiaxun.yang@flygoat.com>
 ---
- arch/mips/Kconfig                    |   5 +-
- arch/mips/loongson32/common/Makefile |   2 +-
- arch/mips/loongson32/common/irq.c    | 196 ---------------------------
- arch/mips/loongson32/common/setup.c  |  18 +++
- 4 files changed, 23 insertions(+), 198 deletions(-)
- delete mode 100644 arch/mips/loongson32/common/irq.c
+ arch/mips/Kconfig                | 38 +++++++++-----------------------
+ arch/mips/include/asm/cpu-type.h |  3 +--
+ arch/mips/loongson32/Kconfig     |  4 ++--
+ 3 files changed, 14 insertions(+), 31 deletions(-)
 
 diff --git a/arch/mips/Kconfig b/arch/mips/Kconfig
-index ddfb587c4744..15f8cc3c965f 100644
+index 15f8cc3c965f..ac0b93e57ca3 100644
 --- a/arch/mips/Kconfig
 +++ b/arch/mips/Kconfig
-@@ -437,6 +437,9 @@ config LASAT
+@@ -1429,26 +1429,22 @@ config CPU_LOONGSON2F
+ 	  have a similar programming interface with FPGA northbridge used in
+ 	  Loongson2E.
  
- config MACH_LOONGSON32
- 	bool "Loongson-1 family of machines"
-+	select USE_OF
-+	select BUILTIN_DTB
-+	select LS1X_IRQ
- 	select SYS_SUPPORTS_ZBOOT
+-config CPU_LOONGSON1B
+-	bool "Loongson 1B"
+-	depends on SYS_HAS_CPU_LOONGSON1B
+-	select CPU_LOONGSON1
++config CPU_LOONGSON1
++	bool "Loongson 1"
++	depends on SYS_HAS_CPU_LOONGSON1
++	select CPU_MIPS32
++	select CPU_MIPSR2
++	select CPU_HAS_PREFETCH
++	select CPU_HAS_LOAD_STORE_LR
++	select CPU_SUPPORTS_32BIT_KERNEL
++	select CPU_SUPPORTS_HIGHMEM
++	select CPU_SUPPORTS_CPUFREQ
+ 	select LEDS_GPIO_REGISTER
  	help
- 	  This enables support for the Loongson-1 family of machines.
-@@ -3024,7 +3027,7 @@ endchoice
- choice
- 	prompt "Kernel command line type" if !CMDLINE_OVERRIDE
- 	default MIPS_CMDLINE_FROM_DTB if USE_OF && !ATH79 && !MACH_INGENIC && \
--					 !MIPS_MALTA && \
-+					 !MACH_LOONGSON32 && !MIPS_MALTA && \
- 					 !CAVIUM_OCTEON_SOC
- 	default MIPS_CMDLINE_FROM_BOOTLOADER
+ 	  The Loongson 1B is a 32-bit SoC, which implements the MIPS32
+ 	  Release 1 instruction set and part of the MIPS32 Release 2
+ 	  instruction set.
  
-diff --git a/arch/mips/loongson32/common/Makefile b/arch/mips/loongson32/common/Makefile
-index 723b4ce3b8f0..5b29badb0950 100644
---- a/arch/mips/loongson32/common/Makefile
-+++ b/arch/mips/loongson32/common/Makefile
-@@ -2,4 +2,4 @@
- # Makefile for common code of loongson1 based machines.
- #
+-config CPU_LOONGSON1C
+-	bool "Loongson 1C"
+-	depends on SYS_HAS_CPU_LOONGSON1C
+-	select CPU_LOONGSON1
+-	select LEDS_GPIO_REGISTER
+-	help
+-	  The Loongson 1C is a 32-bit SoC, which implements the MIPS32
+-	  Release 1 instruction set and part of the MIPS32 Release 2
+-	  instruction set.
+-
+ config CPU_MIPS32_R1
+ 	bool "MIPS32 Release 1"
+ 	depends on SYS_HAS_CPU_MIPS32_R1
+@@ -1866,15 +1862,6 @@ config CPU_LOONGSON2
+ 	select ARCH_HAS_PHYS_TO_DMA
+ 	select CPU_HAS_LOAD_STORE_LR
  
--obj-y	+= time.o irq.o platform.o prom.o reset.o setup.o
-+obj-y	+= time.o platform.o prom.o reset.o setup.o
-diff --git a/arch/mips/loongson32/common/irq.c b/arch/mips/loongson32/common/irq.c
-deleted file mode 100644
-index 635a4abe1f48..000000000000
---- a/arch/mips/loongson32/common/irq.c
-+++ /dev/null
-@@ -1,196 +0,0 @@
--/*
-- * Copyright (c) 2011 Zhang, Keguang <keguang.zhang@gmail.com>
-- *
-- * This program is free software; you can redistribute	it and/or modify it
-- * under  the terms of	the GNU General	 Public License as published by the
-- * Free Software Foundation;  either version 2 of the  License, or (at your
-- * option) any later version.
-- */
--
--#include <linux/interrupt.h>
--#include <linux/irq.h>
--#include <asm/irq_cpu.h>
--
--#include <loongson1.h>
--#include <irq.h>
--
--#define LS1X_INTC_REG(n, x) \
--		((void __iomem *)KSEG1ADDR(LS1X_INTC_BASE + (n * 0x18) + (x)))
--
--#define LS1X_INTC_INTISR(n)		LS1X_INTC_REG(n, 0x0)
--#define LS1X_INTC_INTIEN(n)		LS1X_INTC_REG(n, 0x4)
--#define LS1X_INTC_INTSET(n)		LS1X_INTC_REG(n, 0x8)
--#define LS1X_INTC_INTCLR(n)		LS1X_INTC_REG(n, 0xc)
--#define LS1X_INTC_INTPOL(n)		LS1X_INTC_REG(n, 0x10)
--#define LS1X_INTC_INTEDGE(n)		LS1X_INTC_REG(n, 0x14)
--
--static void ls1x_irq_ack(struct irq_data *d)
--{
--	unsigned int bit = (d->irq - LS1X_IRQ_BASE) & 0x1f;
--	unsigned int n = (d->irq - LS1X_IRQ_BASE) >> 5;
--
--	__raw_writel(__raw_readl(LS1X_INTC_INTCLR(n))
--			| (1 << bit), LS1X_INTC_INTCLR(n));
--}
--
--static void ls1x_irq_mask(struct irq_data *d)
--{
--	unsigned int bit = (d->irq - LS1X_IRQ_BASE) & 0x1f;
--	unsigned int n = (d->irq - LS1X_IRQ_BASE) >> 5;
--
--	__raw_writel(__raw_readl(LS1X_INTC_INTIEN(n))
--			& ~(1 << bit), LS1X_INTC_INTIEN(n));
--}
--
--static void ls1x_irq_mask_ack(struct irq_data *d)
--{
--	unsigned int bit = (d->irq - LS1X_IRQ_BASE) & 0x1f;
--	unsigned int n = (d->irq - LS1X_IRQ_BASE) >> 5;
--
--	__raw_writel(__raw_readl(LS1X_INTC_INTIEN(n))
--			& ~(1 << bit), LS1X_INTC_INTIEN(n));
--	__raw_writel(__raw_readl(LS1X_INTC_INTCLR(n))
--			| (1 << bit), LS1X_INTC_INTCLR(n));
--}
--
--static void ls1x_irq_unmask(struct irq_data *d)
--{
--	unsigned int bit = (d->irq - LS1X_IRQ_BASE) & 0x1f;
--	unsigned int n = (d->irq - LS1X_IRQ_BASE) >> 5;
--
--	__raw_writel(__raw_readl(LS1X_INTC_INTIEN(n))
--			| (1 << bit), LS1X_INTC_INTIEN(n));
--}
--
--static int ls1x_irq_settype(struct irq_data *d, unsigned int type)
--{
--	unsigned int bit = (d->irq - LS1X_IRQ_BASE) & 0x1f;
--	unsigned int n = (d->irq - LS1X_IRQ_BASE) >> 5;
--
--	switch (type) {
--	case IRQ_TYPE_LEVEL_HIGH:
--		__raw_writel(__raw_readl(LS1X_INTC_INTPOL(n))
--			| (1 << bit), LS1X_INTC_INTPOL(n));
--		__raw_writel(__raw_readl(LS1X_INTC_INTEDGE(n))
--			& ~(1 << bit), LS1X_INTC_INTEDGE(n));
--		break;
--	case IRQ_TYPE_LEVEL_LOW:
--		__raw_writel(__raw_readl(LS1X_INTC_INTPOL(n))
--			& ~(1 << bit), LS1X_INTC_INTPOL(n));
--		__raw_writel(__raw_readl(LS1X_INTC_INTEDGE(n))
--			& ~(1 << bit), LS1X_INTC_INTEDGE(n));
--		break;
--	case IRQ_TYPE_EDGE_RISING:
--		__raw_writel(__raw_readl(LS1X_INTC_INTPOL(n))
--			| (1 << bit), LS1X_INTC_INTPOL(n));
--		__raw_writel(__raw_readl(LS1X_INTC_INTEDGE(n))
--			| (1 << bit), LS1X_INTC_INTEDGE(n));
--		break;
--	case IRQ_TYPE_EDGE_FALLING:
--		__raw_writel(__raw_readl(LS1X_INTC_INTPOL(n))
--			& ~(1 << bit), LS1X_INTC_INTPOL(n));
--		__raw_writel(__raw_readl(LS1X_INTC_INTEDGE(n))
--			| (1 << bit), LS1X_INTC_INTEDGE(n));
--		break;
--	case IRQ_TYPE_EDGE_BOTH:
--		__raw_writel(__raw_readl(LS1X_INTC_INTPOL(n))
--			& ~(1 << bit), LS1X_INTC_INTPOL(n));
--		__raw_writel(__raw_readl(LS1X_INTC_INTEDGE(n))
--			| (1 << bit), LS1X_INTC_INTEDGE(n));
--		break;
--	case IRQ_TYPE_NONE:
--		break;
--	default:
--		return -EINVAL;
--	}
--
--	return 0;
--}
--
--static struct irq_chip ls1x_irq_chip = {
--	.name		= "LS1X-INTC",
--	.irq_ack	= ls1x_irq_ack,
--	.irq_mask	= ls1x_irq_mask,
--	.irq_mask_ack	= ls1x_irq_mask_ack,
--	.irq_unmask	= ls1x_irq_unmask,
--	.irq_set_type   = ls1x_irq_settype,
--};
--
--static void ls1x_irq_dispatch(int n)
--{
--	u32 int_status, irq;
--
--	/* Get pending sources, masked by current enables */
--	int_status = __raw_readl(LS1X_INTC_INTISR(n)) &
--			__raw_readl(LS1X_INTC_INTIEN(n));
--
--	if (int_status) {
--		irq = LS1X_IRQ(n, __ffs(int_status));
--		do_IRQ(irq);
--	}
--}
--
--asmlinkage void plat_irq_dispatch(void)
--{
--	unsigned int pending;
--
--	pending = read_c0_cause() & read_c0_status() & ST0_IM;
--
--	if (pending & CAUSEF_IP7)
--		do_IRQ(TIMER_IRQ);
--	else if (pending & CAUSEF_IP2)
--		ls1x_irq_dispatch(0); /* INT0 */
--	else if (pending & CAUSEF_IP3)
--		ls1x_irq_dispatch(1); /* INT1 */
--	else if (pending & CAUSEF_IP4)
--		ls1x_irq_dispatch(2); /* INT2 */
--	else if (pending & CAUSEF_IP5)
--		ls1x_irq_dispatch(3); /* INT3 */
--	else if (pending & CAUSEF_IP6)
--		ls1x_irq_dispatch(4); /* INT4 */
--	else
--		spurious_interrupt();
--
--}
--
--static struct irqaction cascade_irqaction = {
--	.handler = no_action,
--	.name = "cascade",
--	.flags = IRQF_NO_THREAD,
--};
--
--static void __init ls1x_irq_init(int base)
--{
--	int n;
--
--	/* Disable interrupts and clear pending,
--	 * setup all IRQs as high level triggered
--	 */
--	for (n = 0; n < INTN; n++) {
--		__raw_writel(0x0, LS1X_INTC_INTIEN(n));
--		__raw_writel(0xffffffff, LS1X_INTC_INTCLR(n));
--		__raw_writel(0xffffffff, LS1X_INTC_INTPOL(n));
--		/* set DMA0, DMA1 and DMA2 to edge trigger */
--		__raw_writel(n ? 0x0 : 0xe000, LS1X_INTC_INTEDGE(n));
--	}
--
--
--	for (n = base; n < NR_IRQS; n++) {
--		irq_set_chip_and_handler(n, &ls1x_irq_chip,
--					 handle_level_irq);
--	}
--
--	setup_irq(INT0_IRQ, &cascade_irqaction);
--	setup_irq(INT1_IRQ, &cascade_irqaction);
--	setup_irq(INT2_IRQ, &cascade_irqaction);
--	setup_irq(INT3_IRQ, &cascade_irqaction);
--#if defined(CONFIG_LOONGSON1_LS1C)
--	setup_irq(INT4_IRQ, &cascade_irqaction);
--#endif
--}
--
--void __init arch_init_irq(void)
--{
--	mips_cpu_irq_init();
--	ls1x_irq_init(LS1X_IRQ_BASE);
--}
-diff --git a/arch/mips/loongson32/common/setup.c b/arch/mips/loongson32/common/setup.c
-index 1640744288ee..5ede65a79d6f 100644
---- a/arch/mips/loongson32/common/setup.c
-+++ b/arch/mips/loongson32/common/setup.c
-@@ -8,12 +8,30 @@
-  */
+-config CPU_LOONGSON1
+-	bool
+-	select CPU_MIPS32
+-	select CPU_MIPSR2
+-	select CPU_HAS_PREFETCH
+-	select CPU_HAS_LOAD_STORE_LR
+-	select CPU_SUPPORTS_32BIT_KERNEL
+-	select CPU_SUPPORTS_HIGHMEM
+-	select CPU_SUPPORTS_CPUFREQ
  
- #include <asm/bootinfo.h>
-+#include <linux/init.h>
-+#include <linux/irqchip.h>
-+#include <linux/kernel.h>
-+#include <linux/libfdt.h>
-+#include <linux/of_fdt.h>
-+#include <asm/prom.h>
+ config CPU_BMIPS32_3300
+ 	select SMP_UP if SMP
+@@ -1914,10 +1901,7 @@ config SYS_HAS_CPU_LOONGSON2F
+ 	select CPU_SUPPORTS_ADDRWINCFG if 64BIT
+ 	select CPU_SUPPORTS_UNCACHED_ACCELERATED
  
-+#include <asm/bootinfo.h>
- #include <prom.h>
+-config SYS_HAS_CPU_LOONGSON1B
+-	bool
+-
+-config SYS_HAS_CPU_LOONGSON1C
++config SYS_HAS_CPU_LOONGSON1
+ 	bool
  
- void __init plat_mem_setup(void)
- {
- 	add_memory_region(0x0, (memsize << 20), BOOT_MEM_RAM);
-+	__dt_setup_arch(__dtb_start);
-+}
-+
-+void __init device_tree_init(void)
-+{
-+	unflatten_and_copy_device_tree();
-+}
-+
-+void __init arch_init_irq(void)
-+{
-+	irqchip_init();
- }
+ config SYS_HAS_CPU_MIPS32_R1
+diff --git a/arch/mips/include/asm/cpu-type.h b/arch/mips/include/asm/cpu-type.h
+index a45af3de075d..ee17f02419a3 100644
+--- a/arch/mips/include/asm/cpu-type.h
++++ b/arch/mips/include/asm/cpu-type.h
+@@ -24,8 +24,7 @@ static inline int __pure __get_cpu_type(const int cpu_type)
+ 	case CPU_LOONGSON3:
+ #endif
  
- const char *get_system_type(void)
+-#if defined(CONFIG_SYS_HAS_CPU_LOONGSON1B) || \
+-    defined(CONFIG_SYS_HAS_CPU_LOONGSON1C)
++#if defined(CONFIG_SYS_HAS_CPU_LOONGSON1)
+ 	case CPU_LOONGSON1:
+ #endif
+ 
+diff --git a/arch/mips/loongson32/Kconfig b/arch/mips/loongson32/Kconfig
+index 6dacc1438906..a0a00c3e2187 100644
+--- a/arch/mips/loongson32/Kconfig
++++ b/arch/mips/loongson32/Kconfig
+@@ -8,7 +8,7 @@ config LOONGSON1_LS1B
+ 	bool "Loongson LS1B board"
+ 	select CEVT_R4K if !MIPS_EXTERNAL_TIMER
+ 	select CSRC_R4K if !MIPS_EXTERNAL_TIMER
+-	select SYS_HAS_CPU_LOONGSON1B
++	select SYS_HAS_CPU_LOONGSON1
+ 	select DMA_NONCOHERENT
+ 	select BOOT_ELF32
+ 	select IRQ_MIPS_CPU
+@@ -23,7 +23,7 @@ config LOONGSON1_LS1C
+ 	bool "Loongson LS1C board"
+ 	select CEVT_R4K if !MIPS_EXTERNAL_TIMER
+ 	select CSRC_R4K if !MIPS_EXTERNAL_TIMER
+-	select SYS_HAS_CPU_LOONGSON1C
++	select SYS_HAS_CPU_LOONGSON1
+ 	select DMA_NONCOHERENT
+ 	select BOOT_ELF32
+ 	select IRQ_MIPS_CPU
 -- 
 2.20.1
 
