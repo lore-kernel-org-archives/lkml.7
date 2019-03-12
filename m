@@ -4,51 +4,54 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C370EC43381
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 18:01:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EA47DC43381
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 18:01:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9406A2175B
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 18:01:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B02BA214AF
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 18:01:07 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1552413663;
-	bh=EYXDwpgXngUtfWbJylkfNLOCuaYyKRjKOMstTx+7360=;
+	s=default; t=1552413667;
+	bh=l64l3qvKN0bwfV1xBefE4uinW/cMvfop+Im88zymUro=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Km3W6H5lsSjJmLlI/kzSiOp0shVornZQGOT83/bcIDkrO6CivKMY/9Vkrm2mG1G6G
-	 v9aQgutOVDC4QZZ9Y2ktIPW0KV7yLbyyUyRZlW/K3jqvWWkmdrTWHeZmPW6ITSN5uE
-	 sV8r4QUcVbbtc9wX0nJwzDN3uaVJ8cton6zMKhc8=
+	b=TwqIMInnci0DnmLY/MqABUFIvBHCjHLSweEg3c/0YHhMRnXqpJ9tlukoWA2hpfh4I
+	 QPUk4q6pNJl/iFF3t7Uq1MT8HO8hVK7UAPtQGUmWUaBhoR0doPVi+bBsjYARVfV6WM
+	 XqUDuZcO1Nzy4A29BIoeLlrxE6bHoeCHDHbH5DcY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728767AbfCLSBC (ORCPT
+        id S1727850AbfCLRNP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 12 Mar 2019 14:01:02 -0400
-Received: from mail.kernel.org ([198.145.29.99]:49898 "EHLO mail.kernel.org"
+        Tue, 12 Mar 2019 13:13:15 -0400
+Received: from mail.kernel.org ([198.145.29.99]:48364 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727852AbfCLRNQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 12 Mar 2019 13:13:16 -0400
+        id S1727597AbfCLRMm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 12 Mar 2019 13:12:42 -0400
 Received: from localhost (unknown [104.133.8.98])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 72A63217D9;
-        Tue, 12 Mar 2019 17:13:15 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 8AFEE21741;
+        Tue, 12 Mar 2019 17:12:41 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1552410795;
-        bh=EYXDwpgXngUtfWbJylkfNLOCuaYyKRjKOMstTx+7360=;
+        s=default; t=1552410761;
+        bh=l64l3qvKN0bwfV1xBefE4uinW/cMvfop+Im88zymUro=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Epfj9YQEMGCYPrMmfZCY5yQeSFwTETVd1O66k9YJ5syStd2BxAzaKOUQ/alV5kFrd
-         kmRzcdCqZuyIlnMhrSWfiFHqZa6QiFIrEQoua1JUk0DqmlZcQahm0KVPglN5UIxHCV
-         t+TzdeimpplCMMilIK3CM0kH3lZRbqzhPY5HhSuQ=
+        b=dRraTN9pwGWg1glQUa3fMcUEBQV5yQW1YGPXe7ftOQWO8TihtGclY4UZJUQ69NpcH
+         Qlc5FqBmK/7bzp66np77Xcf5pKZkqJBl/SeT1YdXTNC+wWu3goUZs1IW6xAbeSLunn
+         TWF44m5LorxZii3kl20JxJHzVCF0yc23DLydbQJ4=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Tetsuo Handa <penguin-kernel@I-love.SAKURA.ne.jp>,
-        Jan Kara <jack@suse.cz>, Dmitry Vyukov <dvyukov@google.com>,
-        Jens Axboe <axboe@kernel.dk>, Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.20 141/171] fs: ratelimit __find_get_block_slow() failure message.
-Date:   Tue, 12 Mar 2019 10:08:41 -0700
-Message-Id: <20190312170359.796672074@linuxfoundation.org>
+        stable@vger.kernel.org, Paul Cercueil <paul@crapouillou.net>,
+        Paul Burton <paul.burton@mips.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Ralf Baechle <ralf@linux-mips.org>,
+        James Hogan <jhogan@kernel.org>, devicetree@vger.kernel.org,
+        linux-mips@vger.kernel.org, Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.20 094/171] MIPS: DTS: jz4740: Correct interrupt number of DMA core
+Date:   Tue, 12 Mar 2019 10:07:54 -0700
+Message-Id: <20190312170356.078923649@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190312170347.868927101@linuxfoundation.org>
 References: <20190312170347.868927101@linuxfoundation.org>
@@ -67,74 +70,38 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-[ Upstream commit 43636c804df0126da669c261fc820fb22f62bfc2 ]
+[ Upstream commit 70999ec1c9d3f783a7232973cfc26971e5732758 ]
 
-When something let __find_get_block_slow() hit all_mapped path, it calls
-printk() for 100+ times per a second. But there is no need to print same
-message with such high frequency; it is just asking for stall warning, or
-at least bloating log files.
+The interrupt number set in the devicetree node of the DMA driver was
+wrong.
 
-  [  399.866302][T15342] __find_get_block_slow() failed. block=1, b_blocknr=8
-  [  399.873324][T15342] b_state=0x00000029, b_size=512
-  [  399.878403][T15342] device loop0 blocksize: 4096
-  [  399.883296][T15342] __find_get_block_slow() failed. block=1, b_blocknr=8
-  [  399.890400][T15342] b_state=0x00000029, b_size=512
-  [  399.895595][T15342] device loop0 blocksize: 4096
-  [  399.900556][T15342] __find_get_block_slow() failed. block=1, b_blocknr=8
-  [  399.907471][T15342] b_state=0x00000029, b_size=512
-  [  399.912506][T15342] device loop0 blocksize: 4096
-
-This patch reduces frequency to up to once per a second, in addition to
-concatenating three lines into one.
-
-  [  399.866302][T15342] __find_get_block_slow() failed. block=1, b_blocknr=8, b_state=0x00000029, b_size=512, device loop0 blocksize: 4096
-
-Signed-off-by: Tetsuo Handa <penguin-kernel@I-love.SAKURA.ne.jp>
-Reviewed-by: Jan Kara <jack@suse.cz>
-Cc: Dmitry Vyukov <dvyukov@google.com>
-Signed-off-by: Jens Axboe <axboe@kernel.dk>
+Signed-off-by: Paul Cercueil <paul@crapouillou.net>
+Signed-off-by: Paul Burton <paul.burton@mips.com>
+Cc: Rob Herring <robh+dt@kernel.org>
+Cc: Mark Rutland <mark.rutland@arm.com>
+Cc: Ralf Baechle <ralf@linux-mips.org>
+Cc: James Hogan <jhogan@kernel.org>
+Cc: devicetree@vger.kernel.org
+Cc: linux-mips@vger.kernel.org
+Cc: linux-kernel@vger.kernel.org
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- fs/buffer.c | 19 ++++++++++---------
- 1 file changed, 10 insertions(+), 9 deletions(-)
+ arch/mips/boot/dts/ingenic/jz4740.dtsi | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/fs/buffer.c b/fs/buffer.c
-index 1286c2b95498..72e33ffa00ff 100644
---- a/fs/buffer.c
-+++ b/fs/buffer.c
-@@ -200,6 +200,7 @@ __find_get_block_slow(struct block_device *bdev, sector_t block)
- 	struct buffer_head *head;
- 	struct page *page;
- 	int all_mapped = 1;
-+	static DEFINE_RATELIMIT_STATE(last_warned, HZ, 1);
+diff --git a/arch/mips/boot/dts/ingenic/jz4740.dtsi b/arch/mips/boot/dts/ingenic/jz4740.dtsi
+index 6fb16fd24035..2beb78a62b7d 100644
+--- a/arch/mips/boot/dts/ingenic/jz4740.dtsi
++++ b/arch/mips/boot/dts/ingenic/jz4740.dtsi
+@@ -161,7 +161,7 @@
+ 		#dma-cells = <2>;
  
- 	index = block >> (PAGE_SHIFT - bd_inode->i_blkbits);
- 	page = find_get_page_flags(bd_mapping, index, FGP_ACCESSED);
-@@ -227,15 +228,15 @@ __find_get_block_slow(struct block_device *bdev, sector_t block)
- 	 * file io on the block device and getblk.  It gets dealt with
- 	 * elsewhere, don't buffer_error if we had some unmapped buffers
- 	 */
--	if (all_mapped) {
--		printk("__find_get_block_slow() failed. "
--			"block=%llu, b_blocknr=%llu\n",
--			(unsigned long long)block,
--			(unsigned long long)bh->b_blocknr);
--		printk("b_state=0x%08lx, b_size=%zu\n",
--			bh->b_state, bh->b_size);
--		printk("device %pg blocksize: %d\n", bdev,
--			1 << bd_inode->i_blkbits);
-+	ratelimit_set_flags(&last_warned, RATELIMIT_MSG_ON_RELEASE);
-+	if (all_mapped && __ratelimit(&last_warned)) {
-+		printk("__find_get_block_slow() failed. block=%llu, "
-+		       "b_blocknr=%llu, b_state=0x%08lx, b_size=%zu, "
-+		       "device %pg blocksize: %d\n",
-+		       (unsigned long long)block,
-+		       (unsigned long long)bh->b_blocknr,
-+		       bh->b_state, bh->b_size, bdev,
-+		       1 << bd_inode->i_blkbits);
- 	}
- out_unlock:
- 	spin_unlock(&bd_mapping->private_lock);
+ 		interrupt-parent = <&intc>;
+-		interrupts = <29>;
++		interrupts = <20>;
+ 
+ 		clocks = <&cgu JZ4740_CLK_DMA>;
+ 
 -- 
 2.19.1
 
