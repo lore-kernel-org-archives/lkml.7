@@ -3,53 +3,53 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1AEB6C43381
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 09:19:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 01B2AC43381
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 09:20:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E825C214AF
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 09:19:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D0D4C214AF
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 09:19:59 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726743AbfCLJTy (ORCPT
+        id S1726760AbfCLJT6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 12 Mar 2019 05:19:54 -0400
-Received: from mout.kundenserver.de ([212.227.126.133]:42047 "EHLO
+        Tue, 12 Mar 2019 05:19:58 -0400
+Received: from mout.kundenserver.de ([212.227.126.133]:33347 "EHLO
         mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726419AbfCLJTt (ORCPT
+        with ESMTP id S1726418AbfCLJTt (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Tue, 12 Mar 2019 05:19:49 -0400
 Received: from orion.localdomain ([77.4.190.91]) by mrelayeu.kundenserver.de
  (mreue012 [212.227.15.167]) with ESMTPSA (Nemesis) id
- 1M4skB-1h1iYu1cQh-00238X; Tue, 12 Mar 2019 10:19:39 +0100
+ 1MFsAJ-1hH3Z60UaF-00HPDp; Tue, 12 Mar 2019 10:19:39 +0100
 From:   "Enrico Weigelt, metux IT consult" <info@metux.net>
 To:     linux-kernel@vger.kernel.org
 Cc:     axboe@kernel.dk, hdegoede@redhat.com, b.zolnierkie@samsung.com,
         linus.walleij@linaro.org, linux-ide@vger.kernel.org,
         linux-tegra@vger.kernel.org
-Subject: [PATCH 8/9] drivers: ata: sata_gemini: use devm_platform_ioremap_resource()
-Date:   Tue, 12 Mar 2019 10:19:33 +0100
-Message-Id: <1552382374-28789-8-git-send-email-info@metux.net>
+Subject: [PATCH 7/9] drivers: ata: sata_dwc_460ex: use devm_platform_ioremap_resource()
+Date:   Tue, 12 Mar 2019 10:19:32 +0100
+Message-Id: <1552382374-28789-7-git-send-email-info@metux.net>
 X-Mailer: git-send-email 1.9.1
 In-Reply-To: <1552382374-28789-1-git-send-email-info@metux.net>
 References: <1552382374-28789-1-git-send-email-info@metux.net>
-X-Provags-ID: V03:K1:ygMbOZY5Dt4reBEHFx2mw1Or0kbEPtlHK7viHyATw/DwO2V5G3r
- H+XgVQy0FiHfog0eferi/wQ1yIAXLqxIUOBrw4MzC7Opi/IgUwlmLrfXIzyCw59SR0RXOTG
- RQLa5oaAy4+TfBxBGIijHwV1mSFHPrxythtae5Ki90SgNEbtuZ6KKNNuQlV2ziDR+SLSETw
- KHnyrBhGOlutsxxqNoJtg==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:sDl3EPrjjAA=:c2I4RDmB8GXosA489J3GzA
- aze3BmBjpKkaM9I1xFrFkJb3GbwN20LYjhB9DcM/OOQmeHydMmdtEfBGgPcpqFynK5zt8qk7X
- v/dSTXzCXOgQghAhEecL6hd8J85/rjVLHe8z875SZpdXwVarpw2Ub0hIdtX4R/DRee1EvXcVc
- O7Phj0QBLKuFQG9SlHWLYr58XKOg1VVCslevhSUAMohz6NariB15c7suO3QFjI2ueHjfTANkA
- O8SI2HjJ+NBn1SwymR+p53oLtPpC+6pPdP4+7mP4jw/1xNReUSQvNUzsRN4r0pCAlKOCnigRR
- OyWEbUXaAGoDnaZambqbzYMFQPr2KfoGvMWnkNwnx8dwyGGMVDoymQf6t7Z89DgOQitg1x5Zy
- +8YpgPup0xOssnmLkWRDqhd39bPSR8dJM6B3C6j/cBLt3DcXma2zpUwSSm7WIUnCFO9g2jivb
- w18fkdxeTGmhloBWuWet79LV3lm02kJIZsQrlyHChApiul9b8YdRjb6xfplgjiRvtAX36eOZr
- kfy7cN2znpmxkhVWGMLJzNV6k14xO8g1r8jyzR94S094B/2g+ejw9ZYvFNsIpMTd8ATtKfIi6
- a8rc/X/pJt5idcCuspcdrFTBJhTwghGCkjFG9Tc3mvISZXuywI+MAXvh9xE0GM2TM8yF6TGkk
- YhxKA0KF79hYkKw1Hzc3M5ChboNuuh9WNDHBI1Vm61+AmedheojE23rPLjqzOeAnNg4Xl02at
- m4rTsVzVl2nldngiMHJ0Mg6jCihIToLVvze/kw==
+X-Provags-ID: V03:K1:phuCYVCNtu/vOFKX6Wlrf/mgYQs3AWJQXpB1qR71og5qJlTap/1
+ 8ZVZ1rawx1c5dofLfbhM66wzAn4waqTQkeY7WxUsC06KayrSl94lpWKrfRiBhd1ieG1JpPO
+ v6hr8o1mvWqWjYL60TzkDxBhNjy3cXYQ/iZadZnaNCYDKw6NpvawVSVri9lb2ka2SyWKqyR
+ tit2iqmC6V0qAXPKSWtZQ==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:BKkw22+VAY0=:0Tdbof+Lj3M4cAfBhkipnN
+ KZnwOtIQ5ISSEhUPANSsThihqwwtsFECwa3u6P4cs+f9UcGYDlA0ndAljT3tuBeyqbeHZ1Cyg
+ n8XKNlGiEzWf1ZttgqhDmQjc1+7jVZL/SlQ6XaQbuwfhcsleuQrJMkaL9RQlznLUZnx3336nE
+ LXrH2epO8FUiCMRmiIGgR9nLr3tTF9PFLtDo+2cFOHf3tvORkczUpYCwfYKolg7wK/3IJrXKt
+ qB027WHiPXDawySexlAj6Iyep+XWNnFNNx7arvtk51WZ3W6mwGvqA4qMdLRBfOPzyRtpsmeNu
+ jSaxK3pJ2ILlxJ5weIDCfeLzzrfFpWF4m/d6Gbe8mcvz3qLHapTyk/smSi7nGHJrO81TX6Hb8
+ JX+ml2g1eA7WQFfctN0m7zeJmNJRCIwCMlH/X+4Sqhsw4W3+TfXsgqts9/wwPDt0d1UVzWor2
+ Qr/5uZwPqzsczB1JwP+VzRXhqns0FE4INTsf6aAg7XJ14VFdBHxcnsuDaPyx63sWWpc8CiReq
+ ytLEz+y8cwLgK9iHC+dc9mkfCHQ1LCHMaZMxSh/13SUJHIU3yifxlXvUaMJ8sPSitLM6GP1GL
+ IYdmgNgumaVOGomhEYiKJhX2DdidzAaQIMmLx6A/Uc8YN6k5nhhSvIfF7xVSVIkpZXvKQZSAH
+ f7KRPeJxYJD4dzWDHwdrsLyzHuIA1PkqV2AWiTAPaHJDMbB80ZCGoq7SV5kmucVJdlw04ay+0
+ eJmmnC9P8lVG7fHds93hKfd6K4Kee9fdlmAHBg==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
@@ -60,33 +60,30 @@ and devm_ioremap_resource() together.
 
 Signed-off-by: Enrico Weigelt, metux IT consult <info@metux.net>
 ---
- drivers/ata/sata_gemini.c | 7 +------
- 1 file changed, 1 insertion(+), 6 deletions(-)
+ drivers/ata/sata_dwc_460ex.c | 4 +---
+ 1 file changed, 1 insertion(+), 3 deletions(-)
 
-diff --git a/drivers/ata/sata_gemini.c b/drivers/ata/sata_gemini.c
-index 46950e0..96cca96 100644
---- a/drivers/ata/sata_gemini.c
-+++ b/drivers/ata/sata_gemini.c
-@@ -317,7 +317,6 @@ static int gemini_sata_probe(struct platform_device *pdev)
- 	struct device_node *np = dev->of_node;
- 	struct sata_gemini *sg;
- 	struct regmap *map;
+diff --git a/drivers/ata/sata_dwc_460ex.c b/drivers/ata/sata_dwc_460ex.c
+index 6f142aa..c57b348 100644
+--- a/drivers/ata/sata_dwc_460ex.c
++++ b/drivers/ata/sata_dwc_460ex.c
+@@ -241,7 +241,6 @@ static int sata_dwc_dma_init_old(struct platform_device *pdev,
+ 				 struct sata_dwc_device *hsdev)
+ {
+ 	struct device_node *np = pdev->dev.of_node;
 -	struct resource *res;
- 	enum gemini_muxmode muxmode;
- 	u32 gmode;
- 	u32 gmask;
-@@ -328,11 +327,7 @@ static int gemini_sata_probe(struct platform_device *pdev)
- 		return -ENOMEM;
- 	sg->dev = dev;
  
--	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
--	if (!res)
--		return -ENODEV;
--
--	sg->base = devm_ioremap_resource(dev, res);
-+	sg->base = devm_platform_ioremap_resource(pdev, 0);
- 	if (IS_ERR(sg->base))
- 		return PTR_ERR(sg->base);
+ 	hsdev->dma = devm_kzalloc(&pdev->dev, sizeof(*hsdev->dma), GFP_KERNEL);
+ 	if (!hsdev->dma)
+@@ -258,8 +257,7 @@ static int sata_dwc_dma_init_old(struct platform_device *pdev,
+ 	}
+ 
+ 	/* Get physical SATA DMA register base address */
+-	res = platform_get_resource(pdev, IORESOURCE_MEM, 1);
+-	hsdev->dma->regs = devm_ioremap_resource(&pdev->dev, res);
++	hsdev->dma->regs = devm_platform_ioremap_resource(pdev, 1);
+ 	if (IS_ERR(hsdev->dma->regs))
+ 		return PTR_ERR(hsdev->dma->regs);
  
 -- 
 1.9.1
