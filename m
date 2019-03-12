@@ -2,151 +2,187 @@ Return-Path: <SRS0=J4ZE=RP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_MUTT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C7EE4C43381
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 15:35:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AB121C43381
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 15:36:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9BB3E2083D
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 15:35:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 80D732083D
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 15:36:59 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726808AbfCLPfg (ORCPT
+        id S1726585AbfCLPg6 convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 12 Mar 2019 11:35:36 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:26127 "EHLO mx1.redhat.com"
+        Tue, 12 Mar 2019 11:36:58 -0400
+Received: from mga17.intel.com ([192.55.52.151]:14486 "EHLO mga17.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726218AbfCLPff (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 12 Mar 2019 11:35:35 -0400
-Received: from smtp.corp.redhat.com (int-mx06.intmail.prod.int.phx2.redhat.com [10.5.11.16])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id 9722F308FED2;
-        Tue, 12 Mar 2019 15:35:33 +0000 (UTC)
-Received: from redhat.com (ovpn-117-131.phx2.redhat.com [10.3.117.131])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id 0C7025C280;
-        Tue, 12 Mar 2019 15:35:30 +0000 (UTC)
-Date:   Tue, 12 Mar 2019 11:35:29 -0400
-From:   Jerome Glisse <jglisse@redhat.com>
-To:     Christopher Lameter <cl@linux.com>
-Cc:     john.hubbard@gmail.com, Andrew Morton <akpm@linux-foundation.org>,
-        linux-mm@kvack.org, Al Viro <viro@zeniv.linux.org.uk>,
-        Christian Benvenuti <benve@cisco.com>,
-        Christoph Hellwig <hch@infradead.org>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Dave Chinner <david@fromorbit.com>,
-        Dennis Dalessandro <dennis.dalessandro@intel.com>,
+        id S1726192AbfCLPg5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 12 Mar 2019 11:36:57 -0400
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga001.fm.intel.com ([10.253.24.23])
+  by fmsmga107.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 12 Mar 2019 08:36:57 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.58,471,1544515200"; 
+   d="scan'208";a="154322835"
+Received: from fmsmsx106.amr.corp.intel.com ([10.18.124.204])
+  by fmsmga001.fm.intel.com with ESMTP; 12 Mar 2019 08:36:57 -0700
+Received: from FMSMSX110.amr.corp.intel.com (10.18.116.10) by
+ FMSMSX106.amr.corp.intel.com (10.18.124.204) with Microsoft SMTP Server (TLS)
+ id 14.3.408.0; Tue, 12 Mar 2019 08:36:57 -0700
+Received: from fmsmsx124.amr.corp.intel.com ([169.254.8.86]) by
+ FMSMSX110.amr.corp.intel.com ([169.254.14.3]) with mapi id 14.03.0415.000;
+ Tue, 12 Mar 2019 08:36:56 -0700
+From:   "Saleem, Shiraz" <shiraz.saleem@intel.com>
+To:     Kangjie Lu <kjlu@umn.edu>
+CC:     "pakki001@umn.edu" <pakki001@umn.edu>,
+        "Latif, Faisal" <faisal.latif@intel.com>,
         Doug Ledford <dledford@redhat.com>,
-        Ira Weiny <ira.weiny@intel.com>, Jan Kara <jack@suse.cz>,
         Jason Gunthorpe <jgg@ziepe.ca>,
-        Matthew Wilcox <willy@infradead.org>,
-        Michal Hocko <mhocko@kernel.org>,
-        Mike Rapoport <rppt@linux.ibm.com>,
-        Mike Marciniszyn <mike.marciniszyn@intel.com>,
-        Ralph Campbell <rcampbell@nvidia.com>,
-        Tom Talpey <tom@talpey.com>,
-        LKML <linux-kernel@vger.kernel.org>,
-        linux-fsdevel@vger.kernel.org, John Hubbard <jhubbard@nvidia.com>
-Subject: Re: [PATCH v3 0/1] mm: introduce put_user_page*(), placeholder
- versions
-Message-ID: <20190312153528.GB3233@redhat.com>
-References: <20190306235455.26348-1-jhubbard@nvidia.com>
- <010001695b4631cd-f4b8fcbf-a760-4267-afce-fb7969e3ff87-000000@email.amazonses.com>
- <20190308190704.GC5618@redhat.com>
- <01000169703e5495-2815ba73-34e8-45d5-b970-45784f653a34-000000@email.amazonses.com>
+        "linux-rdma@vger.kernel.org" <linux-rdma@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: RE: [PATCH] infiniband: i40iw: fix potential NULL pointer
+ dereferences
+Thread-Topic: [PATCH] infiniband: i40iw: fix potential NULL pointer
+ dereferences
+Thread-Index: AQHU1jjcRI9xjU7ZKUeZYb8WAnw3mqYIJNzA
+Date:   Tue, 12 Mar 2019 15:36:56 +0000
+Message-ID: <9DD61F30A802C4429A01CA4200E302A7A5A6B1A0@fmsmsx124.amr.corp.intel.com>
+References: <20190309052750.16139-1-kjlu@umn.edu>
+In-Reply-To: <20190309052750.16139-1-kjlu@umn.edu>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-originating-ip: [10.1.200.107]
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 8BIT
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <01000169703e5495-2815ba73-34e8-45d5-b970-45784f653a34-000000@email.amazonses.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.16
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.49]); Tue, 12 Mar 2019 15:35:35 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Mar 12, 2019 at 04:52:07AM +0000, Christopher Lameter wrote:
-> On Fri, 8 Mar 2019, Jerome Glisse wrote:
-> 
-> > >
-> > > It would good if that understanding would be enforced somehow given the problems
-> > > that we see.
-> >
-> > This has been discuss extensively already. GUP usage is now widespread in
-> > multiple drivers, removing that would regress userspace ie break existing
-> > application. We all know what the rules for that is.
-> 
-> The applications that work are using anonymous memory and memory
-> filesystems. I have never seen use cases with a real filesystem and would
-> have objected if someone tried something crazy like that.
-> 
-> Because someone was able to get away with weird ways of abusing the system
-> it not an argument that we should continue to allow such things. In fact
-> we have repeatedly ensured that the kernel works reliably by improving the
-> kernel so that a proper failure is occurring.
+>Subject: [PATCH] infiniband: i40iw: fix potential NULL pointer dereferences
+>
+>alloc_ordered_workqueue may fail and return NULL. Let's check its return value
+>to ensure it is not NULL so as to avoid potential NULL pointer dereferences.
+>
+>Signed-off-by: Kangjie Lu <kjlu@umn.edu>
+>---
+> drivers/infiniband/hw/i40iw/i40iw_cm.c | 12 ++++++++++++
+> 1 file changed, 12 insertions(+)
+>
+>diff --git a/drivers/infiniband/hw/i40iw/i40iw_cm.c
+>b/drivers/infiniband/hw/i40iw/i40iw_cm.c
+>index 206cfb0016f8..ad9b4f235e30 100644
+>--- a/drivers/infiniband/hw/i40iw/i40iw_cm.c
+>+++ b/drivers/infiniband/hw/i40iw/i40iw_cm.c
+>@@ -3256,9 +3256,21 @@ void i40iw_setup_cm_core(struct i40iw_device
+>*iwdev)
+>
+> 	cm_core->event_wq = alloc_ordered_workqueue("iwewq",
+> 						    WQ_MEM_RECLAIM);
+>+	if (!cm_core->event_wq) {
+>+		i40iw_debug(cm_core->dev,
+>+				I40IW_DEBUG_CM,
+>+				"%s allocate event work queue failed\n",
+>+				__func__);
+>+	}
+>
+> 	cm_core->disconn_wq = alloc_ordered_workqueue("iwdwq",
+> 						      WQ_MEM_RECLAIM);
+>+	if (!cm_core->disconn_wq) {
+>+		i40iw_debug(cm_core->dev,
+>+				I40IW_DEBUG_CM,
+>+				"%s allocate disconnect work queue failed\n",
+>+				__func__);
+>+	}
+> }
 
-Driver doing GUP on mmap of regular file is something that seems to
-already have widespread user (in the RDMA devices at least). So they
-are active users and they were never told that what they are doing
-was illegal.
+Hi Kangjie - Just doing a debug print doesn't suffice. We need to fail the i40iw_open() and unwind correctly.
 
-Note that i am personaly fine with breaking device driver that can not
-abide by mmu notifier but the consensus seems that it is not fine to
-do so.
+Perhaps something like this would be required.
 
-> > > > In fact, the GUP documentation even recommends that pattern.
-> > >
-> > > Isnt that pattern safe for anonymous memory and memory filesystems like
-> > > hugetlbfs etc? Which is the common use case.
-> >
-> > Still an issue in respect to swapout ie if anon/shmem page was map
-> > read only in preparation for swapout and we do not report the page
-> > as dirty what endup in swap might lack what was written last through
-> > GUP.
-> 
-> Well swapout cannot occur if the page is pinned and those pages are also
-> often mlocked.
+diff --git a/drivers/infiniband/hw/i40iw/i40iw.h b/drivers/infiniband/hw/i40iw/i40iw.h
+index 2f2b442..8feec35 100644
+--- a/drivers/infiniband/hw/i40iw/i40iw.h
++++ b/drivers/infiniband/hw/i40iw/i40iw.h
+@@ -552,7 +552,7 @@ enum i40iw_status_code i40iw_obj_aligned_mem(struct i40iw_device *iwdev,
 
-I would need to check the swapout code but i believe the write to disk
-can happen before the pin checks happens. I believe the event flow is:
-map read only, allocate swap, write to disk, try to free page which
-checks for pin. So that you could write stale data to disk and the GUP
-going away before you perform the pin checks.
+ void i40iw_request_reset(struct i40iw_device *iwdev);
+ void i40iw_destroy_rdma_device(struct i40iw_ib_device *iwibdev);
+-void i40iw_setup_cm_core(struct i40iw_device *iwdev);
++int i40iw_setup_cm_core(struct i40iw_device *iwdev);
+ void i40iw_cleanup_cm_core(struct i40iw_cm_core *cm_core);
+ void i40iw_process_ceq(struct i40iw_device *, struct i40iw_ceq *iwceq);
+ void i40iw_process_aeq(struct i40iw_device *);
+diff --git a/drivers/infiniband/hw/i40iw/i40iw_cm.c b/drivers/infiniband/hw/i40iw/i40iw_cm.c
+index 206cfb0..dcc5fea 100644
+--- a/drivers/infiniband/hw/i40iw/i40iw_cm.c
++++ b/drivers/infiniband/hw/i40iw/i40iw_cm.c
+@@ -3237,7 +3237,7 @@ void i40iw_receive_ilq(struct i40iw_sc_vsi *vsi, struct i40iw_puda_buf *rbuf)
+  * core
+  * @iwdev: iwarp device structure
+  */
+-void i40iw_setup_cm_core(struct i40iw_device *iwdev)
++int i40iw_setup_cm_core(struct i40iw_device *iwdev)
+ {
+        struct i40iw_cm_core *cm_core = &iwdev->cm_core;
 
-They are other thing to take into account and that need proper page
-dirtying, like soft dirtyness for instance.
+@@ -3256,9 +3256,20 @@ void i40iw_setup_cm_core(struct i40iw_device *iwdev)
 
+        cm_core->event_wq = alloc_ordered_workqueue("iwewq",
+                                                    WQ_MEM_RECLAIM);
+-
++       if (!cm_core->event_wq)
++               goto error;
++       
+        cm_core->disconn_wq = alloc_ordered_workqueue("iwdwq",
+                                                      WQ_MEM_RECLAIM);
++       if (!cm_core->disconn_wq)
++               goto error;
++
++       return 0;
++error:
++       i40iw_cleanup_cm_core(&iwdev->cm_core);
++       i40iw_pr_err("fail to setup CM core");
++
++       return -ENOMEM;
+ }
 
-> > >
-> > > Yes you now have the filesystem as well as the GUP pinner claiming
-> > > authority over the contents of a single memory segment. Maybe better not
-> > > allow that?
-> >
-> > This goes back to regressing existing driver with existing users.
-> 
-> There is no regression if that behavior never really worked.
+ /**
+@@ -3278,8 +3289,10 @@ void i40iw_cleanup_cm_core(struct i40iw_cm_core *cm_core)
+                del_timer_sync(&cm_core->tcp_timer);
+        spin_unlock_irqrestore(&cm_core->ht_lock, flags);
 
-Well RDMA driver maintainer seems to report that this has been a valid
-and working workload for their users.
+-       destroy_workqueue(cm_core->event_wq);
+-       destroy_workqueue(cm_core->disconn_wq);
++       if (cm_core->event_wq)
++               destroy_workqueue(cm_core->event_wq);
++       if (cm_core->disconn_wq)
++               destroy_workqueue(cm_core->disconn_wq);
+ }
 
+ /**
+diff --git a/drivers/infiniband/hw/i40iw/i40iw_main.c b/drivers/infiniband/hw/i40iw/i40iw_main.c
+index 68095f0..10932ba 100644
+--- a/drivers/infiniband/hw/i40iw/i40iw_main.c
++++ b/drivers/infiniband/hw/i40iw/i40iw_main.c
+@@ -1641,7 +1641,10 @@ static int i40iw_open(struct i40e_info *ldev, struct i40e_client *client)
+        iwdev = &hdl->device;
+        iwdev->hdl = hdl;
+        dev = &iwdev->sc_dev;
+-       i40iw_setup_cm_core(iwdev);
++       if (i40iw_setup_cm_core(iwdev)) {
++               kfree(iwdev->hdl);
++               return -ENOMEM;
++       }
 
-> > > Two filesystem trying to sync one memory segment both believing to have
-> > > exclusive access and we want to sort this out. Why? Dont allow this.
-> >
-> > This is allowed, it always was, forbidding that case now would regress
-> > existing application and it would also means that we are modifying the
-> > API we expose to userspace. So again this is not something we can block
-> > without regressing existing user.
-> 
-> We have always stopped the user from doing obviously stupid and risky
-> things. It would be logical to do it here as well.
+        dev->back_dev = (void *)iwdev;
+        iwdev->ldev = &hdl->ldev;
+-- 
+1.8.3.1
 
-While i would rather only allow device that can handle mmu notifier
-it is just not acceptable to regress existing user and they do seem
-to exist and had working setup going on for a while.
-
-Cheers,
-Jérôme
+Shiraz
