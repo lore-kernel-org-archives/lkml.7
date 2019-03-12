@@ -4,58 +4,58 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 65317C4360F
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 09:00:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id ABB77C43381
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 09:00:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 28BE7214D8
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 09:00:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7554E2147C
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 09:00:21 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="iS0RXPUB"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="zIwVUnUF"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727720AbfCLJAO (ORCPT
+        id S1727740AbfCLJAU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 12 Mar 2019 05:00:14 -0400
-Received: from mail-wm1-f68.google.com ([209.85.128.68]:38525 "EHLO
-        mail-wm1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727700AbfCLJAM (ORCPT
+        Tue, 12 Mar 2019 05:00:20 -0400
+Received: from mail-wr1-f51.google.com ([209.85.221.51]:43868 "EHLO
+        mail-wr1-f51.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727724AbfCLJAS (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 12 Mar 2019 05:00:12 -0400
-Received: by mail-wm1-f68.google.com with SMTP id a188so1678979wmf.3
-        for <linux-kernel@vger.kernel.org>; Tue, 12 Mar 2019 02:00:11 -0700 (PDT)
+        Tue, 12 Mar 2019 05:00:18 -0400
+Received: by mail-wr1-f51.google.com with SMTP id d17so1719664wre.10
+        for <linux-kernel@vger.kernel.org>; Tue, 12 Mar 2019 02:00:16 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=v4uFtyzA18u5b8FpMac6NfiN9aYKDmVQAs2/t+LEouQ=;
-        b=iS0RXPUBY1WOA6OUxZAMoN+2kbxJkGL3Hjr3CPiqg/6XmRhyCkplfWh2Mdf2I/dXX7
-         zNmdB/ScIRo8GjCF/czzFwN4K6V+UCCeiSvxz+WyWD1az6KokzfCRSKT0NoNlCq2s53S
-         hIEyeC8rOxD8od8zs2k6ADNGwbGJ0O1Gv7DXJ+KXeznNxcRyaixzDoFQqbFuF3HPE3ed
-         q/L9BqpmSzzNUkifD/tpnUjuscSrCFbc6gRR2gHMPTCp4PtaslXe9pQE6TvXKzJSOx5K
-         2xHUswb/EIZeP5FFOezsXVgiFgIfnLkPIn7UMypsxLLbLZyKvCWiLKYix3qxt2I/XzoZ
-         mgLA==
+        bh=btVK/jtdAfu6AHuJ6S+yT+D8LfZ0KK3FDm6jIOjAw+w=;
+        b=zIwVUnUFW4N+3v68oh+lo2cLxoG34ZSW/qTtQiFK0iOgbGazb2FoAehAsJ5Oxg1NKE
+         mldTdbxnmF526mUDFp5wcKTbFqtvE+RTglmjvlT5o7ZETSKIfA4/R9QmemlV8NU2VuLp
+         atEqWEttirD5F0hB1KSXrFQYwVPqG6z0VsM0cw1Pbwdn2FF6SHEnxZfMcrOHV9OfCTiL
+         WryEopGoTlXJSpWJ13hdT0Q+m/m1PFJWjcg9na/gzbFlwGsMCRjDr7NmRzND26729v/k
+         FzNRZh5yxaKvjRHYlBedciyESQkGtTEOKFKIE44BAXriBKmhrLdswggsFZr+5PdZRt2O
+         4Ujg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=v4uFtyzA18u5b8FpMac6NfiN9aYKDmVQAs2/t+LEouQ=;
-        b=KIhqQFVvJcU49sOJq2O7jJ7/79dkMVgnGvAJUcQwthz/FTRNqqZgvajtQthpWcmRd8
-         J8wPD/fmt1zZgGrWwbpxYMoVX6idr/XGNgV0vBANjrUDC95g+JZY32J+UtiaOtYR6j/m
-         ECLjiMjoSyljoVJqIWBje09o5qR24RBlS8DEOy5Hz2NJKWv+aieo0D9TEkWG2NfPEAXn
-         hwPZYIHuxRXU3xydZlzYq43JAfDcg6yo0mnoQ9jxQcvT7/NvnDTs9s+P2sbQ18uoEeS+
-         m9Ttw7uoQ6zWLsPz0OmGRZNRiWBOCbC9qpmBl3dcdnuLuhm0E7gJfWWRphZQZfH+pb4m
-         N9Nw==
-X-Gm-Message-State: APjAAAVD27owtY86LFdjPvkXIyIr1WC7bYrmYgsPeuLVkVV2zW0NV3Xf
-        DBMQMwI5GjK8watRJNJJP44wMw==
-X-Google-Smtp-Source: APXvYqwMDeQFIV+BAnqHkvh0W6ZD4CpzG6YriiHI53Z8NXqXoZq/C1N1rRYGdAdnBSi5GStGId55LQ==
-X-Received: by 2002:a1c:a007:: with SMTP id j7mr1493311wme.25.1552381210260;
-        Tue, 12 Mar 2019 02:00:10 -0700 (PDT)
+        bh=btVK/jtdAfu6AHuJ6S+yT+D8LfZ0KK3FDm6jIOjAw+w=;
+        b=USIdrC3gYJ0CoQ+PZOW1wDkxjXPLFfzx8lCWjM0qQszok2uwyXFtWUOINtzO+rP3FT
+         MPy1FkTWFzS/Ja4ucYOGRxhX7rBW8WVadDrlGx2if5uGOaRjftbFPIagyKk6zb5LeSzv
+         GN09gff//X0SAz0rFUKVBvygeGQ6Op6AoNq1ava4x2oeq2X6UHITwc+eon4SIksgFX2R
+         Jt2IcCUI53TnOWhuAzltFX2CChgwQHrLFgHbT2DPQt0k70UGuki0/+1T3HQlmRHmSguB
+         0V4xHg/rYpElxQMJWcwqmj09CFpIcnNwfiO1UoyJcVutsTrOBhajihrkvupu0NJr8vwb
+         L3Eg==
+X-Gm-Message-State: APjAAAVMkrIipkfGCSWV5fJlJF28hmGhAHznZrQ/fHdFF7iHV1syL5QF
+        v7xSF9N5pOijvAftFP1tMz1f9g==
+X-Google-Smtp-Source: APXvYqy/T7GhDxhFR5W7lNSSa2QTDLlUBX2f92hCb+5Oy12jsPbbCSh6l5NEKHrv6ZG8o4E5aiOOug==
+X-Received: by 2002:a05:6000:1091:: with SMTP id y17mr22255913wrw.317.1552381215773;
+        Tue, 12 Mar 2019 02:00:15 -0700 (PDT)
 Received: from localhost.localdomain ([84.33.65.66])
-        by smtp.gmail.com with ESMTPSA id y20sm3953043wmi.34.2019.03.12.02.00.09
+        by smtp.gmail.com with ESMTPSA id y20sm3953043wmi.34.2019.03.12.02.00.10
         (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Tue, 12 Mar 2019 02:00:09 -0700 (PDT)
+        Tue, 12 Mar 2019 02:00:15 -0700 (PDT)
 From:   Paolo Valente <paolo.valente@linaro.org>
 To:     Jens Axboe <axboe@kernel.dk>
 Cc:     linux-block@vger.kernel.org, linux-kernel@vger.kernel.org,
@@ -64,9 +64,9 @@ Cc:     linux-block@vger.kernel.org, linux-kernel@vger.kernel.org,
         oleksandr@natalenko.name, fra.fra.800@gmail.com,
         alessio.masola@gmail.com, holger@applied-asynchrony.com,
         Paolo Valente <paolo.valente@linaro.org>
-Subject: [PATCH BUGFIX IMPROVEMENT V3 6/9] block, bfq: always protect newly-created queues from existing active queues
-Date:   Tue, 12 Mar 2019 09:59:32 +0100
-Message-Id: <20190312085935.11340-7-paolo.valente@linaro.org>
+Subject: [PATCH BUGFIX IMPROVEMENT V3 7/9] block, bfq: print SHARED instead of pid for shared queues in logs
+Date:   Tue, 12 Mar 2019 09:59:33 +0100
+Message-Id: <20190312085935.11340-8-paolo.valente@linaro.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190312085935.11340-1-paolo.valente@linaro.org>
 References: <20190312085935.11340-1-paolo.valente@linaro.org>
@@ -78,143 +78,107 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-If many bfq_queues belonging to the same group happen to be created
-shortly after each other, then the processes associated with these
-queues have typically a common goal. In particular, bursts of queue
-creations are usually caused by services or applications that spawn
-many parallel threads/processes. Examples are systemd during boot, or
-git grep. If there are no other active queues, then, to help these
-processes get their job done as soon as possible, the best thing to do
-is to reach a high throughput. To this goal, it is usually better to
-not grant either weight-raising or device idling to the queues
-associated with these processes. And this is exactly what BFQ
-currently does.
+From: Francesco Pollicino <fra.fra.800@gmail.com>
 
-There is however a drawback: if, in contrast, some other queues are
-already active, then the newly created queues must be protected from
-the I/O flowing through the already existing queues. In this case, the
-best thing to do is the opposite as in the other case: it is much
-better to grant weight-raising and device idling to the newly-created
-queues, if they deserve it. This commit addresses this issue by doing
-so if there are already other active queues.
+The function "bfq_log_bfqq" prints the pid of the process
+associated with the queue passed as input.
 
-This change also helps eliminating false positives, which occur when
-the newly-created queues do not belong to an actual large burst of
-creations, but some background task (e.g., a service) happens to
-trigger the creation of new queues in the middle, i.e., very close to
-when the victim queues are created. These false positive may cause
-total loss of control on process latencies.
+Unfortunately, if the queue is shared, then more than one process
+is associated with the queue. The pid that gets printed in this
+case is the pid of one of the associated processes.
+Which process gets printed depends on the exact sequence of merge
+events the queue underwent. So printing such a pid is rather
+useless and above all is often rather confusing because it
+reports a random pid between those of the associated processes.
+
+This commit addresses this issue by printing SHARED instead of a pid
+if the queue is shared.
 
 Tested-by: Holger Hoffstätte <holger@applied-asynchrony.com>
 Tested-by: Oleksandr Natalenko <oleksandr@natalenko.name>
+Signed-off-by: Francesco Pollicino <fra.fra.800@gmail.com>
 Signed-off-by: Paolo Valente <paolo.valente@linaro.org>
 ---
- block/bfq-iosched.c | 64 ++++++++++++++++++++++++++++++++++++---------
- 1 file changed, 51 insertions(+), 13 deletions(-)
+ block/bfq-iosched.c | 10 ++++++++++
+ block/bfq-iosched.h | 23 +++++++++++++++++++----
+ 2 files changed, 29 insertions(+), 4 deletions(-)
 
 diff --git a/block/bfq-iosched.c b/block/bfq-iosched.c
-index d34b80e5c47d..500b04df9efa 100644
+index 500b04df9efa..7d95d9c01036 100644
 --- a/block/bfq-iosched.c
 +++ b/block/bfq-iosched.c
-@@ -1075,8 +1075,18 @@ static void bfq_reset_burst_list(struct bfq_data *bfqd, struct bfq_queue *bfqq)
- 
- 	hlist_for_each_entry_safe(item, n, &bfqd->burst_list, burst_list_node)
- 		hlist_del_init(&item->burst_list_node);
--	hlist_add_head(&bfqq->burst_list_node, &bfqd->burst_list);
--	bfqd->burst_size = 1;
-+
+@@ -2590,6 +2590,16 @@ bfq_merge_bfqqs(struct bfq_data *bfqd, struct bfq_io_cq *bic,
+ 	 *   assignment causes no harm).
+ 	 */
+ 	new_bfqq->bic = NULL;
 +	/*
-+	 * Start the creation of a new burst list only if there is no
-+	 * active queue. See comments on the conditional invocation of
-+	 * bfq_handle_burst().
++	 * If the queue is shared, the pid is the pid of one of the associated
++	 * processes. Which pid depends on the exact sequence of merge events
++	 * the queue underwent. So printing such a pid is useless and confusing
++	 * because it reports a random pid between those of the associated
++	 * processes.
++	 * We mark such a queue with a pid -1, and then print SHARED instead of
++	 * a pid in logging messages.
 +	 */
-+	if (bfq_tot_busy_queues(bfqd) == 0) {
-+		hlist_add_head(&bfqq->burst_list_node, &bfqd->burst_list);
-+		bfqd->burst_size = 1;
-+	} else
-+		bfqd->burst_size = 0;
++	new_bfqq->pid = -1;
+ 	bfqq->bic = NULL;
+ 	/* release process reference to bfqq */
+ 	bfq_put_queue(bfqq);
+diff --git a/block/bfq-iosched.h b/block/bfq-iosched.h
+index 829730b96fb2..67e63c276c7a 100644
+--- a/block/bfq-iosched.h
++++ b/block/bfq-iosched.h
+@@ -32,6 +32,8 @@
+ #define BFQ_DEFAULT_GRP_IOPRIO	0
+ #define BFQ_DEFAULT_GRP_CLASS	IOPRIO_CLASS_BE
+ 
++#define MAX_PID_STR_LENGTH 12
 +
- 	bfqd->burst_parent_entity = bfqq->entity.parent;
- }
+ /*
+  * Soft real-time applications are extremely more latency sensitive
+  * than interactive ones. Over-raise the weight of the former to
+@@ -1016,13 +1018,23 @@ void bfq_add_bfqq_busy(struct bfq_data *bfqd, struct bfq_queue *bfqq);
+ /* --------------- end of interface of B-WF2Q+ ---------------- */
  
-@@ -1132,7 +1142,8 @@ static void bfq_add_to_burst(struct bfq_data *bfqd, struct bfq_queue *bfqq)
-  * many parallel threads/processes. Examples are systemd during boot,
-  * or git grep. To help these processes get their job done as soon as
-  * possible, it is usually better to not grant either weight-raising
-- * or device idling to their queues.
-+ * or device idling to their queues, unless these queues must be
-+ * protected from the I/O flowing through other active queues.
-  *
-  * In this comment we describe, firstly, the reasons why this fact
-  * holds, and, secondly, the next function, which implements the main
-@@ -1144,7 +1155,10 @@ static void bfq_add_to_burst(struct bfq_data *bfqd, struct bfq_queue *bfqq)
-  * cumulatively served, the sooner the target job of these queues gets
-  * completed. As a consequence, weight-raising any of these queues,
-  * which also implies idling the device for it, is almost always
-- * counterproductive. In most cases it just lowers throughput.
-+ * counterproductive, unless there are other active queues to isolate
-+ * these new queues from. If there no other active queues, then
-+ * weight-raising these new queues just lowers throughput in most
-+ * cases.
-  *
-  * On the other hand, a burst of queue creations may be caused also by
-  * the start of an application that does not consist of a lot of
-@@ -1178,14 +1192,16 @@ static void bfq_add_to_burst(struct bfq_data *bfqd, struct bfq_queue *bfqq)
-  * are very rare. They typically occur if some service happens to
-  * start doing I/O exactly when the interactive task starts.
-  *
-- * Turning back to the next function, it implements all the steps
-- * needed to detect the occurrence of a large burst and to properly
-- * mark all the queues belonging to it (so that they can then be
-- * treated in a different way). This goal is achieved by maintaining a
-- * "burst list" that holds, temporarily, the queues that belong to the
-- * burst in progress. The list is then used to mark these queues as
-- * belonging to a large burst if the burst does become large. The main
-- * steps are the following.
-+ * Turning back to the next function, it is invoked only if there are
-+ * no active queues (apart from active queues that would belong to the
-+ * same, possible burst bfqq would belong to), and it implements all
-+ * the steps needed to detect the occurrence of a large burst and to
-+ * properly mark all the queues belonging to it (so that they can then
-+ * be treated in a different way). This goal is achieved by
-+ * maintaining a "burst list" that holds, temporarily, the queues that
-+ * belong to the burst in progress. The list is then used to mark
-+ * these queues as belonging to a large burst if the burst does become
-+ * large. The main steps are the following.
-  *
-  * . when the very first queue is created, the queue is inserted into the
-  *   list (as it could be the first queue in a possible burst)
-@@ -5695,7 +5711,29 @@ static struct bfq_queue *bfq_init_rq(struct request *rq)
- 		}
- 	}
+ /* Logging facilities. */
++static inline void bfq_pid_to_str(int pid, char *str, int len)
++{
++	if (pid != -1)
++		snprintf(str, len, "%d", pid);
++	else
++		snprintf(str, len, "SHARED-");
++}
++
+ #ifdef CONFIG_BFQ_GROUP_IOSCHED
+ struct bfq_group *bfqq_group(struct bfq_queue *bfqq);
  
--	if (unlikely(bfq_bfqq_just_created(bfqq)))
-+	/*
-+	 * Consider bfqq as possibly belonging to a burst of newly
-+	 * created queues only if:
-+	 * 1) A burst is actually happening (bfqd->burst_size > 0)
-+	 * or
-+	 * 2) There is no other active queue. In fact, if, in
-+	 *    contrast, there are active queues not belonging to the
-+	 *    possible burst bfqq may belong to, then there is no gain
-+	 *    in considering bfqq as belonging to a burst, and
-+	 *    therefore in not weight-raising bfqq. See comments on
-+	 *    bfq_handle_burst().
-+	 *
-+	 * This filtering also helps eliminating false positives,
-+	 * occurring when bfqq does not belong to an actual large
-+	 * burst, but some background task (e.g., a service) happens
-+	 * to trigger the creation of new queues very close to when
-+	 * bfqq and its possible companion queues are created. See
-+	 * comments on bfq_handle_burst() for further details also on
-+	 * this issue.
-+	 */
-+	if (unlikely(bfq_bfqq_just_created(bfqq) &&
-+		     (bfqd->burst_size > 0 ||
-+		      bfq_tot_busy_queues(bfqd) == 0)))
- 		bfq_handle_burst(bfqd, bfqq);
+ #define bfq_log_bfqq(bfqd, bfqq, fmt, args...)	do {			\
++	char pid_str[MAX_PID_STR_LENGTH];	\
++	bfq_pid_to_str((bfqq)->pid, pid_str, MAX_PID_STR_LENGTH);	\
+ 	blk_add_cgroup_trace_msg((bfqd)->queue,				\
+ 			bfqg_to_blkg(bfqq_group(bfqq))->blkcg,		\
+-			"bfq%d%c " fmt, (bfqq)->pid,			\
++			"bfq%s%c " fmt, pid_str,			\
+ 			bfq_bfqq_sync((bfqq)) ? 'S' : 'A', ##args);	\
+ } while (0)
  
- 	return bfqq;
+@@ -1033,10 +1045,13 @@ struct bfq_group *bfqq_group(struct bfq_queue *bfqq);
+ 
+ #else /* CONFIG_BFQ_GROUP_IOSCHED */
+ 
+-#define bfq_log_bfqq(bfqd, bfqq, fmt, args...)	\
+-	blk_add_trace_msg((bfqd)->queue, "bfq%d%c " fmt, (bfqq)->pid,	\
++#define bfq_log_bfqq(bfqd, bfqq, fmt, args...) do {	\
++	char pid_str[MAX_PID_STR_LENGTH];	\
++	bfq_pid_to_str((bfqq)->pid, pid_str, MAX_PID_STR_LENGTH);	\
++	blk_add_trace_msg((bfqd)->queue, "bfq%s%c " fmt, pid_str,	\
+ 			bfq_bfqq_sync((bfqq)) ? 'S' : 'A',		\
+-				##args)
++				##args);	\
++} while (0)
+ #define bfq_log_bfqg(bfqd, bfqg, fmt, args...)		do {} while (0)
+ 
+ #endif /* CONFIG_BFQ_GROUP_IOSCHED */
 -- 
 2.20.1
 
