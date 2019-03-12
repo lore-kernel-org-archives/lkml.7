@@ -4,51 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D0F8BC4360F
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 18:10:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3309CC10F00
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 18:10:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 894F42087C
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 18:10:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 035712087C
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 18:10:40 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1552414235;
-	bh=On3Sm1z02ADxIsJDmKYBvyQUP4OjGqy2DkpD6fxol44=;
+	s=default; t=1552414240;
+	bh=dSqxp/jOA8SnEsuTUQ1zUWZkRwRc25DnKIXNbvuW3ho=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=FRAJPO1y/s1sqjIlVXj9ASC/TwnUPwXuyBxHEP5+dH+uiBFsUgV5QF7zYl/pspE5B
-	 u95nwV7mPHMWw9IRE9NXM5/ANrDalQI0XCMG/8j8U4or1bM8g32+djeVvCoc70logU
-	 7H2RhEzy97jtopHBk4RLZKidV2WErYUWPgZxdI2Q=
+	b=kmiNn8KebDM5H1hUZvsnQYSkG2dPY8X1dhANjAYM8iBoTmHwr/3JGs28Poi+z/+Ec
+	 XTwbeIGZwTrFnp7/ge6P41nBWkqXGTCpfGp2tpOFPacA0WRxol+kMHNEW6nfwB31pY
+	 7T0QEy4EHvGpGAV+RVkqC7mY1lxrHkxPD/nL+VcU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727180AbfCLRLw (ORCPT
+        id S1729437AbfCLSKf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 12 Mar 2019 13:11:52 -0400
-Received: from mail.kernel.org ([198.145.29.99]:45544 "EHLO mail.kernel.org"
+        Tue, 12 Mar 2019 14:10:35 -0400
+Received: from mail.kernel.org ([198.145.29.99]:46018 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727080AbfCLRLn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 12 Mar 2019 13:11:43 -0400
+        id S1727178AbfCLRLx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 12 Mar 2019 13:11:53 -0400
 Received: from localhost (unknown [104.133.8.98])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 72265217D8;
-        Tue, 12 Mar 2019 17:11:42 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 8632D214AF;
+        Tue, 12 Mar 2019 17:11:52 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1552410702;
-        bh=On3Sm1z02ADxIsJDmKYBvyQUP4OjGqy2DkpD6fxol44=;
+        s=default; t=1552410712;
+        bh=dSqxp/jOA8SnEsuTUQ1zUWZkRwRc25DnKIXNbvuW3ho=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=LiAwBDi2GFD6hV/911fXxaEXBXoI0uYSF7QSeez49O9Ghn29aUoGF1XqSCJOX0Xaw
-         sugRdLMdwtlPYw3ZT4Pc+j9I7OaDOqm3t9dwq+yGRTWUvYNdPqyZRRZrxav1jQPhEG
-         IBkZpSXe8L4txvcUtaUojqrih+Ij43E6Kct03hts=
+        b=CtiuDcogoozIVv7gJVYBRvrxEQSUtsak2PNczrTKnjBq8FPs0RYTIHXPCCi/k+uRi
+         d/3ziAOl0nVLTArSHpN0iAUYp6ttHQgz9VT/bj3GiYbSPtcG3cWmXbzBO2lj9CrYpS
+         Wjm6fhgjMqE+/KoYnAvXqwlnFqn275oZKccLWdyI=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Joerg Roedel <joro@8bytes.org>,
-        Suravee Suthikulpanit <suravee.suthikulpanit@amd.com>,
-        Jerry Snitselaar <jsnitsel@redhat.com>,
-        Joerg Roedel <jroedel@suse.de>, Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.20 013/171] iommu/amd: Call free_iova_fast with pfn in map_sg
-Date:   Tue, 12 Mar 2019 10:06:33 -0700
-Message-Id: <20190312170349.038441327@linuxfoundation.org>
+        stable@vger.kernel.org, Max Filippov <jcmvbkbc@gmail.com>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.20 026/171] xtensa: smp_lx200_defconfig: fix vectors clash
+Date:   Tue, 12 Mar 2019 10:06:46 -0700
+Message-Id: <20190312170350.202285424@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190312170347.868927101@linuxfoundation.org>
 References: <20190312170347.868927101@linuxfoundation.org>
@@ -67,36 +65,31 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-[ Upstream commit 51d8838d66d3249508940d8f59b07701f2129723 ]
+[ Upstream commit 306b38305c0f86de7f17c5b091a95451dcc93d7d ]
 
-In the error path of map_sg, free_iova_fast is being called with
-address instead of the pfn. This results in a bad value getting into
-the rcache, and can result in hitting a BUG_ON when
-iova_magazine_free_pfns is called.
+Secondary CPU reset vector overlaps part of the double exception handler
+code, resulting in weird crashes and hangups when running user code.
+Move exception vectors one page up so that they don't clash with the
+secondary CPU reset vector.
 
-Cc: Joerg Roedel <joro@8bytes.org>
-Cc: Suravee Suthikulpanit <suravee.suthikulpanit@amd.com>
-Signed-off-by: Jerry Snitselaar <jsnitsel@redhat.com>
-Fixes: 80187fd39dcb ("iommu/amd: Optimize map_sg and unmap_sg")
-Signed-off-by: Joerg Roedel <jroedel@suse.de>
+Signed-off-by: Max Filippov <jcmvbkbc@gmail.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/iommu/amd_iommu.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ arch/xtensa/configs/smp_lx200_defconfig | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/drivers/iommu/amd_iommu.c b/drivers/iommu/amd_iommu.c
-index 325f3bad118b..5f33f843d30a 100644
---- a/drivers/iommu/amd_iommu.c
-+++ b/drivers/iommu/amd_iommu.c
-@@ -2561,7 +2561,7 @@ static int map_sg(struct device *dev, struct scatterlist *sglist,
- 	}
- 
- out_free_iova:
--	free_iova_fast(&dma_dom->iovad, address, npages);
-+	free_iova_fast(&dma_dom->iovad, address >> PAGE_SHIFT, npages);
- 
- out_err:
- 	return 0;
+diff --git a/arch/xtensa/configs/smp_lx200_defconfig b/arch/xtensa/configs/smp_lx200_defconfig
+index 11fed6c06a7c..b5938160fb3d 100644
+--- a/arch/xtensa/configs/smp_lx200_defconfig
++++ b/arch/xtensa/configs/smp_lx200_defconfig
+@@ -33,6 +33,7 @@ CONFIG_SMP=y
+ CONFIG_HOTPLUG_CPU=y
+ # CONFIG_INITIALIZE_XTENSA_MMU_INSIDE_VMLINUX is not set
+ # CONFIG_PCI is not set
++CONFIG_VECTORS_OFFSET=0x00002000
+ CONFIG_XTENSA_PLATFORM_XTFPGA=y
+ CONFIG_CMDLINE_BOOL=y
+ CONFIG_CMDLINE="earlycon=uart8250,mmio32native,0xfd050020,115200n8 console=ttyS0,115200n8 ip=dhcp root=/dev/nfs rw debug memmap=96M@0"
 -- 
 2.19.1
 
