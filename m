@@ -2,146 +2,216 @@ Return-Path: <SRS0=J4ZE=RP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.6 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_PASS,URIBL_BLOCKED,USER_IN_DEF_DKIM_WL
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIMWL_WL_MED,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_PASS autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A2ED1C10F00
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 16:21:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 29BBDC43381
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 16:27:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 723152147C
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 16:21:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E1E262147C
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 16:27:06 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="Yqjdboxf"
+	dkim=pass (1024-bit key) header.d=fb.com header.i=@fb.com header.b="Qb/121ay";
+	dkim=pass (1024-bit key) header.d=fb.onmicrosoft.com header.i=@fb.onmicrosoft.com header.b="DuJXULSq"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726615AbfCLQVh (ORCPT
+        id S1726585AbfCLQ1F (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 12 Mar 2019 12:21:37 -0400
-Received: from mail-it1-f194.google.com ([209.85.166.194]:40313 "EHLO
-        mail-it1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726272AbfCLQVg (ORCPT
+        Tue, 12 Mar 2019 12:27:05 -0400
+Received: from mx0b-00082601.pphosted.com ([67.231.153.30]:45090 "EHLO
+        mx0b-00082601.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726174AbfCLQ1E (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 12 Mar 2019 12:21:36 -0400
-Received: by mail-it1-f194.google.com with SMTP id l139so5413661ita.5
-        for <linux-kernel@vger.kernel.org>; Tue, 12 Mar 2019 09:21:35 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=tawD2D2yhPxJ6jVXdtHNzTe8sO1hTye0ddBxemZiBK0=;
-        b=YqjdboxfbzNopV2x9tMkBvHEJbeEETBfuKrR724GZBynKUEkKw8bhWCs/cXMaZaqh5
-         SqPg4ybL65uJ3DELHxUp1gO18+ChmybO41/MrzeHwf67CE7ifx5j8OZ/wrhB/uyVHK7C
-         LscohqQm2NR/vhYni5KBEmiOn6kJYmhlBwBa6n+x9xAqVgzYfBPc6I9oGkGZ452XXSM3
-         DERK2nDBJUYXoh5ioWq7qES+9dHLOlH6lr7QopZLcyaSR9zM9lPn9O89HVa6146Le78L
-         gfADH6PaRS/S6+otmKDpA9/ZARjKj+lWSYH8iprM9tsVNeLMedjCNnJJ9QzjnyekXqTM
-         3DqQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=tawD2D2yhPxJ6jVXdtHNzTe8sO1hTye0ddBxemZiBK0=;
-        b=BiGBCBINT5XvLWnjZGdrLMLIjssdYH+Iv6fIGZKfWZMHJi89khmr4gGlKXZrTbajo4
-         YjR7xi7QysD7wO5/+K9JbmT119z5QVVpNL1xQcjmIxGtsqBRKQvqXo2FPR23N7wZwH5s
-         zfJgzRllYmuDXSigAd8BBvMoXYTm1tgOXfCPFv+hVSaAKd/HyQiaxB+u8W05LGQ59lAZ
-         133qsJ0B7EQ2mk7WtEPf8s4Rbq0A1uKmwuvXVLZlTa29yjFtSrMQPP4M27+/KmcShhXv
-         RDKfoNRv3pPMbmmqRlpilnxLSUyVHKBWXv31YIyINJzrdr4zBQY44mlTms9Edfp0Uk7W
-         3p1w==
-X-Gm-Message-State: APjAAAXfO4QzScYY7MXAXbRssTQoBljELDvvT2TJNFaA62Z2Zv0IK2+V
-        4OOyivhJmaAqa8ldWN/ZpxQNdt/MjI9QGBOyAyl8qHAZBQqDJw==
-X-Google-Smtp-Source: APXvYqxZqJuNvoPlZ3IOIz9BjknrvsaJ96W7l03bb8D4EOLmlNa3I1X5HOC7soEMtdHoeGrvjq7QOf3Q+27pWMVKaVc=
-X-Received: by 2002:a05:660c:3d1:: with SMTP id c17mr2338356itl.166.1552407695236;
- Tue, 12 Mar 2019 09:21:35 -0700 (PDT)
+        Tue, 12 Mar 2019 12:27:04 -0400
+Received: from pps.filterd (m0148460.ppops.net [127.0.0.1])
+        by mx0a-00082601.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x2CGNRZx031821;
+        Tue, 12 Mar 2019 09:26:37 -0700
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=fb.com; h=from : to : cc : subject
+ : date : message-id : references : in-reply-to : content-type : content-id
+ : content-transfer-encoding : mime-version; s=facebook;
+ bh=MYRh/aEL7gyS2ixL+Qwt8Jc7c/dSO1sZT0GOub5PQ2Q=;
+ b=Qb/121ayoa+0DdUHWJruSwWk/Q2o7RvDH/itXbXQACqdVjN+qiXEiBL6cWD//e9H5GHu
+ aN2U3WfpjtbdKIyVuNSuf80Ql/tLSudqkqeqNCJ57JULpzwC8ZJ1e8iND/uq4ZeWIR4y
+ fh69nIN9xURoPLWXaH6029Incuh7apZmYI8= 
+Received: from maileast.thefacebook.com ([199.201.65.23])
+        by mx0a-00082601.pphosted.com with ESMTP id 2r6g3tg1qs-10
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-SHA384 bits=256 verify=NOT);
+        Tue, 12 Mar 2019 09:26:37 -0700
+Received: from frc-mbx05.TheFacebook.com (2620:10d:c0a1:f82::29) by
+ frc-hub01.TheFacebook.com (2620:10d:c021:18::171) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA384) id
+ 15.1.1713.5; Tue, 12 Mar 2019 09:26:20 -0700
+Received: from frc-hub03.TheFacebook.com (2620:10d:c021:18::173) by
+ frc-mbx05.TheFacebook.com (2620:10d:c0a1:f82::29) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA384) id
+ 15.1.1713.5; Tue, 12 Mar 2019 09:26:20 -0700
+Received: from NAM04-CO1-obe.outbound.protection.outlook.com (192.168.183.28)
+ by o365-in.thefacebook.com (192.168.177.73) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA384) id 15.1.1713.5
+ via Frontend Transport; Tue, 12 Mar 2019 09:26:19 -0700
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=fb.onmicrosoft.com;
+ s=selector1-fb-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=MYRh/aEL7gyS2ixL+Qwt8Jc7c/dSO1sZT0GOub5PQ2Q=;
+ b=DuJXULSqt/X4CT60aEo60Fsl5wqt+2hUNhhOR1iVE3WLdlPkhwBbTReVeV4BkmsIiw4DA4OZjxFKHR7XKkcPNOhl6GEXON64LmaoCCTvWUAaFO/WvAgw0FgthRGhYZBAWcEMiwFMBdOfJISC+3tEwSkKltBN1NoTtWPf2LFpYMI=
+Received: from MWHPR15MB1165.namprd15.prod.outlook.com (10.175.2.19) by
+ MWHPR15MB1120.namprd15.prod.outlook.com (10.175.2.10) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.1686.21; Tue, 12 Mar 2019 16:26:17 +0000
+Received: from MWHPR15MB1165.namprd15.prod.outlook.com
+ ([fe80::f190:6de5:7e3:e065]) by MWHPR15MB1165.namprd15.prod.outlook.com
+ ([fe80::f190:6de5:7e3:e065%6]) with mapi id 15.20.1686.021; Tue, 12 Mar 2019
+ 16:26:17 +0000
+From:   Song Liu <songliubraving@fb.com>
+To:     Arnaldo Carvalho de Melo <arnaldo.melo@gmail.com>
+CC:     "bpf@vger.kernel.org" <bpf@vger.kernel.org>,
+        Networking <netdev@vger.kernel.org>,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        Alexei Starovoitov <ast@kernel.org>,
+        Daniel Borkmann <daniel@iogearbox.net>,
+        Kernel Team <Kernel-team@fb.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Arnaldo Carvalho de Melo <acme@redhat.com>,
+        "Jiri Olsa" <jolsa@kernel.org>, Namhyung Kim <namhyung@kernel.org>,
+        "sdf@fomichev.me" <sdf@fomichev.me>
+Subject: Re: [PATCH v9 perf,bpf 09/15] perf, bpf: save btf information as
+ headers to perf.data
+Thread-Topic: [PATCH v9 perf,bpf 09/15] perf, bpf: save btf information as
+ headers to perf.data
+Thread-Index: AQHU2JTq1ai9qoaEF0mXPn112Pnh46YIG0yAgAAAkwCAABOYAA==
+Date:   Tue, 12 Mar 2019 16:26:17 +0000
+Message-ID: <61901DA6-47B4-44E0-A0C9-9F2DBD6C34C1@fb.com>
+References: <20190312053051.2690567-1-songliubraving@fb.com>
+ <20190312053051.2690567-10-songliubraving@fb.com>
+ <20190312151405.GG4939@kernel.org> <20190312151608.GH4939@kernel.org>
+In-Reply-To: <20190312151608.GH4939@kernel.org>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-mailer: Apple Mail (2.3445.102.3)
+x-originating-ip: [2620:10d:c090:200::1:a1d5]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: ca0ed5bb-1737-4c46-4a6d-08d6a707743e
+x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600127)(711020)(4605104)(2017052603328)(7153060)(7193020);SRVR:MWHPR15MB1120;
+x-ms-traffictypediagnostic: MWHPR15MB1120:
+x-microsoft-exchange-diagnostics: 1;MWHPR15MB1120;20:2nUnE+vs6vX7Zf2yksswGbocgHzsGgDlZmAF8ro+1HUqnxq5nxZtCJwFz6Xoxs/UuoCH6kX4TP9GcOCs0uCT0t2oj7Gn9P2bUZfiwmknLDFSdN597rtKL4ufHOPUOmRFO29p3eZxeCyBFBgU2iQV+0Ajd3nhNXLA0xSMhSh8XuA=
+x-microsoft-antispam-prvs: <MWHPR15MB112029C5C846097ACBC2E970B3490@MWHPR15MB1120.namprd15.prod.outlook.com>
+x-forefront-prvs: 09749A275C
+x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(346002)(396003)(376002)(366004)(39860400002)(136003)(199004)(189003)(105586002)(106356001)(6916009)(93886005)(86362001)(54906003)(2906002)(6506007)(53546011)(316002)(305945005)(53936002)(8936002)(46003)(7736002)(57306001)(99286004)(76176011)(5660300002)(486006)(6246003)(14454004)(11346002)(102836004)(229853002)(2616005)(476003)(4326008)(6116002)(256004)(68736007)(186003)(7416002)(25786009)(6436002)(6486002)(50226002)(6512007)(82746002)(97736004)(71190400001)(83716004)(81166006)(81156014)(14444005)(8676002)(71200400001)(478600001)(33656002)(36756003)(446003)(142933001);DIR:OUT;SFP:1102;SCL:1;SRVR:MWHPR15MB1120;H:MWHPR15MB1165.namprd15.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
+received-spf: None (protection.outlook.com: fb.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam-message-info: mP0lJEtdcrvDMeZoc741fQYRgmfhVEcoL7lDnQ9Z9GGis/nJGzymJKZ2tmet/+cn0Z6Sr0nZzeRLlgoQo+H2m6lhC7JaRXvC380NrtH/BwffF1yodTKd13tYa8mYFuGm7It8w/TokEbp6318qh7FGEzrHjwTGGuRgfKQwxf3YVfViwHNRExz63hVHsDRgxxNwjpYoft8i1Vj75991SxrXfJq//FB8ROHRQ841p2ooJcxoFt7rIPdpgSig8tj8tBds0hgHm1iexIANyxO77P9Vsjh3IBmeCvWIyP0SERPa9U4KrbO/rtdRSLwbnStsil0BvToUMeJEJqBHCFjbyLPl2z0raVNoqxzJ++l6caHQDVh88kpRC4Nq+su85z6ScjessCZHoelgKN5wmIyA6YHZN0rpf1zc1XQD3Ko74htqRk=
+Content-Type: text/plain; charset="us-ascii"
+Content-ID: <53E94C517151074E80449361F929A160@namprd15.prod.outlook.com>
+Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
-References: <0000000000004cfa120583e1dfc3@google.com> <7dd5ffca-803d-9d5e-7fa4-f9eed2249d26@hartkopp.net>
- <CACT4Y+ZoDc=_a_W=wVMYj+VLW8WFBDbQJGB17dZTSvYinWhebA@mail.gmail.com>
-In-Reply-To: <CACT4Y+ZoDc=_a_W=wVMYj+VLW8WFBDbQJGB17dZTSvYinWhebA@mail.gmail.com>
-From:   Dmitry Vyukov <dvyukov@google.com>
-Date:   Tue, 12 Mar 2019 17:21:24 +0100
-Message-ID: <CACT4Y+ayyFe6oek8MdnUd1LsB_+1kpJatBLnmF_jCttQPyCK0g@mail.gmail.com>
-Subject: Re: WARNING in hsr_forward_skb
-To:     Oliver Hartkopp <socketcan@hartkopp.net>
-Cc:     syzbot <syzbot+fdce8f2a8903f3ba0e6b@syzkaller.appspotmail.com>,
-        arvid.brodin@alten.se, Jens Axboe <axboe@fb.com>,
-        Jens Axboe <axboe@kernel.dk>,
-        David Miller <davem@davemloft.net>,
-        Christoph Hellwig <hch@lst.de>, linux-block@vger.kernel.org,
-        linux-can@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>,
-        Ming Lei <ming.lei@redhat.com>,
-        Marc Kleine-Budde <mkl@pengutronix.de>,
-        netdev <netdev@vger.kernel.org>,
-        syzkaller-bugs <syzkaller-bugs@googlegroups.com>
-Content-Type: text/plain; charset="UTF-8"
+X-MS-Exchange-CrossTenant-Network-Message-Id: ca0ed5bb-1737-4c46-4a6d-08d6a707743e
+X-MS-Exchange-CrossTenant-originalarrivaltime: 12 Mar 2019 16:26:17.4210
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 8ae927fe-1255-47a7-a2af-5f3a069daaa2
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: MWHPR15MB1120
+X-OriginatorOrg: fb.com
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-03-12_09:,,
+ signatures=0
+X-Proofpoint-Spam-Reason: safe
+X-FB-Internal: Safe
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Mar 12, 2019 at 5:09 PM Dmitry Vyukov <dvyukov@google.com> wrote:
->
-> On Tue, Mar 12, 2019 at 1:02 PM Oliver Hartkopp <socketcan@hartkopp.net> wrote:
-> >
-> > Hi all,
-> >
-> > I'm not sure why a Kernel 4.12.0-rc2+ is used here, but I do not get any
-> > problems on the my latest 5.0.0-06622-g1fc1cd8399ab tree and I strongly
-> > assume this patch showing up in 4.12-rc6
-> >
-> > https://git.kernel.org/pub/scm/linux/kernel/git/stable/linux.git/commit?id=74b7b490886852582d986a33443c2ffa50970169
-> >
-> > fixes the problem.
->
->
-> Hi Oliver,
->
-> You can see how bisection progressed and got to 4.12.0-rc2+ in the
-> bisection log.
->
-> The commit that it come up with looks unrelated.
-> I've started collecting such cases at:
-> https://github.com/google/syzkaller/issues/1051
-> and added for this case:
->
-> =====
-> Bisected to wrong commit.
-> Root cause: broken kernel boots, bugs that happen on all tests.
-> Boot is broken for several releases with "WARNING in hsr_forward_skb",
-> this switches to a bug that happens during every test "INFO: trying to
-> register non-static key in can_notifier", which then leads to a
-> completely random commit.
-> =====
 
-Broken boots did not happen here. "WARNING in hsr_forward_skb" is the
-crash that we pursued, so it started correctly. But then diverged to
-an unrelated "INFO: trying to register non-static key in
-can_notifier".
 
-> > On 3/12/19 9:57 AM, syzbot wrote:
-> > > syzbot has bisected this bug to:
-> > >
-> > > commit ab42f35d9cb5ac49b5a2a11f940e74f58f207280
-> > > Author: Ming Lei <ming.lei@redhat.com>
-> > > Date:   Fri May 26 11:53:19 2017 +0000
-> > >
-> > >      blk-mq: merge bio into sw queue before plugging
-> > >
-> > > bisection log:  https://syzkaller.appspot.com/x/bisect.txt?x=16e68713200000
-> > > start commit:   ab42f35d blk-mq: merge bio into sw queue before plugging
-> > > git tree:       upstream
-> > > final crash:    https://syzkaller.appspot.com/x/report.txt?x=15e68713200000
-> > > console output: https://syzkaller.appspot.com/x/log.txt?x=11e68713200000
-> > > kernel config:  https://syzkaller.appspot.com/x/.config?x=5e7dc790609552d7
-> > > dashboard link:
-> > > https://syzkaller.appspot.com/bug?extid=fdce8f2a8903f3ba0e6b
-> > > userspace arch: amd64
-> > > syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=15f6d1fd400000
-> > > C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=17290fdd400000
-> > >
-> > > Reported-by: syzbot+fdce8f2a8903f3ba0e6b@syzkaller.appspotmail.com
-> > > Fixes: ab42f35d ("blk-mq: merge bio into sw queue before plugging")
-> >
-> > --
-> > You received this message because you are subscribed to the Google Groups "syzkaller-bugs" group.
-> > To unsubscribe from this group and stop receiving emails from it, send an email to syzkaller-bugs+unsubscribe@googlegroups.com.
-> > To view this discussion on the web visit https://groups.google.com/d/msgid/syzkaller-bugs/7dd5ffca-803d-9d5e-7fa4-f9eed2249d26%40hartkopp.net.
-> > For more options, visit https://groups.google.com/d/optout.
+> On Mar 12, 2019, at 8:16 AM, Arnaldo Carvalho de Melo <arnaldo.melo@gmail=
+.com> wrote:
+>=20
+> Em Tue, Mar 12, 2019 at 12:14:05PM -0300, Arnaldo Carvalho de Melo escrev=
+eu:
+>> Em Mon, Mar 11, 2019 at 10:30:45PM -0700, Song Liu escreveu:
+>>> +static void print_bpf_btf(struct feat_fd *ff, FILE *fp)
+>>> +{
+>>> +	struct perf_env *env =3D &ff->ph->env;
+>>> +	struct rb_root *root;
+>>> +	struct rb_node *next;
+>>> +
+>>> +	down_read(&env->bpf_progs.lock);
+>>> +
+>>> +	root =3D &env->bpf_progs.btfs;
+>>> +	next =3D rb_first(root);
+>>> +
+>>> +	while (next) {
+>>> +		struct btf_node *node;
+>>> +
+>>> +		node =3D rb_entry(next, struct btf_node, rb_node);
+>>> +		next =3D rb_next(&node->rb_node);
+>>> +		fprintf(fp, "# btf info of id %u\n", node->id);
+>>=20
+>> So, I couldn't get this to work right now, and I have BPF programs that
+>> are loaded and that have BTF info:
+>>=20
+>> [root@quaco ~]# bpftool prog | tail -6
+>> 208: tracepoint  name sys_enter  tag 819967866022f1e1  gpl
+>> 	loaded_at 2019-03-12T11:16:55-0300  uid 0
+>> 	xlated 528B  jited 381B  memlock 4096B  map_ids 107,106,105
+>> 209: tracepoint  name sys_exit  tag c1bd85c092d6e4aa  gpl
+>> 	loaded_at 2019-03-12T11:16:55-0300  uid 0
+>> 	xlated 256B  jited 191B  memlock 4096B  map_ids 107,106
+>> [root@quaco ~]#
+>>=20
+>>=20
+>> [root@quaco ~]# bpftool map  | tail -6
+>> 105: perf_event_array  name __augmented_sys  flags 0x0
+>> 	key 4B  value 4B  max_entries 8  memlock 4096B
+>> 106: array  name syscalls  flags 0x0
+>> 	key 4B  value 1B  max_entries 512  memlock 8192B
+>> 107: hash  name pids_filtered  flags 0x0
+>> 	key 4B  value 1B  max_entries 64  memlock 8192B
+>> [root@quaco ~]#
+>>=20
+>> [root@quaco ~]# bpftool map dump id 107
+>> [{
+>>        "key": 8104,
+>>        "value": true
+>>    },{
+>>        "key": 18868,
+>>        "value": true
+>>    }
+>> ]
+>> [root@quaco ~]# ps ax|egrep 8104\|18868 | grep -v grep
+>> 8104 pts/8    S+     0:07 trace -e recvmmsg
+>> 18868 ?        Ssl   21:21 /usr/libexec/gnome-terminal-server
+>> [root@quaco ~]#
+>>=20
+>> So I was expecting to see those btf lines there :-\
+>>=20
+>> All the patches up to this point I have already merged and tested in my
+>> local branch.
+>>=20
+>> Will continue right after lunch to try to figure out why this BTF info
+>> isn't landing on this new header feature...
+>=20
+> I've pushed what I have to my git.kernel.org repo, branch
+> tmp.perf/bpf-annotate.
+>=20
+> git://git.kernel.org/pub/scm/linux/kernel/git/acme/linux.git tmp.perf/bpf=
+-annotate
+>=20
+> The HEAD is this cset.
+>=20
+> - Arnaldo
+
+I am not sure I fully understand the problem here.=20
+
+I can get BTF information from this version:
+
+# ~/perf report --header-only  | grep btf
+# btf info of id 504
+
+Thanks,
+Song
+
