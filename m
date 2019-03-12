@@ -2,90 +2,171 @@ Return-Path: <SRS0=J4ZE=RP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C576DC43381
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 08:58:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C042AC43381
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 08:59:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9B1C3214D8
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 08:58:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 852B52147C
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 08:59:25 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=baylibre-com.20150623.gappssmtp.com header.i=@baylibre-com.20150623.gappssmtp.com header.b="UNaaNssR"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727629AbfCLI6l (ORCPT
+        id S1727642AbfCLI7Y (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 12 Mar 2019 04:58:41 -0400
-Received: from outbound.smtp.vt.edu ([198.82.183.121]:54054 "EHLO
-        omr1.cc.vt.edu" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1726638AbfCLI6k (ORCPT
+        Tue, 12 Mar 2019 04:59:24 -0400
+Received: from mail-wm1-f66.google.com ([209.85.128.66]:50829 "EHLO
+        mail-wm1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726638AbfCLI7X (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 12 Mar 2019 04:58:40 -0400
-Received: from mr4.cc.vt.edu (mail.ipv6.vt.edu [IPv6:2607:b400:92:9:0:9d:8fcb:4116])
-        by omr1.cc.vt.edu (8.14.4/8.14.4) with ESMTP id x2C8wd7M011032
-        for <linux-kernel@vger.kernel.org>; Tue, 12 Mar 2019 04:58:39 -0400
-Received: from mail-qt1-f197.google.com (mail-qt1-f197.google.com [209.85.160.197])
-        by mr4.cc.vt.edu (8.14.7/8.14.7) with ESMTP id x2C8wYlN012145
-        for <linux-kernel@vger.kernel.org>; Tue, 12 Mar 2019 04:58:39 -0400
-Received: by mail-qt1-f197.google.com with SMTP id p5so1639300qtp.3
-        for <linux-kernel@vger.kernel.org>; Tue, 12 Mar 2019 01:58:39 -0700 (PDT)
+        Tue, 12 Mar 2019 04:59:23 -0400
+Received: by mail-wm1-f66.google.com with SMTP id x7so1732395wmj.0
+        for <linux-kernel@vger.kernel.org>; Tue, 12 Mar 2019 01:59:22 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=baylibre-com.20150623.gappssmtp.com; s=20150623;
+        h=subject:to:cc:references:from:openpgp:autocrypt:organization
+         :message-id:date:user-agent:mime-version:in-reply-to
+         :content-language:content-transfer-encoding;
+        bh=6bgr61PphMixnr3AhXO8AbHOrIMyq+Q6xeKT7Qg3H7c=;
+        b=UNaaNssRIUXldlMh9cGnWmHRl9kv7gVHkTjAdUTbT7iuhhugNq2c4BemILWHhW6KpA
+         Ii9eNiW8wlQaGKPUL5zW7GYRkZM2C2rw0BpowefUI4XVAOYjdYTZbwSyPNg4LTo806iN
+         eCBn1iAizoXDwUNxpW7VuuCdnYSsAHTMJAzh4t/i7FyV809VPcB9m5PgAs7pR8fq95ZX
+         olcNh0i1IHoucpveS2q0a1eamujaalcp/5i19bj9uQt3V5sknaVSd6N9ampgYwqNYdnf
+         seWkAeBMIlW53/HbTzYJG7Z5MV61wnvzN+pNAh/7EjzHuaqHFNSeYfp5VddRM/3Zqjpn
+         g7VA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:from:to:cc:subject:mime-version:date
-         :message-id;
-        bh=0apvxecUW+k4NfI2y5dbyFeFJ6xBK7zfPjD0AugeSx4=;
-        b=I5E4e5F9Rj4JnXZnF6Vi7r9NKnRd6ZJRtm6iBFxL3zhphgYqAArUsAootqnlwz/5mS
-         CFgHnMFWR2Ph5SchciP5gP5YNhSI8ZR8kUvk1rf26YxL9/epovOKxUZ7458Cjg0/EQt3
-         yiw81VTHcUKd1DE2RWXyQuUegJeJNz0lpFoqkn9WpiafvqQ4ryjBqrb+BpUg4MCHXOGT
-         yKSYIlVf3Bo1A+WMmHFDE6IRy3huXP7pLL0rlzs24w4JDjswlh313Ko7Ae2g5dSfZgSG
-         wbvUajZTwnt64M0Pokx0pXrONb4txPdMPYF8eaAGJ3+f9pJMwiTYicQmdDzn+FHzFljX
-         ws6A==
-X-Gm-Message-State: APjAAAVBUkw4p6iuS+qjjyZQMlxoQUfK9oDDreKgpUbXZQKGRan+I2jW
-        gtBOyCiR5YXMcty19FIUeBQJIhpfwd3vRS2VJgPBUuedFFk8OlsVGpPlL9arErSAxUjclzyFVOA
-        dqk+ZglX8RrsU68F1dBRWXoxWUrI8kKtcCcY=
-X-Received: by 2002:aed:20e3:: with SMTP id 90mr6172507qtb.357.1552381114420;
-        Tue, 12 Mar 2019 01:58:34 -0700 (PDT)
-X-Google-Smtp-Source: APXvYqyiop5OLkdTtE1s1kQID3VqWNy78e1iEXj9N2YQ/LiTjIPF/JUcholhlwpagtvHs7Mw+ziBqA==
-X-Received: by 2002:aed:20e3:: with SMTP id 90mr6172496qtb.357.1552381114282;
-        Tue, 12 Mar 2019 01:58:34 -0700 (PDT)
-Received: from turing-police ([2601:5c0:c001:4341::3b7])
-        by smtp.gmail.com with ESMTPSA id h27sm1709156qkk.92.2019.03.12.01.58.33
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Tue, 12 Mar 2019 01:58:33 -0700 (PDT)
-From:   "Valdis Kl=?utf-8?Q?=c4=93?=tnieks" <valdis.kletnieks@vt.edu>
-X-Google-Original-From: "Valdis Kl=?utf-8?Q?=c4=93?=tnieks" <Valdis.Kletnieks@vt.edu>
-X-Mailer: exmh version 2.9.0 11/07/2018 with nmh-1.7+dev
-To:     Steven Rostedt <rostedt@goodmis.org>,
-        Ingo Molnar <mingo@redhat.com>
-cc:     linux-kernel@vger.kernel.org
-Subject: [PATCH] kernel/trace/trace_kprobe.c - fix comment format
-Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Date:   Tue, 12 Mar 2019 04:58:32 -0400
-Message-ID: <2812.1552381112@turing-police>
+        h=x-gm-message-state:subject:to:cc:references:from:openpgp:autocrypt
+         :organization:message-id:date:user-agent:mime-version:in-reply-to
+         :content-language:content-transfer-encoding;
+        bh=6bgr61PphMixnr3AhXO8AbHOrIMyq+Q6xeKT7Qg3H7c=;
+        b=gJNDk9dcKGDKMsTiyLqqM6/sptuq8z4d3x7ToKt8nlMXLkzU/hgnjDdNl6x8n3G6iT
+         q139ThuiPNGuSrdxN400eNNxV26cyF0CXnIUoUVx2u5LyotEQjdzQH4Spkc2leopz6Um
+         0jXOTlKn3UeALBEts9kUc8r2REJmDB1o7SO6UCiZtJmMhMF9vRiFIOYFvKEoaZS4G9r1
+         sUmVdDvrqnY4MBcOL6vkOfuevh92nr0CaF7xKS/bKjjO039nVgtYs9M6HkD+7tJBkvnw
+         oIwdT0HrfDDTKjgsszknfce3vG1nanDD/rtOkwAcJ0W1IToAvseIu5yru0TkETfPCR4g
+         Ysig==
+X-Gm-Message-State: APjAAAWLv+PsXJVhSAAwTfnMTddyX5Iq8sPjYdYWDSYfPDmoGh3j84nu
+        TS03snxEAWsICJ6Kz+gGIJ5QVA==
+X-Google-Smtp-Source: APXvYqyj6gMnO9kkmK8yl69UVwhWeIqk7NRzmLq27usqaGa34Y90gT4GnDo++GS/PoCtoPREHPgosQ==
+X-Received: by 2002:a1c:7c08:: with SMTP id x8mr1630947wmc.8.1552381161079;
+        Tue, 12 Mar 2019 01:59:21 -0700 (PDT)
+Received: from [10.1.2.12] (lmontsouris-657-1-212-31.w90-63.abo.wanadoo.fr. [90.63.244.31])
+        by smtp.gmail.com with ESMTPSA id d2sm9050575wrq.94.2019.03.12.01.59.20
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Tue, 12 Mar 2019 01:59:20 -0700 (PDT)
+Subject: Re: [PATCH] arm64: dts: meson-gxl-s905d-phicomm-n1: add status LED
+To:     Chuanhong Guo <gch981213@gmail.com>, devicetree@vger.kernel.org
+Cc:     Mark Rutland <mark.rutland@arm.com>,
+        Kevin Hilman <khilman@baylibre.com>,
+        linux-kernel@vger.kernel.org, Rob Herring <robh+dt@kernel.org>,
+        linux-amlogic@lists.infradead.org
+References: <20190312083326.18029-1-gch981213@gmail.com>
+From:   Neil Armstrong <narmstrong@baylibre.com>
+Openpgp: preference=signencrypt
+Autocrypt: addr=narmstrong@baylibre.com; prefer-encrypt=mutual; keydata=
+ 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
+ ZaTUOEkgIor5losDrePdPgE=
+Organization: Baylibre
+Message-ID: <5c580f1b-1038-2c34-7047-e504eb4ac323@baylibre.com>
+Date:   Tue, 12 Mar 2019 09:59:20 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.5.1
+MIME-Version: 1.0
+In-Reply-To: <20190312083326.18029-1-gch981213@gmail.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Hi Chuanhong,
 
-  CC      kernel/trace/trace_kprobe.o
-kernel/trace/trace_kprobe.c:41: warning: cannot understand function prototype: 'struct trace_kprobe '
+On 12/03/2019 09:33, Chuanhong Guo wrote:
+> There is a white LED on the front panel behind the logo and the
+> manufacturer uses that LED to indicate network and USB drive status.
+> 
+> Signed-off-by: Chuanhong Guo <gch981213@gmail.com>
+> ---
+>  .../boot/dts/amlogic/meson-gxl-s905d-phicomm-n1.dts    | 10 ++++++++++
+>  1 file changed, 10 insertions(+)
+> 
+> diff --git a/arch/arm64/boot/dts/amlogic/meson-gxl-s905d-phicomm-n1.dts b/arch/arm64/boot/dts/amlogic/meson-gxl-s905d-phicomm-n1.dts
+> index 9a8a8a7e4b53..b5667f1fb2c8 100644
+> --- a/arch/arm64/boot/dts/amlogic/meson-gxl-s905d-phicomm-n1.dts
+> +++ b/arch/arm64/boot/dts/amlogic/meson-gxl-s905d-phicomm-n1.dts
+> @@ -14,6 +14,16 @@
+>  	cvbs-connector {
+>  		status = "disabled";
+>  	};
+> +
+> +	leds {
+> +		compatible = "gpio-leds";
+> +
+> +		status {
+> +			label = "n1:white:status";
+> +			gpios = <&gpio_ao GPIOAO_9 GPIO_ACTIVE_HIGH>;
+> +			default-state = "on";
+> +		};
+> +	};
+>  };
+>  
+>  &cvbs_vdac_port {
+> 
 
-The real problem is that a comment looked like kerneldoc when it shouldn't be...
+Reviewed-by: Neil Armstrong <narmstrong@baylibre.com>
 
-Signed-off-by: Valdis Kletnieks <valdis.kletnieks@vt.edu>
+BTW, do you know if it's possible to have a sample of the Phicomm N1
+in order to be added in kernelci ?
 
-diff --git a/kernel/trace/trace_kprobe.c b/kernel/trace/trace_kprobe.c
-index 9eaf07f99212..c825c591553a 100644
---- a/kernel/trace/trace_kprobe.c
-+++ b/kernel/trace/trace_kprobe.c
-@@ -35,7 +35,7 @@ static struct dyn_event_operations trace_kprobe_ops = {
- 	.match = trace_kprobe_match,
- };
- 
--/**
-+/*
-  * Kprobe event core functions
-  */
- struct trace_kprobe {
-
+Neil
