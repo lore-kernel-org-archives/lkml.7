@@ -2,128 +2,191 @@ Return-Path: <SRS0=J4ZE=RP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 796F1C43381
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 06:33:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 316CFC43381
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 06:34:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 496A0214AE
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 06:33:13 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=umn.edu header.i=@umn.edu header.b="jWGw53lZ"
+	by mail.kernel.org (Postfix) with ESMTP id 07A39214AE
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 06:34:46 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727106AbfCLGdL (ORCPT
+        id S1727136AbfCLGeo (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 12 Mar 2019 02:33:11 -0400
-Received: from mta-p6.oit.umn.edu ([134.84.196.206]:53570 "EHLO
-        mta-p6.oit.umn.edu" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726444AbfCLGdL (ORCPT
+        Tue, 12 Mar 2019 02:34:44 -0400
+Received: from bhuna.collabora.co.uk ([46.235.227.227]:57476 "EHLO
+        bhuna.collabora.co.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726263AbfCLGeo (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 12 Mar 2019 02:33:11 -0400
-Received: from localhost (unknown [127.0.0.1])
-        by mta-p6.oit.umn.edu (Postfix) with ESMTP id 7E1B2B35
-        for <linux-kernel@vger.kernel.org>; Tue, 12 Mar 2019 06:33:09 +0000 (UTC)
-X-Virus-Scanned: amavisd-new at umn.edu
-Received: from mta-p6.oit.umn.edu ([127.0.0.1])
-        by localhost (mta-p6.oit.umn.edu [127.0.0.1]) (amavisd-new, port 10024)
-        with ESMTP id qqg4UlefxG9M for <linux-kernel@vger.kernel.org>;
-        Tue, 12 Mar 2019 01:33:09 -0500 (CDT)
-Received: from mail-io1-f72.google.com (mail-io1-f72.google.com [209.85.166.72])
-        (using TLSv1.2 with cipher AES128-GCM-SHA256 (128/128 bits))
+        Tue, 12 Mar 2019 02:34:44 -0400
+Received: from localhost (unknown [IPv6:2a01:e0a:2c:6930:b93f:9fae:b276:a89a])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mta-p6.oit.umn.edu (Postfix) with ESMTPS id 4A139B32
-        for <linux-kernel@vger.kernel.org>; Tue, 12 Mar 2019 01:33:09 -0500 (CDT)
-Received: by mail-io1-f72.google.com with SMTP id k24so1042866ioa.18
-        for <linux-kernel@vger.kernel.org>; Mon, 11 Mar 2019 23:33:09 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=umn.edu; s=google;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references;
-        bh=Ha9PW7pIPJPn/3E35z3kTO9/Th37iu1RWxZGXsOeCtg=;
-        b=jWGw53lZcMw7+b3WK4goiihsxr7OqN+Auv/UvXG/K13EIP5f+cOiWxsUEq9odYb4M2
-         XvOEGEZToOxyZhhTCIiHEJkYRNPDizZEIw6fu7SN4ZcGB3NeDUtWm4wqo0hpeGIKKyPb
-         YRxDp1zrrnS2B3eFlYq5RKun/Ijmhm9i0AFo5E8zUTrlJSKDgMs+lSqoAvBqBU/Xh0vH
-         IzSD2DlaoZZ2diMf1Cyca/zr0ryO3CBNuoUEuz9X+Mk2QUs5d/vhJPCV3u4WBj0AvMr3
-         CigBfr54gBncNW0yhoTirEKoHvZlyy5ZGFe6MB1ETmam2r3HUvPfGH1twc+iZqN9M7k8
-         bSww==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references;
-        bh=Ha9PW7pIPJPn/3E35z3kTO9/Th37iu1RWxZGXsOeCtg=;
-        b=ZKKX5BXMAQJEN7Px0QBFbJPUuRa9c0H0aU7Qx1QJ3eOMZxuiu0TXb8edA2zr7vNtCX
-         KX4Lg18hVGrTkxbzJUY11wEbBF8/q26CxUGdQoiYdRmTPFbxIW/4Rh6plxOzq7tJ0AXs
-         FPipI7Xnr1VFylojM4svniQ9cwJksC9cjDs8J8K+Cr6sSn0GlRNsxWOeUp8KHN0DkNXK
-         SCAePJmbuWAihzTf3q/lA5AYwnwEXzLIQgIqcwQWuA4Ly2IvgdkbLQCIGZkLfABIejzB
-         JzuDBJ0ifasXXv1U2OvqmRVH2shp2Lhq8eZuM88hcTTXzoyc479sLud8dXxJaIYFWm6E
-         ouRA==
-X-Gm-Message-State: APjAAAVlDfC02/vY4lsAiqD16ZyUA/9bIFQk3Hf1jwp5GSQJcnxoySz2
-        TTxhYsjrHQSCOl5KZgh2VkwgamtYCX5478XAEYV5npTDWhM50IZ9ELK31/LGJ/5sSuaQc6tOcQx
-        pRovRar/pVBSYdP76DK4fpbMpL+hq
-X-Received: by 2002:a6b:ea19:: with SMTP id m25mr9689464ioc.291.1552372388768;
-        Mon, 11 Mar 2019 23:33:08 -0700 (PDT)
-X-Google-Smtp-Source: APXvYqwJKL43alLWjqG0b6skYN7rnA1g31yJYG8Wi9Bu3Xc6MwUOEVw6D/gxFoQ0Q+dN5gP/rfYZEQ==
-X-Received: by 2002:a6b:ea19:: with SMTP id m25mr9689450ioc.291.1552372388470;
-        Mon, 11 Mar 2019 23:33:08 -0700 (PDT)
-Received: from bee.dtc.umn.edu (cs-bee-u.cs.umn.edu. [128.101.106.63])
-        by smtp.gmail.com with ESMTPSA id p18sm897264itp.10.2019.03.11.23.33.07
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Mon, 11 Mar 2019 23:33:07 -0700 (PDT)
-From:   Kangjie Lu <kjlu@umn.edu>
-To:     kjlu@umn.edu
-Cc:     pakki001@umn.edu,
-        Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        Vladimir Zapolskiy <vladimir_zapolskiy@mentor.com>,
-        Geert Uytterhoeven <geert+renesas@glider.be>,
-        Chris Brandt <chris.brandt@renesas.com>,
-        netdev@vger.kernel.org, linux-renesas-soc@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH v2] net: sh_eth: fix a missing check of of_get_phy_mode
-Date:   Tue, 12 Mar 2019 01:30:24 -0500
-Message-Id: <20190312063026.15083-1-kjlu@umn.edu>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <c205461c-edb1-c9c1-a928-8068374aef2b@cogentembedded.com>
-References: <c205461c-edb1-c9c1-a928-8068374aef2b@cogentembedded.com>
+        (Authenticated sender: bbrezillon)
+        by bhuna.collabora.co.uk (Postfix) with ESMTPSA id B4AE627B896;
+        Tue, 12 Mar 2019 06:34:41 +0000 (GMT)
+Date:   Tue, 12 Mar 2019 07:34:38 +0100
+From:   Boris Brezillon <boris.brezillon@collabora.com>
+To:     Helen Koike <helen.koike@collabora.com>
+Cc:     dri-devel@lists.freedesktop.org, nicholas.kazlauskas@amd.com,
+        andrey.grodzovsky@amd.com, daniel.vetter@ffwll.ch,
+        linux-kernel@vger.kernel.org, Tomasz Figa <tfiga@chromium.org>,
+        David Airlie <airlied@linux.ie>,
+        Sean Paul <seanpaul@google.com>, kernel@collabora.com,
+        harry.wentland@amd.com,
+        =?UTF-8?B?U3TDqXBoYW5l?= Marchesin <marcheu@google.com>,
+        Sandy Huang <hjc@rock-chips.com>,
+        linux-rockchip@lists.infradead.org,
+        Heiko =?UTF-8?B?U3TDvGJuZXI=?= <heiko@sntech.de>,
+        linux-arm-kernel@lists.infradead.org,
+        Daniel Vetter <daniel@ffwll.ch>
+Subject: Re: [PATCH v2 1/5] drm/rockchip: fix fb references in async update
+Message-ID: <20190312073438.05ad8173@collabora.com>
+In-Reply-To: <20190312022204.2775-2-helen.koike@collabora.com>
+References: <20190312022204.2775-1-helen.koike@collabora.com>
+        <20190312022204.2775-2-helen.koike@collabora.com>
+Organization: Collabora
+X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; x86_64-redhat-linux-gnu)
+MIME-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-of_get_phy_mode may fail and return a negative error code;
-the fix checks the return value of of_get_phy_mode and
-returns NULL of it fails.
+On Mon, 11 Mar 2019 23:21:59 -0300
+Helen Koike <helen.koike@collabora.com> wrote:
 
-Signed-off-by: Kangjie Lu <kjlu@umn.edu>
----
- drivers/net/ethernet/renesas/sh_eth.c | 6 ++++--
- 1 file changed, 4 insertions(+), 2 deletions(-)
+> In the case of async update, modifications are done in place, i.e. in the
+> current plane state, so the new_state is prepared and the new_state is
+> cleanup up (instead of the old_state, diferrently on what happen in a
 
-diff --git a/drivers/net/ethernet/renesas/sh_eth.c b/drivers/net/ethernet/renesas/sh_eth.c
-index 239eeafe1b2d..e33af371b169 100644
---- a/drivers/net/ethernet/renesas/sh_eth.c
-+++ b/drivers/net/ethernet/renesas/sh_eth.c
-@@ -3181,14 +3181,16 @@ static struct sh_eth_plat_data *sh_eth_parse_dt(struct device *dev)
- 	struct device_node *np = dev->of_node;
- 	struct sh_eth_plat_data *pdata;
- 	const char *mac_addr;
-+	int ret;
- 
- 	pdata = devm_kzalloc(dev, sizeof(*pdata), GFP_KERNEL);
- 	if (!pdata)
- 		return NULL;
- 
--	pdata->phy_interface = of_get_phy_mode(np);
--	if (pdata->phy_interface < 0)
-+	ret = of_get_phy_mode(np);
-+	if (ret < 0)
- 		return NULL;
-+	pdata->phy_interface = ret;
- 
- 	mac_addr = of_get_mac_address(np);
- 	if (mac_addr)
--- 
-2.17.1
+  ^ cleaned up				^ differently (but maybe
+"unlike what happens" is more appropriate here).
+
+> normal sync update).
+> To cleanup the old_fb properly, it needs to be placed in the new_state
+> in the end of async_update, so cleanup call will unreference the old_fb
+> correctly.
+> 
+> Also, the previous code had a:
+> 
+> 	plane_state = plane->funcs->atomic_duplicate_state(plane);
+> 	...
+> 	swap(plane_state, plane->state);
+> 
+> 	if (plane->state->fb && plane->state->fb != new_state->fb) {
+> 	...
+> 	}
+> 
+> Which was wrong, as the fb were just assigned to be equal, so this if
+> statement nevers evaluates to true.
+> 
+> Another details is that the function drm_crtc_vblank_get() can only be
+> called when vop->is_enabled is true, otherwise it has no effect and
+> trows a WARN_ON().
+> 
+> Calling drm_atomic_set_fb_for_plane() (which get a referent of the new
+> fb and pus the old fb) is not required, as it is taken care by
+> drm_mode_cursor_universal() when calling
+> drm_atomic_helper_update_plane().
+> 
+> Signed-off-by: Helen Koike <helen.koike@collabora.com>
+> 
+> ---
+> Hello,
+> 
+> I tested on the rockchip ficus v1.1 using igt plane_cursor_legacy and
+> kms_cursor_legacy and I didn't see any regressions.
+> 
+> Changes in v2: None
+> 
+>  drivers/gpu/drm/rockchip/rockchip_drm_vop.c | 42 ++++++++++++---------
+>  1 file changed, 24 insertions(+), 18 deletions(-)
+> 
+> diff --git a/drivers/gpu/drm/rockchip/rockchip_drm_vop.c b/drivers/gpu/drm/rockchip/rockchip_drm_vop.c
+> index c7d4c6073ea5..a1ee8c156a7b 100644
+> --- a/drivers/gpu/drm/rockchip/rockchip_drm_vop.c
+> +++ b/drivers/gpu/drm/rockchip/rockchip_drm_vop.c
+> @@ -912,30 +912,31 @@ static void vop_plane_atomic_async_update(struct drm_plane *plane,
+>  					  struct drm_plane_state *new_state)
+>  {
+>  	struct vop *vop = to_vop(plane->state->crtc);
+> -	struct drm_plane_state *plane_state;
+> +	struct drm_framebuffer *old_fb = plane->state->fb;
+>  
+> -	plane_state = plane->funcs->atomic_duplicate_state(plane);
+> -	plane_state->crtc_x = new_state->crtc_x;
+> -	plane_state->crtc_y = new_state->crtc_y;
+> -	plane_state->crtc_h = new_state->crtc_h;
+> -	plane_state->crtc_w = new_state->crtc_w;
+> -	plane_state->src_x = new_state->src_x;
+> -	plane_state->src_y = new_state->src_y;
+> -	plane_state->src_h = new_state->src_h;
+> -	plane_state->src_w = new_state->src_w;
+> -
+> -	if (plane_state->fb != new_state->fb)
+> -		drm_atomic_set_fb_for_plane(plane_state, new_state->fb);
+> -
+> -	swap(plane_state, plane->state);
+> -
+> -	if (plane->state->fb && plane->state->fb != new_state->fb) {
+> +	/*
+> +	 * A scanout can still be occurring, so we can't drop the reference to
+> +	 * the old framebuffer. To solve this we get a reference to old_fb and
+> +	 * set a worker to release it later.
+
+Hm, doesn't look like an async update to me if we have to wait for the
+next VBLANK to happen to get the new content on the screen. Maybe we
+should reject async updates when old_fb != new_fb in the rk
+->async_check() hook. 
+
+> +	 */
+> +	if (vop->is_enabled &&
+> +	    plane->state->fb && plane->state->fb != new_state->fb) {
+>  		drm_framebuffer_get(plane->state->fb);
+>  		WARN_ON(drm_crtc_vblank_get(plane->state->crtc) != 0);
+>  		drm_flip_work_queue(&vop->fb_unref_work, plane->state->fb);
+>  		set_bit(VOP_PENDING_FB_UNREF, &vop->pending);
+>  	}
+
+In any case, I think this should be called after
+vop_plane_atomic_update() to prevent the situation where the VBLANK
+event happens between this point and the following
+vop_plane_atomic_update() call.
+
+>  
+> +	plane->state->crtc_x = new_state->crtc_x;
+> +	plane->state->crtc_y = new_state->crtc_y;
+> +	plane->state->crtc_h = new_state->crtc_h;
+> +	plane->state->crtc_w = new_state->crtc_w;
+> +	plane->state->src_x = new_state->src_x;
+> +	plane->state->src_y = new_state->src_y;
+> +	plane->state->src_h = new_state->src_h;
+> +	plane->state->src_w = new_state->src_w;
+> +	plane->state->fb = new_state->fb;
+
+Any reason not to use swap() here and reference plane->state->fb
+instead of new_state->fb after this point?
+
+> +
+>  	if (vop->is_enabled) {
+>  		rockchip_drm_psr_inhibit_get_state(new_state->state);
+>  		vop_plane_atomic_update(plane, plane->state);
+> @@ -945,7 +946,12 @@ static void vop_plane_atomic_async_update(struct drm_plane *plane,
+>  		rockchip_drm_psr_inhibit_put_state(new_state->state);
+>  	}
+>  
+> -	plane->funcs->atomic_destroy_state(plane, plane_state);
+> +	/*
+> +	 * In async update we perform inplace modifications and release the
+> +	 * new_state. The following is required so we release the reference of
+> +	 * the old framebuffer.
+> +	 */
+> +	new_state->fb = old_fb;
+>  }
+>  
+>  static const struct drm_plane_helper_funcs plane_helper_funcs = {
 
