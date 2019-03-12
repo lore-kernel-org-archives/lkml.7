@@ -6,50 +6,50 @@ X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B5984C43381
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 09:20:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E1CAFC43381
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 09:20:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 904B6214AF
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 09:20:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B6D3B214D8
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 09:20:18 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726581AbfCLJTw (ORCPT
+        id S1726832AbfCLJUR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 12 Mar 2019 05:19:52 -0400
-Received: from mout.kundenserver.de ([212.227.126.130]:35403 "EHLO
+        Tue, 12 Mar 2019 05:20:17 -0400
+Received: from mout.kundenserver.de ([212.227.126.134]:48083 "EHLO
         mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726412AbfCLJTt (ORCPT
+        with ESMTP id S1726496AbfCLJTv (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 12 Mar 2019 05:19:49 -0400
+        Tue, 12 Mar 2019 05:19:51 -0400
 Received: from orion.localdomain ([77.4.190.91]) by mrelayeu.kundenserver.de
  (mreue012 [212.227.15.167]) with ESMTPSA (Nemesis) id
- 1McZfZ-1gVOcB2UXd-00d2ud; Tue, 12 Mar 2019 10:19:38 +0100
+ 1MPK73-1hQMzO2hW1-00PchT; Tue, 12 Mar 2019 10:19:39 +0100
 From:   "Enrico Weigelt, metux IT consult" <info@metux.net>
 To:     linux-kernel@vger.kernel.org
 Cc:     axboe@kernel.dk, hdegoede@redhat.com, b.zolnierkie@samsung.com,
         linus.walleij@linaro.org, linux-ide@vger.kernel.org,
         linux-tegra@vger.kernel.org
-Subject: [PATCH 5/9] drivers: ata: libahci_platform: use devm_platform_ioremap_resource()
-Date:   Tue, 12 Mar 2019 10:19:30 +0100
-Message-Id: <1552382374-28789-5-git-send-email-info@metux.net>
+Subject: [PATCH 9/9] drivers: ata: sata_rcar: use devm_platform_ioremap_resource()
+Date:   Tue, 12 Mar 2019 10:19:34 +0100
+Message-Id: <1552382374-28789-9-git-send-email-info@metux.net>
 X-Mailer: git-send-email 1.9.1
 In-Reply-To: <1552382374-28789-1-git-send-email-info@metux.net>
 References: <1552382374-28789-1-git-send-email-info@metux.net>
-X-Provags-ID: V03:K1:yJo80UzxFeQGn4mOEANaEv3N8XS+LV8pXxqzCyLuavfUd4pHkjn
- zSM0Bbu/1gqZ8/ykMGJVppZJRSYzUIlFrsmVsUkxyhU5fi7SCr77bh2qNymhCBnflQZMzMZ
- 2FVrcqlH7MSxertLDG0hOR+lbfR0SLsGQUpiO0Pacs8Uuo44sVvh3+NJGx5+tVpAgvXCIa5
- 2B61NpAL2UTjL8a5om2sw==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:IKHoLh2INEw=:Is4uReW/XilG8EwGXv+m8G
- YAu5sgkEdYi3gC0eh3F/x4EG7hXlhRsxHFAuavTx89cTPwNhLpvN0pjq6Fpgs14qBKNw0S/sv
- JgQz9iiVStPTwyNSPAElBRI+X1dF1o33TcEUwEM7LFppOuSpA3IWlNqvB1rJVXND2qB+0KJF+
- pdCK36gIm028XYBq9rYQ+OYnwb2W9p60TOkT5Mu74WtZmz29wPC+2KcaX1YTx7QKmd29oxziL
- ModhmtH+WfiACMdt/pHvc8sBHo5FZkdPpM9HirQj0qZHAO+xut3Zp4AD+SF3uAsCOKMW5LKwy
- QR/JnCEDy7cCFgkG+mBPxw/MpvgJ/UNHXeyJpJ/NsfeyNqkK4XluVSvZb2YjZjybToBbAeUrb
- JN6cDdRBv2zFXbfgg5QQ96zXcVcJ1T3blMHUkqJf0TyxAYFwarfIYsam++d1Yc94KYCNPcPkQ
- 13890JfuD610Q9gTAoNR7/3d/mRLtjaqLkpi6MNHHYDBSZr7saJsbFboLcETSTyZ5zWcmPunm
- adz+wM/bA8dIfrmVEbdU/A/+wNoWsO5Y0XNYdzjpIGtpMN3wW6cxLTJSDqvk+mdMhkWGIOf2c
- 5lDjPIbIwtwEuB9neD9i6i+GcaJo02sayjZRp5AlE8Rry9VmDi/vtUqKpMpa9LOxgoo2jccTq
- hCFzBQB7G0Qd4VuE4i1PusbwBYhz47mEUk2C5vyAzUcDNIFDhewDlcfRcfBcVQ1RwPJbpkM7v
- m7ijvQ3h23JQh+KCycNuL6YNFdx8j9U35c87Gw==
+X-Provags-ID: V03:K1:p6NaebDa9bnEWsbT9tRBkkg8wrRrhbn7egAQTAezJJ4gmE8aehS
+ 7gKeniFSEQ+wu+KTSqMRFokaELbxvyjVp+6r7CVocJ0aRqSO+8ozb3zS1ekBM7fKzupJB23
+ J3xhIpAyaScsQOnUaTF7pV3MIEPXC3okB//xc+MGXSukPDIOxEzmp1nvdSmNGRtD1LJJwwG
+ YVe51YHMy0D2uCAUOeBnQ==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:oVuaafSdmIE=:VptspbdO+7lrZHBHUQkIlj
+ CizZA2Pn5F5X3cbRUs+AYp7rGJOOhg1AomWm4ExHPyjThc80ejD6/h/+9D56iU2XYiJZVfc/P
+ QXEPDENHLt3mdLUIqZmOeoindDMAJ9BsBQhpObB5jFTU/nJKwIshQ6rsotsgkq6d7LK836V4q
+ b+WEAyMlJkuoQjPbVuc52DNUDMas/6ZNaKIC/IF7hAlx1CY4fUrMNOAbAEVzE0sc5eo+PEP8H
+ 2/1N+KA1KBLgqqE9WDHDINUIaydebja0spsZuTCIGfMLtsywJzObWQHt4fFD11fcn76CCAgBb
+ Ktdvjk8PI2Jkp6RNBhGWomJlSiZaE0dnjhvwfhiHha13FUSbxXFVNtzZiK0COiQs3xo/CnrpS
+ mMM6zfEkw3PkMZDbjVSLbaMC7IktfyX15l6rPe5QGBAK6+/Jw5rvYM8P/Ge2eJgiyDQfyXWOX
+ fqdCcMdnkUubSdRqoRz+bkF6wvOOTIvTxazzw0F3W4t+aqba0zobAOidShfOP7C3enXgCzdqy
+ Wc+KBKzrvxdBrMwdeTCrUU8rDfUroGdcSb1Lm3niCJwGRz0YI4JsrSeDrArN4cW3VluBaCCpN
+ VoqQ4tOgWKrPl0c565tovTYwG+JUI/ozhVz+1gwveXwvqQfb4B80MKKvQAv27SsuM1ZeaF7mp
+ 5tQGLT+x5kyJtlkMy8/GKpM2i46nIeTW29DQcJH1JsGm33Pm+VuNBGXzYRRHgB/ojn0DRspe2
+ gVsMSb5jA7mivbV7A6c4IF8rJFhSdM+sWzsxQA==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
@@ -60,23 +60,31 @@ and devm_ioremap_resource() together.
 
 Signed-off-by: Enrico Weigelt, metux IT consult <info@metux.net>
 ---
- drivers/ata/libahci_platform.c | 3 +--
- 1 file changed, 1 insertion(+), 2 deletions(-)
+ drivers/ata/sata_rcar.c | 4 +---
+ 1 file changed, 1 insertion(+), 3 deletions(-)
 
-diff --git a/drivers/ata/libahci_platform.c b/drivers/ata/libahci_platform.c
-index 81b1a33..8dc8b9a 100644
---- a/drivers/ata/libahci_platform.c
-+++ b/drivers/ata/libahci_platform.c
-@@ -409,8 +409,7 @@ struct ahci_host_priv *ahci_platform_get_resources(struct platform_device *pdev,
+diff --git a/drivers/ata/sata_rcar.c b/drivers/ata/sata_rcar.c
+index 59b2317..293cc62 100644
+--- a/drivers/ata/sata_rcar.c
++++ b/drivers/ata/sata_rcar.c
+@@ -886,7 +886,6 @@ static int sata_rcar_probe(struct platform_device *pdev)
+ 	struct device *dev = &pdev->dev;
+ 	struct ata_host *host;
+ 	struct sata_rcar_priv *priv;
+-	struct resource *mem;
+ 	int irq;
+ 	int ret = 0;
  
- 	devres_add(dev, hpriv);
+@@ -916,8 +915,7 @@ static int sata_rcar_probe(struct platform_device *pdev)
  
--	hpriv->mmio = devm_ioremap_resource(dev,
--			      platform_get_resource(pdev, IORESOURCE_MEM, 0));
-+	hpriv->mmio = devm_platform_ioremap_resource(pdev, 0);
- 	if (IS_ERR(hpriv->mmio)) {
- 		dev_err(dev, "no mmio space\n");
- 		rc = PTR_ERR(hpriv->mmio);
+ 	host->private_data = priv;
+ 
+-	mem = platform_get_resource(pdev, IORESOURCE_MEM, 0);
+-	priv->base = devm_ioremap_resource(dev, mem);
++	priv->base = devm_platform_ioremap_resource(pdev, 0);
+ 	if (IS_ERR(priv->base)) {
+ 		ret = PTR_ERR(priv->base);
+ 		goto err_pm_put;
 -- 
 1.9.1
 
