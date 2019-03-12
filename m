@@ -2,90 +2,126 @@ Return-Path: <SRS0=J4ZE=RP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_PASS,
+	USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 84CBBC43381
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 18:49:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C67E6C43381
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 18:51:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4A8D1206BA
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 18:49:13 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="M5CLgleb"
+	by mail.kernel.org (Postfix) with ESMTP id 8DAA82147C
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 18:51:01 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1552416661;
+	bh=DEqyzLHUHAyMTqMI0/4aM5ydiivX4x8vNjvsXrpZOLA=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=NrR7OUyjGvx0Zsu62WdlRB85udos7fuqhhwoCFMxUoAWtS1vFA4NVGRu0C0oiP2Eu
+	 pWimD/VgHzBUoOa3dxPSiP2lltu778K26IcAxXbCTMtXqkxgseppxev0E65IqmS+5Q
+	 ii3Za1PHkuaTckkqj4EwMC5VaA2DI321kIXW6do4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727232AbfCLStM (ORCPT
+        id S1727152AbfCLSvA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 12 Mar 2019 14:49:12 -0400
-Received: from mail-wr1-f68.google.com ([209.85.221.68]:41307 "EHLO
-        mail-wr1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725894AbfCLStK (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 12 Mar 2019 14:49:10 -0400
-Received: by mail-wr1-f68.google.com with SMTP id p1so3870363wrs.8;
-        Tue, 12 Mar 2019 11:49:09 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:in-reply-to:references:from:date:message-id:subject:to
-         :cc;
-        bh=NA/EOJELzXKnvvWlFYT+E/rD0WQrVgx/MZwKV0NqSkA=;
-        b=M5CLglebF0mieCp7oZYm9x+qH+iFgZN7A5mTgNrqlTfwxjZx2wn/ffsk55SUy+ha2P
-         ROJJ6KYhdTd9U9hFMih63WUiKhOpfcFVYp1InKvYAy5Zv1Khv5sKZwyQTRBszJU9UZq6
-         K+6xODLsEZ/8iNhyagyPNiWF8g9PJWL0NucYmVJjgAePii1WaAl3pTR5bPQATstI0Kaq
-         zORW3pihZJw9wNith6oarLNOH3NATrTeWd6VikVAHgjesny6xST+zM1Ag7Zuab17NFZz
-         i+7xX2Kjkdypv0hP8ZznoMIkxB6ZNoSfySSxv9GOlF7IA3A/KlS9O2JUkNCsbQhtv9cF
-         34FA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:in-reply-to:references:from:date
-         :message-id:subject:to:cc;
-        bh=NA/EOJELzXKnvvWlFYT+E/rD0WQrVgx/MZwKV0NqSkA=;
-        b=Tyd5h+TbGyveKN+CkUdW4dfMH5syX5zVofRh6uJWtVETsXy1UqxA+G6yOltDUkBnnI
-         C8EW9LOlivPQMww1YlK99hKrsRTJVZOrKbn+G6Y+oaVNlVQE2qQrUeBdHfW9qC/r0YaJ
-         jtfmrHvDSJIBKw/CgKES55aocQfCxDL+UcwIeh3hEoF9+a1ZHewh/MOW+3pCxibnwRQ4
-         WukCw541qCj3M7mr83cdDPYsaQClnOHoLBx1ALPTLxxyB6MGksaWPlR2MX1KDMlzp2Uz
-         yJZNP1KWAV/vU1ldcnUohrAGnB7uIGGKy9oWxrAY4tY6GeqPRJdm0KtprcUGKyO7efZC
-         sEEQ==
-X-Gm-Message-State: APjAAAUE0XHYMOOTGX1fQN4pLi3Z6DRjOPGIebul+fE2TiRYM6QAdtuv
-        CqXl9+dwEeQ2WZQUb2C/XXJGdmxWYO/a84fIfyY=
-X-Google-Smtp-Source: APXvYqywgFg9Im8VjS2IbnAntyqrMmCVGCVsvAjqvVkUQuBllv2q2/4iXn/je7e3EY/aaHh4/qQBb+ws8TPrM/FcmG0=
-X-Received: by 2002:adf:ba12:: with SMTP id o18mr26621630wrg.326.1552416548559;
- Tue, 12 Mar 2019 11:49:08 -0700 (PDT)
+        Tue, 12 Mar 2019 14:51:00 -0400
+Received: from mail.kernel.org ([198.145.29.99]:40244 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727041AbfCLSu7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 12 Mar 2019 14:50:59 -0400
+Received: from localhost (unknown [104.132.1.80])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id AF376206BA;
+        Tue, 12 Mar 2019 18:50:58 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1552416658;
+        bh=DEqyzLHUHAyMTqMI0/4aM5ydiivX4x8vNjvsXrpZOLA=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=Sfn/u6VuUrd87OGYfaR05JJtVFKZfRl+WG6yqtn+TEp2n8NA8nFWLZnxFosLv876k
+         A8gDdom8awK4gN88W8UTstHzi0ReON/Ud4aEfojuts0L4P5zOKPuDsldNTi/QYpVk4
+         4OJPeVMl079ML8JJeChBYy6PVPmFFzI0Idsb3W70=
+Date:   Tue, 12 Mar 2019 11:50:57 -0700
+From:   Jaegeuk Kim <jaegeuk@kernel.org>
+To:     Chao Yu <yuchao0@huawei.com>
+Cc:     Chao Yu <chao@kernel.org>, linux-f2fs-devel@lists.sourceforge.net,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2] f2fs: fix to check inline_xattr_size boundary
+ correctly
+Message-ID: <20190312185057.GB45421@jaegeuk-macbookpro.roam.corp.google.com>
+References: <20190214160825.4973-1-chao@kernel.org>
+ <82ef0ff8-452c-1894-6776-41c70ad7654b@huawei.com>
 MIME-Version: 1.0
-Received: by 2002:a7b:c8cd:0:0:0:0:0 with HTTP; Tue, 12 Mar 2019 11:49:08
- -0700 (PDT)
-In-Reply-To: <20190306224113.24853-2-jbx6244@gmail.com>
-References: <20190306224113.24853-1-jbx6244@gmail.com> <20190306224113.24853-2-jbx6244@gmail.com>
-From:   Johan Jonker <jbx6244@gmail.com>
-Date:   Tue, 12 Mar 2019 19:49:08 +0100
-Message-ID: <CA+z=w3XtC-_rJsE5oYKzQdiXteHyCYM2ya1Q+unRO2UBDz9BHw@mail.gmail.com>
-Subject: Re: [PATCH v4 1/4] drm: rockchip: introduce rk3066 hdmi
-To:     heiko@sntech.de
-Cc:     hjc@rock-chips.com, airlied@linux.ie, daniel@ffwll.ch,
-        robh+dt@kernel.org, mark.rutland@arm.com,
-        dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org,
-        linux-rockchip@lists.infradead.org, linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <82ef0ff8-452c-1894-6776-41c70ad7654b@huawei.com>
+User-Agent: Mutt/1.8.2 (2017-04-18)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi,
+On 03/04, Chao Yu wrote:
+> Hi Jaegeuk,
+> 
+> On 2019/2/15 0:08, Chao Yu wrote:
+> > ---
+> > v2:
+> > - fix lower bound check, inline xattr size should be larger than
+> > xattr_header's size at least.
+> 
+> ...
+> 
+> > +		if (F2FS_OPTION(sbi).inline_xattr_size <
+> > +			sizeof(struct f2fs_xattr_header) / sizeof(__le32)
+> 
+> No sure we should set this low bound as above... now I guess original
+> non-zero check is enough.
+> 
+> How do you think of setting inline_xattr_size range as
+> (0, MAX_INLINE_XATTR_SIZE]?
 
-Would like to add some "Tested-by:" tags.
-Is Rockchip or someone with RK3066 hardware able to test this patch
-with a HDMI TV or DVI monitor and give a report?
+How about this?
 
-Power domain doesn't seem to turn off the vop and hdmi in v5.0-rc8.
-The bug is due to a patch revert earlier this year.
-To shutdown MK808 one can continue to use the patch at the link below until this
-issue is fixed by them.
+---
+ fs/f2fs/super.c | 17 +++++++++++------
+ 1 file changed, 11 insertions(+), 6 deletions(-)
 
-drm/rockchip: shutdown drm subsystem on shutdown
-https://patchwork.kernel.org/patch/10556151/
+diff --git a/fs/f2fs/super.c b/fs/f2fs/super.c
+index 42eb5c86330a..96302a428fdc 100644
+--- a/fs/f2fs/super.c
++++ b/fs/f2fs/super.c
+@@ -821,6 +821,8 @@ static int parse_options(struct super_block *sb, char *options)
+ 	}
+ 
+ 	if (test_opt(sbi, INLINE_XATTR_SIZE)) {
++		int min_size, max_size;
++
+ 		if (!f2fs_sb_has_extra_attr(sbi) ||
+ 			!f2fs_sb_has_flexible_inline_xattr(sbi)) {
+ 			f2fs_msg(sb, KERN_ERR,
+@@ -834,15 +836,18 @@ static int parse_options(struct super_block *sb, char *options)
+ 					"set with inline_xattr option");
+ 			return -EINVAL;
+ 		}
+-		if (F2FS_OPTION(sbi).inline_xattr_size <
+-			sizeof(struct f2fs_xattr_header) / sizeof(__le32) ||
+-			F2FS_OPTION(sbi).inline_xattr_size >
+-			DEF_ADDRS_PER_INODE -
++
++		min_size = sizeof(struct f2fs_xattr_header) / sizeof(__le32);
++		max_size = DEF_ADDRS_PER_INODE -
+ 			F2FS_TOTAL_EXTRA_ATTR_SIZE / sizeof(__le32) -
+ 			DEF_INLINE_RESERVED_SIZE -
+-			MIN_INLINE_DENTRY_SIZE / sizeof(__le32)) {
++			MIN_INLINE_DENTRY_SIZE / sizeof(__le32);
++
++		if (F2FS_OPTION(sbi).inline_xattr_size < min ||
++				F2FS_OPTION(sbi).inline_xattr_size > max) {
+ 			f2fs_msg(sb, KERN_ERR,
+-					"inline xattr size is out of range");
++				"inline xattr size is out of range: %d ~ %d",
++				min, max);
+ 			return -EINVAL;
+ 		}
+ 	}
+-- 
+2.19.0.605.g01d371f741-goog
 
-[for-4.20] Revert "drm/rockchip: Allow driver to be shutdown on reboot/kexec"
-https://patchwork.kernel.org/patch/10714725/
