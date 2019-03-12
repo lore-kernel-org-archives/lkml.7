@@ -2,287 +2,100 @@ Return-Path: <SRS0=dUEL=RQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_PASS,URIBL_BLOCKED,USER_AGENT_NEOMUTT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.5 required=3.0 tests=DATE_IN_PAST_24_48,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5CBF0C43381
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 Mar 2019 08:32:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 65643C43381
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 Mar 2019 08:34:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 15F192171F
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 Mar 2019 08:32:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 32D17214AE
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 Mar 2019 08:34:17 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727003AbfCMIco (ORCPT
+        id S1727175AbfCMIeP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 13 Mar 2019 04:32:44 -0400
-Received: from metis.ext.pengutronix.de ([85.220.165.71]:49125 "EHLO
-        metis.ext.pengutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725820AbfCMIcn (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 13 Mar 2019 04:32:43 -0400
-Received: from pty.hi.pengutronix.de ([2001:67c:670:100:1d::c5])
-        by metis.ext.pengutronix.de with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.89)
-        (envelope-from <ukl@pengutronix.de>)
-        id 1h3zJM-00067H-Uf; Wed, 13 Mar 2019 09:32:28 +0100
-Received: from ukl by pty.hi.pengutronix.de with local (Exim 4.89)
-        (envelope-from <ukl@pengutronix.de>)
-        id 1h3zJK-0001sW-VA; Wed, 13 Mar 2019 09:32:26 +0100
-Date:   Wed, 13 Mar 2019 09:32:26 +0100
-From:   Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= 
-        <u.kleine-koenig@pengutronix.de>
-To:     Anson Huang <anson.huang@nxp.com>
-Cc:     "thierry.reding@gmail.com" <thierry.reding@gmail.com>,
-        "robh+dt@kernel.org" <robh+dt@kernel.org>,
-        "mark.rutland@arm.com" <mark.rutland@arm.com>,
-        "shawnguo@kernel.org" <shawnguo@kernel.org>,
-        "s.hauer@pengutronix.de" <s.hauer@pengutronix.de>,
-        "kernel@pengutronix.de" <kernel@pengutronix.de>,
-        "festevam@gmail.com" <festevam@gmail.com>,
-        "linux@armlinux.org.uk" <linux@armlinux.org.uk>,
-        "stefan@agner.ch" <stefan@agner.ch>,
-        "otavio@ossystems.com.br" <otavio@ossystems.com.br>,
-        Leonard Crestez <leonard.crestez@nxp.com>,
-        "schnitzeltony@gmail.com" <schnitzeltony@gmail.com>,
-        "jan.tuerk@emtrion.com" <jan.tuerk@emtrion.com>,
-        Robin Gong <yibin.gong@nxp.com>,
-        "linux-pwm@vger.kernel.org" <linux-pwm@vger.kernel.org>,
-        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        dl-linux-imx <linux-imx@nxp.com>
-Subject: Re: [PATCH 2/5] pwm: Add i.MX TPM PWM driver support
-Message-ID: <20190313083226.qgnldzd6pc3arooc@pengutronix.de>
-References: <1552288273-31028-1-git-send-email-Anson.Huang@nxp.com>
- <1552288273-31028-3-git-send-email-Anson.Huang@nxp.com>
- <20190311092644.a2x53zgxv2iseqao@pengutronix.de>
- <AM6PR0402MB391160F820907ABE8ECA4C26F54A0@AM6PR0402MB3911.eurprd04.prod.outlook.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <AM6PR0402MB391160F820907ABE8ECA4C26F54A0@AM6PR0402MB3911.eurprd04.prod.outlook.com>
-User-Agent: NeoMutt/20170113 (1.7.2)
-X-SA-Exim-Connect-IP: 2001:67c:670:100:1d::c5
-X-SA-Exim-Mail-From: ukl@pengutronix.de
-X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
-X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
+        Wed, 13 Mar 2019 04:34:15 -0400
+Received: from mga05.intel.com ([192.55.52.43]:51480 "EHLO mga05.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726184AbfCMIeP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 13 Mar 2019 04:34:15 -0400
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga001.fm.intel.com ([10.253.24.23])
+  by fmsmga105.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 13 Mar 2019 01:34:14 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.58,474,1544515200"; 
+   d="scan'208";a="154566596"
+Received: from yiliu-dev.bj.intel.com ([10.238.156.125])
+  by fmsmga001.fm.intel.com with ESMTP; 13 Mar 2019 01:34:12 -0700
+From:   "Liu, Yi L" <yi.l.liu@intel.com>
+To:     alex.williamson@redhat.com, kwankhede@nvidia.com
+Cc:     kevin.tian@intel.com, baolu.lu@linux.intel.com, yi.l.liu@intel.com,
+        yi.y.sun@intel.com, joro@8bytes.org, jean-philippe.brucker@arm.com,
+        peterx@redhat.com, linux-kernel@vger.kernel.org
+Subject: [RFC v2 0/2] vfio/pci: wrap pci device as a mediated device
+Date:   Tue, 12 Mar 2019 16:18:21 +0800
+Message-Id: <1552378703-11202-1-git-send-email-yi.l.liu@intel.com>
+X-Mailer: git-send-email 2.7.4
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hello,
+This patchset aims to add a vfio-pci-like meta driver as a demo
+user of the vfio changes introduced in "vfio/mdev: IOMMU aware
+mediated device" patchset from Baolu Lu.
 
-On Wed, Mar 13, 2019 at 07:28:24AM +0000, Anson Huang wrote:
-> > On Mon, Mar 11, 2019 at 07:16:16AM +0000, Anson Huang wrote:
-> > > +
-> > >  config PWM_JZ4740
-> > >  	tristate "Ingenic JZ47xx PWM support"
-> > >  	depends on MACH_INGENIC
-> > > diff --git a/drivers/pwm/Makefile b/drivers/pwm/Makefile index
-> > > 9c676a0..64e036c 100644
-> > > --- a/drivers/pwm/Makefile
-> > > +++ b/drivers/pwm/Makefile
-> > > @@ -18,6 +18,7 @@ obj-$(CONFIG_PWM_FSL_FTM)	+= pwm-fsl-ftm.o
-> > >  obj-$(CONFIG_PWM_HIBVT)		+= pwm-hibvt.o
-> > >  obj-$(CONFIG_PWM_IMG)		+= pwm-img.o
-> > >  obj-$(CONFIG_PWM_IMX)		+= pwm-imx.o
-> > > +obj-$(CONFIG_PWM_IMX_TPM)	+= pwm-imx-tpm.o
-> > >  obj-$(CONFIG_PWM_JZ4740)	+= pwm-jz4740.o
-> > >  obj-$(CONFIG_PWM_LP3943)	+= pwm-lp3943.o
-> > >  obj-$(CONFIG_PWM_LPC18XX_SCT)	+= pwm-lpc18xx-sct.o
-> > > diff --git a/drivers/pwm/pwm-imx-tpm.c b/drivers/pwm/pwm-imx-tpm.c
-> > new
-> > > file mode 100644 index 0000000..a53256a
-> > > --- /dev/null
-> > > +++ b/drivers/pwm/pwm-imx-tpm.c
-> > > @@ -0,0 +1,277 @@
-> > > +// SPDX-License-Identifier: GPL-2.0
-> > > +/*
-> > > + * Copyright 2018-2019 NXP.
-> > > + */
-> > 
-> > Please add a link to the reference manual to the header.
-> 
-> I checked the NXP website, looks like i.MX7ULP reference manual is NOT
-> published yet, should be published very soon.
+Previous RFC v1 has given two proposals and the discussion could
+be found in following link. Per the comments, this patchset adds
+a separate driver named vfio-pci-mdev. It leverages some symbols
+from existing vfio-pci. When device is bound to vfio-pci-mdev
+driver, it would be wrapped as a mediated device. And user should
+create a mdev on this device via the mdev interface exposed to
+user.
+https://lkml.org/lkml/2019/3/4/529
 
-ok.
+The new vfio-pci-mdev driver could be used to verify the vfio
+changes in "vfio/mdev: IOMMU aware mediated device". Besides,
+per Alex's comments, it could also be a good base driver for
+experimenting with device specific mdev migration.
 
-> > > +#include <linux/bitops.h>
-> > > +#include <linux/clk.h>
-> > > +#include <linux/err.h>
-> > > +#include <linux/io.h>
-> > > +#include <linux/module.h>
-> > > +#include <linux/of.h>
-> > > +#include <linux/of_address.h>
-> > > +#include <linux/platform_device.h>
-> > > +#include <linux/pwm.h>
-> > > +#include <linux/slab.h>
-> > > +
-> > > +#define TPM_GLOBAL	0x8
-> > > +#define TPM_SC		0x10
-> > > +#define TPM_CNT		0x14
-> > > +#define TPM_MOD		0x18
-> > > +#define TPM_C0SC	0x20
-> > > +#define TPM_C0V		0x24
-> > > +
-> > > +#define SC_CMOD		3
-> > 
-> > This seems to be an offset, why not defining it as BIT(3) instead?
-> 
-> SC_CMOD field as 2 bits, I will use below in V2 patch set:
-> 
-> #define TPM_SC_CMOD_SHIFT       3
-> #define TPM_SC_CMOD_MASK        (0x3 << TPM_SC_CMOD_SHIFT)
+Specific interface tested in this proposal:
 
-I suggest
+*) int mdev_set_iommu_device(struct device *dev,
+				struct device *iommu_device)
+   introduced in the patch as below:
+   "[PATCH v5 6/8] vfio/mdev: Add iommu related member in mdev_device"
 
-	#define PWM_IMX_TPM_SC_CMOD	GENMASK(1, 0)
 
-instead. See include/linux/bitfield.h for details.
-Also note that "TPM" isn't a great prefix given that we have:
+Links:
+*) Link of "vfio/mdev: IOMMU aware mediated device"
+	https://lwn.net/Articles/780522/
 
-	$ git ls-files | grep -c tpm
-	82
+Please feel free give your comments.
 
-. Even though PWM_IMX_TPM is longer I think it's worth the extra bytes.
-Then if you use pwm_imx_tpm als prefix for your function it's obvious
-that they all belong together. For extra credits also adapt the driver
-name to match.
+Thanks,
+Yi Liu
 
-> > > +		ret = clk_prepare_enable(tpm->clk);
-> > > +		if (ret) {
-> > > +			dev_err(chip->dev,
-> > > +				"failed to prepare or enable clk %d\n", ret);
-> > > +			return ret;
-> > > +		}
-> > > +	}
-> > > +
-> > > +	val = readl(tpm->base + TPM_SC);
-> > > +	val &= ~TPM_SC_PS_MASK;
-> > > +	val |= div;
-> > > +	writel(val, tpm->base + TPM_SC);
-> > 
-> > If the unit ran with (say) div == 5 and a high duty cycle before and for the
-> > new configuration you need div == 6 with a low duty cycle, can it happen
-> > here that the output uses the new div value already with the high duty cycle?
-> > If so, this is bad.
-> 
-> As the TPM counter is shared between 2 channels, so I will make this prescale setting
-> to be initialized ONLY once, ONLY first channel will config it, this makes things simple
-> and the other channel should use same prescale value as first channel and ONLY adjust
-> its own duty cycle and polarity etc..
+Change log:
+  v1->v2:
+  - instead of adding kernel option to existing vfio-pci
+    module in v1, v2 follows Alex's suggestion to add a
+    separate vfio-pci-mdev module.
+  - new patchset subject: "vfio/pci: wrap pci device as a mediated device"
 
-So the two channels have to share the period length? If so please note
-this in the header of the driver like it was done in
-https://www.spinics.net/lists/linux-pwm/msg09149.html (search for
-"Limitations"). You also need some logic to assert that setting the 2nd
-channel doesn't modify the first (if the first is in use).
+Liu, Yi L (2):
+  vfio/pci: export common symbols in vfio-pci
+  vfio/pci: add vfio-pci-mdev driver
 
-> > > +	period_cycles = c;
-> > > +	c *= duty_ns;
-> > > +	do_div(c, period_ns);
-> > > +	duty_cycles = c;
-> > > +
-> > > +	writel(period_cycles & TPM_MOD_MOD_MASK, tpm->base +
-> > TPM_MOD);
-> > 
-> > Don't you need to add pwm->hwpwm * TPM_CHn_ADDR_OFFSET to the
-> > register offset here? And if not, I assume this affects the other PWMs
-> > provided by this hardware unit which is bad.
-> 
-> The MOD register is shared between different channels, ONLY 1 register there.
-> This register will be same as SC, ONLY configured ONCE by first channel.
-> 
-> > 
-> > > +	writel(duty_cycles & TPM_MOD_MOD_MASK, tpm->base +
-> > > +	       TPM_C0V + pwm->hwpwm * TPM_CHn_ADDR_OFFSET);
-> > > +
-> > > +	/* if pwm is not enabled, disable clk after setting */
-> > > +	if (!pwm_is_enabled(pwm))
-> > > +		clk_disable_unprepare(tpm->clk);
-> > > +
-> > > +	return 0;
-> > > +}
-> > > +
-> > > +static int tpm_pwm_enable(struct pwm_chip *chip, struct pwm_device
-> > > +*pwm) {
-> > > +	struct tpm_pwm_chip *tpm = to_tpm_pwm_chip(chip);
-> > > +	int ret;
-> > > +	u32 val;
-> > > +
-> > > +	ret = clk_prepare_enable(tpm->clk);
-> > > +	if (ret) {
-> > > +		dev_err(chip->dev,
-> > > +			"failed to prepare or enable clk %d\n", ret);
-> > > +		return ret;
-> > > +	}
-> > > +
-> > > +	/*
-> > > +	 * To enable a tpm channel, CPWMS = 0, MSnB:MSnA = 0x0,
-> > > +	 * for TPM normal polarity ELSnB:ELSnA = 2b'10,
-> > > +	 * inverse ELSnB:ELSnA = 2b'01
-> > > +	 */
-> > > +	val = readl(tpm->base + TPM_C0SC + pwm->hwpwm * TPM_CHn_ADDR_OFFSET);
-
-You could make it obvious which channels are shared and which have one
-instance per pwm by doing:
-
-	#define PWM_IMX_TPM_C0SC(hwid)	(0x20 + hwid * 4)
-
-> > > +	val |= pwm->state.polarity ? ELSnA : ELSnB;
-> > > +
-> > > +	writel(val, tpm->base + TPM_C0SC + pwm->hwpwm *
-> > > +TPM_CHn_ADDR_OFFSET);
-> > > +
-> > > +	/* start the counter */
-> > > +	val = readl(tpm->base + TPM_SC);
-> > > +	val |= 0x1 << SC_CMOD;
-> > > +	writel(val, tpm->base + TPM_SC);
-> > 
-> > If tpm_pwm_enable is called for the first PWM provided by the hardware,
-> > how does this writel affect the second one?
-> 
-> I will make the TPM counter enabled for every channel enabled, if ONLY disabled
-> when both channels are disabled.
-
-So you have to make sure that:
-
- - if you disable one channel while the other is still running, just set
-   the duty cycle to zero to not interfere with the other
- - if you enable one channel while the other is still off/unused, make
-   sure that other channel doesn't start to wiggle.
-
-> > > +	return 0;
-> > > +}
-> > > +
-> > > +static int tpm_pwm_remove(struct platform_device *pdev) {
-> > > +	struct tpm_pwm_chip *tpm = platform_get_drvdata(pdev);
-> > > +
-> > > +	return pwmchip_remove(&tpm->chip);
-> > > +}
-> > > +
-> > > +static int __maybe_unused tpm_pwm_suspend(struct device *dev) {
-> > > +	struct tpm_pwm_chip *tpm = dev_get_drvdata(dev);
-> > > +
-> > > +	clk_disable_unprepare(tpm->clk);
-> > 
-> > If the PWM is in use, it shouldn't stop on suspend.
-> 
-> I think PWM should be disabled when suspend, if a device is suspended, but PWM
-> is still enabled, we will see backlight is enabled. This is weird. Unless the backlight
-> driver will guarantee that pwm is disabled before suspend?
-
-No, on suspend it's the responsibility of the backlight driver to
-disable the pwm. Otherwise the PWM changes its behaviour without the
-consumer's consent which depending on the purpose of the PWM is bad.
- 
-Best regards
-Uwe
+ drivers/vfio/pci/Kconfig            |  11 ++
+ drivers/vfio/pci/Makefile           |   5 +
+ drivers/vfio/pci/vfio_pci.c         | 101 ++++++-----
+ drivers/vfio/pci/vfio_pci_mdev.c    | 334 ++++++++++++++++++++++++++++++++++++
+ drivers/vfio/pci/vfio_pci_private.h |  17 ++
+ 5 files changed, 428 insertions(+), 40 deletions(-)
+ create mode 100644 drivers/vfio/pci/vfio_pci_mdev.c
 
 -- 
-Pengutronix e.K.                           | Uwe Kleine-König            |
-Industrial Linux Solutions                 | http://www.pengutronix.de/  |
+2.7.4
+
