@@ -4,52 +4,53 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 92262C43381
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 17:12:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 16BDBC43381
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 17:12:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5ECC42087C
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 17:12:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D95D9217F9
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 17:12:14 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1552410729;
-	bh=GZzUkDJHEhqkjwKctnrrftjMWzbgG35xzNM8uFndx6c=;
+	s=default; t=1552410734;
+	bh=au2KB+lJSUoM1biqsFDWww8fPqUDnA2T4nUXE0Fx7f0=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=ZxkQcfTncyFxMJqVA5Uk/yLWA3vx0JQa6Wg5UvRnpyMeZwqF5lPrkGTGh1WMyPY2W
-	 B+2t4XdaD8ZoIgk1AWssqs0ztNTWfIpK9iRA5ftLUMFjYZyvk6Y13Jo9YgiUqu+smv
-	 R36zTiGt1TbCAZ+ew/YT128ynVS0G3g4OS7h+JPU=
+	b=r52icdLRm4+qtQGIjM3CbvndwbkaTWP1IGW42b9tc55ikkjKhDzvdmrv/lMFAYYuu
+	 zF+JxgjdwrukpnebqJXrq3ALtA4wqBIMq5g1qcuVajMXyWBdtursLyVyidJj6tNxLP
+	 WR8DwABLN2btUIJKfCoZ8/PvQIsMGGSa5eR5JYlc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727297AbfCLRMH (ORCPT
+        id S1727336AbfCLRMM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 12 Mar 2019 13:12:07 -0400
-Received: from mail.kernel.org ([198.145.29.99]:46096 "EHLO mail.kernel.org"
+        Tue, 12 Mar 2019 13:12:12 -0400
+Received: from mail.kernel.org ([198.145.29.99]:46284 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727198AbfCLRLz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 12 Mar 2019 13:11:55 -0400
+        id S1727118AbfCLRMA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 12 Mar 2019 13:12:00 -0400
 Received: from localhost (unknown [104.133.8.98])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id C35F7214AF;
-        Tue, 12 Mar 2019 17:11:54 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 5F8A52171F;
+        Tue, 12 Mar 2019 17:11:59 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1552410714;
-        bh=GZzUkDJHEhqkjwKctnrrftjMWzbgG35xzNM8uFndx6c=;
+        s=default; t=1552410719;
+        bh=au2KB+lJSUoM1biqsFDWww8fPqUDnA2T4nUXE0Fx7f0=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=tONQavGcNCj+DJtpNH76i69RMnlJ+JTtjuFh4+INf/NJJ2IotHYf7busnIq0L423C
-         a38f96JZXTQO1FCES3H/oGMvL6xDU2QvFD7CpqNHULiCx53fixwVsV6puVgmMLTO9a
-         pD3aZG+bbP5pzJNKERSp3bwo5i8Of4d6gkSLKdGE=
+        b=OmHvaOajWIIMnTsesR5+6w4uCoaZ8qQvM5zDbqs7WMmBKtVnkXFgRylTCn2IvNETC
+         GexDKvfL0bJpDIt9MCs6kfK8j8Le1ZAPPfBSVKm2/oVfuL42g3j+0QZ1mBq5WZLGrR
+         g6WJ08lH4lrtYa23JdKFPZimu/b8Hpld5+dKORt4=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Chandan Rajendra <chandan@linux.ibm.com>,
-        "Darrick J. Wong" <darrick.wong@oracle.com>,
-        Christoph Hellwig <hch@lst.de>,
-        Dave Chinner <dchinner@redhat.com>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.20 029/171] iomap: fix a use after free in iomap_dio_rw
-Date:   Tue, 12 Mar 2019 10:06:49 -0700
-Message-Id: <20190312170350.500092622@linuxfoundation.org>
+        stable@vger.kernel.org,
+        Boris Ostrovsky <boris.ostrovsky@oracle.com>,
+        Joerg Roedel <joro@8bytes.org>,
+        Brijesh Singh <brijesh.singh@amd.com>,
+        Suravee Suthikulpanit <suravee.suthikulpanit@amd.com>,
+        Joerg Roedel <jroedel@suse.de>, Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.20 017/171] iommu/amd: Fix IOMMU page flush when detach device from a domain
+Date:   Tue, 12 Mar 2019 10:06:37 -0700
+Message-Id: <20190312170349.413403738@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190312170347.868927101@linuxfoundation.org>
 References: <20190312170347.868927101@linuxfoundation.org>
@@ -68,103 +69,78 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-[ Upstream commit 4ea899ead2786a30aaa8181fefa81a3df4ad28f6 ]
+[ Upstream commit 9825bd94e3a2baae1f4874767ae3a7d4c049720e ]
 
-Introduce a local wait_for_completion variable to avoid an access to the
-potentially freed dio struture after dropping the last reference count.
+When a VM is terminated, the VFIO driver detaches all pass-through
+devices from VFIO domain by clearing domain id and page table root
+pointer from each device table entry (DTE), and then invalidates
+the DTE. Then, the VFIO driver unmap pages and invalidate IOMMU pages.
 
-Also use the chance to document the completion behavior to make the
-refcounting clear to the reader of the code.
+Currently, the IOMMU driver keeps track of which IOMMU and how many
+devices are attached to the domain. When invalidate IOMMU pages,
+the driver checks if the IOMMU is still attached to the domain before
+issuing the invalidate page command.
 
-Fixes: ff6a9292e6 ("iomap: implement direct I/O")
-Reported-by: Chandan Rajendra <chandan@linux.ibm.com>
-Reported-by: Darrick J. Wong <darrick.wong@oracle.com>
-Signed-off-by: Christoph Hellwig <hch@lst.de>
-Tested-by: Chandan Rajendra <chandan@linux.ibm.com>
-Tested-by: Darrick J. Wong <darrick.wong@oracle.com>
-Reviewed-by: Dave Chinner <dchinner@redhat.com>
-Reviewed-by: Darrick J. Wong <darrick.wong@oracle.com>
-Signed-off-by: Darrick J. Wong <darrick.wong@oracle.com>
+However, since VFIO has already detached all devices from the domain,
+the subsequent INVALIDATE_IOMMU_PAGES commands are being skipped as
+there is no IOMMU attached to the domain. This results in data
+corruption and could cause the PCI device to end up in indeterministic
+state.
+
+Fix this by invalidate IOMMU pages when detach a device, and
+before decrementing the per-domain device reference counts.
+
+Cc: Boris Ostrovsky <boris.ostrovsky@oracle.com>
+Suggested-by: Joerg Roedel <joro@8bytes.org>
+Co-developed-by: Brijesh Singh <brijesh.singh@amd.com>
+Signed-off-by: Brijesh Singh <brijesh.singh@amd.com>
+Signed-off-by: Suravee Suthikulpanit <suravee.suthikulpanit@amd.com>
+Fixes: 6de8ad9b9ee0 ('x86/amd-iommu: Make iommu_flush_pages aware of multiple IOMMUs')
+Signed-off-by: Joerg Roedel <jroedel@suse.de>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- fs/iomap.c | 28 +++++++++++++++++++++-------
- 1 file changed, 21 insertions(+), 7 deletions(-)
+ drivers/iommu/amd_iommu.c | 15 +++++++++++----
+ 1 file changed, 11 insertions(+), 4 deletions(-)
 
-diff --git a/fs/iomap.c b/fs/iomap.c
-index 7793e9e42ad5..83d9a196fe3e 100644
---- a/fs/iomap.c
-+++ b/fs/iomap.c
-@@ -1806,6 +1806,7 @@ iomap_dio_rw(struct kiocb *iocb, struct iov_iter *iter,
- 	loff_t pos = iocb->ki_pos, start = pos;
- 	loff_t end = iocb->ki_pos + count - 1, ret = 0;
- 	unsigned int flags = IOMAP_DIRECT;
-+	bool wait_for_completion = is_sync_kiocb(iocb);
- 	struct blk_plug plug;
- 	struct iomap_dio *dio;
+diff --git a/drivers/iommu/amd_iommu.c b/drivers/iommu/amd_iommu.c
+index ca3a250d8fa7..4d2c5d4f586f 100644
+--- a/drivers/iommu/amd_iommu.c
++++ b/drivers/iommu/amd_iommu.c
+@@ -1929,16 +1929,13 @@ static void do_attach(struct iommu_dev_data *dev_data,
  
-@@ -1825,7 +1826,6 @@ iomap_dio_rw(struct kiocb *iocb, struct iov_iter *iter,
- 	dio->end_io = end_io;
- 	dio->error = 0;
- 	dio->flags = 0;
--	dio->wait_for_completion = is_sync_kiocb(iocb);
+ static void do_detach(struct iommu_dev_data *dev_data)
+ {
++	struct protection_domain *domain = dev_data->domain;
+ 	struct amd_iommu *iommu;
+ 	u16 alias;
  
- 	dio->submit.iter = iter;
- 	dio->submit.waiter = current;
-@@ -1880,7 +1880,7 @@ iomap_dio_rw(struct kiocb *iocb, struct iov_iter *iter,
- 		dio_warn_stale_pagecache(iocb->ki_filp);
- 	ret = 0;
+ 	iommu = amd_iommu_rlookup_table[dev_data->devid];
+ 	alias = dev_data->alias;
  
--	if (iov_iter_rw(iter) == WRITE && !dio->wait_for_completion &&
-+	if (iov_iter_rw(iter) == WRITE && !wait_for_completion &&
- 	    !inode->i_sb->s_dio_done_wq) {
- 		ret = sb_init_dio_done_wq(inode->i_sb);
- 		if (ret < 0)
-@@ -1896,7 +1896,7 @@ iomap_dio_rw(struct kiocb *iocb, struct iov_iter *iter,
- 		if (ret <= 0) {
- 			/* magic error code to fall back to buffered I/O */
- 			if (ret == -ENOTBLK) {
--				dio->wait_for_completion = true;
-+				wait_for_completion = true;
- 				ret = 0;
- 			}
- 			break;
-@@ -1918,8 +1918,24 @@ iomap_dio_rw(struct kiocb *iocb, struct iov_iter *iter,
- 	if (dio->flags & IOMAP_DIO_WRITE_FUA)
- 		dio->flags &= ~IOMAP_DIO_NEED_SYNC;
- 
-+	/*
-+	 * We are about to drop our additional submission reference, which
-+	 * might be the last reference to the dio.  There are three three
-+	 * different ways we can progress here:
-+	 *
-+	 *  (a) If this is the last reference we will always complete and free
-+	 *	the dio ourselves.
-+	 *  (b) If this is not the last reference, and we serve an asynchronous
-+	 *	iocb, we must never touch the dio after the decrement, the
-+	 *	I/O completion handler will complete and free it.
-+	 *  (c) If this is not the last reference, but we serve a synchronous
-+	 *	iocb, the I/O completion handler will wake us up on the drop
-+	 *	of the final reference, and we will complete and free it here
-+	 *	after we got woken by the I/O completion handler.
-+	 */
-+	dio->wait_for_completion = wait_for_completion;
- 	if (!atomic_dec_and_test(&dio->ref)) {
--		if (!dio->wait_for_completion)
-+		if (!wait_for_completion)
- 			return -EIOCBQUEUED;
- 
- 		for (;;) {
-@@ -1936,9 +1952,7 @@ iomap_dio_rw(struct kiocb *iocb, struct iov_iter *iter,
- 		__set_current_state(TASK_RUNNING);
- 	}
- 
--	ret = iomap_dio_complete(dio);
+-	/* decrease reference counters */
+-	dev_data->domain->dev_iommu[iommu->index] -= 1;
+-	dev_data->domain->dev_cnt                 -= 1;
 -
--	return ret;
-+	return iomap_dio_complete(dio);
+ 	/* Update data structures */
+ 	dev_data->domain = NULL;
+ 	list_del(&dev_data->list);
+@@ -1948,6 +1945,16 @@ static void do_detach(struct iommu_dev_data *dev_data)
  
- out_free_dio:
- 	kfree(dio);
+ 	/* Flush the DTE entry */
+ 	device_flush_dte(dev_data);
++
++	/* Flush IOTLB */
++	domain_flush_tlb_pde(domain);
++
++	/* Wait for the flushes to finish */
++	domain_flush_complete(domain);
++
++	/* decrease reference counters - needs to happen after the flushes */
++	domain->dev_iommu[iommu->index] -= 1;
++	domain->dev_cnt                 -= 1;
+ }
+ 
+ /*
 -- 
 2.19.1
 
