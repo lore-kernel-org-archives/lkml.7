@@ -4,53 +4,56 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CC7EDC43381
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 17:23:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DBF22C43381
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 17:23:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9C88C206DF
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 17:23:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AABE8214AE
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 17:23:15 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1552411387;
-	bh=43OSHyfE5MUyfMbY7vOHWDSFzIxNLvinf4oaWQz+RHg=;
+	s=default; t=1552411395;
+	bh=npI/2QA4hvqe0G/lTl5+s+EEM9bsKycAwKX4oW6o90s=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=DSO3An5k1DP6QO2OWrdy8es5QwAadCGtSrgcpm/el3t0lUiYzii22YKQGZPPRJi4n
-	 b/Thps0eZuUtO28Pcv0rytK9OUO05DI5ejNCu8fBnUjNVHHup2Uua8WB5GPK9BQy9v
-	 KpCYefG7bxBdJDQbMx1q5SRixCKfwOWk21pUjfZc=
+	b=Unnf4fvDv/Q+9Xdh9RaEq9/hsEKB9u24+3lxwZ6mAMGYEdTJQ8gHiZdaeAo8vbQdF
+	 4pa/Oh1GsHTao4GJKInui8Kbxd+i/MOoqMF+ygeMA22Cw0p93lrjYEOtB5poZs1dKy
+	 7njL37XgM4E7HCHHsjeb5WemCwTS3pggPLa7xX6U=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730078AbfCLRXG (ORCPT
+        id S1730093AbfCLRXO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 12 Mar 2019 13:23:06 -0400
-Received: from mail.kernel.org ([198.145.29.99]:34984 "EHLO mail.kernel.org"
+        Tue, 12 Mar 2019 13:23:14 -0400
+Received: from mail.kernel.org ([198.145.29.99]:34946 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729896AbfCLRSE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 12 Mar 2019 13:18:04 -0400
+        id S1729475AbfCLRSD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 12 Mar 2019 13:18:03 -0400
 Received: from localhost (unknown [104.133.8.98])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 6BFB82087C;
-        Tue, 12 Mar 2019 17:18:03 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id A69BE206DF;
+        Tue, 12 Mar 2019 17:18:02 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1552411083;
-        bh=43OSHyfE5MUyfMbY7vOHWDSFzIxNLvinf4oaWQz+RHg=;
+        s=default; t=1552411082;
+        bh=npI/2QA4hvqe0G/lTl5+s+EEM9bsKycAwKX4oW6o90s=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=yA1dpUILfyI029JidbWwlHQvs3xitOTNb7XkP9GFbaF4gNsG0Rb+n7mCM1Y/aVuWs
-         qePUUBmnnWWc6DhTD2phg+S5+wsEo9Lwy/m2sQLuI4l7DU9vZd18dxliRcpIZY01kl
-         L6tNcnMhqsra9bEfInBQyGPua63jZ5snqFawwt8Q=
+        b=jm6Taba3v2QEhfZxqUWvfQRBSbZJT6Nf87aOQ4cvWxBmEk1fjpFKAT+oefTja7maW
+         7SyG2WKej6HBeMziZTGWIFYrHJgBCKAS91Z/EFTtnxQOfFxTIiGf3X0sVpHJMzjlrq
+         6y1CJpJljISFQ2p5W1sV4sjBAdcSXGWYeLR9H6RE=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Jan Kara <jack@suse.cz>,
-        Michal Hocko <mhocko@suse.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Al Viro <viro@ZenIV.linux.org.uk>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
+        stable@vger.kernel.org, Jiri Olsa <jolsa@kernel.org>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Masami Hiramatsu <mhiramat@kernel.org>,
+        Michael Petlan <mpetlan@redhat.com>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Nick Clifton <nickc@redhat.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Arnaldo Carvalho de Melo <acme@redhat.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.9 62/96] fs/drop_caches.c: avoid softlockups in drop_pagecache_sb()
-Date:   Tue, 12 Mar 2019 10:10:20 -0700
-Message-Id: <20190312171039.222529485@linuxfoundation.org>
+Subject: [PATCH 4.9 79/96] perf symbols: Filter out hidden symbols from labels
+Date:   Tue, 12 Mar 2019 10:10:37 -0700
+Message-Id: <20190312171040.542820589@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190312171034.530434962@linuxfoundation.org>
 References: <20190312171034.530434962@linuxfoundation.org>
@@ -69,55 +72,92 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-[ Upstream commit c27d82f52f75fc9d8d9d40d120d2a96fdeeada5e ]
+[ Upstream commit 59a17706915fe5ea6f711e1f92d4fb706bce07fe ]
 
-When superblock has lots of inodes without any pagecache (like is the
-case for /proc), drop_pagecache_sb() will iterate through all of them
-without dropping sb->s_inode_list_lock which can lead to softlockups
-(one of our customers hit this).
+When perf is built with the annobin plugin (RHEL8 build) extra symbols
+are added to its binary:
 
-Fix the problem by going to the slow path and doing cond_resched() in
-case the process needs rescheduling.
+  # nm perf | grep annobin | head -10
+  0000000000241100 t .annobin_annotate.c
+  0000000000326490 t .annobin_annotate.c
+  0000000000249255 t .annobin_annotate.c_end
+  00000000003283a8 t .annobin_annotate.c_end
+  00000000001bce18 t .annobin_annotate.c_end.hot
+  00000000001bce18 t .annobin_annotate.c_end.hot
+  00000000001bc3e2 t .annobin_annotate.c_end.unlikely
+  00000000001bc400 t .annobin_annotate.c_end.unlikely
+  00000000001bce18 t .annobin_annotate.c.hot
+  00000000001bce18 t .annobin_annotate.c.hot
+  ...
 
-Link: http://lkml.kernel.org/r/20190114085343.15011-1-jack@suse.cz
-Signed-off-by: Jan Kara <jack@suse.cz>
-Acked-by: Michal Hocko <mhocko@suse.com>
-Reviewed-by: Andrew Morton <akpm@linux-foundation.org>
-Cc: Al Viro <viro@ZenIV.linux.org.uk>
-Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
-Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
+Those symbols have no use for report or annotation and should be
+skipped.  Moreover they interfere with the DWARF unwind test on the PPC
+arch, where they are mixed with checked symbols and then the test fails:
+
+  # perf test dwarf -v
+  59: Test dwarf unwind                                     :
+  --- start ---
+  test child forked, pid 8515
+  unwind: .annobin_dwarf_unwind.c:ip = 0x10dba40dc (0x2740dc)
+  ...
+  got: .annobin_dwarf_unwind.c 0x10dba40dc, expecting test__arch_unwind_sample
+  unwind: failed with 'no error'
+
+The annobin symbols are defined as NOTYPE/LOCAL/HIDDEN:
+
+  # readelf -s ./perf | grep annobin | head -1
+    40: 00000000001bce4f     0 NOTYPE  LOCAL  HIDDEN    13 .annobin_init.c
+
+They can still pass the check for the label symbol. Adding check for
+HIDDEN and INTERNAL (as suggested by Nick below) visibility and filter
+out such symbols.
+
+>   Just to be awkward, if you are going to ignore STV_HIDDEN
+>   symbols then you should probably also ignore STV_INTERNAL ones
+>   as well...  Annobin does not generate them, but you never know,
+>   one day some other tool might create some.
+
+Signed-off-by: Jiri Olsa <jolsa@kernel.org>
+Cc: Alexander Shishkin <alexander.shishkin@linux.intel.com>
+Cc: Masami Hiramatsu <mhiramat@kernel.org>
+Cc: Michael Petlan <mpetlan@redhat.com>
+Cc: Namhyung Kim <namhyung@kernel.org>
+Cc: Nick Clifton <nickc@redhat.com>
+Cc: Peter Zijlstra <peterz@infradead.org>
+Link: http://lkml.kernel.org/r/20190128133526.GD15461@krava
+Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- fs/drop_caches.c | 8 +++++++-
- 1 file changed, 7 insertions(+), 1 deletion(-)
+ tools/perf/util/symbol-elf.c | 9 ++++++++-
+ 1 file changed, 8 insertions(+), 1 deletion(-)
 
-diff --git a/fs/drop_caches.c b/fs/drop_caches.c
-index d72d52b90433..280460fef066 100644
---- a/fs/drop_caches.c
-+++ b/fs/drop_caches.c
-@@ -20,8 +20,13 @@ static void drop_pagecache_sb(struct super_block *sb, void *unused)
- 	spin_lock(&sb->s_inode_list_lock);
- 	list_for_each_entry(inode, &sb->s_inodes, i_sb_list) {
- 		spin_lock(&inode->i_lock);
-+		/*
-+		 * We must skip inodes in unusual state. We may also skip
-+		 * inodes without pages but we deliberately won't in case
-+		 * we need to reschedule to avoid softlockups.
-+		 */
- 		if ((inode->i_state & (I_FREEING|I_WILL_FREE|I_NEW)) ||
--		    (inode->i_mapping->nrpages == 0)) {
-+		    (inode->i_mapping->nrpages == 0 && !need_resched())) {
- 			spin_unlock(&inode->i_lock);
- 			continue;
- 		}
-@@ -29,6 +34,7 @@ static void drop_pagecache_sb(struct super_block *sb, void *unused)
- 		spin_unlock(&inode->i_lock);
- 		spin_unlock(&sb->s_inode_list_lock);
+diff --git a/tools/perf/util/symbol-elf.c b/tools/perf/util/symbol-elf.c
+index adbc6c02c3aa..20ba5a9aeae4 100644
+--- a/tools/perf/util/symbol-elf.c
++++ b/tools/perf/util/symbol-elf.c
+@@ -85,6 +85,11 @@ static inline uint8_t elf_sym__type(const GElf_Sym *sym)
+ 	return GELF_ST_TYPE(sym->st_info);
+ }
  
-+		cond_resched();
- 		invalidate_mapping_pages(inode->i_mapping, 0, -1);
- 		iput(toput_inode);
- 		toput_inode = inode;
++static inline uint8_t elf_sym__visibility(const GElf_Sym *sym)
++{
++	return GELF_ST_VISIBILITY(sym->st_other);
++}
++
+ #ifndef STT_GNU_IFUNC
+ #define STT_GNU_IFUNC 10
+ #endif
+@@ -109,7 +114,9 @@ static inline int elf_sym__is_label(const GElf_Sym *sym)
+ 	return elf_sym__type(sym) == STT_NOTYPE &&
+ 		sym->st_name != 0 &&
+ 		sym->st_shndx != SHN_UNDEF &&
+-		sym->st_shndx != SHN_ABS;
++		sym->st_shndx != SHN_ABS &&
++		elf_sym__visibility(sym) != STV_HIDDEN &&
++		elf_sym__visibility(sym) != STV_INTERNAL;
+ }
+ 
+ static bool elf_sym__is_a(GElf_Sym *sym, enum map_type type)
 -- 
 2.19.1
 
