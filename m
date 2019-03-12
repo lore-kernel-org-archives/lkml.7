@@ -4,50 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 63070C4360F
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 17:11:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0A7CAC43381
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 17:11:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 32C99217D8
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 17:11:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CE0BB2183F
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 17:11:33 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1552410690;
-	bh=Zj7KR6TV3xyxNLysa2ENf5U/SlbL802rFYiKq8/3JBU=;
+	s=default; t=1552410693;
+	bh=sdthxxpaj3+PqBXoFDplEhszc+qHuRUV/00mwKvdqUg=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=OMZ/7uaekakSHX3sOHlWNocfT/NkA8d+ua9UWqjHAZcn5tpCCd9xDr49zko0hyANu
-	 +zFeiA49R4UXck/dM8rjxWrYqXVhvYKa9gBr9DIOZAz0Vbywd6ze2y6qhplDQyH4p6
-	 GE1lkWXmatqwZi5UiSN4F0mqhh+hxQ5OT2tt93Ak=
+	b=eCpNkxXTezcZEAnXAmaH0KLIUEnOhPLg+OwC7X9UfdX2CEKtfOYC170JKNHjb8OaN
+	 v2oFwTHha5+oU9lLoH/h+nos/1DzPqfZ/nOrgrkVEv2pDmHYJA5jSEu8RjE27XYszY
+	 Q/SWFP/o26ptzSuNynYga0JrnlNMoD1sTpmYiOok=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726939AbfCLRL2 (ORCPT
+        id S1726990AbfCLRLc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 12 Mar 2019 13:11:28 -0400
-Received: from mail.kernel.org ([198.145.29.99]:44684 "EHLO mail.kernel.org"
+        Tue, 12 Mar 2019 13:11:32 -0400
+Received: from mail.kernel.org ([198.145.29.99]:44746 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726372AbfCLRL0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 12 Mar 2019 13:11:26 -0400
+        id S1726927AbfCLRL3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 12 Mar 2019 13:11:29 -0400
 Received: from localhost (unknown [104.133.8.98])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D064E2171F;
-        Tue, 12 Mar 2019 17:11:25 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 431A72087C;
+        Tue, 12 Mar 2019 17:11:27 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1552410685;
-        bh=Zj7KR6TV3xyxNLysa2ENf5U/SlbL802rFYiKq8/3JBU=;
+        s=default; t=1552410687;
+        bh=sdthxxpaj3+PqBXoFDplEhszc+qHuRUV/00mwKvdqUg=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=GbpfqQVdfrIKrSK2l3eHATVDuBm8GYecYNlmif7mRs6HEaY1MhuPQMLf0n4LVgUl6
-         2VanJKZzhCR1w2X9fOUeY78klju7H7CAsecXKEsS1TPTy5i6DBODZeX7mVupSpre4c
-         xSDyQGM752EtMHovvfXtvDWGtuuspDEIWlnWri9s=
+        b=ZbRabpqHy1OcXL0XmzR3tVZ4aK5pj508+r2EJMaFxcS1I4OIFS112hEUooaRuK8aH
+         vzP92UBFENG4emfd2f3A1HYvgE9KJEnGdoTQGXg1OtBzSpxHliXf8uhFQRQhTK3cO6
+         08VU+wPGGjaq9Z0FSqEBichFuwIHQi4F0eswKgwM=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, kernel test robot <rong.a.chen@intel.com>,
-        Jakub Sitnicki <jakub@cloudflare.com>,
-        Daniel Borkmann <daniel@iogearbox.net>
-Subject: [PATCH 5.0 16/25] bpf: Stop the psock parser before canceling its work
-Date:   Tue, 12 Mar 2019 10:08:54 -0700
-Message-Id: <20190312170404.764449885@linuxfoundation.org>
+        stable@vger.kernel.org, Al Viro <viro@ZenIV.linux.org.uk>,
+        Gao Xiang <gaoxiang25@huawei.com>
+Subject: [PATCH 5.0 18/25] staging: erofs: keep corrupted fs from crashing kernel in erofs_namei()
+Date:   Tue, 12 Mar 2019 10:08:56 -0700
+Message-Id: <20190312170404.893278552@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190312170403.643852550@linuxfoundation.org>
 References: <20190312170403.643852550@linuxfoundation.org>
@@ -66,63 +65,314 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-From: Jakub Sitnicki <jakub@cloudflare.com>
+From: Gao Xiang <gaoxiang25@huawei.com>
 
-commit e8e3437762ad938880dd48a3c52d702e7cf3c124 upstream.
+commit 419d6efc50e94bcf5d6b35cd8c71f79edadec564 upstream.
 
-We might have never enabled (started) the psock's parser, in which case it
-will not get stopped when destroying the psock. This leads to a warning
-when trying to cancel parser's work from psock's deferred destructor:
+As Al pointed out, "
+... and while we are at it, what happens to
+	unsigned int nameoff = le16_to_cpu(de[mid].nameoff);
+	unsigned int matched = min(startprfx, endprfx);
 
-[  405.325769] WARNING: CPU: 1 PID: 3216 at net/strparser/strparser.c:526 strp_done+0x3c/0x40
-[  405.326712] Modules linked in: [last unloaded: test_bpf]
-[  405.327359] CPU: 1 PID: 3216 Comm: kworker/1:164 Tainted: G        W         5.0.0 #42
-[  405.328294] Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS ?-20180531_142017-buildhw-08.phx2.fedoraproject.org-1.fc28 04/01/2014
-[  405.329712] Workqueue: events sk_psock_destroy_deferred
-[  405.330254] RIP: 0010:strp_done+0x3c/0x40
-[  405.330706] Code: 28 e8 b8 d5 6b ff 48 8d bb 80 00 00 00 e8 9c d5 6b ff 48 8b 7b 18 48 85 ff 74 0d e8 1e a5 e8 ff 48 c7 43 18 00 00 00 00 5b c3 <0f> 0b eb cf 66 66 66 66 90 55 89 f5 53 48 89 fb 48 83 c7 28 e8 0b
-[  405.332862] RSP: 0018:ffffc900026bbe50 EFLAGS: 00010246
-[  405.333482] RAX: ffffffff819323e0 RBX: ffff88812cb83640 RCX: ffff88812cb829e8
-[  405.334228] RDX: 0000000000000001 RSI: ffff88812cb837e8 RDI: ffff88812cb83640
-[  405.335366] RBP: ffff88813fd22680 R08: 0000000000000000 R09: 000073746e657665
-[  405.336472] R10: 8080808080808080 R11: 0000000000000001 R12: ffff88812cb83600
-[  405.337760] R13: 0000000000000000 R14: ffff88811f401780 R15: ffff88812cb837e8
-[  405.338777] FS:  0000000000000000(0000) GS:ffff88813fd00000(0000) knlGS:0000000000000000
-[  405.339903] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-[  405.340821] CR2: 00007fb11489a6b8 CR3: 000000012d4d6000 CR4: 00000000000406e0
-[  405.341981] DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
-[  405.343131] DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
-[  405.344415] Call Trace:
-[  405.344821]  sk_psock_destroy_deferred+0x23/0x1b0
-[  405.345585]  process_one_work+0x1ae/0x3e0
-[  405.346110]  worker_thread+0x3c/0x3b0
-[  405.346576]  ? pwq_unbound_release_workfn+0xd0/0xd0
-[  405.347187]  kthread+0x11d/0x140
-[  405.347601]  ? __kthread_parkme+0x80/0x80
-[  405.348108]  ret_from_fork+0x35/0x40
-[  405.348566] ---[ end trace a4a3af4026a327d4 ]---
+	struct qstr dname = QSTR_INIT(data + nameoff,
+		unlikely(mid >= ndirents - 1) ?
+			maxsize - nameoff :
+			le16_to_cpu(de[mid + 1].nameoff) - nameoff);
 
-Stop psock's parser just before canceling its work.
+	/* string comparison without already matched prefix */
+	int ret = dirnamecmp(name, &dname, &matched);
+if le16_to_cpu(de[...].nameoff) is not monotonically increasing?  I.e.
+what's to prevent e.g. (unsigned)-1 ending up in dname.len?
 
-Fixes: 1d79895aef18 ("sk_msg: Always cancel strp work before freeing the psock")
-Reported-by: kernel test robot <rong.a.chen@intel.com>
-Signed-off-by: Jakub Sitnicki <jakub@cloudflare.com>
-Signed-off-by: Daniel Borkmann <daniel@iogearbox.net>
+Corrupted fs image shouldn't oops the kernel.. "
+
+Revisit the related lookup flow to address the issue.
+
+Fixes: d72d1ce60174 ("staging: erofs: add namei functions")
+Cc: <stable@vger.kernel.org> # 4.19+
+Suggested-by: Al Viro <viro@ZenIV.linux.org.uk>
+Signed-off-by: Gao Xiang <gaoxiang25@huawei.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
----
- net/core/skmsg.c |    1 +
- 1 file changed, 1 insertion(+)
 
---- a/net/core/skmsg.c
-+++ b/net/core/skmsg.c
-@@ -545,6 +545,7 @@ static void sk_psock_destroy_deferred(st
- 	struct sk_psock *psock = container_of(gc, struct sk_psock, gc);
+---
+ drivers/staging/erofs/namei.c |  183 ++++++++++++++++++++++--------------------
+ 1 file changed, 97 insertions(+), 86 deletions(-)
+
+--- a/drivers/staging/erofs/namei.c
++++ b/drivers/staging/erofs/namei.c
+@@ -15,74 +15,77 @@
  
- 	/* No sk_callback_lock since already detached. */
-+	strp_stop(&psock->parser.strp);
- 	strp_done(&psock->parser.strp);
+ #include <trace/events/erofs.h>
  
- 	cancel_work_sync(&psock->work);
+-/* based on the value of qn->len is accurate */
+-static inline int dirnamecmp(struct qstr *qn,
+-	struct qstr *qd, unsigned int *matched)
++struct erofs_qstr {
++	const unsigned char *name;
++	const unsigned char *end;
++};
++
++/* based on the end of qn is accurate and it must have the trailing '\0' */
++static inline int dirnamecmp(const struct erofs_qstr *qn,
++			     const struct erofs_qstr *qd,
++			     unsigned int *matched)
+ {
+-	unsigned int i = *matched, len = min(qn->len, qd->len);
+-loop:
+-	if (unlikely(i >= len)) {
+-		*matched = i;
+-		if (qn->len < qd->len) {
+-			/*
+-			 * actually (qn->len == qd->len)
+-			 * when qd->name[i] == '\0'
+-			 */
+-			return qd->name[i] == '\0' ? 0 : -1;
+-		}
+-		return (qn->len > qd->len);
+-	}
++	unsigned int i = *matched;
+ 
+-	if (qn->name[i] != qd->name[i]) {
+-		*matched = i;
+-		return qn->name[i] > qd->name[i] ? 1 : -1;
++	/*
++	 * on-disk error, let's only BUG_ON in the debugging mode.
++	 * otherwise, it will return 1 to just skip the invalid name
++	 * and go on (in consideration of the lookup performance).
++	 */
++	DBG_BUGON(qd->name > qd->end);
++
++	/* qd could not have trailing '\0' */
++	/* However it is absolutely safe if < qd->end */
++	while (qd->name + i < qd->end && qd->name[i] != '\0') {
++		if (qn->name[i] != qd->name[i]) {
++			*matched = i;
++			return qn->name[i] > qd->name[i] ? 1 : -1;
++		}
++		++i;
+ 	}
+-
+-	++i;
+-	goto loop;
++	*matched = i;
++	/* See comments in __d_alloc on the terminating NUL character */
++	return qn->name[i] == '\0' ? 0 : 1;
+ }
+ 
+-static struct erofs_dirent *find_target_dirent(
+-	struct qstr *name,
+-	u8 *data, int maxsize)
++#define nameoff_from_disk(off, sz)	(le16_to_cpu(off) & ((sz) - 1))
++
++static struct erofs_dirent *find_target_dirent(struct erofs_qstr *name,
++					       u8 *data,
++					       unsigned int dirblksize,
++					       const int ndirents)
+ {
+-	unsigned int ndirents, head, back;
++	int head, back;
+ 	unsigned int startprfx, endprfx;
+ 	struct erofs_dirent *const de = (struct erofs_dirent *)data;
+ 
+-	/* make sure that maxsize is valid */
+-	BUG_ON(maxsize < sizeof(struct erofs_dirent));
+-
+-	ndirents = le16_to_cpu(de->nameoff) / sizeof(*de);
+-
+-	/* corrupted dir (may be unnecessary...) */
+-	BUG_ON(!ndirents);
+-
+-	head = 0;
++	/* since the 1st dirent has been evaluated previously */
++	head = 1;
+ 	back = ndirents - 1;
+ 	startprfx = endprfx = 0;
+ 
+ 	while (head <= back) {
+-		unsigned int mid = head + (back - head) / 2;
+-		unsigned int nameoff = le16_to_cpu(de[mid].nameoff);
++		const int mid = head + (back - head) / 2;
++		const int nameoff = nameoff_from_disk(de[mid].nameoff,
++						      dirblksize);
+ 		unsigned int matched = min(startprfx, endprfx);
+-
+-		struct qstr dname = QSTR_INIT(data + nameoff,
+-			unlikely(mid >= ndirents - 1) ?
+-				maxsize - nameoff :
+-				le16_to_cpu(de[mid + 1].nameoff) - nameoff);
++		struct erofs_qstr dname = {
++			.name = data + nameoff,
++			.end = unlikely(mid >= ndirents - 1) ?
++				data + dirblksize :
++				data + nameoff_from_disk(de[mid + 1].nameoff,
++							 dirblksize)
++		};
+ 
+ 		/* string comparison without already matched prefix */
+ 		int ret = dirnamecmp(name, &dname, &matched);
+ 
+-		if (unlikely(!ret))
++		if (unlikely(!ret)) {
+ 			return de + mid;
+-		else if (ret > 0) {
++		} else if (ret > 0) {
+ 			head = mid + 1;
+ 			startprfx = matched;
+-		} else if (unlikely(mid < 1))	/* fix "mid" overflow */
+-			break;
+-		else {
++		} else {
+ 			back = mid - 1;
+ 			endprfx = matched;
+ 		}
+@@ -91,12 +94,12 @@ static struct erofs_dirent *find_target_
+ 	return ERR_PTR(-ENOENT);
+ }
+ 
+-static struct page *find_target_block_classic(
+-	struct inode *dir,
+-	struct qstr *name, int *_diff)
++static struct page *find_target_block_classic(struct inode *dir,
++					      struct erofs_qstr *name,
++					      int *_ndirents)
+ {
+ 	unsigned int startprfx, endprfx;
+-	unsigned int head, back;
++	int head, back;
+ 	struct address_space *const mapping = dir->i_mapping;
+ 	struct page *candidate = ERR_PTR(-ENOENT);
+ 
+@@ -105,41 +108,43 @@ static struct page *find_target_block_cl
+ 	back = inode_datablocks(dir) - 1;
+ 
+ 	while (head <= back) {
+-		unsigned int mid = head + (back - head) / 2;
++		const int mid = head + (back - head) / 2;
+ 		struct page *page = read_mapping_page(mapping, mid, NULL);
+ 
+-		if (IS_ERR(page)) {
+-exact_out:
+-			if (!IS_ERR(candidate)) /* valid candidate */
+-				put_page(candidate);
+-			return page;
+-		} else {
+-			int diff;
+-			unsigned int ndirents, matched;
+-			struct qstr dname;
++		if (!IS_ERR(page)) {
+ 			struct erofs_dirent *de = kmap_atomic(page);
+-			unsigned int nameoff = le16_to_cpu(de->nameoff);
+-
+-			ndirents = nameoff / sizeof(*de);
++			const int nameoff = nameoff_from_disk(de->nameoff,
++							      EROFS_BLKSIZ);
++			const int ndirents = nameoff / sizeof(*de);
++			int diff;
++			unsigned int matched;
++			struct erofs_qstr dname;
+ 
+-			/* corrupted dir (should have one entry at least) */
+-			BUG_ON(!ndirents || nameoff > PAGE_SIZE);
++			if (unlikely(!ndirents)) {
++				DBG_BUGON(1);
++				kunmap_atomic(de);
++				put_page(page);
++				page = ERR_PTR(-EIO);
++				goto out;
++			}
+ 
+ 			matched = min(startprfx, endprfx);
+ 
+ 			dname.name = (u8 *)de + nameoff;
+-			dname.len = ndirents == 1 ?
+-				/* since the rest of the last page is 0 */
+-				EROFS_BLKSIZ - nameoff
+-				: le16_to_cpu(de[1].nameoff) - nameoff;
++			if (ndirents == 1)
++				dname.end = (u8 *)de + EROFS_BLKSIZ;
++			else
++				dname.end = (u8 *)de +
++					nameoff_from_disk(de[1].nameoff,
++							  EROFS_BLKSIZ);
+ 
+ 			/* string comparison without already matched prefix */
+ 			diff = dirnamecmp(name, &dname, &matched);
+ 			kunmap_atomic(de);
+ 
+ 			if (unlikely(!diff)) {
+-				*_diff = 0;
+-				goto exact_out;
++				*_ndirents = 0;
++				goto out;
+ 			} else if (diff > 0) {
+ 				head = mid + 1;
+ 				startprfx = matched;
+@@ -147,45 +152,51 @@ exact_out:
+ 				if (likely(!IS_ERR(candidate)))
+ 					put_page(candidate);
+ 				candidate = page;
++				*_ndirents = ndirents;
+ 			} else {
+ 				put_page(page);
+ 
+-				if (unlikely(mid < 1))	/* fix "mid" overflow */
+-					break;
+-
+ 				back = mid - 1;
+ 				endprfx = matched;
+ 			}
++			continue;
+ 		}
++out:		/* free if the candidate is valid */
++		if (!IS_ERR(candidate))
++			put_page(candidate);
++		return page;
+ 	}
+-	*_diff = 1;
+ 	return candidate;
+ }
+ 
+ int erofs_namei(struct inode *dir,
+-	struct qstr *name,
+-	erofs_nid_t *nid, unsigned int *d_type)
++		struct qstr *name,
++		erofs_nid_t *nid, unsigned int *d_type)
+ {
+-	int diff;
++	int ndirents;
+ 	struct page *page;
+-	u8 *data;
++	void *data;
+ 	struct erofs_dirent *de;
++	struct erofs_qstr qn;
+ 
+ 	if (unlikely(!dir->i_size))
+ 		return -ENOENT;
+ 
+-	diff = 1;
+-	page = find_target_block_classic(dir, name, &diff);
++	qn.name = name->name;
++	qn.end = name->name + name->len;
++
++	ndirents = 0;
++	page = find_target_block_classic(dir, &qn, &ndirents);
+ 
+ 	if (unlikely(IS_ERR(page)))
+ 		return PTR_ERR(page);
+ 
+ 	data = kmap_atomic(page);
+ 	/* the target page has been mapped */
+-	de = likely(diff) ?
+-		/* since the rest of the last page is 0 */
+-		find_target_dirent(name, data, EROFS_BLKSIZ) :
+-		(struct erofs_dirent *)data;
++	if (ndirents)
++		de = find_target_dirent(&qn, data, EROFS_BLKSIZ, ndirents);
++	else
++		de = (struct erofs_dirent *)data;
+ 
+ 	if (likely(!IS_ERR(de))) {
+ 		*nid = le64_to_cpu(de->nid);
 
 
