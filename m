@@ -2,55 +2,52 @@ Return-Path: <SRS0=J4ZE=RP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1849FC43381
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 17:40:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1882DC43381
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 17:40:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D4DEA2087C
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 17:40:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DE935214AE
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 17:40:58 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1552412451;
-	bh=wgrYFZMBLMJUaEE9stwG8bPKVH6Y9s/J6FXuJhiVt/8=;
+	s=default; t=1552412459;
+	bh=YWGezYtD1Of8LTG3/mlUGGK5t6sD7oUu+UPFLboq8ds=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=BDuJkXMLHpp0+mjKtkgPveojALmZm3p/wNxYekbKooI24bZk7bA60qlwp39ulk8oj
-	 V+TDOBRqwunbUzaALl7rq+vvS+CXg/8YD1VluvQGHOHtPrWjukdjNH4u/JMt5udSmL
-	 ZUzQhOw18YodKmawsMjZoh6p+ZtI5BUxXt9EM0pQ=
+	b=TJfdPaI3gCnLaW/5N+w8S0aFW+zV1h43vusao7W16ndh+M9otqPuPZE6AVW/4eUPq
+	 1PLwkS6S9Ju9LDdfqLwujvOhSTt8Qhr+MRXQ7vw7gYbkI0vEKBYpc2wCndBa7Bt4js
+	 JApxinsKFbWhMPkBKRnuVdKXLOfcilR01BvbDkjI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729819AbfCLRkv (ORCPT
+        id S1729868AbfCLRkx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 12 Mar 2019 13:40:51 -0400
-Received: from mail.kernel.org ([198.145.29.99]:57842 "EHLO mail.kernel.org"
+        Tue, 12 Mar 2019 13:40:53 -0400
+Received: from mail.kernel.org ([198.145.29.99]:57816 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729029AbfCLRQL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S1728224AbfCLRQL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Tue, 12 Mar 2019 13:16:11 -0400
 Received: from localhost (unknown [104.133.8.98])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 8B0EB21741;
-        Tue, 12 Mar 2019 17:16:10 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id C4A2A21850;
+        Tue, 12 Mar 2019 17:16:09 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1552410970;
-        bh=wgrYFZMBLMJUaEE9stwG8bPKVH6Y9s/J6FXuJhiVt/8=;
+        s=default; t=1552410969;
+        bh=YWGezYtD1Of8LTG3/mlUGGK5t6sD7oUu+UPFLboq8ds=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=b794CtkqGLQIThK0d0y7DmDf0d8Qd/bHP+wAdB7k7D5+1cn+JLvvPEi1WrLw13epn
-         v5CJ/dCZKm1t14vTSIAF6pn0E4O0zNOztSGt5oOBWOgqSPfTSQD+uV/vXTRakxXNSi
-         FrtdSoD0d3SyzNqwDffKxzuKVW5BS/EYXqbvSJuI=
+        b=S25lr3iI8Cv8C65UblUHm5VvbD9fEuWd4omJrb4RIIYFxX7lG+A4/46ApDbuxrCMg
+         t4elMnqLp3MRtqZpRAtj/DZ62KmamYkdQpDvW3/hPm8nTyf27gvaJ7jbBWVFRceg/R
+         kXPR9CeH6u07C1lftsqqGDHvp84Z3URoaEX+p77k=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Jiaxun Yang <jiaxun.yang@flygoat.com>,
-        Borislav Petkov <bp@suse.de>,
-        Tom Lendacky <thomas.lendacky@amd.com>,
-        "H. Peter Anvin" <hpa@zytor.com>, Ingo Molnar <mingo@redhat.com>,
-        Sherry Hurwitz <sherry.hurwitz@amd.com>,
-        Suravee Suthikulpanit <suravee.suthikulpanit@amd.com>,
-        Thomas Gleixner <tglx@linutronix.de>, x86-ml <x86@kernel.org>
-Subject: [PATCH 4.14 035/135] x86/CPU/AMD: Set the CPB bit unconditionally on F17h
-Date:   Tue, 12 Mar 2019 10:08:02 -0700
-Message-Id: <20190312170344.335179030@linuxfoundation.org>
+        stable@vger.kernel.org, Su Yanjun <suyj.fnst@cn.fujitsu.com>,
+        Steffen Klassert <steffen.klassert@secunet.com>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.14 044/135] vti4: Fix a ipip packet processing bug in IPCOMP virtual tunnel
+Date:   Tue, 12 Mar 2019 10:08:11 -0700
+Message-Id: <20190312170345.194841127@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190312170341.127810985@linuxfoundation.org>
 References: <20190312170341.127810985@linuxfoundation.org>
@@ -69,47 +66,119 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-From: Jiaxun Yang <jiaxun.yang@flygoat.com>
+[ Upstream commit dd9ee3444014e8f28c0eefc9fffc9ac9c5248c12 ]
 
-commit 0237199186e7a4aa5310741f0a6498a20c820fd7 upstream.
+Recently we run a network test over ipcomp virtual tunnel.We find that
+if a ipv4 packet needs fragment, then the peer can't receive
+it.
 
-Some F17h models do not have CPB set in CPUID even though the CPU
-supports it. Set the feature bit unconditionally on all F17h.
+We deep into the code and find that when packet need fragment the smaller
+fragment will be encapsulated by ipip not ipcomp. So when the ipip packet
+goes into xfrm, it's skb->dev is not properly set. The ipv4 reassembly code
+always set skb'dev to the last fragment's dev. After ipv4 defrag processing,
+when the kernel rp_filter parameter is set, the skb will be drop by -EXDEV
+error.
 
- [ bp: Rewrite commit message and patch. ]
+This patch adds compatible support for the ipip process in ipcomp virtual tunnel.
 
-Signed-off-by: Jiaxun Yang <jiaxun.yang@flygoat.com>
-Signed-off-by: Borislav Petkov <bp@suse.de>
-Acked-by: Tom Lendacky <thomas.lendacky@amd.com>
-Cc: "H. Peter Anvin" <hpa@zytor.com>
-Cc: Ingo Molnar <mingo@redhat.com>
-Cc: Sherry Hurwitz <sherry.hurwitz@amd.com>
-Cc: Suravee Suthikulpanit <suravee.suthikulpanit@amd.com>
-Cc: Thomas Gleixner <tglx@linutronix.de>
-Cc: x86-ml <x86@kernel.org>
-Link: https://lkml.kernel.org/r/20181120030018.5185-1-jiaxun.yang@flygoat.com
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-
+Signed-off-by: Su Yanjun <suyj.fnst@cn.fujitsu.com>
+Signed-off-by: Steffen Klassert <steffen.klassert@secunet.com>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/x86/kernel/cpu/amd.c |    8 +++-----
- 1 file changed, 3 insertions(+), 5 deletions(-)
+ net/ipv4/ip_vti.c | 50 +++++++++++++++++++++++++++++++++++++++++++++++
+ 1 file changed, 50 insertions(+)
 
---- a/arch/x86/kernel/cpu/amd.c
-+++ b/arch/x86/kernel/cpu/amd.c
-@@ -791,11 +791,9 @@ static void init_amd_bd(struct cpuinfo_x
- static void init_amd_zn(struct cpuinfo_x86 *c)
- {
- 	set_cpu_cap(c, X86_FEATURE_ZEN);
--	/*
--	 * Fix erratum 1076: CPB feature bit not being set in CPUID. It affects
--	 * all up to and including B1.
--	 */
--	if (c->x86_model <= 1 && c->x86_stepping <= 1)
-+
-+	/* Fix erratum 1076: CPB feature bit not being set in CPUID. */
-+	if (!cpu_has(c, X86_FEATURE_CPB))
- 		set_cpu_cap(c, X86_FEATURE_CPB);
+diff --git a/net/ipv4/ip_vti.c b/net/ipv4/ip_vti.c
+index 00d4371d4573..306603a7f351 100644
+--- a/net/ipv4/ip_vti.c
++++ b/net/ipv4/ip_vti.c
+@@ -74,6 +74,33 @@ static int vti_input(struct sk_buff *skb, int nexthdr, __be32 spi,
+ 	return 0;
  }
  
++static int vti_input_ipip(struct sk_buff *skb, int nexthdr, __be32 spi,
++		     int encap_type)
++{
++	struct ip_tunnel *tunnel;
++	const struct iphdr *iph = ip_hdr(skb);
++	struct net *net = dev_net(skb->dev);
++	struct ip_tunnel_net *itn = net_generic(net, vti_net_id);
++
++	tunnel = ip_tunnel_lookup(itn, skb->dev->ifindex, TUNNEL_NO_KEY,
++				  iph->saddr, iph->daddr, 0);
++	if (tunnel) {
++		if (!xfrm4_policy_check(NULL, XFRM_POLICY_IN, skb))
++			goto drop;
++
++		XFRM_TUNNEL_SKB_CB(skb)->tunnel.ip4 = tunnel;
++
++		skb->dev = tunnel->dev;
++
++		return xfrm_input(skb, nexthdr, spi, encap_type);
++	}
++
++	return -EINVAL;
++drop:
++	kfree_skb(skb);
++	return 0;
++}
++
+ static int vti_rcv(struct sk_buff *skb)
+ {
+ 	XFRM_SPI_SKB_CB(skb)->family = AF_INET;
+@@ -82,6 +109,14 @@ static int vti_rcv(struct sk_buff *skb)
+ 	return vti_input(skb, ip_hdr(skb)->protocol, 0, 0);
+ }
+ 
++static int vti_rcv_ipip(struct sk_buff *skb)
++{
++	XFRM_SPI_SKB_CB(skb)->family = AF_INET;
++	XFRM_SPI_SKB_CB(skb)->daddroff = offsetof(struct iphdr, daddr);
++
++	return vti_input_ipip(skb, ip_hdr(skb)->protocol, ip_hdr(skb)->saddr, 0);
++}
++
+ static int vti_rcv_cb(struct sk_buff *skb, int err)
+ {
+ 	unsigned short family;
+@@ -439,6 +474,12 @@ static struct xfrm4_protocol vti_ipcomp4_protocol __read_mostly = {
+ 	.priority	=	100,
+ };
+ 
++static struct xfrm_tunnel ipip_handler __read_mostly = {
++	.handler	=	vti_rcv_ipip,
++	.err_handler	=	vti4_err,
++	.priority	=	0,
++};
++
+ static int __net_init vti_init_net(struct net *net)
+ {
+ 	int err;
+@@ -607,6 +648,13 @@ static int __init vti_init(void)
+ 	if (err < 0)
+ 		goto xfrm_proto_comp_failed;
+ 
++	msg = "ipip tunnel";
++	err = xfrm4_tunnel_register(&ipip_handler, AF_INET);
++	if (err < 0) {
++		pr_info("%s: cant't register tunnel\n",__func__);
++		goto xfrm_tunnel_failed;
++	}
++
+ 	msg = "netlink interface";
+ 	err = rtnl_link_register(&vti_link_ops);
+ 	if (err < 0)
+@@ -616,6 +664,8 @@ static int __init vti_init(void)
+ 
+ rtnl_link_failed:
+ 	xfrm4_protocol_deregister(&vti_ipcomp4_protocol, IPPROTO_COMP);
++xfrm_tunnel_failed:
++	xfrm4_tunnel_deregister(&ipip_handler, AF_INET);
+ xfrm_proto_comp_failed:
+ 	xfrm4_protocol_deregister(&vti_ah4_protocol, IPPROTO_AH);
+ xfrm_proto_ah_failed:
+-- 
+2.19.1
+
 
 
