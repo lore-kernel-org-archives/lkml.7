@@ -7,50 +7,52 @@ X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E60A5C10F00
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 18:05:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DF6DAC43381
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 18:05:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AEBEA2087C
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 18:05:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A707B2147C
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 18:05:08 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1552413904;
-	bh=L2PIsHTZNFxCGffKuf3UuUo7Y0rNJ09W1UE6YPYQS3M=;
+	s=default; t=1552413908;
+	bh=aqwcRsou3omsl0U7oxXsBRH41wtvOff4J6L2rJ6r+20=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=p/k/jDnFbOC8vQiOI03wpo9U5qX9rdA1EdGi+4ZrauuufHnnpNzhFVaGa0AEEfWvN
-	 uCHiz8tnGfVXiwy/8u4gQw+z92vvVfUfJuqGAY82H2JbF/OSEYmUfce08UcscEeV5z
-	 9s6YCAKBLH+WwoDpb+VKb99bFov7Lnpy4DgSiQwU=
+	b=08gmw5MtvmOgwQtbQDv3ZjT0SzDIWdxuSB9RaRpFwmquzB5R15oqTHg1SDD6vEPZL
+	 RvlUpHO+o/TtTH3tDlwm+897bzn0HAKKaAkgTgdnnSgZp7wh6LS4+3Bu5AaGHEhdTP
+	 OMyCS0dr3pKahl8XLQnCWgCWxAYS5AhmdliG2Iu4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727602AbfCLRMm (ORCPT
+        id S1728412AbfCLSFG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 12 Mar 2019 13:12:42 -0400
-Received: from mail.kernel.org ([198.145.29.99]:47440 "EHLO mail.kernel.org"
+        Tue, 12 Mar 2019 14:05:06 -0400
+Received: from mail.kernel.org ([198.145.29.99]:48396 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727420AbfCLRMX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 12 Mar 2019 13:12:23 -0400
+        id S1727603AbfCLRMn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 12 Mar 2019 13:12:43 -0400
 Received: from localhost (unknown [104.133.8.98])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 448A72184C;
-        Tue, 12 Mar 2019 17:12:22 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 369E52183E;
+        Tue, 12 Mar 2019 17:12:42 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1552410742;
-        bh=L2PIsHTZNFxCGffKuf3UuUo7Y0rNJ09W1UE6YPYQS3M=;
+        s=default; t=1552410762;
+        bh=aqwcRsou3omsl0U7oxXsBRH41wtvOff4J6L2rJ6r+20=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=T1DlcjTpkQiGap6AF5EWHV1Npw+WGrbwZYuIDr59SaTL7lfv/6aT8G9l7MEqbwZvU
-         1Xwm28V5TNspsIUyPdU7deZiJK8m5cGckgDfmVPIs+5z1nePGHfgaECyfsnEf/oRVC
-         wjMsJgIzqjdjZOwMNXbDaz+SnKVN4ZBWDyNc9YMQ=
+        b=e70MVnaXa75Jxq6aSgg6dY0j7kFRtBXkEYptRrFLgZPQoTQqvgDWbd9GJ77vgKbkU
+         Ymf4ArXXfJTR6LIO/Jvp8IFMbbTQmZlXp/cW9JgPNgeSuXodpkgLcoMUbbu9n8UfVh
+         RqAMNr/qY8JZdlWqoY5symOR54LhUWB6hfZvi8Hk=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Jan Kara <jack@suse.cz>,
-        Michal Hocko <mhocko@suse.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Al Viro <viro@ZenIV.linux.org.uk>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
+        stable@vger.kernel.org, Zhou Yanjie <zhouyanjie@cduestc.edu.cn>,
+        Paul Burton <paul.burton@mips.com>,
+        linux-mips <linux-mips@vger.kernel.org>,
+        devicetree@vger.kernel.org, robh+dt@kernel.org,
+        ralf@linux-mips.org, jhogan@kernel.org, mark.rutland@arm.com,
+        malat@debian.org, ezequiel@collabora.co.uk, ulf.hansson@linaro.org,
+        syq <syq@debian.org>, "jiaxun.yang" <jiaxun.yang@flygoat.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.20 067/171] fs/drop_caches.c: avoid softlockups in drop_pagecache_sb()
-Date:   Tue, 12 Mar 2019 10:07:27 -0700
-Message-Id: <20190312170353.948978221@linuxfoundation.org>
+Subject: [PATCH 4.20 095/171] DTS: CI20: Fix bugs in ci20s device tree.
+Date:   Tue, 12 Mar 2019 10:07:55 -0700
+Message-Id: <20190312170356.160461164@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190312170347.868927101@linuxfoundation.org>
 References: <20190312170347.868927101@linuxfoundation.org>
@@ -69,55 +71,56 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-[ Upstream commit c27d82f52f75fc9d8d9d40d120d2a96fdeeada5e ]
+[ Upstream commit 1ca1c87f91d9dc50d6a38e2177b2032996e7901c ]
 
-When superblock has lots of inodes without any pagecache (like is the
-case for /proc), drop_pagecache_sb() will iterate through all of them
-without dropping sb->s_inode_list_lock which can lead to softlockups
-(one of our customers hit this).
+According to the Schematic, the hardware of ci20 leads to uart3,
+but not to uart2. Uart2 is miswritten in the original code.
 
-Fix the problem by going to the slow path and doing cond_resched() in
-case the process needs rescheduling.
-
-Link: http://lkml.kernel.org/r/20190114085343.15011-1-jack@suse.cz
-Signed-off-by: Jan Kara <jack@suse.cz>
-Acked-by: Michal Hocko <mhocko@suse.com>
-Reviewed-by: Andrew Morton <akpm@linux-foundation.org>
-Cc: Al Viro <viro@ZenIV.linux.org.uk>
-Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
-Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
+Signed-off-by: Zhou Yanjie <zhouyanjie@cduestc.edu.cn>
+Signed-off-by: Paul Burton <paul.burton@mips.com>
+Cc: linux-mips <linux-mips@vger.kernel.org>
+Cc: linux-kernel <linux-kernel@vger.kernel.org>
+Cc: devicetree@vger.kernel.org
+Cc: robh+dt@kernel.org
+Cc: ralf@linux-mips.org
+Cc: jhogan@kernel.org
+Cc: mark.rutland@arm.com
+Cc: malat@debian.org
+Cc: ezequiel@collabora.co.uk
+Cc: ulf.hansson@linaro.org
+Cc: syq <syq@debian.org>
+Cc: jiaxun.yang <jiaxun.yang@flygoat.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- fs/drop_caches.c | 8 +++++++-
- 1 file changed, 7 insertions(+), 1 deletion(-)
+ arch/mips/boot/dts/ingenic/ci20.dts | 8 ++++----
+ 1 file changed, 4 insertions(+), 4 deletions(-)
 
-diff --git a/fs/drop_caches.c b/fs/drop_caches.c
-index 82377017130f..d31b6c72b476 100644
---- a/fs/drop_caches.c
-+++ b/fs/drop_caches.c
-@@ -21,8 +21,13 @@ static void drop_pagecache_sb(struct super_block *sb, void *unused)
- 	spin_lock(&sb->s_inode_list_lock);
- 	list_for_each_entry(inode, &sb->s_inodes, i_sb_list) {
- 		spin_lock(&inode->i_lock);
-+		/*
-+		 * We must skip inodes in unusual state. We may also skip
-+		 * inodes without pages but we deliberately won't in case
-+		 * we need to reschedule to avoid softlockups.
-+		 */
- 		if ((inode->i_state & (I_FREEING|I_WILL_FREE|I_NEW)) ||
--		    (inode->i_mapping->nrpages == 0)) {
-+		    (inode->i_mapping->nrpages == 0 && !need_resched())) {
- 			spin_unlock(&inode->i_lock);
- 			continue;
- 		}
-@@ -30,6 +35,7 @@ static void drop_pagecache_sb(struct super_block *sb, void *unused)
- 		spin_unlock(&inode->i_lock);
- 		spin_unlock(&sb->s_inode_list_lock);
+diff --git a/arch/mips/boot/dts/ingenic/ci20.dts b/arch/mips/boot/dts/ingenic/ci20.dts
+index 50cff3cbcc6d..4f7b1fa31cf5 100644
+--- a/arch/mips/boot/dts/ingenic/ci20.dts
++++ b/arch/mips/boot/dts/ingenic/ci20.dts
+@@ -76,7 +76,7 @@
+ 	status = "okay";
  
-+		cond_resched();
- 		invalidate_mapping_pages(inode->i_mapping, 0, -1);
- 		iput(toput_inode);
- 		toput_inode = inode;
+ 	pinctrl-names = "default";
+-	pinctrl-0 = <&pins_uart2>;
++	pinctrl-0 = <&pins_uart3>;
+ };
+ 
+ &uart4 {
+@@ -196,9 +196,9 @@
+ 		bias-disable;
+ 	};
+ 
+-	pins_uart2: uart2 {
+-		function = "uart2";
+-		groups = "uart2-data", "uart2-hwflow";
++	pins_uart3: uart3 {
++		function = "uart3";
++		groups = "uart3-data", "uart3-hwflow";
+ 		bias-disable;
+ 	};
+ 
 -- 
 2.19.1
 
