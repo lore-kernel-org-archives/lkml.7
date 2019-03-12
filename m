@@ -2,111 +2,126 @@ Return-Path: <SRS0=J4ZE=RP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+X-Spam-Status: No, score=-7.3 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_PASS,USER_AGENT_MUTT autolearn=unavailable autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 28AFDC43381
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 08:44:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6FAC7C43381
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 08:45:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F4153214AE
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 08:44:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3B831214D8
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 08:45:01 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=szeredi.hu header.i=@szeredi.hu header.b="fVMmOVRp"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727587AbfCLIos (ORCPT
+        id S1727615AbfCLIpA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 12 Mar 2019 04:44:48 -0400
-Received: from mail-vs1-f66.google.com ([209.85.217.66]:38636 "EHLO
-        mail-vs1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726218AbfCLIos (ORCPT
+        Tue, 12 Mar 2019 04:45:00 -0400
+Received: from mail-wm1-f68.google.com ([209.85.128.68]:54715 "EHLO
+        mail-wm1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726724AbfCLIo6 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 12 Mar 2019 04:44:48 -0400
-Received: by mail-vs1-f66.google.com with SMTP id h132so1092889vsd.5;
-        Tue, 12 Mar 2019 01:44:46 -0700 (PDT)
+        Tue, 12 Mar 2019 04:44:58 -0400
+Received: by mail-wm1-f68.google.com with SMTP id f3so1671170wmj.4
+        for <linux-kernel@vger.kernel.org>; Tue, 12 Mar 2019 01:44:57 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=szeredi.hu; s=google;
+        h=date:from:to:cc:subject:message-id:mime-version:content-disposition
+         :user-agent;
+        bh=FAPOV31EHgmj7keyQ1DV8jgwUpCfM9dI3mHEsY66UyY=;
+        b=fVMmOVRpZtDUDRi2Q2hzWioTMLZDK/8HfQOQcTafPQpc+r39SASm/ZS+cZuIoky2dT
+         LuipQTfuRb3W/tfqYKXNo6bJikpA/hto8G+R110w19VYTmBTr3Xcxa2D2LijypdZ1S5C
+         ipF3Kb/u6P7/3Mj1uNKYp8sWDFsu2VyOGGYCU=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=YYHhDPutvmRW/s4Gd5kvh+ag+8DUkGkrMyTX/zZ528U=;
-        b=ioJ/EyDCWGWfirfmy+n92Ka9VgMPamXuPC/7EQ/i6M4oOPkK9smm05/xbJRoh5WaWV
-         idIjtlRbEo8QIyIIZoATzr6vynoMh4BB1bNVbIcorr0Skey0Tdt6I+/WADsiM1VYFUkI
-         QL8cFi3FIIGI84CNmoHt5luo7qqrUovCuBEmeJQkVfGWltD10uqq860mepBql2S146o8
-         hTWit2oj4FJvg/4pGr/utmUZZgW3iYio0wMN5p9GTLNXNX5MmdZtCgTiHFjhVzkGWBVj
-         Gb6xyBDcOWvEsajDfW5+ayQe71E63G9avYL7xBfeXmKv0TGd1fGS437I1TfQsY0lnyO5
-         4NBg==
-X-Gm-Message-State: APjAAAVkzIGDS735mV2RYxMRMlA/1bFnB46l9KB3BHaaKTI/NLk8Uisu
-        UHn8ndJZ3wALX7sySr5pKYHQQv8GslbShYynmuKj6g==
-X-Google-Smtp-Source: APXvYqzLuzfNCmbrcazvRI4ZsxYTz25X7Z4NR8xn99ABERz4UAk219Vc87Zwd+8iTok5ZV83UM/5HKd55zwzdeREARs=
-X-Received: by 2002:a67:fc9a:: with SMTP id x26mr19461608vsp.166.1552380286385;
- Tue, 12 Mar 2019 01:44:46 -0700 (PDT)
-MIME-Version: 1.0
-References: <CAG48ez1RVd5mQ_Pb6eygQESaZhpQz765OAZYSoPE0kPqfZEXQg@mail.gmail.com>
- <20190305091904.GB8256@zn.tnic> <20190305122218.GD13380@bombadil.infradead.org>
- <20190305134347.4be2449c@alans-desktop> <20190305145717.GD8256@zn.tnic>
- <CAHk-=wi2E4kugAW7BQwNSVwYHOr=B_9EgzBRMpQ2+1dxAqydDg@mail.gmail.com>
- <20190305173134.GE8256@zn.tnic> <CAHk-=wg0bY=RFhD4NW9x++fC0bME=_-9xM3kexGGM3gefHQTyQ@mail.gmail.com>
- <20190305181138.GG8256@zn.tnic> <20190305181808.GH8256@zn.tnic>
- <CAEdQ38G5M3vq9pGBV1iyEViO7JhFuXk5g+VCs-vUH+Z62kNqgQ@mail.gmail.com>
- <CAHk-=wgt7M6yA5BJCJo0nF22WgPJnN8CvViL9CAJmd+S+Civ6w@mail.gmail.com>
- <yw1xa7i14btw.fsf@mansr.com> <CAHk-=whD1SumZUBQeuMT-GcciwPxg_jW_TsPAmokYp3sGGCGhA@mail.gmail.com>
- <yw1x5zsp473a.fsf@mansr.com> <CAHk-=wiU7xacTqDfm-x29-meyJWNd_X95K0T8FQMcDgy-yo3Qw@mail.gmail.com>
- <yw1x1s3d42ia.fsf@mansr.com> <CAK8P3a031d9mSOxVmCAGcrbdaCE8N3R4e2Smtxp-Z+cautTAvg@mail.gmail.com>
- <CAHk-=wj3v41CWH+3ry3+vrkjAEcyGojtevpsZDbiXVvpv1nTkA@mail.gmail.com>
-In-Reply-To: <CAHk-=wj3v41CWH+3ry3+vrkjAEcyGojtevpsZDbiXVvpv1nTkA@mail.gmail.com>
-From:   Geert Uytterhoeven <geert@linux-m68k.org>
-Date:   Tue, 12 Mar 2019 09:44:34 +0100
-Message-ID: <CAMuHMdU76V=p8GLqVdChx+Sa_aPZ9BMCnnzmzWonqEq4Xe+LEQ@mail.gmail.com>
-Subject: Re: [PATCH] x86: Deprecate a.out support
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:mime-version
+         :content-disposition:user-agent;
+        bh=FAPOV31EHgmj7keyQ1DV8jgwUpCfM9dI3mHEsY66UyY=;
+        b=SVm0mPzcwM+MKQYrVQ1vJobfteU5cEZcD8IfzOsVsiE1ZBe228Q+9rlYUvQrATnD5B
+         SrNOr4SVOQZolK+ciPdJeD7pnavER0gS1bFw/LLbd8jiGtmGCh0yShad0kvN3T/+hY9N
+         9cGTRP01kgKjpMMxl9SdRfOn5fNAm67Thm6Dv078w5P9RhuG/fFwwQGOy0hQOAOUq4NW
+         OtTLDs1ayvc6BgWZkf5438XhZ8cxyVBngi8xudCmSXRpQIrg5gfreqI0/rh0ViUNoMI5
+         j6vbDetW31OCrZOuOs8OE9D8dcAXWkfXa7JGxeZ3Pwk/rtVgRKMG9KZMXCvt2+znk1kV
+         AlSw==
+X-Gm-Message-State: APjAAAWo8p4D8h1y+SCuRbcxwJVqqjHKhu5HU5T3E1MvbkcLVVDAah86
+        N6sYt8CwPzycbmArXrN0U29UWOsanrg=
+X-Google-Smtp-Source: APXvYqxHO3N6Gkx2tWgPgX2eiCFwC6HANLVpP2EmgjbTU8qUemXiHs95DKILohxaMK3vqYwkJio1zQ==
+X-Received: by 2002:a1c:d0c9:: with SMTP id h192mr1552914wmg.103.1552380296207;
+        Tue, 12 Mar 2019 01:44:56 -0700 (PDT)
+Received: from veci.piliscsaba.redhat.com (84-236-15-74.pool.digikabel.hu. [84.236.15.74])
+        by smtp.gmail.com with ESMTPSA id t2sm1261032wmi.37.2019.03.12.01.44.55
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Tue, 12 Mar 2019 01:44:55 -0700 (PDT)
+Date:   Tue, 12 Mar 2019 09:44:49 +0100
+From:   Miklos Szeredi <miklos@szeredi.hu>
 To:     Linus Torvalds <torvalds@linux-foundation.org>
-Cc:     Arnd Bergmann <arnd@arndb.de>,
-        =?UTF-8?B?TcOlbnMgUnVsbGfDpXJk?= <mans@mansr.com>,
-        Matt Turner <mattst88@gmail.com>,
-        Borislav Petkov <bp@alien8.de>,
-        Alan Cox <gnomes@lxorguk.ukuu.org.uk>,
-        Matthew Wilcox <willy@infradead.org>,
-        Jann Horn <jannh@google.com>,
-        Al Viro <viro@zeniv.linux.org.uk>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        kernel list <linux-kernel@vger.kernel.org>,
-        linux-fsdevel <linux-fsdevel@vger.kernel.org>,
-        "the arch/x86 maintainers" <x86@kernel.org>,
-        Linux API <linux-api@vger.kernel.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Richard Weinberger <richard@nod.at>,
-        Anton Ivanov <anton.ivanov@cambridgegreys.com>,
-        linux-alpha <linux-alpha@vger.kernel.org>,
-        linux-m68k <linux-m68k@lists.linux-m68k.org>
-Content-Type: text/plain; charset="UTF-8"
+Cc:     linux-kernel@vger.kernel.org, linux-fsdevel@vger.kernel.org
+Subject: [GIT PULL] fuse update for 5.1
+Message-ID: <20190312084449.GA30899@veci.piliscsaba.redhat.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Mar 11, 2019 at 10:46 PM Linus Torvalds
-<torvalds@linux-foundation.org> wrote:
-> On Mon, Mar 11, 2019 at 2:34 PM Arnd Bergmann <arnd@arndb.de> wrote:
-> > The main historic use case I've heard of was running Netscape
-> > Navigator on Alpha Linux, before there was an open source version.
-> > Doing this today to connect to the open internet is probably
-> > a bit pointless, but there may be other use cases.
->
-> The _really_ main version was that I decided to make my life easier
-> for the initial alpha port by trying to run basic (tested) OSF/1
-> binaries directly.
->
-> Netscape may have been one of the binaries people actually ended up
-> using, but it's probably not a reason any more, since the internet has
-> moved past that anyway.
+Hi Linus,
 
-Yeah, the alphas on the server side, powering AltaVista, are also long
-gone...
+Please pull from:
 
-Gr{oetje,eeting}s,
+  git://git.kernel.org/pub/scm/linux/kernel/git/mszeredi/fuse.git tags/fuse-update-5.1
 
-                        Geert
+Scalability and performance improvements, as well as minor bug fixes and
+cleanups.
 
--- 
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+Thanks,
+Miklos
 
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
+----------------------------------------------------------------
+Chad Austin (2):
+      fuse: support clients that don't implement 'opendir'
+      fuse: cache readdir calls if filesystem opts out of opendir
+
+Kirill Tkhai (12):
+      fuse: Replace page without copying in fuse_writepage_in_flight()
+      fuse: Remove stale comment in end_requests()
+      fuse: Kill fasync only if interrupt is queued in queue_interrupt()
+      fuse: Optimize request_end() by not taking fiq->waitq.lock
+      fuse: Wake up req->waitq of only if not background
+      fuse: Do some refactoring in fuse_dev_do_write()
+      fuse: Verify userspace asks to requeue interrupt that we really sent
+      fuse: Add fuse_inode argument to fuse_prepare_release()
+      fuse: Convert fc->attr_version into atomic64_t
+      fuse: Introduce fi->lock to protect write related fields
+      fuse: Protect fi->nlookup with fi->lock
+      fuse: Protect ff->reserved_req via corresponding fi->lock
+
+Martin Raiber (1):
+      fuse: Switch to using async direct IO for FOPEN_DIRECT_IO
+
+Miklos Szeredi (10):
+      fuse: extract fuse_find_writeback() helper
+      fuse: clean up fuse_writepage_in_flight()
+      fuse: only reuse auxiliary request in fuse_writepage_in_flight()
+      fuse: fix leaked aux requests
+      fuse: clean up aborted
+      fuse: use atomic64_t for khctr
+      fuse: use iov_iter based generic splice helpers
+      fuse add copy_file_range to direct io fops
+      fuse: multiplex cached/direct_io file operations
+      fuse: lift bad inode checks into callers
+
+---
+ fs/fuse/control.c         |   4 +-
+ fs/fuse/cuse.c            |   7 +-
+ fs/fuse/dev.c             | 115 +++++++++-------
+ fs/fuse/dir.c             |  54 +++-----
+ fs/fuse/file.c            | 342 ++++++++++++++++++++++++++--------------------
+ fs/fuse/fuse_i.h          |  28 ++--
+ fs/fuse/inode.c           |  26 ++--
+ fs/fuse/readdir.c         |   4 +-
+ include/uapi/linux/fuse.h |   7 +-
+ 9 files changed, 327 insertions(+), 260 deletions(-)
