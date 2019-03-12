@@ -7,38 +7,38 @@ X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C241BC43381
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 18:07:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E32C6C43381
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 18:07:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9321E2087C
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 18:07:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B1BF821734
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 18:07:43 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1552414058;
-	bh=4BluRIqSIzUm4xHbDoh4fjdn2BL1H1b29RBrrSLG+Ec=;
+	s=default; t=1552414063;
+	bh=mv1M9FJxvZBHJbs/qqnjc2kl51JfClxx9tmGgCrhjEY=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=r8qeTeCZp4YXaM4M5BEoDHE6E8uVsZyAuSRHYWxdNIOzovQ8j/Hw08GyYpmmFhlT2
-	 l2hnQJCt4vRLzMbnHWWjPmDcYFXjdhCWvSAQNNnNV2MrIbVVjWjHZlTbVXD2UKVi0R
-	 mscJ71AFaC+qfwry1AgJlUwJW6j0sECVN0oUOPj0=
+	b=MilvcTT738K+Lp7UVnR0cv7Q8NImVig+PM0azb7PpwLRCjLAENIMkP5K5NpJ/m1fF
+	 KcbYe5LZQJqb0m53nc0Bj6YhJ0Ux7V41nMk/HK0JMEyNL/tLCApP0zQ/r8c/3R30EO
+	 T4JggDIFrLnGULspe/7IkCSnP4L2z0L7A8ACNH58=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728100AbfCLSHh (ORCPT
+        id S1728157AbfCLSHm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 12 Mar 2019 14:07:37 -0400
-Received: from mail.kernel.org ([198.145.29.99]:47302 "EHLO mail.kernel.org"
+        Tue, 12 Mar 2019 14:07:42 -0400
+Received: from mail.kernel.org ([198.145.29.99]:47272 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727394AbfCLRMU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S1727384AbfCLRMU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Tue, 12 Mar 2019 13:12:20 -0400
 Received: from localhost (unknown [104.133.8.98])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 8B9412177E;
-        Tue, 12 Mar 2019 17:12:19 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id D25E6217D9;
+        Tue, 12 Mar 2019 17:12:18 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1552410739;
-        bh=4BluRIqSIzUm4xHbDoh4fjdn2BL1H1b29RBrrSLG+Ec=;
+        s=default; t=1552410738;
+        bh=mv1M9FJxvZBHJbs/qqnjc2kl51JfClxx9tmGgCrhjEY=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=z8ROuXDU0TUyeTG0AvAxIi2AfmtM5om0Msa3O/B/tzEOmcLb1GHRBHl66rQId9GAk
-         I0RYtqYGC7bkRV26f+bB1MuA3n77npjf6Ckfpuu2m03YzRTFAUH1bBZOmjvmCpyxmP
-         47zSZH5kxY8uhz7Sci/gJZgy5F565DxPvl+DeElo=
+        b=DtggwwBuuE2V/21yARAN/EeytBFhjS89G2dGpb/XR/hWP37+LJV7aLpd1i0OlYJsc
+         ZLM1Zo/sHcoWIBgkN/4NJMww8USq4v55LoIpgC/A/tBFljjU/zVymRSxBMEyJxk6hw
+         9FpoTMDNf15RcFmNcngnf9YI1Ru/V6n/HiVgFZWA=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
@@ -46,9 +46,9 @@ Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         Ariel Elior <aelior@marvell.com>,
         "David S. Miller" <davem@davemloft.net>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.20 043/171] qed: Fix VF probe failure while FLR
-Date:   Tue, 12 Mar 2019 10:07:03 -0700
-Message-Id: <20190312170351.831277041@linuxfoundation.org>
+Subject: [PATCH 4.20 042/171] qed: Fix LACP pdu drops for VFs
+Date:   Tue, 12 Mar 2019 10:07:02 -0700
+Message-Id: <20190312170351.723521857@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190312170347.868927101@linuxfoundation.org>
 References: <20190312170347.868927101@linuxfoundation.org>
@@ -67,55 +67,92 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-[ Upstream commit 327852ec64205bb651be391a069784872098a3b2 ]
+[ Upstream commit ff9296966e5e00b0d0d00477b2365a178f0f06a3 ]
 
-VFs may hit VF-PF channel timeout while probing, as in some
-cases it was observed that VF FLR and VF "acquire" message
-transaction (i.e first message from VF to PF in VF's probe flow)
-could occur simultaneously which could lead VF to fail sending
-"acquire" message to PF as VF is marked disabled from HW perspective
-due to FLR, which will result into channel timeout and VF probe failure.
+VF is always configured to drop control frames
+(with reserved mac addresses) but to work LACP
+on the VFs, it would require LACP control frames
+to be forwarded or transmitted successfully.
 
-In such cases, try retrying VF "acquire" message so that in later
-attempts it could be successful to pass message to PF after the VF
-FLR is completed and can be probed successfully.
+This patch fixes this in such a way that trusted VFs
+(marked through ndo_set_vf_trust) would be allowed to
+pass the control frames such as LACP pdus.
 
 Signed-off-by: Manish Chopra <manishc@marvell.com>
 Signed-off-by: Ariel Elior <aelior@marvell.com>
 Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/ethernet/qlogic/qed/qed_vf.c | 10 ++++++++++
- 1 file changed, 10 insertions(+)
+ drivers/net/ethernet/qlogic/qed/qed_l2.c    |  5 +++++
+ drivers/net/ethernet/qlogic/qed/qed_l2.h    |  3 +++
+ drivers/net/ethernet/qlogic/qed/qed_sriov.c | 10 ++++++++--
+ 3 files changed, 16 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/net/ethernet/qlogic/qed/qed_vf.c b/drivers/net/ethernet/qlogic/qed/qed_vf.c
-index b6cccf44bf40..5dda547772c1 100644
---- a/drivers/net/ethernet/qlogic/qed/qed_vf.c
-+++ b/drivers/net/ethernet/qlogic/qed/qed_vf.c
-@@ -261,6 +261,7 @@ static int qed_vf_pf_acquire(struct qed_hwfn *p_hwfn)
- 	struct pfvf_acquire_resp_tlv *resp = &p_iov->pf2vf_reply->acquire_resp;
- 	struct pf_vf_pfdev_info *pfdev_info = &resp->pfdev_info;
- 	struct vf_pf_resc_request *p_resc;
-+	u8 retry_cnt = VF_ACQUIRE_THRESH;
- 	bool resources_acquired = false;
- 	struct vfpf_acquire_tlv *req;
- 	int rc = 0, attempts = 0;
-@@ -314,6 +315,15 @@ static int qed_vf_pf_acquire(struct qed_hwfn *p_hwfn)
+diff --git a/drivers/net/ethernet/qlogic/qed/qed_l2.c b/drivers/net/ethernet/qlogic/qed/qed_l2.c
+index b8baa6fcef8e..e68ca83ae915 100644
+--- a/drivers/net/ethernet/qlogic/qed/qed_l2.c
++++ b/drivers/net/ethernet/qlogic/qed/qed_l2.c
+@@ -748,6 +748,11 @@ int qed_sp_vport_update(struct qed_hwfn *p_hwfn,
+ 		return rc;
+ 	}
  
- 		/* send acquire request */
- 		rc = qed_send_msg2pf(p_hwfn, &resp->hdr.status, sizeof(*resp));
++	if (p_params->update_ctl_frame_check) {
++		p_cmn->ctl_frame_mac_check_en = p_params->mac_chk_en;
++		p_cmn->ctl_frame_ethtype_check_en = p_params->ethtype_chk_en;
++	}
 +
-+		/* Re-try acquire in case of vf-pf hw channel timeout */
-+		if (retry_cnt && rc == -EBUSY) {
-+			DP_VERBOSE(p_hwfn, QED_MSG_IOV,
-+				   "VF retrying to acquire due to VPC timeout\n");
-+			retry_cnt--;
-+			continue;
-+		}
-+
- 		if (rc)
- 			goto exit;
+ 	/* Update mcast bins for VFs, PF doesn't use this functionality */
+ 	qed_sp_update_mcast_bin(p_hwfn, p_ramrod, p_params);
  
+diff --git a/drivers/net/ethernet/qlogic/qed/qed_l2.h b/drivers/net/ethernet/qlogic/qed/qed_l2.h
+index 8d80f1095d17..7127d5aaac42 100644
+--- a/drivers/net/ethernet/qlogic/qed/qed_l2.h
++++ b/drivers/net/ethernet/qlogic/qed/qed_l2.h
+@@ -219,6 +219,9 @@ struct qed_sp_vport_update_params {
+ 	struct qed_rss_params		*rss_params;
+ 	struct qed_filter_accept_flags	accept_flags;
+ 	struct qed_sge_tpa_params	*sge_tpa_params;
++	u8				update_ctl_frame_check;
++	u8				mac_chk_en;
++	u8				ethtype_chk_en;
+ };
+ 
+ int qed_sp_vport_update(struct qed_hwfn *p_hwfn,
+diff --git a/drivers/net/ethernet/qlogic/qed/qed_sriov.c b/drivers/net/ethernet/qlogic/qed/qed_sriov.c
+index ca6290fa0f30..71a7af134dd8 100644
+--- a/drivers/net/ethernet/qlogic/qed/qed_sriov.c
++++ b/drivers/net/ethernet/qlogic/qed/qed_sriov.c
+@@ -1969,7 +1969,9 @@ static void qed_iov_vf_mbx_start_vport(struct qed_hwfn *p_hwfn,
+ 	params.vport_id = vf->vport_id;
+ 	params.max_buffers_per_cqe = start->max_buffers_per_cqe;
+ 	params.mtu = vf->mtu;
+-	params.check_mac = true;
++
++	/* Non trusted VFs should enable control frame filtering */
++	params.check_mac = !vf->p_vf_info.is_trusted_configured;
+ 
+ 	rc = qed_sp_eth_vport_start(p_hwfn, &params);
+ 	if (rc) {
+@@ -5130,6 +5132,9 @@ static void qed_iov_handle_trust_change(struct qed_hwfn *hwfn)
+ 		params.opaque_fid = vf->opaque_fid;
+ 		params.vport_id = vf->vport_id;
+ 
++		params.update_ctl_frame_check = 1;
++		params.mac_chk_en = !vf_info->is_trusted_configured;
++
+ 		if (vf_info->rx_accept_mode & mask) {
+ 			flags->update_rx_mode_config = 1;
+ 			flags->rx_accept_filter = vf_info->rx_accept_mode;
+@@ -5147,7 +5152,8 @@ static void qed_iov_handle_trust_change(struct qed_hwfn *hwfn)
+ 		}
+ 
+ 		if (flags->update_rx_mode_config ||
+-		    flags->update_tx_mode_config)
++		    flags->update_tx_mode_config ||
++		    params.update_ctl_frame_check)
+ 			qed_sp_vport_update(hwfn, &params,
+ 					    QED_SPQ_MODE_EBLOCK, NULL);
+ 	}
 -- 
 2.19.1
 
