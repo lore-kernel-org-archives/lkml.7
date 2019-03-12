@@ -4,54 +4,54 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0ED38C43381
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 17:14:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5E405C43381
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 17:14:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D1A80217F5
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 17:14:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2E934206DF
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 17:14:42 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1552410878;
-	bh=75ZUn/mIRRk9x0oksHMZnD4fzhCLuETtfHgnV5Hm6ro=;
+	s=default; t=1552410882;
+	bh=HypgB1R5/K6v+RlmL4REoK+WmSjdPZEgea/NfpOebHg=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=TB7CDKCrCsZYPuYHlJv5FofIgmGBOV4+iDBOWUk3vjWbZhw+XqG1ceVwoLwZ4PbTx
-	 C4wzH2dhCG459qjxaoIKc50pkooU+wx22QQCsszOhWZsN4kwsUq0rzSdad/dY4NBYT
-	 P60qVMFh43D0R4ebF2izOQAKoHNo6mgzAPdEdRes=
+	b=GxDqcipNqXNWbC9jTfSefwVw7ZVlMisKqAt5kbjxmsOcgJ4ukdnqlaXXlSG8dznSh
+	 aC+ulvZ8sBXN2Qf3V/dMvkOgmas76jkyX7mVpSxfBHN+4psZlz3pGjBOkCJuoVkRCF
+	 tXJtMTPf+/qxCJVQ/hAnC5PWv2aapDbU7qR+Jk9s=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728431AbfCLROh (ORCPT
+        id S1728449AbfCLROk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 12 Mar 2019 13:14:37 -0400
-Received: from mail.kernel.org ([198.145.29.99]:51400 "EHLO mail.kernel.org"
+        Tue, 12 Mar 2019 13:14:40 -0400
+Received: from mail.kernel.org ([198.145.29.99]:51438 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728096AbfCLRNu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S1728104AbfCLRNu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Tue, 12 Mar 2019 13:13:50 -0400
 Received: from localhost (unknown [104.133.8.98])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B811221850;
-        Tue, 12 Mar 2019 17:13:48 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 6F5DA2171F;
+        Tue, 12 Mar 2019 17:13:49 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1552410828;
-        bh=75ZUn/mIRRk9x0oksHMZnD4fzhCLuETtfHgnV5Hm6ro=;
+        s=default; t=1552410829;
+        bh=HypgB1R5/K6v+RlmL4REoK+WmSjdPZEgea/NfpOebHg=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=KpuQhi7txmuo/J9OIYfxJDVO4JFcY4YRRXNz2gv27ZcsjORTYiSAuuM5LfsFxTABO
-         qhOJDhgvcQc1StfZnt+8qwpCMLZqsPDKHQxkN8spTGtjJpkkXLj15+PgogfX0y35+G
-         rZSpACVea2Aztbz7ShhCx6oofg1IfHquM8cer8k0=
+        b=vSgU55dy9TrQrvppfP0TU6KzSuaHD146RVvZF8ADo/7AK7s+9XZzoYY+iM4nZFWav
+         j/DR9k9i2d9yEL9teA6MMbQTBIMVQRPDaJTGYSyuY1YGS0avUIeDXVR5LlvUdJ2n17
+         Rrwsbz0DBKsnMyB8xp36eT/D2D0IDYbhp8udzlck=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Tony Jones <tonyj@suse.de>,
-        Jiri Olsa <jolsa@kernel.org>,
-        Arnaldo Carvalho de Melo <acme@redhat.com>,
-        Ravi Bangoria <ravi.bangoria@linux.ibm.com>,
-        Andi Kleen <ak@linux.intel.com>,
-        Jin Yao <yao.jin@linux.intel.com>,
+        stable@vger.kernel.org,
+        "Michael J. Ruhl" <michael.j.ruhl@intel.com>,
+        Brian Welty <brian.welty@intel.com>,
+        Mike Marciniszyn <mike.marciniszyn@intel.com>,
+        Dennis Dalessandro <dennis.dalessandro@intel.com>,
+        Jason Gunthorpe <jgg@mellanox.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 006/149] perf script: Fix crash when processing recorded stat data
-Date:   Tue, 12 Mar 2019 10:07:04 -0700
-Message-Id: <20190312170350.018664512@linuxfoundation.org>
+Subject: [PATCH 4.19 007/149] IB/{hfi1, qib}: Fix WC.byte_len calculation for UD_SEND_WITH_IMM
+Date:   Tue, 12 Mar 2019 10:07:05 -0700
+Message-Id: <20190312170350.141047661@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190312170349.421581206@linuxfoundation.org>
 References: <20190312170349.421581206@linuxfoundation.org>
@@ -70,99 +70,55 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-[ Upstream commit 8bf8c6da53c2265aea365a1de6038f118f522113 ]
+[ Upstream commit 904bba211acc2112fdf866e5a2bc6cd9ecd0de1b ]
 
-While updating perf to work with Python3 and Python2 I noticed that the
-stat-cpi script was dumping core.
+The work completion length for a receiving a UD send with immediate is
+short by 4 bytes causing application using this opcode to fail.
 
-$ perf  stat -e cycles,instructions record -o /tmp/perf.data /bin/false
+The UD receive logic incorrectly subtracts 4 bytes for immediate
+value. These bytes are already included in header length and are used to
+calculate header/payload split, so the result is these 4 bytes are
+subtracted twice, once when the header length subtracted from the overall
+length and once again in the UD opcode specific path.
 
- Performance counter stats for '/bin/false':
+Remove the extra subtraction when handling the opcode.
 
-           802,148      cycles
-
-           604,622      instructions                                                       802,148      cycles
-           604,622      instructions
-
-       0.001445842 seconds time elapsed
-
-$ perf script -i /tmp/perf.data -s scripts/python/stat-cpi.py
-Segmentation fault (core dumped)
-...
-...
-    rblist=rblist@entry=0xb2a200 <rt_stat>,
-    new_entry=new_entry@entry=0x7ffcb755c310) at util/rblist.c:33
-    ctx=<optimized out>, type=<optimized out>, create=<optimized out>,
-    cpu=<optimized out>, evsel=<optimized out>) at util/stat-shadow.c:118
-    ctx=<optimized out>, type=<optimized out>, st=<optimized out>)
-    at util/stat-shadow.c:196
-    count=count@entry=727442, cpu=cpu@entry=0, st=0xb2a200 <rt_stat>)
-    at util/stat-shadow.c:239
-    config=config@entry=0xafeb40 <stat_config>,
-    counter=counter@entry=0x133c6e0) at util/stat.c:372
-...
-...
-
-The issue is that since 1fcd03946b52 perf_stat__update_shadow_stats now calls
-update_runtime_stat passing rt_stat rather than calling update_stats but
-perf_stat__init_shadow_stats has never been called to initialize rt_stat in
-the script path processing recorded stat data.
-
-Since I can't see any reason why perf_stat__init_shadow_stats() is presently
-initialized like it is in builtin-script.c::perf_sample__fprint_metric()
-[4bd1bef8bba2f] I'm proposing it instead be initialized once in __cmd_script
-
-Committer testing:
-
-After applying the patch:
-
-  # perf script -i /tmp/perf.data -s tools/perf/scripts/python/stat-cpi.py
-       0.001970: cpu -1, thread -1 -> cpi 1.709079 (1075684/629394)
-  #
-
-No segfault.
-
-Signed-off-by: Tony Jones <tonyj@suse.de>
-Reviewed-by: Jiri Olsa <jolsa@kernel.org>
-Tested-by: Arnaldo Carvalho de Melo <acme@redhat.com>
-Tested-by: Ravi Bangoria <ravi.bangoria@linux.ibm.com>
-Cc: Andi Kleen <ak@linux.intel.com>
-Cc: Jin Yao <yao.jin@linux.intel.com>
-Fixes: 1fcd03946b52 ("perf stat: Update per-thread shadow stats")
-Link: http://lkml.kernel.org/r/20190120191414.12925-1-tonyj@suse.de
-Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
+Fixes: 7724105686e7 ("IB/hfi1: add driver files")
+Reviewed-by: Michael J. Ruhl <michael.j.ruhl@intel.com>
+Signed-off-by: Brian Welty <brian.welty@intel.com>
+Signed-off-by: Mike Marciniszyn <mike.marciniszyn@intel.com>
+Signed-off-by: Dennis Dalessandro <dennis.dalessandro@intel.com>
+Signed-off-by: Jason Gunthorpe <jgg@mellanox.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- tools/perf/builtin-script.c | 7 ++-----
- 1 file changed, 2 insertions(+), 5 deletions(-)
+ drivers/infiniband/hw/hfi1/ud.c    | 1 -
+ drivers/infiniband/hw/qib/qib_ud.c | 1 -
+ 2 files changed, 2 deletions(-)
 
-diff --git a/tools/perf/builtin-script.c b/tools/perf/builtin-script.c
-index ce2aee11e360..53c11fc0855e 100644
---- a/tools/perf/builtin-script.c
-+++ b/tools/perf/builtin-script.c
-@@ -1589,13 +1589,8 @@ static void perf_sample__fprint_metric(struct perf_script *script,
- 		.force_header = false,
- 	};
- 	struct perf_evsel *ev2;
--	static bool init;
- 	u64 val;
- 
--	if (!init) {
--		perf_stat__init_shadow_stats();
--		init = true;
--	}
- 	if (!evsel->stats)
- 		perf_evlist__alloc_stats(script->session->evlist, false);
- 	if (evsel_script(evsel->leader)->gnum++ == 0)
-@@ -2214,6 +2209,8 @@ static int __cmd_script(struct perf_script *script)
- 
- 	signal(SIGINT, sig_handler);
- 
-+	perf_stat__init_shadow_stats();
-+
- 	/* override event processing functions */
- 	if (script->show_task_events) {
- 		script->tool.comm = process_comm_event;
+diff --git a/drivers/infiniband/hw/hfi1/ud.c b/drivers/infiniband/hw/hfi1/ud.c
+index 70d39fc450a1..54eb69564264 100644
+--- a/drivers/infiniband/hw/hfi1/ud.c
++++ b/drivers/infiniband/hw/hfi1/ud.c
+@@ -980,7 +980,6 @@ void hfi1_ud_rcv(struct hfi1_packet *packet)
+ 	    opcode == IB_OPCODE_UD_SEND_ONLY_WITH_IMMEDIATE) {
+ 		wc.ex.imm_data = packet->ohdr->u.ud.imm_data;
+ 		wc.wc_flags = IB_WC_WITH_IMM;
+-		tlen -= sizeof(u32);
+ 	} else if (opcode == IB_OPCODE_UD_SEND_ONLY) {
+ 		wc.ex.imm_data = 0;
+ 		wc.wc_flags = 0;
+diff --git a/drivers/infiniband/hw/qib/qib_ud.c b/drivers/infiniband/hw/qib/qib_ud.c
+index f8d029a2390f..bce2b5cd3c7b 100644
+--- a/drivers/infiniband/hw/qib/qib_ud.c
++++ b/drivers/infiniband/hw/qib/qib_ud.c
+@@ -513,7 +513,6 @@ void qib_ud_rcv(struct qib_ibport *ibp, struct ib_header *hdr,
+ 	    opcode == IB_OPCODE_UD_SEND_ONLY_WITH_IMMEDIATE) {
+ 		wc.ex.imm_data = ohdr->u.ud.imm_data;
+ 		wc.wc_flags = IB_WC_WITH_IMM;
+-		tlen -= sizeof(u32);
+ 	} else if (opcode == IB_OPCODE_UD_SEND_ONLY) {
+ 		wc.ex.imm_data = 0;
+ 		wc.wc_flags = 0;
 -- 
 2.19.1
 
