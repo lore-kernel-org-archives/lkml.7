@@ -7,46 +7,50 @@ X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 36BE1C43381
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 17:20:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1A955C4360F
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 17:20:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EE4B4214AE
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 17:20:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DE68B214AE
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 17:20:25 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1552411209;
-	bh=Va8p/WDF5He8p6962LOks/82faS6pK6zNydoADeljak=;
+	s=default; t=1552411225;
+	bh=MVYqKjChGDIouZylQG6P77I0kakZDqiF79TlhZb0okY=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=vniXWDkHvcGqDsLLSjXO5Ztphx7MgviiL9fn8THo+AijxH8TKTA1fTDTvtAcIDKjU
-	 EBdH4cngp6QhUz0Y7a9oiro2MoTKQY2K/2u4aI0Uc5JjVhILwB8AoKuDPJQoaBg4G7
-	 rubsrLtrzFNWld+uFsflFxL17k31n+uCrs6U3tYE=
+	b=ldedQ1KxvdxVUUyKB3Z7m+bEqRifgQT0qRSg74TP/e/TSy5VVj7H3zjTndffbqRpy
+	 Gmd6/RDIlGdemhNbrABkgMeUXb1ySc456iAMUgtUMA65DutBqrZz+hbKDyyL8+5Hen
+	 m1xebo3g3kqN7QuO2kIVj207QaGH/wd8bT0kcpIk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730099AbfCLRS3 (ORCPT
+        id S1727268AbfCLRUY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 12 Mar 2019 13:18:29 -0400
-Received: from mail.kernel.org ([198.145.29.99]:34508 "EHLO mail.kernel.org"
+        Tue, 12 Mar 2019 13:20:24 -0400
+Received: from mail.kernel.org ([198.145.29.99]:35990 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729798AbfCLRRx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 12 Mar 2019 13:17:53 -0400
+        id S1730053AbfCLRSV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 12 Mar 2019 13:18:21 -0400
 Received: from localhost (unknown [104.133.8.98])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id A73D52171F;
-        Tue, 12 Mar 2019 17:17:52 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id BCB98218A6;
+        Tue, 12 Mar 2019 17:18:20 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1552411072;
-        bh=Va8p/WDF5He8p6962LOks/82faS6pK6zNydoADeljak=;
+        s=default; t=1552411100;
+        bh=MVYqKjChGDIouZylQG6P77I0kakZDqiF79TlhZb0okY=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=PTo0CQ4CPGyBJLPt5jyJ0R35g13fJblHG6m72PAwGa5cA63M8Uq6f3zri6m92PZwB
-         z98wFqYz1FEl5+DyqR7m/+hM+tfUsOMWfru27oPwsz9POZ4NjURnfzur4wSrZ9bFjC
-         pNu3nKoBDcxypbc9R3Y8tEFJM7Wzc8oGvg6kn5Ko=
+        b=a7K+fD13dg3fO3fW4C6Bbq7Le4cHyG9P0ABUnqIbkqaYbaXcmlYOjXtHhKIXAGY4X
+         U1NT5usiX9Z8YaQj5Pf8mXECnOVV6macoSH9ZEqx57cQArj62hXl1WQ3libk7unJNW
+         F6+gtCJFRV70dwlqT/Iyi6JVDr+uDPSoYHXSsNyg=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Max Filippov <jcmvbkbc@gmail.com>,
+        stable@vger.kernel.org, Jun-Ru Chang <jrjang@realtek.com>,
+        Tony Wu <tonywu@realtek.com>,
+        Paul Burton <paul.burton@mips.com>, ralf@linux-mips.org,
+        jhogan@kernel.org, macro@mips.com, yamada.masahiro@socionext.com,
+        peterz@infradead.org, mingo@kernel.org, linux-mips@vger.kernel.org,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.9 46/96] xtensa: SMP: limit number of possible CPUs by NR_CPUS
-Date:   Tue, 12 Mar 2019 10:10:04 -0700
-Message-Id: <20190312171038.043229476@linuxfoundation.org>
+Subject: [PATCH 4.9 82/96] MIPS: Remove function size check in get_frame_info()
+Date:   Tue, 12 Mar 2019 10:10:40 -0700
+Message-Id: <20190312171040.763830937@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190312171034.530434962@linuxfoundation.org>
 References: <20190312171034.530434962@linuxfoundation.org>
@@ -65,47 +69,62 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-[ Upstream commit 25384ce5f9530def39421597b1457d9462df6455 ]
+[ Upstream commit 2b424cfc69728224fcb5fad138ea7260728e0901 ]
 
-This fixes the following warning at boot when the kernel is booted on a
-board with more CPU cores than was configured in NR_CPUS:
+Patch (b6c7a324df37b "MIPS: Fix get_frame_info() handling of
+microMIPS function size.") introduces additional function size
+check for microMIPS by only checking insn between ip and ip + func_size.
+However, func_size in get_frame_info() is always 0 if KALLSYMS is not
+enabled. This causes get_frame_info() to return immediately without
+calculating correct frame_size, which in turn causes "Can't analyze
+schedule() prologue" warning messages at boot time.
 
-  smp_init_cpus: Core Count = 8
-  smp_init_cpus: Core Id = 0
-  ------------[ cut here ]------------
-  WARNING: CPU: 0 PID: 0 at include/linux/cpumask.h:121 smp_init_cpus+0x54/0x74
-  Modules linked in:
-  CPU: 0 PID: 0 Comm: swapper Not tainted 5.0.0-rc3-00015-g1459333f88a0 #124
-  Call Trace:
-    __warn$part$3+0x6a/0x7c
-    warn_slowpath_null+0x35/0x3c
-    smp_init_cpus+0x54/0x74
-    setup_arch+0x1c0/0x1d0
-    start_kernel+0x44/0x310
-    _startup+0x107/0x107
+This patch removes func_size check, and let the frame_size check run
+up to 128 insns for both MIPS and microMIPS.
 
-Signed-off-by: Max Filippov <jcmvbkbc@gmail.com>
+Signed-off-by: Jun-Ru Chang <jrjang@realtek.com>
+Signed-off-by: Tony Wu <tonywu@realtek.com>
+Signed-off-by: Paul Burton <paul.burton@mips.com>
+Fixes: b6c7a324df37b ("MIPS: Fix get_frame_info() handling of microMIPS function size.")
+Cc: <ralf@linux-mips.org>
+Cc: <jhogan@kernel.org>
+Cc: <macro@mips.com>
+Cc: <yamada.masahiro@socionext.com>
+Cc: <peterz@infradead.org>
+Cc: <mingo@kernel.org>
+Cc: <linux-mips@vger.kernel.org>
+Cc: <linux-kernel@vger.kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/xtensa/kernel/smp.c | 5 +++++
- 1 file changed, 5 insertions(+)
+ arch/mips/kernel/process.c | 7 +++----
+ 1 file changed, 3 insertions(+), 4 deletions(-)
 
-diff --git a/arch/xtensa/kernel/smp.c b/arch/xtensa/kernel/smp.c
-index 8329891071aa..44805673a250 100644
---- a/arch/xtensa/kernel/smp.c
-+++ b/arch/xtensa/kernel/smp.c
-@@ -93,6 +93,11 @@ void __init smp_init_cpus(void)
- 	pr_info("%s: Core Count = %d\n", __func__, ncpus);
- 	pr_info("%s: Core Id = %d\n", __func__, core_id);
+diff --git a/arch/mips/kernel/process.c b/arch/mips/kernel/process.c
+index 1cc133e7026f..fffd031dc6b6 100644
+--- a/arch/mips/kernel/process.c
++++ b/arch/mips/kernel/process.c
+@@ -344,7 +344,7 @@ static inline int is_sp_move_ins(union mips_instruction *ip)
+ static int get_frame_info(struct mips_frame_info *info)
+ {
+ 	bool is_mmips = IS_ENABLED(CONFIG_CPU_MICROMIPS);
+-	union mips_instruction insn, *ip, *ip_end;
++	union mips_instruction insn, *ip;
+ 	const unsigned int max_insns = 128;
+ 	unsigned int last_insn_size = 0;
+ 	unsigned int i;
+@@ -356,10 +356,9 @@ static int get_frame_info(struct mips_frame_info *info)
+ 	if (!ip)
+ 		goto err;
  
-+	if (ncpus > NR_CPUS) {
-+		ncpus = NR_CPUS;
-+		pr_info("%s: limiting core count by %d\n", __func__, ncpus);
-+	}
+-	ip_end = (void *)ip + info->func_size;
+-
+-	for (i = 0; i < max_insns && ip < ip_end; i++) {
++	for (i = 0; i < max_insns; i++) {
+ 		ip = (void *)ip + last_insn_size;
 +
- 	for (i = 0; i < ncpus; ++i)
- 		set_cpu_possible(i, true);
- }
+ 		if (is_mmips && mm_insn_16bit(ip->halfword[0])) {
+ 			insn.halfword[0] = 0;
+ 			insn.halfword[1] = ip->halfword[0];
 -- 
 2.19.1
 
