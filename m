@@ -2,170 +2,171 @@ Return-Path: <SRS0=J4ZE=RP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.8 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CAD1AC43381
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 18:14:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2CB09C43381
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 18:14:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 91629213A2
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 18:14:38 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="M3ehYlM3";
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="NHINJMBr"
+	by mail.kernel.org (Postfix) with ESMTP id F2DAE2087C
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 18:14:58 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727710AbfCLSOh (ORCPT
+        id S1727184AbfCLSO5 convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 12 Mar 2019 14:14:37 -0400
-Received: from smtp.codeaurora.org ([198.145.29.96]:58244 "EHLO
-        smtp.codeaurora.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727522AbfCLSOQ (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 12 Mar 2019 14:14:16 -0400
-Received: by smtp.codeaurora.org (Postfix, from userid 1000)
-        id E52C761AA2; Tue, 12 Mar 2019 18:14:12 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
-        s=default; t=1552414455;
-        bh=XavfODKbiYd3VUlO1pljeUXeZYLnBdMdaR2DWcS0Jjs=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=M3ehYlM3ux2SwmB7hkQOS42TY8kjmVX4Ap6TEqsMh6Rhxq1pXpd3pzLrJeP1tIZCi
-         A42TddoRBmadbVQRKhSf2sbKo049PQWKA5T41ffg+aSNqijIQk7TdC3b+DcgRsAhuz
-         F5qFXCgHBPngnK1FPqqX5oZYvJ6+MLcwQixoSaw4=
-Received: from jcrouse1-lnx.qualcomm.com (i-global254.qualcomm.com [199.106.103.254])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-SHA256 (128/128 bits))
-        (No client certificate requested)
-        (Authenticated sender: jcrouse@smtp.codeaurora.org)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id CCF87619D0;
-        Tue, 12 Mar 2019 18:14:09 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
-        s=default; t=1552414451;
-        bh=XavfODKbiYd3VUlO1pljeUXeZYLnBdMdaR2DWcS0Jjs=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=NHINJMBrQ0nIJTVSwRpCmKbfxfoKgfYSE2MAJhuC3lVNa2ZAcXEygzmoqtAk6GsgF
-         KgfdQEgjVEvMXyUqdsiQxr+0RYXn0J9kV5ISd80p6z/HfbjiNtFUw/2b9KqJ3XsVkB
-         WE7+3leoW/0oglufdV7Q3Cz1f6j72CswhobHqy0Q=
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org CCF87619D0
-Authentication-Results: pdx-caf-mail.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
-Authentication-Results: pdx-caf-mail.web.codeaurora.org; spf=none smtp.mailfrom=jcrouse@codeaurora.org
-From:   Jordan Crouse <jcrouse@codeaurora.org>
-To:     freedreno@lists.freedesktop.org
-Cc:     Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Arnd Bergmann <arnd@arndb.de>, Sean Paul <sean@poorly.run>,
-        Thomas Zimmermann <tzimmermann@suse.de>,
-        linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org,
-        dri-devel@lists.freedesktop.org, Rob Clark <robdclark@gmail.com>,
-        David Airlie <airlied@linux.ie>,
-        Jonathan Marek <jonathan@marek.ca>,
-        Daniel Mack <daniel@zonque.org>,
-        Mamta Shukla <mamtashukla555@gmail.com>,
-        Daniel Vetter <daniel@ffwll.ch>
-Subject: [PATCH v1 2/4] drm/msm/a6xx: Add zap shader load
-Date:   Tue, 12 Mar 2019 12:13:40 -0600
-Message-Id: <1552414422-9568-3-git-send-email-jcrouse@codeaurora.org>
-X-Mailer: git-send-email 2.7.4
-In-Reply-To: <1552414422-9568-1-git-send-email-jcrouse@codeaurora.org>
-References: <1552414422-9568-1-git-send-email-jcrouse@codeaurora.org>
+        Tue, 12 Mar 2019 14:14:57 -0400
+Received: from gloria.sntech.de ([185.11.138.130]:33926 "EHLO gloria.sntech.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726360AbfCLRLX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 12 Mar 2019 13:11:23 -0400
+Received: from ip5f5a6320.dynamic.kabel-deutschland.de ([95.90.99.32] helo=diego.localnet)
+        by gloria.sntech.de with esmtpsa (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.89)
+        (envelope-from <heiko@sntech.de>)
+        id 1h3kvZ-0003W6-6y; Tue, 12 Mar 2019 18:10:57 +0100
+From:   Heiko =?ISO-8859-1?Q?St=FCbner?= <heiko@sntech.de>
+To:     Christoph =?ISO-8859-1?Q?M=FCllner?= 
+        <christoph.muellner@theobroma-systems.com>
+Cc:     Adrian Hunter <adrian.hunter@intel.com>, robh+dt@kernel.org,
+        mark.rutland@arm.com, shawn.lin@rock-chips.com,
+        ulf.hansson@linaro.org,
+        Philipp Tomsich <philipp.tomsich@theobroma-systems.com>,
+        Michal Simek <michal.simek@xilinx.com>,
+        Douglas Anderson <dianders@chromium.org>,
+        Viresh Kumar <viresh.kumar@linaro.org>,
+        Enric Balletbo i Serra <enric.balletbo@collabora.com>,
+        Vicente Bergas <vicencb@gmail.com>,
+        Emil Renner Berthing <kernel@esmil.dk>,
+        Randy Li <ayaka@soulik.info>,
+        Tony Xie <tony.xie@rock-chips.com>,
+        Ezequiel Garcia <ezequiel@collabora.com>,
+        Klaus Goger <klaus.goger@theobroma-systems.com>,
+        Lin Huang <hl@rock-chips.com>, linux-mmc@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org,
+        linux-rockchip@lists.infradead.org
+Subject: Re: [PATCH v2 2/3] dt-bindings: mmc: Add a new property disable-cqe-dcmd.
+Date:   Tue, 12 Mar 2019 18:10:56 +0100
+Message-ID: <2038789.ZmMFo7ZELZ@diego>
+In-Reply-To: <D7EF0176-0EBD-4401-83BE-E7F951F88CAA@theobroma-systems.com>
+References: <20190307084329.25416-1-christoph.muellner@theobroma-systems.com> <4793843.T1TZ7EF8k3@phil> <D7EF0176-0EBD-4401-83BE-E7F951F88CAA@theobroma-systems.com>
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8BIT
+Content-Type: text/plain; charset="iso-8859-1"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The a6xx GPU powers on in secure mode which restricts what memory it can
-write to. To get out of secure mode the GPU driver can write to
-REG_A6XX_RBBM_SECVID_TRUST_CNTL but on targets that are "secure" that
-register region is blocked and writes will cause the system to go down.
+Hi Christoph,
 
-For those targets we need to execute a special sequence that involves
-loadinga special shader that clears the GPU registers and use a PM4
-sequence to pull the GPU out of secure. Add support for loading the zap
-shader and executing the secure sequence. For targets that do not support
-SCM or the specific SCM sequence this should fail and we would fall back
-to writing the register.
+Am Dienstag, 12. März 2019, 15:46:44 CET schrieb Christoph Müllner:
+> > On 12.03.2019, at 14:17, Heiko Stuebner <heiko@sntech.de> wrote:
+> > 
+> > Am Freitag, 8. März 2019, 14:10:45 CET schrieb Christoph Müllner:
+> >>> On 08.03.2019, at 13:46, Adrian Hunter <adrian.hunter@intel.com> wrote:
+> >>> 
+> >>> On 7/03/19 10:43 AM, Christoph Muellner wrote:
+> >>>> This patch documents the new property disable-cqe-dcmd
+> >>>> for the Arasan eMMC 5.1 driver.
+> >>>> 
+> >>>> Signed-off-by: Christoph Muellner
+> >>>> <christoph.muellner@theobroma-systems.com> Signed-off-by: Philipp
+> >>>> Tomsich <philipp.tomsich@theobroma-systems.com> ---
+> >>>> Documentation/devicetree/bindings/mmc/arasan,sdhci.txt | 4 ++++
+> >>>> 1 file changed, 4 insertions(+)
+> >>>> 
+> >>>> diff --git a/Documentation/devicetree/bindings/mmc/arasan,sdhci.txt
+> >>>> b/Documentation/devicetree/bindings/mmc/arasan,sdhci.txt index
+> >>>> 1edbb049cccb..ec699bf98b7c 100644
+> >>>> --- a/Documentation/devicetree/bindings/mmc/arasan,sdhci.txt
+> >>>> +++ b/Documentation/devicetree/bindings/mmc/arasan,sdhci.txt
+> >>>> 
+> >>>> @@ -44,6 +44,10 @@ Optional Properties:
+> >>>>    properly. Test mode can be used to force the controller to function.
+> >>>>  
+> >>>>  - xlnx,int-clock-stable-broken: when present, the controller always
+> >>>>  reports
+> >>>>  
+> >>>>    that the internal clock is stable even when it is not.
+> >>>> 
+> >>>> +  - disable-cqe-dcmd: The eMMC 5.1 standard specifies direct commands
+> >>>> (DCMDs) +    as part of the command queue engine (CQE). On controllers
+> >>>> with a CQHCI, +    such as the Arasan eMMC 5.1 host controller, the
+> >>>> driver has to enable DCMDs. +    This is done unless disable-cqe-dcmd
+> >>>> is specified.
+> > 
+> > This needs a rewording please. See below for hw-description vs. driver, so
+> > the description should be centered around why this is a property of the hw
+> > [like faulty controller implementation or whatever]
+> 
+> I understand, that you prefer a HW-specific name for a property
+> over one, that explains the actual effect.
 
-Signed-off-by: Jordan Crouse <jcrouse@codeaurora.org>
----
+Actually I think the property-name is just fine :-) .
 
- drivers/gpu/drm/msm/adreno/a6xx_gpu.c      | 38 +++++++++++++++++++++++++++++-
- drivers/gpu/drm/msm/adreno/adreno_device.c |  1 +
- 2 files changed, 38 insertions(+), 1 deletion(-)
+The description might profit from a rewording though. Aka not driver-
+centric but hw-centric, describing why some controllers may need the
+option to disable these dcmds (controller bugs or whatever).
 
-diff --git a/drivers/gpu/drm/msm/adreno/a6xx_gpu.c b/drivers/gpu/drm/msm/adreno/a6xx_gpu.c
-index fefe773..5983e47 100644
---- a/drivers/gpu/drm/msm/adreno/a6xx_gpu.c
-+++ b/drivers/gpu/drm/msm/adreno/a6xx_gpu.c
-@@ -10,6 +10,8 @@
- 
- #include <linux/devfreq.h>
- 
-+#define GPU_PAS_ID 13
-+
- static inline bool _a6xx_check_idle(struct msm_gpu *gpu)
- {
- 	struct adreno_gpu *adreno_gpu = to_adreno_gpu(gpu);
-@@ -343,6 +345,20 @@ static int a6xx_ucode_init(struct msm_gpu *gpu)
- 	return 0;
- }
- 
-+static int a6xx_zap_shader_init(struct msm_gpu *gpu)
-+{
-+	static bool loaded;
-+	int ret;
-+
-+	if (loaded)
-+		return 0;
-+
-+	ret = adreno_zap_shader_load(gpu, GPU_PAS_ID);
-+
-+	loaded = !ret;
-+	return ret;
-+}
-+
- #define A6XX_INT_MASK (A6XX_RBBM_INT_0_MASK_CP_AHB_ERROR | \
- 	  A6XX_RBBM_INT_0_MASK_RBBM_ATB_ASYNCFIFO_OVERFLOW | \
- 	  A6XX_RBBM_INT_0_MASK_CP_HW_ERROR | \
-@@ -491,7 +507,27 @@ static int a6xx_hw_init(struct msm_gpu *gpu)
- 	if (ret)
- 		goto out;
- 
--	gpu_write(gpu, REG_A6XX_RBBM_SECVID_TRUST_CNTL, 0x0);
-+	/*
-+	 * Try to load a zap shader into the secure world. If successful
-+	 * we can use the CP to switch out of secure mode. If not then we
-+	 * have no resource but to try to switch ourselves out manually. If we
-+	 * guessed wrong then access to the RBBM_SECVID_TRUST_CNTL register will
-+	 * be blocked and a permissions violation will soon follow.
-+	 */
-+	ret = a6xx_zap_shader_init(gpu);
-+	if (!ret) {
-+		OUT_PKT7(gpu->rb[0], CP_SET_SECURE_MODE, 1);
-+		OUT_RING(gpu->rb[0], 0x00000000);
-+
-+		a6xx_flush(gpu, gpu->rb[0]);
-+		if (!a6xx_idle(gpu, gpu->rb[0]))
-+			return -EINVAL;
-+	} else {
-+		/* Print a warning so if we die, we know why */
-+		dev_warn_once(gpu->dev->dev,
-+			"Zap shader not enabled - using SECVID_TRUST_CNTL instead\n");
-+		gpu_write(gpu, REG_A6XX_RBBM_SECVID_TRUST_CNTL, 0x0);
-+	}
- 
- out:
- 	/*
-diff --git a/drivers/gpu/drm/msm/adreno/adreno_device.c b/drivers/gpu/drm/msm/adreno/adreno_device.c
-index 714ed65..ead5f6a 100644
---- a/drivers/gpu/drm/msm/adreno/adreno_device.c
-+++ b/drivers/gpu/drm/msm/adreno/adreno_device.c
-@@ -155,6 +155,7 @@ static const struct adreno_info gpulist[] = {
- 		.gmem = SZ_1M,
- 		.inactive_period = DRM_MSM_INACTIVE_PERIOD,
- 		.init = a6xx_gpu_init,
-+		.zapfw = "a630_zap.mdt",
- 	},
- };
- 
--- 
-2.7.4
+
+Heiko
+
+
+
+> However, using disable-<feature> (which is always a directive for the driver
+> and not a HW description) is not uncommon:
+> 
+> * disable-wp should be "no-wp-line-connection"
+> * disable-over-current -> "no-over-current-line-connection"
+> * srp-disable -> "not-existing-srp-implementation"
+> * ...
+> 
+> But I don't mind using something else.
+> Would "broken-cqe-dcmd" (like broken-cd or broken-flash-reset) be ok?
+> Or other suggestions?
+> 
+> Also I'd like to mention, that my first implementation was
+> "supports-cqe-dcmd". I guess that would be a good choice, if it would have
+> been there
+> from the beginning. Introducing it now, would silently disable DCMD
+> for existing DTBs. Therefore I went on to "disable-cqe-dcmd".
+> 
+> >>> If "supports-cqe" is in mmc.txt, should "disable-cqe-dcmd" be there
+> >>> also?
+> >> 
+> >> The file mmc.txt says on top:
+> >> "These properties are common to multiple MMC host controllers".
+> >> As my patchset introduces "disable-cqe-dcmd" just for sdhci-of-arasan,
+> >> I would say it should not go into that file.
+> >> 
+> >> Also I wonder why "supports-cqe" is in mmc.txt, because
+> >> only sdhci-tegra.c is evaluating that property.
+> >> So I would expect it to be documented in
+> >> Documentation/devicetree/bindings/mmc/nvidia,tegra20-sdhci.txt
+> >> 
+> >> However, I see that "disable-cqe-dcmd" could go into other drivers as
+> >> well.
+> >> But is this enough to document it in mmc.txt?
+> > 
+> > Devicetree is always about describing the hardware capabilites and never
+> > about the actual nitty-gritty of driver implementation, aka it is not
+> > meant
+> > as a space for hardware-independent config-settings or such.
+> > 
+> > As for only tegra evaluating this, is probably because it is still so new,
+> > like january 2019 and Rob explicitly suggested it becoming common [0],
+> > which suggests that the disable-cqe-dcmds should probably also be common.
+> So mmc.txt lists "standardised" names for properties to reduce the risk
+> of having similar, but distinct names for different MMC drivers.
+> So whenever you want to introduce a new property for a driver,
+> check if there isn't already something defined in mmc.txt.
+> 
+> When seeing it this way, it clearly makes sense to have the property there.
+> 
+> Thanks,
+> Christoph
+
+
+
 
