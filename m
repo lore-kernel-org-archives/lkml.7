@@ -2,143 +2,114 @@ Return-Path: <SRS0=J4ZE=RP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_PASS autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 96096C4360F
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 07:53:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 45A84C10F00
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 07:56:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 68545214AF
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 07:53:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 16723214D8
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 07:56:44 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=umn.edu header.i=@umn.edu header.b="Rrwb3kUu"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727466AbfCLHxt (ORCPT
+        id S1727107AbfCLH4m (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 12 Mar 2019 03:53:49 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:42524 "EHLO mx1.redhat.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725832AbfCLHxt (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 12 Mar 2019 03:53:49 -0400
-Received: from smtp.corp.redhat.com (int-mx02.intmail.prod.int.phx2.redhat.com [10.5.11.12])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        Tue, 12 Mar 2019 03:56:42 -0400
+Received: from mta-p6.oit.umn.edu ([134.84.196.206]:38096 "EHLO
+        mta-p6.oit.umn.edu" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726218AbfCLH4m (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 12 Mar 2019 03:56:42 -0400
+Received: from localhost (unknown [127.0.0.1])
+        by mta-p6.oit.umn.edu (Postfix) with ESMTP id C3EB3B3D
+        for <linux-kernel@vger.kernel.org>; Tue, 12 Mar 2019 07:56:40 +0000 (UTC)
+X-Virus-Scanned: amavisd-new at umn.edu
+Received: from mta-p6.oit.umn.edu ([127.0.0.1])
+        by localhost (mta-p6.oit.umn.edu [127.0.0.1]) (amavisd-new, port 10024)
+        with ESMTP id ya0QLOhEwT5U for <linux-kernel@vger.kernel.org>;
+        Tue, 12 Mar 2019 02:56:40 -0500 (CDT)
+Received: from mail-it1-f197.google.com (mail-it1-f197.google.com [209.85.166.197])
+        (using TLSv1.2 with cipher AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id 904B987621;
-        Tue, 12 Mar 2019 07:53:48 +0000 (UTC)
-Received: from [10.72.12.17] (ovpn-12-17.pek2.redhat.com [10.72.12.17])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 86C1260CA3;
-        Tue, 12 Mar 2019 07:53:39 +0000 (UTC)
-Subject: Re: [RFC PATCH V2 0/5] vhost: accelerate metadata access through
- vmap()
-From:   Jason Wang <jasowang@redhat.com>
-To:     James Bottomley <James.Bottomley@HansenPartnership.com>,
-        David Miller <davem@davemloft.net>, mst@redhat.com
-Cc:     hch@infradead.org, kvm@vger.kernel.org,
-        virtualization@lists.linux-foundation.org, netdev@vger.kernel.org,
-        linux-kernel@vger.kernel.org, peterx@redhat.com,
-        linux-mm@kvack.org, aarcange@redhat.com,
-        linux-arm-kernel@lists.infradead.org, linux-parisc@vger.kernel.org
-References: <20190308141220.GA21082@infradead.org>
- <56374231-7ba7-0227-8d6d-4d968d71b4d6@redhat.com>
- <20190311095405-mutt-send-email-mst@kernel.org>
- <20190311.111413.1140896328197448401.davem@davemloft.net>
- <6b6dcc4a-2f08-ba67-0423-35787f3b966c@redhat.com>
- <1552367685.23859.22.camel@HansenPartnership.com>
- <f9e52313-0a06-22b6-140c-ded75eecde20@redhat.com>
-Message-ID: <7f779c16-58d1-dd4f-54cf-a7538d4b6fe4@redhat.com>
-Date:   Tue, 12 Mar 2019 15:53:37 +0800
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.5.1
-MIME-Version: 1.0
-In-Reply-To: <f9e52313-0a06-22b6-140c-ded75eecde20@redhat.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 8bit
-Content-Language: en-US
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.12
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.26]); Tue, 12 Mar 2019 07:53:48 +0000 (UTC)
+        by mta-p6.oit.umn.edu (Postfix) with ESMTPS id 8E38CA84
+        for <linux-kernel@vger.kernel.org>; Tue, 12 Mar 2019 02:56:40 -0500 (CDT)
+Received: by mail-it1-f197.google.com with SMTP id 9so1454449ita.8
+        for <linux-kernel@vger.kernel.org>; Tue, 12 Mar 2019 00:56:40 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=umn.edu; s=google;
+        h=from:to:cc:subject:date:message-id;
+        bh=GHwL4zBqlKlQckqtsDRpff1AB+Nxp6P8f5kwUycKt+I=;
+        b=Rrwb3kUuQTLkon4rAku7XQ7Jg4lHHS8eKfKk7+CJayAofX14LiY/ADR2yL+fzWKzy/
+         yQFxzC1Xd9tahI3szGNNGQbqD6645mJg5E4tgzoql2LTQnvsAfobz/okxbkAuaRPZkTq
+         aEG1wFcTtu2t+15pLdM1RroMNIf4veY2WFEyp0H+FXiGgL74CxcrdfI5v06AQn6VCEAF
+         ZRE8j7dkwzGExBmRsLKH1Y2rhBezbVfJ6BQFfqGf2PbMHY2WSW5gvaUlitFQUKRxoJE+
+         zz2ze4xC5Ipl6ISpL1fqAEG5KH+mWcvBP7H0HR5MBqoEJZEcWONUYUTbJd+PwFP8h5FP
+         tTQw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=GHwL4zBqlKlQckqtsDRpff1AB+Nxp6P8f5kwUycKt+I=;
+        b=Wj2EKm4Mpqk7pQe44wv0y1G50o5Kx9HLuU0nE0rEDT+ShNxjd1B1IdcfOZiM3PRHKL
+         gaxVV9Ywl2RbJ7CanBRBpy+MZzku+Bdwvc5U93voPgwbgygrA7klwKfRWrOLTgyS8a2q
+         Mig5hSfOraQpcz+a+jA2KHPzQIArmkP/+pGJOmB6+xvfObH2NIdNopQ+StjEzGgkPMcN
+         eIo9IuBdsrlIlYHYdD8gzIzn+oq1018rKZb3srDWJHHeygfpBQJIA7c9FFi03hztFOiq
+         F4xFWwzEHOLviE+INzFxJjDUCcAcv9mJINheXKarRqdNsiI6BH/4a27Hjfz60n6W2tHf
+         w7pA==
+X-Gm-Message-State: APjAAAX/WYrlBzGs+9/I7vmrs0duLs6G/jnA5UE4lGrFcq3yk53iH4wU
+        rcek8QfQfR0F2iYZIFL6qieMq7X1TolaHfiR799ImTVc1dQNwyqfihKOjd0PXe4YcGtq23lWHVk
+        M3rt/zMkeMj9p7DruAN5EQxOjzk7q
+X-Received: by 2002:a6b:7219:: with SMTP id n25mr10363257ioc.117.1552377400155;
+        Tue, 12 Mar 2019 00:56:40 -0700 (PDT)
+X-Google-Smtp-Source: APXvYqwCOLy0p/Zx9y/3ip/ZQBpQCX4CLC4JCn7dfHgj8FIju2Odvfqkl6BklClOE5Sd+YohY31Vig==
+X-Received: by 2002:a6b:7219:: with SMTP id n25mr10363242ioc.117.1552377399938;
+        Tue, 12 Mar 2019 00:56:39 -0700 (PDT)
+Received: from bee.dtc.umn.edu (cs-bee-u.cs.umn.edu. [128.101.106.63])
+        by smtp.gmail.com with ESMTPSA id s10sm2669419ioc.54.2019.03.12.00.56.38
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Tue, 12 Mar 2019 00:56:38 -0700 (PDT)
+From:   Kangjie Lu <kjlu@umn.edu>
+To:     kjlu@umn.edu
+Cc:     pakki001@umn.edu, Ping-Ke Shih <pkshih@realtek.com>,
+        Kalle Valo <kvalo@codeaurora.org>,
+        "David S. Miller" <davem@davemloft.net>,
+        linux-wireless@vger.kernel.org, netdev@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH] net: rtlwifi: fix a potential NULL pointer dereference
+Date:   Tue, 12 Mar 2019 02:56:33 -0500
+Message-Id: <20190312075633.573-1-kjlu@umn.edu>
+X-Mailer: git-send-email 2.17.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+In case alloc_workqueue fails, the fix reports the error and
+returns to avoid NULL pointer dereference.
 
-On 2019/3/12 下午3:51, Jason Wang wrote:
->
-> On 2019/3/12 下午1:14, James Bottomley wrote:
->> On Tue, 2019-03-12 at 10:59 +0800, Jason Wang wrote:
->>> On 2019/3/12 上午2:14, David Miller wrote:
->>>> From: "Michael S. Tsirkin" <mst@redhat.com>
->>>> Date: Mon, 11 Mar 2019 09:59:28 -0400
->>>>
->>>>> On Mon, Mar 11, 2019 at 03:13:17PM +0800, Jason Wang wrote:
->>>>>> On 2019/3/8 下午10:12, Christoph Hellwig wrote:
->>>>>>> On Wed, Mar 06, 2019 at 02:18:07AM -0500, Jason Wang wrote:
->>>>>>>> This series tries to access virtqueue metadata through
->>>>>>>> kernel virtual
->>>>>>>> address instead of copy_user() friends since they had too
->>>>>>>> much
->>>>>>>> overheads like checks, spec barriers or even hardware
->>>>>>>> feature
->>>>>>>> toggling. This is done through setup kernel address through
->>>>>>>> vmap() and
->>>>>>>> resigter MMU notifier for invalidation.
->>>>>>>>
->>>>>>>> Test shows about 24% improvement on TX PPS. TCP_STREAM
->>>>>>>> doesn't see
->>>>>>>> obvious improvement.
->>>>>>> How is this going to work for CPUs with virtually tagged
->>>>>>> caches?
->>>>>> Anything different that you worry?
->>>>> If caches have virtual tags then kernel and userspace view of
->>>>> memory
->>>>> might not be automatically in sync if they access memory
->>>>> through different virtual addresses. You need to do things like
->>>>> flush_cache_page, probably multiple times.
->>>> "flush_dcache_page()"
->>>
->>> I get this. Then I think the current set_bit_to_user() is suspicious,
->>> we
->>> probably miss a flush_dcache_page() there:
->>>
->>>
->>> static int set_bit_to_user(int nr, void __user *addr)
->>> {
->>>           unsigned long log = (unsigned long)addr;
->>>           struct page *page;
->>>           void *base;
->>>           int bit = nr + (log % PAGE_SIZE) * 8;
->>>           int r;
->>>
->>>           r = get_user_pages_fast(log, 1, 1, &page);
->>>           if (r < 0)
->>>                   return r;
->>>           BUG_ON(r != 1);
->>>           base = kmap_atomic(page);
->>>           set_bit(bit, base);
->>>           kunmap_atomic(base);
->> This sequence should be OK.  get_user_pages() contains a flush which
->> clears the cache above the user virtual address, so on kmap, the page
->> is coherent at the new alias.  On parisc at least, kunmap embodies a
->> flush_dcache_page() which pushes any changes in the cache above the
->> kernel virtual address back to main memory and makes it coherent again
->> for the user alias to pick it up.
->
->
-> It would be good if kmap()/kunmap() can do this but looks like we can 
-> not assume this? For example, sparc's flush_dcache_page() 
+Signed-off-by: Kangjie Lu <kjlu@umn.edu>
+---
+ drivers/net/wireless/realtek/rtlwifi/base.c | 5 +++++
+ 1 file changed, 5 insertions(+)
 
+diff --git a/drivers/net/wireless/realtek/rtlwifi/base.c b/drivers/net/wireless/realtek/rtlwifi/base.c
+index 217d2a7a43c7..ac746c322554 100644
+--- a/drivers/net/wireless/realtek/rtlwifi/base.c
++++ b/drivers/net/wireless/realtek/rtlwifi/base.c
+@@ -448,6 +448,11 @@ static void _rtl_init_deferred_work(struct ieee80211_hw *hw)
+ 	/* <2> work queue */
+ 	rtlpriv->works.hw = hw;
+ 	rtlpriv->works.rtl_wq = alloc_workqueue("%s", 0, 0, rtlpriv->cfg->name);
++	if (unlikely(!rtlpriv->works.rtl_wq)) {
++		pr_err("Failed to allocate work queue\n");
++		return;
++	}
++
+ 	INIT_DELAYED_WORK(&rtlpriv->works.watchdog_wq,
+ 			  (void *)rtl_watchdog_wq_callback);
+ 	INIT_DELAYED_WORK(&rtlpriv->works.ips_nic_off_wq,
+-- 
+2.17.1
 
-Sorry, I meant kunmap_atomic().
-
-Thanks
-
-
-> doesn't do flush_dcache_page(). And bio_copy_data_iter() do 
-> flush_dcache_page() after kunmap_atomic().
->
-> Thanks
->
->
->>
->> James
->>
->
