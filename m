@@ -4,51 +4,56 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4263CC43381
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 18:00:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A56A9C43381
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 18:00:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 03322214AF
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 18:00:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 702EC214AF
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 18:00:33 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1552413627;
-	bh=6XNrrTvVy1QOul8jqwharAlHnm4MW6mbR65A/bL3Hqs=;
+	s=default; t=1552413633;
+	bh=72kFG2IO4mX7Wg5JcbwqDM5oHwv3FyhjMeJ+WWnTEt4=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=FzCWyVRKrs4aafjaI4gRr5myI0tIzU5dBlT5+fPA+WxZEV93kFsxXRnwBJvqEGhts
-	 l234c64TYZ7NOwsgJQ0S2zC9RArnxRjvJg3xCszhsFeRf8wJfTnSo1+Lv4tupuCvc6
-	 p0EKuzF7gxlRh4rmoz9N2SCZF0QVPNiPPhWjLoUM=
+	b=1sPAC6ydzdZLU5YGIA+O7bJ8vHlTuSBZ+B+3s9gb4rujC5T1zARiAGTiU5XKFyuHk
+	 AXDbNUVg4a25X1QlybKfNWo0jvTEXfdThbJBZBsD2K4oYGJ5hMnhWyozIYFWlhcO2/
+	 YT5ihb+HR2ghhE7a0NaXdL3nhVRCQJdRSMhtBmBA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728399AbfCLSAZ (ORCPT
+        id S1728557AbfCLSAb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 12 Mar 2019 14:00:25 -0400
-Received: from mail.kernel.org ([198.145.29.99]:50364 "EHLO mail.kernel.org"
+        Tue, 12 Mar 2019 14:00:31 -0400
+Received: from mail.kernel.org ([198.145.29.99]:49988 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727088AbfCLRNZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 12 Mar 2019 13:13:25 -0400
+        id S1727900AbfCLRNW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 12 Mar 2019 13:13:22 -0400
 Received: from localhost (unknown [104.133.8.98])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D794E217D4;
-        Tue, 12 Mar 2019 17:13:24 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id D686B217F4;
+        Tue, 12 Mar 2019 17:13:21 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1552410805;
-        bh=6XNrrTvVy1QOul8jqwharAlHnm4MW6mbR65A/bL3Hqs=;
+        s=default; t=1552410802;
+        bh=72kFG2IO4mX7Wg5JcbwqDM5oHwv3FyhjMeJ+WWnTEt4=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=L8CvJy3s3u72vZ4T45XmY5l0vahOQwOeaEy0af4210X7fTBNQxUEwyoVeXRJnOumh
-         Vw+wxogoEMdDa7L1oYTaihjIdOBReBy+JSDP6Xr7cnTSuVwYbRfqokciDAdnUuvS9E
-         QHS1ydlhUhQ9kAifqAp+cljnZOYjhYXCgApZTtC4=
+        b=LL8D6pfvYPUTzKiNSXDNWHT6m0hzd1rSH2LLhc39/8YNSW/iUhwW4P11/k6wS7iCD
+         AQAKwmWMvmB4qhwCLzLQvcQ3HY2IHqtjjB6PhE2BRrHSl5HLsSOWcqNUgvM/U1Zfb2
+         llJF9GpA756DZwabebengOD7jSfMaa5cC8NYNaDg=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Ross Lagerwall <ross.lagerwall@citrix.com>,
-        Hannes Reinecke <hare@suse.com>,
-        "Martin K. Petersen" <martin.petersen@oracle.com>,
+        stable@vger.kernel.org, Jiri Olsa <jolsa@kernel.org>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Masami Hiramatsu <mhiramat@kernel.org>,
+        Michael Petlan <mpetlan@redhat.com>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Nick Clifton <nickc@redhat.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Arnaldo Carvalho de Melo <acme@redhat.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.20 133/171] Revert "scsi: libfc: Add WARN_ON() when deleting rports"
-Date:   Tue, 12 Mar 2019 10:08:33 -0700
-Message-Id: <20190312170359.167317611@linuxfoundation.org>
+Subject: [PATCH 4.20 129/171] perf symbols: Filter out hidden symbols from labels
+Date:   Tue, 12 Mar 2019 10:08:29 -0700
+Message-Id: <20190312170358.853256599@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190312170347.868927101@linuxfoundation.org>
 References: <20190312170347.868927101@linuxfoundation.org>
@@ -67,40 +72,92 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-[ Upstream commit d8f6382a7d026989029e2e50c515df954488459b ]
+[ Upstream commit 59a17706915fe5ea6f711e1f92d4fb706bce07fe ]
 
-This reverts commit bbc0f8bd88abefb0f27998f40a073634a3a2db89.
+When perf is built with the annobin plugin (RHEL8 build) extra symbols
+are added to its binary:
 
-It added a warning whose intent was to check whether the rport was still
-linked into the peer list. It doesn't work as intended and gives false
-positive warnings for two reasons:
+  # nm perf | grep annobin | head -10
+  0000000000241100 t .annobin_annotate.c
+  0000000000326490 t .annobin_annotate.c
+  0000000000249255 t .annobin_annotate.c_end
+  00000000003283a8 t .annobin_annotate.c_end
+  00000000001bce18 t .annobin_annotate.c_end.hot
+  00000000001bce18 t .annobin_annotate.c_end.hot
+  00000000001bc3e2 t .annobin_annotate.c_end.unlikely
+  00000000001bc400 t .annobin_annotate.c_end.unlikely
+  00000000001bce18 t .annobin_annotate.c.hot
+  00000000001bce18 t .annobin_annotate.c.hot
+  ...
 
-1) If the rport is never linked into the peer list it will not be
-considered empty since the list_head is never initialized.
+Those symbols have no use for report or annotation and should be
+skipped.  Moreover they interfere with the DWARF unwind test on the PPC
+arch, where they are mixed with checked symbols and then the test fails:
 
-2) If the rport is deleted from the peer list using list_del_rcu(), then
-the list_head is in an undefined state and it is not considered empty.
+  # perf test dwarf -v
+  59: Test dwarf unwind                                     :
+  --- start ---
+  test child forked, pid 8515
+  unwind: .annobin_dwarf_unwind.c:ip = 0x10dba40dc (0x2740dc)
+  ...
+  got: .annobin_dwarf_unwind.c 0x10dba40dc, expecting test__arch_unwind_sample
+  unwind: failed with 'no error'
 
-Signed-off-by: Ross Lagerwall <ross.lagerwall@citrix.com>
-Reviewed-by: Hannes Reinecke <hare@suse.com>
-Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
+The annobin symbols are defined as NOTYPE/LOCAL/HIDDEN:
+
+  # readelf -s ./perf | grep annobin | head -1
+    40: 00000000001bce4f     0 NOTYPE  LOCAL  HIDDEN    13 .annobin_init.c
+
+They can still pass the check for the label symbol. Adding check for
+HIDDEN and INTERNAL (as suggested by Nick below) visibility and filter
+out such symbols.
+
+>   Just to be awkward, if you are going to ignore STV_HIDDEN
+>   symbols then you should probably also ignore STV_INTERNAL ones
+>   as well...  Annobin does not generate them, but you never know,
+>   one day some other tool might create some.
+
+Signed-off-by: Jiri Olsa <jolsa@kernel.org>
+Cc: Alexander Shishkin <alexander.shishkin@linux.intel.com>
+Cc: Masami Hiramatsu <mhiramat@kernel.org>
+Cc: Michael Petlan <mpetlan@redhat.com>
+Cc: Namhyung Kim <namhyung@kernel.org>
+Cc: Nick Clifton <nickc@redhat.com>
+Cc: Peter Zijlstra <peterz@infradead.org>
+Link: http://lkml.kernel.org/r/20190128133526.GD15461@krava
+Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/scsi/libfc/fc_rport.c | 1 -
- 1 file changed, 1 deletion(-)
+ tools/perf/util/symbol-elf.c | 9 ++++++++-
+ 1 file changed, 8 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/scsi/libfc/fc_rport.c b/drivers/scsi/libfc/fc_rport.c
-index 1e1c0f1b9e69..8ed2113f5a1e 100644
---- a/drivers/scsi/libfc/fc_rport.c
-+++ b/drivers/scsi/libfc/fc_rport.c
-@@ -184,7 +184,6 @@ void fc_rport_destroy(struct kref *kref)
- 	struct fc_rport_priv *rdata;
- 
- 	rdata = container_of(kref, struct fc_rport_priv, kref);
--	WARN_ON(!list_empty(&rdata->peers));
- 	kfree_rcu(rdata, rcu);
+diff --git a/tools/perf/util/symbol-elf.c b/tools/perf/util/symbol-elf.c
+index 66a84d5846c8..03cb8c6d620a 100644
+--- a/tools/perf/util/symbol-elf.c
++++ b/tools/perf/util/symbol-elf.c
+@@ -87,6 +87,11 @@ static inline uint8_t elf_sym__type(const GElf_Sym *sym)
+ 	return GELF_ST_TYPE(sym->st_info);
  }
- EXPORT_SYMBOL(fc_rport_destroy);
+ 
++static inline uint8_t elf_sym__visibility(const GElf_Sym *sym)
++{
++	return GELF_ST_VISIBILITY(sym->st_other);
++}
++
+ #ifndef STT_GNU_IFUNC
+ #define STT_GNU_IFUNC 10
+ #endif
+@@ -111,7 +116,9 @@ static inline int elf_sym__is_label(const GElf_Sym *sym)
+ 	return elf_sym__type(sym) == STT_NOTYPE &&
+ 		sym->st_name != 0 &&
+ 		sym->st_shndx != SHN_UNDEF &&
+-		sym->st_shndx != SHN_ABS;
++		sym->st_shndx != SHN_ABS &&
++		elf_sym__visibility(sym) != STV_HIDDEN &&
++		elf_sym__visibility(sym) != STV_INTERNAL;
+ }
+ 
+ static bool elf_sym__filter(GElf_Sym *sym)
 -- 
 2.19.1
 
