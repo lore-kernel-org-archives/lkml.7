@@ -4,51 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 02C4EC43381
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 17:38:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2B956C43381
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 17:38:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CA68E2171F
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 17:38:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E939B2087C
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 17:38:21 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1552412293;
-	bh=Rg/IJBl4T1qvGj+CKt5+uo3rdPYFa/EOl4BJKlNsDV4=;
+	s=default; t=1552412302;
+	bh=1qg7sow55n95St4QrQrX/rO13lprVYtLHD/oFFceJ2c=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=MPpRs0Qgp7csv0WRRyDI4v8kr7/DrPEcMQa//msS8JTB39KXRvSWLqLbLPwUMftWX
-	 cVp7wMxUCGSA2iE+jwUUXVMVbFEfHQuxNdKNlz5fdWNHiZD5UW4lhMboNMP2Gp9xft
-	 3K6LackZG2EGJ64AV1x9n+qtH9+w2KuMDIjQ36PU=
+	b=En8i8+Ym2wUPgSkmGvg4joN3HIZQwcsniTxu99uhO9BD6Py9geXfDdqJIzoR9PzYj
+	 NWUclPAjowUAOvJM+8WnZkMemyiKqN0uM7sIqnmhk+iNbjhB4ElwvQICyMbH1K+mZk
+	 VoopdEvQdzx+nAzUHOcfIA3UtO9cgFz7ORmXYP34=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728332AbfCLRiM (ORCPT
+        id S1728437AbfCLRiU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 12 Mar 2019 13:38:12 -0400
-Received: from mail.kernel.org ([198.145.29.99]:58850 "EHLO mail.kernel.org"
+        Tue, 12 Mar 2019 13:38:20 -0400
+Received: from mail.kernel.org ([198.145.29.99]:58830 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729185AbfCLRQe (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 12 Mar 2019 13:16:34 -0400
+        id S1727938AbfCLRQd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 12 Mar 2019 13:16:33 -0400
 Received: from localhost (unknown [104.133.8.98])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 6B7C721741;
-        Tue, 12 Mar 2019 17:16:33 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id A78892171F;
+        Tue, 12 Mar 2019 17:16:32 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1552410993;
-        bh=Rg/IJBl4T1qvGj+CKt5+uo3rdPYFa/EOl4BJKlNsDV4=;
+        s=default; t=1552410992;
+        bh=1qg7sow55n95St4QrQrX/rO13lprVYtLHD/oFFceJ2c=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=GPW5EK9gx5RGOlzFKZlvD9CmixIRxrWstwWHmUVzb2TX/GYlw6m2uRRtil1jgnNk1
-         VFSEwSaK9iajXRhO0pUK5GLrBQXP5QTFFBRD3iVANuGIs1M6ius15CdUGNjszrWex/
-         LXmu7NDxUemMTjBdpqtNv/MhBhFgL6L6k6eafZsI=
+        b=XmoWDGpIqs1X0M6M+Ma/WtGHiScVF9gWM2e75XYDesOS4/+k4d1KMb4CnKg/EdksX
+         /YpGNU7/Hg5BZcQ5sKRgSyQl/lmktDEMZelGGGgE7Fycp/2wwlznR88XuE7fOoif4T
+         J01b8PDqqtZkCNhgMTiGsIeSHY/UgqAmXBSBZJtY=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Sinan Kaya <okaya@kernel.org>,
-        Andy Shevchenko <andy.shevchenko@gmail.com>,
-        "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>,
+        stable@vger.kernel.org, Dan Carpenter <dan.carpenter@oracle.com>,
+        "Martin K. Petersen" <martin.petersen@oracle.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.14 074/135] platform/x86: Fix unmet dependency warning for SAMSUNG_Q10
-Date:   Tue, 12 Mar 2019 10:08:41 -0700
-Message-Id: <20190312170348.052267264@linuxfoundation.org>
+Subject: [PATCH 4.14 073/135] scsi: 53c700: pass correct "dev" to dma_alloc_attrs()
+Date:   Tue, 12 Mar 2019 10:08:40 -0700
+Message-Id: <20190312170347.968989444@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190312170341.127810985@linuxfoundation.org>
 References: <20190312170341.127810985@linuxfoundation.org>
@@ -67,41 +66,34 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-[ Upstream commit 0ee4b5f801b73b83a9fb3921d725f2162fd4a2e5 ]
+[ Upstream commit 8437fcf14deed67e5ad90b5e8abf62fb20f30881 ]
 
-Add BACKLIGHT_LCD_SUPPORT for SAMSUNG_Q10 to fix the
-warning: unmet direct dependencies detected for BACKLIGHT_CLASS_DEVICE.
+The "hostdata->dev" pointer is NULL here.  We set "hostdata->dev = dev;"
+later in the function and we also use "hostdata->dev" when we call
+dma_free_attrs() in NCR_700_release().
 
-SAMSUNG_Q10 selects BACKLIGHT_CLASS_DEVICE but BACKLIGHT_CLASS_DEVICE
-depends on BACKLIGHT_LCD_SUPPORT.
+This bug predates git version control.
 
-Copy BACKLIGHT_LCD_SUPPORT dependency into SAMSUNG_Q10 to fix:
-
-WARNING: unmet direct dependencies detected for BACKLIGHT_CLASS_DEVICE
-  Depends on [n]: HAS_IOMEM [=y] && BACKLIGHT_LCD_SUPPORT [=n]
-  Selected by [y]:
-  - SAMSUNG_Q10 [=y] && X86 [=y] && X86_PLATFORM_DEVICES [=y] && ACPI [=y]
-
-Signed-off-by: Sinan Kaya <okaya@kernel.org>
-Acked-by: Andy Shevchenko <andy.shevchenko@gmail.com>
-Signed-off-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
+Signed-off-by: Dan Carpenter <dan.carpenter@oracle.com>
+Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/platform/x86/Kconfig | 1 +
- 1 file changed, 1 insertion(+)
+ drivers/scsi/53c700.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/platform/x86/Kconfig b/drivers/platform/x86/Kconfig
-index 80b87954f6dd..09035705d0a0 100644
---- a/drivers/platform/x86/Kconfig
-+++ b/drivers/platform/x86/Kconfig
-@@ -999,6 +999,7 @@ config INTEL_OAKTRAIL
- config SAMSUNG_Q10
- 	tristate "Samsung Q10 Extras"
- 	depends on ACPI
-+	depends on BACKLIGHT_LCD_SUPPORT
- 	select BACKLIGHT_CLASS_DEVICE
- 	---help---
- 	  This driver provides support for backlight control on Samsung Q10
+diff --git a/drivers/scsi/53c700.c b/drivers/scsi/53c700.c
+index 6be77b3aa8a5..ac79f2088b31 100644
+--- a/drivers/scsi/53c700.c
++++ b/drivers/scsi/53c700.c
+@@ -295,7 +295,7 @@ NCR_700_detect(struct scsi_host_template *tpnt,
+ 	if(tpnt->sdev_attrs == NULL)
+ 		tpnt->sdev_attrs = NCR_700_dev_attrs;
+ 
+-	memory = dma_alloc_attrs(hostdata->dev, TOTAL_MEM_SIZE, &pScript,
++	memory = dma_alloc_attrs(dev, TOTAL_MEM_SIZE, &pScript,
+ 				 GFP_KERNEL, DMA_ATTR_NON_CONSISTENT);
+ 	if(memory == NULL) {
+ 		printk(KERN_ERR "53c700: Failed to allocate memory for driver, detaching\n");
 -- 
 2.19.1
 
