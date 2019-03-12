@@ -2,115 +2,115 @@ Return-Path: <SRS0=J4ZE=RP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.0 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,
-	USER_AGENT_NEOMUTT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CB1A9C43381
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 09:50:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C1BD8C43381
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 09:52:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9093A2147C
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 09:50:33 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=shutemov-name.20150623.gappssmtp.com header.i=@shutemov-name.20150623.gappssmtp.com header.b="lR+XvUt+"
+	by mail.kernel.org (Postfix) with ESMTP id 9A7142147C
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 09:52:29 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726588AbfCLJuc (ORCPT
+        id S1726657AbfCLJw2 convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 12 Mar 2019 05:50:32 -0400
-Received: from mail-pg1-f196.google.com ([209.85.215.196]:36209 "EHLO
-        mail-pg1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725882AbfCLJub (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 12 Mar 2019 05:50:31 -0400
-Received: by mail-pg1-f196.google.com with SMTP id r124so1419236pgr.3
-        for <linux-kernel@vger.kernel.org>; Tue, 12 Mar 2019 02:50:30 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=shutemov-name.20150623.gappssmtp.com; s=20150623;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=0D7OV4c9X2n8zGW+F3FNLmEy0PklCf74U0Xfmop9WTA=;
-        b=lR+XvUt+gcXKVe8QBPRWg8Xb9Ed2cVDz/e31b9tyoQwvtD0m3/VNtF3Cd2uHIvwr+R
-         tLLF5VnRypSgc63GHOFaJ0GIjna+48sSZF7Z5sa2xcAixy1lYyvGFdz8s41YGNnEy7b3
-         h+rUTKbvgR51gL7G7Cg2zB9oN1rQ7FJuzijlbzbJgId6SmfHEduoMz6eum5OHWcbGzP4
-         7g5mXVMvGAhP5C46A743XzmewtyxV+3X+HsP9j87sdDCf/L7F1LTx88S/DHb3HjJQk6C
-         RHJ57oztHbo2o8OM+bqQQrXmlA52qdcvzoqv8AgTVfFl/S2PgLi4Kb7+vr8mDZ9syZE/
-         PXtw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=0D7OV4c9X2n8zGW+F3FNLmEy0PklCf74U0Xfmop9WTA=;
-        b=CoAGzEuw39jrorLslOKOls1yoxUxaqjzMXvvPB+R1ctTozu+JzH8x+weP2mXXdeNR4
-         YwazQwBPbi+VIlT7PQ6ranurhXMqoXEUJwdtAQJXl7Tl8b7jj3p612XFZWvwWRs/jpAN
-         CbXr4dja+F0jdDSbrs/sY9IIP9yFfaarlznnVGgYl4b0ev4CGEPNQNswAHitcQ/mLD0o
-         8uUtkbnMhDDSXK7rGSwijHQYWHezNLzEgRFrCLUrHSKr3nyX9HcwYMlxeZgRqV+W7ldn
-         SRRUi9YEd3NilrsbWzoskWAU030B4g1STIeS/kWfy8P/YTE8l90W8qcPZXCWtWW20t08
-         4wsw==
-X-Gm-Message-State: APjAAAWfqbUWWuJdiseGfX9T09nUqG475jgtGDD780Kd9HLs3pHZjGIy
-        JxZuyArq2wmX5wL1kbz7r202jA==
-X-Google-Smtp-Source: APXvYqwhfJMt98l24I+WTmfn1qKL/4YmqMUyy+I46z3j5ZJdq1ROCg5WEq5aqTqy5DT0GU0fuDtgtQ==
-X-Received: by 2002:a62:41cc:: with SMTP id g73mr36985243pfd.145.1552384229725;
-        Tue, 12 Mar 2019 02:50:29 -0700 (PDT)
-Received: from kshutemo-mobl1.localdomain ([134.134.139.83])
-        by smtp.gmail.com with ESMTPSA id a7sm12907564pff.54.2019.03.12.02.50.28
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Tue, 12 Mar 2019 02:50:29 -0700 (PDT)
-Received: by kshutemo-mobl1.localdomain (Postfix, from userid 1000)
-        id 8856B3011CA; Tue, 12 Mar 2019 12:50:26 +0300 (+03)
-Date:   Tue, 12 Mar 2019 12:50:26 +0300
-From:   "Kirill A. Shutemov" <kirill@shutemov.name>
-To:     hpa@zytor.com
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        linux-kernel@vger.kernel.org, stable@vger.kernel.org,
-        Pitam Mitra <pitamm@gmail.com>,
-        "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Bockjoo Kim <bockjoo@phys.ufl.edu>, bp@alien8.de
-Subject: Re: [PATCH 5.0 30/46] x86/boot/compressed/64: Do not read legacy ROM
- on EFI system
-Message-ID: <20190312095026.obzxv65roj3fcu32@kshutemo-mobl1>
-References: <20190308124902.257040783@linuxfoundation.org>
- <20190308124904.216497374@linuxfoundation.org>
- <CED6E6E5-00E5-4FFD-A8C9-254EA3A5288E@zytor.com>
+        Tue, 12 Mar 2019 05:52:28 -0400
+Received: from foss.arm.com ([217.140.101.70]:39628 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725872AbfCLJw1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 12 Mar 2019 05:52:27 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.72.51.249])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 20B1CA78;
+        Tue, 12 Mar 2019 02:52:27 -0700 (PDT)
+Received: from donnerap.cambridge.arm.com (usa-sjc-imap-foss1.foss.arm.com [10.72.51.249])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 98C883F59C;
+        Tue, 12 Mar 2019 02:52:25 -0700 (PDT)
+Date:   Tue, 12 Mar 2019 09:52:22 +0000
+From:   Andre Przywara <andre.przywara@arm.com>
+To:     Gong John <johngong0791@gmail.com>
+Cc:     christoffer.dall@arm.com, Shengmin Gong <shengmin.gong@gmail.com>,
+        Marc Zyngier <marc.zyngier@arm.com>,
+        Julien Thierry <julien.thierry@arm.com>,
+        Jia He <hejianet@gmail.com>,
+        linux-arm-kernel@lists.infradead.org, kvmarm@lists.cs.columbia.edu,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] KVM: arm64: fix potential bug
+Message-ID: <20190312095222.45227d05@donnerap.cambridge.arm.com>
+In-Reply-To: <CAEg8mkxRj2jQSqnuqY239yDH3a4mkvabg+_6Q8+9Nd=mk+U2pw@mail.gmail.com>
+References: <20190312003243.6712-1-johngong0791@gmail.com>
+        <2405014d-9370-c0d5-7a44-7ec336098c45@arm.com>
+        <CAEg8mkxRj2jQSqnuqY239yDH3a4mkvabg+_6Q8+9Nd=mk+U2pw@mail.gmail.com>
+Organization: ARM
+X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; aarch64-unknown-linux-gnu)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CED6E6E5-00E5-4FFD-A8C9-254EA3A5288E@zytor.com>
-User-Agent: NeoMutt/20180716
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8BIT
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat, Mar 09, 2019 at 10:10:19PM -0800, hpa@zytor.com wrote:
-> >@@ -47,8 +50,18 @@ static unsigned long find_trampoline_pla
-> > 	 * This code is based on reserve_bios_regions().
-> > 	 */
-> > 
-> >-	ebda_start = *(unsigned short *)0x40e << 4;
-> >-	bios_start = *(unsigned short *)0x413 << 10;
-> >+	/*
-> >+	 * EFI systems may not provide legacy ROM. The memory may not be
-> >mapped
-> >+	 * at all.
-> >+	 *
-> >+	 * Only look for values in the legacy ROM for non-EFI system.
-> >+	 */
-> >+	signature = (char *)&boot_params->efi_info.efi_loader_signature;
-> >+	if (strncmp(signature, EFI32_LOADER_SIGNATURE, 4) &&
-> >+	    strncmp(signature, EFI64_LOADER_SIGNATURE, 4)) {
-> >+		ebda_start = *(unsigned short *)0x40e << 4;
-> >+		bios_start = *(unsigned short *)0x413 << 10;
-> >+	}
-> > 
-> > 	if (bios_start < BIOS_START_MIN || bios_start > BIOS_START_MAX)
-> > 		bios_start = BIOS_START_MAX;
+On Tue, 12 Mar 2019 11:15:14 +0800
+Gong John <johngong0791@gmail.com> wrote:
+
+Hi,
+
+> On Tue, Mar 12, 2019 at 9:44 AM André Przywara <andre.przywara@arm.com> wrote:
+> >
+> > On 12/03/2019 00:32, John Gong wrote:
+> > Hi,
+> >  
+> > > Since intid always >= VGIC_NR_PRIVATE_IRQS,  
+> >
+> > How so? The PMU and the arch timer emulation use PPIs, so intid is
+> > definitely < VGIC_NR_PRIVATE_IRQS there.
+> >  
+> > > so then even vcpu == NULL, it never return -EINVAL.  
+> >
+> > I am not sure I follow.
+> > To uniquely identify an SPI interrupt, we just need the interrupt ID
+> > (which is always >= 32). For PPIs and SGIs, we additionally need the
+> > vCPU ID this private interrupt belongs to, as there are multiple
+> > interrupts with the same INTID (one per VCPU).
+> > The VCPU ID passed in for SPIs is just a dummy value (because we use the
+> > same function to inject private and shared interrupts), so we don't need
+> > to check for its validity.
+> >
+> > Cheers,
+> > Andre.
+> >  
+> Thanks for your explanation. It's my fault to not consider the PPIs
+> and SGIs injection.
+
+Don't worry, we are glad when people actually look at the code. And we rather have a false positive report than a bug slipping through.
+
+Cheers,
+Andre.
+ 
+> Sorry for polluting the mail list.
 > 
-> Only one objection: the explanation is nonsensical. 
+> Cheers,
+> John Gong
+> > >
+> > > Signed-off-by: Shengmin Gong <shengmin.gong@gmail.com>
+> > > Signed-off-by: John Gong <johngong0791@gmail.com>
+> > > ---
+> > >  virt/kvm/arm/vgic/vgic.c | 2 +-
+> > >  1 file changed, 1 insertion(+), 1 deletion(-)
+> > >
+> > > diff --git a/virt/kvm/arm/vgic/vgic.c b/virt/kvm/arm/vgic/vgic.c
+> > > index abd9c7352677..d3cb1ce880e2 100644
+> > > --- a/virt/kvm/arm/vgic/vgic.c
+> > > +++ b/virt/kvm/arm/vgic/vgic.c
+> > > @@ -424,7 +424,7 @@ int kvm_vgic_inject_irq(struct kvm *kvm, int cpuid, unsigned int intid,
+> > >               return ret;
+> > >
+> > >       vcpu = kvm_get_vcpu(kvm, cpuid);
+> > > -     if (!vcpu && intid < VGIC_NR_PRIVATE_IRQS)
+> > > +     if (!vcpu)
+> > >               return -EINVAL;
+> > >
+> > >       irq = vgic_get_irq(kvm, vcpu, intid);
+> > >  
+> >  
 
-Well, that's the best explanation I've come up with :/
-
-I would be glad for any insight here.
-
--- 
- Kirill A. Shutemov
