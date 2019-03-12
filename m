@@ -2,168 +2,168 @@ Return-Path: <SRS0=J4ZE=RP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIMWL_WL_MED,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.7 required=3.0 tests=FROM_LOCAL_HEX,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CE760C43381
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 18:48:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DE226C43381
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 18:49:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8B8CD206BA
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 18:48:24 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=fb.com header.i=@fb.com header.b="IJSeswfW";
-	dkim=pass (1024-bit key) header.d=fb.onmicrosoft.com header.i=@fb.onmicrosoft.com header.b="WUmomp+y"
+	by mail.kernel.org (Postfix) with ESMTP id A041D206BA
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 18:49:07 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727035AbfCLSsX (ORCPT
+        id S1727192AbfCLStG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 12 Mar 2019 14:48:23 -0400
-Received: from mx0b-00082601.pphosted.com ([67.231.153.30]:44768 "EHLO
-        mx0a-00082601.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726558AbfCLSsW (ORCPT
+        Tue, 12 Mar 2019 14:49:06 -0400
+Received: from mail-io1-f72.google.com ([209.85.166.72]:56134 "EHLO
+        mail-io1-f72.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725894AbfCLStF (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 12 Mar 2019 14:48:22 -0400
-Received: from pps.filterd (m0089730.ppops.net [127.0.0.1])
-        by m0089730.ppops.net (8.16.0.27/8.16.0.27) with SMTP id x2CIiBIK019653;
-        Tue, 12 Mar 2019 11:48:09 -0700
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=fb.com; h=from : to : cc : subject
- : date : message-id : references : in-reply-to : content-type : content-id
- : content-transfer-encoding : mime-version; s=facebook;
- bh=a5lxcpFrG4f+ml3OZhKJemoJ+5+50skRxcyCNMCmnaY=;
- b=IJSeswfWIScosNrugkeWB8ikdV9sRpN89Phz/Y/Zr9DMuI7SamzyzMGcgA3/SLyprukm
- euSexIjjsJ5woK1K25dudMFATc9iNyAeSC//3PDA1ERvxgtEzlOksRydNKPgI/+vFgr+
- 5LPO5gBGPumxIbgPV3WHhTeqoOLqxTlWYJ8= 
-Received: from maileast.thefacebook.com ([199.201.65.23])
-        by m0089730.ppops.net with ESMTP id 2r6gt2rgh0-19
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-SHA384 bits=256 verify=NOT);
-        Tue, 12 Mar 2019 11:48:09 -0700
-Received: from frc-mbx08.TheFacebook.com (192.168.155.29) by
- frc-hub03.TheFacebook.com (192.168.177.73) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA384) id
- 15.1.1713.5; Tue, 12 Mar 2019 11:48:00 -0700
-Received: from frc-hub04.TheFacebook.com (192.168.177.74) by
- frc-mbx08.TheFacebook.com (192.168.155.29) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA384) id
- 15.1.1713.5; Tue, 12 Mar 2019 11:48:00 -0700
-Received: from NAM01-BN3-obe.outbound.protection.outlook.com (192.168.183.28)
- by o365-in.thefacebook.com (192.168.177.74) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA384) id 15.1.1713.5
- via Frontend Transport; Tue, 12 Mar 2019 11:48:00 -0700
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=fb.onmicrosoft.com;
- s=selector1-fb-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=a5lxcpFrG4f+ml3OZhKJemoJ+5+50skRxcyCNMCmnaY=;
- b=WUmomp+yWR2NK8isAkjIS6osoN9+X0tSw461ku9wwc+lgoD8UeUsESsyaLcIuPeT+JmXR1t6PaRR8NDsswU0RbxYyrfMoTeOGwQtkYNTy0RnIJR5+J1+067QeJuudoqyOpqacfPuPwpszyIb/M1zLfv/a/P+QqGzqtmL2itD2+I=
-Received: from BYAPR15MB2631.namprd15.prod.outlook.com (20.179.156.24) by
- BYAPR15MB3510.namprd15.prod.outlook.com (20.179.60.26) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.1686.18; Tue, 12 Mar 2019 18:47:58 +0000
-Received: from BYAPR15MB2631.namprd15.prod.outlook.com
- ([fe80::790e:7294:b086:9ded]) by BYAPR15MB2631.namprd15.prod.outlook.com
- ([fe80::790e:7294:b086:9ded%2]) with mapi id 15.20.1686.021; Tue, 12 Mar 2019
- 18:47:58 +0000
-From:   Roman Gushchin <guro@fb.com>
-To:     Christopher Lameter <cl@linux.com>
-CC:     "Tobin C. Harding" <tobin@kernel.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Pekka Enberg <penberg@cs.helsinki.fi>,
-        "Matthew Wilcox" <willy@infradead.org>,
-        Tycho Andersen <tycho@tycho.ws>,
-        "linux-mm@kvack.org" <linux-mm@kvack.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: Re: [RFC 02/15] slub: Add isolate() and migrate() methods
-Thread-Topic: [RFC 02/15] slub: Add isolate() and migrate() methods
-Thread-Index: AQHU1WWOzoo+8Mo/g0+TXm2HFlFybKYGiOoAgADmRICAAO46AA==
-Date:   Tue, 12 Mar 2019 18:47:57 +0000
-Message-ID: <20190312184754.GB31407@tower.DHCP.thefacebook.com>
-References: <20190308041426.16654-1-tobin@kernel.org>
- <20190308041426.16654-3-tobin@kernel.org>
- <20190311215106.GA7915@tower.DHCP.thefacebook.com>
- <01000169702ee357-fe8b85e5-e601-41da-8ba2-25e8b7db52eb-000000@email.amazonses.com>
-In-Reply-To: <01000169702ee357-fe8b85e5-e601-41da-8ba2-25e8b7db52eb-000000@email.amazonses.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-clientproxiedby: MWHPR03CA0005.namprd03.prod.outlook.com
- (2603:10b6:300:117::15) To BYAPR15MB2631.namprd15.prod.outlook.com
- (2603:10b6:a03:152::24)
-x-ms-exchange-messagesentrepresentingtype: 1
-x-originating-ip: [2620:10d:c090:200::2:d3a0]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: af1a46df-4e5a-440b-5e95-08d6a71b3eab
-x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600127)(711020)(4605104)(2017052603328)(7153060)(7193020);SRVR:BYAPR15MB3510;
-x-ms-traffictypediagnostic: BYAPR15MB3510:
-x-microsoft-exchange-diagnostics: 1;BYAPR15MB3510;20:OfzLOrUcUBv2Fd2vakFl3InVBLbYWE/Irtqtn3Y3w8O7+VeGuSmWyjeBfJA/7AizCUEhkgLnQvRuqx4E1Z32H28NK2y75/9qHbVCSiK+4O1qPO9fYNeTTH4arDhP0h9skf7RogYxUpvLS92869H+FOp7u+dPYGTV8FB0R2t/Cyc=
-x-microsoft-antispam-prvs: <BYAPR15MB3510E8CA0DAF9B933CA93EC8BE490@BYAPR15MB3510.namprd15.prod.outlook.com>
-x-forefront-prvs: 09749A275C
-x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(346002)(396003)(136003)(366004)(39860400002)(376002)(199004)(189003)(54094003)(256004)(386003)(14444005)(6506007)(25786009)(54906003)(1076003)(6436002)(7736002)(102836004)(68736007)(6486002)(5660300002)(71190400001)(6246003)(229853002)(14454004)(81156014)(81166006)(9686003)(76176011)(305945005)(11346002)(478600001)(476003)(8676002)(446003)(6916009)(4326008)(46003)(99286004)(6512007)(8936002)(186003)(97736004)(53936002)(486006)(316002)(106356001)(93886005)(71200400001)(105586002)(86362001)(52116002)(33656002)(2906002)(6116002);DIR:OUT;SFP:1102;SCL:1;SRVR:BYAPR15MB3510;H:BYAPR15MB2631.namprd15.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
-received-spf: None (protection.outlook.com: fb.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam-message-info: oqcbNJ/DPl4R11an69bG1xo6rHxmu+XOK04/Nw3L1eJ994FG1De6IakPnkS6DlpOfrcMgPo7MC4/FQRy8iqM05W/JE7/rTqFr/QCB5G7BHOcNM7FEXV1SBg7wMsGIQPSnp48bYq0oECrWwnF52LwICtR+Xj9RL2bBGoxHEBLf8WLpMukFHaZGDesvnTlAWxng442Q4qT2W23vv8cF/HqZ8csdtf3UMho3T1AxKd6OYi3j63nzT3NVeJ4xEGeYjdrN0dj8wsOIPqnp261zE6PSoJBMpzXOevmjpctNyv3ZTPGUQ7A1e1jOPL/Kv/JiqdwSngccZdIrtteXTiTlbJyBiwiNOhKZ0qMnXZP2BF2xslq6lFiai4e5ngEdSmjYNzbJhdmsNVbDO6lINAtuFRWA+16x9QuIKZYrUw8Fm0oUiM=
-Content-Type: text/plain; charset="us-ascii"
-Content-ID: <6569EAB69B17AE42B6B6270C7F703CBE@namprd15.prod.outlook.com>
-Content-Transfer-Encoding: quoted-printable
+        Tue, 12 Mar 2019 14:49:05 -0400
+Received: by mail-io1-f72.google.com with SMTP id l10so2444615iob.22
+        for <linux-kernel@vger.kernel.org>; Tue, 12 Mar 2019 11:49:05 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:date:in-reply-to:message-id:subject
+         :from:to;
+        bh=Q1e34M/H3HeaUKSHtvVboUgF0b7c9dehVQ8F/3p9fR4=;
+        b=GH4xHOUGJMwuvHWfENc2I+a7f9N6XXjdJqjEudy3JUJ0Y7RkbtaIK1fhNQdOv5ghfC
+         CFZcaOdbiyInPcT70A9/aldLoW8uLzVKSg1N6H9cplLRFGgBBF0aFKBPBUi+qrVX950Y
+         SU4M4z9ZvHP6PkQIgvjxTNMdQyWKXjpUtcF0bHp1Q/N81cfFM5HQgaqsc2+2IUEHD/QH
+         bHD3bGlm2PwmJKaCVQ7QG7IurI7GOgsfzpHEt681qjnLVwlBftSFwFucSkI9YAhJpWtm
+         c53Zckl28GF364lSwgypMR4quGpLlQWhALY3xtyLZgfqnPldV1tkhZKSGBUNykaHdTNm
+         YmOw==
+X-Gm-Message-State: APjAAAXM4VbMNgGvuTKRsUBn74aZyorQ5qEGu0HLLPST8LOJhyDaHovp
+        Y1QGAEMx2fufI6UCCjV/peh5X+dBZw131sOAoJSxL8akMOug
+X-Google-Smtp-Source: APXvYqzD+jBWsoWLRgjl/H0QHV95CysXaJFA+g5NS4gsESu4UlXG8gFEKtf37IKlgr9IRxNZSTeUvUtCpYNSrkj+VaLAVbjiS6V0
 MIME-Version: 1.0
-X-MS-Exchange-CrossTenant-Network-Message-Id: af1a46df-4e5a-440b-5e95-08d6a71b3eab
-X-MS-Exchange-CrossTenant-originalarrivaltime: 12 Mar 2019 18:47:57.9999
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 8ae927fe-1255-47a7-a2af-5f3a069daaa2
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: BYAPR15MB3510
-X-OriginatorOrg: fb.com
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-03-12_10:,,
- signatures=0
-X-Proofpoint-Spam-Reason: safe
-X-FB-Internal: Safe
+X-Received: by 2002:a5d:9b95:: with SMTP id r21mr2877255iom.38.1552416544747;
+ Tue, 12 Mar 2019 11:49:04 -0700 (PDT)
+Date:   Tue, 12 Mar 2019 11:49:04 -0700
+In-Reply-To: <000000000000dbe73a057cd65da2@google.com>
+X-Google-Appengine-App-Id: s~syzkaller
+X-Google-Appengine-App-Id-Alias: syzkaller
+Message-ID: <000000000000b18bf10583ea24d9@google.com>
+Subject: Re: general protection fault in fib6_purge_rt
+From:   syzbot <syzbot+a25307ad099309f1c2b9@syzkaller.appspotmail.com>
+To:     davem@davemloft.net, kuznet@ms2.inr.ac.ru,
+        linux-kernel@vger.kernel.org, netdev@vger.kernel.org,
+        syzkaller-bugs@googlegroups.com, yoshfuji@linux-ipv6.org
+Content-Type: text/plain; charset="UTF-8"; format=flowed; delsp=yes
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Mar 12, 2019 at 04:35:15AM +0000, Christopher Lameter wrote:
-> On Mon, 11 Mar 2019, Roman Gushchin wrote:
->=20
-> > > --- a/mm/slub.c
-> > > +++ b/mm/slub.c
-> > > @@ -4325,6 +4325,34 @@ int __kmem_cache_create(struct kmem_cache *s, =
-slab_flags_t flags)
-> > >  	return err;
-> > >  }
-> > >
-> > > +void kmem_cache_setup_mobility(struct kmem_cache *s,
-> > > +			       kmem_cache_isolate_func isolate,
-> > > +			       kmem_cache_migrate_func migrate)
-> > > +{
-> >
-> > I wonder if it's better to adapt kmem_cache_create() to take two additi=
-onal
-> > argument? I suspect mobility is not a dynamic option, so it can be
-> > set on kmem_cache creation.
->=20
-> One other idea that prior versions of this patchset used was to change
-> kmem_cache_create() so that the ctor parameter becomes an ops vector.
->=20
-> However, in order to reduce the size of the patchset I dropped that. It
-> could be easily moved back to the way it was before.
+syzbot has found a reproducer for the following crash on:
 
-Understood. I like the idea of an ops vector, but it can be done later,
-agree.
+HEAD commit:    cf08baa2 Add linux-next specific files for 20190306
+git tree:       linux-next
+console output: https://syzkaller.appspot.com/x/log.txt?x=12f6755f200000
+kernel config:  https://syzkaller.appspot.com/x/.config?x=c8b6073d992e8217
+dashboard link: https://syzkaller.appspot.com/bug?extid=a25307ad099309f1c2b9
+compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
+userspace arch: amd64
+syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=16b2c56f200000
+C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=13b8890b200000
 
->=20
-> > > +	/*
-> > > +	 * Sadly serialization requirements currently mean that we have
-> > > +	 * to disable fast cmpxchg based processing.
-> > > +	 */
-> >
-> > Can you, please, elaborate a bit more here?
->=20
-> cmpxchg based processing does not lock the struct page. SMO requires to
-> ensure that all changes on a slab page can be stopped. The page->lock wil=
-l
-> accomplish that. I think we could avoid dealing with actually locking the
-> page with some more work.
+IMPORTANT: if you fix the bug, please add the following tag to the commit:
+Reported-by: syzbot+a25307ad099309f1c2b9@syzkaller.appspotmail.com
 
-Thank you for the explanation!
+Started in network mode
+Own node identity ac1414aa, cluster identity 4711
+New replicast peer: 172.20.20.187
+Enabled bearer <udp:syz1>, priority 10
+Enabling of bearer <udp:syz1> rejected, already enabled
+kasan: CONFIG_KASAN_INLINE enabled
+kasan: GPF could be caused by NULL-ptr deref or user memory access
+general protection fault: 0000 [#1] PREEMPT SMP KASAN
+CPU: 1 PID: 7821 Comm: syz-executor772 Not tainted 5.0.0-next-20190306 #4
+Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS  
+Google 01/01/2011
+RIP: 0010:fib6_drop_pcpu_from net/ipv6/ip6_fib.c:924 [inline]
+RIP: 0010:fib6_purge_rt+0x4b3/0x670 net/ipv6/ip6_fib.c:960
+Code: 0f b6 35 5a f6 44 03 31 ff 44 89 f6 e8 a6 1c 5b fb 45 84 f6 0f 84 b3  
+00 00 00 e8 58 1b 5b fb 49 8d 7f 70 48 89 f8 48 c1 e8 03 <80> 3c 18 00 0f  
+85 64 01 00 00 48 89 f8 4d 8b 77 70 48 c1 e8 03 80
+RSP: 0018:ffff8880a5a26e98 EFLAGS: 00010202
+RAX: 000000000000000e RBX: dffffc0000000000 RCX: ffffffff861579a9
+RDX: 0000000000000000 RSI: ffffffff861578d8 RDI: 0000000000000071
+RBP: ffff8880a5a26ef0 R08: ffff88808f9a6300 R09: ffffed101406c2f6
+R10: ffffed101406c2f5 R11: ffff8880a03617af R12: 0000000000000000
+R13: ffff8880a0361780 R14: 0000000000000001 R15: 0000000000000001
+FS:  00007fe8383f8700(0000) GS:ffff8880ae900000(0000) knlGS:0000000000000000
+CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+CR2: 00005612a363f110 CR3: 0000000093362000 CR4: 00000000001406e0
+DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
+DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
+Call Trace:
+  fib6_del_route net/ipv6/ip6_fib.c:1813 [inline]
+  fib6_del+0xac2/0x10a0 net/ipv6/ip6_fib.c:1844
+  fib6_clean_node+0x3a8/0x590 net/ipv6/ip6_fib.c:2006
+  fib6_walk_continue+0x495/0x900 net/ipv6/ip6_fib.c:1928
+  fib6_walk+0x9d/0x100 net/ipv6/ip6_fib.c:1976
+  fib6_clean_tree+0xe0/0x120 net/ipv6/ip6_fib.c:2055
+  __fib6_clean_all+0x118/0x2a0 net/ipv6/ip6_fib.c:2071
+  fib6_clean_all+0x2b/0x40 net/ipv6/ip6_fib.c:2082
+  rt6_sync_down_dev+0x134/0x150 net/ipv6/route.c:4051
+  rt6_disable_ip+0x27/0x5f0 net/ipv6/route.c:4056
+  addrconf_ifdown+0xa2/0x1220 net/ipv6/addrconf.c:3705
+  addrconf_notify+0x19a/0x2260 net/ipv6/addrconf.c:3630
+  notifier_call_chain+0xc7/0x240 kernel/notifier.c:93
+  __raw_notifier_call_chain kernel/notifier.c:394 [inline]
+  raw_notifier_call_chain+0x2e/0x40 kernel/notifier.c:401
+  call_netdevice_notifiers_info+0x3f/0x90 net/core/dev.c:1739
+  call_netdevice_notifiers_extack net/core/dev.c:1751 [inline]
+  call_netdevice_notifiers net/core/dev.c:1765 [inline]
+  dev_close_many+0x33f/0x6f0 net/core/dev.c:1508
+  rollback_registered_many+0x43b/0xfd0 net/core/dev.c:8161
+  rollback_registered+0x109/0x1d0 net/core/dev.c:8226
+  unregister_netdevice_queue net/core/dev.c:9273 [inline]
+  unregister_netdevice_queue+0x1ee/0x2c0 net/core/dev.c:9266
+  unregister_netdevice include/linux/netdevice.h:2655 [inline]
+  __tun_detach+0xd5b/0x1000 drivers/net/tun.c:727
+  tun_detach drivers/net/tun.c:744 [inline]
+  tun_chr_close+0xe0/0x180 drivers/net/tun.c:3435
+  __fput+0x2e5/0x8d0 fs/file_table.c:278
+  ____fput+0x16/0x20 fs/file_table.c:309
+  task_work_run+0x14a/0x1c0 kernel/task_work.c:113
+  exit_task_work include/linux/task_work.h:22 [inline]
+  do_exit+0x90a/0x2fa0 kernel/exit.c:876
+  do_group_exit+0x135/0x370 kernel/exit.c:980
+  get_signal+0x399/0x1d50 kernel/signal.c:2577
+  do_signal+0x87/0x1940 arch/x86/kernel/signal.c:816
+  exit_to_usermode_loop+0x244/0x2c0 arch/x86/entry/common.c:162
+  prepare_exit_to_usermode arch/x86/entry/common.c:197 [inline]
+  syscall_return_slowpath arch/x86/entry/common.c:268 [inline]
+  do_syscall_64+0x52d/0x610 arch/x86/entry/common.c:293
+  entry_SYSCALL_64_after_hwframe+0x49/0xbe
+RIP: 0033:0x44bca9
+Code: 5b 65 73 63 61 70 65 20 63 6f 6e 74 72 6f 6c 2d 63 68 61 72 61 63 74  
+65 72 73 5d 20 00 5b 64 72 6f 70 20 63 6f 6e 74 72 6f 6c <2d> 63 68 61 72  
+61 63 74 65 72 73 5d 20 00 5b 73 6c 61 73 68 65 73
+RSP: 002b:00007fe8383f7cf8 EFLAGS: 00000246 ORIG_RAX: 00000000000000ca
+RAX: fffffffffffffe00 RBX: 00000000006dec48 RCX: 000000000044bca9
+RDX: 0000000000000000 RSI: 0000000000000080 RDI: 00000000006dec48
+RBP: 00000000006dec40 R08: 0000000000000000 R09: 0000000000000000
+R10: 0000000000000000 R11: 0000000000000246 R12: 00000000006dec4c
+R13: 00007ffd4d27000f R14: 00007fe8383f89c0 R15: 000000000000002d
+Modules linked in:
+---[ end trace 9a88786341e68810 ]---
+RIP: 0010:fib6_drop_pcpu_from net/ipv6/ip6_fib.c:924 [inline]
+RIP: 0010:fib6_purge_rt+0x4b3/0x670 net/ipv6/ip6_fib.c:960
+Code: 0f b6 35 5a f6 44 03 31 ff 44 89 f6 e8 a6 1c 5b fb 45 84 f6 0f 84 b3  
+00 00 00 e8 58 1b 5b fb 49 8d 7f 70 48 89 f8 48 c1 e8 03 <80> 3c 18 00 0f  
+85 64 01 00 00 48 89 f8 4d 8b 77 70 48 c1 e8 03 80
+RSP: 0018:ffff8880a5a26e98 EFLAGS: 00010202
+RAX: 000000000000000e RBX: dffffc0000000000 RCX: ffffffff861579a9
+RDX: 0000000000000000 RSI: ffffffff861578d8 RDI: 0000000000000071
+RBP: ffff8880a5a26ef0 R08: ffff88808f9a6300 R09: ffffed101406c2f6
+R10: ffffed101406c2f5 R11: ffff8880a03617af R12: 0000000000000000
+R13: ffff8880a0361780 R14: 0000000000000001 R15: 0000000000000001
+FS:  00007fe8383f8700(0000) GS:ffff8880ae900000(0000) knlGS:0000000000000000
+CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+CR2: 00005612a363f110 CR3: 0000000093362000 CR4: 00000000001406e0
+DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
+DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
+
