@@ -7,46 +7,47 @@ X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8D3E4C43381
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 18:13:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2BDE4C43381
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 18:13:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 39B1D213A2
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 18:13:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E4435214AF
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 18:13:23 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1552414399;
-	bh=Fh1G7OCHOvY5Dmfqvg2XTeJWxfQx7mejk2ent0gJmjg=;
+	s=default; t=1552414404;
+	bh=5edrh1mhAUPscXMjXE6B5rcggG+CFIS1Jnze1cnltxE=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=R8TEBEkn/mk0kJPB/fGYs+/2JUYaCR3GU3isnzo8/qVYKzHw3bNGW+20gRL4I5Gmy
-	 TbBLU0/nuUiO0Wd3uXR2i6ozDf1u4ClJweCp5NDSoS8RsfBsPoLigj6al8DjE4z1gj
-	 ebJCdYIf1qEounHagtJQHiDtna2hoieMrrVTuxY8=
+	b=kSLxFi3T1AZPqXwfk0X8pvWKxjnwQyCPX876uyLiOK72vNSLusTfuJS6FPFR5dMC3
+	 dAgWHGMXO5N5y1rrBG0Vi/KtYtG/kL+U7HfuIlS7pUtGvMB4fdk8RXEinqKoBsjOpt
+	 0UA/zsWBM74CiqaGq/dhjKq2sFBY4NPOK0Obejj4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726969AbfCLRLb (ORCPT
+        id S1727262AbfCLSNW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 12 Mar 2019 13:11:31 -0400
-Received: from mail.kernel.org ([198.145.29.99]:44780 "EHLO mail.kernel.org"
+        Tue, 12 Mar 2019 14:13:22 -0400
+Received: from mail.kernel.org ([198.145.29.99]:44926 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726937AbfCLRL2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 12 Mar 2019 13:11:28 -0400
+        id S1726962AbfCLRLb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 12 Mar 2019 13:11:31 -0400
 Received: from localhost (unknown [104.133.8.98])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 005B32173C;
-        Tue, 12 Mar 2019 17:11:27 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 3E808214AF;
+        Tue, 12 Mar 2019 17:11:30 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1552410688;
-        bh=Fh1G7OCHOvY5Dmfqvg2XTeJWxfQx7mejk2ent0gJmjg=;
+        s=default; t=1552410690;
+        bh=5edrh1mhAUPscXMjXE6B5rcggG+CFIS1Jnze1cnltxE=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=fqQ639CENcSCA1stpreQqIWz+FNC2Zpq7oVHm2OvEnqHMQ5jmHcWf9cC8yEaq3lJD
-         L3mHwMZqrHn8ys4x2KpVX4DC0i4H6nUlCBLeMYtXOVCM3NFomOA2b8DvXz0OsVZGF8
-         /kquoJ2OSLdl/8g8mcCvBM5ntwjWzk5jR/oO+vvo=
+        b=jdvmIPA+i4V2eWAfgMzo/l31u1voLnK4ruTEPq43EOSjMlQxmD6Mys5pC6VsLkcbu
+         2bzwYp0XlItl5jZYc7guioevIS0uxr6tA79qO0mSdXy3Fukolob8L428Ei9cMSVTir
+         GLt6kNM/gPJ3JiEV8gLS0e5D5wQqDU6QaDdKkDJk=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Vincent Batts <vbatts@hashbangbash.com>,
-        Dmitry Torokhov <dmitry.torokhov@gmail.com>
-Subject: [PATCH 5.0 03/25] Input: elan_i2c - add id for touchpad found in Lenovo s21e-20
-Date:   Tue, 12 Mar 2019 10:08:41 -0700
-Message-Id: <20190312170403.852278073@linuxfoundation.org>
+        stable@vger.kernel.org,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Bjorn Helgaas <bhelgaas@google.com>
+Subject: [PATCH 5.0 06/25] x86/PCI: Fixup RTIT_BAR of Intel Denverton Trace Hub
+Date:   Tue, 12 Mar 2019 10:08:44 -0700
+Message-Id: <20190312170404.035437166@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190312170403.643852550@linuxfoundation.org>
 References: <20190312170403.643852550@linuxfoundation.org>
@@ -65,30 +66,85 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-From: Vincent Batts <vbatts@hashbangbash.com>
+From: Alexander Shishkin <alexander.shishkin@linux.intel.com>
 
-commit e154ab69321ce2c54f19863d75c77b4e2dc9d365 upstream.
+commit 2e095ce7b6ecce2f3e2ff330527f12056ed1e1a1 upstream.
 
-Lenovo s21e-20 uses ELAN0601 in its ACPI tables for the Elan touchpad.
+On Denverton's integration of the Intel(R) Trace Hub (for a reference and
+overview see Documentation/trace/intel_th.rst) the reported size of one of
+its resources (RTIT_BAR) doesn't match its actual size, which leads to
+overlaps with other devices' resources.
 
-Signed-off-by: Vincent Batts <vbatts@hashbangbash.com>
+In practice, it overlaps with XHCI MMIO space, which results in the xhci
+driver bailing out after seeing its registers as 0xffffffff, and perceived
+disappearance of all USB devices:
+
+  intel_th_pci 0000:00:1f.7: enabling device (0004 -> 0006)
+  xhci_hcd 0000:00:15.0: xHCI host controller not responding, assume dead
+  xhci_hcd 0000:00:15.0: xHC not responding in xhci_irq, assume controller is dead
+  xhci_hcd 0000:00:15.0: HC died; cleaning up
+  usb 1-1: USB disconnect, device number 2
+
+For this reason, we need to resize the RTIT_BAR on Denverton to its actual
+size, which in this case is 4MB.  The corresponding erratum is DNV36 at the
+link below:
+
+  DNV36.       Processor Host Root Complex May Incorrectly Route Memory
+               Accesses to Intel® Trace Hub
+
+  Problem:     The Intel® Trace Hub RTIT_BAR (B0:D31:F7 offset 20h) is
+	       reported as a 2KB memory range.  Due to this erratum, the
+	       processor Host Root Complex will forward addresses from
+	       RTIT_BAR to RTIT_BAR + 4MB -1 to Intel® Trace Hub.
+
+  Implication: Devices assigned within the RTIT_BAR to RTIT_BAR + 4MB -1
+               space may not function correctly.
+
+  Workaround:  A BIOS code change has been identified and may be
+               implemented as a workaround for this erratum.
+
+  Status:      No Fix.
+
+Note that 5118ccd34780 ("intel_th: pci: Add Denverton SOC support") updates
+the Trace Hub driver so it claims the Denverton device, but the resource
+overlap exists regardless of whether that driver is loaded or that commit
+is included.
+
+Link: https://www.intel.com/content/dam/www/public/us/en/documents/specification-updates/atom-c3000-family-spec-update.pdf
+Signed-off-by: Alexander Shishkin <alexander.shishkin@linux.intel.com>
+[bhelgaas: include erratum text, clarify relationship with 5118ccd34780]
+Signed-off-by: Bjorn Helgaas <bhelgaas@google.com>
 Cc: stable@vger.kernel.org
-Signed-off-by: Dmitry Torokhov <dmitry.torokhov@gmail.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/input/mouse/elan_i2c_core.c |    1 +
- 1 file changed, 1 insertion(+)
+ arch/x86/pci/fixup.c |   16 ++++++++++++++++
+ 1 file changed, 16 insertions(+)
 
---- a/drivers/input/mouse/elan_i2c_core.c
-+++ b/drivers/input/mouse/elan_i2c_core.c
-@@ -1337,6 +1337,7 @@ static const struct acpi_device_id elan_
- 	{ "ELAN0000", 0 },
- 	{ "ELAN0100", 0 },
- 	{ "ELAN0600", 0 },
-+	{ "ELAN0601", 0 },
- 	{ "ELAN0602", 0 },
- 	{ "ELAN0605", 0 },
- 	{ "ELAN0608", 0 },
+--- a/arch/x86/pci/fixup.c
++++ b/arch/x86/pci/fixup.c
+@@ -635,6 +635,22 @@ static void quirk_no_aersid(struct pci_d
+ DECLARE_PCI_FIXUP_CLASS_EARLY(PCI_VENDOR_ID_INTEL, PCI_ANY_ID,
+ 			      PCI_CLASS_BRIDGE_PCI, 8, quirk_no_aersid);
+ 
++static void quirk_intel_th_dnv(struct pci_dev *dev)
++{
++	struct resource *r = &dev->resource[4];
++
++	/*
++	 * Denverton reports 2k of RTIT_BAR (intel_th resource 4), which
++	 * appears to be 4 MB in reality.
++	 */
++	if (r->end == r->start + 0x7ff) {
++		r->start = 0;
++		r->end   = 0x3fffff;
++		r->flags |= IORESOURCE_UNSET;
++	}
++}
++DECLARE_PCI_FIXUP_HEADER(PCI_VENDOR_ID_INTEL, 0x19e1, quirk_intel_th_dnv);
++
+ #ifdef CONFIG_PHYS_ADDR_T_64BIT
+ 
+ #define AMD_141b_MMIO_BASE(x)	(0x80 + (x) * 0x8)
 
 
