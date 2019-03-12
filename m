@@ -7,47 +7,49 @@ X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 40AA5C43381
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 17:17:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BC2B9C43381
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 17:17:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0AAA121741
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 17:17:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7B79021741
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 17:17:44 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1552411061;
-	bh=CMelUpm/SFz2/UxL4sw3BY9Qn7JV1dOO4dFH+2PtoI4=;
+	s=default; t=1552411064;
+	bh=LPhwsHS/86d0nhBrogUoPpDSezQD+PoFkRYZzfGDi+M=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=tEnSs2vmdAw8ibUj0NOOppmutWlqVLTyQAkMrJcGjP+S9ZlcJ6SzuA/Or3O5xdjGp
-	 l2ls2JKgwzTguWL9KWaTK7SHhbag8hFOxkHCXjgcal8ysE0wM06OqiBcOLPzOZEb08
-	 73yHPDy1cdfSQVr00/LuEbS7rdGXuQfjxU5CcFYA=
+	b=nNcRwMpQzHxslCvk81RRx3NXmlvT8zVNCPhA7ib2q3Vsh8p4niS2xvVLWElU9YQxL
+	 /gn5f3Dg21gPzSQ56J5N/vG+xeyHoh7TdUcILudoIlvH/WsOuxKMXjI+pqe+4yl8P5
+	 3FXnIVfPtgMi1b7boe47tqQXnJ+yS0midvCQMbXY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727891AbfCLRRk (ORCPT
+        id S1728289AbfCLRRn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 12 Mar 2019 13:17:40 -0400
-Received: from mail.kernel.org ([198.145.29.99]:58668 "EHLO mail.kernel.org"
+        Tue, 12 Mar 2019 13:17:43 -0400
+Received: from mail.kernel.org ([198.145.29.99]:58900 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729162AbfCLRQa (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 12 Mar 2019 13:16:30 -0400
+        id S1729197AbfCLRQf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 12 Mar 2019 13:16:35 -0400
 Received: from localhost (unknown [104.133.8.98])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 7FDAF21871;
-        Tue, 12 Mar 2019 17:16:30 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id E05F321741;
+        Tue, 12 Mar 2019 17:16:34 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1552410990;
-        bh=CMelUpm/SFz2/UxL4sw3BY9Qn7JV1dOO4dFH+2PtoI4=;
+        s=default; t=1552410995;
+        bh=LPhwsHS/86d0nhBrogUoPpDSezQD+PoFkRYZzfGDi+M=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=xm2yF8n+VcUSM4f8eq8QcDJp4y19u0ncgwFBN1jnCkhc6s7+whWYH4uf/+lSpL3nq
-         Q/tVQsbvsN5tV/qG00EPcxH1Dfu79jWdZAet9nmOY5umH8N1e68W8NySaKui8Asttg
-         7Pk2IToqG4ecvJm529fI06F9HZ7cGkON2uotxstI=
+        b=TbxzZf4xO28xgxIklJpgcY5VRg56Ed9uEffu5LlwDw05VXnhJmNQ90hlSaw9oBQ7O
+         Hh2TaVX6cIgDSORmRAS8lGSiW+CO7dJmMmrataFzQv/lDUV/nJbZ0d0M7GoHFuGyyg
+         0LnWVM/xpdrzr5XFMHQ/M7hnD58Z0lQPKnjEcQWc=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Sebastian Reichel <sre@kernel.org>,
-        Pavel Machek <pavel@ucw.cz>, Tony Lindgren <tony@atomide.com>,
+        stable@vger.kernel.org, Tom Lendacky <thomas.lendacky@amd.com>,
+        Borislav Petkov <bp@suse.de>, "H. Peter Anvin" <hpa@zytor.com>,
+        Ingo Molnar <mingo@redhat.com>,
+        Thomas Gleixner <tglx@linutronix.de>, x86-ml <x86@kernel.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.14 087/135] ARM: dts: omap4-droid4: Fix typo in cpcap IRQ flags
-Date:   Tue, 12 Mar 2019 10:08:54 -0700
-Message-Id: <20190312170349.196616633@linuxfoundation.org>
+Subject: [PATCH 4.14 076/135] x86/microcode/amd: Dont falsely trick the late loading mechanism
+Date:   Tue, 12 Mar 2019 10:08:43 -0700
+Message-Id: <20190312170348.202859950@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190312170341.127810985@linuxfoundation.org>
 References: <20190312170341.127810985@linuxfoundation.org>
@@ -66,36 +68,64 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-[ Upstream commit ef4a55b9197a8f844ea0663138e902dcce3e2f36 ]
+[ Upstream commit 912139cfbfa6a2bc1da052314d2c29338dae1f6a ]
 
-We're now getting the following error:
+The load_microcode_amd() function searches for microcode patches and
+attempts to apply a microcode patch if it is of different level than the
+currently installed level.
 
-genirq: Setting trigger mode 1 for irq 230 failed
-(regmap_irq_set_type+0x0/0x15c)
-cpcap-usb-phy cpcap-usb-phy.0: could not get irq dp: -524
+While the processor won't actually load a level that is less than
+what is already installed, the logic wrongly returns UCODE_NEW thus
+signaling to its caller reload_store() that a late loading should be
+attempted.
 
-Cc: Sebastian Reichel <sre@kernel.org>
-Reported-by: Pavel Machek <pavel@ucw.cz>
-Tested-by: Pavel Machek <pavel@ucw.cz>
-Signed-off-by: Tony Lindgren <tony@atomide.com>
+If the file-system contains an older microcode revision than what is
+currently running, such a late microcode reload can result in these
+misleading messages:
+
+  x86/CPU: CPU features have changed after loading microcode, but might not take effect.
+  x86/CPU: Please consider either early loading through initrd/built-in or a potential BIOS update.
+
+These messages were issued on a system where SME/SEV are not
+enabled by the BIOS (MSR C001_0010[23] = 0b) because during boot,
+early_detect_mem_encrypt() is called and cleared the SME and SEV
+features in this case.
+
+However, after the wrong late load attempt, get_cpu_cap() is called and
+reloads the SME and SEV feature bits, resulting in the messages.
+
+Update the microcode level check to not attempt microcode loading if the
+current level is greater than(!) and not only equal to the current patch
+level.
+
+ [ bp: massage commit message. ]
+
+Fixes: 2613f36ed965 ("x86/microcode: Attempt late loading only when new microcode is present")
+Signed-off-by: Tom Lendacky <thomas.lendacky@amd.com>
+Signed-off-by: Borislav Petkov <bp@suse.de>
+Cc: "H. Peter Anvin" <hpa@zytor.com>
+Cc: Ingo Molnar <mingo@redhat.com>
+Cc: Thomas Gleixner <tglx@linutronix.de>
+Cc: x86-ml <x86@kernel.org>
+Link: https://lkml.kernel.org/r/154894518427.9406.8246222496874202773.stgit@tlendack-t1.amdoffice.net
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/arm/boot/dts/motorola-cpcap-mapphone.dtsi | 2 +-
+ arch/x86/kernel/cpu/microcode/amd.c | 2 +-
  1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/arch/arm/boot/dts/motorola-cpcap-mapphone.dtsi b/arch/arm/boot/dts/motorola-cpcap-mapphone.dtsi
-index 4d61e5b1334a..bcced922b280 100644
---- a/arch/arm/boot/dts/motorola-cpcap-mapphone.dtsi
-+++ b/arch/arm/boot/dts/motorola-cpcap-mapphone.dtsi
-@@ -92,7 +92,7 @@
- 			interrupts-extended = <
- 				&cpcap 15 0 &cpcap 14 0 &cpcap 28 0 &cpcap 19 0
- 				&cpcap 18 0 &cpcap 17 0 &cpcap 16 0 &cpcap 49 0
--				&cpcap 48 1
-+				&cpcap 48 0
- 			>;
- 			interrupt-names =
- 				"id_ground", "id_float", "se0conn", "vbusvld",
+diff --git a/arch/x86/kernel/cpu/microcode/amd.c b/arch/x86/kernel/cpu/microcode/amd.c
+index 9d33dbf2489e..d0a61d3e2fb9 100644
+--- a/arch/x86/kernel/cpu/microcode/amd.c
++++ b/arch/x86/kernel/cpu/microcode/amd.c
+@@ -707,7 +707,7 @@ load_microcode_amd(bool save, u8 family, const u8 *data, size_t size)
+ 	if (!p) {
+ 		return ret;
+ 	} else {
+-		if (boot_cpu_data.microcode == p->patch_id)
++		if (boot_cpu_data.microcode >= p->patch_id)
+ 			return ret;
+ 
+ 		ret = UCODE_NEW;
 -- 
 2.19.1
 
