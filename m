@@ -7,51 +7,51 @@ X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AA043C10F00
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 17:57:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 50307C43381
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 17:58:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 725E521734
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 17:57:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0FF3B21773
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 17:58:01 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1552413477;
-	bh=LSrNUnl7tvD8p3jC1rSuHoR9OyFbw2KRR7wqIPJ+kNg=;
+	s=default; t=1552413481;
+	bh=pLOwAcR68iIml+uNFJIimloNeCWE/8elS+IkPDvVWh8=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=H5lE5aihWw64reZ79kns5LxoQXfWBQZ8tMG+LQ5cbA8CQdVDWVvir2aY/JKQ2aWvm
-	 OAsO7121LCsjLTLhvSNudtYMBLTBLJDWCnPPUM9HvOPcBKg7J1LvLBu4EMVnulDGBS
-	 zVUHOkJM5sBf8sod5DaFrQQfGayJbtis7bLvlffU=
+	b=jKVwa9bQviz5XVguO2qfiEpo+skgiISw4nQhHud7OtOimwTnqUtpCNZiR0WhuX4Z0
+	 Gkb5Y2j4klQbh/S3407NaDXlLD6E6l4Y9Rze+tP6QvaS/unwSg4rNDDkiYyS4yF74L
+	 DAtgq+QhqtlJBnIddbz9vgZWWu+OVdr+Mfpyc3W8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726422AbfCLRNp (ORCPT
+        id S1728318AbfCLR57 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 12 Mar 2019 13:13:45 -0400
-Received: from mail.kernel.org ([198.145.29.99]:49208 "EHLO mail.kernel.org"
+        Tue, 12 Mar 2019 13:57:59 -0400
+Received: from mail.kernel.org ([198.145.29.99]:51878 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727753AbfCLRNC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 12 Mar 2019 13:13:02 -0400
+        id S1728171AbfCLRN6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 12 Mar 2019 13:13:58 -0400
 Received: from localhost (unknown [104.133.8.98])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 5507E2087C;
-        Tue, 12 Mar 2019 17:13:02 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 14135217F9;
+        Tue, 12 Mar 2019 17:13:58 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1552410782;
-        bh=LSrNUnl7tvD8p3jC1rSuHoR9OyFbw2KRR7wqIPJ+kNg=;
+        s=default; t=1552410838;
+        bh=pLOwAcR68iIml+uNFJIimloNeCWE/8elS+IkPDvVWh8=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=kDSEq4ZNDYzT+TNgwwqWlEoe14PCB04IBhh1Ezhwf9HQ8RauokB8ic9cWQyK23IZW
-         C9RRs7+xKPiYjHokqRrvNXrTkb33XUKJ/lsUC5G+xG7TxNmwIrumggOF/xivMnpJSF
-         TyNmNNYLKP27aEfOoIHI295jsnWKcYB7aBSCq9UE=
+        b=X5uZMOdEGcO4RKCXcjVSnNdfyCKxNXjoKEXnbtriPkWS9H9z/UFzdiq2vcoWqwCWM
+         zekvjaR6hytMCPKWq/kJ3j71sAcEfb964TKFazp/zAMgyazA7LZBWac5wnhXB0j8zE
+         7Wpt8Oyy1HCoIZnILqGTK6II9jHjZy3SWizLO3BY=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Naresh Kamboju <naresh.kamboju@linaro.org>,
-        Florian Westphal <fw@strlen.de>,
-        Pablo Neira Ayuso <pablo@netfilter.org>,
+        stable@vger.kernel.org, Yonglong Liu <liuyonglong@huawei.com>,
+        Peng Li <lipeng321@huawei.com>,
+        "David S. Miller" <davem@davemloft.net>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.20 122/171] selftests: netfilter: fix config fragment CONFIG_NF_TABLES_INET
-Date:   Tue, 12 Mar 2019 10:08:22 -0700
-Message-Id: <20190312170358.314214813@linuxfoundation.org>
+Subject: [PATCH 4.19 028/149] net: hns: Fix wrong read accesses via Clause 45 MDIO protocol
+Date:   Tue, 12 Mar 2019 10:07:26 -0700
+Message-Id: <20190312170352.071759509@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
-In-Reply-To: <20190312170347.868927101@linuxfoundation.org>
-References: <20190312170347.868927101@linuxfoundation.org>
+In-Reply-To: <20190312170349.421581206@linuxfoundation.org>
+References: <20190312170349.421581206@linuxfoundation.org>
 User-Agent: quilt/0.65
 X-stable: review
 X-Patchwork-Hint: ignore
@@ -63,31 +63,37 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-4.20-stable review patch.  If anyone has any objections, please let me know.
+4.19-stable review patch.  If anyone has any objections, please let me know.
 
 ------------------
 
-[ Upstream commit 952b72f89ae23b316da8c1021b18d0c388ad6cc4 ]
+[ Upstream commit cec8abba13e6a26729dfed41019720068eeeff2b ]
 
-In selftests the config fragment for netfilter was added as
-NF_TABLES_INET=y and this patch correct it as CONFIG_NF_TABLES_INET=y
+When reading phy registers via Clause 45 MDIO protocol, after write
+address operation, the driver use another write address operation, so
+can not read the right value of any phy registers. This patch fixes it.
 
-Signed-off-by: Naresh Kamboju <naresh.kamboju@linaro.org>
-Acked-by: Florian Westphal <fw@strlen.de>
-Signed-off-by: Pablo Neira Ayuso <pablo@netfilter.org>
+Signed-off-by: Yonglong Liu <liuyonglong@huawei.com>
+Signed-off-by: Peng Li <lipeng321@huawei.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- tools/testing/selftests/netfilter/config | 2 +-
+ drivers/net/ethernet/hisilicon/hns_mdio.c | 2 +-
  1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/tools/testing/selftests/netfilter/config b/tools/testing/selftests/netfilter/config
-index 1017313e41a8..59caa8f71cd8 100644
---- a/tools/testing/selftests/netfilter/config
-+++ b/tools/testing/selftests/netfilter/config
-@@ -1,2 +1,2 @@
- CONFIG_NET_NS=y
--NF_TABLES_INET=y
-+CONFIG_NF_TABLES_INET=y
+diff --git a/drivers/net/ethernet/hisilicon/hns_mdio.c b/drivers/net/ethernet/hisilicon/hns_mdio.c
+index 017e08452d8c..baf5cc251f32 100644
+--- a/drivers/net/ethernet/hisilicon/hns_mdio.c
++++ b/drivers/net/ethernet/hisilicon/hns_mdio.c
+@@ -321,7 +321,7 @@ static int hns_mdio_read(struct mii_bus *bus, int phy_id, int regnum)
+ 		}
+ 
+ 		hns_mdio_cmd_write(mdio_dev, is_c45,
+-				   MDIO_C45_WRITE_ADDR, phy_id, devad);
++				   MDIO_C45_READ, phy_id, devad);
+ 	}
+ 
+ 	/* Step 5: waitting for MDIO_COMMAND_REG 's mdio_start==0,*/
 -- 
 2.19.1
 
