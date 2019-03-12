@@ -7,55 +7,52 @@ X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D6DA6C43381
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 17:13:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3D04AC43381
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 17:13:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9DCD7217F5
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 17:13:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 064D621841
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 17:13:06 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1552410783;
-	bh=spZWEIy18W5bA5lNNBUdvGCrGRAoXGkN6ldD1BlgFt4=;
+	s=default; t=1552410786;
+	bh=F1s0tK7LblyBUY+xyYWqgLd1xd07CWEIf5C/L8i8WKU=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=OcfwL55qBz8nziG0chsVtQPpEUY04PsAuW235SFjvWUM8tlTGsXisCaHJjoEXDn0v
-	 8sFnuvk+3CG8ByNpwlhr5QJtEo/Aqg1rgpINrfN7nDHD/SgTnzVJ5BH1sBGb6xzc1/
-	 1N9QjOr9QauhxteTO+nIUea0LljU6f6f9koCsSew=
+	b=G0nwnEImstFvrXI4NfxCIdI/vtYoq0Wob0wKr9NrQ/2u+6tIknnQ/5tnsWoE+dp9o
+	 LZSzNkmMBmaSQonmgBjSJ6+TZ3E4gQ6sy6m15t2tYbDe99euMGPKlQ0TyjOSr57Zrz
+	 mJhPSN4nYQqu3qxATPCkCk8ZVSXCaM6/LJ1fbolM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727754AbfCLRNC (ORCPT
+        id S1727772AbfCLRNF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 12 Mar 2019 13:13:02 -0400
-Received: from mail.kernel.org ([198.145.29.99]:47946 "EHLO mail.kernel.org"
+        Tue, 12 Mar 2019 13:13:05 -0400
+Received: from mail.kernel.org ([198.145.29.99]:48006 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727545AbfCLRMe (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 12 Mar 2019 13:12:34 -0400
+        id S1727547AbfCLRMf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 12 Mar 2019 13:12:35 -0400
 Received: from localhost (unknown [104.133.8.98])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 69AF32184C;
-        Tue, 12 Mar 2019 17:12:34 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 1DD8C206DF;
+        Tue, 12 Mar 2019 17:12:35 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1552410754;
-        bh=spZWEIy18W5bA5lNNBUdvGCrGRAoXGkN6ldD1BlgFt4=;
+        s=default; t=1552410755;
+        bh=F1s0tK7LblyBUY+xyYWqgLd1xd07CWEIf5C/L8i8WKU=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=fqWSszAMjmxfdehMXW3ALJB0i6KWn/R3y5J0kXGipGIVlKTBqikc5rVFdH13uZH2N
-         g/bpFBAvQoAkD5FeDWWdnFXHPE0CQUa3VwPjStRAD4SAd1Qfz4cfGlZzsA+rpou/Oy
-         fmuWB6hVn23DK1dwGiW8ZaPzEiynD/r+2moATccc=
+        b=q9AfEg85wbdzrHjGh0UsC05y7BUgG1HX5NNsy9AFKt7IBJjkMWEBMvWNS8YZwZIBC
+         1Z7v9KCzWGzCO99Ra/7HB9YZqBBx5foq1iXHG13e5prbD4QtBNPeut8MlrB6nEnHvu
+         LA7OTwET+8GbVeXnDcbF9na1sRpC8iNMdvJd+VQQ=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Michal Hocko <mhocko@suse.com>,
-        Mikhail Zaslonko <zaslonko@linux.ibm.com>,
-        Mikhail Gavrilov <mikhail.v.gavrilov@gmail.com>,
-        Oscar Salvador <osalvador@suse.de>,
-        Gerald Schaefer <gerald.schaefer@de.ibm.com>,
-        Heiko Carstens <heiko.carstens@de.ibm.com>,
-        Martin Schwidefsky <schwidefsky@de.ibm.com>,
-        Pavel Tatashin <pasha.tatashin@soleen.com>,
+        stable@vger.kernel.org, Johannes Weiner <hannes@cmpxchg.org>,
+        Suren Baghdasaryan <surenb@google.com>,
+        Tejun Heo <tj@kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Lai Jiangshan <jiangshanlai@gmail.com>,
         Andrew Morton <akpm@linux-foundation.org>,
         Linus Torvalds <torvalds@linux-foundation.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.20 064/171] mm, memory_hotplug: test_pages_in_a_zone do not pass the end of zone
-Date:   Tue, 12 Mar 2019 10:07:24 -0700
-Message-Id: <20190312170353.720863926@linuxfoundation.org>
+Subject: [PATCH 4.20 065/171] psi: fix aggregation idle shut-off
+Date:   Tue, 12 Mar 2019 10:07:25 -0700
+Message-Id: <20190312170353.800914596@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190312170347.868927101@linuxfoundation.org>
 References: <20190312170347.868927101@linuxfoundation.org>
@@ -74,71 +71,182 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-[ Upstream commit 24feb47c5fa5b825efb0151f28906dfdad027e61 ]
+[ Upstream commit 1b69ac6b40ebd85eed73e4dbccde2a36961ab990 ]
 
-If memory end is not aligned with the sparse memory section boundary,
-the mapping of such a section is only partly initialized.  This may lead
-to VM_BUG_ON due to uninitialized struct pages access from
-test_pages_in_a_zone() function triggered by memory_hotplug sysfs
-handlers.
+psi has provisions to shut off the periodic aggregation worker when
+there is a period of no task activity - and thus no data that needs
+aggregating.  However, while developing psi monitoring, Suren noticed
+that the aggregation clock currently won't stay shut off for good.
 
-Here are the the panic examples:
- CONFIG_DEBUG_VM_PGFLAGS=y
- kernel parameter mem=2050M
- --------------------------
- page:000003d082008000 is uninitialized and poisoned
- page dumped because: VM_BUG_ON_PAGE(PagePoisoned(p))
- Call Trace:
-   test_pages_in_a_zone+0xde/0x160
-   show_valid_zones+0x5c/0x190
-   dev_attr_show+0x34/0x70
-   sysfs_kf_seq_show+0xc8/0x148
-   seq_read+0x204/0x480
-   __vfs_read+0x32/0x178
-   vfs_read+0x82/0x138
-   ksys_read+0x5a/0xb0
-   system_call+0xdc/0x2d8
- Last Breaking-Event-Address:
-   test_pages_in_a_zone+0xde/0x160
- Kernel panic - not syncing: Fatal exception: panic_on_oops
+Debugging this revealed a flaw in the idle design: an aggregation run
+will see no task activity and decide to go to sleep; shortly thereafter,
+the kworker thread that executed the aggregation will go idle and cause
+a scheduling change, during which the psi callback will kick the
+!pending worker again.  This will ping-pong forever, and is equivalent
+to having no shut-off logic at all (but with more code!)
 
-Fix this by checking whether the pfn to check is within the zone.
+Fix this by exempting aggregation workers from psi's clock waking logic
+when the state change is them going to sleep.  To do this, tag workers
+with the last work function they executed, and if in psi we see a worker
+going to sleep after aggregating psi data, we will not reschedule the
+aggregation work item.
 
-[mhocko@suse.com: separated this change from http://lkml.kernel.org/r/20181105150401.97287-2-zaslonko@linux.ibm.com]
-Link: http://lkml.kernel.org/r/20190128144506.15603-3-mhocko@kernel.org
+What if the worker is also executing other items before or after?
 
-[mhocko@suse.com: separated this change from
-http://lkml.kernel.org/r/20181105150401.97287-2-zaslonko@linux.ibm.com]
-Signed-off-by: Michal Hocko <mhocko@suse.com>
-Signed-off-by: Mikhail Zaslonko <zaslonko@linux.ibm.com>
-Tested-by: Mikhail Gavrilov <mikhail.v.gavrilov@gmail.com>
-Reviewed-by: Oscar Salvador <osalvador@suse.de>
-Tested-by: Gerald Schaefer <gerald.schaefer@de.ibm.com>
-Cc: Heiko Carstens <heiko.carstens@de.ibm.com>
-Cc: Martin Schwidefsky <schwidefsky@de.ibm.com>
-Cc: Mikhail Gavrilov <mikhail.v.gavrilov@gmail.com>
-Cc: Pavel Tatashin <pasha.tatashin@soleen.com>
+Any psi state times that were incurred by work items preceding the
+aggregation work will have been collected from the per-cpu buckets
+during the aggregation itself.  If there are work items following the
+aggregation work, the worker's last_func tag will be overwritten and the
+aggregator will be kept alive to process this genuine new activity.
+
+If the aggregation work is the last thing the worker does, and we decide
+to go idle, the brief period of non-idle time incurred between the
+aggregation run and the kworker's dequeue will be stranded in the
+per-cpu buckets until the clock is woken by later activity.  But that
+should not be a problem.  The buckets can hold 4s worth of time, and
+future activity will wake the clock with a 2s delay, giving us 2s worth
+of data we can leave behind when disabling aggregation.  If it takes a
+worker more than two seconds to go idle after it finishes its last work
+item, we likely have bigger problems in the system, and won't notice one
+sample that was averaged with a bogus per-CPU weight.
+
+Link: http://lkml.kernel.org/r/20190116193501.1910-1-hannes@cmpxchg.org
+Fixes: eb414681d5a0 ("psi: pressure stall information for CPU, memory, and IO")
+Signed-off-by: Johannes Weiner <hannes@cmpxchg.org>
+Reported-by: Suren Baghdasaryan <surenb@google.com>
+Acked-by: Tejun Heo <tj@kernel.org>
+Cc: Peter Zijlstra <peterz@infradead.org>
+Cc: Lai Jiangshan <jiangshanlai@gmail.com>
 Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
 Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- mm/memory_hotplug.c | 3 +++
- 1 file changed, 3 insertions(+)
+ kernel/sched/psi.c          | 21 +++++++++++++++++----
+ kernel/workqueue.c          | 23 +++++++++++++++++++++++
+ kernel/workqueue_internal.h |  6 +++++-
+ 3 files changed, 45 insertions(+), 5 deletions(-)
 
-diff --git a/mm/memory_hotplug.c b/mm/memory_hotplug.c
-index 5ce0d929ff48..488aa11495d2 100644
---- a/mm/memory_hotplug.c
-+++ b/mm/memory_hotplug.c
-@@ -1275,6 +1275,9 @@ int test_pages_in_a_zone(unsigned long start_pfn, unsigned long end_pfn,
- 				i++;
- 			if (i == MAX_ORDER_NR_PAGES || pfn + i >= end_pfn)
- 				continue;
-+			/* Check if we got outside of the zone */
-+			if (zone && !zone_spans_pfn(zone, pfn + i))
-+				return 0;
- 			page = pfn_to_page(pfn + i);
- 			if (zone && page_zone(page) != zone)
- 				return 0;
+diff --git a/kernel/sched/psi.c b/kernel/sched/psi.c
+index fe24de3fbc93..c3484785b179 100644
+--- a/kernel/sched/psi.c
++++ b/kernel/sched/psi.c
+@@ -124,6 +124,7 @@
+  * sampling of the aggregate task states would be.
+  */
+ 
++#include "../workqueue_internal.h"
+ #include <linux/sched/loadavg.h>
+ #include <linux/seq_file.h>
+ #include <linux/proc_fs.h>
+@@ -480,9 +481,6 @@ static void psi_group_change(struct psi_group *group, int cpu,
+ 			groupc->tasks[t]++;
+ 
+ 	write_seqcount_end(&groupc->seq);
+-
+-	if (!delayed_work_pending(&group->clock_work))
+-		schedule_delayed_work(&group->clock_work, PSI_FREQ);
+ }
+ 
+ static struct psi_group *iterate_groups(struct task_struct *task, void **iter)
+@@ -513,6 +511,7 @@ void psi_task_change(struct task_struct *task, int clear, int set)
+ {
+ 	int cpu = task_cpu(task);
+ 	struct psi_group *group;
++	bool wake_clock = true;
+ 	void *iter = NULL;
+ 
+ 	if (!task->pid)
+@@ -530,8 +529,22 @@ void psi_task_change(struct task_struct *task, int clear, int set)
+ 	task->psi_flags &= ~clear;
+ 	task->psi_flags |= set;
+ 
+-	while ((group = iterate_groups(task, &iter)))
++	/*
++	 * Periodic aggregation shuts off if there is a period of no
++	 * task changes, so we wake it back up if necessary. However,
++	 * don't do this if the task change is the aggregation worker
++	 * itself going to sleep, or we'll ping-pong forever.
++	 */
++	if (unlikely((clear & TSK_RUNNING) &&
++		     (task->flags & PF_WQ_WORKER) &&
++		     wq_worker_last_func(task) == psi_update_work))
++		wake_clock = false;
++
++	while ((group = iterate_groups(task, &iter))) {
+ 		psi_group_change(group, cpu, clear, set);
++		if (wake_clock && !delayed_work_pending(&group->clock_work))
++			schedule_delayed_work(&group->clock_work, PSI_FREQ);
++	}
+ }
+ 
+ void psi_memstall_tick(struct task_struct *task, int cpu)
+diff --git a/kernel/workqueue.c b/kernel/workqueue.c
+index 0280deac392e..288b2105bbb1 100644
+--- a/kernel/workqueue.c
++++ b/kernel/workqueue.c
+@@ -909,6 +909,26 @@ struct task_struct *wq_worker_sleeping(struct task_struct *task)
+ 	return to_wakeup ? to_wakeup->task : NULL;
+ }
+ 
++/**
++ * wq_worker_last_func - retrieve worker's last work function
++ *
++ * Determine the last function a worker executed. This is called from
++ * the scheduler to get a worker's last known identity.
++ *
++ * CONTEXT:
++ * spin_lock_irq(rq->lock)
++ *
++ * Return:
++ * The last work function %current executed as a worker, NULL if it
++ * hasn't executed any work yet.
++ */
++work_func_t wq_worker_last_func(struct task_struct *task)
++{
++	struct worker *worker = kthread_data(task);
++
++	return worker->last_func;
++}
++
+ /**
+  * worker_set_flags - set worker flags and adjust nr_running accordingly
+  * @worker: self
+@@ -2184,6 +2204,9 @@ __acquires(&pool->lock)
+ 	if (unlikely(cpu_intensive))
+ 		worker_clr_flags(worker, WORKER_CPU_INTENSIVE);
+ 
++	/* tag the worker for identification in schedule() */
++	worker->last_func = worker->current_func;
++
+ 	/* we're done with it, release */
+ 	hash_del(&worker->hentry);
+ 	worker->current_work = NULL;
+diff --git a/kernel/workqueue_internal.h b/kernel/workqueue_internal.h
+index 66fbb5a9e633..cb68b03ca89a 100644
+--- a/kernel/workqueue_internal.h
++++ b/kernel/workqueue_internal.h
+@@ -53,6 +53,9 @@ struct worker {
+ 
+ 	/* used only by rescuers to point to the target workqueue */
+ 	struct workqueue_struct	*rescue_wq;	/* I: the workqueue to rescue */
++
++	/* used by the scheduler to determine a worker's last known identity */
++	work_func_t		last_func;
+ };
+ 
+ /**
+@@ -67,9 +70,10 @@ static inline struct worker *current_wq_worker(void)
+ 
+ /*
+  * Scheduler hooks for concurrency managed workqueue.  Only to be used from
+- * sched/core.c and workqueue.c.
++ * sched/ and workqueue.c.
+  */
+ void wq_worker_waking_up(struct task_struct *task, int cpu);
+ struct task_struct *wq_worker_sleeping(struct task_struct *task);
++work_func_t wq_worker_last_func(struct task_struct *task);
+ 
+ #endif /* _KERNEL_WORKQUEUE_INTERNAL_H */
 -- 
 2.19.1
 
