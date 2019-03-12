@@ -2,52 +2,53 @@ Return-Path: <SRS0=J4ZE=RP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1882DC43381
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 17:40:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CDFBFC43381
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 17:41:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DE935214AE
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 17:40:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9190A2087C
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 17:41:08 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1552412459;
-	bh=YWGezYtD1Of8LTG3/mlUGGK5t6sD7oUu+UPFLboq8ds=;
+	s=default; t=1552412468;
+	bh=XU67G5XOL4N4jzUf++QxMY3ufhmGL7RNjwAQa+ulkDc=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=TJfdPaI3gCnLaW/5N+w8S0aFW+zV1h43vusao7W16ndh+M9otqPuPZE6AVW/4eUPq
-	 1PLwkS6S9Ju9LDdfqLwujvOhSTt8Qhr+MRXQ7vw7gYbkI0vEKBYpc2wCndBa7Bt4js
-	 JApxinsKFbWhMPkBKRnuVdKXLOfcilR01BvbDkjI=
+	b=k51eqt6s3YCc02i/R5X+rRm5W8iq3MsRZAAdV7mIR8slTynTPiI2aqFgrLSmhtJJ+
+	 NQQbr5JCHVbm++WA7obwLn3mZJVfw/VGiKRtVWpKPTnLEvanrZPJgsi9thIvbHsUrt
+	 pu6uT8rXtfNvz4by3Pi3JSZu98/6YAwb11YbYSKU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729868AbfCLRkx (ORCPT
+        id S1729103AbfCLRlH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 12 Mar 2019 13:40:53 -0400
-Received: from mail.kernel.org ([198.145.29.99]:57816 "EHLO mail.kernel.org"
+        Tue, 12 Mar 2019 13:41:07 -0400
+Received: from mail.kernel.org ([198.145.29.99]:57756 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728224AbfCLRQL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 12 Mar 2019 13:16:11 -0400
+        id S1729012AbfCLRQI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 12 Mar 2019 13:16:08 -0400
 Received: from localhost (unknown [104.133.8.98])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id C4A2A21850;
-        Tue, 12 Mar 2019 17:16:09 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 4DA7D2184C;
+        Tue, 12 Mar 2019 17:16:08 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1552410969;
-        bh=YWGezYtD1Of8LTG3/mlUGGK5t6sD7oUu+UPFLboq8ds=;
+        s=default; t=1552410968;
+        bh=XU67G5XOL4N4jzUf++QxMY3ufhmGL7RNjwAQa+ulkDc=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=S25lr3iI8Cv8C65UblUHm5VvbD9fEuWd4omJrb4RIIYFxX7lG+A4/46ApDbuxrCMg
-         t4elMnqLp3MRtqZpRAtj/DZ62KmamYkdQpDvW3/hPm8nTyf27gvaJ7jbBWVFRceg/R
-         kXPR9CeH6u07C1lftsqqGDHvp84Z3URoaEX+p77k=
+        b=jT27sF3oT4jcjb+fVdX+6JAqnQEUdGMNxQYSzM9JcGlPWXL47q1nWxyt++l2Pig8k
+         C1jpIJ6RPCd7J9J3TqSYkwpgQoZLI0WiNB27q62+EvgW79q/pxlxoqAP06uARMt+El
+         aVddp+Xrlu8UmXTV/8dASuKP19AaUAbKFCRHfBNY=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Su Yanjun <suyj.fnst@cn.fujitsu.com>,
-        Steffen Klassert <steffen.klassert@secunet.com>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.14 044/135] vti4: Fix a ipip packet processing bug in IPCOMP virtual tunnel
-Date:   Tue, 12 Mar 2019 10:08:11 -0700
-Message-Id: <20190312170345.194841127@linuxfoundation.org>
+        stable@vger.kernel.org, Martin Wilck <mwilck@suse.com>,
+        Hannes Reinecke <hare@suse.com>,
+        Christoph Hellwig <hch@lst.de>,
+        "Martin K. Petersen" <martin.petersen@oracle.com>
+Subject: [PATCH 4.14 042/135] scsi: core: reset host byte in DID_NEXUS_FAILURE case
+Date:   Tue, 12 Mar 2019 10:08:09 -0700
+Message-Id: <20190312170344.997704446@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190312170341.127810985@linuxfoundation.org>
 References: <20190312170341.127810985@linuxfoundation.org>
@@ -66,119 +67,42 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-[ Upstream commit dd9ee3444014e8f28c0eefc9fffc9ac9c5248c12 ]
+From: Martin Wilck <mwilck@suse.com>
 
-Recently we run a network test over ipcomp virtual tunnel.We find that
-if a ipv4 packet needs fragment, then the peer can't receive
-it.
+commit 4a067cf823d9d8e50d41cfb618011c0d4a969c72 upstream.
 
-We deep into the code and find that when packet need fragment the smaller
-fragment will be encapsulated by ipip not ipcomp. So when the ipip packet
-goes into xfrm, it's skb->dev is not properly set. The ipv4 reassembly code
-always set skb'dev to the last fragment's dev. After ipv4 defrag processing,
-when the kernel rp_filter parameter is set, the skb will be drop by -EXDEV
-error.
+Up to 4.12, __scsi_error_from_host_byte() would reset the host byte to
+DID_OK for various cases including DID_NEXUS_FAILURE.  Commit
+2a842acab109 ("block: introduce new block status code type") replaced this
+function with scsi_result_to_blk_status() and removed the host-byte
+resetting code for the DID_NEXUS_FAILURE case.  As the line
+set_host_byte(cmd, DID_OK) was preserved for the other cases, I suppose
+this was an editing mistake.
 
-This patch adds compatible support for the ipip process in ipcomp virtual tunnel.
+The fact that the host byte remains set after 4.13 is causing problems with
+the sg_persist tool, which now returns success rather then exit status 24
+when a RESERVATION CONFLICT error is encountered.
 
-Signed-off-by: Su Yanjun <suyj.fnst@cn.fujitsu.com>
-Signed-off-by: Steffen Klassert <steffen.klassert@secunet.com>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
+Fixes: 2a842acab109 "block: introduce new block status code type"
+Signed-off-by: Martin Wilck <mwilck@suse.com>
+Reviewed-by: Hannes Reinecke <hare@suse.com>
+Reviewed-by: Christoph Hellwig <hch@lst.de>
+Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+
 ---
- net/ipv4/ip_vti.c | 50 +++++++++++++++++++++++++++++++++++++++++++++++
- 1 file changed, 50 insertions(+)
+ drivers/scsi/scsi_lib.c |    1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/net/ipv4/ip_vti.c b/net/ipv4/ip_vti.c
-index 00d4371d4573..306603a7f351 100644
---- a/net/ipv4/ip_vti.c
-+++ b/net/ipv4/ip_vti.c
-@@ -74,6 +74,33 @@ static int vti_input(struct sk_buff *skb, int nexthdr, __be32 spi,
- 	return 0;
- }
- 
-+static int vti_input_ipip(struct sk_buff *skb, int nexthdr, __be32 spi,
-+		     int encap_type)
-+{
-+	struct ip_tunnel *tunnel;
-+	const struct iphdr *iph = ip_hdr(skb);
-+	struct net *net = dev_net(skb->dev);
-+	struct ip_tunnel_net *itn = net_generic(net, vti_net_id);
-+
-+	tunnel = ip_tunnel_lookup(itn, skb->dev->ifindex, TUNNEL_NO_KEY,
-+				  iph->saddr, iph->daddr, 0);
-+	if (tunnel) {
-+		if (!xfrm4_policy_check(NULL, XFRM_POLICY_IN, skb))
-+			goto drop;
-+
-+		XFRM_TUNNEL_SKB_CB(skb)->tunnel.ip4 = tunnel;
-+
-+		skb->dev = tunnel->dev;
-+
-+		return xfrm_input(skb, nexthdr, spi, encap_type);
-+	}
-+
-+	return -EINVAL;
-+drop:
-+	kfree_skb(skb);
-+	return 0;
-+}
-+
- static int vti_rcv(struct sk_buff *skb)
- {
- 	XFRM_SPI_SKB_CB(skb)->family = AF_INET;
-@@ -82,6 +109,14 @@ static int vti_rcv(struct sk_buff *skb)
- 	return vti_input(skb, ip_hdr(skb)->protocol, 0, 0);
- }
- 
-+static int vti_rcv_ipip(struct sk_buff *skb)
-+{
-+	XFRM_SPI_SKB_CB(skb)->family = AF_INET;
-+	XFRM_SPI_SKB_CB(skb)->daddroff = offsetof(struct iphdr, daddr);
-+
-+	return vti_input_ipip(skb, ip_hdr(skb)->protocol, ip_hdr(skb)->saddr, 0);
-+}
-+
- static int vti_rcv_cb(struct sk_buff *skb, int err)
- {
- 	unsigned short family;
-@@ -439,6 +474,12 @@ static struct xfrm4_protocol vti_ipcomp4_protocol __read_mostly = {
- 	.priority	=	100,
- };
- 
-+static struct xfrm_tunnel ipip_handler __read_mostly = {
-+	.handler	=	vti_rcv_ipip,
-+	.err_handler	=	vti4_err,
-+	.priority	=	0,
-+};
-+
- static int __net_init vti_init_net(struct net *net)
- {
- 	int err;
-@@ -607,6 +648,13 @@ static int __init vti_init(void)
- 	if (err < 0)
- 		goto xfrm_proto_comp_failed;
- 
-+	msg = "ipip tunnel";
-+	err = xfrm4_tunnel_register(&ipip_handler, AF_INET);
-+	if (err < 0) {
-+		pr_info("%s: cant't register tunnel\n",__func__);
-+		goto xfrm_tunnel_failed;
-+	}
-+
- 	msg = "netlink interface";
- 	err = rtnl_link_register(&vti_link_ops);
- 	if (err < 0)
-@@ -616,6 +664,8 @@ static int __init vti_init(void)
- 
- rtnl_link_failed:
- 	xfrm4_protocol_deregister(&vti_ipcomp4_protocol, IPPROTO_COMP);
-+xfrm_tunnel_failed:
-+	xfrm4_tunnel_deregister(&ipip_handler, AF_INET);
- xfrm_proto_comp_failed:
- 	xfrm4_protocol_deregister(&vti_ah4_protocol, IPPROTO_AH);
- xfrm_proto_ah_failed:
--- 
-2.19.1
-
+--- a/drivers/scsi/scsi_lib.c
++++ b/drivers/scsi/scsi_lib.c
+@@ -734,6 +734,7 @@ static blk_status_t __scsi_error_from_ho
+ 		set_host_byte(cmd, DID_OK);
+ 		return BLK_STS_TARGET;
+ 	case DID_NEXUS_FAILURE:
++		set_host_byte(cmd, DID_OK);
+ 		return BLK_STS_NEXUS;
+ 	case DID_ALLOC_FAILURE:
+ 		set_host_byte(cmd, DID_OK);
 
 
