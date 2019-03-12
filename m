@@ -4,50 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C5A86C43381
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 17:54:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 25E94C43381
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 17:54:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7D0482087C
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 17:54:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id ED106205C9
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 17:54:38 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1552413274;
-	bh=YfD3J7BySHfr4FI+l28oaUkfEYF0hF4ZniCf4AUdv4k=;
+	s=default; t=1552413279;
+	bh=1dNwFVDz8lHRMuujSu3tsbGnWcceyYymBVaJgltluPc=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=NBnrIH4ImnmS0sLa28+mQgBUgNIDrF/HthR67z9kk6u6WJC8oxer4XXyCxx8WJx84
-	 LLC/I5oN4HO1qcitTj5FhOHmTovGqonZqnvY72xqKRIBsIfVeOBc6/rINwrSKfA7dc
-	 T6dwFKJQqSKK17SgR4+ijPOwiFnXiT6zc05zRQao=
+	b=PJZfFl5Pxf+QXtgQ2ktezXv7lYcwzq1Dl7+dvpWz7ZZPj19FhBmUvXN7p/F187p09
+	 8XV5u8Reh37vcZbuctRZ9AKpri0D1BFQ/KQ4B7TxlsX1c2x464jWjpxj0eIAfa+S/4
+	 JvsAh/fO8bJIlKNsbWXQQm8mJh+cLugvqYQx8F2Q=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728477AbfCLRyd (ORCPT
+        id S1728679AbfCLRyh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 12 Mar 2019 13:54:33 -0400
-Received: from mail.kernel.org ([198.145.29.99]:52318 "EHLO mail.kernel.org"
+        Tue, 12 Mar 2019 13:54:37 -0400
+Received: from mail.kernel.org ([198.145.29.99]:52374 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728256AbfCLROK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S1728259AbfCLROK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Tue, 12 Mar 2019 13:14:10 -0400
 Received: from localhost (unknown [104.133.8.98])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 7D8592173C;
-        Tue, 12 Mar 2019 17:14:09 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 3A06721850;
+        Tue, 12 Mar 2019 17:14:10 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1552410849;
-        bh=YfD3J7BySHfr4FI+l28oaUkfEYF0hF4ZniCf4AUdv4k=;
+        s=default; t=1552410850;
+        bh=1dNwFVDz8lHRMuujSu3tsbGnWcceyYymBVaJgltluPc=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=d8tUUountnqJ+39oYbqOuTVIgB62WuhgKJmUs9dT7+wRy2BxgpTyRuw7NIDAuVlYo
-         ljL8XHgZJ0tXLlsGXYgADUj2z9MnyxPv74Bnillwrfxhnqersy8vVt3KgXQuGDLdd/
-         kHHPG8+8KtAXrkMp5ZhqXUmJ6OpxfESXbJNoFWUA=
+        b=NDKFSvo+n9T8OpXTP/TzaD5JAF/6gjYTY9ejM0sYFKYrJb6bRr61Es3+q2srdzOqe
+         nw98SdgYcgLopLkbkcBxXLOWcCbK3fLEU3sFdbYP/kOrZRDC0X2MAKaWyNhCiVyjeA
+         i0gNH7mwmkjTHE9hiHKyX4V6e2KdDoVDDmTlfHqY=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Dan Carpenter <dan.carpenter@oracle.com>,
-        "Martin K. Petersen" <martin.petersen@oracle.com>,
+        stable@vger.kernel.org, Sinan Kaya <okaya@kernel.org>,
+        Andy Shevchenko <andy.shevchenko@gmail.com>,
+        "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 043/149] scsi: 53c700: pass correct "dev" to dma_alloc_attrs()
-Date:   Tue, 12 Mar 2019 10:07:41 -0700
-Message-Id: <20190312170353.348171615@linuxfoundation.org>
+Subject: [PATCH 4.19 044/149] platform/x86: Fix unmet dependency warning for ACPI_CMPC
+Date:   Tue, 12 Mar 2019 10:07:42 -0700
+Message-Id: <20190312170353.441806048@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190312170349.421581206@linuxfoundation.org>
 References: <20190312170349.421581206@linuxfoundation.org>
@@ -66,34 +67,41 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-[ Upstream commit 8437fcf14deed67e5ad90b5e8abf62fb20f30881 ]
+[ Upstream commit d58bf90a32a33becec78c3034e781735049fcd25 ]
 
-The "hostdata->dev" pointer is NULL here.  We set "hostdata->dev = dev;"
-later in the function and we also use "hostdata->dev" when we call
-dma_free_attrs() in NCR_700_release().
+Add BACKLIGHT_LCD_SUPPORT for ACPI_CMPC to fix the
+warning: unmet direct dependencies detected for BACKLIGHT_CLASS_DEVICE.
 
-This bug predates git version control.
+ACPI_CMPC selects BACKLIGHT_CLASS_DEVICE but BACKLIGHT_CLASS_DEVICE
+depends on BACKLIGHT_LCD_SUPPORT.
 
-Signed-off-by: Dan Carpenter <dan.carpenter@oracle.com>
-Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
+Copy BACKLIGHT_LCD_SUPPORT dependency into ACPI_CMPC to fix
+
+WARNING: unmet direct dependencies detected for BACKLIGHT_CLASS_DEVICE
+  Depends on [n]: HAS_IOMEM [=y] && BACKLIGHT_LCD_SUPPORT [=n]
+  Selected by [y]:
+  - ACPI_CMPC [=y] && X86 [=y] && X86_PLATFORM_DEVICES [=y] && ACPI [=y] && INPUT [=y] && (RFKILL [=n] || RFKILL [=n]=n)
+
+Signed-off-by: Sinan Kaya <okaya@kernel.org>
+Acked-by: Andy Shevchenko <andy.shevchenko@gmail.com>
+Signed-off-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/scsi/53c700.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/platform/x86/Kconfig | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/drivers/scsi/53c700.c b/drivers/scsi/53c700.c
-index 6be77b3aa8a5..ac79f2088b31 100644
---- a/drivers/scsi/53c700.c
-+++ b/drivers/scsi/53c700.c
-@@ -295,7 +295,7 @@ NCR_700_detect(struct scsi_host_template *tpnt,
- 	if(tpnt->sdev_attrs == NULL)
- 		tpnt->sdev_attrs = NCR_700_dev_attrs;
- 
--	memory = dma_alloc_attrs(hostdata->dev, TOTAL_MEM_SIZE, &pScript,
-+	memory = dma_alloc_attrs(dev, TOTAL_MEM_SIZE, &pScript,
- 				 GFP_KERNEL, DMA_ATTR_NON_CONSISTENT);
- 	if(memory == NULL) {
- 		printk(KERN_ERR "53c700: Failed to allocate memory for driver, detaching\n");
+diff --git a/drivers/platform/x86/Kconfig b/drivers/platform/x86/Kconfig
+index 0c1aa6c314f5..96afca4648d5 100644
+--- a/drivers/platform/x86/Kconfig
++++ b/drivers/platform/x86/Kconfig
+@@ -856,6 +856,7 @@ config TOSHIBA_WMI
+ config ACPI_CMPC
+ 	tristate "CMPC Laptop Extras"
+ 	depends on ACPI && INPUT
++	depends on BACKLIGHT_LCD_SUPPORT
+ 	depends on RFKILL || RFKILL=n
+ 	select BACKLIGHT_CLASS_DEVICE
+ 	help
 -- 
 2.19.1
 
