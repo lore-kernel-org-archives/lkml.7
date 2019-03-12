@@ -2,111 +2,112 @@ Return-Path: <SRS0=J4ZE=RP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_PASS,URIBL_BLOCKED autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A8AB0C43381
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 08:59:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DBDEAC4360F
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 09:00:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7DDBA217F4
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 08:59:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AA41A21734
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 09:00:05 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="bviLqu9v"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727654AbfCLI7c convert rfc822-to-8bit (ORCPT
+        id S1727663AbfCLJAE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 12 Mar 2019 04:59:32 -0400
-Received: from ms01.santannapisa.it ([193.205.80.98]:52354 "EHLO
-        mail.santannapisa.it" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726465AbfCLI7b (ORCPT
+        Tue, 12 Mar 2019 05:00:04 -0400
+Received: from mail-wr1-f68.google.com ([209.85.221.68]:41117 "EHLO
+        mail-wr1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726932AbfCLJAE (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 12 Mar 2019 04:59:31 -0400
-X-Greylist: delayed 3601 seconds by postgrey-1.27 at vger.kernel.org; Tue, 12 Mar 2019 04:59:30 EDT
-Received: from [10.1.195.109] (account l.abeni@santannapisa.it HELO nowhere)
-  by santannapisa.it (CommuniGate Pro SMTP 6.1.11)
-  with ESMTPSA id 137197463; Tue, 12 Mar 2019 08:59:27 +0100
-Date:   Tue, 12 Mar 2019 08:59:22 +0100
-From:   luca abeni <luca.abeni@santannapisa.it>
-To:     "chengjian (D)" <cj.chengjian@huawei.com>
-Cc:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Li Bin <huawei.libin@huawei.com>,
-        "Xiexiuqi (Xie XiuQi)" <xiexiuqi@huawei.com>, <mingo@redhat.com>,
-        Peter Zijlstra <peterz@infradead.org>
-Subject: Re: WARN ON at kernel/sched/deadline.c task_non_contending
-Message-ID: <20190312085922.13895cae@nowhere>
-In-Reply-To: <dfb46874-3657-71c6-e068-9413ffe3f82e@huawei.com>
-References: <dfb46874-3657-71c6-e068-9413ffe3f82e@huawei.com>
-Organization: Scuola Superiore S.Anna
-X-Mailer: Claws Mail 3.16.0 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+        Tue, 12 Mar 2019 05:00:04 -0400
+Received: by mail-wr1-f68.google.com with SMTP id p1so1732889wrs.8
+        for <linux-kernel@vger.kernel.org>; Tue, 12 Mar 2019 02:00:02 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=DpaxuVPFYTGwRL/2DODlpf7LUNdqYBXLDXiz8LeznM8=;
+        b=bviLqu9v7cPllaGCVF2cHXQohTxBX68huyHE6/b/wDXsQG9QsPeCEN2bzwuajeYrJK
+         TjSt0Cnw5JjvgUbDqr196MF6bMJn954pFUgN90Xghtg82E46qi+cu7GYazTcK773JxZh
+         WLNN9VRSqQ5tr+i3jemT2bcNfdeF8BrPZavabiWLqFxrCAd40o5cGGbJjXHi3qpeovgb
+         rYuYC3a/20D3vzBuwaCuUC1j5ljWRmeDjQpNXrpY0MJuWJz87dEDVClbTSDqme+RRERA
+         5wt2/B4ekRtygowQOIObJv/3Q2T5eQ70JJvELOQikWE3JPI4MQXWUO4zAmSAsr6P6Pvh
+         1oXQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=DpaxuVPFYTGwRL/2DODlpf7LUNdqYBXLDXiz8LeznM8=;
+        b=tytnROYQX1z/89NBImwZGHgn6dfNk3Q19n0WuFR7Mj3J0FswVAH1OLQiyYwAZsZp6m
+         vbxq9YPE5+a0cbXkdS7SWypJabkOg6ssNCkBDtjrww8qhmN4Ll/yxwdfTnxuNfc0G5fg
+         6E7qCKqERXWikM20MfaihHrS4qEpmRrHiHNOdkU9wdGzSupgilk+Pm9Pp/II1m48PgOP
+         fePSUeR+3UzOb1w4FBHOszqUv9dvlq0aJmpoJpA/IsFrxRfziSG7ZPRqZJQJAOsfPbV2
+         JFi2kWUQyyt4ZYMyOJO/HyoV7V5KcztpHpFBtIFk/aJv1lBThYgovWF90lK46eiYD1na
+         hdJQ==
+X-Gm-Message-State: APjAAAWfvltLPDtzD8QS8/eNULPMGXgej5WZPv+fELF2aKCIlc5zBjhJ
+        bRd8s5RcrX+Mu/oumMnujxpF5A==
+X-Google-Smtp-Source: APXvYqwCDzZ/EPobkYCU6Hze9bWWfAXBGe2kJ54SwQbgxQJ1MkIGR39GLlYAVqpIgWBJsSyaM6E8Rw==
+X-Received: by 2002:a5d:6948:: with SMTP id r8mr261116wrw.255.1552381201892;
+        Tue, 12 Mar 2019 02:00:01 -0700 (PDT)
+Received: from localhost.localdomain ([84.33.65.66])
+        by smtp.gmail.com with ESMTPSA id y20sm3953043wmi.34.2019.03.12.02.00.00
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Tue, 12 Mar 2019 02:00:01 -0700 (PDT)
+From:   Paolo Valente <paolo.valente@linaro.org>
+To:     Jens Axboe <axboe@kernel.dk>
+Cc:     linux-block@vger.kernel.org, linux-kernel@vger.kernel.org,
+        ulf.hansson@linaro.org, linus.walleij@linaro.org,
+        broonie@kernel.org, bfq-iosched@googlegroups.com,
+        oleksandr@natalenko.name, fra.fra.800@gmail.com,
+        alessio.masola@gmail.com, holger@applied-asynchrony.com,
+        Paolo Valente <paolo.valente@linaro.org>
+Subject: [PATCH BUGFIX IMPROVEMENT V3 0/9] lock, bfq: fix bugs, reduce exec time and boost performance
+Date:   Tue, 12 Mar 2019 09:59:26 +0100
+Message-Id: <20190312085935.11340-1-paolo.valente@linaro.org>
+X-Mailer: git-send-email 2.20.1
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8BIT
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi all,
+Hi,
+this is the v3 of the series
+https://lkml.org/lkml/2019/3/10/138
+that fixes some bug affecting performance, reduces execution time a
+little bit, and boosts throughput and responsiveness.
 
-On Tue, 12 Mar 2019 10:03:12 +0800
-"chengjian (D)" <cj.chengjian@huawei.com> wrote:
+The difference w.r.t. v2 are new fixes to the patch "block, bfq: print
+SHARED instead of pid for shared queues in logs", after patient checks
+and suggestions by Holger and Oleksandr.
 
-> Hi.
-> 
-> When looking to test SCHED_DEADLINE syzkaller report an warn in
-> task_non_contending(). I tested the mainline kernel with the C program
-> and captured the same call trace.
-[...]
-> diff --git a/kernel/sched/deadline.c b/kernel/sched/deadline.c
-> index 31c050a0d0ce..d73cb033a06d 100644
-> --- a/kernel/sched/deadline.c
-> +++ b/kernel/sched/deadline.c
-> @@ -252,7 +252,6 @@ static void task_non_contending(struct
-> task_struct *p) if (dl_entity_is_special(dl_se))
->                  return;
-> 
-> -       WARN_ON(hrtimer_active(&dl_se->inactive_timer));
->          WARN_ON(dl_se->dl_non_contending);
-> 
->          zerolag_time = dl_se->deadline -
-> @@ -287,7 +286,9 @@ static void task_non_contending(struct
-> task_struct *p) }
-> 
->          dl_se->dl_non_contending = 1;
-> -       get_task_struct(p);
-> +
-> +       if (!hrtimer_active(&dl_se->inactive_timer));
-> +               get_task_struct(p);
->          hrtimer_start(timer, ns_to_ktime(zerolag_time),
-> HRTIMER_MODE_REL); }
+Thanks,
+Paolo
 
-At a first glance, I think the patch is OK, but I need some more time to
-look at the details.
+Francesco Pollicino (2):
+  block, bfq: print SHARED instead of pid for shared queues in logs
+  block, bfq: save & resume weight on a queue merge/split
 
-I'll run some experiments with the reproducer, and I'll let you know my
-conclusions.
+Paolo Valente (7):
+  block, bfq: increase idling for weight-raised queues
+  block, bfq: do not idle for lowest-weight queues
+  block, bfq: tune service injection basing on request service times
+  block, bfq: do not merge queues on flash storage with queueing
+  block, bfq: do not tag totally seeky queues as soft rt
+  block, bfq: always protect newly-created queues from existing active
+    queues
+  doc, block, bfq: add information on bfq execution time
 
+ Documentation/block/bfq-iosched.txt |  29 +-
+ block/bfq-cgroup.c                  |   3 +-
+ block/bfq-iosched.c                 | 786 +++++++++++++++++++++++-----
+ block/bfq-iosched.h                 |  92 ++--
+ block/bfq-wf2q.c                    |   2 +-
+ 5 files changed, 729 insertions(+), 183 deletions(-)
 
-> Did I miss something ?
-> 
-> I saw it directly remove the hrtimer in hrtime_start() if hrtime is
-> queued, it may be unsafe here when the timer handler is running.
-
-This is probably why I added that WARN_ON()... I'll look at a possible
-solution.
-
-
-
-			Thanks,
-				Luca
-
-
-> 
-> Help ?
-> 
-> I put the syzkaller log and C demo in attachments.
-> 
-> Thanks.
-> 
-> 
-> 
-
+--
+2.20.1
