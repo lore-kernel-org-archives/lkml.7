@@ -2,114 +2,102 @@ Return-Path: <SRS0=J4ZE=RP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_MUTT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E9EA6C43381
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 08:05:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EEC0DC10F00
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 08:05:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BB0EC214AE
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 08:05:15 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=umn.edu header.i=@umn.edu header.b="C2CU5N2i"
+	by mail.kernel.org (Postfix) with ESMTP id BCC2A21734
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 08:05:36 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1552377936;
+	bh=XH2tStxWIlE5+LS3Fb9tcdsJI0+c4VlL7elmENUivo4=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=UhaSpK76xUJB1OeykungN4qW9np7GZJZsjaVPssK//kR7qQm0n3vErz40pU/u/5e6
+	 dJ31rTa2f7x5E5mg73ST5TMlPKi3lm5FjTHIGX9F1oWVYIkPQAKZ5AeRzziyyTQCwW
+	 STspf4TELWGF9QGmz/utWZYNLCjOi+42tTqR3bjI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727399AbfCLIFN (ORCPT
+        id S1727473AbfCLIFf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 12 Mar 2019 04:05:13 -0400
-Received: from mta-p8.oit.umn.edu ([134.84.196.208]:57730 "EHLO
-        mta-p8.oit.umn.edu" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726724AbfCLIFL (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 12 Mar 2019 04:05:11 -0400
-Received: from localhost (unknown [127.0.0.1])
-        by mta-p8.oit.umn.edu (Postfix) with ESMTP id 2DCD478E
-        for <linux-kernel@vger.kernel.org>; Tue, 12 Mar 2019 08:05:10 +0000 (UTC)
-X-Virus-Scanned: amavisd-new at umn.edu
-Received: from mta-p8.oit.umn.edu ([127.0.0.1])
-        by localhost (mta-p8.oit.umn.edu [127.0.0.1]) (amavisd-new, port 10024)
-        with ESMTP id 0SLvaX2y4KhN for <linux-kernel@vger.kernel.org>;
-        Tue, 12 Mar 2019 03:05:10 -0500 (CDT)
-Received: from mail-it1-f198.google.com (mail-it1-f198.google.com [209.85.166.198])
-        (using TLSv1.2 with cipher AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mta-p8.oit.umn.edu (Postfix) with ESMTPS id F249EAA2
-        for <linux-kernel@vger.kernel.org>; Tue, 12 Mar 2019 03:05:09 -0500 (CDT)
-Received: by mail-it1-f198.google.com with SMTP id h3so1526855itb.4
-        for <linux-kernel@vger.kernel.org>; Tue, 12 Mar 2019 01:05:09 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=umn.edu; s=google;
-        h=from:to:cc:subject:date:message-id;
-        bh=/UfKkWpYjlT8HaU1Ko3WZBjaI52PEMRkC5DbnaB1afM=;
-        b=C2CU5N2ilF6/MC7VS18KzFDgWfc8qUkgQW75R93Fmi0mcK20vJz+l4pSQ/yjezdMu4
-         ErC+JVyr1f9K+eRzhrHvLysmkvAdYmygBD6BMYTsmvQvAm9THOYJI6+s8b+EJ3/FzBKB
-         1tv8o8yNmEN1FuexN7Cvv0a7ntfZfy/1POskTMQ09zp8HBIBFnxUJkmMGFnEMlZvliiI
-         ChtMvwI7TkqvCZISby5YNpTnVEQMs7k0kT51CBBYSz9YowePaA4I5aWndtPgTZQjeXM5
-         9iD1FhovsHd6QvZlnHnNqVi8Kre/dbxcPpdfpvM3oCS4lW2n6u7I+qBTia8m2lvi3LnQ
-         Qn2A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id;
-        bh=/UfKkWpYjlT8HaU1Ko3WZBjaI52PEMRkC5DbnaB1afM=;
-        b=BN+2ElLWy9LaBU53zPR+ixai9pzpgmmYLiEkZSe04LN6m4BA4D6mzDGsUilUrhZxAX
-         FSjWK8pWKALpeW9TYAgaDt/4FjhIaxo5jeYCgpmh/z9Wngohr/g8B2vnSxuILm4Qphg3
-         Ga3za3Y2BJRxmpGY/XdWHzPbs1j0yzd270+JCnRu7bPFoLf0AHAragKIxHZQpIHBVxeO
-         cLtuT96x4a3MPpTfmSsl0haByuG5dlzm2FJqm+QKNpWyv5ewcGtk6mTwK8lnMzHuZM2X
-         hufAygkMWT1N2aQWKjo9HmMrX2EAlpUnIKq+b4dybT319sLRtVdh6hwXSAg5NYh/+zW+
-         2ueg==
-X-Gm-Message-State: APjAAAW54uyyKjFpuDtf0n4kI+y5biAt4vlM4J5e8G81/YNaIwiIa71K
-        X0PLm2ThLH4z/cIMFNb0VNbNt5SFmqEMd0+nZHOGX1s70S9djNQKO0DW1XtZ6n4I6dao+O8d3T2
-        XV1TGJlrjhJ/mMhdRQSw/7a+T+w01
-X-Received: by 2002:a02:3e8b:: with SMTP id s133mr4972939jas.16.1552377908993;
-        Tue, 12 Mar 2019 01:05:08 -0700 (PDT)
-X-Google-Smtp-Source: APXvYqy3ZuyqFz2fQwVVgNZphNFG7Y9j9mWyIanz3U+djB/ZPVQsf6s9oS+mL1mA87L3fhG4aZWNSw==
-X-Received: by 2002:a02:3e8b:: with SMTP id s133mr4972929jas.16.1552377908755;
-        Tue, 12 Mar 2019 01:05:08 -0700 (PDT)
-Received: from bee.dtc.umn.edu (cs-bee-u.cs.umn.edu. [128.101.106.63])
-        by smtp.gmail.com with ESMTPSA id u24sm3327451ior.59.2019.03.12.01.05.07
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Tue, 12 Mar 2019 01:05:07 -0700 (PDT)
-From:   Kangjie Lu <kjlu@umn.edu>
-To:     kjlu@umn.edu
-Cc:     pakki001@umn.edu, Solomon Peachy <pizza@shaftnet.org>,
-        Kalle Valo <kvalo@codeaurora.org>,
-        "David S. Miller" <davem@davemloft.net>,
-        linux-wireless@vger.kernel.org, netdev@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH] net: cw1200: fix a NULL pointer dereference
-Date:   Tue, 12 Mar 2019 03:05:02 -0500
-Message-Id: <20190312080502.2953-1-kjlu@umn.edu>
-X-Mailer: git-send-email 2.17.1
+        Tue, 12 Mar 2019 04:05:35 -0400
+Received: from mx2.suse.de ([195.135.220.15]:42718 "EHLO mx1.suse.de"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726633AbfCLIFe (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 12 Mar 2019 04:05:34 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx1.suse.de (Postfix) with ESMTP id 64782B608;
+        Tue, 12 Mar 2019 08:05:33 +0000 (UTC)
+Date:   Tue, 12 Mar 2019 09:05:32 +0100
+From:   Michal Hocko <mhocko@kernel.org>
+To:     Suren Baghdasaryan <surenb@google.com>
+Cc:     Sultan Alsawaf <sultan@kerneltoast.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Arve =?iso-8859-1?B?SGr4bm5lduVn?= <arve@android.com>,
+        Todd Kjos <tkjos@android.com>,
+        Martijn Coenen <maco@android.com>,
+        Joel Fernandes <joel@joelfernandes.org>,
+        Christian Brauner <christian@brauner.io>,
+        Ingo Molnar <mingo@redhat.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        LKML <linux-kernel@vger.kernel.org>, devel@driverdev.osuosl.org,
+        linux-mm <linux-mm@kvack.org>, Tim Murray <timmurray@google.com>
+Subject: Re: [RFC] simple_lmk: Introduce Simple Low Memory Killer for Android
+Message-ID: <20190312080532.GE5721@dhcp22.suse.cz>
+References: <20190310203403.27915-1-sultan@kerneltoast.com>
+ <20190311174320.GC5721@dhcp22.suse.cz>
+ <20190311175800.GA5522@sultan-box.localdomain>
+ <CAJuCfpHTjXejo+u--3MLZZj7kWQVbptyya4yp1GLE3hB=BBX7w@mail.gmail.com>
+ <20190311204626.GA3119@sultan-box.localdomain>
+ <CAJuCfpGpBxofTT-ANEEY+dFCSdwkQswox3s8Uk9Eq0BnK9i0iA@mail.gmail.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAJuCfpGpBxofTT-ANEEY+dFCSdwkQswox3s8Uk9Eq0BnK9i0iA@mail.gmail.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-In case create_singlethread_workqueue fails, the fix free the
-hardware and returns NULL to avoid NULL pointer dereference.
+On Mon 11-03-19 15:15:35, Suren Baghdasaryan wrote:
+> On Mon, Mar 11, 2019 at 1:46 PM Sultan Alsawaf <sultan@kerneltoast.com> wrote:
+> >
+> > On Mon, Mar 11, 2019 at 01:10:36PM -0700, Suren Baghdasaryan wrote:
+> > > The idea seems interesting although I need to think about this a bit
+> > > more. Killing processes based on failed page allocation might backfire
+> > > during transient spikes in memory usage.
+> >
+> > This issue could be alleviated if tasks could be killed and have their pages
+> > reaped faster. Currently, Linux takes a _very_ long time to free a task's memory
+> > after an initial privileged SIGKILL is sent to a task, even with the task's
+> > priority being set to the highest possible (so unwanted scheduler preemption
+> > starving dying tasks of CPU time is not the issue at play here). I've
+> > frequently measured the difference in time between when a SIGKILL is sent for a
+> > task and when free_task() is called for that task to be hundreds of
+> > milliseconds, which is incredibly long. AFAIK, this is a problem that LMKD
+> > suffers from as well, and perhaps any OOM killer implementation in Linux, since
+> > you cannot evaluate effect you've had on memory pressure by killing a process
+> > for at least several tens of milliseconds.
+> 
+> Yeah, killing speed is a well-known problem which we are considering
+> in LMKD. For example the recent LMKD change to assign process being
+> killed to a cpuset cgroup containing big cores cuts the kill time
+> considerably. This is not ideal and we are thinking about better ways
+> to expedite the cleanup process.
 
-Signed-off-by: Kangjie Lu <kjlu@umn.edu>
----
- drivers/net/wireless/st/cw1200/main.c | 5 +++++
- 1 file changed, 5 insertions(+)
+If you design is relies on the speed of killing then it is fundamentally
+flawed AFAICT. You cannot assume anything about how quickly a task dies.
+It might be blocked in an uninterruptible sleep or performin an
+operation which takes some time. Sure, oom_reaper might help here but
+still.
 
-diff --git a/drivers/net/wireless/st/cw1200/main.c b/drivers/net/wireless/st/cw1200/main.c
-index 90dc979f260b..c1608f0bf6d0 100644
---- a/drivers/net/wireless/st/cw1200/main.c
-+++ b/drivers/net/wireless/st/cw1200/main.c
-@@ -345,6 +345,11 @@ static struct ieee80211_hw *cw1200_init_common(const u8 *macaddr,
- 	mutex_init(&priv->wsm_cmd_mux);
- 	mutex_init(&priv->conf_mutex);
- 	priv->workqueue = create_singlethread_workqueue("cw1200_wq");
-+	if (!priv->workqueue) {
-+		ieee80211_free_hw(hw);
-+		return NULL;
-+	}
-+
- 	sema_init(&priv->scan.lock, 1);
- 	INIT_WORK(&priv->scan.work, cw1200_scan_work);
- 	INIT_DELAYED_WORK(&priv->scan.probe_work, cw1200_probe_work);
+The only way to control the OOM behavior pro-actively is to throttle
+allocation speed. We have memcg high limit for that purpose. Along with
+PSI, I can imagine a reasonably working user space early oom
+notifications and reasonable acting upon that.
 -- 
-2.17.1
-
+Michal Hocko
+SUSE Labs
