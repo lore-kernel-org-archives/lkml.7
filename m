@@ -5,43 +5,43 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F1A7DC43381
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 05:32:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A039CC43381
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 05:32:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C0A2B214AE
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 05:32:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 63C81214AE
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 05:32:25 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=fb.com header.i=@fb.com header.b="clk6785G"
+	dkim=pass (1024-bit key) header.d=fb.com header.i=@fb.com header.b="Z5vCm0Jc"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727548AbfCLFcN (ORCPT
+        id S1727280AbfCLFbS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 12 Mar 2019 01:32:13 -0400
-Received: from mx0b-00082601.pphosted.com ([67.231.153.30]:57204 "EHLO
+        Tue, 12 Mar 2019 01:31:18 -0400
+Received: from mx0b-00082601.pphosted.com ([67.231.153.30]:53360 "EHLO
         mx0b-00082601.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727386AbfCLFbW (ORCPT
+        by vger.kernel.org with ESMTP id S1726521AbfCLFbN (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 12 Mar 2019 01:31:22 -0400
-Received: from pps.filterd (m0109331.ppops.net [127.0.0.1])
-        by mx0a-00082601.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x2C5NJ4X029253
-        for <linux-kernel@vger.kernel.org>; Mon, 11 Mar 2019 22:31:21 -0700
+        Tue, 12 Mar 2019 01:31:13 -0400
+Received: from pps.filterd (m0109332.ppops.net [127.0.0.1])
+        by mx0a-00082601.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x2C5OIbJ012391
+        for <linux-kernel@vger.kernel.org>; Mon, 11 Mar 2019 22:31:11 -0700
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=fb.com; h=from : to : cc : subject
  : date : message-id : in-reply-to : references : mime-version :
- content-type; s=facebook; bh=AfMfDZ4yvsnvw9Y8hTpmaKPEvZU/vcZpbdE23yuXz+M=;
- b=clk6785Gn7LK+1aBF/z7chB1Fi3ImBR/RzMYhmpZtMS2xf2oJv30bNySF7neTk9PPd6O
- JSvOoObE1WuRvQMU/pwT0qe/Qx1vpeLyIAugOL5Sk0wLu3/oBWWeNGf84/F8CJy38AcB
- bWOyNlmAnVoE/TY0E2LGRhaJPX1cCZJNgUk= 
-Received: from maileast.thefacebook.com ([199.201.65.23])
-        by mx0a-00082601.pphosted.com with ESMTP id 2r62tvrs0s-10
+ content-type; s=facebook; bh=PCf97shjoNZac7UhGWCj/J1k8UTJlh5kyrTEemTaNf4=;
+ b=Z5vCm0JcPEfH5IP0ia3rAVWkeYj7tY2tDkpU6rcdS+xSEpJAX/BIys4q9zcDaj/lzRZ7
+ 3HvehKmQVHRym/5YKiradArGinkf3fJoGWUPOrLZUQ9vYTQLVstX0g1T3vHOYwfw76zd
+ IbUlfVAdRnYap1ipw4s0LML+4wvYtS0Pui4= 
+Received: from mail.thefacebook.com ([199.201.64.23])
+        by mx0a-00082601.pphosted.com with ESMTP id 2r668jg1ya-14
         (version=TLSv1.2 cipher=ECDHE-RSA-AES256-SHA384 bits=256 verify=NOT)
-        for <linux-kernel@vger.kernel.org>; Mon, 11 Mar 2019 22:31:21 -0700
-Received: from mx-out.facebook.com (2620:10d:c0a1:3::13) by
- mail.thefacebook.com (2620:10d:c021:18::172) with Microsoft SMTP Server
+        for <linux-kernel@vger.kernel.org>; Mon, 11 Mar 2019 22:31:11 -0700
+Received: from mx-out.facebook.com (2620:10d:c081:10::13) by
+ mail.thefacebook.com (2620:10d:c081:35::125) with Microsoft SMTP Server
  (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA) id 15.1.1713.5;
- Mon, 11 Mar 2019 22:31:20 -0700
+ Mon, 11 Mar 2019 22:31:08 -0700
 Received: by devbig006.ftw2.facebook.com (Postfix, from userid 4523)
-        id 7C83E62E2019; Mon, 11 Mar 2019 22:31:18 -0700 (PDT)
+        id F421762E2019; Mon, 11 Mar 2019 22:31:03 -0700 (PDT)
 Smtp-Origin-Hostprefix: devbig
 From:   Song Liu <songliubraving@fb.com>
 Smtp-Origin-Hostname: devbig006.ftw2.facebook.com
@@ -52,9 +52,9 @@ CC:     <ast@kernel.org>, <daniel@iogearbox.net>, <kernel-team@fb.com>,
         <namhyung@kernel.org>, <sdf@fomichev.me>,
         Song Liu <songliubraving@fb.com>
 Smtp-Origin-Cluster: ftw2c04
-Subject: [PATCH v9 perf,bpf 11/15] perf: add -lopcodes to feature-libbfd
-Date:   Mon, 11 Mar 2019 22:30:47 -0700
-Message-ID: <20190312053051.2690567-12-songliubraving@fb.com>
+Subject: [PATCH v9 perf,bpf 04/15] perf, bpf: synthesize bpf events with bpf_program__get_prog_info_linear()
+Date:   Mon, 11 Mar 2019 22:30:40 -0700
+Message-ID: <20190312053051.2690567-5-songliubraving@fb.com>
 X-Mailer: git-send-email 2.17.1
 In-Reply-To: <20190312053051.2690567-1-songliubraving@fb.com>
 References: <20190312053051.2690567-1-songliubraving@fb.com>
@@ -70,44 +70,203 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Both libbfd and libopcodes are distributed with binutil-dev/devel. When
-libbfd presents, it is OK to assume libopcodes also presents. This has
-been a safe assumption for bpftool.
+With bpf_program__get_prog_info_linear, we can simplify the logic that
+synthesizes bpf events.
 
-This patch adds -lopcodes to perf/Makefile.config. libopcodes will be
-used in the next commit for bpf annotation.
+This patch doesn't change the behavior of the code.
 
 Signed-off-by: Song Liu <songliubraving@fb.com>
 ---
- tools/perf/Makefile.config | 6 +++---
- 1 file changed, 3 insertions(+), 3 deletions(-)
+ tools/perf/util/bpf-event.c | 118 ++++++++++++------------------------
+ 1 file changed, 40 insertions(+), 78 deletions(-)
 
-diff --git a/tools/perf/Makefile.config b/tools/perf/Makefile.config
-index 0f11d5891301..df4ad45599ca 100644
---- a/tools/perf/Makefile.config
-+++ b/tools/perf/Makefile.config
-@@ -713,7 +713,7 @@ else
- endif
+diff --git a/tools/perf/util/bpf-event.c b/tools/perf/util/bpf-event.c
+index ea012b735a37..e9d9854be506 100644
+--- a/tools/perf/util/bpf-event.c
++++ b/tools/perf/util/bpf-event.c
+@@ -3,7 +3,9 @@
+ #include <stdlib.h>
+ #include <bpf/bpf.h>
+ #include <bpf/btf.h>
++#include <bpf/libbpf.h>
+ #include <linux/btf.h>
++#include <linux/err.h>
+ #include "bpf-event.h"
+ #include "debug.h"
+ #include "symbol.h"
+@@ -49,99 +51,62 @@ static int perf_event__synthesize_one_bpf_prog(struct perf_tool *tool,
+ {
+ 	struct ksymbol_event *ksymbol_event = &event->ksymbol_event;
+ 	struct bpf_event *bpf_event = &event->bpf_event;
+-	u32 sub_prog_cnt, i, func_info_rec_size = 0;
+-	u8 (*prog_tags)[BPF_TAG_SIZE] = NULL;
+-	struct bpf_prog_info info = { .type = 0, };
+-	u32 info_len = sizeof(info);
+-	void *func_infos = NULL;
+-	u64 *prog_addrs = NULL;
++	struct bpf_prog_info_linear *info_linear;
++	struct bpf_prog_info *info;
+ 	struct btf *btf = NULL;
+-	u32 *prog_lens = NULL;
+ 	bool has_btf = false;
+-	char errbuf[512];
++	u32 sub_prog_cnt, i;
+ 	int err = 0;
++	u64 arrays;
  
- ifeq ($(feature-libbfd), 1)
--  EXTLIBS += -lbfd
-+  EXTLIBS += -lbfd -lopcodes
- else
-   # we are on a system that requires -liberty and (maybe) -lz
-   # to link against -lbfd; test each case individually here
-@@ -724,10 +724,10 @@ else
-   $(call feature_check,libbfd-liberty-z)
+-	/* Call bpf_obj_get_info_by_fd() to get sizes of arrays */
+-	err = bpf_obj_get_info_by_fd(fd, &info, &info_len);
++	arrays = 1UL << BPF_PROG_INFO_JITED_KSYMS;
++	arrays |= 1UL << BPF_PROG_INFO_JITED_FUNC_LENS;
++	arrays |= 1UL << BPF_PROG_INFO_FUNC_INFO;
++	arrays |= 1UL << BPF_PROG_INFO_PROG_TAGS;
  
-   ifeq ($(feature-libbfd-liberty), 1)
--    EXTLIBS += -lbfd -liberty
-+    EXTLIBS += -lbfd -lopcodes -liberty
-   else
-     ifeq ($(feature-libbfd-liberty-z), 1)
--      EXTLIBS += -lbfd -liberty -lz
-+      EXTLIBS += -lbfd -lopcodes -liberty -lz
-     endif
-   endif
- endif
+-	if (err) {
+-		pr_debug("%s: failed to get BPF program info: %s, aborting\n",
+-			 __func__, str_error_r(errno, errbuf, sizeof(errbuf)));
++	info_linear = bpf_program__get_prog_info_linear(fd, arrays);
++	if (IS_ERR_OR_NULL(info_linear)) {
++		info_linear = NULL;
++		pr_debug("%s: failed to get BPF program info. aborting\n", __func__);
+ 		return -1;
+ 	}
+-	if (info_len < offsetof(struct bpf_prog_info, prog_tags)) {
++
++	if (info_linear->info_len < offsetof(struct bpf_prog_info, prog_tags)) {
+ 		pr_debug("%s: the kernel is too old, aborting\n", __func__);
+ 		return -2;
+ 	}
+ 
++	info = &info_linear->info;
++
+ 	/* number of ksyms, func_lengths, and tags should match */
+-	sub_prog_cnt = info.nr_jited_ksyms;
+-	if (sub_prog_cnt != info.nr_prog_tags ||
+-	    sub_prog_cnt != info.nr_jited_func_lens)
++	sub_prog_cnt = info->nr_jited_ksyms;
++	if (sub_prog_cnt != info->nr_prog_tags ||
++	    sub_prog_cnt != info->nr_jited_func_lens)
+ 		return -1;
+ 
+ 	/* check BTF func info support */
+-	if (info.btf_id && info.nr_func_info && info.func_info_rec_size) {
++	if (info->btf_id && info->nr_func_info && info->func_info_rec_size) {
+ 		/* btf func info number should be same as sub_prog_cnt */
+-		if (sub_prog_cnt != info.nr_func_info) {
++		if (sub_prog_cnt != info->nr_func_info) {
+ 			pr_debug("%s: mismatch in BPF sub program count and BTF function info count, aborting\n", __func__);
+-			return -1;
+-		}
+-		if (btf__get_from_id(info.btf_id, &btf)) {
+-			pr_debug("%s: failed to get BTF of id %u, aborting\n", __func__, info.btf_id);
+-			return -1;
++			err = -1;
++			goto out;
+ 		}
+-		func_info_rec_size = info.func_info_rec_size;
+-		func_infos = calloc(sub_prog_cnt, func_info_rec_size);
+-		if (!func_infos) {
+-			pr_debug("%s: failed to allocate memory for func_infos, aborting\n", __func__);
+-			return -1;
++		if (btf__get_from_id(info->btf_id, &btf)) {
++			pr_debug("%s: failed to get BTF of id %u, aborting\n", __func__, info->btf_id);
++			err = -1;
++			btf = NULL;
++			goto out;
+ 		}
+ 		has_btf = true;
+ 	}
+ 
+-	/*
+-	 * We need address, length, and tag for each sub program.
+-	 * Allocate memory and call bpf_obj_get_info_by_fd() again
+-	 */
+-	prog_addrs = calloc(sub_prog_cnt, sizeof(u64));
+-	if (!prog_addrs) {
+-		pr_debug("%s: failed to allocate memory for prog_addrs, aborting\n", __func__);
+-		goto out;
+-	}
+-	prog_lens = calloc(sub_prog_cnt, sizeof(u32));
+-	if (!prog_lens) {
+-		pr_debug("%s: failed to allocate memory for prog_lens, aborting\n", __func__);
+-		goto out;
+-	}
+-	prog_tags = calloc(sub_prog_cnt, BPF_TAG_SIZE);
+-	if (!prog_tags) {
+-		pr_debug("%s: failed to allocate memory for prog_tags, aborting\n", __func__);
+-		goto out;
+-	}
+-
+-	memset(&info, 0, sizeof(info));
+-	info.nr_jited_ksyms = sub_prog_cnt;
+-	info.nr_jited_func_lens = sub_prog_cnt;
+-	info.nr_prog_tags = sub_prog_cnt;
+-	info.jited_ksyms = ptr_to_u64(prog_addrs);
+-	info.jited_func_lens = ptr_to_u64(prog_lens);
+-	info.prog_tags = ptr_to_u64(prog_tags);
+-	info_len = sizeof(info);
+-	if (has_btf) {
+-		info.nr_func_info = sub_prog_cnt;
+-		info.func_info_rec_size = func_info_rec_size;
+-		info.func_info = ptr_to_u64(func_infos);
+-	}
+-
+-	err = bpf_obj_get_info_by_fd(fd, &info, &info_len);
+-	if (err) {
+-		pr_debug("%s: failed to get BPF program info, aborting\n", __func__);
+-		goto out;
+-	}
+-
+ 	/* Synthesize PERF_RECORD_KSYMBOL */
+ 	for (i = 0; i < sub_prog_cnt; i++) {
++		u8 (*prog_tags)[BPF_TAG_SIZE] = (void *)(info->prog_tags);
++		__u32 *prog_lens = (__u32 *)(info->jited_func_lens);
++		__u64 *prog_addrs = (__u64 *)(info->jited_ksyms);
++		void *func_infos = (void *)(info->func_info);
+ 		const struct bpf_func_info *finfo;
+ 		const char *short_name = NULL;
+ 		const struct btf_type *t;
+@@ -163,13 +128,13 @@ static int perf_event__synthesize_one_bpf_prog(struct perf_tool *tool,
+ 					 KSYM_NAME_LEN - name_len,
+ 					 prog_tags[i], BPF_TAG_SIZE);
+ 		if (has_btf) {
+-			finfo = func_infos + i * info.func_info_rec_size;
++			finfo = func_infos + i * info->func_info_rec_size;
+ 			t = btf__type_by_id(btf, finfo->type_id);
+ 			short_name = btf__name_by_offset(btf, t->name_off);
+ 		} else if (i == 0 && sub_prog_cnt == 1) {
+ 			/* no subprog */
+-			if (info.name[0])
+-				short_name = info.name;
++			if (info->name[0])
++				short_name = info->name;
+ 		} else
+ 			short_name = "F";
+ 		if (short_name)
+@@ -195,9 +160,9 @@ static int perf_event__synthesize_one_bpf_prog(struct perf_tool *tool,
+ 			},
+ 			.type = PERF_BPF_EVENT_PROG_LOAD,
+ 			.flags = 0,
+-			.id = info.id,
++			.id = info->id,
+ 		};
+-		memcpy(bpf_event->tag, prog_tags[i], BPF_TAG_SIZE);
++		memcpy(bpf_event->tag, info->tag, BPF_TAG_SIZE);
+ 		memset((void *)event + event->header.size, 0, machine->id_hdr_size);
+ 		event->header.size += machine->id_hdr_size;
+ 		err = perf_tool__process_synth_event(tool, event,
+@@ -205,10 +170,7 @@ static int perf_event__synthesize_one_bpf_prog(struct perf_tool *tool,
+ 	}
+ 
+ out:
+-	free(prog_tags);
+-	free(prog_lens);
+-	free(prog_addrs);
+-	free(func_infos);
++	free(info_linear);
+ 	free(btf);
+ 	return err ? -1 : 0;
+ }
 -- 
 2.17.1
 
