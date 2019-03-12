@@ -2,52 +2,55 @@ Return-Path: <SRS0=J4ZE=RP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+X-Spam-Status: No, score=-14.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1ECAAC43381
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 17:13:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1C078C43381
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 17:14:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E1FC9217D4
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 17:13:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E1D4C21852
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 17:14:02 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1552410834;
-	bh=kOtjHQJl66byfjxpcZ8qcknYhXokst2XzUsEMKpldJA=;
+	s=default; t=1552410843;
+	bh=tXCnaYFjBA8ZShVoSSoH7xEEIQT5+nmNKeyjmcg/o6Y=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=qY8O15WmAb6vCXg7/WSph1rn3CdcTUzvMT7yKJQoNDF5cnw9fNsfRcqKhbdqydRHT
-	 +BESnBGf6B2K5WHKu6Vb9n0cCAuLegeXOIZIWNBUF+Qgr5aw+j4wpbWtUUj40xMNit
-	 WjlD9/muS12GeOXWAuNXLzfYlnEuukWBFo90lkOw=
+	b=EKJbSnUbEGYPAuUu83CEPiWEVb59bfnisYPDHQEYwzJ+PgxtFdlINh2y3PWm+3u5Z
+	 jVv35pMaPlgGUWxNUoJtGu4RQ/U4KB2/GXKL134kpuWywtASOMGy3YHPpXmALD0xS2
+	 gl3ZvR9YauLkFFoYI5S5aGlqC9Y5c7Gex+fhAUqw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728120AbfCLRNw (ORCPT
+        id S1728202AbfCLROB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 12 Mar 2019 13:13:52 -0400
+        Tue, 12 Mar 2019 13:14:01 -0400
 Received: from mail.kernel.org ([198.145.29.99]:49744 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727879AbfCLRNT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 12 Mar 2019 13:13:19 -0400
+        id S1727906AbfCLRNX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 12 Mar 2019 13:13:23 -0400
 Received: from localhost (unknown [104.133.8.98])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 4BDCF217D4;
-        Tue, 12 Mar 2019 17:13:18 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 9A8192183F;
+        Tue, 12 Mar 2019 17:13:22 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1552410798;
-        bh=kOtjHQJl66byfjxpcZ8qcknYhXokst2XzUsEMKpldJA=;
+        s=default; t=1552410802;
+        bh=tXCnaYFjBA8ZShVoSSoH7xEEIQT5+nmNKeyjmcg/o6Y=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=FTET5TOvpsjK4bUIz6c+pIY2c2wvW7EArxmo5DL0UEffwEXKLz/QnI1fvXkOvAQaU
-         UK2fUpcM8IyKE4t2w06WZ7Nlm5R91KActXTbXPf4ALyiY1smWKdpv3upc/duWYebsJ
-         FTo+gVe196kbTT07xldXB2dvSLmmMqC2SuK7G8bc=
+        b=KuMLwdd3RlWTo58vJ+BFmzreiZIBQVgpgL3rrY+kqHHOYe6whPoe1eScZT9/AfH9U
+         BF4J2BWe9q6xcqnyE7n4yU0t+t8LTTIuAWrRHdzDreNDltQ2oPhdMEPv+ivbzuW+EL
+         J7yVJuuccxD0N3odLT5XmOCfXUxeMpfFn2/ny8V0=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Julian Wiedmann <jwi@linux.ibm.com>,
-        "David S. Miller" <davem@davemloft.net>,
+        stable@vger.kernel.org, Michael Petlan <mpetlan@redhat.com>,
+        Adrian Hunter <adrian.hunter@intel.com>,
+        Jiri Olsa <jolsa@redhat.com>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Arnaldo Carvalho de Melo <acme@redhat.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.20 127/171] s390/qeth: cancel close_dev work before removing a card
-Date:   Tue, 12 Mar 2019 10:08:27 -0700
-Message-Id: <20190312170358.679237737@linuxfoundation.org>
+Subject: [PATCH 4.20 130/171] perf trace: Support multiple "vfs_getname" probes
+Date:   Tue, 12 Mar 2019 10:08:30 -0700
+Message-Id: <20190312170358.939660064@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190312170347.868927101@linuxfoundation.org>
 References: <20190312170347.868927101@linuxfoundation.org>
@@ -66,60 +69,99 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-[ Upstream commit c2780c1a3fb724560b1d44f7976e0de17bf153c7 ]
+[ Upstream commit 6ab3bc240ade47a0f52bc16d97edd9accbe0024e ]
 
-A card's close_dev work is scheduled on a driver-wide workqueue. If the
-card is removed and freed while the work is still active, this causes a
-use-after-free.
-So make sure that the work is completed before freeing the card.
+With a suitably defined "probe:vfs_getname" probe, 'perf trace' can
+"beautify" its output, so syscalls like open() or openat() can print the
+"filename" argument instead of just its hex address, like:
 
-Fixes: 0f54761d167f ("qeth: Support VEPA mode")
-Signed-off-by: Julian Wiedmann <jwi@linux.ibm.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
+  $ perf trace -e open -- touch /dev/null
+  [...]
+       0.590 ( 0.014 ms): touch/18063 open(filename: /dev/null, flags: CREAT|NOCTTY|NONBLOCK|WRONLY, mode: IRUGO|IWUGO) = 3
+  [...]
+
+The output without such beautifier looks like:
+
+     0.529 ( 0.011 ms): touch/18075 open(filename: 0xc78cf288, flags: CREAT|NOCTTY|NONBLOCK|WRONLY, mode: IRUGO|IWUGO) = 3
+
+However, when the vfs_getname probe expands to multiple probes and it is
+not the first one that is hit, the beautifier fails, as following:
+
+     0.326 ( 0.010 ms): touch/18072 open(filename: , flags: CREAT|NOCTTY|NONBLOCK|WRONLY, mode: IRUGO|IWUGO) = 3
+
+Fix it by hooking into all the expanded probes (inlines), now, for instance:
+
+  [root@quaco ~]# perf probe -l
+    probe:vfs_getname    (on getname_flags:73@fs/namei.c with pathname)
+    probe:vfs_getname_1  (on getname_flags:73@fs/namei.c with pathname)
+  [root@quaco ~]# perf trace -e open* sleep 1
+       0.010 ( 0.005 ms): sleep/5588 openat(dfd: CWD, filename: /etc/ld.so.cache, flags: RDONLY|CLOEXEC)   = 3
+       0.029 ( 0.006 ms): sleep/5588 openat(dfd: CWD, filename: /lib64/libc.so.6, flags: RDONLY|CLOEXEC)   = 3
+       0.194 ( 0.008 ms): sleep/5588 openat(dfd: CWD, filename: /usr/lib/locale/locale-archive, flags: RDONLY|CLOEXEC) = 3
+  [root@quaco ~]#
+
+Works, further verified with:
+
+  [root@quaco ~]# perf test vfs
+  65: Use vfs_getname probe to get syscall args filenames   : Ok
+  66: Add vfs_getname probe to get syscall args filenames   : Ok
+  67: Check open filename arg using perf trace + vfs_getname: Ok
+  [root@quaco ~]#
+
+Reported-by: Michael Petlan <mpetlan@redhat.com>
+Tested-by: Michael Petlan <mpetlan@redhat.com>
+Cc: Adrian Hunter <adrian.hunter@intel.com>
+Cc: Jiri Olsa <jolsa@redhat.com>
+Cc: Namhyung Kim <namhyung@kernel.org>
+Link: https://lkml.kernel.org/n/tip-mv8kolk17xla1smvmp3qabv1@git.kernel.org
+Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/s390/net/qeth_core.h    | 1 +
- drivers/s390/net/qeth_l2_main.c | 2 ++
- drivers/s390/net/qeth_l3_main.c | 1 +
- 3 files changed, 4 insertions(+)
+ tools/perf/builtin-trace.c | 25 ++++++++++++++++++-------
+ 1 file changed, 18 insertions(+), 7 deletions(-)
 
-diff --git a/drivers/s390/net/qeth_core.h b/drivers/s390/net/qeth_core.h
-index 99af1a0a3314..8999be74c545 100644
---- a/drivers/s390/net/qeth_core.h
-+++ b/drivers/s390/net/qeth_core.h
-@@ -22,6 +22,7 @@
- #include <linux/hashtable.h>
- #include <linux/ip.h>
- #include <linux/refcount.h>
-+#include <linux/workqueue.h>
+diff --git a/tools/perf/builtin-trace.c b/tools/perf/builtin-trace.c
+index 835619476370..c108519ddd61 100644
+--- a/tools/perf/builtin-trace.c
++++ b/tools/perf/builtin-trace.c
+@@ -2424,19 +2424,30 @@ static size_t trace__fprintf_thread_summary(struct trace *trace, FILE *fp);
  
- #include <net/ipv6.h>
- #include <net/if_inet6.h>
-diff --git a/drivers/s390/net/qeth_l2_main.c b/drivers/s390/net/qeth_l2_main.c
-index 8d3601891c62..49fa09c67d49 100644
---- a/drivers/s390/net/qeth_l2_main.c
-+++ b/drivers/s390/net/qeth_l2_main.c
-@@ -823,6 +823,8 @@ static void qeth_l2_remove_device(struct ccwgroup_device *cgdev)
+ static bool perf_evlist__add_vfs_getname(struct perf_evlist *evlist)
+ {
+-	struct perf_evsel *evsel = perf_evsel__newtp("probe", "vfs_getname");
++	bool found = false;
++	struct perf_evsel *evsel, *tmp;
++	struct parse_events_error err = { .idx = 0, };
++	int ret = parse_events(evlist, "probe:vfs_getname*", &err);
  
- 	if (cgdev->state == CCWGROUP_ONLINE)
- 		qeth_l2_set_offline(cgdev);
+-	if (IS_ERR(evsel))
++	if (ret)
+ 		return false;
+ 
+-	if (perf_evsel__field(evsel, "pathname") == NULL) {
++	evlist__for_each_entry_safe(evlist, evsel, tmp) {
++		if (!strstarts(perf_evsel__name(evsel), "probe:vfs_getname"))
++			continue;
 +
-+	cancel_work_sync(&card->close_dev_work);
- 	if (qeth_netdev_is_registered(card->dev))
- 		unregister_netdev(card->dev);
- }
-diff --git a/drivers/s390/net/qeth_l3_main.c b/drivers/s390/net/qeth_l3_main.c
-index f08b745c2007..d1bf55b5c8e1 100644
---- a/drivers/s390/net/qeth_l3_main.c
-+++ b/drivers/s390/net/qeth_l3_main.c
-@@ -2428,6 +2428,7 @@ static void qeth_l3_remove_device(struct ccwgroup_device *cgdev)
- 	if (cgdev->state == CCWGROUP_ONLINE)
- 		qeth_l3_set_offline(cgdev);
++		if (perf_evsel__field(evsel, "pathname")) {
++			evsel->handler = trace__vfs_getname;
++			found = true;
++			continue;
++		}
++
++		list_del_init(&evsel->node);
++		evsel->evlist = NULL;
+ 		perf_evsel__delete(evsel);
+-		return false;
+ 	}
  
-+	cancel_work_sync(&card->close_dev_work);
- 	if (qeth_netdev_is_registered(card->dev))
- 		unregister_netdev(card->dev);
- 	qeth_l3_clear_ip_htable(card, 0);
+-	evsel->handler = trace__vfs_getname;
+-	perf_evlist__add(evlist, evsel);
+-	return true;
++	return found;
+ }
+ 
+ static struct perf_evsel *perf_evsel__new_pgfault(u64 config)
 -- 
 2.19.1
 
