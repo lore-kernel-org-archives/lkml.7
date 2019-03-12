@@ -2,95 +2,82 @@ Return-Path: <SRS0=J4ZE=RP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED
+X-Spam-Status: No, score=-8.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_MUTT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 071C2C43381
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 12:53:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4A84FC43381
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 12:53:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D0580206BA
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 12:53:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 15752206BA
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 12:53:23 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726619AbfCLMw7 convert rfc822-to-8bit (ORCPT
+        id S1726731AbfCLMxW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 12 Mar 2019 08:52:59 -0400
-Received: from gloria.sntech.de ([185.11.138.130]:59816 "EHLO gloria.sntech.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725887AbfCLMw4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 12 Mar 2019 08:52:56 -0400
-Received: from we0652.dip.tu-dresden.de ([141.76.178.140] helo=phil.localnet)
-        by gloria.sntech.de with esmtpsa (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.89)
-        (envelope-from <heiko@sntech.de>)
-        id 1h3gtc-0001hS-VG; Tue, 12 Mar 2019 13:52:40 +0100
-From:   Heiko Stuebner <heiko@sntech.de>
-To:     Christoph Muellner <christoph.muellner@theobroma-systems.com>
-Cc:     robh+dt@kernel.org, mark.rutland@arm.com, shawn.lin@rock-chips.com,
-        Philipp Tomsich <philipp.tomsich@theobroma-systems.com>,
-        Kishon Vijay Abraham I <kishon@ti.com>,
-        Brian Norris <briannorris@chromium.org>,
-        Klaus Goger <klaus.goger@theobroma-systems.com>,
-        Enric Balletbo i Serra <enric.balletbo@collabora.com>,
-        Douglas Anderson <dianders@chromium.org>,
-        Viresh Kumar <viresh.kumar@linaro.org>,
-        Ezequiel Garcia <ezequiel@collabora.com>,
-        Lin Huang <hl@rock-chips.com>, Randy Li <ayaka@soulik.info>,
-        Tony Xie <tony.xie@rock-chips.com>,
-        Vicente Bergas <vicencb@gmail.com>,
-        linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org,
-        linux-rockchip@lists.infradead.org
-Subject: Re: [PATCH v2 2/4] dt-bindings: phy: Add a new property drive-impedance-ohm for RK's emmc PHY
-Date:   Tue, 12 Mar 2019 13:52:39 +0100
-Message-ID: <1924357.CMCVK5N5Qd@phil>
-In-Reply-To: <20190307084159.25236-2-christoph.muellner@theobroma-systems.com>
-References: <20190307084159.25236-1-christoph.muellner@theobroma-systems.com> <20190307084159.25236-2-christoph.muellner@theobroma-systems.com>
+        Tue, 12 Mar 2019 08:53:22 -0400
+Received: from mail-pf1-f196.google.com ([209.85.210.196]:36268 "EHLO
+        mail-pf1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726280AbfCLMxV (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 12 Mar 2019 08:53:21 -0400
+Received: by mail-pf1-f196.google.com with SMTP id n22so1777404pfa.3
+        for <linux-kernel@vger.kernel.org>; Tue, 12 Mar 2019 05:53:21 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:mime-version
+         :content-disposition:signed-off-by:user-agent;
+        bh=lunRezebGiR7uZrsiHZUiHELSYvvQhQ7jo/sNtO0vrw=;
+        b=lIseYHd1HWPBLuUUHJGFbtqAdbKY0bodom17bRMe8LIeCKYEVTMmbL5qf8a60aZx1C
+         nTIBGFeXkbnxouFRvi+B59lmyv6waOLwlaEFfUKLEvZDKJYsriSESM68CeR18K7yS2q0
+         xVYYsP7DqhR9cUBQbgeUeKgwfO4wI0kkOUd3kl7qJQLT1nWiuCSqlai5EareZGXBkskD
+         BjqKAA7pkCo7O2/jdFQHq6lJaCeSwqlBUSCayTcAr4hqmMvX449WNxRunXfiCdc/fqre
+         frhlrHjzJEXBGl9Jlb7ib1F6rK9LaSY7SIJqD29iENKl5xKDmHY2n9+SOxcL6DzXBa2f
+         Sx7g==
+X-Gm-Message-State: APjAAAV4bmFeBPe2fmXpDJGtyYUGeS3uzJIYm6JvNKCxF0Nowj/Eg33Y
+        8m1ZZmZvNcS/YCuXOLTbJ/gcrQ==
+X-Google-Smtp-Source: APXvYqwHdRfm9XaqBSZnoI4e96YpcGzGqO7mTAV7YrIDI4YByBR3WvQDTH3UU489wCLixPIfJ/jwmA==
+X-Received: by 2002:a65:4147:: with SMTP id x7mr35066044pgp.54.1552395200795;
+        Tue, 12 Mar 2019 05:53:20 -0700 (PDT)
+Received: from machine1 ([125.16.97.124])
+        by smtp.gmail.com with ESMTPSA id u26sm2270549pfh.42.2019.03.12.05.53.18
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Tue, 12 Mar 2019 05:53:20 -0700 (PDT)
+Date:   Tue, 12 Mar 2019 18:23:15 +0530
+From:   "Milan P. Gandhi" <mgandhi@redhat.com>
+To:     kernel-janitors@vger.kernel.org
+Cc:     qla2xxx-upstream@qlogic.com, jejb@linux.ibm.com,
+        martin.petersen@oracle.com, linux-scsi@vger.kernel.org,
+        linux-kernel@vger.kernel.org, julia.lawall@lip6.fr,
+        dan.carpenter@oracle.com
+Subject: [PATCH 2/2] scsi: qla2xxx: Fix a small typo in qla_bsg.c
+Message-ID: <20190312125315.GA13975@machine1>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8BIT
-Content-Type: text/plain; charset="iso-8859-1"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Signed-off-by: Milan P. Gandhi <mgandhi@redhat.com>
+User-Agent: Mutt/1.9.2 (2017-12-15)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Christoph,
+Fixed a typo for 'iiDMA' cmd in qla_bsg.c
 
-Am Donnerstag, 7. März 2019, 09:41:54 CET schrieb Christoph Muellner:
-> This patch documents the new proprty drive-impedance-ohm for
-> Rockchip's eMMC PHY node.
-> 
-> Signed-off-by: Christoph Muellner <christoph.muellner@theobroma-systems.com>
-> Signed-off-by: Philipp Tomsich <philipp.tomsich@theobroma-systems.com>
-> ---
->  Documentation/devicetree/bindings/phy/rockchip-emmc-phy.txt | 3 +++
->  1 file changed, 3 insertions(+)
-> 
-> diff --git a/Documentation/devicetree/bindings/phy/rockchip-emmc-phy.txt b/Documentation/devicetree/bindings/phy/rockchip-emmc-phy.txt
-> index e3ea55763b0a..5f5d999dacc3 100644
-> --- a/Documentation/devicetree/bindings/phy/rockchip-emmc-phy.txt
-> +++ b/Documentation/devicetree/bindings/phy/rockchip-emmc-phy.txt
-> @@ -13,6 +13,9 @@ specified by name:
+Signed-off-by: Milan P. Gandhi <mgandhi@redhat.com>
+---
+ drivers/scsi/qla2xxx/qla_bsg.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-you might want to adapt the section headline as well, as right now it
-talks about "Optional clocks", but should likely become the generic
-"Optional properties" as in other bindings (including moving the clock-
-binding.txt reference down into the clock elements)
-
-
-Heiko
-
->  		(because most boards can get basic functionality without having
->  		access to it), it is strongly suggested.
->   - clocks: Should have a phandle to the card clock exported by the SDHCI driver.
-> + - drive-impedance-ohm: Specifies the drive impedance in Ohm.
-> +                        Possible values are 33, 40, 50, 66 and 100.
-> +                        If not set, the default value of 50 will be applied.
->  
->  Example:
->  
-> 
-
-
-
-
+diff --git a/drivers/scsi/qla2xxx/qla_bsg.c b/drivers/scsi/qla2xxx/qla_bsg.c
+index 17d42658ad9a..f2b95f11a71c 100644
+--- a/drivers/scsi/qla2xxx/qla_bsg.c
++++ b/drivers/scsi/qla2xxx/qla_bsg.c
+@@ -1354,7 +1354,7 @@ qla24xx_iidma(struct bsg_job *bsg_job)
+ 
+ 	if (rval) {
+ 		ql_log(ql_log_warn, vha, 0x704c,
+-		    "iIDMA cmd failed for %8phN -- "
++		    "iiDMA cmd failed for %8phN -- "
+ 		    "%04x %x %04x %04x.\n", fcport->port_name,
+ 		    rval, fcport->fp_speed, mb[0], mb[1]);
+ 		rval = (DID_ERROR << 16);
