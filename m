@@ -4,41 +4,41 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8975EC43381
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 17:50:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D0142C43381
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 17:50:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5A8612147C
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 17:50:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9917F205C9
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 17:50:41 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1552413035;
-	bh=CJVRbMBy+VjSq8iRFMmdk0cnkBa486Yk3SfCkfOHW6g=;
+	s=default; t=1552413041;
+	bh=7zrQopYsAjpQGFuizJnYBrzQ35Ei667hGwOQK8zhQJc=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=V/aVOkcyRPD8e6N4zCuU65064p1X8Sk1LTzf8x9uBqrJ9yC8ndsUH4dTPwAJ3tzRb
-	 105Yx5BCqmu5CUeKXnERnDrLhkEDuiFjyBvBQ/DiP1lj0c+cncYiM99taZSdgvnxlK
-	 En8iW7WBcVDGBb1+uBVuq9g85OiRD7L/QpE1nL2E=
+	b=Iqo36mK5bXZoTsU+AGr8woTBeIJm0HUURz2rsM/xyRV/Fr2EXAxeF6i5jDcxSnjXX
+	 XM1ThfCnqL58sDkgWjuFV0tuz80KYEp+V43FQ6/JGyNo7hwBK0lF6DFk8O4pEYQIMe
+	 DYLRUda/TO5BCxeXl1hqgLUTj/VxjtPiilc6cR6Y=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729135AbfCLRu1 (ORCPT
+        id S1728750AbfCLRuk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 12 Mar 2019 13:50:27 -0400
-Received: from mail.kernel.org ([198.145.29.99]:53928 "EHLO mail.kernel.org"
+        Tue, 12 Mar 2019 13:50:40 -0400
+Received: from mail.kernel.org ([198.145.29.99]:53874 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728457AbfCLROn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 12 Mar 2019 13:14:43 -0400
+        id S1728451AbfCLROm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 12 Mar 2019 13:14:42 -0400
 Received: from localhost (unknown [104.133.8.98])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id A7FB9206DF;
+        by mail.kernel.org (Postfix) with ESMTPSA id 0812B2173C;
         Tue, 12 Mar 2019 17:14:42 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
         s=default; t=1552410882;
-        bh=CJVRbMBy+VjSq8iRFMmdk0cnkBa486Yk3SfCkfOHW6g=;
+        bh=7zrQopYsAjpQGFuizJnYBrzQ35Ei667hGwOQK8zhQJc=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=XFQALlYwsuSWPAnti1U//paB4xOwsHN3d5iNN2ZdOmqtu4xfeg7pB3thTabhpjgSP
-         txKex8/hfsLHF9o0Q556QhZpXFgRbOv4nWIVPICWuxI0fWV3FV8fIOuKU/tLnj25qq
-         yoW8Fixv+GPSRvXn3wOdxnpOY2Im0RRbU4crS1UY=
+        b=t1kcQrUHAzHbLHRiuN87A+G/1oZ5uymyUs35BDgOp8NTjsJbVznBwAHnBbF+h1E33
+         hEtFmqp/HWUu4g8VHHU6ziftN5KhmR62WZPpogxei56jQFCt8TNPRsoYM7BAyzdS11
+         uU5ohu9i+Cn9T8OrjykO3kSPYFlauQParoVfLwYU=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
@@ -48,9 +48,9 @@ Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         Giuseppe Cavallaro <peppe.cavallaro@st.com>,
         Alexandre Torgue <alexandre.torgue@st.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 089/149] net: stmmac: Send TSO packets always from Queue 0
-Date:   Tue, 12 Mar 2019 10:08:27 -0700
-Message-Id: <20190312170357.174972830@linuxfoundation.org>
+Subject: [PATCH 4.19 088/149] net: stmmac: Fallback to Platform Data clock in Watchdog conversion
+Date:   Tue, 12 Mar 2019 10:08:26 -0700
+Message-Id: <20190312170357.090351325@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190312170349.421581206@linuxfoundation.org>
 References: <20190312170349.421581206@linuxfoundation.org>
@@ -69,14 +69,12 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-[ Upstream commit c5acdbee22a1b200dde07effd26fd1f649e9ab8a ]
+[ Upstream commit 4ec5302fa906ec9d86597b236f62315bacdb9622 ]
 
-The number of TSO enabled channels in HW can be different than the
-number of total channels. There is no way to determined, at runtime, the
-number of TSO capable channels and its safe to assume that if TSO is
-enabled then at least channel 0 will be TSO capable.
+If we don't have DT then stmmac_clk will not be available. Let's add a
+new Platform Data field so that we can specify the refclk by this mean.
 
-Lets always send TSO packets from Queue 0.
+This way we can still use the coalesce command in PCI based setups.
 
 Signed-off-by: Jose Abreu <joabreu@synopsys.com>
 Cc: Joao Pinto <jpinto@synopsys.com>
@@ -86,32 +84,54 @@ Cc: Alexandre Torgue <alexandre.torgue@st.com>
 Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/ethernet/stmicro/stmmac/stmmac_main.c | 11 ++++++++++-
- 1 file changed, 10 insertions(+), 1 deletion(-)
+ .../net/ethernet/stmicro/stmmac/stmmac_ethtool.c   | 14 ++++++++++----
+ include/linux/stmmac.h                             |  1 +
+ 2 files changed, 11 insertions(+), 4 deletions(-)
 
-diff --git a/drivers/net/ethernet/stmicro/stmmac/stmmac_main.c b/drivers/net/ethernet/stmicro/stmmac/stmmac_main.c
-index 123b74e25ed8..57c56e295705 100644
---- a/drivers/net/ethernet/stmicro/stmmac/stmmac_main.c
-+++ b/drivers/net/ethernet/stmicro/stmmac/stmmac_main.c
-@@ -3030,8 +3030,17 @@ static netdev_tx_t stmmac_xmit(struct sk_buff *skb, struct net_device *dev)
+diff --git a/drivers/net/ethernet/stmicro/stmmac/stmmac_ethtool.c b/drivers/net/ethernet/stmicro/stmmac/stmmac_ethtool.c
+index 9caf79ba5ef1..4d5fb4b51cc4 100644
+--- a/drivers/net/ethernet/stmicro/stmmac/stmmac_ethtool.c
++++ b/drivers/net/ethernet/stmicro/stmmac/stmmac_ethtool.c
+@@ -719,8 +719,11 @@ static u32 stmmac_usec2riwt(u32 usec, struct stmmac_priv *priv)
+ {
+ 	unsigned long clk = clk_get_rate(priv->plat->stmmac_clk);
  
- 	/* Manage oversized TCP frames for GMAC4 device */
- 	if (skb_is_gso(skb) && priv->tso) {
--		if (skb_shinfo(skb)->gso_type & (SKB_GSO_TCPV4 | SKB_GSO_TCPV6))
-+		if (skb_shinfo(skb)->gso_type & (SKB_GSO_TCPV4 | SKB_GSO_TCPV6)) {
-+			/*
-+			 * There is no way to determine the number of TSO
-+			 * capable Queues. Let's use always the Queue 0
-+			 * because if TSO is supported then at least this
-+			 * one will be capable.
-+			 */
-+			skb_set_queue_mapping(skb, 0);
-+
- 			return stmmac_tso_xmit(skb, dev);
-+		}
- 	}
+-	if (!clk)
+-		return 0;
++	if (!clk) {
++		clk = priv->plat->clk_ref_rate;
++		if (!clk)
++			return 0;
++	}
  
- 	if (unlikely(stmmac_tx_avail(priv, queue) < nfrags + 1)) {
+ 	return (usec * (clk / 1000000)) / 256;
+ }
+@@ -729,8 +732,11 @@ static u32 stmmac_riwt2usec(u32 riwt, struct stmmac_priv *priv)
+ {
+ 	unsigned long clk = clk_get_rate(priv->plat->stmmac_clk);
+ 
+-	if (!clk)
+-		return 0;
++	if (!clk) {
++		clk = priv->plat->clk_ref_rate;
++		if (!clk)
++			return 0;
++	}
+ 
+ 	return (riwt * 256) / (clk / 1000000);
+ }
+diff --git a/include/linux/stmmac.h b/include/linux/stmmac.h
+index 7ddfc65586b0..4335bd771ce5 100644
+--- a/include/linux/stmmac.h
++++ b/include/linux/stmmac.h
+@@ -184,6 +184,7 @@ struct plat_stmmacenet_data {
+ 	struct clk *pclk;
+ 	struct clk *clk_ptp_ref;
+ 	unsigned int clk_ptp_rate;
++	unsigned int clk_ref_rate;
+ 	struct reset_control *stmmac_rst;
+ 	struct stmmac_axi *axi;
+ 	int has_gmac4;
 -- 
 2.19.1
 
