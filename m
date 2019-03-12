@@ -2,164 +2,156 @@ Return-Path: <SRS0=J4ZE=RP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS autolearn=ham
+X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 98174C43381
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 15:52:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5975CC10F00
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 15:52:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7336D20693
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 15:52:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2B95D20693
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 15:52:58 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=ingics-com.20150623.gappssmtp.com header.i=@ingics-com.20150623.gappssmtp.com header.b="XoIQBeH6"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726728AbfCLPwv (ORCPT
+        id S1726781AbfCLPw4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 12 Mar 2019 11:52:51 -0400
-Received: from bhuna.collabora.co.uk ([46.235.227.227]:60194 "EHLO
-        bhuna.collabora.co.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725917AbfCLPwu (ORCPT
+        Tue, 12 Mar 2019 11:52:56 -0400
+Received: from mail-pg1-f195.google.com ([209.85.215.195]:45713 "EHLO
+        mail-pg1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726751AbfCLPwy (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 12 Mar 2019 11:52:50 -0400
-Received: from localhost (unknown [IPv6:2a01:e0a:2c:6930:5cf4:84a1:2763:fe0d])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        (Authenticated sender: bbrezillon)
-        by bhuna.collabora.co.uk (Postfix) with ESMTPSA id 84B2A26D7C8;
-        Tue, 12 Mar 2019 15:52:46 +0000 (GMT)
-Date:   Tue, 12 Mar 2019 16:52:43 +0100
-From:   Boris Brezillon <boris.brezillon@collabora.com>
-To:     Helen Koike <helen.koike@collabora.com>
-Cc:     dri-devel@lists.freedesktop.org, nicholas.kazlauskas@amd.com,
-        andrey.grodzovsky@amd.com, daniel.vetter@ffwll.ch,
-        linux-kernel@vger.kernel.org, Tomasz Figa <tfiga@chromium.org>,
-        David Airlie <airlied@linux.ie>,
-        Sean Paul <seanpaul@google.com>, kernel@collabora.com,
-        harry.wentland@amd.com,
-        =?UTF-8?B?U3TDqXBoYW5l?= Marchesin <marcheu@google.com>,
-        Sandy Huang <hjc@rock-chips.com>,
-        linux-rockchip@lists.infradead.org,
-        Heiko =?UTF-8?B?U3TDvGJuZXI=?= <heiko@sntech.de>,
-        linux-arm-kernel@lists.infradead.org,
-        Daniel Vetter <daniel@ffwll.ch>
-Subject: Re: [PATCH v2 1/5] drm/rockchip: fix fb references in async update
-Message-ID: <20190312165243.5b771e4a@collabora.com>
-In-Reply-To: <f888a2d0-c6b1-8995-7254-ba2923dd22f9@collabora.com>
-References: <20190312022204.2775-1-helen.koike@collabora.com>
-        <20190312022204.2775-2-helen.koike@collabora.com>
-        <20190312073438.05ad8173@collabora.com>
-        <f888a2d0-c6b1-8995-7254-ba2923dd22f9@collabora.com>
-Organization: Collabora
-X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; x86_64-redhat-linux-gnu)
-MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+        Tue, 12 Mar 2019 11:52:54 -0400
+Received: by mail-pg1-f195.google.com with SMTP id 125so2115698pgc.12
+        for <linux-kernel@vger.kernel.org>; Tue, 12 Mar 2019 08:52:53 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=ingics-com.20150623.gappssmtp.com; s=20150623;
+        h=from:to:cc:subject:date:message-id;
+        bh=P3whinzO+RjQuNihU8Txak/JqmSS/8Xm17HIFga/4Gg=;
+        b=XoIQBeH614FnwKU/o2+T69v4Kg2r0soqCPgdtvqwu8Ob3H5zJbm1zfQOwdhMV4yCYL
+         E8h2qVBRWEZpoknOGaesg59TccVWraZjHzxwa91qO7PROgRoqspPcgTFFoJH1taGtZEj
+         5n143EV2V98aV+5IDCkB9DWzaCe+pkRkSUeTgYHbjEGzo5nuHE1P9/sWhe6qPCIz01ge
+         d6ubPVsemyGYMNlBdQUTVQK0tJ7jlu17YQkAkzUKZjfl0kFC8lT1vOPtXkn8Qg5XfwLX
+         y51xytLWoEx3LmnxCSV3tGuvye/hKiDWO2EXrZ1rTEHDOQYsGG5/P4JU8hrNBrZwHbKt
+         MBDg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=P3whinzO+RjQuNihU8Txak/JqmSS/8Xm17HIFga/4Gg=;
+        b=rQVZFtLxXD36QUeK157I82G57c3Kz/w8Xj2Hfq53DumouYDfGK2nlwNKP3n5zgnzm/
+         PN4/doM8p07v7xz4YjXcw7NM9hgy5aeWlKkNifNaDRqixS89Yp/fW2BqcDDPms8qy8Kw
+         gEb6LiRdi17UD/2bFCUdUY+c4HG6+N22o5GzrUp7XYunfvmSwmNExLr4b8JWnXgijmh3
+         ELs8M8fghPCLBSWJXB0ULZly7JUvZw4Vd16QpSeg3jzdpADvXWZSkpjSgli7xEDZRT9y
+         IMBXA9ppvZlQ0njqVGz2BfsgEijmomJTq1zv9XArvCiBqDMLb7Tedamkx961tEbcvLjx
+         NU8g==
+X-Gm-Message-State: APjAAAXZK2XPqSaI+npM/6kah1aGW3l+Vkw14JQcVDvx0L3x2DDe7gwG
+        dCTzH7jay3KZZ+ttHwr1gC87PcMLvXGyFQ==
+X-Google-Smtp-Source: APXvYqwLxWHhC0ag1D6zAJ6JJS5GXbtg/oA9TI8o+UvFmj5yi8HwYtbeXHvXYrdUmS0TGnFzd04hCg==
+X-Received: by 2002:a17:902:31a4:: with SMTP id x33mr39720975plb.198.1552405973531;
+        Tue, 12 Mar 2019 08:52:53 -0700 (PDT)
+Received: from localhost.localdomain (220-133-186-239.HINET-IP.hinet.net. [220.133.186.239])
+        by smtp.gmail.com with ESMTPSA id y22sm12116647pfn.136.2019.03.12.08.52.50
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Tue, 12 Mar 2019 08:52:52 -0700 (PDT)
+From:   Axel Lin <axel.lin@ingics.com>
+To:     Mark Brown <broonie@kernel.org>
+Cc:     Chanwoo Choi <cw00.choi@samsung.com>,
+        Krzysztof Kozlowski <krzk@kernel.org>,
+        Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>,
+        Liam Girdwood <lgirdwood@gmail.com>,
+        linux-kernel@vger.kernel.org, Axel Lin <axel.lin@ingics.com>
+Subject: [PATCH] regulator: max14577: Get rid of match_init_data/match_of_node functions
+Date:   Tue, 12 Mar 2019 23:52:41 +0800
+Message-Id: <20190312155241.17277-1-axel.lin@ingics.com>
+X-Mailer: git-send-email 2.17.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, 12 Mar 2019 12:34:45 -0300
-Helen Koike <helen.koike@collabora.com> wrote:
+This driver has been converted to use regulator core's simplified DT
+parsing code. So the match_init_data/match_of_node functions are not
+necessary now, remove them.
 
-> On 3/12/19 3:34 AM, Boris Brezillon wrote:
-> > On Mon, 11 Mar 2019 23:21:59 -0300
-> > Helen Koike <helen.koike@collabora.com> wrote:
-> >   
-> >> In the case of async update, modifications are done in place, i.e. in the
-> >> current plane state, so the new_state is prepared and the new_state is
-> >> cleanup up (instead of the old_state, diferrently on what happen in a  
-> > 
-> >   ^ cleaned up				^ differently (but maybe
-> > "unlike what happens" is more appropriate here).
-> >   
-> >> normal sync update).
-> >> To cleanup the old_fb properly, it needs to be placed in the new_state
-> >> in the end of async_update, so cleanup call will unreference the old_fb
-> >> correctly.
-> >>
-> >> Also, the previous code had a:
-> >>
-> >> 	plane_state = plane->funcs->atomic_duplicate_state(plane);
-> >> 	...
-> >> 	swap(plane_state, plane->state);
-> >>
-> >> 	if (plane->state->fb && plane->state->fb != new_state->fb) {
-> >> 	...
-> >> 	}
-> >>
-> >> Which was wrong, as the fb were just assigned to be equal, so this if
-> >> statement nevers evaluates to true.
-> >>
-> >> Another details is that the function drm_crtc_vblank_get() can only be
-> >> called when vop->is_enabled is true, otherwise it has no effect and
-> >> trows a WARN_ON().
-> >>
-> >> Calling drm_atomic_set_fb_for_plane() (which get a referent of the new
-> >> fb and pus the old fb) is not required, as it is taken care by
-> >> drm_mode_cursor_universal() when calling
-> >> drm_atomic_helper_update_plane().
-> >>
-> >> Signed-off-by: Helen Koike <helen.koike@collabora.com>
-> >>
-> >> ---
-> >> Hello,
-> >>
-> >> I tested on the rockchip ficus v1.1 using igt plane_cursor_legacy and
-> >> kms_cursor_legacy and I didn't see any regressions.
-> >>
-> >> Changes in v2: None
-> >>
-> >>  drivers/gpu/drm/rockchip/rockchip_drm_vop.c | 42 ++++++++++++---------
-> >>  1 file changed, 24 insertions(+), 18 deletions(-)
-> >>
-> >> diff --git a/drivers/gpu/drm/rockchip/rockchip_drm_vop.c b/drivers/gpu/drm/rockchip/rockchip_drm_vop.c
-> >> index c7d4c6073ea5..a1ee8c156a7b 100644
-> >> --- a/drivers/gpu/drm/rockchip/rockchip_drm_vop.c
-> >> +++ b/drivers/gpu/drm/rockchip/rockchip_drm_vop.c
-> >> @@ -912,30 +912,31 @@ static void vop_plane_atomic_async_update(struct drm_plane *plane,
-> >>  					  struct drm_plane_state *new_state)
-> >>  {
-> >>  	struct vop *vop = to_vop(plane->state->crtc);
-> >> -	struct drm_plane_state *plane_state;
-> >> +	struct drm_framebuffer *old_fb = plane->state->fb;
-> >>  
-> >> -	plane_state = plane->funcs->atomic_duplicate_state(plane);
-> >> -	plane_state->crtc_x = new_state->crtc_x;
-> >> -	plane_state->crtc_y = new_state->crtc_y;
-> >> -	plane_state->crtc_h = new_state->crtc_h;
-> >> -	plane_state->crtc_w = new_state->crtc_w;
-> >> -	plane_state->src_x = new_state->src_x;
-> >> -	plane_state->src_y = new_state->src_y;
-> >> -	plane_state->src_h = new_state->src_h;
-> >> -	plane_state->src_w = new_state->src_w;
-> >> -
-> >> -	if (plane_state->fb != new_state->fb)
-> >> -		drm_atomic_set_fb_for_plane(plane_state, new_state->fb);
-> >> -
-> >> -	swap(plane_state, plane->state);
-> >> -
-> >> -	if (plane->state->fb && plane->state->fb != new_state->fb) {
-> >> +	/*
-> >> +	 * A scanout can still be occurring, so we can't drop the reference to
-> >> +	 * the old framebuffer. To solve this we get a reference to old_fb and
-> >> +	 * set a worker to release it later.  
-> > 
-> > Hm, doesn't look like an async update to me if we have to wait for the
-> > next VBLANK to happen to get the new content on the screen. Maybe we
-> > should reject async updates when old_fb != new_fb in the rk  
-> > ->async_check() hook.  
-> 
-> Unless I am misunderstanding this, we don't wait here, we just grab a
-> reference to the fb in case it is being still used by the hw, so it
-> doesn't get released prematurely.
+Signed-off-by: Axel Lin <axel.lin@ingics.com>
+---
+ drivers/regulator/max14577-regulator.c | 55 --------------------------
+ 1 file changed, 55 deletions(-)
 
-I was just reacting to the comment that says the new FB should stay
-around until the next VBLANK event happens. If the FB must stay around
-that probably means the HW is still using, which made me wonder if this
-HW actually supports async update (where async means "update now and
-don't care about about tearing"). Or maybe it takes some time to switch
-to the new FB and waiting for the next VBLANK to release the old FB was
-an easy solution to not wait for the flip to actually happen in
-->async_update() (which is kind of a combination of async+non-blocking).
+diff --git a/drivers/regulator/max14577-regulator.c b/drivers/regulator/max14577-regulator.c
+index 85a88a9e4d42..07a150c9bbf2 100644
+--- a/drivers/regulator/max14577-regulator.c
++++ b/drivers/regulator/max14577-regulator.c
+@@ -155,58 +155,6 @@ static const struct regulator_desc max77836_supported_regulators[] = {
+ 	[MAX77836_LDO2] = MAX77836_LDO_REG(2),
+ };
+ 
+-#ifdef CONFIG_OF
+-static struct of_regulator_match max14577_regulator_matches[] = {
+-	{ .name	= "SAFEOUT", },
+-	{ .name = "CHARGER", },
+-};
+-
+-static struct of_regulator_match max77836_regulator_matches[] = {
+-	{ .name	= "SAFEOUT", },
+-	{ .name = "CHARGER", },
+-	{ .name = "LDO1", },
+-	{ .name = "LDO2", },
+-};
+-
+-static inline struct regulator_init_data *match_init_data(int index,
+-		enum maxim_device_type dev_type)
+-{
+-	switch (dev_type) {
+-	case MAXIM_DEVICE_TYPE_MAX77836:
+-		return max77836_regulator_matches[index].init_data;
+-
+-	case MAXIM_DEVICE_TYPE_MAX14577:
+-	default:
+-		return max14577_regulator_matches[index].init_data;
+-	}
+-}
+-
+-static inline struct device_node *match_of_node(int index,
+-		enum maxim_device_type dev_type)
+-{
+-	switch (dev_type) {
+-	case MAXIM_DEVICE_TYPE_MAX77836:
+-		return max77836_regulator_matches[index].of_node;
+-
+-	case MAXIM_DEVICE_TYPE_MAX14577:
+-	default:
+-		return max14577_regulator_matches[index].of_node;
+-	}
+-}
+-#else /* CONFIG_OF */
+-static inline struct regulator_init_data *match_init_data(int index,
+-		enum maxim_device_type dev_type)
+-{
+-	return NULL;
+-}
+-
+-static inline struct device_node *match_of_node(int index,
+-		enum maxim_device_type dev_type)
+-{
+-	return NULL;
+-}
+-#endif /* CONFIG_OF */
+-
+ /**
+  * Registers for regulators of max77836 use different I2C slave addresses so
+  * different regmaps must be used for them.
+@@ -265,9 +213,6 @@ static int max14577_regulator_probe(struct platform_device *pdev)
+ 		if (pdata && pdata->regulators) {
+ 			config.init_data = pdata->regulators[i].initdata;
+ 			config.of_node = pdata->regulators[i].of_node;
+-		} else {
+-			config.init_data = match_init_data(i, dev_type);
+-			config.of_node = match_of_node(i, dev_type);
+ 		}
+ 		config.regmap = max14577_get_regmap(max14577,
+ 				supported_regulators[i].id);
+-- 
+2.17.1
 
-Anyway, let's keep it like that.
