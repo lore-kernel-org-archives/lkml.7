@@ -4,51 +4,52 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E32C6C43381
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 18:07:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 24ABCC43381
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 18:07:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B1BF821734
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 18:07:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EA0FA21734
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 18:07:48 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1552414063;
-	bh=mv1M9FJxvZBHJbs/qqnjc2kl51JfClxx9tmGgCrhjEY=;
+	s=default; t=1552414069;
+	bh=Oc1AI/MOGh+muM5Gbr/GXlnWNl13yyGRN/B+0I9xRAg=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=MilvcTT738K+Lp7UVnR0cv7Q8NImVig+PM0azb7PpwLRCjLAENIMkP5K5NpJ/m1fF
-	 KcbYe5LZQJqb0m53nc0Bj6YhJ0Ux7V41nMk/HK0JMEyNL/tLCApP0zQ/r8c/3R30EO
-	 T4JggDIFrLnGULspe/7IkCSnP4L2z0L7A8ACNH58=
+	b=avipzaCvkDwZPzFn03wJytxLBPaRnm7X5MDx7UPoCUnRdeCLNSZLNjdUNlMjJAURv
+	 wSd/atkZ0bOe2h2swJ71W55c08YZHlS7c5RghKOBbV//mdI0jHbMsl+/cMrzALicsA
+	 myA8Jvbl/bKL7MKqmkdRMZdEKYx5W2N7uP/Szi+I=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728157AbfCLSHm (ORCPT
+        id S1727389AbfCLRMT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 12 Mar 2019 14:07:42 -0400
-Received: from mail.kernel.org ([198.145.29.99]:47272 "EHLO mail.kernel.org"
+        Tue, 12 Mar 2019 13:12:19 -0400
+Received: from mail.kernel.org ([198.145.29.99]:46366 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727384AbfCLRMU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 12 Mar 2019 13:12:20 -0400
+        id S1727258AbfCLRMD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 12 Mar 2019 13:12:03 -0400
 Received: from localhost (unknown [104.133.8.98])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D25E6217D9;
-        Tue, 12 Mar 2019 17:12:18 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 5434F214AE;
+        Tue, 12 Mar 2019 17:12:02 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1552410738;
-        bh=mv1M9FJxvZBHJbs/qqnjc2kl51JfClxx9tmGgCrhjEY=;
+        s=default; t=1552410722;
+        bh=Oc1AI/MOGh+muM5Gbr/GXlnWNl13yyGRN/B+0I9xRAg=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=DtggwwBuuE2V/21yARAN/EeytBFhjS89G2dGpb/XR/hWP37+LJV7aLpd1i0OlYJsc
-         ZLM1Zo/sHcoWIBgkN/4NJMww8USq4v55LoIpgC/A/tBFljjU/zVymRSxBMEyJxk6hw
-         9FpoTMDNf15RcFmNcngnf9YI1Ru/V6n/HiVgFZWA=
+        b=Elvo+jpih8X3KWrIwJRK4CmPay4rvPIVFtOUlcQA7JKbCvnQ2hKp8wqcPnN212rHJ
+         lQLRO2KmwkhmRDWMqtRKSBIjrj520fHwjv5zmCy5ndzQ1wq0tcJPuh1LfjIyHOt7VF
+         +9QdpwHejCNPUKg99WtopcnZaDvlr7d8McTzvf+c=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Manish Chopra <manishc@marvell.com>,
-        Ariel Elior <aelior@marvell.com>,
-        "David S. Miller" <davem@davemloft.net>,
+        stable@vger.kernel.org, Artemy Kovalyov <artemyko@mellanox.com>,
+        Moni Shoua <monis@mellanox.com>,
+        Leon Romanovsky <leonro@mellanox.com>,
+        Jason Gunthorpe <jgg@mellanox.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.20 042/171] qed: Fix LACP pdu drops for VFs
-Date:   Tue, 12 Mar 2019 10:07:02 -0700
-Message-Id: <20190312170351.723521857@linuxfoundation.org>
+Subject: [PATCH 4.20 021/171] RDMA/umem: Add missing initialization of owning_mm
+Date:   Tue, 12 Mar 2019 10:06:41 -0700
+Message-Id: <20190312170349.769129057@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190312170347.868927101@linuxfoundation.org>
 References: <20190312170347.868927101@linuxfoundation.org>
@@ -67,92 +68,73 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-[ Upstream commit ff9296966e5e00b0d0d00477b2365a178f0f06a3 ]
+[ Upstream commit a2093dd35f8cfb28dd7c878ccbd020c1bb20d0d7 ]
 
-VF is always configured to drop control frames
-(with reserved mac addresses) but to work LACP
-on the VFs, it would require LACP control frames
-to be forwarded or transmitted successfully.
+When allocating a umem leaf for implicit ODP MR during page fault the
+field owning_mm was not set.
 
-This patch fixes this in such a way that trusted VFs
-(marked through ndo_set_vf_trust) would be allowed to
-pass the control frames such as LACP pdus.
+Initialize and take a reference on this field to avoid kernel panic when
+trying to access this field.
 
-Signed-off-by: Manish Chopra <manishc@marvell.com>
-Signed-off-by: Ariel Elior <aelior@marvell.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
+ BUG: unable to handle kernel NULL pointer dereference at 0000000000000058
+ PGD 800000022dfed067 P4D 800000022dfed067 PUD 22dfcf067 PMD 0
+ Oops: 0000 [#1] SMP PTI
+ CPU: 0 PID: 634 Comm: kworker/u33:0 Not tainted 4.20.0-rc6+ #89
+ Hardware name: Red Hat KVM, BIOS 0.5.1 01/01/2011
+ Workqueue: mlx5_ib_page_fault mlx5_ib_eqe_pf_action [mlx5_ib]
+ RIP: 0010:ib_umem_odp_map_dma_pages+0xf3/0x710 [ib_core]
+ Code: 45 c0 48 21 f3 48 89 75 b0 31 f6 4a 8d 04 33 48 89 45 a8 49 8b 44 24 60 48 8b 78 10 e8 66 16 a8 c5 49 8b 54 24 08 48 89 45 98 <8b> 42 58 85 c0 0f 84 8e 05 00 00 8d 48 01 48 8d 72 58 f0 0f b1 4a
+ RSP: 0000:ffffb610813a7c20 EFLAGS: 00010202
+ RAX: ffff95ace6e8ac80 RBX: 0000000000000000 RCX: 000000000000000c
+ RDX: 0000000000000000 RSI: 0000000000000850 RDI: ffff95aceaadae80
+ RBP: ffffb610813a7ce0 R08: 0000000000000000 R09: 0000000000080c77
+ R10: ffff95acfffdbd00 R11: 0000000000000000 R12: ffff95aceaa20a00
+ R13: 0000000000001000 R14: 0000000000001000 R15: 000000000000000c
+ FS:  0000000000000000(0000) GS:ffff95acf7800000(0000) knlGS:0000000000000000
+ CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+ CR2: 0000000000000058 CR3: 000000022c834001 CR4: 00000000001606f0
+ Call Trace:
+  pagefault_single_data_segment+0x1df/0xc60 [mlx5_ib]
+  mlx5_ib_eqe_pf_action+0x7bc/0xa70 [mlx5_ib]
+  ? __switch_to+0xe1/0x470
+  process_one_work+0x174/0x390
+  worker_thread+0x4f/0x3e0
+  kthread+0x102/0x140
+  ? drain_workqueue+0x130/0x130
+  ? kthread_stop+0x110/0x110
+  ret_from_fork+0x1f/0x30
+
+Fixes: f27a0d50a4bc ("RDMA/umem: Use umem->owning_mm inside ODP")
+Signed-off-by: Artemy Kovalyov <artemyko@mellanox.com>
+Signed-off-by: Moni Shoua <monis@mellanox.com>
+Signed-off-by: Leon Romanovsky <leonro@mellanox.com>
+Signed-off-by: Jason Gunthorpe <jgg@mellanox.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/ethernet/qlogic/qed/qed_l2.c    |  5 +++++
- drivers/net/ethernet/qlogic/qed/qed_l2.h    |  3 +++
- drivers/net/ethernet/qlogic/qed/qed_sriov.c | 10 ++++++++--
- 3 files changed, 16 insertions(+), 2 deletions(-)
+ drivers/infiniband/core/umem_odp.c | 3 +++
+ 1 file changed, 3 insertions(+)
 
-diff --git a/drivers/net/ethernet/qlogic/qed/qed_l2.c b/drivers/net/ethernet/qlogic/qed/qed_l2.c
-index b8baa6fcef8e..e68ca83ae915 100644
---- a/drivers/net/ethernet/qlogic/qed/qed_l2.c
-+++ b/drivers/net/ethernet/qlogic/qed/qed_l2.c
-@@ -748,6 +748,11 @@ int qed_sp_vport_update(struct qed_hwfn *p_hwfn,
- 		return rc;
- 	}
+diff --git a/drivers/infiniband/core/umem_odp.c b/drivers/infiniband/core/umem_odp.c
+index 676c1fd1119d..7ef385db52c3 100644
+--- a/drivers/infiniband/core/umem_odp.c
++++ b/drivers/infiniband/core/umem_odp.c
+@@ -356,6 +356,8 @@ struct ib_umem_odp *ib_alloc_odp_umem(struct ib_ucontext_per_mm *per_mm,
+ 	umem->writable   = 1;
+ 	umem->is_odp = 1;
+ 	odp_data->per_mm = per_mm;
++	umem->owning_mm  = per_mm->mm;
++	mmgrab(umem->owning_mm);
  
-+	if (p_params->update_ctl_frame_check) {
-+		p_cmn->ctl_frame_mac_check_en = p_params->mac_chk_en;
-+		p_cmn->ctl_frame_ethtype_check_en = p_params->ethtype_chk_en;
-+	}
-+
- 	/* Update mcast bins for VFs, PF doesn't use this functionality */
- 	qed_sp_update_mcast_bin(p_hwfn, p_ramrod, p_params);
- 
-diff --git a/drivers/net/ethernet/qlogic/qed/qed_l2.h b/drivers/net/ethernet/qlogic/qed/qed_l2.h
-index 8d80f1095d17..7127d5aaac42 100644
---- a/drivers/net/ethernet/qlogic/qed/qed_l2.h
-+++ b/drivers/net/ethernet/qlogic/qed/qed_l2.h
-@@ -219,6 +219,9 @@ struct qed_sp_vport_update_params {
- 	struct qed_rss_params		*rss_params;
- 	struct qed_filter_accept_flags	accept_flags;
- 	struct qed_sge_tpa_params	*sge_tpa_params;
-+	u8				update_ctl_frame_check;
-+	u8				mac_chk_en;
-+	u8				ethtype_chk_en;
- };
- 
- int qed_sp_vport_update(struct qed_hwfn *p_hwfn,
-diff --git a/drivers/net/ethernet/qlogic/qed/qed_sriov.c b/drivers/net/ethernet/qlogic/qed/qed_sriov.c
-index ca6290fa0f30..71a7af134dd8 100644
---- a/drivers/net/ethernet/qlogic/qed/qed_sriov.c
-+++ b/drivers/net/ethernet/qlogic/qed/qed_sriov.c
-@@ -1969,7 +1969,9 @@ static void qed_iov_vf_mbx_start_vport(struct qed_hwfn *p_hwfn,
- 	params.vport_id = vf->vport_id;
- 	params.max_buffers_per_cqe = start->max_buffers_per_cqe;
- 	params.mtu = vf->mtu;
--	params.check_mac = true;
-+
-+	/* Non trusted VFs should enable control frame filtering */
-+	params.check_mac = !vf->p_vf_info.is_trusted_configured;
- 
- 	rc = qed_sp_eth_vport_start(p_hwfn, &params);
- 	if (rc) {
-@@ -5130,6 +5132,9 @@ static void qed_iov_handle_trust_change(struct qed_hwfn *hwfn)
- 		params.opaque_fid = vf->opaque_fid;
- 		params.vport_id = vf->vport_id;
- 
-+		params.update_ctl_frame_check = 1;
-+		params.mac_chk_en = !vf_info->is_trusted_configured;
-+
- 		if (vf_info->rx_accept_mode & mask) {
- 			flags->update_rx_mode_config = 1;
- 			flags->rx_accept_filter = vf_info->rx_accept_mode;
-@@ -5147,7 +5152,8 @@ static void qed_iov_handle_trust_change(struct qed_hwfn *hwfn)
- 		}
- 
- 		if (flags->update_rx_mode_config ||
--		    flags->update_tx_mode_config)
-+		    flags->update_tx_mode_config ||
-+		    params.update_ctl_frame_check)
- 			qed_sp_vport_update(hwfn, &params,
- 					    QED_SPQ_MODE_EBLOCK, NULL);
- 	}
+ 	mutex_init(&odp_data->umem_mutex);
+ 	init_completion(&odp_data->notifier_completion);
+@@ -388,6 +390,7 @@ struct ib_umem_odp *ib_alloc_odp_umem(struct ib_ucontext_per_mm *per_mm,
+ out_page_list:
+ 	vfree(odp_data->page_list);
+ out_odp_data:
++	mmdrop(umem->owning_mm);
+ 	kfree(odp_data);
+ 	return ERR_PTR(ret);
+ }
 -- 
 2.19.1
 
