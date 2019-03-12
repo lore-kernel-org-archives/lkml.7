@@ -2,196 +2,95 @@ Return-Path: <SRS0=J4ZE=RP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D06D4C43381
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 12:52:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 071C2C43381
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 12:53:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A4F2E206BA
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 12:52:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D0580206BA
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 12:53:01 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726498AbfCLMwz (ORCPT
+        id S1726619AbfCLMw7 convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 12 Mar 2019 08:52:55 -0400
-Received: from foss.arm.com ([217.140.101.70]:41918 "EHLO foss.arm.com"
+        Tue, 12 Mar 2019 08:52:59 -0400
+Received: from gloria.sntech.de ([185.11.138.130]:59816 "EHLO gloria.sntech.de"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725873AbfCLMwz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 12 Mar 2019 08:52:55 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.72.51.249])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 8EC7E165C;
-        Tue, 12 Mar 2019 05:52:54 -0700 (PDT)
-Received: from [0.0.0.0] (e107985-lin.cambridge.arm.com [10.1.194.38])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id F2EBC3F614;
-        Tue, 12 Mar 2019 05:52:50 -0700 (PDT)
-Subject: Re: [PATCH v7 01/15] sched/core: uclamp: Add CPU's clamp buckets
- refcounting
-To:     Patrick Bellasi <patrick.bellasi@arm.com>,
-        linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org,
-        linux-api@vger.kernel.org
-Cc:     Ingo Molnar <mingo@redhat.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Tejun Heo <tj@kernel.org>,
-        "Rafael J . Wysocki" <rafael.j.wysocki@intel.com>,
-        Vincent Guittot <vincent.guittot@linaro.org>,
+        id S1725887AbfCLMw4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 12 Mar 2019 08:52:56 -0400
+Received: from we0652.dip.tu-dresden.de ([141.76.178.140] helo=phil.localnet)
+        by gloria.sntech.de with esmtpsa (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.89)
+        (envelope-from <heiko@sntech.de>)
+        id 1h3gtc-0001hS-VG; Tue, 12 Mar 2019 13:52:40 +0100
+From:   Heiko Stuebner <heiko@sntech.de>
+To:     Christoph Muellner <christoph.muellner@theobroma-systems.com>
+Cc:     robh+dt@kernel.org, mark.rutland@arm.com, shawn.lin@rock-chips.com,
+        Philipp Tomsich <philipp.tomsich@theobroma-systems.com>,
+        Kishon Vijay Abraham I <kishon@ti.com>,
+        Brian Norris <briannorris@chromium.org>,
+        Klaus Goger <klaus.goger@theobroma-systems.com>,
+        Enric Balletbo i Serra <enric.balletbo@collabora.com>,
+        Douglas Anderson <dianders@chromium.org>,
         Viresh Kumar <viresh.kumar@linaro.org>,
-        Paul Turner <pjt@google.com>,
-        Quentin Perret <quentin.perret@arm.com>,
-        Morten Rasmussen <morten.rasmussen@arm.com>,
-        Juri Lelli <juri.lelli@redhat.com>,
-        Todd Kjos <tkjos@google.com>,
-        Joel Fernandes <joelaf@google.com>,
-        Steve Muckle <smuckle@google.com>,
-        Suren Baghdasaryan <surenb@google.com>
-References: <20190208100554.32196-1-patrick.bellasi@arm.com>
- <20190208100554.32196-2-patrick.bellasi@arm.com>
-From:   Dietmar Eggemann <dietmar.eggemann@arm.com>
-Message-ID: <21171fa0-7fd5-ebbf-dd48-d6668ed563af@arm.com>
-Date:   Tue, 12 Mar 2019 13:52:49 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.4.0
+        Ezequiel Garcia <ezequiel@collabora.com>,
+        Lin Huang <hl@rock-chips.com>, Randy Li <ayaka@soulik.info>,
+        Tony Xie <tony.xie@rock-chips.com>,
+        Vicente Bergas <vicencb@gmail.com>,
+        linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org,
+        linux-rockchip@lists.infradead.org
+Subject: Re: [PATCH v2 2/4] dt-bindings: phy: Add a new property drive-impedance-ohm for RK's emmc PHY
+Date:   Tue, 12 Mar 2019 13:52:39 +0100
+Message-ID: <1924357.CMCVK5N5Qd@phil>
+In-Reply-To: <20190307084159.25236-2-christoph.muellner@theobroma-systems.com>
+References: <20190307084159.25236-1-christoph.muellner@theobroma-systems.com> <20190307084159.25236-2-christoph.muellner@theobroma-systems.com>
 MIME-Version: 1.0
-In-Reply-To: <20190208100554.32196-2-patrick.bellasi@arm.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-GB
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8BIT
+Content-Type: text/plain; charset="iso-8859-1"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2/8/19 11:05 AM, Patrick Bellasi wrote:
+Hi Christoph,
 
-[...]
+Am Donnerstag, 7. März 2019, 09:41:54 CET schrieb Christoph Muellner:
+> This patch documents the new proprty drive-impedance-ohm for
+> Rockchip's eMMC PHY node.
+> 
+> Signed-off-by: Christoph Muellner <christoph.muellner@theobroma-systems.com>
+> Signed-off-by: Philipp Tomsich <philipp.tomsich@theobroma-systems.com>
+> ---
+>  Documentation/devicetree/bindings/phy/rockchip-emmc-phy.txt | 3 +++
+>  1 file changed, 3 insertions(+)
+> 
+> diff --git a/Documentation/devicetree/bindings/phy/rockchip-emmc-phy.txt b/Documentation/devicetree/bindings/phy/rockchip-emmc-phy.txt
+> index e3ea55763b0a..5f5d999dacc3 100644
+> --- a/Documentation/devicetree/bindings/phy/rockchip-emmc-phy.txt
+> +++ b/Documentation/devicetree/bindings/phy/rockchip-emmc-phy.txt
+> @@ -13,6 +13,9 @@ specified by name:
 
-> +config UCLAMP_BUCKETS_COUNT
-> +	int "Number of supported utilization clamp buckets"
-> +	range 5 20
-> +	default 5
-> +	depends on UCLAMP_TASK
-> +	help
-> +	  Defines the number of clamp buckets to use. The range of each bucket
-> +	  will be SCHED_CAPACITY_SCALE/UCLAMP_BUCKETS_COUNT. The higher the
-> +	  number of clamp buckets the finer their granularity and the higher
-> +	  the precision of clamping aggregation and tracking at run-time.
-> +
-> +	  For example, with the default configuration we will have 5 clamp
-> +	  buckets tracking 20% utilization each. A 25% boosted tasks will be
-> +	  refcounted in the [20..39]% bucket and will set the bucket clamp
-> +	  effective value to 25%.
-> +	  If a second 30% boosted task should be co-scheduled on the same CPU,
-> +	  that task will be refcounted in the same bucket of the first task and
-> +	  it will boost the bucket clamp effective value to 30%.
-> +	  The clamp effective value of a bucket is reset to its nominal value
-> +	  (20% in the example above) when there are anymore tasks refcounted in
+you might want to adapt the section headline as well, as right now it
+talks about "Optional clocks", but should likely become the generic
+"Optional properties" as in other bindings (including moving the clock-
+binding.txt reference down into the clock elements)
 
-this sounds weird.
 
-[...]
+Heiko
 
-> +static inline unsigned int uclamp_bucket_value(unsigned int clamp_value)
-> +{
-> +	return UCLAMP_BUCKET_DELTA * uclamp_bucket_id(clamp_value);
-> +}
+>  		(because most boards can get basic functionality without having
+>  		access to it), it is strongly suggested.
+>   - clocks: Should have a phandle to the card clock exported by the SDHCI driver.
+> + - drive-impedance-ohm: Specifies the drive impedance in Ohm.
+> +                        Possible values are 33, 40, 50, 66 and 100.
+> +                        If not set, the default value of 50 will be applied.
+>  
+>  Example:
+>  
+> 
 
-Soemthing like uclamp_bucket_nominal_value() should be clearer.
 
-> +static inline void uclamp_rq_update(struct rq *rq, unsigned int clamp_id)
-> +{
-> +	struct uclamp_bucket *bucket = rq->uclamp[clamp_id].bucket;
-> +	unsigned int max_value = uclamp_none(clamp_id);
-> +	unsigned int bucket_id;
 
-unsigned int bucket_id = UCLAMP_BUCKETS;
 
-> +
-> +	/*
-> +	 * Both min and max clamps are MAX aggregated, thus the topmost
-> +	 * bucket with some tasks defines the rq's clamp value.
-> +	 */
-> +	bucket_id = UCLAMP_BUCKETS;
-
-to get rid of this line?
-
-> +	do {
-> +		--bucket_id;
-> +		if (!rq->uclamp[clamp_id].bucket[bucket_id].tasks)
-
-if (!bucket[bucket_id].tasks)
-
-[...]
-
-> +/*
-> + * When a task is enqueued on a rq, the clamp bucket currently defined by the
-> + * task's uclamp::bucket_id is reference counted on that rq. This also
-> + * immediately updates the rq's clamp value if required.
-> + *
-> + * Since tasks know their specific value requested from user-space, we track
-> + * within each bucket the maximum value for tasks refcounted in that bucket.
-> + * This provide a further aggregation (local clamping) which allows to track
-
-s/This provide/This provides
-
-> + * within each bucket the exact "requested" clamp value whenever all tasks
-> + * RUNNABLE in that bucket require the same clamp.
-> + */
-> +static inline void uclamp_rq_inc_id(struct task_struct *p, struct rq *rq,
-> +				    unsigned int clamp_id)
-> +{
-> +	unsigned int bucket_id = p->uclamp[clamp_id].bucket_id;
-> +	unsigned int rq_clamp, bkt_clamp, tsk_clamp;
-
-Wouldn't it be easier to have a pointer to the task's and rq's uclamp 
-structure as well to the bucket?
-
--       unsigned int bucket_id = p->uclamp[clamp_id].bucket_id;
-+       struct uclamp_se *uc_se = &p->uclamp[clamp_id];
-+       struct uclamp_rq *uc_rq = &rq->uclamp[clamp_id];
-+       struct uclamp_bucket *bucket = &uc_rq->bucket[uc_se->bucket_id];
-
-The code in uclamp_rq_inc_id() and uclamp_rq_dec_id() for example 
-becomes much more readable.
-
-[...]
-
->   struct sched_class {
->   	const struct sched_class *next;
->   
-> +#ifdef CONFIG_UCLAMP_TASK
-> +	int uclamp_enabled;
-> +#endif
-> +
->   	void (*enqueue_task) (struct rq *rq, struct task_struct *p, int flags);
->   	void (*dequeue_task) (struct rq *rq, struct task_struct *p, int flags);
-> -	void (*yield_task)   (struct rq *rq);
-> -	bool (*yield_to_task)(struct rq *rq, struct task_struct *p, bool preempt);
->   
->   	void (*check_preempt_curr)(struct rq *rq, struct task_struct *p, int flags);
->   
-> @@ -1685,7 +1734,6 @@ struct sched_class {
->   	void (*set_curr_task)(struct rq *rq);
->   	void (*task_tick)(struct rq *rq, struct task_struct *p, int queued);
->   	void (*task_fork)(struct task_struct *p);
-> -	void (*task_dead)(struct task_struct *p);
->   
->   	/*
->   	 * The switched_from() call is allowed to drop rq->lock, therefore we
-> @@ -1702,12 +1750,17 @@ struct sched_class {
->   
->   	void (*update_curr)(struct rq *rq);
->   
-> +	void (*yield_task)   (struct rq *rq);
-> +	bool (*yield_to_task)(struct rq *rq, struct task_struct *p, bool preempt);
-> +
->   #define TASK_SET_GROUP		0
->   #define TASK_MOVE_GROUP		1
->   
->   #ifdef CONFIG_FAIR_GROUP_SCHED
->   	void (*task_change_group)(struct task_struct *p, int type);
->   #endif
-> +
-> +	void (*task_dead)(struct task_struct *p);
-
-Why do you move yield_task, yield_to_task and task_dead here?
-
-[...]
