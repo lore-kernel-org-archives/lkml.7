@@ -2,54 +2,74 @@ Return-Path: <SRS0=J4ZE=RP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AC805C43381
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 17:30:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CF1D2C43381
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 17:31:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 749AB206DF
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 17:30:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9717B2087C
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 17:31:00 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1552411858;
-	bh=+Cmo8Zzay1P4Aw4vEJP13dIaYoyQQwh5Yl0IT40REGs=;
+	s=default; t=1552411860;
+	bh=tE+hKSrppXi4h4U212ftd0/Ckuy9VBAyRNh5+TNbS0Q=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=CRLteyZKRfIkxwdr6QYTtvLrqRMcYV5uZdQWQv0KUH+RUQo8nVKiVVS6rXq/KiDPN
-	 h65Uie7Iw48rz86vIwMVzg3yf8/+q0UHQ9Ge2j4oS+VCxinkmEdrI6ZXk1jL/ThpKK
-	 Mo4eITLkR8DOxV9AuIPeFpi6jcqsrbvrHsvS7+yA=
+	b=LVVyDmIoE396hMWcrkMEA793y+rMSOTgajZiLBQOOHuTrNoJ0ZLDqPcq6FGmapnA5
+	 CCLwSTAFToNbuXyPQCCi9o/h/q54zjqNZwhPk+4vBv+W3XhDRtrwUsBPLkxzKa6DNR
+	 7idRs29724JUAp3P1qVZ0+Pe/+VuphQgj+mPH8kQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728148AbfCLRa5 (ORCPT
+        id S1729746AbfCLRa7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 12 Mar 2019 13:30:57 -0400
-Received: from mail.kernel.org ([198.145.29.99]:60694 "EHLO mail.kernel.org"
+        Tue, 12 Mar 2019 13:30:59 -0400
+Received: from mail.kernel.org ([198.145.29.99]:60634 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729495AbfCLRRN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S1729491AbfCLRRN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Tue, 12 Mar 2019 13:17:13 -0400
 Received: from localhost (unknown [104.133.8.98])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B9FB5217D4;
+        by mail.kernel.org (Postfix) with ESMTPSA id 14A062087C;
         Tue, 12 Mar 2019 17:17:12 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
         s=default; t=1552411032;
-        bh=+Cmo8Zzay1P4Aw4vEJP13dIaYoyQQwh5Yl0IT40REGs=;
+        bh=tE+hKSrppXi4h4U212ftd0/Ckuy9VBAyRNh5+TNbS0Q=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=xu3AQ/Y0dU+u0skf0ahiYcHsmjIeq+feZ4wKIE5RWLsIaR5xjdjkIShYbKCH6a6ze
-         /6XSG/9yNYnbTBHXAddb4zcQ4TDoOTKSZDrPJbkpa8of/zTuRcIb5qm1CLNGEGsHXM
-         2ZY1Y23Ylye+XED2D/VdaS1cUMQEjkYVJiiwfmAA=
+        b=Cs454gDdOPs59G9LmzA/cOEc+x6vchue+7tpMNMH8jUOpGf5Q8cYG+vErWuZuoF1S
+         Q5jQUigTptnNyPzdAG5JEVFxrN8B2BIBCPdr28HpjkATQHAKyHqMrmLaJwXXdRXp6U
+         7SFX1GTkQoRgzT+kcNNMVZ8mTxo/8XkHc+bisfZo=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Daniele Palmas <dnlplm@gmail.com>,
-        Johan Hovold <johan@kernel.org>
-Subject: [PATCH 4.9 01/96] USB: serial: option: add Telit ME910 ECM composition
-Date:   Tue, 12 Mar 2019 10:09:19 -0700
-Message-Id: <20190312171034.649356692@linuxfoundation.org>
+        stable@vger.kernel.org,
+        Christian Koenig <christian.koenig@amd.com>,
+        Alex Deucher <alexander.deucher@amd.com>,
+        David Zhou <David1.Zhou@amd.com>,
+        Huang Rui <ray.huang@amd.com>,
+        Junwei Zhang <Jerry.Zhang@amd.com>,
+        Michel Daenzer <michel.daenzer@amd.com>,
+        David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
+        Maxime Ripard <maxime.ripard@bootlin.com>,
+        Sean Paul <sean@poorly.run>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        Will Deacon <will.deacon@arm.com>,
+        Christoph Hellwig <hch@infradead.org>,
+        Robin Murphy <robin.murphy@arm.com>,
+        amd-gfx list <amd-gfx@lists.freedesktop.org>,
+        dri-devel <dri-devel@lists.freedesktop.org>,
+        Carsten Haitzler <Carsten.Haitzler@arm.com>,
+        Ard Biesheuvel <ard.biesheuvel@linaro.org>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.14 127/135] drm: disable uncached DMA optimization for ARM and arm64
+Date:   Tue, 12 Mar 2019 10:09:34 -0700
+Message-Id: <20190312170352.839578994@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
-In-Reply-To: <20190312171034.530434962@linuxfoundation.org>
-References: <20190312171034.530434962@linuxfoundation.org>
+In-Reply-To: <20190312170341.127810985@linuxfoundation.org>
+References: <20190312170341.127810985@linuxfoundation.org>
 User-Agent: quilt/0.65
 X-stable: review
 X-Patchwork-Hint: ignore
@@ -61,35 +81,87 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-4.9-stable review patch.  If anyone has any objections, please let me know.
+4.14-stable review patch.  If anyone has any objections, please let me know.
 
 ------------------
 
-From: Daniele Palmas <dnlplm@gmail.com>
+[ Upstream commit e02f5c1bb2283cfcee68f2f0feddcc06150f13aa ]
 
-commit 6431866b6707d27151be381252d6eef13025cfce upstream.
+The DRM driver stack is designed to work with cache coherent devices
+only, but permits an optimization to be enabled in some cases, where
+for some buffers, both the CPU and the GPU use uncached mappings,
+removing the need for DMA snooping and allocation in the CPU caches.
 
-This patch adds Telit ME910 family ECM composition 0x1102.
+The use of uncached GPU mappings relies on the correct implementation
+of the PCIe NoSnoop TLP attribute by the platform, otherwise the GPU
+will use cached mappings nonetheless. On x86 platforms, this does not
+seem to matter, as uncached CPU mappings will snoop the caches in any
+case. However, on ARM and arm64, enabling this optimization on a
+platform where NoSnoop is ignored results in loss of coherency, which
+breaks correct operation of the device. Since we have no way of
+detecting whether NoSnoop works or not, just disable this
+optimization entirely for ARM and arm64.
 
-Signed-off-by: Daniele Palmas <dnlplm@gmail.com>
-Cc: stable <stable@vger.kernel.org>
-Signed-off-by: Johan Hovold <johan@kernel.org>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-
+Cc: Christian Koenig <christian.koenig@amd.com>
+Cc: Alex Deucher <alexander.deucher@amd.com>
+Cc: David Zhou <David1.Zhou@amd.com>
+Cc: Huang Rui <ray.huang@amd.com>
+Cc: Junwei Zhang <Jerry.Zhang@amd.com>
+Cc: Michel Daenzer <michel.daenzer@amd.com>
+Cc: David Airlie <airlied@linux.ie>
+Cc: Daniel Vetter <daniel@ffwll.ch>
+Cc: Maarten Lankhorst <maarten.lankhorst@linux.intel.com>
+Cc: Maxime Ripard <maxime.ripard@bootlin.com>
+Cc: Sean Paul <sean@poorly.run>
+Cc: Michael Ellerman <mpe@ellerman.id.au>
+Cc: Benjamin Herrenschmidt <benh@kernel.crashing.org>
+Cc: Will Deacon <will.deacon@arm.com>
+Cc: Christoph Hellwig <hch@infradead.org>
+Cc: Robin Murphy <robin.murphy@arm.com>
+Cc: amd-gfx list <amd-gfx@lists.freedesktop.org>
+Cc: dri-devel <dri-devel@lists.freedesktop.org>
+Reported-by: Carsten Haitzler <Carsten.Haitzler@arm.com>
+Signed-off-by: Ard Biesheuvel <ard.biesheuvel@linaro.org>
+Reviewed-by: Christian König <christian.koenig@amd.com>
+Reviewed-by: Alex Deucher <alexander.deucher@amd.com>
+Link: https://patchwork.kernel.org/patch/10778815/
+Signed-off-by: Christian König <christian.koenig@amd.com>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/usb/serial/option.c |    2 ++
- 1 file changed, 2 insertions(+)
+ include/drm/drm_cache.h | 18 ++++++++++++++++++
+ 1 file changed, 18 insertions(+)
 
---- a/drivers/usb/serial/option.c
-+++ b/drivers/usb/serial/option.c
-@@ -1147,6 +1147,8 @@ static const struct usb_device_id option
- 	  .driver_info = NCTRL(0) | RSVD(1) | RSVD(3) },
- 	{ USB_DEVICE(TELIT_VENDOR_ID, TELIT_PRODUCT_ME910_DUAL_MODEM),
- 	  .driver_info = NCTRL(0) | RSVD(3) },
-+	{ USB_DEVICE_INTERFACE_CLASS(TELIT_VENDOR_ID, 0x1102, 0xff),	/* Telit ME910 (ECM) */
-+	  .driver_info = NCTRL(0) },
- 	{ USB_DEVICE(TELIT_VENDOR_ID, TELIT_PRODUCT_LE910),
- 	  .driver_info = NCTRL(0) | RSVD(1) | RSVD(2) },
- 	{ USB_DEVICE(TELIT_VENDOR_ID, TELIT_PRODUCT_LE910_USBCFG4),
+diff --git a/include/drm/drm_cache.h b/include/drm/drm_cache.h
+index beab0f0d0cfb..250e2d13c61b 100644
+--- a/include/drm/drm_cache.h
++++ b/include/drm/drm_cache.h
+@@ -45,6 +45,24 @@ static inline bool drm_arch_can_wc_memory(void)
+ 	return false;
+ #elif defined(CONFIG_MIPS) && defined(CONFIG_CPU_LOONGSON3)
+ 	return false;
++#elif defined(CONFIG_ARM) || defined(CONFIG_ARM64)
++	/*
++	 * The DRM driver stack is designed to work with cache coherent devices
++	 * only, but permits an optimization to be enabled in some cases, where
++	 * for some buffers, both the CPU and the GPU use uncached mappings,
++	 * removing the need for DMA snooping and allocation in the CPU caches.
++	 *
++	 * The use of uncached GPU mappings relies on the correct implementation
++	 * of the PCIe NoSnoop TLP attribute by the platform, otherwise the GPU
++	 * will use cached mappings nonetheless. On x86 platforms, this does not
++	 * seem to matter, as uncached CPU mappings will snoop the caches in any
++	 * case. However, on ARM and arm64, enabling this optimization on a
++	 * platform where NoSnoop is ignored results in loss of coherency, which
++	 * breaks correct operation of the device. Since we have no way of
++	 * detecting whether NoSnoop works or not, just disable this
++	 * optimization entirely for ARM and arm64.
++	 */
++	return false;
+ #else
+ 	return true;
+ #endif
+-- 
+2.19.1
+
 
 
