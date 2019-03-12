@@ -2,122 +2,119 @@ Return-Path: <SRS0=J4ZE=RP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.8 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 16078C43381
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 21:19:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C2D67C43381
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 21:23:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D66212147C
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 21:19:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8DE1B2147C
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 21:23:31 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=hansenpartnership.com header.i=@hansenpartnership.com header.b="oZJBW5KX"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="K0qZl6Gc"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726881AbfCLVTX (ORCPT
+        id S1726646AbfCLVXa (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 12 Mar 2019 17:19:23 -0400
-Received: from bedivere.hansenpartnership.com ([66.63.167.143]:47448 "EHLO
-        bedivere.hansenpartnership.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726329AbfCLVTX (ORCPT
+        Tue, 12 Mar 2019 17:23:30 -0400
+Received: from mail-wr1-f68.google.com ([209.85.221.68]:38570 "EHLO
+        mail-wr1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726378AbfCLVXa (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 12 Mar 2019 17:19:23 -0400
-Received: from localhost (localhost [127.0.0.1])
-        by bedivere.hansenpartnership.com (Postfix) with ESMTP id EA5AE8EE1ED;
-        Tue, 12 Mar 2019 14:19:21 -0700 (PDT)
-Received: from bedivere.hansenpartnership.com ([127.0.0.1])
-        by localhost (bedivere.hansenpartnership.com [127.0.0.1]) (amavisd-new, port 10024)
-        with ESMTP id 0xVaCC_S7-6v; Tue, 12 Mar 2019 14:19:19 -0700 (PDT)
-Received: from [153.66.254.194] (unknown [50.35.68.20])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by bedivere.hansenpartnership.com (Postfix) with ESMTPSA id C9EA58EE0F5;
-        Tue, 12 Mar 2019 14:19:16 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=hansenpartnership.com;
-        s=20151216; t=1552425557;
-        bh=nBucg5nObt1KlK9vb8n4aq4g77BNSYrOWjbZNOJxaqk=;
-        h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
-        b=oZJBW5KXIW92FCi6QYBzLSNeWSzJczWdOOQlss5aFpWMkuj7ltNJ+LRAhD2lIbB4W
-         7ZJzTIkaZ87beykikhhLN79fTZ86C1lTnEXB1mXKruoOmDSwDzVZV64VafKNPy9HKW
-         m+NIZUEPLnH92JH1Y2UNiobJjLrtRC8VYA8p/+kg=
-Message-ID: <1552425555.14432.14.camel@HansenPartnership.com>
-Subject: Re: [RFC PATCH V2 0/5] vhost: accelerate metadata access through
- vmap()
-From:   James Bottomley <James.Bottomley@HansenPartnership.com>
-To:     Andrea Arcangeli <aarcange@redhat.com>
-Cc:     "Michael S. Tsirkin" <mst@redhat.com>,
-        Jason Wang <jasowang@redhat.com>,
-        David Miller <davem@davemloft.net>, hch@infradead.org,
-        kvm@vger.kernel.org, virtualization@lists.linux-foundation.org,
-        netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
-        peterx@redhat.com, linux-mm@kvack.org,
-        linux-arm-kernel@lists.infradead.org, linux-parisc@vger.kernel.org
-Date:   Tue, 12 Mar 2019 14:19:15 -0700
-In-Reply-To: <20190312211117.GB25147@redhat.com>
-References: <56374231-7ba7-0227-8d6d-4d968d71b4d6@redhat.com>
-         <20190311095405-mutt-send-email-mst@kernel.org>
-         <20190311.111413.1140896328197448401.davem@davemloft.net>
-         <6b6dcc4a-2f08-ba67-0423-35787f3b966c@redhat.com>
-         <20190311235140-mutt-send-email-mst@kernel.org>
-         <76c353ed-d6de-99a9-76f9-f258074c1462@redhat.com>
-         <20190312075033-mutt-send-email-mst@kernel.org>
-         <1552405610.3083.17.camel@HansenPartnership.com>
-         <20190312200450.GA25147@redhat.com>
-         <1552424017.14432.11.camel@HansenPartnership.com>
-         <20190312211117.GB25147@redhat.com>
-Content-Type: text/plain; charset="UTF-8"
-X-Mailer: Evolution 3.26.6 
-Mime-Version: 1.0
-Content-Transfer-Encoding: 7bit
+        Tue, 12 Mar 2019 17:23:30 -0400
+Received: by mail-wr1-f68.google.com with SMTP id g12so4296171wrm.5
+        for <linux-kernel@vger.kernel.org>; Tue, 12 Mar 2019 14:23:28 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=sender:from:to:cc:subject:date:message-id:in-reply-to:references
+         :mime-version:content-transfer-encoding;
+        bh=H8NQNQuMFw0L9D+ZrDs+DwimCDz1lv4WmSbItCZ7xMg=;
+        b=K0qZl6GcON/ccCqoRM6CUnD8DbdhQoqNUIw0YKmiprWKSoBOWUM0Q5T17+Rmql/3u1
+         QslFLP0bgLCV0q1Jwk4m48bf5nmmwZeCR3Tq4E86de/eLm3rVj+8DqG1S+dhq/eJcl8v
+         kc82nm/emKS7nlQuotUd+dlvEJgczzsSQup7nta9kslm/3a/fjG5y2o10w1lvmIRtYk0
+         IAkP3wMHumema8VNS1ofEwiLkF4pORMd7vRp9aptTxHQYm7TtIqFmbTOlv67JMJ+Ip1e
+         2GSPBgUQyuoAsl7vVGlKYogQdQ3L/NXqtzzIDpkw07R/rFvJ/hMj1IyEM9jXRaOQjLDp
+         90jQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:sender:from:to:cc:subject:date:message-id
+         :in-reply-to:references:mime-version:content-transfer-encoding;
+        bh=H8NQNQuMFw0L9D+ZrDs+DwimCDz1lv4WmSbItCZ7xMg=;
+        b=JCHwZMg9EljRRv9s/q6HirZz3pGrV42Y1ruBztHAx/3snRrvhGx00YrzqTEOUH6u2Y
+         YgucQG+JYZGq8W7xQiFXcWUtljGSdyVLmdsSbr/cfoQtxhxSmN4OZ4gIBTDGN3iQsbsH
+         SsChv7XafG64PbJVRFF7oJNqmfxkpNwAEC9LfsvjZ0IB3fLYYo414wD/fWGAXJgQ9cUR
+         F0mQP84NzFkx7aag8hjo8dxSZycCFF+WljUtTmV7x4LUJOpICk7Nbpnx8BjAjV4j6yeu
+         kCIUDFdB4q+k4GG37poj+Rwai+RK7XMGGAnuatsL5/p94maVzk8fv6jcIse3mVlVHoYU
+         QbiA==
+X-Gm-Message-State: APjAAAWv8tHAOi1IxDGEJYDHlqb6wNL5jUmUotXUGvb8v6c+IoQzEZyS
+        kdlbtfSFhqTQ2cvG2oYkfUE=
+X-Google-Smtp-Source: APXvYqy2q7BWmTPZ/MJm9OMn6kgmtzkUVQkYRYNe4ohbpQuaG8hQuRtYD0RARooO6+Uoi/5sHyKUoA==
+X-Received: by 2002:a05:6000:14d:: with SMTP id r13mr6833755wrx.231.1552425807833;
+        Tue, 12 Mar 2019 14:23:27 -0700 (PDT)
+Received: from macbookpro.malat.net ([2a01:e34:ee1e:860:6f23:82e6:aa2d:bbd1])
+        by smtp.gmail.com with ESMTPSA id i62sm2200238wmg.17.2019.03.12.14.23.27
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Tue, 12 Mar 2019 14:23:27 -0700 (PDT)
+Received: by macbookpro.malat.net (Postfix, from userid 1000)
+        id 3BBAD1146D74; Tue, 12 Mar 2019 22:23:21 +0100 (CET)
+From:   Mathieu Malaterre <malat@debian.org>
+To:     Michael Ellerman <mpe@ellerman.id.au>
+Cc:     Mathieu Malaterre <malat@debian.org>,
+        Christophe Leroy <christophe.leroy@c-s.fr>,
+        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        Paul Mackerras <paulus@samba.org>,
+        linuxppc-dev@lists.ozlabs.org, linux-kernel@vger.kernel.org
+Subject: [PATCH v2] powerpc/32: sstep: Move variable `rc` within CONFIG_PPC64 sentinels
+Date:   Tue, 12 Mar 2019 22:23:17 +0100
+Message-Id: <20190312212318.17822-1-malat@debian.org>
+X-Mailer: git-send-email 2.20.1
+In-Reply-To: <20190312202008.29681-1-malat@debian.org>
+References: <20190312202008.29681-1-malat@debian.org>
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-I think we might be talking past each other.  Let me try the double
-flush first
+Fix warnings treated as errors with W=1:
 
-On Tue, 2019-03-12 at 17:11 -0400, Andrea Arcangeli wrote:
-> On Tue, Mar 12, 2019 at 01:53:37PM -0700, James Bottomley wrote:
-> > > Which means after we fix vhost to add the flush_dcache_page after
-> > > kunmap, Parisc will get a double hit (but it also means Parisc
-> > > was
-> > > the only one of those archs needed explicit cache flushes, where
-> > > vhost worked correctly so far.. so it kinds of proofs your point
-> > > of
-> > > giving up being the safe choice).
-> > 
-> > What double hit?  If there's no cache to flush then cache flush is
-> > a no-op.  It's also a highly piplineable no-op because the CPU has
-> > the L1 cache within easy reach.  The only event when flush takes a
-> > large amount time is if we actually have dirty data to write back
-> > to main memory.
-> 
-> The double hit is in parisc copy_to_user_page:
-> 
-> #define copy_to_user_page(vma, page, vaddr, dst, src, len) \
-> do { \
-> 	flush_cache_page(vma, vaddr, page_to_pfn(page)); \
-> 	memcpy(dst, src, len); \
-> 	flush_kernel_dcache_range_asm((unsigned long)dst, (unsigned
-> long)dst + len); \
-> } while (0)
-> 
-> That is executed just before kunmap:
-> 
-> static inline void kunmap(struct page *page)
-> {
-> 	flush_kernel_dcache_page_addr(page_address(page));
-> }
+  arch/powerpc/lib/sstep.c:1172:31: error: variable 'rc' set but not used [-Werror=unused-but-set-variable]
 
-I mean in the sequence
+Suggested-by: Christophe Leroy <christophe.leroy@c-s.fr>
+Signed-off-by: Mathieu Malaterre <malat@debian.org>
+---
+v2: as suggested prefer CONFIG_PPC64 sentinel instead of unused keyword
 
-flush_dcache_page(page);
-flush_dcache_page(page);
+ arch/powerpc/lib/sstep.c | 7 ++++++-
+ 1 file changed, 6 insertions(+), 1 deletion(-)
 
-The first flush_dcache_page did all the work and the second it a
-tightly pipelined no-op.  That's what I mean by there not really being
-a double hit.
-
-James
+diff --git a/arch/powerpc/lib/sstep.c b/arch/powerpc/lib/sstep.c
+index 3d33fb509ef4..9996dc7a0b46 100644
+--- a/arch/powerpc/lib/sstep.c
++++ b/arch/powerpc/lib/sstep.c
+@@ -1169,7 +1169,10 @@ static nokprobe_inline int trap_compare(long v1, long v2)
+ int analyse_instr(struct instruction_op *op, const struct pt_regs *regs,
+ 		  unsigned int instr)
+ {
+-	unsigned int opcode, ra, rb, rc, rd, spr, u;
++	unsigned int opcode, ra, rb, rd, spr, u;
++#ifdef CONFIG_PPC64
++	unsigned int rc;
++#endif
+ 	unsigned long int imm;
+ 	unsigned long int val, val2;
+ 	unsigned int mb, me, sh;
+@@ -1292,7 +1295,9 @@ int analyse_instr(struct instruction_op *op, const struct pt_regs *regs,
+ 	rd = (instr >> 21) & 0x1f;
+ 	ra = (instr >> 16) & 0x1f;
+ 	rb = (instr >> 11) & 0x1f;
++#ifdef CONFIG_PPC64
+ 	rc = (instr >> 6) & 0x1f;
++#endif
+ 
+ 	switch (opcode) {
+ #ifdef __powerpc64__
+-- 
+2.20.1
 
