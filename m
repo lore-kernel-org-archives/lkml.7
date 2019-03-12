@@ -4,48 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1F53AC43381
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 17:42:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6EF8BC43381
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 17:42:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E13F0206DF
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 17:42:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 40EC9206DF
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 17:42:58 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1552412576;
-	bh=R0IzdxrpEg9vMTIINCYzZz97S0hIR87h3zsaiSmzAOc=;
+	s=default; t=1552412578;
+	bh=JFjVFzwSz47jxopVart9fl7rY66lLtK7qTOPiZ3EFGo=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=SlmXD6IuDwFBnMSdWSxEp0kmTRR9FCV4HFfUgPBNZfdTAZ9jUA9jm81WtSjjCKDcc
-	 F8+ZOXPtBNN4JIArlbWN2KllYKZLKvjdjSBJk3hyTKl3yCLQgad3fKREYO7hH7iuDQ
-	 4i3NVmjdPLxoGwdoDtyvv6w53xpyTiKG/0EAE+ys=
+	b=dWqlg1dNLKp/bh4G2GvkpuxI5k8mkScuA9gfk6WjLt/eFpkv8gMkLtQUMZvadIlDl
+	 kU/cDok8wgaJMUAi7JwzcWGttukOcrDyDuv6OEGcM+TG1knSJTgxQsrGBhv5Cp2wcc
+	 xVy/S1FOHazI3pOxw1eU1aX1eMOZ4L78+vL+Jpxo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729138AbfCLRmy (ORCPT
+        id S1729425AbfCLRmv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 12 Mar 2019 13:42:54 -0400
-Received: from mail.kernel.org ([198.145.29.99]:57126 "EHLO mail.kernel.org"
+        Tue, 12 Mar 2019 13:42:51 -0400
+Received: from mail.kernel.org ([198.145.29.99]:57154 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728908AbfCLRPx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 12 Mar 2019 13:15:53 -0400
+        id S1728064AbfCLRPy (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 12 Mar 2019 13:15:54 -0400
 Received: from localhost (unknown [104.133.8.98])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E6B652183F;
-        Tue, 12 Mar 2019 17:15:52 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id A51842087C;
+        Tue, 12 Mar 2019 17:15:53 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
         s=default; t=1552410953;
-        bh=R0IzdxrpEg9vMTIINCYzZz97S0hIR87h3zsaiSmzAOc=;
+        bh=JFjVFzwSz47jxopVart9fl7rY66lLtK7qTOPiZ3EFGo=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=dTRJPVUqj3w39kChgOK0Don8H4WBrRC6qkmQgg+zg2sGXm/k70S+jhXRKXnfWaVga
-         F7GPmqJVt+0+MsajNXNg4ppGvSudTDymLks9lKcJ9Vbt3qDGjBzTyIXrUCRO/IYDGw
-         kiaPqfRjaoT/Ki686f64DDkozAnwDQRuFfH5xJ8U=
+        b=Oe1wI/8ORYkuwvJs8RMHWyXPD/OC4q3wA6O7YQ6pXgKUwLDLCNTkeeTdgIw9Qr6DB
+         vfr9aztX38P4uGEb5uo9e6Z6OEtfA97NpuaqX+TIgsHvgMaf8Lvc7khPr0v7mE49V2
+         qWYJGXRjr41i0bEbUUspaAyHi8zAvKfkORr/ZpLQ=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Heiner Kallweit <hkallweit1@gmail.com>,
+        stable@vger.kernel.org, Mao Wenan <maowenan@huawei.com>,
         "David S. Miller" <davem@davemloft.net>
-Subject: [PATCH 4.14 021/135] net: phy: phylink: fix uninitialized variable in phylink_get_mac_state
-Date:   Tue, 12 Mar 2019 10:07:48 -0700
-Message-Id: <20190312170343.049007666@linuxfoundation.org>
+Subject: [PATCH 4.14 022/135] net: sit: fix memory leak in sit_init_net()
+Date:   Tue, 12 Mar 2019 10:07:49 -0700
+Message-Id: <20190312170343.147420878@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190312170341.127810985@linuxfoundation.org>
 References: <20190312170341.127810985@linuxfoundation.org>
@@ -64,41 +65,53 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-From: Heiner Kallweit <hkallweit1@gmail.com>
+From: Mao Wenan <maowenan@huawei.com>
 
-[ Upstream commit d25ed413d5e51644e18f66e34eec049f17a7abcb ]
+[ Upstream commit 07f12b26e21ab359261bf75cfcb424fdc7daeb6d ]
 
-When debugging an issue I found implausible values in state->pause.
-Reason in that state->pause isn't initialized and later only single
-bits are changed. Also the struct itself isn't initialized in
-phylink_resolve(). So better initialize state->pause and other
-not yet initialized fields.
+If register_netdev() is failed to register sitn->fb_tunnel_dev,
+it will go to err_reg_dev and forget to free netdev(sitn->fb_tunnel_dev).
 
-v2:
-- use right function name in subject
-v3:
-- initialize additional fields
+BUG: memory leak
+unreferenced object 0xffff888378daad00 (size 512):
+  comm "syz-executor.1", pid 4006, jiffies 4295121142 (age 16.115s)
+  hex dump (first 32 bytes):
+    00 e6 ed c0 83 88 ff ff 00 00 00 00 00 00 00 00  ................
+    00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00  ................
+backtrace:
+    [<00000000d6dcb63e>] kvmalloc include/linux/mm.h:577 [inline]
+    [<00000000d6dcb63e>] kvzalloc include/linux/mm.h:585 [inline]
+    [<00000000d6dcb63e>] netif_alloc_netdev_queues net/core/dev.c:8380 [inline]
+    [<00000000d6dcb63e>] alloc_netdev_mqs+0x600/0xcc0 net/core/dev.c:8970
+    [<00000000867e172f>] sit_init_net+0x295/0xa40 net/ipv6/sit.c:1848
+    [<00000000871019fa>] ops_init+0xad/0x3e0 net/core/net_namespace.c:129
+    [<00000000319507f6>] setup_net+0x2ba/0x690 net/core/net_namespace.c:314
+    [<0000000087db4f96>] copy_net_ns+0x1dc/0x330 net/core/net_namespace.c:437
+    [<0000000057efc651>] create_new_namespaces+0x382/0x730 kernel/nsproxy.c:107
+    [<00000000676f83de>] copy_namespaces+0x2ed/0x3d0 kernel/nsproxy.c:165
+    [<0000000030b74bac>] copy_process.part.27+0x231e/0x6db0 kernel/fork.c:1919
+    [<00000000fff78746>] copy_process kernel/fork.c:1713 [inline]
+    [<00000000fff78746>] _do_fork+0x1bc/0xe90 kernel/fork.c:2224
+    [<000000001c2e0d1c>] do_syscall_64+0xc8/0x580 arch/x86/entry/common.c:290
+    [<00000000ec48bd44>] entry_SYSCALL_64_after_hwframe+0x49/0xbe
+    [<0000000039acff8a>] 0xffffffffffffffff
 
-Fixes: 9525ae83959b ("phylink: add phylink infrastructure")
-Signed-off-by: Heiner Kallweit <hkallweit1@gmail.com>
+Signed-off-by: Mao Wenan <maowenan@huawei.com>
 Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- drivers/net/phy/phylink.c |    4 ++++
- 1 file changed, 4 insertions(+)
+ net/ipv6/sit.c |    1 +
+ 1 file changed, 1 insertion(+)
 
---- a/drivers/net/phy/phylink.c
-+++ b/drivers/net/phy/phylink.c
-@@ -333,6 +333,10 @@ static int phylink_get_mac_state(struct
- 	linkmode_zero(state->lp_advertising);
- 	state->interface = pl->link_config.interface;
- 	state->an_enabled = pl->link_config.an_enabled;
-+	state->speed = SPEED_UNKNOWN;
-+	state->duplex = DUPLEX_UNKNOWN;
-+	state->pause = MLO_PAUSE_NONE;
-+	state->an_complete = 0;
- 	state->link = 1;
+--- a/net/ipv6/sit.c
++++ b/net/ipv6/sit.c
+@@ -1856,6 +1856,7 @@ static int __net_init sit_init_net(struc
  
- 	return pl->ops->mac_link_state(ndev, state);
+ err_reg_dev:
+ 	ipip6_dev_free(sitn->fb_tunnel_dev);
++	free_netdev(sitn->fb_tunnel_dev);
+ err_alloc_dev:
+ 	return err;
+ }
 
 
