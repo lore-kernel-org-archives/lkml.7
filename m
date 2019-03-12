@@ -2,122 +2,149 @@ Return-Path: <SRS0=J4ZE=RP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 76507C43381
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 19:09:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6E0B1C43381
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 19:13:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 42A332087C
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 19:09:57 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1552417797;
-	bh=o7BTEW1BkV/8JJZr6L8AMtYFTqfQ3eMmuxPFFD4sjy8=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=w01JdFG/5Cf8FULPDzjqA1jkmQm8p5AxzOfGy3sj66tl9f1Vla3TMEWQv8OLO7PKU
-	 zTcXWhKgEzC3iUqRHFCvQqCd0F2bWUFj05qIwkRZkKOUl+jIp8kXlarAhKc2LQMtVK
-	 lQBcKu6GGyjqCcDXqT6bK+9jJDpSnJsUq2NhWdWc=
+	by mail.kernel.org (Postfix) with ESMTP id 3D73C2077B
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 19:13:40 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727270AbfCLTJz (ORCPT
+        id S1727267AbfCLTNi (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 12 Mar 2019 15:09:55 -0400
-Received: from mail-oi1-f193.google.com ([209.85.167.193]:34933 "EHLO
-        mail-oi1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726685AbfCLTJz (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 12 Mar 2019 15:09:55 -0400
-Received: by mail-oi1-f193.google.com with SMTP id u128so3064702oie.2;
-        Tue, 12 Mar 2019 12:09:54 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=jJKOnB1P9PKNpKShB0uPqUX+B71dLq4m19fT/OZ0LME=;
-        b=dsZOQu8fS6TojTimb/iienLhE/NvQgDG0QUP1TkrfpAYnOF1VnvmGogvCgD+P2MezN
-         QBhmVPA9Gqd4djbE8nWqEeIiRG4x4p4au/PUTZfLwF2/Q1tamfsGwGct+WfRspRilXsE
-         4RqWlqBdU2rIbvZP5YuDfAdA9PuMJJZy/yFktY2Ddz0KJFQ2mgdRN3DYC7+/pXAzRuxQ
-         fHYpesVFand0HXX3WcSUQjzwvos4/TSgqBMq82X2IBuzcgQiuqM8XJZMgWS4fGVU1F2g
-         D5wcQOYk9VEJqPLp1B8mlXm7KKFiLoFL2HjcsB7wNGC5YokhtpBnHLkFDQeK8qof2QPM
-         x8mg==
-X-Gm-Message-State: APjAAAWJPBxpDTTG6/WJURjhRKL+6qZlBqx9pqBzKA4/2DTPqnn2wU7+
-        wnOI07p0QTTN9m+FXuu3HcTuS/WJiw==
-X-Google-Smtp-Source: APXvYqzOmYiyevn4pfx/OmhV9QmJPBrm3c1cxWiC68YfOw7IRUa9Y5zI+wZ8qBznprpY0q72PHFdMw==
-X-Received: by 2002:aca:dec4:: with SMTP id v187mr2810071oig.92.1552417793942;
-        Tue, 12 Mar 2019 12:09:53 -0700 (PDT)
-Received: from localhost (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
-        by smtp.gmail.com with ESMTPSA id l93sm3981536otc.15.2019.03.12.12.09.53
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Tue, 12 Mar 2019 12:09:53 -0700 (PDT)
-Date:   Tue, 12 Mar 2019 14:09:52 -0500
-From:   Rob Herring <robh@kernel.org>
-To:     Patrick Havelange <patrick.havelange@essensium.com>
-Cc:     William Breathitt Gray <vilhelm.gray@gmail.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Shawn Guo <shawnguo@kernel.org>, Li Yang <leoyang.li@nxp.com>,
-        Daniel Lezcano <daniel.lezcano@linaro.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        Esben Haabendal <esben@haabendal.dk>,
-        linux-iio@vger.kernel.org, linux-kernel@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-pwm@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
-        Jonathan Cameron <jic23@kernel.org>
-Subject: Re: [PATCH v2 4/7] dt-bindings: counter: ftm-quaddec
-Message-ID: <20190312190952.GA18547@bogus>
-References: <20190306111208.7454-1-patrick.havelange@essensium.com>
- <20190306111208.7454-5-patrick.havelange@essensium.com>
+        Tue, 12 Mar 2019 15:13:38 -0400
+Received: from mga06.intel.com ([134.134.136.31]:56185 "EHLO mga06.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727091AbfCLTNi (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 12 Mar 2019 15:13:38 -0400
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga002.fm.intel.com ([10.253.24.26])
+  by orsmga104.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 12 Mar 2019 12:13:37 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.58,471,1544515200"; 
+   d="scan'208";a="151074269"
+Received: from tthayer-hp-z620.an.intel.com (HELO [10.122.105.146]) ([10.122.105.146])
+  by fmsmga002.fm.intel.com with ESMTP; 12 Mar 2019 12:13:36 -0700
+Reply-To: thor.thayer@linux.intel.com
+Subject: Re: [PATCHv2 1/5] Documentation: dt: edac: Fix Stratix10 IRQ bindings
+To:     Rob Herring <robh@kernel.org>
+Cc:     bp@alien8.de, dinguyen@kernel.org, mark.rutland@arm.com,
+        mchehab@kernel.org, devicetree@vger.kernel.org,
+        linux-edac@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <1551288445-22335-1-git-send-email-thor.thayer@linux.intel.com>
+ <1551288445-22335-2-git-send-email-thor.thayer@linux.intel.com>
+ <20190312160057.GA31306@bogus>
+From:   Thor Thayer <thor.thayer@linux.intel.com>
+Message-ID: <8b18501b-e120-97f2-f6b5-4771dc0f613f@linux.intel.com>
+Date:   Tue, 12 Mar 2019 14:15:47 -0500
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.5.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190306111208.7454-5-patrick.havelange@essensium.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <20190312160057.GA31306@bogus>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Mar 06, 2019 at 12:12:05PM +0100, Patrick Havelange wrote:
-> FlexTimer quadrature decoder driver.
-> 
-> Signed-off-by: Patrick Havelange <patrick.havelange@essensium.com>
-> Reviewed-by: Esben Haabendal <esben@haabendal.dk>
-> ---
-> Changes v2
->      - None
-> ---
->  .../bindings/counter/ftm-quaddec.txt           | 18 ++++++++++++++++++
->  1 file changed, 18 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/counter/ftm-quaddec.txt
-> 
-> diff --git a/Documentation/devicetree/bindings/counter/ftm-quaddec.txt b/Documentation/devicetree/bindings/counter/ftm-quaddec.txt
-> new file mode 100644
-> index 000000000000..4d18cd722074
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/counter/ftm-quaddec.txt
-> @@ -0,0 +1,18 @@
-> +FlexTimer Quadrature decoder counter
-> +
-> +This driver exposes a simple counter for the quadrature decoder mode.
+Hi Rob,
 
-Seems like this is more a mode of a h/w block than describing a h/w 
-block. Bindings should do the latter.
-
-> +
-> +Required properties:
-> +- compatible:		Must be "fsl,ftm-quaddec".
-> +- reg:			Must be set to the memory region of the flextimer.
-> +
-> +Optional property:
-> +- big-endian:		Access the device registers in big-endian mode.
-> +
-> +Example:
-> +		counter0: counter@29d0000 {
-> +			compatible = "fsl,ftm-quaddec";
-> +			reg = <0x0 0x29d0000 0x0 0x10000>;
-> +			big-endian;
-> +			status = "disabled";
-> +		};
-> -- 
-> 2.19.1
+On 3/12/19 11:00 AM, Rob Herring wrote:
+> On Wed, Feb 27, 2019 at 11:27:21AM -0600, thor.thayer@linux.intel.com wrote:
+>> From: Thor Thayer <thor.thayer@linux.intel.com>
+>>
+>> Fix Stratix10 ECC bindings to specify only the single
+>> bit error. On Stratix10 double bit errors are handled
+>> as SErrors instead of interrupts.
+>> Indicate the differences between the ARM64 and ARM32
+>> EDAC architecture in the bindings.
+>>
+>> Signed-off-by: Thor Thayer <thor.thayer@linux.intel.com>
+>> ---
+>> v2 No change
+>> ---
+>>   .../devicetree/bindings/edac/socfpga-eccmgr.txt    | 23 +++++++++++++++-------
+>>   1 file changed, 16 insertions(+), 7 deletions(-)
+>>
+>> diff --git a/Documentation/devicetree/bindings/edac/socfpga-eccmgr.txt b/Documentation/devicetree/bindings/edac/socfpga-eccmgr.txt
+>> index 5626560a6cfd..a0ac50e15912 100644
+>> --- a/Documentation/devicetree/bindings/edac/socfpga-eccmgr.txt
+>> +++ b/Documentation/devicetree/bindings/edac/socfpga-eccmgr.txt
+>> @@ -236,33 +236,42 @@ Stratix10 SoCFPGA ECC Manager
+>>   The Stratix10 SoC ECC Manager handles the IRQs for each peripheral
+>>   in a shared register similar to the Arria10. However, ECC requires
+>>   access to registers that can only be read from Secure Monitor with
+>> -SMC calls. Therefore the device tree is slightly different.
+>> +SMC calls. Therefore the device tree is slightly different. Note that
+>> +only 1 interrupt is sent because the double bit errors are treated as
+>> +SErrors instead of IRQ.
+>>   
+>>   Required Properties:
+>>   - compatible : Should be "altr,socfpga-s10-ecc-manager"
+>> -- interrupts : Should be single bit error interrupt, then double bit error
+>> -	interrupt.
+>> +- altr,sysgr-syscon : phandle to Stratix10 System Manager Block
+>> +	              containing the ECC manager registers.
 > 
+> Seems this was already in use, but why not just make this node a child
+> of the System Manager Block and remove this phandle?
+> 
+Yes, this was already in use but I'm trying to fix that oversight with 
+this patch.
+
+The System Manager is a collection of registers used by different 
+peripherals including EMAC and ECC.
+
+I view ECC Manager as a separate entity as is the Ethernet MAC which is 
+why I have it separate. Using the phandle also follows the convention 
+established with the Arria10 ECC Manager.
+
+Thanks for the comments and for reviewing!
+
+Thor
+
+>> +- interrupts : Should be single bit error interrupt.
+>>   - interrupt-controller : boolean indicator that ECC Manager is an interrupt controller
+>>   - #interrupt-cells : must be set to 2.
+>> +- #address-cells: must be 1
+>> +- #size-cells: must be 1
+>> +- ranges : standard definition, should translate from local addresses
+>>   
+>>   Subcomponents:
+>>   
+>>   SDRAM ECC
+>>   Required Properties:
+>>   - compatible : Should be "altr,sdram-edac-s10"
+>> -- interrupts : Should be single bit error interrupt, then double bit error
+>> -	interrupt, in this order.
+>> +- interrupts : Should be single bit error interrupt.
+>>   
+>>   Example:
+>>   
+>>   	eccmgr {
+>>   		compatible = "altr,socfpga-s10-ecc-manager";
+>> -		interrupts = <0 15 4>, <0 95 4>;
+>> +		altr,sysmgr-syscon = <&sysmgr>;
+>> +		#address-cells = <1>;
+>> +		#size-cells = <1>;
+>> +		interrupts = <0 15 4>;
+>>   		interrupt-controller;
+>>   		#interrupt-cells = <2>;
+>> +		ranges;
+>>   
+>>   		sdramedac {
+>>   			compatible = "altr,sdram-edac-s10";
+>> -			interrupts = <16 4>, <48 4>;
+>> +			interrupts = <16 IRQ_TYPE_LEVEL_HIGH>;
+>>   		};
+>>   	};
+>> -- 
+>> 2.7.4
+>>
+> 
+
