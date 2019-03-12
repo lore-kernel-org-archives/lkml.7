@@ -2,108 +2,119 @@ Return-Path: <SRS0=J4ZE=RP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AFF33C43381
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 15:02:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 00448C43381
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 15:03:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 89A9B2075C
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 15:02:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BF7402075C
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 15:03:25 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=lucaceresoli.net header.i=@lucaceresoli.net header.b="4/Au2Asr"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726760AbfCLPCd (ORCPT
+        id S1726833AbfCLPDY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 12 Mar 2019 11:02:33 -0400
-Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:49646 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726336AbfCLPCd (ORCPT
+        Tue, 12 Mar 2019 11:03:24 -0400
+Received: from hostingweb31-40.netsons.net ([89.40.174.40]:57065 "EHLO
+        hostingweb31-40.netsons.net" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1725894AbfCLPDY (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 12 Mar 2019 11:02:33 -0400
-Received: from pps.filterd (m0098413.ppops.net [127.0.0.1])
-        by mx0b-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x2CEnGYw118365
-        for <linux-kernel@vger.kernel.org>; Tue, 12 Mar 2019 11:02:32 -0400
-Received: from e33.co.us.ibm.com (e33.co.us.ibm.com [32.97.110.151])
-        by mx0b-001b2d01.pphosted.com with ESMTP id 2r6dejptxy-1
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
-        for <linux-kernel@vger.kernel.org>; Tue, 12 Mar 2019 11:02:18 -0400
-Received: from localhost
-        by e33.co.us.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
-        for <linux-kernel@vger.kernel.org> from <akrowiak@linux.ibm.com>;
-        Tue, 12 Mar 2019 15:02:14 -0000
-Received: from b03cxnp08026.gho.boulder.ibm.com (9.17.130.18)
-        by e33.co.us.ibm.com (192.168.1.133) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
-        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
-        Tue, 12 Mar 2019 15:02:13 -0000
-Received: from b03ledav002.gho.boulder.ibm.com (b03ledav002.gho.boulder.ibm.com [9.17.130.233])
-        by b03cxnp08026.gho.boulder.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x2CF29BT55836784
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Tue, 12 Mar 2019 15:02:10 GMT
-Received: from b03ledav002.gho.boulder.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id DA73613605D;
-        Tue, 12 Mar 2019 15:02:09 +0000 (GMT)
-Received: from b03ledav002.gho.boulder.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 2580813604F;
-        Tue, 12 Mar 2019 15:02:09 +0000 (GMT)
-Received: from [9.60.75.235] (unknown [9.60.75.235])
-        by b03ledav002.gho.boulder.ibm.com (Postfix) with ESMTP;
-        Tue, 12 Mar 2019 15:02:08 +0000 (GMT)
-Subject: Re: [PATCH v3] zcrypt: handle AP Info notification from CHSC SEI
- command
-To:     Sebastian Ott <sebott@linux.ibm.com>
-Cc:     linux-s390@vger.kernel.org, linux-kernel@vger.kernel.org,
-        freude@de.ibm.com, borntraeger@de.ibm.com, cohuck@redhat.com,
-        pmorel@linux.vnet.ibm.com, pasic@linux.vnet.ibm.com,
-        akrowiak@linux.vnet.ibm.com, oberpar@linux.ibm.com
-References: <1550509295-1199-1-git-send-email-akrowiak@linux.ibm.com>
- <9224eca6-6d2c-7089-1fb2-618a04d7286b@linux.ibm.com>
- <alpine.LFD.2.21.1903111656170.8196@schleppi>
-From:   Tony Krowiak <akrowiak@linux.ibm.com>
-Date:   Tue, 12 Mar 2019 11:02:08 -0400
+        Tue, 12 Mar 2019 11:03:24 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=lucaceresoli.net; s=default; h=Content-Transfer-Encoding:Content-Type:
+        In-Reply-To:MIME-Version:Date:Message-ID:From:References:Cc:To:Subject:Sender
+        :Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
+        Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
+        List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+        bh=Yut3vJ2kSCA6KUuEog7i+w2ZYC8lyu24Pkl3B9ZWaEI=; b=4/Au2Asr0UYm5hBf77liw8HAXL
+        8tzaybJiMR/s8QNO47UhUuBOztb6ObwBPgq7e2RW+Uc1/FNC22h1fcJjuWcgxCjHNRXolVnYZWLrU
+        rl5ocurB+qMBHkr7MkA8OtaJ/NLIVwOW8K1PGvm/92XM4Dpg8R1g//iUE7iqixVG9NtI=;
+Received: from [109.168.11.45] (port=55626 helo=[192.168.101.76])
+        by hostingweb31.netsons.net with esmtpsa (TLSv1.2:ECDHE-RSA-AES128-GCM-SHA256:128)
+        (Exim 4.91)
+        (envelope-from <luca@lucaceresoli.net>)
+        id 1h3iw4-00Finm-IM; Tue, 12 Mar 2019 16:03:20 +0100
+Subject: Re: [PATCH v6 1/2] media: dt-bindings: media: xilinx: Add Xilinx MIPI
+ CSI-2 Rx Subsystem
+To:     Vishal Sagar <vsagar@xilinx.com>,
+        Sakari Ailus <sakari.ailus@linux.intel.com>,
+        Vishal Sagar <vishal.sagar@xilinx.com>
+Cc:     Hyun Kwon <hyunk@xilinx.com>,
+        "laurent.pinchart@ideasonboard.com" 
+        <laurent.pinchart@ideasonboard.com>,
+        "mchehab@kernel.org" <mchehab@kernel.org>,
+        "robh+dt@kernel.org" <robh+dt@kernel.org>,
+        "mark.rutland@arm.com" <mark.rutland@arm.com>,
+        Michal Simek <michals@xilinx.com>,
+        "linux-media@vger.kernel.org" <linux-media@vger.kernel.org>,
+        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+        "hans.verkuil@cisco.com" <hans.verkuil@cisco.com>,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Dinesh Kumar <dineshk@xilinx.com>,
+        Sandip Kothari <sandipk@xilinx.com>
+References: <1552365330-21155-1-git-send-email-vishal.sagar@xilinx.com>
+ <1552365330-21155-2-git-send-email-vishal.sagar@xilinx.com>
+ <20190312102118.6ianedkzscr7gdba@kekkonen.localdomain>
+ <DM5PR02MB2713DB568A4AD713BE3B2621A7490@DM5PR02MB2713.namprd02.prod.outlook.com>
+From:   Luca Ceresoli <luca@lucaceresoli.net>
+Message-ID: <ff914561-a021-9405-8b26-11d4a5cc605d@lucaceresoli.net>
+Date:   Tue, 12 Mar 2019 16:03:19 +0100
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.2.1
+ Thunderbird/60.5.1
 MIME-Version: 1.0
-In-Reply-To: <alpine.LFD.2.21.1903111656170.8196@schleppi>
-Content-Type: text/plain; charset=utf-8; format=flowed
+In-Reply-To: <DM5PR02MB2713DB568A4AD713BE3B2621A7490@DM5PR02MB2713.namprd02.prod.outlook.com>
+Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
 Content-Transfer-Encoding: 7bit
-X-TM-AS-GCONF: 00
-x-cbid: 19031215-0036-0000-0000-00000A9756C5
-X-IBM-SpamModules-Scores: 
-X-IBM-SpamModules-Versions: BY=3.00010745; HX=3.00000242; KW=3.00000007;
- PH=3.00000004; SC=3.00000281; SDB=6.01173330; UDB=6.00613456; IPR=6.00953989;
- MB=3.00025946; MTD=3.00000008; XFM=3.00000015; UTC=2019-03-12 15:02:14
-X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
-x-cbparentid: 19031215-0037-0000-0000-00004B013979
-Message-Id: <6117b968-bb06-78e6-1687-9d03b1544099@linux.ibm.com>
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-03-12_08:,,
- signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
- malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
- clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
- mlxlogscore=707 adultscore=0 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.0.1-1810050000 definitions=main-1903120105
+X-AntiAbuse: This header was added to track abuse, please include it with any abuse report
+X-AntiAbuse: Primary Hostname - hostingweb31.netsons.net
+X-AntiAbuse: Original Domain - vger.kernel.org
+X-AntiAbuse: Originator/Caller UID/GID - [47 12] / [47 12]
+X-AntiAbuse: Sender Address Domain - lucaceresoli.net
+X-Get-Message-Sender-Via: hostingweb31.netsons.net: authenticated_id: luca+lucaceresoli.net/only user confirmed/virtual account not confirmed
+X-Authenticated-Sender: hostingweb31.netsons.net: luca@lucaceresoli.net
+X-Source: 
+X-Source-Args: 
+X-Source-Dir: 
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 3/11/19 11:57 AM, Sebastian Ott wrote:
-> On Mon, 11 Mar 2019, Tony Krowiak wrote:
->> On 2/18/19 12:01 PM, Tony Krowiak wrote:
->>> The current AP bus implementation periodically polls the AP configuration
->>> to detect changes. When the AP configuration is dynamically changed via the
->>> SE or an SCLP instruction, the changes will not be reflected to sysfs until
->>> the next time the AP configuration is polled. The CHSC architecture
->>> provides a Store Event Information (SEI) command to make notification of an
->>> AP configuration change. This patch introduces a handler to process
->>> notification from the CHSC SEI command by immediately kicking off an AP bus
->>> scan-after-event.
+Hi Vishal, Sakari,
+
+On 12/03/19 15:45, Vishal Sagar wrote:
+>>> +- xlnx,en-csi-v2-0: Present if CSI v2 is enabled in IP configuration.
+>>> +- xlnx,en-vcx: When present, there are maximum 16 virtual channels, else
+>>> +  only 4. This is present only if xlnx,en-csi-v2-0 is present.
+>>> +- xlnx,en-active-lanes: present if the number of active lanes can be
+>>> +  reconfigured at runtime in the Protocol Configuration Register.
+>>> +  If present, the V4L2_CID_XILINX_MIPICSISS_ACT_LANES control is added.
+>>> +  Otherwise all lanes, as set in IP configuration, are always active.
 >>
->> Ping
+>> The bindings document hardware, therefore a V4L2 control name doesn't
+>> belong here.
+>>
+> Ok. I will remove this and revert to original description as below -
 > 
-> Applied.
+> xlnx,en-active-lanes: present if the number of active lanes can be
+> re-configured at runtime in the Protocol Configuration Register
 
-Thank you Sebastian.
+I'm to blame here as I suggested that text. However I still find the
+original wording was ambiguous: my initial reading of it was close to
+the opposite of the intended meaning. xlnx,en-active-lanes means "a
+register exists to configure the active lanes at runtime" and I just
+care that this is stated clearly and unambiguously.
 
-> 
+If we cannot mention a control name here, why not just dropping it:
 
+- xlnx,en-active-lanes: present if the number of active lanes can be
+  reconfigured at runtime in the Protocol Configuration Register.
+  Otherwise all lanes are always active.
+
+-- 
+Luca
