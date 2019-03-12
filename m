@@ -2,91 +2,97 @@ Return-Path: <SRS0=J4ZE=RP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5BE80C43381
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 15:24:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C5163C43381
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 15:25:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 292402054F
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 15:24:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 952242054F
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 15:25:01 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="nyVmCwkn"
+	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="baBlAhgr"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726561AbfCLPYw (ORCPT
+        id S1726661AbfCLPZA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 12 Mar 2019 11:24:52 -0400
-Received: from mail-lf1-f67.google.com ([209.85.167.67]:35675 "EHLO
-        mail-lf1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726255AbfCLPYw (ORCPT
+        Tue, 12 Mar 2019 11:25:00 -0400
+Received: from hqemgate14.nvidia.com ([216.228.121.143]:3604 "EHLO
+        hqemgate14.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726329AbfCLPY7 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 12 Mar 2019 11:24:52 -0400
-Received: by mail-lf1-f67.google.com with SMTP id h6so2388955lfc.2
-        for <linux-kernel@vger.kernel.org>; Tue, 12 Mar 2019 08:24:50 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=7aOasrWNGGRnQLgjjfq8vqZ5DNneGLyU7YgbK8bEx3o=;
-        b=nyVmCwkneRU76Jw2nxR/uogPBzDfFFt1f9Lg89ui3QFVK/2lXLogSlUoHBi9M7zsoz
-         0UAhUxGyoeJaMCN4oQV5TLUkfqa/kO/qtW82gDmMkLycWGk0TvaxOtrm8rbwaL7CBEsl
-         /bFGlHzNOvE5XXz5IAbrf+VGBLRIVTVn877N7g/kpwjtCWWaASnWjwADZZvaHA9in8dE
-         jpthrPUMRgg8YUO0aAqIqvlcY9xexzvaHOkU6l/2GiVl0UnWvV56s8xoCFqJKRDp+WD0
-         hkofzbtSase4r0k4yr4MlQOuz/vZhnTT4bSe1de9WozFWgke6RveQoGpZ1QH3LHmXy2u
-         0Ysg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=7aOasrWNGGRnQLgjjfq8vqZ5DNneGLyU7YgbK8bEx3o=;
-        b=cmXmv+kI+f4kI+B92vE+Lo4C8ZfyHDJSH8/juxHdn8LKVx38PXJmlG9c6sIzu1S+2N
-         bP0pNI3SiK19/Vmer88+3FLR4uPE1RlDyMpmnIAKjKVhoWHGODTM03v7X1Ik5bnsgORa
-         2SapKATbxn1zKwEZ/GVF/oiZ1X5ZPKhOS+SNX7Wqom6n49ACLBnX8iLbdUFlXFQS4u5h
-         cxUvXp+uRJQp4OEXOzqgNXeU0YL6rWLz93go/bdtR4vyLyYkM8IZ+4eTZwsKisPJ7Xyj
-         ZfgYhqowPqC7wTJr212sT4nxlcM8TL2gBwdzdT1d4bkyxkay3Gja6vXW4qHFoco3wlhy
-         VD7A==
-X-Gm-Message-State: APjAAAXjrES8Tbg8kgJVyFZ5J7whLAFbH0XFVGeyXDrZug4tPOqJOivp
-        dVeLlil0Vwe4Ae/mOyIhDG67kLDR00wo7ihcU9KuYrHf
-X-Google-Smtp-Source: APXvYqyQh7cISe/E1Wru9LwvbnYi2RUGIqkXCgYsYex4X3y3tfWd6+CyPbmzPEgK4tdkTjmmZc9p7tiFZNpBTIH8/OY=
-X-Received: by 2002:ac2:5386:: with SMTP id g6mr12717577lfh.88.1552404289710;
- Tue, 12 Mar 2019 08:24:49 -0700 (PDT)
+        Tue, 12 Mar 2019 11:24:59 -0400
+Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqemgate14.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
+        id <B5c87cf4c0000>; Tue, 12 Mar 2019 08:25:00 -0700
+Received: from hqmail.nvidia.com ([172.20.161.6])
+  by hqpgpgate101.nvidia.com (PGP Universal service);
+  Tue, 12 Mar 2019 08:24:58 -0700
+X-PGP-Universal: processed;
+        by hqpgpgate101.nvidia.com on Tue, 12 Mar 2019 08:24:58 -0700
+Received: from [10.21.132.148] (10.124.1.5) by HQMAIL101.nvidia.com
+ (172.20.187.10) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Tue, 12 Mar
+ 2019 15:24:57 +0000
+Subject: Re: [PATCH] dmaengine: tegra210-adma: use devm_clk_*() helpers
+To:     Sameer Pujar <spujar@nvidia.com>, <dan.j.williams@intel.com>,
+        <vkoul@kernel.org>
+CC:     <treding@nvidia.com>, <dmaengine@vger.kernel.org>,
+        <linux-tegra@vger.kernel.org>, <linux-kernel@vger.kernel.org>
+References: <1552401352-30043-1-git-send-email-spujar@nvidia.com>
+From:   Jon Hunter <jonathanh@nvidia.com>
+Message-ID: <7598abfe-ae1a-61d2-e4d2-c95dc78c9697@nvidia.com>
+Date:   Tue, 12 Mar 2019 15:24:55 +0000
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.5.1
 MIME-Version: 1.0
-References: <1552310346-7629-1-git-send-email-info@metux.net> <1552310346-7629-86-git-send-email-info@metux.net>
-In-Reply-To: <1552310346-7629-86-git-send-email-info@metux.net>
-From:   Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>
-Date:   Tue, 12 Mar 2019 16:24:35 +0100
-Message-ID: <CANiq72mQKKcE+dr4ajOULmR-Y-1OdxaQ8tmAyAFJ_ZadCkD5wg@mail.gmail.com>
-Subject: Re: [PATCH 085/114] drivers: auxdisplay: Kconfig: pedantic formatting
-To:     "Enrico Weigelt, metux IT consult" <info@metux.net>
-Cc:     linux-kernel <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <1552401352-30043-1-git-send-email-spujar@nvidia.com>
+X-Originating-IP: [10.124.1.5]
+X-ClientProxiedBy: HQMAIL105.nvidia.com (172.20.187.12) To
+ HQMAIL101.nvidia.com (172.20.187.10)
+Content-Type: text/plain; charset="utf-8"
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
+        t=1552404300; bh=YtaJ9x8sYN10MYrP9ppuxiz1StD6MzfGIzIWexmRM3k=;
+        h=X-PGP-Universal:Subject:To:CC:References:From:Message-ID:Date:
+         User-Agent:MIME-Version:In-Reply-To:X-Originating-IP:
+         X-ClientProxiedBy:Content-Type:Content-Language:
+         Content-Transfer-Encoding;
+        b=baBlAhgr5FPyRZ4fM4ZFFM1S0+rlM5XbJDk3WvkcftwpBtCrR/e0ZOILnUstFJC9A
+         pCtZN5ocjItLNj7hlIMllA9HFcXIklrvnERWbYsmZVi40uO+2k+KmeI087rMJQ/QuD
+         FrFF856pD/+jhQv+jdHLdlHo8845D3dxQYC6HPadmoY10HQsV5lv20XaTdKKgL9r9d
+         fuAc0VtrcLbxE11SbsDxFvborwA9yd+hxX6A56ue6JrIOkqYycSYDHpNazcnLPVW5c
+         TwEWm+DMMI8hBake6q3wlRBDGd2J/cXMiZjWXzg872UIjYxv1OsCi46h0Fvy5llHX1
+         oLrJOM/eUT10A==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Enrico,
 
-On Mon, Mar 11, 2019 at 2:21 PM Enrico Weigelt, metux IT consult
-<info@metux.net> wrote:
->
-> Formatting of Kconfig files doesn't look so pretty, so let the
-> Great White Handkerchief come around and clean it up.
+On 12/03/2019 14:35, Sameer Pujar wrote:
+> Usage of pm_clk_*() results in non-zero prepare_count for clocks and hence
+> module clocks remain ON always. This is not desired as it will leak power
+> unncessarily. This patch replaces pm_clk_*() with devm_clk_*() interface.
 
-I am all for humor in the right places, but this does not even explain
-why this is being done nor what is being done. :) Also, "pretty" is
-not really a good description.
+Technically, this is not true for all devices. The actual problem here
+is that for some Tegra devices that use the BPMP co-processor to manage
+clocks, the clock are actually enabled during the prepare-phase and
+hence when using the pm-clocks framework they are never disabled for
+these devices. However, this is not the case for Tegra210 which does not
+use the BPMP for managing clocks.
 
-Instead, please simply state that you are replacing spaces with tabs,
-or whatever you feel it is best, and if possible, what triggered this
-change (e.g. a reference to some discussion, or at least the
-motivation).
+It maybe worth highlighting the fact the BPMP has to enable clocks
+during the prepare phase because calls to the BPMP are always blocking.
 
-> Signed-off-by: Enrico Weigelt, metux IT consult <info@metux.net>
+> This helps to keep refcounts balanced when device is not in use and runtime
+> PM callbacks help to enable or disable clocks. System suspend/resume calls
+> can use pm_runtime_force_suspend/resume.
 
-That Signed-off-by line looks wrong. It should only be your legal name.
+I think that this last bit should be a separate patch as it has nothing
+to do with the $subject.
 
-Thanks,
-Miguel
+Cheers
+Jon
+
+-- 
+nvpublic
