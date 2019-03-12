@@ -2,83 +2,150 @@ Return-Path: <SRS0=J4ZE=RP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,
-	USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 175BFC43381
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 18:36:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EADA5C43381
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 18:36:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DC8222077B
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 18:36:24 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1552415784;
-	bh=kT/GduMZOOiOGbEJ2HWGcrRbuCDtwpdBkaLEE5MQxT0=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=kZPzrn+J1LFxBeoNAqLQ6cytCqyGwNeODvBewFEadpLAoofvEDoGmB3EhYhjkWNO2
-	 vFBHMmZoLErn6HqSY2i7M10KXiC0aZXUEoVB7jX7sdByTjDjvfdxXjobsueZBbxisD
-	 /ta5PwtmjOZ8O/X+t9IRbMkByB0VIlddDSJ2cWvw=
+	by mail.kernel.org (Postfix) with ESMTP id AED3C2077B
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 18:36:42 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=lechnology.com header.i=@lechnology.com header.b="h4Okru7E"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726979AbfCLSgX (ORCPT
+        id S1727043AbfCLSgl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 12 Mar 2019 14:36:23 -0400
-Received: from mail-oi1-f196.google.com ([209.85.167.196]:36107 "EHLO
-        mail-oi1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726372AbfCLSgX (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 12 Mar 2019 14:36:23 -0400
-Received: by mail-oi1-f196.google.com with SMTP id t206so2976774oib.3;
-        Tue, 12 Mar 2019 11:36:22 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=oGe5cppENN7lhKh8rinC2uVCxjTF8ixNh6Di4wbsj6Y=;
-        b=h/2ITUSQUBvh34vZLCJlD2p6nqKMRL1oXlm8kHXGu7LfKRxHlrQUxThyWzY2EaBrjw
-         9OJMcsfHi9qY0fGMqEeMpw3KbKK2wjru9Npa8OHc6AedhXtgvqdxtabGJjZQwP4NpiO/
-         XPKyKp2zOD0zwxi3MB65hHVj2uJe5hwHSQ5jFRuAOhGhr7DKhrLrhqqj6+VkthQRQMT0
-         MsNDn2mFW4UHltgToVZ153HXTvs9P6fDhzSFwB7HKTi37Pykvu7R87ZrZgvbP5WfvePW
-         +t1JhBRE1F4jHJ6Sc4BWSrK0KjIALxF3UiN/GPwR/HQGk3Yid3VIb54j9IQJyCQ5kqik
-         /3IA==
-X-Gm-Message-State: APjAAAXi5ktYlrbpGh32z0/RrpPNHIKi+n13rDGPutgNn6t21tNIqv0u
-        W5RVnZ0ZJMs0W/I2WCSAaQ==
-X-Google-Smtp-Source: APXvYqxMnFhf7Or9Uq2dnwQXwPQGDDwo20oudBuVyrsp1ViE3ymx8sbEzY2eUk6D/OLUnYX8AR/+8Q==
-X-Received: by 2002:aca:ab11:: with SMTP id u17mr2651145oie.98.1552415782226;
-        Tue, 12 Mar 2019 11:36:22 -0700 (PDT)
-Received: from localhost (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
-        by smtp.gmail.com with ESMTPSA id p188sm3762117oia.58.2019.03.12.11.36.21
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Tue, 12 Mar 2019 11:36:21 -0700 (PDT)
-Date:   Tue, 12 Mar 2019 13:36:21 -0500
-From:   Rob Herring <robh@kernel.org>
-To:     Robert Yang <decatf@gmail.com>
-Cc:     Jonathan Cameron <jic23@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>, linux-iio@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Robert Yang <decatf@gmail.com>
-Subject: Re: [PATCH v2 2/3] dt-bindings: iio: accel: kxcjk1013: Add device
- tree binding documentation
-Message-ID: <20190312183621.GA1585@bogus>
-References: <20190304151912.11485-1-decatf@gmail.com>
- <20190304151912.11485-3-decatf@gmail.com>
+        Tue, 12 Mar 2019 14:36:41 -0400
+Received: from vern.gendns.com ([98.142.107.122]:56604 "EHLO vern.gendns.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725894AbfCLSgl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 12 Mar 2019 14:36:41 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=lechnology.com; s=default; h=Content-Transfer-Encoding:Content-Type:
+        In-Reply-To:MIME-Version:Date:Message-ID:From:References:Cc:To:Subject:Sender
+        :Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
+        Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
+        List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+        bh=85h4gBEV7nQw3cKXv1BtTUbQD8JmJx1V+D4HNt/7l+Q=; b=h4Okru7EjBNWlZvyEkpYkDLbtT
+        KohUiphnn5a6By1ZdsYotVg5azyurcmJ2C/KfOIGS8f6q9qdPLTgpex9ECqYE8EEixFVjJ8OPbwwY
+        RVnpuS1VU/K9JiqctN3dr+llvqdZqUFovm6F4IOw2m5Mr+ML/Jwd0AFKAjacg9XNxYZry0k9/qgMc
+        O2IY/X+rksvT16vmpS3/Vc7xuAR9d8G+SIaEnaVI0L8XoSF8i3lMACl0eIQdETordDqUdMMWnlKgm
+        XBlP18QUd9HZbFNTckXsusp6rqF9RX/TgAwXdbSn26LfdRdqwvDfgRRXe24iUsQehBVs/8etdE1qV
+        qIYZztKQ==;
+Received: from 108-198-5-147.lightspeed.okcbok.sbcglobal.net ([108.198.5.147]:37214 helo=[192.168.0.134])
+        by vern.gendns.com with esmtpsa (TLSv1.2:ECDHE-RSA-AES128-GCM-SHA256:128)
+        (Exim 4.91)
+        (envelope-from <david@lechnology.com>)
+        id 1h3mFR-00067A-Af; Tue, 12 Mar 2019 14:35:33 -0400
+Subject: Re: [PATCH v3 04/11] ARM: davinci: da850: switch to using the
+ clocksource driver
+To:     Bartosz Golaszewski <brgl@bgdev.pl>, Sekhar Nori <nsekhar@ti.com>,
+        Kevin Hilman <khilman@kernel.org>,
+        Daniel Lezcano <daniel.lezcano@linaro.org>,
+        Thomas Gleixner <tglx@linutronix.de>
+Cc:     linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        devicetree@vger.kernel.org,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>
+References: <20190226120633.18200-1-brgl@bgdev.pl>
+ <20190226120633.18200-5-brgl@bgdev.pl>
+From:   David Lechner <david@lechnology.com>
+Message-ID: <8c8cfed0-f52b-06c7-21e2-38039dc99a71@lechnology.com>
+Date:   Tue, 12 Mar 2019 13:36:36 -0500
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.4.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190304151912.11485-3-decatf@gmail.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <20190226120633.18200-5-brgl@bgdev.pl>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-AntiAbuse: This header was added to track abuse, please include it with any abuse report
+X-AntiAbuse: Primary Hostname - vern.gendns.com
+X-AntiAbuse: Original Domain - vger.kernel.org
+X-AntiAbuse: Originator/Caller UID/GID - [47 12] / [47 12]
+X-AntiAbuse: Sender Address Domain - lechnology.com
+X-Get-Message-Sender-Via: vern.gendns.com: authenticated_id: davidmain+lechnology.com/only user confirmed/virtual account not confirmed
+X-Authenticated-Sender: vern.gendns.com: davidmain@lechnology.com
+X-Source: 
+X-Source-Args: 
+X-Source-Dir: 
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon,  4 Mar 2019 10:19:11 -0500, Robert Yang wrote:
-> Document device tree bindings for Kionix KXCJK-1013 Accelerometer driver.
+On 2/26/19 6:06 AM, Bartosz Golaszewski wrote:
+> From: Bartosz Golaszewski <bgolaszewski@baylibre.com>
 > 
-> Signed-off-by: Robert Yang <decatf@gmail.com>
+> We now have a proper clocksource driver for davinci. Switch the da850
+> platform to using it.
+> 
+> Signed-off-by: Bartosz Golaszewski <bgolaszewski@baylibre.com>
 > ---
->  .../bindings/iio/accel/kionix,kxcjk1013.txt     | 17 +++++++++++++++++
->  1 file changed, 17 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/iio/accel/kionix,kxcjk1013.txt
-> 
 
-Reviewed-by: Rob Herring <robh@kernel.org>
+Reviewed-by: David Lechner <david@lechnology.com>
+
+>   arch/arm/mach-davinci/da850.c | 41 ++++++++++-------------------------
+>   1 file changed, 11 insertions(+), 30 deletions(-)
+> 
+> diff --git a/arch/arm/mach-davinci/da850.c b/arch/arm/mach-davinci/da850.c
+> index 72d64d39d42a..5ce58ae0d764 100644
+> --- a/arch/arm/mach-davinci/da850.c
+> +++ b/arch/arm/mach-davinci/da850.c
+> @@ -34,7 +34,8 @@
+>   #include <mach/cputype.h>
+>   #include <mach/da8xx.h>
+>   #include <mach/pm.h>
+> -#include <mach/time.h>
+> +
+> +#include <clocksource/timer-davinci.h>
+>   
+>   #include "irqs.h"
+>   #include "mux.h"
+> @@ -332,38 +333,17 @@ static struct davinci_id da850_ids[] = {
+>   	},
+>   };
+>   
+> -static struct davinci_timer_instance da850_timer_instance[4] = {
+> -	{
+> -		.base		= DA8XX_TIMER64P0_BASE,
+> -		.bottom_irq	= DAVINCI_INTC_IRQ(IRQ_DA8XX_TINT12_0),
+> -		.top_irq	= DAVINCI_INTC_IRQ(IRQ_DA8XX_TINT34_0),
+> -	},
+> -	{
+> -		.base		= DA8XX_TIMER64P1_BASE,
+> -		.bottom_irq	= DAVINCI_INTC_IRQ(IRQ_DA8XX_TINT12_1),
+> -		.top_irq	= DAVINCI_INTC_IRQ(IRQ_DA8XX_TINT34_1),
+> -	},
+> -	{
+> -		.base		= DA850_TIMER64P2_BASE,
+> -		.bottom_irq	= DAVINCI_INTC_IRQ(IRQ_DA850_TINT12_2),
+> -		.top_irq	= DAVINCI_INTC_IRQ(IRQ_DA850_TINT34_2),
+> -	},
+> -	{
+> -		.base		= DA850_TIMER64P3_BASE,
+> -		.bottom_irq	= DAVINCI_INTC_IRQ(IRQ_DA850_TINT12_3),
+> -		.top_irq	= DAVINCI_INTC_IRQ(IRQ_DA850_TINT34_3),
+> -	},
+> -};
+> -
+>   /*
+>    * T0_BOT: Timer 0, bottom		: Used for clock_event
+>    * T0_TOP: Timer 0, top			: Used for clocksource
+>    * T1_BOT, T1_TOP: Timer 1, bottom & top: Used for watchdog timer
+
+It looks like we could drop the mention of the watchdog timer here.
+And T0_BOT/T0_TOP don't really have a meaning anymore.
+
+>    */
+> -static struct davinci_timer_info da850_timer_info = {
+> -	.timers		= da850_timer_instance,
+> -	.clockevent_id	= T0_BOT,
+> -	.clocksource_id	= T0_TOP,
+> +static const struct davinci_timer_cfg da850_timer_cfg = {
+> +	.reg = DEFINE_RES_IO(DA8XX_TIMER64P0_BASE, SZ_4K),
+> +	.irq = {
+> +		DEFINE_RES_IRQ(DAVINCI_INTC_IRQ(IRQ_DA8XX_TINT12_0)),
+> +		DEFINE_RES_IRQ(DAVINCI_INTC_IRQ(IRQ_DA8XX_TINT34_0)),
+> +	},
+>   };
