@@ -7,55 +7,55 @@ X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D9EA4C43381
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 09:00:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 88BD7C43381
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 09:00:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A4E3A2147C
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 09:00:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 55AB72147C
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 09:00:41 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="rrDaoIOH"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="l21Jl1yZ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727766AbfCLJA3 (ORCPT
+        id S1727780AbfCLJAk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 12 Mar 2019 05:00:29 -0400
-Received: from mail-wr1-f67.google.com ([209.85.221.67]:37018 "EHLO
-        mail-wr1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727726AbfCLJAS (ORCPT
+        Tue, 12 Mar 2019 05:00:40 -0400
+Received: from mail-wm1-f65.google.com ([209.85.128.65]:38520 "EHLO
+        mail-wm1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727690AbfCLJAK (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 12 Mar 2019 05:00:18 -0400
-Received: by mail-wr1-f67.google.com with SMTP id y15so1751187wro.4
-        for <linux-kernel@vger.kernel.org>; Tue, 12 Mar 2019 02:00:17 -0700 (PDT)
+        Tue, 12 Mar 2019 05:00:10 -0400
+Received: by mail-wm1-f65.google.com with SMTP id a188so1678909wmf.3
+        for <linux-kernel@vger.kernel.org>; Tue, 12 Mar 2019 02:00:09 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=uB6F8nkcc+jXPBDeIaz78K4jgn2LvnmUlQ+OCREpF+E=;
-        b=rrDaoIOHvvi1Hid8Z/1X9MJv6gwLoS8LoXZbdj6oUdt7UFvECfEJ4m+nd7XmpWb3YE
-         lXm+YDALDH3MtZ+vzNGBMFG0m2ZY8j8uDlf+jmxHpp0Nr9AOXi2P2uy3+wn83FrcedIz
-         3H/7SMt8j3yGMXKQBns/Oan2hMEiW4J+A8jZiH78kvm+zaHdUZG/OVDPEG/eaQC6ct88
-         N9iPEdgAYVjW0D/wWQ3bH83ieHgR4LbYBtq+zEiGn2XCozM68fPT9c3zL9JwC90l5j+Z
-         MjKJfOWGV//Oepcv8HhCU+H1rhg98ZqtVBhc/vLWO/DN/YlMYOP5kIQyK8pjJwQJaR73
-         mu9g==
+        bh=3yl3XU7a49GA8s9ZssN4iqwWKfxKo62fpyxLFCHTfdM=;
+        b=l21Jl1yZjVVBrUCvymJJxze0ysYHTiw8TwtK9e3AcziIbTngV9WXO4AnA9uaSTgijV
+         D9MiZAR73lQWdDxKHhfzUeEpliUC5D0O9sZw0nt2rKKp8HrBo8chqhzCVM9OsrR/kIlL
+         P0pyx7lS+4XtIDzMH0kO89P5l+IhAEwDth3GMsu2NSFiVT8BxqLESpvxWTN5Q0iPqB/W
+         ImhpUq7ArZI6iObjZu8dHr/cRWWH4zFWQkkJxcYC5RrkB53h8LJ16qt/3BnkWHZlz59o
+         +TmHndTPD2q4e/yulwkvL/dGT7lE7gfxkW0XWYl0rGKQu4IjNcr6yfThWciXGbglUCA8
+         QJ4w==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=uB6F8nkcc+jXPBDeIaz78K4jgn2LvnmUlQ+OCREpF+E=;
-        b=oJeQYQMXMyPMqsIn+vNdaoh+/q3nNz4AK3kXXH0ZHBMWC3+M/lbXn8hpg8bwRlXtAj
-         oLg+Dq0MH4rj6SXrKOan2QjU3h+QsxKJCLh0t0L5zV8UgaVU4PQ+/eVDaZwyMW6N1nAl
-         IMiaV3n8D1E5DeSc/RmPVKo8sohndMRYFwJu78ncbIBNDmu+TNfYxxaoMN2RgOwt1NOX
-         Cxro5AG4wEtQTYyBIOFGHyFqbQc2P4zNXGy3gDe3EGDv7ocftH9Uz6Q3P46RQf0uzUYD
-         gGsrUDMAWS8i0VLFqKjOO4qaJAo5ECwkd+1jq2ZVh0Bdf4fWvrjuysBYFdfb3GlbzxKj
-         T94A==
-X-Gm-Message-State: APjAAAWR2rbyP7dM+0Eud4FTtDgq973EkjHybdqYYALtg4g4LMrsuTul
-        wNWgGb4VTuLxCt5talx7O5W1VQ==
-X-Google-Smtp-Source: APXvYqwtuDkW8vwYjQJx9QJeLRpVimDrPGoeFfYyOMEUoWVuvouT9okOK3TDWF25e4FO2e0evztqVg==
-X-Received: by 2002:adf:dfd2:: with SMTP id q18mr2267713wrn.259.1552381216921;
-        Tue, 12 Mar 2019 02:00:16 -0700 (PDT)
+        bh=3yl3XU7a49GA8s9ZssN4iqwWKfxKo62fpyxLFCHTfdM=;
+        b=sanrvFUvkR5B69m0YObOjgTV9FrTnzz8ukXMYSUncgCnS1f2CnyyjUGsETrWLxVdRt
+         On/EV7z8gw2l5bt4mJYcuUR6rFDby1Lak8IfgEDZyXdkzppdosIUMpTFIOCvT73ZveP8
+         0UGrVIgjkdpnAMB7OHELJuUxgyvg+Zelce60aZ9LvWiVzX+5moIh7KMSKeH1EG3fce2L
+         pvTWyIj/K/ydcYLqZsMscia78l50H2G9mCg7t9ATbHsSxGKaeHbwqHLGDzau/sYHmFpb
+         TVyv+wrzDItt3pVgE0NjRgSOD2aMMf4O0miyjRaoBOeInPO/gB8FW9PanFBhg/1BTXzj
+         SYpQ==
+X-Gm-Message-State: APjAAAVBk/QXwrxL3f/Xx2aUr2TLljTyq570rDO9JfpgcEJw4z42gjnK
+        oF/HvG0UkLX9AxcaoCm+FAWw4g1zLVo=
+X-Google-Smtp-Source: APXvYqzQ7IHQ9WwuM0Q9tw7gv7qFqwjCUs6TELpsRlFlDakqOvH8fKgNzrzIbsrEQi8VLBL974Z4rw==
+X-Received: by 2002:a1c:9694:: with SMTP id y142mr1501451wmd.98.1552381209127;
+        Tue, 12 Mar 2019 02:00:09 -0700 (PDT)
 Received: from localhost.localdomain ([84.33.65.66])
-        by smtp.gmail.com with ESMTPSA id y20sm3953043wmi.34.2019.03.12.02.00.15
+        by smtp.gmail.com with ESMTPSA id y20sm3953043wmi.34.2019.03.12.02.00.07
         (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Tue, 12 Mar 2019 02:00:16 -0700 (PDT)
+        Tue, 12 Mar 2019 02:00:08 -0700 (PDT)
 From:   Paolo Valente <paolo.valente@linaro.org>
 To:     Jens Axboe <axboe@kernel.dk>
 Cc:     linux-block@vger.kernel.org, linux-kernel@vger.kernel.org,
@@ -64,9 +64,9 @@ Cc:     linux-block@vger.kernel.org, linux-kernel@vger.kernel.org,
         oleksandr@natalenko.name, fra.fra.800@gmail.com,
         alessio.masola@gmail.com, holger@applied-asynchrony.com,
         Paolo Valente <paolo.valente@linaro.org>
-Subject: [PATCH BUGFIX IMPROVEMENT V3 8/9] block, bfq: save & resume weight on a queue merge/split
-Date:   Tue, 12 Mar 2019 09:59:34 +0100
-Message-Id: <20190312085935.11340-9-paolo.valente@linaro.org>
+Subject: [PATCH BUGFIX IMPROVEMENT V3 5/9] block, bfq: do not tag totally seeky queues as soft rt
+Date:   Tue, 12 Mar 2019 09:59:31 +0100
+Message-Id: <20190312085935.11340-6-paolo.valente@linaro.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190312085935.11340-1-paolo.valente@linaro.org>
 References: <20190312085935.11340-1-paolo.valente@linaro.org>
@@ -78,68 +78,58 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Francesco Pollicino <fra.fra.800@gmail.com>
-
-bfq saves the state of a queue each time a merge occurs, to be
-able to resume such a state when the queue is associated again
-with its original process, on a split.
-
-Unfortunately bfq does not save & restore also the weight of the
-queue. If the weight is not correctly resumed when the queue is
-recycled, then the weight of the recycled queue could differ
-from the weight of the original queue.
-
-This commit adds the missing save & resume of the weight.
+Sync random I/O is likely to be confused with soft real-time I/O,
+because it is characterized by limited throughput and apparently
+isochronous arrival pattern. To avoid false positives, this commits
+prevents bfq_queues containing only random (seeky) I/O from being
+tagged as soft real-time.
 
 Tested-by: Holger Hoffstätte <holger@applied-asynchrony.com>
 Tested-by: Oleksandr Natalenko <oleksandr@natalenko.name>
-Signed-off-by: Francesco Pollicino <fra.fra.800@gmail.com>
 Signed-off-by: Paolo Valente <paolo.valente@linaro.org>
 ---
- block/bfq-iosched.c | 2 ++
- block/bfq-iosched.h | 9 +++++++++
- 2 files changed, 11 insertions(+)
+ block/bfq-iosched.c | 14 ++++++++++++++
+ 1 file changed, 14 insertions(+)
 
 diff --git a/block/bfq-iosched.c b/block/bfq-iosched.c
-index 7d95d9c01036..1712d12340c0 100644
+index b96be3764b8a..d34b80e5c47d 100644
 --- a/block/bfq-iosched.c
 +++ b/block/bfq-iosched.c
-@@ -1028,6 +1028,7 @@ bfq_bfqq_resume_state(struct bfq_queue *bfqq, struct bfq_data *bfqd,
- 	else
- 		bfq_clear_bfqq_IO_bound(bfqq);
+@@ -242,6 +242,14 @@ static struct kmem_cache *bfq_pool;
+ 	  blk_rq_sectors(rq) < BFQQ_SECT_THR_NONROT))
+ #define BFQQ_CLOSE_THR		(sector_t)(8 * 1024)
+ #define BFQQ_SEEKY(bfqq)	(hweight32(bfqq->seek_history) > 19)
++/*
++ * Sync random I/O is likely to be confused with soft real-time I/O,
++ * because it is characterized by limited throughput and apparently
++ * isochronous arrival pattern. To avoid false positives, queues
++ * containing only random (seeky) I/O are prevented from being tagged
++ * as soft real-time.
++ */
++#define BFQQ_TOTALLY_SEEKY(bfqq)	(bfqq->seek_history & -1)
  
-+	bfqq->entity.new_weight = bic->saved_weight;
- 	bfqq->ttime = bic->saved_ttime;
- 	bfqq->wr_coeff = bic->saved_wr_coeff;
- 	bfqq->wr_start_at_switch_to_srt = bic->saved_wr_start_at_switch_to_srt;
-@@ -2502,6 +2503,7 @@ static void bfq_bfqq_save_state(struct bfq_queue *bfqq)
- 	if (!bic)
- 		return;
- 
-+	bic->saved_weight = bfqq->entity.orig_weight;
- 	bic->saved_ttime = bfqq->ttime;
- 	bic->saved_has_short_ttime = bfq_bfqq_has_short_ttime(bfqq);
- 	bic->saved_IO_bound = bfq_bfqq_IO_bound(bfqq);
-diff --git a/block/bfq-iosched.h b/block/bfq-iosched.h
-index 67e63c276c7a..60c148728cc5 100644
---- a/block/bfq-iosched.h
-+++ b/block/bfq-iosched.h
-@@ -404,6 +404,15 @@ struct bfq_io_cq {
+ /* Min number of samples required to perform peak-rate update */
+ #define BFQ_RATE_MIN_SAMPLES	32
+@@ -1622,6 +1630,7 @@ static void bfq_bfqq_handle_idle_busy_switch(struct bfq_data *bfqd,
  	 */
- 	bool was_in_burst_list;
- 
-+	/*
-+	 * Save the weight when a merge occurs, to be able
-+	 * to restore it in case of split. If the weight is not
-+	 * correctly resumed when the queue is recycled,
-+	 * then the weight of the recycled queue could differ
-+	 * from the weight of the original queue.
-+	 */
-+	unsigned int saved_weight;
+ 	in_burst = bfq_bfqq_in_large_burst(bfqq);
+ 	soft_rt = bfqd->bfq_wr_max_softrt_rate > 0 &&
++		!BFQQ_TOTALLY_SEEKY(bfqq) &&
+ 		!in_burst &&
+ 		time_is_before_jiffies(bfqq->soft_rt_next_start) &&
+ 		bfqq->dispatched == 0;
+@@ -4816,6 +4825,11 @@ bfq_update_io_seektime(struct bfq_data *bfqd, struct bfq_queue *bfqq,
+ {
+ 	bfqq->seek_history <<= 1;
+ 	bfqq->seek_history |= BFQ_RQ_SEEKY(bfqd, bfqq->last_request_pos, rq);
 +
- 	/*
- 	 * Similar to previous fields: save wr information.
- 	 */
++	if (bfqq->wr_coeff > 1 &&
++	    bfqq->wr_cur_max_time == bfqd->bfq_wr_rt_max_time &&
++	    BFQQ_TOTALLY_SEEKY(bfqq))
++		bfq_bfqq_end_wr(bfqq);
+ }
+ 
+ static void bfq_update_has_short_ttime(struct bfq_data *bfqd,
 -- 
 2.20.1
 
