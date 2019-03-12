@@ -4,34 +4,37 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,UNPARSEABLE_RELAY,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7D585C43381
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 03:02:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B0B99C43381
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 03:02:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5629C2148D
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 03:02:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 895E42148D
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 03:02:59 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727218AbfCLDCy (ORCPT
+        id S1727236AbfCLDC6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 11 Mar 2019 23:02:54 -0400
-Received: from out30-130.freemail.mail.aliyun.com ([115.124.30.130]:36888 "EHLO
-        out30-130.freemail.mail.aliyun.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727191AbfCLDCv (ORCPT
+        Mon, 11 Mar 2019 23:02:58 -0400
+Received: from out30-44.freemail.mail.aliyun.com ([115.124.30.44]:47281 "EHLO
+        out30-44.freemail.mail.aliyun.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726167AbfCLDCx (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 11 Mar 2019 23:02:51 -0400
-X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R231e4;CH=green;DM=||false|;FP=0|-1|-1|-1|0|-1|-1|-1;HT=e01f04392;MF=alex.shi@linux.alibaba.com;NM=1;PH=DS;RN=7;SR=0;TI=SMTPD_---0TMWN-gD_1552359735;
-Received: from localhost(mailfrom:alex.shi@linux.alibaba.com fp:SMTPD_---0TMWN-gD_1552359735)
+        Mon, 11 Mar 2019 23:02:53 -0400
+X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R181e4;CH=green;DM=||false|;FP=0|-1|-1|-1|0|-1|-1|-1;HT=e01f04397;MF=alex.shi@linux.alibaba.com;NM=1;PH=DS;RN=10;SR=0;TI=SMTPD_---0TMWMcma_1552359720;
+Received: from localhost(mailfrom:alex.shi@linux.alibaba.com fp:SMTPD_---0TMWMcma_1552359720)
           by smtp.aliyun-inc.com(127.0.0.1);
-          Tue, 12 Mar 2019 11:02:15 +0800
+          Tue, 12 Mar 2019 11:02:00 +0800
 From:   Alex Shi <alex.shi@linux.alibaba.com>
 To:     corbet@lwn.net, harryxiyou@gmail.com, linux-doc@vger.kernel.org,
         linux-kernel@vger.kernel.org
 Cc:     Alex Shi <alex.shi@linux.alibaba.com>,
-        Li Yang <leoyang.li@nxp.com>, TripleX Chung <xxx.phy@gmail.com>
-Subject: [PATCH v4 28/31] docs/zh_CN: fix indent issue in submitting-drivers
-Date:   Tue, 12 Mar 2019 11:01:26 +0800
-Message-Id: <20190312030129.47511-29-alex.shi@linux.alibaba.com>
+        TripleX Chung <xxx.phy@gmail.com>,
+        Li Zefan <lizefan@huawei.com>,
+        Shawn Guo <shawn.guo@linaro.org>,
+        Fengguang Wu <fengguang.wu@intel.com>, Coly Li <colyli@suse.de>
+Subject: [PATCH v4 08/31] docs/zh_CN: format the submitting-patches doc to rst
+Date:   Tue, 12 Mar 2019 11:01:06 +0800
+Message-Id: <20190312030129.47511-9-alex.shi@linux.alibaba.com>
 X-Mailer: git-send-email 2.19.1.856.g8858448bb
 In-Reply-To: <20190312030129.47511-1-alex.shi@linux.alibaba.com>
 References: <20190312030129.47511-1-alex.shi@linux.alibaba.com>
@@ -43,35 +46,83 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Tame 'make htmldocs' w/o indent complains.
+And remove Enghlish explainations in the docs, which it isn't
+necessary in Chinese doc.
 
 Signed-off-by: Alex Shi <alex.shi@linux.alibaba.com>
 Cc: Harry Wei <harryxiyou@gmail.com>
 Cc: Jonathan Corbet <corbet@lwn.net>
-Cc: Li Yang <leoyang.li@nxp.com>
 Cc: TripleX Chung <xxx.phy@gmail.com>
+Cc: Li Zefan <lizefan@huawei.com>
+Cc: Shawn Guo <shawn.guo@linaro.org>
+Cc: Fengguang Wu <fengguang.wu@intel.com>
+Cc: Coly Li <colyli@suse.de>
 ---
- .../translations/zh_CN/process/submitting-drivers.rst         | 4 ++++
- 1 file changed, 4 insertions(+)
+ .../zh_CN/process/submitting-patches.rst      | 36 +++++++------------
+ 1 file changed, 13 insertions(+), 23 deletions(-)
 
-diff --git a/Documentation/translations/zh_CN/process/submitting-drivers.rst b/Documentation/translations/zh_CN/process/submitting-drivers.rst
-index 43c0e4530362..3be51d998c80 100644
---- a/Documentation/translations/zh_CN/process/submitting-drivers.rst
-+++ b/Documentation/translations/zh_CN/process/submitting-drivers.rst
-@@ -137,9 +137,13 @@ Linux 设备驱动程序，第三版（探讨 2.6.10 版内核）：
+diff --git a/Documentation/translations/zh_CN/process/submitting-patches.rst b/Documentation/translations/zh_CN/process/submitting-patches.rst
+index e9098da8f1a4..2a2989733c8d 100644
+--- a/Documentation/translations/zh_CN/process/submitting-patches.rst
++++ b/Documentation/translations/zh_CN/process/submitting-patches.rst
+@@ -1,31 +1,21 @@
+-Chinese translated version of Documentation/process/submitting-patches.rst
++.. _cn_process_submittingpatches:
  
- LWN.net:
- 	每周内核开发活动摘要 - http://lwn.net/
-+
- 	2.6 版中 API 的变更：
-+
- 		http://lwn.net/Articles/2.6-kernel-api/
-+
- 	将旧版内核的驱动程序移植到 2.6 版：
-+
- 		http://lwn.net/Articles/driver-porting/
+-If you have any comment or update to the content, please contact the
+-original document maintainer directly.  However, if you have a problem
+-communicating in English you can also ask the Chinese maintainer for
+-help.  Contact the Chinese maintainer if this translation is outdated
+-or if there is a problem with the translation.
++.. include:: ../disclaimer-zh_CN.rst
  
- 内核新手(KernelNewbies):
+-Chinese maintainer: TripleX Chung <triplex@zh-kernel.org>
+----------------------------------------------------------------------
+-Documentation/process/submitting-patches.rst 的中文翻译
++:Original: :ref:`Documentation/process/submitting-patches.rst <submittingpatches>`
+ 
+ 如果想评论或更新本文的内容，请直接联系原文档的维护者。如果你使用英文
+ 交流有困难的话，也可以向中文版维护者求助。如果本翻译更新不及时或者翻
+-译存在问题，请联系中文版维护者。
++译存在问题，请联系中文版维护者::
+ 
+-中文版维护者： 钟宇 TripleX Chung <triplex@zh-kernel.org>
+-中文版翻译者： 钟宇 TripleX Chung <triplex@zh-kernel.org>
+-中文版校译者： 李阳 Li Yang <leo@zh-kernel.org>
+-               王聪 Wang Cong <xiyou.wangcong@gmail.com>
++        中文版维护者： 钟宇 TripleX Chung <triplex@zh-kernel.org>
++        中文版翻译者： 钟宇 TripleX Chung <triplex@zh-kernel.org>
++        中文版校译者： 李阳 Li Yang <leo@zh-kernel.org>
++                       王聪 Wang Cong <xiyou.wangcong@gmail.com>
+ 
+-以下为正文
+----------------------------------------------------------------------
+ 
+-   如何让你的改动进入内核
+-     或者
+-  获得亲爱的 Linus Torvalds 的关注和处理
+-----------------------------------
++如何让你的改动进入内核
++======================
+ 
+ 对于想要将改动提交到 Linux 内核的个人或者公司来说，如果不熟悉“规矩”，
+ 提交的流程会让人畏惧。本文档收集了一系列建议，这些建议可以大大的提高你
+@@ -35,12 +25,12 @@ Documentation/process/submitting-patches.rst 的中文翻译
+ Documentation/process/submitting-drivers.rst 。
+ 
+ 
+---------------------------
++---------------------------
+ 第一节 - 创建并发送你的改动
+---------------------------
++---------------------------
+ 
+ 1) "diff -up"
+------------
++-------------
+ 
+ 使用 "diff -up" 或者 "diff -uprN" 来创建补丁。
+ 
 -- 
 2.19.1.856.g8858448bb
 
