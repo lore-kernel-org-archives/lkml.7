@@ -7,46 +7,46 @@ X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 59733C43381
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 17:18:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4922BC43381
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 17:18:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 23F8E217D8
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 17:18:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1A38E217F5
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 17:18:28 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1552411106;
-	bh=EHodQHAv/IQtKTEYUT+Ji9MDxercDNCJe8JRWtSr36M=;
+	s=default; t=1552411108;
+	bh=hBqQY+DGl1LAMXUAZiHeya/EKKAUgMIAD9MZJbYUI6U=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=PuTSZCZDQ6nL+8od5XKTXj0J+3kys3uNZNr72XJfYQb9UsGmd4nxIwH/KncoGKhv4
-	 Qe+6rhEZPPUhms10R3a3MyxvwwJj38IvJl5CFXdiywfX+q2/ebb3Y0Gtc+QH07bE4W
-	 x3Tmh0To1l8gzAslaKDdNDV/+Ix3owQrWIFJptzA=
+	b=tqIV0UeJfjQdoMAupYdXdekmJDrXcemjAOCoNiYuRcwIKDs2SpTgvKexCnbFheBBc
+	 SKK0MHGK36a9BqDZLuUPTHsdN1uXCbuonJ7PZgoWyVGgXQjR2GYi5GFyG97CeNWDr+
+	 hE4UyeLCMKDMPrM5Qx/pVTWiYUQjzyRScMgcEyD8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730075AbfCLRSY (ORCPT
+        id S1730087AbfCLRS0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 12 Mar 2019 13:18:24 -0400
-Received: from mail.kernel.org ([198.145.29.99]:34290 "EHLO mail.kernel.org"
+        Tue, 12 Mar 2019 13:18:26 -0400
+Received: from mail.kernel.org ([198.145.29.99]:34434 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729770AbfCLRRu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 12 Mar 2019 13:17:50 -0400
+        id S1729775AbfCLRRv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 12 Mar 2019 13:17:51 -0400
 Received: from localhost (unknown [104.133.8.98])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B94FC2183F;
-        Tue, 12 Mar 2019 17:17:49 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 72E002087C;
+        Tue, 12 Mar 2019 17:17:50 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1552411069;
-        bh=EHodQHAv/IQtKTEYUT+Ji9MDxercDNCJe8JRWtSr36M=;
+        s=default; t=1552411070;
+        bh=hBqQY+DGl1LAMXUAZiHeya/EKKAUgMIAD9MZJbYUI6U=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=xypoRC199sn9HOaaHQ4wxYLJV/uweh3+J15etd5g0Rf6OXlbUVkCUMZvZUQN6exAS
-         jitkclkUkOqEU5dNOwg+qoukK8MFB2U2+OiwzkDRWOrfmtW5uHjRspfPGjQrnp9aVT
-         W+yxQlvWt0qCEbYSc9RN8YDk3lX3yr++qM30pA4I=
+        b=xtRY9qCOoEgow+J5/EgNAXVbsCfbwUjZyCa35VroiPKVilnIUyoAzZgHv6k0HzBd0
+         69Fw3XJ8Fw/GSIj3DU4COwpuA/P/23b8xcivnq2UMRISrKanLNT7t/uNU/5yPZmENM
+         jovZqtMviLf3XEs45TSNoUu/0obpDgbJjondyPzQ=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         stable@vger.kernel.org, Max Filippov <jcmvbkbc@gmail.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.9 42/96] xtensa: SMP: fix ccount_timer_shutdown
-Date:   Tue, 12 Mar 2019 10:10:00 -0700
-Message-Id: <20190312171037.701374612@linuxfoundation.org>
+Subject: [PATCH 4.9 43/96] xtensa: SMP: fix secondary CPU initialization
+Date:   Tue, 12 Mar 2019 10:10:01 -0700
+Message-Id: <20190312171037.795076296@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190312171034.530434962@linuxfoundation.org>
 References: <20190312171034.530434962@linuxfoundation.org>
@@ -65,53 +65,126 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-[ Upstream commit 4fe8713b873fc881284722ce4ac47995de7cf62c ]
+[ Upstream commit 32a7726c4f4aadfabdb82440d84f88a5a2c8fe13 ]
 
-ccount_timer_shutdown is called from the atomic context in the
-secondary_start_kernel, resulting in the following BUG:
-
-BUG: sleeping function called from invalid context
-in_atomic(): 1, irqs_disabled(): 1, pid: 0, name: swapper/1
-Preemption disabled at:
-  secondary_start_kernel+0xa1/0x130
-Call Trace:
-  ___might_sleep+0xe7/0xfc
-  __might_sleep+0x41/0x44
-  synchronize_irq+0x24/0x64
-  disable_irq+0x11/0x14
-  ccount_timer_shutdown+0x12/0x20
-  clockevents_switch_state+0x82/0xb4
-  clockevents_exchange_device+0x54/0x60
-  tick_check_new_device+0x46/0x70
-  clockevents_register_device+0x8c/0xc8
-  clockevents_config_and_register+0x1d/0x2c
-  local_timer_setup+0x75/0x7c
-  secondary_start_kernel+0xb4/0x130
-  should_never_return+0x32/0x35
-
-Use disable_irq_nosync instead of disable_irq to avoid it.
-This is safe because the ccount timer IRQ is per-CPU, and once IRQ is
-masked the ISR will not be called.
+- add missing memory barriers to the secondary CPU synchronization spin
+  loops; add comment to the matching memory barrier in the boot_secondary
+  and __cpu_die functions;
+- use READ_ONCE/WRITE_ONCE to access cpu_start_id/cpu_start_ccount
+  instead of reading/writing them directly;
+- re-initialize cpu_running every time before starting secondary CPU to
+  flush possible previous CPU startup results.
 
 Signed-off-by: Max Filippov <jcmvbkbc@gmail.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/xtensa/kernel/time.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ arch/xtensa/kernel/head.S |  5 ++++-
+ arch/xtensa/kernel/smp.c  | 34 +++++++++++++++++++++-------------
+ 2 files changed, 25 insertions(+), 14 deletions(-)
 
-diff --git a/arch/xtensa/kernel/time.c b/arch/xtensa/kernel/time.c
-index be81e69b25bc..2251a6e0973a 100644
---- a/arch/xtensa/kernel/time.c
-+++ b/arch/xtensa/kernel/time.c
-@@ -89,7 +89,7 @@ static int ccount_timer_shutdown(struct clock_event_device *evt)
- 		container_of(evt, struct ccount_timer, evt);
+diff --git a/arch/xtensa/kernel/head.S b/arch/xtensa/kernel/head.S
+index 27c8e07ace43..29f445b410b3 100644
+--- a/arch/xtensa/kernel/head.S
++++ b/arch/xtensa/kernel/head.S
+@@ -281,12 +281,13 @@ should_never_return:
  
- 	if (timer->irq_enabled) {
--		disable_irq(evt->irq);
-+		disable_irq_nosync(evt->irq);
- 		timer->irq_enabled = 0;
+ 	movi	a2, cpu_start_ccount
+ 1:
++	memw
+ 	l32i	a3, a2, 0
+ 	beqi	a3, 0, 1b
+ 	movi	a3, 0
+ 	s32i	a3, a2, 0
+-	memw
+ 1:
++	memw
+ 	l32i	a3, a2, 0
+ 	beqi	a3, 0, 1b
+ 	wsr	a3, ccount
+@@ -323,11 +324,13 @@ ENTRY(cpu_restart)
+ 	rsr	a0, prid
+ 	neg	a2, a0
+ 	movi	a3, cpu_start_id
++	memw
+ 	s32i	a2, a3, 0
+ #if XCHAL_DCACHE_IS_WRITEBACK
+ 	dhwbi	a3, 0
+ #endif
+ 1:
++	memw
+ 	l32i	a2, a3, 0
+ 	dhi	a3, 0
+ 	bne	a2, a0, 1b
+diff --git a/arch/xtensa/kernel/smp.c b/arch/xtensa/kernel/smp.c
+index fc4ad21a5ed4..fd0f0b50e021 100644
+--- a/arch/xtensa/kernel/smp.c
++++ b/arch/xtensa/kernel/smp.c
+@@ -192,9 +192,11 @@ static int boot_secondary(unsigned int cpu, struct task_struct *ts)
+ 	int i;
+ 
+ #ifdef CONFIG_HOTPLUG_CPU
+-	cpu_start_id = cpu;
+-	system_flush_invalidate_dcache_range(
+-			(unsigned long)&cpu_start_id, sizeof(cpu_start_id));
++	WRITE_ONCE(cpu_start_id, cpu);
++	/* Pairs with the third memw in the cpu_restart */
++	mb();
++	system_flush_invalidate_dcache_range((unsigned long)&cpu_start_id,
++					     sizeof(cpu_start_id));
+ #endif
+ 	smp_call_function_single(0, mx_cpu_start, (void *)cpu, 1);
+ 
+@@ -203,18 +205,21 @@ static int boot_secondary(unsigned int cpu, struct task_struct *ts)
+ 			ccount = get_ccount();
+ 		while (!ccount);
+ 
+-		cpu_start_ccount = ccount;
++		WRITE_ONCE(cpu_start_ccount, ccount);
+ 
+-		while (time_before(jiffies, timeout)) {
++		do {
++			/*
++			 * Pairs with the first two memws in the
++			 * .Lboot_secondary.
++			 */
+ 			mb();
+-			if (!cpu_start_ccount)
+-				break;
+-		}
++			ccount = READ_ONCE(cpu_start_ccount);
++		} while (ccount && time_before(jiffies, timeout));
+ 
+-		if (cpu_start_ccount) {
++		if (ccount) {
+ 			smp_call_function_single(0, mx_cpu_stop,
+-					(void *)cpu, 1);
+-			cpu_start_ccount = 0;
++						 (void *)cpu, 1);
++			WRITE_ONCE(cpu_start_ccount, 0);
+ 			return -EIO;
+ 		}
  	}
- 	return 0;
+@@ -234,6 +239,7 @@ int __cpu_up(unsigned int cpu, struct task_struct *idle)
+ 	pr_debug("%s: Calling wakeup_secondary(cpu:%d, idle:%p, sp: %08lx)\n",
+ 			__func__, cpu, idle, start_info.stack);
+ 
++	init_completion(&cpu_running);
+ 	ret = boot_secondary(cpu, idle);
+ 	if (ret == 0) {
+ 		wait_for_completion_timeout(&cpu_running,
+@@ -295,8 +301,10 @@ void __cpu_die(unsigned int cpu)
+ 	unsigned long timeout = jiffies + msecs_to_jiffies(1000);
+ 	while (time_before(jiffies, timeout)) {
+ 		system_invalidate_dcache_range((unsigned long)&cpu_start_id,
+-				sizeof(cpu_start_id));
+-		if (cpu_start_id == -cpu) {
++					       sizeof(cpu_start_id));
++		/* Pairs with the second memw in the cpu_restart */
++		mb();
++		if (READ_ONCE(cpu_start_id) == -cpu) {
+ 			platform_cpu_kill(cpu);
+ 			return;
+ 		}
 -- 
 2.19.1
 
