@@ -2,52 +2,54 @@ Return-Path: <SRS0=J4ZE=RP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-11.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 205DBC43381
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 18:12:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B94D3C43381
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 18:12:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E42862087C
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 18:12:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 89B50213A2
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 18:12:31 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1552414343;
-	bh=9jhTcBV93F/rUl40YM2NTogGBf9PFh4gTfh/ZTCJFSE=;
+	s=default; t=1552414351;
+	bh=Wa/UAR4V/3hkQDPAizpQtr2ZqzzqTzscyA88b1OdBeM=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=oZTsgEJLIVeUZnvR3AGLEufyfuP/eitPtnApnqO7KVmH9qsv1CdxJ+acIqNvBaJS1
-	 exyqswFmOuU2cgDDL61mDJeLaTl2l/+BYfDq8tpoX2YVF6aaFyrziYpUcPjbSXYoj6
-	 aqwmAk8q7w9grFA7fm2TIQP1F6pDizGBWp7+qe4A=
+	b=XuNn4e3sIew1NInVaQN7WQl9fV9pLgsONvDfMp0T7q1bSTtJ9NsRhe7YIPRe2Avm1
+	 Wpu7qJmpnq0kqxVRXJFsrm9YNviNJqqLr3wSBrMQI3jkvp/cE0UQV0QfLKJ0zYjKNq
+	 OGrsHcr16JaQZwpsfgbGHom9ckfN8wPvcn8wKAxM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728122AbfCLSMU (ORCPT
+        id S1727718AbfCLSM3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 12 Mar 2019 14:12:20 -0400
-Received: from mail.kernel.org ([198.145.29.99]:45152 "EHLO mail.kernel.org"
+        Tue, 12 Mar 2019 14:12:29 -0400
+Received: from mail.kernel.org ([198.145.29.99]:45120 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727018AbfCLRLg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S1727015AbfCLRLg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Tue, 12 Mar 2019 13:11:36 -0400
 Received: from localhost (unknown [104.133.8.98])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 10BBF2184C;
-        Tue, 12 Mar 2019 17:11:36 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 569A42087C;
+        Tue, 12 Mar 2019 17:11:35 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1552410696;
-        bh=9jhTcBV93F/rUl40YM2NTogGBf9PFh4gTfh/ZTCJFSE=;
+        s=default; t=1552410695;
+        bh=Wa/UAR4V/3hkQDPAizpQtr2ZqzzqTzscyA88b1OdBeM=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=I6rpmURTpp0tlKvBpeRNydoe6vSKTVGwD07ziZOLXGpj6wHM3FaeOyoI3tQng0+QR
-         Ki++7kWoiC//Ch65J/85tmdQGsiRRMwpukjmo67rLZAHnAk8WqpaL7f8bDUuA5cV/r
-         OWjcpqQ1V2z+zwyH9f1ehak7Dw97EvA/NER9Jld4=
+        b=jmi2WldhO9IBq414cwW+H21Zd43EzKn+hrq1ndSyWBePZu5RHdWRSDTtoAcqqTk6X
+         VlsBH3/9FpCtWlPkLN7HgEA285xA9BWPEDEVS8IDNc6Dxsx8V2rFEizkp7QJlKVIqN
+         qYdL1YOmkk3QDMWFahcPP8iw99Q09RJmf0g4z7qI=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         stable@vger.kernel.org,
-        "Peter Zijlstra (Intel)" <peterz@infradead.org>,
-        Thomas Gleixner <tglx@linutronix.de>
-Subject: [PATCH 5.0 22/25] perf/x86/intel: Make cpuc allocations consistent
-Date:   Tue, 12 Mar 2019 10:09:00 -0700
-Message-Id: <20190312170405.316790931@linuxfoundation.org>
+        Martin Blumenstingl <martin.blumenstingl@googlemail.com>,
+        "Daniel F. Dickinson" <cshored@thecshore.com>,
+        Kalle Valo <kvalo@codeaurora.org>,
+        Christian Lamparter <chunkeey@gmail.com>
+Subject: [PATCH 5.0 21/25] ath9k: Avoid OF no-EEPROM quirks without qca,no-eeprom
+Date:   Tue, 12 Mar 2019 10:08:59 -0700
+Message-Id: <20190312170405.198550287@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190312170403.643852550@linuxfoundation.org>
 References: <20190312170403.643852550@linuxfoundation.org>
@@ -66,167 +68,88 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-From: "Peter Zijlstra (Intel)" <peterz@infradead.org>
+From: Daniel F. Dickinson <cshored@thecshore.com>
 
-The cpuc data structure allocation is different between fake and real
-cpuc's; use the same code to init/free both.
+commit ce938231bd3b1d7af3cbd8836f084801090470e1 upstream.
 
-Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
-Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
+ath9k_of_init() function[0] was initially written on the assumption that
+if someone had an explicit ath9k OF node that "there must be something
+wrong, why would someone add an OF node if everything is fine"[1]
+(Quoting Martin Blumenstingl <martin.blumenstingl@googlemail.com>)
+
+"it turns out it's not that simple. with your requirements I'm now aware
+of two use-cases where the current code in ath9k_of_init() doesn't work
+without modifications"[1]
+
+The "your requirements" Martin speaks of is the result of the fact that I
+have a device (PowerCloud Systems CR5000) has some kind of default - not
+unique mac address - set and requires to set the correct MAC address via
+mac-address devicetree property, however:
+
+"some cards come with a physical EEPROM chip [or OTP] so "qca,no-eeprom"
+should not be set (your use-case). in this case AH_USE_EEPROM should be
+set (which is the default when there is no OF node)"[1]
+
+The other use case is:
+
+the firmware on some PowerMac G5 seems to add a OF node for the ath9k
+card automatically. depending on the EEPROM on the card AH_NO_EEP_SWAP
+should be unset (which is the default when there is no OF node). see [3]
+
+After this patch to ath9k_of_init() the new behavior will be:
+
+    if there's no OF node then everything is the same as before
+    if there's an empty OF node then ath9k will use the hardware EEPROM
+      (before ath9k would fail to initialize because no EEPROM data was
+      provided by userspace)
+    if there's an OF node with only a MAC address then ath9k will use
+      the MAC address and the hardware EEPROM (see the case above)
+    with "qca,no-eeprom" EEPROM data from userspace will be requested.
+      the behavior here will not change
+[1]
+
+Martin provides additional background on EEPROM swapping[1].
+
+Thanks to Christian Lamparter <chunkeey@gmail.com> for all his help on
+troubleshooting this issue and the basis for this patch.
+
+[0]https://elixir.bootlin.com/linux/v4.20-rc7/source/drivers/net/wireless/ath/ath9k/init.c#L615
+[1]https://github.com/openwrt/openwrt/pull/1645#issuecomment-448027058
+[2]https://github.com/openwrt/openwrt/pull/1613
+[3]https://patchwork.kernel.org/patch/10241731/
+
+Fixes: 138b41253d9c ("ath9k: parse the device configuration from an OF node")
+Reviewed-by: Martin Blumenstingl <martin.blumenstingl@googlemail.com>
+Tested-by: Martin Blumenstingl <martin.blumenstingl@googlemail.com>
+Signed-off-by: Daniel F. Dickinson <cshored@thecshore.com>
+Signed-off-by: Kalle Valo <kvalo@codeaurora.org>
+Cc: Christian Lamparter <chunkeey@gmail.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
----
- arch/x86/events/core.c       |   13 +++++--------
- arch/x86/events/intel/core.c |   29 ++++++++++++++++++-----------
- arch/x86/events/perf_event.h |   11 ++++++++---
- 3 files changed, 31 insertions(+), 22 deletions(-)
 
---- a/arch/x86/events/core.c
-+++ b/arch/x86/events/core.c
-@@ -1995,7 +1995,7 @@ static int x86_pmu_commit_txn(struct pmu
-  */
- static void free_fake_cpuc(struct cpu_hw_events *cpuc)
- {
--	kfree(cpuc->shared_regs);
-+	intel_cpuc_finish(cpuc);
- 	kfree(cpuc);
- }
+---
+ drivers/net/wireless/ath/ath9k/init.c |    6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
+
+--- a/drivers/net/wireless/ath/ath9k/init.c
++++ b/drivers/net/wireless/ath/ath9k/init.c
+@@ -636,15 +636,15 @@ static int ath9k_of_init(struct ath_soft
+ 		ret = ath9k_eeprom_request(sc, eeprom_name);
+ 		if (ret)
+ 			return ret;
++
++		ah->ah_flags &= ~AH_USE_EEPROM;
++		ah->ah_flags |= AH_NO_EEP_SWAP;
+ 	}
  
-@@ -2007,14 +2007,11 @@ static struct cpu_hw_events *allocate_fa
- 	cpuc = kzalloc(sizeof(*cpuc), GFP_KERNEL);
- 	if (!cpuc)
- 		return ERR_PTR(-ENOMEM);
+ 	mac = of_get_mac_address(np);
+ 	if (mac)
+ 		ether_addr_copy(common->macaddr, mac);
+ 
+-	ah->ah_flags &= ~AH_USE_EEPROM;
+-	ah->ah_flags |= AH_NO_EEP_SWAP;
 -
--	/* only needed, if we have extra_regs */
--	if (x86_pmu.extra_regs) {
--		cpuc->shared_regs = allocate_shared_regs(cpu);
--		if (!cpuc->shared_regs)
--			goto error;
--	}
- 	cpuc->is_fake = 1;
-+
-+	if (intel_cpuc_prepare(cpuc, cpu))
-+		goto error;
-+
- 	return cpuc;
- error:
- 	free_fake_cpuc(cpuc);
---- a/arch/x86/events/intel/core.c
-+++ b/arch/x86/events/intel/core.c
-@@ -3398,7 +3398,7 @@ ssize_t intel_event_sysfs_show(char *pag
- 	return x86_event_sysfs_show(page, config, event);
- }
- 
--struct intel_shared_regs *allocate_shared_regs(int cpu)
-+static struct intel_shared_regs *allocate_shared_regs(int cpu)
- {
- 	struct intel_shared_regs *regs;
- 	int i;
-@@ -3430,10 +3430,9 @@ static struct intel_excl_cntrs *allocate
- 	return c;
- }
- 
--static int intel_pmu_cpu_prepare(int cpu)
--{
--	struct cpu_hw_events *cpuc = &per_cpu(cpu_hw_events, cpu);
- 
-+int intel_cpuc_prepare(struct cpu_hw_events *cpuc, int cpu)
-+{
- 	if (x86_pmu.extra_regs || x86_pmu.lbr_sel_map) {
- 		cpuc->shared_regs = allocate_shared_regs(cpu);
- 		if (!cpuc->shared_regs)
-@@ -3443,7 +3442,7 @@ static int intel_pmu_cpu_prepare(int cpu
- 	if (x86_pmu.flags & PMU_FL_EXCL_CNTRS) {
- 		size_t sz = X86_PMC_IDX_MAX * sizeof(struct event_constraint);
- 
--		cpuc->constraint_list = kzalloc(sz, GFP_KERNEL);
-+		cpuc->constraint_list = kzalloc_node(sz, GFP_KERNEL, cpu_to_node(cpu));
- 		if (!cpuc->constraint_list)
- 			goto err_shared_regs;
- 
-@@ -3468,6 +3467,11 @@ err:
- 	return -ENOMEM;
- }
- 
-+static int intel_pmu_cpu_prepare(int cpu)
-+{
-+	return intel_cpuc_prepare(&per_cpu(cpu_hw_events, cpu), cpu);
-+}
-+
- static void flip_smm_bit(void *data)
- {
- 	unsigned long set = *(unsigned long *)data;
-@@ -3542,9 +3546,8 @@ static void intel_pmu_cpu_starting(int c
- 	}
- }
- 
--static void free_excl_cntrs(int cpu)
-+static void free_excl_cntrs(struct cpu_hw_events *cpuc)
- {
--	struct cpu_hw_events *cpuc = &per_cpu(cpu_hw_events, cpu);
- 	struct intel_excl_cntrs *c;
- 
- 	c = cpuc->excl_cntrs;
-@@ -3565,9 +3568,8 @@ static void intel_pmu_cpu_dying(int cpu)
- 		disable_counter_freeze();
- }
- 
--static void intel_pmu_cpu_dead(int cpu)
-+void intel_cpuc_finish(struct cpu_hw_events *cpuc)
- {
--	struct cpu_hw_events *cpuc = &per_cpu(cpu_hw_events, cpu);
- 	struct intel_shared_regs *pc;
- 
- 	pc = cpuc->shared_regs;
-@@ -3577,7 +3579,12 @@ static void intel_pmu_cpu_dead(int cpu)
- 		cpuc->shared_regs = NULL;
- 	}
- 
--	free_excl_cntrs(cpu);
-+	free_excl_cntrs(cpuc);
-+}
-+
-+static void intel_pmu_cpu_dead(int cpu)
-+{
-+	intel_cpuc_finish(&per_cpu(cpu_hw_events, cpu));
- }
- 
- static void intel_pmu_sched_task(struct perf_event_context *ctx,
-@@ -4715,7 +4722,7 @@ static __init int fixup_ht_bug(void)
- 	hardlockup_detector_perf_restart();
- 
- 	for_each_online_cpu(c)
--		free_excl_cntrs(c);
-+		free_excl_cntrs(&per_cpu(cpu_hw_events, c));
- 
- 	cpus_read_unlock();
- 	pr_info("PMU erratum BJ122, BV98, HSD29 workaround disabled, HT off\n");
---- a/arch/x86/events/perf_event.h
-+++ b/arch/x86/events/perf_event.h
-@@ -889,7 +889,8 @@ struct event_constraint *
- x86_get_event_constraints(struct cpu_hw_events *cpuc, int idx,
- 			  struct perf_event *event);
- 
--struct intel_shared_regs *allocate_shared_regs(int cpu);
-+extern int intel_cpuc_prepare(struct cpu_hw_events *cpuc, int cpu);
-+extern void intel_cpuc_finish(struct cpu_hw_events *cpuc);
- 
- int intel_pmu_init(void);
- 
-@@ -1025,9 +1026,13 @@ static inline int intel_pmu_init(void)
  	return 0;
  }
  
--static inline struct intel_shared_regs *allocate_shared_regs(int cpu)
-+static inline int intel_cpuc_prepare(struct cpu_hw_event *cpuc, int cpu)
-+{
-+	return 0;
-+}
-+
-+static inline void intel_cpuc_finish(struct cpu_hw_event *cpuc)
- {
--	return NULL;
- }
- 
- static inline int is_ht_workaround_enabled(void)
 
 
