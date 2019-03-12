@@ -2,53 +2,54 @@ Return-Path: <SRS0=J4ZE=RP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id ACBC7C43381
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 17:19:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 48A81C43381
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 17:19:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7DF082087C
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 17:19:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1B287214AE
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 17:19:46 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1552411170;
-	bh=g93+PPOcNcMixw48RymxLC9ys/+odly9dcmA2T+GXY0=;
+	s=default; t=1552411186;
+	bh=nInn66kLdAyEWINs8d1XXJnfyoUWoyEMoGetgkOFhzw=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=N0CAQF0GC6QR8z5J0yOzA2qMUjaLOsEytGtOZnphOiApic0t8XUcZbCG1gtBrpK0Y
-	 mAci6Im/gmwuGN+i1K8qZZrcmileOeGQGdV/i5K5d7igBUQwUZCm+BJgOHt9trFN2F
-	 0dpiOH+SDeF+Zdl3Hgn0Sa7TwxZt9l/okhPa+4X8=
+	b=yM+piSTB1U3PvEoLvrxv+tLKWy2vOuuf0ZXDbf3Wk/Uis9PJGVFQQUC+USd8I9uTp
+	 LLAJlGW9bhqMcOPqZHthjZ4PiKIqDBpiEog1Hub9PZfxEcmbtmD/qTVR8a/mCh6dpS
+	 0Oi0eAUWlr1gJN2cd9GLQbZed50Z5MR8JAMIMB1k=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729055AbfCLRS7 (ORCPT
+        id S1730148AbfCLRSr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 12 Mar 2019 13:18:59 -0400
-Received: from mail.kernel.org ([198.145.29.99]:35474 "EHLO mail.kernel.org"
+        Tue, 12 Mar 2019 13:18:47 -0400
+Received: from mail.kernel.org ([198.145.29.99]:34984 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729979AbfCLRSM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 12 Mar 2019 13:18:12 -0400
+        id S1729924AbfCLRSG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 12 Mar 2019 13:18:06 -0400
 Received: from localhost (unknown [104.133.8.98])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 3938B206DF;
-        Tue, 12 Mar 2019 17:18:12 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id A95BB21741;
+        Tue, 12 Mar 2019 17:18:05 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1552411092;
-        bh=g93+PPOcNcMixw48RymxLC9ys/+odly9dcmA2T+GXY0=;
+        s=default; t=1552411085;
+        bh=nInn66kLdAyEWINs8d1XXJnfyoUWoyEMoGetgkOFhzw=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=cE2qRUlVw8Qxap/IIBLTalaKKzZx2zLUQ9YmR6exJ7A+vd4LrEINXaJQLg3YTUQTl
-         tqHXmRYxonGZOoET68/WpJo6QRfN15k42GSW5c8Hm6rEKHPJJW0/q98NCIL/BXNi1P
-         eWoLLXWgmXTHbZBDDIq0K8X53wSwbHohT4bEUHuw=
+        b=BUfezR99x8ooBJCwTOWFnxYTw0CjSrFlYzNrOPvljStOAAgibYpr6lNySM0MwjfwT
+         TkwNtkbO8TfFH0d4cvW+g2yFCq5Dy4yiwlZYL/DZA5BDlLRzazpkEuBnOGeH/WTdEL
+         NfdMFfjSLzOhqMSZyzThfoLN4R46uSifpm7n1qSU=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Vincent Whitchurch <vincent.whitchurch@axis.com>,
-        Russell King <rmk+kernel@armlinux.org.uk>,
+        stable@vger.kernel.org, Pan Bian <bianpan2016@163.com>,
+        Ian Kent <raven@themaw.net>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.9 92/96] ARM: 8781/1: Fix Thumb-2 syscall return for binutils 2.29+
-Date:   Tue, 12 Mar 2019 10:10:50 -0700
-Message-Id: <20190312171041.403754083@linuxfoundation.org>
+Subject: [PATCH 4.9 63/96] autofs: drop dentry reference only when it is never used
+Date:   Tue, 12 Mar 2019 10:10:21 -0700
+Message-Id: <20190312171039.291363881@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190312171034.530434962@linuxfoundation.org>
 References: <20190312171034.530434962@linuxfoundation.org>
@@ -67,79 +68,46 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-[ Upstream commit afc9f65e01cd114cb2cedf544d22239116ce0cc6 ]
+[ Upstream commit 63ce5f552beb9bdb41546b3a26c4374758b21815 ]
 
-When building the kernel as Thumb-2 with binutils 2.29 or newer, if the
-assembler has seen the .type directive (via ENDPROC()) for a symbol, it
-automatically handles the setting of the lowest bit when the symbol is
-used with ADR.  The badr macro on the other hand handles this lowest bit
-manually.  This leads to a jump to a wrong address in the wrong state
-in the syscall return path:
+autofs_expire_run() calls dput(dentry) to drop the reference count of
+dentry.  However, dentry is read via autofs_dentry_ino(dentry) after
+that.  This may result in a use-free-bug.  The patch drops the reference
+count of dentry only when it is never used.
 
- Internal error: Oops - undefined instruction: 0 [#2] SMP THUMB2
- Modules linked in:
- CPU: 0 PID: 652 Comm: modprobe Tainted: G      D           4.18.0-rc3+ #8
- PC is at ret_fast_syscall+0x4/0x62
- LR is at sys_brk+0x109/0x128
- pc : [<80101004>]    lr : [<801c8a35>]    psr: 60000013
- Flags: nZCv  IRQs on  FIQs on  Mode SVC_32  ISA ARM  Segment none
- Control: 50c5387d  Table: 9e82006a  DAC: 00000051
- Process modprobe (pid: 652, stack limit = 0x(ptrval))
-
- 80101000 <ret_fast_syscall>:
- 80101000:       b672            cpsid   i
- 80101002:       f8d9 2008       ldr.w   r2, [r9, #8]
- 80101006:       f1b2 4ffe       cmp.w   r2, #2130706432 ; 0x7f000000
-
- 80101184 <local_restart>:
- 80101184:       f8d9 a000       ldr.w   sl, [r9]
- 80101188:       e92d 0030       stmdb   sp!, {r4, r5}
- 8010118c:       f01a 0ff0       tst.w   sl, #240        ; 0xf0
- 80101190:       d117            bne.n   801011c2 <__sys_trace>
- 80101192:       46ba            mov     sl, r7
- 80101194:       f5ba 7fc8       cmp.w   sl, #400        ; 0x190
- 80101198:       bf28            it      cs
- 8010119a:       f04f 0a00       movcs.w sl, #0
- 8010119e:       f3af 8014       nop.w   {20}
- 801011a2:       f2af 1ea2       subw    lr, pc, #418    ; 0x1a2
-
-To fix this, add a new symbol name which doesn't have ENDPROC used on it
-and use that with badr.  We can't remove the badr usage since that would
-would cause breakage with older binutils.
-
-Signed-off-by: Vincent Whitchurch <vincent.whitchurch@axis.com>
-Signed-off-by: Russell King <rmk+kernel@armlinux.org.uk>
+Link: http://lkml.kernel.org/r/154725122396.11260.16053424107144453867.stgit@pluto-themaw-net
+Signed-off-by: Pan Bian <bianpan2016@163.com>
+Signed-off-by: Ian Kent <raven@themaw.net>
+Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
+Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/arm/kernel/entry-common.S |    4 +++-
- 1 file changed, 3 insertions(+), 1 deletion(-)
+ fs/autofs4/expire.c | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
---- a/arch/arm/kernel/entry-common.S
-+++ b/arch/arm/kernel/entry-common.S
-@@ -32,6 +32,7 @@
-  * features make this path too inefficient.
-  */
- ret_fast_syscall:
-+__ret_fast_syscall:
-  UNWIND(.fnstart	)
-  UNWIND(.cantunwind	)
- 	disable_irq_notrace			@ disable interrupts
-@@ -57,6 +58,7 @@ fast_work_pending:
-  * r0 first to avoid needing to save registers around each C function call.
-  */
- ret_fast_syscall:
-+__ret_fast_syscall:
-  UNWIND(.fnstart	)
-  UNWIND(.cantunwind	)
- 	str	r0, [sp, #S_R0 + S_OFF]!	@ save returned r0
-@@ -223,7 +225,7 @@ local_restart:
- 	tst	r10, #_TIF_SYSCALL_WORK		@ are we tracing syscalls?
- 	bne	__sys_trace
+diff --git a/fs/autofs4/expire.c b/fs/autofs4/expire.c
+index d8e6d421c27f..2e1f50e467f1 100644
+--- a/fs/autofs4/expire.c
++++ b/fs/autofs4/expire.c
+@@ -563,7 +563,6 @@ int autofs4_expire_run(struct super_block *sb,
+ 	pkt.len = dentry->d_name.len;
+ 	memcpy(pkt.name, dentry->d_name.name, pkt.len);
+ 	pkt.name[pkt.len] = '\0';
+-	dput(dentry);
  
--	invoke_syscall tbl, scno, r10, ret_fast_syscall
-+	invoke_syscall tbl, scno, r10, __ret_fast_syscall
+ 	if (copy_to_user(pkt_p, &pkt, sizeof(struct autofs_packet_expire)))
+ 		ret = -EFAULT;
+@@ -576,6 +575,8 @@ int autofs4_expire_run(struct super_block *sb,
+ 	complete_all(&ino->expire_complete);
+ 	spin_unlock(&sbi->fs_lock);
  
- 	add	r1, sp, #S_OFF
- 2:	cmp	scno, #(__ARM_NR_BASE - __NR_SYSCALL_BASE)
++	dput(dentry);
++
+ 	return ret;
+ }
+ 
+-- 
+2.19.1
+
 
 
