@@ -2,62 +2,57 @@ Return-Path: <SRS0=J4ZE=RP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-14.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+X-Spam-Status: No, score=-11.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
 	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 58AC0C43381
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 17:39:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F0088C43381
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 17:39:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2CABA206DF
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 17:39:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C356C2087C
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 17:39:07 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1552412343;
-	bh=rQQThTxj8y/o5aqAM16mu3JThlrjhIy28jblj2YYNWU=;
+	s=default; t=1552412347;
+	bh=6paLWQNG0L+rvjqLdhQwakz/RbHtyYQt7r3QNOf9TrI=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=1DvVv2lwNWzmiuzHtjW77lzKZB1LaQWRLjh+CkQAcODsH8bD0otGPE0LdSumgDctm
-	 q6dn533lvVeD104f4lqagoTiClBpwYObmr4JqDVDgySaxssQzsimJFQ4HmiOV6Zpaj
-	 mUIYiqq6gkLZ5IlMye7syBZqLWjQwqPR8kvHLkQM=
+	b=k3yBGForSA398oWZ/Ks1jjIi1qMS8bi4i7zFLcOIPLSbx7RYVsfcZC/Jcesrnen6z
+	 B8wEqMn+K+rT1XZPITGf+AUpluXvSVke1rDbDo6s1mW5A0VqXxBDcX6aqwO7KrW3hW
+	 lSyglMtUvVBH1tX02pnbUe82t4G5iYx1Z1G16pQM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729514AbfCLRjB (ORCPT
+        id S1728164AbfCLRQZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 12 Mar 2019 13:39:01 -0400
-Received: from mail.kernel.org ([198.145.29.99]:58514 "EHLO mail.kernel.org"
+        Tue, 12 Mar 2019 13:16:25 -0400
+Received: from mail.kernel.org ([198.145.29.99]:55750 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729131AbfCLRQ0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 12 Mar 2019 13:16:26 -0400
+        id S1728696AbfCLRPZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 12 Mar 2019 13:15:25 -0400
 Received: from localhost (unknown [104.133.8.98])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 89803206DF;
-        Tue, 12 Mar 2019 17:16:25 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 4561D21741;
+        Tue, 12 Mar 2019 17:15:24 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1552410985;
-        bh=rQQThTxj8y/o5aqAM16mu3JThlrjhIy28jblj2YYNWU=;
+        s=default; t=1552410924;
+        bh=6paLWQNG0L+rvjqLdhQwakz/RbHtyYQt7r3QNOf9TrI=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=zaLU/ypmLEpMUbiRaiAeltxoRqvTf9JW5r4XLp/8YYBwomhobhSJN90mxsKDo7kKb
-         YnRHJwJZ+EG5EOY9874G7RwzcNyEd/hJVuy0LAshaK0duyHhVVad9UWSx+LKmUXz0A
-         QrPpnfw4pSkmJlhVpx/LMRwO1DNBVzGQKfmCdIZk=
+        b=KoSWmlHEkUzx5XA7+PQzVFM/UW1H5f9xdjuC88Jd15Gg5MLmMAYtR9zCqJxBKYQi7
+         1M7CMNz4scGcveBdF7NYQkOEVk3rrx6ny5M9aLzP6l1tos0rjywViSChq7IX2pYOu0
+         U65bK6uigViUVuybGt5BmiWZohnu8V4xs5hqdLeA=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Qian Cai <cai@lca.pw>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        "H. Peter Anvin" <hpa@zytor.com>,
-        Andrey Ryabinin <aryabinin@virtuozzo.com>,
-        Alexander Potapenko <glider@google.com>,
-        Dmitry Vyukov <dvyukov@google.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.14 080/135] x86_64: increase stack size for KASAN_EXTRA
-Date:   Tue, 12 Mar 2019 10:08:47 -0700
-Message-Id: <20190312170348.549446954@linuxfoundation.org>
+        stable@vger.kernel.org,
+        Martin Blumenstingl <martin.blumenstingl@googlemail.com>,
+        "Daniel F. Dickinson" <cshored@thecshore.com>,
+        Kalle Valo <kvalo@codeaurora.org>,
+        Christian Lamparter <chunkeey@gmail.com>
+Subject: [PATCH 4.19 144/149] ath9k: Avoid OF no-EEPROM quirks without qca,no-eeprom
+Date:   Tue, 12 Mar 2019 10:09:22 -0700
+Message-Id: <20190312170401.358590286@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
-In-Reply-To: <20190312170341.127810985@linuxfoundation.org>
-References: <20190312170341.127810985@linuxfoundation.org>
+In-Reply-To: <20190312170349.421581206@linuxfoundation.org>
+References: <20190312170349.421581206@linuxfoundation.org>
 User-Agent: quilt/0.65
 X-stable: review
 X-Patchwork-Hint: ignore
@@ -69,86 +64,92 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-4.14-stable review patch.  If anyone has any objections, please let me know.
+4.19-stable review patch.  If anyone has any objections, please let me know.
 
 ------------------
 
-[ Upstream commit a8e911d13540487942d53137c156bd7707f66e5d ]
+From: Daniel F. Dickinson <cshored@thecshore.com>
 
-If the kernel is configured with KASAN_EXTRA, the stack size is
-increasted significantly because this option sets "-fstack-reuse" to
-"none" in GCC [1].  As a result, it triggers stack overrun quite often
-with 32k stack size compiled using GCC 8.  For example, this reproducer
+commit ce938231bd3b1d7af3cbd8836f084801090470e1 upstream.
 
-  https://github.com/linux-test-project/ltp/blob/master/testcases/kernel/syscalls/madvise/madvise06.c
+ath9k_of_init() function[0] was initially written on the assumption that
+if someone had an explicit ath9k OF node that "there must be something
+wrong, why would someone add an OF node if everything is fine"[1]
+(Quoting Martin Blumenstingl <martin.blumenstingl@googlemail.com>)
 
-triggers a "corrupted stack end detected inside scheduler" very reliably
-with CONFIG_SCHED_STACK_END_CHECK enabled.
+"it turns out it's not that simple. with your requirements I'm now aware
+of two use-cases where the current code in ath9k_of_init() doesn't work
+without modifications"[1]
 
-There are just too many functions that could have a large stack with
-KASAN_EXTRA due to large local variables that have been called over and
-over again without being able to reuse the stacks.  Some noticiable ones
-are
+The "your requirements" Martin speaks of is the result of the fact that I
+have a device (PowerCloud Systems CR5000) has some kind of default - not
+unique mac address - set and requires to set the correct MAC address via
+mac-address devicetree property, however:
 
-  size
-  7648 shrink_page_list
-  3584 xfs_rmap_convert
-  3312 migrate_page_move_mapping
-  3312 dev_ethtool
-  3200 migrate_misplaced_transhuge_page
-  3168 copy_process
+"some cards come with a physical EEPROM chip [or OTP] so "qca,no-eeprom"
+should not be set (your use-case). in this case AH_USE_EEPROM should be
+set (which is the default when there is no OF node)"[1]
 
-There are other 49 functions are over 2k in size while compiling kernel
-with "-Wframe-larger-than=" even with a related minimal config on this
-machine.  Hence, it is too much work to change Makefiles for each object
-to compile without "-fsanitize-address-use-after-scope" individually.
+The other use case is:
 
-[1] https://gcc.gnu.org/bugzilla/show_bug.cgi?id=81715#c23
+the firmware on some PowerMac G5 seems to add a OF node for the ath9k
+card automatically. depending on the EEPROM on the card AH_NO_EEP_SWAP
+should be unset (which is the default when there is no OF node). see [3]
 
-Although there is a patch in GCC 9 to help the situation, GCC 9 probably
-won't be released in a few months and then it probably take another
-6-month to 1-year for all major distros to include it as a default.
-Hence, the stack usage with KASAN_EXTRA can be revisited again in 2020
-when GCC 9 is everywhere.  Until then, this patch will help users avoid
-stack overrun.
+After this patch to ath9k_of_init() the new behavior will be:
 
-This has already been fixed for arm64 for the same reason via
-6e8830674ea ("arm64: kasan: Increase stack size for KASAN_EXTRA").
+    if there's no OF node then everything is the same as before
+    if there's an empty OF node then ath9k will use the hardware EEPROM
+      (before ath9k would fail to initialize because no EEPROM data was
+      provided by userspace)
+    if there's an OF node with only a MAC address then ath9k will use
+      the MAC address and the hardware EEPROM (see the case above)
+    with "qca,no-eeprom" EEPROM data from userspace will be requested.
+      the behavior here will not change
+[1]
 
-Link: http://lkml.kernel.org/r/20190109215209.2903-1-cai@lca.pw
-Signed-off-by: Qian Cai <cai@lca.pw>
-Cc: Thomas Gleixner <tglx@linutronix.de>
-Cc: Ingo Molnar <mingo@redhat.com>
-Cc: Borislav Petkov <bp@alien8.de>
-Cc: "H. Peter Anvin" <hpa@zytor.com>
-Cc: Andrey Ryabinin <aryabinin@virtuozzo.com>
-Cc: Alexander Potapenko <glider@google.com>
-Cc: Dmitry Vyukov <dvyukov@google.com>
-Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
-Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
+Martin provides additional background on EEPROM swapping[1].
+
+Thanks to Christian Lamparter <chunkeey@gmail.com> for all his help on
+troubleshooting this issue and the basis for this patch.
+
+[0]https://elixir.bootlin.com/linux/v4.20-rc7/source/drivers/net/wireless/ath/ath9k/init.c#L615
+[1]https://github.com/openwrt/openwrt/pull/1645#issuecomment-448027058
+[2]https://github.com/openwrt/openwrt/pull/1613
+[3]https://patchwork.kernel.org/patch/10241731/
+
+Fixes: 138b41253d9c ("ath9k: parse the device configuration from an OF node")
+Reviewed-by: Martin Blumenstingl <martin.blumenstingl@googlemail.com>
+Tested-by: Martin Blumenstingl <martin.blumenstingl@googlemail.com>
+Signed-off-by: Daniel F. Dickinson <cshored@thecshore.com>
+Signed-off-by: Kalle Valo <kvalo@codeaurora.org>
+Cc: Christian Lamparter <chunkeey@gmail.com>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+
 ---
- arch/x86/include/asm/page_64_types.h | 4 ++++
- 1 file changed, 4 insertions(+)
+ drivers/net/wireless/ath/ath9k/init.c |    6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
 
-diff --git a/arch/x86/include/asm/page_64_types.h b/arch/x86/include/asm/page_64_types.h
-index 74d531f6d518..50c8baaca4b0 100644
---- a/arch/x86/include/asm/page_64_types.h
-+++ b/arch/x86/include/asm/page_64_types.h
-@@ -7,7 +7,11 @@
- #endif
+--- a/drivers/net/wireless/ath/ath9k/init.c
++++ b/drivers/net/wireless/ath/ath9k/init.c
+@@ -636,15 +636,15 @@ static int ath9k_of_init(struct ath_soft
+ 		ret = ath9k_eeprom_request(sc, eeprom_name);
+ 		if (ret)
+ 			return ret;
++
++		ah->ah_flags &= ~AH_USE_EEPROM;
++		ah->ah_flags |= AH_NO_EEP_SWAP;
+ 	}
  
- #ifdef CONFIG_KASAN
-+#ifdef CONFIG_KASAN_EXTRA
-+#define KASAN_STACK_ORDER 2
-+#else
- #define KASAN_STACK_ORDER 1
-+#endif
- #else
- #define KASAN_STACK_ORDER 0
- #endif
--- 
-2.19.1
-
+ 	mac = of_get_mac_address(np);
+ 	if (mac)
+ 		ether_addr_copy(common->macaddr, mac);
+ 
+-	ah->ah_flags &= ~AH_USE_EEPROM;
+-	ah->ah_flags |= AH_NO_EEP_SWAP;
+-
+ 	return 0;
+ }
+ 
 
 
