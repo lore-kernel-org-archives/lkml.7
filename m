@@ -7,49 +7,47 @@ X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CF04DC43381
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 17:17:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 40AA5C43381
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 17:17:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9A83C21871
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 17:17:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0AAA121741
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 17:17:41 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1552411059;
-	bh=Ipp0z5zAItGLj44TF6EdG/8tYHWHAfJ302ugg2/OTHU=;
+	s=default; t=1552411061;
+	bh=CMelUpm/SFz2/UxL4sw3BY9Qn7JV1dOO4dFH+2PtoI4=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=gUCXn2amcKQcnN2TLJ41c7YDtAlap6TkHyv+vRvdDOU69qcnGpzRDQ2hXZgLsbMC+
-	 Yhk5z1Y4PFSMSURgQOUADtH/TeXz2Y6hD5a1wqh6v4AKciCV6SfPyzLfwkRwXSzt2Z
-	 mijIzIdhPa3WXz4TS00yp1b+xjgR4FBZFtE4PEDI=
+	b=tEnSs2vmdAw8ibUj0NOOppmutWlqVLTyQAkMrJcGjP+S9ZlcJ6SzuA/Or3O5xdjGp
+	 l2ls2JKgwzTguWL9KWaTK7SHhbag8hFOxkHCXjgcal8ysE0wM06OqiBcOLPzOZEb08
+	 73yHPDy1cdfSQVr00/LuEbS7rdGXuQfjxU5CcFYA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729692AbfCLRRi (ORCPT
+        id S1727891AbfCLRRk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 12 Mar 2019 13:17:38 -0400
+        Tue, 12 Mar 2019 13:17:40 -0400
 Received: from mail.kernel.org ([198.145.29.99]:58668 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729160AbfCLRQ3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 12 Mar 2019 13:16:29 -0400
+        id S1729162AbfCLRQa (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 12 Mar 2019 13:16:30 -0400
 Received: from localhost (unknown [104.133.8.98])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 083CD2171F;
-        Tue, 12 Mar 2019 17:16:29 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 7FDAF21871;
+        Tue, 12 Mar 2019 17:16:30 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1552410989;
-        bh=Ipp0z5zAItGLj44TF6EdG/8tYHWHAfJ302ugg2/OTHU=;
+        s=default; t=1552410990;
+        bh=CMelUpm/SFz2/UxL4sw3BY9Qn7JV1dOO4dFH+2PtoI4=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=JrmGTeOd2VjeIrdjmK+ANcjz9h985viqh9+1jxyB0p32ahCxE36nQzI2irppN3hJ/
-         6p2PBuPvaKDI2XzG5Q7N2hiiHhoArcSAk7uNl7iki/eyuJG8mvv2NYD5lAwUE2DTrf
-         dxHIIKRGOJjxq+GI9DDic1uNCyISdXFE40mPFVsY=
+        b=xm2yF8n+VcUSM4f8eq8QcDJp4y19u0ncgwFBN1jnCkhc6s7+whWYH4uf/+lSpL3nq
+         Q/tVQsbvsN5tV/qG00EPcxH1Dfu79jWdZAet9nmOY5umH8N1e68W8NySaKui8Asttg
+         7Pk2IToqG4ecvJm529fI06F9HZ7cGkON2uotxstI=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Pan Bian <bianpan2016@163.com>,
-        Ian Kent <raven@themaw.net>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
+        stable@vger.kernel.org, Sebastian Reichel <sre@kernel.org>,
+        Pavel Machek <pavel@ucw.cz>, Tony Lindgren <tony@atomide.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.14 085/135] autofs: drop dentry reference only when it is never used
-Date:   Tue, 12 Mar 2019 10:08:52 -0700
-Message-Id: <20190312170349.018393768@linuxfoundation.org>
+Subject: [PATCH 4.14 087/135] ARM: dts: omap4-droid4: Fix typo in cpcap IRQ flags
+Date:   Tue, 12 Mar 2019 10:08:54 -0700
+Message-Id: <20190312170349.196616633@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190312170341.127810985@linuxfoundation.org>
 References: <20190312170341.127810985@linuxfoundation.org>
@@ -68,44 +66,36 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-[ Upstream commit 63ce5f552beb9bdb41546b3a26c4374758b21815 ]
+[ Upstream commit ef4a55b9197a8f844ea0663138e902dcce3e2f36 ]
 
-autofs_expire_run() calls dput(dentry) to drop the reference count of
-dentry.  However, dentry is read via autofs_dentry_ino(dentry) after
-that.  This may result in a use-free-bug.  The patch drops the reference
-count of dentry only when it is never used.
+We're now getting the following error:
 
-Link: http://lkml.kernel.org/r/154725122396.11260.16053424107144453867.stgit@pluto-themaw-net
-Signed-off-by: Pan Bian <bianpan2016@163.com>
-Signed-off-by: Ian Kent <raven@themaw.net>
-Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
-Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
+genirq: Setting trigger mode 1 for irq 230 failed
+(regmap_irq_set_type+0x0/0x15c)
+cpcap-usb-phy cpcap-usb-phy.0: could not get irq dp: -524
+
+Cc: Sebastian Reichel <sre@kernel.org>
+Reported-by: Pavel Machek <pavel@ucw.cz>
+Tested-by: Pavel Machek <pavel@ucw.cz>
+Signed-off-by: Tony Lindgren <tony@atomide.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- fs/autofs4/expire.c | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+ arch/arm/boot/dts/motorola-cpcap-mapphone.dtsi | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/fs/autofs4/expire.c b/fs/autofs4/expire.c
-index 57725d4a8c59..141f9bc213a3 100644
---- a/fs/autofs4/expire.c
-+++ b/fs/autofs4/expire.c
-@@ -567,7 +567,6 @@ int autofs4_expire_run(struct super_block *sb,
- 	pkt.len = dentry->d_name.len;
- 	memcpy(pkt.name, dentry->d_name.name, pkt.len);
- 	pkt.name[pkt.len] = '\0';
--	dput(dentry);
- 
- 	if (copy_to_user(pkt_p, &pkt, sizeof(struct autofs_packet_expire)))
- 		ret = -EFAULT;
-@@ -580,6 +579,8 @@ int autofs4_expire_run(struct super_block *sb,
- 	complete_all(&ino->expire_complete);
- 	spin_unlock(&sbi->fs_lock);
- 
-+	dput(dentry);
-+
- 	return ret;
- }
- 
+diff --git a/arch/arm/boot/dts/motorola-cpcap-mapphone.dtsi b/arch/arm/boot/dts/motorola-cpcap-mapphone.dtsi
+index 4d61e5b1334a..bcced922b280 100644
+--- a/arch/arm/boot/dts/motorola-cpcap-mapphone.dtsi
++++ b/arch/arm/boot/dts/motorola-cpcap-mapphone.dtsi
+@@ -92,7 +92,7 @@
+ 			interrupts-extended = <
+ 				&cpcap 15 0 &cpcap 14 0 &cpcap 28 0 &cpcap 19 0
+ 				&cpcap 18 0 &cpcap 17 0 &cpcap 16 0 &cpcap 49 0
+-				&cpcap 48 1
++				&cpcap 48 0
+ 			>;
+ 			interrupt-names =
+ 				"id_ground", "id_float", "se0conn", "vbusvld",
 -- 
 2.19.1
 
