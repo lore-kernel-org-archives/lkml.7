@@ -2,150 +2,105 @@ Return-Path: <SRS0=J4ZE=RP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_NEOMUTT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_MUTT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CC326C43381
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 10:30:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0CD75C43381
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 10:30:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A299D2147C
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 10:30:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D882B214D8
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 10:30:27 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726663AbfCLKaU (ORCPT
+        id S1726748AbfCLKa0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 12 Mar 2019 06:30:20 -0400
-Received: from mx2.suse.de ([195.135.220.15]:41642 "EHLO mx1.suse.de"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1725873AbfCLKaU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 12 Mar 2019 06:30:20 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx1.suse.de (Postfix) with ESMTP id D69CCAEC2;
-        Tue, 12 Mar 2019 10:30:17 +0000 (UTC)
-Date:   Tue, 12 Mar 2019 11:30:17 +0100
-From:   Petr Mladek <pmladek@suse.com>
-To:     John Ogness <john.ogness@linutronix.de>
-Cc:     Sergey Senozhatsky <sergey.senozhatsky.work@gmail.com>,
-        Sergey Senozhatsky <sergey.senozhatsky@gmail.com>,
-        linux-kernel@vger.kernel.org,
-        Peter Zijlstra <peterz@infradead.org>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Daniel Wang <wonderfly@google.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Alan Cox <gnomes@lxorguk.ukuu.org.uk>,
-        Jiri Slaby <jslaby@suse.com>,
-        Peter Feiner <pfeiner@google.com>, linux-serial@vger.kernel.org
-Subject: Re: [RFC PATCH v1 08/25] printk: add ring buffer and kthread
-Message-ID: <20190312103017.rvdtoc3j34eayleb@pathway.suse.cz>
-References: <20190212143003.48446-1-john.ogness@linutronix.de>
- <20190212143003.48446-9-john.ogness@linutronix.de>
- <20190304073856.GA552@jagdpanzerIV>
- <20190304100044.GC21004@jagdpanzerIV>
- <20190304110703.GA960@tigerII.localdomain>
- <87o96p9gtx.fsf@linutronix.de>
- <20190307051530.GC4893@jagdpanzerIV>
- <87va0pznsq.fsf@linutronix.de>
+        Tue, 12 Mar 2019 06:30:26 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:32886 "EHLO mx1.redhat.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725873AbfCLKaZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 12 Mar 2019 06:30:25 -0400
+Received: from smtp.corp.redhat.com (int-mx05.intmail.prod.int.phx2.redhat.com [10.5.11.15])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id 4CE8C30833C2;
+        Tue, 12 Mar 2019 10:30:25 +0000 (UTC)
+Received: from krava (unknown [10.43.17.124])
+        by smtp.corp.redhat.com (Postfix) with SMTP id E89F15D70E;
+        Tue, 12 Mar 2019 10:30:23 +0000 (UTC)
+Date:   Tue, 12 Mar 2019 11:30:22 +0100
+From:   Jiri Olsa <jolsa@redhat.com>
+To:     Andi Kleen <andi@firstfloor.org>
+Cc:     acme@kernel.org, jolsa@kernel.org,
+        linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Andi Kleen <ak@linux.intel.com>
+Subject: Re: [PATCH v1 04/10] perf, tools, record: Clarify help for
+ --switch-output
+Message-ID: <20190312103022.GA13071@krava>
+References: <20190311202446.10210-1-andi@firstfloor.org>
+ <20190311202446.10210-5-andi@firstfloor.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <87va0pznsq.fsf@linutronix.de>
-User-Agent: NeoMutt/20170421 (1.8.2)
+In-Reply-To: <20190311202446.10210-5-andi@firstfloor.org>
+User-Agent: Mutt/1.10.1 (2018-07-13)
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.15
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.44]); Tue, 12 Mar 2019 10:30:25 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon 2019-03-11 11:51:49, John Ogness wrote:
-> On 2019-03-07, Sergey Senozhatsky <sergey.senozhatsky.work@gmail.com> wrote:
-> > I don't really understand the role of loglevel anymore.
+On Mon, Mar 11, 2019 at 01:24:40PM -0700, Andi Kleen wrote:
+> From: Andi Kleen <ak@linux.intel.com>
 > 
-> "what the kernel considers" is a configuration option of the
-> administrator. The administrator can increase the verbocity of the
-> console (loglevel) without having negative effects on the system
-> itself.
+> The help description for --switch-output looks like there
+> are multiple comma separated fields. But it's actually a choice
+> of different options. Make it clear and less confusing.
+> 
+> Before:
+> 
+> % perf report -h
 
-Where do you get the confidence that atomic console will not
-slow down the system? Have you tried it on real life workload
-when debugging a real life bug?
-
-Some benchmarks might help. Well, it would be needed to
-trigger some messages from them and see how the different
-approaches affect the overall system performance.
+s/report/record/
 
 
-> Also, if the system were to suddenly crash, those crash messages
-> shouldn't be in jeopardy just because the verbocity of the console was
-> turned up.
+> ...
+>         --switch-output[=<signal,size,time>]
+>                           Switch output when receive SIGUSR2 or cross size,time threshold
+> 
+> After:
+> 
+> % perf report -h
 
-This expects that the error messages will be enough to discover
-and fix the problem.
+ditto
 
+jirka
 
-> You (and Petr) talk about that _all_ console printing is for
-> emergencies. That if an administrator sets the loglevel to 7 it is
-> because the pr_info messages are just as important as the pr_emerg.
-
-It might be true when the messages with higher level (more critical)
-are not enough to understand the situation.
-
-
-> And if that is indeed the intention of console printing and loglevel, then
-> why is asynchronous printk calls for console messages even allowed
-> today? IMO that isn't taking the importance of the message very
-> seriously.
-
-Because it was working pretty well in the past. The amount of messages
-is still growing (code complexity, more CPUs, more devices, ...).
-Our customers have started reporting softlockups "only" 7 years ago
-or so.
-
-We currently have two level handling of messages:
-
-   + all messages can be seen from userspace
-   + messages below console_loglevel can be seen
-     on the console
-
-You are introducing one more level of handling:
-
-   + critical messages are printed on the console directly
-     even before the queued less critical ones
-
-
-The third level would be acceptable when:
-
-   + atomic consoles are reliable enough
-   + the code complexity is worth the gain
-
-
-IMHO, we mix too many things here:
-
-   + log buffer implementation
-   + console offload
-   + direct console handling using atomic consoles
-
-I see the potential in all areas:
-
-   + lock less ring buffer helps to avoid deadlocks,
-     and extra log buffers
-
-   + console offload prevents too long stalls (softlockups)
-
-   + direct console handling might help to avoid deadlocks
-     and might make the output more reliable.
-
-
-I think that we are on the same page here.
-
-But we must use an incremental approach. It is not acceptable
-to replace everything by a single patch. And it is not acceptable
-to break important functionality and implement alternative
-solution several patches later.
-
-Also no solution is as ideal as it is sometimes presented
-in this thread.
-
-Best Regards,
-Petr
+> ...
+> 
+>         --switch-output[=<signal or size[BKMG] or time[smhd]>]
+>                           Switch output when receiving SIGUSR2 (signal) or cross a size or time threshold
+> 
+> Signed-off-by: Andi Kleen <ak@linux.intel.com>
+> ---
+>  tools/perf/builtin-record.c | 4 ++--
+>  1 file changed, 2 insertions(+), 2 deletions(-)
+> 
+> diff --git a/tools/perf/builtin-record.c b/tools/perf/builtin-record.c
+> index 02d7c40b2d10..e7144a1c1c82 100644
+> --- a/tools/perf/builtin-record.c
+> +++ b/tools/perf/builtin-record.c
+> @@ -1989,8 +1989,8 @@ static struct option __record_options[] = {
+>  	OPT_BOOLEAN(0, "timestamp-boundary", &record.timestamp_boundary,
+>  		    "Record timestamp boundary (time of first/last samples)"),
+>  	OPT_STRING_OPTARG_SET(0, "switch-output", &record.switch_output.str,
+> -			  &record.switch_output.set, "signal,size,time",
+> -			  "Switch output when receive SIGUSR2 or cross size,time threshold",
+> +			  &record.switch_output.set, "signal or size[BKMG] or time[smhd]",
+> +			  "Switch output when receiving SIGUSR2 (signal) or cross a size or time threshold",
+>  			  "signal"),
+>  	OPT_INTEGER(0, "switch-max-files", &record.switch_output.num_files,
+>  		   "Limit number of switch output generated files"),
+> -- 
+> 2.20.1
+> 
