@@ -4,50 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 16A51C43381
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 18:09:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 46616C43381
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 18:10:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D1321205C9
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 18:09:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 051B0205C9
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 18:10:02 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1552414176;
-	bh=cQlXbgBFplaTh2TUSBeyjQiQKEkiYGQIJ6syTZordQ8=;
+	s=default; t=1552414202;
+	bh=jN45d+dQiiwXoTJQ2S7EGXD8rkxxC81GntU3relK228=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=qGBFdANkH0VfPLRM0pPNPSWL3vunkIpYgdhFpYjzVsB28nSC48L9ptvm8EfPmtpUN
-	 4DkT0fLzIZq+ncpARA2aR+twsdo/Bh2dQsnc1+YmlZN6m0sg7ax2JxCUi5B6yyBVrJ
-	 mCegKeehZySepG18StULqbolJL/m+3y7+ueiLTnQ=
+	b=KT+N0guAFt5cW/SEDTeQLPrCKYk8m834EFHWoHG4JzNyKlJrwtA8fMgQitKjWQDPG
+	 cmfti7QeHt/xJOVaa5z9LLXTU5rtMgESWJmqbVYty8qlpRUybsfoIcXeOhK9HjDqxr
+	 D9o4DMRuQTW3DCFNu8wQR6reAHOBlb9esn9PdOHE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728509AbfCLSJf (ORCPT
+        id S1729110AbfCLSKA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 12 Mar 2019 14:09:35 -0400
-Received: from mail.kernel.org ([198.145.29.99]:46366 "EHLO mail.kernel.org"
+        Tue, 12 Mar 2019 14:10:00 -0400
+Received: from mail.kernel.org ([198.145.29.99]:46232 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727250AbfCLRMB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 12 Mar 2019 13:12:01 -0400
+        id S1727226AbfCLRL6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 12 Mar 2019 13:11:58 -0400
 Received: from localhost (unknown [104.133.8.98])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id DFB472177E;
-        Tue, 12 Mar 2019 17:12:00 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id E511A214AE;
+        Tue, 12 Mar 2019 17:11:57 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1552410721;
-        bh=cQlXbgBFplaTh2TUSBeyjQiQKEkiYGQIJ6syTZordQ8=;
+        s=default; t=1552410718;
+        bh=jN45d+dQiiwXoTJQ2S7EGXD8rkxxC81GntU3relK228=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=QZa/tMw9VEihFo0lDbBWVgJZAF75EvWJAm3wHFEq5jXiVuuDIUW+mYorgWIzKMiVN
-         L6N1AJfyksYxrvNo/kRkcYGr0W7EQlydbWfLmcb9luTJk95XYkHPtjrDbTlk0GY8bC
-         tE1VbRZRQd1Ov5f3BNICSPvEDJPM9aH6/3zoaKmU=
+        b=qgp9yaZB2X0+qp/0G56pvJjAs+eF5GqB1cXZAus9nfQuwN5aBZNDS9jUdtglZ85YH
+         kOhQEm3uRELNh6Z1jW9lLJlX3JWK5xK9k9J0CxaddTqUrEI+ERijusrqClMOHho6Lb
+         2DD124XmqAT6PphFOtZP9WAo91xDTObDuA/37k2c=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Taniya Das <tdas@codeaurora.org>,
-        Stephen Boyd <sboyd@kernel.org>,
+        stable@vger.kernel.org, Yonglong Liu <liuyonglong@huawei.com>,
+        Peng Li <lipeng321@huawei.com>,
+        "David S. Miller" <davem@davemloft.net>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.20 019/171] clk: qcom: gcc: Use active only source for CPUSS clocks
-Date:   Tue, 12 Mar 2019 10:06:39 -0700
-Message-Id: <20190312170349.581043758@linuxfoundation.org>
+Subject: [PATCH 4.20 033/171] net: hns: Restart autoneg need return failed when autoneg off
+Date:   Tue, 12 Mar 2019 10:06:53 -0700
+Message-Id: <20190312170350.886109893@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190312170347.868927101@linuxfoundation.org>
 References: <20190312170347.868927101@linuxfoundation.org>
@@ -66,67 +67,50 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-[ Upstream commit 9ff1a3b4912528f853048ccd9757ba6a2cc75557 ]
+[ Upstream commit ed29ca8b9592562559c64d027fb5eb126e463e2c ]
 
-The clocks of the CPUSS such as "gcc_cpuss_ahb_clk_src" is a CRITICAL
-clock and needs to vote on the active only source of XO, so as to keep
-the vote as long as CPUSS is active. Similar rbcpr_clk_src is also has
-the same requirement.
+The hns driver of earlier devices, when autoneg off, restart autoneg
+will return -EINVAL, so make the hns driver for the latest devices
+do the same.
 
-Signed-off-by: Taniya Das <tdas@codeaurora.org>
-Fixes: 06391eddb60a ("clk: qcom: Add Global Clock controller (GCC) driver for SDM845")
-Signed-off-by: Stephen Boyd <sboyd@kernel.org>
+Signed-off-by: Yonglong Liu <liuyonglong@huawei.com>
+Signed-off-by: Peng Li <lipeng321@huawei.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/clk/qcom/gcc-sdm845.c | 14 ++++++++++----
- 1 file changed, 10 insertions(+), 4 deletions(-)
+ drivers/net/ethernet/hisilicon/hns/hns_ethtool.c | 16 +++++++++-------
+ 1 file changed, 9 insertions(+), 7 deletions(-)
 
-diff --git a/drivers/clk/qcom/gcc-sdm845.c b/drivers/clk/qcom/gcc-sdm845.c
-index f133b7f5652f..26110e74e086 100644
---- a/drivers/clk/qcom/gcc-sdm845.c
-+++ b/drivers/clk/qcom/gcc-sdm845.c
-@@ -115,8 +115,8 @@ static const char * const gcc_parent_names_6[] = {
- 	"core_bi_pll_test_se",
- };
+diff --git a/drivers/net/ethernet/hisilicon/hns/hns_ethtool.c b/drivers/net/ethernet/hisilicon/hns/hns_ethtool.c
+index 774beda040a1..e2710ff48fb0 100644
+--- a/drivers/net/ethernet/hisilicon/hns/hns_ethtool.c
++++ b/drivers/net/ethernet/hisilicon/hns/hns_ethtool.c
+@@ -1157,16 +1157,18 @@ static int hns_get_regs_len(struct net_device *net_dev)
+  */
+ static int hns_nic_nway_reset(struct net_device *netdev)
+ {
+-	int ret = 0;
+ 	struct phy_device *phy = netdev->phydev;
  
--static const char * const gcc_parent_names_7[] = {
--	"bi_tcxo",
-+static const char * const gcc_parent_names_7_ao[] = {
-+	"bi_tcxo_ao",
- 	"gpll0",
- 	"gpll0_out_even",
- 	"core_bi_pll_test_se",
-@@ -128,6 +128,12 @@ static const char * const gcc_parent_names_8[] = {
- 	"core_bi_pll_test_se",
- };
+-	if (netif_running(netdev)) {
+-		/* if autoneg is disabled, don't restart auto-negotiation */
+-		if (phy && phy->autoneg == AUTONEG_ENABLE)
+-			ret = genphy_restart_aneg(phy);
+-	}
++	if (!netif_running(netdev))
++		return 0;
  
-+static const char * const gcc_parent_names_8_ao[] = {
-+	"bi_tcxo_ao",
-+	"gpll0",
-+	"core_bi_pll_test_se",
-+};
+-	return ret;
++	if (!phy)
++		return -EOPNOTSUPP;
 +
- static const struct parent_map gcc_parent_map_10[] = {
- 	{ P_BI_TCXO, 0 },
- 	{ P_GPLL0_OUT_MAIN, 1 },
-@@ -210,7 +216,7 @@ static struct clk_rcg2 gcc_cpuss_ahb_clk_src = {
- 	.freq_tbl = ftbl_gcc_cpuss_ahb_clk_src,
- 	.clkr.hw.init = &(struct clk_init_data){
- 		.name = "gcc_cpuss_ahb_clk_src",
--		.parent_names = gcc_parent_names_7,
-+		.parent_names = gcc_parent_names_7_ao,
- 		.num_parents = 4,
- 		.ops = &clk_rcg2_ops,
- 	},
-@@ -229,7 +235,7 @@ static struct clk_rcg2 gcc_cpuss_rbcpr_clk_src = {
- 	.freq_tbl = ftbl_gcc_cpuss_rbcpr_clk_src,
- 	.clkr.hw.init = &(struct clk_init_data){
- 		.name = "gcc_cpuss_rbcpr_clk_src",
--		.parent_names = gcc_parent_names_8,
-+		.parent_names = gcc_parent_names_8_ao,
- 		.num_parents = 3,
- 		.ops = &clk_rcg2_ops,
- 	},
++	if (phy->autoneg != AUTONEG_ENABLE)
++		return -EINVAL;
++
++	return genphy_restart_aneg(phy);
+ }
+ 
+ static u32
 -- 
 2.19.1
 
