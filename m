@@ -2,164 +2,108 @@ Return-Path: <SRS0=J4ZE=RP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 81548C43381
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 02:04:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 64471C43381
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 02:05:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5B3C3214AE
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 02:04:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 23C70214AE
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 02:05:08 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1552356308;
+	bh=iG3LEmt/Qr+FqshnjO9TU+V6auBasMilB8z8HzboAig=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=ffftvNk1RH0eEyJjck8XU7zbnZoAtglaDVNzqvrDJavMIwn7g6uQSQQAedvhIUJnd
+	 SdGYXpgbT/LBnlo8hMSziatlUU3I0IerNMvOc4aSclIe934UAIPveB8S4/fkoJl75M
+	 +ByLzuWhXlolRVYjxltfHoXwi5luCz8+bdoom3zs=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726935AbfCLCEp (ORCPT
+        id S1726947AbfCLCFH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 11 Mar 2019 22:04:45 -0400
-Received: from szxga07-in.huawei.com ([45.249.212.35]:43518 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726616AbfCLCEk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 11 Mar 2019 22:04:40 -0400
-Received: from DGGEMS414-HUB.china.huawei.com (unknown [172.30.72.59])
-        by Forcepoint Email with ESMTP id DD00DF6DDB0A9B4B01F1;
-        Tue, 12 Mar 2019 10:04:38 +0800 (CST)
-Received: from localhost (10.177.31.96) by DGGEMS414-HUB.china.huawei.com
- (10.3.19.214) with Microsoft SMTP Server id 14.3.408.0; Tue, 12 Mar 2019
- 10:04:32 +0800
-From:   Yue Haibing <yuehaibing@huawei.com>
-To:     <davem@davemloft.net>, <joe@perches.com>,
-        <gregkh@linuxfoundation.org>
-CC:     <linux-kernel@vger.kernel.org>, <netdev@vger.kernel.org>,
-        YueHaibing <yuehaibing@huawei.com>
-Subject: [PATCH] appletalk: Fix potential NULL pointer dereference in unregister_snap_client
-Date:   Tue, 12 Mar 2019 10:04:26 +0800
-Message-ID: <20190312020426.4824-1-yuehaibing@huawei.com>
-X-Mailer: git-send-email 2.10.2.windows.1
+        Mon, 11 Mar 2019 22:05:07 -0400
+Received: from mail.kernel.org ([198.145.29.99]:36260 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726813AbfCLCC2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 11 Mar 2019 22:02:28 -0400
+Received: from quaco.meukeo.local (unknown [179.97.35.11])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id B86B4214AE;
+        Tue, 12 Mar 2019 02:02:24 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1552356147;
+        bh=iG3LEmt/Qr+FqshnjO9TU+V6auBasMilB8z8HzboAig=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=DwmomOGZsVGr9n7TIbAkUqY+Nsb+v5sLzRfWgI9T0M8Kvo8SfUkTdIpmlFdk4+Rua
+         kxZegsSyceDyIeh67G6sxfHFMZa42+i/6Rsf+RjP3LDxE0HrB/bWhLLnrlmm8EVB+6
+         EWGs9gsTWTYP0q6tC1EiYdejytgAR06EIFO1Z2Eo=
+From:   Arnaldo Carvalho de Melo <acme@kernel.org>
+To:     Ingo Molnar <mingo@kernel.org>
+Cc:     Jiri Olsa <jolsa@kernel.org>, Namhyung Kim <namhyung@kernel.org>,
+        Clark Williams <williams@redhat.com>,
+        linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
+        Andi Kleen <ak@linux.intel.com>,
+        Arnaldo Carvalho de Melo <acme@redhat.com>
+Subject: [PATCH 04/30] perf time-utils: Add utility function to print time stamps in nanoseconds
+Date:   Mon, 11 Mar 2019 23:01:38 -0300
+Message-Id: <20190312020204.22092-5-acme@kernel.org>
+X-Mailer: git-send-email 2.20.1
+In-Reply-To: <20190312020204.22092-1-acme@kernel.org>
+References: <20190312020204.22092-1-acme@kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Originating-IP: [10.177.31.96]
-X-CFilter-Loop: Reflected
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: YueHaibing <yuehaibing@huawei.com>
+From: Andi Kleen <ak@linux.intel.com>
 
-register_snap_client may return NULL, all the callers
-check it, but only print a warning. This will result in
-NULL pointer dereference in unregister_snap_client and other
-places.
+Add a utility function to print nanosecond timestamps.
 
-It has always been used like this since v2.6
-
-Reported-by: Dan Carpenter <dan.carpenter@oracle.com>
-Signed-off-by: YueHaibing <yuehaibing@huawei.com>
+Signed-off-by: Andi Kleen <ak@linux.intel.com>
+Cc: Jiri Olsa <jolsa@kernel.org>
+Cc: Namhyung Kim <namhyung@kernel.org>
+Link: http://lkml.kernel.org/r/20190305144758.12397-11-andi@firstfloor.org
+Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 ---
- include/linux/atalk.h |  2 +-
- net/appletalk/aarp.c  | 13 ++++++++++---
- net/appletalk/ddp.c   | 20 ++++++++++++--------
- 3 files changed, 23 insertions(+), 12 deletions(-)
+ tools/perf/util/time-utils.c | 8 ++++++++
+ tools/perf/util/time-utils.h | 1 +
+ 2 files changed, 9 insertions(+)
 
-diff --git a/include/linux/atalk.h b/include/linux/atalk.h
-index 5a90f28..0e5265a 100644
---- a/include/linux/atalk.h
-+++ b/include/linux/atalk.h
-@@ -108,7 +108,7 @@ static __inline__ struct elapaarp *aarp_hdr(struct sk_buff *skb)
- #define AARP_RESOLVE_TIME	(10 * HZ)
- 
- extern struct datalink_proto *ddp_dl, *aarp_dl;
--extern void aarp_proto_init(void);
-+extern int aarp_proto_init(void);
- 
- /* Inter module exports */
- 
-diff --git a/net/appletalk/aarp.c b/net/appletalk/aarp.c
-index 49a16ce..d11372d 100644
---- a/net/appletalk/aarp.c
-+++ b/net/appletalk/aarp.c
-@@ -879,15 +879,22 @@ static struct notifier_block aarp_notifier = {
- 
- static unsigned char aarp_snap_id[] = { 0x00, 0x00, 0x00, 0x80, 0xF3 };
- 
--void __init aarp_proto_init(void)
-+int __init aarp_proto_init(void)
- {
-+	int rc;
-+
- 	aarp_dl = register_snap_client(aarp_snap_id, aarp_rcv);
--	if (!aarp_dl)
-+	if (!aarp_dl) {
- 		printk(KERN_CRIT "Unable to register AARP with SNAP.\n");
-+		return -ENOMEM;
-+	}
- 	timer_setup(&aarp_timer, aarp_expire_timeout, 0);
- 	aarp_timer.expires  = jiffies + sysctl_aarp_expiry_time;
- 	add_timer(&aarp_timer);
--	register_netdevice_notifier(&aarp_notifier);
-+	rc = register_netdevice_notifier(&aarp_notifier);
-+	if (rc)
-+		unregister_snap_client(aarp_dl);
-+	return rc;
+diff --git a/tools/perf/util/time-utils.c b/tools/perf/util/time-utils.c
+index 0f53baec660e..20663a460df3 100644
+--- a/tools/perf/util/time-utils.c
++++ b/tools/perf/util/time-utils.c
+@@ -453,6 +453,14 @@ int timestamp__scnprintf_usec(u64 timestamp, char *buf, size_t sz)
+ 	return scnprintf(buf, sz, "%"PRIu64".%06"PRIu64, sec, usec);
  }
  
- /* Remove the AARP entries associated with a device. */
-diff --git a/net/appletalk/ddp.c b/net/appletalk/ddp.c
-index 795fbc6..709d254 100644
---- a/net/appletalk/ddp.c
-+++ b/net/appletalk/ddp.c
-@@ -1904,9 +1904,6 @@ static unsigned char ddp_snap_id[] = { 0x08, 0x00, 0x07, 0x80, 0x9B };
- EXPORT_SYMBOL(atrtr_get_dev);
- EXPORT_SYMBOL(atalk_find_dev_addr);
- 
--static const char atalk_err_snap[] __initconst =
--	KERN_CRIT "Unable to register DDP with SNAP.\n";
--
- /* Called by proto.c on kernel start up */
- static int __init atalk_init(void)
- {
-@@ -1921,17 +1918,22 @@ static int __init atalk_init(void)
- 		goto out_proto;
- 
- 	ddp_dl = register_snap_client(ddp_snap_id, atalk_rcv);
--	if (!ddp_dl)
--		printk(atalk_err_snap);
-+	if (!ddp_dl) {
-+		pr_crit("Unable to register DDP with SNAP.\n");
-+		goto out_sock;
-+	}
- 
- 	dev_add_pack(&ltalk_packet_type);
- 	dev_add_pack(&ppptalk_packet_type);
- 
- 	rc = register_netdevice_notifier(&ddp_notifier);
- 	if (rc)
--		goto out_sock;
-+		goto out_snap;
++int timestamp__scnprintf_nsec(u64 timestamp, char *buf, size_t sz)
++{
++	u64 sec  = timestamp / NSEC_PER_SEC,
++	    nsec = timestamp % NSEC_PER_SEC;
 +
-+	rc = aarp_proto_init();
-+	if (rc)
-+		goto out_dev;
++	return scnprintf(buf, sz, "%" PRIu64 ".%09" PRIu64, sec, nsec);
++}
++
+ int fetch_current_timestamp(char *buf, size_t sz)
+ {
+ 	struct timeval tv;
+diff --git a/tools/perf/util/time-utils.h b/tools/perf/util/time-utils.h
+index b923de44e36f..72a42ea1d513 100644
+--- a/tools/perf/util/time-utils.h
++++ b/tools/perf/util/time-utils.h
+@@ -30,6 +30,7 @@ int perf_time__parse_for_ranges(const char *str, struct perf_session *session,
+ 				int *range_size, int *range_num);
  
--	aarp_proto_init();
- 	rc = atalk_proc_init();
- 	if (rc)
- 		goto out_aarp;
-@@ -1945,11 +1947,13 @@ static int __init atalk_init(void)
- 	atalk_proc_exit();
- out_aarp:
- 	aarp_cleanup_module();
-+out_dev:
- 	unregister_netdevice_notifier(&ddp_notifier);
--out_sock:
-+out_snap:
- 	dev_remove_pack(&ppptalk_packet_type);
- 	dev_remove_pack(&ltalk_packet_type);
- 	unregister_snap_client(ddp_dl);
-+out_sock:
- 	sock_unregister(PF_APPLETALK);
- out_proto:
- 	proto_unregister(&ddp_proto);
+ int timestamp__scnprintf_usec(u64 timestamp, char *buf, size_t sz);
++int timestamp__scnprintf_nsec(u64 timestamp, char *buf, size_t sz);
+ 
+ int fetch_current_timestamp(char *buf, size_t sz);
+ 
 -- 
-2.7.0
-
+2.20.1
 
