@@ -2,305 +2,84 @@ Return-Path: <SRS0=J4ZE=RP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_MUTT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 56299C43381
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 07:12:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8F43FC43381
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 07:13:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F21EF2171F
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 07:12:30 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="NaRTbkxX"
+	by mail.kernel.org (Postfix) with ESMTP id 59C46214AE
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 07:13:20 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727323AbfCLHM3 (ORCPT
+        id S1727389AbfCLHNS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 12 Mar 2019 03:12:29 -0400
-Received: from mail-pf1-f196.google.com ([209.85.210.196]:44385 "EHLO
-        mail-pf1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726614AbfCLHM2 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 12 Mar 2019 03:12:28 -0400
-Received: by mail-pf1-f196.google.com with SMTP id a3so1141343pff.11;
-        Tue, 12 Mar 2019 00:12:28 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=DITBBTDueFMwgO9c43r4QUnl5fmEGfsFdxK6pS4NikQ=;
-        b=NaRTbkxXSNxzdQTO9Nz4CCC82K4WzcFVl8VbOYZXMwBWymJZudJBC/DufVjx2rHYnK
-         X/R2ugk0+0iy2vWL12iBWx2dYGRBsTY/eOzM+gWER7ACihezeDTUlpXblHP/kWCBOijH
-         QIhIiIKzjrw822GiIjbVR0bIqZBCZtMd3uJIVYd28S4PXUE8Cfz7OPa3JiF3+NyvohyZ
-         BIG/Uf+gpAD8rIX1B4Z71d2c/00FOFGYNSI6zbqihTuVnjO5TNyZoC1X4b8K/Vwd81pi
-         BUP+KPqbC5PVC9mcS4QQ/XMHEV/TksUd+Sc2Tw+TSr+afHCxCQu784PGTsuKmEVffiTz
-         x9BQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=DITBBTDueFMwgO9c43r4QUnl5fmEGfsFdxK6pS4NikQ=;
-        b=TFYJCu/jARM3qc+Zh7IlGjNL1ZHiqt+Z57Lqk1cj+ld+rYFPAA96GxuOnBXcEwYrIY
-         k1QfzwCTz4eOitHdu9zP6E+8iviJza/l/uEebpaGXCRx22IISIEdWmVlYdctF7SHsykh
-         CTjmEsQzbjXRfkNPzhYZE0EQn8Ng34Lu9cx3U1KSoNqKkeG30CAI+o2ybbY12swbGIwK
-         aWwSzjOhnHidG/HinRqbtlhxNPiNE5G7ragNYLvqpRFLVBTco3vc+RBi64VJW6P9zlt7
-         9l/z4j7mCJ4G4S8IrA2C945hXmvREh2D43/QwPBZzw9VL0dr0olJTmgd8EacNcvqa+a3
-         OiiA==
-X-Gm-Message-State: APjAAAX88Jochwa1BSUUG0Yfry/wlLL41CrpL2mGHNWiE7wcrRnuQIIL
-        A4AKKp3CxmMsZJ091u/oLe+aewxNKyOH
-X-Google-Smtp-Source: APXvYqym8k5rm0KL4CDhTRpcrsQds6wJEmM+pYOyg/NWpgey1fXZujCluFq5EGUMSaqItyI+5zFgfw==
-X-Received: by 2002:aa7:82d7:: with SMTP id f23mr37414417pfn.114.1552374747583;
-        Tue, 12 Mar 2019 00:12:27 -0700 (PDT)
-Received: from localhost ([2001:19f0:7001:54c5:5400:1ff:fec8:7fc2])
-        by smtp.gmail.com with ESMTPSA id j4sm11333564pfn.132.2019.03.12.00.12.26
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Tue, 12 Mar 2019 00:12:26 -0700 (PDT)
-From:   Jacky Hu <hengqing.hu@gmail.com>
-To:     hengqing.hu@gmail.com
-Cc:     jacky.hu@walmart.com, jason.niesz@walmart.com,
-        Wensong Zhang <wensong@linux-vs.org>,
-        Simon Horman <horms@verge.net.au>,
-        Julian Anastasov <ja@ssi.bg>,
-        Pablo Neira Ayuso <pablo@netfilter.org>,
-        Jozsef Kadlecsik <kadlec@blackhole.kfki.hu>,
-        Florian Westphal <fw@strlen.de>,
-        "David S. Miller" <davem@davemloft.net>, netdev@vger.kernel.org,
-        lvs-devel@vger.kernel.org, linux-kernel@vger.kernel.org,
-        netfilter-devel@vger.kernel.org, coreteam@netfilter.org
-Subject: [PATCH] ipvs: allow tunneling with gue encapsulation
-Date:   Tue, 12 Mar 2019 15:12:18 +0800
-Message-Id: <20190312071218.21905-1-hengqing.hu@gmail.com>
-X-Mailer: git-send-email 2.21.0
+        Tue, 12 Mar 2019 03:13:18 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:36262 "EHLO mx1.redhat.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726614AbfCLHNS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 12 Mar 2019 03:13:18 -0400
+Received: from smtp.corp.redhat.com (int-mx03.intmail.prod.int.phx2.redhat.com [10.5.11.13])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id 4259A308125D;
+        Tue, 12 Mar 2019 07:13:18 +0000 (UTC)
+Received: from localhost (ovpn-204-138.brq.redhat.com [10.40.204.138])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 770EC60A9A;
+        Tue, 12 Mar 2019 07:13:15 +0000 (UTC)
+Date:   Tue, 12 Mar 2019 08:13:14 +0100
+From:   Stanislaw Gruszka <sgruszka@redhat.com>
+To:     Rosen Penev <rosenp@gmail.com>
+Cc:     Joerg Roedel <joro@8bytes.org>,
+        Lorenzo Bianconi <lorenzo.bianconi@redhat.com>,
+        linux-wireless <linux-wireless@vger.kernel.org>,
+        Samuel Sieb <samuel@sieb.net>,
+        Alexander Duyck <alexander.h.duyck@linux.intel.com>,
+        iommu@lists.linux-foundation.org, linux-kernel@vger.kernel.org,
+        linux-nvme@lists.infradead.org, jan.viktorin@gmail.com
+Subject: Re: MT76x2U crashes XHCI driver on AMD Ryzen system
+Message-ID: <20190312071314.GB2483@redhat.com>
+References: <20190226103450.GA2989@redhat.com>
+ <20190226104413.GH20740@8bytes.org>
+ <20190226112407.GB2989@redhat.com>
+ <20190228090411.GA24938@redhat.com>
+ <20190228104223.GA2749@redhat.com>
+ <20190228121948.GD6072@redhat.com>
+ <20190228134029.GC1594@8bytes.org>
+ <20190304071037.GA2787@redhat.com>
+ <CAKxU2N-k-9DCYBv6W3CohL963dr3AeY3VHyt8FrUuo=BfacDsw@mail.gmail.com>
+ <20190311084319.GA3310@redhat.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190311084319.GA3310@redhat.com>
+User-Agent: Mutt/1.8.3 (2017-05-23)
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.13
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.49]); Tue, 12 Mar 2019 07:13:18 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-ipip packets are blocked in some public cloud environments, this patch
-allows gue encapsulation with the tunneling method, which would make
-tunneling working in those environments.
+On Mon, Mar 11, 2019 at 09:43:19AM +0100, Stanislaw Gruszka wrote:
+> > > However after fixing that mt76usb still did not work. To make things
+> > > work we had to change rx frag size from 2048 to PAGE_SIZE and change
+> > > virt_to_head_page() to virt_to_page() when setting SG's.
+> >
+> > > I think I understand why first change was needed. If we do 2 separate
+> > > dma maps of 2 different buffers in single page i.e (PAGE + off=0
+> > > and PAGE + off=2048) it causes problem. So either map_sg() return
+> > > error which mt76usb does not handle correctly or there is issue
+> > > in AMD IOMMU because two dma maps use the same page.
+> 
+> Any comment on that? Is fine or not to do 2 or more dma mappings
+> within the same single page on AMD IOMMU? If not, is there any
+> mechanism for drivers to find out about this limitation to prevent
+> to prepare wrong SG buffers?
 
-Signed-off-by: Jacky Hu <hengqing.hu@gmail.com>
----
- include/uapi/linux/ip_vs.h      | 17 +++++++-
- net/netfilter/ipvs/ip_vs_ctl.c  |  4 +-
- net/netfilter/ipvs/ip_vs_xmit.c | 71 ++++++++++++++++++++++++++++++++-
- 3 files changed, 87 insertions(+), 5 deletions(-)
+FTR: it was confirmed by Jan (bug reporter) the 2 or more dma mappings
+within single page works with AMD IOMMU. Most likely it was needed
+previously to workaround this sg->offset problem until proper fix to
+AMD IOMMU was applied.
 
-diff --git a/include/uapi/linux/ip_vs.h b/include/uapi/linux/ip_vs.h
-index 1c916b2f89dc..6637e45b93f4 100644
---- a/include/uapi/linux/ip_vs.h
-+++ b/include/uapi/linux/ip_vs.h
-@@ -96,13 +96,25 @@
- #define IP_VS_CONN_F_TEMPLATE	0x1000		/* template, not connection */
- #define IP_VS_CONN_F_ONE_PACKET	0x2000		/* forward only one packet */
- 
-+/* tunneling with gue */
-+#define IP_VS_CONN_F_GUE	0x0008
-+
-+/* gue destination port bit 0 */
-+#define IP_VS_CONN_F_GUE_PORT_LSB	0x4000
-+
-+/* gue destination port bit 1-15 */
-+#define IP_VS_CONN_F_GUE_PORT_MSB	0xFFFFE0000
-+
- /* Initial bits allowed in backup server */
- #define IP_VS_CONN_F_BACKUP_MASK (IP_VS_CONN_F_FWD_MASK | \
- 				  IP_VS_CONN_F_NOOUTPUT | \
- 				  IP_VS_CONN_F_INACTIVE | \
- 				  IP_VS_CONN_F_SEQ_MASK | \
- 				  IP_VS_CONN_F_NO_CPORT | \
--				  IP_VS_CONN_F_TEMPLATE \
-+				  IP_VS_CONN_F_TEMPLATE | \
-+				  IP_VS_CONN_F_GUE | \
-+				  IP_VS_CONN_F_GUE_PORT_MSB | \
-+				  IP_VS_CONN_F_GUE_PORT_LSB \
- 				 )
- 
- /* Bits allowed to update in backup server */
-@@ -116,6 +128,9 @@
- #define IP_VS_CONN_F_DEST_MASK (IP_VS_CONN_F_FWD_MASK | \
- 				IP_VS_CONN_F_ONE_PACKET | \
- 				IP_VS_CONN_F_NFCT | \
-+				IP_VS_CONN_F_GUE | \
-+				IP_VS_CONN_F_GUE_PORT_MSB | \
-+				IP_VS_CONN_F_GUE_PORT_LSB | \
- 				0)
- 
- #define IP_VS_SCHEDNAME_MAXLEN	16
-diff --git a/net/netfilter/ipvs/ip_vs_ctl.c b/net/netfilter/ipvs/ip_vs_ctl.c
-index 432141f04af3..cecfb52cdea4 100644
---- a/net/netfilter/ipvs/ip_vs_ctl.c
-+++ b/net/netfilter/ipvs/ip_vs_ctl.c
-@@ -3169,7 +3169,7 @@ static int ip_vs_genl_fill_dest(struct sk_buff *skb, struct ip_vs_dest *dest)
- 	    nla_put_be16(skb, IPVS_DEST_ATTR_PORT, dest->port) ||
- 	    nla_put_u32(skb, IPVS_DEST_ATTR_FWD_METHOD,
- 			(atomic_read(&dest->conn_flags) &
--			 IP_VS_CONN_F_FWD_MASK)) ||
-+			 IP_VS_CONN_F_DEST_MASK)) ||
- 	    nla_put_u32(skb, IPVS_DEST_ATTR_WEIGHT,
- 			atomic_read(&dest->weight)) ||
- 	    nla_put_u32(skb, IPVS_DEST_ATTR_U_THRESH, dest->u_threshold) ||
-@@ -3305,7 +3305,7 @@ static int ip_vs_genl_parse_dest(struct ip_vs_dest_user_kern *udest,
- 			return -EINVAL;
- 
- 		udest->conn_flags = nla_get_u32(nla_fwd)
--				    & IP_VS_CONN_F_FWD_MASK;
-+				    & IP_VS_CONN_F_DEST_MASK;
- 		udest->weight = nla_get_u32(nla_weight);
- 		udest->u_threshold = nla_get_u32(nla_u_thresh);
- 		udest->l_threshold = nla_get_u32(nla_l_thresh);
-diff --git a/net/netfilter/ipvs/ip_vs_xmit.c b/net/netfilter/ipvs/ip_vs_xmit.c
-index 473cce2a5231..2667b587b91d 100644
---- a/net/netfilter/ipvs/ip_vs_xmit.c
-+++ b/net/netfilter/ipvs/ip_vs_xmit.c
-@@ -32,6 +32,7 @@
- #include <linux/slab.h>
- #include <linux/tcp.h>                  /* for tcphdr */
- #include <net/ip.h>
-+#include <net/gue.h>
- #include <net/tcp.h>                    /* for csum_tcpudp_magic */
- #include <net/udp.h>
- #include <net/icmp.h>                   /* for icmp_send */
-@@ -989,6 +990,42 @@ static inline int __tun_gso_type_mask(int encaps_af, int orig_af)
- 	}
- }
- 
-+static int
-+__build_gue_header(struct net *net, struct sk_buff *skb,
-+		   struct ip_vs_conn *cp, __u8 *next_protocol)
-+{
-+	__be16 dport;
-+	__be16 sport;
-+	struct udphdr  *udph;	/* Our new UDP header */
-+	struct guehdr  *gueh;	/* Our new GUE header */
-+
-+	skb_push(skb, sizeof(struct guehdr));
-+
-+	gueh = (struct guehdr *)skb->data;
-+
-+	gueh->control = 0;
-+	gueh->version = 0;
-+	gueh->hlen = 0;
-+	gueh->flags = 0;
-+	gueh->proto_ctype = *next_protocol;
-+
-+	skb_push(skb, sizeof(struct udphdr));
-+	skb_reset_transport_header(skb);
-+
-+	udph = udp_hdr(skb);
-+
-+	dport = htons(((cp->flags >> 16) & 0xFFFE) | ((cp->flags >> 14) & 1));
-+	sport = udp_flow_src_port(net, skb, 0, 0, false);
-+	udph->dest = dport;
-+	udph->source = sport;
-+	udph->len = htons(skb->len);
-+	udph->check = 0;
-+
-+	*next_protocol = IPPROTO_UDP;
-+
-+	return 0;
-+}
-+
- /*
-  *   IP Tunneling transmitter
-  *
-@@ -1025,6 +1062,8 @@ ip_vs_tunnel_xmit(struct sk_buff *skb, struct ip_vs_conn *cp,
- 	struct iphdr  *iph;			/* Our new IP header */
- 	unsigned int max_headroom;		/* The extra header space needed */
- 	int ret, local;
-+	bool gue = false;
-+	int type;
- 
- 	EnterFunction(10);
- 
-@@ -1041,11 +1080,16 @@ ip_vs_tunnel_xmit(struct sk_buff *skb, struct ip_vs_conn *cp,
- 	rt = skb_rtable(skb);
- 	tdev = rt->dst.dev;
- 
-+	gue = (bool)(cp->flags & IP_VS_CONN_F_GUE);
-+
- 	/*
- 	 * Okay, now see if we can stuff it in the buffer as-is.
- 	 */
- 	max_headroom = LL_RESERVED_SPACE(tdev) + sizeof(struct iphdr);
- 
-+	if (gue)
-+		max_headroom += sizeof(struct udphdr) + sizeof(struct guehdr);
-+
- 	/* We only care about the df field if sysctl_pmtu_disc(ipvs) is set */
- 	dfp = sysctl_pmtu_disc(ipvs) ? &df : NULL;
- 	skb = ip_vs_prepare_tunneled_skb(skb, cp->af, max_headroom,
-@@ -1054,11 +1098,19 @@ ip_vs_tunnel_xmit(struct sk_buff *skb, struct ip_vs_conn *cp,
- 	if (IS_ERR(skb))
- 		goto tx_error;
- 
--	if (iptunnel_handle_offloads(skb, __tun_gso_type_mask(AF_INET, cp->af)))
-+	if (gue)
-+		type = SKB_GSO_UDP_TUNNEL;
-+	else
-+		type = __tun_gso_type_mask(AF_INET, cp->af);
-+
-+	if (iptunnel_handle_offloads(skb, type))
- 		goto tx_error;
- 
- 	skb->transport_header = skb->network_header;
- 
-+	if (gue)
-+		__build_gue_header(dev_net(tdev), skb, cp, &next_protocol);
-+
- 	skb_push(skb, sizeof(struct iphdr));
- 	skb_reset_network_header(skb);
- 	memset(&(IPCB(skb)->opt), 0, sizeof(IPCB(skb)->opt));
-@@ -1112,6 +1164,8 @@ ip_vs_tunnel_xmit_v6(struct sk_buff *skb, struct ip_vs_conn *cp,
- 	struct ipv6hdr  *iph;		/* Our new IP header */
- 	unsigned int max_headroom;	/* The extra header space needed */
- 	int ret, local;
-+	bool gue = false;
-+	int type;
- 
- 	EnterFunction(10);
- 
-@@ -1129,22 +1183,35 @@ ip_vs_tunnel_xmit_v6(struct sk_buff *skb, struct ip_vs_conn *cp,
- 	rt = (struct rt6_info *) skb_dst(skb);
- 	tdev = rt->dst.dev;
- 
-+	gue = (bool)(cp->flags & IP_VS_CONN_F_GUE);
-+
- 	/*
- 	 * Okay, now see if we can stuff it in the buffer as-is.
- 	 */
- 	max_headroom = LL_RESERVED_SPACE(tdev) + sizeof(struct ipv6hdr);
- 
-+	if (gue)
-+		max_headroom += sizeof(struct udphdr) + sizeof(struct guehdr);
-+
- 	skb = ip_vs_prepare_tunneled_skb(skb, cp->af, max_headroom,
- 					 &next_protocol, &payload_len,
- 					 &dsfield, &ttl, NULL);
- 	if (IS_ERR(skb))
- 		goto tx_error;
- 
--	if (iptunnel_handle_offloads(skb, __tun_gso_type_mask(AF_INET6, cp->af)))
-+	if (gue)
-+		type = SKB_GSO_UDP_TUNNEL;
-+	else
-+		type = __tun_gso_type_mask(AF_INET6, cp->af);
-+
-+	if (iptunnel_handle_offloads(skb, type))
- 		goto tx_error;
- 
- 	skb->transport_header = skb->network_header;
- 
-+	if (gue)
-+		__build_gue_header(dev_net(tdev), skb, cp, &next_protocol);
-+
- 	skb_push(skb, sizeof(struct ipv6hdr));
- 	skb_reset_network_header(skb);
- 	memset(&(IPCB(skb)->opt), 0, sizeof(IPCB(skb)->opt));
--- 
-2.21.0
-
+Stanislaw 
