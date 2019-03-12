@@ -2,153 +2,100 @@ Return-Path: <SRS0=J4ZE=RP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_PASS
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B0853C43381
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 13:20:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 58626C43381
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 13:29:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6ED0C214D8
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 13:20:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1525A206BA
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 13:29:13 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="hDLEU3/6"
+	dkim=pass (2048-bit key) header.d=bgdev-pl.20150623.gappssmtp.com header.i=@bgdev-pl.20150623.gappssmtp.com header.b="GxwhhnRw"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726754AbfCLNUB (ORCPT
+        id S1726581AbfCLN3L (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 12 Mar 2019 09:20:01 -0400
-Received: from mail-lf1-f67.google.com ([209.85.167.67]:37600 "EHLO
-        mail-lf1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725774AbfCLNUB (ORCPT
+        Tue, 12 Mar 2019 09:29:11 -0400
+Received: from mail-wr1-f66.google.com ([209.85.221.66]:44657 "EHLO
+        mail-wr1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725774AbfCLN3L (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 12 Mar 2019 09:20:01 -0400
-Received: by mail-lf1-f67.google.com with SMTP id u2so2038165lfd.4
-        for <linux-kernel@vger.kernel.org>; Tue, 12 Mar 2019 06:20:00 -0700 (PDT)
+        Tue, 12 Mar 2019 09:29:11 -0400
+Received: by mail-wr1-f66.google.com with SMTP id w2so2682452wrt.11
+        for <linux-kernel@vger.kernel.org>; Tue, 12 Mar 2019 06:29:10 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=OtWYEbJXLsy87UXYgvMArLDzIm1avZVAPNT8waxy3kk=;
-        b=hDLEU3/6cZOPJEXO9O4NzeCCoSsUsUtcGtaUOfjUa7Nnptu0M32QYtKBQUy3hnW3eb
-         A+smyrdkT1zo7C3HQjMfYJV+oRp0tKMrYZ4v39J5OoC/VG7LCw0O2Zd8PwoCKwzZOuvS
-         Hl3G6vG0Rn6gL0Gp2YrHKbSQBujY5DNpOkj+wlvQBYjff00GS5BV4/ieIbhhcFlTBK4n
-         +IV6+bzZW6DNF1r3+KDlYrIXKxBxFjmIVjNLo7bRkigBObdV48kIfwreM+NVFxmj0qj6
-         sQdLlvelWXVNbjYXTfD3V78bVhKMQBTl5lX24wl6J1O9ghTMvuEdK8JhJLYoUSePQLcP
-         UqTA==
+        d=bgdev-pl.20150623.gappssmtp.com; s=20150623;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=sXUXVXlvAdVAFUbmGrPp3Y++cwC7YAn6ufejqo4y85E=;
+        b=GxwhhnRwAI0mQHn3+AajPHEAD5qHfVqJPCTFDxTXDwSUADjGv7hxGYdhiKXd2O8MO0
+         TRdtTKDgC6x3/Z7AgmZZ854ynfWnJ+6gsJ+3qJmsmWRsf/GJugTYGWiw3RjAil6zBpSz
+         bZpwn2umdbdREZOzE0WZsYyh/4TPyBPdk4kDzGFOpUWQ761lw2uDkl1iPuCOed6c4fhj
+         xRdMVASza2YeZE07e76lkq+ogwY7yQteiyuIco6P1GFnkMX5yfOFy/P5xnxFpYB2qbrc
+         2ftNr64IrwKUk33E9RD9x7cVG+Npzw1AhW1DoUzQJIXXiRWIkc3up6Ze6dU0UCC7C6ch
+         lcCw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=OtWYEbJXLsy87UXYgvMArLDzIm1avZVAPNT8waxy3kk=;
-        b=j0LmWzehGZF2wxCxcuwJR4DIrHqdhw9quvq1jgtXMTe5/d0pYnlK4oT0TJkFE16EwU
-         IvSg+i+v8dSbB+ORKsUQoXExVhTU2efPBeMVI4oUtvUzhUdzzEDOPVGEVegX0H6SWPs5
-         DrYray21VADh2YpG034XbVQly1SWdNJ3+yquPEGjnK12Pq909UioEzwfzXxCh/fkBLG1
-         LBEj3m1mg6R0fCkeo+Vyht5/NG2DGf2WbQG0iYE3mBByxHAELo9HF4ElzLXUKk4oZwh4
-         s2tNuAUtxxcsWs116TMPSsWSQSZTOID8DZ35bsCAVT2ssEzGeUyRgFrVeT3fS/dZ+lGK
-         e2ag==
-X-Gm-Message-State: APjAAAViehFPd0c2haiLnVCOrjpfuQ5UjK46NNc9NJ5afmoSe9j0X8Bj
-        QGJ79jT5VOQfOzfdh+Va7GBaBY2wAVMqH8/tGYs=
-X-Google-Smtp-Source: APXvYqxm1hOjJ1mSyv7V6Osu1B7XlMkYN7WTosH8sOccAftZfirbpvwcIb9D8/IemNSVg+FiRuaAzITlOdbRtHvLC+E=
-X-Received: by 2002:ac2:4219:: with SMTP id y25mr15250023lfh.130.1552396799267;
- Tue, 12 Mar 2019 06:19:59 -0700 (PDT)
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=sXUXVXlvAdVAFUbmGrPp3Y++cwC7YAn6ufejqo4y85E=;
+        b=t56xdhXAJAeprhiZ0jJEdYLba1EAsLX+V85s7jDB2md0yQ2eYM7Swijrd7R7gKpsWa
+         Li+RGgiXmG/ZOwn2whlNuK+0HIKI5G1gmdL6PiwNYHwtb47xUFXiaj0vtgPA+sqTlKFk
+         HDBmHKutzgqBKQlD9H3WdtEJwk9nUZAS0DlFT95pdkmdkZQ5CYT3KCIL+bisLFGpAWmO
+         i0mTPM9/vgMhhJ3Z1oHKj81dhq3QY7p20pScoEG355r/kis7r19Ptfz0d+VsKWNtGyz+
+         kv+SjJN/lQlkoLH4W3DNTnZqGlmOSNsL7AcZb3JkcBg7xcf5D7EsRi+WavrtEBhlyL9j
+         IpGw==
+X-Gm-Message-State: APjAAAU9EWQ4OIfVS6nIu5CxtvsPq3aajyjRQPgfc3HkpSzPQlg2a5QX
+        8bGKhyFRCnIjM1QfJ2A8JF1LLg==
+X-Google-Smtp-Source: APXvYqyDMMU4JGKeldvw1hUSjmGm8MTelCfenfBNg9tvci4kOGrW1HU8vJ+50w18UmQ6InjasI0jxg==
+X-Received: by 2002:a5d:5386:: with SMTP id d6mr22774771wrv.104.1552397349635;
+        Tue, 12 Mar 2019 06:29:09 -0700 (PDT)
+Received: from localhost.localdomain (aputeaux-684-1-27-140.w90-86.abo.wanadoo.fr. [90.86.252.140])
+        by smtp.gmail.com with ESMTPSA id d9sm19953173wrn.72.2019.03.12.06.29.08
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Tue, 12 Mar 2019 06:29:08 -0700 (PDT)
+From:   Bartosz Golaszewski <brgl@bgdev.pl>
+To:     Andrew Morton <akpm@linux-foundation.org>,
+        Anthony Yznaga <anthony.yznaga@oracle.com>,
+        Khalid Aziz <khalid.aziz@oracle.com>,
+        "Aneesh Kumar K . V" <aneesh.kumar@linux.ibm.com>,
+        =?UTF-8?q?J=C3=A9r=C3=B4me=20Glisse?= <jglisse@redhat.com>
+Cc:     linux-mm@kvack.org, linux-kernel@vger.kernel.org,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>
+Subject: [PATCH] mm: remove unused variable
+Date:   Tue, 12 Mar 2019 14:28:52 +0100
+Message-Id: <20190312132852.20115-1-brgl@bgdev.pl>
+X-Mailer: git-send-email 2.20.1
 MIME-Version: 1.0
-References: <20190311184928.25988-1-andrew.smirnov@gmail.com>
-In-Reply-To: <20190311184928.25988-1-andrew.smirnov@gmail.com>
-From:   Fabio Estevam <festevam@gmail.com>
-Date:   Tue, 12 Mar 2019 10:20:10 -0300
-Message-ID: <CAOMZO5DwA0jgfwOgvgWUq1j9qFQUTHz+SVcD3oPdUhkwAfG=GQ@mail.gmail.com>
-Subject: Re: [PATCH] ARM: dts: vf610: Add ZII SPB4 board
-To:     Andrey Smirnov <andrew.smirnov@gmail.com>
-Cc:     Shawn Guo <shawnguo@kernel.org>, Chris Healy <cphealy@gmail.com>,
-        Andrew Lunn <andrew@lunn.ch>,
-        Heiner Kallweit <hkallweit1@gmail.com>,
-        "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" 
-        <linux-arm-kernel@lists.infradead.org>,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        NXP Linux Team <linux-imx@nxp.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Andrey,
+From: Bartosz Golaszewski <bgolaszewski@baylibre.com>
 
-On Mon, Mar 11, 2019 at 3:49 PM Andrey Smirnov <andrew.smirnov@gmail.com> wrote:
+The mm variable is set but unused. Remove it.
 
-> diff --git a/arch/arm/boot/dts/Makefile b/arch/arm/boot/dts/Makefile
-> index f4f5aeaf3298..035ad9fc49f3 100644
-> --- a/arch/arm/boot/dts/Makefile
-> +++ b/arch/arm/boot/dts/Makefile
-> @@ -607,7 +607,8 @@ dtb-$(CONFIG_SOC_VF610) += \
->         vf610-zii-dev-rev-c.dtb \
->         vf610-zii-scu4-aib.dtb \
->         vf610-zii-ssmb-dtu.dtb \
-> -       vf610-zii-ssmb-spu3.dtb
-> +       vf610-zii-ssmb-spu3.dtb \
-> +       vf610-zii-spb4.dtb
+Signed-off-by: Bartosz Golaszewski <bgolaszewski@baylibre.com>
+---
+ mm/mprotect.c | 1 -
+ 1 file changed, 1 deletion(-)
 
-Please keep it in alphabetical order.
+diff --git a/mm/mprotect.c b/mm/mprotect.c
+index 028c724dcb1a..130dac3ad04f 100644
+--- a/mm/mprotect.c
++++ b/mm/mprotect.c
+@@ -39,7 +39,6 @@ static unsigned long change_pte_range(struct vm_area_struct *vma, pmd_t *pmd,
+ 		unsigned long addr, unsigned long end, pgprot_t newprot,
+ 		int dirty_accountable, int prot_numa)
+ {
+-	struct mm_struct *mm = vma->vm_mm;
+ 	pte_t *pte, oldpte;
+ 	spinlock_t *ptl;
+ 	unsigned long pages = 0;
+-- 
+2.20.1
 
-> +       gpio-leds {
-> +               compatible = "gpio-leds";
-> +               pinctrl-0 = <&pinctrl_leds_debug>;
-> +               pinctrl-names = "default";
-> +
-> +               led-debug {
-> +                       label = "zii:green:debug1";
-> +                       gpios = <&gpio2 18 GPIO_ACTIVE_HIGH>;
-> +                       linux,default-trigger = "heartbeat";
-> +                       max-brightness = <1>;
-
-This is an invalid property for gpio-leds. It is used for leds pwm
-only. Please remove it.
-
-> +               };
-> +       };
-> +
-> +       reg_vcc_3v3_mcu: regulator {
-
-reg_vcc_3v3_mcu: regulator-vcc-3v3-mcu  {
-
-> +&dspi1 {
-> +       bus-num = <1>;
-> +       pinctrl-names = "default";
-> +       pinctrl-0 = <&pinctrl_dspi1>;
-> +       status = "okay";
-> +
-> +       m25p128@0 {
-
-Node names should be generic:
-
-spi-nor@0
-
-> +&i2c0 {
-> +       clock-frequency = <100000>;
-> +       pinctrl-names = "default";
-> +       pinctrl-0 = <&pinctrl_i2c0>;
-> +       status = "okay";
-> +
-> +       gpio6: pca9505@22 {
-
-io-expander@22
-
-> +               compatible = "nxp,pca9554";
-> +               reg = <0x22>;
-> +               gpio-controller;
-> +               #gpio-cells = <2>;
-> +       };
-> +
-> +       at24c04@50 {
-
-eeprom@50
-
-> +               compatible = "atmel,24c04";
-> +               reg = <0x50>;
-> +               label = "nameplate";
-> +       };
-> +
-> +       at24c04@52 {
-
-eeprom@52
