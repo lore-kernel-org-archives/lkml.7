@@ -2,69 +2,69 @@ Return-Path: <SRS0=J4ZE=RP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.0 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CDF2EC43381
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 20:25:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E7FB3C43381
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 20:28:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 93A392171F
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 20:25:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 99A132087C
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 20:28:45 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=baylibre-com.20150623.gappssmtp.com header.i=@baylibre-com.20150623.gappssmtp.com header.b="D7cUhY81"
+	dkim=pass (2048-bit key) header.d=baylibre-com.20150623.gappssmtp.com header.i=@baylibre-com.20150623.gappssmtp.com header.b="CBsovrUr"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727332AbfCLUZ1 (ORCPT
+        id S1726782AbfCLU2o (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 12 Mar 2019 16:25:27 -0400
-Received: from mail-pg1-f193.google.com ([209.85.215.193]:33892 "EHLO
-        mail-pg1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726534AbfCLUZ0 (ORCPT
+        Tue, 12 Mar 2019 16:28:44 -0400
+Received: from mail-pf1-f196.google.com ([209.85.210.196]:35678 "EHLO
+        mail-pf1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726191AbfCLU2n (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 12 Mar 2019 16:25:26 -0400
-Received: by mail-pg1-f193.google.com with SMTP id v12so2698011pgq.1
-        for <linux-kernel@vger.kernel.org>; Tue, 12 Mar 2019 13:25:26 -0700 (PDT)
+        Tue, 12 Mar 2019 16:28:43 -0400
+Received: by mail-pf1-f196.google.com with SMTP id j5so2659451pfa.2
+        for <linux-kernel@vger.kernel.org>; Tue, 12 Mar 2019 13:28:43 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=baylibre-com.20150623.gappssmtp.com; s=20150623;
         h=from:to:cc:subject:in-reply-to:references:date:message-id
          :mime-version;
-        bh=UjIkLDF+WPlQwj3k/SSeB4jZh/jn2w9+5oluq0KnIUs=;
-        b=D7cUhY81VVg8b5cI72uuLyMu/I0u4rPjDpmIgRiXo66lt2wY4Q8p+ac0J32Hi5oD1b
-         n9x7imRmVjkzMu5YkGZMv4n4I/tRbEAamoWvNbymMmcO3D1SlsSiDQanBX9h1v8bhmKG
-         JCiij8MlXbO/2OmQvuSgYbFBlzTB1Rld99b+f4IXw7mvCdo6iou221Wqzdy2nuLsf8FI
-         Y+XyXrwCi6+hXZLEsrQ+A685yMGnakU8O0AjnYUy1hG4CqZ6xJ7JErevPlobUVSphUwg
-         qeEwYpMFWN9Am9T86VnCj2vGmqMupCXEB8lGlVep3uoootcCvqU0DRCFP0wteC3e9/Lr
-         /Fcw==
+        bh=LSAL76ZaBISCmftacvftLCPdC0tuQThkmwcBczJW1Rg=;
+        b=CBsovrUr5CkyQCnm9kWg+yPSbXQiHTmNnbMI89eHxW3PnJ5YA3lGozCwvqE16v7gOr
+         n/1O+Al5PYLywIOtGl4oaDYqttC/E9cS69Ly+LUKQ7FZ9O5N0yEuUvbOnVMf/+fH3q8v
+         /EfqVRFQILkyjYlntdBbXXHkKH3E5rU6ae5zOsy6l+E9Q3bTvGAy2ugqT+515eOfGi1t
+         JOnMX21kUDH//SgsKpOwywp8njLu88nIdCGwlwsGG+wPWCPDvvOuv1tg62dKo4DdL+MS
+         trqFggP+zTe72KX9AS7Q/dRqD2C+mcxU+jtCSggZ78Aege4D5kNYsCdmUCqgqpejnpa9
+         t1tQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:in-reply-to:references:date
          :message-id:mime-version;
-        bh=UjIkLDF+WPlQwj3k/SSeB4jZh/jn2w9+5oluq0KnIUs=;
-        b=uAv3NR40HC/ja4A966FoCTk+AoOBVnc68EFYtxl9m4s7UdOr4PZFrdLZWKnldTNGTF
-         OS0hBy3TlqdvR2ZGtuwy2ezQutGfqTObRG6TSiMFlOswE414ZYJ9ilFARU2MYRexlU6w
-         gGUiv5tvwtjxltoUdDKpNsupqqIRngrTPG6rmVoX4QOU1Ol3NVU5rm9oxO2LUi6XhOk3
-         l+U6NQZnUKJUlubeFJ8FzmtznpZ51HmKwGxE0FnZTJE4nurcujoU2Wbo19rL5F+8yw/O
-         rt9NyIDZIOGoE7eu+8ITkUZklAfaVnI5khi0TG1qzPBgTzKw1TorUTGUJrJz58WJU3ZB
-         eXTg==
-X-Gm-Message-State: APjAAAVuXmI+EV00auOc/27m1h9Wte1qJVehnoucjOb9HyDT9YG2JiJD
-        yLbeMFBfgoelte/RN4uyamArrNaHo5yaJQ==
-X-Google-Smtp-Source: APXvYqziQRiTJeiwGTiIRDq9NYpwFOikItHR6HFTIuUY+EDHlVCfxIGM/negzlpNYOslqFYPlyWr0Q==
-X-Received: by 2002:a65:6489:: with SMTP id e9mr36608788pgv.260.1552422325658;
-        Tue, 12 Mar 2019 13:25:25 -0700 (PDT)
+        bh=LSAL76ZaBISCmftacvftLCPdC0tuQThkmwcBczJW1Rg=;
+        b=dR2bFrFMdoyqwKUr/Ki2ytoRde4MOtrBaC2zxU1KCx5fktsQHxcYOGpyztp7/cLnyC
+         ttKWCEomsEVi5Ut6r95ezfG7i/2C04+FPNV8kZ33GHTDLrByEguibsnM6Mxa8pa4wpdw
+         4pFM4O4brKh4gOsrUzFv1DNnCoHvkfQz4Ut6ts+9izCBNCP7r5VO2GB0zdnSlFiscciv
+         2gVTOfw/E0OhFSYoUOPmaMRwoBbNDi/f66Q9SIdsFTAVZM8qKn5jv/h5yQYP02pqvyYT
+         BaM9apuVMMYsqKOlpCsUav7mld8OWpjGEyfS6ZXcekrgPwBk5deLJe/ADhnacQ5nfykb
+         rxeg==
+X-Gm-Message-State: APjAAAWP08oBTBGHNyAxNXKtWQo11tIa/MDymxGTnFn3e4PJrPYRYVfA
+        Xduxa2d/33NyOsFIWVPZF1/kyQ==
+X-Google-Smtp-Source: APXvYqzZED7QLtXOpujudJakoPtjS2S6V/2RlKyZGx5+WxIxPG09Wckf3mLR5T0+PD9nMmfAG8DnWw==
+X-Received: by 2002:a65:614a:: with SMTP id o10mr36701640pgv.51.1552422523088;
+        Tue, 12 Mar 2019 13:28:43 -0700 (PDT)
 Received: from localhost ([2601:602:9200:a1a5:1daf:3f96:9f7f:33ba])
-        by smtp.googlemail.com with ESMTPSA id e15sm4545527pgk.30.2019.03.12.13.25.24
+        by smtp.googlemail.com with ESMTPSA id w17sm13308688pfn.63.2019.03.12.13.28.42
         (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Tue, 12 Mar 2019 13:25:24 -0700 (PDT)
+        Tue, 12 Mar 2019 13:28:42 -0700 (PDT)
 From:   Kevin Hilman <khilman@baylibre.com>
-To:     Neil Armstrong <narmstrong@baylibre.com>
-Cc:     Neil Armstrong <narmstrong@baylibre.com>,
-        linux-amlogic@lists.infradead.org,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2 0/3] arm64: meson: Add SoC ID detection for G12A
-In-Reply-To: <20190307140147.22047-1-narmstrong@baylibre.com>
-References: <20190307140147.22047-1-narmstrong@baylibre.com>
-Date:   Tue, 12 Mar 2019 13:25:23 -0700
-Message-ID: <7hlg1ju9fw.fsf@baylibre.com>
+To:     Julia Lawall <Julia.Lawall@lip6.fr>
+Cc:     kernel-janitors@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org,
+        linux-amlogic@lists.infradead.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 09/12] meson-gx-socinfo: add missing of_node_put after of_device_is_available
+In-Reply-To: <1550928043-14889-10-git-send-email-Julia.Lawall@lip6.fr>
+References: <1550928043-14889-1-git-send-email-Julia.Lawall@lip6.fr> <1550928043-14889-10-git-send-email-Julia.Lawall@lip6.fr>
+Date:   Tue, 12 Mar 2019 13:28:41 -0700
+Message-ID: <7hh8c7u9ae.fsf@baylibre.com>
 MIME-Version: 1.0
 Content-Type: text/plain
 Sender: linux-kernel-owner@vger.kernel.org
@@ -72,30 +72,18 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Neil Armstrong <narmstrong@baylibre.com> writes:
+Julia Lawall <Julia.Lawall@lip6.fr> writes:
 
-> This patchset :
-> - Fixes the package id detection for S905 variants and AXG packages
-> - Adds new SoC IDs and Packages IDs for G12A/G12B, and S805X/Y
-> - Adds Add AO Secure node for G12A dtsi
->
-> Changes since v1:
-> - Added G12B S922X package ID
-> - Added G12A S905D2 package ID
-> - Fixed patch 2 commit message
+> Add an of_node_put when a tested device node is not available.
 
-Series queued for v5.2.
+[...] 
+]
 
-> Neil Armstrong (3):
->   soc: amlogic: gx-socinfo: Add mask for each SoC packages
->   soc: amlogic: gx-socinfo: Add new SoC IDs and Packages IDs
+> Fixes: a9daaba2965e8 ("soc: Add Amlogic SoC Information driver")
+> Signed-off-by: Julia Lawall <Julia.Lawall@lip6.fr>
 
-Applied to branch: v5.2/drivers.
+Patch applied,
 
->   arm64: dts: meson-g12a: Add AO Secure node
-
-Applied to v5.2/dt64,
-
-Thanks for all the new SoC detection!
+Thanks,
 
 Kevin
