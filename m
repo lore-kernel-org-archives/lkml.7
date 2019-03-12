@@ -4,51 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1519BC43381
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 17:54:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3B5DBC43381
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 17:55:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DB8A92147C
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 17:54:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 09A1F21734
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 17:55:04 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1552413293;
-	bh=hAdM4iI4F16mdc7rXYM+OoXto79ZkLjm2te83gKSppY=;
+	s=default; t=1552413304;
+	bh=+MHuTSVv7GU6W3qRrunD9/UAr6gG/FZG5bQodghtV3A=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=OmjMBNEPrPUkyBGd1K/ZFdPLZmMZ5WZuHxIkt7qYrlkVo1sw9SAJgqdTkITJEMmNT
-	 QqJlOuxo7NdzipL940hPxFH5rLaLaU/bzw9Oupwia0ur3LQ/hQ9OUUbi3bey7n7mUB
-	 D0Ss/Bvvr2Rj1XSJqu3tITF/pehTdI8vRdd7YMRI=
+	b=GoYdpg/pOJOenpLCHRWjkgYUKV0Xc2k3vJsdW9ufjOVTECzVCfaUq/hRil0UzNvGF
+	 ry4y8wPa4cPu4JRrCd8KReTr34A3kK4MFY6rdUuEisyq4KAUSCVe8mPeP2+C/12buZ
+	 EB0lQzoZHekZnR72Ma+WuGHa2W8yJwFu3jPvU1Bc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728858AbfCLRyw (ORCPT
+        id S1728756AbfCLRzC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 12 Mar 2019 13:54:52 -0400
-Received: from mail.kernel.org ([198.145.29.99]:52244 "EHLO mail.kernel.org"
+        Tue, 12 Mar 2019 13:55:02 -0400
+Received: from mail.kernel.org ([198.145.29.99]:52196 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728241AbfCLROH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S1727916AbfCLROH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Tue, 12 Mar 2019 13:14:07 -0400
 Received: from localhost (unknown [104.133.8.98])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 3F8942087C;
-        Tue, 12 Mar 2019 17:14:07 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id CB29D2087C;
+        Tue, 12 Mar 2019 17:14:05 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1552410847;
-        bh=hAdM4iI4F16mdc7rXYM+OoXto79ZkLjm2te83gKSppY=;
+        s=default; t=1552410845;
+        bh=+MHuTSVv7GU6W3qRrunD9/UAr6gG/FZG5bQodghtV3A=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=oEFn90c/8cUrSpaz0lXRVEQF1dWeDFruPheFmEvRzQtd1LtL1+u3iW4QMDoxn/CRZ
-         96Ood0ON1GT5fHbV4c7Qhg2uJBcSdkpME3Xj4w6kOIqY0oGcR+TBUAOhln02cuK+dA
-         5fDrmckpTHd5izn52TG0AuTQ5JbwQnmuYE3GVIZk=
+        b=FiHbres3UR2AVlF+j0L1o37TdXjHAlG6ViLkIOZOlILWkvv0tihlVoahzb88fK+4/
+         mgqVDi4zwZnf+m33/QY/gbXKjo4+/xGrzCtVup7J9/Ojz+CV6n+6fbQ83NBTArbG7H
+         bjKXHnM0PXinj8fUfKLtGr+kpvwggUC62j8GVAdQ=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, ZhangXiaoxu <zhangxiaoxu5@huawei.com>,
-        Simon Horman <horms@verge.net.au>,
-        Pablo Neira Ayuso <pablo@netfilter.org>,
+        stable@vger.kernel.org, Max Filippov <jcmvbkbc@gmail.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 011/149] ipvs: Fix signed integer overflow when setsockopt timeout
-Date:   Tue, 12 Mar 2019 10:07:09 -0700
-Message-Id: <20190312170350.484167462@linuxfoundation.org>
+Subject: [PATCH 4.19 019/149] xtensa: SMP: fix secondary CPU initialization
+Date:   Tue, 12 Mar 2019 10:07:17 -0700
+Message-Id: <20190312170351.230660729@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190312170349.421581206@linuxfoundation.org>
 References: <20190312170349.421581206@linuxfoundation.org>
@@ -67,89 +65,126 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-[ Upstream commit 53ab60baa1ac4f20b080a22c13b77b6373922fd7 ]
+[ Upstream commit 32a7726c4f4aadfabdb82440d84f88a5a2c8fe13 ]
 
-There is a UBSAN bug report as below:
-UBSAN: Undefined behaviour in net/netfilter/ipvs/ip_vs_ctl.c:2227:21
-signed integer overflow:
--2147483647 * 1000 cannot be represented in type 'int'
+- add missing memory barriers to the secondary CPU synchronization spin
+  loops; add comment to the matching memory barrier in the boot_secondary
+  and __cpu_die functions;
+- use READ_ONCE/WRITE_ONCE to access cpu_start_id/cpu_start_ccount
+  instead of reading/writing them directly;
+- re-initialize cpu_running every time before starting secondary CPU to
+  flush possible previous CPU startup results.
 
-Reproduce program:
-	#include <stdio.h>
-	#include <sys/types.h>
-	#include <sys/socket.h>
-
-	#define IPPROTO_IP 0
-	#define IPPROTO_RAW 255
-
-	#define IP_VS_BASE_CTL		(64+1024+64)
-	#define IP_VS_SO_SET_TIMEOUT	(IP_VS_BASE_CTL+10)
-
-	/* The argument to IP_VS_SO_GET_TIMEOUT */
-	struct ipvs_timeout_t {
-		int tcp_timeout;
-		int tcp_fin_timeout;
-		int udp_timeout;
-	};
-
-	int main() {
-		int ret = -1;
-		int sockfd = -1;
-		struct ipvs_timeout_t to;
-
-		sockfd = socket(AF_INET, SOCK_RAW, IPPROTO_RAW);
-		if (sockfd == -1) {
-			printf("socket init error\n");
-			return -1;
-		}
-
-		to.tcp_timeout = -2147483647;
-		to.tcp_fin_timeout = -2147483647;
-		to.udp_timeout = -2147483647;
-
-		ret = setsockopt(sockfd,
-				 IPPROTO_IP,
-				 IP_VS_SO_SET_TIMEOUT,
-				 (char *)(&to),
-				 sizeof(to));
-
-		printf("setsockopt return %d\n", ret);
-		return ret;
-	}
-
-Return -EINVAL if the timeout value is negative or max than 'INT_MAX / HZ'.
-
-Signed-off-by: ZhangXiaoxu <zhangxiaoxu5@huawei.com>
-Acked-by: Simon Horman <horms@verge.net.au>
-Signed-off-by: Pablo Neira Ayuso <pablo@netfilter.org>
+Signed-off-by: Max Filippov <jcmvbkbc@gmail.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- net/netfilter/ipvs/ip_vs_ctl.c | 12 ++++++++++++
- 1 file changed, 12 insertions(+)
+ arch/xtensa/kernel/head.S |  5 ++++-
+ arch/xtensa/kernel/smp.c  | 34 +++++++++++++++++++++-------------
+ 2 files changed, 25 insertions(+), 14 deletions(-)
 
-diff --git a/net/netfilter/ipvs/ip_vs_ctl.c b/net/netfilter/ipvs/ip_vs_ctl.c
-index 518364f4abcc..55a77314340a 100644
---- a/net/netfilter/ipvs/ip_vs_ctl.c
-+++ b/net/netfilter/ipvs/ip_vs_ctl.c
-@@ -2220,6 +2220,18 @@ static int ip_vs_set_timeout(struct netns_ipvs *ipvs, struct ip_vs_timeout_user
- 		  u->tcp_fin_timeout,
- 		  u->udp_timeout);
+diff --git a/arch/xtensa/kernel/head.S b/arch/xtensa/kernel/head.S
+index 9053a5622d2c..5bd38ea2da38 100644
+--- a/arch/xtensa/kernel/head.S
++++ b/arch/xtensa/kernel/head.S
+@@ -280,12 +280,13 @@ should_never_return:
  
-+#ifdef CONFIG_IP_VS_PROTO_TCP
-+	if (u->tcp_timeout < 0 || u->tcp_timeout > (INT_MAX / HZ) ||
-+	    u->tcp_fin_timeout < 0 || u->tcp_fin_timeout > (INT_MAX / HZ)) {
-+		return -EINVAL;
-+	}
-+#endif
-+
-+#ifdef CONFIG_IP_VS_PROTO_UDP
-+	if (u->udp_timeout < 0 || u->udp_timeout > (INT_MAX / HZ))
-+		return -EINVAL;
-+#endif
-+
- #ifdef CONFIG_IP_VS_PROTO_TCP
- 	if (u->tcp_timeout) {
- 		pd = ip_vs_proto_data_get(ipvs, IPPROTO_TCP);
+ 	movi	a2, cpu_start_ccount
+ 1:
++	memw
+ 	l32i	a3, a2, 0
+ 	beqi	a3, 0, 1b
+ 	movi	a3, 0
+ 	s32i	a3, a2, 0
+-	memw
+ 1:
++	memw
+ 	l32i	a3, a2, 0
+ 	beqi	a3, 0, 1b
+ 	wsr	a3, ccount
+@@ -321,11 +322,13 @@ ENTRY(cpu_restart)
+ 	rsr	a0, prid
+ 	neg	a2, a0
+ 	movi	a3, cpu_start_id
++	memw
+ 	s32i	a2, a3, 0
+ #if XCHAL_DCACHE_IS_WRITEBACK
+ 	dhwbi	a3, 0
+ #endif
+ 1:
++	memw
+ 	l32i	a2, a3, 0
+ 	dhi	a3, 0
+ 	bne	a2, a0, 1b
+diff --git a/arch/xtensa/kernel/smp.c b/arch/xtensa/kernel/smp.c
+index 932d64689bac..c9fc2c4f71b3 100644
+--- a/arch/xtensa/kernel/smp.c
++++ b/arch/xtensa/kernel/smp.c
+@@ -195,9 +195,11 @@ static int boot_secondary(unsigned int cpu, struct task_struct *ts)
+ 	int i;
+ 
+ #ifdef CONFIG_HOTPLUG_CPU
+-	cpu_start_id = cpu;
+-	system_flush_invalidate_dcache_range(
+-			(unsigned long)&cpu_start_id, sizeof(cpu_start_id));
++	WRITE_ONCE(cpu_start_id, cpu);
++	/* Pairs with the third memw in the cpu_restart */
++	mb();
++	system_flush_invalidate_dcache_range((unsigned long)&cpu_start_id,
++					     sizeof(cpu_start_id));
+ #endif
+ 	smp_call_function_single(0, mx_cpu_start, (void *)cpu, 1);
+ 
+@@ -206,18 +208,21 @@ static int boot_secondary(unsigned int cpu, struct task_struct *ts)
+ 			ccount = get_ccount();
+ 		while (!ccount);
+ 
+-		cpu_start_ccount = ccount;
++		WRITE_ONCE(cpu_start_ccount, ccount);
+ 
+-		while (time_before(jiffies, timeout)) {
++		do {
++			/*
++			 * Pairs with the first two memws in the
++			 * .Lboot_secondary.
++			 */
+ 			mb();
+-			if (!cpu_start_ccount)
+-				break;
+-		}
++			ccount = READ_ONCE(cpu_start_ccount);
++		} while (ccount && time_before(jiffies, timeout));
+ 
+-		if (cpu_start_ccount) {
++		if (ccount) {
+ 			smp_call_function_single(0, mx_cpu_stop,
+-					(void *)cpu, 1);
+-			cpu_start_ccount = 0;
++						 (void *)cpu, 1);
++			WRITE_ONCE(cpu_start_ccount, 0);
+ 			return -EIO;
+ 		}
+ 	}
+@@ -237,6 +242,7 @@ int __cpu_up(unsigned int cpu, struct task_struct *idle)
+ 	pr_debug("%s: Calling wakeup_secondary(cpu:%d, idle:%p, sp: %08lx)\n",
+ 			__func__, cpu, idle, start_info.stack);
+ 
++	init_completion(&cpu_running);
+ 	ret = boot_secondary(cpu, idle);
+ 	if (ret == 0) {
+ 		wait_for_completion_timeout(&cpu_running,
+@@ -298,8 +304,10 @@ void __cpu_die(unsigned int cpu)
+ 	unsigned long timeout = jiffies + msecs_to_jiffies(1000);
+ 	while (time_before(jiffies, timeout)) {
+ 		system_invalidate_dcache_range((unsigned long)&cpu_start_id,
+-				sizeof(cpu_start_id));
+-		if (cpu_start_id == -cpu) {
++					       sizeof(cpu_start_id));
++		/* Pairs with the second memw in the cpu_restart */
++		mb();
++		if (READ_ONCE(cpu_start_id) == -cpu) {
+ 			platform_cpu_kill(cpu);
+ 			return;
+ 		}
 -- 
 2.19.1
 
