@@ -7,48 +7,47 @@ X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D3C35C4360F
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 17:13:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1ECAAC43381
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 17:13:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9F3CB218A1
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 17:13:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E1FC9217D4
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 17:13:53 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1552410831;
-	bh=jysny0CJvbkdU9dyemd/IHq1zGEhrE+kX6yxwDMZZxA=;
+	s=default; t=1552410834;
+	bh=kOtjHQJl66byfjxpcZ8qcknYhXokst2XzUsEMKpldJA=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=BS5ElQ2VI3jisvHTKBtaa7SnPaLlrLvlWj9L/YGt+66/LsFJlrvFpDY9VH+Pq4Klj
-	 GKFI/y5C7VshfGQ2FdXFHJV/QpsOqDb8kQ1jtX7qtbPO04lpgmWLiBn7IdCVzqbDRt
-	 9zv4pCzVGNS+sBadXmGTfC1k2L601COT4sLx02is=
+	b=qY8O15WmAb6vCXg7/WSph1rn3CdcTUzvMT7yKJQoNDF5cnw9fNsfRcqKhbdqydRHT
+	 +BESnBGf6B2K5WHKu6Vb9n0cCAuLegeXOIZIWNBUF+Qgr5aw+j4wpbWtUUj40xMNit
+	 WjlD9/muS12GeOXWAuNXLzfYlnEuukWBFo90lkOw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728111AbfCLRNu (ORCPT
+        id S1728120AbfCLRNw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 12 Mar 2019 13:13:50 -0400
+        Tue, 12 Mar 2019 13:13:52 -0400
 Received: from mail.kernel.org ([198.145.29.99]:49744 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727846AbfCLRNP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 12 Mar 2019 13:13:15 -0400
+        id S1727879AbfCLRNT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 12 Mar 2019 13:13:19 -0400
 Received: from localhost (unknown [104.133.8.98])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B7AC3217D4;
-        Tue, 12 Mar 2019 17:13:14 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 4BDCF217D4;
+        Tue, 12 Mar 2019 17:13:18 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1552410794;
-        bh=jysny0CJvbkdU9dyemd/IHq1zGEhrE+kX6yxwDMZZxA=;
+        s=default; t=1552410798;
+        bh=kOtjHQJl66byfjxpcZ8qcknYhXokst2XzUsEMKpldJA=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=H0lIBGg5juPD2jjSnHQ6SSd+LoCWdkE1PDOuj6DFJOBcC+jTzdqte4/k7U7p1gSJw
-         qaZvbxlJ+LX6lL9+bUrbnR2ak6pQbDRw961mB+PILprESm3OUzT5wrTkb1oPNJOdjz
-         4a/hOzes06d1hpJqplJCYIF0BUttoCi0SV8jZfEw=
+        b=FTET5TOvpsjK4bUIz6c+pIY2c2wvW7EArxmo5DL0UEffwEXKLz/QnI1fvXkOvAQaU
+         UK2fUpcM8IyKE4t2w06WZ7Nlm5R91KActXTbXPf4ALyiY1smWKdpv3upc/duWYebsJ
+         FTo+gVe196kbTT07xldXB2dvSLmmMqC2SuK7G8bc=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Alex Gagniuc <Alex_Gagniuc@Dellteam.com>,
-        Keith Busch <keith.busch@intel.com>,
-        Alex Gagniuc <mr.nuke.me@gmail.com>,
-        Christoph Hellwig <hch@lst.de>, Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.20 140/171] nvme-pci: fix rapid add remove sequence
-Date:   Tue, 12 Mar 2019 10:08:40 -0700
-Message-Id: <20190312170359.715739642@linuxfoundation.org>
+        stable@vger.kernel.org, Julian Wiedmann <jwi@linux.ibm.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.20 127/171] s390/qeth: cancel close_dev work before removing a card
+Date:   Tue, 12 Mar 2019 10:08:27 -0700
+Message-Id: <20190312170358.679237737@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190312170347.868927101@linuxfoundation.org>
 References: <20190312170347.868927101@linuxfoundation.org>
@@ -67,69 +66,60 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-[ Upstream commit 5c959d73dba6495ec01d04c206ee679d61ccb2b0 ]
+[ Upstream commit c2780c1a3fb724560b1d44f7976e0de17bf153c7 ]
 
-A surprise removal may fail to tear down request queues if it is racing
-with the initial asynchronous probe. If that happens, the remove path
-won't see the queue resources to tear down, and the controller reset
-path may create a new request queue on a removed device, but will not
-be able to make forward progress, deadlocking the pci removal.
+A card's close_dev work is scheduled on a driver-wide workqueue. If the
+card is removed and freed while the work is still active, this causes a
+use-after-free.
+So make sure that the work is completed before freeing the card.
 
-Protect setting up non-blocking resources from a shutdown by holding the
-same mutex, and transition to the CONNECTING state after these resources
-are initialized so the probe path may see the dead controller state
-before dispatching new IO.
-
-Link: https://bugzilla.kernel.org/show_bug.cgi?id=202081
-Reported-by: Alex Gagniuc <Alex_Gagniuc@Dellteam.com>
-Signed-off-by: Keith Busch <keith.busch@intel.com>
-Tested-by: Alex Gagniuc <mr.nuke.me@gmail.com>
-Signed-off-by: Christoph Hellwig <hch@lst.de>
+Fixes: 0f54761d167f ("qeth: Support VEPA mode")
+Signed-off-by: Julian Wiedmann <jwi@linux.ibm.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/nvme/host/pci.c | 22 ++++++++++++----------
- 1 file changed, 12 insertions(+), 10 deletions(-)
+ drivers/s390/net/qeth_core.h    | 1 +
+ drivers/s390/net/qeth_l2_main.c | 2 ++
+ drivers/s390/net/qeth_l3_main.c | 1 +
+ 3 files changed, 4 insertions(+)
 
-diff --git a/drivers/nvme/host/pci.c b/drivers/nvme/host/pci.c
-index c0d01048ce4d..439b9f4eb246 100644
---- a/drivers/nvme/host/pci.c
-+++ b/drivers/nvme/host/pci.c
-@@ -2280,16 +2280,7 @@ static void nvme_reset_work(struct work_struct *work)
- 	if (dev->ctrl.ctrl_config & NVME_CC_ENABLE)
- 		nvme_dev_disable(dev, false);
+diff --git a/drivers/s390/net/qeth_core.h b/drivers/s390/net/qeth_core.h
+index 99af1a0a3314..8999be74c545 100644
+--- a/drivers/s390/net/qeth_core.h
++++ b/drivers/s390/net/qeth_core.h
+@@ -22,6 +22,7 @@
+ #include <linux/hashtable.h>
+ #include <linux/ip.h>
+ #include <linux/refcount.h>
++#include <linux/workqueue.h>
  
--	/*
--	 * Introduce CONNECTING state from nvme-fc/rdma transports to mark the
--	 * initializing procedure here.
--	 */
--	if (!nvme_change_ctrl_state(&dev->ctrl, NVME_CTRL_CONNECTING)) {
--		dev_warn(dev->ctrl.device,
--			"failed to mark controller CONNECTING\n");
--		goto out;
--	}
--
-+	mutex_lock(&dev->shutdown_lock);
- 	result = nvme_pci_enable(dev);
- 	if (result)
- 		goto out;
-@@ -2308,6 +2299,17 @@ static void nvme_reset_work(struct work_struct *work)
- 	 */
- 	dev->ctrl.max_hw_sectors = NVME_MAX_KB_SZ << 1;
- 	dev->ctrl.max_segments = NVME_MAX_SEGS;
-+	mutex_unlock(&dev->shutdown_lock);
+ #include <net/ipv6.h>
+ #include <net/if_inet6.h>
+diff --git a/drivers/s390/net/qeth_l2_main.c b/drivers/s390/net/qeth_l2_main.c
+index 8d3601891c62..49fa09c67d49 100644
+--- a/drivers/s390/net/qeth_l2_main.c
++++ b/drivers/s390/net/qeth_l2_main.c
+@@ -823,6 +823,8 @@ static void qeth_l2_remove_device(struct ccwgroup_device *cgdev)
+ 
+ 	if (cgdev->state == CCWGROUP_ONLINE)
+ 		qeth_l2_set_offline(cgdev);
 +
-+	/*
-+	 * Introduce CONNECTING state from nvme-fc/rdma transports to mark the
-+	 * initializing procedure here.
-+	 */
-+	if (!nvme_change_ctrl_state(&dev->ctrl, NVME_CTRL_CONNECTING)) {
-+		dev_warn(dev->ctrl.device,
-+			"failed to mark controller CONNECTING\n");
-+		goto out;
-+	}
++	cancel_work_sync(&card->close_dev_work);
+ 	if (qeth_netdev_is_registered(card->dev))
+ 		unregister_netdev(card->dev);
+ }
+diff --git a/drivers/s390/net/qeth_l3_main.c b/drivers/s390/net/qeth_l3_main.c
+index f08b745c2007..d1bf55b5c8e1 100644
+--- a/drivers/s390/net/qeth_l3_main.c
++++ b/drivers/s390/net/qeth_l3_main.c
+@@ -2428,6 +2428,7 @@ static void qeth_l3_remove_device(struct ccwgroup_device *cgdev)
+ 	if (cgdev->state == CCWGROUP_ONLINE)
+ 		qeth_l3_set_offline(cgdev);
  
- 	result = nvme_init_identify(&dev->ctrl);
- 	if (result)
++	cancel_work_sync(&card->close_dev_work);
+ 	if (qeth_netdev_is_registered(card->dev))
+ 		unregister_netdev(card->dev);
+ 	qeth_l3_clear_ip_htable(card, 0);
 -- 
 2.19.1
 
