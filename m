@@ -2,51 +2,50 @@ Return-Path: <SRS0=J4ZE=RP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5FEA7C43381
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 17:46:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C38E3C43381
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 17:46:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 336592147C
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 17:46:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 954522147C
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 17:46:28 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1552412785;
-	bh=IHKqIbqC6oH1dIQFRWoG5DUpavdBCZC53ISO2ZmWhIw=;
+	s=default; t=1552412788;
+	bh=VH7sJGTvFcatHJvdY/8x6B9eI015EwjXR1FtWDmbBjs=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=f7rf9GJIUEsg3En8Uq8pUVq24uCmxgWOGQgkhqRE7/SUabybmOE+bIERXPadIbok7
-	 AWm45MLaQrdYXe2ZwOWGQjx7i7YSJX3ZsHjMLqI+xaZZ5bCdWgKx7pyNKopEw2+T51
-	 xlAGfRflS7tmP4EsoLdadk1v6FXkYtwcfAezp35A=
+	b=1BwDbtFK8nHnJ5ZNDXwikt38s3h8R/2k/lLpI9Qk+EJzXl7BVu225VxcoUcoajG60
+	 MoyKylApV8X+wVXQCPRT90r6GLzW9DZ3hHGz6dnFvCWubSKRYmKesxOUmin4kwpMK4
+	 w4LDj8/1+6WTUfYW+mCpw2CCKPnekLbomNCOfKUY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729164AbfCLRqX (ORCPT
+        id S1729024AbfCLRqV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 12 Mar 2019 13:46:23 -0400
-Received: from mail.kernel.org ([198.145.29.99]:55708 "EHLO mail.kernel.org"
+        Tue, 12 Mar 2019 13:46:21 -0400
+Received: from mail.kernel.org ([198.145.29.99]:55730 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728685AbfCLRPW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 12 Mar 2019 13:15:22 -0400
+        id S1727410AbfCLRPX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 12 Mar 2019 13:15:23 -0400
 Received: from localhost (unknown [104.133.8.98])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 2C12C217D8;
+        by mail.kernel.org (Postfix) with ESMTPSA id E12522184E;
         Tue, 12 Mar 2019 17:15:21 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1552410921;
-        bh=IHKqIbqC6oH1dIQFRWoG5DUpavdBCZC53ISO2ZmWhIw=;
+        s=default; t=1552410922;
+        bh=VH7sJGTvFcatHJvdY/8x6B9eI015EwjXR1FtWDmbBjs=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=oS0+iyUC/8oq5B2VUDcsuzVksMKjJYQbIhqgkj1TMiMLudX7VZIHxFudW1EMMcEV4
-         duSZF60lWkhk+cuPcqNPMJ5rq4aNguHwkTafM319xn4U6WYSc3XO8Jc3+uVrWybAFw
-         Hi8G8mbsOAm0XgPLQ78xPFxjt4+uXof3qM044jJQ=
+        b=KAyBTdeTxKo3l9LjqnVBsGKe4p9TRQLllGTBRZzAwq63MqazpfSePUPhfwHLOKruL
+         7zqfMJeE9+zaffTs4aNdV6TScJbo6nyYWkQrUqbJ39/aKSCahhMTNtm4vNCmizO4dr
+         v3tv8Zn56A4GGnjwsVmFTGTJ/Po87nIL+RlTgB6Y=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     linux-kernel@vger.kernel.org
+To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Jason Gerecke <jason.gerecke@wacom.com>,
-        Dmitry Torokhov <dmitry.torokhov@gmail.com>
-Subject: [PATCH 4.19 123/149] Input: wacom_serial4 - add support for Wacom ArtPad II tablet
-Date:   Tue, 12 Mar 2019 10:09:01 -0700
-Message-Id: <20190312170359.733146450@linuxfoundation.org>
+        Chao Yu <yuchao0@huawei.com>, Gao Xiang <gaoxiang25@huawei.com>
+Subject: [PATCH 4.19 141/149] staging: erofs: fix race of initializing xattrs of a inode at the same time
+Date:   Tue, 12 Mar 2019 10:09:19 -0700
+Message-Id: <20190312170401.113850139@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190312170349.421581206@linuxfoundation.org>
 References: <20190312170349.421581206@linuxfoundation.org>
@@ -65,43 +64,145 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-From: Jason Gerecke <jason.gerecke@wacom.com>
+From: Gao Xiang <gaoxiang25@huawei.com>
 
-commit 44fc95e218a09d7966a9d448941fdb003f6bb69f upstream.
+commit 62dc45979f3f8cb0ea67302a93bff686f0c46c5a upstream.
 
-Tablet initially begins communicating at 9600 baud, so this command
-should be used to connect to the device:
+In real scenario, there could be several threads accessing xattrs
+of the same xattr-uninitialized inode, and init_inode_xattrs()
+almost at the same time.
 
-    $ inputattach --daemon --baud 9600 --wacom_iv /dev/ttyS0
+That's actually an unexpected behavior, this patch closes the race.
 
-https://github.com/linuxwacom/xf86-input-wacom/issues/40
-
-Signed-off-by: Jason Gerecke <jason.gerecke@wacom.com>
-Cc: stable@vger.kernel.org
-Signed-off-by: Dmitry Torokhov <dmitry.torokhov@gmail.com>
+Fixes: b17500a0fdba ("staging: erofs: introduce xattr & acl support")
+Cc: <stable@vger.kernel.org> # 4.19+
+Reviewed-by: Chao Yu <yuchao0@huawei.com>
+Signed-off-by: Gao Xiang <gaoxiang25@huawei.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-
 ---
- drivers/input/tablet/wacom_serial4.c |    2 ++
- 1 file changed, 2 insertions(+)
+ drivers/staging/erofs/internal.h |   11 +++++++---
+ drivers/staging/erofs/xattr.c    |   41 +++++++++++++++++++++++++++------------
+ 2 files changed, 37 insertions(+), 15 deletions(-)
 
---- a/drivers/input/tablet/wacom_serial4.c
-+++ b/drivers/input/tablet/wacom_serial4.c
-@@ -187,6 +187,7 @@ enum {
- 	MODEL_DIGITIZER_II	= 0x5544, /* UD */
- 	MODEL_GRAPHIRE		= 0x4554, /* ET */
- 	MODEL_PENPARTNER	= 0x4354, /* CT */
-+	MODEL_ARTPAD_II		= 0x4B54, /* KT */
- };
+--- a/drivers/staging/erofs/internal.h
++++ b/drivers/staging/erofs/internal.h
+@@ -327,12 +327,17 @@ static inline erofs_off_t iloc(struct er
+ 	return blknr_to_addr(sbi->meta_blkaddr) + (nid << sbi->islotbits);
+ }
  
- static void wacom_handle_model_response(struct wacom *wacom)
-@@ -245,6 +246,7 @@ static void wacom_handle_model_response(
- 		wacom->flags = F_HAS_STYLUS2 | F_HAS_SCROLLWHEEL;
- 		break;
+-#define inode_set_inited_xattr(inode)   (EROFS_V(inode)->flags |= 1)
+-#define inode_has_inited_xattr(inode)   (EROFS_V(inode)->flags & 1)
++/* atomic flag definitions */
++#define EROFS_V_EA_INITED_BIT	0
++
++/* bitlock definitions (arranged in reverse order) */
++#define EROFS_V_BL_XATTR_BIT	(BITS_PER_LONG - 1)
  
-+	case MODEL_ARTPAD_II:
- 	case MODEL_DIGITIZER_II:
- 		wacom->dev->name = "Wacom Digitizer II";
- 		wacom->dev->id.version = MODEL_DIGITIZER_II;
+ struct erofs_vnode {
+ 	erofs_nid_t nid;
+-	unsigned int flags;
++
++	/* atomic flags (including bitlocks) */
++	unsigned long flags;
+ 
+ 	unsigned char data_mapping_mode;
+ 	/* inline size in bytes */
+--- a/drivers/staging/erofs/xattr.c
++++ b/drivers/staging/erofs/xattr.c
+@@ -44,17 +44,24 @@ static inline void xattr_iter_end_final(
+ 
+ static int init_inode_xattrs(struct inode *inode)
+ {
++	struct erofs_vnode *const vi = EROFS_V(inode);
+ 	struct xattr_iter it;
+ 	unsigned i;
+ 	struct erofs_xattr_ibody_header *ih;
+ 	struct erofs_sb_info *sbi;
+-	struct erofs_vnode *vi;
+ 	bool atomic_map;
++	int ret = 0;
+ 
+-	if (likely(inode_has_inited_xattr(inode)))
++	/* the most case is that xattrs of this inode are initialized. */
++	if (test_bit(EROFS_V_EA_INITED_BIT, &vi->flags))
+ 		return 0;
+ 
+-	vi = EROFS_V(inode);
++	if (wait_on_bit_lock(&vi->flags, EROFS_V_BL_XATTR_BIT, TASK_KILLABLE))
++		return -ERESTARTSYS;
++
++	/* someone has initialized xattrs for us? */
++	if (test_bit(EROFS_V_EA_INITED_BIT, &vi->flags))
++		goto out_unlock;
+ 
+ 	/*
+ 	 * bypass all xattr operations if ->xattr_isize is not greater than
+@@ -67,13 +74,16 @@ static int init_inode_xattrs(struct inod
+ 	if (vi->xattr_isize == sizeof(struct erofs_xattr_ibody_header)) {
+ 		errln("xattr_isize %d of nid %llu is not supported yet",
+ 		      vi->xattr_isize, vi->nid);
+-		return -ENOTSUPP;
++		ret = -ENOTSUPP;
++		goto out_unlock;
+ 	} else if (vi->xattr_isize < sizeof(struct erofs_xattr_ibody_header)) {
+ 		if (unlikely(vi->xattr_isize)) {
+ 			DBG_BUGON(1);
+-			return -EIO;	/* xattr ondisk layout error */
++			ret = -EIO;
++			goto out_unlock;	/* xattr ondisk layout error */
+ 		}
+-		return -ENOATTR;
++		ret = -ENOATTR;
++		goto out_unlock;
+ 	}
+ 
+ 	sbi = EROFS_I_SB(inode);
+@@ -81,8 +91,10 @@ static int init_inode_xattrs(struct inod
+ 	it.ofs = erofs_blkoff(iloc(sbi, vi->nid) + vi->inode_isize);
+ 
+ 	it.page = erofs_get_inline_page(inode, it.blkaddr);
+-	if (IS_ERR(it.page))
+-		return PTR_ERR(it.page);
++	if (IS_ERR(it.page)) {
++		ret = PTR_ERR(it.page);
++		goto out_unlock;
++	}
+ 
+ 	/* read in shared xattr array (non-atomic, see kmalloc below) */
+ 	it.kaddr = kmap(it.page);
+@@ -95,7 +107,8 @@ static int init_inode_xattrs(struct inod
+ 						sizeof(uint), GFP_KERNEL);
+ 	if (!vi->xattr_shared_xattrs) {
+ 		xattr_iter_end(&it, atomic_map);
+-		return -ENOMEM;
++		ret = -ENOMEM;
++		goto out_unlock;
+ 	}
+ 
+ 	/* let's skip ibody header */
+@@ -112,7 +125,8 @@ static int init_inode_xattrs(struct inod
+ 			if (IS_ERR(it.page)) {
+ 				kfree(vi->xattr_shared_xattrs);
+ 				vi->xattr_shared_xattrs = NULL;
+-				return PTR_ERR(it.page);
++				ret = PTR_ERR(it.page);
++				goto out_unlock;
+ 			}
+ 
+ 			it.kaddr = kmap_atomic(it.page);
+@@ -125,8 +139,11 @@ static int init_inode_xattrs(struct inod
+ 	}
+ 	xattr_iter_end(&it, atomic_map);
+ 
+-	inode_set_inited_xattr(inode);
+-	return 0;
++	set_bit(EROFS_V_EA_INITED_BIT, &vi->flags);
++
++out_unlock:
++	clear_and_wake_up_bit(EROFS_V_BL_XATTR_BIT, &vi->flags);
++	return ret;
+ }
+ 
+ struct xattr_iter_handlers {
 
 
