@@ -2,104 +2,193 @@ Return-Path: <SRS0=J4ZE=RP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 14E1AC43381
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 01:28:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7B8E5C10F06
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 01:34:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DEFC2214D8
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 01:28:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 413142084F
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 01:34:53 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="qOyNYXF2"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726689AbfCLB2b (ORCPT
+        id S1726668AbfCLBev (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 11 Mar 2019 21:28:31 -0400
-Received: from mail.kernel.org ([198.145.29.99]:55256 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725932AbfCLB2a (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 11 Mar 2019 21:28:30 -0400
-Received: from oasis.local.home (cpe-66-24-58-225.stny.res.rr.com [66.24.58.225])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 7BF922084F;
-        Tue, 12 Mar 2019 01:28:26 +0000 (UTC)
-Date:   Mon, 11 Mar 2019 21:28:23 -0400
-From:   Steven Rostedt <rostedt@goodmis.org>
-To:     Joel Fernandes <joel@joelfernandes.org>
-Cc:     Daniel Colascione <dancol@google.com>,
-        Karim Yaghmour <karim.yaghmour@opersys.com>,
-        Geert Uytterhoeven <geert@linux-m68k.org>,
-        Greg KH <gregkh@linuxfoundation.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Alexei Starovoitov <ast@kernel.org>,
-        atish patra <atishp04@gmail.com>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Dietmar Eggemann <dietmar.eggemann@arm.com>,
-        Guenter Roeck <groeck@chromium.org>,
-        Jonathan Corbet <corbet@lwn.net>,
-        Kees Cook <keescook@chromium.org>,
-        Android Kernel Team <kernel-team@android.com>,
-        "open list:DOCUMENTATION" <linux-doc@vger.kernel.org>,
-        "open list:KERNEL SELFTEST FRAMEWORK" 
-        <linux-kselftest@vger.kernel.org>,
-        linux-trace-devel@vger.kernel.org,
-        Manoj Rao <linux@manojrajarao.com>,
-        Masahiro Yamada <yamada.masahiro@socionext.com>,
-        Masami Hiramatsu <mhiramat@kernel.org>,
-        Qais Yousef <qais.yousef@arm.com>,
-        Randy Dunlap <rdunlap@infradead.org>,
-        Shuah Khan <shuah@kernel.org>, Yonghong Song <yhs@fb.com>
-Subject: Re: [PATCH v4 1/2] Provide in-kernel headers for making it easy to
- extend the kernel
-Message-ID: <20190311212823.60684182@oasis.local.home>
-In-Reply-To: <20190312003912.GA170478@google.com>
-References: <20190308140251.GC25768@kroah.com>
-        <CAMuHMdUmnrJtu8bBeUgtiU6y_TLHM27z1WxpPia4dXMpApeijw@mail.gmail.com>
-        <20190309071648.GE3882@kroah.com>
-        <CAMuHMdUT+UGt9p2QhOXzAtCUmqy-a8YN-ceDa-0qANJE53pWBA@mail.gmail.com>
-        <20190309121141.GA30173@kroah.com>
-        <b7296377-9e0c-aed7-61f0-93d24d1ceddd@opersys.com>
-        <CAMuHMdV8+XTyGf1ZJ+gMf=zQpzqh3-+b7wgi+gAmXQ6HpUAw3A@mail.gmail.com>
-        <3e84e1ef-e266-e983-5874-6c26ac7f38b8@opersys.com>
-        <20190311193612.4f09bf11@oasis.local.home>
-        <CAKOZuetHG0O-CiO6h5tD7aht_MT70ebwWMMSPkRUHdiM3wVq0Q@mail.gmail.com>
-        <20190312003912.GA170478@google.com>
-X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+        Mon, 11 Mar 2019 21:34:51 -0400
+Received: from merlin.infradead.org ([205.233.59.134]:57744 "EHLO
+        merlin.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726431AbfCLBev (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 11 Mar 2019 21:34:51 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=merlin.20170209; h=Content-Transfer-Encoding:Content-Type:
+        In-Reply-To:MIME-Version:Date:Message-ID:References:Cc:To:From:Subject:Sender
+        :Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
+        Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
+        List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+        bh=ABBIpJ9khKxMfKx7eqgU0kcE99GiBOw+nQ4Hr61nFvU=; b=qOyNYXF23+BGUsDp8nVauzAlZf
+        HpRWwPj4Fklo9dKN2Mea7Pj0HZtdPPA80FY/mNJPvL2/m65BzeZhSI1Hks7f9Mmv5zo9XUqCu8NsO
+        qSa3KHko0I9dAYtqC882qs5PKBPCLw+Z/qlLNZ6W7N17H0gVV5K3mMEzHo84UPXRKdgQ20jsCuzxJ
+        vHiSzsFCSWQl9l7fKSb8j3QyUOjlL/1ZustcI128PEY0If70V8zLTTzsY4cKpUQi11PiAmPbF5Kdw
+        wRH+4Y3DdE0Wcg3ErFo//EcpiLAk2vkIXvX4ZykmjQKp5sGflpX7sXLihy4/t6uSGaoAUVUYbVPRm
+        J/Y+Xi4A==;
+Received: from static-50-53-52-16.bvtn.or.frontiernet.net ([50.53.52.16] helo=dragon.dunlab)
+        by merlin.infradead.org with esmtpsa (Exim 4.90_1 #2 (Red Hat Linux))
+        id 1h3WJa-0007hs-Fu; Tue, 12 Mar 2019 01:34:46 +0000
+Subject: Re: paride/pf.c: blk-mq use-after-free (kernel v5.0)
+From:   Randy Dunlap <rdunlap@infradead.org>
+To:     linux-block <linux-block@vger.kernel.org>, axboe <axboe@kernel.dk>
+Cc:     LKML <linux-kernel@vger.kernel.org>, Tim Waugh <tim@cyberelk.net>,
+        linux-parport@lists.infradead.org
+References: <30c63b2d-92d2-51be-40f0-62cada110388@infradead.org>
+Message-ID: <7d24a06f-f219-e50a-e8f8-915a6cc1b796@infradead.org>
+Date:   Mon, 11 Mar 2019 18:34:12 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.5.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+In-Reply-To: <30c63b2d-92d2-51be-40f0-62cada110388@infradead.org>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
 Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, 11 Mar 2019 20:39:12 -0400
-Joel Fernandes <joel@joelfernandes.org> wrote:
-
-> I think even though the kernel-headers can't have information about all data
-> structures, they do already contain a lot of data structure definitions we
-> need already. And anything needed can/should arguably be moved to include/ if
-> they are really needed for kernel extension by something "external" to the
-> kernel such as kernel modules or eBPF, right?
-
-That's not my worry. I would like to be able to easily walk data
-structures from within the kernel, without having to do a lot of work
-in userspace to get that information. The kprobe_events could then be
-passed type casts or such to access data fields of arguments to
-functions and such.
-
-> 
-> In any case, such a solution such as what Steve suggested, still cannot do
-> what we can with headers - such as build kernel modules on the fly using the
-> C-compiler without any auto-generation of C code from any debug artifiacts.
-> Think systemtap working with the module-backend without any need for
-> linux-headers package on the file system. So such a solution would still be a
-> bit orthogonal in scope to what this proposed solution can solve IMO.
+On 3/11/19 6:25 PM, Randy Dunlap wrote:
+> [Has this already been addressed/fixed?]
 > 
 
-With the information I would like to have, it would be trivial to read
-the data to create the header files needed for modules.
+Same bug occurs with paride/pcd.c driver.
 
--- Steve
+> 
+> [ 1688.055696] calling  pf_init+0x0/0x1000 [pf] @ 8572
+> [ 1688.058871] pf: pf version 1.04, major 47, cluster 64, nice 0
+> [ 1688.064381] pf: No ATAPI disk detected
+> [ 1688.064783] initcall pf_init+0x0/0x1000 [pf] returned -19 after 8827 usecs
+> [ 1688.322562] calling  pf_init+0x0/0x1000 [pf] @ 8582
+> [ 1688.323566] ==================================================================
+> [ 1688.323621] BUG: KASAN: use-after-free in __cpuhp_state_add_instance_cpuslocked+0x33f/0x430
+> [ 1688.323669] Write of size 8 at addr ffff888117051810 by task modprobe/8582
+> 
+> [ 1688.323729] CPU: 3 PID: 8582 Comm: modprobe Not tainted 5.0.0mod #2
+> [ 1688.323767] Hardware name: TOSHIBA PORTEGE R835/Portable PC, BIOS Version 4.10   01/08/2013
+> [ 1688.323812] Call Trace:
+> [ 1688.323840]  dump_stack+0x7b/0xb5
+> [ 1688.323874]  print_address_description+0x6e/0x360
+> [ 1688.323916]  kasan_report+0x11a/0x198
+> [ 1688.323948]  ? __cpuhp_state_add_instance_cpuslocked+0x33f/0x430
+> [ 1688.323993]  ? __cpuhp_state_add_instance_cpuslocked+0x33f/0x430
+> [ 1688.324035]  __asan_report_store8_noabort+0x17/0x20
+> [ 1688.324070]  __cpuhp_state_add_instance_cpuslocked+0x33f/0x430
+> [ 1688.324108]  ? blk_mq_realloc_hw_ctxs+0x409/0xfb0
+> [ 1688.324142]  ? __might_sleep+0xa1/0x1b0
+> [ 1688.324178]  ? lockdep_init_map+0x115/0x5e0
+> [ 1688.324215]  __cpuhp_state_add_instance+0x78/0xf0
+> [ 1688.324249]  blk_mq_realloc_hw_ctxs+0x409/0xfb0
+> [ 1688.324279]  ? kasan_unpoison_shadow+0x35/0x50
+> [ 1688.324311]  ? __kasan_kmalloc.constprop.8+0xa7/0xd0
+> [ 1688.324362]  blk_mq_init_allocated_queue+0x404/0x1a00
+> [ 1688.324395]  ? blk_throtl_init+0x431/0x620
+> [ 1688.324430]  ? blkcg_init_queue+0x102/0x190
+> [ 1688.324475]  blk_mq_init_queue+0x56/0x80
+> [ 1688.324507]  blk_mq_init_sq_queue+0x144/0x1a0
+> [ 1688.324547]  pf_init+0x9f/0x1000 [pf]
+> [ 1688.324575]  ? 0xffffffffc0a48000
+> [ 1688.324605]  ? ktime_get+0xba/0x160
+> [ 1688.324634]  ? 0xffffffffc0a48000
+> [ 1688.324662]  do_one_initcall+0xab/0x2ad
+> [ 1688.324692]  ? initcall_blacklisted+0x190/0x190
+> [ 1688.324723]  ? kasan_unpoison_shadow+0x35/0x50
+> [ 1688.324759]  ? kasan_unpoison_shadow+0x35/0x50
+> [ 1688.324788]  ? kasan_unpoison_shadow+0x35/0x50
+> [ 1688.324819]  ? kasan_poison_shadow+0x2f/0x40
+> [ 1688.324849]  ? __asan_register_globals+0x5a/0x70
+> [ 1688.324888]  do_init_module+0x1c7/0x548
+> [ 1688.324926]  load_module+0x445d/0x5de0
+> [ 1688.324999]  ? layout_and_allocate+0x2d00/0x2d00
+> [ 1688.325035]  ? kernel_read+0x90/0x130
+> [ 1688.325074]  ? kasan_check_write+0x14/0x20
+> [ 1688.325105]  ? kernel_read_file+0x24a/0x640
+> [ 1688.325179]  __do_sys_finit_module+0x193/0x1b0
+> [ 1688.325209]  ? __do_sys_finit_module+0x193/0x1b0
+> [ 1688.325242]  ? __ia32_sys_init_module+0xa0/0xa0
+> [ 1688.325275]  ? vfs_statx_fd+0x45/0x80
+> [ 1688.325306]  ? kasan_check_write+0x14/0x20
+> [ 1688.325335]  ? fput+0x18/0x130
+> [ 1688.325363]  ? ksys_mmap_pgoff+0x3d9/0xb50
+> [ 1688.325416]  __x64_sys_finit_module+0x6e/0xb0
+> [ 1688.325442]  ? __x64_sys_newfstat+0x4f/0x70
+> [ 1688.325469]  do_syscall_64+0xaa/0x310
+> [ 1688.325501]  ? prepare_exit_to_usermode+0x8b/0x150
+> [ 1688.325536]  entry_SYSCALL_64_after_hwframe+0x44/0xa9
+> [ 1688.325567] RIP: 0033:0x7f17f52bd129
+> [ 1688.325595] Code: 00 f3 c3 66 2e 0f 1f 84 00 00 00 00 00 0f 1f 40 00 48 89 f8 48 89 f7 48 89 d6 48 89 ca 4d 89 c2 4d 89 c8 4c 8b 4c 24 08 0f 05 <48> 3d 01 f0 ff ff 73 01 c3 48 8b 0d 3f 0d 2c 00 f7 d8 64 89 01 48
+> [ 1688.325679] RSP: 002b:00007fff2e723e38 EFLAGS: 00000246 ORIG_RAX: 0000000000000139
+> [ 1688.325718] RAX: ffffffffffffffda RBX: 00005565f67c0b10 RCX: 00007f17f52bd129
+> [ 1688.325740] RDX: 0000000000000000 RSI: 00005565f65ae548 RDI: 0000000000000003
+> [ 1688.325762] RBP: 00005565f65ae548 R08: 0000000000000000 R09: 00005565f67c0400
+> [ 1688.325783] R10: 0000000000000003 R11: 0000000000000246 R12: 0000000000040000
+> [ 1688.325805] R13: 00005565f67c0c40 R14: 0000000000000000 R15: 00005565f67c0b10
+> 
+> [ 1688.325848] Allocated by task 8572:
+> [ 1688.325864]  save_stack+0x43/0xd0
+> [ 1688.325879]  __kasan_kmalloc.constprop.8+0xa7/0xd0
+> [ 1688.325896]  kasan_kmalloc+0x9/0x10
+> [ 1688.325912]  blk_mq_realloc_hw_ctxs+0x18b/0xfb0
+> [ 1688.325929]  blk_mq_init_allocated_queue+0x404/0x1a00
+> [ 1688.325948]  blk_mq_init_queue+0x56/0x80
+> [ 1688.325964]  blk_mq_init_sq_queue+0x144/0x1a0
+> [ 1688.325983]  pf_init+0x9f/0x1000 [pf]
+> [ 1688.325998]  do_one_initcall+0xab/0x2ad
+> [ 1688.326013]  do_init_module+0x1c7/0x548
+> [ 1688.326028]  load_module+0x445d/0x5de0
+> [ 1688.326043]  __do_sys_finit_module+0x193/0x1b0
+> [ 1688.326059]  __x64_sys_finit_module+0x6e/0xb0
+> [ 1688.326075]  do_syscall_64+0xaa/0x310
+> [ 1688.326097]  entry_SYSCALL_64_after_hwframe+0x44/0xa9
+> 
+> [ 1688.326142] Freed by task 2217:
+> [ 1688.326160]  save_stack+0x43/0xd0
+> [ 1688.326174]  __kasan_slab_free+0x137/0x190
+> [ 1688.326191]  kasan_slab_free+0xe/0x10
+> [ 1688.326206]  kfree+0xb0/0x1b0
+> [ 1688.326220]  blk_mq_hw_sysfs_release+0x6f/0x90
+> [ 1688.326237]  kobject_put+0x153/0x420
+> [ 1688.326252]  blk_mq_release+0xbc/0x160
+> [ 1688.326267]  __blk_release_queue+0x178/0x320
+> [ 1688.326284]  process_one_work+0x9fb/0x1710
+> [ 1688.326299]  worker_thread+0x85/0xee0
+> [ 1688.326315]  kthread+0x349/0x410
+> [ 1688.326329]  ret_from_fork+0x35/0x40
+> 
+> [ 1688.326353] The buggy address belongs to the object at ffff888117051588
+>                 which belongs to the cache kmalloc-1k of size 1024
+> [ 1688.326388] The buggy address is located 648 bytes inside of
+>                 1024-byte region [ffff888117051588, ffff888117051988)
+> [ 1688.326421] The buggy address belongs to the page:
+> [ 1688.326439] page:ffffea00045c1400 count:1 mapcount:0 mapping:ffff888107c16940 index:0x0 compound_mapcount: 0
+> [ 1688.326469] flags: 0x17ffffc0010200(slab|head)
+> [ 1688.326488] raw: 0017ffffc0010200 ffffea0004502408 ffffea00042c6408 ffff888107c16940
+> [ 1688.326512] raw: 0000000000000000 0000000000170017 00000001ffffffff 0000000000000000
+> [ 1688.326535] page dumped because: kasan: bad access detected
+> 
+> [ 1688.326562] Memory state around the buggy address:
+> [ 1688.326579]  ffff888117051700: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
+> [ 1688.326602]  ffff888117051780: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
+> [ 1688.326624] >ffff888117051800: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
+> [ 1688.326646]                          ^
+> [ 1688.326660]  ffff888117051880: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
+> [ 1688.326684]  ffff888117051900: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
+> [ 1688.326705] ==================================================================
+> [ 1688.326726] Disabling lock debugging due to kernel taint
+> [ 1688.328731] pf: pf version 1.04, major 47, cluster 64, nice 0
+> [ 1688.336493] pf: No ATAPI disk detected
+> [ 1688.336730] initcall pf_init+0x0/0x1000 [pf] returned -19 after 13791 usecs
+> 
+
+
+-- 
+~Randy
