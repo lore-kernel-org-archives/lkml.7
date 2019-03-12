@@ -2,120 +2,232 @@ Return-Path: <SRS0=J4ZE=RP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_PASS autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F356AC43381
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 18:03:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5B828C43381
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 18:03:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CFEAC214AF
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 18:03:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 236BB205C9
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 18:03:27 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1552413807;
+	bh=zf070MuLkFq56nS2NBH2hqRCZFU6HlbzfEf8x6iH6tg=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=voBGJNlWg7LNmnPNm0TUW9i87+aRFbGmbCxmjhPvfBBKNisHE4rtbyhLabxODD+xU
+	 jjuMg26SYML/o+9glDFo3bilPPYz0g7/mUXcGprS36CCGHvomC7REWR1aKmJpioFS4
+	 8VZYJ0rRkO28J2v4k1ZfG0kFEp8cAO13gaR58t+o=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728820AbfCLSDS (ORCPT
+        id S1728843AbfCLSD0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 12 Mar 2019 14:03:18 -0400
-Received: from usa-sjc-mx-foss1.foss.arm.com ([217.140.101.70]:47506 "EHLO
-        foss.arm.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727699AbfCLSDQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 12 Mar 2019 14:03:16 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.72.51.249])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 8E851A78;
-        Tue, 12 Mar 2019 11:03:15 -0700 (PDT)
-Received: from [10.1.196.92] (usa-sjc-imap-foss1.foss.arm.com [10.72.51.249])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id E83E33F59C;
-        Tue, 12 Mar 2019 11:03:14 -0700 (PDT)
-Subject: Re: [PATCH 0/4] irqchip/gic-v3-its: free_lpi_range tweaks
-To:     Rasmus Villemoes <linux@rasmusvillemoes.dk>,
-        linux-kernel@vger.kernel.org
-Cc:     stable@vger.kernel.org
-References: <20190312173350.4025-1-linux@rasmusvillemoes.dk>
-From:   Marc Zyngier <marc.zyngier@arm.com>
-Openpgp: preference=signencrypt
-Autocrypt: addr=marc.zyngier@arm.com; prefer-encrypt=mutual; keydata=
- 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
-Organization: ARM Ltd
-Message-ID: <e0a7becd-9098-e264-b509-a6bcd5279a7a@arm.com>
-Date:   Tue, 12 Mar 2019 18:03:13 +0000
-User-Agent: Mozilla/5.0 (X11; Linux aarch64; rv:60.0) Gecko/20100101
- Thunderbird/60.5.1
+        Tue, 12 Mar 2019 14:03:26 -0400
+Received: from mail.kernel.org ([198.145.29.99]:48946 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727698AbfCLRM4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 12 Mar 2019 13:12:56 -0400
+Received: from localhost (unknown [104.133.8.98])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 143B12171F;
+        Tue, 12 Mar 2019 17:12:55 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1552410775;
+        bh=zf070MuLkFq56nS2NBH2hqRCZFU6HlbzfEf8x6iH6tg=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=qrJGNX5z3IvpqURm6G9ehbMwPlHmV34Ntej6/HV8ChdrCU/1Q7zOjoLFKXM4URn8T
+         r0j55dxvJ/79WtnFHJtC6t5Y2vEvkBMe36PvxdnQp965iquEsXd35QBZsTZ2kpkCYq
+         HN+Wy2VwphKuvTlQfMkYHYTAAWYLtUiU2356Pl/U=
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     linux-kernel@vger.kernel.org
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        stable@vger.kernel.org, Martin KaFai Lau <kafai@fb.com>,
+        Alexei Starovoitov <ast@kernel.org>,
+        Daniel Borkmann <daniel@iogearbox.net>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.20 113/171] bpf: fix potential deadlock in bpf_prog_register
+Date:   Tue, 12 Mar 2019 10:08:13 -0700
+Message-Id: <20190312170357.637421555@linuxfoundation.org>
+X-Mailer: git-send-email 2.21.0
+In-Reply-To: <20190312170347.868927101@linuxfoundation.org>
+References: <20190312170347.868927101@linuxfoundation.org>
+User-Agent: quilt/0.65
+X-stable: review
+X-Patchwork-Hint: ignore
 MIME-Version: 1.0
-In-Reply-To: <20190312173350.4025-1-linux@rasmusvillemoes.dk>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Rasmus,
+4.20-stable review patch.  If anyone has any objections, please let me know.
 
-On 12/03/2019 17:33, Rasmus Villemoes wrote:
-> I noticed that the O(n log n) behaviour of free_lpi_range could easily
-> be made O(n) (patch 4), though I don't suppose n is ever large enough
-> to actually matter. While there, I also stumbled on two other
-> micro-optimizations (2 and 3).
+------------------
 
-n is usually in the range 1 .. nr_cpus, so pretty small, even on the
-biggest machines we have around (256 threads). And actually, nobody ever
-frees LPIs, because hey, why would you?
+[ Upstream commit e16ec34039c701594d55d08a5aa49ee3e1abc821 ]
 
-> Then while writing the commit log for the last patch, I noticed that
-> the cmp callback I was removing was actually buggy, so I went back and
-> added a patch in front suitable for -stable. I'll leave it to others
-> to decide if it's important enough for that.
+Lockdep found a potential deadlock between cpu_hotplug_lock, bpf_event_mutex, and cpuctx_mutex:
+[   13.007000] WARNING: possible circular locking dependency detected
+[   13.007587] 5.0.0-rc3-00018-g2fa53f892422-dirty #477 Not tainted
+[   13.008124] ------------------------------------------------------
+[   13.008624] test_progs/246 is trying to acquire lock:
+[   13.009030] 0000000094160d1d (tracepoints_mutex){+.+.}, at: tracepoint_probe_register_prio+0x2d/0x300
+[   13.009770]
+[   13.009770] but task is already holding lock:
+[   13.010239] 00000000d663ef86 (bpf_event_mutex){+.+.}, at: bpf_probe_register+0x1d/0x60
+[   13.010877]
+[   13.010877] which lock already depends on the new lock.
+[   13.010877]
+[   13.011532]
+[   13.011532] the existing dependency chain (in reverse order) is:
+[   13.012129]
+[   13.012129] -> #4 (bpf_event_mutex){+.+.}:
+[   13.012582]        perf_event_query_prog_array+0x9b/0x130
+[   13.013016]        _perf_ioctl+0x3aa/0x830
+[   13.013354]        perf_ioctl+0x2e/0x50
+[   13.013668]        do_vfs_ioctl+0x8f/0x6a0
+[   13.014003]        ksys_ioctl+0x70/0x80
+[   13.014320]        __x64_sys_ioctl+0x16/0x20
+[   13.014668]        do_syscall_64+0x4a/0x180
+[   13.015007]        entry_SYSCALL_64_after_hwframe+0x49/0xbe
+[   13.015469]
+[   13.015469] -> #3 (&cpuctx_mutex){+.+.}:
+[   13.015910]        perf_event_init_cpu+0x5a/0x90
+[   13.016291]        perf_event_init+0x1b2/0x1de
+[   13.016654]        start_kernel+0x2b8/0x42a
+[   13.016995]        secondary_startup_64+0xa4/0xb0
+[   13.017382]
+[   13.017382] -> #2 (pmus_lock){+.+.}:
+[   13.017794]        perf_event_init_cpu+0x21/0x90
+[   13.018172]        cpuhp_invoke_callback+0xb3/0x960
+[   13.018573]        _cpu_up+0xa7/0x140
+[   13.018871]        do_cpu_up+0xa4/0xc0
+[   13.019178]        smp_init+0xcd/0xd2
+[   13.019483]        kernel_init_freeable+0x123/0x24f
+[   13.019878]        kernel_init+0xa/0x110
+[   13.020201]        ret_from_fork+0x24/0x30
+[   13.020541]
+[   13.020541] -> #1 (cpu_hotplug_lock.rw_sem){++++}:
+[   13.021051]        static_key_slow_inc+0xe/0x20
+[   13.021424]        tracepoint_probe_register_prio+0x28c/0x300
+[   13.021891]        perf_trace_event_init+0x11f/0x250
+[   13.022297]        perf_trace_init+0x6b/0xa0
+[   13.022644]        perf_tp_event_init+0x25/0x40
+[   13.023011]        perf_try_init_event+0x6b/0x90
+[   13.023386]        perf_event_alloc+0x9a8/0xc40
+[   13.023754]        __do_sys_perf_event_open+0x1dd/0xd30
+[   13.024173]        do_syscall_64+0x4a/0x180
+[   13.024519]        entry_SYSCALL_64_after_hwframe+0x49/0xbe
+[   13.024968]
+[   13.024968] -> #0 (tracepoints_mutex){+.+.}:
+[   13.025434]        __mutex_lock+0x86/0x970
+[   13.025764]        tracepoint_probe_register_prio+0x2d/0x300
+[   13.026215]        bpf_probe_register+0x40/0x60
+[   13.026584]        bpf_raw_tracepoint_open.isra.34+0xa4/0x130
+[   13.027042]        __do_sys_bpf+0x94f/0x1a90
+[   13.027389]        do_syscall_64+0x4a/0x180
+[   13.027727]        entry_SYSCALL_64_after_hwframe+0x49/0xbe
+[   13.028171]
+[   13.028171] other info that might help us debug this:
+[   13.028171]
+[   13.028807] Chain exists of:
+[   13.028807]   tracepoints_mutex --> &cpuctx_mutex --> bpf_event_mutex
+[   13.028807]
+[   13.029666]  Possible unsafe locking scenario:
+[   13.029666]
+[   13.030140]        CPU0                    CPU1
+[   13.030510]        ----                    ----
+[   13.030875]   lock(bpf_event_mutex);
+[   13.031166]                                lock(&cpuctx_mutex);
+[   13.031645]                                lock(bpf_event_mutex);
+[   13.032135]   lock(tracepoints_mutex);
+[   13.032441]
+[   13.032441]  *** DEADLOCK ***
+[   13.032441]
+[   13.032911] 1 lock held by test_progs/246:
+[   13.033239]  #0: 00000000d663ef86 (bpf_event_mutex){+.+.}, at: bpf_probe_register+0x1d/0x60
+[   13.033909]
+[   13.033909] stack backtrace:
+[   13.034258] CPU: 1 PID: 246 Comm: test_progs Not tainted 5.0.0-rc3-00018-g2fa53f892422-dirty #477
+[   13.034964] Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS 1.11.0-2.el7 04/01/2014
+[   13.035657] Call Trace:
+[   13.035859]  dump_stack+0x5f/0x8b
+[   13.036130]  print_circular_bug.isra.37+0x1ce/0x1db
+[   13.036526]  __lock_acquire+0x1158/0x1350
+[   13.036852]  ? lock_acquire+0x98/0x190
+[   13.037154]  lock_acquire+0x98/0x190
+[   13.037447]  ? tracepoint_probe_register_prio+0x2d/0x300
+[   13.037876]  __mutex_lock+0x86/0x970
+[   13.038167]  ? tracepoint_probe_register_prio+0x2d/0x300
+[   13.038600]  ? tracepoint_probe_register_prio+0x2d/0x300
+[   13.039028]  ? __mutex_lock+0x86/0x970
+[   13.039337]  ? __mutex_lock+0x24a/0x970
+[   13.039649]  ? bpf_probe_register+0x1d/0x60
+[   13.039992]  ? __bpf_trace_sched_wake_idle_without_ipi+0x10/0x10
+[   13.040478]  ? tracepoint_probe_register_prio+0x2d/0x300
+[   13.040906]  tracepoint_probe_register_prio+0x2d/0x300
+[   13.041325]  bpf_probe_register+0x40/0x60
+[   13.041649]  bpf_raw_tracepoint_open.isra.34+0xa4/0x130
+[   13.042068]  ? __might_fault+0x3e/0x90
+[   13.042374]  __do_sys_bpf+0x94f/0x1a90
+[   13.042678]  do_syscall_64+0x4a/0x180
+[   13.042975]  entry_SYSCALL_64_after_hwframe+0x49/0xbe
+[   13.043382] RIP: 0033:0x7f23b10a07f9
+[   13.045155] RSP: 002b:00007ffdef42fdd8 EFLAGS: 00000202 ORIG_RAX: 0000000000000141
+[   13.045759] RAX: ffffffffffffffda RBX: 00007ffdef42ff70 RCX: 00007f23b10a07f9
+[   13.046326] RDX: 0000000000000070 RSI: 00007ffdef42fe10 RDI: 0000000000000011
+[   13.046893] RBP: 00007ffdef42fdf0 R08: 0000000000000038 R09: 00007ffdef42fe10
+[   13.047462] R10: 0000000000000000 R11: 0000000000000202 R12: 0000000000000000
+[   13.048029] R13: 0000000000000016 R14: 00007f23b1db4690 R15: 0000000000000000
 
-Thanks for that. I'll have a look at the whole thing anyway (I've just
-glanced over it so far).
+Since tracepoints_mutex will be taken in tracepoint_probe_register/unregister()
+there is no need to take bpf_event_mutex too.
+bpf_event_mutex is protecting modifications to prog array used in kprobe/perf bpf progs.
+bpf_raw_tracepoints don't need to take this mutex.
 
-> Please note that this is only compile-tested.
+Fixes: c4f6699dfcb8 ("bpf: introduce BPF_RAW_TRACEPOINT")
+Acked-by: Martin KaFai Lau <kafai@fb.com>
+Signed-off-by: Alexei Starovoitov <ast@kernel.org>
+Signed-off-by: Daniel Borkmann <daniel@iogearbox.net>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
+---
+ kernel/trace/bpf_trace.c | 14 ++------------
+ 1 file changed, 2 insertions(+), 12 deletions(-)
 
-Right, this needs some actual testing then. /me needs to build a guest
-that shakes the allocator a bit.
-
-Cheers,
-
-	M.
+diff --git a/kernel/trace/bpf_trace.c b/kernel/trace/bpf_trace.c
+index 9864a35c8bb5..6c28d519447d 100644
+--- a/kernel/trace/bpf_trace.c
++++ b/kernel/trace/bpf_trace.c
+@@ -1158,22 +1158,12 @@ static int __bpf_probe_register(struct bpf_raw_event_map *btp, struct bpf_prog *
+ 
+ int bpf_probe_register(struct bpf_raw_event_map *btp, struct bpf_prog *prog)
+ {
+-	int err;
+-
+-	mutex_lock(&bpf_event_mutex);
+-	err = __bpf_probe_register(btp, prog);
+-	mutex_unlock(&bpf_event_mutex);
+-	return err;
++	return __bpf_probe_register(btp, prog);
+ }
+ 
+ int bpf_probe_unregister(struct bpf_raw_event_map *btp, struct bpf_prog *prog)
+ {
+-	int err;
+-
+-	mutex_lock(&bpf_event_mutex);
+-	err = tracepoint_probe_unregister(btp->tp, (void *)btp->bpf_func, prog);
+-	mutex_unlock(&bpf_event_mutex);
+-	return err;
++	return tracepoint_probe_unregister(btp->tp, (void *)btp->bpf_func, prog);
+ }
+ 
+ int bpf_get_perf_event_info(const struct perf_event *event, u32 *prog_id,
 -- 
-Jazz is not dead. It just smells funny...
+2.19.1
+
+
+
