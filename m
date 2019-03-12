@@ -7,47 +7,47 @@ X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D1CDFC43381
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 17:11:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2A5CEC43381
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 17:11:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9928A2173C
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 17:11:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E7E07217D9
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 17:11:38 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1552410696;
-	bh=+Fm2dvIz/8hp6dLpXMH5RvWHrZTlAf8ECAbqeAIi7Zs=;
+	s=default; t=1552410699;
+	bh=RF9sT/ibTIzIT/AXrglLP9NxrHm6Y+TzagscqqU85vA=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=YZCtgHdootE651oH84hRxQov6WC8l/Qnm1ihsK2bDTHoUz0w8D7jRGf4+H1MWIPFi
-	 2+pIHkWTMCGQ+j73P336wdXr+T7GCTelPa7+enN3Imh+Q/OlftEf5FYEQUm2Uq8ZyO
-	 7XBe95xCRJdoY0KKUTXZrr4bjNBBW13uS+2igMDE=
+	b=Sdft6LeQ/aQQ1DdL0eau6lAp+8mIH1V5F+dYUL/768hpYI8LqzUDSaC/2qufBBpz5
+	 Dg2099VpiXOez7TP3ot19NsTAR+LpSwP1apd+KaPIbh+n8HuecOULldkh6KfhZl5gk
+	 EXf95b9guP1ssQUxtwXlzz8DJoK/ojhVGRDNHeh4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727010AbfCLRLe (ORCPT
+        id S1727032AbfCLRLi (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 12 Mar 2019 13:11:34 -0400
-Received: from mail.kernel.org ([198.145.29.99]:44718 "EHLO mail.kernel.org"
+        Tue, 12 Mar 2019 13:11:38 -0400
+Received: from mail.kernel.org ([198.145.29.99]:44858 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726941AbfCLRL3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 12 Mar 2019 13:11:29 -0400
+        id S1726954AbfCLRLa (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 12 Mar 2019 13:11:30 -0400
 Received: from localhost (unknown [104.133.8.98])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id AE15F214AE;
-        Tue, 12 Mar 2019 17:11:28 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 7FB9B217D4;
+        Tue, 12 Mar 2019 17:11:29 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1552410688;
-        bh=+Fm2dvIz/8hp6dLpXMH5RvWHrZTlAf8ECAbqeAIi7Zs=;
+        s=default; t=1552410689;
+        bh=RF9sT/ibTIzIT/AXrglLP9NxrHm6Y+TzagscqqU85vA=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=BCcAi5TCloFvExR8sb1olfIeYtvvjNX6JrDiO3i7J90GN9BvtxO/AHVi89u3jE9FY
-         9kIldGfZw/43fPCH+30IVhl3derTLC2YTvqAt7L3oXO2jJPPD919Xm6IRgpeKxfUFk
-         Y5koO/O2BrNZ6RAkVNf8A5Bm4ZtGo3OwI+2bZmuI=
+        b=gQR9KAj77BVMrfk4UwSF6TUANkw/X2oV0QB4TtLvUz2DdUzQvFByNki6VilM989M5
+         2EW5cTkHcrNINWMY1fuHIM6Xor6+84HmZh6lIB6pmaM0U5ccymzTRkc1fKwtZ0qG5z
+         /aCR8CoD8dfhhRXEpp4RsrUbcMZyLQDRvfCUf/Zg=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         stable@vger.kernel.org,
         "Gustavo A. R. Silva" <gustavo@embeddedor.com>,
-        Konrad Rzeszutek Wilk <konrad.wilk@oracle.com>
-Subject: [PATCH 5.0 04/25] iscsi_ibft: Fix missing break in switch statement
-Date:   Tue, 12 Mar 2019 10:08:42 -0700
-Message-Id: <20190312170403.911721947@linuxfoundation.org>
+        "Martin K. Petersen" <martin.petersen@oracle.com>
+Subject: [PATCH 5.0 05/25] scsi: aacraid: Fix missing break in switch statement
+Date:   Tue, 12 Mar 2019 10:08:43 -0700
+Message-Id: <20190312170403.976490686@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190312170403.643852550@linuxfoundation.org>
 References: <20190312170403.643852550@linuxfoundation.org>
@@ -68,33 +68,36 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Gustavo A. R. Silva <gustavo@embeddedor.com>
 
-commit df997abeebadaa4824271009e2d2b526a70a11cb upstream.
+commit 5e420fe635813e5746b296cfc8fff4853ae205a2 upstream.
 
-Add missing break statement in order to prevent the code from falling
-through to case ISCSI_BOOT_TGT_NAME, which is unnecessary.
+Add missing break statement and fix identation issue.
 
 This bug was found thanks to the ongoing efforts to enable
 -Wimplicit-fallthrough.
 
-Fixes: b33a84a38477 ("ibft: convert iscsi_ibft module to iscsi boot lib")
+Fixes: 9cb62fa24e0d ("aacraid: Log firmware AIF messages")
 Cc: stable@vger.kernel.org
 Signed-off-by: Gustavo A. R. Silva <gustavo@embeddedor.com>
-Signed-off-by: Konrad Rzeszutek Wilk <konrad.wilk@oracle.com>
+Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/firmware/iscsi_ibft.c |    1 +
- 1 file changed, 1 insertion(+)
+ drivers/scsi/aacraid/commsup.c |    5 +++--
+ 1 file changed, 3 insertions(+), 2 deletions(-)
 
---- a/drivers/firmware/iscsi_ibft.c
-+++ b/drivers/firmware/iscsi_ibft.c
-@@ -542,6 +542,7 @@ static umode_t __init ibft_check_tgt_for
- 	case ISCSI_BOOT_TGT_NIC_ASSOC:
- 	case ISCSI_BOOT_TGT_CHAP_TYPE:
- 		rc = S_IRUGO;
-+		break;
- 	case ISCSI_BOOT_TGT_NAME:
- 		if (tgt->tgt_name_len)
- 			rc = S_IRUGO;
+--- a/drivers/scsi/aacraid/commsup.c
++++ b/drivers/scsi/aacraid/commsup.c
+@@ -1303,8 +1303,9 @@ static void aac_handle_aif(struct aac_de
+ 				  ADD : DELETE;
+ 				break;
+ 			}
+-			case AifBuManagerEvent:
+-				aac_handle_aif_bu(dev, aifcmd);
++			break;
++		case AifBuManagerEvent:
++			aac_handle_aif_bu(dev, aifcmd);
+ 			break;
+ 		}
+ 
 
 
