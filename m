@@ -2,95 +2,63 @@ Return-Path: <SRS0=J4ZE=RP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+X-Spam-Status: No, score=-4.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 95E48C43381
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 10:33:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1FF14C43381
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 10:38:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5C7352147C
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 10:33:06 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=baylibre-com.20150623.gappssmtp.com header.i=@baylibre-com.20150623.gappssmtp.com header.b="qPKhsWQR"
+	by mail.kernel.org (Postfix) with ESMTP id ECCB220449
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 10:38:42 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726506AbfCLKdE (ORCPT
+        id S1726526AbfCLKim convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 12 Mar 2019 06:33:04 -0400
-Received: from mail-wr1-f67.google.com ([209.85.221.67]:37868 "EHLO
-        mail-wr1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725887AbfCLKdE (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 12 Mar 2019 06:33:04 -0400
-Received: by mail-wr1-f67.google.com with SMTP id y15so2082688wro.4
-        for <linux-kernel@vger.kernel.org>; Tue, 12 Mar 2019 03:33:03 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=baylibre-com.20150623.gappssmtp.com; s=20150623;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=wLXyLglHFa8WKhCE7UI5x+FxnCWWt9w4ptPRyC5dxNc=;
-        b=qPKhsWQR7lHWo26jk2IHBy6RW1A9phLJfjgbuUVJNOrVCqmqzBWj34cb2oX5fKhLbz
-         NpSChalSqLWnbRdbR7Y7g56ZcvDdokto9NJtKtfbLw7voyzrMJa9IP2viWSXxboulLOC
-         T2d1sV10/mCFoSkGrJ2Qj9M6zJ7dZy0VDjDoupBFkmTmDbrb5UmcrGtzumI6UklPCsf4
-         wGBUeL0ZJAUCa9EBTdtVzRp08QYLRVJoEyh9Vc9v3UmMv2LO8v95fl4xWe+Gx/LHn2yy
-         TUrVjr89FAiZDKQ4T4I0gQaQ18U4eO081+dRX5B6CSR3+pQQ3aILMBNadLiAGJe/RdCN
-         0brQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=wLXyLglHFa8WKhCE7UI5x+FxnCWWt9w4ptPRyC5dxNc=;
-        b=jVInU5qvabx511p5hr4f9PtnC+dhKzf8qKZD+0WcthmYOFF8xWlrWOn/xCyuebqMQo
-         rGUF6kVhAL/zENvc5FkWeWiwd0jpDYQZCVHDewZIQG0Ii5z7n6148YixL2BlzjyZgKiN
-         6P2kNgNrQcjG46P29IIZ4m1/BVdo1zGbuDnkJ35+c4J98EN36K3GPJw4ePwOY7/L/Cs+
-         k4urjQfkVF5JGIjcP6HdeFwl+ITlHPzLUs9/9l7J6GqqC7EROao+lnS1oFsSl6wqDB8l
-         u0pvZF1R3GSFDAeSSmqrPHFrDuQO8N4vmqvnrvB0CUfRkPnPGO2v/kJuGsGBEYh/roRG
-         D8GA==
-X-Gm-Message-State: APjAAAUG0r7Po++tX8DOiCux0jB6+JXzAzoX8Cs9oepBuJn+g0jFBIep
-        PY71fwTsVJzqU0ie5sI7u6jXQA==
-X-Google-Smtp-Source: APXvYqw+Fgo9wKVUnS2wQNNXAYH1Ft3PRJZxiDpiJ6ByNwrDzNMGErfcbMkBSzUkdTGXarFTVGsXMA==
-X-Received: by 2002:a5d:6a08:: with SMTP id m8mr1391832wru.59.1552386782354;
-        Tue, 12 Mar 2019 03:33:02 -0700 (PDT)
-Received: from bender.baylibre.local (lmontsouris-657-1-212-31.w90-63.abo.wanadoo.fr. [90.63.244.31])
-        by smtp.gmail.com with ESMTPSA id o12sm28673572wre.0.2019.03.12.03.33.01
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-SHA bits=128/128);
-        Tue, 12 Mar 2019 03:33:01 -0700 (PDT)
-From:   Neil Armstrong <narmstrong@baylibre.com>
-To:     daniel.lezcano@linaro.org
-Cc:     Neil Armstrong <narmstrong@baylibre.com>, linux-oxnas@groups.io,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        Daniel Golle <daniel@makrotopia.org>
-Subject: [PATCH] clocksource/drivers/oxnas: Fix OX820 compatible
-Date:   Tue, 12 Mar 2019 11:32:56 +0100
-Message-Id: <20190312103256.13565-1-narmstrong@baylibre.com>
-X-Mailer: git-send-email 2.20.1
+        Tue, 12 Mar 2019 06:38:42 -0400
+Received: from gloria.sntech.de ([185.11.138.130]:58656 "EHLO gloria.sntech.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726193AbfCLKil (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 12 Mar 2019 06:38:41 -0400
+Received: from we0652.dip.tu-dresden.de ([141.76.178.140] helo=phil.localnet)
+        by gloria.sntech.de with esmtpsa (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.89)
+        (envelope-from <heiko@sntech.de>)
+        id 1h3ens-00016F-L8; Tue, 12 Mar 2019 11:38:36 +0100
+From:   Heiko Stuebner <heiko@sntech.de>
+To:     Jagan Teki <jagan@amarulasolutions.com>
+Cc:     Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-rockchip@lists.infradead.org, linux-kernel@vger.kernel.org,
+        linux-amarula@amarulasolutions.com,
+        Akash Gajjar <akash@openedev.com>
+Subject: Re: [PATCH 1/3] arm64: dts: rockchip: rk3399: rock960: Rename vcc_sys into vcc5v0_sys
+Date:   Tue, 12 Mar 2019 11:38:36 +0100
+Message-ID: <2025500.4so6M6JK9C@phil>
+In-Reply-To: <20190311150332.19492-1-jagan@amarulasolutions.com>
+References: <20190311150332.19492-1-jagan@amarulasolutions.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Transfer-Encoding: 8BIT
+Content-Type: text/plain; charset="iso-8859-1"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The OX820 compatible is wrong is the driver, fix it.
+Am Montag, 11. März 2019, 16:03:30 CET schrieb Jagan Teki:
+> It is always better practice to follow regulator naming conventions
+> as per the schematics for future references.
+> 
+> So, rename vcc_sys into vcc5v0_sys as per rk3399 power diagram of
+> rock960 schematics.
+> 
+> Signed-off-by: Jagan Teki <jagan@amarulasolutions.com>
+> Signed-off-by: Akash Gajjar <akash@openedev.com>
 
-Fixes: 2ea3401e2a84 ("clocksource/drivers/oxnas: Add OX820 compatible")
-Reported-by: Daniel Golle <daniel@makrotopia.org>
-Signed-off-by: Neil Armstrong <narmstrong@baylibre.com>
----
- drivers/clocksource/timer-oxnas-rps.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+I've double-checked both rock960 and ficus schematics to verify
+and applied both patch 1+2 for 5.2
 
-diff --git a/drivers/clocksource/timer-oxnas-rps.c b/drivers/clocksource/timer-oxnas-rps.c
-index eed6feff8b5f..30c6f4ce672b 100644
---- a/drivers/clocksource/timer-oxnas-rps.c
-+++ b/drivers/clocksource/timer-oxnas-rps.c
-@@ -296,4 +296,4 @@ static int __init oxnas_rps_timer_init(struct device_node *np)
- TIMER_OF_DECLARE(ox810se_rps,
- 		       "oxsemi,ox810se-rps-timer", oxnas_rps_timer_init);
- TIMER_OF_DECLARE(ox820_rps,
--		       "oxsemi,ox820se-rps-timer", oxnas_rps_timer_init);
-+		       "oxsemi,ox820-rps-timer", oxnas_rps_timer_init);
--- 
-2.20.1
+Thanks
+Heiko
+
 
