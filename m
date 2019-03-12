@@ -7,48 +7,46 @@ X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5F140C43381
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 17:30:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3921EC43381
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 17:30:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 30623206DF
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 17:30:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 06B37206DF
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 17:30:34 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1552411831;
-	bh=XBrmE+Np9bborTtTfbkZJov/SwRBYVWq2OgA8axxeSw=;
+	s=default; t=1552411834;
+	bh=S9FFNboo1CPnTlB0u0t3IuC7pji7zYwgt5316U25/ik=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=LyGTs2PMQbXa6n3w8zGSyZSomfDPPQwULxfgxfP74sAT3UaZZIxNhbzEBEt1W8Mle
-	 6qg8c8VZBbcgNobxzKvR1m521lTYHC+rZTPaWN3LbbbxnD/ZiLeTCgyRFMcS6KIIYd
-	 4uFDEah/XpSJD+NmayTFjy/sIl598DakufMUDdbs=
+	b=EJl1c/QxTsY7B8sGDh5GHjcBG167WrbdeVrrRWzdriGTPCryVwcHVxjAVI5sTyhqG
+	 85Uo3pZZPIlVbXtC4kau+U0uYN+Uh3j6PU5H9yGGoCwYMKfYvdBKyVMScZz2EDkezm
+	 qzDNcUGsNXf1S+YPhz6UgToSy6o4FDEJwfSTjcHw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729016AbfCLRaa (ORCPT
+        id S1729684AbfCLRac (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 12 Mar 2019 13:30:30 -0400
-Received: from mail.kernel.org ([198.145.29.99]:60796 "EHLO mail.kernel.org"
+        Tue, 12 Mar 2019 13:30:32 -0400
+Received: from mail.kernel.org ([198.145.29.99]:60744 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729513AbfCLRRQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S1729517AbfCLRRQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Tue, 12 Mar 2019 13:17:16 -0400
 Received: from localhost (unknown [104.133.8.98])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 76B8B21741;
-        Tue, 12 Mar 2019 17:17:15 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 3244721874;
+        Tue, 12 Mar 2019 17:17:16 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1552411035;
-        bh=XBrmE+Np9bborTtTfbkZJov/SwRBYVWq2OgA8axxeSw=;
+        s=default; t=1552411036;
+        bh=S9FFNboo1CPnTlB0u0t3IuC7pji7zYwgt5316U25/ik=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=GcMYcjpPytTD6kQiJ1uId1yAymenp/KAYYzDWXnnQ14SMn4AJQimW0vfcaESr7Gxg
-         0RB+F1LtBcpgeA6/+PvrdXXYBwsdfsjT4DyyycQySIoab4oOYrUqJpdvkLxV1uQyoT
-         250cV7KvpI4aFgENyWemg5AOxOyub0yTaTlT14Ao=
+        b=Kw0H5+HprGVSrHaHMlutFvN813tp3WkdNm7tnxlS0/TlrK8UR4tquwbqMWmzDT90F
+         TXrbWZtiOvYxfT5smkqLmeJrK7xIygn0m1QZ9t9pe2QPCgEcM9RemTJJD8ZY3Skf3v
+         6QNQ5PkYyFiH5FgL5ArePFg1u2QoIDy1H5qMQrhI=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Ido Schimmel <idosch@mellanox.com>,
-        Amit Cohen <amitc@mellanox.com>,
-        Jiri Pirko <jiri@mellanox.com>,
+        stable@vger.kernel.org, Michael Chan <michael.chan@broadcom.com>,
         "David S. Miller" <davem@davemloft.net>
-Subject: [PATCH 4.9 13/96] team: Free BPF filter when unregistering netdev
-Date:   Tue, 12 Mar 2019 10:09:31 -0700
-Message-Id: <20190312171035.552113566@linuxfoundation.org>
+Subject: [PATCH 4.9 14/96] bnxt_en: Drop oversize TX packets to prevent errors.
+Date:   Tue, 12 Mar 2019 10:09:32 -0700
+Message-Id: <20190312171035.626885470@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190312171034.530434962@linuxfoundation.org>
 References: <20190312171034.530434962@linuxfoundation.org>
@@ -67,99 +65,45 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-From: Ido Schimmel <idosch@mellanox.com>
+From: Michael Chan <michael.chan@broadcom.com>
 
-[ Upstream commit 692c31bd4054212312396b1d303bffab2c5b93a7 ]
+[ Upstream commit 2b3c6885386020b1b9d92d45e8349637e27d1f66 ]
 
-When team is used in loadbalance mode a BPF filter can be used to
-provide a hash which will determine the Tx port.
+There have been reports of oversize UDP packets being sent to the
+driver to be transmitted, causing error conditions.  The issue is
+likely caused by the dst of the SKB switching between 'lo' with
+64K MTU and the hardware device with a smaller MTU.  Patches are
+being proposed by Mahesh Bandewar <maheshb@google.com> to fix the
+issue.
 
-When the netdev is later unregistered the filter is not freed which
-results in memory leaks [1].
+In the meantime, add a quick length check in the driver to prevent
+the error.  The driver uses the TX packet size as index to look up an
+array to setup the TX BD.  The array is large enough to support all MTU
+sizes supported by the driver.  The oversize TX packet causes the
+driver to index beyond the array and put garbage values into the
+TX BD.  Add a simple check to prevent this.
 
-Fix by freeing the program and the corresponding filter when
-unregistering the netdev.
-
-[1]
-unreferenced object 0xffff8881dbc47cc8 (size 16):
-  comm "teamd", pid 3068, jiffies 4294997779 (age 438.247s)
-  hex dump (first 16 bytes):
-    a3 00 6b 6b 6b 6b 6b 6b 88 a5 82 e1 81 88 ff ff  ..kkkkkk........
-  backtrace:
-    [<000000008a3b47e3>] team_nl_cmd_options_set+0x88f/0x11b0
-    [<00000000c4f4f27e>] genl_family_rcv_msg+0x78f/0x1080
-    [<00000000610ef838>] genl_rcv_msg+0xca/0x170
-    [<00000000a281df93>] netlink_rcv_skb+0x132/0x380
-    [<000000004d9448a2>] genl_rcv+0x29/0x40
-    [<000000000321b2f4>] netlink_unicast+0x4c0/0x690
-    [<000000008c25dffb>] netlink_sendmsg+0x929/0xe10
-    [<00000000068298c5>] sock_sendmsg+0xc8/0x110
-    [<0000000082a61ff0>] ___sys_sendmsg+0x77a/0x8f0
-    [<00000000663ae29d>] __sys_sendmsg+0xf7/0x250
-    [<0000000027c5f11a>] do_syscall_64+0x14d/0x610
-    [<000000006cfbc8d3>] entry_SYSCALL_64_after_hwframe+0x49/0xbe
-    [<00000000e23197e2>] 0xffffffffffffffff
-unreferenced object 0xffff8881e182a588 (size 2048):
-  comm "teamd", pid 3068, jiffies 4294997780 (age 438.247s)
-  hex dump (first 32 bytes):
-    20 00 00 00 02 00 00 00 30 00 00 00 28 f0 ff ff   .......0...(...
-    07 00 00 00 00 00 00 00 28 00 00 00 00 00 00 00  ........(.......
-  backtrace:
-    [<000000002daf01fb>] lb_bpf_func_set+0x45c/0x6d0
-    [<000000008a3b47e3>] team_nl_cmd_options_set+0x88f/0x11b0
-    [<00000000c4f4f27e>] genl_family_rcv_msg+0x78f/0x1080
-    [<00000000610ef838>] genl_rcv_msg+0xca/0x170
-    [<00000000a281df93>] netlink_rcv_skb+0x132/0x380
-    [<000000004d9448a2>] genl_rcv+0x29/0x40
-    [<000000000321b2f4>] netlink_unicast+0x4c0/0x690
-    [<000000008c25dffb>] netlink_sendmsg+0x929/0xe10
-    [<00000000068298c5>] sock_sendmsg+0xc8/0x110
-    [<0000000082a61ff0>] ___sys_sendmsg+0x77a/0x8f0
-    [<00000000663ae29d>] __sys_sendmsg+0xf7/0x250
-    [<0000000027c5f11a>] do_syscall_64+0x14d/0x610
-    [<000000006cfbc8d3>] entry_SYSCALL_64_after_hwframe+0x49/0xbe
-    [<00000000e23197e2>] 0xffffffffffffffff
-
-Fixes: 01d7f30a9f96 ("team: add loadbalance mode")
-Signed-off-by: Ido Schimmel <idosch@mellanox.com>
-Reported-by: Amit Cohen <amitc@mellanox.com>
-Acked-by: Jiri Pirko <jiri@mellanox.com>
+Signed-off-by: Michael Chan <michael.chan@broadcom.com>
 Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- drivers/net/team/team_mode_loadbalance.c |   15 +++++++++++++++
- 1 file changed, 15 insertions(+)
+ drivers/net/ethernet/broadcom/bnxt/bnxt.c |    6 ++++++
+ 1 file changed, 6 insertions(+)
 
---- a/drivers/net/team/team_mode_loadbalance.c
-+++ b/drivers/net/team/team_mode_loadbalance.c
-@@ -319,6 +319,20 @@ static int lb_bpf_func_set(struct team *
- 	return 0;
- }
+--- a/drivers/net/ethernet/broadcom/bnxt/bnxt.c
++++ b/drivers/net/ethernet/broadcom/bnxt/bnxt.c
+@@ -428,6 +428,12 @@ normal_tx:
+ 	}
  
-+static void lb_bpf_func_free(struct team *team)
-+{
-+	struct lb_priv *lb_priv = get_lb_priv(team);
-+	struct bpf_prog *fp;
-+
-+	if (!lb_priv->ex->orig_fprog)
-+		return;
-+
-+	__fprog_destroy(lb_priv->ex->orig_fprog);
-+	fp = rcu_dereference_protected(lb_priv->fp,
-+				       lockdep_is_held(&team->lock));
-+	bpf_prog_destroy(fp);
-+}
-+
- static int lb_tx_method_get(struct team *team, struct team_gsetter_ctx *ctx)
- {
- 	struct lb_priv *lb_priv = get_lb_priv(team);
-@@ -633,6 +647,7 @@ static void lb_exit(struct team *team)
+ 	length >>= 9;
++	if (unlikely(length >= ARRAY_SIZE(bnxt_lhint_arr))) {
++		dev_warn_ratelimited(&pdev->dev, "Dropped oversize %d bytes TX packet.\n",
++				     skb->len);
++		i = 0;
++		goto tx_dma_error;
++	}
+ 	flags |= bnxt_lhint_arr[length];
+ 	txbd->tx_bd_len_flags_type = cpu_to_le32(flags);
  
- 	team_options_unregister(team, lb_options,
- 				ARRAY_SIZE(lb_options));
-+	lb_bpf_func_free(team);
- 	cancel_delayed_work_sync(&lb_priv->ex->stats.refresh_dw);
- 	free_percpu(lb_priv->pcpu_stats);
- 	kfree(lb_priv->ex);
 
 
