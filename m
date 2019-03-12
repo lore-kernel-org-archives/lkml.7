@@ -2,120 +2,84 @@ Return-Path: <SRS0=J4ZE=RP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_PASS,URIBL_BLOCKED,USER_IN_DEF_DKIM_WL autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 88D4AC43381
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 06:08:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9F3D2C43381
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 06:09:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 556A021741
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 06:08:53 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="hqE6AUsr"
+	by mail.kernel.org (Postfix) with ESMTP id 78BD72147C
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 06:09:41 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727187AbfCLGIw (ORCPT
+        id S1727227AbfCLGJj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 12 Mar 2019 02:08:52 -0400
-Received: from mail-it1-f193.google.com ([209.85.166.193]:32909 "EHLO
-        mail-it1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727078AbfCLGIv (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 12 Mar 2019 02:08:51 -0400
-Received: by mail-it1-f193.google.com with SMTP id f186so1595372ita.0
-        for <linux-kernel@vger.kernel.org>; Mon, 11 Mar 2019 23:08:51 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=N1JiQ1cf1uHp+tMakySvUAuKGEi8FGoygCN9wkQMXqw=;
-        b=hqE6AUsrdIaw8AqgtLspHLAVKb5SxCwC13bRoQ+Z0wXsi36QiN13hYYns2oMwfN6qO
-         Pc8GSslcZrTFHx+8t2295LkvYl28Oia+4xOaj0EUqW0xLreRAVcsNOiyvls9FHg5Hitw
-         5PARefocPhP7I/YbPrPyxPfC518gAUgj23ET9aaCDOrZxUaVlesbZWpGxRwxd7jaE+5J
-         wC0ypf6VGxVCc5XixFadnCaB1n5jJQu6rdgO5eE/wMwWsjUgKM7XGZMcg/8ZXv41k5Oo
-         d8WmszRQ+rfKrZay/cpoqmTHKNlZjsJe0pTj6SN32Dv98bDzjmMIkX6VW08aG7bJB3XT
-         xLWQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=N1JiQ1cf1uHp+tMakySvUAuKGEi8FGoygCN9wkQMXqw=;
-        b=DFAuGlNbYoF2oG2I3KEkdYZjRvxLw9CQZB4Qq/A/5Y/PENk+MHi/eQMSK8oh6lhisl
-         xxiB/c6uM4pJoD2/XmDU6h9d5tUEPAu6oWPBN7T/ziFfm4DpfmW3X70ilI4jFphoJNYY
-         NdTOy4HeF5HhzwP83O7Ded59e/ZT38kSmo4BismsDESxKEIs8N7D8wc8SruTOgocKLti
-         IUXjU7NBGgqS6HHn02Hnp7py/H20wUUHPd64PcmoGiCs94HtNkHgDZe2uFD07WsOs2kR
-         hSZX6apjWXOFOuKOi6G5aT1zXmk6O1hF7j2Hb/6sb2C1l0n9MoZIDnzIf8gpHxWekd1A
-         xdgg==
-X-Gm-Message-State: APjAAAWx7eEgzsW0x2xXAApd5gmQTtHgRtLuHhAFuZdAdrcR7qCFf8Uh
-        TO0gtU9FmexUSkVEB4iXfhLae9U49PjJhU0GtK6e8g==
-X-Google-Smtp-Source: APXvYqyGXtnMS2ogIjE5olP/bMefqZZmG86bf7yTmNWT6Oi2bSZlY5OSUGoDZnJnkjBP5bwMQsCr5Os3poCp9xG8Zic=
-X-Received: by 2002:a05:660c:3d1:: with SMTP id c17mr966026itl.166.1552370930231;
- Mon, 11 Mar 2019 23:08:50 -0700 (PDT)
+        Tue, 12 Mar 2019 02:09:39 -0400
+Received: from szxga07-in.huawei.com ([45.249.212.35]:50912 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726670AbfCLGJi (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 12 Mar 2019 02:09:38 -0400
+Received: from DGGEMS406-HUB.china.huawei.com (unknown [172.30.72.60])
+        by Forcepoint Email with ESMTP id 7B43E6E88321F5214C34;
+        Tue, 12 Mar 2019 14:09:36 +0800 (CST)
+Received: from [127.0.0.1] (10.184.189.20) by DGGEMS406-HUB.china.huawei.com
+ (10.3.19.206) with Microsoft SMTP Server id 14.3.408.0; Tue, 12 Mar 2019
+ 14:09:26 +0800
+Subject: Re: [PATCH net] net: sit: fix UBSAN Undefined behaviour in check_6rd
+To:     David Miller <davem@davemloft.net>
+CC:     <kuznet@ms2.inr.ac.ru>, <yoshfuji@linux-ipv6.org>,
+        <netdev@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <mingfangsen@huawei.com>
+References: <694fb074-53a3-af60-6561-57c022445a48@huawei.com>
+ <20190311.102937.1716496269975009682.davem@davemloft.net>
+ <20190311.103037.1736601922338617214.davem@davemloft.net>
+From:   linmiaohe <linmiaohe@huawei.com>
+Message-ID: <e28441a3-7010-7535-5f70-af0f3df1158a@huawei.com>
+Date:   Tue, 12 Mar 2019 14:08:37 +0800
+User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:60.0) Gecko/20100101
+ Thunderbird/60.5.1
 MIME-Version: 1.0
-References: <0000000000001fd5780583d1433f@google.com> <20190311163747.f56cceebd9c2661e4519bdfc@linux-foundation.org>
-In-Reply-To: <20190311163747.f56cceebd9c2661e4519bdfc@linux-foundation.org>
-From:   Dmitry Vyukov <dvyukov@google.com>
-Date:   Tue, 12 Mar 2019 07:08:38 +0100
-Message-ID: <CACT4Y+byKQSOCte3JS9XOnyr+aVSEFtBvLxG2-HUrZX3-82Hcg@mail.gmail.com>
-Subject: Re: KASAN: null-ptr-deref Read in reclaim_high
-To:     Andrew Morton <akpm@linux-foundation.org>
-Cc:     syzbot <syzbot+fa11f9da42b46cea3b4a@syzkaller.appspotmail.com>,
-        cgroups@vger.kernel.org, Johannes Weiner <hannes@cmpxchg.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Linux-MM <linux-mm@kvack.org>, Michal Hocko <mhocko@kernel.org>,
-        Michal Hocko <mhocko@suse.com>,
-        Stephen Rothwell <sfr@canb.auug.org.au>,
-        Shakeel Butt <shakeelb@google.com>,
-        syzkaller-bugs <syzkaller-bugs@googlegroups.com>,
-        Vladimir Davydov <vdavydov.dev@gmail.com>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <20190311.103037.1736601922338617214.davem@davemloft.net>
+Content-Type: text/plain; charset="utf-8"
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [10.184.189.20]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Mar 12, 2019 at 12:37 AM Andrew Morton
-<akpm@linux-foundation.org> wrote:
->
-> On Mon, 11 Mar 2019 06:08:01 -0700 syzbot <syzbot+fa11f9da42b46cea3b4a@syzkaller.appspotmail.com> wrote:
->
-> > syzbot has bisected this bug to:
-> >
-> > commit 29a4b8e275d1f10c51c7891362877ef6cffae9e7
-> > Author: Shakeel Butt <shakeelb@google.com>
-> > Date:   Wed Jan 9 22:02:21 2019 +0000
-> >
-> >      memcg: schedule high reclaim for remote memcgs on high_work
-> >
-> > bisection log:  https://syzkaller.appspot.com/x/bisect.txt?x=155bf5db200000
-> > start commit:   29a4b8e2 memcg: schedule high reclaim for remote memcgs on..
-> > git tree:       linux-next
-> > final crash:    https://syzkaller.appspot.com/x/report.txt?x=175bf5db200000
-> > console output: https://syzkaller.appspot.com/x/log.txt?x=135bf5db200000
-> > kernel config:  https://syzkaller.appspot.com/x/.config?x=611f89e5b6868db
-> > dashboard link: https://syzkaller.appspot.com/bug?extid=fa11f9da42b46cea3b4a
-> > userspace arch: amd64
-> > syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=14259017400000
-> > C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=141630a0c00000
-> >
-> > Reported-by: syzbot+fa11f9da42b46cea3b4a@syzkaller.appspotmail.com
-> > Fixes: 29a4b8e2 ("memcg: schedule high reclaim for remote memcgs on
-> > high_work")
->
-> The following patch
-> memcg-schedule-high-reclaim-for-remote-memcgs-on-high_work-v3.patch
-> might have fixed this.  Was it applied?
 
-Hi Andrew,
 
-You mean if the patch was applied during the bisection?
-No, it wasn't. Bisection is very specifically done on the same tree
-where the bug was hit. There are already too many factors that make
-the result flaky/wrong/inconclusive without changing the tree state.
-Now, if syzbot would know about any pending fix for this bug, then it
-would not do the bisection at all. But it have not seen any patch in
-upstream/linux-next with the Reported-by tag, nor it received any syz
-fix commands for this bugs. Should have been it aware of the fix? How?
+On 2019/3/12 1:30, David Miller wrote:
+> From: David Miller <davem@davemloft.net>
+> Date: Mon, 11 Mar 2019 10:29:37 -0700 (PDT)
+> 
+>> From: linmiaohe <linmiaohe@huawei.com>
+>> Date: Mon, 11 Mar 2019 16:29:32 +0800
+>>
+>>> @@ -778,8 +778,9 @@ static bool check_6rd(struct ip_tunnel *tunnel, const struct in6_addr *v6dst,
+>>>  		pbw0 = tunnel->ip6rd.prefixlen >> 5;
+>>>  		pbi0 = tunnel->ip6rd.prefixlen & 0x1f;
+>>>
+>>> -		d = (ntohl(v6dst->s6_addr32[pbw0]) << pbi0) >>
+>>> -		    tunnel->ip6rd.relay_prefixlen;
+>>> +		d = tunnel->ip6rd.relay_prefixlen < 32 ?
+>>> +			(ntohl(v6dst->s6_addr32[pbw0]) << pbi0) >>
+>>> +		    tunnel->ip6rd.relay_prefixlen : 0;
+>>>
+>>
+>> I hate the fact that we have to guard against something which the rest
+>> of the code makes sure NEVER EVER happens.
+>>
+>> Every assignment of ->relay_prefixlen is guarded by a check against 32.
+> 
+> Sorry, I now understand, it can equal 32.
+> 
+> I'll apply this, thank you.
+> 
+> .
+> 
 
-Thanks
+That's very nice of you. Thank you very much. I'am sorry for topping my reply in the previous email.
+
