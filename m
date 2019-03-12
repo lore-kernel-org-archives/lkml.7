@@ -6,41 +6,41 @@ X-Spam-Status: No, score=-11.0 required=3.0
 	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PULL_REQUEST,MAILING_LIST_MULTI,
 	MENTIONS_GIT_HOSTING,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 38E64C43381
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 15:13:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 228C8C43381
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 15:14:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0D5242087C
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 15:13:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EA03F2147C
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 15:14:08 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726649AbfCLPN5 (ORCPT
+        id S1726719AbfCLPOH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 12 Mar 2019 11:13:57 -0400
-Received: from lithops.sigma-star.at ([195.201.40.130]:51800 "EHLO
+        Tue, 12 Mar 2019 11:14:07 -0400
+Received: from lithops.sigma-star.at ([195.201.40.130]:51828 "EHLO
         lithops.sigma-star.at" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726427AbfCLPN5 (ORCPT
+        with ESMTP id S1725894AbfCLPOH (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 12 Mar 2019 11:13:57 -0400
+        Tue, 12 Mar 2019 11:14:07 -0400
 Received: from localhost (localhost [127.0.0.1])
-        by lithops.sigma-star.at (Postfix) with ESMTP id E00416091865;
-        Tue, 12 Mar 2019 16:13:54 +0100 (CET)
+        by lithops.sigma-star.at (Postfix) with ESMTP id C8BD36074BAB;
+        Tue, 12 Mar 2019 16:14:05 +0100 (CET)
 Received: from lithops.sigma-star.at ([127.0.0.1])
         by localhost (lithops.sigma-star.at [127.0.0.1]) (amavisd-new, port 10032)
-        with ESMTP id y9lNEVtk4dgl; Tue, 12 Mar 2019 16:13:54 +0100 (CET)
+        with ESMTP id 6S2-0PNpPCZ5; Tue, 12 Mar 2019 16:14:05 +0100 (CET)
 Received: from localhost (localhost [127.0.0.1])
-        by lithops.sigma-star.at (Postfix) with ESMTP id 92692609187B;
-        Tue, 12 Mar 2019 16:13:54 +0100 (CET)
+        by lithops.sigma-star.at (Postfix) with ESMTP id 7D09260B628A;
+        Tue, 12 Mar 2019 16:14:05 +0100 (CET)
 Received: from lithops.sigma-star.at ([127.0.0.1])
         by localhost (lithops.sigma-star.at [127.0.0.1]) (amavisd-new, port 10026)
-        with ESMTP id koBhCvT6gr9b; Tue, 12 Mar 2019 16:13:54 +0100 (CET)
+        with ESMTP id K3cJTxhT5G1r; Tue, 12 Mar 2019 16:14:05 +0100 (CET)
 Received: from blindfold.localnet (unknown [82.150.214.1])
-        by lithops.sigma-star.at (Postfix) with ESMTPSA id 596B66091865;
-        Tue, 12 Mar 2019 16:13:54 +0100 (CET)
+        by lithops.sigma-star.at (Postfix) with ESMTPSA id 397B4609187B;
+        Tue, 12 Mar 2019 16:14:05 +0100 (CET)
 From:   Richard Weinberger <richard@nod.at>
 To:     torvalds@linux-foundation.org
-Cc:     linux-mtd@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: [GIT PULL] UBI/UBIFS updates for 5.1-rc1
-Date:   Tue, 12 Mar 2019 16:13:53 +0100
-Message-ID: <6283638.XALati16HY@blindfold>
+Cc:     linux-um@lists.infradead.org, linux-kernel@vger.kernel.org
+Subject: [GIT PULL] UML updates for 5.1-rc1
+Date:   Tue, 12 Mar 2019 16:14:04 +0100
+Message-ID: <31705653.NnsrL61LRB@blindfold>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 7Bit
 Content-Type: text/plain; charset="us-ascii"
@@ -51,41 +51,33 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 Linus,
 
-The following changes since commit a3b22b9f11d9fbc48b0291ea92259a5a810e9438:
+The following changes since commit 1c163f4c7b3f621efff9b28a47abb36f7378d783:
 
-  Linux 5.0-rc7 (2019-02-17 18:46:40 -0800)
+  Linux 5.0 (2019-03-03 15:21:29 -0800)
 
 are available in the Git repository at:
 
-  git://git.infradead.org/linux-ubifs.git tags/upstream-5.1-rc1
+  git://git.kernel.org/pub/scm/linux/kernel/git/rw/uml.git for-linus-5.1-rc1
 
-for you to fetch changes up to 5578e48e5c0bf4684e68ae08caa2293bfb3f5307:
+for you to fetch changes up to aea05eb56e47046de1e5b508d40931dca969f1e5:
 
-  ubi: wl: Silence uninitialized variable warning (2019-03-05 21:21:07 +0100)
-
-----------------------------------------------------------------
-This pull request contains updates for both UBI and UBIFS:
-
-- A new interface for UBI to deal better with read disturb
-- Reject unsupported ioctl flags in UBIFS (xfstests found it)
+  um: Fix for a possible OOPS in ubd initialization (2019-03-06 22:39:18 +0100)
 
 ----------------------------------------------------------------
-Dan Carpenter (1):
-      ubi: wl: Silence uninitialized variable warning
+This pull request contains updates for UML:
 
-Hou Tao (1):
-      ubifs: Reject unsupported ioctl flags explicitly
+- Bugfix for the UML block device driver
 
-Richard Weinberger (2):
-      ubi: Introduce in_pq()
-      ubi: Expose the bitrot interface
+----------------------------------------------------------------
+Anton Ivanov (1):
+      um: Fix for a possible OOPS in ubd initialization
 
- drivers/mtd/ubi/cdev.c      |  30 ++++++++
- drivers/mtd/ubi/ubi.h       |   1 +
- drivers/mtd/ubi/wl.c        | 174 ++++++++++++++++++++++++++++++++++++++++++--
- fs/ubifs/ioctl.c            |   8 ++
- include/uapi/mtd/ubi-user.h |   5 ++
- 5 files changed, 211 insertions(+), 7 deletions(-)
+YueHaibing (1):
+      um: Remove duplicated include from vector_user.c
+
+ arch/um/drivers/ubd_kern.c    | 6 +++---
+ arch/um/drivers/vector_user.c | 3 ---
+ 2 files changed, 3 insertions(+), 6 deletions(-)
 
 
 
