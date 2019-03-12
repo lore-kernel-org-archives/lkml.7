@@ -2,185 +2,131 @@ Return-Path: <SRS0=J4ZE=RP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS autolearn=ham
+X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8CD06C43381
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 17:32:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 13B09C43381
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 17:32:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5D9AA2087C
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 17:32:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DB4A22087C
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 17:32:31 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1552411951;
+	bh=APZPdU7VhwYSGbvYpfEmcCtHjzc0PYTNatcOl+t67OE=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=x/OMFEehGgQ/PMCIfbUIzRdsCGKGLqu3IN7Heegozy0AebV3EQD+LksCSvjAE15+0
+	 i7OkQ6Qf638jCXUcAVaBufyGnmeh1TpeB+as2VHGGoWA6iroKZiczLDc9yapwzM/H2
+	 +er4gJFhr2qjWhC7os6yc4RRXxj20ihmuh6DFN3k=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726852AbfCLRcT convert rfc822-to-8bit (ORCPT
+        id S1729557AbfCLRcS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 12 Mar 2019 13:32:19 -0400
-Received: from vegas.theobroma-systems.com ([144.76.126.164]:60887 "EHLO
-        mail.theobroma-systems.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1729412AbfCLRRF (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 12 Mar 2019 13:32:18 -0400
+Received: from mail.kernel.org ([198.145.29.99]:60292 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1729418AbfCLRRF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Tue, 12 Mar 2019 13:17:05 -0400
-Received: from ip092042140082.rev.nessus.at ([92.42.140.82]:51415 helo=[10.2.146.249])
-        by mail.theobroma-systems.com with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
-        (Exim 4.80)
-        (envelope-from <christoph.muellner@theobroma-systems.com>)
-        id 1h3l17-0006mT-UP; Tue, 12 Mar 2019 18:16:42 +0100
-Content-Type: text/plain;
-        charset=utf-8
-Mime-Version: 1.0 (Mac OS X Mail 11.5 \(3445.9.1\))
-Subject: Re: [PATCH v2 2/3] dt-bindings: mmc: Add a new property
- disable-cqe-dcmd.
-From:   =?utf-8?Q?Christoph_M=C3=BCllner?= 
-        <christoph.muellner@theobroma-systems.com>
-In-Reply-To: <2038789.ZmMFo7ZELZ@diego>
-Date:   Tue, 12 Mar 2019 18:16:40 +0100
-Cc:     Adrian Hunter <adrian.hunter@intel.com>, robh+dt@kernel.org,
-        mark.rutland@arm.com, shawn.lin@rock-chips.com,
-        ulf.hansson@linaro.org,
-        Philipp Tomsich <philipp.tomsich@theobroma-systems.com>,
-        Michal Simek <michal.simek@xilinx.com>,
-        Douglas Anderson <dianders@chromium.org>,
-        Viresh Kumar <viresh.kumar@linaro.org>,
-        Enric Balletbo i Serra <enric.balletbo@collabora.com>,
-        Vicente Bergas <vicencb@gmail.com>,
-        Emil Renner Berthing <kernel@esmil.dk>,
-        Randy Li <ayaka@soulik.info>,
-        Tony Xie <tony.xie@rock-chips.com>,
-        Ezequiel Garcia <ezequiel@collabora.com>,
-        Klaus Goger <klaus.goger@theobroma-systems.com>,
-        Lin Huang <hl@rock-chips.com>, linux-mmc@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org,
-        linux-rockchip@lists.infradead.org
-Content-Transfer-Encoding: 8BIT
-Message-Id: <B1575425-14BA-496D-A295-FF956C8F3346@theobroma-systems.com>
-References: <20190307084329.25416-1-christoph.muellner@theobroma-systems.com>
- <4793843.T1TZ7EF8k3@phil>
- <D7EF0176-0EBD-4401-83BE-E7F951F88CAA@theobroma-systems.com>
- <2038789.ZmMFo7ZELZ@diego>
-To:     =?utf-8?Q?Heiko_St=C3=BCbner?= <heiko@sntech.de>
-X-Mailer: Apple Mail (2.3445.9.1)
+Received: from localhost (unknown [104.133.8.98])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id D843F2087C;
+        Tue, 12 Mar 2019 17:17:04 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1552411025;
+        bh=APZPdU7VhwYSGbvYpfEmcCtHjzc0PYTNatcOl+t67OE=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=IB3ijwoQNlPj9ajRuZuDMkpYDfyDypbVNcCfmNoCcrYST5pYvEPd5/5/In1YH3ZhE
+         p/gaOjdqekWpLOECN4rLga3h2GoTiL4ncJ4gBBnUXv+g/d+M/I0Y9r0JYWWFmQfC6N
+         K1mBSKu4qczBMPypx5g6tQM8l865azXrbXds3ax4=
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     linux-kernel@vger.kernel.org
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        stable@vger.kernel.org, Jun-Ru Chang <jrjang@realtek.com>,
+        Tony Wu <tonywu@realtek.com>,
+        Paul Burton <paul.burton@mips.com>, ralf@linux-mips.org,
+        jhogan@kernel.org, macro@mips.com, yamada.masahiro@socionext.com,
+        peterz@infradead.org, mingo@kernel.org, linux-mips@vger.kernel.org,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.14 115/135] MIPS: Remove function size check in get_frame_info()
+Date:   Tue, 12 Mar 2019 10:09:22 -0700
+Message-Id: <20190312170351.821104117@linuxfoundation.org>
+X-Mailer: git-send-email 2.21.0
+In-Reply-To: <20190312170341.127810985@linuxfoundation.org>
+References: <20190312170341.127810985@linuxfoundation.org>
+User-Agent: quilt/0.65
+X-stable: review
+X-Patchwork-Hint: ignore
+MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+4.14-stable review patch.  If anyone has any objections, please let me know.
 
-> On 12.03.2019, at 18:10, Heiko Stübner <heiko@sntech.de> wrote:
-> 
-> Hi Christoph,
-> 
-> Am Dienstag, 12. März 2019, 15:46:44 CET schrieb Christoph Müllner:
->>> On 12.03.2019, at 14:17, Heiko Stuebner <heiko@sntech.de> wrote:
->>> 
->>> Am Freitag, 8. März 2019, 14:10:45 CET schrieb Christoph Müllner:
->>>>> On 08.03.2019, at 13:46, Adrian Hunter <adrian.hunter@intel.com> wrote:
->>>>> 
->>>>> On 7/03/19 10:43 AM, Christoph Muellner wrote:
->>>>>> This patch documents the new property disable-cqe-dcmd
->>>>>> for the Arasan eMMC 5.1 driver.
->>>>>> 
->>>>>> Signed-off-by: Christoph Muellner
->>>>>> <christoph.muellner@theobroma-systems.com> Signed-off-by: Philipp
->>>>>> Tomsich <philipp.tomsich@theobroma-systems.com> ---
->>>>>> Documentation/devicetree/bindings/mmc/arasan,sdhci.txt | 4 ++++
->>>>>> 1 file changed, 4 insertions(+)
->>>>>> 
->>>>>> diff --git a/Documentation/devicetree/bindings/mmc/arasan,sdhci.txt
->>>>>> b/Documentation/devicetree/bindings/mmc/arasan,sdhci.txt index
->>>>>> 1edbb049cccb..ec699bf98b7c 100644
->>>>>> --- a/Documentation/devicetree/bindings/mmc/arasan,sdhci.txt
->>>>>> +++ b/Documentation/devicetree/bindings/mmc/arasan,sdhci.txt
->>>>>> 
->>>>>> @@ -44,6 +44,10 @@ Optional Properties:
->>>>>>   properly. Test mode can be used to force the controller to function.
->>>>>> 
->>>>>> - xlnx,int-clock-stable-broken: when present, the controller always
->>>>>> reports
->>>>>> 
->>>>>>   that the internal clock is stable even when it is not.
->>>>>> 
->>>>>> +  - disable-cqe-dcmd: The eMMC 5.1 standard specifies direct commands
->>>>>> (DCMDs) +    as part of the command queue engine (CQE). On controllers
->>>>>> with a CQHCI, +    such as the Arasan eMMC 5.1 host controller, the
->>>>>> driver has to enable DCMDs. +    This is done unless disable-cqe-dcmd
->>>>>> is specified.
->>> 
->>> This needs a rewording please. See below for hw-description vs. driver, so
->>> the description should be centered around why this is a property of the hw
->>> [like faulty controller implementation or whatever]
->> 
->> I understand, that you prefer a HW-specific name for a property
->> over one, that explains the actual effect.
-> 
-> Actually I think the property-name is just fine :-) .
-> 
-> The description might profit from a rewording though. Aka not driver-
-> centric but hw-centric, describing why some controllers may need the
-> option to disable these dcmds (controller bugs or whatever).
+------------------
 
-Ah, ok. Now I understand what you mean.
-Will do for v3.
+[ Upstream commit 2b424cfc69728224fcb5fad138ea7260728e0901 ]
 
-Thanks,
-Christoph
+Patch (b6c7a324df37b "MIPS: Fix get_frame_info() handling of
+microMIPS function size.") introduces additional function size
+check for microMIPS by only checking insn between ip and ip + func_size.
+However, func_size in get_frame_info() is always 0 if KALLSYMS is not
+enabled. This causes get_frame_info() to return immediately without
+calculating correct frame_size, which in turn causes "Can't analyze
+schedule() prologue" warning messages at boot time.
 
-> 
-> 
-> Heiko
-> 
-> 
-> 
->> However, using disable-<feature> (which is always a directive for the driver
->> and not a HW description) is not uncommon:
->> 
->> * disable-wp should be "no-wp-line-connection"
->> * disable-over-current -> "no-over-current-line-connection"
->> * srp-disable -> "not-existing-srp-implementation"
->> * ...
->> 
->> But I don't mind using something else.
->> Would "broken-cqe-dcmd" (like broken-cd or broken-flash-reset) be ok?
->> Or other suggestions?
->> 
->> Also I'd like to mention, that my first implementation was
->> "supports-cqe-dcmd". I guess that would be a good choice, if it would have
->> been there
->> from the beginning. Introducing it now, would silently disable DCMD
->> for existing DTBs. Therefore I went on to "disable-cqe-dcmd".
->> 
->>>>> If "supports-cqe" is in mmc.txt, should "disable-cqe-dcmd" be there
->>>>> also?
->>>> 
->>>> The file mmc.txt says on top:
->>>> "These properties are common to multiple MMC host controllers".
->>>> As my patchset introduces "disable-cqe-dcmd" just for sdhci-of-arasan,
->>>> I would say it should not go into that file.
->>>> 
->>>> Also I wonder why "supports-cqe" is in mmc.txt, because
->>>> only sdhci-tegra.c is evaluating that property.
->>>> So I would expect it to be documented in
->>>> Documentation/devicetree/bindings/mmc/nvidia,tegra20-sdhci.txt
->>>> 
->>>> However, I see that "disable-cqe-dcmd" could go into other drivers as
->>>> well.
->>>> But is this enough to document it in mmc.txt?
->>> 
->>> Devicetree is always about describing the hardware capabilites and never
->>> about the actual nitty-gritty of driver implementation, aka it is not
->>> meant
->>> as a space for hardware-independent config-settings or such.
->>> 
->>> As for only tegra evaluating this, is probably because it is still so new,
->>> like january 2019 and Rob explicitly suggested it becoming common [0],
->>> which suggests that the disable-cqe-dcmds should probably also be common.
->> So mmc.txt lists "standardised" names for properties to reduce the risk
->> of having similar, but distinct names for different MMC drivers.
->> So whenever you want to introduce a new property for a driver,
->> check if there isn't already something defined in mmc.txt.
->> 
->> When seeing it this way, it clearly makes sense to have the property there.
->> 
->> Thanks,
->> Christoph
+This patch removes func_size check, and let the frame_size check run
+up to 128 insns for both MIPS and microMIPS.
+
+Signed-off-by: Jun-Ru Chang <jrjang@realtek.com>
+Signed-off-by: Tony Wu <tonywu@realtek.com>
+Signed-off-by: Paul Burton <paul.burton@mips.com>
+Fixes: b6c7a324df37b ("MIPS: Fix get_frame_info() handling of microMIPS function size.")
+Cc: <ralf@linux-mips.org>
+Cc: <jhogan@kernel.org>
+Cc: <macro@mips.com>
+Cc: <yamada.masahiro@socionext.com>
+Cc: <peterz@infradead.org>
+Cc: <mingo@kernel.org>
+Cc: <linux-mips@vger.kernel.org>
+Cc: <linux-kernel@vger.kernel.org>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
+---
+ arch/mips/kernel/process.c | 7 +++----
+ 1 file changed, 3 insertions(+), 4 deletions(-)
+
+diff --git a/arch/mips/kernel/process.c b/arch/mips/kernel/process.c
+index e8b166e9146a..ea563bfea0e1 100644
+--- a/arch/mips/kernel/process.c
++++ b/arch/mips/kernel/process.c
+@@ -370,7 +370,7 @@ static inline int is_sp_move_ins(union mips_instruction *ip, int *frame_size)
+ static int get_frame_info(struct mips_frame_info *info)
+ {
+ 	bool is_mmips = IS_ENABLED(CONFIG_CPU_MICROMIPS);
+-	union mips_instruction insn, *ip, *ip_end;
++	union mips_instruction insn, *ip;
+ 	const unsigned int max_insns = 128;
+ 	unsigned int last_insn_size = 0;
+ 	unsigned int i;
+@@ -383,10 +383,9 @@ static int get_frame_info(struct mips_frame_info *info)
+ 	if (!ip)
+ 		goto err;
+ 
+-	ip_end = (void *)ip + info->func_size;
+-
+-	for (i = 0; i < max_insns && ip < ip_end; i++) {
++	for (i = 0; i < max_insns; i++) {
+ 		ip = (void *)ip + last_insn_size;
++
+ 		if (is_mmips && mm_insn_16bit(ip->halfword[0])) {
+ 			insn.word = ip->halfword[0] << 16;
+ 			last_insn_size = 2;
+-- 
+2.19.1
+
+
 
