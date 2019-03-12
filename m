@@ -2,127 +2,170 @@ Return-Path: <SRS0=J4ZE=RP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_PASS,URIBL_BLOCKED,USER_AGENT_NEOMUTT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_PASS,USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8C421C4360F
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 07:27:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B2987C43381
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 07:28:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 634212147C
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 07:27:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 822A32147C
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 07:28:30 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="POqBjfSp"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727071AbfCLH1i (ORCPT
+        id S1727319AbfCLH23 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 12 Mar 2019 03:27:38 -0400
-Received: from metis.ext.pengutronix.de ([85.220.165.71]:55807 "EHLO
-        metis.ext.pengutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726463AbfCLH1h (ORCPT
+        Tue, 12 Mar 2019 03:28:29 -0400
+Received: from mail-it1-f195.google.com ([209.85.166.195]:54717 "EHLO
+        mail-it1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726218AbfCLH22 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 12 Mar 2019 03:27:37 -0400
-Received: from pty.hi.pengutronix.de ([2001:67c:670:100:1d::c5])
-        by metis.ext.pengutronix.de with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.89)
-        (envelope-from <ukl@pengutronix.de>)
-        id 1h3bov-0007H9-W7; Tue, 12 Mar 2019 08:27:29 +0100
-Received: from ukl by pty.hi.pengutronix.de with local (Exim 4.89)
-        (envelope-from <ukl@pengutronix.de>)
-        id 1h3bou-0003XE-Qq; Tue, 12 Mar 2019 08:27:28 +0100
-Date:   Tue, 12 Mar 2019 08:27:28 +0100
-From:   Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= 
-        <u.kleine-koenig@pengutronix.de>
-To:     Thierry Reding <thierry.reding@gmail.com>
-Cc:     Yash Shah <yash.shah@sifive.com>, palmer@sifive.com,
-        linux-pwm@vger.kernel.org, linux-riscv@lists.infradead.org,
-        robh+dt@kernel.org, mark.rutland@arm.com,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        sachin.ghadi@sifive.com, paul.walmsley@sifive.com
-Subject: Re: [PATCH v5 2/2] pwm: sifive: Add a driver for SiFive SoC PWM
-Message-ID: <20190312072728.dy26cg4cateumuug@pengutronix.de>
-References: <1548762199-7065-1-git-send-email-yash.shah@sifive.com>
- <1548762199-7065-3-git-send-email-yash.shah@sifive.com>
- <20190207101657.rfzcq6xdv6ocvubg@pengutronix.de>
- <20190213123703.GE647@ulmo>
- <20190214155903.7h3b7v3nbhj57uy2@pengutronix.de>
+        Tue, 12 Mar 2019 03:28:28 -0400
+Received: by mail-it1-f195.google.com with SMTP id w18so2800214itj.4;
+        Tue, 12 Mar 2019 00:28:28 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=pGH9hXHyWER1pzm+u0uu4GolUUMTfbEFKb7Hx7Ab1a0=;
+        b=POqBjfSpw237O6zafNWy3TXebdvmelN33JuEv5KOCALT9ol+B/rxb4LDXQuYaMJGlC
+         xZgePmcPsyMY0bYQGexZjA9D1iVHXUnnWuOHrPbCAQ10zrWvVl0Ty4nfnQCVaAXELYOh
+         gm0oT1hkqUrz1vBdkh/lVSCcAQnSHn0PbBPK7/6ZajJXipCxRgX16tVwT4eH882nOg5s
+         GRB526Q82bw/W0Hr2zF9SiLHr5Z+GX94caJXdFhRJOXX7awyBZD9byQb4kS+LbB9qxbW
+         hAyxHE/KRmQ4LQ+9E9bosXTYrlagNZ5Rc8rgb3+/B+aFc2SGAPy4pWHnxlh7Nfb/e9di
+         6WMg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=pGH9hXHyWER1pzm+u0uu4GolUUMTfbEFKb7Hx7Ab1a0=;
+        b=UWxfZTipuWcaeIWRS1NU7KsKYRHC3//c+pAbLPi/Z40ghNUeKDj+aWpcTkNGcT99vh
+         wjss9ys66gRvKb1QPevP9Vf83ezNfS23CqC6O4HMmViaOobIDqMTb0SZfw9iFFXw4v8N
+         9Fp3lBdpG78vweR47qsFPi7dk2tZZVDbkJ6JAcFnygOr3LaH+YT04nQd+nzm0LM7vOYa
+         8dSJPhQ/up2t75g7Zoye4lt+2uBOeedARBuIyUhlGzszJNaKib9K19R1NF6kYtvCQJ1l
+         EhE5C02PgVHwhrgQXqYnpKOWv81hBObTdxoYm/hWNCDkqugLW0kI06JqO9O+lHCtwJwL
+         nAnA==
+X-Gm-Message-State: APjAAAVjSr9NtvyokSZy5puzcB0J4STKf7foo1Jh0gH3OoD8utCgCOup
+        AfPjSNmRqsTF39PPreXdOXs=
+X-Google-Smtp-Source: APXvYqxHmJIesELkAUVHhYJBu7fCXcjUEEHHegnqY/1JirI+FJjFiyvRjFogljWslviP9cCxbj3Lnw==
+X-Received: by 2002:a24:7d94:: with SMTP id b142mr1223093itc.136.1552375707571;
+        Tue, 12 Mar 2019 00:28:27 -0700 (PDT)
+Received: from icarus ([2001:268:c0a3:c255:c70:4af9:86e2:2])
+        by smtp.gmail.com with ESMTPSA id q133sm934219itb.19.2019.03.12.00.28.23
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Tue, 12 Mar 2019 00:28:26 -0700 (PDT)
+Date:   Tue, 12 Mar 2019 16:29:23 +0900
+From:   William Breathitt Gray <vilhelm.gray@gmail.com>
+To:     Masahiro Yamada <yamada.masahiro@socionext.com>
+Cc:     Linus Walleij <linus.walleij@linaro.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        linux-arch <linux-arch@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Rasmus Villemoes <linux@rasmusvillemoes.dk>,
+        bgolaszewski@baylibre.com,
+        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>
+Subject: Re: [PATCH v9 9/9] gpio: uniphier: Utilize for_each_set_clump8 macro
+Message-ID: <20190312072923.GB2898@icarus>
+References: <cover.1551598603.git.vilhelm.gray@gmail.com>
+ <0840d55707dacd1121659723246fa9f55737f426.1551598603.git.vilhelm.gray@gmail.com>
+ <CAK7LNARRqYb_ovO_ccQ8xTLTzNYyTEK8whT2r0cq_AqpWqeNXg@mail.gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20190214155903.7h3b7v3nbhj57uy2@pengutronix.de>
-User-Agent: NeoMutt/20170113 (1.7.2)
-X-SA-Exim-Connect-IP: 2001:67c:670:100:1d::c5
-X-SA-Exim-Mail-From: ukl@pengutronix.de
-X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
-X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
+In-Reply-To: <CAK7LNARRqYb_ovO_ccQ8xTLTzNYyTEK8whT2r0cq_AqpWqeNXg@mail.gmail.com>
+User-Agent: Mutt/1.11.3 (2019-02-01)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hello,
-
-On Thu, Feb 14, 2019 at 04:59:03PM +0100, Uwe Kleine-König wrote:
-> On Wed, Feb 13, 2019 at 01:37:03PM +0100, Thierry Reding wrote:
-> > On Thu, Feb 07, 2019 at 11:16:57AM +0100, Uwe Kleine-König wrote:
-> > > On Tue, Jan 29, 2019 at 05:13:19PM +0530, Yash Shah wrote:
-> > [...]
-> > > > diff --git a/drivers/pwm/pwm-sifive.c b/drivers/pwm/pwm-sifive.c
-> > [...]
-> > > > +	writel(val, pwm->regs + PWM_SIFIVE_PWMCFG);
-> > > > +
-> > > > +	writel(frac, pwm->regs + PWM_SIFIVE_PWMCMP0 + dev->hwpwm * SIZE_PWMCMP);
-> > > > +
-> > > > +	val &= ~(1 << PWM_SIFIVE_PWMCFG_DEGLITCH);
-> > > > +	writel(val, pwm->regs + PWM_SIFIVE_PWMCFG);
-> > > > +
-> > > > +	pwm_sifive_get_state(chip, dev, state);
-> > > 
-> > > Thierry: This changes the pwm_state. Is this how this should be done?
-> > 
-> > Yes, I think that's fine. The PWM state should always reflect the
-> > current hardware state. If the configuration that we program does not
-> > reflect the state that was requested, that should be reflected in the
-> > PWM state.
+On Tue, Mar 12, 2019 at 01:36:57PM +0900, Masahiro Yamada wrote:
+> On Sun, Mar 3, 2019 at 4:51 PM William Breathitt Gray
+> <vilhelm.gray@gmail.com> wrote:
+> >
+> > Replace verbose implementation in set_multiple callback with
+> > for_each_set_clump8 macro to simplify code and improve clarity. An
+> > improvement in this case is that banks that are not masked will now be
+> > skipped.
+> >
+> > Cc: Masahiro Yamada <yamada.masahiro@socionext.com>
+> > Signed-off-by: William Breathitt Gray <vilhelm.gray@gmail.com>
+> > ---
+> >  drivers/gpio/gpio-uniphier.c | 16 ++++++----------
+> >  1 file changed, 6 insertions(+), 10 deletions(-)
+> >
+> > diff --git a/drivers/gpio/gpio-uniphier.c b/drivers/gpio/gpio-uniphier.c
+> > index 0f662b297a95..df640cb29b9c 100644
+> > --- a/drivers/gpio/gpio-uniphier.c
+> > +++ b/drivers/gpio/gpio-uniphier.c
+> > @@ -15,9 +15,6 @@
+> >  #include <linux/spinlock.h>
+> >  #include <dt-bindings/gpio/uniphier-gpio.h>
+> >
+> > -#define UNIPHIER_GPIO_BANK_MASK                \
+> > -                               GENMASK((UNIPHIER_GPIO_LINES_PER_BANK) - 1, 0)
+> > -
+> >  #define UNIPHIER_GPIO_IRQ_MAX_NUM      24
+> >
+> >  #define UNIPHIER_GPIO_PORT_DATA                0x0     /* data */
+> > @@ -147,15 +144,14 @@ static void uniphier_gpio_set(struct gpio_chip *chip,
+> >  static void uniphier_gpio_set_multiple(struct gpio_chip *chip,
+> >                                        unsigned long *mask, unsigned long *bits)
+> >  {
+> > -       unsigned int bank, shift, bank_mask, bank_bits;
+> > -       int i;
+> > +       unsigned int i;
+> > +       unsigned long bank_mask;
+> > +       unsigned int bank;
+> > +       unsigned int bank_bits;
+> >
+> > -       for (i = 0; i < chip->ngpio; i += UNIPHIER_GPIO_LINES_PER_BANK) {
+> > +       for_each_set_clump8(i, bank_mask, mask, chip->ngpio) {
+> >                 bank = i / UNIPHIER_GPIO_LINES_PER_BANK;
+> > -               shift = i % BITS_PER_LONG;
+> > -               bank_mask = (mask[BIT_WORD(i)] >> shift) &
+> > -                                               UNIPHIER_GPIO_BANK_MASK;
+> > -               bank_bits = bits[BIT_WORD(i)] >> shift;
+> > +               bank_bits = bitmap_get_value8(bits, chip->ngpio, i);
+> >
+> >                 uniphier_gpio_bank_write(chip, bank, UNIPHIER_GPIO_PORT_DATA,
+> >                                          bank_mask, bank_bits);
 > 
-> I'm not sure you blessed what is really done here. If I do:
 > 
-> 	state.duty_cycle = state.period;
-> 	pwm_apply_state(pwm, &state);
+> Please do not do this.
 > 
-> the call in question doesn't only result in pwm->state.duty_cycle <
-> pwm->state.period, but it also corrects my local state variable (i.e. I
-> have state.duty_cycle < state.period afterwards).
+> Nothing in this driver says the GPIO width is 8-bit.
 > 
-> Is this what you thought to be fine?
+> You are hard-coding '8-bit'.
 
-I thought a bit about this and I'm convinced that updating struct
-pwm_device::state is/might be fine, but changing the caller's struct pwm_state
-that was passed to pwm_apply_state is not.
+The for_each_set_clump8 macro is hardcoded to 8-bit clumps because the
+current drivers utilizing this functionality are only updating their
+GPIO ports 8-bits at a time.
 
-Consider a consumer who does:
+However, if this driver updates more or less GPIO at a time, we can
+easily update the macro by replacing the hardcoded '8' value with a
+variable, thus giving us the generic for_each_set_clump macro.
 
-	#define PERIOD 5000000
-	#define DUTY_LITTLE 10
-	...
-	struct pwm_state state = {
-		.period = PERIOD,
-		.duty_cycle = DUTY_LITTLE,
-		.polarity = PWM_POLARITY_NORMAL,
-		.enabled = true,
-	};
+How many GPIO can be updated at a time for this device?
 
-	pwm_apply_state(mypwm, &state);
-	...
-	state.duty_cycle = PERIOD / 2;
-	pwm_apply_state(mypwm, &state);
+William Breathitt Gray
 
-I think the second request should have state.period = 5000000 and not
-some other value (that might only have chosen by the respective driver
-because the first duty cycle was so short).
-
-Best regards
-Uwe
-
--- 
-Pengutronix e.K.                           | Uwe Kleine-König            |
-Industrial Linux Solutions                 | http://www.pengutronix.de/  |
+> 
+> 
+> 
+> 
+> 
+> 
+> 
+> > --
+> > 2.21.0
+> >
+> 
+> 
+> -- 
+> Best Regards
+> Masahiro Yamada
