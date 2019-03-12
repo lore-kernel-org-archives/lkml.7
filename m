@@ -2,208 +2,78 @@ Return-Path: <SRS0=J4ZE=RP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,
+X-Spam-Status: No, score=-2.5 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,
 	USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3D536C43381
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 11:58:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 66636C43381
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 12:02:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 086D0206BA
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 11:58:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2927E2084F
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 12:02:15 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1552392135;
+	bh=37aoO7sQylW2/1zvp/kiFUjPxX1zAnimK78dIt+s9qM=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=vFFU6Pb4IT8j1gQPsPAoRdoQHLB3fl9qujUnM1NrTBKURofHfHr3QcDGEkk++4JjD
+	 k0xdycCA17aM9fCeI6oqWtZElFFlPnJDUaCNChiKYMPLREJbFF+Fb+BFNH/Uc1VzYF
+	 C1uorxJlPFVyIw7pM/Xhaug2y+MjRjsqz1cTxQ1k=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726534AbfCLL6B (ORCPT
+        id S1726422AbfCLMCN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 12 Mar 2019 07:58:01 -0400
-Received: from atrey.karlin.mff.cuni.cz ([195.113.26.193]:43419 "EHLO
-        atrey.karlin.mff.cuni.cz" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725887AbfCLL6B (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 12 Mar 2019 07:58:01 -0400
-Received: by atrey.karlin.mff.cuni.cz (Postfix, from userid 512)
-        id AD1018057A; Tue, 12 Mar 2019 12:57:50 +0100 (CET)
-Date:   Tue, 12 Mar 2019 12:57:57 +0100
-From:   Pavel Machek <pavel@ucw.cz>
-To:     Thomas Gleixner <tglx@linutronix.de>
-Cc:     corbet@lwn.net, LKML <linux-kernel@vger.kernel.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>, x86@kernel.org,
-        Peter Zijlstra <peterz@infradead.org>,
-        Jiri Kosina <jkosina@suse.cz>,
-        Josh Poimboeuf <jpoimboe@redhat.com>,
-        Dave Hansen <dave.hansen@linux.intel.com>,
-        Andy Lutomirski <luto@kernel.org>,
-        Greg KH <gregkh@linuxfoundation.org>,
-        Konrad Rzeszutek Wilk <konrad.wilk@oracle.com>,
-        David Woodhouse <dwmw2@infradead.org>,
-        Tom Lendacky <thomas.lendacky@amd.com>,
-        Paolo Bonzini <pbonzini@redhat.com>,
-        Joerg Roedel <joro@8bytes.org>,
-        Tony Luck <tony.luck@intel.com>,
-        Salvatore Bonaccorso <carnil@debian.org>,
-        linux-doc@vger.kernel.org
-Subject: Re: [patch] Fix up l1ft documentation was Re: Taking a break - time
- to look back
-Message-ID: <20190312115757.GA29955@amd>
-References: <alpine.DEB.2.21.1812200022580.1651@nanos.tec.linutronix.de>
- <20190102235152.GA24163@amd>
- <20190311102109.GA14118@amd>
- <alpine.DEB.2.21.1903111403330.1691@nanos.tec.linutronix.de>
- <20190311131341.GA28223@amd>
- <alpine.DEB.2.21.1903112211180.1651@nanos.tec.linutronix.de>
+        Tue, 12 Mar 2019 08:02:13 -0400
+Received: from mail.kernel.org ([198.145.29.99]:44838 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725844AbfCLMCN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 12 Mar 2019 08:02:13 -0400
+Received: from localhost (unknown [12.27.65.221])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 90E7D206BA;
+        Tue, 12 Mar 2019 12:02:12 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1552392132;
+        bh=37aoO7sQylW2/1zvp/kiFUjPxX1zAnimK78dIt+s9qM=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=Ct57JQsjWhxN1K7RAg1iNfqBb1kaUX3QP2ZCi3uJdGnfhbReeetBmF9vTDg5NQyIA
+         wiW+4i94yIp+rZIDyJx+b0Vtt1w1gifkBsh+C4g+Ssg5u+RPU1pnzVNcRjNTfzjvOC
+         NW8zmuIvoeCGty3StDBCJIIR73QBaBAGh33FO1Hw=
+Date:   Tue, 12 Mar 2019 05:02:12 -0700
+From:   Greg KH <gregkh@linuxfoundation.org>
+To:     maowenan <maowenan@huawei.com>
+Cc:     Larry.Finger@lwfinger.net, straube.linux@gmail.com,
+        jananis37@gmail.com, devel@driverdev.osuosl.org,
+        linux-kernel@vger.kernel.org, kernel-janitors@vger.kernel.org,
+        davem@davemloft.net
+Subject: Re: [PATCH net] staging: rtl8188eu: use is_zero_ether_addr() instead
+ of memcmp()
+Message-ID: <20190312120212.GA30183@kroah.com>
+References: <20190309032600.98732-1-maowenan@huawei.com>
+ <951c83d2-fa0d-11ed-96a9-cee620c9c096@huawei.com>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-        protocol="application/pgp-signature"; boundary="xHFwDpU9dbj6ez1V"
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <alpine.DEB.2.21.1903112211180.1651@nanos.tec.linutronix.de>
-User-Agent: Mutt/1.5.23 (2014-03-12)
+In-Reply-To: <951c83d2-fa0d-11ed-96a9-cee620c9c096@huawei.com>
+User-Agent: Mutt/1.11.3 (2019-02-01)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Tue, Mar 12, 2019 at 02:29:29PM +0800, maowenan wrote:
+> ping...
+> 
+> On 2019/3/9 11:26, Mao Wenan wrote:
 
---xHFwDpU9dbj6ez1V
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+What?  You got an automated email from my patch system saying that I can
+not do anything with this patch until after 5.1-rc1 is out, due to the
+merge window.  Why did that not answer the question ahead of time as to
+why this patch was not responded to?
 
-On Mon 2019-03-11 23:31:08, Thomas Gleixner wrote:
-> Pavel,
->=20
-> On Mon, 11 Mar 2019, Pavel Machek wrote:
-> > On Mon 2019-03-11 14:05:07, Thomas Gleixner wrote:
-> > > Huch? Care to tell what's a lie instead of making bold statements?
-> >=20
-> > Take a care to look at the patch I submitted?
-> >=20
-> > Lie:
-> >=20
-> > # A system with an up to date kernel is protected against attacks from
-> > # malicious user space applications.
-> >=20
-> > 3GB system running 32bit kernel is not protected. Same is true for for
-> > really big 64bit systems.
->=20
-> I agree that this statement is incorrect.
->=20
-> Calling this a lie is a completly unjustified personal attack on those who
+Also, it's only been 3 days, please relax, for a clean-up patch, it can
+take weeks before they are reviewed as they are obvious at the bottom of
+everyone's priority queue.
 
-So how should it be called? I initally used less strong words, only to
-get "Care to tell what's a lie instead of making bold statements?"
-back. Also look at the timing of the thread.
+so all is good, just wait.
 
-> >     Ok, I guess L1TF was a lot of fun, and there was not time for a good
-> >     documentation.
->=20
-> It's interesting that quite some people were actually happy about that
-> document. Sorry, that we weren't able to live up to your high
-> standards.
-
-Ok, now can we have that document updated to meet the standards?
-
-> > @@ -1,10 +1,11 @@
-> >  L1TF - L1 Terminal Fault
-> >  =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
-=3D
-> > =20
-> > -L1 Terminal Fault is a hardware vulnerability which allows unprivileged
-> > -speculative access to data which is available in the Level 1 Data Cache
-> > -when the page table entry controlling the virtual address, which is us=
-ed
-> > -for the access, has the Present bit cleared or other reserved bits set.
-> > +L1 Terminal Fault is a hardware vulnerability on most recent Intel x86
->=20
-> The 'Affected processors' section right below this is very clear about th=
-is
-> being an Intel only issue (for now). So what exactly is the point of this
-> change?
-
-Making it very clear from the begining this is x86-only issue. Yes,
-you can kind-of figure it out from the next section... except for
-Intel StrongArm.
-
-Next sentence speaks about "present bit" of "page table entry". That
-may be confusing for people familiar with other architectures, which
-may not have such bit. We should mention this is x86 before using
-x86-specific terminology.
-
-> hardware. A 32bit kernel booted on a 64bit capable CPU has the same issue.
-> For further correctness, this needs to mention that !PAE enabled kernels
-> cannot do PTE inversion at all.
-
-Ok.
-
-> > 3GB system running 32bit kernel is not protected. Same is true for for
-> > really big 64bit systems.
->=20
-> Where is the explanation for the 'really big 64bit systems' issue for
-> correctness sake?
-
-I don't know the detailed limits for each system; what about this?
-
-Signed-off-by: Pavel Machek <pavel@ucw.cz>
-
-									Pavel
-
-diff --git a/Documentation/admin-guide/l1tf.rst b/Documentation/admin-guide=
-/l1tf.rst
-index 9af9773..cbf02a4 100644
---- a/Documentation/admin-guide/l1tf.rst
-+++ b/Documentation/admin-guide/l1tf.rst
-@@ -1,10 +1,11 @@
- L1TF - L1 Terminal Fault
- =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
-=20
--L1 Terminal Fault is a hardware vulnerability which allows unprivileged
--speculative access to data which is available in the Level 1 Data Cache
--when the page table entry controlling the virtual address, which is used
--for the access, has the Present bit cleared or other reserved bits set.
-+L1 Terminal Fault is a hardware vulnerability on most recent Intel x86
-+CPUs which allows unprivileged speculative access to data which is
-+available in the Level 1 Data Cache when the page table entry
-+controlling the virtual address, which is used for the access, has the
-+Present bit cleared or other reserved bits set.
-=20
- Affected processors
- -------------------
-@@ -76,12 +77,15 @@ Attack scenarios
-    deterministic and more practical.
-=20
-    The Linux kernel contains a mitigation for this attack vector, PTE
--   inversion, which is permanently enabled and has no performance
--   impact. The kernel ensures that the address bits of PTEs, which are not
--   marked present, never point to cacheable physical memory space.
--
--   A system with an up to date kernel is protected against attacks from
--   malicious user space applications.
-+   inversion, which has no measurable performance impact in most
-+   configurations. The kernel ensures that the address bits of PTEs,
-+   which are not marked present, never point to cacheable physical
-+   memory space. For mitigation to be effective, physical memory needs
-+   to be limited in some configurations.
-+
-+   Mitigation is present in kernels v4.19 and newer, and in
-+   recent -stable kernels. PAE needs to be enabled for mitigation to
-+   work.
-=20
- 2. Malicious guest in a virtual machine
- ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-
---=20
-(english) http://www.livejournal.com/~pavelmachek
-(cesky, pictures) http://atrey.karlin.mff.cuni.cz/~pavel/picture/horses/blo=
-g.html
-
---xHFwDpU9dbj6ez1V
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1
-
-iEYEARECAAYFAlyHnsUACgkQMOfwapXb+vJM9QCeKbEXiW/YBjJn52kEdFLQvM1i
-FKsAoL4ebJhxukQko0/F+7OVRAj/YHpG
-=p7N6
------END PGP SIGNATURE-----
-
---xHFwDpU9dbj6ez1V--
+greg k-h
