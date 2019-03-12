@@ -4,51 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 39EE1C43381
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 17:35:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 70E69C43381
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 17:35:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0B1E52087C
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 17:35:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 404BE2087C
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 17:35:38 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1552412132;
-	bh=Qrulc24inYCPvK8tDy7pr9FgePuCFjtS4+aklLDuu5k=;
+	s=default; t=1552412138;
+	bh=sqgDS6a+Gotp4wqmnSkgkaleqmxz5QSa9GVK7akVHV4=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=xNK4cRKysCH2gO/+YOBZ65X2EmcCAtMuY2ONyLjjI5BXx5o3azZgiC2aPP5hIclS0
-	 mjIahTVhN1AEvMjV5YwndaSPK1pzGOSJe0U4QDwGpdw+qOU+J2kGNRRmrmjsVSF/m/
-	 JDdo88EF1VTKayWbQJmL0DojbPXRE1CwMQ93NY1s=
+	b=10P6Ym8D2f+edaXQSnfPoy6FLSbdkpmjlwXiDAyW6PSbsFE+QJPtDKJez9k+4JjrE
+	 su0bVM8XCnrTKBGVLLUYFWi/Q2qgt0nrquR06SkrnPWQp4psNyUOyMRYhYZqaIOgIp
+	 reDDCfKvVc4gLAM5Zf28cWTkAH4ZXFqmaXqq6N4c=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729471AbfCLRfa (ORCPT
+        id S1729552AbfCLRfh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 12 Mar 2019 13:35:30 -0400
-Received: from mail.kernel.org ([198.145.29.99]:59586 "EHLO mail.kernel.org"
+        Tue, 12 Mar 2019 13:35:37 -0400
+Received: from mail.kernel.org ([198.145.29.99]:59658 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729353AbfCLRQx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 12 Mar 2019 13:16:53 -0400
+        id S1729342AbfCLRQw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 12 Mar 2019 13:16:52 -0400
 Received: from localhost (unknown [104.133.8.98])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id A10B72171F;
-        Tue, 12 Mar 2019 17:16:52 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 391332171F;
+        Tue, 12 Mar 2019 17:16:51 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1552411012;
-        bh=Qrulc24inYCPvK8tDy7pr9FgePuCFjtS4+aklLDuu5k=;
+        s=default; t=1552411011;
+        bh=sqgDS6a+Gotp4wqmnSkgkaleqmxz5QSa9GVK7akVHV4=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=bbjO2TABZ9F7ZZ4i68hbCxfyfQ3hmydBtv3pH837u2xr0TX89zUOEEHh5zFuKKEmW
-         zr0RsGuEDuXbcaAKNQ/b0tBasAf6/2ciO538vent5pZcnNH+RBpWITGLcZAjL1oGoD
-         5z5abn+Hq2oS1F3Xi3be9Jm0se2fstMg2oY+J+5Y=
+        b=zcBLuYrtymkDld6cIJXDt1v5g6jxA8mmnuwN5r3HZp/nZsBlFm/vdS563NGxT4NLL
+         6HHOL+A81M57Gd7Z4Jj/b58DCYq3ApD+/O1iXMc3g/4iPDUzOimxvJFk1rQNB0BgT3
+         xMa/xkzlaPO73fuZzZwf8Gkwdk1H2dyvpxcWlNsA=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Tetsuo Handa <penguin-kernel@I-love.SAKURA.ne.jp>,
-        Jan Kara <jack@suse.cz>, Dmitry Vyukov <dvyukov@google.com>,
-        Jens Axboe <axboe@kernel.dk>, Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.14 117/135] fs: ratelimit __find_get_block_slow() failure message.
-Date:   Tue, 12 Mar 2019 10:09:24 -0700
-Message-Id: <20190312170352.004283054@linuxfoundation.org>
+        stable@vger.kernel.org, Dan Williams <dan.j.williams@intel.com>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Vinod Koul <vkoul@kernel.org>, Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.14 107/135] dmaengine: dmatest: Abort test in case of mapping error
+Date:   Tue, 12 Mar 2019 10:09:14 -0700
+Message-Id: <20190312170351.060159584@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190312170341.127810985@linuxfoundation.org>
 References: <20190312170341.127810985@linuxfoundation.org>
@@ -67,74 +66,119 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-[ Upstream commit 43636c804df0126da669c261fc820fb22f62bfc2 ]
+[ Upstream commit 6454368a804c4955ccd116236037536f81e5b1f1 ]
 
-When something let __find_get_block_slow() hit all_mapped path, it calls
-printk() for 100+ times per a second. But there is no need to print same
-message with such high frequency; it is just asking for stall warning, or
-at least bloating log files.
+In case of mapping error the DMA addresses are invalid and continuing
+will screw system memory or potentially something else.
 
-  [  399.866302][T15342] __find_get_block_slow() failed. block=1, b_blocknr=8
-  [  399.873324][T15342] b_state=0x00000029, b_size=512
-  [  399.878403][T15342] device loop0 blocksize: 4096
-  [  399.883296][T15342] __find_get_block_slow() failed. block=1, b_blocknr=8
-  [  399.890400][T15342] b_state=0x00000029, b_size=512
-  [  399.895595][T15342] device loop0 blocksize: 4096
-  [  399.900556][T15342] __find_get_block_slow() failed. block=1, b_blocknr=8
-  [  399.907471][T15342] b_state=0x00000029, b_size=512
-  [  399.912506][T15342] device loop0 blocksize: 4096
+[  222.480310] dmatest: dma0chan7-copy0: summary 1 tests, 3 failures 6 iops 349 KB/s (0)
+...
+[  240.912725] check: Corrupted low memory at 00000000c7c75ac9 (2940 phys) = 5656000000000000
+[  240.921998] check: Corrupted low memory at 000000005715a1cd (2948 phys) = 279f2aca5595ab2b
+[  240.931280] check: Corrupted low memory at 000000002f4024c0 (2950 phys) = 5e5624f349e793cf
+...
 
-This patch reduces frequency to up to once per a second, in addition to
-concatenating three lines into one.
+Abort any test if mapping failed.
 
-  [  399.866302][T15342] __find_get_block_slow() failed. block=1, b_blocknr=8, b_state=0x00000029, b_size=512, device loop0 blocksize: 4096
-
-Signed-off-by: Tetsuo Handa <penguin-kernel@I-love.SAKURA.ne.jp>
-Reviewed-by: Jan Kara <jack@suse.cz>
-Cc: Dmitry Vyukov <dvyukov@google.com>
-Signed-off-by: Jens Axboe <axboe@kernel.dk>
+Fixes: 4076e755dbec ("dmatest: convert to dmaengine_unmap_data")
+Cc: Dan Williams <dan.j.williams@intel.com>
+Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Signed-off-by: Vinod Koul <vkoul@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- fs/buffer.c | 19 ++++++++++---------
- 1 file changed, 10 insertions(+), 9 deletions(-)
+ drivers/dma/dmatest.c | 28 ++++++++++++----------------
+ 1 file changed, 12 insertions(+), 16 deletions(-)
 
-diff --git a/fs/buffer.c b/fs/buffer.c
-index b96f3b98a6ef..8086cc8ff0bc 100644
---- a/fs/buffer.c
-+++ b/fs/buffer.c
-@@ -208,6 +208,7 @@ __find_get_block_slow(struct block_device *bdev, sector_t block)
- 	struct buffer_head *head;
- 	struct page *page;
- 	int all_mapped = 1;
-+	static DEFINE_RATELIMIT_STATE(last_warned, HZ, 1);
+diff --git a/drivers/dma/dmatest.c b/drivers/dma/dmatest.c
+index 80cc2be6483c..e39336127741 100644
+--- a/drivers/dma/dmatest.c
++++ b/drivers/dma/dmatest.c
+@@ -626,11 +626,9 @@ static int dmatest_func(void *data)
+ 			srcs[i] = um->addr[i] + src_off;
+ 			ret = dma_mapping_error(dev->dev, um->addr[i]);
+ 			if (ret) {
+-				dmaengine_unmap_put(um);
+ 				result("src mapping error", total_tests,
+ 				       src_off, dst_off, len, ret);
+-				failed_tests++;
+-				continue;
++				goto error_unmap_continue;
+ 			}
+ 			um->to_cnt++;
+ 		}
+@@ -645,11 +643,9 @@ static int dmatest_func(void *data)
+ 					       DMA_BIDIRECTIONAL);
+ 			ret = dma_mapping_error(dev->dev, dsts[i]);
+ 			if (ret) {
+-				dmaengine_unmap_put(um);
+ 				result("dst mapping error", total_tests,
+ 				       src_off, dst_off, len, ret);
+-				failed_tests++;
+-				continue;
++				goto error_unmap_continue;
+ 			}
+ 			um->bidi_cnt++;
+ 		}
+@@ -679,12 +675,10 @@ static int dmatest_func(void *data)
+ 		}
  
- 	index = block >> (PAGE_SHIFT - bd_inode->i_blkbits);
- 	page = find_get_page_flags(bd_mapping, index, FGP_ACCESSED);
-@@ -235,15 +236,15 @@ __find_get_block_slow(struct block_device *bdev, sector_t block)
- 	 * file io on the block device and getblk.  It gets dealt with
- 	 * elsewhere, don't buffer_error if we had some unmapped buffers
- 	 */
--	if (all_mapped) {
--		printk("__find_get_block_slow() failed. "
--			"block=%llu, b_blocknr=%llu\n",
--			(unsigned long long)block,
--			(unsigned long long)bh->b_blocknr);
--		printk("b_state=0x%08lx, b_size=%zu\n",
--			bh->b_state, bh->b_size);
--		printk("device %pg blocksize: %d\n", bdev,
--			1 << bd_inode->i_blkbits);
-+	ratelimit_set_flags(&last_warned, RATELIMIT_MSG_ON_RELEASE);
-+	if (all_mapped && __ratelimit(&last_warned)) {
-+		printk("__find_get_block_slow() failed. block=%llu, "
-+		       "b_blocknr=%llu, b_state=0x%08lx, b_size=%zu, "
-+		       "device %pg blocksize: %d\n",
-+		       (unsigned long long)block,
-+		       (unsigned long long)bh->b_blocknr,
-+		       bh->b_state, bh->b_size, bdev,
-+		       1 << bd_inode->i_blkbits);
+ 		if (!tx) {
+-			dmaengine_unmap_put(um);
+ 			result("prep error", total_tests, src_off,
+ 			       dst_off, len, ret);
+ 			msleep(100);
+-			failed_tests++;
+-			continue;
++			goto error_unmap_continue;
+ 		}
+ 
+ 		done->done = false;
+@@ -693,12 +687,10 @@ static int dmatest_func(void *data)
+ 		cookie = tx->tx_submit(tx);
+ 
+ 		if (dma_submit_error(cookie)) {
+-			dmaengine_unmap_put(um);
+ 			result("submit error", total_tests, src_off,
+ 			       dst_off, len, ret);
+ 			msleep(100);
+-			failed_tests++;
+-			continue;
++			goto error_unmap_continue;
+ 		}
+ 		dma_async_issue_pending(chan);
+ 
+@@ -711,16 +703,14 @@ static int dmatest_func(void *data)
+ 			dmaengine_unmap_put(um);
+ 			result("test timed out", total_tests, src_off, dst_off,
+ 			       len, 0);
+-			failed_tests++;
+-			continue;
++			goto error_unmap_continue;
+ 		} else if (status != DMA_COMPLETE) {
+ 			dmaengine_unmap_put(um);
+ 			result(status == DMA_ERROR ?
+ 			       "completion error status" :
+ 			       "completion busy status", total_tests, src_off,
+ 			       dst_off, len, ret);
+-			failed_tests++;
+-			continue;
++			goto error_unmap_continue;
+ 		}
+ 
+ 		dmaengine_unmap_put(um);
+@@ -765,6 +755,12 @@ static int dmatest_func(void *data)
+ 			verbose_result("test passed", total_tests, src_off,
+ 				       dst_off, len, 0);
+ 		}
++
++		continue;
++
++error_unmap_continue:
++		dmaengine_unmap_put(um);
++		failed_tests++;
  	}
- out_unlock:
- 	spin_unlock(&bd_mapping->private_lock);
+ 	ktime = ktime_sub(ktime_get(), ktime);
+ 	ktime = ktime_sub(ktime, comparetime);
 -- 
 2.19.1
 
