@@ -2,112 +2,94 @@ Return-Path: <SRS0=J4ZE=RP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_PASS,USER_AGENT_MUTT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_NEOMUTT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3DBBBC43381
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 09:28:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 96918C43381
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 09:30:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F14D3214AE
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 09:28:50 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=alien8.de header.i=@alien8.de header.b="JP3ldUWL"
+	by mail.kernel.org (Postfix) with ESMTP id 6AC86214AE
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 09:30:21 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726255AbfCLJ2u (ORCPT
+        id S1726388AbfCLJaT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 12 Mar 2019 05:28:50 -0400
-Received: from mail.skyhub.de ([5.9.137.197]:34824 "EHLO mail.skyhub.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725832AbfCLJ2t (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 12 Mar 2019 05:28:49 -0400
-Received: from zn.tnic (unknown [IPv6:2003:ec:2f09:5700:f135:3193:b053:76cd])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.skyhub.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id 26F441EC0324;
-        Tue, 12 Mar 2019 10:28:47 +0100 (CET)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=dkim;
-        t=1552382927;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:in-reply-to:in-reply-to:  references:references;
-        bh=wasXZt4wz3g1Y1fQFWK6MO5JGxZ4OlHYf5kdyysXjP8=;
-        b=JP3ldUWLZ61kYQrbC9bwtEDx1z55mSvPaGCZbLMUtAdGp6M82xFgHpcBSKAup4V9ilp5oZ
-        g96j949yzmz5VWaVM8IShhAzme65Oqn9RE9NSQbiRNMNl9YlcpOGXyf4Kc/bWbs1lrC+7g
-        GB1nhyyFqzymRk6Li8eabNPr6TDE7uk=
-Date:   Tue, 12 Mar 2019 10:28:42 +0100
-From:   Borislav Petkov <bp@alien8.de>
-To:     Yash Shah <yash.shah@sifive.com>
-Cc:     linux-riscv@lists.infradead.org, linux-edac@vger.kernel.org,
-        palmer@sifive.com, paul.walmsley@sifive.com,
-        linux-kernel@vger.kernel.org, robh+dt@kernel.org,
-        mark.rutland@arm.com, aou@eecs.berkeley.edu, mchehab@kernel.org,
-        devicetree@vger.kernel.org
-Subject: Re: [PATCH 2/2] sifive: edac: Add EDAC driver for Sifive l2 Cache
- Controller
-Message-ID: <20190312092842.GC28589@zn.tnic>
-References: <1552382461-13051-1-git-send-email-yash.shah@sifive.com>
- <1552382461-13051-3-git-send-email-yash.shah@sifive.com>
+        Tue, 12 Mar 2019 05:30:19 -0400
+Received: from metis.ext.pengutronix.de ([85.220.165.71]:53981 "EHLO
+        metis.ext.pengutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725847AbfCLJaS (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 12 Mar 2019 05:30:18 -0400
+Received: from pty.hi.pengutronix.de ([2001:67c:670:100:1d::c5])
+        by metis.ext.pengutronix.de with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.89)
+        (envelope-from <ukl@pengutronix.de>)
+        id 1h3djh-0003ux-5o; Tue, 12 Mar 2019 10:30:13 +0100
+Received: from ukl by pty.hi.pengutronix.de with local (Exim 4.89)
+        (envelope-from <ukl@pengutronix.de>)
+        id 1h3djg-0007LW-8m; Tue, 12 Mar 2019 10:30:12 +0100
+Date:   Tue, 12 Mar 2019 10:30:12 +0100
+From:   Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= 
+        <u.kleine-koenig@pengutronix.de>
+To:     Vignesh Raghavendra <vigneshr@ti.com>
+Cc:     Thierry Reding <thierry.reding@gmail.com>,
+        Rob Herring <robh+dt@kernel.org>, linux-pwm@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Linux ARM Mailing List <linux-arm-kernel@lists.infradead.org>
+Subject: Re: [PATCH 2/2] pwm: Kconfig: Enable ehrpwm driver to be compiled
+ for ARCH_K3
+Message-ID: <20190312093012.g4rnis37nltzbygz@pengutronix.de>
+References: <20190312091629.31701-1-vigneshr@ti.com>
+ <20190312091629.31701-3-vigneshr@ti.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=iso-8859-1
 Content-Disposition: inline
-In-Reply-To: <1552382461-13051-3-git-send-email-yash.shah@sifive.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20190312091629.31701-3-vigneshr@ti.com>
+User-Agent: NeoMutt/20170113 (1.7.2)
+X-SA-Exim-Connect-IP: 2001:67c:670:100:1d::c5
+X-SA-Exim-Mail-From: ukl@pengutronix.de
+X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
+X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Mar 12, 2019 at 02:51:01PM +0530, Yash Shah wrote:
-> Add driver for the SiFive L2 cache controller
-> on the HiFive Unleashed board
+On Tue, Mar 12, 2019 at 02:46:29PM +0530, Vignesh Raghavendra wrote:
+> K3 devices have the same EHRPWM IP as OMAP SoCs. Enable driver to be built
+> for K3 devices. Also, drop reference to AM33xx in help text, as IP is
+> found on multiple TI SoCs.
 > 
-> Signed-off-by: Yash Shah <yash.shah@sifive.com>
+> Signed-off-by: Vignesh Raghavendra <vigneshr@ti.com>
 > ---
->  arch/riscv/Kconfig            |   1 +
->  drivers/edac/Kconfig          |   7 +
->  drivers/edac/Makefile         |   1 +
->  drivers/edac/sifive_edac-l2.c | 292 ++++++++++++++++++++++++++++++++++++++++++
->  4 files changed, 301 insertions(+)
->  create mode 100644 drivers/edac/sifive_edac-l2.c
+>  drivers/pwm/Kconfig | 5 ++---
+>  1 file changed, 2 insertions(+), 3 deletions(-)
 > 
-> diff --git a/arch/riscv/Kconfig b/arch/riscv/Kconfig
-> index 515fc3c..fede4b6 100644
-> --- a/arch/riscv/Kconfig
-> +++ b/arch/riscv/Kconfig
-> @@ -49,6 +49,7 @@ config RISCV
->  	select RISCV_TIMER
->  	select GENERIC_IRQ_MULTI_HANDLER
->  	select ARCH_HAS_PTE_SPECIAL
-> +	select EDAC_SUPPORT
+> diff --git a/drivers/pwm/Kconfig b/drivers/pwm/Kconfig
+> index 54f8238aac0d..c054bd1dba36 100644
+> --- a/drivers/pwm/Kconfig
+> +++ b/drivers/pwm/Kconfig
+> @@ -467,10 +467,9 @@ config  PWM_TIECAP
 >  
->  config MMU
->  	def_bool y
-> diff --git a/drivers/edac/Kconfig b/drivers/edac/Kconfig
-> index e286b5b..63ccdf1 100644
-> --- a/drivers/edac/Kconfig
-> +++ b/drivers/edac/Kconfig
-> @@ -440,6 +440,13 @@ config EDAC_ALTERA_SDMMC
->  	  Support for error detection and correction on the
->  	  Altera SDMMC FIFO Memory for Altera SoCs.
->  
-> +config EDAC_SIFIVE_L2
-> +	tristate "Sifive L2 Cache"
-> +	depends on RISCV
-> +	help
-> +	  Support for error detection and correction on the SiFive L2
-> +	  cache controller.
+>  config  PWM_TIEHRPWM
+>  	tristate "EHRPWM PWM support"
+> -	depends on ARCH_OMAP2PLUS || ARCH_DAVINCI_DA8XX
+> +	depends on ARCH_OMAP2PLUS || ARCH_DAVINCI_DA8XX || ARCH_K3
+>  	help
+> -	  PWM driver support for the EHRPWM controller found on AM33XX
+> -	  TI SOC
+> +	  PWM driver support for the EHRPWM controller found on TI SOCs
 
-Please no EDAC drivers for a single functional unit with RAS
-capabilities. Rather, a sifive_edac or riscv_edac driver which covers
-the whole platform or even architecture and contains support for all the
-RAS functionality there. See altera_edac, for example.
+It would be great to be able to compile this driver with COMPILE_TEST.
+From a quick look the following would be appropriate:
 
-HTH.
+	depends on ARCH_OMAP2PLUS || ARCH_DAVINCI_DA8XX || ARCH_K3 || COMPILE_TEST
+	depends on HAVE_CLK && HAS_IOMEM
+ 
+Best regards
+Uwe
 
 -- 
-Regards/Gruss,
-    Boris.
-
-Good mailing practices for 400: avoid top-posting and trim the reply.
+Pengutronix e.K.                           | Uwe Kleine-König            |
+Industrial Linux Solutions                 | http://www.pengutronix.de/  |
