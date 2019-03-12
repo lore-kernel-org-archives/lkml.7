@@ -2,171 +2,111 @@ Return-Path: <SRS0=J4ZE=RP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_PASS,URIBL_BLOCKED autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C042AC43381
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 08:59:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A8AB0C43381
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 08:59:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 852B52147C
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 08:59:25 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=baylibre-com.20150623.gappssmtp.com header.i=@baylibre-com.20150623.gappssmtp.com header.b="UNaaNssR"
+	by mail.kernel.org (Postfix) with ESMTP id 7DDBA217F4
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 08:59:33 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727642AbfCLI7Y (ORCPT
+        id S1727654AbfCLI7c convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 12 Mar 2019 04:59:24 -0400
-Received: from mail-wm1-f66.google.com ([209.85.128.66]:50829 "EHLO
-        mail-wm1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726638AbfCLI7X (ORCPT
+        Tue, 12 Mar 2019 04:59:32 -0400
+Received: from ms01.santannapisa.it ([193.205.80.98]:52354 "EHLO
+        mail.santannapisa.it" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726465AbfCLI7b (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 12 Mar 2019 04:59:23 -0400
-Received: by mail-wm1-f66.google.com with SMTP id x7so1732395wmj.0
-        for <linux-kernel@vger.kernel.org>; Tue, 12 Mar 2019 01:59:22 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=baylibre-com.20150623.gappssmtp.com; s=20150623;
-        h=subject:to:cc:references:from:openpgp:autocrypt:organization
-         :message-id:date:user-agent:mime-version:in-reply-to
-         :content-language:content-transfer-encoding;
-        bh=6bgr61PphMixnr3AhXO8AbHOrIMyq+Q6xeKT7Qg3H7c=;
-        b=UNaaNssRIUXldlMh9cGnWmHRl9kv7gVHkTjAdUTbT7iuhhugNq2c4BemILWHhW6KpA
-         Ii9eNiW8wlQaGKPUL5zW7GYRkZM2C2rw0BpowefUI4XVAOYjdYTZbwSyPNg4LTo806iN
-         eCBn1iAizoXDwUNxpW7VuuCdnYSsAHTMJAzh4t/i7FyV809VPcB9m5PgAs7pR8fq95ZX
-         olcNh0i1IHoucpveS2q0a1eamujaalcp/5i19bj9uQt3V5sknaVSd6N9ampgYwqNYdnf
-         seWkAeBMIlW53/HbTzYJG7Z5MV61wnvzN+pNAh/7EjzHuaqHFNSeYfp5VddRM/3Zqjpn
-         g7VA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:openpgp:autocrypt
-         :organization:message-id:date:user-agent:mime-version:in-reply-to
-         :content-language:content-transfer-encoding;
-        bh=6bgr61PphMixnr3AhXO8AbHOrIMyq+Q6xeKT7Qg3H7c=;
-        b=gJNDk9dcKGDKMsTiyLqqM6/sptuq8z4d3x7ToKt8nlMXLkzU/hgnjDdNl6x8n3G6iT
-         q139ThuiPNGuSrdxN400eNNxV26cyF0CXnIUoUVx2u5LyotEQjdzQH4Spkc2leopz6Um
-         0jXOTlKn3UeALBEts9kUc8r2REJmDB1o7SO6UCiZtJmMhMF9vRiFIOYFvKEoaZS4G9r1
-         sUmVdDvrqnY4MBcOL6vkOfuevh92nr0CaF7xKS/bKjjO039nVgtYs9M6HkD+7tJBkvnw
-         oIwdT0HrfDDTKjgsszknfce3vG1nanDD/rtOkwAcJ0W1IToAvseIu5yru0TkETfPCR4g
-         Ysig==
-X-Gm-Message-State: APjAAAWLv+PsXJVhSAAwTfnMTddyX5Iq8sPjYdYWDSYfPDmoGh3j84nu
-        TS03snxEAWsICJ6Kz+gGIJ5QVA==
-X-Google-Smtp-Source: APXvYqyj6gMnO9kkmK8yl69UVwhWeIqk7NRzmLq27usqaGa34Y90gT4GnDo++GS/PoCtoPREHPgosQ==
-X-Received: by 2002:a1c:7c08:: with SMTP id x8mr1630947wmc.8.1552381161079;
-        Tue, 12 Mar 2019 01:59:21 -0700 (PDT)
-Received: from [10.1.2.12] (lmontsouris-657-1-212-31.w90-63.abo.wanadoo.fr. [90.63.244.31])
-        by smtp.gmail.com with ESMTPSA id d2sm9050575wrq.94.2019.03.12.01.59.20
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Tue, 12 Mar 2019 01:59:20 -0700 (PDT)
-Subject: Re: [PATCH] arm64: dts: meson-gxl-s905d-phicomm-n1: add status LED
-To:     Chuanhong Guo <gch981213@gmail.com>, devicetree@vger.kernel.org
-Cc:     Mark Rutland <mark.rutland@arm.com>,
-        Kevin Hilman <khilman@baylibre.com>,
-        linux-kernel@vger.kernel.org, Rob Herring <robh+dt@kernel.org>,
-        linux-amlogic@lists.infradead.org
-References: <20190312083326.18029-1-gch981213@gmail.com>
-From:   Neil Armstrong <narmstrong@baylibre.com>
-Openpgp: preference=signencrypt
-Autocrypt: addr=narmstrong@baylibre.com; prefer-encrypt=mutual; keydata=
- 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
- ZaTUOEkgIor5losDrePdPgE=
-Organization: Baylibre
-Message-ID: <5c580f1b-1038-2c34-7047-e504eb4ac323@baylibre.com>
-Date:   Tue, 12 Mar 2019 09:59:20 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.5.1
+        Tue, 12 Mar 2019 04:59:31 -0400
+X-Greylist: delayed 3601 seconds by postgrey-1.27 at vger.kernel.org; Tue, 12 Mar 2019 04:59:30 EDT
+Received: from [10.1.195.109] (account l.abeni@santannapisa.it HELO nowhere)
+  by santannapisa.it (CommuniGate Pro SMTP 6.1.11)
+  with ESMTPSA id 137197463; Tue, 12 Mar 2019 08:59:27 +0100
+Date:   Tue, 12 Mar 2019 08:59:22 +0100
+From:   luca abeni <luca.abeni@santannapisa.it>
+To:     "chengjian (D)" <cj.chengjian@huawei.com>
+Cc:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Li Bin <huawei.libin@huawei.com>,
+        "Xiexiuqi (Xie XiuQi)" <xiexiuqi@huawei.com>, <mingo@redhat.com>,
+        Peter Zijlstra <peterz@infradead.org>
+Subject: Re: WARN ON at kernel/sched/deadline.c task_non_contending
+Message-ID: <20190312085922.13895cae@nowhere>
+In-Reply-To: <dfb46874-3657-71c6-e068-9413ffe3f82e@huawei.com>
+References: <dfb46874-3657-71c6-e068-9413ffe3f82e@huawei.com>
+Organization: Scuola Superiore S.Anna
+X-Mailer: Claws Mail 3.16.0 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
 MIME-Version: 1.0
-In-Reply-To: <20190312083326.18029-1-gch981213@gmail.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8BIT
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Chuanhong,
+Hi all,
 
-On 12/03/2019 09:33, Chuanhong Guo wrote:
-> There is a white LED on the front panel behind the logo and the
-> manufacturer uses that LED to indicate network and USB drive status.
+On Tue, 12 Mar 2019 10:03:12 +0800
+"chengjian (D)" <cj.chengjian@huawei.com> wrote:
+
+> Hi.
 > 
-> Signed-off-by: Chuanhong Guo <gch981213@gmail.com>
-> ---
->  .../boot/dts/amlogic/meson-gxl-s905d-phicomm-n1.dts    | 10 ++++++++++
->  1 file changed, 10 insertions(+)
+> When looking to test SCHED_DEADLINE syzkaller report an warn in
+> task_non_contending(). I tested the mainline kernel with the C program
+> and captured the same call trace.
+[...]
+> diff --git a/kernel/sched/deadline.c b/kernel/sched/deadline.c
+> index 31c050a0d0ce..d73cb033a06d 100644
+> --- a/kernel/sched/deadline.c
+> +++ b/kernel/sched/deadline.c
+> @@ -252,7 +252,6 @@ static void task_non_contending(struct
+> task_struct *p) if (dl_entity_is_special(dl_se))
+>                  return;
 > 
-> diff --git a/arch/arm64/boot/dts/amlogic/meson-gxl-s905d-phicomm-n1.dts b/arch/arm64/boot/dts/amlogic/meson-gxl-s905d-phicomm-n1.dts
-> index 9a8a8a7e4b53..b5667f1fb2c8 100644
-> --- a/arch/arm64/boot/dts/amlogic/meson-gxl-s905d-phicomm-n1.dts
-> +++ b/arch/arm64/boot/dts/amlogic/meson-gxl-s905d-phicomm-n1.dts
-> @@ -14,6 +14,16 @@
->  	cvbs-connector {
->  		status = "disabled";
->  	};
+> -       WARN_ON(hrtimer_active(&dl_se->inactive_timer));
+>          WARN_ON(dl_se->dl_non_contending);
+> 
+>          zerolag_time = dl_se->deadline -
+> @@ -287,7 +286,9 @@ static void task_non_contending(struct
+> task_struct *p) }
+> 
+>          dl_se->dl_non_contending = 1;
+> -       get_task_struct(p);
 > +
-> +	leds {
-> +		compatible = "gpio-leds";
-> +
-> +		status {
-> +			label = "n1:white:status";
-> +			gpios = <&gpio_ao GPIOAO_9 GPIO_ACTIVE_HIGH>;
-> +			default-state = "on";
-> +		};
-> +	};
->  };
->  
->  &cvbs_vdac_port {
+> +       if (!hrtimer_active(&dl_se->inactive_timer));
+> +               get_task_struct(p);
+>          hrtimer_start(timer, ns_to_ktime(zerolag_time),
+> HRTIMER_MODE_REL); }
+
+At a first glance, I think the patch is OK, but I need some more time to
+look at the details.
+
+I'll run some experiments with the reproducer, and I'll let you know my
+conclusions.
+
+
+> Did I miss something ?
+> 
+> I saw it directly remove the hrtimer in hrtime_start() if hrtime is
+> queued, it may be unsafe here when the timer handler is running.
+
+This is probably why I added that WARN_ON()... I'll look at a possible
+solution.
+
+
+
+			Thanks,
+				Luca
+
+
+> 
+> Help ?
+> 
+> I put the syzkaller log and C demo in attachments.
+> 
+> Thanks.
+> 
+> 
 > 
 
-Reviewed-by: Neil Armstrong <narmstrong@baylibre.com>
-
-BTW, do you know if it's possible to have a sample of the Phicomm N1
-in order to be added in kernelci ?
-
-Neil
