@@ -7,55 +7,55 @@ X-Spam-Status: No, score=-8.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
 	SPF_PASS,USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 716F3C43381
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 22:34:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 749FAC4360F
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 22:34:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 401B5217D8
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 22:34:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 39EEC217D8
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 22:34:37 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="jrtS3ovn"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="LXstkKlU"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727254AbfCLWef (ORCPT
+        id S1727326AbfCLWef (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
         Tue, 12 Mar 2019 18:34:35 -0400
-Received: from mail-pf1-f196.google.com ([209.85.210.196]:38675 "EHLO
-        mail-pf1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726280AbfCLWeN (ORCPT
+Received: from mail-pf1-f194.google.com ([209.85.210.194]:35552 "EHLO
+        mail-pf1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726767AbfCLWeL (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 12 Mar 2019 18:34:13 -0400
-Received: by mail-pf1-f196.google.com with SMTP id n125so2862901pfn.5
-        for <linux-kernel@vger.kernel.org>; Tue, 12 Mar 2019 15:34:13 -0700 (PDT)
+        Tue, 12 Mar 2019 18:34:11 -0400
+Received: by mail-pf1-f194.google.com with SMTP id j5so2871260pfa.2
+        for <linux-kernel@vger.kernel.org>; Tue, 12 Mar 2019 15:34:10 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=ZKgL4zeK+z0St01hNMYKSt6dKMvw92MkjAHduvDs3M4=;
-        b=jrtS3ovnWaLclOmLoRw34CUAd+9ENpw1XWtfnLUP1GL2O+JypA4+PCOxzdusoMOk42
-         MwG2QHBlvBDAahr7Py5iS1cPYcTR4sq6AHI1i7JxSrfe4Z193iZBEtTWyzzO5M/qeVh8
-         y/5CRZ5bEQz7MH/ith0ogencVWwi/1sVtcswJ1X1i7uv6w689GJCGWNslFK0fan/knST
-         Evo9ANJxmGdHkfNod5kaooDNe8L3Wnrvb215MwDQyPp9a6tvADnANRyz4q1sEuM5r9Gt
-         Xmd1TzZfc/2bDNGBzFEqgP3VGvUWq+PFL50UCQgdo9wcjoPw7/LplLb/nOt9Xy/gnxY3
-         svCA==
+        bh=oz/TqQdvSWg5Jr50nmxxA8VLsKG86DG+TYlsVRNN9G4=;
+        b=LXstkKlUo0CnIa3Kc9zF+D4gAlOlVCACVZQL55UAPdMLJPpES1HylsZEk9D3A62uSi
+         fdBXQCsgnT34wO+Y3YeEVDZDz8SkhJqKZzNp1SLlupnP8AMhk6eQJq0gJEcndGpfsCyy
+         gICdN5uWruLEXqIic9Da9FeFoaleFCceVwVaTlcBB5XxD0QQ9PtvlAWeqrQSIQVAEdW8
+         NwRAy+W1N0D9imr2hWnXWox7pYqy0heUoeImh6pY8pQi5y3XmlcbCifj9BumcodY0pl9
+         dhp6sT026DZ5kN93hNlwp4Tt1mOJtPMBEgrfBmcNZ3FLzMxDcbFGfjwXQtA/lQ6FqUiF
+         1WCw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=ZKgL4zeK+z0St01hNMYKSt6dKMvw92MkjAHduvDs3M4=;
-        b=q6hrPhaz77vMzalmyAWiFDmlTnTyQLXBBerJv8w11X+6nW0/6nmxSgCwgRqB/nEfr2
-         n9FoYPDO6HYda7hj6nwOvbjyEwnpgqcE4fJ/s4twBlY/OF/bFSpZTKw2XcpxkJvjZmqK
-         PtQ2/dB77Xy/sZaew8CiH2q0nJ02PSOMyDpvj6uBSfC/QRbinBEKqoTNpMm5OVidM4IU
-         YfPZtGczQ/spfdLf63V6eZTtjNz1C+Ey2qiaRyF3oFBqLEeLOrleLQJ9locPBnUsH/Gy
-         jOLocra/wOMlvXKrChlY6eR2Ox+2UzdKIpTN25Tas4MJ3Z8QvPPDj2cF/87dCuho+WXC
-         XZMw==
-X-Gm-Message-State: APjAAAWOXmZIlrlVUd9Mij7THOHHUdtaiZBS4KBQf5kqksMpDRjd4jSP
-        WwjVmzcBPd4IIj36vFAezmI=
-X-Google-Smtp-Source: APXvYqyS8FSfyNNo22nCX4/AyHeBT/RRTO7S/phayDoBXXlEplUx4YCEb0YjtOc8QhTdvGHx5uHWwg==
-X-Received: by 2002:a63:6193:: with SMTP id v141mr8446168pgb.392.1552430053392;
-        Tue, 12 Mar 2019 15:34:13 -0700 (PDT)
+        bh=oz/TqQdvSWg5Jr50nmxxA8VLsKG86DG+TYlsVRNN9G4=;
+        b=B7kOCkNohLjy271lcH85t89/du3ERRtxZftcGsm97f664PRVulSP1HbOh1XER7DWlD
+         bHFNg6t6MlhXjDHNAYt0LHGRa15l78GDZ/X/nkeRPkVyXTDOgopQ1pG50yjDoI3be+pP
+         bhLd8gkXl4WVL0ho6zSq73xH+XTU1dNxQHUKMOA8cRzC4FT+nkOTRs9rOEEPoskfNnBM
+         INK8ksYmaGPCkBxsHSeclPdVbX1O7QN+1hkRAVrTcjwSrW5XgU0tyVt9UuBDUsvkch/e
+         +je2K/EAh5vVvDzz6nU0eR5ZjQXFclIY2LAagXYKYPSw4EY+s5JNnHVDXA69jFLfpAFP
+         v4WA==
+X-Gm-Message-State: APjAAAU0UV0rYROcMzRAQ0Dnrky7pm6WAZQELnYQHVKO8x7Y+6ekBwFq
+        /idA5Z7bXa1Ssb9j7K8V+2J4h5xDM+Q=
+X-Google-Smtp-Source: APXvYqxaTl30AAKSU0hP96o65+VdoqQtZLA+IvuzkQRRVNKj8cm5sDUVP3whhZO805D+hSJdmfCc0A==
+X-Received: by 2002:a63:3541:: with SMTP id c62mr36759041pga.157.1552430050528;
+        Tue, 12 Mar 2019 15:34:10 -0700 (PDT)
 Received: from tower.thefacebook.com ([2620:10d:c090:200::1:3203])
-        by smtp.gmail.com with ESMTPSA id i13sm14680592pfo.106.2019.03.12.15.34.12
+        by smtp.gmail.com with ESMTPSA id i13sm14680592pfo.106.2019.03.12.15.34.09
         (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Tue, 12 Mar 2019 15:34:12 -0700 (PDT)
+        Tue, 12 Mar 2019 15:34:09 -0700 (PDT)
 From:   Roman Gushchin <guroan@gmail.com>
 X-Google-Original-From: Roman Gushchin <guro@fb.com>
 To:     linux-mm@kvack.org, kernel-team@fb.com
@@ -63,9 +63,9 @@ Cc:     linux-kernel@vger.kernel.org, Tejun Heo <tj@kernel.org>,
         Rik van Riel <riel@surriel.com>,
         Johannes Weiner <hannes@cmpxchg.org>,
         Michal Hocko <mhocko@kernel.org>, Roman Gushchin <guro@fb.com>
-Subject: [PATCH v2 4/6] mm: release per-node memcg percpu data prematurely
-Date:   Tue, 12 Mar 2019 15:34:01 -0700
-Message-Id: <20190312223404.28665-5-guro@fb.com>
+Subject: [PATCH v2 2/6] mm: prepare to premature release of per-node lruvec_stat_cpu
+Date:   Tue, 12 Mar 2019 15:33:59 -0700
+Message-Id: <20190312223404.28665-3-guro@fb.com>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190312223404.28665-1-guro@fb.com>
 References: <20190312223404.28665-1-guro@fb.com>
@@ -76,80 +76,118 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Similar to memcg-level statistics, per-node data isn't expected
-to be hot after cgroup removal. Switching over to atomics and
-prematurely releasing percpu data helps to reduce the memory
-footprint of dying cgroups.
+Similar to the memcg's vmstats_percpu, per-memcg per-node stats
+consists of percpu- and atomic counterparts, and we do expect
+that both coexist during the whole life-cycle of the memcg.
+
+To prepare for a premature release of percpu per-node data,
+let's pretend that lruvec_stat_cpu is a rcu-protected pointer,
+which can be NULL. This patch adds corresponding checks whenever
+required.
 
 Signed-off-by: Roman Gushchin <guro@fb.com>
 Acked-by: Johannes Weiner <hannes@cmpxchg.org>
 ---
- include/linux/memcontrol.h |  1 +
- mm/memcontrol.c            | 24 +++++++++++++++++++++++-
- 2 files changed, 24 insertions(+), 1 deletion(-)
+ include/linux/memcontrol.h | 21 +++++++++++++++------
+ mm/memcontrol.c            | 14 +++++++++++---
+ 2 files changed, 26 insertions(+), 9 deletions(-)
 
 diff --git a/include/linux/memcontrol.h b/include/linux/memcontrol.h
-index 569337514230..f296693d102b 100644
+index 05ca77767c6a..8ac04632002a 100644
 --- a/include/linux/memcontrol.h
 +++ b/include/linux/memcontrol.h
-@@ -127,6 +127,7 @@ struct mem_cgroup_per_node {
+@@ -126,7 +126,7 @@ struct memcg_shrinker_map {
+ struct mem_cgroup_per_node {
  	struct lruvec		lruvec;
  
- 	struct lruvec_stat __rcu /* __percpu */ *lruvec_stat_cpu;
-+	struct lruvec_stat __percpu *lruvec_stat_cpu_offlined;
+-	struct lruvec_stat __percpu *lruvec_stat_cpu;
++	struct lruvec_stat __rcu /* __percpu */ *lruvec_stat_cpu;
  	atomic_long_t		lruvec_stat[NR_VM_NODE_STAT_ITEMS];
  
  	unsigned long		lru_zone_size[MAX_NR_ZONES][NR_LRU_LISTS];
-diff --git a/mm/memcontrol.c b/mm/memcontrol.c
-index efd5bc131a38..1b5fe826d6d0 100644
---- a/mm/memcontrol.c
-+++ b/mm/memcontrol.c
-@@ -4460,7 +4460,7 @@ static void free_mem_cgroup_per_node_info(struct mem_cgroup *memcg, int node)
- 	if (!pn)
- 		return;
+@@ -682,6 +682,7 @@ static inline unsigned long lruvec_page_state(struct lruvec *lruvec,
+ static inline void __mod_lruvec_state(struct lruvec *lruvec,
+ 				      enum node_stat_item idx, int val)
+ {
++	struct lruvec_stat __percpu *lruvec_stat_cpu;
+ 	struct mem_cgroup_per_node *pn;
+ 	long x;
  
--	free_percpu(pn->lruvec_stat_cpu);
-+	WARN_ON_ONCE(pn->lruvec_stat_cpu != NULL);
- 	kfree(pn);
+@@ -697,12 +698,20 @@ static inline void __mod_lruvec_state(struct lruvec *lruvec,
+ 	__mod_memcg_state(pn->memcg, idx, val);
+ 
+ 	/* Update lruvec */
+-	x = val + __this_cpu_read(pn->lruvec_stat_cpu->count[idx]);
+-	if (unlikely(abs(x) > MEMCG_CHARGE_BATCH)) {
+-		atomic_long_add(x, &pn->lruvec_stat[idx]);
+-		x = 0;
++	rcu_read_lock();
++	lruvec_stat_cpu = (struct lruvec_stat __percpu *)
++		rcu_dereference(pn->lruvec_stat_cpu);
++	if (likely(lruvec_stat_cpu)) {
++		x = val + __this_cpu_read(lruvec_stat_cpu->count[idx]);
++		if (unlikely(abs(x) > MEMCG_CHARGE_BATCH)) {
++			atomic_long_add(x, &pn->lruvec_stat[idx]);
++			x = 0;
++		}
++		__this_cpu_write(lruvec_stat_cpu->count[idx], x);
++	} else {
++		atomic_long_add(val, &pn->lruvec_stat[idx]);
+ 	}
+-	__this_cpu_write(pn->lruvec_stat_cpu->count[idx], x);
++	rcu_read_unlock();
  }
  
-@@ -4616,7 +4616,17 @@ static int mem_cgroup_css_online(struct cgroup_subsys_state *css)
- static void percpu_rcu_free(struct rcu_head *rcu)
+ static inline void mod_lruvec_state(struct lruvec *lruvec,
+diff --git a/mm/memcontrol.c b/mm/memcontrol.c
+index 803c772f354b..5ef4098f3f8d 100644
+--- a/mm/memcontrol.c
++++ b/mm/memcontrol.c
+@@ -2122,6 +2122,7 @@ static void drain_all_stock(struct mem_cgroup *root_memcg)
+ static int memcg_hotplug_cpu_dead(unsigned int cpu)
  {
- 	struct mem_cgroup *memcg = container_of(rcu, struct mem_cgroup, rcu);
-+	int node;
+ 	struct memcg_vmstats_percpu __percpu *vmstats_percpu;
++	struct lruvec_stat __percpu *lruvec_stat_cpu;
+ 	struct memcg_stock_pcp *stock;
+ 	struct mem_cgroup *memcg;
+ 
+@@ -2152,7 +2153,12 @@ static int memcg_hotplug_cpu_dead(unsigned int cpu)
+ 				struct mem_cgroup_per_node *pn;
+ 
+ 				pn = mem_cgroup_nodeinfo(memcg, nid);
+-				x = this_cpu_xchg(pn->lruvec_stat_cpu->count[i], 0);
 +
-+	for_each_node(node) {
-+		struct mem_cgroup_per_node *pn = memcg->nodeinfo[node];
++				lruvec_stat_cpu = (struct lruvec_stat __percpu*)
++					rcu_dereference(pn->lruvec_stat_cpu);
++				if (!lruvec_stat_cpu)
++					continue;
++				x = this_cpu_xchg(lruvec_stat_cpu->count[i], 0);
+ 				if (x)
+ 					atomic_long_add(x, &pn->lruvec_stat[i]);
+ 			}
+@@ -4414,6 +4420,7 @@ struct mem_cgroup *mem_cgroup_from_id(unsigned short id)
  
-+		if (!pn)
-+			continue;
-+
-+		free_percpu(pn->lruvec_stat_cpu_offlined);
-+		WARN_ON_ONCE(pn->lruvec_stat_cpu != NULL);
-+	}
- 	free_percpu(memcg->vmstats_percpu_offlined);
- 	WARN_ON_ONCE(memcg->vmstats_percpu);
- 
-@@ -4625,6 +4635,18 @@ static void percpu_rcu_free(struct rcu_head *rcu)
- 
- static void mem_cgroup_offline_percpu(struct mem_cgroup *memcg)
+ static int alloc_mem_cgroup_per_node_info(struct mem_cgroup *memcg, int node)
  {
-+	int node;
-+
-+	for_each_node(node) {
-+		struct mem_cgroup_per_node *pn = memcg->nodeinfo[node];
-+
-+		if (!pn)
-+			continue;
-+
-+		pn->lruvec_stat_cpu_offlined = (struct lruvec_stat __percpu *)
-+			rcu_dereference(pn->lruvec_stat_cpu);
-+		rcu_assign_pointer(pn->lruvec_stat_cpu, NULL);
-+	}
- 	memcg->vmstats_percpu_offlined = (struct memcg_vmstats_percpu __percpu*)
- 		rcu_dereference(memcg->vmstats_percpu);
- 	rcu_assign_pointer(memcg->vmstats_percpu, NULL);
++	struct lruvec_stat __percpu *lruvec_stat_cpu;
+ 	struct mem_cgroup_per_node *pn;
+ 	int tmp = node;
+ 	/*
+@@ -4430,11 +4437,12 @@ static int alloc_mem_cgroup_per_node_info(struct mem_cgroup *memcg, int node)
+ 	if (!pn)
+ 		return 1;
+ 
+-	pn->lruvec_stat_cpu = alloc_percpu(struct lruvec_stat);
+-	if (!pn->lruvec_stat_cpu) {
++	lruvec_stat_cpu = alloc_percpu(struct lruvec_stat);
++	if (!lruvec_stat_cpu) {
+ 		kfree(pn);
+ 		return 1;
+ 	}
++	rcu_assign_pointer(pn->lruvec_stat_cpu, lruvec_stat_cpu);
+ 
+ 	lruvec_init(&pn->lruvec);
+ 	pn->usage_in_excess = 0;
 -- 
 2.20.1
 
