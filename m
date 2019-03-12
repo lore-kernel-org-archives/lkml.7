@@ -2,104 +2,173 @@ Return-Path: <SRS0=J4ZE=RP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_MUTT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0FF01C43381
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 12:43:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E65C0C43381
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 12:43:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CF317214D8
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 12:43:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B0BB2206BA
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 12:43:50 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726754AbfCLMnR (ORCPT
+        id S1726771AbfCLMns (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 12 Mar 2019 08:43:17 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:43970 "EHLO mx1.redhat.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726192AbfCLMnR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 12 Mar 2019 08:43:17 -0400
-Received: from smtp.corp.redhat.com (int-mx03.intmail.prod.int.phx2.redhat.com [10.5.11.13])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        Tue, 12 Mar 2019 08:43:48 -0400
+Received: from mailproxy02.manitu.net ([217.11.48.66]:44406 "EHLO
+        mailproxy02.manitu.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726280AbfCLMns (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 12 Mar 2019 08:43:48 -0400
+Received: from [192.168.178.20] (aftr-88-217-180-81.dynamic.mnet-online.de [88.217.180.81])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id 78BAF30842CD;
-        Tue, 12 Mar 2019 12:43:16 +0000 (UTC)
-Received: from xz-x1 (dhcp-14-116.nay.redhat.com [10.66.14.116])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id 45797648C2;
-        Tue, 12 Mar 2019 12:43:05 +0000 (UTC)
-Date:   Tue, 12 Mar 2019 20:43:02 +0800
-From:   Peter Xu <peterx@redhat.com>
-To:     "Kirill A. Shutemov" <kirill@shutemov.name>
-Cc:     linux-kernel@vger.kernel.org, Paolo Bonzini <pbonzini@redhat.com>,
-        Hugh Dickins <hughd@google.com>,
-        Luis Chamberlain <mcgrof@kernel.org>,
-        Maxime Coquelin <maxime.coquelin@redhat.com>,
-        kvm@vger.kernel.org, Jerome Glisse <jglisse@redhat.com>,
-        Pavel Emelyanov <xemul@virtuozzo.com>,
-        Johannes Weiner <hannes@cmpxchg.org>,
-        Martin Cracauer <cracauer@cons.org>,
-        Denis Plotnikov <dplotnikov@virtuozzo.com>, linux-mm@kvack.org,
-        Marty McFadden <mcfadden8@llnl.gov>,
-        Maya Gokhale <gokhale2@llnl.gov>,
-        Mike Kravetz <mike.kravetz@oracle.com>,
-        Andrea Arcangeli <aarcange@redhat.com>,
-        Mike Rapoport <rppt@linux.vnet.ibm.com>,
-        Kees Cook <keescook@chromium.org>,
-        Mel Gorman <mgorman@suse.de>, linux-fsdevel@vger.kernel.org,
-        "Dr . David Alan Gilbert" <dgilbert@redhat.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        linux-api@vger.kernel.org
-Subject: Re: [PATCH 0/3] userfaultfd: allow to forbid unprivileged users
-Message-ID: <20190312124302.GA2433@xz-x1>
-References: <20190311093701.15734-1-peterx@redhat.com>
- <20190312074951.i2md3npcjcceywqj@kshutemo-mobl1>
+        (Authenticated sender: wg@grandegger.com)
+        by mailproxy02.manitu.net (Postfix) with ESMTPSA id A95EF10200DB;
+        Tue, 12 Mar 2019 13:48:09 +0100 (CET)
+Subject: Re: [PATCH v8 1/4] can: m_can: Create a m_can platform framework
+To:     Dan Murphy <dmurphy@ti.com>, mkl@pengutronix.de,
+        davem@davemloft.net
+Cc:     linux-can@vger.kernel.org, netdev@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+References: <20190312121254.8043-1-dmurphy@ti.com>
+From:   Wolfgang Grandegger <wg@grandegger.com>
+Openpgp: preference=signencrypt
+Autocrypt: addr=wg@grandegger.com; prefer-encrypt=mutual; keydata=
+ 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
+ 8QEfHnPzgykCs2DOOQ==
+Message-ID: <da6a94ba-e843-891f-cbbc-9ba1e9324f77@grandegger.com>
+Date:   Tue, 12 Mar 2019 13:43:41 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.2.1
 MIME-Version: 1.0
+In-Reply-To: <20190312121254.8043-1-dmurphy@ti.com>
 Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20190312074951.i2md3npcjcceywqj@kshutemo-mobl1>
-User-Agent: Mutt/1.10.1 (2018-07-13)
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.13
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.40]); Tue, 12 Mar 2019 12:43:17 +0000 (UTC)
+Content-Language: en-GB
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi, Kirill,
+Hello Dan,
 
-On Tue, Mar 12, 2019 at 10:49:51AM +0300, Kirill A. Shutemov wrote:
-> On Mon, Mar 11, 2019 at 05:36:58PM +0800, Peter Xu wrote:
-> > Hi,
-> > 
-> > (The idea comes from Andrea, and following discussions with Mike and
-> >  other people)
-> > 
-> > This patchset introduces a new sysctl flag to allow the admin to
-> > forbid users from using userfaultfd:
-> > 
-> >   $ cat /proc/sys/vm/unprivileged_userfaultfd
-> >   [disabled] enabled kvm
+Am 12.03.19 um 13:12 schrieb Dan Murphy:
+> Create a m_can platform framework that peripherial
+> devices can register to and use common code and register sets.
+> The peripherial devices may provide read/write and configuration
+> support of the IP.
 > 
-> CC linux-api@
+> Signed-off-by: Dan Murphy <dmurphy@ti.com>
+> ---
 > 
-> This is unusual way to return current value for sysctl. Does it work fine
-> with sysctl tool?
-
-It can work, though it displays the same as "cat":
-
-$ sysctl vm.unprivileged_userfaultfd
-vm.unprivileged_userfaultfd = disabled enabled [kvm] 
-
+> v8 - Added a clean function for the tx_skb, cleaned up skb on BUS_OFF and on xmit
+> BUSY - https://lore.kernel.org/patchwork/patch/1047980/
 > 
-> Have you considered to place the switch into /sys/kernel/mm instead?
-> I doubt it's the last tunable for userfaultfd. Maybe we should have an
-> directory for it under /sys/kernel/mm?
+> v7 - Fixed remaining new checkpatch issues, removed CSR setting, fixed tx hard
+> start function to return tx_busy, and renamed device callbacks - https://lore.kernel.org/patchwork/patch/1047220/
+> v6 - Squashed platform patch to this patch for bissectablity, fixed coding style
+> issues, updated Kconfig help, placed mcan reg offsets back into c file, renamed
+> priv->skb to priv->tx_skb and cleared perp interrupts at ISR start -
+> Patch 1 comments - https://lore.kernel.org/patchwork/patch/1042446/
+> Patch 2 comments - https://lore.kernel.org/patchwork/patch/1042442/
+> 
+>  drivers/net/can/m_can/Kconfig          |  13 +-
+>  drivers/net/can/m_can/Makefile         |   1 +
+>  drivers/net/can/m_can/m_can.c          | 717 +++++++++++++------------
+>  drivers/net/can/m_can/m_can.h          | 110 ++++
+>  drivers/net/can/m_can/m_can_platform.c | 202 +++++++
+>  5 files changed, 699 insertions(+), 344 deletions(-)
+>  create mode 100644 drivers/net/can/m_can/m_can.h
+>  create mode 100644 drivers/net/can/m_can/m_can_platform.c
+> 
+> diff --git a/drivers/net/can/m_can/Kconfig b/drivers/net/can/m_can/Kconfig
+> index 04f20dd39007..f7119fd72df4 100644
+> --- a/drivers/net/can/m_can/Kconfig
+> +++ b/drivers/net/can/m_can/Kconfig
+> @@ -1,5 +1,14 @@
+>  config CAN_M_CAN
+> +	tristate "Bosch M_CAN support"
+> +	---help---
+> +	  Say Y here if you want support for Bosch M_CAN controller framework.
+> +	  This is common support for devices that embed the Bosch M_CAN IP.
+> +
+> +config CAN_M_CAN_PLATFORM
+> +	tristate "Bosch M_CAN support for io-mapped devices"
+>  	depends on HAS_IOMEM
+> -	tristate "Bosch M_CAN devices"
+> +	depends on CAN_M_CAN
+>  	---help---
+> -	  Say Y here if you want to support for Bosch M_CAN controller.
+> +	  Say Y here if you want support for IO Mapped Bosch M_CAN controller.
+> +	  This support is for devices that have the Bosch M_CAN controller
+> +	  IP embedded into the device and the IP is IO Mapped to the processor.
+> diff --git a/drivers/net/can/m_can/Makefile b/drivers/net/can/m_can/Makefile
+> index 8bbd7f24f5be..057bbcdb3c74 100644
+> --- a/drivers/net/can/m_can/Makefile
+> +++ b/drivers/net/can/m_can/Makefile
+> @@ -3,3 +3,4 @@
+>  #
+>  
+>  obj-$(CONFIG_CAN_M_CAN) += m_can.o
+> +obj-$(CONFIG_CAN_M_CAN_PLATFORM) += m_can_platform.o
 
-I haven't thought about sysfs, if that's preferred I can consider to
-switch to that.  And yes I think creating a directory should be a good
-idea.
+... snip ...
 
-Thanks,
+> diff --git a/drivers/net/can/m_can/m_can.c b/drivers/net/can/m_can/m_can.c
+> -static int m_can_dev_setup(struct platform_device *pdev, struct net_device *dev,
+> -			   void __iomem *addr)
+> +static int m_can_dev_setup(struct m_can_priv *m_can_dev)
+>  {
+> -	struct m_can_priv *priv;
+> +	struct net_device *dev = m_can_dev->net;
+>  	int m_can_version;
+>  
+> -	m_can_version = m_can_check_core_release(addr);
+> +	m_can_version = m_can_check_core_release(m_can_dev);
 
--- 
-Peter Xu
+What is m_can_version for the tcan4x5x?
+
+... snip ...
+
+Wolfgang.
