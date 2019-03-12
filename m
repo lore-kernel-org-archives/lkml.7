@@ -2,203 +2,203 @@ Return-Path: <SRS0=J4ZE=RP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIMWL_WL_MED,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-11.6 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8E8BBC43381
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 00:16:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 38FFBC43381
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 00:20:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 570902087C
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 00:16:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E87582087C
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 00:20:34 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=fb.com header.i=@fb.com header.b="AkkaOKgR";
-	dkim=pass (1024-bit key) header.d=fb.onmicrosoft.com header.i=@fb.onmicrosoft.com header.b="EFvMpZdn"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="YlrQgeSr"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726514AbfCLAQZ (ORCPT
+        id S1726561AbfCLAUd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 11 Mar 2019 20:16:25 -0400
-Received: from mx0b-00082601.pphosted.com ([67.231.153.30]:33106 "EHLO
-        mx0b-00082601.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726167AbfCLAQY (ORCPT
+        Mon, 11 Mar 2019 20:20:33 -0400
+Received: from mail-qt1-f195.google.com ([209.85.160.195]:40838 "EHLO
+        mail-qt1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726396AbfCLAUc (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 11 Mar 2019 20:16:24 -0400
-Received: from pps.filterd (m0109331.ppops.net [127.0.0.1])
-        by mx0a-00082601.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x2C02p0U031837;
-        Mon, 11 Mar 2019 17:16:10 -0700
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=fb.com; h=from : to : cc : subject
- : date : message-id : references : in-reply-to : content-type : content-id
- : content-transfer-encoding : mime-version; s=facebook;
- bh=yEsQic9A0/OZ7vFfSurRTqbvcYZcuYEV+T9ohUAOMwc=;
- b=AkkaOKgRjZDMxGwCUNn1PNDPvyNj34mO+vmqHEuy3JJKr8EaFH72bM/BxZOS2u/xguDy
- Gv++ftOv/FJjTm/v/dM+Toy9oCCi9dfatuzinTggNkG6s5/Rm9eIjf3e3OUK/QQX3N1S
- hrSdTNIGP4bysqYAFVjbev0NK+AaXofGmnQ= 
-Received: from mail.thefacebook.com ([199.201.64.23])
-        by mx0a-00082601.pphosted.com with ESMTP id 2r5yahgmg3-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-SHA384 bits=256 verify=NOT);
-        Mon, 11 Mar 2019 17:16:10 -0700
-Received: from prn-mbx02.TheFacebook.com (2620:10d:c081:6::16) by
- prn-hub06.TheFacebook.com (2620:10d:c081:35::130) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA384) id
- 15.1.1713.5; Mon, 11 Mar 2019 17:16:09 -0700
-Received: from prn-hub05.TheFacebook.com (2620:10d:c081:35::129) by
- prn-mbx02.TheFacebook.com (2620:10d:c081:6::16) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA384) id
- 15.1.1713.5; Mon, 11 Mar 2019 17:16:09 -0700
-Received: from NAM05-BY2-obe.outbound.protection.outlook.com (192.168.54.28)
- by o365-in.thefacebook.com (192.168.16.29) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA384) id 15.1.1713.5
- via Frontend Transport; Mon, 11 Mar 2019 17:16:09 -0700
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=fb.onmicrosoft.com;
- s=selector1-fb-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=yEsQic9A0/OZ7vFfSurRTqbvcYZcuYEV+T9ohUAOMwc=;
- b=EFvMpZdn5wTFgZHNPfFmkTWFvlEP3lw35xRK6ip1q9M/nz9/8Ov9LN2QTG7h/SBOd/DcSFeWUg7WCT1BFdp9JdYFJXiPP/vq7BstGRPO2CoFQ0m6985xMrPV9hr7IG4o8gqMB2wLIIlUcZF1SbdDfwc7mjHIlpToG2TlCupzlVY=
-Received: from BYAPR15MB2631.namprd15.prod.outlook.com (20.179.156.24) by
- BYAPR15MB2951.namprd15.prod.outlook.com (20.178.237.88) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.1686.17; Tue, 12 Mar 2019 00:16:07 +0000
-Received: from BYAPR15MB2631.namprd15.prod.outlook.com
- ([fe80::790e:7294:b086:9ded]) by BYAPR15MB2631.namprd15.prod.outlook.com
- ([fe80::790e:7294:b086:9ded%2]) with mapi id 15.20.1686.021; Tue, 12 Mar 2019
- 00:16:07 +0000
-From:   Roman Gushchin <guro@fb.com>
-To:     "Tobin C. Harding" <tobin@kernel.org>
-CC:     Andrew Morton <akpm@linux-foundation.org>,
-        Christopher Lameter <cl@linux.com>,
-        Pekka Enberg <penberg@cs.helsinki.fi>,
-        Matthew Wilcox <willy@infradead.org>,
-        Tycho Andersen <tycho@tycho.ws>,
-        "linux-mm@kvack.org" <linux-mm@kvack.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: Re: [RFC 12/15] xarray: Implement migration function for objects
-Thread-Topic: [RFC 12/15] xarray: Implement migration function for objects
-Thread-Index: AQHU1WWo/dXt33FMnkORmiARkMoWrqYHJsEA
-Date:   Tue, 12 Mar 2019 00:16:07 +0000
-Message-ID: <20190312001602.GB25059@tower.DHCP.thefacebook.com>
-References: <20190308041426.16654-1-tobin@kernel.org>
- <20190308041426.16654-13-tobin@kernel.org>
-In-Reply-To: <20190308041426.16654-13-tobin@kernel.org>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-clientproxiedby: MWHPR20CA0032.namprd20.prod.outlook.com
- (2603:10b6:300:ed::18) To BYAPR15MB2631.namprd15.prod.outlook.com
- (2603:10b6:a03:152::24)
-x-ms-exchange-messagesentrepresentingtype: 1
-x-originating-ip: [2620:10d:c090:200::1:b487]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: 6924867f-88bc-4545-b12e-08d6a67fec01
-x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600127)(711020)(4605104)(2017052603328)(7153060)(7193020);SRVR:BYAPR15MB2951;
-x-ms-traffictypediagnostic: BYAPR15MB2951:
-x-microsoft-exchange-diagnostics: 1;BYAPR15MB2951;20:YidRqfCZ9gfSPGeHMDzBjxi3dTUj1yciuvfhLE2i2SZ+Yzk15elcOfrd+VJHqKf/Ms5TIo0MkfnAZFlBQ1ws8eeH8dzfjZf1GVfnN1B9FYqpOKTmQZPyKImVE8c4OLVAm5OnZJ3TBFGVHNgiAYwugBYQlI3gq1icTB2ULWhp1jY=
-x-microsoft-antispam-prvs: <BYAPR15MB2951739B6DC78D4080D8B0A5BE490@BYAPR15MB2951.namprd15.prod.outlook.com>
-x-forefront-prvs: 09749A275C
-x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(39860400002)(346002)(376002)(396003)(136003)(366004)(199004)(189003)(46003)(256004)(6916009)(102836004)(6246003)(6116002)(81166006)(81156014)(8936002)(186003)(97736004)(6512007)(478600001)(8676002)(6436002)(9686003)(6486002)(7736002)(14454004)(53936002)(305945005)(229853002)(4326008)(6506007)(76176011)(106356001)(316002)(54906003)(386003)(105586002)(2906002)(99286004)(476003)(86362001)(486006)(11346002)(68736007)(5660300002)(52116002)(446003)(33656002)(71190400001)(1076003)(71200400001)(25786009);DIR:OUT;SFP:1102;SCL:1;SRVR:BYAPR15MB2951;H:BYAPR15MB2631.namprd15.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
-received-spf: None (protection.outlook.com: fb.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam-message-info: cOW+58xwgkGYA8bzWzgQhsMtO8NZg6Jkt+k3GdLOZOZmO+mINWYg3liUiaMwgbG0fX6AAZGNEnwzngvd1FJO0sOLRnjN5x/xrT/JkzgCDAGhpMdm84sqp98vf1QJuvJuSmMdh7sYm2aooktBYSQrzAt4Nw+pbUtnNglpGvnmkXKjT7HHvkB1WTwO1Cz2Mt+AvU7tGvOcSKYcrCZgKdXSuN17tBP9uIaG72btsLralDe21n5NW0G24Jbk1BOuawbfb0umpih2BlEqtRbkOQ4jOf7ewGRSE9PWAL3izaC+53x4oRiYHnzp4aRlDyEEX4ZximtqGQ6eMHWk7pGH1fWNbpZcbsESkoqIUHmj1iO0jFIHeWVprf5T+P18uu/xrGDXzMnIr5w978nmomyWzvo5hzcoVb+/6RwvqNSFuY+pAbE=
-Content-Type: text/plain; charset="us-ascii"
-Content-ID: <69B394CDEC3A1442927A6A5F0A9F8DC3@namprd15.prod.outlook.com>
-Content-Transfer-Encoding: quoted-printable
+        Mon, 11 Mar 2019 20:20:32 -0400
+Received: by mail-qt1-f195.google.com with SMTP id f11so682963qti.7
+        for <linux-kernel@vger.kernel.org>; Mon, 11 Mar 2019 17:20:31 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=UT0ImJxTjHCkD4z2A531RVNWlnRVlywYZW2iWfcNVqA=;
+        b=YlrQgeSrk1hr14+o0Jh36NvnjwmvireGJFK8QFKx4aTqfkTVUXRKfE9ERO7BrX/Oax
+         jkUnhCvYXqdrahMzvG0SEXJOsjPwTDZPumKSnFm0qWHZ2I0cyr0WeMxKnRdItr0n+NHN
+         JKylKQkfUUgjeM+H1afQj02gGwYaPpTt1iArUR41/0IFjrHP+qAQ/hzhE0p8hzPU03t2
+         5tKgdU3w4agtJQW9h7ISEAOhghFunJdS5DSuAZGJGacpubYJC0pmECn8PeDctoBXCljN
+         gd9Vp6lnpkJ/Ql2+mVt6XmGwvbyBrKBbhRc0piSyziJGCuUSLAE8xm3+Z4JdmRQXNeYe
+         wwEw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=UT0ImJxTjHCkD4z2A531RVNWlnRVlywYZW2iWfcNVqA=;
+        b=LiEfDUZtSH7ul/uw9FROCa+slNrbismyL87ZgY2Kzl1ckayO4H2Lb6KS2AND51HGh6
+         b8CL5TYkIQuyOMlQ2mfBs/Mj3YPv9XtFFZmeQJKBeaBeETgS1aZMqjeTvdIJnEcOCuwj
+         yuueTYDsP9jqZpi9zPLvIQ+wbilVdVBSbZD4ERipOcRqOqZHyiwsrCRO0StVceF9dGGj
+         18+m6QVVwc+y0RydDMqkamWWpnCOeDkCEGiKK0BhEBxwo9+9ETBtfwquc/edSeMDZYib
+         ZNsnsNGcLHaVP3HUhbkPnAOzPoNHv1BET5rOZxW1iC3DVGoU1LW5GGgs9BQE/X2C0QI0
+         C6PQ==
+X-Gm-Message-State: APjAAAUxyBWb/v+LHtf4l65e0dlKCHO70buMAK3O7rpTlVf/CTqevnyS
+        mb2uwTS3/VBEiXfhi5pGSHgA7B7+vtUtyVlywkJlOQ==
+X-Google-Smtp-Source: APXvYqxBfnO/tXZ5gRIGb8OjhquzDZtHdRosWpXhXgas3qBgAW5w7saBa73iYy25TxnGmIyFBqiKw7BjcrvZ6c+j3gU=
+X-Received: by 2002:ac8:2827:: with SMTP id 36mr27428681qtq.359.1552350030998;
+ Mon, 11 Mar 2019 17:20:30 -0700 (PDT)
 MIME-Version: 1.0
-X-MS-Exchange-CrossTenant-Network-Message-Id: 6924867f-88bc-4545-b12e-08d6a67fec01
-X-MS-Exchange-CrossTenant-originalarrivaltime: 12 Mar 2019 00:16:07.2987
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 8ae927fe-1255-47a7-a2af-5f3a069daaa2
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: BYAPR15MB2951
-X-OriginatorOrg: fb.com
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-03-11_17:,,
- signatures=0
-X-Proofpoint-Spam-Reason: safe
-X-FB-Internal: Safe
+References: <20190218165620.383905466@infradead.org> <CAHk-=wh32Zgp+bN7G1KH7SuCiY1YSJ41Y-_eWpfWubGjqq2_dw@mail.gmail.com>
+ <20190222124544.GY9565@techsingularity.net> <14a9adf7-9b50-1dfa-0c35-d04e976081c2@oracle.com>
+ <CAERHkru9DzvszvdGHWp8PhEAqeUc-wVR1Gey-KtQ6aMRLx68bQ@mail.gmail.com>
+ <19d5d492-a4c1-b3c8-cae4-da2fdfcb872b@oracle.com> <ac10b8fd-da1a-2cc2-afee-4e2b9b4278ee@oracle.com>
+In-Reply-To: <ac10b8fd-da1a-2cc2-afee-4e2b9b4278ee@oracle.com>
+From:   Greg Kerr <kerrnel@google.com>
+Date:   Mon, 11 Mar 2019 17:20:19 -0700
+Message-ID: <CAJGSLMuLVDXhffOWbnzt8-P7u68OODkN_pwvSt9MBH5mbyAfQQ@mail.gmail.com>
+Subject: Re: [RFC][PATCH 00/16] sched: Core scheduling
+To:     Subhra Mazumdar <subhra.mazumdar@oracle.com>
+Cc:     Aubrey Li <aubrey.intel@gmail.com>,
+        Mel Gorman <mgorman@techsingularity.net>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@kernel.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Paul Turner <pjt@google.com>,
+        Tim Chen <tim.c.chen@linux.intel.com>,
+        Linux List Kernel Mailing <linux-kernel@vger.kernel.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        "Fr?d?ric Weisbecker" <fweisbec@gmail.com>,
+        Kees Cook <keescook@chromium.org>, Greg Kerr <greg@kerrnel.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Mar 08, 2019 at 03:14:23PM +1100, Tobin C. Harding wrote:
-> Implement functions to migrate objects. This is based on
-> initial code by Matthew Wilcox and was modified to work with
-> slab object migration.
->=20
-> Co-developed-by: Christoph Lameter <cl@linux.com>
-> Signed-off-by: Tobin C. Harding <tobin@kernel.org>
-> ---
->  lib/radix-tree.c | 13 +++++++++++++
->  lib/xarray.c     | 44 ++++++++++++++++++++++++++++++++++++++++++++
->  2 files changed, 57 insertions(+)
->=20
-> diff --git a/lib/radix-tree.c b/lib/radix-tree.c
-> index 14d51548bea6..9412c2853726 100644
-> --- a/lib/radix-tree.c
-> +++ b/lib/radix-tree.c
-> @@ -1613,6 +1613,17 @@ static int radix_tree_cpu_dead(unsigned int cpu)
->  	return 0;
->  }
-> =20
-> +extern void xa_object_migrate(void *tree_node, int numa_node);
+On Mon, Mar 11, 2019 at 4:36 PM Subhra Mazumdar
+<subhra.mazumdar@oracle.com> wrote:
+>
+>
+> On 3/11/19 11:34 AM, Subhra Mazumdar wrote:
+> >
+> > On 3/10/19 9:23 PM, Aubrey Li wrote:
+> >> On Sat, Mar 9, 2019 at 3:50 AM Subhra Mazumdar
+> >> <subhra.mazumdar@oracle.com> wrote:
+> >>> expected. Most of the performance recovery happens in patch 15 which,
+> >>> unfortunately, is also the one that introduces the hard lockup.
+> >>>
+> >> After applied Subhra's patch, the following is triggered by enabling
+> >> core sched when a cgroup is
+> >> under heavy load.
+> >>
+> > It seems you are facing some other deadlock where printk is involved.
+> > Can you
+> > drop the last patch (patch 16 sched: Debug bits...) and try?
+> >
+> > Thanks,
+> > Subhra
+> >
+> Never Mind, I am seeing the same lockdep deadlock output even w/o patch
+> 16. Btw
+> the NULL fix had something missing, following works.
+
+Is this panic below, which occurs when I tag the first process,
+related or known? If not, I will debug it tomorrow.
+
+[   46.831828] BUG: unable to handle kernel NULL pointer dereference
+at 0000000000000000
+[   46.831829] core sched enabled
+[   46.834261] #PF error: [WRITE]
+[   46.834899] PGD 0 P4D 0
+[   46.835438] Oops: 0002 [#1] SMP PTI
+[   46.836158] CPU: 0 PID: 11 Comm: migration/0 Not tainted
+5.0.0everyday-glory-03949-g2d8fdbb66245-dirty #7
+[   46.838206] Hardware name: QEMU Standard PC (i440FX + PIIX, 1996),
+BIOS 1.10.2-1 04/01/2014
+[   46.839844] RIP: 0010:_raw_spin_lock+0x7/0x20
+[   46.840448] Code: 00 00 00 65 81 05 25 ca 5c 51 00 02 00 00 31 c0
+ba ff 00 00 00 f0 0f b1 17 74 05 e9 93 80 46 ff f3 c3 90 31 c0 ba 01
+00 00 00 <f0> 0f b1 17 74 07 89 c6 e9 1c 6e 46 ff f3 c3 66 2e 0f 1f 84
+00 00
+[   46.843000] RSP: 0018:ffffb9d300cabe38 EFLAGS: 00010046
+[   46.843744] RAX: 0000000000000000 RBX: 0000000000000000 RCX: 0000000000000004
+[   46.844709] RDX: 0000000000000001 RSI: ffffffffaea435ae RDI: 0000000000000000
+[   46.845689] RBP: ffffb9d300cabed8 R08: 0000000000000000 R09: 0000000000020800
+[   46.846651] R10: ffffffffaf603ea0 R11: 0000000000000001 R12: ffffffffaf6576c0
+[   46.847619] R13: ffff9a57366c8000 R14: ffff9a5737401300 R15: ffffffffade868f0
+[   46.848584] FS:  0000000000000000(0000) GS:ffff9a5737a00000(0000)
+knlGS:0000000000000000
+[   46.849680] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+[   46.850455] CR2: 0000000000000000 CR3: 00000001d36fa000 CR4: 00000000000006f0
+[   46.851415] DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
+[   46.852371] DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
+[   46.853326] Call Trace:
+[   46.853678]  __schedule+0x139/0x11f0
+[   46.854167]  ? cpumask_next+0x16/0x20
+[   46.854668]  ? cpu_stop_queue_work+0xc0/0xc0
+[   46.855252]  ? sort_range+0x20/0x20
+[   46.855742]  schedule+0x4e/0x60
+[   46.856171]  smpboot_thread_fn+0x12a/0x160
+[   46.856725]  kthread+0x112/0x120
+[   46.857164]  ? kthread_stop+0xf0/0xf0
+[   46.857661]  ret_from_fork+0x35/0x40
+[   46.858146] Modules linked in:
+[   46.858562] CR2: 0000000000000000
+[   46.859022] ---[ end trace e9fff08f17bfd2be ]---
+
+- Greg
+
+>
+> --------->8------------
+>
+> diff --git a/kernel/sched/fair.c b/kernel/sched/fair.c
+> index 1d0dac4..27cbc64 100644
+> --- a/kernel/sched/fair.c
+> +++ b/kernel/sched/fair.c
+> @@ -4131,7 +4131,7 @@ pick_next_entity(struct cfs_rq *cfs_rq, struct
+> sched_entity *curr)
+>           * Avoid running the skip buddy, if running something else can
+>           * be done without getting too unfair.
+> */
+> -       if (cfs_rq->skip == se) {
+> +       if (cfs_rq->skip && cfs_rq->skip == se) {
+>                  struct sched_entity *second;
+>
+>                  if (se == curr) {
+> @@ -4149,13 +4149,15 @@ pick_next_entity(struct cfs_rq *cfs_rq, struct
+> sched_entity *curr)
+> /*
+>           * Prefer last buddy, try to return the CPU to a preempted task.
+> */
+> -       if (cfs_rq->last && wakeup_preempt_entity(cfs_rq->last, left) < 1)
+> +       if (left && cfs_rq->last && wakeup_preempt_entity(cfs_rq->last,
+> left)
+> +           < 1)
+>                  se = cfs_rq->last;
+>
+> /*
+>           * Someone really wants this to run. If it's not unfair, run it.
+> */
+> -       if (cfs_rq->next && wakeup_preempt_entity(cfs_rq->next, left) < 1)
+> +       if (left && cfs_rq->next && wakeup_preempt_entity(cfs_rq->next,
+> left)
+> +           < 1)
+>                  se = cfs_rq->next;
+>
+>          clear_buddies(cfs_rq, se);
+> @@ -6958,6 +6960,9 @@ pick_task_fair(struct rq *rq)
+>
+>                  se = pick_next_entity(cfs_rq, NULL);
+>
+> +               if (!(se || curr))
+> +                       return NULL;
 > +
-> +static void radix_tree_migrate(struct kmem_cache *s, void **objects, int=
- nr,
-> +			       int node, void *private)
-> +{
-> +	int i;
-> +
-> +	for (i =3D 0; i < nr; i++)
-> +		xa_object_migrate(objects[i], node);
-> +}
-> +
->  void __init radix_tree_init(void)
->  {
->  	int ret;
-> @@ -1627,4 +1638,6 @@ void __init radix_tree_init(void)
->  	ret =3D cpuhp_setup_state_nocalls(CPUHP_RADIX_DEAD, "lib/radix:dead",
->  					NULL, radix_tree_cpu_dead);
->  	WARN_ON(ret < 0);
-> +	kmem_cache_setup_mobility(radix_tree_node_cachep, NULL,
-> +				  radix_tree_migrate);
->  }
-> diff --git a/lib/xarray.c b/lib/xarray.c
-> index 81c3171ddde9..4f6f17c87769 100644
-> --- a/lib/xarray.c
-> +++ b/lib/xarray.c
-> @@ -1950,6 +1950,50 @@ void xa_destroy(struct xarray *xa)
->  }
->  EXPORT_SYMBOL(xa_destroy);
-> =20
-> +void xa_object_migrate(struct xa_node *node, int numa_node)
-> +{
-> +	struct xarray *xa =3D READ_ONCE(node->array);
-> +	void __rcu **slot;
-> +	struct xa_node *new_node;
-> +	int i;
-> +
-> +	/* Freed or not yet in tree then skip */
-> +	if (!xa || xa =3D=3D XA_FREE_MARK)
-> +		return;
-
-XA_FREE_MARK is equal to 0, so the second check is redundant.
-
-#define XA_MARK_0		((__force xa_mark_t)0U)
-#define XA_MARK_1		((__force xa_mark_t)1U)
-#define XA_MARK_2		((__force xa_mark_t)2U)
-#define XA_PRESENT		((__force xa_mark_t)8U)
-#define XA_MARK_MAX		XA_MARK_2
-#define XA_FREE_MARK		XA_MARK_0
-
-xa_node_free() sets node->array to XA_RCU_FREE, so maybe it's
-what you need. I'm not sure however, Matthew should know better.
-
-> +
-> +	new_node =3D kmem_cache_alloc_node(radix_tree_node_cachep,
-> +					 GFP_KERNEL, numa_node);
-
-We need to check here if the allocation was successful.
-
-Thanks!
+>                  if (curr) {
+>                          if (se && curr->on_rq)
+> update_curr(cfs_rq);
+>
