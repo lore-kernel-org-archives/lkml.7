@@ -2,54 +2,63 @@ Return-Path: <SRS0=J4ZE=RP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4E306C43381
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 17:38:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A784FC43381
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 17:38:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 21E9C206DF
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 17:38:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 75737206DF
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 17:38:55 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1552412332;
-	bh=kY9xzmjhC9gdi+s7kG2k0dSrufwK2R+XjalQC/Bz4FE=;
+	s=default; t=1552412335;
+	bh=eGWkRknbF8T4dHs2N7IRbJJmV9BVpLxcNKK52eMrTCI=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=ayLFrYC6/oOMvrXeT1wMVCrSIuycj4PDCysToYkS5K1YVD6kXhUbFyUjrdoLKveOr
-	 VQNqWJPiD04UdPib/p+l28lszXRafd9sKVdXvEpSGhkXYcEd1+qc32J1d689dm9f2V
-	 AXqNTPgjwsWDjgMq7jqcT26+ERhhWp+rDTCSVnWc=
+	b=v/rfamFvLqS2qFEJX0v3qXBEQVBa4yvFZO9/z/FnRxXZvYJS3VotRU6fFfFGak/ng
+	 mspiqd44WsKKS/0bh7vZ3krfOCTtXDxRZa/4FAi9JxWUN3yvk4Fl/5vcCVBqV8trae
+	 1HCym6iQGt3C7woFwt3YK/kRnBbIKYMXCRbv9c9E=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729143AbfCLRQ1 (ORCPT
+        id S1729456AbfCLRiy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 12 Mar 2019 13:16:27 -0400
-Received: from mail.kernel.org ([198.145.29.99]:55784 "EHLO mail.kernel.org"
+        Tue, 12 Mar 2019 13:38:54 -0400
+Received: from mail.kernel.org ([198.145.29.99]:58544 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728697AbfCLRPZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 12 Mar 2019 13:15:25 -0400
+        id S1729137AbfCLRQ0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 12 Mar 2019 13:16:26 -0400
 Received: from localhost (unknown [104.133.8.98])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E9A42206DF;
-        Tue, 12 Mar 2019 17:15:24 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 340842087C;
+        Tue, 12 Mar 2019 17:16:26 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1552410925;
-        bh=kY9xzmjhC9gdi+s7kG2k0dSrufwK2R+XjalQC/Bz4FE=;
+        s=default; t=1552410986;
+        bh=eGWkRknbF8T4dHs2N7IRbJJmV9BVpLxcNKK52eMrTCI=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=NnRoA8Ul5+8Ig7q6lqLdF3n1mQt6VDILatVdsMbDLSGsFcNpxg9/i8+t93kqI7fbC
-         Tqd9LRW349caqgnguNKhbPN+5Pxfj2UKCKNrJeBOyR4ZVWbZ8qJGlRwIG3PsAee9+V
-         b0+wuhugyIoXXi8T1KFyn/Co9BqLr70BTFx2PkXk=
+        b=aNuq54Xr9uXXsIMuBaNqX1hN9PtL1EcSoijNfadrxj6LN7VasFpRf14uYRkn+up62
+         Ryket7bs3bh6/4MsHo1pHZaDseEXFQVhUWpm7CRtUCxCj2JnIubW7hYNQ8e5dXhw2K
+         GAauSwb9onODmfd40si90AbLEZ4hg5Fn/eQGBHPE=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Vincent Batts <vbatts@hashbangbash.com>,
-        Dmitry Torokhov <dmitry.torokhov@gmail.com>
-Subject: [PATCH 4.19 124/149] Input: elan_i2c - add id for touchpad found in Lenovo s21e-20
-Date:   Tue, 12 Mar 2019 10:09:02 -0700
-Message-Id: <20190312170359.817831361@linuxfoundation.org>
+        stable@vger.kernel.org, Michal Hocko <mhocko@suse.com>,
+        Mikhail Zaslonko <zaslonko@linux.ibm.com>,
+        Gerald Schaefer <gerald.schaefer@de.ibm.com>,
+        Mikhail Gavrilov <mikhail.v.gavrilov@gmail.com>,
+        Oscar Salvador <osalvador@suse.de>,
+        Pavel Tatashin <pasha.tatashin@soleen.com>,
+        Heiko Carstens <heiko.carstens@de.ibm.com>,
+        Martin Schwidefsky <schwidefsky@de.ibm.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.14 081/135] mm, memory_hotplug: is_mem_section_removable do not pass the end of a zone
+Date:   Tue, 12 Mar 2019 10:08:48 -0700
+Message-Id: <20190312170348.640318024@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
-In-Reply-To: <20190312170349.421581206@linuxfoundation.org>
-References: <20190312170349.421581206@linuxfoundation.org>
+In-Reply-To: <20190312170341.127810985@linuxfoundation.org>
+References: <20190312170341.127810985@linuxfoundation.org>
 User-Agent: quilt/0.65
 X-stable: review
 X-Patchwork-Hint: ignore
@@ -61,34 +70,93 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-4.19-stable review patch.  If anyone has any objections, please let me know.
+4.14-stable review patch.  If anyone has any objections, please let me know.
 
 ------------------
 
-From: Vincent Batts <vbatts@hashbangbash.com>
+[ Upstream commit efad4e475c312456edb3c789d0996d12ed744c13 ]
 
-commit e154ab69321ce2c54f19863d75c77b4e2dc9d365 upstream.
+Patch series "mm, memory_hotplug: fix uninitialized pages fallouts", v2.
 
-Lenovo s21e-20 uses ELAN0601 in its ACPI tables for the Elan touchpad.
+Mikhail Zaslonko has posted fixes for the two bugs quite some time ago
+[1].  I have pushed back on those fixes because I believed that it is
+much better to plug the problem at the initialization time rather than
+play whack-a-mole all over the hotplug code and find all the places
+which expect the full memory section to be initialized.
 
-Signed-off-by: Vincent Batts <vbatts@hashbangbash.com>
-Cc: stable@vger.kernel.org
-Signed-off-by: Dmitry Torokhov <dmitry.torokhov@gmail.com>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+We have ended up with commit 2830bf6f05fb ("mm, memory_hotplug:
+initialize struct pages for the full memory section") merged and cause a
+regression [2][3].  The reason is that there might be memory layouts
+when two NUMA nodes share the same memory section so the merged fix is
+simply incorrect.
 
+In order to plug this hole we really have to be zone range aware in
+those handlers.  I have split up the original patch into two.  One is
+unchanged (patch 2) and I took a different approach for `removable'
+crash.
+
+[1] http://lkml.kernel.org/r/20181105150401.97287-2-zaslonko@linux.ibm.com
+[2] https://bugzilla.redhat.com/show_bug.cgi?id=1666948
+[3] http://lkml.kernel.org/r/20190125163938.GA20411@dhcp22.suse.cz
+
+This patch (of 2):
+
+Mikhail has reported the following VM_BUG_ON triggered when reading sysfs
+removable state of a memory block:
+
+ page:000003d08300c000 is uninitialized and poisoned
+ page dumped because: VM_BUG_ON_PAGE(PagePoisoned(p))
+ Call Trace:
+   is_mem_section_removable+0xb4/0x190
+   show_mem_removable+0x9a/0xd8
+   dev_attr_show+0x34/0x70
+   sysfs_kf_seq_show+0xc8/0x148
+   seq_read+0x204/0x480
+   __vfs_read+0x32/0x178
+   vfs_read+0x82/0x138
+   ksys_read+0x5a/0xb0
+   system_call+0xdc/0x2d8
+ Last Breaking-Event-Address:
+   is_mem_section_removable+0xb4/0x190
+ Kernel panic - not syncing: Fatal exception: panic_on_oops
+
+The reason is that the memory block spans the zone boundary and we are
+stumbling over an unitialized struct page.  Fix this by enforcing zone
+range in is_mem_section_removable so that we never run away from a zone.
+
+Link: http://lkml.kernel.org/r/20190128144506.15603-2-mhocko@kernel.org
+Signed-off-by: Michal Hocko <mhocko@suse.com>
+Reported-by: Mikhail Zaslonko <zaslonko@linux.ibm.com>
+Debugged-by: Mikhail Zaslonko <zaslonko@linux.ibm.com>
+Tested-by: Gerald Schaefer <gerald.schaefer@de.ibm.com>
+Tested-by: Mikhail Gavrilov <mikhail.v.gavrilov@gmail.com>
+Reviewed-by: Oscar Salvador <osalvador@suse.de>
+Cc: Pavel Tatashin <pasha.tatashin@soleen.com>
+Cc: Heiko Carstens <heiko.carstens@de.ibm.com>
+Cc: Martin Schwidefsky <schwidefsky@de.ibm.com>
+Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
+Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/input/mouse/elan_i2c_core.c |    1 +
- 1 file changed, 1 insertion(+)
+ mm/memory_hotplug.c | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
---- a/drivers/input/mouse/elan_i2c_core.c
-+++ b/drivers/input/mouse/elan_i2c_core.c
-@@ -1337,6 +1337,7 @@ static const struct acpi_device_id elan_
- 	{ "ELAN0000", 0 },
- 	{ "ELAN0100", 0 },
- 	{ "ELAN0600", 0 },
-+	{ "ELAN0601", 0 },
- 	{ "ELAN0602", 0 },
- 	{ "ELAN0605", 0 },
- 	{ "ELAN0608", 0 },
+diff --git a/mm/memory_hotplug.c b/mm/memory_hotplug.c
+index c7c74a927d6f..39db89f3df65 100644
+--- a/mm/memory_hotplug.c
++++ b/mm/memory_hotplug.c
+@@ -1256,7 +1256,8 @@ static struct page *next_active_pageblock(struct page *page)
+ bool is_mem_section_removable(unsigned long start_pfn, unsigned long nr_pages)
+ {
+ 	struct page *page = pfn_to_page(start_pfn);
+-	struct page *end_page = page + nr_pages;
++	unsigned long end_pfn = min(start_pfn + nr_pages, zone_end_pfn(page_zone(page)));
++	struct page *end_page = pfn_to_page(end_pfn);
+ 
+ 	/* Check the starting page of each pageblock within the range */
+ 	for (; page < end_page; page = next_active_pageblock(page)) {
+-- 
+2.19.1
+
 
 
