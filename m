@@ -2,53 +2,55 @@ Return-Path: <SRS0=J4ZE=RP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E48BBC43381
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 17:40:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1849FC43381
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 17:40:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AB256206DF
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 17:40:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D4DEA2087C
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 17:40:51 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1552412445;
-	bh=6xQMaKZn0n5mcXRxRFdRdFi8V5KeS9xCb7f0aktTIVU=;
+	s=default; t=1552412451;
+	bh=wgrYFZMBLMJUaEE9stwG8bPKVH6Y9s/J6FXuJhiVt/8=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=zj2CkN9u4jdnWB5TIYEa43p66ct3gGwgfUBfcpJUyJMAVKJgfZhg07vljUvpDpWy7
-	 36lTMRgNURh3ed1sQ8yV5g7/ZudF3vuTGPeis2DAHydZbNjiH0wdsbz2fMsC9gvfaE
-	 0YhRPBl5w5Ogy5uyw2tfMK3pFma+xi8S6V4Qh+qA=
+	b=BDuJkXMLHpp0+mjKtkgPveojALmZm3p/wNxYekbKooI24bZk7bA60qlwp39ulk8oj
+	 V+TDOBRqwunbUzaALl7rq+vvS+CXg/8YD1VluvQGHOHtPrWjukdjNH4u/JMt5udSmL
+	 ZUzQhOw18YodKmawsMjZoh6p+ZtI5BUxXt9EM0pQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729260AbfCLRko (ORCPT
+        id S1729819AbfCLRkv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 12 Mar 2019 13:40:44 -0400
-Received: from mail.kernel.org ([198.145.29.99]:57928 "EHLO mail.kernel.org"
+        Tue, 12 Mar 2019 13:40:51 -0400
+Received: from mail.kernel.org ([198.145.29.99]:57842 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729034AbfCLRQM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 12 Mar 2019 13:16:12 -0400
+        id S1729029AbfCLRQL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 12 Mar 2019 13:16:11 -0400
 Received: from localhost (unknown [104.133.8.98])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id F328B2183F;
-        Tue, 12 Mar 2019 17:16:11 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 8B0EB21741;
+        Tue, 12 Mar 2019 17:16:10 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1552410972;
-        bh=6xQMaKZn0n5mcXRxRFdRdFi8V5KeS9xCb7f0aktTIVU=;
+        s=default; t=1552410970;
+        bh=wgrYFZMBLMJUaEE9stwG8bPKVH6Y9s/J6FXuJhiVt/8=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=ZlZuulB5EydUvsJvCga5rWvRG4280axPQ5H+K9IIehF1nqVdunCPLd0PIftdboeh8
-         ovMXmADUIqVz+ZVCgcUo4Mt79uBiic3tAppd0rTS08gkOAfG08e5NyrtTlbLl/OXHC
-         Lea+u5QrO640+j9BoryK3q/ZYJG3b+DLwWH70HlI=
+        b=b794CtkqGLQIThK0d0y7DmDf0d8Qd/bHP+wAdB7k7D5+1cn+JLvvPEi1WrLw13epn
+         v5CJ/dCZKm1t14vTSIAF6pn0E4O0zNOztSGt5oOBWOgqSPfTSQD+uV/vXTRakxXNSi
+         FrtdSoD0d3SyzNqwDffKxzuKVW5BS/EYXqbvSJuI=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Yonglong Liu <liuyonglong@huawei.com>,
-        Peng Li <lipeng321@huawei.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.14 061/135] net: hns: Fix wrong read accesses via Clause 45 MDIO protocol
-Date:   Tue, 12 Mar 2019 10:08:28 -0700
-Message-Id: <20190312170346.931679750@linuxfoundation.org>
+        stable@vger.kernel.org, Jiaxun Yang <jiaxun.yang@flygoat.com>,
+        Borislav Petkov <bp@suse.de>,
+        Tom Lendacky <thomas.lendacky@amd.com>,
+        "H. Peter Anvin" <hpa@zytor.com>, Ingo Molnar <mingo@redhat.com>,
+        Sherry Hurwitz <sherry.hurwitz@amd.com>,
+        Suravee Suthikulpanit <suravee.suthikulpanit@amd.com>,
+        Thomas Gleixner <tglx@linutronix.de>, x86-ml <x86@kernel.org>
+Subject: [PATCH 4.14 035/135] x86/CPU/AMD: Set the CPB bit unconditionally on F17h
+Date:   Tue, 12 Mar 2019 10:08:02 -0700
+Message-Id: <20190312170344.335179030@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190312170341.127810985@linuxfoundation.org>
 References: <20190312170341.127810985@linuxfoundation.org>
@@ -67,35 +69,47 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-[ Upstream commit cec8abba13e6a26729dfed41019720068eeeff2b ]
+From: Jiaxun Yang <jiaxun.yang@flygoat.com>
 
-When reading phy registers via Clause 45 MDIO protocol, after write
-address operation, the driver use another write address operation, so
-can not read the right value of any phy registers. This patch fixes it.
+commit 0237199186e7a4aa5310741f0a6498a20c820fd7 upstream.
 
-Signed-off-by: Yonglong Liu <liuyonglong@huawei.com>
-Signed-off-by: Peng Li <lipeng321@huawei.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
+Some F17h models do not have CPB set in CPUID even though the CPU
+supports it. Set the feature bit unconditionally on all F17h.
+
+ [ bp: Rewrite commit message and patch. ]
+
+Signed-off-by: Jiaxun Yang <jiaxun.yang@flygoat.com>
+Signed-off-by: Borislav Petkov <bp@suse.de>
+Acked-by: Tom Lendacky <thomas.lendacky@amd.com>
+Cc: "H. Peter Anvin" <hpa@zytor.com>
+Cc: Ingo Molnar <mingo@redhat.com>
+Cc: Sherry Hurwitz <sherry.hurwitz@amd.com>
+Cc: Suravee Suthikulpanit <suravee.suthikulpanit@amd.com>
+Cc: Thomas Gleixner <tglx@linutronix.de>
+Cc: x86-ml <x86@kernel.org>
+Link: https://lkml.kernel.org/r/20181120030018.5185-1-jiaxun.yang@flygoat.com
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+
 ---
- drivers/net/ethernet/hisilicon/hns_mdio.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ arch/x86/kernel/cpu/amd.c |    8 +++-----
+ 1 file changed, 3 insertions(+), 5 deletions(-)
 
-diff --git a/drivers/net/ethernet/hisilicon/hns_mdio.c b/drivers/net/ethernet/hisilicon/hns_mdio.c
-index 017e08452d8c..baf5cc251f32 100644
---- a/drivers/net/ethernet/hisilicon/hns_mdio.c
-+++ b/drivers/net/ethernet/hisilicon/hns_mdio.c
-@@ -321,7 +321,7 @@ static int hns_mdio_read(struct mii_bus *bus, int phy_id, int regnum)
- 		}
+--- a/arch/x86/kernel/cpu/amd.c
++++ b/arch/x86/kernel/cpu/amd.c
+@@ -791,11 +791,9 @@ static void init_amd_bd(struct cpuinfo_x
+ static void init_amd_zn(struct cpuinfo_x86 *c)
+ {
+ 	set_cpu_cap(c, X86_FEATURE_ZEN);
+-	/*
+-	 * Fix erratum 1076: CPB feature bit not being set in CPUID. It affects
+-	 * all up to and including B1.
+-	 */
+-	if (c->x86_model <= 1 && c->x86_stepping <= 1)
++
++	/* Fix erratum 1076: CPB feature bit not being set in CPUID. */
++	if (!cpu_has(c, X86_FEATURE_CPB))
+ 		set_cpu_cap(c, X86_FEATURE_CPB);
+ }
  
- 		hns_mdio_cmd_write(mdio_dev, is_c45,
--				   MDIO_C45_WRITE_ADDR, phy_id, devad);
-+				   MDIO_C45_READ, phy_id, devad);
- 	}
- 
- 	/* Step 5: waitting for MDIO_COMMAND_REG 's mdio_start==0,*/
--- 
-2.19.1
-
 
 
