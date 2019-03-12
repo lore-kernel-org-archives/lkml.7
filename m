@@ -2,93 +2,143 @@ Return-Path: <SRS0=J4ZE=RP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_PASS,UNWANTED_LANGUAGE_BODY,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6817AC43381
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 14:58:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7BB98C43381
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 14:58:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 42FC62075C
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 14:58:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 56DAD2147C
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 14:58:53 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726931AbfCLO6r (ORCPT
+        id S1726945AbfCLO6v (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 12 Mar 2019 10:58:47 -0400
-Received: from mout.kundenserver.de ([212.227.17.10]:57901 "EHLO
+        Tue, 12 Mar 2019 10:58:51 -0400
+Received: from mout.kundenserver.de ([212.227.17.24]:47949 "EHLO
         mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726856AbfCLO6p (ORCPT
+        with ESMTP id S1726889AbfCLO6r (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 12 Mar 2019 10:58:45 -0400
+        Tue, 12 Mar 2019 10:58:47 -0400
 Received: from orion.localdomain ([77.4.190.91]) by mrelayeu.kundenserver.de
  (mreue106 [212.227.15.183]) with ESMTPSA (Nemesis) id
- 1MeTD8-1gTI6V1vJE-00aTDI; Tue, 12 Mar 2019 15:57:59 +0100
+ 1N5FQJ-1gtNfB1RMj-011B2z; Tue, 12 Mar 2019 15:58:00 +0100
 From:   "Enrico Weigelt, metux IT consult" <info@metux.net>
 To:     gregkh@linuxfoundation.org, jslaby@suse.com,
         linux-serial@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH 1/8] drivers: tty: serial: 8250_bcm2835aux: use devm_platform_ioremap_resource()
-Date:   Tue, 12 Mar 2019 15:57:33 +0100
-Message-Id: <1552402660-31730-2-git-send-email-info@metux.net>
+Subject: [PATCH 5/8] drivers: tty: serial: introduce struct resource
+Date:   Tue, 12 Mar 2019 15:57:37 +0100
+Message-Id: <1552402660-31730-6-git-send-email-info@metux.net>
 X-Mailer: git-send-email 1.9.1
 In-Reply-To: <1552402660-31730-1-git-send-email-info@metux.net>
 References: <1552402660-31730-1-git-send-email-info@metux.net>
-X-Provags-ID: V03:K1:FN04X2Ub3xRXIzlxlh17glX9Iw/H9eqelV2UVvQPJoruw3dDK1j
- XB1O90+jCvGfoYykUWHVpjmWm09DqlGoj9HzxKE0WI0ehY6P7doAJrTwJPjWkUIyKRVB06H
- pqz07ujIsyvkGP6Tv2kou6JvXcLXxy8bfxkk1pIg4GE7V4RoBSjPJ0rOQNT0nk1vmlxkbzN
- 68e5nAU3vVz7NEFFFS1vg==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:msGOz4avu/A=:MVBLetZzFMjT7JusAGoEhz
- +9WQMyjk4a6FvA2zWOLZ5u/tWbW8pjqOa4VHC3ioPa804R75SRqKpef+0yUf1DIydbkXvp+Ue
- zMLok4JVXeSntaLHDb5xLC4UdSMsQr9cthu0OAtJPf2ZYdt93q7RTPWO+u0NMIpkbOQ9SMtyu
- Mths4UlLqLCgkzAH8b82FO88dzRPuHC/tdWmzjU/2XLTp/5J49RsBJ0RAZSxFcOEQWGBA5gHE
- XdUGEbJJfgZCH8WIj3qlSq8XKoIQ+/HlaKCSgINBjMCzC27kxjR+VWQxxv10YpDl50qsraB2X
- OIoO8lOKGjsg2MXKSXmlGxnGLRhnR2u2wScax2oWoEZds5ORtdIgSqRYtjn2PCycp0zxUjoJY
- BPouIM8bi7knU6VxXDmwFLwE5t5RUVrxuGBq3FK6Wpeh57p7kCFiAMkGJxwAze+dDVAeRUvAw
- VwE8xM2F5/a1KBkX1GaGYsW8KwdGkXyFRGwri+gWHkMsB83VIrqjX9RoEl5S/6awlhmUlIpv/
- LppTnE1aQjEUDfEpl9c4rRUnnc9KntkYPheGD1gIGEFQ0I+0TX/GDYUj+IIyE8sFe94MNrgx1
- QrbJrIiHWlpv5dIyj7rJl2/fnPH5XpWBS2+jaFA3jfn3W08tg6QIF6g7uYcodwbBCVJUXEYtS
- iUYDmnCI3hhuz/dEgDK1VQYQOU/tJuSCU1KhgNPsw0L19TsFmXOWDdA3OH6z2/HHT1y4ZxPUP
- 5bN6x2Npl+9uEDZFS9je7bJY6OIPPuNGZNxrAw==
+X-Provags-ID: V03:K1:Z3CS6QZlcka6ABXb/1Z3QPD+/Xh3CYH1vw4l+AaNcNhlFyBrOvH
+ pazdteWCQBnmq78rrQGum9ZPAt3rFQngbaDzjZUSAm6Jr0PWJuSsk1/HxvsOxNWEciaod05
+ UkLxu4mWw374yFo2wZBb0TD70PFr7p4B7S7/PFtUKm/1sVz6v0Sp+N6o7RD+9AZuO/+7Uxa
+ WO2wz2TvAyrznDEhh908A==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:lHEssxpnTgs=:B/rGFU0nPalUlyZZLA9ZaD
+ tkH46nhvLwE8xcSyWUnnBW92hxbrEotiNh7+5NdT9IEggFoIMjVRdTiB5myRsRSnJGYsrTRpb
+ tAU/IlU/R9V5QLsFZsAbhYAta/1fnbEJXnz4Iqg/v4OTKosMqFPMaCctn813rGgY1jHgE7NXp
+ vXb4PgUcx+HlZTmbRKk8qQggNMJe9dJ23Xwda16jQ4yAP/dUjEoeO5EN9XMf09IFeU/sXwL2m
+ eV4ZPRHlcUkRhl2AUxqDdsk0QP/IWSwPE+euloRFEl8vsVcmVds3SFjTNHY51uGW9qV6nhHbK
+ WSpzX5yUYYKHnozi+P3maJdnqzIh/jEbPKSMQfZjHlQkwhMLl/SJv58E3RR3CNwGaMMAuCuc3
+ qIRSncQGzhJ0NxAjq1x6Ft0ijTlixMwGtIP4Kx+pt3sXMhHHpXTEAUiJElzsBfRcng3syBgRF
+ mTSE8nXKAO2TvNvN8cKTs3MxkFADCXngkIRX3aD4URquxWTYCIqeHiMHQa9cvJxlC/x9m8tUY
+ 8NYXerZfRWzYlHCcidOvHfSO1sNr3GO7/PkaR01t0dnhbCq1YyT5WHs5gXxTfAptoN2kxqpUL
+ B+1EIFHfNxpaGdrwpJScwrsrU/W6A7I9REBPFKLyLGKniIK0mx591QRV6ea877AOunqbsT6rQ
+ Xy6x6Dgtf2X4jWGYcNC7p7KBZB9fa4Bjztvm29VzSiAXbJIZeGHgGfVGz/vtUBVheO+7p85dT
+ xUwkV7xV/CxMjrLJcYwnCFhqQ0La7kfWhzbV3A==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
----
- drivers/tty/serial/8250/8250_bcm2835aux.c | 12 ++++--------
- 1 file changed, 4 insertions(+), 8 deletions(-)
+The standard data structure for holding io resources in the
+kernel is struct resource. Serial drivers yet don't really
+use it (except when retrieving from oftree).
 
-diff --git a/drivers/tty/serial/8250/8250_bcm2835aux.c b/drivers/tty/serial/8250/8250_bcm2835aux.c
-index bd53661..0738d14 100644
---- a/drivers/tty/serial/8250/8250_bcm2835aux.c
-+++ b/drivers/tty/serial/8250/8250_bcm2835aux.c
-@@ -25,7 +25,6 @@ struct bcm2835aux_data {
- static int bcm2835aux_serial_probe(struct platform_device *pdev)
- {
- 	struct bcm2835aux_data *data;
--	struct resource *res;
- 	int ret;
+This patch introduces a new field in struct uart_port for that,
+plus several helpers. Yet it's up to the individual drivers for
+using it - serial_core doesn't care yet. Therefore, the old fields
+mapbase and mapsize need to be filled properly by the drivers.
+---
+ include/linux/serial_core.h | 49 +++++++++++++++++++++++++++++++++++++++++++++
+ 1 file changed, 49 insertions(+)
+
+diff --git a/include/linux/serial_core.h b/include/linux/serial_core.h
+index 5fe2b03..9b07a40 100644
+--- a/include/linux/serial_core.h
++++ b/include/linux/serial_core.h
+@@ -24,6 +24,7 @@
+ #include <linux/compiler.h>
+ #include <linux/console.h>
+ #include <linux/interrupt.h>
++#include <linux/ioport.h>
+ #include <linux/circ_buf.h>
+ #include <linux/spinlock.h>
+ #include <linux/sched.h>
+@@ -256,6 +257,7 @@ struct uart_port {
+ 	unsigned int		minor;
+ 	resource_size_t		mapbase;		/* for ioremap */
+ 	resource_size_t		mapsize;
++	struct resource		memres;
+ 	struct device		*dev;			/* parent device */
+ 	unsigned char		hub6;			/* this should be in the 8250 driver */
+ 	unsigned char		suspended;
+@@ -427,6 +429,53 @@ void uart_console_write(struct uart_port *port, const char *s,
+ int uart_match_port(struct uart_port *port1, struct uart_port *port2);
  
- 	/* allocate the custom structure */
-@@ -63,15 +62,12 @@ static int bcm2835aux_serial_probe(struct platform_device *pdev)
- 	data->uart.port.irq = ret;
- 
- 	/* map the main registers */
--	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
--	if (!res) {
--		dev_err(&pdev->dev, "memory resource not found");
--		return -EINVAL;
--	}
--	data->uart.port.membase = devm_ioremap_resource(&pdev->dev, res);
-+	data->uart.port.membase = devm_platform_ioremap_resource(pdev, 0);
- 	ret = PTR_ERR_OR_ZERO(data->uart.port.membase);
--	if (ret)
-+	if (ret) {
-+		dev_err(&pdev->dev, "could not map memory resource");
- 		return ret;
-+	}
- 
- 	/* Check for a fixed line number */
- 	ret = of_alias_get_id(pdev->dev.of_node, "serial");
+ /*
++ * Port resource management
++ */
++static inline void uart_memres_set(struct uart_port *port,
++				     struct resource res)
++{
++	port->memres = res;
++	port->mapbase = res.start;
++}
++
++static inline void uart_memres_clear(struct uart_port *port)
++{
++	port->memres = DEFINE_RES_MEM(0, 0);
++}
++
++static inline int uart_memres_valid(struct uart_port *port)
++{
++	return (port->memres.start != 0);
++}
++
++static inline struct resource *uart_memres_request(struct uart_port *port,
++				     const char *name)
++{
++	return request_mem_region(
++		port->memres.start,
++		resource_size(&port->memres),
++		name);
++}
++
++static inline void uart_memres_release(struct uart_port *port)
++{
++	return release_mem_region(port->memres.start,
++				  resource_size(&port->memres));
++}
++
++static inline void __iomem *uart_memres_ioremap_nocache(struct uart_port *port)
++{
++	return ioremap_nocache(port->memres.start,
++			       resource_size(&port->memres.start));
++}
++
++static inline void __iomem *uart_memres_ioremap(struct uart_port *port)
++{
++	return ioremap(port->memres.start,
++		       resource_size(&port->memres.start));
++}
++
++/*
+  * Power Management
+  */
+ int uart_suspend_port(struct uart_driver *reg, struct uart_port *port);
 -- 
 1.9.1
 
