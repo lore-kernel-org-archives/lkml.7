@@ -7,48 +7,47 @@ X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4136BC43381
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 17:17:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 68055C43381
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 17:17:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1391C217F5
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 17:17:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 38456218A6
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 17:17:54 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1552411069;
-	bh=Q7n385mE1glBaerKX6tndDvXnkz6YBe+HskV8UJwA30=;
+	s=default; t=1552411074;
+	bh=vjb7LeK+0QoWAzv0h/m/QbzOhczP1OaFw09OVhXpAsM=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Vn0xvTPG3VLNZnpwuv0PfWUe31SEiR3OupA+69CeZkv74D/0bM8PaJCcnWkBuAEtM
-	 R45rMs/3IYEnpKGugQvLg1Ww1XfK0mV4p2n4PIs5Cgk5d24DrgVZpjLtY4VSsUY6rM
-	 79n1sd+35UQK/IjzaDvCvoFSWzb2sMuPvsEuPi54=
+	b=sTqc65vij6Kwy2OE7qTzmHBRZNG/5d6rUTYqHGBl2Yo4dam49iD4HPNEyQokRUD2u
+	 4eA2GhSsw5ihbBLCTIX0P+5IOu+2BTHmN3pwtVRPWziztSSSwLNM3JiH4+b0H6MVgY
+	 XToJw5SAUxLuVy+ndEs5DEJ16C4bW9bbrFOGkefU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729749AbfCLRRs (ORCPT
+        id S1729797AbfCLRRx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 12 Mar 2019 13:17:48 -0400
-Received: from mail.kernel.org ([198.145.29.99]:59228 "EHLO mail.kernel.org"
+        Tue, 12 Mar 2019 13:17:53 -0400
+Received: from mail.kernel.org ([198.145.29.99]:59470 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729255AbfCLRQm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 12 Mar 2019 13:16:42 -0400
+        id S1728855AbfCLRQs (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 12 Mar 2019 13:16:48 -0400
 Received: from localhost (unknown [104.133.8.98])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 53B4D2171F;
-        Tue, 12 Mar 2019 17:16:42 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 88B70217D4;
+        Tue, 12 Mar 2019 17:16:47 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1552411002;
-        bh=Q7n385mE1glBaerKX6tndDvXnkz6YBe+HskV8UJwA30=;
+        s=default; t=1552411007;
+        bh=vjb7LeK+0QoWAzv0h/m/QbzOhczP1OaFw09OVhXpAsM=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=X9eGXW0031p6hDLqm3rZJrIriSfzuGpUARffEmz6Q/whJr5BVTUzJgoDI4hr2w0QA
-         lSaNPrmxKk6Uxp53kceMC1S+EL5Ji/p+1MtIt1jMd1yriGKJ6Crv0699F02imMLuzB
-         53V89mJbXO9sp2tzVBSOzLny2HO6feGNyXb4QeTc=
+        b=Yfppu1SDMeuefmVh4N7mGND7Jx03BniS5Vdi11/Lb+U3F67NBvgqn4X03fDqx6qIJ
+         Q49M2239TXtSRP5LYw26ONbPQG/1sBOPxkkddeyC6LVE27mrSXIsLWXmSISPO8R9eo
+         n2uE7h67bWR2HkJMMEwsc4620K2gULk1WvsxWn2A=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Paul Kocialkowski <paul.kocialkowski@bootlin.com>,
-        Maxime Ripard <maxime.ripard@bootlin.com>,
+        stable@vger.kernel.org, Anders Roxell <anders.roxell@linaro.org>,
+        Felipe Balbi <felipe.balbi@linux.intel.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.14 103/135] drm/sun4i: tcon: Prepare and enable TCON channel 0 clock at init
-Date:   Tue, 12 Mar 2019 10:09:10 -0700
-Message-Id: <20190312170350.667457071@linuxfoundation.org>
+Subject: [PATCH 4.14 094/135] usb: phy: fix link errors
+Date:   Tue, 12 Mar 2019 10:09:01 -0700
+Message-Id: <20190312170349.848799219@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190312170341.127810985@linuxfoundation.org>
 References: <20190312170341.127810985@linuxfoundation.org>
@@ -67,48 +66,56 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-[ Upstream commit b14e945bda8ae227d1bf2b1837c0c4a61721cd1a ]
+[ Upstream commit f2105d42597f4d10e431b195d69e96dccaf9b012 ]
 
-When initializing clocks, a reference to the TCON channel 0 clock is
-obtained. However, the clock is never prepared and enabled later.
-Switching from simplefb to DRM actually disables the clock (that was
-usually configured by U-Boot) because of that.
+Fix link errors when CONFIG_FSL_USB2_OTG is enabled and USB_OTG_FSM is
+set to module then the following link error occurs.
 
-On the V3s, this results in a hang when writing to some mixer registers
-when switching over to DRM from simplefb.
+aarch64-linux-gnu-ld: drivers/usb/phy/phy-fsl-usb.o: in function `fsl_otg_ioctl':
+drivers/usb/phy/phy-fsl-usb.c:1083: undefined reference to `otg_statemachine'
+aarch64-linux-gnu-ld: drivers/usb/phy/phy-fsl-usb.c:1083:(.text+0x574): relocation truncated to fit: R_AARCH64_CALL26 against undefined symbol `otg_statemachine'
+aarch64-linux-gnu-ld: drivers/usb/phy/phy-fsl-usb.o: in function `fsl_otg_start_srp':
+drivers/usb/phy/phy-fsl-usb.c:674: undefined reference to `otg_statemachine'
+aarch64-linux-gnu-ld: drivers/usb/phy/phy-fsl-usb.c:674:(.text+0x61c): relocation truncated to fit: R_AARCH64_CALL26 against undefined symbol `otg_statemachine'
+aarch64-linux-gnu-ld: drivers/usb/phy/phy-fsl-usb.o: in function `fsl_otg_set_host':
+drivers/usb/phy/phy-fsl-usb.c:593: undefined reference to `otg_statemachine'
+aarch64-linux-gnu-ld: drivers/usb/phy/phy-fsl-usb.c:593:(.text+0x7a4): relocation truncated to fit: R_AARCH64_CALL26 against undefined symbol `otg_statemachine'
+aarch64-linux-gnu-ld: drivers/usb/phy/phy-fsl-usb.o: in function `fsl_otg_start_hnp':
+drivers/usb/phy/phy-fsl-usb.c:695: undefined reference to `otg_statemachine'
+aarch64-linux-gnu-ld: drivers/usb/phy/phy-fsl-usb.c:695:(.text+0x858): relocation truncated to fit: R_AARCH64_CALL26 against undefined symbol `otg_statemachine'
+aarch64-linux-gnu-ld: drivers/usb/phy/phy-fsl-usb.o: in function `a_wait_enum':
+drivers/usb/phy/phy-fsl-usb.c:274: undefined reference to `otg_statemachine'
+aarch64-linux-gnu-ld: drivers/usb/phy/phy-fsl-usb.c:274:(.text+0x16f0): relocation truncated to fit: R_AARCH64_CALL26 against undefined symbol `otg_statemachine'
+aarch64-linux-gnu-ld: drivers/usb/phy/phy-fsl-usb.o:drivers/usb/phy/phy-fsl-usb.c:619: more undefined references to `otg_statemachine' follow
+aarch64-linux-gnu-ld: drivers/usb/phy/phy-fsl-usb.o: in function `fsl_otg_set_peripheral':
+drivers/usb/phy/phy-fsl-usb.c:619:(.text+0x1fa0): relocation truncated to fit: R_AARCH64_CALL26 against undefined symbol `otg_statemachine'
+make[1]: *** [Makefile:1020: vmlinux] Error 1
+make[1]: Target 'Image' not remade because of errors.
+make: *** [Makefile:152: sub-make] Error 2
+make: Target 'Image' not remade because of errors.
 
-Fix this by preparing and enabling the clock when initializing other
-clocks. Waiting for sun4i_tcon_channel_enable to enable the clock is
-apparently too late and results in the same mixer register access hang.
+Rework so that FSL_USB2_OTG depends on that the USB_OTG_FSM is builtin.
 
-Signed-off-by: Paul Kocialkowski <paul.kocialkowski@bootlin.com>
-Signed-off-by: Maxime Ripard <maxime.ripard@bootlin.com>
-Link: https://patchwork.freedesktop.org/patch/msgid/20190131132550.26355-1-paul.kocialkowski@bootlin.com
+Signed-off-by: Anders Roxell <anders.roxell@linaro.org>
+Signed-off-by: Felipe Balbi <felipe.balbi@linux.intel.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/gpu/drm/sun4i/sun4i_tcon.c | 2 ++
- 1 file changed, 2 insertions(+)
+ drivers/usb/phy/Kconfig | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/gpu/drm/sun4i/sun4i_tcon.c b/drivers/gpu/drm/sun4i/sun4i_tcon.c
-index 7b909d814d38..095bd6b4ae80 100644
---- a/drivers/gpu/drm/sun4i/sun4i_tcon.c
-+++ b/drivers/gpu/drm/sun4i/sun4i_tcon.c
-@@ -371,6 +371,7 @@ static int sun4i_tcon_init_clocks(struct device *dev,
- 		dev_err(dev, "Couldn't get the TCON channel 0 clock\n");
- 		return PTR_ERR(tcon->sclk0);
- 	}
-+	clk_prepare_enable(tcon->sclk0);
+diff --git a/drivers/usb/phy/Kconfig b/drivers/usb/phy/Kconfig
+index aff702c0eb9f..85a92d0813dd 100644
+--- a/drivers/usb/phy/Kconfig
++++ b/drivers/usb/phy/Kconfig
+@@ -21,7 +21,7 @@ config AB8500_USB
  
- 	if (tcon->quirks->has_channel_1) {
- 		tcon->sclk1 = devm_clk_get(dev, "tcon-ch1");
-@@ -385,6 +386,7 @@ static int sun4i_tcon_init_clocks(struct device *dev,
- 
- static void sun4i_tcon_free_clocks(struct sun4i_tcon *tcon)
- {
-+	clk_disable_unprepare(tcon->sclk0);
- 	clk_disable_unprepare(tcon->clk);
- }
- 
+ config FSL_USB2_OTG
+ 	bool "Freescale USB OTG Transceiver Driver"
+-	depends on USB_EHCI_FSL && USB_FSL_USB2 && USB_OTG_FSM && PM
++	depends on USB_EHCI_FSL && USB_FSL_USB2 && USB_OTG_FSM=y && PM
+ 	depends on USB_GADGET || !USB_GADGET # if USB_GADGET=m, this can't be 'y'
+ 	select USB_PHY
+ 	help
 -- 
 2.19.1
 
