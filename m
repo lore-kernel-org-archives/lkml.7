@@ -4,88 +4,85 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
+	URIBL_BLOCKED,USER_AGENT_MUTT autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B01ACC43381
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 16:13:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D01F8C4360F
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 16:14:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 809E2205F4
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 16:13:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 92794205F4
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 16:14:11 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1552407221;
-	bh=R6frdUt0h7gwLKvF5Lt5OO14+Bfxtgd/WXsxtyu3giQ=;
+	s=default; t=1552407251;
+	bh=tJJ1Divm+qqh0sGztuq8oW4+oA3zEgJQ5tHx/cf5xgs=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=uehKngCCFe1CM986AJ1XoZ4rWPVw6p7Y97NnlIkBXoG9oh8wi+TsI+zXQZ2uMmaPJ
-	 7cPqD4hsvOnT2RWRcHFBVgHVlG4GceDzjO7oS1AQz2HEi0NXC0BGBnxjO9mx+0NAYL
-	 DpEN5gqhL4sWhUwJivb+SrdA6fA1HC/h8YcY8hSs=
+	b=1zCTOX0fTVbPrSkVnqe0v2BmztPUuOpSYh0hddYhOquDi99ozGB5Sn4nNLnLjx8O0
+	 t3P3hToTlPEPkirj95NRs5GGES7Jv2ruApgrQ/BH+GM1s/tT8aL08lwA0PX/huWxsq
+	 m8SS8OvQ4re0dLGQy/PR+xcPmyO8Cmp3VHpvKPf0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726765AbfCLQNj (ORCPT
+        id S1726831AbfCLQOK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 12 Mar 2019 12:13:39 -0400
-Received: from mail-oi1-f194.google.com ([209.85.167.194]:42632 "EHLO
-        mail-oi1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725887AbfCLQNi (ORCPT
+        Tue, 12 Mar 2019 12:14:10 -0400
+Received: from mail-ot1-f66.google.com ([209.85.210.66]:37319 "EHLO
+        mail-ot1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725887AbfCLQOK (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 12 Mar 2019 12:13:38 -0400
-Received: by mail-oi1-f194.google.com with SMTP id m4so2198655oim.9;
-        Tue, 12 Mar 2019 09:13:38 -0700 (PDT)
+        Tue, 12 Mar 2019 12:14:10 -0400
+Received: by mail-ot1-f66.google.com with SMTP id b3so2998882otp.4;
+        Tue, 12 Mar 2019 09:14:09 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:content-transfer-encoding
-         :in-reply-to:user-agent;
-        bh=MrKbHZcVt1+np1Ngx/kaljrjrUgKgLYFFfAC2nGvBnU=;
-        b=QIlfJHca3fSsbCtcUZ7zdhno6eGWiRfrykg5lbuPyE4b9SHcfm4XiQ1GYhQlY7qMwp
-         aTGHtj5rPhtpJU4XcV6rX3pUVYxvfHhVsCxZWdYZOT+PpMKenlYy+zBSkloyBKUCIYZU
-         N5Ya65iDzWcbTCNZvOQ7uw3RjYZ7PGb8fROpTYUuhJPPcXdtryxR3PwxxKX5FLb2n32s
-         9yMw1mjFeSgYr0lTbE+oB6ubxhPOuT5UiSSLrdT4hsHBrJG6GwJsqKP0DEGWs1jDm7Uc
-         gzL1M1CNYspozM8MKEKLozICCd4Uy9xOTrGEwx5JYVoWT5nzp8wdjU0QPXY53Rb79oT1
-         BZ+g==
-X-Gm-Message-State: APjAAAUkRoXkqO2cSv+p5lcmdJcx3YNx8aoZDwDhoOT+bBHxj2wbWTux
-        S5vCbs2eyuvyQoWD0nMVQQ==
-X-Google-Smtp-Source: APXvYqzoABGQan3eeW13Js+VlGJ8e4VB2jYyHUJI45cUsEwQZCcn/eD5RRoZZsmejWvvja12UhBs3A==
-X-Received: by 2002:aca:dc8b:: with SMTP id t133mr2267731oig.25.1552407217553;
-        Tue, 12 Mar 2019 09:13:37 -0700 (PDT)
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=yKUhxTAul6cwTKknRmZAHzYNVV/MGLnlb4TN6Hep+yw=;
+        b=fwsLbyLsNylWdyGX78CGrRXhJZ90c9uedYcEyUjxxu5EVs7Wz6dW++yFX0Sh0sxvJE
+         lxcqtKaFTwulG5KNpisxDThAsjVWuve5oVrR0azeMV8rnctPrQt5TXXUzM/HSab4U+9C
+         +bPLP/B0Pi48hFM09tOAKHWtBkhMSV6NOjsuO+Xm20Zr2vH+cnEsxs8clSaRUEz+IFwC
+         gcNOukW6k0Db9Pl2ucwO3Ey0QNwkrLVy+9w1yBCh+aRxRP7kjqxDN/YF7PgzVxh6BatO
+         mUmy102dUbzSJFcGIJyS30g0lLWD17n+0RgJVRTKQjzmuzxg9fBjBqCivLoYoFg/azC0
+         N4GQ==
+X-Gm-Message-State: APjAAAW/CAPxlM4XOhQyMRnAIql++Bdua+uH1GcoxyvAiFsRncQH3QeA
+        o1FAxRJ/fV9SBpvMjhEFdQ==
+X-Google-Smtp-Source: APXvYqxWrO62JBNCG9YA64l0oFTD1/z26IkhTK3MjoPn9Yz8Jlb7w4zlBcTtIS8IQdz6IAhUZLylUg==
+X-Received: by 2002:a9d:5c09:: with SMTP id o9mr24880390otk.128.1552407249146;
+        Tue, 12 Mar 2019 09:14:09 -0700 (PDT)
 Received: from localhost (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
-        by smtp.gmail.com with ESMTPSA id w200sm3528590oif.13.2019.03.12.09.13.36
+        by smtp.gmail.com with ESMTPSA id u6sm3738074oig.5.2019.03.12.09.14.08
         (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Tue, 12 Mar 2019 09:13:36 -0700 (PDT)
-Date:   Tue, 12 Mar 2019 11:13:36 -0500
+        Tue, 12 Mar 2019 09:14:08 -0700 (PDT)
+Date:   Tue, 12 Mar 2019 11:14:07 -0500
 From:   Rob Herring <robh@kernel.org>
-To:     Marek =?iso-8859-1?Q?Beh=FAn?= <marek.behun@nic.cz>
-Cc:     Jassi Brar <jassisinghbrar@gmail.com>,
-        linux-kernel@vger.kernel.org,
-        Gregory CLEMENT <gregory.clement@bootlin.com>,
-        linux-arm-kernel@lists.infradead.org,
-        Marek =?iso-8859-1?Q?Beh=FAn?= <marek.behun@nic.cz>,
-        devicetree@vger.kernel.org
-Subject: Re: [PATCH v2 mailbox 2/3] dt-bindings: mailbox: Document
- armada-37xx-rwtm-mailbox binding
-Message-ID: <20190312161336.GA29174@bogus>
-References: <20190301042341.29484-1-marek.behun@nic.cz>
- <20190301042341.29484-3-marek.behun@nic.cz>
+To:     Andreas Klinger <ak@it-klinger.de>
+Cc:     devicetree@vger.kernel.org, linux-iio@vger.kernel.org,
+        jic23@kernel.org, robh+dt@kernel.org, mark.rutland@arm.com,
+        afaerber@suse.de, arnd@arndb.de, davem@davemloft.net,
+        gregkh@linuxfoundation.org, johan@kernel.org, khilman@baylibre.com,
+        knaack.h@gmx.de, lars@metafoo.de, linux-kernel@vger.kernel.org,
+        martin.blumenstingl@googlemail.com, mchehab+samsung@kernel.org,
+        m.othacehe@gmail.com, nicolas.ferre@microchip.com,
+        pmeerw@pmeerw.net, robh@kernel.org, songqiang1304521@gmail.com,
+        treding@nvidia.com, techsupport@maxbotix.com
+Subject: Re: [PATCH v2 1/4] dt-bindings: Add vendor prefix for MaxBotix
+Message-ID: <20190312161407.GA30150@bogus>
+References: <20190301134155.ujtl434di6eb7jir@arbad>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20190301042341.29484-3-marek.behun@nic.cz>
+In-Reply-To: <20190301134155.ujtl434di6eb7jir@arbad>
 User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri,  1 Mar 2019 05:23:40 +0100, =?UTF-8?q?Marek=20Beh=C3=BAn?= wrote:
-> This adds device tree binding documentation for the rWTM BIU mailbox
-> driver on the Armada 37xx SOC (EspressoBin, Turris Mox).
+On Fri, 1 Mar 2019 14:41:57 +0100, Andreas Klinger wrote:
+> Add MaxBotix, which is a vendor of ultrasonic rangers in different
+> varieties and interfaces.
 > 
-> Signed-off-by: Marek Behún <marek.behun@nic.cz>
-> Cc: Rob Herring <robh+dt@kernel.org>
-> Cc: devicetree@vger.kernel.org
+> Signed-off-by: Andreas Klinger <ak@it-klinger.de>
 > ---
->  .../mailbox/armada-37xx-rwtm-mailbox.txt         | 16 ++++++++++++++++
->  1 file changed, 16 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/mailbox/armada-37xx-rwtm-mailbox.txt
+>  Documentation/devicetree/bindings/vendor-prefixes.txt | 1 +
+>  1 file changed, 1 insertion(+)
 > 
 
 Reviewed-by: Rob Herring <robh@kernel.org>
