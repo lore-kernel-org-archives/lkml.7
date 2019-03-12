@@ -2,52 +2,51 @@ Return-Path: <SRS0=J4ZE=RP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 58C71C43381
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 17:45:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 31189C43381
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 17:45:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1FDF52087C
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 17:45:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id ECA702087C
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 17:45:23 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1552412721;
-	bh=sQFyO456Kez7m7440dAXnhGbm++OePFJAfaWqAsq1Ww=;
+	s=default; t=1552412724;
+	bh=PwDcnXjQzTdZLnEkiTjrAYW9ex7OKCuOxglj770SoXY=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=2rKr7b2RLnf0B/opNCTW+Q+QLCR2ZWjUdxW34czdmOfqQwR8fHiHHN1R/anHRZNVE
-	 JS4tbyYqJbK5lZwtbqfprCex8neX64nuGU4Vbfi8oAPM9E1D57JSHidH70+Ntt4WE1
-	 Tf6e8aLng/qKsjeNBEm4SwE8jN8Ty/MouPkDgjmk=
+	b=OLuhf1UJPlY64WiOZ1llTAkmBBmNVeq6oYXFV96ZnleL7xvvhsoBQbbcibMxjgD33
+	 mdgXRefHum1GUCctGVLrF8WWAxcebGK4KCAUSHVKorF1SCYNbBIsL7QFMNmGpYK9xB
+	 068B0iwOyeyBjCvdYlOuZobInNoV0Om0j8TZrRLg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729017AbfCLRpU (ORCPT
+        id S1729115AbfCLRpW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 12 Mar 2019 13:45:20 -0400
-Received: from mail.kernel.org ([198.145.29.99]:56100 "EHLO mail.kernel.org"
+        Tue, 12 Mar 2019 13:45:22 -0400
+Received: from mail.kernel.org ([198.145.29.99]:56054 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728753AbfCLRPb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S1728742AbfCLRPb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Tue, 12 Mar 2019 13:15:31 -0400
 Received: from localhost (unknown [104.133.8.98])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 170D02183F;
-        Tue, 12 Mar 2019 17:15:31 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 0AB71217D8;
+        Tue, 12 Mar 2019 17:15:30 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1552410931;
-        bh=sQFyO456Kez7m7440dAXnhGbm++OePFJAfaWqAsq1Ww=;
+        s=default; t=1552410930;
+        bh=PwDcnXjQzTdZLnEkiTjrAYW9ex7OKCuOxglj770SoXY=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=H3wI+7Ovi5f9k2eOmZ3sRB3C4/xqmZjuRFFU+aDwgTUpiO8/a9BLKJ+BkPNRUI/mm
-         SqN0CN/bCVZ/r/J9UmrnLuUClEwdMujrpZil0dWXWW3DjNa13Gnn4NiuPt0UIkLpxV
-         erd/gkM1BEqzlgFzniRZ2hegDmAHiVOuitYQcxWE=
+        b=ddRVVyHDm4di6K85Ga8l7p3GQD0p44Flt1d9OF4eN8Z7bmysdWkY7rBckoYnkdocI
+         MbWAEoVR8N9pMQjAaf2UIVq5V/pYegP3ZYUwvMajLT94skYnCwZf8WpRfrDoTcebGb
+         Pe+joyiQkRxmRNitrHO4mamHIC2XexjtkEQOfrQU=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        "Peter Zijlstra (Intel)" <peterz@infradead.org>,
-        Thomas Gleixner <tglx@linutronix.de>
-Subject: [PATCH 4.19 146/149] perf/x86/intel: Make cpuc allocations consistent
-Date:   Tue, 12 Mar 2019 10:09:24 -0700
-Message-Id: <20190312170401.524962264@linuxfoundation.org>
+        stable@vger.kernel.org, Liu Bo <bo.liu@linux.alibaba.com>,
+        Jens Axboe <axboe@kernel.dk>, Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.19 121/149] blk-iolatency: fix IO hang due to negative inflight counter
+Date:   Tue, 12 Mar 2019 10:08:59 -0700
+Message-Id: <20190312170359.583172835@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190312170349.421581206@linuxfoundation.org>
 References: <20190312170349.421581206@linuxfoundation.org>
@@ -66,169 +65,193 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-From: "Peter Zijlstra (Intel)" <peterz@infradead.org>
+[ Upstream commit 8c772a9bfc7c07c76f4a58b58910452fbb20843b ]
 
-commit d01b1f96a82e5dd7841a1d39db3abfdaf95f70ab upstream
+Our test reported the following stack, and vmcore showed that
+->inflight counter is -1.
 
-The cpuc data structure allocation is different between fake and real
-cpuc's; use the same code to init/free both.
+[ffffc9003fcc38d0] __schedule at ffffffff8173d95d
+[ffffc9003fcc3958] schedule at ffffffff8173de26
+[ffffc9003fcc3970] io_schedule at ffffffff810bb6b6
+[ffffc9003fcc3988] blkcg_iolatency_throttle at ffffffff813911cb
+[ffffc9003fcc3a20] rq_qos_throttle at ffffffff813847f3
+[ffffc9003fcc3a48] blk_mq_make_request at ffffffff8137468a
+[ffffc9003fcc3b08] generic_make_request at ffffffff81368b49
+[ffffc9003fcc3b68] submit_bio at ffffffff81368d7d
+[ffffc9003fcc3bb8] ext4_io_submit at ffffffffa031be00 [ext4]
+[ffffc9003fcc3c00] ext4_writepages at ffffffffa03163de [ext4]
+[ffffc9003fcc3d68] do_writepages at ffffffff811c49ae
+[ffffc9003fcc3d78] __filemap_fdatawrite_range at ffffffff811b6188
+[ffffc9003fcc3e30] filemap_write_and_wait_range at ffffffff811b6301
+[ffffc9003fcc3e60] ext4_sync_file at ffffffffa030cee8 [ext4]
+[ffffc9003fcc3ea8] vfs_fsync_range at ffffffff8128594b
+[ffffc9003fcc3ee8] do_fsync at ffffffff81285abd
+[ffffc9003fcc3f18] sys_fsync at ffffffff81285d50
+[ffffc9003fcc3f28] do_syscall_64 at ffffffff81003c04
+[ffffc9003fcc3f50] entry_SYSCALL_64_after_swapgs at ffffffff81742b8e
 
-Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
-Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+The ->inflight counter may be negative (-1) if
+
+1) blk-iolatency was disabled when the IO was issued,
+
+2) blk-iolatency was enabled before this IO reached its endio,
+
+3) the ->inflight counter is decreased from 0 to -1 in endio()
+
+In fact the hang can be easily reproduced by the below script,
+
+H=/sys/fs/cgroup/unified/
+P=/sys/fs/cgroup/unified/test
+
+echo "+io" > $H/cgroup.subtree_control
+mkdir -p $P
+
+echo $$ > $P/cgroup.procs
+
+xfs_io -f -d -c "pwrite 0 4k" /dev/sdg
+
+echo "`cat /sys/block/sdg/dev` target=1000000" > $P/io.latency
+
+xfs_io -f -d -c "pwrite 0 4k" /dev/sdg
+
+This fixes the problem by freezing the queue so that while
+enabling/disabling iolatency, there is no inflight rq running.
+
+Note that quiesce_queue is not needed as this only updating iolatency
+configuration about which dispatching request_queue doesn't care.
+
+Signed-off-by: Liu Bo <bo.liu@linux.alibaba.com>
+Signed-off-by: Jens Axboe <axboe@kernel.dk>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/x86/events/core.c       |   13 +++++--------
- arch/x86/events/intel/core.c |   29 ++++++++++++++++++-----------
- arch/x86/events/perf_event.h |   11 ++++++++---
- 3 files changed, 31 insertions(+), 22 deletions(-)
+ block/blk-iolatency.c | 52 +++++++++++++++++++++++++++++++++++++------
+ 1 file changed, 45 insertions(+), 7 deletions(-)
 
---- a/arch/x86/events/core.c
-+++ b/arch/x86/events/core.c
-@@ -1970,7 +1970,7 @@ static int x86_pmu_commit_txn(struct pmu
-  */
- static void free_fake_cpuc(struct cpu_hw_events *cpuc)
- {
--	kfree(cpuc->shared_regs);
-+	intel_cpuc_finish(cpuc);
- 	kfree(cpuc);
- }
+diff --git a/block/blk-iolatency.c b/block/blk-iolatency.c
+index 19923f8a029d..b154e057ca67 100644
+--- a/block/blk-iolatency.c
++++ b/block/blk-iolatency.c
+@@ -72,6 +72,7 @@
+ #include <linux/sched/loadavg.h>
+ #include <linux/sched/signal.h>
+ #include <trace/events/block.h>
++#include <linux/blk-mq.h>
+ #include "blk-rq-qos.h"
+ #include "blk-stat.h"
  
-@@ -1982,14 +1982,11 @@ static struct cpu_hw_events *allocate_fa
- 	cpuc = kzalloc(sizeof(*cpuc), GFP_KERNEL);
- 	if (!cpuc)
- 		return ERR_PTR(-ENOMEM);
--
--	/* only needed, if we have extra_regs */
--	if (x86_pmu.extra_regs) {
--		cpuc->shared_regs = allocate_shared_regs(cpu);
--		if (!cpuc->shared_regs)
--			goto error;
--	}
- 	cpuc->is_fake = 1;
+@@ -568,6 +569,9 @@ static void blkcg_iolatency_done_bio(struct rq_qos *rqos, struct bio *bio)
+ 		return;
+ 
+ 	enabled = blk_iolatency_enabled(iolat->blkiolat);
++	if (!enabled)
++		return;
 +
-+	if (intel_cpuc_prepare(cpuc, cpu))
-+		goto error;
-+
- 	return cpuc;
- error:
- 	free_fake_cpuc(cpuc);
---- a/arch/x86/events/intel/core.c
-+++ b/arch/x86/events/intel/core.c
-@@ -3282,7 +3282,7 @@ ssize_t intel_event_sysfs_show(char *pag
- 	return x86_event_sysfs_show(page, config, event);
- }
+ 	while (blkg && blkg->parent) {
+ 		iolat = blkg_to_lat(blkg);
+ 		if (!iolat) {
+@@ -577,7 +581,7 @@ static void blkcg_iolatency_done_bio(struct rq_qos *rqos, struct bio *bio)
+ 		rqw = &iolat->rq_wait;
  
--struct intel_shared_regs *allocate_shared_regs(int cpu)
-+static struct intel_shared_regs *allocate_shared_regs(int cpu)
- {
- 	struct intel_shared_regs *regs;
- 	int i;
-@@ -3314,10 +3314,9 @@ static struct intel_excl_cntrs *allocate
- 	return c;
- }
- 
--static int intel_pmu_cpu_prepare(int cpu)
--{
--	struct cpu_hw_events *cpuc = &per_cpu(cpu_hw_events, cpu);
- 
-+int intel_cpuc_prepare(struct cpu_hw_events *cpuc, int cpu)
-+{
- 	if (x86_pmu.extra_regs || x86_pmu.lbr_sel_map) {
- 		cpuc->shared_regs = allocate_shared_regs(cpu);
- 		if (!cpuc->shared_regs)
-@@ -3327,7 +3326,7 @@ static int intel_pmu_cpu_prepare(int cpu
- 	if (x86_pmu.flags & PMU_FL_EXCL_CNTRS) {
- 		size_t sz = X86_PMC_IDX_MAX * sizeof(struct event_constraint);
- 
--		cpuc->constraint_list = kzalloc(sz, GFP_KERNEL);
-+		cpuc->constraint_list = kzalloc_node(sz, GFP_KERNEL, cpu_to_node(cpu));
- 		if (!cpuc->constraint_list)
- 			goto err_shared_regs;
- 
-@@ -3352,6 +3351,11 @@ err:
- 	return -ENOMEM;
- }
- 
-+static int intel_pmu_cpu_prepare(int cpu)
-+{
-+	return intel_cpuc_prepare(&per_cpu(cpu_hw_events, cpu), cpu);
-+}
-+
- static void flip_smm_bit(void *data)
- {
- 	unsigned long set = *(unsigned long *)data;
-@@ -3423,9 +3427,8 @@ static void intel_pmu_cpu_starting(int c
- 	}
- }
- 
--static void free_excl_cntrs(int cpu)
-+static void free_excl_cntrs(struct cpu_hw_events *cpuc)
- {
--	struct cpu_hw_events *cpuc = &per_cpu(cpu_hw_events, cpu);
- 	struct intel_excl_cntrs *c;
- 
- 	c = cpuc->excl_cntrs;
-@@ -3443,9 +3446,8 @@ static void intel_pmu_cpu_dying(int cpu)
- 	fini_debug_store_on_cpu(cpu);
- }
- 
--static void intel_pmu_cpu_dead(int cpu)
-+void intel_cpuc_finish(struct cpu_hw_events *cpuc)
- {
--	struct cpu_hw_events *cpuc = &per_cpu(cpu_hw_events, cpu);
- 	struct intel_shared_regs *pc;
- 
- 	pc = cpuc->shared_regs;
-@@ -3455,7 +3457,12 @@ static void intel_pmu_cpu_dead(int cpu)
- 		cpuc->shared_regs = NULL;
- 	}
- 
--	free_excl_cntrs(cpu);
-+	free_excl_cntrs(cpuc);
-+}
-+
-+static void intel_pmu_cpu_dead(int cpu)
-+{
-+	intel_cpuc_finish(&per_cpu(cpu_hw_events, cpu));
- }
- 
- static void intel_pmu_sched_task(struct perf_event_context *ctx,
-@@ -4515,7 +4522,7 @@ static __init int fixup_ht_bug(void)
- 	hardlockup_detector_perf_restart();
- 
- 	for_each_online_cpu(c)
--		free_excl_cntrs(c);
-+		free_excl_cntrs(&per_cpu(cpu_hw_events, c));
- 
- 	cpus_read_unlock();
- 	pr_info("PMU erratum BJ122, BV98, HSD29 workaround disabled, HT off\n");
---- a/arch/x86/events/perf_event.h
-+++ b/arch/x86/events/perf_event.h
-@@ -887,7 +887,8 @@ struct event_constraint *
- x86_get_event_constraints(struct cpu_hw_events *cpuc, int idx,
- 			  struct perf_event *event);
- 
--struct intel_shared_regs *allocate_shared_regs(int cpu);
-+extern int intel_cpuc_prepare(struct cpu_hw_events *cpuc, int cpu);
-+extern void intel_cpuc_finish(struct cpu_hw_events *cpuc);
- 
- int intel_pmu_init(void);
- 
-@@ -1023,9 +1024,13 @@ static inline int intel_pmu_init(void)
+ 		atomic_dec(&rqw->inflight);
+-		if (!enabled || iolat->min_lat_nsec == 0)
++		if (iolat->min_lat_nsec == 0)
+ 			goto next;
+ 		iolatency_record_time(iolat, &bio->bi_issue, now,
+ 				      issue_as_root);
+@@ -721,10 +725,13 @@ int blk_iolatency_init(struct request_queue *q)
  	return 0;
  }
  
--static inline struct intel_shared_regs *allocate_shared_regs(int cpu)
-+static inline int intel_cpuc_prepare(struct cpu_hw_event *cpuc, int cpu)
-+{
-+	return 0;
-+}
-+
-+static inline void intel_cpuc_finish(struct cpu_hw_event *cpuc)
+-static void iolatency_set_min_lat_nsec(struct blkcg_gq *blkg, u64 val)
++/*
++ * return 1 for enabling iolatency, return -1 for disabling iolatency, otherwise
++ * return 0.
++ */
++static int iolatency_set_min_lat_nsec(struct blkcg_gq *blkg, u64 val)
  {
--	return NULL;
+ 	struct iolatency_grp *iolat = blkg_to_lat(blkg);
+-	struct blk_iolatency *blkiolat = iolat->blkiolat;
+ 	u64 oldval = iolat->min_lat_nsec;
+ 
+ 	iolat->min_lat_nsec = val;
+@@ -733,9 +740,10 @@ static void iolatency_set_min_lat_nsec(struct blkcg_gq *blkg, u64 val)
+ 				    BLKIOLATENCY_MAX_WIN_SIZE);
+ 
+ 	if (!oldval && val)
+-		atomic_inc(&blkiolat->enabled);
++		return 1;
+ 	if (oldval && !val)
+-		atomic_dec(&blkiolat->enabled);
++		return -1;
++	return 0;
  }
  
- static inline int is_ht_workaround_enabled(void)
+ static void iolatency_clear_scaling(struct blkcg_gq *blkg)
+@@ -768,6 +776,7 @@ static ssize_t iolatency_set_limit(struct kernfs_open_file *of, char *buf,
+ 	u64 lat_val = 0;
+ 	u64 oldval;
+ 	int ret;
++	int enable = 0;
+ 
+ 	ret = blkg_conf_prep(blkcg, &blkcg_policy_iolatency, buf, &ctx);
+ 	if (ret)
+@@ -803,7 +812,12 @@ static ssize_t iolatency_set_limit(struct kernfs_open_file *of, char *buf,
+ 	blkg = ctx.blkg;
+ 	oldval = iolat->min_lat_nsec;
+ 
+-	iolatency_set_min_lat_nsec(blkg, lat_val);
++	enable = iolatency_set_min_lat_nsec(blkg, lat_val);
++	if (enable) {
++		WARN_ON_ONCE(!blk_get_queue(blkg->q));
++		blkg_get(blkg);
++	}
++
+ 	if (oldval != iolat->min_lat_nsec) {
+ 		iolatency_clear_scaling(blkg);
+ 	}
+@@ -811,6 +825,24 @@ static ssize_t iolatency_set_limit(struct kernfs_open_file *of, char *buf,
+ 	ret = 0;
+ out:
+ 	blkg_conf_finish(&ctx);
++	if (ret == 0 && enable) {
++		struct iolatency_grp *tmp = blkg_to_lat(blkg);
++		struct blk_iolatency *blkiolat = tmp->blkiolat;
++
++		blk_mq_freeze_queue(blkg->q);
++
++		if (enable == 1)
++			atomic_inc(&blkiolat->enabled);
++		else if (enable == -1)
++			atomic_dec(&blkiolat->enabled);
++		else
++			WARN_ON_ONCE(1);
++
++		blk_mq_unfreeze_queue(blkg->q);
++
++		blkg_put(blkg);
++		blk_put_queue(blkg->q);
++	}
+ 	return ret ?: nbytes;
+ }
+ 
+@@ -910,8 +942,14 @@ static void iolatency_pd_offline(struct blkg_policy_data *pd)
+ {
+ 	struct iolatency_grp *iolat = pd_to_lat(pd);
+ 	struct blkcg_gq *blkg = lat_to_blkg(iolat);
++	struct blk_iolatency *blkiolat = iolat->blkiolat;
++	int ret;
+ 
+-	iolatency_set_min_lat_nsec(blkg, 0);
++	ret = iolatency_set_min_lat_nsec(blkg, 0);
++	if (ret == 1)
++		atomic_inc(&blkiolat->enabled);
++	if (ret == -1)
++		atomic_dec(&blkiolat->enabled);
+ 	iolatency_clear_scaling(blkg);
+ }
+ 
+-- 
+2.19.1
+
 
 
