@@ -2,444 +2,161 @@ Return-Path: <SRS0=J4ZE=RP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED
+X-Spam-Status: No, score=-1.0 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A4758C43381
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 05:36:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 79287C43381
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 05:36:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 748C5214AE
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 05:36:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 36C76214D8
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 05:36:30 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=Synaptics.onmicrosoft.com header.i=@Synaptics.onmicrosoft.com header.b="LWHfHM30"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726985AbfCLFgY (ORCPT
+        id S1726468AbfCLFg2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 12 Mar 2019 01:36:24 -0400
-Received: from mga12.intel.com ([192.55.52.136]:38915 "EHLO mga12.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726292AbfCLFgX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 12 Mar 2019 01:36:23 -0400
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga006.jf.intel.com ([10.7.209.51])
-  by fmsmga106.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 11 Mar 2019 22:36:23 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.58,469,1544515200"; 
-   d="scan'208";a="126168059"
-Received: from linux.intel.com ([10.54.29.200])
-  by orsmga006.jf.intel.com with ESMTP; 11 Mar 2019 22:36:22 -0700
-Received: from [10.252.11.175] (abudanko-mobl.ccr.corp.intel.com [10.252.11.175])
-        by linux.intel.com (Postfix) with ESMTP id DD77F58046F;
-        Mon, 11 Mar 2019 22:36:19 -0700 (PDT)
-Subject: [PATCH v7 10/12] perf report: implement record trace decompression
-From:   Alexey Budankov <alexey.budankov@linux.intel.com>
-To:     Arnaldo Carvalho de Melo <acme@kernel.org>
-Cc:     Jiri Olsa <jolsa@redhat.com>, Namhyung Kim <namhyung@kernel.org>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Ingo Molnar <mingo@redhat.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Andi Kleen <ak@linux.intel.com>,
-        linux-kernel <linux-kernel@vger.kernel.org>
-References: <5f3a8326-58a0-816e-ad61-31c111232c7a@linux.intel.com>
-Organization: Intel Corp.
-Message-ID: <54b3c3c8-2b7e-e7ba-d55e-d15cc5983ced@linux.intel.com>
-Date:   Tue, 12 Mar 2019 08:36:18 +0300
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
- Thunderbird/60.5.1
-MIME-Version: 1.0
-In-Reply-To: <5f3a8326-58a0-816e-ad61-31c111232c7a@linux.intel.com>
-Content-Type: text/plain; charset=utf-8
+        Tue, 12 Mar 2019 01:36:28 -0400
+Received: from mail-eopbgr810072.outbound.protection.outlook.com ([40.107.81.72]:27040
+        "EHLO NAM01-BY2-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1725855AbfCLFg0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 12 Mar 2019 01:36:26 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=Synaptics.onmicrosoft.com; s=selector1-synaptics-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=AECtvOOFWq1lYLKOB+YwnhDv6HJt3KtjjLL2vO/KZ9M=;
+ b=LWHfHM306nrk8PuCOa/vT9T1+fuQjjFdcsxk57UCGW4fHLMjy9RpVf9SGgg/NUw01vnUt35uKVy0i9YyIlXJ6pmjWxKCTROXPu87GZ+Egsb4ix2c72+vCBgiSLWdcCIQ5odgtfoERp4rlum/uP8Smp3+cuKDYb3+5U9a4EPGJAY=
+Received: from BYAPR03MB4773.namprd03.prod.outlook.com (20.179.92.152) by
+ BYAPR03MB3736.namprd03.prod.outlook.com (52.135.214.140) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.1686.18; Tue, 12 Mar 2019 05:35:43 +0000
+Received: from BYAPR03MB4773.namprd03.prod.outlook.com
+ ([fe80::1a8:1bc4:174b:472b]) by BYAPR03MB4773.namprd03.prod.outlook.com
+ ([fe80::1a8:1bc4:174b:472b%2]) with mapi id 15.20.1686.021; Tue, 12 Mar 2019
+ 05:35:43 +0000
+From:   Jisheng Zhang <Jisheng.Zhang@synaptics.com>
+To:     "James E.J. Bottomley" <jejb@linux.ibm.com>,
+        "Martin K. Petersen" <martin.petersen@oracle.com>,
+        Jens Axboe <axboe@kernel.dk>
+CC:     "linux-scsi@vger.kernel.org" <linux-scsi@vger.kernel.org>,
+        "linux-block@vger.kernel.org" <linux-block@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: kernel 5.0 blk_clear_pm_only triggers a warning during resume
+Thread-Topic: kernel 5.0 blk_clear_pm_only triggers a warning during resume
+Thread-Index: AQHU2JVvuDgOhmoPBEi74ENXmxZW/g==
+Date:   Tue, 12 Mar 2019 05:35:43 +0000
+Message-ID: <20190312132826.12c5f166@xhacker.debian>
+Accept-Language: en-US
 Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-originating-ip: [199.33.119.15]
+x-clientproxiedby: TYAPR01CA0215.jpnprd01.prod.outlook.com
+ (2603:1096:404:29::35) To BYAPR03MB4773.namprd03.prod.outlook.com
+ (2603:10b6:a03:134::24)
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=Jisheng.Zhang@synaptics.com; 
+x-ms-exchange-messagesentrepresentingtype: 1
+x-mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: e32dc1d0-ce45-4166-73cd-08d6a6ac91db
+x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600127)(711020)(4605104)(2017052603328)(7153060)(7193020);SRVR:BYAPR03MB3736;
+x-ms-traffictypediagnostic: BYAPR03MB3736:
+x-microsoft-exchange-diagnostics: =?us-ascii?Q?1;BYAPR03MB3736;23:Zlpqo7L/+s9xFsOCT9GipiRVu0eLPoFGMmITxfvgh?=
+ =?us-ascii?Q?I4zATHwcY2v/CeFwTblUX7Oqz4rjftqKZJN8MkiiOyfJwf6vXB0HCidbbIG1?=
+ =?us-ascii?Q?Kto0lpi+5ExkWGVltplQg5fGTPnFeD0ikYMwmUxRXsI5P4WwgOeVbytcQ9+8?=
+ =?us-ascii?Q?u7BOmNya8iMQTXgrmUIUeW6do4IT+epP7wGXp/+diJ88/ao6Z7h8qhjSN/R+?=
+ =?us-ascii?Q?JX5smacuaQS/92PSGsiJ0JefYHWZ4X8MgP94ABuC12F7qpr2rYwdVqEDssH8?=
+ =?us-ascii?Q?anO29tZfMq4knMQ1M0i1CnR7KW+hMTN0SsYmwoGrC/DFWlrZYpK/qregUtu7?=
+ =?us-ascii?Q?z/TWgORHuBgRrHx61A0R4kd967h+oTGmkaUQfASXm23+S40gCI+eGUtMzrT/?=
+ =?us-ascii?Q?sZXsXrPKeV9HUtjHPRN0ghXxQ9vAMdfmeKnNYFQ6jyvbHAMuVcgeFsVcRGv5?=
+ =?us-ascii?Q?W8HbjlIiRMvOhzm1L+jgUkBvtmfO2l8rwKMHdxJpjGZPhs7vELOXX+qjXmMf?=
+ =?us-ascii?Q?OLRiFfZoelYHgnUhRdFQs2766oPR7hKceGTrp8rzpgsIRiusnPzNJNOklcGh?=
+ =?us-ascii?Q?FBmWz8ErvsHGvn8G9nTEqQRhWwFesf+cDIUIVhUQVdZVcg250YFhmEkWXBwO?=
+ =?us-ascii?Q?jzmRI/dxSSWDdsbMVXgn+lJG8LlK4sTML3YEPhOBmytAhXj1KOrBehG3gqZ0?=
+ =?us-ascii?Q?e7N5r2kx6Gk8XLLlj4GahZd+on41qtS6ktElOzUNxY26crY06dmo/fkMAWFg?=
+ =?us-ascii?Q?UCdEiC14hh9RHDcue88dxlzzTs9g2RPR6SFGSp1iz3qo2UNRojaR4nTjxtKr?=
+ =?us-ascii?Q?M8I51qe3hAo/+WOVgQhpRi0OMLRjCeelMOgvXke1aunD0An0SSkK41zATuQT?=
+ =?us-ascii?Q?5S0BeIlhaIf3j8v1p1sV5KEdqskO9fOYkJkpEvMsbxG9YA4CYWOL2GJcFzj7?=
+ =?us-ascii?Q?59SqXYuHjssDgVeq2qf6Ou5vLlLWR+P8RKtENkD3LU6UQhnlFGr6fd3TJRqg?=
+ =?us-ascii?Q?DaUdwcfRZYd/iPzzaKF5zVAMMm+OBMFlIPCPAyYV1XsCKre6BP1CJiwYa35w?=
+ =?us-ascii?Q?EoRLX52HwHG4NJtFlV2/0UVU93I9wITw/XRQ6hJx/zNeZ/lcihDY2pMtXXKf?=
+ =?us-ascii?Q?Iu9z2O7egmDNJ5cHZ6vdH7OqDMn5DvGgfGdGTGB16r5MuUb3JTzRUGkOWYpw?=
+ =?us-ascii?Q?I3BZA8mHg8pBNjE2ViqC+uFB6oyDRAZrnmgMpo6OQOM9DbaCm20xh4Eyw=3D?=
+ =?us-ascii?Q?=3D?=
+x-microsoft-antispam-prvs: <BYAPR03MB3736E6DC6283F7282F44EF69ED490@BYAPR03MB3736.namprd03.prod.outlook.com>
+x-forefront-prvs: 09749A275C
+x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(366004)(396003)(39860400002)(136003)(346002)(376002)(51234002)(199004)(189003)(476003)(105586002)(106356001)(68736007)(50226002)(8936002)(99286004)(6512007)(9686003)(6486002)(71200400001)(53936002)(6436002)(97736004)(14444005)(486006)(71190400001)(86362001)(256004)(52116002)(26005)(102836004)(6506007)(386003)(186003)(66066001)(81156014)(2906002)(8676002)(81166006)(478600001)(1076003)(3846002)(305945005)(5660300002)(25786009)(4326008)(7736002)(14454004)(316002)(54906003)(110136005)(6116002)(72206003)(39210200001);DIR:OUT;SFP:1101;SCL:1;SRVR:BYAPR03MB3736;H:BYAPR03MB4773.namprd03.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:0;MX:3;
+received-spf: None (protection.outlook.com: synaptics.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam-message-info: nrFKfZfX7DF9IppLa14ewijdySTJtZaZHAgV+an8RdV/QZwL25KRt/PLcKosMk6NhFlgdSmZJVDqRnXoYshJhrysLFkxERaJ9z2akjlPohcA5FkBqCwfsHdZohiNinCerB5RnoMZ03WJcBSDIQzVavwN9/1AfkMx+pOAMgTbMXOid6xdjMSMN+nDHOkamie+IhX7FcWshMFuXK0cTwM5vY4eLqLCYtUw/c8m66sw4ba8bcIPZ8Eo61JNAqskIhSKGJmFXIQz5wSHDCIDii8gifud5egklOli5bPnL+lrCDWD7csK1BbKKuEYdh0hmJRHR4yxHaPMIfdjakcMeCzvh21i9y5XtMBfN/q685YrzH/kQ5j69Q0UwmwzEskt330lxUd5CHzc4ArzbUFHULN88FnTqZJHLCMVRo8sqhK6dMk=
+Content-Type: text/plain; charset="us-ascii"
+Content-ID: <988FA2967C0A644AACF3FE99D84C8CAF@namprd03.prod.outlook.com>
+Content-Transfer-Encoding: quoted-printable
+MIME-Version: 1.0
+X-OriginatorOrg: synaptics.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: e32dc1d0-ce45-4166-73cd-08d6a6ac91db
+X-MS-Exchange-CrossTenant-originalarrivaltime: 12 Mar 2019 05:35:43.3939
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 335d1fbc-2124-4173-9863-17e7051a2a0e
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: BYAPR03MB3736
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Hi,
 
-zstd_init(, comp_level = 0) initializes decompression part of API only
-that now consists of zstd_decompress_stream() function.
+kernel version: 5.0
 
-Trace frames containing PERF_RECORD_COMPRESSED records are decompressed
-using zstd_decompress_stream() function into a linked list of mmaped 
-memory regions of mmap_comp_len size (struct decomp).
+I got below warning during resume:
 
-After decompression of one COMPRESSED record its content is iterated and
-fetched for usual processing. The mmaped memory regions with decompressed
-events are kept in the linked list till the tool process termination.
+[  673.658888] sd 0:0:0:0: [sda] Starting disk
+[  673.658899] WARNING: CPU: 3 PID: 1039 at blk_clear_pm_only+0x2a/0x30
+[  673.658902] CPU: 3 PID: 1039 Comm: kworker/u8:49 Not tainted 5.0.0+ #1
+[  673.658902] sd 2:0:0:0: [sdb] Starting disk
+[  673.658903] Hardware name: LENOVO 4180F42/4180F42, BIOS 83ET75WW (1.45 )=
+ 05/10/2013
+[  673.658906] Workqueue: events_unbound async_run_entry_fn
+[  673.658909] RIP: 0010:blk_clear_pm_only+0x2a/0x30
+[  673.658911] Code: b8 ff ff ff ff f0 0f c1 87 80 00 00 00 83 e8 01 78 18 =
+74 01 c3 48 81 c7 58 05 00 00 31 c9 31 d2 be 03 00 00 00 e9 36 97 e2 ff <0f=
+> 0b c3 0f 1f 00 48 81 c7 90 00 00 00 e9 04 01 3a 00 0f 1f 40 00
+[  673.658911] RSP: 0000:ffff8881115a7e48 EFLAGS: 00010297
+[  673.658913] RAX: 00000000ffffffff RBX: ffff888118d42800 RCX: ffff8881194=
+c9a00
+[  673.658914] RDX: ffff888118ab1a00 RSI: 0000000000000000 RDI: ffff888117e=
+70000
+[  673.658915] RBP: ffff888118d42f90 R08: 0000000000000004 R09: 00000000000=
+1f900
+[  673.658915] R10: 0000000045698a8e R11: 0000000000000010 R12: ffff8881194=
+21000
+[  673.658916] R13: 0000000000000000 R14: ffff88800030ea80 R15: 0ffff888119=
+42100
+[  673.658918] FS:  0000000000000000(0000) GS:ffff88811a180000(0000) knlGS:=
+0000000000000000
+[  673.658918] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+[  673.658919] CR2: 0000000000000000 CR3: 000000000200c001 CR4: 00000000000=
+606e0
+[  673.658920] Call Trace:
+[  673.658924]  ? scsi_device_resume+0x28/0x50
+[  673.658926]  ? scsi_dev_type_resume+0x2b/0x80
+[  673.658927]  ? async_run_entry_fn+0x2c/0xd0
+[  673.658930]  ? process_one_work+0x1f0/0x3f0
+[  673.658932]  ? worker_thread+0x28/0x3c0
+[  673.658933]  ? process_one_work+0x3f0/0x3f0
+[  673.658935]  ? kthread+0x10c/0x130
+[  673.658936]  ? __kthread_create_on_node+0x150/0x150
+[  673.658938]  ? ret_from_fork+0x1f/0x30
+[  673.658940] ---[ end trace ce18772de33e283e ]---
 
-When dumping raw trace (e.g., perf report -D --header) file offsets of
-events from compressed records are printed as zero.
 
-Signed-off-by: Alexey Budankov <alexey.budankov@linux.intel.com>
----
- tools/perf/builtin-report.c |   5 +-
- tools/perf/util/compress.h  |   4 ++
- tools/perf/util/session.c   | 124 +++++++++++++++++++++++++++++++++++-
- tools/perf/util/session.h   |  10 +++
- tools/perf/util/tool.h      |   2 +
- tools/perf/util/zstd.c      |  48 ++++++++++++++
- 6 files changed, 191 insertions(+), 2 deletions(-)
+I notice that commit 388b4e6a00bb3 ("scsi: core: Avoid that system resume
+triggers a kernel warning") tried to fix the warning in the same code path
+perhaps, it isn't enough.
 
-diff --git a/tools/perf/builtin-report.c b/tools/perf/builtin-report.c
-index 05c8dd41106c..66aceca49312 100644
---- a/tools/perf/builtin-report.c
-+++ b/tools/perf/builtin-report.c
-@@ -1258,6 +1258,9 @@ int cmd_report(int argc, const char **argv)
- 	if (session == NULL)
- 		return -1;
- 
-+	if (zstd_init(&(session->zstd_data), 0) < 0)
-+		pr_warning("Decompression initialization failed. Reported data may be incomplete.\n");
-+
- 	if (report.queue_size) {
- 		ordered_events__set_alloc_size(&session->ordered_events,
- 					       report.queue_size);
-@@ -1448,7 +1451,7 @@ int cmd_report(int argc, const char **argv)
- error:
- 	if (report.ptime_range)
- 		zfree(&report.ptime_range);
--
-+	zstd_fini(&(session->zstd_data));
- 	perf_session__delete(session);
- 	return ret;
- }
-diff --git a/tools/perf/util/compress.h b/tools/perf/util/compress.h
-index e0987616db94..4f6672770ebb 100644
---- a/tools/perf/util/compress.h
-+++ b/tools/perf/util/compress.h
-@@ -20,6 +20,7 @@ bool lzma_is_compressed(const char *input);
- struct zstd_data {
- #ifdef HAVE_ZSTD_SUPPORT
- 	ZSTD_CStream	*cstream;
-+	ZSTD_DStream	*dstream;
- #endif
- };
- 
-@@ -30,4 +31,7 @@ size_t zstd_compress_stream_to_records(struct zstd_data *data,
- 	void *dst, size_t dst_size, void *src, size_t src_size,	size_t max_record_size,
- 	size_t process_header(void *record, size_t increment));
- 
-+size_t zstd_decompress_stream(struct zstd_data *data,
-+	void *src, size_t src_size, void *dst, size_t dst_size);
-+
- #endif /* PERF_COMPRESS_H */
-diff --git a/tools/perf/util/session.c b/tools/perf/util/session.c
-index 0ec34227bd60..a2e4f1202fe4 100644
---- a/tools/perf/util/session.c
-+++ b/tools/perf/util/session.c
-@@ -29,6 +29,67 @@
- #include "stat.h"
- #include "arch/common.h"
- 
-+#ifdef HAVE_ZSTD_SUPPORT
-+static int perf_session__process_compressed_event(struct perf_session *session,
-+					union perf_event *event, u64 file_offset)
-+{
-+	void *src;
-+	size_t decomp_size, src_size;
-+	u64 decomp_last_rem = 0;
-+	size_t decomp_len = session->header.env.comp_mmap_len;
-+	struct decomp *decomp, *decomp_last = session->decomp_last;
-+
-+	decomp = mmap(NULL, sizeof(struct decomp) + decomp_len, PROT_READ|PROT_WRITE,
-+		      MAP_ANONYMOUS|MAP_PRIVATE, -1, 0);
-+	if (decomp == MAP_FAILED) {
-+		pr_err("Couldn't allocate memory for decompression\n");
-+		return -1;
-+	}
-+
-+	decomp->file_pos = file_offset;
-+	decomp->head = 0;
-+
-+	if (decomp_last) {
-+		decomp_last_rem = decomp_last->size - decomp_last->head;
-+		memcpy(decomp->data, &(decomp_last->data[decomp_last->head]), decomp_last_rem);
-+		decomp->size = decomp_last_rem;
-+	}
-+
-+	src = (void *)event + sizeof(struct compressed_event);
-+	src_size = event->pack.header.size - sizeof(struct compressed_event);
-+
-+	decomp_size = zstd_decompress_stream(&(session->zstd_data), src, src_size,
-+				&(decomp->data[decomp_last_rem]), decomp_len - decomp_last_rem);
-+	if (!decomp_size) {
-+		munmap(decomp, sizeof(struct decomp) + decomp_len);
-+		pr_err("Couldn't decompress data\n");
-+		return -1;
-+	}
-+
-+	decomp->size += decomp_size;
-+
-+	if (session->decomp == NULL) {
-+		session->decomp = decomp;
-+		session->decomp_last = decomp;
-+	} else {
-+		session->decomp_last->next = decomp;
-+		session->decomp_last = decomp;
-+	}
-+
-+	pr_debug("decomp (B): %ld to %ld\n", src_size, decomp_size);
-+
-+	return 0;
-+}
-+#else /* !HAVE_ZSTD_SUPPORT */
-+static int perf_session__process_compressed_event(struct perf_session *session __maybe_unused,
-+				union perf_event *event __maybe_unused,
-+				u64 file_offset __maybe_unused)
-+{
-+	dump_printf(": unhandled!\n");
-+	return 0;
-+}
-+#endif
-+
- static int perf_session__deliver_event(struct perf_session *session,
- 				       union perf_event *event,
- 				       struct perf_tool *tool,
-@@ -198,12 +259,23 @@ static void perf_session__delete_threads(struct perf_session *session)
- 
- void perf_session__delete(struct perf_session *session)
- {
-+	struct decomp *next, *decomp;
-+	size_t decomp_len;
- 	if (session == NULL)
- 		return;
- 	auxtrace__free(session);
- 	auxtrace_index__free(&session->auxtrace_index);
- 	perf_session__destroy_kernel_maps(session);
- 	perf_session__delete_threads(session);
-+	next = session->decomp;
-+	decomp_len = session->header.env.comp_mmap_len;
-+	do {
-+		decomp = next;
-+		if (decomp == NULL)
-+			break;
-+		next = decomp->next;
-+		munmap(decomp, decomp_len + sizeof(struct decomp));
-+	} while (1);
- 	perf_env__exit(&session->header.env);
- 	machines__exit(&session->machines);
- 	if (session->data)
-@@ -429,6 +501,8 @@ void perf_tool__fill_defaults(struct perf_tool *tool)
- 		tool->time_conv = process_event_op2_stub;
- 	if (tool->feature == NULL)
- 		tool->feature = process_event_op2_stub;
-+	if (tool->compressed == NULL)
-+		tool->compressed = perf_session__process_compressed_event;
- }
- 
- static void swap_sample_id_all(union perf_event *event, void *data)
-@@ -1372,7 +1446,8 @@ static s64 perf_session__process_user_event(struct perf_session *session,
- 	int fd = perf_data__fd(session->data);
- 	int err;
- 
--	dump_event(session->evlist, event, file_offset, &sample);
-+	if (event->header.type != PERF_RECORD_COMPRESSED)
-+		dump_event(session->evlist, event, file_offset, &sample);
- 
- 	/* These events are processed right away */
- 	switch (event->header.type) {
-@@ -1425,6 +1500,11 @@ static s64 perf_session__process_user_event(struct perf_session *session,
- 		return tool->time_conv(session, event);
- 	case PERF_RECORD_HEADER_FEATURE:
- 		return tool->feature(session, event);
-+	case PERF_RECORD_COMPRESSED:
-+		err = tool->compressed(session, event, file_offset);
-+		if (err)
-+			dump_event(session->evlist, event, file_offset, &sample);
-+		return 0;
- 	default:
- 		return -EINVAL;
- 	}
-@@ -1707,6 +1787,8 @@ static int perf_session__flush_thread_stacks(struct perf_session *session)
- 
- volatile int session_done;
- 
-+static int __perf_session__process_decomp_events(struct perf_session *session);
-+
- static int __perf_session__process_pipe_events(struct perf_session *session)
- {
- 	struct ordered_events *oe = &session->ordered_events;
-@@ -1787,6 +1869,10 @@ static int __perf_session__process_pipe_events(struct perf_session *session)
- 	if (skip > 0)
- 		head += skip;
- 
-+	err = __perf_session__process_decomp_events(session);
-+	if (err)
-+		goto out_err;
-+
- 	if (!session_done())
- 		goto more;
- done:
-@@ -1835,6 +1921,38 @@ fetch_mmaped_event(struct perf_session *session,
- 	return event;
- }
- 
-+static int __perf_session__process_decomp_events(struct perf_session *session)
-+{
-+	s64 skip;
-+	u64 size, file_pos = 0;
-+	union perf_event *event;
-+	struct decomp *decomp = session->decomp_last;
-+
-+	if (!decomp)
-+		return 0;
-+
-+	while (decomp->head < decomp->size && !session_done()) {
-+		event = fetch_mmaped_event(session, decomp->head, decomp->size, decomp->data);
-+		if (!event)
-+			break;
-+
-+		size = event->header.size;
-+		if (size < sizeof(struct perf_event_header) ||
-+		    (skip = perf_session__process_event(session, event, file_pos)) < 0) {
-+			pr_err("%#" PRIx64 " [%#x]: failed to process type: %d\n",
-+				decomp->file_pos + decomp->head, event->header.size, event->header.type);
-+			return -EINVAL;
-+		}
-+
-+		if (skip)
-+			size += skip;
-+
-+		decomp->head += size;
-+	}
-+
-+	return 0;
-+}
-+
- /*
-  * On 64bit we can mmap the data file in one go. No need for tiny mmap
-  * slices. On 32bit we use 32MB.
-@@ -1942,6 +2060,10 @@ reader__process_events(struct reader *rd, struct perf_session *session,
- 	head += size;
- 	file_pos += size;
- 
-+	err = __perf_session__process_decomp_events(session);
-+	if (err)
-+		goto out;
-+
- 	ui_progress__update(prog, size);
- 
- 	if (session_done())
-diff --git a/tools/perf/util/session.h b/tools/perf/util/session.h
-index 6c984c895924..dd8920b745bc 100644
---- a/tools/perf/util/session.h
-+++ b/tools/perf/util/session.h
-@@ -39,6 +39,16 @@ struct perf_session {
- 	u64			bytes_transferred;
- 	u64			bytes_compressed;
- 	struct zstd_data	zstd_data;
-+	struct decomp		*decomp;
-+	struct decomp		*decomp_last;
-+};
-+
-+struct decomp {
-+	struct decomp *next;
-+	u64 file_pos;
-+	u64 head;
-+	size_t size;
-+	char data[];
- };
- 
- struct perf_tool;
-diff --git a/tools/perf/util/tool.h b/tools/perf/util/tool.h
-index 250391672f9f..9096a6e3de59 100644
---- a/tools/perf/util/tool.h
-+++ b/tools/perf/util/tool.h
-@@ -28,6 +28,7 @@ typedef int (*event_attr_op)(struct perf_tool *tool,
- 
- typedef int (*event_op2)(struct perf_session *session, union perf_event *event);
- typedef s64 (*event_op3)(struct perf_session *session, union perf_event *event);
-+typedef int (*event_op4)(struct perf_session *session, union perf_event *event, u64 data);
- 
- typedef int (*event_oe)(struct perf_tool *tool, union perf_event *event,
- 			struct ordered_events *oe);
-@@ -72,6 +73,7 @@ struct perf_tool {
- 			stat,
- 			stat_round,
- 			feature;
-+	event_op4	compressed;
- 	event_op3	auxtrace;
- 	bool		ordered_events;
- 	bool		ordering_requires_timestamps;
-diff --git a/tools/perf/util/zstd.c b/tools/perf/util/zstd.c
-index e5d44d0f6b5d..ca43538b8772 100644
---- a/tools/perf/util/zstd.c
-+++ b/tools/perf/util/zstd.c
-@@ -11,6 +11,21 @@ int zstd_init(struct zstd_data *data, int level)
- {
- 	size_t ret;
- 
-+	data->dstream = ZSTD_createDStream();
-+	if (data->dstream == NULL) {
-+		pr_err("Couldn't create decompression stream.\n");
-+		return -1;
-+	}
-+
-+	ret = ZSTD_initDStream(data->dstream);
-+	if (ZSTD_isError(ret)) {
-+		pr_err("Failed to initialize decompression stream: %s\n", ZSTD_getErrorName(ret));
-+		return -1;
-+	}
-+
-+	if (!level)
-+		return 0;
-+
- 	data->cstream = ZSTD_createCStream();
- 	if (data->cstream == NULL) {
- 		pr_err("Couldn't create compression stream.\n");
-@@ -28,6 +43,11 @@ int zstd_init(struct zstd_data *data, int level)
- 
- int zstd_fini(struct zstd_data *data)
- {
-+	if (data->dstream) {
-+		ZSTD_freeDStream(data->dstream);
-+		data->dstream = NULL;
-+	}
-+
- 	if (data->cstream) {
- 		ZSTD_freeCStream(data->cstream);
- 		data->cstream = NULL;
-@@ -71,6 +91,27 @@ size_t zstd_compress_stream_to_records(struct zstd_data *data,
- 	return compressed;
- }
- 
-+size_t zstd_decompress_stream(struct zstd_data *data,
-+		void *src, size_t src_size, void *dst, size_t dst_size)
-+{
-+	size_t ret;
-+	ZSTD_inBuffer input = { src, src_size, 0 };
-+	ZSTD_outBuffer output = { dst, dst_size, 0 };
-+
-+	while (input.pos < input.size) {
-+		ret = ZSTD_decompressStream(data->dstream, &output, &input);
-+		if (ZSTD_isError(ret)) {
-+			pr_err("failed to decompress (B): %ld -> %ld : %s\n",
-+				src_size, output.size, ZSTD_getErrorName(ret));
-+			break;
-+		}
-+		output.dst  = dst + output.pos;
-+		output.size = dst_size - output.pos;
-+	}
-+
-+	return output.pos;
-+}
-+
- #else /* !HAVE_ZSTD_SUPPORT */
- 
- int zstd_init(struct zstd_data *data __maybe_unused, int level __maybe_unused)
-@@ -92,4 +133,11 @@ size_t zstd_compress_stream_to_records(struct zstd_data *data __maybe_unused,
- 	return 0;
- }
- 
-+size_t zstd_decompress_stream(struct zstd_data *data __maybe_unused, void *src __maybe_unused,
-+		size_t src_size __maybe_unused, void *dst __maybe_unused,
-+		size_t dst_size __maybe_unused)
-+{
-+	return 0;
-+}
-+
- #endif
--- 
-2.20.1
-
+Thanks
