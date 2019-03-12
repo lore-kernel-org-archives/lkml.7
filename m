@@ -7,48 +7,49 @@ X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D999FC43381
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 17:17:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CF04DC43381
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 17:17:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A0E8E218AE
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 17:17:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9A83C21871
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 17:17:39 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1552411052;
-	bh=j9MS3CBbMyplD2+Mz90uoi3jgbTzQXgQJIeM5Ft355A=;
+	s=default; t=1552411059;
+	bh=Ipp0z5zAItGLj44TF6EdG/8tYHWHAfJ302ugg2/OTHU=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Vi5JDzmP4QtR0RfqixKsotohfXpFyHb/15EAwmoGjGYW9EznwUdZB+35OMFRNt6MD
-	 2gPlGgo15qHIaaWnsq3KkWSh74PDMiShL1YZuvx5FZNgiMR70tcZ4wn1GG2kckUnbl
-	 HGUjrDQtT9sWbUk7zu4tQrc4sRPDFed7no59IWD0=
+	b=gUCXn2amcKQcnN2TLJ41c7YDtAlap6TkHyv+vRvdDOU69qcnGpzRDQ2hXZgLsbMC+
+	 Yhk5z1Y4PFSMSURgQOUADtH/TeXz2Y6hD5a1wqh6v4AKciCV6SfPyzLfwkRwXSzt2Z
+	 mijIzIdhPa3WXz4TS00yp1b+xjgR4FBZFtE4PEDI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729641AbfCLRRb (ORCPT
+        id S1729692AbfCLRRi (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 12 Mar 2019 13:17:31 -0400
-Received: from mail.kernel.org ([198.145.29.99]:58374 "EHLO mail.kernel.org"
+        Tue, 12 Mar 2019 13:17:38 -0400
+Received: from mail.kernel.org ([198.145.29.99]:58668 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729109AbfCLRQX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 12 Mar 2019 13:16:23 -0400
+        id S1729160AbfCLRQ3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 12 Mar 2019 13:16:29 -0400
 Received: from localhost (unknown [104.133.8.98])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id C2C36206DF;
-        Tue, 12 Mar 2019 17:16:22 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 083CD2171F;
+        Tue, 12 Mar 2019 17:16:29 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1552410982;
-        bh=j9MS3CBbMyplD2+Mz90uoi3jgbTzQXgQJIeM5Ft355A=;
+        s=default; t=1552410989;
+        bh=Ipp0z5zAItGLj44TF6EdG/8tYHWHAfJ302ugg2/OTHU=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=mBv8Pjr/c2Ko76w4sQjrcn5FT/P5kKAk/wbxSEM1RlV0oh3a+TkOV4R+UOLaPi0I9
-         vE1Or8NgrVcAN2ePjkaUR4WhT0B6RYJSVLfSPbkxD4igwpljadDcUpXBSoZjPQ6DoS
-         jGNILv2tXhODS2Yl35Ulbt1zRjep0QsPOZi8ER+8=
+        b=JrmGTeOd2VjeIrdjmK+ANcjz9h985viqh9+1jxyB0p32ahCxE36nQzI2irppN3hJ/
+         6p2PBuPvaKDI2XzG5Q7N2hiiHhoArcSAk7uNl7iki/eyuJG8mvv2NYD5lAwUE2DTrf
+         dxHIIKRGOJjxq+GI9DDic1uNCyISdXFE40mPFVsY=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Yonglong Liu <liuyonglong@huawei.com>,
-        Peng Li <lipeng321@huawei.com>,
-        "David S. Miller" <davem@davemloft.net>,
+        stable@vger.kernel.org, Pan Bian <bianpan2016@163.com>,
+        Ian Kent <raven@themaw.net>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.14 060/135] net: hns: Restart autoneg need return failed when autoneg off
-Date:   Tue, 12 Mar 2019 10:08:27 -0700
-Message-Id: <20190312170346.831849010@linuxfoundation.org>
+Subject: [PATCH 4.14 085/135] autofs: drop dentry reference only when it is never used
+Date:   Tue, 12 Mar 2019 10:08:52 -0700
+Message-Id: <20190312170349.018393768@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190312170341.127810985@linuxfoundation.org>
 References: <20190312170341.127810985@linuxfoundation.org>
@@ -67,50 +68,44 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-[ Upstream commit ed29ca8b9592562559c64d027fb5eb126e463e2c ]
+[ Upstream commit 63ce5f552beb9bdb41546b3a26c4374758b21815 ]
 
-The hns driver of earlier devices, when autoneg off, restart autoneg
-will return -EINVAL, so make the hns driver for the latest devices
-do the same.
+autofs_expire_run() calls dput(dentry) to drop the reference count of
+dentry.  However, dentry is read via autofs_dentry_ino(dentry) after
+that.  This may result in a use-free-bug.  The patch drops the reference
+count of dentry only when it is never used.
 
-Signed-off-by: Yonglong Liu <liuyonglong@huawei.com>
-Signed-off-by: Peng Li <lipeng321@huawei.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
+Link: http://lkml.kernel.org/r/154725122396.11260.16053424107144453867.stgit@pluto-themaw-net
+Signed-off-by: Pan Bian <bianpan2016@163.com>
+Signed-off-by: Ian Kent <raven@themaw.net>
+Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
+Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/ethernet/hisilicon/hns/hns_ethtool.c | 16 +++++++++-------
- 1 file changed, 9 insertions(+), 7 deletions(-)
+ fs/autofs4/expire.c | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/net/ethernet/hisilicon/hns/hns_ethtool.c b/drivers/net/ethernet/hisilicon/hns/hns_ethtool.c
-index c1e947bb852f..14df03f60e05 100644
---- a/drivers/net/ethernet/hisilicon/hns/hns_ethtool.c
-+++ b/drivers/net/ethernet/hisilicon/hns/hns_ethtool.c
-@@ -1154,16 +1154,18 @@ static int hns_get_regs_len(struct net_device *net_dev)
-  */
- static int hns_nic_nway_reset(struct net_device *netdev)
- {
--	int ret = 0;
- 	struct phy_device *phy = netdev->phydev;
+diff --git a/fs/autofs4/expire.c b/fs/autofs4/expire.c
+index 57725d4a8c59..141f9bc213a3 100644
+--- a/fs/autofs4/expire.c
++++ b/fs/autofs4/expire.c
+@@ -567,7 +567,6 @@ int autofs4_expire_run(struct super_block *sb,
+ 	pkt.len = dentry->d_name.len;
+ 	memcpy(pkt.name, dentry->d_name.name, pkt.len);
+ 	pkt.name[pkt.len] = '\0';
+-	dput(dentry);
  
--	if (netif_running(netdev)) {
--		/* if autoneg is disabled, don't restart auto-negotiation */
--		if (phy && phy->autoneg == AUTONEG_ENABLE)
--			ret = genphy_restart_aneg(phy);
--	}
-+	if (!netif_running(netdev))
-+		return 0;
+ 	if (copy_to_user(pkt_p, &pkt, sizeof(struct autofs_packet_expire)))
+ 		ret = -EFAULT;
+@@ -580,6 +579,8 @@ int autofs4_expire_run(struct super_block *sb,
+ 	complete_all(&ino->expire_complete);
+ 	spin_unlock(&sbi->fs_lock);
  
--	return ret;
-+	if (!phy)
-+		return -EOPNOTSUPP;
++	dput(dentry);
 +
-+	if (phy->autoneg != AUTONEG_ENABLE)
-+		return -EINVAL;
-+
-+	return genphy_restart_aneg(phy);
+ 	return ret;
  }
  
- static u32
 -- 
 2.19.1
 
