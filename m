@@ -2,119 +2,101 @@ Return-Path: <SRS0=J4ZE=RP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_PASS autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5C400C43381
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 17:34:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D0DA5C43381
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 17:34:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 36933206DF
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 17:34:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 70E6A206DF
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 17:34:07 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=rasmusvillemoes.dk header.i=@rasmusvillemoes.dk header.b="aiQGimhN"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729774AbfCLRd6 (ORCPT
+        id S1729805AbfCLReG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 12 Mar 2019 13:33:58 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:49464 "EHLO mx1.redhat.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729587AbfCLRd4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 12 Mar 2019 13:33:56 -0400
-Received: from smtp.corp.redhat.com (int-mx06.intmail.prod.int.phx2.redhat.com [10.5.11.16])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id 8E70281DF1;
-        Tue, 12 Mar 2019 17:33:56 +0000 (UTC)
-Received: from gondolin (dhcp-192-213.str.redhat.com [10.33.192.213])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 67E084C3;
-        Tue, 12 Mar 2019 17:33:53 +0000 (UTC)
-Date:   Tue, 12 Mar 2019 18:33:51 +0100
-From:   Cornelia Huck <cohuck@redhat.com>
-To:     Dongli Zhang <dongli.zhang@oracle.com>
-Cc:     <virtualization@lists.linux-foundation.org>,
-        <linux-block@vger.kernel.org>, axboe@kernel.dk,
-        linux-kernel@vger.kernel.org, mst@redhat.com
-Subject: Re: virtio-blk: should num_vqs be limited by num_possible_cpus()?
-Message-ID: <20190312183351.74764f4f.cohuck@redhat.com>
-In-Reply-To: <e4afe4c5-0262-4500-aeec-60f30734b4fc@default>
-References: <e4afe4c5-0262-4500-aeec-60f30734b4fc@default>
-Organization: Red Hat GmbH
+        Tue, 12 Mar 2019 13:34:06 -0400
+Received: from mail-lj1-f193.google.com ([209.85.208.193]:38796 "EHLO
+        mail-lj1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729756AbfCLRd5 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 12 Mar 2019 13:33:57 -0400
+Received: by mail-lj1-f193.google.com with SMTP id x13so3076424ljj.5
+        for <linux-kernel@vger.kernel.org>; Tue, 12 Mar 2019 10:33:57 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=rasmusvillemoes.dk; s=google;
+        h=from:to:cc:subject:date:message-id:in-reply-to:references
+         :mime-version:content-transfer-encoding;
+        bh=etcNNtTzHJ9C5TLik2UUWBM9lxWizQ3uJC9YeUHDamQ=;
+        b=aiQGimhN5qtnkWLgB/Bvepsutu7mowEz1yO3avlsbHoT85psJSuc7c9Wm8HSDw7Jyd
+         p7sEYeS+J3Qm2CAmZ4qtz7jeCLqeHngOLUASWGpRFZTWUpi+rivjSMMnBUhM+qJqCglq
+         4Xe3AAXtAB6/U2C7EvN5EUTRG1arhDldnEjBg=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=etcNNtTzHJ9C5TLik2UUWBM9lxWizQ3uJC9YeUHDamQ=;
+        b=VBtc1+gsi7drpzf0BSw9GMA7BljZND9h7HjeEJpx6F6jhS8VHO4Z0l3dTqCQ6VI+6B
+         8s34KnSNtl+EPVJbXihpinWwU8WTt9jHRgbGA6iQQrluPQ3LmE34fF4TWoTRqWpu9Rxh
+         LWX0XnZ63TgFPEthq3NcNfTWWKwoEIS+tZEgwrY+e8HPegkzBjxoKwOaltx9Q70elMPF
+         8dUPFNzFZaspakD6GwAL5x+4GoeoITMOt7+1wUbjQi6hwutYNp6GaQqHclSsrCEAiqcu
+         GW5zKmU8OafJp3lU7f6AR1jtWBW2LriY43eXRjwDTzM30LC7xogoWFp15tHJjqXhXX1i
+         25eg==
+X-Gm-Message-State: APjAAAW9/q32RyjbsKLHn72OQJ/C8FiJyBfFZMTxFCL3rZC/RZDLJYnl
+        UJjqcGe6OStQLFujm1AWkXsJhw==
+X-Google-Smtp-Source: APXvYqxIUbNfZlyWSJBVE/SZU0lkItuaE4PpAJYXt+4cCPd4ZGelq2hMgNLIhUxE5oI1+n7kdEp48w==
+X-Received: by 2002:a2e:425b:: with SMTP id p88mr19619041lja.78.1552412036520;
+        Tue, 12 Mar 2019 10:33:56 -0700 (PDT)
+Received: from prevas-ravi.prevas.se ([81.216.59.226])
+        by smtp.gmail.com with ESMTPSA id j5sm1473609ljg.47.2019.03.12.10.33.55
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Tue, 12 Mar 2019 10:33:56 -0700 (PDT)
+From:   Rasmus Villemoes <linux@rasmusvillemoes.dk>
+To:     Marc Zyngier <marc.zyngier@arm.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Jason Cooper <jason@lakedaemon.net>
+Cc:     Rasmus Villemoes <linux@rasmusvillemoes.dk>,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH 3/4] irqchip/gic-v3-its: drop redundant initialization in mk_lpi_range
+Date:   Tue, 12 Mar 2019 18:33:48 +0100
+Message-Id: <20190312173350.4025-4-linux@rasmusvillemoes.dk>
+X-Mailer: git-send-email 2.20.1
+In-Reply-To: <20190312173350.4025-1-linux@rasmusvillemoes.dk>
+References: <20190312173350.4025-1-linux@rasmusvillemoes.dk>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.16
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.25]); Tue, 12 Mar 2019 17:33:56 +0000 (UTC)
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, 12 Mar 2019 10:22:46 -0700 (PDT)
-Dongli Zhang <dongli.zhang@oracle.com> wrote:
+There's no reason to ask kmalloc() to zero the allocation, since all
+the fields get initialized immediately afterwards. Except that there's
+also not any reason to initialize the ->entry member, since the
+element gets added to the lpi_range_list immediately.
 
-> I observed that there is one msix vector for config and one shared vector
-> for all queues in below qemu cmdline, when the num-queues for virtio-blk
-> is more than the number of possible cpus:
-> 
-> qemu: "-smp 4" while "-device virtio-blk-pci,drive=drive-0,id=virtblk0,num-queues=6"
-> 
-> # cat /proc/interrupts 
->            CPU0       CPU1       CPU2       CPU3
-> ... ...
->  24:          0          0          0          0   PCI-MSI 65536-edge      virtio0-config
->  25:          0          0          0         59   PCI-MSI 65537-edge      virtio0-virtqueues
-> ... ...
-> 
-> 
-> However, when num-queues is the same as number of possible cpus:
-> 
-> qemu: "-smp 4" while "-device virtio-blk-pci,drive=drive-0,id=virtblk0,num-queues=4"
-> 
-> # cat /proc/interrupts 
->            CPU0       CPU1       CPU2       CPU3
-> ... ... 
->  24:          0          0          0          0   PCI-MSI 65536-edge      virtio0-config
->  25:          2          0          0          0   PCI-MSI 65537-edge      virtio0-req.0
->  26:          0         35          0          0   PCI-MSI 65538-edge      virtio0-req.1
->  27:          0          0         32          0   PCI-MSI 65539-edge      virtio0-req.2
->  28:          0          0          0          0   PCI-MSI 65540-edge      virtio0-req.3
-> ... ...
-> 
-> In above case, there is one msix vector per queue.
+Signed-off-by: Rasmus Villemoes <linux@rasmusvillemoes.dk>
+---
+ drivers/irqchip/irq-gic-v3-its.c | 3 +--
+ 1 file changed, 1 insertion(+), 2 deletions(-)
 
-Please note that this is pci-specific...
+diff --git a/drivers/irqchip/irq-gic-v3-its.c b/drivers/irqchip/irq-gic-v3-its.c
+index 5c8232cff290..2ebc28a53d96 100644
+--- a/drivers/irqchip/irq-gic-v3-its.c
++++ b/drivers/irqchip/irq-gic-v3-its.c
+@@ -1465,9 +1465,8 @@ static struct lpi_range *mk_lpi_range(u32 base, u32 span)
+ {
+ 	struct lpi_range *range;
+ 
+-	range = kzalloc(sizeof(*range), GFP_KERNEL);
++	range = kmalloc(sizeof(*range), GFP_KERNEL);
+ 	if (range) {
+-		INIT_LIST_HEAD(&range->entry);
+ 		range->base_id = base;
+ 		range->span = span;
+ 	}
+-- 
+2.20.1
 
-> 
-> 
-> This is because the max number of queues is not limited by the number of
-> possible cpus.
-> 
-> By default, nvme (regardless about write_queues and poll_queues) and
-> xen-blkfront limit the number of queues with num_possible_cpus().
-
-...and these are probably pci-specific as well.
-
-> 
-> 
-> Is this by design on purpose, or can we fix with below?
-> 
-> 
-> diff --git a/drivers/block/virtio_blk.c b/drivers/block/virtio_blk.c
-> index 4bc083b..df95ce3 100644
-> --- a/drivers/block/virtio_blk.c
-> +++ b/drivers/block/virtio_blk.c
-> @@ -513,6 +513,8 @@ static int init_vq(struct virtio_blk *vblk)
->  	if (err)
->  		num_vqs = 1;
->  
-> +	num_vqs = min(num_possible_cpus(), num_vqs);
-> +
->  	vblk->vqs = kmalloc_array(num_vqs, sizeof(*vblk->vqs), GFP_KERNEL);
->  	if (!vblk->vqs)
->  		return -ENOMEM;
-
-virtio-blk, however, is not pci-specific.
-
-If we are using the ccw transport on s390, a completely different
-interrupt mechanism is in use ('floating' interrupts, which are not
-per-cpu). A check like that should therefore not go into the generic
-driver.
