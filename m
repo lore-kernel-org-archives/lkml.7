@@ -4,51 +4,52 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2737FC43381
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 17:36:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D9441C43381
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 17:36:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id ED4E02087C
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 17:36:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A99F62087C
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 17:36:36 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1552412193;
-	bh=4Qpj3Nkzg9C2OaOTdDur/qZFtu5KWjIPGfWNRlRKNlU=;
+	s=default; t=1552412196;
+	bh=ghKeEAkvRomxATNUfmzL7HQ+0WHitDSNiahtHMWWKlg=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=XYcAxj6QDHvDM+rIw1pdrVp7eSqzmV9ngkJdAEmHeUsfX5SVDCW/HCmwP3ZL5wy5j
-	 sYNXYYikQzsRFN2ddr+9Mryzu5mJHHfs3H+lPbCOzab3TNFgS4oifirz7CszEw0XTD
-	 b0Jqr0lV+IzPYBwPkY8vIOg9uKCmu3JHNwk7n8BM=
+	b=LkMn79ZVy0VGZJ4eqakmU77yu/FUTOrTCkV24275dsxYt5T9B843eGoXX4sQtw5J/
+	 3QUszVnpDLaL46nDT/3CVIThsmkNjzpLxpm1Z6ecqAjdl163DteYer8nhE2vwMuEaC
+	 6l87PIGI1eQYut5MbGhnJxGzZSXXxAbb16AgByOI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729537AbfCLRgb (ORCPT
+        id S1729320AbfCLRga (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 12 Mar 2019 13:36:31 -0400
-Received: from mail.kernel.org ([198.145.29.99]:59256 "EHLO mail.kernel.org"
+        Tue, 12 Mar 2019 13:36:30 -0400
+Received: from mail.kernel.org ([198.145.29.99]:59284 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729259AbfCLRQo (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S1729264AbfCLRQo (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Tue, 12 Mar 2019 13:16:44 -0400
 Received: from localhost (unknown [104.133.8.98])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 088C321741;
+        by mail.kernel.org (Postfix) with ESMTPSA id BE70B217F5;
         Tue, 12 Mar 2019 17:16:43 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
         s=default; t=1552411003;
-        bh=4Qpj3Nkzg9C2OaOTdDur/qZFtu5KWjIPGfWNRlRKNlU=;
+        bh=ghKeEAkvRomxATNUfmzL7HQ+0WHitDSNiahtHMWWKlg=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Jm6QKiA7Zuf7FWEhfqyUASPw09ExEx5nuJIKE1fAMnvpsSSSEHodQUh1zHZC0kpwp
-         tjPxXjkchNCA1JXjXtvKEcGjQjypwmi89KB9UCONA0C1uumV/cLaT9Urxio4BxIKms
-         2xRsdfqoglJJJBSWqWWo469FWKIc5eaq1VM0v12Q=
+        b=IyiAIXpiXofkG2EhQoU29KUzaglDMmInNIdUil9l2EJB+3FezkaqOK60q0pZU5+QT
+         LS9Yn/0ufaGQyuYgKxwrhedT1Il8+diN8JqQzpFRHyEZQhtZjPMcyW6ueczOzegACi
+         VZEQhpLI/H3nUHfphmUCY9hEJ5aRxWx7AUv8O9Wk=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Codrin Ciubotariu <codrin.ciubotariu@microchip.com>,
-        Ludovic Desroches <ludovic.desroches@microchip.com>,
-        Vinod Koul <vkoul@kernel.org>, Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.14 104/135] dmaengine: at_xdmac: Fix wrongfull report of a channel as in use
-Date:   Tue, 12 Mar 2019 10:09:11 -0700
-Message-Id: <20190312170350.760995594@linuxfoundation.org>
+        stable@vger.kernel.org, Yan Fu <yafu@redhat.com>,
+        Stefano Garzarella <sgarzare@redhat.com>,
+        Stefan Hajnoczi <stefanha@redhat.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.14 105/135] vsock/virtio: fix kernel panic after device hot-unplug
+Date:   Tue, 12 Mar 2019 10:09:12 -0700
+Message-Id: <20190312170350.860962497@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190312170341.127810985@linuxfoundation.org>
 References: <20190312170341.127810985@linuxfoundation.org>
@@ -67,98 +68,99 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-[ Upstream commit dc3f595b6617ebc0307e0ce151e8f2f2b2489b95 ]
+[ Upstream commit 22b5c0b63f32568e130fa2df4ba23efce3eb495b ]
 
-atchan->status variable is used to store two different information:
- - pass channel interrupts status from interrupt handler to tasklet;
- - channel information like whether it is cyclic or paused;
+virtio_vsock_remove() invokes the vsock_core_exit() also if there
+are opened sockets for the AF_VSOCK protocol family. In this way
+the vsock "transport" pointer is set to NULL, triggering the
+kernel panic at the first socket activity.
 
-This causes a bug when device_terminate_all() is called,
-(AT_XDMAC_CHAN_IS_CYCLIC cleared on atchan->status) and then a late End
-of Block interrupt arrives (AT_XDMAC_CIS_BIS), which sets bit 0 of
-atchan->status. Bit 0 is also used for AT_XDMAC_CHAN_IS_CYCLIC, so when
-a new descriptor for a cyclic transfer is created, the driver reports
-the channel as in use:
+This patch move the vsock_core_init()/vsock_core_exit() in the
+virtio_vsock respectively in module_init and module_exit functions,
+that cannot be invoked until there are open sockets.
 
-if (test_and_set_bit(AT_XDMAC_CHAN_IS_CYCLIC, &atchan->status)) {
-	dev_err(chan2dev(chan), "channel currently used\n");
-	return NULL;
-}
-
-This patch fixes the bug by adding a different struct member to keep
-the interrupts status separated from the channel status bits.
-
-Fixes: e1f7c9eee707 ("dmaengine: at_xdmac: creation of the atmel eXtended DMA Controller driver")
-Signed-off-by: Codrin Ciubotariu <codrin.ciubotariu@microchip.com>
-Acked-by: Ludovic Desroches <ludovic.desroches@microchip.com>
-Signed-off-by: Vinod Koul <vkoul@kernel.org>
+Bugzilla: https://bugzilla.redhat.com/show_bug.cgi?id=1609699
+Reported-by: Yan Fu <yafu@redhat.com>
+Signed-off-by: Stefano Garzarella <sgarzare@redhat.com>
+Acked-by: Stefan Hajnoczi <stefanha@redhat.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/dma/at_xdmac.c | 19 ++++++++++---------
- 1 file changed, 10 insertions(+), 9 deletions(-)
+ net/vmw_vsock/virtio_transport.c | 26 ++++++++++++++++++--------
+ 1 file changed, 18 insertions(+), 8 deletions(-)
 
-diff --git a/drivers/dma/at_xdmac.c b/drivers/dma/at_xdmac.c
-index 94236ec9d410..4db2cd1c611d 100644
---- a/drivers/dma/at_xdmac.c
-+++ b/drivers/dma/at_xdmac.c
-@@ -203,6 +203,7 @@ struct at_xdmac_chan {
- 	u32				save_cim;
- 	u32				save_cnda;
- 	u32				save_cndc;
-+	u32				irq_status;
- 	unsigned long			status;
- 	struct tasklet_struct		tasklet;
- 	struct dma_slave_config		sconfig;
-@@ -1580,8 +1581,8 @@ static void at_xdmac_tasklet(unsigned long data)
- 	struct at_xdmac_desc	*desc;
- 	u32			error_mask;
+diff --git a/net/vmw_vsock/virtio_transport.c b/net/vmw_vsock/virtio_transport.c
+index fdb294441682..8cdf6ddec9b7 100644
+--- a/net/vmw_vsock/virtio_transport.c
++++ b/net/vmw_vsock/virtio_transport.c
+@@ -75,6 +75,9 @@ static u32 virtio_transport_get_local_cid(void)
+ {
+ 	struct virtio_vsock *vsock = virtio_vsock_get();
  
--	dev_dbg(chan2dev(&atchan->chan), "%s: status=0x%08lx\n",
--		 __func__, atchan->status);
-+	dev_dbg(chan2dev(&atchan->chan), "%s: status=0x%08x\n",
-+		__func__, atchan->irq_status);
++	if (!vsock)
++		return VMADDR_CID_ANY;
++
+ 	return vsock->guest_cid;
+ }
  
- 	error_mask = AT_XDMAC_CIS_RBEIS
- 		     | AT_XDMAC_CIS_WBEIS
-@@ -1589,15 +1590,15 @@ static void at_xdmac_tasklet(unsigned long data)
+@@ -584,10 +587,6 @@ static int virtio_vsock_probe(struct virtio_device *vdev)
  
- 	if (at_xdmac_chan_is_cyclic(atchan)) {
- 		at_xdmac_handle_cyclic(atchan);
--	} else if ((atchan->status & AT_XDMAC_CIS_LIS)
--		   || (atchan->status & error_mask)) {
-+	} else if ((atchan->irq_status & AT_XDMAC_CIS_LIS)
-+		   || (atchan->irq_status & error_mask)) {
- 		struct dma_async_tx_descriptor  *txd;
+ 	virtio_vsock_update_guest_cid(vsock);
  
--		if (atchan->status & AT_XDMAC_CIS_RBEIS)
-+		if (atchan->irq_status & AT_XDMAC_CIS_RBEIS)
- 			dev_err(chan2dev(&atchan->chan), "read bus error!!!");
--		if (atchan->status & AT_XDMAC_CIS_WBEIS)
-+		if (atchan->irq_status & AT_XDMAC_CIS_WBEIS)
- 			dev_err(chan2dev(&atchan->chan), "write bus error!!!");
--		if (atchan->status & AT_XDMAC_CIS_ROIS)
-+		if (atchan->irq_status & AT_XDMAC_CIS_ROIS)
- 			dev_err(chan2dev(&atchan->chan), "request overflow error!!!");
+-	ret = vsock_core_init(&virtio_transport.transport);
+-	if (ret < 0)
+-		goto out_vqs;
+-
+ 	vsock->rx_buf_nr = 0;
+ 	vsock->rx_buf_max_nr = 0;
+ 	atomic_set(&vsock->queued_replies, 0);
+@@ -618,8 +617,6 @@ static int virtio_vsock_probe(struct virtio_device *vdev)
+ 	mutex_unlock(&the_virtio_vsock_mutex);
+ 	return 0;
  
- 		spin_lock_bh(&atchan->lock);
-@@ -1652,7 +1653,7 @@ static irqreturn_t at_xdmac_interrupt(int irq, void *dev_id)
- 			atchan = &atxdmac->chan[i];
- 			chan_imr = at_xdmac_chan_read(atchan, AT_XDMAC_CIM);
- 			chan_status = at_xdmac_chan_read(atchan, AT_XDMAC_CIS);
--			atchan->status = chan_status & chan_imr;
-+			atchan->irq_status = chan_status & chan_imr;
- 			dev_vdbg(atxdmac->dma.dev,
- 				 "%s: chan%d: imr=0x%x, status=0x%x\n",
- 				 __func__, i, chan_imr, chan_status);
-@@ -1666,7 +1667,7 @@ static irqreturn_t at_xdmac_interrupt(int irq, void *dev_id)
- 				 at_xdmac_chan_read(atchan, AT_XDMAC_CDA),
- 				 at_xdmac_chan_read(atchan, AT_XDMAC_CUBC));
+-out_vqs:
+-	vsock->vdev->config->del_vqs(vsock->vdev);
+ out:
+ 	kfree(vsock);
+ 	mutex_unlock(&the_virtio_vsock_mutex);
+@@ -669,7 +666,6 @@ static void virtio_vsock_remove(struct virtio_device *vdev)
  
--			if (atchan->status & (AT_XDMAC_CIS_RBEIS | AT_XDMAC_CIS_WBEIS))
-+			if (atchan->irq_status & (AT_XDMAC_CIS_RBEIS | AT_XDMAC_CIS_WBEIS))
- 				at_xdmac_write(atxdmac, AT_XDMAC_GD, atchan->mask);
+ 	mutex_lock(&the_virtio_vsock_mutex);
+ 	the_virtio_vsock = NULL;
+-	vsock_core_exit();
+ 	mutex_unlock(&the_virtio_vsock_mutex);
  
- 			tasklet_schedule(&atchan->tasklet);
+ 	vdev->config->del_vqs(vdev);
+@@ -702,14 +698,28 @@ static int __init virtio_vsock_init(void)
+ 	virtio_vsock_workqueue = alloc_workqueue("virtio_vsock", 0, 0);
+ 	if (!virtio_vsock_workqueue)
+ 		return -ENOMEM;
++
+ 	ret = register_virtio_driver(&virtio_vsock_driver);
+ 	if (ret)
+-		destroy_workqueue(virtio_vsock_workqueue);
++		goto out_wq;
++
++	ret = vsock_core_init(&virtio_transport.transport);
++	if (ret)
++		goto out_vdr;
++
++	return 0;
++
++out_vdr:
++	unregister_virtio_driver(&virtio_vsock_driver);
++out_wq:
++	destroy_workqueue(virtio_vsock_workqueue);
+ 	return ret;
++
+ }
+ 
+ static void __exit virtio_vsock_exit(void)
+ {
++	vsock_core_exit();
+ 	unregister_virtio_driver(&virtio_vsock_driver);
+ 	destroy_workqueue(virtio_vsock_workqueue);
+ }
 -- 
 2.19.1
 
