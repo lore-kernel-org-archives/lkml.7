@@ -2,112 +2,131 @@ Return-Path: <SRS0=J4ZE=RP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0D05FC43381
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 17:42:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5EBC9C43381
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 17:42:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D31C821734
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 17:42:45 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="eICtM3WJ"
+	by mail.kernel.org (Postfix) with ESMTP id 31F69214AE
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 17:42:50 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1552412570;
+	bh=LFHcKK6faK7/O4hcN+eXDnfvxF23d4nWBYOISKViewo=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=l3Yz9S4fjp+gqMI8jI4KRfUhCVb6pueiC7J5fAM6Vd3hLAjJ8XtfEVbfhk+yl6YwZ
+	 GLaXYM2ggOEtAmrF6wQPf6h4ZB3Maiv7UPccy3hdcth0ht/epnZTsKTMuGVBHwRuqX
+	 B0SXE++SfKxaTGI6eKuhumeBB/0c++pSbcU3JJQA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729175AbfCLRmo (ORCPT
+        id S1728903AbfCLRPx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 12 Mar 2019 13:42:44 -0400
-Received: from mail-wm1-f54.google.com ([209.85.128.54]:35215 "EHLO
-        mail-wm1-f54.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728909AbfCLRPz (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 12 Mar 2019 13:15:55 -0400
-Received: by mail-wm1-f54.google.com with SMTP id y15so3508129wma.0
-        for <linux-kernel@vger.kernel.org>; Tue, 12 Mar 2019 10:15:53 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=JJNmxFq4kvtgDMxGW5EQZmwTBHXCE8cD8UO0j6EqecE=;
-        b=eICtM3WJdg7Bq7C7keVDYg0CrinSY8xGGeQG45rEmu59uiZfjFMczd9uA/UYhoAK+g
-         hCH2sfdCvx95nRGUSuHYhXxnYObCMQL27F3dvIFV/nD0pkzS+RWsuLvO20H3uohxUK8Q
-         bFWGc02dYBQDpx9KIr9IkMTpmmOLw6OjlJlPjDrBDeBbHlAJFaklVRj5VOu0U31Btj3D
-         Y2PvQxG1UvzKcsj7by517lkcVQ00sM0No4sycN/PgwxHIT9WthtTO4uSpYByiS94nf9g
-         UJ6r3xqwjS105/10FTzY8I8djkMo+4TPDnzH9B4ZzIGH0kaWVK0ouPit1AgkSDsEVjT0
-         4K0g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=JJNmxFq4kvtgDMxGW5EQZmwTBHXCE8cD8UO0j6EqecE=;
-        b=NghbaTMhb5AqeRI5htT7nYTF8qtt8rg6TqsO078qkO1Br6c2jmeIxSVVHmyAbsRE3r
-         9/1EuPSWAhpjYywoEUW9S/9rGd2lMs2ELaNBv5sRothT5afPxn5tpWMc26zJE+oIyRB2
-         TscW0qKVW9wA267b/H4NZzMlybvaXcxFu/QAYt2TEmUxpMlBlESr865s2u4mqlafAme6
-         YxD5fImQ53ge58BZimldZ8b8rak5DZmY41EP46aClFs23o0JsGUMKeQj0aLrKiRFx+Ay
-         G2fB2AJdG82Z4SKEw1Xl5P/tKcS4VyxpQr+GnFa0EQ2eEDqofYOjd7rWInEIoUmLysvM
-         YX6w==
-X-Gm-Message-State: APjAAAXMSIT2Zz7xFsyl31KTFv3MSeWe1s07uf+aCr/L4/VkexVUi5JS
-        Jor2hkfpMjEqu+6Qn1S2HrljPlxzklii6XRCK+cuMg==
-X-Google-Smtp-Source: APXvYqx87Bwal2xirLDgWzJL461s60oU++NHtJORE9GT9nlzsH1PR8HvbGpV44aPviSqK/l38j0DtUaUXf28zAVP9qA=
-X-Received: by 2002:a05:600c:2115:: with SMTP id u21mr3406355wml.70.1552410952458;
- Tue, 12 Mar 2019 10:15:52 -0700 (PDT)
+        Tue, 12 Mar 2019 13:15:53 -0400
+Received: from mail.kernel.org ([198.145.29.99]:54610 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727746AbfCLRO7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 12 Mar 2019 13:14:59 -0400
+Received: from localhost (unknown [104.133.8.98])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id E765D2184C;
+        Tue, 12 Mar 2019 17:14:58 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1552410899;
+        bh=LFHcKK6faK7/O4hcN+eXDnfvxF23d4nWBYOISKViewo=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=jK0VzZ9QGmh66uXuAemYxAy5EjpogAZV2tBuqD+TW8GgtG75TDbixDuE6NYotQ1n7
+         BYqgxQenzxcTsx5/Y709+T9WEJwwd28MHmNKBf+ySLFnDFvv1LsiLeMSID28ljZgeI
+         bAaCpD90Fmq3kMabBs5/Ax21qCu5oJIakJnQTBg8=
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     linux-kernel@vger.kernel.org
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        stable@vger.kernel.org, Jun-Ru Chang <jrjang@realtek.com>,
+        Tony Wu <tonywu@realtek.com>,
+        Paul Burton <paul.burton@mips.com>, ralf@linux-mips.org,
+        jhogan@kernel.org, macro@mips.com, yamada.masahiro@socionext.com,
+        peterz@infradead.org, mingo@kernel.org, linux-mips@vger.kernel.org,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.19 111/149] MIPS: Remove function size check in get_frame_info()
+Date:   Tue, 12 Mar 2019 10:08:49 -0700
+Message-Id: <20190312170358.799063461@linuxfoundation.org>
+X-Mailer: git-send-email 2.21.0
+In-Reply-To: <20190312170349.421581206@linuxfoundation.org>
+References: <20190312170349.421581206@linuxfoundation.org>
+User-Agent: quilt/0.65
+X-stable: review
+X-Patchwork-Hint: ignore
 MIME-Version: 1.0
-References: <20190310203403.27915-1-sultan@kerneltoast.com>
- <20190311174320.GC5721@dhcp22.suse.cz> <20190311175800.GA5522@sultan-box.localdomain>
- <CAJuCfpHTjXejo+u--3MLZZj7kWQVbptyya4yp1GLE3hB=BBX7w@mail.gmail.com>
- <20190311204626.GA3119@sultan-box.localdomain> <CAJuCfpGpBxofTT-ANEEY+dFCSdwkQswox3s8Uk9Eq0BnK9i0iA@mail.gmail.com>
- <20190312080532.GE5721@dhcp22.suse.cz> <20190312163741.GA2762@sultan-box.localdomain>
- <20190312165805.GF5721@dhcp22.suse.cz>
-In-Reply-To: <20190312165805.GF5721@dhcp22.suse.cz>
-From:   Suren Baghdasaryan <surenb@google.com>
-Date:   Tue, 12 Mar 2019 10:15:40 -0700
-Message-ID: <CAJuCfpH9emgP=iaMy2_BEJ6HT3vvrvoeqTrCUXeBBD9VNR99kA@mail.gmail.com>
-Subject: Re: [RFC] simple_lmk: Introduce Simple Low Memory Killer for Android
-To:     Michal Hocko <mhocko@kernel.org>
-Cc:     Sultan Alsawaf <sultan@kerneltoast.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        =?UTF-8?B?QXJ2ZSBIasO4bm5ldsOlZw==?= <arve@android.com>,
-        Todd Kjos <tkjos@android.com>,
-        Martijn Coenen <maco@android.com>,
-        Joel Fernandes <joel@joelfernandes.org>,
-        Christian Brauner <christian@brauner.io>,
-        Ingo Molnar <mingo@redhat.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        LKML <linux-kernel@vger.kernel.org>, devel@driverdev.osuosl.org,
-        linux-mm <linux-mm@kvack.org>, Tim Murray <timmurray@google.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Mar 12, 2019 at 9:58 AM Michal Hocko <mhocko@kernel.org> wrote:
->
-> On Tue 12-03-19 09:37:41, Sultan Alsawaf wrote:
-> > I have not had a chance to look at PSI yet, but
-> > unless a PSI-enabled solution allows allocations to reach the same point as when
-> > the OOM killer is invoked (which is contradictory to what it sets out to do),
+4.19-stable review patch.  If anyone has any objections, please let me know.
 
-LMK's job is to relieve memory pressure before we reach the boiling
-point at which OOM killer has to be invoked. If we wait that long it
-will definitely affect user experience. There might be usecases when
-you might not care about this but on interactive systems like Android
-it is important.
+------------------
 
-> > then it cannot take advantage of all of the alternative memory-reclaim means
-> > employed in the slowpath, and will result in killing a process before it is
-> > _really_ necessary.
+[ Upstream commit 2b424cfc69728224fcb5fad138ea7260728e0901 ]
 
-I guess it's a matter of defining when is it _really_ necessary to
-kill. In Android case that should be when the user starts suffering
-from the delays caused by memory contention and that delay is exactly
-what PSI is measuring.
+Patch (b6c7a324df37b "MIPS: Fix get_frame_info() handling of
+microMIPS function size.") introduces additional function size
+check for microMIPS by only checking insn between ip and ip + func_size.
+However, func_size in get_frame_info() is always 0 if KALLSYMS is not
+enabled. This causes get_frame_info() to return immediately without
+calculating correct frame_size, which in turn causes "Can't analyze
+schedule() prologue" warning messages at boot time.
 
-> One more note. The above is true, but you can also hit one of the
-> thrashing reclaim behaviors and reclaim last few pages again and again
-> with the whole system really sluggish. That is what PSI is trying to
-> help with.
-> --
-> Michal Hocko
-> SUSE Labs
+This patch removes func_size check, and let the frame_size check run
+up to 128 insns for both MIPS and microMIPS.
+
+Signed-off-by: Jun-Ru Chang <jrjang@realtek.com>
+Signed-off-by: Tony Wu <tonywu@realtek.com>
+Signed-off-by: Paul Burton <paul.burton@mips.com>
+Fixes: b6c7a324df37b ("MIPS: Fix get_frame_info() handling of microMIPS function size.")
+Cc: <ralf@linux-mips.org>
+Cc: <jhogan@kernel.org>
+Cc: <macro@mips.com>
+Cc: <yamada.masahiro@socionext.com>
+Cc: <peterz@infradead.org>
+Cc: <mingo@kernel.org>
+Cc: <linux-mips@vger.kernel.org>
+Cc: <linux-kernel@vger.kernel.org>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
+---
+ arch/mips/kernel/process.c | 7 +++----
+ 1 file changed, 3 insertions(+), 4 deletions(-)
+
+diff --git a/arch/mips/kernel/process.c b/arch/mips/kernel/process.c
+index d4f7fd4550e1..85522c137f19 100644
+--- a/arch/mips/kernel/process.c
++++ b/arch/mips/kernel/process.c
+@@ -371,7 +371,7 @@ static inline int is_sp_move_ins(union mips_instruction *ip, int *frame_size)
+ static int get_frame_info(struct mips_frame_info *info)
+ {
+ 	bool is_mmips = IS_ENABLED(CONFIG_CPU_MICROMIPS);
+-	union mips_instruction insn, *ip, *ip_end;
++	union mips_instruction insn, *ip;
+ 	const unsigned int max_insns = 128;
+ 	unsigned int last_insn_size = 0;
+ 	unsigned int i;
+@@ -384,10 +384,9 @@ static int get_frame_info(struct mips_frame_info *info)
+ 	if (!ip)
+ 		goto err;
+ 
+-	ip_end = (void *)ip + info->func_size;
+-
+-	for (i = 0; i < max_insns && ip < ip_end; i++) {
++	for (i = 0; i < max_insns; i++) {
+ 		ip = (void *)ip + last_insn_size;
++
+ 		if (is_mmips && mm_insn_16bit(ip->halfword[0])) {
+ 			insn.word = ip->halfword[0] << 16;
+ 			last_insn_size = 2;
+-- 
+2.19.1
+
+
+
