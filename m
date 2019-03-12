@@ -2,114 +2,120 @@ Return-Path: <SRS0=J4ZE=RP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,URIBL_BLOCKED
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CE3C4C43381
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 08:48:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 03F66C43381
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 08:49:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9C86C21734
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 08:48:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C5965214AE
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 08:49:22 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=brauner.io header.i=@brauner.io header.b="W15h/+ei"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="Y/5Ztrm3"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727594AbfCLIsV (ORCPT
+        id S1727609AbfCLItV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 12 Mar 2019 04:48:21 -0400
-Received: from mail-ed1-f65.google.com ([209.85.208.65]:36668 "EHLO
-        mail-ed1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726483AbfCLIsU (ORCPT
+        Tue, 12 Mar 2019 04:49:21 -0400
+Received: from mail-lf1-f67.google.com ([209.85.167.67]:37468 "EHLO
+        mail-lf1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726483AbfCLItU (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 12 Mar 2019 04:48:20 -0400
-Received: by mail-ed1-f65.google.com with SMTP id e4so1562112edi.3
-        for <linux-kernel@vger.kernel.org>; Tue, 12 Mar 2019 01:48:19 -0700 (PDT)
+        Tue, 12 Mar 2019 04:49:20 -0400
+Received: by mail-lf1-f67.google.com with SMTP id u2so1413521lfd.4
+        for <linux-kernel@vger.kernel.org>; Tue, 12 Mar 2019 01:49:19 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=brauner.io; s=google;
-        h=date:user-agent:in-reply-to:references:mime-version
-         :content-transfer-encoding:subject:to:cc:from:message-id;
-        bh=qLa95DyklTZJohSCfbWMlR6TLcwZlkof2Mrj+c+e5rE=;
-        b=W15h/+ei6U+x7egAkhO305eE4JZ01p2N6zccFTrUUIryIUEPebB5DrsWxIyHoxK0RV
-         jqObdhSNZirfuxbMPRGU0lXl0XUsVb3C84hskg7zHSl9Bg8D1Al0tUrbyETL9lcwgEM5
-         cASPRSBM9iHJTRdYeDVLWK4TAzVyZ+PR+SBaiqBWkfGLCtcv2nm9D91cipYToUZgfL22
-         WQFfBbXxeEq3Ie/1WUYeB0NCxUmtc4/O3dWjwy+onjIn9fp15mirOaTY18HpcnuCqiC1
-         aNXvZG0Z87iofUhRwgDsVyeNKS1neDQq0fBmDX4quESzm5DKFB1DvSsxqGDW8EuQtJ7b
-         DNfw==
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=MFIEefMYnz1eemiwQEU5sKowNj5kyBHW5KbGr+EN4CQ=;
+        b=Y/5Ztrm3MS9rVgo+BfJmMu8Fo7o+/oRpvHNGPt3kVNyVg095W+pOogu1v8sE1kdG8A
+         7po9LLqNcDJFkHUsULP5IECHGjLzJr8GQzQcppS5ZDAxzmHX3nA3IiMxOBZqBQlGdrLg
+         X4x85HOC41crMY9pujPWFgd+MhvNkhIlYKsoTj/46978QugWcPCb8I65Uzk5zqKvkIBm
+         ZKe/QmmYQL3pQ7Fpyi6zZMSaVkAw9nVFsFlnb/1TvWzyKNqglHN60MTGpNUHIg0PnxFZ
+         XB1TkHbm9T/J6y66GNHGlgUAq21RCTn4Dz/RwxwrG6uaQxqh3ftcPezFMwHXhZ2nt1HH
+         tm4Q==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:user-agent:in-reply-to:references
-         :mime-version:content-transfer-encoding:subject:to:cc:from
-         :message-id;
-        bh=qLa95DyklTZJohSCfbWMlR6TLcwZlkof2Mrj+c+e5rE=;
-        b=QKJbSPSliryeP0fGwEUjDq/RnqVT6BZLUErk4NGpmzdRiJU+P0X+etnj/8QO9K52Pv
-         P278GDLSOvNp45D8Uow26bKsgmRCIhqNss0klXObo6g6yBOfiHXJn7TRCdZZiYKgJvep
-         fEjM6TPm7kqOcG2YLvNVpMjJO4121BMRSYYIZh0RXks/WpVuOr28pN/oiZUceZHdvZkq
-         OAXAiZSabRdCwWQRrtK1qjQTiEiK+7EvWWPSOUNsYZ7mVi6N4rOWhZYw5rHxx9M+9W5Y
-         3ezD7WKS8hgmQTZyXTpTLDrNsjVwcvID/H9zvgzAxdCPmj2MId7kNVS6nQYfs59Lt6TG
-         +s0Q==
-X-Gm-Message-State: APjAAAWGOBlBjYYCoQnE2YBj6H0B95//rojtyiS01KwSbCMlyDIp/U6u
-        KswY2yJkhxSHRFSRVRynWvILeg==
-X-Google-Smtp-Source: APXvYqx7rk/jyN7mrCUWyMyGCv9nkcCym92ozsLV4lpukHahWRiypoehHL5DIkj06wvsXe+uwpdzlw==
-X-Received: by 2002:a50:a4ec:: with SMTP id x41mr2437370edb.27.1552380498687;
-        Tue, 12 Mar 2019 01:48:18 -0700 (PDT)
-Received: from ?IPv6:2a02:8109:b6c0:76e:ad50:a908:c1ce:44c? ([2a02:8109:b6c0:76e:ad50:a908:c1ce:44c])
-        by smtp.gmail.com with ESMTPSA id d17sm401398ejl.49.2019.03.12.01.48.17
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Tue, 12 Mar 2019 01:48:17 -0700 (PDT)
-Date:   Tue, 12 Mar 2019 09:48:11 +0100
-User-Agent: K-9 Mail for Android
-In-Reply-To: <CAK8P3a0iW-bhfiLY2po4cwaG0f-S+Xdoowrj0A6CwaY4VHgdWA@mail.gmail.com>
-References: <20190122141027.70cd9166@canb.auug.org.au> <20190213162212.500a7cd5@canb.auug.org.au> <CAK8P3a1hw03ik+tZSG8PnP7Rd=Pzwbo7n59HLJW04ncndyqzsg@mail.gmail.com> <CAMuHMdUmPBeQ=jcDufVBDEGiO1Yk4bWWBSg488Jm_wwAuySHBQ@mail.gmail.com> <CAK8P3a1zHm-WjYjEA65PomrKe7+5Sd110KbXv13=wiMVpxyuaQ@mail.gmail.com> <20190311214307.domy6azaoi4ggtiu@brauner.io> <CAK8P3a0iW-bhfiLY2po4cwaG0f-S+Xdoowrj0A6CwaY4VHgdWA@mail.gmail.com>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=MFIEefMYnz1eemiwQEU5sKowNj5kyBHW5KbGr+EN4CQ=;
+        b=d1KcTuPpq665Im/+dfF+eGUVy4c8EGYL69buUjWhcd4ULaLFFjFYAHZmY33BKriwu8
+         hwdW8u4BS16EKEFMk8hCzcIDepCv7Rikm0M+8BTIg4v3RnW0IoJM9LvKodKxLtIt3wiP
+         cseAxiXCIO0XICDdnLk4c0mHWn0jFtR+Sg0duHPGRGU6KZgeiSLqqxT/ukwjfbMN+xNN
+         4m3C2m6HxK7p16Lzv/y6MetxAMuw2t1Vgo2jdc4lZIlEj3m8ERHToN+Dcrfk1q8/sa5n
+         xwIbemi28s1kIwQKMZ4To1ryVtWlNr1f/fEUoKSwo8LE5ZxxEQXhzBSSGFbpnRnk7i3G
+         mxdQ==
+X-Gm-Message-State: APjAAAW/H9cvLwD09jV8CVK+JFLn5yEByykmjdaP7+YIzAvFckB9BCmi
+        dCNDOui9eYWl8jJZeQ7Hj5cY4QacGaFlcmT/W+AsvQ==
+X-Google-Smtp-Source: APXvYqyIYNaXm2HsY7Ep9/U9iPJtwISrRyaPyUxCgTKn7cvyK+a1Zba6KxcZQJcLtjaJYcNUZm5PyJ67qn71LVk1upg=
+X-Received: by 2002:ac2:5638:: with SMTP id b24mr3365165lff.18.1552380558638;
+ Tue, 12 Mar 2019 01:49:18 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain;
- charset=utf-8
-Content-Transfer-Encoding: quoted-printable
-Subject: Re: New syscalls (was: Re: linux-next: manual merge of the pidfd tree with the y2038 tree (now block and tip trees))
-To:     Arnd Bergmann <arnd@arndb.de>
-CC:     Geert Uytterhoeven <geert@linux-m68k.org>,
-        Stephen Rothwell <sfr@canb.auug.org.au>,
-        Jens Axboe <axboe@kernel.dk>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@elte.hu>, "H. Peter Anvin" <hpa@zytor.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Linux-Arch <linux-arch@vger.kernel.org>
-From:   Christian Brauner <christian@brauner.io>
-Message-ID: <0E75950C-D39C-43F9-950B-284BEA768A90@brauner.io>
+References: <AMz4kuKC5haGbhyVJ4gQ6nMRzdaxJnd3SmeCSM-096p7TAp8cA@mail.gmail.com>
+ <1552378134-3678-1-git-send-email-info@metux.net>
+In-Reply-To: <1552378134-3678-1-git-send-email-info@metux.net>
+From:   Baolin Wang <baolin.wang@linaro.org>
+Date:   Tue, 12 Mar 2019 16:49:07 +0800
+Message-ID: <CAMz4kuJaFtsmk1sWw_cSc+b0tdNabt_1jZB8hjrJrOgdQkqzmA@mail.gmail.com>
+Subject: Re: [PATCH v2] drivers: gpio: sprd: use devm_platform_ioremap_resource()
+To:     "Enrico Weigelt, metux IT consult" <info@metux.net>
+Cc:     LKML <linux-kernel@vger.kernel.org>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        Orson Zhai <orsonzhai@gmail.com>,
+        Chunyan Zhang <zhang.lyra@gmail.com>,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On March 12, 2019 9:31:33 AM GMT+01:00, Arnd Bergmann <arnd@arndb=2Ede> wro=
-te:
->On Mon, Mar 11, 2019 at 10:43 PM Christian Brauner
-><christian@brauner=2Eio> wrote:
->> On Mon, Mar 11, 2019 at 10:38:07PM +0100, Arnd Bergmann wrote:
->> > On Mon, Mar 11, 2019 at 9:36 AM Geert Uytterhoeven
-><geert@linux-m68k=2Eorg> wrote:
->> > >
->> > > Shall each architcture maintainer take care of this hxxself, or
->will
->> > > this be done in
->> > > a coordinated way?
->> >
->> > I was planning to send a patch for all architectures this time
->> > (after all three sets are merged, which is now), and ask future
->>
->> Just to clarify, are you referring to your sets? I think Linus hasn't
->> gotten around to reviewing the PR for pidfd_send_signal() yet=2E :)
+On Tue, 12 Mar 2019 at 16:08, Enrico Weigelt, metux IT consult
+<info@metux.net> wrote:
 >
->Ah, I thought he had already merged both, the confusion was on
->my end=2E
-
-I think I'll do a GIT PULL RESEND later today since I sent the original pr=
- last Tuesday=2E
-
-Christian
-
-
+> Use the new helper that wraps the calls to platform_get_resource()
+> and devm_ioremap_resource() together.
 >
->      Arnd
+> Signed-off-by: Enrico Weigelt, metux IT consult <info@metux.net>
+> ---
+>  drivers/gpio/gpio-eic-sprd.c | 9 ++-------
+>  1 file changed, 2 insertions(+), 7 deletions(-)
+>
+> diff --git a/drivers/gpio/gpio-eic-sprd.c b/drivers/gpio/gpio-eic-sprd.c
+> index f0223ce..462cdf4 100644
+> --- a/drivers/gpio/gpio-eic-sprd.c
+> +++ b/drivers/gpio/gpio-eic-sprd.c
+> @@ -567,7 +567,6 @@ static int sprd_eic_probe(struct platform_device *pdev)
+>         const struct sprd_eic_variant_data *pdata;
+>         struct gpio_irq_chip *irq;
+>         struct sprd_eic *sprd_eic;
+> -       struct resource *res;
+>         int ret, i;
+>
+>         pdata = of_device_get_match_data(&pdev->dev);
+> @@ -596,13 +595,9 @@ static int sprd_eic_probe(struct platform_device *pdev)
+>                  * have one bank EIC, thus base[1] and base[2] can be
+>                  * optional.
+>                  */
+> -               res = platform_get_resource(pdev, IORESOURCE_MEM, i);
+> -               if (!res)
+> -                       continue;
+> -
+> -               sprd_eic->base[i] = devm_ioremap_resource(&pdev->dev, res);
+> +               sprd_eic->base[i] = devm_platform_ioremap_resource(pdev, i);
+>                 if (IS_ERR(sprd_eic->base[i]))
+> -                       return PTR_ERR(sprd_eic->base[i]);
+> +                       continue;
+>         }
 
+I still do not think the new API is suitable for this case. Since we
+can have optional multiple IO resources, so the original code will not
+return errors if we did not get the IO resources, but we must cast
+errors if we failed to do ioremap. But you ignore the errors of
+ioremap, which is not good.
+
+-- 
+Baolin Wang
+Best Regards
