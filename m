@@ -2,112 +2,249 @@ Return-Path: <SRS0=J4ZE=RP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PULL_REQUEST,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C0D75C43381
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 16:39:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D41E7C43381
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 16:43:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8F0AB2083D
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 16:39:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8F14A2054F
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 16:43:21 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=nifty.com header.i=@nifty.com header.b="OJbdjZSa"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="fg7rCZhK"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726860AbfCLQjx (ORCPT
+        id S1726556AbfCLQnU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 12 Mar 2019 12:39:53 -0400
-Received: from conssluserg-02.nifty.com ([210.131.2.81]:38168 "EHLO
-        conssluserg-02.nifty.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726255AbfCLQjx (ORCPT
+        Tue, 12 Mar 2019 12:43:20 -0400
+Received: from mail-lf1-f68.google.com ([209.85.167.68]:39097 "EHLO
+        mail-lf1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726255AbfCLQnT (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 12 Mar 2019 12:39:53 -0400
-Received: from mail-vs1-f54.google.com (mail-vs1-f54.google.com [209.85.217.54]) (authenticated)
-        by conssluserg-02.nifty.com with ESMTP id x2CGde52021085;
-        Wed, 13 Mar 2019 01:39:41 +0900
-DKIM-Filter: OpenDKIM Filter v2.10.3 conssluserg-02.nifty.com x2CGde52021085
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nifty.com;
-        s=dec2015msa; t=1552408781;
-        bh=6BpOhEUIH5KArzx7rFWrfV5TzefUihAmIXd76d/S7wk=;
-        h=From:Date:Subject:To:Cc:From;
-        b=OJbdjZSab7Sn5BlEvaSl0dSjLeS55NEJvoAA1eTcY2LQ+URhDXJH6f8HXT/xNxL0L
-         FQRQlDyGiXnttT1lpUosZLNkjLpj7DDCKpPygOHvi0o2lW1GOHhZwkc5BVFedd0761
-         nX3+jxq+FpHybVjbDsxgJW1egVCTwzNrNHVvp9Ab8bZHpvFqsbbLuxbvfIuKF+wIsK
-         kt1HCEZOcdN9eKfm2L1VL/dctfScqnDEs3hHfQo5p9WGbkgtQbti4Va7axD/CXmV3I
-         JnkcG+Pwz+0bGj3gE/1xdOlEslIDWQma+KV4uCcBRdUTHplGxRJUAYFbfOyB1vEDyp
-         i12XYgXYrNQGg==
-X-Nifty-SrcIP: [209.85.217.54]
-Received: by mail-vs1-f54.google.com with SMTP id z18so1987299vso.7;
-        Tue, 12 Mar 2019 09:39:41 -0700 (PDT)
-X-Gm-Message-State: APjAAAXlhmdlRcKAOR5Uhr3G72fMJEajBXW2hPL30ruOXmPpnJb0kR0k
-        Q8jIga02BV35V/oa/f2W6JcgQyh8rEwqapEi1uU=
-X-Google-Smtp-Source: APXvYqy6Au8Rn8sq3Zv4JMFYBtc24KXXlbKkPLqjFg+7QePTZ1GepA32D+APh4dAr1G6hzs2moNXBoeONIxwGsIWqlg=
-X-Received: by 2002:a67:ea05:: with SMTP id g5mr2938729vso.179.1552408780228;
- Tue, 12 Mar 2019 09:39:40 -0700 (PDT)
+        Tue, 12 Mar 2019 12:43:19 -0400
+Received: by mail-lf1-f68.google.com with SMTP id m13so2601573lfb.6;
+        Tue, 12 Mar 2019 09:43:17 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=subject:from:to:cc:references:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=hdGIBZsttxOeRsXlmv4SNGWTE8a1xa6k3veGaZntxBQ=;
+        b=fg7rCZhKTMrmpuJ+9wGeBUP9cVtSqj9N0H+92YywiE5FuQGRHJOSHLgXq/imsfkiEW
+         8sbkqcfcmdAHJ7iFQ3K3hZxFz9mCGyBOWrnv9TLGJAIa6Kym3fUxJ2ahP2MNiMUKDf6r
+         i8yMjysf7kMRTBaiZ6svuF3X2tqJYoje9g8ncXek8TJMtlTqzyHXgb35iamKwFYtdI9b
+         MoUDh6s4GsF1gjfghCE/H8aLOv0Dm6prk8yP8pJNik+leYJpePYvdDPTbSESBqzffUsV
+         UXBLaaqs601llwxG1MuvdAYqMAb/xz/ahYfVJE+KrR9d9HdF0Ca5UTrgrPOJJiXg35Jd
+         xJvA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:from:to:cc:references:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=hdGIBZsttxOeRsXlmv4SNGWTE8a1xa6k3veGaZntxBQ=;
+        b=Gru22Ybczp+SNabEM/RQjkuILeZUl4cHpfWNXin7pYkFLEmpLPE4tI0fFVOgoHdnag
+         ifVLLLjGH+0WrQjLwNbL6xysl+9nlyeWo0Y5d+zogSdEbnyuAAwV/L/B8FJEl8ZDqciG
+         3qx+kBfaFjTO17CCe0aOEs03xcIc23I97d0F1fUudj39GESJ7I4PvLTZ+zROm21PzRNI
+         H27dAKfIlYHaNNTuRFOhHONPae+HNBr8+TH/MoQEawVmWuuyeUYjyubK1DeUT5y4gHXB
+         EQW3fucxy6Va3zzFVmh+6DVL6z8W1vfytKXQcPy9snADxH/RY5Cpgmfc7Bv6HmtQU8kL
+         FxUA==
+X-Gm-Message-State: APjAAAXPDxovdcd/4upsKZfHsGFALhLdYzwm/QHdElF5xHZAIdLEDlxf
+        /xDga7SfKgwMHujqgr6nuxM=
+X-Google-Smtp-Source: APXvYqxr7kpt7kxJaYDE4MFsr8qfurjUEE/uTcWtJCdF1tC4g1TZl/11Ecn3Hl8+BW6k/U0tYUBK3A==
+X-Received: by 2002:ac2:424e:: with SMTP id m14mr21123024lfl.4.1552408996454;
+        Tue, 12 Mar 2019 09:43:16 -0700 (PDT)
+Received: from [192.168.1.18] (chp67.neoplus.adsl.tpnet.pl. [83.31.13.67])
+        by smtp.gmail.com with ESMTPSA id j5sm1450980ljg.47.2019.03.12.09.43.13
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Tue, 12 Mar 2019 09:43:15 -0700 (PDT)
+Subject: Re: [PATCH 05/25] dt-bindings: leds: Add function and color
+ properties
+From:   Jacek Anaszewski <jacek.anaszewski@gmail.com>
+To:     Dan Murphy <dmurphy@ti.com>, linux-leds@vger.kernel.org
+Cc:     devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        pavel@ucw.cz, robh@kernel.org,
+        Baolin Wang <baolin.wang@linaro.org>,
+        Daniel Mack <daniel@zonque.org>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Oleh Kravchenko <oleg@kaa.org.ua>,
+        Sakari Ailus <sakari.ailus@linux.intel.com>,
+        Simon Shields <simon@lineageos.org>
+References: <20190310182836.20841-1-jacek.anaszewski@gmail.com>
+ <20190310182836.20841-6-jacek.anaszewski@gmail.com>
+ <98c1a41e-77bb-5ffd-b5b3-772a28c0f0a6@ti.com>
+ <796a13a7-fb8c-9b5b-6bd5-dfb7458731fe@gmail.com>
+Message-ID: <232b6154-cccd-c1f9-80c3-438098f3ab08@gmail.com>
+Date:   Tue, 12 Mar 2019 17:43:11 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.5.1
 MIME-Version: 1.0
-From:   Masahiro Yamada <yamada.masahiro@socionext.com>
-Date:   Wed, 13 Mar 2019 01:39:04 +0900
-X-Gmail-Original-Message-ID: <CAK7LNASa-XsGj9ESee+RF4SMQxpxD49oKz9C86etYQV2gQPxDQ@mail.gmail.com>
-Message-ID: <CAK7LNASa-XsGj9ESee+RF4SMQxpxD49oKz9C86etYQV2gQPxDQ@mail.gmail.com>
-Subject: [GIT PULL] Kconfig updates for v5.1
-To:     Linus Torvalds <torvalds@linux-foundation.org>
-Cc:     Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Linux Kbuild mailing list <linux-kbuild@vger.kernel.org>,
-        masahiroy@kernel.org
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <796a13a7-fb8c-9b5b-6bd5-dfb7458731fe@gmail.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Linus,
+On 3/11/19 6:24 PM, Jacek Anaszewski wrote:
+> Dan,
+> 
+> On 3/11/19 1:26 PM, Dan Murphy wrote:
+>> On 3/10/19 1:28 PM, Jacek Anaszewski wrote:
+>>> Introduce dedicated properties for conveying information about
+>>> LED function and color. Mark old "label" property as deprecated.
+>>>
+>>> Signed-off-by: Jacek Anaszewski <jacek.anaszewski@gmail.com>
+>>> Cc: Baolin Wang <baolin.wang@linaro.org>
+>>> Cc: Daniel Mack <daniel@zonque.org>
+>>> Cc: Dan Murphy <dmurphy@ti.com>
+>>> Cc: Linus Walleij <linus.walleij@linaro.org>
+>>> Cc: Oleh Kravchenko <oleg@kaa.org.ua>
+>>> Cc: Sakari Ailus <sakari.ailus@linux.intel.com>
+>>> Cc: Simon Shields <simon@lineageos.org>
+>>> ---
+>>>   Documentation/devicetree/bindings/leds/common.txt | 55 
+>>> +++++++++++++++++++----
+>>>   1 file changed, 47 insertions(+), 8 deletions(-)
+>>>
+>>> diff --git a/Documentation/devicetree/bindings/leds/common.txt 
+>>> b/Documentation/devicetree/bindings/leds/common.txt
+>>> index aa1399814a2a..3402b0e1cec9 100644
+>>> --- a/Documentation/devicetree/bindings/leds/common.txt
+>>> +++ b/Documentation/devicetree/bindings/leds/common.txt
+>>> @@ -10,14 +10,23 @@ can influence the way of the LED device 
+>>> initialization, the LED components
+>>>   have to be tightly coupled with the LED device binding. They are 
+>>> represented
+>>>   by child nodes of the parent LED device binding.
+>>> +
+>>>   Optional properties for child nodes:
+>>>   - led-sources : List of device current outputs the LED is connected 
+>>> to. The
+>>>           outputs are identified by the numbers that must be defined
+>>>           in the LED device binding documentation.
+>>> +- function: LED functon. Use one of the LED_FUNCTION_* prefixed 
+>>> definitions
+>>> +        from the header include/dt-bindings/leds/common.h.
+>>> +        If there is no matching LED_FUNCTION available, add a new one.
+>>> +- color : Color of the LED. Use one of the LED_COLOR_NAME_* prefixed 
+>>> definitions
+>>> +        from the header include/dt-bindings/leds/common.h.
+>>> +        If there is no matching LED_COLOR_NAME available, add a new 
+>>> one.
+>>> +
+>>
+>> I am assuming multi color can re-use this property as well?
+> 
+> I intended it to be a string, but indeed it would be better if we will
+> make it an integer to be consistent with the discussed LED multi color
+> design.
 
+Going further, I wonder if it would make sense to make function also
+an integer. This way we could enforce use of LED functions known
+to kernel.
 
-Please pull Kconfig updates for v5.1.
+Additionally, if we introduced a property like function-enum-val
+(better name suggestions are welcome), then we could easily solve the
+problem of string concatenation limitation in dtc compiler mentioned
+in the cover letter, since the concatenation would be done in the LED core.
 
-Thanks.
-
-
-
-The following changes since commit f17b5f06cb92ef2250513a1e154c47b78df07d40:
-
-  Linux 5.0-rc4 (2019-01-27 15:18:05 -0800)
-
-are available in the git repository at:
-
-  git://git.kernel.org/pub/scm/linux/kernel/git/masahiroy/linux-kbuild.git
-tags/kconfig-v5.1
-
-for you to fetch changes up to 8741908b3e29d35a33eeab6de60175958db8e54b:
-
-  kconfig: fix 'Save As' menu of xconfig (2019-03-12 02:50:24 +0900)
-
-----------------------------------------------------------------
-Kconfig updates for v5.1
-
- - rename lexer and parse files
-
- - fix 'Save as' menu of xconfig
-
-----------------------------------------------------------------
-Masahiro Yamada (3):
-      kconfig: rename zconf.l to lexer.l
-      kconfig: rename zconf.y to parser.y
-      kconfig: fix 'Save As' menu of xconfig
-
- scripts/kconfig/Makefile              |  9 ++++----
- scripts/kconfig/expr.h                |  2 +-
- scripts/kconfig/{zconf.l => lexer.l}  |  2 +-
- scripts/kconfig/lkc.h                 |  2 +-
- scripts/kconfig/{zconf.y => parser.y} |  0
- scripts/kconfig/qconf.cc              | 42 +++++++++++++++++++++++++++++------
- scripts/kconfig/qconf.h               |  1 +
- 7 files changed, 44 insertions(+), 14 deletions(-)
- rename scripts/kconfig/{zconf.l => lexer.l} (99%)
- rename scripts/kconfig/{zconf.y => parser.y} (100%)
-
+>>>   - label : The label for this LED. If omitted, the label is taken 
+>>> from the node
+>>>         name (excluding the unit address). It has to uniquely identify
+>>>         a device, i.e. no other LED class device can be assigned the 
+>>> same
+>>> -      label.
+>>> +      label. This property is deprecated - use 'function' and 'color'
+>>> +      properties instead.
+>>>   - default-state : The initial state of the LED. Valid values are 
+>>> "on", "off",
+>>>     and "keep". If the LED is already on or off and the default-state 
+>>> property is
+>>> @@ -87,29 +96,59 @@ Required properties for trigger source:
+>>>   * Examples
+>>> -gpio-leds {
+>>> +#include <dt-bindings/leds/common.h>
+>>> +
+>>> +led-controller@0 {
+>>>       compatible = "gpio-leds";
+>>> -    system-status {
+>>> -        label = "Status";
+>>> +    led0 {
+>>> +        function = LED_FUNCTION_STATUS;
+>>
+>> Missing color for example unless there is a reason to omit it for GPIO 
+>> LEDs
+> 
+> It is on purpose - to show that it is an optional property for
+> monochrome LEDs.
+> 
+>>
+>> Also missing reg here
+> 
+> Also on purpose. leds-gpio bindings don't require reg here.
+> And when reg is absent the unit address in the node name should
+> be omitted as Rob stated in one of recent reviews.
+> 
+>>>           linux,default-trigger = "heartbeat";
+>>>           gpios = <&gpio0 0 GPIO_ACTIVE_HIGH>;
+>>>       };
+>>> -    usb {
+>>> +    led1 {
+>>> +        function = LED_FUNCTION_USB;
+>>
+>> Same as above
+>> Also missing reg here
+>>>           gpios = <&gpio0 1 GPIO_ACTIVE_HIGH>;
+>>>           trigger-sources = <&ohci_port1>, <&ehci_port1>;
+>>>       };
+>>>   };
+>>> -max77693-led {
+>>> +led-controller@0 {
+>>>       compatible = "maxim,max77693-led";
+>>> -    camera-flash {
+>>> -        label = "Flash";
+>>> +    led {
+>>> +        function = LED_FUNCTION_FLASH;
+>>> +        color = LED_COLOR_NAME_WHITE;
+>>>           led-sources = <0>, <1>;
+>>>           led-max-microamp = <50000>;
+>>>           flash-max-microamp = <320000>;
+>>>           flash-max-timeout-us = <500000>;
+>>>       };
+>>>   };
+>>> +
+>>> +led-controller@30 {
+>>> +        compatible = "panasonic,an30259a";
+>>> +        reg = <0x30>;
+>>> +        #address-cells = <1>;
+>>> +        #size-cells = <0>;
+>>> +
+>>> +        led@1 {
+>>> +                reg = <1>;
+>>> +                linux,default-trigger = "heartbeat";
+>>> +                function = LED_FUNCTION_INDICATOR;
+>>> +                color = LED_COLOR_NAME_RED;
+>>> +        };
+>>> +
+>>> +        led@2 {
+>>> +                reg = <2>;
+>>> +                function = LED_FUNCTION_INDICATOR;
+>>> +                color = LED_COLOR_NAME_GREEN;
+>>> +        };
+>>> +
+>>> +        led@3 {
+>>> +                reg = <3>;
+>>> +                function = LED_FUNCTION_INDICATOR;
+>>> +                color = LED_COLOR_NAME_BLUE;
+>>> +        };
+>>> +};
+>>>
+>>
+>>
+> 
 
 -- 
-Best Regards
-Masahiro Yamada
+Best regards,
+Jacek Anaszewski
