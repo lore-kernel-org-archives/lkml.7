@@ -2,125 +2,262 @@ Return-Path: <SRS0=J4ZE=RP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.0 required=3.0
-	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PULL_REQUEST,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.8 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BD3BCC43381
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 12:23:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B3FC2C43381
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 12:23:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 951832147C
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 12:23:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 79CC820883
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 12:23:44 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="oRA/xiIu";
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="TXtZL4b2"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726732AbfCLMXg (ORCPT
+        id S1726794AbfCLMXm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 12 Mar 2019 08:23:36 -0400
-Received: from youngberry.canonical.com ([91.189.89.112]:39472 "EHLO
-        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725957AbfCLMXf (ORCPT
+        Tue, 12 Mar 2019 08:23:42 -0400
+Received: from smtp.codeaurora.org ([198.145.29.96]:54156 "EHLO
+        smtp.codeaurora.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725957AbfCLMXh (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 12 Mar 2019 08:23:35 -0400
-Received: from static-50-53-47-167.bvtn.or.frontiernet.net ([50.53.47.167] helo=[192.168.192.153])
-        by youngberry.canonical.com with esmtpsa (TLS1.0:RSA_AES_128_CBC_SHA1:16)
-        (Exim 4.76)
-        (envelope-from <john.johansen@canonical.com>)
-        id 1h3gRR-0005GA-22; Tue, 12 Mar 2019 12:23:33 +0000
-From:   John Johansen <john.johansen@canonical.com>
-Subject: [GIT PULL] apparmor updates for v5.1
-To:     Linus Torvalds <torvalds@linux-foundation.org>
-Cc:     LKLM <linux-kernel@vger.kernel.org>,
-        "open list:SECURITY SUBSYSTEM" 
-        <linux-security-module@vger.kernel.org>
-Openpgp: preference=signencrypt
-Autocrypt: addr=john.johansen@canonical.com; prefer-encrypt=mutual; keydata=
- xsFNBE5mrPoBEADAk19PsgVgBKkImmR2isPQ6o7KJhTTKjJdwVbkWSnNn+o6Up5knKP1f49E
- BQlceWg1yp/NwbR8ad+eSEO/uma/K+PqWvBptKC9SWD97FG4uB4/caomLEU97sLQMtnvGWdx
- rxVRGM4anzWYMgzz5TZmIiVTZ43Ou5VpaS1Vz1ZSxP3h/xKNZr/TcW5WQai8u3PWVnbkjhSZ
- PHv1BghN69qxEPomrJBm1gmtx3ZiVmFXluwTmTgJOkpFol7nbJ0ilnYHrA7SX3CtR1upeUpM
- a/WIanVO96WdTjHHIa43fbhmQube4txS3FcQLOJVqQsx6lE9B7qAppm9hQ10qPWwdfPy/+0W
- 6AWtNu5ASiGVCInWzl2HBqYd/Zll93zUq+NIoCn8sDAM9iH+wtaGDcJywIGIn+edKNtK72AM
- gChTg/j1ZoWH6ZeWPjuUfubVzZto1FMoGJ/SF4MmdQG1iQNtf4sFZbEgXuy9cGi2bomF0zvy
- BJSANpxlKNBDYKzN6Kz09HUAkjlFMNgomL/cjqgABtAx59L+dVIZfaF281pIcUZzwvh5+JoG
- eOW5uBSMbE7L38nszooykIJ5XrAchkJxNfz7k+FnQeKEkNzEd2LWc3QF4BQZYRT6PHHga3Rg
- ykW5+1wTMqJILdmtaPbXrF3FvnV0LRPcv4xKx7B3fGm7ygdoowARAQABzR1Kb2huIEpvaGFu
- c2VuIDxqb2huQGpqbXgubmV0PsLBegQTAQoAJAIbAwULCQgHAwUVCgkICwUWAgMBAAIeAQIX
- gAUCTo0YVwIZAQAKCRAFLzZwGNXD2LxJD/9TJZCpwlncTgYeraEMeDfkWv8c1IsM1j0AmE4V
- tL+fE780ZVP9gkjgkdYSxt7ecETPTKMaZSisrl1RwqU0oogXdXQSpxrGH01icu/2n0jcYSqY
- KggPxy78BGs2LZq4XPfJTZmHZGnXGq/eDr/mSnj0aavBJmMZ6jbiPz6yHtBYPZ9fdo8btczw
- P41YeWoIu26/8II6f0Xm3VC5oAa8v7Rd+RWZa8TMwlhzHExxel3jtI7IzzOsnmE9/8Dm0ARD
- 5iTLCXwR1cwI/J9BF/S1Xv8PN1huT3ItCNdatgp8zqoJkgPVjmvyL64Q3fEkYbfHOWsaba9/
- kAVtBNz9RTFh7IHDfECVaToujBd7BtPqr+qIjWFadJD3I5eLCVJvVrrolrCATlFtN3YkQs6J
- n1AiIVIU3bHR8Gjevgz5Ll6SCGHgRrkyRpnSYaU/uLgn37N6AYxi/QAL+by3CyEFLjzWAEvy
- Q8bq3Iucn7JEbhS/J//dUqLoeUf8tsGi00zmrITZYeFYARhQMtsfizIrVDtz1iPf/ZMp5gRB
- niyjpXn131cm3M3gv6HrQsAGnn8AJru8GDi5XJYIco/1+x/qEiN2nClaAOpbhzN2eUvPDY5W
- 0q3bA/Zp2mfG52vbRI+tQ0Br1Hd/vsntUHO903mMZep2NzN3BZ5qEvPvG4rW5Zq2DpybWc7B
- TQROZqz6ARAAoqw6kkBhWyM1fvgamAVjeZ6nKEfnRWbkC94L1EsJLup3Wb2X0ABNOHSkbSD4
- pAuC2tKF/EGBt5CP7QdVKRGcQzAd6b2c1Idy9RLw6w4gi+nn/d1Pm1kkYhkSi5zWaIg0m5RQ
- Uk+El8zkf5tcE/1N0Z5OK2JhjwFu5bX0a0l4cFGWVQEciVMDKRtxMjEtk3SxFalm6ZdQ2pp2
- 822clnq4zZ9mWu1d2waxiz+b5Ia4weDYa7n41URcBEUbJAgnicJkJtCTwyIxIW2KnVyOrjvk
- QzIBvaP0FdP2vvZoPMdlCIzOlIkPLgxE0IWueTXeBJhNs01pb8bLqmTIMlu4LvBELA/veiaj
- j5s8y542H/aHsfBf4MQUhHxO/BZV7h06KSUfIaY7OgAgKuGNB3UiaIUS5+a9gnEOQLDxKRy/
- a7Q1v9S+Nvx+7j8iH3jkQJhxT6ZBhZGRx0gkH3T+F0nNDm5NaJUsaswgJrqFZkUGd2Mrm1qn
- KwXiAt8SIcENdq33R0KKKRC80Xgwj8Jn30vXLSG+NO1GH0UMcAxMwy/pvk6LU5JGjZR73J5U
- LVhH4MLbDggD3mPaiG8+fotTrJUPqqhg9hyUEPpYG7sqt74Xn79+CEZcjLHzyl6vAFE2W0kx
- lLtQtUZUHO36afFv8qGpO3ZqPvjBUuatXF6tvUQCwf3H6XMAEQEAAcLBXwQYAQoACQUCTmas
- +gIbDAAKCRAFLzZwGNXD2D/XD/0ddM/4ai1b+Tl1jznKajX3kG+MeEYeI4f40vco3rOLrnRG
- FOcbyyfVF69MKepie4OwoI1jcTU0ADecnbWnDNHpr0SczxBMro3bnrLhsmvjunTYIvssBZtB
- 4aVJjuLILPUlnhFqa7fbVq0ZQjbiV/rt2jBENdm9pbJZ6GjnpYIcAbPCCa/ffL4/SQRSYHXo
- hGiiS4y5jBTmK5ltfewLOw02fkexH+IJFrrGBXDSg6n2Sgxnn++NF34fXcm9piaw3mKsICm+
- 0hdNh4afGZ6IWV8PG2teooVDp4dYih++xX/XS8zBCc1O9w4nzlP2gKzlqSWbhiWpifRJBFa4
- WtAeJTdXYd37j/BI4RWWhnyw7aAPNGj33ytGHNUf6Ro2/jtj4tF1y/QFXqjJG/wGjpdtRfbt
- UjqLHIsvfPNNJq/958p74ndACidlWSHzj+Op26KpbFnmwNO0psiUsnhvHFwPO/vAbl3RsR5+
- 0Ro+hvs2cEmQuv9r/bDlCfpzp2t3cK+rhxUqisOx8DZfz1BnkaoCRFbvvvk+7L/fomPntGPk
- qJciYE8TGHkZw1hOku+4OoM2GB5nEDlj+2TF/jLQ+EipX9PkPJYvxfRlC6dK8PKKfX9KdfmA
- IcgHfnV1jSn+8yH2djBPtKiqW0J69aIsyx7iV/03paPCjJh7Xq9vAzydN5U/UA==
-Organization: Canonical
-Message-ID: <d695d181-eaa1-eb62-9d01-56e4e52178d7@canonical.com>
-Date:   Tue, 12 Mar 2019 05:23:30 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.5.1
-MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-GB
-Content-Transfer-Encoding: 7bit
+        Tue, 12 Mar 2019 08:23:37 -0400
+Received: by smtp.codeaurora.org (Postfix, from userid 1000)
+        id DD63F60CF1; Tue, 12 Mar 2019 12:23:35 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
+        s=default; t=1552393415;
+        bh=Hg8D0z8ZKsZParmeqwPRRHpEZJ17D4WoBZwC3Tyew2M=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=oRA/xiIuNgCWMHCTAIayi4DIgk1TTOTgufPuwiSVwlPkW2z/RJXSqBdr1OMdR2Mab
+         tZUQfeBjCpo5/DdmdsZR6g/9osrBuwpmIiorgENiYJuapWbrg+Q68OPy5hQmK7E+2B
+         7Mpt/xXEKSmX/FMmyapzBl6Qp4K0H3WPIhKSeXnA=
+Received: from c-hbandi-linux.qualcomm.com (blr-c-bdr-fw-01_globalnat_allzones-outside.qualcomm.com [103.229.19.19])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-SHA256 (128/128 bits))
+        (No client certificate requested)
+        (Authenticated sender: c-hbandi@codeaurora.org)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id DB9D660ACE;
+        Tue, 12 Mar 2019 12:23:30 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
+        s=default; t=1552393414;
+        bh=Hg8D0z8ZKsZParmeqwPRRHpEZJ17D4WoBZwC3Tyew2M=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=TXtZL4b2SZMQtE64iWU2pkUiyz/eU35cO5wQyulWWHaVdtoRxepzr20XzNXOGUOtI
+         x5XdeuymGaxFxiJxqM7PXqwUpNKT/TXRdb4PN6G4uLH24I8j6gAeiiTM5Nh62HKdal
+         4Neg8MZjQGXjzi7B2m9jVuzerZnlELzGDk6SrvCk=
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org DB9D660ACE
+Authentication-Results: pdx-caf-mail.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
+Authentication-Results: pdx-caf-mail.web.codeaurora.org; spf=none smtp.mailfrom=c-hbandi@codeaurora.org
+From:   Harish Bandi <c-hbandi@codeaurora.org>
+To:     marcel@holtmann.org, johan.hedberg@gmail.com
+Cc:     mka@chromium.org, linux-kernel@vger.kernel.org,
+        linux-bluetooth@vger.kernel.org, hemantg@codeaurora.org,
+        linux-arm-msm@vger.kernel.org, bgodavar@codeaurora.org,
+        anubhavg@codeaurora.org, Harish Bandi <c-hbandi@codeaurora.org>
+Subject: [PATCH v3 1/2] Bluetooth: hci_qca: Added support for wcn3998
+Date:   Tue, 12 Mar 2019 17:52:58 +0530
+Message-Id: <1552393379-26330-2-git-send-email-c-hbandi@codeaurora.org>
+X-Mailer: git-send-email 1.9.1
+In-Reply-To: <1552393379-26330-1-git-send-email-c-hbandi@codeaurora.org>
+References: <1552393379-26330-1-git-send-email-c-hbandi@codeaurora.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi,
+Added new compatible for wcn3998 and corresponding voltage
+and current values to wcn3998 compatible.
+Changed driver code to support wcn3998
 
+Signed-off-by: Harish Bandi <c-hbandi@codeaurora.org>
+---
+changes in v3:
+- updated to latest code base.
+---
+ drivers/bluetooth/btqca.c   |  4 ++--
+ drivers/bluetooth/btqca.h   |  3 ++-
+ drivers/bluetooth/hci_qca.c | 40 ++++++++++++++++++++++++++--------------
+ 3 files changed, 30 insertions(+), 17 deletions(-)
 
-Please pull these apparmor bugfixes for v5.1
-Thanks!
+diff --git a/drivers/bluetooth/btqca.c b/drivers/bluetooth/btqca.c
+index 6122685..70cab13 100644
+--- a/drivers/bluetooth/btqca.c
++++ b/drivers/bluetooth/btqca.c
+@@ -344,7 +344,7 @@ int qca_uart_setup(struct hci_dev *hdev, uint8_t baudrate,
+ 
+ 	/* Download rampatch file */
+ 	config.type = TLV_TYPE_PATCH;
+-	if (soc_type == QCA_WCN3990) {
++	if (soc_type >= QCA_WCN3990) {
+ 		/* Firmware files to download are based on ROM version.
+ 		 * ROM version is derived from last two bytes of soc_ver.
+ 		 */
+@@ -365,7 +365,7 @@ int qca_uart_setup(struct hci_dev *hdev, uint8_t baudrate,
+ 
+ 	/* Download NVM configuration */
+ 	config.type = TLV_TYPE_NVM;
+-	if (soc_type == QCA_WCN3990)
++	if (soc_type >= QCA_WCN3990)
+ 		snprintf(config.fwname, sizeof(config.fwname),
+ 			 "qca/crnv%02x.bin", rom_ver);
+ 	else
+diff --git a/drivers/bluetooth/btqca.h b/drivers/bluetooth/btqca.h
+index c72c56e..f03d96e 100644
+--- a/drivers/bluetooth/btqca.h
++++ b/drivers/bluetooth/btqca.h
+@@ -132,7 +132,8 @@ enum qca_btsoc_type {
+ 	QCA_INVALID = -1,
+ 	QCA_AR3002,
+ 	QCA_ROME,
+-	QCA_WCN3990
++	QCA_WCN3990,
++	QCA_WCN3998
+ };
+ 
+ #if IS_ENABLED(CONFIG_BT_QCA)
+diff --git a/drivers/bluetooth/hci_qca.c b/drivers/bluetooth/hci_qca.c
+index 4ea995d..1221f5a 100644
+--- a/drivers/bluetooth/hci_qca.c
++++ b/drivers/bluetooth/hci_qca.c
+@@ -521,7 +521,7 @@ static int qca_open(struct hci_uart *hu)
+ 	if (hu->serdev) {
+ 
+ 		qcadev = serdev_device_get_drvdata(hu->serdev);
+-		if (qcadev->btsoc_type != QCA_WCN3990) {
++		if (qcadev->btsoc_type == QCA_ROME) {
+ 			gpiod_set_value_cansleep(qcadev->bt_en, 1);
+ 		} else {
+ 			hu->init_speed = qcadev->init_speed;
+@@ -627,7 +627,7 @@ static int qca_close(struct hci_uart *hu)
+ 
+ 	if (hu->serdev) {
+ 		qcadev = serdev_device_get_drvdata(hu->serdev);
+-		if (qcadev->btsoc_type == QCA_WCN3990)
++		if (qcadev->btsoc_type >= QCA_WCN3990)
+ 			qca_power_shutdown(hu);
+ 		else
+ 			gpiod_set_value_cansleep(qcadev->bt_en, 0);
+@@ -1008,7 +1008,7 @@ static int qca_set_baudrate(struct hci_dev *hdev, uint8_t baudrate)
+ 		      msecs_to_jiffies(CMD_TRANS_TIMEOUT_MS));
+ 
+ 	/* Give the controller time to process the request */
+-	if (qca_soc_type(hu) == QCA_WCN3990)
++	if (qca_soc_type(hu) >= QCA_WCN3990)
+ 		msleep(10);
+ 	else
+ 		msleep(300);
+@@ -1084,7 +1084,7 @@ static unsigned int qca_get_speed(struct hci_uart *hu,
+ 
+ static int qca_check_speeds(struct hci_uart *hu)
+ {
+-	if (qca_soc_type(hu) == QCA_WCN3990) {
++	if (qca_soc_type(hu) >= QCA_WCN3990) {
+ 		if (!qca_get_speed(hu, QCA_INIT_SPEED) &&
+ 		    !qca_get_speed(hu, QCA_OPER_SPEED))
+ 			return -EINVAL;
+@@ -1116,7 +1116,7 @@ static int qca_set_speed(struct hci_uart *hu, enum qca_speed_type speed_type)
+ 		/* Disable flow control for wcn3990 to deassert RTS while
+ 		 * changing the baudrate of chip and host.
+ 		 */
+-		if (soc_type == QCA_WCN3990)
++		if (soc_type >= QCA_WCN3990)
+ 			hci_uart_set_flow_control(hu, true);
+ 
+ 		qca_baudrate = qca_get_baudrate_value(speed);
+@@ -1128,7 +1128,7 @@ static int qca_set_speed(struct hci_uart *hu, enum qca_speed_type speed_type)
+ 		host_set_baudrate(hu, speed);
+ 
+ error:
+-		if (soc_type == QCA_WCN3990)
++		if (soc_type >= QCA_WCN3990)
+ 			hci_uart_set_flow_control(hu, false);
+ 	}
+ 
+@@ -1201,7 +1201,7 @@ static int qca_setup(struct hci_uart *hu)
+ 	/* Patch downloading has to be done without IBS mode */
+ 	clear_bit(STATE_IN_BAND_SLEEP_ENABLED, &qca->flags);
+ 
+-	if (soc_type == QCA_WCN3990) {
++	if (soc_type >= QCA_WCN3990) {
+ 		bt_dev_info(hdev, "setting up wcn3990");
+ 
+ 		/* Enable NON_PERSISTENT_SETUP QUIRK to ensure to execute
+@@ -1232,7 +1232,7 @@ static int qca_setup(struct hci_uart *hu)
+ 		qca_baudrate = qca_get_baudrate_value(speed);
+ 	}
+ 
+-	if (soc_type != QCA_WCN3990) {
++	if (soc_type == QCA_ROME) {
+ 		/* Get QCA version information */
+ 		ret = qca_read_soc_version(hdev, &soc_ver);
+ 		if (ret)
+@@ -1257,7 +1257,7 @@ static int qca_setup(struct hci_uart *hu)
+ 	}
+ 
+ 	/* Setup bdaddr */
+-	if (soc_type == QCA_WCN3990)
++	if (soc_type >= QCA_WCN3990)
+ 		hu->hdev->set_bdaddr = qca_set_bdaddr;
+ 	else
+ 		hu->hdev->set_bdaddr = qca_set_bdaddr_rome;
+@@ -1280,7 +1280,7 @@ static int qca_setup(struct hci_uart *hu)
+ 	.dequeue	= qca_dequeue,
+ };
+ 
+-static const struct qca_vreg_data qca_soc_data = {
++static const struct qca_vreg_data qca_soc_data_wcn3990 = {
+ 	.soc_type = QCA_WCN3990,
+ 	.vregs = (struct qca_vreg []) {
+ 		{ "vddio",   1800000, 1900000,  15000  },
+@@ -1291,6 +1291,17 @@ static int qca_setup(struct hci_uart *hu)
+ 	.num_vregs = 4,
+ };
+ 
++static const struct qca_vreg_data qca_soc_data_wcn3998 = {
++	.soc_type = QCA_WCN3998,
++	.vregs = (struct qca_vreg []) {
++		{ "vddio",   1800000, 1900000,  10000  },
++		{ "vddxo",   1800000, 1900000,  80000  },
++		{ "vddrf",   1300000, 1352000,  300000 },
++		{ "vddch0",  3300000, 3300000,  450000 },
++	},
++	.num_vregs = 4,
++};
++
+ static void qca_power_shutdown(struct hci_uart *hu)
+ {
+ 	struct qca_data *qca = hu->priv;
+@@ -1424,8 +1435,8 @@ static int qca_serdev_probe(struct serdev_device *serdev)
+ 	qcadev->serdev_hu.serdev = serdev;
+ 	data = of_device_get_match_data(&serdev->dev);
+ 	serdev_device_set_drvdata(serdev, qcadev);
+-	if (data && data->soc_type == QCA_WCN3990) {
+-		qcadev->btsoc_type = QCA_WCN3990;
++	if (data && data->soc_type >= QCA_WCN3990) {
++		qcadev->btsoc_type = data->soc_type;
+ 		qcadev->bt_power = devm_kzalloc(&serdev->dev,
+ 						sizeof(struct qca_power),
+ 						GFP_KERNEL);
+@@ -1489,7 +1500,7 @@ static void qca_serdev_remove(struct serdev_device *serdev)
+ {
+ 	struct qca_serdev *qcadev = serdev_device_get_drvdata(serdev);
+ 
+-	if (qcadev->btsoc_type == QCA_WCN3990)
++	if (qcadev->btsoc_type >= QCA_WCN3990)
+ 		qca_power_shutdown(&qcadev->serdev_hu);
+ 	else
+ 		clk_disable_unprepare(qcadev->susclk);
+@@ -1499,7 +1510,8 @@ static void qca_serdev_remove(struct serdev_device *serdev)
+ 
+ static const struct of_device_id qca_bluetooth_of_match[] = {
+ 	{ .compatible = "qcom,qca6174-bt" },
+-	{ .compatible = "qcom,wcn3990-bt", .data = &qca_soc_data},
++	{ .compatible = "qcom,wcn3990-bt", .data = &qca_soc_data_wcn3990},
++	{ .compatible = "qcom,wcn3998-bt", .data = &qca_soc_data_wcn3998},
+ 	{ /* sentinel */ }
+ };
+ MODULE_DEVICE_TABLE(of, qca_bluetooth_of_match);
+-- 
+The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
+a Linux Foundation Collaborative Project
 
-- John
-
-
-The following changes since commit 43aa09fee2f08c8d90a4f35d4c8c711362afcaee:
-
-  apparmor: Fix warning about unused function apparmor_ipv6_postroute (2018-11-14 11:42:18 -0800)
-
-are available in the Git repository at:
-
-  git://git.kernel.org/pub/scm/linux/kernel/git/jj/linux-apparmor tags/apparmor-pr-2019-03-12
-
-for you to fetch changes up to d8dbb581d4f86a2ac669c056fc71a28ebeb367f4:
-
-  apparmor: fix double free when unpack of secmark rules fails (2019-03-12 03:48:02 -0700)
-
-----------------------------------------------------------------
-+ Bug Fixes
-  - fix double when failing to unpack secmark rules in policy
-  - fix leak of dentry when profile is removed
-
-----------------------------------------------------------------
-Chris Coulson (1):
-      apparmor: delete the dentry in aafs_remove() to avoid a leak
-
-John Johansen (1):
-      apparmor: fix double free when unpack of secmark rules fails
-
- security/apparmor/apparmorfs.c    | 1 +
- security/apparmor/policy_unpack.c | 1 +
- 2 files changed, 2 insertions(+)
