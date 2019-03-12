@@ -2,105 +2,109 @@ Return-Path: <SRS0=J4ZE=RP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_MUTT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_PASS autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 79A17C43381
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 02:58:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5AD08C10F06
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 02:59:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3E26F205C9
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 02:58:54 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ZmHQtAg8"
+	by mail.kernel.org (Postfix) with ESMTP id 35C162087C
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 02:59:28 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726861AbfCLC6w (ORCPT
+        id S1726904AbfCLC70 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 11 Mar 2019 22:58:52 -0400
-Received: from mail-pf1-f196.google.com ([209.85.210.196]:44611 "EHLO
-        mail-pf1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726534AbfCLC6w (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 11 Mar 2019 22:58:52 -0400
-Received: by mail-pf1-f196.google.com with SMTP id a3so703582pff.11;
-        Mon, 11 Mar 2019 19:58:51 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=Gb99ATYP8IlhDEeZEtQ3KHaXQAmqFzucm+eRvpv9VUw=;
-        b=ZmHQtAg80aDg/eVN+P9ACBZY91QpYKBhRb+TEXmOZ6J3s7iaR4baXmIlct2ZNcJ6f1
-         zUQITuP3LOTJxQFI3a4BAgYNeo9+df+xB8m7nDWol/AWvvIxSFYk87oc48vY3m4iPz2+
-         V7v+QvgwUMvxUxOh36m7v8bnq7+34gYiLRAU7VMfBMTdym76vnRrH9xooeD1cISo7RKT
-         bIlj3N5TsY6egnpVDefwCdkVWwgBonQOQG4U2xlk0PMpgHhUxlLlrHAyljP1vrfP38Yg
-         GUfknU66vn78kgDZk88reSg+GVi0iNo4TWy7DEd+pOPcpGk6Ut7fN31m0ZKglpgQdCJJ
-         Lksg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=Gb99ATYP8IlhDEeZEtQ3KHaXQAmqFzucm+eRvpv9VUw=;
-        b=TI0M1WnoSVaq3FXOZIrRu+w6iDlzhsvfvNv4vQpnXnDit+wG76A6c6orgd2HA4yJK+
-         4a+/j6A5dW2JTGjAPrx//Uhk5/Wyg2YoADnfpr3DGhH0lZSvV+Cc9jShd3WFbbx7nB92
-         VpBR9bJoSzlJQCnuILZwa2iW/JHc7LnwWMjpTAudLyH1cVWaUD57HFGQn95h+4Pkc7ow
-         zWYjwEIXAWFQe4ZEBAzHrYfTwLWn4JZQQiGXxw0MUDpyP644BWI6t2/7hu2jWPVwDKg9
-         WElXd+7Rep7/OiyWh4qxyfVbj7qgXNkdImiW1DwDxQ+AtHf6p8+bAbYV1TU5n61xcz1I
-         HNsw==
-X-Gm-Message-State: APjAAAXvXlEYJdZd4kQEwunzoVDtGDaO2hygPluOtuAnrWbi3pCOasCj
-        mMqBkxqr+kxqJVhBOGno2RA=
-X-Google-Smtp-Source: APXvYqxMkI8jg0EaSBZWbU2uEdH8Qr4UDK1F0TezP/62tZjDO4ANZC0eIt35mSlFXWLEIwkm68vvug==
-X-Received: by 2002:a62:b286:: with SMTP id z6mr36240315pfl.106.1552359531560;
-        Mon, 11 Mar 2019 19:58:51 -0700 (PDT)
-Received: from localhost ([175.223.22.108])
-        by smtp.gmail.com with ESMTPSA id b6sm11355095pfo.27.2019.03.11.19.58.50
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Mon, 11 Mar 2019 19:58:50 -0700 (PDT)
-Date:   Tue, 12 Mar 2019 11:58:47 +0900
-From:   Sergey Senozhatsky <sergey.senozhatsky.work@gmail.com>
-To:     Petr Mladek <pmladek@suse.com>
-Cc:     Sergey Senozhatsky <sergey.senozhatsky.work@gmail.com>,
-        John Ogness <john.ogness@linutronix.de>,
-        linux-kernel@vger.kernel.org,
-        Peter Zijlstra <peterz@infradead.org>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Daniel Wang <wonderfly@google.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Alan Cox <gnomes@lxorguk.ukuu.org.uk>,
-        Jiri Slaby <jslaby@suse.com>,
-        Peter Feiner <pfeiner@google.com>,
-        linux-serial@vger.kernel.org,
-        Sergey Senozhatsky <sergey.senozhatsky@gmail.com>
-Subject: Re: [RFC PATCH v1 19/25] printk: introduce emergency messages
-Message-ID: <20190312025847.GD4146@jagdpanzerIV>
-References: <20190212143003.48446-1-john.ogness@linutronix.de>
- <20190212143003.48446-20-john.ogness@linutronix.de>
- <20190307073029.GA489@jagdpanzerIV>
- <20190308103127.txsgv3d6lqlf6pad@pathway.suse.cz>
+        Mon, 11 Mar 2019 22:59:26 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:43724 "EHLO mx1.redhat.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726534AbfCLC70 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 11 Mar 2019 22:59:26 -0400
+Received: from smtp.corp.redhat.com (int-mx02.intmail.prod.int.phx2.redhat.com [10.5.11.12])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id CC3BE307CDF5;
+        Tue, 12 Mar 2019 02:59:25 +0000 (UTC)
+Received: from [10.72.12.17] (ovpn-12-17.pek2.redhat.com [10.72.12.17])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 63C4660C4C;
+        Tue, 12 Mar 2019 02:59:14 +0000 (UTC)
+Subject: Re: [RFC PATCH V2 0/5] vhost: accelerate metadata access through
+ vmap()
+To:     David Miller <davem@davemloft.net>, mst@redhat.com
+Cc:     hch@infradead.org, kvm@vger.kernel.org,
+        virtualization@lists.linux-foundation.org, netdev@vger.kernel.org,
+        linux-kernel@vger.kernel.org, peterx@redhat.com,
+        linux-mm@kvack.org, aarcange@redhat.com,
+        linux-arm-kernel@lists.infradead.org, linux-parisc@vger.kernel.org
+References: <20190308141220.GA21082@infradead.org>
+ <56374231-7ba7-0227-8d6d-4d968d71b4d6@redhat.com>
+ <20190311095405-mutt-send-email-mst@kernel.org>
+ <20190311.111413.1140896328197448401.davem@davemloft.net>
+From:   Jason Wang <jasowang@redhat.com>
+Message-ID: <6b6dcc4a-2f08-ba67-0423-35787f3b966c@redhat.com>
+Date:   Tue, 12 Mar 2019 10:59:09 +0800
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.5.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190308103127.txsgv3d6lqlf6pad@pathway.suse.cz>
-User-Agent: Mutt/1.11.3 (2019-02-01)
+In-Reply-To: <20190311.111413.1140896328197448401.davem@davemloft.net>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
+Content-Language: en-US
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.12
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.49]); Tue, 12 Mar 2019 02:59:26 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On (03/08/19 11:31), Petr Mladek wrote:
-> Great catch!
-> 
-> I think that it is doable to guard the list using RCU.
 
-I think console_sem is more than just list lock.
+On 2019/3/12 上午2:14, David Miller wrote:
+> From: "Michael S. Tsirkin" <mst@redhat.com>
+> Date: Mon, 11 Mar 2019 09:59:28 -0400
+>
+>> On Mon, Mar 11, 2019 at 03:13:17PM +0800, Jason Wang wrote:
+>>> On 2019/3/8 下午10:12, Christoph Hellwig wrote:
+>>>> On Wed, Mar 06, 2019 at 02:18:07AM -0500, Jason Wang wrote:
+>>>>> This series tries to access virtqueue metadata through kernel virtual
+>>>>> address instead of copy_user() friends since they had too much
+>>>>> overheads like checks, spec barriers or even hardware feature
+>>>>> toggling. This is done through setup kernel address through vmap() and
+>>>>> resigter MMU notifier for invalidation.
+>>>>>
+>>>>> Test shows about 24% improvement on TX PPS. TCP_STREAM doesn't see
+>>>>> obvious improvement.
+>>>> How is this going to work for CPUs with virtually tagged caches?
+>>>
+>>> Anything different that you worry?
+>> If caches have virtual tags then kernel and userspace view of memory
+>> might not be automatically in sync if they access memory
+>> through different virtual addresses. You need to do things like
+>> flush_cache_page, probably multiple times.
+> "flush_dcache_page()"
 
-E.g. fb_flashcursor() - console_sem protects framebuffer from concurrent
-modifications. And many other examples.
 
-I think the last time we talked about it (two+ years ago) we counted
-5 or 7 (don't remember exactly) different things which console_sem
-does.
+I get this. Then I think the current set_bit_to_user() is suspicious, we 
+probably miss a flush_dcache_page() there:
 
-	-ss
+
+static int set_bit_to_user(int nr, void __user *addr)
+{
+         unsigned long log = (unsigned long)addr;
+         struct page *page;
+         void *base;
+         int bit = nr + (log % PAGE_SIZE) * 8;
+         int r;
+
+         r = get_user_pages_fast(log, 1, 1, &page);
+         if (r < 0)
+                 return r;
+         BUG_ON(r != 1);
+         base = kmap_atomic(page);
+         set_bit(bit, base);
+         kunmap_atomic(base);
+         set_page_dirty_lock(page);
+         put_page(page);
+         return 0;
+}
+
+Thanks
+
