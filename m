@@ -2,72 +2,156 @@ Return-Path: <SRS0=J4ZE=RP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_MUTT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AFDB5C43381
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 07:43:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0082FC43381
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 07:44:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7F201214AF
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 07:43:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C8B8C2173C
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 07:44:46 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727461AbfCLHnj (ORCPT
+        id S1727223AbfCLHop (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 12 Mar 2019 03:43:39 -0400
-Received: from pony.blueri.se ([163.172.214.9]:6454 "EHLO pony.blueri.se"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726714AbfCLHni (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 12 Mar 2019 03:43:38 -0400
-X-Greylist: delayed 398 seconds by postgrey-1.27 at vger.kernel.org; Tue, 12 Mar 2019 03:43:38 EDT
-Received: from thor.local (p200300C1C7200A001155894A8088296E.dip0.t-ipconnect.de [IPv6:2003:c1:c720:a00:1155:894a:8088:296e])
-        by pony.blueri.se (OpenSMTPD) with ESMTPSA id 08f9ce1e (TLSv1.2:ECDHE-RSA-AES256-GCM-SHA384:256:NO);
-        Tue, 12 Mar 2019 08:36:57 +0100 (CET)
-Date:   Tue, 12 Mar 2019 08:36:54 +0100
-From:   Patrick Wildt <patrick@blueri.se>
-To:     Stephen Boyd <sboyd@kernel.org>
-Cc:     Abel Vesa <abel.vesa@nxp.com>,
-        Fabio Estevam <fabio.estevam@nxp.com>,
-        Lucas Stach <l.stach@pengutronix.de>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Rob Herring <robh@kernel.org>,
-        Sascha Hauer <kernel@pengutronix.de>,
-        Shawn Guo <shawnguo@kernel.org>,
-        dl-linux-imx <linux-imx@nxp.com>,
-        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH] dt-bindings: clock: imx8mq: Fix numbering overlaps and
- gaps
-Message-ID: <20190312073654.GA85609@thor.local>
-References: <1551779342-2640-1-git-send-email-abel.vesa@nxp.com>
- <155181110921.20095.1641360339603928947@swboyd.mtv.corp.google.com>
- <20190306130941.dqf3swx66bchm5k2@fsr-ub1664-175>
- <155205894567.20095.2782332899458282059@swboyd.mtv.corp.google.com>
+        Tue, 12 Mar 2019 03:44:45 -0400
+Received: from szxga06-in.huawei.com ([45.249.212.32]:52744 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726518AbfCLHop (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 12 Mar 2019 03:44:45 -0400
+Received: from DGGEMS412-HUB.china.huawei.com (unknown [172.30.72.58])
+        by Forcepoint Email with ESMTP id 0C0FD230AAB90243BBF4;
+        Tue, 12 Mar 2019 15:44:43 +0800 (CST)
+Received: from szvp000201624.huawei.com (10.120.216.130) by
+ DGGEMS412-HUB.china.huawei.com (10.3.19.212) with Microsoft SMTP Server id
+ 14.3.408.0; Tue, 12 Mar 2019 15:44:35 +0800
+From:   Chao Yu <yuchao0@huawei.com>
+To:     <jaegeuk@kernel.org>
+CC:     <linux-f2fs-devel@lists.sourceforge.net>,
+        <linux-kernel@vger.kernel.org>, <chao@kernel.org>,
+        Chao Yu <yuchao0@huawei.com>
+Subject: [PATCH] f2fs: fix to avoid deadlock in f2fs_read_inline_dir()
+Date:   Tue, 12 Mar 2019 15:44:27 +0800
+Message-ID: <20190312074427.75515-1-yuchao0@huawei.com>
+X-Mailer: git-send-email 2.18.0.rc1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <155205894567.20095.2782332899458282059@swboyd.mtv.corp.google.com>
-User-Agent: Mutt/1.11.3 (2019-02-01)
+Content-Type: text/plain
+X-Originating-IP: [10.120.216.130]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Mar 08, 2019 at 07:29:05AM -0800, Stephen Boyd wrote:
-> It's mostly about making sure that any existing dtbs don't have their
-> numbers shifted around. So hopefully any overlapping identifiers aren't
-> in use yet and then those ids can be changed while leaving the ones that
-> are in use how they are.
+As Jiqun Li reported in bugzilla:
 
-In practice I bet no one uses Linux 5.0's i.MX8M device trees since they
-lack too much support.  It's so basic it's not useful.  You'd still run
-your existing non-mainline bindings until it is.  Thus I would argue
-changing the ABI right now would be the only chance there is.
+https://bugzilla.kernel.org/show_bug.cgi?id=202883
 
-If you think that chance is gone, then I guess the reasonable thing is
-to keep the numbers and only move those (to the end) which overlap.  Or
-put them into that erreneous number gap.
+sometimes, dead lock when make system call SYS_getdents64 with fsync() is
+called by another process.
 
-Patrick
+monkey running on android9.0
+
+1.  task 9785 held sbi->cp_rwsem and waiting lock_page()
+2.  task 10349 held mm_sem and waiting sbi->cp_rwsem
+3. task 9709 held lock_page() and waiting mm_sem
+
+so this is a dead lock scenario.
+
+task stack is show by crash tools as following
+
+crash_arm64> bt ffffffc03c354080
+PID: 9785   TASK: ffffffc03c354080  CPU: 1   COMMAND: "RxIoScheduler-3"
+>> #7 [ffffffc01b50fac0] __lock_page at ffffff80081b11e8
+
+crash-arm64> bt 10349
+PID: 10349  TASK: ffffffc018b83080  CPU: 1   COMMAND: "BUGLY_ASYNC_UPL"
+>> #3 [ffffffc01f8cfa40] rwsem_down_read_failed at ffffff8008a93afc
+     PC: 00000033  LR: 00000000  SP: 00000000  PSTATE: ffffffffffffffff
+
+crash-arm64> bt 9709
+PID: 9709   TASK: ffffffc03e7f3080  CPU: 1   COMMAND: "IntentService[A"
+>> #3 [ffffffc001e67850] rwsem_down_read_failed at ffffff8008a93afc
+>> #8 [ffffffc001e67b80] el1_ia at ffffff8008084fc4
+     PC: ffffff8008274114  [compat_filldir64+120]
+     LR: ffffff80083584d4  [f2fs_fill_dentries+448]
+     SP: ffffffc001e67b80  PSTATE: 80400145
+    X29: ffffffc001e67b80  X28: 0000000000000000  X27: 000000000000001a
+    X26: 00000000000093d7  X25: ffffffc070d52480  X24: 0000000000000008
+    X23: 0000000000000028  X22: 00000000d43dfd60  X21: ffffffc001e67e90
+    X20: 0000000000000011  X19: ffffff80093a4000  X18: 0000000000000000
+    X17: 0000000000000000  X16: 0000000000000000  X15: 0000000000000000
+    X14: ffffffffffffffff  X13: 0000000000000008  X12: 0101010101010101
+    X11: 7f7f7f7f7f7f7f7f  X10: 6a6a6a6a6a6a6a6a   X9: 7f7f7f7f7f7f7f7f
+     X8: 0000000080808000   X7: ffffff800827409c   X6: 0000000080808000
+     X5: 0000000000000008   X4: 00000000000093d7   X3: 000000000000001a
+     X2: 0000000000000011   X1: ffffffc070d52480   X0: 0000000000800238
+>> #9 [ffffffc001e67be0] f2fs_fill_dentries at ffffff80083584d0
+     PC: 0000003c  LR: 00000000  SP: 00000000  PSTATE: 000000d9
+    X12: f48a02ff X11: d4678960 X10: d43dfc00  X9: d4678ae4
+     X8: 00000058  X7: d4678994  X6: d43de800  X5: 000000d9
+     X4: d43dfc0c  X3: d43dfc10  X2: d46799c8  X1: 00000000
+     X0: 00001068
+
+Below potential deadlock will happen between three threads:
+Thread A		Thread B		Thread C
+- f2fs_do_sync_file
+ - f2fs_write_checkpoint
+  - down_write(&sbi->node_change) -- 1)
+			- do_page_fault
+			 - down_write(&mm->mmap_sem) -- 2)
+			  - do_wp_page
+			   - f2fs_vm_page_mkwrite
+						- getdents64
+						 - f2fs_read_inline_dir
+						  - lock_page -- 3)
+  - f2fs_sync_node_pages
+   - lock_page -- 3)
+			    - __do_map_lock
+			     - down_read(&sbi->node_change) -- 1)
+						  - f2fs_fill_dentries
+						   - dir_emit
+						    - compat_filldir64
+						     - do_page_fault
+						      - down_read(&mm->mmap_sem) -- 2)
+
+Since f2fs_readdir is protected by inode.i_rwsem, there should not be
+any updates in inode page, we're safe to lookup dents in inode page
+without its lock held, so taking off the lock to improve concurrency
+of readdir and avoid potential deadlock.
+
+Reported-by: Jiqun Li <jiqun.li@unisoc.com>
+Signed-off-by: Chao Yu <yuchao0@huawei.com>
+---
+ fs/f2fs/inline.c | 8 +++++++-
+ 1 file changed, 7 insertions(+), 1 deletion(-)
+
+diff --git a/fs/f2fs/inline.c b/fs/f2fs/inline.c
+index a1381d05956b..bb6a152310ef 100644
+--- a/fs/f2fs/inline.c
++++ b/fs/f2fs/inline.c
+@@ -659,6 +659,12 @@ int f2fs_read_inline_dir(struct file *file, struct dir_context *ctx,
+ 	if (IS_ERR(ipage))
+ 		return PTR_ERR(ipage);
+ 
++	/*
++	 * f2fs_readdir was protected by inode.i_rwsem, it is safe to access
++	 * ipage without page's lock held.
++	 */
++	unlock_page(ipage);
++
+ 	inline_dentry = inline_data_addr(inode, ipage);
+ 
+ 	make_dentry_ptr_inline(inode, &d, inline_dentry);
+@@ -667,7 +673,7 @@ int f2fs_read_inline_dir(struct file *file, struct dir_context *ctx,
+ 	if (!err)
+ 		ctx->pos = d.max;
+ 
+-	f2fs_put_page(ipage, 1);
++	f2fs_put_page(ipage, 0);
+ 	return err < 0 ? err : 0;
+ }
+ 
+-- 
+2.18.0.rc1
+
