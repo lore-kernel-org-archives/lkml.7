@@ -7,47 +7,48 @@ X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AF9EEC43381
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 17:52:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AAF77C43381
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 17:52:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 842A12147C
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 17:52:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7A2EA2087C
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 17:52:28 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1552413145;
-	bh=PfZNgPTKovjRRm3Zq3TNboqmkHETOSCm8TGuBu7Up5s=;
+	s=default; t=1552413148;
+	bh=rEIOtqErgSa+Q5w2Pk9UbYJ4gITvMVw7bTMRTVZ9Ikc=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Ol8+J5aAxo9bSLvAu3lm58OKwU038tSCS7lKubIzAK+iWTDNV10j9I5VeMF3vthuT
-	 GxjYQucuDf7Ec8FimGSkgV3GiraqB3DXo9lmBJhaKLszLCJpqSLB/1BM5NlFt2roUn
-	 DRlqIa9rL/vdExZJNanHSP0jd5YLsjxFZ9xgBKQY=
+	b=ExB8xCSEJDdwUFjS3OHKSZz8FptNyE2wJHrIZwHtC7O2iYSZWgMDc4Mef5xZI5s9T
+	 Up4hjbmLcbnOmcyZG5978Yd2QlNecyKhVpvmAeLnR0JCFYfsZ96B+Vj32LYi4e+zaK
+	 Mr0lSerssMMwq4iC6Y/BOnfdFzYV+scKzKDoup+M=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729283AbfCLRwX (ORCPT
+        id S1728053AbfCLRwW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 12 Mar 2019 13:52:23 -0400
-Received: from mail.kernel.org ([198.145.29.99]:53204 "EHLO mail.kernel.org"
+        Tue, 12 Mar 2019 13:52:22 -0400
+Received: from mail.kernel.org ([198.145.29.99]:53230 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728363AbfCLRO2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S1728366AbfCLRO2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Tue, 12 Mar 2019 13:14:28 -0400
 Received: from localhost (unknown [104.133.8.98])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 8D2F22173C;
-        Tue, 12 Mar 2019 17:14:27 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 485682171F;
+        Tue, 12 Mar 2019 17:14:28 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1552410867;
-        bh=PfZNgPTKovjRRm3Zq3TNboqmkHETOSCm8TGuBu7Up5s=;
+        s=default; t=1552410868;
+        bh=rEIOtqErgSa+Q5w2Pk9UbYJ4gITvMVw7bTMRTVZ9Ikc=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=MBA48FKbEYMXA5qHRciGDA1/dUEcP+eDdvg36dRA0C0ONvpV2FzC9TcRhHACeu+nG
-         7BzEaO1yQAPDLAs5WbhLPs16oN4BlPVa6+fgDDGCqxGVURXGvs+qqQV0CddX/pRU/3
-         drbTEf3ryMsQADTUbnoudL+eYcG3WwzZlaL8NvoQ=
+        b=gRxD47iAF2vKIRFoxCwGGcFF9AR6IJv5QBeprSHevt3+xmKodMOA/xk7GTnA+9O8Q
+         crVNnm9+uRxvC+lSUhnJtbwXm5E3thywOsZladsDXBOyKMCNSkGxlDmrzmS48nvqI9
+         jq3KfjmmB6ss/2xXAxjmkLhzz7KI/2TgGV+4B5aE=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Anson Huang <Anson.Huang@nxp.com>,
-        Shawn Guo <shawnguo@kernel.org>,
+        stable@vger.kernel.org,
+        Geert Uytterhoeven <geert+renesas@glider.be>,
+        Simon Horman <horms+renesas@verge.net.au>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 068/149] ARM: dts: imx6sx: correct backward compatible of gpt
-Date:   Tue, 12 Mar 2019 10:08:06 -0700
-Message-Id: <20190312170355.390108063@linuxfoundation.org>
+Subject: [PATCH 4.19 069/149] arm64: dts: renesas: r8a7796: Enable DMA for SCIF2
+Date:   Tue, 12 Mar 2019 10:08:07 -0700
+Message-Id: <20190312170355.460838623@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190312170349.421581206@linuxfoundation.org>
 References: <20190312170349.421581206@linuxfoundation.org>
@@ -66,34 +67,32 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-[ Upstream commit ba0f4560526ba19300c07ed5a3c1df7592815dc6 ]
+[ Upstream commit 97f26702bc95b5c3a72671d5c6675e4d6ee0a2f4 ]
 
-i.MX6SX has same GPT type as i.MX6DL, in GPT driver, it uses
-below TIMER_OF_DECLARE, so the backward compatible should be
-"fsl,imx6dl-gpt", correct it.
+SCIF2 on R-Car M3-W can be used with both DMAC1 and DMAC2.
 
-TIMER_OF_DECLARE(imx6sx_timer, "fsl,imx6sx-gpt", imx6dl_timer_init_dt);
-
-Signed-off-by: Anson Huang <Anson.Huang@nxp.com>
-Signed-off-by: Shawn Guo <shawnguo@kernel.org>
+Fixes: dbcae5ea4bd27409 ("arm64: dts: r8a7796: Enable SCIF DMA")
+Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
+Signed-off-by: Simon Horman <horms+renesas@verge.net.au>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/arm/boot/dts/imx6sx.dtsi | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ arch/arm64/boot/dts/renesas/r8a7796.dtsi | 3 +++
+ 1 file changed, 3 insertions(+)
 
-diff --git a/arch/arm/boot/dts/imx6sx.dtsi b/arch/arm/boot/dts/imx6sx.dtsi
-index 844caa39364f..50083cecc6c9 100644
---- a/arch/arm/boot/dts/imx6sx.dtsi
-+++ b/arch/arm/boot/dts/imx6sx.dtsi
-@@ -462,7 +462,7 @@
- 			};
- 
- 			gpt: gpt@2098000 {
--				compatible = "fsl,imx6sx-gpt", "fsl,imx31-gpt";
-+				compatible = "fsl,imx6sx-gpt", "fsl,imx6dl-gpt";
- 				reg = <0x02098000 0x4000>;
- 				interrupts = <GIC_SPI 55 IRQ_TYPE_LEVEL_HIGH>;
- 				clocks = <&clks IMX6SX_CLK_GPT_BUS>,
+diff --git a/arch/arm64/boot/dts/renesas/r8a7796.dtsi b/arch/arm64/boot/dts/renesas/r8a7796.dtsi
+index cbd35c00b4af..33cb0281c39c 100644
+--- a/arch/arm64/boot/dts/renesas/r8a7796.dtsi
++++ b/arch/arm64/boot/dts/renesas/r8a7796.dtsi
+@@ -1161,6 +1161,9 @@
+ 				 <&cpg CPG_CORE R8A7796_CLK_S3D1>,
+ 				 <&scif_clk>;
+ 			clock-names = "fck", "brg_int", "scif_clk";
++			dmas = <&dmac1 0x13>, <&dmac1 0x12>,
++			       <&dmac2 0x13>, <&dmac2 0x12>;
++			dma-names = "tx", "rx", "tx", "rx";
+ 			power-domains = <&sysc R8A7796_PD_ALWAYS_ON>;
+ 			resets = <&cpg 310>;
+ 			status = "disabled";
 -- 
 2.19.1
 
