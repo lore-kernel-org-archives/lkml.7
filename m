@@ -2,54 +2,61 @@ Return-Path: <SRS0=J4ZE=RP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CE9D4C43381
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 17:28:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 480B0C43381
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 17:29:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8E5102054F
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 17:28:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0E273206DF
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 17:29:03 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1552411738;
-	bh=PyUigaifpyelkOzBDe/L2mMJf0Yd0+NoGLXVbPjGCuc=;
+	s=default; t=1552411743;
+	bh=5rd3Qe7IqCjBTZIAdHUfhHRnYiKjtYOWjSCrAHWRhjI=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=KAIC3kfUlJ8xheRc7PW9Ka3Fwyu0p9orl/NYlBAXY+cFx2AeiXAk66+VTk82x3hHT
-	 hary2mialxL8HV9TIYOBo+EhLpkioSvRQcIm5iBk+ndyRlthOTrY4xILe4JbsTlVPl
-	 JNYSeBxSO3rp1zxSYuhMjbk+6GDid76MBhD/PrJo=
+	b=0sM87QsIhph1jyNRN4ZRD/Z/reblnMrDX8G5u6IpujNc+ZXfadz9uA4FuK4zYDhzQ
+	 nSTL+qj5Y9/7baslXo8AFArsT00bYcTjk1XllnOUJ3dAMmuJwJznhFS9EgKpaw/emQ
+	 tNw98684eVlA0mEEPGZo7WsVmcO7ESOxRpmmx3yM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729604AbfCLRR3 (ORCPT
+        id S1728705AbfCLR3B (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 12 Mar 2019 13:17:29 -0400
-Received: from mail.kernel.org ([198.145.29.99]:58252 "EHLO mail.kernel.org"
+        Tue, 12 Mar 2019 13:29:01 -0400
+Received: from mail.kernel.org ([198.145.29.99]:33182 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729087AbfCLRQU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 12 Mar 2019 13:16:20 -0400
+        id S1729600AbfCLRR2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 12 Mar 2019 13:17:28 -0400
 Received: from localhost (unknown [104.133.8.98])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E6FF021741;
-        Tue, 12 Mar 2019 17:16:19 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 2A9DE2183F;
+        Tue, 12 Mar 2019 17:17:28 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1552410980;
-        bh=PyUigaifpyelkOzBDe/L2mMJf0Yd0+NoGLXVbPjGCuc=;
+        s=default; t=1552411048;
+        bh=5rd3Qe7IqCjBTZIAdHUfhHRnYiKjtYOWjSCrAHWRhjI=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=0B62dWTjfekg7luUdD5Ypob9AvxxR/1rOJg+9UOCwLt2VpsPLZyTOjipLRoO5Pc1k
-         DbgUxe3kca9fhwcgC6qw+D5W4uPSbGS8+pO3HNfYtl4lRNRxdruYM7OIJi17ybcvO0
-         HZ7z+pLtuZAalpxfcqRWKcR/+gCa7uRKtQSoJYbE=
+        b=RYp3HsXYddG0gGjHxFVrVakVb82nNCKjk+4lS3Y1SvCuzL1XyxQp62Layv7UaM4c8
+         /crk1cTc4WYbykHbDwa0Hlp0xmHY6ejorc/oZ/AJ0+klLUAmftMX0SK16Sg7RYYtJ1
+         WhEqMFSPAPpcRh5o5plrSDwoQf1N4Mm2K6rnX7P4=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Max Filippov <jcmvbkbc@gmail.com>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.14 056/135] xtensa: SMP: mark each possible CPU as present
-Date:   Tue, 12 Mar 2019 10:08:23 -0700
-Message-Id: <20190312170346.365394282@linuxfoundation.org>
+        stable@vger.kernel.org, Mike Kravetz <mike.kravetz@oracle.com>,
+        Naoya Horiguchi <n-horiguchi@ah.jp.nec.com>,
+        Michal Hocko <mhocko@kernel.org>,
+        Andrea Arcangeli <aarcange@redhat.com>,
+        "Kirill A . Shutemov" <kirill.shutemov@linux.intel.com>,
+        Mel Gorman <mgorman@techsingularity.net>,
+        Davidlohr Bueso <dave@stgolabs.net>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>
+Subject: [PATCH 4.9 31/96] hugetlbfs: fix races and page leaks during migration
+Date:   Tue, 12 Mar 2019 10:09:49 -0700
+Message-Id: <20190312171036.857655350@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
-In-Reply-To: <20190312170341.127810985@linuxfoundation.org>
-References: <20190312170341.127810985@linuxfoundation.org>
+In-Reply-To: <20190312171034.530434962@linuxfoundation.org>
+References: <20190312171034.530434962@linuxfoundation.org>
 User-Agent: quilt/0.65
 X-stable: review
 X-Patchwork-Hint: ignore
@@ -61,36 +68,204 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-4.14-stable review patch.  If anyone has any objections, please let me know.
+4.9-stable review patch.  If anyone has any objections, please let me know.
 
 ------------------
 
-[ Upstream commit 8b1c42cdd7181200dc1fff39dcb6ac1a3fac2c25 ]
+From: Mike Kravetz <mike.kravetz@oracle.com>
 
-Otherwise it is impossible to enable CPUs after booting with 'maxcpus'
-parameter.
+commit cb6acd01e2e43fd8bad11155752b7699c3d0fb76 upstream.
 
-Signed-off-by: Max Filippov <jcmvbkbc@gmail.com>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
+hugetlb pages should only be migrated if they are 'active'.  The
+routines set/clear_page_huge_active() modify the active state of hugetlb
+pages.
+
+When a new hugetlb page is allocated at fault time, set_page_huge_active
+is called before the page is locked.  Therefore, another thread could
+race and migrate the page while it is being added to page table by the
+fault code.  This race is somewhat hard to trigger, but can be seen by
+strategically adding udelay to simulate worst case scheduling behavior.
+Depending on 'how' the code races, various BUG()s could be triggered.
+
+To address this issue, simply delay the set_page_huge_active call until
+after the page is successfully added to the page table.
+
+Hugetlb pages can also be leaked at migration time if the pages are
+associated with a file in an explicitly mounted hugetlbfs filesystem.
+For example, consider a two node system with 4GB worth of huge pages
+available.  A program mmaps a 2G file in a hugetlbfs filesystem.  It
+then migrates the pages associated with the file from one node to
+another.  When the program exits, huge page counts are as follows:
+
+  node0
+  1024    free_hugepages
+  1024    nr_hugepages
+
+  node1
+  0       free_hugepages
+  1024    nr_hugepages
+
+  Filesystem                         Size  Used Avail Use% Mounted on
+  nodev                              4.0G  2.0G  2.0G  50% /var/opt/hugepool
+
+That is as expected.  2G of huge pages are taken from the free_hugepages
+counts, and 2G is the size of the file in the explicitly mounted
+filesystem.  If the file is then removed, the counts become:
+
+  node0
+  1024    free_hugepages
+  1024    nr_hugepages
+
+  node1
+  1024    free_hugepages
+  1024    nr_hugepages
+
+  Filesystem                         Size  Used Avail Use% Mounted on
+  nodev                              4.0G  2.0G  2.0G  50% /var/opt/hugepool
+
+Note that the filesystem still shows 2G of pages used, while there
+actually are no huge pages in use.  The only way to 'fix' the filesystem
+accounting is to unmount the filesystem
+
+If a hugetlb page is associated with an explicitly mounted filesystem,
+this information in contained in the page_private field.  At migration
+time, this information is not preserved.  To fix, simply transfer
+page_private from old to new page at migration time if necessary.
+
+There is a related race with removing a huge page from a file and
+migration.  When a huge page is removed from the pagecache, the
+page_mapping() field is cleared, yet page_private remains set until the
+page is actually freed by free_huge_page().  A page could be migrated
+while in this state.  However, since page_mapping() is not set the
+hugetlbfs specific routine to transfer page_private is not called and we
+leak the page count in the filesystem.
+
+To fix that, check for this condition before migrating a huge page.  If
+the condition is detected, return EBUSY for the page.
+
+Link: http://lkml.kernel.org/r/74510272-7319-7372-9ea6-ec914734c179@oracle.com
+Link: http://lkml.kernel.org/r/20190212221400.3512-1-mike.kravetz@oracle.com
+Fixes: bcc54222309c ("mm: hugetlb: introduce page_huge_active")
+Signed-off-by: Mike Kravetz <mike.kravetz@oracle.com>
+Reviewed-by: Naoya Horiguchi <n-horiguchi@ah.jp.nec.com>
+Cc: Michal Hocko <mhocko@kernel.org>
+Cc: Andrea Arcangeli <aarcange@redhat.com>
+Cc: "Kirill A . Shutemov" <kirill.shutemov@linux.intel.com>
+Cc: Mel Gorman <mgorman@techsingularity.net>
+Cc: Davidlohr Bueso <dave@stgolabs.net>
+Cc: <stable@vger.kernel.org>
+[mike.kravetz@oracle.com: v2]
+  Link: http://lkml.kernel.org/r/7534d322-d782-8ac6-1c8d-a8dc380eb3ab@oracle.com
+[mike.kravetz@oracle.com: update comment and changelog]
+  Link: http://lkml.kernel.org/r/420bcfd6-158b-38e4-98da-26d0cd85bd01@oracle.com
+Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
+Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+
 ---
- arch/xtensa/kernel/smp.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ fs/hugetlbfs/inode.c |   12 ++++++++++++
+ mm/hugetlb.c         |   14 ++++++++++++--
+ mm/migrate.c         |   11 +++++++++++
+ 3 files changed, 35 insertions(+), 2 deletions(-)
 
-diff --git a/arch/xtensa/kernel/smp.c b/arch/xtensa/kernel/smp.c
-index c9fc2c4f71b3..80be6449c497 100644
---- a/arch/xtensa/kernel/smp.c
-+++ b/arch/xtensa/kernel/smp.c
-@@ -83,7 +83,7 @@ void __init smp_prepare_cpus(unsigned int max_cpus)
- {
- 	unsigned i;
+--- a/fs/hugetlbfs/inode.c
++++ b/fs/hugetlbfs/inode.c
+@@ -861,6 +861,18 @@ static int hugetlbfs_migrate_page(struct
+ 	rc = migrate_huge_page_move_mapping(mapping, newpage, page);
+ 	if (rc != MIGRATEPAGE_SUCCESS)
+ 		return rc;
++
++	/*
++	 * page_private is subpool pointer in hugetlb pages.  Transfer to
++	 * new page.  PagePrivate is not associated with page_private for
++	 * hugetlb pages and can not be set here as only page_huge_active
++	 * pages can be migrated.
++	 */
++	if (page_private(page)) {
++		set_page_private(newpage, page_private(page));
++		set_page_private(page, 0);
++	}
++
+ 	migrate_page_copy(newpage, page);
  
--	for (i = 0; i < max_cpus; ++i)
-+	for_each_possible_cpu(i)
- 		set_cpu_present(i, true);
- }
+ 	return MIGRATEPAGE_SUCCESS;
+--- a/mm/hugetlb.c
++++ b/mm/hugetlb.c
+@@ -3579,7 +3579,6 @@ retry_avoidcopy:
+ 	copy_user_huge_page(new_page, old_page, address, vma,
+ 			    pages_per_huge_page(h));
+ 	__SetPageUptodate(new_page);
+-	set_page_huge_active(new_page);
  
--- 
-2.19.1
-
+ 	mmun_start = address & huge_page_mask(h);
+ 	mmun_end = mmun_start + huge_page_size(h);
+@@ -3601,6 +3600,7 @@ retry_avoidcopy:
+ 				make_huge_pte(vma, new_page, 1));
+ 		page_remove_rmap(old_page, true);
+ 		hugepage_add_new_anon_rmap(new_page, vma, address);
++		set_page_huge_active(new_page);
+ 		/* Make the old page be freed below */
+ 		new_page = old_page;
+ 	}
+@@ -3683,6 +3683,7 @@ static int hugetlb_no_page(struct mm_str
+ 	struct page *page;
+ 	pte_t new_pte;
+ 	spinlock_t *ptl;
++	bool new_page = false;
+ 
+ 	/*
+ 	 * Currently, we are forced to kill the process in the event the
+@@ -3716,7 +3717,7 @@ retry:
+ 		}
+ 		clear_huge_page(page, address, pages_per_huge_page(h));
+ 		__SetPageUptodate(page);
+-		set_page_huge_active(page);
++		new_page = true;
+ 
+ 		if (vma->vm_flags & VM_MAYSHARE) {
+ 			int err = huge_add_to_page_cache(page, mapping, idx);
+@@ -3788,6 +3789,15 @@ retry:
+ 	}
+ 
+ 	spin_unlock(ptl);
++
++	/*
++	 * Only make newly allocated pages active.  Existing pages found
++	 * in the pagecache could be !page_huge_active() if they have been
++	 * isolated for migration.
++	 */
++	if (new_page)
++		set_page_huge_active(page);
++
+ 	unlock_page(page);
+ out:
+ 	return ret;
+--- a/mm/migrate.c
++++ b/mm/migrate.c
+@@ -1234,6 +1234,16 @@ static int unmap_and_move_huge_page(new_
+ 		lock_page(hpage);
+ 	}
+ 
++	/*
++	 * Check for pages which are in the process of being freed.  Without
++	 * page_mapping() set, hugetlbfs specific move page routine will not
++	 * be called and we could leak usage counts for subpools.
++	 */
++	if (page_private(hpage) && !page_mapping(hpage)) {
++		rc = -EBUSY;
++		goto out_unlock;
++	}
++
+ 	if (PageAnon(hpage))
+ 		anon_vma = page_get_anon_vma(hpage);
+ 
+@@ -1265,6 +1275,7 @@ put_anon:
+ 		set_page_owner_migrate_reason(new_hpage, reason);
+ 	}
+ 
++out_unlock:
+ 	unlock_page(hpage);
+ out:
+ 	if (rc != -EAGAIN)
 
 
