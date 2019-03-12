@@ -2,53 +2,53 @@ Return-Path: <SRS0=J4ZE=RP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 600D7C43381
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 17:27:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0A707C43381
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 17:28:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2DDCB2171F
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 17:27:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CDB96206DF
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 17:27:59 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1552411676;
-	bh=nRevLH+zr1a37U0j/mVmu2vLuSjYIQixjau9UW74pHg=;
+	s=default; t=1552411679;
+	bh=no5+dMa7cF1DGZycwZB3vDKlFeEhSvN/wWFYk2JNa8c=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=xmYaPKZ2LJDhM5MSAtyh2mpnuKpVwzLqW+ae9jE4G0Ax0rsbI9Jit4Ys+HXCcjwTk
-	 wkBGWpFA8TX9jvCWNcSkOohZTUNnljgUVBRxAp62PvHxpAFSixcTVS9wediKec07UR
-	 A0j2xiDUK1u1yFxr1qObUqNXFJFPcrVloFmoH5rU=
+	b=TznsxyLw5y3ZOyw/bMhyxmdQH7x7DDBATqxpX6onL9XijWfUm1L89k9QxwnhvHpBB
+	 XtCBONWpPcUNSBopPs6Dwcu4/7+WlZu6AQX9gxN3VhVLNlF3l8xcGxfajLC7LRW11o
+	 Put/4Pg2gyCBlKc4Vub1/qtq88o49SAn3k1bzGEE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729763AbfCLR1y (ORCPT
+        id S1729841AbfCLR16 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 12 Mar 2019 13:27:54 -0400
-Received: from mail.kernel.org ([198.145.29.99]:33606 "EHLO mail.kernel.org"
+        Tue, 12 Mar 2019 13:27:58 -0400
+Received: from mail.kernel.org ([198.145.29.99]:34056 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729657AbfCLRRf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 12 Mar 2019 13:17:35 -0400
+        id S1729741AbfCLRRo (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 12 Mar 2019 13:17:44 -0400
 Received: from localhost (unknown [104.133.8.98])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id A30C42087C;
-        Tue, 12 Mar 2019 17:17:34 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id F1239206DF;
+        Tue, 12 Mar 2019 17:17:43 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1552411054;
-        bh=nRevLH+zr1a37U0j/mVmu2vLuSjYIQixjau9UW74pHg=;
+        s=default; t=1552411064;
+        bh=no5+dMa7cF1DGZycwZB3vDKlFeEhSvN/wWFYk2JNa8c=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=xMQ8dP74WRMQHvUHZYkgE7aC9pZHtlfPnyMr2nrz/UJ7jG40sLa+beJ4loU6+PbAz
-         KKCfydJv1etciLe3uUbslZ8eXRsfvlhGpBf+2BfD/x0LklY2K3ecXWlyA1bvX/0mjZ
-         n7qWUppUXLwNPcVPSf+D3Srzf+P/n4goB1dnqtms=
+        b=iZ7jRi4L+lT8yXZi1d5YpHSLe81aV1mulDAdoEIp0tFg1zES4gsE/shAnwLWHyVum
+         TDLv7s7TPzrTqPwgVDdYYkBSJsCwE3huvpXNoSbgKtLdd+eor5pPqPoCE2KoViWGZC
+         Il3uF5TG098EWjPMrgoJdmwRXW4Z/gqCvfG0J94I=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Paul Durrant <paul.durrant@citrix.com>,
-        Igor Druzhinin <igor.druzhinin@citrix.com>,
-        Wei Liu <wei.liu2@citrix.com>,
-        "David S. Miller" <davem@davemloft.net>
-Subject: [PATCH 4.9 22/96] xen-netback: fix occasional leak of grant ref mappings under memory pressure
-Date:   Tue, 12 Mar 2019 10:09:40 -0700
-Message-Id: <20190312171036.191773014@linuxfoundation.org>
+        stable@vger.kernel.org, Manish Chopra <manishc@marvell.com>,
+        Ariel Elior <aelior@marvell.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.9 53/96] qed: Fix VF probe failure while FLR
+Date:   Tue, 12 Mar 2019 10:10:11 -0700
+Message-Id: <20190312171038.532807468@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190312171034.530434962@linuxfoundation.org>
 References: <20190312171034.530434962@linuxfoundation.org>
@@ -67,64 +67,57 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-From: Igor Druzhinin <igor.druzhinin@citrix.com>
+[ Upstream commit 327852ec64205bb651be391a069784872098a3b2 ]
 
-[ Upstream commit 99e87f56b48f490fb16b6e0f74691c1e664dea95 ]
+VFs may hit VF-PF channel timeout while probing, as in some
+cases it was observed that VF FLR and VF "acquire" message
+transaction (i.e first message from VF to PF in VF's probe flow)
+could occur simultaneously which could lead VF to fail sending
+"acquire" message to PF as VF is marked disabled from HW perspective
+due to FLR, which will result into channel timeout and VF probe failure.
 
-Zero-copy callback flag is not yet set on frag list skb at the moment
-xenvif_handle_frag_list() returns -ENOMEM. This eventually results in
-leaking grant ref mappings since xenvif_zerocopy_callback() is never
-called for these fragments. Those eventually build up and cause Xen
-to kill Dom0 as the slots get reused for new mappings:
+In such cases, try retrying VF "acquire" message so that in later
+attempts it could be successful to pass message to PF after the VF
+FLR is completed and can be probed successfully.
 
-"d0v0 Attempt to implicitly unmap a granted PTE c010000329fce005"
-
-That behavior is observed under certain workloads where sudden spikes
-of page cache writes coexist with active atomic skb allocations from
-network traffic. Additionally, rework the logic to deal with frag_list
-deallocation in a single place.
-
-Signed-off-by: Paul Durrant <paul.durrant@citrix.com>
-Signed-off-by: Igor Druzhinin <igor.druzhinin@citrix.com>
-Acked-by: Wei Liu <wei.liu2@citrix.com>
+Signed-off-by: Manish Chopra <manishc@marvell.com>
+Signed-off-by: Ariel Elior <aelior@marvell.com>
 Signed-off-by: David S. Miller <davem@davemloft.net>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/xen-netback/netback.c |   10 +++++-----
- 1 file changed, 5 insertions(+), 5 deletions(-)
+ drivers/net/ethernet/qlogic/qed/qed_vf.c | 10 ++++++++++
+ 1 file changed, 10 insertions(+)
 
---- a/drivers/net/xen-netback/netback.c
-+++ b/drivers/net/xen-netback/netback.c
-@@ -1074,11 +1074,6 @@ static int xenvif_handle_frag_list(struc
- 		skb_frag_size_set(&frags[i], len);
- 	}
+diff --git a/drivers/net/ethernet/qlogic/qed/qed_vf.c b/drivers/net/ethernet/qlogic/qed/qed_vf.c
+index 9cc02b94328a..cf34908ec8e1 100644
+--- a/drivers/net/ethernet/qlogic/qed/qed_vf.c
++++ b/drivers/net/ethernet/qlogic/qed/qed_vf.c
+@@ -158,6 +158,7 @@ static int qed_vf_pf_acquire(struct qed_hwfn *p_hwfn)
+ 	struct pfvf_acquire_resp_tlv *resp = &p_iov->pf2vf_reply->acquire_resp;
+ 	struct pf_vf_pfdev_info *pfdev_info = &resp->pfdev_info;
+ 	struct vf_pf_resc_request *p_resc;
++	u8 retry_cnt = VF_ACQUIRE_THRESH;
+ 	bool resources_acquired = false;
+ 	struct vfpf_acquire_tlv *req;
+ 	int rc = 0, attempts = 0;
+@@ -203,6 +204,15 @@ static int qed_vf_pf_acquire(struct qed_hwfn *p_hwfn)
  
--	/* Copied all the bits from the frag list -- free it. */
--	skb_frag_list_init(skb);
--	xenvif_skb_zerocopy_prepare(queue, nskb);
--	kfree_skb(nskb);
--
- 	/* Release all the original (foreign) frags. */
- 	for (f = 0; f < skb_shinfo(skb)->nr_frags; f++)
- 		skb_frag_unref(skb, f);
-@@ -1147,6 +1142,8 @@ static int xenvif_tx_submit(struct xenvi
- 		xenvif_fill_frags(queue, skb);
+ 		/* send acquire request */
+ 		rc = qed_send_msg2pf(p_hwfn, &resp->hdr.status, sizeof(*resp));
++
++		/* Re-try acquire in case of vf-pf hw channel timeout */
++		if (retry_cnt && rc == -EBUSY) {
++			DP_VERBOSE(p_hwfn, QED_MSG_IOV,
++				   "VF retrying to acquire due to VPC timeout\n");
++			retry_cnt--;
++			continue;
++		}
++
+ 		if (rc)
+ 			goto exit;
  
- 		if (unlikely(skb_has_frag_list(skb))) {
-+			struct sk_buff *nskb = skb_shinfo(skb)->frag_list;
-+			xenvif_skb_zerocopy_prepare(queue, nskb);
- 			if (xenvif_handle_frag_list(queue, skb)) {
- 				if (net_ratelimit())
- 					netdev_err(queue->vif->dev,
-@@ -1155,6 +1152,9 @@ static int xenvif_tx_submit(struct xenvi
- 				kfree_skb(skb);
- 				continue;
- 			}
-+			/* Copied all the bits from the frag list -- free it. */
-+			skb_frag_list_init(skb);
-+			kfree_skb(nskb);
- 		}
- 
- 		skb->dev      = queue->vif->dev;
+-- 
+2.19.1
+
 
 
