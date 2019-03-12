@@ -7,48 +7,48 @@ X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 60AB4C43381
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 17:48:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EECFDC43381
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 17:48:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 31FC42173C
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 17:48:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C0B012173C
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 17:48:21 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1552412899;
-	bh=hXhfNQTp7+rRZ/EKdpAAF17IA4VFwfiLd5/lM7cEWgU=;
+	s=default; t=1552412901;
+	bh=X+sgWuEzyB0G/Lz1u2Z4bxbknIgiOYcVvQ4GbMYRTjk=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=VKf9MNHlkTdiXkgfRUE2g1nTFmtGkH3fC+m4mrZ7Hkl29ENSlGqj5ibs1jfCo+Ymt
-	 jb/WACmsSoBui2xMwAHhTH6nfuXch/QfxStBEdcLZ0c66taWQ8z7iHss2Oeg/HcBNC
-	 wyyKjtvuov3ZVxjcreFHTKYQMU/PVVRLEKTgX8tY=
+	b=YTl8Iv/Wos9KiDXQ2rFYzcuB34dDbQWAY6noPqaE0N09sRkwGooynvEz2tqWnyzE+
+	 dQt5jP+rv3CAFSDQo62iillwzeRD1uXjG9dM81CSN494uRt2hY0JDQG6Fh5YMjDaaP
+	 6zi1UMFrhq9/hK6V32/G2BTz4060BhyVmEVBdXgQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728598AbfCLRPD (ORCPT
+        id S1728888AbfCLRsU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 12 Mar 2019 13:15:03 -0400
-Received: from mail.kernel.org ([198.145.29.99]:52874 "EHLO mail.kernel.org"
+        Tue, 12 Mar 2019 13:48:20 -0400
+Received: from mail.kernel.org ([198.145.29.99]:54802 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728323AbfCLROV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 12 Mar 2019 13:14:21 -0400
+        id S1727782AbfCLRPD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 12 Mar 2019 13:15:03 -0400
 Received: from localhost (unknown [104.133.8.98])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 3C5C72183E;
-        Tue, 12 Mar 2019 17:14:20 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id D478C21850;
+        Tue, 12 Mar 2019 17:15:01 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1552410860;
-        bh=hXhfNQTp7+rRZ/EKdpAAF17IA4VFwfiLd5/lM7cEWgU=;
+        s=default; t=1552410901;
+        bh=X+sgWuEzyB0G/Lz1u2Z4bxbknIgiOYcVvQ4GbMYRTjk=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=QSQX1VOe8emsf72HnfmufgnnzYhi/SqugvzgRiEhk32QcWtIOQ9hc3UNa8XvZafgV
-         iN0aGPF2u5GzDXWnu3jSZlFR+Ru0AnoKbD40lMVwVyOMtKq23wxmjQIZEquprntIUi
-         GbDt7lKAkpKzG96u5zgSAqIkkBDmgVoZnIIghb+Y=
+        b=M1wt2XepCB05Cosexli5RT5B3IQDrqgNgBKMt507fG0Uy+dic2PbdkCYxC1oVAKx9
+         XLQ3LNYgr85rk3q+OOX8IKD9pi6CJHq7SJjYBDT2ZIw/uSW4S7FuIYX9mPsKyDLSAs
+         tkKo106gPHWE/WF9g21XGrAa1yf67z3xCxDNsJ3w=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Manish Chopra <manishc@marvell.com>,
-        Ariel Elior <aelior@marvell.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 038/149] qed: Fix system crash in ll2 xmit
-Date:   Tue, 12 Mar 2019 10:07:36 -0700
-Message-Id: <20190312170352.917510459@linuxfoundation.org>
+        stable@vger.kernel.org, Wen Xiong <wenxiong@us.ibm.com>,
+        Keith Busch <keith.busch@intel.com>,
+        Chaitanya Kulkarni <chaitanya.kulkarni@wdc.com>,
+        Christoph Hellwig <hch@lst.de>, Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.19 115/149] nvme: lock NS list changes while handling command effects
+Date:   Tue, 12 Mar 2019 10:08:53 -0700
+Message-Id: <20190312170359.124779056@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190312170349.421581206@linuxfoundation.org>
 References: <20190312170349.421581206@linuxfoundation.org>
@@ -67,82 +67,94 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-[ Upstream commit 7c81626a3c37e4ac320b8ad785694ba498f24794 ]
+[ Upstream commit e7ad43c3eda6a1690c4c3c341f95dc1c6898da83 ]
 
-Cache number of fragments in the skb locally as in case
-of linear skb (with zero fragments), tx completion
-(or freeing of skb) may happen before driver tries
-to get number of frgaments from the skb which could
-lead to stale access to an already freed skb.
+If a controller supports the NS Change Notification, the namespace
+scan_work is automatically triggered after attaching a new namespace.
 
-Signed-off-by: Manish Chopra <manishc@marvell.com>
-Signed-off-by: Ariel Elior <aelior@marvell.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
+Occasionally the namespace scan_work may append the new namespace to the
+list before the admin command effects handling is completed. The effects
+handling unfreezes namespaces, but if it unfreezes the newly attached
+namespace, its request_queue freeze depth will be off and we'll hit the
+warning in blk_mq_unfreeze_queue().
+
+On the next namespace add, we will fail to freeze that queue due to the
+previous bad accounting and deadlock waiting for frozen.
+
+Fix that by preventing scan work from altering the namespace list while
+command effects handling needs to pair freeze with unfreeze.
+
+Reported-by: Wen Xiong <wenxiong@us.ibm.com>
+Tested-by: Wen Xiong <wenxiong@us.ibm.com>
+Signed-off-by: Keith Busch <keith.busch@intel.com>
+Reviewed-by: Chaitanya Kulkarni <chaitanya.kulkarni@wdc.com>
+Signed-off-by: Christoph Hellwig <hch@lst.de>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/ethernet/qlogic/qed/qed_ll2.c | 20 +++++++++++++++-----
- 1 file changed, 15 insertions(+), 5 deletions(-)
+ drivers/nvme/host/core.c | 8 +++++++-
+ drivers/nvme/host/nvme.h | 1 +
+ 2 files changed, 8 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/net/ethernet/qlogic/qed/qed_ll2.c b/drivers/net/ethernet/qlogic/qed/qed_ll2.c
-index 92cd8abeb41d..015de1e0addd 100644
---- a/drivers/net/ethernet/qlogic/qed/qed_ll2.c
-+++ b/drivers/net/ethernet/qlogic/qed/qed_ll2.c
-@@ -2430,19 +2430,24 @@ static int qed_ll2_start_xmit(struct qed_dev *cdev, struct sk_buff *skb,
- {
- 	struct qed_ll2_tx_pkt_info pkt;
- 	const skb_frag_t *frag;
-+	u8 flags = 0, nr_frags;
- 	int rc = -EINVAL, i;
- 	dma_addr_t mapping;
- 	u16 vlan = 0;
--	u8 flags = 0;
- 
- 	if (unlikely(skb->ip_summed != CHECKSUM_NONE)) {
- 		DP_INFO(cdev, "Cannot transmit a checksummed packet\n");
- 		return -EINVAL;
+diff --git a/drivers/nvme/host/core.c b/drivers/nvme/host/core.c
+index e0d2b7473901..2cdb3032ca0f 100644
+--- a/drivers/nvme/host/core.c
++++ b/drivers/nvme/host/core.c
+@@ -1182,6 +1182,7 @@ static u32 nvme_passthru_start(struct nvme_ctrl *ctrl, struct nvme_ns *ns,
+ 	 * effects say only one namespace is affected.
+ 	 */
+ 	if (effects & (NVME_CMD_EFFECTS_LBCC | NVME_CMD_EFFECTS_CSE_MASK)) {
++		mutex_lock(&ctrl->scan_lock);
+ 		nvme_start_freeze(ctrl);
+ 		nvme_wait_freeze(ctrl);
  	}
+@@ -1210,8 +1211,10 @@ static void nvme_passthru_end(struct nvme_ctrl *ctrl, u32 effects)
+ 	 */
+ 	if (effects & NVME_CMD_EFFECTS_LBCC)
+ 		nvme_update_formats(ctrl);
+-	if (effects & (NVME_CMD_EFFECTS_LBCC | NVME_CMD_EFFECTS_CSE_MASK))
++	if (effects & (NVME_CMD_EFFECTS_LBCC | NVME_CMD_EFFECTS_CSE_MASK)) {
+ 		nvme_unfreeze(ctrl);
++		mutex_unlock(&ctrl->scan_lock);
++	}
+ 	if (effects & NVME_CMD_EFFECTS_CCC)
+ 		nvme_init_identify(ctrl);
+ 	if (effects & (NVME_CMD_EFFECTS_NIC | NVME_CMD_EFFECTS_NCC))
+@@ -3292,6 +3295,7 @@ static void nvme_scan_work(struct work_struct *work)
+ 	if (nvme_identify_ctrl(ctrl, &id))
+ 		return;
  
--	if (1 + skb_shinfo(skb)->nr_frags > CORE_LL2_TX_MAX_BDS_PER_PACKET) {
-+	/* Cache number of fragments from SKB since SKB may be freed by
-+	 * the completion routine after calling qed_ll2_prepare_tx_packet()
-+	 */
-+	nr_frags = skb_shinfo(skb)->nr_frags;
-+
-+	if (1 + nr_frags > CORE_LL2_TX_MAX_BDS_PER_PACKET) {
- 		DP_ERR(cdev, "Cannot transmit a packet with %d fragments\n",
--		       1 + skb_shinfo(skb)->nr_frags);
-+		       1 + nr_frags);
- 		return -EINVAL;
++	mutex_lock(&ctrl->scan_lock);
+ 	nn = le32_to_cpu(id->nn);
+ 	if (ctrl->vs >= NVME_VS(1, 1, 0) &&
+ 	    !(ctrl->quirks & NVME_QUIRK_IDENTIFY_CNS)) {
+@@ -3300,6 +3304,7 @@ static void nvme_scan_work(struct work_struct *work)
  	}
+ 	nvme_scan_ns_sequential(ctrl, nn);
+ out_free_id:
++	mutex_unlock(&ctrl->scan_lock);
+ 	kfree(id);
+ 	down_write(&ctrl->namespaces_rwsem);
+ 	list_sort(NULL, &ctrl->namespaces, ns_cmp);
+@@ -3535,6 +3540,7 @@ int nvme_init_ctrl(struct nvme_ctrl *ctrl, struct device *dev,
  
-@@ -2464,7 +2469,7 @@ static int qed_ll2_start_xmit(struct qed_dev *cdev, struct sk_buff *skb,
- 	}
- 
- 	memset(&pkt, 0, sizeof(pkt));
--	pkt.num_of_bds = 1 + skb_shinfo(skb)->nr_frags;
-+	pkt.num_of_bds = 1 + nr_frags;
- 	pkt.vlan = vlan;
- 	pkt.bd_flags = flags;
- 	pkt.tx_dest = QED_LL2_TX_DEST_NW;
-@@ -2475,12 +2480,17 @@ static int qed_ll2_start_xmit(struct qed_dev *cdev, struct sk_buff *skb,
- 	    test_bit(QED_LL2_XMIT_FLAGS_FIP_DISCOVERY, &xmit_flags))
- 		pkt.remove_stag = true;
- 
-+	/* qed_ll2_prepare_tx_packet() may actually send the packet if
-+	 * there are no fragments in the skb and subsequently the completion
-+	 * routine may run and free the SKB, so no dereferencing the SKB
-+	 * beyond this point unless skb has any fragments.
-+	 */
- 	rc = qed_ll2_prepare_tx_packet(&cdev->hwfns[0], cdev->ll2->handle,
- 				       &pkt, 1);
- 	if (rc)
- 		goto err;
- 
--	for (i = 0; i < skb_shinfo(skb)->nr_frags; i++) {
-+	for (i = 0; i < nr_frags; i++) {
- 		frag = &skb_shinfo(skb)->frags[i];
- 
- 		mapping = skb_frag_dma_map(&cdev->pdev->dev, frag, 0,
+ 	ctrl->state = NVME_CTRL_NEW;
+ 	spin_lock_init(&ctrl->lock);
++	mutex_init(&ctrl->scan_lock);
+ 	INIT_LIST_HEAD(&ctrl->namespaces);
+ 	init_rwsem(&ctrl->namespaces_rwsem);
+ 	ctrl->dev = dev;
+diff --git a/drivers/nvme/host/nvme.h b/drivers/nvme/host/nvme.h
+index 60220de2db52..e82cdaec81c9 100644
+--- a/drivers/nvme/host/nvme.h
++++ b/drivers/nvme/host/nvme.h
+@@ -148,6 +148,7 @@ struct nvme_ctrl {
+ 	enum nvme_ctrl_state state;
+ 	bool identified;
+ 	spinlock_t lock;
++	struct mutex scan_lock;
+ 	const struct nvme_ctrl_ops *ops;
+ 	struct request_queue *admin_q;
+ 	struct request_queue *connect_q;
 -- 
 2.19.1
 
