@@ -4,56 +4,52 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E13E3C43381
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 17:55:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8C4E5C43381
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 17:55:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AEBC92087C
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 17:55:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5E2A42087C
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 17:55:17 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1552413312;
-	bh=B4Oq8vY4v/PHUA2mwC/kSY6YkPUrqqt1DPEqiaRRvLQ=;
+	s=default; t=1552413317;
+	bh=TxnnQZfTSx5BZvnlSEtpeXMEyQx3hDnLinTJrF7ayO8=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=oGSgHOgzaNyFZYwzbcxdbTHf7QiAiPg5LfYhq+Z8TsC9qChANiTFM7P6yHD1LKNV1
-	 3tmw8u6VLB//NrnJkmbEYW2yCbs45H6p++srrtnOFbFoSxQpgJ/gagnczL8jZ7lb9L
-	 yuTp9pRko7EsFD+7o8vGrbZcnY3PiXxQeRSPPH6s=
+	b=ZRzhNb3i9ZOMTpMMxyYZcyOJfO7TdeKTdHIJilg5bKzh7TrohBgeoSygDBaNUkcdi
+	 0I5X4wr6JRi81pszLeh1EZDHNpxI1udgRIdOeCAj7QO1njUx2ZqFGynpXXsaOu5quh
+	 7bBE3FpRWGpO5M5HwcXc5HhwbYKZ8hHATSZPpsTM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728232AbfCLROF (ORCPT
+        id S1728427AbfCLRzO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 12 Mar 2019 13:14:05 -0400
-Received: from mail.kernel.org ([198.145.29.99]:49744 "EHLO mail.kernel.org"
+        Tue, 12 Mar 2019 13:55:14 -0400
+Received: from mail.kernel.org ([198.145.29.99]:52174 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727916AbfCLRNY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 12 Mar 2019 13:13:24 -0400
+        id S1728230AbfCLROF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 12 Mar 2019 13:14:05 -0400
 Received: from localhost (unknown [104.133.8.98])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 209B12183E;
-        Tue, 12 Mar 2019 17:13:24 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 1967D21850;
+        Tue, 12 Mar 2019 17:14:05 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1552410804;
-        bh=B4Oq8vY4v/PHUA2mwC/kSY6YkPUrqqt1DPEqiaRRvLQ=;
+        s=default; t=1552410845;
+        bh=TxnnQZfTSx5BZvnlSEtpeXMEyQx3hDnLinTJrF7ayO8=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=wFWJ5ckSE/I95DE7WEmN43xH9+qJBrDs4uHI56joUlBeCUICdrVWs3lRZUmX39jo5
-         +fTmIcGMpqwIG3Rhz7vnhCdTK7Pp9ZRzgE3z2DIviJqFMoxeDmOv4Xw5cZ/GjThheh
-         EBTI8js2sfQfnMBdBGrtPnRAFazZ72NQ3tZyQjZ8=
+        b=Yg9D7zFyRTjc0fFxTMZ+IZ9pnyxXK+2mejDCpCcYBsE0mtnRcXPzSqmdDFNa2RA73
+         pBW9D5VQsAwwAxgaPhROH59knv7tf/w3p3buk5Aifye2SsFYgOBM/mOWAZOAONW5gv
+         W4O0brxgzQM887uWznbzAMafS7xvkI1DioKroKVU=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Jun-Ru Chang <jrjang@realtek.com>,
-        Tony Wu <tonywu@realtek.com>,
-        Paul Burton <paul.burton@mips.com>, ralf@linux-mips.org,
-        jhogan@kernel.org, macro@mips.com, yamada.masahiro@socionext.com,
-        peterz@infradead.org, mingo@kernel.org, linux-mips@vger.kernel.org,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.20 132/171] MIPS: Remove function size check in get_frame_info()
-Date:   Tue, 12 Mar 2019 10:08:32 -0700
-Message-Id: <20190312170359.084168929@linuxfoundation.org>
+        stable@vger.kernel.org, Colin Ian King <colin.king@canonical.com>,
+        Shuah Khan <shuah@kernel.org>, Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.19 018/149] selftests: cpu-hotplug: fix case where CPUs offline > CPUs present
+Date:   Tue, 12 Mar 2019 10:07:16 -0700
+Message-Id: <20190312170351.138105612@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
-In-Reply-To: <20190312170347.868927101@linuxfoundation.org>
-References: <20190312170347.868927101@linuxfoundation.org>
+In-Reply-To: <20190312170349.421581206@linuxfoundation.org>
+References: <20190312170349.421581206@linuxfoundation.org>
 User-Agent: quilt/0.65
 X-stable: review
 X-Patchwork-Hint: ignore
@@ -65,66 +61,68 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-4.20-stable review patch.  If anyone has any objections, please let me know.
+4.19-stable review patch.  If anyone has any objections, please let me know.
 
 ------------------
 
-[ Upstream commit 2b424cfc69728224fcb5fad138ea7260728e0901 ]
+[ Upstream commit 2b531b6137834a55857a337ac17510d6436b6fbb ]
 
-Patch (b6c7a324df37b "MIPS: Fix get_frame_info() handling of
-microMIPS function size.") introduces additional function size
-check for microMIPS by only checking insn between ip and ip + func_size.
-However, func_size in get_frame_info() is always 0 if KALLSYMS is not
-enabled. This causes get_frame_info() to return immediately without
-calculating correct frame_size, which in turn causes "Can't analyze
-schedule() prologue" warning messages at boot time.
+The cpu-hotplug test assumes that we can offline the maximum CPU as
+described by /sys/devices/system/cpu/offline.  However, in the case
+where the number of CPUs exceeds like kernel configuration then
+the offline count can be greater than the present count and we end
+up trying to test the offlining of a CPU that is not available to
+offline.  Fix this by testing the maximum present CPU instead.
 
-This patch removes func_size check, and let the frame_size check run
-up to 128 insns for both MIPS and microMIPS.
+Also, the test currently offlines the CPU and does not online it,
+so fix this by onlining the CPU after the test.
 
-Signed-off-by: Jun-Ru Chang <jrjang@realtek.com>
-Signed-off-by: Tony Wu <tonywu@realtek.com>
-Signed-off-by: Paul Burton <paul.burton@mips.com>
-Fixes: b6c7a324df37b ("MIPS: Fix get_frame_info() handling of microMIPS function size.")
-Cc: <ralf@linux-mips.org>
-Cc: <jhogan@kernel.org>
-Cc: <macro@mips.com>
-Cc: <yamada.masahiro@socionext.com>
-Cc: <peterz@infradead.org>
-Cc: <mingo@kernel.org>
-Cc: <linux-mips@vger.kernel.org>
-Cc: <linux-kernel@vger.kernel.org>
+Fixes: d89dffa976bc ("fault-injection: add selftests for cpu and memory hotplug")
+Signed-off-by: Colin Ian King <colin.king@canonical.com>
+Signed-off-by: Shuah Khan <shuah@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/mips/kernel/process.c | 7 +++----
- 1 file changed, 3 insertions(+), 4 deletions(-)
+ .../selftests/cpu-hotplug/cpu-on-off-test.sh        | 13 ++++++++++---
+ 1 file changed, 10 insertions(+), 3 deletions(-)
 
-diff --git a/arch/mips/kernel/process.c b/arch/mips/kernel/process.c
-index d4f7fd4550e1..85522c137f19 100644
---- a/arch/mips/kernel/process.c
-+++ b/arch/mips/kernel/process.c
-@@ -371,7 +371,7 @@ static inline int is_sp_move_ins(union mips_instruction *ip, int *frame_size)
- static int get_frame_info(struct mips_frame_info *info)
- {
- 	bool is_mmips = IS_ENABLED(CONFIG_CPU_MICROMIPS);
--	union mips_instruction insn, *ip, *ip_end;
-+	union mips_instruction insn, *ip;
- 	const unsigned int max_insns = 128;
- 	unsigned int last_insn_size = 0;
- 	unsigned int i;
-@@ -384,10 +384,9 @@ static int get_frame_info(struct mips_frame_info *info)
- 	if (!ip)
- 		goto err;
+diff --git a/tools/testing/selftests/cpu-hotplug/cpu-on-off-test.sh b/tools/testing/selftests/cpu-hotplug/cpu-on-off-test.sh
+index bab13dd025a6..0d26b5e3f966 100755
+--- a/tools/testing/selftests/cpu-hotplug/cpu-on-off-test.sh
++++ b/tools/testing/selftests/cpu-hotplug/cpu-on-off-test.sh
+@@ -37,6 +37,10 @@ prerequisite()
+ 		exit $ksft_skip
+ 	fi
  
--	ip_end = (void *)ip + info->func_size;
--
--	for (i = 0; i < max_insns && ip < ip_end; i++) {
-+	for (i = 0; i < max_insns; i++) {
- 		ip = (void *)ip + last_insn_size;
++	present_cpus=`cat $SYSFS/devices/system/cpu/present`
++	present_max=${present_cpus##*-}
++	echo "present_cpus = $present_cpus present_max = $present_max"
 +
- 		if (is_mmips && mm_insn_16bit(ip->halfword[0])) {
- 			insn.word = ip->halfword[0] << 16;
- 			last_insn_size = 2;
+ 	echo -e "\t Cpus in online state: $online_cpus"
+ 
+ 	offline_cpus=`cat $SYSFS/devices/system/cpu/offline`
+@@ -151,6 +155,8 @@ online_cpus=0
+ online_max=0
+ offline_cpus=0
+ offline_max=0
++present_cpus=0
++present_max=0
+ 
+ while getopts e:ahp: opt; do
+ 	case $opt in
+@@ -190,9 +196,10 @@ if [ $allcpus -eq 0 ]; then
+ 	online_cpu_expect_success $online_max
+ 
+ 	if [[ $offline_cpus -gt 0 ]]; then
+-		echo -e "\t offline to online to offline: cpu $offline_max"
+-		online_cpu_expect_success $offline_max
+-		offline_cpu_expect_success $offline_max
++		echo -e "\t offline to online to offline: cpu $present_max"
++		online_cpu_expect_success $present_max
++		offline_cpu_expect_success $present_max
++		online_cpu $present_max
+ 	fi
+ 	exit 0
+ else
 -- 
 2.19.1
 
