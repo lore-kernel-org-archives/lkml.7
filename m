@@ -2,215 +2,113 @@ Return-Path: <SRS0=J4ZE=RP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_MUTT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6E33CC43381
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 00:07:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3E3A4C10F06
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 00:08:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 30BAD2075C
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 00:07:20 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="P4ngTZIF"
+	by mail.kernel.org (Postfix) with ESMTP id 0B1772075C
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 00:08:06 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1552349286;
+	bh=MBBhdiZfWZ2ilnjglUlq5xOXlZEERkebtEGLShrSceo=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=j9oVFLdchoAPZ2LO7JiVuFOm03bykmz5cMNY5tBpCN09pWG17uTXZ+dvObm9zoUox
+	 Te7yt8CgoxcnBmpmn/FACWaoD5QCJ0dp6elFD6ZiQQQnQ5G1a08KBdezdi42bQNlQS
+	 z8NibN4hdzfv1UpdBvg4JX19FBrphpa3xHYG1+y4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726424AbfCLAHS (ORCPT
+        id S1726485AbfCLAIE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 11 Mar 2019 20:07:18 -0400
-Received: from mail-ed1-f66.google.com ([209.85.208.66]:36832 "EHLO
-        mail-ed1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725932AbfCLAHR (ORCPT
+        Mon, 11 Mar 2019 20:08:04 -0400
+Received: from mail-lf1-f67.google.com ([209.85.167.67]:39211 "EHLO
+        mail-lf1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725932AbfCLAID (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 11 Mar 2019 20:07:17 -0400
-Received: by mail-ed1-f66.google.com with SMTP id e4so792988edi.3;
-        Mon, 11 Mar 2019 17:07:15 -0700 (PDT)
+        Mon, 11 Mar 2019 20:08:03 -0400
+Received: by mail-lf1-f67.google.com with SMTP id m13so660453lfb.6
+        for <linux-kernel@vger.kernel.org>; Mon, 11 Mar 2019 17:08:02 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=u8tEF18obpwebhbJcolXJ0nMK1ingClUAVWsSzjRXx4=;
-        b=P4ngTZIFileSEFNm4RsrkxXCXiF26PhEOluRXC9pPT/ChkPyYp7VYF4/7h6F0hXnhZ
-         nbiSmUHGsvms9l1LBlwnH0aKSSZ2RO4MPV78fNZfYF/Wwqlh8BCTf1VqHI8YPOwxuhJa
-         BPQGoFmkJzWKksFhWekVzI9nXyM3/oSMfPadwuSvdXuaur/3Gc6e1YG0ez1OQ9bUE3q+
-         l0wOrMFB5rsv0Tyd98qNu/xXgyhA1mlnLHGz8KSCbelyZpKDbmSeiRrFQGoe+0Rq9jff
-         KIc3Dvhhe9xLhp/GXihlNFdo9eWGbaoowvOPT9SfoOIykd4Zi1nYXNObgeXktabvIa72
-         rnlg==
+        d=linux-foundation.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=Qt694sGi2lwRRCAVHkTT7ndj+scdvDKwGl7sZfr8K8k=;
+        b=A0yHjNKx5WvptfvDAlJCIScPZv5yWQVdV6SuSraSXLmHtTV6Ax0AesK3ins9D80g60
+         Ku3kCS5faTcIuBqylJyRTEgWvdj0jF1oK1H1QNGjebEf0GRRcM7bohsnDyUdK4KpY0dr
+         qNth7eZOZNiQyNe0TsSFjfOMEJDmo08bqpyEg=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=u8tEF18obpwebhbJcolXJ0nMK1ingClUAVWsSzjRXx4=;
-        b=ejhnI7zcl1lQCzVF8ssCOfYgOrFZYUX9d8IA+Lzh6mWy263iUsiBRXUvcS6pWzqad6
-         fGfsw2lGMprOVnmVittK/h7c9QeuU+K9SkZKdCjq/Igp3NNC1tqy+jU7mYmXJEWywTeY
-         Hk3uiYOQytWKq6tbo60MZVLXud5Aq61oy2BjolZKEfBgj2LLf7QRv7EBUEYp7H1Ua9xF
-         pxyAVnuKzqe62L5eiVoQ77CnoyKGxJxzH1Nv44BeApAYxrxbaUjj2DPcHO4x0eDHM4tI
-         H6MTbQu/llhpyFEneYQdktKT+JL3FnDIf7nBnwkn+gkITUbmEWUIh42K4Z3PbYK3hM9H
-         k4wQ==
-X-Gm-Message-State: APjAAAUEt5eXVS8iU3piMpQQ4sqTbVKAKInT0cbMljeMGiPu6ZxciqMh
-        vJ/AsI5M/ldPU48SsnjHGYE=
-X-Google-Smtp-Source: APXvYqximPiu8ahTKzkKussj/1/MEYQ6Yf8vquFycQ/jcU98pMUN01jb61fTIGoN4VGWR8fQBXaqaQ==
-X-Received: by 2002:a50:92d0:: with SMTP id l16mr990563eda.153.1552349234929;
-        Mon, 11 Mar 2019 17:07:14 -0700 (PDT)
-Received: from archlinux-ryzen ([2a01:4f9:2a:1fae::2])
-        by smtp.gmail.com with ESMTPSA id t9sm5102888edb.13.2019.03.11.17.07.13
-        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Mon, 11 Mar 2019 17:07:13 -0700 (PDT)
-Date:   Mon, 11 Mar 2019 17:07:12 -0700
-From:   Nathan Chancellor <natechancellor@gmail.com>
-To:     "Rafael J. Wysocki" <rjw@rjwysocki.net>
-Cc:     Len Brown <lenb@kernel.org>, linux-acpi@vger.kernel.org,
-        linux-kernel@vger.kernel.org, clang-built-linux@googlegroups.com,
-        Nick Desaulniers <ndesaulniers@google.com>
-Subject: Re: [PATCH] ACPI / sysfs: Restructure get_status
-Message-ID: <20190312000712.GA32298@archlinux-ryzen>
-References: <20190307173802.3448-1-natechancellor@gmail.com>
- <1766077.IDCbULq7Lr@aspire.rjw.lan>
- <3133462.vhohJv2aGS@aspire.rjw.lan>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=Qt694sGi2lwRRCAVHkTT7ndj+scdvDKwGl7sZfr8K8k=;
+        b=WYpBVpa3SL2w/pe+sg4Ka+dcuv/3j2g3SqsUNtxJf9EgYgjebUyOy1kPr7/TRnOjeo
+         rE09UPiy7Gyv5JI00qaE/LdFfFTRoPNj0KnHV9s0qtW9ggJzZft1Gt6NQF/FnBNJNU/6
+         +aeppeE2aNRgL3WhCJ48APOzbk5L48Gao5clDatNrVZ1zA6/lHxnu8mCLXmw4WISp+7o
+         bOWTzE37VGmnwTXDbEviGt3Z0dXLM+ioMgLbv47le3vMh/+pFp6S3cyRbyvFbdiWTH5M
+         KOwd4ew5SuqFEVUHJjAexQ3yu//FFQCJ5pISniUo/sPDroJjLy4f7UOLCNRNlF1v7Jeh
+         MjVg==
+X-Gm-Message-State: APjAAAWp1BHAK1MLdZW4ke1iXF775HcyUIzDuIgjt02Y8e1+xTgvOROP
+        IpZudJ1B2V4pGBTd/3ur/w+N8jj6WAg=
+X-Google-Smtp-Source: APXvYqxBF6mSLdr72stqyidF4hjvLFOWFt6lPWlJ7X+EMjxaRe/6liheKpDRO0uWmqiflvSSgMgHxg==
+X-Received: by 2002:a19:9a8d:: with SMTP id c135mr18247873lfe.100.1552349280646;
+        Mon, 11 Mar 2019 17:08:00 -0700 (PDT)
+Received: from mail-lj1-f178.google.com (mail-lj1-f178.google.com. [209.85.208.178])
+        by smtp.gmail.com with ESMTPSA id d23sm1296923lfc.11.2019.03.11.17.07.59
+        for <linux-kernel@vger.kernel.org>
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Mon, 11 Mar 2019 17:07:59 -0700 (PDT)
+Received: by mail-lj1-f178.google.com with SMTP id v16so649334ljg.13
+        for <linux-kernel@vger.kernel.org>; Mon, 11 Mar 2019 17:07:59 -0700 (PDT)
+X-Received: by 2002:a2e:8018:: with SMTP id j24mr17374435ljg.118.1552349279030;
+ Mon, 11 Mar 2019 17:07:59 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <3133462.vhohJv2aGS@aspire.rjw.lan>
-User-Agent: Mutt/1.11.3 (2019-02-01)
+References: <CAPcyv4he0q_FdqqiXarp0bXjcggs8QZX8Od560E2iFxzCU3Qag@mail.gmail.com>
+ <CAHk-=wjvmwD_0=CRQtNs5RBh8oJwrriXDn+XNWOU=wk8OyQ5ew@mail.gmail.com>
+ <CAPcyv4hafLUr2rKdLG+3SHXyWaa0d_2g8AKKZRf2mKPW+3DUSA@mail.gmail.com>
+ <CAHk-=wiTM93XKaFqUOR7q7133wvzNS8Kj777EZ9E8S99NbZhAA@mail.gmail.com> <CAPcyv4hMZMuSEtUkKqL067f4cWPGivzn9mCtv3gZsJG2qUOYvg@mail.gmail.com>
+In-Reply-To: <CAPcyv4hMZMuSEtUkKqL067f4cWPGivzn9mCtv3gZsJG2qUOYvg@mail.gmail.com>
+From:   Linus Torvalds <torvalds@linux-foundation.org>
+Date:   Mon, 11 Mar 2019 17:07:43 -0700
+X-Gmail-Original-Message-ID: <CAHk-=wgnJd_qY1wGc0KcoGrNz3Mp9-8mQFMDLoTXvEMVtAxyZQ@mail.gmail.com>
+Message-ID: <CAHk-=wgnJd_qY1wGc0KcoGrNz3Mp9-8mQFMDLoTXvEMVtAxyZQ@mail.gmail.com>
+Subject: Re: [GIT PULL] device-dax for 5.1: PMEM as RAM
+To:     Dan Williams <dan.j.williams@intel.com>
+Cc:     Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        linux-nvdimm <linux-nvdimm@lists.01.org>,
+        Linux MM <linux-mm@kvack.org>,
+        Dave Hansen <dave.hansen@intel.com>,
+        "Luck, Tony" <tony.luck@intel.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Mar 11, 2019 at 11:56:27PM +0100, Rafael J. Wysocki wrote:
-> On Monday, March 11, 2019 11:46:14 PM CET Rafael J. Wysocki wrote:
-> > On Thursday, March 7, 2019 6:38:02 PM CET Nathan Chancellor wrote:
-> > > When building with -Wsometimes-uninitialized, Clang warns:
-> > > 
-> > > drivers/acpi/sysfs.c:667:13: warning: variable 'result' is used uninitialized whenever 'if' condition is false [-Wsometimes-uninitialized]
-> > > 
-> > > Clang can't determine that all cases are covered by the two separate if
-> > > statements. We could combine then to look like this:
-> > > 
-> > >     int result;
-> > > 
-> > >     if (...) {
-> > >         ...
-> > >     } else if {
-> > >         ...
-> > >     } else {
-> > >         result -EINVAL;
-> > >     }
-> > > 
-> > >     return result;
-> > > 
-> > > However, at that point, we can further simplify this function by only
-> > > using result when absolutely needed and just direct returning the value
-> > > of the function.
-> > > 
-> > > Link: https://github.com/ClangBuiltLinux/linux/issues/388
-> > > Suggested-by: Nick Desaulniers <ndesaulniers@google.com>
-> > > Signed-off-by: Nathan Chancellor <natechancellor@gmail.com>
-> > > ---
-> > >  drivers/acpi/sysfs.c | 13 ++++---------
-> > >  1 file changed, 4 insertions(+), 9 deletions(-)
-> > > 
-> > > diff --git a/drivers/acpi/sysfs.c b/drivers/acpi/sysfs.c
-> > > index 41324f0b1bee..6ed785cadad9 100644
-> > > --- a/drivers/acpi/sysfs.c
-> > > +++ b/drivers/acpi/sysfs.c
-> > > @@ -651,23 +651,18 @@ static void acpi_global_event_handler(u32 event_type, acpi_handle device,
-> > >  static int get_status(u32 index, acpi_event_status *status,
-> > >  		      acpi_handle *handle)
-> > >  {
-> > > -	int result;
-> > > -
-> > > -	if (index >= num_gpes + ACPI_NUM_FIXED_EVENTS)
-> > > -		return -EINVAL;
-> > > -
-> > >  	if (index < num_gpes) {
-> > > -		result = acpi_get_gpe_device(index, handle);
-> > > +		int result = acpi_get_gpe_device(index, handle);
-> > >  		if (result) {
-> > >  			ACPI_EXCEPTION((AE_INFO, AE_NOT_FOUND,
-> > >  					"Invalid GPE 0x%x", index));
-> > >  			return result;
-> > >  		}
-> > > -		result = acpi_get_gpe_status(*handle, index, status);
-> > > +		return acpi_get_gpe_status(*handle, index, status);
-> > >  	} else if (index < (num_gpes + ACPI_NUM_FIXED_EVENTS))
-> > 
-> > In principle, it would suffice to replace the "else if (...)" with "else"
-> > to fix the Clang warning AFAICS, but that's not the only issue with this
-> > function.
-> > 
+On Mon, Mar 11, 2019 at 8:37 AM Dan Williams <dan.j.williams@intel.com> wrote:
+>
+> Another feature the userspace tooling can support for the PMEM as RAM
+> case is the ability to complete an Address Range Scrub of the range
+> before it is added to the core-mm. I.e at least ensure that previously
+> encountered poison is eliminated.
 
-Correct, that would be the simplest fix for the warning.
+Ok, so this at least makes sense as an argument to me.
 
-> > > -		result = acpi_get_event_status(index - num_gpes, status);
-> > > +		return acpi_get_event_status(index - num_gpes, status);
-> > >  
-> > > -	return result;
-> > > +	return -EINVAL;
-> > >  }
-> > >  
-> > >  static ssize_t counter_show(struct kobject *kobj,
-> > 
-> > Namely, it confuses errno with acpi_status and may cause the latter to be
-> > returned to user space in certain situations which should never be done.
-> > 
-> > So, I'd prefer to apply something like the (untested so far) patch below.
-> 
-> Actually, acpi_get_event_status() returns acpi_status too, so something like
-> this rather:
-> 
-> ---
->  drivers/acpi/sysfs.c |   21 ++++++++++++---------
->  1 file changed, 12 insertions(+), 9 deletions(-)
-> 
-> Index: linux-pm/drivers/acpi/sysfs.c
-> ===================================================================
-> --- linux-pm.orig/drivers/acpi/sysfs.c
-> +++ linux-pm/drivers/acpi/sysfs.c
-> @@ -648,26 +648,29 @@ static void acpi_global_event_handler(u3
->  	}
->  }
->  
-> -static int get_status(u32 index, acpi_event_status *status,
-> +static int get_status(u32 index, acpi_event_status *ret,
->  		      acpi_handle *handle)
->  {
-> -	int result;
-> +	acpi_status status;
->  
->  	if (index >= num_gpes + ACPI_NUM_FIXED_EVENTS)
->  		return -EINVAL;
->  
->  	if (index < num_gpes) {
-> -		result = acpi_get_gpe_device(index, handle);
-> -		if (result) {
-> +		status = acpi_get_gpe_device(index, handle);
-> +		if (ACPI_FAILURE(status)) {
->  			ACPI_EXCEPTION((AE_INFO, AE_NOT_FOUND,
->  					"Invalid GPE 0x%x", index));
-> -			return result;
-> +			return -ENXIO;
->  		}
-> -		result = acpi_get_gpe_status(*handle, index, status);
-> -	} else if (index < (num_gpes + ACPI_NUM_FIXED_EVENTS))
-> -		result = acpi_get_event_status(index - num_gpes, status);
-> +		status = acpi_get_gpe_status(*handle, index, ret);
-> +	} else {
-> +		status = acpi_get_event_status(index - num_gpes, ret);
-> +	}
-> +	if (ACPI_FAILURE(status))
-> +		return -EIO;
->  
-> -	return result;
-> +	return 0;
->  }
->  
->  static ssize_t counter_show(struct kobject *kobj,
-> 
+In the "PMEM as filesystem" part, the errors have long-term history,
+while in "PMEM as RAM" the memory may be physically the same thing,
+but it doesn't have the history and as such may not be prone to
+long-term errors the same way.
 
-Seems reasonable. There are no warnings from this.
+So that validly argues that yes, when used as RAM, the likelihood for
+errors is much lower because they don't accumulate the same way.
 
-Reviewed-by: Nathan Chancellor <natechancellor@gmail.com>
+> The driver can also publish an
+> attribute to indicate when rep; mov is recoverable, and gate the
+> hotplug policy on the result. In my opinion a positive indicator of
+> the cpu's ability to recover rep; mov exceptions is a gap that needs
+> addressing.
 
-Thank you for the reply and patch!
+Is there some way to say "don't raise MC for this region"? Or at least
+limit it to a nonfatal one?
+
+                 Linus
