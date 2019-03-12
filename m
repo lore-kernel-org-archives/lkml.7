@@ -2,88 +2,83 @@ Return-Path: <SRS0=J4ZE=RP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,URIBL_BLOCKED
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C6890C43381
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 15:11:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E0E15C43381
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 15:11:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9EE2320693
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 15:11:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A963A20693
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 15:11:51 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="mM0Gq4yd"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726882AbfCLPLh (ORCPT
+        id S1726907AbfCLPLt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 12 Mar 2019 11:11:37 -0400
-Received: from mout.kundenserver.de ([212.227.126.130]:37691 "EHLO
-        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725894AbfCLPLg (ORCPT
+        Tue, 12 Mar 2019 11:11:49 -0400
+Received: from mail-lj1-f194.google.com ([209.85.208.194]:33314 "EHLO
+        mail-lj1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725894AbfCLPLt (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 12 Mar 2019 11:11:36 -0400
-Received: from [192.168.1.110] ([77.4.190.91]) by mrelayeu.kundenserver.de
- (mreue011 [212.227.15.167]) with ESMTPSA (Nemesis) id
- 1MlfL0-1gcg2G3EMk-00iiMl; Tue, 12 Mar 2019 16:11:34 +0100
-Subject: Re: [PATCH] drivers: gpio: octeon: use
- devm_platform_ioremap_resource()
-To:     Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        "Enrico Weigelt, metux IT consult" <info@metux.net>
-Cc:     LKML <linux-kernel@vger.kernel.org>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        linux-gpio <linux-gpio@vger.kernel.org>
-References: <1552330521-4276-23-git-send-email-info@metux.net>
- <1552333701-22712-1-git-send-email-info@metux.net>
- <CAMpxmJWCpfm0E15k0vAcxOKFTGdaFkmqK-VXD+orVE65H1Uk2g@mail.gmail.com>
-From:   "Enrico Weigelt, metux IT consult" <lkml@metux.net>
-Organization: metux IT consult
-Message-ID: <5f55101d-ae12-0908-fff1-934f0e8d0d54@metux.net>
-Date:   Tue, 12 Mar 2019 16:11:33 +0100
-User-Agent: Mozilla/5.0 (X11; Linux i686 on x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.2.1
+        Tue, 12 Mar 2019 11:11:49 -0400
+Received: by mail-lj1-f194.google.com with SMTP id z7so2682862lji.0
+        for <linux-kernel@vger.kernel.org>; Tue, 12 Mar 2019 08:11:48 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=uAsmMb/KS/4LTNxcX+BEFLVFT469PItXv1tXVOcQ5zo=;
+        b=mM0Gq4ydM5nvRE5QPnlN8exLU+qqSGfASxIkgaROI0T/C0l1FkgKD/k4oBQmoDYZRB
+         tHybO0CDdJn1+Eif+nkFUnV31zyF2n7V0qm9ogd5xREFWnbz4zhk80TKetQeV3QwFLZR
+         62JkZsWo7s/plZPE6bF9wYqbmzo+KvHW9zj+foffpMqynhaA5mn2phjwKPAaz4OHZlNG
+         WHC2adsevjThrAoh0HbaLq1cdEaTBqHOSQBI2oH5gqoC3wgm3Cka7oreCAHAgJ2LhMZJ
+         h/T5aXmzaw8X0ctOJ7pdWbOYZc4w0386QVQ1foKBdwbqIH07zy9Wkv20obvKGD8nWkqJ
+         G2LA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=uAsmMb/KS/4LTNxcX+BEFLVFT469PItXv1tXVOcQ5zo=;
+        b=l2OIpHrTobNH7WBxdKC51Eq5RlS83OWLCoBTZcb+hENhjtKDoHPnyJNGEQUEa1xy+N
+         mkkc+TF8jgtp6h3iP9zyzm62oMawWk6APHUcB19p6JlSgV+/bAkuesh3eWUH5r9Q+Y85
+         saNtSLKWWqLPQh5/X3+0b17jQ3zOaHe5mB/YXW/qN+kT5ksORO1ifbGXOzPgDZAX/wOY
+         pCfaOGqCEiK6wCllCBNxUjmbqpWrqkeIIFoFH5RUMEo0ob4tPX9PFsE56uOV58WYgs2Q
+         CF0Lhixqd1V0MZjRfMW2c39Hbge51erV82n8o+OmVuAIulhlZqE1VvZufKJXWb1yQHmy
+         smAA==
+X-Gm-Message-State: APjAAAUanqlmlFvSk3IvR58Or8I9JSKayGdv55JSwfO0lmV2y7O/9SIU
+        4gicaoJnnV305rkhhsh2ep8LrHjyUpto1Pq2iv18Pg==
+X-Google-Smtp-Source: APXvYqxVYWHcs7SQHFjOmoBkNvNci39YQEI9dFTN/SmcfWmiU4e6ERzEolquz923sqa2Hv5cG0sqswbdjzwP+uXXitY=
+X-Received: by 2002:a2e:5b44:: with SMTP id p65mr20059411ljb.182.1552403507340;
+ Tue, 12 Mar 2019 08:11:47 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <CAMpxmJWCpfm0E15k0vAcxOKFTGdaFkmqK-VXD+orVE65H1Uk2g@mail.gmail.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Provags-ID: V03:K1:+fa9yhcgcSd4NielpCp6MqzD6NyNH6Icuz/FtQdThkHTP6ihPB2
- 9wMQVuCEyxtFykuHvc63Fp7tquXjhrzSMTuRl45kyVY0yfIADiC0qv63XQNE7PbQS1I4OIX
- wOjE6Jsi+GnVpPvztZkiThrNADDdntx3btprqQ3oPL0x3j0eyuNaOnN3t8TC//2RuGt1FkR
- h7BvF+7lDOf0UXzXw5N9A==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:gVGGa9dIlmM=:G85DSOe4XmmOWWZWBXzH21
- zUV+pTLUtCVLbG2hnqctVGTjHX1ORC67a1BIvTYZQasdrJD2L3c+2bu34EJBP4xa9Vj/H4cSJ
- 4EE+1kezYrDkdtrQdhtZUKZafl5qa1OrE3aGlPamtH1Y0pt53i/ZEMJMjvW0tgPOpCnLh047H
- DVwakzcIKJKJblVkYqiliVEv1sly4/95ROAbAfSkgZP8s0Zf7MqF2V5j4dvhFc0n8vBvonCNP
- 2QKx+yAAZcltejhigRybCjd9JjHOiQsfCcQj9/gGwiUUI1flluh45MSLe/dJ7X98X4V/8Q0/i
- 4mciG7ahm0FrmspQtxqJuwTvr2SSyUpHI4TDoFqAafAr3FUQDaJ7mOiYVqbZRkA2YhzXOPrve
- lK1AB8TfoGj0IZcuT4sydDMTAVP+OA/4pFxIY7ZfuyyWxQGVgCrVWj6QVf2lZkIDdP9r0kjE0
- sQJIouhQONe1v9Vb/qcrrDh9rlaEfX4ebtBKzA3pT4ZMVSFGJme7bcYefbotFRiS2iL7da+D8
- vjb1rZuPqAXFyActRc+ga/S33+cRsxIgbcMIe6+0IHGAMlR0absq1U3ZqOXLYjQ3E5mIDu7Nx
- FFUu/YmO6MMZR0+OJGInaHboJJONM6299OMil8VxH5q089T2ualbL8hfAqs9gtNVpPQbW4ej6
- ZxHIEdkKtg3VsYrrQUIO4NeEoMQuoDvMPlsRzliIYP9KKezgXjP3uQqmuVTHifoH5UU3T6dW3
- on3lOVrHL+CsCeG4/+9VQHOLMd2BKGanCQ4ISQeqKAXk7iU1kKVht7tGbwE=
+References: <20190312144432.7668-1-andriy.shevchenko@linux.intel.com>
+In-Reply-To: <20190312144432.7668-1-andriy.shevchenko@linux.intel.com>
+From:   Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>
+Date:   Tue, 12 Mar 2019 16:11:36 +0100
+Message-ID: <CANiq72mmeCv+mVGjE39OMxaJH9CDmDSDuDkdXo7aG+edxo3ekg@mail.gmail.com>
+Subject: Re: [PATCH v2 0/5] auxdisplay: Introduce charlcd_free()
+To:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Cc:     Willy Tarreau <willy@haproxy.com>,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        Geert Uytterhoeven <geert@linux-m68k.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 12.03.19 14:45, Bartosz Golaszewski wrote:
+On Tue, Mar 12, 2019 at 3:44 PM Andy Shevchenko
+<andriy.shevchenko@linux.intel.com> wrote:
+>
+> I have found a memory leak in hd44780 and it becomes that we have no
+> counterpart to charlcd_alloc() that developers can easily miss.
 
-> Can you make this a part of the bigger series and resend together with
-> subject line fixes?
+Side-note now that I see these patches: I forgot to CC you in a series
+for charlcd that we got from Mans a week or two ago -- please take a
+chance to review them if you want! Also pinging Geert & Willy again in
+case they want to take a look.
 
-tried to resend it as reply on the prev version. but somehow this
-didn't seem to work as intented.
-
-> Also: maybe consider adding a coccinelle script for that. When I added
-> that function I noticed there are 1200+ instances in the kernel that
-> need fixing. I think we'll be better off automating it.
-
-haven't coped w/ this yet ... I'll first need to have a deeper look
-at it. advices welcomed.
-
-
---mtx
-
--- 
-Enrico Weigelt, metux IT consult
-Free software and Linux embedded engineering
-info@metux.net -- +49-151-27565287
+Cheers,
+Miguel
