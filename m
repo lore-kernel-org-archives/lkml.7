@@ -1,161 +1,156 @@
 Return-Path: <SRS0=J4ZE=RP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
-X-Spam-Level: *
-X-Spam-Status: No, score=1.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FSL_HELO_FAKE,MAILING_LIST_MULTI,SPF_PASS,
-	USER_AGENT_MUTT autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Level: 
+X-Spam-Status: No, score=-2.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DC300C43381
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 22:31:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 05A32C4360F
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 22:34:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AA1432173C
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 22:31:19 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1552429879;
-	bh=E9LjOuH7NlwjEdXrTTN9jNJ+sUFTiiXDJcLC3CteIKM=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=SrRUXpIwYNtughb1o2Xn3BELaDHduQnEqbNG+afWG7phZa1qVEOCKCz7oDmdys3X3
-	 BPn3X35k4cXAhMc3lDmL+KZhdVjLdExYSs50k1W/QEj1+ZI2oRZK1MivYHAQtb1c1M
-	 o083C7VhXCypY22edB4F+jpiJaXzJqjwv3Cd9/tM=
+	by mail.kernel.org (Postfix) with ESMTP id C97EE2177E
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 22:34:10 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="h9UOI736"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726559AbfCLWbS (ORCPT
+        id S1726630AbfCLWeI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 12 Mar 2019 18:31:18 -0400
-Received: from mail.kernel.org ([198.145.29.99]:48076 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726280AbfCLWbS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 12 Mar 2019 18:31:18 -0400
-Received: from gmail.com (unknown [104.132.1.77])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 7197A2077B;
-        Tue, 12 Mar 2019 22:31:16 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1552429876;
-        bh=E9LjOuH7NlwjEdXrTTN9jNJ+sUFTiiXDJcLC3CteIKM=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=mgDX2Ja0bynZtaS+WaK0y1rIkv62DHI1nWFmMJVzq0Ab5gTiYtd3ESuN0la/2mzia
-         ssElYhG4GEHO30ZyTTSfAA+ij6UvykwLWf125Q6r7jfYwZtx7X8+AhTPaf2rYFUvRK
-         scu7n6Pk8F6/V+jQh3VeCW6SbeYVd0gpGU7wmV0E=
-Date:   Tue, 12 Mar 2019 15:31:15 -0700
-From:   Eric Biggers <ebiggers@kernel.org>
-To:     Dmitry Vyukov <dvyukov@google.com>
-Cc:     Andrew Morton <akpm@linux-foundation.org>,
-        syzbot <syzbot+fa11f9da42b46cea3b4a@syzkaller.appspotmail.com>,
-        cgroups@vger.kernel.org, Johannes Weiner <hannes@cmpxchg.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Linux-MM <linux-mm@kvack.org>, Michal Hocko <mhocko@kernel.org>,
-        Michal Hocko <mhocko@suse.com>,
-        Stephen Rothwell <sfr@canb.auug.org.au>,
-        Shakeel Butt <shakeelb@google.com>,
-        syzkaller-bugs <syzkaller-bugs@googlegroups.com>,
-        Vladimir Davydov <vdavydov.dev@gmail.com>
-Subject: Re: KASAN: null-ptr-deref Read in reclaim_high
-Message-ID: <20190312223113.GA38846@gmail.com>
-References: <0000000000001fd5780583d1433f@google.com>
- <20190311163747.f56cceebd9c2661e4519bdfc@linux-foundation.org>
- <CACT4Y+byKQSOCte3JS9XOnyr+aVSEFtBvLxG2-HUrZX3-82Hcg@mail.gmail.com>
- <20190311232541.db8571d2e3e0ca636785f31f@linux-foundation.org>
- <20190312064300.GB9123@sol.localdomain>
- <CACT4Y+Z1rkS5bf3x9Y+0ke=zZ+mM2F5+vN-JtSQpjD09STRNdw@mail.gmail.com>
+        Tue, 12 Mar 2019 18:34:08 -0400
+Received: from mail-pg1-f195.google.com ([209.85.215.195]:35055 "EHLO
+        mail-pg1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726280AbfCLWeI (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 12 Mar 2019 18:34:08 -0400
+Received: by mail-pg1-f195.google.com with SMTP id e17so14352pgd.2
+        for <linux-kernel@vger.kernel.org>; Tue, 12 Mar 2019 15:34:08 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=CG8VBs5njjsmOqTJucGpp1GQp/U3yTJMZSM/HvLW4gk=;
+        b=h9UOI736Jx8iXrIAW5OPQIbfTw5h4YbGzRbG/vYeMXWaWJOxBybprNrbv4O+Tu+XAp
+         Xz5UJG4r2OR2oJwLhH/SYygF3nWcDR6f/K1FfVliZXnjYXNX0BiwDnugHX/7+U2Ooixz
+         cUggfKM+93MVHidmn0HHx96nbtXCm+90bq//g8SAcGYa/sVorTsYEJvn4qQc6WqL4bpf
+         pL6LqHWecY2HOTC5ASTMunxu/cveQxG03yRiGfEgZ2JNVLAVJnxnry4Fhi7aSUBjBJ3T
+         DK6kiYcnApv2T3uDE55OilUSc3eR7GOQszr0gowGNe/ITjB3LPrB3gD5qbs1siRZGjMq
+         /oCg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=CG8VBs5njjsmOqTJucGpp1GQp/U3yTJMZSM/HvLW4gk=;
+        b=KQGNsN8mvBMA2JE6ZsX+pQy2ABr/eTBsphMBpEQvfTdNft/9Es0xfAVBAmAVjwCvSf
+         9rpeukLEvOElh6t+pfIUv7jBfkGmM2Rvafu6L+qVJURIeO1vYmOOFw/UcMO4DySrJtUl
+         UC5LNUStjuP6HHusfJxxNwPJYRB0xgWiE8/dfqZfO/VmXhN5Q6OK6ZSwD/SKF9H2D9vm
+         9XcVVuzVYtJRtjF0mLiAkYE+5MJeCl9KmNxz/I7uxt5GZhor/Mk3Dlo9M8aqhViq5o/Z
+         +vtQ+VtqsOe2v6glhENfwdJIpy+0x1Mbf4Irw5b7d9Hf9pHe5scDGbnGmA8PpJ4k+2zE
+         mreQ==
+X-Gm-Message-State: APjAAAXt+k5LQbWG+4akfKr47zHlu9g5s/yNmKCFxopk3o3e3aI6cBiz
+        codsyYQS6TJyEJtOB5lCRkk=
+X-Google-Smtp-Source: APXvYqy8tOPejVH25UDtkqcgofc+5QUcNdJIMGt8cfCJjTCXftBKArtxUyMWs1dIsenafkn68gXx8w==
+X-Received: by 2002:a17:902:e713:: with SMTP id co19mr43680plb.102.1552430047540;
+        Tue, 12 Mar 2019 15:34:07 -0700 (PDT)
+Received: from tower.thefacebook.com ([2620:10d:c090:200::1:3203])
+        by smtp.gmail.com with ESMTPSA id i13sm14680592pfo.106.2019.03.12.15.34.05
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Tue, 12 Mar 2019 15:34:06 -0700 (PDT)
+From:   Roman Gushchin <guroan@gmail.com>
+X-Google-Original-From: Roman Gushchin <guro@fb.com>
+To:     linux-mm@kvack.org, kernel-team@fb.com
+Cc:     linux-kernel@vger.kernel.org, Tejun Heo <tj@kernel.org>,
+        Rik van Riel <riel@surriel.com>,
+        Johannes Weiner <hannes@cmpxchg.org>,
+        Michal Hocko <mhocko@kernel.org>, Roman Gushchin <guro@fb.com>
+Subject: [PATCH v2 0/6] mm: reduce the memory footprint of dying memory cgroups
+Date:   Tue, 12 Mar 2019 15:33:57 -0700
+Message-Id: <20190312223404.28665-1-guro@fb.com>
+X-Mailer: git-send-email 2.20.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CACT4Y+Z1rkS5bf3x9Y+0ke=zZ+mM2F5+vN-JtSQpjD09STRNdw@mail.gmail.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Dmitry,
+A cgroup can remain in the dying state for a long time, being pinned in the
+memory by any kernel object. It can be pinned by a page, shared with other
+cgroup (e.g. mlocked by a process in the other cgroup). It can be pinned
+by a vfs cache object, etc.
 
-On Tue, Mar 12, 2019 at 09:21:09AM +0100, 'Dmitry Vyukov' via syzkaller-bugs wrote:
-> On Tue, Mar 12, 2019 at 7:43 AM Eric Biggers <ebiggers@kernel.org> wrote:
-> >
-> > On Mon, Mar 11, 2019 at 11:25:41PM -0700, Andrew Morton wrote:
-> > > On Tue, 12 Mar 2019 07:08:38 +0100 Dmitry Vyukov <dvyukov@google.com> wrote:
-> > >
-> > > > On Tue, Mar 12, 2019 at 12:37 AM Andrew Morton
-> > > > <akpm@linux-foundation.org> wrote:
-> > > > >
-> > > > > On Mon, 11 Mar 2019 06:08:01 -0700 syzbot <syzbot+fa11f9da42b46cea3b4a@syzkaller.appspotmail.com> wrote:
-> > > > >
-> > > > > > syzbot has bisected this bug to:
-> > > > > >
-> > > > > > commit 29a4b8e275d1f10c51c7891362877ef6cffae9e7
-> > > > > > Author: Shakeel Butt <shakeelb@google.com>
-> > > > > > Date:   Wed Jan 9 22:02:21 2019 +0000
-> > > > > >
-> > > > > >      memcg: schedule high reclaim for remote memcgs on high_work
-> > > > > >
-> > > > > > bisection log:  https://syzkaller.appspot.com/x/bisect.txt?x=155bf5db200000
-> > > > > > start commit:   29a4b8e2 memcg: schedule high reclaim for remote memcgs on..
-> > > > > > git tree:       linux-next
-> > > > > > final crash:    https://syzkaller.appspot.com/x/report.txt?x=175bf5db200000
-> > > > > > console output: https://syzkaller.appspot.com/x/log.txt?x=135bf5db200000
-> > > > > > kernel config:  https://syzkaller.appspot.com/x/.config?x=611f89e5b6868db
-> > > > > > dashboard link: https://syzkaller.appspot.com/bug?extid=fa11f9da42b46cea3b4a
-> > > > > > userspace arch: amd64
-> > > > > > syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=14259017400000
-> > > > > > C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=141630a0c00000
-> > > > > >
-> > > > > > Reported-by: syzbot+fa11f9da42b46cea3b4a@syzkaller.appspotmail.com
-> > > > > > Fixes: 29a4b8e2 ("memcg: schedule high reclaim for remote memcgs on
-> > > > > > high_work")
-> > > > >
-> > > > > The following patch
-> > > > > memcg-schedule-high-reclaim-for-remote-memcgs-on-high_work-v3.patch
-> > > > > might have fixed this.  Was it applied?
-> > > >
-> > > > Hi Andrew,
-> > > >
-> > > > You mean if the patch was applied during the bisection?
-> > > > No, it wasn't. Bisection is very specifically done on the same tree
-> > > > where the bug was hit. There are already too many factors that make
-> > > > the result flaky/wrong/inconclusive without changing the tree state.
-> > > > Now, if syzbot would know about any pending fix for this bug, then it
-> > > > would not do the bisection at all. But it have not seen any patch in
-> > > > upstream/linux-next with the Reported-by tag, nor it received any syz
-> > > > fix commands for this bugs. Should have been it aware of the fix? How?
-> > >
-> > > memcg-schedule-high-reclaim-for-remote-memcgs-on-high_work-v3.patch was
-> > > added to linux-next on Jan 10.  I take it that this bug was hit when
-> > > testing the entire linux-next tree, so we can assume that
-> > > memcg-schedule-high-reclaim-for-remote-memcgs-on-high_work-v3.patch
-> > > does not fix it, correct?
-> > >
-> > > In which case, over to Shakeel!
-> > >
-> >
-> > I don't understand what happened here.  First, the syzbot report doesn't say
-> > which linux-next version was tested (which it should), but I get:
-> >
-> > $ git tag --contains 29a4b8e275d1f10c51c7891362877ef6cffae9e7
-> > next-20190110
-> > next-20190111
-> > next-20190114
-> > next-20190115
-> > next-20190116
-> >
-> > That's almost 2 months old, yet this bug was just reported now.  Why?
-> 
-> Hi Eric,
-> 
-> This bug was reported on Jan 10:
-> https://syzkaller.appspot.com/bug?extid=fa11f9da42b46cea3b4a
-> https://groups.google.com/forum/#!msg/syzkaller-bugs/5YkhNUg2PFY/4-B5M7bDCAAJ
-> 
-> The start revision of the bisection process (provided) is the same
-> that was used to create the reproducer. The end revision and bisection
-> log are provided in the email.
-> 
-> How can we improve the format to make it more clear?
-> 
+Mostly because of percpu data, the size of a memcg structure in the kernel
+memory is quite large. Depending on the machine size and the kernel config,
+it can easily reach hundreds of kilobytes per cgroup.
 
-syzbot started a new thread rather than sending the bisection result in the
-existing thread.  So I thought it was a new bug report, as did everyone else
-probably.
+Depending on the memory pressure and the reclaim approach (which is a separate
+topic), it looks like several hundreds (if not single thousands) of dying
+cgroups is a typical number. On a moderately sized machine the overall memory
+footprint is measured in hundreds of megabytes.
 
-- Eric
+So if we can't completely get rid of dying cgroups, let's make them smaller.
+This patchset aims to reduce the size of a dying memory cgroup by the premature
+release of percpu data during the cgroup removal, and use of atomic counterparts
+instead. Currently it covers per-memcg vmstat_percpu, per-memcg per-node
+lruvec_stat_cpu. The same approach can be further applied to other percpu data.
+
+Results on my test machine (32 CPUs, singe node):
+
+  With the patchset:              Originally:
+
+  nr_dying_descendants 0
+  Slab:              66640 kB	  Slab:              67644 kB
+  Percpu:             6912 kB	  Percpu:             6912 kB
+
+  nr_dying_descendants 1000
+  Slab:              85912 kB	  Slab:              84704 kB
+  Percpu:            26880 kB	  Percpu:            64128 kB
+
+So one dying cgroup went from 75 kB to 39 kB, which is almost twice smaller.
+The difference will be even bigger on a bigger machine
+(especially, with NUMA).
+
+To test the patchset, I used the following script:
+  CG=/sys/fs/cgroup/percpu_test/
+
+  mkdir ${CG}
+  echo "+memory" > ${CG}/cgroup.subtree_control
+
+  cat ${CG}/cgroup.stat | grep nr_dying_descendants
+  cat /proc/meminfo | grep -e Percpu -e Slab
+
+  for i in `seq 1 1000`; do
+      mkdir ${CG}/${i}
+      echo $$ > ${CG}/${i}/cgroup.procs
+      dd if=/dev/urandom of=/tmp/test-${i} count=1 2> /dev/null
+      echo $$ > /sys/fs/cgroup/cgroup.procs
+      rmdir ${CG}/${i}
+  done
+
+  cat /sys/fs/cgroup/cgroup.stat | grep nr_dying_descendants
+  cat /proc/meminfo | grep -e Percpu -e Slab
+
+  rmdir ${CG}
+
+
+v2:
+  - several renamings suggested by Johannes Weiner
+  - added a patch, which merges cpu offlining and percpu flush code
+
+
+Roman Gushchin (6):
+  mm: prepare to premature release of memcg->vmstats_percpu
+  mm: prepare to premature release of per-node lruvec_stat_cpu
+  mm: release memcg percpu data prematurely
+  mm: release per-node memcg percpu data prematurely
+  mm: flush memcg percpu stats and events before releasing
+  mm: refactor memcg_hotplug_cpu_dead() to use
+    memcg_flush_offline_percpu()
+
+ include/linux/memcontrol.h |  66 ++++++++++----
+ mm/memcontrol.c            | 179 ++++++++++++++++++++++++++++---------
+ 2 files changed, 186 insertions(+), 59 deletions(-)
+
+-- 
+2.20.1
+
