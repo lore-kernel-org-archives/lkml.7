@@ -4,47 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B43E0C43381
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 17:29:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A3DC0C43381
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 17:29:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7AD0F206DF
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 17:29:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 76C4A2054F
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 17:29:37 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1552411770;
-	bh=jzpK9kJxk0aSH8lmwKTIvvZA2hn3CLP/vegAvnNXzWg=;
+	s=default; t=1552411777;
+	bh=ryx+l9xN2DJL2EtRfCJ7eoEUmisdidzLJ7okjJeEIa8=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=0MKpyHgWMhHxrjMTTQWnkQyxEMdMhTJIMzEvahMJYOO3/9WV335BsE3Kop5TW3zEf
-	 na0Kh9Vl39+Dzraqc/qut4z/5MCqUTp0A2OQZe5yqoKLPuX0A9WHxXzeYumYtLnRV1
-	 CNlDpwtxJ5A3pY8X3+2nV7zpDZ3VbvSjwrTcgLH4=
+	b=zpAukLhSBJ6hm5jumXAN+xLeFvHdXGl7wKRHjH2Ncyo+8KcgMF7JZPKlXKgiFURQr
+	 4k/FoyRq1Uiz3CugK3YHoppo2+rA2nDe0a2Cran5l9IS0MHocTI737PYfaTRDXkY06
+	 9qbQ2gA6g8KkpQLv3DqaqkbvOAb2R0NsgLWmiWBQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729694AbfCLR33 (ORCPT
+        id S1729729AbfCLR3g (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 12 Mar 2019 13:29:29 -0400
-Received: from mail.kernel.org ([198.145.29.99]:33068 "EHLO mail.kernel.org"
+        Tue, 12 Mar 2019 13:29:36 -0400
+Received: from mail.kernel.org ([198.145.29.99]:32928 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729570AbfCLRRY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 12 Mar 2019 13:17:24 -0400
+        id S1728121AbfCLRRW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 12 Mar 2019 13:17:22 -0400
 Received: from localhost (unknown [104.133.8.98])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id CDD29206DF;
-        Tue, 12 Mar 2019 17:17:23 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 19134206DF;
+        Tue, 12 Mar 2019 17:17:21 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1552411043;
-        bh=jzpK9kJxk0aSH8lmwKTIvvZA2hn3CLP/vegAvnNXzWg=;
+        s=default; t=1552411041;
+        bh=ryx+l9xN2DJL2EtRfCJ7eoEUmisdidzLJ7okjJeEIa8=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=0BTYnuj3SCdHIQ9dBJpL+m6kWzUhk7V/anv0fRfCV/XJ0SDhAv/+EoTBtz9/h1bES
-         zPLdRXYDdmQgcbkABlM5e1QjFyY10faVb1mpcb8mgAVawbPPEegsTbFXcWME6nxR9t
-         6iQXtB0MjS0f3rNtrcaW2DrJLf0whHvu5czUIaQM=
+        b=vuUeoGtBi96ZkMKEVGzwl3rt0DiBNaAjRtTSd9Uzd+JYR7ViipzS2tdCtMep7Toqf
+         xCSRBgGB/xwE8gN6oC/yO1D97NsjMJvWPOqPrqrBAMjROlA8ro+o00jea3CIaRw3OY
+         DCfoIgwUy9UCwEUCzAeJsirHSSAC1oN7Pr33eDWk=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Dan Carpenter <dan.carpenter@oracle.com>
-Subject: [PATCH 4.9 08/96] staging: wilc1000: fix to set correct value for vif_num
-Date:   Tue, 12 Mar 2019 10:09:26 -0700
-Message-Id: <20190312171035.193321357@linuxfoundation.org>
+        stable@vger.kernel.org, Donghee Han <dh.han@samsung.com>,
+        Sangkyu Kim <skwith.kim@samsung.com>,
+        Viresh Kumar <viresh.kumar@linaro.org>,
+        "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>
+Subject: [PATCH 4.9 04/96] cpufreq: Use struct kobj_attribute instead of struct global_attr
+Date:   Tue, 12 Mar 2019 10:09:22 -0700
+Message-Id: <20190312171034.892196376@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190312171034.530434962@linuxfoundation.org>
 References: <20190312171034.530434962@linuxfoundation.org>
@@ -63,37 +67,148 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-From: Ajay Singh <ajay.kathat@microchip.com>
+From: Viresh Kumar <viresh.kumar@linaro.org>
 
-commit dda037057a572f5c82ac2499eb4e6fb17600ba3e upstream.
+commit 625c85a62cb7d3c79f6e16de3cfa972033658250 upstream.
 
-Set correct value in '->vif_num' for the total number of interfaces and
-set '->idx' value using 'i'.
+The cpufreq_global_kobject is created using kobject_create_and_add()
+helper, which assigns the kobj_type as dynamic_kobj_ktype and show/store
+routines are set to kobj_attr_show() and kobj_attr_store().
 
-Fixes: 735bb39ca3be ("staging: wilc1000: simplify vif[i]->ndev accesses")
-Fixes: 0e490657c721 ("staging: wilc1000: Fix problem with wrong vif index")
-Cc: <stable@vger.kernel.org>
-Suggested-by: Dan Carpenter <dan.carpenter@oracle.com>
-Reviewed-by: Dan Carpenter <dan.carpenter@oracle.com>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+These routines pass struct kobj_attribute as an argument to the
+show/store callbacks. But all the cpufreq files created using the
+cpufreq_global_kobject expect the argument to be of type struct
+attribute. Things work fine currently as no one accesses the "attr"
+argument. We may not see issues even if the argument is used, as struct
+kobj_attribute has struct attribute as its first element and so they
+will both get same address.
+
+But this is logically incorrect and we should rather use struct
+kobj_attribute instead of struct global_attr in the cpufreq core and
+drivers and the show/store callbacks should take struct kobj_attribute
+as argument instead.
+
+This bug is caught using CFI CLANG builds in android kernel which
+catches mismatch in function prototypes for such callbacks.
+
+Reported-by: Donghee Han <dh.han@samsung.com>
+Reported-by: Sangkyu Kim <skwith.kim@samsung.com>
+Signed-off-by: Viresh Kumar <viresh.kumar@linaro.org>
+Signed-off-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/staging/wilc1000/linux_wlan.c |    4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ drivers/cpufreq/cpufreq.c      |    6 +++---
+ drivers/cpufreq/intel_pstate.c |   14 +++++++-------
+ include/linux/cpufreq.h        |   12 ++----------
+ 3 files changed, 12 insertions(+), 20 deletions(-)
 
---- a/drivers/staging/wilc1000/linux_wlan.c
-+++ b/drivers/staging/wilc1000/linux_wlan.c
-@@ -1263,8 +1263,8 @@ int wilc_netdev_init(struct wilc **wilc,
- 		vif->wilc = *wilc;
- 		vif->ndev = ndev;
- 		wl->vif[i] = vif;
--		wl->vif_num = i;
--		vif->idx = wl->vif_num;
-+		wl->vif_num = i + 1;
-+		vif->idx = i;
+--- a/drivers/cpufreq/cpufreq.c
++++ b/drivers/cpufreq/cpufreq.c
+@@ -528,13 +528,13 @@ EXPORT_SYMBOL_GPL(cpufreq_driver_resolve
+  *                          SYSFS INTERFACE                          *
+  *********************************************************************/
+ static ssize_t show_boost(struct kobject *kobj,
+-				 struct attribute *attr, char *buf)
++			  struct kobj_attribute *attr, char *buf)
+ {
+ 	return sprintf(buf, "%d\n", cpufreq_driver->boost_enabled);
+ }
  
- 		ndev->netdev_ops = &wilc_netdev_ops;
+-static ssize_t store_boost(struct kobject *kobj, struct attribute *attr,
+-				  const char *buf, size_t count)
++static ssize_t store_boost(struct kobject *kobj, struct kobj_attribute *attr,
++			   const char *buf, size_t count)
+ {
+ 	int ret, enable;
+ 
+--- a/drivers/cpufreq/intel_pstate.c
++++ b/drivers/cpufreq/intel_pstate.c
+@@ -659,13 +659,13 @@ static void __init intel_pstate_debug_ex
+ /************************** sysfs begin ************************/
+ #define show_one(file_name, object)					\
+ 	static ssize_t show_##file_name					\
+-	(struct kobject *kobj, struct attribute *attr, char *buf)	\
++	(struct kobject *kobj, struct kobj_attribute *attr, char *buf)	\
+ 	{								\
+ 		return sprintf(buf, "%u\n", limits->object);		\
+ 	}
+ 
+ static ssize_t show_turbo_pct(struct kobject *kobj,
+-				struct attribute *attr, char *buf)
++				struct kobj_attribute *attr, char *buf)
+ {
+ 	struct cpudata *cpu;
+ 	int total, no_turbo, turbo_pct;
+@@ -681,7 +681,7 @@ static ssize_t show_turbo_pct(struct kob
+ }
+ 
+ static ssize_t show_num_pstates(struct kobject *kobj,
+-				struct attribute *attr, char *buf)
++				struct kobj_attribute *attr, char *buf)
+ {
+ 	struct cpudata *cpu;
+ 	int total;
+@@ -692,7 +692,7 @@ static ssize_t show_num_pstates(struct k
+ }
+ 
+ static ssize_t show_no_turbo(struct kobject *kobj,
+-			     struct attribute *attr, char *buf)
++			     struct kobj_attribute *attr, char *buf)
+ {
+ 	ssize_t ret;
+ 
+@@ -705,7 +705,7 @@ static ssize_t show_no_turbo(struct kobj
+ 	return ret;
+ }
+ 
+-static ssize_t store_no_turbo(struct kobject *a, struct attribute *b,
++static ssize_t store_no_turbo(struct kobject *a, struct kobj_attribute *b,
+ 			      const char *buf, size_t count)
+ {
+ 	unsigned int input;
+@@ -729,7 +729,7 @@ static ssize_t store_no_turbo(struct kob
+ 	return count;
+ }
+ 
+-static ssize_t store_max_perf_pct(struct kobject *a, struct attribute *b,
++static ssize_t store_max_perf_pct(struct kobject *a, struct kobj_attribute *b,
+ 				  const char *buf, size_t count)
+ {
+ 	unsigned int input;
+@@ -753,7 +753,7 @@ static ssize_t store_max_perf_pct(struct
+ 	return count;
+ }
+ 
+-static ssize_t store_min_perf_pct(struct kobject *a, struct attribute *b,
++static ssize_t store_min_perf_pct(struct kobject *a, struct kobj_attribute *b,
+ 				  const char *buf, size_t count)
+ {
+ 	unsigned int input;
+--- a/include/linux/cpufreq.h
++++ b/include/linux/cpufreq.h
+@@ -234,20 +234,12 @@ __ATTR(_name, _perm, show_##_name, NULL)
+ static struct freq_attr _name =			\
+ __ATTR(_name, 0644, show_##_name, store_##_name)
+ 
+-struct global_attr {
+-	struct attribute attr;
+-	ssize_t (*show)(struct kobject *kobj,
+-			struct attribute *attr, char *buf);
+-	ssize_t (*store)(struct kobject *a, struct attribute *b,
+-			 const char *c, size_t count);
+-};
+-
+ #define define_one_global_ro(_name)		\
+-static struct global_attr _name =		\
++static struct kobj_attribute _name =		\
+ __ATTR(_name, 0444, show_##_name, NULL)
+ 
+ #define define_one_global_rw(_name)		\
+-static struct global_attr _name =		\
++static struct kobj_attribute _name =		\
+ __ATTR(_name, 0644, show_##_name, store_##_name)
+ 
  
 
 
