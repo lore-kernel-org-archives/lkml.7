@@ -4,50 +4,52 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 58E7EC10F00
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 17:48:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B3A45C43381
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 17:49:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 226082173C
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 17:48:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 85A362147C
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 17:49:05 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1552412938;
-	bh=zf3FyPapp3QQ0haG9WqdP21+9WWmHcr1SEngQUtczUk=;
+	s=default; t=1552412945;
+	bh=JHs03SfIIUzJrwaC8f1scmlwj/qUTm3lvsqbfx9mvzg=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=zUIvQDJC8sC/yQmSyqVpK2jlcN+TQoqyWgyS6V2J/FvChHbPoYDbohn6p+l8vEOps
-	 /h9+xSl0/XormMjjLcaYPwmkD4lO68kozUtALzyC6yE20dsLVm3vyGu8dROLbzZD6m
-	 7a5iPrrdYIUMtuDUsVCMt/TuqpYGbXnrWMk88qzk=
+	b=AUGiEPGB4dkMltpN+Xumk4KfmUmZOKDR2RkXbCELqi3QgILWVzCApffNiW7Mclr+k
+	 bhKKbigbq0EtkRD5qit87JENZnvIgYpHadKSVJLYtx6QmJJ4l0P7mPMWueCBht89u+
+	 8+yfwRLmxk7oeCpjLPZMGcrBnXIof66EuPdcjO4I=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728556AbfCLRO4 (ORCPT
+        id S1727458AbfCLROw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 12 Mar 2019 13:14:56 -0400
-Received: from mail.kernel.org ([198.145.29.99]:52666 "EHLO mail.kernel.org"
+        Tue, 12 Mar 2019 13:14:52 -0400
+Received: from mail.kernel.org ([198.145.29.99]:52124 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728291AbfCLROQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 12 Mar 2019 13:14:16 -0400
+        id S1728225AbfCLROF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 12 Mar 2019 13:14:05 -0400
 Received: from localhost (unknown [104.133.8.98])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 0D1ED217F9;
-        Tue, 12 Mar 2019 17:14:16 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 5895C2173C;
+        Tue, 12 Mar 2019 17:14:04 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1552410856;
-        bh=zf3FyPapp3QQ0haG9WqdP21+9WWmHcr1SEngQUtczUk=;
+        s=default; t=1552410844;
+        bh=JHs03SfIIUzJrwaC8f1scmlwj/qUTm3lvsqbfx9mvzg=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=JZPZFz/z4ob+eBfUKSwAZrJoOUPGqODamxM100/wDMkNdaw0O6KvM5v8MfEvqdLPk
-         qWw5QMlPE1DAqGaIuvrx+XBJYFOnGCrsR0BQ1poDtlvlhlhRICTpU/o9H8lnucYOoU
-         1j8oFRl8hDP3uxs3tz+Oz/53WIgtc5aiUXbtuM1A=
+        b=d0oO7UxZEYHLHfHlFxlaHW0qsoWwYMKasCilBQIEm5ys4VBmOID/kZlDhs7c3zkAC
+         uRIX3G7/7w4fHEMm8QOK+mGokBmvp8HDPUfzVVRu+KKYruFhBgkRmKxTYkefW2Tj54
+         b+3QYKDY1E9shakJb2wzmAWSzbJ5ouYKHBuAAvqg=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Yao Liu <yotta.liu@ucloud.cn>,
-        Anna Schumaker <Anna.Schumaker@Netapp.com>,
+        stable@vger.kernel.org, Feras Daoud <ferasda@mellanox.com>,
+        Erez Shitrit <erezsh@mellanox.com>,
+        Leon Romanovsky <leonro@mellanox.com>,
+        Jason Gunthorpe <jgg@mellanox.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 034/149] nfs: Fix NULL pointer dereference of dev_name
-Date:   Tue, 12 Mar 2019 10:07:32 -0700
-Message-Id: <20190312170352.554891806@linuxfoundation.org>
+Subject: [PATCH 4.19 017/149] IB/ipoib: Fix for use-after-free in ipoib_cm_tx_start
+Date:   Tue, 12 Mar 2019 10:07:15 -0700
+Message-Id: <20190312170351.046666320@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190312170349.421581206@linuxfoundation.org>
 References: <20190312170349.421581206@linuxfoundation.org>
@@ -66,54 +68,144 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-[ Upstream commit 80ff00172407e0aad4b10b94ef0816fc3e7813cb ]
+[ Upstream commit 6ab4aba00f811a5265acc4d3eb1863bb3ca60562 ]
 
-There is a NULL pointer dereference of dev_name in nfs_parse_devname()
+The following BUG was reported by kasan:
 
-The oops looks something like:
+ BUG: KASAN: use-after-free in ipoib_cm_tx_start+0x430/0x1390 [ib_ipoib]
+ Read of size 80 at addr ffff88034c30bcd0 by task kworker/u16:1/24020
 
-  BUG: unable to handle kernel NULL pointer dereference at 0000000000000000
-  ...
-  RIP: 0010:nfs_fs_mount+0x3b6/0xc20 [nfs]
-  ...
-  Call Trace:
-   ? ida_alloc_range+0x34b/0x3d0
-   ? nfs_clone_super+0x80/0x80 [nfs]
-   ? nfs_free_parsed_mount_data+0x60/0x60 [nfs]
-   mount_fs+0x52/0x170
-   ? __init_waitqueue_head+0x3b/0x50
-   vfs_kern_mount+0x6b/0x170
-   do_mount+0x216/0xdc0
-   ksys_mount+0x83/0xd0
-   __x64_sys_mount+0x25/0x30
-   do_syscall_64+0x65/0x220
-   entry_SYSCALL_64_after_hwframe+0x49/0xbe
+ Workqueue: ipoib_wq ipoib_cm_tx_start [ib_ipoib]
+ Call Trace:
+  dump_stack+0x9a/0xeb
+  print_address_description+0xe3/0x2e0
+  kasan_report+0x18a/0x2e0
+  ? ipoib_cm_tx_start+0x430/0x1390 [ib_ipoib]
+  memcpy+0x1f/0x50
+  ipoib_cm_tx_start+0x430/0x1390 [ib_ipoib]
+  ? kvm_clock_read+0x1f/0x30
+  ? ipoib_cm_skb_reap+0x610/0x610 [ib_ipoib]
+  ? __lock_is_held+0xc2/0x170
+  ? process_one_work+0x880/0x1960
+  ? process_one_work+0x912/0x1960
+  process_one_work+0x912/0x1960
+  ? wq_pool_ids_show+0x310/0x310
+  ? lock_acquire+0x145/0x440
+  worker_thread+0x87/0xbb0
+  ? process_one_work+0x1960/0x1960
+  kthread+0x314/0x3d0
+  ? kthread_create_worker_on_cpu+0xc0/0xc0
+  ret_from_fork+0x3a/0x50
 
-Fix this by adding a NULL check on dev_name
+ Allocated by task 0:
+  kasan_kmalloc+0xa0/0xd0
+  kmem_cache_alloc_trace+0x168/0x3e0
+  path_rec_create+0xa2/0x1f0 [ib_ipoib]
+  ipoib_start_xmit+0xa98/0x19e0 [ib_ipoib]
+  dev_hard_start_xmit+0x159/0x8d0
+  sch_direct_xmit+0x226/0xb40
+  __dev_queue_xmit+0x1d63/0x2950
+  neigh_update+0x889/0x1770
+  arp_process+0xc47/0x21f0
+  arp_rcv+0x462/0x760
+  __netif_receive_skb_core+0x1546/0x2da0
+  netif_receive_skb_internal+0xf2/0x590
+  napi_gro_receive+0x28e/0x390
+  ipoib_ib_handle_rx_wc_rss+0x873/0x1b60 [ib_ipoib]
+  ipoib_rx_poll_rss+0x17d/0x320 [ib_ipoib]
+  net_rx_action+0x427/0xe30
+  __do_softirq+0x28e/0xc42
 
-Signed-off-by: Yao Liu <yotta.liu@ucloud.cn>
-Signed-off-by: Anna Schumaker <Anna.Schumaker@Netapp.com>
+ Freed by task 26680:
+  __kasan_slab_free+0x11d/0x160
+  kfree+0xf5/0x360
+  ipoib_flush_paths+0x532/0x9d0 [ib_ipoib]
+  ipoib_set_mode_rss+0x1ad/0x560 [ib_ipoib]
+  set_mode+0xc8/0x150 [ib_ipoib]
+  kernfs_fop_write+0x279/0x440
+  __vfs_write+0xd8/0x5c0
+  vfs_write+0x15e/0x470
+  ksys_write+0xb8/0x180
+  do_syscall_64+0x9b/0x420
+  entry_SYSCALL_64_after_hwframe+0x49/0xbe
+
+ The buggy address belongs to the object at ffff88034c30bcc8
+                which belongs to the cache kmalloc-512 of size 512
+ The buggy address is located 8 bytes inside of
+                512-byte region [ffff88034c30bcc8, ffff88034c30bec8)
+ The buggy address belongs to the page:
+
+The following race between change mode and xmit flow is the reason for
+this use-after-free:
+
+Change mode     Send packet 1 to GID XX      Send packet 2 to GID XX
+     |                    |                             |
+   start                  |                             |
+     |                    |                             |
+     |                    |                             |
+     |         Create new path for GID XX               |
+     |           and update neigh path                  |
+     |                    |                             |
+     |                    |                             |
+     |                    |                             |
+ flush_paths              |                             |
+                          |                             |
+               queue_work(cm.start_task)                |
+                          |                 Path for GID XX not found
+                          |                      create new path
+                          |
+                          |
+               start_task runs with old
+                    released path
+
+There is no locking to protect the lifetime of the path through the
+ipoib_cm_tx struct, so delete it entirely and always use the newly looked
+up path under the priv->lock.
+
+Fixes: 546481c2816e ("IB/ipoib: Fix memory corruption in ipoib cm mode connect flow")
+Signed-off-by: Feras Daoud <ferasda@mellanox.com>
+Reviewed-by: Erez Shitrit <erezsh@mellanox.com>
+Signed-off-by: Leon Romanovsky <leonro@mellanox.com>
+Signed-off-by: Jason Gunthorpe <jgg@mellanox.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- fs/nfs/super.c | 5 +++++
- 1 file changed, 5 insertions(+)
+ drivers/infiniband/ulp/ipoib/ipoib.h    | 1 -
+ drivers/infiniband/ulp/ipoib/ipoib_cm.c | 3 +--
+ 2 files changed, 1 insertion(+), 3 deletions(-)
 
-diff --git a/fs/nfs/super.c b/fs/nfs/super.c
-index 5ef2c71348bd..6b666d187907 100644
---- a/fs/nfs/super.c
-+++ b/fs/nfs/super.c
-@@ -1906,6 +1906,11 @@ static int nfs_parse_devname(const char *dev_name,
- 	size_t len;
- 	char *end;
+diff --git a/drivers/infiniband/ulp/ipoib/ipoib.h b/drivers/infiniband/ulp/ipoib/ipoib.h
+index 1abe3c62f106..b22d02c9de90 100644
+--- a/drivers/infiniband/ulp/ipoib/ipoib.h
++++ b/drivers/infiniband/ulp/ipoib/ipoib.h
+@@ -248,7 +248,6 @@ struct ipoib_cm_tx {
+ 	struct list_head     list;
+ 	struct net_device   *dev;
+ 	struct ipoib_neigh  *neigh;
+-	struct ipoib_path   *path;
+ 	struct ipoib_tx_buf *tx_ring;
+ 	unsigned int	     tx_head;
+ 	unsigned int	     tx_tail;
+diff --git a/drivers/infiniband/ulp/ipoib/ipoib_cm.c b/drivers/infiniband/ulp/ipoib/ipoib_cm.c
+index 0428e01e8f69..aa9dcfc36cd3 100644
+--- a/drivers/infiniband/ulp/ipoib/ipoib_cm.c
++++ b/drivers/infiniband/ulp/ipoib/ipoib_cm.c
+@@ -1312,7 +1312,6 @@ struct ipoib_cm_tx *ipoib_cm_create_tx(struct net_device *dev, struct ipoib_path
  
-+	if (unlikely(!dev_name || !*dev_name)) {
-+		dfprintk(MOUNT, "NFS: device name not specified\n");
-+		return -EINVAL;
-+	}
-+
- 	/* Is the host name protected with square brakcets? */
- 	if (*dev_name == '[') {
- 		end = strchr(++dev_name, ']');
+ 	neigh->cm = tx;
+ 	tx->neigh = neigh;
+-	tx->path = path;
+ 	tx->dev = dev;
+ 	list_add(&tx->list, &priv->cm.start_list);
+ 	set_bit(IPOIB_FLAG_INITIALIZED, &tx->flags);
+@@ -1371,7 +1370,7 @@ static void ipoib_cm_tx_start(struct work_struct *work)
+ 				neigh->daddr + QPN_AND_OPTIONS_OFFSET);
+ 			goto free_neigh;
+ 		}
+-		memcpy(&pathrec, &p->path->pathrec, sizeof(pathrec));
++		memcpy(&pathrec, &path->pathrec, sizeof(pathrec));
+ 
+ 		spin_unlock_irqrestore(&priv->lock, flags);
+ 		netif_tx_unlock_bh(dev);
 -- 
 2.19.1
 
