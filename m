@@ -7,46 +7,47 @@ X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3921EC43381
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 17:30:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C9ABAC43381
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 17:30:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 06B37206DF
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 17:30:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9A3CB206DF
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 17:30:45 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1552411834;
-	bh=S9FFNboo1CPnTlB0u0t3IuC7pji7zYwgt5316U25/ik=;
+	s=default; t=1552411845;
+	bh=I7M9c45P2j7gj3w7HK1vB1GIQnzxchjmf4FP2eZyEZs=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=EJl1c/QxTsY7B8sGDh5GHjcBG167WrbdeVrrRWzdriGTPCryVwcHVxjAVI5sTyhqG
-	 85Uo3pZZPIlVbXtC4kau+U0uYN+Uh3j6PU5H9yGGoCwYMKfYvdBKyVMScZz2EDkezm
-	 qzDNcUGsNXf1S+YPhz6UgToSy6o4FDEJwfSTjcHw=
+	b=Rh1MpCoUDEq4m+xIB6NaYaS2pndFKC1iRh3Fnq/mA3MSn9nhLBf0XqrlZIEvxR+QS
+	 IAtCCWnCd6u5D53ToreGgTKi6Z/3wnWe3sszNCd3NF+VUVxbZ3Qab3K/yZynkn7Zwo
+	 nWQ9mlWkNKED8cf7meRWOhSFOcMPuCyeNG4aSrK8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729684AbfCLRac (ORCPT
+        id S1729517AbfCLRao (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 12 Mar 2019 13:30:32 -0400
-Received: from mail.kernel.org ([198.145.29.99]:60744 "EHLO mail.kernel.org"
+        Tue, 12 Mar 2019 13:30:44 -0400
+Received: from mail.kernel.org ([198.145.29.99]:60820 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729517AbfCLRRQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 12 Mar 2019 13:17:16 -0400
+        id S1728138AbfCLRRP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 12 Mar 2019 13:17:15 -0400
 Received: from localhost (unknown [104.133.8.98])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 3244721874;
-        Tue, 12 Mar 2019 17:17:16 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id C027821873;
+        Tue, 12 Mar 2019 17:17:14 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1552411036;
-        bh=S9FFNboo1CPnTlB0u0t3IuC7pji7zYwgt5316U25/ik=;
+        s=default; t=1552411034;
+        bh=I7M9c45P2j7gj3w7HK1vB1GIQnzxchjmf4FP2eZyEZs=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Kw0H5+HprGVSrHaHMlutFvN813tp3WkdNm7tnxlS0/TlrK8UR4tquwbqMWmzDT90F
-         TXrbWZtiOvYxfT5smkqLmeJrK7xIygn0m1QZ9t9pe2QPCgEcM9RemTJJD8ZY3Skf3v
-         6QNQ5PkYyFiH5FgL5ArePFg1u2QoIDy1H5qMQrhI=
+        b=gJiVp88tRwY0wuq+EVGsjLHC4WRUuQf6TM/Zc2UaWp5P/UvlsnFap/NaZt9MQ2SwV
+         ZONRcbv6NqxrstEqcJg8ugkke4eFHojCcxuB4gyQJZLC+deyKri6hnAIc5SwSEV8DT
+         hE4agfa0vMAG7OyhdPzDbaMj39MEx/WHHnXACabM=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Michael Chan <michael.chan@broadcom.com>,
+        stable@vger.kernel.org,
+        Kai-Heng Feng <kai.heng.feng@canonical.com>,
         "David S. Miller" <davem@davemloft.net>
-Subject: [PATCH 4.9 14/96] bnxt_en: Drop oversize TX packets to prevent errors.
-Date:   Tue, 12 Mar 2019 10:09:32 -0700
-Message-Id: <20190312171035.626885470@linuxfoundation.org>
+Subject: [PATCH 4.9 12/96] sky2: Disable MSI on Dell Inspiron 1545 and Gateway P-79
+Date:   Tue, 12 Mar 2019 10:09:30 -0700
+Message-Id: <20190312171035.474112943@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190312171034.530434962@linuxfoundation.org>
 References: <20190312171034.530434962@linuxfoundation.org>
@@ -65,45 +66,82 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-From: Michael Chan <michael.chan@broadcom.com>
+From: Kai-Heng Feng <kai.heng.feng@canonical.com>
 
-[ Upstream commit 2b3c6885386020b1b9d92d45e8349637e27d1f66 ]
+[ Upstream commit b33b7cd6fd86478dd2890a9abeb6f036aa01fdf7 ]
 
-There have been reports of oversize UDP packets being sent to the
-driver to be transmitted, causing error conditions.  The issue is
-likely caused by the dst of the SKB switching between 'lo' with
-64K MTU and the hardware device with a smaller MTU.  Patches are
-being proposed by Mahesh Bandewar <maheshb@google.com> to fix the
-issue.
+Some sky2 chips fire IRQ after S3, before the driver is fully resumed:
+[ 686.804877] do_IRQ: 1.37 No irq handler for vector
 
-In the meantime, add a quick length check in the driver to prevent
-the error.  The driver uses the TX packet size as index to look up an
-array to setup the TX BD.  The array is large enough to support all MTU
-sizes supported by the driver.  The oversize TX packet causes the
-driver to index beyond the array and put garbage values into the
-TX BD.  Add a simple check to prevent this.
+This is likely a platform bug that device isn't fully quiesced during
+S3. Use MSI-X, maskable MSI or INTx can prevent this issue from
+happening.
 
-Signed-off-by: Michael Chan <michael.chan@broadcom.com>
+Since MSI-X and maskable MSI are not supported by this device, fallback
+to use INTx on affected platforms.
+
+BugLink: https://bugs.launchpad.net/bugs/1807259
+BugLink: https://bugs.launchpad.net/bugs/1809843
+Signed-off-by: Kai-Heng Feng <kai.heng.feng@canonical.com>
 Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- drivers/net/ethernet/broadcom/bnxt/bnxt.c |    6 ++++++
- 1 file changed, 6 insertions(+)
+ drivers/net/ethernet/marvell/sky2.c |   24 +++++++++++++++++++++++-
+ 1 file changed, 23 insertions(+), 1 deletion(-)
 
---- a/drivers/net/ethernet/broadcom/bnxt/bnxt.c
-+++ b/drivers/net/ethernet/broadcom/bnxt/bnxt.c
-@@ -428,6 +428,12 @@ normal_tx:
+--- a/drivers/net/ethernet/marvell/sky2.c
++++ b/drivers/net/ethernet/marvell/sky2.c
+@@ -46,6 +46,7 @@
+ #include <linux/mii.h>
+ #include <linux/of_device.h>
+ #include <linux/of_net.h>
++#include <linux/dmi.h>
+ 
+ #include <asm/irq.h>
+ 
+@@ -93,7 +94,7 @@ static int copybreak __read_mostly = 128
+ module_param(copybreak, int, 0);
+ MODULE_PARM_DESC(copybreak, "Receive copy threshold");
+ 
+-static int disable_msi = 0;
++static int disable_msi = -1;
+ module_param(disable_msi, int, 0);
+ MODULE_PARM_DESC(disable_msi, "Disable Message Signaled Interrupt (MSI)");
+ 
+@@ -4923,6 +4924,24 @@ static const char *sky2_name(u8 chipid,
+ 	return buf;
+ }
+ 
++static const struct dmi_system_id msi_blacklist[] = {
++	{
++		.ident = "Dell Inspiron 1545",
++		.matches = {
++			DMI_MATCH(DMI_SYS_VENDOR, "Dell Inc."),
++			DMI_MATCH(DMI_PRODUCT_NAME, "Inspiron 1545"),
++		},
++	},
++	{
++		.ident = "Gateway P-79",
++		.matches = {
++			DMI_MATCH(DMI_SYS_VENDOR, "Gateway"),
++			DMI_MATCH(DMI_PRODUCT_NAME, "P-79"),
++		},
++	},
++	{}
++};
++
+ static int sky2_probe(struct pci_dev *pdev, const struct pci_device_id *ent)
+ {
+ 	struct net_device *dev, *dev1;
+@@ -5034,6 +5053,9 @@ static int sky2_probe(struct pci_dev *pd
+ 		goto err_out_free_pci;
  	}
  
- 	length >>= 9;
-+	if (unlikely(length >= ARRAY_SIZE(bnxt_lhint_arr))) {
-+		dev_warn_ratelimited(&pdev->dev, "Dropped oversize %d bytes TX packet.\n",
-+				     skb->len);
-+		i = 0;
-+		goto tx_dma_error;
-+	}
- 	flags |= bnxt_lhint_arr[length];
- 	txbd->tx_bd_len_flags_type = cpu_to_le32(flags);
- 
++	if (disable_msi == -1)
++		disable_msi = !!dmi_check_system(msi_blacklist);
++
+ 	if (!disable_msi && pci_enable_msi(pdev) == 0) {
+ 		err = sky2_test_msi(hw);
+ 		if (err) {
 
 
