@@ -2,88 +2,117 @@ Return-Path: <SRS0=J4ZE=RP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.4 required=3.0 tests=DATE_IN_PAST_06_12,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_MUTT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2FB85C43381
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 18:40:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EFFF3C10F00
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 18:41:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E60572077B
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 18:40:49 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=lechnology.com header.i=@lechnology.com header.b="FWC6J1+i"
+	by mail.kernel.org (Postfix) with ESMTP id C36A12077B
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 18:41:06 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726751AbfCLSks (ORCPT
+        id S1726630AbfCLSlE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 12 Mar 2019 14:40:48 -0400
-Received: from vern.gendns.com ([98.142.107.122]:57226 "EHLO vern.gendns.com"
+        Tue, 12 Mar 2019 14:41:04 -0400
+Received: from mga17.intel.com ([192.55.52.151]:29281 "EHLO mga17.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726360AbfCLSkr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 12 Mar 2019 14:40:47 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=lechnology.com; s=default; h=Content-Transfer-Encoding:Content-Type:
-        In-Reply-To:MIME-Version:Date:Message-ID:From:References:Cc:To:Subject:Sender
-        :Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
-        Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
-        List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-        bh=K3rlyUcKuyCgvO1FErAau9JwKJAvVu+LtPEI4/UyMlY=; b=FWC6J1+isXMMnK8d/o/YCE19FQ
-        7g63CGjUHj/cwxRUgnpuZV53vvQ/zK+pF04cT68Ye2ET95x6EqyKYI9nEXlbKsDrmJQELu0fMuiHZ
-        YliTddO8O4A6Erk2LYVj2KM0Ot2QUeI9OgwUXq/WFiXbmY12Cgbd/ETufuCa5iRfVars3F+NiuDO4
-        qDL+ycsnAb4hMcmbfNhehvGs/UugI7odljGKMGuCHST7INfgs+Bjmn+hzzYF7mLOdl+iNecmTPq45
-        wbAUr6C7aRgG4vNFzFitCcgku8u7pGXZICUVhAA6AErbptNSudevteUbUGYZx4q2B698hrIkCSg8W
-        5cG8S02w==;
-Received: from 108-198-5-147.lightspeed.okcbok.sbcglobal.net ([108.198.5.147]:37262 helo=[192.168.0.134])
-        by vern.gendns.com with esmtpsa (TLSv1.2:ECDHE-RSA-AES128-GCM-SHA256:128)
-        (Exim 4.91)
-        (envelope-from <david@lechnology.com>)
-        id 1h3mJR-0006we-CQ; Tue, 12 Mar 2019 14:39:41 -0400
-Subject: Re: [PATCH v3 05/11] ARM: davinci: da830: switch to using the
- clocksource driver
-To:     Bartosz Golaszewski <brgl@bgdev.pl>, Sekhar Nori <nsekhar@ti.com>,
-        Kevin Hilman <khilman@kernel.org>,
-        Daniel Lezcano <daniel.lezcano@linaro.org>,
-        Thomas Gleixner <tglx@linutronix.de>
-Cc:     linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        devicetree@vger.kernel.org,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>
-References: <20190226120633.18200-1-brgl@bgdev.pl>
- <20190226120633.18200-6-brgl@bgdev.pl>
-From:   David Lechner <david@lechnology.com>
-Message-ID: <2e989dd2-6844-4b03-904f-34103e60d550@lechnology.com>
-Date:   Tue, 12 Mar 2019 13:40:44 -0500
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.4.0
+        id S1726360AbfCLSlE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 12 Mar 2019 14:41:04 -0400
+X-Amp-Result: UNKNOWN
+X-Amp-Original-Verdict: FILE UNKNOWN
+X-Amp-File-Uploaded: False
+Received: from orsmga005.jf.intel.com ([10.7.209.41])
+  by fmsmga107.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 12 Mar 2019 11:41:03 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.58,471,1544515200"; 
+   d="scan'208";a="306615952"
+Received: from iweiny-desk2.sc.intel.com ([10.3.52.157])
+  by orsmga005.jf.intel.com with ESMTP; 12 Mar 2019 11:41:02 -0700
+Date:   Tue, 12 Mar 2019 03:39:33 -0700
+From:   Ira Weiny <ira.weiny@intel.com>
+To:     Christopher Lameter <cl@linux.com>
+Cc:     Dave Chinner <david@fromorbit.com>, john.hubbard@gmail.com,
+        Andrew Morton <akpm@linux-foundation.org>, linux-mm@kvack.org,
+        Al Viro <viro@zeniv.linux.org.uk>,
+        Christian Benvenuti <benve@cisco.com>,
+        Christoph Hellwig <hch@infradead.org>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Dennis Dalessandro <dennis.dalessandro@intel.com>,
+        Doug Ledford <dledford@redhat.com>, Jan Kara <jack@suse.cz>,
+        Jason Gunthorpe <jgg@ziepe.ca>,
+        Jerome Glisse <jglisse@redhat.com>,
+        Matthew Wilcox <willy@infradead.org>,
+        Michal Hocko <mhocko@kernel.org>,
+        Mike Rapoport <rppt@linux.ibm.com>,
+        Mike Marciniszyn <mike.marciniszyn@intel.com>,
+        Ralph Campbell <rcampbell@nvidia.com>,
+        Tom Talpey <tom@talpey.com>,
+        LKML <linux-kernel@vger.kernel.org>,
+        linux-fsdevel@vger.kernel.org, John Hubbard <jhubbard@nvidia.com>
+Subject: Re: [PATCH v3 0/1] mm: introduce put_user_page*(), placeholder
+ versions
+Message-ID: <20190312103932.GD1119@iweiny-DESK2.sc.intel.com>
+References: <20190306235455.26348-1-jhubbard@nvidia.com>
+ <010001695b4631cd-f4b8fcbf-a760-4267-afce-fb7969e3ff87-000000@email.amazonses.com>
+ <20190310224742.GK26298@dastard>
+ <01000169705aecf0-76f2b83d-ac18-4872-9421-b4b6efe19fc7-000000@email.amazonses.com>
 MIME-Version: 1.0
-In-Reply-To: <20190226120633.18200-6-brgl@bgdev.pl>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-AntiAbuse: This header was added to track abuse, please include it with any abuse report
-X-AntiAbuse: Primary Hostname - vern.gendns.com
-X-AntiAbuse: Original Domain - vger.kernel.org
-X-AntiAbuse: Originator/Caller UID/GID - [47 12] / [47 12]
-X-AntiAbuse: Sender Address Domain - lechnology.com
-X-Get-Message-Sender-Via: vern.gendns.com: authenticated_id: davidmain+lechnology.com/only user confirmed/virtual account not confirmed
-X-Authenticated-Sender: vern.gendns.com: davidmain@lechnology.com
-X-Source: 
-X-Source-Args: 
-X-Source-Dir: 
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <01000169705aecf0-76f2b83d-ac18-4872-9421-b4b6efe19fc7-000000@email.amazonses.com>
+User-Agent: Mutt/1.11.1 (2018-12-01)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2/26/19 6:06 AM, Bartosz Golaszewski wrote:
-> From: Bartosz Golaszewski <bgolaszewski@baylibre.com>
+On Tue, Mar 12, 2019 at 05:23:21AM +0000, Christopher Lameter wrote:
+> On Mon, 11 Mar 2019, Dave Chinner wrote:
 > 
-> We now have a proper clocksource driver for davinci. Switch the da830
-> platform to using it.
+> > > Direct IO on a mmapped file backed page doesnt make any sense.
+> >
+> > People have used it for many, many years as zero-copy data movement
+> > pattern. i.e. mmap the destination file, use direct IO to DMA direct
+> > into the destination file page cache pages, fdatasync() to force
+> > writeback of the destination file.
 > 
-> Signed-off-by: Bartosz Golaszewski <bgolaszewski@baylibre.com>
-> ---
+> Well we could make that more safe through a special API that designates a
+> range of pages in a file in the same way as for RDMA. This is inherently
+> not reliable as we found out.
 
-Reviewed-by: David Lechner <david@lechnology.com>
+I'm not following.  What API was not reliable?  In[2] we had ideas on such an
+API but AFAIK these have not been tried.
 
-(same comment as the da850 patch about the comment)
+From what I have seen the above is racy and is prone to the issues John has
+seen.  The difference is that Direct IO has a smaller window than RDMA.  (Or at
+least I thought we already established that?)
+
+	"And also remember that while RDMA might be the case at least some
+	people care about here it really isn't different from any of the other
+	gup + I/O cases, including doing direct I/O to a mmap area.  The only
+	difference in the various cases is how long the area should be pinned
+	down..."
+
+		-- Christoph Hellwig : https://lkml.org/lkml/2018/10/1/591
+
+> 
+> > Now we have copy_file_range() to optimise this sort of data
+> > movement, the need for games with mmap+direct IO largely goes away.
+> > However, we still can't just remove that functionality as it will
+> > break lots of random userspace stuff...
+> 
+> It is already broken and unreliable. Are there really "lots" of these
+> things around? Can we test this by adding a warning in the kernel and see
+> where it actually crops up?
+
+IMHO I don't think that the copy_file_range() is going to carry us through the
+next wave of user performance requirements.  RDMA, while the first, is not the
+only technology which is looking to have direct access to files.  XDP is
+another.[1]
+
+Ira
+
+[1] https://www.kernel.org/doc/html/v4.19-rc1/networking/af_xdp.html
+[2] https://lore.kernel.org/lkml/20190205175059.GB21617@iweiny-DESK2.sc.intel.com/
 
