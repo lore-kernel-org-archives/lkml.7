@@ -4,51 +4,53 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4CB72C43381
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 18:02:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5286EC43381
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 18:02:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1F858214AF
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 18:02:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2103B205C9
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 18:02:52 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1552413760;
-	bh=7JT0PTYvlzXrizgjVSHPQly6nBrMCYCOT0vpzabmNjI=;
+	s=default; t=1552413772;
+	bh=vyaD62ANCx6Kg2rgGKX/agowgGD7HHfoKwnwQrkk5dM=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=cXyV90X9ToAqy6NUUgO7kWm3zLbVHNSZloQ5smV31mkRb4/4hqayf/B9lSlElK7ey
-	 D5e7djNsPuazBmmqfUC+4v3fweH37pv1lvA3fLhan7top7AIEzDcSf6gdcPwtmETpH
-	 FYEmRO+3BxFFTI73Qlv+9Xy7hhWJZeIk1mEBa3Qg=
+	b=XBXjK6aO8XY4NJGewM18Z+/FBF31L7q58JlByO1S7MQzeFCsA+0of9kCPV5BiqwzY
+	 0vs4bnJ8EAqzlRlXlTS64u+TZwFeHLccg9dXi/cxVfw92qyIVnuY5fNDYSh30ikG5Z
+	 qSW3wuy5r0RYqcCIbF167HYNq0TEsc8RriGQicJ8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728103AbfCLSCi (ORCPT
+        id S1728092AbfCLSCu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 12 Mar 2019 14:02:38 -0400
-Received: from mail.kernel.org ([198.145.29.99]:49208 "EHLO mail.kernel.org"
+        Tue, 12 Mar 2019 14:02:50 -0400
+Received: from mail.kernel.org ([198.145.29.99]:49184 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727765AbfCLRNF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 12 Mar 2019 13:13:05 -0400
+        id S1727745AbfCLRNC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 12 Mar 2019 13:13:02 -0400
 Received: from localhost (unknown [104.133.8.98])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id CBE332183E;
-        Tue, 12 Mar 2019 17:13:03 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id A32CF217D8;
+        Tue, 12 Mar 2019 17:13:01 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1552410783;
-        bh=7JT0PTYvlzXrizgjVSHPQly6nBrMCYCOT0vpzabmNjI=;
+        s=default; t=1552410781;
+        bh=vyaD62ANCx6Kg2rgGKX/agowgGD7HHfoKwnwQrkk5dM=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=F2mn+m2pcpmyKCyl/LNywNIZDh8P2eUmAlVdX4M93cnBK3tG6E3ZadjBGjnHbzCxi
-         OGz1/ECgyY5pwcvLra/p09k0tIz2UU4cYJLIph5AGvyivgZINF63oq1DjA7B3fu0pJ
-         gMY2/3u3EhSCu9JZ0cFSraQS09nDNuTjl25Pu758=
+        b=m/zbxz1NxvSrAYZP8flaXszewvUxrRjlbL9QwI2eRwKEPiyJi2eY43jeaY4KTIUpv
+         9aF4gqYFdCTSWIS3/CyvOiqlKCrbCdzQUwu1ghQPxTBD3lnUOt3pmtzjnOyXJX11vc
+         NHFOpqUYJtYaDqQAnqc+7xTOYysYLyyiGbCVPSxY=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Martynas Pumputis <martynas@weave.works>,
-        Florian Westphal <fw@strlen.de>,
-        Pablo Neira Ayuso <pablo@netfilter.org>,
+        stable@vger.kernel.org, Jose Abreu <joabreu@synopsys.com>,
+        Joao Pinto <jpinto@synopsys.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Giuseppe Cavallaro <peppe.cavallaro@st.com>,
+        Alexandre Torgue <alexandre.torgue@st.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.20 124/171] netfilter: nf_nat: skip nat clash resolution for same-origin entries
-Date:   Tue, 12 Mar 2019 10:08:24 -0700
-Message-Id: <20190312170358.456497354@linuxfoundation.org>
+Subject: [PATCH 4.20 104/171] net: stmmac: Fallback to Platform Data clock in Watchdog conversion
+Date:   Tue, 12 Mar 2019 10:08:04 -0700
+Message-Id: <20190312170357.012062332@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190312170347.868927101@linuxfoundation.org>
 References: <20190312170347.868927101@linuxfoundation.org>
@@ -67,69 +69,69 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-[ Upstream commit 4e35c1cb9460240e983a01745b5f29fe3a4d8e39 ]
+[ Upstream commit 4ec5302fa906ec9d86597b236f62315bacdb9622 ]
 
-It is possible that two concurrent packets originating from the same
-socket of a connection-less protocol (e.g. UDP) can end up having
-different IP_CT_DIR_REPLY tuples which results in one of the packets
-being dropped.
+If we don't have DT then stmmac_clk will not be available. Let's add a
+new Platform Data field so that we can specify the refclk by this mean.
 
-To illustrate this, consider the following simplified scenario:
+This way we can still use the coalesce command in PCI based setups.
 
-1. Packet A and B are sent at the same time from two different threads
-   by same UDP socket.  No matching conntrack entry exists yet.
-   Both packets cause allocation of a new conntrack entry.
-2. get_unique_tuple gets called for A.  No clashing entry found.
-   conntrack entry for A is added to main conntrack table.
-3. get_unique_tuple is called for B and will find that the reply
-   tuple of B is already taken by A.
-   It will allocate a new UDP source port for B to resolve the clash.
-4. conntrack entry for B cannot be added to main conntrack table
-   because its ORIGINAL direction is clashing with A and the REPLY
-   directions of A and B are not the same anymore due to UDP source
-   port reallocation done in step 3.
-
-This patch modifies nf_conntrack_tuple_taken so it doesn't consider
-colliding reply tuples if the IP_CT_DIR_ORIGINAL tuples are equal.
-
-[ Florian: simplify patch to not use .allow_clash setting
-  and always ignore identical flows ]
-
-Signed-off-by: Martynas Pumputis <martynas@weave.works>
-Signed-off-by: Florian Westphal <fw@strlen.de>
-Signed-off-by: Pablo Neira Ayuso <pablo@netfilter.org>
+Signed-off-by: Jose Abreu <joabreu@synopsys.com>
+Cc: Joao Pinto <jpinto@synopsys.com>
+Cc: David S. Miller <davem@davemloft.net>
+Cc: Giuseppe Cavallaro <peppe.cavallaro@st.com>
+Cc: Alexandre Torgue <alexandre.torgue@st.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- net/netfilter/nf_conntrack_core.c | 16 ++++++++++++++++
- 1 file changed, 16 insertions(+)
+ .../net/ethernet/stmicro/stmmac/stmmac_ethtool.c   | 14 ++++++++++----
+ include/linux/stmmac.h                             |  1 +
+ 2 files changed, 11 insertions(+), 4 deletions(-)
 
-diff --git a/net/netfilter/nf_conntrack_core.c b/net/netfilter/nf_conntrack_core.c
-index e92e749aff53..830b1328fe97 100644
---- a/net/netfilter/nf_conntrack_core.c
-+++ b/net/netfilter/nf_conntrack_core.c
-@@ -1007,6 +1007,22 @@ nf_conntrack_tuple_taken(const struct nf_conntrack_tuple *tuple,
- 		}
+diff --git a/drivers/net/ethernet/stmicro/stmmac/stmmac_ethtool.c b/drivers/net/ethernet/stmicro/stmmac/stmmac_ethtool.c
+index 9caf79ba5ef1..4d5fb4b51cc4 100644
+--- a/drivers/net/ethernet/stmicro/stmmac/stmmac_ethtool.c
++++ b/drivers/net/ethernet/stmicro/stmmac/stmmac_ethtool.c
+@@ -719,8 +719,11 @@ static u32 stmmac_usec2riwt(u32 usec, struct stmmac_priv *priv)
+ {
+ 	unsigned long clk = clk_get_rate(priv->plat->stmmac_clk);
  
- 		if (nf_ct_key_equal(h, tuple, zone, net)) {
-+			/* Tuple is taken already, so caller will need to find
-+			 * a new source port to use.
-+			 *
-+			 * Only exception:
-+			 * If the *original tuples* are identical, then both
-+			 * conntracks refer to the same flow.
-+			 * This is a rare situation, it can occur e.g. when
-+			 * more than one UDP packet is sent from same socket
-+			 * in different threads.
-+			 *
-+			 * Let nf_ct_resolve_clash() deal with this later.
-+			 */
-+			if (nf_ct_tuple_equal(&ignored_conntrack->tuplehash[IP_CT_DIR_ORIGINAL].tuple,
-+					      &ct->tuplehash[IP_CT_DIR_ORIGINAL].tuple))
-+				continue;
-+
- 			NF_CT_STAT_INC_ATOMIC(net, found);
- 			rcu_read_unlock();
- 			return 1;
+-	if (!clk)
+-		return 0;
++	if (!clk) {
++		clk = priv->plat->clk_ref_rate;
++		if (!clk)
++			return 0;
++	}
+ 
+ 	return (usec * (clk / 1000000)) / 256;
+ }
+@@ -729,8 +732,11 @@ static u32 stmmac_riwt2usec(u32 riwt, struct stmmac_priv *priv)
+ {
+ 	unsigned long clk = clk_get_rate(priv->plat->stmmac_clk);
+ 
+-	if (!clk)
+-		return 0;
++	if (!clk) {
++		clk = priv->plat->clk_ref_rate;
++		if (!clk)
++			return 0;
++	}
+ 
+ 	return (riwt * 256) / (clk / 1000000);
+ }
+diff --git a/include/linux/stmmac.h b/include/linux/stmmac.h
+index 7ddfc65586b0..4335bd771ce5 100644
+--- a/include/linux/stmmac.h
++++ b/include/linux/stmmac.h
+@@ -184,6 +184,7 @@ struct plat_stmmacenet_data {
+ 	struct clk *pclk;
+ 	struct clk *clk_ptp_ref;
+ 	unsigned int clk_ptp_rate;
++	unsigned int clk_ref_rate;
+ 	struct reset_control *stmmac_rst;
+ 	struct stmmac_axi *axi;
+ 	int has_gmac4;
 -- 
 2.19.1
 
