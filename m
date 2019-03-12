@@ -2,144 +2,162 @@ Return-Path: <SRS0=J4ZE=RP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_MUTT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_PASS,URIBL_BLOCKED,USER_IN_DEF_DKIM_WL autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 01F72C43381
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 13:45:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4394FC10F00
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 13:46:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BD32D2147C
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 13:45:28 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1552398328;
-	bh=nqlrHWJ20y5gcffjzVN6h7w/oceYfkFUCXKaaqEmGcA=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=Sg4nfzmOQE99iltxX228YE5QO638HHoGz3A3JIRZMvlyE7nEQjeU+43QtmRgu21rU
-	 7hZjUssBkImnRc+V2NdPqiqhwUqN6ILv+lYIpiZdiBAMfz+axQRKntbG49BPUmAbA6
-	 0+Lh3wXFMEFp4Izh64nNGaVwQqpMqUo6R7t4tAdk=
+	by mail.kernel.org (Postfix) with ESMTP id 14D2E2147C
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 13:46:13 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="amrURANU"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726738AbfCLNp2 (ORCPT
+        id S1726765AbfCLNqM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 12 Mar 2019 09:45:28 -0400
-Received: from mail-oi1-f194.google.com ([209.85.167.194]:38089 "EHLO
-        mail-oi1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725774AbfCLNp1 (ORCPT
+        Tue, 12 Mar 2019 09:46:12 -0400
+Received: from mail-yw1-f67.google.com ([209.85.161.67]:42636 "EHLO
+        mail-yw1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725917AbfCLNqL (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 12 Mar 2019 09:45:27 -0400
-Received: by mail-oi1-f194.google.com with SMTP id a15so1956642oid.5;
-        Tue, 12 Mar 2019 06:45:26 -0700 (PDT)
+        Tue, 12 Mar 2019 09:46:11 -0400
+Received: by mail-yw1-f67.google.com with SMTP id e76so2090325ywa.9
+        for <linux-kernel@vger.kernel.org>; Tue, 12 Mar 2019 06:46:11 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=Z9o+ZRkqKfziSen8lPKKS3g4b+sPcaG2W3T+6uzEH9g=;
+        b=amrURANUVN08ADXnnxxWasXpOUxyxp5dMTdRZhdlsTUqBXurp0Ma56c+nJgxdfQT/n
+         4ob3IR3dt/041CJFWuyoaA/uB8WxO80ry2YKSeP9161NGGaP4Wine1dexnni0CyVc/ni
+         pTmH8h465/sg6DwmTjSlkCD7m//oju951OCmBnucU8KgD6sC/abyjeO1uFQhYlZ1HF8A
+         54d2nDMKPt2BBatRrIcfjCVXYiW4DeBd1e2WhjcXKSvyihEhAAauyWtIFZo1Mb3IZKFp
+         2r8dIFMD+e9GHO8RgMcSxc+x83llphU0mksSc97Sne5pyDxu9oqrsi2KHijTVx/pDlu3
+         W3Gg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=FJjWhe5cXR18ePUK1tdiW/jaqBI8knZ1Y9/Caryu0/Y=;
-        b=jgLbUbJqSSRIcdUz2gB4JbHiMxwP05fHOAo+gSjfvQ8a16s+Yq0w/szbObs/6o8uxN
-         Ij99Jt5T9kCmSmYHwWt24DL95qIwN/F3fjM6mMqAaYr5pN2lPjwL1v4ruyll6QFaHWLb
-         gvZKSynx++raGDGwSMGzZeJUScRMVNVg2ZSqsKpMR/PGla5QaY1UtBJfe+zpe4/o8ad7
-         1FNVGMFgxeoloxvhmWlhMtpRcl2AWvvbApcu4ppW0AcTCnVroGKyTDRMMTu3rn6DXBaz
-         zkGS1rY3z8jy5xn+nSG7hwWgWsFIvDRejA1wwa33Q8PDwcWVxmbscoW07VdQVGidLjTG
-         7niQ==
-X-Gm-Message-State: APjAAAXzf4zLCPb2Qd2u36+bUZuyS4+9YUCeQqiuUKtJFkEp0FeoHNSX
-        apzBFpLsIebXlxSs/WjXSA==
-X-Google-Smtp-Source: APXvYqwq4rkdCQnsMHHLBGayCL8WrhsvjLxS2/vFo6KKMOiTbNJ7keLSo7CqXLWe7pcTTDBGuo+L+Q==
-X-Received: by 2002:aca:4344:: with SMTP id q65mr1649734oia.156.1552398326160;
-        Tue, 12 Mar 2019 06:45:26 -0700 (PDT)
-Received: from localhost ([70.231.7.113])
-        by smtp.gmail.com with ESMTPSA id h138sm3725224oic.8.2019.03.12.06.45.25
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Tue, 12 Mar 2019 06:45:25 -0700 (PDT)
-Date:   Tue, 12 Mar 2019 08:45:25 -0500
-From:   Rob Herring <robh@kernel.org>
-To:     Yu Chen <chenyu56@huawei.com>
-Cc:     linux-usb@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, john.stultz@linaro.org,
-        suzhuangluan@hisilicon.com, kongfei@hisilicon.com,
-        liuyu712@hisilicon.com, wanghu17@hisilicon.com,
-        butao@hisilicon.com, chenyao11@huawei.com,
-        fangshengzhou@hisilicon.com, lipengcheng8@huawei.com,
-        songxiaowei@hisilicon.com, xuyiping@hisilicon.com,
-        xuyoujun4@huawei.com, yudongbin@hisilicon.com,
-        zangleigang@hisilicon.com, Mark Rutland <mark.rutland@arm.com>,
-        Binghui Wang <wangbinghui@hisilicon.com>
-Subject: Re: [PATCH v3 01/12] dt-bindings: phy: Add support for HiSilicon's
- hi3660 USB PHY
-Message-ID: <20190312134525.GA9706@bogus>
-References: <20190302090505.65542-1-chenyu56@huawei.com>
- <20190302090505.65542-2-chenyu56@huawei.com>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=Z9o+ZRkqKfziSen8lPKKS3g4b+sPcaG2W3T+6uzEH9g=;
+        b=fgWOj0CNF3B34V7qTQFwyRvjMLw68CHAiTtVUafBdo3rQyCAvJH6KjEdNp81Hvt9lG
+         EbAK9s2+ICDb9/Z0fzjhSu9PcO2LAZ1kBdwF8ie9HLMWKLLR2vy7ZTRHitb016uA3JUu
+         uQ8Ll14nh14LyK/TOgHm3dJOgiZ5vbU+9/NDInwCEgLGHQM1Rw9yQvAoELG2ucV+WDZU
+         T521l1Ok6T2Q5tCjim3a8olervPn2Nnd5pZYv8CDsJrqQDb3iUU+yCgviTNdhWzOfbKo
+         Yc1DCQDI+DUujf6JfRtjKUOpb93fOlhJxdmQRcMqhdAfSi70VJFp/3bY+++XYGR0JFSV
+         OoWw==
+X-Gm-Message-State: APjAAAVkpeMuTENSfb5Dq8JLtWQINncp4g8AziwiGtwcmBR6jg/GdZf4
+        ZS1UUahgbhPMn1bpjDM9DfHkLpbdDGiC6eiUzx8skQ==
+X-Google-Smtp-Source: APXvYqxLVjwTbEkLiEnQqelf1e6ZM2Rq3Ip9doTY9hdELEmrtmkYxYbEwYx9rIiOkqWDr5yTI5jssibFJwLhnlXV4mE=
+X-Received: by 2002:a81:a047:: with SMTP id x68mr29403501ywg.349.1552398370146;
+ Tue, 12 Mar 2019 06:46:10 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190302090505.65542-2-chenyu56@huawei.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+References: <0000000000001fd5780583d1433f@google.com> <20190311163747.f56cceebd9c2661e4519bdfc@linux-foundation.org>
+ <CACT4Y+byKQSOCte3JS9XOnyr+aVSEFtBvLxG2-HUrZX3-82Hcg@mail.gmail.com>
+ <20190311232541.db8571d2e3e0ca636785f31f@linux-foundation.org> <CACT4Y+Y0JdB-=yLLchw8icokn11iH2-XYoLJEOFKm6F88fJ3WQ@mail.gmail.com>
+In-Reply-To: <CACT4Y+Y0JdB-=yLLchw8icokn11iH2-XYoLJEOFKm6F88fJ3WQ@mail.gmail.com>
+From:   Shakeel Butt <shakeelb@google.com>
+Date:   Tue, 12 Mar 2019 06:45:59 -0700
+Message-ID: <CALvZod6ADEHE4_gFpod-gmXz0h3WjoOZE+cN2BCG20ORb2V5Qg@mail.gmail.com>
+Subject: Re: KASAN: null-ptr-deref Read in reclaim_high
+To:     Dmitry Vyukov <dvyukov@google.com>
+Cc:     Andrew Morton <akpm@linux-foundation.org>,
+        syzbot <syzbot+fa11f9da42b46cea3b4a@syzkaller.appspotmail.com>,
+        Cgroups <cgroups@vger.kernel.org>,
+        Johannes Weiner <hannes@cmpxchg.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Linux-MM <linux-mm@kvack.org>, Michal Hocko <mhocko@kernel.org>,
+        Michal Hocko <mhocko@suse.com>,
+        Stephen Rothwell <sfr@canb.auug.org.au>,
+        syzkaller-bugs <syzkaller-bugs@googlegroups.com>,
+        Vladimir Davydov <vdavydov.dev@gmail.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat, Mar 02, 2019 at 05:04:54PM +0800, Yu Chen wrote:
-> This patch adds binding documentation for supporting the hi3660 usb
-> phy on boards like the HiKey960.
-> 
-> Cc: Rob Herring <robh+dt@kernel.org>
-> Cc: Mark Rutland <mark.rutland@arm.com>
-> Cc: John Stultz <john.stultz@linaro.org>
-> Cc: Binghui Wang <wangbinghui@hisilicon.com>
-> Signed-off-by: Yu Chen <chenyu56@huawei.com>
-> ---
-> v1:
-> * Fix some format error as suggested by Rob.
-> v2:
-> * Change hi3660 usb PHY to hi3660 USB PHY
-> v3:
-> * Make device node a subnode of usb3_otg_bc register.
-> ---
-> ---
->  .../devicetree/bindings/phy/phy-hi3660-usb3.txt    | 28 ++++++++++++++++++++++
->  1 file changed, 28 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/phy/phy-hi3660-usb3.txt
-> 
-> diff --git a/Documentation/devicetree/bindings/phy/phy-hi3660-usb3.txt b/Documentation/devicetree/bindings/phy/phy-hi3660-usb3.txt
-> new file mode 100644
-> index 000000000000..6096214a2bc6
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/phy/phy-hi3660-usb3.txt
-> @@ -0,0 +1,28 @@
-> +Hisilicon hi3660 USB PHY
-> +-----------------------
-> +
-> +Required properties:
-> +- compatible: should be "hisilicon,hi3660-usb-phy"
-> +- #phy-cells: must be 0
-> +- hisilicon,pericrg-syscon: phandle of syscon used to control phy.
-> +- hisilicon,pctrl-syscon: phandle of syscon used to control phy.
-> +- hisilicon,usb3-otg-bc-syscon: phandle of syscon used to control phy.
+On Tue, Mar 12, 2019 at 1:33 AM Dmitry Vyukov <dvyukov@google.com> wrote:
+>
+> On Tue, Mar 12, 2019 at 7:25 AM Andrew Morton <akpm@linux-foundation.org> wrote:
+> >
+> > On Tue, 12 Mar 2019 07:08:38 +0100 Dmitry Vyukov <dvyukov@google.com> wrote:
+> >
+> > > On Tue, Mar 12, 2019 at 12:37 AM Andrew Morton
+> > > <akpm@linux-foundation.org> wrote:
+> > > >
+> > > > On Mon, 11 Mar 2019 06:08:01 -0700 syzbot <syzbot+fa11f9da42b46cea3b4a@syzkaller.appspotmail.com> wrote:
+> > > >
+> > > > > syzbot has bisected this bug to:
+> > > > >
+> > > > > commit 29a4b8e275d1f10c51c7891362877ef6cffae9e7
+> > > > > Author: Shakeel Butt <shakeelb@google.com>
+> > > > > Date:   Wed Jan 9 22:02:21 2019 +0000
+> > > > >
+> > > > >      memcg: schedule high reclaim for remote memcgs on high_work
+> > > > >
+> > > > > bisection log:  https://syzkaller.appspot.com/x/bisect.txt?x=155bf5db200000
+> > > > > start commit:   29a4b8e2 memcg: schedule high reclaim for remote memcgs on..
+> > > > > git tree:       linux-next
+> > > > > final crash:    https://syzkaller.appspot.com/x/report.txt?x=175bf5db200000
+> > > > > console output: https://syzkaller.appspot.com/x/log.txt?x=135bf5db200000
+> > > > > kernel config:  https://syzkaller.appspot.com/x/.config?x=611f89e5b6868db
+> > > > > dashboard link: https://syzkaller.appspot.com/bug?extid=fa11f9da42b46cea3b4a
+> > > > > userspace arch: amd64
+> > > > > syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=14259017400000
+> > > > > C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=141630a0c00000
+> > > > >
+> > > > > Reported-by: syzbot+fa11f9da42b46cea3b4a@syzkaller.appspotmail.com
+> > > > > Fixes: 29a4b8e2 ("memcg: schedule high reclaim for remote memcgs on
+> > > > > high_work")
+> > > >
+> > > > The following patch
+> > > > memcg-schedule-high-reclaim-for-remote-memcgs-on-high_work-v3.patch
+> > > > might have fixed this.  Was it applied?
+> > >
+> > > Hi Andrew,
+> > >
+> > > You mean if the patch was applied during the bisection?
+> > > No, it wasn't. Bisection is very specifically done on the same tree
+> > > where the bug was hit. There are already too many factors that make
+> > > the result flaky/wrong/inconclusive without changing the tree state.
+> > > Now, if syzbot would know about any pending fix for this bug, then it
+> > > would not do the bisection at all. But it have not seen any patch in
+> > > upstream/linux-next with the Reported-by tag, nor it received any syz
+> > > fix commands for this bugs. Should have been it aware of the fix? How?
+> >
+> > memcg-schedule-high-reclaim-for-remote-memcgs-on-high_work-v3.patch was
+> > added to linux-next on Jan 10.  I take it that this bug was hit when
+> > testing the entire linux-next tree, so we can assume that
+> > memcg-schedule-high-reclaim-for-remote-memcgs-on-high_work-v3.patch
+> > does not fix it, correct?
+> > In which case, over to Shakeel!
+>
+> Jan 10 is exactly when this bug was reported:
+> https://groups.google.com/forum/#!msg/syzkaller-bugs/5YkhNUg2PFY/4-B5M7bDCAAJ
+> https://syzkaller.appspot.com/bug?extid=fa11f9da42b46cea3b4a
+>
+> We don't know if that patch fixed the bug or not because nobody tested
+> the reproducer with that patch.
+>
+> It seems that the problem here is that nobody associated the fix with
+> the bug report. So people looking at open bug reports will spend time
+> again and again debugging this just to find that this was fixed months
+> ago. syzbot also doesn't have a chance to realize that this is fixed
+> and bisection is not necessary anymore. It also won't confirm/disprove
+> that the fix actually fixes the bug because even if the crash will
+> continue to happen it will look like the old crash just continues to
+> happen, so nothing to notify about.
+>
+> Associating fixes with bug reports solves all these problems for
+> humans and bots.
 
-You can drop this as it is now just the parent node.
+Should we add "Reported-by" for syzbot reports on linux-next patches
+as well? Please note that these patches are in flux and might be
+dropped or completely changed before merging into Linus tree.
 
-> +- hisilicon,eye-diagram-param: parameter set for phy
-> +Refer to phy/phy-bindings.txt for the generic PHY binding properties
-> +
-> +This is a subnode of usb3_otg_bc register node.
-> +
-> +Example:
-> +	usb3_otg_bc: usb3_otg_bc@ff200000 {
-> +		compatible = "syscon", "simple-mfd";
+Also should syzbot drop bug reports on older linux-next trees if it
+can not be repro'ed in the latest linux-next tree? IMHO yes.
 
-This node should have a specific compatible.
-
-> +		reg = <0x0 0xff200000 0x0 0x1000>;
-> +
-> +		usb-phy {
-> +			compatible = "hisilicon,hi3660-usb-phy";
-> +			#phy-cells = <0>;
-> +			hisilicon,pericrg-syscon = <&crg_ctrl>;
-> +			hisilicon,pctrl-syscon = <&pctrl>;
-> +			hisilicon,usb3-otg-bc-syscon = <&usb3_otg_bc>;
-> +			hisilicon,eye-diagram-param = <0x22466e4>;
-> +		};
-> +	};
-> -- 
-> 2.15.0-rc2
-> 
+Shakeel
