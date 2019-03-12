@@ -2,105 +2,190 @@ Return-Path: <SRS0=J4ZE=RP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_MUTT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A5A28C43381
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 21:11:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7767AC4360F
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 21:11:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 691D52077B
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 21:11:15 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=c-s.fr header.i=@c-s.fr header.b="e9UFzVdI"
+	by mail.kernel.org (Postfix) with ESMTP id 40C022077B
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 21:11:26 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726685AbfCLVLO (ORCPT
+        id S1726899AbfCLVLY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 12 Mar 2019 17:11:14 -0400
-Received: from pegase1.c-s.fr ([93.17.236.30]:19822 "EHLO pegase1.c-s.fr"
+        Tue, 12 Mar 2019 17:11:24 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:55684 "EHLO mx1.redhat.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726284AbfCLVLN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 12 Mar 2019 17:11:13 -0400
-Received: from localhost (mailhub1-int [192.168.12.234])
-        by localhost (Postfix) with ESMTP id 44JnhJ4NbWz9tykP;
-        Tue, 12 Mar 2019 22:11:12 +0100 (CET)
-Authentication-Results: localhost; dkim=pass
-        reason="1024-bit key; insecure key"
-        header.d=c-s.fr header.i=@c-s.fr header.b=e9UFzVdI; dkim-adsp=pass;
-        dkim-atps=neutral
-X-Virus-Scanned: Debian amavisd-new at c-s.fr
-Received: from pegase1.c-s.fr ([192.168.12.234])
-        by localhost (pegase1.c-s.fr [192.168.12.234]) (amavisd-new, port 10024)
-        with ESMTP id IuNmQkGCQPpg; Tue, 12 Mar 2019 22:11:12 +0100 (CET)
-Received: from messagerie.si.c-s.fr (messagerie.si.c-s.fr [192.168.25.192])
-        by pegase1.c-s.fr (Postfix) with ESMTP id 44JnhJ3KC5z9tykN;
-        Tue, 12 Mar 2019 22:11:12 +0100 (CET)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=c-s.fr; s=mail;
-        t=1552425072; bh=Cl7xbVD4/x1AlYrMnR/USpHRndATs0lxgitlmSBSfc4=;
-        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
-        b=e9UFzVdIVpYzuAGd5F7AOSu9eFsfulDyeTkXy3jwydw2iFpcWfWgid5RtbB4sLVGV
-         yQ/shl3AMQecDH9iT9znzVo0Xv2RaN45YhtQ9XTjMNWzeVtCK6YpyN7MXZ9V0MbSkf
-         LFCBlLkX6z2KudINGymiE6ZYyFUDujEFI3ab501w=
-Received: from localhost (localhost [127.0.0.1])
-        by messagerie.si.c-s.fr (Postfix) with ESMTP id 928C98B8B1;
-        Tue, 12 Mar 2019 22:11:12 +0100 (CET)
-X-Virus-Scanned: amavisd-new at c-s.fr
-Received: from messagerie.si.c-s.fr ([127.0.0.1])
-        by localhost (messagerie.si.c-s.fr [127.0.0.1]) (amavisd-new, port 10023)
-        with ESMTP id Dw49mXqlquPM; Tue, 12 Mar 2019 22:11:12 +0100 (CET)
-Received: from PO15451 (unknown [192.168.4.90])
-        by messagerie.si.c-s.fr (Postfix) with ESMTP id 01CBC8B8A7;
-        Tue, 12 Mar 2019 22:11:11 +0100 (CET)
-Subject: Re: [PATCH] powerpc/64s: Include <asm/nmi.h> header file to fix a
- warning
-To:     Mathieu Malaterre <malat@debian.org>,
-        Michael Ellerman <mpe@ellerman.id.au>
-Cc:     Paul Mackerras <paulus@samba.org>, linuxppc-dev@lists.ozlabs.org,
-        linux-kernel@vger.kernel.org
-References: <20190312201823.29371-1-malat@debian.org>
-From:   Christophe Leroy <christophe.leroy@c-s.fr>
-Message-ID: <040f7bd3-a0b2-6fed-69d7-43efddd7e56d@c-s.fr>
-Date:   Tue, 12 Mar 2019 22:11:11 +0100
-User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:60.0) Gecko/20100101
- Thunderbird/60.5.3
+        id S1726284AbfCLVLY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 12 Mar 2019 17:11:24 -0400
+Received: from smtp.corp.redhat.com (int-mx06.intmail.prod.int.phx2.redhat.com [10.5.11.16])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id 3EB26307D844;
+        Tue, 12 Mar 2019 21:11:23 +0000 (UTC)
+Received: from sky.random (ovpn-121-1.rdu2.redhat.com [10.10.121.1])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id EA5474C3;
+        Tue, 12 Mar 2019 21:11:17 +0000 (UTC)
+Date:   Tue, 12 Mar 2019 17:11:17 -0400
+From:   Andrea Arcangeli <aarcange@redhat.com>
+To:     James Bottomley <James.Bottomley@HansenPartnership.com>
+Cc:     "Michael S. Tsirkin" <mst@redhat.com>,
+        Jason Wang <jasowang@redhat.com>,
+        David Miller <davem@davemloft.net>, hch@infradead.org,
+        kvm@vger.kernel.org, virtualization@lists.linux-foundation.org,
+        netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
+        peterx@redhat.com, linux-mm@kvack.org,
+        linux-arm-kernel@lists.infradead.org, linux-parisc@vger.kernel.org
+Subject: Re: [RFC PATCH V2 0/5] vhost: accelerate metadata access through
+ vmap()
+Message-ID: <20190312211117.GB25147@redhat.com>
+References: <56374231-7ba7-0227-8d6d-4d968d71b4d6@redhat.com>
+ <20190311095405-mutt-send-email-mst@kernel.org>
+ <20190311.111413.1140896328197448401.davem@davemloft.net>
+ <6b6dcc4a-2f08-ba67-0423-35787f3b966c@redhat.com>
+ <20190311235140-mutt-send-email-mst@kernel.org>
+ <76c353ed-d6de-99a9-76f9-f258074c1462@redhat.com>
+ <20190312075033-mutt-send-email-mst@kernel.org>
+ <1552405610.3083.17.camel@HansenPartnership.com>
+ <20190312200450.GA25147@redhat.com>
+ <1552424017.14432.11.camel@HansenPartnership.com>
 MIME-Version: 1.0
-In-Reply-To: <20190312201823.29371-1-malat@debian.org>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: fr
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <1552424017.14432.11.camel@HansenPartnership.com>
+User-Agent: Mutt/1.11.3 (2019-02-01)
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.16
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.48]); Tue, 12 Mar 2019 21:11:23 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Tue, Mar 12, 2019 at 01:53:37PM -0700, James Bottomley wrote:
+> I've got to say: optimize what?  What code do we ever have in the
+> kernel that kmap's a page and then doesn't do anything with it? You can
+> guarantee that on kunmap the page is either referenced (needs
+> invalidating) or updated (needs flushing). The in-kernel use of kmap is
+> always
+> 
+> kmap
+> do something with the mapped page
+> kunmap
+> 
+> In a very short interval.  It seems just a simplification to make
+> kunmap do the flush if needed rather than try to have the users
+> remember.  The thing which makes this really simple is that on most
+> architectures flush and invalidate is the same operation.  If you
+> really want to optimize you can use the referenced and dirty bits on
+> the kmapped pte to tell you what operation to do, but if your flush is
+> your invalidate, you simply assume the data needs flushing on kunmap
+> without checking anything.
+
+Except other archs like arm64 and sparc do the cache flushing on
+copy_to_user_page and copy_user_page, not on kunmap.
+
+#define copy_user_page(to,from,vaddr,pg) __cpu_copy_user_page(to, from, vaddr)
+void __cpu_copy_user_page(void *kto, const void *kfrom, unsigned long vaddr)
+{
+	struct page *page = virt_to_page(kto);
+	copy_page(kto, kfrom);
+	flush_dcache_page(page);
+}
+#define copy_user_page(to, from, vaddr, page)	\
+	do {	copy_page(to, from);		\
+		sparc_flush_page_to_ram(page);	\
+	} while (0)
+
+And they do nothing on kunmap:
+
+static inline void kunmap(struct page *page)
+{
+	BUG_ON(in_interrupt());
+	if (!PageHighMem(page))
+		return;
+	kunmap_high(page);
+}
+void kunmap_high(struct page *page)
+{
+	unsigned long vaddr;
+	unsigned long nr;
+	unsigned long flags;
+	int need_wakeup;
+	unsigned int color = get_pkmap_color(page);
+	wait_queue_head_t *pkmap_map_wait;
+
+	lock_kmap_any(flags);
+	vaddr = (unsigned long)page_address(page);
+	BUG_ON(!vaddr);
+	nr = PKMAP_NR(vaddr);
+
+	/*
+	 * A count must never go down to zero
+	 * without a TLB flush!
+	 */
+	need_wakeup = 0;
+	switch (--pkmap_count[nr]) {
+	case 0:
+		BUG();
+	case 1:
+		/*
+		 * Avoid an unnecessary wake_up() function call.
+		 * The common case is pkmap_count[] == 1, but
+		 * no waiters.
+		 * The tasks queued in the wait-queue are guarded
+		 * by both the lock in the wait-queue-head and by
+		 * the kmap_lock.  As the kmap_lock is held here,
+		 * no need for the wait-queue-head's lock.  Simply
+		 * test if the queue is empty.
+		 */
+		pkmap_map_wait = get_pkmap_wait_queue_head(color);
+		need_wakeup = waitqueue_active(pkmap_map_wait);
+	}
+	unlock_kmap_any(flags);
+
+	/* do wake-up, if needed, race-free outside of the spin lock */
+	if (need_wakeup)
+		wake_up(pkmap_map_wait);
+}
+static inline void kunmap(struct page *page)
+{
+}
+
+because they already did it just above.
 
 
-Le 12/03/2019 à 21:18, Mathieu Malaterre a écrit :
-> Make sure to include <asm/nmi.h> to provide the following prototype:
-> hv_nmi_check_nonrecoverable.
+> > Which means after we fix vhost to add the flush_dcache_page after
+> > kunmap, Parisc will get a double hit (but it also means Parisc was
+> > the only one of those archs needed explicit cache flushes, where
+> > vhost worked correctly so far.. so it kinds of proofs your point of
+> > giving up being the safe choice).
 > 
-> Remove the following warning treated as error (W=1):
-> 
->    arch/powerpc/kernel/traps.c:393:6: error: no previous prototype for 'hv_nmi_check_nonrecoverable' [-Werror=missing-prototypes]
-> 
-> Signed-off-by: Mathieu Malaterre <malat@debian.org>
+> What double hit?  If there's no cache to flush then cache flush is a
+> no-op.  It's also a highly piplineable no-op because the CPU has the L1
+> cache within easy reach.  The only event when flush takes a large
+> amount time is if we actually have dirty data to write back to main
+> memory.
 
-Reviewed-by: Christophe Leroy <christophe.leroy@c-s.fr>
+The double hit is in parisc copy_to_user_page:
 
-> ---
->   arch/powerpc/kernel/traps.c | 1 +
->   1 file changed, 1 insertion(+)
-> 
-> diff --git a/arch/powerpc/kernel/traps.c b/arch/powerpc/kernel/traps.c
-> index a21200c6aaea..1fd45a8650e1 100644
-> --- a/arch/powerpc/kernel/traps.c
-> +++ b/arch/powerpc/kernel/traps.c
-> @@ -71,6 +71,7 @@
->   #include <sysdev/fsl_pci.h>
->   #include <asm/kprobes.h>
->   #include <asm/stacktrace.h>
-> +#include <asm/nmi.h>
->   
->   #if defined(CONFIG_DEBUGGER) || defined(CONFIG_KEXEC_CORE)
->   int (*__debugger)(struct pt_regs *regs) __read_mostly;
-> 
+#define copy_to_user_page(vma, page, vaddr, dst, src, len) \
+do { \
+	flush_cache_page(vma, vaddr, page_to_pfn(page)); \
+	memcpy(dst, src, len); \
+	flush_kernel_dcache_range_asm((unsigned long)dst, (unsigned long)dst + len); \
+} while (0)
+
+That is executed just before kunmap:
+
+static inline void kunmap(struct page *page)
+{
+	flush_kernel_dcache_page_addr(page_address(page));
+}
+
+Can't argue about the fact your "safer" kunmap is safer, but we cannot
+rely on common code unless we remove some optimization from the common
+code abstractions and we make all archs do kunmap like parisc.
+
+Thanks,
+Andrea
