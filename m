@@ -4,51 +4,53 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9A6BFC43381
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 17:36:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C3ECBC43381
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 17:36:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6E8602087C
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 17:36:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 94ED42087C
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 17:36:55 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1552412212;
-	bh=uW6YNtrzL4IoEdhZ93o1IBsXh+OFmvejpFNusd+sJRw=;
+	s=default; t=1552412215;
+	bh=PnyJkZHFpAkVKkBVJuoEiWm+YSFTIjGbUslaJpOhQG4=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=SAQK42xZFzOS+jib3f86n2juBMVLm19DTRW2nzM7pdsOnsQfx8bUy3mXbjzD2q+CF
-	 a3XsutY96Xne6YGBWo0cQkvsLJ7wK0g6Ne+q/jclJT3z5Ov9nYcVdKImcC5AySA5E+
-	 HSDt1QolPQLh4RdAqkRKQN+wjG+XfEzkZjFcLLkA=
+	b=Fon1Y89IYtmyuiZtLW+Ri27ah/mDbZfWVWykWGwjce4CJx0q5IljcE97aPY0dJjNV
+	 XirufZtCoa4Acz5VGAhfHwP3KWR07sOenL2m0wEUbXPFprB3VKpOqP9xxpb4/l6chS
+	 jnnwHZewvOpZnjo+UAS471pphz9066eXtuyjKtgY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729472AbfCLRgv (ORCPT
+        id S1729674AbfCLRgy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 12 Mar 2019 13:36:51 -0400
-Received: from mail.kernel.org ([198.145.29.99]:59132 "EHLO mail.kernel.org"
+        Tue, 12 Mar 2019 13:36:54 -0400
+Received: from mail.kernel.org ([198.145.29.99]:59094 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729247AbfCLRQl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S1727561AbfCLRQl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Tue, 12 Mar 2019 13:16:41 -0400
 Received: from localhost (unknown [104.133.8.98])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D9ADD206DF;
+        by mail.kernel.org (Postfix) with ESMTPSA id 23DB221850;
         Tue, 12 Mar 2019 17:16:40 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1552411001;
-        bh=uW6YNtrzL4IoEdhZ93o1IBsXh+OFmvejpFNusd+sJRw=;
+        s=default; t=1552411000;
+        bh=PnyJkZHFpAkVKkBVJuoEiWm+YSFTIjGbUslaJpOhQG4=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=yaPha1uKzaFA/opIjHG9sJZbau7cBp/axlNf4I5jRptM/98DhtB0dC2JRi02sCDxB
-         EN+74ZOstcpg0WERglIWXWhyTkOpVnv5mvYv0K6Mi+x6l+izVcBt4n3IrCAwiuQOM6
-         oObodztLoYAQg2CK4ygDTGMyXhrq14uRG1Hv1kPM=
+        b=KQ3GfW/9dvpe6B4IiLDyKy855khjtzedE5oyBbkyqNNYRk60yNArA1zNIY46j0G9n
+         CSq5sGX3JVM9YRijB3m05OPm36Eqpb6WIXyamkR6wAuoIuLUzb+EanHnGcg3n1/qHW
+         oPDW/7nMIEP9ZiJxAS62EkOyQnDxu1z3vR38zhb8=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Martynas Pumputis <m@lambda.lt>,
-        Yonghong Song <yhs@fb.com>,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.14 101/135] bpf, selftests: fix handling of sparse CPU allocations
-Date:   Tue, 12 Mar 2019 10:09:08 -0700
-Message-Id: <20190312170350.476476039@linuxfoundation.org>
+        stable@vger.kernel.org, Kees Cook <keescook@chromium.org>,
+        Tetsuo Handa <penguin-kernel@I-love.SAKURA.ne.jp>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        David Rientjes <rientjes@google.com>,
+        Sasha Levin <sashal@kernel.org>,
+        syzbot+16c3a70e1e9b29346c43@syzkaller.appspotmail.com
+Subject: [PATCH 4.14 100/135] relay: check return of create_buf_file() properly
+Date:   Tue, 12 Mar 2019 10:09:07 -0700
+Message-Id: <20190312170350.394798703@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190312170341.127810985@linuxfoundation.org>
 References: <20190312170341.127810985@linuxfoundation.org>
@@ -67,77 +69,50 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-[ Upstream commit 1bb54c4071f585ebef56ce8fdfe6026fa2cbcddd ]
+[ Upstream commit 2c1cf00eeacb784781cf1c9896b8af001246d339 ]
 
-Previously, bpf_num_possible_cpus() had a bug when calculating a
-number of possible CPUs in the case of sparse CPU allocations, as
-it was considering only the first range or element of
-/sys/devices/system/cpu/possible.
+If create_buf_file() returns an error, don't try to reference it later
+as a valid dentry pointer.
 
-E.g. in the case of "0,2-3" (CPU 1 is not available), the function
-returned 1 instead of 3.
+This problem was exposed when debugfs started to return errors instead
+of just NULL for some calls when they do not succeed properly.
 
-This patch fixes the function by making it parse all CPU ranges and
-elements.
+Also, the check for WARN_ON(dentry) was just wrong :)
 
-Signed-off-by: Martynas Pumputis <m@lambda.lt>
-Acked-by: Yonghong Song <yhs@fb.com>
-Signed-off-by: Daniel Borkmann <daniel@iogearbox.net>
+Reported-by: Kees Cook <keescook@chromium.org>
+Reported-and-tested-by: syzbot+16c3a70e1e9b29346c43@syzkaller.appspotmail.com
+Reported-by: Tetsuo Handa <penguin-kernel@I-love.SAKURA.ne.jp>
+Cc: Andrew Morton <akpm@linux-foundation.org>
+Cc: David Rientjes <rientjes@google.com>
+Fixes: ff9fb72bc077 ("debugfs: return error values, not NULL")
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- tools/testing/selftests/bpf/bpf_util.h | 30 +++++++++++++++++---------
- 1 file changed, 20 insertions(+), 10 deletions(-)
+ kernel/relay.c | 4 +++-
+ 1 file changed, 3 insertions(+), 1 deletion(-)
 
-diff --git a/tools/testing/selftests/bpf/bpf_util.h b/tools/testing/selftests/bpf/bpf_util.h
-index d0811b3d6a6f..4bf720364934 100644
---- a/tools/testing/selftests/bpf/bpf_util.h
-+++ b/tools/testing/selftests/bpf/bpf_util.h
-@@ -13,7 +13,7 @@ static inline unsigned int bpf_num_possible_cpus(void)
- 	unsigned int start, end, possible_cpus = 0;
- 	char buff[128];
- 	FILE *fp;
--	int n;
-+	int len, n, i, j = 0;
+diff --git a/kernel/relay.c b/kernel/relay.c
+index 1537158c67b3..61d37e6da22d 100644
+--- a/kernel/relay.c
++++ b/kernel/relay.c
+@@ -427,6 +427,8 @@ static struct dentry *relay_create_buf_file(struct rchan *chan,
+ 	dentry = chan->cb->create_buf_file(tmpname, chan->parent,
+ 					   S_IRUSR, buf,
+ 					   &chan->is_global);
++	if (IS_ERR(dentry))
++		dentry = NULL;
  
- 	fp = fopen(fcpu, "r");
- 	if (!fp) {
-@@ -21,17 +21,27 @@ static inline unsigned int bpf_num_possible_cpus(void)
- 		exit(1);
+ 	kfree(tmpname);
+ 
+@@ -460,7 +462,7 @@ static struct rchan_buf *relay_open_buf(struct rchan *chan, unsigned int cpu)
+ 		dentry = chan->cb->create_buf_file(NULL, NULL,
+ 						   S_IRUSR, buf,
+ 						   &chan->is_global);
+-		if (WARN_ON(dentry))
++		if (IS_ERR_OR_NULL(dentry))
+ 			goto free_buf;
  	}
  
--	while (fgets(buff, sizeof(buff), fp)) {
--		n = sscanf(buff, "%u-%u", &start, &end);
--		if (n == 0) {
--			printf("Failed to retrieve # possible CPUs!\n");
--			exit(1);
--		} else if (n == 1) {
--			end = start;
-+	if (!fgets(buff, sizeof(buff), fp)) {
-+		printf("Failed to read %s!\n", fcpu);
-+		exit(1);
-+	}
-+
-+	len = strlen(buff);
-+	for (i = 0; i <= len; i++) {
-+		if (buff[i] == ',' || buff[i] == '\0') {
-+			buff[i] = '\0';
-+			n = sscanf(&buff[j], "%u-%u", &start, &end);
-+			if (n <= 0) {
-+				printf("Failed to retrieve # possible CPUs!\n");
-+				exit(1);
-+			} else if (n == 1) {
-+				end = start;
-+			}
-+			possible_cpus += end - start + 1;
-+			j = i + 1;
- 		}
--		possible_cpus = start == 0 ? end + 1 : 0;
--		break;
- 	}
-+
- 	fclose(fp);
- 
- 	return possible_cpus;
 -- 
 2.19.1
 
