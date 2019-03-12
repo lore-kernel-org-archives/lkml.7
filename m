@@ -4,53 +4,54 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 640B5C43381
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 17:26:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1E32EC43381
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 17:26:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2BE87214AE
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 17:26:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E5B93206DF
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 17:26:43 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1552411600;
-	bh=ZCMPn74y+xtkxANTIeo5m/xp9nTKs1E1cuXFJRnQ7/M=;
+	s=default; t=1552411604;
+	bh=igoRQm+DOVlKELTtRExYcem6dYcsWwYqNhg0wqlKP78=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=dN5sQiJABGxzNFKyKKcmHV4ccnd6s+RnnJFQVCaqdmciUZV+EBT2aeU+SJ+T64kQd
-	 DUvaJ7RtQe2BH3+7wpbZIPKagcbWPP9OyH2pJXttho/s/x5Yte3CkGAjZ18O6D7xIB
-	 OPjUUM7M+QxAiU/vIOxceqAXy2EotCvXa5SsIzvA=
+	b=p0F/OHbHI8W2IYPRs8lZARvIQkCdqheqHhoGveDAfLUcxeoat0iv+7n++Xr6jYVge
+	 HMLHlIvZYcxe5LdS4XLIM+jaxZ7kAn2mn1uu4R5rNKZ8qbjohmyI1/L4VLQ34rNgv5
+	 sBzP/rJPXFDZKZEr7b7vDIF9PSChTHh9oGpK5ovo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728674AbfCLR0i (ORCPT
+        id S1729717AbfCLRRl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 12 Mar 2019 13:26:38 -0400
-Received: from mail.kernel.org ([198.145.29.99]:33954 "EHLO mail.kernel.org"
+        Tue, 12 Mar 2019 13:17:41 -0400
+Received: from mail.kernel.org ([198.145.29.99]:58638 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729719AbfCLRRm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 12 Mar 2019 13:17:42 -0400
+        id S1729163AbfCLRQc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 12 Mar 2019 13:16:32 -0400
 Received: from localhost (unknown [104.133.8.98])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B532921741;
-        Tue, 12 Mar 2019 17:17:41 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 3ACC921872;
+        Tue, 12 Mar 2019 17:16:31 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1552411061;
-        bh=ZCMPn74y+xtkxANTIeo5m/xp9nTKs1E1cuXFJRnQ7/M=;
+        s=default; t=1552410991;
+        bh=igoRQm+DOVlKELTtRExYcem6dYcsWwYqNhg0wqlKP78=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=uSDVo7M5gkpXOlNY0uBknwY98FLKZSjHHjgoiA08Tyf1UlFMCuD3q3b8szGNg+GuP
-         Ud15GMHBy5gwmW6wJ10sB1zx3NTsUYEXXczmSOz4BvCpTJxxngMlJIDn0aV29yHhWA
-         210YVttwlG03pBiKu4ndK9Y+mP4WW5X7hwxlGK/U=
+        b=yhG1maCp1kpUwQ9L4pxgi6MAza5AFBS/8XrCypG6REynthWvyvZXWw5wSn+rjPXHR
+         /gdESU+IlPZtFl0VQZNqierKVDYOM2BJeL+glO+9bT5JqbWR7f1IofaPmWLSYDDp+0
+         u5C5v5nInNfocN27AMoWb3hzeBluXoQj4QVw/oDI=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Alexey Khoroshilov <khoroshilov@ispras.ru>,
+        stable@vger.kernel.org, Manish Chopra <manishc@marvell.com>,
+        Ariel Elior <aelior@marvell.com>,
         "David S. Miller" <davem@davemloft.net>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.9 50/96] net: stmmac: dwmac-rk: fix error handling in rk_gmac_powerup()
-Date:   Tue, 12 Mar 2019 10:10:08 -0700
-Message-Id: <20190312171038.327529721@linuxfoundation.org>
+Subject: [PATCH 4.14 071/135] qed: Fix stack out of bounds bug
+Date:   Tue, 12 Mar 2019 10:08:38 -0700
+Message-Id: <20190312170347.821944604@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
-In-Reply-To: <20190312171034.530434962@linuxfoundation.org>
-References: <20190312171034.530434962@linuxfoundation.org>
+In-Reply-To: <20190312170341.127810985@linuxfoundation.org>
+References: <20190312170341.127810985@linuxfoundation.org>
 User-Agent: quilt/0.65
 X-stable: review
 X-Patchwork-Hint: ignore
@@ -62,39 +63,111 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-4.9-stable review patch.  If anyone has any objections, please let me know.
+4.14-stable review patch.  If anyone has any objections, please let me know.
 
 ------------------
 
-[ Upstream commit c69c29a1a0a8f68cd87e98ba4a5a79fb8ef2a58c ]
+[ Upstream commit ffb057f98928aa099b08e419bbe5afc26ec9f448 ]
 
-If phy_power_on() fails in rk_gmac_powerup(), clocks are left enabled.
+KASAN reported following bug in qed_init_qm_get_idx_from_flags
+due to inappropriate casting of "pq_flags". Fix the type of "pq_flags".
 
-Found by Linux Driver Verification project (linuxtesting.org).
+[  196.624707] BUG: KASAN: stack-out-of-bounds in qed_init_qm_get_idx_from_flags+0x1a4/0x1b8 [qed]
+[  196.624712] Read of size 8 at addr ffff809b00bc7360 by task kworker/0:9/1712
+[  196.624714]
+[  196.624720] CPU: 0 PID: 1712 Comm: kworker/0:9 Not tainted 4.18.0-60.el8.aarch64+debug #1
+[  196.624723] Hardware name: To be filled by O.E.M. Saber/Saber, BIOS 0ACKL024 09/26/2018
+[  196.624733] Workqueue: events work_for_cpu_fn
+[  196.624738] Call trace:
+[  196.624742]  dump_backtrace+0x0/0x2f8
+[  196.624745]  show_stack+0x24/0x30
+[  196.624749]  dump_stack+0xe0/0x11c
+[  196.624755]  print_address_description+0x68/0x260
+[  196.624759]  kasan_report+0x178/0x340
+[  196.624762]  __asan_report_load_n_noabort+0x38/0x48
+[  196.624786]  qed_init_qm_get_idx_from_flags+0x1a4/0x1b8 [qed]
+[  196.624808]  qed_init_qm_info+0xec0/0x2200 [qed]
+[  196.624830]  qed_resc_alloc+0x284/0x7e8 [qed]
+[  196.624853]  qed_slowpath_start+0x6cc/0x1ae8 [qed]
+[  196.624864]  __qede_probe.isra.10+0x1cc/0x12c0 [qede]
+[  196.624874]  qede_probe+0x78/0xf0 [qede]
+[  196.624879]  local_pci_probe+0xc4/0x180
+[  196.624882]  work_for_cpu_fn+0x54/0x98
+[  196.624885]  process_one_work+0x758/0x1900
+[  196.624888]  worker_thread+0x4e0/0xd18
+[  196.624892]  kthread+0x2c8/0x350
+[  196.624897]  ret_from_fork+0x10/0x18
+[  196.624899]
+[  196.624902] Allocated by task 2:
+[  196.624906]  kasan_kmalloc.part.1+0x40/0x108
+[  196.624909]  kasan_kmalloc+0xb4/0xc8
+[  196.624913]  kasan_slab_alloc+0x14/0x20
+[  196.624916]  kmem_cache_alloc_node+0x1dc/0x480
+[  196.624921]  copy_process.isra.1.part.2+0x1d8/0x4a98
+[  196.624924]  _do_fork+0x150/0xfa0
+[  196.624926]  kernel_thread+0x48/0x58
+[  196.624930]  kthreadd+0x3a4/0x5a0
+[  196.624932]  ret_from_fork+0x10/0x18
+[  196.624934]
+[  196.624937] Freed by task 0:
+[  196.624938] (stack is not available)
+[  196.624940]
+[  196.624943] The buggy address belongs to the object at ffff809b00bc0000
+[  196.624943]  which belongs to the cache thread_stack of size 32768
+[  196.624946] The buggy address is located 29536 bytes inside of
+[  196.624946]  32768-byte region [ffff809b00bc0000, ffff809b00bc8000)
+[  196.624948] The buggy address belongs to the page:
+[  196.624952] page:ffff7fe026c02e00 count:1 mapcount:0 mapping:ffff809b4001c000 index:0x0 compound_mapcount: 0
+[  196.624960] flags: 0xfffff8000008100(slab|head)
+[  196.624967] raw: 0fffff8000008100 dead000000000100 dead000000000200 ffff809b4001c000
+[  196.624970] raw: 0000000000000000 0000000000080008 00000001ffffffff 0000000000000000
+[  196.624973] page dumped because: kasan: bad access detected
+[  196.624974]
+[  196.624976] Memory state around the buggy address:
+[  196.624980]  ffff809b00bc7200: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
+[  196.624983]  ffff809b00bc7280: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
+[  196.624985] >ffff809b00bc7300: 00 00 00 00 00 00 00 00 f1 f1 f1 f1 04 f2 f2 f2
+[  196.624988]                                                        ^
+[  196.624990]  ffff809b00bc7380: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
+[  196.624993]  ffff809b00bc7400: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
+[  196.624995] ==================================================================
 
-Signed-off-by: Alexey Khoroshilov <khoroshilov@ispras.ru>
+Signed-off-by: Manish Chopra <manishc@marvell.com>
+Signed-off-by: Ariel Elior <aelior@marvell.com>
 Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/ethernet/stmicro/stmmac/dwmac-rk.c | 4 +++-
- 1 file changed, 3 insertions(+), 1 deletion(-)
+ drivers/net/ethernet/qlogic/qed/qed_dev.c | 8 ++++----
+ 1 file changed, 4 insertions(+), 4 deletions(-)
 
-diff --git a/drivers/net/ethernet/stmicro/stmmac/dwmac-rk.c b/drivers/net/ethernet/stmicro/stmmac/dwmac-rk.c
-index d80c88bd2bba..6e61bccc90b3 100644
---- a/drivers/net/ethernet/stmicro/stmmac/dwmac-rk.c
-+++ b/drivers/net/ethernet/stmicro/stmmac/dwmac-rk.c
-@@ -877,8 +877,10 @@ static int rk_gmac_powerup(struct rk_priv_data *bsp_priv)
+diff --git a/drivers/net/ethernet/qlogic/qed/qed_dev.c b/drivers/net/ethernet/qlogic/qed/qed_dev.c
+index 16953c4ebd71..410528e7d927 100644
+--- a/drivers/net/ethernet/qlogic/qed/qed_dev.c
++++ b/drivers/net/ethernet/qlogic/qed/qed_dev.c
+@@ -435,19 +435,19 @@ static void qed_init_qm_pq(struct qed_hwfn *p_hwfn,
+ 
+ /* get pq index according to PQ_FLAGS */
+ static u16 *qed_init_qm_get_idx_from_flags(struct qed_hwfn *p_hwfn,
+-					   u32 pq_flags)
++					   unsigned long pq_flags)
+ {
+ 	struct qed_qm_info *qm_info = &p_hwfn->qm_info;
+ 
+ 	/* Can't have multiple flags set here */
+-	if (bitmap_weight((unsigned long *)&pq_flags,
++	if (bitmap_weight(&pq_flags,
+ 			  sizeof(pq_flags) * BITS_PER_BYTE) > 1) {
+-		DP_ERR(p_hwfn, "requested multiple pq flags 0x%x\n", pq_flags);
++		DP_ERR(p_hwfn, "requested multiple pq flags 0x%lx\n", pq_flags);
+ 		goto err;
  	}
  
- 	ret = phy_power_on(bsp_priv, true);
--	if (ret)
-+	if (ret) {
-+		gmac_clk_enable(bsp_priv, false);
- 		return ret;
-+	}
+ 	if (!(qed_get_pq_flags(p_hwfn) & pq_flags)) {
+-		DP_ERR(p_hwfn, "pq flag 0x%x is not set\n", pq_flags);
++		DP_ERR(p_hwfn, "pq flag 0x%lx is not set\n", pq_flags);
+ 		goto err;
+ 	}
  
- 	ret = gmac_clk_enable(bsp_priv, true);
- 	if (ret)
 -- 
 2.19.1
 
