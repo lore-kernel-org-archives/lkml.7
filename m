@@ -4,49 +4,53 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 683A7C43381
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 18:09:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2FD32C43381
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 18:09:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2BA10205C9
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 18:09:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EE9CB205C9
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 18:09:29 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1552414162;
-	bh=dYmTNIGa7yrCVvvDcATFD1ttjkMZByN9d0F8EilZ17w=;
+	s=default; t=1552414170;
+	bh=mfQc3uSUbREL7cKH6EVhnUeycIQL7YcJjItyi/5fHDs=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=gByuJLiRSniFCLvZ4QxJUksinyJIb4NbIUbK4wabd/gtn/WMi3XmgZnKI1c92E8N3
-	 M0L+bu9/Bea09bQ6WyUpmMyZM7Yaubcb9goO3DIiuY5un4Nkury+zxU33NEaUS8sBK
-	 ujEAL/f1dk8UvYFcEQtzyjHtB3suPK0/0DdohOf4=
+	b=eQjKna5iSvtktB+dgDFAUaP2G720y1rBpcZjKD+NnsMh6f4nrV59sHQG2juS+MbO3
+	 DhkbBxhvvPv86DBsV/2ekGA2EOL2BbHgLTnsd8ok2e41UjYoZRBkZjAs21xZOEDWk+
+	 WjdIQatEmoHRmwoRLo2R+t4GrbXtOiZcY9+vrpww=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727447AbfCLSJU (ORCPT
+        id S1727252AbfCLRMB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 12 Mar 2019 14:09:20 -0400
-Received: from mail.kernel.org ([198.145.29.99]:46526 "EHLO mail.kernel.org"
+        Tue, 12 Mar 2019 13:12:01 -0400
+Received: from mail.kernel.org ([198.145.29.99]:45826 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727080AbfCLRMF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 12 Mar 2019 13:12:05 -0400
+        id S1727129AbfCLRLu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 12 Mar 2019 13:11:50 -0400
 Received: from localhost (unknown [104.133.8.98])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 870E12171F;
-        Tue, 12 Mar 2019 17:12:04 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id B9A03217D4;
+        Tue, 12 Mar 2019 17:11:48 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1552410724;
-        bh=dYmTNIGa7yrCVvvDcATFD1ttjkMZByN9d0F8EilZ17w=;
+        s=default; t=1552410708;
+        bh=mfQc3uSUbREL7cKH6EVhnUeycIQL7YcJjItyi/5fHDs=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=ng2uWrkFEGWBKldj3iIJ7Uk1tlAa6h1KuBOChzUYcLUe3IcJBWVryB+gM3IgXsdkX
-         Yux58sfKjeRuvB3MmMTtHDAIjESrhXqeJXzCgnWhfdWswtAtxsNqWCT0BS2j3DVgc1
-         6Ybm8vozr7ZGHXHLovqOtdV2OIPyGcqsUH33XRAM=
+        b=mgEoBr0VLn+xdK7S/mPE4MS5HSmfHtTrUq7SwemNX1wupXau2DmOYdYV+vhpkjr7w
+         nBO60GbhIzxVX1d8OqXjRF290oCY2CJyesDdC+W/JVgOhWdl2oO2plC4Lk7CSIYrO2
+         lZB1wMSSMOxe0KzuOG0qfEhlNU55MpByb2Nmpk4o=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Colin Ian King <colin.king@canonical.com>,
-        Shuah Khan <shuah@kernel.org>, Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.20 024/171] selftests: cpu-hotplug: fix case where CPUs offline > CPUs present
-Date:   Tue, 12 Mar 2019 10:06:44 -0700
-Message-Id: <20190312170350.036688531@linuxfoundation.org>
+        stable@vger.kernel.org, Stephane Eranian <eranian@google.com>,
+        Andi Kleen <ak@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>,
+        Arnaldo Carvalho de Melo <acme@redhat.com>,
+        Kan Liang <kan.liang@linux.intel.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.20 008/171] perf core: Fix perf_proc_update_handler() bug
+Date:   Tue, 12 Mar 2019 10:06:28 -0700
+Message-Id: <20190312170348.591839100@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190312170347.868927101@linuxfoundation.org>
 References: <20190312170347.868927101@linuxfoundation.org>
@@ -65,64 +69,82 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-[ Upstream commit 2b531b6137834a55857a337ac17510d6436b6fbb ]
+[ Upstream commit 1a51c5da5acc6c188c917ba572eebac5f8793432 ]
 
-The cpu-hotplug test assumes that we can offline the maximum CPU as
-described by /sys/devices/system/cpu/offline.  However, in the case
-where the number of CPUs exceeds like kernel configuration then
-the offline count can be greater than the present count and we end
-up trying to test the offlining of a CPU that is not available to
-offline.  Fix this by testing the maximum present CPU instead.
+The perf_proc_update_handler() handles /proc/sys/kernel/perf_event_max_sample_rate
+syctl variable.  When the PMU IRQ handler timing monitoring is disabled, i.e,
+when /proc/sys/kernel/perf_cpu_time_max_percent is equal to 0 or 100,
+then no modification to sysctl_perf_event_sample_rate is allowed to prevent
+possible hang from wrong values.
 
-Also, the test currently offlines the CPU and does not online it,
-so fix this by onlining the CPU after the test.
+The problem is that the test to prevent modification is made after the
+sysctl variable is modified in perf_proc_update_handler().
 
-Fixes: d89dffa976bc ("fault-injection: add selftests for cpu and memory hotplug")
-Signed-off-by: Colin Ian King <colin.king@canonical.com>
-Signed-off-by: Shuah Khan <shuah@kernel.org>
+You get an error:
+
+  $ echo 10001 >/proc/sys/kernel/perf_event_max_sample_rate
+  echo: write error: invalid argument
+
+But the value is still modified causing all sorts of inconsistencies:
+
+  $ cat /proc/sys/kernel/perf_event_max_sample_rate
+  10001
+
+This patch fixes the problem by moving the parsing of the value after
+the test.
+
+Committer testing:
+
+  # echo 100 > /proc/sys/kernel/perf_cpu_time_max_percent
+  # echo 10001 > /proc/sys/kernel/perf_event_max_sample_rate
+  -bash: echo: write error: Invalid argument
+  # cat /proc/sys/kernel/perf_event_max_sample_rate
+  10001
+  #
+
+Signed-off-by: Stephane Eranian <eranian@google.com>
+Reviewed-by: Andi Kleen <ak@linux.intel.com>
+Reviewed-by: Jiri Olsa <jolsa@kernel.org>
+Tested-by: Arnaldo Carvalho de Melo <acme@redhat.com>
+Cc: Kan Liang <kan.liang@linux.intel.com>
+Cc: Peter Zijlstra <peterz@infradead.org>
+Link: http://lkml.kernel.org/r/1547169436-6266-1-git-send-email-eranian@google.com
+Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- .../selftests/cpu-hotplug/cpu-on-off-test.sh        | 13 ++++++++++---
- 1 file changed, 10 insertions(+), 3 deletions(-)
+ kernel/events/core.c | 14 +++++++-------
+ 1 file changed, 7 insertions(+), 7 deletions(-)
 
-diff --git a/tools/testing/selftests/cpu-hotplug/cpu-on-off-test.sh b/tools/testing/selftests/cpu-hotplug/cpu-on-off-test.sh
-index bab13dd025a6..0d26b5e3f966 100755
---- a/tools/testing/selftests/cpu-hotplug/cpu-on-off-test.sh
-+++ b/tools/testing/selftests/cpu-hotplug/cpu-on-off-test.sh
-@@ -37,6 +37,10 @@ prerequisite()
- 		exit $ksft_skip
- 	fi
+diff --git a/kernel/events/core.c b/kernel/events/core.c
+index 699bc25d6204..18997730b665 100644
+--- a/kernel/events/core.c
++++ b/kernel/events/core.c
+@@ -436,18 +436,18 @@ int perf_proc_update_handler(struct ctl_table *table, int write,
+ 		void __user *buffer, size_t *lenp,
+ 		loff_t *ppos)
+ {
+-	int ret = proc_dointvec_minmax(table, write, buffer, lenp, ppos);
+-
+-	if (ret || !write)
+-		return ret;
+-
++	int ret;
++	int perf_cpu = sysctl_perf_cpu_time_max_percent;
+ 	/*
+ 	 * If throttling is disabled don't allow the write:
+ 	 */
+-	if (sysctl_perf_cpu_time_max_percent == 100 ||
+-	    sysctl_perf_cpu_time_max_percent == 0)
++	if (write && (perf_cpu == 100 || perf_cpu == 0))
+ 		return -EINVAL;
  
-+	present_cpus=`cat $SYSFS/devices/system/cpu/present`
-+	present_max=${present_cpus##*-}
-+	echo "present_cpus = $present_cpus present_max = $present_max"
++	ret = proc_dointvec_minmax(table, write, buffer, lenp, ppos);
++	if (ret || !write)
++		return ret;
 +
- 	echo -e "\t Cpus in online state: $online_cpus"
- 
- 	offline_cpus=`cat $SYSFS/devices/system/cpu/offline`
-@@ -151,6 +155,8 @@ online_cpus=0
- online_max=0
- offline_cpus=0
- offline_max=0
-+present_cpus=0
-+present_max=0
- 
- while getopts e:ahp: opt; do
- 	case $opt in
-@@ -190,9 +196,10 @@ if [ $allcpus -eq 0 ]; then
- 	online_cpu_expect_success $online_max
- 
- 	if [[ $offline_cpus -gt 0 ]]; then
--		echo -e "\t offline to online to offline: cpu $offline_max"
--		online_cpu_expect_success $offline_max
--		offline_cpu_expect_success $offline_max
-+		echo -e "\t offline to online to offline: cpu $present_max"
-+		online_cpu_expect_success $present_max
-+		offline_cpu_expect_success $present_max
-+		online_cpu $present_max
- 	fi
- 	exit 0
- else
+ 	max_samples_per_tick = DIV_ROUND_UP(sysctl_perf_event_sample_rate, HZ);
+ 	perf_sample_period_ns = NSEC_PER_SEC / sysctl_perf_event_sample_rate;
+ 	update_perf_cpu_limits();
 -- 
 2.19.1
 
