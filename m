@@ -2,55 +2,54 @@ Return-Path: <SRS0=J4ZE=RP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7969DC43381
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 17:42:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7B4E6C43381
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 17:42:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4FC9B206DF
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 17:42:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5098A206DF
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 17:42:20 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1552412533;
-	bh=MMzbwjNBBVC9uIDfaXZPuvDFkEccPDKapdGfen7r+2A=;
+	s=default; t=1552412540;
+	bh=hxA2Bjctbt9lyj67lNSsUa/7ForX0mBCQJt8+7ZpddQ=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=nJt4cN/Aie/pnvA9ll68ENG9X/0voxpH1z2kcKhw7YfD2mPfMgpuKZSXXtkEWCsEF
-	 Bwt1ic8mocFst8GjKRaX0zaZlvt6zbfBbad7Kg5uVBhAWRi84VwGgEiCASXq4Q+J0m
-	 RVYWa9VGNlzL7uMdyR1+lAvhxnGxnl2wW1rFBAQQ=
+	b=fSzgDDLKnwHPfO82szBq7rtUJLtrCmxEMT4gv49vWYWwB/TU4E14MR5QOMEXG8pyr
+	 eb69qXXS8vtXZHKdLvmz3REwPK5wXLPcXrEFtlRWKfybphXSOVDxBTyXl2Pvujblaj
+	 35ElhfRsmvCivL9kUxNVF3Wtu6+WGeUBTljBCyL4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729695AbfCLRmM (ORCPT
+        id S1729189AbfCLRmS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 12 Mar 2019 13:42:12 -0400
+        Tue, 12 Mar 2019 13:42:18 -0400
 Received: from mail.kernel.org ([198.145.29.99]:57266 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728964AbfCLRQA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S1727763AbfCLRQA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Tue, 12 Mar 2019 13:16:00 -0400
 Received: from localhost (unknown [104.133.8.98])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 50D2A2183F;
-        Tue, 12 Mar 2019 17:16:00 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id B02662171F;
+        Tue, 12 Mar 2019 17:15:58 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1552410960;
-        bh=MMzbwjNBBVC9uIDfaXZPuvDFkEccPDKapdGfen7r+2A=;
+        s=default; t=1552410958;
+        bh=hxA2Bjctbt9lyj67lNSsUa/7ForX0mBCQJt8+7ZpddQ=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=M2Xln0WvGw6z+Epn/2GzpDCuZhe46u9iMOEI4Snml+I1kLbUnx1fqGnLqrZx9+GVG
-         BvJlQD2iuqutoDMvp3tFYtFvwDYsufxQwQjZUt8DeVP4ml5lXRjyuFSRNhAYAUXlRh
-         4MLJoKXQE/jdPopDz6lWBpKkuZia3VfywjI18MN4=
+        b=D27NUUWLRsN3NRY1rIy/Sc62I+viIUxbGxU7Q7nOPmKwynWQ5LqB/IPrOdcp5TU3J
+         pb3ewDUIATeZqBladoqSWA7Q+RAp0I+8eUz+y1jrx2thPPRCBTNbbzKAl2Tq0c4q0x
+         Whahdgmxnsath3g2z7mSL1w7Zgl1cjHojbkeDF5U=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Stephane Eranian <eranian@google.com>,
-        Andi Kleen <ak@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>,
-        Arnaldo Carvalho de Melo <acme@redhat.com>,
-        Kan Liang <kan.liang@linux.intel.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.14 045/135] perf core: Fix perf_proc_update_handler() bug
-Date:   Tue, 12 Mar 2019 10:08:12 -0700
-Message-Id: <20190312170345.286983653@linuxfoundation.org>
+        stable@vger.kernel.org, Sheng Lan <lansheng@huawei.com>,
+        Qin Ji <jiqin.ji@huawei.com>,
+        Eric Dumazet <eric.dumazet@gmail.com>,
+        Eric Dumazet <edumazet@google.com>,
+        "David S. Miller" <davem@davemloft.net>
+Subject: [PATCH 4.14 019/135] net: netem: fix skb length BUG_ON in __skb_to_sgvec
+Date:   Tue, 12 Mar 2019 10:07:46 -0700
+Message-Id: <20190312170342.874789902@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190312170341.127810985@linuxfoundation.org>
 References: <20190312170341.127810985@linuxfoundation.org>
@@ -69,84 +68,108 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-[ Upstream commit 1a51c5da5acc6c188c917ba572eebac5f8793432 ]
+From: Sheng Lan <lansheng@huawei.com>
 
-The perf_proc_update_handler() handles /proc/sys/kernel/perf_event_max_sample_rate
-syctl variable.  When the PMU IRQ handler timing monitoring is disabled, i.e,
-when /proc/sys/kernel/perf_cpu_time_max_percent is equal to 0 or 100,
-then no modification to sysctl_perf_event_sample_rate is allowed to prevent
-possible hang from wrong values.
+[ Upstream commit 5845f706388a4cde0f6b80f9e5d33527e942b7d9 ]
 
-The problem is that the test to prevent modification is made after the
-sysctl variable is modified in perf_proc_update_handler().
+It can be reproduced by following steps:
+1. virtio_net NIC is configured with gso/tso on
+2. configure nginx as http server with an index file bigger than 1M bytes
+3. use tc netem to produce duplicate packets and delay:
+   tc qdisc add dev eth0 root netem delay 100ms 10ms 30% duplicate 90%
+4. continually curl the nginx http server to get index file on client
+5. BUG_ON is seen quickly
 
-You get an error:
+[10258690.371129] kernel BUG at net/core/skbuff.c:4028!
+[10258690.371748] invalid opcode: 0000 [#1] SMP PTI
+[10258690.372094] CPU: 5 PID: 0 Comm: swapper/5 Tainted: G        W         5.0.0-rc6 #2
+[10258690.372094] RSP: 0018:ffffa05797b43da0 EFLAGS: 00010202
+[10258690.372094] RBP: 00000000000005ea R08: 0000000000000000 R09: 00000000000005ea
+[10258690.372094] R10: ffffa0579334d800 R11: 00000000000002c0 R12: 0000000000000002
+[10258690.372094] R13: 0000000000000000 R14: ffffa05793122900 R15: ffffa0578f7cb028
+[10258690.372094] FS:  0000000000000000(0000) GS:ffffa05797b40000(0000) knlGS:0000000000000000
+[10258690.372094] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+[10258690.372094] CR2: 00007f1a6dc00868 CR3: 000000001000e000 CR4: 00000000000006e0
+[10258690.372094] Call Trace:
+[10258690.372094]  <IRQ>
+[10258690.372094]  skb_to_sgvec+0x11/0x40
+[10258690.372094]  start_xmit+0x38c/0x520 [virtio_net]
+[10258690.372094]  dev_hard_start_xmit+0x9b/0x200
+[10258690.372094]  sch_direct_xmit+0xff/0x260
+[10258690.372094]  __qdisc_run+0x15e/0x4e0
+[10258690.372094]  net_tx_action+0x137/0x210
+[10258690.372094]  __do_softirq+0xd6/0x2a9
+[10258690.372094]  irq_exit+0xde/0xf0
+[10258690.372094]  smp_apic_timer_interrupt+0x74/0x140
+[10258690.372094]  apic_timer_interrupt+0xf/0x20
+[10258690.372094]  </IRQ>
 
-  $ echo 10001 >/proc/sys/kernel/perf_event_max_sample_rate
-  echo: write error: invalid argument
+In __skb_to_sgvec(), the skb->len is not equal to the sum of the skb's
+linear data size and nonlinear data size, thus BUG_ON triggered.
+Because the skb is cloned and a part of nonlinear data is split off.
 
-But the value is still modified causing all sorts of inconsistencies:
+Duplicate packet is cloned in netem_enqueue() and may be delayed
+some time in qdisc. When qdisc len reached the limit and returns
+NET_XMIT_DROP, the skb will be retransmit later in write queue.
+the skb will be fragmented by tso_fragment(), the limit size
+that depends on cwnd and mss decrease, the skb's nonlinear
+data will be split off. The length of the skb cloned by netem
+will not be updated. When we use virtio_net NIC and invoke skb_to_sgvec(),
+the BUG_ON trigger.
 
-  $ cat /proc/sys/kernel/perf_event_max_sample_rate
-  10001
+To fix it, netem returns NET_XMIT_SUCCESS to upper stack
+when it clones a duplicate packet.
 
-This patch fixes the problem by moving the parsing of the value after
-the test.
-
-Committer testing:
-
-  # echo 100 > /proc/sys/kernel/perf_cpu_time_max_percent
-  # echo 10001 > /proc/sys/kernel/perf_event_max_sample_rate
-  -bash: echo: write error: Invalid argument
-  # cat /proc/sys/kernel/perf_event_max_sample_rate
-  10001
-  #
-
-Signed-off-by: Stephane Eranian <eranian@google.com>
-Reviewed-by: Andi Kleen <ak@linux.intel.com>
-Reviewed-by: Jiri Olsa <jolsa@kernel.org>
-Tested-by: Arnaldo Carvalho de Melo <acme@redhat.com>
-Cc: Kan Liang <kan.liang@linux.intel.com>
-Cc: Peter Zijlstra <peterz@infradead.org>
-Link: http://lkml.kernel.org/r/1547169436-6266-1-git-send-email-eranian@google.com
-Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
+Fixes: 35d889d1 ("sch_netem: fix skb leak in netem_enqueue()")
+Signed-off-by: Sheng Lan <lansheng@huawei.com>
+Reported-by: Qin Ji <jiqin.ji@huawei.com>
+Suggested-by: Eric Dumazet <eric.dumazet@gmail.com>
+Signed-off-by: Eric Dumazet <edumazet@google.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- kernel/events/core.c | 14 +++++++-------
- 1 file changed, 7 insertions(+), 7 deletions(-)
+ net/sched/sch_netem.c |   10 +++++++---
+ 1 file changed, 7 insertions(+), 3 deletions(-)
 
-diff --git a/kernel/events/core.c b/kernel/events/core.c
-index 17d5d41464c6..92939b5397df 100644
---- a/kernel/events/core.c
-+++ b/kernel/events/core.c
-@@ -436,18 +436,18 @@ int perf_proc_update_handler(struct ctl_table *table, int write,
- 		void __user *buffer, size_t *lenp,
- 		loff_t *ppos)
- {
--	int ret = proc_dointvec_minmax(table, write, buffer, lenp, ppos);
--
--	if (ret || !write)
--		return ret;
--
-+	int ret;
-+	int perf_cpu = sysctl_perf_cpu_time_max_percent;
- 	/*
- 	 * If throttling is disabled don't allow the write:
- 	 */
--	if (sysctl_perf_cpu_time_max_percent == 100 ||
--	    sysctl_perf_cpu_time_max_percent == 0)
-+	if (write && (perf_cpu == 100 || perf_cpu == 0))
- 		return -EINVAL;
+--- a/net/sched/sch_netem.c
++++ b/net/sched/sch_netem.c
+@@ -435,6 +435,7 @@ static int netem_enqueue(struct sk_buff
+ 	int nb = 0;
+ 	int count = 1;
+ 	int rc = NET_XMIT_SUCCESS;
++	int rc_drop = NET_XMIT_DROP;
  
-+	ret = proc_dointvec_minmax(table, write, buffer, lenp, ppos);
-+	if (ret || !write)
-+		return ret;
-+
- 	max_samples_per_tick = DIV_ROUND_UP(sysctl_perf_event_sample_rate, HZ);
- 	perf_sample_period_ns = NSEC_PER_SEC / sysctl_perf_event_sample_rate;
- 	update_perf_cpu_limits();
--- 
-2.19.1
-
+ 	/* Do not fool qdisc_drop_all() */
+ 	skb->prev = NULL;
+@@ -474,6 +475,7 @@ static int netem_enqueue(struct sk_buff
+ 		q->duplicate = 0;
+ 		rootq->enqueue(skb2, rootq, to_free);
+ 		q->duplicate = dupsave;
++		rc_drop = NET_XMIT_SUCCESS;
+ 	}
+ 
+ 	/*
+@@ -486,7 +488,7 @@ static int netem_enqueue(struct sk_buff
+ 		if (skb_is_gso(skb)) {
+ 			segs = netem_segment(skb, sch, to_free);
+ 			if (!segs)
+-				return NET_XMIT_DROP;
++				return rc_drop;
+ 		} else {
+ 			segs = skb;
+ 		}
+@@ -509,8 +511,10 @@ static int netem_enqueue(struct sk_buff
+ 			1<<(prandom_u32() % 8);
+ 	}
+ 
+-	if (unlikely(sch->q.qlen >= sch->limit))
+-		return qdisc_drop_all(skb, sch, to_free);
++	if (unlikely(sch->q.qlen >= sch->limit)) {
++		qdisc_drop_all(skb, sch, to_free);
++		return rc_drop;
++	}
+ 
+ 	qdisc_qstats_backlog_inc(sch, skb);
+ 
 
 
