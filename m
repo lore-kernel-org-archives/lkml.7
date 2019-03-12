@@ -2,112 +2,81 @@ Return-Path: <SRS0=J4ZE=RP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_MUTT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DFE5DC43381
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 14:51:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EE3E1C43381
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 14:54:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B13DA2087C
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 14:51:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C69052083D
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 14:54:19 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726672AbfCLOv4 (ORCPT
+        id S1726636AbfCLOyS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 12 Mar 2019 10:51:56 -0400
-Received: from mail-ed1-f66.google.com ([209.85.208.66]:41917 "EHLO
-        mail-ed1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726255AbfCLOvy (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 12 Mar 2019 10:51:54 -0400
-Received: by mail-ed1-f66.google.com with SMTP id n14so2534268edv.8
-        for <linux-kernel@vger.kernel.org>; Tue, 12 Mar 2019 07:51:53 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=gqBj8nH0pazADWytM/e0oIVEVNfp64FgxLQOymyNMA0=;
-        b=cazKa5SZg50YtR4UhOAI6N9pChENEOY5gKPFsrNeK8aCFB7PNXNXkAfZpRZiYJaQ+z
-         vpXuOapdNI4iW/KQvTm57TzaxB2AYr/+t+IkJXdMrkyGCbxU7EovmhvaGxxKLraI5tXj
-         tgxpT6WsOgn9vfRMMUVMVbCZjHQYLyaTPs2Dd2YwZwwwtquuFRhzt+74zFzbA1AodqvG
-         pWHg2me8Nf4pPFxjosvI5JYBcIGzOX2IDu9V5zvzrx3EVLBqjmlbu3vYCU1gv+dol865
-         BGsmfP6PmpWSgWA11YgTiyshdVtVla4TDaVCk0J7pqoLin6KQwrS/JLOx0qG8Y3B7yGe
-         3LcQ==
-X-Gm-Message-State: APjAAAXsO4JORchGB/xsTdT/oXQGOCbTaVFQgUwjRdgu8jwPVNTFs2O1
-        TMuZSHB6WdnquSAv1UbXuKoLSmnB28A=
-X-Google-Smtp-Source: APXvYqyQ8bRSbEjwqjlROUb9/2KJg1KwFNhCTlbj2DyuEp7oO6vCKZyqwiXHz7/KGyW0Xpg+nMxrJg==
-X-Received: by 2002:a17:906:288d:: with SMTP id o13mr26416110ejd.66.1552402312677;
-        Tue, 12 Mar 2019 07:51:52 -0700 (PDT)
-Received: from shalem.localdomain (546A5441.cm-12-3b.dynamic.ziggo.nl. [84.106.84.65])
-        by smtp.gmail.com with ESMTPSA id k3sm449809edn.43.2019.03.12.07.51.51
-        (version=TLS1_3 cipher=AEAD-AES128-GCM-SHA256 bits=128/128);
-        Tue, 12 Mar 2019 07:51:51 -0700 (PDT)
-Subject: Re: [PATCH 1/2] i2c: i2c-designware-platdrv: Allow a dynamic adap. nr
- without an ACPI fwnode
-To:     Jarkko Nikula <jarkko.nikula@linux.intel.com>,
-        Wolfram Sang <wsa@the-dreams.de>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Mika Westerberg <mika.westerberg@linux.intel.com>,
-        Lee Jones <lee.jones@linaro.org>
-Cc:     linux-i2c@vger.kernel.org, linux-acpi@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-References: <20190311112216.31391-1-hdegoede@redhat.com>
- <20190311112216.31391-2-hdegoede@redhat.com>
- <c519b0ea-670d-defe-5870-c6258c19ff74@linux.intel.com>
-From:   Hans de Goede <hdegoede@redhat.com>
-Message-ID: <4b54ad0b-c3a7-3286-08bb-fda1cd243285@redhat.com>
-Date:   Tue, 12 Mar 2019 15:51:51 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.5.1
+        Tue, 12 Mar 2019 10:54:18 -0400
+Received: from mga14.intel.com ([192.55.52.115]:48209 "EHLO mga14.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725917AbfCLOyS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 12 Mar 2019 10:54:18 -0400
+X-Amp-Result: UNKNOWN
+X-Amp-Original-Verdict: FILE UNKNOWN
+X-Amp-File-Uploaded: False
+Received: from orsmga006.jf.intel.com ([10.7.209.51])
+  by fmsmga103.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 12 Mar 2019 07:54:17 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.58,471,1544515200"; 
+   d="scan'208";a="126287800"
+Received: from smile.fi.intel.com (HELO smile) ([10.237.72.86])
+  by orsmga006.jf.intel.com with ESMTP; 12 Mar 2019 07:54:14 -0700
+Received: from andy by smile with local (Exim 4.92)
+        (envelope-from <andriy.shevchenko@linux.intel.com>)
+        id 1h3inE-00083n-KY; Tue, 12 Mar 2019 16:54:12 +0200
+Date:   Tue, 12 Mar 2019 16:54:12 +0200
+From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+To:     William Breathitt Gray <vilhelm.gray@gmail.com>
+Cc:     Masahiro Yamada <yamada.masahiro@socionext.com>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        linux-arch <linux-arch@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Rasmus Villemoes <linux@rasmusvillemoes.dk>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        Arnd Bergmann <arnd@arndb.de>
+Subject: Re: [PATCH v9 1/9] bitops: Introduce the for_each_set_clump8 macro
+Message-ID: <20190312145412.GD9224@smile.fi.intel.com>
+References: <cover.1551598603.git.vilhelm.gray@gmail.com>
+ <12b3a364ac7fc32194fa6f55911dd800aca92a56.1551598603.git.vilhelm.gray@gmail.com>
+ <CACRpkdbvCGRjB1sZWqN3wm660cP8S4-j0ub1j1iYpitDK_eXcQ@mail.gmail.com>
+ <20190308085733.GA3903@icarus>
+ <CAK7LNARvv3Z-eJooj7Htv7xWzD_Ow1whxcPrpqn84JHyqUnEJA@mail.gmail.com>
+ <20190312072222.GA2898@icarus>
 MIME-Version: 1.0
-In-Reply-To: <c519b0ea-670d-defe-5870-c6258c19ff74@linux.intel.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190312072222.GA2898@icarus>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi,
+On Tue, Mar 12, 2019 at 04:22:22PM +0900, William Breathitt Gray wrote:
 
-On 12-03-19 15:47, Jarkko Nikula wrote:
-> Hi
-> 
-> On 3/11/19 1:22 PM, Hans de Goede wrote:
->> Before this commit the i2c-designware-platdrv assumes that if the pdev
->> has an apci-companion it should use a dynamic adapter-nr and otherwise
->> it will use pdev->id as adapter-nr.
->>
->> On some devices e.g. the Apollo Lake using Acer TravelMate Spin B118,
->> some of the LPSS i2c-adapters are enumerated through PCI and do not have
->> an ACPI fwnode. These devices are handled as mfd devices so they end up
->> using the i2c-designware-platdrv driver.
->>
->> This results in the i2c-adapter being registered with the mfd generated
->> pdev->id as adapter-nr, which conflicts with existing adapters, triggering
->> a WARN(id < 0, "couldn't get idr") in i2c-core-base.c and causing the
->> adapter registration to fail.
->>
-> I went thinking would we get a regression if we switch the i2c-designware-platdrv to dynamic numbering unconditionally?
-> 
-> Only drivers/mfd/intel-lpss.c and drivers/mfd/intel_quark_i2c_gpio.c register platform device "i2c_designware" and otherwise in the driver itself for known ACPI IDs and device tree bindings.
-> 
-> Things should be fine for ACPI cases if slave devices are also described in ACPI tables. As far as I've understood with device tree matching adapter number is irrelevant in slave device registration?
-> 
-> Andy: could you tell by commit 918fe70cf475 ("mfd: intel_quark_i2c_gpio: support devices behind i2c bus") are those devices described in ACPI or in some i2c_board_infos with referring to fixed adapter number either in or out of kernel tree code?
-> 
-> Then drivers/platform/chrome/chromeos_laptop.c is the only code searching for adapter named as "Synopsys DesignWare I2C adapter" without assuming any fixed adapter numbering.
-> 
-> What's unclear to me can there be device tree cases where i2c-designware probing comes with pdev->id not starting from zero or in different order? I.e. would it make difference do we use pdev->id or dynamic adapter numbering?
+> Since Andy appears to have hardware outside of the GPIO subsystem he's
+> testing, let's wait for that and see how it turns out.
 
-I've just completed analyzing all ways a designware_i2c (or compatible)
-platform device can be instantiated and I've come to the conclusion that
-always using dynamic adapter-nrs is fine and is a proper, clean fix for this.
+Since I have still not much time, here is the driver I'm talking about
+drivers/thermal/intel/intel_soc_dts_iosf.c
 
-Also see my reply to Andy which I send about the same time you send
-your reply :)
+If you have a chance to look at it (add_dts_thermal_zone(), for example) and
+prepare a patch, I will be able to test it on real hardware.
 
-Regards,
+-- 
+With Best Regards,
+Andy Shevchenko
 
-Hans
+
