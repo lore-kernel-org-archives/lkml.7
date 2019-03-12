@@ -2,105 +2,142 @@ Return-Path: <SRS0=J4ZE=RP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8A7BBC4360F
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 00:42:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 437B2C43381
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 00:50:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 51C062084F
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 00:42:52 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="dX1i2jSK"
+	by mail.kernel.org (Postfix) with ESMTP id 14A992084F
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 00:50:16 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726604AbfCLAmv (ORCPT
+        id S1726513AbfCLAuO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 11 Mar 2019 20:42:51 -0400
-Received: from mail-io1-f68.google.com ([209.85.166.68]:39262 "EHLO
-        mail-io1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726411AbfCLAmu (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 11 Mar 2019 20:42:50 -0400
-Received: by mail-io1-f68.google.com with SMTP id x3so554385ior.6
-        for <linux-kernel@vger.kernel.org>; Mon, 11 Mar 2019 17:42:49 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=cvqMwPmDKPaOeSABeD2s16ykBRIp+PzgwWPBhWyxVEQ=;
-        b=dX1i2jSKZA4k2wZVaRbGVlOezSHggBIsV5kLw8RrBaLOPLmspsgVoGcvMJqguCUerK
-         ZXjOxBHo+QUaUq4URYfyldyG5Zzv4kty3PoFduEHaz82xy9+mwA7lL+SswBTN+qVf32A
-         7M/5ic/YrrJdBRgbpDsy0GXoINrmb2d5RicvwHT2FtsrrVZb5TItDhbpVkZLczf0ElO9
-         bQ3I7ITpjH8owFH7XEzYfZqnsBDDsjeei2t05ThBeLUKWUiqt0OtEqEhQ3df9Iub7Mv9
-         430dYIwg2VG4LNI/gqwxbfjgyXBz6BSUFfTnUOcoiYHDlu+ym45B5n6bGbcw2PcAPQGf
-         ETPw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=cvqMwPmDKPaOeSABeD2s16ykBRIp+PzgwWPBhWyxVEQ=;
-        b=r/GMVtWcfRxDq2kJIGjy6MQbfibluplV0yYhVAGaiyM7xlQ7GDlL+V4hl9WfFwmHSb
-         LxnDKz1ABEqlIMJ0FtZF1qua9zrqIl3javgpDmeCmOgeVCaa3ca79HEiOS1q1J/vFejH
-         Xz0XQLO+rdIG9NPL7Y4rgO5y/zGvFHQtqKPdNe2HtvGxb6MSQukR3JY77dBm14XHcy/1
-         CMhavmgOEiWNdw5IdYMxQVuttRiOcdrutsZbuRLGgRU9hpddxiMwPxxA7TwyiIjEIE9u
-         SjRRCArGHEE1HT1PD6VAx7DfnD579h2+u24FZDjZGFKEDI3HyDS1WeCM/VlMnCPRv5BA
-         WsWQ==
-X-Gm-Message-State: APjAAAXYkafO/bRgF4Ld2J2fdI8ZVbQrxCu5uFSIatcUAwGAFjDVp/6e
-        sJGD8AwqcjZG74i4RBjq0t8o6ZmbnQ7Z5/lc9oai+g==
-X-Google-Smtp-Source: APXvYqxPE3Y0ZduynIOXnYlimlXcEVFvYKo6rh21YlcvE9mHTDddoOF7IceyW08WfpqyGbLMKJEYYcdH3a0XqfZrOeE=
-X-Received: by 2002:a5e:c901:: with SMTP id z1mr3331209iol.304.1552351369117;
- Mon, 11 Mar 2019 17:42:49 -0700 (PDT)
-MIME-Version: 1.0
-References: <20190306235913.6631-1-matthewgarrett@google.com>
- <1551930990.31706.279.camel@linux.ibm.com> <CACdnJuuib7kYEw1o0Bh1p=X+MmJH+pqupECWnWTJ2e2jE2XRkg@mail.gmail.com>
-In-Reply-To: <CACdnJuuib7kYEw1o0Bh1p=X+MmJH+pqupECWnWTJ2e2jE2XRkg@mail.gmail.com>
-From:   Matthew Garrett <mjg59@google.com>
-Date:   Mon, 11 Mar 2019 17:42:38 -0700
-Message-ID: <CACdnJuszfo4gTUD88p+8jeHU5e3hSdp+GEr8_=F1AMThPb7yWg@mail.gmail.com>
-Subject: Re: [PULL REQUEST] Kernel lockdown patches for 5.2
-To:     Mimi Zohar <zohar@linux.ibm.com>
-Cc:     James Morris <jmorris@namei.org>,
-        LSM List <linux-security-module@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        David Howells <dhowells@redhat.com>
-Content-Type: text/plain; charset="UTF-8"
+        Mon, 11 Mar 2019 20:50:14 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:43364 "EHLO mx1.redhat.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725932AbfCLAuO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 11 Mar 2019 20:50:14 -0400
+Received: from smtp.corp.redhat.com (int-mx06.intmail.prod.int.phx2.redhat.com [10.5.11.16])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id 145F530718C8;
+        Tue, 12 Mar 2019 00:50:14 +0000 (UTC)
+Received: from MiWiFi-R3L-srv.redhat.com (ovpn-12-19.pek2.redhat.com [10.72.12.19])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id D0DDC5C579;
+        Tue, 12 Mar 2019 00:50:07 +0000 (UTC)
+From:   Baoquan He <bhe@redhat.com>
+To:     linux-kernel@vger.kernel.org
+Cc:     tglx@linutronix.de, kirill.shutemov@linux.intel.com,
+        mingo@kernel.org, bp@alien8.de, hpa@zytor.com, dyoung@redhat.com,
+        x86@kernel.org, Baoquan He <bhe@redhat.com>
+Subject: [PATCH v2 0/3] Add restrictions for kexec/kdump jumping between 5-level and 4-level kernel
+Date:   Tue, 12 Mar 2019 08:50:01 +0800
+Message-Id: <20190312005004.19182-1-bhe@redhat.com>
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.16
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.40]); Tue, 12 Mar 2019 00:50:14 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Mar 6, 2019 at 8:24 PM Matthew Garrett <mjg59@google.com> wrote:
->
-> On Wed, Mar 6, 2019 at 7:56 PM Mimi Zohar <zohar@linux.ibm.com> wrote:
-> > The kexec and kernel modules patches in this patch set continues to
-> > ignore IMA.  This patch set should up front either provide an
-> > alternative solution to coordinate the different signature
-> > verification methods or rely on the architecture specific policy for
-> > that coordination.
->
-> Hi Mimi,
->
-> I'm working on a patch for this at the moment which can then be added
-> to either patchset. Is there a tree that contains the proposed Power
-> architecture policy? I want to make sure I don't accidentally end up
-> depending on anything x86.
+This is v2 post.
 
-I've been digging into this some more, and want to ensure that I get
-the appropriate semantics. Are we happy with the x86 solution for
-module signing (ie, if the arch policy is enabled and the kernel
-supports module signatures, use module signatures rather than IMA
-signatures)? If so, that just leaves kexec. For platforms that support
-PE signing for kernels (x86 and arm), are we ok punting to that? If so
-then to maintain the semantics we have for lockdown in general (ie, no
-way for a user to modify ring 0 code) then I think that would mean
-allowing kexec_file() only when the following criteria are met:
+The original v1 post can be found here:
+http://lkml.kernel.org/r/20180829141624.13985-1-bhe@redhat.com
 
-1) IMA is appraising kexec with digital signatures, either ima digital
-signatures or ima hashes with associated EVM digital signatures
-2) CONFIG_INTEGRITY_TRUSTED_KEYRING is set in order to prevent an
-attacker being able to add a key to the keyring
+Later a v1 RESEND version:
+http://lkml.kernel.org/r/20190125022817.29506-1-bhe@redhat.com
 
-Does this sound reasonable? Are there any further criteria that are
-required for this?
+This patchset is trying to fix several issues for kexec/kdump when
+dynamic switching of paging mode is enabled in x86_64. The current
+kernel supports 5-level paging mode, and supports dynamically choosing
+paging mode during bootup according to kernel image, hardware and
+kernel parameter setting. This flexibility brings several issues for
+kexec/kdump:
+
+Issues:
+1)
+Dynamic switching between paging mode requires code change in target
+kernel. So we can't kexec jump from 5-level kernel to old 4-level
+kernel which lacks the code change.
+
+2)
+Switching from 5-level paging to 4-level paging kernel would fail, if
+kexec() put kernel image above 64TiB of memory.
+
+3)
+Kdump jumping has similar issue as 2). This require us to only
+reserve crashkernel below 64TB, otherwise jumping from 5-level to
+4-level kernel will fail.
+
+Note:
+Since we have two interfaces kexec_load() and kexec_file_load() to load
+kexec/kdump kernel, handling for them is a little different. For
+kexec_load(), most of the loading job is done in user space utility
+kexec_tools. However, for kexec_file_load(), most of the loading codes
+have moved into kernel because of kernel image verification.
+
+Fixes:
+a) For issue 1), we need check if XLF_5LEVEL is set, otherwise error out
+a message. 
+  -This need be done in both kernel and kexec_tools utility.
+  -Patch 2/3 is the handling of kernel part.
+  -Will post user space patch to kexec mailing list later.
+
+b) For issue 2), we need check if both XLF_5LEVEL and XLF_5LEVEL_ENABLED
+are set, otherwise error out a message.
+  -This only need be done in kexec_tools utility. Because for
+   kexec_file_load(), the current code searches area to put kernel from
+   bottom to up in system RAM, we usually can always find an area below
+   4 GB, no need to worry about 5-level kernel jumping to 4-level
+   kernel. While for kexec_load(), it's top down seraching area for kernel
+   loading, and implemented in user space. We need make sure that
+   5-level kernel find an area under 64 TB for a kexec-ed kernel of
+   4-level.
+  -Will post user space patch to kexec mailing list later.
+
+c) For issues 3), just limit kernel to reserve crashkernel below 64 TB.
+  -This only need be done in kernel.
+  -It doesn't need to check bit XLF_5LEVEL or XLF_5LEVEL_ENABLED, we
+   just simply limit it below 64 TB which should be enough. Because
+   crashernel is reserved during the 1st kernel's bootup, we don't know
+   what kernel will be loaded for kdump usage.
+  -Patch 3/3 handles this.
+
+Concerns from reviewing comments:
+1)
+In v1, hpa raised concern that why the paging mode checking is not done
+before kexec jumping, the discussion can be found here:
+
+http://lkml.kernel.org/r/alpine.DEB.2.21.1809051002020.1416@nanos.tec.linutronix.de
+
+As tglx said, it might be not doable for kdump since kdump kernel's
+reserved crashkernel region only owns a portion of memory, may
+be above 4G; and might be not safer to do paging mode checking and
+switching thing after crash.
+
+2)
+In v1 RESEND post, tglx asked why only bit XLF_5LEVEL is checked, even
+though two bits XLF_5LEVEL or XLF_5LEVEL_ENABLED. So add sentences to
+explain this in *Fixes* b).
+
+v1->v2:
+  Correct the subject of patch 1 according to tglx's comment;
+  Add more information to cover-letter to address reviewers' concerns;
+
+Baoquan He (3):
+  x86/boot: Add xloadflags bits for 5-level kernel checking
+  x86/kexec/64: Error out if try to jump to old 4-level kernel from
+    5-level kernel
+  x86/kdump/64: Change the upper limit of crashkernel reservation
+
+ arch/x86/boot/header.S                | 12 +++++++++++-
+ arch/x86/include/uapi/asm/bootparam.h |  2 ++
+ arch/x86/kernel/kexec-bzimage64.c     |  5 +++++
+ arch/x86/kernel/setup.c               | 18 ++++++++++++++----
+ 4 files changed, 32 insertions(+), 5 deletions(-)
+
+-- 
+2.17.2
+
