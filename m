@@ -2,204 +2,130 @@ Return-Path: <SRS0=J4ZE=RP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_MUTT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8F3FDC43381
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 14:34:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 93383C43381
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 14:34:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 607092147C
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 14:34:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5DE1E2147C
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 14:34:22 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="bwFT+1Up"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Vkv2ID2x"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726733AbfCLOeQ (ORCPT
+        id S1726831AbfCLOeV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 12 Mar 2019 10:34:16 -0400
-Received: from hqemgate16.nvidia.com ([216.228.121.65]:3679 "EHLO
-        hqemgate16.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726496AbfCLOeQ (ORCPT
+        Tue, 12 Mar 2019 10:34:21 -0400
+Received: from mail-qt1-f196.google.com ([209.85.160.196]:46806 "EHLO
+        mail-qt1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726542AbfCLOeR (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 12 Mar 2019 10:34:16 -0400
-Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqemgate16.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
-        id <B5c87c3650000>; Tue, 12 Mar 2019 07:34:13 -0700
-Received: from hqmail.nvidia.com ([172.20.161.6])
-  by hqpgpgate101.nvidia.com (PGP Universal service);
-  Tue, 12 Mar 2019 07:34:14 -0700
-X-PGP-Universal: processed;
-        by hqpgpgate101.nvidia.com on Tue, 12 Mar 2019 07:34:14 -0700
-Received: from HQMAIL109.nvidia.com (172.20.187.15) by HQMAIL103.nvidia.com
- (172.20.187.11) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Tue, 12 Mar
- 2019 14:34:14 +0000
-Received: from HQMAIL106.nvidia.com (172.18.146.12) by HQMAIL109.nvidia.com
- (172.20.187.15) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Tue, 12 Mar
- 2019 14:34:13 +0000
-Received: from hqnvemgw02.nvidia.com (172.16.227.111) by HQMAIL106.nvidia.com
- (172.18.146.12) with Microsoft SMTP Server (TLS) id 15.0.1473.3 via Frontend
- Transport; Tue, 12 Mar 2019 14:34:13 +0000
-Received: from linux.nvidia.com (Not Verified[10.24.34.185]) by hqnvemgw02.nvidia.com with Trustwave SEG (v7,5,8,10121)
-        id <B5c87c3640000>; Tue, 12 Mar 2019 07:34:13 -0700
-From:   Sameer Pujar <spujar@nvidia.com>
-To:     <treding@nvidia.com>, <jonathanh@nvidia.com>
-CC:     <linux-tegra@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        "Sameer Pujar" <spujar@nvidia.com>
-Subject: [PATCH] bus: tegra-aconnect: use devm_clk_*() helpers
-Date:   Tue, 12 Mar 2019 20:04:09 +0530
-Message-ID: <1552401249-29838-1-git-send-email-spujar@nvidia.com>
-X-Mailer: git-send-email 2.7.4
+        Tue, 12 Mar 2019 10:34:17 -0400
+Received: by mail-qt1-f196.google.com with SMTP id z25so2700376qti.13;
+        Tue, 12 Mar 2019 07:34:17 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:date:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=FVv+o7DqfKzJrx4w1CC3UvFpUfwchNmos/cdS+aoglg=;
+        b=Vkv2ID2xNdPqVxq4HGCoThXR1ABkvQRqcUTrsGX0bMcI5SMi+DIpLfpU1+2OAr1KF4
+         0x8AUumAyXTRMFwJVHlLf3uGN2weTREeBDHxZNh6oSoJJaMLGcOKdPscgW+MjltkJeBC
+         CKaXKZpMBBvnt7UCjOGtbGohrx49pf7QyMmbf2F5YG4PQ2+tExtRIIB8huzzCdNNEzx1
+         51YgYoI7/Fp0UX+UxzQNv0M/ZF6s3Jn0A8Mp0fnXOfe3PDQJUPNU+YqfxJIdHO/QMOD3
+         TrqSeaCAbPOnH3XOBzjc2SFiRH5LdUl4pzglIk541/lkvEbFsPHGBJmUcBCSgdMPMh3b
+         5Q0w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:date:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=FVv+o7DqfKzJrx4w1CC3UvFpUfwchNmos/cdS+aoglg=;
+        b=o0GnONuXeAATxtFeXQpSvAakbbOZrJP086I05O15ECaqi6aDQNIrExZZVvJnIJj4JF
+         XXuDQy454FqxxHcCaa8qOgnYlnayMXCwoNuhAMMhh+Lh2v7qKpDEufG0tfYfL7oBi2TQ
+         QEVElNZmq0QYGsfV5ab48Am8pD6yODi2oz/M3DQ6b80DHL/9sWd9inz0v5Ik7tUkrGSj
+         xY2krSzJPu8aFXY+zHGazGikzL1HzJtz2JLdHQ9FOpWassODSCq3mtTy4MmpPj1IetpG
+         AqGemyGm3D5Jf8YVWAHXIwsnKb9yQYguJNiOhiM6keJOgApcmAgkcNfC9l/Dy/NEmTFd
+         1cpA==
+X-Gm-Message-State: APjAAAWRPirWUQx3lWzuQAC88DZtiG+iLqU+fxZmrJFBx/xS4/i5oapD
+        JwbF6OoqvjLtuWSKFwTry8A=
+X-Google-Smtp-Source: APXvYqxOxx9jvtAEvElLFG8JmwKgcXclXJi5Xfm0avThEgPNhEJItNbG4bxTMKHW1v3p5v2pUgP4iw==
+X-Received: by 2002:a0c:80a8:: with SMTP id 37mr2991767qvb.138.1552401256353;
+        Tue, 12 Mar 2019 07:34:16 -0700 (PDT)
+Received: from quaco.ghostprotocols.net (177-59-123-113.3g.claro.net.br. [177.59.123.113])
+        by smtp.gmail.com with ESMTPSA id w33sm5751122qth.34.2019.03.12.07.34.14
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Tue, 12 Mar 2019 07:34:14 -0700 (PDT)
+From:   Arnaldo Carvalho de Melo <arnaldo.melo@gmail.com>
+X-Google-Original-From: Arnaldo Carvalho de Melo <acme@kernel.org>
+Received: by quaco.ghostprotocols.net (Postfix, from userid 1000)
+        id 230904039C; Tue, 12 Mar 2019 11:34:11 -0300 (-03)
+Date:   Tue, 12 Mar 2019 11:34:11 -0300
+To:     Jiri Olsa <jolsa@redhat.com>
+Cc:     Song Liu <songliubraving@fb.com>, bpf@vger.kernel.org,
+        netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
+        ast@kernel.org, daniel@iogearbox.net, kernel-team@fb.com,
+        peterz@infradead.org, acme@redhat.com, jolsa@kernel.org,
+        namhyung@kernel.org, sdf@fomichev.me,
+        Andi Kleen <andi@firstfloor.org>
+Subject: Re: [PATCH v9 perf,bpf 06/15] perf, bpf: save bpf_prog_info in a
+ rbtree in perf_env
+Message-ID: <20190312143411.GD4939@kernel.org>
+References: <20190312053051.2690567-1-songliubraving@fb.com>
+ <20190312053051.2690567-7-songliubraving@fb.com>
+ <20190312131033.GB3034@krava>
 MIME-Version: 1.0
-Content-Type: text/plain
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
-        t=1552401253; bh=2P8UBw6vXPbZ7oSbE4OEK5sJXWd0pcAkC41A42Jcnic=;
-        h=X-PGP-Universal:From:To:CC:Subject:Date:Message-ID:X-Mailer:
-         MIME-Version:Content-Type;
-        b=bwFT+1Upvhl6l/CHjqlKUm9EcTj956bxhpDK0OQ2A96Dp8SsbesGqGJuO7aEle1c2
-         XFAlkPZbF3zsbZY6xLMxlETZvOiARUDE+gfwagzQBK5r2YhQKMvRYSdJ24Y2ywdiF4
-         2ONq75wZvwmqLvUTjaStbYfCZioY2vH/09ZfC2wtO11ZKbYniLJZhz5MTx7FHYNgpQ
-         vgCGl7oUo3s/GIYSCk7My6Wc8ZHbQ4w7YFkhsTzR8ZeOQxbEraO4lVj8tP8JdCuEhd
-         B2xRBDcfYwanRcASJ83+7VchzA9EQo4CKQhQ4ChIbaPMinGu2Kc324nWV9WDLGaySU
-         Jf2guh6Kvavww==
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190312131033.GB3034@krava>
+X-Url:  http://acmel.wordpress.com
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-aconnect bus driver is using pm_clk_*() for managing required clocks. With
-this, clocks seem to be always ON. This happens because, the clock prepare
-count is incremented in pm_clock_acquire() which is called during device
-probe(). The count is decremented during remove(). Hence the prepare_count
-for the clock is non-zero till the remove() gets executed. This is true for
-BPMP managed clock sources, where clock enable and disable happens during
-prepare and unprepare phases respectively. Thus clocks remain ON always and
-that is why pm_clk_*() cannot be used on Tegra.
+Em Tue, Mar 12, 2019 at 02:10:33PM +0100, Jiri Olsa escreveu:
+> On Mon, Mar 11, 2019 at 10:30:42PM -0700, Song Liu wrote:
+> 
+> SNIP
+> 
+> > +/* purge data in bpf_progs.infos tree */
+> > +static void perf_env__purge_bpf(struct perf_env *env)
+> > +{
+> > +	struct rb_root *root;
+> > +	struct rb_node *next;
+> > +
+> > +	down_write(&env->bpf_progs.lock);
+> > +
+> > +	root = &env->bpf_progs.infos;
+> > +	next = rb_first(root);
+> > +
+> > +	while (next) {
+> > +		struct bpf_prog_info_node *node;
+> > +
+> > +		node = rb_entry(next, struct bpf_prog_info_node, rb_node);
+> > +		next = rb_next(&node->rb_node);
+> > +		rb_erase(&node->rb_node, root);
+> > +		free(node);
+> > +	}
+> 
+> 	env->bpf_progs.infos_cnt = 0;  ?
+> 
+> but it's probably not needed given the current usage
 
-This patch replaces pm_clk_*() with devm_clk_*() and runtime PM callbacks
-reflect this. System suspend/resume can use pm_runtime_force_suspend/resume
+Better be safe than sorry, see the Andi's "perf, tools, stat: Avoid
+memory overrun with -r" :-)
 
-Suggested-by: Mohan Kumar D <mkumard@nvidia.com>
-Reviewed-by: Jonathan Hunter <jonathanh@nvidia.com>
-Signed-off-by: Sameer Pujar <spujar@nvidia.com>
----
- drivers/bus/tegra-aconnect.c | 66 ++++++++++++++++++++++++++++++--------------
- 1 file changed, 46 insertions(+), 20 deletions(-)
+I'll add the infos_cnt = 0 here.
+ 
+> jirka
+> 
+> > +	up_write(&env->bpf_progs.lock);
+> > +}
+> 
+> SNIP
 
-diff --git a/drivers/bus/tegra-aconnect.c b/drivers/bus/tegra-aconnect.c
-index 084ae28..ac58142 100644
---- a/drivers/bus/tegra-aconnect.c
-+++ b/drivers/bus/tegra-aconnect.c
-@@ -12,28 +12,38 @@
- #include <linux/module.h>
- #include <linux/of_platform.h>
- #include <linux/platform_device.h>
--#include <linux/pm_clock.h>
- #include <linux/pm_runtime.h>
- 
-+struct tegra_aconnect {
-+	struct clk	*ape_clk;
-+	struct clk	*apb2ape_clk;
-+};
-+
- static int tegra_aconnect_probe(struct platform_device *pdev)
- {
--	int ret;
-+	struct tegra_aconnect *aconnect;
- 
- 	if (!pdev->dev.of_node)
- 		return -EINVAL;
- 
--	ret = pm_clk_create(&pdev->dev);
--	if (ret)
--		return ret;
-+	aconnect = devm_kzalloc(&pdev->dev, sizeof(struct tegra_aconnect),
-+				GFP_KERNEL);
-+	if (!aconnect)
-+		return -ENOMEM;
- 
--	ret = of_pm_clk_add_clk(&pdev->dev, "ape");
--	if (ret)
--		goto clk_destroy;
-+	aconnect->ape_clk = devm_clk_get(&pdev->dev, "ape");
-+	if (IS_ERR(aconnect->ape_clk)) {
-+		dev_err(&pdev->dev, "Can't retrieve ape clock\n");
-+		return PTR_ERR(aconnect->ape_clk);
-+	}
- 
--	ret = of_pm_clk_add_clk(&pdev->dev, "apb2ape");
--	if (ret)
--		goto clk_destroy;
-+	aconnect->apb2ape_clk = devm_clk_get(&pdev->dev, "apb2ape");
-+	if (IS_ERR(aconnect->apb2ape_clk)) {
-+		dev_err(&pdev->dev, "Can't retrieve apb2ape clock\n");
-+		return PTR_ERR(aconnect->apb2ape_clk);
-+	}
- 
-+	dev_set_drvdata(&pdev->dev, aconnect);
- 	pm_runtime_enable(&pdev->dev);
- 
- 	of_platform_populate(pdev->dev.of_node, NULL, NULL, &pdev->dev);
-@@ -41,35 +51,51 @@ static int tegra_aconnect_probe(struct platform_device *pdev)
- 	dev_info(&pdev->dev, "Tegra ACONNECT bus registered\n");
- 
- 	return 0;
--
--clk_destroy:
--	pm_clk_destroy(&pdev->dev);
--
--	return ret;
- }
- 
- static int tegra_aconnect_remove(struct platform_device *pdev)
- {
- 	pm_runtime_disable(&pdev->dev);
- 
--	pm_clk_destroy(&pdev->dev);
--
- 	return 0;
- }
- 
- static int tegra_aconnect_runtime_resume(struct device *dev)
- {
--	return pm_clk_resume(dev);
-+	struct tegra_aconnect *aconnect = dev_get_drvdata(dev);
-+	int ret;
-+
-+	ret = clk_prepare_enable(aconnect->ape_clk);
-+	if (ret) {
-+		dev_err(dev, "ape clk_enable failed: %d\n", ret);
-+		return ret;
-+	}
-+
-+	ret = clk_prepare_enable(aconnect->apb2ape_clk);
-+	if (ret) {
-+		clk_disable_unprepare(aconnect->ape_clk);
-+		dev_err(dev, "apb2ape clk_enable failed: %d\n", ret);
-+		return ret;
-+	}
-+
-+	return 0;
- }
- 
- static int tegra_aconnect_runtime_suspend(struct device *dev)
- {
--	return pm_clk_suspend(dev);
-+	struct tegra_aconnect *aconnect = dev_get_drvdata(dev);
-+
-+	clk_disable_unprepare(aconnect->ape_clk);
-+	clk_disable_unprepare(aconnect->apb2ape_clk);
-+
-+	return 0;
- }
- 
- static const struct dev_pm_ops tegra_aconnect_pm_ops = {
- 	SET_RUNTIME_PM_OPS(tegra_aconnect_runtime_suspend,
- 			   tegra_aconnect_runtime_resume, NULL)
-+	SET_NOIRQ_SYSTEM_SLEEP_PM_OPS(pm_runtime_force_suspend,
-+				      pm_runtime_force_resume)
- };
- 
- static const struct of_device_id tegra_aconnect_of_match[] = {
 -- 
-2.7.4
 
+- Arnaldo
