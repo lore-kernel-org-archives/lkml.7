@@ -6,50 +6,50 @@ X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,
 	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B59FBC43381
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 09:20:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 94008C43381
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 09:20:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8588C214AF
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 09:20:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6E9A02171F
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 09:20:32 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726870AbfCLJU1 (ORCPT
+        id S1726843AbfCLJU0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 12 Mar 2019 05:20:27 -0400
-Received: from mout.kundenserver.de ([212.227.126.133]:42555 "EHLO
+        Tue, 12 Mar 2019 05:20:26 -0400
+Received: from mout.kundenserver.de ([212.227.126.131]:36581 "EHLO
         mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726411AbfCLJTs (ORCPT
+        with ESMTP id S1725767AbfCLJTt (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 12 Mar 2019 05:19:48 -0400
+        Tue, 12 Mar 2019 05:19:49 -0400
 Received: from orion.localdomain ([77.4.190.91]) by mrelayeu.kundenserver.de
  (mreue012 [212.227.15.167]) with ESMTPSA (Nemesis) id
- 1MeUPU-1gTTsD30lw-00aYsI; Tue, 12 Mar 2019 10:19:37 +0100
+ 1Mdf3x-1gUIgd11AP-00ZjWl; Tue, 12 Mar 2019 10:19:38 +0100
 From:   "Enrico Weigelt, metux IT consult" <info@metux.net>
 To:     linux-kernel@vger.kernel.org
 Cc:     axboe@kernel.dk, hdegoede@redhat.com, b.zolnierkie@samsung.com,
         linus.walleij@linaro.org, linux-ide@vger.kernel.org,
         linux-tegra@vger.kernel.org
-Subject: [PATCH 2/9] drivers: ata: ahci_seattle: use devm_platform_ioremap_resource()
-Date:   Tue, 12 Mar 2019 10:19:27 +0100
-Message-Id: <1552382374-28789-2-git-send-email-info@metux.net>
+Subject: [PATCH 4/9] drivers: ata: ahci_xgene: use devm_platform_ioremap_resource()
+Date:   Tue, 12 Mar 2019 10:19:29 +0100
+Message-Id: <1552382374-28789-4-git-send-email-info@metux.net>
 X-Mailer: git-send-email 1.9.1
 In-Reply-To: <1552382374-28789-1-git-send-email-info@metux.net>
 References: <1552382374-28789-1-git-send-email-info@metux.net>
-X-Provags-ID: V03:K1:Di13Jip8xEGvSp6mzn349XBink/bXtPmF08DrpPdbMeRgT036OW
- vgH7ZsaEJcB21tUMuqNidPfuWvmO2CnaJgUMeFTGXsHwKXs11yVIZ3R0EsconIomWT9ZVPV
- E4R3NggPezf8Fl3sBS7rXIb5R1wQ12jZh+W43nWqNXmMVtgCtpCo3jf080qdZZ7Sy1kgeEt
- NWyeRuVKQ01OHrC1/pmIg==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:F3mLKTxXFsk=:Yc1RaDIKCS8zGDZg0NMHwW
- aLYm3dQpbtsgDJjlTFSXLMNGX9y71bfX3vhNi9lybznAMIYbtEDH3XCWuetGAlRGYvr7UqR+j
- G1eyfLyKQabUE3ST5AcIyYnUs0BfvizupDFCZcBUn04M4QxcLSw5r6AhfG3SzKMi375PPpZua
- JmzXNa5tHOCieF1h2bs9tpx5pcIE0W3n3/S1UChxHtdtVY7HKYAurY3G2foaMjjPI2mP78rJY
- pATV5AO9n12J1vKJcE4YuwrvtYX76nBc87j8sbCwmKhQug6dkhqNdVog6xKI2HL/tqM1AmYC5
- VNKiB0kT9N0AslO4f/NjlCRHb6vHf0KysX6u0tz/hFDFYMw/wozygTGnIe7u57s4hN/WxksJK
- ZLl3t+8r4hQJYjLzVKYNBVFEliNIhjTqJOcdVMqud7BdIem6THX1x0deYYdOHYOUSKvhdV8sg
- 5CADgFgkpjoA5IbrkIPdxkI8zPHbqVY+XdgzWJAR2BOy5d/sB0EJcgG+fLBxBpVOUa5J/lids
- aNb3hzBUfs931+1cxF74DgfuMUPWxsnr54Df7HBAkVe/L1JH50buTxj7SCgOh6vWmYkYKtBaX
- 0K3tdbGsT0WCVAIt8EpiuNYtLquNYvRcRoLyXTpUx/qWz4KBDCUfGWWxb6icm726WpmqOMLTV
- c/eNeGae9kQ94wyr0h82ea8Fp/fs89oUI6zThsZIEll596X3MPUsbtMn48+ubZb9sLp6POytC
- 5Gp/U+p0+CibUhjtg2AVfl6ujfWCBecmxMbWKA==
+X-Provags-ID: V03:K1:0hkIfb4mFdlNk+YlUGk4xjL+VdrE2kwL/2RgqWO+KuJK2qXhXuN
+ cSe7EA61KOU7T7waLIM4pY3pUInCO9zALEHXbuX5dNcgxDNi2uV3+GeaunrDMWUUy8caDqa
+ ni6bh+Q/nowb7MfSaeKgBNBrqAjZhIyAgTqdlLu0/N2E/uFh1QjGRrlzBJt8nd5s9IXiqxy
+ SbUTckVttv594ahyfY3jQ==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:dtQZE7dvR/g=:RUc7WPozR6MDiUSE3ABBOr
+ 3Xe0bbPxibYkqZZthEMNlEX1+oI+/ubxEQMJQebkoM6mB5pHO3Nfi27h5nzjhVJ344fw6J2/y
+ ZIUVRTdXMA6XLVLwObE26n6gcebBmyklDVrBO2ONAk6m7FrCes0sDrTz0ZyShAseGyRmSVWCU
+ nQdUnmvo6ffRO9Kfo6WT3IJwpLVJveL+gffK8ceyki34mRW6CBZZQh9ha5rz/eOrKNiHTmvkV
+ qdhSCotr55GLFbzWaLzsuxWnnTTruK2zqBtqcXBJZ6WGSAU0ZQm9qEUGdJYy7t5v0k47aoDA7
+ aNJ1mpJIZ07AV3i497xx9guIu7igkDhX/dJgM4IjNAUCHasrHVfdAyrDKa+XHwcr6KlaCGWrH
+ sYtHUlLpigtqPFwxq4eTNH06Yr24EIGIw7mLxKZUwkQLM2NneCZR1JMqzIsuylPbCaWguSl7+
+ zXLRc9nQwDESZcMFLMq07MLx1ahpuhTTyUHXLDIQPtbrXjjpEWUNqMN7gUjIHmjOQ6xnO8o4E
+ A3Am+yOve9tWUwv2SS3GIe4l1mP5CWYDdD8XbK8dx8oZJJEaKLBURcq6yGbVfx3tCnarBvjMj
+ ncJ32hsnSeQZqW5tfUIfGALYyUv/Ck7XvEjARC9lr+BxFKNFVFNJU1BFag39w7upXWdQtuFDU
+ yTbWvGxqVnnTUzerCV2sfDAHzLt5fBzgMyLxjX3yPtKQOk4D/7HgVSR1Z1DoIIEfq1jC0xP7k
+ 4ffvkX4+3/owtm+4m7QN6CH6j+J/F2lO6EvxiA==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
@@ -60,23 +60,60 @@ and devm_ioremap_resource() together.
 
 Signed-off-by: Enrico Weigelt, metux IT consult <info@metux.net>
 ---
- drivers/ata/ahci_seattle.c | 3 +--
- 1 file changed, 1 insertion(+), 2 deletions(-)
+ drivers/ata/ahci_xgene.c | 21 +++++++--------------
+ 1 file changed, 7 insertions(+), 14 deletions(-)
 
-diff --git a/drivers/ata/ahci_seattle.c b/drivers/ata/ahci_seattle.c
-index e57b6f9..9a10d81 100644
---- a/drivers/ata/ahci_seattle.c
-+++ b/drivers/ata/ahci_seattle.c
-@@ -140,8 +140,7 @@ static const struct ata_port_info *ahci_seattle_get_port_info(
- 	if (!plat_data)
- 		return &ahci_port_info;
+diff --git a/drivers/ata/ahci_xgene.c b/drivers/ata/ahci_xgene.c
+index 7e157e1..99c622c 100644
+--- a/drivers/ata/ahci_xgene.c
++++ b/drivers/ata/ahci_xgene.c
+@@ -752,7 +752,6 @@ static int xgene_ahci_probe(struct platform_device *pdev)
+ 	struct device *dev = &pdev->dev;
+ 	struct ahci_host_priv *hpriv;
+ 	struct xgene_ahci_context *ctx;
+-	struct resource *res;
+ 	const struct of_device_id *of_devid;
+ 	enum xgene_ahci_version version = XGENE_AHCI_V1;
+ 	const struct ata_port_info *ppi[] = { &xgene_ahci_v1_port_info,
+@@ -772,31 +771,25 @@ static int xgene_ahci_probe(struct platform_device *pdev)
+ 	ctx->dev = dev;
  
--	plat_data->sgpio_ctrl = devm_ioremap_resource(dev,
--			      platform_get_resource(pdev, IORESOURCE_MEM, 1));
-+	plat_data->sgpio_ctrl = devm_platform_ioremap_resource(pdev, 1);
- 	if (IS_ERR(plat_data->sgpio_ctrl))
- 		return &ahci_port_info;
+ 	/* Retrieve the IP core resource */
+-	res = platform_get_resource(pdev, IORESOURCE_MEM, 1);
+-	ctx->csr_core = devm_ioremap_resource(dev, res);
++	ctx->csr_core = devm_platform_ioremap_resource(pdev, 1);
+ 	if (IS_ERR(ctx->csr_core))
+ 		return PTR_ERR(ctx->csr_core);
  
+ 	/* Retrieve the IP diagnostic resource */
+-	res = platform_get_resource(pdev, IORESOURCE_MEM, 2);
+-	ctx->csr_diag = devm_ioremap_resource(dev, res);
++	ctx->csr_diag = devm_platform_ioremap_resource(pdev, 2);
+ 	if (IS_ERR(ctx->csr_diag))
+ 		return PTR_ERR(ctx->csr_diag);
+ 
+ 	/* Retrieve the IP AXI resource */
+-	res = platform_get_resource(pdev, IORESOURCE_MEM, 3);
+-	ctx->csr_axi = devm_ioremap_resource(dev, res);
++	ctx->csr_axi = devm_platform_ioremap_resource(pdev, 3);
+ 	if (IS_ERR(ctx->csr_axi))
+ 		return PTR_ERR(ctx->csr_axi);
+ 
+ 	/* Retrieve the optional IP mux resource */
+-	res = platform_get_resource(pdev, IORESOURCE_MEM, 4);
+-	if (res) {
+-		void __iomem *csr = devm_ioremap_resource(dev, res);
+-		if (IS_ERR(csr))
+-			return PTR_ERR(csr);
+-
+-		ctx->csr_mux = csr;
++	ctx->csr_mux = csr = devm_platform_ioremap_resource(pdev, 4);
++	if (IS_ERR(ctx->csr_mux)) {
++		dev_info(&pdev->dev, "cant get ip mux resource (optional)");
++		ctx->csr_mux = NULL;
+ 	}
+ 
+ 	of_devid = of_match_device(xgene_ahci_of_match, dev);
 -- 
 1.9.1
 
