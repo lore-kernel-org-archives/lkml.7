@@ -2,75 +2,110 @@ Return-Path: <SRS0=J4ZE=RP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=FREEMAIL_FORGED_FROMDOMAIN,
-	FREEMAIL_FROM,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 54575C43381
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 17:35:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8D836C4360F
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 17:35:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 311EB206DF
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 17:35:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 57FE3206DF
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 17:35:24 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1552412124;
+	bh=HLwUd72mDoW4h2pAq8JlDL7IXIsRe8w8TjGbEh52p70=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=cg8CbPpv9Wt25LSQ3TYWpU6NRLwMuVFOQG/Thg9NaJWt9Ennem1L+BaiKqGotVyCu
+	 XO74Jzf/EEGT3oUTpdCvxuJTch1jPEiMt0kUde8mIzkDvz0bds63bFPcgaKcNnmIMc
+	 FaLN13C1jE5PqCe0Q2XQoM2Tqxxt8OTFYAI95/js=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729822AbfCLRfT (ORCPT
+        id S1729492AbfCLRfL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 12 Mar 2019 13:35:19 -0400
-Received: from smtp3-g21.free.fr ([212.27.42.3]:56654 "EHLO smtp3-g21.free.fr"
+        Tue, 12 Mar 2019 13:35:11 -0400
+Received: from mail.kernel.org ([198.145.29.99]:59628 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729354AbfCLRfQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 12 Mar 2019 13:35:16 -0400
-Received: from [192.168.108.8] (unknown [213.36.7.13])
-        (Authenticated sender: marc.w.gonzalez)
-        by smtp3-g21.free.fr (Postfix) with ESMTPSA id 9C78313F8E2;
-        Tue, 12 Mar 2019 18:34:55 +0100 (CET)
-Subject: Re: [RFC PATCH v1] PCI: qcom: Use quirk to override incorrect device
- class
-From:   Marc Gonzalez <marc.w.gonzalez@free.fr>
-To:     Stanimir Varbanov <svarbanov@mm-sol.com>,
-        Bjorn Helgaas <bhelgaas@google.com>
-Cc:     Andy Gross <andy.gross@linaro.org>,
-        David Brown <david.brown@linaro.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        PCI <linux-pci@vger.kernel.org>,
-        MSM <linux-arm-msm@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Jeffrey Hugo <jhugo@codeaurora.org>
-References: <94bb3f22-c5a7-1891-9d89-42a520e9a592@free.fr>
- <65321fe3-ca29-c454-63ae-98a46c2e5158@mm-sol.com>
- <1205cbfb-ac06-63a5-9401-75d4e68b15b5@free.fr>
-Message-ID: <38ad143b-3b07-4d19-8ccd-ca39fb51e53d@free.fr>
-Date:   Tue, 12 Mar 2019 18:34:55 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.5.1
+        id S1729361AbfCLRQy (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 12 Mar 2019 13:16:54 -0400
+Received: from localhost (unknown [104.133.8.98])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 1EE4B217D8;
+        Tue, 12 Mar 2019 17:16:54 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1552411014;
+        bh=HLwUd72mDoW4h2pAq8JlDL7IXIsRe8w8TjGbEh52p70=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=zyvJ1VCEk/HHtf9ZlMxdOd+SobO4zjLVqaeU5JjeZZQQ/1+/mTntd/UCgSTAiLT37
+         zaP9jfMatNCgR0T15rO2crd/kGb4JtEGV6OOaRkWDyD3qq8HxeJXvUQOhPVYxBqc32
+         He7q7G90J8LHR1ZltBoICHpccp6HN9hw5AcfkkJ8=
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     linux-kernel@vger.kernel.org
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        stable@vger.kernel.org,
+        Sudarsana Reddy Kalluru <skalluru@marvell.com>,
+        Ariel Elior <aelior@marvell.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.14 119/135] qed: Consider TX tcs while deriving the max num_queues for PF.
+Date:   Tue, 12 Mar 2019 10:09:26 -0700
+Message-Id: <20190312170352.171128707@linuxfoundation.org>
+X-Mailer: git-send-email 2.21.0
+In-Reply-To: <20190312170341.127810985@linuxfoundation.org>
+References: <20190312170341.127810985@linuxfoundation.org>
+User-Agent: quilt/0.65
+X-stable: review
+X-Patchwork-Hint: ignore
 MIME-Version: 1.0
-In-Reply-To: <1205cbfb-ac06-63a5-9401-75d4e68b15b5@free.fr>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 12/03/2019 18:18, Marc Gonzalez wrote:
+4.14-stable review patch.  If anyone has any objections, please let me know.
 
-> On 12/03/2019 13:42, Stanimir Varbanov wrote:
-> 
->> I wonder, in case that dw_pcie_setup_rc() already has a write to
->> PCI_CLASS_DEVICE configuration register to set it as a bridge do we
->> still need to do the above fixup?
-> 
-> I don't know, I don't have an affected device. Unless the msm8998 /is/ affected,
-> and dw_pcie_setup_rc() actually fixes it?
+------------------
 
-I think you hit the nail on the head...
+[ Upstream commit fb1faab74ddef9ec2d841d54e5d0912a097b3abe ]
 
-If I comment out
-//dw_pcie_wr_own_conf(pp, PCI_CLASS_DEVICE, 2, PCI_CLASS_BRIDGE_PCI);
-from dw_pcie_setup_rc()
-then pci_class() returns 0xff000000 instead of 0x6040000
+Max supported queues is derived incorrectly in the case of multi-CoS.
+Need to consider TCs while calculating num_queues for PF.
 
-So perhaps you're right: the quirk can be omitted altogether.
-Unless it is not possible to program the device class on older chips?
+Signed-off-by: Sudarsana Reddy Kalluru <skalluru@marvell.com>
+Signed-off-by: Ariel Elior <aelior@marvell.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
+---
+ drivers/net/ethernet/qlogic/qed/qed_l2.c | 5 +++--
+ 1 file changed, 3 insertions(+), 2 deletions(-)
 
-Regards.
+diff --git a/drivers/net/ethernet/qlogic/qed/qed_l2.c b/drivers/net/ethernet/qlogic/qed/qed_l2.c
+index 4ffdde755db7..62cde3854a5c 100644
+--- a/drivers/net/ethernet/qlogic/qed/qed_l2.c
++++ b/drivers/net/ethernet/qlogic/qed/qed_l2.c
+@@ -2170,7 +2170,7 @@ static int qed_fill_eth_dev_info(struct qed_dev *cdev,
+ 			u16 num_queues = 0;
+ 
+ 			/* Since the feature controls only queue-zones,
+-			 * make sure we have the contexts [rx, tx, xdp] to
++			 * make sure we have the contexts [rx, xdp, tcs] to
+ 			 * match.
+ 			 */
+ 			for_each_hwfn(cdev, i) {
+@@ -2180,7 +2180,8 @@ static int qed_fill_eth_dev_info(struct qed_dev *cdev,
+ 				u16 cids;
+ 
+ 				cids = hwfn->pf_params.eth_pf_params.num_cons;
+-				num_queues += min_t(u16, l2_queues, cids / 3);
++				cids /= (2 + info->num_tc);
++				num_queues += min_t(u16, l2_queues, cids);
+ 			}
+ 
+ 			/* queues might theoretically be >256, but interrupts'
+-- 
+2.19.1
+
+
+
