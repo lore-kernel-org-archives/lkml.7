@@ -4,51 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8361BC43381
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 18:01:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C0DD6C43381
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 18:01:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 54B80205C9
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 18:01:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8D9A9205C9
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 18:01:48 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1552413700;
-	bh=B9LOU82fvSROLQkTZaLRax5A6S0zwpbmGXxZz51ibuY=;
+	s=default; t=1552413708;
+	bh=Y6AD5yQUcHxaAcnbJPtTbKl7/p7YCiYvp8vnaTv4/JY=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=M7HWDA/RqwH/EalOyFw/RCgOfm0evOJMUOz1suClu2K8EoNYkIaa3hCodnRx17J8e
-	 +QKMNAc4/7bRbgM0aRlspxL93yVJ0iQjPU8VeHWrhas4lrPjE85WPAZ8TloinvHbWs
-	 y2upURr/BJcGJl3nYILxr/vJPs6EvGpEdG77G4qY=
+	b=e1oH4qJlSUfWkQuznAuf3p9Rq3v7z7H0rSVNiiogXLAssCqBJ2Hi/kovaApkW1Cse
+	 Pq0OV1F+2RmqOZ0JLjGQZmhZqpbuYtocB6nCfPPno5UubCc8padpxlm04rucXyiiS/
+	 3ogvhOx66noc1jCKyj3gukk6E/bBgzPv9o3JxgYs=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728558AbfCLSBj (ORCPT
+        id S1728031AbfCLSBq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 12 Mar 2019 14:01:39 -0400
-Received: from mail.kernel.org ([198.145.29.99]:49536 "EHLO mail.kernel.org"
+        Tue, 12 Mar 2019 14:01:46 -0400
+Received: from mail.kernel.org ([198.145.29.99]:49586 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727820AbfCLRNL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 12 Mar 2019 13:13:11 -0400
+        id S1727816AbfCLRNK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 12 Mar 2019 13:13:10 -0400
 Received: from localhost (unknown [104.133.8.98])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 6AEAA217D4;
-        Tue, 12 Mar 2019 17:13:10 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id B8DFF2173C;
+        Tue, 12 Mar 2019 17:13:09 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1552410790;
-        bh=B9LOU82fvSROLQkTZaLRax5A6S0zwpbmGXxZz51ibuY=;
+        s=default; t=1552410789;
+        bh=Y6AD5yQUcHxaAcnbJPtTbKl7/p7YCiYvp8vnaTv4/JY=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Q018Ldomh8IkOGBp8Mh0bTOjrlI/x2/qGeiKL7yNrf2gY/sGI7aWOTxFc59ztKpQy
-         9GAwkwGeI23RSV9JQtrSFB/GP86YVyk1l+GrGMm71WA9Gu9RuqkaPzDMVCxnRKEtG9
-         deRtQBaXqyBCoph4FU4gyAYSBo/zAtvsv/pDHd4E=
+        b=bECDWiwPbI55IqmF+VdUxyqdE6m3AC6lHjPX0XJjxxAP4hrpy1eVXs87rpVoVzWi0
+         WXOJjCm+gzoxzF/QcFANq5WtOLPIdk2MjLTEi92Xuxbno/SyTQGBHp0ffkFk03Mhdn
+         CFqTxiTlB0JRW4EKqYnvew/0VRaV5hhadN1WLsvU=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Julian Wiedmann <jwi@linux.ibm.com>,
-        Alexandra Winter <wintera@linux.ibm.com>,
-        "David S. Miller" <davem@davemloft.net>,
+        stable@vger.kernel.org, Evan Quan <evan.quan@amd.com>,
+        Alex Deucher <alexander.deucher@amd.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.20 126/171] s390/qeth: fix use-after-free in error path
-Date:   Tue, 12 Mar 2019 10:08:26 -0700
-Message-Id: <20190312170358.610986906@linuxfoundation.org>
+Subject: [PATCH 4.20 102/171] drm/radeon: check if device is root before getting pci speed caps
+Date:   Tue, 12 Mar 2019 10:08:02 -0700
+Message-Id: <20190312170356.883488003@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190312170347.868927101@linuxfoundation.org>
 References: <20190312170347.868927101@linuxfoundation.org>
@@ -67,68 +66,67 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-[ Upstream commit afa0c5904ba16d59b0454f7ee4c807dae350f432 ]
+[ Upstream commit afeff4c16edaa6275b903f82b0561406259aa3a3 ]
 
-The error path in qeth_alloc_qdio_buffers() that takes care of
-cleaning up the Output Queues is buggy. It first frees the queue, but
-then calls qeth_clear_outq_buffers() with that very queue struct.
+Check if the device is root rather before attempting to see what
+speeds the pcie port supports.  Fixes a crash with pci passthrough
+in a VM.
 
-Make the call to qeth_clear_outq_buffers() part of the free action
-(in the correct order), and while at it fix the naming of the helper.
-
-Fixes: 0da9581ddb0f ("qeth: exploit asynchronous delivery of storage blocks")
-Signed-off-by: Julian Wiedmann <jwi@linux.ibm.com>
-Reviewed-by: Alexandra Winter <wintera@linux.ibm.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
+Bug: https://bugs.freedesktop.org/show_bug.cgi?id=109366
+Reviewed-by: Evan Quan <evan.quan@amd.com>
+Signed-off-by: Alex Deucher <alexander.deucher@amd.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/s390/net/qeth_core_main.c | 15 ++++++---------
- 1 file changed, 6 insertions(+), 9 deletions(-)
+ drivers/gpu/drm/radeon/ci_dpm.c | 5 +++--
+ drivers/gpu/drm/radeon/si_dpm.c | 5 +++--
+ 2 files changed, 6 insertions(+), 4 deletions(-)
 
-diff --git a/drivers/s390/net/qeth_core_main.c b/drivers/s390/net/qeth_core_main.c
-index 623ddda5d2ba..89cc172820ca 100644
---- a/drivers/s390/net/qeth_core_main.c
-+++ b/drivers/s390/net/qeth_core_main.c
-@@ -2397,11 +2397,12 @@ static int qeth_init_qdio_out_buf(struct qeth_qdio_out_q *q, int bidx)
- 	return 0;
- }
+diff --git a/drivers/gpu/drm/radeon/ci_dpm.c b/drivers/gpu/drm/radeon/ci_dpm.c
+index d587779a80b4..a97294ac96d5 100644
+--- a/drivers/gpu/drm/radeon/ci_dpm.c
++++ b/drivers/gpu/drm/radeon/ci_dpm.c
+@@ -5676,7 +5676,7 @@ int ci_dpm_init(struct radeon_device *rdev)
+ 	u16 data_offset, size;
+ 	u8 frev, crev;
+ 	struct ci_power_info *pi;
+-	enum pci_bus_speed speed_cap;
++	enum pci_bus_speed speed_cap = PCI_SPEED_UNKNOWN;
+ 	struct pci_dev *root = rdev->pdev->bus->self;
+ 	int ret;
  
--static void qeth_free_qdio_out_buf(struct qeth_qdio_out_q *q)
-+static void qeth_free_output_queue(struct qeth_qdio_out_q *q)
- {
- 	if (!q)
- 		return;
+@@ -5685,7 +5685,8 @@ int ci_dpm_init(struct radeon_device *rdev)
+ 		return -ENOMEM;
+ 	rdev->pm.dpm.priv = pi;
  
-+	qeth_clear_outq_buffers(q, 1);
- 	qdio_free_buffers(q->qdio_bufs, QDIO_MAX_BUFFERS_PER_Q);
- 	kfree(q);
- }
-@@ -2475,10 +2476,8 @@ static int qeth_alloc_qdio_buffers(struct qeth_card *card)
- 		card->qdio.out_qs[i]->bufs[j] = NULL;
- 	}
- out_freeoutq:
--	while (i > 0) {
--		qeth_free_qdio_out_buf(card->qdio.out_qs[--i]);
--		qeth_clear_outq_buffers(card->qdio.out_qs[i], 1);
--	}
-+	while (i > 0)
-+		qeth_free_output_queue(card->qdio.out_qs[--i]);
- 	kfree(card->qdio.out_qs);
- 	card->qdio.out_qs = NULL;
- out_freepool:
-@@ -2511,10 +2510,8 @@ static void qeth_free_qdio_buffers(struct qeth_card *card)
- 	qeth_free_buffer_pool(card);
- 	/* free outbound qdio_qs */
- 	if (card->qdio.out_qs) {
--		for (i = 0; i < card->qdio.no_out_queues; ++i) {
--			qeth_clear_outq_buffers(card->qdio.out_qs[i], 1);
--			qeth_free_qdio_out_buf(card->qdio.out_qs[i]);
--		}
-+		for (i = 0; i < card->qdio.no_out_queues; i++)
-+			qeth_free_output_queue(card->qdio.out_qs[i]);
- 		kfree(card->qdio.out_qs);
- 		card->qdio.out_qs = NULL;
- 	}
+-	speed_cap = pcie_get_speed_cap(root);
++	if (!pci_is_root_bus(rdev->pdev->bus))
++		speed_cap = pcie_get_speed_cap(root);
+ 	if (speed_cap == PCI_SPEED_UNKNOWN) {
+ 		pi->sys_pcie_mask = 0;
+ 	} else {
+diff --git a/drivers/gpu/drm/radeon/si_dpm.c b/drivers/gpu/drm/radeon/si_dpm.c
+index 8fb60b3af015..0a785ef0ab66 100644
+--- a/drivers/gpu/drm/radeon/si_dpm.c
++++ b/drivers/gpu/drm/radeon/si_dpm.c
+@@ -6899,7 +6899,7 @@ int si_dpm_init(struct radeon_device *rdev)
+ 	struct ni_power_info *ni_pi;
+ 	struct si_power_info *si_pi;
+ 	struct atom_clock_dividers dividers;
+-	enum pci_bus_speed speed_cap;
++	enum pci_bus_speed speed_cap = PCI_SPEED_UNKNOWN;
+ 	struct pci_dev *root = rdev->pdev->bus->self;
+ 	int ret;
+ 
+@@ -6911,7 +6911,8 @@ int si_dpm_init(struct radeon_device *rdev)
+ 	eg_pi = &ni_pi->eg;
+ 	pi = &eg_pi->rv7xx;
+ 
+-	speed_cap = pcie_get_speed_cap(root);
++	if (!pci_is_root_bus(rdev->pdev->bus))
++		speed_cap = pcie_get_speed_cap(root);
+ 	if (speed_cap == PCI_SPEED_UNKNOWN) {
+ 		si_pi->sys_pcie_mask = 0;
+ 	} else {
 -- 
 2.19.1
 
