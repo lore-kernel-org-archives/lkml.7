@@ -2,85 +2,84 @@ Return-Path: <SRS0=J4ZE=RP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4A0D9C43381
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 09:19:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1D40BC43381
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 09:19:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 138EC214AF
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 09:19:47 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=tomli.me header.i=@tomli.me header.b="Jqbkbneh"
+	by mail.kernel.org (Postfix) with ESMTP id E79EB214AF
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 09:19:53 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726385AbfCLJTq (ORCPT
+        id S1726653AbfCLJTw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 12 Mar 2019 05:19:46 -0400
-Received: from tomli.me ([153.92.126.73]:53228 "EHLO tomli.me"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725767AbfCLJTp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 12 Mar 2019 05:19:45 -0400
-Received: from tomli.me (localhost [127.0.0.1])
-        by tomli.me (OpenSMTPD) with ESMTP id d07dabd9;
-        Tue, 12 Mar 2019 09:19:42 +0000 (UTC)
-X-HELO: localhost.localdomain
-Authentication-Results: tomli.me; auth=pass (login) smtp.auth=tomli
-Received: from Unknown (HELO localhost.localdomain) (2402:f000:1:1501:200:5efe:3d33:ceae)
- by tomli.me (qpsmtpd/0.95) with ESMTPSA (DHE-RSA-CHACHA20-POLY1305 encrypted); Tue, 12 Mar 2019 09:19:41 +0000
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed; d=tomli.me; h=date:from:to:cc:subject:message-id:references:mime-version:content-type:in-reply-to; s=1490979754; bh=3+8mC/5CURHzM97+bVX0v3NzwZuZY+wkRKDQCW362qs=; b=Jqbkbnehg9WWi1ATvoduHo+bACPzl33AlVoiyD9QhKM8ubXvwRP4Ct9Z2ZGaghV5J9uPwRRGWcs86JS9WymTIkNCTYGLfEFw2kcsbd4sAZUskNqH6pE7W1eO4Ptayj0vXcIPKAJ04h0s0EBoGnvX0jGAXmnfB+tyUM6RBsoAQOC0AR1m3jDi2O6O0XxGQldo7cuxxrvhDdMB/tStzVbdwTbSdZqIHuj+suPfEAf7d6yCi/UKtz+DURCkv1zrR0lzP6fa7lpW2TEEkXQDcHIQMJjwqvBLtY3Lww8CxSoRW5UFZid/VgLZUSqybQrDMeIug5kCfQSGsnS7pGOcBL9EYQ==
-Date:   Tue, 12 Mar 2019 17:19:32 +0800
-From:   Tom Li <tomli@tomli.me>
-To:     Geert Uytterhoeven <geert@linux-m68k.org>
-Cc:     Jani Nikula <jani.nikula@linux.intel.com>,
-        Linux Fbdev development list <linux-fbdev@vger.kernel.org>,
-        DRI Development <dri-devel@lists.freedesktop.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>,
-        Sudip Mukherjee <sudipm.mukherjee@gmail.com>,
-        Teddy Wang <teddy.wang@siliconmotion.com>
-Subject: Re: Is it possible to reset graphics controller on reboot in a
- framebuffer driver?
-Message-ID: <20190312091932.GA17859@localhost.localdomain>
-References: <20190307051641.GA7012@localhost.localdomain>
- <871s3jm532.fsf@intel.com>
- <CAMuHMdU_+4_T4B67Z-Y-wgHQs6o1yuh9H4m82Lym+_Jno5Mgzg@mail.gmail.com>
- <20190307213759.GA14798@localhost.localdomain>
- <CAMuHMdVnkdrUTL_3UaoaOondGxCB_FpEYOTDmLeh1C0W5j0-Hw@mail.gmail.com>
- <20190308103536.GA17258@localhost.localdomain>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190308103536.GA17258@localhost.localdomain>
-User-Agent: Mutt/1.11.3 (2019-02-01)
+        Tue, 12 Mar 2019 05:19:52 -0400
+Received: from mout.kundenserver.de ([212.227.126.133]:39023 "EHLO
+        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726420AbfCLJTt (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 12 Mar 2019 05:19:49 -0400
+Received: from orion.localdomain ([77.4.190.91]) by mrelayeu.kundenserver.de
+ (mreue012 [212.227.15.167]) with ESMTPSA (Nemesis) id
+ 1MnWx3-1gbyBQ1frp-00jbQt; Tue, 12 Mar 2019 10:19:37 +0100
+From:   "Enrico Weigelt, metux IT consult" <info@metux.net>
+To:     linux-kernel@vger.kernel.org
+Cc:     axboe@kernel.dk, hdegoede@redhat.com, b.zolnierkie@samsung.com,
+        linus.walleij@linaro.org, linux-ide@vger.kernel.org,
+        linux-tegra@vger.kernel.org
+Subject: [PATCH 1/9] drivers: ata: ahci_octeon: use devm_platform_ioremap_resource()
+Date:   Tue, 12 Mar 2019 10:19:26 +0100
+Message-Id: <1552382374-28789-1-git-send-email-info@metux.net>
+X-Mailer: git-send-email 1.9.1
+X-Provags-ID: V03:K1:kr2oGxND4BpkUl9BC/l59hSmx7VDkOveIv7A6gqphQc7tK113/7
+ Oz9SE3yZzk+FOuHol/Gt6ARBuMpwn8oylpwi4SP0+Q1+vyMOAzmApXTwD1Lgihf/dP84pO/
+ /bwKA+l1fPrt+QsgMBlRd4FKWrHGpYfRKWT0mAVDzpPaiiNkQiiMMo98zLwGGVm/TWeLe85
+ hQiaZx7MHiGaJJVcsaVlQ==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:uuQ7ZQsXFQ8=:VH2HtOiIfKvxWJj2HN0KTt
+ sJZf6TtT7ZBWKdipetHK7ugxQ/MmRI5kIGjYe+5Q0jkMjLscMqAvzhBxqE0aefokjOpy3A42e
+ vf7NqyVILgLWYAWr+rJvs+xrolF8VYegwRpXS4qZUe76hbf0IcuuZEZeU5epTIxA3vMfBzSaK
+ +tCB9UPQprZtt4Xdek8z6FZD9oUqQ2WH3WGNaLpWt44klsybPKah1mRj0Yw+bEKDOAXK8PNOZ
+ qGyYApz6gpX2uGJvjZ17ukmZum4jZFvln/rZ4x1JckN1qSBNTVcxpLIVJarT3kxT23VMG7Ffu
+ ylj8LoA5qGSqRXFCSv6H+5jfdd9ajPjsbk2wuEffrpiwYKkpUJZdmFRSdtNBjFVrLU3R00mB6
+ 0Xs4d9USjCqSf8OVmlyLIuMUeS+yseZPfbRnrtX6CuNcYHknpuhPRsgH8O6L0I5o4X2FMc7Pv
+ 8O3DyK7FPgeaS/T8FT5KtK8lUrLkiEkiNoLUFevWzrFOtoFuNb4Rvk81omGk1Iv0CIvFv8dxP
+ soQBpSqJnSvp0qrlTM7oZGPX2SHH8aGN4bM8feo4DiE+iGBCO6pfi4hrEr8Pro7LlPQuPPHIU
+ kvic5Oc+OaLKX2yM9cgnCz5V2szL1ghuBNlxTCoynIOhMlkN9Hkduc1be3V/KH3f3S2R8LMDc
+ f+MFkDeb/AaXVuuqfKpVCcMtHZNwjg+m2fZZIfwwr5UM8+EVkNUVZ/JEkMB3yKmd8euVrYzie
+ 3RUnaoDL+V2tR5Tps1+sZiAT36JZ50o/hcR90Q==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Mar 08, 2019 at 06:35:36PM +0800, Tom Li wrote:
-> On Fri, Mar 08, 2019 at 10:13:58AM +0100, Geert Uytterhoeven wrote:
-> > On Thu, Mar 7, 2019 at 10:38 PM Tom Li <tomli@tomli.me> wrote:
-> > > Nevertheless, does it mean there's no way to prevent it from happening if the
-> > > user issues a emergency reboot? Like an automatic reboot after a kernel panic,
-> > > or a SysRq-B reboot.
-> > 
-> > If Linux performs a reboot, it calls the shutdown handlers.
-> > I think that includes reboot on panic, or SysRq-B, but I'd have to check to
-> > be 100% sure.
-> 
-> Okay, glad to hear that. If it works for SysRq-B or panic reboot, I think
-> it would be enough. After all, hard kernel crashes are rare nowadays, and
-> most crashes are hard lockups. In case it happens, the user just presses
-> the power button to halt.
+Use the new helper that wraps the calls to platform_get_resource()
+and devm_ioremap_resource() together.
 
-As I suspected, emergency reboot via SysRq-B is a hard reboot and none of the
-reboot handler will be called. I've put a for (;;) {} loop in .shutdown(), the
-kernel would hang during a normal reboot, but a SysRq-B reboot will reset the
-machine immediately.
+Signed-off-by: Enrico Weigelt, metux IT consult <info@metux.net>
+---
+ drivers/ata/ahci_octeon.c | 4 +---
+ 1 file changed, 1 insertion(+), 3 deletions(-)
 
-Fortunately, I've found a way to stop trigger the bug in the driver, so no
-shutdown handler is needed anymore.
+diff --git a/drivers/ata/ahci_octeon.c b/drivers/ata/ahci_octeon.c
+index 5a44e08..2280180 100644
+--- a/drivers/ata/ahci_octeon.c
++++ b/drivers/ata/ahci_octeon.c
+@@ -32,13 +32,11 @@ static int ahci_octeon_probe(struct platform_device *pdev)
+ {
+ 	struct device *dev = &pdev->dev;
+ 	struct device_node *node = dev->of_node;
+-	struct resource *res;
+ 	void __iomem *base;
+ 	u64 cfg;
+ 	int ret;
+ 
+-	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
+-	base = devm_ioremap_resource(&pdev->dev, res);
++	base = devm_platform_ioremap_resource(pdev, 0);
+ 	if (IS_ERR(base))
+ 		return PTR_ERR(base);
+ 
+-- 
+1.9.1
 
-Cheers,
-Tom Li
