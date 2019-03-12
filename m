@@ -2,146 +2,80 @@ Return-Path: <SRS0=J4ZE=RP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_MUTT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 05507C43381
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 12:05:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9B623C43381
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 12:06:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CAA5F206BA
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 12:05:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 63DC5206BA
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 12:06:15 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726452AbfCLMFj (ORCPT
+        id S1726628AbfCLMGO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 12 Mar 2019 08:05:39 -0400
-Received: from usa-sjc-mx-foss1.foss.arm.com ([217.140.101.70]:41218 "EHLO
-        foss.arm.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725873AbfCLMFj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 12 Mar 2019 08:05:39 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.72.51.249])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 4EB62374;
-        Tue, 12 Mar 2019 05:05:38 -0700 (PDT)
-Received: from e107155-lin (e107155-lin.cambridge.arm.com [10.1.196.42])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 59EDC3F59C;
-        Tue, 12 Mar 2019 05:05:35 -0700 (PDT)
-Date:   Tue, 12 Mar 2019 12:05:29 +0000
-From:   Sudeep Holla <sudeep.holla@arm.com>
-To:     "Haibo Xu (Arm Technology China)" <Haibo.Xu@arm.com>
-Cc:     "x86@kernel.org" <x86@kernel.org>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linuxppc-dev@lists.ozlabs.org" <linuxppc-dev@lists.ozlabs.org>,
-        Catalin Marinas <Catalin.Marinas@arm.com>,
-        Will Deacon <Will.Deacon@arm.com>,
-        Oleg Nesterov <oleg@redhat.com>,
-        Paul Mackerras <paulus@samba.org>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>,
-        Richard Weinberger <richard@nod.at>,
-        "jdike@addtoit.com" <jdike@addtoit.com>,
-        Steve Capper <Steve.Capper@arm.com>,
-        "Bin Lu (Arm Technology China)" <Bin.Lu@arm.com>,
-        Andy Lutomirski <luto@kernel.org>,
-        Borislav Petkov <bp@alien8.de>
-Subject: Re: [PATCH 3/6] x86: clean up _TIF_SYSCALL_EMU handling using
- ptrace_syscall_enter hook
-Message-ID: <20190312120529.GA13825@e107155-lin>
-References: <20190228183220.15626-1-sudeep.holla@arm.com>
- <20190228183220.15626-4-sudeep.holla@arm.com>
- <eb9ef619-4af8-71e1-5aee-0b6294ac488b@arm.com>
- <20190304101205.GA1504@e107155-lin>
- <96d59a68-e5e2-86d9-c707-a79aad438b76@arm.com>
- <20190311183403.GA31062@e107155-lin>
- <65b00ea1-f784-4fb4-2a98-49fa44d9fa8f@arm.com>
+        Tue, 12 Mar 2019 08:06:14 -0400
+Received: from mail2-relais-roc.national.inria.fr ([192.134.164.83]:52932 "EHLO
+        mail2-relais-roc.national.inria.fr" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1725873AbfCLMGN (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 12 Mar 2019 08:06:13 -0400
+X-IronPort-AV: E=Sophos;i="5.58,471,1544482800"; 
+   d="scan'208";a="373037623"
+Received: from vaio-julia.rsr.lip6.fr ([132.227.76.33])
+  by mail2-relais-roc.national.inria.fr with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 12 Mar 2019 13:06:11 +0100
+Date:   Tue, 12 Mar 2019 13:06:09 +0100 (CET)
+From:   Julia Lawall <julia.lawall@lip6.fr>
+X-X-Sender: jll@hadrien
+To:     "Milan P. Gandhi" <mgandhi@redhat.com>
+cc:     kernel-janitors@vger.kernel.org, qla2xxx-upstream@qlogic.com,
+        jejb@linux.ibm.com, martin.petersen@oracle.com,
+        linux-scsi@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] scsi: qla2xxx: Fix a small typo in qla_bsg.c
+In-Reply-To: <20190312115313.GA12695@machine1>
+Message-ID: <alpine.DEB.2.20.1903121305220.4097@hadrien>
+References: <20190312115313.GA12695@machine1>
+User-Agent: Alpine 2.20 (DEB 67 2015-01-07)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <65b00ea1-f784-4fb4-2a98-49fa44d9fa8f@arm.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+Content-Type: text/plain; charset=US-ASCII
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Mar 12, 2019 at 01:34:44AM +0000, Haibo Xu (Arm Technology China) wrote:
-> On 2019/3/12 2:34, Sudeep Holla wrote:
-> > (I thought I had sent this email, last Tuesday itself, but saw this in my
-> > draft today, something went wrong, sorry for the delay)
-> > 
-> > On Tue, Mar 05, 2019 at 02:14:47AM +0000, Haibo Xu (Arm Technology China) wrote:
-> >> On 2019/3/4 18:12, Sudeep Holla wrote:
-> >>> On Mon, Mar 04, 2019 at 08:25:28AM +0000, Haibo Xu (Arm Technology China) wrote:
-> >>>> On 2019/3/1 2:32, Sudeep Holla wrote:
-> >>>>> Now that we have a new hook ptrace_syscall_enter that can be called from
-> >>>>> syscall entry code and it handles PTRACE_SYSEMU in generic code, we
-> >>>>> can do some cleanup using the same in syscall_trace_enter.
-> >>>>>
-> >>>>> Further the extra logic to find single stepping PTRACE_SYSEMU_SINGLESTEP
-> >>>>> in syscall_slow_exit_work seems unnecessary. Let's remove the same.
-> >>>>
-> >>>> I think we should not change the logic here. Is so, it will double the report of syscall
-> >>>> when PTRACE_SYSEMU_SINGLESTEP is enabled.
-> >>>>
-> >>>
-> >>> I don't think that should happen, but I may be missing something.
-> >>> Can you explain how ?
-> >>>
-> >>
-> >> When PTRACE_SYSEMU_SINGLESTEP is enabled, both the _TIF_SYSCALL_EMU and
-> >> _TIF_SINGLESTEP flags are set, but ptrace only need to report(send SIGTRAP)
-> >> at the entry of a system call, no need to report at the exit of a system
-> >> call.
-> >>
-> > Sorry, but I still not get it, we have:
-> > 
-> > 	step = ((flags & (_TIF_SINGLESTEP | _TIF_SYSCALL_EMU)) == _TIF_SINGLESTEP);
-> > 
-> > For me, this is same as:
-> > 	step = ((flags & _TIF_SINGLESTEP) == _TIF_SINGLESTEP)
-> > 	or
-> > 	if (flags & _TIF_SINGLESTEP)
-> > 		step = true;
-> > 
-> 
-> I don't think so! As I mentioned in the last email loop, when
-> PTRACE_SYSEMU_SINGLESTE is enabled, both the _TIF_SYSCALL_EMU and
-> _TIF_SINGLESTEP flags are set, in which case the step should be "false" for
-> the old logic. But with the new logic, the step is "true".
-> 
 
-Ah right, sorry I missed that.
 
-> > So when PTRACE_SYSEMU_SINGLESTEP, _TIF_SYSCALL_EMU and _TIF_SINGLESTEP
-> > are set and step evaluates to true.
-> > 
-> > So dropping _TIF_SYSCALL_EMU here should be fine. Am I still missing
-> > something ?
-> > 
-> > --
-> > Regards,
-> > Sudeep
-> > 
-> 
-> For the PTRACE_SYSEMU_SINGLESTEP request, ptrace only need to report(send
-> SIGTRAP) at the entry of a system call, no need to report at the exit of a
-> system call.That's why the old logic-{step = ((flags & (_TIF_SINGLESTEP |
-> _TIF_SYSCALL_EMU)) == _TIF_SINGLESTEP)} here try to filter out the special
-> case(PTRACE_SYSEMU_SINGLESTEP).
-> 
+On Tue, 12 Mar 2019, Milan P. Gandhi wrote:
 
-Understood
+> This patch fixes a minor formatting issue with comment section and a
+> typo for 'iiDMA' cmd in drivers/scsi/qla2xxx/qla_bsg.c
 
-> Another way to make sure the logic is fine, you can run some tests with
-> respect to both logic, and to check whether they have the same behavior.
+This seems to be two completely unrelated changes.  The subject line
+promises only one change, and indeed only one change per patch would have
+been better.  You should make a series.
+
+julia
+
 >
-
-I did run selftests after Andy Lutomirski pointed out. Nothing got flagged,
-I haven't looked at the tests themselves yet, but it clearly misses this
-case.
-
---
-Regards,
-Sudeep
+> Signed-off-by: Milan P. Gandhi <mgandhi@redhat.com>
+> ---
+> diff --git a/drivers/scsi/qla2xxx/qla_bsg.c b/drivers/scsi/qla2xxx/qla_bsg.c
+> index 17d42658ad9a..2353be988907 100644
+> --- a/drivers/scsi/qla2xxx/qla_bsg.c
+> +++ b/drivers/scsi/qla2xxx/qla_bsg.c
+> @@ -1,4 +1,4 @@
+> -	/*
+> +/*
+>   * QLogic Fibre Channel HBA Driver
+>   * Copyright (c)  2003-2014 QLogic Corporation
+>   *
+> @@ -1354,7 +1354,7 @@ qla24xx_iidma(struct bsg_job *bsg_job)
+>
+>  	if (rval) {
+>  		ql_log(ql_log_warn, vha, 0x704c,
+> -		    "iIDMA cmd failed for %8phN -- "
+> +		    "iiDMA cmd failed for %8phN -- "
+>  		    "%04x %x %04x %04x.\n", fcport->port_name,
+>  		    rval, fcport->fp_speed, mb[0], mb[1]);
+>  		rval = (DID_ERROR << 16);
+>
