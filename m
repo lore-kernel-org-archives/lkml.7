@@ -2,46 +2,46 @@ Return-Path: <SRS0=J4ZE=RP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 61A89C43381
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 05:31:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 97243C4360F
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 05:31:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 17EF0214AE
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 05:31:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 642A6214AF
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 05:31:04 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=fb.com header.i=@fb.com header.b="hAXquXTo"
+	dkim=pass (1024-bit key) header.d=fb.com header.i=@fb.com header.b="fMasOW4/"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727070AbfCLFa6 (ORCPT
+        id S1727143AbfCLFbC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 12 Mar 2019 01:30:58 -0400
-Received: from mx0b-00082601.pphosted.com ([67.231.153.30]:57136 "EHLO
-        mx0b-00082601.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1725792AbfCLFa6 (ORCPT
+        Tue, 12 Mar 2019 01:31:02 -0400
+Received: from mx0b-00082601.pphosted.com ([67.231.153.30]:49506 "EHLO
+        mx0a-00082601.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1727078AbfCLFbA (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 12 Mar 2019 01:30:58 -0400
-Received: from pps.filterd (m0109331.ppops.net [127.0.0.1])
-        by mx0a-00082601.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x2C5N2GY028701
-        for <linux-kernel@vger.kernel.org>; Mon, 11 Mar 2019 22:30:56 -0700
+        Tue, 12 Mar 2019 01:31:00 -0400
+Received: from pps.filterd (m0089730.ppops.net [127.0.0.1])
+        by m0089730.ppops.net (8.16.0.27/8.16.0.27) with SMTP id x2C5Nuuk015315
+        for <linux-kernel@vger.kernel.org>; Mon, 11 Mar 2019 22:30:59 -0700
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=fb.com; h=from : to : cc : subject
- : date : message-id : mime-version : content-type; s=facebook;
- bh=upfBIjA0kNIbF6J4vlwNcA8+TUiRa80vcT3HjwmBI08=;
- b=hAXquXToYQ/aHdPpmkeU/HKFPTcBsG/DX8PAlqUjX5tDDtzP3Qkyvx/QptyPFDfIMhdU
- L2DKWuQ8rl97tQQ02/yUg8DyKRDe+9hYFuJhxNCnqlTEwxj1btHWy+nO38Llfi0Wj/tT
- uBk36d3+6FxOt8Lvps1Guoz8YJu7dnjCjfY= 
+ : date : message-id : in-reply-to : references : mime-version :
+ content-type; s=facebook; bh=FKyla0QQJmABdIegC7k5TNI5N68m/ViLaeiBzOrc3T8=;
+ b=fMasOW4/nPLQWQjcW4tKMiPwRhNrpn18aL/HZy5YpCb9JgnkDdio2o25k9jbArUaU4Jq
+ DYqbcqVRvO5Tr21RmF/gQ2J+/rszCdDsEnLJqJcS8XAyjYmv3ct7Sf/hjhXK5bm8ltZv
+ 4Au555B8+ZlD8BBuf6ICgiGJby6HxX9IZPg= 
 Received: from maileast.thefacebook.com ([199.201.65.23])
-        by mx0a-00082601.pphosted.com with ESMTP id 2r62tvrryv-3
+        by m0089730.ppops.net with ESMTP id 2r667b826k-4
         (version=TLSv1.2 cipher=ECDHE-RSA-AES256-SHA384 bits=256 verify=NOT)
-        for <linux-kernel@vger.kernel.org>; Mon, 11 Mar 2019 22:30:56 -0700
+        for <linux-kernel@vger.kernel.org>; Mon, 11 Mar 2019 22:30:59 -0700
 Received: from mx-out.facebook.com (2620:10d:c0a1:3::13) by
  mail.thefacebook.com (2620:10d:c021:18::172) with Microsoft SMTP Server
  (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA) id 15.1.1713.5;
- Mon, 11 Mar 2019 22:30:55 -0700
+ Mon, 11 Mar 2019 22:30:58 -0700
 Received: by devbig006.ftw2.facebook.com (Postfix, from userid 4523)
-        id 2BA5462E2019; Mon, 11 Mar 2019 22:30:55 -0700 (PDT)
+        id 0BCB762E2019; Mon, 11 Mar 2019 22:30:56 -0700 (PDT)
 Smtp-Origin-Hostprefix: devbig
 From:   Song Liu <songliubraving@fb.com>
 Smtp-Origin-Hostname: devbig006.ftw2.facebook.com
@@ -52,10 +52,12 @@ CC:     <ast@kernel.org>, <daniel@iogearbox.net>, <kernel-team@fb.com>,
         <namhyung@kernel.org>, <sdf@fomichev.me>,
         Song Liu <songliubraving@fb.com>
 Smtp-Origin-Cluster: ftw2c04
-Subject: [PATCH v9 perf,bpf 00/15] perf annotation of BPF programs
-Date:   Mon, 11 Mar 2019 22:30:36 -0700
-Message-ID: <20190312053051.2690567-1-songliubraving@fb.com>
+Subject: [PATCH v9 perf,bpf 01/15] perf-record: replace option --bpf-event with --no-bpf-event
+Date:   Mon, 11 Mar 2019 22:30:37 -0700
+Message-ID: <20190312053051.2690567-2-songliubraving@fb.com>
 X-Mailer: git-send-email 2.17.1
+In-Reply-To: <20190312053051.2690567-1-songliubraving@fb.com>
+References: <20190312053051.2690567-1-songliubraving@fb.com>
 X-FB-Internal: Safe
 MIME-Version: 1.0
 Content-Type: text/plain
@@ -68,119 +70,75 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Changes v8 to v9:
-1. Rebase on top of torvalds/master:
-    commit ea295481b6e313b4ea3ca2720ffcafd6005b5643 ;
-2. Change perf-record option --bpf-event to --no-bpf-event.
+Currently, monitoring of BPF programs through bpf_event is off by default
+for perf-record. To turn it on, the user need to use option "--bpf-event".
+As BPF gets wider adoption in different subsystems, this option becomes
+inconvinient.
 
-Changes v7 to v8:
-1. Address issues suggested by Jiri and Stanislav.
+This patch makes bpf_event on by default, and adds option "--no-bpf-event"
+to turn it off. Since option --bpf-event is not released yet, it is safe
+to remove it.
 
-Changes v6 to v7:
-1. Fix minor issues suggested by Jiri.
+Signed-off-by: Song Liu <songliubraving@fb.com>
+---
+ tools/perf/builtin-record.c | 2 +-
+ tools/perf/perf.h           | 2 +-
+ tools/perf/util/bpf-event.c | 2 +-
+ tools/perf/util/evsel.c     | 2 +-
+ 4 files changed, 4 insertions(+), 4 deletions(-)
 
-Changes v5 to v6:
-1. Improve side band evlist interface;
-2. Minor style fixes.
-
-Changes v4 to v5:
-1. Rebase to latest bpf-next;
-2. Add dependency of 94816add0005 from Arnaldo's tree;
-3. More details in change logs;
-4. Add perf_env__init() to init bpf related lock and rbtrees;
-5. Small clean ups.
-
-Changes v3 to v4:
-1. Incorporate feedbacks from Jiri and Namhyung;
-2. Fixed compilation error with different feature-disassembler-four-args;
-3. Split some patches to smaller patches;
-4. Improved error handleing in symbol__disassemble_bpf();
-5. Made side band thread more generic;
-6. Added comments as suggested.
-
-Changes v2 to v3:
-1. Remove unnecessary include in header files;
-2. Improved error handling;
-3. Better naming of functions, variables, etc.;
-4. Enable bpf events by default for perf-top.
-
-Changes v1 to v2:
-1. Fix compilation error with different feature-disassembler-four-args;
-2. Fix a segfault in perf-record;
-3. Split patches 5/9 and 6/9 so that perf_env changes and perf.data changes
-   are in separate patches.
-
-This series enables annotation of BPF programs in perf.
-
-perf tool gathers information via sys_bpf and (optionally) stores them in
-perf.data as headers.
-
-Patch 1/15 changes --bpf-event option to --no-bpf-event;
-Patch 2/15 to 4/15 introduce new helper functions and use them in perf and
-     bpftool;
-Patch 5/15 to 9/15 saves information of bpf program in perf_env;
-Patch 10/15 adds --bpf-event options to perf-top;
-Patch 11/15 to 13/15 enables annotation of bpf progs based on information
-     gathered in 5/15 to 9/15;
-Patch 14/15 introduces side band polling thread that gathers information
-     for special kernel events during perf-record or perf-top.
-Patch 15/15 handles information of short living BPF program using the new
-     side band polling thread.
-
-Commands tested during developments are perf-top, perf-record, perf-report,
-and perf-annotate.
-
-This set is also available at:
-
-https://github.com/liu-song-6/linux/tree/bpf-annotation-v9
-
-Thanks!!
-
-Song Liu (15):
-  perf-record: replace option --bpf-event with --no-bpf-event
-  bpf: libbpf: introduce bpf_program__get_prog_info_linear()
-  bpf: bpftool: use bpf_program__get_prog_info_linear() in
-    prog.c:do_dump()
-  perf, bpf: synthesize bpf events with
-    bpf_program__get_prog_info_linear()
-  perf: change prototype of perf_event__synthesize_bpf_events()
-  perf, bpf: save bpf_prog_info in a rbtree in perf_env
-  perf, bpf: save bpf_prog_info information as headers to perf.data
-  perf, bpf: save btf in a rbtree in perf_env
-  perf, bpf: save btf information as headers to perf.data
-  perf-top: add option --no-bpf-event
-  perf: add -lopcodes to feature-libbfd
-  perf, bpf: enable annotation of bpf program
-  perf, bpf: process PERF_BPF_EVENT_PROG_LOAD for annotation
-  perf: introduce side band thread
-  perf, bpf: save bpf_prog_info and btf of short living bpf programs
-
- tools/bpf/bpftool/prog.c     | 266 +++++++---------------------
- tools/build/Makefile.feature |   6 +-
- tools/lib/bpf/libbpf.c       | 251 ++++++++++++++++++++++++++
- tools/lib/bpf/libbpf.h       |  63 +++++++
- tools/lib/bpf/libbpf.map     |   3 +
- tools/perf/Makefile.config   |  10 +-
- tools/perf/builtin-record.c  |  11 +-
- tools/perf/builtin-top.c     |  10 +-
- tools/perf/perf.c            |   1 +
- tools/perf/perf.h            |   2 +-
- tools/perf/util/annotate.c   | 150 +++++++++++++++-
- tools/perf/util/bpf-event.c  | 330 ++++++++++++++++++++++++++---------
- tools/perf/util/bpf-event.h  |  33 +++-
- tools/perf/util/dso.c        |   1 +
- tools/perf/util/dso.h        |  32 ++--
- tools/perf/util/env.c        | 151 ++++++++++++++++
- tools/perf/util/env.h        |  24 +++
- tools/perf/util/evlist.c     | 119 +++++++++++++
- tools/perf/util/evlist.h     |  12 ++
- tools/perf/util/evsel.c      |   2 +-
- tools/perf/util/evsel.h      |   6 +
- tools/perf/util/header.c     | 238 ++++++++++++++++++++++++-
- tools/perf/util/header.h     |   2 +
- tools/perf/util/session.c    |   1 +
- tools/perf/util/symbol.c     |   1 +
- 25 files changed, 1409 insertions(+), 316 deletions(-)
-
---
+diff --git a/tools/perf/builtin-record.c b/tools/perf/builtin-record.c
+index f3f7f3100336..458dcd0cc0e7 100644
+--- a/tools/perf/builtin-record.c
++++ b/tools/perf/builtin-record.c
+@@ -1870,7 +1870,7 @@ static struct option __record_options[] = {
+ 	OPT_BOOLEAN(0, "tail-synthesize", &record.opts.tail_synthesize,
+ 		    "synthesize non-sample events at the end of output"),
+ 	OPT_BOOLEAN(0, "overwrite", &record.opts.overwrite, "use overwrite mode"),
+-	OPT_BOOLEAN(0, "bpf-event", &record.opts.bpf_event, "record bpf events"),
++	OPT_BOOLEAN(0, "no-bpf-event", &record.opts.no_bpf_event, "record bpf events"),
+ 	OPT_BOOLEAN(0, "strict-freq", &record.opts.strict_freq,
+ 		    "Fail if the specified frequency can't be used"),
+ 	OPT_CALLBACK('F', "freq", &record.opts, "freq or 'max'",
+diff --git a/tools/perf/perf.h b/tools/perf/perf.h
+index b120e547ddc7..c59743def8d3 100644
+--- a/tools/perf/perf.h
++++ b/tools/perf/perf.h
+@@ -66,7 +66,7 @@ struct record_opts {
+ 	bool	     ignore_missing_thread;
+ 	bool	     strict_freq;
+ 	bool	     sample_id;
+-	bool	     bpf_event;
++	bool	     no_bpf_event;
+ 	unsigned int freq;
+ 	unsigned int mmap_pages;
+ 	unsigned int auxtrace_mmap_pages;
+diff --git a/tools/perf/util/bpf-event.c b/tools/perf/util/bpf-event.c
+index 028c8ec1f62a..ea012b735a37 100644
+--- a/tools/perf/util/bpf-event.c
++++ b/tools/perf/util/bpf-event.c
+@@ -187,7 +187,7 @@ static int perf_event__synthesize_one_bpf_prog(struct perf_tool *tool,
+ 	}
+ 
+ 	/* Synthesize PERF_RECORD_BPF_EVENT */
+-	if (opts->bpf_event) {
++	if (!opts->no_bpf_event) {
+ 		*bpf_event = (struct bpf_event){
+ 			.header = {
+ 				.type = PERF_RECORD_BPF_EVENT,
+diff --git a/tools/perf/util/evsel.c b/tools/perf/util/evsel.c
+index 3bbf73e979c0..bda4a968762d 100644
+--- a/tools/perf/util/evsel.c
++++ b/tools/perf/util/evsel.c
+@@ -1036,7 +1036,7 @@ void perf_evsel__config(struct perf_evsel *evsel, struct record_opts *opts,
+ 	attr->mmap2 = track && !perf_missing_features.mmap2;
+ 	attr->comm  = track;
+ 	attr->ksymbol = track && !perf_missing_features.ksymbol;
+-	attr->bpf_event = track && opts->bpf_event &&
++	attr->bpf_event = track && !opts->no_bpf_event &&
+ 		!perf_missing_features.bpf_event;
+ 
+ 	if (opts->record_namespaces)
+-- 
 2.17.1
+
