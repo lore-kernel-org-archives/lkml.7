@@ -2,53 +2,52 @@ Return-Path: <SRS0=J4ZE=RP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 484ADC43381
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 17:26:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 90769C43381
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 17:26:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1B5FC206DF
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 17:26:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 56326206DF
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 17:26:53 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1552411607;
-	bh=zLRhDcAkHvOhQLpA4AagRJqXHDgMt/+suAxLNiNgKLs=;
+	s=default; t=1552411613;
+	bh=+QGZvFVsQ1MzjRQY5cQr4/K/vD0DlWVRqT/eZc73xcY=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=qklGnjbcmXIzZ4Tm9sQfaD/BqebXNiJ/5Hlff4jHDXskaPhNI5K9cnerWI4GXqGhx
-	 uW/ItoHPWe916kLFqxyKIIbm93c88ctMM5pCBHPX0/7gd4AmZdZWgib6MMAGjJ3Jc8
-	 sFx88D/pRpLIk8KeDGoC6PNkVMYoOEUGQlbCvegc=
+	b=zATwuD0HAnkqac8cNqcO2Sxq4NCT1URtEmsd+eq+VWLmQTk5Km78EeEcJJR6t58Ay
+	 GXyQztfIGsMZNUKIk8ME6HJhlQoUVN5Wl61dPHF0OlNp0RIAh3dP13ROrmLKr6dPV+
+	 2DFrch8Fe7VaAa2FkMh1ifbGjaU1J2QuJNXaQoNE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729002AbfCLR0p (ORCPT
+        id S1729159AbfCLR0w (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 12 Mar 2019 13:26:45 -0400
-Received: from mail.kernel.org ([198.145.29.99]:33878 "EHLO mail.kernel.org"
+        Tue, 12 Mar 2019 13:26:52 -0400
+Received: from mail.kernel.org ([198.145.29.99]:33832 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729709AbfCLRRk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S1729704AbfCLRRk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Tue, 12 Mar 2019 13:17:40 -0400
 Received: from localhost (unknown [104.133.8.98])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 4EE85217F5;
-        Tue, 12 Mar 2019 17:17:40 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 98CF62186A;
+        Tue, 12 Mar 2019 17:17:39 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1552411060;
-        bh=zLRhDcAkHvOhQLpA4AagRJqXHDgMt/+suAxLNiNgKLs=;
+        s=default; t=1552411059;
+        bh=+QGZvFVsQ1MzjRQY5cQr4/K/vD0DlWVRqT/eZc73xcY=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=eFT3ZcnBovRaXnUN6J1cxqL7NUZfgkhLeaQd4+t8fHeloSu4gG/jcDHbk5soWz+AP
-         8JxKlczo4Bs1aPm7GL9+C1PrEeG2nwjqp+DUMIGvF0Lp/KF5c5BzsC4/k6BLAMGIkP
-         G3/AelMOTOm4G+3HDBkyZMcGgKTxraF0J6q6nUoA=
+        b=clzF2r7F/f+BICP6q/Duuel41stUOxD7NZW94vun6MBcoIlI6Uw6n6KWgEDefq8az
+         0IryX+auaX9f4+m1JW848WgjjPuuV9/AkLzXhH1T7x+vXjDs+dSxkPgWI3+g7Wv6SF
+         etLxFujoS9EMClE1WRo7g8xuzXN6c+XXau+9ap1I=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, ZhangXiaoxu <zhangxiaoxu5@huawei.com>,
-        Simon Horman <horms@verge.net.au>,
-        Pablo Neira Ayuso <pablo@netfilter.org>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.9 40/96] ipvs: Fix signed integer overflow when setsockopt timeout
-Date:   Tue, 12 Mar 2019 10:09:58 -0700
-Message-Id: <20190312171037.558605480@linuxfoundation.org>
+        stable@vger.kernel.org, Hulk Robot <hulkci@huawei.com>,
+        YueHaibing <yuehaibing@huawei.com>,
+        "David S. Miller" <davem@davemloft.net>
+Subject: [PATCH 4.9 19/96] net: nfc: Fix NULL dereference on nfc_llcp_build_tlv fails
+Date:   Tue, 12 Mar 2019 10:09:37 -0700
+Message-Id: <20190312171035.985538722@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190312171034.530434962@linuxfoundation.org>
 References: <20190312171034.530434962@linuxfoundation.org>
@@ -67,91 +66,156 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-[ Upstream commit 53ab60baa1ac4f20b080a22c13b77b6373922fd7 ]
+From: YueHaibing <yuehaibing@huawei.com>
 
-There is a UBSAN bug report as below:
-UBSAN: Undefined behaviour in net/netfilter/ipvs/ip_vs_ctl.c:2227:21
-signed integer overflow:
--2147483647 * 1000 cannot be represented in type 'int'
+[ Upstream commit 58bdd544e2933a21a51eecf17c3f5f94038261b5 ]
 
-Reproduce program:
-	#include <stdio.h>
-	#include <sys/types.h>
-	#include <sys/socket.h>
+KASAN report this:
 
-	#define IPPROTO_IP 0
-	#define IPPROTO_RAW 255
+BUG: KASAN: null-ptr-deref in nfc_llcp_build_gb+0x37f/0x540 [nfc]
+Read of size 3 at addr 0000000000000000 by task syz-executor.0/5401
 
-	#define IP_VS_BASE_CTL		(64+1024+64)
-	#define IP_VS_SO_SET_TIMEOUT	(IP_VS_BASE_CTL+10)
+CPU: 0 PID: 5401 Comm: syz-executor.0 Not tainted 5.0.0-rc7+ #45
+Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS 1.10.2-1ubuntu1 04/01/2014
+Call Trace:
+ __dump_stack lib/dump_stack.c:77 [inline]
+ dump_stack+0xfa/0x1ce lib/dump_stack.c:113
+ kasan_report+0x171/0x18d mm/kasan/report.c:321
+ memcpy+0x1f/0x50 mm/kasan/common.c:130
+ nfc_llcp_build_gb+0x37f/0x540 [nfc]
+ nfc_llcp_register_device+0x6eb/0xb50 [nfc]
+ nfc_register_device+0x50/0x1d0 [nfc]
+ nfcsim_device_new+0x394/0x67d [nfcsim]
+ ? 0xffffffffc1080000
+ nfcsim_init+0x6b/0x1000 [nfcsim]
+ do_one_initcall+0xfa/0x5ca init/main.c:887
+ do_init_module+0x204/0x5f6 kernel/module.c:3460
+ load_module+0x66b2/0x8570 kernel/module.c:3808
+ __do_sys_finit_module+0x238/0x2a0 kernel/module.c:3902
+ do_syscall_64+0x147/0x600 arch/x86/entry/common.c:290
+ entry_SYSCALL_64_after_hwframe+0x49/0xbe
+RIP: 0033:0x462e99
+Code: f7 d8 64 89 02 b8 ff ff ff ff c3 66 0f 1f 44 00 00 48 89 f8 48 89 f7 48 89 d6 48 89 ca 4d 89 c2 4d 89 c8 4c 8b 4c 24 08 0f 05 <48> 3d 01 f0 ff ff 73 01 c3 48 c7 c1 bc ff ff ff f7 d8 64 89 01 48
+RSP: 002b:00007f9cb79dcc58 EFLAGS: 00000246 ORIG_RAX: 0000000000000139
+RAX: ffffffffffffffda RBX: 000000000073bf00 RCX: 0000000000462e99
+RDX: 0000000000000000 RSI: 0000000020000280 RDI: 0000000000000003
+RBP: 00007f9cb79dcc70 R08: 0000000000000000 R09: 0000000000000000
+R10: 0000000000000000 R11: 0000000000000246 R12: 00007f9cb79dd6bc
+R13: 00000000004bcefb R14: 00000000006f7030 R15: 0000000000000004
 
-	/* The argument to IP_VS_SO_GET_TIMEOUT */
-	struct ipvs_timeout_t {
-		int tcp_timeout;
-		int tcp_fin_timeout;
-		int udp_timeout;
-	};
+nfc_llcp_build_tlv will return NULL on fails, caller should check it,
+otherwise will trigger a NULL dereference.
 
-	int main() {
-		int ret = -1;
-		int sockfd = -1;
-		struct ipvs_timeout_t to;
-
-		sockfd = socket(AF_INET, SOCK_RAW, IPPROTO_RAW);
-		if (sockfd == -1) {
-			printf("socket init error\n");
-			return -1;
-		}
-
-		to.tcp_timeout = -2147483647;
-		to.tcp_fin_timeout = -2147483647;
-		to.udp_timeout = -2147483647;
-
-		ret = setsockopt(sockfd,
-				 IPPROTO_IP,
-				 IP_VS_SO_SET_TIMEOUT,
-				 (char *)(&to),
-				 sizeof(to));
-
-		printf("setsockopt return %d\n", ret);
-		return ret;
-	}
-
-Return -EINVAL if the timeout value is negative or max than 'INT_MAX / HZ'.
-
-Signed-off-by: ZhangXiaoxu <zhangxiaoxu5@huawei.com>
-Acked-by: Simon Horman <horms@verge.net.au>
-Signed-off-by: Pablo Neira Ayuso <pablo@netfilter.org>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
+Reported-by: Hulk Robot <hulkci@huawei.com>
+Fixes: eda21f16a5ed ("NFC: Set MIU and RW values from CONNECT and CC LLCP frames")
+Fixes: d646960f7986 ("NFC: Initial LLCP support")
+Signed-off-by: YueHaibing <yuehaibing@huawei.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- net/netfilter/ipvs/ip_vs_ctl.c | 12 ++++++++++++
- 1 file changed, 12 insertions(+)
+ net/nfc/llcp_commands.c |   20 ++++++++++++++++++++
+ net/nfc/llcp_core.c     |   24 ++++++++++++++++++++----
+ 2 files changed, 40 insertions(+), 4 deletions(-)
 
-diff --git a/net/netfilter/ipvs/ip_vs_ctl.c b/net/netfilter/ipvs/ip_vs_ctl.c
-index 8382b7880b24..8037b25ddb76 100644
---- a/net/netfilter/ipvs/ip_vs_ctl.c
-+++ b/net/netfilter/ipvs/ip_vs_ctl.c
-@@ -2258,6 +2258,18 @@ static int ip_vs_set_timeout(struct netns_ipvs *ipvs, struct ip_vs_timeout_user
- 		  u->tcp_fin_timeout,
- 		  u->udp_timeout);
+--- a/net/nfc/llcp_commands.c
++++ b/net/nfc/llcp_commands.c
+@@ -419,6 +419,10 @@ int nfc_llcp_send_connect(struct nfc_llc
+ 						      sock->service_name,
+ 						      sock->service_name_len,
+ 						      &service_name_tlv_length);
++		if (!service_name_tlv) {
++			err = -ENOMEM;
++			goto error_tlv;
++		}
+ 		size += service_name_tlv_length;
+ 	}
  
-+#ifdef CONFIG_IP_VS_PROTO_TCP
-+	if (u->tcp_timeout < 0 || u->tcp_timeout > (INT_MAX / HZ) ||
-+	    u->tcp_fin_timeout < 0 || u->tcp_fin_timeout > (INT_MAX / HZ)) {
-+		return -EINVAL;
+@@ -429,9 +433,17 @@ int nfc_llcp_send_connect(struct nfc_llc
+ 
+ 	miux_tlv = nfc_llcp_build_tlv(LLCP_TLV_MIUX, (u8 *)&miux, 0,
+ 				      &miux_tlv_length);
++	if (!miux_tlv) {
++		err = -ENOMEM;
++		goto error_tlv;
 +	}
-+#endif
-+
-+#ifdef CONFIG_IP_VS_PROTO_UDP
-+	if (u->udp_timeout < 0 || u->udp_timeout > (INT_MAX / HZ))
-+		return -EINVAL;
-+#endif
-+
- #ifdef CONFIG_IP_VS_PROTO_TCP
- 	if (u->tcp_timeout) {
- 		pd = ip_vs_proto_data_get(ipvs, IPPROTO_TCP);
--- 
-2.19.1
-
+ 	size += miux_tlv_length;
+ 
+ 	rw_tlv = nfc_llcp_build_tlv(LLCP_TLV_RW, &rw, 0, &rw_tlv_length);
++	if (!rw_tlv) {
++		err = -ENOMEM;
++		goto error_tlv;
++	}
+ 	size += rw_tlv_length;
+ 
+ 	pr_debug("SKB size %d SN length %zu\n", size, sock->service_name_len);
+@@ -484,9 +496,17 @@ int nfc_llcp_send_cc(struct nfc_llcp_soc
+ 
+ 	miux_tlv = nfc_llcp_build_tlv(LLCP_TLV_MIUX, (u8 *)&miux, 0,
+ 				      &miux_tlv_length);
++	if (!miux_tlv) {
++		err = -ENOMEM;
++		goto error_tlv;
++	}
+ 	size += miux_tlv_length;
+ 
+ 	rw_tlv = nfc_llcp_build_tlv(LLCP_TLV_RW, &rw, 0, &rw_tlv_length);
++	if (!rw_tlv) {
++		err = -ENOMEM;
++		goto error_tlv;
++	}
+ 	size += rw_tlv_length;
+ 
+ 	skb = llcp_allocate_pdu(sock, LLCP_PDU_CC, size);
+--- a/net/nfc/llcp_core.c
++++ b/net/nfc/llcp_core.c
+@@ -532,10 +532,10 @@ static u8 nfc_llcp_reserve_sdp_ssap(stru
+ 
+ static int nfc_llcp_build_gb(struct nfc_llcp_local *local)
+ {
+-	u8 *gb_cur, *version_tlv, version, version_length;
+-	u8 *lto_tlv, lto_length;
+-	u8 *wks_tlv, wks_length;
+-	u8 *miux_tlv, miux_length;
++	u8 *gb_cur, version, version_length;
++	u8 lto_length, wks_length, miux_length;
++	u8 *version_tlv = NULL, *lto_tlv = NULL,
++	   *wks_tlv = NULL, *miux_tlv = NULL;
+ 	__be16 wks = cpu_to_be16(local->local_wks);
+ 	u8 gb_len = 0;
+ 	int ret = 0;
+@@ -543,17 +543,33 @@ static int nfc_llcp_build_gb(struct nfc_
+ 	version = LLCP_VERSION_11;
+ 	version_tlv = nfc_llcp_build_tlv(LLCP_TLV_VERSION, &version,
+ 					 1, &version_length);
++	if (!version_tlv) {
++		ret = -ENOMEM;
++		goto out;
++	}
+ 	gb_len += version_length;
+ 
+ 	lto_tlv = nfc_llcp_build_tlv(LLCP_TLV_LTO, &local->lto, 1, &lto_length);
++	if (!lto_tlv) {
++		ret = -ENOMEM;
++		goto out;
++	}
+ 	gb_len += lto_length;
+ 
+ 	pr_debug("Local wks 0x%lx\n", local->local_wks);
+ 	wks_tlv = nfc_llcp_build_tlv(LLCP_TLV_WKS, (u8 *)&wks, 2, &wks_length);
++	if (!wks_tlv) {
++		ret = -ENOMEM;
++		goto out;
++	}
+ 	gb_len += wks_length;
+ 
+ 	miux_tlv = nfc_llcp_build_tlv(LLCP_TLV_MIUX, (u8 *)&local->miux, 0,
+ 				      &miux_length);
++	if (!miux_tlv) {
++		ret = -ENOMEM;
++		goto out;
++	}
+ 	gb_len += miux_length;
+ 
+ 	gb_len += ARRAY_SIZE(llcp_magic);
 
 
