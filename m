@@ -7,47 +7,48 @@ X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 555B6C43381
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 18:00:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4785EC43381
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 18:00:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2284E214AF
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 18:00:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 139B0214AF
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 18:00:12 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1552413609;
-	bh=C5orn661uvyrGoyLa3Y8cUTFhlCr1T1HQdhkWiAdOvY=;
+	s=default; t=1552413612;
+	bh=3vH00exyIQyNbX1NgPWY1DGyFajZzYi3+9s1khJuGOM=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=XLXV6binG23w4wRvTHoRvJASQSoZXsGCcQDlnFWGCRIhO9blDw4/aZ1IrzGkWyyvT
-	 FeSdG6THkYPah2ytC91an7rDzg6YjDsxZIdHa+DKdpUbxj5xcTTeXGq8po8cf255W7
-	 bofWgap9ut2FQSjivPnsjVQR4MyJ+eqnIBad+R/g=
+	b=SCIgxkSLEhuGFxgXWsj5vZElP+MGyAsUmOsb4S2UIr1pHr0tIFpccua58SbMOZMjP
+	 /wui1VdfFPMNc+incH6ijLVM1jQltvjQe2VXEANOJo7ro6gUv6ebUk2VoedBrkVBn4
+	 z35juU4FylLc87XGFtm2SXEjozkYyQQJUXiM5/Wg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728680AbfCLSAH (ORCPT
+        id S1728151AbfCLSAK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 12 Mar 2019 14:00:07 -0400
-Received: from mail.kernel.org ([198.145.29.99]:50444 "EHLO mail.kernel.org"
+        Tue, 12 Mar 2019 14:00:10 -0400
+Received: from mail.kernel.org ([198.145.29.99]:50412 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727124AbfCLRN1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 12 Mar 2019 13:13:27 -0400
+        id S1727925AbfCLRN0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 12 Mar 2019 13:13:26 -0400
 Received: from localhost (unknown [104.133.8.98])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 65E9F217F4;
-        Tue, 12 Mar 2019 17:13:26 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 9869D2183F;
+        Tue, 12 Mar 2019 17:13:25 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1552410806;
-        bh=C5orn661uvyrGoyLa3Y8cUTFhlCr1T1HQdhkWiAdOvY=;
+        s=default; t=1552410805;
+        bh=3vH00exyIQyNbX1NgPWY1DGyFajZzYi3+9s1khJuGOM=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=PL3FE/j1EVF/ewsArAT3v+LaLUp6+k7thzppKpj7uIy9ZAFNEhYVv+lJVcLYeHpeE
-         C6xYkre7EmrzdYdxS2ZEOL9s3m7FV4gaUNYsAAP8lI3mofhtYkQ2n46+oZjbL9aQcf
-         1+j2lsCmdhNHKqGzCCsX0n+XTIcoGd+tnEjrCQCw=
+        b=UuQMh+ggMzgf6bVWf76Y33BTZq+WCAAn6E/2rX3H4dCdwc9+9TYM0F7oLJIZfKLuc
+         +sLHGQyguRMcwzdLmcJDIKZF4IuUXYnLvv5OPaquGEedQ36GU4PxNIGThAz/WGdKy9
+         sK0qP571oPGIqK2BzkTfp2HN8Yp6W6qY+meXvAE0=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Julian Wiedmann <jwi@linux.ibm.com>,
-        "David S. Miller" <davem@davemloft.net>,
+        stable@vger.kernel.org, Keerthy <j-keerthy@ti.com>,
+        Tony Lindgren <tony@atomide.com>, Vignesh R <vigneshr@ti.com>,
+        Wolfram Sang <wsa@the-dreams.de>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.20 125/171] s390/qeth: release cmd buffer in error paths
-Date:   Tue, 12 Mar 2019 10:08:25 -0700
-Message-Id: <20190312170358.525131923@linuxfoundation.org>
+Subject: [PATCH 4.20 134/171] i2c: omap: Use noirq system sleep pm ops to idle device for suspend
+Date:   Tue, 12 Mar 2019 10:08:34 -0700
+Message-Id: <20190312170359.239895051@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190312170347.868927101@linuxfoundation.org>
 References: <20190312170347.868927101@linuxfoundation.org>
@@ -66,64 +67,90 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-[ Upstream commit 5065b2dd3e5f9247a6c9d67974bc0472bf561b9d ]
+[ Upstream commit c6e2bd956936d925748581e4d0294f10f1d92f2c ]
 
-Whenever we fail before/while starting an IO, make sure to release the
-IO buffer. Usually qeth_irq() would do this for us, but if the IO
-doesn't even start we obviously won't get an interrupt for it either.
+We currently get the following error with pixcir_ts driver during a
+suspend resume cycle:
 
-Signed-off-by: Julian Wiedmann <jwi@linux.ibm.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
+omap_i2c 4802a000.i2c: controller timed out
+pixcir_ts 1-005c: pixcir_int_enable: can't read reg 0x34 : -110
+pixcir_ts 1-005c: Failed to disable interrupt generation: -110
+pixcir_ts 1-005c: Failed to stop
+dpm_run_callback(): pixcir_i2c_ts_resume+0x0/0x98
+[pixcir_i2c_ts] returns -110
+PM: Device 1-005c failed to resume: error -110
+
+And at least am437x based devices with pixcir_ts will fail to resume
+to a touchscreen that is configured as the wakeup-source in device
+tree for these devices.
+
+This is because pixcir_ts tries to reconfigure it's registers for
+noirq suspend which fails. This also leaves i2c-omap in enabled state
+for suspend.
+
+Let's fix the pixcir_ts issue and make sure i2c-omap is suspended by
+adding SET_NOIRQ_SYSTEM_SLEEP_PM_OPS.
+
+Let's also get rid of some ifdefs while at it and replace them with
+__maybe_unused as SET_RUNTIME_PM_OPS and SET_NOIRQ_SYSTEM_SLEEP_PM_OPS
+already deal with the various PM Kconfig options.
+
+Reported-by: Keerthy <j-keerthy@ti.com>
+Signed-off-by: Tony Lindgren <tony@atomide.com>
+Acked-by: Vignesh R <vigneshr@ti.com>
+Signed-off-by: Wolfram Sang <wsa@the-dreams.de>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/s390/net/qeth_core_main.c | 6 ++++++
- 1 file changed, 6 insertions(+)
+ drivers/i2c/busses/i2c-omap.c | 13 +++++--------
+ 1 file changed, 5 insertions(+), 8 deletions(-)
 
-diff --git a/drivers/s390/net/qeth_core_main.c b/drivers/s390/net/qeth_core_main.c
-index 0c9a5250dd93..623ddda5d2ba 100644
---- a/drivers/s390/net/qeth_core_main.c
-+++ b/drivers/s390/net/qeth_core_main.c
-@@ -568,6 +568,7 @@ static int __qeth_issue_next_read(struct qeth_card *card)
- 		QETH_DBF_MESSAGE(2, "error %i on device %x when starting next read ccw!\n",
- 				 rc, CARD_DEVID(card));
- 		atomic_set(&channel->irq_pending, 0);
-+		qeth_release_buffer(channel, iob);
- 		card->read_or_write_problem = 1;
- 		qeth_schedule_recovery(card);
- 		wake_up(&card->wait_q);
-@@ -1129,6 +1130,8 @@ static void qeth_irq(struct ccw_device *cdev, unsigned long intparm,
- 		rc = qeth_get_problem(card, cdev, irb);
- 		if (rc) {
- 			card->read_or_write_problem = 1;
-+			if (iob)
-+				qeth_release_buffer(iob->channel, iob);
- 			qeth_clear_ipacmd_list(card);
- 			qeth_schedule_recovery(card);
- 			goto out;
-@@ -1811,6 +1814,7 @@ static int qeth_idx_activate_get_answer(struct qeth_card *card,
- 		QETH_DBF_MESSAGE(2, "Error2 in activating channel rc=%d\n", rc);
- 		QETH_DBF_TEXT_(SETUP, 2, "2err%d", rc);
- 		atomic_set(&channel->irq_pending, 0);
-+		qeth_release_buffer(channel, iob);
- 		wake_up(&card->wait_q);
- 		return rc;
- 	}
-@@ -1880,6 +1884,7 @@ static int qeth_idx_activate_channel(struct qeth_card *card,
- 			rc);
- 		QETH_DBF_TEXT_(SETUP, 2, "1err%d", rc);
- 		atomic_set(&channel->irq_pending, 0);
-+		qeth_release_buffer(channel, iob);
- 		wake_up(&card->wait_q);
- 		return rc;
- 	}
-@@ -2060,6 +2065,7 @@ int qeth_send_control_data(struct qeth_card *card, int len,
- 	}
- 	reply = qeth_alloc_reply(card);
- 	if (!reply) {
-+		qeth_release_buffer(channel, iob);
- 		return -ENOMEM;
- 	}
- 	reply->callback = reply_cb;
+diff --git a/drivers/i2c/busses/i2c-omap.c b/drivers/i2c/busses/i2c-omap.c
+index b1086bfb0465..cd9c65f3d404 100644
+--- a/drivers/i2c/busses/i2c-omap.c
++++ b/drivers/i2c/busses/i2c-omap.c
+@@ -1500,8 +1500,7 @@ static int omap_i2c_remove(struct platform_device *pdev)
+ 	return 0;
+ }
+ 
+-#ifdef CONFIG_PM
+-static int omap_i2c_runtime_suspend(struct device *dev)
++static int __maybe_unused omap_i2c_runtime_suspend(struct device *dev)
+ {
+ 	struct omap_i2c_dev *omap = dev_get_drvdata(dev);
+ 
+@@ -1527,7 +1526,7 @@ static int omap_i2c_runtime_suspend(struct device *dev)
+ 	return 0;
+ }
+ 
+-static int omap_i2c_runtime_resume(struct device *dev)
++static int __maybe_unused omap_i2c_runtime_resume(struct device *dev)
+ {
+ 	struct omap_i2c_dev *omap = dev_get_drvdata(dev);
+ 
+@@ -1542,20 +1541,18 @@ static int omap_i2c_runtime_resume(struct device *dev)
+ }
+ 
+ static const struct dev_pm_ops omap_i2c_pm_ops = {
++	SET_NOIRQ_SYSTEM_SLEEP_PM_OPS(pm_runtime_force_suspend,
++				      pm_runtime_force_resume)
+ 	SET_RUNTIME_PM_OPS(omap_i2c_runtime_suspend,
+ 			   omap_i2c_runtime_resume, NULL)
+ };
+-#define OMAP_I2C_PM_OPS (&omap_i2c_pm_ops)
+-#else
+-#define OMAP_I2C_PM_OPS NULL
+-#endif /* CONFIG_PM */
+ 
+ static struct platform_driver omap_i2c_driver = {
+ 	.probe		= omap_i2c_probe,
+ 	.remove		= omap_i2c_remove,
+ 	.driver		= {
+ 		.name	= "omap_i2c",
+-		.pm	= OMAP_I2C_PM_OPS,
++		.pm	= &omap_i2c_pm_ops,
+ 		.of_match_table = of_match_ptr(omap_i2c_of_match),
+ 	},
+ };
 -- 
 2.19.1
 
