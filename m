@@ -4,53 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1A955C4360F
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 17:20:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 92174C10F00
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 17:20:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DE68B214AE
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 17:20:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5C097214AF
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 17:20:29 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1552411225;
-	bh=MVYqKjChGDIouZylQG6P77I0kakZDqiF79TlhZb0okY=;
+	s=default; t=1552411229;
+	bh=C+N34+zhbC6vkTBeL54CtgLPG2hhxWjnnl+idULe/kk=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=ldedQ1KxvdxVUUyKB3Z7m+bEqRifgQT0qRSg74TP/e/TSy5VVj7H3zjTndffbqRpy
-	 Gmd6/RDIlGdemhNbrABkgMeUXb1ySc456iAMUgtUMA65DutBqrZz+hbKDyyL8+5Hen
-	 m1xebo3g3kqN7QuO2kIVj207QaGH/wd8bT0kcpIk=
+	b=gDB6olJXAhwO2gCGGvUnC/UjhTGUqVR8BGo+aQ+JuvlMamEudIjWryt1Tfl7HPDXj
+	 rX1Xq909hM9hNBYMrNSTeFlSACA/t+fCL+Gj2RuDTE9NwWNjdkBRIKGIQsg9YoP/3y
+	 PKU0A+cqbvklQ62sj6J5N5PGIToQpJdIgJgV5euo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727268AbfCLRUY (ORCPT
+        id S1730051AbfCLRSU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 12 Mar 2019 13:20:24 -0400
-Received: from mail.kernel.org ([198.145.29.99]:35990 "EHLO mail.kernel.org"
+        Tue, 12 Mar 2019 13:18:20 -0400
+Received: from mail.kernel.org ([198.145.29.99]:33908 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730053AbfCLRSV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 12 Mar 2019 13:18:21 -0400
+        id S1729716AbfCLRRm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 12 Mar 2019 13:17:42 -0400
 Received: from localhost (unknown [104.133.8.98])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id BCB98218A6;
-        Tue, 12 Mar 2019 17:18:20 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 04101206DF;
+        Tue, 12 Mar 2019 17:17:40 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1552411100;
-        bh=MVYqKjChGDIouZylQG6P77I0kakZDqiF79TlhZb0okY=;
+        s=default; t=1552411061;
+        bh=C+N34+zhbC6vkTBeL54CtgLPG2hhxWjnnl+idULe/kk=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=a7K+fD13dg3fO3fW4C6Bbq7Le4cHyG9P0ABUnqIbkqaYbaXcmlYOjXtHhKIXAGY4X
-         U1NT5usiX9Z8YaQj5Pf8mXECnOVV6macoSH9ZEqx57cQArj62hXl1WQ3libk7unJNW
-         F6+gtCJFRV70dwlqT/Iyi6JVDr+uDPSoYHXSsNyg=
+        b=EPWooXRLwLLiK5TP0+JDG3dl2ra8ii6OpiTNpv54+kOTzkE2P6ty6H6XmwIeSvwgx
+         ByTBozqx3GkOlpBldzOkaCcOpy5b9F6Ou+Tzs6GON5jx4TypvfhSVXs3bNX/APtAY9
+         cpvHccOEYRxt0vvjnCBxALspDBZ9jOFnpwblb8a4=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Jun-Ru Chang <jrjang@realtek.com>,
-        Tony Wu <tonywu@realtek.com>,
-        Paul Burton <paul.burton@mips.com>, ralf@linux-mips.org,
-        jhogan@kernel.org, macro@mips.com, yamada.masahiro@socionext.com,
-        peterz@infradead.org, mingo@kernel.org, linux-mips@vger.kernel.org,
+        stable@vger.kernel.org, Yonglong Liu <liuyonglong@huawei.com>,
+        Peng Li <lipeng321@huawei.com>,
+        "David S. Miller" <davem@davemloft.net>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.9 82/96] MIPS: Remove function size check in get_frame_info()
-Date:   Tue, 12 Mar 2019 10:10:40 -0700
-Message-Id: <20190312171040.763830937@linuxfoundation.org>
+Subject: [PATCH 4.9 49/96] net: hns: Fix wrong read accesses via Clause 45 MDIO protocol
+Date:   Tue, 12 Mar 2019 10:10:07 -0700
+Message-Id: <20190312171038.253133083@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190312171034.530434962@linuxfoundation.org>
 References: <20190312171034.530434962@linuxfoundation.org>
@@ -69,62 +67,33 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-[ Upstream commit 2b424cfc69728224fcb5fad138ea7260728e0901 ]
+[ Upstream commit cec8abba13e6a26729dfed41019720068eeeff2b ]
 
-Patch (b6c7a324df37b "MIPS: Fix get_frame_info() handling of
-microMIPS function size.") introduces additional function size
-check for microMIPS by only checking insn between ip and ip + func_size.
-However, func_size in get_frame_info() is always 0 if KALLSYMS is not
-enabled. This causes get_frame_info() to return immediately without
-calculating correct frame_size, which in turn causes "Can't analyze
-schedule() prologue" warning messages at boot time.
+When reading phy registers via Clause 45 MDIO protocol, after write
+address operation, the driver use another write address operation, so
+can not read the right value of any phy registers. This patch fixes it.
 
-This patch removes func_size check, and let the frame_size check run
-up to 128 insns for both MIPS and microMIPS.
-
-Signed-off-by: Jun-Ru Chang <jrjang@realtek.com>
-Signed-off-by: Tony Wu <tonywu@realtek.com>
-Signed-off-by: Paul Burton <paul.burton@mips.com>
-Fixes: b6c7a324df37b ("MIPS: Fix get_frame_info() handling of microMIPS function size.")
-Cc: <ralf@linux-mips.org>
-Cc: <jhogan@kernel.org>
-Cc: <macro@mips.com>
-Cc: <yamada.masahiro@socionext.com>
-Cc: <peterz@infradead.org>
-Cc: <mingo@kernel.org>
-Cc: <linux-mips@vger.kernel.org>
-Cc: <linux-kernel@vger.kernel.org>
+Signed-off-by: Yonglong Liu <liuyonglong@huawei.com>
+Signed-off-by: Peng Li <lipeng321@huawei.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/mips/kernel/process.c | 7 +++----
- 1 file changed, 3 insertions(+), 4 deletions(-)
+ drivers/net/ethernet/hisilicon/hns_mdio.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/arch/mips/kernel/process.c b/arch/mips/kernel/process.c
-index 1cc133e7026f..fffd031dc6b6 100644
---- a/arch/mips/kernel/process.c
-+++ b/arch/mips/kernel/process.c
-@@ -344,7 +344,7 @@ static inline int is_sp_move_ins(union mips_instruction *ip)
- static int get_frame_info(struct mips_frame_info *info)
- {
- 	bool is_mmips = IS_ENABLED(CONFIG_CPU_MICROMIPS);
--	union mips_instruction insn, *ip, *ip_end;
-+	union mips_instruction insn, *ip;
- 	const unsigned int max_insns = 128;
- 	unsigned int last_insn_size = 0;
- 	unsigned int i;
-@@ -356,10 +356,9 @@ static int get_frame_info(struct mips_frame_info *info)
- 	if (!ip)
- 		goto err;
+diff --git a/drivers/net/ethernet/hisilicon/hns_mdio.c b/drivers/net/ethernet/hisilicon/hns_mdio.c
+index 501eb2090ca6..de23a0ead5d7 100644
+--- a/drivers/net/ethernet/hisilicon/hns_mdio.c
++++ b/drivers/net/ethernet/hisilicon/hns_mdio.c
+@@ -329,7 +329,7 @@ static int hns_mdio_read(struct mii_bus *bus, int phy_id, int regnum)
+ 		}
  
--	ip_end = (void *)ip + info->func_size;
--
--	for (i = 0; i < max_insns && ip < ip_end; i++) {
-+	for (i = 0; i < max_insns; i++) {
- 		ip = (void *)ip + last_insn_size;
-+
- 		if (is_mmips && mm_insn_16bit(ip->halfword[0])) {
- 			insn.halfword[0] = 0;
- 			insn.halfword[1] = ip->halfword[0];
+ 		hns_mdio_cmd_write(mdio_dev, is_c45,
+-				   MDIO_C45_WRITE_ADDR, phy_id, devad);
++				   MDIO_C45_READ, phy_id, devad);
+ 	}
+ 
+ 	/* Step 5: waitting for MDIO_COMMAND_REG 's mdio_start==0,*/
 -- 
 2.19.1
 
