@@ -4,54 +4,52 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D12A9C43381
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 17:24:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4A616C43381
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 17:24:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9A6D42077B
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 17:24:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 139A2214AF
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 17:24:47 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1552411480;
-	bh=E2nVuON5xSZJJb9+9ltVHr4IXtfTDAkuOX+RgGn9YTw=;
+	s=default; t=1552411487;
+	bh=F2sg+03FNxSK3oDh3i8k/VHij56U4Pc6mHl2T/icCK8=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=iaal4Z6rQiwCDUdLijiuQTn4daIH1MFymu+NDbXTM+//W/owzwk7pG/CNV8KZ9txK
-	 Z/xmQXsUyIeUQo15/toSkW5M75kAk13D3elz6sv880Q7pQW1WPeLCTOt6XZWHsQ7eK
-	 B4UKPHL/+x1YmPnX32wLMi8BNaQ9WTtZPTqqSX+Y=
+	b=FxuMwftgpD+NMg5WwqF9yrGKekdgsGJT8EDRjnAuNiP38pBy1r4QmYys8rZBYfHSR
+	 ZF4U/N6hhQkxEGocKl16HfHb3cIFgu+1fwsqd3LIws4m4p/JpyX+3sbWfHAwq+SvhI
+	 8jxNldxHJ4GggGhnpnFdgks4BsYckx6DrwMvqJl4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729974AbfCLRYj (ORCPT
+        id S1729959AbfCLRYi (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 12 Mar 2019 13:24:39 -0400
-Received: from mail.kernel.org ([198.145.29.99]:34530 "EHLO mail.kernel.org"
+        Tue, 12 Mar 2019 13:24:38 -0400
+Received: from mail.kernel.org ([198.145.29.99]:34582 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729800AbfCLRRy (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S1729804AbfCLRRy (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Tue, 12 Mar 2019 13:17:54 -0400
 Received: from localhost (unknown [104.133.8.98])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 56BEA2087C;
-        Tue, 12 Mar 2019 17:17:53 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 0D4A12183F;
+        Tue, 12 Mar 2019 17:17:54 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1552411073;
-        bh=E2nVuON5xSZJJb9+9ltVHr4IXtfTDAkuOX+RgGn9YTw=;
+        s=default; t=1552411074;
+        bh=F2sg+03FNxSK3oDh3i8k/VHij56U4Pc6mHl2T/icCK8=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=s7ftR2r4Oy06O8foXZ2fwYfrayJcoqYjHMvAg47HXMrwM1JumfM9ARMcmBjEGiHis
-         3TXBVWBuPz4fiDpODIMWjvsrH6uvEiafkZDkUeYaiiogq93mBTEsXmOStSGzRJeVz/
-         VvUNLGQpjcL+Z/WFzGKdB9Q90JlC5XL6E5ws6WXM=
+        b=er+6a7NdvPbGCpFxdnAFYcR1skT4Nq/WBQN6kHscN1HzQWScrmhT5WgfTGu7QlC23
+         wMp9kA6TOAbyjPsXLzwL7AqtSidLChMZGwzDbG5SiO3hDbdIjXYj3oQIp91qGEpzP7
+         FzUUOL1WWCs3KPg2Ht/TfmW3PQhTJN5bSQyCl9Jg=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Tomonori Sakita <tomonori.sakita@sord.co.jp>,
-        Atsushi Nemoto <atsushi.nemoto@sord.co.jp>,
-        Dalon L Westergreen <dalon.westergreen@linux.intel.com>,
-        Thor Thayer <thor.thayer@linux.intel.com>,
+        stable@vger.kernel.org, Alexey Khoroshilov <khoroshilov@ispras.ru>,
+        Yonglong Liu <liuyonglong@huawei.com>,
+        Peng Li <lipeng321@huawei.com>,
         "David S. Miller" <davem@davemloft.net>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.9 47/96] net: altera_tse: fix msgdma_tx_completion on non-zero fill_level case
-Date:   Tue, 12 Mar 2019 10:10:05 -0700
-Message-Id: <20190312171038.115818890@linuxfoundation.org>
+Subject: [PATCH 4.9 48/96] net: hns: Fix for missing of_node_put() after of_parse_phandle()
+Date:   Tue, 12 Mar 2019 10:10:06 -0700
+Message-Id: <20190312171038.184900518@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190312171034.530434962@linuxfoundation.org>
 References: <20190312171034.530434962@linuxfoundation.org>
@@ -70,38 +68,49 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-[ Upstream commit 6571ebce112a21ec9be68ef2f53b96fcd41fd81b ]
+[ Upstream commit 263c6d75f9a544a3c2f8f6a26de4f4808d8f59cf ]
 
-If fill_level was not zero and status was not BUSY,
-result of "tx_prod - tx_cons - inuse" might be zero.
-Subtracting 1 unconditionally results invalid negative return value
-on this case.
-Make sure not to return an negative value.
+In hns enet driver, we use of_parse_handle() to get hold of the
+device node related to "ae-handle" but we have missed to put
+the node reference using of_node_put() after we are done using
+the node. This patch fixes it.
 
-Signed-off-by: Tomonori Sakita <tomonori.sakita@sord.co.jp>
-Signed-off-by: Atsushi Nemoto <atsushi.nemoto@sord.co.jp>
-Reviewed-by: Dalon L Westergreen <dalon.westergreen@linux.intel.com>
-Acked-by: Thor Thayer <thor.thayer@linux.intel.com>
+Note:
+This problem is stated in Link: https://lkml.org/lkml/2018/12/22/217
+
+Fixes: 48189d6aaf1e ("net: hns: enet specifies a reference to dsaf")
+Reported-by: Alexey Khoroshilov <khoroshilov@ispras.ru>
+Signed-off-by: Yonglong Liu <liuyonglong@huawei.com>
+Signed-off-by: Peng Li <lipeng321@huawei.com>
 Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/ethernet/altera/altera_msgdma.c | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+ drivers/net/ethernet/hisilicon/hns/hns_enet.c | 5 +++++
+ 1 file changed, 5 insertions(+)
 
-diff --git a/drivers/net/ethernet/altera/altera_msgdma.c b/drivers/net/ethernet/altera/altera_msgdma.c
-index 0fb986ba3290..0ae723f75341 100644
---- a/drivers/net/ethernet/altera/altera_msgdma.c
-+++ b/drivers/net/ethernet/altera/altera_msgdma.c
-@@ -145,7 +145,8 @@ u32 msgdma_tx_completions(struct altera_tse_private *priv)
- 			& 0xffff;
+diff --git a/drivers/net/ethernet/hisilicon/hns/hns_enet.c b/drivers/net/ethernet/hisilicon/hns/hns_enet.c
+index a2f7d0834071..ad8681cf5ef0 100644
+--- a/drivers/net/ethernet/hisilicon/hns/hns_enet.c
++++ b/drivers/net/ethernet/hisilicon/hns/hns_enet.c
+@@ -2078,6 +2078,8 @@ static int hns_nic_dev_probe(struct platform_device *pdev)
+ out_notify_fail:
+ 	(void)cancel_work_sync(&priv->service_task);
+ out_read_prop_fail:
++	/* safe for ACPI FW */
++	of_node_put(to_of_node(priv->fwnode));
+ 	free_netdev(ndev);
+ 	return ret;
+ }
+@@ -2107,6 +2109,9 @@ static int hns_nic_dev_remove(struct platform_device *pdev)
+ 	set_bit(NIC_STATE_REMOVING, &priv->state);
+ 	(void)cancel_work_sync(&priv->service_task);
  
- 	if (inuse) { /* Tx FIFO is not empty */
--		ready = priv->tx_prod - priv->tx_cons - inuse - 1;
-+		ready = max_t(int,
-+			      priv->tx_prod - priv->tx_cons - inuse - 1, 0);
- 	} else {
- 		/* Check for buffered last packet */
- 		status = csrrd32(priv->tx_dma_csr, msgdma_csroffs(status));
++	/* safe for ACPI FW */
++	of_node_put(to_of_node(priv->fwnode));
++
+ 	free_netdev(ndev);
+ 	return 0;
+ }
 -- 
 2.19.1
 
