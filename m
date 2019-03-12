@@ -4,50 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B9B7EC43381
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 18:04:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 36B80C43381
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 18:04:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 814AA2087C
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 18:04:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id ECA87205C9
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 18:04:34 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1552413864;
-	bh=dvRzzKO88JiWpFL+0/zB3U05RtwiGidnzEc20VAic/Q=;
+	s=default; t=1552413875;
+	bh=zS+o/Ak2pbRc5HuR858ZcOCRhoY/hOpwuPOTTaoBeC8=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=wmvdMVuO+5qJRlfhURg67pbrrOVN6xwfl4uYngFjf7slvDDChiEqDIFfDJ4c4qwMb
-	 ONKXwys94YAZ7+RrqurA6+mOhTFJF/G0BwNZb5cL+uVpEQ0rfihgmSEAMWAdlzch5p
-	 HdqkGOrevQ31ucMBd0E0nF9ZwffVE8iEzeUMTOSo=
+	b=DZ6zy9NWkZr/0L4Ub6AFlyKQ4LvZq0yR4uJ3kRE/qv5nNLCZYSxIH1yW5w8APs214
+	 vyS3bfJ+hwcFOuNPIFypUcJF2NKtw8qri27SnAHRZriYdyMGBxKDzdHK+BejMwR0hk
+	 lACGPFvNch1GXOOF84vHZLVWc2YFjhbkPB0sO7VA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728949AbfCLSEW (ORCPT
+        id S1727767AbfCLSEd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 12 Mar 2019 14:04:22 -0400
-Received: from mail.kernel.org ([198.145.29.99]:48678 "EHLO mail.kernel.org"
+        Tue, 12 Mar 2019 14:04:33 -0400
+Received: from mail.kernel.org ([198.145.29.99]:48446 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727651AbfCLRMt (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 12 Mar 2019 13:12:49 -0400
+        id S1727638AbfCLRMr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 12 Mar 2019 13:12:47 -0400
 Received: from localhost (unknown [104.133.8.98])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 8F9232087C;
-        Tue, 12 Mar 2019 17:12:48 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 2C5402171F;
+        Tue, 12 Mar 2019 17:12:47 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1552410768;
-        bh=dvRzzKO88JiWpFL+0/zB3U05RtwiGidnzEc20VAic/Q=;
+        s=default; t=1552410767;
+        bh=zS+o/Ak2pbRc5HuR858ZcOCRhoY/hOpwuPOTTaoBeC8=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=pcRNaDJv+hRcDnZvJ0S7+tdCexJ6kYxH1wQ0ufaTkz08OOS4UR5uK568KORd8jQ8l
-         gfS65BJESruKMFP1e6ZxbgHyQxYMPcLy1xnCxFLQf61DghdV9GD5Wxwojw4uONreH/
-         0u1ydS1AMHTDQ+a20NAfVgOTP4c8FDMw8wNe/WIE=
+        b=Zurva/IxZ1Di/c3qwJzfxcOo/pqKGAOhDKVCGAOU5hJWsM+a1yelvuA6yjORwqlBT
+         YqGIRKiMfSL1P7rlnT6H2ZlsErlafOLROZgZm0GRrjoOGGAXx+vgnXbrCciOQcpt58
+         omMi/HIyXYjBrtsa6jXOdbcGUQPLc7HqxtGwz/pY=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Jason Kridner <jdk@ti.com>,
-        Linus Walleij <linus.walleij@linaro.org>,
+        stable@vger.kernel.org, Evan Quan <evan.quan@amd.com>,
+        Alex Deucher <alexander.deucher@amd.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.20 083/171] pinctrl: mcp23s08: spi: Fix regmap allocation for mcp23s18
-Date:   Tue, 12 Mar 2019 10:07:43 -0700
-Message-Id: <20190312170355.183241379@linuxfoundation.org>
+Subject: [PATCH 4.20 101/171] drm/amdgpu: Add missing power attribute to APU check
+Date:   Tue, 12 Mar 2019 10:08:01 -0700
+Message-Id: <20190312170356.770786892@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190312170347.868927101@linuxfoundation.org>
 References: <20190312170347.868927101@linuxfoundation.org>
@@ -66,43 +66,32 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-[ Upstream commit f165988b77ef849eb0c1aebd94fe778024f88314 ]
+[ Upstream commit dc14eb12f6bb3e779c5461429c1889a339c67aab ]
 
-Fixes issue created by 9b3e4207661e67f04c72af15e29f74cd944f5964.
+Add missing power_average to visible check for power
+attributes for APUs.  Was missed before.
 
-It wasn't possible for one_regmap_config to be non-NULL at the point
-it was tested for mcp23s18 devices.
-
-Applied the same pattern of allocating one_regmap_config using
-devm_kmemdump() and then initializing the local regmap structure
-from that.
-
-Signed-off-by: Jason Kridner <jdk@ti.com>
-Signed-off-by: Linus Walleij <linus.walleij@linaro.org>
+Reviewed-by: Evan Quan <evan.quan@amd.com>
+Signed-off-by: Alex Deucher <alexander.deucher@amd.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/pinctrl/pinctrl-mcp23s08.c | 7 ++++++-
- 1 file changed, 6 insertions(+), 1 deletion(-)
+ drivers/gpu/drm/amd/amdgpu/amdgpu_pm.c | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/pinctrl/pinctrl-mcp23s08.c b/drivers/pinctrl/pinctrl-mcp23s08.c
-index b03481ef99a1..98905d4a79ca 100644
---- a/drivers/pinctrl/pinctrl-mcp23s08.c
-+++ b/drivers/pinctrl/pinctrl-mcp23s08.c
-@@ -832,8 +832,13 @@ static int mcp23s08_probe_one(struct mcp23s08 *mcp, struct device *dev,
- 		break;
+diff --git a/drivers/gpu/drm/amd/amdgpu/amdgpu_pm.c b/drivers/gpu/drm/amd/amdgpu/amdgpu_pm.c
+index 59cc678de8c1..bbac15fd8caa 100644
+--- a/drivers/gpu/drm/amd/amdgpu/amdgpu_pm.c
++++ b/drivers/gpu/drm/amd/amdgpu/amdgpu_pm.c
+@@ -1671,7 +1671,8 @@ static umode_t hwmon_attributes_visible(struct kobject *kobj,
+ 		effective_mode &= ~S_IWUSR;
  
- 	case MCP_TYPE_S18:
-+		one_regmap_config =
-+			devm_kmemdup(dev, &mcp23x17_regmap,
-+				sizeof(struct regmap_config), GFP_KERNEL);
-+		if (!one_regmap_config)
-+			return -ENOMEM;
- 		mcp->regmap = devm_regmap_init(dev, &mcp23sxx_spi_regmap, mcp,
--					       &mcp23x17_regmap);
-+					       one_regmap_config);
- 		mcp->reg_shift = 1;
- 		mcp->chip.ngpio = 16;
- 		mcp->chip.label = "mcp23s18";
+ 	if ((adev->flags & AMD_IS_APU) &&
+-	    (attr == &sensor_dev_attr_power1_cap_max.dev_attr.attr ||
++	    (attr == &sensor_dev_attr_power1_average.dev_attr.attr ||
++	     attr == &sensor_dev_attr_power1_cap_max.dev_attr.attr ||
+ 	     attr == &sensor_dev_attr_power1_cap_min.dev_attr.attr||
+ 	     attr == &sensor_dev_attr_power1_cap.dev_attr.attr))
+ 		return 0;
 -- 
 2.19.1
 
