@@ -7,50 +7,50 @@ X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6C89CC43381
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 17:51:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D0FC3C43381
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 17:51:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3D8CA2087C
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 17:51:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A4C5C2147C
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 17:51:44 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1552413097;
-	bh=fCpb523PH5ze2vmTXgxOeONnOMTgzT1g5WAb2NGe/3w=;
+	s=default; t=1552413104;
+	bh=ItRofSm2Fi8QdGu6dwPVpy8on1OCLu75yezgumCrZYA=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=LgAMuk2pR8kFQkHetAbRpbAnHlQ6Tk1hwpdSY1FbmUnHa6C6RL3QLKoP2yLGQfPdN
-	 aUQweB2eCLfppCYCItW8UN47xnea27WQ16ipFqT3vWD1v8fKMjYNz9PdS1SUcERrRM
-	 UOASGA7e3qWLPuVV44iLkreCwGrygtu5bPM9hPcg=
+	b=wkoxbYUZTwqplkFlegHnM57ZUZvznyJcU8tihPwdddaJZ0vn2N8qX0ptkpWQHytHw
+	 s6uKqwlJExbbbp9PsXuKIju9AI47FNr7T3zgf74fqDp9SgMF49aqNOQTipfNLy+llA
+	 oJWY8dAeW66hRyKD5XdU0Ll1zyfZHf3uHMUJwgMY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729245AbfCLRvf (ORCPT
+        id S1727561AbfCLRvb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 12 Mar 2019 13:51:35 -0400
+        Tue, 12 Mar 2019 13:51:31 -0400
 Received: from mail.kernel.org ([198.145.29.99]:53414 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728399AbfCLROd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 12 Mar 2019 13:14:33 -0400
+        id S1728405AbfCLROe (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 12 Mar 2019 13:14:34 -0400
 Received: from localhost (unknown [104.133.8.98])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 6E75E21741;
-        Tue, 12 Mar 2019 17:14:32 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id DCA09217D4;
+        Tue, 12 Mar 2019 17:14:33 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1552410872;
-        bh=fCpb523PH5ze2vmTXgxOeONnOMTgzT1g5WAb2NGe/3w=;
+        s=default; t=1552410874;
+        bh=ItRofSm2Fi8QdGu6dwPVpy8on1OCLu75yezgumCrZYA=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=lf0DVKoz5sQ+J8T3u8T6KFyGXPBAES90sevn3sJ9CcGZVqvv6cXsc9urZ4QZpwNar
-         /vDcq9pNJtSLCSS9+5Nu6rpP5frgFTBZvE6ZUyKVt4kJYNEkpYG1t9JFJy5jezdjEh
-         ihaHaoYljqVxIJZoLKc6WPRy7gMnwpbGzlYO59Nw=
+        b=VuQQlWM5f68DM1ZuXVVGsDaNj9hLiQQtX+d7BVm18tw7pYmuwDfMFsgFGxlobULos
+         WPoUtpXhMO/1EyydsvCe1qEgbphx2A06TlJmIcpIL3m04bzLYY9r0gK9qzsLChYPtz
+         9hZpw7mZlyMv4JKhPv57im7IG7oCj21F2MS+E9yY=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Lance Digby <ldigby@redhat.com>,
-        Jiri Olsa <jolsa@kernel.org>,
-        Quentin Monnet <quentin.monnet@netronome.com>,
-        Jakub Kicinski <jakub.kicinski@netronome.com>,
-        Daniel Borkmann <daniel@iogearbox.net>,
+        stable@vger.kernel.org, Jan Kara <jack@suse.cz>,
+        Michal Hocko <mhocko@suse.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Al Viro <viro@ZenIV.linux.org.uk>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 074/149] bpftool: Fix prog dump by tag
-Date:   Tue, 12 Mar 2019 10:08:12 -0700
-Message-Id: <20190312170355.818860573@linuxfoundation.org>
+Subject: [PATCH 4.19 058/149] fs/drop_caches.c: avoid softlockups in drop_pagecache_sb()
+Date:   Tue, 12 Mar 2019 10:07:56 -0700
+Message-Id: <20190312170354.588307852@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190312170349.421581206@linuxfoundation.org>
 References: <20190312170349.421581206@linuxfoundation.org>
@@ -69,68 +69,55 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-[ Upstream commit 752bcf80f5549c9901b2e8bc77b2138de55b1026 ]
+[ Upstream commit c27d82f52f75fc9d8d9d40d120d2a96fdeeada5e ]
 
-Lance reported an issue with bpftool not being able to
-dump program if there are more programs loaded and you
-want to dump any but the first program, like:
+When superblock has lots of inodes without any pagecache (like is the
+case for /proc), drop_pagecache_sb() will iterate through all of them
+without dropping sb->s_inode_list_lock which can lead to softlockups
+(one of our customers hit this).
 
-  # bpftool prog
-  28: kprobe  name trace_req_start  tag 1dfc28ba8b3dd597  gpl
-  	loaded_at 2019-01-18T17:02:40+1100  uid 0
-  	xlated 112B  jited 109B  memlock 4096B  map_ids 13
-  29: kprobe  name trace_req_compl  tag 5b6a5ecc6030a683  gpl
-  	loaded_at 2019-01-18T17:02:40+1100  uid 0
-  	xlated 928B  jited 575B  memlock 4096B  map_ids 13,14
-  #  bpftool prog dum jited tag 1dfc28ba8b3dd597
-   0:	push   %rbp
-   1:	mov    %rsp,%rbp
-  ...
+Fix the problem by going to the slow path and doing cond_resched() in
+case the process needs rescheduling.
 
-  #  bpftool prog dum jited tag 5b6a5ecc6030a683
-  Error: can't get prog info (29): Bad address
-
-The problem is in the prog_fd_by_tag function not cleaning
-the struct bpf_prog_info before another request, so the
-previous program length is still in there and kernel assumes
-it needs to dump the program, which fails because there's no
-user pointer set.
-
-Moving the struct bpf_prog_info declaration into the loop,
-so it gets cleaned before each query.
-
-Fixes: 71bb428fe2c1 ("tools: bpf: add bpftool")
-Reported-by: Lance Digby <ldigby@redhat.com>
-Signed-off-by: Jiri Olsa <jolsa@kernel.org>
-Reviewed-by: Quentin Monnet <quentin.monnet@netronome.com>
-Acked-by: Jakub Kicinski <jakub.kicinski@netronome.com>
-Signed-off-by: Daniel Borkmann <daniel@iogearbox.net>
+Link: http://lkml.kernel.org/r/20190114085343.15011-1-jack@suse.cz
+Signed-off-by: Jan Kara <jack@suse.cz>
+Acked-by: Michal Hocko <mhocko@suse.com>
+Reviewed-by: Andrew Morton <akpm@linux-foundation.org>
+Cc: Al Viro <viro@ZenIV.linux.org.uk>
+Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
+Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- tools/bpf/bpftool/prog.c | 5 +++--
- 1 file changed, 3 insertions(+), 2 deletions(-)
+ fs/drop_caches.c | 8 +++++++-
+ 1 file changed, 7 insertions(+), 1 deletion(-)
 
-diff --git a/tools/bpf/bpftool/prog.c b/tools/bpf/bpftool/prog.c
-index 0de024a6cc2b..bbba0d61570f 100644
---- a/tools/bpf/bpftool/prog.c
-+++ b/tools/bpf/bpftool/prog.c
-@@ -109,13 +109,14 @@ static void print_boot_time(__u64 nsecs, char *buf, unsigned int size)
+diff --git a/fs/drop_caches.c b/fs/drop_caches.c
+index 82377017130f..d31b6c72b476 100644
+--- a/fs/drop_caches.c
++++ b/fs/drop_caches.c
+@@ -21,8 +21,13 @@ static void drop_pagecache_sb(struct super_block *sb, void *unused)
+ 	spin_lock(&sb->s_inode_list_lock);
+ 	list_for_each_entry(inode, &sb->s_inodes, i_sb_list) {
+ 		spin_lock(&inode->i_lock);
++		/*
++		 * We must skip inodes in unusual state. We may also skip
++		 * inodes without pages but we deliberately won't in case
++		 * we need to reschedule to avoid softlockups.
++		 */
+ 		if ((inode->i_state & (I_FREEING|I_WILL_FREE|I_NEW)) ||
+-		    (inode->i_mapping->nrpages == 0)) {
++		    (inode->i_mapping->nrpages == 0 && !need_resched())) {
+ 			spin_unlock(&inode->i_lock);
+ 			continue;
+ 		}
+@@ -30,6 +35,7 @@ static void drop_pagecache_sb(struct super_block *sb, void *unused)
+ 		spin_unlock(&inode->i_lock);
+ 		spin_unlock(&sb->s_inode_list_lock);
  
- static int prog_fd_by_tag(unsigned char *tag)
- {
--	struct bpf_prog_info info = {};
--	__u32 len = sizeof(info);
- 	unsigned int id = 0;
- 	int err;
- 	int fd;
- 
- 	while (true) {
-+		struct bpf_prog_info info = {};
-+		__u32 len = sizeof(info);
-+
- 		err = bpf_prog_get_next_id(id, &id);
- 		if (err) {
- 			p_err("%s", strerror(errno));
++		cond_resched();
+ 		invalidate_mapping_pages(inode->i_mapping, 0, -1);
+ 		iput(toput_inode);
+ 		toput_inode = inode;
 -- 
 2.19.1
 
