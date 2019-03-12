@@ -2,108 +2,98 @@ Return-Path: <SRS0=J4ZE=RP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,
-	URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6B255C10F06
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 00:30:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2BAABC43381
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 00:33:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 37C9D2148D
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 00:30:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DA7A22087F
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 00:33:08 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel-com.20150623.gappssmtp.com header.i=@intel-com.20150623.gappssmtp.com header.b="tjGdxu/b"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ud4o9CIh"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726619AbfCLAaO (ORCPT
+        id S1726446AbfCLAdH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 11 Mar 2019 20:30:14 -0400
-Received: from mail-oi1-f194.google.com ([209.85.167.194]:43108 "EHLO
-        mail-oi1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725880AbfCLAaO (ORCPT
+        Mon, 11 Mar 2019 20:33:07 -0400
+Received: from mail-pf1-f193.google.com ([209.85.210.193]:39313 "EHLO
+        mail-pf1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726009AbfCLAdH (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 11 Mar 2019 20:30:14 -0400
-Received: by mail-oi1-f194.google.com with SMTP id i8so631616oib.10
-        for <linux-kernel@vger.kernel.org>; Mon, 11 Mar 2019 17:30:13 -0700 (PDT)
+        Mon, 11 Mar 2019 20:33:07 -0400
+Received: by mail-pf1-f193.google.com with SMTP id i20so479208pfo.6
+        for <linux-kernel@vger.kernel.org>; Mon, 11 Mar 2019 17:33:06 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=intel-com.20150623.gappssmtp.com; s=20150623;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=96Eychx0pVXg5tC/lmw3nK92/kMpZpAcq39GwifwZoI=;
-        b=tjGdxu/bVPVh9Ua5UQ8YtA22eqApz6aIzFPfYx/7CDlBMSMlZHU0eHNZdkYmi1qjsS
-         OmHTQI2f2eb5YiKYmgKeN4CALQM8TaBXKfhHPZtA8LlA+Wl4IaWsIyyoHe4RKeXN7JyK
-         2oqiCUcYuzjD19Oz1vcxDOEwP0keO3Js0AntCZkGr7o3wJubBd7j754AQ+BahUJ7weyW
-         VnQqxBLf8Pc9NU6+/3PfC/AMuqlQ4wQ3rdM2pF8OGCN3nhQ1++j3cDp98NsucCoxQeyc
-         omm/sgZP15MkyeSNXf1CWIYFvXT//dFW7uamAA9EMQFBEQuF8Kiv3pSRBCXxmG/SLHfO
-         FDOg==
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id;
+        bh=8PABx0OHKc8ecQvYTILU00A3ovg0RAcr/xS/uNWnrJI=;
+        b=ud4o9CIhP2Dw8m03b4Qb3bUQJrMmdYk/qvFgclJ+n4goizacfjRLluBiKDfF977Oy6
+         muk5lDqOP/rxFUijP+3ChrB8LUYa7vLBRw0lac5mO/QJ+DYcD7LgNaU7+M7YIn0dor3L
+         oZRF5WqP5OPbZxc2r66qUFb451TfFhgnuGZDIJ6e+b3zoI4CcE2bTBbPecShF4aUUvrQ
+         oxGIxYmJtqu0/SiVLAHG5qfHxAH+D5jGAs3MST7p4wyXk3+rh3UTHkQrO+QI1/cHRuDS
+         9PH+CCkYkMbx+iTwcRO6VBo+s7ir7mN++SfHI+JE/2nPMVBmIRz8rmEpdmOVq3uVHShy
+         UdSQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=96Eychx0pVXg5tC/lmw3nK92/kMpZpAcq39GwifwZoI=;
-        b=pNcllbfhl36d23IB28Ggc6iPn/neShXJZMClgrbffc3PqynxUyoatbpFLHKey8F+ud
-         GUphH/X9ArbGSto1wLfYGlnKk8I+JWRJT69hAJA7EMR6ilLw/QzEc2jVRDlWbjM2Mlwv
-         6bDFbYBlVF7Qp94D8spJKn2KTINFLf1s1PWEJ2uZF1sCGZ0GLDA1SPSXRT/bdqjTCK9T
-         tjk/CvnOuPXpMO8fuocTPLzqzuOrqmTqZXqM+812D2bWVFzxUitufAmZMpz3Ajn7OI2t
-         zo08YGZx1HuwvMVksRL+qFCtzGrMUSzin+d9aWAa1qWP+ATnvP3hITPF3t99dSri9siu
-         ZCJg==
-X-Gm-Message-State: APjAAAX8DNySVaLNt1ElE/e/EtDjK7ndbphD21JJxcLWybpWsEdIu/C9
-        HciHt5ud38lV2gYE2UXu7SZPE7alvutUFHfM6nysMw==
-X-Google-Smtp-Source: APXvYqwlMK4Ji22rFS+MBGh9COVQcs3fw5qaMUPzkLdofXvv/AYErEbzrXXcIHwPq5L/VyLOpy4O8NJyIgC70phvAJ0=
-X-Received: by 2002:aca:3906:: with SMTP id g6mr10168oia.149.1552350611637;
- Mon, 11 Mar 2019 17:30:11 -0700 (PDT)
-MIME-Version: 1.0
-References: <CAPcyv4he0q_FdqqiXarp0bXjcggs8QZX8Od560E2iFxzCU3Qag@mail.gmail.com>
- <CAHk-=wjvmwD_0=CRQtNs5RBh8oJwrriXDn+XNWOU=wk8OyQ5ew@mail.gmail.com>
- <CAPcyv4hafLUr2rKdLG+3SHXyWaa0d_2g8AKKZRf2mKPW+3DUSA@mail.gmail.com>
- <CAHk-=wiTM93XKaFqUOR7q7133wvzNS8Kj777EZ9E8S99NbZhAA@mail.gmail.com>
- <CAPcyv4hMZMuSEtUkKqL067f4cWPGivzn9mCtv3gZsJG2qUOYvg@mail.gmail.com> <CAHk-=wgnJd_qY1wGc0KcoGrNz3Mp9-8mQFMDLoTXvEMVtAxyZQ@mail.gmail.com>
-In-Reply-To: <CAHk-=wgnJd_qY1wGc0KcoGrNz3Mp9-8mQFMDLoTXvEMVtAxyZQ@mail.gmail.com>
-From:   Dan Williams <dan.j.williams@intel.com>
-Date:   Mon, 11 Mar 2019 17:30:00 -0700
-Message-ID: <CAPcyv4hjfOjLU8x366eDy57FV-=6Xb5sdCr7u-+r8OZe2RwMHA@mail.gmail.com>
-Subject: Re: [GIT PULL] device-dax for 5.1: PMEM as RAM
-To:     Linus Torvalds <torvalds@linux-foundation.org>
-Cc:     Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        linux-nvdimm <linux-nvdimm@lists.01.org>,
-        Linux MM <linux-mm@kvack.org>,
-        Dave Hansen <dave.hansen@intel.com>,
-        "Luck, Tony" <tony.luck@intel.com>
-Content-Type: text/plain; charset="UTF-8"
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=8PABx0OHKc8ecQvYTILU00A3ovg0RAcr/xS/uNWnrJI=;
+        b=UnxmAVgwWdSTJw1xWt3815WO42lW4zlq85oL0Gg24CiS982vWLiNyJIubxdjAjRFE5
+         TuuqqAae6KLBpYi0PVYzYEQtXdfupZ8oAnhJ+YwqplNbwhPliu6FSaEHQcRmc787yPlM
+         m2GvdYyxrHgiT2clPEchCTQo32SWbBi1k+Z+xFOVK58GxVRKb2tP9MWP1M5q3bkKfUxH
+         FQh2TuLesluKFZAiZHT+X4CVW3723To8VNNfvSt5dL0bBMtRU1KCDALsSxNTrB3SgZ3D
+         nxrLbq+0ukL9XbWEotl3taAu8UNHArT2DRyroi1RdilEQPJn76b9wPeaNVJKhbGa5C3y
+         EU6w==
+X-Gm-Message-State: APjAAAU6EQo57deNnByzEwGPQRWn3u90DSw/pI9sQo5JfVRvkg7k9ujO
+        gERtHPBkq8nJcz+ogC18ib4ARohouAAz
+X-Google-Smtp-Source: APXvYqzrZJ7IWraZK6cKOfdcMMT1ns3pioGtmDVwxG60opdOw95n6EQ78RRJhRQ83g6qHLEGeNYCJA==
+X-Received: by 2002:a17:902:70c9:: with SMTP id l9mr11496692plt.131.1552350786482;
+        Mon, 11 Mar 2019 17:33:06 -0700 (PDT)
+Received: from host.hxtcorp.net ([240e:e0:f08d:5bc1:25ae:36fa:3a9e:cfcf])
+        by smtp.gmail.com with ESMTPSA id d86sm15002274pfm.18.2019.03.11.17.32.55
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Mon, 11 Mar 2019 17:33:05 -0700 (PDT)
+From:   John Gong <johngong0791@gmail.com>
+To:     christoffer.dall@arm.com
+Cc:     Shengmin Gong <shengmin.gong@gmail.com>,
+        Marc Zyngier <marc.zyngier@arm.com>,
+        Julien Thierry <julien.thierry@arm.com>,
+        Jia He <hejianet@gmail.com>,
+        Andre Przywara <andre.przywara@arm.com>,
+        linux-arm-kernel@lists.infradead.org, kvmarm@lists.cs.columbia.edu,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH] KVM: arm64: fix potential bug
+Date:   Tue, 12 Mar 2019 08:32:41 +0800
+Message-Id: <20190312003243.6712-1-johngong0791@gmail.com>
+X-Mailer: git-send-email 2.17.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Mar 11, 2019 at 5:08 PM Linus Torvalds
-<torvalds@linux-foundation.org> wrote:
->
-> On Mon, Mar 11, 2019 at 8:37 AM Dan Williams <dan.j.williams@intel.com> wrote:
-> >
-> > Another feature the userspace tooling can support for the PMEM as RAM
-> > case is the ability to complete an Address Range Scrub of the range
-> > before it is added to the core-mm. I.e at least ensure that previously
-> > encountered poison is eliminated.
->
-> Ok, so this at least makes sense as an argument to me.
->
-> In the "PMEM as filesystem" part, the errors have long-term history,
-> while in "PMEM as RAM" the memory may be physically the same thing,
-> but it doesn't have the history and as such may not be prone to
-> long-term errors the same way.
->
-> So that validly argues that yes, when used as RAM, the likelihood for
-> errors is much lower because they don't accumulate the same way.
->
-> > The driver can also publish an
-> > attribute to indicate when rep; mov is recoverable, and gate the
-> > hotplug policy on the result. In my opinion a positive indicator of
-> > the cpu's ability to recover rep; mov exceptions is a gap that needs
-> > addressing.
->
-> Is there some way to say "don't raise MC for this region"? Or at least
-> limit it to a nonfatal one?
+Since intid always >= VGIC_NR_PRIVATE_IRQS, so then even vcpu == NULL,
+it never return -EINVAL.
 
-I wish, but no. The poison consumption always raises the MC then it's
-whether MCI_STATUS_PCC (processor context corrupt) is set as to
-whether the cpu indicates it is safe to proceed. There's no way to
-indicate, "never set MCI_STATUS_PCC", or silence the exception.
+Signed-off-by: Shengmin Gong <shengmin.gong@gmail.com>
+Signed-off-by: John Gong <johngong0791@gmail.com>
+---
+ virt/kvm/arm/vgic/vgic.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/virt/kvm/arm/vgic/vgic.c b/virt/kvm/arm/vgic/vgic.c
+index abd9c7352677..d3cb1ce880e2 100644
+--- a/virt/kvm/arm/vgic/vgic.c
++++ b/virt/kvm/arm/vgic/vgic.c
+@@ -424,7 +424,7 @@ int kvm_vgic_inject_irq(struct kvm *kvm, int cpuid, unsigned int intid,
+ 		return ret;
+ 
+ 	vcpu = kvm_get_vcpu(kvm, cpuid);
+-	if (!vcpu && intid < VGIC_NR_PRIVATE_IRQS)
++	if (!vcpu)
+ 		return -EINVAL;
+ 
+ 	irq = vgic_get_irq(kvm, vcpu, intid);
+-- 
+2.17.1
+
