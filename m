@@ -2,147 +2,115 @@ Return-Path: <SRS0=J4ZE=RP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F15B4C4360F
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 11:05:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4A67CC43381
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 11:06:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BD179214AE
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 11:05:21 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="mOW5+EKM"
+	by mail.kernel.org (Postfix) with ESMTP id 23483206DF
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 11:06:09 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726452AbfCLLFU (ORCPT
+        id S1726610AbfCLLGH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 12 Mar 2019 07:05:20 -0400
-Received: from mail-io1-f65.google.com ([209.85.166.65]:46881 "EHLO
-        mail-io1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725811AbfCLLFU (ORCPT
+        Tue, 12 Mar 2019 07:06:07 -0400
+Received: from outbound.smtp.vt.edu ([198.82.183.121]:36384 "EHLO
+        omr2.cc.vt.edu" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1725811AbfCLLGG (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 12 Mar 2019 07:05:20 -0400
-Received: by mail-io1-f65.google.com with SMTP id k21so1643769ior.13
-        for <linux-kernel@vger.kernel.org>; Tue, 12 Mar 2019 04:05:19 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=xH7u0SIa2NIqLp+XLrFdsgjL0uBSb7uHvpHDRDB7p5U=;
-        b=mOW5+EKMTy+WiyZtH8detQ3wUr/c7TNL1Qy/LragZbtl6h2wdtk49YpuBuEexJQlsa
-         lj/VBzbcVbMX9yaYBUWfsQ0b2NhR9CXKz8alLTdwboeei/qmPJnXqLG8iXsTOscAjjtt
-         BPWsJi0A6suM2TbTuXNmpBd6Phl7VhP5Bs3JpSRno1kE3EhPCbL3OmVCeuasv/g7wd6A
-         qgANJkBulCV5vrq4nIXXatCsj+DHQvBUNkXsDgLx+iPRf1AM6GTmRBfwRN8ns3HckGyH
-         hXZyUvVqNQA2PhtNZu6YCe372FG3VMhaerjz6N3zJZdaJkrIc9zUGliaB8LDWp7BE1c7
-         AZEg==
+        Tue, 12 Mar 2019 07:06:06 -0400
+Received: from mr4.cc.vt.edu (mr4.cc.ipv6.vt.edu [IPv6:2607:b400:92:8300:0:7b:e2b1:6a29])
+        by omr2.cc.vt.edu (8.14.4/8.14.4) with ESMTP id x2CB653A004602
+        for <linux-kernel@vger.kernel.org>; Tue, 12 Mar 2019 07:06:05 -0400
+Received: from mail-qk1-f200.google.com (mail-qk1-f200.google.com [209.85.222.200])
+        by mr4.cc.vt.edu (8.14.7/8.14.7) with ESMTP id x2CB60FO020167
+        for <linux-kernel@vger.kernel.org>; Tue, 12 Mar 2019 07:06:05 -0400
+Received: by mail-qk1-f200.google.com with SMTP id d8so1777025qkk.17
+        for <linux-kernel@vger.kernel.org>; Tue, 12 Mar 2019 04:06:05 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=xH7u0SIa2NIqLp+XLrFdsgjL0uBSb7uHvpHDRDB7p5U=;
-        b=kAD+/VslsW7vbTgAnMn6x2eqgZsqIL9a1jPh7puibsmbYe3spSgu0JwJ+qNOu1Wki1
-         C66pJwczMFxtHMp4yY2ok6lSBQUpaD4pBCPm26z6fisdS6oH5GXblbud8UEFh9G5pTt7
-         CQrL1IMOSqcRUUXXbuLQPzOjwP+oKTv1fXxHBLyV+yAMcw6tXkQMis9DJki1ft2DAiAe
-         8bp1YkF/F7efqsUrn18i7jGyDpL8/+gJfPQDXkxpkGBAPm6Nr5dD1Sa2zvEjX2KbDO1m
-         +VoIjXL9qZg4OiXSo0ptJ60CKy2Lktn6OHPLhP6ex2OYsaV+j0HFQhC3Yz0AF4gZIKf/
-         CsFA==
-X-Gm-Message-State: APjAAAWVZPk7UWMePP7ggzRi9QzL6t9CAVBXJB/XNgyxCAf6J/QqHcGV
-        vmnisNFm1wrfIMWa5OxgzEXqHm6rVaFCNAX+dCg=
-X-Google-Smtp-Source: APXvYqweUbWZD1AYGdvU7fmlc//2ygm4OyFUT2sT8YLocP/dIa+DgeNXPueNq3IZMDBFiLToCtAqmFh43FtBmqfwndc=
-X-Received: by 2002:a6b:c3cc:: with SMTP id t195mr7892691iof.11.1552388718871;
- Tue, 12 Mar 2019 04:05:18 -0700 (PDT)
-MIME-Version: 1.0
-References: <1551425934-28068-1-git-send-email-laoar.shao@gmail.com> <20190311084743.GX5232@dhcp22.suse.cz>
-In-Reply-To: <20190311084743.GX5232@dhcp22.suse.cz>
-From:   Yafang Shao <laoar.shao@gmail.com>
-Date:   Tue, 12 Mar 2019 19:04:43 +0800
-Message-ID: <CALOAHbDHM1mJ3X9x3vFpDagd81T+hrb7_xdqM12x6JQXuHqwxA@mail.gmail.com>
-Subject: Re: [PATCH] mm: vmscan: show zone type in kswapd tracepoints
-To:     Michal Hocko <mhocko@kernel.org>
-Cc:     Vlastimil Babka <vbabka@suse.cz>,
-        Souptick Joarder <jrdr.linux@gmail.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Linux MM <linux-mm@kvack.org>,
-        LKML <linux-kernel@vger.kernel.org>, shaoyafang@didiglobal.com
-Content-Type: text/plain; charset="UTF-8"
+        h=x-gm-message-state:sender:from:to:cc:subject:mime-version:date
+         :message-id;
+        bh=fHbH8xXrsdcVp7DgI6FhDseV5/05/lU0RAksNhHFrTE=;
+        b=feDaoPYwFaCXUK4nCxt+bs0brJL3To0Ypq6ZsiTs6nKqqyf39i+yJptRFOMK6hh5He
+         xVaG4e1sxvOEhdLdLrUrNqRLbwhZgc4I7cBNfHQPTl/mseoMDPJApHI/Z9CfipCrxLtq
+         bpEV0Lrp788ljMbQACRZRnIsEr0H32U/uKc1EazThEiH9K8hlkp7u+fq5Ay2245CCNHT
+         W6zxLxOLgQEckqMm7LXRqSNCbMhiNA+i0ParBeOTxrBD3Ci60eu7c3R3xlWggffywyka
+         Rs4A10FIH9gCbpNjizhOrmgiSHzvH71Jsq1VBtz8a37HI9NtpOS/ttA6KhjB2kYkT84p
+         U9Hw==
+X-Gm-Message-State: APjAAAUEDw9CAIvXatvi7X/Gkeke5OzrNt+zB0jLpJbdLvHrkUoHnb1z
+        5abG4yVZItnKnvaWYS7bmeoqOmk0Ph1rs0/EuGu3U6xQP3UUQjxxN6d+AxQ9gzFe0QNUpRx/ZZ7
+        YjvLlFmTg43UE3LxAWgEyvXHueRHm69n7mJU=
+X-Received: by 2002:a37:b704:: with SMTP id h4mr19373789qkf.39.1552388759875;
+        Tue, 12 Mar 2019 04:05:59 -0700 (PDT)
+X-Google-Smtp-Source: APXvYqzc3WkjPFIew0rUJ4rvq+sC1ihUc28g1hckhy15AZ++tjWJ/KJPi6jAT6PWskJO+gQkvMlrZA==
+X-Received: by 2002:a37:b704:: with SMTP id h4mr19373775qkf.39.1552388759653;
+        Tue, 12 Mar 2019 04:05:59 -0700 (PDT)
+Received: from turing-police ([2601:5c0:c001:4341::3b7])
+        by smtp.gmail.com with ESMTPSA id f13sm5575421qto.80.2019.03.12.04.05.58
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Tue, 12 Mar 2019 04:05:58 -0700 (PDT)
+From:   "Valdis Kl=?utf-8?Q?=c4=93?=tnieks" <valdis.kletnieks@vt.edu>
+X-Google-Original-From: "Valdis Kl=?utf-8?Q?=c4=93?=tnieks" <Valdis.Kletnieks@vt.edu>
+X-Mailer: exmh version 2.9.0 11/07/2018 with nmh-1.7+dev
+To:     Ping-Ke Shih <pkshih@realtek.com>,
+        Kalle Valo <kvalo@codeaurora.org>,
+        "David S. Miller" <davem@davemloft.net>
+cc:     linux-wireless@vger.kernel.org, netdev@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH] drivers/net/wireless/realtek/rtlwifi/usb.c - fix some non-kerneldoc comments
+Mime-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Date:   Tue, 12 Mar 2019 07:05:57 -0400
+Message-ID: <15731.1552388757@turing-police>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Mar 11, 2019 at 4:47 PM Michal Hocko <mhocko@kernel.org> wrote:
->
-> On Fri 01-03-19 15:38:54, Yafang Shao wrote:
-> > If we want to know the zone type, we have to check whether
-> > CONFIG_ZONE_DMA, CONFIG_ZONE_DMA32 and CONFIG_HIGHMEM are set or not,
-> > that's not so convenient.
-> >
-> > We'd better show the zone type directly.
->
-> I do agree that zone number is quite PITA to process in general but do
-> we really need this information in the first place? Why do we even care?
->
+Building with W=1:
+  CC [M]  drivers/net/wireless/realtek/rtlwifi/usb.o
+drivers/net/wireless/realtek/rtlwifi/usb.c:243: warning: Cannot understand  *
+ on line 243 - I thought it was a doc line
+drivers/net/wireless/realtek/rtlwifi/usb.c:760: warning: Cannot understand  *
+ on line 760 - I thought it was a doc line
+drivers/net/wireless/realtek/rtlwifi/usb.c:790: warning: Cannot understand  *
+ on line 790 - I thought it was a doc line
 
-Sometimes we want to know this event occurs in which zone, then we can
-get the information of this zone,
-for example via /proc/zoneinfo.
-It could give us more information for debugging.
+Fix comment blocks so they don't look like kerneldoc lines
 
+Signed-off-by: Valdis Kletnieks <valdis.kletnieks@vt.edu>
 
-> Zones are an MM internal implementation details and the more we export
-> to the userspace the more we are going to argue about breaking userspace
-> when touching them. So I would rather not export that information unless
-> it is terribly useful.
->
+diff --git a/drivers/net/wireless/realtek/rtlwifi/usb.c b/drivers/net/wireless/realtek/rtlwifi/usb.c
+index e24fda5e9087..9478cc0d4f8b 100644
+--- a/drivers/net/wireless/realtek/rtlwifi/usb.c
++++ b/drivers/net/wireless/realtek/rtlwifi/usb.c
+@@ -239,7 +239,7 @@ static void _rtl_usb_io_handler_release(struct ieee80211_hw *hw)
+ 	mutex_destroy(&rtlpriv->io.bb_mutex);
+ }
+ 
+-/**
++/*
+  *
+  *	Default aggregation handler. Do nothing and just return the oldest skb.
+  */
+@@ -756,7 +756,7 @@ static int rtl_usb_start(struct ieee80211_hw *hw)
+ 	return err;
+ }
+ 
+-/**
++/*
+  *
+  *
+  */
+@@ -786,7 +786,7 @@ static void rtl_usb_cleanup(struct ieee80211_hw *hw)
+ 	usb_kill_anchored_urbs(&rtlusb->tx_submitted);
+ }
+ 
+-/**
++/*
+  *
+  * We may add some struct into struct rtl_usb later. Do deinit here.
+  *
 
-I 'm not sure whether zone type is  terribly useful or not, but the
-'zid' is useless at all.
-
-I don't agree that Zones are MM internal.
-We can get the zone type in many ways, for example /proc/zoneinfo.
-
-If we show this event occurs in which zone, we'd better show the zone type,
-or we should drop this 'zid'.
-
-
-> > Signed-off-by: Yafang Shao <laoar.shao@gmail.com>
-> > ---
-> >  include/trace/events/vmscan.h | 9 ++++++---
-> >  1 file changed, 6 insertions(+), 3 deletions(-)
-> >
-> > diff --git a/include/trace/events/vmscan.h b/include/trace/events/vmscan.h
-> > index a1cb913..4c8880b 100644
-> > --- a/include/trace/events/vmscan.h
-> > +++ b/include/trace/events/vmscan.h
-> > @@ -73,7 +73,10 @@
-> >               __entry->order  = order;
-> >       ),
-> >
-> > -     TP_printk("nid=%d zid=%d order=%d", __entry->nid, __entry->zid, __entry->order)
-> > +     TP_printk("nid=%d zid=%-8s order=%d",
-> > +             __entry->nid,
-> > +             __print_symbolic(__entry->zid, ZONE_TYPE),
-> > +             __entry->order)
-> >  );
-> >
-> >  TRACE_EVENT(mm_vmscan_wakeup_kswapd,
-> > @@ -96,9 +99,9 @@
-> >               __entry->gfp_flags      = gfp_flags;
-> >       ),
-> >
-> > -     TP_printk("nid=%d zid=%d order=%d gfp_flags=%s",
-> > +     TP_printk("nid=%d zid=%-8s order=%d gfp_flags=%s",
-> >               __entry->nid,
-> > -             __entry->zid,
-> > +             __print_symbolic(__entry->zid, ZONE_TYPE),
-> >               __entry->order,
-> >               show_gfp_flags(__entry->gfp_flags))
-> >  );
-> > --
-> > 1.8.3.1
-> >
->
-> --
-> Michal Hocko
-> SUSE Labs
