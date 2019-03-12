@@ -4,50 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 77B7BC4360F
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 17:18:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CBFFBC43381
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 17:18:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 41299217D8
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 17:18:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8FEB12183F
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 17:18:56 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1552411134;
-	bh=n/J555r9fXA3ezyeOpmrooWdqM+N9qeifiWy6trYURI=;
+	s=default; t=1552411136;
+	bh=k2XXZUrv2ZczFJFhp+8ZlyvxYwyLUmVK1l2PV/tJ73I=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=NIHhTdTYD6YoR9Tm81qxm4XT9LbDpx6dIHQVuhH51SiaWb5CPqG4XvQGEJ5u2NmE8
-	 70Dy0ntdusGwQqAvYAd7Nv0NT/gbwg6ImTffwBk5lYXhWlrl6IY3k09Z0Z8xsJQZlV
-	 pMCNkkX6oazwlK6lKbjy71CQwzQIkBz7gySXiCh0=
+	b=F9wT2hryHpJ/6OW9zECGazJTsjUq5l3HuUgglwLOICvx4Fnn5sRNp7JQTIXm8py4s
+	 +5ADxp9bGsRk7FlVnnhL0P9Q0iWqzW+Zkrf+joqeShj4OOCNK5LI/DfTch2DtJLdSF
+	 kvfwaxBZ44410X73pIfcPdfcuXXTNXSOsY8oLkqM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728764AbfCLRSx (ORCPT
+        id S1730177AbfCLRSz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 12 Mar 2019 13:18:53 -0400
-Received: from mail.kernel.org ([198.145.29.99]:35314 "EHLO mail.kernel.org"
+        Tue, 12 Mar 2019 13:18:55 -0400
+Received: from mail.kernel.org ([198.145.29.99]:35348 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729941AbfCLRSI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 12 Mar 2019 13:18:08 -0400
+        id S1729947AbfCLRSJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 12 Mar 2019 13:18:09 -0400
 Received: from localhost (unknown [104.133.8.98])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E0CAD206DF;
-        Tue, 12 Mar 2019 17:18:07 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 9623521741;
+        Tue, 12 Mar 2019 17:18:08 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
         s=default; t=1552411088;
-        bh=n/J555r9fXA3ezyeOpmrooWdqM+N9qeifiWy6trYURI=;
+        bh=k2XXZUrv2ZczFJFhp+8ZlyvxYwyLUmVK1l2PV/tJ73I=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=emOLrb2Lpb2ii9M7yw0oo7N+x9V3eSBdnC78WOokxISLKpmSz948f9Fyk8Jgw6miH
-         rvByvceyZXbcKZjBMWjxOnVgSA8lY60vfs9qPpcRP+c+CbPsKBy1CPuyxEOBxxF6gU
-         PabJ0kEVrG2anJtu+sAzLrxRunew6bF9j0d+D+lk=
+        b=K1d67Z1wcRoNUEegUpFOYKIPF5VEAKPKG0/Nfe4qLrDQLvGmHv0H4+WwP3/T65F02
+         NPQSeNxnqUqTCOX6fv6Ld7XxqVEtn6Es/Lw5pavsZ+/m/iPD/mTnsZ23jm5Nxvc+F0
+         fwOJwahky5EBmEQfhyF1tikJ5M1C22t5vzxPbKvE=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Peng Hao <peng.hao2@zte.com.cn>,
-        Robert Jarzmik <robert.jarzmik@free.fr>,
+        stable@vger.kernel.org,
+        Srinivas Kandagatla <srinivas.kandagatla@linaro.org>,
+        Andy Gross <andy.gross@linaro.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.9 66/96] ARM: pxa: ssp: unneeded to free devm_ allocated data
-Date:   Tue, 12 Mar 2019 10:10:24 -0700
-Message-Id: <20190312171039.542744280@linuxfoundation.org>
+Subject: [PATCH 4.9 67/96] arm64: dts: add msm8996 compatible to gicv3
+Date:   Tue, 12 Mar 2019 10:10:25 -0700
+Message-Id: <20190312171039.639270669@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190312171034.530434962@linuxfoundation.org>
 References: <20190312171034.530434962@linuxfoundation.org>
@@ -66,41 +67,36 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-[ Upstream commit ba16adeb346387eb2d1ada69003588be96f098fa ]
+[ Upstream commit 2a81efb0de0e33f2d2c83154af0bd3ce389b3269 ]
 
-devm_ allocated data will be automatically freed. The free
-of devm_ allocated data is invalid.
+Add compatible to gicv3 node to enable quirk required to restrict writing
+to GICR_WAKER register which is restricted on msm8996 SoC in Hypervisor.
 
-Fixes: 1c459de1e645 ("ARM: pxa: ssp: use devm_ functions")
-Signed-off-by: Peng Hao <peng.hao2@zte.com.cn>
-[title's prefix changed]
-Signed-off-by: Robert Jarzmik <robert.jarzmik@free.fr>
+With this quirk MSM8996 can at least boot out of mainline, which can help
+community to work with boards based on MSM8996.
+
+Without this patch Qualcomm DB820c board reboots on mainline.
+
+Signed-off-by: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
+Signed-off-by: Andy Gross <andy.gross@linaro.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/arm/plat-pxa/ssp.c | 3 ---
- 1 file changed, 3 deletions(-)
+ arch/arm64/boot/dts/qcom/msm8996.dtsi | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/arch/arm/plat-pxa/ssp.c b/arch/arm/plat-pxa/ssp.c
-index ba13f793fbce..b92673efffff 100644
---- a/arch/arm/plat-pxa/ssp.c
-+++ b/arch/arm/plat-pxa/ssp.c
-@@ -237,8 +237,6 @@ static int pxa_ssp_remove(struct platform_device *pdev)
- 	if (ssp == NULL)
- 		return -ENODEV;
+diff --git a/arch/arm64/boot/dts/qcom/msm8996.dtsi b/arch/arm64/boot/dts/qcom/msm8996.dtsi
+index 2c93de7fffe5..bdea2d6fde94 100644
+--- a/arch/arm64/boot/dts/qcom/msm8996.dtsi
++++ b/arch/arm64/boot/dts/qcom/msm8996.dtsi
+@@ -219,7 +219,7 @@
+ 		compatible = "simple-bus";
  
--	iounmap(ssp->mmio_base);
--
- 	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
- 	release_mem_region(res->start, resource_size(res));
- 
-@@ -248,7 +246,6 @@ static int pxa_ssp_remove(struct platform_device *pdev)
- 	list_del(&ssp->node);
- 	mutex_unlock(&ssp_lock);
- 
--	kfree(ssp);
- 	return 0;
- }
- 
+ 		intc: interrupt-controller@9bc0000 {
+-			compatible = "arm,gic-v3";
++			compatible = "qcom,msm8996-gic-v3", "arm,gic-v3";
+ 			#interrupt-cells = <3>;
+ 			interrupt-controller;
+ 			#redistributor-regions = <1>;
 -- 
 2.19.1
 
