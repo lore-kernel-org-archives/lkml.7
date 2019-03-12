@@ -2,119 +2,112 @@ Return-Path: <SRS0=J4ZE=RP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=unavailable autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CB5E6C43381
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 17:42:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0D05FC43381
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 17:42:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9DAC021734
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 17:42:37 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1552412557;
-	bh=UY2kBkV2e9l/KGrFwczm1NkHnmte9s0hWgV8g+o2cBQ=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=2jFKO6Mxp/vTZXbLcdWYNgR+JPLByrVBJQGaiAvA8Zo7059NDCrwgvElPhchPShzf
-	 MG9fEwe3+YWcSp5lWJzHPCugDT47IyDZKu+6IuqV4qB4fy7AkJKv/TRRxCtdXcvfWk
-	 lhDl1kdHW8UAH4I3ZyLr1QzJWS+CnwqsvdnRdrpo=
+	by mail.kernel.org (Postfix) with ESMTP id D31C821734
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 17:42:45 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="eICtM3WJ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729185AbfCLRmg (ORCPT
+        id S1729175AbfCLRmo (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 12 Mar 2019 13:42:36 -0400
-Received: from mail.kernel.org ([198.145.29.99]:57216 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728923AbfCLRP4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 12 Mar 2019 13:15:56 -0400
-Received: from localhost (unknown [104.133.8.98])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 1BCE821850;
-        Tue, 12 Mar 2019 17:15:55 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1552410955;
-        bh=UY2kBkV2e9l/KGrFwczm1NkHnmte9s0hWgV8g+o2cBQ=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=QE+fnJuMMqqzZ9XiZOy9vtcc8TZlhRyzgGS6/mqKDzEy1G7IuDCQdf4hfKNUduIVG
-         vmxOrAA0jtDLYtgJtyEtA8wKS7rHhEQn+jFY9haDs+9gzgBBwhJqLuHGLZQTRwscvv
-         Gb5yEaGg8p5SkisK9c7PkgqF6uYaEQwUPJKpQ7Ks=
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     linux-kernel@vger.kernel.org
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Igor Druzhinin <igor.druzhinin@citrix.com>,
-        Paul Durrant <paul.durrant@citrix.com>,
-        "David S. Miller" <davem@davemloft.net>
-Subject: [PATCH 4.14 024/135] xen-netback: dont populate the hash cache on XenBus disconnect
-Date:   Tue, 12 Mar 2019 10:07:51 -0700
-Message-Id: <20190312170343.347675274@linuxfoundation.org>
-X-Mailer: git-send-email 2.21.0
-In-Reply-To: <20190312170341.127810985@linuxfoundation.org>
-References: <20190312170341.127810985@linuxfoundation.org>
-User-Agent: quilt/0.65
-X-stable: review
-X-Patchwork-Hint: ignore
+        Tue, 12 Mar 2019 13:42:44 -0400
+Received: from mail-wm1-f54.google.com ([209.85.128.54]:35215 "EHLO
+        mail-wm1-f54.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728909AbfCLRPz (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 12 Mar 2019 13:15:55 -0400
+Received: by mail-wm1-f54.google.com with SMTP id y15so3508129wma.0
+        for <linux-kernel@vger.kernel.org>; Tue, 12 Mar 2019 10:15:53 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=JJNmxFq4kvtgDMxGW5EQZmwTBHXCE8cD8UO0j6EqecE=;
+        b=eICtM3WJdg7Bq7C7keVDYg0CrinSY8xGGeQG45rEmu59uiZfjFMczd9uA/UYhoAK+g
+         hCH2sfdCvx95nRGUSuHYhXxnYObCMQL27F3dvIFV/nD0pkzS+RWsuLvO20H3uohxUK8Q
+         bFWGc02dYBQDpx9KIr9IkMTpmmOLw6OjlJlPjDrBDeBbHlAJFaklVRj5VOu0U31Btj3D
+         Y2PvQxG1UvzKcsj7by517lkcVQ00sM0No4sycN/PgwxHIT9WthtTO4uSpYByiS94nf9g
+         UJ6r3xqwjS105/10FTzY8I8djkMo+4TPDnzH9B4ZzIGH0kaWVK0ouPit1AgkSDsEVjT0
+         4K0g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=JJNmxFq4kvtgDMxGW5EQZmwTBHXCE8cD8UO0j6EqecE=;
+        b=NghbaTMhb5AqeRI5htT7nYTF8qtt8rg6TqsO078qkO1Br6c2jmeIxSVVHmyAbsRE3r
+         9/1EuPSWAhpjYywoEUW9S/9rGd2lMs2ELaNBv5sRothT5afPxn5tpWMc26zJE+oIyRB2
+         TscW0qKVW9wA267b/H4NZzMlybvaXcxFu/QAYt2TEmUxpMlBlESr865s2u4mqlafAme6
+         YxD5fImQ53ge58BZimldZ8b8rak5DZmY41EP46aClFs23o0JsGUMKeQj0aLrKiRFx+Ay
+         G2fB2AJdG82Z4SKEw1Xl5P/tKcS4VyxpQr+GnFa0EQ2eEDqofYOjd7rWInEIoUmLysvM
+         YX6w==
+X-Gm-Message-State: APjAAAXMSIT2Zz7xFsyl31KTFv3MSeWe1s07uf+aCr/L4/VkexVUi5JS
+        Jor2hkfpMjEqu+6Qn1S2HrljPlxzklii6XRCK+cuMg==
+X-Google-Smtp-Source: APXvYqx87Bwal2xirLDgWzJL461s60oU++NHtJORE9GT9nlzsH1PR8HvbGpV44aPviSqK/l38j0DtUaUXf28zAVP9qA=
+X-Received: by 2002:a05:600c:2115:: with SMTP id u21mr3406355wml.70.1552410952458;
+ Tue, 12 Mar 2019 10:15:52 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+References: <20190310203403.27915-1-sultan@kerneltoast.com>
+ <20190311174320.GC5721@dhcp22.suse.cz> <20190311175800.GA5522@sultan-box.localdomain>
+ <CAJuCfpHTjXejo+u--3MLZZj7kWQVbptyya4yp1GLE3hB=BBX7w@mail.gmail.com>
+ <20190311204626.GA3119@sultan-box.localdomain> <CAJuCfpGpBxofTT-ANEEY+dFCSdwkQswox3s8Uk9Eq0BnK9i0iA@mail.gmail.com>
+ <20190312080532.GE5721@dhcp22.suse.cz> <20190312163741.GA2762@sultan-box.localdomain>
+ <20190312165805.GF5721@dhcp22.suse.cz>
+In-Reply-To: <20190312165805.GF5721@dhcp22.suse.cz>
+From:   Suren Baghdasaryan <surenb@google.com>
+Date:   Tue, 12 Mar 2019 10:15:40 -0700
+Message-ID: <CAJuCfpH9emgP=iaMy2_BEJ6HT3vvrvoeqTrCUXeBBD9VNR99kA@mail.gmail.com>
+Subject: Re: [RFC] simple_lmk: Introduce Simple Low Memory Killer for Android
+To:     Michal Hocko <mhocko@kernel.org>
+Cc:     Sultan Alsawaf <sultan@kerneltoast.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        =?UTF-8?B?QXJ2ZSBIasO4bm5ldsOlZw==?= <arve@android.com>,
+        Todd Kjos <tkjos@android.com>,
+        Martijn Coenen <maco@android.com>,
+        Joel Fernandes <joel@joelfernandes.org>,
+        Christian Brauner <christian@brauner.io>,
+        Ingo Molnar <mingo@redhat.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        LKML <linux-kernel@vger.kernel.org>, devel@driverdev.osuosl.org,
+        linux-mm <linux-mm@kvack.org>, Tim Murray <timmurray@google.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-4.14-stable review patch.  If anyone has any objections, please let me know.
+On Tue, Mar 12, 2019 at 9:58 AM Michal Hocko <mhocko@kernel.org> wrote:
+>
+> On Tue 12-03-19 09:37:41, Sultan Alsawaf wrote:
+> > I have not had a chance to look at PSI yet, but
+> > unless a PSI-enabled solution allows allocations to reach the same point as when
+> > the OOM killer is invoked (which is contradictory to what it sets out to do),
 
-------------------
+LMK's job is to relieve memory pressure before we reach the boiling
+point at which OOM killer has to be invoked. If we wait that long it
+will definitely affect user experience. There might be usecases when
+you might not care about this but on interactive systems like Android
+it is important.
 
-From: Igor Druzhinin <igor.druzhinin@citrix.com>
+> > then it cannot take advantage of all of the alternative memory-reclaim means
+> > employed in the slowpath, and will result in killing a process before it is
+> > _really_ necessary.
 
-[ Upstream commit a2288d4e355992d369c50c45d017a85f6061ff71 ]
+I guess it's a matter of defining when is it _really_ necessary to
+kill. In Android case that should be when the user starts suffering
+from the delays caused by memory contention and that delay is exactly
+what PSI is measuring.
 
-Occasionally, during the disconnection procedure on XenBus which
-includes hash cache deinitialization there might be some packets
-still in-flight on other processors. Handling of these packets includes
-hashing and hash cache population that finally results in hash cache
-data structure corruption.
-
-In order to avoid this we prevent hashing of those packets if there
-are no queues initialized. In that case RCU protection of queues guards
-the hash cache as well.
-
-Signed-off-by: Igor Druzhinin <igor.druzhinin@citrix.com>
-Reviewed-by: Paul Durrant <paul.durrant@citrix.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
----
- drivers/net/xen-netback/hash.c      |    2 ++
- drivers/net/xen-netback/interface.c |    7 +++++++
- 2 files changed, 9 insertions(+)
-
---- a/drivers/net/xen-netback/hash.c
-+++ b/drivers/net/xen-netback/hash.c
-@@ -435,6 +435,8 @@ void xenvif_init_hash(struct xenvif *vif
- 	if (xenvif_hash_cache_size == 0)
- 		return;
- 
-+	BUG_ON(vif->hash.cache.count);
-+
- 	spin_lock_init(&vif->hash.cache.lock);
- 	INIT_LIST_HEAD(&vif->hash.cache.list);
- }
---- a/drivers/net/xen-netback/interface.c
-+++ b/drivers/net/xen-netback/interface.c
-@@ -153,6 +153,13 @@ static u16 xenvif_select_queue(struct ne
- {
- 	struct xenvif *vif = netdev_priv(dev);
- 	unsigned int size = vif->hash.size;
-+	unsigned int num_queues;
-+
-+	/* If queues are not set up internally - always return 0
-+	 * as the packet going to be dropped anyway */
-+	num_queues = READ_ONCE(vif->num_queues);
-+	if (num_queues < 1)
-+		return 0;
- 
- 	if (vif->hash.alg == XEN_NETIF_CTRL_HASH_ALGORITHM_NONE)
- 		return fallback(dev, skb) % dev->real_num_tx_queues;
-
-
+> One more note. The above is true, but you can also hit one of the
+> thrashing reclaim behaviors and reclaim last few pages again and again
+> with the whole system really sluggish. That is what PSI is trying to
+> help with.
+> --
+> Michal Hocko
+> SUSE Labs
