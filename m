@@ -7,52 +7,47 @@ X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3A3A9C43381
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 18:13:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 65E19C43381
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 18:13:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E713F2087C
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 18:13:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2264E213A2
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 18:13:11 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1552414382;
-	bh=tZeXPsqJ1QZgIJBr0QZVQCRje8A+GVzBXkSg2v1szzo=;
+	s=default; t=1552414391;
+	bh=gYXwQsI/GvPSNWue6qKYRRaQO3smlpVoxNAl4VRUH90=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=VtZeAGPqrjW8GZqj5h0tjuiZlFctUrtxlJQ8NVgjKPomRkjGlQNDAa259p/Ccpsjy
-	 QI46l8YFCVTEeoN8HNySjh7cpw9kT7mA0+SNBU7IH+xPOVxQwlkrhQyMzaOyRVJaO/
-	 GgxBQjXBVWNYn3RSTnOMCO7tdHEKk5wZJwz5nIME=
+	b=IK9cU38qeKhFsEDmL3FBPBeoVbEXn451Q0O3A9Z9kMy3WE5om/tdiZPRCMW2CiUXD
+	 6JJnUCHGQpstFQ6dx1AhsMJIn1dQVUdej0SiHwWspI04CiVlYCjT6iyErlG1kQe78Q
+	 W4SzohPg+oCIBQoQZ96hKRJ58/9DjbBhrnKsFU1E=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727238AbfCLSNA (ORCPT
+        id S1727012AbfCLSNJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 12 Mar 2019 14:13:00 -0400
-Received: from mail.kernel.org ([198.145.29.99]:45022 "EHLO mail.kernel.org"
+        Tue, 12 Mar 2019 14:13:09 -0400
+Received: from mail.kernel.org ([198.145.29.99]:44992 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726991AbfCLRLd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 12 Mar 2019 13:11:33 -0400
+        id S1726982AbfCLRLc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 12 Mar 2019 13:11:32 -0400
 Received: from localhost (unknown [104.133.8.98])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 6829A21741;
-        Tue, 12 Mar 2019 17:11:32 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id B68CC217D9;
+        Tue, 12 Mar 2019 17:11:31 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1552410692;
-        bh=tZeXPsqJ1QZgIJBr0QZVQCRje8A+GVzBXkSg2v1szzo=;
+        s=default; t=1552410691;
+        bh=gYXwQsI/GvPSNWue6qKYRRaQO3smlpVoxNAl4VRUH90=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=YCU0kh/Yn1XmeOYrkUDlC0Z4zUVN9oe/SGiQhpON8M9QlVnAuLgjfBiWXgs14VRSW
-         ACw08i6U8JbbiR5PvhHf2jRCo2GnYs5KaOzhsNecJlG1r2xmGznW4iaT/T2o0qMYow
-         mGCNYvciWva9z+0WdwzpMw0TYmpjfWIM6hABJvMg=
+        b=JYVL7dDArsRVTuZ/nZQosQA3P7Z8fdscxWY1u5Cp5HIVWymLFO9E2dhwxIkbpfIdO
+         mekLlN5wo/xglKWclhi4yHOYJYyuT63tMyFIKVNZd80QMXNhN3Sa6Ek2IRTbsCQ3ur
+         yFLMAtrPPalWh+QVtm78Y/tINpi/RM1AolLBh0eo=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Ryan Grachek <ryan@edited.us>,
-        Wei Xu <xuwei5@hisilicon.com>,
-        Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org,
-        Alistair Strachan <astrachan@google.com>,
-        John Stultz <john.stultz@linaro.org>
-Subject: [PATCH 5.0 09/25] arm64: dts: hikey: Revert "Enable HS200 mode on eMMC"
-Date:   Tue, 12 Mar 2019 10:08:47 -0700
-Message-Id: <20190312170404.252297707@linuxfoundation.org>
+        stable@vger.kernel.org, Jan Kiszka <jan.kiszka@siemens.com>,
+        Ulf Hansson <ulf.hansson@linaro.org>,
+        Wei Xu <xuwei5@hisilicon.com>
+Subject: [PATCH 5.0 08/25] arm64: dts: hikey: Give wifi some time after power-on
+Date:   Tue, 12 Mar 2019 10:08:46 -0700
+Message-Id: <20190312170404.167689395@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190312170403.643852550@linuxfoundation.org>
 References: <20190312170403.643852550@linuxfoundation.org>
@@ -71,43 +66,42 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-From: Alistair Strachan <astrachan@google.com>
+From: Jan Kiszka <jan.kiszka@siemens.com>
 
-commit 8d26c1390aec795d492b8de5e4437751e8805a1d upstream.
+commit 83b944174ad79825ae84a47af1a0354485b24602 upstream.
 
-This reverts commit abd7d0972a192ee653efc7b151a6af69db58f2bb. This
-change was already partially reverted by John Stultz in
-commit 9c6d26df1fae ("arm64: dts: hikey: Fix eMMC corruption regression").
+Somewhere along recent changes to power control of the wl1835, power-on
+became very unreliable on the hikey, failing like this:
 
-This change appears to cause controller resets and block read failures
-which prevents successful booting on some hikey boards.
+wl1271_sdio: probe of mmc2:0001:1 failed with error -16
+wl1271_sdio: probe of mmc2:0001:2 failed with error -16
 
-Cc: Ryan Grachek <ryan@edited.us>
-Cc: Wei Xu <xuwei5@hisilicon.com>
-Cc: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-Cc: Rob Herring <robh+dt@kernel.org>
-Cc: Mark Rutland <mark.rutland@arm.com>
-Cc: linux-arm-kernel@lists.infradead.org
-Cc: devicetree@vger.kernel.org
-Cc: stable <stable@vger.kernel.org> #4.17+
-Signed-off-by: Alistair Strachan <astrachan@google.com>
-Signed-off-by: John Stultz <john.stultz@linaro.org>
+After playing with some dt parameters and comparing to other users of
+this chip, it turned out we need some power-on delay to make things
+stable again. In contrast to those other users which define 200 ms, the
+hikey would already be happy with 1 ms. Still, we use the safer 10 ms,
+like on the Ultra96.
+
+Fixes: ea452678734e ("arm64: dts: hikey: Fix WiFi support")
+Cc: <stable@vger.kernel.org> #4.12+
+Signed-off-by: Jan Kiszka <jan.kiszka@siemens.com>
+Acked-by: Ulf Hansson <ulf.hansson@linaro.org>
 Signed-off-by: Wei Xu <xuwei5@hisilicon.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- arch/arm64/boot/dts/hisilicon/hi6220-hikey.dts |    1 -
- 1 file changed, 1 deletion(-)
+ arch/arm64/boot/dts/hisilicon/hi6220-hikey.dts |    1 +
+ 1 file changed, 1 insertion(+)
 
 --- a/arch/arm64/boot/dts/hisilicon/hi6220-hikey.dts
 +++ b/arch/arm64/boot/dts/hisilicon/hi6220-hikey.dts
-@@ -301,7 +301,6 @@
+@@ -118,6 +118,7 @@
+ 		reset-gpios = <&gpio0 5 GPIO_ACTIVE_LOW>;
+ 		clocks = <&pmic>;
+ 		clock-names = "ext_clock";
++		post-power-on-delay-ms = <10>;
+ 		power-off-delay-us = <10>;
+ 	};
  
- 		dwmmc_0: dwmmc0@f723d000 {
- 			cap-mmc-highspeed;
--			mmc-hs200-1_8v;
- 			non-removable;
- 			bus-width = <0x8>;
- 			vmmc-supply = <&ldo19>;
 
 
