@@ -7,47 +7,46 @@ X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6EB99C43381
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 17:21:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B3856C43381
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 17:21:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2ADCE214AF
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 17:21:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7ACE4214AF
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 17:21:11 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1552411267;
-	bh=a5k/5McCdVIfjwDiowKRhZiJALVZdbbq3PjYCy8+xvs=;
+	s=default; t=1552411271;
+	bh=Nk7HOX40D5riXI/6e081zfNdyd6T8ePaYrLSQMD+QbY=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=DFyCqJZOFtq/YGbQQF5xrvhCoV8I7Rt6Ep0yAvBkzAtjp1IlTRoRgc8BcuA+AY5aS
-	 ZAVJDiUtINjoC+wsbIoh7kWoVbnqfLBC/WRCxDMRdpNmIthc9Lll3tp1hQppkwbxFH
-	 MmiSUvxR3S0+VOMlT1KaIzhrAMny7VXO4ovCBIiU=
+	b=UdDFU90FipoXlum2B7+sAmT5idSM58NtZT9WWyB4JWWGKdoLrPhglm1+ooSX4bDDV
+	 /9Shr/NGdMoQwGAL0tAFZenJ7gvtvW/YUM+E0WFvBmU9D6L+hppar1l6884/cHNi1O
+	 tDZhBMZTSqrWsj8DUOpzxn9XIVz8Ho3FwK6INf8A=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730118AbfCLRVF (ORCPT
+        id S1730162AbfCLRVJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 12 Mar 2019 13:21:05 -0400
-Received: from mail.kernel.org ([198.145.29.99]:35710 "EHLO mail.kernel.org"
+        Tue, 12 Mar 2019 13:21:09 -0400
+Received: from mail.kernel.org ([198.145.29.99]:35688 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730024AbfCLRSR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 12 Mar 2019 13:18:17 -0400
+        id S1730020AbfCLRSQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 12 Mar 2019 13:18:16 -0400
 Received: from localhost (unknown [104.133.8.98])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id C84C521873;
+        by mail.kernel.org (Postfix) with ESMTPSA id 1EB7D21855;
         Tue, 12 Mar 2019 17:18:16 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
         s=default; t=1552411096;
-        bh=a5k/5McCdVIfjwDiowKRhZiJALVZdbbq3PjYCy8+xvs=;
+        bh=Nk7HOX40D5riXI/6e081zfNdyd6T8ePaYrLSQMD+QbY=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Hs+NfYV3fM3zlQPvHqF9EgeCrwAx3xkKIrTX5ejl6ixsbNFy6B+e3IS/vqDmkbgBI
-         LLyggrko2tOoBIp0kptyKNAebQRU77PWcJNwR3Ozu4ndzwYjetvNrL9M/eSGqF510v
-         dkdxbmqjiYw2zh8LjmjAgqkJQQWs2U9jeyZ3FbOw=
+        b=2rFAnQeA8flYRu4A89QoyHYcaN1EM4cCtz7xZWda0XSFVXQm95HeX+Lhc+DZ6XY3M
+         D0fujSoiVOT9DTtk9VAWrxE/X6npPdAoLAcYZkyDEHYN+k/KnKibcyOma1joTI6IC5
+         kDK+6qzeWpdVmLbKnTBZU6m4TQZ1PnVzwpcLIv7M=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        "Gustavo A. R. Silva" <gustavo@embeddedor.com>,
-        Konrad Rzeszutek Wilk <konrad.wilk@oracle.com>
-Subject: [PATCH 4.9 86/96] iscsi_ibft: Fix missing break in switch statement
-Date:   Tue, 12 Mar 2019 10:10:44 -0700
-Message-Id: <20190312171040.975949130@linuxfoundation.org>
+        stable@vger.kernel.org, Vincent Batts <vbatts@hashbangbash.com>,
+        Dmitry Torokhov <dmitry.torokhov@gmail.com>
+Subject: [PATCH 4.9 85/96] Input: elan_i2c - add id for touchpad found in Lenovo s21e-20
+Date:   Tue, 12 Mar 2019 10:10:43 -0700
+Message-Id: <20190312171040.931045580@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190312171034.530434962@linuxfoundation.org>
 References: <20190312171034.530434962@linuxfoundation.org>
@@ -66,35 +65,30 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-From: Gustavo A. R. Silva <gustavo@embeddedor.com>
+From: Vincent Batts <vbatts@hashbangbash.com>
 
-commit df997abeebadaa4824271009e2d2b526a70a11cb upstream.
+commit e154ab69321ce2c54f19863d75c77b4e2dc9d365 upstream.
 
-Add missing break statement in order to prevent the code from falling
-through to case ISCSI_BOOT_TGT_NAME, which is unnecessary.
+Lenovo s21e-20 uses ELAN0601 in its ACPI tables for the Elan touchpad.
 
-This bug was found thanks to the ongoing efforts to enable
--Wimplicit-fallthrough.
-
-Fixes: b33a84a38477 ("ibft: convert iscsi_ibft module to iscsi boot lib")
+Signed-off-by: Vincent Batts <vbatts@hashbangbash.com>
 Cc: stable@vger.kernel.org
-Signed-off-by: Gustavo A. R. Silva <gustavo@embeddedor.com>
-Signed-off-by: Konrad Rzeszutek Wilk <konrad.wilk@oracle.com>
+Signed-off-by: Dmitry Torokhov <dmitry.torokhov@gmail.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/firmware/iscsi_ibft.c |    1 +
+ drivers/input/mouse/elan_i2c_core.c |    1 +
  1 file changed, 1 insertion(+)
 
---- a/drivers/firmware/iscsi_ibft.c
-+++ b/drivers/firmware/iscsi_ibft.c
-@@ -542,6 +542,7 @@ static umode_t __init ibft_check_tgt_for
- 	case ISCSI_BOOT_TGT_NIC_ASSOC:
- 	case ISCSI_BOOT_TGT_CHAP_TYPE:
- 		rc = S_IRUGO;
-+		break;
- 	case ISCSI_BOOT_TGT_NAME:
- 		if (tgt->tgt_name_len)
- 			rc = S_IRUGO;
+--- a/drivers/input/mouse/elan_i2c_core.c
++++ b/drivers/input/mouse/elan_i2c_core.c
+@@ -1241,6 +1241,7 @@ static const struct acpi_device_id elan_
+ 	{ "ELAN0000", 0 },
+ 	{ "ELAN0100", 0 },
+ 	{ "ELAN0600", 0 },
++	{ "ELAN0601", 0 },
+ 	{ "ELAN0602", 0 },
+ 	{ "ELAN0605", 0 },
+ 	{ "ELAN0608", 0 },
 
 
