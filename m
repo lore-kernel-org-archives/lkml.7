@@ -7,46 +7,46 @@ X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E163DC43381
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 17:44:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D4084C10F00
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 17:44:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B51F02087C
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 17:44:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A47EE214AE
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 17:44:40 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1552412679;
-	bh=1EQeXiDW1LHZByLpQI82Cyc77Yyov7lWcWFZk3b2XqQ=;
+	s=default; t=1552412680;
+	bh=R0HY1DxLZW5S8d5YDtBikJvfw3XUMWp1gPHpMHfmeXs=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=gmUaeXPl+HwcxiE2a1BCy+lQRcYSCO3SjpCOflIJfKheGN6cSCbWIMs1S3YuTzYQi
-	 ufaIlzgFzzEvwiR+a+MtXESwQgtDV89/Ogvmyn6SEqxTuU5M4bI3ViPQuG8sm4QvEJ
-	 4A0AQn50G+QG57bE9YfhpxIgVji2VrRRxuGYxe/A=
+	b=GTukfLZ8dOB0pPzSRVHS4VkgDUb459cE2qkCQAY0YtkALMRlaItNxuXsHYkPRR1LR
+	 HDPJFF4GjViMC5HZRNQXBkMaQY3V9IkEH6RnXXaTwn5f6KEmM26vFMqVU0gKSPO0Gr
+	 7IbzQxFizEi7xqeRtC+lMv3I+KbEcVjxhwBTSgeU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729213AbfCLRoi (ORCPT
+        id S1729409AbfCLRoj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 12 Mar 2019 13:44:38 -0400
-Received: from mail.kernel.org ([198.145.29.99]:56542 "EHLO mail.kernel.org"
+        Tue, 12 Mar 2019 13:44:39 -0400
+Received: from mail.kernel.org ([198.145.29.99]:56506 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728827AbfCLRPj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S1728821AbfCLRPj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Tue, 12 Mar 2019 13:15:39 -0400
 Received: from localhost (unknown [104.133.8.98])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id F34692186A;
+        by mail.kernel.org (Postfix) with ESMTPSA id 4C17D217D4;
         Tue, 12 Mar 2019 17:15:38 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1552410939;
-        bh=1EQeXiDW1LHZByLpQI82Cyc77Yyov7lWcWFZk3b2XqQ=;
+        s=default; t=1552410938;
+        bh=R0HY1DxLZW5S8d5YDtBikJvfw3XUMWp1gPHpMHfmeXs=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=kxgYlCTJmpJ1+fdW+U9G9tQkEwkpa5lFSZu27MdzzHx/5b7wPAPQeIdgAKlJ2IXBB
-         Vwx4EV5fO9ejZ9mVTtmU2JAQdy09Fu8spXayQO+pfK/gAReyx+qloNB3ZBf7dULmxy
-         EiLLLO+mt1HEDiqd6TJj/Yjf30MgnoxKgdlquVqE=
+        b=2Ai9sBBQpN8x6HB+j/pYEcdUKc1IXbzcWiuxcZ5RvvGMycK3T+MsXTwP1bNkwkm/f
+         HS8AVXWGhU1ie0qRi3dkjvqLUCg7pzVjU6lPz8Zo+hSSXayZcMNAl5OkXOTAcIJbVu
+         NKkNgw9Q334mmysjFdZoN2mHb6zxs0+9B54zaky8=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Jiri Benc <jbenc@redhat.com>,
+        stable@vger.kernel.org, Michael Chan <michael.chan@broadcom.com>,
         "David S. Miller" <davem@davemloft.net>
-Subject: [PATCH 4.14 015/135] geneve: correctly handle ipv6.disable module parameter
-Date:   Tue, 12 Mar 2019 10:07:42 -0700
-Message-Id: <20190312170342.513697780@linuxfoundation.org>
+Subject: [PATCH 4.14 014/135] bnxt_en: Drop oversize TX packets to prevent errors.
+Date:   Tue, 12 Mar 2019 10:07:41 -0700
+Message-Id: <20190312170342.431157891@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190312170341.127810985@linuxfoundation.org>
 References: <20190312170341.127810985@linuxfoundation.org>
@@ -65,56 +65,45 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-From: Jiri Benc <jbenc@redhat.com>
+From: Michael Chan <michael.chan@broadcom.com>
 
-[ Upstream commit cf1c9ccba7308e48a68fa77f476287d9d614e4c7 ]
+[ Upstream commit 2b3c6885386020b1b9d92d45e8349637e27d1f66 ]
 
-When IPv6 is compiled but disabled at runtime, geneve_sock_add returns
--EAFNOSUPPORT. For metadata based tunnels, this causes failure of the whole
-operation of bringing up the tunnel.
+There have been reports of oversize UDP packets being sent to the
+driver to be transmitted, causing error conditions.  The issue is
+likely caused by the dst of the SKB switching between 'lo' with
+64K MTU and the hardware device with a smaller MTU.  Patches are
+being proposed by Mahesh Bandewar <maheshb@google.com> to fix the
+issue.
 
-Ignore failure of IPv6 socket creation for metadata based tunnels caused by
-IPv6 not being available.
+In the meantime, add a quick length check in the driver to prevent
+the error.  The driver uses the TX packet size as index to look up an
+array to setup the TX BD.  The array is large enough to support all MTU
+sizes supported by the driver.  The oversize TX packet causes the
+driver to index beyond the array and put garbage values into the
+TX BD.  Add a simple check to prevent this.
 
-This is the same fix as what commit d074bf960044 ("vxlan: correctly handle
-ipv6.disable module parameter") is doing for vxlan.
-
-Note there's also commit c0a47e44c098 ("geneve: should not call rt6_lookup()
-when ipv6 was disabled") which fixes a similar issue but for regular
-tunnels, while this patch is needed for metadata based tunnels.
-
-Signed-off-by: Jiri Benc <jbenc@redhat.com>
+Signed-off-by: Michael Chan <michael.chan@broadcom.com>
 Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- drivers/net/geneve.c |   11 ++++++++---
- 1 file changed, 8 insertions(+), 3 deletions(-)
+ drivers/net/ethernet/broadcom/bnxt/bnxt.c |    6 ++++++
+ 1 file changed, 6 insertions(+)
 
---- a/drivers/net/geneve.c
-+++ b/drivers/net/geneve.c
-@@ -632,15 +632,20 @@ out:
- static int geneve_open(struct net_device *dev)
- {
- 	struct geneve_dev *geneve = netdev_priv(dev);
--	bool ipv6 = !!(geneve->info.mode & IP_TUNNEL_INFO_IPV6);
- 	bool metadata = geneve->collect_md;
-+	bool ipv4, ipv6;
- 	int ret = 0;
+--- a/drivers/net/ethernet/broadcom/bnxt/bnxt.c
++++ b/drivers/net/ethernet/broadcom/bnxt/bnxt.c
+@@ -447,6 +447,12 @@ normal_tx:
+ 	}
  
-+	ipv6 = geneve->info.mode & IP_TUNNEL_INFO_IPV6 || metadata;
-+	ipv4 = !ipv6 || metadata;
- #if IS_ENABLED(CONFIG_IPV6)
--	if (ipv6 || metadata)
-+	if (ipv6) {
- 		ret = geneve_sock_add(geneve, true);
-+		if (ret < 0 && ret != -EAFNOSUPPORT)
-+			ipv4 = false;
+ 	length >>= 9;
++	if (unlikely(length >= ARRAY_SIZE(bnxt_lhint_arr))) {
++		dev_warn_ratelimited(&pdev->dev, "Dropped oversize %d bytes TX packet.\n",
++				     skb->len);
++		i = 0;
++		goto tx_dma_error;
 +	}
- #endif
--	if (!ret && (!ipv6 || metadata))
-+	if (ipv4)
- 		ret = geneve_sock_add(geneve, false);
- 	if (ret < 0)
- 		geneve_sock_release(geneve);
+ 	flags |= bnxt_lhint_arr[length];
+ 	txbd->tx_bd_len_flags_type = cpu_to_le32(flags);
+ 
 
 
