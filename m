@@ -4,49 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 610C9C43381
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 18:10:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D0F8BC4360F
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 18:10:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 32C8A2087C
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 18:10:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 894F42087C
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 18:10:35 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1552414232;
-	bh=sWPq+YBYelIVtVm9NhMJgi8U7/XEdMu3gPww/xgAOo4=;
+	s=default; t=1552414235;
+	bh=On3Sm1z02ADxIsJDmKYBvyQUP4OjGqy2DkpD6fxol44=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=VsxeTHuqK+0xIVfK6y0fHdWtEfuRgvdT2lNAhclVjJaW4RjRUXW7WkjOCmBa389e7
-	 yn8k09uP2FoJozVX4wAE4xm93AeJTIv6wNmxeMIk+2e6cYx1PMr/4Aum4gqaWB8yC0
-	 WepmU+Gkw7F0WDME48SpIKP/JL+wOvRnKp7d2/G0=
+	b=FRAJPO1y/s1sqjIlVXj9ASC/TwnUPwXuyBxHEP5+dH+uiBFsUgV5QF7zYl/pspE5B
+	 u95nwV7mPHMWw9IRE9NXM5/ANrDalQI0XCMG/8j8U4or1bM8g32+djeVvCoc70logU
+	 7H2RhEzy97jtopHBk4RLZKidV2WErYUWPgZxdI2Q=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729381AbfCLSKb (ORCPT
+        id S1727180AbfCLRLw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 12 Mar 2019 14:10:31 -0400
-Received: from mail.kernel.org ([198.145.29.99]:45962 "EHLO mail.kernel.org"
+        Tue, 12 Mar 2019 13:11:52 -0400
+Received: from mail.kernel.org ([198.145.29.99]:45544 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727175AbfCLRLx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 12 Mar 2019 13:11:53 -0400
+        id S1727080AbfCLRLn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 12 Mar 2019 13:11:43 -0400
 Received: from localhost (unknown [104.133.8.98])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B65B8214AE;
-        Tue, 12 Mar 2019 17:11:51 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 72265217D8;
+        Tue, 12 Mar 2019 17:11:42 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1552410711;
-        bh=sWPq+YBYelIVtVm9NhMJgi8U7/XEdMu3gPww/xgAOo4=;
+        s=default; t=1552410702;
+        bh=On3Sm1z02ADxIsJDmKYBvyQUP4OjGqy2DkpD6fxol44=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=PKxzLIvTC+IIzl/D9tGOI79IsQhDoLmQHn7mOBhkgONPqA3CrSGEhHTuXID301uJa
-         bccW3FCKUcsQOzcatZmQEbDB9D05/DAcd7HLMY4zkCtJXiX3ck1ju8Zs2k4I5azBvk
-         GylGB7MILsPpcO4G5Z3HCGSQBgL+KrISgTHGyBTA=
+        b=LiAwBDi2GFD6hV/911fXxaEXBXoI0uYSF7QSeez49O9Ghn29aUoGF1XqSCJOX0Xaw
+         sugRdLMdwtlPYw3ZT4Pc+j9I7OaDOqm3t9dwq+yGRTWUvYNdPqyZRRZrxav1jQPhEG
+         IBkZpSXe8L4txvcUtaUojqrih+Ij43E6Kct03hts=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Max Filippov <jcmvbkbc@gmail.com>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.20 025/171] xtensa: SMP: fix secondary CPU initialization
-Date:   Tue, 12 Mar 2019 10:06:45 -0700
-Message-Id: <20190312170350.108634865@linuxfoundation.org>
+        stable@vger.kernel.org, Joerg Roedel <joro@8bytes.org>,
+        Suravee Suthikulpanit <suravee.suthikulpanit@amd.com>,
+        Jerry Snitselaar <jsnitsel@redhat.com>,
+        Joerg Roedel <jroedel@suse.de>, Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.20 013/171] iommu/amd: Call free_iova_fast with pfn in map_sg
+Date:   Tue, 12 Mar 2019 10:06:33 -0700
+Message-Id: <20190312170349.038441327@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190312170347.868927101@linuxfoundation.org>
 References: <20190312170347.868927101@linuxfoundation.org>
@@ -65,126 +67,36 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-[ Upstream commit 32a7726c4f4aadfabdb82440d84f88a5a2c8fe13 ]
+[ Upstream commit 51d8838d66d3249508940d8f59b07701f2129723 ]
 
-- add missing memory barriers to the secondary CPU synchronization spin
-  loops; add comment to the matching memory barrier in the boot_secondary
-  and __cpu_die functions;
-- use READ_ONCE/WRITE_ONCE to access cpu_start_id/cpu_start_ccount
-  instead of reading/writing them directly;
-- re-initialize cpu_running every time before starting secondary CPU to
-  flush possible previous CPU startup results.
+In the error path of map_sg, free_iova_fast is being called with
+address instead of the pfn. This results in a bad value getting into
+the rcache, and can result in hitting a BUG_ON when
+iova_magazine_free_pfns is called.
 
-Signed-off-by: Max Filippov <jcmvbkbc@gmail.com>
+Cc: Joerg Roedel <joro@8bytes.org>
+Cc: Suravee Suthikulpanit <suravee.suthikulpanit@amd.com>
+Signed-off-by: Jerry Snitselaar <jsnitsel@redhat.com>
+Fixes: 80187fd39dcb ("iommu/amd: Optimize map_sg and unmap_sg")
+Signed-off-by: Joerg Roedel <jroedel@suse.de>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/xtensa/kernel/head.S |  5 ++++-
- arch/xtensa/kernel/smp.c  | 34 +++++++++++++++++++++-------------
- 2 files changed, 25 insertions(+), 14 deletions(-)
+ drivers/iommu/amd_iommu.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/arch/xtensa/kernel/head.S b/arch/xtensa/kernel/head.S
-index 9053a5622d2c..5bd38ea2da38 100644
---- a/arch/xtensa/kernel/head.S
-+++ b/arch/xtensa/kernel/head.S
-@@ -280,12 +280,13 @@ should_never_return:
- 
- 	movi	a2, cpu_start_ccount
- 1:
-+	memw
- 	l32i	a3, a2, 0
- 	beqi	a3, 0, 1b
- 	movi	a3, 0
- 	s32i	a3, a2, 0
--	memw
- 1:
-+	memw
- 	l32i	a3, a2, 0
- 	beqi	a3, 0, 1b
- 	wsr	a3, ccount
-@@ -321,11 +322,13 @@ ENTRY(cpu_restart)
- 	rsr	a0, prid
- 	neg	a2, a0
- 	movi	a3, cpu_start_id
-+	memw
- 	s32i	a2, a3, 0
- #if XCHAL_DCACHE_IS_WRITEBACK
- 	dhwbi	a3, 0
- #endif
- 1:
-+	memw
- 	l32i	a2, a3, 0
- 	dhi	a3, 0
- 	bne	a2, a0, 1b
-diff --git a/arch/xtensa/kernel/smp.c b/arch/xtensa/kernel/smp.c
-index 932d64689bac..c9fc2c4f71b3 100644
---- a/arch/xtensa/kernel/smp.c
-+++ b/arch/xtensa/kernel/smp.c
-@@ -195,9 +195,11 @@ static int boot_secondary(unsigned int cpu, struct task_struct *ts)
- 	int i;
- 
- #ifdef CONFIG_HOTPLUG_CPU
--	cpu_start_id = cpu;
--	system_flush_invalidate_dcache_range(
--			(unsigned long)&cpu_start_id, sizeof(cpu_start_id));
-+	WRITE_ONCE(cpu_start_id, cpu);
-+	/* Pairs with the third memw in the cpu_restart */
-+	mb();
-+	system_flush_invalidate_dcache_range((unsigned long)&cpu_start_id,
-+					     sizeof(cpu_start_id));
- #endif
- 	smp_call_function_single(0, mx_cpu_start, (void *)cpu, 1);
- 
-@@ -206,18 +208,21 @@ static int boot_secondary(unsigned int cpu, struct task_struct *ts)
- 			ccount = get_ccount();
- 		while (!ccount);
- 
--		cpu_start_ccount = ccount;
-+		WRITE_ONCE(cpu_start_ccount, ccount);
- 
--		while (time_before(jiffies, timeout)) {
-+		do {
-+			/*
-+			 * Pairs with the first two memws in the
-+			 * .Lboot_secondary.
-+			 */
- 			mb();
--			if (!cpu_start_ccount)
--				break;
--		}
-+			ccount = READ_ONCE(cpu_start_ccount);
-+		} while (ccount && time_before(jiffies, timeout));
- 
--		if (cpu_start_ccount) {
-+		if (ccount) {
- 			smp_call_function_single(0, mx_cpu_stop,
--					(void *)cpu, 1);
--			cpu_start_ccount = 0;
-+						 (void *)cpu, 1);
-+			WRITE_ONCE(cpu_start_ccount, 0);
- 			return -EIO;
- 		}
+diff --git a/drivers/iommu/amd_iommu.c b/drivers/iommu/amd_iommu.c
+index 325f3bad118b..5f33f843d30a 100644
+--- a/drivers/iommu/amd_iommu.c
++++ b/drivers/iommu/amd_iommu.c
+@@ -2561,7 +2561,7 @@ static int map_sg(struct device *dev, struct scatterlist *sglist,
  	}
-@@ -237,6 +242,7 @@ int __cpu_up(unsigned int cpu, struct task_struct *idle)
- 	pr_debug("%s: Calling wakeup_secondary(cpu:%d, idle:%p, sp: %08lx)\n",
- 			__func__, cpu, idle, start_info.stack);
  
-+	init_completion(&cpu_running);
- 	ret = boot_secondary(cpu, idle);
- 	if (ret == 0) {
- 		wait_for_completion_timeout(&cpu_running,
-@@ -298,8 +304,10 @@ void __cpu_die(unsigned int cpu)
- 	unsigned long timeout = jiffies + msecs_to_jiffies(1000);
- 	while (time_before(jiffies, timeout)) {
- 		system_invalidate_dcache_range((unsigned long)&cpu_start_id,
--				sizeof(cpu_start_id));
--		if (cpu_start_id == -cpu) {
-+					       sizeof(cpu_start_id));
-+		/* Pairs with the second memw in the cpu_restart */
-+		mb();
-+		if (READ_ONCE(cpu_start_id) == -cpu) {
- 			platform_cpu_kill(cpu);
- 			return;
- 		}
+ out_free_iova:
+-	free_iova_fast(&dma_dom->iovad, address, npages);
++	free_iova_fast(&dma_dom->iovad, address >> PAGE_SHIFT, npages);
+ 
+ out_err:
+ 	return 0;
 -- 
 2.19.1
 
