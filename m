@@ -2,94 +2,111 @@ Return-Path: <SRS0=J4ZE=RP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.5 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,
-	USER_AGENT_MUTT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_PASS autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 11DC4C4360F
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 22:01:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9836CC43381
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 22:02:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CFF112173C
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 22:01:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 63B092175B
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 22:02:58 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1552428065;
-	bh=mzqJdzs7aPWWo7/bSoKNz+UZfdtrDaPFc2zFxpmIM/g=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=Hsbsmuk6L0lXTM/zp6e0Bvb6Y/XgYZs7TLkST4nmZIVW3K/fIiTcbdk6pjFwh0WHW
-	 LtvuebNltHa9AIFYEsCUSU0rJ48BlouY58CiWPZtuFimaASGkVTAIVw83832bFdnrp
-	 Ma1iVdAwpT/egEdMkDj+FkaI6ygycNcWeq+28uaQ=
+	s=default; t=1552428178;
+	bh=PqOnWunzXPGGnYnXEGoAPh0tJlvRU0jvDi1p8NQDXp8=;
+	h=In-Reply-To:References:From:Subject:Cc:To:Date:List-ID:From;
+	b=I4rrAG8euZtJKiBiVpsjTWUIscitwA9Ejr5zmgCIpJGCGrIGug3Kvjz0dSJcD4QJ2
+	 hZSonuE5XBbnN740ED7FbH0je2G2uXqYebrghr1xpZqaAaiUpgu21zBm9phnDX22Qe
+	 cKXTj4ZNAsUL75Gt08wtLM9a5i66KGtYgjDqRPKM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726627AbfCLWBE (ORCPT
+        id S1726835AbfCLWC5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 12 Mar 2019 18:01:04 -0400
-Received: from mail.kernel.org ([198.145.29.99]:57056 "EHLO mail.kernel.org"
+        Tue, 12 Mar 2019 18:02:57 -0400
+Received: from mail.kernel.org ([198.145.29.99]:58634 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726388AbfCLWBD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 12 Mar 2019 18:01:03 -0400
-Received: from localhost (unknown [104.133.8.98])
+        id S1726396AbfCLWC4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 12 Mar 2019 18:02:56 -0400
+Received: from localhost (unknown [104.132.0.74])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 2D467214AE;
-        Tue, 12 Mar 2019 22:01:03 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 09E662173C;
+        Tue, 12 Mar 2019 22:02:56 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1552428063;
-        bh=mzqJdzs7aPWWo7/bSoKNz+UZfdtrDaPFc2zFxpmIM/g=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=10rpadjO3U0nScJfo0dNHMO9HkWU7vE3gZCEfTH441/Wmw5Xtx8we55x7VQGsmwL1
-         Yvc2fjLxm601bQIStMJZARvkspVjZqpqX1QpYyUpCnaEDe7G42Eb/5n2IK6fw+UIDc
-         pDHGzTWpCoXbJhVj0CNuqzPqfyS4lIXeA0QzrNJQ=
-Date:   Tue, 12 Mar 2019 15:01:02 -0700
-From:   "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>
-To:     Michael Kelley <mikelley@microsoft.com>
-Cc:     "will.deacon@arm.com" <will.deacon@arm.com>,
-        "marc.zyngier@arm.com" <marc.zyngier@arm.com>,
+        s=default; t=1552428176;
+        bh=PqOnWunzXPGGnYnXEGoAPh0tJlvRU0jvDi1p8NQDXp8=;
+        h=In-Reply-To:References:From:Subject:Cc:To:Date:From;
+        b=mrgxHUMDe0HpzsaFQkhriaGz5B98GgZiMATpWDqjy5lnMXVnm0kVu8EAPNZtHj8Ja
+         Edy/hUIeoO2YxlW7nXIrcjcx1mzzsj1oxlzF486sVZovSZhy5qD7JulrWxIXRKFmHU
+         5QVOIA8X3F9JhNN7cb8/fONygIaD0GKWuvElFe3w=
+Content-Type: text/plain; charset="utf-8"
+MIME-Version: 1.0
+Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <20190312205921.GA2723@nyx.fritz.box>
+References: <1551779342-2640-1-git-send-email-abel.vesa@nxp.com> <155181110921.20095.1641360339603928947@swboyd.mtv.corp.google.com> <20190306130941.dqf3swx66bchm5k2@fsr-ub1664-175> <155205894567.20095.2782332899458282059@swboyd.mtv.corp.google.com> <20190312073654.GA85609@thor.local> <155242319026.20095.4334777579139010310@swboyd.mtv.corp.google.com> <20190312205921.GA2723@nyx.fritz.box>
+From:   Stephen Boyd <sboyd@kernel.org>
+Subject: Re: [PATCH] dt-bindings: clock: imx8mq: Fix numbering overlaps and gaps
+Cc:     Abel Vesa <abel.vesa@nxp.com>,
+        Fabio Estevam <fabio.estevam@nxp.com>,
+        Lucas Stach <l.stach@pengutronix.de>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Rob Herring <robh@kernel.org>,
+        Sascha Hauer <kernel@pengutronix.de>,
+        Shawn Guo <shawnguo@kernel.org>,
+        dl-linux-imx <linux-imx@nxp.com>,
+        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
         "linux-arm-kernel@lists.infradead.org" 
         <linux-arm-kernel@lists.infradead.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>,
-        "olaf@aepfle.de" <olaf@aepfle.de>,
-        "apw@canonical.com" <apw@canonical.com>,
-        vkuznets <vkuznets@redhat.com>,
-        "jasowang@redhat.com" <jasowang@redhat.com>,
-        "marcelo.cerri@canonical.com" <marcelo.cerri@canonical.com>,
-        Sunil Muthuswamy <sunilmut@microsoft.com>,
-        KY Srinivasan <kys@microsoft.com>,
-        "catalin.marinas@arm.com" <catalin.marinas@arm.com>,
-        "mark.rutland@arm.com" <mark.rutland@arm.com>
-Subject: Re: [PATCH 0/2] Drivers: hv: Move Hyper-V clock/timer code to
- separate clocksource driver
-Message-ID: <20190312220102.GA17164@kroah.com>
-References: <1552426813-9568-1-git-send-email-mikelley@microsoft.com>
- <20190312214652.GA15914@kroah.com>
- <DM5PR2101MB091877CF62AD20D07D82F452D7490@DM5PR2101MB0918.namprd21.prod.outlook.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <DM5PR2101MB091877CF62AD20D07D82F452D7490@DM5PR2101MB0918.namprd21.prod.outlook.com>
-User-Agent: Mutt/1.11.3 (2019-02-01)
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+To:     Patrick Wildt <patrick@blueri.se>
+Message-ID: <155242817520.20095.13059579285743425243@swboyd.mtv.corp.google.com>
+User-Agent: alot/0.8
+Date:   Tue, 12 Mar 2019 15:02:55 -0700
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Mar 12, 2019 at 09:53:28PM +0000, Michael Kelley wrote:
-> From: gregkh@linuxfoundation.org <gregkh@linuxfoundation.org>  Sent: Tuesday, March 12, 2019 2:47 PM
-> > >
-> > > Michael Kelley (2):
-> > >   Drivers: hv: Move Hyper-V clockevents code to new clocksource driver
-> > >   Drivers: hv: Move Hyper-V clocksource code to new clocksource driver
-> > 
-> > You have two different patches that do different things, yet have the
-> > same identical shortlog text :(
-> > 
-> > That's not ok, and something that I reject for trivial patches, it
-> > should never happen for a "real" patch as you don't do the same thing in
-> > both of these patches.
-> 
-> Hmmm.  Not identical.  The first patch is "clockevents" code, and the second
-> patch is "clocksource" code.
+Quoting Patrick Wildt (2019-03-12 13:59:22)
+> On Tue, Mar 12, 2019 at 01:39:50PM -0700, Stephen Boyd wrote:
+> > Quoting Patrick Wildt (2019-03-12 00:36:54)
+> > > On Fri, Mar 08, 2019 at 07:29:05AM -0800, Stephen Boyd wrote:
+> > > > It's mostly about making sure that any existing dtbs don't have the=
+ir
+> > > > numbers shifted around. So hopefully any overlapping identifiers ar=
+en't
+> > > > in use yet and then those ids can be changed while leaving the ones=
+ that
+> > > > are in use how they are.
+> > >=20
+> > > In practice I bet no one uses Linux 5.0's i.MX8M device trees since t=
+hey
+> > > lack too much support.  It's so basic it's not useful.  You'd still r=
+un
+> > > your existing non-mainline bindings until it is.  Thus I would argue
+> > > changing the ABI right now would be the only chance there is.
+> > >=20
+> > > If you think that chance is gone, then I guess the reasonable thing is
+> > > to keep the numbers and only move those (to the end) which overlap.  =
+Or
+> > > put them into that erreneous number gap.
+> > >=20
+> >=20
+> > The chance is quickly slipping away because we're going to be at -rc1
+> > soon. I'm not the one to decide what is and isn't being used by people
+> > out there, so I'm happy to apply this patch now before the next -rc1
+> > comes out as long as it doesn't break anything in arm-soc area. The
+> > confidence I'm getting isn't high though. Has anyone from NXP reviewed
+> > this change? Maybe I can get an ack from someone else that normally
+> > looks after the arm-soc/dts side of things here indicating that nothing
+> > should go wrong? That would increase my confidence levels.
+>=20
+> The person that supplied the diff apparently is from NXP, which should
+> be enough to say that NXP reviewed it?
+>=20
+> It's a bit of a shame that the ones that are CC'd keep quiet.  I would
+> take this chance and go ahead with it.  After 5.1/rc1 there will be no
+> chance to rectify this in a sane way.
 
-Wow, that's not obvious at all, sorry.  You still might want to make it
-a bit more different :)
+Ok. I'm just going to merge it and see if anyone complains. I'll send
+the PR tomorrow.
 
-greg k-h
