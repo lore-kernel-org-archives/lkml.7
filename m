@@ -2,50 +2,53 @@ Return-Path: <SRS0=J4ZE=RP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1BF1DC10F00
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 17:35:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 39EE1C43381
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 17:35:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D9B2221773
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 17:35:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0B1E52087C
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 17:35:32 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1552412130;
-	bh=OjqWwYMO5xE/tInpKW9KcmandjJF28+2Rv6Sw6bkFBE=;
+	s=default; t=1552412132;
+	bh=Qrulc24inYCPvK8tDy7pr9FgePuCFjtS4+aklLDuu5k=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Nz6KLyWCuYy83PGL/+UWUkq0iWUp5xmRRls3tOPfguijbNUjPOBdG1Jy1FT8VoYDV
-	 h5TbWSuOBIWxFKA33zMx4KgDhWbusK424C1ava+zrUCEbSI07X2/L+8D1tmgfrUApx
-	 Ah7kPMt6QIj7MqGgKtzM3TZA++UPhh0BRdJm/6L4=
+	b=xNK4cRKysCH2gO/+YOBZ65X2EmcCAtMuY2ONyLjjI5BXx5o3azZgiC2aPP5hIclS0
+	 mjIahTVhN1AEvMjV5YwndaSPK1pzGOSJe0U4QDwGpdw+qOU+J2kGNRRmrmjsVSF/m/
+	 JDdo88EF1VTKayWbQJmL0DojbPXRE1CwMQ93NY1s=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728518AbfCLRQx (ORCPT
+        id S1729471AbfCLRfa (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 12 Mar 2019 13:16:53 -0400
-Received: from mail.kernel.org ([198.145.29.99]:57004 "EHLO mail.kernel.org"
+        Tue, 12 Mar 2019 13:35:30 -0400
+Received: from mail.kernel.org ([198.145.29.99]:59586 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728890AbfCLRPu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 12 Mar 2019 13:15:50 -0400
+        id S1729353AbfCLRQx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 12 Mar 2019 13:16:53 -0400
 Received: from localhost (unknown [104.133.8.98])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 2DE0221850;
-        Tue, 12 Mar 2019 17:15:50 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id A10B72171F;
+        Tue, 12 Mar 2019 17:16:52 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1552410950;
-        bh=OjqWwYMO5xE/tInpKW9KcmandjJF28+2Rv6Sw6bkFBE=;
+        s=default; t=1552411012;
+        bh=Qrulc24inYCPvK8tDy7pr9FgePuCFjtS4+aklLDuu5k=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=o0/DUjC+1yL3nLuKyoeTLIoeBUwjD3fpBeRXZqW2Ax3bygA+fkudehlwpNTDE40ry
-         2pmNLg66B+g91Z9Y1MfWbRpGN2qJwHrNFaQwztP1WbKukOZp9OE4AXGMhJWINjlRPE
-         zwK41U+B87wB/Ts2y2PDzsj2EyD4paqdeOEaFJOg=
+        b=bbjO2TABZ9F7ZZ4i68hbCxfyfQ3hmydBtv3pH837u2xr0TX89zUOEEHh5zFuKKEmW
+         zr0RsGuEDuXbcaAKNQ/b0tBasAf6/2ciO538vent5pZcnNH+RBpWITGLcZAjL1oGoD
+         5z5abn+Hq2oS1F3Xi3be9Jm0se2fstMg2oY+J+5Y=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Timur Celik <mail@timurcelik.de>,
-        "David S. Miller" <davem@davemloft.net>
-Subject: [PATCH 4.14 031/135] tun: fix blocking read
-Date:   Tue, 12 Mar 2019 10:07:58 -0700
-Message-Id: <20190312170344.005209586@linuxfoundation.org>
+        stable@vger.kernel.org,
+        Tetsuo Handa <penguin-kernel@I-love.SAKURA.ne.jp>,
+        Jan Kara <jack@suse.cz>, Dmitry Vyukov <dvyukov@google.com>,
+        Jens Axboe <axboe@kernel.dk>, Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.14 117/135] fs: ratelimit __find_get_block_slow() failure message.
+Date:   Tue, 12 Mar 2019 10:09:24 -0700
+Message-Id: <20190312170352.004283054@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190312170341.127810985@linuxfoundation.org>
 References: <20190312170341.127810985@linuxfoundation.org>
@@ -64,42 +67,76 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-From: Timur Celik <mail@timurcelik.de>
+[ Upstream commit 43636c804df0126da669c261fc820fb22f62bfc2 ]
 
-[ Upstream commit 71828b2240692cec0e68b8d867bc00e1745e7fae ]
+When something let __find_get_block_slow() hit all_mapped path, it calls
+printk() for 100+ times per a second. But there is no need to print same
+message with such high frequency; it is just asking for stall warning, or
+at least bloating log files.
 
-This patch moves setting of the current state into the loop. Otherwise
-the task may end up in a busy wait loop if none of the break conditions
-are met.
+  [  399.866302][T15342] __find_get_block_slow() failed. block=1, b_blocknr=8
+  [  399.873324][T15342] b_state=0x00000029, b_size=512
+  [  399.878403][T15342] device loop0 blocksize: 4096
+  [  399.883296][T15342] __find_get_block_slow() failed. block=1, b_blocknr=8
+  [  399.890400][T15342] b_state=0x00000029, b_size=512
+  [  399.895595][T15342] device loop0 blocksize: 4096
+  [  399.900556][T15342] __find_get_block_slow() failed. block=1, b_blocknr=8
+  [  399.907471][T15342] b_state=0x00000029, b_size=512
+  [  399.912506][T15342] device loop0 blocksize: 4096
 
-Signed-off-by: Timur Celik <mail@timurcelik.de>
-Signed-off-by: David S. Miller <davem@davemloft.net>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+This patch reduces frequency to up to once per a second, in addition to
+concatenating three lines into one.
+
+  [  399.866302][T15342] __find_get_block_slow() failed. block=1, b_blocknr=8, b_state=0x00000029, b_size=512, device loop0 blocksize: 4096
+
+Signed-off-by: Tetsuo Handa <penguin-kernel@I-love.SAKURA.ne.jp>
+Reviewed-by: Jan Kara <jack@suse.cz>
+Cc: Dmitry Vyukov <dvyukov@google.com>
+Signed-off-by: Jens Axboe <axboe@kernel.dk>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/tun.c |    4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ fs/buffer.c | 19 ++++++++++---------
+ 1 file changed, 10 insertions(+), 9 deletions(-)
 
---- a/drivers/net/tun.c
-+++ b/drivers/net/tun.c
-@@ -1714,9 +1714,9 @@ static struct sk_buff *tun_ring_recv(str
+diff --git a/fs/buffer.c b/fs/buffer.c
+index b96f3b98a6ef..8086cc8ff0bc 100644
+--- a/fs/buffer.c
++++ b/fs/buffer.c
+@@ -208,6 +208,7 @@ __find_get_block_slow(struct block_device *bdev, sector_t block)
+ 	struct buffer_head *head;
+ 	struct page *page;
+ 	int all_mapped = 1;
++	static DEFINE_RATELIMIT_STATE(last_warned, HZ, 1);
+ 
+ 	index = block >> (PAGE_SHIFT - bd_inode->i_blkbits);
+ 	page = find_get_page_flags(bd_mapping, index, FGP_ACCESSED);
+@@ -235,15 +236,15 @@ __find_get_block_slow(struct block_device *bdev, sector_t block)
+ 	 * file io on the block device and getblk.  It gets dealt with
+ 	 * elsewhere, don't buffer_error if we had some unmapped buffers
+ 	 */
+-	if (all_mapped) {
+-		printk("__find_get_block_slow() failed. "
+-			"block=%llu, b_blocknr=%llu\n",
+-			(unsigned long long)block,
+-			(unsigned long long)bh->b_blocknr);
+-		printk("b_state=0x%08lx, b_size=%zu\n",
+-			bh->b_state, bh->b_size);
+-		printk("device %pg blocksize: %d\n", bdev,
+-			1 << bd_inode->i_blkbits);
++	ratelimit_set_flags(&last_warned, RATELIMIT_MSG_ON_RELEASE);
++	if (all_mapped && __ratelimit(&last_warned)) {
++		printk("__find_get_block_slow() failed. block=%llu, "
++		       "b_blocknr=%llu, b_state=0x%08lx, b_size=%zu, "
++		       "device %pg blocksize: %d\n",
++		       (unsigned long long)block,
++		       (unsigned long long)bh->b_blocknr,
++		       bh->b_state, bh->b_size, bdev,
++		       1 << bd_inode->i_blkbits);
  	}
- 
- 	add_wait_queue(&tfile->wq.wait, &wait);
--	current->state = TASK_INTERRUPTIBLE;
- 
- 	while (1) {
-+		set_current_state(TASK_INTERRUPTIBLE);
- 		skb = skb_array_consume(&tfile->tx_array);
- 		if (skb)
- 			break;
-@@ -1732,7 +1732,7 @@ static struct sk_buff *tun_ring_recv(str
- 		schedule();
- 	}
- 
--	current->state = TASK_RUNNING;
-+	set_current_state(TASK_RUNNING);
- 	remove_wait_queue(&tfile->wq.wait, &wait);
- 
- out:
+ out_unlock:
+ 	spin_unlock(&bd_mapping->private_lock);
+-- 
+2.19.1
+
 
 
