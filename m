@@ -2,54 +2,59 @@ Return-Path: <SRS0=J4ZE=RP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D2C74C43381
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 17:11:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 59495C43381
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 17:11:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A34F5214AE
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 17:11:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2B62E2173C
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 17:11:52 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1552410708;
-	bh=9Auvx8DwUw+Ac8CnAXYP1kW19nufdx7vDVXTgrMk/TU=;
+	s=default; t=1552410712;
+	bh=sA7wHAVT6wW4wF+OUZze6Xl2wg/y/EcUaA0buFJoIgA=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=a79BOGkAobxRYvSUiqF7w+KQLGUhHJIleC49brloI/cF0j55RvdXTxYzmtzWpKE5x
-	 fH9FQ/eAjHB0ezNXCDYhKtbIHxKq/mSGt5lqUnra5/BqI+RyMTv1lDZ7uT5FeUvnbV
-	 UytWBblItLC3qHHxr+VINiMNLn5R+9eXxaxggLjk=
+	b=VAOkx7Xc8aWLSHp4Tn/DSrr5LR+6F9ZxQqK/GVzC/maYNDwAzDFnZRhYEgoscP/Bc
+	 IyYWnT3zmxdV7maV+MWu6EcH3CH5n6JMO6qwcbDHWJSOzQ9Z+kc9XKA9kJ3FqXxc3K
+	 U5eYEgP1OKRbvQLlJ+UiAiU1as51fphU+Fiu7x1I=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727113AbfCLRLq (ORCPT
+        id S1727160AbfCLRLv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 12 Mar 2019 13:11:46 -0400
-Received: from mail.kernel.org ([198.145.29.99]:45380 "EHLO mail.kernel.org"
+        Tue, 12 Mar 2019 13:11:51 -0400
+Received: from mail.kernel.org ([198.145.29.99]:45488 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727044AbfCLRLk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 12 Mar 2019 13:11:40 -0400
+        id S1727063AbfCLRLm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 12 Mar 2019 13:11:42 -0400
 Received: from localhost (unknown [104.133.8.98])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E2C40217D8;
-        Tue, 12 Mar 2019 17:11:38 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 15B2E217D4;
+        Tue, 12 Mar 2019 17:11:41 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1552410699;
-        bh=9Auvx8DwUw+Ac8CnAXYP1kW19nufdx7vDVXTgrMk/TU=;
+        s=default; t=1552410701;
+        bh=sA7wHAVT6wW4wF+OUZze6Xl2wg/y/EcUaA0buFJoIgA=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=PZbJpBILEqD7HFD/gBZqzU6tYPkM4+aD1jHs3fLPYOnhhzWTFNFWtHtvN6gAw39DK
-         Tbzg6W68f6CpclUEvskimi88/uXeMPomLsw6M2RcrSyZ1zn1DW9QPyXP1jOFldIWP9
-         v207qLETZOcx7sUHD5L1FSoQSZ4IW81Q1wigkA+A=
+        b=AgYm3sdRAyXYD8cOmFqkgmpd3C6BOKC8vAAdUfTkytv01dTQx4+JsFfwR5VkLaxZR
+         sbPsLpYXMqmYMM02Y5DfM6lSyqTGXoF4yT5/bdx1QvYCwMyTUiCfogx3EOmfGpDAjX
+         EjChwKfp2lu5n0g7+V+xh1ZSj93CigCUHHXNZfPA=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Gao Xiang <gaoxiang25@huawei.com>,
-        Chao Yu <yuchao0@huawei.com>
-Subject: [PATCH 5.0 19/25] staging: erofs: compressed_pages should not be accessed again after freed
-Date:   Tue, 12 Mar 2019 10:08:57 -0700
-Message-Id: <20190312170404.975178350@linuxfoundation.org>
+        stable@vger.kernel.org, Tony Jones <tonyj@suse.de>,
+        Jiri Olsa <jolsa@kernel.org>,
+        Arnaldo Carvalho de Melo <acme@redhat.com>,
+        Ravi Bangoria <ravi.bangoria@linux.ibm.com>,
+        Andi Kleen <ak@linux.intel.com>,
+        Jin Yao <yao.jin@linux.intel.com>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.20 011/171] perf script: Fix crash when processing recorded stat data
+Date:   Tue, 12 Mar 2019 10:06:31 -0700
+Message-Id: <20190312170348.854888888@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
-In-Reply-To: <20190312170403.643852550@linuxfoundation.org>
-References: <20190312170403.643852550@linuxfoundation.org>
+In-Reply-To: <20190312170347.868927101@linuxfoundation.org>
+References: <20190312170347.868927101@linuxfoundation.org>
 User-Agent: quilt/0.65
 X-stable: review
 X-Patchwork-Hint: ignore
@@ -61,180 +66,105 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-5.0-stable review patch.  If anyone has any objections, please let me know.
+4.20-stable review patch.  If anyone has any objections, please let me know.
 
 ------------------
 
-From: Gao Xiang <gaoxiang25@huawei.com>
+[ Upstream commit 8bf8c6da53c2265aea365a1de6038f118f522113 ]
 
-commit af692e117cb8cd9d3d844d413095775abc1217f9 upstream.
+While updating perf to work with Python3 and Python2 I noticed that the
+stat-cpi script was dumping core.
 
-This patch resolves the following page use-after-free issue,
-z_erofs_vle_unzip:
-    ...
-    for (i = 0; i < nr_pages; ++i) {
-        ...
-        z_erofs_onlinepage_endio(page);  (1)
-    }
+$ perf  stat -e cycles,instructions record -o /tmp/perf.data /bin/false
 
-    for (i = 0; i < clusterpages; ++i) {
-        page = compressed_pages[i];
+ Performance counter stats for '/bin/false':
 
-        if (page->mapping == mngda)      (2)
-            continue;
-        /* recycle all individual staging pages */
-        (void)z_erofs_gather_if_stagingpage(page_pool, page); (3)
-        WRITE_ONCE(compressed_pages[i], NULL);
-    }
-    ...
+           802,148      cycles
 
-After (1) is executed, page is freed and could be then reused, if
-compressed_pages is scanned after that, it could fall info (2) or
-(3) by mistake and that could finally be in a mess.
+           604,622      instructions                                                       802,148      cycles
+           604,622      instructions
 
-This patch aims to solve the above issue only with little changes
-as much as possible in order to make the fix backport easier.
+       0.001445842 seconds time elapsed
 
-Fixes: 3883a79abd02 ("staging: erofs: introduce VLE decompression support")
-Cc: <stable@vger.kernel.org> # 4.19+
-Signed-off-by: Gao Xiang <gaoxiang25@huawei.com>
-Reviewed-by: Chao Yu <yuchao0@huawei.com>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+$ perf script -i /tmp/perf.data -s scripts/python/stat-cpi.py
+Segmentation fault (core dumped)
+...
+...
+    rblist=rblist@entry=0xb2a200 <rt_stat>,
+    new_entry=new_entry@entry=0x7ffcb755c310) at util/rblist.c:33
+    ctx=<optimized out>, type=<optimized out>, create=<optimized out>,
+    cpu=<optimized out>, evsel=<optimized out>) at util/stat-shadow.c:118
+    ctx=<optimized out>, type=<optimized out>, st=<optimized out>)
+    at util/stat-shadow.c:196
+    count=count@entry=727442, cpu=cpu@entry=0, st=0xb2a200 <rt_stat>)
+    at util/stat-shadow.c:239
+    config=config@entry=0xafeb40 <stat_config>,
+    counter=counter@entry=0x133c6e0) at util/stat.c:372
+...
+...
 
+The issue is that since 1fcd03946b52 perf_stat__update_shadow_stats now calls
+update_runtime_stat passing rt_stat rather than calling update_stats but
+perf_stat__init_shadow_stats has never been called to initialize rt_stat in
+the script path processing recorded stat data.
 
+Since I can't see any reason why perf_stat__init_shadow_stats() is presently
+initialized like it is in builtin-script.c::perf_sample__fprint_metric()
+[4bd1bef8bba2f] I'm proposing it instead be initialized once in __cmd_script
+
+Committer testing:
+
+After applying the patch:
+
+  # perf script -i /tmp/perf.data -s tools/perf/scripts/python/stat-cpi.py
+       0.001970: cpu -1, thread -1 -> cpi 1.709079 (1075684/629394)
+  #
+
+No segfault.
+
+Signed-off-by: Tony Jones <tonyj@suse.de>
+Reviewed-by: Jiri Olsa <jolsa@kernel.org>
+Tested-by: Arnaldo Carvalho de Melo <acme@redhat.com>
+Tested-by: Ravi Bangoria <ravi.bangoria@linux.ibm.com>
+Cc: Andi Kleen <ak@linux.intel.com>
+Cc: Jin Yao <yao.jin@linux.intel.com>
+Fixes: 1fcd03946b52 ("perf stat: Update per-thread shadow stats")
+Link: http://lkml.kernel.org/r/20190120191414.12925-1-tonyj@suse.de
+Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/staging/erofs/unzip_vle.c     |   38 +++++++++++++++++-----------------
- drivers/staging/erofs/unzip_vle.h     |    3 --
- drivers/staging/erofs/unzip_vle_lz4.c |   19 +++++++----------
- 3 files changed, 29 insertions(+), 31 deletions(-)
+ tools/perf/builtin-script.c | 7 ++-----
+ 1 file changed, 2 insertions(+), 5 deletions(-)
 
---- a/drivers/staging/erofs/unzip_vle.c
-+++ b/drivers/staging/erofs/unzip_vle.c
-@@ -1017,11 +1017,10 @@ repeat:
- 	if (llen > grp->llen)
- 		llen = grp->llen;
+diff --git a/tools/perf/builtin-script.c b/tools/perf/builtin-script.c
+index 5c070a600233..d8791e0e5f75 100644
+--- a/tools/perf/builtin-script.c
++++ b/tools/perf/builtin-script.c
+@@ -1633,13 +1633,8 @@ static void perf_sample__fprint_metric(struct perf_script *script,
+ 		.force_header = false,
+ 	};
+ 	struct perf_evsel *ev2;
+-	static bool init;
+ 	u64 val;
  
--	err = z_erofs_vle_unzip_fast_percpu(compressed_pages,
--		clusterpages, pages, llen, work->pageofs,
--		z_erofs_onlinepage_endio);
-+	err = z_erofs_vle_unzip_fast_percpu(compressed_pages, clusterpages,
-+					    pages, llen, work->pageofs);
- 	if (err != -ENOTSUPP)
--		goto out_percpu;
-+		goto out;
- 
- 	if (sparsemem_pages >= nr_pages)
- 		goto skip_allocpage;
-@@ -1042,8 +1041,25 @@ skip_allocpage:
- 	erofs_vunmap(vout, nr_pages);
- 
- out:
-+	/* must handle all compressed pages before endding pages */
-+	for (i = 0; i < clusterpages; ++i) {
-+		page = compressed_pages[i];
-+
-+#ifdef EROFS_FS_HAS_MANAGED_CACHE
-+		if (page->mapping == MNGD_MAPPING(sbi))
-+			continue;
-+#endif
-+		/* recycle all individual staging pages */
-+		(void)z_erofs_gather_if_stagingpage(page_pool, page);
-+
-+		WRITE_ONCE(compressed_pages[i], NULL);
-+	}
-+
- 	for (i = 0; i < nr_pages; ++i) {
- 		page = pages[i];
-+		if (!page)
-+			continue;
-+
- 		DBG_BUGON(!page->mapping);
- 
- 		/* recycle all individual staging pages */
-@@ -1056,20 +1072,6 @@ out:
- 		z_erofs_onlinepage_endio(page);
- 	}
- 
--out_percpu:
--	for (i = 0; i < clusterpages; ++i) {
--		page = compressed_pages[i];
--
--#ifdef EROFS_FS_HAS_MANAGED_CACHE
--		if (page->mapping == MNGD_MAPPING(sbi))
--			continue;
--#endif
--		/* recycle all individual staging pages */
--		(void)z_erofs_gather_if_stagingpage(page_pool, page);
--
--		WRITE_ONCE(compressed_pages[i], NULL);
+-	if (!init) {
+-		perf_stat__init_shadow_stats();
+-		init = true;
 -	}
--
- 	if (pages == z_pagemap_global)
- 		mutex_unlock(&z_pagemap_global_lock);
- 	else if (unlikely(pages != pages_onstack))
---- a/drivers/staging/erofs/unzip_vle.h
-+++ b/drivers/staging/erofs/unzip_vle.h
-@@ -218,8 +218,7 @@ extern int z_erofs_vle_plain_copy(struct
+ 	if (!evsel->stats)
+ 		perf_evlist__alloc_stats(script->session->evlist, false);
+ 	if (evsel_script(evsel->leader)->gnum++ == 0)
+@@ -2305,6 +2300,8 @@ static int __cmd_script(struct perf_script *script)
  
- extern int z_erofs_vle_unzip_fast_percpu(struct page **compressed_pages,
- 	unsigned clusterpages, struct page **pages,
--	unsigned outlen, unsigned short pageofs,
--	void (*endio)(struct page *));
-+	unsigned int outlen, unsigned short pageofs);
+ 	signal(SIGINT, sig_handler);
  
- extern int z_erofs_vle_unzip_vmap(struct page **compressed_pages,
- 	unsigned clusterpages, void *vaddr, unsigned llen,
---- a/drivers/staging/erofs/unzip_vle_lz4.c
-+++ b/drivers/staging/erofs/unzip_vle_lz4.c
-@@ -125,8 +125,7 @@ int z_erofs_vle_unzip_fast_percpu(struct
- 				  unsigned int clusterpages,
- 				  struct page **pages,
- 				  unsigned int outlen,
--				  unsigned short pageofs,
--				  void (*endio)(struct page *))
-+				  unsigned short pageofs)
- {
- 	void *vin, *vout;
- 	unsigned int nr_pages, i, j;
-@@ -148,19 +147,16 @@ int z_erofs_vle_unzip_fast_percpu(struct
- 	ret = z_erofs_unzip_lz4(vin, vout + pageofs,
- 				clusterpages * PAGE_SIZE, outlen);
- 
--	if (ret >= 0) {
--		outlen = ret;
--		ret = 0;
--	}
-+	if (ret < 0)
-+		goto out;
-+	ret = 0;
- 
- 	for (i = 0; i < nr_pages; ++i) {
- 		j = min((unsigned int)PAGE_SIZE - pageofs, outlen);
- 
- 		if (pages[i]) {
--			if (ret < 0) {
--				SetPageError(pages[i]);
--			} else if (clusterpages == 1 &&
--				   pages[i] == compressed_pages[0]) {
-+			if (clusterpages == 1 &&
-+			    pages[i] == compressed_pages[0]) {
- 				memcpy(vin + pageofs, vout + pageofs, j);
- 			} else {
- 				void *dst = kmap_atomic(pages[i]);
-@@ -168,12 +164,13 @@ int z_erofs_vle_unzip_fast_percpu(struct
- 				memcpy(dst + pageofs, vout + pageofs, j);
- 				kunmap_atomic(dst);
- 			}
--			endio(pages[i]);
- 		}
- 		vout += PAGE_SIZE;
- 		outlen -= j;
- 		pageofs = 0;
- 	}
++	perf_stat__init_shadow_stats();
 +
-+out:
- 	preempt_enable();
- 
- 	if (clusterpages == 1)
+ 	/* override event processing functions */
+ 	if (script->show_task_events) {
+ 		script->tool.comm = process_comm_event;
+-- 
+2.19.1
+
 
 
