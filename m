@@ -6,37 +6,37 @@ X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,
 	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 132E9C43381
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 01:56:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7296FC43381
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 01:57:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E1BE8214AE
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 01:56:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4927F214AE
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 01:57:01 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726796AbfCLB4y (ORCPT
+        id S1726817AbfCLB47 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 11 Mar 2019 21:56:54 -0400
-Received: from inva020.nxp.com ([92.121.34.13]:55926 "EHLO inva020.nxp.com"
+        Mon, 11 Mar 2019 21:56:59 -0400
+Received: from inva021.nxp.com ([92.121.34.21]:41190 "EHLO inva021.nxp.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726623AbfCLB4v (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 11 Mar 2019 21:56:51 -0400
-Received: from inva020.nxp.com (localhost [127.0.0.1])
-        by inva020.eu-rdc02.nxp.com (Postfix) with ESMTP id CD4DB1A035F;
-        Tue, 12 Mar 2019 02:56:48 +0100 (CET)
+        id S1726774AbfCLB4x (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 11 Mar 2019 21:56:53 -0400
+Received: from inva021.nxp.com (localhost [127.0.0.1])
+        by inva021.eu-rdc02.nxp.com (Postfix) with ESMTP id 2E36D2000A8;
+        Tue, 12 Mar 2019 02:56:50 +0100 (CET)
 Received: from invc005.ap-rdc01.nxp.com (invc005.ap-rdc01.nxp.com [165.114.16.14])
-        by inva020.eu-rdc02.nxp.com (Postfix) with ESMTP id F021B1A0285;
-        Tue, 12 Mar 2019 02:56:43 +0100 (CET)
+        by inva021.eu-rdc02.nxp.com (Postfix) with ESMTP id 077AE200042;
+        Tue, 12 Mar 2019 02:56:45 +0100 (CET)
 Received: from titan.ap.freescale.net (TITAN.ap.freescale.net [10.192.208.233])
-        by invc005.ap-rdc01.nxp.com (Postfix) with ESMTP id AEFD6402D5;
-        Tue, 12 Mar 2019 09:56:37 +0800 (SGT)
+        by invc005.ap-rdc01.nxp.com (Postfix) with ESMTP id B9AF2402DB;
+        Tue, 12 Mar 2019 09:56:38 +0800 (SGT)
 From:   Peng Ma <peng.ma@nxp.com>
 To:     axboe@kernel.dk, robh+dt@kernel.org, mark.rutland@arm.com,
         shawnguo@kernel.org, leoyang.li@nxp.com
 Cc:     linux-ide@vger.kernel.org, devicetree@vger.kernel.org,
         linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
         Peng Ma <peng.ma@nxp.com>
-Subject: [v7 2/3] arm64: dts: lx2160a: add sata node support
-Date:   Tue, 12 Mar 2019 09:50:18 +0800
-Message-Id: <20190312015019.30628-2-peng.ma@nxp.com>
+Subject: [v7 3/3] ahci: qoriq: add lx2160 platforms support
+Date:   Tue, 12 Mar 2019 09:50:19 +0800
+Message-Id: <20190312015019.30628-3-peng.ma@nxp.com>
 X-Mailer: git-send-email 2.14.1
 In-Reply-To: <20190312015019.30628-1-peng.ma@nxp.com>
 References: <20190312015019.30628-1-peng.ma@nxp.com>
@@ -46,128 +46,140 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add SATA device nodes for fsl-lx2160a and enable support
-for QDS and RDB boards.
+Lx2160a is a new introduced soc which supports ATA3.0
 
 Signed-off-by: Peng Ma <peng.ma@nxp.com>
 ---
 changed for V7:
-	- no changed
+	- no changed.
 
- arch/arm64/boot/dts/freescale/fsl-lx2160a-qds.dts |   16 +++++++
- arch/arm64/boot/dts/freescale/fsl-lx2160a-rdb.dts |   16 +++++++
- arch/arm64/boot/dts/freescale/fsl-lx2160a.dtsi    |   44 +++++++++++++++++++++
- 3 files changed, 76 insertions(+), 0 deletions(-)
+ drivers/ata/ahci_qoriq.c |   52 +++++++++++++++++++++++++++++++---------------
+ 1 files changed, 35 insertions(+), 17 deletions(-)
 
-diff --git a/arch/arm64/boot/dts/freescale/fsl-lx2160a-qds.dts b/arch/arm64/boot/dts/freescale/fsl-lx2160a-qds.dts
-index 99a22ab..1a5acf6 100644
---- a/arch/arm64/boot/dts/freescale/fsl-lx2160a-qds.dts
-+++ b/arch/arm64/boot/dts/freescale/fsl-lx2160a-qds.dts
-@@ -95,6 +95,22 @@
- 	};
+diff --git a/drivers/ata/ahci_qoriq.c b/drivers/ata/ahci_qoriq.c
+index ce59253..08dbb86 100644
+--- a/drivers/ata/ahci_qoriq.c
++++ b/drivers/ata/ahci_qoriq.c
+@@ -58,6 +58,7 @@ enum ahci_qoriq_type {
+ 	AHCI_LS1046A,
+ 	AHCI_LS1088A,
+ 	AHCI_LS2088A,
++	AHCI_LX2160A,
  };
  
-+&sata0 {
-+	status = "okay";
-+};
-+
-+&sata1 {
-+	status = "okay";
-+};
-+
-+&sata2 {
-+	status = "okay";
-+};
-+
-+&sata3 {
-+	status = "okay";
-+};
-+
- &uart0 {
- 	status = "okay";
- };
-diff --git a/arch/arm64/boot/dts/freescale/fsl-lx2160a-rdb.dts b/arch/arm64/boot/dts/freescale/fsl-lx2160a-rdb.dts
-index 6481e5f..5b6799e 100644
---- a/arch/arm64/boot/dts/freescale/fsl-lx2160a-rdb.dts
-+++ b/arch/arm64/boot/dts/freescale/fsl-lx2160a-rdb.dts
-@@ -102,6 +102,22 @@
- 	};
+ struct ahci_qoriq_priv {
+@@ -67,6 +68,8 @@ struct ahci_qoriq_priv {
+ 	bool is_dmacoherent;
  };
  
-+&sata0 {
-+	status = "okay";
-+};
++static bool ecc_initialized;
 +
-+&sata1 {
-+	status = "okay";
-+};
-+
-+&sata2 {
-+	status = "okay";
-+};
-+
-+&sata3 {
-+	status = "okay";
-+};
-+
- &uart0 {
- 	status = "okay";
+ static const struct of_device_id ahci_qoriq_of_match[] = {
+ 	{ .compatible = "fsl,ls1021a-ahci", .data = (void *)AHCI_LS1021A},
+ 	{ .compatible = "fsl,ls1043a-ahci", .data = (void *)AHCI_LS1043A},
+@@ -74,6 +77,7 @@ struct ahci_qoriq_priv {
+ 	{ .compatible = "fsl,ls1046a-ahci", .data = (void *)AHCI_LS1046A},
+ 	{ .compatible = "fsl,ls1088a-ahci", .data = (void *)AHCI_LS1088A},
+ 	{ .compatible = "fsl,ls2088a-ahci", .data = (void *)AHCI_LS2088A},
++	{ .compatible = "fsl,lx2160a-ahci", .data = (void *)AHCI_LX2160A},
+ 	{},
  };
-diff --git a/arch/arm64/boot/dts/freescale/fsl-lx2160a.dtsi b/arch/arm64/boot/dts/freescale/fsl-lx2160a.dtsi
-index a79f5c1..592034b 100644
---- a/arch/arm64/boot/dts/freescale/fsl-lx2160a.dtsi
-+++ b/arch/arm64/boot/dts/freescale/fsl-lx2160a.dtsi
-@@ -671,6 +671,50 @@
- 			status = "disabled";
- 		};
+ MODULE_DEVICE_TABLE(of, ahci_qoriq_of_match);
+@@ -165,9 +169,10 @@ static int ahci_qoriq_phy_init(struct ahci_host_priv *hpriv)
  
-+		sata0: sata@3200000 {
-+			compatible = "fsl,lx2160a-ahci";
-+			reg = <0x0 0x3200000 0x0 0x10000>,
-+			      <0x7 0x100520 0x0 0x4>;
-+			reg-names = "ahci", "sata-ecc";
-+			interrupts = <GIC_SPI 133 IRQ_TYPE_LEVEL_HIGH>;
-+			clocks = <&clockgen 4 3>;
-+			dma-coherent;
-+			status = "disabled";
-+		};
+ 	switch (qpriv->type) {
+ 	case AHCI_LS1021A:
+-		if (!qpriv->ecc_addr)
++		if (!(qpriv->ecc_addr || ecc_initialized))
+ 			return -EINVAL;
+-		writel(SATA_ECC_DISABLE, qpriv->ecc_addr);
++		else if (qpriv->ecc_addr && !ecc_initialized)
++			writel(SATA_ECC_DISABLE, qpriv->ecc_addr);
+ 		writel(AHCI_PORT_PHY_1_CFG, reg_base + PORT_PHY1);
+ 		writel(LS1021A_PORT_PHY2, reg_base + PORT_PHY2);
+ 		writel(LS1021A_PORT_PHY3, reg_base + PORT_PHY3);
+@@ -180,10 +185,12 @@ static int ahci_qoriq_phy_init(struct ahci_host_priv *hpriv)
+ 		break;
+ 
+ 	case AHCI_LS1043A:
+-		if (!qpriv->ecc_addr)
++		if (!(qpriv->ecc_addr || ecc_initialized))
+ 			return -EINVAL;
+-		writel(readl(qpriv->ecc_addr) | ECC_DIS_ARMV8_CH2,
+-				qpriv->ecc_addr);
++		else if (qpriv->ecc_addr && !ecc_initialized)
++			writel(readl(qpriv->ecc_addr) |
++			       ECC_DIS_ARMV8_CH2,
++			       qpriv->ecc_addr);
+ 		writel(AHCI_PORT_PHY_1_CFG, reg_base + PORT_PHY1);
+ 		writel(AHCI_PORT_PHY2_CFG, reg_base + PORT_PHY2);
+ 		writel(AHCI_PORT_PHY3_CFG, reg_base + PORT_PHY3);
+@@ -202,10 +209,12 @@ static int ahci_qoriq_phy_init(struct ahci_host_priv *hpriv)
+ 		break;
+ 
+ 	case AHCI_LS1046A:
+-		if (!qpriv->ecc_addr)
++		if (!(qpriv->ecc_addr || ecc_initialized))
+ 			return -EINVAL;
+-		writel(readl(qpriv->ecc_addr) | ECC_DIS_ARMV8_CH2,
+-				qpriv->ecc_addr);
++		else if (qpriv->ecc_addr && !ecc_initialized)
++			writel(readl(qpriv->ecc_addr) |
++			       ECC_DIS_ARMV8_CH2,
++			       qpriv->ecc_addr);
+ 		writel(AHCI_PORT_PHY_1_CFG, reg_base + PORT_PHY1);
+ 		writel(AHCI_PORT_PHY2_CFG, reg_base + PORT_PHY2);
+ 		writel(AHCI_PORT_PHY3_CFG, reg_base + PORT_PHY3);
+@@ -215,10 +224,13 @@ static int ahci_qoriq_phy_init(struct ahci_host_priv *hpriv)
+ 		break;
+ 
+ 	case AHCI_LS1088A:
+-		if (!qpriv->ecc_addr)
++	case AHCI_LX2160A:
++		if (!(qpriv->ecc_addr || ecc_initialized))
+ 			return -EINVAL;
+-		writel(readl(qpriv->ecc_addr) | ECC_DIS_LS1088A,
+-		       qpriv->ecc_addr);
++		else if (qpriv->ecc_addr && !ecc_initialized)
++			writel(readl(qpriv->ecc_addr) |
++			       ECC_DIS_LS1088A,
++			       qpriv->ecc_addr);
+ 		writel(AHCI_PORT_PHY_1_CFG, reg_base + PORT_PHY1);
+ 		writel(AHCI_PORT_PHY2_CFG, reg_base + PORT_PHY2);
+ 		writel(AHCI_PORT_PHY3_CFG, reg_base + PORT_PHY3);
+@@ -237,6 +249,7 @@ static int ahci_qoriq_phy_init(struct ahci_host_priv *hpriv)
+ 		break;
+ 	}
+ 
++	ecc_initialized = true;
+ 	return 0;
+ }
+ 
+@@ -264,13 +277,18 @@ static int ahci_qoriq_probe(struct platform_device *pdev)
+ 
+ 	qoriq_priv->type = (enum ahci_qoriq_type)of_id->data;
+ 
+-	res = platform_get_resource_byname(pdev, IORESOURCE_MEM,
+-			"sata-ecc");
+-	if (res) {
+-		qoriq_priv->ecc_addr = devm_ioremap_resource(dev, res);
+-		if (IS_ERR(qoriq_priv->ecc_addr))
+-			return PTR_ERR(qoriq_priv->ecc_addr);
++	if (unlikely(!ecc_initialized)) {
++		res = platform_get_resource_byname(pdev,
++						   IORESOURCE_MEM,
++						   "sata-ecc");
++		if (res) {
++			qoriq_priv->ecc_addr =
++				devm_ioremap_resource(dev, res);
++			if (IS_ERR(qoriq_priv->ecc_addr))
++				return PTR_ERR(qoriq_priv->ecc_addr);
++		}
+ 	}
 +
-+		sata1: sata@3210000 {
-+			compatible = "fsl,lx2160a-ahci";
-+			reg = <0x0 0x3210000 0x0 0x10000>,
-+			      <0x7 0x100520 0x0 0x4>;
-+			reg-names = "ahci", "sata-ecc";
-+			interrupts = <GIC_SPI 136 IRQ_TYPE_LEVEL_HIGH>;
-+			clocks = <&clockgen 4 3>;
-+			dma-coherent;
-+			status = "disabled";
-+		};
-+
-+		sata2: sata@3220000 {
-+			compatible = "fsl,lx2160a-ahci";
-+			reg = <0x0 0x3220000 0x0 0x10000>,
-+			      <0x7 0x100520 0x0 0x4>;
-+			reg-names = "ahci", "sata-ecc";
-+			interrupts = <GIC_SPI 97 IRQ_TYPE_LEVEL_HIGH>;
-+			clocks = <&clockgen 4 3>;
-+			dma-coherent;
-+			status = "disabled";
-+		};
-+
-+		sata3: sata@3230000 {
-+			compatible = "fsl,lx2160a-ahci";
-+			reg = <0x0 0x3230000 0x0 0x10000>,
-+			      <0x7 0x100520 0x0 0x4>;
-+			reg-names = "ahci", "sata-ecc";
-+			interrupts = <GIC_SPI 100 IRQ_TYPE_LEVEL_HIGH>;
-+			clocks = <&clockgen 4 3>;
-+			dma-coherent;
-+			status = "disabled";
-+		};
-+
- 		smmu: iommu@5000000 {
- 			compatible = "arm,mmu-500";
- 			reg = <0 0x5000000 0 0x800000>;
+ 	qoriq_priv->is_dmacoherent = of_dma_is_coherent(np);
+ 
+ 	rc = ahci_platform_enable_resources(hpriv);
 -- 
 1.7.1
 
