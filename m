@@ -2,53 +2,59 @@ Return-Path: <SRS0=J4ZE=RP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+X-Spam-Status: No, score=-14.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0B406C10F00
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 17:15:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E3383C43381
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 17:15:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C77E1217D8
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 17:15:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B5F1F2171F
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 17:15:31 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1552410926;
-	bh=x+I7AuOfxRg+PKWiEyNg1DoZlw3A3WrjpwukFjNXE4Q=;
+	s=default; t=1552410931;
+	bh=99KGI86hNJciy5+1ygsOfcSF0DC4IHNMtKX220X9Rk8=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=1aQJiHTMkauZye3PbCBx8Ua9SswMDYPAK90G+bTvjrYB2F8Nb/GjcTzMCdJaPfmPC
-	 VqYMAM6zsfLjnfgWF8BRzz1Iw49vjX72pO5Z8VeldxNoAThTwRWgzIDb+4ABKJ8qyV
-	 fKM5QhTKZYUgE+YoFvtqu40BRxEZ1uSFIzMw/nng=
+	b=OQQx2p9g5cwAH8IN91V+Ap6Tos9eyFYWhmTR+Kv19CkV8qBL8vXxBvVOQX1pXIb5J
+	 6oyg7chhUukoNBy9wEGn9a91zd5eU/leH33QGudV1S3LtI8ldaaC6nnf/vxqDVo2eO
+	 /TKMoOXtWM8JUybGfudEbhLxZg2K1UZt0ifEqb18=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728698AbfCLRPZ (ORCPT
+        id S1728747AbfCLRPa (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 12 Mar 2019 13:15:25 -0400
-Received: from mail.kernel.org ([198.145.29.99]:53538 "EHLO mail.kernel.org"
+        Tue, 12 Mar 2019 13:15:30 -0400
+Received: from mail.kernel.org ([198.145.29.99]:53682 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728416AbfCLROg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 12 Mar 2019 13:14:36 -0400
+        id S1728440AbfCLROj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 12 Mar 2019 13:14:39 -0400
 Received: from localhost (unknown [104.133.8.98])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 54358217F5;
-        Tue, 12 Mar 2019 17:14:35 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 288DB2171F;
+        Tue, 12 Mar 2019 17:14:38 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1552410875;
-        bh=x+I7AuOfxRg+PKWiEyNg1DoZlw3A3WrjpwukFjNXE4Q=;
+        s=default; t=1552410878;
+        bh=99KGI86hNJciy5+1ygsOfcSF0DC4IHNMtKX220X9Rk8=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=1gYRkEUeFRZBK6Mg6HK/7VETibpqhpM9NIDorXox3ji1NOWkMqeQFEjnJBZyyA0I0
-         TRpOtcTI1pGqfAmzkp6vVgeXuHu6Rzf+40p2/ddAhgmpetJk4kXoGJdwbG4ZgfbCEL
-         splftWtBHvVq6MwPfghbLO3tC40f4h7kmO4HrKk4=
+        b=U4CwUGwI9Fvq/CGwCJJYf6sE7C2jfyeBcrFVstr7EqBr7yAwgJcSc01/PEn2xC5GP
+         a9xRveFILKIyBuMc2ryI4Jb0LIhVjhDNAcLzFCRa1PUxnjrSQPy9iBO9fxydOeq6wH
+         iFCaJJsUuBF52/aLCDompktgTh458IQcvNGqMQ80=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Ian Kent <raven@themaw.net>,
+        stable@vger.kernel.org, Qian Cai <cai@lca.pw>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        "H. Peter Anvin" <hpa@zytor.com>,
+        Andrey Ryabinin <aryabinin@virtuozzo.com>,
+        Alexander Potapenko <glider@google.com>,
+        Dmitry Vyukov <dvyukov@google.com>,
         Andrew Morton <akpm@linux-foundation.org>,
         Linus Torvalds <torvalds@linux-foundation.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 060/149] autofs: fix error return in autofs_fill_super()
-Date:   Tue, 12 Mar 2019 10:07:58 -0700
-Message-Id: <20190312170354.749446898@linuxfoundation.org>
+Subject: [PATCH 4.19 054/149] x86_64: increase stack size for KASAN_EXTRA
+Date:   Tue, 12 Mar 2019 10:07:52 -0700
+Message-Id: <20190312170354.263097560@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190312170349.421581206@linuxfoundation.org>
 References: <20190312170349.421581206@linuxfoundation.org>
@@ -67,37 +73,80 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-[ Upstream commit f585b283e3f025754c45bbe7533fc6e5c4643700 ]
+[ Upstream commit a8e911d13540487942d53137c156bd7707f66e5d ]
 
-In autofs_fill_super() on error of get inode/make root dentry the return
-should be ENOMEM as this is the only failure case of the called
-functions.
+If the kernel is configured with KASAN_EXTRA, the stack size is
+increasted significantly because this option sets "-fstack-reuse" to
+"none" in GCC [1].  As a result, it triggers stack overrun quite often
+with 32k stack size compiled using GCC 8.  For example, this reproducer
 
-Link: http://lkml.kernel.org/r/154725123240.11260.796773942606871359.stgit@pluto-themaw-net
-Signed-off-by: Ian Kent <raven@themaw.net>
+  https://github.com/linux-test-project/ltp/blob/master/testcases/kernel/syscalls/madvise/madvise06.c
+
+triggers a "corrupted stack end detected inside scheduler" very reliably
+with CONFIG_SCHED_STACK_END_CHECK enabled.
+
+There are just too many functions that could have a large stack with
+KASAN_EXTRA due to large local variables that have been called over and
+over again without being able to reuse the stacks.  Some noticiable ones
+are
+
+  size
+  7648 shrink_page_list
+  3584 xfs_rmap_convert
+  3312 migrate_page_move_mapping
+  3312 dev_ethtool
+  3200 migrate_misplaced_transhuge_page
+  3168 copy_process
+
+There are other 49 functions are over 2k in size while compiling kernel
+with "-Wframe-larger-than=" even with a related minimal config on this
+machine.  Hence, it is too much work to change Makefiles for each object
+to compile without "-fsanitize-address-use-after-scope" individually.
+
+[1] https://gcc.gnu.org/bugzilla/show_bug.cgi?id=81715#c23
+
+Although there is a patch in GCC 9 to help the situation, GCC 9 probably
+won't be released in a few months and then it probably take another
+6-month to 1-year for all major distros to include it as a default.
+Hence, the stack usage with KASAN_EXTRA can be revisited again in 2020
+when GCC 9 is everywhere.  Until then, this patch will help users avoid
+stack overrun.
+
+This has already been fixed for arm64 for the same reason via
+6e8830674ea ("arm64: kasan: Increase stack size for KASAN_EXTRA").
+
+Link: http://lkml.kernel.org/r/20190109215209.2903-1-cai@lca.pw
+Signed-off-by: Qian Cai <cai@lca.pw>
+Cc: Thomas Gleixner <tglx@linutronix.de>
+Cc: Ingo Molnar <mingo@redhat.com>
+Cc: Borislav Petkov <bp@alien8.de>
+Cc: "H. Peter Anvin" <hpa@zytor.com>
+Cc: Andrey Ryabinin <aryabinin@virtuozzo.com>
+Cc: Alexander Potapenko <glider@google.com>
+Cc: Dmitry Vyukov <dvyukov@google.com>
 Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
 Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- fs/autofs/inode.c | 4 +++-
- 1 file changed, 3 insertions(+), 1 deletion(-)
+ arch/x86/include/asm/page_64_types.h | 4 ++++
+ 1 file changed, 4 insertions(+)
 
-diff --git a/fs/autofs/inode.c b/fs/autofs/inode.c
-index 846c052569dd..3c14a8e45ffb 100644
---- a/fs/autofs/inode.c
-+++ b/fs/autofs/inode.c
-@@ -255,8 +255,10 @@ int autofs_fill_super(struct super_block *s, void *data, int silent)
- 	}
- 	root_inode = autofs_get_inode(s, S_IFDIR | 0755);
- 	root = d_make_root(root_inode);
--	if (!root)
-+	if (!root) {
-+		ret = -ENOMEM;
- 		goto fail_ino;
-+	}
- 	pipe = NULL;
+diff --git a/arch/x86/include/asm/page_64_types.h b/arch/x86/include/asm/page_64_types.h
+index b99d497e342d..0b6352aabbd3 100644
+--- a/arch/x86/include/asm/page_64_types.h
++++ b/arch/x86/include/asm/page_64_types.h
+@@ -7,7 +7,11 @@
+ #endif
  
- 	root->d_fsdata = ino;
+ #ifdef CONFIG_KASAN
++#ifdef CONFIG_KASAN_EXTRA
++#define KASAN_STACK_ORDER 2
++#else
+ #define KASAN_STACK_ORDER 1
++#endif
+ #else
+ #define KASAN_STACK_ORDER 0
+ #endif
 -- 
 2.19.1
 
