@@ -2,135 +2,223 @@ Return-Path: <SRS0=J4ZE=RP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-19.6 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_PASS,
-	USER_IN_DEF_DKIM_WL autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 56708C43381
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 22:55:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 01B18C10F00
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 22:57:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 129742177E
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 22:55:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AF7A4217D9
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 22:57:05 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="G+ogt7uk"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="VmdyRRhm"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727077AbfCLWzV (ORCPT
+        id S1727124AbfCLW5E (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 12 Mar 2019 18:55:21 -0400
-Received: from mail-pf1-f194.google.com ([209.85.210.194]:35584 "EHLO
-        mail-pf1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725957AbfCLWzV (ORCPT
+        Tue, 12 Mar 2019 18:57:04 -0400
+Received: from mail-it1-f194.google.com ([209.85.166.194]:54924 "EHLO
+        mail-it1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726372AbfCLW5E (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 12 Mar 2019 18:55:21 -0400
-Received: by mail-pf1-f194.google.com with SMTP id j5so2904969pfa.2
-        for <linux-kernel@vger.kernel.org>; Tue, 12 Mar 2019 15:55:20 -0700 (PDT)
+        Tue, 12 Mar 2019 18:57:04 -0400
+Received: by mail-it1-f194.google.com with SMTP id w18so7241171itj.4;
+        Tue, 12 Mar 2019 15:57:03 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
+        d=gmail.com; s=20161025;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=UyJCz3/ignHV9qUFnpkZubkabXzIG/uZFa8r9jmzhd4=;
-        b=G+ogt7ukYHrO1A/RZtRj/HL0/MI/3T9HLGvGaBGOiBq/J3RVRrLbDmCRDjMYzj6ISY
-         H6B0XsNzUUzxqilgBC1ctEhE9TKBN7PD9NYarH+iS+50B+F8+90ST/+irlb95kF+e4v4
-         NbRUXr7GM+5xCsxWw2uTTUMkT9qIXQXFzJ1QnkTUnpnu5S1yNlDiXLKpZwlcn+7CLxyY
-         WKHtohxx7JP68bXF69UWy19+YKV2+OC6/K2qw1OGRiVxdBP3dHqIZrGsIF8AKP8Xi7Yp
-         kk+mvglWBmF6emIeJrgyb/j12TWs66aCMEUW9caufpTQ11V6RFnhx9isiJlGuSBAf1xr
-         lgwg==
+        bh=jIFuwTaqlsPxroQheI+plV9ASZgtqzOS4PSZ00O/GCE=;
+        b=VmdyRRhmKuHbcpkG8m+AVJpZeTLkgs88qJxqBQ80xUiEM1GRYFwMXtA2dx54CJ97AU
+         CdUop5KWoTbZS/9dVAVE4JNnbeZwQDpZBFiUcv22IilkF0CId7GouHM2vn3i7QmWZynl
+         g4t/HPIQjRG6htkap+SxSH9pZnUXevZAq94gvm1fB6tLu1MAk3HZ4gAF1Ffp+DFdNB9M
+         UGxw0wcWjmH3wYPCBZeDHuUPaYt1y/7FK3+ZJmdMWIb2GXGBwTEr5L/EfiElTr8EuJQX
+         07AO+k4CH2H5DLCRchY4oNhbCvaXcILrLeKI5MZEuHtRNJmB+IZwEdZ8nVWar2O3+b68
+         epQw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=UyJCz3/ignHV9qUFnpkZubkabXzIG/uZFa8r9jmzhd4=;
-        b=k1isN/E2bmtH9zEnAjDHaSEggVlt208WaRwqsi1nD7+kU3Bk/KaLdI0+xmkgIwzMZ8
-         wfMZwGyGYv2VSk6Wwv5wYTDTkDgSfzw+4ucNak7LlxyJUg6qiHCp53mTzk10jrGrHdIL
-         +SrNJVVJWPKn36EQtKeDxSICFOmPjr/JT9cRiLCYa8CU6YA22bGKyym2ROIoA8l7poO6
-         BtrexeLEdQ0U4mVgPKX+JYAicrCHeLi6FWwBXWhXB4oJN9cxepH1MzSf9DGnrn3mtaeK
-         3LVFCOvA6e56tKR4d42dkMrvvdkrvySmeCupuTaazwX4FIOUJAKMDcNetrv67MHONZzv
-         Istg==
-X-Gm-Message-State: APjAAAXnxBmxOhysMJzsQsJDI4QkZKes9mo+YHTCnvWpb4zdFAoufDF4
-        k/oHXo8+8Xwyo/a7bn0qCjYhNkXUVdEdfeBBZ58BHw==
-X-Google-Smtp-Source: APXvYqyMkAyZ1zMrqjjIC6XlW0hyaHJIF8CE4QxQ/Bk4r2FXOZAoUFHfAR6H+vKbR9pN9NL61/EJD4bTyiISoyt0OcM=
-X-Received: by 2002:a62:f20d:: with SMTP id m13mr40442517pfh.174.1552431320196;
- Tue, 12 Mar 2019 15:55:20 -0700 (PDT)
+        bh=jIFuwTaqlsPxroQheI+plV9ASZgtqzOS4PSZ00O/GCE=;
+        b=BaDjMn97lRusq2tI6HWTr7s0HiK8QqhezzfF3q++dvczEr6WnyGumJpzci/4pQ1wK6
+         dGjXPaxtgFH6DxsxOaRrGxzWavAr7iz4GJy8jXJNMkcBqqdhTY7FiNPkIwNWm21McvUp
+         n2goocD1G/wyiESPJ63KiMybj6L8MQ+QkGUXv63oHZO5wDH4qEtD0Iy0JLijpNPKlAeo
+         3s3l2YWiD5pLfY02iPOudzG3T1ZHrC6wqbyLTE5+mXFyLk7waoH+PPR3L9N+yvDAig1i
+         6bAttToVhC9rh2fzvDbxyv6FTTYvcDnefLWzCJwnDFeA2bFbgUkUDnNDcOlENVEVgyp8
+         hoMg==
+X-Gm-Message-State: APjAAAWDTvuMk838xU5Sv1kmEFzEapieEisxpOkJKjBlsPGf7F5GXYTC
+        e7z8TVyDAc9MkQrcf401UQ9rQaWajJGl0KrDMH8=
+X-Google-Smtp-Source: APXvYqwL7Bqrcj7SXP29rOVcCDsjzWYenQ27zAqjv+O5kl+XPR3EpMGhyotzkBj4jLCYXb7avecbKU+9xy3Nz0cqQwQ=
+X-Received: by 2002:a24:b643:: with SMTP id d3mr136826itj.146.1552431422559;
+ Tue, 12 Mar 2019 15:57:02 -0700 (PDT)
 MIME-Version: 1.0
-References: <20190312215203.27643-1-natechancellor@gmail.com>
-In-Reply-To: <20190312215203.27643-1-natechancellor@gmail.com>
-From:   Nick Desaulniers <ndesaulniers@google.com>
-Date:   Tue, 12 Mar 2019 15:55:09 -0700
-Message-ID: <CAKwvOdmVWrrVWeuh6efnwreS4kp1L_kJ-FbKVGux8ZdiqvYCDA@mail.gmail.com>
-Subject: Re: [PATCH] Makefile: Add '-fno-builtin-bcmp' to CLANG_FLAGS
-To:     Nathan Chancellor <natechancellor@gmail.com>,
-        Masahiro Yamada <yamada.masahiro@socionext.com>
-Cc:     Michal Marek <michal.lkml@markovi.net>,
-        Linux Kbuild mailing list <linux-kbuild@vger.kernel.org>,
+References: <20190306155048.12868-1-nitesh@redhat.com> <20190306155048.12868-3-nitesh@redhat.com>
+ <CAKgT0UdDohCXZY3q9qhQsHw-2vKp_CAgvf2dd2e6U6KLsAkVng@mail.gmail.com>
+ <2d9ae889-a9b9-7969-4455-ff36944f388b@redhat.com> <22e4b1cd-38a5-6642-8cbe-d68e4fcbb0b7@redhat.com>
+ <CAKgT0UcAqGX26pcQLzFUevHsLu-CtiyOYe15uG3bkhGZ5BJKAg@mail.gmail.com>
+ <78b604be-2129-a716-a7a6-f5b382c9fb9c@redhat.com> <CAKgT0Uc_z9Vi+JhQcJYX+J9c4J56RRSkzzegbb2=9xO-NY3dgw@mail.gmail.com>
+ <20190307212845-mutt-send-email-mst@kernel.org> <CAKgT0Ucu3EMsYBfdKtEiprrn-VBZy3Y+0HdEp5b4PO2SQgGsRw@mail.gmail.com>
+ <17d2afa6-556e-ec73-40dc-beac536b3f20@redhat.com> <CAKgT0UcdQZwHjmMBkSWmy_ZdShJCagjwomn13g+r7ZNJBRn1LQ@mail.gmail.com>
+ <8f692047-4750-6827-1ee0-d3d354788f09@redhat.com> <CAKgT0UddT9CKg1uZo6ZODs9ARti-6XGm9Zvo+8QRZKUPSwzWMQ@mail.gmail.com>
+ <41ae8afe-72c9-58e6-0cbb-9375c91ce37a@redhat.com> <CAKgT0Uftff+JVRW-sQ6u8DeVg4Fq9b-pgE6Ojr+XqQFn13JmGw@mail.gmail.com>
+ <be257778-3ecb-8f12-2d51-451a5e16fd3f@redhat.com>
+In-Reply-To: <be257778-3ecb-8f12-2d51-451a5e16fd3f@redhat.com>
+From:   Alexander Duyck <alexander.duyck@gmail.com>
+Date:   Tue, 12 Mar 2019 15:56:51 -0700
+Message-ID: <CAKgT0UfG6PQS-LTGGcGrV3Qi1eLAFxef=OV43SVThQVgFSMqRA@mail.gmail.com>
+Subject: Re: [RFC][Patch v9 2/6] KVM: Enables the kernel to isolate guest free pages
+To:     David Hildenbrand <david@redhat.com>
+Cc:     Nitesh Narayan Lal <nitesh@redhat.com>,
+        "Michael S. Tsirkin" <mst@redhat.com>,
+        kvm list <kvm@vger.kernel.org>,
         LKML <linux-kernel@vger.kernel.org>,
-        Arnd Bergmann <arnd@arndb.de>,
-        James Y Knight <jyknight@google.com>,
-        clang-built-linux@googlegroups.com, stable@vger.kernel.org
+        linux-mm <linux-mm@kvack.org>,
+        Paolo Bonzini <pbonzini@redhat.com>, lcapitulino@redhat.com,
+        pagupta@redhat.com, wei.w.wang@intel.com,
+        Yang Zhang <yang.zhang.wz@gmail.com>,
+        Rik van Riel <riel@surriel.com>, dodgen@google.com,
+        Konrad Rzeszutek Wilk <konrad.wilk@oracle.com>,
+        dhildenb@redhat.com, Andrea Arcangeli <aarcange@redhat.com>
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Mar 12, 2019 at 2:53 PM Nathan Chancellor
-<natechancellor@gmail.com> wrote:
+On Tue, Mar 12, 2019 at 2:53 PM David Hildenbrand <david@redhat.com> wrote:
 >
-> After LLVM revision r355672 [1], all known working kernel configurations
-> fail to link [2]:
+> On 12.03.19 22:13, Alexander Duyck wrote:
+> > On Tue, Mar 12, 2019 at 12:46 PM Nitesh Narayan Lal <nitesh@redhat.com> wrote:
+> >>
+> >> On 3/8/19 4:39 PM, Alexander Duyck wrote:
+> >>> On Fri, Mar 8, 2019 at 11:39 AM Nitesh Narayan Lal <nitesh@redhat.com> wrote:
+> >>>> On 3/8/19 2:25 PM, Alexander Duyck wrote:
+> >>>>> On Fri, Mar 8, 2019 at 11:10 AM Nitesh Narayan Lal <nitesh@redhat.com> wrote:
+> >>>>>> On 3/8/19 1:06 PM, Alexander Duyck wrote:
+> >>>>>>> On Thu, Mar 7, 2019 at 6:32 PM Michael S. Tsirkin <mst@redhat.com> wrote:
+> >>>>>>>> On Thu, Mar 07, 2019 at 02:35:53PM -0800, Alexander Duyck wrote:
+> >>>>>>>>> The only other thing I still want to try and see if I can do is to add
+> >>>>>>>>> a jiffies value to the page private data in the case of the buddy
+> >>>>>>>>> pages.
+> >>>>>>>> Actually there's one extra thing I think we should do, and that is make
+> >>>>>>>> sure we do not leave less than X% off the free memory at a time.
+> >>>>>>>> This way chances of triggering an OOM are lower.
+> >>>>>>> If nothing else we could probably look at doing a watermark of some
+> >>>>>>> sort so we have to have X amount of memory free but not hinted before
+> >>>>>>> we will start providing the hints. It would just be a matter of
+> >>>>>>> tracking how much memory we have hinted on versus the amount of memory
+> >>>>>>> that has been pulled from that pool.
+> >>>>>> This is to avoid false OOM in the guest?
+> >>>>> Partially, though it would still be possible. Basically it would just
+> >>>>> be a way of determining when we have hinted "enough". Basically it
+> >>>>> doesn't do us much good to be hinting on free memory if the guest is
+> >>>>> already constrained and just going to reallocate the memory shortly
+> >>>>> after we hinted on it. The idea is with a watermark we can avoid
+> >>>>> hinting until we start having pages that are actually going to stay
+> >>>>> free for a while.
+> >>>>>
+> >>>>>>>  It is another reason why we
+> >>>>>>> probably want a bit in the buddy pages somewhere to indicate if a page
+> >>>>>>> has been hinted or not as we can then use that to determine if we have
+> >>>>>>> to account for it in the statistics.
+> >>>>>> The one benefit which I can see of having an explicit bit is that it
+> >>>>>> will help us to have a single hook away from the hot path within buddy
+> >>>>>> merging code (just like your arch_merge_page) and still avoid duplicate
+> >>>>>> hints while releasing pages.
+> >>>>>>
+> >>>>>> I still have to check PG_idle and PG_young which you mentioned but I
+> >>>>>> don't think we can reuse any existing bits.
+> >>>>> Those are bits that are already there for 64b. I think those exist in
+> >>>>> the page extension for 32b systems. If I am not mistaken they are only
+> >>>>> used in VMA mapped memory. What I was getting at is that those are the
+> >>>>> bits we could think about reusing.
+> >>>>>
+> >>>>>> If we really want to have something like a watermark, then can't we use
+> >>>>>> zone->free_pages before isolating to see how many free pages are there
+> >>>>>> and put a threshold on it? (__isolate_free_page() does a similar thing
+> >>>>>> but it does that on per request basis).
+> >>>>> Right. That is only part of it though since that tells you how many
+> >>>>> free pages are there. But how many of those free pages are hinted?
+> >>>>> That is the part we would need to track separately and then then
+> >>>>> compare to free_pages to determine if we need to start hinting on more
+> >>>>> memory or not.
+> >>>> Only pages which are isolated will be hinted, and once a page is
+> >>>> isolated it will not be counted in the zone free pages.
+> >>>> Feel free to correct me if I am wrong.
+> >>> You are correct up to here. When we isolate the page it isn't counted
+> >>> against the free pages. However after we complete the hint we end up
+> >>> taking it out of isolation and returning it to the "free" state, so it
+> >>> will be counted against the free pages.
+> >>>
+> >>>> If I am understanding it correctly you only want to hint the idle pages,
+> >>>> is that right?
+> >>> Getting back to the ideas from our earlier discussion, we had 3 stages
+> >>> for things. Free but not hinted, isolated due to hinting, and free and
+> >>> hinted. So what we would need to do is identify the size of the first
+> >>> pool that is free and not hinted by knowing the total number of free
+> >>> pages, and then subtract the size of the pages that are hinted and
+> >>> still free.
+> >> To summarize, for now, I think it makes sense to stick with the current
+> >> approach as this way we can avoid any locking in the allocation path and
+> >> reduce the number of hypercalls for a bunch of MAX_ORDER - 1 page.
+> >
+> > I'm not sure what you are talking about by "avoid any locking in the
+> > allocation path". Are you talking about the spin on idle bit, if so
+> > then yes. However I have been testing your patches and I was correct
+> > in the assumption that you forgot to handle the zone lock when you
+> > were freeing __free_one_page. I just did a quick copy/paste from your
+> > zone lock handling from the guest_free_page_hinting function into the
+> > release_buddy_pages function and then I was able to enable multiple
+> > CPUs without any issues.
+> >
+> >> For the next step other than the comments received in the code and what
+> >> I mentioned in the cover email, I would like to do the following:
+> >> 1. Explore the watermark idea suggested by Alex and bring down memhog
+> >> execution time if possible.
+> >
+> > So there are a few things that are hurting us on the memhog test:
+> > 1. The current QEMU patch is only madvising 4K pages at a time, this
+> > is disabling THP and hurts the test.
+> >
+> > 2. The fact that we madvise the pages away makes it so that we have to
+> > fault the page back in in order to use it for the memhog test. In
+> > order to avoid that penalty we may want to see if we can introduce
+> > some sort of "timeout" on the pages so that we are only hinting away
+> > old pages that have not been used for some period of time.
+> >
+> > 3. Currently we are still doing a large amount of processing in the
+> > page free path. Ideally we should look at getting away from trying to
+> > do so much per-cpu work and instead just have some small tasks that
+> > put the data needed in the page, and then have a separate thread
+> > walking the free_list checking that data, isolating the pages, hinting
+> > them, and then returning them back to the free_list.
 >
-> ld: init/do_mounts.o: in function `prepare_namespace':
-> do_mounts.c:(.init.text+0x5ca): undefined reference to `bcmp'
-> ld: do_mounts.c:(.init.text+0x5e6): undefined reference to `bcmp'
-> ld: init/initramfs.o: in function `do_header':
-> initramfs.c:(.init.text+0x6e0): undefined reference to `bcmp'
-> ld: initramfs.c:(.init.text+0x6f8): undefined reference to `bcmp'
-> ld: arch/x86/kernel/setup.o: in function `setup_arch':
-> setup.c:(.init.text+0x21d): undefined reference to `bcmp'
->
-> Commit 6edfba1b33c7 ("[PATCH] x86_64: Don't define string functions to
-> builtin") removed '-ffreestanding' globally and the kernel doesn't
-> provide a bcmp definition so the linker cannot find a reference to it.
->
-> Fix this by explicitly telling LLVM through Clang not to emit bcmp
-> references. This flag does not need to be behind 'cc-option' because all
-> working versions of Clang support this flag.
->
-> [1]: https://github.com/llvm/llvm-project/commit/8e16d73346f8091461319a7dfc4ddd18eedcff13
-> [2]: https://travis-ci.com/ClangBuiltLinux/continuous-integration/builds/104027249
->
-> Link: https://github.com/ClangBuiltLinux/linux/issues/416
-> Link: https://bugs.llvm.org/show_bug.cgi?id=41035
-> Cc: stable@vger.kernel.org
-> Signed-off-by: Nathan Chancellor <natechancellor@gmail.com>
+> This is highly debatable. Whenever the is concurrency, there is the need
+> for locking (well, at least synchronization - maybe using existing locks
+> like the zone lock). The other thread has to run somewhere. One thread
+> per VCPU might not what we want ... sorting this out might be more
+> complicated than it would seem. I would suggest to defer the discussion
+> of this change to a later stage. It can be easily reworked later - in
+> theory :)
 
-Thanks for this patch.  Can the maintainers please consider this an
-emergency patch; without it, the recent change to LLVM has caused ALL
-of our CI targets to go red.
-Reviewed-by: Nick Desaulniers <ndesaulniers@google.com>
+I'm not suggesting anything too complex for now. I would be happy with
+just using the zone lock. The only other thing we would really need to
+make it work is some sort of bit we could set once a page has been
+hinted, and cleared when it is allocated. I"m leaning toward
+PG_owner_priv_1 at this point since it doesn't seem to be used in the
+buddy allocator but is heavily used/re-purposed in multiple other
+spots.
 
+> 1 and 2 you mention are the lower hanging fruits that will definitely
+> improve performance.
 
-> ---
->  Makefile | 1 +
->  1 file changed, 1 insertion(+)
->
-> diff --git a/Makefile b/Makefile
-> index 9ef547fc7ffe..6645a274b6e3 100644
-> --- a/Makefile
-> +++ b/Makefile
-> @@ -501,6 +501,7 @@ ifneq ($(GCC_TOOLCHAIN),)
->  CLANG_FLAGS    += --gcc-toolchain=$(GCC_TOOLCHAIN)
->  endif
->  CLANG_FLAGS    += -no-integrated-as
-> +CLANG_FLAGS    += -fno-builtin-bcmp
->  KBUILD_CFLAGS  += $(CLANG_FLAGS)
->  KBUILD_AFLAGS  += $(CLANG_FLAGS)
->  export CLANG_FLAGS
+Agreed. Although the challenge with 2 is getting to the page later
+instead of trying to immediately hint on the page we just freed. That
+is why I still thing 3 is going to tie in closely with 2.
+
 > --
-> 2.21.0
 >
-
-
---
-Thanks,
-~Nick Desaulniers
+> Thanks,
+>
+> David / dhildenb
