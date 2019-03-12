@@ -7,47 +7,47 @@ X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2BDE4C43381
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 18:13:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8CA0EC43381
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 18:13:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E4435214AF
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 18:13:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 50F782087C
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 18:13:38 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1552414404;
-	bh=5edrh1mhAUPscXMjXE6B5rcggG+CFIS1Jnze1cnltxE=;
+	s=default; t=1552414418;
+	bh=zMd2ZE/4CsiHKXRBdEU5CIdMA8nBXgBy5kag2WOJ1P0=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=kSLxFi3T1AZPqXwfk0X8pvWKxjnwQyCPX876uyLiOK72vNSLusTfuJS6FPFR5dMC3
-	 dAgWHGMXO5N5y1rrBG0Vi/KtYtG/kL+U7HfuIlS7pUtGvMB4fdk8RXEinqKoBsjOpt
-	 0UA/zsWBM74CiqaGq/dhjKq2sFBY4NPOK0Obejj4=
+	b=wajXu6L7Zy1nDchFI28uVlvYuVB/p0GwkcrGsidq1f305LAZKrnYD9TQtoT36qYW+
+	 VF4rnv6h3HZHwXTxRAt+wPAPo8HjcmAglnPbCgw8WCRfVWeMkoDap4E9dVXV4T8CVD
+	 h4gSH3+rs6GwxhQQv0kv7TupIdVYtx9EBZfarxiU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727262AbfCLSNW (ORCPT
+        id S1727339AbfCLSNg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 12 Mar 2019 14:13:22 -0400
-Received: from mail.kernel.org ([198.145.29.99]:44926 "EHLO mail.kernel.org"
+        Tue, 12 Mar 2019 14:13:36 -0400
+Received: from mail.kernel.org ([198.145.29.99]:44718 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726962AbfCLRLb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 12 Mar 2019 13:11:31 -0400
+        id S1726892AbfCLRL1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 12 Mar 2019 13:11:27 -0400
 Received: from localhost (unknown [104.133.8.98])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 3E808214AF;
-        Tue, 12 Mar 2019 17:11:30 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 868D6214AF;
+        Tue, 12 Mar 2019 17:11:26 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1552410690;
-        bh=5edrh1mhAUPscXMjXE6B5rcggG+CFIS1Jnze1cnltxE=;
+        s=default; t=1552410686;
+        bh=zMd2ZE/4CsiHKXRBdEU5CIdMA8nBXgBy5kag2WOJ1P0=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=jdvmIPA+i4V2eWAfgMzo/l31u1voLnK4ruTEPq43EOSjMlQxmD6Mys5pC6VsLkcbu
-         2bzwYp0XlItl5jZYc7guioevIS0uxr6tA79qO0mSdXy3Fukolob8L428Ei9cMSVTir
-         GLt6kNM/gPJ3JiEV8gLS0e5D5wQqDU6QaDdKkDJk=
+        b=hXUD0vkTG0eY1v8Z0ASZD96laI5MNMWw6zTG/UCNRky3Er/7YehijdepB8inz3IsT
+         qS3VZVcmiG/vnev/cBzJmydnKrgGFJj614vOLjItrha1ifcvNCYUKnKODfzEEERExO
+         YuA6oQAhHoajbzyP0eMFsRZSGm6T9aDbYZuUi6h0=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Bjorn Helgaas <bhelgaas@google.com>
-Subject: [PATCH 5.0 06/25] x86/PCI: Fixup RTIT_BAR of Intel Denverton Trace Hub
-Date:   Tue, 12 Mar 2019 10:08:44 -0700
-Message-Id: <20190312170404.035437166@linuxfoundation.org>
+        stable@vger.kernel.org, Mark Syms <mark.syms@citrix.com>,
+        Andreas Gruenbacher <agruenba@redhat.com>,
+        Bob Peterson <rpeterso@redhat.com>
+Subject: [PATCH 5.0 17/25] gfs2: Fix missed wakeups in find_insert_glock
+Date:   Tue, 12 Mar 2019 10:08:55 -0700
+Message-Id: <20190312170404.830569776@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190312170403.643852550@linuxfoundation.org>
 References: <20190312170403.643852550@linuxfoundation.org>
@@ -66,85 +66,38 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-From: Alexander Shishkin <alexander.shishkin@linux.intel.com>
+From: Andreas Gruenbacher <agruenba@redhat.com>
 
-commit 2e095ce7b6ecce2f3e2ff330527f12056ed1e1a1 upstream.
+commit 605b0487f0bc1ae9963bf52ece0f5c8055186f81 upstream.
 
-On Denverton's integration of the Intel(R) Trace Hub (for a reference and
-overview see Documentation/trace/intel_th.rst) the reported size of one of
-its resources (RTIT_BAR) doesn't match its actual size, which leads to
-overlaps with other devices' resources.
+Mark Syms has reported seeing tasks that are stuck waiting in
+find_insert_glock.  It turns out that struct lm_lockname contains four padding
+bytes on 64-bit architectures that function glock_waitqueue doesn't skip when
+hashing the glock name.  As a result, we can end up waking up the wrong
+waitqueue, and the waiting tasks may be stuck forever.
 
-In practice, it overlaps with XHCI MMIO space, which results in the xhci
-driver bailing out after seeing its registers as 0xffffffff, and perceived
-disappearance of all USB devices:
+Fix that by using ht_parms.key_len instead of sizeof(struct lm_lockname) for
+the key length.
 
-  intel_th_pci 0000:00:1f.7: enabling device (0004 -> 0006)
-  xhci_hcd 0000:00:15.0: xHCI host controller not responding, assume dead
-  xhci_hcd 0000:00:15.0: xHC not responding in xhci_irq, assume controller is dead
-  xhci_hcd 0000:00:15.0: HC died; cleaning up
-  usb 1-1: USB disconnect, device number 2
-
-For this reason, we need to resize the RTIT_BAR on Denverton to its actual
-size, which in this case is 4MB.  The corresponding erratum is DNV36 at the
-link below:
-
-  DNV36.       Processor Host Root Complex May Incorrectly Route Memory
-               Accesses to Intel® Trace Hub
-
-  Problem:     The Intel® Trace Hub RTIT_BAR (B0:D31:F7 offset 20h) is
-	       reported as a 2KB memory range.  Due to this erratum, the
-	       processor Host Root Complex will forward addresses from
-	       RTIT_BAR to RTIT_BAR + 4MB -1 to Intel® Trace Hub.
-
-  Implication: Devices assigned within the RTIT_BAR to RTIT_BAR + 4MB -1
-               space may not function correctly.
-
-  Workaround:  A BIOS code change has been identified and may be
-               implemented as a workaround for this erratum.
-
-  Status:      No Fix.
-
-Note that 5118ccd34780 ("intel_th: pci: Add Denverton SOC support") updates
-the Trace Hub driver so it claims the Denverton device, but the resource
-overlap exists regardless of whether that driver is loaded or that commit
-is included.
-
-Link: https://www.intel.com/content/dam/www/public/us/en/documents/specification-updates/atom-c3000-family-spec-update.pdf
-Signed-off-by: Alexander Shishkin <alexander.shishkin@linux.intel.com>
-[bhelgaas: include erratum text, clarify relationship with 5118ccd34780]
-Signed-off-by: Bjorn Helgaas <bhelgaas@google.com>
-Cc: stable@vger.kernel.org
+Reported-by: Mark Syms <mark.syms@citrix.com>
+Signed-off-by: Andreas Gruenbacher <agruenba@redhat.com>
+Signed-off-by: Bob Peterson <rpeterso@redhat.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- arch/x86/pci/fixup.c |   16 ++++++++++++++++
- 1 file changed, 16 insertions(+)
+ fs/gfs2/glock.c |    2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
---- a/arch/x86/pci/fixup.c
-+++ b/arch/x86/pci/fixup.c
-@@ -635,6 +635,22 @@ static void quirk_no_aersid(struct pci_d
- DECLARE_PCI_FIXUP_CLASS_EARLY(PCI_VENDOR_ID_INTEL, PCI_ANY_ID,
- 			      PCI_CLASS_BRIDGE_PCI, 8, quirk_no_aersid);
+--- a/fs/gfs2/glock.c
++++ b/fs/gfs2/glock.c
+@@ -107,7 +107,7 @@ static int glock_wake_function(wait_queu
  
-+static void quirk_intel_th_dnv(struct pci_dev *dev)
-+{
-+	struct resource *r = &dev->resource[4];
-+
-+	/*
-+	 * Denverton reports 2k of RTIT_BAR (intel_th resource 4), which
-+	 * appears to be 4 MB in reality.
-+	 */
-+	if (r->end == r->start + 0x7ff) {
-+		r->start = 0;
-+		r->end   = 0x3fffff;
-+		r->flags |= IORESOURCE_UNSET;
-+	}
-+}
-+DECLARE_PCI_FIXUP_HEADER(PCI_VENDOR_ID_INTEL, 0x19e1, quirk_intel_th_dnv);
-+
- #ifdef CONFIG_PHYS_ADDR_T_64BIT
+ static wait_queue_head_t *glock_waitqueue(struct lm_lockname *name)
+ {
+-	u32 hash = jhash2((u32 *)name, sizeof(*name) / 4, 0);
++	u32 hash = jhash2((u32 *)name, ht_parms.key_len / 4, 0);
  
- #define AMD_141b_MMIO_BASE(x)	(0x80 + (x) * 0x8)
+ 	return glock_wait_table + hash_32(hash, GLOCK_WAIT_TABLE_BITS);
+ }
 
 
