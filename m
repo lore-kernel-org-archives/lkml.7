@@ -4,48 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C38E3C43381
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 17:46:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B0988C43381
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 17:46:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 954522147C
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 17:46:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 819862147C
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 17:46:36 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1552412788;
-	bh=VH7sJGTvFcatHJvdY/8x6B9eI015EwjXR1FtWDmbBjs=;
+	s=default; t=1552412796;
+	bh=DE4qk9mo8AadjJcY+LcDBQaSrjxdEFncQ7w6QE23IbA=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=1BwDbtFK8nHnJ5ZNDXwikt38s3h8R/2k/lLpI9Qk+EJzXl7BVu225VxcoUcoajG60
-	 MoyKylApV8X+wVXQCPRT90r6GLzW9DZ3hHGz6dnFvCWubSKRYmKesxOUmin4kwpMK4
-	 w4LDj8/1+6WTUfYW+mCpw2CCKPnekLbomNCOfKUY=
+	b=HULS6jBoPRQJNBUeVgAROftw9K/xX66UW8qPK6KOL3kPpjT4CRur9qJmssOwfvz77
+	 2sHcBhN1OYie4KTlzFn83pmm4qIkGwBibj31KBdv6QH+6i0Bd4y2mt4LD6p1GweQQI
+	 k3YEJuJQeTsNXpkIBsNUgySbnONfmd7FCFbYm+S4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729024AbfCLRqV (ORCPT
+        id S1729100AbfCLRqf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 12 Mar 2019 13:46:21 -0400
-Received: from mail.kernel.org ([198.145.29.99]:55730 "EHLO mail.kernel.org"
+        Tue, 12 Mar 2019 13:46:35 -0400
+Received: from mail.kernel.org ([198.145.29.99]:55656 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727410AbfCLRPX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 12 Mar 2019 13:15:23 -0400
+        id S1728676AbfCLRPU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 12 Mar 2019 13:15:20 -0400
 Received: from localhost (unknown [104.133.8.98])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E12522184E;
-        Tue, 12 Mar 2019 17:15:21 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id AD5EF206DF;
+        Tue, 12 Mar 2019 17:15:19 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1552410922;
-        bh=VH7sJGTvFcatHJvdY/8x6B9eI015EwjXR1FtWDmbBjs=;
+        s=default; t=1552410919;
+        bh=DE4qk9mo8AadjJcY+LcDBQaSrjxdEFncQ7w6QE23IbA=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=KAyBTdeTxKo3l9LjqnVBsGKe4p9TRQLllGTBRZzAwq63MqazpfSePUPhfwHLOKruL
-         7zqfMJeE9+zaffTs4aNdV6TScJbo6nyYWkQrUqbJ39/aKSCahhMTNtm4vNCmizO4dr
-         v3tv8Zn56A4GGnjwsVmFTGTJ/Po87nIL+RlTgB6Y=
+        b=dq01PYprfCh1Hz/BKPX8terbhMpBgXIZLbaf3O1JVBnMb5cAsx2bHA69ta6wYm8yR
+         I4Hx3BeJ7tvxpg18GM02AFP4HlU51NuZ0NbVK+yddFmuathPEpp/NNTeySi8fMGCtO
+         l9ntdUvlc2MQ5AiYrVhOaKRJuFjgzzhHfvQv6jWs=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Li Guifu <bluce.liguifu@huawei.com>,
         Chao Yu <yuchao0@huawei.com>, Gao Xiang <gaoxiang25@huawei.com>
-Subject: [PATCH 4.19 141/149] staging: erofs: fix race of initializing xattrs of a inode at the same time
-Date:   Tue, 12 Mar 2019 10:09:19 -0700
-Message-Id: <20190312170401.113850139@linuxfoundation.org>
+Subject: [PATCH 4.19 139/149] staging: erofs: fix fast symlink w/o xattr when fs xattr is on
+Date:   Tue, 12 Mar 2019 10:09:17 -0700
+Message-Id: <20190312170400.961848460@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190312170349.421581206@linuxfoundation.org>
 References: <20190312170349.421581206@linuxfoundation.org>
@@ -66,143 +67,120 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Gao Xiang <gaoxiang25@huawei.com>
 
-commit 62dc45979f3f8cb0ea67302a93bff686f0c46c5a upstream.
+commit 7077fffcb0b0b65dc75e341306aeef4d0e7f2ec6 upstream.
 
-In real scenario, there could be several threads accessing xattrs
-of the same xattr-uninitialized inode, and init_inode_xattrs()
-almost at the same time.
+Currently, this will hit a BUG_ON for these symlinks as follows:
 
-That's actually an unexpected behavior, this patch closes the race.
+- kernel message
+------------[ cut here ]------------
+kernel BUG at drivers/staging/erofs/xattr.c:59!
+SMP PTI
+CPU: 1 PID: 1170 Comm: getllxattr Not tainted 4.20.0-rc6+ #92
+Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS 1.10.2-2.fc27 04/01/2014
+RIP: 0010:init_inode_xattrs+0x22b/0x270
+Code: 48 0f 45 ea f0 ff 4d 34 74 0d 41 83 4c 24 e0 01 31 c0 e9 00 fe ff ff 48 89 ef e8 e0 31 9e ff eb e9 89 e8 e9 ef fd ff ff 0f 0$
+ <0f> 0b 48 89 ef e8 fb f6 9c ff 48 8b 45 08 a8 01 75 24 f0 ff 4d 34
+RSP: 0018:ffffa03ac026bdf8 EFLAGS: 00010246
+------------[ cut here ]------------
+...
+Call Trace:
+ erofs_listxattr+0x30/0x2c0
+ ? selinux_inode_listxattr+0x5a/0x80
+ ? kmem_cache_alloc+0x33/0x170
+ ? security_inode_listxattr+0x27/0x40
+ listxattr+0xaf/0xc0
+ path_listxattr+0x5a/0xa0
+ do_syscall_64+0x43/0xf0
+ entry_SYSCALL_64_after_hwframe+0x44/0xa9
+...
+---[ end trace 3c24b49408dc0c72 ]---
+
+Fix it by checking ->xattr_isize in init_inode_xattrs(),
+and it also fixes improper return value -ENOTSUPP
+(it should be -ENODATA if xattr is enabled) for those inodes.
 
 Fixes: b17500a0fdba ("staging: erofs: introduce xattr & acl support")
 Cc: <stable@vger.kernel.org> # 4.19+
+Reported-by: Li Guifu <bluce.liguifu@huawei.com>
+Tested-by: Li Guifu <bluce.liguifu@huawei.com>
 Reviewed-by: Chao Yu <yuchao0@huawei.com>
 Signed-off-by: Gao Xiang <gaoxiang25@huawei.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- drivers/staging/erofs/internal.h |   11 +++++++---
- drivers/staging/erofs/xattr.c    |   41 +++++++++++++++++++++++++++------------
- 2 files changed, 37 insertions(+), 15 deletions(-)
+ drivers/staging/erofs/inode.c |    8 ++++----
+ drivers/staging/erofs/xattr.c |   25 ++++++++++++++++++++-----
+ 2 files changed, 24 insertions(+), 9 deletions(-)
 
---- a/drivers/staging/erofs/internal.h
-+++ b/drivers/staging/erofs/internal.h
-@@ -327,12 +327,17 @@ static inline erofs_off_t iloc(struct er
- 	return blknr_to_addr(sbi->meta_blkaddr) + (nid << sbi->islotbits);
- }
- 
--#define inode_set_inited_xattr(inode)   (EROFS_V(inode)->flags |= 1)
--#define inode_has_inited_xattr(inode)   (EROFS_V(inode)->flags & 1)
-+/* atomic flag definitions */
-+#define EROFS_V_EA_INITED_BIT	0
-+
-+/* bitlock definitions (arranged in reverse order) */
-+#define EROFS_V_BL_XATTR_BIT	(BITS_PER_LONG - 1)
- 
- struct erofs_vnode {
- 	erofs_nid_t nid;
--	unsigned int flags;
-+
-+	/* atomic flags (including bitlocks) */
-+	unsigned long flags;
- 
- 	unsigned char data_mapping_mode;
- 	/* inline size in bytes */
+--- a/drivers/staging/erofs/inode.c
++++ b/drivers/staging/erofs/inode.c
+@@ -184,16 +184,16 @@ static int fill_inode(struct inode *inod
+ 		/* setup the new inode */
+ 		if (S_ISREG(inode->i_mode)) {
+ #ifdef CONFIG_EROFS_FS_XATTR
+-			if (vi->xattr_isize)
+-				inode->i_op = &erofs_generic_xattr_iops;
++			inode->i_op = &erofs_generic_xattr_iops;
+ #endif
+ 			inode->i_fop = &generic_ro_fops;
+ 		} else if (S_ISDIR(inode->i_mode)) {
+ 			inode->i_op =
+ #ifdef CONFIG_EROFS_FS_XATTR
+-				vi->xattr_isize ? &erofs_dir_xattr_iops :
+-#endif
++				&erofs_dir_xattr_iops;
++#else
+ 				&erofs_dir_iops;
++#endif
+ 			inode->i_fop = &erofs_dir_fops;
+ 		} else if (S_ISLNK(inode->i_mode)) {
+ 			/* by default, page_get_link is used for symlink */
 --- a/drivers/staging/erofs/xattr.c
 +++ b/drivers/staging/erofs/xattr.c
-@@ -44,17 +44,24 @@ static inline void xattr_iter_end_final(
- 
- static int init_inode_xattrs(struct inode *inode)
- {
-+	struct erofs_vnode *const vi = EROFS_V(inode);
- 	struct xattr_iter it;
- 	unsigned i;
- 	struct erofs_xattr_ibody_header *ih;
- 	struct erofs_sb_info *sbi;
--	struct erofs_vnode *vi;
- 	bool atomic_map;
-+	int ret = 0;
- 
--	if (likely(inode_has_inited_xattr(inode)))
-+	/* the most case is that xattrs of this inode are initialized. */
-+	if (test_bit(EROFS_V_EA_INITED_BIT, &vi->flags))
+@@ -55,7 +55,26 @@ static int init_inode_xattrs(struct inod
  		return 0;
  
--	vi = EROFS_V(inode);
-+	if (wait_on_bit_lock(&vi->flags, EROFS_V_BL_XATTR_BIT, TASK_KILLABLE))
-+		return -ERESTARTSYS;
+ 	vi = EROFS_V(inode);
+-	BUG_ON(!vi->xattr_isize);
 +
-+	/* someone has initialized xattrs for us? */
-+	if (test_bit(EROFS_V_EA_INITED_BIT, &vi->flags))
-+		goto out_unlock;
- 
- 	/*
- 	 * bypass all xattr operations if ->xattr_isize is not greater than
-@@ -67,13 +74,16 @@ static int init_inode_xattrs(struct inod
- 	if (vi->xattr_isize == sizeof(struct erofs_xattr_ibody_header)) {
- 		errln("xattr_isize %d of nid %llu is not supported yet",
- 		      vi->xattr_isize, vi->nid);
--		return -ENOTSUPP;
-+		ret = -ENOTSUPP;
-+		goto out_unlock;
- 	} else if (vi->xattr_isize < sizeof(struct erofs_xattr_ibody_header)) {
- 		if (unlikely(vi->xattr_isize)) {
- 			DBG_BUGON(1);
--			return -EIO;	/* xattr ondisk layout error */
-+			ret = -EIO;
-+			goto out_unlock;	/* xattr ondisk layout error */
- 		}
--		return -ENOATTR;
-+		ret = -ENOATTR;
-+		goto out_unlock;
- 	}
- 
- 	sbi = EROFS_I_SB(inode);
-@@ -81,8 +91,10 @@ static int init_inode_xattrs(struct inod
- 	it.ofs = erofs_blkoff(iloc(sbi, vi->nid) + vi->inode_isize);
- 
- 	it.page = erofs_get_inline_page(inode, it.blkaddr);
--	if (IS_ERR(it.page))
--		return PTR_ERR(it.page);
-+	if (IS_ERR(it.page)) {
-+		ret = PTR_ERR(it.page);
-+		goto out_unlock;
++	/*
++	 * bypass all xattr operations if ->xattr_isize is not greater than
++	 * sizeof(struct erofs_xattr_ibody_header), in detail:
++	 * 1) it is not enough to contain erofs_xattr_ibody_header then
++	 *    ->xattr_isize should be 0 (it means no xattr);
++	 * 2) it is just to contain erofs_xattr_ibody_header, which is on-disk
++	 *    undefined right now (maybe use later with some new sb feature).
++	 */
++	if (vi->xattr_isize == sizeof(struct erofs_xattr_ibody_header)) {
++		errln("xattr_isize %d of nid %llu is not supported yet",
++		      vi->xattr_isize, vi->nid);
++		return -ENOTSUPP;
++	} else if (vi->xattr_isize < sizeof(struct erofs_xattr_ibody_header)) {
++		if (unlikely(vi->xattr_isize)) {
++			DBG_BUGON(1);
++			return -EIO;	/* xattr ondisk layout error */
++		}
++		return -ENOATTR;
 +	}
  
- 	/* read in shared xattr array (non-atomic, see kmalloc below) */
- 	it.kaddr = kmap(it.page);
-@@ -95,7 +107,8 @@ static int init_inode_xattrs(struct inod
- 						sizeof(uint), GFP_KERNEL);
- 	if (!vi->xattr_shared_xattrs) {
- 		xattr_iter_end(&it, atomic_map);
--		return -ENOMEM;
-+		ret = -ENOMEM;
-+		goto out_unlock;
+ 	sbi = EROFS_I_SB(inode);
+ 	it.blkaddr = erofs_blknr(iloc(sbi, vi->nid) + vi->inode_isize);
+@@ -414,7 +433,6 @@ static int erofs_xattr_generic_get(const
+ 		struct dentry *unused, struct inode *inode,
+ 		const char *name, void *buffer, size_t size)
+ {
+-	struct erofs_vnode *const vi = EROFS_V(inode);
+ 	struct erofs_sb_info *const sbi = EROFS_I_SB(inode);
+ 
+ 	switch (handler->flags) {
+@@ -432,9 +450,6 @@ static int erofs_xattr_generic_get(const
+ 		return -EINVAL;
  	}
  
- 	/* let's skip ibody header */
-@@ -112,7 +125,8 @@ static int init_inode_xattrs(struct inod
- 			if (IS_ERR(it.page)) {
- 				kfree(vi->xattr_shared_xattrs);
- 				vi->xattr_shared_xattrs = NULL;
--				return PTR_ERR(it.page);
-+				ret = PTR_ERR(it.page);
-+				goto out_unlock;
- 			}
- 
- 			it.kaddr = kmap_atomic(it.page);
-@@ -125,8 +139,11 @@ static int init_inode_xattrs(struct inod
- 	}
- 	xattr_iter_end(&it, atomic_map);
- 
--	inode_set_inited_xattr(inode);
--	return 0;
-+	set_bit(EROFS_V_EA_INITED_BIT, &vi->flags);
-+
-+out_unlock:
-+	clear_and_wake_up_bit(EROFS_V_BL_XATTR_BIT, &vi->flags);
-+	return ret;
+-	if (!vi->xattr_isize)
+-		return -ENOATTR;
+-
+ 	return erofs_getxattr(inode, handler->flags, name, buffer, size);
  }
  
- struct xattr_iter_handlers {
 
 
