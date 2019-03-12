@@ -7,47 +7,50 @@ X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DEB0AC43381
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 17:50:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4A985C43381
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 17:50:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9371E21734
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 17:50:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 20F552147C
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 17:50:21 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1552413015;
-	bh=LpZUwrsbzkYXGpVUHVGEffjgzl9AEVcQa22Et31TXHw=;
+	s=default; t=1552413021;
+	bh=zbG6HX2q7pYRqw8BG0c1pa7ByaWy3B8btN9znR45ccw=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=iNYNXdishSFLpzKz1Gsbt+96Hjfk7L1cIowbJQVcY/1ndPRrPDyWpn1ASoQK+TTvl
-	 sPc+SbVZQSuPycRkMYANXlEDO+z1F0oHtU5xEHTMhDCuoh8jog9SE2J98qamzT6nbD
-	 p/R6T6oKGVdbrweOgj1HfrYGoS29tMKBW+osP0Xs=
+	b=ETxvCQlTxAb459zh6kgCYacBWYMNQuwsgjdOJ66d9TXorsd9di8ZFuSChxgdHwyb6
+	 RBt2YEFM+IBezLwIrK22XywNuSR7ssjyeKQWOrOVpjuxL1CY6IkuYnC84czrVPtyur
+	 Dxbb4gNhrX/l7xz2mf/GczfRBf7J7RsFfI2ctCEY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728871AbfCLRuN (ORCPT
+        id S1729249AbfCLRuT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 12 Mar 2019 13:50:13 -0400
-Received: from mail.kernel.org ([198.145.29.99]:53998 "EHLO mail.kernel.org"
+        Tue, 12 Mar 2019 13:50:19 -0400
+Received: from mail.kernel.org ([198.145.29.99]:53874 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728127AbfCLROo (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 12 Mar 2019 13:14:44 -0400
+        id S1728458AbfCLROn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 12 Mar 2019 13:14:43 -0400
 Received: from localhost (unknown [104.133.8.98])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 1BD2E21850;
-        Tue, 12 Mar 2019 17:14:44 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 638032087C;
+        Tue, 12 Mar 2019 17:14:43 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1552410884;
-        bh=LpZUwrsbzkYXGpVUHVGEffjgzl9AEVcQa22Et31TXHw=;
+        s=default; t=1552410883;
+        bh=zbG6HX2q7pYRqw8BG0c1pa7ByaWy3B8btN9znR45ccw=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=CmVVDMGIU4XSKuhoLlh9SGmgIhDvf6wC15Fic121Q9UbV6WdeBjJNfJ0fDqB7o6q4
-         63DVYhwdOkWcHtIWVYg5d96h0e30D7tSNasg7/dCvhmEBz/wNvDvDCDaTGOyIfpOY6
-         5MoLRbnYpKCTQHjBx97MF0zkaufLaQHDzhNXrrNE=
+        b=k+8B1YyZInTMUqGdUmywHCG2keKcFu08sHeTIYqX33KqYLFRY/DhWQVFo2h8tI2ff
+         g40jdFv9ylksoQ3UeNGHnbCEeJJP4LWalMNrPE9S55zhY1KCtPmLS+aupLsfeAuUgP
+         5SmLkcOZ2P46NwInUMlbYI7gxBqNubP1xuHw64tQ=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Zenghui Yu <yuzenghui@huawei.com>,
-        Marc Zyngier <marc.zyngier@arm.com>,
+        stable@vger.kernel.org, Jose Abreu <joabreu@synopsys.com>,
+        Joao Pinto <jpinto@synopsys.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Giuseppe Cavallaro <peppe.cavallaro@st.com>,
+        Alexandre Torgue <alexandre.torgue@st.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 091/149] irqchip/gic-v3-its: Fix ITT_entry_size accessor
-Date:   Tue, 12 Mar 2019 10:08:29 -0700
-Message-Id: <20190312170357.317165491@linuxfoundation.org>
+Subject: [PATCH 4.19 090/149] net: stmmac: Disable EEE mode earlier in XMIT callback
+Date:   Tue, 12 Mar 2019 10:08:28 -0700
+Message-Id: <20190312170357.243366777@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190312170349.421581206@linuxfoundation.org>
 References: <20190312170349.421581206@linuxfoundation.org>
@@ -66,35 +69,49 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-[ Upstream commit 56841070ccc87b463ac037d2d1f2beb8e5e35f0c ]
+[ Upstream commit e2cd682deb231ba6f80524bb84e57e7138261149 ]
 
-According to ARM IHI 0069C (ID070116), we should use GITS_TYPER's
-bits [7:4] as ITT_entry_size instead of [8:4]. Although this is
-pretty annoying, it only results in a potential over-allocation
-of memory, and nothing bad happens.
+In stmmac xmit callback we use a different flow for TSO packets but TSO
+xmit callback is not disabling the EEE mode.
 
-Fixes: 3dfa576bfb45 ("irqchip/gic-v3-its: Add probing for VLPI properties")
-Signed-off-by: Zenghui Yu <yuzenghui@huawei.com>
-[maz: massaged subject and commit message]
-Signed-off-by: Marc Zyngier <marc.zyngier@arm.com>
+Fix this by disabling earlier the EEE mode, i.e. before calling the TSO
+xmit callback.
+
+Signed-off-by: Jose Abreu <joabreu@synopsys.com>
+Cc: Joao Pinto <jpinto@synopsys.com>
+Cc: David S. Miller <davem@davemloft.net>
+Cc: Giuseppe Cavallaro <peppe.cavallaro@st.com>
+Cc: Alexandre Torgue <alexandre.torgue@st.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- include/linux/irqchip/arm-gic-v3.h | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/net/ethernet/stmicro/stmmac/stmmac_main.c | 6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
 
-diff --git a/include/linux/irqchip/arm-gic-v3.h b/include/linux/irqchip/arm-gic-v3.h
-index 8bdbb5f29494..3188c0bef3e7 100644
---- a/include/linux/irqchip/arm-gic-v3.h
-+++ b/include/linux/irqchip/arm-gic-v3.h
-@@ -319,7 +319,7 @@
- #define GITS_TYPER_PLPIS		(1UL << 0)
- #define GITS_TYPER_VLPIS		(1UL << 1)
- #define GITS_TYPER_ITT_ENTRY_SIZE_SHIFT	4
--#define GITS_TYPER_ITT_ENTRY_SIZE(r)	((((r) >> GITS_TYPER_ITT_ENTRY_SIZE_SHIFT) & 0x1f) + 1)
-+#define GITS_TYPER_ITT_ENTRY_SIZE(r)	((((r) >> GITS_TYPER_ITT_ENTRY_SIZE_SHIFT) & 0xf) + 1)
- #define GITS_TYPER_IDBITS_SHIFT		8
- #define GITS_TYPER_DEVBITS_SHIFT	13
- #define GITS_TYPER_DEVBITS(r)		((((r) >> GITS_TYPER_DEVBITS_SHIFT) & 0x1f) + 1)
+diff --git a/drivers/net/ethernet/stmicro/stmmac/stmmac_main.c b/drivers/net/ethernet/stmicro/stmmac/stmmac_main.c
+index 57c56e295705..43ab9e905bed 100644
+--- a/drivers/net/ethernet/stmicro/stmmac/stmmac_main.c
++++ b/drivers/net/ethernet/stmicro/stmmac/stmmac_main.c
+@@ -3028,6 +3028,9 @@ static netdev_tx_t stmmac_xmit(struct sk_buff *skb, struct net_device *dev)
+ 
+ 	tx_q = &priv->tx_queue[queue];
+ 
++	if (priv->tx_path_in_lpi_mode)
++		stmmac_disable_eee_mode(priv);
++
+ 	/* Manage oversized TCP frames for GMAC4 device */
+ 	if (skb_is_gso(skb) && priv->tso) {
+ 		if (skb_shinfo(skb)->gso_type & (SKB_GSO_TCPV4 | SKB_GSO_TCPV6)) {
+@@ -3055,9 +3058,6 @@ static netdev_tx_t stmmac_xmit(struct sk_buff *skb, struct net_device *dev)
+ 		return NETDEV_TX_BUSY;
+ 	}
+ 
+-	if (priv->tx_path_in_lpi_mode)
+-		stmmac_disable_eee_mode(priv);
+-
+ 	entry = tx_q->cur_tx;
+ 	first_entry = entry;
+ 	WARN_ON(tx_q->tx_skbuff[first_entry]);
 -- 
 2.19.1
 
