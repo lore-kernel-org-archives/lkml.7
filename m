@@ -2,157 +2,151 @@ Return-Path: <SRS0=J4ZE=RP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_MUTT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1A243C43381
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 16:28:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5D249C43381
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 16:29:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DBB952147C
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 16:28:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 21DEB2083D
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 16:29:51 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="Cpu2YFT2"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726663AbfCLQ25 (ORCPT
+        id S1726716AbfCLQ3t (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 12 Mar 2019 12:28:57 -0400
-Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:44216 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1725894AbfCLQ25 (ORCPT
+        Tue, 12 Mar 2019 12:29:49 -0400
+Received: from mail-pf1-f194.google.com ([209.85.210.194]:35509 "EHLO
+        mail-pf1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726385AbfCLQ3t (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 12 Mar 2019 12:28:57 -0400
-Received: from pps.filterd (m0098417.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x2CGOJs5141171
-        for <linux-kernel@vger.kernel.org>; Tue, 12 Mar 2019 12:28:55 -0400
-Received: from e06smtp05.uk.ibm.com (e06smtp05.uk.ibm.com [195.75.94.101])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 2r6fx4smyu-1
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
-        for <linux-kernel@vger.kernel.org>; Tue, 12 Mar 2019 12:28:54 -0400
-Received: from localhost
-        by e06smtp05.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
-        for <linux-kernel@vger.kernel.org> from <ldufour@linux.ibm.com>;
-        Tue, 12 Mar 2019 16:28:53 -0000
-Received: from b06cxnps4074.portsmouth.uk.ibm.com (9.149.109.196)
-        by e06smtp05.uk.ibm.com (192.168.101.135) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
-        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
-        Tue, 12 Mar 2019 16:28:50 -0000
-Received: from d06av21.portsmouth.uk.ibm.com (d06av21.portsmouth.uk.ibm.com [9.149.105.232])
-        by b06cxnps4074.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x2CGSnfi12189780
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Tue, 12 Mar 2019 16:28:49 GMT
-Received: from d06av21.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 4812352057;
-        Tue, 12 Mar 2019 16:28:49 +0000 (GMT)
-Received: from nimbus.lab.toulouse-stg.fr.ibm.com (unknown [9.101.4.33])
-        by d06av21.portsmouth.uk.ibm.com (Postfix) with ESMTP id 808BA5204F;
-        Tue, 12 Mar 2019 16:28:48 +0000 (GMT)
-Subject: Re: [PATCH] mm/slab: protect cache_reap() against CPU and memory hot
- plug operations
-To:     Michal Hocko <mhocko@kernel.org>
-Cc:     linux-kernel@vger.kernel.org, linux-mm@kvack.org,
-        stable@vger.kernel.org, Christoph Lameter <cl@linux.com>,
-        Pekka Enberg <penberg@kernel.org>,
-        David Rientjes <rientjes@google.com>,
-        Joonsoo Kim <iamjoonsoo.kim@lge.com>,
-        Andrew Morton <akpm@linux-foundation.org>
-References: <20190311191701.24325-1-ldufour@linux.ibm.com>
- <20190312145813.GS5721@dhcp22.suse.cz>
-From:   Laurent Dufour <ldufour@linux.ibm.com>
-Date:   Tue, 12 Mar 2019 17:28:47 +0100
-User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.14; rv:60.0)
- Gecko/20100101 Thunderbird/60.5.1
+        Tue, 12 Mar 2019 12:29:49 -0400
+Received: by mail-pf1-f194.google.com with SMTP id j5so2212063pfa.2
+        for <linux-kernel@vger.kernel.org>; Tue, 12 Mar 2019 09:29:48 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=ElZ5ziF/7ZNUJd8C4F1xA5Yjw8p3TB+TlOCx919a/60=;
+        b=Cpu2YFT2U1a1VmuEC1AL+cf/gKesG6Xy+lb0c2T+Io1tJChZsHUT9Fr4u1FAIVi3Ut
+         elGctAgTL+6jTiY1TclMF2xBs8muZ2/h1b70ofSGji9dHaOtHn5hUDtdn3SrUwBpMUH+
+         dAwolHmxQC6jqRfXdFpt6Q1Dykk74dkT7/cic=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=ElZ5ziF/7ZNUJd8C4F1xA5Yjw8p3TB+TlOCx919a/60=;
+        b=VfnBEx67D40jIGjjAYLw6odfrslrosBvdb7iTIDpSNF8iaRhL7i3hzxY0BY63GZLGj
+         wJWjARe4wmYAPQkTKQepQmqbnG0Hkv8jxbVWI9x3sRYypI0Rs/+R8zwvkq0ehH9ThFXx
+         9BqXSNAATJiy/7M1qkBHovHUmYEIbjnP9dGtfcms6ei8IPbVyR3B7gV93FwRszZE6w+a
+         TzCaMvh6qaRT2mILGQ1m28pJizEahepwjqal0wpx8cTIEXNmq1phTXq3EZDLywgfGOtD
+         8MnPxkavNIxC31xuYpoI5KrNzLrD1PiasBoUoV88LaeUN+NAqxOpawoNff171We1ljjC
+         X5WA==
+X-Gm-Message-State: APjAAAWRXQMWg4/iwjIRWRB78bep6uz4/ddp8AjjjqUkkGobuPuRu+0v
+        7YJBzT9izaKyi/+f1UUKtKPeIxKTc1Y=
+X-Google-Smtp-Source: APXvYqyjF03JpG5V20Q0YKYckhvsn/uggJPJb5oglM17sbMS4wSYpLojTt9fV+ScK8IDmL6Yd9Bw9w==
+X-Received: by 2002:a62:7592:: with SMTP id q140mr39668430pfc.164.1552408188439;
+        Tue, 12 Mar 2019 09:29:48 -0700 (PDT)
+Received: from localhost ([2620:15c:202:1:75a:3f6e:21d:9374])
+        by smtp.gmail.com with ESMTPSA id a192sm12065351pge.3.2019.03.12.09.29.47
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Tue, 12 Mar 2019 09:29:47 -0700 (PDT)
+Date:   Tue, 12 Mar 2019 09:29:47 -0700
+From:   Matthias Kaehlcke <mka@chromium.org>
+To:     Harish Bandi <c-hbandi@codeaurora.org>
+Cc:     marcel@holtmann.org, johan.hedberg@gmail.com,
+        linux-kernel@vger.kernel.org, linux-bluetooth@vger.kernel.org,
+        hemantg@codeaurora.org, linux-arm-msm@vger.kernel.org,
+        bgodavar@codeaurora.org, anubhavg@codeaurora.org
+Subject: Re: [PATCH v3 1/2] Bluetooth: hci_qca: Added support for wcn3998
+Message-ID: <20190312162947.GC200579@google.com>
+References: <1552393379-26330-1-git-send-email-c-hbandi@codeaurora.org>
+ <1552393379-26330-2-git-send-email-c-hbandi@codeaurora.org>
 MIME-Version: 1.0
-In-Reply-To: <20190312145813.GS5721@dhcp22.suse.cz>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
-X-TM-AS-GCONF: 00
-x-cbid: 19031216-0020-0000-0000-00000321B665
-X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
-x-cbparentid: 19031216-0021-0000-0000-00002173E2BF
-Message-Id: <b2b80faf-2670-da69-60d9-f244d1597139@linux.ibm.com>
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-03-12_09:,,
- signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
- malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
- clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
- mlxlogscore=999 adultscore=0 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.0.1-1810050000 definitions=main-1903120114
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <1552393379-26330-2-git-send-email-c-hbandi@codeaurora.org>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Le 12/03/2019 à 15:58, Michal Hocko a écrit :
-> On Mon 11-03-19 20:17:01, Laurent Dufour wrote:
->> The commit 95402b382901 ("cpu-hotplug: replace per-subsystem mutexes with
->> get_online_cpus()") remove the CPU_LOCK_ACQUIRE operation which was use to
->> grap the cache_chain_mutex lock which was protecting cache_reap() against
->> CPU hot plug operations.
->>
->> Later the commit 18004c5d4084 ("mm, sl[aou]b: Use a common mutex
->> definition") changed cache_chain_mutex to slab_mutex but this didn't help
->> fixing the missing the cache_reap() protection against CPU hot plug
->> operations.
->>
->> Here we are stopping the per cpu worker while holding the slab_mutex to
->> ensure that cache_reap() is not running in our back and will not be
->> triggered anymore for this cpu.
->>
->> This patch fixes that race leading to SLAB's data corruption when CPU
->> hotplug are triggered. We hit it while doing partition migration on PowerVM
->> leading to CPU reconfiguration through the CPU hotplug mechanism.
+Hi Harish,
+
+On Tue, Mar 12, 2019 at 05:52:58PM +0530, Harish Bandi wrote:
+> Added new compatible for wcn3998 and corresponding voltage
+> and current values to wcn3998 compatible.
+> Changed driver code to support wcn3998
 > 
-> What is the actual race? slab_offline_cpu calls cancel_delayed_work_sync
-> so it removes a pending item and waits for the item to finish if they run
-> concurently. So why do we need an additional lock?
+> Signed-off-by: Harish Bandi <c-hbandi@codeaurora.org>
+> ---
+> changes in v3:
+> - updated to latest code base.
 
-You're right.
-Reading cancel_delayed_work_sync() again I can't see how this could help.
+This is not useful, for future versions please describe what changed
+(e.g. 'specify regulator constraints in the driver instead of the DT')
 
-The tests done with that patch were successful, while we were seeing a 
-SLAB data corruption without it, but this needs to be investigated 
-further since this one should not help. This was perhaps a lucky side 
-effect.
-
-Please forgot about this one.
-
+> ---
+>  drivers/bluetooth/btqca.c   |  4 ++--
+>  drivers/bluetooth/btqca.h   |  3 ++-
+>  drivers/bluetooth/hci_qca.c | 40 ++++++++++++++++++++++++++--------------
+>  3 files changed, 30 insertions(+), 17 deletions(-)
 > 
->> This fix is covering kernel containing to the commit 6731d4f12315 ("slab:
->> Convert to hotplug state machine"), ie 4.9.1, earlier kernel needs a
->> slightly different patch.
->>
->> Cc: stable@vger.kernel.org
->> Cc: Christoph Lameter <cl@linux.com>
->> Cc: Pekka Enberg <penberg@kernel.org>
->> Cc: David Rientjes <rientjes@google.com>
->> Cc: Joonsoo Kim <iamjoonsoo.kim@lge.com>
->> Cc: Andrew Morton <akpm@linux-foundation.org>
->> Signed-off-by: Laurent Dufour <ldufour@linux.ibm.com>
->> ---
->>   mm/slab.c | 2 ++
->>   1 file changed, 2 insertions(+)
->>
->> diff --git a/mm/slab.c b/mm/slab.c
->> index 28652e4218e0..ba499d90f27f 100644
->> --- a/mm/slab.c
->> +++ b/mm/slab.c
->> @@ -1103,6 +1103,7 @@ static int slab_online_cpu(unsigned int cpu)
->>   
->>   static int slab_offline_cpu(unsigned int cpu)
->>   {
->> +	mutex_lock(&slab_mutex);
->>   	/*
->>   	 * Shutdown cache reaper. Note that the slab_mutex is held so
->>   	 * that if cache_reap() is invoked it cannot do anything
->> @@ -1112,6 +1113,7 @@ static int slab_offline_cpu(unsigned int cpu)
->>   	cancel_delayed_work_sync(&per_cpu(slab_reap_work, cpu));
->>   	/* Now the cache_reaper is guaranteed to be not running. */
->>   	per_cpu(slab_reap_work, cpu).work.func = NULL;
->> +	mutex_unlock(&slab_mutex);
->>   	return 0;
->>   }
->>   
->> -- 
->> 2.21.0
-> 
+> diff --git a/drivers/bluetooth/btqca.c b/drivers/bluetooth/btqca.c
+> index 6122685..70cab13 100644
+> --- a/drivers/bluetooth/btqca.c
+> +++ b/drivers/bluetooth/btqca.c
+> @@ -344,7 +344,7 @@ int qca_uart_setup(struct hci_dev *hdev, uint8_t baudrate,
+>  
+>  	/* Download rampatch file */
+>  	config.type = TLV_TYPE_PATCH;
+> -	if (soc_type == QCA_WCN3990) {
+> +	if (soc_type >= QCA_WCN3990) {
 
+That works, but isn't super-clear and might need to be adapted when
+future non-WCN399x controllers are added.
+
+Some possible alternatives:
+
+- is_wcn399x(soc_type)
+- have a family (Rome, Cherokee (IIRC this name was used for WCN3990))
+  and a chip id (QCA6174, WCN3990, WCN3998, ...)
+
+>  		/* Firmware files to download are based on ROM version.
+>  		 * ROM version is derived from last two bytes of soc_ver.
+>  		 */
+> @@ -365,7 +365,7 @@ int qca_uart_setup(struct hci_dev *hdev, uint8_t baudrate,
+>  
+>  	/* Download NVM configuration */
+>  	config.type = TLV_TYPE_NVM;
+> -	if (soc_type == QCA_WCN3990)
+> +	if (soc_type >= QCA_WCN3990)
+>  		snprintf(config.fwname, sizeof(config.fwname),
+>  			 "qca/crnv%02x.bin", rom_ver);
+>  	else
+> diff --git a/drivers/bluetooth/btqca.h b/drivers/bluetooth/btqca.h
+> index c72c56e..f03d96e 100644
+> --- a/drivers/bluetooth/btqca.h
+> +++ b/drivers/bluetooth/btqca.h
+> @@ -132,7 +132,8 @@ enum qca_btsoc_type {
+>  	QCA_INVALID = -1,
+>  	QCA_AR3002,
+>  	QCA_ROME,
+> -	QCA_WCN3990
+> +	QCA_WCN3990,
+> +	QCA_WCN3998
+
+nit: if you add a comma after the last value the line doesn't need to
+be changed when a new type is added in the future.
+
+Is 'WCN3998' specific enough? You mentioned earlier that there are
+multiple WCN3998 variants with different requirements for regulator
+voltages/max currents. Which names does Qualcomm use to distinguish
+between them (e.g. WCN3998-A, WCN3998-B, ...)?
+
+Thanks
+
+Matthias
