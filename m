@@ -4,24 +4,24 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED
-	autolearn=ham autolearn_force=no version=3.4.0
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C4616C43381
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 15:33:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0D618C43381
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 15:33:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9E56E2083D
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 15:33:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D3B1021734
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 15:33:14 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726818AbfCLPdB (ORCPT
+        id S1726802AbfCLPdA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 12 Mar 2019 11:33:01 -0400
-Received: from hermes.aosc.io ([199.195.250.187]:40108 "EHLO hermes.aosc.io"
+        Tue, 12 Mar 2019 11:33:00 -0400
+Received: from hermes.aosc.io ([199.195.250.187]:40109 "EHLO hermes.aosc.io"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726656AbfCLPc6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S1726643AbfCLPc6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Tue, 12 Mar 2019 11:32:58 -0400
 Received: from localhost (localhost [127.0.0.1]) (Authenticated sender: icenowy@aosc.io)
-        by hermes.aosc.io (Postfix) with ESMTPSA id 6AA2715FCC3;
-        Tue, 12 Mar 2019 15:26:07 +0000 (UTC)
+        by hermes.aosc.io (Postfix) with ESMTPSA id 1763B15FCBF;
+        Tue, 12 Mar 2019 15:24:28 +0000 (UTC)
 From:   Icenowy Zheng <icenowy@aosc.io>
 To:     Rob Herring <robh+dt@kernel.org>,
         Maxime Ripard <maxime.ripard@bootlin.com>,
@@ -32,9 +32,9 @@ Cc:     devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
         linux-kernel@vger.kernel.org, linux-clk@vger.kernel.org,
         linux-gpio@vger.kernel.org, linux-sunxi@googlegroups.com,
         Icenowy Zheng <icenowy@aosc.io>
-Subject: [PATCH 09/14] dt-bindings: vendor-prefixes: add SoChip
-Date:   Tue, 12 Mar 2019 23:22:51 +0800
-Message-Id: <20190312152256.35574-10-icenowy@aosc.io>
+Subject: [PATCH 03/14] dt-bindings: pinctrl: add compatible string for Allwinner V3 pinctrl
+Date:   Tue, 12 Mar 2019 23:22:45 +0800
+Message-Id: <20190312152256.35574-4-icenowy@aosc.io>
 In-Reply-To: <20190312152256.35574-1-icenowy@aosc.io>
 References: <20190312152256.35574-1-icenowy@aosc.io>
 Sender: linux-kernel-owner@vger.kernel.org
@@ -42,29 +42,29 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Shenzhen SoChip Technology Co., Ltd. is a hardware vendor that produces
-EVBs with Allwinner chips. There's also a SoC named S3 that is developed
-by Allwinner (based on Allwinner V3/V3s) but branded SoChip.
+The Allwinner V3 SoC, despite come with the same die with V3s, has more
+GPIO pins than V3s, and a different compatible string for pinctrl is
+needed.
 
-Add the vendor prefix for SoChip.
+Add the compatible string for V3 pinctrl.
 
 Signed-off-by: Icenowy Zheng <icenowy@aosc.io>
 ---
- Documentation/devicetree/bindings/vendor-prefixes.txt | 1 +
+ .../devicetree/bindings/pinctrl/allwinner,sunxi-pinctrl.txt      | 1 +
  1 file changed, 1 insertion(+)
 
-diff --git a/Documentation/devicetree/bindings/vendor-prefixes.txt b/Documentation/devicetree/bindings/vendor-prefixes.txt
-index bb6f6e8a2eee..b03a2a49440b 100644
---- a/Documentation/devicetree/bindings/vendor-prefixes.txt
-+++ b/Documentation/devicetree/bindings/vendor-prefixes.txt
-@@ -377,6 +377,7 @@ sitronix	Sitronix Technology Corporation
- skyworks	Skyworks Solutions, Inc.
- smsc	Standard Microsystems Corporation
- snps	Synopsys, Inc.
-+sochip	Shenzhen SoChip Technology Co., Ltd.
- socionext	Socionext Inc.
- solidrun	SolidRun
- solomon        Solomon Systech Limited
+diff --git a/Documentation/devicetree/bindings/pinctrl/allwinner,sunxi-pinctrl.txt b/Documentation/devicetree/bindings/pinctrl/allwinner,sunxi-pinctrl.txt
+index baba55db864c..328585c6da58 100644
+--- a/Documentation/devicetree/bindings/pinctrl/allwinner,sunxi-pinctrl.txt
++++ b/Documentation/devicetree/bindings/pinctrl/allwinner,sunxi-pinctrl.txt
+@@ -24,6 +24,7 @@ Required properties:
+   "allwinner,sun8i-h3-pinctrl"
+   "allwinner,sun8i-h3-r-pinctrl"
+   "allwinner,sun8i-r40-pinctrl"
++  "allwinner,sun8i-v3-pinctrl"
+   "allwinner,sun8i-v3s-pinctrl"
+   "allwinner,sun50i-a64-pinctrl"
+   "allwinner,sun50i-a64-r-pinctrl"
 -- 
 2.18.1
 
