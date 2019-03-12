@@ -2,115 +2,175 @@ Return-Path: <SRS0=J4ZE=RP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C1BD8C43381
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 09:52:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CA8AFC43381
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 09:53:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9A7142147C
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 09:52:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A16542147C
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 09:53:13 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726657AbfCLJw2 convert rfc822-to-8bit (ORCPT
+        id S1726673AbfCLJxM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 12 Mar 2019 05:52:28 -0400
-Received: from foss.arm.com ([217.140.101.70]:39628 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725872AbfCLJw1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 12 Mar 2019 05:52:27 -0400
+        Tue, 12 Mar 2019 05:53:12 -0400
+Received: from usa-sjc-mx-foss1.foss.arm.com ([217.140.101.70]:39664 "EHLO
+        foss.arm.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725872AbfCLJxL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 12 Mar 2019 05:53:11 -0400
 Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.72.51.249])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 20B1CA78;
-        Tue, 12 Mar 2019 02:52:27 -0700 (PDT)
-Received: from donnerap.cambridge.arm.com (usa-sjc-imap-foss1.foss.arm.com [10.72.51.249])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 98C883F59C;
-        Tue, 12 Mar 2019 02:52:25 -0700 (PDT)
-Date:   Tue, 12 Mar 2019 09:52:22 +0000
-From:   Andre Przywara <andre.przywara@arm.com>
-To:     Gong John <johngong0791@gmail.com>
-Cc:     christoffer.dall@arm.com, Shengmin Gong <shengmin.gong@gmail.com>,
-        Marc Zyngier <marc.zyngier@arm.com>,
-        Julien Thierry <julien.thierry@arm.com>,
-        Jia He <hejianet@gmail.com>,
-        linux-arm-kernel@lists.infradead.org, kvmarm@lists.cs.columbia.edu,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] KVM: arm64: fix potential bug
-Message-ID: <20190312095222.45227d05@donnerap.cambridge.arm.com>
-In-Reply-To: <CAEg8mkxRj2jQSqnuqY239yDH3a4mkvabg+_6Q8+9Nd=mk+U2pw@mail.gmail.com>
-References: <20190312003243.6712-1-johngong0791@gmail.com>
-        <2405014d-9370-c0d5-7a44-7ec336098c45@arm.com>
-        <CAEg8mkxRj2jQSqnuqY239yDH3a4mkvabg+_6Q8+9Nd=mk+U2pw@mail.gmail.com>
-Organization: ARM
-X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; aarch64-unknown-linux-gnu)
-MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8BIT
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id E5478A78;
+        Tue, 12 Mar 2019 02:53:10 -0700 (PDT)
+Received: from en101.cambridge.arm.com (en101.cambridge.arm.com [10.1.196.93])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPA id 250323F59C;
+        Tue, 12 Mar 2019 02:53:09 -0700 (PDT)
+From:   Suzuki K Poulose <suzuki.poulose@arm.com>
+To:     linux-arm-kernel@lists.infradead.org
+Cc:     linux-kernel@vger.kernel.org, kvm@vger.kernel.org,
+        kvmarm@lists.cs.columbia.edu, james.morse@arm.com,
+        julien.thierry@arm.com, Suzuki K Poulose <suzuki.poulose@arm.com>,
+        Zenghui Yu <yuzenghui@huawei.com>,
+        Christoffer Dall <christoffer.dall@arm.com>,
+        Marc Zyngier <marc.zyngier@arm.com>
+Subject: [PATCH] kvm: arm: Enforce PTE mappings at stage2 when needed
+Date:   Tue, 12 Mar 2019 09:52:51 +0000
+Message-Id: <1552384371-10772-1-git-send-email-suzuki.poulose@arm.com>
+X-Mailer: git-send-email 2.7.4
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, 12 Mar 2019 11:15:14 +0800
-Gong John <johngong0791@gmail.com> wrote:
+commit 6794ad5443a2118 ("KVM: arm/arm64: Fix unintended stage 2 PMD mappings")
+made the checks to skip huge mappings, stricter. However it introduced
+a bug where we still use huge mappings, ignoring the flag to
+use PTE mappings, by not reseting the vma_pagesize to PAGE_SIZE.
 
-Hi,
+Also, the checks do not cover the PUD huge pages, that was
+under review during the same period. This patch fixes both
+the issues.
 
-> On Tue, Mar 12, 2019 at 9:44 AM André Przywara <andre.przywara@arm.com> wrote:
-> >
-> > On 12/03/2019 00:32, John Gong wrote:
-> > Hi,
-> >  
-> > > Since intid always >= VGIC_NR_PRIVATE_IRQS,  
-> >
-> > How so? The PMU and the arch timer emulation use PPIs, so intid is
-> > definitely < VGIC_NR_PRIVATE_IRQS there.
-> >  
-> > > so then even vcpu == NULL, it never return -EINVAL.  
-> >
-> > I am not sure I follow.
-> > To uniquely identify an SPI interrupt, we just need the interrupt ID
-> > (which is always >= 32). For PPIs and SGIs, we additionally need the
-> > vCPU ID this private interrupt belongs to, as there are multiple
-> > interrupts with the same INTID (one per VCPU).
-> > The VCPU ID passed in for SPIs is just a dummy value (because we use the
-> > same function to inject private and shared interrupts), so we don't need
-> > to check for its validity.
-> >
-> > Cheers,
-> > Andre.
-> >  
-> Thanks for your explanation. It's my fault to not consider the PPIs
-> and SGIs injection.
+Fixes : 6794ad5443a2118 ("KVM: arm/arm64: Fix unintended stage 2 PMD mappings")
+Reported-by: Zenghui Yu <yuzenghui@huawei.com>
+Cc: Zenghui Yu <yuzenghui@huawei.com>
+Cc: Christoffer Dall <christoffer.dall@arm.com>
+Cc: Marc Zyngier <marc.zyngier@arm.com>
+Signed-off-by: Suzuki K Poulose <suzuki.poulose@arm.com>
+---
+ virt/kvm/arm/mmu.c | 43 +++++++++++++++++++++----------------------
+ 1 file changed, 21 insertions(+), 22 deletions(-)
 
-Don't worry, we are glad when people actually look at the code. And we rather have a false positive report than a bug slipping through.
-
-Cheers,
-Andre.
+diff --git a/virt/kvm/arm/mmu.c b/virt/kvm/arm/mmu.c
+index 30251e2..66e0fbb5 100644
+--- a/virt/kvm/arm/mmu.c
++++ b/virt/kvm/arm/mmu.c
+@@ -1595,8 +1595,9 @@ static void kvm_send_hwpoison_signal(unsigned long address,
+ 	send_sig_mceerr(BUS_MCEERR_AR, (void __user *)address, lsb, current);
+ }
  
-> Sorry for polluting the mail list.
-> 
-> Cheers,
-> John Gong
-> > >
-> > > Signed-off-by: Shengmin Gong <shengmin.gong@gmail.com>
-> > > Signed-off-by: John Gong <johngong0791@gmail.com>
-> > > ---
-> > >  virt/kvm/arm/vgic/vgic.c | 2 +-
-> > >  1 file changed, 1 insertion(+), 1 deletion(-)
-> > >
-> > > diff --git a/virt/kvm/arm/vgic/vgic.c b/virt/kvm/arm/vgic/vgic.c
-> > > index abd9c7352677..d3cb1ce880e2 100644
-> > > --- a/virt/kvm/arm/vgic/vgic.c
-> > > +++ b/virt/kvm/arm/vgic/vgic.c
-> > > @@ -424,7 +424,7 @@ int kvm_vgic_inject_irq(struct kvm *kvm, int cpuid, unsigned int intid,
-> > >               return ret;
-> > >
-> > >       vcpu = kvm_get_vcpu(kvm, cpuid);
-> > > -     if (!vcpu && intid < VGIC_NR_PRIVATE_IRQS)
-> > > +     if (!vcpu)
-> > >               return -EINVAL;
-> > >
-> > >       irq = vgic_get_irq(kvm, vcpu, intid);
-> > >  
-> >  
+-static bool fault_supports_stage2_pmd_mappings(struct kvm_memory_slot *memslot,
+-					       unsigned long hva)
++static bool fault_supports_stage2_huge_mapping(struct kvm_memory_slot *memslot,
++					       unsigned long hva,
++					       unsigned long map_size)
+ {
+ 	gpa_t gpa_start, gpa_end;
+ 	hva_t uaddr_start, uaddr_end;
+@@ -1612,34 +1613,34 @@ static bool fault_supports_stage2_pmd_mappings(struct kvm_memory_slot *memslot,
+ 
+ 	/*
+ 	 * Pages belonging to memslots that don't have the same alignment
+-	 * within a PMD for userspace and IPA cannot be mapped with stage-2
+-	 * PMD entries, because we'll end up mapping the wrong pages.
++	 * within a PMD/PUD for userspace and IPA cannot be mapped with stage-2
++	 * PMD/PUD entries, because we'll end up mapping the wrong pages.
+ 	 *
+ 	 * Consider a layout like the following:
+ 	 *
+ 	 *    memslot->userspace_addr:
+ 	 *    +-----+--------------------+--------------------+---+
+-	 *    |abcde|fgh  Stage-1 PMD    |    Stage-1 PMD   tv|xyz|
++	 *    |abcde|fgh  Stage-1 block  |    Stage-1 block tv|xyz|
+ 	 *    +-----+--------------------+--------------------+---+
+ 	 *
+ 	 *    memslot->base_gfn << PAGE_SIZE:
+ 	 *      +---+--------------------+--------------------+-----+
+-	 *      |abc|def  Stage-2 PMD    |    Stage-2 PMD     |tvxyz|
++	 *      |abc|def  Stage-2 block  |    Stage-2 block   |tvxyz|
+ 	 *      +---+--------------------+--------------------+-----+
+ 	 *
+-	 * If we create those stage-2 PMDs, we'll end up with this incorrect
++	 * If we create those stage-2 blocks, we'll end up with this incorrect
+ 	 * mapping:
+ 	 *   d -> f
+ 	 *   e -> g
+ 	 *   f -> h
+ 	 */
+-	if ((gpa_start & ~S2_PMD_MASK) != (uaddr_start & ~S2_PMD_MASK))
++	if ((gpa_start & (map_size - 1)) != (uaddr_start & (map_size - 1)))
+ 		return false;
+ 
+ 	/*
+ 	 * Next, let's make sure we're not trying to map anything not covered
+-	 * by the memslot. This means we have to prohibit PMD size mappings
+-	 * for the beginning and end of a non-PMD aligned and non-PMD sized
++	 * by the memslot. This means we have to prohibit block size mappings
++	 * for the beginning and end of a non-block aligned and non-block sized
+ 	 * memory slot (illustrated by the head and tail parts of the
+ 	 * userspace view above containing pages 'abcde' and 'xyz',
+ 	 * respectively).
+@@ -1648,8 +1649,8 @@ static bool fault_supports_stage2_pmd_mappings(struct kvm_memory_slot *memslot,
+ 	 * userspace_addr or the base_gfn, as both are equally aligned (per
+ 	 * the check above) and equally sized.
+ 	 */
+-	return (hva & S2_PMD_MASK) >= uaddr_start &&
+-	       (hva & S2_PMD_MASK) + S2_PMD_SIZE <= uaddr_end;
++	return (hva & ~(map_size - 1)) >= uaddr_start &&
++	       (hva & ~(map_size - 1)) + map_size <= uaddr_end;
+ }
+ 
+ static int user_mem_abort(struct kvm_vcpu *vcpu, phys_addr_t fault_ipa,
+@@ -1678,12 +1679,6 @@ static int user_mem_abort(struct kvm_vcpu *vcpu, phys_addr_t fault_ipa,
+ 		return -EFAULT;
+ 	}
+ 
+-	if (!fault_supports_stage2_pmd_mappings(memslot, hva))
+-		force_pte = true;
+-
+-	if (logging_active)
+-		force_pte = true;
+-
+ 	/* Let's check if we will get back a huge page backed by hugetlbfs */
+ 	down_read(&current->mm->mmap_sem);
+ 	vma = find_vma_intersection(current->mm, hva, hva + 1);
+@@ -1694,6 +1689,12 @@ static int user_mem_abort(struct kvm_vcpu *vcpu, phys_addr_t fault_ipa,
+ 	}
+ 
+ 	vma_pagesize = vma_kernel_pagesize(vma);
++	if (logging_active ||
++	    !fault_supports_stage2_huge_mapping(memslot, hva, vma_pagesize)) {
++		force_pte = true;
++		vma_pagesize = PAGE_SIZE;
++	}
++
+ 	/*
+ 	 * The stage2 has a minimum of 2 level table (For arm64 see
+ 	 * kvm_arm_setup_stage2()). Hence, we are guaranteed that we can
+@@ -1701,11 +1702,9 @@ static int user_mem_abort(struct kvm_vcpu *vcpu, phys_addr_t fault_ipa,
+ 	 * As for PUD huge maps, we must make sure that we have at least
+ 	 * 3 levels, i.e, PMD is not folded.
+ 	 */
+-	if ((vma_pagesize == PMD_SIZE ||
+-	     (vma_pagesize == PUD_SIZE && kvm_stage2_has_pmd(kvm))) &&
+-	    !force_pte) {
++	if (vma_pagesize == PMD_SIZE ||
++	    (vma_pagesize == PUD_SIZE && kvm_stage2_has_pmd(kvm)))
+ 		gfn = (fault_ipa & huge_page_mask(hstate_vma(vma))) >> PAGE_SHIFT;
+-	}
+ 	up_read(&current->mm->mmap_sem);
+ 
+ 	/* We need minimum second+third level pages */
+-- 
+2.7.4
 
