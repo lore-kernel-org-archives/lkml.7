@@ -2,95 +2,147 @@ Return-Path: <SRS0=J4ZE=RP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_NEOMUTT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F2E67C43381
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 01:44:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 10091C43381
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 01:45:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C75A5214AE
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 01:44:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CE6B1214AE
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 01:45:33 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="eiuA49yf"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726716AbfCLBov (ORCPT
+        id S1726752AbfCLBpc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 11 Mar 2019 21:44:51 -0400
-Received: from foss.arm.com ([217.140.101.70]:35160 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725932AbfCLBou (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 11 Mar 2019 21:44:50 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.72.51.249])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 4315BA78;
-        Mon, 11 Mar 2019 18:44:50 -0700 (PDT)
-Received: from [192.168.3.111] (usa-sjc-mx-foss1.foss.arm.com [217.140.101.70])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 9C3EB3F575;
-        Mon, 11 Mar 2019 18:44:48 -0700 (PDT)
-Subject: Re: [PATCH] KVM: arm64: fix potential bug
-To:     John Gong <johngong0791@gmail.com>, christoffer.dall@arm.com
-Cc:     Shengmin Gong <shengmin.gong@gmail.com>,
-        Marc Zyngier <marc.zyngier@arm.com>,
-        Julien Thierry <julien.thierry@arm.com>,
-        Jia He <hejianet@gmail.com>,
-        linux-arm-kernel@lists.infradead.org, kvmarm@lists.cs.columbia.edu,
-        linux-kernel@vger.kernel.org
-References: <20190312003243.6712-1-johngong0791@gmail.com>
-From:   =?UTF-8?Q?Andr=c3=a9_Przywara?= <andre.przywara@arm.com>
-Organization: ARM Ltd.
-Message-ID: <2405014d-9370-c0d5-7a44-7ec336098c45@arm.com>
-Date:   Tue, 12 Mar 2019 01:42:47 +0000
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.5.2
+        Mon, 11 Mar 2019 21:45:32 -0400
+Received: from mail-pf1-f195.google.com ([209.85.210.195]:34030 "EHLO
+        mail-pf1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725932AbfCLBpb (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 11 Mar 2019 21:45:31 -0400
+Received: by mail-pf1-f195.google.com with SMTP id u9so615011pfn.1;
+        Mon, 11 Mar 2019 18:45:30 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=TfkFOI9Syjr0HfQxSUDH8FDRCp9ri4E/0CE66t2/jTs=;
+        b=eiuA49yf4iOB/MdhyItJu1hP8sM7PPoPi67M77GHGuIAUWisGp7zWOusep9INVq8Wv
+         OxuVW+OIAbCdb+YTQ2KdYmtpemFmDFolx0bA3N2dpKYFRiw872+gUG+GkjAOXwS8aLeC
+         FWIeFKkD60zsYB8AQ7j7ZGDfAtCMudu0811IWYgdZtHDhYO2EgFneG4xnm8aIrSOLEXF
+         GU8c6zE2falkoT9+YliqDuyhw9HTpX22Jb/MkmZ2RoIz9kCnYAefV8DFX9gwe0xrw4Zd
+         Vvknz/FXORMZwi2S1VE0NEagn8/UXBTYVMWI6Y/Bt/ofMG/h+Ix9CVgBNUDty8Erdgdp
+         jt/A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=TfkFOI9Syjr0HfQxSUDH8FDRCp9ri4E/0CE66t2/jTs=;
+        b=Xhgz/rsiaZXZa4MdgVzW8oL0KSOP2+g51gPfbGfDpJ1kCW3MLH3tnasdroCW0nvnVs
+         kEtQcFvBaNDPITOC+YmAbtd4OwPcsYuZnBltJiq8lihaH2RmbEaH9IUfCaV1vRMutV0/
+         D0vuenJGF4Rqr+VYBL1M/XCnTHCbhVJlQYVWeR64BNvKB8RCfX5AE2zo1e5kjnYbzmeE
+         r4nBhakPWHCqi5fq9vZkt4akSdxzONSWIWvjNur849klO2be4bPkkyTxBTy5unSH9gX9
+         Roc5+9zAJbgkGQBW6U78Uiv9gYmvvUlyYhExbKfYE3MXZzbV2H0M3A3Li5qNrMjDcgzE
+         H48g==
+X-Gm-Message-State: APjAAAXGjF+Y5J6A84O+U65G1xurxLzdo+CNmcQHC6T68d62YpnX8w4F
+        4nnBEL38vTcMRr2QTiiMOmc=
+X-Google-Smtp-Source: APXvYqyutmyDjMr9Ok7C144/shMQ+f27dT4fHaKnSIbCHQS0MHn5iPDcPtOKWOKxnEcNQE984TA7Kg==
+X-Received: by 2002:a17:902:9a01:: with SMTP id v1mr31774767plp.34.1552355130187;
+        Mon, 11 Mar 2019 18:45:30 -0700 (PDT)
+Received: from ast-mbp ([2620:10d:c090:200::2:263e])
+        by smtp.gmail.com with ESMTPSA id b65sm15496395pfm.127.2019.03.11.18.45.28
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Mon, 11 Mar 2019 18:45:29 -0700 (PDT)
+Date:   Mon, 11 Mar 2019 18:45:24 -0700
+From:   Alexei Starovoitov <alexei.starovoitov@gmail.com>
+To:     Steven Rostedt <rostedt@goodmis.org>
+Cc:     Joel Fernandes <joel@joelfernandes.org>,
+        Daniel Colascione <dancol@google.com>,
+        Karim Yaghmour <karim.yaghmour@opersys.com>,
+        Geert Uytterhoeven <geert@linux-m68k.org>,
+        Greg KH <gregkh@linuxfoundation.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Alexei Starovoitov <ast@kernel.org>,
+        atish patra <atishp04@gmail.com>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Dietmar Eggemann <dietmar.eggemann@arm.com>,
+        Guenter Roeck <groeck@chromium.org>,
+        Jonathan Corbet <corbet@lwn.net>,
+        Kees Cook <keescook@chromium.org>,
+        Android Kernel Team <kernel-team@android.com>,
+        "open list:DOCUMENTATION" <linux-doc@vger.kernel.org>,
+        "open list:KERNEL SELFTEST FRAMEWORK" 
+        <linux-kselftest@vger.kernel.org>,
+        linux-trace-devel@vger.kernel.org,
+        Manoj Rao <linux@manojrajarao.com>,
+        Masahiro Yamada <yamada.masahiro@socionext.com>,
+        Masami Hiramatsu <mhiramat@kernel.org>,
+        Qais Yousef <qais.yousef@arm.com>,
+        Randy Dunlap <rdunlap@infradead.org>,
+        Shuah Khan <shuah@kernel.org>, Yonghong Song <yhs@fb.com>
+Subject: Re: [PATCH v4 1/2] Provide in-kernel headers for making it easy to
+ extend the kernel
+Message-ID: <20190312014522.jfxg3pdav2piuaqs@ast-mbp>
+References: <20190309071648.GE3882@kroah.com>
+ <CAMuHMdUT+UGt9p2QhOXzAtCUmqy-a8YN-ceDa-0qANJE53pWBA@mail.gmail.com>
+ <20190309121141.GA30173@kroah.com>
+ <b7296377-9e0c-aed7-61f0-93d24d1ceddd@opersys.com>
+ <CAMuHMdV8+XTyGf1ZJ+gMf=zQpzqh3-+b7wgi+gAmXQ6HpUAw3A@mail.gmail.com>
+ <3e84e1ef-e266-e983-5874-6c26ac7f38b8@opersys.com>
+ <20190311193612.4f09bf11@oasis.local.home>
+ <CAKOZuetHG0O-CiO6h5tD7aht_MT70ebwWMMSPkRUHdiM3wVq0Q@mail.gmail.com>
+ <20190312003912.GA170478@google.com>
+ <20190311212823.60684182@oasis.local.home>
 MIME-Version: 1.0
-In-Reply-To: <20190312003243.6712-1-johngong0791@gmail.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-GB
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190311212823.60684182@oasis.local.home>
+User-Agent: NeoMutt/20180223
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 12/03/2019 00:32, John Gong wrote:
-Hi,
-
-> Since intid always >= VGIC_NR_PRIVATE_IRQS,
-
-How so? The PMU and the arch timer emulation use PPIs, so intid is
-definitely < VGIC_NR_PRIVATE_IRQS there.
-
-> so then even vcpu == NULL, it never return -EINVAL.
-
-I am not sure I follow.
-To uniquely identify an SPI interrupt, we just need the interrupt ID
-(which is always >= 32). For PPIs and SGIs, we additionally need the
-vCPU ID this private interrupt belongs to, as there are multiple
-interrupts with the same INTID (one per VCPU).
-The VCPU ID passed in for SPIs is just a dummy value (because we use the
-same function to inject private and shared interrupts), so we don't need
-to check for its validity.
-
-Cheers,
-Andre.
-
+On Mon, Mar 11, 2019 at 09:28:23PM -0400, Steven Rostedt wrote:
+> On Mon, 11 Mar 2019 20:39:12 -0400
+> Joel Fernandes <joel@joelfernandes.org> wrote:
 > 
-> Signed-off-by: Shengmin Gong <shengmin.gong@gmail.com>
-> Signed-off-by: John Gong <johngong0791@gmail.com>
-> ---
->  virt/kvm/arm/vgic/vgic.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
+> > I think even though the kernel-headers can't have information about all data
+> > structures, they do already contain a lot of data structure definitions we
+> > need already. And anything needed can/should arguably be moved to include/ if
+> > they are really needed for kernel extension by something "external" to the
+> > kernel such as kernel modules or eBPF, right?
 > 
-> diff --git a/virt/kvm/arm/vgic/vgic.c b/virt/kvm/arm/vgic/vgic.c
-> index abd9c7352677..d3cb1ce880e2 100644
-> --- a/virt/kvm/arm/vgic/vgic.c
-> +++ b/virt/kvm/arm/vgic/vgic.c
-> @@ -424,7 +424,7 @@ int kvm_vgic_inject_irq(struct kvm *kvm, int cpuid, unsigned int intid,
->  		return ret;
->  
->  	vcpu = kvm_get_vcpu(kvm, cpuid);
-> -	if (!vcpu && intid < VGIC_NR_PRIVATE_IRQS)
-> +	if (!vcpu)
->  		return -EINVAL;
->  
->  	irq = vgic_get_irq(kvm, vcpu, intid);
+> That's not my worry. I would like to be able to easily walk data
+> structures from within the kernel, without having to do a lot of work
+> in userspace to get that information. The kprobe_events could then be
+> passed type casts or such to access data fields of arguments to
+> functions and such.
 > 
+> > 
+> > In any case, such a solution such as what Steve suggested, still cannot do
+> > what we can with headers - such as build kernel modules on the fly using the
+> > C-compiler without any auto-generation of C code from any debug artifiacts.
+> > Think systemtap working with the module-backend without any need for
+> > linux-headers package on the file system. So such a solution would still be a
+> > bit orthogonal in scope to what this proposed solution can solve IMO.
+> > 
+> 
+> With the information I would like to have, it would be trivial to read
+> the data to create the header files needed for modules.
+
+what you're asking for we already have. It's called BTF.
+pahole takes vmlinux dwarf and convert it into ~1Mbyte of BTF that includes
+all kernel types.
+With gzip it can be compressed further if necessary.
+We also have a prototype to generate all_vmlinux_types.h from BTF.
+But it's not a substitute for kernel headers.
+We've had a long discussion during last LPC regarding this:
+http://vger.kernel.org/lpc-bpf2018.html#session-2
+tldr: many tracing use cases will be solved with BTF, but kernel headers
+are here to stay.
 
