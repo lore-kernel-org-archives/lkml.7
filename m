@@ -2,147 +2,202 @@ Return-Path: <SRS0=J4ZE=RP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_NEOMUTT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_MUTT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 10091C43381
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 01:45:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A1BD7C4360F
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 01:47:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CE6B1214AE
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 01:45:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5696721734
+	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 01:47:45 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="eiuA49yf"
+	dkim=pass (2048-bit key) header.d=tobin.cc header.i=@tobin.cc header.b="y7wXdvON";
+	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="Kz4fpROf"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726752AbfCLBpc (ORCPT
+        id S1726695AbfCLBrn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 11 Mar 2019 21:45:32 -0400
-Received: from mail-pf1-f195.google.com ([209.85.210.195]:34030 "EHLO
-        mail-pf1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725932AbfCLBpb (ORCPT
+        Mon, 11 Mar 2019 21:47:43 -0400
+Received: from out2-smtp.messagingengine.com ([66.111.4.26]:54863 "EHLO
+        out2-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726390AbfCLBrn (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 11 Mar 2019 21:45:31 -0400
-Received: by mail-pf1-f195.google.com with SMTP id u9so615011pfn.1;
-        Mon, 11 Mar 2019 18:45:30 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=TfkFOI9Syjr0HfQxSUDH8FDRCp9ri4E/0CE66t2/jTs=;
-        b=eiuA49yf4iOB/MdhyItJu1hP8sM7PPoPi67M77GHGuIAUWisGp7zWOusep9INVq8Wv
-         OxuVW+OIAbCdb+YTQ2KdYmtpemFmDFolx0bA3N2dpKYFRiw872+gUG+GkjAOXwS8aLeC
-         FWIeFKkD60zsYB8AQ7j7ZGDfAtCMudu0811IWYgdZtHDhYO2EgFneG4xnm8aIrSOLEXF
-         GU8c6zE2falkoT9+YliqDuyhw9HTpX22Jb/MkmZ2RoIz9kCnYAefV8DFX9gwe0xrw4Zd
-         Vvknz/FXORMZwi2S1VE0NEagn8/UXBTYVMWI6Y/Bt/ofMG/h+Ix9CVgBNUDty8Erdgdp
-         jt/A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=TfkFOI9Syjr0HfQxSUDH8FDRCp9ri4E/0CE66t2/jTs=;
-        b=Xhgz/rsiaZXZa4MdgVzW8oL0KSOP2+g51gPfbGfDpJ1kCW3MLH3tnasdroCW0nvnVs
-         kEtQcFvBaNDPITOC+YmAbtd4OwPcsYuZnBltJiq8lihaH2RmbEaH9IUfCaV1vRMutV0/
-         D0vuenJGF4Rqr+VYBL1M/XCnTHCbhVJlQYVWeR64BNvKB8RCfX5AE2zo1e5kjnYbzmeE
-         r4nBhakPWHCqi5fq9vZkt4akSdxzONSWIWvjNur849klO2be4bPkkyTxBTy5unSH9gX9
-         Roc5+9zAJbgkGQBW6U78Uiv9gYmvvUlyYhExbKfYE3MXZzbV2H0M3A3Li5qNrMjDcgzE
-         H48g==
-X-Gm-Message-State: APjAAAXGjF+Y5J6A84O+U65G1xurxLzdo+CNmcQHC6T68d62YpnX8w4F
-        4nnBEL38vTcMRr2QTiiMOmc=
-X-Google-Smtp-Source: APXvYqyutmyDjMr9Ok7C144/shMQ+f27dT4fHaKnSIbCHQS0MHn5iPDcPtOKWOKxnEcNQE984TA7Kg==
-X-Received: by 2002:a17:902:9a01:: with SMTP id v1mr31774767plp.34.1552355130187;
-        Mon, 11 Mar 2019 18:45:30 -0700 (PDT)
-Received: from ast-mbp ([2620:10d:c090:200::2:263e])
-        by smtp.gmail.com with ESMTPSA id b65sm15496395pfm.127.2019.03.11.18.45.28
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Mon, 11 Mar 2019 18:45:29 -0700 (PDT)
-Date:   Mon, 11 Mar 2019 18:45:24 -0700
-From:   Alexei Starovoitov <alexei.starovoitov@gmail.com>
-To:     Steven Rostedt <rostedt@goodmis.org>
-Cc:     Joel Fernandes <joel@joelfernandes.org>,
-        Daniel Colascione <dancol@google.com>,
-        Karim Yaghmour <karim.yaghmour@opersys.com>,
-        Geert Uytterhoeven <geert@linux-m68k.org>,
-        Greg KH <gregkh@linuxfoundation.org>,
-        LKML <linux-kernel@vger.kernel.org>,
+        Mon, 11 Mar 2019 21:47:43 -0400
+Received: from compute5.internal (compute5.nyi.internal [10.202.2.45])
+        by mailout.nyi.internal (Postfix) with ESMTP id D3616216AC;
+        Mon, 11 Mar 2019 21:47:42 -0400 (EDT)
+Received: from mailfrontend2 ([10.202.2.163])
+  by compute5.internal (MEProxy); Mon, 11 Mar 2019 21:47:42 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=tobin.cc; h=date
+        :from:to:cc:subject:message-id:references:mime-version
+        :content-type:in-reply-to; s=fm2; bh=2hF6d6fZeUwH8051ioQNCV9dfHE
+        A8Z+yoBZ4if8TWas=; b=y7wXdvON5UqpZqv6I9bl5qlvGVkSNQut+QiNC5WuiRI
+        6cDOuowo+0exbKZC+0SBnVP0/mQlREiNtXSgPC25DwCZTa1dtZ9PhWkoi9jaGkEP
+        1CoBeHEE2LVsii0ano+1sufTQS07h1CBNGZ4c0w4mnQ91ewrcz51IrwBiB/2ygRV
+        fuwds1wxZVoZ/Cl7PEpNDEPSxd5AHVSmbmBnrvnvbpjwS71wTQ3rJj/fEpuvd50v
+        BMTW1NdkG6DnniyuLCv3jcFTaQt3V9YZ60sdtzVRRWuyxsaojPbhRLNILm654otH
+        unJrAbB/pX54P9xm5C5W7E9vn0wi+PuCxDIKsOHpLfA==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+        messagingengine.com; h=cc:content-type:date:from:in-reply-to
+        :message-id:mime-version:references:subject:to:x-me-proxy
+        :x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=fm2; bh=2hF6d6
+        fZeUwH8051ioQNCV9dfHEA8Z+yoBZ4if8TWas=; b=Kz4fpROf5JbK8QyCEK1XcJ
+        xi0JWRY74K+KM25IOs5B0hwQ7hdrag5FQRkHGd1C+QfatPpw5e082LlUlf4ovxZ9
+        PcktF5T5OOXab698bMX2pv9xwla09MpUzCPLFsQ1/upIYy7gW7Jp5OKyJpdFh9rY
+        1hYc4sQDW9hueXdUFWnWksz8v5tSxKfWx48IEkNUocLM99oZGrxYmXTQG71+nXAw
+        kV0qnR5ImOfoGkjyEhNH1D0MK9ekbY9QmB9kjxUdzb8rj5gB/9U86f0NTLp74k0q
+        kUSIuUBSJ0a7ZvKP2iDLMcW8jihRJdZU42o4qB8Q1Ny6tlr5CD6kJd7nON42zKPg
+        ==
+X-ME-Sender: <xms:vA-HXLDDBpTjR7fu0GkQKx54-My5pTOzdhXuXKgyAFmASD5jZ5kxnA>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedutddrgeejgdefiecutefuodetggdotefrodftvf
+    curfhrohhfihhlvgemucfhrghsthforghilhdpqfgfvfdpuffrtefokffrpgfnqfghnecu
+    uegrihhlohhuthemuceftddtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenfg
+    hrlhcuvffnffculddutddmnecujfgurhepfffhvffukfhfgggtuggjofgfsehttdertdfo
+    redvnecuhfhrohhmpedfvfhosghinhcuvedrucfjrghrughinhhgfdcuoehmvgesthhosg
+    hinhdrtggtqeenucfkphepuddvgedrudeiledrvdefrddukeegnecurfgrrhgrmhepmhgr
+    ihhlfhhrohhmpehmvgesthhosghinhdrtggtnecuvehluhhsthgvrhfuihiivgeptd
+X-ME-Proxy: <xmx:vA-HXIZWmcW2v-OhaM7udWya5_5cfPglg8-0h1uybAdtAJrMbEAcWg>
+    <xmx:vA-HXM1cIQwkwFcPy3YRgjhx_Jj6zXqrV-_d-FJ7iUOkjWS65RGG0w>
+    <xmx:vA-HXOICcOK3g0CwrkIERjWa_-gN0yl_EG1H9YNq8iFjLRZkDgacBQ>
+    <xmx:vg-HXIpGGPrblNnDNsHLPonET9_uGkpM1WpPei2X6G_xbdEV45ckkw>
+Received: from localhost (124-169-23-184.dyn.iinet.net.au [124.169.23.184])
+        by mail.messagingengine.com (Postfix) with ESMTPA id A158B1033A;
+        Mon, 11 Mar 2019 21:47:39 -0400 (EDT)
+Date:   Tue, 12 Mar 2019 12:47:12 +1100
+From:   "Tobin C. Harding" <me@tobin.cc>
+To:     Roman Gushchin <guro@fb.com>
+Cc:     "Tobin C. Harding" <tobin@kernel.org>,
         Andrew Morton <akpm@linux-foundation.org>,
-        Alexei Starovoitov <ast@kernel.org>,
-        atish patra <atishp04@gmail.com>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Dietmar Eggemann <dietmar.eggemann@arm.com>,
-        Guenter Roeck <groeck@chromium.org>,
-        Jonathan Corbet <corbet@lwn.net>,
-        Kees Cook <keescook@chromium.org>,
-        Android Kernel Team <kernel-team@android.com>,
-        "open list:DOCUMENTATION" <linux-doc@vger.kernel.org>,
-        "open list:KERNEL SELFTEST FRAMEWORK" 
-        <linux-kselftest@vger.kernel.org>,
-        linux-trace-devel@vger.kernel.org,
-        Manoj Rao <linux@manojrajarao.com>,
-        Masahiro Yamada <yamada.masahiro@socionext.com>,
-        Masami Hiramatsu <mhiramat@kernel.org>,
-        Qais Yousef <qais.yousef@arm.com>,
-        Randy Dunlap <rdunlap@infradead.org>,
-        Shuah Khan <shuah@kernel.org>, Yonghong Song <yhs@fb.com>
-Subject: Re: [PATCH v4 1/2] Provide in-kernel headers for making it easy to
- extend the kernel
-Message-ID: <20190312014522.jfxg3pdav2piuaqs@ast-mbp>
-References: <20190309071648.GE3882@kroah.com>
- <CAMuHMdUT+UGt9p2QhOXzAtCUmqy-a8YN-ceDa-0qANJE53pWBA@mail.gmail.com>
- <20190309121141.GA30173@kroah.com>
- <b7296377-9e0c-aed7-61f0-93d24d1ceddd@opersys.com>
- <CAMuHMdV8+XTyGf1ZJ+gMf=zQpzqh3-+b7wgi+gAmXQ6HpUAw3A@mail.gmail.com>
- <3e84e1ef-e266-e983-5874-6c26ac7f38b8@opersys.com>
- <20190311193612.4f09bf11@oasis.local.home>
- <CAKOZuetHG0O-CiO6h5tD7aht_MT70ebwWMMSPkRUHdiM3wVq0Q@mail.gmail.com>
- <20190312003912.GA170478@google.com>
- <20190311212823.60684182@oasis.local.home>
+        Christopher Lameter <cl@linux.com>,
+        Pekka Enberg <penberg@cs.helsinki.fi>,
+        Matthew Wilcox <willy@infradead.org>,
+        Tycho Andersen <tycho@tycho.ws>,
+        "linux-mm@kvack.org" <linux-mm@kvack.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: Re: [RFC 04/15] slub: Enable Slab Movable Objects (SMO)
+Message-ID: <20190312014712.GF9362@eros.localdomain>
+References: <20190308041426.16654-1-tobin@kernel.org>
+ <20190308041426.16654-5-tobin@kernel.org>
+ <20190311224842.GC7915@tower.DHCP.thefacebook.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20190311212823.60684182@oasis.local.home>
-User-Agent: NeoMutt/20180223
+In-Reply-To: <20190311224842.GC7915@tower.DHCP.thefacebook.com>
+X-Mailer: Mutt 1.11.3 (2019-02-01)
+User-Agent: Mutt/1.11.3 (2019-02-01)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Mar 11, 2019 at 09:28:23PM -0400, Steven Rostedt wrote:
-> On Mon, 11 Mar 2019 20:39:12 -0400
-> Joel Fernandes <joel@joelfernandes.org> wrote:
-> 
-> > I think even though the kernel-headers can't have information about all data
-> > structures, they do already contain a lot of data structure definitions we
-> > need already. And anything needed can/should arguably be moved to include/ if
-> > they are really needed for kernel extension by something "external" to the
-> > kernel such as kernel modules or eBPF, right?
-> 
-> That's not my worry. I would like to be able to easily walk data
-> structures from within the kernel, without having to do a lot of work
-> in userspace to get that information. The kprobe_events could then be
-> passed type casts or such to access data fields of arguments to
-> functions and such.
-> 
+On Mon, Mar 11, 2019 at 10:48:45PM +0000, Roman Gushchin wrote:
+> On Fri, Mar 08, 2019 at 03:14:15PM +1100, Tobin C. Harding wrote:
+> > We have now in place a mechanism for adding callbacks to a cache in
+> > order to be able to implement object migration.
 > > 
-> > In any case, such a solution such as what Steve suggested, still cannot do
-> > what we can with headers - such as build kernel modules on the fly using the
-> > C-compiler without any auto-generation of C code from any debug artifiacts.
-> > Think systemtap working with the module-backend without any need for
-> > linux-headers package on the file system. So such a solution would still be a
-> > bit orthogonal in scope to what this proposed solution can solve IMO.
+> > Add a function __move() that implements SMO by moving all objects in a
+> > slab page using the isolate/migrate callback methods.
 > > 
+> > Co-developed-by: Christoph Lameter <cl@linux.com>
+> > Signed-off-by: Tobin C. Harding <tobin@kernel.org>
+> > ---
+> >  mm/slub.c | 85 +++++++++++++++++++++++++++++++++++++++++++++++++++++++
+> >  1 file changed, 85 insertions(+)
+> > 
+> > diff --git a/mm/slub.c b/mm/slub.c
+> > index 0133168d1089..6ce866b420f1 100644
+> > --- a/mm/slub.c
+> > +++ b/mm/slub.c
+> > @@ -4325,6 +4325,91 @@ int __kmem_cache_create(struct kmem_cache *s, slab_flags_t flags)
+> >  	return err;
+> >  }
+> >  
+> > +/*
+> > + * Allocate a slab scratch space that is sufficient to keep pointers to
+> > + * individual objects for all objects in cache and also a bitmap for the
+> > + * objects (used to mark which objects are active).
+> > + */
+> > +static inline void *alloc_scratch(struct kmem_cache *s)
+> > +{
+> > +	unsigned int size = oo_objects(s->max);
+> > +
+> > +	return kmalloc(size * sizeof(void *) +
+> > +		       BITS_TO_LONGS(size) * sizeof(unsigned long),
+> > +		       GFP_KERNEL);
 > 
-> With the information I would like to have, it would be trivial to read
-> the data to create the header files needed for modules.
+> I wonder how big this allocation can be?
+> Given that the reason for migration is probably highly fragmented memory,
+> we probably don't want to have a high-order allocation here. So maybe
+> kvmalloc()?
+> 
+> > +}
+> > +
+> > +/*
+> > + * __move() - Move all objects in the given slab.
+> > + * @page: The slab we are working on.
+> > + * @scratch: Pointer to scratch space.
+> > + * @node: The target node to move objects to.
+> > + *
+> > + * If the target node is not the current node then the object is moved
+> > + * to the target node.  If the target node is the current node then this
+> > + * is an effective way of defragmentation since the current slab page
+> > + * with its object is exempt from allocation.
+> > + */
+> > +static void __move(struct page *page, void *scratch, int node)
+> > +{
+> 
+> __move() isn't a very explanatory name. kmem_cache_move() (as in Christopher's
+> version) is much better, IMO. Or maybe move_slab_objects()?
 
-what you're asking for we already have. It's called BTF.
-pahole takes vmlinux dwarf and convert it into ~1Mbyte of BTF that includes
-all kernel types.
-With gzip it can be compressed further if necessary.
-We also have a prototype to generate all_vmlinux_types.h from BTF.
-But it's not a substitute for kernel headers.
-We've had a long discussion during last LPC regarding this:
-http://vger.kernel.org/lpc-bpf2018.html#session-2
-tldr: many tracing use cases will be solved with BTF, but kernel headers
-are here to stay.
+How about move_slab_page()?  We use kmem_cache_move() later in the
+series.  __move() moves all objects in the given page but not all
+objects in this cache (which kmem_cache_move() later does).  Open to
+further suggestions though, naming things is hard :)
 
+Christopher's original patch uses kmem_cache_move() for a function that
+only moves objects from within partial slabs, I changed it because I did
+not think this name suitably describes the behaviour.  So from the
+original I rename:
+
+	__move() -> __defrag()
+	kmem_cache_move() -> __move()
+	
+And reuse kmem_cache_move() for move _all_ objects (includes full list).
+
+With this set applied we have the call chains
+
+kmem_cache_shrink()		# Defined in slab_common.c, exported to kernel.
+ -> __kmem_cache_shrink()	# Defined in slub.c
+   -> __defrag()		# Unconditionally (i.e 100%)
+     -> __move()
+
+kmem_cache_defrag()		# Exported to kernel
+ -> __defrag()
+   -> __move()
+
+move_store()			# sysfs
+ -> kmem_cache_move()
+   -> __move()
+ or
+ -> __move_all_objects_to()
+   -> kmem_cache_move()
+     -> __move()
+
+
+Suggested improvements?
+
+> Also, it's usually better to avoid adding new functions without calling them.
+> Maybe it's possible to merge this patch with (9)?
+
+Understood.  The reason behind this is that I attempted to break this
+set up separating the implementation of SMO with the addition of each
+feature.  This function is only called when features are implemented to
+use SMO, I did not want to elevate any feature above any other by
+including it in this patch.  I'm open to suggestions on how to order
+though, also I'm happy to order it differently if/when we do PATCH
+version.  Is that acceptable for the RFC versions?
+
+
+thanks,
+Tobin.
