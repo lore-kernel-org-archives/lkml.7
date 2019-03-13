@@ -2,137 +2,168 @@ Return-Path: <SRS0=dUEL=RQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_MUTT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C5B3CC43381
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 Mar 2019 09:03:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7F14AC43381
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 Mar 2019 09:05:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 993B72147C
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 Mar 2019 09:03:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 42E672147C
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 Mar 2019 09:05:57 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="kBUv/qIW"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727317AbfCMJD0 convert rfc822-to-8bit (ORCPT
+        id S1727301AbfCMJFz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 13 Mar 2019 05:03:26 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:47432 "EHLO mx1.redhat.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726694AbfCMJDZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 13 Mar 2019 05:03:25 -0400
-Received: from smtp.corp.redhat.com (int-mx08.intmail.prod.int.phx2.redhat.com [10.5.11.23])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id 05E92757DB;
-        Wed, 13 Mar 2019 09:03:25 +0000 (UTC)
-Received: from localhost (unknown [10.40.205.100])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 174F827CB0;
-        Wed, 13 Mar 2019 09:03:17 +0000 (UTC)
-Date:   Wed, 13 Mar 2019 10:03:17 +0100
-From:   Stanislaw Gruszka <sgruszka@redhat.com>
-To:     Alexander Duyck <alexander.h.duyck@linux.intel.com>,
-        Joerg Roedel <joro@8bytes.org>
-Cc:     Rosen Penev <rosenp@gmail.com>,
-        Lorenzo Bianconi <lorenzo.bianconi@redhat.com>,
-        linux-wireless <linux-wireless@vger.kernel.org>,
-        Samuel Sieb <samuel@sieb.net>,
-        iommu@lists.linux-foundation.org, linux-kernel@vger.kernel.org,
-        linux-nvme@lists.infradead.org, jan.viktorin@gmail.com
-Subject: [PATCH v2] iommu/amd: fix sg->dma_address for sg->offset bigger than
- PAGE_SIZE
-Message-ID: <20190313090316.GA2663@redhat.com>
-References: <20190228104223.GA2749@redhat.com>
- <20190228121948.GD6072@redhat.com>
- <20190228134029.GC1594@8bytes.org>
- <20190304071037.GA2787@redhat.com>
- <CAKxU2N-k-9DCYBv6W3CohL963dr3AeY3VHyt8FrUuo=BfacDsw@mail.gmail.com>
- <20190311084319.GA3310@redhat.com>
- <20190311090314.GB3310@redhat.com>
- <e0630ae9d9bee73d8a1ce3499ea9f77900e9cdfa.camel@linux.intel.com>
- <20190312070832.GA2483@redhat.com>
- <67c062b183fbd5651a9aa990e677d31673ff7580.camel@linux.intel.com>
+        Wed, 13 Mar 2019 05:05:55 -0400
+Received: from mail-eopbgr30043.outbound.protection.outlook.com ([40.107.3.43]:18823
+        "EHLO EUR03-AM5-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726694AbfCMJFz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 13 Mar 2019 05:05:55 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=sznuWZQrZNfM2TP+wFo6OzXs0NioKBnsWljJojEnuqo=;
+ b=kBUv/qIWh2n8T8Ar4MHAoL5hHaIkG33SX2UBl9ppDdfL1S6ya3WQ1CvOmqWHvZ+3CtebvcZ412MOnJvYsur1sGyRtxa2sDqE4l40o7GKWXOucBhz78+DM+JwDaiCTY2bv2nV+8dqRnyKzgbf/Q7+fxgkI9uL3IpOPuSJG6WjQcw=
+Received: from AM0PR04MB4481.eurprd04.prod.outlook.com (52.135.147.15) by
+ AM0PR04MB5332.eurprd04.prod.outlook.com (52.134.95.161) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.1709.13; Wed, 13 Mar 2019 09:05:52 +0000
+Received: from AM0PR04MB4481.eurprd04.prod.outlook.com
+ ([fe80::a51f:134d:b530:f185]) by AM0PR04MB4481.eurprd04.prod.outlook.com
+ ([fe80::a51f:134d:b530:f185%5]) with mapi id 15.20.1686.021; Wed, 13 Mar 2019
+ 09:05:52 +0000
+From:   Peng Fan <peng.fan@nxp.com>
+To:     "shawnguo@kernel.org" <shawnguo@kernel.org>,
+        "s.hauer@pengutronix.de" <s.hauer@pengutronix.de>,
+        "kernel@pengutronix.de" <kernel@pengutronix.de>,
+        "festevam@gmail.com" <festevam@gmail.com>,
+        dl-linux-imx <linux-imx@nxp.com>,
+        Anson Huang <anson.huang@nxp.com>,
+        "arnd@arndb.de" <arnd@arndb.de>,
+        Aisheng Dong <aisheng.dong@nxp.com>,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+CC:     "van.freenix@gmail.com" <van.freenix@gmail.com>,
+        Peng Fan <peng.fan@nxp.com>
+Subject: [PATCH 1/2] ARM: imx: drop uneccessary of_platform_default_populate
+Thread-Topic: [PATCH 1/2] ARM: imx: drop uneccessary
+ of_platform_default_populate
+Thread-Index: AQHU2Xv1SFnRc4p0SkOOn59vTkEkOw==
+Date:   Wed, 13 Mar 2019 09:05:52 +0000
+Message-ID: <20190313091757.16410-1-peng.fan@nxp.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-mailer: git-send-email 2.16.4
+x-clientproxiedby: HK2PR0302CA0011.apcprd03.prod.outlook.com
+ (2603:1096:202::21) To AM0PR04MB4481.eurprd04.prod.outlook.com
+ (2603:10a6:208:70::15)
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=peng.fan@nxp.com; 
+x-ms-exchange-messagesentrepresentingtype: 1
+x-originating-ip: [119.31.174.71]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: 1bbaa476-1def-4b08-2ec7-08d6a7931782
+x-ms-office365-filtering-ht: Tenant
+x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600127)(711020)(4605104)(4618075)(2017052603328)(7153060)(7193020);SRVR:AM0PR04MB5332;
+x-ms-traffictypediagnostic: AM0PR04MB5332:
+x-microsoft-antispam-prvs: <AM0PR04MB5332A5DDCA2F58120CC14065884A0@AM0PR04MB5332.eurprd04.prod.outlook.com>
+x-forefront-prvs: 09752BC779
+x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(376002)(346002)(366004)(396003)(39860400002)(136003)(199004)(189003)(386003)(8676002)(186003)(71200400001)(71190400001)(52116002)(26005)(53936002)(6512007)(66066001)(68736007)(6506007)(102836004)(8936002)(36756003)(7736002)(1076003)(14454004)(305945005)(50226002)(81156014)(81166006)(4326008)(6436002)(25786009)(478600001)(105586002)(110136005)(54906003)(2906002)(44832011)(5660300002)(6116002)(3846002)(6486002)(2201001)(86362001)(2616005)(476003)(256004)(2501003)(486006)(99286004)(97736004)(316002)(106356001)(921003)(1121003);DIR:OUT;SFP:1101;SCL:1;SRVR:AM0PR04MB5332;H:AM0PR04MB4481.eurprd04.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
+received-spf: None (protection.outlook.com: nxp.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam-message-info: KL/z/ofBx1U+AGrQgF1bnwMPMGMZFeZWQls5emm9BTA3tN8xKIE2mPEu3MrklIzYYcqpfVpAF7w/IgJ56ChJ0DVwgctl1LFE8+0fVHG2UoWQCtKM2w0lz67+LfA/69pHsnXk+MqjB2jzJPHhdMKiPYzUdU9V8ZOlCzhTtM7fkxhv7Scp2VJzGrGnY9Jpt+EdLOOUpOPblmVe9zcDVOJp0qgvsILVKdLTqZKtg72zn1x1PioZn66M/k04ZgxMuWzaLV5xypd2Y12KgJKvzLXxvWU7ofnPK5FKEsJGh3ne1k5CZXqQIHD4gPNlvkWWuFb6d4P+P82VBkmo+jKPKjXIeFBteMr1gxh5m8AdN/iabIrAUVuNt8SyLzDOujZU8ctoTrRhL2G4tK8YKHjtse0Gt9yr3ho4vxJ3G7xD9GDhaoU=
+Content-Type: text/plain; charset="iso-8859-1"
+Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: 8BIT
-In-Reply-To: <67c062b183fbd5651a9aa990e677d31673ff7580.camel@linux.intel.com>
-User-Agent: Mutt/1.8.3 (2017-05-23)
-X-Scanned-By: MIMEDefang 2.84 on 10.5.11.23
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.26]); Wed, 13 Mar 2019 09:03:25 +0000 (UTC)
+X-OriginatorOrg: nxp.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 1bbaa476-1def-4b08-2ec7-08d6a7931782
+X-MS-Exchange-CrossTenant-originalarrivaltime: 13 Mar 2019 09:05:52.0465
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: AM0PR04MB5332
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+"arch_initcall_sync(of_platform_default_populate_init);" could be
+used to populate the device tree, there is no need to call
+of_platform_default_populate in machine code.
 
-Take into account that sg->offset can be bigger than PAGE_SIZE when
-setting segment sg->dma_address. Otherwise sg->dma_address will point
-at diffrent page, what makes DMA not possible with erros like this:
+Tested on i.MX6Q-SDB i.MX6SL-EVK i.MX6UL-EVK board.
 
-xhci_hcd 0000:38:00.3: AMD-Vi: Event logged [IO_PAGE_FAULT domain=0x0000 address=0x00000000fdaa70c0 flags=0x0020]
-xhci_hcd 0000:38:00.3: AMD-Vi: Event logged [IO_PAGE_FAULT domain=0x0000 address=0x00000000fdaa7040 flags=0x0020]
-xhci_hcd 0000:38:00.3: AMD-Vi: Event logged [IO_PAGE_FAULT domain=0x0000 address=0x00000000fdaa7080 flags=0x0020]
-xhci_hcd 0000:38:00.3: AMD-Vi: Event logged [IO_PAGE_FAULT domain=0x0000 address=0x00000000fdaa7100 flags=0x0020]
-xhci_hcd 0000:38:00.3: AMD-Vi: Event logged [IO_PAGE_FAULT domain=0x0000 address=0x00000000fdaa7000 flags=0x0020]
-
-Additinally with wrong sg->dma_address unmap_sg will free wrong pages,
-what what can cause crashes like this:
-
-Feb 28 19:27:45 kernel: BUG: Bad page state in process cinnamon  pfn:39e8b1
-Feb 28 19:27:45 kernel: Disabling lock debugging due to kernel taint
-Feb 28 19:27:45 kernel: flags: 0x2ffff0000000000()
-Feb 28 19:27:45 kernel: raw: 02ffff0000000000 0000000000000000 ffffffff00000301 0000000000000000
-Feb 28 19:27:45 kernel: raw: 0000000000000000 0000000000000000 00000001ffffffff 0000000000000000
-Feb 28 19:27:45 kernel: page dumped because: nonzero _refcount
-Feb 28 19:27:45 kernel: Modules linked in: ccm fuse arc4 nct6775 hwmon_vid amdgpu nls_iso8859_1 nls_cp437 edac_mce_amd vfat fat kvm_amd ccp rng_core kvm mt76x0u mt76x0_common mt76x02_usb irqbypass mt76_usb mt76x02_lib mt76 crct10dif_pclmul crc32_pclmul chash mac80211 amd_iommu_v2 ghash_clmulni_intel gpu_sched i2c_algo_bit ttm wmi_bmof snd_hda_codec_realtek snd_hda_codec_generic drm_kms_helper snd_hda_codec_hdmi snd_hda_intel drm snd_hda_codec aesni_intel snd_hda_core snd_hwdep aes_x86_64 crypto_simd snd_pcm cfg80211 cryptd mousedev snd_timer glue_helper pcspkr r8169 input_leds realtek agpgart libphy rfkill snd syscopyarea sysfillrect sysimgblt fb_sys_fops soundcore sp5100_tco k10temp i2c_piix4 wmi evdev gpio_amdpt pinctrl_amd mac_hid pcc_cpufreq acpi_cpufreq sg ip_tables x_tables ext4(E) crc32c_generic(E) crc16(E) mbcache(E) jbd2(E) fscrypto(E) sd_mod(E) hid_generic(E) usbhid(E) hid(E) dm_mod(E) serio_raw(E) atkbd(E) libps2(E) crc32c_intel(E) ahci(E) libahci(E) libata(E) xhci_pci(E) 
- xhci_hcd(E)
-Feb 28 19:27:45 kernel:  scsi_mod(E) i8042(E) serio(E) bcache(E) crc64(E)
-Feb 28 19:27:45 kernel: CPU: 2 PID: 896 Comm: cinnamon Tainted: G    B   W   E     4.20.12-arch1-1-custom #1
-Feb 28 19:27:45 kernel: Hardware name: To Be Filled By O.E.M. To Be Filled By O.E.M./B450M Pro4, BIOS P1.20 06/26/2018
-Feb 28 19:27:45 kernel: Call Trace:
-Feb 28 19:27:45 kernel:  dump_stack+0x5c/0x80
-Feb 28 19:27:45 kernel:  bad_page.cold.29+0x7f/0xb2
-Feb 28 19:27:45 kernel:  __free_pages_ok+0x2c0/0x2d0
-Feb 28 19:27:45 kernel:  skb_release_data+0x96/0x180
-Feb 28 19:27:45 kernel:  __kfree_skb+0xe/0x20
-Feb 28 19:27:45 kernel:  tcp_recvmsg+0x894/0xc60
-Feb 28 19:27:45 kernel:  ? reuse_swap_page+0x120/0x340
-Feb 28 19:27:45 kernel:  ? ptep_set_access_flags+0x23/0x30
-Feb 28 19:27:45 kernel:  inet_recvmsg+0x5b/0x100
-Feb 28 19:27:45 kernel:  __sys_recvfrom+0xc3/0x180
-Feb 28 19:27:45 kernel:  ? handle_mm_fault+0x10a/0x250
-Feb 28 19:27:45 kernel:  ? syscall_trace_enter+0x1d3/0x2d0
-Feb 28 19:27:45 kernel:  ? __audit_syscall_exit+0x22a/0x290
-Feb 28 19:27:45 kernel:  __x64_sys_recvfrom+0x24/0x30
-Feb 28 19:27:45 kernel:  do_syscall_64+0x5b/0x170
-Feb 28 19:27:45 kernel:  entry_SYSCALL_64_after_hwframe+0x44/0xa9
-
-Cc: stable@vger.kernel.org
-Reported-and-tested-by: Jan Viktorin <jan.viktorin@gmail.com>
-Reviewed-by: Alexander Duyck <alexander.h.duyck@linux.intel.com>
-Signed-off-by: Stanislaw Gruszka <sgruszka@redhat.com>
+Signed-off-by: Peng Fan <peng.fan@nxp.com>
 ---
-v2: add comment 
+ arch/arm/mach-imx/mach-imx6q.c  | 2 --
+ arch/arm/mach-imx/mach-imx6sl.c | 2 --
+ arch/arm/mach-imx/mach-imx6sx.c | 2 --
+ arch/arm/mach-imx/mach-imx6ul.c | 1 -
+ 4 files changed, 7 deletions(-)
 
- drivers/iommu/amd_iommu.c | 6 +++++-
- 1 file changed, 5 insertions(+), 1 deletion(-)
-
-diff --git a/drivers/iommu/amd_iommu.c b/drivers/iommu/amd_iommu.c
-index 6b0760dafb3e..696c78225dd1 100644
---- a/drivers/iommu/amd_iommu.c
-+++ b/drivers/iommu/amd_iommu.c
-@@ -2604,7 +2604,11 @@ static int map_sg(struct device *dev, struct scatterlist *sglist,
- 
- 	/* Everything is mapped - write the right values into s->dma_address */
- 	for_each_sg(sglist, s, nelems, i) {
--		s->dma_address += address + s->offset;
-+		/* Add in the remaining piece of the scatter-gather offset that
-+		 * was masked out when we were determining the physical address
-+		 * via (sg_phys(s) & PAGE_MASK) earlier.
-+		 */
-+		s->dma_address += address + (s->offset & ~PAGE_MASK);
- 		s->dma_length   = s->length;
- 	}
- 
--- 
-2.7.5
+diff --git a/arch/arm/mach-imx/mach-imx6q.c b/arch/arm/mach-imx/mach-imx6q.=
+c
+index 7d80a0ae723c..655398c20256 100644
+--- a/arch/arm/mach-imx/mach-imx6q.c
++++ b/arch/arm/mach-imx/mach-imx6q.c
+@@ -278,8 +278,6 @@ static void __init imx6q_init_machine(void)
+=20
+ 	imx6q_enet_phy_init();
+=20
+-	of_platform_default_populate(NULL, NULL, parent);
+-
+ 	imx_anatop_init();
+ 	cpu_is_imx6q() ?  imx6q_pm_init() : imx6dl_pm_init();
+ 	imx6q_1588_init();
+diff --git a/arch/arm/mach-imx/mach-imx6sl.c b/arch/arm/mach-imx/mach-imx6s=
+l.c
+index 99be4225297a..9743bdbb68fa 100644
+--- a/arch/arm/mach-imx/mach-imx6sl.c
++++ b/arch/arm/mach-imx/mach-imx6sl.c
+@@ -56,8 +56,6 @@ static void __init imx6sl_init_machine(void)
+ 	if (parent =3D=3D NULL)
+ 		pr_warn("failed to initialize soc device\n");
+=20
+-	of_platform_default_populate(NULL, NULL, parent);
+-
+ 	if (cpu_is_imx6sl())
+ 		imx6sl_fec_init();
+ 	imx_anatop_init();
+diff --git a/arch/arm/mach-imx/mach-imx6sx.c b/arch/arm/mach-imx/mach-imx6s=
+x.c
+index 7f52d9b1e8a4..19b9f2dd309e 100644
+--- a/arch/arm/mach-imx/mach-imx6sx.c
++++ b/arch/arm/mach-imx/mach-imx6sx.c
+@@ -72,8 +72,6 @@ static void __init imx6sx_init_machine(void)
+ 	if (parent =3D=3D NULL)
+ 		pr_warn("failed to initialize soc device\n");
+=20
+-	of_platform_default_populate(NULL, NULL, parent);
+-
+ 	imx6sx_enet_init();
+ 	imx_anatop_init();
+ 	imx6sx_pm_init();
+diff --git a/arch/arm/mach-imx/mach-imx6ul.c b/arch/arm/mach-imx/mach-imx6u=
+l.c
+index 6cb8a22b617d..c57b9df791b1 100644
+--- a/arch/arm/mach-imx/mach-imx6ul.c
++++ b/arch/arm/mach-imx/mach-imx6ul.c
+@@ -65,7 +65,6 @@ static void __init imx6ul_init_machine(void)
+ 	if (parent =3D=3D NULL)
+ 		pr_warn("failed to initialize soc device\n");
+=20
+-	of_platform_default_populate(NULL, NULL, parent);
+ 	imx6ul_enet_init();
+ 	imx_anatop_init();
+ 	imx6ul_pm_init();
+--=20
+2.16.4
 
