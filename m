@@ -2,182 +2,143 @@ Return-Path: <SRS0=dUEL=RQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8F582C10F03
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 Mar 2019 10:38:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D8E7FC43381
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 Mar 2019 10:39:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 578132177E
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 Mar 2019 10:38:06 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=synopsys.com header.i=@synopsys.com header.b="YWT4M/EO"
+	by mail.kernel.org (Postfix) with ESMTP id AE7362171F
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 Mar 2019 10:39:30 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726193AbfCMKiF (ORCPT
+        id S1726336AbfCMKj2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 13 Mar 2019 06:38:05 -0400
-Received: from smtprelay4.synopsys.com ([198.182.47.9]:59038 "EHLO
-        smtprelay.synopsys.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725868AbfCMKiE (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 13 Mar 2019 06:38:04 -0400
-Received: from mailhost.synopsys.com (dc2-mailhost2.synopsys.com [10.12.135.162])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by smtprelay.synopsys.com (Postfix) with ESMTPS id 2271D24E0969;
-        Wed, 13 Mar 2019 03:38:04 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=synopsys.com; s=mail;
-        t=1552473484; bh=fRn9dW93qpk3SMK4vDY3nYibYTYJ+W1xRSlyuh38EnI=;
-        h=Subject:To:CC:References:From:Date:In-Reply-To:From;
-        b=YWT4M/EO3kG6bfAhgfbQ4ETsL4XqQEDrU4UCxjJhkoQVe/OSjudAmt5XRojW/Sepk
-         jGu8E03KQefZkorGB6Dk14skPNCcav2jLHIHjb0OnLX4cANmElahfo0a7aWiBHDMl8
-         ie8OvFxuQDbr6Gu15rF/BT8Znr0miUqVsd5jkuR5PNJO1hkyQCCTXwK2VlIcPfKimY
-         e7zdz76MeSBwMF6RWJqm8D14OW5AY9MZ/9jk76M0D+lYRU9pYR2zyV9MW1A2tt9yl0
-         UVJ2Pv8TTVUjw23klDflheIIAoR+PmGxjLGWz7JdIB71Fno3lxiNYaygwosOg0NKhD
-         qVRj4HBRJwcyQ==
-Received: from US01WEHTC2.internal.synopsys.com (us01wehtc2.internal.synopsys.com [10.12.239.237])
-        (using TLSv1.2 with cipher AES128-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mailhost.synopsys.com (Postfix) with ESMTPS id D2FA9A0097;
-        Wed, 13 Mar 2019 10:38:03 +0000 (UTC)
-Received: from DE02WEHTCB.internal.synopsys.com (10.225.19.94) by
- US01WEHTC2.internal.synopsys.com (10.12.239.237) with Microsoft SMTP Server
- (TLS) id 14.3.408.0; Wed, 13 Mar 2019 03:38:03 -0700
-Received: from DE02WEHTCA.internal.synopsys.com (10.225.19.92) by
- DE02WEHTCB.internal.synopsys.com (10.225.19.94) with Microsoft SMTP Server
- (TLS) id 14.3.408.0; Wed, 13 Mar 2019 11:38:01 +0100
-Received: from [10.107.19.55] (10.107.19.55) by
- DE02WEHTCA.internal.synopsys.com (10.225.19.80) with Microsoft SMTP Server
- (TLS) id 14.3.408.0; Wed, 13 Mar 2019 11:38:01 +0100
-Subject: Re: [PATCH v2 4/5] PCI: dwc: Use devm_pci_alloc_host_bridge() to
- simplify the code
-To:     Jisheng Zhang <Jisheng.Zhang@synaptics.com>,
-        Jingoo Han <jingoohan1@gmail.com>,
-        Gustavo Pimentel <gustavo.pimentel@synopsys.com>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Bjorn Helgaas <bhelgaas@google.com>
-CC:     "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>
-References: <20190301125510.4e2ee985@xhacker.debian>
- <20190301125901.5ee7730c@xhacker.debian>
-From:   Gustavo Pimentel <gustavo.pimentel@synopsys.com>
-Message-ID: <3b1a5c1e-e458-20cf-51ce-1a7846ebf8c0@synopsys.com>
-Date:   Wed, 13 Mar 2019 10:37:59 +0000
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
- Thunderbird/60.5.0
-MIME-Version: 1.0
-In-Reply-To: <20190301125901.5ee7730c@xhacker.debian>
-Content-Type: text/plain; charset="utf-8"
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.107.19.55]
+        Wed, 13 Mar 2019 06:39:28 -0400
+Received: from mx2.suse.de ([195.135.220.15]:58538 "EHLO mx1.suse.de"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1725856AbfCMKj2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 13 Mar 2019 06:39:28 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx1.suse.de (Postfix) with ESMTP id 6F22BAD55;
+        Wed, 13 Mar 2019 10:39:26 +0000 (UTC)
+Date:   Wed, 13 Mar 2019 11:39:26 +0100
+Message-ID: <s5ho96fukgx.wl-tiwai@suse.de>
+From:   Takashi Iwai <tiwai@suse.de>
+To:     Takashi Iwai <tiwai@suse.de>
+Cc:     "Bernhard Rosenkraenzer" <bero@lindev.ch>,
+        <linux-kernel@vger.kernel.org>, <alsa-devel@alsa-project.org>,
+        <perex@perex.cz>
+Subject: Re: [PATCH] Fix speakers on Acer Predator Helios 500 Ryzen laptops
+In-Reply-To: <s5hpnqvukvb.wl-tiwai@suse.de>
+References: <20190304233818.GA25749@lindev.ch>
+        <s5hpnqvukvb.wl-tiwai@suse.de>
+User-Agent: Wanderlust/2.15.9 (Almost Unreal) SEMI/1.14.6 (Maruoka)
+ FLIM/1.14.9 (=?UTF-8?B?R29qxY0=?=) APEL/10.8 Emacs/25.3
+ (x86_64-suse-linux-gnu) MULE/6.0 (HANACHIRUSATO)
+MIME-Version: 1.0 (generated by SEMI 1.14.6 - "Maruoka")
+Content-Type: text/plain; charset=US-ASCII
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi,
-
-On 01/03/2019 05:06, Jisheng Zhang wrote:
-> Use devm_pci_alloc_host_bridge() to simplify the error code path.
+On Wed, 13 Mar 2019 11:30:48 +0100,
+Takashi Iwai wrote:
 > 
-> Signed-off-by: Jisheng Zhang <Jisheng.Zhang@synaptics.com>
-> ---
->  .../pci/controller/dwc/pcie-designware-host.c | 21 +++++++------------
->  1 file changed, 8 insertions(+), 13 deletions(-)
+> On Tue, 05 Mar 2019 00:38:19 +0100,
+> Bernhard Rosenkraenzer wrote:
+> > 
+> > On an Acer Predator Helios 500 (Ryzen version), the laptop's speakers
+> > don't work out of the box.
+> > 
+> > The problem can be worked around with hdajackretask, remapping the
+> > "Black Headphone, Right side" pin (0x21) to the Internal speaker.
+> > 
+> > This patch adds a quirk to change this mapping by default.
+> > 
+> > Signed-off-by: Bernhard Rosenkraenzer <bero@lindev.ch>
 > 
-> diff --git a/drivers/pci/controller/dwc/pcie-designware-host.c b/drivers/pci/controller/dwc/pcie-designware-host.c
-> index 66569d0f3ab9..4831c12fee93 100644
-> --- a/drivers/pci/controller/dwc/pcie-designware-host.c
-> +++ b/drivers/pci/controller/dwc/pcie-designware-host.c
-> @@ -357,7 +357,7 @@ int dw_pcie_host_init(struct pcie_port *pp)
->  		dev_err(dev, "Missing *config* reg space\n");
->  	}
->  
-> -	bridge = pci_alloc_host_bridge(0);
-> +	bridge = devm_pci_alloc_host_bridge(dev, 0);
->  	if (!bridge)
->  		return -ENOMEM;
->  
-> @@ -368,7 +368,7 @@ int dw_pcie_host_init(struct pcie_port *pp)
->  
->  	ret = devm_request_pci_bus_resources(dev, &bridge->windows);
->  	if (ret)
-> -		goto error;
-> +		return ret;
->  
->  	/* Get the I/O and memory ranges from DT */
->  	resource_list_for_each_entry_safe(win, tmp, &bridge->windows) {
-> @@ -412,8 +412,7 @@ int dw_pcie_host_init(struct pcie_port *pp)
->  						resource_size(pp->cfg));
->  		if (!pci->dbi_base) {
->  			dev_err(dev, "Error with ioremap\n");
-> -			ret = -ENOMEM;
-> -			goto error;
-> +			return -ENOMEM;
->  		}
->  	}
->  
-> @@ -424,8 +423,7 @@ int dw_pcie_host_init(struct pcie_port *pp)
->  					pp->cfg0_base, pp->cfg0_size);
->  		if (!pp->va_cfg0_base) {
->  			dev_err(dev, "Error with ioremap in function\n");
-> -			ret = -ENOMEM;
-> -			goto error;
-> +			return -ENOMEM;
->  		}
->  	}
->  
-> @@ -435,8 +433,7 @@ int dw_pcie_host_init(struct pcie_port *pp)
->  						pp->cfg1_size);
->  		if (!pp->va_cfg1_base) {
->  			dev_err(dev, "Error with ioremap\n");
-> -			ret = -ENOMEM;
-> -			goto error;
-> +			return -ENOMEM;
->  		}
->  	}
->  
-> @@ -459,14 +456,14 @@ int dw_pcie_host_init(struct pcie_port *pp)
->  			    pp->num_vectors == 0) {
->  				dev_err(dev,
->  					"Invalid number of vectors\n");
-> -				goto error;
-> +				return -EINVAL;
->  			}
->  		}
->  
->  		if (!pp->ops->msi_host_init) {
->  			ret = dw_pcie_allocate_domains(pp);
->  			if (ret)
-> -				goto error;
-> +				return ret;
->  
->  			if (pp->msi_irq)
->  				irq_set_chained_handler_and_data(pp->msi_irq,
-> @@ -475,7 +472,7 @@ int dw_pcie_host_init(struct pcie_port *pp)
->  		} else {
->  			ret = pp->ops->msi_host_init(pp);
->  			if (ret < 0)
-> -				goto error;
-> +				return ret;
->  		}
->  	}
->  
-> @@ -515,8 +512,6 @@ int dw_pcie_host_init(struct pcie_port *pp)
->  err_free_msi:
->  	if (IS_ENABLED(CONFIG_PCI_MSI) && !pp->ops->msi_host_init)
->  		dw_pcie_free_msi(pp);
-> -error:
-> -	pci_free_host_bridge(bridge);
->  	return ret;
->  }
->  
-> 
+> Applied, thanks.
 
-Nice!
+... and looking at the patch again, I found that you added
+ALC299_FIXUP_PREDATOR_SPK definition in the wrong place.  It should be
+a quirk for alc269-variant while the patch added to alc882-variant.
 
-Acked-by: Gustavo Pimentel <gustavo.pimentel@synopsys.com>
+Also, the addition to alc269_pin_fixup_tbl looks superfluous.  It's a
+table to look up the pattern matching of pin configs BIOS sets up, not
+the result of the pins after applying the quirk.
+
+The corrected patch is below.  Could you check whether it still works
+as expected?
+
+
+thanks,
+
+Takashi
+
+-- 8< --
+From: Bernhard Rosenkraenzer <bero@lindev.ch>
+Subject: [PATCH] ALSA: hda/realtek - Fix speakers on Acer Predator Helios 500 Ryzen laptops
+
+On an Acer Predator Helios 500 (Ryzen version), the laptop's speakers
+don't work out of the box.
+
+The problem can be worked around with hdajackretask, remapping the
+"Black Headphone, Right side" pin (0x21) to the Internal speaker.
+
+This patch adds a quirk to change this mapping by default.
+
+Signed-off-by: Bernhard Rosenkraenzer <bero@lindev.ch>
+Cc: <stable@vger.kernel.org>
+Signed-off-by: Takashi Iwai <tiwai@suse.de>
+---
+ sound/pci/hda/patch_realtek.c | 10 ++++++++++
+ 1 file changed, 10 insertions(+)
+
+diff --git a/sound/pci/hda/patch_realtek.c b/sound/pci/hda/patch_realtek.c
+index c8413d44973c..d47e2fd0a523 100644
+--- a/sound/pci/hda/patch_realtek.c
++++ b/sound/pci/hda/patch_realtek.c
+@@ -5673,6 +5673,7 @@ enum {
+ 	ALC225_FIXUP_HEADSET_JACK,
+ 	ALC293_FIXUP_SYSTEM76_MIC_NO_PRESENCE,
+ 	ALC285_FIXUP_LENOVO_PC_BEEP_IN_NOISE,
++	ALC299_FIXUP_PREDATOR_SPK,
+ };
+ 
+ static const struct hda_fixup alc269_fixups[] = {
+@@ -6639,6 +6640,13 @@ static const struct hda_fixup alc269_fixups[] = {
+ 		.chained = true,
+ 		.chain_id = ALC285_FIXUP_LENOVO_HEADPHONE_NOISE
+ 	},
++	[ALC299_FIXUP_PREDATOR_SPK] = {
++		.type = HDA_FIXUP_PINS,
++		.v.pins = (const struct hda_pintbl[]) {
++			{ 0x21, 0x90170150 }, /* use as headset mic, without its own jack detect */
++			{ }
++		}
++	},
+ };
+ 
+ static const struct snd_pci_quirk alc269_fixup_tbl[] = {
+@@ -6655,6 +6663,7 @@ static const struct snd_pci_quirk alc269_fixup_tbl[] = {
+ 	SND_PCI_QUIRK(0x1025, 0x079b, "Acer Aspire V5-573G", ALC282_FIXUP_ASPIRE_V5_PINS),
+ 	SND_PCI_QUIRK(0x1025, 0x102b, "Acer Aspire C24-860", ALC286_FIXUP_ACER_AIO_MIC_NO_PRESENCE),
+ 	SND_PCI_QUIRK(0x1025, 0x106d, "Acer Cloudbook 14", ALC283_FIXUP_CHROME_BOOK),
++	SND_PCI_QUIRK(0x1025, 0x1246, "Acer Predator Helios 500", ALC299_FIXUP_PREDATOR_SPK),
+ 	SND_PCI_QUIRK(0x1025, 0x128f, "Acer Veriton Z6860G", ALC286_FIXUP_ACER_AIO_MIC_NO_PRESENCE),
+ 	SND_PCI_QUIRK(0x1025, 0x1290, "Acer Veriton Z4860G", ALC286_FIXUP_ACER_AIO_MIC_NO_PRESENCE),
+ 	SND_PCI_QUIRK(0x1025, 0x1291, "Acer Veriton Z4660G", ALC286_FIXUP_ACER_AIO_MIC_NO_PRESENCE),
+@@ -7049,6 +7058,7 @@ static const struct hda_model_fixup alc269_fixup_models[] = {
+ 	{.id = ALC255_FIXUP_DELL_HEADSET_MIC, .name = "alc255-dell-headset"},
+ 	{.id = ALC295_FIXUP_HP_X360, .name = "alc295-hp-x360"},
+ 	{.id = ALC225_FIXUP_HEADSET_JACK, .name = "alc-sense-combo"},
++	{.id = ALC299_FIXUP_PREDATOR_SPK, .name = "predator-spk"},
+ 	{}
+ };
+ #define ALC225_STANDARD_PINS \
+-- 
+2.16.4
+
