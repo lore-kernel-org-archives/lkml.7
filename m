@@ -2,101 +2,166 @@ Return-Path: <SRS0=dUEL=RQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_PASS autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 10EB6C43381
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 Mar 2019 14:09:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9E08BC43381
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 Mar 2019 14:09:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DBA8B2171F
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 Mar 2019 14:09:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6CF312171F
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 Mar 2019 14:09:39 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1552486179;
+	bh=3+2I98o1I9ZiI96NR/5ZyEUSMXPnk3CzMGlkkeqLB30=;
+	h=Subject:From:To:Cc:Date:In-Reply-To:References:List-ID:From;
+	b=Jfdz4gbqHZYSqz2XXE504fXIAqbRjB3EWV+8QARCkgLnYYg7r8Q8SgCQIMaK0H5zJ
+	 hoOzns9BC4KZCgR/Nu0z88odasyTB/VE0/IVoW1C34Zw7MQb25FMag7/xfpUEwxpxH
+	 Fy5H12CIW1u9a7+RnVa60vczWQJEaWBA8jpe7r8w=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726915AbfCMOJd (ORCPT
+        id S1726973AbfCMOJi (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 13 Mar 2019 10:09:33 -0400
-Received: from mout.kundenserver.de ([212.227.126.134]:35389 "EHLO
-        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726530AbfCMOJd (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 13 Mar 2019 10:09:33 -0400
-Received: from [192.168.1.110] ([77.4.24.189]) by mrelayeu.kundenserver.de
- (mreue009 [212.227.15.167]) with ESMTPSA (Nemesis) id
- 1Mnq0I-1ggbSW01uc-00pNuW; Wed, 13 Mar 2019 15:09:26 +0100
-Subject: Re: [PATCH 1/8] drivers: tty: serial: 8250_bcm2835aux: use
- devm_platform_ioremap_resource()
-To:     Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>
-Cc:     Greg KH <gregkh@linuxfoundation.org>,
-        "Enrico Weigelt, metux IT consult" <info@metux.net>,
-        Jiri Slaby <jslaby@suse.com>, linux-serial@vger.kernel.org,
-        linux-kernel <linux-kernel@vger.kernel.org>
-References: <1552402660-31730-1-git-send-email-info@metux.net>
- <1552402660-31730-2-git-send-email-info@metux.net>
- <20190312163356.GB13549@kroah.com>
- <947da751-bbce-4364-a1bf-5487908e59a5@metux.net>
- <CANiq72=SBFzRVhpkH8V+=5E-adzJ4v6UGAPKfr18wnCB0rcoQA@mail.gmail.com>
-From:   "Enrico Weigelt, metux IT consult" <lkml@metux.net>
-Organization: metux IT consult
-Message-ID: <939d94a2-f44d-27a6-e894-1f846c6b3b5c@metux.net>
-Date:   Wed, 13 Mar 2019 15:09:23 +0100
-User-Agent: Mozilla/5.0 (X11; Linux i686 on x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.2.1
-MIME-Version: 1.0
-In-Reply-To: <CANiq72=SBFzRVhpkH8V+=5E-adzJ4v6UGAPKfr18wnCB0rcoQA@mail.gmail.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
+        Wed, 13 Mar 2019 10:09:38 -0400
+Received: from mail.kernel.org ([198.145.29.99]:39780 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726530AbfCMOJg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 13 Mar 2019 10:09:36 -0400
+Received: from tzanussi-mobl (c-98-220-238-81.hsd1.il.comcast.net [98.220.238.81])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 0F3402147C;
+        Wed, 13 Mar 2019 14:09:34 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1552486175;
+        bh=3+2I98o1I9ZiI96NR/5ZyEUSMXPnk3CzMGlkkeqLB30=;
+        h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
+        b=qJW10C3wPFIZceA3hWQLpZ01njnBt5nl8W+MQ1DtRaCj8qGHL2tAgOW2opuKCdGfZ
+         I4xlIJs0xsI7gzc4L8RS7yoBZ7M80DJhNmxp0Q+kAiDT+8xVLfzm3vpMCvBTFwV4s4
+         JQQtm8lKPKR/UO1o0w9kBtzT9sk21JEBZjAMS8XI=
+Message-ID: <1552486173.4293.27.camel@kernel.org>
+Subject: Re: [RFC PATCH v3 0/5] tracing: common error_log for ftrace
+From:   Tom Zanussi <zanussi@kernel.org>
+To:     Masami Hiramatsu <mhiramat@kernel.org>
+Cc:     rostedt@goodmis.org, tglx@linutronix.de, namhyung@kernel.org,
+        bigeasy@linutronix.de, joel@joelfernandes.org,
+        linux-kernel@vger.kernel.org, linux-rt-users@vger.kernel.org
+Date:   Wed, 13 Mar 2019 09:09:33 -0500
+In-Reply-To: <20190313220348.d0481a0a5ad7de91e90dbadc@kernel.org>
+References: <cover.1551741458.git.tom.zanussi@linux.intel.com>
+         <20190305230646.e7f99c46f86c0e099ac0cd30@kernel.org>
+         <20190312152605.00150aae7b781137005e9ebf@kernel.org>
+         <1552409351.4293.22.camel@kernel.org>
+         <20190313220348.d0481a0a5ad7de91e90dbadc@kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+X-Mailer: Evolution 3.26.1-1 
+Mime-Version: 1.0
 Content-Transfer-Encoding: 7bit
-X-Provags-ID: V03:K1:157mBowVaUiM7riybT37RvZxeAu1+1jPROG+l2QZgX7NrypCRHw
- ufz5m1ZaxbCR2cC/Oa6qxB4gGoLdPsgOqbDg9TM9WkwhvVE5pQIhPEqMD5fbWyJNoKvVKx0
- NRzsUhpEPQ3xvu1RIAqIUfzvORanbU559sS3zK06Vlb8CEGYnztkN4slLjJhYDlX8zyyNzE
- t9oaXlkwgZWQUbBPpiBsg==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:TliYtZdi++k=:EZs4T1ZX0FEH4kho7oqtD2
- 4jtuVmE39BkDbSXVXhrB4uwRNuig7q2wfa3F0GTtxrMrazEqrkzPPp8nvSIc0dW2cjdHFvKZc
- /0WINuVfmxbYW64JW7MO40tkTlz+M007psWTa0o/1h3W9aCag+Dp/Kwr2Ab2+B7tCudMe+ijS
- QVDxn//Op1N148ZNWF+KvdQP7p8z1z8srDeLl7jXoxsByTbAgz4yVS7Li+PfiQgp7spyT22bX
- AC2euT8+x0Z4H9ActhwmsyvrQNv8O0pNXJBZ45q2LSeOQrp/Yc+prLSOD8PJpAr5MHJQVanOa
- qEEqkje0vKuix1eFebHMgApTpY6CfVOpME6d5G0XZp4YA5ZBuB85PoUtm8+u5FkCKbk63pUl7
- OkZipqJEC7QNXPvW2s/EZxuNpE4gIlLpkvvtibjG04UjP/0laMWkkSqQALaDeI8AgJ84i+Pg2
- 7ZVRSHsJgtd6xtcwRtDUF5Vk9gM47/TAFcdUg5QXfzA4zTxCoH4XTSz8x+kf0MgioWkFVvqki
- wwR9x2lywyNxQ/HeWka0Wxqc99ANg6OUHKxupIPOJ3CZFK0eXGllqHIY29HROUrRIaDr78u2l
- /oWLYf7rPbMc3lz7B60FwkhpIzBeYcNK3BVjS3cPV7oTNRHwzuotf0GxR44zyYwRAo1KMDoH3
- feTTiNwVxxhIkaqFP95ejC9bPwVjI7+RU2k4dNSISLOpTro77t3BbX5ih9Pdg6HNWWjsM0/w4
- XrU84UsUHpCML40vSrxSTT3+/ZIsL521UgdWJ0sKPTRjSdxOTeRMUhjCxpM46CedxdDaP50fV
- j/L706gAK+5Xvki0v0MovcenC7/fbaTOyxf5ogDCR4LzirLb70XqWrQipUqpwfntityzfkv
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 13.03.19 12:28, Miguel Ojeda wrote:
+Hi Masami,
 
-Hi,
+On Wed, 2019-03-13 at 22:03 +0900, Masami Hiramatsu wrote:
+> On Tue, 12 Mar 2019 11:49:11 -0500
+> Tom Zanussi <zanussi@kernel.org> wrote:
+> 
+> > Hi Masami,
+> > 
+> > On Tue, 2019-03-12 at 15:26 +0900, Masami Hiramatsu wrote:
+> > > Hi Tom,
+> > > 
+> > > On Tue, 5 Mar 2019 23:06:46 +0900
+> > > Masami Hiramatsu <mhiramat@kernel.org> wrote:
+> > > 
+> > > > On Mon,  4 Mar 2019 17:36:43 -0600
+> > > > > Changes from v2:
+> > > > > 
+> > > > >   - Added [n] numbering as suggested by Masami
+> > > 
+> > > Hmm, this seems a bit different what I suggested.
+> > > 
+> > > I'm trying to port probe event's error report on
+> > > your error log, and I found that the number is
+> > > just shifted as below.
+> > > 
+> > > When I filled the log with errors.
+> > > =============
+> > > /sys/kernel/debug/tracing # cat error_log 
+> > > [1] trace_kprobe: error: Invalid unsigned integer string
+> > >   Command: r10aa00:foo/bar vfs
+> > >             ^
+> > > ...
+> > > 
+> > > [7] trace_kprobe: error: Group name must follow C naming
+> > > convention
+> > >   Command: p:a-b/bar vfs_read
+> > >              ^
+> > > [8] trace_kprobe: error: Event name is too long
+> > >   Command:
+> > > p:a/barrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrr
+> > > rrrr
+> > > rrrrrrrrrrr vfs_read
+> > > =============
+> > > 
+> > > And do one more error, 
+> > > 
+> > > =============
+> > > /sys/kernel/debug/tracing # cat error_log 
+> > > [1] trace_kprobe: error: Maxactive is too big
+> > >   Command: r0xaa00:foo/bar vfs
+> > > 
+> > > ....
+> > > 
+> > > [7] trace_kprobe: error: Event name is too long
+> > >   Command:
+> > > p:a/barrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrr
+> > > rrrr
+> > > rrrrrrrrrrr vfs_read
+> > >                ^
+> > > [8] trace_kprobe: error: Event name must follow C naming
+> > > convention
+> > >   Command: p:a/bar.c vfs_read
+> > >                ^
+> > > =============
+> > > 
+> > > The number of logs are changed :(  This can confuse users.
+> > > I think it is better to keep the number as a unique number for
+> > > each entry as below.
+> > > 
+> > 
+> > Hmm, that makes sense, but I wonder if that will also confuse
+> > users,
+> > when the log wraps around and no longer starts at [1] and there's
+> > no
+> > way to retrieve the previous errors.
+> 
+> It is OK, that is same as dmesg. If user needs to keep watching it,
+> it should be dumped to disk by a daemon.
+> 
+> > 
+> > I took your suggestion as a way mainly to clearly delineate each
+> > error,
+> > since without the [number] or something similar, they all kind of
+> > run
+> > together.
+> > 
+> > Not sure what advantage numbering itself provides - would some
+> > other
+> > non-numbered separator work?
+> 
+> What about timestamp, similar to dmesg?
+> 
 
-> The intro letter seems to be an independent message with a different> subject line -- not sure what threading you expected (?).
-hmm, I've sent it via git-send-email --compose. IMHO, this should
-send the intro as the first message and the actual patches as reply.
+Yeah, I think that makes more sense - unlike the counter, there's no
+sense that you may be missing some prior messages.
 
-But it seems that didn't work as I hoped.
+Thanks,
 
->> I wrote that this is yet WIP, not meant for actual submission, instead>> just to ask you folks whether my approach in general would be work.>
-> That will indeed cause confusion. If you are requesting comments
-only,> please do so placing [RFC] or similar in the subject of each patch
+Tom 
 
-Ah, good idea. So I also have this tag in the git repo.
-BTW: are there more such conventions I should be aware of ?
-
-> Another option is sending a message with the repo URL where> development is happening, so interested parties can take a look.
-Ok. I had the impression that people here don't really like to look
-at some git repos for reviews.
-
-> Even if you are sending some draft patches, it is still a bad idea to> send them incomplete. Basically you are making it harder for early>
-reviewers simply by not having written an explanation or at least a>
-reference to the explanation.
-Understood.
-
-
---mtx
-
--- 
-Enrico Weigelt, metux IT consult
-Free software and Linux embedded engineering
-info@metux.net -- +49-151-27565287
+> Thank you,
+> 
+> 
+> 
