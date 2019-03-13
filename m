@@ -4,50 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_PASS,USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EF5C7C43381
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 Mar 2019 19:18:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D4C2DC4360F
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 Mar 2019 19:18:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C6C3B213A2
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 Mar 2019 19:18:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9C5512177E
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 Mar 2019 19:18:20 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1552504695;
-	bh=i0J7dGE+dZTA0rjeedy0+LDuyZuehLT+RaQ+vZggEoE=;
-	h=From:To:Cc:Subject:Date:List-ID:From;
-	b=STK8x9AMzOsnLUhzuKkAX6epecAD21Y5dHNtNJKqVSYklt7pJRFsb126cVBSaCJDQ
-	 jeW5rBkI44g/8MuSXq4FjiOFXtVt45diTrrlc8RAw8ei5M0B5gOQ/s9br1BiExN47a
-	 e8tnYbx5N28Yo7tjEo5NOCgyKWF23ktsGzwDAmgM=
+	s=default; t=1552504700;
+	bh=ZKwvw+OdkFutJ+O09TpyQakiP6ppRqg3P+SgX7PdfE0=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=KugFDlcHSv+xFyah+U9BVTIg3X9kWJb1QkKItoM4IrRWjXRIOJ1UA2+ZwaXi/dF/O
+	 qa8hiYgqG+hBfGoPZ/Kh+Ilk9s6ePaoOQFICyPS+88nv/d7e4SYlxebFgyepmgpxAc
+	 JxU23pn0EgmU3d4thhU9W/a6C5ocogTY6KaPx/+o=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729025AbfCMTSO (ORCPT
+        id S1729036AbfCMTST (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 13 Mar 2019 15:18:14 -0400
-Received: from mail.kernel.org ([198.145.29.99]:48698 "EHLO mail.kernel.org"
+        Wed, 13 Mar 2019 15:18:19 -0400
+Received: from mail.kernel.org ([198.145.29.99]:48732 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728301AbfCMTSL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 13 Mar 2019 15:18:11 -0400
+        id S1729022AbfCMTSO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 13 Mar 2019 15:18:14 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 771DF21850;
-        Wed, 13 Mar 2019 19:18:09 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 77424213A2;
+        Wed, 13 Mar 2019 19:18:12 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1552504690;
-        bh=i0J7dGE+dZTA0rjeedy0+LDuyZuehLT+RaQ+vZggEoE=;
-        h=From:To:Cc:Subject:Date:From;
-        b=KF/1IvGgTJP0iNTjmpT95MrjrxJ9EBMZSBx8ifVb2bTeWL9GDtNO9kj/Nz0ijfQSo
-         6+JIFTwv3WlK1L+deTk+oEsyLg6BoLhC7AjnKnNhkb+GqMDJjUqAzNZvhQzA75Of6B
-         Ruiv5pWMVO2LxWbP8kP5iXKHeM78axVg67Uzzt80=
+        s=default; t=1552504693;
+        bh=ZKwvw+OdkFutJ+O09TpyQakiP6ppRqg3P+SgX7PdfE0=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=hvikZ3Ifkx55mnkw32HHXOeK6ze4oP2ZmlloNHnFKR1/S/G/6dHNfN3j35ieTBzQ8
+         nFtXIwOREBvVB1FbuiPZ9PHZcDTxS78wnnRrXqTipdqVKB9VygIiLoV0/8TE41NhSz
+         d2GDJPUSrX6f4XnuS97+leizMt1UIZLktoupSTOM=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Dietmar Eggemann <dietmar.eggemann@arm.com>,
-        Russell King <rmk+kernel@armlinux.org.uk>,
+Cc:     David Howells <dhowells@redhat.com>,
+        James Morris <james.morris@microsoft.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH AUTOSEL 4.4 01/15] ARM: 8824/1: fix a migrating irq bug when hotplug cpu
-Date:   Wed, 13 Mar 2019 15:17:47 -0400
-Message-Id: <20190313191806.160547-1-sashal@kernel.org>
+Subject: [PATCH AUTOSEL 4.4 02/15] assoc_array: Fix shortcut creation
+Date:   Wed, 13 Mar 2019 15:17:48 -0400
+Message-Id: <20190313191806.160547-2-sashal@kernel.org>
 X-Mailer: git-send-email 2.19.1
+In-Reply-To: <20190313191806.160547-1-sashal@kernel.org>
+References: <20190313191806.160547-1-sashal@kernel.org>
 MIME-Version: 1.0
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
@@ -56,156 +57,57 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Dietmar Eggemann <dietmar.eggemann@arm.com>
+From: David Howells <dhowells@redhat.com>
 
-[ Upstream commit 1b5ba350784242eb1f899bcffd95d2c7cff61e84 ]
+[ Upstream commit bb2ba2d75a2d673e76ddaf13a9bd30d6a8b1bb08 ]
 
-Arm TC2 fails cpu hotplug stress test.
+Fix the creation of shortcuts for which the length of the index key value
+is an exact multiple of the machine word size.  The problem is that the
+code that blanks off the unused bits of the shortcut value malfunctions if
+the number of bits in the last word equals machine word size.  This is due
+to the "<<" operator being given a shift of zero in this case, and so the
+mask that should be all zeros is all ones instead.  This causes the
+subsequent masking operation to clear everything rather than clearing
+nothing.
 
-This issue was tracked down to a missing copy of the new affinity
-cpumask for the vexpress-spc interrupt into struct
-irq_common_data.affinity when the interrupt is migrated in
-migrate_one_irq().
+Ordinarily, the presence of the hash at the beginning of the tree index key
+makes the issue very hard to test for, but in this case, it was encountered
+due to a development mistake that caused the hash output to be either 0
+(keyring) or 1 (non-keyring) only.  This made it susceptible to the
+keyctl/unlink/valid test in the keyutils package.
 
-Fix it by replacing the arm specific hotplug cpu migration with the
-generic irq code.
+The fix is simply to skip the blanking if the shift would be 0.  For
+example, an index key that is 64 bits long would produce a 0 shift and thus
+a 'blank' of all 1s.  This would then be inverted and AND'd onto the
+index_key, incorrectly clearing the entire last word.
 
-This is the counterpart implementation to commit 217d453d473c ("arm64:
-fix a migrating irq bug when hotplug cpu").
-
-Tested with cpu hotplug stress test on Arm TC2 (multi_v7_defconfig plus
-CONFIG_ARM_BIG_LITTLE_CPUFREQ=y and CONFIG_ARM_VEXPRESS_SPC_CPUFREQ=y).
-The vexpress-spc interrupt (irq=22) on this board is affine to CPU0.
-Its affinity cpumask now changes correctly e.g. from 0 to 1-4 when
-CPU0 is hotplugged out.
-
-Suggested-by: Marc Zyngier <marc.zyngier@arm.com>
-Signed-off-by: Dietmar Eggemann <dietmar.eggemann@arm.com>
-Acked-by: Marc Zyngier <marc.zyngier@arm.com>
-Reviewed-by: Linus Walleij <linus.walleij@linaro.org>
-Signed-off-by: Russell King <rmk+kernel@armlinux.org.uk>
+Fixes: 3cb989501c26 ("Add a generic associative array implementation.")
+Signed-off-by: David Howells <dhowells@redhat.com>
+Signed-off-by: James Morris <james.morris@microsoft.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/arm/Kconfig           |  1 +
- arch/arm/include/asm/irq.h |  1 -
- arch/arm/kernel/irq.c      | 62 --------------------------------------
- arch/arm/kernel/smp.c      |  2 +-
- 4 files changed, 2 insertions(+), 64 deletions(-)
+ lib/assoc_array.c | 8 +++++---
+ 1 file changed, 5 insertions(+), 3 deletions(-)
 
-diff --git a/arch/arm/Kconfig b/arch/arm/Kconfig
-index 34e1569a11ee..3a0277c6c060 100644
---- a/arch/arm/Kconfig
-+++ b/arch/arm/Kconfig
-@@ -1475,6 +1475,7 @@ config NR_CPUS
- config HOTPLUG_CPU
- 	bool "Support for hot-pluggable CPUs"
- 	depends on SMP
-+	select GENERIC_IRQ_MIGRATION
- 	help
- 	  Say Y here to experiment with turning CPUs off and on.  CPUs
- 	  can be controlled through /sys/devices/system/cpu.
-diff --git a/arch/arm/include/asm/irq.h b/arch/arm/include/asm/irq.h
-index 1bd9510de1b9..cae4df39f02e 100644
---- a/arch/arm/include/asm/irq.h
-+++ b/arch/arm/include/asm/irq.h
-@@ -24,7 +24,6 @@
- #ifndef __ASSEMBLY__
- struct irqaction;
- struct pt_regs;
--extern void migrate_irqs(void);
+diff --git a/lib/assoc_array.c b/lib/assoc_array.c
+index 5cd093589c5a..3b46c5433b7a 100644
+--- a/lib/assoc_array.c
++++ b/lib/assoc_array.c
+@@ -781,9 +781,11 @@ static bool assoc_array_insert_into_terminal_node(struct assoc_array_edit *edit,
+ 		new_s0->index_key[i] =
+ 			ops->get_key_chunk(index_key, i * ASSOC_ARRAY_KEY_CHUNK_SIZE);
  
- extern void asm_do_IRQ(unsigned int, struct pt_regs *);
- void handle_IRQ(unsigned int, struct pt_regs *);
-diff --git a/arch/arm/kernel/irq.c b/arch/arm/kernel/irq.c
-index 1d45320ee125..900c591913d5 100644
---- a/arch/arm/kernel/irq.c
-+++ b/arch/arm/kernel/irq.c
-@@ -31,7 +31,6 @@
- #include <linux/smp.h>
- #include <linux/init.h>
- #include <linux/seq_file.h>
--#include <linux/ratelimit.h>
- #include <linux/errno.h>
- #include <linux/list.h>
- #include <linux/kallsyms.h>
-@@ -119,64 +118,3 @@ int __init arch_probe_nr_irqs(void)
- 	return nr_irqs;
- }
- #endif
--
--#ifdef CONFIG_HOTPLUG_CPU
--static bool migrate_one_irq(struct irq_desc *desc)
--{
--	struct irq_data *d = irq_desc_get_irq_data(desc);
--	const struct cpumask *affinity = irq_data_get_affinity_mask(d);
--	struct irq_chip *c;
--	bool ret = false;
--
--	/*
--	 * If this is a per-CPU interrupt, or the affinity does not
--	 * include this CPU, then we have nothing to do.
--	 */
--	if (irqd_is_per_cpu(d) || !cpumask_test_cpu(smp_processor_id(), affinity))
--		return false;
--
--	if (cpumask_any_and(affinity, cpu_online_mask) >= nr_cpu_ids) {
--		affinity = cpu_online_mask;
--		ret = true;
--	}
--
--	c = irq_data_get_irq_chip(d);
--	if (!c->irq_set_affinity)
--		pr_debug("IRQ%u: unable to set affinity\n", d->irq);
--	else if (c->irq_set_affinity(d, affinity, false) == IRQ_SET_MASK_OK && ret)
--		cpumask_copy(irq_data_get_affinity_mask(d), affinity);
--
--	return ret;
--}
--
--/*
-- * The current CPU has been marked offline.  Migrate IRQs off this CPU.
-- * If the affinity settings do not allow other CPUs, force them onto any
-- * available CPU.
-- *
-- * Note: we must iterate over all IRQs, whether they have an attached
-- * action structure or not, as we need to get chained interrupts too.
-- */
--void migrate_irqs(void)
--{
--	unsigned int i;
--	struct irq_desc *desc;
--	unsigned long flags;
--
--	local_irq_save(flags);
--
--	for_each_irq_desc(i, desc) {
--		bool affinity_broken;
--
--		raw_spin_lock(&desc->lock);
--		affinity_broken = migrate_one_irq(desc);
--		raw_spin_unlock(&desc->lock);
--
--		if (affinity_broken)
--			pr_warn_ratelimited("IRQ%u no longer affine to CPU%u\n",
--				i, smp_processor_id());
--	}
--
--	local_irq_restore(flags);
--}
--#endif /* CONFIG_HOTPLUG_CPU */
-diff --git a/arch/arm/kernel/smp.c b/arch/arm/kernel/smp.c
-index e42be5800f37..08ce9e36dc5a 100644
---- a/arch/arm/kernel/smp.c
-+++ b/arch/arm/kernel/smp.c
-@@ -218,7 +218,7 @@ int __cpu_disable(void)
- 	/*
- 	 * OK - migrate IRQs away from this CPU
- 	 */
--	migrate_irqs();
-+	irq_migrate_all_off_this_cpu();
+-	blank = ULONG_MAX << (level & ASSOC_ARRAY_KEY_CHUNK_MASK);
+-	pr_devel("blank off [%zu] %d: %lx\n", keylen - 1, level, blank);
+-	new_s0->index_key[keylen - 1] &= ~blank;
++	if (level & ASSOC_ARRAY_KEY_CHUNK_MASK) {
++		blank = ULONG_MAX << (level & ASSOC_ARRAY_KEY_CHUNK_MASK);
++		pr_devel("blank off [%zu] %d: %lx\n", keylen - 1, level, blank);
++		new_s0->index_key[keylen - 1] &= ~blank;
++	}
  
- 	/*
- 	 * Flush user cache and TLB mappings, and then remove this CPU
+ 	/* This now reduces to a node splitting exercise for which we'll need
+ 	 * to regenerate the disparity table.
 -- 
 2.19.1
 
