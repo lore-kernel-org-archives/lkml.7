@@ -2,186 +2,142 @@ Return-Path: <SRS0=dUEL=RQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+X-Spam-Status: No, score=-12.0 required=3.0
+	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 28C32C43381
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 Mar 2019 19:15:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 710FBC4360F
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 Mar 2019 19:15:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EA1652184E
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 Mar 2019 19:15:33 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1552504534;
-	bh=VeP3dWStXVGCRhaxFRORKkpkv8xZzci2kELSu0BBntE=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=K6QzcmKSfHRAIhYkYF/1/Lfcm2MqzWkJiymB3VIvmuzCym+304xBWUNLi7hAF3piM
-	 ZxeiiomPGDEO08Y0ySVA21v2kXbevgzw5dE0hNmBs2CEE8K4JpcAMV1i/1Gt7VnCGB
-	 8CF8wSgCTZ9zyeMpNQKvzqjj2MLpskrooJUH+u48=
+	by mail.kernel.org (Postfix) with ESMTP id 431B021850
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 Mar 2019 19:15:38 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728469AbfCMTPb (ORCPT
+        id S1728481AbfCMTPg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 13 Mar 2019 15:15:31 -0400
-Received: from mail.kernel.org ([198.145.29.99]:45554 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728394AbfCMTPY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 13 Mar 2019 15:15:24 -0400
-Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 84E5D213A2;
-        Wed, 13 Mar 2019 19:15:22 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1552504523;
-        bh=VeP3dWStXVGCRhaxFRORKkpkv8xZzci2kELSu0BBntE=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=G04FccDaiqUfIy7V3uMHD5TUtQB6KCH7hhBrX/REPPrycH1WZjQY1/J6kqrJYv9wO
-         Ie4fSmbuxeg3B7Mv5wKJnz60oUCkAoYTSmFwcbn1Fk8ainUTs6QLddbn3v6Voptr8+
-         K95atDlkMYpVIv5eg6K6zfcQLUb5TVWjwMxnxeo0=
-From:   Sasha Levin <sashal@kernel.org>
-To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Sean Tranchetti <stranche@codeaurora.org>,
-        Steffen Klassert <steffen.klassert@secunet.com>,
-        Sasha Levin <sashal@kernel.org>, netdev@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.14 05/33] af_key: unconditionally clone on broadcast
-Date:   Wed, 13 Mar 2019 15:14:38 -0400
-Message-Id: <20190313191506.159677-5-sashal@kernel.org>
-X-Mailer: git-send-email 2.19.1
-In-Reply-To: <20190313191506.159677-1-sashal@kernel.org>
-References: <20190313191506.159677-1-sashal@kernel.org>
+        Wed, 13 Mar 2019 15:15:36 -0400
+Received: from mail-vs1-f65.google.com ([209.85.217.65]:33943 "EHLO
+        mail-vs1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728466AbfCMTPc (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 13 Mar 2019 15:15:32 -0400
+Received: by mail-vs1-f65.google.com with SMTP id e126so1515624vse.1;
+        Wed, 13 Mar 2019 12:15:31 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=rFIxdQAhhkGV8VPhrx+7Vx5ZiE2NjNFKTCrLqhzBDX0=;
+        b=t71sQIoxl1VikU/dd7T48cwFBJ1a2/LyJY9L5CU5Q0ca3/m703k/kIGp8xIfXLTelF
+         MSHmDcXVLxHWNSBj92N+YN5G9+NHoz3Yo9Rk3AARHxmv6nErZFz7goiRiYsnRskPkzDb
+         klUDspythpmFrYmBqyCfwRszbPwnltdHvPvzeMIEW4YaMfjfGdfmzr4ApA9/4yxVe668
+         PEv1B/sF8cryFF8C9o05ERFcVQpE2GvALVMv/ON83Tlypm4y0AS/w71gy0Ftixwxg9vg
+         lKVLOlx0+nCnEd9U3rrSFqZ6trOlPQETEZmLPr5ZyrrGjhcL5dbc+3gXjDl8NbkppMV0
+         a41Q==
+X-Gm-Message-State: APjAAAVd6q/dx/jM/p9lpDtQChoxcuUUkoBqGWRI/r9qcGU8SoZ5AQvn
+        QaMvO35q6pG8TjGn/sPyLOlBc9gDgFFqDE56C8Q=
+X-Google-Smtp-Source: APXvYqzbEN7/LltuGjmumOnJRO1FDv8QyW/6UQ+RgaWKzvHgW0ONrkJAYdOI7ZgjNrJ7D6VOYxYb5vrUnf9ItLUx6TI=
+X-Received: by 2002:a67:8588:: with SMTP id h130mr22710612vsd.11.1552504530660;
+ Wed, 13 Mar 2019 12:15:30 -0700 (PDT)
 MIME-Version: 1.0
-X-Patchwork-Hint: Ignore
-Content-Transfer-Encoding: 8bit
+References: <20190307155506.2993868-1-arnd@arndb.de> <20190311172421.275811128896@debutante.sirena.org.uk>
+In-Reply-To: <20190311172421.275811128896@debutante.sirena.org.uk>
+From:   Geert Uytterhoeven <geert@linux-m68k.org>
+Date:   Wed, 13 Mar 2019 20:15:18 +0100
+Message-ID: <CAMuHMdXeuHwF2y1S=bpvQ_qXn+DYacUSS-uP2Zj9yKiHzghhqQ@mail.gmail.com>
+Subject: Re: Applied "spi: work around clang bug in SPI_BPW_RANGE_MASK()" to
+ the spi tree
+To:     Mark Brown <broonie@kernel.org>
+Cc:     Arnd Bergmann <arnd@arndb.de>,
+        Rasmus Villemoes <linux@rasmusvillemoes.dk>,
+        Boris Brezillon <bbrezillon@kernel.org>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        linux-spi <linux-spi@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Sean Tranchetti <stranche@codeaurora.org>
+Hi Mark,
 
-[ Upstream commit fc2d5cfdcfe2ab76b263d91429caa22451123085 ]
+On Mon, Mar 11, 2019 at 6:26 PM Mark Brown <broonie@kernel.org> wrote:
+> The patch
+>
+>    spi: work around clang bug in SPI_BPW_RANGE_MASK()
+>
+> has been applied to the spi tree at
+>
+>    https://git.kernel.org/pub/scm/linux/kernel/git/broonie/spi.git
+>
+> All being well this means that it will be integrated into the linux-next
+> tree (usually sometime in the next 24 hours) and sent to Linus during
+> the next merge window (or sooner if it is a bug fix), however if
+> problems are discovered then the patch may be dropped or reverted.
+>
+> You may get further e-mails resulting from automated or manual testing
+> and review of the tree, please engage with people reporting problems and
+> send followup patches addressing any issues that are reported if needed.
+>
+> If any updates are required or you are submitting further changes they
+> should be sent as incremental updates against current git, existing
+> patches will not be replaced.
+>
+> Please add any relevant lists and maintainers to the CCs when replying
+> to this mail.
+>
+> Thanks,
+> Mark
+>
+> From eefffb42f6659c9510105f3e4ebf2a8499d56936 Mon Sep 17 00:00:00 2001
+> From: Arnd Bergmann <arnd@arndb.de>
+> Date: Thu, 7 Mar 2019 16:54:21 +0100
+> Subject: [PATCH] spi: work around clang bug in SPI_BPW_RANGE_MASK()
+>
+> Clang-8 evaluates both sides of a ?: expression to check for
+> valid arithmetic even in the side that is never taken. This
+> results in a build warning:
+>
+> drivers/spi/spi-sh-msiof.c:1052:24: error: shift count >= width of type [-Werror,-Wshift-count-overflow]
+>         .bits_per_word_mask = SPI_BPW_RANGE_MASK(8, 32),
+>                               ^~~~~~~~~~~~~~~~~~~~~~~~~
+>
+> Change the implementation to use the GENMASK() macro that does
+> what we want here but does not have a problem with the shift
+> count overflow.
+>
+> Link: https://bugs.llvm.org/show_bug.cgi?id=38789
+> Signed-off-by: Arnd Bergmann <arnd@arndb.de>
+> Signed-off-by: Mark Brown <broonie@kernel.org>
+> ---
+>  include/linux/spi/spi.h | 3 +--
+>  1 file changed, 1 insertion(+), 2 deletions(-)
+>
+> diff --git a/include/linux/spi/spi.h b/include/linux/spi/spi.h
+> index 662b336aa2e4..b27386450089 100644
+> --- a/include/linux/spi/spi.h
+> +++ b/include/linux/spi/spi.h
+> @@ -444,8 +444,7 @@ struct spi_controller {
+>         /* bitmask of supported bits_per_word for transfers */
+>         u32                     bits_per_word_mask;
+>  #define SPI_BPW_MASK(bits) BIT((bits) - 1)
+> -#define SPI_BIT_MASK(bits) (((bits) == 32) ? ~0U : (BIT(bits) - 1))
+> -#define SPI_BPW_RANGE_MASK(min, max) (SPI_BIT_MASK(max) - SPI_BIT_MASK(min - 1))
+> +#define SPI_BPW_RANGE_MASK(min, max) GENMASK((min) - 1, (max) - 1)
 
-Attempting to avoid cloning the skb when broadcasting by inflating
-the refcount with sock_hold/sock_put while under RCU lock is dangerous
-and violates RCU principles. It leads to subtle race conditions when
-attempting to free the SKB, as we may reference sockets that have
-already been freed by the stack.
+This is not correct: GENMASK() order is from msb to lsb.
+So it should it:
 
-Unable to handle kernel paging request at virtual address 6b6b6b6b6b6c4b
-[006b6b6b6b6b6c4b] address between user and kernel address ranges
-Internal error: Oops: 96000004 [#1] PREEMPT SMP
-task: fffffff78f65b380 task.stack: ffffff8049a88000
-pc : sock_rfree+0x38/0x6c
-lr : skb_release_head_state+0x6c/0xcc
-Process repro (pid: 7117, stack limit = 0xffffff8049a88000)
-Call trace:
-	sock_rfree+0x38/0x6c
-	skb_release_head_state+0x6c/0xcc
-	skb_release_all+0x1c/0x38
-	__kfree_skb+0x1c/0x30
-	kfree_skb+0xd0/0xf4
-	pfkey_broadcast+0x14c/0x18c
-	pfkey_sendmsg+0x1d8/0x408
-	sock_sendmsg+0x44/0x60
-	___sys_sendmsg+0x1d0/0x2a8
-	__sys_sendmsg+0x64/0xb4
-	SyS_sendmsg+0x34/0x4c
-	el0_svc_naked+0x34/0x38
-Kernel panic - not syncing: Fatal exception
++#define SPI_BPW_RANGE_MASK(min, max) GENMASK((max) - 1, (min) - 1)
 
-Suggested-by: Eric Dumazet <eric.dumazet@gmail.com>
-Signed-off-by: Sean Tranchetti <stranche@codeaurora.org>
-Signed-off-by: Steffen Klassert <steffen.klassert@secunet.com>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
----
- net/key/af_key.c | 40 +++++++++++++++-------------------------
- 1 file changed, 15 insertions(+), 25 deletions(-)
+Gr{oetje,eeting}s,
 
-diff --git a/net/key/af_key.c b/net/key/af_key.c
-index 3b209cbfe1df..b095551a5773 100644
---- a/net/key/af_key.c
-+++ b/net/key/af_key.c
-@@ -196,30 +196,22 @@ static int pfkey_release(struct socket *sock)
- 	return 0;
- }
- 
--static int pfkey_broadcast_one(struct sk_buff *skb, struct sk_buff **skb2,
--			       gfp_t allocation, struct sock *sk)
-+static int pfkey_broadcast_one(struct sk_buff *skb, gfp_t allocation,
-+			       struct sock *sk)
- {
- 	int err = -ENOBUFS;
- 
--	sock_hold(sk);
--	if (*skb2 == NULL) {
--		if (refcount_read(&skb->users) != 1) {
--			*skb2 = skb_clone(skb, allocation);
--		} else {
--			*skb2 = skb;
--			refcount_inc(&skb->users);
--		}
--	}
--	if (*skb2 != NULL) {
--		if (atomic_read(&sk->sk_rmem_alloc) <= sk->sk_rcvbuf) {
--			skb_set_owner_r(*skb2, sk);
--			skb_queue_tail(&sk->sk_receive_queue, *skb2);
--			sk->sk_data_ready(sk);
--			*skb2 = NULL;
--			err = 0;
--		}
-+	if (atomic_read(&sk->sk_rmem_alloc) > sk->sk_rcvbuf)
-+		return err;
-+
-+	skb = skb_clone(skb, allocation);
-+
-+	if (skb) {
-+		skb_set_owner_r(skb, sk);
-+		skb_queue_tail(&sk->sk_receive_queue, skb);
-+		sk->sk_data_ready(sk);
-+		err = 0;
- 	}
--	sock_put(sk);
- 	return err;
- }
- 
-@@ -234,7 +226,6 @@ static int pfkey_broadcast(struct sk_buff *skb, gfp_t allocation,
- {
- 	struct netns_pfkey *net_pfkey = net_generic(net, pfkey_net_id);
- 	struct sock *sk;
--	struct sk_buff *skb2 = NULL;
- 	int err = -ESRCH;
- 
- 	/* XXX Do we need something like netlink_overrun?  I think
-@@ -253,7 +244,7 @@ static int pfkey_broadcast(struct sk_buff *skb, gfp_t allocation,
- 		 * socket.
- 		 */
- 		if (pfk->promisc)
--			pfkey_broadcast_one(skb, &skb2, GFP_ATOMIC, sk);
-+			pfkey_broadcast_one(skb, GFP_ATOMIC, sk);
- 
- 		/* the exact target will be processed later */
- 		if (sk == one_sk)
-@@ -268,7 +259,7 @@ static int pfkey_broadcast(struct sk_buff *skb, gfp_t allocation,
- 				continue;
- 		}
- 
--		err2 = pfkey_broadcast_one(skb, &skb2, GFP_ATOMIC, sk);
-+		err2 = pfkey_broadcast_one(skb, GFP_ATOMIC, sk);
- 
- 		/* Error is cleared after successful sending to at least one
- 		 * registered KM */
-@@ -278,9 +269,8 @@ static int pfkey_broadcast(struct sk_buff *skb, gfp_t allocation,
- 	rcu_read_unlock();
- 
- 	if (one_sk != NULL)
--		err = pfkey_broadcast_one(skb, &skb2, allocation, one_sk);
-+		err = pfkey_broadcast_one(skb, allocation, one_sk);
- 
--	kfree_skb(skb2);
- 	kfree_skb(skb);
- 	return err;
- }
+                        Geert
+
 -- 
-2.19.1
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
 
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
