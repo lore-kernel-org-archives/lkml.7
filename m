@@ -2,80 +2,161 @@ Return-Path: <SRS0=dUEL=RQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_NEOMUTT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4DD44C43381
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 Mar 2019 15:28:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0DAEAC43381
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 Mar 2019 15:30:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1C1A721019
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 Mar 2019 15:28:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CCA4D213A2
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 Mar 2019 15:30:11 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1552491011;
+	bh=/2SbPzaKbqAvu1Kym1YYx7yjqMZJNg0nJ2lB7c969wU=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=An15RqPhzttr9tBE2GMRS6SKlcWGDrL6+WouGmxPXWPP30uegkpRY9ee5XKCpizSn
+	 9Bc5b7/TOtIjRz08pZzNHQGLk09H5XrgLr/Ldc3RTtoWlhz66uclUspBWHNp6HpuaV
+	 NqIt8Kjtp4VYAhShrrubfQCmIttSJz9FrI5hz7eA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726512AbfCMP2i (ORCPT
+        id S1726581AbfCMPaK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 13 Mar 2019 11:28:38 -0400
-Received: from foss.arm.com ([217.140.101.70]:59196 "EHLO foss.arm.com"
+        Wed, 13 Mar 2019 11:30:10 -0400
+Received: from mail.kernel.org ([198.145.29.99]:57524 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725868AbfCMP2i (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 13 Mar 2019 11:28:38 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.72.51.249])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 6F41A80D;
-        Wed, 13 Mar 2019 08:28:37 -0700 (PDT)
-Received: from e110439-lin (e110439-lin.cambridge.arm.com [10.1.194.43])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 7A8533F71D;
-        Wed, 13 Mar 2019 08:28:34 -0700 (PDT)
-Date:   Wed, 13 Mar 2019 15:28:31 +0000
-From:   Patrick Bellasi <patrick.bellasi@arm.com>
-To:     Peter Zijlstra <peterz@infradead.org>
-Cc:     linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org,
-        linux-api@vger.kernel.org, Ingo Molnar <mingo@redhat.com>,
-        Tejun Heo <tj@kernel.org>,
-        "Rafael J . Wysocki" <rafael.j.wysocki@intel.com>,
-        Vincent Guittot <vincent.guittot@linaro.org>,
-        Viresh Kumar <viresh.kumar@linaro.org>,
-        Paul Turner <pjt@google.com>,
-        Quentin Perret <quentin.perret@arm.com>,
-        Dietmar Eggemann <dietmar.eggemann@arm.com>,
-        Morten Rasmussen <morten.rasmussen@arm.com>,
-        Juri Lelli <juri.lelli@redhat.com>,
-        Todd Kjos <tkjos@google.com>,
-        Joel Fernandes <joelaf@google.com>,
-        Steve Muckle <smuckle@google.com>,
-        Suren Baghdasaryan <surenb@google.com>
-Subject: Re: [PATCH v7 01/15] sched/core: uclamp: Add CPU's clamp buckets
- refcounting
-Message-ID: <20190313152831.aqkvdrdoffiyu5pp@e110439-lin>
-References: <20190208100554.32196-1-patrick.bellasi@arm.com>
- <20190208100554.32196-2-patrick.bellasi@arm.com>
- <20190313140603.GD5922@hirez.programming.kicks-ass.net>
+        id S1725870AbfCMPaK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 13 Mar 2019 11:30:10 -0400
+Received: from sol.localdomain (c-107-3-167-184.hsd1.ca.comcast.net [107.3.167.184])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id E077B20693;
+        Wed, 13 Mar 2019 15:30:08 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1552491009;
+        bh=/2SbPzaKbqAvu1Kym1YYx7yjqMZJNg0nJ2lB7c969wU=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=xW8bK1xQYvGxVQS6oHqRYzdsPA84ziOPBHqX0MAJT6oDGwPvDi8MElCFabj+08yQR
+         T0kimRBFuRDB/FwjbFJs2bAcpSOwRmkMRusXryIkrvM0qTk/ATc0WWh9cYVYlKzbNR
+         ZQEavqaqYfbD3Eai0uXwQ0X2DMhHAKTYXXZdL3d4=
+Date:   Wed, 13 Mar 2019 08:30:07 -0700
+From:   Eric Biggers <ebiggers@kernel.org>
+To:     Amir Goldstein <amir73il@gmail.com>
+Cc:     Richard Weinberger <richard@nod.at>,
+        Miklos Szeredi <miklos@szeredi.hu>,
+        linux-fsdevel <linux-fsdevel@vger.kernel.org>,
+        linux-fscrypt@vger.kernel.org,
+        overlayfs <linux-unionfs@vger.kernel.org>,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        Paul Lawrence <paullawrence@google.com>
+Subject: Re: overlayfs vs. fscrypt
+Message-ID: <20190313153006.GB703@sol.localdomain>
+References: <4603533.ZIfxmiEf7K@blindfold>
+ <1854703.ve7plDhYWt@blindfold>
+ <CAJfpegtgfuAkgv26QH6Ht25OeMiev-QvEf7ror4KAbud7FADgg@mail.gmail.com>
+ <4066872.KGdO14EQMx@blindfold>
+ <CAOQ4uxhqQKzriL0An4Tvzc1E_LffL-z9q1otOW_RdD1ZdKWP3Q@mail.gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=iso-8859-1
 Content-Disposition: inline
-In-Reply-To: <20190313140603.GD5922@hirez.programming.kicks-ass.net>
-User-Agent: NeoMutt/20180716
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <CAOQ4uxhqQKzriL0An4Tvzc1E_LffL-z9q1otOW_RdD1ZdKWP3Q@mail.gmail.com>
+User-Agent: Mutt/1.11.3 (2019-02-01)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 13-Mar 15:06, Peter Zijlstra wrote:
-> On Fri, Feb 08, 2019 at 10:05:40AM +0000, Patrick Bellasi wrote:
-> > +static void __init init_uclamp(void)
-> > +{
-> > +	unsigned int clamp_id;
-> > +	int cpu;
-> > +
-> > +	for_each_possible_cpu(cpu)
-> > +		memset(&cpu_rq(cpu)->uclamp, 0, sizeof(struct uclamp_rq));
-> > +
+On Wed, Mar 13, 2019 at 04:26:54PM +0200, Amir Goldstein wrote:
+> On Wed, Mar 13, 2019 at 3:34 PM Richard Weinberger <richard@nod.at> wrote:
+> >
+> > Am Mittwoch, 13. März 2019, 14:24:47 CET schrieb Miklos Szeredi:
+> > > > The use case is that you can delete these files if the DAC/MAC permissions allow it.
+> > > > Just like on NTFS. If a user encrypts files, the admin cannot read them but can
+> > > > remove them if the user is gone or loses the key.
+> > >
+> > > There's the underlying filesystem view where admin can delete files,
+> > > etc.   And there's the fscrypt layer stacked on top of the underlying
+> > > fs, which en/decrypts files *in case the user has the key*.  What if
+> > > one user has a key, but the other one doesn't?  Will d_revalidate
+> > > constantly switch the set of dentries between the encrypted filenames
+> > > and the decrypted ones?  Sounds crazy.  And the fact that NTFS does
+> > > this doesn't make it any less crazy...
+> >
+> > Well, I didn't come up with this feature. :-)
+> >
+> > If one user has the key and the other not, a classic multi-user
+> > system, then you need to make sure that the affected fscrypt instances
+> > are not visible by both.
+> > For example by using mount namespaces to make sure that user a can only
+> > see /home/foo and user b only /home/bar.
+> > Or removing the search permission on /home/foo and /home/bar.
+> >
+> > I know, I know, but that's how it is...
+> > Maybe Ted or Eric can give more details on why they chose this approach.
+> >
 > 
-> Is that really needed? Doesn't rq come from .bss ?
+> AFAIK, this feature was born to tailor Android's file based encryption.
+> https://source.android.com/security/encryption#file-based
+> It is meant to protect data at rest and what happens when user enters
+> the screen lock password IIRC, is that some service will get restarted.
+> IOW, there should NOT be any processes in Android accessing the
+> encrypted user data folders with and without the key simultaneously.
 
-Will check better... I've just assumed not since in sched_init() we
-already have tons of rq's related zero initializations.
+See my response to Miklos.  Even if some processes had the key in their keyring
+and some didn't, which isn't the case on Android since on Android the fscrypt
+keys are placed in a "global" keyring, there's still only one cached inode per
+file/directory/symlink, and it either has the key (->i_crypt_info != NULL) or it
+doesn't (i_crypt_info == NULL).  And it can only go from ->i_crypt_info == NULL
+to ->i_crypt_info != NULL, not vice versa.
 
--- 
-#include <best/regards.h>
+Also to be clear, there are other fscrypt users besides Android.  E.g. Chrome OS
+where it replaced eCryptfs for home directory encryption and was actually the
+original use case, people using it on "regular" Linux distros like Ubuntu via
+the userspace tool https://github.com/google/fscrypt, and Richard using UBIFS
+encryption on embedded devices.  It's not just for Android.
 
-Patrick Bellasi
+> Also, like OpenWRT, in Android the key does not get removed
+> (until boot) AFAIK(?).
+
+On Android, the fscrypt keys are removed when you switch users on a multi-user
+device, or when you turn off work mode on a device with a work profile.  This is
+currently accompanied by a 'sync && echo 3 > /proc/sys/vm/drop_caches', so the
+inodes get evicted too and the files revert to their ciphertext "view".  I'd
+like to replace this with my proposed new ioctl FS_IOC_REMOVE_ENCRYPTION_KEY,
+which avoids the drop_caches hack: https://patchwork.kernel.org/patch/10821455/.
+
+> 
+> That dcache behavior remind me of the proposal to make case
+> insensitive a per mount option (also for an Android use case).
+> Eventually, that was replaced with per directory flag, which plays
+> much better with dache.
+> 
+> IMO, the best thing for UBIFS to do would be to modify fscrypt to support
+> opting out of the revalidate behavior, IWO, sanitize your hack to an API.
+
+As noted in my other response, a better solution (if this is really needed at
+all) would probably be to move a stripped-down version of fscrypt_d_revalidate()
+to the VFS, so fscrypt won't need to use any dentry_operations at all.
+
+> 
+> It's good that you are thinking about what will happen with overlayfs
+> over ext4/f2fs, but I think that it will be messy if dentry names would be
+> changing in underlying fs and the fact the overlayfs accessed the underlying
+> dirs with different credentials at times makes this even more messy.
+> 
+> The way out of this mess IMO would be for ext4/f2fs to also conditionally
+> opt-out of d_revalidate behavior at mount time if the fs is expected to be
+> used under overlayfs.
+> In Android, for example, I think the use case of "admin deleting
+> the encrypted directories" is only relevant on "reset to default" and that
+> happens in recovery boot that could potentially opt-out of encryption
+> altogether (because there is no user to enter the password anyway).
+> 
+> I could be over simplifying things for the Android use case and my
+> information could be severely out dated.
+> CC Paul Lawrence to fill in my Android knowledge gaps.
+> 
+> Thanks,
+> Amir.
+
+- Eric
