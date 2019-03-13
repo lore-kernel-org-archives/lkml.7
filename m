@@ -2,179 +2,187 @@ Return-Path: <SRS0=dUEL=RQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-11.6 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A139BC4360F
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 Mar 2019 17:43:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1D1DEC43381
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 Mar 2019 17:44:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 670152077B
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 Mar 2019 17:43:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D31C12077B
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 Mar 2019 17:44:14 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=nifty.com header.i=@nifty.com header.b="LVcJQrWi"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="JVwA2FoW"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726971AbfCMRne (ORCPT
+        id S1726991AbfCMRoM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 13 Mar 2019 13:43:34 -0400
-Received: from conssluserg-02.nifty.com ([210.131.2.81]:41680 "EHLO
-        conssluserg-02.nifty.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725876AbfCMRne (ORCPT
+        Wed, 13 Mar 2019 13:44:12 -0400
+Received: from mail-pg1-f195.google.com ([209.85.215.195]:37414 "EHLO
+        mail-pg1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726735AbfCMRoM (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 13 Mar 2019 13:43:34 -0400
-Received: from mail-vk1-f174.google.com (mail-vk1-f174.google.com [209.85.221.174]) (authenticated)
-        by conssluserg-02.nifty.com with ESMTP id x2DHhBYs026058;
-        Thu, 14 Mar 2019 02:43:12 +0900
-DKIM-Filter: OpenDKIM Filter v2.10.3 conssluserg-02.nifty.com x2DHhBYs026058
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nifty.com;
-        s=dec2015msa; t=1552498992;
-        bh=+bgt4FknEQiOWUpXsMCO3fjYoODS51SZWAzuLFryQiQ=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=LVcJQrWiucEFJHAO5X/8OpiPfRBj6LmQX6G2h80dYFd9YaCrfhMUISteHBsdiBumB
-         spsG3YoNyrFjJY7XoASDEsd13LzhiFkAVF0QQda/rTL8cn0PLCFErsIX/hEoTRua59
-         pC+7EnTtLl7UUjs5oqNLC/8YENyjeSUz/3HVj5Ys5cd2VOSuucF09fEv6WTDwMq7NM
-         N9X/JRht2S9b2pTaCGltLMmgSQidzlcbvvul7e3D69LEZVQv3rTkYgsRghy7o1zRtW
-         h5ooh0o5P0JeBI6tyHPRGreJa7TfXorPptloiB3V/OQrN0W5FOfhJcWrnUEeEcQBYu
-         IhdDixCOmbUVQ==
-X-Nifty-SrcIP: [209.85.221.174]
-Received: by mail-vk1-f174.google.com with SMTP id p190so691331vke.4;
-        Wed, 13 Mar 2019 10:43:12 -0700 (PDT)
-X-Gm-Message-State: APjAAAWwb3AnOSE77O2x9Ozypzmn4tCzTsS8iOx/qrk1zGNMzpe0bNtU
-        mMmV3jbow1RmiRVxPPL7e1ek55TCVMNAYcwItJI=
-X-Google-Smtp-Source: APXvYqwiRlgxgWY8uQpoXV6tURrlR/ehXb5ff4bi781WMRKHbSigndAKcQ8njJYo4hixck8X89gqHboTtmyjqfjZxFk=
-X-Received: by 2002:a1f:1d01:: with SMTP id d1mr9546704vkd.0.1552498991358;
- Wed, 13 Mar 2019 10:43:11 -0700 (PDT)
+        Wed, 13 Mar 2019 13:44:12 -0400
+Received: by mail-pg1-f195.google.com with SMTP id q206so2038257pgq.4
+        for <linux-kernel@vger.kernel.org>; Wed, 13 Mar 2019 10:44:11 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=from:to:cc:subject:references:date:in-reply-to:message-id
+         :user-agent:mime-version;
+        bh=PHiYwjVjk4CRq/ZawQLXKB21ReH1/sTDD0VHZgzrKyA=;
+        b=JVwA2FoW7aydj/5UujeMvA2EjXFvewsQNDEtH0sH2gn4WY7/8sOGuRQBFhWLgN4hRA
+         JoCpQWTTWOlxCoeZ1AXJHfEVrod0fiVTtPMFRYFdsW3j56pfqp8DSKzOZr5zQRW5aHtp
+         w81V7/sNBdIAO0L5zGHeFhBrHbZhC89Wd759tUckeAS58mykdV3hC8ZCEXWtFjYDVmmG
+         uoy69ZUzsyMf6b7CYmc/qPZM52QXtQ3IB6cQjg8m34/B/CLT1ecXpgC52B/xkZF2iCty
+         /qp8sy2i4MdhxFzaqHwI5bjoWCw9d2gsKjWIcJ9ZqY0n35M7HoA5iFXcJFGNhr/Dpk+l
+         sRjA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:references:date:in-reply-to
+         :message-id:user-agent:mime-version;
+        bh=PHiYwjVjk4CRq/ZawQLXKB21ReH1/sTDD0VHZgzrKyA=;
+        b=dVxIUXHO4LSVLJF6mbYgHxwRa9xxbu4RmAjrJYUn6kFCCEP6I3vJXNrcfZkz3DOb2l
+         P0tM2R9sLwNFroFsrUQYHPk/oe+29GMS407PQv17zgyXGgWf4Sm2BqIoTm7WAMDKa/Rg
+         jbkwesbHDH5YPYahdAJ2r9Ks9tiKvBuUjS9ZmLhm642VOxfJGw6Fk22DO4UcPbp3xAEL
+         1GlHoaxcAjEIKJhPg849dTQhg7nSyKR+/rvXzuPZ3mJPziHoo3NzPSueLhX96Agw+MBp
+         c0kNNIP27x8kVHQ8f9wai/LVcZb0jKYc3xQNbXY3PD5K3Ibeik5QiKtXYhxo1q24FRq2
+         Ai6w==
+X-Gm-Message-State: APjAAAWF7YCxcdFbndlPVNXK6WPHtmQQzP3OhCcKavaDoSXci3hxQL7u
+        9FwJZQcGlbKPXpJ0zHa0uMVwyGOG7IY=
+X-Google-Smtp-Source: APXvYqwF5+nwFmPVe2daHsIUj/BR/dv44OI1kqA8zoI0RwGK5erLZn/jBRxVDqD1Xy9HSWgPMJvOWQ==
+X-Received: by 2002:a17:902:765:: with SMTP id 92mr45814327pli.95.1552499051144;
+        Wed, 13 Mar 2019 10:44:11 -0700 (PDT)
+Received: from bsegall-linux.svl.corp.google.com.localhost ([2620:15c:2cd:202:39d7:98b3:2536:e93f])
+        by smtp.gmail.com with ESMTPSA id j4sm19079111pfn.132.2019.03.13.10.44.09
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Wed, 13 Mar 2019 10:44:09 -0700 (PDT)
+From:   bsegall@google.com
+To:     Phil Auld <pauld@redhat.com>
+Cc:     mingo@redhat.com, peterz@infradead.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [RFC]  sched/fair: hard lockup in sched_cfs_period_timer
+References: <xm26ef7mzew2.fsf@bsegall-linux.svl.corp.google.com>
+        <20190304190510.GB5366@lorien.usersys.redhat.com>
+        <xm268sxtyx5u.fsf@bsegall-linux.svl.corp.google.com>
+        <20190305200554.GA8786@pauld.bos.csb>
+        <xm261s3lyrrl.fsf@bsegall-linux.svl.corp.google.com>
+        <20190306162313.GB8786@pauld.bos.csb>
+        <xm26wolbyfe9.fsf@bsegall-linux.svl.corp.google.com>
+        <20190309203320.GA24464@lorien.usersys.redhat.com>
+        <xm26sgvtxq4m.fsf@bsegall-linux.svl.corp.google.com>
+        <20190311202536.GK25201@pauld.bos.csb>
+        <20190312135746.GB24002@pauld.bos.csb>
+Date:   Wed, 13 Mar 2019 10:44:09 -0700
+In-Reply-To: <20190312135746.GB24002@pauld.bos.csb> (Phil Auld's message of
+        "Tue, 12 Mar 2019 09:57:46 -0400")
+Message-ID: <xm26ef7ay8ie.fsf@bsegall-linux.svl.corp.google.com>
+User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/26.1 (gnu/linux)
 MIME-Version: 1.0
-References: <1548996645-16962-1-git-send-email-yamada.masahiro@socionext.com>
-In-Reply-To: <1548996645-16962-1-git-send-email-yamada.masahiro@socionext.com>
-From:   Masahiro Yamada <yamada.masahiro@socionext.com>
-Date:   Thu, 14 Mar 2019 02:42:35 +0900
-X-Gmail-Original-Message-ID: <CAK7LNAQicqVtx-b-qvm37U6Hq8AFztHULFuABLFVvb7i7urL3w@mail.gmail.com>
-Message-ID: <CAK7LNAQicqVtx-b-qvm37U6Hq8AFztHULFuABLFVvb7i7urL3w@mail.gmail.com>
-Subject: Re: [PATCH] modpost: always show verbose warning for section mismatch
-To:     Linux Kbuild mailing list <linux-kbuild@vger.kernel.org>
-Cc:     Sam Ravnborg <sam@ravnborg.org>,
-        Michal Marek <michal.lkml@markovi.net>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Feb 1, 2019 at 2:26 PM Masahiro Yamada
-<yamada.masahiro@socionext.com> wrote:
+Phil Auld <pauld@redhat.com> writes:
+
+> On Mon, Mar 11, 2019 at 04:25:36PM -0400 Phil Auld wrote:
+>> On Mon, Mar 11, 2019 at 10:44:25AM -0700 bsegall@google.com wrote:
+>> > Letting it spin for 100ms and then only increasing by 6% seems extremely
+>> > generous. If we went this route I'd probably say "after looping N
+>> > times, set the period to time taken / N + X%" where N is like 8 or
+>> > something. I think I'd probably perfer something like this to the
+>> > previous "just abort and let it happen again next interrupt" one.
+>> 
+>> Okay. I'll try to spin something up that does this. It may be a little 
+>> trickier to keep the quota proportional to the new period. I think that's 
+>> important since we'll be changing the user's setting.
+>> 
+>> Do you mean to have it break when it hits N and recalculates the period or 
+>> reset the counter and keep going?
+>> 
 >
-> Unless CONFIG_DEBUG_SECTION_MISMATCH is enabled, modpost only shows
-> the number of section mismatches.
+> Let me know what you think of the below. It's working nicely. I like your 
+> suggestion to limit it quickly based on number of loops and use that to 
+> scale up. I think it is best to break out and let it fire again if needed. 
+> The warning fires once, very occasionally twice, and then things are quiet.
 >
-> If you want to know the symbols causing the issue, you need to rebuild
-> with CONFIG_DEBUG_SECTION_MISMATCH. It is tedious.
+> If that looks reasonable I'll do some more testing and spin it up as a real 
+> patch submission. 
+
+Yeah, this looks reasonable. I should probably see how unreasonable the
+other thing would be, but if your previous periods were kinda small (and
+it's just that the machine crashing isn't an ok failure mode) I suppose
+it's not a big deal.
+
 >
-> I think it is fine to show annoying warning when a new section mismatch
-> comes in.
->
-> Signed-off-by: Masahiro Yamada <yamada.masahiro@socionext.com>
+> Cheers,
+> Phil
 > ---
+>
+> diff --git a/kernel/sched/fair.c b/kernel/sched/fair.c
+> index 310d0637fe4b..54b30adfc89e 100644
+> --- a/kernel/sched/fair.c
+> +++ b/kernel/sched/fair.c
+> @@ -4859,19 +4859,51 @@ static enum hrtimer_restart sched_cfs_slack_timer(struct hrtimer *timer)
+>  	return HRTIMER_NORESTART;
+>  }
+>  
+> +extern const u64 max_cfs_quota_period;
+> +int cfs_period_autotune_loop_limit   = 8;
+> +int cfs_period_autotune_cushion_pct  = 15; /* percentage added to period recalculation */
+> +
+>  static enum hrtimer_restart sched_cfs_period_timer(struct hrtimer *timer)
+>  {
+>  	struct cfs_bandwidth *cfs_b =
+>  		container_of(timer, struct cfs_bandwidth, period_timer);
+> +	s64 nsstart, nsnow, new_period;
+>  	int overrun;
+>  	int idle = 0;
+> +	int count = 0;
+>  
+>  	raw_spin_lock(&cfs_b->lock);
+> +	nsstart = ktime_to_ns(hrtimer_cb_get_time(timer));
+>  	for (;;) {
+>  		overrun = hrtimer_forward_now(timer, cfs_b->period);
+>  		if (!overrun)
+>  			break;
+>  
+> +		if (++count > cfs_period_autotune_loop_limit) {
+> +			ktime_t old_period = ktime_to_ns(cfs_b->period);
+> +
+> +			nsnow = ktime_to_ns(hrtimer_cb_get_time(timer));
+> +			new_period = (nsnow - nsstart)/cfs_period_autotune_loop_limit;
+> +
+> +			/*  Make sure new period will be larger than old. */
+> +			if (new_period < old_period) {
+> +				new_period = old_period;
+> +			}
+> +			new_period += (new_period *  cfs_period_autotune_cushion_pct) / 100;
 
+This ordering means that it will always increase by at least 15%. This
+is a bit odd but probably a good thing; I'd just change the comment to
+make it clear this is deliberate.
 
-Applied to linux-kbuild.
+> +
+> +			if (new_period >  max_cfs_quota_period)
+> +				new_period = max_cfs_quota_period;
+> +
+> +			cfs_b->period = ns_to_ktime(new_period);
+> +			cfs_b->quota += (cfs_b->quota * ((new_period - old_period) * 100)/old_period)/100;
 
->
->  scripts/Makefile.modpost |  1 -
->  scripts/mod/modpost.c    | 27 +++++----------------------
->  2 files changed, 5 insertions(+), 23 deletions(-)
->
-> diff --git a/scripts/Makefile.modpost b/scripts/Makefile.modpost
-> index c0b7f52..6b7f354 100644
-> --- a/scripts/Makefile.modpost
-> +++ b/scripts/Makefile.modpost
-> @@ -77,7 +77,6 @@ modpost = scripts/mod/modpost                    \
->   $(if $(KBUILD_EXTMOD),-I $(modulesymfile))      \
->   $(if $(KBUILD_EXTRA_SYMBOLS), $(patsubst %, -e %,$(KBUILD_EXTRA_SYMBOLS))) \
->   $(if $(KBUILD_EXTMOD),-o $(modulesymfile))      \
-> - $(if $(CONFIG_DEBUG_SECTION_MISMATCH),,-S)      \
->   $(if $(CONFIG_SECTION_MISMATCH_WARN_ONLY),,-E)  \
->   $(if $(KBUILD_EXTMOD)$(KBUILD_MODPOST_WARN),-w)
->
-> diff --git a/scripts/mod/modpost.c b/scripts/mod/modpost.c
-> index 26bf886..0b0d108 100644
-> --- a/scripts/mod/modpost.c
-> +++ b/scripts/mod/modpost.c
-> @@ -35,7 +35,6 @@ static int vmlinux_section_warnings = 1;
->  static int warn_unresolved = 0;
->  /* How a symbol is exported */
->  static int sec_mismatch_count = 0;
-> -static int sec_mismatch_verbose = 1;
->  static int sec_mismatch_fatal = 0;
->  /* ignore missing files */
->  static int ignore_missing_files;
-> @@ -1406,8 +1405,6 @@ static void report_sec_mismatch(const char *modname,
->         char *prl_to;
->
->         sec_mismatch_count++;
-> -       if (!sec_mismatch_verbose)
-> -               return;
->
->         get_pretty_name(from_is_func, &from, &from_p);
->         get_pretty_name(to_is_func, &to, &to_p);
-> @@ -1655,9 +1652,7 @@ static void extable_mismatch_handler(const char* modname, struct elf_info *elf,
->
->         sec_mismatch_count++;
->
-> -       if (sec_mismatch_verbose)
-> -               report_extable_warnings(modname, elf, mismatch, r, sym,
-> -                                       fromsec, tosec);
-> +       report_extable_warnings(modname, elf, mismatch, r, sym, fromsec, tosec);
->
->         if (match(tosec, mismatch->bad_tosec))
->                 fatal("The relocation at %s+0x%lx references\n"
-> @@ -2433,7 +2428,7 @@ int main(int argc, char **argv)
->         struct ext_sym_list *extsym_iter;
->         struct ext_sym_list *extsym_start = NULL;
->
-> -       while ((opt = getopt(argc, argv, "i:I:e:mnsST:o:awE")) != -1) {
-> +       while ((opt = getopt(argc, argv, "i:I:e:mnsT:o:awE")) != -1) {
->                 switch (opt) {
->                 case 'i':
->                         kernel_read = optarg;
-> @@ -2465,9 +2460,6 @@ int main(int argc, char **argv)
->                 case 's':
->                         vmlinux_section_warnings = 0;
->                         break;
-> -               case 'S':
-> -                       sec_mismatch_verbose = 0;
-> -                       break;
->                 case 'T':
->                         files_source = optarg;
->                         break;
-> @@ -2525,18 +2517,9 @@ int main(int argc, char **argv)
->         }
->         if (dump_write)
->                 write_dump(dump_write);
-> -       if (sec_mismatch_count) {
-> -               if (!sec_mismatch_verbose) {
-> -                       warn("modpost: Found %d section mismatch(es).\n"
-> -                            "To see full details build your kernel with:\n"
-> -                            "'make CONFIG_DEBUG_SECTION_MISMATCH=y'\n",
-> -                            sec_mismatch_count);
-> -               }
-> -               if (sec_mismatch_fatal) {
-> -                       fatal("modpost: Section mismatches detected.\n"
-> -                             "Set CONFIG_SECTION_MISMATCH_WARN_ONLY=y to allow them.\n");
-> -               }
-> -       }
-> +       if (sec_mismatch_count && sec_mismatch_fatal)
-> +               fatal("modpost: Section mismatches detected.\n"
-> +                     "Set CONFIG_SECTION_MISMATCH_WARN_ONLY=y to allow them.\n");
->         free(buf.p);
->
->         return err;
-> --
-> 2.7.4
->
+In general it makes sense to do fixed point via 1024 or something that
+can be optimized into shifts (and a larger number is better in general
+for better precision).
 
-
--- 
-Best Regards
-Masahiro Yamada
+> +			pr_warn_ratelimited(
+> +				"cfs_period_timer[cpu%d]: period too short, scaling up (new cfs_period_us %lld, cfs_quota_us = %lld)\n",
+> +				smp_processor_id(), cfs_b->period/NSEC_PER_USEC, cfs_b->quota/NSEC_PER_USEC);
+> +
+> +			idle = 0;
+> +			break;
+> +		}
+> +
+>  		idle = do_sched_cfs_period_timer(cfs_b, overrun);
+>  	}
+>  	if (idle)
