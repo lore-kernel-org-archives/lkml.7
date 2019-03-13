@@ -7,47 +7,47 @@ X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9DE16C43381
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 Mar 2019 19:27:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B1A42C43381
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 Mar 2019 19:28:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7165B20657
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 Mar 2019 19:27:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8527620657
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 Mar 2019 19:28:01 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1552505273;
-	bh=7Yabia67CA2a2s3WOo3uxMOKLKlnbqpbE6/o/nyvMFY=;
+	s=default; t=1552505281;
+	bh=L0Enbu1fZ7K+UDS99HWcRdeF+WzSsW51aiihSnv1XEk=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=bPczZwCadXKBR1VgyAJhjFS4X7TW66T6teaR5VugTgUvSNCte+tOg9fqKOiSdXfsH
-	 V6wemxWv6xBbzrNQ63C8UON/XQxt021nxD+k72YhI1AChSyBzVZXgQ/rVRNICIxsO7
-	 DFMa6JgN3swnCAMccID9bsAD3ECV+JPT3B0b/JrQ=
+	b=eo6UK/iPOYqFhcE3Vf7qPyOL2aQVSCB2O29oiJhst4AgQ/HeEbTjad6MxHc2cOxZ4
+	 I1H2BCjZAlrBsu6GCIgZBw9WQuLz6KzwYv5rHkVwTzNvcBALdhn8B+NK/vbUE6d/oJ
+	 pOOEhA7pEoZ0NHVBoYRnbCPTnKnB6t6YBtKj9SH4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728103AbfCMTNw (ORCPT
+        id S1728268AbfCMT2A (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 13 Mar 2019 15:13:52 -0400
-Received: from mail.kernel.org ([198.145.29.99]:44236 "EHLO mail.kernel.org"
+        Wed, 13 Mar 2019 15:28:00 -0400
+Received: from mail.kernel.org ([198.145.29.99]:44288 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728031AbfCMTNr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 13 Mar 2019 15:13:47 -0400
+        id S1728081AbfCMTNv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 13 Mar 2019 15:13:51 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id DE39E20693;
-        Wed, 13 Mar 2019 19:13:44 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id EDB9F2173C;
+        Wed, 13 Mar 2019 19:13:48 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1552504426;
-        bh=7Yabia67CA2a2s3WOo3uxMOKLKlnbqpbE6/o/nyvMFY=;
+        s=default; t=1552504430;
+        bh=L0Enbu1fZ7K+UDS99HWcRdeF+WzSsW51aiihSnv1XEk=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=x0vvHTBVh921rkTO8CcPVe6epX67EM9W18sl/o8syzfty0P37upSlwp4hgZge3aEH
-         OCnOACKo0IlmXe8VcybZsxGzbTTciTa2h/1ewTIl9CBvdtuyLua3cvUnpsN8e4NNeq
-         GtkcMoJ2b+8Yq+9OeHc9oBtVaiSTM7r/57qbLV6E=
+        b=hvpcUvZ7D0Bn43eUpOcVPycEqh8HTxoUCB22MQBWSYD4H9ofnKPBsJio4oGljk2f1
+         U1+FXKjaf4IchRJo+HU3pmS3VgsVIFJSt1N2Jet70HvVN51TcCisRyLiCmS6eVUkAL
+         2Me7krLyAPmuh2Jul1GyfJ/A0A3Kle0/lFUCTVBQ=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Michal Kalderon <michal.kalderon@marvell.com>,
-        Ariel Elior <ariel.elior@marvell.com>,
-        "David S . Miller" <davem@davemloft.net>,
-        Sasha Levin <sashal@kernel.org>, netdev@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.19 21/48] qed: Fix iWARP buffer size provided for syn packet processing.
-Date:   Wed, 13 Mar 2019 15:12:23 -0400
-Message-Id: <20190313191250.158955-21-sashal@kernel.org>
+Cc:     Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
+        Miquel Raynal <miquel.raynal@bootlin.com>,
+        Gregory CLEMENT <gregory.clement@bootlin.com>,
+        Sasha Levin <sashal@kernel.org>, devicetree@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.19 23/48] ARM: dts: armada-xp: fix Armada XP boards NAND description
+Date:   Wed, 13 Mar 2019 15:12:25 -0400
+Message-Id: <20190313191250.158955-23-sashal@kernel.org>
 X-Mailer: git-send-email 2.19.1
 In-Reply-To: <20190313191250.158955-1-sashal@kernel.org>
 References: <20190313191250.158955-1-sashal@kernel.org>
@@ -59,90 +59,214 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Michal Kalderon <michal.kalderon@marvell.com>
+From: Thomas Petazzoni <thomas.petazzoni@bootlin.com>
 
-[ Upstream commit 9addc92730df55e2c05e8d3f69267a89d65bcba8 ]
+[ Upstream commit 6fc979179c98d2591784937d5618edc3e5cd31c1 ]
 
-The assumption that the maximum size of a syn packet is 128 bytes
-is wrong. Tunneling headers were not accounted for.
-Allocate buffers large enough for mtu.
+Commit 3b79919946cd2cf4dac47842afc9a893acec4ed7 ("ARM: dts:
+armada-370-xp: update NAND node with new bindings") updated some
+Marvell Armada DT description to use the new NAND controller bindings,
+but did it incorrectly for a number of boards: armada-xp-gp,
+armada-xp-db and armada-xp-lenovo-ix4-300d. Due to this, the NAND is
+no longer detected on those platforms.
 
-Signed-off-by: Ariel Elior <ariel.elior@marvell.com>
-Signed-off-by: Michal Kalderon <michal.kalderon@marvell.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
+This commit fixes that by properly using the new NAND DT binding. This
+commit was runtime-tested on Armada XP GP, the two other platforms are
+only compile-tested.
+
+Fixes: 3b79919946cd2 ("ARM: dts: armada-370-xp: update NAND node with new bindings")
+Cc: Miquel Raynal <miquel.raynal@bootlin.com>
+Signed-off-by: Thomas Petazzoni <thomas.petazzoni@bootlin.com>
+Signed-off-by: Gregory CLEMENT <gregory.clement@bootlin.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/ethernet/qlogic/qed/qed_iwarp.c | 12 ++++++------
- drivers/net/ethernet/qlogic/qed/qed_iwarp.h |  1 -
- 2 files changed, 6 insertions(+), 7 deletions(-)
+ arch/arm/boot/dts/armada-xp-db.dts            | 46 +++++-----
+ arch/arm/boot/dts/armada-xp-gp.dts            | 13 +--
+ .../boot/dts/armada-xp-lenovo-ix4-300d.dts    | 85 ++++++++++---------
+ 3 files changed, 76 insertions(+), 68 deletions(-)
 
-diff --git a/drivers/net/ethernet/qlogic/qed/qed_iwarp.c b/drivers/net/ethernet/qlogic/qed/qed_iwarp.c
-index e860bdf0f752..3c932f79a02e 100644
---- a/drivers/net/ethernet/qlogic/qed/qed_iwarp.c
-+++ b/drivers/net/ethernet/qlogic/qed/qed_iwarp.c
-@@ -2606,7 +2606,7 @@ qed_iwarp_ll2_start(struct qed_hwfn *p_hwfn,
- 	struct qed_iwarp_info *iwarp_info;
- 	struct qed_ll2_acquire_data data;
- 	struct qed_ll2_cbs cbs;
--	u32 mpa_buff_size;
-+	u32 buff_size;
- 	u16 n_ooo_bufs;
- 	int rc = 0;
- 	int i;
-@@ -2633,7 +2633,7 @@ qed_iwarp_ll2_start(struct qed_hwfn *p_hwfn,
+diff --git a/arch/arm/boot/dts/armada-xp-db.dts b/arch/arm/boot/dts/armada-xp-db.dts
+index f3ac7483afed..5d04dc68cf57 100644
+--- a/arch/arm/boot/dts/armada-xp-db.dts
++++ b/arch/arm/boot/dts/armada-xp-db.dts
+@@ -144,30 +144,32 @@
+ 				status = "okay";
+ 			};
  
- 	memset(&data, 0, sizeof(data));
- 	data.input.conn_type = QED_LL2_TYPE_IWARP;
--	data.input.mtu = QED_IWARP_MAX_SYN_PKT_SIZE;
-+	data.input.mtu = params->max_mtu;
- 	data.input.rx_num_desc = QED_IWARP_LL2_SYN_RX_SIZE;
- 	data.input.tx_num_desc = QED_IWARP_LL2_SYN_TX_SIZE;
- 	data.input.tx_max_bds_per_packet = 1;	/* will never be fragmented */
-@@ -2655,9 +2655,10 @@ qed_iwarp_ll2_start(struct qed_hwfn *p_hwfn,
- 		goto err;
- 	}
+-			nand@d0000 {
++			nand-controller@d0000 {
+ 				status = "okay";
+-				label = "pxa3xx_nand-0";
+-				num-cs = <1>;
+-				marvell,nand-keep-config;
+-				nand-on-flash-bbt;
+-
+-				partitions {
+-					compatible = "fixed-partitions";
+-					#address-cells = <1>;
+-					#size-cells = <1>;
+-
+-					partition@0 {
+-						label = "U-Boot";
+-						reg = <0 0x800000>;
+-					};
+-					partition@800000 {
+-						label = "Linux";
+-						reg = <0x800000 0x800000>;
+-					};
+-					partition@1000000 {
+-						label = "Filesystem";
+-						reg = <0x1000000 0x3f000000>;
  
-+	buff_size = QED_IWARP_MAX_BUF_SIZE(params->max_mtu);
- 	rc = qed_iwarp_ll2_alloc_buffers(p_hwfn,
- 					 QED_IWARP_LL2_SYN_RX_SIZE,
--					 QED_IWARP_MAX_SYN_PKT_SIZE,
-+					 buff_size,
- 					 iwarp_info->ll2_syn_handle);
- 	if (rc)
- 		goto err;
-@@ -2711,10 +2712,9 @@ qed_iwarp_ll2_start(struct qed_hwfn *p_hwfn,
- 	if (rc)
- 		goto err;
++				nand@0 {
++					reg = <0>;
++					label = "pxa3xx_nand-0";
++					nand-rb = <0>;
++					nand-on-flash-bbt;
++
++					partitions {
++						compatible = "fixed-partitions";
++						#address-cells = <1>;
++						#size-cells = <1>;
++
++						partition@0 {
++							label = "U-Boot";
++							reg = <0 0x800000>;
++						};
++						partition@800000 {
++							label = "Linux";
++							reg = <0x800000 0x800000>;
++						};
++						partition@1000000 {
++							label = "Filesystem";
++							reg = <0x1000000 0x3f000000>;
++						};
+ 					};
+ 				};
+ 			};
+diff --git a/arch/arm/boot/dts/armada-xp-gp.dts b/arch/arm/boot/dts/armada-xp-gp.dts
+index 1139e9469a83..b4cca507cf13 100644
+--- a/arch/arm/boot/dts/armada-xp-gp.dts
++++ b/arch/arm/boot/dts/armada-xp-gp.dts
+@@ -160,12 +160,15 @@
+ 				status = "okay";
+ 			};
  
--	mpa_buff_size = QED_IWARP_MAX_BUF_SIZE(params->max_mtu);
- 	rc = qed_iwarp_ll2_alloc_buffers(p_hwfn,
- 					 data.input.rx_num_desc,
--					 mpa_buff_size,
-+					 buff_size,
- 					 iwarp_info->ll2_mpa_handle);
- 	if (rc)
- 		goto err;
-@@ -2727,7 +2727,7 @@ qed_iwarp_ll2_start(struct qed_hwfn *p_hwfn,
+-			nand@d0000 {
++			nand-controller@d0000 {
+ 				status = "okay";
+-				label = "pxa3xx_nand-0";
+-				num-cs = <1>;
+-				marvell,nand-keep-config;
+-				nand-on-flash-bbt;
++
++				nand@0 {
++					reg = <0>;
++					label = "pxa3xx_nand-0";
++					nand-rb = <0>;
++					nand-on-flash-bbt;
++				};
+ 			};
+ 		};
  
- 	iwarp_info->max_num_partial_fpdus = (u16)p_hwfn->p_rdma_info->num_qps;
+diff --git a/arch/arm/boot/dts/armada-xp-lenovo-ix4-300d.dts b/arch/arm/boot/dts/armada-xp-lenovo-ix4-300d.dts
+index bbbb38888bb8..87dcb502f72d 100644
+--- a/arch/arm/boot/dts/armada-xp-lenovo-ix4-300d.dts
++++ b/arch/arm/boot/dts/armada-xp-lenovo-ix4-300d.dts
+@@ -81,49 +81,52 @@
  
--	iwarp_info->mpa_intermediate_buf = kzalloc(mpa_buff_size, GFP_KERNEL);
-+	iwarp_info->mpa_intermediate_buf = kzalloc(buff_size, GFP_KERNEL);
- 	if (!iwarp_info->mpa_intermediate_buf)
- 		goto err;
+ 			};
  
-diff --git a/drivers/net/ethernet/qlogic/qed/qed_iwarp.h b/drivers/net/ethernet/qlogic/qed/qed_iwarp.h
-index b8f612d00241..7ac959038324 100644
---- a/drivers/net/ethernet/qlogic/qed/qed_iwarp.h
-+++ b/drivers/net/ethernet/qlogic/qed/qed_iwarp.h
-@@ -46,7 +46,6 @@ enum qed_iwarp_qp_state qed_roce2iwarp_state(enum qed_roce_qp_state state);
+-			nand@d0000 {
++			nand-controller@d0000 {
+ 				status = "okay";
+-				label = "pxa3xx_nand-0";
+-				num-cs = <1>;
+-				marvell,nand-keep-config;
+-				nand-on-flash-bbt;
+-
+-				partitions {
+-					compatible = "fixed-partitions";
+-					#address-cells = <1>;
+-					#size-cells = <1>;
+-
+-					partition@0 {
+-						label = "u-boot";
+-						reg = <0x00000000 0x000e0000>;
+-						read-only;
+-					};
+-
+-					partition@e0000 {
+-						label = "u-boot-env";
+-						reg = <0x000e0000 0x00020000>;
+-						read-only;
+-					};
+-
+-					partition@100000 {
+-						label = "u-boot-env2";
+-						reg = <0x00100000 0x00020000>;
+-						read-only;
+-					};
+-
+-					partition@120000 {
+-						label = "zImage";
+-						reg = <0x00120000 0x00400000>;
+-					};
+-
+-					partition@520000 {
+-						label = "initrd";
+-						reg = <0x00520000 0x00400000>;
+-					};
  
- #define QED_IWARP_LL2_SYN_TX_SIZE       (128)
- #define QED_IWARP_LL2_SYN_RX_SIZE       (256)
--#define QED_IWARP_MAX_SYN_PKT_SIZE      (128)
- 
- #define QED_IWARP_LL2_OOO_DEF_TX_SIZE   (256)
- #define QED_IWARP_MAX_OOO		(16)
+-					partition@e00000 {
+-						label = "boot";
+-						reg = <0x00e00000 0x3f200000>;
++				nand@0 {
++					reg = <0>;
++					label = "pxa3xx_nand-0";
++					nand-rb = <0>;
++					nand-on-flash-bbt;
++
++					partitions {
++						compatible = "fixed-partitions";
++						#address-cells = <1>;
++						#size-cells = <1>;
++
++						partition@0 {
++							label = "u-boot";
++							reg = <0x00000000 0x000e0000>;
++							read-only;
++						};
++
++						partition@e0000 {
++							label = "u-boot-env";
++							reg = <0x000e0000 0x00020000>;
++							read-only;
++						};
++
++						partition@100000 {
++							label = "u-boot-env2";
++							reg = <0x00100000 0x00020000>;
++							read-only;
++						};
++
++						partition@120000 {
++							label = "zImage";
++							reg = <0x00120000 0x00400000>;
++						};
++
++						partition@520000 {
++							label = "initrd";
++							reg = <0x00520000 0x00400000>;
++						};
++
++						partition@e00000 {
++							label = "boot";
++							reg = <0x00e00000 0x3f200000>;
++						};
+ 					};
+ 				};
+ 			};
 -- 
 2.19.1
 
