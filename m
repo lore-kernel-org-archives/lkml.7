@@ -7,52 +7,50 @@ X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7681EC10F03
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 Mar 2019 19:17:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AFFD6C43381
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 Mar 2019 19:17:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 448E72075C
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 Mar 2019 19:17:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7ADDC2184E
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 Mar 2019 19:17:26 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1552504638;
-	bh=FoKoBmeNU52R/Excfc7BDCXTBLfYZ5GXkOl78yYPwe4=;
+	s=default; t=1552504646;
+	bh=sVblMtG0NrzYE2b4pdSq7BQgvXQ9oXw/RdObMDka5lU=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=xBdjqzhV9G8n62TZ0hmpqHvVXL8cD/YGc8Jqh1M73XPIPDT8TOKIowt1sigJZMDox
-	 X+CmnQio04jrYehaxPZqGdCMVLsBlkz/I48XMDEaHYWPIh1jxQlji65yuNd1Puc0PV
-	 Izd9RUJYya9y3XaKDRbEg6czFa9dxs2C4LGYdvJY=
+	b=pehVQqdkHcAnIYDavb899odI8vf0b96Trzcqas96I2ApiNGzpYxeAAjgvGfGmXQuq
+	 NxGIZT3GuPoZGbzFri1AkwXJy7lSfcPh2+gwU8AVnJfbqcVdwHCzf1cdf3HqqYoFjk
+	 zuZLDtRt0q0/tq1+3rECooVa/pZHsttjKmzCJ0zE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728117AbfCMTRQ (ORCPT
+        id S1728178AbfCMTRY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 13 Mar 2019 15:17:16 -0400
-Received: from mail.kernel.org ([198.145.29.99]:47560 "EHLO mail.kernel.org"
+        Wed, 13 Mar 2019 15:17:24 -0400
+Received: from mail.kernel.org ([198.145.29.99]:47640 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728820AbfCMTRM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 13 Mar 2019 15:17:12 -0400
+        id S1728376AbfCMTRQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 13 Mar 2019 15:17:16 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 493772184D;
-        Wed, 13 Mar 2019 19:17:09 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id F33CB213A2;
+        Wed, 13 Mar 2019 19:17:13 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1552504631;
-        bh=FoKoBmeNU52R/Excfc7BDCXTBLfYZ5GXkOl78yYPwe4=;
+        s=default; t=1552504635;
+        bh=sVblMtG0NrzYE2b4pdSq7BQgvXQ9oXw/RdObMDka5lU=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=uuOamLBpgwTSj9J1MJKNuKWDtwWissxUGsuemfI0j+mfblO0zkOZvixQqJrmxmJQl
-         5PxkLPShKTq5bWj4OTolflrDSC4X7aQCjBYw8HbJDPx6VB1JvhaTYlV54TtKFIPRlQ
-         W4EuzrPK6euoymWWZ4pHUWFwzyfvxCgxOPK05jXE=
+        b=RYKyNtLZkFqI/HDErMczOKkOQRZ6Buh6umilXsL44e+ZAiTit2zny206C4utRmZoZ
+         kSa2UGtbGtfjRQWYO2elAtzYhsZTCadgBxeqwL11+JxNgZIxSNhf+pEM5acse59tqt
+         3QxqElWpe5iwqv3eLaKDnVbcMhoQAp9ssHJWeKQU=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Beniamino Galvani <bgalvani@redhat.com>,
-        "David S . Miller" <davem@davemloft.net>,
-        Sasha Levin <sashal@kernel.org>, netdev@vger.kernel.org,
-        linux-usb@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.9 07/24] qmi_wwan: apply SET_DTR quirk to Sierra WP7607
-Date:   Wed, 13 Mar 2019 15:16:30 -0400
-Message-Id: <20190313191647.160171-7-sashal@kernel.org>
+Cc:     Bard liao <yung-chuan.liao@linux.intel.com>,
+        Mark Brown <broonie@kernel.org>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH AUTOSEL 4.9 09/24] ASoC: topology: free created components in tplg load error
+Date:   Wed, 13 Mar 2019 15:16:32 -0400
+Message-Id: <20190313191647.160171-9-sashal@kernel.org>
 X-Mailer: git-send-email 2.19.1
 In-Reply-To: <20190313191647.160171-1-sashal@kernel.org>
 References: <20190313191647.160171-1-sashal@kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
@@ -60,37 +58,45 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Beniamino Galvani <bgalvani@redhat.com>
+From: Bard liao <yung-chuan.liao@linux.intel.com>
 
-[ Upstream commit 97dc47a1308a3af46a09b1546cfb869f2e382a81 ]
+[ Upstream commit 304017d31df36fb61eb2ed3ebf65fb6870b3c731 ]
 
-The 1199:68C0 USB ID is reused by Sierra WP7607 which requires the DTR
-quirk to be detected. Apply QMI_QUIRK_SET_DTR unconditionally as
-already done for other IDs shared between different devices.
+Topology resources are no longer needed if any element failed to load.
 
-Signed-off-by: Beniamino Galvani <bgalvani@redhat.com>
-Acked-by: Bjørn Mork <bjorn@mork.no>
-Signed-off-by: David S. Miller <davem@davemloft.net>
+Signed-off-by: Bard liao <yung-chuan.liao@linux.intel.com>
+Signed-off-by: Mark Brown <broonie@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/usb/qmi_wwan.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ sound/soc/soc-topology.c | 8 +++++++-
+ 1 file changed, 7 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/net/usb/qmi_wwan.c b/drivers/net/usb/qmi_wwan.c
-index 134eb184fa22..16e5c8cd104d 100644
---- a/drivers/net/usb/qmi_wwan.c
-+++ b/drivers/net/usb/qmi_wwan.c
-@@ -895,8 +895,8 @@ static const struct usb_device_id products[] = {
- 	{QMI_FIXED_INTF(0x114f, 0x68a2, 8)},    /* Sierra Wireless MC7750 */
- 	{QMI_FIXED_INTF(0x1199, 0x68a2, 8)},	/* Sierra Wireless MC7710 in QMI mode */
- 	{QMI_FIXED_INTF(0x1199, 0x68a2, 19)},	/* Sierra Wireless MC7710 in QMI mode */
--	{QMI_FIXED_INTF(0x1199, 0x68c0, 8)},	/* Sierra Wireless MC7304/MC7354 */
--	{QMI_FIXED_INTF(0x1199, 0x68c0, 10)},	/* Sierra Wireless MC7304/MC7354 */
-+	{QMI_QUIRK_SET_DTR(0x1199, 0x68c0, 8)},	/* Sierra Wireless MC7304/MC7354, WP76xx */
-+	{QMI_QUIRK_SET_DTR(0x1199, 0x68c0, 10)},/* Sierra Wireless MC7304/MC7354 */
- 	{QMI_FIXED_INTF(0x1199, 0x901c, 8)},    /* Sierra Wireless EM7700 */
- 	{QMI_FIXED_INTF(0x1199, 0x901f, 8)},    /* Sierra Wireless EM7355 */
- 	{QMI_FIXED_INTF(0x1199, 0x9041, 8)},	/* Sierra Wireless MC7305/MC7355 */
+diff --git a/sound/soc/soc-topology.c b/sound/soc/soc-topology.c
+index d6b48c796bfc..086fe4d27f60 100644
+--- a/sound/soc/soc-topology.c
++++ b/sound/soc/soc-topology.c
+@@ -1989,6 +1989,7 @@ int snd_soc_tplg_component_load(struct snd_soc_component *comp,
+ 	struct snd_soc_tplg_ops *ops, const struct firmware *fw, u32 id)
+ {
+ 	struct soc_tplg tplg;
++	int ret;
+ 
+ 	/* setup parsing context */
+ 	memset(&tplg, 0, sizeof(tplg));
+@@ -2002,7 +2003,12 @@ int snd_soc_tplg_component_load(struct snd_soc_component *comp,
+ 	tplg.bytes_ext_ops = ops->bytes_ext_ops;
+ 	tplg.bytes_ext_ops_count = ops->bytes_ext_ops_count;
+ 
+-	return soc_tplg_load(&tplg);
++	ret = soc_tplg_load(&tplg);
++	/* free the created components if fail to load topology */
++	if (ret)
++		snd_soc_tplg_component_remove(comp, SND_SOC_TPLG_INDEX_ALL);
++
++	return ret;
+ }
+ EXPORT_SYMBOL_GPL(snd_soc_tplg_component_load);
+ 
 -- 
 2.19.1
 
