@@ -2,263 +2,85 @@ Return-Path: <SRS0=dUEL=RQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,
-	URIBL_SBL,URIBL_SBL_A autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_NEOMUTT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B5150C43381
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 Mar 2019 18:21:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A7826C43381
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 Mar 2019 18:22:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 858582075C
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 Mar 2019 18:21:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6DBA52075C
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 Mar 2019 18:22:36 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726790AbfCMSVD (ORCPT
+        id S1726828AbfCMSWf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 13 Mar 2019 14:21:03 -0400
-Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:35694 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726411AbfCMSVC (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 13 Mar 2019 14:21:02 -0400
-Received: from pps.filterd (m0098421.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x2DICqcc064189
-        for <linux-kernel@vger.kernel.org>; Wed, 13 Mar 2019 14:21:01 -0400
-Received: from e06smtp01.uk.ibm.com (e06smtp01.uk.ibm.com [195.75.94.97])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 2r749agakt-1
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
-        for <linux-kernel@vger.kernel.org>; Wed, 13 Mar 2019 14:20:59 -0400
-Received: from localhost
-        by e06smtp01.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
-        for <linux-kernel@vger.kernel.org> from <fbarrat@linux.ibm.com>;
-        Wed, 13 Mar 2019 18:20:49 -0000
-Received: from b06cxnps4075.portsmouth.uk.ibm.com (9.149.109.197)
-        by e06smtp01.uk.ibm.com (192.168.101.131) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
-        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
-        Wed, 13 Mar 2019 18:20:46 -0000
-Received: from b06wcsmtp001.portsmouth.uk.ibm.com (b06wcsmtp001.portsmouth.uk.ibm.com [9.149.105.160])
-        by b06cxnps4075.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x2DIKj8131916208
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Wed, 13 Mar 2019 18:20:45 GMT
-Received: from b06wcsmtp001.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 1B69FA405C;
-        Wed, 13 Mar 2019 18:20:45 +0000 (GMT)
-Received: from b06wcsmtp001.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id AA844A4054;
-        Wed, 13 Mar 2019 18:20:44 +0000 (GMT)
-Received: from [9.145.182.34] (unknown [9.145.182.34])
-        by b06wcsmtp001.portsmouth.uk.ibm.com (Postfix) with ESMTP;
-        Wed, 13 Mar 2019 18:20:44 +0000 (GMT)
-Subject: Re: [PATCH 2/7] ocxl: Allow external drivers to use OpenCAPI contexts
-To:     "Alastair D'Silva" <alastair@au1.ibm.com>
-Cc:     "Alastair D'Silva" <alastair@d-silva.org>,
-        Greg Kurz <groug@kaod.org>,
-        Andrew Donnellan <andrew.donnellan@au1.ibm.com>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        linux-kernel@vger.kernel.org, linuxppc-dev@lists.ozlabs.org
-References: <20190313041524.14644-1-alastair@au1.ibm.com>
- <20190313041524.14644-3-alastair@au1.ibm.com>
-From:   Frederic Barrat <fbarrat@linux.ibm.com>
-Date:   Wed, 13 Mar 2019 19:20:44 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.5.1
+        Wed, 13 Mar 2019 14:22:35 -0400
+Received: from foss.arm.com ([217.140.101.70]:33318 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726142AbfCMSWe (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 13 Mar 2019 14:22:34 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.72.51.249])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 6F641165C;
+        Wed, 13 Mar 2019 11:22:34 -0700 (PDT)
+Received: from e110439-lin (e110439-lin.cambridge.arm.com [10.1.194.43])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 7B1073F614;
+        Wed, 13 Mar 2019 11:22:31 -0700 (PDT)
+Date:   Wed, 13 Mar 2019 18:22:28 +0000
+From:   Patrick Bellasi <patrick.bellasi@arm.com>
+To:     Peter Zijlstra <peterz@infradead.org>
+Cc:     linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org,
+        linux-api@vger.kernel.org, Ingo Molnar <mingo@redhat.com>,
+        Tejun Heo <tj@kernel.org>,
+        "Rafael J . Wysocki" <rafael.j.wysocki@intel.com>,
+        Vincent Guittot <vincent.guittot@linaro.org>,
+        Viresh Kumar <viresh.kumar@linaro.org>,
+        Paul Turner <pjt@google.com>,
+        Quentin Perret <quentin.perret@arm.com>,
+        Dietmar Eggemann <dietmar.eggemann@arm.com>,
+        Morten Rasmussen <morten.rasmussen@arm.com>,
+        Juri Lelli <juri.lelli@redhat.com>,
+        Todd Kjos <tkjos@google.com>,
+        Joel Fernandes <joelaf@google.com>,
+        Steve Muckle <smuckle@google.com>,
+        Suren Baghdasaryan <surenb@google.com>
+Subject: Re: [PATCH v7 01/15] sched/core: uclamp: Add CPU's clamp buckets
+ refcounting
+Message-ID: <20190313182228.h22o36vnokiskhzk@e110439-lin>
+References: <20190208100554.32196-1-patrick.bellasi@arm.com>
+ <20190208100554.32196-2-patrick.bellasi@arm.com>
+ <20190313134022.GB5922@hirez.programming.kicks-ass.net>
+ <20190313161229.pkib2tmjass5chtb@e110439-lin>
+ <20190313172225.GG5996@hirez.programming.kicks-ass.net>
 MIME-Version: 1.0
-In-Reply-To: <20190313041524.14644-3-alastair@au1.ibm.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: fr
-Content-Transfer-Encoding: 8bit
-X-TM-AS-GCONF: 00
-x-cbid: 19031318-4275-0000-0000-0000031A9469
-X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
-x-cbparentid: 19031318-4276-0000-0000-00003829041D
-Message-Id: <35bec389-2b70-96cb-c5f5-443bf902c9cd@linux.ibm.com>
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-03-13_11:,,
- signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
- malwarescore=0 suspectscore=2 phishscore=0 bulkscore=0 spamscore=0
- clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
- mlxlogscore=644 adultscore=0 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.0.1-1810050000 definitions=main-1903130126
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190313172225.GG5996@hirez.programming.kicks-ass.net>
+User-Agent: NeoMutt/20180716
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-
-
-Le 13/03/2019 à 05:15, Alastair D'Silva a écrit :
-> From: Alastair D'Silva <alastair@d-silva.org>
+On 13-Mar 18:22, Peter Zijlstra wrote:
+> On Wed, Mar 13, 2019 at 04:12:29PM +0000, Patrick Bellasi wrote:
+> > Yes, the for looks better, but perhaps like that:
+> > 
+> > 	unsigned int bucket_id = UCLAMP_BUCKETS;
+> > 
+> >  	/*
+> >  	 * Both min and max clamps are MAX aggregated, thus the topmost
+> >  	 * bucket with some tasks defines the rq's clamp value.
+> >  	 */
+> > 	for (; bucket_id >= 0; --bucket_id) {
 > 
-> Most OpenCAPI operations require a valid context, so
-> exposing these functions to external drivers is necessary.
+> GCC will be clever and figure that unsigned will never be smaller than 0
+> and turn the above into an infinite loop or something daft.
 > 
-> Signed-off-by: Alastair D'Silva <alastair@d-silva.org>
-> Reviewed-by: Greg Kurz <groug@kaod.org>
-> ---
+> That is; use 'int', not 'unsigned int' for bucket_id.
 
-Patch could also be moved later in the series (same reason as before), but:
-Acked-by: Frederic Barrat <fbarrat@linux.ibm.com>
+Right, which remembers me now why I originally went for a do { } while();
 
+-- 
+#include <best/regards.h>
 
->   drivers/misc/ocxl/context.c       |  9 +++++--
->   drivers/misc/ocxl/file.c          |  2 +-
->   drivers/misc/ocxl/ocxl_internal.h |  6 -----
->   include/misc/ocxl.h               | 44 +++++++++++++++++++++++++++++++
->   4 files changed, 52 insertions(+), 9 deletions(-)
-> 
-> diff --git a/drivers/misc/ocxl/context.c b/drivers/misc/ocxl/context.c
-> index 3498a0199bde..1534b56f1db1 100644
-> --- a/drivers/misc/ocxl/context.c
-> +++ b/drivers/misc/ocxl/context.c
-> @@ -8,6 +8,7 @@ struct ocxl_context *ocxl_context_alloc(void)
->   {
->   	return kzalloc(sizeof(struct ocxl_context), GFP_KERNEL);
->   }
-> +EXPORT_SYMBOL_GPL(ocxl_context_alloc);
->   
->   int ocxl_context_init(struct ocxl_context *ctx, struct ocxl_afu *afu,
->   		struct address_space *mapping)
-> @@ -43,6 +44,7 @@ int ocxl_context_init(struct ocxl_context *ctx, struct ocxl_afu *afu,
->   	ocxl_afu_get(afu);
->   	return 0;
->   }
-> +EXPORT_SYMBOL_GPL(ocxl_context_init);
->   
->   /*
->    * Callback for when a translation fault triggers an error
-> @@ -63,7 +65,7 @@ static void xsl_fault_error(void *data, u64 addr, u64 dsisr)
->   	wake_up_all(&ctx->events_wq);
->   }
->   
-> -int ocxl_context_attach(struct ocxl_context *ctx, u64 amr)
-> +int ocxl_context_attach(struct ocxl_context *ctx, u64 amr, struct mm_struct *mm)
->   {
->   	int rc;
->   
-> @@ -75,7 +77,7 @@ int ocxl_context_attach(struct ocxl_context *ctx, u64 amr)
->   	}
->   
->   	rc = ocxl_link_add_pe(ctx->afu->fn->link, ctx->pasid,
-> -			current->mm->context.id, ctx->tidr, amr, current->mm,
-> +			mm->context.id, ctx->tidr, amr, mm,
->   			xsl_fault_error, ctx);
->   	if (rc)
->   		goto out;
-> @@ -85,6 +87,7 @@ int ocxl_context_attach(struct ocxl_context *ctx, u64 amr)
->   	mutex_unlock(&ctx->status_mutex);
->   	return rc;
->   }
-> +EXPORT_SYMBOL_GPL(ocxl_context_attach);
->   
->   static vm_fault_t map_afu_irq(struct vm_area_struct *vma, unsigned long address,
->   		u64 offset, struct ocxl_context *ctx)
-> @@ -243,6 +246,7 @@ int ocxl_context_detach(struct ocxl_context *ctx)
->   	}
->   	return 0;
->   }
-> +EXPORT_SYMBOL_GPL(ocxl_context_detach);
->   
->   void ocxl_context_detach_all(struct ocxl_afu *afu)
->   {
-> @@ -280,3 +284,4 @@ void ocxl_context_free(struct ocxl_context *ctx)
->   	ocxl_afu_put(ctx->afu);
->   	kfree(ctx);
->   }
-> +EXPORT_SYMBOL_GPL(ocxl_context_free);
-> diff --git a/drivers/misc/ocxl/file.c b/drivers/misc/ocxl/file.c
-> index 16eb8a60d5c7..865b3d176431 100644
-> --- a/drivers/misc/ocxl/file.c
-> +++ b/drivers/misc/ocxl/file.c
-> @@ -100,7 +100,7 @@ static long afu_ioctl_attach(struct ocxl_context *ctx,
->   		return -EINVAL;
->   
->   	amr = arg.amr & mfspr(SPRN_UAMOR);
-> -	rc = ocxl_context_attach(ctx, amr);
-> +	rc = ocxl_context_attach(ctx, amr, current->mm);
->   	return rc;
->   }
->   
-> diff --git a/drivers/misc/ocxl/ocxl_internal.h b/drivers/misc/ocxl/ocxl_internal.h
-> index 06fd98c989c8..779d15ef60b5 100644
-> --- a/drivers/misc/ocxl/ocxl_internal.h
-> +++ b/drivers/misc/ocxl/ocxl_internal.h
-> @@ -130,15 +130,9 @@ int ocxl_config_check_afu_index(struct pci_dev *dev,
->    */
->   int ocxl_link_update_pe(void *link_handle, int pasid, __u16 tid);
->   
-> -struct ocxl_context *ocxl_context_alloc(void);
-> -int ocxl_context_init(struct ocxl_context *ctx, struct ocxl_afu *afu,
-> -			struct address_space *mapping);
-> -int ocxl_context_attach(struct ocxl_context *ctx, u64 amr);
->   int ocxl_context_mmap(struct ocxl_context *ctx,
->   			struct vm_area_struct *vma);
-> -int ocxl_context_detach(struct ocxl_context *ctx);
->   void ocxl_context_detach_all(struct ocxl_afu *afu);
-> -void ocxl_context_free(struct ocxl_context *ctx);
->   
->   int ocxl_sysfs_add_afu(struct ocxl_afu *afu);
->   void ocxl_sysfs_remove_afu(struct ocxl_afu *afu);
-> diff --git a/include/misc/ocxl.h b/include/misc/ocxl.h
-> index 3b320c39f0af..ebbfe83cd5a6 100644
-> --- a/include/misc/ocxl.h
-> +++ b/include/misc/ocxl.h
-> @@ -51,6 +51,7 @@ struct ocxl_fn_config {
->   
->   // These are opaque outside the ocxl driver
->   struct ocxl_afu;
-> +struct ocxl_context;
->   
->   enum ocxl_endian {
->   	OCXL_BIG_ENDIAN = 0,    /**< AFU data is big-endian */
-> @@ -58,6 +59,49 @@ enum ocxl_endian {
->   	OCXL_HOST_ENDIAN = 2,   /**< AFU data is the same endianness as the host */
->   };
->   
-> +/**
-> + * Allocate space for a new OpenCAPI context
-> + *
-> + * Returns NULL on failure
-> + */
-> +struct ocxl_context *ocxl_context_alloc(void);
-> +
-> +/**
-> + * Initialize an OpenCAPI context
-> + *
-> + * @ctx: The OpenCAPI context to initialize
-> + * @afu: The AFU the context belongs to
-> + * @mapping: The mapping to unmap when the context is closed (may be NULL)
-> + */
-> +int ocxl_context_init(struct ocxl_context *ctx, struct ocxl_afu *afu,
-> +			struct address_space *mapping);
-> +
-> +/**
-> + * Free an OpenCAPI context
-> + *
-> + * @ctx: The OpenCAPI context to free
-> + */
-> +void ocxl_context_free(struct ocxl_context *ctx);
-> +
-> +/**
-> + * Grant access to an MM to an OpenCAPI context
-> + * @ctx: The OpenCAPI context to attach
-> + * @amr: The value of the AMR register to restrict access
-> + * @mm: The mm to attach to the context
-> + *
-> + * Returns 0 on success, negative on failure
-> + */
-> +int ocxl_context_attach(struct ocxl_context *ctx, u64 amr,
-> +				struct mm_struct *mm);
-> +
-> +/**
-> + * Detach an MM from an OpenCAPI context
-> + * @ctx: The OpenCAPI context to attach
-> + *
-> + * Returns 0 on success, negative on failure
-> + */
-> +int ocxl_context_detach(struct ocxl_context *ctx);
-> +
->   /**
->    * Read a 32 bit value from global MMIO
->    *
-> 
-
+Patrick Bellasi
