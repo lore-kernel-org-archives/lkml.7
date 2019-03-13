@@ -2,74 +2,73 @@ Return-Path: <SRS0=dUEL=RQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS autolearn=ham
-	autolearn_force=no version=3.4.0
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DFF41C43381
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 Mar 2019 16:46:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 614E5C43381
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 Mar 2019 16:47:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9E98E206DF
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 Mar 2019 16:46:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2043A206DF
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 Mar 2019 16:47:11 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="nw02G2w4"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="r2vXT89u"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726513AbfCMQq2 (ORCPT
+        id S1726727AbfCMQrJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 13 Mar 2019 12:46:28 -0400
-Received: from mail-ed1-f68.google.com ([209.85.208.68]:37855 "EHLO
-        mail-ed1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725856AbfCMQq1 (ORCPT
+        Wed, 13 Mar 2019 12:47:09 -0400
+Received: from mail-ed1-f67.google.com ([209.85.208.67]:34130 "EHLO
+        mail-ed1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726033AbfCMQrJ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 13 Mar 2019 12:46:27 -0400
-Received: by mail-ed1-f68.google.com with SMTP id m12so2144698edv.4
-        for <linux-kernel@vger.kernel.org>; Wed, 13 Mar 2019 09:46:26 -0700 (PDT)
+        Wed, 13 Mar 2019 12:47:09 -0400
+Received: by mail-ed1-f67.google.com with SMTP id a16so2153912edn.1
+        for <linux-kernel@vger.kernel.org>; Wed, 13 Mar 2019 09:47:06 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=subject:to:cc:references:from:openpgp:autocrypt:message-id:date
          :user-agent:mime-version:in-reply-to:content-language
          :content-transfer-encoding;
-        bh=4Rp4onWKAkw2Ugm/yFFc31Mim208Ujc3MLxV2LZHCew=;
-        b=nw02G2w4g0Ly0EXu9YSA6dsN6QT8wYf0wXoO3HPFKWZZdRk2YEeWKsMMylEdV9ZgHr
-         PkPxFYdLiNxDxixz87tjfgnwOJqPNQ7c9EmK97uXhbwLa8lpi1aorj3ooloiyOQ0svY9
-         gj5oZ8vTF+lAtX85gdKaqfK0VyE511XahLfa/e02zXJYDhnRs8ELDnjDNI/NGy9qf0RR
-         sTFPbmR/77fg+ud5iy8QbM4QoxZyeO8hESh3w9wYcEGg5iUhLchXhKBHNCAZR9/K2jK4
-         ymkxGqxnAW54pAtA2VIc05X3xtq1PV/5Lo4LbogEFpzOwp4zcO+RnvFUoTkvYEa0dw8E
-         syIA==
+        bh=xzEeK55v00KouadKDBXbfh4wN6ejhIveYHAS7LApO6s=;
+        b=r2vXT89uP+Rof1bxa8JqfqsNY4/D86jWyB/3POqIa0XouF+vETNcU5ERfu1r8fh8Xn
+         /8l1cgf+w4lDbe8DrmExaPOKtduO6VkVvOTEvlFeSaD1VBQ7gRr+UhNqlUwqoZHd0jDw
+         5FNpfnmtF+zE9gZkiikmHCEsewcSKrcX3ZPjW/o835+u8du1AbILs8zFOhN6rXm2xLg/
+         DYHNZbsPbqP30ujDqBCX6e8vHMyrLpLSEPuj88tzdv3pKi1CU+eh/PR2t1zLwE3qUwya
+         ztqHpvOb9t1vfo4lsnjWpKPAXXRiEoglVtMJ+Bp/V34krlI6jHfGoMzz5PvWsMedxoEy
+         dZaQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:subject:to:cc:references:from:openpgp:autocrypt
          :message-id:date:user-agent:mime-version:in-reply-to
          :content-language:content-transfer-encoding;
-        bh=4Rp4onWKAkw2Ugm/yFFc31Mim208Ujc3MLxV2LZHCew=;
-        b=VovqFNZSc64L2sHn6Rdo0yz6S6jpsuOGcRCImCrZFZPw+v5coauQnT68HozRmRisBs
-         cmSwGYVSNBcj1l5WZx9EkU8HqzHoQetlzeKyS4vCdsCncPn6s/Ofxz35TK+rtspc+Jz+
-         7KIb3xbKdPd6Unqc055CbMDvNmVTJcEDQ4pwDFgTlmuvvjIQKWcqh6XsgnX9gyPbsnOZ
-         6DQxS5gDMDphYYxSdmeiKdORGderUX2OGAH6N4hxHVjnYPxkuDFlR1DFHngIyZTNQB+i
-         GaWHOh8/AZMA4wbD1hatkF21r0bgmeuWv3BGDifqQOFrlofxzWGCnRRof7HMQT8ibS6N
-         OI9Q==
-X-Gm-Message-State: APjAAAX7fgcI0Dg0T+WBEB3oL0nud2jWSTkd3tkst5fGuPKmFSVlohJ9
-        GG8jLZufrh8knT5a+6hB6RxCN7sY
-X-Google-Smtp-Source: APXvYqwXYbiIHOaVCzF8DnKbiuX46t6Wvh63n5qfpKbg+TQALamKhvmT1UTMcDKIHPFS6Ya3IgFAFw==
-X-Received: by 2002:a17:906:1e05:: with SMTP id g5mr7906839ejj.241.1552495585067;
-        Wed, 13 Mar 2019 09:46:25 -0700 (PDT)
+        bh=xzEeK55v00KouadKDBXbfh4wN6ejhIveYHAS7LApO6s=;
+        b=J0V5Jan35DJPj77WoJlpb9mdvjS+FCXbD+e22DzXikWqrtHTqG7YsHpmOBwtUoeNCY
+         UGSmMhKRXBTqmo+HPZoXbBQ3W4lw8yIAxQr5s5YsYTgTiYGCf7MoTAok5giD5dVGX41P
+         O/y12B+omvOK95OcgSdpwvIxFugqeF9JN6X0NuI15FJ+NEtGJwv81pqhbjXyiIb+M9Ri
+         m5hjBKJPpCqrwgOxUdJiYRTnQBbbw1CcZ/1VWSrXlB3dkrBrAEHSfza3wUfT/mrZOOZ8
+         26W73mfwCU+/Ds5YpN67D6nIBXaU+Vk9Tb5gjyyP+qAamO3/jDG3DvDr/zmAZy+kW/Uc
+         tclA==
+X-Gm-Message-State: APjAAAWZcBYdHysJYJkxooUEM4rRzWqzXrBfB8GCkyzqtWr2l8ZoGm7A
+        3dPNNaN5oGAL9n7wHPY+W8U=
+X-Google-Smtp-Source: APXvYqyBY6rkMw0sNSD6RIrZRKGJTWR8fGchFTaZYGsyDtZMBMD60W+gZdwd4nRxffyCsm72OD2K7A==
+X-Received: by 2002:a50:eb4a:: with SMTP id z10mr8487415edp.284.1552495626124;
+        Wed, 13 Mar 2019 09:47:06 -0700 (PDT)
 Received: from ziggy.stardust ([37.223.147.22])
-        by smtp.gmail.com with ESMTPSA id m32sm782728edc.17.2019.03.13.09.46.23
+        by smtp.gmail.com with ESMTPSA id a18sm704997edt.2.2019.03.13.09.47.04
         (version=TLS1_3 cipher=AEAD-AES128-GCM-SHA256 bits=128/128);
-        Wed, 13 Mar 2019 09:46:24 -0700 (PDT)
+        Wed, 13 Mar 2019 09:47:05 -0700 (PDT)
 Subject: Re: [PATCH] spi: mediatek: Attempt to address style issues in
  spi-mt7621.c
-To:     Chuanhong Guo <gch981213@gmail.com>
-Cc:     Armando Miraglia <arma2ff0@gmail.com>, NeilBrown <neil@brown.name>,
+To:     Dan Carpenter <dan.carpenter@oracle.com>,
+        Armando Miraglia <arma2ff0@gmail.com>
+Cc:     neil@brown.name, devel@driverdev.osuosl.org,
+        gregkh@linuxfoundation.org, linux-kernel@vger.kernel.org,
         Armando Miraglia <armax@google.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Stefan Roese <sr@denx.de>, sankalpnegi2310@gmail.com,
-        devel@driverdev.osuosl.org, linux-arm-kernel@lists.infradead.org,
-        linux-mediatek@lists.infradead.org, linux-kernel@vger.kernel.org
+        linux-mediatek@lists.infradead.org, sankalpnegi2310@gmail.com,
+        sr@denx.de, linux-arm-kernel@lists.infradead.org
 References: <20190313122403.248873-1-armax@google.com>
- <eb85ea17-babd-fe3a-f0ff-9c7f13498bd1@gmail.com>
- <CAJsYDVKF-3jZo4E3EMiYOqeWXVLu0hBra6Qp0sFoCz8y=BAjSw@mail.gmail.com>
+ <20190313123454.GB2202@kadam>
 From:   Matthias Brugger <matthias.bgg@gmail.com>
 Openpgp: preference=signencrypt
 Autocrypt: addr=matthias.bgg@gmail.com; prefer-encrypt=mutual; keydata=
@@ -165,12 +164,12 @@ Autocrypt: addr=matthias.bgg@gmail.com; prefer-encrypt=mutual; keydata=
  pac005PuhxCWkKTJz3gCmznnoat4GCnL5gy/m0Qk45l4PFqwWXVLo9AQg2Kp3mlIFZ6fsEKI
  AN5hxlbNvNb9V2Zo5bFZjPWPFTxOteM0omUAS+QopwU0yPLLGJVf2iCmItHcUXI+r2JwH1CJ
  jrHWeQEI2ucSKsNa8FllDmG/fQ==
-Message-ID: <4789d739-d2b5-357b-b9d8-bfaf587d33fc@gmail.com>
-Date:   Wed, 13 Mar 2019 17:46:22 +0100
+Message-ID: <c1f98f80-c46a-dd08-f318-bc302daa2865@gmail.com>
+Date:   Wed, 13 Mar 2019 17:47:04 +0100
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
  Thunderbird/60.5.1
 MIME-Version: 1.0
-In-Reply-To: <CAJsYDVKF-3jZo4E3EMiYOqeWXVLu0hBra6Qp0sFoCz8y=BAjSw@mail.gmail.com>
+In-Reply-To: <20190313123454.GB2202@kadam>
 Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
 Content-Transfer-Encoding: 7bit
@@ -181,19 +180,103 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 
 
-On 13/03/2019 17:34, Chuanhong Guo wrote:
-> Hi!
-> On Wed, Mar 13, 2019 at 8:28 PM Matthias Brugger <matthias.bgg@gmail.com> wrote:
+On 13/03/2019 13:34, Dan Carpenter wrote:
+> On Wed, Mar 13, 2019 at 01:24:04PM +0100, Armando Miraglia wrote:
+>> Running Lindent on the mt7621-spi.c file in drivers/staging I noticed that the
+>> file contained style issues. This change attempts to address such style
+>> problems.
 >>
+> 
+> Don't run lindent.  I think checkpatch.pl has a --fix option that might
+> be better, but once the code is merged then our standard become much
+> higher for follow up patches.
+> 
+>> Signed-off-by: Armando Miraglia <armax@google.com>
+>> ---
+>> NOTE: resend this patch to include all mainteners listed by get_mantainers.pl.
+>>  drivers/staging/mt7621-spi/spi-mt7621.c | 27 +++++++++++++------------
+>>  1 file changed, 14 insertions(+), 13 deletions(-)
 >>
->>
->> On 13/03/2019 13:24, Armando Miraglia wrote:
->> [...]
->> Apart from fixing styling issues it would be usefull to see if we can add
->> support for mt7621 to drivers/spi/spi-mt65xx.c
-> It's impossible. They are completely different IPs.
+>> diff --git a/drivers/staging/mt7621-spi/spi-mt7621.c b/drivers/staging/mt7621-spi/spi-mt7621.c
+>> index b509f9fe3346..03d53845f8c5 100644
+>> --- a/drivers/staging/mt7621-spi/spi-mt7621.c
+>> +++ b/drivers/staging/mt7621-spi/spi-mt7621.c
+>> @@ -52,14 +52,14 @@
+>>  #define MT7621_LSB_FIRST	BIT(3)
+>>  
+>>  struct mt7621_spi {
+>> -	struct spi_master	*master;
+>> -	void __iomem		*base;
+>> -	unsigned int		sys_freq;
+>> -	unsigned int		speed;
+>> -	struct clk		*clk;
+>> -	int			pending_write;
+>> -
+>> -	struct mt7621_spi_ops	*ops;
+>> +	struct spi_master *master;
+>> +	void __iomem *base;
+>> +	unsigned int sys_freq;
+>> +	unsigned int speed;
+>> +	struct clk *clk;
+>> +	int pending_write;
+>> +
+>> +	struct mt7621_spi_ops *ops;
+> 
+> The original is fine.  I don't encourage people to do fancy indenting
+> with their local variable declarations inside functions but for a struct
+> the declarations aren't going to change a lot so people can get fancy
+> if they want.
+> 
+> The problem with a local is if you need to add a new variable then you
+> have to re-indent a bunch of unrelated lines or have one out of
+> alignment line.  Most people know this intuitively so they don't get
+> fancy.
+> 
+>>  };
+>>  
+>>  static inline struct mt7621_spi *spidev_to_mt7621_spi(struct spi_device *spi)
+>> @@ -303,7 +303,7 @@ static int mt7621_spi_setup(struct spi_device *spi)
+>>  	struct mt7621_spi *rs = spidev_to_mt7621_spi(spi);
+>>  
+>>  	if ((spi->max_speed_hz == 0) ||
+>> -		(spi->max_speed_hz > (rs->sys_freq / 2)))
+>> +	    (spi->max_speed_hz > (rs->sys_freq / 2)))
+> 
+> Yeah.  Lindent is correct here.
+> 
+>>  		spi->max_speed_hz = (rs->sys_freq / 2);
+>>  
+>>  	if (spi->max_speed_hz < (rs->sys_freq / 4097)) {
+>> @@ -316,9 +316,10 @@ static int mt7621_spi_setup(struct spi_device *spi)
+>>  }
+>>  
+>>  static const struct of_device_id mt7621_spi_match[] = {
+>> -	{ .compatible = "ralink,mt7621-spi" },
+>> +	{.compatible = "ralink,mt7621-spi"},
+> 
+> The original was better.
+> 
+>>  	{},
+>>  };
+>> +
+>>  MODULE_DEVICE_TABLE(of, mt7621_spi_match);
+> 
+> No need for a blank.  These are closely related.
+> 
+>>  
+>>  static int mt7621_spi_probe(struct platform_device *pdev)
+>> @@ -408,9 +409,9 @@ MODULE_ALIAS("platform:" DRIVER_NAME);
+>>  
+>>  static struct platform_driver mt7621_spi_driver = {
+>>  	.driver = {
+>> -		.name = DRIVER_NAME,
+>> -		.of_match_table = mt7621_spi_match,
+>> -	},
+>> +		   .name = DRIVER_NAME,
+>> +		   .of_match_table = mt7621_spi_match,
+>> +		   },
+> 
+> The new indenting is very wrong.
+> 
 
-Thanks for the info. Do you know the status of the rest of the drivers in staging?
-
-Best regards,
-Matthias
+Fair enough, I was too fast providing my Reviewed-by tag :-/
