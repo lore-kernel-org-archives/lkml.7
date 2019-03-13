@@ -2,587 +2,170 @@ Return-Path: <SRS0=dUEL=RQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 255BDC43381
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 Mar 2019 23:23:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 35B80C43381
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 Mar 2019 23:28:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CF42020854
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 Mar 2019 23:23:12 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1552519393;
-	bh=yPKdX1g2+mlXacIeDxpnM3+TRYGGZv0VfhZVCRXQ+4M=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=HDD802uVFf6oBrlx3JbHG+C/9buUaTDian92VSj8TbFhu3AUBdkulICjp1ittQuXL
-	 SYhDZC3gRY8htW+YJ2W7V4XNNtg/mQHgkJyMi0lPRkb6AK/jq6JUCyhZhgMi7PfQtj
-	 6hZKvCY8VnUFW2DgilT0WWl9aSyICYFp1YKLjJeM=
+	by mail.kernel.org (Postfix) with ESMTP id E76FA2087C
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 Mar 2019 23:28:22 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=rasmusvillemoes.dk header.i=@rasmusvillemoes.dk header.b="XxqLZEba"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727048AbfCMXXL (ORCPT
+        id S1726628AbfCMX2U (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 13 Mar 2019 19:23:11 -0400
-Received: from mail-ot1-f65.google.com ([209.85.210.65]:33392 "EHLO
-        mail-ot1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726264AbfCMXXK (ORCPT
+        Wed, 13 Mar 2019 19:28:20 -0400
+Received: from mail-ed1-f68.google.com ([209.85.208.68]:39580 "EHLO
+        mail-ed1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726336AbfCMX2U (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 13 Mar 2019 19:23:10 -0400
-Received: by mail-ot1-f65.google.com with SMTP id q24so3438917otk.0;
-        Wed, 13 Mar 2019 16:23:09 -0700 (PDT)
+        Wed, 13 Mar 2019 19:28:20 -0400
+Received: by mail-ed1-f68.google.com with SMTP id p27so3030361edc.6
+        for <linux-kernel@vger.kernel.org>; Wed, 13 Mar 2019 16:28:19 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=rasmusvillemoes.dk; s=google;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=4k6ca2BfjKX4cdU55N5XKX7uRcWT27OEntt1eDMFXwA=;
+        b=XxqLZEba2eS2T7PlFU/uIcx+Ju9tR+qaVvPWHgwh92M8T1Ym4SHolBh+b5Bw8hNWn8
+         v5Ggp/ELWyjkmgfJ+tbYA6pOYwaZX+jMgi6C2rbeO/CAUPAKyKUKIFrErbindmsbhGMU
+         nxH5tTyXe6qZ4RKqdiPyFXIherhIybG3ZdLJM=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=Q2yzGy8Up5RijkmMQQzeyBjDUfhrLxmOdP/p+EKf+TU=;
-        b=DUE46RLdQY/owD5rds3kt5157I05Fwf+7dwdZuaWW9Ktby0q0IXkbyFmLUDhg3Kl5k
-         dY8l+/UHkDz3p4vekcjTw/3VY62u/n/pRYkYv5PlPS/x8zJuk/h1tX19pdVSYplsGSaG
-         klT1XdcI8p/X/xwUjV9dA5aOxXPUAOnp4dHqdNJxdooELc8Vz+HWYPnU1gcL51tjZY7x
-         AGA8DftEw+Wn/FsvscSAvP8eoSke7+RD2G7HwOhU/CdNVZYInhtid3lnPnC//YhZvf/T
-         zINhqRrVxP7F+BpnwJo7qx/e9L98lK1B3YVlrqlrXtuyDCKqwAhKwGWuQXAP1ld8BZQB
-         jGjQ==
-X-Gm-Message-State: APjAAAXkaD/Yp6jteu6k3g0PGs7a4GfRmSVoUZXOkJMumCfIXqsYeZVZ
-        eWEJ2YbyvD4Yru1xCWK0cQVs5fJnc503Bi+3FMY=
-X-Google-Smtp-Source: APXvYqwEhfD+Dpjy5A26uD7mkAe2L2+aMR7vn3Wpk0YBShuHd0QcjVWrL58j8VCwhyxJWavHJFuVWF1gJuGyny7N+5U=
-X-Received: by 2002:a9d:6498:: with SMTP id g24mr30326216otl.343.1552519389344;
- Wed, 13 Mar 2019 16:23:09 -0700 (PDT)
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=4k6ca2BfjKX4cdU55N5XKX7uRcWT27OEntt1eDMFXwA=;
+        b=LE3l9hsbWMZya5yijfDxxlelHJRD32AeO5Y+1rr4kPzrdlDen/AXyyc/hrF5DM+an1
+         qGb9lAqte4tTDoDWWoF5kxyNa7pAPCOtIVJat/T+oAxr1kgaVDl1FVICmBK2xJfN/M+9
+         PExqbXU9wF4E/qSbLEpErO/8v13yIyQuFvgIJCYUr0tEynUqiNvIl/Q/6H5Fa2z+/dTu
+         j28z4NA6OChanmcA6sgWGFFkwoBM/Cyci0ZGt5EmtWhXlqbBv7zxU7NNnie1JNzlj4jl
+         aQr6vN4Hkf+bLeh8o09q65bPSToZ7OFpevQMCxgUfy4b9FIFk3d15NKvC7ehh2Ap2en3
+         f5og==
+X-Gm-Message-State: APjAAAU3SpHN1KFUfNI+FMMLkQPpsaHoQcwaulTx1yi9uX6bR38XjKE0
+        jbqv1A1/Cw16ndaSDJ4+4v9YTg==
+X-Google-Smtp-Source: APXvYqx03ESCauP2yN0WEbcB5CTLHMTOPLpZBqwMdM4lrYY56OdL/Vg25XVOp2rttjHMRa5QnQX4bw==
+X-Received: by 2002:a17:906:3c5:: with SMTP id c5mr30767697eja.24.1552519698668;
+        Wed, 13 Mar 2019 16:28:18 -0700 (PDT)
+Received: from [192.168.1.149] (ip-5-186-119-202.cgn.fibianet.dk. [5.186.119.202])
+        by smtp.gmail.com with ESMTPSA id o8sm735964eju.0.2019.03.13.16.28.17
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Wed, 13 Mar 2019 16:28:18 -0700 (PDT)
+Subject: Re: [PATCH 5/5] lib/list_sort: Optimize number of calls to comparison
+ function
+To:     George Spelvin <lkml@sdf.org>, linux-kernel@vger.kernel.org
+Cc:     Andrew Morton <akpm@linux-foundation.org>,
+        Andrey Abramov <st5pub@yandex.ru>,
+        Geert Uytterhoeven <geert@linux-m68k.org>,
+        Daniel Wagner <daniel.wagner@siemens.com>,
+        Don Mullis <don.mullis@gmail.com>,
+        Dave Chinner <dchinner@redhat.com>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+References: <cover.1552097842.git.lkml@sdf.org>
+ <b36187f091acc1b3a8fc1fc3e9dbb6eca56231a9.1552097842.git.lkml@sdf.org>
+From:   Rasmus Villemoes <linux@rasmusvillemoes.dk>
+Message-ID: <dd8924c1-07a9-4317-bfa8-23271b138a62@rasmusvillemoes.dk>
+Date:   Thu, 14 Mar 2019 00:28:16 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.4.0
 MIME-Version: 1.0
-References: <20190311205606.11228-1-keith.busch@intel.com> <20190311205606.11228-8-keith.busch@intel.com>
-In-Reply-To: <20190311205606.11228-8-keith.busch@intel.com>
-From:   "Rafael J. Wysocki" <rafael@kernel.org>
-Date:   Thu, 14 Mar 2019 00:22:58 +0100
-Message-ID: <CAJZ5v0iO0ArbyXRZX5MKSf10SY+HRKkaRs7SUmo+KdA0ecOLHQ@mail.gmail.com>
-Subject: Re: [PATCHv8 07/10] acpi/hmat: Register processor domain to its memory
-To:     Keith Busch <keith.busch@intel.com>
-Cc:     Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        ACPI Devel Maling List <linux-acpi@vger.kernel.org>,
-        Linux Memory Management List <linux-mm@kvack.org>,
-        Linux API <linux-api@vger.kernel.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Rafael Wysocki <rafael@kernel.org>,
-        Dave Hansen <dave.hansen@intel.com>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Jonathan Cameron <jonathan.cameron@huawei.com>,
-        Brice Goglin <Brice.Goglin@inria.fr>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <b36187f091acc1b3a8fc1fc3e9dbb6eca56231a9.1552097842.git.lkml@sdf.org>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Mar 11, 2019 at 9:55 PM Keith Busch <keith.busch@intel.com> wrote:
->
-> If the HMAT Subsystem Address Range provides a valid processor proximity
-> domain for a memory domain, or a processor domain matches the performance
-> access of the valid processor proximity domain, register the memory
-> target with that initiator so this relationship will be visible under
-> the node's sysfs directory.
->
-> Since HMAT requires valid address ranges have an equivalent SRAT entry,
-> verify each memory target satisfies this requirement.
->
-> Reviewed-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
-> Signed-off-by: Keith Busch <keith.busch@intel.com>
+On 05/03/2019 06.58, George Spelvin wrote:
+> CONFIG_RETPOLINE has severely degraded indirect function call
+> performance, so it's worth putting some effort into reducing
+> the number of times cmp() is called.
+> 
+> This patch avoids badly unbalanced merges on unlucky input sizes.
+> It slightly increases the code size, but saves an average of 0.2*n
+> calls to cmp().
+> 
+[snip]
+> 
+> (I confess to being more than a little bit proud of how clean this
+> code turned out.  It took a lot of thinking, but the resultant inner
+> loop is very simple and efficient.)
+> 
+> Refs:
+>   Bottom-up Mergesort: A Detailed Analysis
+>   Wolfgang Panny, Helmut Prodinger
+>   Algorithmica 14(4):340--354, October 1995
+>   https://doi.org/10.1007/BF01294131
+>   https://citeseerx.ist.psu.edu/viewdoc/summary?doi=10.1.1.6.5260
+> 
+>   The cost distribution of queue-mergesort, optimal mergesorts, and
+>   power-of-two rules
+>   Wei-Mei Chen, Hsien-Kuei Hwang, Gen-Huey Chen
+>   Journal of Algorithms 30(2); Pages 423--448, February 1999
+>   https://doi.org/10.1006/jagm.1998.0986
+>   https://citeseerx.ist.psu.edu/viewdoc/summary?doi=10.1.1.4.5380
+> 
+>   Queue-Mergesort
+>   Mordecai J. Golin, Robert Sedgewick
+>   Information Processing Letters, 48(5):253--259, 10 December 1993
+>   https://doi.org/10.1016/0020-0190(93)90088-q
+>   https://sci-hub.tw/10.1016/0020-0190(93)90088-Q
 
-Acked-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
+This is beautiful. So no comments on the patch itself. One thing that
+might be nice would be to see the reduction in number of cmp callbacks
+explicitly; it should be trivial to use the priv element for that in the
+list_sort_test module. But to really see it one would of course have to
+extend that test to do a lot more different sizes of lists.
 
-> ---
->  drivers/acpi/hmat/Kconfig |   3 +-
->  drivers/acpi/hmat/hmat.c  | 392 +++++++++++++++++++++++++++++++++++++++++++++-
->  2 files changed, 393 insertions(+), 2 deletions(-)
->
-> diff --git a/drivers/acpi/hmat/Kconfig b/drivers/acpi/hmat/Kconfig
-> index 2f7111b7af62..13cddd612a52 100644
-> --- a/drivers/acpi/hmat/Kconfig
-> +++ b/drivers/acpi/hmat/Kconfig
-> @@ -4,4 +4,5 @@ config ACPI_HMAT
->         depends on ACPI_NUMA
->         help
->          If set, this option has the kernel parse and report the
-> -        platform's ACPI HMAT (Heterogeneous Memory Attributes Table).
-> +        platform's ACPI HMAT (Heterogeneous Memory Attributes Table),
-> +        and register memory initiators with their targets.
-> diff --git a/drivers/acpi/hmat/hmat.c b/drivers/acpi/hmat/hmat.c
-> index 4758beb3b2c1..01a6eddac6f7 100644
-> --- a/drivers/acpi/hmat/hmat.c
-> +++ b/drivers/acpi/hmat/hmat.c
-> @@ -13,11 +13,105 @@
->  #include <linux/device.h>
->  #include <linux/init.h>
->  #include <linux/list.h>
-> +#include <linux/list_sort.h>
->  #include <linux/node.h>
->  #include <linux/sysfs.h>
->
->  static __initdata u8 hmat_revision;
->
-> +static __initdata LIST_HEAD(targets);
-> +static __initdata LIST_HEAD(initiators);
-> +static __initdata LIST_HEAD(localities);
-> +
-> +/*
-> + * The defined enum order is used to prioritize attributes to break ties when
-> + * selecting the best performing node.
-> + */
-> +enum locality_types {
-> +       WRITE_LATENCY,
-> +       READ_LATENCY,
-> +       WRITE_BANDWIDTH,
-> +       READ_BANDWIDTH,
-> +};
-> +
-> +static struct memory_locality *localities_types[4];
-> +
-> +struct memory_target {
-> +       struct list_head node;
-> +       unsigned int memory_pxm;
-> +       unsigned int processor_pxm;
-> +       struct node_hmem_attrs hmem_attrs;
-> +};
-> +
-> +struct memory_initiator {
-> +       struct list_head node;
-> +       unsigned int processor_pxm;
-> +};
-> +
-> +struct memory_locality {
-> +       struct list_head node;
-> +       struct acpi_hmat_locality *hmat_loc;
-> +};
-> +
-> +static __init struct memory_initiator *find_mem_initiator(unsigned int cpu_pxm)
-> +{
-> +       struct memory_initiator *initiator;
-> +
-> +       list_for_each_entry(initiator, &initiators, node)
-> +               if (initiator->processor_pxm == cpu_pxm)
-> +                       return initiator;
-> +       return NULL;
-> +}
-> +
-> +static __init struct memory_target *find_mem_target(unsigned int mem_pxm)
-> +{
-> +       struct memory_target *target;
-> +
-> +       list_for_each_entry(target, &targets, node)
-> +               if (target->memory_pxm == mem_pxm)
-> +                       return target;
-> +       return NULL;
-> +}
-> +
-> +static __init void alloc_memory_initiator(unsigned int cpu_pxm)
-> +{
-> +       struct memory_initiator *initiator;
-> +
-> +       if (pxm_to_node(cpu_pxm) == NUMA_NO_NODE)
-> +               return;
-> +
-> +       initiator = find_mem_initiator(cpu_pxm);
-> +       if (initiator)
-> +               return;
-> +
-> +       initiator = kzalloc(sizeof(*initiator), GFP_KERNEL);
-> +       if (!initiator)
-> +               return;
-> +
-> +       initiator->processor_pxm = cpu_pxm;
-> +       list_add_tail(&initiator->node, &initiators);
-> +}
-> +
-> +static __init void alloc_memory_target(unsigned int mem_pxm)
-> +{
-> +       struct memory_target *target;
-> +
-> +       if (pxm_to_node(mem_pxm) == NUMA_NO_NODE)
-> +               return;
-> +
-> +       target = find_mem_target(mem_pxm);
-> +       if (target)
-> +               return;
-> +
-> +       target = kzalloc(sizeof(*target), GFP_KERNEL);
-> +       if (!target)
-> +               return;
-> +
-> +       target->memory_pxm = mem_pxm;
-> +       target->processor_pxm = PXM_INVAL;
-> +       list_add_tail(&target->node, &targets);
-> +}
-> +
->  static __init const char *hmat_data_type(u8 type)
->  {
->         switch (type) {
-> @@ -89,14 +183,83 @@ static __init u32 hmat_normalize(u16 entry, u64 base, u8 type)
->         return value;
->  }
->
-> +static __init void hmat_update_target_access(struct memory_target *target,
-> +                                            u8 type, u32 value)
-> +{
-> +       switch (type) {
-> +       case ACPI_HMAT_ACCESS_LATENCY:
-> +               target->hmem_attrs.read_latency = value;
-> +               target->hmem_attrs.write_latency = value;
-> +               break;
-> +       case ACPI_HMAT_READ_LATENCY:
-> +               target->hmem_attrs.read_latency = value;
-> +               break;
-> +       case ACPI_HMAT_WRITE_LATENCY:
-> +               target->hmem_attrs.write_latency = value;
-> +               break;
-> +       case ACPI_HMAT_ACCESS_BANDWIDTH:
-> +               target->hmem_attrs.read_bandwidth = value;
-> +               target->hmem_attrs.write_bandwidth = value;
-> +               break;
-> +       case ACPI_HMAT_READ_BANDWIDTH:
-> +               target->hmem_attrs.read_bandwidth = value;
-> +               break;
-> +       case ACPI_HMAT_WRITE_BANDWIDTH:
-> +               target->hmem_attrs.write_bandwidth = value;
-> +               break;
-> +       default:
-> +               break;
-> +       }
-> +}
-> +
-> +static __init void hmat_add_locality(struct acpi_hmat_locality *hmat_loc)
-> +{
-> +       struct memory_locality *loc;
-> +
-> +       loc = kzalloc(sizeof(*loc), GFP_KERNEL);
-> +       if (!loc) {
-> +               pr_notice_once("Failed to allocate HMAT locality\n");
-> +               return;
-> +       }
-> +
-> +       loc->hmat_loc = hmat_loc;
-> +       list_add_tail(&loc->node, &localities);
-> +
-> +       switch (hmat_loc->data_type) {
-> +       case ACPI_HMAT_ACCESS_LATENCY:
-> +               localities_types[READ_LATENCY] = loc;
-> +               localities_types[WRITE_LATENCY] = loc;
-> +               break;
-> +       case ACPI_HMAT_READ_LATENCY:
-> +               localities_types[READ_LATENCY] = loc;
-> +               break;
-> +       case ACPI_HMAT_WRITE_LATENCY:
-> +               localities_types[WRITE_LATENCY] = loc;
-> +               break;
-> +       case ACPI_HMAT_ACCESS_BANDWIDTH:
-> +               localities_types[READ_BANDWIDTH] = loc;
-> +               localities_types[WRITE_BANDWIDTH] = loc;
-> +               break;
-> +       case ACPI_HMAT_READ_BANDWIDTH:
-> +               localities_types[READ_BANDWIDTH] = loc;
-> +               break;
-> +       case ACPI_HMAT_WRITE_BANDWIDTH:
-> +               localities_types[WRITE_BANDWIDTH] = loc;
-> +               break;
-> +       default:
-> +               break;
-> +       }
-> +}
-> +
->  static __init int hmat_parse_locality(union acpi_subtable_headers *header,
->                                       const unsigned long end)
->  {
->         struct acpi_hmat_locality *hmat_loc = (void *)header;
-> +       struct memory_target *target;
->         unsigned int init, targ, total_size, ipds, tpds;
->         u32 *inits, *targs, value;
->         u16 *entries;
-> -       u8 type;
-> +       u8 type, mem_hier;
->
->         if (hmat_loc->header.length < sizeof(*hmat_loc)) {
->                 pr_notice("HMAT: Unexpected locality header length: %d\n",
-> @@ -105,6 +268,7 @@ static __init int hmat_parse_locality(union acpi_subtable_headers *header,
->         }
->
->         type = hmat_loc->data_type;
-> +       mem_hier = hmat_loc->flags & ACPI_HMAT_MEMORY_HIERARCHY;
->         ipds = hmat_loc->number_of_initiator_Pds;
->         tpds = hmat_loc->number_of_target_Pds;
->         total_size = sizeof(*hmat_loc) + sizeof(*entries) * ipds * tpds +
-> @@ -123,6 +287,7 @@ static __init int hmat_parse_locality(union acpi_subtable_headers *header,
->         targs = inits + ipds;
->         entries = (u16 *)(targs + tpds);
->         for (init = 0; init < ipds; init++) {
-> +               alloc_memory_initiator(inits[init]);
->                 for (targ = 0; targ < tpds; targ++) {
->                         value = hmat_normalize(entries[init * tpds + targ],
->                                                hmat_loc->entry_base_unit,
-> @@ -130,9 +295,18 @@ static __init int hmat_parse_locality(union acpi_subtable_headers *header,
->                         pr_info("  Initiator-Target[%d-%d]:%d%s\n",
->                                 inits[init], targs[targ], value,
->                                 hmat_data_type_suffix(type));
-> +
-> +                       if (mem_hier == ACPI_HMAT_MEMORY) {
-> +                               target = find_mem_target(targs[targ]);
-> +                               if (target && target->processor_pxm == inits[init])
-> +                                       hmat_update_target_access(target, type, value);
-> +                       }
->                 }
->         }
->
-> +       if (mem_hier == ACPI_HMAT_MEMORY)
-> +               hmat_add_locality(hmat_loc);
-> +
->         return 0;
->  }
->
-> @@ -160,6 +334,7 @@ static int __init hmat_parse_proximity_domain(union acpi_subtable_headers *heade
->                                               const unsigned long end)
->  {
->         struct acpi_hmat_proximity_domain *p = (void *)header;
-> +       struct memory_target *target;
->
->         if (p->header.length != sizeof(*p)) {
->                 pr_notice("HMAT: Unexpected address range header length: %d\n",
-> @@ -175,6 +350,23 @@ static int __init hmat_parse_proximity_domain(union acpi_subtable_headers *heade
->                 pr_info("HMAT: Memory Flags:%04x Processor Domain:%d Memory Domain:%d\n",
->                         p->flags, p->processor_PD, p->memory_PD);
->
-> +       if (p->flags & ACPI_HMAT_MEMORY_PD_VALID) {
-> +               target = find_mem_target(p->memory_PD);
-> +               if (!target) {
-> +                       pr_debug("HMAT: Memory Domain missing from SRAT\n");
-> +                       return -EINVAL;
-> +               }
-> +       }
-> +       if (target && p->flags & ACPI_HMAT_PROCESSOR_PD_VALID) {
-> +               int p_node = pxm_to_node(p->processor_PD);
-> +
-> +               if (p_node == NUMA_NO_NODE) {
-> +                       pr_debug("HMAT: Invalid Processor Domain\n");
-> +                       return -EINVAL;
-> +               }
-> +               target->processor_pxm = p_node;
-> +       }
-> +
->         return 0;
->  }
->
-> @@ -198,6 +390,191 @@ static int __init hmat_parse_subtable(union acpi_subtable_headers *header,
->         }
->  }
->
-> +static __init int srat_parse_mem_affinity(union acpi_subtable_headers *header,
-> +                                         const unsigned long end)
-> +{
-> +       struct acpi_srat_mem_affinity *ma = (void *)header;
-> +
-> +       if (!ma)
-> +               return -EINVAL;
-> +       if (!(ma->flags & ACPI_SRAT_MEM_ENABLED))
-> +               return 0;
-> +       alloc_memory_target(ma->proximity_domain);
-> +       return 0;
-> +}
-> +
-> +static __init u32 hmat_initiator_perf(struct memory_target *target,
-> +                              struct memory_initiator *initiator,
-> +                              struct acpi_hmat_locality *hmat_loc)
-> +{
-> +       unsigned int ipds, tpds, i, idx = 0, tdx = 0;
-> +       u32 *inits, *targs;
-> +       u16 *entries;
-> +
-> +       ipds = hmat_loc->number_of_initiator_Pds;
-> +       tpds = hmat_loc->number_of_target_Pds;
-> +       inits = (u32 *)(hmat_loc + 1);
-> +       targs = inits + ipds;
-> +       entries = (u16 *)(targs + tpds);
-> +
-> +       for (i = 0; i < ipds; i++) {
-> +               if (inits[i] == initiator->processor_pxm) {
-> +                       idx = i;
-> +                       break;
-> +               }
-> +       }
-> +
-> +       if (i == ipds)
-> +               return 0;
-> +
-> +       for (i = 0; i < tpds; i++) {
-> +               if (targs[i] == target->memory_pxm) {
-> +                       tdx = i;
-> +                       break;
-> +               }
-> +       }
-> +       if (i == tpds)
-> +               return 0;
-> +
-> +       return hmat_normalize(entries[idx * tpds + tdx],
-> +                             hmat_loc->entry_base_unit,
-> +                             hmat_loc->data_type);
-> +}
-> +
-> +static __init bool hmat_update_best(u8 type, u32 value, u32 *best)
-> +{
-> +       bool updated = false;
-> +
-> +       if (!value)
-> +               return false;
-> +
-> +       switch (type) {
-> +       case ACPI_HMAT_ACCESS_LATENCY:
-> +       case ACPI_HMAT_READ_LATENCY:
-> +       case ACPI_HMAT_WRITE_LATENCY:
-> +               if (!*best || *best > value) {
-> +                       *best = value;
-> +                       updated = true;
-> +               }
-> +               break;
-> +       case ACPI_HMAT_ACCESS_BANDWIDTH:
-> +       case ACPI_HMAT_READ_BANDWIDTH:
-> +       case ACPI_HMAT_WRITE_BANDWIDTH:
-> +               if (!*best || *best < value) {
-> +                       *best = value;
-> +                       updated = true;
-> +               }
-> +               break;
-> +       }
-> +
-> +       return updated;
-> +}
-> +
-> +static int initiator_cmp(void *priv, struct list_head *a, struct list_head *b)
-> +{
-> +       struct memory_initiator *ia;
-> +       struct memory_initiator *ib;
-> +       unsigned long *p_nodes = priv;
-> +
-> +       ia = list_entry(a, struct memory_initiator, node);
-> +       ib = list_entry(b, struct memory_initiator, node);
-> +
-> +       set_bit(ia->processor_pxm, p_nodes);
-> +       set_bit(ib->processor_pxm, p_nodes);
-> +
-> +       return ia->processor_pxm - ib->processor_pxm;
-> +}
-> +
-> +static __init void hmat_register_target_initiators(struct memory_target *target)
-> +{
-> +       static DECLARE_BITMAP(p_nodes, MAX_NUMNODES);
-> +       struct memory_initiator *initiator;
-> +       unsigned int mem_nid, cpu_nid;
-> +       struct memory_locality *loc = NULL;
-> +       u32 best = 0;
-> +       int i;
-> +
-> +       mem_nid = pxm_to_node(target->memory_pxm);
-> +       /*
-> +        * If the Address Range Structure provides a local processor pxm, link
-> +        * only that one. Otherwise, find the best performance attributes and
-> +        * register all initiators that match.
-> +        */
-> +       if (target->processor_pxm != PXM_INVAL) {
-> +               cpu_nid = pxm_to_node(target->processor_pxm);
-> +               register_memory_node_under_compute_node(mem_nid, cpu_nid, 0);
-> +               return;
-> +       }
-> +
-> +       if (list_empty(&localities))
-> +               return;
-> +
-> +       /*
-> +        * We need the initiator list sorted so we can use bitmap_clear for
-> +        * previously set initiators when we find a better memory accessor.
-> +        * We'll also use the sorting to prime the candidate nodes with known
-> +        * initiators.
-> +        */
-> +       bitmap_zero(p_nodes, MAX_NUMNODES);
-> +       list_sort(p_nodes, &initiators, initiator_cmp);
-> +       for (i = WRITE_LATENCY; i <= READ_BANDWIDTH; i++) {
-> +               loc = localities_types[i];
-> +               if (!loc)
-> +                       continue;
-> +
-> +               best = 0;
-> +               list_for_each_entry(initiator, &initiators, node) {
-> +                       u32 value;
-> +
-> +                       if (!test_bit(initiator->processor_pxm, p_nodes))
-> +                               continue;
-> +
-> +                       value = hmat_initiator_perf(target, initiator, loc->hmat_loc);
-> +                       if (hmat_update_best(loc->hmat_loc->data_type, value, &best))
-> +                               bitmap_clear(p_nodes, 0, initiator->processor_pxm);
-> +                       if (value != best)
-> +                               clear_bit(initiator->processor_pxm, p_nodes);
-> +               }
-> +               if (best)
-> +                       hmat_update_target_access(target, loc->hmat_loc->data_type, best);
-> +       }
-> +
-> +       for_each_set_bit(i, p_nodes, MAX_NUMNODES) {
-> +               cpu_nid = pxm_to_node(i);
-> +               register_memory_node_under_compute_node(mem_nid, cpu_nid, 0);
-> +       }
-> +}
-> +
-> +static __init void hmat_register_targets(void)
-> +{
-> +       struct memory_target *target;
-> +
-> +       list_for_each_entry(target, &targets, node)
-> +               hmat_register_target_initiators(target);
-> +}
-> +
-> +static __init void hmat_free_structures(void)
-> +{
-> +       struct memory_target *target, *tnext;
-> +       struct memory_locality *loc, *lnext;
-> +       struct memory_initiator *initiator, *inext;
-> +
-> +       list_for_each_entry_safe(target, tnext, &targets, node) {
-> +               list_del(&target->node);
-> +               kfree(target);
-> +       }
-> +
-> +       list_for_each_entry_safe(initiator, inext, &initiators, node) {
-> +               list_del(&initiator->node);
-> +               kfree(initiator);
-> +       }
-> +
-> +       list_for_each_entry_safe(loc, lnext, &localities, node) {
-> +               list_del(&loc->node);
-> +               kfree(loc);
-> +       }
-> +}
-> +
->  static __init int hmat_init(void)
->  {
->         struct acpi_table_header *tbl;
-> @@ -207,6 +584,17 @@ static __init int hmat_init(void)
->         if (srat_disabled())
->                 return 0;
->
-> +       status = acpi_get_table(ACPI_SIG_SRAT, 0, &tbl);
-> +       if (ACPI_FAILURE(status))
-> +               return 0;
-> +
-> +       if (acpi_table_parse_entries(ACPI_SIG_SRAT,
-> +                               sizeof(struct acpi_table_srat),
-> +                               ACPI_SRAT_TYPE_MEMORY_AFFINITY,
-> +                               srat_parse_mem_affinity, 0) < 0)
-> +               goto out_put;
-> +       acpi_put_table(tbl);
-> +
->         status = acpi_get_table(ACPI_SIG_HMAT, 0, &tbl);
->         if (ACPI_FAILURE(status))
->                 return 0;
-> @@ -229,7 +617,9 @@ static __init int hmat_init(void)
->                         goto out_put;
->                 }
->         }
-> +       hmat_register_targets();
->  out_put:
-> +       hmat_free_structures();
->         acpi_put_table(tbl);
->         return 0;
->  }
-> --
-> 2.14.4
->
+And looking at the actual cmp functions used made me think we might do
+something similar to what you did for the swap functions for sort(),
+though it will require updating call sites. Suppose we have some
+
+struct foo {
+   ...
+   struct list_head list;
+   ...
+   some_integer_type key;
+   ...
+};
+
+and a trivial cmp function that just compares the ->key members. What if
+we do something like
+
+#define LIST_SORT_SIMPLE_CMP(type, list, key) ({ \
+  /* encode the size and signedness of type.key along with
+   offsetof(type, key) - offsetof(type, list) into the low, say,
+   24 bits - a signed 20 bit number should be sufficient for the
+   offsetof diff, and we can bail at compile time if too big */
+})
+
+then do
+
+int do_cmp(void *priv, list_head *a, list_head *b, cmp_func cmp)
+{
+   if ((long)cmp & high_bits) /* it's a kernel pointer */
+      return cmp(priv, a, b);
+   int diff = extract_diff(cmp);
+   int type = extract_type(cmp);
+   void *keya = (void*)a + diff;
+   void *keyb = (void*)b + diff;
+   if (type == s32)
+      return *(s32*)keya > *(s32*)keyb;
+   if (type == u32)
+       return *(u32*)keya > *(u32*)keyb;
+   ...
+
+in practice, we'd probably only have to support 4- and 8-byte signed and
+unsigned versions (and we can check at compile time whether key has a
+supported type).
+
+Similarly one could do a SORT_SIMPLE_CMP() for when sorting an array of
+structs according to a single numeric member. That sort is not stable,
+so the comparison functions would have to do a full -1,0,1 return, of
+course, but we'd still avoid indirect calls.
+
+Rasmus
