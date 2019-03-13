@@ -2,102 +2,96 @@ Return-Path: <SRS0=dUEL=RQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,
-	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0FB6BC43381
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 Mar 2019 21:52:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 43172C43381
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 Mar 2019 21:53:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C23282147C
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 Mar 2019 21:52:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E646620854
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 Mar 2019 21:53:38 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="FWZ5FyyV"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="rf/+WRrD"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726857AbfCMVwp (ORCPT
+        id S1726938AbfCMVxh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 13 Mar 2019 17:52:45 -0400
-Received: from mail-wm1-f68.google.com ([209.85.128.68]:38204 "EHLO
-        mail-wm1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726442AbfCMVwp (ORCPT
+        Wed, 13 Mar 2019 17:53:37 -0400
+Received: from mail-pg1-f171.google.com ([209.85.215.171]:45097 "EHLO
+        mail-pg1-f171.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726442AbfCMVxh (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 13 Mar 2019 17:52:45 -0400
-Received: by mail-wm1-f68.google.com with SMTP id a188so749304wmf.3
-        for <linux-kernel@vger.kernel.org>; Wed, 13 Mar 2019 14:52:44 -0700 (PDT)
+        Wed, 13 Mar 2019 17:53:37 -0400
+Received: by mail-pg1-f171.google.com with SMTP id 125so2440928pgc.12;
+        Wed, 13 Mar 2019 14:53:36 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=NQPQNUXHaMVqixEqanCMUJqVcKpUFAyrSTDqnVRbEII=;
-        b=FWZ5FyyVZzFp44x3Rvnc3Kdzk5DeLhyWxgKSIq9Rk7Vu5a2DZzLyOq6JcN8JytYDF4
-         g2D6pdFWOYNDBQokxZRLdCkclWSjz2UGgbM7BNQ4ZPRiOtfxfqszPPTy8AcaZAc7PYFb
-         2LHcfdddHBrYk7ilhRIkFU98LZ8bPz1cx66vdKfaGo0R+QH5WHPnA4N8YC9Aq49hqgYW
-         5UjC+lz7obv2tAOviEQPQoIBOd9Dxzv2pbo5gADwpGkRO+6jADr2mnosW+eafo8KdIUc
-         3VAv/pnaCrE0nw1sOqqvt/hLzOV4UH2PGBHzQaL4o9uxaWd1dL7Dji7/Uu5oGw0EjpTt
-         43yw==
+        d=gmail.com; s=20161025;
+        h=mime-version:from:date:message-id:subject:to;
+        bh=6eCsmeoAoFlU+udQMKiADuIbR+nVv1uwRiLFljK6kSQ=;
+        b=rf/+WRrDGTv5SacBVVcd8F/3eaR0OTCDcwHl2sLDE81Jcu7/Sof/EToCQFg9l0kBHQ
+         giTqymVeFLqIVChlFpiyNVSk01W/OJyWOFbNpqiMF6UdOF7CpS97HEbcoVxgFvrHkI3A
+         qExWDbLY0x38C30P936ez3PWDnfbSHoMoG9wvNAK8wFjqyQ3ubUS6Ad3XtNt9Ezd55N6
+         fsdf+ImVWIeaKxB8QmXgnMPlh+htUxxw2lry8yn1aZ0NTi8x14Km9bhgMfER562l2uMU
+         YysLwCGO8dtGBcOrjpuKFyUTrcxp0OczFi1yOuEz4jWWFLtucD6iczh/u8MXhG7whvpv
+         UW2g==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=NQPQNUXHaMVqixEqanCMUJqVcKpUFAyrSTDqnVRbEII=;
-        b=hz41Xsrd0lkvqeFVO3MAwHxc8Amr/7w59e3nO/EJLilkV0wJnKID9hGAofmR8Jaxyx
-         F149kOIgeQ1wWSgnNyz9Pe/lCGpyC7GO23klKVjZ1jDc50Fn2Oq5dnLA64u3iUe5sPWS
-         CzpuGx+qkGRZ0AUgkxCw5wlAARawpkA4XIEFem7+flTJanxODXSBKursHw2mZK43Zied
-         GwASSTQCUd3hDj39fPF4y5vmu6VAbZhwEQDQMcnLMvlPLbjhJr/DKz9lMchLHCfl+CCM
-         Wr/i11vYuPSasCx+Dgz06nzqVAcDBcbaWZlLYi9l2zIP4pbHkFFLJLg3Z4+wh8i24dNt
-         JggQ==
-X-Gm-Message-State: APjAAAUBTIfXrrw0CxWvAAvoHs2Tb5JTOBqWbrZ5wRnKFNzbbd3FpH/X
-        VJVkIgRsYh63gGXDeygCzcjxNA==
-X-Google-Smtp-Source: APXvYqzVyu+XogAkmn97yC1v/MFovyGxZsHIKg/6w2Of8IwuedHo/Smf12bxi8DHap5+1WsqnOELdQ==
-X-Received: by 2002:a7b:c14a:: with SMTP id z10mr171476wmi.99.1552513963682;
-        Wed, 13 Mar 2019 14:52:43 -0700 (PDT)
-Received: from [192.168.86.34] (cpc89974-aztw32-2-0-cust43.18-1.cable.virginm.net. [86.30.250.44])
-        by smtp.googlemail.com with ESMTPSA id p16sm25516836wro.25.2019.03.13.14.52.42
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Wed, 13 Mar 2019 14:52:42 -0700 (PDT)
-Subject: Re: [PATCH v2] PCI: qcom: Use default config space read function
-To:     Marc Gonzalez <marc.w.gonzalez@free.fr>,
-        Stanimir Varbanov <svarbanov@mm-sol.com>,
-        Bjorn Helgaas <bhelgaas@google.com>
-Cc:     Andy Gross <andy.gross@linaro.org>,
-        David Brown <david.brown@linaro.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        PCI <linux-pci@vger.kernel.org>,
-        MSM <linux-arm-msm@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Jeffrey Hugo <jhugo@codeaurora.org>
-References: <94bb3f22-c5a7-1891-9d89-42a520e9a592@free.fr>
- <65321fe3-ca29-c454-63ae-98a46c2e5158@mm-sol.com>
- <1205cbfb-ac06-63a5-9401-75d4e68b15b5@free.fr>
- <38ad143b-3b07-4d19-8ccd-ca39fb51e53d@free.fr>
- <7d3d788a-d6a3-a70b-adab-6c65771cacc4@free.fr>
- <3c76613e-e60d-94b8-dd6f-b8f4e1928263@linaro.org>
- <2f901228-52db-7661-8257-ca8fd2ff2a46@free.fr>
-From:   Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
-Message-ID: <29664b43-535c-c4b1-a93d-18f49687f929@linaro.org>
-Date:   Wed, 13 Mar 2019 21:52:42 +0000
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.5.1
+        h=x-gm-message-state:mime-version:from:date:message-id:subject:to;
+        bh=6eCsmeoAoFlU+udQMKiADuIbR+nVv1uwRiLFljK6kSQ=;
+        b=GoiYaoyyq6wA5fmdQ6WfzUpKwX8RDpZnPNmhGtwa3OxRTz1Yp48gWdzD3FbB0zu3kk
+         d/RMqOHeue3qLVZTFjp2LL1YU6bPeefVhCGQlftZEu9kdHEvziJQLNOzmisQY5U39Ibp
+         R/aTse6V+xGO1uBTobWnVrlh1yQsYYT6yd14kIPTjWOYQVelhln+TOBKTNLEAb6BDU1Q
+         TnaIywPkTdAQd8NHOe0AXEbNZ2hZvDXd+YTBtGaE1y2tkUvS24MRZ42GwAdFdqYXzsln
+         xBbacxp1LqSyP/Z7DN4NjoPD+oFRPt1xo26//C9NAgHJMw0CX8c5ieoTYH9oeiBTeQNB
+         yUpA==
+X-Gm-Message-State: APjAAAVbND8hMeulKxJZtVTebLSRm8fvu5OkZ8/6JX1MtdWaBl6PmSW9
+        0TAKAzAkYfsLApfwkyEybcotkmKsqFc3fpAkQ48fjxRr
+X-Google-Smtp-Source: APXvYqyh9Bj35JCpeAhccUx6peGH1wax+N+fvUHrvvY+GBvZ0Do/9EKYFBKzXlHChCLZdSTF41irBnoU7ONc/s+VYyU=
+X-Received: by 2002:a63:2c50:: with SMTP id s77mr25188055pgs.440.1552514015827;
+ Wed, 13 Mar 2019 14:53:35 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <2f901228-52db-7661-8257-ca8fd2ff2a46@free.fr>
-Content-Type: text/plain; charset=iso-8859-15; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+From:   Steve French <smfrench@gmail.com>
+Date:   Wed, 13 Mar 2019 16:53:24 -0500
+Message-ID: <CAH2r5muaceyqkrbXB7Bt-qv_vtVqZEmpafJa6B2+8kyRsK7ftQ@mail.gmail.com>
+Subject: [PATCH] [CIFS] Remove unneeded statements pointed out by Coverity
+To:     CIFS <linux-cifs@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+cifs: remove unused value pointed out by Coverity
 
+Detected by CoverityScan CID#1438719 ("Unused Value")
 
-On 13/03/2019 20:39, Marc Gonzalez wrote:
->> working without patch :https://paste.ubuntu.com/p/TJm4hgjGW4/
->>
->> I have not debugged it any further other than just testing the patch.
->> Let me know if you need any more dumps for more debug.
-> Could you pastebin the output of lspci -vvv -n in the working case?
-This was already in my original reply:
-working without patch : https://paste.ubuntu.com/p/TJm4hgjGW4/
+buf is reset again before being used so these two lines of code
+are useless.
 
---srini
+Signed-off-by: Steve French <stfrench@microsoft.com>
+---
+ fs/cifs/connect.c | 4 ----
+ 1 file changed, 4 deletions(-)
+
+diff --git a/fs/cifs/connect.c b/fs/cifs/connect.c
+index b95db2b593cb..a8e9738db691 100644
+--- a/fs/cifs/connect.c
++++ b/fs/cifs/connect.c
+@@ -1191,10 +1191,6 @@ cifs_demultiplex_thread(void *p)
+             continue;
+         }
+
+-        if (server->large_buf)
+-            buf = server->bigbuf;
+-
+-
+         server->lstrp = jiffies;
+
+         for (i = 0; i < num_mids; i++) {
+
+-- 
+Thanks,
+
+Steve
