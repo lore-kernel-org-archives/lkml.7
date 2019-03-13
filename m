@@ -2,207 +2,170 @@ Return-Path: <SRS0=dUEL=RQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_PASS autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B9B0EC43381
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 Mar 2019 03:43:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 42939C10F03
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 Mar 2019 03:52:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 76ED9217F5
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 Mar 2019 03:43:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 10272217F5
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 Mar 2019 03:52:27 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="ltDHoa7q"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="kVqmce3z"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726869AbfCMDnC (ORCPT
+        id S1726793AbfCMDw0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 12 Mar 2019 23:43:02 -0400
-Received: from mail-vk1-f196.google.com ([209.85.221.196]:45387 "EHLO
-        mail-vk1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726849AbfCMDnB (ORCPT
+        Tue, 12 Mar 2019 23:52:26 -0400
+Received: from mail-lj1-f194.google.com ([209.85.208.194]:42230 "EHLO
+        mail-lj1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726561AbfCMDwZ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 12 Mar 2019 23:43:01 -0400
-Received: by mail-vk1-f196.google.com with SMTP id v187so132304vkf.12
-        for <linux-kernel@vger.kernel.org>; Tue, 12 Mar 2019 20:43:00 -0700 (PDT)
+        Tue, 12 Mar 2019 23:52:25 -0400
+Received: by mail-lj1-f194.google.com with SMTP id v3so229350ljk.9
+        for <linux-kernel@vger.kernel.org>; Tue, 12 Mar 2019 20:52:24 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
+        d=linaro.org; s=google;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=H0dIcw6m1Pzr0Ps1GAlM43xbFMS3sCb4y/K1DlTFxi4=;
-        b=ltDHoa7qX/+p2IbyixR+qVL8X/IQ5+LXGIEF7HHMo6Zz/2CRXlG1orsfb4AVbh+E96
-         JxQYs7ZAzwWzmKWjmpoPPT7TqC9D/EydtrF00rpPjYQXNhinOg3hI2eMCaRHmp+ARDq2
-         ilu+vIqgk1etAFlwHihsw4fGkiaLwNUcuDXpg=
+         :cc:content-transfer-encoding;
+        bh=bkdR30meNw5hMFmdX+iAexPeOCWs/rd4HYQIMU3jV8A=;
+        b=kVqmce3z3SHd2zCWUxndAGFhZQFWl0b1PjVpCch2f6QoVpE8tztM93wXb9XtZyfAXN
+         4Fr4yYX/Nck8iKG4HSbQePtE+JPx1DKGy4vfu40Y0fo32Yx4rjjnZdrifzAgOTN9LLXL
+         o5wVamaCneV3f7wJfgynVkEp1TChe+8l45zjj3HWJ6B65EinuyKkgTpBAPasF7ryBFx1
+         rgR1Ktl/18auQywlWRUyQMl8PZDFZK80c+1fKk96unSBegkJcQRwvCIvosLPl0Dfg9ZK
+         eLprNcVrAPq8c+5pFM/QDjfjElF2WsgEa6jEaQTs1FyRJLyCmh9mepknEMgHw0WIuIBk
+         GOQQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=H0dIcw6m1Pzr0Ps1GAlM43xbFMS3sCb4y/K1DlTFxi4=;
-        b=eb81H0GkK4wsTtIGh6+NtXrbZiZ8/RxmfQ1N69uSROZGIkkJf33EE1pTKQuxUEPHYw
-         5VSkwnJFBOK5uhKLoV1KUgMalZiGPGAdbCVnGct7QZbYjyKOGcpRWTQw3joRFFLEitzM
-         M+iqwSiSQlbFiN8Vke2qYLSKnwj08Zd8FbDgCAtAGv6uZ9YMgzEqR74tyPsiM/tSqeXC
-         z0MXJ8lBtQQIvN+f2CfhX/ImL1NHecjfS5G90JD7WRaJ9+bcYlCqI3WY1105gfLBcXs7
-         XUk0r8dC+Jlrr+jMd5Rmugnb2cpmNWHxyMatwFHdcpyXkcZC+e8gCJ09UyV+0+qoe8MV
-         0JuQ==
-X-Gm-Message-State: APjAAAWi3be+AlliiPV8ZtNqcpV9QJWS9LhHg7eeUtWgfjzzxgb1e9L/
-        tR4Uy+Dz3Hb49maa8pVQ0LUYQeLNVfc=
-X-Google-Smtp-Source: APXvYqwPDT/1oTY2llVg/4dhBaGPXUzvtiG8Ue+QIrQNRC0St2Z+ZayLCVyA+/k1FwQU6mreifoUjg==
-X-Received: by 2002:a1f:a0d7:: with SMTP id j206mr21466165vke.37.1552448579951;
-        Tue, 12 Mar 2019 20:42:59 -0700 (PDT)
-Received: from mail-vs1-f43.google.com (mail-vs1-f43.google.com. [209.85.217.43])
-        by smtp.gmail.com with ESMTPSA id l12sm65909uao.15.2019.03.12.20.42.56
-        for <linux-kernel@vger.kernel.org>
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Tue, 12 Mar 2019 20:42:57 -0700 (PDT)
-Received: by mail-vs1-f43.google.com with SMTP id c189so191491vsd.9
-        for <linux-kernel@vger.kernel.org>; Tue, 12 Mar 2019 20:42:56 -0700 (PDT)
-X-Received: by 2002:a67:f744:: with SMTP id w4mr22501451vso.16.1552448576321;
- Tue, 12 Mar 2019 20:42:56 -0700 (PDT)
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=bkdR30meNw5hMFmdX+iAexPeOCWs/rd4HYQIMU3jV8A=;
+        b=bvwi7c1x8y6FRhTathIDyTJSMZuch74cP6/XQziOCALfUNgzGjU09FVdbPegxA4VCE
+         e2Gqv1loPmR3rp79hxbq3SvABEN4CLp2YPWilYb+1NASGI4bwGJ6rDUBetbtBl1HXTga
+         gD4aTmvwhmEpVYt3c7QI2AFu2/w8W1YzPe/43TE3yWE21vvnGQMRUZ4N9g56VoZaT2RV
+         y5ubL+Rbiq8J1bZ6zoptxlxvyeGYTdiKMFd6n2VYFFplXL8TDpSAzsTmXQf5f0ACG5qk
+         c3s3UCk7jh7L4+7iEEWzETanWtfdNxJUd0LdPmR3cXWykJ05i4V4pem6m/1mBPJtscFI
+         FIAA==
+X-Gm-Message-State: APjAAAWW/I93zCSgtXHY+maOXGAHCfWr/fDlPQ+qm/xCJJb87nlUYpum
+        hgxDQd/PZ0cVvMGeS+qDo2aRX0Qj8sfFrbtKusFwEvM0RR4=
+X-Google-Smtp-Source: APXvYqz5XsEJBEY6f++UuL7sMyuzDCCIRHWAysczQMIUmrfwt6T4QZ+0yUAOkea+oPulONhlRooqlb1F9BJA+hG6MSc=
+X-Received: by 2002:a2e:5cc1:: with SMTP id q184mr21396334ljb.123.1552449143514;
+ Tue, 12 Mar 2019 20:52:23 -0700 (PDT)
 MIME-Version: 1.0
-References: <20190312022204.2775-1-helen.koike@collabora.com>
- <20190312022204.2775-2-helen.koike@collabora.com> <20190312073438.05ad8173@collabora.com>
- <f888a2d0-c6b1-8995-7254-ba2923dd22f9@collabora.com> <20190312165243.5b771e4a@collabora.com>
-In-Reply-To: <20190312165243.5b771e4a@collabora.com>
-From:   Tomasz Figa <tfiga@chromium.org>
-Date:   Wed, 13 Mar 2019 12:42:45 +0900
-X-Gmail-Original-Message-ID: <CAAFQd5CCEDaxLbw0E9NJJ-tEcHd8-Lidvcvt8qfPAnKu7uuj8w@mail.gmail.com>
-Message-ID: <CAAFQd5CCEDaxLbw0E9NJJ-tEcHd8-Lidvcvt8qfPAnKu7uuj8w@mail.gmail.com>
-Subject: Re: [PATCH v2 1/5] drm/rockchip: fix fb references in async update
-To:     Boris Brezillon <boris.brezillon@collabora.com>
-Cc:     Helen Koike <helen.koike@collabora.com>,
-        dri-devel <dri-devel@lists.freedesktop.org>,
-        nicholas.kazlauskas@amd.com, andrey.grodzovsky@amd.com,
-        Daniel Vetter <daniel.vetter@ffwll.ch>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        David Airlie <airlied@linux.ie>,
-        Sean Paul <seanpaul@google.com>, kernel@collabora.com,
-        harry.wentland@amd.com,
-        =?UTF-8?Q?St=C3=A9phane_Marchesin?= <marcheu@google.com>,
-        Sandy Huang <hjc@rock-chips.com>,
-        "open list:ARM/Rockchip SoC..." <linux-rockchip@lists.infradead.org>,
-        =?UTF-8?Q?Heiko_St=C3=BCbner?= <heiko@sntech.de>,
-        "list@263.net:IOMMU DRIVERS <iommu@lists.linux-foundation.org>, Joerg
-        Roedel <joro@8bytes.org>," <linux-arm-kernel@lists.infradead.org>,
-        Daniel Vetter <daniel@ffwll.ch>
+References: <20190312170341.127810985@linuxfoundation.org>
+In-Reply-To: <20190312170341.127810985@linuxfoundation.org>
+From:   Naresh Kamboju <naresh.kamboju@linaro.org>
+Date:   Wed, 13 Mar 2019 09:22:11 +0530
+Message-ID: <CA+G9fYsPE2uKjYvXHR6qPz-SzUrsVTQWVXV3-4AuR1wo8m-=5A@mail.gmail.com>
+Subject: Re: [PATCH 4.14 000/135] 4.14.106-stable review
+To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc:     open list <linux-kernel@vger.kernel.org>,
+        Shuah Khan <shuah@kernel.org>, patches@kernelci.org,
+        lkft-triage@lists.linaro.org,
+        Ben Hutchings <ben.hutchings@codethink.co.uk>,
+        linux- stable <stable@vger.kernel.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Guenter Roeck <linux@roeck-us.net>
 Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Mar 13, 2019 at 12:52 AM Boris Brezillon
-<boris.brezillon@collabora.com> wrote:
+On Tue, 12 Mar 2019 at 22:47, Greg Kroah-Hartman
+<gregkh@linuxfoundation.org> wrote:
 >
-> On Tue, 12 Mar 2019 12:34:45 -0300
-> Helen Koike <helen.koike@collabora.com> wrote:
+> This is the start of the stable review cycle for the 4.14.106 release.
+> There are 135 patches in this series, all will be posted as a response
+> to this one.  If anyone has any issues with these being applied, please
+> let me know.
 >
-> > On 3/12/19 3:34 AM, Boris Brezillon wrote:
-> > > On Mon, 11 Mar 2019 23:21:59 -0300
-> > > Helen Koike <helen.koike@collabora.com> wrote:
-> > >
-> > >> In the case of async update, modifications are done in place, i.e. in the
-> > >> current plane state, so the new_state is prepared and the new_state is
-> > >> cleanup up (instead of the old_state, diferrently on what happen in a
-> > >
-> > >   ^ cleaned up                              ^ differently (but maybe
-> > > "unlike what happens" is more appropriate here).
-> > >
-> > >> normal sync update).
-> > >> To cleanup the old_fb properly, it needs to be placed in the new_state
-> > >> in the end of async_update, so cleanup call will unreference the old_fb
-> > >> correctly.
-> > >>
-> > >> Also, the previous code had a:
-> > >>
-> > >>    plane_state = plane->funcs->atomic_duplicate_state(plane);
-> > >>    ...
-> > >>    swap(plane_state, plane->state);
-> > >>
-> > >>    if (plane->state->fb && plane->state->fb != new_state->fb) {
-> > >>    ...
-> > >>    }
-> > >>
-> > >> Which was wrong, as the fb were just assigned to be equal, so this if
-> > >> statement nevers evaluates to true.
-> > >>
-> > >> Another details is that the function drm_crtc_vblank_get() can only be
-> > >> called when vop->is_enabled is true, otherwise it has no effect and
-> > >> trows a WARN_ON().
-> > >>
-> > >> Calling drm_atomic_set_fb_for_plane() (which get a referent of the new
-> > >> fb and pus the old fb) is not required, as it is taken care by
-> > >> drm_mode_cursor_universal() when calling
-> > >> drm_atomic_helper_update_plane().
-> > >>
-> > >> Signed-off-by: Helen Koike <helen.koike@collabora.com>
-> > >>
-> > >> ---
-> > >> Hello,
-> > >>
-> > >> I tested on the rockchip ficus v1.1 using igt plane_cursor_legacy and
-> > >> kms_cursor_legacy and I didn't see any regressions.
-> > >>
-> > >> Changes in v2: None
-> > >>
-> > >>  drivers/gpu/drm/rockchip/rockchip_drm_vop.c | 42 ++++++++++++---------
-> > >>  1 file changed, 24 insertions(+), 18 deletions(-)
-> > >>
-> > >> diff --git a/drivers/gpu/drm/rockchip/rockchip_drm_vop.c b/drivers/gpu/drm/rockchip/rockchip_drm_vop.c
-> > >> index c7d4c6073ea5..a1ee8c156a7b 100644
-> > >> --- a/drivers/gpu/drm/rockchip/rockchip_drm_vop.c
-> > >> +++ b/drivers/gpu/drm/rockchip/rockchip_drm_vop.c
-> > >> @@ -912,30 +912,31 @@ static void vop_plane_atomic_async_update(struct drm_plane *plane,
-> > >>                                      struct drm_plane_state *new_state)
-> > >>  {
-> > >>    struct vop *vop = to_vop(plane->state->crtc);
-> > >> -  struct drm_plane_state *plane_state;
-> > >> +  struct drm_framebuffer *old_fb = plane->state->fb;
-> > >>
-> > >> -  plane_state = plane->funcs->atomic_duplicate_state(plane);
-> > >> -  plane_state->crtc_x = new_state->crtc_x;
-> > >> -  plane_state->crtc_y = new_state->crtc_y;
-> > >> -  plane_state->crtc_h = new_state->crtc_h;
-> > >> -  plane_state->crtc_w = new_state->crtc_w;
-> > >> -  plane_state->src_x = new_state->src_x;
-> > >> -  plane_state->src_y = new_state->src_y;
-> > >> -  plane_state->src_h = new_state->src_h;
-> > >> -  plane_state->src_w = new_state->src_w;
-> > >> -
-> > >> -  if (plane_state->fb != new_state->fb)
-> > >> -          drm_atomic_set_fb_for_plane(plane_state, new_state->fb);
-> > >> -
-> > >> -  swap(plane_state, plane->state);
-> > >> -
-> > >> -  if (plane->state->fb && plane->state->fb != new_state->fb) {
-> > >> +  /*
-> > >> +   * A scanout can still be occurring, so we can't drop the reference to
-> > >> +   * the old framebuffer. To solve this we get a reference to old_fb and
-> > >> +   * set a worker to release it later.
-> > >
-> > > Hm, doesn't look like an async update to me if we have to wait for the
-> > > next VBLANK to happen to get the new content on the screen. Maybe we
-> > > should reject async updates when old_fb != new_fb in the rk
-> > > ->async_check() hook.
-> >
-> > Unless I am misunderstanding this, we don't wait here, we just grab a
-> > reference to the fb in case it is being still used by the hw, so it
-> > doesn't get released prematurely.
+> Responses should be made by Thu Mar 14 17:02:27 UTC 2019.
+> Anything received after that time might be too late.
 >
-> I was just reacting to the comment that says the new FB should stay
-> around until the next VBLANK event happens. If the FB must stay around
-> that probably means the HW is still using, which made me wonder if this
-> HW actually supports async update (where async means "update now and
-> don't care about about tearing"). Or maybe it takes some time to switch
-> to the new FB and waiting for the next VBLANK to release the old FB was
-> an easy solution to not wait for the flip to actually happen in
-> ->async_update() (which is kind of a combination of async+non-blocking).
+> The whole patch series can be found in one patch at:
+>         https://www.kernel.org/pub/linux/kernel/v4.x/stable-review/patch-=
+4.14.106-rc1.gz
+> or in the git tree and branch at:
+>         git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable=
+-rc.git linux-4.14.y
+> and the diffstat can be found below.
+>
+> thanks,
+>
+> greg k-h
 
-The hardware switches framebuffers on vblank, so whatever framebuffer
-is currently being scanned out from needs to stay there until the
-hardware switches to the new one in shadow registers. If that doesn't
-happen, you get IOMMU faults and the display controller stops working
-since we don't have any fault handling currently, just printing a
-message.
+Results from Linaro=E2=80=99s test farm.
+No regressions on arm64, arm, x86_64, and i386.
 
-Best regards,
-Tomasz
+Summary
+------------------------------------------------------------------------
+
+kernel: 4.14.106-rc1
+git repo: https://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stab=
+le-rc.git
+git branch: linux-4.14.y
+git commit: f881675936ef263f178eab5a5cf95bc86089cf20
+git describe: v4.14.105-136-gf881675936ef
+Test details: https://qa-reports.linaro.org/lkft/linux-stable-rc-4.14-oe/bu=
+ild/v4.14.105-136-gf881675936ef
+
+No regressions (compared to build v4.14.105)
+
+No fixes (compared to build v4.14.105)
+
+Ran 22869 total tests in the following environments and test suites.
+
+Environments
+--------------
+- dragonboard-410c - arm64
+- hi6220-hikey - arm64
+- i386
+- juno-r2 - arm64
+- qemu_arm
+- qemu_arm64
+- qemu_i386
+- qemu_x86_64
+- x15 - arm
+- x86_64
+
+Test Suites
+-----------
+* boot
+* install-android-platform-tools-r2600
+* kselftest
+* libhugetlbfs
+* ltp-cap_bounds-tests
+* ltp-commands-tests
+* ltp-containers-tests
+* ltp-cpuhotplug-tests
+* ltp-cve-tests
+* ltp-dio-tests
+* ltp-fcntl-locktests-tests
+* ltp-filecaps-tests
+* ltp-fs-tests
+* ltp-fs_bind-tests
+* ltp-fs_perms_simple-tests
+* ltp-fsx-tests
+* ltp-hugetlb-tests
+* ltp-io-tests
+* ltp-ipc-tests
+* ltp-math-tests
+* ltp-mm-tests
+* ltp-nptl-tests
+* ltp-pty-tests
+* ltp-sched-tests
+* ltp-securebits-tests
+* ltp-syscalls-tests
+* ltp-timers-tests
+* spectre-meltdown-checker-test
+* ltp-open-posix-tests
+* kselftest-vsyscall-mode-native
+* kselftest-vsyscall-mode-none
+
+--=20
+Linaro LKFT
+https://lkft.linaro.org
