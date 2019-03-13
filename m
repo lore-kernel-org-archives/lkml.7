@@ -2,245 +2,187 @@ Return-Path: <SRS0=dUEL=RQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,UNPARSEABLE_RELAY,
+	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 925BAC43381
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 Mar 2019 09:10:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 78D6CC43381
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 Mar 2019 09:12:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 553402147C
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 Mar 2019 09:10:42 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=c-s.fr header.i=@c-s.fr header.b="GSc5AOH+"
+	by mail.kernel.org (Postfix) with ESMTP id 474992171F
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 Mar 2019 09:12:11 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727370AbfCMJKk (ORCPT
+        id S1727310AbfCMJMK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 13 Mar 2019 05:10:40 -0400
-Received: from pegase1.c-s.fr ([93.17.236.30]:52447 "EHLO pegase1.c-s.fr"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726163AbfCMJKk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 13 Mar 2019 05:10:40 -0400
-Received: from localhost (mailhub1-int [192.168.12.234])
-        by localhost (Postfix) with ESMTP id 44K5fP37Q5z9v0NH;
-        Wed, 13 Mar 2019 10:10:37 +0100 (CET)
-Authentication-Results: localhost; dkim=pass
-        reason="1024-bit key; insecure key"
-        header.d=c-s.fr header.i=@c-s.fr header.b=GSc5AOH+; dkim-adsp=pass;
-        dkim-atps=neutral
-X-Virus-Scanned: Debian amavisd-new at c-s.fr
-Received: from pegase1.c-s.fr ([192.168.12.234])
-        by localhost (pegase1.c-s.fr [192.168.12.234]) (amavisd-new, port 10024)
-        with ESMTP id J42xVLdnR4Pk; Wed, 13 Mar 2019 10:10:37 +0100 (CET)
-Received: from messagerie.si.c-s.fr (messagerie.si.c-s.fr [192.168.25.192])
-        by pegase1.c-s.fr (Postfix) with ESMTP id 44K5fP1spKz9v0N6;
-        Wed, 13 Mar 2019 10:10:37 +0100 (CET)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=c-s.fr; s=mail;
-        t=1552468237; bh=AwOtVJKRSmLCc/uOSmPUkXnjvWBp1GwuwYrRyp7BnVA=;
-        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
-        b=GSc5AOH+BF/r7BNN24RBbS0YJzNOZzKJItd5GTD0Y3Z9X3ebPKOp0N42Ze4+RAk/V
-         n64jzCduUW4O9EjPvivu8l+d9eA0yhH3AaJ1rYds+Zdz/KrpUnB3id5x4EB6Nq1p9+
-         5hyXmy5ozLl8aise2tAWzLTCO6aZ6tNZvNvhWwro=
-Received: from localhost (localhost [127.0.0.1])
-        by messagerie.si.c-s.fr (Postfix) with ESMTP id 4C2528B8FA;
-        Wed, 13 Mar 2019 10:10:38 +0100 (CET)
-X-Virus-Scanned: amavisd-new at c-s.fr
-Received: from messagerie.si.c-s.fr ([127.0.0.1])
-        by localhost (messagerie.si.c-s.fr [127.0.0.1]) (amavisd-new, port 10023)
-        with ESMTP id oBeo66qug2fX; Wed, 13 Mar 2019 10:10:38 +0100 (CET)
-Received: from PO15451 (unknown [192.168.4.90])
-        by messagerie.si.c-s.fr (Postfix) with ESMTP id C1D8E8B8EE;
-        Wed, 13 Mar 2019 10:10:37 +0100 (CET)
-Subject: Re: [PATCH v2] powerpc/mm: move warning from resize_hpt_for_hotplug()
-To:     Laurent Vivier <lvivier@redhat.com>, linux-kernel@vger.kernel.org
-Cc:     Michael Ellerman <mpe@ellerman.id.au>,
-        linuxppc-dev@lists.ozlabs.org,
-        David Gibson <david@gibson.dropbear.id.au>
-References: <20190308105413.4302-1-lvivier@redhat.com>
- <3db6b64d-02d3-8aa7-80ca-3e469ea743ff@c-s.fr>
- <1dfe1a2e-f6f9-2d5d-a38e-ba4517794bad@redhat.com>
- <6f089371-29e6-6fa9-379d-76d3a87e2b8b@c-s.fr>
- <8a22d3a7-f574-19f1-46d0-a54a5343dec8@redhat.com>
-From:   Christophe Leroy <christophe.leroy@c-s.fr>
-Message-ID: <86c23a4a-2545-2025-cd61-51f77f1c4393@c-s.fr>
-Date:   Wed, 13 Mar 2019 10:10:37 +0100
-User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:60.0) Gecko/20100101
- Thunderbird/60.5.3
+        Wed, 13 Mar 2019 05:12:10 -0400
+Received: from mailgw02.mediatek.com ([1.203.163.81]:53229 "EHLO
+        mailgw02.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1726163AbfCMJMJ (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 13 Mar 2019 05:12:09 -0400
+X-UUID: a4ae4db5cc434582a9148da334c2e57d-20190313
+X-UUID: a4ae4db5cc434582a9148da334c2e57d-20190313
+Received: from mtkcas35.mediatek.inc [(172.27.4.253)] by mailgw02.mediatek.com
+        (envelope-from <yong.wu@mediatek.com>)
+        (mailgw01.mediatek.com ESMTP with TLS)
+        with ESMTP id 650479586; Wed, 13 Mar 2019 17:11:55 +0800
+Received: from MTKCAS32.mediatek.inc (172.27.4.184) by MTKMBS31DR.mediatek.inc
+ (172.27.6.102) with Microsoft SMTP Server (TLS) id 15.0.1395.4; Wed, 13 Mar
+ 2019 17:11:53 +0800
+Received: from [10.17.3.153] (172.27.4.253) by MTKCAS32.mediatek.inc
+ (172.27.4.170) with Microsoft SMTP Server id 15.0.1395.4 via Frontend
+ Transport; Wed, 13 Mar 2019 17:11:53 +0800
+Message-ID: <1552468313.7433.14.camel@mhfsdcap03>
+Subject: Re: [PATCH 04/13] iommu/mediatek: Add device_link between the
+ consumer and the larb devices
+From:   Yong Wu <yong.wu@mediatek.com>
+To:     Robin Murphy <robin.murphy@arm.com>
+CC:     Joerg Roedel <joro@8bytes.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        Rob Herring <robh+dt@kernel.org>, <youlin.pei@mediatek.com>,
+        <devicetree@vger.kernel.org>,
+        Nicolas Boichat <drinkcat@chromium.org>, <arnd@arndb.de>,
+        <srv_heupstream@mediatek.com>, Will Deacon <will.deacon@arm.com>,
+        <linux-kernel@vger.kernel.org>, Tomasz Figa <tfiga@google.com>,
+        <iommu@lists.linux-foundation.org>,
+        <linux-mediatek@lists.infradead.org>, <yingjoe.chen@mediatek.com>,
+        <linux-arm-kernel@lists.infradead.org>
+Date:   Wed, 13 Mar 2019 17:11:53 +0800
+In-Reply-To: <709d7d66-9610-eeb3-128e-e2156bcfb616@arm.com>
+References: <1546318276-18993-1-git-send-email-yong.wu@mediatek.com>
+         <1546318276-18993-5-git-send-email-yong.wu@mediatek.com>
+         <709d7d66-9610-eeb3-128e-e2156bcfb616@arm.com>
+Content-Type: text/plain; charset="UTF-8"
+X-Mailer: Evolution 3.2.3-0ubuntu6 
+Content-Transfer-Encoding: 7bit
 MIME-Version: 1.0
-In-Reply-To: <8a22d3a7-f574-19f1-46d0-a54a5343dec8@redhat.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: fr
-Content-Transfer-Encoding: 8bit
+X-MTK:  N
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Hi Robin,
 
+sorry for reply so late.
 
-Le 13/03/2019 à 09:50, Laurent Vivier a écrit :
-> On 13/03/2019 09:28, Christophe Leroy wrote:
->>
->>
->> Le 13/03/2019 à 09:01, Laurent Vivier a écrit :
->>> On 13/03/2019 07:03, Christophe Leroy wrote:
->>>>
->>>>
->>>> Le 08/03/2019 à 11:54, Laurent Vivier a écrit :
->>>>> resize_hpt_for_hotplug() reports a warning when it cannot
->>>>> resize the hash page table ("Unable to resize hash page
->>>>> table to target order") but in some cases it's not a problem
->>>>> and can make user thinks something has not worked properly.
->>>>>
->>>>> This patch moves the warning to arch_remove_memory() to
->>>>> only report the problem when it is needed.
->>>>>
->>>>> Signed-off-by: Laurent Vivier <lvivier@redhat.com>
->>>>> ---
->>>>>     arch/powerpc/include/asm/sparsemem.h  |  4 ++--
->>>>>     arch/powerpc/mm/hash_utils_64.c       | 17 ++++++-----------
->>>>>     arch/powerpc/mm/mem.c                 |  3 ++-
->>>>>     arch/powerpc/platforms/pseries/lpar.c |  3 ++-
->>>>>     4 files changed, 12 insertions(+), 15 deletions(-)
->>>>>
->>>>> diff --git a/arch/powerpc/include/asm/sparsemem.h
->>>>> b/arch/powerpc/include/asm/sparsemem.h
->>>>> index 68da49320592..3192d454a733 100644
->>>>> --- a/arch/powerpc/include/asm/sparsemem.h
->>>>> +++ b/arch/powerpc/include/asm/sparsemem.h
->>>>> @@ -17,9 +17,9 @@ extern int create_section_mapping(unsigned long
->>>>> start, unsigned long end, int ni
->>>>>     extern int remove_section_mapping(unsigned long start, unsigned long
->>>>> end);
->>>>>       #ifdef CONFIG_PPC_BOOK3S_64
->>>>> -extern void resize_hpt_for_hotplug(unsigned long new_mem_size);
->>>>> +extern int resize_hpt_for_hotplug(unsigned long new_mem_size);
->>>>>     #else
->>>>> -static inline void resize_hpt_for_hotplug(unsigned long new_mem_size)
->>>>> { }
->>>>> +static inline int resize_hpt_for_hotplug(unsigned long new_mem_size)
->>>>> { return 0; }
->>>>>     #endif
->>>>>       #ifdef CONFIG_NUMA
->>>>> diff --git a/arch/powerpc/mm/hash_utils_64.c
->>>>> b/arch/powerpc/mm/hash_utils_64.c
->>>>> index 0cc7fbc3bd1c..40bb2a8326bb 100644
->>>>> --- a/arch/powerpc/mm/hash_utils_64.c
->>>>> +++ b/arch/powerpc/mm/hash_utils_64.c
->>>>> @@ -755,12 +755,12 @@ static unsigned long __init
->>>>> htab_get_table_size(void)
->>>>>     }
->>>>>       #ifdef CONFIG_MEMORY_HOTPLUG
->>>>> -void resize_hpt_for_hotplug(unsigned long new_mem_size)
->>>>> +int resize_hpt_for_hotplug(unsigned long new_mem_size)
->>>>>     {
->>>>>         unsigned target_hpt_shift;
->>>>>           if (!mmu_hash_ops.resize_hpt)
->>>>> -        return;
->>>>> +        return 0;
->>>>>           target_hpt_shift = htab_shift_for_mem_size(new_mem_size);
->>>>>     @@ -773,15 +773,10 @@ void resize_hpt_for_hotplug(unsigned long
->>>>> new_mem_size)
->>>>>          * current shift
->>>>>          */
->>>>>         if ((target_hpt_shift > ppc64_pft_size)
->>>>> -        || (target_hpt_shift < (ppc64_pft_size - 1))) {
->>>>> -        int rc;
->>>>> -
->>>>> -        rc = mmu_hash_ops.resize_hpt(target_hpt_shift);
->>>>> -        if (rc && (rc != -ENODEV))
->>>>> -            printk(KERN_WARNING
->>>>> -                   "Unable to resize hash page table to target order
->>>>> %d: %d\n",
->>>>> -                   target_hpt_shift, rc);
->>>>> -    }
->>>>> +        || (target_hpt_shift < (ppc64_pft_size - 1)))
->>>>
->>>> The || should go on the line above and the two (target_hpt... should be
->>>> aligned, and the () after the < are superflous.
->>>>
->>>> And indeed, we should (in another patch) rename 'target_hpt_shift' with
->>>> a shorter name, this would avoid multiple lines.
->>>>
->>>> Ref
->>>> https://www.kernel.org/doc/html/latest/process/coding-style.html#naming
->>>> :
->>>>
->>>> LOCAL variable names should be short, and to the point. If you have some
->>>> random integer loop counter, it should probably be called i. Calling it
->>>> loop_counter is non-productive, if there is no chance of it being
->>>> mis-understood. Similarly, tmp can be just about any type of variable
->>>> that is used to hold a temporary value.
->>>>
->>>> If you are afraid to mix up your local variable names, you have another
->>>> problem, which is called the function-growth-hormone-imbalance syndrome.
->>>> See chapter 6 (Functions).
->>>>
->>>
->>> I'm only removing a warning. Do we really need to rewrite all the code
->>> around for that?
->>
->> No, and that's the reason why I said it could be done in another
->> (future) patch.
->>
->> Anyway, your patch should be clean regarding checkpatch
->>
->> See https://patchwork.ozlabs.org/patch/1052984/
->> And
->> https://openpower.xyz/job/snowpatch/job/snowpatch-linux-checkpatch/3298//artifact/linux/checkpatch.log
->>
->>
->> CHECK:AVOID_EXTERNS: extern prototypes should be avoided in .h files
->> #31: FILE: arch/powerpc/include/asm/sparsemem.h:20:
->> +extern int resize_hpt_for_hotplug(unsigned long new_mem_size);
->>
->> CHECK:LOGICAL_CONTINUATIONS: Logical continuations should be on the
->> previous line
->> #70: FILE: arch/powerpc/mm/hash_utils_64.c:776:
->>       if ((target_hpt_shift > ppc64_pft_size)
->> +        || (target_hpt_shift < (ppc64_pft_size - 1)))
->>
+On Wed, 2019-02-27 at 19:30 +0000, Robin Murphy wrote:
+> On 01/01/2019 04:51, Yong Wu wrote:
+> > MediaTek IOMMU don't have its power-domain. all the consumer connect
+> > with smi-larb, then connect with smi-common.
+> > 
+> >          M4U
+> >           |
+> >      smi-common
+> >           |
+> >    -------------
+> >    |         |    ...
+> >    |         |
+> > larb1     larb2
+> >    |         |
+> > vdec       venc
+> > 
+> > When the consumer works, it should enable the smi-larb's power which
+> > also need enable the smi-common's power firstly.
+> > 
+> > Thus, First of all, use the device link connect the consumer and the
+> > smi-larbs. then add device link between the smi-larb and smi-common.
+> > 
+> > This patch adds device_link between the consumer and the larbs.
+> > 
+> > Suggested-by: Tomasz Figa <tfiga@chromium.org>
+> > Signed-off-by: Yong Wu <yong.wu@mediatek.com>
+> > ---
+> >   drivers/iommu/mtk_iommu.c    | 15 +++++++++++++--
+> >   drivers/iommu/mtk_iommu_v1.c | 14 ++++++++++++--
+> >   2 files changed, 25 insertions(+), 4 deletions(-)
+> > 
+> > diff --git a/drivers/iommu/mtk_iommu.c b/drivers/iommu/mtk_iommu.c
+> > index 202e41b..735ae8d 100644
+> > --- a/drivers/iommu/mtk_iommu.c
+> > +++ b/drivers/iommu/mtk_iommu.c
+> > @@ -247,6 +247,7 @@ static void mtk_iommu_config(struct mtk_iommu_data *data,
+> >   	struct mtk_smi_larb_iommu    *larb_mmu;
+> >   	unsigned int                 larbid, portid;
+> >   	struct iommu_fwspec *fwspec = dev_iommu_fwspec_get(dev);
+> > +	struct device_link *link;
+> >   	int i;
+> >   
+> >   	for (i = 0; i < fwspec->num_ids; ++i) {
+> > @@ -257,10 +258,20 @@ static void mtk_iommu_config(struct mtk_iommu_data *data,
+> >   		dev_dbg(dev, "%s iommu port: %d\n",
+> >   			enable ? "enable" : "disable", portid);
+> >   
+> > -		if (enable)
+> > +		if (enable) {
+> >   			larb_mmu->mmu |= MTK_SMI_MMU_EN(portid);
+> > -		else
+> > +			/* Link the consumer with the larb device(supplier) */
+> > +			link = device_link_add(dev, larb_mmu->dev,
+> > +					       DL_FLAG_PM_RUNTIME |
+> > +					       DL_FLAG_AUTOREMOVE_CONSUMER);
 > 
-> It's really strange, from linux directory:
-> 
-> ./scripts/checkpatch.pl 0001-powerpc-mm-move-warning-from-resize_hpt_for_hotplug.patch
+> This looks technically wrong, since we get here from 
+> mtk_iommu_attach_device(), and in theory a device could get attached to 
+> any number of domains over its lifetime, so adding a link at this point 
+> when there's no corresponding cleanup on detach is definitely 
+> unbalanced. If you want this layer to manage the link on behalf of the 
+> consumer, it would probably be better to do it at the point of 
+> mtk_iommu_add_device(), and either track it for manual cleanup in 
+> mtk_iommu_remove_device() or rely on AUTOREMOVE_SUPPLIER.
 
-Try with --strict
+Thanks. I will try to move the "device_link_add" in add_device in next
+version.
 
 > 
-> doesn't output this error [1]. Why linux-ppc doesn't use the same script as in the kernel directory?
+> Robin.
+> 
+> > +			if (!link) {
+> > +				dev_err(dev, "Unable to link %s\n",
+> > +					dev_name(larb_mmu->dev));
+> > +				return;
+> > +			}
+> > +		} else {
+> >   			larb_mmu->mmu &= ~MTK_SMI_MMU_EN(portid);
+> > +		}
+> >   	}
+> >   }
+> >   
+> > diff --git a/drivers/iommu/mtk_iommu_v1.c b/drivers/iommu/mtk_iommu_v1.c
+> > index 9386aee..022bad9 100644
+> > --- a/drivers/iommu/mtk_iommu_v1.c
+> > +++ b/drivers/iommu/mtk_iommu_v1.c
+> > @@ -201,6 +201,7 @@ static void mtk_iommu_config(struct mtk_iommu_data *data,
+> >   	struct mtk_smi_larb_iommu    *larb_mmu;
+> >   	unsigned int                 larbid, portid;
+> >   	struct iommu_fwspec *fwspec = dev_iommu_fwspec_get(dev);
+> > +	struct device_link *link;
+> >   	int i;
+> >   
+> >   	for (i = 0; i < fwspec->num_ids; ++i) {
+> > @@ -211,10 +212,19 @@ static void mtk_iommu_config(struct mtk_iommu_data *data,
+> >   		dev_dbg(dev, "%s iommu port: %d\n",
+> >   			enable ? "enable" : "disable", portid);
+> >   
+> > -		if (enable)
+> > +		if (enable) {
+> >   			larb_mmu->mmu |= MTK_SMI_MMU_EN(portid);
+> > -		else
+> > +			link = device_link_add(dev, larb_mmu->dev,
+> > +					       DL_FLAG_PM_RUNTIME |
+> > +					       DL_FLAG_AUTOREMOVE_CONSUMER);
+> > +			if (!link) {
+> > +				dev_err(dev, "Unable to link %s\n",
+> > +					dev_name(larb_mmu->dev));
+> > +				return;
+> > +			}
+> > +		} else {
+> >   			larb_mmu->mmu &= ~MTK_SMI_MMU_EN(portid);
+> > +		}
+> >   	}
+> >   }
+> >   
+> > 
 
-linux-ppc used it but with dedicated options, see 
-arch/powerpc/tools/checkpatch.sh
 
-> 
-> Anyway, I send a v3.
-> 
-> Thanks,
-> Laurent
-> 
-> [1] only:
-> 
-> WARNING: line over 80 characters
-> #34: FILE: arch/powerpc/include/asm/sparsemem.h:22:
-> +static inline int resize_hpt_for_hotplug(unsigned long new_mem_size) { return 0; }
-
-linux-ppc allows 90 characters.
-
-> 
-> total: 0 errors, 1 warnings, 70 lines checked
-> 
-> NOTE: For some of the reported defects, checkpatch may be able to
->        mechanically convert to the typical style using --fix or --fix-inplace.
-> 
-> 0001-powerpc-mm-move-warning-from-resize_hpt_for_hotplug.patch has style problems, please review.
-> 
-> NOTE: If any of the errors are false positives, please report
->        them to the maintainer, see CHECKPATCH in MAINTAINERS.
-> 
-> 
-> But I think it's cleaner to keep the over 80 characters line for the inline.
-> 
-
-Christophe
