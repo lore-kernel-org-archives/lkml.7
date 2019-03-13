@@ -2,122 +2,134 @@ Return-Path: <SRS0=dUEL=RQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 24995C43381
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 Mar 2019 10:49:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 66F9AC43381
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 Mar 2019 10:49:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E702520693
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 Mar 2019 10:49:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 35C0020693
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 Mar 2019 10:49:44 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="N0xPSEvm"
+	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="EX8iLTWr"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726218AbfCMKtV (ORCPT
+        id S1726349AbfCMKtn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 13 Mar 2019 06:49:21 -0400
-Received: from mail-qt1-f196.google.com ([209.85.160.196]:44755 "EHLO
-        mail-qt1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726074AbfCMKtV (ORCPT
+        Wed, 13 Mar 2019 06:49:43 -0400
+Received: from hqemgate15.nvidia.com ([216.228.121.64]:18447 "EHLO
+        hqemgate15.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725868AbfCMKtm (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 13 Mar 2019 06:49:21 -0400
-Received: by mail-qt1-f196.google.com with SMTP id d2so1236900qti.11
-        for <linux-kernel@vger.kernel.org>; Wed, 13 Mar 2019 03:49:20 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=YhzR6aubWEYgzikBR/ws80jTTDYj/MkeU9A7euzIPNw=;
-        b=N0xPSEvm2SMEiqkEn5mdNzntu4XU15JPKSEEvdM8WOKL1gpkmakRljsyBOThrIPneb
-         7jrbcIZ6Pz/SrAKvRsR5b5ZBRhDlhEBG5RU6/gb3exWTM/wnG+thegzV0W00kRHmCQjI
-         2gOfDI6rqDI9q+MlF9e6078Cwd1xnt1PVO5Sc=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=YhzR6aubWEYgzikBR/ws80jTTDYj/MkeU9A7euzIPNw=;
-        b=OdQ4Znlp8wuV7FL8KA3h/m2/Iaz5ghIqRxVP2bef2chP5BMk8plKsJBEKCL7qPnUrs
-         uCdq1g8N+pby8E4RBuF/HR2xk3SluqIpPzL3AQ6m8HZKT2Q0lKQU2R9bpNZOPsLkYigz
-         b8cdV9BDtWFUsDO0qbfKy62aWm400FjLega9FKqsTakLyJ/baQQI/G93RQlQPIM2GO1q
-         +5+/CKAiyybyel0JcZmAJXM4Fx3K5aIxjaejGWNFhueclwxYe08ZG4OsjM6HyhSZSFQU
-         MYi8f/bYXtCMKygoe4LyZ6MeRjfMjO1XcIw7MrTqfhQ38lyfPnddnjmTsrye4X1c9afN
-         llbw==
-X-Gm-Message-State: APjAAAWcsone3/+3cTlMHAPI3KEaACWqq7JO0v5kRcgIrKMYXy8xRdnN
-        AFT21TxIulU1ulXGGJUk68ZFipHX1C05CoIqAtQRzA==
-X-Google-Smtp-Source: APXvYqxe5R6Rs2hTIgCTeBVSIiF6J50pyjo+yD0VwOJUCN+qC8XUAe0iZWlfUTP3NHHHr0UgIWFEjZFIhtZwy6RvtN8=
-X-Received: by 2002:ac8:2847:: with SMTP id 7mr33275907qtr.335.1552474159659;
- Wed, 13 Mar 2019 03:49:19 -0700 (PDT)
+        Wed, 13 Mar 2019 06:49:42 -0400
+Received: from hqpgpgate102.nvidia.com (Not Verified[216.228.121.13]) by hqemgate15.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
+        id <B5c88e03a0000>; Wed, 13 Mar 2019 03:49:30 -0700
+Received: from hqmail.nvidia.com ([172.20.161.6])
+  by hqpgpgate102.nvidia.com (PGP Universal service);
+  Wed, 13 Mar 2019 03:49:42 -0700
+X-PGP-Universal: processed;
+        by hqpgpgate102.nvidia.com on Wed, 13 Mar 2019 03:49:42 -0700
+Received: from [10.21.132.148] (10.124.1.5) by HQMAIL101.nvidia.com
+ (172.20.187.10) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Wed, 13 Mar
+ 2019 10:49:40 +0000
+Subject: Re: [PATCH v2 2/2] dmaengine: tegra210-adma: update system sleep
+ callbacks
+To:     Sameer Pujar <spujar@nvidia.com>, <dan.j.williams@intel.com>,
+        <vkoul@kernel.org>
+CC:     <treding@nvidia.com>, <dmaengine@vger.kernel.org>,
+        <linux-tegra@vger.kernel.org>, <linux-kernel@vger.kernel.org>
+References: <1552455794-24946-1-git-send-email-spujar@nvidia.com>
+ <1552455794-24946-2-git-send-email-spujar@nvidia.com>
+ <c4d0a061-e435-8a60-0dfc-f8e66c0a9f0b@nvidia.com>
+ <51f5a49e-f105-604c-130c-fd3d0a07bbc5@nvidia.com>
+From:   Jon Hunter <jonathanh@nvidia.com>
+Message-ID: <1466b97e-2cbd-9469-6646-fee85a7efa58@nvidia.com>
+Date:   Wed, 13 Mar 2019 10:49:38 +0000
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.5.1
 MIME-Version: 1.0
-References: <1552465563-6940-1-git-send-email-yongqiang.niu@mediatek.com>
-In-Reply-To: <1552465563-6940-1-git-send-email-yongqiang.niu@mediatek.com>
-From:   Nicolas Boichat <drinkcat@chromium.org>
-Date:   Wed, 13 Mar 2019 18:49:08 +0800
-Message-ID: <CANMq1KC31g7=NiW2zHLxqv9yH7a11qRLdieSyoES446ZJxi8Sw@mail.gmail.com>
-Subject: Re: [RESEND PATCH v1, 00/18] add drm support for MT8183
-To:     Yongqiang Niu <yongqiang.niu@mediatek.com>
-Cc:     CK Hu <ck.hu@mediatek.com>, Philipp Zabel <p.zabel@pengutronix.de>,
-        Rob Herring <robh+dt@kernel.org>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        devicetree@vger.kernel.org, David Airlie <airlied@linux.ie>,
-        lkml <linux-kernel@vger.kernel.org>,
-        dri-devel@lists.freedesktop.org,
-        "moderated list:ARM/Mediatek SoC support" 
-        <linux-mediatek@lists.infradead.org>,
-        linux-arm Mailing List <linux-arm-kernel@lists.infradead.org>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <51f5a49e-f105-604c-130c-fd3d0a07bbc5@nvidia.com>
+X-Originating-IP: [10.124.1.5]
+X-ClientProxiedBy: HQMAIL105.nvidia.com (172.20.187.12) To
+ HQMAIL101.nvidia.com (172.20.187.10)
+Content-Type: text/plain; charset="utf-8"
+Content-Language: en-US
+Content-Transfer-Encoding: quoted-printable
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
+        t=1552474170; bh=blizHoMWy3WSKdgrYspu23QObzIp07jpXNGS97m1gXY=;
+        h=X-PGP-Universal:Subject:To:CC:References:From:Message-ID:Date:
+         User-Agent:MIME-Version:In-Reply-To:X-Originating-IP:
+         X-ClientProxiedBy:Content-Type:Content-Language:
+         Content-Transfer-Encoding;
+        b=EX8iLTWrcybv0801hREmzoTR5i3vTiqCSRt7z3rNwEXQilIGCdpLT+GDqY27UW9+1
+         oDdLdjGYujs5OGQtSdvnUVLZQfWHHPia8uRa4fnigj0CiN+KBmyFQcd1AtbflBHj9o
+         aRUF12jr/VN5AOWCMtAfZonbyVO1+LZq9SKM4T6Q5+54KIzhip4Sait+a7Ef9PjJxg
+         EPeYapIdnQW1qZJ3wHW7rSEM6Rtpbep31sTg0bnKnn/6i8/TISXwE4LAb1wXBFf9H8
+         GkyAwbb74jb2MQ5eL5kqRuQkMek9Z9Xfeky6wESPwW2fFXBzwG2nbq9LtqwgdV41o9
+         PifNEnP1b68Yw==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Mar 13, 2019 at 4:53 PM Yongqiang Niu
-<yongqiang.niu@mediatek.com> wrote:
->
-> This series are based on 4.20-rc1 and provide 18 patches to
-> support mediatek SOC MT8183
 
-v1 (https://patchwork.freedesktop.org/series/54451/#rev1) had a large
-number of comments, and I don't think you addressed any of them here?
-Can you please do so before resending?
+On 13/03/2019 10:40, Sameer Pujar wrote:
+>=20
+> On 3/13/2019 3:58 PM, Jon Hunter wrote:
+>> On 13/03/2019 05:43, Sameer Pujar wrote:
+>>> If the driver is active till late suspend, where runtime PM cannot run,
+>>> force suspend is essential in such case to put the device in low power
+>>> state. Thus pm_runtime_force_suspend and pm_runtime_force_resume are
+>>> used as system sleep callbacks during system wide PM transitions.
+>>>
+>>> Signed-off-by: Sameer Pujar <spujar@nvidia.com>
+>>> ---
+>>> =C2=A0 drivers/dma/tegra210-adma.c | 10 ++--------
+>>> =C2=A0 1 file changed, 2 insertions(+), 8 deletions(-)
+>>>
+>>> diff --git a/drivers/dma/tegra210-adma.c b/drivers/dma/tegra210-adma.c
+>>> index 650cd9c..be29171 100644
+>>> --- a/drivers/dma/tegra210-adma.c
+>>> +++ b/drivers/dma/tegra210-adma.c
+>>> @@ -796,17 +796,11 @@ static int tegra_adma_remove(struct
+>>> platform_device *pdev)
+>>> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 return 0;
+>>> =C2=A0 }
+>>> =C2=A0 -#ifdef CONFIG_PM_SLEEP
+>>> -static int tegra_adma_pm_suspend(struct device *dev)
+>>> -{
+>>> -=C2=A0=C2=A0=C2=A0 return pm_runtime_suspended(dev) =3D=3D false;
+>>> -}
+>>> -#endif
+>>> -
+>>> =C2=A0 static const struct dev_pm_ops tegra_adma_dev_pm_ops =3D {
+>>> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 SET_RUNTIME_PM_OPS(tegra_adma_runtime_su=
+spend,
+>>> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0=C2=A0=C2=A0=C2=A0=C2=A0 tegra_adma_runtime_resume, NULL)
+>>> -=C2=A0=C2=A0=C2=A0 SET_SYSTEM_SLEEP_PM_OPS(tegra_adma_pm_suspend, NULL=
+)
+>>> +=C2=A0=C2=A0=C2=A0 SET_SYSTEM_SLEEP_PM_OPS(pm_runtime_force_suspend,
+>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0=C2=A0=C2=A0=C2=A0 pm_runtime_force_resume)
+>>> =C2=A0 };
+>> Looking at our downstream kernel we use LATE_SYSTEM_SLEEP for these. Any
+>> reason why you changed this?
+> I think, I just wanted to replace function calls for system sleep here
+> and probably did
+> not see exactly what we have in downstream kernel at that point. Looking
+> at the commit
+> log in downstream, it might qualify for separate patch.
+> Let me know if you think, its better to add here.
 
-> Yongqiang Niu (18):
->   drm/mediatek: update dt-bindings for mt8183
->   drm/mediatek: add mutex mod and sof into ddp private data
->   drm/mediatek: redefine mtk_ddp_sout_sel
->   drm/mediatek: move rdma sout from mtk_ddp_mout_en into
->     mtk_ddp_sout_sel
->   drm/mediatek: add ddp component CCORR
->   drm/mediatek: add mmsys private data for ddp path config
->   drm/mediatek: add commponent OVL0_2L
->   drm/mediatek: add component OVL1_2L
->   drm/mediatek: add component DITHER
->   drm/mediatek: add gmc_bits for ovl private data
->   drm/medaitek: add layer_nr for ovl private data
->   drm/mediatek: add function to connect module with it's previous one
->   drm/mediatek: add ddp write register common api
->   drm/mediatek: add connect function for ovl
->   drm/mediatek: add RDMA1 fifo size into RDMA private data
->   drm/mediatek: add function mtk_ddp_comp_get_type
->   drm/mediatek: add ovl0/ovl0_2l usecase
->   drm/mediatek: add support for mediatek SOC MT8183
->
->  .../bindings/display/mediatek/mediatek,disp.txt    |  11 +-
->  drivers/gpu/drm/mediatek/mtk_disp_ovl.c            |  64 ++-
->  drivers/gpu/drm/mediatek/mtk_disp_rdma.c           |  23 +-
->  drivers/gpu/drm/mediatek/mtk_drm_crtc.c            |  42 +-
->  drivers/gpu/drm/mediatek/mtk_drm_ddp.c             | 458 ++++++++++++++++-----
->  drivers/gpu/drm/mediatek/mtk_drm_ddp.h             |  11 +
->  drivers/gpu/drm/mediatek/mtk_drm_ddp_comp.c        | 100 +++++
->  drivers/gpu/drm/mediatek/mtk_drm_ddp_comp.h        |  24 ++
->  drivers/gpu/drm/mediatek/mtk_drm_drv.c             |  55 +++
->  drivers/gpu/drm/mediatek/mtk_drm_drv.h             |   4 +
->  10 files changed, 688 insertions(+), 104 deletions(-)
->
-> --
-> 1.8.1.1.dirty
-> _______________________________________________
-> dri-devel mailing list
-> dri-devel@lists.freedesktop.org
-> https://lists.freedesktop.org/mailman/listinfo/dri-devel
+I see no reason to change this from what we have been using and testing
+downstream. I don't think that this warrants yet another patch for this.
+Furthermore, the changelog references 'late' so it does not seem to
+align with the change itself.
+
+Cheers
+Jon
+
+--=20
+nvpublic
