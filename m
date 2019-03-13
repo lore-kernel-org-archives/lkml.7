@@ -4,50 +4,48 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BF2F0C43381
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 Mar 2019 19:23:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 123ABC43381
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 Mar 2019 19:23:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 837FE2075C
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 Mar 2019 19:23:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CEB752075C
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 Mar 2019 19:23:26 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1552504997;
-	bh=Y6GeG6BM1+EuTD6cFmUs9CGqds5EOI3phgN+zPuK7ls=;
+	s=default; t=1552505006;
+	bh=ZKwvw+OdkFutJ+O09TpyQakiP6ppRqg3P+SgX7PdfE0=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=eBA8RyqpM2oKARO5UrAkmji1VtSt9Tv1LbQInJVXG4BvM1/4isEdtY2P7Y2LY/kqH
-	 +9OI4WDA1FXkMP5zmg30gibyfEvy7o1CaC2DkcbH6/pkk9STqk03Dl05opjEiAeFx8
-	 r522EZSWFd5D140oDzEmxdppJX3oUN22R8b/3pp8=
+	b=pdXFZLW6GKdPBberTU3xwsl25p/lKiR82p9qiy8EmAILdchTB2uQAHUQerzc5qL4J
+	 VnyTTyCu2NHiIsPltbiADrOVaRa0Ylt8AHmi02eAsYDoa2LQUHxPaRL8Rqtfr0AYka
+	 YhZNL/S4A7AGZHJWWIo9nUqzLZ5Cmy5q8LgsRKTs=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727487AbfCMTXP (ORCPT
+        id S1728792AbfCMTXZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 13 Mar 2019 15:23:15 -0400
-Received: from mail.kernel.org ([198.145.29.99]:47512 "EHLO mail.kernel.org"
+        Wed, 13 Mar 2019 15:23:25 -0400
+Received: from mail.kernel.org ([198.145.29.99]:47392 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727545AbfCMTRJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 13 Mar 2019 15:17:09 -0400
+        id S1728808AbfCMTRB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 13 Mar 2019 15:17:01 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id ED5222075C;
-        Wed, 13 Mar 2019 19:17:06 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 8068E2177E;
+        Wed, 13 Mar 2019 19:16:59 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1552504628;
-        bh=Y6GeG6BM1+EuTD6cFmUs9CGqds5EOI3phgN+zPuK7ls=;
+        s=default; t=1552504620;
+        bh=ZKwvw+OdkFutJ+O09TpyQakiP6ppRqg3P+SgX7PdfE0=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=1WgIDH7PbLjoihQ4V2kaBSkJ1Brg6XhsxsAYgNfcqCo+z6CxKhlvEQ74s2xPsAHRC
-         DUj8KWRN8ioaDHUzUAQPDq19OusdoyQGFSY9fVMu6EaUMW9fGEnTm0sN/nW3P22bgl
-         yMThf5mbSQGGK4IOPLIMEAEIeCOjct8gncbqZ3XU=
+        b=g1Kz7rtRMytlWk+BtOg/73H/Fmrl7sJfmKEKKGLnNKrhNjhJSdrFzFzmSbfarZ9er
+         ExSUazIyZhZQTTiqCUNYwlQZnb6SR0g1VykLv6t2ktozMJQe0ejEeLVowITMyKAEyg
+         iaiEEqQGCAoGx0ItmXHDvuGo6IBUPBU52GrzS5c0=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Martin Blumenstingl <martin.blumenstingl@googlemail.com>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Sasha Levin <sashal@kernel.org>, linux-gpio@vger.kernel.org,
-        linux-amlogic@lists.infradead.org
-Subject: [PATCH AUTOSEL 4.9 06/24] pinctrl: meson: meson8b: fix the sdxc_a data 1..3 pins
-Date:   Wed, 13 Mar 2019 15:16:29 -0400
-Message-Id: <20190313191647.160171-6-sashal@kernel.org>
+Cc:     David Howells <dhowells@redhat.com>,
+        James Morris <james.morris@microsoft.com>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH AUTOSEL 4.9 03/24] assoc_array: Fix shortcut creation
+Date:   Wed, 13 Mar 2019 15:16:26 -0400
+Message-Id: <20190313191647.160171-3-sashal@kernel.org>
 X-Mailer: git-send-email 2.19.1
 In-Reply-To: <20190313191647.160171-1-sashal@kernel.org>
 References: <20190313191647.160171-1-sashal@kernel.org>
@@ -59,36 +57,57 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Martin Blumenstingl <martin.blumenstingl@googlemail.com>
+From: David Howells <dhowells@redhat.com>
 
-[ Upstream commit c17abcfa93bf0be5e48bb011607d237ac2bfc839 ]
+[ Upstream commit bb2ba2d75a2d673e76ddaf13a9bd30d6a8b1bb08 ]
 
-Fix the mismatch between the "sdxc_d13_1_a" pin group definition from
-meson8b_cbus_groups and the entry in sdxc_a_groups ("sdxc_d0_13_1_a").
-This makes it possible to use "sdxc_d13_1_a" in device-tree files to
-route the MMC data 1..3 pins to GPIOX_1..3.
+Fix the creation of shortcuts for which the length of the index key value
+is an exact multiple of the machine word size.  The problem is that the
+code that blanks off the unused bits of the shortcut value malfunctions if
+the number of bits in the last word equals machine word size.  This is due
+to the "<<" operator being given a shift of zero in this case, and so the
+mask that should be all zeros is all ones instead.  This causes the
+subsequent masking operation to clear everything rather than clearing
+nothing.
 
-Fixes: 0fefcb6876d0d6 ("pinctrl: Add support for Meson8b")
-Signed-off-by: Martin Blumenstingl <martin.blumenstingl@googlemail.com>
-Signed-off-by: Linus Walleij <linus.walleij@linaro.org>
+Ordinarily, the presence of the hash at the beginning of the tree index key
+makes the issue very hard to test for, but in this case, it was encountered
+due to a development mistake that caused the hash output to be either 0
+(keyring) or 1 (non-keyring) only.  This made it susceptible to the
+keyctl/unlink/valid test in the keyutils package.
+
+The fix is simply to skip the blanking if the shift would be 0.  For
+example, an index key that is 64 bits long would produce a 0 shift and thus
+a 'blank' of all 1s.  This would then be inverted and AND'd onto the
+index_key, incorrectly clearing the entire last word.
+
+Fixes: 3cb989501c26 ("Add a generic associative array implementation.")
+Signed-off-by: David Howells <dhowells@redhat.com>
+Signed-off-by: James Morris <james.morris@microsoft.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/pinctrl/meson/pinctrl-meson8b.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ lib/assoc_array.c | 8 +++++---
+ 1 file changed, 5 insertions(+), 3 deletions(-)
 
-diff --git a/drivers/pinctrl/meson/pinctrl-meson8b.c b/drivers/pinctrl/meson/pinctrl-meson8b.c
-index cbe5f5cbddb8..e1b689f840ab 100644
---- a/drivers/pinctrl/meson/pinctrl-meson8b.c
-+++ b/drivers/pinctrl/meson/pinctrl-meson8b.c
-@@ -662,7 +662,7 @@ static const char * const sd_a_groups[] = {
+diff --git a/lib/assoc_array.c b/lib/assoc_array.c
+index 5cd093589c5a..3b46c5433b7a 100644
+--- a/lib/assoc_array.c
++++ b/lib/assoc_array.c
+@@ -781,9 +781,11 @@ static bool assoc_array_insert_into_terminal_node(struct assoc_array_edit *edit,
+ 		new_s0->index_key[i] =
+ 			ops->get_key_chunk(index_key, i * ASSOC_ARRAY_KEY_CHUNK_SIZE);
  
- static const char * const sdxc_a_groups[] = {
- 	"sdxc_d0_0_a", "sdxc_d13_0_a", "sdxc_d47_a", "sdxc_clk_a",
--	"sdxc_cmd_a", "sdxc_d0_1_a", "sdxc_d0_13_1_a"
-+	"sdxc_cmd_a", "sdxc_d0_1_a", "sdxc_d13_1_a"
- };
+-	blank = ULONG_MAX << (level & ASSOC_ARRAY_KEY_CHUNK_MASK);
+-	pr_devel("blank off [%zu] %d: %lx\n", keylen - 1, level, blank);
+-	new_s0->index_key[keylen - 1] &= ~blank;
++	if (level & ASSOC_ARRAY_KEY_CHUNK_MASK) {
++		blank = ULONG_MAX << (level & ASSOC_ARRAY_KEY_CHUNK_MASK);
++		pr_devel("blank off [%zu] %d: %lx\n", keylen - 1, level, blank);
++		new_s0->index_key[keylen - 1] &= ~blank;
++	}
  
- static const char * const pcm_a_groups[] = {
+ 	/* This now reduces to a node splitting exercise for which we'll need
+ 	 * to regenerate the disparity table.
 -- 
 2.19.1
 
