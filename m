@@ -7,55 +7,55 @@ X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8A458C43381
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 Mar 2019 09:00:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B0CC4C43381
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 Mar 2019 09:00:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 581F32147C
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 Mar 2019 09:00:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7F5D021850
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 Mar 2019 09:00:37 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="inRvYdF2"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="jMKInlTb"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727386AbfCMJAa (ORCPT
+        id S1727403AbfCMJAf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 13 Mar 2019 05:00:30 -0400
-Received: from mail-lj1-f194.google.com ([209.85.208.194]:42552 "EHLO
-        mail-lj1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727368AbfCMJAZ (ORCPT
+        Wed, 13 Mar 2019 05:00:35 -0400
+Received: from mail-lj1-f196.google.com ([209.85.208.196]:43667 "EHLO
+        mail-lj1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727351AbfCMJAW (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 13 Mar 2019 05:00:25 -0400
-Received: by mail-lj1-f194.google.com with SMTP id v3so796614ljk.9
-        for <linux-kernel@vger.kernel.org>; Wed, 13 Mar 2019 02:00:24 -0700 (PDT)
+        Wed, 13 Mar 2019 05:00:22 -0400
+Received: by mail-lj1-f196.google.com with SMTP id z20so796811ljj.10
+        for <linux-kernel@vger.kernel.org>; Wed, 13 Mar 2019 02:00:21 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=lRuCf454mnzXB+DyjyFfFPdMgMq/C5zdWzQg4oC5VkU=;
-        b=inRvYdF2URJMHy6DjIr+GhGLMU3P1FzqcqtEDRK4JChuFpTLPGpOXtV+RO7/5dckAL
-         jpeGejyWeb/QXvr0zUbCfzv5imaWuFE8wlhpWlFxqC8uX5ShsK5sWeKiHgO8TEXRm1kj
-         mqT+DHt8hKej3THaZPN8rbwK1rMZYmYkyAGrcCnAMoqRxxNnJykTIdVW1fQYmKs7gZln
-         +R0hIrYLWqWlsKlY0LeNuBvvrVJQKFJR6/+GH7XKRikBbsWDbg1AqOKFIRinz1/qSmVm
-         WCvKsymK5Mv7aT4QBueq3B5eBZpjEXka9bfjlOqe7cbZPc4fU+Dto10G8lkRcRDJdQtd
-         6YGg==
+        bh=9gFFJDf2YnnW41mbrUGLhQnv9x8YWw9okQzyBd4EYFU=;
+        b=jMKInlTbt1kLgeuLKDe1amgKHzJijr6f5OIpO20OyvgkfgsGFPnJBf+y9RYwcTwOWp
+         RSMMny0yclfzx9rhkKAM0DE4N2KIqEt+MeGSe+EybjdQ7/um9Aq+qwJ/5Dj5hLXZ9eVz
+         wCvKQ2Kdna0pdjPTg49jZt06SR5Img4H2vK36R85kcNZlz0Ea5dTHlt/d+cy9J8yWfpZ
+         ZVKB8PHcjom6Wbt/de+T18MQw4P9JQ1WyQ7HyppLQ7ScMyO4hwzhVb2GhNkU9hTw3+K3
+         Sm6weatOipRzmxgWAfm5eq/x9cvj2aG474sTl0mo5zi5Gcet+AA/b4KMktKMVL/m4wDm
+         8JBg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=lRuCf454mnzXB+DyjyFfFPdMgMq/C5zdWzQg4oC5VkU=;
-        b=P2aJ3WEzaXAg8iDnCitlRGOC7Bb4iaFW+2MhYHTnOwQTSZIrva5pfHvOGph6Zkxhl6
-         b2cjy8+Y//7yqSsR33Vn5QaXZnZHNxtsH31cS+TJLZgJEGnVvXsBRkiCPVfaKsYYEUHe
-         BN+MUVKOx9EUwyhkrhpo+05E+tDXi+scJ70uXdT1ggQc5MaFK+ysXkwF74N5d5UwTKyg
-         K6UDtVg0HLUr19YMo2qCSwFqwIfq0FbSms08Xc9gHBhS9TC8KXvqK+k0eWvcM8tlEit+
-         hlsbFdgT74qtaCb5D9AodbGdkR6W8yWc4HM6gxReLYUyj6UkNXh8doIwbgNk/nRmXz3l
-         Lg6A==
-X-Gm-Message-State: APjAAAVulx5v6cwWyOZspaCGaWlOp1rFDjIUUCKVxzeoRwqrLKTdjANv
-        TI734EQ02VF0P0Xf9GCsBgQZgA==
-X-Google-Smtp-Source: APXvYqy+0kI5lN5r3CDxfcKdZ5X2ac9IRFzw80Mxsj4mGpyXAGd5SfKIalXwYLiag6G79eZLggdkjA==
-X-Received: by 2002:a2e:8585:: with SMTP id b5mr22362278lji.125.1552467623334;
-        Wed, 13 Mar 2019 02:00:23 -0700 (PDT)
+        bh=9gFFJDf2YnnW41mbrUGLhQnv9x8YWw9okQzyBd4EYFU=;
+        b=fh2AdtOHxbgpsFv4i4g/qd2tyKGGJBQprq7b/ZpL5xUQdh8BjSpjsp9UiaE6ooXSKU
+         YQ7OHPfGC29d3N6KIKXZShPOSxVtFDtxERSv3Ef/2E1Un3OfiIpDRBd7AW7cPM3MbUoQ
+         Q0NEUe5K7wvpRPfyn88mqgg03fmubxH8WZs8HnaVByqbh01grOsJeUtShMbIHPD8Tixr
+         1VjsMbi0Gn0ukTI+ZuVE9Y06hauqRQHxa9gpPV69+pFyGKuzYP0dPll+MMuwdC5vVRfO
+         1LNEL0mKdICM94+2+Chr4DUkrYlfHtSILwORZeHRKqdutbsTygKc6gLcxqtDnvDRrYA5
+         H2aw==
+X-Gm-Message-State: APjAAAVKL7hrfcPa9DWO9Dv5ZJAFPr3PhgomAGPGntlEIb4CTSUFLsAc
+        6p+O7srw4W4QjzJT8mQGce1GPw==
+X-Google-Smtp-Source: APXvYqwIXkMGOo68z7kFcseQc3iUz+MeychrjygBb8vF2llh1M8u7cMuBjgZiH7jH8KbVIemdtrL0w==
+X-Received: by 2002:a2e:8986:: with SMTP id c6mr543791lji.146.1552467620690;
+        Wed, 13 Mar 2019 02:00:20 -0700 (PDT)
 Received: from localhost.localdomain ([212.45.67.2])
-        by smtp.googlemail.com with ESMTPSA id u15sm1701986lja.73.2019.03.13.02.00.20
+        by smtp.googlemail.com with ESMTPSA id u15sm1701986lja.73.2019.03.13.02.00.18
         (version=TLS1_2 cipher=ECDHE-RSA-AES128-SHA bits=128/128);
-        Wed, 13 Mar 2019 02:00:22 -0700 (PDT)
+        Wed, 13 Mar 2019 02:00:19 -0700 (PDT)
 From:   Georgi Djakov <georgi.djakov@linaro.org>
 To:     vireshk@kernel.org, sboyd@kernel.org, nm@ti.com,
         robh+dt@kernel.org, mark.rutland@arm.com, rjw@rjwysocki.net
@@ -66,9 +66,9 @@ Cc:     jcrouse@codeaurora.org, vincent.guittot@linaro.org,
         linux-pm@vger.kernel.org, devicetree@vger.kernel.org,
         linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org,
         georgi.djakov@linaro.org
-Subject: [PATCH 4/4] cpufreq: dt: Add support for interconnect bandwidth scaling
-Date:   Wed, 13 Mar 2019 11:00:10 +0200
-Message-Id: <20190313090010.20534-5-georgi.djakov@linaro.org>
+Subject: [PATCH 3/4] OPP: Update the bandwidth on OPP frequency changes
+Date:   Wed, 13 Mar 2019 11:00:09 +0200
+Message-Id: <20190313090010.20534-4-georgi.djakov@linaro.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190313090010.20534-1-georgi.djakov@linaro.org>
 References: <20190313090010.20534-1-georgi.djakov@linaro.org>
@@ -79,81 +79,26 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-In addition to clocks and regulators, some devices can scale the bandwidth
-of their on-chip interconnect - for example between CPU and DDR memory. Add
-support for that, so that platforms which support it can make use of it.
+If the OPP bandwidth values are populated, we want to switch also the
+interconnect bandwidth in addition to frequency and voltage.
 
 Signed-off-by: Georgi Djakov <georgi.djakov@linaro.org>
 ---
- drivers/cpufreq/cpufreq-dt.c | 27 ++++++++++++++++++++++++++-
- 1 file changed, 26 insertions(+), 1 deletion(-)
+ drivers/opp/core.c | 4 ++++
+ 1 file changed, 4 insertions(+)
 
-diff --git a/drivers/cpufreq/cpufreq-dt.c b/drivers/cpufreq/cpufreq-dt.c
-index e58bfcb1169e..30fed0fc266d 100644
---- a/drivers/cpufreq/cpufreq-dt.c
-+++ b/drivers/cpufreq/cpufreq-dt.c
-@@ -17,6 +17,7 @@
- #include <linux/cpufreq.h>
- #include <linux/cpumask.h>
- #include <linux/err.h>
-+#include <linux/interconnect.h>
- #include <linux/module.h>
- #include <linux/of.h>
- #include <linux/pm_opp.h>
-@@ -100,6 +101,7 @@ static int resources_available(void)
- 	struct device *cpu_dev;
- 	struct regulator *cpu_reg;
- 	struct clk *cpu_clk;
-+	struct icc_path *cpu_path;
- 	int ret = 0;
- 	const char *name;
- 
-@@ -126,6 +128,19 @@ static int resources_available(void)
- 
- 	clk_put(cpu_clk);
- 
-+	cpu_path = of_icc_get(cpu_dev, NULL);
-+	ret = PTR_ERR_OR_ZERO(cpu_path);
-+	if (ret) {
-+		if (ret == -EPROBE_DEFER)
-+			dev_dbg(cpu_dev, "defer icc path: %d\n", ret);
-+		else
-+			dev_err(cpu_dev, "failed to get icc path: %d\n", ret);
-+
-+		return ret;
-+	}
-+
-+	icc_put(cpu_path);
-+
- 	name = find_supply_name(cpu_dev);
- 	/* Platform doesn't require regulator */
- 	if (!name)
-@@ -205,10 +220,18 @@ static int cpufreq_init(struct cpufreq_policy *policy)
- 		}
+diff --git a/drivers/opp/core.c b/drivers/opp/core.c
+index 4b019cecaa07..99e7c4cf6c34 100644
+--- a/drivers/opp/core.c
++++ b/drivers/opp/core.c
+@@ -781,6 +781,10 @@ int dev_pm_opp_set_rate(struct device *dev, unsigned long target_freq)
+ 		ret = _generic_set_opp_clk_only(dev, clk, old_freq, freq);
  	}
  
-+	opp_table = dev_pm_opp_set_path(cpu_dev, NULL);
-+	if (IS_ERR(opp_table)) {
-+		ret = PTR_ERR(opp_table);
-+		dev_err(cpu_dev, "Failed to set interconnect path for cpu%d: %d\n",
-+			policy->cpu, ret);
-+		goto out_put_regulator;
-+	}
++	if (!ret && !IS_ERR_OR_NULL(opp_table->path) && opp->bandwidth)
++		icc_set_bw(opp_table->path, opp->bandwidth->avg,
++			   opp->bandwidth->peak);
 +
- 	priv = kzalloc(sizeof(*priv), GFP_KERNEL);
- 	if (!priv) {
- 		ret = -ENOMEM;
--		goto out_put_regulator;
-+		goto out_put_path;
- 	}
- 
- 	priv->reg_name = name;
-@@ -288,6 +311,8 @@ static int cpufreq_init(struct cpufreq_policy *policy)
- 	if (priv->have_static_opps)
- 		dev_pm_opp_of_cpumask_remove_table(policy->cpus);
- 	kfree(priv);
-+out_put_path:
-+	dev_pm_opp_put_path(opp_table);
- out_put_regulator:
- 	if (name)
- 		dev_pm_opp_put_regulators(opp_table);
+ 	/* Scaling down? Configure required OPPs after frequency */
+ 	if (!ret && freq < old_freq) {
+ 		ret = _set_required_opps(dev, opp_table, opp);
