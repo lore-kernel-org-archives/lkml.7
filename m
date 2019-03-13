@@ -2,148 +2,106 @@ Return-Path: <SRS0=dUEL=RQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D8CC6C10F03
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 Mar 2019 15:04:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 61A53C43381
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 Mar 2019 15:06:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A55202177E
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 Mar 2019 15:04:09 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1552489449;
-	bh=bjhNnvGoZyrO88NM0oR5TXqw0JniZtRUqrox/oqc2uM=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
-	b=fzU5GJeZWVhUyBXAoRPDIJSICen+hTj4zszT0Gbh0On1EWemttTU2ymA25ncBSHt+
-	 4MLfWij5OI6N7Rh9fPfanpPpYTFa7T47z4LeZ4s9W9LOhUmuRCClZFX5ZQEMQf7G2c
-	 3DD7+fw+wg3I3MHL71ReeKNA9xvjBlezGZXRLdPE=
+	by mail.kernel.org (Postfix) with ESMTP id 33679214AE
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 Mar 2019 15:06:30 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726436AbfCMPEI (ORCPT
+        id S1726418AbfCMPG2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 13 Mar 2019 11:04:08 -0400
-Received: from mail.kernel.org ([198.145.29.99]:44882 "EHLO mail.kernel.org"
+        Wed, 13 Mar 2019 11:06:28 -0400
+Received: from mga09.intel.com ([134.134.136.24]:9084 "EHLO mga09.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725832AbfCMPEH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 13 Mar 2019 11:04:07 -0400
-Received: from devnote2 (NE2965lan1.rev.em-net.ne.jp [210.141.244.193])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 06942214AE;
-        Wed, 13 Mar 2019 15:04:04 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1552489446;
-        bh=bjhNnvGoZyrO88NM0oR5TXqw0JniZtRUqrox/oqc2uM=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=1YVVve2xS5SB29cgZgOA+HmEGSvEZwYCe4Xoobk9l7V8PVv7XAm374Iyev2yIjL2W
-         hw0FfneLBQNM/BypA+RrCuxeon/zdnNdB7vUMbQ/bUaDV2hmqDW63Q+yp+QFDs3Py4
-         8LeW9n7tYbDLXwNhK2u9F68Fjz4GFDAWBCur3aXc=
-Date:   Thu, 14 Mar 2019 00:04:02 +0900
-From:   Masami Hiramatsu <mhiramat@kernel.org>
-To:     Steven Rostedt <rostedt@goodmis.org>
-Cc:     Tom Zanussi <zanussi@kernel.org>, tglx@linutronix.de,
-        namhyung@kernel.org, bigeasy@linutronix.de, joel@joelfernandes.org,
-        linux-kernel@vger.kernel.org, linux-rt-users@vger.kernel.org
-Subject: Re: [RFC PATCH 4/7] tracing/probe: Check event/group naming rule at
- parsing
-Message-Id: <20190314000402.3b14693f9030e891648124f1@kernel.org>
-In-Reply-To: <20190313092355.6f434c9f@gandalf.local.home>
-References: <155248005229.10815.334731901778152247.stgit@devnote2>
-        <155248009231.10815.12287201787254147977.stgit@devnote2>
-        <20190313092355.6f434c9f@gandalf.local.home>
-X-Mailer: Sylpheed 3.5.1 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
-Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+        id S1725832AbfCMPG2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 13 Mar 2019 11:06:28 -0400
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga005.jf.intel.com ([10.7.209.41])
+  by orsmga102.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 13 Mar 2019 08:06:26 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.58,474,1544515200"; 
+   d="scan'208";a="306874916"
+Received: from linux.intel.com ([10.54.29.200])
+  by orsmga005.jf.intel.com with ESMTP; 13 Mar 2019 08:06:26 -0700
+Received: from [10.252.18.45] (unknown [10.252.18.45])
+        by linux.intel.com (Postfix) with ESMTP id 7180158042B;
+        Wed, 13 Mar 2019 08:06:24 -0700 (PDT)
+Subject: Re: [PATCH v7 06/12] perf util: introduce Zstd based streaming
+ compression API
+To:     Jiri Olsa <jolsa@redhat.com>
+Cc:     Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Ingo Molnar <mingo@redhat.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Andi Kleen <ak@linux.intel.com>,
+        linux-kernel <linux-kernel@vger.kernel.org>
+References: <5f3a8326-58a0-816e-ad61-31c111232c7a@linux.intel.com>
+ <f9062f55-c37f-bf50-8566-a587bce30131@linux.intel.com>
+ <20190313143709.GD6676@krava>
+From:   Alexey Budankov <alexey.budankov@linux.intel.com>
+Organization: Intel Corp.
+Message-ID: <810fc58b-ebcb-a20f-92c5-33501b1d7081@linux.intel.com>
+Date:   Wed, 13 Mar 2019 18:06:23 +0300
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
+ Thunderbird/60.5.1
+MIME-Version: 1.0
+In-Reply-To: <20190313143709.GD6676@krava>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
 Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, 13 Mar 2019 09:23:55 -0400
-Steven Rostedt <rostedt@goodmis.org> wrote:
 
-> On Wed, 13 Mar 2019 21:28:12 +0900
-> Masami Hiramatsu <mhiramat@kernel.org> wrote:
+On 13.03.2019 17:37, Jiri Olsa wrote:
+> On Tue, Mar 12, 2019 at 08:23:42AM +0300, Alexey Budankov wrote:
+>>
+>> Implemented functions are based on Zstd streaming compression API.
+>> The functions are used in runtime to compress data that come from
+>> mmaped kernel buffer. zstd_init(), zstd_fini() are used for 
+>> initialization and finalization to allocate and deallocate internal
+>> zstd objects. zstd_compress_stream_to_records() is used to convert 
+>> parts of mmaped kernel buffer into an array of PERF_RECORD_COMPRESSED 
+>> records.
+>>
+>> Signed-off-by: Alexey Budankov <alexey.budankov@linux.intel.com>
+>> ---
+>>  tools/perf/util/Build      |  2 +
+>>  tools/perf/util/compress.h | 18 ++++++++
+>>  tools/perf/util/zstd.c     | 95 ++++++++++++++++++++++++++++++++++++++
+>>  3 files changed, 115 insertions(+)
+>>  create mode 100644 tools/perf/util/zstd.c
+>>
+>> diff --git a/tools/perf/util/Build b/tools/perf/util/Build
+>> index 8dd3102301ea..920ee8bebd83 100644
+>> --- a/tools/perf/util/Build
+>> +++ b/tools/perf/util/Build
+>> @@ -145,6 +145,8 @@ perf-y += scripting-engines/
+>>  
+>>  perf-$(CONFIG_ZLIB) += zlib.o
+>>  perf-$(CONFIG_LZMA) += lzma.o
+>> +perf-y += zstd.o
 > 
-> > Check event and group naming rule at parsing it instead
-> > of allocating probes.
-> > 
-> > Signed-off-by: Masami Hiramatsu <mhiramat@kernel.org>
-> > ---
-> >  kernel/trace/trace_kprobe.c |    7 +------
-> >  kernel/trace/trace_probe.c  |    8 ++++++++
-> >  kernel/trace/trace_uprobe.c |    5 +----
-> >  3 files changed, 10 insertions(+), 10 deletions(-)
-> > 
-> > diff --git a/kernel/trace/trace_kprobe.c b/kernel/trace/trace_kprobe.c
-> > index d47e12596f12..5222fd82e7e4 100644
-> > --- a/kernel/trace/trace_kprobe.c
-> > +++ b/kernel/trace/trace_kprobe.c
-> > @@ -221,7 +221,7 @@ static struct trace_kprobe *alloc_trace_kprobe(const char *group,
-> >  
-> >  	tk->rp.maxactive = maxactive;
-> >  
-> > -	if (!event || !is_good_name(event)) {
-> > +	if (!event || !group) {
-> >  		ret = -EINVAL;
-> >  		goto error;
-> >  	}
-> > @@ -231,11 +231,6 @@ static struct trace_kprobe *alloc_trace_kprobe(const char *group,
-> >  	if (!tk->tp.call.name)
-> >  		goto error;
-> >  
-> > -	if (!group || !is_good_name(group)) {
-> > -		ret = -EINVAL;
-> > -		goto error;
-> > -	}
-> > -
-> >  	tk->tp.class.system = kstrdup(group, GFP_KERNEL);
-> >  	if (!tk->tp.class.system)
-> >  		goto error;
-> > diff --git a/kernel/trace/trace_probe.c b/kernel/trace/trace_probe.c
-> > index feae03056f0b..1f0cb4030c0b 100644
-> > --- a/kernel/trace/trace_probe.c
-> > +++ b/kernel/trace/trace_probe.c
-> > @@ -172,6 +172,10 @@ int traceprobe_parse_event_name(const char **pevent, const char **pgroup,
-> >  			return -E2BIG;
-> >  		}
-> >  		strlcpy(buf, event, slash - event + 1);
-> > +		if (!is_good_name(buf)) {
-> > +			pr_info("Group name must follow the rule of C identifier\n");
+> we have CONFIG_ZSTD, so we can do:
 > 
-> What do you mean by "C identifier"?
+> perf-$(CONFIG_ZSTD) += zstd.o
+> 
+> and skip that #ifdef HAVE_ZSTD_SUPPORT in zstd.c
+> and put stub inlines into compress.h
 
-I meant "the naming rules of C language identifiers". It means
-that the name has to start with alphabet or "_" and only contain
-alphanumeric characters and "_". Does it clear?
-I couldn't think of a good word. maybe "naming convention"
-does not fit...
+in v8.
 
-Would you have any idea?
-
-Thank you,
+~Alexey
 
 > 
-> -- Steve
+> thanks,
+> jirka
 > 
-> > +			return -EINVAL;
-> > +		}
-> >  		*pgroup = buf;
-> >  		*pevent = slash + 1;
-> >  		event = *pevent;
-> > @@ -184,6 +188,10 @@ int traceprobe_parse_event_name(const char **pevent, const char **pgroup,
-> >  		pr_info("Event name is too long\n");
-> >  		return -E2BIG;
-> >  	}
-> > +	if (!is_good_name(event)) {
-> > +		pr_info("Event name must follow the rule of C identifier\n");
-> > +		return -EINVAL;
-> > +	}
-> >  	return 0;
-> >  }
-> >
-
-
--- 
-Masami Hiramatsu <mhiramat@kernel.org>
