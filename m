@@ -2,168 +2,225 @@ Return-Path: <SRS0=dUEL=RQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_PASS
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 70074C43381
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 Mar 2019 14:30:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6879EC10F03
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 Mar 2019 14:32:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 38C2F2147C
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 Mar 2019 14:30:07 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1552487407;
-	bh=WxCoh3/Zwj0u1M4rzUiIbIW6lK0BNxsjKCOZBUJggrQ=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=r1DTW0WpcRGqJ9w8w6aZhjDbqbq6SnGDgftEIpRGrWrLCCD/f2CxYCkRkJFbRBCtH
-	 mFFaXOfYdz8wA+7D/ke9kfqvdJDdYYkXm01G7ovphIVuqH7WbAuqirC8JV115R7FAw
-	 mdZAFPBheopdHjSu7kX3vGrFMFsdKFTlk7pGvUaI=
+	by mail.kernel.org (Postfix) with ESMTP id 2E4E42087C
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 Mar 2019 14:32:01 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=lca.pw header.i=@lca.pw header.b="BcU3oTNs"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726539AbfCMOaF (ORCPT
+        id S1726624AbfCMOb7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 13 Mar 2019 10:30:05 -0400
-Received: from mail-wr1-f67.google.com ([209.85.221.67]:34999 "EHLO
-        mail-wr1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725876AbfCMOaE (ORCPT
+        Wed, 13 Mar 2019 10:31:59 -0400
+Received: from mail-qk1-f195.google.com ([209.85.222.195]:35523 "EHLO
+        mail-qk1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725888AbfCMOb7 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 13 Mar 2019 10:30:04 -0400
-Received: by mail-wr1-f67.google.com with SMTP id t18so2257743wrx.2
-        for <linux-kernel@vger.kernel.org>; Wed, 13 Mar 2019 07:30:03 -0700 (PDT)
+        Wed, 13 Mar 2019 10:31:59 -0400
+Received: by mail-qk1-f195.google.com with SMTP id z13so1207573qki.2
+        for <linux-kernel@vger.kernel.org>; Wed, 13 Mar 2019 07:31:58 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=lca.pw; s=google;
+        h=from:to:cc:subject:date:message-id;
+        bh=zWwvp5HYTt2UGqggycNdgQkwCt4sLo6I2UnQvia+v8Q=;
+        b=BcU3oTNsoRMBivjqIfl5Apen1hlN23ETVuiivEbUZbV1AqcfMmLDlkuRV7W0GmpnYC
+         Y0Gy9ZVZCLwf8RU+klZ4dx1O4vfB2rGJRMdtxFmLR9/MztzbDcUL3GfuhJWOo+PGQdOr
+         C2K3uxfeOMgMohLKicLzru0VlnIj3CPRaDBX3DyIIopq3zOUcDWCkiN6fE76YgNQRzz6
+         tFKStAQOeNLqYDN49OJf9LOIeWYg42ql6agjc+H5ZrzovRSMf+u+iuZB+q8zQq89na9T
+         e2VjMpfHim8QeXqh65QG4nxyNzseRfEsik3nbSvwcUcpViRRMmwzEpCWueLywMaO2oDU
+         GFWw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=Pj/5Ah2gba8heXTnd4O6BtfFDTc51WqCFu9jCZywzTk=;
-        b=IsI3ZHDEDtoWElQkEyxQ/gTWoBbE1+HsHl4UeLdA3/fEEpiM+/u6zyBr6+RpKraU0H
-         m6VspCuOBZppBjDorKj7T41wNmhkpFbL9lUAAIh2TKpmve91aWIScYWFq9fNus3Po5Tj
-         7PRxfma+TqcJ2vXoyb4YyKh1DoMV+IDBppX/B3Av3E7oSt88flb+LKRdIdf7xIqLvkvQ
-         obAzP6rf1rNf5RutZlcT/ixU9uArSgezNbQmYU2YUhRPfrX77BTPGH140O8ZPdKtEE32
-         4uIAUQP5c85fPpwExJreTcdkq4FW7zQ95FS3eRirPXUPVhRYtnHEzO0eROqqkGV/dn5C
-         Tz1w==
-X-Gm-Message-State: APjAAAWTeFxsKsjAa1oLaYRufdrYhXMft2AB9pPVixz6mMXgPE96FlS4
-        hPrHL4rr3cDMWHewG11/Nd+HG+oMpti1/hwOlalo3w==
-X-Google-Smtp-Source: APXvYqzkS9hInl5Dyebh1QIwN8wDUPFzAdKsKHw0xjULBKHw63UntOgIoV5XfLQtafRBH5HI7Am+G5qfBFhBk2XVMWw=
-X-Received: by 2002:a5d:4887:: with SMTP id g7mr21341667wrq.51.1552487402561;
- Wed, 13 Mar 2019 07:30:02 -0700 (PDT)
-MIME-Version: 1.0
-References: <20190310153026.8661-1-jolsa@kernel.org>
-In-Reply-To: <20190310153026.8661-1-jolsa@kernel.org>
-From:   Namhyung Kim <namhyung@kernel.org>
-Date:   Wed, 13 Mar 2019 23:29:51 +0900
-Message-ID: <CAM9d7chND4RwmsS3Bf24KKp320myqZ6B6ZfaCGRZ1LM0dAp+9A@mail.gmail.com>
-Subject: Re: [PATCHv6 0/5] perf record: Add support to store data in directory
-To:     Jiri Olsa <jolsa@kernel.org>
-Cc:     Arnaldo Carvalho de Melo <acme@kernel.org>,
-        lkml <linux-kernel@vger.kernel.org>,
-        Ingo Molnar <mingo@kernel.org>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Peter Zijlstra <a.p.zijlstra@chello.nl>,
-        Adrian Hunter <adrian.hunter@intel.com>,
-        Andi Kleen <ak@linux.intel.com>,
-        Stephane Eranian <eranian@google.com>,
-        Alexey Budankov <alexey.budankov@linux.intel.com>
-Content-Type: text/plain; charset="UTF-8"
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=zWwvp5HYTt2UGqggycNdgQkwCt4sLo6I2UnQvia+v8Q=;
+        b=CM3OZZvLPz2u3xcWC8h4MYvaHKaMElfXWci8wDovzXn3Yw1zeAlWc9AjKJqx7CBNNL
+         4kTJLp7wU7Ezbp29yr3kMABNn2lVbnXRG2mAbxBeoVocS9CCfblL6sKsqEg0ZZ3Agayq
+         ZweIKLqooW/zGS0mMsKKFtAX94c/jGD6ZjAVWYlYz0XPNd44bcpV+KbNLIh1ptOMBVdq
+         bBnVEr62qb9U0yqIrQDlrB3XopQXGE/GMHjpF69q3vLNbCdLCshc4jPm+Qv3uNxgYHRx
+         ppwhWOLWXkEWIt2WBYx/cCG4XV3Cry/OpZ4GvB9LlwqbvlKC8cP83niV+zKtO/S+UkfX
+         WtcA==
+X-Gm-Message-State: APjAAAWOYeG8s5CoGZUmeVSIe0rLIZ7eWUceJXnKEP4CtAv9JfP3SbGe
+        b5aP74Y0oKugsgEIGVyjByryow==
+X-Google-Smtp-Source: APXvYqxEzvE7apl4xb0kvGmqFkAtgk3l2CnCqVsh1tCeReWtuJN4sctxkQsBC+zoaC3x9xnte6Ua2w==
+X-Received: by 2002:a37:7d86:: with SMTP id y128mr23316265qkc.36.1552487517888;
+        Wed, 13 Mar 2019 07:31:57 -0700 (PDT)
+Received: from ovpn-121-103.rdu2.redhat.com (pool-71-184-117-43.bstnma.fios.verizon.net. [71.184.117.43])
+        by smtp.gmail.com with ESMTPSA id e2sm6147984qkd.7.2019.03.13.07.31.56
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Wed, 13 Mar 2019 07:31:56 -0700 (PDT)
+From:   Qian Cai <cai@lca.pw>
+To:     akpm@linux-foundation.org
+Cc:     mhocko@kernel.org, osalvador@suse.de, vbabka@suse.cz,
+        linux-mm@kvack.org, linux-kernel@vger.kernel.org,
+        Qian Cai <cai@lca.pw>
+Subject: [PATCH v2] mm/hotplug: fix offline undo_isolate_page_range()
+Date:   Wed, 13 Mar 2019 10:31:33 -0400
+Message-Id: <20190313143133.46200-1-cai@lca.pw>
+X-Mailer: git-send-email 2.17.2 (Apple Git-113)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Mar 11, 2019 at 12:30 AM Jiri Olsa <jolsa@kernel.org> wrote:
->
-> hi,
-> this patchset adds the --dir option to record command (and all
-> the other record command that overload cmd_record) that allows
-> the data to be stored in directory with multiple data files.
->
-> It's next step for multiple threads implementation in record.
-> It's now possible to make directory data via --dir option, like:
->
->   $ perf record --dir perf bench sched messaging
->   $ ls -l perf.data
->   total 344
->   -rw-------. 1 jolsa jolsa 43864 Jan 20 22:26 data.0
->   -rw-------. 1 jolsa jolsa 30464 Jan 20 22:26 data.1
->   -rw-------. 1 jolsa jolsa 53816 Jan 20 22:26 data.2
->   -rw-------. 1 jolsa jolsa 30368 Jan 20 22:26 data.3
->   -rw-------. 1 jolsa jolsa 40088 Jan 20 22:26 data.4
->   -rw-------. 1 jolsa jolsa 42592 Jan 20 22:26 data.5
->   -rw-------. 1 jolsa jolsa 56136 Jan 20 22:26 data.6
->   -rw-------. 1 jolsa jolsa 25992 Jan 20 22:26 data.7
->   -rw-------. 1 jolsa jolsa  8832 Jan 20 22:26 header
->
-> There's a data file created for every cpu and it's storing
-> data for those cpu maps. The report command will read it
-> transparently, sort it and display as single file data.
->
-> There's new DIR_FORMAT feature to describe directory data
-> layout/format. In future we can describe different data files
-> layout according to special needs.
->
-> It's possible to transform directory data into standard
-> perf.data file via simple inject command:
->
->   $ perf inject -o perf.data.file -i perf.data
->
-> The old perf fails over the directory data with following message:
->   $ perf report
->   incompatible file format (rerun with -v to learn more)
->
-> I'm now testing the record threads support, so I'd like to
-> have some agreement on the directory data support before.
->
-> v6 changes:
->   - rebased to latest Arnaldo's perf/core
->   - some of the patches already taken
->   - adding comments to __perf_session__process_dir_events
->
-> v5 changes:
->   - rebased to latest Arnaldo's perf/core
->
-> v4 changes:
->   - some of the patches already taken
->   - removing up perf.data directory on perf_data__open
->     error path
->
-> v3 changes:
->   - add rm_rf_perf_data to safely remove file/directory perf data
->   - allocation fix in perf_data__create_dir
->
-> v2 changes:
->   - rm_rf changes are already accepted with requested changes
->   - updated doc/man plus adding perf.data-directory-format.txt
->     to describe directory format/layout
->   - the --switch-output options now works over directory data
->   - data rollback is not part of this patchset, updated my TODO though ;-)
->   - added --output-dir option to combine -o and --dir
->   - added DIR_FORMAT feature to describe directory data
->   - disabling directory output for aio for now
->
-> It's also available in here:
->   git://git.kernel.org/pub/scm/linux/kernel/git/jolsa/perf.git
->   perf/dir
->
+The commit f1dd2cd13c4b ("mm, memory_hotplug: do not associate hotadded
+memory to zones until online") introduced move_pfn_range_to_zone() which
+calls memmap_init_zone() during onlining a memory block.
+memmap_init_zone() will reset pagetype flags and makes migrate type to
+be MOVABLE.
 
-It seems I'm too late, but anyway for the series
+However, in __offline_pages(), it also call undo_isolate_page_range()
+after offline_isolated_pages() to do the same thing. Due to
+the commit 2ce13640b3f4 ("mm: __first_valid_page skip over offline
+pages") changed __first_valid_page() to skip offline pages,
+undo_isolate_page_range() here just waste CPU cycles looping around the
+offlining PFN range while doing nothing, because __first_valid_page()
+will return NULL as offline_isolated_pages() has already marked all
+memory sections within the pfn range as offline via
+offline_mem_sections().
 
-Acked-by: Namhyung Kim <namhyung@kernel.org>
+Also, after calling the "useless" undo_isolate_page_range() here, it
+reaches the point of no returning by notifying MEM_OFFLINE. Those pages
+will be marked as MIGRATE_MOVABLE again once onlining. The only thing
+left to do is to decrease the number of isolated pageblocks zone
+counter which would make some paths of the page allocation slower that
+the above commit introduced. A memory block is usually at most 1GiB in
+size, so an "int" should be enough to represent the number of pageblocks
+in a block. Fix an incorrect comment along the way.
 
-Thanks for the work!
-Namhyung
+Fixes: 2ce13640b3f4 ("mm: __first_valid_page skip over offline pages")
+Signed-off-by: Qian Cai <cai@lca.pw>
+---
 
+v2: return the nubmer of isolated pageblocks in start_isolate_page_range() per
+    Oscar; take the zone lock when undoing zone->nr_isolate_pageblock per
+    Michal.
 
+ mm/memory_hotplug.c | 17 +++++++++++++----
+ mm/page_alloc.c     |  2 +-
+ mm/page_isolation.c | 16 ++++++++++------
+ mm/sparse.c         |  2 +-
+ 4 files changed, 25 insertions(+), 12 deletions(-)
 
-> Jiri Olsa (5):
->       perf session: Add __perf_session__process_dir_events function
->       perf session: Add path to reader object
->       perf record: Add --dir option to store data in directory
->       perf record: Add --output-dir option to store data in directory
->       perf record: Describe perf.data directory format
->
->  tools/lib/subcmd/parse-options.h                        |   4 ++++
->  tools/perf/Documentation/perf-record.txt                |   6 ++++++
->  tools/perf/Documentation/perf.data-directory-format.txt |  54 ++++++++++++++++++++++++++++++++++++++++++++++++++++++
->  tools/perf/builtin-record.c                             |  93 ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++-------
->  tools/perf/util/mmap.h                                  |  23 ++++++++++++-----------
->  tools/perf/util/session.c                               | 114 ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++----
->  6 files changed, 272 insertions(+), 22 deletions(-)
->  create mode 100644 tools/perf/Documentation/perf.data-directory-format.txt
+diff --git a/mm/memory_hotplug.c b/mm/memory_hotplug.c
+index cd23c081924d..8ffe844766da 100644
+--- a/mm/memory_hotplug.c
++++ b/mm/memory_hotplug.c
+@@ -1580,7 +1580,7 @@ static int __ref __offline_pages(unsigned long start_pfn,
+ {
+ 	unsigned long pfn, nr_pages;
+ 	long offlined_pages;
+-	int ret, node;
++	int ret, node, count;
+ 	unsigned long flags;
+ 	unsigned long valid_start, valid_end;
+ 	struct zone *zone;
+@@ -1606,10 +1606,11 @@ static int __ref __offline_pages(unsigned long start_pfn,
+ 	ret = start_isolate_page_range(start_pfn, end_pfn,
+ 				       MIGRATE_MOVABLE,
+ 				       SKIP_HWPOISON | REPORT_FAILURE);
+-	if (ret) {
++	if (ret < 0) {
+ 		reason = "failure to isolate range";
+ 		goto failed_removal;
+ 	}
++	count = ret;
+ 
+ 	arg.start_pfn = start_pfn;
+ 	arg.nr_pages = nr_pages;
+@@ -1661,8 +1662,16 @@ static int __ref __offline_pages(unsigned long start_pfn,
+ 	/* Ok, all of our target is isolated.
+ 	   We cannot do rollback at this point. */
+ 	offline_isolated_pages(start_pfn, end_pfn);
+-	/* reset pagetype flags and makes migrate type to be MOVABLE */
+-	undo_isolate_page_range(start_pfn, end_pfn, MIGRATE_MOVABLE);
++
++	/*
++	 * Onlining will reset pagetype flags and makes migrate type
++	 * MOVABLE, so just need to decrease the number of isolated
++	 * pageblocks zone counter here.
++	 */
++	spin_lock_irqsave(&zone->lock, flags);
++	zone->nr_isolate_pageblock -= count;
++	spin_unlock_irqrestore(&zone->lock, flags);
++
+ 	/* removal success */
+ 	adjust_managed_page_count(pfn_to_page(start_pfn), -offlined_pages);
+ 	zone->present_pages -= offlined_pages;
+diff --git a/mm/page_alloc.c b/mm/page_alloc.c
+index 03fcf73d47da..d96ca5bc555b 100644
+--- a/mm/page_alloc.c
++++ b/mm/page_alloc.c
+@@ -8233,7 +8233,7 @@ int alloc_contig_range(unsigned long start, unsigned long end,
+ 
+ 	ret = start_isolate_page_range(pfn_max_align_down(start),
+ 				       pfn_max_align_up(end), migratetype, 0);
+-	if (ret)
++	if (ret < 0)
+ 		return ret;
+ 
+ 	/*
+diff --git a/mm/page_isolation.c b/mm/page_isolation.c
+index ce323e56b34d..bf67b63227ca 100644
+--- a/mm/page_isolation.c
++++ b/mm/page_isolation.c
+@@ -172,7 +172,8 @@ __first_valid_page(unsigned long pfn, unsigned long nr_pages)
+  * future will not be allocated again.
+  *
+  * start_pfn/end_pfn must be aligned to pageblock_order.
+- * Return 0 on success and -EBUSY if any part of range cannot be isolated.
++ * Return the number of isolated pageblocks on success and -EBUSY if any part of
++ * range cannot be isolated.
+  *
+  * There is no high level synchronization mechanism that prevents two threads
+  * from trying to isolate overlapping ranges.  If this happens, one thread
+@@ -188,6 +189,7 @@ int start_isolate_page_range(unsigned long start_pfn, unsigned long end_pfn,
+ 	unsigned long pfn;
+ 	unsigned long undo_pfn;
+ 	struct page *page;
++	int count = 0;
+ 
+ 	BUG_ON(!IS_ALIGNED(start_pfn, pageblock_nr_pages));
+ 	BUG_ON(!IS_ALIGNED(end_pfn, pageblock_nr_pages));
+@@ -196,13 +198,15 @@ int start_isolate_page_range(unsigned long start_pfn, unsigned long end_pfn,
+ 	     pfn < end_pfn;
+ 	     pfn += pageblock_nr_pages) {
+ 		page = __first_valid_page(pfn, pageblock_nr_pages);
+-		if (page &&
+-		    set_migratetype_isolate(page, migratetype, flags)) {
+-			undo_pfn = pfn;
+-			goto undo;
++		if (page) {
++			if (set_migratetype_isolate(page, migratetype, flags)) {
++				undo_pfn = pfn;
++				goto undo;
++			}
++			count++;
+ 		}
+ 	}
+-	return 0;
++	return count;
+ undo:
+ 	for (pfn = start_pfn;
+ 	     pfn < undo_pfn;
+diff --git a/mm/sparse.c b/mm/sparse.c
+index 69904aa6165b..56e057c432f9 100644
+--- a/mm/sparse.c
++++ b/mm/sparse.c
+@@ -567,7 +567,7 @@ void online_mem_sections(unsigned long start_pfn, unsigned long end_pfn)
+ }
+ 
+ #ifdef CONFIG_MEMORY_HOTREMOVE
+-/* Mark all memory sections within the pfn range as online */
++/* Mark all memory sections within the pfn range as offline */
+ void offline_mem_sections(unsigned long start_pfn, unsigned long end_pfn)
+ {
+ 	unsigned long pfn;
+-- 
+2.17.2 (Apple Git-113)
+
