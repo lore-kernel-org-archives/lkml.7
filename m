@@ -6,61 +6,63 @@ X-Spam-Status: No, score=-6.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_PASS
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D2F9FC10F03
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 Mar 2019 17:10:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9CC9CC43381
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 Mar 2019 17:10:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A2FEE2146E
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 Mar 2019 17:10:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 682AB2147C
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 Mar 2019 17:10:32 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1552497025;
-	bh=lKX2+KokHkXD7+WKOR98e/2DLyemVOYXoNQplzv4mHc=;
+	s=default; t=1552497032;
+	bh=agxqL9yukEQxHjmkls4aS1fmBiElTBUyjSN+GZey+mQ=;
 	h=Subject:From:In-Reply-To:References:Date:To:Cc:List-ID:From;
-	b=pZiWppD0B4Cajftl01F1PvhTs2chJEtQPlF/9I+ImNPLE3xIjvCE31roUb8rlMf42
-	 zO5kJ0EIVay7X1pFBY4DJ8OaUgW3TlsD3OcPBTYgeQIPNtz0Q2gkLAqq7bJngRrZTo
-	 ykSW+cfM5BO+JqMq8mGoyzuhAUr9fcV7sMXpNlp8=
+	b=HJ7neDKeJ+dJUtPY7X71vkPZ/4IB1brcnXXtnMVuQY9d2c3iZHBqUFVqAEHHJ9yv1
+	 0dWR6Q6vOYbd+2t4XwQ1ds2jMuzXRktYcy7K/FVgaz7co2JPtAds0g8Zx8rcedfXAb
+	 Ot5REmlTubGRyQeXddyPXY2/GhC8PFl3E1Ld55Dc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726937AbfCMRKY (ORCPT
+        id S1726974AbfCMRKa (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 13 Mar 2019 13:10:24 -0400
-Received: from mail.kernel.org ([198.145.29.99]:41540 "EHLO mail.kernel.org"
+        Wed, 13 Mar 2019 13:10:30 -0400
+Received: from mail.kernel.org ([198.145.29.99]:41520 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726872AbfCMRKS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 13 Mar 2019 13:10:18 -0400
-Subject: Re: [GIT PULL] pwm: Changes for v5.1-rc1
+        id S1726861AbfCMRKR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 13 Mar 2019 13:10:17 -0400
+Subject: Re: [GIT PULL] Kconfig updates for v5.1
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
         s=default; t=1552497017;
-        bh=lKX2+KokHkXD7+WKOR98e/2DLyemVOYXoNQplzv4mHc=;
+        bh=agxqL9yukEQxHjmkls4aS1fmBiElTBUyjSN+GZey+mQ=;
         h=From:In-Reply-To:References:Date:To:Cc:From;
-        b=jvNWrr0t/XqTpzLgCvt0pUf7wjvVDHT/tUo7plMY3D6lmdcNNhxTuiVn2kWFPDD7O
-         WbiWfCT3MPb0wdpWbGKV1C6RKcW6nw0hj+MY/jdZIACmpkvOlDn64vv6n6Xv/bPl8J
-         eJlQAizoWRfw5HtKiuqreauV4z5cYdscfP5tiZXM=
+        b=kckalO8fymqv9uJoFmt8fat6NqmmvLviEU9sh+1NsxdcI6M8Y5iskZNUw5LcE7yki
+         NqjqUZsRscDFuV+CB+yUk93CmDTFgB4PRJyFlD9kIDlyjlSk1HIlhMETjpEj3m6ISn
+         uDfq4eenBXgAuOHJ69zzfbdbJz6LaLnF6MUZKK2w=
 From:   pr-tracker-bot@kernel.org
-In-Reply-To: <20190313145118.21818-1-thierry.reding@gmail.com>
-References: <20190313145118.21818-1-thierry.reding@gmail.com>
+In-Reply-To: <CAK7LNASa-XsGj9ESee+RF4SMQxpxD49oKz9C86etYQV2gQPxDQ@mail.gmail.com>
+References: <CAK7LNASa-XsGj9ESee+RF4SMQxpxD49oKz9C86etYQV2gQPxDQ@mail.gmail.com>
 X-PR-Tracked-List-Id: <linux-kernel.vger.kernel.org>
-X-PR-Tracked-Message-Id: <20190313145118.21818-1-thierry.reding@gmail.com>
-X-PR-Tracked-Remote: git://git.kernel.org/pub/scm/linux/kernel/git/thierry.reding/linux-pwm.git
- tags/pwm/for-5.1-rc1
-X-PR-Tracked-Commit-Id: d7d96312fe108d0df50898d212770b0a5b2d491e
+X-PR-Tracked-Message-Id: <CAK7LNASa-XsGj9ESee+RF4SMQxpxD49oKz9C86etYQV2gQPxDQ@mail.gmail.com>
+X-PR-Tracked-Remote: git://git.kernel.org/pub/scm/linux/kernel/git/masahiroy/linux-kbuild.git
+ tags/kconfig-v5.1
+X-PR-Tracked-Commit-Id: 8741908b3e29d35a33eeab6de60175958db8e54b
 X-PR-Merge-Tree: torvalds/linux.git
 X-PR-Merge-Refname: refs/heads/master
-X-PR-Merge-Commit-Id: add8462a60421ca1b03a6864e295d22de532a5e7
-Message-Id: <155249701791.28396.12653606782831489104.pr-tracker-bot@kernel.org>
-Date:   Wed, 13 Mar 2019 17:10:17 +0000
-To:     Thierry Reding <thierry.reding@gmail.com>
+X-PR-Merge-Commit-Id: 5453a3df2a5eb49bc24615d4cf0d66b2aae05e5f
+Message-Id: <155249701696.28396.14196911305158619040.pr-tracker-bot@kernel.org>
+Date:   Wed, 13 Mar 2019 17:10:16 +0000
+To:     Masahiro Yamada <yamada.masahiro@socionext.com>
 Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
-        linux-pwm@vger.kernel.org, linux-kernel@vger.kernel.org
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Linux Kbuild mailing list <linux-kbuild@vger.kernel.org>,
+        masahiroy@kernel.org
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The pull request you sent on Wed, 13 Mar 2019 15:51:18 +0100:
+The pull request you sent on Wed, 13 Mar 2019 01:39:04 +0900:
 
-> git://git.kernel.org/pub/scm/linux/kernel/git/thierry.reding/linux-pwm.git tags/pwm/for-5.1-rc1
+> git://git.kernel.org/pub/scm/linux/kernel/git/masahiroy/linux-kbuild.git tags/kconfig-v5.1
 
 has been merged into torvalds/linux.git:
-https://git.kernel.org/torvalds/c/add8462a60421ca1b03a6864e295d22de532a5e7
+https://git.kernel.org/torvalds/c/5453a3df2a5eb49bc24615d4cf0d66b2aae05e5f
 
 Thank you!
 
