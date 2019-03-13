@@ -2,57 +2,57 @@ Return-Path: <SRS0=dUEL=RQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D23ADC4360F
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 Mar 2019 04:07:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D45A5C43381
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 Mar 2019 04:07:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AA4AB2173C
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 Mar 2019 04:07:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8E8B9218A5
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 Mar 2019 04:07:50 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726770AbfCMEHs (ORCPT
+        id S1726861AbfCMEHt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 13 Mar 2019 00:07:48 -0400
-Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:45520 "EHLO
+        Wed, 13 Mar 2019 00:07:49 -0400
+Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:58166 "EHLO
         mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1725878AbfCMEHr (ORCPT
+        by vger.kernel.org with ESMTP id S1726466AbfCMEHr (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Wed, 13 Mar 2019 00:07:47 -0400
-Received: from pps.filterd (m0098393.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x2D43vqT036413
+Received: from pps.filterd (m0098399.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x2D4430D111353
         for <linux-kernel@vger.kernel.org>; Wed, 13 Mar 2019 00:07:46 -0400
-Received: from e06smtp03.uk.ibm.com (e06smtp03.uk.ibm.com [195.75.94.99])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 2r6pqg0xrp-1
+Received: from e06smtp05.uk.ibm.com (e06smtp05.uk.ibm.com [195.75.94.101])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 2r6nn7kbp9-1
         (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
-        for <linux-kernel@vger.kernel.org>; Wed, 13 Mar 2019 00:07:45 -0400
+        for <linux-kernel@vger.kernel.org>; Wed, 13 Mar 2019 00:07:46 -0400
 Received: from localhost
-        by e06smtp03.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
+        by e06smtp05.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
         for <linux-kernel@vger.kernel.org> from <alastair@au1.ibm.com>;
         Wed, 13 Mar 2019 04:07:43 -0000
-Received: from b06cxnps4076.portsmouth.uk.ibm.com (9.149.109.198)
-        by e06smtp03.uk.ibm.com (192.168.101.133) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
+Received: from b06cxnps4074.portsmouth.uk.ibm.com (9.149.109.196)
+        by e06smtp05.uk.ibm.com (192.168.101.135) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
         (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
-        Wed, 13 Mar 2019 04:07:39 -0000
-Received: from d06av23.portsmouth.uk.ibm.com (d06av23.portsmouth.uk.ibm.com [9.149.105.59])
-        by b06cxnps4076.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x2D47cSf29753412
+        Wed, 13 Mar 2019 04:07:40 -0000
+Received: from d06av24.portsmouth.uk.ibm.com (mk.ibm.com [9.149.105.60])
+        by b06cxnps4074.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x2D47dp938010988
         (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=FAIL);
         Wed, 13 Mar 2019 04:07:39 GMT
-Received: from d06av23.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id D5251A404D;
-        Wed, 13 Mar 2019 04:07:38 +0000 (GMT)
-Received: from d06av23.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 83507A4055;
-        Wed, 13 Mar 2019 04:07:38 +0000 (GMT)
+Received: from d06av24.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 90EF74203F;
+        Wed, 13 Mar 2019 04:07:39 +0000 (GMT)
+Received: from d06av24.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 3FB0D4204B;
+        Wed, 13 Mar 2019 04:07:39 +0000 (GMT)
 Received: from ozlabs.au.ibm.com (unknown [9.192.253.14])
-        by d06av23.portsmouth.uk.ibm.com (Postfix) with ESMTP;
-        Wed, 13 Mar 2019 04:07:38 +0000 (GMT)
+        by d06av24.portsmouth.uk.ibm.com (Postfix) with ESMTP;
+        Wed, 13 Mar 2019 04:07:39 +0000 (GMT)
 Received: from adsilva.ozlabs.ibm.com (haven.au.ibm.com [9.192.254.114])
         (using TLSv1.2 with cipher DHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by ozlabs.au.ibm.com (Postfix) with ESMTPSA id 33916A00D1;
-        Wed, 13 Mar 2019 15:07:37 +1100 (AEDT)
+        by ozlabs.au.ibm.com (Postfix) with ESMTPSA id 30C89A0282;
+        Wed, 13 Mar 2019 15:07:38 +1100 (AEDT)
 From:   "Alastair D'Silva" <alastair@au1.ibm.com>
 Cc:     "Alastair D'Silva" <alastair@d-silva.org>,
         Frederic Barrat <fbarrat@linux.ibm.com>,
@@ -60,24 +60,25 @@ Cc:     "Alastair D'Silva" <alastair@d-silva.org>,
         Arnd Bergmann <arnd@arndb.de>,
         Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         linuxppc-dev@lists.ozlabs.org, linux-kernel@vger.kernel.org
-Subject: [PATCH v2 0/5] ocxl: OpenCAPI Cleanup
-Date:   Wed, 13 Mar 2019 15:06:56 +1100
+Subject: [PATCH 2/5] ocxl: Clean up printf formats
+Date:   Wed, 13 Mar 2019 15:06:58 +1100
 X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20190227045741.21412-1-alastair@au1.ibm.com>
+In-Reply-To: <20190313040702.14276-1-alastair@au1.ibm.com>
 References: <20190227045741.21412-1-alastair@au1.ibm.com>
+ <20190313040702.14276-1-alastair@au1.ibm.com>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 X-TM-AS-GCONF: 00
-x-cbid: 19031304-0012-0000-0000-00000301EBAC
+x-cbid: 19031304-0020-0000-0000-00000321E6E0
 X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
-x-cbparentid: 19031304-0013-0000-0000-000021390FB5
-Message-Id: <20190313040702.14276-1-alastair@au1.ibm.com>
+x-cbparentid: 19031304-0021-0000-0000-0000217415A9
+Message-Id: <20190313040702.14276-3-alastair@au1.ibm.com>
 X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-03-13_02:,,
  signatures=0
 X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
- malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
+ malwarescore=0 suspectscore=2 phishscore=0 bulkscore=0 spamscore=0
  clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
- mlxlogscore=789 adultscore=0 classifier=spam adjust=0 reason=mlx
+ mlxlogscore=999 adultscore=0 classifier=spam adjust=0 reason=mlx
  scancount=1 engine=8.0.1-1810050000 definitions=main-1903130028
 To:     unlisted-recipients:; (no To-header on input)
 Sender: linux-kernel-owner@vger.kernel.org
@@ -87,33 +88,94 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Alastair D'Silva <alastair@d-silva.org>
 
-Some minor cleanups for the OpenCAPI driver as a prerequisite
-for an ocxl driver refactoring to allow the driver core to
-be utilised by external drivers.
+Use %# instead of using a literal '0x'
 
-Changelog:
-V2:
-  - remove intermediate assignment of 'link' var in
-		'Rename struct link to ocxl_link'
-  - Don't shift definition of ocxl_context_attach in
-		'Remove some unused exported symbols'
+Signed-off-by: Alastair D'Silva <alastair@d-silva.org>
+---
+ drivers/misc/ocxl/config.c  |  6 +++---
+ drivers/misc/ocxl/context.c |  2 +-
+ drivers/misc/ocxl/trace.h   | 10 +++++-----
+ 3 files changed, 9 insertions(+), 9 deletions(-)
 
-Alastair D'Silva (5):
-  ocxl: Rename struct link to ocxl_link
-  ocxl: Clean up printf formats
-  ocxl: read_pasid never returns an error, so make it void
-  ocxl: Remove superfluous 'extern' from headers
-  ocxl: Remove some unused exported symbols
-
- drivers/misc/ocxl/config.c        | 17 ++----
- drivers/misc/ocxl/context.c       |  2 +-
- drivers/misc/ocxl/file.c          |  2 +-
- drivers/misc/ocxl/link.c          | 36 ++++++-------
- drivers/misc/ocxl/ocxl_internal.h | 86 +++++++++++++++++++------------
- drivers/misc/ocxl/trace.h         | 10 ++--
- include/misc/ocxl.h               | 53 ++++++-------------
- 7 files changed, 99 insertions(+), 107 deletions(-)
-
+diff --git a/drivers/misc/ocxl/config.c b/drivers/misc/ocxl/config.c
+index 8f2c5d8bd2ee..0ee7856b033d 100644
+--- a/drivers/misc/ocxl/config.c
++++ b/drivers/misc/ocxl/config.c
+@@ -178,9 +178,9 @@ static int read_dvsec_vendor(struct pci_dev *dev)
+ 	pci_read_config_dword(dev, pos + OCXL_DVSEC_VENDOR_DLX_VERS, &dlx);
+ 
+ 	dev_dbg(&dev->dev, "Vendor specific DVSEC:\n");
+-	dev_dbg(&dev->dev, "  CFG version = 0x%x\n", cfg);
+-	dev_dbg(&dev->dev, "  TLX version = 0x%x\n", tlx);
+-	dev_dbg(&dev->dev, "  DLX version = 0x%x\n", dlx);
++	dev_dbg(&dev->dev, "  CFG version = %#x\n", cfg);
++	dev_dbg(&dev->dev, "  TLX version = %#x\n", tlx);
++	dev_dbg(&dev->dev, "  DLX version = %#x\n", dlx);
+ 	return 0;
+ }
+ 
+diff --git a/drivers/misc/ocxl/context.c b/drivers/misc/ocxl/context.c
+index c10a940e3b38..3498a0199bde 100644
+--- a/drivers/misc/ocxl/context.c
++++ b/drivers/misc/ocxl/context.c
+@@ -134,7 +134,7 @@ static vm_fault_t ocxl_mmap_fault(struct vm_fault *vmf)
+ 	vm_fault_t ret;
+ 
+ 	offset = vmf->pgoff << PAGE_SHIFT;
+-	pr_debug("%s: pasid %d address 0x%lx offset 0x%llx\n", __func__,
++	pr_debug("%s: pasid %d address %#lx offset %#llx\n", __func__,
+ 		ctx->pasid, vmf->address, offset);
+ 
+ 	if (offset < ctx->afu->irq_base_offset)
+diff --git a/drivers/misc/ocxl/trace.h b/drivers/misc/ocxl/trace.h
+index bcb7ff330c1e..68bf2f173a1a 100644
+--- a/drivers/misc/ocxl/trace.h
++++ b/drivers/misc/ocxl/trace.h
+@@ -28,7 +28,7 @@ DECLARE_EVENT_CLASS(ocxl_context,
+ 		__entry->tidr = tidr;
+ 	),
+ 
+-	TP_printk("linux pid=%d spa=0x%p pasid=0x%x pidr=0x%x tidr=0x%x",
++	TP_printk("linux pid=%d spa=%p pasid=%#x pidr=%#x tidr=%#x",
+ 		__entry->pid,
+ 		__entry->spa,
+ 		__entry->pasid,
+@@ -61,7 +61,7 @@ TRACE_EVENT(ocxl_terminate_pasid,
+ 		__entry->rc = rc;
+ 	),
+ 
+-	TP_printk("pasid=0x%x rc=%d",
++	TP_printk("pasid=%#x rc=%d",
+ 		__entry->pasid,
+ 		__entry->rc
+ 	)
+@@ -87,7 +87,7 @@ DECLARE_EVENT_CLASS(ocxl_fault_handler,
+ 		__entry->tfc = tfc;
+ 	),
+ 
+-	TP_printk("spa=%p pe=0x%llx dsisr=0x%llx dar=0x%llx tfc=0x%llx",
++	TP_printk("spa=%p pe=%#llx dsisr=%#llx dar=%#llx tfc=%#llx",
+ 		__entry->spa,
+ 		__entry->pe,
+ 		__entry->dsisr,
+@@ -127,7 +127,7 @@ TRACE_EVENT(ocxl_afu_irq_alloc,
+ 		__entry->irq_offset = irq_offset;
+ 	),
+ 
+-	TP_printk("pasid=0x%x irq_id=%d virq=%u hw_irq=%d irq_offset=0x%llx",
++	TP_printk("pasid=%#x irq_id=%d virq=%u hw_irq=%d irq_offset=%#llx",
+ 		__entry->pasid,
+ 		__entry->irq_id,
+ 		__entry->virq,
+@@ -150,7 +150,7 @@ TRACE_EVENT(ocxl_afu_irq_free,
+ 		__entry->irq_id = irq_id;
+ 	),
+ 
+-	TP_printk("pasid=0x%x irq_id=%d",
++	TP_printk("pasid=%#x irq_id=%d",
+ 		__entry->pasid,
+ 		__entry->irq_id
+ 	)
 -- 
 2.20.1
 
