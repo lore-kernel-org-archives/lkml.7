@@ -4,48 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D4C2DC4360F
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 Mar 2019 19:18:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 26D8CC43381
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 Mar 2019 19:18:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9C5512177E
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 Mar 2019 19:18:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E691A213A2
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 Mar 2019 19:18:23 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1552504700;
-	bh=ZKwvw+OdkFutJ+O09TpyQakiP6ppRqg3P+SgX7PdfE0=;
+	s=default; t=1552504704;
+	bh=vsmukZjwr341I39UlMjrYziHYGjCzjZMmH/QkjEgf84=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=KugFDlcHSv+xFyah+U9BVTIg3X9kWJb1QkKItoM4IrRWjXRIOJ1UA2+ZwaXi/dF/O
-	 qa8hiYgqG+hBfGoPZ/Kh+Ilk9s6ePaoOQFICyPS+88nv/d7e4SYlxebFgyepmgpxAc
-	 JxU23pn0EgmU3d4thhU9W/a6C5ocogTY6KaPx/+o=
+	b=LczdnCHqcTGZ3VLwE6k4PrPAWVIcm59aUUZti5NkNwf4Tlv9yNexVUapQoNTjhsWA
+	 KrnF5aeRP5EveriIjAQkeuDsz7KzyRFX0i+ITiFkbWigRTNzZbl+CU5HVBgP8P7Wnm
+	 byGMvR/EVUtPt2n4pShxTUiNAqSlGAt8+05HP8dA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729036AbfCMTST (ORCPT
+        id S1729050AbfCMTSW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 13 Mar 2019 15:18:19 -0400
-Received: from mail.kernel.org ([198.145.29.99]:48732 "EHLO mail.kernel.org"
+        Wed, 13 Mar 2019 15:18:22 -0400
+Received: from mail.kernel.org ([198.145.29.99]:48834 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729022AbfCMTSO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 13 Mar 2019 15:18:14 -0400
+        id S1729033AbfCMTSU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 13 Mar 2019 15:18:20 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 77424213A2;
-        Wed, 13 Mar 2019 19:18:12 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id EC3452171F;
+        Wed, 13 Mar 2019 19:18:17 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1552504693;
-        bh=ZKwvw+OdkFutJ+O09TpyQakiP6ppRqg3P+SgX7PdfE0=;
+        s=default; t=1552504699;
+        bh=vsmukZjwr341I39UlMjrYziHYGjCzjZMmH/QkjEgf84=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=hvikZ3Ifkx55mnkw32HHXOeK6ze4oP2ZmlloNHnFKR1/S/G/6dHNfN3j35ieTBzQ8
-         nFtXIwOREBvVB1FbuiPZ9PHZcDTxS78wnnRrXqTipdqVKB9VygIiLoV0/8TE41NhSz
-         d2GDJPUSrX6f4XnuS97+leizMt1UIZLktoupSTOM=
+        b=KdTc5LeQ0iz5gn4EKhlys8pP3iT93XTHnubzdfDcb8VtyOyKJqvtnkx1EW0rRUv7E
+         kbk7J+0H/um1q8APS4LxZRYpBff6utZg0myGwmtfWx5Spd9pwudVZwcGnf+H+2g0i4
+         neBbROQ54FangdKVeacq6810/Zf8eE1Urn57tPjM=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     David Howells <dhowells@redhat.com>,
-        James Morris <james.morris@microsoft.com>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH AUTOSEL 4.4 02/15] assoc_array: Fix shortcut creation
-Date:   Wed, 13 Mar 2019 15:17:48 -0400
-Message-Id: <20190313191806.160547-2-sashal@kernel.org>
+Cc:     John Garry <john.garry@huawei.com>,
+        "Martin K . Petersen" <martin.petersen@oracle.com>,
+        Sasha Levin <sashal@kernel.org>, linux-scsi@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.4 04/15] scsi: libsas: Fix rphy phy_identifier for PHYs with end devices attached
+Date:   Wed, 13 Mar 2019 15:17:50 -0400
+Message-Id: <20190313191806.160547-4-sashal@kernel.org>
 X-Mailer: git-send-email 2.19.1
 In-Reply-To: <20190313191806.160547-1-sashal@kernel.org>
 References: <20190313191806.160547-1-sashal@kernel.org>
@@ -57,57 +58,87 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: David Howells <dhowells@redhat.com>
+From: John Garry <john.garry@huawei.com>
 
-[ Upstream commit bb2ba2d75a2d673e76ddaf13a9bd30d6a8b1bb08 ]
+[ Upstream commit ffeafdd2bf0b280d67ec1a47ea6287910d271f3f ]
 
-Fix the creation of shortcuts for which the length of the index key value
-is an exact multiple of the machine word size.  The problem is that the
-code that blanks off the unused bits of the shortcut value malfunctions if
-the number of bits in the last word equals machine word size.  This is due
-to the "<<" operator being given a shift of zero in this case, and so the
-mask that should be all zeros is all ones instead.  This causes the
-subsequent masking operation to clear everything rather than clearing
-nothing.
+The sysfs phy_identifier attribute for a sas_end_device comes from the rphy
+phy_identifier value.
 
-Ordinarily, the presence of the hash at the beginning of the tree index key
-makes the issue very hard to test for, but in this case, it was encountered
-due to a development mistake that caused the hash output to be either 0
-(keyring) or 1 (non-keyring) only.  This made it susceptible to the
-keyctl/unlink/valid test in the keyutils package.
+Currently this is not being set for rphys with an end device attached, so
+we see incorrect symlinks from systemd disk/by-path:
 
-The fix is simply to skip the blanking if the shift would be 0.  For
-example, an index key that is 64 bits long would produce a 0 shift and thus
-a 'blank' of all 1s.  This would then be inverted and AND'd onto the
-index_key, incorrectly clearing the entire last word.
+root@localhost:~# ls -l /dev/disk/by-path/
+total 0
+lrwxrwxrwx 1 root root  9 Feb 13 12:26 platform-HISI0162:01-sas-exp0x500e004aaaaaaa1f-phy0-lun-0 -> ../../sdb
+lrwxrwxrwx 1 root root 10 Feb 13 12:26 platform-HISI0162:01-sas-exp0x500e004aaaaaaa1f-phy0-lun-0-part1 -> ../../sdb1
+lrwxrwxrwx 1 root root 10 Feb 13 12:26 platform-HISI0162:01-sas-exp0x500e004aaaaaaa1f-phy0-lun-0-part2 -> ../../sdb2
+lrwxrwxrwx 1 root root 10 Feb 13 12:26 platform-HISI0162:01-sas-exp0x500e004aaaaaaa1f-phy0-lun-0-part3 -> ../../sdc3
 
-Fixes: 3cb989501c26 ("Add a generic associative array implementation.")
-Signed-off-by: David Howells <dhowells@redhat.com>
-Signed-off-by: James Morris <james.morris@microsoft.com>
+Indeed, each sas_end_device phy_identifier value is 0:
+
+root@localhost:/# more sys/class/sas_device/end_device-0\:0\:2/phy_identifier
+0
+root@localhost:/# more sys/class/sas_device/end_device-0\:0\:10/phy_identifier
+0
+
+This patch fixes the discovery code to set the phy_identifier.  With this,
+we now get proper symlinks:
+
+root@localhost:~# ls -l /dev/disk/by-path/
+total 0
+lrwxrwxrwx 1 root root  9 Feb 13 11:53 platform-HISI0162:01-sas-exp0x500e004aaaaaaa1f-phy10-lun-0 -> ../../sdg
+lrwxrwxrwx 1 root root  9 Feb 13 11:53 platform-HISI0162:01-sas-exp0x500e004aaaaaaa1f-phy11-lun-0 -> ../../sdh
+lrwxrwxrwx 1 root root  9 Feb 13 11:53 platform-HISI0162:01-sas-exp0x500e004aaaaaaa1f-phy2-lun-0 -> ../../sda
+lrwxrwxrwx 1 root root 10 Feb 13 11:53 platform-HISI0162:01-sas-exp0x500e004aaaaaaa1f-phy2-lun-0-part1 -> ../../sda1
+lrwxrwxrwx 1 root root  9 Feb 13 11:53 platform-HISI0162:01-sas-exp0x500e004aaaaaaa1f-phy3-lun-0 -> ../../sdb
+lrwxrwxrwx 1 root root 10 Feb 13 11:53 platform-HISI0162:01-sas-exp0x500e004aaaaaaa1f-phy3-lun-0-part1 -> ../../sdb1
+lrwxrwxrwx 1 root root 10 Feb 13 11:53 platform-HISI0162:01-sas-exp0x500e004aaaaaaa1f-phy3-lun-0-part2 -> ../../sdb2
+lrwxrwxrwx 1 root root  9 Feb 13 11:53 platform-HISI0162:01-sas-exp0x500e004aaaaaaa1f-phy4-lun-0 -> ../../sdc
+lrwxrwxrwx 1 root root 10 Feb 13 11:53 platform-HISI0162:01-sas-exp0x500e004aaaaaaa1f-phy4-lun-0-part1 -> ../../sdc1
+lrwxrwxrwx 1 root root 10 Feb 13 11:53 platform-HISI0162:01-sas-exp0x500e004aaaaaaa1f-phy4-lun-0-part2 -> ../../sdc2
+lrwxrwxrwx 1 root root 10 Feb 13 11:53 platform-HISI0162:01-sas-exp0x500e004aaaaaaa1f-phy4-lun-0-part3 -> ../../sdc3
+lrwxrwxrwx 1 root root  9 Feb 13 11:53 platform-HISI0162:01-sas-exp0x500e004aaaaaaa1f-phy5-lun-0 -> ../../sdd
+lrwxrwxrwx 1 root root  9 Feb 13 11:53 platform-HISI0162:01-sas-exp0x500e004aaaaaaa1f-phy7-lun-0 -> ../../sde
+lrwxrwxrwx 1 root root 10 Feb 13 11:53 platform-HISI0162:01-sas-exp0x500e004aaaaaaa1f-phy7-lun-0-part1 -> ../../sde1
+lrwxrwxrwx 1 root root 10 Feb 13 11:53 platform-HISI0162:01-sas-exp0x500e004aaaaaaa1f-phy7-lun-0-part2 -> ../../sde2
+lrwxrwxrwx 1 root root 10 Feb 13 11:53 platform-HISI0162:01-sas-exp0x500e004aaaaaaa1f-phy7-lun-0-part3 -> ../../sde3
+lrwxrwxrwx 1 root root  9 Feb 13 11:53 platform-HISI0162:01-sas-exp0x500e004aaaaaaa1f-phy8-lun-0 -> ../../sdf
+lrwxrwxrwx 1 root root 10 Feb 13 11:53 platform-HISI0162:01-sas-exp0x500e004aaaaaaa1f-phy8-lun-0-part1 -> ../../sdf1
+lrwxrwxrwx 1 root root 10 Feb 13 11:53 platform-HISI0162:01-sas-exp0x500e004aaaaaaa1f-phy8-lun-0-part2 -> ../../sdf2
+lrwxrwxrwx 1 root root 10 Feb 13 11:53 platform-HISI0162:01-sas-exp0x500e004aaaaaaa1f-phy8-lun-0-part3 -> ../../sdf3
+
+Fixes: 2908d778ab3e ("[SCSI] aic94xx: new driver")
+Reported-by: dann frazier <dann.frazier@canonical.com>
+Signed-off-by: John Garry <john.garry@huawei.com>
+Reviewed-by: Jason Yan <yanaijie@huawei.com>
+Tested-by: dann frazier <dann.frazier@canonical.com>
+Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- lib/assoc_array.c | 8 +++++---
- 1 file changed, 5 insertions(+), 3 deletions(-)
+ drivers/scsi/libsas/sas_expander.c | 2 ++
+ 1 file changed, 2 insertions(+)
 
-diff --git a/lib/assoc_array.c b/lib/assoc_array.c
-index 5cd093589c5a..3b46c5433b7a 100644
---- a/lib/assoc_array.c
-+++ b/lib/assoc_array.c
-@@ -781,9 +781,11 @@ static bool assoc_array_insert_into_terminal_node(struct assoc_array_edit *edit,
- 		new_s0->index_key[i] =
- 			ops->get_key_chunk(index_key, i * ASSOC_ARRAY_KEY_CHUNK_SIZE);
+diff --git a/drivers/scsi/libsas/sas_expander.c b/drivers/scsi/libsas/sas_expander.c
+index 12886f96b286..7be581f7c35d 100644
+--- a/drivers/scsi/libsas/sas_expander.c
++++ b/drivers/scsi/libsas/sas_expander.c
+@@ -818,6 +818,7 @@ static struct domain_device *sas_ex_discover_end_dev(
+ 		rphy = sas_end_device_alloc(phy->port);
+ 		if (!rphy)
+ 			goto out_free;
++		rphy->identify.phy_identifier = phy_id;
  
--	blank = ULONG_MAX << (level & ASSOC_ARRAY_KEY_CHUNK_MASK);
--	pr_devel("blank off [%zu] %d: %lx\n", keylen - 1, level, blank);
--	new_s0->index_key[keylen - 1] &= ~blank;
-+	if (level & ASSOC_ARRAY_KEY_CHUNK_MASK) {
-+		blank = ULONG_MAX << (level & ASSOC_ARRAY_KEY_CHUNK_MASK);
-+		pr_devel("blank off [%zu] %d: %lx\n", keylen - 1, level, blank);
-+		new_s0->index_key[keylen - 1] &= ~blank;
-+	}
+ 		child->rphy = rphy;
+ 		get_device(&rphy->dev);
+@@ -845,6 +846,7 @@ static struct domain_device *sas_ex_discover_end_dev(
  
- 	/* This now reduces to a node splitting exercise for which we'll need
- 	 * to regenerate the disparity table.
+ 		child->rphy = rphy;
+ 		get_device(&rphy->dev);
++		rphy->identify.phy_identifier = phy_id;
+ 		sas_fill_in_rphy(child, rphy);
+ 
+ 		list_add_tail(&child->disco_list_node, &parent->port->disco_list);
 -- 
 2.19.1
 
