@@ -2,109 +2,225 @@ Return-Path: <SRS0=dUEL=RQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_NEOMUTT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B3DA7C43381
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 Mar 2019 17:07:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1032BC43381
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 Mar 2019 17:09:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8271E2077B
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 Mar 2019 17:07:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CC2512077B
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 Mar 2019 17:09:47 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726255AbfCMRHk (ORCPT
+        id S1726831AbfCMRJq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 13 Mar 2019 13:07:40 -0400
-Received: from mga04.intel.com ([192.55.52.120]:30279 "EHLO mga04.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725856AbfCMRHj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 13 Mar 2019 13:07:39 -0400
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga006.jf.intel.com ([10.7.209.51])
-  by fmsmga104.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 13 Mar 2019 10:07:39 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.58,474,1544515200"; 
-   d="scan'208";a="126649122"
-Received: from ahduyck-desk1.amr.corp.intel.com ([10.7.198.76])
-  by orsmga006.jf.intel.com with ESMTP; 13 Mar 2019 10:07:39 -0700
-Message-ID: <e1d108a27d8f532e147c860ee64db6a07ed87040.camel@linux.intel.com>
-Subject: Re: [mm PATCH v6 6/7] mm: Add reserved flag setting to
- set_page_links
-From:   Alexander Duyck <alexander.h.duyck@linux.intel.com>
-To:     Andrew Morton <akpm@linux-foundation.org>
-Cc:     Michal Hocko <mhocko@kernel.org>, linux-mm@kvack.org,
-        sparclinux@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-nvdimm@lists.01.org, davem@davemloft.net,
-        pavel.tatashin@microsoft.com, mingo@kernel.org,
-        kirill.shutemov@linux.intel.com, dan.j.williams@intel.com,
-        dave.jiang@intel.com, rppt@linux.vnet.ibm.com, willy@infradead.org,
-        vbabka@suse.cz, khalid.aziz@oracle.com, ldufour@linux.vnet.ibm.com,
-        mgorman@techsingularity.net, yi.z.zhang@linux.intel.com
-Date:   Wed, 13 Mar 2019 10:07:39 -0700
-In-Reply-To: <20190313093306.c4b49c6d062f506a967f843d@linux-foundation.org>
-References: <154361452447.7497.1348692079883153517.stgit@ahduyck-desk1.amr.corp.intel.com>
-         <154361479877.7497.2824031260670152276.stgit@ahduyck-desk1.amr.corp.intel.com>
-         <20181205172225.GT1286@dhcp22.suse.cz>
-         <19c9f0fe83a857d5858c386a08ca2ddeba7cf27b.camel@linux.intel.com>
-         <20181205204247.GY1286@dhcp22.suse.cz>
-         <20190312150727.cb15cbc323a742e520b9a881@linux-foundation.org>
-         <4c72a04bb87e341ea7c747d509f42136a99a0716.camel@linux.intel.com>
-         <20190313093306.c4b49c6d062f506a967f843d@linux-foundation.org>
-Content-Type: text/plain; charset="UTF-8"
-User-Agent: Evolution 3.30.5 (3.30.5-1.fc29) 
+        Wed, 13 Mar 2019 13:09:46 -0400
+Received: from usa-sjc-mx-foss1.foss.arm.com ([217.140.101.70]:60752 "EHLO
+        foss.arm.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725856AbfCMRJq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 13 Mar 2019 13:09:46 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.72.51.249])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id D3BDA80D;
+        Wed, 13 Mar 2019 10:09:45 -0700 (PDT)
+Received: from e110439-lin (e110439-lin.cambridge.arm.com [10.1.194.43])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id DF6C33F71D;
+        Wed, 13 Mar 2019 10:09:42 -0700 (PDT)
+Date:   Wed, 13 Mar 2019 17:09:40 +0000
+From:   Patrick Bellasi <patrick.bellasi@arm.com>
+To:     Peter Zijlstra <peterz@infradead.org>
+Cc:     linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org,
+        linux-api@vger.kernel.org, Ingo Molnar <mingo@redhat.com>,
+        Tejun Heo <tj@kernel.org>,
+        "Rafael J . Wysocki" <rafael.j.wysocki@intel.com>,
+        Vincent Guittot <vincent.guittot@linaro.org>,
+        Viresh Kumar <viresh.kumar@linaro.org>,
+        Paul Turner <pjt@google.com>,
+        Quentin Perret <quentin.perret@arm.com>,
+        Dietmar Eggemann <dietmar.eggemann@arm.com>,
+        Morten Rasmussen <morten.rasmussen@arm.com>,
+        Juri Lelli <juri.lelli@redhat.com>,
+        Todd Kjos <tkjos@google.com>,
+        Joel Fernandes <joelaf@google.com>,
+        Steve Muckle <smuckle@google.com>,
+        Suren Baghdasaryan <surenb@google.com>
+Subject: Re: [PATCH v7 03/15] sched/core: uclamp: Add system default clamps
+Message-ID: <20190313170940.ngiafkmiijryhl2k@e110439-lin>
+References: <20190208100554.32196-1-patrick.bellasi@arm.com>
+ <20190208100554.32196-4-patrick.bellasi@arm.com>
+ <20190313143240.GH5922@hirez.programming.kicks-ass.net>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190313143240.GH5922@hirez.programming.kicks-ass.net>
+User-Agent: NeoMutt/20180716
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, 2019-03-13 at 09:33 -0700, Andrew Morton wrote:
-> On Tue, 12 Mar 2019 15:50:36 -0700 Alexander Duyck <alexander.h.duyck@linux.intel.com> wrote:
+On 13-Mar 15:32, Peter Zijlstra wrote:
+> On Fri, Feb 08, 2019 at 10:05:42AM +0000, Patrick Bellasi wrote:
 > 
-> > On Tue, 2019-03-12 at 15:07 -0700, Andrew Morton wrote:
-> > > On Wed, 5 Dec 2018 21:42:47 +0100 Michal Hocko <mhocko@kernel.org> wrote:
-> > > 
-> > > > > I got your explanation. However Andrew had already applied the patches
-> > > > > and I had some outstanding issues in them that needed to be addressed.
-> > > > > So I thought it best to send out this set of patches with those fixes
-> > > > > before the code in mm became too stale. I am still working on what to
-> > > > > do about the Reserved bit, and plan to submit it as a follow-up set.
-> > > > > From my experience Andrew can drop patches between different versions of
-> > > > the patchset. Things can change a lot while they are in mmotm and under
-> > > > the discussion.
-> > > 
-> > > It's been a while and everyone has forgotten everything, so I'll drop
-> > > this version of the patchset.
-> > > 
-> > 
-> > As far as getting to the reserved bit I probably won't have the time in
-> > the near future. If I were to resubmit the first 4 patches as a
-> > standalone patch set would that be acceptable, or would they be held up
-> > as well until the reserved bit issues is addressed?
-> > 
+> > diff --git a/include/linux/sched.h b/include/linux/sched.h
+> > index 45460e7a3eee..447261cd23ba 100644
+> > --- a/include/linux/sched.h
+> > +++ b/include/linux/sched.h
+> > @@ -584,14 +584,32 @@ struct sched_dl_entity {
+> >   * Utilization clamp for a scheduling entity
+> >   * @value:		clamp value "requested" by a se
+> >   * @bucket_id:		clamp bucket corresponding to the "requested" value
+> > + * @effective:		clamp value and bucket actually "assigned" to the se
+> > + * @active:		the se is currently refcounted in a rq's bucket
+> >   *
+> > + * Both bucket_id and effective::bucket_id are the index of the clamp bucket
+> > + * matching the corresponding clamp value which are pre-computed and stored to
+> > + * avoid expensive integer divisions from the fast path.
+> > + *
+> > + * The active bit is set whenever a task has got an effective::value assigned,
+> > + * which can be different from the user requested clamp value. This allows to
+> > + * know a task is actually refcounting the rq's effective::bucket_id bucket.
+> >   */
+> >  struct uclamp_se {
+> > +	/* Clamp value "requested" by a scheduling entity */
+> >  	unsigned int value		: bits_per(SCHED_CAPACITY_SCALE);
+> >  	unsigned int bucket_id		: bits_per(UCLAMP_BUCKETS);
+> > +	unsigned int active		: 1;
+> > +	/*
+> > +	 * Clamp value "obtained" by a scheduling entity.
+> > +	 *
+> > +	 * This cache the actual clamp value, possibly enforced by system
+> > +	 * default clamps, a task is subject to while enqueued in a rq.
+> > +	 */
+> > +	struct {
+> > +		unsigned int value	: bits_per(SCHED_CAPACITY_SCALE);
+> > +		unsigned int bucket_id	: bits_per(UCLAMP_BUCKETS);
+> > +	} effective;
 > 
-> Yes, I think that merging the first four will be OK.  As long as they
-> don't add some bug which [5/5] corrects, which happens sometimes!
+> I still think that this effective thing is backwards.
 > 
-> Please redo, retest and resend sometime?
+> The existing code already used @value and @bucket_id as 'effective' and
+> you're now changing all that again. This really doesn't make sense to
+> me.
 
-I had gone through and tested with each patch applied individually when
-I was performance testing them, and I am fairly certain there wasn't a
-bug introduced between any two patches.
+With respect to the previous v6, I've now moved this concept to the
+patch where we actually use it for the first time.
 
-The issue that I recall Michal had was the fact that I was essentially
-embedding the setting of the reserved page under several layers of
-function calls, which would make it harder to remove. I started that
-work at about patch 5 which is why I figured I would resend the first
-4, and hold off on 5-7 until I can get the reserved bit removal for
-hotplug done.
+In this patch we add system default values, thus a task is now subject
+to two possible constraints: the task specific (TS) one or the system
+default (SD) one.
 
-I can probably have the patches ready to go in a couple days. I'll send
-updates once linux-next and mmotm with the patches dropped have been
-posted.
+The most restrictive of the two must be enforced but we also want to
+keep track of the task specific value, while system defaults are
+enforce, to restore it when the system defaults are relaxed.
 
-Thanks.
+For example:
 
-- Alex
+  TS:   |.............. 20 .................|
+  SD:   |... 0 ....|..... 40 .....|... 0 ...|
+  Time: |..........|..............|.........|
+        t0         t1             t2        t3
 
+Despite the task asking always only for a 20% boost:
+ - in [t1,t2] we want to boost it to 40% but, right after...
+ - in [t2,t3] we want to go back to the 20% boost.
+
+The "effective" values allows to efficiently enforce the most
+restrictive clamp value for a task at enqueue time by:
+ - not loosing track of the original request
+ - don't caring about updating non runnable tasks
+
+> Also; if you don't add it inside struct uclamp_se, but add a second
+> instance,
+> 
+> >  };
+> >  #endif /* CONFIG_UCLAMP_TASK */
+> >  
+> 
+> 
+> > @@ -803,6 +811,70 @@ static inline void uclamp_rq_update(struct rq *rq, unsigned int clamp_id,
+> >  	WRITE_ONCE(rq->uclamp[clamp_id].value, max_value);
+> >  }
+> >  
+> > +/*
+> > + * The effective clamp bucket index of a task depends on, by increasing
+> > + * priority:
+> > + * - the task specific clamp value, when explicitly requested from userspace
+> > + * - the system default clamp value, defined by the sysadmin
+> > + *
+> > + * As a side effect, update the task's effective value:
+> > + *    task_struct::uclamp::effective::value
+> > + * to represent the clamp value of the task effective bucket index.
+> > + */
+> > +static inline void
+> > +uclamp_effective_get(struct task_struct *p, unsigned int clamp_id,
+> > +		     unsigned int *clamp_value, unsigned int *bucket_id)
+> > +{
+> > +	/* Task specific clamp value */
+> > +	*bucket_id = p->uclamp[clamp_id].bucket_id;
+> > +	*clamp_value = p->uclamp[clamp_id].value;
+> > +
+> > +	/* Always apply system default restrictions */
+> > +	if (unlikely(*clamp_value > uclamp_default[clamp_id].value)) {
+> > +		*clamp_value = uclamp_default[clamp_id].value;
+> > +		*bucket_id = uclamp_default[clamp_id].bucket_id;
+> > +	}
+> > +}
+> 
+> you can avoid horrors like this and simply return a struct uclamp_se by
+> value.
+
+Yes, that should be possible... will look into splitting this out in
+v8 to have something like:
+
+---8<---
+struct uclamp_req {
+	/* Clamp value "requested" by a scheduling entity */
+	unsigned int value		: bits_per(SCHED_CAPACITY_SCALE);
+	unsigned int bucket_id		: bits_per(UCLAMP_BUCKETS);
+	unsigned int active		: 1;
+	unsigned int user_defined	: 1;
+}
+
+struct uclamp_eff {
+	unsigned int value	        : bits_per(SCHED_CAPACITY_SCALE);
+	unsigned int bucket_id	        : bits_per(UCLAMP_BUCKETS);
+}
+
+struct task_struct {
+        // ...
+        #ifdef CONFIG_UCLAMP_TASK
+                struct uclamp_req uclamp_req[UCLAMP_CNT];
+                struct uclamp_eff uclamp_eff[UCLAMP_CNT];
+        #endif
+        // ...
+}
+
+static inline struct uclamp_eff
+uclamp_eff_get(struct task_struct *p, unsigned int clamp_id)
+{
+        struct uclamp_eff uc_eff = p->uclamp_eff[clamp_id];
+
+	uc_eff.bucket_id = p->uclamp_req[clamp_id].bucket_id;
+	uc_eff.clamp_value = p->uclamp_req[clamp_id].value;
+
+	if (unlikely(uc_eff.clamp_value > uclamp_default[clamp_id].value)) {
+		uc_eff.clamp_value = uclamp_default[clamp_id].value;
+		uc_eff.bucket_id = uclamp_default[clamp_id].bucket_id;
+	}
+
+        return uc_eff;
+}
+
+static inline void
+uclamp_eff_set(struct task_struct *p, unsigned int clamp_id)
+{
+        p->uclamp_eff[clamp_id] = uclamp_eff_get(p, clamp_id);
+}
+---8<---
+
+Is that what you mean ?
+
+-- 
+#include <best/regards.h>
+
+Patrick Bellasi
