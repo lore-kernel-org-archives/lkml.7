@@ -4,55 +4,61 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-12.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_PASS autolearn=ham autolearn_force=no
-	version=3.4.0
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_PASS autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7D127C43381
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 Mar 2019 15:41:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1081CC43381
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 Mar 2019 15:41:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4B1EC20693
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 Mar 2019 15:41:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D225620693
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 Mar 2019 15:41:27 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1552491681;
-	bh=XD8PCTndTwqdghnIsU/s0HlloFIGjHObIEepUCh1kmE=;
+	s=default; t=1552491687;
+	bh=eoiJ8Y7WJpVfiM+Ls9DjOU5lrfujq1mV76rlmLsUG3w=;
 	h=From:To:Cc:Subject:In-Reply-To:Date:List-ID:From;
-	b=D54ZsIweezhknw9WrsoCmSK1Rxv2Ns+ckgStZZ+2//aK+UtAaEUwDHT7TQur3fq03
-	 c/nJI4U1AhD0/9zEa9VVpLRJ//546vjKr5LDVduqPGx3J8jj1IjqV/QYjruBMFJSey
-	 C00WrOJTPMucaUovONW6qnrN3+xSponx74+Z2rzM=
+	b=hveS+fJ4f6yM7wvGNH3qlDFhkOJm8hQIHF1dwAFQz6pnR2L8sR4wV2Ayx+ANXz+jb
+	 Z2UDTZdbLUfyTuvOF3qi1vpfVKpFBHJ7auesphWlU/zY7HbULrjhPZaez4NKQOzNvN
+	 VBW+viaHkcFOiGyhRRaIMOn+qdJB7+drU0nI3/N8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726039AbfCMPlT (ORCPT
+        id S1726889AbfCMPjP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 13 Mar 2019 11:41:19 -0400
-Received: from heliosphere.sirena.org.uk ([172.104.155.198]:50144 "EHLO
+        Wed, 13 Mar 2019 11:39:15 -0400
+Received: from heliosphere.sirena.org.uk ([172.104.155.198]:49946 "EHLO
         heliosphere.sirena.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726891AbfCMPjR (ORCPT
+        with ESMTP id S1726844AbfCMPjL (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 13 Mar 2019 11:39:17 -0400
+        Wed, 13 Mar 2019 11:39:11 -0400
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
         d=sirena.org.uk; s=20170815-heliosphere; h=Date:Message-Id:In-Reply-To:
         Subject:Cc:To:From:Sender:Reply-To:MIME-Version:Content-Type:
         Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
         Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:References:
         List-Id:List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:
-        List-Archive; bh=7Rhih47KSi3drO5CSy+3wBgd4OUn/dnunQtu7hJjcao=; b=mrtsYEfR57Ld
-        jwGuY70PWzN9P//RBfCnYzcl9DWpZEk1ndo6W9+xqJtXYssa4e4jZdoiJxVcJ4MrOWZdPL5lvO8In
-        xdLTUIT8TqSGjGfGmKLXuf+OkE0QqQ3180zpPlKEdwZBqNZHQX898baZqULEJ/cp6faqb1ePIHU4Z
-        FUMMk=;
+        List-Archive; bh=X5sGB91oFBFVYIHkyXSiAn+ENZMIm0hBqBhWrcKAEqM=; b=bw2qxkLR1+TF
+        r7QGBmPkYzcuugzIXvojcmdACC1EY8ym8Bxel5nprJ8mAtCMfVNv/ukNoZzREzFLvc5KeihQmechx
+        wQdpBJIneS34hny3UufsqRL9xJm2aKW41TWu7e72hA/mYtTdVpcdC/J8zNKjBmfNXVDOkyVaUANwm
+        JF9YY=;
 Received: from cpc102320-sgyl38-2-0-cust46.18-2.cable.virginm.net ([82.37.168.47] helo=debutante.sirena.org.uk)
         by heliosphere.sirena.org.uk with esmtpa (Exim 4.89)
         (envelope-from <broonie@sirena.org.uk>)
-        id 1h45yK-0003SZ-SH; Wed, 13 Mar 2019 15:39:12 +0000
+        id 1h45xz-0003R0-8J; Wed, 13 Mar 2019 15:38:51 +0000
 Received: by debutante.sirena.org.uk (Postfix, from userid 1000)
-        id 36AAE1128B97; Wed, 13 Mar 2019 15:39:12 +0000 (GMT)
+        id AE33D1128B97; Wed, 13 Mar 2019 15:38:50 +0000 (GMT)
 From:   Mark Brown <broonie@kernel.org>
-To:     Steve Twiss <stwiss.opensource@diasemi.com>
-Cc:     Charles Keepax <ckeepax@opensource.cirrus.com>,
-        Mark Brown <broonie@kernel.org>, linux-kernel@vger.kernel.org
-Subject: Applied "regulator: wm831x ldo: Fix notifier mutex lock warning" to the regulator tree
-In-Reply-To: 
+To:     Olivier Moysan <olivier.moysan@st.com>
+Cc:     Mark Brown <broonie@kernel.org>, lgirdwood@gmail.com,
+        broonie@kernel.org, perex@perex.cz, tiwai@suse.com,
+        mcoquelin.stm32@gmail.com, alexandre.torgue@st.com,
+        alsa-devel@alsa-project.org, linux-arm-kernel@lists.infradead.org,
+        linux-stm32@st-md-mailman.stormreply.com,
+        linux-kernel@vger.kernel.org, olivier.moysan@st.com,
+        arnaud.pouliquen@st.com, benjamin.gaignard@st.com,
+        alsa-devel@alsa-project.org
+Subject: Applied "ASoC: stm32: i2s: change trigger traces" to the asoc tree
+In-Reply-To:  <1552317990-24219-2-git-send-email-olivier.moysan@st.com>
 X-Patchwork-Hint: ignore
-Message-Id: <20190313153912.36AAE1128B97@debutante.sirena.org.uk>
-Date:   Wed, 13 Mar 2019 15:39:12 +0000 (GMT)
+Message-Id: <20190313153850.AE33D1128B97@debutante.sirena.org.uk>
+Date:   Wed, 13 Mar 2019 15:38:50 +0000 (GMT)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
@@ -60,11 +66,11 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 The patch
 
-   regulator: wm831x ldo: Fix notifier mutex lock warning
+   ASoC: stm32: i2s: change trigger traces
 
-has been applied to the regulator tree at
+has been applied to the asoc tree at
 
-   https://git.kernel.org/pub/scm/linux/kernel/git/broonie/regulator.git 
+   https://git.kernel.org/pub/scm/linux/kernel/git/broonie/sound.git 
 
 All being well this means that it will be integrated into the linux-next
 tree (usually sometime in the next 24 hours) and sent to Linus during
@@ -85,45 +91,52 @@ to this mail.
 Thanks,
 Mark
 
-From 8be64b6d87bd47d81753b60ddafe70102ebfd76b Mon Sep 17 00:00:00 2001
-From: Steve Twiss <stwiss.opensource@diasemi.com>
-Date: Tue, 26 Feb 2019 15:54:01 +0000
-Subject: [PATCH] regulator: wm831x ldo: Fix notifier mutex lock warning
+From 52e7306ca2db565edc1503a74477f3547bc9e408 Mon Sep 17 00:00:00 2001
+From: Olivier Moysan <olivier.moysan@st.com>
+Date: Mon, 11 Mar 2019 16:26:28 +0100
+Subject: [PATCH] ASoC: stm32: i2s: change trigger traces
 
-The mutex for the regulator_dev must be controlled by the caller of
-the regulator_notifier_call_chain(), as described in the comment
-for that function.
+Update traces to log capture/playback stream start/stop.
 
-Failure to mutex lock and unlock surrounding the notifier call results
-in a kernel WARN_ON_ONCE() which will dump a backtrace for the
-regulator_notifier_call_chain() when that function call is first made.
-The mutex can be controlled using the regulator_lock/unlock() API.
-
-Fixes: d1c6b4fe668b ("regulator: Add WM831x LDO support")
-Suggested-by: Adam Thomson <Adam.Thomson.Opensource@diasemi.com>
-Signed-off-by: Steve Twiss <stwiss.opensource@diasemi.com>
-Acked-by: Charles Keepax <ckeepax@opensource.cirrus.com>
+Signed-off-by: Olivier Moysan <olivier.moysan@st.com>
 Signed-off-by: Mark Brown <broonie@kernel.org>
 ---
- drivers/regulator/wm831x-ldo.c | 2 ++
- 1 file changed, 2 insertions(+)
+ sound/soc/stm/stm32_i2s.c | 8 +++++---
+ 1 file changed, 5 insertions(+), 3 deletions(-)
 
-diff --git a/drivers/regulator/wm831x-ldo.c b/drivers/regulator/wm831x-ldo.c
-index e4a6f888484e..fcd038e7cd80 100644
---- a/drivers/regulator/wm831x-ldo.c
-+++ b/drivers/regulator/wm831x-ldo.c
-@@ -51,9 +51,11 @@ static irqreturn_t wm831x_ldo_uv_irq(int irq, void *data)
- {
- 	struct wm831x_ldo *ldo = data;
+diff --git a/sound/soc/stm/stm32_i2s.c b/sound/soc/stm/stm32_i2s.c
+index 47c334de6b09..783b33497435 100644
+--- a/sound/soc/stm/stm32_i2s.c
++++ b/sound/soc/stm/stm32_i2s.c
+@@ -593,7 +593,8 @@ static int stm32_i2s_trigger(struct snd_pcm_substream *substream, int cmd,
+ 	case SNDRV_PCM_TRIGGER_RESUME:
+ 	case SNDRV_PCM_TRIGGER_PAUSE_RELEASE:
+ 		/* Enable i2s */
+-		dev_dbg(cpu_dai->dev, "start I2S\n");
++		dev_dbg(cpu_dai->dev, "start I2S %s\n",
++			playback_flg ? "playback" : "capture");
  
-+	regulator_lock(ldo->regulator);
- 	regulator_notifier_call_chain(ldo->regulator,
- 				      REGULATOR_EVENT_UNDER_VOLTAGE,
- 				      NULL);
-+	regulator_unlock(ldo->regulator);
+ 		cfg1_mask = I2S_CFG1_RXDMAEN | I2S_CFG1_TXDMAEN;
+ 		regmap_update_bits(i2s->regmap, STM32_I2S_CFG1_REG,
+@@ -638,6 +639,9 @@ static int stm32_i2s_trigger(struct snd_pcm_substream *substream, int cmd,
+ 	case SNDRV_PCM_TRIGGER_STOP:
+ 	case SNDRV_PCM_TRIGGER_SUSPEND:
+ 	case SNDRV_PCM_TRIGGER_PAUSE_PUSH:
++		dev_dbg(cpu_dai->dev, "stop I2S %s\n",
++			playback_flg ? "playback" : "capture");
++
+ 		if (playback_flg)
+ 			regmap_update_bits(i2s->regmap, STM32_I2S_IER_REG,
+ 					   I2S_IER_UDRIE,
+@@ -654,8 +658,6 @@ static int stm32_i2s_trigger(struct snd_pcm_substream *substream, int cmd,
+ 			break;
+ 		}
  
- 	return IRQ_HANDLED;
- }
+-		dev_dbg(cpu_dai->dev, "stop I2S\n");
+-
+ 		ret = regmap_update_bits(i2s->regmap, STM32_I2S_CR1_REG,
+ 					 I2S_CR1_SPE, 0);
+ 		if (ret < 0) {
 -- 
 2.20.1
 
