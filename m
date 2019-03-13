@@ -2,338 +2,130 @@ Return-Path: <SRS0=dUEL=RQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.8 required=3.0 tests=DATE_IN_PAST_03_06,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EEC30C43381
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 Mar 2019 00:31:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1F624C4360F
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 Mar 2019 00:31:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AB3142077B
+	by mail.kernel.org (Postfix) with ESMTP id E2ACD2177E
 	for <linux-kernel@archiver.kernel.org>; Wed, 13 Mar 2019 00:31:36 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="DOcYpTzo"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="LFPnUqqO"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726435AbfCMA3E (ORCPT
+        id S1726615AbfCMAbd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 12 Mar 2019 20:29:04 -0400
-Received: from mail-pf1-f194.google.com ([209.85.210.194]:38631 "EHLO
-        mail-pf1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726309AbfCMA3D (ORCPT
+        Tue, 12 Mar 2019 20:31:33 -0400
+Received: from mail-wm1-f65.google.com ([209.85.128.65]:56100 "EHLO
+        mail-wm1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726269AbfCMAbd (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 12 Mar 2019 20:29:03 -0400
-Received: by mail-pf1-f194.google.com with SMTP id n125so91518pfn.5
-        for <linux-kernel@vger.kernel.org>; Tue, 12 Mar 2019 17:29:02 -0700 (PDT)
+        Tue, 12 Mar 2019 20:31:33 -0400
+Received: by mail-wm1-f65.google.com with SMTP id 4so109065wmf.5;
+        Tue, 12 Mar 2019 17:31:32 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id;
-        bh=Envoy7eTrribuN722v44J5VnFLReYNXuAQsI//t4lgw=;
-        b=DOcYpTzobVFUXwZm/8jtIz+TtmFH5yrKRzDEE5mPpjT/I1o6izd8xCEftQljWY7c2E
-         MI8gI/nJkGya/W4klCkeEB3Mqr2dUlp8c3tdVK1YGvg3eoqnfa/YKQPnpGs/wDu/9ydk
-         ub8Ndm+RmiILTp4IXZ4W8SzF/eFsGcmIxldeL0inhSRBTu5KNrMUemm/3rWehCc8I/7M
-         r/hI5CBkM0134qXqF052Av1SAxKMxjHuJPeB0FhFHrPMNE6QFgBOxPbFbg90BXrfxhMp
-         vpQTDoYbH7+xgxjN/C6KVLqe/0sI1enfIrFS63c5LaZsz2RgBvlmJnKLT/XQwUPaXlJN
-         fe0A==
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=yKg+nARTdtsm7x8t8Xjwu4alcYJjw3luItz1ZtmLJWc=;
+        b=LFPnUqqOKOq0XufiLgweF4Dm2YGpJj6u+ZQaoWS2nD1RxL0KQZktWgH3iZ8Cs2JooC
+         ivefOfIdpSfTsEQ326PUeNda7AkHEEmC/qZFMX+bwj6xfz9X5W0BNK/o/eOpdhiB5Rzz
+         An42GI35hN1oa2nsIVaGqTW7KatU5Wq+L3/1cbM2hMqhyze8yd/fN0Ezi2qnC+UwrUpH
+         m9i51caOvN6Pv7k5wc0D42kiNI/QuPmQbcswKAi/L8sP25gVe1Xj3Q+6OFgq9uHCAv8v
+         fXkR8IytLXQ9089Hf/668z6ANvqheTcRs8yH6nZX/aYDxoueLWR94m1EJqFhscUQ7CkU
+         3ftg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id;
-        bh=Envoy7eTrribuN722v44J5VnFLReYNXuAQsI//t4lgw=;
-        b=RQKoViU8jQHlGZyLr01OsQzwpuXmLzDAbVTDK5EyTcjQb6xSDyjGgZ7BMV9TgDsIEo
-         ACsEySyus0TI5QiV1FkMYAH/xdM0OEjCFO7+rKo3fYsBYPpA4mp11cBPIMx4us/cY3fJ
-         s7MwpQ3l8QUFGpCij6eudMbkDHnsb9ARxfw+skTEG60xbJAFkSxq7X2cDvokNB48j7Zk
-         jBHlCnSZp23Q6lkjDGOtqoftmLUVUn4rzTvgAlh6Ddhsyc6qrQbV6zIzRQ7gVzB98suN
-         K5cWlzh3i+NiuTa16nvoGGn9zLmHiqysFtwTzqb1IcGRUVgEJ5v0VU8Oa7gA81oqVIw5
-         AbiQ==
-X-Gm-Message-State: APjAAAWolJza3LRo1SXsWVdJkiyUXcK56iP4uuFnlNe33E73tffBr11H
-        aq61mv6QmEoQT87vfZgkF55KQ0llLXs=
-X-Google-Smtp-Source: APXvYqzoxoOivt6yUp9Eq6TnkkzmFifQK6nSYsFDC8a+jI7vyt2GQW9QKqtSE27ihlNyAI6C9Sdrnw==
-X-Received: by 2002:a63:c307:: with SMTP id c7mr37849061pgd.386.1552436942356;
-        Tue, 12 Mar 2019 17:29:02 -0700 (PDT)
-Received: from localhost.localdomain ([122.172.151.49])
-        by smtp.googlemail.com with ESMTPSA id m64sm23598591pfi.149.2019.03.12.17.28.54
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Tue, 12 Mar 2019 17:29:01 -0700 (PDT)
-From:   Arshad Hussain <arshad.super@gmail.com>
-To:     linux-erofs@lists.ozlabs.org
-Cc:     gaoxiang25@huawei.com, devel@driverdev.osuosl.org,
-        linux-kernel@vger.kernel.org, gregkh@linuxfoundation.org,
-        yuchao0@huawei.com
-Subject: [PATCH] [PATCH 1/1] staging: erofs: Add function comment for erofs/super.c
-Date:   Wed, 13 Mar 2019 02:36:40 +0530
-Message-Id: <20190312210640.2175-1-arshad.super@gmail.com>
-X-Mailer: git-send-email 2.14.5
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=yKg+nARTdtsm7x8t8Xjwu4alcYJjw3luItz1ZtmLJWc=;
+        b=Ww8Xl4sx5D4iKIuLGHEZM3h9LRJ9ag7sM/WzqnhOlwj8Q2LPywcdZsZquo9oCE34xn
+         aFpzxiH3TmvxIEhfeREkfNPEiPkLoFkC815Bz55D65RM9oWYSbsbAoxZokn1AtBoTPXQ
+         lqzmULqSWqvJkeyviHkT6Mx+7va9JIY9ZklfC3zYecLYMa78nw6yLrN1tI/A/P6ov9Ct
+         zGs9ZCcYaNEnqyX1IReUHnOfo5/16K/wgrlQo3SpOsCMHiGnKkeVnoDz8RNJNL3v+PjX
+         0DlOITfe44MTE5l45bXX/QZlBNMea/YObK2TslPO7fymG/sSMZhZ8ToyZyqmobSS0yO8
+         yerA==
+X-Gm-Message-State: APjAAAUNI7xEWGbjvAERIDXvTKZOruVcVuBSgHTNewV71r7CPa8Yy0z6
+        zysJVdGqH0cTyJtZ2M/Dg75Xq1otUEVhIZpJE84=
+X-Google-Smtp-Source: APXvYqwNXuNA9Ei0KiJya8Xew9u0EApjP8XO4F401s61x1pnoPN4Tiq6qSLo1C5L4OdIaa41gLaV4lyNc8h/LQDHqWs=
+X-Received: by 2002:a1c:44:: with SMTP id 65mr212870wma.127.1552437091074;
+ Tue, 12 Mar 2019 17:31:31 -0700 (PDT)
+MIME-Version: 1.0
+References: <20190311213124.29325-1-angus@akkea.ca> <CAHQ1cqEHr1mB2EH3-fJPrYa+nkcWPPjmCTjSt-XsDnJp-SCf+w@mail.gmail.com>
+ <9f25fb1a0acb35539dcd802502c49058@www.akkea.ca>
+In-Reply-To: <9f25fb1a0acb35539dcd802502c49058@www.akkea.ca>
+From:   Andrey Smirnov <andrew.smirnov@gmail.com>
+Date:   Tue, 12 Mar 2019 17:31:19 -0700
+Message-ID: <CAHQ1cqHS6Q9naaYO8etfVC6ra0Km8a3Hs-4FTVdjjS5Ciwjpbw@mail.gmail.com>
+Subject: Re: [PATCH] arm64: dts: fsl: imx8mq: enable the thermal management
+ unit (TMU)
+To:     Angus Ainslie <angus@akkea.ca>
+Cc:     Mark Rutland <mark.rutland@arm.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Shawn Guo <shawnguo@kernel.org>,
+        Fabio Estevam <festevam@gmail.com>,
+        Sascha Hauer <kernel@pengutronix.de>,
+        Lucas Stach <l.stach@pengutronix.de>,
+        Abel Vesa <abel.vesa@nxp.com>, daniel.baluta@nxp.com,
+        agx@sigxcpu.org, dl-linux-imx <linux-imx@nxp.com>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>,
+        linux-kernel <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This patch adds functions comment for file erofs/super.c in
-sphinx format.
+On Tue, Mar 12, 2019 at 1:19 PM Angus Ainslie <angus@akkea.ca> wrote:
+>
+> Hi Andrey,
+>
+> On 2019-03-11 19:35, Andrey Smirnov wrote:
+> > On Mon, Mar 11, 2019 at 2:35 PM Angus Ainslie (Purism) <angus@akkea.ca>
+> > wrote:
+> >>
+> >> These are the TMU nodes from the NXP vendor kernel
+> >>
+> >
+> > Hey Angus,
+> >
+> > TMU block supports multiple thermal zones and vendor kernel doesn't
+> > really account for that (see below). Latest version of the driver in
+> > thermal tree now actually supports that feature (mulit-sensor), so I
+> > think the code in DT should reflect that as well. I recently submitted
+> > a series adding HWMON integration for TMU
+> > (https://lore.kernel.org/lkml/20190222200508.26325-1-andrew.smirnov@gmail.com/T/#u)
+>
+> I tried applying those to linux-next. They don't apply very cleanly
+> there so I gave up.
+>
+> > and this is my take on this patch:
+> >
+> > https://github.com/ndreys/linux/commit/09931e3d60af0a74377307b433db97da1be31570
+> >
+> > All of the code there is up for grabs, if you feel like using it.
+> >
+>
+> I followed that and I have a version that works with linux-next that
+> does not include the GPU
+> and VPU parts.
+>
+> I also tested a version with the GPU and VPU parts and it "works" but
+> creates 2 useless
+> paths in /sys/class/thermal .
+>
+> Should I wait for your changes to get into linux-next or resubmit a
+> version that works with the current one ?
+>
 
-Signed-off-by: Arshad Hussain <arshad.super@gmail.com>
----
- drivers/staging/erofs/super.c | 135 ++++++++++++++++++++++++++++++++++++++++--
- 1 file changed, 131 insertions(+), 4 deletions(-)
+You don't really need my changes for multi sensor support, only the
+patch Fabio pointed to. You can send the patch sans GPU and VPU nodes
+to get it in sooner or you can wait until multi-sensor support patch
+trickles down to get all in in a single patch. All options are fine by
+me, so it's up to you and Shawn I'd say.
 
-diff --git a/drivers/staging/erofs/super.c b/drivers/staging/erofs/super.c
-index 15c784fba879..60bfc3e8db7a 100644
---- a/drivers/staging/erofs/super.c
-+++ b/drivers/staging/erofs/super.c
-@@ -30,6 +30,11 @@ static void init_once(void *ptr)
- 	inode_init_once(&vi->vfs_inode);
- }
- 
-+/**
-+ * erofs_init_inode_cache(): Create & initialize inode cache
-+ *
-+ * Returns: 0 on Success. Errno Otherwise.
-+ */
- static int __init erofs_init_inode_cache(void)
- {
- 	erofs_inode_cachep = kmem_cache_create("erofs_inode",
-@@ -39,11 +44,21 @@ static int __init erofs_init_inode_cache(void)
- 	return erofs_inode_cachep != NULL ? 0 : -ENOMEM;
- }
- 
-+/**
-+ * erofs_exit_inode_cache(): Destroy inode cache
-+ */
- static void erofs_exit_inode_cache(void)
- {
- 	kmem_cache_destroy(erofs_inode_cachep);
- }
- 
-+/**
-+ * alloc_inode(): Allocate and initialize inode
-+ *
-+ * @sb: VFS superblock structure
-+ *
-+ * Returns: Pointer to inode structure
-+ */
- static struct inode *alloc_inode(struct super_block *sb)
- {
- 	struct erofs_vnode *vi =
-@@ -57,6 +72,11 @@ static struct inode *alloc_inode(struct super_block *sb)
- 	return &vi->vfs_inode;
- }
- 
-+/**
-+ * i_callback(): Release slab Memory
-+ *
-+ * @head: RCU callback structure
-+ */
- static void i_callback(struct rcu_head *head)
- {
- 	struct inode *inode = container_of(head, struct inode, i_rcu);
-@@ -71,11 +91,23 @@ static void i_callback(struct rcu_head *head)
- 	kmem_cache_free(erofs_inode_cachep, vi);
- }
- 
-+/**
-+ * destroy_inode(): Release Inode Resources allocated by alloc_inode()
-+ *
-+ * @inode: VFS Inode structure
-+ */
- static void destroy_inode(struct inode *inode)
- {
- 	call_rcu(&inode->i_rcu, i_callback);
- }
- 
-+/**
-+ * superblock_read(): Read superblock into buffer
-+ *
-+ * @sb: VFS Superblock structure
-+ *
-+ * Returns: 0 on Success. Errno otherwise
-+ */
- static int superblock_read(struct super_block *sb)
- {
- 	struct erofs_sb_info *sbi;
-@@ -230,6 +262,14 @@ static match_table_t erofs_tokens = {
- 	{Opt_err, NULL}
- };
- 
-+/**
-+ * parse_options(): Parse and set additional mount option for erofs
-+ *
-+ * @sb: VFS superblock structure
-+ * @options: Mount options
-+ *
-+ * Returns: 0 on Success. Errno otherwise
-+ */
- static int parse_options(struct super_block *sb, char *options)
- {
- 	substring_t args[MAX_OPT_ARGS];
-@@ -351,6 +391,22 @@ static struct inode *erofs_init_managed_cache(struct super_block *sb)
- 
- #endif
- 
-+/**
-+ * erofs_read_super(): Helper function to erofs_fill_super()
-+ *
-+ * @sb: VFS superblock structure
-+ * @dev_name: Name of device where erofs is mounted
-+ * @data: Additional mount options
-+ * @silent: if TRUE print message on error.
-+ * 	    Silent/quite otherwise
-+ *
-+ * Helper function to actual callback function erofs_fill_super
-+ * This function sets the blocksize. Reads the superblock into
-+ * buffer. Parses and sets mount options. Populates root inode
-+ * and creates root directory.
-+ *
-+ * Returns: 0 on Success. Errno otherwise
-+ */
- static int erofs_read_super(struct super_block *sb,
- 	const char *dev_name, void *data, int silent)
- {
-@@ -472,8 +528,12 @@ static int erofs_read_super(struct super_block *sb,
- 	return err;
- }
- 
--/*
-- * could be triggered after deactivate_locked_super()
-+/**
-+ * erofs_put_super(): Free superblock structure
-+ *
-+ * @sb: VFS superblock structure
-+ *
-+ * Could be triggered after deactivate_locked_super()
-  * is called, thus including umount and failed to initialize.
-  */
- static void erofs_put_super(struct super_block *sb)
-@@ -513,7 +573,20 @@ struct erofs_mount_private {
- 	char *options;
- };
- 
--/* support mount_bdev() with options */
-+/**
-+ * erofs_fill_super(): Fill erofs superblock
-+ *
-+ * @sb: VFS superblock structure
-+ * @_priv: Additional Mount options
-+ * @silent: if TRUE print message on error.
-+ * 	    Silent/quite otherwise
-+ *
-+ * This function fills erofs superblock information into
-+ * the VFS superblock stucture. Additionally it supports
-+ * mount_bdev() with options
-+ *
-+ * Returns: 0 on Success
-+ */
- static int erofs_fill_super(struct super_block *sb,
- 	void *_priv, int silent)
- {
-@@ -523,6 +596,17 @@ static int erofs_fill_super(struct super_block *sb,
- 		priv->options, silent);
- }
- 
-+/**
-+ * erofs_mount(): Function called when erofs is mounted
-+ *
-+ * @fs_type: Describes the erofs filesystem
-+ * @flags: Mount flags/options
-+ * @dev_name: Name of device where erofs is mounted
-+ * @data: Mount options
-+ *
-+ * Returns: Pointer to VFS dentry structure.
-+ * 	    The root dentry.
-+ */
- static struct dentry *erofs_mount(
- 	struct file_system_type *fs_type, int flags,
- 	const char *dev_name, void *data)
-@@ -532,10 +616,21 @@ static struct dentry *erofs_mount(
- 		.options = data
- 	};
- 
-+	/*
-+	 * Mount filesystem residing on a block device
-+	 * provide a callback (erofs_fill_super)  to
-+	 * populate superblock
-+	 */
- 	return mount_bdev(fs_type, flags, dev_name,
- 		&priv, erofs_fill_super);
- }
- 
-+/**
-+ * erofs_kill_sb(): Called when erofs is getting shutdown/killed 
-+ *
-+ * @sb: VFS superblock structure
-+ *
-+ */
- static void erofs_kill_sb(struct super_block *sb)
- {
- 	kill_block_super(sb);
-@@ -550,6 +645,11 @@ static struct file_system_type erofs_fs_type = {
- };
- MODULE_ALIAS_FS("erofs");
- 
-+/**
-+ * erofs_module_init(): Called when module is loaded
-+ *
-+ * returns: 0 on Success. Error Otherwise
-+ */
- static int __init erofs_module_init(void)
- {
- 	int err;
-@@ -586,6 +686,9 @@ static int __init erofs_module_init(void)
- 	return err;
- }
- 
-+/**
-+ * erofs_module_exit(): Called when module is un-loaded
-+ */
- static void __exit erofs_module_exit(void)
- {
- 	unregister_filesystem(&erofs_fs_type);
-@@ -595,7 +698,14 @@ static void __exit erofs_module_exit(void)
- 	infoln("successfully finalize erofs");
- }
- 
--/* get filesystem statistics */
-+/**
-+ * erofs_statfs(): Get erofs statistics
-+ *
-+ * @dentry: Directory from where stats is collected
-+ * @buf: Buffer where stats info is stored
-+ *
-+ * Returns: 0 on Success
-+ */
- static int erofs_statfs(struct dentry *dentry, struct kstatfs *buf)
- {
- 	struct super_block *sb = dentry->d_sb;
-@@ -617,6 +727,14 @@ static int erofs_statfs(struct dentry *dentry, struct kstatfs *buf)
- 	return 0;
- }
- 
-+/**
-+ * erofs_show_options(): Show currently active mount options
-+ *
-+ * @seq: Sequence interface (iterator)
-+ * @root: VFS dentry structure of mounted FS
-+ *
-+ * Returns: 0 on Success, < 0 on error
-+ */
- static int erofs_show_options(struct seq_file *seq, struct dentry *root)
- {
- 	struct erofs_sb_info *sbi __maybe_unused = EROFS_SB(root->d_sb);
-@@ -639,6 +757,15 @@ static int erofs_show_options(struct seq_file *seq, struct dentry *root)
- 	return 0;
- }
- 
-+/**
-+ * erofs_remount(): Called when erofs is remounted
-+ *
-+ * @sb: VFS superblock structure
-+ * @flags: Mount flags/options
-+ * @data: Mount options
-+ *
-+ * Returns: 0 on Success. Errno otherwise
-+ */
- static int erofs_remount(struct super_block *sb, int *flags, char *data)
- {
- 	struct erofs_sb_info *sbi = EROFS_SB(sb);
--- 
-2.14.3
-
+Thanks,
+Andrey Smirnov
