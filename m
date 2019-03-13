@@ -2,141 +2,119 @@ Return-Path: <SRS0=dUEL=RQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,NORMAL_HTTP_TO_IP,SPF_PASS,UNPARSEABLE_RELAY,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2D4AEC43381
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 Mar 2019 13:52:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 48545C43381
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 Mar 2019 13:52:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EF0CF2171F
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 Mar 2019 13:52:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 12A0C2087C
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 Mar 2019 13:52:23 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="ad/otPZ1"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727207AbfCMNwH (ORCPT
+        id S1727359AbfCMNwV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 13 Mar 2019 09:52:07 -0400
-Received: from out30-57.freemail.mail.aliyun.com ([115.124.30.57]:47107 "EHLO
-        out30-57.freemail.mail.aliyun.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726142AbfCMNwB (ORCPT
+        Wed, 13 Mar 2019 09:52:21 -0400
+Received: from hqemgate16.nvidia.com ([216.228.121.65]:16562 "EHLO
+        hqemgate16.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726971AbfCMNuh (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 13 Mar 2019 09:52:01 -0400
-X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R201e4;CH=green;DM=||false|;FP=0|-1|-1|-1|0|-1|-1|-1;HT=e01e07488;MF=alex.shi@linux.alibaba.com;NM=1;PH=DS;RN=5;SR=0;TI=SMTPD_---0TMdk0qw_1552485013;
-Received: from localhost(mailfrom:alex.shi@linux.alibaba.com fp:SMTPD_---0TMdk0qw_1552485013)
-          by smtp.aliyun-inc.com(127.0.0.1);
-          Wed, 13 Mar 2019 21:50:14 +0800
-From:   Alex Shi <alex.shi@linux.alibaba.com>
-To:     corbet@lwn.net, harryxiyou@gmail.com, linux-doc@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Cc:     Alex Shi <alex.shi@linux.alibaba.com>
-Subject: [PATCH v5 00/31] Clean up and reorg Chinese kernel docs 
-Date:   Wed, 13 Mar 2019 21:49:30 +0800
-Message-Id: <20190313135001.260905-1-alex.shi@linux.alibaba.com>
-X-Mailer: git-send-email 2.19.1.856.g8858448bb
+        Wed, 13 Mar 2019 09:50:37 -0400
+Received: from hqpgpgate102.nvidia.com (Not Verified[216.228.121.13]) by hqemgate16.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
+        id <B5c890aab0001>; Wed, 13 Mar 2019 06:50:35 -0700
+Received: from hqmail.nvidia.com ([172.20.161.6])
+  by hqpgpgate102.nvidia.com (PGP Universal service);
+  Wed, 13 Mar 2019 06:50:36 -0700
+X-PGP-Universal: processed;
+        by hqpgpgate102.nvidia.com on Wed, 13 Mar 2019 06:50:36 -0700
+Received: from [10.25.74.242] (10.124.1.5) by HQMAIL101.nvidia.com
+ (172.20.187.10) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Wed, 13 Mar
+ 2019 13:50:28 +0000
+Subject: Re: [PATCH 1/5] irqchip/gic-pm: add driver remove support
+To:     Marc Zyngier <marc.zyngier@arm.com>, <tglx@linutronix.de>,
+        <jason@lakedaemon.net>, <catalin.marinas@arm.com>,
+        <heiko@sntech.de>, <horms+renesas@verge.net.au>,
+        <maxime.ripard@bootlin.com>, <andy.gross@linaro.org>,
+        <olof@lixom.net>, <bjorn.andersson@linaro.org>,
+        <jagan@amarulasolutions.com>, <enric.balletbo@collabora.com>,
+        <stefan.wahren@i2se.com>, <ezequiel@collabora.com>,
+        <marc.w.gonzalez@free.fr>, <christoffer.dall@arm.com>,
+        <drjones@redhat.com>, <julien.thierry@arm.com>
+CC:     <will.deacon@arm.com>, <treding@nvidia.com>,
+        <jonathanh@nvidia.com>, <linux-arm-kernel@lists.infradead.org>,
+        <linux-kernel@vger.kernel.org>, <linux-tegra@vger.kernel.org>
+References: <1552474956-25513-1-git-send-email-spujar@nvidia.com>
+ <0cd78fb7-4bcb-b735-54ca-24a179b9ff72@arm.com>
+From:   Sameer Pujar <spujar@nvidia.com>
+Message-ID: <bc00b804-2248-4f8b-1537-3e3db151d74d@nvidia.com>
+Date:   Wed, 13 Mar 2019 19:20:24 +0530
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
+ Thunderbird/60.5.3
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+In-Reply-To: <0cd78fb7-4bcb-b735-54ca-24a179b9ff72@arm.com>
+X-Originating-IP: [10.124.1.5]
+X-ClientProxiedBy: HQMAIL105.nvidia.com (172.20.187.12) To
+ HQMAIL101.nvidia.com (172.20.187.10)
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Transfer-Encoding: 7bit
+Content-Language: en-GB
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
+        t=1552485035; bh=3SwpHPghf1PqiRkFu6VgQya4xF3Yy7DP0MzigPG3dio=;
+        h=X-PGP-Universal:Subject:To:CC:References:From:Message-ID:Date:
+         User-Agent:MIME-Version:In-Reply-To:X-Originating-IP:
+         X-ClientProxiedBy:Content-Type:Content-Transfer-Encoding:
+         Content-Language;
+        b=ad/otPZ1oUlxT2cHsukFKIZALv39qKjqcA9njbns5fadavCS99yAgDjBckBtwy9dN
+         TGzRjXd6V9izsLnxsnpAtLmqhRY/IrSTj2RP4oPlGQRN/7htED4JGoRUt+BJccJyd9
+         0THPYzNGWqwJbxtM4jVXXr11sI/cLsIxKEA5pIZNXMB7HCeqADxm/JQxdxNFYGSYKq
+         CqsUcPaHkYOYLVKEUGN1byAdKdhsIkoOMAYiNLl9Mt+dzAZIf1cLvW76h+H28qjvdZ
+         zM6zyGj+P8U3QjbiqxmN6/3WjiU/1UCPsAaGqiarbEXDCdRIQdcSm+NW5Xksmq+RWH
+         R2sSxPEKjwB2Q==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi All,
 
-The following patches change existing Chinese kernel docs to rst format
-and reorg them to make them alive in 'make htmldocs'.
+On 3/13/2019 4:52 PM, Marc Zyngier wrote:
+> First things first:
+>
+> - Where is the cover letter?
+> - This series should be flagged as v2, as it not the same as the one you
+> sent last week.
+I had the dilemma whether to name this series as v2 or not, thought the 
+commits
+in the series are different and v2 may not be necessary.
+Also felt commit messages are descriptive enough and all belong to 
+irq-gic-pm,
+hence did not send cover letter.
+If you suggest so, I will send a cover letter next patch version(v2)
+>
+> On 13/03/2019 11:02, Sameer Pujar wrote:
+>> This is a preparatory patch for using irq-gic-pm driver as module and thus
+>> implement remove() call for the driver. Details of remove() are as below,
+>>
+>>   * pm_runtime_force_suspend() is added to balance runtime PM, otherwise
+>>     following is seen: "agic-controller: Unbalanced pm_runtime_enable!"
+>>   * Function gic_teardown() is exported from gic driver and called in remove
+>>     to perform io unmap.
+>>   * pm_clk_destroy() to free clock resources
+>>   * irq is unmapped and freed with irq_dispose_mapping()
+>>
+> Let's be clear, I have no desire to export any GIC symbol at all. Why
+> should we do this? This "driver" is the tiniest thing, and making it
+> modular doesn't get us anything.
+>
+> So what's the rational for doing so?
+Reason for this was, the driver gets used for AGIC block and audio is not
+boot critical and hence module option was preferred.
 
-you can view the generated htmldocs from:
-    http://176.122.172.82/translations/zh_CN/index.html 
+Thanks,
+Sameer.
 
-Or make and review docs on your self box:
-
-    make htmldocs SPHINXDIRS=translations/zh_CN 
-    lynx Documentation/output/translations/zh_CN/index.html
-
-Any comments are appreciated!
-
-V5 changes:
-1, update howto.rst patch after Federico Vaga's changes on it.
-
-V4 changes:
-1, Add Harry's signed-off as his ack.
-
-V3 changes:
-1, fix a zh_CN/index.rst display issue
-2, update .mailmap for zh_CN transolators'r email address
-
-V2 changes:
-1, change the disclaimer file to Chinese version,
-2, replace the obsolete translator's email address in related files.
-3, fix couple of format issues in couple files
-
-Cheers!
-Alex
-
----
-Alex Shi (31):
-  docs/zh_CN: add disclaimer file
-  docs/zh_CN: move process related docs into process dir
-  docs/zh_CN: change Chinese index to know process dir
-  docs/zh_CN: add index file into process dir
-  docs/zh_CN: rename HOWTO into process directory
-  docs/zh_CN: howto format changes
-  docs/zh_CN: rename SubmittingPatches for html links
-  docs/zh_CN: format the submitting-patches doc to rst
-  docs/zh_CN: rename stable_kernel_rules doc
-  docs/zh_CN: rst format change for stable-kernel-rules
-  docs/zh_CN: rename email-clients.txt as email-clients.rst
-  docs/zh_CN: do rst format for email-clients.rst
-  docs/zh_CN: rename volatile-consider-harmful doc
-  docs/zh_CN: volatile doc format changes
-  docs/zh_CN: rename SubmittingDrivers
-  docs/zh_CN: format submitting drivers as rst
-  docs/zh_CN: rename magic-numbers as rst doc
-  docs/zh_CN: format the magic-number doc as rst
-  docs/zh_CN: rename stable_api_nonsense.txt as stable-api-nonsense.rst
-  docs/zh_CN: format stable-api-nonsense
-  docs/zh_CN: update Li Yang's email address
-  mailmap: update Li Yang's email address
-  docs/zh_CN: update Zhang Wei's email address
-  mailmap: update email address for Triplex
-  docs/zh_CN: update TripleX chung's email address
-  docs/zh_CN: fix indent issue in stable-api-nonsense file
-  docs/zh_CN: fix indent issue in submitting-drivers
-  docs/zh_CN: remove zh-kernel.org in MAINTAINERS
-  mailmap: update my obsolete email address
-  docs/zh_CN: fix rst format issue in submitting-patch
-  docs/zh_CN: fix rst format errors in howto.rst
-
- .mailmap                                      |   6 +
- .../translations/zh_CN/disclaimer-zh_CN.rst   |   9 ++
- Documentation/translations/zh_CN/index.rst    |  17 +-
- .../translations/zh_CN/magic-number.txt       | 153 ------------------
- .../translations/zh_CN/oops-tracing.txt       |   2 +-
- .../zh_CN/{ => process}/coding-style.rst      |   0
- .../email-clients.rst}                        |  53 +++---
- .../zh_CN/{HOWTO => process/howto.rst}        |  69 +++++---
- .../translations/zh_CN/process/index.rst      |  53 ++++++
- .../zh_CN/process/magic-number.rst            | 151 +++++++++++++++++
- .../stable-api-nonsense.rst}                  |  67 ++++----
- .../stable-kernel-rules.rst}                  |  32 ++--
- .../submitting-drivers.rst}                   |  34 ++--
- .../submitting-patches.rst}                   |  58 +++----
- .../volatile-considered-harmful.rst}          |  35 ++--
- Documentation/translations/zh_CN/sparse.txt   |   6 +-
- MAINTAINERS                                   |   1 -
- 17 files changed, 407 insertions(+), 339 deletions(-)
- create mode 100644 Documentation/translations/zh_CN/disclaimer-zh_CN.rst
- delete mode 100644 Documentation/translations/zh_CN/magic-number.txt
- rename Documentation/translations/zh_CN/{ => process}/coding-style.rst (100%)
- rename Documentation/translations/zh_CN/{email-clients.txt => process/email-clients.rst} (82%)
- rename Documentation/translations/zh_CN/{HOWTO => process/howto.rst} (95%)
- create mode 100644 Documentation/translations/zh_CN/process/index.rst
- create mode 100644 Documentation/translations/zh_CN/process/magic-number.rst
- rename Documentation/translations/zh_CN/{stable_api_nonsense.txt => process/stable-api-nonsense.rst} (80%)
- rename Documentation/translations/zh_CN/{stable_kernel_rules.txt => process/stable-kernel-rules.rst} (76%)
- rename Documentation/translations/zh_CN/{SubmittingDrivers => process/submitting-drivers.rst} (86%)
- rename Documentation/translations/zh_CN/{SubmittingPatches => process/submitting-patches.rst} (92%)
- rename Documentation/translations/zh_CN/{volatile-considered-harmful.txt => process/volatile-considered-harmful.rst} (81%)
-
--- 
-2.19.1.856.g8858448bb
-
+>
+> Thanks,
+>
+> 	M.
