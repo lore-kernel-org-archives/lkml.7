@@ -4,54 +4,54 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-12.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED autolearn=ham
-	autolearn_force=no version=3.4.0
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_PASS autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 93D51C43381
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 Mar 2019 15:40:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 219B3C43381
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 Mar 2019 15:41:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 654AC206BA
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 Mar 2019 15:40:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E42EA206BA
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 Mar 2019 15:41:01 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1552491659;
-	bh=OYqpqCGjhWBGqba9M3R05S0p97R1oSp847nk+ME2Y84=;
+	s=default; t=1552491662;
+	bh=3vosEVn19NY46+11FCjyHyO6jAus324/NKY67XUMK2I=;
 	h=From:To:Cc:Subject:In-Reply-To:Date:List-ID:From;
-	b=VnfeoD23RRymQd3086+hM7IzFRNyBVjVTBU9TEcKoB0SAzlvj0XQ+5LU3fNp+4yg7
-	 ZiNazB4rXHnHOLz9iFSAfYxBbzccwM7OJGtGZp/dTFfHfaiQuYHnMSRAOPp7EFQk5Y
-	 ylzuEbi7S2RU3oVuqUGi+JX1Ffy9WOkCA/tKotzw=
+	b=jbnq0/DEEy9oiwEXLehyhHikggvBQEML6wscXA6dINWbHD0ptQD1xOwF3WkLYYLzm
+	 PIiUC0Dx+20uH3pXe29Og+IErzGPw6wYzsPoK98keAamx0qgXnzhcq57VfduwEW9D3
+	 PUTvzEk/OgGBmBpkw9DY2/11WGeJCL+NVAFMcWa0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727107AbfCMPjb (ORCPT
+        id S1727081AbfCMPj3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 13 Mar 2019 11:39:31 -0400
-Received: from heliosphere.sirena.org.uk ([172.104.155.198]:50460 "EHLO
+        Wed, 13 Mar 2019 11:39:29 -0400
+Received: from heliosphere.sirena.org.uk ([172.104.155.198]:50398 "EHLO
         heliosphere.sirena.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727053AbfCMPj1 (ORCPT
+        with ESMTP id S1727012AbfCMPjY (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 13 Mar 2019 11:39:27 -0400
+        Wed, 13 Mar 2019 11:39:24 -0400
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
         d=sirena.org.uk; s=20170815-heliosphere; h=Date:Message-Id:In-Reply-To:
         Subject:Cc:To:From:Sender:Reply-To:MIME-Version:Content-Type:
         Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
         Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:References:
         List-Id:List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:
-        List-Archive; bh=A4vtzUc/vZ68Bm3zo1w2rT3Xtu1Cv8Rpn+yK+FUrBWs=; b=exZoCA6Ul8/5
-        tBH9xoOIwA4JVkOAVmBaV7ydHa3uXZL0yIZco9N2nQuI6dZ2DPwLmdWblODIa2psZAYIr1vKTrhC2
-        yCM71DiqcFpU/TsQ2gXR4yLSM5sEt/2N43ARnOk/+oi47SXlOLbkR6H6R7JCdsNIcmNLNwtDYnbyJ
-        0j45w=;
+        List-Archive; bh=gCAb2oLKzO2npBX3IR/hO0e1fl4uvXgZEkkvF+gK21U=; b=bR5lVw/y8cDj
+        ITq4kv8UWxAJCD7npR0ieY1+1Q+zyXv1sjAZui4RT/fNzqtpUMYTRWx7WxKhvijmdnKKmK5KQl76G
+        tQ/BOEKGyvP0/gKkfTmZRNPJeJwetLQdtUC7+UXkbELBbCmySfwe1azSL5b1WM4KndxbYabPA1Zd5
+        CX4HY=;
 Received: from cpc102320-sgyl38-2-0-cust46.18-2.cable.virginm.net ([82.37.168.47] helo=debutante.sirena.org.uk)
         by heliosphere.sirena.org.uk with esmtpa (Exim 4.89)
         (envelope-from <broonie@sirena.org.uk>)
-        id 1h45yW-0003TI-KX; Wed, 13 Mar 2019 15:39:24 +0000
+        id 1h45yU-0003TC-OK; Wed, 13 Mar 2019 15:39:22 +0000
 Received: by debutante.sirena.org.uk (Postfix, from userid 1000)
-        id EFC9B1128B97; Wed, 13 Mar 2019 15:39:23 +0000 (GMT)
+        id 42FB71128B97; Wed, 13 Mar 2019 15:39:22 +0000 (GMT)
 From:   Mark Brown <broonie@kernel.org>
 To:     Steve Twiss <stwiss.opensource@diasemi.com>
 Cc:     Mark Brown <broonie@kernel.org>, linux-kernel@vger.kernel.org
-Subject: Applied "regulator: lp8755: Fix notifier mutex lock warning" to the regulator tree
+Subject: Applied "regulator: ltc3589: Fix notifier mutex lock warning" to the regulator tree
 In-Reply-To: 
 X-Patchwork-Hint: ignore
-Message-Id: <20190313153923.EFC9B1128B97@debutante.sirena.org.uk>
-Date:   Wed, 13 Mar 2019 15:39:23 +0000 (GMT)
+Message-Id: <20190313153922.42FB71128B97@debutante.sirena.org.uk>
+Date:   Wed, 13 Mar 2019 15:39:22 +0000 (GMT)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
@@ -59,7 +59,7 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 The patch
 
-   regulator: lp8755: Fix notifier mutex lock warning
+   regulator: ltc3589: Fix notifier mutex lock warning
 
 has been applied to the regulator tree at
 
@@ -84,10 +84,10 @@ to this mail.
 Thanks,
 Mark
 
-From 89b2758c192c35068b07766a6830433bfbdc1f44 Mon Sep 17 00:00:00 2001
+From f132da2534ec6599c78c4adcef15340cff2e9dd9 Mon Sep 17 00:00:00 2001
 From: Steve Twiss <stwiss.opensource@diasemi.com>
-Date: Tue, 26 Feb 2019 15:32:18 +0000
-Subject: [PATCH] regulator: lp8755: Fix notifier mutex lock warning
+Date: Tue, 26 Feb 2019 15:35:35 +0000
+Subject: [PATCH] regulator: ltc3589: Fix notifier mutex lock warning
 
 The mutex for the regulator_dev must be controlled by the caller of
 the regulator_notifier_call_chain(), as described in the comment
@@ -98,60 +98,43 @@ in a kernel WARN_ON_ONCE() which will dump a backtrace for the
 regulator_notifier_call_chain() when that function call is first made.
 The mutex can be controlled using the regulator_lock/unlock() API.
 
-Fixes: b59320cc5a5e ("regulator: lp8755: new driver for LP8755")
+Fixes: 3eb2c7ecb7ea ("regulator: Add LTC3589 support")
 Suggested-by: Adam Thomson <Adam.Thomson.Opensource@diasemi.com>
 Signed-off-by: Steve Twiss <stwiss.opensource@diasemi.com>
 Signed-off-by: Mark Brown <broonie@kernel.org>
 ---
- drivers/regulator/lp8755.c | 15 ++++++++++++---
- 1 file changed, 12 insertions(+), 3 deletions(-)
+ drivers/regulator/ltc3589.c | 10 ++++++++--
+ 1 file changed, 8 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/regulator/lp8755.c b/drivers/regulator/lp8755.c
-index 14fd38807134..2e16a6ab491d 100644
---- a/drivers/regulator/lp8755.c
-+++ b/drivers/regulator/lp8755.c
-@@ -372,10 +372,13 @@ static irqreturn_t lp8755_irq_handler(int irq, void *data)
- 	for (icnt = 0; icnt < LP8755_BUCK_MAX; icnt++)
- 		if ((flag0 & (0x4 << icnt))
- 		    && (pchip->irqmask & (0x04 << icnt))
--		    && (pchip->rdev[icnt] != NULL))
-+		    && (pchip->rdev[icnt] != NULL)) {
-+			regulator_lock(pchip->rdev[icnt]);
- 			regulator_notifier_call_chain(pchip->rdev[icnt],
- 						      LP8755_EVENT_PWR_FAULT,
- 						      NULL);
-+			regulator_unlock(pchip->rdev[icnt]);
+diff --git a/drivers/regulator/ltc3589.c b/drivers/regulator/ltc3589.c
+index 63f724f260ef..75089b037b72 100644
+--- a/drivers/regulator/ltc3589.c
++++ b/drivers/regulator/ltc3589.c
+@@ -419,16 +419,22 @@ static irqreturn_t ltc3589_isr(int irq, void *dev_id)
+ 
+ 	if (irqstat & LTC3589_IRQSTAT_THERMAL_WARN) {
+ 		event = REGULATOR_EVENT_OVER_TEMP;
+-		for (i = 0; i < LTC3589_NUM_REGULATORS; i++)
++		for (i = 0; i < LTC3589_NUM_REGULATORS; i++) {
++		        regulator_lock(ltc3589->regulators[i]);
+ 			regulator_notifier_call_chain(ltc3589->regulators[i],
+ 						      event, NULL);
++		        regulator_unlock(ltc3589->regulators[i]);
 +		}
+ 	}
  
- 	/* read flag1 register */
- 	ret = lp8755_read(pchip, 0x0E, &flag1);
-@@ -389,18 +392,24 @@ static irqreturn_t lp8755_irq_handler(int irq, void *data)
- 	/* send OCP event to all regulator devices */
- 	if ((flag1 & 0x01) && (pchip->irqmask & 0x01))
- 		for (icnt = 0; icnt < LP8755_BUCK_MAX; icnt++)
--			if (pchip->rdev[icnt] != NULL)
-+			if (pchip->rdev[icnt] != NULL) {
-+				regulator_lock(pchip->rdev[icnt]);
- 				regulator_notifier_call_chain(pchip->rdev[icnt],
- 							      LP8755_EVENT_OCP,
- 							      NULL);
-+				regulator_unlock(pchip->rdev[icnt]);
-+			}
+ 	if (irqstat & LTC3589_IRQSTAT_UNDERVOLT_WARN) {
+ 		event = REGULATOR_EVENT_UNDER_VOLTAGE;
+-		for (i = 0; i < LTC3589_NUM_REGULATORS; i++)
++		for (i = 0; i < LTC3589_NUM_REGULATORS; i++) {
++		        regulator_lock(ltc3589->regulators[i]);
+ 			regulator_notifier_call_chain(ltc3589->regulators[i],
+ 						      event, NULL);
++		        regulator_unlock(ltc3589->regulators[i]);
++		}
+ 	}
  
- 	/* send OVP event to all regulator devices */
- 	if ((flag1 & 0x02) && (pchip->irqmask & 0x02))
- 		for (icnt = 0; icnt < LP8755_BUCK_MAX; icnt++)
--			if (pchip->rdev[icnt] != NULL)
-+			if (pchip->rdev[icnt] != NULL) {
-+				regulator_lock(pchip->rdev[icnt]);
- 				regulator_notifier_call_chain(pchip->rdev[icnt],
- 							      LP8755_EVENT_OVP,
- 							      NULL);
-+				regulator_unlock(pchip->rdev[icnt]);
-+			}
- 	return IRQ_HANDLED;
- 
- err_i2c:
+ 	/* Clear warning condition */
 -- 
 2.20.1
 
