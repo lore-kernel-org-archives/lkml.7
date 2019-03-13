@@ -2,175 +2,93 @@ Return-Path: <SRS0=dUEL=RQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 55E68C43381
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 Mar 2019 02:31:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 04B50C43381
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 Mar 2019 02:37:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0500D2184E
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 Mar 2019 02:31:16 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="RRSSBNKY";
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="EAkxa/BH"
+	by mail.kernel.org (Postfix) with ESMTP id CB028217F5
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 Mar 2019 02:37:40 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726805AbfCMCbP (ORCPT
+        id S1726600AbfCMChU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 12 Mar 2019 22:31:15 -0400
-Received: from smtp.codeaurora.org ([198.145.29.96]:46994 "EHLO
-        smtp.codeaurora.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726426AbfCMCbO (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 12 Mar 2019 22:31:14 -0400
-Received: by smtp.codeaurora.org (Postfix, from userid 1000)
-        id F150F60907; Wed, 13 Mar 2019 02:31:12 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
-        s=default; t=1552444273;
-        bh=RkVRjMrLS0Dchxt7UP6TAUBfGoygtjWqi9+MGDeQBUY=;
-        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
-        b=RRSSBNKYFM+XrX6J/BwJt+66VMToiXHU3tbGIo7xR0vc8cWlQb2exGjzfyMeQTyUX
-         WKN8z3EsfHxpLZg2kLvzK8LdznVgd8BZK9oIqwVkMYCmm+TyarGwE1s5vx7T+FWlqp
-         5DqQeEGQY78mu0DEo+e+k5pDG1m7UwwhexD2k2go=
-Received: from [10.206.25.9] (blr-c-bdr-fw-01_globalnat_allzones-outside.qualcomm.com [103.229.19.19])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        (Authenticated sender: riteshh@smtp.codeaurora.org)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id 9F64660159;
-        Wed, 13 Mar 2019 02:31:07 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
-        s=default; t=1552444271;
-        bh=RkVRjMrLS0Dchxt7UP6TAUBfGoygtjWqi9+MGDeQBUY=;
-        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
-        b=EAkxa/BHSjzwMKZwuYZCsF+v1HJbk8UkyXqJsydLQxHRI9Tffn9hrKvVDl9NWoFax
-         r/PlSX2bS1OXK8Pm5YiGRvvECtbeKk26MvP5rlhno6Zhnf+r/6lJyG2NH8qCTyJFhn
-         nwRa1ySymbWNejqTKi3ATvpR/+iFqC1By91WtzU4=
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 9F64660159
-Authentication-Results: pdx-caf-mail.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
-Authentication-Results: pdx-caf-mail.web.codeaurora.org; spf=none smtp.mailfrom=riteshh@codeaurora.org
-Subject: Re: [PATCH V1 07/11] mmc: cqhci: add quirk for setting DCMD
- CMD_TIMING
-To:     Sowjanya Komatineni <skomatineni@nvidia.com>,
-        Adrian Hunter <adrian.hunter@intel.com>,
-        "ulf.hansson@linaro.org" <ulf.hansson@linaro.org>,
-        "robh+dt@kernel.org" <robh+dt@kernel.org>,
-        "mark.rutland@arm.com" <mark.rutland@arm.com>,
-        Asutosh Das <asutoshd@codeaurora.org>
-Cc:     "thierry.reding@gmail.com" <thierry.reding@gmail.com>,
-        Jonathan Hunter <jonathanh@nvidia.com>,
-        Aniruddha Tvs Rao <anrao@nvidia.com>,
-        "linux-tegra@vger.kernel.org" <linux-tegra@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linux-mmc@vger.kernel.org" <linux-mmc@vger.kernel.org>,
-        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
-References: <1551504025-3541-1-git-send-email-skomatineni@nvidia.com>
- <1551504025-3541-7-git-send-email-skomatineni@nvidia.com>
- <a320c841-7e58-4d3e-5df6-61e10520d9d8@intel.com>
- <a544bc6d-7b23-53e8-16d0-ee0eaf576eb2@codeaurora.org>
- <BYAPR12MB33984D80A404EF919F3A86A0C24C0@BYAPR12MB3398.namprd12.prod.outlook.com>
-From:   Ritesh Harjani <riteshh@codeaurora.org>
-Message-ID: <05a6e500-9dc9-1984-9576-44b3a9fdc595@codeaurora.org>
-Date:   Wed, 13 Mar 2019 08:01:05 +0530
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
- Thunderbird/60.5.3
+        Tue, 12 Mar 2019 22:37:20 -0400
+Received: from mga05.intel.com ([192.55.52.43]:20916 "EHLO mga05.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726400AbfCMChT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 12 Mar 2019 22:37:19 -0400
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga006.jf.intel.com ([10.7.209.51])
+  by fmsmga105.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 12 Mar 2019 19:37:17 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.58,472,1544515200"; 
+   d="scan'208";a="126451338"
+Received: from allen-box.sh.intel.com (HELO [10.239.159.136]) ([10.239.159.136])
+  by orsmga006.jf.intel.com with ESMTP; 12 Mar 2019 19:37:14 -0700
+Cc:     baolu.lu@linux.intel.com, David Woodhouse <dwmw2@infradead.org>,
+        Joerg Roedel <joro@8bytes.org>, ashok.raj@intel.com,
+        jacob.jun.pan@intel.com, alan.cox@intel.com, kevin.tian@intel.com,
+        mika.westerberg@linux.intel.com, pengfei.xu@intel.com,
+        iommu@lists.linux-foundation.org, linux-kernel@vger.kernel.org,
+        Jacob Pan <jacob.jun.pan@linux.intel.com>
+Subject: Re: [PATCH v1 4/9] iommu/vt-d: Add bounce buffer API for domain
+ map/unmap
+To:     Christoph Hellwig <hch@infradead.org>
+References: <20190312060005.12189-1-baolu.lu@linux.intel.com>
+ <20190312060005.12189-5-baolu.lu@linux.intel.com>
+ <20190312163845.GA13141@infradead.org>
+ <e653341d-e001-7262-740b-2262842be06d@linux.intel.com>
+From:   Lu Baolu <baolu.lu@linux.intel.com>
+Message-ID: <c9fe7879-569e-b4f4-d6ec-47ab7e6fd443@linux.intel.com>
+Date:   Wed, 13 Mar 2019 10:31:52 +0800
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.4.0
 MIME-Version: 1.0
-In-Reply-To: <BYAPR12MB33984D80A404EF919F3A86A0C24C0@BYAPR12MB3398.namprd12.prod.outlook.com>
+In-Reply-To: <e653341d-e001-7262-740b-2262842be06d@linux.intel.com>
 Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 8bit
 Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Hi again,
 
-On 3/7/2019 11:46 PM, Sowjanya Komatineni wrote:
->> On 3/6/2019 6:30 PM, Adrian Hunter wrote:
->>> On 2/03/19 7:20 AM, Sowjanya Komatineni wrote:
->>>> This patch adds a quirk for setting CMD_TIMING to 1 in descriptor for
->>>> DCMD with R1B response type to allow the command to be sent to device
->>>> during data activity or busy time.
->>>>
->>>> Tegra186 CQHCI host has bug where it selects DATA_PRESENT_SELECT to 1
->>>> by CQHCI controller for DCMDs with R1B response type and since DCMD
->>>> does not trigger any data transfer, DCMD task complete happens
->>>> leaving the DATA FSM of host controller in wait state for data.
->>>>
->>>> This effects the data transfer task issued after R1B DCMD task and no
->>>> interrupt is generated for the data transfer task.
->>>>
->>>> SW WAR for this issue is to set CMD_TIMING bit to 1 in DCMD task
->>>> descriptor and as DCMD task descriptor preparation is done by cqhci
->>>> driver, this patch adds cqequirk to handle this.
->>>>
->>>> Signed-off-by: Sowjanya Komatineni <skomatineni@nvidia.com>
->>>> ---
->>>>    drivers/mmc/host/cqhci.c | 5 ++++-
->>>>    drivers/mmc/host/cqhci.h | 1 +
->>>>    2 files changed, 5 insertions(+), 1 deletion(-)
->>>>
->>>> diff --git a/drivers/mmc/host/cqhci.c b/drivers/mmc/host/cqhci.c
->>>> index a8af682a9182..b34c07125f32 100644
->>>> --- a/drivers/mmc/host/cqhci.c
->>>> +++ b/drivers/mmc/host/cqhci.c
->>>> @@ -521,7 +521,10 @@ static void cqhci_prep_dcmd_desc(struct mmc_host *mmc,
->>>>    	} else {
->>>>    		if (mrq->cmd->flags & MMC_RSP_R1B) {
->>>>    			resp_type = 0x3;
->>>> -			timing = 0x0;
->>>> +			if (cq_host->quirks & CQHCI_QUIRK_CMD_TIMING_R1B_DCMD)
->>>> +				timing = 0x1;
->>>> +			else
->>>> +				timing = 0x0;
->>> I was thinking it would be nice if there was a generic way for drivers
->>> to make changes to descriptors before a task is started.  Currently
->>> there is
->>> host->ops->write_l() which would make it possible by checking for
->>> host->ops->CQHCI_TDBR
->>> register and, in this case, the DCMD tag.  We would need to export
->>> get_desc(), perhaps rename it cqhci_get_desc() and put it in cqhci.h
->>> since it is an inline function.
->> We take spin_lock_irqsave after the descriptor is prepared and before writing to TDBR.
->> Not sure but tomorrow this may become a limitation for drivers to make changes to descriptors if they edit descriptors in host->ops->write_l() call.
->> Though in this case it is not required here.
+On 3/13/19 10:04 AM, Lu Baolu wrote:
+> Hi,
+> 
+> On 3/13/19 12:38 AM, Christoph Hellwig wrote:
+>> On Tue, Mar 12, 2019 at 02:00:00PM +0800, Lu Baolu wrote:
+>>> This adds the APIs for bounce buffer specified domain
+>>> map() and unmap(). The start and end partial pages will
+>>> be mapped with bounce buffered pages instead. This will
+>>> enhance the security of DMA buffer by isolating the DMA
+>>> attacks from malicious devices.
 >>
->>> Alternatively we could add host->ops for descriptor preparation.
->> Both ways sounds good to me.
->> But maybe adding a host->ops for descriptor preparation is better way to go,
->> since that will be the right interface exposed to make changes to
->> descriptors.
+>> Please reuse the swiotlb code instead of reinventing it.
 >>
-> DCMD descriptor attributes remain same for any host and also task parameters as QBR need to be enabled with DCMD.
-> So I believe it should be ok if we just add callback to allow hosts to update command parameters of DCMD descriptor only thru cqhci_host_ops.
 
-For now we can add host->ops as update_dcmd_desc and pass the task_desc 
-of DCMD for updating any params which host may want to update.
+Just looked into the code again. At least we could reuse below
+functions:
 
->
-> Also, don’t see any requirement for host specific Task parameter updates in Task descriptor so not sure if there is any need to provide callback for task descriptor data preparation to hosts.
-> Please confirm.
+swiotlb_tbl_map_single()
+swiotlb_tbl_unmap_single()
+swiotlb_tbl_sync_single()
 
-Sure, for now the requirement has come up only for DCMD desc update. 
-Sure we can add task descriptor ops in the similar way later when required.
+Anything else?
 
-Adrian, please confirm if you are fine with both of above?
+Best regards,
+Lu Baolu
 
->
->>> What do people think?
->>>
->>>>    		} else {
->>>>    			resp_type = 0x2;
->>>>    			timing = 0x1;
->>>> diff --git a/drivers/mmc/host/cqhci.h b/drivers/mmc/host/cqhci.h
->>>> index 9e68286a07b4..f96d8565cc07 100644
->>>> --- a/drivers/mmc/host/cqhci.h
->>>> +++ b/drivers/mmc/host/cqhci.h
->>>> @@ -170,6 +170,7 @@ struct cqhci_host {
->>>>    
->>>>    	u32 quirks;
->>>>    #define CQHCI_QUIRK_SHORT_TXFR_DESC_SZ	0x1
->>>> +#define CQHCI_QUIRK_CMD_TIMING_R1B_DCMD	0x2
->>>>    
->>>>    	bool enabled;
->>>>    	bool halted;
->>>>
+> 
+> I don't think we are doing the same thing as swiotlb here. But it's
+> always a good thing to reuse code if possible. I considered this when
+> writing this code, but I found it's hard to do. Do you mind pointing
+> me to the code which I could reuse?
+> 
+> Best regards,
+> Lu Baolu
+> 
