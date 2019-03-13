@@ -2,226 +2,752 @@ Return-Path: <SRS0=dUEL=RQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 66914C43381
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 Mar 2019 22:54:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 93AB7C43381
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 Mar 2019 22:57:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 13A722087C
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 Mar 2019 22:54:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 21CD32146E
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 Mar 2019 22:57:53 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Zp2J1GBY"
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="MN2EJpar";
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="cDi48qdl"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726646AbfCMWyw (ORCPT
+        id S1727022AbfCMW5w (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 13 Mar 2019 18:54:52 -0400
-Received: from mail-io1-f65.google.com ([209.85.166.65]:41612 "EHLO
-        mail-io1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725876AbfCMWyv (ORCPT
+        Wed, 13 Mar 2019 18:57:52 -0400
+Received: from smtp.codeaurora.org ([198.145.29.96]:44046 "EHLO
+        smtp.codeaurora.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725883AbfCMW5v (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 13 Mar 2019 18:54:51 -0400
-Received: by mail-io1-f65.google.com with SMTP id v10so3261698iom.8;
-        Wed, 13 Mar 2019 15:54:51 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=hI97cvpiFwbqINqVuOvg/SoIet+VipX1FL8Sh+mhPSo=;
-        b=Zp2J1GBY2PZdvuxBzucq8kmyE2K23CMXhXuNXjNf9fuzVrdXzVG3bdIjS1ZfdLV2S7
-         ioJqAkwmRJxRnM/6NxN4YNhXarvNRZycnK9PUyPORbUfbn83YO9mEq5WLleJcIa7kmV+
-         IDpKUAjRSz4X5FHid6/o8rK2E0vdQZUKvLElTmL+z9CzhK+UQ/zYUSexpZZqzB/06L2E
-         BVJXVUKx0cy8/DTWQ9EwnQqUO3OMjodIrRO7thGrgIEvG0k1ba3JRVZf+/4QBC/I8Img
-         U9yEI0gTt1KC+6SxErWgzD4UVhdAhkpWHrytgpWzyslbzkjpK1tvIACkSWxrOa9KxvdH
-         AhNw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=hI97cvpiFwbqINqVuOvg/SoIet+VipX1FL8Sh+mhPSo=;
-        b=Rt7oqUDxgdLD+FmC4G+s4L0P1hBuVryX1kK9COXOtrx8B3WjnGkHwmpihXxEyDDywG
-         TeKvhqa544PxKYXsBbkpQoUnH/Y5Lu67B13dGxiMVvpv7qSMK/am2f6gUKqg5RO8uePs
-         wpA9DtBtk9AnJjqsGd8TcrvwDm+lMFX/MIG6+yZhfcAOBFlaYPQIuJdLzJ8NnHxLhD6J
-         uWxO5G606MkZfGUA8IJxQsP6ekfp8a7sLRS4Ks1N3nlVD4ATRIk07f3HeD4vGG+3wruZ
-         RWiq4Xp11h5Rqjz9WM5GwixPUyjbb/1ATqTpSDFwDbuyGfpmOZkbWwIkso7dNeuhNgqZ
-         tNAA==
-X-Gm-Message-State: APjAAAWNNIM0a1mNirwS3mwnb/waSNgaGCAm0PpQj0z0GA2MdilJyo4Y
-        xuVy39XB9IfHAib24CoUH4QBfspnbl+/CiT5VbY=
-X-Google-Smtp-Source: APXvYqw3ZG1UU10TbGzDdlbWYuEyTWhm3KqyAdd3EFS4onxj0uEyYP28T3Sv5yA4eD2RAwENvmxZHjtCNcvD0qbmPYg=
-X-Received: by 2002:a6b:f70a:: with SMTP id k10mr15952688iog.68.1552517690436;
- Wed, 13 Mar 2019 15:54:50 -0700 (PDT)
+        Wed, 13 Mar 2019 18:57:51 -0400
+Received: by smtp.codeaurora.org (Postfix, from userid 1000)
+        id CB52160909; Wed, 13 Mar 2019 22:57:49 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
+        s=default; t=1552517869;
+        bh=mbJ2bf6/4Rm8wOr8DreCAbfnizn/zjLprBJZFLnbG30=;
+        h=Date:From:To:cc:Subject:In-Reply-To:References:From;
+        b=MN2EJparbAbwJ0ItIIAEFBYfOIehtvyXbl5DMBD4s3S5qLIOnIaNOmVpOKIuJ1blK
+         mKwV35HSuArl8bTxu5EUQXCZHDwpOOLmnLNo6K/OqSteB4ysA3VxMcc3NEN+CFiFR9
+         DOtM5yI8LKl2g6peCQHRHR3nPHuqre+WPu8DtQ1E=
+Received: from lmark-linux.qualcomm.com (i-global254.qualcomm.com [199.106.103.254])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        (Authenticated sender: lmark@smtp.codeaurora.org)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id 2F759601CF;
+        Wed, 13 Mar 2019 22:57:46 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
+        s=default; t=1552517866;
+        bh=mbJ2bf6/4Rm8wOr8DreCAbfnizn/zjLprBJZFLnbG30=;
+        h=Date:From:To:cc:Subject:In-Reply-To:References:From;
+        b=cDi48qdlNQWSyhVshGLSPuGN1rX875n+RhWWWBjffoy/+sDZ925gVWz40S7lA4OUt
+         iDhcIP2Mrtr3tSnpjH1HKLkJlOoLB+KofBkn3dUHrl4Xk629svhVnJ+sboRVKXOM6L
+         cupsr6iRxoEKpDnak3mbK0iKdPY8B0P1Z2fgEKig=
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 2F759601CF
+Authentication-Results: pdx-caf-mail.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
+Authentication-Results: pdx-caf-mail.web.codeaurora.org; spf=none smtp.mailfrom=lmark@codeaurora.org
+Date:   Wed, 13 Mar 2019 15:57:45 -0700 (PDT)
+From:   Liam Mark <lmark@codeaurora.org>
+X-X-Sender: lmark@lmark-linux.qualcomm.com
+To:     "Andrew F. Davis" <afd@ti.com>
+cc:     John Stultz <john.stultz@linaro.org>,
+        lkml <linux-kernel@vger.kernel.org>,
+        Laura Abbott <labbott@redhat.com>,
+        Benjamin Gaignard <benjamin.gaignard@linaro.org>,
+        Greg KH <gregkh@linuxfoundation.org>,
+        Sumit Semwal <sumit.semwal@linaro.org>,
+        Brian Starkey <Brian.Starkey@arm.com>,
+        Chenbo Feng <fengc@google.com>,
+        Alistair Strachan <astrachan@google.com>,
+        dri-devel@lists.freedesktop.org
+Subject: Re: [RFC][PATCH 2/5 v2] dma-buf: heaps: Add heap helpers
+In-Reply-To: <f0575850-39a2-ce26-e5f5-0f183be3b347@ti.com>
+Message-ID: <alpine.DEB.2.10.1903131540190.32572@lmark-linux.qualcomm.com>
+References: <1551819273-640-1-git-send-email-john.stultz@linaro.org> <1551819273-640-3-git-send-email-john.stultz@linaro.org> <alpine.DEB.2.10.1903131312270.5023@lmark-linux.qualcomm.com> <f0575850-39a2-ce26-e5f5-0f183be3b347@ti.com>
+User-Agent: Alpine 2.10 (DEB 1266 2009-07-14)
 MIME-Version: 1.0
-References: <20190306155048.12868-1-nitesh@redhat.com> <2d9ae889-a9b9-7969-4455-ff36944f388b@redhat.com>
- <22e4b1cd-38a5-6642-8cbe-d68e4fcbb0b7@redhat.com> <CAKgT0UcAqGX26pcQLzFUevHsLu-CtiyOYe15uG3bkhGZ5BJKAg@mail.gmail.com>
- <78b604be-2129-a716-a7a6-f5b382c9fb9c@redhat.com> <CAKgT0Uc_z9Vi+JhQcJYX+J9c4J56RRSkzzegbb2=9xO-NY3dgw@mail.gmail.com>
- <20190307212845-mutt-send-email-mst@kernel.org> <CAKgT0Ucu3EMsYBfdKtEiprrn-VBZy3Y+0HdEp5b4PO2SQgGsRw@mail.gmail.com>
- <17d2afa6-556e-ec73-40dc-beac536b3f20@redhat.com> <CAKgT0UcdQZwHjmMBkSWmy_ZdShJCagjwomn13g+r7ZNJBRn1LQ@mail.gmail.com>
- <8f692047-4750-6827-1ee0-d3d354788f09@redhat.com> <CAKgT0UddT9CKg1uZo6ZODs9ARti-6XGm9Zvo+8QRZKUPSwzWMQ@mail.gmail.com>
- <41ae8afe-72c9-58e6-0cbb-9375c91ce37a@redhat.com> <CAKgT0Uftff+JVRW-sQ6u8DeVg4Fq9b-pgE6Ojr+XqQFn13JmGw@mail.gmail.com>
- <1ae522f1-1e98-9eef-324c-29585fe574d6@redhat.com> <8826829a-973d-8117-3fe3-8e33170acfb8@redhat.com>
- <CAKgT0UdGhFFR=SN8rdT5QMk-QF0LuWz0Xh2pp9abrfc3FgKmVQ@mail.gmail.com> <71d0bd98-ff97-7ed1-1f95-c0d134d0b2a1@redhat.com>
-In-Reply-To: <71d0bd98-ff97-7ed1-1f95-c0d134d0b2a1@redhat.com>
-From:   Alexander Duyck <alexander.duyck@gmail.com>
-Date:   Wed, 13 Mar 2019 15:54:39 -0700
-Message-ID: <CAKgT0Uef=O3bSQLc6-JY8jLmmtOPFwVWSAsY+sHL=BocSGp8BQ@mail.gmail.com>
-Subject: Re: [RFC][Patch v9 2/6] KVM: Enables the kernel to isolate guest free pages
-To:     David Hildenbrand <david@redhat.com>
-Cc:     Nitesh Narayan Lal <nitesh@redhat.com>,
-        "Michael S. Tsirkin" <mst@redhat.com>,
-        kvm list <kvm@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        linux-mm <linux-mm@kvack.org>,
-        Paolo Bonzini <pbonzini@redhat.com>, lcapitulino@redhat.com,
-        pagupta@redhat.com, wei.w.wang@intel.com,
-        Yang Zhang <yang.zhang.wz@gmail.com>,
-        Rik van Riel <riel@surriel.com>, dodgen@google.com,
-        Konrad Rzeszutek Wilk <konrad.wilk@oracle.com>,
-        dhildenb@redhat.com, Andrea Arcangeli <aarcange@redhat.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: TEXT/PLAIN; charset=US-ASCII
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Mar 13, 2019 at 9:39 AM David Hildenbrand <david@redhat.com> wrote:
->
-> On 13.03.19 17:37, Alexander Duyck wrote:
-> > On Wed, Mar 13, 2019 at 5:18 AM David Hildenbrand <david@redhat.com> wrote:
+On Wed, 13 Mar 2019, Andrew F. Davis wrote:
+
+> On 3/13/19 3:18 PM, Liam Mark wrote:
+> > On Tue, 5 Mar 2019, John Stultz wrote:
+> > 
+> >> Add generic helper dmabuf ops for dma heaps, so we can reduce
+> >> the amount of duplicative code for the exported dmabufs.
 > >>
-> >> On 13.03.19 12:54, Nitesh Narayan Lal wrote:
-> >>>
-> >>> On 3/12/19 5:13 PM, Alexander Duyck wrote:
-> >>>> On Tue, Mar 12, 2019 at 12:46 PM Nitesh Narayan Lal <nitesh@redhat.com> wrote:
-> >>>>> On 3/8/19 4:39 PM, Alexander Duyck wrote:
-> >>>>>> On Fri, Mar 8, 2019 at 11:39 AM Nitesh Narayan Lal <nitesh@redhat.com> wrote:
-> >>>>>>> On 3/8/19 2:25 PM, Alexander Duyck wrote:
-> >>>>>>>> On Fri, Mar 8, 2019 at 11:10 AM Nitesh Narayan Lal <nitesh@redhat.com> wrote:
-> >>>>>>>>> On 3/8/19 1:06 PM, Alexander Duyck wrote:
-> >>>>>>>>>> On Thu, Mar 7, 2019 at 6:32 PM Michael S. Tsirkin <mst@redhat.com> wrote:
-> >>>>>>>>>>> On Thu, Mar 07, 2019 at 02:35:53PM -0800, Alexander Duyck wrote:
-> >>>>>>>>>>>> The only other thing I still want to try and see if I can do is to add
-> >>>>>>>>>>>> a jiffies value to the page private data in the case of the buddy
-> >>>>>>>>>>>> pages.
-> >>>>>>>>>>> Actually there's one extra thing I think we should do, and that is make
-> >>>>>>>>>>> sure we do not leave less than X% off the free memory at a time.
-> >>>>>>>>>>> This way chances of triggering an OOM are lower.
-> >>>>>>>>>> If nothing else we could probably look at doing a watermark of some
-> >>>>>>>>>> sort so we have to have X amount of memory free but not hinted before
-> >>>>>>>>>> we will start providing the hints. It would just be a matter of
-> >>>>>>>>>> tracking how much memory we have hinted on versus the amount of memory
-> >>>>>>>>>> that has been pulled from that pool.
-> >>>>>>>>> This is to avoid false OOM in the guest?
-> >>>>>>>> Partially, though it would still be possible. Basically it would just
-> >>>>>>>> be a way of determining when we have hinted "enough". Basically it
-> >>>>>>>> doesn't do us much good to be hinting on free memory if the guest is
-> >>>>>>>> already constrained and just going to reallocate the memory shortly
-> >>>>>>>> after we hinted on it. The idea is with a watermark we can avoid
-> >>>>>>>> hinting until we start having pages that are actually going to stay
-> >>>>>>>> free for a while.
-> >>>>>>>>
-> >>>>>>>>>>  It is another reason why we
-> >>>>>>>>>> probably want a bit in the buddy pages somewhere to indicate if a page
-> >>>>>>>>>> has been hinted or not as we can then use that to determine if we have
-> >>>>>>>>>> to account for it in the statistics.
-> >>>>>>>>> The one benefit which I can see of having an explicit bit is that it
-> >>>>>>>>> will help us to have a single hook away from the hot path within buddy
-> >>>>>>>>> merging code (just like your arch_merge_page) and still avoid duplicate
-> >>>>>>>>> hints while releasing pages.
-> >>>>>>>>>
-> >>>>>>>>> I still have to check PG_idle and PG_young which you mentioned but I
-> >>>>>>>>> don't think we can reuse any existing bits.
-> >>>>>>>> Those are bits that are already there for 64b. I think those exist in
-> >>>>>>>> the page extension for 32b systems. If I am not mistaken they are only
-> >>>>>>>> used in VMA mapped memory. What I was getting at is that those are the
-> >>>>>>>> bits we could think about reusing.
-> >>>>>>>>
-> >>>>>>>>> If we really want to have something like a watermark, then can't we use
-> >>>>>>>>> zone->free_pages before isolating to see how many free pages are there
-> >>>>>>>>> and put a threshold on it? (__isolate_free_page() does a similar thing
-> >>>>>>>>> but it does that on per request basis).
-> >>>>>>>> Right. That is only part of it though since that tells you how many
-> >>>>>>>> free pages are there. But how many of those free pages are hinted?
-> >>>>>>>> That is the part we would need to track separately and then then
-> >>>>>>>> compare to free_pages to determine if we need to start hinting on more
-> >>>>>>>> memory or not.
-> >>>>>>> Only pages which are isolated will be hinted, and once a page is
-> >>>>>>> isolated it will not be counted in the zone free pages.
-> >>>>>>> Feel free to correct me if I am wrong.
-> >>>>>> You are correct up to here. When we isolate the page it isn't counted
-> >>>>>> against the free pages. However after we complete the hint we end up
-> >>>>>> taking it out of isolation and returning it to the "free" state, so it
-> >>>>>> will be counted against the free pages.
-> >>>>>>
-> >>>>>>> If I am understanding it correctly you only want to hint the idle pages,
-> >>>>>>> is that right?
-> >>>>>> Getting back to the ideas from our earlier discussion, we had 3 stages
-> >>>>>> for things. Free but not hinted, isolated due to hinting, and free and
-> >>>>>> hinted. So what we would need to do is identify the size of the first
-> >>>>>> pool that is free and not hinted by knowing the total number of free
-> >>>>>> pages, and then subtract the size of the pages that are hinted and
-> >>>>>> still free.
-> >>>>> To summarize, for now, I think it makes sense to stick with the current
-> >>>>> approach as this way we can avoid any locking in the allocation path and
-> >>>>> reduce the number of hypercalls for a bunch of MAX_ORDER - 1 page.
-> >>>> I'm not sure what you are talking about by "avoid any locking in the
-> >>>> allocation path". Are you talking about the spin on idle bit, if so
-> >>>> then yes.
-> >>> Yeap!
-> >>>> However I have been testing your patches and I was correct
-> >>>> in the assumption that you forgot to handle the zone lock when you
-> >>>> were freeing __free_one_page.
-> >>> Yes, these are the steps other than the comments you provided in the
-> >>> code. (One of them is to fix release_buddy_page())
-> >>>>  I just did a quick copy/paste from your
-> >>>> zone lock handling from the guest_free_page_hinting function into the
-> >>>> release_buddy_pages function and then I was able to enable multiple
-> >>>> CPUs without any issues.
-> >>>>
-> >>>>> For the next step other than the comments received in the code and what
-> >>>>> I mentioned in the cover email, I would like to do the following:
-> >>>>> 1. Explore the watermark idea suggested by Alex and bring down memhog
-> >>>>> execution time if possible.
-> >>>> So there are a few things that are hurting us on the memhog test:
-> >>>> 1. The current QEMU patch is only madvising 4K pages at a time, this
-> >>>> is disabling THP and hurts the test.
-> >>> Makes sense, thanks for pointing this out.
-> >>>>
-> >>>> 2. The fact that we madvise the pages away makes it so that we have to
-> >>>> fault the page back in in order to use it for the memhog test. In
-> >>>> order to avoid that penalty we may want to see if we can introduce
-> >>>> some sort of "timeout" on the pages so that we are only hinting away
-> >>>> old pages that have not been used for some period of time.
-> >>>
-> >>> Possibly using MADVISE_FREE should also help in this, I will try this as
-> >>> well.
+> >> This code is an evolution of the Android ION implementation, so
+> >> thanks to its original authors and maintainters:
+> >>   Rebecca Schultz Zavin, Colin Cross, Laura Abbott, and others!
 > >>
-> >> I was asking myself some time ago how MADVISE_FREE will be handled in
-> >> case of THP. Please let me know your findings :)
-> >
-> > The problem with MADVISE_FREE is that it will add additional
-> > complication to the QEMU portion of all this as it only applies to
-> > anonymous memory if I am not mistaken.
->
-> Just as MADV_DONTNEED. So nothing new. Future work.
+> >> Cc: Laura Abbott <labbott@redhat.com>
+> >> Cc: Benjamin Gaignard <benjamin.gaignard@linaro.org>
+> >> Cc: Greg KH <gregkh@linuxfoundation.org>
+> >> Cc: Sumit Semwal <sumit.semwal@linaro.org>
+> >> Cc: Liam Mark <lmark@codeaurora.org>
+> >> Cc: Brian Starkey <Brian.Starkey@arm.com>
+> >> Cc: Andrew F. Davis <afd@ti.com>
+> >> Cc: Chenbo Feng <fengc@google.com>
+> >> Cc: Alistair Strachan <astrachan@google.com>
+> >> Cc: dri-devel@lists.freedesktop.org
+> >> Signed-off-by: John Stultz <john.stultz@linaro.org>
+> >> ---
+> >> v2:
+> >> * Removed cache management performance hack that I had
+> >>   accidentally folded in.
+> >> * Removed stats code that was in helpers
+> >> * Lots of checkpatch cleanups
+> >> ---
+> >>  drivers/dma-buf/Makefile             |   1 +
+> >>  drivers/dma-buf/heaps/Makefile       |   2 +
+> >>  drivers/dma-buf/heaps/heap-helpers.c | 335 +++++++++++++++++++++++++++++++++++
+> >>  drivers/dma-buf/heaps/heap-helpers.h |  48 +++++
+> >>  4 files changed, 386 insertions(+)
+> >>  create mode 100644 drivers/dma-buf/heaps/Makefile
+> >>  create mode 100644 drivers/dma-buf/heaps/heap-helpers.c
+> >>  create mode 100644 drivers/dma-buf/heaps/heap-helpers.h
+> >>
+> >> diff --git a/drivers/dma-buf/Makefile b/drivers/dma-buf/Makefile
+> >> index b0332f1..09c2f2d 100644
+> >> --- a/drivers/dma-buf/Makefile
+> >> +++ b/drivers/dma-buf/Makefile
+> >> @@ -1,4 +1,5 @@
+> >>  obj-y := dma-buf.o dma-fence.o dma-fence-array.o reservation.o seqno-fence.o
+> >> +obj-$(CONFIG_DMABUF_HEAPS)	+= heaps/
+> >>  obj-$(CONFIG_DMABUF_HEAPS)	+= dma-heap.o
+> >>  obj-$(CONFIG_SYNC_FILE)		+= sync_file.o
+> >>  obj-$(CONFIG_SW_SYNC)		+= sw_sync.o sync_debug.o
+> >> diff --git a/drivers/dma-buf/heaps/Makefile b/drivers/dma-buf/heaps/Makefile
+> >> new file mode 100644
+> >> index 0000000..de49898
+> >> --- /dev/null
+> >> +++ b/drivers/dma-buf/heaps/Makefile
+> >> @@ -0,0 +1,2 @@
+> >> +# SPDX-License-Identifier: GPL-2.0
+> >> +obj-y					+= heap-helpers.o
+> >> diff --git a/drivers/dma-buf/heaps/heap-helpers.c b/drivers/dma-buf/heaps/heap-helpers.c
+> >> new file mode 100644
+> >> index 0000000..ae5e9d0
+> >> --- /dev/null
+> >> +++ b/drivers/dma-buf/heaps/heap-helpers.c
+> >> @@ -0,0 +1,335 @@
+> >> +// SPDX-License-Identifier: GPL-2.0
+> >> +#include <linux/device.h>
+> >> +#include <linux/dma-buf.h>
+> >> +#include <linux/err.h>
+> >> +#include <linux/idr.h>
+> >> +#include <linux/list.h>
+> >> +#include <linux/slab.h>
+> >> +#include <linux/uaccess.h>
+> >> +#include <uapi/linux/dma-heap.h>
+> >> +
+> >> +#include "heap-helpers.h"
+> >> +
+> >> +
+> >> +static void *dma_heap_map_kernel(struct heap_helper_buffer *buffer)
+> >> +{
+> >> +	struct scatterlist *sg;
+> >> +	int i, j;
+> >> +	void *vaddr;
+> >> +	pgprot_t pgprot;
+> >> +	struct sg_table *table = buffer->sg_table;
+> >> +	int npages = PAGE_ALIGN(buffer->heap_buffer.size) / PAGE_SIZE;
+> >> +	struct page **pages = vmalloc(array_size(npages,
+> >> +						 sizeof(struct page *)));
+> >> +	struct page **tmp = pages;
+> >> +
+> >> +	if (!pages)
+> >> +		return ERR_PTR(-ENOMEM);
+> >> +
+> >> +	pgprot = PAGE_KERNEL;
+> >> +
+> >> +	for_each_sg(table->sgl, sg, table->nents, i) {
+> >> +		int npages_this_entry = PAGE_ALIGN(sg->length) / PAGE_SIZE;
+> >> +		struct page *page = sg_page(sg);
+> >> +
+> >> +		WARN_ON(i >= npages);
+> >> +		for (j = 0; j < npages_this_entry; j++)
+> >> +			*(tmp++) = page++;
+> >> +	}
+> >> +	vaddr = vmap(pages, npages, VM_MAP, pgprot);
+> >> +	vfree(pages);
+> >> +
+> >> +	if (!vaddr)
+> >> +		return ERR_PTR(-ENOMEM);
+> >> +
+> >> +	return vaddr;
+> >> +}
+> >> +
+> >> +static int dma_heap_map_user(struct heap_helper_buffer *buffer,
+> >> +			 struct vm_area_struct *vma)
+> >> +{
+> >> +	struct sg_table *table = buffer->sg_table;
+> >> +	unsigned long addr = vma->vm_start;
+> >> +	unsigned long offset = vma->vm_pgoff * PAGE_SIZE;
+> >> +	struct scatterlist *sg;
+> >> +	int i;
+> >> +	int ret;
+> >> +
+> >> +	for_each_sg(table->sgl, sg, table->nents, i) {
+> >> +		struct page *page = sg_page(sg);
+> >> +		unsigned long remainder = vma->vm_end - addr;
+> >> +		unsigned long len = sg->length;
+> >> +
+> >> +		if (offset >= sg->length) {
+> >> +			offset -= sg->length;
+> >> +			continue;
+> >> +		} else if (offset) {
+> >> +			page += offset / PAGE_SIZE;
+> >> +			len = sg->length - offset;
+> >> +			offset = 0;
+> >> +		}
+> >> +		len = min(len, remainder);
+> >> +		ret = remap_pfn_range(vma, addr, page_to_pfn(page), len,
+> >> +				      vma->vm_page_prot);
+> >> +		if (ret)
+> >> +			return ret;
+> >> +		addr += len;
+> >> +		if (addr >= vma->vm_end)
+> >> +			return 0;
+> >> +	}
+> >> +
+> >> +	return 0;
+> >> +}
+> >> +
+> >> +
+> >> +void dma_heap_buffer_destroy(struct dma_heap_buffer *heap_buffer)
+> >> +{
+> >> +	struct heap_helper_buffer *buffer = to_helper_buffer(heap_buffer);
+> >> +
+> >> +	if (buffer->kmap_cnt > 0) {
+> >> +		pr_warn_once("%s: buffer still mapped in the kernel\n",
+> >> +			     __func__);
+> >> +		vunmap(buffer->vaddr);
+> >> +	}
+> >> +
+> >> +	buffer->free(buffer);
+> >> +}
+> >> +
+> >> +static void *dma_heap_buffer_kmap_get(struct dma_heap_buffer *heap_buffer)
+> >> +{
+> >> +	struct heap_helper_buffer *buffer = to_helper_buffer(heap_buffer);
+> >> +	void *vaddr;
+> >> +
+> >> +	if (buffer->kmap_cnt) {
+> >> +		buffer->kmap_cnt++;
+> >> +		return buffer->vaddr;
+> >> +	}
+> >> +	vaddr = dma_heap_map_kernel(buffer);
+> >> +	if (WARN_ONCE(!vaddr,
+> >> +		      "heap->ops->map_kernel should return ERR_PTR on error"))
+> >> +		return ERR_PTR(-EINVAL);
+> >> +	if (IS_ERR(vaddr))
+> >> +		return vaddr;
+> >> +	buffer->vaddr = vaddr;
+> >> +	buffer->kmap_cnt++;
+> >> +	return vaddr;
+> >> +}
+> >> +
+> >> +static void dma_heap_buffer_kmap_put(struct dma_heap_buffer *heap_buffer)
+> >> +{
+> >> +	struct heap_helper_buffer *buffer = to_helper_buffer(heap_buffer);
+> >> +
+> >> +	buffer->kmap_cnt--;
+> >> +	if (!buffer->kmap_cnt) {
+> >> +		vunmap(buffer->vaddr);
+> >> +		buffer->vaddr = NULL;
+> >> +	}
+> >> +}
+> >> +
+> >> +static struct sg_table *dup_sg_table(struct sg_table *table)
+> >> +{
+> >> +	struct sg_table *new_table;
+> >> +	int ret, i;
+> >> +	struct scatterlist *sg, *new_sg;
+> >> +
+> >> +	new_table = kzalloc(sizeof(*new_table), GFP_KERNEL);
+> >> +	if (!new_table)
+> >> +		return ERR_PTR(-ENOMEM);
+> >> +
+> >> +	ret = sg_alloc_table(new_table, table->nents, GFP_KERNEL);
+> >> +	if (ret) {
+> >> +		kfree(new_table);
+> >> +		return ERR_PTR(-ENOMEM);
+> >> +	}
+> >> +
+> >> +	new_sg = new_table->sgl;
+> >> +	for_each_sg(table->sgl, sg, table->nents, i) {
+> >> +		memcpy(new_sg, sg, sizeof(*sg));
+> >> +		new_sg->dma_address = 0;
+> >> +		new_sg = sg_next(new_sg);
+> >> +	}
+> >> +
+> >> +	return new_table;
+> >> +}
+> >> +
+> >> +static void free_duped_table(struct sg_table *table)
+> >> +{
+> >> +	sg_free_table(table);
+> >> +	kfree(table);
+> >> +}
+> >> +
+> >> +struct dma_heaps_attachment {
+> >> +	struct device *dev;
+> >> +	struct sg_table *table;
+> >> +	struct list_head list;
+> >> +};
+> >> +
+> >> +static int dma_heap_attach(struct dma_buf *dmabuf,
+> >> +			      struct dma_buf_attachment *attachment)
+> >> +{
+> >> +	struct dma_heaps_attachment *a;
+> >> +	struct sg_table *table;
+> >> +	struct dma_heap_buffer *heap_buffer = dmabuf->priv;
+> >> +	struct heap_helper_buffer *buffer = to_helper_buffer(heap_buffer);
+> >> +
+> >> +	a = kzalloc(sizeof(*a), GFP_KERNEL);
+> >> +	if (!a)
+> >> +		return -ENOMEM;
+> >> +
+> >> +	table = dup_sg_table(buffer->sg_table);
+> >> +	if (IS_ERR(table)) {
+> >> +		kfree(a);
+> >> +		return -ENOMEM;
+> >> +	}
+> >> +
+> >> +	a->table = table;
+> >> +	a->dev = attachment->dev;
+> >> +	INIT_LIST_HEAD(&a->list);
+> >> +
+> >> +	attachment->priv = a;
+> >> +
+> >> +	mutex_lock(&buffer->lock);
+> >> +	list_add(&a->list, &buffer->attachments);
+> >> +	mutex_unlock(&buffer->lock);
+> >> +
+> >> +	return 0;
+> >> +}
+> >> +
+> >> +static void dma_heap_detatch(struct dma_buf *dmabuf,
+> >> +				struct dma_buf_attachment *attachment)
+> >> +{
+> >> +	struct dma_heaps_attachment *a = attachment->priv;
+> >> +	struct dma_heap_buffer *heap_buffer = dmabuf->priv;
+> >> +	struct heap_helper_buffer *buffer = to_helper_buffer(heap_buffer);
+> >> +
+> >> +	mutex_lock(&buffer->lock);
+> >> +	list_del(&a->list);
+> >> +	mutex_unlock(&buffer->lock);
+> >> +	free_duped_table(a->table);
+> >> +
+> >> +	kfree(a);
+> >> +}
+> >> +
+> >> +static struct sg_table *dma_heap_map_dma_buf(
+> >> +					struct dma_buf_attachment *attachment,
+> >> +					enum dma_data_direction direction)
+> >> +{
+> >> +	struct dma_heaps_attachment *a = attachment->priv;
+> >> +	struct sg_table *table;
+> >> +
+> >> +	table = a->table;
+> >> +
+> >> +	if (!dma_map_sg(attachment->dev, table->sgl, table->nents,
+> >> +			direction))
+> > 
+> > Since this code is used for system heap and and as the reference.
+> > In multimedia uses cases very large buffers can be allocated from system 
+> > heap, and since system heap allocations have a cached kernel mapping it 
+> > has been difficult to support uncached allocations so clients will likely 
+> > allocate them as cached allocations.
+> > Most access to these buffers will occur from non IO-coherent devices, 
+> > however in frameworks such as Android these buffers will be dma mapped and 
+> > dma unmapped frequently, for every frame and for each device in the 
+> > "buffer pipeline", which leads to a lot of unnecessary cache maintenance 
+> > in the dma map and dma unmap calls.
+> > From previous discussions it doesn't seem like this could be optimized by 
+> > only making changes to dma-buf heaps framework.
+> > 
+> > So I think it would be helpful to try and agree on what types of changes 
+> > would be required to the Android framework and possibly the dma-buf heaps 
+> > framework to resolve this.
+> > Example
+> > 
+> > - Have Android framework keep buffers dma mapped for the whole use case
+> > 
+> > - Or perhaps have Android keep required devices attached to the buffer as 
+> > they are "pipelined" so that cache maintenance can be skipped in dma map 
+> > and dma umnap but reliably applied in begin/end_cpu_access.
+> > 
+> 
+> I don't have a strong opinion on the solution here for Android, but from
+> kernel/hardware side I can see we don't have a good ownership model for
+> dma-buf and that looks to be causing your unneeded cache ops.
+> 
+> Let my give my vision for the model you request below.
+> 
+> 
+> >> +	 table = ERR_PTR(-ENOMEM); 
+> >> +	 return table; 
+> >> +} 
+> >> +
+> >> +static void dma_heap_unmap_dma_buf(struct dma_buf_attachment *attachment,
+> >> +			      struct sg_table *table,
+> >> +			      enum dma_data_direction direction)
+> >> +{
+> >> +	dma_unmap_sg(attachment->dev, table->sgl, table->nents, direction);
+> >> +}
+> >> +
+> >> +static int dma_heap_mmap(struct dma_buf *dmabuf, struct vm_area_struct *vma)
+> >> +{
+> >> +	struct dma_heap_buffer *heap_buffer = dmabuf->priv;
+> >> +	struct heap_helper_buffer *buffer = to_helper_buffer(heap_buffer);
+> >> +	int ret = 0;
+> >> +
+> >> +	mutex_lock(&buffer->lock);
+> >> +	/* now map it to userspace */
+> >> +	ret = dma_heap_map_user(buffer, vma);
+> > 
+> > Since this code is used for system heap and and as the reference.
+> > Currently in Android when a system heap buffer is moving down the 
+> > "pipeline" CPU access may occur and there may be no device attached.
+> > In the past people have raised concerns that this should perhaps not be 
+> > supported and that at least one device should be attached when CPU access 
+> > occurs.
+> > 
+> > Can we decide, from a dma-buf contract perspective, on whether CPU access 
+> > without a device attached should allowed and make it clear in the dma-buf 
+> > documentation either way?
+> > 
+> > If it should not be allowed we can try to work with Android to see how 
+> > they can change their framework to align with the dma-buf spec.
+> > 
+> 
+> As you say, right now DMA-BUF does not really provide guidelines for
+> "well behaved" heaps, and as such we all end up making different
+> assumptions. Although I don't think they below should be enforced for
+> all DMA-BUFs it should be used for our first set of reference heaps.
+> 
+> So from the start, lets looks at DMA-BUF buffer lifetimes. A buffer
+> begins by being allocated, at this point the backing resources (usually
+> some pages in physical CPU addressable RAM) have *not* been allocated
+> this is a core feature of DMA-BUF allowing smart allocations at map
+> time. At this point we should consider the buffer in a state "non-owned
+> non-backed".
+> 
+> Next we have three valid actions:
+>  * CPU use
+>  * device attachments
+>  * free
+> 
+> CPU use starts with a call to begin_cpu_access(), the buffer will now
+> both become CPU owned and will pin it's backing buffer. This last part
+> can cause begin_cpu_access() to fail for some types of buffers that only
+> pick their backing resource based on the set of attached devices, which
+> at this point we have none. For heaps like "system" heap this should not
+> be a problem as the backing storage is already selected at allocation time.
+> 
+> Device attachments and mapping should behave as they do now. After
+> mapping, the buffer is now owned by the attached devices and backed. The
+> ownership can be transfered to the CPU and back as usual with
+> {begin,end}_cpu_access().
+> 
+> Free right after allocation without anyone taking ownership is trivial.
+> 
+> Now here is where things may get interesting, we can now be in the
+> following states:
+> 
+> CPU owned backed
+> Device owned backed
+> 
+> What should we do when CPU owned and end_cpu_access() is called or when
+> Device owned and all devices detach. What state do we go into? My
+> opinion would be to return to "non-owned non-backed" which means the
+> backing resource can be freed. The other option is to leave it backed. I
+> beleave this is what Android expects right now as it returns buffers to
+> a "BufferQueue" to later be dequeued and used again in the same way
+> without time consuming reallocations.
+> 
 
-I'm pretty sure you can use MADV_DONTNEED to free up file backed
-memory, I don't believe this is the case for MADV_FREE, but maybe I am
-mistaken.
+I think the issue may be more serious with Android than allow improving 
+the performance of buffer re-allocation.
 
-On a side note I was just reviewing some stuff related to the reserved
-bit and on-lining hotplug memory, and it just occurred to me that most
-the PG_offline bit would be a good means to indicate that we hinted
-away a page out of the buddy allocator, especially since it is already
-used by the balloon drivers anyway.  We would just have to add a call
-to make sure we clear it when we call __ClearPageBuddy. It looks like
-that would currently be in del_page_from_free_area, at least for
-linux-next.
+In cases such as video playback:
+#1 video device reads and transforms the video data 
+#2 optionally there may be some software video post processing 
+#3 surface flinger 
+#4 HAL 
+#5 display device eventually gets the buffer
 
-I just wanted to get your thoughts on that as it seems like it might
-be a good fit.
+My understanding is the last device attached to the buffer (the video 
+device) can be detached before Android sends the buffer down the 
+"pipeline" where some software module may do CPU access and where 
+eventually a new device is attached when the buffer is going to be acceded 
+by a device. 
 
-Thanks.
+So Android is counting on the contents of the buffer being retained while 
+it is "non-owned".
 
-- Alex
+> For "system" heaps the result is the same outside of the cache ops, if
+> we maintain a buffer state like the above we can always know when a
+> cache op or similar is needed (only when transitioning owners, not on
+> every map/unmap). 
+
+Assuming I understood your comments correctly, I agree that we will know 
+"when" to optimally apply the cache maintenance but the problem with 
+allowing CPU access to buffers that are now "non-owned" is that we can't 
+apply the cache maintenance when it is required (because there is no 
+longer a device available).
+
+
+> For more complex heaps we can do something similar
+> when transitioning from backed to non-backed (and vice-versa) such as
+> migrating the backing data to a more appropriate resource given the new
+> set of attaching/mapping devices.
+> 
+> A more complete state transition map will probably be needed to fill out
+> what should be allowed and what to do when, and I agree it will be good
+> to have that for this first set of reference heaps. But all of this can
+> be done now with DMA-heaps, so I don't want to tie up the core
+> de-staging too much on getting every possible heap to behave just right
+> either..
+> 
+> >> +	mutex_unlock(&buffer->lock);
+> >> +
+> >> +	if (ret)
+> >> +		pr_err("%s: failure mapping buffer to userspace\n",
+> >> +		       __func__);
+> >> +
+> >> +	return ret;
+> >> +}
+> >> +
+> >> +static void dma_heap_dma_buf_release(struct dma_buf *dmabuf)
+> >> +{
+> >> +	struct dma_heap_buffer *buffer = dmabuf->priv;
+> >> +
+> >> +	dma_heap_buffer_destroy(buffer);
+> >> +}
+> >> +
+> >> +static void *dma_heap_dma_buf_kmap(struct dma_buf *dmabuf,
+> >> +					unsigned long offset)
+> >> +{
+> >> +	struct dma_heap_buffer *heap_buffer = dmabuf->priv;
+> >> +	struct heap_helper_buffer *buffer = to_helper_buffer(heap_buffer);
+> >> +
+> >> +	return buffer->vaddr + offset * PAGE_SIZE;
+> >> +}
+> >> +
+> >> +static void dma_heap_dma_buf_kunmap(struct dma_buf *dmabuf,
+> >> +					unsigned long offset,
+> >> +					void *ptr)
+> >> +{
+> >> +}
+> >> +
+> >> +static int dma_heap_dma_buf_begin_cpu_access(struct dma_buf *dmabuf,
+> >> +					enum dma_data_direction direction)
+> >> +{
+> >> +	struct dma_heap_buffer *heap_buffer = dmabuf->priv;
+> >> +	struct heap_helper_buffer *buffer = to_helper_buffer(heap_buffer);
+> >> +	void *vaddr;
+> >> +	struct dma_heaps_attachment *a;
+> >> +	int ret = 0;
+> >> +
+> >> +	mutex_lock(&buffer->lock);
+> >> +	vaddr = dma_heap_buffer_kmap_get(heap_buffer);
+> > 
+> > Since this code is used for system heap and and as the reference.
+> > As has been discussed in the past there are several disadvantages to 
+> > creating a kernel mapping on each call to begin_cpu_access.
+> > 
+> > The resulting call to alloc_vmap_area is expensive and can hurt client 
+> > KPIs
+> > 
+> > Allowing userspace clients to create and destroy kernel mappings can 
+> > provide opportunities to crash the kernel.
+> > 
+> > Can we look at removing the creation of a kernel mapping in 
+> > begin_cpu_access and either introduce support for dma_buf_vmap and have 
+> > clients use that instead or perahps change 
+> > the contract for dma_buf_kmap so that it doesn't always need to succeed?
+> > 
+> 
+> Agree, for this we should just fail (or succeed but perform no action?)
+> if there are no active mappings (neither in kernel (kmap, vmap) nor in
+> userspace (mmap)), forcing a new mapping just to keep
+> dma_sync_sg_for_cpu() happy is not the correct thing to do here.
+> 
+> >> +	if (IS_ERR(vaddr)) {
+> >> +		ret = PTR_ERR(vaddr);
+> >> +		goto unlock;
+> >> +	}
+> >> +	mutex_unlock(&buffer->lock);
+> >> +
+> >> +	mutex_lock(&buffer->lock);
+> >> +	list_for_each_entry(a, &buffer->attachments, list) {
+> >> +		dma_sync_sg_for_cpu(a->dev, a->table->sgl, a->table->nents,
+> >> +				    direction);
+> > 
+> > Since this code is used for system heap and and as the reference.
+> > Not a major issue for newer kernels but I still don't think it makes sense 
+> > to apply cache maintenance when the buffer is not dma mapped, it doesn't 
+> > makes sense to me from a logical perspective and from a performance 
+> > perspective.
+> > 
+> 
+> Agree again, this is only needed when we are transitioning out of state
+> "device owned" which we will not be in if we have no active
+> attached/mapped devices.
+> 
+> > 
+> >> +	}
+> >> +
+> >> +unlock:
+> >> +	mutex_unlock(&buffer->lock);
+> >> +	return ret;
+> >> +}
+> >> +
+> >> +static int dma_heap_dma_buf_end_cpu_access(struct dma_buf *dmabuf,
+> >> +				      enum dma_data_direction direction)
+> >> +{
+> >> +	struct dma_heap_buffer *heap_buffer = dmabuf->priv;
+> >> +	struct heap_helper_buffer *buffer = to_helper_buffer(heap_buffer);
+> >> +	struct dma_heaps_attachment *a;
+> >> +
+> >> +	mutex_lock(&buffer->lock);
+> >> +	dma_heap_buffer_kmap_put(heap_buffer);
+> >> +	mutex_unlock(&buffer->lock);
+> >> +
+> >> +	mutex_lock(&buffer->lock);
+> >> +	list_for_each_entry(a, &buffer->attachments, list) {
+> >> +		dma_sync_sg_for_device(a->dev, a->table->sgl, a->table->nents,
+> >> +				       direction);
+> > 
+> > There are use cases in Android which result in only small parts of a large 
+> > buffer are written do during of CPU access.
+> > 
+> 
+> We have the same requirements for some OpenCL use-cases
+> (clCreateSubBuffer), which allows for chunks of a larger buffer to have
+> different properties and therefor cache operations different from the
+> larger parrent buffer.
+> 
+> > Applying cache maintenance to the complete buffer results in a lot of 
+> > unnecessary cache maintenance that can affect KPIs.
+> > 
+> > I believe the Android team is wondering if there could be a way to support 
+> > partial maintenance in  where userspace could describe the buffer changes 
+> > they have made.
+> > 
+> 
+> The issue I have with that is it would require userspace to know about
+> the cache line size of all involved devices, otherwise you would have
+> users writing to the first 64B and invalidate to read the second 64B
+> written from a DMA device outside the cache, in a system with 128B
+> cache-lines you will always lose some data here.
+> 
+
+Good point.
+
+> > I think it would be useful to make sure that there is a least a path 
+> > forward with the current dma-buf heaps framework to solve this for system 
+> > heap allocations.
+> > 
+> 
+> DMA-BUF sync operations always act on the full buffer, changing this
+> would require changes to the core DMA-BUF framework (so outside the
+> scope of this set) :)
+> 
+> Andrew
+> 
+> > I can get more details on the specific use cases if required.
+> > 
+> >> +	}
+> >> +	mutex_unlock(&buffer->lock);
+> >> +
+> >> +	return 0;
+> >> +}
+> >> +
+> >> +const struct dma_buf_ops heap_helper_ops = {
+> >> +	.map_dma_buf = dma_heap_map_dma_buf,
+> >> +	.unmap_dma_buf = dma_heap_unmap_dma_buf,
+> >> +	.mmap = dma_heap_mmap,
+> >> +	.release = dma_heap_dma_buf_release,
+> >> +	.attach = dma_heap_attach,
+> >> +	.detach = dma_heap_detatch,
+> >> +	.begin_cpu_access = dma_heap_dma_buf_begin_cpu_access,
+> >> +	.end_cpu_access = dma_heap_dma_buf_end_cpu_access,
+> >> +	.map = dma_heap_dma_buf_kmap,
+> >> +	.unmap = dma_heap_dma_buf_kunmap,
+> >> +};
+> >> diff --git a/drivers/dma-buf/heaps/heap-helpers.h b/drivers/dma-buf/heaps/heap-helpers.h
+> >> new file mode 100644
+> >> index 0000000..0bd8643
+> >> --- /dev/null
+> >> +++ b/drivers/dma-buf/heaps/heap-helpers.h
+> >> @@ -0,0 +1,48 @@
+> >> +/* SPDX-License-Identifier: GPL-2.0 */
+> >> +/*
+> >> + * DMABUF Heaps helper code
+> >> + *
+> >> + * Copyright (C) 2011 Google, Inc.
+> >> + * Copyright (C) 2019 Linaro Ltd.
+> >> + */
+> >> +
+> >> +#ifndef _HEAP_HELPERS_H
+> >> +#define _HEAP_HELPERS_H
+> >> +
+> >> +#include <linux/dma-heap.h>
+> >> +#include <linux/list.h>
+> >> +
+> >> +struct heap_helper_buffer {
+> >> +	struct dma_heap_buffer heap_buffer;
+> >> +
+> >> +	unsigned long private_flags;
+> >> +	void *priv_virt;
+> >> +	struct mutex lock;
+> >> +	int kmap_cnt;
+> >> +	void *vaddr;
+> >> +	struct sg_table *sg_table;
+> >> +	struct list_head attachments;
+> >> +
+> >> +	void (*free)(struct heap_helper_buffer *buffer);
+> >> +
+> >> +};
+> >> +
+> >> +#define to_helper_buffer(x) \
+> >> +	container_of(x, struct heap_helper_buffer, heap_buffer)
+> >> +
+> >> +static inline void INIT_HEAP_HELPER_BUFFER(struct heap_helper_buffer *buffer,
+> >> +				 void (*free)(struct heap_helper_buffer *))
+> >> +{
+> >> +	buffer->private_flags = 0;
+> >> +	buffer->priv_virt = NULL;
+> >> +	mutex_init(&buffer->lock);
+> >> +	buffer->kmap_cnt = 0;
+> >> +	buffer->vaddr = NULL;
+> >> +	buffer->sg_table = NULL;
+> >> +	INIT_LIST_HEAD(&buffer->attachments);
+> >> +	buffer->free = free;
+> >> +}
+> >> +
+> >> +extern const struct dma_buf_ops heap_helper_ops;
+> >> +
+> >> +#endif /* _HEAP_HELPERS_H */
+> >> -- 
+> >> 2.7.4
+> >>
+> >>
+> > 
+> > Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum,
+> > a Linux Foundation Collaborative Project
+> > 
+> 
+
+Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum,
+a Linux Foundation Collaborative Project
