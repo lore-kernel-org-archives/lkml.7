@@ -6,53 +6,53 @@ X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BFBC8C43381
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 Mar 2019 04:16:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4173FC43381
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 Mar 2019 04:16:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 825DC217F5
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 Mar 2019 04:16:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0BBFA217F5
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 Mar 2019 04:16:41 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727295AbfCMEQe (ORCPT
+        id S1727163AbfCMEQ3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 13 Mar 2019 00:16:34 -0400
-Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:44964 "EHLO
+        Wed, 13 Mar 2019 00:16:29 -0400
+Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:44376 "EHLO
         mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1727258AbfCMEQc (ORCPT
+        by vger.kernel.org with ESMTP id S1727093AbfCMEQZ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 13 Mar 2019 00:16:32 -0400
+        Wed, 13 Mar 2019 00:16:25 -0400
 Received: from pps.filterd (m0098417.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x2D4Devr004147
-        for <linux-kernel@vger.kernel.org>; Wed, 13 Mar 2019 00:16:30 -0400
+        by mx0a-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x2D4DfNm004229
+        for <linux-kernel@vger.kernel.org>; Wed, 13 Mar 2019 00:16:24 -0400
 Received: from e06smtp07.uk.ibm.com (e06smtp07.uk.ibm.com [195.75.94.103])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 2r6q6aqyvc-1
+        by mx0a-001b2d01.pphosted.com with ESMTP id 2r6q6aqyrg-1
         (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
-        for <linux-kernel@vger.kernel.org>; Wed, 13 Mar 2019 00:16:30 -0400
+        for <linux-kernel@vger.kernel.org>; Wed, 13 Mar 2019 00:16:24 -0400
 Received: from localhost
         by e06smtp07.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
         for <linux-kernel@vger.kernel.org> from <alastair@au1.ibm.com>;
-        Wed, 13 Mar 2019 04:16:28 -0000
-Received: from b06cxnps3074.portsmouth.uk.ibm.com (9.149.109.194)
+        Wed, 13 Mar 2019 04:16:22 -0000
+Received: from b06cxnps4074.portsmouth.uk.ibm.com (9.149.109.196)
         by e06smtp07.uk.ibm.com (192.168.101.137) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
         (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
-        Wed, 13 Mar 2019 04:16:25 -0000
-Received: from d06av23.portsmouth.uk.ibm.com (d06av23.portsmouth.uk.ibm.com [9.149.105.59])
-        by b06cxnps3074.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x2D4GODX50594024
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Wed, 13 Mar 2019 04:16:24 GMT
-Received: from d06av23.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 70EF6A405B;
-        Wed, 13 Mar 2019 04:16:24 +0000 (GMT)
-Received: from d06av23.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id BF6EEA4040;
-        Wed, 13 Mar 2019 04:16:23 +0000 (GMT)
+        Wed, 13 Mar 2019 04:16:20 -0000
+Received: from b06wcsmtp001.portsmouth.uk.ibm.com (b06wcsmtp001.portsmouth.uk.ibm.com [9.149.105.160])
+        by b06cxnps4074.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x2D4GJpH20316290
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Wed, 13 Mar 2019 04:16:19 GMT
+Received: from b06wcsmtp001.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 0377BA405F;
+        Wed, 13 Mar 2019 04:16:19 +0000 (GMT)
+Received: from b06wcsmtp001.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 61C09A4054;
+        Wed, 13 Mar 2019 04:16:18 +0000 (GMT)
 Received: from ozlabs.au.ibm.com (unknown [9.192.253.14])
-        by d06av23.portsmouth.uk.ibm.com (Postfix) with ESMTP;
-        Wed, 13 Mar 2019 04:16:23 +0000 (GMT)
+        by b06wcsmtp001.portsmouth.uk.ibm.com (Postfix) with ESMTP;
+        Wed, 13 Mar 2019 04:16:18 +0000 (GMT)
 Received: from adsilva.ozlabs.ibm.com (haven.au.ibm.com [9.192.254.114])
         (using TLSv1.2 with cipher DHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by ozlabs.au.ibm.com (Postfix) with ESMTPSA id 48506A01B5;
-        Wed, 13 Mar 2019 15:16:22 +1100 (AEDT)
+        by ozlabs.au.ibm.com (Postfix) with ESMTPSA id 5385AA024A;
+        Wed, 13 Mar 2019 15:16:17 +1100 (AEDT)
 From:   "Alastair D'Silva" <alastair@au1.ibm.com>
 Cc:     "Alastair D'Silva" <alastair@d-silva.org>,
         Frederic Barrat <fbarrat@linux.ibm.com>,
@@ -60,18 +60,18 @@ Cc:     "Alastair D'Silva" <alastair@d-silva.org>,
         Arnd Bergmann <arnd@arndb.de>,
         Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         linux-kernel@vger.kernel.org, linuxppc-dev@lists.ozlabs.org
-Subject: [PATCH 7/7] ocxl: move event_fd handling to frontend
-Date:   Wed, 13 Mar 2019 15:15:22 +1100
+Subject: [PATCH 4/7] ocxl: Don't pass pci_dev around
+Date:   Wed, 13 Mar 2019 15:15:19 +1100
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190313041524.14644-1-alastair@au1.ibm.com>
 References: <20190313041524.14644-1-alastair@au1.ibm.com>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 X-TM-AS-GCONF: 00
-x-cbid: 19031304-0028-0000-0000-0000035354FA
+x-cbid: 19031304-0028-0000-0000-0000035354F8
 X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
-x-cbparentid: 19031304-0029-0000-0000-00002411DB33
-Message-Id: <20190313041524.14644-8-alastair@au1.ibm.com>
+x-cbparentid: 19031304-0029-0000-0000-00002411DB31
+Message-Id: <20190313041524.14644-5-alastair@au1.ibm.com>
 X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-03-13_02:,,
  signatures=0
 X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
@@ -87,255 +87,166 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Alastair D'Silva <alastair@d-silva.org>
 
-Event_fd is only used in the driver frontend, so it does not
-need to exist in the backend code. Relocate it to the frontend
-and provide an opaque mechanism for consumers instead.
+This data is already available in a struct
 
 Signed-off-by: Alastair D'Silva <alastair@d-silva.org>
 ---
- drivers/misc/ocxl/afu_irq.c       | 69 +++++++++++++++++--------------
- drivers/misc/ocxl/file.c          | 22 +++++++++-
- drivers/misc/ocxl/ocxl_internal.h |  5 ---
- include/misc/ocxl.h               | 44 ++++++++++++++++++++
- 4 files changed, 102 insertions(+), 38 deletions(-)
+ drivers/misc/ocxl/core.c | 38 +++++++++++++++++++++-----------------
+ 1 file changed, 21 insertions(+), 17 deletions(-)
 
-diff --git a/drivers/misc/ocxl/afu_irq.c b/drivers/misc/ocxl/afu_irq.c
-index 1885c472df58..bccb89085a29 100644
---- a/drivers/misc/ocxl/afu_irq.c
-+++ b/drivers/misc/ocxl/afu_irq.c
-@@ -1,7 +1,7 @@
- // SPDX-License-Identifier: GPL-2.0+
- // Copyright 2017 IBM Corp.
- #include <linux/interrupt.h>
--#include <linux/eventfd.h>
-+#include <asm/pnv-ocxl.h>
- #include "ocxl_internal.h"
- #include "trace.h"
- 
-@@ -11,7 +11,9 @@ struct afu_irq {
- 	unsigned int virq;
- 	char *name;
- 	u64 trigger_page;
--	struct eventfd_ctx *ev_ctx;
-+	irqreturn_t (*handler)(void *private);
-+	void (*free_private)(void *private);
-+	void *private;
- };
- 
- int ocxl_irq_offset_to_id(struct ocxl_context *ctx, u64 offset)
-@@ -24,14 +26,42 @@ u64 ocxl_irq_id_to_offset(struct ocxl_context *ctx, int irq_id)
- 	return ctx->afu->irq_base_offset + (irq_id << PAGE_SHIFT);
+diff --git a/drivers/misc/ocxl/core.c b/drivers/misc/ocxl/core.c
+index b47cfda83e46..2fd0c700e8a0 100644
+--- a/drivers/misc/ocxl/core.c
++++ b/drivers/misc/ocxl/core.c
+@@ -66,10 +66,11 @@ static int set_afu_device(struct ocxl_afu *afu, const char *location)
+ 	return rc;
  }
  
-+int ocxl_irq_set_handler(struct ocxl_context *ctx, int irq_id,
-+		irqreturn_t (*handler)(void *private),
-+		void (*free_private)(void *private),
-+		void *private)
-+{
-+	struct afu_irq *irq;
-+	int rc;
-+
-+	mutex_lock(&ctx->irq_lock);
-+	irq = idr_find(&ctx->irq_idr, irq_id);
-+	if (!irq) {
-+		rc = -EINVAL;
-+		goto unlock;
-+	}
-+
-+	irq->handler = handler;
-+	irq->private = private;
-+
-+	rc = 0;
-+	goto unlock;
-+
-+unlock:
-+	mutex_unlock(&ctx->irq_lock);
-+	return rc;
-+}
-+
- static irqreturn_t afu_irq_handler(int virq, void *data)
+-static int assign_afu_actag(struct ocxl_afu *afu, struct pci_dev *dev)
++static int assign_afu_actag(struct ocxl_afu *afu)
  {
- 	struct afu_irq *irq = (struct afu_irq *) data;
+ 	struct ocxl_fn *fn = afu->fn;
+ 	int actag_count, actag_offset;
++	struct pci_dev *pci_dev = to_pci_dev(fn->dev.parent);
  
- 	trace_ocxl_afu_irq_receive(virq);
--	if (irq->ev_ctx)
--		eventfd_signal(irq->ev_ctx, 1);
--	return IRQ_HANDLED;
-+
-+	if (irq->handler)
-+		return irq->handler(irq->private);
-+
-+	return IRQ_HANDLED; // Just drop it on the ground
+ 	/*
+ 	 * if there were not enough actags for the function, each afu
+@@ -79,16 +80,16 @@ static int assign_afu_actag(struct ocxl_afu *afu, struct pci_dev *dev)
+ 		fn->actag_enabled / fn->actag_supported;
+ 	actag_offset = ocxl_actag_afu_alloc(fn, actag_count);
+ 	if (actag_offset < 0) {
+-		dev_err(&afu->dev, "Can't allocate %d actags for AFU: %d\n",
++		dev_err(&pci_dev->dev, "Can't allocate %d actags for AFU: %d\n",
+ 			actag_count, actag_offset);
+ 		return actag_offset;
+ 	}
+ 	afu->actag_base = fn->actag_base + actag_offset;
+ 	afu->actag_enabled = actag_count;
+ 
+-	ocxl_config_set_afu_actag(dev, afu->config.dvsec_afu_control_pos,
++	ocxl_config_set_afu_actag(pci_dev, afu->config.dvsec_afu_control_pos,
+ 				afu->actag_base, afu->actag_enabled);
+-	dev_dbg(&afu->dev, "actag base=%d enabled=%d\n",
++	dev_dbg(&pci_dev->dev, "actag base=%d enabled=%d\n",
+ 		afu->actag_base, afu->actag_enabled);
+ 	return 0;
+ }
+@@ -103,10 +104,11 @@ static void reclaim_afu_actag(struct ocxl_afu *afu)
+ 	ocxl_actag_afu_free(afu->fn, start_offset, size);
  }
  
- static int setup_afu_irq(struct ocxl_context *ctx, struct afu_irq *irq)
-@@ -123,8 +153,8 @@ static void afu_irq_free(struct afu_irq *irq, struct ocxl_context *ctx)
- 				ocxl_irq_id_to_offset(ctx, irq->id),
- 				1 << PAGE_SHIFT, 1);
- 	release_afu_irq(irq);
--	if (irq->ev_ctx)
--		eventfd_ctx_put(irq->ev_ctx);
-+	if (irq->free_private)
-+		irq->free_private(irq->private);
- 	ocxl_link_free_irq(ctx->afu->fn->link, irq->hw_irq);
- 	kfree(irq);
- }
-@@ -157,31 +187,6 @@ void ocxl_afu_irq_free_all(struct ocxl_context *ctx)
- 	mutex_unlock(&ctx->irq_lock);
- }
- 
--int ocxl_afu_irq_set_fd(struct ocxl_context *ctx, int irq_id, int eventfd)
--{
--	struct afu_irq *irq;
--	struct eventfd_ctx *ev_ctx;
--	int rc = 0;
--
--	mutex_lock(&ctx->irq_lock);
--	irq = idr_find(&ctx->irq_idr, irq_id);
--	if (!irq) {
--		rc = -EINVAL;
--		goto unlock;
--	}
--
--	ev_ctx = eventfd_ctx_fdget(eventfd);
--	if (IS_ERR(ev_ctx)) {
--		rc = -EINVAL;
--		goto unlock;
--	}
--
--	irq->ev_ctx = ev_ctx;
--unlock:
--	mutex_unlock(&ctx->irq_lock);
--	return rc;
--}
--
- u64 ocxl_afu_irq_get_addr(struct ocxl_context *ctx, int irq_id)
+-static int assign_afu_pasid(struct ocxl_afu *afu, struct pci_dev *dev)
++static int assign_afu_pasid(struct ocxl_afu *afu)
  {
- 	struct afu_irq *irq;
-diff --git a/drivers/misc/ocxl/file.c b/drivers/misc/ocxl/file.c
-index d28618c161de..16833a5d47f0 100644
---- a/drivers/misc/ocxl/file.c
-+++ b/drivers/misc/ocxl/file.c
-@@ -3,6 +3,7 @@
- #include <linux/fs.h>
- #include <linux/poll.h>
- #include <linux/sched/signal.h>
-+#include <linux/eventfd.h>
- #include <linux/uaccess.h>
- #include <uapi/misc/ocxl.h>
- #include <asm/reg.h>
-@@ -192,11 +193,27 @@ static long afu_ioctl_get_features(struct ocxl_context *ctx,
- 			x == OCXL_IOCTL_GET_FEATURES ? "GET_FEATURES" :	\
- 			"UNKNOWN")
+ 	struct ocxl_fn *fn = afu->fn;
+ 	int pasid_count, pasid_offset;
++	struct pci_dev *pci_dev = to_pci_dev(fn->dev.parent);
  
-+static irqreturn_t irq_handler(void *private)
-+{
-+	struct eventfd_ctx *ev_ctx = private;
-+
-+	eventfd_signal(ev_ctx, 1);
-+	return IRQ_HANDLED;
-+}
-+
-+static void irq_free(void *private)
-+{
-+	struct eventfd_ctx *ev_ctx = private;
-+
-+	eventfd_ctx_put(ev_ctx);
-+}
-+
- static long afu_ioctl(struct file *file, unsigned int cmd,
- 		unsigned long args)
+ 	/*
+ 	 * We only support the case where the function configuration
+@@ -115,7 +117,7 @@ static int assign_afu_pasid(struct ocxl_afu *afu, struct pci_dev *dev)
+ 	pasid_count = 1 << afu->config.pasid_supported_log;
+ 	pasid_offset = ocxl_pasid_afu_alloc(fn, pasid_count);
+ 	if (pasid_offset < 0) {
+-		dev_err(&afu->dev, "Can't allocate %d PASIDs for AFU: %d\n",
++		dev_err(&pci_dev->dev, "Can't allocate %d PASIDs for AFU: %d\n",
+ 			pasid_count, pasid_offset);
+ 		return pasid_offset;
+ 	}
+@@ -123,10 +125,10 @@ static int assign_afu_pasid(struct ocxl_afu *afu, struct pci_dev *dev)
+ 	afu->pasid_count = 0;
+ 	afu->pasid_max = pasid_count;
+ 
+-	ocxl_config_set_afu_pasid(dev, afu->config.dvsec_afu_control_pos,
++	ocxl_config_set_afu_pasid(pci_dev, afu->config.dvsec_afu_control_pos,
+ 				afu->pasid_base,
+ 				afu->config.pasid_supported_log);
+-	dev_dbg(&afu->dev, "PASID base=%d, enabled=%d\n",
++	dev_dbg(&pci_dev->dev, "PASID base=%d, enabled=%d\n",
+ 		afu->pasid_base, pasid_count);
+ 	return 0;
+ }
+@@ -172,9 +174,10 @@ static void release_fn_bar(struct ocxl_fn *fn, int bar)
+ 	WARN_ON(fn->bar_used[idx] < 0);
+ }
+ 
+-static int map_mmio_areas(struct ocxl_afu *afu, struct pci_dev *dev)
++static int map_mmio_areas(struct ocxl_afu *afu)
  {
- 	struct ocxl_context *ctx = file->private_data;
- 	struct ocxl_ioctl_irq_fd irq_fd;
-+	struct eventfd_ctx *ev_ctx;
- 	int irq_id;
- 	u64 irq_offset;
- 	long rc;
-@@ -248,7 +265,10 @@ static long afu_ioctl(struct file *file, unsigned int cmd,
- 		if (irq_fd.reserved)
- 			return -EINVAL;
- 		irq_id = ocxl_irq_offset_to_id(ctx, irq_fd.irq_offset);
--		rc = ocxl_afu_irq_set_fd(ctx, irq_id, irq_fd.eventfd);
-+		ev_ctx = eventfd_ctx_fdget(irq_fd.eventfd);
-+		if (!ev_ctx)
-+			return -EFAULT;
-+		rc = ocxl_irq_set_handler(ctx, irq_id, irq_handler, irq_free, ev_ctx);
- 		break;
+ 	int rc;
++	struct pci_dev *pci_dev = to_pci_dev(afu->fn->dev.parent);
  
- 	case OCXL_IOCTL_GET_METADATA:
-diff --git a/drivers/misc/ocxl/ocxl_internal.h b/drivers/misc/ocxl/ocxl_internal.h
-index 871155b464da..f3775223f4b1 100644
---- a/drivers/misc/ocxl/ocxl_internal.h
-+++ b/drivers/misc/ocxl/ocxl_internal.h
-@@ -142,12 +142,7 @@ void ocxl_sysfs_unregister_afu(struct ocxl_afu *afu);
+ 	rc = reserve_fn_bar(afu->fn, afu->config.global_mmio_bar);
+ 	if (rc)
+@@ -187,10 +190,10 @@ static int map_mmio_areas(struct ocxl_afu *afu, struct pci_dev *dev)
+ 	}
  
- int ocxl_irq_offset_to_id(struct ocxl_context *ctx, u64 offset);
- u64 ocxl_irq_id_to_offset(struct ocxl_context *ctx, int irq_id);
--int ocxl_afu_irq_alloc(struct ocxl_context *ctx, int *irq_id);
--int ocxl_afu_irq_free(struct ocxl_context *ctx, int irq_id);
- void ocxl_afu_irq_free_all(struct ocxl_context *ctx);
--int ocxl_afu_irq_set_fd(struct ocxl_context *ctx, int irq_id,
--			int eventfd);
--u64 ocxl_afu_irq_get_addr(struct ocxl_context *ctx, int irq_id);
+ 	afu->global_mmio_start =
+-		pci_resource_start(dev, afu->config.global_mmio_bar) +
++		pci_resource_start(pci_dev, afu->config.global_mmio_bar) +
+ 		afu->config.global_mmio_offset;
+ 	afu->pp_mmio_start =
+-		pci_resource_start(dev, afu->config.pp_mmio_bar) +
++		pci_resource_start(pci_dev, afu->config.pp_mmio_bar) +
+ 		afu->config.pp_mmio_offset;
  
- /**
-  * Free an AFU
-diff --git a/include/misc/ocxl.h b/include/misc/ocxl.h
-index 54f8bafa3caa..3099c858093c 100644
---- a/include/misc/ocxl.h
-+++ b/include/misc/ocxl.h
-@@ -169,6 +169,50 @@ int ocxl_context_detach(struct ocxl_context *ctx);
+ 	afu->global_mmio_ptr = ioremap(afu->global_mmio_start,
+@@ -198,7 +201,7 @@ static int map_mmio_areas(struct ocxl_afu *afu, struct pci_dev *dev)
+ 	if (!afu->global_mmio_ptr) {
+ 		release_fn_bar(afu->fn, afu->config.pp_mmio_bar);
+ 		release_fn_bar(afu->fn, afu->config.global_mmio_bar);
+-		dev_err(&dev->dev, "Error mapping global mmio area\n");
++		dev_err(&pci_dev->dev, "Error mapping global mmio area\n");
+ 		return -ENOMEM;
+ 	}
  
- // OpenCAPI MMIO accesses
+@@ -234,17 +237,17 @@ static int configure_afu(struct ocxl_afu *afu, u8 afu_idx, struct pci_dev *dev)
+ 	if (rc)
+ 		return rc;
  
-+/**
-+ * Allocate an IRQ associated with an AFU context
-+ * @ctx: the AFU context
-+ * @irq_id: out, the IRQ ID
-+ *
-+ * Returns 0 on success, negative on failure
-+ */
-+extern int ocxl_afu_irq_alloc(struct ocxl_context *ctx, int *irq_id);
+-	rc = assign_afu_actag(afu, dev);
++	rc = assign_afu_actag(afu);
+ 	if (rc)
+ 		return rc;
+ 
+-	rc = assign_afu_pasid(afu, dev);
++	rc = assign_afu_pasid(afu);
+ 	if (rc) {
+ 		reclaim_afu_actag(afu);
+ 		return rc;
+ 	}
+ 
+-	rc = map_mmio_areas(afu, dev);
++	rc = map_mmio_areas(afu);
+ 	if (rc) {
+ 		reclaim_afu_pasid(afu);
+ 		reclaim_afu_actag(afu);
+@@ -331,7 +334,7 @@ void remove_afu(struct ocxl_afu *afu)
+ 	device_unregister(&afu->dev);
+ }
+ 
+-static struct ocxl_fn *alloc_function(struct pci_dev *dev)
++static struct ocxl_fn *alloc_function(void)
+ {
+ 	struct ocxl_fn *fn;
+ 
+@@ -342,6 +345,7 @@ static struct ocxl_fn *alloc_function(struct pci_dev *dev)
+ 	INIT_LIST_HEAD(&fn->afu_list);
+ 	INIT_LIST_HEAD(&fn->pasid_list);
+ 	INIT_LIST_HEAD(&fn->actag_list);
 +
-+/**
-+ * Frees an IRQ associated with an AFU context
-+ * @ctx: the AFU context
-+ * @irq_id: the IRQ ID
-+ *
-+ * Returns 0 on success, negative on failure
-+ */
-+extern int ocxl_afu_irq_free(struct ocxl_context *ctx, int irq_id);
-+
-+/**
-+ * Gets the address of the trigger page for an IRQ
-+ * This can then be provided to an AFU which will write to that
-+ * page to trigger the IRQ.
-+ * @ctx: The AFU context that the IRQ is associated with
-+ * @irq_id: The IRQ ID
-+ *
-+ * returns the trigger page address, or 0 if the IRQ is not valid
-+ */
-+extern u64 ocxl_afu_irq_get_addr(struct ocxl_context *ctx, int irq_id);
-+
-+/**
-+ * Provide a callback to be called when an IRQ is triggered
-+ * @ctx: The AFU context that the IRQ is associated with
-+ * @irq_id: The IRQ ID
-+ * @handler: the callback to be called when the IRQ is triggered
-+ * @free_private: the callback to be called when the IRQ is freed
-+ * @private: Private data to be passed to the callbacks
-+ *
-+ * Returns 0 on success, negative on failure
-+ */
-+int ocxl_irq_set_handler(struct ocxl_context *ctx, int irq_id,
-+		irqreturn_t (*handler)(void *private),
-+		void (*free_private)(void *private),
-+		void *private);
-+
- /**
-  * Read a 32 bit value from global MMIO
-  *
+ 	return fn;
+ }
+ 
+@@ -491,7 +495,7 @@ struct ocxl_fn *init_function(struct pci_dev *dev)
+ 	struct ocxl_fn *fn;
+ 	int rc;
+ 
+-	fn = alloc_function(dev);
++	fn = alloc_function();
+ 	if (!fn)
+ 		return ERR_PTR(-ENOMEM);
+ 
 -- 
 2.20.1
 
