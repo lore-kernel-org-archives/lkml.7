@@ -4,112 +4,138 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,URIBL_BLOCKED
-	autolearn=ham autolearn_force=no version=3.4.0
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 53ECDC43381
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 Mar 2019 11:28:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1A923C43381
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 Mar 2019 11:29:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 10F802147C
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 Mar 2019 11:28:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DAAD42147C
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 Mar 2019 11:29:26 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="WJQoTbrN"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="XUX9VT8p"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726130AbfCML2t (ORCPT
+        id S1726292AbfCML3Z (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 13 Mar 2019 07:28:49 -0400
-Received: from mail-lf1-f68.google.com ([209.85.167.68]:42218 "EHLO
-        mail-lf1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725864AbfCML2s (ORCPT
+        Wed, 13 Mar 2019 07:29:25 -0400
+Received: from mail-ed1-f54.google.com ([209.85.208.54]:33748 "EHLO
+        mail-ed1-f54.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725864AbfCML3Y (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 13 Mar 2019 07:28:48 -0400
-Received: by mail-lf1-f68.google.com with SMTP id p1so1167831lfk.9;
-        Wed, 13 Mar 2019 04:28:47 -0700 (PDT)
+        Wed, 13 Mar 2019 07:29:24 -0400
+Received: by mail-ed1-f54.google.com with SMTP id d12so1189204edp.0;
+        Wed, 13 Mar 2019 04:29:23 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=n9/qclrmrrk7hPObbqA9eWSUjxZEdmBmfh9T6w5dL5g=;
-        b=WJQoTbrNGo/OQniR3YKOXVanWcVxbA+ctKMObE80TAjyJ2KiUk8XLOObu/VBgBmKPA
-         TpfjWzkU5DsPoJkBVTwV6yhvvR4qP4Gg9fq32Ol5d/QpGeeUUHc1AXAVdrDZMD5165yy
-         wjoxdVyUyk/PRM5denDgUJXFzH2LgADzp6Hfigoo2Wk2fZ7vuJInGnEHIsk+KhGfduQU
-         KS2Q4t92cM54Gu/YZubxeoCu8HpmL7x0gVJkiaeWJOe2jXmGxT3nBV6A7FkLMw7wuIqI
-         2A/vJrN38mjDc+PvS4AzjE38Gc/mcBD2MS//l+73mCselNd6WnrxvH+SMPgGHP4AR3jG
-         RDMQ==
+        bh=IaHS6lLWgrNLAc+oodSpbhdPL3EOi9KHTDGrU9ZVgp0=;
+        b=XUX9VT8pVXcb8+bqb7zXGK2Cb57iRvC3/QqMbj3Sjge+2wT6FOsu+VIz5vg139EQNk
+         sm/WIJjV1tQjGYc2ZlBJszYSXQAzk0wK1Krz9hYxbGrs30dVYD4Ypp2SqbFJrMzi4Esk
+         GsBbZCUVjGFEY4BvJeRWMwk6UjPboOvjnG0tgrpy+416xFCVRZeoQaDUfEV9wkxigoHu
+         qNfVUx9VQwczy+v/Szi9aJW+9ZRCx63OgPuHqAPaVkjTUEjcvm3wPiPZ1JdbcYMjCU2z
+         cC6VT/6hwYYlAlUd2nPSGR0qexcHQ8p+9bHPSR87Eq47yClq+nCVhmM57MNxQeskQXTU
+         tXZA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=n9/qclrmrrk7hPObbqA9eWSUjxZEdmBmfh9T6w5dL5g=;
-        b=S/mIo8BR3a7/aR0L7qSdk6OobkOeixA1G7f6WLMmH58+evLfC7a6D7mlhF6VOU+BfJ
-         EEBWJkd2NTnj2LWu8qdHcdNesveyuMtjFJ7vMSr4XwX1+D6JXI/u4i+2tWN1OdYPABvX
-         L+LITUgsQ7V4e/RnMv65EqNPLFxQL782VkPFQwtcCAA+ado5i0nw8MSj+9aNYu0KFQO1
-         i2e9/jnRt4NQKS1fhvwEDFQ2KJL1G1A6gESoQy8yrcAvszI9I0IeGtWB4YiKHPCIVDgb
-         YkjKXiFLW+R760HSzzx5+jGWKhMybVEIj/6r0jbs3dHZSW3kIW+bjh5nJHdD8Qcf+1mF
-         fvmQ==
-X-Gm-Message-State: APjAAAVLNz8Ijkctnaq/4j7+2ui0pykjL9VRZrCyIepOhYtYz7Nszv+5
-        IlKcYLCAlUx/pIckoTENl/PukqZQumEvlZniuig=
-X-Google-Smtp-Source: APXvYqxsTaDjP4C3IbgvOcli7qrbzUyJ41YVNEf6OaU/F5EzpS9DG3I4+0MI285MfTFg9mVfl7voru+Z/KZTOMNsoN4=
-X-Received: by 2002:ac2:5386:: with SMTP id g6mr15344615lfh.88.1552476526505;
- Wed, 13 Mar 2019 04:28:46 -0700 (PDT)
+        bh=IaHS6lLWgrNLAc+oodSpbhdPL3EOi9KHTDGrU9ZVgp0=;
+        b=IwrlV0WyZqlXgPSKoENaDC87539ViO/B2GggzId3bTlcx0k47CEGndFjqEb4BLOdkD
+         JPCpj75yGpEIZcU/00uA7qEBWQR9vv8Kx8fOh8s/Q6/HBdn+Na314mu2U7kPAC3M9OBK
+         sotsGUICQX7QzRibTfJ/81TDW71L4ZcBIbkxIpY1p/N91pozE3CnTFzXJMhyMWuhyvk0
+         HFO5uoYr1knOgKYntpiwdJRwec1JyEKR/CW/lvisLFZwMoLbeYgPLs2OWQGPYy8Rk6sk
+         UH2+SJSeJv6fh3Ub5qB53uHfHKD06SfJXBlQyzfJz/wC7Dfj3TtRlXEigxlOBRQlkshN
+         XjUQ==
+X-Gm-Message-State: APjAAAXBuwJx04WhkaS3kLVs4J+U1IUDfI2p74tmmeqIombqux5hCqwt
+        vMMoUcAJUniB3X7tUaCdi0xM1HzaOmA77A4E8FHlV1Pz
+X-Google-Smtp-Source: APXvYqwGrL3664lc8agee0fLVURsnokfYzQuhvdfuRL6Y9zG555x9Obt4UcFOxl6C48AsijpAmamcMypSq+OH83p/8Y=
+X-Received: by 2002:a50:aa2e:: with SMTP id o43mr7273283edc.67.1552476562574;
+ Wed, 13 Mar 2019 04:29:22 -0700 (PDT)
 MIME-Version: 1.0
-References: <1552402660-31730-1-git-send-email-info@metux.net>
- <1552402660-31730-2-git-send-email-info@metux.net> <20190312163356.GB13549@kroah.com>
- <947da751-bbce-4364-a1bf-5487908e59a5@metux.net>
-In-Reply-To: <947da751-bbce-4364-a1bf-5487908e59a5@metux.net>
-From:   Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>
-Date:   Wed, 13 Mar 2019 12:28:35 +0100
-Message-ID: <CANiq72=SBFzRVhpkH8V+=5E-adzJ4v6UGAPKfr18wnCB0rcoQA@mail.gmail.com>
-Subject: Re: [PATCH 1/8] drivers: tty: serial: 8250_bcm2835aux: use devm_platform_ioremap_resource()
-To:     "Enrico Weigelt, metux IT consult" <lkml@metux.net>
-Cc:     Greg KH <gregkh@linuxfoundation.org>,
-        "Enrico Weigelt, metux IT consult" <info@metux.net>,
-        Jiri Slaby <jslaby@suse.com>, linux-serial@vger.kernel.org,
-        linux-kernel <linux-kernel@vger.kernel.org>
+References: <1551950425-7346-1-git-send-email-abel.vesa@nxp.com>
+ <20190311102825.g7d5mmorcltxnnzf@pengutronix.de> <20190311104140.n65jvamx76rzkonr@fsr-ub1664-175>
+ <20190313104149.blhwqgn53lsgow6z@pengutronix.de>
+In-Reply-To: <20190313104149.blhwqgn53lsgow6z@pengutronix.de>
+From:   Daniel Baluta <daniel.baluta@gmail.com>
+Date:   Wed, 13 Mar 2019 13:29:10 +0200
+Message-ID: <CAEnQRZAHTjKVZwviNnXSwMEn1f6PN1fV2==3xeG9kZ462ryYhw@mail.gmail.com>
+Subject: Re: [RFC] clk: imx: Allow re-parenting by default on set rate
+To:     Sascha Hauer <s.hauer@pengutronix.de>
+Cc:     Abel Vesa <abel.vesa@nxp.com>,
+        Michael Turquette <mturquette@baylibre.com>,
+        Stephen Boyd <sboyd@kernel.org>,
+        Sascha Hauer <kernel@pengutronix.de>,
+        Lucas Stach <l.stach@pengutronix.de>,
+        Shawn Guo <shawnguo@kernel.org>,
+        Aisheng Dong <aisheng.dong@nxp.com>,
+        Jacky Bai <ping.bai@nxp.com>,
+        Anson Huang <anson.huang@nxp.com>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        dl-linux-imx <linux-imx@nxp.com>,
+        Fabio Estevam <fabio.estevam@nxp.com>,
+        "linux-clk@vger.kernel.org" <linux-clk@vger.kernel.org>,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>,
+        "S.j. Wang" <shengjiu.wang@nxp.com>
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Mar 13, 2019 at 8:03 AM Enrico Weigelt, metux IT consult
-<lkml@metux.net> wrote:
+On Wed, Mar 13, 2019 at 12:42 PM Sascha Hauer <s.hauer@pengutronix.de> wrote:
 >
-> On 12.03.19 17:33, Greg KH wrote:
-> > On Tue, Mar 12, 2019 at 03:57:33PM +0100, Enrico Weigelt, metux IT consult wrote:
-> >> ---
-> >>  drivers/tty/serial/8250/8250_bcm2835aux.c | 12 ++++--------
-> >>  1 file changed, 4 insertions(+), 8 deletions(-)
+> On Mon, Mar 11, 2019 at 10:41:40AM +0000, Abel Vesa wrote:
+> > On 19-03-11 11:28:25, Sascha Hauer wrote:
+> > > Hi Abel,
+> > >
+> > > On Thu, Mar 07, 2019 at 09:20:37AM +0000, Abel Vesa wrote:
+> > > > By default, the muxes should re-parent on set_rate.
+> > > > This would allow the drivers to control only the leaf clock node,
+> > > > leaving the rest to the clock driver, that way simplifying the
+> > > > clock control.
+> > >
+> > > I am afraid of this change. Besides the rate there might be other
+> > > reasons to choose one mux input over another, consider for example low
+> > > power audio playback where we need one specific mux setting because it
+> > > provides a clock which runs at low power mode.
+> > > On the IPU on i.MX5/6 there are clocks being used as pixel clocks
+> > > derived from different muxes. I don't think you want to pick an input
+> > > clock just because it happens to deliver the best clock rate at that
+> > > point in time, but really is shared with some other clock that changes
+> > > its rate in the next moment.
+> > >
 > >
-> > No changelog or signed-off-by, sorry, please fix up the series and
-> > resend.
+> > > I have no concrete examples for things that break with this change, but
+> > > I would be more confident if we change the behaviour explicitly only for
+> > > the muxes that we have reviewed to cope with this change.
+> > >
+> >
+> > Fair enough. We could replace all the imx_clk_mux with imx_clk_mux_noreparent
+> > and after that we can independently switch the clocks that are safe (to switch)
+> > to imx_clk_mux (which would not have the noreparent flag set).
 >
-> Maybe the threading got messed up somehow (at least my tbird doesn't
-> show it correctly), so you've probably didn't see my intro letter: there
+> Ok with me.
+>
+> >
+> > The main idea is to simplify the clock control from drivers point of view.
+>
+> Which drivers do you have in mind? I hardly ever missed reparenting on
+> rate changes, so where is this feature useful?
 
-The intro letter seems to be an independent message with a different
-subject line -- not sure what threading you expected (?).
+Hi Sascha,
 
-> I wrote that this is yet WIP, not meant for actual submission, instead
-> just to ask you folks whether my approach in general would be work.
+Reparenting is very useful for Audio IPs (SAI, SPDIF, PDM, FSL DSP).
+We often need clock rates that are multiples of 8000 or 11025
+which can be obtain from different PLLs. But in order for this to work
+we need to have the correct parent.
 
-That will indeed cause confusion. If you are requesting comments only,
-please do so placing [RFC] or similar in the subject of each patch
-(you did in the letter, but that had a different title, and it is
-not how cover letters are usually sent, they are normally patch 0).
+In our current tree we do the re parenting manually inside drivers. For example:
 
-Another option is sending a message with the repo URL where
-development is happening, so interested parties can take a look.
+https://source.codeaurora.org/external/imx/linux-imx/tree/sound/soc/fsl/fsl_sai.c?h=imx_4.14.78_1.0.0_ga#n244
 
-However:
+This is far from optimal. Abel's patch will be of a great help for Audio.
 
-> Of course, when the stuff becomes ready for submission, all these
-> things will be cleaned up.
-
-Even if you are sending some draft patches, it is still a bad idea to
-send them incomplete. Basically you are making it harder for early
-reviewers simply by not having written an explanation or at least a
-reference to the explanation.
-
-Cheers,
-Miguel
+thanks,
+Daniel.
