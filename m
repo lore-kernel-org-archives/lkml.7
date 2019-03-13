@@ -1,186 +1,132 @@
-Return-Path: <SRS0=J4ZE=RP=vger.kernel.org=linux-kernel-owner@kernel.org>
+Return-Path: <SRS0=dUEL=RQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DEC9AC43381
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 23:54:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D04A6C43381
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 Mar 2019 00:02:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9D072206BA
-	for <linux-kernel@archiver.kernel.org>; Tue, 12 Mar 2019 23:54:34 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=aj.id.au header.i=@aj.id.au header.b="qLC/QcmL";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="60pYjIon"
+	by mail.kernel.org (Postfix) with ESMTP id A1CA02147C
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 Mar 2019 00:02:20 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727462AbfCLXyd (ORCPT
+        id S1726858AbfCMACT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 12 Mar 2019 19:54:33 -0400
-Received: from out2-smtp.messagingengine.com ([66.111.4.26]:53561 "EHLO
-        out2-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726372AbfCLXyc (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 12 Mar 2019 19:54:32 -0400
-Received: from compute4.internal (compute4.nyi.internal [10.202.2.44])
-        by mailout.nyi.internal (Postfix) with ESMTP id 88558228FA;
-        Tue, 12 Mar 2019 19:54:31 -0400 (EDT)
-Received: from imap2 ([10.202.2.52])
-  by compute4.internal (MEProxy); Tue, 12 Mar 2019 19:54:31 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=aj.id.au; h=
-        message-id:in-reply-to:references:date:from:to:cc:subject
-        :content-type; s=fm2; bh=ZLdYJ59TEy60Z1sd2pKkiHH2eFd04bPLAA+LnR5
-        TkVc=; b=qLC/QcmLddDtBDYrWEG4OGzQTafY2nZMhZbHBk2OXSrylnoaPqoJk8f
-        H3m4Mj5CfZMAJl+FV53mSTzQjaU4qA5wSY7EMLhSMHfwue5U4Sg2xDPM8L/TaTdc
-        wfU64GTybNwAagx5VWYxqwD3Cz8Qpwv12X7zLiUq/l+J1VkfZoNqJXS9VlEcnlOr
-        aiiCo33bn+QmPFMvh3WsaGeeMcuqZOhCCjKlFX4de2DL2UUS/hyWBHzcNeI3XAnD
-        IScEZOJqpRjWKkhzuK6fcG6iMcuFEkQxv4iLr4UU8VxBv3YILD3enb/wld9Fah7g
-        /VgQKcHMx/6a2qRFrm20Nfpz8OoTnsA==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-        messagingengine.com; h=cc:content-type:date:from:in-reply-to
-        :message-id:references:subject:to:x-me-proxy:x-me-proxy
-        :x-me-sender:x-me-sender:x-sasl-enc; s=fm2; bh=ZLdYJ59TEy60Z1sd2
-        pKkiHH2eFd04bPLAA+LnR5TkVc=; b=60pYjIona/YDv6z3xJTlfQ838tDicA8i1
-        yP56AndqJKhNmA7xERmLtvNOzVDYzGpuYVxJgqIEhriW1LTSYyBNO1JoCzCa+o5b
-        y0IiGMZGuzZxlbZjZOD6EZY4QYjHAwZZnyDMwO6XWIjNarLYNoTd8oSlfIUpdz+C
-        TM/dIiExGTAjoLRNE/eMOf0Tu4GqwxJMIMm/4ppmZ7VNiZdhWVbdycCTZOr3O0K0
-        xSc/A8+KwMlgs3JSAn8TaTgMQMLrjtYm24p+uKIY2ASx4Vx6CI+GjCwXsFOxI0o+
-        fH7bs/RoYS2z0DFrlX3AofaoHXnX2BYoDY5XXUwAGlLx190Nd6Cvg==
-X-ME-Sender: <xms:tkaIXEFv1g1y9-XeWftFHqKzSDTYR99o-KXNt7lWAv9vGInOcczZJQ>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedutddrgeelgddugecutefuodetggdotefrodftvf
-    curfhrohhfihhlvgemucfhrghsthforghilhdpqfgfvfdpuffrtefokffrpgfnqfghnecu
-    uegrihhlohhuthemuceftddtnecunecujfgurhepofgfkfgjfhffhffvufgtsehttdertd
-    erredtnecuhfhrohhmpedftehnughrvgifucflvghffhgvrhihfdcuoegrnhgurhgvfies
-    rghjrdhiugdrrghuqeenucfrrghrrghmpehmrghilhhfrhhomheprghnughrvgifsegrjh
-    drihgurdgruhenucevlhhushhtvghrufhiiigvpedt
-X-ME-Proxy: <xmx:tkaIXKgbZpBqSpehNs-t1xz8gnhkE6GNuSFJU1dT-HZ0ZXzw-URhOA>
-    <xmx:tkaIXCov6l7uaBoXqM-dxgjP84pJJHAG06eMhgDscL-fS2ljXwO_Jg>
-    <xmx:tkaIXCTYlsyoPhBRtNryYMGdlZp9LY0SkMPLdBZJZUE73oG96arSww>
-    <xmx:t0aIXBMDhct4TjZy6mHyI6sKYUm2LIgyCoYaH0QKC1YVpDrgFMPzBw>
-Received: by mailuser.nyi.internal (Postfix, from userid 501)
-        id F1AB97C1EB; Tue, 12 Mar 2019 19:54:29 -0400 (EDT)
-X-Mailer: MessagingEngine.com Webmail Interface
-User-Agent: Cyrus-JMAP/3.1.5-925-g644bf8c-fmstable-20190228v5
-X-Me-Personality: 52947553
-Message-Id: <cc4d6c18-6c94-4f0b-8c6c-139496fa49aa@www.fastmail.com>
-In-Reply-To: <1552312598-25574-1-git-send-email-info@metux.net>
-References: <1552312598-25574-1-git-send-email-info@metux.net>
-Date:   Tue, 12 Mar 2019 19:54:28 -0400
-From:   "Andrew Jeffery" <andrew@aj.id.au>
-To:     "Enrico Weigelt, metux IT consult" <info@metux.net>,
-        linux-kernel@vger.kernel.org
-Cc:     hsweeten@visionengravers.com, alexander.sverdlin@gmail.com,
-        kaloz@openwrt.org, khalasa@piap.pl, lkundrak@v3.sk,
-        aaro.koskinen@iki.fi, tony@atomide.com, baohua@kernel.org,
-        kgene@kernel.org, krzk@kernel.org, linux@prisktech.co.nz,
-        mcuos.com@gmail.com, matthias.bgg@gmail.com,
-        linux-omap@vger.kernel.org
-Subject: Re: [PATCH] arch: arm: Kconfig: pedantic formatting
-Content-Type: text/plain
+        Tue, 12 Mar 2019 20:02:19 -0400
+Received: from mga14.intel.com ([192.55.52.115]:23529 "EHLO mga14.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726411AbfCMACS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 12 Mar 2019 20:02:18 -0400
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga008.jf.intel.com ([10.7.209.65])
+  by fmsmga103.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 12 Mar 2019 17:02:18 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.58,472,1544515200"; 
+   d="scan'208";a="124953603"
+Received: from ray.jf.intel.com (HELO [10.7.201.126]) ([10.7.201.126])
+  by orsmga008.jf.intel.com with ESMTP; 12 Mar 2019 17:02:17 -0700
+Subject: Re: [PATCH] b/arch/x86/mm/pti.c - make local symbols static
+To:     =?UTF-8?Q?Valdis_Kl=c4=93tnieks?= <valdis.kletnieks@vt.edu>,
+        Dave Hansen <dave.hansen@linux.intel.com>,
+        Andy Lutomirski <luto@kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>
+Cc:     x86@kernel.org, linux-kernel@vger.kernel.org
+References: <27680.1552376873@turing-police>
+From:   Dave Hansen <dave.hansen@intel.com>
+Openpgp: preference=signencrypt
+Autocrypt: addr=dave.hansen@intel.com; keydata=
+ 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
+Message-ID: <36d37d88-4460-e2bb-4f09-07693ddb5831@intel.com>
+Date:   Tue, 12 Mar 2019 17:02:17 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.5.1
+MIME-Version: 1.0
+In-Reply-To: <27680.1552376873@turing-police>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+> Make both variables static.
 
+"pti_set_kernel_image_nonglobal(void)" is an awfully funny looking
+variable. ;)
 
-On Tue, 12 Mar 2019, at 00:26, Enrico Weigelt, metux IT consult wrote:
-> Formatting of Kconfig files doesn't look so pretty, so let the
-> Great White Handkerchief come around and clean it up.
+> Signed-off-by: Valdis Kletnieks <valdis.kletnieks@vt.edu>
 > 
-> Signed-off-by: Enrico Weigelt, metux IT consult <info@metux.net>
 > ---
->  arch/arm/Kconfig              | 24 +++++++++++-----------
->  arch/arm/mach-aspeed/Kconfig  | 10 ++++-----
->  arch/arm/mach-ep93xx/Kconfig  |  8 ++++----
->  arch/arm/mach-hisi/Kconfig    | 14 ++++++-------
->  arch/arm/mach-ixp4xx/Kconfig  | 32 ++++++++++++++---------------
->  arch/arm/mach-mmp/Kconfig     |  2 +-
->  arch/arm/mach-omap1/Kconfig   | 36 ++++++++++++++++----------------
->  arch/arm/mach-omap2/Kconfig   | 12 +++++------
->  arch/arm/mach-prima2/Kconfig  |  6 +++---
->  arch/arm/mach-s3c24xx/Kconfig | 32 ++++++++++++++---------------
->  arch/arm/mach-s3c64xx/Kconfig | 16 +++++++--------
->  arch/arm/mach-sa1100/Kconfig  |  4 ++--
->  arch/arm/mach-vt8500/Kconfig  |  6 +++---
->  arch/arm/mach-w90x900/Kconfig |  6 +++---
->  arch/arm/mm/Kconfig           | 48 +++++++++++++++++++++----------------------
->  arch/arm/plat-samsung/Kconfig | 26 +++++++++++------------
->  16 files changed, 140 insertions(+), 142 deletions(-)
-> 
-> diff --git a/arch/arm/Kconfig b/arch/arm/Kconfig
-> index 5085a1e..c89f683 100644
-> --- a/arch/arm/Kconfig
-> +++ b/arch/arm/Kconfig
-> @@ -1115,14 +1115,14 @@ config ARM_ERRATA_764369
->  	  in the diagnostic control register of the SCU.
+> diff --git a/arch/x86/mm/pti.c b/arch/x86/mm/pti.c
+> index 4fee5c3003ed..139b28a01ce4 100644
+> --- a/arch/x86/mm/pti.c
+> +++ b/arch/x86/mm/pti.c
+> @@ -77,7 +77,7 @@ static void __init pti_print_if_secure(const char *reason)
+>  		pr_info("%s\n", reason);
+>  }
 >  
->  config ARM_ERRATA_775420
-> -       bool "ARM errata: A data cache maintenance operation which 
-> aborts, might lead to deadlock"
-> -       depends on CPU_V7
-> -       help
-> -	 This option enables the workaround for the 775420 Cortex-A9 (r2p2,
-> -	 r2p6,r2p8,r2p10,r3p0) erratum. In case a date cache maintenance
-> -	 operation aborts with MMU exception, it might cause the processor
-> -	 to deadlock. This workaround puts DSB before executing ISB if
-> -	 an abort may occur on cache maintenance.
-> +	bool "ARM errata: A data cache maintenance operation which aborts, 
-> might lead to deadlock"
-> +	depends on CPU_V7
-> +	help
-> +	  This option enables the workaround for the 775420 Cortex-A9 (r2p2,
-> +	  r2p6,r2p8,r2p10,r3p0) erratum. In case a date cache maintenance
-> +	  operation aborts with MMU exception, it might cause the processor
-> +	  to deadlock. This workaround puts DSB before executing ISB if
-> +	  an abort may occur on cache maintenance.
->  
->  config ARM_ERRATA_798181
->  	bool "ARM errata: TLBI/DSB failure on Cortex-A15"
-> @@ -1650,12 +1650,12 @@ config HW_PERF_EVENTS
->  	depends on ARM_PMU
->  
->  config SYS_SUPPORTS_HUGETLBFS
-> -       def_bool y
-> -       depends on ARM_LPAE
-> +	def_bool y
-> +	depends on ARM_LPAE
->  
->  config HAVE_ARCH_TRANSPARENT_HUGEPAGE
-> -       def_bool y
-> -       depends on ARM_LPAE
-> +	def_bool y
-> +	depends on ARM_LPAE
->  
->  config ARCH_WANT_GENERAL_HUGETLB
->  	def_bool y
-> diff --git a/arch/arm/mach-aspeed/Kconfig b/arch/arm/mach-aspeed/Kconfig
-> index 2d5570e..f6eaf05 100644
-> --- a/arch/arm/mach-aspeed/Kconfig
-> +++ b/arch/arm/mach-aspeed/Kconfig
-> @@ -18,9 +18,9 @@ config MACH_ASPEED_G4
->  	select CPU_ARM926T
->  	select PINCTRL_ASPEED_G4
->  	help
-> -	 Say yes if you intend to run on an Aspeed ast2400 or similar
-> -	 fourth generation BMCs, such as those used by OpenPower Power8
-> -	 systems.
-> +	  Say yes if you intend to run on an Aspeed ast2400 or similar
-> +	  fourth generation BMCs, such as those used by OpenPower Power8
-> +	  systems.
->  
->  config MACH_ASPEED_G5
->  	bool "Aspeed SoC 5th Generation"
-> @@ -28,7 +28,7 @@ config MACH_ASPEED_G5
->  	select CPU_V6
->  	select PINCTRL_ASPEED_G5
->  	help
-> -	 Say yes if you intend to run on an Aspeed ast2500 or similar
-> -	 fifth generation Aspeed BMCs.
-> +	  Say yes if you intend to run on an Aspeed ast2500 or similar
-> +	  fifth generation Aspeed BMCs.
+> -enum pti_mode {
+> +static enum pti_mode {
 
-For the ASPEED bits:
+I'm struggling to figure out why we would want to do this.  If there's a
+really good reason, I think we probably need to do it en masse:
 
-Acked-by: Andrew Jeffery <andrew@aj.id.au>
+$ grep -r '^enum.{' arch/x86/ | wc -l
+48
+
+>  	PTI_AUTO = 0,
+>  	PTI_FORCE_OFF,
+>  	PTI_FORCE_ON
+> @@ -602,7 +602,7 @@ static void pti_clone_kernel_text(void)
+>  	set_memory_global(start, (end_global - start) >> PAGE_SHIFT);
+>  }
+>  
+> -void pti_set_kernel_image_nonglobal(void)
+> +static void pti_set_kernel_image_nonglobal(void)
+
+Yes, this function should be static.
