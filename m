@@ -2,251 +2,204 @@ Return-Path: <SRS0=dUEL=RQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FSL_HELO_FAKE,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_PASS,URIBL_BLOCKED,USER_AGENT_MUTT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8C04FC43381
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 Mar 2019 18:15:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9E844C43381
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 Mar 2019 18:16:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 610282075C
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 Mar 2019 18:15:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5A7732075C
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 Mar 2019 18:16:55 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1552501015;
+	bh=NBYWGtH9wtv5Jk1W5+17+1saO++Uar9ct/F9yhKpQZI=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=XLCtwvp7ykR9y/Su/Gd1nFjIR9dLPE44ufjfzAzEKWEFJT7osMSDiEIeD/ac2IeLS
+	 K0VH1KhuchNod2ADi7j5DKzJkp0cj7MFbX2zfZep9Vmjpnh8WDIuMwHXppt8LeEEcd
+	 temP90mEAJaVOWN1u2BPs8qZtDyVa/jbSuAAw/FQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726771AbfCMSPO (ORCPT
+        id S1726837AbfCMSQy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 13 Mar 2019 14:15:14 -0400
-Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:53916 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726328AbfCMSPO (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 13 Mar 2019 14:15:14 -0400
-Received: from pps.filterd (m0098396.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x2DIC9c9067629
-        for <linux-kernel@vger.kernel.org>; Wed, 13 Mar 2019 14:15:13 -0400
-Received: from e06smtp07.uk.ibm.com (e06smtp07.uk.ibm.com [195.75.94.103])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 2r76tjrgbe-1
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
-        for <linux-kernel@vger.kernel.org>; Wed, 13 Mar 2019 14:15:13 -0400
-Received: from localhost
-        by e06smtp07.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
-        for <linux-kernel@vger.kernel.org> from <rppt@linux.ibm.com>;
-        Wed, 13 Mar 2019 18:15:10 -0000
-Received: from b06cxnps4076.portsmouth.uk.ibm.com (9.149.109.198)
-        by e06smtp07.uk.ibm.com (192.168.101.137) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
-        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
-        Wed, 13 Mar 2019 18:15:07 -0000
-Received: from b06wcsmtp001.portsmouth.uk.ibm.com (b06wcsmtp001.portsmouth.uk.ibm.com [9.149.105.160])
-        by b06cxnps4076.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x2DIF6BJ32964702
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Wed, 13 Mar 2019 18:15:06 GMT
-Received: from b06wcsmtp001.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 37567A405B;
-        Wed, 13 Mar 2019 18:15:06 +0000 (GMT)
-Received: from b06wcsmtp001.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 1330AA405F;
-        Wed, 13 Mar 2019 18:15:05 +0000 (GMT)
-Received: from rapoport-lnx (unknown [9.148.204.233])
-        by b06wcsmtp001.portsmouth.uk.ibm.com (Postfix) with ESMTPS;
-        Wed, 13 Mar 2019 18:15:04 +0000 (GMT)
-Date:   Wed, 13 Mar 2019 20:15:03 +0200
-From:   Mike Rapoport <rppt@linux.ibm.com>
-To:     Anup Patel <Anup.Patel@wdc.com>
-Cc:     Palmer Dabbelt <palmer@sifive.com>,
-        Albert Ou <aou@eecs.berkeley.edu>,
-        Atish Patra <Atish.Patra@wdc.com>,
-        Paul Walmsley <paul.walmsley@sifive.com>,
-        Christoph Hellwig <hch@infradead.org>,
-        "linux-riscv@lists.infradead.org" <linux-riscv@lists.infradead.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH 2/3] RISC-V: Make setup_vm() independent of GCC code model
-References: <20190312220752.128141-1-anup.patel@wdc.com>
- <20190312220752.128141-3-anup.patel@wdc.com>
+        Wed, 13 Mar 2019 14:16:54 -0400
+Received: from mail.kernel.org ([198.145.29.99]:43556 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726412AbfCMSQx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 13 Mar 2019 14:16:53 -0400
+Received: from gmail.com (unknown [104.132.1.77])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id ED92D21019;
+        Wed, 13 Mar 2019 18:16:51 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1552501012;
+        bh=NBYWGtH9wtv5Jk1W5+17+1saO++Uar9ct/F9yhKpQZI=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=URSa0zmoebEWbGHKSEkWGzRrbEVoDmXu2HYX/iZre+2OIfJ8Rf6ZF4hULmOBmCzx+
+         dy74dBbaK4VuhVexHIJ4umpIejOh8BVmW5+BNhz6omfDdr4ANQpGl2fOdpBKYGgRlo
+         MrjBkIn1xE6P5zCFYEdVXhM1b2i+eQ/vGeSNGcRo=
+Date:   Wed, 13 Mar 2019 11:16:50 -0700
+From:   Eric Biggers <ebiggers@kernel.org>
+To:     Dmitry Vyukov <dvyukov@google.com>
+Cc:     Andrew Morton <akpm@linux-foundation.org>,
+        syzbot <syzbot+fa11f9da42b46cea3b4a@syzkaller.appspotmail.com>,
+        Cgroups <cgroups@vger.kernel.org>,
+        Johannes Weiner <hannes@cmpxchg.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Linux-MM <linux-mm@kvack.org>, Michal Hocko <mhocko@kernel.org>,
+        Michal Hocko <mhocko@suse.com>,
+        Stephen Rothwell <sfr@canb.auug.org.au>,
+        Shakeel Butt <shakeelb@google.com>,
+        syzkaller-bugs <syzkaller-bugs@googlegroups.com>,
+        Vladimir Davydov <vdavydov.dev@gmail.com>
+Subject: Re: KASAN: null-ptr-deref Read in reclaim_high
+Message-ID: <20190313181649.GA10169@gmail.com>
+References: <0000000000001fd5780583d1433f@google.com>
+ <20190311163747.f56cceebd9c2661e4519bdfc@linux-foundation.org>
+ <CACT4Y+byKQSOCte3JS9XOnyr+aVSEFtBvLxG2-HUrZX3-82Hcg@mail.gmail.com>
+ <20190311232541.db8571d2e3e0ca636785f31f@linux-foundation.org>
+ <CACT4Y+Y0JdB-=yLLchw8icokn11iH2-XYoLJEOFKm6F88fJ3WQ@mail.gmail.com>
+ <20190312225044.GB38846@gmail.com>
+ <CACT4Y+a775wdkjQcsZTLG_Jr4k2gSXnOQF6ZTJDPOc-kvPG9Xw@mail.gmail.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20190312220752.128141-3-anup.patel@wdc.com>
-User-Agent: Mutt/1.5.24 (2015-08-30)
-X-TM-AS-GCONF: 00
-x-cbid: 19031318-0028-0000-0000-000003539FC8
-X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
-x-cbparentid: 19031318-0029-0000-0000-000024122936
-Message-Id: <20190313181502.GA28630@rapoport-lnx>
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-03-13_11:,,
- signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
- malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
- clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
- mlxlogscore=999 adultscore=0 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.0.1-1810050000 definitions=main-1903130126
+In-Reply-To: <CACT4Y+a775wdkjQcsZTLG_Jr4k2gSXnOQF6ZTJDPOc-kvPG9Xw@mail.gmail.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Mar 12, 2019 at 10:08:16PM +0000, Anup Patel wrote:
-> The setup_vm() must access kernel symbols in a position independent way
-> because it will be called from head.S with MMU off.
+On Wed, Mar 13, 2019 at 09:24:21AM +0100, 'Dmitry Vyukov' via syzkaller-bugs wrote:
+> On Tue, Mar 12, 2019 at 11:50 PM Eric Biggers <ebiggers@kernel.org> wrote:
+> >
+> > On Tue, Mar 12, 2019 at 09:33:44AM +0100, 'Dmitry Vyukov' via syzkaller-bugs wrote:
+> > > On Tue, Mar 12, 2019 at 7:25 AM Andrew Morton <akpm@linux-foundation.org> wrote:
+> > > >
+> > > > On Tue, 12 Mar 2019 07:08:38 +0100 Dmitry Vyukov <dvyukov@google.com> wrote:
+> > > >
+> > > > > On Tue, Mar 12, 2019 at 12:37 AM Andrew Morton
+> > > > > <akpm@linux-foundation.org> wrote:
+> > > > > >
+> > > > > > On Mon, 11 Mar 2019 06:08:01 -0700 syzbot <syzbot+fa11f9da42b46cea3b4a@syzkaller.appspotmail.com> wrote:
+> > > > > >
+> > > > > > > syzbot has bisected this bug to:
+> > > > > > >
+> > > > > > > commit 29a4b8e275d1f10c51c7891362877ef6cffae9e7
+> > > > > > > Author: Shakeel Butt <shakeelb@google.com>
+> > > > > > > Date:   Wed Jan 9 22:02:21 2019 +0000
+> > > > > > >
+> > > > > > >      memcg: schedule high reclaim for remote memcgs on high_work
+> > > > > > >
+> > > > > > > bisection log:  https://syzkaller.appspot.com/x/bisect.txt?x=155bf5db200000
+> > > > > > > start commit:   29a4b8e2 memcg: schedule high reclaim for remote memcgs on..
+> > > > > > > git tree:       linux-next
+> > > > > > > final crash:    https://syzkaller.appspot.com/x/report.txt?x=175bf5db200000
+> > > > > > > console output: https://syzkaller.appspot.com/x/log.txt?x=135bf5db200000
+> > > > > > > kernel config:  https://syzkaller.appspot.com/x/.config?x=611f89e5b6868db
+> > > > > > > dashboard link: https://syzkaller.appspot.com/bug?extid=fa11f9da42b46cea3b4a
+> > > > > > > userspace arch: amd64
+> > > > > > > syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=14259017400000
+> > > > > > > C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=141630a0c00000
+> > > > > > >
+> > > > > > > Reported-by: syzbot+fa11f9da42b46cea3b4a@syzkaller.appspotmail.com
+> > > > > > > Fixes: 29a4b8e2 ("memcg: schedule high reclaim for remote memcgs on
+> > > > > > > high_work")
+> > > > > >
+> > > > > > The following patch
+> > > > > > memcg-schedule-high-reclaim-for-remote-memcgs-on-high_work-v3.patch
+> > > > > > might have fixed this.  Was it applied?
+> > > > >
+> > > > > Hi Andrew,
+> > > > >
+> > > > > You mean if the patch was applied during the bisection?
+> > > > > No, it wasn't. Bisection is very specifically done on the same tree
+> > > > > where the bug was hit. There are already too many factors that make
+> > > > > the result flaky/wrong/inconclusive without changing the tree state.
+> > > > > Now, if syzbot would know about any pending fix for this bug, then it
+> > > > > would not do the bisection at all. But it have not seen any patch in
+> > > > > upstream/linux-next with the Reported-by tag, nor it received any syz
+> > > > > fix commands for this bugs. Should have been it aware of the fix? How?
+> > > >
+> > > > memcg-schedule-high-reclaim-for-remote-memcgs-on-high_work-v3.patch was
+> > > > added to linux-next on Jan 10.  I take it that this bug was hit when
+> > > > testing the entire linux-next tree, so we can assume that
+> > > > memcg-schedule-high-reclaim-for-remote-memcgs-on-high_work-v3.patch
+> > > > does not fix it, correct?
+> > > > In which case, over to Shakeel!
+> > >
+> > > Jan 10 is exactly when this bug was reported:
+> > > https://groups.google.com/forum/#!msg/syzkaller-bugs/5YkhNUg2PFY/4-B5M7bDCAAJ
+> > > https://syzkaller.appspot.com/bug?extid=fa11f9da42b46cea3b4a
+> > >
+> > > We don't know if that patch fixed the bug or not because nobody tested
+> > > the reproducer with that patch.
+> > >
+> > > It seems that the problem here is that nobody associated the fix with
+> > > the bug report. So people looking at open bug reports will spend time
+> > > again and again debugging this just to find that this was fixed months
+> > > ago. syzbot also doesn't have a chance to realize that this is fixed
+> > > and bisection is not necessary anymore. It also won't confirm/disprove
+> > > that the fix actually fixes the bug because even if the crash will
+> > > continue to happen it will look like the old crash just continues to
+> > > happen, so nothing to notify about.
+> > >
+> > > Associating fixes with bug reports solves all these problems for
+> > > humans and bots.
+> > >
+> >
+> > I think syzbot needs to be more aggressive about invalidating old bug reports on
+> > linux-next, e.g. automatically invalidate linux-next bugs that no longer occur
+> > after a few weeks even if there is a reproducer.  Patches get added, changed,
+> > and removed in linux-next every day.  Bugs that syzbot runs into on linux-next
+> > are often obvious enough that they get reported by other people too, resulting
+> > in bugs being fixed or dropped without people ever seeing the syzbot report.
+> > How do you propose that people associate fixes with syzbot reports when they
+> > never saw the syzbot report in the first place?
+> >
+> > This is a problem on mainline too, of course.  But we *know* it's a more severe
+> > problem on linux-next, and that a bug like this that only ever happened on
+> > linux-next and stopped happening 2 months ago, is much less likely to be
+> > relevant than a bug in mainline.  Kernel developers don't have time to examine
+> > every single syzbot report so you need to help them out by reducing the noise.
 > 
-> If we compile kernel with cmodel=medany then PC-relative addressing will
-> be used in setup_vm() to access kernel symbols so it works perfectly fine.
+> Please file an issue for this at https://github.com/google/syzkaller/issues
+
+I filed https://github.com/google/syzkaller/issues/1054
+
 > 
-> Although, if we compile kernel with cmodel=medlow then either absolute
-> addressing or PC-relative addressing (based on whichever requires fewer
-> instructions) is used to access kernel symbols in setup_vm(). This can
-> break setup_vm() whenever any absolute addressing is used to access
-> kernel symbols.
+> I also wonder how does this work for all other kernel bugs reports?
+> syzbot is not the only one reporting kernel bugs and we don't want to
+> invent new rules here.
+
+Well, I think you already know the answer to that.  There's no unified bug
+tracking system for all kernel subsystems, so in the worst case bugs/features
+just get ignored until someone cares to bring it up again.  I know you want to
+change that, but the larger problem is that there aren't enough people able and
+funded to do the work.  For the kernel overall (some subsystems are better, OFC)
+there so many low-quality, duplicate, or irrelevant reports/requests that no one
+can keep up.  That means maintainers have to focus on the highest priority
+reports/requests, such as the ones that are clearly relevant and get continued
+discussion, vs. some random problem someone had 2 years ago.  Just putting stuff
+on a bug tracker does not magically make people work on it.
+
+I think the reality is that until people can actually be funded to immediately
+analyze every syzbot report, syzbot needs to be designed to help developers
+focus on the reports most likely to still be actual bugs.  That means
+automatically closing bugs where the crash is no longer occurring, especially if
+it was on linux-next; and sending reminders if the crash is still occurring.
+
 > 
-> With the movement of setup_vm() from kernel/setup.c to mm/init.c, the
-> setup_vm() is now broken for cmodel=medlow but it works perfectly fine
-> for cmodel=medany.
-> 
-> This patch fixes setup_vm() and makes it independent of GCC code model
-> by accessing kernel symbols relative to kernel load address instead of
-> assuming PC-relative addressing.
-> 
-> Fixes: 6f1e9e946f0b ("RISC-V: Move setup_vm() to mm/init.c")
-> Signed-off-by: Anup Patel <anup.patel@wdc.com>
-> ---
->  arch/riscv/kernel/head.S |  1 +
->  arch/riscv/mm/init.c     | 71 ++++++++++++++++++++++++++--------------
->  2 files changed, 47 insertions(+), 25 deletions(-)
-> 
-> diff --git a/arch/riscv/kernel/head.S b/arch/riscv/kernel/head.S
-> index fe884cd69abd..7966262b4f9d 100644
-> --- a/arch/riscv/kernel/head.S
-> +++ b/arch/riscv/kernel/head.S
-> @@ -62,6 +62,7 @@ clear_bss_done:
->  
->  	/* Initialize page tables and relocate to virtual addresses */
->  	la sp, init_thread_union + THREAD_SIZE
-> +	la a0, _start
->  	call setup_vm
->  	call relocate
->  
-> diff --git a/arch/riscv/mm/init.c b/arch/riscv/mm/init.c
-> index b379a75ac6a6..f35299f2f3d5 100644
-> --- a/arch/riscv/mm/init.c
-> +++ b/arch/riscv/mm/init.c
-> @@ -172,55 +172,76 @@ void __set_fixmap(enum fixed_addresses idx, phys_addr_t phys, pgprot_t prot)
->  	}
->  }
->  
-> -asmlinkage void __init setup_vm(void)
-> +static inline void *__early_va(void *ptr, uintptr_t load_pa)
->  {
->  	extern char _start;
-> +	uintptr_t va = (uintptr_t)ptr;
-> +	uintptr_t sz = (uintptr_t)(&_end) - (uintptr_t)(&_start);
-> +
-> +	if (va >= PAGE_OFFSET && va < (PAGE_OFFSET + sz))
-> +		return (void *)(load_pa + (va - PAGE_OFFSET));
-
-This is (void *)__pa(va), isn't it?
-
-> +	return (void *)va;
-
-The below usage suggests that __early_va() should be used solely for
-addresses inside the kernel. What will happen if the accesses is outside
-that range? Isn't it a BUG()?
-
-> +}
-> +
-> +asmlinkage void __init setup_vm(uintptr_t load_pa)
-> +{
->  	uintptr_t i;
-> -	uintptr_t pa = (uintptr_t) &_start;
-> +#ifndef __PAGETABLE_PMD_FOLDED
-> +	pmd_t *pmdp;
-> +#endif
-> +	pgd_t *pgdp;
-> +	phys_addr_t map_pa;
-> +	pgprot_t tableprot = __pgprot(_PAGE_TABLE);
->  	pgprot_t prot = __pgprot(pgprot_val(PAGE_KERNEL) | _PAGE_EXEC);
->  
-> -	va_pa_offset = PAGE_OFFSET - pa;
-> -	pfn_base = PFN_DOWN(pa);
-> +	va_pa_offset = PAGE_OFFSET - load_pa;
-> +	pfn_base = PFN_DOWN(load_pa);
->  
->  	/* Sanity check alignment and size */
->  	BUG_ON((PAGE_OFFSET % PGDIR_SIZE) != 0);
-> -	BUG_ON((pa % (PAGE_SIZE * PTRS_PER_PTE)) != 0);
-> +	BUG_ON((load_pa % (PAGE_SIZE * PTRS_PER_PTE)) != 0);
->  
->  #ifndef __PAGETABLE_PMD_FOLDED
-> -	trampoline_pg_dir[(PAGE_OFFSET >> PGDIR_SHIFT) % PTRS_PER_PGD] =
-> -		pfn_pgd(PFN_DOWN((uintptr_t)trampoline_pmd),
-> -			__pgprot(_PAGE_TABLE));
-> -	trampoline_pmd[0] = pfn_pmd(PFN_DOWN(pa), prot);
-> +	pgdp = __early_va(trampoline_pg_dir, load_pa);
-> +	map_pa = (uintptr_t)__early_va(trampoline_pmd, load_pa);
-
-This reads a bit strange: pa = va()
-BTW, I think you could keep the pa local variable instead of introducing
-map_pa.
-
-> +	pgdp[(PAGE_OFFSET >> PGDIR_SHIFT) % PTRS_PER_PGD] =
-> +		pfn_pgd(PFN_DOWN(map_pa), tableprot);
-> +	trampoline_pmd[0] = pfn_pmd(PFN_DOWN(load_pa), prot);
-> +
-> +	pgdp = __early_va(swapper_pg_dir, load_pa);
->  
->  	for (i = 0; i < (-PAGE_OFFSET)/PGDIR_SIZE; ++i) {
->  		size_t o = (PAGE_OFFSET >> PGDIR_SHIFT) % PTRS_PER_PGD + i;
->  
-> -		swapper_pg_dir[o] =
-> -			pfn_pgd(PFN_DOWN((uintptr_t)swapper_pmd) + i,
-> -				__pgprot(_PAGE_TABLE));
-> +		map_pa = (uintptr_t)__early_va(swapper_pmd, load_pa);
-> +		pgdp[o] = pfn_pgd(PFN_DOWN(map_pa) + i, tableprot);
->  	}
-> +	pmdp = __early_va(swapper_pmd, load_pa);
->  	for (i = 0; i < ARRAY_SIZE(swapper_pmd); i++)
-> -		swapper_pmd[i] = pfn_pmd(PFN_DOWN(pa + i * PMD_SIZE), prot);
-> +		pmdp[i] = pfn_pmd(PFN_DOWN(load_pa + i * PMD_SIZE), prot);
->  
-> -	swapper_pg_dir[(FIXADDR_START >> PGDIR_SHIFT) % PTRS_PER_PGD] =
-> -		pfn_pgd(PFN_DOWN((uintptr_t)fixmap_pmd),
-> -				__pgprot(_PAGE_TABLE));
-> +	map_pa = (uintptr_t)__early_va(fixmap_pmd, load_pa);
-> +	pgdp[(FIXADDR_START >> PGDIR_SHIFT) % PTRS_PER_PGD] =
-> +		pfn_pgd(PFN_DOWN(map_pa), tableprot);
-> +	pmdp = __early_va(fixmap_pmd, load_pa);
-> +	map_pa = (uintptr_t)__early_va(fixmap_pte, load_pa);
->  	fixmap_pmd[(FIXADDR_START >> PMD_SHIFT) % PTRS_PER_PMD] =
-> -		pfn_pmd(PFN_DOWN((uintptr_t)fixmap_pte),
-> -				__pgprot(_PAGE_TABLE));
-> +		pfn_pmd(PFN_DOWN(map_pa), tableprot);
->  #else
-> -	trampoline_pg_dir[(PAGE_OFFSET >> PGDIR_SHIFT) % PTRS_PER_PGD] =
-> -		pfn_pgd(PFN_DOWN(pa), prot);
-> +	pgdp = __early_va(trampoline_pg_dir, load_pa);
-> +	pgdp[(PAGE_OFFSET >> PGDIR_SHIFT) % PTRS_PER_PGD] =
-> +		pfn_pgd(PFN_DOWN(load_pa), prot);
-> +
-> +	pgdp = __early_va(swapper_pg_dir, load_pa);
->  
->  	for (i = 0; i < (-PAGE_OFFSET)/PGDIR_SIZE; ++i) {
->  		size_t o = (PAGE_OFFSET >> PGDIR_SHIFT) % PTRS_PER_PGD + i;
->  
-> -		swapper_pg_dir[o] =
-> -			pfn_pgd(PFN_DOWN(pa + i * PGDIR_SIZE), prot);
-> +		pgdp[o] = pfn_pgd(PFN_DOWN(load_pa + i * PGDIR_SIZE), prot);
->  	}
->  
-> -	swapper_pg_dir[(FIXADDR_START >> PGDIR_SHIFT) % PTRS_PER_PGD] =
-> -		pfn_pgd(PFN_DOWN((uintptr_t)fixmap_pte),
-> -				__pgprot(_PAGE_TABLE));
-> +	map_pa = (uintptr_t)__early_va(fixmap_pte, load_pa);
-> +	pgdp[(FIXADDR_START >> PGDIR_SHIFT) % PTRS_PER_PGD] =
-> +		pfn_pgd(PFN_DOWN(map_pa), tableprot);
->  #endif
->  }
-> -- 
-> 2.17.1
+> Also note that what happens now may be not representative of what will
+> happen in a steady mode later. Now syzbot bisects old bugs accumulated
+> over 1+ year. Later if it reports a bug, it should bisect sooner. So
+> all of what happens in this bug report won't take place.
 > 
 
--- 
-Sincerely yours,
-Mike.
+Sure, but I think there will continue to be syzbot reports that the relevant
+people either don't see, or don't have time or expertise to look into.  This is
+especially true when the same bug is filed as many different bug reports.
 
+- Eric
