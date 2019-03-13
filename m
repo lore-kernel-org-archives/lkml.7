@@ -2,211 +2,191 @@ Return-Path: <SRS0=dUEL=RQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_MUTT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 12A06C43381
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 Mar 2019 04:28:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F2B79C43381
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 Mar 2019 04:42:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D11F92177E
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 Mar 2019 04:28:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B8DEA2173C
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 Mar 2019 04:42:08 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=gibson.dropbear.id.au header.i=@gibson.dropbear.id.au header.b="pwrunOu1"
+	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="X4JUvKCY"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726912AbfCME23 (ORCPT
+        id S1726513AbfCMEmH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 13 Mar 2019 00:28:29 -0400
-Received: from ozlabs.org ([203.11.71.1]:55265 "EHLO ozlabs.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726573AbfCME21 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 13 Mar 2019 00:28:27 -0400
-Received: by ozlabs.org (Postfix, from userid 1007)
-        id 44JzNl5nPpz9sDB; Wed, 13 Mar 2019 15:28:23 +1100 (AEDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-        d=gibson.dropbear.id.au; s=201602; t=1552451303;
-        bh=YwQ5f+H3Ru8vCsfwi5Jh+JuQ9ZKtgXRwSwkRtI2CsaQ=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=pwrunOu1PWfR6fRj9TQpUxRRlZMt3BsM1hkutfBn91MxkbFMfuBUjKxfIeqNzZEUL
-         xhjJxQ02+SUGIvbH4Af9Bivy+mqBFDeGoxWVVPZc+Ibn2uUUkLEy5BHnx3y0JIiJw6
-         m6I0cn+/SPL/FpY6XC6IqqjyGQuRGRClqYBRStpA=
-Date:   Wed, 13 Mar 2019 15:27:37 +1100
-From:   David Gibson <david@gibson.dropbear.id.au>
-To:     Laurent Vivier <lvivier@redhat.com>
-Cc:     linux-kernel@vger.kernel.org,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        linuxppc-dev@lists.ozlabs.org,
-        Christophe Leroy <christophe.leroy@c-s.fr>
-Subject: Re: [PATCH v2] powerpc/mm: move warning from resize_hpt_for_hotplug()
-Message-ID: <20190313042737.GR9881@umbus.fritz.box>
-References: <20190308105413.4302-1-lvivier@redhat.com>
+        Wed, 13 Mar 2019 00:42:07 -0400
+Received: from hqemgate15.nvidia.com ([216.228.121.64]:14053 "EHLO
+        hqemgate15.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725821AbfCMEmG (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 13 Mar 2019 00:42:06 -0400
+Received: from hqpgpgate102.nvidia.com (Not Verified[216.228.121.13]) by hqemgate15.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
+        id <B5c888a100000>; Tue, 12 Mar 2019 21:41:52 -0700
+Received: from hqmail.nvidia.com ([172.20.161.6])
+  by hqpgpgate102.nvidia.com (PGP Universal service);
+  Tue, 12 Mar 2019 21:42:04 -0700
+X-PGP-Universal: processed;
+        by hqpgpgate102.nvidia.com on Tue, 12 Mar 2019 21:42:04 -0700
+Received: from HQMAIL103.nvidia.com (172.20.187.11) by HQMAIL105.nvidia.com
+ (172.20.187.12) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Wed, 13 Mar
+ 2019 04:42:04 +0000
+Received: from hqnvemgw02.nvidia.com (172.16.227.111) by HQMAIL103.nvidia.com
+ (172.20.187.11) with Microsoft SMTP Server (TLS) id 15.0.1473.3 via Frontend
+ Transport; Wed, 13 Mar 2019 04:42:04 +0000
+Received: from linux.nvidia.com (Not Verified[10.24.34.185]) by hqnvemgw02.nvidia.com with Trustwave SEG (v7,5,8,10121)
+        id <B5c888a1a0007>; Tue, 12 Mar 2019 21:42:03 -0700
+From:   Sameer Pujar <spujar@nvidia.com>
+To:     <treding@nvidia.com>, <jonathanh@nvidia.com>
+CC:     <linux-tegra@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        Sameer Pujar <spujar@nvidia.com>
+Subject: [PATCH v2 1/2] bus: tegra-aconnect: use devm_clk_*() helpers
+Date:   Wed, 13 Mar 2019 10:11:58 +0530
+Message-ID: <1552452119-6574-1-git-send-email-spujar@nvidia.com>
+X-Mailer: git-send-email 2.7.4
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="jcwRHPSxFqmwpRFb"
-Content-Disposition: inline
-In-Reply-To: <20190308105413.4302-1-lvivier@redhat.com>
-User-Agent: Mutt/1.11.3 (2019-02-01)
+Content-Type: text/plain
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
+        t=1552452113; bh=ACKj7l6XHkEXydbunQpyzCvAITUcQhTNkWhjqjJbPls=;
+        h=X-PGP-Universal:From:To:CC:Subject:Date:Message-ID:X-Mailer:
+         MIME-Version:Content-Type;
+        b=X4JUvKCYCG25RAxl/KP+s+X1z9OkG2o4P7afa6Yii9M6ZyRlJhFUp/SOfqs7Klhsx
+         ZviBE4msYfFZZhwEfG5OJGvfDDA9EZJdHISrfAM4GKMSDv7Ym4u1Xx0cw20WsJ6nMZ
+         pbM90V4amzGziXJqGYBuBwAd7Q7GHXTXEbLAi0eZPyUwrjK2zqMYqNoPbe9bHhNuV2
+         L/+fP2OvLYH4yaRC8Fji3RldwcLIKkvwrSgKByJ10fNvv87s6OSdjHFxfVyZ7+PT3h
+         rKzdOtd3FMOlyMePU+Y97eqjiEi6/kn6Vm+4f7e7MVrxdvmIUJRq1eFaJ7yZBOwkCy
+         Yj7cDuYf39cpg==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+aconnect bus driver is using pm_clk_*() interface for managing clocks.
+With this, clocks seem to be always ON. This happens on Tegra devices
+which use BPMP co-processor to manage clock resources, where clocks
+are enabled during prepare phase. This is necessary because calls to
+BPMP are always blocking. When pm_clk_*() interface is used on such
+Tegra devices, clock prepare count is not balanced till driver remove()
+gets executed and hence clocks are seen ON always. Thus this patch
+replaces pm_clk_*() with devm_clk_*() framework.
 
---jcwRHPSxFqmwpRFb
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Suggested-by: Mohan Kumar D <mkumard@nvidia.com>
+Reviewed-by: Jonathan Hunter <jonathanh@nvidia.com>
+Signed-off-by: Sameer Pujar <spujar@nvidia.com>
+---
+ drivers/bus/tegra-aconnect.c | 64 ++++++++++++++++++++++++++++++--------------
+ 1 file changed, 44 insertions(+), 20 deletions(-)
 
-On Fri, Mar 08, 2019 at 11:54:13AM +0100, Laurent Vivier wrote:
-> resize_hpt_for_hotplug() reports a warning when it cannot
-> resize the hash page table ("Unable to resize hash page
-> table to target order") but in some cases it's not a problem
-> and can make user thinks something has not worked properly.
->=20
-> This patch moves the warning to arch_remove_memory() to
-> only report the problem when it is needed.
->=20
-> Signed-off-by: Laurent Vivier <lvivier@redhat.com>
+diff --git a/drivers/bus/tegra-aconnect.c b/drivers/bus/tegra-aconnect.c
+index 084ae28..9349157 100644
+--- a/drivers/bus/tegra-aconnect.c
++++ b/drivers/bus/tegra-aconnect.c
+@@ -12,28 +12,38 @@
+ #include <linux/module.h>
+ #include <linux/of_platform.h>
+ #include <linux/platform_device.h>
+-#include <linux/pm_clock.h>
+ #include <linux/pm_runtime.h>
+ 
++struct tegra_aconnect {
++	struct clk	*ape_clk;
++	struct clk	*apb2ape_clk;
++};
++
+ static int tegra_aconnect_probe(struct platform_device *pdev)
+ {
+-	int ret;
++	struct tegra_aconnect *aconnect;
+ 
+ 	if (!pdev->dev.of_node)
+ 		return -EINVAL;
+ 
+-	ret = pm_clk_create(&pdev->dev);
+-	if (ret)
+-		return ret;
++	aconnect = devm_kzalloc(&pdev->dev, sizeof(struct tegra_aconnect),
++				GFP_KERNEL);
++	if (!aconnect)
++		return -ENOMEM;
+ 
+-	ret = of_pm_clk_add_clk(&pdev->dev, "ape");
+-	if (ret)
+-		goto clk_destroy;
++	aconnect->ape_clk = devm_clk_get(&pdev->dev, "ape");
++	if (IS_ERR(aconnect->ape_clk)) {
++		dev_err(&pdev->dev, "Can't retrieve ape clock\n");
++		return PTR_ERR(aconnect->ape_clk);
++	}
+ 
+-	ret = of_pm_clk_add_clk(&pdev->dev, "apb2ape");
+-	if (ret)
+-		goto clk_destroy;
++	aconnect->apb2ape_clk = devm_clk_get(&pdev->dev, "apb2ape");
++	if (IS_ERR(aconnect->apb2ape_clk)) {
++		dev_err(&pdev->dev, "Can't retrieve apb2ape clock\n");
++		return PTR_ERR(aconnect->apb2ape_clk);
++	}
+ 
++	dev_set_drvdata(&pdev->dev, aconnect);
+ 	pm_runtime_enable(&pdev->dev);
+ 
+ 	of_platform_populate(pdev->dev.of_node, NULL, NULL, &pdev->dev);
+@@ -41,30 +51,44 @@ static int tegra_aconnect_probe(struct platform_device *pdev)
+ 	dev_info(&pdev->dev, "Tegra ACONNECT bus registered\n");
+ 
+ 	return 0;
+-
+-clk_destroy:
+-	pm_clk_destroy(&pdev->dev);
+-
+-	return ret;
+ }
+ 
+ static int tegra_aconnect_remove(struct platform_device *pdev)
+ {
+ 	pm_runtime_disable(&pdev->dev);
+ 
+-	pm_clk_destroy(&pdev->dev);
+-
+ 	return 0;
+ }
+ 
+ static int tegra_aconnect_runtime_resume(struct device *dev)
+ {
+-	return pm_clk_resume(dev);
++	struct tegra_aconnect *aconnect = dev_get_drvdata(dev);
++	int ret;
++
++	ret = clk_prepare_enable(aconnect->ape_clk);
++	if (ret) {
++		dev_err(dev, "ape clk_enable failed: %d\n", ret);
++		return ret;
++	}
++
++	ret = clk_prepare_enable(aconnect->apb2ape_clk);
++	if (ret) {
++		clk_disable_unprepare(aconnect->ape_clk);
++		dev_err(dev, "apb2ape clk_enable failed: %d\n", ret);
++		return ret;
++	}
++
++	return 0;
+ }
+ 
+ static int tegra_aconnect_runtime_suspend(struct device *dev)
+ {
+-	return pm_clk_suspend(dev);
++	struct tegra_aconnect *aconnect = dev_get_drvdata(dev);
++
++	clk_disable_unprepare(aconnect->ape_clk);
++	clk_disable_unprepare(aconnect->apb2ape_clk);
++
++	return 0;
+ }
+ 
+ static const struct dev_pm_ops tegra_aconnect_pm_ops = {
+-- 
+2.7.4
 
-Reviewed-by: David Gibson <david@gibson.dropbear.id.au>
-
-> ---
->  arch/powerpc/include/asm/sparsemem.h  |  4 ++--
->  arch/powerpc/mm/hash_utils_64.c       | 17 ++++++-----------
->  arch/powerpc/mm/mem.c                 |  3 ++-
->  arch/powerpc/platforms/pseries/lpar.c |  3 ++-
->  4 files changed, 12 insertions(+), 15 deletions(-)
->=20
-> diff --git a/arch/powerpc/include/asm/sparsemem.h b/arch/powerpc/include/=
-asm/sparsemem.h
-> index 68da49320592..3192d454a733 100644
-> --- a/arch/powerpc/include/asm/sparsemem.h
-> +++ b/arch/powerpc/include/asm/sparsemem.h
-> @@ -17,9 +17,9 @@ extern int create_section_mapping(unsigned long start, =
-unsigned long end, int ni
->  extern int remove_section_mapping(unsigned long start, unsigned long end=
-);
-> =20
->  #ifdef CONFIG_PPC_BOOK3S_64
-> -extern void resize_hpt_for_hotplug(unsigned long new_mem_size);
-> +extern int resize_hpt_for_hotplug(unsigned long new_mem_size);
->  #else
-> -static inline void resize_hpt_for_hotplug(unsigned long new_mem_size) { }
-> +static inline int resize_hpt_for_hotplug(unsigned long new_mem_size) { r=
-eturn 0; }
->  #endif
-> =20
->  #ifdef CONFIG_NUMA
-> diff --git a/arch/powerpc/mm/hash_utils_64.c b/arch/powerpc/mm/hash_utils=
-_64.c
-> index 0cc7fbc3bd1c..40bb2a8326bb 100644
-> --- a/arch/powerpc/mm/hash_utils_64.c
-> +++ b/arch/powerpc/mm/hash_utils_64.c
-> @@ -755,12 +755,12 @@ static unsigned long __init htab_get_table_size(voi=
-d)
->  }
-> =20
->  #ifdef CONFIG_MEMORY_HOTPLUG
-> -void resize_hpt_for_hotplug(unsigned long new_mem_size)
-> +int resize_hpt_for_hotplug(unsigned long new_mem_size)
->  {
->  	unsigned target_hpt_shift;
-> =20
->  	if (!mmu_hash_ops.resize_hpt)
-> -		return;
-> +		return 0;
-> =20
->  	target_hpt_shift =3D htab_shift_for_mem_size(new_mem_size);
-> =20
-> @@ -773,15 +773,10 @@ void resize_hpt_for_hotplug(unsigned long new_mem_s=
-ize)
->  	 * current shift
->  	 */
->  	if ((target_hpt_shift > ppc64_pft_size)
-> -	    || (target_hpt_shift < (ppc64_pft_size - 1))) {
-> -		int rc;
-> -
-> -		rc =3D mmu_hash_ops.resize_hpt(target_hpt_shift);
-> -		if (rc && (rc !=3D -ENODEV))
-> -			printk(KERN_WARNING
-> -			       "Unable to resize hash page table to target order %d: %d\n",
-> -			       target_hpt_shift, rc);
-> -	}
-> +	    || (target_hpt_shift < (ppc64_pft_size - 1)))
-> +		return mmu_hash_ops.resize_hpt(target_hpt_shift);
-> +
-> +	return 0;
->  }
-> =20
->  int hash__create_section_mapping(unsigned long start, unsigned long end,=
- int nid)
-> diff --git a/arch/powerpc/mm/mem.c b/arch/powerpc/mm/mem.c
-> index 33cc6f676fa6..0d40d970cf4a 100644
-> --- a/arch/powerpc/mm/mem.c
-> +++ b/arch/powerpc/mm/mem.c
-> @@ -169,7 +169,8 @@ int __meminit arch_remove_memory(int nid, u64 start, =
-u64 size,
->  	 */
->  	vm_unmap_aliases();
-> =20
-> -	resize_hpt_for_hotplug(memblock_phys_mem_size());
-> +	if (resize_hpt_for_hotplug(memblock_phys_mem_size()) =3D=3D -ENOSPC)
-> +		pr_warn("Hash collision while resizing HPT\n");
-> =20
->  	return ret;
->  }
-> diff --git a/arch/powerpc/platforms/pseries/lpar.c b/arch/powerpc/platfor=
-ms/pseries/lpar.c
-> index f2a9f0adc2d3..1034ef1fe2b4 100644
-> --- a/arch/powerpc/platforms/pseries/lpar.c
-> +++ b/arch/powerpc/platforms/pseries/lpar.c
-> @@ -901,8 +901,10 @@ static int pseries_lpar_resize_hpt(unsigned long shi=
-ft)
->  		break;
-> =20
->  	case H_PARAMETER:
-> +		pr_warn("Invalid argument from H_RESIZE_HPT_PREPARE\n");
->  		return -EINVAL;
->  	case H_RESOURCE:
-> +		pr_warn("Operation not permitted from H_RESIZE_HPT_PREPARE\n");
->  		return -EPERM;
->  	default:
->  		pr_warn("Unexpected error %d from H_RESIZE_HPT_PREPARE\n", rc);
-> @@ -918,7 +920,6 @@ static int pseries_lpar_resize_hpt(unsigned long shif=
-t)
->  	if (rc !=3D 0) {
->  		switch (state.commit_rc) {
->  		case H_PTEG_FULL:
-> -			pr_warn("Hash collision while resizing HPT\n");
->  			return -ENOSPC;
-> =20
->  		default:
-
---=20
-David Gibson			| I'll have my music baroque, and my code
-david AT gibson.dropbear.id.au	| minimalist, thank you.  NOT _the_ _other_
-				| _way_ _around_!
-http://www.ozlabs.org/~dgibson
-
---jcwRHPSxFqmwpRFb
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAEBCAAdFiEEdfRlhq5hpmzETofcbDjKyiDZs5IFAlyIhrgACgkQbDjKyiDZ
-s5L0exAAymSOpxCfriMb6Npbikc1b9QnS8txmrdxAbX6Jiq0wt3FLblYSVY6RGau
-/jacSHypqEXMspnISemTjIImA+BPtDgCBIeuiVuF0eGCZ71I9Vlq4mhnc2lOmP7d
-HIrvJ7IlWiqJ50WIlnGER4iypjCW3Mg+I+Z+XyILw+7x03O6GFV6wppit82E9Io3
-jZKtXgnEjM/JIMZi1FhPTbM/E42T9D7XdNkwGX1VHzxyMBnKoP+KRSDkRheU1HKv
-GlZLCGmeHTvYn3RAOFyIobXPuBKIIZNuOh/jbZ3j9kKbngwElSJ+CaTsqzOWTppf
-qdVeOp80P6oehC/PdyjI1Jy3madGIDK/VRzDv9kurK0RVJyltuN+s+PU7V1+o5b9
-JE1xGq9mSNFcAewYDEl2UiXAaJVvQ1Jb9b1xIGzTGu9dUl8DtDUfkAE3KeIFWBtA
-/UjrjKHGLZIm6YQHeBtCjnEBpF6SJDPYORF5O9JL0p+tNwUIL2cm4RvjyM+Rv5As
-DvbIEUryQ0x/Jph1MeNWIpyEDYCINwVh17mKGxSLQlUWg0RcjBDMQEIUe32Mar/V
-BLz+iK/D3zmS4Bi7mMR1Cw9+JMbtg63WIx3VGv9NvxJA5Ht4fK/3qJyLrZPgobwi
-R0XDc0QKMBZnvVq0xJVUivFOLRWus4vKHmCICLw0aEUGF0apNw0=
-=wCLS
------END PGP SIGNATURE-----
-
---jcwRHPSxFqmwpRFb--
