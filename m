@@ -2,337 +2,147 @@ Return-Path: <SRS0=dUEL=RQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT
+X-Spam-Status: No, score=-3.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A40AEC43381
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 Mar 2019 04:08:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A075BC43381
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 Mar 2019 04:09:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 65A40217F5
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 Mar 2019 04:08:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6C6142173C
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 Mar 2019 04:09:58 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1552450198;
+	bh=vjEJand68LR+D4I/HEwf9qmr/8FfeRE8WXWFBtPsbyU=;
+	h=From:To:Cc:Subject:Date:List-ID:From;
+	b=XE5ibdcdahKNkl/2l2nhSwFTh3Z+dsTgfNknBlfSnexHNn3Vb801hmOdsWvJeAX9/
+	 wwHV+2J6XR8+ql/tVsfj0w+BQMQrfTZbKQ88k93BQpQAdY8Pb18xvmUIMlh3xI0Bgz
+	 1X3IrnFbLcL2GT43Dx5wcLsPCdUMy1YDaYbNwlT0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726963AbfCMEIH (ORCPT
+        id S1726854AbfCMEJ5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 13 Mar 2019 00:08:07 -0400
-Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:59346 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1725876AbfCMEHs (ORCPT
+        Wed, 13 Mar 2019 00:09:57 -0400
+Received: from wout2-smtp.messagingengine.com ([64.147.123.25]:56731 "EHLO
+        wout2-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1725884AbfCMEJ4 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 13 Mar 2019 00:07:48 -0400
-Received: from pps.filterd (m0098417.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x2D43uxw127204
-        for <linux-kernel@vger.kernel.org>; Wed, 13 Mar 2019 00:07:46 -0400
-Received: from e06smtp07.uk.ibm.com (e06smtp07.uk.ibm.com [195.75.94.103])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 2r6q6aqphc-1
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
-        for <linux-kernel@vger.kernel.org>; Wed, 13 Mar 2019 00:07:46 -0400
-Received: from localhost
-        by e06smtp07.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
-        for <linux-kernel@vger.kernel.org> from <alastair@au1.ibm.com>;
-        Wed, 13 Mar 2019 04:07:44 -0000
-Received: from b06cxnps4075.portsmouth.uk.ibm.com (9.149.109.197)
-        by e06smtp07.uk.ibm.com (192.168.101.137) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
-        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
-        Wed, 13 Mar 2019 04:07:41 -0000
-Received: from b06wcsmtp001.portsmouth.uk.ibm.com (b06wcsmtp001.portsmouth.uk.ibm.com [9.149.105.160])
-        by b06cxnps4075.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x2D47eib35586140
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Wed, 13 Mar 2019 04:07:40 GMT
-Received: from b06wcsmtp001.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id BDA8AA4054;
-        Wed, 13 Mar 2019 04:07:40 +0000 (GMT)
-Received: from b06wcsmtp001.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 28431A405C;
-        Wed, 13 Mar 2019 04:07:40 +0000 (GMT)
-Received: from ozlabs.au.ibm.com (unknown [9.192.253.14])
-        by b06wcsmtp001.portsmouth.uk.ibm.com (Postfix) with ESMTP;
-        Wed, 13 Mar 2019 04:07:40 +0000 (GMT)
-Received: from adsilva.ozlabs.ibm.com (haven.au.ibm.com [9.192.254.114])
-        (using TLSv1.2 with cipher DHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by ozlabs.au.ibm.com (Postfix) with ESMTPSA id 0AB61A0306;
-        Wed, 13 Mar 2019 15:07:39 +1100 (AEDT)
-From:   "Alastair D'Silva" <alastair@au1.ibm.com>
-Cc:     "Alastair D'Silva" <alastair@d-silva.org>,
-        Frederic Barrat <fbarrat@linux.ibm.com>,
-        Andrew Donnellan <andrew.donnellan@au1.ibm.com>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        linuxppc-dev@lists.ozlabs.org, linux-kernel@vger.kernel.org
-Subject: [PATCH 4/5] ocxl: Remove superfluous 'extern' from headers
-Date:   Wed, 13 Mar 2019 15:07:00 +1100
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20190313040702.14276-1-alastair@au1.ibm.com>
-References: <20190227045741.21412-1-alastair@au1.ibm.com>
- <20190313040702.14276-1-alastair@au1.ibm.com>
+        Wed, 13 Mar 2019 00:09:56 -0400
+Received: from compute3.internal (compute3.nyi.internal [10.202.2.43])
+        by mailout.west.internal (Postfix) with ESMTP id 1D28038D9;
+        Wed, 13 Mar 2019 00:09:55 -0400 (EDT)
+Received: from mailfrontend1 ([10.202.2.162])
+  by compute3.internal (MEProxy); Wed, 13 Mar 2019 00:09:55 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+        messagingengine.com; h=cc:content-transfer-encoding:date:from
+        :message-id:mime-version:subject:to:x-me-proxy:x-me-proxy
+        :x-me-sender:x-me-sender:x-sasl-enc; s=fm2; bh=CcuNGGoS05STV+ubM
+        wGB5nTWGo43u9oskHnErglPjYM=; b=ysJ2B9Q2A9ZFOTWy3UOh115YSZ7FHGwH7
+        biOid/sG4IgnTQtc0Mr3gQ6Jnxdo4iRpdwlGPLmPuPNfXqx0IWphxfAl+JpGz4EL
+        bq/CBJPpTVAyqU/G35avoFRNDn5S65V4D9elnS1U561MPQuT3AEsLz3miQH8SUL4
+        HzUT4LmlHsft9Ge/ni23zQ9++/cLUA9+sreft75bRO92m48QxfHX7l66VZVQhkqt
+        NijzG+QuwtzX4J0IlqGUJ04pNBsqyT/3dFH/1/okqLckNjRh4DOqFkdWnU5vxzil
+        y5GFkMzL1Ka9l/6ydxSL3dpRGfuvVmh54YNyri8obUkS0JpNG1P1A==
+X-ME-Sender: <xms:kYKIXIiovwRIj_8KMzg3gYLbEzWqznMxkcYI8mUPk78AF_7DbvfSgw>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedutddrgeelgdeijecutefuodetggdotefrodftvf
+    curfhrohhfihhlvgemucfhrghsthforghilhdpqfgfvfdpuffrtefokffrpgfnqfghnecu
+    uegrihhlohhuthemuceftddtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenuc
+    fjughrpefhvffufffkofgggfestdekredtredttdenucfhrhhomhepfdfvohgsihhnucev
+    rdcujfgrrhguihhnghdfuceothhosghinheskhgvrhhnvghlrdhorhhgqeenucfkphepud
+    dvgedrudeiledrvdefrddukeegnecurfgrrhgrmhepmhgrihhlfhhrohhmpehtohgsihhn
+    sehkvghrnhgvlhdrohhrghenucevlhhushhtvghrufhiiigvpedt
+X-ME-Proxy: <xmx:kYKIXK050Pflm3tVHEMLjqTtoGoAQAK6Jo5VgmE5OL8iiJ3MLeRy-A>
+    <xmx:kYKIXO7nns5T-Y_yw1R70JboKTfKbtsmQFCtfosh0_xX3UNzoJCG4g>
+    <xmx:kYKIXEq-1Y_a7KNsS1pMjLzLQATlqaI0A4FaPNr0UAKmaSD5UKjX8Q>
+    <xmx:koKIXAZeq8HnWLSQEa8HeqefDZTXjHndBScgxpPMTrt8Ff0UaE2oyQ>
+Received: from eros.localdomain (124-169-23-184.dyn.iinet.net.au [124.169.23.184])
+        by mail.messagingengine.com (Postfix) with ESMTPA id B32D7E408B;
+        Wed, 13 Mar 2019 00:09:51 -0400 (EDT)
+From:   "Tobin C. Harding" <tobin@kernel.org>
+To:     Jonathan Corbet <corbet@lwn.net>
+Cc:     "Tobin C. Harding" <tobin@kernel.org>, linux-doc@vger.kernel.org,
+        linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [PATCH 00/13] Convert vfs.txt to vfs.rst
+Date:   Wed, 13 Mar 2019 15:09:06 +1100
+Message-Id: <20190313040919.6937-1-tobin@kernel.org>
+X-Mailer: git-send-email 2.21.0
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-TM-AS-GCONF: 00
-x-cbid: 19031304-0028-0000-0000-00000353548A
-X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
-x-cbparentid: 19031304-0029-0000-0000-00002411DABD
-Message-Id: <20190313040702.14276-5-alastair@au1.ibm.com>
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-03-13_02:,,
- signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
- malwarescore=0 suspectscore=2 phishscore=0 bulkscore=0 spamscore=0
- clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
- mlxlogscore=855 adultscore=0 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.0.1-1810050000 definitions=main-1903130028
-To:     unlisted-recipients:; (no To-header on input)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Alastair D'Silva <alastair@d-silva.org>
+Hi,
 
-The 'extern' keyword adds no value here.
+This set converts the VFS overview documentation to RST format.  I think
+I'm slowly getting better at structuring these conversions to ease
+review, if you disagree or you notice any way to further improve please
+say so.
 
-Signed-off-by: Alastair D'Silva <alastair@d-silva.org>
----
- drivers/misc/ocxl/ocxl_internal.h | 54 +++++++++++++++----------------
- include/misc/ocxl.h               | 36 ++++++++++-----------
- 2 files changed, 44 insertions(+), 46 deletions(-)
+Patch set introduces no new warnings/errors to the html docs build
 
-diff --git a/drivers/misc/ocxl/ocxl_internal.h b/drivers/misc/ocxl/ocxl_internal.h
-index a32f2151029f..321b29e77f45 100644
---- a/drivers/misc/ocxl/ocxl_internal.h
-+++ b/drivers/misc/ocxl/ocxl_internal.h
-@@ -16,7 +16,6 @@
- 
- extern struct pci_driver ocxl_pci_driver;
- 
--
- struct ocxl_fn {
- 	struct device dev;
- 	int bar_used[3];
-@@ -92,41 +91,40 @@ struct ocxl_process_element {
- 	__be32 software_state;
- };
- 
-+struct ocxl_afu *ocxl_afu_get(struct ocxl_afu *afu);
-+void ocxl_afu_put(struct ocxl_afu *afu);
- 
--extern struct ocxl_afu *ocxl_afu_get(struct ocxl_afu *afu);
--extern void ocxl_afu_put(struct ocxl_afu *afu);
--
--extern int ocxl_create_cdev(struct ocxl_afu *afu);
--extern void ocxl_destroy_cdev(struct ocxl_afu *afu);
--extern int ocxl_register_afu(struct ocxl_afu *afu);
--extern void ocxl_unregister_afu(struct ocxl_afu *afu);
-+int ocxl_create_cdev(struct ocxl_afu *afu);
-+void ocxl_destroy_cdev(struct ocxl_afu *afu);
-+int ocxl_register_afu(struct ocxl_afu *afu);
-+void ocxl_unregister_afu(struct ocxl_afu *afu);
- 
--extern int ocxl_file_init(void);
--extern void ocxl_file_exit(void);
-+int ocxl_file_init(void);
-+void ocxl_file_exit(void);
- 
--extern int ocxl_pasid_afu_alloc(struct ocxl_fn *fn, u32 size);
--extern void ocxl_pasid_afu_free(struct ocxl_fn *fn, u32 start, u32 size);
--extern int ocxl_actag_afu_alloc(struct ocxl_fn *fn, u32 size);
--extern void ocxl_actag_afu_free(struct ocxl_fn *fn, u32 start, u32 size);
-+int ocxl_pasid_afu_alloc(struct ocxl_fn *fn, u32 size);
-+void ocxl_pasid_afu_free(struct ocxl_fn *fn, u32 start, u32 size);
-+int ocxl_actag_afu_alloc(struct ocxl_fn *fn, u32 size);
-+void ocxl_actag_afu_free(struct ocxl_fn *fn, u32 start, u32 size);
- 
--extern struct ocxl_context *ocxl_context_alloc(void);
--extern int ocxl_context_init(struct ocxl_context *ctx, struct ocxl_afu *afu,
-+struct ocxl_context *ocxl_context_alloc(void);
-+int ocxl_context_init(struct ocxl_context *ctx, struct ocxl_afu *afu,
- 			struct address_space *mapping);
--extern int ocxl_context_attach(struct ocxl_context *ctx, u64 amr);
--extern int ocxl_context_mmap(struct ocxl_context *ctx,
-+int ocxl_context_attach(struct ocxl_context *ctx, u64 amr);
-+int ocxl_context_mmap(struct ocxl_context *ctx,
- 			struct vm_area_struct *vma);
--extern int ocxl_context_detach(struct ocxl_context *ctx);
--extern void ocxl_context_detach_all(struct ocxl_afu *afu);
--extern void ocxl_context_free(struct ocxl_context *ctx);
-+int ocxl_context_detach(struct ocxl_context *ctx);
-+void ocxl_context_detach_all(struct ocxl_afu *afu);
-+void ocxl_context_free(struct ocxl_context *ctx);
- 
--extern int ocxl_sysfs_add_afu(struct ocxl_afu *afu);
--extern void ocxl_sysfs_remove_afu(struct ocxl_afu *afu);
-+int ocxl_sysfs_add_afu(struct ocxl_afu *afu);
-+void ocxl_sysfs_remove_afu(struct ocxl_afu *afu);
- 
--extern int ocxl_afu_irq_alloc(struct ocxl_context *ctx, u64 *irq_offset);
--extern int ocxl_afu_irq_free(struct ocxl_context *ctx, u64 irq_offset);
--extern void ocxl_afu_irq_free_all(struct ocxl_context *ctx);
--extern int ocxl_afu_irq_set_fd(struct ocxl_context *ctx, u64 irq_offset,
-+int ocxl_afu_irq_alloc(struct ocxl_context *ctx, u64 *irq_offset);
-+int ocxl_afu_irq_free(struct ocxl_context *ctx, u64 irq_offset);
-+void ocxl_afu_irq_free_all(struct ocxl_context *ctx);
-+int ocxl_afu_irq_set_fd(struct ocxl_context *ctx, u64 irq_offset,
- 			int eventfd);
--extern u64 ocxl_afu_irq_get_addr(struct ocxl_context *ctx, u64 irq_offset);
-+u64 ocxl_afu_irq_get_addr(struct ocxl_context *ctx, u64 irq_offset);
- 
- #endif /* _OCXL_INTERNAL_H_ */
-diff --git a/include/misc/ocxl.h b/include/misc/ocxl.h
-index 9ff6ddc28e22..4544573cc93c 100644
---- a/include/misc/ocxl.h
-+++ b/include/misc/ocxl.h
-@@ -53,7 +53,7 @@ struct ocxl_fn_config {
-  * Read the configuration space of a function and fill in a
-  * ocxl_fn_config structure with all the function details
-  */
--extern int ocxl_config_read_function(struct pci_dev *dev,
-+int ocxl_config_read_function(struct pci_dev *dev,
- 				struct ocxl_fn_config *fn);
- 
- /*
-@@ -62,14 +62,14 @@ extern int ocxl_config_read_function(struct pci_dev *dev,
-  * AFU indexes can be sparse, so a driver should check all indexes up
-  * to the maximum found in the function description
-  */
--extern int ocxl_config_check_afu_index(struct pci_dev *dev,
-+int ocxl_config_check_afu_index(struct pci_dev *dev,
- 				struct ocxl_fn_config *fn, int afu_idx);
- 
- /*
-  * Read the configuration space of a function for the AFU specified by
-  * the index 'afu_idx'. Fills in a ocxl_afu_config structure
-  */
--extern int ocxl_config_read_afu(struct pci_dev *dev,
-+int ocxl_config_read_afu(struct pci_dev *dev,
- 				struct ocxl_fn_config *fn,
- 				struct ocxl_afu_config *afu,
- 				u8 afu_idx);
-@@ -77,7 +77,7 @@ extern int ocxl_config_read_afu(struct pci_dev *dev,
- /*
-  * Get the max PASID value that can be used by the function
-  */
--extern int ocxl_config_get_pasid_info(struct pci_dev *dev, int *count);
-+int ocxl_config_get_pasid_info(struct pci_dev *dev, int *count);
- 
- /*
-  * Tell an AFU, by writing in the configuration space, the PASIDs that
-@@ -87,7 +87,7 @@ extern int ocxl_config_get_pasid_info(struct pci_dev *dev, int *count);
-  * 'afu_control_offset' is the offset of the AFU control DVSEC which
-  * can be found in the function configuration
-  */
--extern void ocxl_config_set_afu_pasid(struct pci_dev *dev,
-+void ocxl_config_set_afu_pasid(struct pci_dev *dev,
- 				int afu_control_offset,
- 				int pasid_base, u32 pasid_count_log);
- 
-@@ -98,7 +98,7 @@ extern void ocxl_config_set_afu_pasid(struct pci_dev *dev,
-  * 'supported' is the total number of actags desired by all the AFUs
-  *             of the function.
-  */
--extern int ocxl_config_get_actag_info(struct pci_dev *dev,
-+int ocxl_config_get_actag_info(struct pci_dev *dev,
- 				u16 *base, u16 *enabled, u16 *supported);
- 
- /*
-@@ -108,7 +108,7 @@ extern int ocxl_config_get_actag_info(struct pci_dev *dev,
-  * 'func_offset' is the offset of the Function DVSEC that can found in
-  * the function configuration
-  */
--extern void ocxl_config_set_actag(struct pci_dev *dev, int func_offset,
-+void ocxl_config_set_actag(struct pci_dev *dev, int func_offset,
- 				u32 actag_base, u32 actag_count);
- 
- /*
-@@ -118,7 +118,7 @@ extern void ocxl_config_set_actag(struct pci_dev *dev, int func_offset,
-  * 'afu_control_offset' is the offset of the AFU control DVSEC for the
-  * desired AFU. It can be found in the AFU configuration
-  */
--extern void ocxl_config_set_afu_actag(struct pci_dev *dev,
-+void ocxl_config_set_afu_actag(struct pci_dev *dev,
- 				int afu_control_offset,
- 				int actag_base, int actag_count);
- 
-@@ -128,7 +128,7 @@ extern void ocxl_config_set_afu_actag(struct pci_dev *dev,
-  * 'afu_control_offset' is the offset of the AFU control DVSEC for the
-  * desired AFU. It can be found in the AFU configuration
-  */
--extern void ocxl_config_set_afu_state(struct pci_dev *dev,
-+void ocxl_config_set_afu_state(struct pci_dev *dev,
- 				int afu_control_offset, int enable);
- 
- /*
-@@ -139,7 +139,7 @@ extern void ocxl_config_set_afu_state(struct pci_dev *dev,
-  * between the host and device, and set the Transaction Layer on both
-  * accordingly.
-  */
--extern int ocxl_config_set_TL(struct pci_dev *dev, int tl_dvsec);
-+int ocxl_config_set_TL(struct pci_dev *dev, int tl_dvsec);
- 
- /*
-  * Request an AFU to terminate a PASID.
-@@ -152,7 +152,7 @@ extern int ocxl_config_set_TL(struct pci_dev *dev, int tl_dvsec);
-  * 'afu_control_offset' is the offset of the AFU control DVSEC for the
-  * desired AFU. It can be found in the AFU configuration
-  */
--extern int ocxl_config_terminate_pasid(struct pci_dev *dev,
-+int ocxl_config_terminate_pasid(struct pci_dev *dev,
- 				int afu_control_offset, int pasid);
- 
- /*
-@@ -165,13 +165,13 @@ extern int ocxl_config_terminate_pasid(struct pci_dev *dev,
-  * Returns a 'link handle' that should be used for further calls for
-  * the link
-  */
--extern int ocxl_link_setup(struct pci_dev *dev, int PE_mask,
-+int ocxl_link_setup(struct pci_dev *dev, int PE_mask,
- 			void **link_handle);
- 
- /*
-  * Remove the association between the function and its link.
-  */
--extern void ocxl_link_release(struct pci_dev *dev, void *link_handle);
-+void ocxl_link_release(struct pci_dev *dev, void *link_handle);
- 
- /*
-  * Add a Process Element to the Shared Process Area for a link.
-@@ -183,7 +183,7 @@ extern void ocxl_link_release(struct pci_dev *dev, void *link_handle);
-  * 'xsl_err_data' is an argument passed to the above callback, if
-  * defined
-  */
--extern int ocxl_link_add_pe(void *link_handle, int pasid, u32 pidr, u32 tidr,
-+int ocxl_link_add_pe(void *link_handle, int pasid, u32 pidr, u32 tidr,
- 		u64 amr, struct mm_struct *mm,
- 		void (*xsl_err_cb)(void *data, u64 addr, u64 dsisr),
- 		void *xsl_err_data);
-@@ -195,12 +195,12 @@ extern int ocxl_link_add_pe(void *link_handle, int pasid, u32 pidr, u32 tidr,
-  * pasid: the PASID for the AFU context
-  * tid: the new thread id for the process element
-  */
--extern int ocxl_link_update_pe(void *link_handle, int pasid, __u16 tid);
-+int ocxl_link_update_pe(void *link_handle, int pasid, __u16 tid);
- 
- /*
-  * Remove a Process Element from the Shared Process Area for a link
-  */
--extern int ocxl_link_remove_pe(void *link_handle, int pasid);
-+int ocxl_link_remove_pe(void *link_handle, int pasid);
- 
- /*
-  * Allocate an AFU interrupt associated to the link.
-@@ -212,12 +212,12 @@ extern int ocxl_link_remove_pe(void *link_handle, int pasid);
-  * interrupt. It is an MMIO address which needs to be remapped (one
-  * page).
-  */
--extern int ocxl_link_irq_alloc(void *link_handle, int *hw_irq,
-+int ocxl_link_irq_alloc(void *link_handle, int *hw_irq,
- 			u64 *obj_handle);
- 
- /*
-  * Free a previously allocated AFU interrupt
-  */
--extern void ocxl_link_free_irq(void *link_handle, int hw_irq);
-+void ocxl_link_free_irq(void *link_handle, int hw_irq);
- 
- #endif /* _MISC_OCXL_H_ */
+      $ make htmldocs 2> ../docs-pre-vfs.stderr	
+
+Apply patch set
+
+      $ make cleandocs
+      $ make htmldocs 2> ../docs-post-vfs.stderr
+      $ diff ../docs-pre-vfs.stderr ../docs-post-vfs.stderr
+
+
+Patch 1-4 - Whitespace fixes.
+Patch 5 - Adds the document title adornments (above and below)
+Patch 6 - Adds a SPDX license identifier
+Patch 7 - Fixes some custom indentation at the top of the file that will
+    	  cause Sphinx to warn when we switch to .rst
+Patch 8 - Converts custom list format to use RST formatted lists, this
+          is in preparation for switching to .rst 
+Patch 9 - Adds '.. code-block:: c' and fixes indentation of code
+	  blocks.  We rename the file to .rst in this patch (introducing
+	  some new warnings).
+Patch 10 - Adds back ticks to all the list items.  This is in
+	   preparation for fixing the indentation in the next patch.
+	   This was found to help when reading both plain text and HTML.
+Patch 11 - Cleans up the lists, indentation and missing periods.  This
+	   was kept separate to assist review.  This patch is benign,
+	   the less meticulous reviewer could safely skip over this one
+	   quickly (this was the intention of separating these changes).
+Patch 12 - Fixes a few minor grammar mistakes I notice while reading the
+	   file, I'm taking bonus points for actually reading every word
+	   of the file and not just trying to haphazardly do the
+	   conversion like I have previously done :)
+Patch 13 - Fixes two remaining Sphinx warnings.
+
+If/when this goes in perhaps I, or someone else, will update the content
+to document a newer kernel version.
+
+
+thanks,
+Tobin.
+
+
+Tobin C. Harding (13):
+  docs: filesystems: vfs: Remove space before tab
+  docs: filesystems: vfs: Use uniform space after period.
+  docs: filesystems: vfs: Use 72 character column width
+  docs: filesystems: vfs: Use uniform spacing around headings
+  docs: filesystems: vfs: Use correct initial heading
+  docs: filesystems: vfs: Use SPDX identifier
+  docs: filesystems: vfs: Fix pre-amble indentation
+  docs: filesystems: vfs: Use list character for lists
+  docs: filesystems: vfs: Add code-block and txt->RST
+  docs: filesystems: vfs: Use ticks for listed items
+  docs: filesystems: vfs: Clean up lists
+  docs: filesystems: vfs: Do minor grammar fixes
+  docs: filesystems: vfs: Use backticks to guard star
+
+ Documentation/filesystems/index.rst |    1 +
+ Documentation/filesystems/vfs.rst   | 1279 +++++++++++++++++++++++++++
+ Documentation/filesystems/vfs.txt   | 1261 --------------------------
+ 3 files changed, 1280 insertions(+), 1261 deletions(-)
+ create mode 100644 Documentation/filesystems/vfs.rst
+ delete mode 100644 Documentation/filesystems/vfs.txt
+
 -- 
-2.20.1
+2.21.0
 
