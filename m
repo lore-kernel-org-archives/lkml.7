@@ -2,212 +2,197 @@ Return-Path: <SRS0=dUEL=RQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2E829C4360F
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 Mar 2019 19:23:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8BADCC43381
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 Mar 2019 19:23:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 069C52075C
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 Mar 2019 19:23:30 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1552505010;
-	bh=ygS+mdvt9zkr/qcrh/Vujm49q9MCCkpaTSZLhbttS5I=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=F4FubB2Dm5qi118kvmAoyZRn8hP50GeakAcpKYlhU8Bpwigv3EfKrFVVItn5588uK
-	 DNn7W3Zz4gvp+G32hMOmIdh+O8cI6E7sV2Z0T5ywZWofag1O6wC0znDvrwD8CxoCvL
-	 +rTwwHYGji6B3uQAuh7kwlhYNaUYGkK8CyBmynQQ=
+	by mail.kernel.org (Postfix) with ESMTP id 56AF12075C
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 Mar 2019 19:23:44 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=c-s.fr header.i=@c-s.fr header.b="d+UWWuvs"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728806AbfCMTRA (ORCPT
+        id S1728813AbfCMTXn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 13 Mar 2019 15:17:00 -0400
-Received: from mail.kernel.org ([198.145.29.99]:47360 "EHLO mail.kernel.org"
+        Wed, 13 Mar 2019 15:23:43 -0400
+Received: from pegase1.c-s.fr ([93.17.236.30]:63345 "EHLO pegase1.c-s.fr"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727681AbfCMTQ7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 13 Mar 2019 15:16:59 -0400
-Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 5594A2075C;
-        Wed, 13 Mar 2019 19:16:56 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1552504617;
-        bh=ygS+mdvt9zkr/qcrh/Vujm49q9MCCkpaTSZLhbttS5I=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=NQeOsGnhfYILyB4amGwfTvWd2/w3b+tmKRUu6cgvMjH1h6L6BdGilKcFHF7Iy8vP4
-         8YVK5V9GsfnqcH4VF5XEj72rKYOtzIkze+aeP2SEfcQBl/UiMnQJxK0cTF8DkuhXOh
-         br2S+sFs09MdBHwJFLr57XKyx/9HU/IbcP3PB1e4=
-From:   Sasha Levin <sashal@kernel.org>
-To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Dietmar Eggemann <dietmar.eggemann@arm.com>,
-        Russell King <rmk+kernel@armlinux.org.uk>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH AUTOSEL 4.9 02/24] ARM: 8824/1: fix a migrating irq bug when hotplug cpu
-Date:   Wed, 13 Mar 2019 15:16:25 -0400
-Message-Id: <20190313191647.160171-2-sashal@kernel.org>
-X-Mailer: git-send-email 2.19.1
-In-Reply-To: <20190313191647.160171-1-sashal@kernel.org>
-References: <20190313191647.160171-1-sashal@kernel.org>
+        id S1728718AbfCMTQr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 13 Mar 2019 15:16:47 -0400
+Received: from localhost (mailhub1-int [192.168.12.234])
+        by localhost (Postfix) with ESMTP id 44KM5n0SfYz9v0vR;
+        Wed, 13 Mar 2019 20:16:45 +0100 (CET)
+Authentication-Results: localhost; dkim=pass
+        reason="1024-bit key; insecure key"
+        header.d=c-s.fr header.i=@c-s.fr header.b=d+UWWuvs; dkim-adsp=pass;
+        dkim-atps=neutral
+X-Virus-Scanned: Debian amavisd-new at c-s.fr
+Received: from pegase1.c-s.fr ([192.168.12.234])
+        by localhost (pegase1.c-s.fr [192.168.12.234]) (amavisd-new, port 10024)
+        with ESMTP id bM_c9XnkjgWR; Wed, 13 Mar 2019 20:16:44 +0100 (CET)
+Received: from messagerie.si.c-s.fr (messagerie.si.c-s.fr [192.168.25.192])
+        by pegase1.c-s.fr (Postfix) with ESMTP id 44KM5m6DS6z9v0vF;
+        Wed, 13 Mar 2019 20:16:44 +0100 (CET)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=c-s.fr; s=mail;
+        t=1552504604; bh=LI3TBGguDUuLpwtPN7CVlLcbxS9s0qBjVoz/08ibyjI=;
+        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
+        b=d+UWWuvslWjlxC0ax3RgMDVErFQPn9gvT0Bss8Ns8wGK890Fq3uDSkpWNRZVpUTty
+         BaV1v8t0+ydWGsHROA/1g1+kNjtl+LQJRIw1mip9mnl/gHVgsTea834Atfq/MbRsqq
+         20VIP45An2EZMCon0fDlP3hPb6YqLM4xgQgK8bmg=
+Received: from localhost (localhost [127.0.0.1])
+        by messagerie.si.c-s.fr (Postfix) with ESMTP id CAED98B915;
+        Wed, 13 Mar 2019 20:16:44 +0100 (CET)
+X-Virus-Scanned: amavisd-new at c-s.fr
+Received: from messagerie.si.c-s.fr ([127.0.0.1])
+        by localhost (messagerie.si.c-s.fr [127.0.0.1]) (amavisd-new, port 10023)
+        with ESMTP id 3qqKLOlHcHGC; Wed, 13 Mar 2019 20:16:44 +0100 (CET)
+Received: from PO15451 (unknown [192.168.4.90])
+        by messagerie.si.c-s.fr (Postfix) with ESMTP id 32F498B8EE;
+        Wed, 13 Mar 2019 20:16:44 +0100 (CET)
+Subject: Re: [PATCH v3] powerpc/mm: move warning from resize_hpt_for_hotplug()
+To:     Laurent Vivier <lvivier@redhat.com>, linux-kernel@vger.kernel.org
+Cc:     linuxppc-dev@lists.ozlabs.org,
+        David Gibson <david@gibson.dropbear.id.au>,
+        Michael Ellerman <mpe@ellerman.id.au>
+References: <20190313102528.4632-1-lvivier@redhat.com>
+From:   Christophe Leroy <christophe.leroy@c-s.fr>
+Message-ID: <d0ee0f33-3218-288a-f5c8-d23143196f2e@c-s.fr>
+Date:   Wed, 13 Mar 2019 20:16:44 +0100
+User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:60.0) Gecko/20100101
+ Thunderbird/60.5.3
 MIME-Version: 1.0
-X-Patchwork-Hint: Ignore
+In-Reply-To: <20190313102528.4632-1-lvivier@redhat.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: fr
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Dietmar Eggemann <dietmar.eggemann@arm.com>
 
-[ Upstream commit 1b5ba350784242eb1f899bcffd95d2c7cff61e84 ]
 
-Arm TC2 fails cpu hotplug stress test.
+Le 13/03/2019 à 11:25, Laurent Vivier a écrit :
+> resize_hpt_for_hotplug() reports a warning when it cannot
+> resize the hash page table ("Unable to resize hash page
+> table to target order") but in some cases it's not a problem
+> and can make user thinks something has not worked properly.
+> 
+> This patch moves the warning to arch_remove_memory() to
+> only report the problem when it is needed.
+> 
+> Reviewed-by: David Gibson <david@gibson.dropbear.id.au>
+> Signed-off-by: Laurent Vivier <lvivier@redhat.com>
 
-This issue was tracked down to a missing copy of the new affinity
-cpumask for the vexpress-spc interrupt into struct
-irq_common_data.affinity when the interrupt is migrated in
-migrate_one_irq().
+Reviewed-by: Christophe Leroy <christophe.leroy@c-s.fr>
 
-Fix it by replacing the arm specific hotplug cpu migration with the
-generic irq code.
-
-This is the counterpart implementation to commit 217d453d473c ("arm64:
-fix a migrating irq bug when hotplug cpu").
-
-Tested with cpu hotplug stress test on Arm TC2 (multi_v7_defconfig plus
-CONFIG_ARM_BIG_LITTLE_CPUFREQ=y and CONFIG_ARM_VEXPRESS_SPC_CPUFREQ=y).
-The vexpress-spc interrupt (irq=22) on this board is affine to CPU0.
-Its affinity cpumask now changes correctly e.g. from 0 to 1-4 when
-CPU0 is hotplugged out.
-
-Suggested-by: Marc Zyngier <marc.zyngier@arm.com>
-Signed-off-by: Dietmar Eggemann <dietmar.eggemann@arm.com>
-Acked-by: Marc Zyngier <marc.zyngier@arm.com>
-Reviewed-by: Linus Walleij <linus.walleij@linaro.org>
-Signed-off-by: Russell King <rmk+kernel@armlinux.org.uk>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
----
- arch/arm/Kconfig           |  1 +
- arch/arm/include/asm/irq.h |  1 -
- arch/arm/kernel/irq.c      | 62 --------------------------------------
- arch/arm/kernel/smp.c      |  2 +-
- 4 files changed, 2 insertions(+), 64 deletions(-)
-
-diff --git a/arch/arm/Kconfig b/arch/arm/Kconfig
-index b5d529fdffab..74a70f91b01a 100644
---- a/arch/arm/Kconfig
-+++ b/arch/arm/Kconfig
-@@ -1457,6 +1457,7 @@ config NR_CPUS
- config HOTPLUG_CPU
- 	bool "Support for hot-pluggable CPUs"
- 	depends on SMP
-+	select GENERIC_IRQ_MIGRATION
- 	help
- 	  Say Y here to experiment with turning CPUs off and on.  CPUs
- 	  can be controlled through /sys/devices/system/cpu.
-diff --git a/arch/arm/include/asm/irq.h b/arch/arm/include/asm/irq.h
-index e53638c8ed8a..61e1d089ce1a 100644
---- a/arch/arm/include/asm/irq.h
-+++ b/arch/arm/include/asm/irq.h
-@@ -24,7 +24,6 @@
- #ifndef __ASSEMBLY__
- struct irqaction;
- struct pt_regs;
--extern void migrate_irqs(void);
- 
- extern void asm_do_IRQ(unsigned int, struct pt_regs *);
- void handle_IRQ(unsigned int, struct pt_regs *);
-diff --git a/arch/arm/kernel/irq.c b/arch/arm/kernel/irq.c
-index ece04a457486..5b07c7a31c31 100644
---- a/arch/arm/kernel/irq.c
-+++ b/arch/arm/kernel/irq.c
-@@ -31,7 +31,6 @@
- #include <linux/smp.h>
- #include <linux/init.h>
- #include <linux/seq_file.h>
--#include <linux/ratelimit.h>
- #include <linux/errno.h>
- #include <linux/list.h>
- #include <linux/kallsyms.h>
-@@ -119,64 +118,3 @@ int __init arch_probe_nr_irqs(void)
- 	return nr_irqs;
- }
- #endif
--
--#ifdef CONFIG_HOTPLUG_CPU
--static bool migrate_one_irq(struct irq_desc *desc)
--{
--	struct irq_data *d = irq_desc_get_irq_data(desc);
--	const struct cpumask *affinity = irq_data_get_affinity_mask(d);
--	struct irq_chip *c;
--	bool ret = false;
--
--	/*
--	 * If this is a per-CPU interrupt, or the affinity does not
--	 * include this CPU, then we have nothing to do.
--	 */
--	if (irqd_is_per_cpu(d) || !cpumask_test_cpu(smp_processor_id(), affinity))
--		return false;
--
--	if (cpumask_any_and(affinity, cpu_online_mask) >= nr_cpu_ids) {
--		affinity = cpu_online_mask;
--		ret = true;
--	}
--
--	c = irq_data_get_irq_chip(d);
--	if (!c->irq_set_affinity)
--		pr_debug("IRQ%u: unable to set affinity\n", d->irq);
--	else if (c->irq_set_affinity(d, affinity, false) == IRQ_SET_MASK_OK && ret)
--		cpumask_copy(irq_data_get_affinity_mask(d), affinity);
--
--	return ret;
--}
--
--/*
-- * The current CPU has been marked offline.  Migrate IRQs off this CPU.
-- * If the affinity settings do not allow other CPUs, force them onto any
-- * available CPU.
-- *
-- * Note: we must iterate over all IRQs, whether they have an attached
-- * action structure or not, as we need to get chained interrupts too.
-- */
--void migrate_irqs(void)
--{
--	unsigned int i;
--	struct irq_desc *desc;
--	unsigned long flags;
--
--	local_irq_save(flags);
--
--	for_each_irq_desc(i, desc) {
--		bool affinity_broken;
--
--		raw_spin_lock(&desc->lock);
--		affinity_broken = migrate_one_irq(desc);
--		raw_spin_unlock(&desc->lock);
--
--		if (affinity_broken)
--			pr_warn_ratelimited("IRQ%u no longer affine to CPU%u\n",
--				i, smp_processor_id());
--	}
--
--	local_irq_restore(flags);
--}
--#endif /* CONFIG_HOTPLUG_CPU */
-diff --git a/arch/arm/kernel/smp.c b/arch/arm/kernel/smp.c
-index 8faf869e9fb2..bc83ec7ed53f 100644
---- a/arch/arm/kernel/smp.c
-+++ b/arch/arm/kernel/smp.c
-@@ -253,7 +253,7 @@ int __cpu_disable(void)
- 	/*
- 	 * OK - migrate IRQs away from this CPU
- 	 */
--	migrate_irqs();
-+	irq_migrate_all_off_this_cpu();
- 
- 	/*
- 	 * Flush user cache and TLB mappings, and then remove this CPU
--- 
-2.19.1
-
+> ---
+> 
+> Notes:
+>      v3: move "||" to above line and remove parenthesis
+>      v2: add warning messages for H_PARAMETER and H_RESOURCE
+> 
+>   arch/powerpc/include/asm/sparsemem.h  |  4 ++--
+>   arch/powerpc/mm/hash_utils_64.c       | 19 +++++++------------
+>   arch/powerpc/mm/mem.c                 |  3 ++-
+>   arch/powerpc/platforms/pseries/lpar.c |  3 ++-
+>   4 files changed, 13 insertions(+), 16 deletions(-)
+> 
+> diff --git a/arch/powerpc/include/asm/sparsemem.h b/arch/powerpc/include/asm/sparsemem.h
+> index 68da49320592..3192d454a733 100644
+> --- a/arch/powerpc/include/asm/sparsemem.h
+> +++ b/arch/powerpc/include/asm/sparsemem.h
+> @@ -17,9 +17,9 @@ extern int create_section_mapping(unsigned long start, unsigned long end, int ni
+>   extern int remove_section_mapping(unsigned long start, unsigned long end);
+>   
+>   #ifdef CONFIG_PPC_BOOK3S_64
+> -extern void resize_hpt_for_hotplug(unsigned long new_mem_size);
+> +extern int resize_hpt_for_hotplug(unsigned long new_mem_size);
+>   #else
+> -static inline void resize_hpt_for_hotplug(unsigned long new_mem_size) { }
+> +static inline int resize_hpt_for_hotplug(unsigned long new_mem_size) { return 0; }
+>   #endif
+>   
+>   #ifdef CONFIG_NUMA
+> diff --git a/arch/powerpc/mm/hash_utils_64.c b/arch/powerpc/mm/hash_utils_64.c
+> index 0cc7fbc3bd1c..5aa7594ee71b 100644
+> --- a/arch/powerpc/mm/hash_utils_64.c
+> +++ b/arch/powerpc/mm/hash_utils_64.c
+> @@ -755,12 +755,12 @@ static unsigned long __init htab_get_table_size(void)
+>   }
+>   
+>   #ifdef CONFIG_MEMORY_HOTPLUG
+> -void resize_hpt_for_hotplug(unsigned long new_mem_size)
+> +int resize_hpt_for_hotplug(unsigned long new_mem_size)
+>   {
+>   	unsigned target_hpt_shift;
+>   
+>   	if (!mmu_hash_ops.resize_hpt)
+> -		return;
+> +		return 0;
+>   
+>   	target_hpt_shift = htab_shift_for_mem_size(new_mem_size);
+>   
+> @@ -772,16 +772,11 @@ void resize_hpt_for_hotplug(unsigned long new_mem_size)
+>   	 * reduce unless the target shift is at least 2 below the
+>   	 * current shift
+>   	 */
+> -	if ((target_hpt_shift > ppc64_pft_size)
+> -	    || (target_hpt_shift < (ppc64_pft_size - 1))) {
+> -		int rc;
+> -
+> -		rc = mmu_hash_ops.resize_hpt(target_hpt_shift);
+> -		if (rc && (rc != -ENODEV))
+> -			printk(KERN_WARNING
+> -			       "Unable to resize hash page table to target order %d: %d\n",
+> -			       target_hpt_shift, rc);
+> -	}
+> +	if (target_hpt_shift > ppc64_pft_size ||
+> +	    target_hpt_shift < ppc64_pft_size - 1)
+> +		return mmu_hash_ops.resize_hpt(target_hpt_shift);
+> +
+> +	return 0;
+>   }
+>   
+>   int hash__create_section_mapping(unsigned long start, unsigned long end, int nid)
+> diff --git a/arch/powerpc/mm/mem.c b/arch/powerpc/mm/mem.c
+> index 33cc6f676fa6..0d40d970cf4a 100644
+> --- a/arch/powerpc/mm/mem.c
+> +++ b/arch/powerpc/mm/mem.c
+> @@ -169,7 +169,8 @@ int __meminit arch_remove_memory(int nid, u64 start, u64 size,
+>   	 */
+>   	vm_unmap_aliases();
+>   
+> -	resize_hpt_for_hotplug(memblock_phys_mem_size());
+> +	if (resize_hpt_for_hotplug(memblock_phys_mem_size()) == -ENOSPC)
+> +		pr_warn("Hash collision while resizing HPT\n");
+>   
+>   	return ret;
+>   }
+> diff --git a/arch/powerpc/platforms/pseries/lpar.c b/arch/powerpc/platforms/pseries/lpar.c
+> index f2a9f0adc2d3..1034ef1fe2b4 100644
+> --- a/arch/powerpc/platforms/pseries/lpar.c
+> +++ b/arch/powerpc/platforms/pseries/lpar.c
+> @@ -901,8 +901,10 @@ static int pseries_lpar_resize_hpt(unsigned long shift)
+>   		break;
+>   
+>   	case H_PARAMETER:
+> +		pr_warn("Invalid argument from H_RESIZE_HPT_PREPARE\n");
+>   		return -EINVAL;
+>   	case H_RESOURCE:
+> +		pr_warn("Operation not permitted from H_RESIZE_HPT_PREPARE\n");
+>   		return -EPERM;
+>   	default:
+>   		pr_warn("Unexpected error %d from H_RESIZE_HPT_PREPARE\n", rc);
+> @@ -918,7 +920,6 @@ static int pseries_lpar_resize_hpt(unsigned long shift)
+>   	if (rc != 0) {
+>   		switch (state.commit_rc) {
+>   		case H_PTEG_FULL:
+> -			pr_warn("Hash collision while resizing HPT\n");
+>   			return -ENOSPC;
+>   
+>   		default:
+> 
