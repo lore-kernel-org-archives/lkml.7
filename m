@@ -2,169 +2,93 @@ Return-Path: <SRS0=dUEL=RQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EE5DBC43381
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 Mar 2019 12:28:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DB8A7C43381
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 Mar 2019 12:31:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BC2A72184D
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 Mar 2019 12:28:49 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1552480129;
-	bh=1S3N2c00aY7uDhBXmte227+GI1rLmi+xUGRQ8BG3AB8=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=MV155JRbog5gmmz2ZAyTf7pnNQbN/ypDGyMz8Y7OpAbB3oZhYy4YcqvmprsZVhRyp
-	 Amv41cSPy/hHqFrynN4pXuVV8U41wU9quzVWgFhahvKtKZCYRhnWWgEMWViG4yrHUB
-	 C0w3d+jLqXklEDD4YWvkmAxw7YBbaGVdPPLfCQb4=
+	by mail.kernel.org (Postfix) with ESMTP id A0D80214AE
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 Mar 2019 12:31:23 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726921AbfCMM2s (ORCPT
+        id S1726431AbfCMMbW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 13 Mar 2019 08:28:48 -0400
-Received: from mail.kernel.org ([198.145.29.99]:42234 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726421AbfCMM2r (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 13 Mar 2019 08:28:47 -0400
-Received: from localhost.localdomain (NE2965lan1.rev.em-net.ne.jp [210.141.244.193])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 24459214AE;
-        Wed, 13 Mar 2019 12:28:44 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1552480126;
-        bh=1S3N2c00aY7uDhBXmte227+GI1rLmi+xUGRQ8BG3AB8=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=J0BQDNsFEP5jCqTYWszdJ5s/+VXjmucumB8EllYDnSZ6S365caGRnL4pl6J/pvIky
-         dMMTdX/Tz7ES/pUCtQZshLP2arrjo4FW5cNF9YjCYwT7mO8cx7sF/K2Naom3BbP4E4
-         +ZRpVg4ZUR8cgsMUN+ISEwVxxwBLqsaSjPPNR+Kc=
-From:   Masami Hiramatsu <mhiramat@kernel.org>
-To:     Tom Zanussi <zanussi@kernel.org>,
-        Steven Rostedt <rostedt@goodmis.org>
-Cc:     tglx@linutronix.de, mhiramat@kernel.org, namhyung@kernel.org,
-        bigeasy@linutronix.de, joel@joelfernandes.org,
-        linux-kernel@vger.kernel.org, linux-rt-users@vger.kernel.org
-Subject: [RFC PATCH 7/7] selftests/ftrace: Add error_log testcase for kprobe errors
-Date:   Wed, 13 Mar 2019 21:28:41 +0900
-Message-Id: <155248012180.10815.9684996376860674672.stgit@devnote2>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <155248005229.10815.334731901778152247.stgit@devnote2>
-References: <155248005229.10815.334731901778152247.stgit@devnote2>
-User-Agent: StGit/0.17.1-dirty
+        Wed, 13 Mar 2019 08:31:22 -0400
+Received: from lithops.sigma-star.at ([195.201.40.130]:41724 "EHLO
+        lithops.sigma-star.at" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725893AbfCMMbW (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 13 Mar 2019 08:31:22 -0400
+Received: from localhost (localhost [127.0.0.1])
+        by lithops.sigma-star.at (Postfix) with ESMTP id 71025609187E;
+        Wed, 13 Mar 2019 13:31:19 +0100 (CET)
+Received: from lithops.sigma-star.at ([127.0.0.1])
+        by localhost (lithops.sigma-star.at [127.0.0.1]) (amavisd-new, port 10032)
+        with ESMTP id 8NsQbv6QpKFp; Wed, 13 Mar 2019 13:31:18 +0100 (CET)
+Received: from localhost (localhost [127.0.0.1])
+        by lithops.sigma-star.at (Postfix) with ESMTP id DD2A4609186C;
+        Wed, 13 Mar 2019 13:31:18 +0100 (CET)
+Received: from lithops.sigma-star.at ([127.0.0.1])
+        by localhost (lithops.sigma-star.at [127.0.0.1]) (amavisd-new, port 10026)
+        with ESMTP id IU7AkRYfsYUw; Wed, 13 Mar 2019 13:31:18 +0100 (CET)
+Received: from blindfold.localnet (unknown [82.150.214.1])
+        by lithops.sigma-star.at (Postfix) with ESMTPSA id 86017608A389;
+        Wed, 13 Mar 2019 13:31:18 +0100 (CET)
+From:   Richard Weinberger <richard@nod.at>
+To:     linux-fsdevel@vger.kernel.org
+Cc:     linux-fscrypt@vger.kernel.org, linux-unionfs@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: overlayfs vs. fscrypt
+Date:   Wed, 13 Mar 2019 13:31:17 +0100
+Message-ID: <4603533.ZIfxmiEf7K@blindfold>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 7Bit
+Content-Type: text/plain; charset="us-ascii"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add error_log testcase for error logs on kprobe events.
-This tests most of error cases and checks the error position
-is correct.
+Hi!
 
-Signed-off-by: Masami Hiramatsu <mhiramat@kernel.org>
----
- .../ftrace/test.d/kprobe/kprobe_syntax_errors.tc   |   91 ++++++++++++++++++++
- 1 file changed, 91 insertions(+)
- create mode 100644 tools/testing/selftests/ftrace/test.d/kprobe/kprobe_syntax_errors.tc
+overlayfs and fscrypt are not friends.
+Currently it is not possible to use a fscrypt encrypted directory as upper 
+directory with overlayfs.
+The reason for that is, fscrypt implements ->d_revalidate().
 
-diff --git a/tools/testing/selftests/ftrace/test.d/kprobe/kprobe_syntax_errors.tc b/tools/testing/selftests/ftrace/test.d/kprobe/kprobe_syntax_errors.tc
-new file mode 100644
-index 000000000000..5796e258747c
---- /dev/null
-+++ b/tools/testing/selftests/ftrace/test.d/kprobe/kprobe_syntax_errors.tc
-@@ -0,0 +1,91 @@
-+#!/bin/sh
-+# SPDX-License-Identifier: GPL-2.0
-+# description: Kprobe event parser error log check
-+
-+[ -f kprobe_events ] || exit_unsupported # this is configurable
-+
-+[ -f error_log ] || exit_unsupported
-+
-+check_error() { # command expected_pos
-+echo "$1"
-+(! echo "$1" > kprobe_events ) >& /dev/null
-+grep "trace_kprobe: error:" -A 3 error_log
-+N=$(tail -n 1 error_log | wc -c)
-+# "  Command: " and "^" => 12
-+test $(expr 12 + $2) -eq $N
-+echo > error_log
-+}
-+
-+if grep -q 'r\[maxactive\]' README; then
-+check_error 'p100 vfs_read' 2		# MAXACT_NO_KPROBE
-+check_error 'r1a111 vfs_read' 2		# BAD_MAXACT
-+check_error 'r100000 vfs_read' 2	# MAXACT_TOO_BIG
-+fi
-+
-+check_error 'p non_exist_func' 3	# BAD_PROBE_ADDR (enoent)
-+check_error 'p hoge-fuga' 3		# BAD_PROBE_ADDR (bad syntax)
-+check_error 'p hoge+1000-1000' 3	# BAD_PROBE_ADDR (bad syntax)
-+check_error 'r vfs_read+10' 3		# BAD_RETPROBE
-+check_error 'p:/bar vfs_read' 3		# NO_GROUP_NAME
-+check_error 'p:12345678901234567890123456789012345678901234567890123456789012345/bar vfs_read' 3	# GROUP_TOO_LONG
-+
-+check_error 'p:foo.1/bar vfs_read' 3	# BAD_GROUP_NAME
-+check_error 'p:foo/ vfs_read' 7		# NO_EVENT_NAME
-+check_error 'p:foo/12345678901234567890123456789012345678901234567890123456789012345 vfs_read' 7	# EVENT_TOO_LONG
-+check_error 'p:foo/bar.1 vfs_read' 7	# BAD_EVENT_NAME
-+
-+check_error 'p vfs_read $retval' 12	# RETVAL_ON_PROBE
-+check_error 'p vfs_read $stack10000' 12	# BAD_STACK_NUM
-+
-+if grep -q '$arg<N>' README; then
-+check_error 'p vfs_read $arg10000' 12	# BAD_ARG_NUM
-+fi
-+
-+check_error 'p vfs_read $none_var' 12	# BAD_VAR
-+
-+check_error 'p vfs_read %none_reg' 12	# BAD_REG_NAME
-+check_error 'p vfs_read @12345678abcde' 12	# BAD_MEM_ADDR
-+check_error 'p vfs_read @+10' 12	# FILE_ON_KPROBE
-+
-+check_error 'p vfs_read +0@0)' 12	# DEREF_NEED_BRACE
-+check_error 'p vfs_read +0ab1(@0)' 12	# BAD_DEREF_OFFS
-+check_error 'p vfs_read +0(+0(@0)' 17	# DEREF_OPEN_BRACE
-+
-+if grep -A1 "fetcharg:" README | grep -q '\$comm' ; then
-+check_error 'p vfs_read +0($comm)' 15	# COMM_CANT_DEREF
-+fi
-+
-+check_error 'p vfs_read &1' 12		# BAD_FETCH_ARG
-+
-+
-+# We've introduced this limitation with array support
-+if grep -q ' <type>\\\[<array-size>\\\]' README; then
-+check_error 'p vfs_read +0(+0(+0(+0(+0(+0(+0(+0(+0(+0(+0(+0(+0(+0(@0))))))))))))))' 15	# TOO_MANY_OPS?
-+check_error 'p vfs_read +0(@11):u8[10' 22	# ARRAY_NO_CLOSE
-+check_error 'p vfs_read +0(@11):u8[10]a' 26	# BAD_ARRAY_SUFFIX
-+check_error 'p vfs_read +0(@11):u8[10a]' 23	# BAD_ARRAY_NUM
-+check_error 'p vfs_read +0(@11):u8[256]' 23	# ARRAY_TOO_BIG
-+fi
-+
-+check_error 'p vfs_read @11:unknown_type' 16	# BAD_TYPE
-+check_error 'p vfs_read $stack0:string' 20	# BAD_STRING
-+check_error 'p vfs_read @11:b10@a/16' 16	# BAD_BITFIELD
-+
-+check_error 'p vfs_read arg123456789012345678901234567890=@11' 12	# ARG_NAME_TOO_LOG
-+check_error 'p vfs_read =@11' 12		# NO_ARG_NAME
-+check_error 'p vfs_read var.1=@11' 12		# BAD_ARG_NAME
-+check_error 'p vfs_read var1=@11 var1=@12' 21	# USED_ARG_NAME
-+check_error 'p vfs_read +1234567(+1234567(+1234567(+1234567(+1234567(+1234567(@1234))))))' 12	# ARG_TOO_LONG
-+check_error 'p vfs_read arg1=' 17		# NO_ARG_BODY
-+
-+# instruction boundary check is valid on x86 (at this moment)
-+case $(uname -m) in
-+  x86_64|i[3456]86)
-+    echo 'p vfs_read' > kprobe_events
-+    if grep -q FTRACE ../kprobes/list ; then
-+	check_error 'p vfs_read+3' 3		# BAD_INSN_BNDRY (only if function-tracer is enabled)
-+    fi
-+    ;;
-+esac
-+
-+exit 0
+From fscrypt's point of view having ->d_revalidate() makes sense because it 
+wants to hide/show encrypted filenames if someone loads or unlinks a key.
+
+On the other hand, overlayfs makes sure that the upper directory cannot
+change beneath it. Therefore it checks whether the upper directory is a remote 
+filesystem by checking for ->d_revalidate() and refuses to mount if so.
+
+In my little embedded Linux world it is common to use both UBIFS and 
+overlayfs. Now with UBIFS being encrypted using fscrypt, overlayfs is a 
+problem.
+My current hack is not using fscrypt_d_ops in UBIFS. This works because on a 
+typical embedded target you setup your crypto keys exactly once, right before 
+you mount overlayfs in an initramfs.
+
+But I'm sure this problem will hit sooner or later users of ext4 and f2fs too.
+Therefore I'd like to discuss possible solutions.
+
+So far I see two options:
+
+1. Get rid of ->d_revalidate() in fscrypt.
+Maybe we find a way to return a dentry via ->lookup() which is not cached at 
+all and therefore no ->d_revalidate() is needed. If unreadable and encrypted
+filename lookups are slow, so what?
+AFAIU this approach is impossible in the current dcache design since it is not 
+allowed to have more than one dentry to the same file.
+
+2. Teach overlayfs to deal with a upper that has ->d_revalidate().
+Given the complexity of overlayfs I'm not sure how feasible this is.
+But I'm no overlayfs expert, maybe I miss something.
+
+What else could we do?
+
+Thanks,
+//richard
+
 
