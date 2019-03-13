@@ -2,90 +2,95 @@ Return-Path: <SRS0=dUEL=RQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_MUTT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.0 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 445EFC43381
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 Mar 2019 14:10:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 32946C43381
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 Mar 2019 14:10:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 102F12147C
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 Mar 2019 14:10:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 003122177E
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 Mar 2019 14:10:36 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="itajYF3T"
+	dkim=pass (2048-bit key) header.d=baylibre-com.20150623.gappssmtp.com header.i=@baylibre-com.20150623.gappssmtp.com header.b="G0hT4HBM"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727057AbfCMOKP (ORCPT
+        id S1727085AbfCMOKf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 13 Mar 2019 10:10:15 -0400
-Received: from bombadil.infradead.org ([198.137.202.133]:58730 "EHLO
-        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726626AbfCMOKP (ORCPT
+        Wed, 13 Mar 2019 10:10:35 -0400
+Received: from mail-wr1-f66.google.com ([209.85.221.66]:33006 "EHLO
+        mail-wr1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726626AbfCMOKe (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 13 Mar 2019 10:10:15 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
-        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=0U/xQi9K7IvDGR4nV1QNS9lG0XQYKLj9vkt1l56gZ3I=; b=itajYF3T4vLAdSA3BYtBabzKP
-        OL1/FjmO74Y5V/4GVFX4tg95Cqomkh04qhLQmeQc6AEX/GS3YkzVNscZ1ibrMmBk14pOduH7naQrV
-        Mutmrn1vq7yS6CADmRPO/AQP38JhE9DUoizC+DEcP4Qazb6aRxx789OCqBKHeLp8KmBc23aSUx42I
-        ZwoTr60rOzig3KV/qDcDu0ElenRkNHsQ8HXcAmo+czoa62cM/WuIw8WCAL1IbSiJY+qsXpBaDF22o
-        8cBIgY+4KU0jyRATjXf8BTXblWSnq4uaxJJapv/EsLutyPqO1joQBXo/hYbBMmTmPpZ8ztNbxH98R
-        N6Qn5kFlA==;
-Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=hirez.programming.kicks-ass.net)
-        by bombadil.infradead.org with esmtpsa (Exim 4.90_1 #2 (Red Hat Linux))
-        id 1h44a9-0004jO-Nf; Wed, 13 Mar 2019 14:10:09 +0000
-Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
-        id 404D72028B0E8; Wed, 13 Mar 2019 15:10:08 +0100 (CET)
-Date:   Wed, 13 Mar 2019 15:10:08 +0100
-From:   Peter Zijlstra <peterz@infradead.org>
-To:     Patrick Bellasi <patrick.bellasi@arm.com>
-Cc:     linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org,
-        linux-api@vger.kernel.org, Ingo Molnar <mingo@redhat.com>,
-        Tejun Heo <tj@kernel.org>,
-        "Rafael J . Wysocki" <rafael.j.wysocki@intel.com>,
-        Vincent Guittot <vincent.guittot@linaro.org>,
-        Viresh Kumar <viresh.kumar@linaro.org>,
-        Paul Turner <pjt@google.com>,
-        Quentin Perret <quentin.perret@arm.com>,
-        Dietmar Eggemann <dietmar.eggemann@arm.com>,
-        Morten Rasmussen <morten.rasmussen@arm.com>,
-        Juri Lelli <juri.lelli@redhat.com>,
-        Todd Kjos <tkjos@google.com>,
-        Joel Fernandes <joelaf@google.com>,
-        Steve Muckle <smuckle@google.com>,
-        Suren Baghdasaryan <surenb@google.com>
-Subject: Re: [PATCH v7 02/15] sched/core: uclamp: Enforce last task UCLAMP_MAX
-Message-ID: <20190313141008.GF5922@hirez.programming.kicks-ass.net>
-References: <20190208100554.32196-1-patrick.bellasi@arm.com>
- <20190208100554.32196-3-patrick.bellasi@arm.com>
+        Wed, 13 Mar 2019 10:10:34 -0400
+Received: by mail-wr1-f66.google.com with SMTP id i8so2185824wrm.0
+        for <linux-kernel@vger.kernel.org>; Wed, 13 Mar 2019 07:10:33 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=baylibre-com.20150623.gappssmtp.com; s=20150623;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=Om43o3QGlbzQeBRSo4/K8t97wwo+604Xu/lrnbkUV6U=;
+        b=G0hT4HBM9kOji92JSSQnQY5hQYBt5SxbRBvSwNZJIf9gY3mDuhquZzgqsVSK2sGf/Z
+         +r94dK1EF7IJlOYZNtPderfGb20LydJQNLHtt5FbSgRaGlgqXKy+Px7KUUeCUyg400XA
+         dL1HtOGJItIC3bfHIHUtIc+C2QoLNMBtBgA9Bauh5pYw0QXmPNawTKCSyu/f1Uq0Mvgf
+         DiD1yrChR/HyL23fDZPB1O2ThdQiZuGweP2gcasnq8jkHoas/irObXvU4n4TAQpkxOma
+         NTNcP1ExjvRAnaVei++Rsk/mUS2RHSNa+/0795GKMp8Y5xnyNhwh2m/qw6yNyReGDBQC
+         C7Bg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=Om43o3QGlbzQeBRSo4/K8t97wwo+604Xu/lrnbkUV6U=;
+        b=RiC3dmESBMu02wxzaUTRzMvjPA7V/5R4WqWdHkm2l7m0MQ1oss+xhr5Yw3fQIYW1TA
+         fbpQVcQjwZgDiaxqK5zG+rfr5oNiyLR7ig+IYFmjt9rrwkDTGPRcdWEl2PmWzF5fqWXQ
+         hp1a+lQlpIe13OrX9URbnR47pFnMqicB/h4/m+ELD4DB6yHUdFG9XfEG5gYkNq13L8mE
+         ua0B2fd9YCkMp1DZgoyhZOyYmbSrtmPlrKw2YRRjH2QaUU79BOY64/qw0NWTD22PH0y8
+         ODoiSpDc6OIF4ldOqQAkGtb9nZmGWoAv+TXka/3pYcaExYYp4EU08P/Xpe4jQVg+7htq
+         Nx6Q==
+X-Gm-Message-State: APjAAAVZTsvyCewXW3ey3wVfJWK87XisNiNCUNbVeuQMcASCI+azjDKz
+        aEUg/7Rwe8jdvzRxvVhX4w/e/g==
+X-Google-Smtp-Source: APXvYqz6rOCst2JaCzL9Yit5kUCMRU/5sLK8apQuVakVpx/da7nsKl+nl9Z70YR/pSRWFxHL7S8D2A==
+X-Received: by 2002:adf:efca:: with SMTP id i10mr27846110wrp.265.1552486233005;
+        Wed, 13 Mar 2019 07:10:33 -0700 (PDT)
+Received: from localhost.localdomain (wal59-h01-176-150-251-154.dsl.sta.abo.bbox.fr. [176.150.251.154])
+        by smtp.gmail.com with ESMTPSA id u17sm37300087wrg.71.2019.03.13.07.10.31
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-SHA bits=128/128);
+        Wed, 13 Mar 2019 07:10:32 -0700 (PDT)
+From:   Neil Armstrong <narmstrong@baylibre.com>
+To:     dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org
+Cc:     Neil Armstrong <narmstrong@baylibre.com>,
+        linux-amlogic@lists.infradead.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+Subject: [PATCH 0/3] dt-bindings: meson: Add G12A display bindings
+Date:   Wed, 13 Mar 2019 15:10:27 +0100
+Message-Id: <20190313141030.5958-1-narmstrong@baylibre.com>
+X-Mailer: git-send-email 2.20.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190208100554.32196-3-patrick.bellasi@arm.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Feb 08, 2019 at 10:05:41AM +0000, Patrick Bellasi wrote:
-> +uclamp_idle_value(struct rq *rq, unsigned int clamp_id, unsigned int clamp_value)
-> +{
-> +	/*
-> +	 * Avoid blocked utilization pushing up the frequency when we go
-> +	 * idle (which drops the max-clamp) by retaining the last known
-> +	 * max-clamp.
-> +	 */
-> +	if (clamp_id == UCLAMP_MAX) {
-> +		rq->uclamp_flags |= UCLAMP_FLAG_IDLE;
-> +		return clamp_value;
-> +	}
-> +
-> +	return uclamp_none(UCLAMP_MIN);
+This patchset adds the G12A specific bindings for the Display VPU
+and VPU Power Control.
 
-That's a very complicated way or writing: return 0, right?
+The Amlogic Meson G12A Display module is based on the Meson GXM SoC
+with an updated Plane Blender, thus VPU architecture and interconnect
+is the same.
 
-> +}
+Implementation then DT nodes will come in a further patchsets.
+
+Neil Armstrong (3):
+  dt-bindings: display: amlogic,meson-vpu: Add G12A compatible and ports
+  dt-bindings: display: amlogic,meson-dw-hdmi: Add G12A compatible and
+    ports
+  dt-bindings: power: amlogic,meson-gx-pwrc: Add G12A compatible
+
+ .../devicetree/bindings/display/amlogic,meson-dw-hdmi.txt     | 4 ++++
+ .../devicetree/bindings/display/amlogic,meson-vpu.txt         | 4 ++++
+ .../devicetree/bindings/power/amlogic,meson-gx-pwrc.txt       | 4 +++-
+ 3 files changed, 11 insertions(+), 1 deletion(-)
+
+-- 
+2.20.1
+
