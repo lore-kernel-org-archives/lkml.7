@@ -2,142 +2,116 @@ Return-Path: <SRS0=dUEL=RQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,URIBL_BLOCKED
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 362C6C43381
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 Mar 2019 14:27:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2C84AC43381
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 Mar 2019 14:27:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F386D2087C
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 Mar 2019 14:27:09 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="GTKRfUPp"
+	by mail.kernel.org (Postfix) with ESMTP id 06A332087C
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 Mar 2019 14:27:45 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726530AbfCMO1I (ORCPT
+        id S1726680AbfCMO1n (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 13 Mar 2019 10:27:08 -0400
-Received: from mail-yw1-f67.google.com ([209.85.161.67]:40658 "EHLO
-        mail-yw1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725876AbfCMO1H (ORCPT
+        Wed, 13 Mar 2019 10:27:43 -0400
+Received: from mail-wr1-f68.google.com ([209.85.221.68]:32974 "EHLO
+        mail-wr1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725856AbfCMO1n (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 13 Mar 2019 10:27:07 -0400
-Received: by mail-yw1-f67.google.com with SMTP id u70so1580645ywf.7;
-        Wed, 13 Mar 2019 07:27:06 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=WzssSWiIpBhFCg7dDWCZzQb3cazuLKAR34HpPN5C/tw=;
-        b=GTKRfUPpH56z7AW66nUJBdDbaMtKMDlGxscsSTNQ1YBT4VYOFE4Y+FAY93lcpuM7/Q
-         74cwqIaAlSPU5FepszxR2tQk8Gk3BLUjRAZsIeeCDSIsA+3kxbGUKVRLM37Bt3TA9+d1
-         fvUn6t/i9Y6vlpSbWfCKjWoxrwVzAqKDUX0Eit4orjWCdRi8LiXTJx1rkjrSsW4YB/CQ
-         mHp53nR2VCUu4L6uS1dABJj4+8QwzYvWei6hpW6XrNPB8I4P1eGdD7pS6/5pqWu2Ec5g
-         mTUixqmjp3kQhXk36FgvcUkxAjL3YmTB9L6H4DKx3UA/7u5jC8CiV8lbEDYJa+quDEWy
-         AKtA==
+        Wed, 13 Mar 2019 10:27:43 -0400
+Received: by mail-wr1-f68.google.com with SMTP id i8so2254556wrm.0;
+        Wed, 13 Mar 2019 07:27:42 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=WzssSWiIpBhFCg7dDWCZzQb3cazuLKAR34HpPN5C/tw=;
-        b=GHY4YMusyl5W+RMC2wb7yqiQ7pgzECjtu6bTBr9QsUu9GpugzkrR0UltRCDNJb2jNI
-         g1GOb6D8nNpYC2lppUig4kj2W2cFhplzyPG5zenNSv7sjUK0JQesstRfPmTMd2HFX9fz
-         aNuwqRsLvq9d5XBk6hNBb9fEuDQE4bSvauARsi2rd3SwpADvBqdzlKScfCqXyuIRCAAh
-         INn1XGb6OJbBVDeNTgNYq+xc/2pYgn4/dXltAS2DT74TFjV1a79mywzj2v9gwhWKcbPb
-         zdtX/1kLmTCd4Rm9WEqwsvgq1EOrYLAF2niKpJH1O0uIONVFVZy+Vw7ZxWPxBiqVlUmk
-         mJ+Q==
-X-Gm-Message-State: APjAAAW7y/AMJM/ID7GmBL6GhCE4pBlARrLRTcr0h2fFRBuaa8b6dxdE
-        fMLsAD4keEg73gAgx24DP2UV/Bp6LxH6B2SD/yo=
-X-Google-Smtp-Source: APXvYqzQY0abGCYaKgvCwX5jJU1vnJl2wL/xcqc5kyXp1+fg7LxIOrnlpOwh1XPT/0vcodACGLJ+5C444+utYbmllmw=
-X-Received: by 2002:a25:5046:: with SMTP id e67mr38102029ybb.397.1552487225985;
- Wed, 13 Mar 2019 07:27:05 -0700 (PDT)
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=znaRMaKImjKU7n+2sOr5kCFEkGn8Lfh8iIcumM4oMEk=;
+        b=TCMcu2T1DCeXGBQ77YLb6kEJZHeyQZ9vXkrH1ewD9n0rGDC1BlrjGJ34uVzxsvCim3
+         JndogAZmSwSjhqFEA5OSBUba1t1abhHXQK+8Eku9GnW0rJC9yztV4wCPIcgkRcHnEhgT
+         M1V5p/lbG4OMuNBh69fA/tAG2HISdEH9on4JdI0VVz66LzcCuf5mPj92T517F1wmMW9h
+         AVOSZbxhRAFvCjyXjza2weTE/KmmPmzfaDFL9bOlrOEGW4/n49LMHHdFsELBN0IufZCE
+         0TB2xUfyvoW/4+IbO7g75y/KlZ1ClXWRelyJqIlMm8u8ql3RuoaRvXJsY3SHb71hvIgL
+         4jrg==
+X-Gm-Message-State: APjAAAUuRIAhtGHnuU5DCkc0kxYo6OGebLYcP1Dvy57QOys20NoyFvFs
+        ogR44Kmnc0rFXqvAwPwDRfk=
+X-Google-Smtp-Source: APXvYqxx9Dfeq65gU26pkdXAS+24+HNqsgNi6ACDfHY6q2T1SE+/x3h7/wAQIZp9PDLCkYJmaehe+w==
+X-Received: by 2002:a5d:5281:: with SMTP id c1mr5716405wrv.83.1552487261256;
+        Wed, 13 Mar 2019 07:27:41 -0700 (PDT)
+Received: from localhost ([90.85.130.193])
+        by smtp.gmail.com with ESMTPSA id h17sm11003526wrq.93.2019.03.13.07.27.40
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Wed, 13 Mar 2019 07:27:40 -0700 (PDT)
+From:   Christina Quast <cquast@hanoverdisplays.com>
+Cc:     bcousson@baylibre.com, tony@atomide.com, robh+dt@kernel.org,
+        mark.rutland@arm.com, mpfj@newflow.co.uk,
+        cquast@hanoverdisplays.com, linux-omap@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [PATCH 0/2] ARM: dts: am335x: Replace numeric pinmux address with macro defines
+Date:   Wed, 13 Mar 2019 15:27:22 +0100
+Message-Id: <20190313142724.27446-1-cquast@hanoverdisplays.com>
+X-Mailer: git-send-email 2.20.1
 MIME-Version: 1.0
-References: <4603533.ZIfxmiEf7K@blindfold> <1854703.ve7plDhYWt@blindfold>
- <CAJfpegtgfuAkgv26QH6Ht25OeMiev-QvEf7ror4KAbud7FADgg@mail.gmail.com> <4066872.KGdO14EQMx@blindfold>
-In-Reply-To: <4066872.KGdO14EQMx@blindfold>
-From:   Amir Goldstein <amir73il@gmail.com>
-Date:   Wed, 13 Mar 2019 16:26:54 +0200
-Message-ID: <CAOQ4uxhqQKzriL0An4Tvzc1E_LffL-z9q1otOW_RdD1ZdKWP3Q@mail.gmail.com>
-Subject: Re: overlayfs vs. fscrypt
-To:     Richard Weinberger <richard@nod.at>
-Cc:     Miklos Szeredi <miklos@szeredi.hu>,
-        linux-fsdevel <linux-fsdevel@vger.kernel.org>,
-        linux-fscrypt@vger.kernel.org,
-        overlayfs <linux-unionfs@vger.kernel.org>,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        Paul Lawrence <paullawrence@google.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
+To:     unlisted-recipients:; (no To-header on input)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Mar 13, 2019 at 3:34 PM Richard Weinberger <richard@nod.at> wrote:
->
-> Am Mittwoch, 13. M=C3=A4rz 2019, 14:24:47 CET schrieb Miklos Szeredi:
-> > > The use case is that you can delete these files if the DAC/MAC permis=
-sions allow it.
-> > > Just like on NTFS. If a user encrypts files, the admin cannot read th=
-em but can
-> > > remove them if the user is gone or loses the key.
-> >
-> > There's the underlying filesystem view where admin can delete files,
-> > etc.   And there's the fscrypt layer stacked on top of the underlying
-> > fs, which en/decrypts files *in case the user has the key*.  What if
-> > one user has a key, but the other one doesn't?  Will d_revalidate
-> > constantly switch the set of dentries between the encrypted filenames
-> > and the decrypted ones?  Sounds crazy.  And the fact that NTFS does
-> > this doesn't make it any less crazy...
->
-> Well, I didn't come up with this feature. :-)
->
-> If one user has the key and the other not, a classic multi-user
-> system, then you need to make sure that the affected fscrypt instances
-> are not visible by both.
-> For example by using mount namespaces to make sure that user a can only
-> see /home/foo and user b only /home/bar.
-> Or removing the search permission on /home/foo and /home/bar.
->
-> I know, I know, but that's how it is...
-> Maybe Ted or Eric can give more details on why they chose this approach.
->
+This patchset replaces the register offsets for am335x with macro defines.
+The values are extraced from the "AM335x SitaraTM Processors Technical
+Reference Manual".
 
-AFAIK, this feature was born to tailor Android's file based encryption.
-https://source.android.com/security/encryption#file-based
-It is meant to protect data at rest and what happens when user enters
-the screen lock password IIRC, is that some service will get restarted.
-IOW, there should NOT be any processes in Android accessing the
-encrypted user data folders with and without the key simultaneously.
-Also, like OpenWRT, in Android the key does not get removed
-(until boot) AFAIK(?).
+Updated AM33XX_IOPAD to take three instead of two parameters, to make
+future changes to #pinctrl-cells easier.
 
-That dcache behavior remind me of the proposal to make case
-insensitive a per mount option (also for an Android use case).
-Eventually, that was replaced with per directory flag, which plays
-much better with dache.
+Christina Quast (2):
+  ARM: dts: am335x: Replace numeric pinmux address with macro defines
+  ARM: dts: am335x: Replaced register offsets with defines
 
-IMO, the best thing for UBIFS to do would be to modify fscrypt to support
-opting out of the revalidate behavior, IWO, sanitize your hack to an API.
+ arch/arm/boot/dts/am335x-baltos-ir2110.dts    |  16 +-
+ arch/arm/boot/dts/am335x-baltos-ir3220.dts    |  38 +--
+ arch/arm/boot/dts/am335x-baltos-ir5221.dts    |  42 +--
+ arch/arm/boot/dts/am335x-baltos-leds.dtsi     |   6 +-
+ arch/arm/boot/dts/am335x-baltos.dtsi          | 140 ++++-----
+ arch/arm/boot/dts/am335x-base0033.dts         |  48 +--
+ arch/arm/boot/dts/am335x-bone-common.dtsi     | 116 +++----
+ .../arm/boot/dts/am335x-boneblack-common.dtsi |  54 ++--
+ .../boot/dts/am335x-boneblack-wireless.dts    |  28 +-
+ arch/arm/boot/dts/am335x-boneblue.dts         | 104 +++----
+ .../arm/boot/dts/am335x-bonegreen-common.dtsi |   4 +-
+ .../boot/dts/am335x-bonegreen-wireless.dts    |  28 +-
+ arch/arm/boot/dts/am335x-chiliboard.dts       |  66 ++--
+ arch/arm/boot/dts/am335x-chilisom.dtsi        |  34 +-
+ arch/arm/boot/dts/am335x-cm-t335.dts          | 154 ++++-----
+ arch/arm/boot/dts/am335x-evm.dts              | 234 +++++++-------
+ arch/arm/boot/dts/am335x-evmsk.dts            | 292 +++++++++---------
+ arch/arm/boot/dts/am335x-icev2.dts            | 116 +++----
+ arch/arm/boot/dts/am335x-igep0033.dtsi        |  40 +--
+ arch/arm/boot/dts/am335x-lxm.dts              | 120 +++----
+ .../boot/dts/am335x-moxa-uc-2100-common.dtsi  |  42 +--
+ arch/arm/boot/dts/am335x-moxa-uc-2101.dts     |  24 +-
+ .../arm/boot/dts/am335x-moxa-uc-8100-me-t.dts | 116 +++----
+ arch/arm/boot/dts/am335x-nano.dts             | 140 ++++-----
+ arch/arm/boot/dts/am335x-osd3358-sm-red.dts   | 168 +++++-----
+ arch/arm/boot/dts/am335x-osd335x-common.dtsi  |   4 +-
+ arch/arm/boot/dts/am335x-pcm-953.dtsi         |  74 ++---
+ arch/arm/boot/dts/am335x-pdu001.dts           | 170 +++++-----
+ arch/arm/boot/dts/am335x-pepper.dts           | 200 ++++++------
+ arch/arm/boot/dts/am335x-phycore-som.dtsi     |  60 ++--
+ arch/arm/boot/dts/am335x-pocketbeagle.dts     |  56 ++--
+ arch/arm/boot/dts/am335x-sancloud-bbe.dts     |  62 ++--
+ arch/arm/boot/dts/am335x-sbc-t335.dts         | 112 +++----
+ arch/arm/boot/dts/am335x-shc.dts              | 224 +++++++-------
+ arch/arm/boot/dts/am335x-sl50.dts             | 208 ++++++-------
+ arch/arm/boot/dts/am335x-wega.dtsi            |  68 ++--
+ arch/arm/boot/dts/am33xx.dtsi                 |   1 +
+ include/dt-bindings/pinctrl/am335x.h          | 236 ++++++++++++++
+ include/dt-bindings/pinctrl/omap.h            |   2 +-
+ 39 files changed, 1942 insertions(+), 1705 deletions(-)
+ create mode 100644 include/dt-bindings/pinctrl/am335x.h
 
-It's good that you are thinking about what will happen with overlayfs
-over ext4/f2fs, but I think that it will be messy if dentry names would be
-changing in underlying fs and the fact the overlayfs accessed the underlyin=
-g
-dirs with different credentials at times makes this even more messy.
+-- 
+2.20.1
 
-The way out of this mess IMO would be for ext4/f2fs to also conditionally
-opt-out of d_revalidate behavior at mount time if the fs is expected to be
-used under overlayfs.
-In Android, for example, I think the use case of "admin deleting
-the encrypted directories" is only relevant on "reset to default" and that
-happens in recovery boot that could potentially opt-out of encryption
-altogether (because there is no user to enter the password anyway).
-
-I could be over simplifying things for the Android use case and my
-information could be severely out dated.
-CC Paul Lawrence to fill in my Android knowledge gaps.
-
-Thanks,
-Amir.
