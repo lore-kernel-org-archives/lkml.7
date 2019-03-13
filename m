@@ -2,108 +2,144 @@ Return-Path: <SRS0=dUEL=RQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_NEOMUTT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0EFD5C43381
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 Mar 2019 11:32:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A378CC43381
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 Mar 2019 11:38:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CFDA82147C
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 Mar 2019 11:32:47 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="ITH4PHWW"
+	by mail.kernel.org (Postfix) with ESMTP id 76BB42147C
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 Mar 2019 11:38:08 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726431AbfCMLcq (ORCPT
+        id S1726337AbfCMLiH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 13 Mar 2019 07:32:46 -0400
-Received: from hqemgate16.nvidia.com ([216.228.121.65]:10273 "EHLO
-        hqemgate16.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726326AbfCMLcp (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 13 Mar 2019 07:32:45 -0400
-Received: from hqpgpgate102.nvidia.com (Not Verified[216.228.121.13]) by hqemgate16.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
-        id <B5c88ea5a0002>; Wed, 13 Mar 2019 04:32:42 -0700
-Received: from hqmail.nvidia.com ([172.20.161.6])
-  by hqpgpgate102.nvidia.com (PGP Universal service);
-  Wed, 13 Mar 2019 04:32:43 -0700
-X-PGP-Universal: processed;
-        by hqpgpgate102.nvidia.com on Wed, 13 Mar 2019 04:32:43 -0700
-Received: from HQMAIL108.nvidia.com (172.18.146.13) by HQMAIL105.nvidia.com
- (172.20.187.12) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Wed, 13 Mar
- 2019 11:32:43 +0000
-Received: from hqnvemgw01.nvidia.com (172.20.150.20) by HQMAIL108.nvidia.com
- (172.18.146.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3 via Frontend
- Transport; Wed, 13 Mar 2019 11:32:43 +0000
-Received: from linux.nvidia.com (Not Verified[10.24.34.185]) by hqnvemgw01.nvidia.com with Trustwave SEG (v7,5,8,10121)
-        id <B5c88ea590001>; Wed, 13 Mar 2019 04:32:43 -0700
-From:   Sameer Pujar <spujar@nvidia.com>
-To:     <dan.j.williams@intel.com>, <vkoul@kernel.org>
-CC:     <treding@nvidia.com>, <jonathanh@nvidia.com>,
-        <dmaengine@vger.kernel.org>, <linux-tegra@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>, Sameer Pujar <spujar@nvidia.com>
-Subject: [PATCH v3 2/2] dmaengine: tegra210-adma: update system sleep callbacks
-Date:   Wed, 13 Mar 2019 17:02:37 +0530
-Message-ID: <1552476757-22360-2-git-send-email-spujar@nvidia.com>
-X-Mailer: git-send-email 2.7.4
-In-Reply-To: <1552476757-22360-1-git-send-email-spujar@nvidia.com>
-References: <1552476757-22360-1-git-send-email-spujar@nvidia.com>
+        Wed, 13 Mar 2019 07:38:07 -0400
+Received: from foss.arm.com ([217.140.101.70]:56498 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725888AbfCMLiG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 13 Mar 2019 07:38:06 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.72.51.249])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 328CB80D;
+        Wed, 13 Mar 2019 04:38:06 -0700 (PDT)
+Received: from e110439-lin (e110439-lin.cambridge.arm.com [10.1.194.43])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 3E7753F71D;
+        Wed, 13 Mar 2019 04:38:03 -0700 (PDT)
+Date:   Wed, 13 Mar 2019 11:37:57 +0000
+From:   Patrick Bellasi <patrick.bellasi@arm.com>
+To:     Peter Zijlstra <peterz@infradead.org>
+Cc:     linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org,
+        linux-api@vger.kernel.org, Ingo Molnar <mingo@redhat.com>,
+        Tejun Heo <tj@kernel.org>,
+        "Rafael J . Wysocki" <rafael.j.wysocki@intel.com>,
+        Vincent Guittot <vincent.guittot@linaro.org>,
+        Viresh Kumar <viresh.kumar@linaro.org>,
+        Paul Turner <pjt@google.com>,
+        Quentin Perret <quentin.perret@arm.com>,
+        Dietmar Eggemann <dietmar.eggemann@arm.com>,
+        Morten Rasmussen <morten.rasmussen@arm.com>,
+        Juri Lelli <juri.lelli@redhat.com>,
+        Todd Kjos <tkjos@google.com>,
+        Joel Fernandes <joelaf@google.com>,
+        Steve Muckle <smuckle@google.com>,
+        Suren Baghdasaryan <surenb@google.com>
+Subject: Re: [PATCH v7 01/15] sched/core: uclamp: Add CPU's clamp buckets
+ refcounting
+Message-ID: <20190313113757.aeaksz5akv6y5uep@e110439-lin>
+References: <20190208100554.32196-1-patrick.bellasi@arm.com>
+ <20190208100554.32196-2-patrick.bellasi@arm.com>
+ <20190312152059.GA5922@hirez.programming.kicks-ass.net>
+ <20190312155043.vj3fiutnsovjti2x@e110439-lin>
+ <20190313081958.GA5996@hirez.programming.kicks-ass.net>
 MIME-Version: 1.0
-Content-Type: text/plain
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
-        t=1552476762; bh=LK4vbbhJXqGCjgspe2hBPkWsV/9mOH9yZUEqUfc+kBo=;
-        h=X-PGP-Universal:From:To:CC:Subject:Date:Message-ID:X-Mailer:
-         In-Reply-To:References:MIME-Version:Content-Type;
-        b=ITH4PHWW6HaKzCKC5Z2iZimEa1geEGBe/UPGkVkuxDZ5xfkO3Sg9XiST42v16coR+
-         QXc2szTimwAWbT2O/CfhN8QYBSP9ktn9xyCfC/HbEx5EZ5R/woScKj913piwU5V7c/
-         0qPZ/b2VkzdPgqbu2H6djosj8VfNEdUvcNu7DC4ixEz3P7Sx9pMojgggjK1WGtmqZo
-         vtT6UWo1XK6ry0S030CAEESaMxUhgLOQYXA1ZjFCcxKwnymkGnrJkLk0KH/NpsRLEo
-         I38xztpDYmBjQ4+Mnw/rJxCSVUzfgBYCQSCY3IyjA/2vG4vNExt9JJzGFn5k6ZEdTp
-         tcRFF+09x62GQ==
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190313081958.GA5996@hirez.programming.kicks-ass.net>
+User-Agent: NeoMutt/20180716
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-If the driver is active till late suspend, where runtime PM cannot run,
-force suspend is essential in such case to put the device in low power
-state. Thus pm_runtime_force_suspend and pm_runtime_force_resume are
-used as system sleep callbacks during system wide PM transitions.
-Late system sleep callbacks are used to ensure, for instance, that the
-sound core has suspended any on-going activity, including stopping the
-ADMA if active, before we attempt to suspend the ADMA.
+On 13-Mar 09:19, Peter Zijlstra wrote:
+> On Tue, Mar 12, 2019 at 03:50:43PM +0000, Patrick Bellasi wrote:
+> > On 12-Mar 16:20, Peter Zijlstra wrote:
+> > > On Fri, Feb 08, 2019 at 10:05:40AM +0000, Patrick Bellasi wrote:
+> > > > +/* Integer ceil-rounded range for each bucket */
+> 
+>           ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+> 
+> > > > +#define UCLAMP_BUCKET_DELTA ((SCHED_CAPACITY_SCALE / UCLAMP_BUCKETS) + 1)
+> 
+>                                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+> 
+> simply do not match.
 
-Suggested-by: Jonathan Hunter <jonathanh@nvidia.com>
-Signed-off-by: Sameer Pujar <spujar@nvidia.com>
----
- drivers/dma/tegra210-adma.c | 10 ++--------
- 1 file changed, 2 insertions(+), 8 deletions(-)
+Right, that don't match when UCLAMP_BUCKETS is a divider of
+SCHED_CAPACITY_SCALE, i.e. when we use 8 or 16 buckets.
 
-diff --git a/drivers/dma/tegra210-adma.c b/drivers/dma/tegra210-adma.c
-index 650cd9c..253d312 100644
---- a/drivers/dma/tegra210-adma.c
-+++ b/drivers/dma/tegra210-adma.c
-@@ -796,17 +796,11 @@ static int tegra_adma_remove(struct platform_device *pdev)
- 	return 0;
- }
- 
--#ifdef CONFIG_PM_SLEEP
--static int tegra_adma_pm_suspend(struct device *dev)
--{
--	return pm_runtime_suspended(dev) == false;
--}
--#endif
--
- static const struct dev_pm_ops tegra_adma_dev_pm_ops = {
- 	SET_RUNTIME_PM_OPS(tegra_adma_runtime_suspend,
- 			   tegra_adma_runtime_resume, NULL)
--	SET_SYSTEM_SLEEP_PM_OPS(tegra_adma_pm_suspend, NULL)
-+	SET_LATE_SYSTEM_SLEEP_PM_OPS(pm_runtime_force_suspend,
-+				     pm_runtime_force_resume)
- };
- 
- static struct platform_driver tegra_admac_driver = {
+> > > Uhm, should that not me ((x+y-1)/y), aka. DIV_ROUND_UP(x,y) ?
+> > 
+> > Well, there is certainly some rounding to be done...
+> > 
+> > > The above would give 4 for 9/3, which is clearly buggered.
+> > 
+> > .. still the math above should work fine within the boundaries we
+> > define for UCLAMP_BUCKET_DELTA (5..20 groups) and considering that
+> > SCHED_CAPACITY_SCALE will never be smaller then 1024.
+> 
+> That's a very poor reason to write utter nonsense :-)
+> 
+> > The above is designed to shrink the topmost bucket wrt all the others
+> > but it will never be smaller than ~30%.
+> 
+> 30% sounds like a lot, esp. for this range.
+
+Well, that 30% is really just ~16 utiliation units on a scale of 1024
+when buckets have a size of 52.
+
+Still, yes, we can argue that's big but that's also the same error
+generated by DIV_ROUND_UP() when UCLAMP_BUCKETS is not 8 or 16.
+
+> > Here are the start values computed for each bucket using the math
+> > above and the computed shrinking percentage for the topmost bucket:
+> 
+> If you use a regular rounding, the error is _much_ smaller:
+> 
+> $ for ((x=5;x<21;x++)) ; do let d=(1024+x/2)/x; let s=(x-1)*d; let e=1024-s; let p=100*(d-e)/d; echo $x $d $s $e $p%; done
+                                    ^^^^^^^^^^^^^
+> 5 205 820 204 0%
+> 6 171 855 169 1%
+> 7 146 876 148 -1%
+> 8 128 896 128 0%
+> 9 114 912 112 1%
+> 10 102 918 106 -3%
+> 11 93 930 94 -1%
+> 12 85 935 89 -4%
+> 13 79 948 76 3%
+> 14 73 949 75 -2%
+> 15 68 952 72 -5%
+> 16 64 960 64 0%
+> 17 60 960 64 -6%
+> 18 57 969 55 3%
+> 19 54 972 52 3%
+> 20 51 969 55 -7%
+> 
+> Funnily enough, we have a helper for that too: DIV_ROUND_CLOSEST().
+                                                 ^^^^^^^^^^^^^^^^^^^^
+This is different than DIV_ROUND_UP() and actually better across the
+full range.
+
+> Now, if we go further, the error will obviously increase because we run
+> out of precision, but even there, regular rounding will be better than
+> either floor or ceil.
+
+I don't think we will have to cover other values in the further but I
+agree that this "closest rounding" is definitively better.
+
+Thanks for spotting it, will update in v8.
+
 -- 
-2.7.4
+#include <best/regards.h>
 
+Patrick Bellasi
