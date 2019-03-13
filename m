@@ -2,92 +2,88 @@ Return-Path: <SRS0=dUEL=RQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_NEOMUTT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F0A67C43381
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 Mar 2019 16:20:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E5AC9C43381
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 Mar 2019 16:20:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C7A362075C
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 Mar 2019 16:20:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B251B2075C
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 Mar 2019 16:20:58 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726512AbfCMQUi (ORCPT
+        id S1726720AbfCMQU5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 13 Mar 2019 12:20:38 -0400
-Received: from ivanoab6.miniserver.com ([5.153.251.140]:42006 "EHLO
-        www.kot-begemot.co.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725876AbfCMQUi (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 13 Mar 2019 12:20:38 -0400
-Received: from jain.kot-begemot.co.uk ([192.168.3.3])
-        by www.kot-begemot.co.uk with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.89)
-        (envelope-from <anton.ivanov@cambridgegreys.com>)
-        id 1h46cN-0008P8-3S; Wed, 13 Mar 2019 16:20:35 +0000
-Received: from jain.kot-begemot.co.uk ([192.168.3.3])
-        by jain.kot-begemot.co.uk with esmtp (Exim 4.89)
-        (envelope-from <anton.ivanov@cambridgegreys.com>)
-        id 1h46cK-0004Yp-Jn; Wed, 13 Mar 2019 16:20:33 +0000
-Subject: Re: [PATCH] um: define set_pte_at() as a static inline function, not
- a macro
-To:     Bartosz Golaszewski <brgl@bgdev.pl>, Jeff Dike <jdike@addtoit.com>,
-        Richard Weinberger <richard@nod.at>
-Cc:     Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        linux-um@lists.infradead.org, linux-kernel@vger.kernel.org
-References: <20190313101439.7092-1-brgl@bgdev.pl>
-From:   Anton Ivanov <anton.ivanov@cambridgegreys.com>
-Message-ID: <ba8a9e10-cd10-c847-af2b-c41f31cf5f30@cambridgegreys.com>
-Date:   Wed, 13 Mar 2019 16:20:32 +0000
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.5.1
+        Wed, 13 Mar 2019 12:20:57 -0400
+Received: from usa-sjc-mx-foss1.foss.arm.com ([217.140.101.70]:60116 "EHLO
+        foss.arm.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725876AbfCMQU5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 13 Mar 2019 12:20:57 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.72.51.249])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 8701880D;
+        Wed, 13 Mar 2019 09:20:56 -0700 (PDT)
+Received: from e110439-lin (e110439-lin.cambridge.arm.com [10.1.194.43])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 9214C3F71D;
+        Wed, 13 Mar 2019 09:20:53 -0700 (PDT)
+Date:   Wed, 13 Mar 2019 16:20:51 +0000
+From:   Patrick Bellasi <patrick.bellasi@arm.com>
+To:     Peter Zijlstra <peterz@infradead.org>
+Cc:     linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org,
+        linux-api@vger.kernel.org, Ingo Molnar <mingo@redhat.com>,
+        Tejun Heo <tj@kernel.org>,
+        "Rafael J . Wysocki" <rafael.j.wysocki@intel.com>,
+        Vincent Guittot <vincent.guittot@linaro.org>,
+        Viresh Kumar <viresh.kumar@linaro.org>,
+        Paul Turner <pjt@google.com>,
+        Quentin Perret <quentin.perret@arm.com>,
+        Dietmar Eggemann <dietmar.eggemann@arm.com>,
+        Morten Rasmussen <morten.rasmussen@arm.com>,
+        Juri Lelli <juri.lelli@redhat.com>,
+        Todd Kjos <tkjos@google.com>,
+        Joel Fernandes <joelaf@google.com>,
+        Steve Muckle <smuckle@google.com>,
+        Suren Baghdasaryan <surenb@google.com>
+Subject: Re: [PATCH v7 02/15] sched/core: uclamp: Enforce last task UCLAMP_MAX
+Message-ID: <20190313162051.djiu5dwc5ahp5p5p@e110439-lin>
+References: <20190208100554.32196-1-patrick.bellasi@arm.com>
+ <20190208100554.32196-3-patrick.bellasi@arm.com>
+ <20190313141008.GF5922@hirez.programming.kicks-ass.net>
 MIME-Version: 1.0
-In-Reply-To: <20190313101439.7092-1-brgl@bgdev.pl>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Clacks-Overhead: GNU Terry Pratchett
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190313141008.GF5922@hirez.programming.kicks-ass.net>
+User-Agent: NeoMutt/20180716
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On 13-Mar 15:10, Peter Zijlstra wrote:
+> On Fri, Feb 08, 2019 at 10:05:41AM +0000, Patrick Bellasi wrote:
+> > +uclamp_idle_value(struct rq *rq, unsigned int clamp_id, unsigned int clamp_value)
+> > +{
+> > +	/*
+> > +	 * Avoid blocked utilization pushing up the frequency when we go
+> > +	 * idle (which drops the max-clamp) by retaining the last known
+> > +	 * max-clamp.
+> > +	 */
+> > +	if (clamp_id == UCLAMP_MAX) {
+> > +		rq->uclamp_flags |= UCLAMP_FLAG_IDLE;
+> > +		return clamp_value;
+> > +	}
+> > +
+> > +	return uclamp_none(UCLAMP_MIN);
+> 
+> That's a very complicated way or writing: return 0, right?
 
+In my mind it's just a simple way to hardcode values in just one place.
 
-On 13/03/2019 10:14, Bartosz Golaszewski wrote:
-> From: Bartosz Golaszewski <bgolaszewski@baylibre.com>
-> 
-> When defined as macro, the mm argument is unused and subsequently the
-> variable passed as mm is considered unused by the compiler. This fixes
-> a build warning.
-> 
-> Signed-off-by: Bartosz Golaszewski <bgolaszewski@baylibre.com>
-> ---
->   arch/um/include/asm/pgtable.h | 7 ++++++-
->   1 file changed, 6 insertions(+), 1 deletion(-)
-> 
-> diff --git a/arch/um/include/asm/pgtable.h b/arch/um/include/asm/pgtable.h
-> index 9c04562310b3..b377df76cc28 100644
-> --- a/arch/um/include/asm/pgtable.h
-> +++ b/arch/um/include/asm/pgtable.h
-> @@ -263,7 +263,12 @@ static inline void set_pte(pte_t *pteptr, pte_t pteval)
->   	*pteptr = pte_mknewpage(*pteptr);
->   	if(pte_present(*pteptr)) *pteptr = pte_mknewprot(*pteptr);
->   }
-> -#define set_pte_at(mm,addr,ptep,pteval) set_pte(ptep,pteval)
-> +
-> +static inline void set_pte_at(struct mm_struct *mm, unsigned long addr,
-> +			      pte_t *pteptr, pte_t pteval)
-> +{
-> +	set_pte(pteptr, pteval);
-> +}
->   
->   #define __HAVE_ARCH_PTE_SAME
->   static inline int pte_same(pte_t pte_a, pte_t pte_b)
-> 
-Reviewed-by: Anton Ivanov <anton.ivanov@cambridgegreys.com>
-Acked-by: Anton Ivanov <anton.ivanov@cambridgegreys.com>
+In the current implementation uclamp_none(UCLAMP_MIN) is 0 and the
+compiler is not in trubles to inline a 0 there.
+
+Is it really so disgusting ?
+
 -- 
-Anton R. Ivanov
-Cambridgegreys Limited. Registered in England. Company Number 10273661
-https://www.cambridgegreys.com/
+#include <best/regards.h>
+
+Patrick Bellasi
