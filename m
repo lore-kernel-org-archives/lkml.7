@@ -4,50 +4,48 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+	SPF_PASS,USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 49415C43381
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 Mar 2019 19:17:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 57A0BC10F03
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 Mar 2019 19:17:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 18D282184D
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 Mar 2019 19:17:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2051F21852
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 Mar 2019 19:17:46 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1552504662;
-	bh=5SU8m6cmIFETHlwpr/gFjKRfq8Bk4QlAJ/7ABaYRufo=;
+	s=default; t=1552504666;
+	bh=ciCpsWYi5TxCWIrzJtVw1RU5kR51xMGWlb6yaG5RS3c=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=NnUxNLGFX8xC7dMf2+P+AiB2mqNtdkPOdkdjMjDK+hmZ1FkIUkuE7QdgkCJOnL2zc
-	 3nHLLWQyIZf0Kq7zzl5UFl/R2myGtp5Cv/RkWUbeg/oUxP1GFrXg5+TyqtDgNAHZu6
-	 4AiTmdQY1pYvMW+GUceSMXw3jkw6zyAk4s581O0U=
+	b=MWM4WIc60kP92wDh7PKGJb6Sv0XSjh3A7GXrVSSooqDeirGVi8mm3eYUPEI4rY2X2
+	 lwZeKBN4of2P2GuOkzqdOnd3bCooo2E7wWsMDVBtpDWqb2mXUL+g7BID3Lr5fnMZXR
+	 9Yj7TkRwQ4v8IwENrWhmqsgAgczBbVdoAbkTOoso=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728928AbfCMTRk (ORCPT
+        id S1728939AbfCMTRo (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 13 Mar 2019 15:17:40 -0400
-Received: from mail.kernel.org ([198.145.29.99]:48090 "EHLO mail.kernel.org"
+        Wed, 13 Mar 2019 15:17:44 -0400
+Received: from mail.kernel.org ([198.145.29.99]:48144 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727818AbfCMTRi (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 13 Mar 2019 15:17:38 -0400
+        id S1728930AbfCMTRl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 13 Mar 2019 15:17:41 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 7E0432171F;
-        Wed, 13 Mar 2019 19:17:36 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 9610A217F5;
+        Wed, 13 Mar 2019 19:17:39 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1552504657;
-        bh=5SU8m6cmIFETHlwpr/gFjKRfq8Bk4QlAJ/7ABaYRufo=;
+        s=default; t=1552504660;
+        bh=ciCpsWYi5TxCWIrzJtVw1RU5kR51xMGWlb6yaG5RS3c=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=hRHmu79E6Xhabo8cHQsfPQHpzP/QtzQF9dDYUMnChoqAXP3GFsKOHEO22ixlF3uD7
-         BN7Z+WOKrGpwsJbfav9gh6846EerppHOWfNdXwZeQRiZIDZFWBacK0NJHMnBsae1Cl
-         DqW25qPi1hF0c+zpiSp8xEk2nyL3uhdxtXSHhBCg=
+        b=wAdsMkA+fxy3xFsYAhegOa/WDLYAB+R1sn4pzo+pCBBWEyTa+nQlzkQo9gGokjTEt
+         T3a0kDOQIK5610cBLrH/tEl/1q8cwq4CCcSLZFmi3orVhyVsNl1bqJVoXManmVDJc5
+         cWywuZu1l0LoCNH5RWtUoeh/Ykp+TWb8lZ2qB6ZM=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Eugeniy Paltsev <eugeniy.paltsev@synopsys.com>,
-        Eugeniy Paltsev <Eugeniy.Paltsev@synopsys.com>,
-        Vineet Gupta <vgupta@synopsys.com>,
+Cc:     Vineet Gupta <vgupta@synopsys.com>,
         Sasha Levin <sashal@kernel.org>,
         linux-snps-arc@lists.infradead.org
-Subject: [PATCH AUTOSEL 4.9 16/24] ARCv2: lib: memcpy: fix doing prefetchw outside of buffer
-Date:   Wed, 13 Mar 2019 15:16:39 -0400
-Message-Id: <20190313191647.160171-16-sashal@kernel.org>
+Subject: [PATCH AUTOSEL 4.9 17/24] ARC: uacces: remove lp_start, lp_end from clobber list
+Date:   Wed, 13 Mar 2019 15:16:40 -0400
+Message-Id: <20190313191647.160171-17-sashal@kernel.org>
 X-Mailer: git-send-email 2.19.1
 In-Reply-To: <20190313191647.160171-1-sashal@kernel.org>
 References: <20190313191647.160171-1-sashal@kernel.org>
@@ -59,102 +57,59 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Eugeniy Paltsev <eugeniy.paltsev@synopsys.com>
+From: Vineet Gupta <vgupta@synopsys.com>
 
-[ Upstream commit f8a15f97664178f27dfbf86a38f780a532cb6df0 ]
+[ Upstream commit d5e3c55e01d8b1774b37b4647c30fb22f1d39077 ]
 
-ARCv2 optimized memcpy uses PREFETCHW instruction for prefetching the
-next cache line but doesn't ensure that the line is not past the end of
-the buffer. PRETECHW changes the line ownership and marks it dirty,
-which can cause data corruption if this area is used for DMA IO.
+Newer ARC gcc handles lp_start, lp_end in a different way and doesn't
+like them in the clobber list.
 
-Fix the issue by avoiding the PREFETCHW. This leads to performance
-degradation but it is OK as we'll introduce new memcpy implementation
-optimized for unaligned memory access using.
-
-We also cut off all PREFETCH instructions at they are quite useless
-here:
- * we call PREFETCH right before LOAD instruction call.
- * we copy 16 or 32 bytes of data (depending on CONFIG_ARC_HAS_LL64)
-   in a main logical loop. so we call PREFETCH 4 times (or 2 times)
-   for each L1 cache line (in case of 64B L1 cache Line which is
-   default case). Obviously this is not optimal.
-
-Signed-off-by: Eugeniy Paltsev <Eugeniy.Paltsev@synopsys.com>
 Signed-off-by: Vineet Gupta <vgupta@synopsys.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/arc/lib/memcpy-archs.S | 14 --------------
- 1 file changed, 14 deletions(-)
+ arch/arc/include/asm/uaccess.h | 8 ++++----
+ 1 file changed, 4 insertions(+), 4 deletions(-)
 
-diff --git a/arch/arc/lib/memcpy-archs.S b/arch/arc/lib/memcpy-archs.S
-index d61044dd8b58..ea14b0bf3116 100644
---- a/arch/arc/lib/memcpy-archs.S
-+++ b/arch/arc/lib/memcpy-archs.S
-@@ -25,15 +25,11 @@
- #endif
+diff --git a/arch/arc/include/asm/uaccess.h b/arch/arc/include/asm/uaccess.h
+index 0684fd2f42e8..f82393f89215 100644
+--- a/arch/arc/include/asm/uaccess.h
++++ b/arch/arc/include/asm/uaccess.h
+@@ -209,7 +209,7 @@ __arc_copy_from_user(void *to, const void __user *from, unsigned long n)
+ 		*/
+ 		  "=&r" (tmp), "+r" (to), "+r" (from)
+ 		:
+-		: "lp_count", "lp_start", "lp_end", "memory");
++		: "lp_count", "memory");
  
- #ifdef CONFIG_ARC_HAS_LL64
--# define PREFETCH_READ(RX)	prefetch    [RX, 56]
--# define PREFETCH_WRITE(RX)	prefetchw   [RX, 64]
- # define LOADX(DST,RX)		ldd.ab	DST, [RX, 8]
- # define STOREX(SRC,RX)		std.ab	SRC, [RX, 8]
- # define ZOLSHFT		5
- # define ZOLAND			0x1F
- #else
--# define PREFETCH_READ(RX)	prefetch    [RX, 28]
--# define PREFETCH_WRITE(RX)	prefetchw   [RX, 32]
- # define LOADX(DST,RX)		ld.ab	DST, [RX, 4]
- # define STOREX(SRC,RX)		st.ab	SRC, [RX, 4]
- # define ZOLSHFT		4
-@@ -41,8 +37,6 @@
- #endif
+ 		return n;
+ 	}
+@@ -438,7 +438,7 @@ __arc_copy_to_user(void __user *to, const void *from, unsigned long n)
+ 		 */
+ 		  "=&r" (tmp), "+r" (to), "+r" (from)
+ 		:
+-		: "lp_count", "lp_start", "lp_end", "memory");
++		: "lp_count", "memory");
  
- ENTRY_CFI(memcpy)
--	prefetch [r1]		; Prefetch the read location
--	prefetchw [r0]		; Prefetch the write location
- 	mov.f	0, r2
- ;;; if size is zero
- 	jz.d	[blink]
-@@ -72,8 +66,6 @@ ENTRY_CFI(memcpy)
- 	lpnz	@.Lcopy32_64bytes
- 	;; LOOP START
- 	LOADX (r6, r1)
--	PREFETCH_READ (r1)
--	PREFETCH_WRITE (r3)
- 	LOADX (r8, r1)
- 	LOADX (r10, r1)
- 	LOADX (r4, r1)
-@@ -117,9 +109,7 @@ ENTRY_CFI(memcpy)
- 	lpnz	@.Lcopy8bytes_1
- 	;; LOOP START
- 	ld.ab	r6, [r1, 4]
--	prefetch [r1, 28]	;Prefetch the next read location
- 	ld.ab	r8, [r1,4]
--	prefetchw [r3, 32]	;Prefetch the next write location
+ 		return n;
+ 	}
+@@ -658,7 +658,7 @@ static inline unsigned long __arc_clear_user(void __user *to, unsigned long n)
+ 	"	.previous			\n"
+ 	: "+r"(d_char), "+r"(res)
+ 	: "i"(0)
+-	: "lp_count", "lp_start", "lp_end", "memory");
++	: "lp_count", "memory");
  
- 	SHIFT_1	(r7, r6, 24)
- 	or	r7, r7, r5
-@@ -162,9 +152,7 @@ ENTRY_CFI(memcpy)
- 	lpnz	@.Lcopy8bytes_2
- 	;; LOOP START
- 	ld.ab	r6, [r1, 4]
--	prefetch [r1, 28]	;Prefetch the next read location
- 	ld.ab	r8, [r1,4]
--	prefetchw [r3, 32]	;Prefetch the next write location
+ 	return res;
+ }
+@@ -691,7 +691,7 @@ __arc_strncpy_from_user(char *dst, const char __user *src, long count)
+ 	"	.previous			\n"
+ 	: "+r"(res), "+r"(dst), "+r"(src), "=r"(val)
+ 	: "g"(-EFAULT), "r"(count)
+-	: "lp_count", "lp_start", "lp_end", "memory");
++	: "lp_count", "memory");
  
- 	SHIFT_1	(r7, r6, 16)
- 	or	r7, r7, r5
-@@ -204,9 +192,7 @@ ENTRY_CFI(memcpy)
- 	lpnz	@.Lcopy8bytes_3
- 	;; LOOP START
- 	ld.ab	r6, [r1, 4]
--	prefetch [r1, 28]	;Prefetch the next read location
- 	ld.ab	r8, [r1,4]
--	prefetchw [r3, 32]	;Prefetch the next write location
- 
- 	SHIFT_1	(r7, r6, 8)
- 	or	r7, r7, r5
+ 	return res;
+ }
 -- 
 2.19.1
 
