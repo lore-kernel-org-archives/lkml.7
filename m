@@ -2,143 +2,166 @@ Return-Path: <SRS0=dUEL=RQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2F6FEC43381
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 Mar 2019 15:06:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 213BAC43381
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 Mar 2019 15:08:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EF9E32171F
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 Mar 2019 15:06:53 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1552489614;
-	bh=VCA8acnYEgQg0n7PnODEQE4MBbEwavUiOdW8YbYpGxM=;
-	h=From:To:Subject:Date:List-ID:From;
-	b=V7QmcZvKURb6dEzyuZlbubRz6QtvhoW7JnBTxCcbz6fzhdZZHhjB/l2UscfbdvwrH
-	 Ah0J7fByDkjCQ5lToL/QmlWkYq1WkvjWzibybJklajD6hODbI1QlT2DCRwNy+s0cFt
-	 0NBr3XwKKmVMOyr8z8czP5NdHwVpxnZBx/UPOONE=
+	by mail.kernel.org (Postfix) with ESMTP id EBCA2214AE
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 Mar 2019 15:08:38 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726720AbfCMPGw (ORCPT
+        id S1726167AbfCMPIh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 13 Mar 2019 11:06:52 -0400
-Received: from mail-ot1-f66.google.com ([209.85.210.66]:33207 "EHLO
-        mail-ot1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725832AbfCMPGv (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 13 Mar 2019 11:06:51 -0400
-Received: by mail-ot1-f66.google.com with SMTP id q24so2051384otk.0;
-        Wed, 13 Mar 2019 08:06:51 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=MXVLhq9kpm2DZ6wvNbMETOIexe2mowMhAjdqPq0I9ZA=;
-        b=H0XCfEjJjRHOjK9IKWXU3Fa6zMjtWLAwp2pJ8K+FkrisxXwVqxCgRdsodEAMllcQv9
-         D3map5O4NNwvINKiJyWitnKpn04dIJpGzKzu/Xaxz4sfMBfk7mWAzDBD+6qj7RBJNfWA
-         ziYygB9BFe+ynGnWMl3ujnk7Agv1NT6ulbb9YV9UGqjhDZzPFY7CkwiuLDJfkTFLcbsk
-         +M9iDNCxwUqSdGwFGOWjWJTkQ+VGDbsz9VcLsmADc/kuBevD154zm+TPjLqmGLtQt9Rn
-         B8rU5C7Ed9HyiznZINsdTVguFV3fdCch5oLm15sofZKVMaI5ZAYYoRUyUcM5Cf+B/JuR
-         6thA==
-X-Gm-Message-State: APjAAAVsIBu1faenyciTovPJA3A3xePeDfTmGNVKvSShhucUjS1QAhjK
-        7lnb/48xFl9G30bJbDDlJM4XSHE=
-X-Google-Smtp-Source: APXvYqwRuhx6o+OTmbetjnm0dCatKVRiUEvFF3Y3HuD6FJ3mqG8ZWBgC5JoRbUAZc21X/PsimSp5aw==
-X-Received: by 2002:a9d:7091:: with SMTP id l17mr29476943otj.198.1552489609679;
-        Wed, 13 Mar 2019 08:06:49 -0700 (PDT)
-Received: from xps15.herring.priv (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
-        by smtp.googlemail.com with ESMTPSA id y124sm4869409oie.57.2019.03.13.08.06.48
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Wed, 13 Mar 2019 08:06:49 -0700 (PDT)
-From:   Rob Herring <robh@kernel.org>
-To:     linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
-Subject: [PATCH] dt-bindings: Add a guide of do's and don't's for writing bindings
-Date:   Wed, 13 Mar 2019 10:06:48 -0500
-Message-Id: <20190313150648.32404-1-robh@kernel.org>
-X-Mailer: git-send-email 2.19.1
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+        Wed, 13 Mar 2019 11:08:37 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:41188 "EHLO mx1.redhat.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725832AbfCMPIh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 13 Mar 2019 11:08:37 -0400
+Received: from smtp.corp.redhat.com (int-mx07.intmail.prod.int.phx2.redhat.com [10.5.11.22])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id BAA1E306720B;
+        Wed, 13 Mar 2019 15:08:36 +0000 (UTC)
+Received: from pauld.bos.com (dhcp-17-51.bos.redhat.com [10.18.17.51])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 382711001E6F;
+        Wed, 13 Mar 2019 15:08:36 +0000 (UTC)
+From:   Phil Auld <pauld@redhat.com>
+To:     linux-kernel@vger.kernel.org
+Cc:     Ben Segall <bsegall@google.com>, Ingo Molnar <mingo@redhat.com>,
+        Peter Zijlstra <peterz@infradead.org>
+Subject: [PATCH] sched/fair: Limit sched_cfs_period_timer loop to avoid hard lockup
+Date:   Wed, 13 Mar 2019 11:08:26 -0400
+Message-Id: <20190313150826.16862-1-pauld@redhat.com>
+X-Scanned-By: MIMEDefang 2.84 on 10.5.11.22
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.48]); Wed, 13 Mar 2019 15:08:36 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Devicetree binding reviews have a lot of repeated review comments. Much
-of the guidelines aren't written down. This list of do's and don't's is
-by no means an exhaustive guide for how to write bindings, but at least
-the "rules" are written down in some form.
+With extremely short cfs_period_us setting on a parent task group with a large
+number of children the for loop in  sched_cfs_period_timer can run until the
+watchdog fires. There is no guarantee that the call to hrtimer_forward_now()
+will ever return 0.  The large number of children can make
+do_sched_cfs_period_timer() take longer than the period.
 
-Signed-off-by: Rob Herring <robh@kernel.org>
+[  217.264946] NMI watchdog: Watchdog detected hard LOCKUP on cpu 24
+[  217.264948] Modules linked in: sunrpc iTCO_wdt gpio_ich iTCO_vendor_support intel_powerclamp coretemp kvm_intel
++kvm ipmi_ssif irqbypass crct10dif_pclmul crc32_pclmul ghash_clmulni_intel ipmi_si intel_cstate joydev
++ipmi_devintf pcspkr hpilo intel_uncore sg hpwdt ipmi_msghandler acpi_power_meter i7core_edac lpc_ich acpi_cpufreq
++ip_tables xfs libcrc32c sr_mod sd_mod cdrom ata_generic radeon i2c_algo_bit drm_kms_helper syscopyarea
++sysfillrect sysimgblt fb_sys_fops ttm ata_piix drm serio_raw crc32c_intel hpsa myri10ge libata dca
++scsi_transport_sas netxen_nic dm_mirror dm_region_hash dm_log dm_mod
+[  217.264964] CPU: 24 PID: 46684 Comm: myapp Not tainted 5.0.0-rc7+ #25
+[  217.264965] Hardware name: HP ProLiant DL580 G7, BIOS P65 08/16/2015
+[  217.264965] RIP: 0010:tg_nop+0x0/0x10
+[  217.264966] Code: 83 c9 08 f0 48 0f b1 0f 48 39 c2 74 0e 48 89 c2 f7 c2 00 00 20 00 75 dc 31 c0 c3 b8 01 00 00
++00 c3 66 0f 1f 84 00 00 00 00 00 <66> 66 66 66 90 31 c0 c3 0f 1f 84 00 00 00 00 00 66 66 66 66 90 8b
+[  217.264967] RSP: 0000:ffff976a7f703e48 EFLAGS: 00000087
+[  217.264967] RAX: ffff976a7c7c8f00 RBX: ffff976a6f4fad00 RCX: ffff976a7c7c90f0
+[  217.264968] RDX: ffff976a6f4faee0 RSI: ffff976a7f961f00 RDI: ffff976a6f4fad00
+[  217.264968] RBP: ffff976a7f961f00 R08: 0000000000000002 R09: ffffffad2c9b3331
+[  217.264969] R10: 0000000000000000 R11: 0000000000000000 R12: ffff976a7c7c8f00
+[  217.264969] R13: ffffffffb2305c00 R14: 0000000000000000 R15: ffffffffb22f8510
+[  217.264970] FS:  00007f6240678740(0000) GS:ffff976a7f700000(0000) knlGS:0000000000000000
+[  217.264970] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+[  217.264971] CR2: 00000000006dee20 CR3: 000000bf2bffc005 CR4: 00000000000206e0
+[  217.264971] Call Trace:
+[  217.264971]  <IRQ>
+[  217.264972]  walk_tg_tree_from+0x29/0xb0
+[  217.264972]  unthrottle_cfs_rq+0xe0/0x1a0
+[  217.264972]  distribute_cfs_runtime+0xd3/0xf0
+[  217.264973]  sched_cfs_period_timer+0xcb/0x160
+[  217.264973]  ? sched_cfs_slack_timer+0xd0/0xd0
+[  217.264973]  __hrtimer_run_queues+0xfb/0x270
+[  217.264974]  hrtimer_interrupt+0x122/0x270
+[  217.264974]  smp_apic_timer_interrupt+0x6a/0x140
+[  217.264975]  apic_timer_interrupt+0xf/0x20
+[  217.264975]  </IRQ>
+[  217.264975] RIP: 0033:0x7f6240125fe5
+[  217.264976] Code: 44 17 d0 f3 44 0f 7f 47 30 f3 44 0f 7f 44 17 c0 48 01 fa 48 83 e2 c0 48 39 d1 74 a3 66 0f 1f
++84 00 00 00 00 00 66 44 0f 7f 01 <66> 44 0f 7f 41 10 66 44 0f 7f 41 20 66 44 0f 7f 41 30 48 83 c1 40
+...
+
+To prevent this we add protection to the loop that detects when the loop has run
+too many times and scales the period and quota up, proportionally, so that the timer
+can complete before then next period expires.  This preserves the relative runtime
+quota while preventing the hard lockup.
+
+A warning is issued reporting this state and the new values.
+
+The scaling by average time over count was suggested by Ben Segall <bsegall@google.com>.
+
+Signed-off-by: Phil Auld <pauld@redhat.com>
+Cc: Ben Segall <bsegall@google.com>
+Cc: Ingo Molnar <mingo@redhat.com>
+Cc: Peter Zijlstra (Intel) <peterz@infradead.org>
 ---
- .../devicetree/bindings/writing-bindings.txt  | 60 +++++++++++++++++++
- 1 file changed, 60 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/writing-bindings.txt
 
-diff --git a/Documentation/devicetree/bindings/writing-bindings.txt b/Documentation/devicetree/bindings/writing-bindings.txt
-new file mode 100644
-index 000000000000..27dfd2d8016e
---- /dev/null
-+++ b/Documentation/devicetree/bindings/writing-bindings.txt
-@@ -0,0 +1,60 @@
-+DOs and DON'Ts for designing and writing Devicetree bindings
+Note: This is against v5.0 as suggested by the documentation. It won't apply to 5.0+ due to
+the change to raw_spin_lock_irqsave. I can respin as needed.
+
+ kernel/sched/fair.c | 32 ++++++++++++++++++++++++++++++++
+ 1 file changed, 32 insertions(+)
+
+diff --git a/kernel/sched/fair.c b/kernel/sched/fair.c
+index 310d0637fe4b..90cc67bbf592 100644
+--- a/kernel/sched/fair.c
++++ b/kernel/sched/fair.c
+@@ -4859,19 +4859,51 @@ static enum hrtimer_restart sched_cfs_slack_timer(struct hrtimer *timer)
+ 	return HRTIMER_NORESTART;
+ }
+ 
++extern const u64 max_cfs_quota_period;
++int cfs_period_autotune_loop_limit   = 8;
++int cfs_period_autotune_cushion_pct  = 15; /* percentage added to period recalculation */
 +
-+This is a list of common review feedback items focused on binding design. With
-+every rule, there are exceptions and bindings have many gray areas.
+ static enum hrtimer_restart sched_cfs_period_timer(struct hrtimer *timer)
+ {
+ 	struct cfs_bandwidth *cfs_b =
+ 		container_of(timer, struct cfs_bandwidth, period_timer);
++	s64 nsstart, nsnow, new_period;
+ 	int overrun;
+ 	int idle = 0;
++	int count = 0;
+ 
+ 	raw_spin_lock(&cfs_b->lock);
++	nsstart = ktime_to_ns(hrtimer_cb_get_time(timer));
+ 	for (;;) {
+ 		overrun = hrtimer_forward_now(timer, cfs_b->period);
+ 		if (!overrun)
+ 			break;
+ 
++		if (++count > cfs_period_autotune_loop_limit) {
++			ktime_t old_period = ktime_to_ns(cfs_b->period);
 +
-+For guidelines related to patches, see
-+Documentation/devicetree/bindings/submitting-patches.txt
++			nsnow = ktime_to_ns(hrtimer_cb_get_time(timer));
++			new_period = (nsnow - nsstart)/cfs_period_autotune_loop_limit;
 +
++			/*  Make sure new period will be larger than old. */
++			if (new_period < old_period) {
++				new_period = old_period;
++			}
++			new_period += (new_period *  cfs_period_autotune_cushion_pct) / 100;
 +
-+Overall design
++			if (new_period >  max_cfs_quota_period)
++				new_period = max_cfs_quota_period;
 +
-+- DO attempt to make bindings complete even if a driver doesn't support some
-+  features. For example, if a device has an interrupt, then include the
-+  'interrupts' property even if the driver is only polled mode.
++			cfs_b->period = ns_to_ktime(new_period);
++			cfs_b->quota += (cfs_b->quota * ((new_period - old_period) * 100)/old_period)/100;
++			pr_warn_ratelimited(
++				"cfs_period_timer[cpu%d]: period too short, scaling up (new cfs_period_us %lld, cfs_quota_us = %lld)\n",
++				smp_processor_id(), cfs_b->period/NSEC_PER_USEC, cfs_b->quota/NSEC_PER_USEC);
 +
-+- DON'T refer to Linux or "device driver" in bindings. Bindings should be
-+  based on what the hardware has, not what an OS and driver currently support.
++			/* reset count so we don't come right back in here */
++			count = 0;
++		}
 +
-+- DO use node names matching the class of the device. Many standard names are
-+  defined in the DT Spec. If there isn't one, consider adding it.
-+
-+- DO check that the example matches the documentation especially after making
-+  review changes.
-+
-+- DON'T create nodes just for the sake of instantiating drivers. Multi-function
-+  devices only need child nodes when the child nodes have their own DT
-+  resources. A single node can be multiple providers (e.g. clocks and resets).
-+
-+- DON'T use 'syscon' alone without a specific compatible string. A 'syscon'
-+  hardware block should have a compatible string unique enough to infer the
-+  register layout of the entire block (at a minimum).
-+
-+
-+Properties
-+
-+- DO make 'compatible' properties specific. DON'T use wildcards in compatible
-+  strings. DO use fallback compatibles when devices are the same as or a subset
-+  of prior implementations. DO add new compatibles in case there are new
-+  features or bugs.
-+
-+- DO use a vendor prefix on device specific property names. Consider if
-+  properties could be common among devices of the same class. Check other
-+  existing bindings for similar devices.
-+
-+- DON'T redefine common properties. Just reference the definition and define
-+  constraints specific to the device.
-+
-+- DO use common property unit suffixes for properties with scientific units.
-+  See property-units.txt.
-+
-+- DO define properties in terms of constraints. How many entries? What are
-+  possible values? What is the order?
-+
-+
-+Board/SoC .dts Files
-+
-+- DO put all MMIO devices under a bus node and not at the top-level.
-+
-+- DO use non-empty 'ranges' to limit the size of child buses/devices. 64-bit
-+  platforms don't need all devices to have 64-bit address and size.
+ 		idle = do_sched_cfs_period_timer(cfs_b, overrun);
+ 	}
+ 	if (idle)
 -- 
-2.19.1
+2.18.0
 
