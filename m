@@ -2,137 +2,263 @@ Return-Path: <SRS0=dUEL=RQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-6.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,
+	URIBL_SBL,URIBL_SBL_A autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4A944C43381
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 Mar 2019 18:19:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B5150C43381
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 Mar 2019 18:21:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F3A6A213A2
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 Mar 2019 18:19:57 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=renesasgroup.onmicrosoft.com header.i=@renesasgroup.onmicrosoft.com header.b="WyxKDAx4"
+	by mail.kernel.org (Postfix) with ESMTP id 858582075C
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 Mar 2019 18:21:04 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726716AbfCMST4 (ORCPT
+        id S1726790AbfCMSVD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 13 Mar 2019 14:19:56 -0400
-Received: from mail-eopbgr1400098.outbound.protection.outlook.com ([40.107.140.98]:36543
-        "EHLO JPN01-TY1-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726420AbfCMST4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 13 Mar 2019 14:19:56 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=renesasgroup.onmicrosoft.com; s=selector1-bp-renesas-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=sBz1VQONOmZwcoUJ+eHt8M+R0BilmN6PE1U6GYzH4Zo=;
- b=WyxKDAx4X/G4eohiSGoNTi9ExCs30BSvZZ0E3q4yk4Ar58EaN71aufI3dZ9Ar/Hbg7/e/1DifZJzmwg5xQX62zaC+jZEequXWnGD1R8Iu6yMGVeQ9FaSTOsK98zkELkGceGcOaA8BTYajP4SQiFh1L/DJITwnAwqOvwFCJGf+Y0=
-Received: from TY1PR01MB1770.jpnprd01.prod.outlook.com (52.133.163.147) by
- TY1PR01MB1609.jpnprd01.prod.outlook.com (52.133.162.143) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.1686.18; Wed, 13 Mar 2019 18:19:49 +0000
-Received: from TY1PR01MB1770.jpnprd01.prod.outlook.com
- ([fe80::b593:2e3c:aa50:2273]) by TY1PR01MB1770.jpnprd01.prod.outlook.com
- ([fe80::b593:2e3c:aa50:2273%4]) with mapi id 15.20.1709.011; Wed, 13 Mar 2019
- 18:19:49 +0000
-From:   Fabrizio Castro <fabrizio.castro@bp.renesas.com>
-To:     Jiada Wang <jiada_wang@mentor.com>,
-        Geert Uytterhoeven <geert@linux-m68k.org>
-CC:     Liam Girdwood <lgirdwood@gmail.com>,
-        Mark Brown <broonie@kernel.org>,
-        Jaroslav Kysela <perex@perex.cz>,
-        Takashi Iwai <tiwai@suse.com>,
-        Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>,
-        ALSA Development Mailing List <alsa-devel@alsa-project.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Subject: RE: [PATCH linux-next v2 1/2] ASoC: rsnd: src: Avoid a potential
- deadlock
-Thread-Topic: [PATCH linux-next v2 1/2] ASoC: rsnd: src: Avoid a potential
- deadlock
-Thread-Index: AQHU1K08bW0xPMRUEEGNOLI3VAcrUKYHvv8AgAG/FoCAAFh2kA==
-Date:   Wed, 13 Mar 2019 18:19:49 +0000
-Message-ID: <TY1PR01MB177056C725F16385A627111EC04A0@TY1PR01MB1770.jpnprd01.prod.outlook.com>
-References: <20190307061554.26486-1-jiada_wang@mentor.com>
- <20190307061554.26486-2-jiada_wang@mentor.com>
- <CAMuHMdU+1Ntz6uvk-VYsSdWJgBfzHu99SztqyfLX7z2FRxPdNg@mail.gmail.com>
- <8cd7f718-bfb2-15c8-823d-88458b385377@mentor.com>
-In-Reply-To: <8cd7f718-bfb2-15c8-823d-88458b385377@mentor.com>
-Accept-Language: en-GB, en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=fabrizio.castro@bp.renesas.com; 
-x-originating-ip: [193.141.220.21]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: 65d7289c-4eff-4600-d969-08d6a7e07b03
-x-ms-office365-filtering-ht: Tenant
-x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600127)(711020)(4605104)(4618075)(2017052603328)(7153060)(7193020);SRVR:TY1PR01MB1609;
-x-ms-traffictypediagnostic: TY1PR01MB1609:
-x-microsoft-exchange-diagnostics: 1;TY1PR01MB1609;20:cxj7JsHHFMvXIYveJithbW2gvUO09xzucQmFfRA9f3Ds9fUeS3FVKGNdGyw8E/XM7OdNEs/rvGHJ0SuC5+c4TmKQs71qPr/9CFAsU2zN10063dApcTyzlXMrOWryg23ev9cHXxoT/4N7OkvHsMhYh0b5wzzjfaTUt573yF5eipI/WncrIaE1QWnPBD4vLFQfhMUruJX9SVWk981/y7pR9dOg4l7ip/P0ef/XXC2M2ugd4ep3OlQZz1rL4tuVgRtW
-x-microsoft-antispam-prvs: <TY1PR01MB16090F473A3EAA9704068535C04A0@TY1PR01MB1609.jpnprd01.prod.outlook.com>
-x-forefront-prvs: 09752BC779
-x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(396003)(376002)(346002)(366004)(39860400002)(136003)(199004)(189003)(71200400001)(25786009)(74316002)(33656002)(44832011)(6116002)(81156014)(478600001)(229853002)(53546011)(52536013)(102836004)(93886005)(81166006)(6506007)(14454004)(8676002)(66066001)(71190400001)(68736007)(8936002)(7736002)(305945005)(86362001)(97736004)(55016002)(256004)(9686003)(99286004)(2906002)(14444005)(476003)(4326008)(105586002)(110136005)(54906003)(6246003)(106356001)(5660300002)(7696005)(316002)(76176011)(26005)(53936002)(486006)(186003)(6436002)(11346002)(446003)(3846002);DIR:OUT;SFP:1102;SCL:1;SRVR:TY1PR01MB1609;H:TY1PR01MB1770.jpnprd01.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:0;MX:1;
-received-spf: None (protection.outlook.com: bp.renesas.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam-message-info: Kqdpm6iAEaRkQbKnXup0F4A+GzVXCVffkYKm5vX5EOkQ8yfmognGnp3ueDVfF2klxHIqySht7CDQ7lcEGBII2nIUJUtxbrM0OZJZiO/ZtoFAClN9QprJMuGtio1WPffHJVb5W/rFEJnkwZGWr9LsVHmC3LKDGFiX4ODH0bYdcJnoOm59Xp4ntFYrnWeuyj5ZXOHr8hh35eA10UTzBnj6mAW2lWoJzs5vBH/6saUtuytNLc/dv30ic+0wlNQGYrureKkNX7DY+iRVkSHBBISNlfHUqQ0r6blyxlqAyamOnj4mLtOWWKdFZs/2IjWvf6cqfc+k4NlS1suvK7l7rpR/jFUGAwwEGhI4Dlp37og+OFQfyVlkSQs0M+zRR/4CrS8d3UCMGg4Xdq+WCSCU740HLpHVDnOeAK9yV7s2IhjITiA=
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+        Wed, 13 Mar 2019 14:21:03 -0400
+Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:35694 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726411AbfCMSVC (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 13 Mar 2019 14:21:02 -0400
+Received: from pps.filterd (m0098421.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x2DICqcc064189
+        for <linux-kernel@vger.kernel.org>; Wed, 13 Mar 2019 14:21:01 -0400
+Received: from e06smtp01.uk.ibm.com (e06smtp01.uk.ibm.com [195.75.94.97])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 2r749agakt-1
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
+        for <linux-kernel@vger.kernel.org>; Wed, 13 Mar 2019 14:20:59 -0400
+Received: from localhost
+        by e06smtp01.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
+        for <linux-kernel@vger.kernel.org> from <fbarrat@linux.ibm.com>;
+        Wed, 13 Mar 2019 18:20:49 -0000
+Received: from b06cxnps4075.portsmouth.uk.ibm.com (9.149.109.197)
+        by e06smtp01.uk.ibm.com (192.168.101.131) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
+        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
+        Wed, 13 Mar 2019 18:20:46 -0000
+Received: from b06wcsmtp001.portsmouth.uk.ibm.com (b06wcsmtp001.portsmouth.uk.ibm.com [9.149.105.160])
+        by b06cxnps4075.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x2DIKj8131916208
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Wed, 13 Mar 2019 18:20:45 GMT
+Received: from b06wcsmtp001.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 1B69FA405C;
+        Wed, 13 Mar 2019 18:20:45 +0000 (GMT)
+Received: from b06wcsmtp001.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id AA844A4054;
+        Wed, 13 Mar 2019 18:20:44 +0000 (GMT)
+Received: from [9.145.182.34] (unknown [9.145.182.34])
+        by b06wcsmtp001.portsmouth.uk.ibm.com (Postfix) with ESMTP;
+        Wed, 13 Mar 2019 18:20:44 +0000 (GMT)
+Subject: Re: [PATCH 2/7] ocxl: Allow external drivers to use OpenCAPI contexts
+To:     "Alastair D'Silva" <alastair@au1.ibm.com>
+Cc:     "Alastair D'Silva" <alastair@d-silva.org>,
+        Greg Kurz <groug@kaod.org>,
+        Andrew Donnellan <andrew.donnellan@au1.ibm.com>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        linux-kernel@vger.kernel.org, linuxppc-dev@lists.ozlabs.org
+References: <20190313041524.14644-1-alastair@au1.ibm.com>
+ <20190313041524.14644-3-alastair@au1.ibm.com>
+From:   Frederic Barrat <fbarrat@linux.ibm.com>
+Date:   Wed, 13 Mar 2019 19:20:44 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.5.1
 MIME-Version: 1.0
-X-OriginatorOrg: bp.renesas.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 65d7289c-4eff-4600-d969-08d6a7e07b03
-X-MS-Exchange-CrossTenant-originalarrivaltime: 13 Mar 2019 18:19:49.5985
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 53d82571-da19-47e4-9cb4-625a166a4a2a
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: TY1PR01MB1609
+In-Reply-To: <20190313041524.14644-3-alastair@au1.ibm.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: fr
+Content-Transfer-Encoding: 8bit
+X-TM-AS-GCONF: 00
+x-cbid: 19031318-4275-0000-0000-0000031A9469
+X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
+x-cbparentid: 19031318-4276-0000-0000-00003829041D
+Message-Id: <35bec389-2b70-96cb-c5f5-443bf902c9cd@linux.ibm.com>
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-03-13_11:,,
+ signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
+ malwarescore=0 suspectscore=2 phishscore=0 bulkscore=0 spamscore=0
+ clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
+ mlxlogscore=644 adultscore=0 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.0.1-1810050000 definitions=main-1903130126
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-SGVsbG8gSmlhZGEsDQoNCj4gRnJvbTogSmlhZGEgV2FuZyA8amlhZGFfd2FuZ0BtZW50b3IuY29t
-Pg0KPiBTZW50OiAxMyBNYXJjaCAyMDE5IDExOjU2DQo+IFN1YmplY3Q6IFJlOiBbUEFUQ0ggbGlu
-dXgtbmV4dCB2MiAxLzJdIEFTb0M6IHJzbmQ6IHNyYzogQXZvaWQgYSBwb3RlbnRpYWwgZGVhZGxv
-Y2sNCj4gDQo+IEhpIEdlZXJ0DQo+IA0KPiBPbiAyMDE5LzAzLzEyIDE4OjE1LCBHZWVydCBVeXR0
-ZXJob2V2ZW4gd3JvdGU6DQo+ID4gSGkgSmlhZGEsIEZhYnJpemlvLA0KPiA+DQo+ID4gT24gVGh1
-LCBNYXIgNywgMjAxOSBhdCA3OjE3IEFNIEppYWRhIFdhbmcgPGppYWRhX3dhbmdAbWVudG9yLmNv
-bT4gd3JvdGU6DQo+ID4+IGxvY2tkZXAgd2FybnMgdXMgdGhhdCBwcml2LT5sb2NrIGFuZCBrLT5r
-X2xvY2sgY2FuIGNhdXNlIGENCj4gPj4gZGVhZGxvY2sgd2hlbiBhZnRlciBhY3F1aXJlIG9mIGst
-PmtfbG9jaywgcHJvY2VzcyBpcyBpbnRlcnJ1cHRlZA0KPiA+PiBieSBzcmMsIHdoaWxlIGluIGFu
-b3RoZXIgcm91dGluZSBvZiBzcmMgLmluaXQsIGstPmtfbG9jayBpcw0KPiA+PiBhY3F1aXJlZCB3
-aXRoIHByaXYtPmxvY2sgaGVsZC4NCj4gPj4NCj4gPj4gVGhpcyBwYXRjaCBhdm9pZHMgYSBwb3Rl
-bnRpYWwgZGVhZGxvY2sgYnkgbm90IGNhbGxpbmcgc29jX2RldmljZV9tYXRjaCgpDQo+ID4+IGlu
-IFNSQyAuaW5pdCBjYWxsYmFjaywgaW5zdGVhZCBpdCBhZGRzIG5ldyBzb2MgZmllbGRzIGluIHBy
-aXYtPmZsYWdzIHRvDQo+ID4+IGRpZmZlcmVudGlhdGUgU29Dcy4NCj4gPj4NCj4gPj4gRml4ZXM6
-IGxpbnV4LW5leHQgY29tbWl0IDc2NzRiZWM0ZmMwOSAoIkFTb0M6IHJzbmQ6IHVwZGF0ZSBCU0RT
-Ui9CU0RJU1IgaGFuZGxpbmciKQ0KPiA+PiBTaWduZWQtb2ZmLWJ5OiBKaWFkYSBXYW5nIDxqaWFk
-YV93YW5nQG1lbnRvci5jb20+DQo+ID4+IC0tLQ0KPiA+PiAgIHNvdW5kL3NvYy9zaC9yY2FyL2Nv
-cmUuYyB8IDIgKysNCj4gPj4gICBzb3VuZC9zb2Mvc2gvcmNhci9yc25kLmggfCA1ICsrKysrDQo+
-ID4+ICAgc291bmQvc29jL3NoL3JjYXIvc3JjLmMgIHwgOSArLS0tLS0tLS0NCj4gPj4gICAzIGZp
-bGVzIGNoYW5nZWQsIDggaW5zZXJ0aW9ucygrKSwgOCBkZWxldGlvbnMoLSkNCj4gPj4NCj4gPj4g
-ZGlmZiAtLWdpdCBhL3NvdW5kL3NvYy9zaC9yY2FyL2NvcmUuYyBiL3NvdW5kL3NvYy9zaC9yY2Fy
-L2NvcmUuYw0KPiA+PiBpbmRleCAwMjI5OTZkMmRiMTMuLjRmZTgzZTYxMWMwMSAxMDA2NDQNCj4g
-Pj4gLS0tIGEvc291bmQvc29jL3NoL3JjYXIvY29yZS5jDQo+ID4+ICsrKyBiL3NvdW5kL3NvYy9z
-aC9yY2FyL2NvcmUuYw0KPiA+PiBAQCAtMTEwLDYgKzExMCw4IEBAIHN0YXRpYyBjb25zdCBzdHJ1
-Y3Qgb2ZfZGV2aWNlX2lkIHJzbmRfb2ZfbWF0Y2hbXSA9IHsNCj4gPj4gICAgICAgICAgeyAuY29t
-cGF0aWJsZSA9ICJyZW5lc2FzLHJjYXJfc291bmQtZ2VuMSIsIC5kYXRhID0gKHZvaWQgKilSU05E
-X0dFTjEgfSwNCj4gPj4gICAgICAgICAgeyAuY29tcGF0aWJsZSA9ICJyZW5lc2FzLHJjYXJfc291
-bmQtZ2VuMiIsIC5kYXRhID0gKHZvaWQgKilSU05EX0dFTjIgfSwNCj4gPj4gICAgICAgICAgeyAu
-Y29tcGF0aWJsZSA9ICJyZW5lc2FzLHJjYXJfc291bmQtZ2VuMyIsIC5kYXRhID0gKHZvaWQgKilS
-U05EX0dFTjMgfSwNCj4gPj4gKyAgICAgICAvKiBTcGVjaWFsIEhhbmRsaW5nICovDQo+ID4+ICsg
-ICAgICAgeyAuY29tcGF0aWJsZSA9ICJyZW5lc2FzLHJjYXJfc291bmQtcjhhNzc5OTAiLCAuZGF0
-YSA9ICh2b2lkICopKFJTTkRfR0VOMyB8IFJTTkRfU09DX0UpIH0sDQo+ID4NCj4gPiBJIGd1ZXNz
-IHdlIG5lZWQgYW4gZW50cnkgZm9yIFJaL0cyRSwgdG9vPw0KDQpHZWVydCBoYXMgYSBwb2ludCwg
-SSBhbSBsb29raW5nIGF0IHRoZSBVc2VyIG1hbnVhbCBmb3IgdGhlIFJaL0cyRSBhbmQgaXQgbG9v
-a3MgbGlrZSB0aGUNCmltcGxlbWVudGF0aW9uIGZvciB0aGUgUlovRzJFIGlzIHRoZSBzYW1lIGFz
-IHRoZSBvbmUgZm9yIHRoZSByOGE3Nzk5MA0KDQo+ID4NCj4gU29ycnksIEkgZG9uJ3QgaGF2ZSB1
-c2VyIG1hbnVhbCBmb3IgUlovRzJFLA0KPiBpZiB5b3UgY2FuIGxldCBtZSBrbm93IHdoZXJlIHRv
-IGZpbmQgUlovRzJFJ3MgdXNlciBtYW51YWwsDQo+IEkgY2FuIGFkZCBlbnRyeSBmb3IgdGhlc2Ug
-U29Dcw0KDQpJZiB5b3UgcHJlZmVyIEkgY291bGQgYWRkIHRoYXQgYWZ0ZXIgcnVubmluZyBzb21l
-IHRlc3RzPyBJIGRvIGhhdmUgYSBib2FyZCB3aXRoIGEgUlovRzJFLg0KDQpUaGFua3MsDQpGYWIN
-Cg0KPiANCj4gVGhhbmtzLA0KPiBKaWFkYQ0KPiA+IEdye29ldGplLGVldGluZ31zLA0KPiA+DQo+
-ID4gICAgICAgICAgICAgICAgICAgICAgICAgIEdlZXJ0DQo+ID4NCg==
+
+
+Le 13/03/2019 à 05:15, Alastair D'Silva a écrit :
+> From: Alastair D'Silva <alastair@d-silva.org>
+> 
+> Most OpenCAPI operations require a valid context, so
+> exposing these functions to external drivers is necessary.
+> 
+> Signed-off-by: Alastair D'Silva <alastair@d-silva.org>
+> Reviewed-by: Greg Kurz <groug@kaod.org>
+> ---
+
+Patch could also be moved later in the series (same reason as before), but:
+Acked-by: Frederic Barrat <fbarrat@linux.ibm.com>
+
+
+>   drivers/misc/ocxl/context.c       |  9 +++++--
+>   drivers/misc/ocxl/file.c          |  2 +-
+>   drivers/misc/ocxl/ocxl_internal.h |  6 -----
+>   include/misc/ocxl.h               | 44 +++++++++++++++++++++++++++++++
+>   4 files changed, 52 insertions(+), 9 deletions(-)
+> 
+> diff --git a/drivers/misc/ocxl/context.c b/drivers/misc/ocxl/context.c
+> index 3498a0199bde..1534b56f1db1 100644
+> --- a/drivers/misc/ocxl/context.c
+> +++ b/drivers/misc/ocxl/context.c
+> @@ -8,6 +8,7 @@ struct ocxl_context *ocxl_context_alloc(void)
+>   {
+>   	return kzalloc(sizeof(struct ocxl_context), GFP_KERNEL);
+>   }
+> +EXPORT_SYMBOL_GPL(ocxl_context_alloc);
+>   
+>   int ocxl_context_init(struct ocxl_context *ctx, struct ocxl_afu *afu,
+>   		struct address_space *mapping)
+> @@ -43,6 +44,7 @@ int ocxl_context_init(struct ocxl_context *ctx, struct ocxl_afu *afu,
+>   	ocxl_afu_get(afu);
+>   	return 0;
+>   }
+> +EXPORT_SYMBOL_GPL(ocxl_context_init);
+>   
+>   /*
+>    * Callback for when a translation fault triggers an error
+> @@ -63,7 +65,7 @@ static void xsl_fault_error(void *data, u64 addr, u64 dsisr)
+>   	wake_up_all(&ctx->events_wq);
+>   }
+>   
+> -int ocxl_context_attach(struct ocxl_context *ctx, u64 amr)
+> +int ocxl_context_attach(struct ocxl_context *ctx, u64 amr, struct mm_struct *mm)
+>   {
+>   	int rc;
+>   
+> @@ -75,7 +77,7 @@ int ocxl_context_attach(struct ocxl_context *ctx, u64 amr)
+>   	}
+>   
+>   	rc = ocxl_link_add_pe(ctx->afu->fn->link, ctx->pasid,
+> -			current->mm->context.id, ctx->tidr, amr, current->mm,
+> +			mm->context.id, ctx->tidr, amr, mm,
+>   			xsl_fault_error, ctx);
+>   	if (rc)
+>   		goto out;
+> @@ -85,6 +87,7 @@ int ocxl_context_attach(struct ocxl_context *ctx, u64 amr)
+>   	mutex_unlock(&ctx->status_mutex);
+>   	return rc;
+>   }
+> +EXPORT_SYMBOL_GPL(ocxl_context_attach);
+>   
+>   static vm_fault_t map_afu_irq(struct vm_area_struct *vma, unsigned long address,
+>   		u64 offset, struct ocxl_context *ctx)
+> @@ -243,6 +246,7 @@ int ocxl_context_detach(struct ocxl_context *ctx)
+>   	}
+>   	return 0;
+>   }
+> +EXPORT_SYMBOL_GPL(ocxl_context_detach);
+>   
+>   void ocxl_context_detach_all(struct ocxl_afu *afu)
+>   {
+> @@ -280,3 +284,4 @@ void ocxl_context_free(struct ocxl_context *ctx)
+>   	ocxl_afu_put(ctx->afu);
+>   	kfree(ctx);
+>   }
+> +EXPORT_SYMBOL_GPL(ocxl_context_free);
+> diff --git a/drivers/misc/ocxl/file.c b/drivers/misc/ocxl/file.c
+> index 16eb8a60d5c7..865b3d176431 100644
+> --- a/drivers/misc/ocxl/file.c
+> +++ b/drivers/misc/ocxl/file.c
+> @@ -100,7 +100,7 @@ static long afu_ioctl_attach(struct ocxl_context *ctx,
+>   		return -EINVAL;
+>   
+>   	amr = arg.amr & mfspr(SPRN_UAMOR);
+> -	rc = ocxl_context_attach(ctx, amr);
+> +	rc = ocxl_context_attach(ctx, amr, current->mm);
+>   	return rc;
+>   }
+>   
+> diff --git a/drivers/misc/ocxl/ocxl_internal.h b/drivers/misc/ocxl/ocxl_internal.h
+> index 06fd98c989c8..779d15ef60b5 100644
+> --- a/drivers/misc/ocxl/ocxl_internal.h
+> +++ b/drivers/misc/ocxl/ocxl_internal.h
+> @@ -130,15 +130,9 @@ int ocxl_config_check_afu_index(struct pci_dev *dev,
+>    */
+>   int ocxl_link_update_pe(void *link_handle, int pasid, __u16 tid);
+>   
+> -struct ocxl_context *ocxl_context_alloc(void);
+> -int ocxl_context_init(struct ocxl_context *ctx, struct ocxl_afu *afu,
+> -			struct address_space *mapping);
+> -int ocxl_context_attach(struct ocxl_context *ctx, u64 amr);
+>   int ocxl_context_mmap(struct ocxl_context *ctx,
+>   			struct vm_area_struct *vma);
+> -int ocxl_context_detach(struct ocxl_context *ctx);
+>   void ocxl_context_detach_all(struct ocxl_afu *afu);
+> -void ocxl_context_free(struct ocxl_context *ctx);
+>   
+>   int ocxl_sysfs_add_afu(struct ocxl_afu *afu);
+>   void ocxl_sysfs_remove_afu(struct ocxl_afu *afu);
+> diff --git a/include/misc/ocxl.h b/include/misc/ocxl.h
+> index 3b320c39f0af..ebbfe83cd5a6 100644
+> --- a/include/misc/ocxl.h
+> +++ b/include/misc/ocxl.h
+> @@ -51,6 +51,7 @@ struct ocxl_fn_config {
+>   
+>   // These are opaque outside the ocxl driver
+>   struct ocxl_afu;
+> +struct ocxl_context;
+>   
+>   enum ocxl_endian {
+>   	OCXL_BIG_ENDIAN = 0,    /**< AFU data is big-endian */
+> @@ -58,6 +59,49 @@ enum ocxl_endian {
+>   	OCXL_HOST_ENDIAN = 2,   /**< AFU data is the same endianness as the host */
+>   };
+>   
+> +/**
+> + * Allocate space for a new OpenCAPI context
+> + *
+> + * Returns NULL on failure
+> + */
+> +struct ocxl_context *ocxl_context_alloc(void);
+> +
+> +/**
+> + * Initialize an OpenCAPI context
+> + *
+> + * @ctx: The OpenCAPI context to initialize
+> + * @afu: The AFU the context belongs to
+> + * @mapping: The mapping to unmap when the context is closed (may be NULL)
+> + */
+> +int ocxl_context_init(struct ocxl_context *ctx, struct ocxl_afu *afu,
+> +			struct address_space *mapping);
+> +
+> +/**
+> + * Free an OpenCAPI context
+> + *
+> + * @ctx: The OpenCAPI context to free
+> + */
+> +void ocxl_context_free(struct ocxl_context *ctx);
+> +
+> +/**
+> + * Grant access to an MM to an OpenCAPI context
+> + * @ctx: The OpenCAPI context to attach
+> + * @amr: The value of the AMR register to restrict access
+> + * @mm: The mm to attach to the context
+> + *
+> + * Returns 0 on success, negative on failure
+> + */
+> +int ocxl_context_attach(struct ocxl_context *ctx, u64 amr,
+> +				struct mm_struct *mm);
+> +
+> +/**
+> + * Detach an MM from an OpenCAPI context
+> + * @ctx: The OpenCAPI context to attach
+> + *
+> + * Returns 0 on success, negative on failure
+> + */
+> +int ocxl_context_detach(struct ocxl_context *ctx);
+> +
+>   /**
+>    * Read a 32 bit value from global MMIO
+>    *
+> 
+
