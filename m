@@ -2,75 +2,142 @@ Return-Path: <SRS0=dUEL=RQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_MUTT
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,URIBL_BLOCKED
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C6FF4C4360F
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 Mar 2019 14:24:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 362C6C43381
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 Mar 2019 14:27:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 878A7214AE
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 Mar 2019 14:24:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F386D2087C
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 Mar 2019 14:27:09 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="0APDjc88"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="GTKRfUPp"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726717AbfCMOY3 (ORCPT
+        id S1726530AbfCMO1I (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 13 Mar 2019 10:24:29 -0400
-Received: from merlin.infradead.org ([205.233.59.134]:49460 "EHLO
-        merlin.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726125AbfCMOY2 (ORCPT
+        Wed, 13 Mar 2019 10:27:08 -0400
+Received: from mail-yw1-f67.google.com ([209.85.161.67]:40658 "EHLO
+        mail-yw1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725876AbfCMO1H (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 13 Mar 2019 10:24:28 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=merlin.20170209; h=In-Reply-To:Content-Type:MIME-Version:
-        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=a4OyokzJ/PfwKHkjkdPAJOWjXzZnOndTsqzTCOs98hs=; b=0APDjc88M/vhI7ZjIxeccmsxN
-        Vg8zVRZ8bV7g0eNpSh2idWD9CtKQGgRfAO0sFVHaEfFmqBJkeGhu+VlIdiq15unpxYUdGJK9MxfIm
-        CKhMDOOzKeRNTHNytKQkeevhzfYGp4qBicfVHC3w6GwddGmG7dXGQYi79SpOEOMmyngM9BacjO8sC
-        Y5EKweiYy56d2U0Bcs8GsPhYrisdrjCgMEgsFe2dZJSbGjZ3ZtulWGbL2mV+C5GneLWH55qKoD15G
-        TWv57LnJBxKSCKJmZRQ+9z39IhcjkVglnUogmlQSly6lkYLsr/1+RTsQAW63wwLckOFtjLSl1bWfA
-        kt3VfRp7A==;
-Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=hirez.programming.kicks-ass.net)
-        by merlin.infradead.org with esmtpsa (Exim 4.90_1 #2 (Red Hat Linux))
-        id 1h44nq-0003Qh-OZ; Wed, 13 Mar 2019 14:24:19 +0000
-Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
-        id 82B4720298565; Wed, 13 Mar 2019 15:24:17 +0100 (CET)
-Date:   Wed, 13 Mar 2019 15:24:17 +0100
-From:   Peter Zijlstra <peterz@infradead.org>
-To:     Arnd Bergmann <arnd@arndb.de>
-Cc:     Qian Cai <cai@lca.pw>, Jason Gunthorpe <jgg@mellanox.com>,
-        "akpm@linux-foundation.org" <akpm@linux-foundation.org>,
-        "linux-mm@kvack.org" <linux-mm@kvack.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>
-Subject: Re: [PATCH] mm/debug: add a cast to u64 for atomic64_read()
-Message-ID: <20190313142417.GF5996@hirez.programming.kicks-ass.net>
-References: <20190310183051.87303-1-cai@lca.pw>
- <20190311035815.kq7ftc6vphy6vwen@linux-r8p5>
- <20190311122100.GF22862@mellanox.com>
- <1552312822.7087.11.camel@lca.pw>
- <CAK8P3a0QB7+oPz4sfbW_g2EGZZmC=LMEnkMNLCW_FD=fEZoQPA@mail.gmail.com>
- <20190313091844.GA24390@hirez.programming.kicks-ass.net>
- <CAK8P3a3_2O7KBKTSD-QC5tcpohy8bkVVHsdAJnanTU1B+H12-w@mail.gmail.com>
+        Wed, 13 Mar 2019 10:27:07 -0400
+Received: by mail-yw1-f67.google.com with SMTP id u70so1580645ywf.7;
+        Wed, 13 Mar 2019 07:27:06 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc:content-transfer-encoding;
+        bh=WzssSWiIpBhFCg7dDWCZzQb3cazuLKAR34HpPN5C/tw=;
+        b=GTKRfUPpH56z7AW66nUJBdDbaMtKMDlGxscsSTNQ1YBT4VYOFE4Y+FAY93lcpuM7/Q
+         74cwqIaAlSPU5FepszxR2tQk8Gk3BLUjRAZsIeeCDSIsA+3kxbGUKVRLM37Bt3TA9+d1
+         fvUn6t/i9Y6vlpSbWfCKjWoxrwVzAqKDUX0Eit4orjWCdRi8LiXTJx1rkjrSsW4YB/CQ
+         mHp53nR2VCUu4L6uS1dABJj4+8QwzYvWei6hpW6XrNPB8I4P1eGdD7pS6/5pqWu2Ec5g
+         mTUixqmjp3kQhXk36FgvcUkxAjL3YmTB9L6H4DKx3UA/7u5jC8CiV8lbEDYJa+quDEWy
+         AKtA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=WzssSWiIpBhFCg7dDWCZzQb3cazuLKAR34HpPN5C/tw=;
+        b=GHY4YMusyl5W+RMC2wb7yqiQ7pgzECjtu6bTBr9QsUu9GpugzkrR0UltRCDNJb2jNI
+         g1GOb6D8nNpYC2lppUig4kj2W2cFhplzyPG5zenNSv7sjUK0JQesstRfPmTMd2HFX9fz
+         aNuwqRsLvq9d5XBk6hNBb9fEuDQE4bSvauARsi2rd3SwpADvBqdzlKScfCqXyuIRCAAh
+         INn1XGb6OJbBVDeNTgNYq+xc/2pYgn4/dXltAS2DT74TFjV1a79mywzj2v9gwhWKcbPb
+         zdtX/1kLmTCd4Rm9WEqwsvgq1EOrYLAF2niKpJH1O0uIONVFVZy+Vw7ZxWPxBiqVlUmk
+         mJ+Q==
+X-Gm-Message-State: APjAAAW7y/AMJM/ID7GmBL6GhCE4pBlARrLRTcr0h2fFRBuaa8b6dxdE
+        fMLsAD4keEg73gAgx24DP2UV/Bp6LxH6B2SD/yo=
+X-Google-Smtp-Source: APXvYqzQY0abGCYaKgvCwX5jJU1vnJl2wL/xcqc5kyXp1+fg7LxIOrnlpOwh1XPT/0vcodACGLJ+5C444+utYbmllmw=
+X-Received: by 2002:a25:5046:: with SMTP id e67mr38102029ybb.397.1552487225985;
+ Wed, 13 Mar 2019 07:27:05 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAK8P3a3_2O7KBKTSD-QC5tcpohy8bkVVHsdAJnanTU1B+H12-w@mail.gmail.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+References: <4603533.ZIfxmiEf7K@blindfold> <1854703.ve7plDhYWt@blindfold>
+ <CAJfpegtgfuAkgv26QH6Ht25OeMiev-QvEf7ror4KAbud7FADgg@mail.gmail.com> <4066872.KGdO14EQMx@blindfold>
+In-Reply-To: <4066872.KGdO14EQMx@blindfold>
+From:   Amir Goldstein <amir73il@gmail.com>
+Date:   Wed, 13 Mar 2019 16:26:54 +0200
+Message-ID: <CAOQ4uxhqQKzriL0An4Tvzc1E_LffL-z9q1otOW_RdD1ZdKWP3Q@mail.gmail.com>
+Subject: Re: overlayfs vs. fscrypt
+To:     Richard Weinberger <richard@nod.at>
+Cc:     Miklos Szeredi <miklos@szeredi.hu>,
+        linux-fsdevel <linux-fsdevel@vger.kernel.org>,
+        linux-fscrypt@vger.kernel.org,
+        overlayfs <linux-unionfs@vger.kernel.org>,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        Paul Lawrence <paullawrence@google.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Mar 13, 2019 at 02:46:55PM +0100, Arnd Bergmann wrote:
-> It would be tempting to use scripts/atomic/* to generate more of
-> the code in a consistent way, but that is likely to be even more
-> work and more error-prone at the start.
+On Wed, Mar 13, 2019 at 3:34 PM Richard Weinberger <richard@nod.at> wrote:
+>
+> Am Mittwoch, 13. M=C3=A4rz 2019, 14:24:47 CET schrieb Miklos Szeredi:
+> > > The use case is that you can delete these files if the DAC/MAC permis=
+sions allow it.
+> > > Just like on NTFS. If a user encrypts files, the admin cannot read th=
+em but can
+> > > remove them if the user is gone or loses the key.
+> >
+> > There's the underlying filesystem view where admin can delete files,
+> > etc.   And there's the fscrypt layer stacked on top of the underlying
+> > fs, which en/decrypts files *in case the user has the key*.  What if
+> > one user has a key, but the other one doesn't?  Will d_revalidate
+> > constantly switch the set of dentries between the encrypted filenames
+> > and the decrypted ones?  Sounds crazy.  And the fact that NTFS does
+> > this doesn't make it any less crazy...
+>
+> Well, I didn't come up with this feature. :-)
+>
+> If one user has the key and the other not, a classic multi-user
+> system, then you need to make sure that the affected fscrypt instances
+> are not visible by both.
+> For example by using mount namespaces to make sure that user a can only
+> see /home/foo and user b only /home/bar.
+> Or removing the search permission on /home/foo and /home/bar.
+>
+> I know, I know, but that's how it is...
+> Maybe Ted or Eric can give more details on why they chose this approach.
+>
 
-Those scripts can't do actual implementations, which is the problem here
-I think. The architectures really need to implement a whole bunch of
-stuff themselves.
+AFAIK, this feature was born to tailor Android's file based encryption.
+https://source.android.com/security/encryption#file-based
+It is meant to protect data at rest and what happens when user enters
+the screen lock password IIRC, is that some service will get restarted.
+IOW, there should NOT be any processes in Android accessing the
+encrypted user data folders with and without the key simultaneously.
+Also, like OpenWRT, in Android the key does not get removed
+(until boot) AFAIK(?).
+
+That dcache behavior remind me of the proposal to make case
+insensitive a per mount option (also for an Android use case).
+Eventually, that was replaced with per directory flag, which plays
+much better with dache.
+
+IMO, the best thing for UBIFS to do would be to modify fscrypt to support
+opting out of the revalidate behavior, IWO, sanitize your hack to an API.
+
+It's good that you are thinking about what will happen with overlayfs
+over ext4/f2fs, but I think that it will be messy if dentry names would be
+changing in underlying fs and the fact the overlayfs accessed the underlyin=
+g
+dirs with different credentials at times makes this even more messy.
+
+The way out of this mess IMO would be for ext4/f2fs to also conditionally
+opt-out of d_revalidate behavior at mount time if the fs is expected to be
+used under overlayfs.
+In Android, for example, I think the use case of "admin deleting
+the encrypted directories" is only relevant on "reset to default" and that
+happens in recovery boot that could potentially opt-out of encryption
+altogether (because there is no user to enter the password anyway).
+
+I could be over simplifying things for the Android use case and my
+information could be severely out dated.
+CC Paul Lawrence to fill in my Android knowledge gaps.
+
+Thanks,
+Amir.
