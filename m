@@ -2,163 +2,133 @@ Return-Path: <SRS0=dUEL=RQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 87289C43381
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 Mar 2019 12:31:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0C8C0C43381
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 Mar 2019 12:33:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4EEAE214AE
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 Mar 2019 12:31:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C64D0214AE
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 Mar 2019 12:33:25 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Pp8jo/Am"
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="raZL76au"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726510AbfCMMbg (ORCPT
+        id S1726560AbfCMMdY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 13 Mar 2019 08:31:36 -0400
-Received: from mail-oi1-f193.google.com ([209.85.167.193]:35501 "EHLO
-        mail-oi1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725893AbfCMMbf (ORCPT
+        Wed, 13 Mar 2019 08:33:24 -0400
+Received: from fllv0015.ext.ti.com ([198.47.19.141]:54748 "EHLO
+        fllv0015.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725832AbfCMMdX (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 13 Mar 2019 08:31:35 -0400
-Received: by mail-oi1-f193.google.com with SMTP id u128so1250884oie.2
-        for <linux-kernel@vger.kernel.org>; Wed, 13 Mar 2019 05:31:34 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=6ulIB1WQv3rgTjsfOPfI4FyBCb55jcpj8cYazj22rUg=;
-        b=Pp8jo/AmM5/+xRJ4rICNaNcDBtVfzUpuZnPEUYztGJW84YbjIZ9v25wYXllsBjWGrl
-         9zO0sAR2kYgECiF713yrDqVVOwJSbfbNtqJS3iZqkU1b1n+fm+iCkemBUu540un41Wlk
-         ALk+WxBRd01hfp/JK61KvyGv2tX2Q0otRNircxE4KLOkK7hNTpznYdp9LvC2csv3OOZj
-         H2DXF5g/248zeCaGnjM4ySs7olDD/7s1qy3ekfhfWMw11v/3VdBfYQANLY4D36rIYPgy
-         VdhIIVjaMKzzeIjHzmesK3gu+s5EvOG3Q1QZYai6aR0o6RpbZasKQgmXPAPhXubWy4Ha
-         TXOg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=6ulIB1WQv3rgTjsfOPfI4FyBCb55jcpj8cYazj22rUg=;
-        b=kuarKsWJKsrod3BhaI/iUIGa9Dv6vVrxwI8tXUkTHy1shrGZKpRrWzeBwKanJzyXbN
-         iB97XalpTHVUydJWeEbcVrgthoJG5xRQlvnQPPXl2gX7rvRxMN7TUMe7Rotwd7cx9LrZ
-         G/XOBjGFhVmv4ygUpFrVTgCX3mDuz6Y2DOOeMaOZSKSD/UxKXlq2HJhNH+fPHgRZh9sP
-         +oEcSDmRWY89RMrdrtSzhJgPuRybc5r2pkECi6ORko1Ot8xxwOXJPFYam70iyd3U1mQn
-         Q4lPMqbyNTzQ1olBaNgMBVAWrCQ7DdAUQOcgsiwecm26EmLQzNOguTYR2u4JJ+b2XpfC
-         MlKA==
-X-Gm-Message-State: APjAAAVZY4djEuBg8YO/L2lRs3/i5sVCMP60ByQcAW6So5HlSzoeJC4v
-        8Gq3JtqviUnGICxhfhgOyqXDTuSisGz6gtakN/g=
-X-Google-Smtp-Source: APXvYqxoVH9txwZZ18rOtF4Gv3dLQ02L7URWxud0h3SJQYKn3wDAh8loCF2gO6+4/Rd6U5UHVEVxHfmQR+OTptJivA4=
-X-Received: by 2002:aca:d7c3:: with SMTP id o186mr1597452oig.28.1552480294149;
- Wed, 13 Mar 2019 05:31:34 -0700 (PDT)
+        Wed, 13 Mar 2019 08:33:23 -0400
+Received: from fllv0034.itg.ti.com ([10.64.40.246])
+        by fllv0015.ext.ti.com (8.15.2/8.15.2) with ESMTP id x2DCXFwf118866;
+        Wed, 13 Mar 2019 07:33:15 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1552480395;
+        bh=uGhrT844WRVLG1HOWRbrmE960LUGPSG+yb66vKihCts=;
+        h=From:To:CC:Subject:Date:In-Reply-To:References;
+        b=raZL76auWKaSl4kbu7+rkZ/Ti1GZTyHfXy3BlcBlI3G7UGoYoNdIMSCcA2LoJaC5n
+         QcOWRbjGlJL9q+Ds68f0LTjzZLo7EW7eARL1ZnqdiDxZBJ0p8r1T0Ex7Zy3W1MCbf0
+         G9crhVsIkvtDAx96Jw1CeY2tmesAkX9D4fNh+imE=
+Received: from DLEE115.ent.ti.com (dlee115.ent.ti.com [157.170.170.26])
+        by fllv0034.itg.ti.com (8.15.2/8.15.2) with ESMTPS id x2DCXFdR054766
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Wed, 13 Mar 2019 07:33:15 -0500
+Received: from DLEE101.ent.ti.com (157.170.170.31) by DLEE115.ent.ti.com
+ (157.170.170.26) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1591.10; Wed, 13
+ Mar 2019 07:33:14 -0500
+Received: from dflp33.itg.ti.com (10.64.6.16) by DLEE101.ent.ti.com
+ (157.170.170.31) with Microsoft SMTP Server (version=TLS1_0,
+ cipher=TLS_RSA_WITH_AES_256_CBC_SHA) id 15.1.1591.10 via Frontend Transport;
+ Wed, 13 Mar 2019 07:33:14 -0500
+Received: from legion.dal.desgin.ti.com (legion.dal.design.ti.com [128.247.22.53])
+        by dflp33.itg.ti.com (8.14.3/8.13.8) with ESMTP id x2DCXE0Z001465;
+        Wed, 13 Mar 2019 07:33:14 -0500
+Received: from localhost (a0272616local-lt.dhcp.ti.com [172.22.122.252])
+        by legion.dal.desgin.ti.com (8.11.7p1+Sun/8.11.7) with ESMTP id x2DCXDU13372;
+        Wed, 13 Mar 2019 07:33:14 -0500 (CDT)
+From:   Dan Murphy <dmurphy@ti.com>
+To:     <robh+dt@kernel.org>, <jacek.anaszewski@gmail.com>, <pavel@ucw.cz>,
+        <tony@atomide.com>, <lee.jones@linaro.org>
+CC:     <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <linux-leds@vger.kernel.org>, Dan Murphy <dmurphy@ti.com>
+Subject: [PATCH v4 2/4] ARM: dts: omap4-droid4: Update backlight dt properties
+Date:   Wed, 13 Mar 2019 07:32:47 -0500
+Message-ID: <20190313123249.17258-2-dmurphy@ti.com>
+X-Mailer: git-send-email 2.12.2
+In-Reply-To: <20190313123249.17258-1-dmurphy@ti.com>
+References: <20190313123249.17258-1-dmurphy@ti.com>
 MIME-Version: 1.0
-References: <20190313122403.248873-1-armax@google.com> <eb85ea17-babd-fe3a-f0ff-9c7f13498bd1@gmail.com>
-In-Reply-To: <eb85ea17-babd-fe3a-f0ff-9c7f13498bd1@gmail.com>
-From:   Armando Miraglia <arma2ff0@gmail.com>
-Date:   Wed, 13 Mar 2019 13:31:23 +0100
-Message-ID: <CAOcbMd2njzr8+6tLTh7k+1zq_VTkU3-fJYODzG0ZwoomO5F9ag@mail.gmail.com>
-Subject: Re: [PATCH] spi: mediatek: Attempt to address style issues in spi-mt7621.c
-To:     Matthias Brugger <matthias.bgg@gmail.com>
-Cc:     Neil Brown <neil@brown.name>, Armando Miraglia <armax@google.com>,
-        gregkh@linuxfoundation.org, sr@denx.de,
-        Sankalp Negi <sankalpnegi2310@gmail.com>,
-        Chuanhong Guo <gch981213@gmail.com>,
-        devel@driverdev.osuosl.org, linux-arm-kernel@lists.infradead.org,
-        linux-mediatek@lists.infradead.org, linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-That might be fun to try :) I should get an mt7621 dev board of sorts though.
+Update the properties for the lm3532 device node for droid4.
+With this change the backlight LED string and the keypad
+LED strings will be controlled separately.
 
-On Wed, Mar 13, 2019 at 1:28 PM Matthias Brugger <matthias.bgg@gmail.com> wrote:
->
->
->
-> On 13/03/2019 13:24, Armando Miraglia wrote:
-> > Running Lindent on the mt7621-spi.c file in drivers/staging I noticed that the
-> > file contained style issues. This change attempts to address such style
-> > problems.
-> >
-> > Signed-off-by: Armando Miraglia <armax@google.com>
->
-> Reviewed-by: Matthias Brugger <matthias.bgg@gmail.com>
->
-> Apart from fixing styling issues it would be usefull to see if we can add
-> support for mt7621 to drivers/spi/spi-mt65xx.c
->
-> Not sure if that is something you want to work on :)
->
-> Regards,
-> Matthias
->
-> > ---
-> > NOTE: resend this patch to include all mainteners listed by get_mantainers.pl.
-> >  drivers/staging/mt7621-spi/spi-mt7621.c | 27 +++++++++++++------------
-> >  1 file changed, 14 insertions(+), 13 deletions(-)
-> >
-> > diff --git a/drivers/staging/mt7621-spi/spi-mt7621.c b/drivers/staging/mt7621-spi/spi-mt7621.c
-> > index b509f9fe3346..03d53845f8c5 100644
-> > --- a/drivers/staging/mt7621-spi/spi-mt7621.c
-> > +++ b/drivers/staging/mt7621-spi/spi-mt7621.c
-> > @@ -52,14 +52,14 @@
-> >  #define MT7621_LSB_FIRST     BIT(3)
-> >
-> >  struct mt7621_spi {
-> > -     struct spi_master       *master;
-> > -     void __iomem            *base;
-> > -     unsigned int            sys_freq;
-> > -     unsigned int            speed;
-> > -     struct clk              *clk;
-> > -     int                     pending_write;
-> > -
-> > -     struct mt7621_spi_ops   *ops;
-> > +     struct spi_master *master;
-> > +     void __iomem *base;
-> > +     unsigned int sys_freq;
-> > +     unsigned int speed;
-> > +     struct clk *clk;
-> > +     int pending_write;
-> > +
-> > +     struct mt7621_spi_ops *ops;
-> >  };
-> >
-> >  static inline struct mt7621_spi *spidev_to_mt7621_spi(struct spi_device *spi)
-> > @@ -303,7 +303,7 @@ static int mt7621_spi_setup(struct spi_device *spi)
-> >       struct mt7621_spi *rs = spidev_to_mt7621_spi(spi);
-> >
-> >       if ((spi->max_speed_hz == 0) ||
-> > -             (spi->max_speed_hz > (rs->sys_freq / 2)))
-> > +         (spi->max_speed_hz > (rs->sys_freq / 2)))
-> >               spi->max_speed_hz = (rs->sys_freq / 2);
-> >
-> >       if (spi->max_speed_hz < (rs->sys_freq / 4097)) {
-> > @@ -316,9 +316,10 @@ static int mt7621_spi_setup(struct spi_device *spi)
-> >  }
-> >
-> >  static const struct of_device_id mt7621_spi_match[] = {
-> > -     { .compatible = "ralink,mt7621-spi" },
-> > +     {.compatible = "ralink,mt7621-spi"},
-> >       {},
-> >  };
-> > +
-> >  MODULE_DEVICE_TABLE(of, mt7621_spi_match);
-> >
-> >  static int mt7621_spi_probe(struct platform_device *pdev)
-> > @@ -408,9 +409,9 @@ MODULE_ALIAS("platform:" DRIVER_NAME);
-> >
-> >  static struct platform_driver mt7621_spi_driver = {
-> >       .driver = {
-> > -             .name = DRIVER_NAME,
-> > -             .of_match_table = mt7621_spi_match,
-> > -     },
-> > +                .name = DRIVER_NAME,
-> > +                .of_match_table = mt7621_spi_match,
-> > +                },
-> >       .probe = mt7621_spi_probe,
-> >       .remove = mt7621_spi_remove,
-> >  };
-> >
+Signed-off-by: Dan Murphy <dmurphy@ti.com>
+---
+
+v4 - No change - https://lore.kernel.org/patchwork/patch/1050125/
+
+v3 - updated keypad label on v1 comment - https://lore.kernel.org/patchwork/patch/1049023/
+v2 - Fixed ramp-up and ramp-down properties, removed hard coded property values,
+I did not change the label as it is undecided what it could be - https://lore.kernel.org/patchwork/patch/1048806/
+
+ arch/arm/boot/dts/omap4-droid4-xt894.dts | 26 ++++++++++++++++--------
+ 1 file changed, 18 insertions(+), 8 deletions(-)
+
+diff --git a/arch/arm/boot/dts/omap4-droid4-xt894.dts b/arch/arm/boot/dts/omap4-droid4-xt894.dts
+index e21ec929f096..aea206f04f76 100644
+--- a/arch/arm/boot/dts/omap4-droid4-xt894.dts
++++ b/arch/arm/boot/dts/omap4-droid4-xt894.dts
+@@ -383,20 +383,30 @@
+ };
+ 
+ &i2c1 {
+-	lm3532@38 {
++	led-controller@38 {
+ 		compatible = "ti,lm3532";
++		#address-cells = <1>;
++		#size-cells = <0>;
+ 		reg = <0x38>;
+ 
+ 		enable-gpios = <&gpio6 12 GPIO_ACTIVE_HIGH>;
+ 
+-		lcd_backlight: backlight {
+-			compatible = "ti,lm3532-backlight";
++		ramp-up-us = <1024>;
++		ramp-down-us = <8193>;
+ 
+-			lcd {
+-				led-sources = <0 1 2>;
+-				ramp-up-msec = <1>;
+-				ramp-down-msec = <0>;
+-			};
++		lcd_backlight: led@0 {
++			reg = <0>;
++			led-sources = <2>;
++			ti,led-mode = <0>;
++			label = "backlight";
++			linux,default-trigger = "backlight";
++		};
++
++		led@1 {
++			reg = <1>;
++			led-sources = <1>;
++			ti,led-mode = <0>;
++			label = "platform::kbd_backlight";
+ 		};
+ 	};
+ };
+-- 
+2.20.1.390.gb5101f9297
+
