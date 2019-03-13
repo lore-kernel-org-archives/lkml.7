@@ -2,183 +2,154 @@ Return-Path: <SRS0=dUEL=RQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.6 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_SBL,
+	URIBL_SBL_A autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 98CA0C4360F
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 Mar 2019 08:24:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B33A7C43381
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 Mar 2019 08:24:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 547AE2183F
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 Mar 2019 08:24:36 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="L/YWlBOT"
+	by mail.kernel.org (Postfix) with ESMTP id 8A1AA2147C
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 Mar 2019 08:24:41 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727126AbfCMIYe (ORCPT
+        id S1727224AbfCMIYj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 13 Mar 2019 04:24:34 -0400
-Received: from mail-it1-f195.google.com ([209.85.166.195]:54184 "EHLO
-        mail-it1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726685AbfCMIYe (ORCPT
+        Wed, 13 Mar 2019 04:24:39 -0400
+Received: from 19.mo7.mail-out.ovh.net ([178.33.251.118]:37462 "EHLO
+        19.mo7.mail-out.ovh.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727136AbfCMIYi (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 13 Mar 2019 04:24:34 -0400
-Received: by mail-it1-f195.google.com with SMTP id x189so1477858itd.3
-        for <linux-kernel@vger.kernel.org>; Wed, 13 Mar 2019 01:24:33 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=sWJhYk8XbJOljfYTwYXHU5dnczu5ZXpBjImg0UmG4eI=;
-        b=L/YWlBOTVQ7xGetSIeg1oKOzbvAiqlPKIsnqzhO34EJOWCqI2SCXtEE8ktSnT5bkD5
-         oxnSgNcfRMuHVY8oHsmACCw34mZN7zC/expYI3kueaMR6oCW6dGtlXWvvmU8st3+Ujcs
-         JmNFDehqh9zcNaSehShsEdXXlC/axU1Z5lkInjXgnUrqWLjhXmiCPN8e+SQ0ae7AF7kE
-         9l2CbuluoVQl3zyqSJzbaQjE0CdQZeY9gCm99reLPnLQo4nHpDBEy7aomVapTCfvoZ8F
-         TM8M90u2o9vb6n4cTRXMUy9x9gcys1YOew/dHgrpGxRfIvnaqW4jBLtpSvHzRAo+fgkH
-         mCLg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=sWJhYk8XbJOljfYTwYXHU5dnczu5ZXpBjImg0UmG4eI=;
-        b=i6/Qt59r0qaRvgI40ChbyVKOd1mqTrHOhZv2s1EQIJ5jBOTp2kbnG7BErmDYrmEMnd
-         74see1FLIz/F5wz0sQ3mACgRCP/rmt4rD/mefn6CjZsbXutk2qNltZA0qmwmjcjGUI9C
-         F0eilROn68iTPhouW7IIpYelMD4kmYqJqxF3K/bNQaPPM0V9CHrpuottSyTB9EJyTnli
-         xCJGaDkIlXS50zDIHTFPTgMRCWbzwAnSawcnr/e3i8to7d9DJqT4ETfZ0yBxH83OLu+P
-         Ze4MQsTWN3G7H04bbY+gPF66L0REyHFJ15RymiN09JgSZ5Rxg/4uuB2Prs2xmXuG2Wpw
-         n5WQ==
-X-Gm-Message-State: APjAAAV3dxtoxUTQvAxG1ADnE7LGk9kGpMxvhEc+OL2oDVsflRrToLwL
-        eSSss2GNSePmyunlF+ZjEgB42HzqW6EEohCbkIyzig==
-X-Google-Smtp-Source: APXvYqwlqIdy9yNNFka7LR3AyjqiL2k17yXaJqSad9ZkyKvv1kYaNj9t9zRu05JO8XM++4itPVw9vbQ/7ZFOxkZXu9E=
-X-Received: by 2002:a24:674a:: with SMTP id u71mr1070166itc.12.1552465472719;
- Wed, 13 Mar 2019 01:24:32 -0700 (PDT)
+        Wed, 13 Mar 2019 04:24:38 -0400
+Received: from player158.ha.ovh.net (unknown [10.109.143.246])
+        by mo7.mail-out.ovh.net (Postfix) with ESMTP id 403D610923A
+        for <linux-kernel@vger.kernel.org>; Wed, 13 Mar 2019 09:24:37 +0100 (CET)
+Received: from kaod.org (lns-bzn-46-82-253-208-248.adsl.proxad.net [82.253.208.248])
+        (Authenticated sender: groug@kaod.org)
+        by player158.ha.ovh.net (Postfix) with ESMTPSA id 8BF873845CCD;
+        Wed, 13 Mar 2019 08:24:29 +0000 (UTC)
+Date:   Wed, 13 Mar 2019 09:24:28 +0100
+From:   Greg Kurz <groug@kaod.org>
+To:     "Alastair D'Silva" <alastair@au1.ibm.com>
+Cc:     Arnd Bergmann <arnd@arndb.de>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        linux-kernel@vger.kernel.org,
+        Andrew Donnellan <andrew.donnellan@au1.ibm.com>,
+        Alastair D'Silva <alastair@d-silva.org>,
+        Frederic Barrat <fbarrat@linux.ibm.com>,
+        linuxppc-dev@lists.ozlabs.org
+Subject: Re: [PATCH 2/5] ocxl: Clean up printf formats
+Message-ID: <20190313092428.747cc671@bahia.lan>
+In-Reply-To: <20190313040702.14276-3-alastair@au1.ibm.com>
+References: <20190227045741.21412-1-alastair@au1.ibm.com>
+        <20190313040702.14276-1-alastair@au1.ibm.com>
+        <20190313040702.14276-3-alastair@au1.ibm.com>
+X-Mailer: Claws Mail 3.16.0 (GTK+ 2.24.32; x86_64-redhat-linux-gnu)
 MIME-Version: 1.0
-References: <0000000000001fd5780583d1433f@google.com> <20190311163747.f56cceebd9c2661e4519bdfc@linux-foundation.org>
- <CACT4Y+byKQSOCte3JS9XOnyr+aVSEFtBvLxG2-HUrZX3-82Hcg@mail.gmail.com>
- <20190311232541.db8571d2e3e0ca636785f31f@linux-foundation.org>
- <CACT4Y+Y0JdB-=yLLchw8icokn11iH2-XYoLJEOFKm6F88fJ3WQ@mail.gmail.com> <20190312225044.GB38846@gmail.com>
-In-Reply-To: <20190312225044.GB38846@gmail.com>
-From:   Dmitry Vyukov <dvyukov@google.com>
-Date:   Wed, 13 Mar 2019 09:24:21 +0100
-Message-ID: <CACT4Y+a775wdkjQcsZTLG_Jr4k2gSXnOQF6ZTJDPOc-kvPG9Xw@mail.gmail.com>
-Subject: Re: KASAN: null-ptr-deref Read in reclaim_high
-To:     Eric Biggers <ebiggers@kernel.org>
-Cc:     Andrew Morton <akpm@linux-foundation.org>,
-        syzbot <syzbot+fa11f9da42b46cea3b4a@syzkaller.appspotmail.com>,
-        Cgroups <cgroups@vger.kernel.org>,
-        Johannes Weiner <hannes@cmpxchg.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Linux-MM <linux-mm@kvack.org>, Michal Hocko <mhocko@kernel.org>,
-        Michal Hocko <mhocko@suse.com>,
-        Stephen Rothwell <sfr@canb.auug.org.au>,
-        Shakeel Butt <shakeelb@google.com>,
-        syzkaller-bugs <syzkaller-bugs@googlegroups.com>,
-        Vladimir Davydov <vdavydov.dev@gmail.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
+X-Ovh-Tracer-Id: 13710364644560574795
+X-VR-SPAMSTATE: OK
+X-VR-SPAMSCORE: -100
+X-VR-SPAMCAUSE: gggruggvucftvghtrhhoucdtuddrgedutddrgeelgdduudelucetufdoteggodetrfdotffvucfrrhhofhhilhgvmecuqfggjfdpvefjgfevmfevgfenuceurghilhhouhhtmecuhedttdenucesvcftvggtihhpihgvnhhtshculddquddttddm
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Mar 12, 2019 at 11:50 PM Eric Biggers <ebiggers@kernel.org> wrote:
->
-> On Tue, Mar 12, 2019 at 09:33:44AM +0100, 'Dmitry Vyukov' via syzkaller-bugs wrote:
-> > On Tue, Mar 12, 2019 at 7:25 AM Andrew Morton <akpm@linux-foundation.org> wrote:
-> > >
-> > > On Tue, 12 Mar 2019 07:08:38 +0100 Dmitry Vyukov <dvyukov@google.com> wrote:
-> > >
-> > > > On Tue, Mar 12, 2019 at 12:37 AM Andrew Morton
-> > > > <akpm@linux-foundation.org> wrote:
-> > > > >
-> > > > > On Mon, 11 Mar 2019 06:08:01 -0700 syzbot <syzbot+fa11f9da42b46cea3b4a@syzkaller.appspotmail.com> wrote:
-> > > > >
-> > > > > > syzbot has bisected this bug to:
-> > > > > >
-> > > > > > commit 29a4b8e275d1f10c51c7891362877ef6cffae9e7
-> > > > > > Author: Shakeel Butt <shakeelb@google.com>
-> > > > > > Date:   Wed Jan 9 22:02:21 2019 +0000
-> > > > > >
-> > > > > >      memcg: schedule high reclaim for remote memcgs on high_work
-> > > > > >
-> > > > > > bisection log:  https://syzkaller.appspot.com/x/bisect.txt?x=155bf5db200000
-> > > > > > start commit:   29a4b8e2 memcg: schedule high reclaim for remote memcgs on..
-> > > > > > git tree:       linux-next
-> > > > > > final crash:    https://syzkaller.appspot.com/x/report.txt?x=175bf5db200000
-> > > > > > console output: https://syzkaller.appspot.com/x/log.txt?x=135bf5db200000
-> > > > > > kernel config:  https://syzkaller.appspot.com/x/.config?x=611f89e5b6868db
-> > > > > > dashboard link: https://syzkaller.appspot.com/bug?extid=fa11f9da42b46cea3b4a
-> > > > > > userspace arch: amd64
-> > > > > > syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=14259017400000
-> > > > > > C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=141630a0c00000
-> > > > > >
-> > > > > > Reported-by: syzbot+fa11f9da42b46cea3b4a@syzkaller.appspotmail.com
-> > > > > > Fixes: 29a4b8e2 ("memcg: schedule high reclaim for remote memcgs on
-> > > > > > high_work")
-> > > > >
-> > > > > The following patch
-> > > > > memcg-schedule-high-reclaim-for-remote-memcgs-on-high_work-v3.patch
-> > > > > might have fixed this.  Was it applied?
-> > > >
-> > > > Hi Andrew,
-> > > >
-> > > > You mean if the patch was applied during the bisection?
-> > > > No, it wasn't. Bisection is very specifically done on the same tree
-> > > > where the bug was hit. There are already too many factors that make
-> > > > the result flaky/wrong/inconclusive without changing the tree state.
-> > > > Now, if syzbot would know about any pending fix for this bug, then it
-> > > > would not do the bisection at all. But it have not seen any patch in
-> > > > upstream/linux-next with the Reported-by tag, nor it received any syz
-> > > > fix commands for this bugs. Should have been it aware of the fix? How?
-> > >
-> > > memcg-schedule-high-reclaim-for-remote-memcgs-on-high_work-v3.patch was
-> > > added to linux-next on Jan 10.  I take it that this bug was hit when
-> > > testing the entire linux-next tree, so we can assume that
-> > > memcg-schedule-high-reclaim-for-remote-memcgs-on-high_work-v3.patch
-> > > does not fix it, correct?
-> > > In which case, over to Shakeel!
-> >
-> > Jan 10 is exactly when this bug was reported:
-> > https://groups.google.com/forum/#!msg/syzkaller-bugs/5YkhNUg2PFY/4-B5M7bDCAAJ
-> > https://syzkaller.appspot.com/bug?extid=fa11f9da42b46cea3b4a
-> >
-> > We don't know if that patch fixed the bug or not because nobody tested
-> > the reproducer with that patch.
-> >
-> > It seems that the problem here is that nobody associated the fix with
-> > the bug report. So people looking at open bug reports will spend time
-> > again and again debugging this just to find that this was fixed months
-> > ago. syzbot also doesn't have a chance to realize that this is fixed
-> > and bisection is not necessary anymore. It also won't confirm/disprove
-> > that the fix actually fixes the bug because even if the crash will
-> > continue to happen it will look like the old crash just continues to
-> > happen, so nothing to notify about.
-> >
-> > Associating fixes with bug reports solves all these problems for
-> > humans and bots.
-> >
->
-> I think syzbot needs to be more aggressive about invalidating old bug reports on
-> linux-next, e.g. automatically invalidate linux-next bugs that no longer occur
-> after a few weeks even if there is a reproducer.  Patches get added, changed,
-> and removed in linux-next every day.  Bugs that syzbot runs into on linux-next
-> are often obvious enough that they get reported by other people too, resulting
-> in bugs being fixed or dropped without people ever seeing the syzbot report.
-> How do you propose that people associate fixes with syzbot reports when they
-> never saw the syzbot report in the first place?
->
-> This is a problem on mainline too, of course.  But we *know* it's a more severe
-> problem on linux-next, and that a bug like this that only ever happened on
-> linux-next and stopped happening 2 months ago, is much less likely to be
-> relevant than a bug in mainline.  Kernel developers don't have time to examine
-> every single syzbot report so you need to help them out by reducing the noise.
+On Wed, 13 Mar 2019 15:06:58 +1100
+"Alastair D'Silva" <alastair@au1.ibm.com> wrote:
 
-Please file an issue for this at https://github.com/google/syzkaller/issues
+> From: Alastair D'Silva <alastair@d-silva.org>
+> 
+> Use %# instead of using a literal '0x'
+> 
+> Signed-off-by: Alastair D'Silva <alastair@d-silva.org>
+> ---
 
-I also wonder how does this work for all other kernel bugs reports?
-syzbot is not the only one reporting kernel bugs and we don't want to
-invent new rules here.
+Reviewed-by: Greg Kurz <groug@kaod.org>
 
-Also note that what happens now may be not representative of what will
-happen in a steady mode later. Now syzbot bisects old bugs accumulated
-over 1+ year. Later if it reports a bug, it should bisect sooner. So
-all of what happens in this bug report won't take place.
+>  drivers/misc/ocxl/config.c  |  6 +++---
+>  drivers/misc/ocxl/context.c |  2 +-
+>  drivers/misc/ocxl/trace.h   | 10 +++++-----
+>  3 files changed, 9 insertions(+), 9 deletions(-)
+> 
+> diff --git a/drivers/misc/ocxl/config.c b/drivers/misc/ocxl/config.c
+> index 8f2c5d8bd2ee..0ee7856b033d 100644
+> --- a/drivers/misc/ocxl/config.c
+> +++ b/drivers/misc/ocxl/config.c
+> @@ -178,9 +178,9 @@ static int read_dvsec_vendor(struct pci_dev *dev)
+>  	pci_read_config_dword(dev, pos + OCXL_DVSEC_VENDOR_DLX_VERS, &dlx);
+>  
+>  	dev_dbg(&dev->dev, "Vendor specific DVSEC:\n");
+> -	dev_dbg(&dev->dev, "  CFG version = 0x%x\n", cfg);
+> -	dev_dbg(&dev->dev, "  TLX version = 0x%x\n", tlx);
+> -	dev_dbg(&dev->dev, "  DLX version = 0x%x\n", dlx);
+> +	dev_dbg(&dev->dev, "  CFG version = %#x\n", cfg);
+> +	dev_dbg(&dev->dev, "  TLX version = %#x\n", tlx);
+> +	dev_dbg(&dev->dev, "  DLX version = %#x\n", dlx);
+>  	return 0;
+>  }
+>  
+> diff --git a/drivers/misc/ocxl/context.c b/drivers/misc/ocxl/context.c
+> index c10a940e3b38..3498a0199bde 100644
+> --- a/drivers/misc/ocxl/context.c
+> +++ b/drivers/misc/ocxl/context.c
+> @@ -134,7 +134,7 @@ static vm_fault_t ocxl_mmap_fault(struct vm_fault *vmf)
+>  	vm_fault_t ret;
+>  
+>  	offset = vmf->pgoff << PAGE_SHIFT;
+> -	pr_debug("%s: pasid %d address 0x%lx offset 0x%llx\n", __func__,
+> +	pr_debug("%s: pasid %d address %#lx offset %#llx\n", __func__,
+>  		ctx->pasid, vmf->address, offset);
+>  
+>  	if (offset < ctx->afu->irq_base_offset)
+> diff --git a/drivers/misc/ocxl/trace.h b/drivers/misc/ocxl/trace.h
+> index bcb7ff330c1e..68bf2f173a1a 100644
+> --- a/drivers/misc/ocxl/trace.h
+> +++ b/drivers/misc/ocxl/trace.h
+> @@ -28,7 +28,7 @@ DECLARE_EVENT_CLASS(ocxl_context,
+>  		__entry->tidr = tidr;
+>  	),
+>  
+> -	TP_printk("linux pid=%d spa=0x%p pasid=0x%x pidr=0x%x tidr=0x%x",
+> +	TP_printk("linux pid=%d spa=%p pasid=%#x pidr=%#x tidr=%#x",
+>  		__entry->pid,
+>  		__entry->spa,
+>  		__entry->pasid,
+> @@ -61,7 +61,7 @@ TRACE_EVENT(ocxl_terminate_pasid,
+>  		__entry->rc = rc;
+>  	),
+>  
+> -	TP_printk("pasid=0x%x rc=%d",
+> +	TP_printk("pasid=%#x rc=%d",
+>  		__entry->pasid,
+>  		__entry->rc
+>  	)
+> @@ -87,7 +87,7 @@ DECLARE_EVENT_CLASS(ocxl_fault_handler,
+>  		__entry->tfc = tfc;
+>  	),
+>  
+> -	TP_printk("spa=%p pe=0x%llx dsisr=0x%llx dar=0x%llx tfc=0x%llx",
+> +	TP_printk("spa=%p pe=%#llx dsisr=%#llx dar=%#llx tfc=%#llx",
+>  		__entry->spa,
+>  		__entry->pe,
+>  		__entry->dsisr,
+> @@ -127,7 +127,7 @@ TRACE_EVENT(ocxl_afu_irq_alloc,
+>  		__entry->irq_offset = irq_offset;
+>  	),
+>  
+> -	TP_printk("pasid=0x%x irq_id=%d virq=%u hw_irq=%d irq_offset=0x%llx",
+> +	TP_printk("pasid=%#x irq_id=%d virq=%u hw_irq=%d irq_offset=%#llx",
+>  		__entry->pasid,
+>  		__entry->irq_id,
+>  		__entry->virq,
+> @@ -150,7 +150,7 @@ TRACE_EVENT(ocxl_afu_irq_free,
+>  		__entry->irq_id = irq_id;
+>  	),
+>  
+> -	TP_printk("pasid=0x%x irq_id=%d",
+> +	TP_printk("pasid=%#x irq_id=%d",
+>  		__entry->pasid,
+>  		__entry->irq_id
+>  	)
+
