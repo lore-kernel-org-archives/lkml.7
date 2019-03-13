@@ -2,175 +2,123 @@ Return-Path: <SRS0=dUEL=RQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,
-	URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_MUTT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 307B2C43381
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 Mar 2019 00:47:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A6300C43381
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 Mar 2019 00:57:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EA01D214AE
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 Mar 2019 00:47:10 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel-com.20150623.gappssmtp.com header.i=@intel-com.20150623.gappssmtp.com header.b="15ssqlbM"
+	by mail.kernel.org (Postfix) with ESMTP id 7C04F214AE
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 Mar 2019 00:57:05 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726490AbfCMArE (ORCPT
+        id S1726580AbfCMA5E (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 12 Mar 2019 20:47:04 -0400
-Received: from mail-ot1-f68.google.com ([209.85.210.68]:38060 "EHLO
-        mail-ot1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726365AbfCMArE (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 12 Mar 2019 20:47:04 -0400
-Received: by mail-ot1-f68.google.com with SMTP id m1so231161otf.5
-        for <linux-kernel@vger.kernel.org>; Tue, 12 Mar 2019 17:47:03 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=intel-com.20150623.gappssmtp.com; s=20150623;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=mLj4qcCQx2Pn+uXcFJ85DvqflvBkrhEGWb75t5OlUng=;
-        b=15ssqlbMFEuple84d+nWcgJNQ+bAE69hLg9vgjJlg8ROS8W3lxVvATNXiK5GYlrhH5
-         vM7DtUN6LU4Nph550Md5x6+LDDByKkR7x0CEvquaxELcbFthbflmxYnASUgkD0EcakZe
-         6EfSI0yb+3TdgO3bdr1FKqY8Bv9kp6XCmarSWTU7v334wVAU2RIov9oG+wuBqtG/AjQc
-         MYVlQ90xUZw2zcLNTx2lciilggH14qDDAJRCKbtzx81ayHUI/yb4vlytEJkPVEnXT7R/
-         r3hhcDUTZgb/5c4rc2pQF7eiUv+g7JgXXvk8qoLAKpTXRyphRw+B1TRkAJSsoGQy/GMA
-         1nFQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=mLj4qcCQx2Pn+uXcFJ85DvqflvBkrhEGWb75t5OlUng=;
-        b=uiZSuTRGu9PFhx2KUgHBcQVzF6tHGiprG528LR83Gf3WwvJ8OVoWTbHU4Fixy3AeBe
-         CIhvGChOu7xUE9mw1gy3U6wB2ehIv0A+wKP7xPnCkF/IenlVL8xJF1x4pGRypLM6uxf7
-         Qw85HLGU8H5My9Wlap1YvjZsjnJsrcfeP+zr2cTjDy+pUuZjW9xbvx2QX8GC7dDHAfbi
-         FsWcJpriGcU5aBLfHNhsKNoUJqwLNdH0srGF+HSU/N7wczh4WEtFD2Tm+lzOl7ovhbBk
-         3Lvqgb7nJu45gcSXGmv38hy3blMBg3T9R13h7MgI3Ux/QgMqCKPBQ5Tq+I1S1wOf41to
-         fMOw==
-X-Gm-Message-State: APjAAAUPeRd7867sScg5TSrm4vdNjaaToav9lgCBaxMZ+OjPwEvSfXqQ
-        IFEv8r499t8X9+l+OjEuaQY8mrklcZ+dUhw6LbZaNA==
-X-Google-Smtp-Source: APXvYqw0Mpk2Nx7zxk3e2cteUAAoUeiLm5q90A8CIm9oOmu4nbmapF5pCiWJ9T7GcsgSrbuN3twHgSfOBxhzOCdFnjc=
-X-Received: by 2002:a9d:760a:: with SMTP id k10mr1705011otl.367.1552438022857;
- Tue, 12 Mar 2019 17:47:02 -0700 (PDT)
+        Tue, 12 Mar 2019 20:57:04 -0400
+Received: from mga12.intel.com ([192.55.52.136]:44646 "EHLO mga12.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726269AbfCMA5E (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 12 Mar 2019 20:57:04 -0400
+X-Amp-Result: UNKNOWN
+X-Amp-Original-Verdict: FILE UNKNOWN
+X-Amp-File-Uploaded: False
+Received: from orsmga007.jf.intel.com ([10.7.209.58])
+  by fmsmga106.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 12 Mar 2019 17:57:03 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.58,472,1544515200"; 
+   d="scan'208";a="122166454"
+Received: from romley-ivt3.sc.intel.com ([172.25.110.60])
+  by orsmga007.jf.intel.com with ESMTP; 12 Mar 2019 17:57:02 -0700
+Date:   Tue, 12 Mar 2019 17:49:56 -0700
+From:   Fenghua Yu <fenghua.yu@intel.com>
+To:     Dave Hansen <dave.hansen@intel.com>
+Cc:     Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, H Peter Anvin <hpa@zytor.com>,
+        Paolo Bonzini <pbonzini@redhat.com>,
+        Ashok Raj <ashok.raj@intel.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Xiaoyao Li <xiaoyao.li@intel.com>,
+        Michael Chan <michael.chan@broadcom.com>,
+        Ravi V Shankar <ravi.v.shankar@intel.com>,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        x86 <x86@kernel.org>, linux-wireless@vger.kernel.org,
+        netdev@vger.kernel.org, kvm@vger.kernel.org
+Subject: Re: [PATCH v5 09/18] x86/split_lock: Handle #AC exception for split
+ lock
+Message-ID: <20190313004955.GA31710@romley-ivt3.sc.intel.com>
+References: <1552431636-31511-1-git-send-email-fenghua.yu@intel.com>
+ <1552431636-31511-10-git-send-email-fenghua.yu@intel.com>
+ <5c76062a-e088-fdb3-09e2-7e4423d820a1@intel.com>
 MIME-Version: 1.0
-References: <20190305141635.8134e310ba7187bc39532cd3@linux-foundation.org>
- <CAA9_cmd2Z62Z5CSXvne4rj3aPSpNhS0Gxt+kZytz0bVEuzvc=A@mail.gmail.com>
- <20190307094654.35391e0066396b204d133927@linux-foundation.org>
- <20190307185623.GD3835@redhat.com> <CAPcyv4gkxmmkB0nofVOvkmV7HcuBDb+1VLR9CSsp+m-QLX_mxA@mail.gmail.com>
- <20190312152551.GA3233@redhat.com> <CAPcyv4iYzTVpP+4iezH1BekawwPwJYiMvk2GZDzfzFLUnO+RgA@mail.gmail.com>
- <20190312190606.GA15675@redhat.com> <CAPcyv4g-z8nkM1B65oR-3PT_RFQbmQMsM-J-P0-nzyvvJ8gVog@mail.gmail.com>
- <20190312145214.9c8f0381cf2ff2fc2904e2d8@linux-foundation.org> <20190313001018.GA3312@redhat.com>
-In-Reply-To: <20190313001018.GA3312@redhat.com>
-From:   Dan Williams <dan.j.williams@intel.com>
-Date:   Tue, 12 Mar 2019 17:46:51 -0700
-Message-ID: <CAPcyv4huAHnWoLQHhVRC_U6c-1DG2joOktA-ZWa-TQ1=KaTQLA@mail.gmail.com>
-Subject: Re: [PATCH 09/10] mm/hmm: allow to mirror vma of a file on a DAX
- backed filesystem
-To:     Jerome Glisse <jglisse@redhat.com>
-Cc:     Andrew Morton <akpm@linux-foundation.org>,
-        Linux MM <linux-mm@kvack.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Ralph Campbell <rcampbell@nvidia.com>,
-        John Hubbard <jhubbard@nvidia.com>,
-        linux-fsdevel <linux-fsdevel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <5c76062a-e088-fdb3-09e2-7e4423d820a1@intel.com>
+User-Agent: Mutt/1.5.23 (2014-03-12)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Mar 12, 2019 at 5:10 PM Jerome Glisse <jglisse@redhat.com> wrote:
->
-> On Tue, Mar 12, 2019 at 02:52:14PM -0700, Andrew Morton wrote:
-> > On Tue, 12 Mar 2019 12:30:52 -0700 Dan Williams <dan.j.williams@intel.com> wrote:
-> >
-> > > On Tue, Mar 12, 2019 at 12:06 PM Jerome Glisse <jglisse@redhat.com> wrote:
-> > > > On Tue, Mar 12, 2019 at 09:06:12AM -0700, Dan Williams wrote:
-> > > > > On Tue, Mar 12, 2019 at 8:26 AM Jerome Glisse <jglisse@redhat.com> wrote:
-> > > [..]
-> > > > > > Spirit of the rule is better than blind application of rule.
-> > > > >
-> > > > > Again, I fail to see why HMM is suddenly unable to make forward
-> > > > > progress when the infrastructure that came before it was merged with
-> > > > > consumers in the same development cycle.
-> > > > >
-> > > > > A gate to upstream merge is about the only lever a reviewer has to
-> > > > > push for change, and these requests to uncouple the consumer only
-> > > > > serve to weaken that review tool in my mind.
-> > > >
-> > > > Well let just agree to disagree and leave it at that and stop
-> > > > wasting each other time
-> > >
-> > > I'm fine to continue this discussion if you are. Please be specific
-> > > about where we disagree and what aspect of the proposed rules about
-> > > merge staging are either acceptable, painful-but-doable, or
-> > > show-stoppers. Do you agree that HMM is doing something novel with
-> > > merge staging, am I off base there?
-> >
-> > You're correct.  We chose to go this way because the HMM code is so
-> > large and all-over-the-place that developing it in a standalone tree
-> > seemed impractical - better to feed it into mainline piecewise.
-> >
-> > This decision very much assumed that HMM users would definitely be
-> > merged, and that it would happen soon.  I was skeptical for a long time
-> > and was eventually persuaded by quite a few conversations with various
-> > architecture and driver maintainers indicating that these HMM users
-> > would be forthcoming.
-> >
-> > In retrospect, the arrival of HMM clients took quite a lot longer than
-> > was anticipated and I'm not sure that all of the anticipated usage
-> > sites will actually be using it.  I wish I'd kept records of
-> > who-said-what, but I didn't and the info is now all rather dissipated.
-> >
-> > So the plan didn't really work out as hoped.  Lesson learned, I would
-> > now very much prefer that new HMM feature work's changelogs include
-> > links to the driver patchsets which will be using those features and
-> > acks and review input from the developers of those driver patchsets.
->
-> This is what i am doing now and this patchset falls into that. I did
-> post the ODP and nouveau bits to use the 2 new functions (dma map and
-> unmap). I expect to merge both ODP and nouveau bits for that during
-> the next merge window.
->
-> Also with 5.1 everything that is upstream is use by nouveau at least.
-> They are posted patches to use HMM for AMD, Intel, Radeon, ODP, PPC.
-> Some are going through several revisions so i do not know exactly when
-> each will make it upstream but i keep working on all this.
->
-> So the guideline we agree on:
->     - no new infrastructure without user
->     - device driver maintainer for which new infrastructure is done
->       must either sign off or review of explicitly say that they want
->       the feature I do not expect all driver maintainer will have
->       the bandwidth to do proper review of the mm part of the infra-
->       structure and it would not be fair to ask that from them. They
->       can still provide feedback on the API expose to the device
->       driver.
->     - driver bits must be posted at the same time as the new infra-
->       structure even if they target the next release cycle to avoid
->       inter-tree dependency
->     - driver bits must be merge as soon as possible
+On Tue, Mar 12, 2019 at 04:51:22PM -0700, Dave Hansen wrote:
+> On 3/12/19 4:00 PM, Fenghua Yu wrote:
+> I don't see any feature checking here.  Don't we need to see if this MSR
+> is supported?
+> 
+> Shouldn't the code here on systems that don't support split lock
+> disabling be the same as on CONFIG_CPU_SUP_INTEL=n systems?
 
-What about EXPORT_SYMBOL_GPL?
+You are right. Is the following #AC handler code better?
 
->
-> Thing we do not agree on:
->     - If driver bits miss for any reason the +1 target directly
->       revert the new infra-structure. I think it should not be black
->       and white and the reasons why the driver bit missed the merge
->       window should be taken into account. If the feature is still
->       wanted and the driver bits missed the window for simple reasons
->       then it means that we push everything by 2 release ie the
->       revert is done in +1 then we reupload the infra-structure in
->       +2 and finaly repush the driver bit in +3 so we loose 1 cycle.
+diff --git a/arch/x86/kernel/traps.c b/arch/x86/kernel/traps.c
+index d26f9e9c3d83..5296021509c7 100644
+--- a/arch/x86/kernel/traps.c
++++ b/arch/x86/kernel/traps.c
+@@ -61,6 +61,7 @@
+ #include <asm/mpx.h>
+ #include <asm/vm86.h>
+ #include <asm/umip.h>
++#include <asm/cpu.h>
+ 
+ #ifdef CONFIG_X86_64
+ #include <asm/x86_init.h>
+@@ -293,7 +294,37 @@ DO_ERROR(X86_TRAP_OLD_MF, SIGFPE,           0, NULL, "coprocessor segment overru
+ DO_ERROR(X86_TRAP_TS,     SIGSEGV,          0, NULL, "invalid TSS",         invalid_TSS)
+ DO_ERROR(X86_TRAP_NP,     SIGBUS,           0, NULL, "segment not present", segment_not_present)
+ DO_ERROR(X86_TRAP_SS,     SIGBUS,           0, NULL, "stack segment",       stack_segment)
+-DO_ERROR(X86_TRAP_AC,     SIGBUS,  BUS_ADRALN, NULL, "alignment check",     alignment_check)
++dotraplinkage void do_alignment_check(struct pt_regs *regs, long error_code)
++{
++	unsigned int trapnr = X86_TRAP_AC;
++	char str[] = "alignment check";
++	int signr = SIGBUS;
++
++	RCU_LOCKDEP_WARN(!rcu_is_watching(), "entry code didn't wake RCU");
++
++	if (notify_die(DIE_TRAP, str, regs, error_code, trapnr, signr) !=
++			NOTIFY_STOP) {
++		cond_local_irq_enable(regs);
++		if (!user_mode(regs)) {
++			if (!this_cpu_has(X86_FEATURE_SPLIT_LOCK_DETECT))
++				return;
++
++			/*
++			 * Only split lock can generate #AC from kernel. Warn
++			 * and disable #AC for split lock on current CPU.
++			 */
++			msr_clear_bit(MSR_TEST_CTL,
++				      TEST_CTL_ENABLE_SPLIT_LOCK_DETECT_SHIFT);
++			WARN_ONCE(1, "A split lock issue is detected.\n");
++
++
++			return;
++		}
++		/* Handle #AC generated from user code. */
++		do_trap(X86_TRAP_AC, SIGBUS, "alignment check", regs,
++			error_code, BUS_ADRALN, NULL);
++	}
++}
+ #undef IP
+ 
+ #ifdef CONFIG_VMAP_STACK
 
-I think that pain is reasonable.
 
->       Hence why i would rather that the revert would only happen if
->       it is clear that the infrastructure is not ready or can not
->       be use in timely (over couple kernel release) fashion by any
->       drivers.
-
-This seems too generous to me, but in the interest of moving this
-discussion forward let's cross that bridge if/when it happens.
-Hopefully the threat of this debate recurring means consumers put in
-the due diligence to get things merged at infrastructure + 1 time.
