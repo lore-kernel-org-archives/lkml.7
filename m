@@ -2,105 +2,168 @@ Return-Path: <SRS0=dUEL=RQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,UNPARSEABLE_RELAY
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D17C2C4360F
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 Mar 2019 10:14:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0DF5EC43381
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 Mar 2019 10:15:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9DF252087C
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 Mar 2019 10:14:46 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=bgdev-pl.20150623.gappssmtp.com header.i=@bgdev-pl.20150623.gappssmtp.com header.b="Pfr7fCud"
+	by mail.kernel.org (Postfix) with ESMTP id D9D7A2173C
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 Mar 2019 10:15:21 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726452AbfCMKOp (ORCPT
+        id S1726510AbfCMKPU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 13 Mar 2019 06:14:45 -0400
-Received: from mail-wm1-f68.google.com ([209.85.128.68]:37588 "EHLO
-        mail-wm1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726284AbfCMKOo (ORCPT
+        Wed, 13 Mar 2019 06:15:20 -0400
+Received: from Mailgw01.mediatek.com ([1.203.163.78]:36507 "EHLO
+        mailgw01.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1725836AbfCMKPT (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 13 Mar 2019 06:14:44 -0400
-Received: by mail-wm1-f68.google.com with SMTP id x10so1219369wmg.2
-        for <linux-kernel@vger.kernel.org>; Wed, 13 Mar 2019 03:14:42 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=bgdev-pl.20150623.gappssmtp.com; s=20150623;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=9AfYvZQ5c2FbUaV3jJlOcrjAVrValcJyPlFZlo9KQJI=;
-        b=Pfr7fCud/iXp1o6WYd+Ln+UTWknMQR+9rSIjBN6ZHIWsqKGZ7Ud28FeTRPolTof3Xz
-         c7pvGD5yffZegaPlakJQBGfGUK4NjFlSCQJlgQvmQWX6JfC/8S/QBE7wSHlLrQ0eXasK
-         +Wm/t6gqIGI263B+yaGwewLdxZi8ZXpfSszDCGEAsKMXET3kF39OnHRiHShGYGz24PYh
-         WpCS9M4YAaRqDi4MEOXkB8u3LBfd2PSa971kuFGDP2oV7tcIPMIosQQ6IRyrNfe5YF2i
-         lwU5hyzRe+73sQ6QElArd8YVh8P1glJ525bUKcDhtdjW5zhvXj4tyy8F+81qDmTVrvEP
-         I5ew==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=9AfYvZQ5c2FbUaV3jJlOcrjAVrValcJyPlFZlo9KQJI=;
-        b=ZLk3RZrUVNsGD85g6AGjhxrUaFIjMLqVPj0f4jNFVpNOb6V2lXUGWId3+8dZT/5I6I
-         9X1yUUPSBbXMQGaBFAXu30VujfJLGeeR5BCK+Yb0UzLzCGh0T2/4lCxcCNSM7ZRQYEG+
-         4KH0p7VzYIw5YXiBUjB+IFBqKJ31IpB/1JgPHB/6kkpZz44ZRIfoj4VCiO43r5czuguO
-         IVGyERKUoU9xy3o2LhvN5zik5rnGbcs6d2V2nsgFmim0y09E663AcwTkORMaDVvc2K0K
-         bUvV9IUTRCuSId9RywfqhmVPJWmlSONb9IkbZzaC5Hr1fvewf2D1VYul7HoyhDU6PRan
-         J0ow==
-X-Gm-Message-State: APjAAAUV1cUQZRFKmOUfQ8F1GeMwiMizENsMYtmS6V0r16Z8QvBp8Wzn
-        LdNMlRPUtQJWs424gbxYC8ZR0FcnxOU=
-X-Google-Smtp-Source: APXvYqyMDcS52LyKgR/xDz2doX9Gvp7JPtKQFvMgr6trrpPNKVA6m+gu0HR2+/iXzyv9SVQHUqHzEw==
-X-Received: by 2002:a1c:dc85:: with SMTP id t127mr1576720wmg.136.1552472082209;
-        Wed, 13 Mar 2019 03:14:42 -0700 (PDT)
-Received: from localhost.localdomain (aputeaux-684-1-27-140.w90-86.abo.wanadoo.fr. [90.86.252.140])
-        by smtp.gmail.com with ESMTPSA id d5sm4702439wrx.12.2019.03.13.03.14.41
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Wed, 13 Mar 2019 03:14:41 -0700 (PDT)
-From:   Bartosz Golaszewski <brgl@bgdev.pl>
-To:     Jeff Dike <jdike@addtoit.com>, Richard Weinberger <richard@nod.at>,
-        Anton Ivanov <anton.ivanov@cambridgegreys.com>
-Cc:     linux-um@lists.infradead.org, linux-kernel@vger.kernel.org,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>
-Subject: [PATCH] um: define set_pte_at() as a static inline function, not a macro
-Date:   Wed, 13 Mar 2019 11:14:39 +0100
-Message-Id: <20190313101439.7092-1-brgl@bgdev.pl>
-X-Mailer: git-send-email 2.20.1
+        Wed, 13 Mar 2019 06:15:19 -0400
+X-UUID: 9110ccc94a3a4f03a84b618665ed23dd-20190313
+X-UUID: 9110ccc94a3a4f03a84b618665ed23dd-20190313
+Received: from mtkcas34.mediatek.inc [(172.27.4.253)] by mailgw01.mediatek.com
+        (envelope-from <chunfeng.yun@mediatek.com>)
+        (mailgw01.mediatek.com ESMTP with TLS)
+        with ESMTP id 1615897056; Wed, 13 Mar 2019 18:15:11 +0800
+Received: from MTKCAS36.mediatek.inc (172.27.4.186) by MTKMBS31N2.mediatek.inc
+ (172.27.4.87) with Microsoft SMTP Server (TLS) id 15.0.1395.4; Wed, 13 Mar
+ 2019 18:15:09 +0800
+Received: from [10.17.3.153] (172.27.4.253) by MTKCAS36.mediatek.inc
+ (172.27.4.170) with Microsoft SMTP Server id 15.0.1395.4 via Frontend
+ Transport; Wed, 13 Mar 2019 18:15:09 +0800
+Message-ID: <1552472109.10179.103.camel@mhfsdcap03>
+Subject: Re: [PATCH 1/5] dt-bindings: connector: add optional properties for
+ Type-B
+From:   Chunfeng Yun <chunfeng.yun@mediatek.com>
+To:     Hans de Goede <hdegoede@redhat.com>
+CC:     Rob Herring <robh+dt@kernel.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Heikki Krogerus <heikki.krogerus@linux.intel.com>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        Adam Thomson <Adam.Thomson.Opensource@diasemi.com>,
+        Li Jun <jun.li@nxp.com>,
+        "Badhri Jagan Sridharan" <badhri@google.com>,
+        Andy Shevchenko <andy.shevchenko@gmail.com>,
+        Min Guo <min.guo@mediatek.com>, <devicetree@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>, <linux-usb@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <linux-mediatek@lists.infradead.org>
+Date:   Wed, 13 Mar 2019 18:15:09 +0800
+In-Reply-To: <464f1021-4c5e-9137-489d-65fd578575d3@redhat.com>
+References: <1552025622-15582-1-git-send-email-chunfeng.yun@mediatek.com>
+         <1552025622-15582-2-git-send-email-chunfeng.yun@mediatek.com>
+         <693b11e7-fa9e-ab1f-561a-beb758b1872f@redhat.com>
+         <1552282383.10179.21.camel@mhfsdcap03>
+         <c8084259-74d3-c85f-1275-854826c935a0@redhat.com>
+         <1552360688.10179.55.camel@mhfsdcap03>
+         <464f1021-4c5e-9137-489d-65fd578575d3@redhat.com>
+Content-Type: text/plain; charset="UTF-8"
+X-Mailer: Evolution 3.2.3-0ubuntu6 
+Content-Transfer-Encoding: 7bit
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+X-MTK:  N
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Bartosz Golaszewski <bgolaszewski@baylibre.com>
+Hi,
+On Tue, 2019-03-12 at 13:45 +0100, Hans de Goede wrote:
+> Hi,
+> On 12-03-19 04:18, Chunfeng Yun wrote:
+> > Hi,
+> > On Mon, 2019-03-11 at 09:06 +0100, Hans de Goede wrote:
+> >> Hi,
+> >>
+> >> On 11-03-19 06:33, Chunfeng Yun wrote:
+> >>> Hi,
+> >>>
+> >>> On Fri, 2019-03-08 at 13:07 +0100, Hans de Goede wrote:
+> >>>> Hi,
+> >>>>
+> >>>> On 08-03-19 07:13, Chunfeng Yun wrote:
+> >>>>> Add id-gpios, vbus-gpios, vbus-supply and pinctrl properties for
+> >>>>> usb-b-connector
+> >>>>>
+> >>>>> Signed-off-by: Chunfeng Yun <chunfeng.yun@mediatek.com>
+> >>>>> ---
+> >>>>>     .../devicetree/bindings/connector/usb-connector.txt    | 10 ++++++++++
+> >>>>>     1 file changed, 10 insertions(+)
+> >>>>>
+> >>>>> diff --git a/Documentation/devicetree/bindings/connector/usb-connector.txt b/Documentation/devicetree/bindings/connector/usb-connector.txt
+> >>>>> index a9a2f2fc44f2..7a07b0f4f973 100644
+> >>>>> --- a/Documentation/devicetree/bindings/connector/usb-connector.txt
+> >>>>> +++ b/Documentation/devicetree/bindings/connector/usb-connector.txt
+> >>>>> @@ -17,6 +17,16 @@ Optional properties:
+> >>>>>     - self-powered: Set this property if the usb device that has its own power
+> >>>>>       source.
+> >>>>>     
+> >>>>> +Optional properties for usb-b-connector:
+> >>>>> +- id-gpios: gpio for USB ID pin.
+> >>>>
+> >>>> What about boards where the ID pin is *not* connected to a GPIO,
+> >>>> but e.g. to a special pin on the PMIC which can also detect
+> >>>> an ACA adapter ? Currently this case is handled by extcon
+> >>>> drivers, but we have no way to set e.g. vbus-supply for the
+> >>>> connector. Maybe in this case the usb-connector node should
+> >>>> be a child of the PMIC node ?
+> >>> Yes, it would be, PMIC is in charger of detecting the status of ID pin
+> >>
+> >> Ok, then I think this should be documented too.
+> >>
+> >>>> And in many cases there also is a mux to switch the datalines
+> >>>> between the host and device(gadget) controllers, how should
+> >>>> that be described in this model?  See the new usb-role-switch
+> >>>> code under drivers/usb/roles
+> >>>>
+> >>>> In some cases the mux is controlled through a gpio, so we
+> >>>> may want to add a "mux-gpios" here in which case we also
+> >>>> need to define what 0/1 means.
+> >>> I'm not sure, the mux seems not belong to this connector,
+> >>> and may need another driver to register usb-role-switch,
+> >>> similar to:
+> >>>
+> >>> [v2,2/2] usb: typec: add typec switch via GPIO control
+> >>> https://patchwork.kernel.org/patch/10834327/
+> >>
+> >> Right the mux/role-switch will need a driver, but the "owner"
+> >> of the usb_connector, e.g. the PMIC or the owner of the
+> >> id GPIO pin needs to know which device is the role-switch so
+> >> that it can set the role correctly based on the id-pin.
+> >>
+> >> Your binding already contains Vbus info, allowing the owner
+> >> of the usb_connector to enable/disable Vbus based on the id-pin,
+> >> but the owner will also be responsible for setting the role-switch.
+> > In this patch series, I make usb_connector driver enable/disable Vbus,
+> > but not the parent(USB controller) of usb_connector which registers a
+> > usb-role-switch, which way do you think it is better?
+> 
+> IMHO there should not be a driver for the usb_connector child-node,
+> only for the parent-device of that child-node.
+If so, each USB controller driver should process this special case by
+itself when use a gpio to detect the status of ID pin, it's not a
+friendly way. And it's easy by using extcon-usb-gpio driver before, so
+we also want to provide a simple way when support usb_connector, no
+matter what method we choose.
 
-When defined as macro, the mm argument is unused and subsequently the
-variable passed as mm is considered unused by the compiler. This fixes
-a build warning.
+Ideally, the only one thing that USB controller driver need to do, just
+register a usb-role-switch, and leave decision when switch the role to
+other drivers, such as type-C, PMIC/charger, also include gpio
 
-Signed-off-by: Bartosz Golaszewski <bgolaszewski@baylibre.com>
----
- arch/um/include/asm/pgtable.h | 7 ++++++-
- 1 file changed, 6 insertions(+), 1 deletion(-)
+> 
+> There are going to be too many specific setups surrounding PMICs to
+> be able to do a single generic driver for the connector.
+> 
+Fortunately, these patches only focus on the simplest gpio driven role
+switch :)
 
-diff --git a/arch/um/include/asm/pgtable.h b/arch/um/include/asm/pgtable.h
-index 9c04562310b3..b377df76cc28 100644
---- a/arch/um/include/asm/pgtable.h
-+++ b/arch/um/include/asm/pgtable.h
-@@ -263,7 +263,12 @@ static inline void set_pte(pte_t *pteptr, pte_t pteval)
- 	*pteptr = pte_mknewpage(*pteptr);
- 	if(pte_present(*pteptr)) *pteptr = pte_mknewprot(*pteptr);
- }
--#define set_pte_at(mm,addr,ptep,pteval) set_pte(ptep,pteval)
-+
-+static inline void set_pte_at(struct mm_struct *mm, unsigned long addr,
-+			      pte_t *pteptr, pte_t pteval)
-+{
-+	set_pte(pteptr, pteval);
-+}
- 
- #define __HAVE_ARCH_PTE_SAME
- static inline int pte_same(pte_t pte_a, pte_t pte_b)
--- 
-2.20.1
+Thanks
+
+> Regards,
+> 
+> Hans
+> 
+
 
