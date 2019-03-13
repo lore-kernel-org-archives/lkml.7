@@ -4,53 +4,52 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+	SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6DCD3C43381
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 Mar 2019 19:17:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9E068C43381
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 Mar 2019 19:17:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3DB0A217F5
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 Mar 2019 19:17:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6F7D3217F5
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 Mar 2019 19:17:53 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1552504670;
-	bh=gdqwjToUgY2pEGOjkqfQD180EYn3hcREsyH/mbv0g5k=;
+	s=default; t=1552504673;
+	bh=utozTv3XkrTpdfNgZ2ryzQ+c3ZHZ2Fsop0JXppyDpqg=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=ZZjdNVi9vrjSz6UdZGjDuZ7Cfpzex9jMOd9nK8GG5rXOLLv+sKdBcZApCWSe8fqEg
-	 LH6ZrSMi/Hcqo1nIblnev1nTM3xO8DQusMuGPusTkijLdVd4K6lPInQy1dFMkGOrnw
-	 e+ENHPHhAE6lrDwSBNMPAdVZnHmBYpteB9ljK/gQ=
+	b=pvfmD0J6bXQCzuGhgbuM7cfh9mTtvukPmpR7VOtkfBCf1fZOIrt0mH4BAh1z6G3sc
+	 0JiDWfbixRVl+8MwE7EfmsMbZ62EbU0UwwDV0w2qPqjkbl3DBSlb9N/SWef6JHMgu6
+	 Iv58vL+KiSkBDyELpVmnEWFuKVtd7mcAZAjLQe+8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728334AbfCMTRs (ORCPT
+        id S1728965AbfCMTRv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 13 Mar 2019 15:17:48 -0400
-Received: from mail.kernel.org ([198.145.29.99]:48204 "EHLO mail.kernel.org"
+        Wed, 13 Mar 2019 15:17:51 -0400
+Received: from mail.kernel.org ([198.145.29.99]:48304 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728932AbfCMTRo (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 13 Mar 2019 15:17:44 -0400
+        id S1728953AbfCMTRs (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 13 Mar 2019 15:17:48 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 6D41E2171F;
-        Wed, 13 Mar 2019 19:17:41 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 07F70217F5;
+        Wed, 13 Mar 2019 19:17:45 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1552504663;
-        bh=gdqwjToUgY2pEGOjkqfQD180EYn3hcREsyH/mbv0g5k=;
+        s=default; t=1552504667;
+        bh=utozTv3XkrTpdfNgZ2ryzQ+c3ZHZ2Fsop0JXppyDpqg=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=b1ecHdGMDDLxBzV5vKUtH+waiGz8vdbQ66KRP5a0XGxmeuSFW/yS6/9CbhzvWhTTw
-         TZbfUOmHmmaTivCWaFsjcnTw52RNefagC5fOVnSPXi4YewqAQ6ySP1fqto6Iqgo5q1
-         N4TypmfS5GMaUfF3HMuGEbQ9eqxp4jfWpsZDz/ew=
+        b=ku43kAR2srG8EAOiAgIT9+xdL2QF/tgUfaYHJyviCjzXn+OOH+3J5xRyse4a0S5Ds
+         5YnTXPCcsFJAESMD4A8FU9doFlLCeBZOAi4MmUS5UPh8mmpeTspYO2n2ijmBF+0I/z
+         P2OSswbw4qI/vfdRddyp7QGIRfvzyq97w7oSMeKc=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Arnd Bergmann <arnd@arndb.de>,
+Cc:     Vadim Lomovtsev <vlomovtsev@marvell.com>,
         "David S . Miller" <davem@davemloft.net>,
         Sasha Levin <sashal@kernel.org>, netdev@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.9 18/24] phonet: fix building with clang
-Date:   Wed, 13 Mar 2019 15:16:41 -0400
-Message-Id: <20190313191647.160171-18-sashal@kernel.org>
+Subject: [PATCH AUTOSEL 4.9 20/24] net: thunderx: make CFG_DONE message to run through generic send-ack sequence
+Date:   Wed, 13 Mar 2019 15:16:43 -0400
+Message-Id: <20190313191647.160171-20-sashal@kernel.org>
 X-Mailer: git-send-email 2.19.1
 In-Reply-To: <20190313191647.160171-1-sashal@kernel.org>
 References: <20190313191647.160171-1-sashal@kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
@@ -58,181 +57,77 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Arnd Bergmann <arnd@arndb.de>
+From: Vadim Lomovtsev <vlomovtsev@marvell.com>
 
-[ Upstream commit 6321aa197547da397753757bd84c6ce64b3e3d89 ]
+[ Upstream commit 0dd563b9a62c4cbabf5d4fd6596440c2491e72b1 ]
 
-clang warns about overflowing the data[] member in the struct pnpipehdr:
+At the end of NIC VF initialization VF sends CFG_DONE message to PF without
+using nicvf_msg_send_to_pf routine. This potentially could re-write data in
+mailbox. This commit is to implement common way of sending CFG_DONE message
+by the same way with other configuration messages by using
+nicvf_send_msg_to_pf() routine.
 
-net/phonet/pep.c:295:8: warning: array index 4 is past the end of the array (which contains 1 element) [-Warray-bounds]
-                        if (hdr->data[4] == PEP_IND_READY)
-                            ^         ~
-include/net/phonet/pep.h:66:3: note: array 'data' declared here
-                u8              data[1];
-
-Using a flexible array member at the end of the struct avoids the
-warning, but since we cannot have a flexible array member inside
-of the union, each index now has to be moved back by one, which
-makes it a little uglier.
-
-Signed-off-by: Arnd Bergmann <arnd@arndb.de>
-Acked-by: Rémi Denis-Courmont <remi@remlab.net>
+Signed-off-by: Vadim Lomovtsev <vlomovtsev@marvell.com>
 Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- include/net/phonet/pep.h |  5 +++--
- net/phonet/pep.c         | 32 ++++++++++++++++----------------
- 2 files changed, 19 insertions(+), 18 deletions(-)
+ drivers/net/ethernet/cavium/thunder/nic_main.c   |  2 +-
+ drivers/net/ethernet/cavium/thunder/nicvf_main.c | 15 ++++++++++++---
+ 2 files changed, 13 insertions(+), 4 deletions(-)
 
-diff --git a/include/net/phonet/pep.h b/include/net/phonet/pep.h
-index b669fe6dbc3b..98f31c7ea23d 100644
---- a/include/net/phonet/pep.h
-+++ b/include/net/phonet/pep.h
-@@ -63,10 +63,11 @@ struct pnpipehdr {
- 		u8		state_after_reset;	/* reset request */
- 		u8		error_code;		/* any response */
- 		u8		pep_type;		/* status indication */
--		u8		data[1];
-+		u8		data0;			/* anything else */
- 	};
-+	u8			data[];
- };
--#define other_pep_type		data[1]
-+#define other_pep_type		data[0]
+diff --git a/drivers/net/ethernet/cavium/thunder/nic_main.c b/drivers/net/ethernet/cavium/thunder/nic_main.c
+index da142f6bd0c3..18ddd243dfa1 100644
+--- a/drivers/net/ethernet/cavium/thunder/nic_main.c
++++ b/drivers/net/ethernet/cavium/thunder/nic_main.c
+@@ -999,7 +999,7 @@ static void nic_handle_mbx_intr(struct nicpf *nic, int vf)
+ 	case NIC_MBOX_MSG_CFG_DONE:
+ 		/* Last message of VF config msg sequence */
+ 		nic_enable_vf(nic, vf, true);
+-		goto unlock;
++		break;
+ 	case NIC_MBOX_MSG_SHUTDOWN:
+ 		/* First msg in VF teardown sequence */
+ 		if (vf >= nic->num_vf_en)
+diff --git a/drivers/net/ethernet/cavium/thunder/nicvf_main.c b/drivers/net/ethernet/cavium/thunder/nicvf_main.c
+index c75d4ea9342b..71f228cece03 100644
+--- a/drivers/net/ethernet/cavium/thunder/nicvf_main.c
++++ b/drivers/net/ethernet/cavium/thunder/nicvf_main.c
+@@ -162,6 +162,17 @@ static int nicvf_check_pf_ready(struct nicvf *nic)
+ 	return 1;
+ }
  
- static inline struct pnpipehdr *pnp_hdr(struct sk_buff *skb)
++static void nicvf_send_cfg_done(struct nicvf *nic)
++{
++	union nic_mbx mbx = {};
++
++	mbx.msg.msg = NIC_MBOX_MSG_CFG_DONE;
++	if (nicvf_send_msg_to_pf(nic, &mbx)) {
++		netdev_err(nic->netdev,
++			   "PF didn't respond to CFG DONE msg\n");
++	}
++}
++
+ static void nicvf_read_bgx_stats(struct nicvf *nic, struct bgx_stats_msg *bgx)
  {
-diff --git a/net/phonet/pep.c b/net/phonet/pep.c
-index 850a86cde0b3..f6aa532bcbf6 100644
---- a/net/phonet/pep.c
-+++ b/net/phonet/pep.c
-@@ -131,7 +131,7 @@ static int pep_indicate(struct sock *sk, u8 id, u8 code,
- 	ph->utid = 0;
- 	ph->message_id = id;
- 	ph->pipe_handle = pn->pipe_handle;
--	ph->data[0] = code;
-+	ph->error_code = code;
- 	return pn_skb_send(sk, skb, NULL);
- }
+ 	if (bgx->rx)
+@@ -1178,7 +1189,6 @@ int nicvf_open(struct net_device *netdev)
+ 	struct nicvf *nic = netdev_priv(netdev);
+ 	struct queue_set *qs = nic->qs;
+ 	struct nicvf_cq_poll *cq_poll = NULL;
+-	union nic_mbx mbx = {};
  
-@@ -152,7 +152,7 @@ static int pipe_handler_request(struct sock *sk, u8 id, u8 code,
- 	ph->utid = id; /* whatever */
- 	ph->message_id = id;
- 	ph->pipe_handle = pn->pipe_handle;
--	ph->data[0] = code;
-+	ph->error_code = code;
- 	return pn_skb_send(sk, skb, NULL);
- }
+ 	netif_carrier_off(netdev);
  
-@@ -207,7 +207,7 @@ static int pep_ctrlreq_error(struct sock *sk, struct sk_buff *oskb, u8 code,
- 	struct pnpipehdr *ph;
- 	struct sockaddr_pn dst;
- 	u8 data[4] = {
--		oph->data[0], /* PEP type */
-+		oph->pep_type, /* PEP type */
- 		code, /* error code, at an unusual offset */
- 		PAD, PAD,
- 	};
-@@ -220,7 +220,7 @@ static int pep_ctrlreq_error(struct sock *sk, struct sk_buff *oskb, u8 code,
- 	ph->utid = oph->utid;
- 	ph->message_id = PNS_PEP_CTRL_RESP;
- 	ph->pipe_handle = oph->pipe_handle;
--	ph->data[0] = oph->data[1]; /* CTRL id */
-+	ph->data0 = oph->data[0]; /* CTRL id */
+@@ -1267,8 +1277,7 @@ int nicvf_open(struct net_device *netdev)
+ 		nicvf_enable_intr(nic, NICVF_INTR_RBDR, qidx);
  
- 	pn_skb_get_src_sockaddr(oskb, &dst);
- 	return pn_skb_send(sk, skb, &dst);
-@@ -271,17 +271,17 @@ static int pipe_rcv_status(struct sock *sk, struct sk_buff *skb)
- 		return -EINVAL;
+ 	/* Send VF config done msg to PF */
+-	mbx.msg.msg = NIC_MBOX_MSG_CFG_DONE;
+-	nicvf_write_to_mbx(nic, &mbx);
++	nicvf_send_cfg_done(nic);
  
- 	hdr = pnp_hdr(skb);
--	if (hdr->data[0] != PN_PEP_TYPE_COMMON) {
-+	if (hdr->pep_type != PN_PEP_TYPE_COMMON) {
- 		net_dbg_ratelimited("Phonet unknown PEP type: %u\n",
--				    (unsigned int)hdr->data[0]);
-+				    (unsigned int)hdr->pep_type);
- 		return -EOPNOTSUPP;
- 	}
- 
--	switch (hdr->data[1]) {
-+	switch (hdr->data[0]) {
- 	case PN_PEP_IND_FLOW_CONTROL:
- 		switch (pn->tx_fc) {
- 		case PN_LEGACY_FLOW_CONTROL:
--			switch (hdr->data[4]) {
-+			switch (hdr->data[3]) {
- 			case PEP_IND_BUSY:
- 				atomic_set(&pn->tx_credits, 0);
- 				break;
-@@ -291,7 +291,7 @@ static int pipe_rcv_status(struct sock *sk, struct sk_buff *skb)
- 			}
- 			break;
- 		case PN_ONE_CREDIT_FLOW_CONTROL:
--			if (hdr->data[4] == PEP_IND_READY)
-+			if (hdr->data[3] == PEP_IND_READY)
- 				atomic_set(&pn->tx_credits, wake = 1);
- 			break;
- 		}
-@@ -300,12 +300,12 @@ static int pipe_rcv_status(struct sock *sk, struct sk_buff *skb)
- 	case PN_PEP_IND_ID_MCFC_GRANT_CREDITS:
- 		if (pn->tx_fc != PN_MULTI_CREDIT_FLOW_CONTROL)
- 			break;
--		atomic_add(wake = hdr->data[4], &pn->tx_credits);
-+		atomic_add(wake = hdr->data[3], &pn->tx_credits);
- 		break;
- 
- 	default:
- 		net_dbg_ratelimited("Phonet unknown PEP indication: %u\n",
--				    (unsigned int)hdr->data[1]);
-+				    (unsigned int)hdr->data[0]);
- 		return -EOPNOTSUPP;
- 	}
- 	if (wake)
-@@ -317,7 +317,7 @@ static int pipe_rcv_created(struct sock *sk, struct sk_buff *skb)
- {
- 	struct pep_sock *pn = pep_sk(sk);
- 	struct pnpipehdr *hdr = pnp_hdr(skb);
--	u8 n_sb = hdr->data[0];
-+	u8 n_sb = hdr->data0;
- 
- 	pn->rx_fc = pn->tx_fc = PN_LEGACY_FLOW_CONTROL;
- 	__skb_pull(skb, sizeof(*hdr));
-@@ -505,7 +505,7 @@ static int pep_connresp_rcv(struct sock *sk, struct sk_buff *skb)
- 		return -ECONNREFUSED;
- 
- 	/* Parse sub-blocks */
--	n_sb = hdr->data[4];
-+	n_sb = hdr->data[3];
- 	while (n_sb > 0) {
- 		u8 type, buf[6], len = sizeof(buf);
- 		const u8 *data = pep_get_sb(skb, &type, &len, buf);
-@@ -738,7 +738,7 @@ static int pipe_do_remove(struct sock *sk)
- 	ph->utid = 0;
- 	ph->message_id = PNS_PIPE_REMOVE_REQ;
- 	ph->pipe_handle = pn->pipe_handle;
--	ph->data[0] = PAD;
-+	ph->data0 = PAD;
- 	return pn_skb_send(sk, skb, NULL);
- }
- 
-@@ -815,7 +815,7 @@ static struct sock *pep_sock_accept(struct sock *sk, int flags, int *errp)
- 	peer_type = hdr->other_pep_type << 8;
- 
- 	/* Parse sub-blocks (options) */
--	n_sb = hdr->data[4];
-+	n_sb = hdr->data[3];
- 	while (n_sb > 0) {
- 		u8 type, buf[1], len = sizeof(buf);
- 		const u8 *data = pep_get_sb(skb, &type, &len, buf);
-@@ -1106,7 +1106,7 @@ static int pipe_skb_send(struct sock *sk, struct sk_buff *skb)
- 	ph->utid = 0;
- 	if (pn->aligned) {
- 		ph->message_id = PNS_PIPE_ALIGNED_DATA;
--		ph->data[0] = 0; /* padding */
-+		ph->data0 = 0; /* padding */
- 	} else
- 		ph->message_id = PNS_PIPE_DATA;
- 	ph->pipe_handle = pn->pipe_handle;
+ 	return 0;
+ cleanup:
 -- 
 2.19.1
 
