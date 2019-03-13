@@ -2,97 +2,168 @@ Return-Path: <SRS0=dUEL=RQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_PASS autolearn=unavailable autolearn_force=no
+X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1AE02C43381
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 Mar 2019 19:01:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E6D02C43381
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 Mar 2019 19:01:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E0BB32075C
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 Mar 2019 19:01:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A9BB62075C
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 Mar 2019 19:01:56 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="HTAlHD1k"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726889AbfCMTBh (ORCPT
+        id S1726954AbfCMTBz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 13 Mar 2019 15:01:37 -0400
-Received: from mail.kernel.org ([198.145.29.99]:38254 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726420AbfCMTBh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 13 Mar 2019 15:01:37 -0400
-Received: from gandalf.local.home (cpe-66-24-58-225.stny.res.rr.com [66.24.58.225])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 3080F2075C;
-        Wed, 13 Mar 2019 19:01:35 +0000 (UTC)
-Date:   Wed, 13 Mar 2019 15:01:33 -0400
-From:   Steven Rostedt <rostedt@goodmis.org>
-To:     Nick Desaulniers <ndesaulniers@google.com>
-Cc:     Andrew Morton <akpm@linux-foundation.org>,
-        clang-built-linux@googlegroups.com,
-        Linux Kbuild mailing list <linux-kbuild@vger.kernel.org>,
-        "# 3.4.x" <stable@vger.kernel.org>,
-        Nathan Chancellor <natechancellor@gmail.com>,
-        Adhemerval Zanella <adhemerval.zanella@linaro.org>,
-        Arnd Bergmann <arnd@arndb.de>,
-        James Y Knight <jyknight@google.com>,
-        Masahiro Yamada <yamada.masahiro@socionext.com>,
-        Rasmus Villemoes <linux@rasmusvillemoes.dk>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Ingo Molnar <mingo@kernel.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        LKML <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH v2] lib/string.c: implement a basic bcmp
-Message-ID: <20190313150133.117e2b63@gandalf.local.home>
-In-Reply-To: <CAKwvOdnheUi6Ho5u4akTLGa-tBeUq94hQJH0+a4ROe_aEUgo7g@mail.gmail.com>
-References: <CAKwvOdmdEH1U9vOmVKo2Fn+hMPF9AB1enZ2rkpJcU9XHgR8Wng@mail.gmail.com>
-        <20190313181719.87859-1-ndesaulniers@google.com>
-        <20190313144013.37cab5c7@gandalf.local.home>
-        <CAKwvOdnheUi6Ho5u4akTLGa-tBeUq94hQJH0+a4ROe_aEUgo7g@mail.gmail.com>
-X-Mailer: Claws Mail 3.16.0 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+        Wed, 13 Mar 2019 15:01:55 -0400
+Received: from mail-vs1-f66.google.com ([209.85.217.66]:44466 "EHLO
+        mail-vs1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726420AbfCMTBy (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 13 Mar 2019 15:01:54 -0400
+Received: by mail-vs1-f66.google.com with SMTP id b8so1685599vsq.11
+        for <linux-kernel@vger.kernel.org>; Wed, 13 Mar 2019 12:01:53 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc:content-transfer-encoding;
+        bh=dBZn4GYyMZX/K4m+LAt7gWUi5uCn+rl6eJHOTlNHyVY=;
+        b=HTAlHD1kec//MROmxcFTBrKcRRR/5aVPTm7KohV4xOSCARRJd8gbqGUSBNdc0SX+wk
+         le0BZEiP4w3qZs/VUAqHOjoHDktACmxnbsrea0APcJl8JjvzcDMaXM03/PSpCdE8kZuk
+         QR8luwiu3mRIpUVxaYjuSbgNG4iTEcG2vOJz8=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=dBZn4GYyMZX/K4m+LAt7gWUi5uCn+rl6eJHOTlNHyVY=;
+        b=S+8ZCGCdM8jlvSSaeDIwTQ855gQ7frN0eBmDjJA+7rQHVqkB3aAHYzfxhbwT/pJ3BB
+         RBCof4PqIEuQrZlzfKwF3injuTT/irzvl2T47og0iKcom/PL0JV/W+lkAVN/ckdU7Tiw
+         QwLv3MpxdxfG047aXhlgIgnoMk7qhJa2trj8XMHCiErsdaZ713Dyr8MU046Q7RoRRksk
+         AK57t3zPTIb9GT0nwMjBTtJOXVldn8+Gpij0Rrq3HUEMT5cZimpOQZrbj69gFLonmUi0
+         Ht3UnVGGKi/y1ybgkH53hHRWmcDVb7exJvWyYQyVz/OFM+sOmoPkJfA807tFfCUxMBbx
+         W/1g==
+X-Gm-Message-State: APjAAAUw+NGes2VYhcTjZzEjGLi/JUqWv0XWa9yBs6Jn3mfQ2Ex6WLUi
+        vhOYRt1iveBCfYt2NH7orimai1b3zmw=
+X-Google-Smtp-Source: APXvYqz7X14PESSJfPsaFRZwxYmcwAgsKPNptWMdu9Ta6hCdaxe2xmN7u/tuV9zNuJ5tj03I9DXYxg==
+X-Received: by 2002:a67:fa8e:: with SMTP id f14mr23900578vsq.126.1552503712400;
+        Wed, 13 Mar 2019 12:01:52 -0700 (PDT)
+Received: from mail-ua1-f52.google.com (mail-ua1-f52.google.com. [209.85.222.52])
+        by smtp.gmail.com with ESMTPSA id q75sm3176909vke.2.2019.03.13.12.01.51
+        for <linux-kernel@vger.kernel.org>
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Wed, 13 Mar 2019 12:01:51 -0700 (PDT)
+Received: by mail-ua1-f52.google.com with SMTP id u1so1036111uae.12
+        for <linux-kernel@vger.kernel.org>; Wed, 13 Mar 2019 12:01:51 -0700 (PDT)
+X-Received: by 2002:ab0:2b0b:: with SMTP id e11mr5095630uar.106.1552503710881;
+ Wed, 13 Mar 2019 12:01:50 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+References: <20190212180441.15340-1-keescook@chromium.org> <20190212180441.15340-2-keescook@chromium.org>
+ <fe87367b-f196-e8b0-6028-6378b65e5240@linux.com>
+In-Reply-To: <fe87367b-f196-e8b0-6028-6378b65e5240@linux.com>
+From:   Kees Cook <keescook@chromium.org>
+Date:   Wed, 13 Mar 2019 12:01:38 -0700
+X-Gmail-Original-Message-ID: <CAGXu5jLFWv867UAL+eHoomcHFQNR3erWUChdFWSWPbehzqOzVg@mail.gmail.com>
+Message-ID: <CAGXu5jLFWv867UAL+eHoomcHFQNR3erWUChdFWSWPbehzqOzVg@mail.gmail.com>
+Subject: Re: [PATCH 1/2] gcc-plugins: structleak: Generalize to all variable types
+To:     Alexander Popov <alex.popov@linux.com>
+Cc:     LKML <linux-kernel@vger.kernel.org>,
+        Emese Revfy <re.emese@gmail.com>,
+        Ard Biesheuvel <ard.biesheuvel@linaro.org>,
+        Laura Abbott <labbott@redhat.com>,
+        Jann Horn <jannh@google.com>,
+        Alexander Potapenko <glider@google.com>,
+        Kernel Hardening <kernel-hardening@lists.openwall.com>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Geert Uytterhoeven <geert@linux-m68k.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, 13 Mar 2019 11:51:09 -0700
-Nick Desaulniers <ndesaulniers@google.com> wrote:
+On Mon, Mar 11, 2019 at 4:05 PM Alexander Popov <alex.popov@linux.com> wrot=
+e:
+> Hello Kees, hello everyone,
+>
+> On 12.02.2019 21:04, Kees Cook wrote:
+> > Building with CONFIG_GCC_PLUGIN_STRUCTLEAK_BYREF_ALL should give the
+> > kernel complete initialization coverage of all stack variables passed
+> > by reference, including padding (see lib/test_stackinit.c).
+>
+> I would like to note that new STRUCTLEAK_BYREF_ALL initializes *less* sta=
+ck
+> variables than STACKINIT, that was introduced earlier:
+> https://www.openwall.com/lists/kernel-hardening/2019/01/23/3
+>
+> Citing the patches:
+> - the STACKINIT plugin "attempts to perform unconditional initialization =
+of all
+> stack variables";
+> - the STRUCTLEAK_BYREF_ALL feature "gives the kernel complete initializat=
+ion
+> coverage of all stack variables passed by reference".
 
+That's true, yes. STACKINIT was a port of Florian's patch to gcc which
+looked only for missing initialization. However, this collides with
+warnings about missing initialization. :)
 
-> > This is confusing where the comment says "like memcmp but .." and then
-> > just returns memcmp() unmodified. If anything, I would expect to see
-> >
-> >         return !!memcmp(cs, ct, conut);  
-> 
-> That's more work than strictly needed. memcmp already provides the
-> semantics of bcmp.  memcmp just provides more meaning to the
-> signedness of the return code, whereas bcmp does not.
+So, given the case that the kernel builds with -Wuninitialized and
+-Wmaybe-uninitialized, the preferred method of dealing with
+non-by-reference missed initializations is to fix the code itself.
+(i.e. kernel builds are expected to build without warnings.) It's only
+the byref cases that there is no warning (and most authors refuse to
+initialize such cases). Have there been security flaws where gcc
+failed to warn a missed initialization that wasn't a byref case?
 
-I figured you would say as much ;-)
+> I.e. stack variables not passed by reference are not initialized by
+> STRUCTLEAK_BYREF_ALL.
 
-> 
-> >
-> > or have a better comment explaining why its the same.  
-> 
-> I could add something about "the signedness of the return code not
-> providing any meaning."  What would you like to see in such a comment?
+Correct.
 
-I think it's the wording that bothers me:
+> Kees, what do you think about adding such cases to your lib/test_stackini=
+t.c?
+> This simple example demonstrates the idea:
+>
+>
+> diff --git a/lib/test_stackinit.c b/lib/test_stackinit.c
+> index 13115b6..f9ef313 100644
+> --- a/lib/test_stackinit.c
+> +++ b/lib/test_stackinit.c
+> @@ -320,9 +320,18 @@ static noinline __init int leaf_switch_2_none(unsign=
+ed long sp, bool fill,
+>  DEFINE_TEST_DRIVER(switch_1_none, uint64_t, SCALAR);
+>  DEFINE_TEST_DRIVER(switch_2_none, uint64_t, SCALAR);
+>
+> +struct x {
+> +       int x1;
+> +       int x2;
+> +       int x3;
+> +};
+> +
+>  static int __init test_stackinit_init(void)
+>  {
+>         unsigned int failures =3D 0;
+> +       struct x _x;
+> +
+> +       printk("uninitialized struct fields sum: %d\n", _x.x1 + _x.x2 + _=
+x.x3);
 
-+ * bcmp - Like memcmp but a non-zero return code simply indicates a non-match.
+This would trip the build warnings:
 
-What about:
+In file included from ./include/linux/kernel.h:15:0,
+                 from lib/test_stackinit.c:9:
+lib/test_stackinit.c: In function =E2=80=98test_stackinit_init=E2=80=99:
+./include/linux/printk.h:309:2: warning: =E2=80=98__x.x1=E2=80=99 is used
+uninitialized in this function [-Wuninitialized]
+  printk(KERN_INFO pr_fmt(fmt), ##__VA_ARGS__)
+  ^~~~~~
 
-  * bcmp - Like memcmp but non-zero only means a non-match
+but those could be silenced for this object specifically if we really
+wanted to add it. I think it'd be fine to add this to the test, but
+it's a known state, though, so I hadn't bothered with it.
 
-Then in the description say that bcmp() callers must not expect
-anything more than zero and non-zero, as different implementations only
-need to return non-zero for non matches. The non-zero has no other
-meaning like it does in memcmp(). You could add that memcmp() itself is
-one implementation of bcmp() but not vice versa.
-
--- Steve
+--=20
+Kees Cook
