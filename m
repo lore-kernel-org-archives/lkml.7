@@ -2,142 +2,101 @@ Return-Path: <SRS0=dUEL=RQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SIGNED_OFF_BY,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 41381C43381
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 Mar 2019 14:08:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 10EB6C43381
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 Mar 2019 14:09:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 09DF02171F
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 Mar 2019 14:08:09 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1552486090;
-	bh=imk3xSw8yfYpSKH2t9ZsLeN0n2ESyIOvOVc5Pvc+UMg=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=uMD/isV+p8ljeSoB8WtWC+HKMBT6ML/GcWxVYpuPJY3rnrqTYJxK3lVg5GbS+u9xS
-	 dv+4Hbnv/+u4adApzd76wAKjuPEBdW1JIDTkMvIkFymy4UTt3rFWuEeog0sKF9OX4D
-	 9yGV7HiW933YLs4BaHZew2KLEwbscBIMSSedV6+Q=
+	by mail.kernel.org (Postfix) with ESMTP id DBA8B2171F
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 Mar 2019 14:09:35 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726891AbfCMOII (ORCPT
+        id S1726915AbfCMOJd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 13 Mar 2019 10:08:08 -0400
-Received: from mail-wm1-f67.google.com ([209.85.128.67]:39027 "EHLO
-        mail-wm1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726530AbfCMOII (ORCPT
+        Wed, 13 Mar 2019 10:09:33 -0400
+Received: from mout.kundenserver.de ([212.227.126.134]:35389 "EHLO
+        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726530AbfCMOJd (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 13 Mar 2019 10:08:08 -0400
-Received: by mail-wm1-f67.google.com with SMTP id t124so2006807wma.4
-        for <linux-kernel@vger.kernel.org>; Wed, 13 Mar 2019 07:08:06 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=Lf4iw+fHxQN4uW3tskF8bX9OWRoysdr2ffr4rWZepwA=;
-        b=YTy2eYVdhCORXsgsa861DLtvwOW9C0P6VVbcJcdfUx9SZlvc47thjSFf28GzwhOuJy
-         WDZ3Wag70nQ8auXQaACksA3HyNl9oadiSz5Nnnn1lIlT9yrO2YPUMZR+LxcUy4yzmUUl
-         EjEonsXdgymY4B5TpQ3KsCpz8s8fB6i9Jx/PW4itPhc5Vtpeei1MlKR3nBpbK0+dF8Cg
-         +hQqr9H1kyZ3wI0etFivFudLIyHaYXSQSkqCExiJijcPte5zdPljNxq6fCAh5LXnrWw6
-         lLSiCVWnJpmQ7GaTfmUeb6RSi16Gkv/W5sR6LOGXqpGziGnWaqaSBST+kV7yPuKxOV6A
-         c4dQ==
-X-Gm-Message-State: APjAAAVNT2FSkxlu0n/Ajl7EZnUgb3aoExYLUl6TEGLDCSelOiLgE2f+
-        /naYi1bdxIkN9w95jU6jMEPhP7eOmdlkBFiN0gI=
-X-Google-Smtp-Source: APXvYqythr3Jl8gIEyVzmTOV3EJYTwq8yd9RT5Kj/hdPBX0m/Ncpngwy3Pl2juF+7qUIJ3NSVu7HzgxKAkpDLQP0r4s=
-X-Received: by 2002:a1c:9e97:: with SMTP id h145mr2384512wme.147.1552486085784;
- Wed, 13 Mar 2019 07:08:05 -0700 (PDT)
+        Wed, 13 Mar 2019 10:09:33 -0400
+Received: from [192.168.1.110] ([77.4.24.189]) by mrelayeu.kundenserver.de
+ (mreue009 [212.227.15.167]) with ESMTPSA (Nemesis) id
+ 1Mnq0I-1ggbSW01uc-00pNuW; Wed, 13 Mar 2019 15:09:26 +0100
+Subject: Re: [PATCH 1/8] drivers: tty: serial: 8250_bcm2835aux: use
+ devm_platform_ioremap_resource()
+To:     Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>
+Cc:     Greg KH <gregkh@linuxfoundation.org>,
+        "Enrico Weigelt, metux IT consult" <info@metux.net>,
+        Jiri Slaby <jslaby@suse.com>, linux-serial@vger.kernel.org,
+        linux-kernel <linux-kernel@vger.kernel.org>
+References: <1552402660-31730-1-git-send-email-info@metux.net>
+ <1552402660-31730-2-git-send-email-info@metux.net>
+ <20190312163356.GB13549@kroah.com>
+ <947da751-bbce-4364-a1bf-5487908e59a5@metux.net>
+ <CANiq72=SBFzRVhpkH8V+=5E-adzJ4v6UGAPKfr18wnCB0rcoQA@mail.gmail.com>
+From:   "Enrico Weigelt, metux IT consult" <lkml@metux.net>
+Organization: metux IT consult
+Message-ID: <939d94a2-f44d-27a6-e894-1f846c6b3b5c@metux.net>
+Date:   Wed, 13 Mar 2019 15:09:23 +0100
+User-Agent: Mozilla/5.0 (X11; Linux i686 on x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.2.1
 MIME-Version: 1.0
-References: <20190310153026.8661-1-jolsa@kernel.org> <20190310153026.8661-4-jolsa@kernel.org>
-In-Reply-To: <20190310153026.8661-4-jolsa@kernel.org>
-From:   Namhyung Kim <namhyung@kernel.org>
-Date:   Wed, 13 Mar 2019 23:07:54 +0900
-Message-ID: <CAM9d7cjuWS8mTzBrMrN09CYCXUVLB6vfw1DD=BdZAL0kvgyfxg@mail.gmail.com>
-Subject: Re: [PATCH 3/5] perf record: Add --dir option to store data in directory
-To:     Jiri Olsa <jolsa@kernel.org>
-Cc:     Arnaldo Carvalho de Melo <acme@kernel.org>,
-        lkml <linux-kernel@vger.kernel.org>,
-        Ingo Molnar <mingo@kernel.org>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Peter Zijlstra <a.p.zijlstra@chello.nl>,
-        Adrian Hunter <adrian.hunter@intel.com>,
-        Andi Kleen <ak@linux.intel.com>,
-        Stephane Eranian <eranian@google.com>,
-        Alexey Budankov <alexey.budankov@linux.intel.com>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <CANiq72=SBFzRVhpkH8V+=5E-adzJ4v6UGAPKfr18wnCB0rcoQA@mail.gmail.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-Provags-ID: V03:K1:157mBowVaUiM7riybT37RvZxeAu1+1jPROG+l2QZgX7NrypCRHw
+ ufz5m1ZaxbCR2cC/Oa6qxB4gGoLdPsgOqbDg9TM9WkwhvVE5pQIhPEqMD5fbWyJNoKvVKx0
+ NRzsUhpEPQ3xvu1RIAqIUfzvORanbU559sS3zK06Vlb8CEGYnztkN4slLjJhYDlX8zyyNzE
+ t9oaXlkwgZWQUbBPpiBsg==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:TliYtZdi++k=:EZs4T1ZX0FEH4kho7oqtD2
+ 4jtuVmE39BkDbSXVXhrB4uwRNuig7q2wfa3F0GTtxrMrazEqrkzPPp8nvSIc0dW2cjdHFvKZc
+ /0WINuVfmxbYW64JW7MO40tkTlz+M007psWTa0o/1h3W9aCag+Dp/Kwr2Ab2+B7tCudMe+ijS
+ QVDxn//Op1N148ZNWF+KvdQP7p8z1z8srDeLl7jXoxsByTbAgz4yVS7Li+PfiQgp7spyT22bX
+ AC2euT8+x0Z4H9ActhwmsyvrQNv8O0pNXJBZ45q2LSeOQrp/Yc+prLSOD8PJpAr5MHJQVanOa
+ qEEqkje0vKuix1eFebHMgApTpY6CfVOpME6d5G0XZp4YA5ZBuB85PoUtm8+u5FkCKbk63pUl7
+ OkZipqJEC7QNXPvW2s/EZxuNpE4gIlLpkvvtibjG04UjP/0laMWkkSqQALaDeI8AgJ84i+Pg2
+ 7ZVRSHsJgtd6xtcwRtDUF5Vk9gM47/TAFcdUg5QXfzA4zTxCoH4XTSz8x+kf0MgioWkFVvqki
+ wwR9x2lywyNxQ/HeWka0Wxqc99ANg6OUHKxupIPOJ3CZFK0eXGllqHIY29HROUrRIaDr78u2l
+ /oWLYf7rPbMc3lz7B60FwkhpIzBeYcNK3BVjS3cPV7oTNRHwzuotf0GxR44zyYwRAo1KMDoH3
+ feTTiNwVxxhIkaqFP95ejC9bPwVjI7+RU2k4dNSISLOpTro77t3BbX5ih9Pdg6HNWWjsM0/w4
+ XrU84UsUHpCML40vSrxSTT3+/ZIsL521UgdWJ0sKPTRjSdxOTeRMUhjCxpM46CedxdDaP50fV
+ j/L706gAK+5Xvki0v0MovcenC7/fbaTOyxf5ogDCR4LzirLb70XqWrQipUqpwfntityzfkv
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Jirka,
+On 13.03.19 12:28, Miguel Ojeda wrote:
 
-On Mon, Mar 11, 2019 at 12:30 AM Jiri Olsa <jolsa@kernel.org> wrote:
->
-> Adding --dir option to store data in directory. It's next
-> step for multiple threads in record. It's now possible to
-> make directory data via --dir option, like:
->
->   $ perf record --dir perf bench sched messaging
->   $ ls -l perf.data
->   total 344
->   -rw-------. 1 jolsa jolsa 43864 Jan 20 22:26 data.0
->   -rw-------. 1 jolsa jolsa 30464 Jan 20 22:26 data.1
->   -rw-------. 1 jolsa jolsa 53816 Jan 20 22:26 data.2
->   -rw-------. 1 jolsa jolsa 30368 Jan 20 22:26 data.3
->   -rw-------. 1 jolsa jolsa 40088 Jan 20 22:26 data.4
->   -rw-------. 1 jolsa jolsa 42592 Jan 20 22:26 data.5
->   -rw-------. 1 jolsa jolsa 56136 Jan 20 22:26 data.6
->   -rw-------. 1 jolsa jolsa 25992 Jan 20 22:26 data.7
->   -rw-------. 1 jolsa jolsa  8832 Jan 20 22:26 header
->
-> There's a data file created for every cpu and it's storing
-> data for those cpu maps.
->
-> It's possible to transform directory data into standard
-> perf.data file via following inject command:
->
->   $ perf inject -o perf.data.file -i perf.data
->
-> The --dir option enabled DIR_FORMAT feature to be stored
-> in header file to indicate the directory layout.
->
-> Don't allow to use --dir with --aio yet. It needs
-> to be investigated first.
->
-> Link: http://lkml.kernel.org/n/tip-0kjm8wpglzu2tm18tpagfm4d@git.kernel.org
-> Signed-off-by: Jiri Olsa <jolsa@kernel.org>
-> ---
+Hi,
 
-[SNIP]
-> @@ -1983,6 +2040,8 @@ static struct option __record_options[] = {
->         OPT_CALLBACK(0, "affinity", &record.opts, "node|cpu",
->                      "Set affinity mask of trace reading thread to NUMA node cpu mask or cpu of processed mmap buffer",
->                      record__parse_affinity),
-> +       OPT_BOOLEAN(0, "dir", &record.data.is_dir,
-> +                   "Store data into directory perf.data"),
->         OPT_END()
->  };
->
-> @@ -2134,6 +2193,17 @@ int cmd_record(int argc, const char **argv)
->                 goto out;
->         }
->
-> +       if (perf_data__is_dir(&rec->data)) {
-> +               if (!rec->opts.sample_time) {
-> +                       pr_err("Sample timestamp is required for indexing\n");
+> The intro letter seems to be an independent message with a different> subject line -- not sure what threading you expected (?).
+hmm, I've sent it via git-send-email --compose. IMHO, this should
+send the intro as the first message and the actual patches as reply.
 
-s/indexing/directory output/ ?
+But it seems that didn't work as I hoped.
 
-Thanks
-Namhyung
+>> I wrote that this is yet WIP, not meant for actual submission, instead>> just to ask you folks whether my approach in general would be work.>
+> That will indeed cause confusion. If you are requesting comments
+only,> please do so placing [RFC] or similar in the subject of each patch
+
+Ah, good idea. So I also have this tag in the git repo.
+BTW: are there more such conventions I should be aware of ?
+
+> Another option is sending a message with the repo URL where> development is happening, so interested parties can take a look.
+Ok. I had the impression that people here don't really like to look
+at some git repos for reviews.
+
+> Even if you are sending some draft patches, it is still a bad idea to> send them incomplete. Basically you are making it harder for early>
+reviewers simply by not having written an explanation or at least a>
+reference to the explanation.
+Understood.
 
 
-> +                       goto out;
-> +               }
-> +               if (record__aio_enabled(rec)) {
-> +                       pr_err("Cannot use both --dir and --aio yet.\n");
-> +                       goto out;
-> +               }
-> +       }
-> +
->         if (rec->opts.target.tid && !rec->opts.no_inherit_set)
->                 rec->opts.no_inherit = true;
+--mtx
+
+-- 
+Enrico Weigelt, metux IT consult
+Free software and Linux embedded engineering
+info@metux.net -- +49-151-27565287
