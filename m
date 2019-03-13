@@ -2,104 +2,86 @@ Return-Path: <SRS0=dUEL=RQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7F93FC43381
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 Mar 2019 05:43:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AE80BC43381
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 Mar 2019 05:53:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4DE022171F
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 Mar 2019 05:43:27 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="BL9sEj0Z"
+	by mail.kernel.org (Postfix) with ESMTP id 79D502173C
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 Mar 2019 05:53:45 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726853AbfCMFn0 (ORCPT
+        id S1726626AbfCMFxo (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 13 Mar 2019 01:43:26 -0400
-Received: from hqemgate15.nvidia.com ([216.228.121.64]:17409 "EHLO
-        hqemgate15.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725773AbfCMFnY (ORCPT
+        Wed, 13 Mar 2019 01:53:44 -0400
+Received: from mout.kundenserver.de ([212.227.126.187]:59245 "EHLO
+        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725773AbfCMFxn (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 13 Mar 2019 01:43:24 -0400
-Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqemgate15.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
-        id <B5c8898700000>; Tue, 12 Mar 2019 22:43:12 -0700
-Received: from hqmail.nvidia.com ([172.20.161.6])
-  by hqpgpgate101.nvidia.com (PGP Universal service);
-  Tue, 12 Mar 2019 22:43:23 -0700
-X-PGP-Universal: processed;
-        by hqpgpgate101.nvidia.com on Tue, 12 Mar 2019 22:43:23 -0700
-Received: from HQMAIL107.nvidia.com (172.20.187.13) by HQMAIL107.nvidia.com
- (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Wed, 13 Mar
- 2019 05:43:23 +0000
-Received: from hqnvemgw02.nvidia.com (172.16.227.111) by HQMAIL107.nvidia.com
- (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3 via Frontend
- Transport; Wed, 13 Mar 2019 05:43:23 +0000
-Received: from linux.nvidia.com (Not Verified[10.24.34.185]) by hqnvemgw02.nvidia.com with Trustwave SEG (v7,5,8,10121)
-        id <B5c8898790000>; Tue, 12 Mar 2019 22:43:23 -0700
-From:   Sameer Pujar <spujar@nvidia.com>
-To:     <dan.j.williams@intel.com>, <vkoul@kernel.org>
-CC:     <treding@nvidia.com>, <jonathanh@nvidia.com>,
-        <dmaengine@vger.kernel.org>, <linux-tegra@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>, Sameer Pujar <spujar@nvidia.com>
-Subject: [PATCH v2 2/2] dmaengine: tegra210-adma: update system sleep callbacks
-Date:   Wed, 13 Mar 2019 11:13:14 +0530
-Message-ID: <1552455794-24946-2-git-send-email-spujar@nvidia.com>
-X-Mailer: git-send-email 2.7.4
-In-Reply-To: <1552455794-24946-1-git-send-email-spujar@nvidia.com>
-References: <1552455794-24946-1-git-send-email-spujar@nvidia.com>
+        Wed, 13 Mar 2019 01:53:43 -0400
+Received: from [192.168.1.110] ([77.4.24.189]) by mrelayeu.kundenserver.de
+ (mreue011 [212.227.15.167]) with ESMTPSA (Nemesis) id
+ 1M4rkF-1h5sMr38zv-001zHw; Wed, 13 Mar 2019 06:53:18 +0100
+Subject: Re: [PATCH] arch: arm: Kconfig: pedantic formatting
+To:     Andrew Jeffery <andrew@aj.id.au>,
+        "Enrico Weigelt, metux IT consult" <info@metux.net>,
+        linux-kernel@vger.kernel.org
+Cc:     hsweeten@visionengravers.com, alexander.sverdlin@gmail.com,
+        kaloz@openwrt.org, khalasa@piap.pl, lkundrak@v3.sk,
+        aaro.koskinen@iki.fi, tony@atomide.com, baohua@kernel.org,
+        kgene@kernel.org, krzk@kernel.org, linux@prisktech.co.nz,
+        mcuos.com@gmail.com, matthias.bgg@gmail.com,
+        linux-omap@vger.kernel.org
+References: <1552312598-25574-1-git-send-email-info@metux.net>
+ <cc4d6c18-6c94-4f0b-8c6c-139496fa49aa@www.fastmail.com>
+From:   "Enrico Weigelt, metux IT consult" <lkml@metux.net>
+Organization: metux IT consult
+Message-ID: <779e841a-ec9e-3dc5-e76a-9f5bb874e26f@metux.net>
+Date:   Wed, 13 Mar 2019 06:53:14 +0100
+User-Agent: Mozilla/5.0 (X11; Linux i686 on x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.2.1
 MIME-Version: 1.0
-Content-Type: text/plain
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
-        t=1552455792; bh=k9ehGwwejEf14UMGn+UZBswSlpSM6nXosszfnU2vyUk=;
-        h=X-PGP-Universal:From:To:CC:Subject:Date:Message-ID:X-Mailer:
-         In-Reply-To:References:MIME-Version:Content-Type;
-        b=BL9sEj0ZrnS5j7wXidy2YOvRTNc8HzBQgOPG2LzkyZrH0huOrndCntdG8OSVyPX9o
-         o2Q6yIciKmUXvW0Fx7P4Kf0HY3n/Hrr4yhMor76QhCMOb1WCzu6CXzeWivMTl/16YW
-         ZGzYZ/m11FDsxzx2JpzIAMy+SlbhE+O+Jnw3HbBf4tQsV2gYMYEe3LuuDA9cntLGUy
-         jfIjSg+4F1HeSWW1ktaiKoPsLeOqXNz0yJxUINn8fI/8BbDd4HgvBt1Pb2y0APg6Hm
-         K2neBEtxa6GSXA3BXHAhdEUCvF7KCC7ysSidYGEQpE11ZhdhEbOtlDdU19i8J0J8nf
-         QGOkSjTbnPO5w==
+In-Reply-To: <cc4d6c18-6c94-4f0b-8c6c-139496fa49aa@www.fastmail.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-Provags-ID: V03:K1:GWUSfJdsmQ0gejg4rDh549rakZzZpnB9PDlaSTyUAN8U75X7oz5
+ vtIYLdmT2xAlDoXnI7Y23pmZRvjAj9wn6CxVLuLbk5Wtk5fmaH4momotDO01B0+51Dy2nhn
+ 0yYkIlQN7Zk7KrA/xCGAS+HtLr1+/o4/MJMz6M5elcBKKWFv3f1LetEA0WDGF2J3aR81FAA
+ ay1O5zT/lJaTI+yIPh+lA==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:nBgh7SGnYi4=:uLV9MEi7TAoBdEH2mnURfG
+ Svd4VbTMHtl4KuowCxPBNOOY3KPdUH4OT3/AhoBqTQ/qfvc3RJR+KVnLlmZUXjCcb0KzRruMJ
+ Izg1/+DV/hVpprvD4e3b6ROm37qfOn5w1roIjTmwmq3+ab2kVDiW9uU98UcgcSx9nL2tMgxRh
+ i8u7btuTQ0kDOZtcGOvh/79IdXf9f1BkcgfYk49/FwRlPk7SyaFGfz7ZrmW+lkbZudSUPoKmd
+ 2ZNEHPeUqb0eO0dVjSN9VIVHquNyhJheY6rrd4np2UQ1RSkpNVSjiAIaeCAjbsa0NTZVsfg+r
+ 9NbGFVKhrqHLaGRdIByLw/XxPGwwOpFaQ96M7uhwjswvS7GTbLd4CqcM+lc7VidRVFOqYydyG
+ 5k4rFadVCj2WUjyPh/A0/Vf4a3i/duQY6LreHZKiguz2ygl4TBCtl5u/qVSnSYYiVOTM+oyzy
+ 7/FyXodX2El0+rSU2YlqfNOXHzx4VKIkxtoPmNCs3LGA04gUzPnGLXKl185pFdAg57mb/SF4+
+ phl7z4+fQ+yfEXDSvq2QxHZDR2hIhDGQyDaAuoob7Iw9hdOjKPBIEIjawqjfveWp0g4ij6yUz
+ YoZUCvgcayYopTLCsdAlzgVcstPWvwJxcS+ES/H3USEFHRITALr9Pd32yKoFMER9fz6HTCwO8
+ mCh0lrUeHx+5+WGlv6zVWrfFTE80j7hzBEWMhxM0CV59dGTYjSjW9cPzaB5opkcbHC5EFnVNs
+ ajUhs4oirbDc96A+h7/RLtatM1r7mqyd/s4JLnED3beteSiynzJYjm0OFw8=
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-If the driver is active till late suspend, where runtime PM cannot run,
-force suspend is essential in such case to put the device in low power
-state. Thus pm_runtime_force_suspend and pm_runtime_force_resume are
-used as system sleep callbacks during system wide PM transitions.
+On 13.03.19 00:54, Andrew Jeffery wrote:
 
-Signed-off-by: Sameer Pujar <spujar@nvidia.com>
----
- drivers/dma/tegra210-adma.c | 10 ++--------
- 1 file changed, 2 insertions(+), 8 deletions(-)
+<snip>
+> 
+> For the ASPEED bits:
+> 
+> Acked-by: Andrew Jeffery <andrew@aj.id.au>
+> 
 
-diff --git a/drivers/dma/tegra210-adma.c b/drivers/dma/tegra210-adma.c
-index 650cd9c..be29171 100644
---- a/drivers/dma/tegra210-adma.c
-+++ b/drivers/dma/tegra210-adma.c
-@@ -796,17 +796,11 @@ static int tegra_adma_remove(struct platform_device *pdev)
- 	return 0;
- }
- 
--#ifdef CONFIG_PM_SLEEP
--static int tegra_adma_pm_suspend(struct device *dev)
--{
--	return pm_runtime_suspended(dev) == false;
--}
--#endif
--
- static const struct dev_pm_ops tegra_adma_dev_pm_ops = {
- 	SET_RUNTIME_PM_OPS(tegra_adma_runtime_suspend,
- 			   tegra_adma_runtime_resume, NULL)
--	SET_SYSTEM_SLEEP_PM_OPS(tegra_adma_pm_suspend, NULL)
-+	SET_SYSTEM_SLEEP_PM_OPS(pm_runtime_force_suspend,
-+				pm_runtime_force_resume)
- };
- 
- static struct platform_driver tegra_admac_driver = {
+shall I split the patch ?
+
+
+--mtx
+
 -- 
-2.7.4
-
+Enrico Weigelt, metux IT consult
+Free software and Linux embedded engineering
+info@metux.net -- +49-151-27565287
