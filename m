@@ -7,46 +7,46 @@ X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id ACD97C43381
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 Mar 2019 19:20:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A7D23C10F03
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 Mar 2019 19:20:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6CDE02075C
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 Mar 2019 19:20:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 70FEF2075C
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 Mar 2019 19:20:53 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1552504839;
-	bh=1ksWpowktPFU9b+CbANnhXbA8OZTnbVrxRVwq2jrdCo=;
+	s=default; t=1552504853;
+	bh=8MG4dM/o+eluLA7XmtqaeLT6YGgYl6n+EewRMK1DIwo=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=xy7puDBS39q0yeZAijNTbyvzoAmYJCriEcoibovzrNGRAnm7WraX4xJ1klnSY+efL
-	 x6ufcmrG3PBiZpkw/YrphXSwRvfvr5zJmTh/9vg3n3l+/UC8D+plITB51k/tNNm2Jq
-	 Ndky6ROtMpGRR8zwlUB/a+0C98hcQ/kgeliSwwfY=
+	b=OcuQbVc/xa3BzusLdQ8Z157wOR3/C4twjlDaGFfyy3t2An5s8t8nPxMNZDyZQDZqT
+	 Xsz7gE7+LMb6c0HIs+HCE4NHGbyVzQ1sVvD6FFxDhHZ5PdeceqJ1wsfhCfoqNbwL4C
+	 ZQOsnVbuzLHeVJXDgwbsANQOgMqdypIdm/aoi1vk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729234AbfCMTUi (ORCPT
+        id S1729102AbfCMTSn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 13 Mar 2019 15:20:38 -0400
-Received: from mail.kernel.org ([198.145.29.99]:49432 "EHLO mail.kernel.org"
+        Wed, 13 Mar 2019 15:18:43 -0400
+Received: from mail.kernel.org ([198.145.29.99]:49208 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729125AbfCMTSq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 13 Mar 2019 15:18:46 -0400
+        id S1729073AbfCMTSg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 13 Mar 2019 15:18:36 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id ECB4C217F5;
-        Wed, 13 Mar 2019 19:18:43 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id A54172171F;
+        Wed, 13 Mar 2019 19:18:34 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1552504725;
-        bh=1ksWpowktPFU9b+CbANnhXbA8OZTnbVrxRVwq2jrdCo=;
+        s=default; t=1552504715;
+        bh=8MG4dM/o+eluLA7XmtqaeLT6YGgYl6n+EewRMK1DIwo=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Owu3indte3BMWwZuSWm9b/jxvpcG/FK/CPjlufcenr2hmdTSX+/e+NvdxxKiJIGa5
-         abswqtlVMIULSwiPMly1+WDQNebHuERNNe8jzItIFd0UvfJPxw1k/Fl/gMncN0KIAQ
-         icdPP4tJpp/8arF/rYqZtY9ts21DXhRrFDRlZxTM=
+        b=cvtsQA9adzL/sspXHo2CXOBmit7Syn7LtmqyixA551401u4gwN+kdyzr/uvIFf5m/
+         uFPM2lLRf9XVVMSmENO13A7kY9msINwr9ldfv9G4fL1FmIQuVqDQXo1bTu+8tHHiCF
+         ls590+B+mqa//I0lkgKR8vUZlTVhXxhBINaDs33Y=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Mao Wenan <maowenan@huawei.com>,
-        "David S . Miller" <davem@davemloft.net>,
-        Sasha Levin <sashal@kernel.org>, netdev@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.4 15/15] net: set static variable an initial value in atl2_probe()
-Date:   Wed, 13 Mar 2019 15:18:01 -0400
-Message-Id: <20190313191806.160547-15-sashal@kernel.org>
+Cc:     Vineet Gupta <vgupta@synopsys.com>,
+        Sasha Levin <sashal@kernel.org>,
+        linux-snps-arc@lists.infradead.org
+Subject: [PATCH AUTOSEL 4.4 11/15] ARC: uacces: remove lp_start, lp_end from clobber list
+Date:   Wed, 13 Mar 2019 15:17:57 -0400
+Message-Id: <20190313191806.160547-11-sashal@kernel.org>
 X-Mailer: git-send-email 2.19.1
 In-Reply-To: <20190313191806.160547-1-sashal@kernel.org>
 References: <20190313191806.160547-1-sashal@kernel.org>
@@ -58,40 +58,59 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Mao Wenan <maowenan@huawei.com>
+From: Vineet Gupta <vgupta@synopsys.com>
 
-[ Upstream commit 4593403fa516a5a4cffe6883c5062d60932cbfbe ]
+[ Upstream commit d5e3c55e01d8b1774b37b4647c30fb22f1d39077 ]
 
-cards_found is a static variable, but when it enters atl2_probe(),
-cards_found is set to zero, the value is not consistent with last probe,
-so next behavior is not our expect.
+Newer ARC gcc handles lp_start, lp_end in a different way and doesn't
+like them in the clobber list.
 
-Signed-off-by: Mao Wenan <maowenan@huawei.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
+Signed-off-by: Vineet Gupta <vgupta@synopsys.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/ethernet/atheros/atlx/atl2.c | 4 +---
- 1 file changed, 1 insertion(+), 3 deletions(-)
+ arch/arc/include/asm/uaccess.h | 8 ++++----
+ 1 file changed, 4 insertions(+), 4 deletions(-)
 
-diff --git a/drivers/net/ethernet/atheros/atlx/atl2.c b/drivers/net/ethernet/atheros/atlx/atl2.c
-index 2ff465848b65..097a0bf592ab 100644
---- a/drivers/net/ethernet/atheros/atlx/atl2.c
-+++ b/drivers/net/ethernet/atheros/atlx/atl2.c
-@@ -1338,13 +1338,11 @@ static int atl2_probe(struct pci_dev *pdev, const struct pci_device_id *ent)
- {
- 	struct net_device *netdev;
- 	struct atl2_adapter *adapter;
--	static int cards_found;
-+	static int cards_found = 0;
- 	unsigned long mmio_start;
- 	int mmio_len;
- 	int err;
+diff --git a/arch/arc/include/asm/uaccess.h b/arch/arc/include/asm/uaccess.h
+index 57387b567f34..f077a419cb51 100644
+--- a/arch/arc/include/asm/uaccess.h
++++ b/arch/arc/include/asm/uaccess.h
+@@ -209,7 +209,7 @@ __arc_copy_from_user(void *to, const void __user *from, unsigned long n)
+ 		*/
+ 		  "=&r" (tmp), "+r" (to), "+r" (from)
+ 		:
+-		: "lp_count", "lp_start", "lp_end", "memory");
++		: "lp_count", "memory");
  
--	cards_found = 0;
--
- 	err = pci_enable_device(pdev);
- 	if (err)
- 		return err;
+ 		return n;
+ 	}
+@@ -438,7 +438,7 @@ __arc_copy_to_user(void __user *to, const void *from, unsigned long n)
+ 		 */
+ 		  "=&r" (tmp), "+r" (to), "+r" (from)
+ 		:
+-		: "lp_count", "lp_start", "lp_end", "memory");
++		: "lp_count", "memory");
+ 
+ 		return n;
+ 	}
+@@ -658,7 +658,7 @@ static inline unsigned long __arc_clear_user(void __user *to, unsigned long n)
+ 	"	.previous			\n"
+ 	: "+r"(d_char), "+r"(res)
+ 	: "i"(0)
+-	: "lp_count", "lp_start", "lp_end", "memory");
++	: "lp_count", "memory");
+ 
+ 	return res;
+ }
+@@ -691,7 +691,7 @@ __arc_strncpy_from_user(char *dst, const char __user *src, long count)
+ 	"	.previous			\n"
+ 	: "+r"(res), "+r"(dst), "+r"(src), "=r"(val)
+ 	: "g"(-EFAULT), "r"(count)
+-	: "lp_count", "lp_start", "lp_end", "memory");
++	: "lp_count", "memory");
+ 
+ 	return res;
+ }
 -- 
 2.19.1
 
