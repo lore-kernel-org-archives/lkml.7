@@ -2,158 +2,175 @@ Return-Path: <SRS0=dUEL=RQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_PASS autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 72210C43381
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 Mar 2019 09:39:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A1985C43381
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 Mar 2019 09:43:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4A36C2173C
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 Mar 2019 09:39:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6D3F92147C
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 Mar 2019 09:43:18 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="PyHvnUNp";
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="TaK2ONbw"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727406AbfCMJjM (ORCPT
+        id S1727420AbfCMJnR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 13 Mar 2019 05:39:12 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:54550 "EHLO mx1.redhat.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726891AbfCMJjM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 13 Mar 2019 05:39:12 -0400
-Received: from smtp.corp.redhat.com (int-mx05.intmail.prod.int.phx2.redhat.com [10.5.11.15])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id A2BCC301BE84;
-        Wed, 13 Mar 2019 09:39:11 +0000 (UTC)
-Received: from gondolin (dhcp-192-213.str.redhat.com [10.33.192.213])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 7C42B5D706;
-        Wed, 13 Mar 2019 09:39:03 +0000 (UTC)
-Date:   Wed, 13 Mar 2019 10:39:00 +0100
-From:   Cornelia Huck <cohuck@redhat.com>
-To:     Dongli Zhang <dongli.zhang@oracle.com>
-Cc:     virtualization@lists.linux-foundation.org,
-        linux-block@vger.kernel.org, axboe@kernel.dk,
-        linux-kernel@vger.kernel.org, mst@redhat.com
-Subject: Re: virtio-blk: should num_vqs be limited by num_possible_cpus()?
-Message-ID: <20190313103900.1ea7f996.cohuck@redhat.com>
-In-Reply-To: <173d19c9-24db-35f2-269f-0b9b83bd0ad6@oracle.com>
-References: <e4afe4c5-0262-4500-aeec-60f30734b4fc@default>
-        <20190312183351.74764f4f.cohuck@redhat.com>
-        <173d19c9-24db-35f2-269f-0b9b83bd0ad6@oracle.com>
-Organization: Red Hat GmbH
+        Wed, 13 Mar 2019 05:43:17 -0400
+Received: from smtp.codeaurora.org ([198.145.29.96]:46024 "EHLO
+        smtp.codeaurora.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726163AbfCMJnQ (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 13 Mar 2019 05:43:16 -0400
+Received: by smtp.codeaurora.org (Postfix, from userid 1000)
+        id 12D3E6081E; Wed, 13 Mar 2019 09:43:15 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
+        s=default; t=1552470195;
+        bh=wq4bwLnqPos8y6EhRQqn0c4PhK5AcAbv+9/DAusveeE=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=PyHvnUNpc6/aM/j4eIzqAsjrFXXzvWl+MyJBxAQkWnL7U5tQSX2TB4+XhicmREXaZ
+         KHio0uLE14tOOlcmjmOf4uCf721bmNwGPwvS6LO1Fy5+UDE/HnsZqsNp2VmyajLW5/
+         VeI78Zoj+OgJTRc6SqEnhOK5PfwldLwI4TAHBxoE=
+Received: from mail.codeaurora.org (localhost.localdomain [127.0.0.1])
+        by smtp.codeaurora.org (Postfix) with ESMTP id 3302060767;
+        Wed, 13 Mar 2019 09:43:14 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
+        s=default; t=1552470194;
+        bh=wq4bwLnqPos8y6EhRQqn0c4PhK5AcAbv+9/DAusveeE=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=TaK2ONbwR46BICcAdfNO0r5n3qmz42eb0Pf0MACYP975WFsKleA2FDY3vvmHvL8+m
+         3RM3PhoYji6AkDAXW3s7w6z9yeywjUrRxe0SbESuGJyL1XfaklnXzeaFOzDSOQUfSI
+         VjSsprKkq9i8yU2ZKh5IN9WGwC7VTBaHo3TTfPmw=
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.15
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.47]); Wed, 13 Mar 2019 09:39:11 +0000 (UTC)
+Content-Type: text/plain; charset=UTF-8;
+ format=flowed
+Content-Transfer-Encoding: 8bit
+Date:   Wed, 13 Mar 2019 17:43:14 +0800
+From:   rjliao@codeaurora.org
+To:     Matthias Kaehlcke <mka@chromium.org>
+Cc:     Balakrishna Godavarthi <bgodavar@codeaurora.org>,
+        marcel@holtmann.org, johan.hedberg@gmail.com,
+        linux-kernel@vger.kernel.org, linux-bluetooth@vger.kernel.org,
+        hemantg@codeaurora.org, linux-arm-msm@vger.kernel.org
+Subject: Re: [PATCH v1] Bluetooth: hci_qca: Enable the ldisc for ROME for x86
+ platforms.
+In-Reply-To: <20190312155241.GB200579@google.com>
+References: <20190307101722.25871-1-bgodavar@codeaurora.org>
+ <20190307204224.GD138592@google.com>
+ <6e0abe10b3ed44053e92ad6a21c75d93@codeaurora.org>
+ <20190308185232.GB69116@google.com>
+ <1042d21dde881e886541d32b8f0dff63@codeaurora.org>
+ <20190312155241.GB200579@google.com>
+Message-ID: <a99bdc7679c9220a913dfa3e149757fa@codeaurora.org>
+X-Sender: rjliao@codeaurora.org
+User-Agent: Roundcube Webmail/1.2.5
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, 13 Mar 2019 11:26:04 +0800
-Dongli Zhang <dongli.zhang@oracle.com> wrote:
-
-> On 3/13/19 1:33 AM, Cornelia Huck wrote:
-> > On Tue, 12 Mar 2019 10:22:46 -0700 (PDT)
-> > Dongli Zhang <dongli.zhang@oracle.com> wrote:
-> >   
-> >> I observed that there is one msix vector for config and one shared vector
-> >> for all queues in below qemu cmdline, when the num-queues for virtio-blk
-> >> is more than the number of possible cpus:
-> >>
-> >> qemu: "-smp 4" while "-device virtio-blk-pci,drive=drive-0,id=virtblk0,num-queues=6"
-> >>
-> >> # cat /proc/interrupts 
-> >>            CPU0       CPU1       CPU2       CPU3
-> >> ... ...
-> >>  24:          0          0          0          0   PCI-MSI 65536-edge      virtio0-config
-> >>  25:          0          0          0         59   PCI-MSI 65537-edge      virtio0-virtqueues
-> >> ... ...
-> >>
-> >>
-> >> However, when num-queues is the same as number of possible cpus:
-> >>
-> >> qemu: "-smp 4" while "-device virtio-blk-pci,drive=drive-0,id=virtblk0,num-queues=4"
-> >>
-> >> # cat /proc/interrupts 
-> >>            CPU0       CPU1       CPU2       CPU3
-> >> ... ... 
-> >>  24:          0          0          0          0   PCI-MSI 65536-edge      virtio0-config
-> >>  25:          2          0          0          0   PCI-MSI 65537-edge      virtio0-req.0
-> >>  26:          0         35          0          0   PCI-MSI 65538-edge      virtio0-req.1
-> >>  27:          0          0         32          0   PCI-MSI 65539-edge      virtio0-req.2
-> >>  28:          0          0          0          0   PCI-MSI 65540-edge      virtio0-req.3
-> >> ... ...
-> >>
-> >> In above case, there is one msix vector per queue.  
-> > 
-> > Please note that this is pci-specific...
-> >   
-> >>
-> >>
-> >> This is because the max number of queues is not limited by the number of
-> >> possible cpus.
-> >>
-> >> By default, nvme (regardless about write_queues and poll_queues) and
-> >> xen-blkfront limit the number of queues with num_possible_cpus().  
-> > 
-> > ...and these are probably pci-specific as well.  
+在 2019-03-12 23:52，Matthias Kaehlcke 写道：
+> Hi Rocky,
 > 
-> Not pci-specific, but per-cpu as well.
-
-Ah, I meant that those are pci devices.
-
+> On Tue, Mar 12, 2019 at 05:01:59PM +0800, rjliao@codeaurora.org wrote:
+>> 在 2019-03-09 02:52，Matthias Kaehlcke 写道：
+>> > On Fri, Mar 08, 2019 at 10:43:14AM +0530, Balakrishna Godavarthi wrote:
+>> > > Hi Matthias,
+>> > >
+>> > > On 2019-03-08 02:12, Matthias Kaehlcke wrote:
+>> > > > Hi Balakrishna,
+>> > > >
+>> > > > On Thu, Mar 07, 2019 at 03:47:22PM +0530, Balakrishna Godavarthi wrote:
+>> > > > > When using btattach to setup Rome over ldisc we observed a crash
+>> > > > > in qca_setup as it will try to access the serdev which is not
+>> > > > > available in the ldisc proto. This patch will fix the crash by
+>> > > > > support both the ldisc and serdev way in the qca hci_uart driver.
+>> > > > >
+>> > > > > Signed-off-by: Balakrishna Godavarthi <bgodavar@codeaurora.org>
+>> > > >
+>> > > > Oh, I wasn't aware of the instantiation through ldisc and was actually
+>> > > > considering to *remove* some of the seemingly unnecessary serdev
+>> > > > checks.
+>> > > >
+>> > > > > ---
+>> > > > >  drivers/bluetooth/hci_qca.c | 47
+>> > > > > ++++++++++++++++++++++---------------
+>> > > > >  1 file changed, 28 insertions(+), 19 deletions(-)
+>> > > > >
+>> > > > > diff --git a/drivers/bluetooth/hci_qca.c b/drivers/bluetooth/hci_qca.c
+>> > > > > index 237aea34b69f..0a5c98d46864 100644
+>> > > > > --- a/drivers/bluetooth/hci_qca.c
+>> > > > > +++ b/drivers/bluetooth/hci_qca.c
+>> > > > > @@ -963,7 +963,7 @@ static int qca_set_baudrate(struct hci_dev
+>> > > > > *hdev, uint8_t baudrate)
+>> > > > >  {
+>> > > > >  	struct hci_uart *hu = hci_get_drvdata(hdev);
+>> > > > >  	struct qca_data *qca = hu->priv;
+>> > > > > -	struct qca_serdev *qcadev;
+>> > > > > +	struct qca_serdev *qcadev = NULL;
+>> > > >
+>> > > > In many cases the only field that is accessed is qcadev->btsoc_type. I
+>> > > > think something like 'qca_get_soc_type(struct hci_dev *hdev / struct
+>> > > > hci_uart *hu)' would make things more readable.
+>> > > >
+>> > > [Bala]: sure will update this in other patch once this change is
+>> > > landed as
+>> > > this has to
+>> > >         go in priority as we have crash coming.
+>> >
+>> > That's not how things should work, especially for fairly trivial
+>> > changes. It requires reviewers to first spent time to review the patch
+>> > that adds clutter and later spend more time to review the one that
+>> > removes it. It's also easier to get a clean patch merged in the first
+>> > place, rather than a noisy one.
+>> >
+>> > Anyway, here is my take at it:
+>> > https://lore.kernel.org/patchwork/patch/1049014/
+>> >
+>> > Please help with testing for ROME, unless you disagree with the
+>> > approach.
+>> >
+>> > Thanks
+>> >
+>> > Matthias
+>> 
+>> Hi Matthias,
+>> 
+>> I will test your patch and update to you, and you are correct that 
+>> AR3002 is
+>> not part of Rome family, you should use QCA_ROME as the default return 
+>> of
+>> qca_soc_type.
 > 
-> >   
-> >>
-> >>
-> >> Is this by design on purpose, or can we fix with below?
-> >>
-> >>
-> >> diff --git a/drivers/block/virtio_blk.c b/drivers/block/virtio_blk.c
-> >> index 4bc083b..df95ce3 100644
-> >> --- a/drivers/block/virtio_blk.c
-> >> +++ b/drivers/block/virtio_blk.c
-> >> @@ -513,6 +513,8 @@ static int init_vq(struct virtio_blk *vblk)
-> >>  	if (err)
-> >>  		num_vqs = 1;
-> >>  
-> >> +	num_vqs = min(num_possible_cpus(), num_vqs);
-> >> +
-> >>  	vblk->vqs = kmalloc_array(num_vqs, sizeof(*vblk->vqs), GFP_KERNEL);
-> >>  	if (!vblk->vqs)
-> >>  		return -ENOMEM;  
-> > 
-> > virtio-blk, however, is not pci-specific.
-> > 
-> > If we are using the ccw transport on s390, a completely different
-> > interrupt mechanism is in use ('floating' interrupts, which are not
-> > per-cpu). A check like that should therefore not go into the generic
-> > driver.
-> >   
+> Thanks for the confirmation!
 > 
-> So far there seems two options.
+>> Could you also loop me in
+>> https://lore.kernel.org/patchwork/patch/1049014/?
 > 
-> The 1st option is to ask the qemu user to always specify "-num-queues" with the
-> same number of vcpus when running x86 guest with pci for virtio-blk or
-> virtio-scsi, in order to assign a vector for each queue.
+> This patch has been superseded by a newer version:
+> 
+> https://lore.kernel.org/patchwork/patch/1049696/
+> 
+> It already landed in bluetooth-next.
+> 
+> Testing with Rome and ldisc would still be appreciated, since I don't
+> have such a configuration.
+> 
+> Thanks
+> 
+> Matthias
 
-That does seem like an extra burden for the user: IIUC, things work
-even if you have too many queues, it's just not optimal. It sounds like
-something that can be done by a management layer (e.g. libvirt), though.
+Hi Matthias,
 
-> Or, is it fine for virtio folks to add a new hook to 'struct virtio_config_ops'
-> so that different platforms (e.g., pci or ccw) would use different ways to limit
-> the max number of queues in guest, with something like below?
+I verified your change and found there is another deference to serdev in 
+the qca_set_baudrate() function while running the ldisc proto, it will 
+cause a crash and need to add a check as below. Could you help to add 
+this change?
 
-That sounds better, as both transports and drivers can opt-in here.
-
-However, maybe it would be even better to try to come up with a better
-strategy of allocating msix vectors in virtio-pci. More vectors in the
-num_queues > num_cpus case, even if they still need to be shared?
-Individual vectors for n-1 cpus and then a shared one for the remaining
-queues?
-
-It might even be device-specific: Have some low-traffic status queues
-share a vector, and provide an individual vector for high-traffic
-queues. Would need some device<->transport interface, obviously.
+<       serdev_device_wait_until_sent(hu->serdev,
+<                       msecs_to_jiffies(CMD_TRANS_TIMEOUT_MS));
+---
+>       if (hu->serdev)
+>               serdev_device_wait_until_sent(hu->serdev,
+>                               msecs_to_jiffies(CMD_TRANS_TIMEOUT_MS));
