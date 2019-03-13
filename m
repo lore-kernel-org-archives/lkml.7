@@ -2,142 +2,166 @@ Return-Path: <SRS0=dUEL=RQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.0 required=3.0
-	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 710FBC4360F
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 Mar 2019 19:15:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 74E49C43381
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 Mar 2019 19:15:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 431B021850
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 Mar 2019 19:15:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4791D2184E
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 Mar 2019 19:15:44 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1552504544;
+	bh=ZANVLY7lCvbFR5ZIqXm2QXXJVdBXIYGRiaPf3c4ydwM=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=oQDTfGhP4ZJjfT1fFQ0qtT/0sWISNXTrqbCHLM4Ilnw5fXrudRcrIdamER4LJ/NDs
+	 sMjV9NfC25E+9MTfOBeSouPNE5nj7WC/OsrpqZDwPhBhKU0zCiJlGVluUMx9A8w8lX
+	 pxBv/bmRGwowPLzFYatD6XQt6LG1OcNtaVdXjNyc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728481AbfCMTPg (ORCPT
+        id S1728512AbfCMTPn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
+        Wed, 13 Mar 2019 15:15:43 -0400
+Received: from mail.kernel.org ([198.145.29.99]:45702 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728475AbfCMTPg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Wed, 13 Mar 2019 15:15:36 -0400
-Received: from mail-vs1-f65.google.com ([209.85.217.65]:33943 "EHLO
-        mail-vs1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728466AbfCMTPc (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 13 Mar 2019 15:15:32 -0400
-Received: by mail-vs1-f65.google.com with SMTP id e126so1515624vse.1;
-        Wed, 13 Mar 2019 12:15:31 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=rFIxdQAhhkGV8VPhrx+7Vx5ZiE2NjNFKTCrLqhzBDX0=;
-        b=t71sQIoxl1VikU/dd7T48cwFBJ1a2/LyJY9L5CU5Q0ca3/m703k/kIGp8xIfXLTelF
-         MSHmDcXVLxHWNSBj92N+YN5G9+NHoz3Yo9Rk3AARHxmv6nErZFz7goiRiYsnRskPkzDb
-         klUDspythpmFrYmBqyCfwRszbPwnltdHvPvzeMIEW4YaMfjfGdfmzr4ApA9/4yxVe668
-         PEv1B/sF8cryFF8C9o05ERFcVQpE2GvALVMv/ON83Tlypm4y0AS/w71gy0Ftixwxg9vg
-         lKVLOlx0+nCnEd9U3rrSFqZ6trOlPQETEZmLPr5ZyrrGjhcL5dbc+3gXjDl8NbkppMV0
-         a41Q==
-X-Gm-Message-State: APjAAAVd6q/dx/jM/p9lpDtQChoxcuUUkoBqGWRI/r9qcGU8SoZ5AQvn
-        QaMvO35q6pG8TjGn/sPyLOlBc9gDgFFqDE56C8Q=
-X-Google-Smtp-Source: APXvYqzbEN7/LltuGjmumOnJRO1FDv8QyW/6UQ+RgaWKzvHgW0ONrkJAYdOI7ZgjNrJ7D6VOYxYb5vrUnf9ItLUx6TI=
-X-Received: by 2002:a67:8588:: with SMTP id h130mr22710612vsd.11.1552504530660;
- Wed, 13 Mar 2019 12:15:30 -0700 (PDT)
+Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 7BCAC2075C;
+        Wed, 13 Mar 2019 19:15:32 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1552504534;
+        bh=ZANVLY7lCvbFR5ZIqXm2QXXJVdBXIYGRiaPf3c4ydwM=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=K5ixxbX43Ef6ifWvj4AowUDx9waJOui5wwtzL3O1NH+uGbV1iomC13eXo1PJI0/X5
+         EaB7Z+AbOr7dIDpXt/0IZrXFvhs5pHN059TXMN+opBw97p+m5Y+BG/jIgL6Hj0UMt3
+         n1hvW5uRRzZU6y2qSDEYM7o1jwiisfiLM+XPnyVY=
+From:   Sasha Levin <sashal@kernel.org>
+To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
+Cc:     Anoob Soman <anoob.soman@citrix.com>, Bob Liu <bob.liu@oracle.com>,
+        "Martin K . Petersen" <martin.petersen@oracle.com>,
+        Sasha Levin <sashal@kernel.org>, open-iscsi@googlegroups.com,
+        linux-scsi@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.14 08/33] scsi: libiscsi: Fix race between iscsi_xmit_task and iscsi_complete_task
+Date:   Wed, 13 Mar 2019 15:14:41 -0400
+Message-Id: <20190313191506.159677-8-sashal@kernel.org>
+X-Mailer: git-send-email 2.19.1
+In-Reply-To: <20190313191506.159677-1-sashal@kernel.org>
+References: <20190313191506.159677-1-sashal@kernel.org>
 MIME-Version: 1.0
-References: <20190307155506.2993868-1-arnd@arndb.de> <20190311172421.275811128896@debutante.sirena.org.uk>
-In-Reply-To: <20190311172421.275811128896@debutante.sirena.org.uk>
-From:   Geert Uytterhoeven <geert@linux-m68k.org>
-Date:   Wed, 13 Mar 2019 20:15:18 +0100
-Message-ID: <CAMuHMdXeuHwF2y1S=bpvQ_qXn+DYacUSS-uP2Zj9yKiHzghhqQ@mail.gmail.com>
-Subject: Re: Applied "spi: work around clang bug in SPI_BPW_RANGE_MASK()" to
- the spi tree
-To:     Mark Brown <broonie@kernel.org>
-Cc:     Arnd Bergmann <arnd@arndb.de>,
-        Rasmus Villemoes <linux@rasmusvillemoes.dk>,
-        Boris Brezillon <bbrezillon@kernel.org>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        linux-spi <linux-spi@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+X-Patchwork-Hint: Ignore
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Mark,
+From: Anoob Soman <anoob.soman@citrix.com>
 
-On Mon, Mar 11, 2019 at 6:26 PM Mark Brown <broonie@kernel.org> wrote:
-> The patch
->
->    spi: work around clang bug in SPI_BPW_RANGE_MASK()
->
-> has been applied to the spi tree at
->
->    https://git.kernel.org/pub/scm/linux/kernel/git/broonie/spi.git
->
-> All being well this means that it will be integrated into the linux-next
-> tree (usually sometime in the next 24 hours) and sent to Linus during
-> the next merge window (or sooner if it is a bug fix), however if
-> problems are discovered then the patch may be dropped or reverted.
->
-> You may get further e-mails resulting from automated or manual testing
-> and review of the tree, please engage with people reporting problems and
-> send followup patches addressing any issues that are reported if needed.
->
-> If any updates are required or you are submitting further changes they
-> should be sent as incremental updates against current git, existing
-> patches will not be replaced.
->
-> Please add any relevant lists and maintainers to the CCs when replying
-> to this mail.
->
-> Thanks,
-> Mark
->
-> From eefffb42f6659c9510105f3e4ebf2a8499d56936 Mon Sep 17 00:00:00 2001
-> From: Arnd Bergmann <arnd@arndb.de>
-> Date: Thu, 7 Mar 2019 16:54:21 +0100
-> Subject: [PATCH] spi: work around clang bug in SPI_BPW_RANGE_MASK()
->
-> Clang-8 evaluates both sides of a ?: expression to check for
-> valid arithmetic even in the side that is never taken. This
-> results in a build warning:
->
-> drivers/spi/spi-sh-msiof.c:1052:24: error: shift count >= width of type [-Werror,-Wshift-count-overflow]
->         .bits_per_word_mask = SPI_BPW_RANGE_MASK(8, 32),
->                               ^~~~~~~~~~~~~~~~~~~~~~~~~
->
-> Change the implementation to use the GENMASK() macro that does
-> what we want here but does not have a problem with the shift
-> count overflow.
->
-> Link: https://bugs.llvm.org/show_bug.cgi?id=38789
-> Signed-off-by: Arnd Bergmann <arnd@arndb.de>
-> Signed-off-by: Mark Brown <broonie@kernel.org>
-> ---
->  include/linux/spi/spi.h | 3 +--
->  1 file changed, 1 insertion(+), 2 deletions(-)
->
-> diff --git a/include/linux/spi/spi.h b/include/linux/spi/spi.h
-> index 662b336aa2e4..b27386450089 100644
-> --- a/include/linux/spi/spi.h
-> +++ b/include/linux/spi/spi.h
-> @@ -444,8 +444,7 @@ struct spi_controller {
->         /* bitmask of supported bits_per_word for transfers */
->         u32                     bits_per_word_mask;
->  #define SPI_BPW_MASK(bits) BIT((bits) - 1)
-> -#define SPI_BIT_MASK(bits) (((bits) == 32) ? ~0U : (BIT(bits) - 1))
-> -#define SPI_BPW_RANGE_MASK(min, max) (SPI_BIT_MASK(max) - SPI_BIT_MASK(min - 1))
-> +#define SPI_BPW_RANGE_MASK(min, max) GENMASK((min) - 1, (max) - 1)
+[ Upstream commit 79edd00dc6a96644d76b4a1cb97d94d49e026768 ]
 
-This is not correct: GENMASK() order is from msb to lsb.
-So it should it:
+When a target sends Check Condition, whilst initiator is busy xmiting
+re-queued data, could lead to race between iscsi_complete_task() and
+iscsi_xmit_task() and eventually crashing with the following kernel
+backtrace.
 
-+#define SPI_BPW_RANGE_MASK(min, max) GENMASK((max) - 1, (min) - 1)
+[3326150.987523] ALERT: BUG: unable to handle kernel NULL pointer dereference at 0000000000000078
+[3326150.987549] ALERT: IP: [<ffffffffa05ce70d>] iscsi_xmit_task+0x2d/0xc0 [libiscsi]
+[3326150.987571] WARN: PGD 569c8067 PUD 569c9067 PMD 0
+[3326150.987582] WARN: Oops: 0002 [#1] SMP
+[3326150.987593] WARN: Modules linked in: tun nfsv3 nfs fscache dm_round_robin
+[3326150.987762] WARN: CPU: 2 PID: 8399 Comm: kworker/u32:1 Tainted: G O 4.4.0+2 #1
+[3326150.987774] WARN: Hardware name: Dell Inc. PowerEdge R720/0W7JN5, BIOS 2.5.4 01/22/2016
+[3326150.987790] WARN: Workqueue: iscsi_q_13 iscsi_xmitworker [libiscsi]
+[3326150.987799] WARN: task: ffff8801d50f3800 ti: ffff8801f5458000 task.ti: ffff8801f5458000
+[3326150.987810] WARN: RIP: e030:[<ffffffffa05ce70d>] [<ffffffffa05ce70d>] iscsi_xmit_task+0x2d/0xc0 [libiscsi]
+[3326150.987825] WARN: RSP: e02b:ffff8801f545bdb0 EFLAGS: 00010246
+[3326150.987831] WARN: RAX: 00000000ffffffc3 RBX: ffff880282d2ab20 RCX: ffff88026b6ac480
+[3326150.987842] WARN: RDX: 0000000000000000 RSI: 00000000fffffe01 RDI: ffff880282d2ab20
+[3326150.987852] WARN: RBP: ffff8801f545bdc8 R08: 0000000000000000 R09: 0000000000000008
+[3326150.987862] WARN: R10: 0000000000000000 R11: 000000000000fe88 R12: 0000000000000000
+[3326150.987872] WARN: R13: ffff880282d2abe8 R14: ffff880282d2abd8 R15: ffff880282d2ac08
+[3326150.987890] WARN: FS: 00007f5a866b4840(0000) GS:ffff88028a640000(0000) knlGS:0000000000000000
+[3326150.987900] WARN: CS: e033 DS: 0000 ES: 0000 CR0: 0000000080050033
+[3326150.987907] WARN: CR2: 0000000000000078 CR3: 0000000070244000 CR4: 0000000000042660
+[3326150.987918] WARN: Stack:
+[3326150.987924] WARN: ffff880282d2ad58 ffff880282d2ab20 ffff880282d2abe8 ffff8801f545be18
+[3326150.987938] WARN: ffffffffa05cea90 ffff880282d2abf8 ffff88026b59cc80 ffff88026b59cc00
+[3326150.987951] WARN: ffff88022acf32c0 ffff880289491800 ffff880255a80800 0000000000000400
+[3326150.987964] WARN: Call Trace:
+[3326150.987975] WARN: [<ffffffffa05cea90>] iscsi_xmitworker+0x2f0/0x360 [libiscsi]
+[3326150.987988] WARN: [<ffffffff8108862c>] process_one_work+0x1fc/0x3b0
+[3326150.987997] WARN: [<ffffffff81088f95>] worker_thread+0x2a5/0x470
+[3326150.988006] WARN: [<ffffffff8159cad8>] ? __schedule+0x648/0x870
+[3326150.988015] WARN: [<ffffffff81088cf0>] ? rescuer_thread+0x300/0x300
+[3326150.988023] WARN: [<ffffffff8108ddf5>] kthread+0xd5/0xe0
+[3326150.988031] WARN: [<ffffffff8108dd20>] ? kthread_stop+0x110/0x110
+[3326150.988040] WARN: [<ffffffff815a0bcf>] ret_from_fork+0x3f/0x70
+[3326150.988048] WARN: [<ffffffff8108dd20>] ? kthread_stop+0x110/0x110
+[3326150.988127] ALERT: RIP [<ffffffffa05ce70d>] iscsi_xmit_task+0x2d/0xc0 [libiscsi]
+[3326150.988138] WARN: RSP <ffff8801f545bdb0>
+[3326150.988144] WARN: CR2: 0000000000000078
+[3326151.020366] WARN: ---[ end trace 1c60974d4678d81b ]---
 
-Gr{oetje,eeting}s,
+Commit 6f8830f5bbab ("scsi: libiscsi: add lock around task lists to fix
+list corruption regression") introduced "taskqueuelock" to fix list
+corruption during the race, but this wasn't enough.
 
-                        Geert
+Re-setting of conn->task to NULL, could race with iscsi_xmit_task().
+iscsi_complete_task()
+{
+    ....
+    if (conn->task == task)
+        conn->task = NULL;
+}
 
+conn->task in iscsi_xmit_task() could be NULL and so will be task.
+__iscsi_get_task(task) will crash (NullPtr de-ref), trying to access
+refcount.
+
+iscsi_xmit_task()
+{
+    struct iscsi_task *task = conn->task;
+
+    __iscsi_get_task(task);
+}
+
+This commit will take extra conn->session->back_lock in iscsi_xmit_task()
+to ensure iscsi_xmit_task() waits for iscsi_complete_task(), if
+iscsi_complete_task() wins the race.  If iscsi_xmit_task() wins the race,
+iscsi_xmit_task() increments task->refcount
+(__iscsi_get_task) ensuring iscsi_complete_task() will not iscsi_free_task().
+
+Signed-off-by: Anoob Soman <anoob.soman@citrix.com>
+Signed-off-by: Bob Liu <bob.liu@oracle.com>
+Acked-by: Lee Duncan <lduncan@suse.com>
+Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
+---
+ drivers/scsi/libiscsi.c | 6 ++++++
+ 1 file changed, 6 insertions(+)
+
+diff --git a/drivers/scsi/libiscsi.c b/drivers/scsi/libiscsi.c
+index 3ff536b350a1..5ea5d42bac76 100644
+--- a/drivers/scsi/libiscsi.c
++++ b/drivers/scsi/libiscsi.c
+@@ -1449,7 +1449,13 @@ static int iscsi_xmit_task(struct iscsi_conn *conn)
+ 	if (test_bit(ISCSI_SUSPEND_BIT, &conn->suspend_tx))
+ 		return -ENODATA;
+ 
++	spin_lock_bh(&conn->session->back_lock);
++	if (conn->task == NULL) {
++		spin_unlock_bh(&conn->session->back_lock);
++		return -ENODATA;
++	}
+ 	__iscsi_get_task(task);
++	spin_unlock_bh(&conn->session->back_lock);
+ 	spin_unlock_bh(&conn->session->frwd_lock);
+ 	rc = conn->session->tt->xmit_task(task);
+ 	spin_lock_bh(&conn->session->frwd_lock);
 -- 
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+2.19.1
 
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
