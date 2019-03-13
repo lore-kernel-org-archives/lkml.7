@@ -2,77 +2,125 @@ Return-Path: <SRS0=dUEL=RQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_MUTT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,
+	URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0AD87C43381
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 Mar 2019 01:03:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1B13FC10F00
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 Mar 2019 01:06:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D2F65217D9
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 Mar 2019 01:03:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DB89E2063F
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 Mar 2019 01:06:37 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=intel-com.20150623.gappssmtp.com header.i=@intel-com.20150623.gappssmtp.com header.b="XVhxodS/"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726754AbfCMBDb (ORCPT
+        id S1726477AbfCMBGg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 12 Mar 2019 21:03:31 -0400
-Received: from mga18.intel.com ([134.134.136.126]:2897 "EHLO mga18.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725917AbfCMBDa (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 12 Mar 2019 21:03:30 -0400
-X-Amp-Result: UNSCANNABLE
-X-Amp-File-Uploaded: False
-Received: from orsmga007.jf.intel.com ([10.7.209.58])
-  by orsmga106.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 12 Mar 2019 18:03:30 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.58,472,1544515200"; 
-   d="scan'208";a="122168191"
-Received: from romley-ivt3.sc.intel.com ([172.25.110.60])
-  by orsmga007.jf.intel.com with ESMTP; 12 Mar 2019 18:03:29 -0700
-Date:   Tue, 12 Mar 2019 17:56:23 -0700
-From:   Fenghua Yu <fenghua.yu@intel.com>
-To:     Dave Hansen <dave.hansen@intel.com>
-Cc:     Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, H Peter Anvin <hpa@zytor.com>,
-        Paolo Bonzini <pbonzini@redhat.com>,
-        Ashok Raj <ashok.raj@intel.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Xiaoyao Li <xiaoyao.li@intel.com>,
-        Michael Chan <michael.chan@broadcom.com>,
-        Ravi V Shankar <ravi.v.shankar@intel.com>,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        x86 <x86@kernel.org>, linux-wireless@vger.kernel.org,
-        netdev@vger.kernel.org, kvm@vger.kernel.org
-Subject: Re: [PATCH v5 07/18] x86/split_lock: Enumerate #AC for split lock by
- MSR IA32_CORE_CAPABILITY
-Message-ID: <20190313005623.GC31710@romley-ivt3.sc.intel.com>
-References: <1552431636-31511-1-git-send-email-fenghua.yu@intel.com>
- <1552431636-31511-8-git-send-email-fenghua.yu@intel.com>
- <d0377d62-38b5-ee69-8fa2-45d3f284a182@intel.com>
+        Tue, 12 Mar 2019 21:06:36 -0400
+Received: from mail-ot1-f68.google.com ([209.85.210.68]:40379 "EHLO
+        mail-ot1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726364AbfCMBGg (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 12 Mar 2019 21:06:36 -0400
+Received: by mail-ot1-f68.google.com with SMTP id x8so257489otg.7
+        for <linux-kernel@vger.kernel.org>; Tue, 12 Mar 2019 18:06:35 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=intel-com.20150623.gappssmtp.com; s=20150623;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=LZK3UMA0+jcYLH9GlOc1de7OArJB5HWUsfhSIV+qw/o=;
+        b=XVhxodS/cWi1+Kj0zcuMgBSdNtgToQjq+8zyn9JVumzlZtbH0+u3oMW5gy/suWMBp7
+         cJ/u6/9rAbYc03wFDmk2ca7iID5lAsbN5R+aWhjKEKe5Wpxfayck71YUPVAqqqigj58O
+         WAvR7oAPg7Nmo0R8A0sgLCcDrruerUv+Ib4vukplAt7U4DfYdh+NpbYxLtTY4KftS4Pv
+         4Cevpn9yEX0quULptFuWBkXtcIa+Bu0J6JWXggDCI79WzhwglU0r5DO8RfAnGdzdvXCk
+         JhhzmvjVws2VsBBbqDzbxyoF8nU1mYSD/my4iNqwGoExV/cBrWu83WZza99ubsFkNqhd
+         rqRg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=LZK3UMA0+jcYLH9GlOc1de7OArJB5HWUsfhSIV+qw/o=;
+        b=BhW/OqB1MH2RI3AWNtVfbEfAcqU4jBRQc8oELAZyO+vtZZMdTAK6gbAgSn6Tc/Sx8r
+         oM+WCg49Qan2zeE52igk4vHN4xTc5RWoHPsnKTqQxHYhiHlGYh+DfSmrPMbnLUJ9Oy3g
+         H8fTH1XzkIkKDGjquPuxqxfvJ8ZWFqo6FSfJiwx2jfBCrX2X5omsMocULZFrcFhNFXXw
+         41ihH6ZuRpRn+jVPhTPRBysFEYw3KqjtDw+BPhMkJlT60259rez9CBy4I2jysPgBAiD+
+         ZAtS4X5Sr6nBkEdR/d43Gp2cxUN6NLsBfX8C40kXQVmTbSrkN3HOIzpI7w5AmktqjgKC
+         0GaA==
+X-Gm-Message-State: APjAAAVsb7542mF1Zx87eRfHFPgzhI9bVc1XAzpT8gsWnkQkIjYlm3aU
+        2RFEJ8YsVUeRisyn+GRxvID7cBpa+AMTYWGucB3OgQ==
+X-Google-Smtp-Source: APXvYqxsMNMGK6e/Fpi42NFWPK3QTmiBgY/COyLYD70QTD/njfoKOA8X+IxFRFTr7yYcjC2F5nme4fECbkh7IFz9I0M=
+X-Received: by 2002:a9d:7a87:: with SMTP id l7mr25469024otn.98.1552439195041;
+ Tue, 12 Mar 2019 18:06:35 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <d0377d62-38b5-ee69-8fa2-45d3f284a182@intel.com>
-User-Agent: Mutt/1.5.23 (2014-03-12)
+References: <CAPcyv4gb+r==riKFXkVZ7gGdnKe62yBmZ7xOa4uBBByhnK9Tzg@mail.gmail.com>
+ <20190305141635.8134e310ba7187bc39532cd3@linux-foundation.org>
+ <CAA9_cmd2Z62Z5CSXvne4rj3aPSpNhS0Gxt+kZytz0bVEuzvc=A@mail.gmail.com>
+ <20190307094654.35391e0066396b204d133927@linux-foundation.org>
+ <20190307185623.GD3835@redhat.com> <CAPcyv4gkxmmkB0nofVOvkmV7HcuBDb+1VLR9CSsp+m-QLX_mxA@mail.gmail.com>
+ <20190312152551.GA3233@redhat.com> <CAPcyv4iYzTVpP+4iezH1BekawwPwJYiMvk2GZDzfzFLUnO+RgA@mail.gmail.com>
+ <20190312190606.GA15675@redhat.com> <CAPcyv4g-z8nkM1B65oR-3PT_RFQbmQMsM-J-P0-nzyvvJ8gVog@mail.gmail.com>
+ <20190312203436.GE23020@dastard>
+In-Reply-To: <20190312203436.GE23020@dastard>
+From:   Dan Williams <dan.j.williams@intel.com>
+Date:   Tue, 12 Mar 2019 18:06:23 -0700
+Message-ID: <CAPcyv4htpVHm9GSYdKS=i4Ry011XZQUkOdMz9CXMrxJccRW9tw@mail.gmail.com>
+Subject: Re: [PATCH 09/10] mm/hmm: allow to mirror vma of a file on a DAX
+ backed filesystem
+To:     Dave Chinner <david@fromorbit.com>
+Cc:     Jerome Glisse <jglisse@redhat.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Linux MM <linux-mm@kvack.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Ralph Campbell <rcampbell@nvidia.com>,
+        John Hubbard <jhubbard@nvidia.com>,
+        linux-fsdevel <linux-fsdevel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Mar 12, 2019 at 04:52:37PM -0700, Dave Hansen wrote:
-> On 3/12/19 4:00 PM, Fenghua Yu wrote:
-> > +/**
-> > + * set_cpu_core_cap_bits - enumerate features supported in IA32_CORE_CAPABILITY
-> > + * @c: pointer to cpuinfo_x86
-> > + *
-> > + * Return: void
-> > + */
-> > +void __init cpu_set_core_cap_bits(struct cpuinfo_x86 *c)
-> 
-> I think this is kerneldoc overkill.  It just wastes space and adds no
-> value here.
+On Tue, Mar 12, 2019 at 1:34 PM Dave Chinner <david@fromorbit.com> wrote:
+>
+> On Tue, Mar 12, 2019 at 12:30:52PM -0700, Dan Williams wrote:
+> > On Tue, Mar 12, 2019 at 12:06 PM Jerome Glisse <jglisse@redhat.com> wrote:
+> > > On Tue, Mar 12, 2019 at 09:06:12AM -0700, Dan Williams wrote:
+> > > > On Tue, Mar 12, 2019 at 8:26 AM Jerome Glisse <jglisse@redhat.com> wrote:
+> > [..]
+> > > > > Spirit of the rule is better than blind application of rule.
+> > > >
+> > > > Again, I fail to see why HMM is suddenly unable to make forward
+> > > > progress when the infrastructure that came before it was merged with
+> > > > consumers in the same development cycle.
+> > > >
+> > > > A gate to upstream merge is about the only lever a reviewer has to
+> > > > push for change, and these requests to uncouple the consumer only
+> > > > serve to weaken that review tool in my mind.
+> > >
+> > > Well let just agree to disagree and leave it at that and stop
+> > > wasting each other time
+> >
+> > I'm fine to continue this discussion if you are. Please be specific
+> > about where we disagree and what aspect of the proposed rules about
+> > merge staging are either acceptable, painful-but-doable, or
+> > show-stoppers. Do you agree that HMM is doing something novel with
+> > merge staging, am I off base there? I expect I can find folks that
+> > would balk with even a one cycle deferment of consumers, but can we
+> > start with that concession and see how it goes? I'm missing where I've
+> > proposed something that is untenable for the future of HMM which is
+> > addressing some real needs in gaps in the kernel's support for new
+> > hardware.
+>
+> /me quietly wonders why the hmm infrastructure can't be staged in a
+> maintainer tree development branch on a kernel.org and then
+> all merged in one go when that branch has both infrastructure and
+> drivers merged into it...
+>
+> i.e. everyone doing hmm driver work gets the infrastructure from the
+> dev tree, not mainline. That's a pretty standard procedure for
+> developing complex features, and it avoids all the issues being
+> argued over right now...
 
-OK. I will not add the function in kerneldoc.
-
-Thanks.
-
--Fenghua
+True, but I wasn't considering that because the mm tree does not do
+stable topic branches. This kind of staging seems not amenable to a
+quilt workflow and it needs to keep pace with the rest of mm.
