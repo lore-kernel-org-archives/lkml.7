@@ -6,46 +6,47 @@ X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
 	SPF_PASS,USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 703BBC43381
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 Mar 2019 19:11:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 65FADC43381
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 Mar 2019 19:11:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1E2EF2184C
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 Mar 2019 19:11:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 38B762183F
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 Mar 2019 19:11:18 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1552504275;
-	bh=fevIuAiKjrqsifqHv9nuVlqfBUelnUXxxO5PPa5RYFc=;
+	s=default; t=1552504278;
+	bh=M90tyzwbXJdW7WZmz/ARiMvMIIwtoaKSJk56xlcEmX0=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=gdMCoWJeQ2Oqip7J+UFvPMCXU8WkjFPIdAVCIEKWHenjlU7lLgAzGYLPLvQ3QxZdD
-	 Feku6KgDTd66KJIpzFUUrZRCzaqPa/I595Q3anDyMsCoNURxyi2FJbuuy1BdwxSp1G
-	 tfrzlhsuUWcLXa6MWGsIU6DXvSK8/YwUwRHkYmWM=
+	b=IXTrGgZ+yVC1nkIhYDHwaQpWMLrnIvcoC3G0OIpQHozZBahkpp0ya+AkngWxPENCR
+	 apDPop5E+zqVxcxA6uhE4G1xFMNnQ62+YRmZXrSERnxFEYzpAWNU0Bht/YfaoeIO0a
+	 DhaUJ5SwcrDRJELs8rX1hv1BrGW7K6WaPKbs9UJI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727377AbfCMTLM (ORCPT
+        id S1727403AbfCMTLP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 13 Mar 2019 15:11:12 -0400
-Received: from mail.kernel.org ([198.145.29.99]:41724 "EHLO mail.kernel.org"
+        Wed, 13 Mar 2019 15:11:15 -0400
+Received: from mail.kernel.org ([198.145.29.99]:41754 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727352AbfCMTLK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 13 Mar 2019 15:11:10 -0400
+        id S1727364AbfCMTLM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 13 Mar 2019 15:11:12 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 7AF032177E;
-        Wed, 13 Mar 2019 19:11:08 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 7912D2075C;
+        Wed, 13 Mar 2019 19:11:10 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1552504269;
-        bh=fevIuAiKjrqsifqHv9nuVlqfBUelnUXxxO5PPa5RYFc=;
+        s=default; t=1552504271;
+        bh=M90tyzwbXJdW7WZmz/ARiMvMIIwtoaKSJk56xlcEmX0=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=i44fms35Iq8eT+uCg9tx8DjZrmAzpWZWhfaZWf8TB/4oLpeJb3Pe73GJRuDGEsDC4
-         7DnJ3qQdBaAFplx8g4xUhzm3/QWsGURj67wB1PjHnYdbIbTU71007S27cR/99Fyv86
-         BOta/RRc6wlyarKQpk8Oy3qFWYk8x/+BI5WLcHM0=
+        b=MCwZKRwMP3ijMCTt/rAYjAeMC9tBlxyv7QT3udv9L0J0rIDIVvTADTeQVLjeX1/q+
+         qKmzhYm5ljcmFgMTu/U02jwG5oWublriWNi6OugRPfkBlb2M5kDd592r2vNxkK13G7
+         76U6zQtcNP1d3/sEHMaa/zZQGQ4KAPv5KdGXLAAg=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Bard liao <yung-chuan.liao@linux.intel.com>,
-        Mark Brown <broonie@kernel.org>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH AUTOSEL 4.20 23/60] ASoC: topology: free created components in tplg load error
-Date:   Wed, 13 Mar 2019 15:09:44 -0400
-Message-Id: <20190313191021.158171-23-sashal@kernel.org>
+Cc:     Stanislav Fomichev <sdf@google.com>,
+        Daniel Borkmann <daniel@iogearbox.net>,
+        Sasha Levin <sashal@kernel.org>, netdev@vger.kernel.org,
+        bpf@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.20 24/60] bpf/test_run: fix unkillable BPF_PROG_TEST_RUN
+Date:   Wed, 13 Mar 2019 15:09:45 -0400
+Message-Id: <20190313191021.158171-24-sashal@kernel.org>
 X-Mailer: git-send-email 2.19.1
 In-Reply-To: <20190313191021.158171-1-sashal@kernel.org>
 References: <20190313191021.158171-1-sashal@kernel.org>
@@ -57,45 +58,117 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Bard liao <yung-chuan.liao@linux.intel.com>
+From: Stanislav Fomichev <sdf@google.com>
 
-[ Upstream commit 304017d31df36fb61eb2ed3ebf65fb6870b3c731 ]
+[ Upstream commit df1a2cb7c74b3d3abc8d8c2d690f82c8ebc3490a ]
 
-Topology resources are no longer needed if any element failed to load.
+Syzbot found out that running BPF_PROG_TEST_RUN with repeat=0xffffffff
+makes process unkillable. The problem is that when CONFIG_PREEMPT is
+enabled, we never see need_resched() return true. This is due to the
+fact that preempt_enable() (which we do in bpf_test_run_one on each
+iteration) now handles resched if it's needed.
 
-Signed-off-by: Bard liao <yung-chuan.liao@linux.intel.com>
-Signed-off-by: Mark Brown <broonie@kernel.org>
+Let's disable preemption for the whole run, not per test. In this case
+we can properly see whether resched is needed.
+Let's also properly return -EINTR to the userspace in case of a signal
+interrupt.
+
+See recent discussion:
+http://lore.kernel.org/netdev/CAH3MdRWHr4N8jei8jxDppXjmw-Nw=puNDLbu1dQOFQHxfU2onA@mail.gmail.com
+
+I'll follow up with the same fix bpf_prog_test_run_flow_dissector in
+bpf-next.
+
+Reported-by: syzbot <syzkaller@googlegroups.com>
+Signed-off-by: Stanislav Fomichev <sdf@google.com>
+Signed-off-by: Daniel Borkmann <daniel@iogearbox.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- sound/soc/soc-topology.c | 8 +++++++-
- 1 file changed, 7 insertions(+), 1 deletion(-)
+ net/bpf/test_run.c | 45 ++++++++++++++++++++++++---------------------
+ 1 file changed, 24 insertions(+), 21 deletions(-)
 
-diff --git a/sound/soc/soc-topology.c b/sound/soc/soc-topology.c
-index 045ef136903d..82b3274e408b 100644
---- a/sound/soc/soc-topology.c
-+++ b/sound/soc/soc-topology.c
-@@ -2482,6 +2482,7 @@ int snd_soc_tplg_component_load(struct snd_soc_component *comp,
- 	struct snd_soc_tplg_ops *ops, const struct firmware *fw, u32 id)
+diff --git a/net/bpf/test_run.c b/net/bpf/test_run.c
+index 25001913d03b..14a631817e12 100644
+--- a/net/bpf/test_run.c
++++ b/net/bpf/test_run.c
+@@ -13,27 +13,13 @@
+ #include <net/sock.h>
+ #include <net/tcp.h>
+ 
+-static __always_inline u32 bpf_test_run_one(struct bpf_prog *prog, void *ctx,
+-		struct bpf_cgroup_storage *storage[MAX_BPF_CGROUP_STORAGE_TYPE])
+-{
+-	u32 ret;
+-
+-	preempt_disable();
+-	rcu_read_lock();
+-	bpf_cgroup_storage_set(storage);
+-	ret = BPF_PROG_RUN(prog, ctx);
+-	rcu_read_unlock();
+-	preempt_enable();
+-
+-	return ret;
+-}
+-
+-static int bpf_test_run(struct bpf_prog *prog, void *ctx, u32 repeat, u32 *ret,
+-			u32 *time)
++static int bpf_test_run(struct bpf_prog *prog, void *ctx, u32 repeat,
++			u32 *retval, u32 *time)
  {
- 	struct soc_tplg tplg;
-+	int ret;
+ 	struct bpf_cgroup_storage *storage[MAX_BPF_CGROUP_STORAGE_TYPE] = { 0 };
+ 	enum bpf_cgroup_storage_type stype;
+ 	u64 time_start, time_spent = 0;
++	int ret = 0;
+ 	u32 i;
  
- 	/* setup parsing context */
- 	memset(&tplg, 0, sizeof(tplg));
-@@ -2495,7 +2496,12 @@ int snd_soc_tplg_component_load(struct snd_soc_component *comp,
- 	tplg.bytes_ext_ops = ops->bytes_ext_ops;
- 	tplg.bytes_ext_ops_count = ops->bytes_ext_ops_count;
+ 	for_each_cgroup_storage_type(stype) {
+@@ -48,25 +34,42 @@ static int bpf_test_run(struct bpf_prog *prog, void *ctx, u32 repeat, u32 *ret,
  
--	return soc_tplg_load(&tplg);
-+	ret = soc_tplg_load(&tplg);
-+	/* free the created components if fail to load topology */
-+	if (ret)
-+		snd_soc_tplg_component_remove(comp, SND_SOC_TPLG_INDEX_ALL);
+ 	if (!repeat)
+ 		repeat = 1;
 +
++	rcu_read_lock();
++	preempt_disable();
+ 	time_start = ktime_get_ns();
+ 	for (i = 0; i < repeat; i++) {
+-		*ret = bpf_test_run_one(prog, ctx, storage);
++		bpf_cgroup_storage_set(storage);
++		*retval = BPF_PROG_RUN(prog, ctx);
++
++		if (signal_pending(current)) {
++			ret = -EINTR;
++			break;
++		}
++
+ 		if (need_resched()) {
+-			if (signal_pending(current))
+-				break;
+ 			time_spent += ktime_get_ns() - time_start;
++			preempt_enable();
++			rcu_read_unlock();
++
+ 			cond_resched();
++
++			rcu_read_lock();
++			preempt_disable();
+ 			time_start = ktime_get_ns();
+ 		}
+ 	}
+ 	time_spent += ktime_get_ns() - time_start;
++	preempt_enable();
++	rcu_read_unlock();
++
+ 	do_div(time_spent, repeat);
+ 	*time = time_spent > U32_MAX ? U32_MAX : (u32)time_spent;
+ 
+ 	for_each_cgroup_storage_type(stype)
+ 		bpf_cgroup_storage_free(storage[stype]);
+ 
+-	return 0;
 +	return ret;
  }
- EXPORT_SYMBOL_GPL(snd_soc_tplg_component_load);
  
+ static int bpf_test_finish(const union bpf_attr *kattr,
 -- 
 2.19.1
 
