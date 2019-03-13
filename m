@@ -4,67 +4,67 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9A115C43381
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 Mar 2019 19:33:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 751CBC10F03
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 Mar 2019 19:34:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 54AC12146E
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 Mar 2019 19:33:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 47C872075C
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 Mar 2019 19:34:00 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=baylibre-com.20150623.gappssmtp.com header.i=@baylibre-com.20150623.gappssmtp.com header.b="uhcsbeBK"
+	dkim=pass (2048-bit key) header.d=baylibre-com.20150623.gappssmtp.com header.i=@baylibre-com.20150623.gappssmtp.com header.b="SuP0zDPY"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727756AbfCMTdw (ORCPT
+        id S1727777AbfCMTd6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 13 Mar 2019 15:33:52 -0400
-Received: from mail-wr1-f68.google.com ([209.85.221.68]:33784 "EHLO
-        mail-wr1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727538AbfCMTdt (ORCPT
+        Wed, 13 Mar 2019 15:33:58 -0400
+Received: from mail-wr1-f67.google.com ([209.85.221.67]:41082 "EHLO
+        mail-wr1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726442AbfCMTdu (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 13 Mar 2019 15:33:49 -0400
-Received: by mail-wr1-f68.google.com with SMTP id i8so3326259wrm.0
-        for <linux-kernel@vger.kernel.org>; Wed, 13 Mar 2019 12:33:47 -0700 (PDT)
+        Wed, 13 Mar 2019 15:33:50 -0400
+Received: by mail-wr1-f67.google.com with SMTP id p1so3302660wrs.8
+        for <linux-kernel@vger.kernel.org>; Wed, 13 Mar 2019 12:33:49 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=baylibre-com.20150623.gappssmtp.com; s=20150623;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=9WBXmNn4StehscAZZnU0MKJI6NK9pgoT630krc3+Cgo=;
-        b=uhcsbeBKnXhIbnOvppqkS8/0labsp64fSUsjAwd7QoW11Ivv+oDnXaIlKdBiFxf5k8
-         15FhTnv68UInDqeQ3DtFvluM6SqgK5FSVrFx4ryqFwdBJQa//9E6wwjStgsDtO6Ty63a
-         os/BoqWc8fh7IcP8l3p82xTBYPOJAUrRUIOZtaMelx/J7N1F7frH8RGJar5VJb5ezG/d
-         xJrbNb61i/T6bRSu8If7dFoen8JjFhkKMSI0MAF+GZJj3XDZERUPlJ5pGuGdTlBILdzU
-         3F/1cu8nJGyTfy04WlP0bxKk4GZV94WdTuaA7LGmw1JWSgkB7s88Z6d0i8Yd35IyuD3T
-         wf5w==
+        bh=UDDK3ZuE18UBaMnSKNW3aRwC8Z//s3DoM8HiLpa/VRw=;
+        b=SuP0zDPYF7Ulece5iTXk+pmnpyLWc3eKtMd3+JQD9+5ZSuuoyhbfZQZc8sUODuGHC5
+         JFC6ro1dq9n4/YzAHnyjlSsC2V8GvEfSBEAaJk+vR1ZAAhqA7jhJQX5fgPMWDpJ/jI6f
+         fS0GjegeCK80Xf3Vs4VPYDIIvRxnnwA1VduNtWTULlzHJwd6KJcuGzSUfWiutkyI7VmQ
+         veR1lv6BTzWDlUQypA8mI0X2Bj+s2a1Yw7rNQlWBawSnXlFb5+d6ZA+qh+FU0lDK5DPE
+         BvLfqFrKbiVigytHRDh+O4RSElgR46/umz92BeeBB4l0OoGqS2APJMVE6TY2FqqlTENl
+         nURA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=9WBXmNn4StehscAZZnU0MKJI6NK9pgoT630krc3+Cgo=;
-        b=VfGywIlWeYZksVmZnjkMDLt8SmCPNKeoiXESN4+w2wKsnn5oTh174hHKdcGQt6lyiu
-         VguEvSrqp8wPwLkhbmWdzzor7Lg8qnc+1N1gl6rSccFth38Nef3kAv6f3aQa56xR8ZaN
-         L4NIWBoGkQoFmtnPwWGiNPb1M5fV2bUqQ6OD6U6vVeOAX7t0eXMRybnr/NH60AURWaOK
-         u+ZFVHMN2r2ZUw2reaKq84cKR6FnlbZz6gXXhxWLsXfFV+yE+RC1f8OqA3tw6VQ3qBmo
-         MJJPDXfZ+Ph+29/RuLqc0dNJIwyGNs/incyAgxAKVcBlMvEyWcch/3JaAoW7N6vLc/+P
-         27vQ==
-X-Gm-Message-State: APjAAAUa9iKO3gPw4NPi8LTIxl0+p20KWPa4t3Y4Z5UlQDS+zG6k15Z1
-        PRK19b6ZJq1OkFKXmuAl4W4jpw==
-X-Google-Smtp-Source: APXvYqxxzjnP/Lp48jWJ/5p35pfgJXrELFTsCqpMsATR/Jg6stAepm24Xs6LM+WJ9eZbLF8o/T5mIw==
-X-Received: by 2002:a5d:4583:: with SMTP id p3mr14261835wrq.114.1552505626654;
-        Wed, 13 Mar 2019 12:33:46 -0700 (PDT)
+        bh=UDDK3ZuE18UBaMnSKNW3aRwC8Z//s3DoM8HiLpa/VRw=;
+        b=DPDsjyDvaXGZnIFSFMHYsWGPS0MadbQ4z2Mb3+iIPGOgfdQNq6gn92IxpUc8RUV/N5
+         3wi+c7aon1MXxPbRTP3I73sdzNKBBX5nRhK1QqZkkBUdsEU+tw6V8lmkLh1kbY7uyJZ2
+         Cp4iBCJuvWve2Qs1DlaAse62NaPHX0gOk2nGRdrdh1dCusQklnMnOYoChGYBcMC02BXT
+         dBhm8LB99mMJZBDGlyn3AhuCV8ad/PhDSa4ArqHNjH2ecwCmbgSmfN7ynHBdh4vYIKuy
+         xhuZJyW0XEudkjxqBgxSOle4ox9JWA51Ddw5YDi7IWgpSUfgRDkvD2MWYqXdKrWASO4F
+         B5BQ==
+X-Gm-Message-State: APjAAAW+ILsPEjXIBcrsDxzqvu4Ienr/WEo+OFSqd5dr9lGFVIk1iU/P
+        HcPGVIdsGY/fn9aqChmdXtMfdLNpw/I=
+X-Google-Smtp-Source: APXvYqw3Ol5Hk3XjFB887ctA6G+qqgk2Oz8WuN2IY5XIz8KOcXb/f929xK7OrfCqOwiKJoS0VKAMMw==
+X-Received: by 2002:a5d:4a4d:: with SMTP id v13mr572670wrs.169.1552505628705;
+        Wed, 13 Mar 2019 12:33:48 -0700 (PDT)
 Received: from localhost.localdomain (205.66.21.93.rev.sfr.net. [93.21.66.205])
-        by smtp.gmail.com with ESMTPSA id z198sm3017497wmc.10.2019.03.13.12.33.45
+        by smtp.gmail.com with ESMTPSA id z198sm3017497wmc.10.2019.03.13.12.33.46
         (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Wed, 13 Mar 2019 12:33:45 -0700 (PDT)
+        Wed, 13 Mar 2019 12:33:47 -0700 (PDT)
 From:   Alexandre Bailon <abailon@baylibre.com>
 To:     linux-pm@vger.kernel.org, georgi.djakov@linaro.org
 Cc:     mturquette@baylibre.com, ptitiano@baylibre.com,
         linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
         zening.wang@nxp.com, aisheng.dong@nxp.com, khilman@baylibre.com,
         ccaione@baylibre.com, Alexandre Bailon <abailon@baylibre.com>
-Subject: [RFC PATCH 2/3] drivers: interconnect: imx: Add support of i.MX8MM
-Date:   Wed, 13 Mar 2019 20:34:07 +0100
-Message-Id: <20190313193408.23740-3-abailon@baylibre.com>
+Subject: [RFC PATCH 3/3] dt-bindings: interconnect: Document fsl,busfreq-imx8mm bindings
+Date:   Wed, 13 Mar 2019 20:34:08 +0100
+Message-Id: <20190313193408.23740-4-abailon@baylibre.com>
 X-Mailer: git-send-email 2.19.2
 In-Reply-To: <20190313193408.23740-1-abailon@baylibre.com>
 References: <20190313193408.23740-1-abailon@baylibre.com>
@@ -75,218 +75,44 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This adds a platform driver for the i.MX8MM SoC.
+Document the device-tree bindings interconnect driver for i.MX8MM SoC.
 
 Signed-off-by: Alexandre Bailon <abailon@baylibre.com>
 ---
- drivers/interconnect/imx/Kconfig          |   4 +
- drivers/interconnect/imx/Makefile         |   1 +
- drivers/interconnect/imx/busfreq-imx8mm.c | 132 ++++++++++++++++++++++
- include/dt-bindings/interconnect/imx8mm.h |  37 ++++++
- 4 files changed, 174 insertions(+)
- create mode 100644 drivers/interconnect/imx/busfreq-imx8mm.c
- create mode 100644 include/dt-bindings/interconnect/imx8mm.h
+ .../bindings/interconnect/imx8mm.txt          | 24 +++++++++++++++++++
+ 1 file changed, 24 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/interconnect/imx8mm.txt
 
-diff --git a/drivers/interconnect/imx/Kconfig b/drivers/interconnect/imx/Kconfig
-index afd7b71bbd82..b569d40e5ca0 100644
---- a/drivers/interconnect/imx/Kconfig
-+++ b/drivers/interconnect/imx/Kconfig
-@@ -11,3 +11,7 @@ config BUSFREQ
- 	  A generic interconnect driver that could be used for any i.MX.
- 	  This provides a way to register master and slave and some opp
- 	  to use when one or more master are in use.
-+
-+config BUSFREQ_IMX8MM
-+	bool "i.MX8MM busfreq driver"
-+	depends on BUSFREQ
-diff --git a/drivers/interconnect/imx/Makefile b/drivers/interconnect/imx/Makefile
-index fea647183815..a92fea6e042d 100644
---- a/drivers/interconnect/imx/Makefile
-+++ b/drivers/interconnect/imx/Makefile
-@@ -1 +1,2 @@
- obj-$(CONFIG_BUSFREQ) += busfreq.o
-+obj-$(CONFIG_BUSFREQ_IMX8MM) += busfreq-imx8mm.o
-diff --git a/drivers/interconnect/imx/busfreq-imx8mm.c b/drivers/interconnect/imx/busfreq-imx8mm.c
+diff --git a/Documentation/devicetree/bindings/interconnect/imx8mm.txt b/Documentation/devicetree/bindings/interconnect/imx8mm.txt
 new file mode 100644
-index 000000000000..c3b10a49dc29
+index 000000000000..81f0cf134de2
 --- /dev/null
-+++ b/drivers/interconnect/imx/busfreq-imx8mm.c
-@@ -0,0 +1,132 @@
-+// SPDX-License-Identifier: GPL-2.0
-+/*
-+ * Interconnect framework driver for i.MX SoC
-+ *
-+ * Copyright (c) 2019, BayLibre
-+ * Author: Alexandre Bailon <abailon@baylibre.com>
-+ */
++++ b/Documentation/devicetree/bindings/interconnect/imx8mm.txt
+@@ -0,0 +1,24 @@
++i.MX busfreq driver binding
++----------------------------------------------------
 +
-+#include <linux/device.h>
-+#include <linux/module.h>
-+#include <linux/of_platform.h>
-+#include <linux/platform_device.h>
++Required properties :
++- compatible : must be "fsl,busfreq-imx8mm"
++- #interconnect-cells : should contain 1
++- clocks : list of phandles and specifiers to all interconnect bus clocks
++- clock-names : clock names must include "dram-alt", "dram-apb", "dram-core",
++                "noc", "ahb" and "axi"
 +
-+#include <dt-bindings/interconnect/imx8mm.h>
++Examples:
 +
-+#include "busfreq.h"
-+
-+static struct busfreq_icc_node imx8mm_icc_nodes[] = {
-+	/* NOC */
-+	DEFINE_BUS_MASTER("A53-0", IMX8MM_CPU_0, IMX8MM_NOC),
-+	DEFINE_BUS_MASTER("A53-1", IMX8MM_CPU_1, IMX8MM_NOC),
-+	DEFINE_BUS_MASTER("A53-2", IMX8MM_CPU_2, IMX8MM_NOC),
-+	DEFINE_BUS_MASTER("A53-3", IMX8MM_CPU_3, IMX8MM_NOC),
-+	DEFINE_BUS_MASTER("VPU H1", IMX8MM_VPU_H1, IMX8MM_NOC),
-+	DEFINE_BUS_MASTER("VPU G1", IMX8MM_VPU_G1, IMX8MM_NOC),
-+	DEFINE_BUS_MASTER("VPU G2", IMX8MM_VPU_G2, IMX8MM_NOC),
-+	DEFINE_BUS_MASTER("MIPI", IMX8MM_MIPI, IMX8MM_NOC),
-+	DEFINE_BUS_MASTER("USB-1", IMX8MM_USB_1, IMX8MM_NOC),
-+	DEFINE_BUS_MASTER("USB-2", IMX8MM_USB_1, IMX8MM_NOC),
-+	DEFINE_BUS_MASTER("GPU", IMX8MM_GPU, IMX8MM_NOC),
-+	DEFINE_BUS_MASTER("PCIE", IMX8MM_PCIE, IMX8MM_NOC),
-+	DEFINE_BUS_SLAVE("DRAM", IMX8MM_DRAM),
-+	DEFINE_BUS_INTERCONNECT("NOC", IMX8MM_NOC, 1, IMX8MM_DRAM),
-+
-+	/* PL301 */
-+	DEFINE_BUS_MASTER("SAI-1", IMX8MM_SAI1, IMX8MM_PL301),
-+	DEFINE_BUS_MASTER("SAI-2", IMX8MM_SAI2, IMX8MM_PL301),
-+	DEFINE_BUS_MASTER("SAI-3", IMX8MM_SAI3, IMX8MM_PL301),
-+	DEFINE_BUS_MASTER("SAI-4", IMX8MM_SAI4, IMX8MM_PL301),
-+	DEFINE_BUS_MASTER("SAI-5", IMX8MM_SAI5, IMX8MM_PL301),
-+	DEFINE_BUS_MASTER("SAI-6", IMX8MM_SAI6, IMX8MM_PL301),
-+	DEFINE_BUS_MASTER("SPDIF", IMX8MM_SPDIF, IMX8MM_PL301),
-+	DEFINE_BUS_MASTER("FEC", IMX8MM_FEC, IMX8MM_PL301),
-+	DEFINE_BUS_INTERCONNECT("PL301", IMX8MM_PL301, 1, IMX8MM_NOC),
-+};
-+
-+static struct busfreq_opp_clk imx8mm_low_freq_clks[] = {
-+	DEFINE_OPP_CLOCK("dram-alt", 100000000),
-+	DEFINE_OPP_CLOCK("dram-apb", 40000000),
-+	DEFINE_OPP_CLOCK("dram-core", 25000000),
-+	DEFINE_OPP_CLOCK("noc", 150000000),
-+	DEFINE_OPP_CLOCK("ahb", 22222222),
-+	DEFINE_OPP_CLOCK("axi", 24000000),
-+};
-+
-+static struct busfreq_opp_clk imx8mm_audio_freq_clks[] = {
-+	DEFINE_OPP_CLOCK("dram-alt", 400000000),
-+	DEFINE_OPP_CLOCK("dram-apb", 40000000),
-+	DEFINE_OPP_CLOCK("dram-core", 100000000),
-+	DEFINE_OPP_CLOCK("noc", 150000000),
-+	DEFINE_OPP_CLOCK("ahb", 22222222),
-+	DEFINE_OPP_CLOCK("axi", 24000000),
-+};
-+
-+static struct busfreq_opp_bw imx8mm_audio_freq_nodes[] = {
-+	DEFINE_OPP_NODE(IMX8MM_SAI1),
-+	DEFINE_OPP_NODE(IMX8MM_SAI2),
-+	DEFINE_OPP_NODE(IMX8MM_SAI3),
-+	DEFINE_OPP_NODE(IMX8MM_SAI4),
-+	DEFINE_OPP_NODE(IMX8MM_SAI5),
-+	DEFINE_OPP_NODE(IMX8MM_SAI6),
-+	DEFINE_OPP_NODE(IMX8MM_SPDIF),
-+};
-+
-+static struct busfreq_opp_clk imx8mm_high_freq_clks[] = {
-+	DEFINE_OPP_CLOCK("dram-apb", 800000000),
-+	DEFINE_OPP_CLOCK("dram-core", 750000000),
-+	DEFINE_OPP_CLOCK("noc", 750000000),
-+	DEFINE_OPP_CLOCK("ahb", 133333333),
-+	DEFINE_OPP_CLOCK("axi", 333000000),
-+};
-+
-+static struct busfreq_opp_bw imx8mm_high_freq_nodes[] = {
-+	DEFINE_OPP_NODE(IMX8MM_SAI1),
-+	DEFINE_OPP_NODE(IMX8MM_SAI2),
-+	DEFINE_OPP_NODE(IMX8MM_SAI3),
-+	DEFINE_OPP_NODE(IMX8MM_SAI4),
-+	DEFINE_OPP_NODE(IMX8MM_SAI5),
-+	DEFINE_OPP_NODE(IMX8MM_SAI6),
-+	DEFINE_OPP_NODE(IMX8MM_SPDIF),
-+	DEFINE_OPP_NODE(IMX8MM_MIPI),
-+};
-+
-+static struct busfreq_plat_opp imx8mm_opps[] = {
-+	DEFINE_OPP_NO_NODES(imx8mm_low_freq_clks, false),
-+	DEFINE_OPP(imx8mm_audio_freq_clks, imx8mm_audio_freq_nodes, false),
-+	DEFINE_OPP(imx8mm_high_freq_clks, imx8mm_high_freq_nodes, true),
-+};
-+
-+static int imx8mm_busfreq_probe(struct platform_device *pdev)
-+{
-+	int ret;
-+
-+	ret = busfreq_register(pdev, imx8mm_icc_nodes,
-+			       ARRAY_SIZE(imx8mm_icc_nodes),
-+			       imx8mm_opps, ARRAY_SIZE(imx8mm_opps));
-+	return ret;
-+}
-+
-+static int imx8mm_busfreq_remove(struct platform_device *pdev)
-+{
-+	return busfreq_unregister(pdev);
-+}
-+
-+static const struct of_device_id busfreq_of_match[] = {
-+	{ .compatible = "fsl,busfreq-imx8mm" },
-+	{ },
-+};
-+MODULE_DEVICE_TABLE(of, busfreq_of_match);
-+
-+static struct platform_driver imx8mm_busfreq_driver = {
-+	.probe = imx8mm_busfreq_probe,
-+	.remove = imx8mm_busfreq_remove,
-+	.driver = {
-+		.name = "busfreq-imx8mm",
-+		.of_match_table = busfreq_of_match,
-+	},
-+};
-+
-+builtin_platform_driver(imx8mm_busfreq_driver);
-+MODULE_AUTHOR("Alexandre Bailon <abailon@baylibre.com>");
-+MODULE_LICENSE("GPL v2");
-diff --git a/include/dt-bindings/interconnect/imx8mm.h b/include/dt-bindings/interconnect/imx8mm.h
-new file mode 100644
-index 000000000000..4318ed319edc
---- /dev/null
-+++ b/include/dt-bindings/interconnect/imx8mm.h
-@@ -0,0 +1,37 @@
-+/* SPDX-License-Identifier: GPL-2.0 */
-+/*
-+ * Interconnect framework driver for i.MX SoC
-+ *
-+ * Copyright (c) 2019, BayLibre
-+ * Author: Alexandre Bailon <abailon@baylibre.com>
-+ */
-+
-+#ifndef __IMX8MM_INTERCONNECT_IDS_H
-+#define __IMX8MM_INTERCONNECT_IDS_H
-+
-+#define IMX8MM_NOC	0
-+#define IMX8MM_CPU_0	1
-+#define IMX8MM_CPU_1	2
-+#define IMX8MM_CPU_2	3
-+#define IMX8MM_CPU_3	4
-+#define IMX8MM_VPU_H1	5
-+#define IMX8MM_VPU_G1	6
-+#define IMX8MM_VPU_G2	7
-+#define IMX8MM_MIPI	8
-+#define IMX8MM_USB_1	9
-+#define IMX8MM_USB_2	10
-+#define IMX8MM_PCIE	11
-+#define IMX8MM_GPU	12
-+#define IMX8MM_DRAM	13
-+
-+#define IMX8MM_PL301	100
-+#define IMX8MM_SAI1	101
-+#define IMX8MM_SAI2	102
-+#define IMX8MM_SAI3	103
-+#define IMX8MM_SAI4	104
-+#define IMX8MM_SAI5	105
-+#define IMX8MM_SAI6	106
-+#define IMX8MM_SPDIF	107
-+#define IMX8MM_FEC	108
-+
-+#endif /* __IMX8MM_INTERCONNECT_IDS_H */
++	icc0: icc {
++		compatible = "fsl,busfreq-imx8mm";
++		#interconnect-cells = <1>;
++		clocks = <&clk IMX8MM_CLK_DRAM_ALT>,
++			 <&clk IMX8MM_CLK_DRAM_APB>,
++			 <&clk IMX8MM_CLK_DRAM_CORE>,
++			 <&clk IMX8MM_CLK_NOC_DIV>,
++			 <&clk IMX8MM_CLK_AHB_DIV>,
++			 <&clk IMX8MM_CLK_MAIN_AXI>;
++		clock-names = "dram-alt", "dram-apb", "dram-core", "noc",
++			 "ahb", "axi";
++	};
 -- 
 2.19.2
 
