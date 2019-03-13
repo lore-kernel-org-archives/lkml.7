@@ -2,206 +2,130 @@ Return-Path: <SRS0=dUEL=RQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,UNPARSEABLE_RELAY
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_MUTT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 90075C43381
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 Mar 2019 09:25:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C6572C43381
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 Mar 2019 09:28:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5B8812183F
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 Mar 2019 09:25:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 90AF02173C
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 Mar 2019 09:28:06 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="FEQCLdDC"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727414AbfCMJZS (ORCPT
+        id S1727339AbfCMJ2F (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 13 Mar 2019 05:25:18 -0400
-Received: from Mailgw01.mediatek.com ([1.203.163.78]:60860 "EHLO
-        mailgw01.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1726719AbfCMJZS (ORCPT
+        Wed, 13 Mar 2019 05:28:05 -0400
+Received: from mail-pf1-f195.google.com ([209.85.210.195]:43551 "EHLO
+        mail-pf1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725856AbfCMJ2E (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 13 Mar 2019 05:25:18 -0400
-X-UUID: a573d73afd474bb6b340500aec94ce18-20190313
-X-UUID: a573d73afd474bb6b340500aec94ce18-20190313
-Received: from mtkcas36.mediatek.inc [(172.27.4.253)] by mailgw01.mediatek.com
-        (envelope-from <yong.wu@mediatek.com>)
-        (mailgw01.mediatek.com ESMTP with TLS)
-        with ESMTP id 1622792869; Wed, 13 Mar 2019 17:25:09 +0800
-Received: from MTKCAS36.mediatek.inc (172.27.4.186) by MTKMBS31N2.mediatek.inc
- (172.27.4.87) with Microsoft SMTP Server (TLS) id 15.0.1395.4; Wed, 13 Mar
- 2019 17:25:07 +0800
-Received: from [10.17.3.153] (172.27.4.253) by MTKCAS36.mediatek.inc
- (172.27.4.170) with Microsoft SMTP Server id 15.0.1395.4 via Frontend
- Transport; Wed, 13 Mar 2019 17:25:06 +0800
-Message-ID: <1552469107.7433.21.camel@mhfsdcap03>
-Subject: Re: [PATCH v6 12/22] memory: mtk-smi: Add gals support
-From:   Yong Wu <yong.wu@mediatek.com>
-To:     Matthias Brugger <matthias.bgg@gmail.com>
-CC:     Joerg Roedel <joro@8bytes.org>,
-        Robin Murphy <robin.murphy@arm.com>,
-        "Rob Herring" <robh+dt@kernel.org>,
-        Evan Green <evgreen@chromium.org>,
-        "Tomasz Figa" <tfiga@google.com>,
-        Will Deacon <will.deacon@arm.com>,
-        <linux-mediatek@lists.infradead.org>,
-        <srv_heupstream@mediatek.com>, <devicetree@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <iommu@lists.linux-foundation.org>, <yingjoe.chen@mediatek.com>,
-        <youlin.pei@mediatek.com>, Nicolas Boichat <drinkcat@chromium.org>,
-        <anan.sun@mediatek.com>, Matthias Kaehlcke <mka@chromium.org>
-Date:   Wed, 13 Mar 2019 17:25:07 +0800
-In-Reply-To: <1550394300-17420-13-git-send-email-yong.wu@mediatek.com>
-References: <1550394300-17420-1-git-send-email-yong.wu@mediatek.com>
-         <1550394300-17420-13-git-send-email-yong.wu@mediatek.com>
-Content-Type: text/plain; charset="UTF-8"
-X-Mailer: Evolution 3.2.3-0ubuntu6 
-Content-Transfer-Encoding: 7bit
+        Wed, 13 Mar 2019 05:28:04 -0400
+Received: by mail-pf1-f195.google.com with SMTP id q17so946745pfh.10;
+        Wed, 13 Mar 2019 02:28:04 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=V2SU/HcyKOo1yTWZv2CFgrz5XJlYH5b//sg9V29TkLI=;
+        b=FEQCLdDCIBXTalZGa5dDpBDTBaBTiSP9EVwRPgWowFnoqZgpeL2Nxr/Uws8KMmEwdK
+         Nms+sE8Jpy28nspwdPPAhLOKGDJ7joTgWVWS2ZKJ5bqoWr4GUr/jUH6YebcphfGOjqpW
+         9HrH9fOP26C0COpV7nNxVC+7YUIFnKlh5tjvA+bfRkMH+s7ETN8viUczJtqaiBT7sLAj
+         oZtXSsTyEODcMmOs6gOlVBEY1ATxWV4zZn5PHUjAFsmtFG7HNbyWMP1T1svl60qB80Pa
+         NNKrNWub0jcU3NFZD+RAA8x72LyPYaA8+hTZtpAT4sbt1HQk62RT8lnPWszd5gjWWNPn
+         ZIHw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=V2SU/HcyKOo1yTWZv2CFgrz5XJlYH5b//sg9V29TkLI=;
+        b=p7BfHhtDzJB3zmNAxNFj35xctew1UZ287hnZgCgqRdsrNDvB/6uzT3mQV6J/wKrnRz
+         x91dhuLr//qhxz/SLQh8Oo4PIiNj3dvtLAn5Marc7y8sDMT7l8i+wz/Own3BA8jB12hX
+         y+tX30ZIXjcDLxMpWkdHp2Ns2tkeVlwEZfuxtNdwdy9EHI9Lks/1rzPCw3I6xAX66Rcs
+         0qIhnRT1x2hReTW0xlXtSrhOWNx9ASxRXr6kXTZ7DZjLR7o2TNs5hk6KqG3KgXPy9nzj
+         XCZr8juWlWD0wHe9wcm1dfD4hif82xkqPzhaGLlQf2Pd3puOD2A81CGRmr3zgm8QMv2b
+         sOqA==
+X-Gm-Message-State: APjAAAWquasBLFzzyk+y2dxcRC/azBmDEwcSJAIjMXzXv4ssSz1OuyVa
+        RaIaWDdTv5AjBG8oSYDlWLo=
+X-Google-Smtp-Source: APXvYqzlINvbJfGI0A2aI7uJXMmAZW7rB48AMnlIYAcWxdnMaMuqb4Lnc32e3vqyjVoF+JKq9FjSUg==
+X-Received: by 2002:a62:e80f:: with SMTP id c15mr43076554pfi.33.1552469283660;
+        Wed, 13 Mar 2019 02:28:03 -0700 (PDT)
+Received: from localhost ([110.70.15.13])
+        by smtp.gmail.com with ESMTPSA id a4sm13471791pga.52.2019.03.13.02.28.01
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Wed, 13 Mar 2019 02:28:02 -0700 (PDT)
+Date:   Wed, 13 Mar 2019 18:27:59 +0900
+From:   Sergey Senozhatsky <sergey.senozhatsky.work@gmail.com>
+To:     Sebastian Siewior <bigeasy@linutronix.de>
+Cc:     John Ogness <john.ogness@linutronix.de>,
+        Sergey Senozhatsky <sergey.senozhatsky.work@gmail.com>,
+        Petr Mladek <pmladek@suse.com>, linux-kernel@vger.kernel.org,
+        Peter Zijlstra <peterz@infradead.org>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Daniel Wang <wonderfly@google.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Alan Cox <gnomes@lxorguk.ukuu.org.uk>,
+        Jiri Slaby <jslaby@suse.com>,
+        Peter Feiner <pfeiner@google.com>,
+        linux-serial@vger.kernel.org,
+        Sergey Senozhatsky <sergey.senozhatsky@gmail.com>
+Subject: Re: [RFC PATCH v1 00/25] printk: new implementation
+Message-ID: <20190313092759.GA10060@jagdpanzerIV>
+References: <20190213025520.GA5803@jagdpanzerIV>
+ <874l9721hf.fsf@linutronix.de>
+ <20190304052335.GA6648@jagdpanzerIV>
+ <87lg1rggcz.fsf@linutronix.de>
+ <20190311105411.GA368@jagdpanzerIV>
+ <20190312123857.juatd6fwtfmqajze@pathway.suse.cz>
+ <874l8815uc.fsf@linutronix.de>
+ <20190313021534.GB783@jagdpanzerIV>
+ <87d0mv9off.fsf@linutronix.de>
+ <20190313084028.f2m4qhxd5sjzzawr@linutronix.de>
 MIME-Version: 1.0
-X-MTK:  N
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190313084028.f2m4qhxd5sjzzawr@linutronix.de>
+User-Agent: Mutt/1.11.3 (2019-02-01)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Matthias,
+On (03/13/19 09:40), Sebastian Siewior wrote:
+> On 2019-03-13 09:19:32 [+0100], John Ogness wrote:
+> > recursive situation. As you are pointing out, the notification/wake
+> > component of printk_safe will still be needed. I will leave that (small)
+> > part in printk_safe.c.
+> 
+> Does this mean we keep irq_work part or we bury it and solve it by other
+> means?
 
-A gentle ping for all the smi part here.
-From Joerg, your review is expected before he apply.
+That's a very good question. Because if we add console_trylock()
+to printk(), then we can't invoke ->atomic() consoles when console_sem
+is already locked, because one of the registered drivers is currently
+being modified by a 3rd party and printk(), thus, must stay away.
+Once that modification will be done console_unlock() will print all
+pending messages. This is current design. And this conflicts with the
+whole idea of ->atomic() consoles.
 
-Thanks in advance.
+So may be we need a whole new scheme in this department as well.
 
-On Sun, 2019-02-17 at 17:04 +0800, Yong Wu wrote:
-> In some SoCs like mt8183, SMI add GALS(Global Async Local Sync) module
-> which can help synchronize for the modules in different clock frequency.
-> It can be seen as a "asynchronous fifo". This is a example diagram:
-> 
->             M4U
->              |
->          ----------
->          |        |
->      gals0-rx   gals1-rx
->          |        |
->          |        |
->      gals0-tx   gals1-tx
->          |        |
->         ------------
->          SMI Common
->         ------------
->              |
->   +-----+--------+-----+- ...
->   |     |        |     |
->   |  gals-rx  gals-rx  |
->   |     |        |     |
->   |     |        |     |
->   |  gals-tx  gals-tx  |
->   |     |        |     |
-> larb1 larb2   larb3  larb4
-> 
-> GALS only help transfer the command/data while it doesn't have the
-> configuring register, thus it has the special "smi" clock and doesn't
-> have the "apb" clock. From the diagram above, we add "gals0" and
-> "gals1" clocks for smi-common and add a "gals" clock for smi-larb.
-> 
-> This patch adds gals clock supporting in the SMI. Note that some larbs
-> may still don't have the "gals" clock like larb1 and larb4 above.
-> 
-> This is also a preparing patch for mt8183 which has GALS.
-> 
-> CC: Matthias Brugger <matthias.bgg@gmail.com>
-> Signed-off-by: Yong Wu <yong.wu@mediatek.com>
-> Reviewed-by: Evan Green <evgreen@chromium.org>
-> ---
->  drivers/memory/mtk-smi.c | 36 ++++++++++++++++++++++++++++++++++++
->  1 file changed, 36 insertions(+)
-> 
-> diff --git a/drivers/memory/mtk-smi.c b/drivers/memory/mtk-smi.c
-> index 8a2f968..91634d7 100644
-> --- a/drivers/memory/mtk-smi.c
-> +++ b/drivers/memory/mtk-smi.c
-> @@ -56,6 +56,7 @@ enum mtk_smi_gen {
->  
->  struct mtk_smi_common_plat {
->  	enum mtk_smi_gen gen;
-> +	bool             has_gals;
->  };
->  
->  struct mtk_smi_larb_gen {
-> @@ -63,11 +64,13 @@ struct mtk_smi_larb_gen {
->  	int port_in_larb[MTK_LARB_NR_MAX + 1];
->  	void (*config_port)(struct device *);
->  	unsigned int larb_direct_to_common_mask;
-> +	bool             has_gals;
->  };
->  
->  struct mtk_smi {
->  	struct device			*dev;
->  	struct clk			*clk_apb, *clk_smi;
-> +	struct clk			*clk_gals0, *clk_gals1;
->  	struct clk			*clk_async; /*only needed by mt2701*/
->  	void __iomem			*smi_ao_base;
->  
-> @@ -99,8 +102,20 @@ static int mtk_smi_enable(const struct mtk_smi *smi)
->  	if (ret)
->  		goto err_disable_apb;
->  
-> +	ret = clk_prepare_enable(smi->clk_gals0);
-> +	if (ret)
-> +		goto err_disable_smi;
-> +
-> +	ret = clk_prepare_enable(smi->clk_gals1);
-> +	if (ret)
-> +		goto err_disable_gals0;
-> +
->  	return 0;
->  
-> +err_disable_gals0:
-> +	clk_disable_unprepare(smi->clk_gals0);
-> +err_disable_smi:
-> +	clk_disable_unprepare(smi->clk_smi);
->  err_disable_apb:
->  	clk_disable_unprepare(smi->clk_apb);
->  err_put_pm:
-> @@ -110,6 +125,8 @@ static int mtk_smi_enable(const struct mtk_smi *smi)
->  
->  static void mtk_smi_disable(const struct mtk_smi *smi)
->  {
-> +	clk_disable_unprepare(smi->clk_gals1);
-> +	clk_disable_unprepare(smi->clk_gals0);
->  	clk_disable_unprepare(smi->clk_smi);
->  	clk_disable_unprepare(smi->clk_apb);
->  	pm_runtime_put_sync(smi->dev);
-> @@ -310,6 +327,15 @@ static int mtk_smi_larb_probe(struct platform_device *pdev)
->  	larb->smi.clk_smi = devm_clk_get(dev, "smi");
->  	if (IS_ERR(larb->smi.clk_smi))
->  		return PTR_ERR(larb->smi.clk_smi);
-> +
-> +	if (larb->larb_gen->has_gals) {
-> +		/* The larbs may still haven't gals even if the SoC support.*/
-> +		larb->smi.clk_gals0 = devm_clk_get(dev, "gals");
-> +		if (PTR_ERR(larb->smi.clk_gals0) == -ENOENT)
-> +			larb->smi.clk_gals0 = NULL;
-> +		else if (IS_ERR(larb->smi.clk_gals0))
-> +			return PTR_ERR(larb->smi.clk_gals0);
-> +	}
->  	larb->smi.dev = dev;
->  
->  	if (larb->larb_gen->need_larbid) {
-> @@ -402,6 +428,16 @@ static int mtk_smi_common_probe(struct platform_device *pdev)
->  	if (IS_ERR(common->clk_smi))
->  		return PTR_ERR(common->clk_smi);
->  
-> +	if (common->plat->has_gals) {
-> +		common->clk_gals0 = devm_clk_get(dev, "gals0");
-> +		if (IS_ERR(common->clk_gals0))
-> +			return PTR_ERR(common->clk_gals0);
-> +
-> +		common->clk_gals1 = devm_clk_get(dev, "gals1");
-> +		if (IS_ERR(common->clk_gals1))
-> +			return PTR_ERR(common->clk_gals1);
-> +	}
-> +
->  	/*
->  	 * for mtk smi gen 1, we need to get the ao(always on) base to config
->  	 * m4u port, and we need to enable the aync clock for transform the smi
+For instance [*and this is completely untested idea* !!!]
 
+*May be* we can take a closer look and find cases when ->atomic
+consoles don't really depend on console_sem. And *may be* we can
+split the console drivers list and somehow forbid removal and
+modification (ioctl) of ->atomic consoles under us. Assuming that
+this is doable we then can start iterating ->atomic consoles list
+with unlocked console_sem.
+Non->atomic consoles or consoles which depend on console_sem (VT,
+fbcon and so on) will stay in another list, and we will take
+console_sem before we iterate that list and invoke those drivers.
 
+One more time - a completely random thought.
+
+	-ss
