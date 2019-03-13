@@ -4,54 +4,54 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 17D72C43381
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 Mar 2019 19:26:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D683EC43381
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 Mar 2019 19:27:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D4FB22075C
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 Mar 2019 19:26:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 955322075C
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 Mar 2019 19:27:02 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1552505213;
-	bh=TY+zVZ/4klUEczISMX9gft6iMeeZS9G6MXrHEdH5kSg=;
+	s=default; t=1552505222;
+	bh=gt1xO1fXUxIGFTtSLn/yPkHH5X2bx3O/MM7lFrbAEbk=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=hnvYNfLycjeOmFUEuvwKN4Pf8CvYE3NAYyj6lpFNJn4XPG+vsJniOXQQ4Oo+EjS6p
-	 am2Xrvch8SlZT2CSXEKQW7Xx5AQWeIz4DiIAPLFaCuZm1BGhbP9ln4pW0VBy1w6Du9
-	 s/tcgB/2baQbxkVrtKxsAJ0nwyFsuuVHnQMMD7D4=
+	b=WKb3PWFzLsPuuvibRHZ8F+6ciGKtxHVTDUjYwXd2zeA9vAggif0v1BIW52BMSeBff
+	 Z9TqxC2qNJEnAzH6qze7az27L2mpKqFyrNe3YTZ5/AUJAQ31dDxbjDkeD9U6bU3llj
+	 UwoaFcQASSDZzqsKS4jkrXf4r9wyYee5ub/hegCA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728343AbfCMT0w (ORCPT
+        id S1728264AbfCMTOl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 13 Mar 2019 15:26:52 -0400
-Received: from mail.kernel.org ([198.145.29.99]:45044 "EHLO mail.kernel.org"
+        Wed, 13 Mar 2019 15:14:41 -0400
+Received: from mail.kernel.org ([198.145.29.99]:44964 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728272AbfCMTOn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 13 Mar 2019 15:14:43 -0400
+        id S1727784AbfCMTOj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 13 Mar 2019 15:14:39 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id CD2B82171F;
-        Wed, 13 Mar 2019 19:14:40 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 2C5BA2171F;
+        Wed, 13 Mar 2019 19:14:36 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1552504482;
-        bh=TY+zVZ/4klUEczISMX9gft6iMeeZS9G6MXrHEdH5kSg=;
+        s=default; t=1552504477;
+        bh=gt1xO1fXUxIGFTtSLn/yPkHH5X2bx3O/MM7lFrbAEbk=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=nzHiqfplw01PJFIViHG6j0zx8QA7RkDuoIZZZdJ+bzW2qNxCJR5t415i9E5IwDm44
-         /un48Jhzo9dSJHD7GWus5egaTwBWX/WUeLwAfJVFkGWjw35ij9rlpTCfcw2h8vkJqN
-         aYkaQSVkNzPVYrKyGAK+D40LhJcgdZuFBv6zkAek=
+        b=AGChrbAYUPOhkCJrMbjBaI+9w6WmB/lKh4tV7weguAeYxlDSHodVircZHGm7hxRZg
+         tE2ivZdGpsGUuwY67vcWov5Vbeynyj+PcXz1s3R+lLgKO8GjDJVPf1HeNECyrOEpxC
+         BwMqAgh2UVyT/GT9iMOZ3burcAtO5RMteBltCnis=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Alban Crequy <alban@kinvolk.io>, Craig Gallek <kraig@google.com>,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        Sasha Levin <sashal@kernel.org>, netdev@vger.kernel.org,
-        bpf@vger.kernel.org, linux-kselftest@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.19 39/48] bpf, lpm: fix lookup bug in map_delete_elem
-Date:   Wed, 13 Mar 2019 15:12:41 -0400
-Message-Id: <20190313191250.158955-39-sashal@kernel.org>
+Cc:     Arnd Bergmann <arnd@arndb.de>,
+        "David S . Miller" <davem@davemloft.net>,
+        Sasha Levin <sashal@kernel.org>, netdev@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.19 37/48] phonet: fix building with clang
+Date:   Wed, 13 Mar 2019 15:12:39 -0400
+Message-Id: <20190313191250.158955-37-sashal@kernel.org>
 X-Mailer: git-send-email 2.19.1
 In-Reply-To: <20190313191250.158955-1-sashal@kernel.org>
 References: <20190313191250.158955-1-sashal@kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
@@ -59,80 +59,181 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Alban Crequy <alban@kinvolk.io>
+From: Arnd Bergmann <arnd@arndb.de>
 
-[ Upstream commit 7c0cdf0b3940f63d9777c3fcf250a2f83859ca54 ]
+[ Upstream commit 6321aa197547da397753757bd84c6ce64b3e3d89 ]
 
-trie_delete_elem() was deleting an entry even though it was not matching
-if the prefixlen was correct. This patch adds a check on matchlen.
+clang warns about overflowing the data[] member in the struct pnpipehdr:
 
-Reproducer:
+net/phonet/pep.c:295:8: warning: array index 4 is past the end of the array (which contains 1 element) [-Warray-bounds]
+                        if (hdr->data[4] == PEP_IND_READY)
+                            ^         ~
+include/net/phonet/pep.h:66:3: note: array 'data' declared here
+                u8              data[1];
 
-$ sudo bpftool map create /sys/fs/bpf/mylpm type lpm_trie key 8 value 1 entries 128 name mylpm flags 1
-$ sudo bpftool map update pinned /sys/fs/bpf/mylpm key hex 10 00 00 00 aa bb cc dd value hex 01
-$ sudo bpftool map dump pinned /sys/fs/bpf/mylpm
-key: 10 00 00 00 aa bb cc dd  value: 01
-Found 1 element
-$ sudo bpftool map delete pinned /sys/fs/bpf/mylpm key hex 10 00 00 00 ff ff ff ff
-$ echo $?
-0
-$ sudo bpftool map dump pinned /sys/fs/bpf/mylpm
-Found 0 elements
+Using a flexible array member at the end of the struct avoids the
+warning, but since we cannot have a flexible array member inside
+of the union, each index now has to be moved back by one, which
+makes it a little uglier.
 
-A similar reproducer is added in the selftests.
-
-Without the patch:
-
-$ sudo ./tools/testing/selftests/bpf/test_lpm_map
-test_lpm_map: test_lpm_map.c:485: test_lpm_delete: Assertion `bpf_map_delete_elem(map_fd, key) == -1 && errno == ENOENT' failed.
-Aborted
-
-With the patch: test_lpm_map runs without errors.
-
-Fixes: e454cf595853 ("bpf: Implement map_delete_elem for BPF_MAP_TYPE_LPM_TRIE")
-Cc: Craig Gallek <kraig@google.com>
-Signed-off-by: Alban Crequy <alban@kinvolk.io>
-Acked-by: Craig Gallek <kraig@google.com>
-Signed-off-by: Daniel Borkmann <daniel@iogearbox.net>
+Signed-off-by: Arnd Bergmann <arnd@arndb.de>
+Acked-by: Rémi Denis-Courmont <remi@remlab.net>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- kernel/bpf/lpm_trie.c                      |  1 +
- tools/testing/selftests/bpf/test_lpm_map.c | 10 ++++++++++
- 2 files changed, 11 insertions(+)
+ include/net/phonet/pep.h |  5 +++--
+ net/phonet/pep.c         | 32 ++++++++++++++++----------------
+ 2 files changed, 19 insertions(+), 18 deletions(-)
 
-diff --git a/kernel/bpf/lpm_trie.c b/kernel/bpf/lpm_trie.c
-index 9058317ba9de..4f3138e6ecb2 100644
---- a/kernel/bpf/lpm_trie.c
-+++ b/kernel/bpf/lpm_trie.c
-@@ -432,6 +432,7 @@ static int trie_delete_elem(struct bpf_map *map, void *_key)
+diff --git a/include/net/phonet/pep.h b/include/net/phonet/pep.h
+index b669fe6dbc3b..98f31c7ea23d 100644
+--- a/include/net/phonet/pep.h
++++ b/include/net/phonet/pep.h
+@@ -63,10 +63,11 @@ struct pnpipehdr {
+ 		u8		state_after_reset;	/* reset request */
+ 		u8		error_code;		/* any response */
+ 		u8		pep_type;		/* status indication */
+-		u8		data[1];
++		u8		data0;			/* anything else */
+ 	};
++	u8			data[];
+ };
+-#define other_pep_type		data[1]
++#define other_pep_type		data[0]
+ 
+ static inline struct pnpipehdr *pnp_hdr(struct sk_buff *skb)
+ {
+diff --git a/net/phonet/pep.c b/net/phonet/pep.c
+index 9fc76b19cd3c..db3473540303 100644
+--- a/net/phonet/pep.c
++++ b/net/phonet/pep.c
+@@ -132,7 +132,7 @@ static int pep_indicate(struct sock *sk, u8 id, u8 code,
+ 	ph->utid = 0;
+ 	ph->message_id = id;
+ 	ph->pipe_handle = pn->pipe_handle;
+-	ph->data[0] = code;
++	ph->error_code = code;
+ 	return pn_skb_send(sk, skb, NULL);
+ }
+ 
+@@ -153,7 +153,7 @@ static int pipe_handler_request(struct sock *sk, u8 id, u8 code,
+ 	ph->utid = id; /* whatever */
+ 	ph->message_id = id;
+ 	ph->pipe_handle = pn->pipe_handle;
+-	ph->data[0] = code;
++	ph->error_code = code;
+ 	return pn_skb_send(sk, skb, NULL);
+ }
+ 
+@@ -208,7 +208,7 @@ static int pep_ctrlreq_error(struct sock *sk, struct sk_buff *oskb, u8 code,
+ 	struct pnpipehdr *ph;
+ 	struct sockaddr_pn dst;
+ 	u8 data[4] = {
+-		oph->data[0], /* PEP type */
++		oph->pep_type, /* PEP type */
+ 		code, /* error code, at an unusual offset */
+ 		PAD, PAD,
+ 	};
+@@ -221,7 +221,7 @@ static int pep_ctrlreq_error(struct sock *sk, struct sk_buff *oskb, u8 code,
+ 	ph->utid = oph->utid;
+ 	ph->message_id = PNS_PEP_CTRL_RESP;
+ 	ph->pipe_handle = oph->pipe_handle;
+-	ph->data[0] = oph->data[1]; /* CTRL id */
++	ph->data0 = oph->data[0]; /* CTRL id */
+ 
+ 	pn_skb_get_src_sockaddr(oskb, &dst);
+ 	return pn_skb_send(sk, skb, &dst);
+@@ -272,17 +272,17 @@ static int pipe_rcv_status(struct sock *sk, struct sk_buff *skb)
+ 		return -EINVAL;
+ 
+ 	hdr = pnp_hdr(skb);
+-	if (hdr->data[0] != PN_PEP_TYPE_COMMON) {
++	if (hdr->pep_type != PN_PEP_TYPE_COMMON) {
+ 		net_dbg_ratelimited("Phonet unknown PEP type: %u\n",
+-				    (unsigned int)hdr->data[0]);
++				    (unsigned int)hdr->pep_type);
+ 		return -EOPNOTSUPP;
  	}
  
- 	if (!node || node->prefixlen != key->prefixlen ||
-+	    node->prefixlen != matchlen ||
- 	    (node->flags & LPM_TREE_NODE_FLAG_IM)) {
- 		ret = -ENOENT;
- 		goto out;
-diff --git a/tools/testing/selftests/bpf/test_lpm_map.c b/tools/testing/selftests/bpf/test_lpm_map.c
-index 147e34cfceb7..02d7c871862a 100644
---- a/tools/testing/selftests/bpf/test_lpm_map.c
-+++ b/tools/testing/selftests/bpf/test_lpm_map.c
-@@ -474,6 +474,16 @@ static void test_lpm_delete(void)
- 	assert(bpf_map_lookup_elem(map_fd, key, &value) == -1 &&
- 		errno == ENOENT);
+-	switch (hdr->data[1]) {
++	switch (hdr->data[0]) {
+ 	case PN_PEP_IND_FLOW_CONTROL:
+ 		switch (pn->tx_fc) {
+ 		case PN_LEGACY_FLOW_CONTROL:
+-			switch (hdr->data[4]) {
++			switch (hdr->data[3]) {
+ 			case PEP_IND_BUSY:
+ 				atomic_set(&pn->tx_credits, 0);
+ 				break;
+@@ -292,7 +292,7 @@ static int pipe_rcv_status(struct sock *sk, struct sk_buff *skb)
+ 			}
+ 			break;
+ 		case PN_ONE_CREDIT_FLOW_CONTROL:
+-			if (hdr->data[4] == PEP_IND_READY)
++			if (hdr->data[3] == PEP_IND_READY)
+ 				atomic_set(&pn->tx_credits, wake = 1);
+ 			break;
+ 		}
+@@ -301,12 +301,12 @@ static int pipe_rcv_status(struct sock *sk, struct sk_buff *skb)
+ 	case PN_PEP_IND_ID_MCFC_GRANT_CREDITS:
+ 		if (pn->tx_fc != PN_MULTI_CREDIT_FLOW_CONTROL)
+ 			break;
+-		atomic_add(wake = hdr->data[4], &pn->tx_credits);
++		atomic_add(wake = hdr->data[3], &pn->tx_credits);
+ 		break;
  
-+	key->prefixlen = 30; // unused prefix so far
-+	inet_pton(AF_INET, "192.255.0.0", key->data);
-+	assert(bpf_map_delete_elem(map_fd, key) == -1 &&
-+		errno == ENOENT);
-+
-+	key->prefixlen = 16; // same prefix as the root node
-+	inet_pton(AF_INET, "192.255.0.0", key->data);
-+	assert(bpf_map_delete_elem(map_fd, key) == -1 &&
-+		errno == ENOENT);
-+
- 	/* assert initial lookup */
- 	key->prefixlen = 32;
- 	inet_pton(AF_INET, "192.168.0.1", key->data);
+ 	default:
+ 		net_dbg_ratelimited("Phonet unknown PEP indication: %u\n",
+-				    (unsigned int)hdr->data[1]);
++				    (unsigned int)hdr->data[0]);
+ 		return -EOPNOTSUPP;
+ 	}
+ 	if (wake)
+@@ -318,7 +318,7 @@ static int pipe_rcv_created(struct sock *sk, struct sk_buff *skb)
+ {
+ 	struct pep_sock *pn = pep_sk(sk);
+ 	struct pnpipehdr *hdr = pnp_hdr(skb);
+-	u8 n_sb = hdr->data[0];
++	u8 n_sb = hdr->data0;
+ 
+ 	pn->rx_fc = pn->tx_fc = PN_LEGACY_FLOW_CONTROL;
+ 	__skb_pull(skb, sizeof(*hdr));
+@@ -506,7 +506,7 @@ static int pep_connresp_rcv(struct sock *sk, struct sk_buff *skb)
+ 		return -ECONNREFUSED;
+ 
+ 	/* Parse sub-blocks */
+-	n_sb = hdr->data[4];
++	n_sb = hdr->data[3];
+ 	while (n_sb > 0) {
+ 		u8 type, buf[6], len = sizeof(buf);
+ 		const u8 *data = pep_get_sb(skb, &type, &len, buf);
+@@ -739,7 +739,7 @@ static int pipe_do_remove(struct sock *sk)
+ 	ph->utid = 0;
+ 	ph->message_id = PNS_PIPE_REMOVE_REQ;
+ 	ph->pipe_handle = pn->pipe_handle;
+-	ph->data[0] = PAD;
++	ph->data0 = PAD;
+ 	return pn_skb_send(sk, skb, NULL);
+ }
+ 
+@@ -817,7 +817,7 @@ static struct sock *pep_sock_accept(struct sock *sk, int flags, int *errp,
+ 	peer_type = hdr->other_pep_type << 8;
+ 
+ 	/* Parse sub-blocks (options) */
+-	n_sb = hdr->data[4];
++	n_sb = hdr->data[3];
+ 	while (n_sb > 0) {
+ 		u8 type, buf[1], len = sizeof(buf);
+ 		const u8 *data = pep_get_sb(skb, &type, &len, buf);
+@@ -1109,7 +1109,7 @@ static int pipe_skb_send(struct sock *sk, struct sk_buff *skb)
+ 	ph->utid = 0;
+ 	if (pn->aligned) {
+ 		ph->message_id = PNS_PIPE_ALIGNED_DATA;
+-		ph->data[0] = 0; /* padding */
++		ph->data0 = 0; /* padding */
+ 	} else
+ 		ph->message_id = PNS_PIPE_DATA;
+ 	ph->pipe_handle = pn->pipe_handle;
 -- 
 2.19.1
 
