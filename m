@@ -7,46 +7,46 @@ X-Spam-Status: No, score=-8.8 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
 	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 99E23C4360F
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 Mar 2019 21:19:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7F69FC43381
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 Mar 2019 21:19:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 580AA2147C
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 Mar 2019 21:19:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 395B82054F
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 Mar 2019 21:19:15 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="I+pVrAF3";
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="GzsBIjNk"
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="J2YZEvu8";
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="Z5jYeaVg"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727568AbfCMVTJ (ORCPT
+        id S1727591AbfCMVTN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 13 Mar 2019 17:19:09 -0400
-Received: from smtp.codeaurora.org ([198.145.29.96]:46620 "EHLO
+        Wed, 13 Mar 2019 17:19:13 -0400
+Received: from smtp.codeaurora.org ([198.145.29.96]:46914 "EHLO
         smtp.codeaurora.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727541AbfCMVTI (ORCPT
+        with ESMTP id S1727570AbfCMVTL (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 13 Mar 2019 17:19:08 -0400
+        Wed, 13 Mar 2019 17:19:11 -0400
 Received: by smtp.codeaurora.org (Postfix, from userid 1000)
-        id 5546061155; Wed, 13 Mar 2019 21:19:03 +0000 (UTC)
+        id 1846A61196; Wed, 13 Mar 2019 21:19:07 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
-        s=default; t=1552511947;
-        bh=ckS8iy0RToEQrDjyvI6ydhZwZrhc47AJWAH3OTbO4MA=;
+        s=default; t=1552511951;
+        bh=xRjiiudR9CYZiAvvB4q1udaYQzh6RmaRwVhLwdws0YQ=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=I+pVrAF3kZjPuVZjMHNvtaT3biRPBviq4DoYvkTC5xuRZgSntPyDTOe51O6ywzME4
-         S51JJyjOfyXQdqPGdK7Gfs+uTe5ELHA5ivRChp785eJHPs81U+Ab2hfH8DJjrFUK+p
-         DaBCiGCMT8WYaAr176Tdk5yYJZxngHZHW6wzN4VE=
+        b=J2YZEvu8rpJuAe3f1bWfHBRXGqYUr4LLx0YMe2GH6KYCO7bmP8aXEtcTD1ScLYAXW
+         /V3SxJaYwcvJTTPvCIdtCyqSfI73AoOn1CKXJRASBTbsgLNdOVRt1jtLzmary+7/kA
+         EC8+DxDOSew2b2+y7aj3HjPYRlvypYPlox2HVv5o=
 Received: from codeaurora.org (i-global254.qualcomm.com [199.106.103.254])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-SHA256 (128/128 bits))
         (No client certificate requested)
         (Authenticated sender: ilina@smtp.codeaurora.org)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id 80FA760CED;
-        Wed, 13 Mar 2019 21:18:59 +0000 (UTC)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id E94CF60DA8;
+        Wed, 13 Mar 2019 21:19:04 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
-        s=default; t=1552511941;
-        bh=ckS8iy0RToEQrDjyvI6ydhZwZrhc47AJWAH3OTbO4MA=;
+        s=default; t=1552511946;
+        bh=xRjiiudR9CYZiAvvB4q1udaYQzh6RmaRwVhLwdws0YQ=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=GzsBIjNkFUeTXKb1vFyxM9k18Ul+YWmZDv0FL0Y+31TvLxkHH/Y4UWsSJ2WBNKI/p
-         ARnYdkJemFVawkTPgVdjYSFweIw7jwWM0OMWir8jkpMhC0qIqYtP6PnWFdGMkrlXqR
-         FU3eONUgXiO7E+a5DHJLvmJI5M7G2Y/nprb8Taio=
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 80FA760CED
+        b=Z5jYeaVg+A/YU3jWgDUu+Lji8fUmtmXSXg7OtGP4XEOqITy1N0/UWKGZaOFYXzHwW
+         y9KhTQs9yWKQgO1JRabxtJzePtpobtG4JGuuqLIMsQjAwCScfc0RASTNMaYbjrCCe+
+         o7f1Fl21F6eg516apNPalBhq/rqnzhUctkF6rJUM=
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org E94CF60DA8
 Authentication-Results: pdx-caf-mail.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
 Authentication-Results: pdx-caf-mail.web.codeaurora.org; spf=none smtp.mailfrom=ilina@codeaurora.org
 From:   Lina Iyer <ilina@codeaurora.org>
@@ -55,9 +55,9 @@ Cc:     linux-kernel@vger.kernel.org, rplsssn@codeaurora.org,
         linux-arm-msm@vger.kernel.org, thierry.reding@gmail.com,
         bjorn.andersson@linaro.org, dianders@chromium.org,
         linus.walleij@linaro.org, Lina Iyer <ilina@codeaurora.org>
-Subject: [PATCH v4 04/10] of: irq: add helper to remap interrupts to another irqdomain
-Date:   Wed, 13 Mar 2019 15:18:38 -0600
-Message-Id: <20190313211844.29416-5-ilina@codeaurora.org>
+Subject: [PATCH v4 07/10] drivers: pinctrl: msm: setup GPIO irqchip hierarchy
+Date:   Wed, 13 Mar 2019 15:18:41 -0600
+Message-Id: <20190313211844.29416-8-ilina@codeaurora.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190313211844.29416-1-ilina@codeaurora.org>
 References: <20190313211844.29416-1-ilina@codeaurora.org>
@@ -68,195 +68,284 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Stephen Boyd <swboyd@chromium.org>
+To allow GPIOs to wakeup the system from suspend or deep idle, the
+wakeup capable GPIOs are setup in hierarchy with interrupts from the
+wakeup-parent irqchip.
 
-Sometimes interrupts are routed from an interrupt controller to another
-in no specific order. Having these in the drivers makes it difficult to
-maintain when the same drivers supports multiple variants with different
-mapping. Also, specifying them in DT makes little sense with a bunch of
-numbers like -
-	<0, 13>, <5, 32>,
+In older SoC's, the TLMM will handover detection to the parent irqchip
+and in newer SoC's, the parent irqchip may also be active as well as the
+TLMM and therefore the GPIOs need to be masked at TLMM to avoid
+duplicate interrupts. To enable both these configurations to exist,
+allow the parent irqchip to dictate the TLMM irqchip's behavior when
+masking/unmasking the interrupt.
 
-It makes more sense when we can have the parent handle along with
-interrupt specifiers for the incoming interrupt as well as that of the
-outgoing interrupt like -
-	<22 0 &intc 36 0>,
-	<24 0 &intc 37 0>,
-	<26 0 &intc 38 0>,
-
-And the interrupt specifiers can be interpreted using these optional
-properties -
-	irqdomain-map-mask = <0xff 0>;
-	irqdomain-map-pass-thru = <0 0xff>;
-
-The irqdomain-map-mask reads the input interrupt specifier to parse the
-incoming interrupt port. The format of the output port is specified with
-the irqdomain-map-pass-thru property.
-
-Let's add a helper function to parse this from DT and match a struct
-irq_fwspec using the input interrupt specifier from the irqdomain-map
-and the valid bits specified in the irqdomain-map-mask and copy the
-output interrupt specifier from the map to irq_fwspec per the mask in
-irqdomain-map-pass-thru property for the matched interrupt.
-
-Signed-off-by: Stephen Boyd <swboyd@chromium.org>
+Co-developed-by: Stephen Boyd <swboyd@chromium.org>
 Signed-off-by: Lina Iyer <ilina@codeaurora.org>
 ---
 Changes in v4:
-	- Fix commit text spelling and verbosity
+	- Remove irq_set_wake() on summary IRQ interrupt
+Changes in v3:
+	- Use of_irq_domain_map() and pass PDC pin to parent irqdomain
+Changes in v2:
+	- Call parent mask when masking GPIO interrupt
+Changes in v1:
+	- Fix bug when unmasking PDC interrupt
 ---
- drivers/of/irq.c       | 125 +++++++++++++++++++++++++++++++++++++++++
- include/linux/of_irq.h |   1 +
- 2 files changed, 126 insertions(+)
+ drivers/pinctrl/qcom/pinctrl-msm.c | 151 ++++++++++++++++++++++++-----
+ 1 file changed, 128 insertions(+), 23 deletions(-)
 
-diff --git a/drivers/of/irq.c b/drivers/of/irq.c
-index e1f6f392a4c0..a1534f947ed4 100644
---- a/drivers/of/irq.c
-+++ b/drivers/of/irq.c
-@@ -273,6 +273,131 @@ int of_irq_parse_raw(const __be32 *addr, struct of_phandle_args *out_irq)
- }
- EXPORT_SYMBOL_GPL(of_irq_parse_raw);
+diff --git a/drivers/pinctrl/qcom/pinctrl-msm.c b/drivers/pinctrl/qcom/pinctrl-msm.c
+index ee8119879c4c..97e9000fa3c3 100644
+--- a/drivers/pinctrl/qcom/pinctrl-msm.c
++++ b/drivers/pinctrl/qcom/pinctrl-msm.c
+@@ -17,6 +17,7 @@
+ #include <linux/io.h>
+ #include <linux/module.h>
+ #include <linux/of.h>
++#include <linux/of_irq.h>
+ #include <linux/platform_device.h>
+ #include <linux/pinctrl/machine.h>
+ #include <linux/pinctrl/pinctrl.h>
+@@ -27,6 +28,7 @@
+ #include <linux/gpio/driver.h>
+ #include <linux/interrupt.h>
+ #include <linux/spinlock.h>
++#include <linux/soc/qcom/irq.h>
+ #include <linux/reboot.h>
+ #include <linux/pm.h>
+ #include <linux/log2.h>
+@@ -69,6 +71,7 @@ struct msm_pinctrl {
  
-+int of_irq_domain_map(const struct irq_fwspec *in, struct irq_fwspec *out)
+ 	DECLARE_BITMAP(dual_edge_irqs, MAX_NR_GPIO);
+ 	DECLARE_BITMAP(enabled_irqs, MAX_NR_GPIO);
++	DECLARE_BITMAP(wakeup_masked_irqs, MAX_NR_GPIO);
+ 
+ 	const struct msm_pinctrl_soc_data *soc;
+ 	void __iomem *regs[MAX_NR_TILES];
+@@ -703,6 +706,13 @@ static void msm_gpio_irq_mask(struct irq_data *d)
+ 
+ 	g = &pctrl->soc->groups[d->hwirq];
+ 
++	if (d->parent_data)
++		irq_chip_mask_parent(d);
++
++	/* Monitored by parent wakeup controller?*/
++	if (test_bit(d->hwirq, pctrl->wakeup_masked_irqs))
++		return;
++
+ 	raw_spin_lock_irqsave(&pctrl->lock, flags);
+ 
+ 	val = msm_readl_intr_cfg(pctrl, g);
+@@ -747,6 +757,13 @@ static void msm_gpio_irq_unmask(struct irq_data *d)
+ 
+ 	g = &pctrl->soc->groups[d->hwirq];
+ 
++	if (d->parent_data)
++		irq_chip_unmask_parent(d);
++
++	/* Monitored by parent wakeup controller? Keep masked */
++	if (test_bit(d->hwirq, pctrl->wakeup_masked_irqs))
++		return;
++
+ 	raw_spin_lock_irqsave(&pctrl->lock, flags);
+ 
+ 	val = msm_readl_intr_cfg(pctrl, g);
+@@ -767,6 +784,10 @@ static void msm_gpio_irq_ack(struct irq_data *d)
+ 	unsigned long flags;
+ 	u32 val;
+ 
++	/* Handled by parent wakeup controller? Do nothing */
++	if (test_bit(d->hwirq, pctrl->wakeup_masked_irqs))
++		return;
++
+ 	g = &pctrl->soc->groups[d->hwirq];
+ 
+ 	raw_spin_lock_irqsave(&pctrl->lock, flags);
+@@ -794,6 +815,13 @@ static int msm_gpio_irq_set_type(struct irq_data *d, unsigned int type)
+ 
+ 	g = &pctrl->soc->groups[d->hwirq];
+ 
++	if (d->parent_data)
++		irq_chip_set_type_parent(d, type);
++
++	/* Monitored by parent wakeup controller? Keep masked */
++	if (test_bit(d->hwirq, pctrl->wakeup_masked_irqs))
++		return 0;
++
+ 	raw_spin_lock_irqsave(&pctrl->lock, flags);
+ 
+ 	/*
+@@ -880,17 +908,10 @@ static int msm_gpio_irq_set_type(struct irq_data *d, unsigned int type)
+ 
+ static int msm_gpio_irq_set_wake(struct irq_data *d, unsigned int on)
+ {
+-	struct gpio_chip *gc = irq_data_get_irq_chip_data(d);
+-	struct msm_pinctrl *pctrl = gpiochip_get_data(gc);
+-	unsigned long flags;
++	if (d->parent_data)
++		return irq_chip_set_wake_parent(d, on);
+ 
+-	raw_spin_lock_irqsave(&pctrl->lock, flags);
+-
+-	irq_set_irq_wake(pctrl->irq, on);
+-
+-	raw_spin_unlock_irqrestore(&pctrl->lock, flags);
+-
+-	return 0;
++	return -ENODEV;
+ }
+ 
+ static int msm_gpio_irq_reqres(struct irq_data *d)
+@@ -967,11 +988,87 @@ static bool msm_gpio_needs_valid_mask(struct msm_pinctrl *pctrl)
+ 	return device_property_read_u16_array(pctrl->dev, "gpios", NULL, 0) > 0;
+ }
+ 
++static int msm_gpio_domain_translate(struct irq_domain *d,
++				     struct irq_fwspec *fwspec,
++				     unsigned long *hwirq, unsigned int *type)
 +{
-+	char *stem_name;
-+	char *cells_name, *map_name = NULL, *mask_name = NULL;
-+	char *pass_name = NULL;
-+	struct device_node *cur, *new = NULL;
-+	const __be32 *map, *mask, *pass;
-+	static const __be32 dummy_mask[] = { [0 ... MAX_PHANDLE_ARGS] = ~0 };
-+	static const __be32 dummy_pass[] = { [0 ... MAX_PHANDLE_ARGS] = 0 };
-+	__be32 initial_match_array[MAX_PHANDLE_ARGS];
-+	const __be32 *match_array = initial_match_array;
-+	int i, ret, map_len, match;
-+	u32 in_size, out_size;
-+
-+	stem_name = "";
-+	cells_name = "#interrupt-cells";
-+
-+	ret = -ENOMEM;
-+	map_name = kasprintf(GFP_KERNEL, "irqdomain%s-map", stem_name);
-+	if (!map_name)
-+		goto free;
-+
-+	mask_name = kasprintf(GFP_KERNEL, "irqdomain%s-map-mask", stem_name);
-+	if (!mask_name)
-+		goto free;
-+
-+	pass_name = kasprintf(GFP_KERNEL, "irqdomain%s-map-pass-thru", stem_name);
-+	if (!pass_name)
-+		goto free;
-+
-+	/* Get the #interrupt-cells property */
-+	cur = to_of_node(in->fwnode);
-+	ret = of_property_read_u32(cur, cells_name, &in_size);
-+	if (ret < 0)
-+		goto put;
-+
-+	/* Precalculate the match array - this simplifies match loop */
-+	for (i = 0; i < in_size; i++)
-+		initial_match_array[i] = cpu_to_be32(in->param[i]);
-+
-+	ret = -EINVAL;
-+	/* Get the irqdomain-map property */
-+	map = of_get_property(cur, map_name, &map_len);
-+	if (!map) {
-+		ret = 0;
-+		goto free;
++	if (is_of_node(fwspec->fwnode)) {
++		if (fwspec->param_count < 2)
++			return -EINVAL;
++		*hwirq = fwspec->param[0];
++		*type = fwspec->param[1] & IRQ_TYPE_SENSE_MASK;
++		return 0;
 +	}
-+	map_len /= sizeof(u32);
 +
-+	/* Get the irqdomain-map-mask property (optional) */
-+	mask = of_get_property(cur, mask_name, NULL);
-+	if (!mask)
-+		mask = dummy_mask;
-+	/* Iterate through irqdomain-map property */
-+	match = 0;
-+	while (map_len > (in_size + 1) && !match) {
-+		/* Compare specifiers */
-+		match = 1;
-+		for (i = 0; i < in_size; i++, map_len--)
-+			match &= !((match_array[i] ^ *map++) & mask[i]);
-+
-+		of_node_put(new);
-+		new = of_find_node_by_phandle(be32_to_cpup(map));
-+		map++;
-+		map_len--;
-+
-+		/* Check if not found */
-+		if (!new)
-+			goto put;
-+
-+		if (!of_device_is_available(new))
-+			match = 0;
-+
-+		ret = of_property_read_u32(new, cells_name, &out_size);
-+		if (ret)
-+			goto put;
-+
-+		/* Check for malformed properties */
-+		if (WARN_ON(out_size > MAX_PHANDLE_ARGS))
-+			goto put;
-+		if (map_len < out_size)
-+			goto put;
-+
-+		/* Move forward by new node's #interrupt-cells amount */
-+		map += out_size;
-+		map_len -= out_size;
-+	}
-+	if (match) {
-+		/* Get the irqdomain-map-pass-thru property (optional) */
-+		pass = of_get_property(cur, pass_name, NULL);
-+		if (!pass)
-+			pass = dummy_pass;
-+
-+		/*
-+		 * Successfully parsed a irqdomain-map translation; copy new
-+		 * specifier into the out structure, keeping the
-+		 * bits specified in irqdomain-map-pass-thru.
-+		 */
-+		match_array = map - out_size;
-+		for (i = 0; i < out_size; i++) {
-+			__be32 val = *(map - out_size + i);
-+
-+			out->param[i] = in->param[i];
-+			if (i < in_size) {
-+				val &= ~pass[i];
-+				val |= cpu_to_be32(out->param[i]) & pass[i];
-+			}
-+
-+			out->param[i] = be32_to_cpu(val);
-+		}
-+		out->param_count = in_size = out_size;
-+		out->fwnode = of_node_to_fwnode(new);
-+	}
-+put:
-+	of_node_put(cur);
-+	of_node_put(new);
-+free:
-+	kfree(mask_name);
-+	kfree(map_name);
-+	kfree(pass_name);
-+
-+	return ret;
++	return -EINVAL;
 +}
-+EXPORT_SYMBOL(of_irq_domain_map);
 +
- /**
-  * of_irq_parse_one - Resolve an interrupt for a device
-  * @device: the device whose interrupt is to be resolved
-diff --git a/include/linux/of_irq.h b/include/linux/of_irq.h
-index 1214cabb2247..86342502a62a 100644
---- a/include/linux/of_irq.h
-+++ b/include/linux/of_irq.h
-@@ -32,6 +32,7 @@ static inline int of_irq_parse_oldworld(struct device_node *device, int index,
- }
- #endif /* CONFIG_PPC32 && CONFIG_PPC_PMAC */
++static int msm_gpio_domain_alloc(struct irq_domain *domain, unsigned int virq,
++				 unsigned int nr_irqs, void *arg)
++{
++	int ret;
++	irq_hw_number_t hwirq;
++	struct gpio_chip *gc = domain->host_data;
++	struct msm_pinctrl *pctrl = gpiochip_get_data(gc);
++	struct irq_fwspec *fwspec = arg;
++	struct qcom_irq_fwspec parent = { };
++	unsigned int type;
++
++	ret = msm_gpio_domain_translate(domain, fwspec, &hwirq, &type);
++	if (ret)
++		return ret;
++
++	ret = irq_domain_set_hwirq_and_chip(domain, virq, hwirq,
++					    &pctrl->irq_chip, gc);
++	if (ret < 0)
++		return ret;
++
++	if (!domain->parent)
++		return 0;
++
++	ret = of_irq_domain_map(fwspec, &parent.fwspec);
++	if (ret)
++		return ret;
++
++	parent.fwspec.fwnode = domain->parent->fwnode;
++
++	ret = irq_domain_alloc_irqs_parent(domain, virq, nr_irqs, &parent);
++	if (ret)
++		return ret;
++
++	if (parent.mask)
++		set_bit(hwirq, pctrl->wakeup_masked_irqs);
++
++	return 0;
++}
++
++/*
++ * TODO: Get rid of this and push it into gpiochip_to_irq()
++ */
++static int msm_gpio_to_irq(struct gpio_chip *chip, unsigned int offset)
++{
++	struct irq_fwspec fwspec;
++
++	fwspec.fwnode = of_node_to_fwnode(chip->of_node);
++	fwspec.param[0] = offset;
++	fwspec.param[1] = IRQ_TYPE_LEVEL_HIGH;
++	fwspec.param_count = 2;
++
++	return irq_create_fwspec_mapping(&fwspec);
++}
++
++static const struct irq_domain_ops msm_gpio_domain_ops = {
++	.translate = msm_gpio_domain_translate,
++	.alloc     = msm_gpio_domain_alloc,
++	.free      = irq_domain_free_irqs_top,
++};
++
+ static int msm_gpio_init(struct msm_pinctrl *pctrl)
+ {
+ 	struct gpio_chip *chip;
+ 	int ret;
+ 	unsigned ngpio = pctrl->soc->ngpios;
++	struct device_node *dn;
  
-+extern int of_irq_domain_map(const struct irq_fwspec *in, struct irq_fwspec *out);
- extern int of_irq_parse_raw(const __be32 *addr, struct of_phandle_args *out_irq);
- extern int of_irq_parse_one(struct device_node *device, int index,
- 			  struct of_phandle_args *out_irq);
+ 	if (WARN_ON(ngpio > MAX_NR_GPIO))
+ 		return -EINVAL;
+@@ -986,6 +1083,7 @@ static int msm_gpio_init(struct msm_pinctrl *pctrl)
+ 	chip->need_valid_mask = msm_gpio_needs_valid_mask(pctrl);
+ 
+ 	pctrl->irq_chip.name = "msmgpio";
++	pctrl->irq_chip.irq_eoi	= irq_chip_eoi_parent;
+ 	pctrl->irq_chip.irq_mask = msm_gpio_irq_mask;
+ 	pctrl->irq_chip.irq_unmask = msm_gpio_irq_unmask;
+ 	pctrl->irq_chip.irq_ack = msm_gpio_irq_ack;
+@@ -994,6 +1092,22 @@ static int msm_gpio_init(struct msm_pinctrl *pctrl)
+ 	pctrl->irq_chip.irq_request_resources = msm_gpio_irq_reqres;
+ 	pctrl->irq_chip.irq_release_resources = msm_gpio_irq_relres;
+ 
++	chip->irq.chip = &pctrl->irq_chip;
++	chip->irq.domain_ops = &msm_gpio_domain_ops;
++	chip->irq.handler = handle_edge_irq;
++	chip->irq.default_type = IRQ_TYPE_EDGE_RISING;
++
++	dn = of_parse_phandle(pctrl->dev->of_node, "wakeup-parent", 0);
++	if (dn) {
++		chip->irq.parent_domain = irq_find_matching_host(dn,
++						 DOMAIN_BUS_WAKEUP);
++		of_node_put(dn);
++		if (!chip->irq.parent_domain)
++			return -EPROBE_DEFER;
++
++		chip->to_irq = msm_gpio_to_irq;
++	}
++
+ 	ret = gpiochip_add_data(&pctrl->chip, pctrl);
+ 	if (ret) {
+ 		dev_err(pctrl->dev, "Failed register gpiochip\n");
+@@ -1015,26 +1129,17 @@ static int msm_gpio_init(struct msm_pinctrl *pctrl)
+ 			dev_name(pctrl->dev), 0, 0, chip->ngpio);
+ 		if (ret) {
+ 			dev_err(pctrl->dev, "Failed to add pin range\n");
+-			gpiochip_remove(&pctrl->chip);
+-			return ret;
++			goto fail;
+ 		}
+ 	}
+ 
+-	ret = gpiochip_irqchip_add(chip,
+-				   &pctrl->irq_chip,
+-				   0,
+-				   handle_edge_irq,
+-				   IRQ_TYPE_NONE);
+-	if (ret) {
+-		dev_err(pctrl->dev, "Failed to add irqchip to gpiochip\n");
+-		gpiochip_remove(&pctrl->chip);
+-		return -ENOSYS;
+-	}
+-
+ 	gpiochip_set_chained_irqchip(chip, &pctrl->irq_chip, pctrl->irq,
+ 				     msm_gpio_irq_handler);
+ 
+ 	return 0;
++fail:
++	gpiochip_remove(&pctrl->chip);
++	return ret;
+ }
+ 
+ static int msm_ps_hold_restart(struct notifier_block *nb, unsigned long action,
 -- 
 The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
 a Linux Foundation Collaborative Project
