@@ -2,148 +2,127 @@ Return-Path: <SRS0=dUEL=RQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1BF17C43381
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 Mar 2019 19:34:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 11243C43381
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 Mar 2019 19:34:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E581020693
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 Mar 2019 19:34:15 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1552505656;
-	bh=ehcFTpKlVQO+i83WcJUFAB9EgudEjTrngKna63Oxums=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=r3evX39YunGeNNWIaaOO8dCaGBqC4BW5Wl158fnbDUrcXLe5wZaJ8g2Oe77jXtpbg
-	 UpInfui6xz+LHcb99g0thfAaorCpAck08VdBbYUjxhsUxOwXEi894oGHjl2kOEeEx2
-	 dsD+KvZmwjUxye6z4q0d9XNdKg4h/FWXIO2fjGTQ=
+	by mail.kernel.org (Postfix) with ESMTP id D103B20657
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 Mar 2019 19:34:18 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=rasmusvillemoes.dk header.i=@rasmusvillemoes.dk header.b="gLHiVNRE"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727789AbfCMTeO (ORCPT
+        id S1727805AbfCMTeR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 13 Mar 2019 15:34:14 -0400
-Received: from mail.kernel.org ([198.145.29.99]:41196 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727107AbfCMTKh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 13 Mar 2019 15:10:37 -0400
-Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id EE08E2173C;
-        Wed, 13 Mar 2019 19:10:34 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1552504236;
-        bh=ehcFTpKlVQO+i83WcJUFAB9EgudEjTrngKna63Oxums=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=j+JcJ2jouQi8BHMQwpFivrsRk+qaKhB8Sk7W6bcr/sHyEgS+WtIPCz3WsXMHlgDht
-         8khvSjU57HNCF4pygii6BC8dkVK4daf1MWnMaEfgrmDwLIv/khsFIWPN+yEZhqM1Q7
-         60jip/fN3ZjyMQ/mfSVXQQyHzNlzUSShnoS+AGVg=
-From:   Sasha Levin <sashal@kernel.org>
-To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Willem de Bruijn <willemb@google.com>,
-        Alexei Starovoitov <ast@kernel.org>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH AUTOSEL 4.20 07/60] bpf: only adjust gso_size on bytestream protocols
-Date:   Wed, 13 Mar 2019 15:09:28 -0400
-Message-Id: <20190313191021.158171-7-sashal@kernel.org>
-X-Mailer: git-send-email 2.19.1
-In-Reply-To: <20190313191021.158171-1-sashal@kernel.org>
-References: <20190313191021.158171-1-sashal@kernel.org>
+        Wed, 13 Mar 2019 15:34:17 -0400
+Received: from mail-ed1-f67.google.com ([209.85.208.67]:39711 "EHLO
+        mail-ed1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727703AbfCMTeP (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 13 Mar 2019 15:34:15 -0400
+Received: by mail-ed1-f67.google.com with SMTP id p27so2573668edc.6
+        for <linux-kernel@vger.kernel.org>; Wed, 13 Mar 2019 12:34:14 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=rasmusvillemoes.dk; s=google;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=HvXvDdDuhnnD+/KUb4dLVxTH1+3vfWp3fUQig2GamBc=;
+        b=gLHiVNRE2/ux1T+za1R8SLNWfvfdV2xEVeQHmaC3NPW0HZOShc8OUIzzdzMR9wvv+K
+         Zc8UJFrlx9sFmLaPSqsbaD053YFKcxd+MHOKToR4wokLQRAKkon2CVGodvRQWJtBNUOm
+         LI9YonQwGVBz9+RU/1sAdODRv0bvCISr80DeU=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=HvXvDdDuhnnD+/KUb4dLVxTH1+3vfWp3fUQig2GamBc=;
+        b=fqFEC3fWchXF7ULYD0gwMUelNiZpHppJNn+KS98s98tB5xBaMyyA98HY0wkmPzPfhx
+         +ibC8XN8SEPaDhqVARWaSC4j4KIIOcaLJGmzEMOCRY7+0CnCdQWop5sui50EIZYQEDCh
+         Kox3hMCAVq7pRh+QWGTI76EmQCzxYRGsYDFkqYYR2bE92MTWOerZjIKj3Dnkk7WQoZN5
+         og8b5j66dwBjvperHAVLs/xKUowQm5pe2XchI+vYZfs3klQNzSGSKhClDClKh7wqyeGR
+         +sfpWotfu9+vuz/SbP9nIc01vDVzgeF9tUYB67WJOfNQBPvybgdB7BGHhzl66QVSsyVf
+         I2Fg==
+X-Gm-Message-State: APjAAAUYYrLdjtVp//D5lspvmc+r3wCYPm/49fKWvFFzX98YuMvAi2gz
+        EanpNHcqNtzDpz7AUN5obuqNNRDEFBF7qxdO
+X-Google-Smtp-Source: APXvYqwOG/gfpKi/wOomE3IY4nYk7uwdHdLgCa0xEHWmzZbr3uc+lpvgQeMVlSVQQLLlJv8dVer7/g==
+X-Received: by 2002:a50:d508:: with SMTP id u8mr8981647edi.51.1552505653461;
+        Wed, 13 Mar 2019 12:34:13 -0700 (PDT)
+Received: from [192.168.1.149] (ip-5-186-119-202.cgn.fibianet.dk. [5.186.119.202])
+        by smtp.gmail.com with ESMTPSA id n10sm647627ejl.22.2019.03.13.12.34.11
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Wed, 13 Mar 2019 12:34:12 -0700 (PDT)
+Subject: Re: [PATCH v2] lib/string.c: implement a basic bcmp
+To:     Steven Rostedt <rostedt@goodmis.org>,
+        Nick Desaulniers <ndesaulniers@google.com>
+Cc:     Andrew Morton <akpm@linux-foundation.org>,
+        clang-built-linux@googlegroups.com,
+        Linux Kbuild mailing list <linux-kbuild@vger.kernel.org>,
+        "# 3.4.x" <stable@vger.kernel.org>,
+        Nathan Chancellor <natechancellor@gmail.com>,
+        Adhemerval Zanella <adhemerval.zanella@linaro.org>,
+        Arnd Bergmann <arnd@arndb.de>,
+        James Y Knight <jyknight@google.com>,
+        Masahiro Yamada <yamada.masahiro@socionext.com>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Ingo Molnar <mingo@kernel.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        LKML <linux-kernel@vger.kernel.org>
+References: <CAKwvOdmdEH1U9vOmVKo2Fn+hMPF9AB1enZ2rkpJcU9XHgR8Wng@mail.gmail.com>
+ <20190313181719.87859-1-ndesaulniers@google.com>
+ <20190313144013.37cab5c7@gandalf.local.home>
+ <CAKwvOdnheUi6Ho5u4akTLGa-tBeUq94hQJH0+a4ROe_aEUgo7g@mail.gmail.com>
+ <20190313150133.117e2b63@gandalf.local.home>
+From:   Rasmus Villemoes <linux@rasmusvillemoes.dk>
+Message-ID: <65c69aac-696c-0534-2243-679db926d527@rasmusvillemoes.dk>
+Date:   Wed, 13 Mar 2019 20:34:11 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.4.0
 MIME-Version: 1.0
-X-Patchwork-Hint: Ignore
-Content-Transfer-Encoding: 8bit
+In-Reply-To: <20190313150133.117e2b63@gandalf.local.home>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Willem de Bruijn <willemb@google.com>
+On 13/03/2019 20.01, Steven Rostedt wrote:
+> On Wed, 13 Mar 2019 11:51:09 -0700
+> Nick Desaulniers <ndesaulniers@google.com> wrote:
+> 
+>>>
+>>> or have a better comment explaining why its the same.  
+>>
+>> I could add something about "the signedness of the return code not
+>> providing any meaning."  What would you like to see in such a comment?
+> 
+> I think it's the wording that bothers me:
+> 
+> + * bcmp - Like memcmp but a non-zero return code simply indicates a non-match.
+> 
+> What about:
+> 
+>   * bcmp - Like memcmp but non-zero only means a non-match
+> 
+> Then in the description say that bcmp() callers must not expect
+> anything more than zero and non-zero,
 
-[ Upstream commit b90efd2258749e04e1b3f71ef0d716f2ac2337e0 ]
+Yes, but let's completely avoid mentioning memcmp in the summary.
 
-bpf_skb_change_proto and bpf_skb_adjust_room change skb header length.
-For GSO packets they adjust gso_size to maintain the same MTU.
+bcmp - return 0 if and only if the buffers have identical contents
+@a: pointer to first buffer
+@b: pointer to second buffer
+@len: size of buffers
 
-The gso size can only be safely adjusted on bytestream protocols.
-Commit d02f51cbcf12 ("bpf: fix bpf_skb_adjust_net/bpf_skb_proto_xlat
-to deal with gso sctp skbs") excluded SKB_GSO_SCTP.
+The sign or magnitude of a non-zero return value has no particular
+meaning, and architectures may implement their own more efficient
+bcmp(). So while this particular implementation is a simple (tail) call
+to memcmp, do not rely on anything but whether the return value is zero
+or non-zero.
 
-Since then type SKB_GSO_UDP_L4 has been added, whose contents are one
-gso_size unit per datagram. Also exclude these.
-
-Move from a blacklist to a whitelist check to future proof against
-additional such new GSO types, e.g., for fraglist based GRO.
-
-Fixes: bec1f6f69736 ("udp: generate gso with UDP_SEGMENT")
-Signed-off-by: Willem de Bruijn <willemb@google.com>
-Signed-off-by: Alexei Starovoitov <ast@kernel.org>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
----
- include/linux/skbuff.h |  6 ++++++
- net/core/filter.c      | 12 ++++--------
- 2 files changed, 10 insertions(+), 8 deletions(-)
-
-diff --git a/include/linux/skbuff.h b/include/linux/skbuff.h
-index 8e63c166765e..875f56cbb756 100644
---- a/include/linux/skbuff.h
-+++ b/include/linux/skbuff.h
-@@ -4118,6 +4118,12 @@ static inline bool skb_is_gso_sctp(const struct sk_buff *skb)
- 	return skb_shinfo(skb)->gso_type & SKB_GSO_SCTP;
- }
- 
-+static inline bool skb_is_gso_tcp(const struct sk_buff *skb)
-+{
-+	return skb_is_gso(skb) &&
-+	       skb_shinfo(skb)->gso_type & (SKB_GSO_TCPV4 | SKB_GSO_TCPV6);
-+}
-+
- static inline void skb_gso_reset(struct sk_buff *skb)
- {
- 	skb_shinfo(skb)->gso_size = 0;
-diff --git a/net/core/filter.c b/net/core/filter.c
-index 16350f8c8815..6e37c639519e 100644
---- a/net/core/filter.c
-+++ b/net/core/filter.c
-@@ -2624,8 +2624,7 @@ static int bpf_skb_proto_4_to_6(struct sk_buff *skb)
- 	u32 off = skb_mac_header_len(skb);
- 	int ret;
- 
--	/* SCTP uses GSO_BY_FRAGS, thus cannot adjust it. */
--	if (skb_is_gso(skb) && unlikely(skb_is_gso_sctp(skb)))
-+	if (!skb_is_gso_tcp(skb))
- 		return -ENOTSUPP;
- 
- 	ret = skb_cow(skb, len_diff);
-@@ -2666,8 +2665,7 @@ static int bpf_skb_proto_6_to_4(struct sk_buff *skb)
- 	u32 off = skb_mac_header_len(skb);
- 	int ret;
- 
--	/* SCTP uses GSO_BY_FRAGS, thus cannot adjust it. */
--	if (skb_is_gso(skb) && unlikely(skb_is_gso_sctp(skb)))
-+	if (!skb_is_gso_tcp(skb))
- 		return -ENOTSUPP;
- 
- 	ret = skb_unclone(skb, GFP_ATOMIC);
-@@ -2792,8 +2790,7 @@ static int bpf_skb_net_grow(struct sk_buff *skb, u32 len_diff)
- 	u32 off = skb_mac_header_len(skb) + bpf_skb_net_base_len(skb);
- 	int ret;
- 
--	/* SCTP uses GSO_BY_FRAGS, thus cannot adjust it. */
--	if (skb_is_gso(skb) && unlikely(skb_is_gso_sctp(skb)))
-+	if (!skb_is_gso_tcp(skb))
- 		return -ENOTSUPP;
- 
- 	ret = skb_cow(skb, len_diff);
-@@ -2822,8 +2819,7 @@ static int bpf_skb_net_shrink(struct sk_buff *skb, u32 len_diff)
- 	u32 off = skb_mac_header_len(skb) + bpf_skb_net_base_len(skb);
- 	int ret;
- 
--	/* SCTP uses GSO_BY_FRAGS, thus cannot adjust it. */
--	if (skb_is_gso(skb) && unlikely(skb_is_gso_sctp(skb)))
-+	if (!skb_is_gso_tcp(skb))
- 		return -ENOTSUPP;
- 
- 	ret = skb_unclone(skb, GFP_ATOMIC);
--- 
-2.19.1
-
+Rasmus
