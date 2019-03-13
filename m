@@ -4,49 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 98271C10F03
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 Mar 2019 19:10:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5607EC43381
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 Mar 2019 19:10:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 601C3217F5
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 Mar 2019 19:10:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 255642183F
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 Mar 2019 19:10:49 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1552504246;
-	bh=yN21YWSjkjnHUTbYYwLQjCrys8QazynvM+ofXuZlgJY=;
+	s=default; t=1552504249;
+	bh=FKaYhBB/zZrnG1uUtZMifYIItmAabeW4lHxjAiVIZTM=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=IKB7GwkUcsEKoO9gXtVlRP96F0gyzHLaY6jYUZxJU9FAsDXaAZqxzwE17jHA5fGju
-	 u0JOy+j0muuOZDY81YPTGYtVQ6j8tafBVYMG8pbbB0KBAHgqShYnSI5jtYg/TpPcEU
-	 bi22PjIvyaKTYkfaCiy4S5qwxb75k8unGF7bq6Hc=
+	b=sRyXe6Xw7XVDbhYOiutafIFR5mnJY6JNBmsHO+MhfiGRxKKUtrIwSfK/aYiuAcLMN
+	 p16QnLnktDqdHDkx6t0tRYUDQN0RfWk+eDTafghL13mMQ0VfAKexFBtw99yKf0yq16
+	 azpiepUJwOHpCjpvslujhWPkBBmtb5znu8fFhxiE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727165AbfCMTKp (ORCPT
+        id S1726072AbfCMTKs (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 13 Mar 2019 15:10:45 -0400
-Received: from mail.kernel.org ([198.145.29.99]:41298 "EHLO mail.kernel.org"
+        Wed, 13 Mar 2019 15:10:48 -0400
+Received: from mail.kernel.org ([198.145.29.99]:41268 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727112AbfCMTKm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 13 Mar 2019 15:10:42 -0400
+        id S1727126AbfCMTKk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 13 Mar 2019 15:10:40 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id DA0082183F;
-        Wed, 13 Mar 2019 19:10:39 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 5EA14217F5;
+        Wed, 13 Mar 2019 19:10:38 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1552504241;
-        bh=yN21YWSjkjnHUTbYYwLQjCrys8QazynvM+ofXuZlgJY=;
+        s=default; t=1552504239;
+        bh=FKaYhBB/zZrnG1uUtZMifYIItmAabeW4lHxjAiVIZTM=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=tJKKyX72haV2C9MNQ9+YQS5JixptkH83qwxTBXqhYVmhPgFRjIx19uxbPrfbcTeik
-         9fn9qbr1p+BjnNss1NdmU1Whb9pSwkpRaWfk9GFtfBPh9VCA//VBomZ7wgmqM8Ke7M
-         +e8eOio7julifT0A1nBT3zvXvMkDjnJ+Zv4B44TY=
+        b=W3EVy6bHJKkGTyMpOVmejbv/nAleFR+z6M0XMcOo8X71/FO36YZ6JvIDajaO6glzZ
+         sXpaYmxO02gu00kaH2b8rhMp75qoxW6B71GRa/IGpzcMR14MRr2IR8IlVJ3hkD1Hyq
+         22WWjUcMhFBscza892IXuvt32kighlsrDxM7E6s8=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Robin Murphy <robin.murphy@arm.com>,
-        Russell King <rmk+kernel@armlinux.org.uk>,
+Cc:     Sean Tranchetti <stranche@codeaurora.org>,
+        Steffen Klassert <steffen.klassert@secunet.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH AUTOSEL 4.20 10/60] ARM: 8835/1: dma-mapping: Clear DMA ops on teardown
-Date:   Wed, 13 Mar 2019 15:09:31 -0400
-Message-Id: <20190313191021.158171-10-sashal@kernel.org>
+Subject: [PATCH AUTOSEL 4.20 09/60] af_key: unconditionally clone on broadcast
+Date:   Wed, 13 Mar 2019 15:09:30 -0400
+Message-Id: <20190313191021.158171-9-sashal@kernel.org>
 X-Mailer: git-send-email 2.19.1
 In-Reply-To: <20190313191021.158171-1-sashal@kernel.org>
 References: <20190313191021.158171-1-sashal@kernel.org>
@@ -58,42 +58,129 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Robin Murphy <robin.murphy@arm.com>
+From: Sean Tranchetti <stranche@codeaurora.org>
 
-[ Upstream commit fc67e6f120a388b611d94cc40baf99a5cc56b283 ]
+[ Upstream commit fc2d5cfdcfe2ab76b263d91429caa22451123085 ]
 
-Installing the appropriate non-IOMMU DMA ops in arm_iommu_detch_device()
-serves the case where IOMMU-aware drivers choose to control their own
-mapping but still make DMA API calls, however it also affects the case
-when the arch code itself tears down the mapping upon driver unbinding,
-where the ops now get left in place and can inhibit arch_setup_dma_ops()
-on subsequent re-probe attempts.
+Attempting to avoid cloning the skb when broadcasting by inflating
+the refcount with sock_hold/sock_put while under RCU lock is dangerous
+and violates RCU principles. It leads to subtle race conditions when
+attempting to free the SKB, as we may reference sockets that have
+already been freed by the stack.
 
-Fix the latter case by making sure that arch_teardown_dma_ops() cleans
-up whenever the ops were automatically installed by its counterpart.
+Unable to handle kernel paging request at virtual address 6b6b6b6b6b6c4b
+[006b6b6b6b6b6c4b] address between user and kernel address ranges
+Internal error: Oops: 96000004 [#1] PREEMPT SMP
+task: fffffff78f65b380 task.stack: ffffff8049a88000
+pc : sock_rfree+0x38/0x6c
+lr : skb_release_head_state+0x6c/0xcc
+Process repro (pid: 7117, stack limit = 0xffffff8049a88000)
+Call trace:
+	sock_rfree+0x38/0x6c
+	skb_release_head_state+0x6c/0xcc
+	skb_release_all+0x1c/0x38
+	__kfree_skb+0x1c/0x30
+	kfree_skb+0xd0/0xf4
+	pfkey_broadcast+0x14c/0x18c
+	pfkey_sendmsg+0x1d8/0x408
+	sock_sendmsg+0x44/0x60
+	___sys_sendmsg+0x1d0/0x2a8
+	__sys_sendmsg+0x64/0xb4
+	SyS_sendmsg+0x34/0x4c
+	el0_svc_naked+0x34/0x38
+Kernel panic - not syncing: Fatal exception
 
-Reported-by: Tobias Jakobi <tjakobi@math.uni-bielefeld.de>
-Reported-by: Marek Szyprowski <m.szyprowski@samsung.com>
-Fixes: 1874619a7df4 "ARM: dma-mapping: Set proper DMA ops in arm_iommu_detach_device()"
-Tested-by: Tobias Jakobi <tjakobi@math.uni-bielefeld.de>
-Tested-by: Thierry Reding <treding@nvidia.com>
-Signed-off-by: Robin Murphy <robin.murphy@arm.com>
-Signed-off-by: Russell King <rmk+kernel@armlinux.org.uk>
+Suggested-by: Eric Dumazet <eric.dumazet@gmail.com>
+Signed-off-by: Sean Tranchetti <stranche@codeaurora.org>
+Signed-off-by: Steffen Klassert <steffen.klassert@secunet.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/arm/mm/dma-mapping.c | 2 ++
- 1 file changed, 2 insertions(+)
+ net/key/af_key.c | 40 +++++++++++++++-------------------------
+ 1 file changed, 15 insertions(+), 25 deletions(-)
 
-diff --git a/arch/arm/mm/dma-mapping.c b/arch/arm/mm/dma-mapping.c
-index 78de138aa66d..7f8afe3c9072 100644
---- a/arch/arm/mm/dma-mapping.c
-+++ b/arch/arm/mm/dma-mapping.c
-@@ -2399,4 +2399,6 @@ void arch_teardown_dma_ops(struct device *dev)
- 		return;
+diff --git a/net/key/af_key.c b/net/key/af_key.c
+index 9d61266526e7..7da629d59717 100644
+--- a/net/key/af_key.c
++++ b/net/key/af_key.c
+@@ -196,30 +196,22 @@ static int pfkey_release(struct socket *sock)
+ 	return 0;
+ }
  
- 	arm_teardown_iommu_dma_ops(dev);
-+	/* Let arch_setup_dma_ops() start again from scratch upon re-probe */
-+	set_dma_ops(dev, NULL);
+-static int pfkey_broadcast_one(struct sk_buff *skb, struct sk_buff **skb2,
+-			       gfp_t allocation, struct sock *sk)
++static int pfkey_broadcast_one(struct sk_buff *skb, gfp_t allocation,
++			       struct sock *sk)
+ {
+ 	int err = -ENOBUFS;
+ 
+-	sock_hold(sk);
+-	if (*skb2 == NULL) {
+-		if (refcount_read(&skb->users) != 1) {
+-			*skb2 = skb_clone(skb, allocation);
+-		} else {
+-			*skb2 = skb;
+-			refcount_inc(&skb->users);
+-		}
+-	}
+-	if (*skb2 != NULL) {
+-		if (atomic_read(&sk->sk_rmem_alloc) <= sk->sk_rcvbuf) {
+-			skb_set_owner_r(*skb2, sk);
+-			skb_queue_tail(&sk->sk_receive_queue, *skb2);
+-			sk->sk_data_ready(sk);
+-			*skb2 = NULL;
+-			err = 0;
+-		}
++	if (atomic_read(&sk->sk_rmem_alloc) > sk->sk_rcvbuf)
++		return err;
++
++	skb = skb_clone(skb, allocation);
++
++	if (skb) {
++		skb_set_owner_r(skb, sk);
++		skb_queue_tail(&sk->sk_receive_queue, skb);
++		sk->sk_data_ready(sk);
++		err = 0;
+ 	}
+-	sock_put(sk);
+ 	return err;
+ }
+ 
+@@ -234,7 +226,6 @@ static int pfkey_broadcast(struct sk_buff *skb, gfp_t allocation,
+ {
+ 	struct netns_pfkey *net_pfkey = net_generic(net, pfkey_net_id);
+ 	struct sock *sk;
+-	struct sk_buff *skb2 = NULL;
+ 	int err = -ESRCH;
+ 
+ 	/* XXX Do we need something like netlink_overrun?  I think
+@@ -253,7 +244,7 @@ static int pfkey_broadcast(struct sk_buff *skb, gfp_t allocation,
+ 		 * socket.
+ 		 */
+ 		if (pfk->promisc)
+-			pfkey_broadcast_one(skb, &skb2, GFP_ATOMIC, sk);
++			pfkey_broadcast_one(skb, GFP_ATOMIC, sk);
+ 
+ 		/* the exact target will be processed later */
+ 		if (sk == one_sk)
+@@ -268,7 +259,7 @@ static int pfkey_broadcast(struct sk_buff *skb, gfp_t allocation,
+ 				continue;
+ 		}
+ 
+-		err2 = pfkey_broadcast_one(skb, &skb2, GFP_ATOMIC, sk);
++		err2 = pfkey_broadcast_one(skb, GFP_ATOMIC, sk);
+ 
+ 		/* Error is cleared after successful sending to at least one
+ 		 * registered KM */
+@@ -278,9 +269,8 @@ static int pfkey_broadcast(struct sk_buff *skb, gfp_t allocation,
+ 	rcu_read_unlock();
+ 
+ 	if (one_sk != NULL)
+-		err = pfkey_broadcast_one(skb, &skb2, allocation, one_sk);
++		err = pfkey_broadcast_one(skb, allocation, one_sk);
+ 
+-	kfree_skb(skb2);
+ 	kfree_skb(skb);
+ 	return err;
  }
 -- 
 2.19.1
