@@ -2,137 +2,141 @@ Return-Path: <SRS0=dUEL=RQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,URIBL_BLOCKED
+X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 297E1C43381
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 Mar 2019 12:39:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7C46CC43381
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 Mar 2019 12:46:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E910D214AE
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 Mar 2019 12:39:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 411952171F
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 Mar 2019 12:46:50 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="dxRhbBjR"
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=crapouillou.net header.i=@crapouillou.net header.b="AsAMNnYg"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726263AbfCMMjl (ORCPT
+        id S1726142AbfCMMqs (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 13 Mar 2019 08:39:41 -0400
-Received: from mail-lj1-f175.google.com ([209.85.208.175]:47028 "EHLO
-        mail-lj1-f175.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725847AbfCMMjl (ORCPT
+        Wed, 13 Mar 2019 08:46:48 -0400
+Received: from outils.crapouillou.net ([89.234.176.41]:50212 "EHLO
+        crapouillou.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725832AbfCMMqs (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 13 Mar 2019 08:39:41 -0400
-Received: by mail-lj1-f175.google.com with SMTP id z26so1177298lja.13;
-        Wed, 13 Mar 2019 05:39:39 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:user-agent:mime-version;
-        bh=N/qevYiS4eUCg9JB/8s90xDFtnQ8s0Ikd4ShgSO0S3I=;
-        b=dxRhbBjRMb1FtEySQtv0yi3p/nIkSektQgkFbJmMvVg8A8UyZCdrYOKBFH9ANMTZj3
-         EPDnfaKOldJ6lnIEdFYLDYbsQOUP5JisBZXi/WRigxdWqwoCJIh11zL20A+weaJzQS/9
-         O2JcYETLJJ6I7v0N42zt7X6BnPDwXaboQweLcj2ukKRyH3zSasziXi4cl8+VBO0LvQhG
-         7N093edk+Bze7F6wWMtJBa0x9VyWtyqkD0xno4/n0x6+h/KQZLy5q/NyNdExs2h5rvVc
-         sVK/DfH9H3d//Y4cTD8HK0T+fbzge/6qQL3jhAY7wabYFfLNmi0qO5Wx98UrOr45nhVK
-         FFXg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:user-agent
-         :mime-version;
-        bh=N/qevYiS4eUCg9JB/8s90xDFtnQ8s0Ikd4ShgSO0S3I=;
-        b=TC8OflykoDEr5N8zwVS3Eh0sMFTsODPuWZ5yU6XhJAap0uLfDZrGfSLbHldVSVrAJu
-         Evk27B9NAyjUKao/KnLU3e1C94ZITuFj4nhY9ZhN8R+ziXly9sjc7B/WmCYpZ1HRjulG
-         iLFe/ltlA3bot0oPJMSQljlFgG4gS+Cu2rfj56sXhIfRhrUagk59gM1Jp7CjDZzFkRtc
-         i7CeylmXDqdVkrcOHGoRa8Ujq0ByIzxLZ4QvTdyNoBSzaEbHtT1ewZck+NKRJs8CvN6A
-         54sUiuVnFks/LH0aHqleeK7sfzAqS0cECG+fSMRuvAMKPpd/tuJwvjxVT8smmRJB7zi/
-         rijA==
-X-Gm-Message-State: APjAAAUfdIfg2hCmjrOrkXG8VVeZ2Oi5ogqC988RRIgAgPpDwVsLTpLx
-        LdOQyNj6pjixlHtVNcouJtC/dRWSVNM=
-X-Google-Smtp-Source: APXvYqy43oMa7KPK3n4cgCAF3uBokEsPKe0JuSGE0Fcz4IvbTJMlRBuUC7UqJGpiH1t7NE1remIEgQ==
-X-Received: by 2002:a2e:9e03:: with SMTP id e3mr3049028ljk.92.1552480778637;
-        Wed, 13 Mar 2019 05:39:38 -0700 (PDT)
-Received: from linmac2 ([46.138.63.5])
-        by smtp.gmail.com with ESMTPSA id g68sm1800908ljg.53.2019.03.13.05.39.37
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Wed, 13 Mar 2019 05:39:37 -0700 (PDT)
-From:   moosotc@gmail.com
-To:     "Rafael J. Wysocki" <rjw@rjwysocki.net>
-Cc:     linux-acpi@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: ACPI, software suspend, power consumption, EFI, crashing
-Date:   Wed, 13 Mar 2019 15:39:36 +0300
-Message-ID: <87ftrrosmv.fsf@gmail.com>
-User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/27.0.50 (gnu/linux)
+        Wed, 13 Mar 2019 08:46:48 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=crapouillou.net;
+        s=mail; t=1552481204; h=from:from:sender:reply-to:subject:subject:date:date:
+         message-id:message-id:to:to:cc:cc:mime-version:mime-version:
+         content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=lpLx8TDEbAzhN6basKpnA1clLFtf8oKedyNixevNEl4=;
+        b=AsAMNnYg9hFu6/ZWA2ftTABrJ7yE3lPPuKrWyNoZUT3qyDtVbGw37FHk459sfGKeQ8Ezfk
+        r8SZYRuwJ0S+EiIPp/cPPzK0QWstHWf5L3W4T3XAVbqDntq5hnkioqPVFQmVgvjlUnafBb
+        9nTWBVnSSVGvjLIAZh3BB5AWEEx7iBM=
+Date:   Wed, 13 Mar 2019 09:46:40 -0300
+From:   Paul Cercueil <paul@crapouillou.net>
+Subject: Re: [PATCH v4 8/9] mtd: rawnand: ingenic: Add support for the JZ4725B
+To:     Miquel Raynal <miquel.raynal@bootlin.com>
+Cc:     David Woodhouse <dwmw2@infradead.org>,
+        Brian Norris <computersforpeace@gmail.com>,
+        Boris Brezillon <bbrezillon@kernel.org>,
+        Marek Vasut <marek.vasut@gmail.com>,
+        Richard Weinberger <richard@nod.at>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Harvey Hunt <harveyhuntnexus@gmail.com>,
+        linux-mtd@lists.infradead.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Message-Id: <1552481200.2412.0@crapouillou.net>
+In-Reply-To: <20190304200947.69237b05@xps13>
+References: <20190209192305.4434-1-paul@crapouillou.net>
+        <20190209192305.4434-8-paul@crapouillou.net> <20190304113519.2e102b25@xps13>
+        <1551724204.4932.6@crapouillou.net> <20190304200947.69237b05@xps13>
 MIME-Version: 1.0
-Content-Type: text/plain
+Content-Type: text/plain; charset=iso-8859-1; format=flowed
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hello,
+Hi Miquel,
 
-After a "regular" system update (pacman -Syu) new kernel and firmware
-packages were installed on this machine[1] (The exact version of the
-kernel/firmware may be a red-herring given sporadic and non bisectable
-(at this point) nature of the problem)
+Le lun. 4 mars 2019 =E0 16:09, Miquel Raynal <miquel.raynal@bootlin.com>=20
+a =E9crit :
+> Hi Paul,
+>=20
+> Paul Cercueil <paul@crapouillou.net> wrote on Mon, 04 Mar 2019=20
+> 19:30:04
+> +0100:
+>=20
+>>  On Mon, Mar 4, 2019 at 11:35 AM, Miquel Raynal=20
+>> <miquel.raynal@bootlin.com> wrote:
+>>  > Hi Paul,
+>>  >
+>>  > Paul Cercueil <paul@crapouillou.net=20
+>> <mailto:paul@crapouillou.net>> > wrote on Sat,  9 Feb 2019 16:23:04
+>>  > -0300:
+>>  >
+>>  >>  The boot ROM of the JZ4725B SoC expects a specific OOB layout=20
+>> on the
+>>  >>  NAND, so we use it unconditionally in the ingenic-nand driver.
+>>  >> >>  Also add the jz4725b-bch driver to support the=20
+>> JZ4725B-specific BCH
+>>  >>  hardware.
+>>  >> >>  Signed-off-by: Paul Cercueil <paul@crapouillou.net >>=20
+>> <mailto:paul@crapouillou.net>>
+>>  >>  ---
+>>  >> >>  Changes:
+>>  >> >>  v2: Instead of forcing the OOB layout, leave it to the board=20
+>> code or
+>>  >>      devicetree to decide if the jz4725b-specific layout should=20
+>> be >> used
+>>  >>      or not.
+>>  >> >>  v3: - Revert the change in v2, as the previous behaviour was=20
+>> >> correct.
+>>  >>      - Also add support for the hardware BCH of the JZ4725B in=20
+>> this
+>>  >>        patch.
+>>  >> >>  v4: - Add MODULE_* macros
+>>  >>      - Add tweaks suggested by upstream feedback
+>>  >> >>   drivers/mtd/nand/raw/ingenic/Kconfig        |  10 +
+>>  >>   drivers/mtd/nand/raw/ingenic/Makefile       |   1 +
+>>  >>   drivers/mtd/nand/raw/ingenic/ingenic_nand.c |  48 ++++-
+>>  >>   drivers/mtd/nand/raw/ingenic/jz4725b_bch.c  | 292 >>=20
+>> ++++++++++++++++++++++++++++
+>>  >>   4 files changed, 350 insertions(+), 1 deletion(-)
+>>  >>   create mode 100644 drivers/mtd/nand/raw/ingenic/jz4725b_bch.c
+>>  >> >
+>>  > [...]
+>>  >
+>>  >>  +static int jz4725b_calculate(struct ingenic_ecc *bch,
+>>  >>  +			     struct ingenic_ecc_params *params,
+>>  >>  +			     const u8 *buf, u8 *ecc_code)
+>>  >>  +{
+>>  >>  +	int ret;
+>>  >>  +
+>>  >>  +	mutex_lock(&bch->lock);
+>>  >>  +	ret =3D jz4725b_bch_init(bch, params, true);
+>>  >
+>>  > I really don't like this bch_init name. A BCH initialization is=20
+>> what > is
+>>  > supposed to be done only once (probably at boot time), can you=20
+>> find a
+>>  > better name or a better organization of the correct/calculate=20
+>> path?
+>>=20
+>>  jz4725b_bch_setup() maybe?
+>=20
+> Unless I am not understanding what this does, I don't get why you=20
+> would
+> need to do this setup everytime you want to use the ECC engine. Are=20
+> you
+> sure this is needed?
 
-The system failed to come up after a reboot though. The machine was
-dead, being an EFI box meant that it also was silent as to why (no
-console output).
+It configures the hardware for a new ECC encoding or decoding sequence,=20
+so
+yes, it has to be done everytime.
 
-After adding "debug earlyprintk=efi,keep log_buf_len=16M"[2] to the
-kernel command line (luckily it's quite easy with rEFInd[3]) it became
-apparent that kernel was crashing (at least 2 oopses happened during
-boot the second one being fatal)
+-Paul
+=
 
-Several false starts later (i.e. downgrade kernel/firmware) when the
-system will _sometimes_ boot) the "real" culprit was identified -
-another kernel command line parameter _seems_ to play a crucial role:
-an empty acpi_osi (i.e. `acpi_osi=`), with acpi_osi removed from the
-command line the system (so far) never failed to reach user-space.
-
-But empty acpi_osi was there for a reason, without it the system
-consumes 2 watts more while idling (for background cf. [4]) (That said
-the acpi_osi influence on power was noticed by accident and is as
-inexplicable as the need to do a one-time suspend to memory to achieve
-power consumption on par with macOS on this hardware)
-
-It is also worth pointing out that the crashes are not really
-deterministic and _sometimes_ kernel boots even with an empty acpi_osi
-being present. The non deterministic nature of failures also means
-that there is no good "bisection" point for saying this kernel was
-okay and after this point in time things went awry.
-
----------
-Update #1
-Having `spectre_v2=off' in the kernel command line:
-
-a. Makes the kernel boot even with an empty acpi_osi
-b. Makes the suspend-to-memory "trick" effective again
-   (in bringing power consumption down)
-
-Update #2 (12-03-2019)
-Turns out `spectre_v2=off' is no panacea, just that when it's there
-kernel is more likely to complete booting without a hitch
-
-Open questions
---------------
-
-a. How are `spectre_v2=off' and `acpi_osi=' related? (update #2 makes
-   this point moot)
-
-b. (Original question from 2016) Why does one-off (accidentally
-   discovered) suspend to RAM have any bearing on power consumption?
-   And why is the efficiency of this trick dependant on acpi_osi?
-
-   What exactly is so important in clear acpi_osi? (A hypothesis here
-   is that AML does (or doesn`t do something "important") depending on
-   the acpi_osi value)
-
-[1] https://manuals.info.apple.com/MANUALS/1000/MA1687/en_US/mac-mini-late2014-qs.pdf
-[2] After ~10 minutes of excruciatingly slow video redraws
-[3] http://www.rodsbooks.com/refind/
-[4] https://lkml.org/lkml/2016/2/12/55
-
--- 
-mailto:moosotc@gmail.com
