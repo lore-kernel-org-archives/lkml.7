@@ -4,48 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CC9E0C43381
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 Mar 2019 19:12:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 018DDC10F03
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 Mar 2019 19:12:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9FD6E2173C
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 Mar 2019 19:12:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C7ED5217F5
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 Mar 2019 19:12:48 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1552504364;
-	bh=doyardt0JggkJhDO07+14ipJytUL+xswS+WNkZwYiVA=;
+	s=default; t=1552504368;
+	bh=iXKsufVD41O1qrrKrDzdeupvnwJ0JxYX4rLla9ZBBko=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=SgZ5Xgbm00uVjLepJkgbhTYj3brJPZ5dhm+L8ctyKA+xuA3jDVyhKjqYS5x4E4cyt
-	 +izUCmOxi9JlQ4yUg76HBrXH3tBb5zFmYgxjQzrAdfhm4o3ZgNK+4gYAiLLa1dl40L
-	 MvW0fdfchcHHRc+SIev8C6r9A+pOic0hejnw4whM=
+	b=oU1wzaS1nMdHFDWVE90aLrqYaMk2PDMGkFkpi3ROlf7+D6NAqQca4ODKy8P5TetbL
+	 nA335aSrW/tCpN4a0PXJEW4Bq71hSvQ7WHtpGHdj12RmzsBoLCluskw85yf75x8USg
+	 lhzVFV7/K+zzjMCAnzIR6NOr/byHxEIjlAPkt8mA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727808AbfCMTMn (ORCPT
+        id S1727826AbfCMTMr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 13 Mar 2019 15:12:43 -0400
-Received: from mail.kernel.org ([198.145.29.99]:43282 "EHLO mail.kernel.org"
+        Wed, 13 Mar 2019 15:12:47 -0400
+Received: from mail.kernel.org ([198.145.29.99]:43318 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727287AbfCMTMl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 13 Mar 2019 15:12:41 -0400
+        id S1727806AbfCMTMn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 13 Mar 2019 15:12:43 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id DDEB82177E;
-        Wed, 13 Mar 2019 19:12:39 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id A73602075C;
+        Wed, 13 Mar 2019 19:12:41 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1552504361;
-        bh=doyardt0JggkJhDO07+14ipJytUL+xswS+WNkZwYiVA=;
+        s=default; t=1552504362;
+        bh=iXKsufVD41O1qrrKrDzdeupvnwJ0JxYX4rLla9ZBBko=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=KIYC2BuF9J50pQICE6SdC4FUHFfybYbtIgB4xwxPlMkuQboxqSpAj4OSTFe+5aQH4
-         +xGP0Zacpn8oSeTaG/QDvkQmynaVRSHVuZsNvtYInMVpJYTMJ1ib7/5ybOpoeruJ3m
-         aTk2uZBvnYcidbDfLe06WQxcwY+u2p7Fs/ZE6h3I=
+        b=s9mz1VLLmp/McYgAMClcn8oBaIZNxxjSFV4W+jWSlewqCjWBDP4jxOiXa/t7VGorS
+         JIU5auma7rtQmYs/SHQENORhU+x4refNLmTmCK2eIFEqGjmgihKpT9o0tDLKkkyVs/
+         UdyhGu4LjWg3QxKqqrz3CBLOYybrhr3DBd+MiVB0=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Michael Chan <michael.chan@broadcom.com>,
+Cc:     YueHaibing <yuehaibing@huawei.com>,
         "David S . Miller" <davem@davemloft.net>,
         Sasha Levin <sashal@kernel.org>, netdev@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.20 57/60] bnxt_en: Wait longer for the firmware message response to complete.
-Date:   Wed, 13 Mar 2019 15:10:18 -0400
-Message-Id: <20190313191021.158171-57-sashal@kernel.org>
+Subject: [PATCH AUTOSEL 4.20 58/60] mdio_bus: Fix use-after-free on device_register fails
+Date:   Wed, 13 Mar 2019 15:10:19 -0400
+Message-Id: <20190313191021.158171-58-sashal@kernel.org>
 X-Mailer: git-send-email 2.19.1
 In-Reply-To: <20190313191021.158171-1-sashal@kernel.org>
 References: <20190313191021.158171-1-sashal@kernel.org>
@@ -57,50 +58,128 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Michael Chan <michael.chan@broadcom.com>
+From: YueHaibing <yuehaibing@huawei.com>
 
-[ Upstream commit 0000b81a063b5f3ab82fa18041c28327ce72c312 ]
+[ Upstream commit 6ff7b060535e87c2ae14dd8548512abfdda528fb ]
 
-The code waits up to 20 usec for the firmware response to complete
-once we've seen the valid response header in the buffer.  It turns
-out that in some scenarios, this wait time is not long enough.
-Extend it to 150 usec and use usleep_range() instead of udelay().
+KASAN has found use-after-free in fixed_mdio_bus_init,
+commit 0c692d07842a ("drivers/net/phy/mdio_bus.c: call
+put_device on device_register() failure") call put_device()
+while device_register() fails,give up the last reference
+to the device and allow mdiobus_release to be executed
+,kfreeing the bus. However in most drives, mdiobus_free
+be called to free the bus while mdiobus_register fails.
+use-after-free occurs when access bus again, this patch
+revert it to let mdiobus_free free the bus.
 
-Fixes: 9751e8e71487 ("bnxt_en: reduce timeout on initial HWRM calls")
-Signed-off-by: Michael Chan <michael.chan@broadcom.com>
+KASAN report details as below:
+
+BUG: KASAN: use-after-free in mdiobus_free+0x85/0x90 drivers/net/phy/mdio_bus.c:482
+Read of size 4 at addr ffff8881dc824d78 by task syz-executor.0/3524
+
+CPU: 1 PID: 3524 Comm: syz-executor.0 Not tainted 5.0.0-rc7+ #45
+Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS 1.10.2-1ubuntu1 04/01/2014
+Call Trace:
+ __dump_stack lib/dump_stack.c:77 [inline]
+ dump_stack+0xfa/0x1ce lib/dump_stack.c:113
+ print_address_description+0x65/0x270 mm/kasan/report.c:187
+ kasan_report+0x149/0x18d mm/kasan/report.c:317
+ mdiobus_free+0x85/0x90 drivers/net/phy/mdio_bus.c:482
+ fixed_mdio_bus_init+0x283/0x1000 [fixed_phy]
+ ? 0xffffffffc0e40000
+ ? 0xffffffffc0e40000
+ ? 0xffffffffc0e40000
+ do_one_initcall+0xfa/0x5ca init/main.c:887
+ do_init_module+0x204/0x5f6 kernel/module.c:3460
+ load_module+0x66b2/0x8570 kernel/module.c:3808
+ __do_sys_finit_module+0x238/0x2a0 kernel/module.c:3902
+ do_syscall_64+0x147/0x600 arch/x86/entry/common.c:290
+ entry_SYSCALL_64_after_hwframe+0x49/0xbe
+RIP: 0033:0x462e99
+Code: f7 d8 64 89 02 b8 ff ff ff ff c3 66 0f 1f 44 00 00 48 89 f8 48 89 f7 48 89 d6 48 89 ca 4d 89 c2 4d 89 c8 4c 8b 4c 24 08 0f 05 <48> 3d 01 f0 ff ff 73 01 c3 48 c7 c1 bc ff ff ff f7 d8 64 89 01 48
+RSP: 002b:00007f6215c19c58 EFLAGS: 00000246 ORIG_RAX: 0000000000000139
+RAX: ffffffffffffffda RBX: 000000000073bf00 RCX: 0000000000462e99
+RDX: 0000000000000000 RSI: 0000000020000080 RDI: 0000000000000003
+RBP: 00007f6215c19c70 R08: 0000000000000000 R09: 0000000000000000
+R10: 0000000000000000 R11: 0000000000000246 R12: 00007f6215c1a6bc
+R13: 00000000004bcefb R14: 00000000006f7030 R15: 0000000000000004
+
+Allocated by task 3524:
+ set_track mm/kasan/common.c:85 [inline]
+ __kasan_kmalloc.constprop.3+0xa0/0xd0 mm/kasan/common.c:496
+ kmalloc include/linux/slab.h:545 [inline]
+ kzalloc include/linux/slab.h:740 [inline]
+ mdiobus_alloc_size+0x54/0x1b0 drivers/net/phy/mdio_bus.c:143
+ fixed_mdio_bus_init+0x163/0x1000 [fixed_phy]
+ do_one_initcall+0xfa/0x5ca init/main.c:887
+ do_init_module+0x204/0x5f6 kernel/module.c:3460
+ load_module+0x66b2/0x8570 kernel/module.c:3808
+ __do_sys_finit_module+0x238/0x2a0 kernel/module.c:3902
+ do_syscall_64+0x147/0x600 arch/x86/entry/common.c:290
+ entry_SYSCALL_64_after_hwframe+0x49/0xbe
+
+Freed by task 3524:
+ set_track mm/kasan/common.c:85 [inline]
+ __kasan_slab_free+0x130/0x180 mm/kasan/common.c:458
+ slab_free_hook mm/slub.c:1409 [inline]
+ slab_free_freelist_hook mm/slub.c:1436 [inline]
+ slab_free mm/slub.c:2986 [inline]
+ kfree+0xe1/0x270 mm/slub.c:3938
+ device_release+0x78/0x200 drivers/base/core.c:919
+ kobject_cleanup lib/kobject.c:662 [inline]
+ kobject_release lib/kobject.c:691 [inline]
+ kref_put include/linux/kref.h:67 [inline]
+ kobject_put+0x146/0x240 lib/kobject.c:708
+ put_device+0x1c/0x30 drivers/base/core.c:2060
+ __mdiobus_register+0x483/0x560 drivers/net/phy/mdio_bus.c:382
+ fixed_mdio_bus_init+0x26b/0x1000 [fixed_phy]
+ do_one_initcall+0xfa/0x5ca init/main.c:887
+ do_init_module+0x204/0x5f6 kernel/module.c:3460
+ load_module+0x66b2/0x8570 kernel/module.c:3808
+ __do_sys_finit_module+0x238/0x2a0 kernel/module.c:3902
+ do_syscall_64+0x147/0x600 arch/x86/entry/common.c:290
+ entry_SYSCALL_64_after_hwframe+0x49/0xbe
+
+The buggy address belongs to the object at ffff8881dc824c80
+ which belongs to the cache kmalloc-2k of size 2048
+The buggy address is located 248 bytes inside of
+ 2048-byte region [ffff8881dc824c80, ffff8881dc825480)
+The buggy address belongs to the page:
+page:ffffea0007720800 count:1 mapcount:0 mapping:ffff8881f6c02800 index:0x0 compound_mapcount: 0
+flags: 0x2fffc0000010200(slab|head)
+raw: 02fffc0000010200 0000000000000000 0000000500000001 ffff8881f6c02800
+raw: 0000000000000000 00000000800f000f 00000001ffffffff 0000000000000000
+page dumped because: kasan: bad access detected
+
+Memory state around the buggy address:
+ ffff8881dc824c00: fc fc fc fc fc fc fc fc fc fc fc fc fc fc fc fc
+ ffff8881dc824c80: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
+>ffff8881dc824d00: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
+                                                                ^
+ ffff8881dc824d80: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
+ ffff8881dc824e00: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
+
+Fixes: 0c692d07842a ("drivers/net/phy/mdio_bus.c: call put_device on device_register() failure")
+Signed-off-by: YueHaibing <yuehaibing@huawei.com>
+Reviewed-by: Andrew Lunn <andrew@lunn.ch>
 Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/ethernet/broadcom/bnxt/bnxt.c | 2 +-
- drivers/net/ethernet/broadcom/bnxt/bnxt.h | 2 +-
- 2 files changed, 2 insertions(+), 2 deletions(-)
+ drivers/net/phy/mdio_bus.c | 1 -
+ 1 file changed, 1 deletion(-)
 
-diff --git a/drivers/net/ethernet/broadcom/bnxt/bnxt.c b/drivers/net/ethernet/broadcom/bnxt/bnxt.c
-index 938ea8ada0da..7fbba28bc488 100644
---- a/drivers/net/ethernet/broadcom/bnxt/bnxt.c
-+++ b/drivers/net/ethernet/broadcom/bnxt/bnxt.c
-@@ -3867,7 +3867,7 @@ static int bnxt_hwrm_do_send_msg(struct bnxt *bp, void *msg, u32 msg_len,
- 			dma_rmb();
- 			if (*valid)
- 				break;
--			udelay(1);
-+			usleep_range(1, 5);
- 		}
+diff --git a/drivers/net/phy/mdio_bus.c b/drivers/net/phy/mdio_bus.c
+index 66b9cfe692fc..7368616286ae 100644
+--- a/drivers/net/phy/mdio_bus.c
++++ b/drivers/net/phy/mdio_bus.c
+@@ -379,7 +379,6 @@ int __mdiobus_register(struct mii_bus *bus, struct module *owner)
+ 	err = device_register(&bus->dev);
+ 	if (err) {
+ 		pr_err("mii_bus %s failed to register\n", bus->id);
+-		put_device(&bus->dev);
+ 		return -EINVAL;
+ 	}
  
- 		if (j >= HWRM_VALID_BIT_DELAY_USEC) {
-diff --git a/drivers/net/ethernet/broadcom/bnxt/bnxt.h b/drivers/net/ethernet/broadcom/bnxt/bnxt.h
-index 3030931ccaf8..7bb9b4d8bf52 100644
---- a/drivers/net/ethernet/broadcom/bnxt/bnxt.h
-+++ b/drivers/net/ethernet/broadcom/bnxt/bnxt.h
-@@ -583,7 +583,7 @@ struct nqe_cn {
- 	(HWRM_SHORT_TIMEOUT_COUNTER * HWRM_SHORT_MIN_TIMEOUT +		\
- 	 ((n) - HWRM_SHORT_TIMEOUT_COUNTER) * HWRM_MIN_TIMEOUT))
- 
--#define HWRM_VALID_BIT_DELAY_USEC	20
-+#define HWRM_VALID_BIT_DELAY_USEC	150
- 
- #define BNXT_RX_EVENT	1
- #define BNXT_AGG_EVENT	2
 -- 
 2.19.1
 
