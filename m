@@ -2,117 +2,89 @@ Return-Path: <SRS0=dUEL=RQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_PASS,URIBL_BLOCKED,USER_IN_DEF_DKIM_WL autolearn=ham autolearn_force=no
+X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_MUTT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 601FAC43381
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 Mar 2019 06:43:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 50739C43381
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 Mar 2019 06:46:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2603E2070D
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 Mar 2019 06:43:53 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="YQV56QKL"
+	by mail.kernel.org (Postfix) with ESMTP id 16D452070D
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 Mar 2019 06:46:01 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727140AbfCMGnv (ORCPT
+        id S1727131AbfCMGp7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 13 Mar 2019 02:43:51 -0400
-Received: from mail-it1-f194.google.com ([209.85.166.194]:36123 "EHLO
-        mail-it1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727080AbfCMGnv (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 13 Mar 2019 02:43:51 -0400
-Received: by mail-it1-f194.google.com with SMTP id v83so1112279itf.1
-        for <linux-kernel@vger.kernel.org>; Tue, 12 Mar 2019 23:43:50 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=h35+BhMsBMD98Yt/fh5izfLu/YmzGEs8dSq2OS0pnco=;
-        b=YQV56QKLz9LNlTH4Ug+3k3c+IOs4iG7vFdBroESswQQBoy4vfRnM78qf3zYVm1+0uU
-         6841dHE6Sx2h86v/aIQc9gQl6zXpoYoqqQOs3qwbXbgj70RN99SvoRvep+pK1b5C9mOi
-         OGNO7HE5pIw3PRdjvXKe0j2u63sgtqsvGJAfnKgqMwWOVW9vnaVKpSkdMIiJVkiixEbR
-         NNT5jKzj8k+t9jU+7ztdka3n0SkDUJjtFYmyO+qiap50Th6YG4omtxr42JgskAscbcQe
-         u9TzSx9m/nyUHUpU4PUvecucTvaIGsIb3uePKjNfcxuddxBBMGtofMVHyc07VjiH9b3S
-         4Q1w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=h35+BhMsBMD98Yt/fh5izfLu/YmzGEs8dSq2OS0pnco=;
-        b=pRWLCrmH+6U12kgzpvzBc6eRSda13rwywy3BD2WeeOxals56pL5ucpiCABybtN8PAC
-         MKqSSYtte4X+IFIXP7xNtYi5vjGlUbI5UnuiryzniLI6MqrRqjJwQSA7M6+0SaRAcOKs
-         kw84isE03E1iKivMPt53lmk0JF8Ik1KHVIyv09osDZJpX0E5Upc8wYlL+LAa5P/218rz
-         LQzRRZsXh2+2LYGxXlzIRkSeqdGq+iWqKiv53N9fu4kzirGC4C5dOVS2l0EdnnH5YAcK
-         gKn0NKLlcydv+pWoW4HnmXMmwoMcwBEClA50v4hSRT+fLHR1Q0Lvun2g5mXeR8YHymH6
-         2tmA==
-X-Gm-Message-State: APjAAAUxtBsCigEXuH1jV5v56/BCeOareOlUaQWwnfaEeyD0t0nvYCWd
-        pVFOEXqAttVeG/b4VcXgbXaFycAoRXNpS86GcHF7XQ==
-X-Google-Smtp-Source: APXvYqy6v26PV8PtIJ7uAUrL6St2uiAD7oGOge30myrSpHkqPkTu5JAXqgMsA2233BMtrgYLmacj0bgPTUOr+beRU90=
-X-Received: by 2002:a24:3b01:: with SMTP id c1mr768525ita.144.1552459429517;
- Tue, 12 Mar 2019 23:43:49 -0700 (PDT)
+        Wed, 13 Mar 2019 02:45:59 -0400
+Received: from mx2.suse.de ([195.135.220.15]:47734 "EHLO mx1.suse.de"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726125AbfCMGp7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 13 Mar 2019 02:45:59 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx1.suse.de (Postfix) with ESMTP id 7252CACAE;
+        Wed, 13 Mar 2019 06:45:57 +0000 (UTC)
+Received: by unicorn.suse.cz (Postfix, from userid 1000)
+        id 0A2BEE0090; Wed, 13 Mar 2019 07:45:57 +0100 (CET)
+Date:   Wed, 13 Mar 2019 07:45:57 +0100
+From:   Michal Kubecek <mkubecek@suse.cz>
+To:     Sudip Mukherjee <sudipm.mukherjee@gmail.com>
+Cc:     linux-kernel@vger.kernel.org
+Subject: regression (bisected): "modprobe parport_pc" hangs in current
+ mainline
+Message-ID: <20190313064557.GA14531@unicorn.suse.cz>
 MIME-Version: 1.0
-References: <00000000000010b2fc057fcdfaba@google.com> <0000000000008c75b50583ddb5f8@google.com>
- <20190312040829.GQ2217@ZenIV.linux.org.uk> <491ff1c3-91d6-eaa7-f551-46a4f8b90f5a@i-love.sakura.ne.jp>
- <CACT4Y+ahcZpJ1Q-TKkCJkyhzGc07XFusuwBcKjg_rfAeos8RWA@mail.gmail.com> <92a4e5e5-33ca-7b39-16c0-82c7fb742d18@i-love.sakura.ne.jp>
-In-Reply-To: <92a4e5e5-33ca-7b39-16c0-82c7fb742d18@i-love.sakura.ne.jp>
-From:   Dmitry Vyukov <dvyukov@google.com>
-Date:   Wed, 13 Mar 2019 07:43:38 +0100
-Message-ID: <CACT4Y+ZQD=raWY4Tp8nrUcpAAbwRt0D3sH65KrTP+JURtQ3n-Q@mail.gmail.com>
-Subject: Re: INFO: rcu detected stall in sys_sendfile64 (2)
-To:     Tetsuo Handa <penguin-kernel@i-love.sakura.ne.jp>
-Cc:     syzbot <syzbot+1505c80c74256c6118a5@syzkaller.appspotmail.com>,
-        syzkaller-bugs <syzkaller-bugs@googlegroups.com>,
-        Al Viro <viro@zeniv.linux.org.uk>,
-        LKML <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Mar 12, 2019 at 10:11 PM Tetsuo Handa
-<penguin-kernel@i-love.sakura.ne.jp> wrote:
->
-> On 2019/03/13 2:15, Dmitry Vyukov wrote:
-> >> Also, this bisection is finding multiple different crash patterns, which
-> >> suggests that the crashed tests are not giving correct feedback to syzbot.
-> >
-> > Treating different crashes as just "crash" is intended. Kernel bugs
-> > can manifest in very different ways.
-> > Want fun, search for "bpf: sockhash, disallow bpf_tcp_close and update
-> > in parallel" in  https://syzkaller.appspot.com/?fixed=upstream
-> > It lead to 50+ different failure modes.
-> >
->
-> But syzbot already found a rather simple C reproducer
-> ( https://syzkaller.appspot.com/text?tag=ReproC&x=116fc7a8c00000 ) for this bug.
-> Was this reproducer used for bisection?
+Hello,
 
-The C reproducer used for bisection is provided as "C reproducer" in
-the bisection report.
+I encountered a regression in current (post-5.0) mainline kernel which I
+bisected to commit 1aec4211204d ("parport: daisy: use new parport device
+model"). Running "modprobe parport_pc" hangs up:
 
-> I guess that if this reproducer was used,
-> syzbot did not hit "WARNING: ODEBUG bug in netdev_freemem" cases.
+tweed:~ # ps ax | grep modprobe
+ 1206 pts/0    D+     0:00 modprobe parport_pc
+ 1209 ?        S      0:00 /sbin/modprobe -q -- parport_lowlevel
+ 1211 pts/1    S+     0:00 grep modprobe
+tweed:~ # cat /proc/1206/stack 
+[<0>] call_usermodehelper_exec+0xc7/0x140
+[<0>] __request_module+0x1a1/0x430
+[<0>] __parport_register_driver+0x142/0x150 [parport]
+[<0>] parport_bus_init+0x1d/0x30 [parport]
+[<0>] parport_default_proc_register+0x28/0x1000 [parport]
+[<0>] do_one_initcall+0x46/0x1cd
+[<0>] do_init_module+0x5b/0x20d
+[<0>] load_module+0x1b3d/0x20f0
+[<0>] __do_sys_finit_module+0xbd/0xe0
+[<0>] do_syscall_64+0x60/0x120
+[<0>] entry_SYSCALL_64_after_hwframe+0x49/0xbe
+[<0>] 0xffffffffffffffff
+tweed:~ # cat /proc/1209/stack 
+[<0>] load_module+0xe6a/0x20f0
+[<0>] __do_sys_finit_module+0xbd/0xe0
+[<0>] do_syscall_64+0x60/0x120
+[<0>] entry_SYSCALL_64_after_hwframe+0x49/0xbe
+[<0>] 0xffffffffffffffff
 
-Maybe. But we won't have more than 1 in future. Currently syzbot
-bisects over a backlog of crashes, some of them accumulated multiple
-reproducers over weeks/months/years. When it will bisect newly
-reported bugs as they are found, there will be only 1 reproducer. E.g.
-these two for this bug were found within a month.
+call_usermodehelper_exec+0xc7/0x140 is (build from commit 1aec4211204d)
+line 583 in kernel/umh.c:
 
-> Also, humans can sometimes find more simpler C reproducers from syzbot provided
-> reproducers. It would be nice if syzbot can accept and use a user defined C
-> reproducer for testing.
+		retval = wait_for_completion_killable(&done);
 
-It would be more useful to accept patches that make syzkaller create
-better reproducers from these people. Manual work is not scalable. We
-would need 10 reproducers per day for a dozen of OSes (incl some
-private kernels/branches). Anybody is free to run syzkaller manually
-and do full manual (perfect) reporting. But for us it become clear
-very early that it won't work. Then see above, while that human is
-sleeping/on weekend/vacation, syzbot will already bisect own
-reproducer. Adding manual reproducer later won't help in any way.
-syzkaller already does lots of smart work for reproducers. Let's not
-give up on the last mile and switch back to all manual work.
+and load_module+0xe6a/0x20f0 is in add_unformed_module(), line 3577 in
+kernel/module.c:
+
+			err = wait_event_interruptible(module_wq,
+					       finished_loading(mod->name));
+
+Unfortunately I don't have version of crash able to deal with kernels as
+new as these so I wasn't able to find more for now.
+
+I have seen this both on real hardware and in a VM.
+
+Michal Kubecek
