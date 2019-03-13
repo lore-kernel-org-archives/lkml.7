@@ -7,52 +7,51 @@ X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 07537C43381
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 Mar 2019 19:28:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id ED3ECC43381
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 Mar 2019 19:28:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C3D152146E
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 Mar 2019 19:28:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B530721019
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 Mar 2019 19:28:25 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1552505299;
-	bh=fxeZbVkpq1WQ5KTii8YT5z9m75oqu4FMBQQXMZWQytg=;
+	s=default; t=1552505305;
+	bh=oy3dvynanRjImHK2flmvaHnoYG6sbJAJOPDGEKGTCBg=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Hnw5zAD+DZs64vunVDJBiTscZRtjzRhmTActAiDMErpBM4GnbuszEyzs2JjzeHe/u
-	 ZIfnOWw8FcJw49ywwntwI/cnhW0A702csL0ZmqIVE4Dq4Eu/3gjHKpDxa/oLJMlhIl
-	 J9e9nPZRg2/SNww0KPZqQnHwBlrZPxpfMYTAIjjk=
+	b=kqM1bMd9nNjmjMRTlIVWhqnGEuPuvaqfQfEzHIMpu+F9cL2Mn1ryTsXVhYyKSf37v
+	 c9lsGuVuVwBPKkO69NJRxLikFTdQO4xd4ImaFxdbKkTmD8PbLdZVeNaKF6W+xP0asL
+	 zHAcN0qnxlagMNcuD+6Yw2SzqqaeYd7S3SHwzqRY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728037AbfCMTNk (ORCPT
+        id S1728019AbfCMTNi (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 13 Mar 2019 15:13:40 -0400
-Received: from mail.kernel.org ([198.145.29.99]:44134 "EHLO mail.kernel.org"
+        Wed, 13 Mar 2019 15:13:38 -0400
+Received: from mail.kernel.org ([198.145.29.99]:44088 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728006AbfCMTNh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 13 Mar 2019 15:13:37 -0400
+        id S1727159AbfCMTNf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 13 Mar 2019 15:13:35 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 888F3213A2;
-        Wed, 13 Mar 2019 19:13:35 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 73E9220693;
+        Wed, 13 Mar 2019 19:13:33 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1552504417;
-        bh=fxeZbVkpq1WQ5KTii8YT5z9m75oqu4FMBQQXMZWQytg=;
+        s=default; t=1552504415;
+        bh=oy3dvynanRjImHK2flmvaHnoYG6sbJAJOPDGEKGTCBg=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Oyka6VVizrY/s/lubELbBsg4DduIb/6M4P92pSJyYHAKLmBgm97VgaO/nLgkA/zXF
-         qeQD2aA6J+3AlYH1MIsxbdkhb4reJWodC8hSvTT3itnVu6Cc8vPUswAtN6/ubtR+3x
-         O/VIvrwTDAvr7i0vd6Ik3/90CTNfWIXJyrAYj5+4=
+        b=cgZw6Bnbgp57aN+nkkS6F4vJymK0bpvkmk0NSiRxyeDknC/06FY6vkpUn+9xiN1dv
+         SLdCUaenRXjGmwXhL0S1pNx8JJrJPw3t4KoWwLYarPLELS2ozuPglvMb61YwXEdyDm
+         I7MIlQLYPB9TtDPRjgGwmQ3fcQ350sh12DkH5Egc=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Beniamino Galvani <bgalvani@redhat.com>,
-        "David S . Miller" <davem@davemloft.net>,
-        Sasha Levin <sashal@kernel.org>, netdev@vger.kernel.org,
-        linux-usb@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.19 16/48] qmi_wwan: apply SET_DTR quirk to Sierra WP7607
-Date:   Wed, 13 Mar 2019 15:12:18 -0400
-Message-Id: <20190313191250.158955-16-sashal@kernel.org>
+Cc:     Martin Blumenstingl <martin.blumenstingl@googlemail.com>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Sasha Levin <sashal@kernel.org>, linux-gpio@vger.kernel.org,
+        linux-amlogic@lists.infradead.org
+Subject: [PATCH AUTOSEL 4.19 15/48] pinctrl: meson: meson8b: fix the sdxc_a data 1..3 pins
+Date:   Wed, 13 Mar 2019 15:12:17 -0400
+Message-Id: <20190313191250.158955-15-sashal@kernel.org>
 X-Mailer: git-send-email 2.19.1
 In-Reply-To: <20190313191250.158955-1-sashal@kernel.org>
 References: <20190313191250.158955-1-sashal@kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
@@ -60,37 +59,36 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Beniamino Galvani <bgalvani@redhat.com>
+From: Martin Blumenstingl <martin.blumenstingl@googlemail.com>
 
-[ Upstream commit 97dc47a1308a3af46a09b1546cfb869f2e382a81 ]
+[ Upstream commit c17abcfa93bf0be5e48bb011607d237ac2bfc839 ]
 
-The 1199:68C0 USB ID is reused by Sierra WP7607 which requires the DTR
-quirk to be detected. Apply QMI_QUIRK_SET_DTR unconditionally as
-already done for other IDs shared between different devices.
+Fix the mismatch between the "sdxc_d13_1_a" pin group definition from
+meson8b_cbus_groups and the entry in sdxc_a_groups ("sdxc_d0_13_1_a").
+This makes it possible to use "sdxc_d13_1_a" in device-tree files to
+route the MMC data 1..3 pins to GPIOX_1..3.
 
-Signed-off-by: Beniamino Galvani <bgalvani@redhat.com>
-Acked-by: Bjørn Mork <bjorn@mork.no>
-Signed-off-by: David S. Miller <davem@davemloft.net>
+Fixes: 0fefcb6876d0d6 ("pinctrl: Add support for Meson8b")
+Signed-off-by: Martin Blumenstingl <martin.blumenstingl@googlemail.com>
+Signed-off-by: Linus Walleij <linus.walleij@linaro.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/usb/qmi_wwan.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ drivers/pinctrl/meson/pinctrl-meson8b.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/net/usb/qmi_wwan.c b/drivers/net/usb/qmi_wwan.c
-index 6e381354f658..74bebbdb4b15 100644
---- a/drivers/net/usb/qmi_wwan.c
-+++ b/drivers/net/usb/qmi_wwan.c
-@@ -1208,8 +1208,8 @@ static const struct usb_device_id products[] = {
- 	{QMI_FIXED_INTF(0x114f, 0x68a2, 8)},    /* Sierra Wireless MC7750 */
- 	{QMI_FIXED_INTF(0x1199, 0x68a2, 8)},	/* Sierra Wireless MC7710 in QMI mode */
- 	{QMI_FIXED_INTF(0x1199, 0x68a2, 19)},	/* Sierra Wireless MC7710 in QMI mode */
--	{QMI_FIXED_INTF(0x1199, 0x68c0, 8)},	/* Sierra Wireless MC7304/MC7354 */
--	{QMI_FIXED_INTF(0x1199, 0x68c0, 10)},	/* Sierra Wireless MC7304/MC7354 */
-+	{QMI_QUIRK_SET_DTR(0x1199, 0x68c0, 8)},	/* Sierra Wireless MC7304/MC7354, WP76xx */
-+	{QMI_QUIRK_SET_DTR(0x1199, 0x68c0, 10)},/* Sierra Wireless MC7304/MC7354 */
- 	{QMI_FIXED_INTF(0x1199, 0x901c, 8)},    /* Sierra Wireless EM7700 */
- 	{QMI_FIXED_INTF(0x1199, 0x901f, 8)},    /* Sierra Wireless EM7355 */
- 	{QMI_FIXED_INTF(0x1199, 0x9041, 8)},	/* Sierra Wireless MC7305/MC7355 */
+diff --git a/drivers/pinctrl/meson/pinctrl-meson8b.c b/drivers/pinctrl/meson/pinctrl-meson8b.c
+index 91cffc051055..ead4beb5f55f 100644
+--- a/drivers/pinctrl/meson/pinctrl-meson8b.c
++++ b/drivers/pinctrl/meson/pinctrl-meson8b.c
+@@ -665,7 +665,7 @@ static const char * const sd_a_groups[] = {
+ 
+ static const char * const sdxc_a_groups[] = {
+ 	"sdxc_d0_0_a", "sdxc_d13_0_a", "sdxc_d47_a", "sdxc_clk_a",
+-	"sdxc_cmd_a", "sdxc_d0_1_a", "sdxc_d0_13_1_a"
++	"sdxc_cmd_a", "sdxc_d0_1_a", "sdxc_d13_1_a"
+ };
+ 
+ static const char * const pcm_a_groups[] = {
 -- 
 2.19.1
 
