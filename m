@@ -2,166 +2,111 @@ Return-Path: <SRS0=dUEL=RQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,
+	USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 213BAC43381
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 Mar 2019 15:08:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A1F12C43381
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 Mar 2019 15:09:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EBCA2214AE
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 Mar 2019 15:08:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6C4B0214AE
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 Mar 2019 15:09:55 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=joelfernandes.org header.i=@joelfernandes.org header.b="LDaoyqrw"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726167AbfCMPIh (ORCPT
+        id S1726582AbfCMPJy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 13 Mar 2019 11:08:37 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:41188 "EHLO mx1.redhat.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725832AbfCMPIh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 13 Mar 2019 11:08:37 -0400
-Received: from smtp.corp.redhat.com (int-mx07.intmail.prod.int.phx2.redhat.com [10.5.11.22])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id BAA1E306720B;
-        Wed, 13 Mar 2019 15:08:36 +0000 (UTC)
-Received: from pauld.bos.com (dhcp-17-51.bos.redhat.com [10.18.17.51])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 382711001E6F;
-        Wed, 13 Mar 2019 15:08:36 +0000 (UTC)
-From:   Phil Auld <pauld@redhat.com>
-To:     linux-kernel@vger.kernel.org
-Cc:     Ben Segall <bsegall@google.com>, Ingo Molnar <mingo@redhat.com>,
-        Peter Zijlstra <peterz@infradead.org>
-Subject: [PATCH] sched/fair: Limit sched_cfs_period_timer loop to avoid hard lockup
-Date:   Wed, 13 Mar 2019 11:08:26 -0400
-Message-Id: <20190313150826.16862-1-pauld@redhat.com>
-X-Scanned-By: MIMEDefang 2.84 on 10.5.11.22
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.48]); Wed, 13 Mar 2019 15:08:36 +0000 (UTC)
+        Wed, 13 Mar 2019 11:09:54 -0400
+Received: from mail-qk1-f196.google.com ([209.85.222.196]:41297 "EHLO
+        mail-qk1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725832AbfCMPJx (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 13 Mar 2019 11:09:53 -0400
+Received: by mail-qk1-f196.google.com with SMTP id o129so1285997qke.8
+        for <linux-kernel@vger.kernel.org>; Wed, 13 Mar 2019 08:09:53 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=joelfernandes.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=Mj0DhrxZTmFLVOfVIzftegHQm2AO6E/ovwMv4xmvu1s=;
+        b=LDaoyqrwIQfQtzAVT0xPlDuTTgmuqXB7UWiZt7DPjD5LTEYZ7cBl3P38NH2DbUoNC6
+         F3tskJ/6xV9TYEbfQuxMKeQFi369+p1W8D13ofdxJ3ctcb1J6dH49WQYRD7vhc9E7NJT
+         JLwT11ZVyacyc8+PzM6+ShLY3WzPH84Ap4tDw=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=Mj0DhrxZTmFLVOfVIzftegHQm2AO6E/ovwMv4xmvu1s=;
+        b=uMwxlHNylxyu+Rj/XLpDXm4mCbvneT/iB2y/5SZ6/SMNuTm1Vps2qPOS3Tmmld8Pxl
+         7pbQLUG0YAyeVQgumJXYZIG4twa+AXyZTtHKiHFpyea6ua1ysdmsYZ8sBxsM4rR5ee7C
+         C/P09PhP0ZXyn1Jnbq/4rOpF0YQBQO0S7UNF2iXDPa1KLjjwLKpmZVVECaKHHmIXQLL+
+         EJIBQbnvdxtNY8XcialP7GO1mBvoNYBbxzC6qBG0q0TSzk5Z3+t2FOBrNXypDiyd3SX6
+         vGlv5u+vZR1EX4ijyIA1uealJnEeazONA8AM18gnJjRNuI6o14BdhLP+9F+sOzW+lk2L
+         rT2A==
+X-Gm-Message-State: APjAAAV3B18tzZ4iLmORYLPE0q33Amo3Zq76PbyuKkX3UAxFZ9vCO1VC
+        XWDQvsBgdUqGMf6tJ5Xa0mB5ZA==
+X-Google-Smtp-Source: APXvYqzPNw9uOiFocGo94IjlmAenfP6QkFBo3mpV4S8oKFNcWr2bHK/yyOxpn4BePaZ4YiIN7dfajQ==
+X-Received: by 2002:a05:620a:109b:: with SMTP id g27mr32665247qkk.128.1552489792423;
+        Wed, 13 Mar 2019 08:09:52 -0700 (PDT)
+Received: from localhost ([2620:0:1004:1100:cca9:fccc:8667:9bdc])
+        by smtp.gmail.com with ESMTPSA id i1sm6438110qtb.0.2019.03.13.08.09.48
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Wed, 13 Mar 2019 08:09:49 -0700 (PDT)
+Date:   Wed, 13 Mar 2019 11:09:48 -0400
+From:   Joel Fernandes <joel@joelfernandes.org>
+To:     "Paul E. McKenney" <paulmck@linux.ibm.com>
+Cc:     linux-kernel@vger.kernel.org, rcu@vger.kernel.org,
+        jiangshanlai@gmail.com, dipankar@in.ibm.com,
+        mathieu.desnoyers@efficios.com, josh@joshtriplett.org,
+        rostedt@goodmis.org, luto@kernel.org, byungchul.park@lge.com
+Subject: Re: [PATCH tip/core/rcu 06/19] rcu: Add warning to detect
+ half-interrupts
+Message-ID: <20190313150948.GA84821@google.com>
+References: <20180829222021.GA29944@linux.vnet.ibm.com>
+ <20180829222047.319-6-paulmck@linux.vnet.ibm.com>
+ <20190311133939.GA29747@google.com>
+ <20190311222903.GR13351@linux.ibm.com>
+ <20190312150514.GB249405@google.com>
+ <20190312152034.GZ13351@linux.ibm.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190312152034.GZ13351@linux.ibm.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-With extremely short cfs_period_us setting on a parent task group with a large
-number of children the for loop in  sched_cfs_period_timer can run until the
-watchdog fires. There is no guarantee that the call to hrtimer_forward_now()
-will ever return 0.  The large number of children can make
-do_sched_cfs_period_timer() take longer than the period.
+On Tue, Mar 12, 2019 at 08:20:34AM -0700, Paul E. McKenney wrote:
+[snip]
+> 
+> >            Could we be more explicit in the code that this function can only
+> > be called from an interrupt, and also we change the code comment to be more
+> > clear about it (like the following diff)?
+> 
+> That would be good!
+> 
+> Nice trick on using dyntick state to check for interrupt nesting, but
+> wouldn't consolidating the counters break that?  But is there a lockdep
+> check for being in a hardware interrupt handler?  If not, could one
+> be added?  This would have the benefit of not adding overhead to the
+> scheduling-clock interrupt in production builds of the Linux kernel,
+> while still finding this bug in testing.
+> 
+> (Another approach would be to use IS_ENABLED(CONFIG_PROVE_RCU), but
+> a lockdep check would be cleaner.)
 
-[  217.264946] NMI watchdog: Watchdog detected hard LOCKUP on cpu 24
-[  217.264948] Modules linked in: sunrpc iTCO_wdt gpio_ich iTCO_vendor_support intel_powerclamp coretemp kvm_intel
-+kvm ipmi_ssif irqbypass crct10dif_pclmul crc32_pclmul ghash_clmulni_intel ipmi_si intel_cstate joydev
-+ipmi_devintf pcspkr hpilo intel_uncore sg hpwdt ipmi_msghandler acpi_power_meter i7core_edac lpc_ich acpi_cpufreq
-+ip_tables xfs libcrc32c sr_mod sd_mod cdrom ata_generic radeon i2c_algo_bit drm_kms_helper syscopyarea
-+sysfillrect sysimgblt fb_sys_fops ttm ata_piix drm serio_raw crc32c_intel hpsa myri10ge libata dca
-+scsi_transport_sas netxen_nic dm_mirror dm_region_hash dm_log dm_mod
-[  217.264964] CPU: 24 PID: 46684 Comm: myapp Not tainted 5.0.0-rc7+ #25
-[  217.264965] Hardware name: HP ProLiant DL580 G7, BIOS P65 08/16/2015
-[  217.264965] RIP: 0010:tg_nop+0x0/0x10
-[  217.264966] Code: 83 c9 08 f0 48 0f b1 0f 48 39 c2 74 0e 48 89 c2 f7 c2 00 00 20 00 75 dc 31 c0 c3 b8 01 00 00
-+00 c3 66 0f 1f 84 00 00 00 00 00 <66> 66 66 66 90 31 c0 c3 0f 1f 84 00 00 00 00 00 66 66 66 66 90 8b
-[  217.264967] RSP: 0000:ffff976a7f703e48 EFLAGS: 00000087
-[  217.264967] RAX: ffff976a7c7c8f00 RBX: ffff976a6f4fad00 RCX: ffff976a7c7c90f0
-[  217.264968] RDX: ffff976a6f4faee0 RSI: ffff976a7f961f00 RDI: ffff976a6f4fad00
-[  217.264968] RBP: ffff976a7f961f00 R08: 0000000000000002 R09: ffffffad2c9b3331
-[  217.264969] R10: 0000000000000000 R11: 0000000000000000 R12: ffff976a7c7c8f00
-[  217.264969] R13: ffffffffb2305c00 R14: 0000000000000000 R15: ffffffffb22f8510
-[  217.264970] FS:  00007f6240678740(0000) GS:ffff976a7f700000(0000) knlGS:0000000000000000
-[  217.264970] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-[  217.264971] CR2: 00000000006dee20 CR3: 000000bf2bffc005 CR4: 00000000000206e0
-[  217.264971] Call Trace:
-[  217.264971]  <IRQ>
-[  217.264972]  walk_tg_tree_from+0x29/0xb0
-[  217.264972]  unthrottle_cfs_rq+0xe0/0x1a0
-[  217.264972]  distribute_cfs_runtime+0xd3/0xf0
-[  217.264973]  sched_cfs_period_timer+0xcb/0x160
-[  217.264973]  ? sched_cfs_slack_timer+0xd0/0xd0
-[  217.264973]  __hrtimer_run_queues+0xfb/0x270
-[  217.264974]  hrtimer_interrupt+0x122/0x270
-[  217.264974]  smp_apic_timer_interrupt+0x6a/0x140
-[  217.264975]  apic_timer_interrupt+0xf/0x20
-[  217.264975]  </IRQ>
-[  217.264975] RIP: 0033:0x7f6240125fe5
-[  217.264976] Code: 44 17 d0 f3 44 0f 7f 47 30 f3 44 0f 7f 44 17 c0 48 01 fa 48 83 e2 c0 48 39 d1 74 a3 66 0f 1f
-+84 00 00 00 00 00 66 44 0f 7f 01 <66> 44 0f 7f 41 10 66 44 0f 7f 41 20 66 44 0f 7f 41 30 48 83 c1 40
-...
+AFAICS, lockdep does not specifically track when we enter an interrupt, but
+rather only tracks when interrupts are enabled/disabled.
 
-To prevent this we add protection to the loop that detects when the loop has run
-too many times and scales the period and quota up, proportionally, so that the timer
-can complete before then next period expires.  This preserves the relative runtime
-quota while preventing the hard lockup.
+But we could use in_irq() to find if we are in an interrupt (which uses the
+preempt_count to track in HARDIRQ_MASK section of the counter).
 
-A warning is issued reporting this state and the new values.
+I will add an in_irq() check that does the check only when PROVE_RCU is
+enabled, and send a patch.
 
-The scaling by average time over count was suggested by Ben Segall <bsegall@google.com>.
+Thanks and it is my pleasure to look into this, quite interesting!
 
-Signed-off-by: Phil Auld <pauld@redhat.com>
-Cc: Ben Segall <bsegall@google.com>
-Cc: Ingo Molnar <mingo@redhat.com>
-Cc: Peter Zijlstra (Intel) <peterz@infradead.org>
----
-
-Note: This is against v5.0 as suggested by the documentation. It won't apply to 5.0+ due to
-the change to raw_spin_lock_irqsave. I can respin as needed.
-
- kernel/sched/fair.c | 32 ++++++++++++++++++++++++++++++++
- 1 file changed, 32 insertions(+)
-
-diff --git a/kernel/sched/fair.c b/kernel/sched/fair.c
-index 310d0637fe4b..90cc67bbf592 100644
---- a/kernel/sched/fair.c
-+++ b/kernel/sched/fair.c
-@@ -4859,19 +4859,51 @@ static enum hrtimer_restart sched_cfs_slack_timer(struct hrtimer *timer)
- 	return HRTIMER_NORESTART;
- }
- 
-+extern const u64 max_cfs_quota_period;
-+int cfs_period_autotune_loop_limit   = 8;
-+int cfs_period_autotune_cushion_pct  = 15; /* percentage added to period recalculation */
-+
- static enum hrtimer_restart sched_cfs_period_timer(struct hrtimer *timer)
- {
- 	struct cfs_bandwidth *cfs_b =
- 		container_of(timer, struct cfs_bandwidth, period_timer);
-+	s64 nsstart, nsnow, new_period;
- 	int overrun;
- 	int idle = 0;
-+	int count = 0;
- 
- 	raw_spin_lock(&cfs_b->lock);
-+	nsstart = ktime_to_ns(hrtimer_cb_get_time(timer));
- 	for (;;) {
- 		overrun = hrtimer_forward_now(timer, cfs_b->period);
- 		if (!overrun)
- 			break;
- 
-+		if (++count > cfs_period_autotune_loop_limit) {
-+			ktime_t old_period = ktime_to_ns(cfs_b->period);
-+
-+			nsnow = ktime_to_ns(hrtimer_cb_get_time(timer));
-+			new_period = (nsnow - nsstart)/cfs_period_autotune_loop_limit;
-+
-+			/*  Make sure new period will be larger than old. */
-+			if (new_period < old_period) {
-+				new_period = old_period;
-+			}
-+			new_period += (new_period *  cfs_period_autotune_cushion_pct) / 100;
-+
-+			if (new_period >  max_cfs_quota_period)
-+				new_period = max_cfs_quota_period;
-+
-+			cfs_b->period = ns_to_ktime(new_period);
-+			cfs_b->quota += (cfs_b->quota * ((new_period - old_period) * 100)/old_period)/100;
-+			pr_warn_ratelimited(
-+				"cfs_period_timer[cpu%d]: period too short, scaling up (new cfs_period_us %lld, cfs_quota_us = %lld)\n",
-+				smp_processor_id(), cfs_b->period/NSEC_PER_USEC, cfs_b->quota/NSEC_PER_USEC);
-+
-+			/* reset count so we don't come right back in here */
-+			count = 0;
-+		}
-+
- 		idle = do_sched_cfs_period_timer(cfs_b, overrun);
- 	}
- 	if (idle)
--- 
-2.18.0
+ - Joel
 
