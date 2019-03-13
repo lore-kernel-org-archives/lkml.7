@@ -7,46 +7,47 @@ X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A7D23C10F03
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 Mar 2019 19:20:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BE869C43381
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 Mar 2019 19:21:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 70FEF2075C
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 Mar 2019 19:20:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7C8F62075C
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 Mar 2019 19:21:03 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1552504853;
-	bh=8MG4dM/o+eluLA7XmtqaeLT6YGgYl6n+EewRMK1DIwo=;
+	s=default; t=1552504863;
+	bh=dEuEg/uoTWMQOpv6C93wfer29W091DNAxhlfaxtwO3M=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=OcuQbVc/xa3BzusLdQ8Z157wOR3/C4twjlDaGFfyy3t2An5s8t8nPxMNZDyZQDZqT
-	 Xsz7gE7+LMb6c0HIs+HCE4NHGbyVzQ1sVvD6FFxDhHZ5PdeceqJ1wsfhCfoqNbwL4C
-	 ZQOsnVbuzLHeVJXDgwbsANQOgMqdypIdm/aoi1vk=
+	b=DNm2LvKDsAaDalOFa/ZxhgIYBYxhAnrOEmCh5cPVFYubdUi6IVWNR6GhPUHD9wO7J
+	 lcIznVABK6KkNRlkU0S7ZNYzjVKrKUW9MWWDene/a5YJH/aQPYDWHlcqiVzthzvPwF
+	 q8T9A0mDH0HFIYdSrWR97TtnIEoQtgR6McKZlFNI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729102AbfCMTSn (ORCPT
+        id S1729318AbfCMTVB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 13 Mar 2019 15:18:43 -0400
-Received: from mail.kernel.org ([198.145.29.99]:49208 "EHLO mail.kernel.org"
+        Wed, 13 Mar 2019 15:21:01 -0400
+Received: from mail.kernel.org ([198.145.29.99]:49330 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729073AbfCMTSg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 13 Mar 2019 15:18:36 -0400
+        id S1728412AbfCMTSk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 13 Mar 2019 15:18:40 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id A54172171F;
-        Wed, 13 Mar 2019 19:18:34 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 634CC217F5;
+        Wed, 13 Mar 2019 19:18:38 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1552504715;
-        bh=8MG4dM/o+eluLA7XmtqaeLT6YGgYl6n+EewRMK1DIwo=;
+        s=default; t=1552504720;
+        bh=dEuEg/uoTWMQOpv6C93wfer29W091DNAxhlfaxtwO3M=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=cvtsQA9adzL/sspXHo2CXOBmit7Syn7LtmqyixA551401u4gwN+kdyzr/uvIFf5m/
-         uFPM2lLRf9XVVMSmENO13A7kY9msINwr9ldfv9G4fL1FmIQuVqDQXo1bTu+8tHHiCF
-         ls590+B+mqa//I0lkgKR8vUZlTVhXxhBINaDs33Y=
+        b=yEuWXoEtCesov5RpdOHjAfk1FSLva1M17xENXZaQyu9Gl9ZzcLOw/e1FmRvtYr3mK
+         bjCktRKMJWTK0e0NABNmr/Adn+RpxRpeYBluqCFIOCA9wG/+njsDI3KaOi5Co4Ghlp
+         UgaxdYMSteDmjFk4oz6+rCA96LGNfi81Ay/y6h8A=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Vineet Gupta <vgupta@synopsys.com>,
+Cc:     Li RongQing <lirongqing@baidu.com>,
+        Johannes Berg <johannes.berg@intel.com>,
         Sasha Levin <sashal@kernel.org>,
-        linux-snps-arc@lists.infradead.org
-Subject: [PATCH AUTOSEL 4.4 11/15] ARC: uacces: remove lp_start, lp_end from clobber list
-Date:   Wed, 13 Mar 2019 15:17:57 -0400
-Message-Id: <20190313191806.160547-11-sashal@kernel.org>
+        linux-wireless@vger.kernel.org, netdev@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.4 13/15] mac80211_hwsim: propagate genlmsg_reply return code
+Date:   Wed, 13 Mar 2019 15:17:59 -0400
+Message-Id: <20190313191806.160547-13-sashal@kernel.org>
 X-Mailer: git-send-email 2.19.1
 In-Reply-To: <20190313191806.160547-1-sashal@kernel.org>
 References: <20190313191806.160547-1-sashal@kernel.org>
@@ -58,59 +59,32 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Vineet Gupta <vgupta@synopsys.com>
+From: Li RongQing <lirongqing@baidu.com>
 
-[ Upstream commit d5e3c55e01d8b1774b37b4647c30fb22f1d39077 ]
+[ Upstream commit 17407715240456448e4989bee46ffc93991add83 ]
 
-Newer ARC gcc handles lp_start, lp_end in a different way and doesn't
-like them in the clobber list.
+genlmsg_reply can fail, so propagate its return code
 
-Signed-off-by: Vineet Gupta <vgupta@synopsys.com>
+Signed-off-by: Li RongQing <lirongqing@baidu.com>
+Signed-off-by: Johannes Berg <johannes.berg@intel.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/arc/include/asm/uaccess.h | 8 ++++----
- 1 file changed, 4 insertions(+), 4 deletions(-)
+ drivers/net/wireless/mac80211_hwsim.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/arch/arc/include/asm/uaccess.h b/arch/arc/include/asm/uaccess.h
-index 57387b567f34..f077a419cb51 100644
---- a/arch/arc/include/asm/uaccess.h
-+++ b/arch/arc/include/asm/uaccess.h
-@@ -209,7 +209,7 @@ __arc_copy_from_user(void *to, const void __user *from, unsigned long n)
- 		*/
- 		  "=&r" (tmp), "+r" (to), "+r" (from)
- 		:
--		: "lp_count", "lp_start", "lp_end", "memory");
-+		: "lp_count", "memory");
+diff --git a/drivers/net/wireless/mac80211_hwsim.c b/drivers/net/wireless/mac80211_hwsim.c
+index 0d1abcfec003..0f582117b0e3 100644
+--- a/drivers/net/wireless/mac80211_hwsim.c
++++ b/drivers/net/wireless/mac80211_hwsim.c
+@@ -3002,7 +3002,7 @@ static int hwsim_get_radio_nl(struct sk_buff *msg, struct genl_info *info)
+ 			goto out_err;
+ 		}
  
- 		return n;
+-		genlmsg_reply(skb, info);
++		res = genlmsg_reply(skb, info);
+ 		break;
  	}
-@@ -438,7 +438,7 @@ __arc_copy_to_user(void __user *to, const void *from, unsigned long n)
- 		 */
- 		  "=&r" (tmp), "+r" (to), "+r" (from)
- 		:
--		: "lp_count", "lp_start", "lp_end", "memory");
-+		: "lp_count", "memory");
  
- 		return n;
- 	}
-@@ -658,7 +658,7 @@ static inline unsigned long __arc_clear_user(void __user *to, unsigned long n)
- 	"	.previous			\n"
- 	: "+r"(d_char), "+r"(res)
- 	: "i"(0)
--	: "lp_count", "lp_start", "lp_end", "memory");
-+	: "lp_count", "memory");
- 
- 	return res;
- }
-@@ -691,7 +691,7 @@ __arc_strncpy_from_user(char *dst, const char __user *src, long count)
- 	"	.previous			\n"
- 	: "+r"(res), "+r"(dst), "+r"(src), "=r"(val)
- 	: "g"(-EFAULT), "r"(count)
--	: "lp_count", "lp_start", "lp_end", "memory");
-+	: "lp_count", "memory");
- 
- 	return res;
- }
 -- 
 2.19.1
 
