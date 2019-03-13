@@ -4,51 +4,48 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 541D3C4360F
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 Mar 2019 19:31:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 23CA8C43381
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 Mar 2019 19:31:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2578621019
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 Mar 2019 19:31:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EA74520657
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 Mar 2019 19:31:57 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1552505501;
-	bh=/uP16jNlmCtvaeiTKwrjdK+zw3IfqialZn0qnVCqR9E=;
+	s=default; t=1552505518;
+	bh=mMofaRByHjHV8jKqOEAERfdAx178lalRUCmPJoX82eo=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=eFx8lC0Vj66qIxIUt+hG2P5KBFEiSGCAAbOMt9Ubf8fSmxvxUsUCHmT1HpYu9qQGU
-	 CK2xWW5Yxut4fl2oUCR2hngzUE6qNhn0mPEBR/I3oCGfJcXBQBPAEC5TamnUdZP3+9
-	 xKeTUOYkaQ6K5PG71DbikY1FhqtjLKTIqwQS1ZAM=
+	b=GJIWL3drNIb+KSCnykpxRsBSvmiGwSGkkl9a4MZt3hoT3JFUl3BZUMuBS+MVSMwtV
+	 nz4/OpIOV6U+kdADwiP5NrS/QZmMz9+lgWRV//SQtUWYc7xqXF4B6dFMqzyDtVK/im
+	 HSCCKFWQg3nZdnieq+4aH/75O6DtJu4+4nNmxhOI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727564AbfCMTLq (ORCPT
+        id S1727755AbfCMTb4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 13 Mar 2019 15:11:46 -0400
-Received: from mail.kernel.org ([198.145.29.99]:42374 "EHLO mail.kernel.org"
+        Wed, 13 Mar 2019 15:31:56 -0400
+Received: from mail.kernel.org ([198.145.29.99]:41984 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726628AbfCMTLo (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 13 Mar 2019 15:11:44 -0400
+        id S1727471AbfCMTL0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 13 Mar 2019 15:11:26 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 20AB9213A2;
-        Wed, 13 Mar 2019 19:11:41 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 616AF2173C;
+        Wed, 13 Mar 2019 19:11:24 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1552504303;
-        bh=/uP16jNlmCtvaeiTKwrjdK+zw3IfqialZn0qnVCqR9E=;
+        s=default; t=1552504285;
+        bh=mMofaRByHjHV8jKqOEAERfdAx178lalRUCmPJoX82eo=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=wNnlPQ/wjJnsMM5pJPfKBIRyGgiKOF867/IQpbcFpJKyO2+RUXDRViHHlPQIDtn2H
-         aFP55Eog2AP47I+aSi7tAoC/Bx91NxpL+lVi0L0lXK1oo9/mn7mbFPbvYWVo6X4zma
-         PrbrLEF02TEYsEgN9oYoi19SyBPIGhqfPjXCYaOg=
+        b=C87J9lgtA3pB/INTHWdBlMdYyub8So14f4yVl8uc9qe9XNyYXeW3vJAGpnxL38ca5
+         NIn9jDNZ7DSVqHwOmW/w+nQGIqASzjXXQ/r3M0UhSwwMHMQ3g3UBrw03xry2AU5VKv
+         Oc3Mr30QCT94LKuLXQCJTS1sLi3jyw2JHlqNoaa8=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     "Darrick J. Wong" <darrick.wong@oracle.com>,
-        Hugh Dickins <hughd@google.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Sasha Levin <sashal@kernel.org>, linux-mm@kvack.org
-Subject: [PATCH AUTOSEL 4.20 37/60] tmpfs: fix link accounting when a tmpfile is linked in
-Date:   Wed, 13 Mar 2019 15:09:58 -0400
-Message-Id: <20190313191021.158171-37-sashal@kernel.org>
+Cc:     Thierry Reding <treding@nvidia.com>, Arnd Bergmann <arnd@arndb.de>,
+        Sasha Levin <sashal@kernel.org>, devicetree@vger.kernel.org,
+        linux-tegra@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.20 31/60] ARM: tegra: Restore DT ABI on Tegra124 Chromebooks
+Date:   Wed, 13 Mar 2019 15:09:52 -0400
+Message-Id: <20190313191021.158171-31-sashal@kernel.org>
 X-Mailer: git-send-email 2.19.1
 In-Reply-To: <20190313191021.158171-1-sashal@kernel.org>
 References: <20190313191021.158171-1-sashal@kernel.org>
@@ -60,62 +57,67 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: "Darrick J. Wong" <darrick.wong@oracle.com>
+From: Thierry Reding <treding@nvidia.com>
 
-[ Upstream commit 1062af920c07f5b54cf5060fde3339da6df0cf6b ]
+[ Upstream commit 94d9b9337d09bdd27735005b3251d97ab29f7273 ]
 
-tmpfs has a peculiarity of accounting hard links as if they were
-separate inodes: so that when the number of inodes is limited, as it is
-by default, a user cannot soak up an unlimited amount of unreclaimable
-dcache memory just by repeatedly linking a file.
+Commit 482997699ef0 ("ARM: tegra: Fix unit_address_vs_reg DTC warnings
+for /memory") inadventently broke device tree ABI by adding a unit-
+address to the "/memory" node because the device tree compiler flagged
+the missing unit-address as a warning.
 
-But when v3.11 added O_TMPFILE, and the ability to use linkat() on the
-fd, we missed accommodating this new case in tmpfs: "df -i" shows that
-an extra "inode" remains accounted after the file is unlinked and the fd
-closed and the actual inode evicted.  If a user repeatedly links
-tmpfiles into a tmpfs, the limit will be hit (ENOSPC) even after they
-are deleted.
+Tegra124 Chromebooks (a.k.a. Nyan) use a bootloader that relies on the
+full name of the memory node in device tree being exactly "/memory". It
+can be argued whether this was a good decision or not, and some other
+bootloaders (such as U-Boot) do accept a unit-address in the name of the
+node, but the device tree is an ABI and we can't break existing setups
+just because the device tree compiler considers it bad practice to omit
+the unit-address nowadays.
 
-Just skip the extra reservation from shmem_link() in this case: there's
-a sense in which this first link of a tmpfile is then cheaper than a
-hard link of another file, but the accounting works out, and there's
-still good limiting, so no need to do anything more complicated.
+This partially reverts the offending commit and restores device tree ABI
+compatibility.
 
-Link: http://lkml.kernel.org/r/alpine.LSU.2.11.1902182134370.7035@eggly.anvils
-Fixes: f4e0c30c191 ("allow the temp files created by open() to be linked to")
-Signed-off-by: Darrick J. Wong <darrick.wong@oracle.com>
-Signed-off-by: Hugh Dickins <hughd@google.com>
-Reported-by: Matej Kupljen <matej.kupljen@gmail.com>
-Acked-by: Al Viro <viro@zeniv.linux.org.uk>
-Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
-Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
+Fixes: 482997699ef0 ("ARM: tegra: Fix unit_address_vs_reg DTC warnings for /memory")
+Reported-by: Tristan Bastian <tristan-c.bastian@gmx.de>
+Signed-off-by: Thierry Reding <treding@nvidia.com>
+Tested-by: Tristan Bastian <tristan-c.bastian@gmx.de>
+Signed-off-by: Arnd Bergmann <arnd@arndb.de>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- mm/shmem.c | 10 +++++++---
- 1 file changed, 7 insertions(+), 3 deletions(-)
+ arch/arm/boot/dts/tegra124-nyan.dtsi | 17 ++++++++++++++++-
+ 1 file changed, 16 insertions(+), 1 deletion(-)
 
-diff --git a/mm/shmem.c b/mm/shmem.c
-index 5d07e0b1352f..7872e3b75e57 100644
---- a/mm/shmem.c
-+++ b/mm/shmem.c
-@@ -2852,10 +2852,14 @@ static int shmem_link(struct dentry *old_dentry, struct inode *dir, struct dentr
- 	 * No ordinary (disk based) filesystem counts links as inodes;
- 	 * but each new link needs a new dentry, pinning lowmem, and
- 	 * tmpfs dentries cannot be pruned until they are unlinked.
-+	 * But if an O_TMPFILE file is linked into the tmpfs, the
-+	 * first link must skip that, to get the accounting right.
- 	 */
--	ret = shmem_reserve_inode(inode->i_sb);
--	if (ret)
--		goto out;
-+	if (inode->i_nlink) {
-+		ret = shmem_reserve_inode(inode->i_sb);
-+		if (ret)
-+			goto out;
-+	}
+diff --git a/arch/arm/boot/dts/tegra124-nyan.dtsi b/arch/arm/boot/dts/tegra124-nyan.dtsi
+index d5f11d6d987e..bc85b6a166c7 100644
+--- a/arch/arm/boot/dts/tegra124-nyan.dtsi
++++ b/arch/arm/boot/dts/tegra124-nyan.dtsi
+@@ -13,10 +13,25 @@
+ 		stdout-path = "serial0:115200n8";
+ 	};
  
- 	dir->i_size += BOGO_DIRENT_SIZE;
- 	inode->i_ctime = dir->i_ctime = dir->i_mtime = current_time(inode);
+-	memory@80000000 {
++	/*
++	 * Note that recent version of the device tree compiler (starting with
++	 * version 1.4.2) warn about this node containing a reg property, but
++	 * missing a unit-address. However, the bootloader on these Chromebook
++	 * devices relies on the full name of this node to be exactly /memory.
++	 * Adding the unit-address causes the bootloader to create a /memory
++	 * node and write the memory bank configuration to that node, which in
++	 * turn leads the kernel to believe that the device has 2 GiB of
++	 * memory instead of the amount detected by the bootloader.
++	 *
++	 * The name of this node is effectively ABI and must not be changed.
++	 */
++	memory {
++		device_type = "memory";
+ 		reg = <0x0 0x80000000 0x0 0x80000000>;
+ 	};
+ 
++	/delete-node/ memory@80000000;
++
+ 	host1x@50000000 {
+ 		hdmi@54280000 {
+ 			status = "okay";
 -- 
 2.19.1
 
