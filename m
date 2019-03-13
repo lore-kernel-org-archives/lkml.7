@@ -2,233 +2,154 @@ Return-Path: <SRS0=dUEL=RQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+X-Spam-Status: No, score=-8.8 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F166DC43381
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 Mar 2019 20:23:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 39AEDC43381
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 Mar 2019 20:24:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AAC3D2146E
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 Mar 2019 20:23:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0310F206DF
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 Mar 2019 20:24:48 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="oqs9gMBl";
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="ImopeHRx"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="L+FoqXqj"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727111AbfCMUXg (ORCPT
+        id S1727187AbfCMUYr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 13 Mar 2019 16:23:36 -0400
-Received: from smtp.codeaurora.org ([198.145.29.96]:46878 "EHLO
-        smtp.codeaurora.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726656AbfCMUXg (ORCPT
+        Wed, 13 Mar 2019 16:24:47 -0400
+Received: from mail-wr1-f66.google.com ([209.85.221.66]:33440 "EHLO
+        mail-wr1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726656AbfCMUYq (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 13 Mar 2019 16:23:36 -0400
-Received: by smtp.codeaurora.org (Postfix, from userid 1000)
-        id F2E9360312; Wed, 13 Mar 2019 20:23:34 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
-        s=default; t=1552508615;
-        bh=2XeLJVW3c4xz6ED8qGo20vKqCnmJdMzGpfyxomXHWRo=;
-        h=Date:From:To:cc:Subject:In-Reply-To:References:From;
-        b=oqs9gMBlyryaNsH/goKRhLOFXgEB1w6YMTro7td4YfDrwKCPmyxG6dMC3rnUzMZO7
-         W1qgCJXuhA+rokm73/+qVT3ih4w1VRBYDgLIHiSc4HzBAzAZFVTNm1FS3KtwId7r2e
-         xGgrwXSRlhJ+2g7IWi90679pllmm8EL5lJLL8A3Y=
-Received: from lmark-linux.qualcomm.com (i-global254.qualcomm.com [199.106.103.254])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        (Authenticated sender: lmark@smtp.codeaurora.org)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id 1523360208;
-        Wed, 13 Mar 2019 20:23:33 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
-        s=default; t=1552508613;
-        bh=2XeLJVW3c4xz6ED8qGo20vKqCnmJdMzGpfyxomXHWRo=;
-        h=Date:From:To:cc:Subject:In-Reply-To:References:From;
-        b=ImopeHRxswu0H0wi+2xZMBoFY4Oxa2YsHpUVFGAFJ5Tz2bgBoEgbBGZ+48NCvXY+u
-         Owt9FtnbekDz1sND5R0SS3o9TA1awdoVL3GT8ZhIoQvsezk3mlXroAL++MkCEex8p9
-         4XKTKxBXNQrVRpIQg9SoRnYI2QMwZq2DpzFUPJP4=
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 1523360208
-Authentication-Results: pdx-caf-mail.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
-Authentication-Results: pdx-caf-mail.web.codeaurora.org; spf=none smtp.mailfrom=lmark@codeaurora.org
-Date:   Wed, 13 Mar 2019 13:23:32 -0700 (PDT)
-From:   Liam Mark <lmark@codeaurora.org>
-X-X-Sender: lmark@lmark-linux.qualcomm.com
-To:     John Stultz <john.stultz@linaro.org>
-cc:     lkml <linux-kernel@vger.kernel.org>,
-        Laura Abbott <labbott@redhat.com>,
-        Benjamin Gaignard <benjamin.gaignard@linaro.org>,
-        Greg KH <gregkh@linuxfoundation.org>,
-        Sumit Semwal <sumit.semwal@linaro.org>,
-        Brian Starkey <Brian.Starkey@arm.com>,
-        "Andrew F . Davis" <afd@ti.com>, Chenbo Feng <fengc@google.com>,
-        Alistair Strachan <astrachan@google.com>,
-        dri-devel@lists.freedesktop.org
-Subject: Re: [RFC][PATCH 5/5 v2] kselftests: Add dma-heap test
-In-Reply-To: <1551819273-640-6-git-send-email-john.stultz@linaro.org>
-Message-ID: <alpine.DEB.2.10.1903131320560.5023@lmark-linux.qualcomm.com>
-References: <1551819273-640-1-git-send-email-john.stultz@linaro.org> <1551819273-640-6-git-send-email-john.stultz@linaro.org>
-User-Agent: Alpine 2.10 (DEB 1266 2009-07-14)
+        Wed, 13 Mar 2019 16:24:46 -0400
+Received: by mail-wr1-f66.google.com with SMTP id i8so3468864wrm.0
+        for <linux-kernel@vger.kernel.org>; Wed, 13 Mar 2019 13:24:44 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=sender:from:to:cc:subject:date:message-id:in-reply-to:references
+         :mime-version:content-transfer-encoding;
+        bh=jTScBOdTsxFi9IV1z8i5dHwn22wCLDi4xhj5TO6bFt4=;
+        b=L+FoqXqjuMTIGtPakrePMuOlMatJZZr5kD0fGrUSUBF0IxSNmO70uAEWf7l/hmT/iR
+         XreW4scMoUu/vBm00sQ4jNhTvIfMtVSTFMjMkr/ABikExHqS/tY/PjWAndx25E9ej0Ck
+         AfyQsP52Bz4yVg5W9heU1oaAH3CpxOUXBSIGHYQGpgYR0xVFmPcKN8q7uDvvBrObQhp+
+         vJDt0E+V8+gvOZKTkjNU+vpQIZ8Fgv+8sZZpnUJaNoCpO1I3WwXoCs70FucVaqwllqy7
+         j4aaqWgAcdtRif9S28k1fXy8vZk6p0bFDZME6wBZcKHIromUAgW7QbFa58T+TEp5k/pJ
+         IAbg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:sender:from:to:cc:subject:date:message-id
+         :in-reply-to:references:mime-version:content-transfer-encoding;
+        bh=jTScBOdTsxFi9IV1z8i5dHwn22wCLDi4xhj5TO6bFt4=;
+        b=silbBDA2qmKOW/0wmjjwTWYiLaqUTjgfV6oAevigqBcKoN8bKcKNZdoE+ZZi9xWcxe
+         4y1n2Y5zt6IBFOgWrw8z44u8BEa/Mq7M6tnnqpRWvF5MuagNBU2nHQ59sWNYVFmyun+l
+         6THgj/qyBJxJEU4cuvtn6Dwtc3Zoek/6bISUzAszLN3qxaPICAi3kzntw8J5fslc8W4C
+         cjXpzLFWeYyo71Ggs0/KDOxCzkMBRUihFkGnQ9ph4iwSdkoDsNIwba7Qv/SV7CIajogQ
+         hxMc9d9O6tLPbZfgQZmxtHwbWwhSLcPf3z+ruCC10d1/dHYxIoVPfvn5u8e8HrCUXfar
+         vvnw==
+X-Gm-Message-State: APjAAAUJwQ2Q805wpy16FRyyaj6AqXrH3CAa9w92Fu787XDzT+bNfPs/
+        gyhtdVKPaJQdqqQvjV6Wj7o=
+X-Google-Smtp-Source: APXvYqxZpl3GX0IYjhBsHwLKZQorMbDKiBlyYBFz/fnc+LSJugIiU+neOVcwVnE+F8+1WkVXQ/Z/pg==
+X-Received: by 2002:a5d:500e:: with SMTP id e14mr27993658wrt.219.1552508683877;
+        Wed, 13 Mar 2019 13:24:43 -0700 (PDT)
+Received: from macbookpro.malat.net ([2a01:e34:ee1e:860:6f23:82e6:aa2d:bbd1])
+        by smtp.gmail.com with ESMTPSA id y140sm32787wmd.18.2019.03.13.13.24.42
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Wed, 13 Mar 2019 13:24:43 -0700 (PDT)
+Received: by macbookpro.malat.net (Postfix, from userid 1000)
+        id 7072E1140A07; Wed, 13 Mar 2019 21:24:41 +0100 (CET)
+From:   Mathieu Malaterre <malat@debian.org>
+To:     "Jason A. Donenfeld" <Jason@zx2c4.com>
+Cc:     Mathieu Malaterre <malat@debian.org>,
+        "Gustavo A. R. Silva" <gustavo@embeddedor.com>,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH v2] lib/siphash.c: annotate implicit fall throughs
+Date:   Wed, 13 Mar 2019 21:24:29 +0100
+Message-Id: <20190313202429.20797-1-malat@debian.org>
+X-Mailer: git-send-email 2.20.1
+In-Reply-To: <20190114201911.13725-1-malat@debian.org>
+References: <20190114201911.13725-1-malat@debian.org>
 MIME-Version: 1.0
-Content-Type: TEXT/PLAIN; charset=US-ASCII
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, 5 Mar 2019, John Stultz wrote:
+There is a plan to build the kernel with -Wimplicit-fallthrough and
+these places in the code produced warnings (W=1). Fix them up.
 
-> Add very trivial allocation test for dma-heaps.
-> 
-> TODO: Need to actually do some validation on
-> the returned dma-buf.
-> 
-> Cc: Laura Abbott <labbott@redhat.com>
-> Cc: Benjamin Gaignard <benjamin.gaignard@linaro.org>
-> Cc: Greg KH <gregkh@linuxfoundation.org>
-> Cc: Sumit Semwal <sumit.semwal@linaro.org>
-> Cc: Liam Mark <lmark@codeaurora.org>
-> Cc: Brian Starkey <Brian.Starkey@arm.com>
-> Cc: Andrew F. Davis <afd@ti.com>
-> Cc: Chenbo Feng <fengc@google.com>
-> Cc: Alistair Strachan <astrachan@google.com>
-> Cc: dri-devel@lists.freedesktop.org
-> Signed-off-by: John Stultz <john.stultz@linaro.org>
-> ---
-> v2: Switched to use reworked dma-heap apis
-> ---
->  tools/testing/selftests/dmabuf-heaps/Makefile      | 11 +++
->  tools/testing/selftests/dmabuf-heaps/dmabuf-heap.c | 96 ++++++++++++++++++++++
->  2 files changed, 107 insertions(+)
->  create mode 100644 tools/testing/selftests/dmabuf-heaps/Makefile
->  create mode 100644 tools/testing/selftests/dmabuf-heaps/dmabuf-heap.c
-> 
-> diff --git a/tools/testing/selftests/dmabuf-heaps/Makefile b/tools/testing/selftests/dmabuf-heaps/Makefile
-> new file mode 100644
-> index 0000000..c414ad3
-> --- /dev/null
-> +++ b/tools/testing/selftests/dmabuf-heaps/Makefile
-> @@ -0,0 +1,11 @@
-> +# SPDX-License-Identifier: GPL-2.0
-> +CFLAGS += -static -O3 -Wl,-no-as-needed -Wall
-> +#LDLIBS += -lrt -lpthread -lm
-> +
-> +# these are all "safe" tests that don't modify
-> +# system time or require escalated privileges
-> +TEST_GEN_PROGS = dmabuf-heap
-> +
-> +
-> +include ../lib.mk
-> +
-> diff --git a/tools/testing/selftests/dmabuf-heaps/dmabuf-heap.c b/tools/testing/selftests/dmabuf-heaps/dmabuf-heap.c
-> new file mode 100644
-> index 0000000..06837a4
-> --- /dev/null
-> +++ b/tools/testing/selftests/dmabuf-heaps/dmabuf-heap.c
-> @@ -0,0 +1,96 @@
-> +// SPDX-License-Identifier: GPL-2.0
-> +
-> +#include <dirent.h>
-> +#include <errno.h>
-> +#include <fcntl.h>
-> +#include <stdio.h>
-> +#include <string.h>
-> +#include <unistd.h>
-> +#include <sys/ioctl.h>
-> +#include <sys/mman.h>
-> +#include <sys/types.h>
-> +
-> +#include "../../../../include/uapi/linux/dma-heap.h"
-> +
-> +#define DEVPATH "/dev/dma_heap"
-> +
-> +int dmabuf_heap_open(char *name)
-> +{
-> +	int ret, fd;
-> +	char buf[256];
-> +
-> +	ret = sprintf(buf, "%s/%s", DEVPATH, name);
-> +	if (ret < 0) {
-> +		printf("sprintf failed!\n");
-> +		return ret;
-> +	}
-> +
-> +	fd = open(buf, O_RDWR);
-> +	if (fd < 0)
-> +		printf("open %s failed!\n", buf);
-> +	return fd;
-> +}
-> +
-> +int dmabuf_heap_alloc(int fd, size_t len, unsigned int flags, int *dmabuf_fd)
-> +{
-> +	struct dma_heap_allocation_data data = {
-> +		.len = len,
-> +		.flags = flags,
-> +	};
-> +	int ret;
-> +
-> +	if (dmabuf_fd == NULL)
-> +		return -EINVAL;
-> +
-> +	ret = ioctl(fd, DMA_HEAP_IOC_ALLOC, &data);
-> +	if (ret < 0)
-> +		return ret;
-> +	*dmabuf_fd = (int)data.fd;
-> +	return ret;
-> +}
-> +
-> +#define ONE_MEG (1024*1024)
-> +
-> +void do_test(char *heap_name)
-> +{
-> +	int heap_fd = -1, dmabuf_fd = -1;
-> +	int ret;
-> +
-> +	printf("Testing heap: %s\n", heap_name);
-> +
-> +	heap_fd = dmabuf_heap_open(heap_name);
-> +	if (heap_fd < 0)
-> +		return;
-> +
-> +	printf("Allocating 1 MEG\n");
-> +	ret = dmabuf_heap_alloc(heap_fd, ONE_MEG, 0, &dmabuf_fd);
+This commit remove the following warnings:
 
-Just be aware that some CMA heaps may already have all their memory 
-allocated by the client, so you may see intermittent failures depending on 
-when you run the test and failrues may
-be more common when run on certain platform.
+  lib/siphash.c:71:12: warning: this statement may fall through [-Wimplicit-fallthrough=]
+  lib/siphash.c:72:12: warning: this statement may fall through [-Wimplicit-fallthrough=]
+  lib/siphash.c:73:12: warning: this statement may fall through [-Wimplicit-fallthrough=]
+  lib/siphash.c:75:12: warning: this statement may fall through [-Wimplicit-fallthrough=]
+  lib/siphash.c:108:12: warning: this statement may fall through [-Wimplicit-fallthrough=]
+  lib/siphash.c:109:12: warning: this statement may fall through [-Wimplicit-fallthrough=]
+  lib/siphash.c:110:12: warning: this statement may fall through [-Wimplicit-fallthrough=]
+  lib/siphash.c:112:12: warning: this statement may fall through [-Wimplicit-fallthrough=]
+  lib/siphash.c:434:12: warning: this statement may fall through [-Wimplicit-fallthrough=]
+  lib/siphash.c:462:12: warning: this statement may fall through [-Wimplicit-fallthrough=]
 
-> +	if (ret)
-> +		goto out;
-> +
-> +	/* DO SOMETHING WITH THE DMABUF HERE? */
-> +
-> +out:
-> +	if (dmabuf_fd >= 0)
-> +		close(dmabuf_fd);
-> +	if (heap_fd >= 0)
-> +		close(heap_fd);
-> +}
-> +
-> +
-> +int main(void)
-> +{
-> +	DIR *d;
-> +	struct dirent *dir;
-> +
-> +	d = opendir(DEVPATH);
-> +	if (!d) {
-> +		printf("No %s directory?\n", DEVPATH);
-> +		return -1;
-> +	}
-> +
-> +	while ((dir = readdir(d)) != NULL)
-> +		do_test(dir->d_name);
-> +
-> +
-> +	return 0;
-> +}
-> -- 
-> 2.7.4
-> 
-> 
+Cc: "Gustavo A. R. Silva" <gustavo@embeddedor.com>
+Signed-off-by: Mathieu Malaterre <malat@debian.org>
+---
+v2: some cases were missed in v1, update missing ones
 
-Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum,
-a Linux Foundation Collaborative Project
+ lib/siphash.c | 10 ++++++++++
+ 1 file changed, 10 insertions(+)
+
+diff --git a/lib/siphash.c b/lib/siphash.c
+index 3ae58b4edad6..f4f778d28660 100644
+--- a/lib/siphash.c
++++ b/lib/siphash.c
+@@ -69,10 +69,14 @@ u64 __siphash_aligned(const void *data, size_t len, const siphash_key_t *key)
+ #else
+ 	switch (left) {
+ 	case 7: b |= ((u64)end[6]) << 48;
++		/* fall through */
+ 	case 6: b |= ((u64)end[5]) << 40;
++		/* fall through */
+ 	case 5: b |= ((u64)end[4]) << 32;
++		/* fall through */
+ 	case 4: b |= le32_to_cpup(data); break;
+ 	case 3: b |= ((u64)end[2]) << 16;
++		/* fall through */
+ 	case 2: b |= le16_to_cpup(data); break;
+ 	case 1: b |= end[0];
+ 	}
+@@ -102,10 +106,14 @@ u64 __siphash_unaligned(const void *data, size_t len, const siphash_key_t *key)
+ #else
+ 	switch (left) {
+ 	case 7: b |= ((u64)end[6]) << 48;
++		/* fall through */
+ 	case 6: b |= ((u64)end[5]) << 40;
++		/* fall through */
+ 	case 5: b |= ((u64)end[4]) << 32;
++		/* fall through */
+ 	case 4: b |= get_unaligned_le32(end); break;
+ 	case 3: b |= ((u64)end[2]) << 16;
++		/* fall through */
+ 	case 2: b |= get_unaligned_le16(end); break;
+ 	case 1: b |= end[0];
+ 	}
+@@ -432,6 +440,7 @@ u32 __hsiphash_aligned(const void *data, size_t len, const hsiphash_key_t *key)
+ 	}
+ 	switch (left) {
+ 	case 3: b |= ((u32)end[2]) << 16;
++		/* fall through */
+ 	case 2: b |= le16_to_cpup(data); break;
+ 	case 1: b |= end[0];
+ 	}
+@@ -455,6 +464,7 @@ u32 __hsiphash_unaligned(const void *data, size_t len,
+ 	}
+ 	switch (left) {
+ 	case 3: b |= ((u32)end[2]) << 16;
++		/* fall through */
+ 	case 2: b |= get_unaligned_le16(end); break;
+ 	case 1: b |= end[0];
+ 	}
+-- 
+2.20.1
+
