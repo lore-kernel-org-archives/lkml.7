@@ -2,133 +2,353 @@ Return-Path: <SRS0=dUEL=RQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_MUTT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 69091C43381
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 Mar 2019 15:59:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 738E7C43381
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 Mar 2019 15:59:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 428CE206DF
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 Mar 2019 15:59:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 34E4E20643
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 Mar 2019 15:59:48 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726097AbfCMP7m (ORCPT
+        id S1726387AbfCMP7r convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 13 Mar 2019 11:59:42 -0400
-Received: from mga12.intel.com ([192.55.52.136]:13196 "EHLO mga12.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725856AbfCMP7l (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 13 Mar 2019 11:59:41 -0400
-X-Amp-Result: UNKNOWN
-X-Amp-Original-Verdict: FILE UNKNOWN
-X-Amp-File-Uploaded: False
-Received: from orsmga006.jf.intel.com ([10.7.209.51])
-  by fmsmga106.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 13 Mar 2019 08:59:40 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.58,474,1544515200"; 
-   d="scan'208";a="126623426"
-Received: from stinkbox.fi.intel.com (HELO stinkbox) ([10.237.72.174])
-  by orsmga006.jf.intel.com with SMTP; 13 Mar 2019 08:59:36 -0700
-Received: by stinkbox (sSMTP sendmail emulation); Wed, 13 Mar 2019 17:59:36 +0200
-Date:   Wed, 13 Mar 2019 17:59:36 +0200
-From:   Ville =?iso-8859-1?Q?Syrj=E4l=E4?= <ville.syrjala@linux.intel.com>
-To:     Kieran Bingham <kieran.bingham+renesas@ideasonboard.com>
-Cc:     linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org,
-        linux-renesas-soc@vger.kernel.org,
-        Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
-        Maxime Ripard <maxime.ripard@bootlin.com>,
-        Sean Paul <sean@poorly.run>, David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>
-Subject: Re: [PATCH v2] gpu: drm: atomic_helper: Fix spelling errors
-Message-ID: <20190313155936.GM3888@intel.com>
-References: <20190312003307.14116-1-kieran.bingham+renesas@ideasonboard.com>
- <20190312151443.GE3888@intel.com>
- <7b0ff11c-68f3-4e2e-f969-27a14062158e@ideasonboard.com>
+        Wed, 13 Mar 2019 11:59:47 -0400
+Received: from lhrrgout.huawei.com ([185.176.76.210]:32906 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726187AbfCMP7q (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 13 Mar 2019 11:59:46 -0400
+Received: from LHREML714-CAH.china.huawei.com (unknown [172.18.7.107])
+        by Forcepoint Email with ESMTP id BAA67C25AFC724184503;
+        Wed, 13 Mar 2019 15:59:43 +0000 (GMT)
+Received: from LHREML524-MBS.china.huawei.com ([169.254.2.154]) by
+ LHREML714-CAH.china.huawei.com ([10.201.108.37]) with mapi id 14.03.0415.000;
+ Wed, 13 Mar 2019 15:59:34 +0000
+From:   Shameerali Kolothum Thodi <shameerali.kolothum.thodi@huawei.com>
+To:     Marc Zyngier <marc.zyngier@arm.com>,
+        "Tangnianyao (ICT)" <tangnianyao@huawei.com>,
+        Christoffer Dall <christoffer.dall@arm.com>,
+        "james.morse@arm.com" <james.morse@arm.com>,
+        "julien.thierry@arm.com" <julien.thierry@arm.com>,
+        "suzuki.poulose@arm.com" <suzuki.poulose@arm.com>,
+        "catalin.marinas@arm.com" <catalin.marinas@arm.com>,
+        "will.deacon@arm.com" <will.deacon@arm.com>,
+        "alex.bennee@linaro.org" <alex.bennee@linaro.org>,
+        "mark.rutland@arm.com" <mark.rutland@arm.com>,
+        "andre.przywara@arm.com" <andre.przywara@arm.com>,
+        Zhangshaokun <zhangshaokun@hisilicon.com>,
+        "keescook@chromium.org" <keescook@chromium.org>,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>,
+        "kvmarm@lists.cs.columbia.edu" <kvmarm@lists.cs.columbia.edu>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+CC:     Linuxarm <linuxarm@huawei.com>
+Subject: RE: [PATCH] KVM: arm/arm64: Set ICH_HCR_EN in guest anyway when
+ using gicv4
+Thread-Topic: [PATCH] KVM: arm/arm64: Set ICH_HCR_EN in guest anyway when
+ using gicv4
+Thread-Index: AQHU2OsZqd087MF3C02VfRguwPAmZqYJdoyAgABAUlA=
+Date:   Wed, 13 Mar 2019 15:59:33 +0000
+Message-ID: <5FC3163CFD30C246ABAA99954A238FA839311C4F@lhreml524-mbs.china.huawei.com>
+References: <F348A9E21A573744858FF7E5D32E29D81FEFA462@DGGEMI529-MBX.china.huawei.com>
+ <3993685d-a78f-2e73-e22a-8ade3b6a6279@arm.com>
+ <d97bd073-8775-f0cf-637a-ea1b04afbd8f@arm.com>
+In-Reply-To: <d97bd073-8775-f0cf-637a-ea1b04afbd8f@arm.com>
+Accept-Language: en-GB, en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-originating-ip: [10.202.227.237]
+Content-Type: text/plain; charset="iso-8859-1"
+Content-Transfer-Encoding: 8BIT
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <7b0ff11c-68f3-4e2e-f969-27a14062158e@ideasonboard.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Mar 12, 2019 at 03:59:15PM +0000, Kieran Bingham wrote:
-> Hi Ville,
+Hi Marc,
+
+> -----Original Message-----
+> From: kvmarm-bounces@lists.cs.columbia.edu
+> [mailto:kvmarm-bounces@lists.cs.columbia.edu] On Behalf Of Marc Zyngier
+> Sent: 13 March 2019 11:59
+> To: Tangnianyao (ICT) <tangnianyao@huawei.com>; Christoffer Dall
+> <christoffer.dall@arm.com>; james.morse@arm.com; julien.thierry@arm.com;
+> suzuki.poulose@arm.com; catalin.marinas@arm.com; will.deacon@arm.com;
+> alex.bennee@linaro.org; mark.rutland@arm.com; andre.przywara@arm.com;
+> Zhangshaokun <zhangshaokun@hisilicon.com>; keescook@chromium.org;
+> linux-arm-kernel@lists.infradead.org; kvmarm@lists.cs.columbia.edu;
+> linux-kernel@vger.kernel.org
+> Subject: Re: [PATCH] KVM: arm/arm64: Set ICH_HCR_EN in guest anyway when
+> using gicv4
 > 
-> On 12/03/2019 15:14, Ville Syrjälä wrote:
-> > On Tue, Mar 12, 2019 at 12:33:07AM +0000, Kieran Bingham wrote:
-> >> Trivial fixes identified while working on the DRM code.
+> On 12/03/2019 15:48, Marc Zyngier wrote:
+> > Nianyao,
+> >
+> > Please do not send patches as HTML. Or any email as HTML. Please make
+> > sure that you only send plain text emails on any mailing list (see point
+> > #6 in Documentation/process/submitting-patches.rst).
+> >
+> > On 12/03/2019 12:22, Tangnianyao (ICT) wrote:
+> >> In gicv4, direct vlpi may be forward to PE without using LR or ap_list. If
 > >>
-> >>   s/artifically/artificially/
-> >>   s/achive/achieve/
+> >> ICH_HCR_EL2.En is 0 in guest, direct vlpi cannot be accepted by PE.
 > >>
-> >> Signed-off-by: Kieran Bingham <kieran.bingham+renesas@ideasonboard.com>
+> >> It will take long time for direct vlpi to be forwarded in some cases.
+> >>
+> >> Direct vlpi has to wait for ICH_HCR_EL2.En=1 where some other interrupts
+> >>
+> >> using LR need to be forwarded, because in kvm_vgic_flush_hwstate,
+> >>
+> >> if ap_list is empty, it will return quickly not setting ICH_HCR_EL2.En.
+> >>
+> >> To fix this, set ICH_HCR_EL2.En to 1 before returning to guest when
+> >>
+> >> using GICv4.
+> >>
+> >>
+> >>
+> >> Signed-off-by: Nianyao Tang <tangnianyao@huawei.com>
+> >>
 > >> ---
 > >>
-> >> v2: - Actually spell achieve correctly!
-> > 
-> > drm convention is to put this above the --- so that it gets included in
-> > the commit msg.
+> >> arch/arm64/include/asm/kvm_asm.h |  1 +
+> >>
+> >> virt/kvm/arm/hyp/vgic-v3-sr.c    | 10 ++++++++++
+> >>
+> >> virt/kvm/arm/vgic/vgic-v4.c      |  8 ++++++++
+> >>
+> >> 3 files changed, 19 insertions(+)
+> >>
+> >>
+> >>
+> >> diff --git a/arch/arm64/include/asm/kvm_asm.h
+> >> b/arch/arm64/include/asm/kvm_asm.h
+> >>
+> >> index f5b79e9..0581c4d 100644
+> >>
+> >> --- a/arch/arm64/include/asm/kvm_asm.h
+> >>
+> >> +++ b/arch/arm64/include/asm/kvm_asm.h
+> >>
+> >> @@ -79,6 +79,7 @@
+> >>
+> >> extern void __vgic_v3_init_lrs(void);
+> >>
+> >>  extern u32 __kvm_get_mdcr_el2(void);
+> >>
+> >> +extern void __vgic_v3_write_hcr(u32 vmcr);
+> >>
+> >>  /* Home-grown __this_cpu_{ptr,read} variants that always work at HYP */
+> >>
+> >> #define
+> >>
+> __hyp_this_cpu_ptr(sym)
 > 
-> Oh - in linux-media these are just dropped.
+> >> \
+> >>
+> >> diff --git a/virt/kvm/arm/hyp/vgic-v3-sr.c b/virt/kvm/arm/hyp/vgic-v3-sr.c
+> >>
+> >> index 264d92d..12027af 100644
+> >>
+> >> --- a/virt/kvm/arm/hyp/vgic-v3-sr.c
+> >>
+> >> +++ b/virt/kvm/arm/hyp/vgic-v3-sr.c
+> >>
+> >> @@ -434,6 +434,16 @@ void __hyp_text __vgic_v3_write_vmcr(u32 vmcr)
+> >>
+> >>        write_gicreg(vmcr, ICH_VMCR_EL2);
+> >>
+> >> }
+> >>
+> >> +u64 __hyp_text __vgic_v3_read_hcr(void)
+> >>
+> >> +{
+> >>
+> >> +       return read_gicreg(ICH_HCR_EL2);
+> >>
+> >> +}
+> >>
+> >> +
+> >>
+> >> +void __hyp_text __vgic_v3_write_hcr(u32 vmcr)
+> >>
+> >> +{
+> >>
+> >> +       write_gicreg(vmcr, ICH_HCR_EL2);
+> >>
+> >> +}
+> >
+> > This is HYP code...
+> >
+> >>
+> >> +
+> >>
+> >> #ifdef CONFIG_ARM64
+> >>
+> >>  static int __hyp_text __vgic_v3_bpr_min(void)
+> >>
+> >> diff --git a/virt/kvm/arm/vgic/vgic-v4.c b/virt/kvm/arm/vgic/vgic-v4.c
+> >>
+> >> index 1ed5f22..515171a 100644
+> >>
+> >> --- a/virt/kvm/arm/vgic/vgic-v4.c
+> >>
+> >> +++ b/virt/kvm/arm/vgic/vgic-v4.c
+> >>
+> >> @@ -208,6 +208,8 @@ int vgic_v4_sync_hwstate(struct kvm_vcpu *vcpu)
+> >>
+> >>        if (!vgic_supports_direct_msis(vcpu->kvm))
+> >>
+> >>                 return 0;
+> >>
+> >> +       __vgic_v3_write_hcr(vcpu->arch.vgic_cpu.vgic_v3.vgic_hcr &
+> >> ~ICH_HCR_EN);
+> >
+> > And you've now crashed your non-VHE system by branching directly to code
+> > that cannot be executed at EL1.
+> >
+> >>
+> >> +
+> >>
+> >>        return its_schedule_vpe(&vcpu->arch.vgic_cpu.vgic_v3.its_vpe,
+> false);
+> >>
+> >> }
+> >>
+> >> @@ -220,6 +222,12 @@ int vgic_v4_flush_hwstate(struct kvm_vcpu *vcpu)
+> >>
+> >>                 return 0;
+> >>
+> >>         /*
+> >>
+> >> +       * Enable ICH_HCR_EL.En so that guest can accpet and handle
+> direct
+> >>
+> >> +       * vlpi.
+> >>
+> >> +       */
+> >>
+> >> +       __vgic_v3_write_hcr(vcpu->arch.vgic_cpu.vgic_v3.vgic_hcr);
+> >>
+> >> +
+> >>
+> >> +       /*
+> >>
+> >>         * Before making the VPE resident, make sure the redistributor
+> >>
+> >>         * corresponding to our current CPU expects us here. See the
+> >>
+> >>         * doc in drivers/irqchip/irq-gic-v4.c to understand how this
+> >>
+> >> --
+> >>
+> >> 1.9.1
+> >>
+> >>
+> >>
+> >>
+> >>
+> >
+> > Overall, this looks like the wrong approach. It is not the GICv4 code's
+> > job to do this, but the low-level code (either the load/put code for VHE
+> > or the save/restore code for non-VHE).
+> >
+> > It would certainly help if you could describe which context you're in
+> > (VHE, non-VHE). I suppose the former...
 > 
-> I'll try to remember this for my future work in DRM.
-> 
-> I don't have commit access anyway, so can I presume whomever will pick
-> this up will adjust if necessary?
+> Can you please give the following patch a go? I can't test it, but hopefully
+> you can.
 
-Ah. Yeah, it's fine. Now pushed with the adjustement. Thanks for the
-patch.
+Thanks for your quick response. I just did a quick test on one of our platforms
+with VHE+GICv4 and it seems to fix the performance issue we were seeing
+when GICv4 is enabled.
 
-> 
-> Or should I repost? (which might be a bit redundant just to move a patch
-> version comment which would then increase again :D )
-> 
-> 
-> > With that
-> > Reviewed-by: Ville Syrjälä <ville.syrjala@linux.intel.com>
-> 
+Test setup:
+
+Host connected to a PC over a 10G port.
+Launch Guest with an assigned vf dev.
+Run iperf from Guest,
+
+5.0 kernel:
+[ ID]  Interval       Transfer     Bandwidth
+[  3]  0.0-10.0 sec  1.30 GBytes  1.12 Gbits/sec
+
++Patch:
+
+[ ID] 	Interval       Transfer     Bandwidth
+[  3]  0.0-10.0 sec  10.9 GBytes  9.39 Gbits/sec
+
+Cheers,
+Shameer
+
 > Thanks,
+> 
+> 	M.
+> 
+> diff --git a/virt/kvm/arm/hyp/vgic-v3-sr.c b/virt/kvm/arm/hyp/vgic-v3-sr.c
+> index 9652c453480f..3c3f7cda95c7 100644
+> --- a/virt/kvm/arm/hyp/vgic-v3-sr.c
+> +++ b/virt/kvm/arm/hyp/vgic-v3-sr.c
+> @@ -222,7 +222,7 @@ void __hyp_text __vgic_v3_save_state(struct
+> kvm_vcpu *vcpu)
+>  		}
+>  	}
+> 
+> -	if (used_lrs) {
+> +	if (used_lrs || cpu_if->its_vpe.its_vm) {
+>  		int i;
+>  		u32 elrsr;
+> 
+> @@ -247,7 +247,7 @@ void __hyp_text __vgic_v3_restore_state(struct
+> kvm_vcpu *vcpu)
+>  	u64 used_lrs = vcpu->arch.vgic_cpu.used_lrs;
+>  	int i;
+> 
+> -	if (used_lrs) {
+> +	if (used_lrs || cpu_if->its_vpe.its_vm) {
+>  		write_gicreg(cpu_if->vgic_hcr, ICH_HCR_EL2);
+> 
+>  		for (i = 0; i < used_lrs; i++)
+> diff --git a/virt/kvm/arm/vgic/vgic.c b/virt/kvm/arm/vgic/vgic.c
+> index abd9c7352677..3af69f2a3866 100644
+> --- a/virt/kvm/arm/vgic/vgic.c
+> +++ b/virt/kvm/arm/vgic/vgic.c
+> @@ -867,15 +867,21 @@ void kvm_vgic_flush_hwstate(struct kvm_vcpu
+> *vcpu)
+>  	 * either observe the new interrupt before or after doing this check,
+>  	 * and introducing additional synchronization mechanism doesn't change
+>  	 * this.
+> +	 *
+> +	 * Note that we still need to go through the whole thing if anything
+> +	 * can be directly injected (GICv4).
+>  	 */
+> -	if (list_empty(&vcpu->arch.vgic_cpu.ap_list_head))
+> +	if (list_empty(&vcpu->arch.vgic_cpu.ap_list_head) &&
+> +	    !vgic_supports_direct_msis(vcpu->kvm))
+>  		return;
+> 
+>  	DEBUG_SPINLOCK_BUG_ON(!irqs_disabled());
+> 
+> -	raw_spin_lock(&vcpu->arch.vgic_cpu.ap_list_lock);
+> -	vgic_flush_lr_state(vcpu);
+> -	raw_spin_unlock(&vcpu->arch.vgic_cpu.ap_list_lock);
+> +	if (!list_empty(&vcpu->arch.vgic_cpu.ap_list_head)) {
+> +		raw_spin_lock(&vcpu->arch.vgic_cpu.ap_list_lock);
+> +		vgic_flush_lr_state(vcpu);
+> +		raw_spin_unlock(&vcpu->arch.vgic_cpu.ap_list_lock);
+> +	}
+> 
+>  	if (can_access_vgic_from_kernel())
+>  		vgic_restore_state(vcpu);
+> 
+> 
 > --
-> Regards
-> 
-> Kieran
-> 
-> 
-> > 
-> >>
-> >>  drivers/gpu/drm/drm_atomic_helper.c | 4 ++--
-> >>  1 file changed, 2 insertions(+), 2 deletions(-)
-> >>
-> >> diff --git a/drivers/gpu/drm/drm_atomic_helper.c b/drivers/gpu/drm/drm_atomic_helper.c
-> >> index 540a77a2ade9..2453678d1186 100644
-> >> --- a/drivers/gpu/drm/drm_atomic_helper.c
-> >> +++ b/drivers/gpu/drm/drm_atomic_helper.c
-> >> @@ -1752,7 +1752,7 @@ int drm_atomic_helper_commit(struct drm_device *dev,
-> >>  	 *
-> >>  	 * NOTE: Commit work has multiple phases, first hardware commit, then
-> >>  	 * cleanup. We want them to overlap, hence need system_unbound_wq to
-> >> -	 * make sure work items don't artifically stall on each another.
-> >> +	 * make sure work items don't artificially stall on each another.
-> >>  	 */
-> >>  
-> >>  	drm_atomic_state_get(state);
-> >> @@ -1786,7 +1786,7 @@ EXPORT_SYMBOL(drm_atomic_helper_commit);
-> >>   *
-> >>   * Asynchronous workers need to have sufficient parallelism to be able to run
-> >>   * different atomic commits on different CRTCs in parallel. The simplest way to
-> >> - * achive this is by running them on the &system_unbound_wq work queue. Note
-> >> + * achieve this is by running them on the &system_unbound_wq work queue. Note
-> >>   * that drivers are not required to split up atomic commits and run an
-> >>   * individual commit in parallel - userspace is supposed to do that if it cares.
-> >>   * But it might be beneficial to do that for modesets, since those necessarily
-> >> -- 
-> >> 2.19.1
-> > 
-
--- 
-Ville Syrjälä
-Intel
+> Jazz is not dead. It just smells funny...
+> _______________________________________________
+> kvmarm mailing list
+> kvmarm@lists.cs.columbia.edu
+> https://lists.cs.columbia.edu/mailman/listinfo/kvmarm
