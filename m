@@ -7,57 +7,59 @@ X-Spam-Status: No, score=-12.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0374BC43381
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 Mar 2019 15:38:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 88D51C43381
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 Mar 2019 15:38:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C522520693
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 Mar 2019 15:38:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 58B55206DF
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 Mar 2019 15:38:51 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1552491517;
-	bh=Y9Kw8z/N7JfZF20DlrOJpbLLtheHq2Z5FKE1LB9Cb98=;
+	s=default; t=1552491531;
+	bh=mWA7rUN9T2nlDpUtwH6+6IGF6uxA4by4cJwcRvvT8i0=;
 	h=From:To:Cc:Subject:In-Reply-To:Date:List-ID:From;
-	b=e3+LrX98fLl31FMkVWkpVfcHJclgoZyLi2/7dzkgo+YZPBL54aT0ExAmnIi2PQt0a
-	 qfVINilpsPmq+k1mQAA+va0+X4HpvgBHJPdR5Jwbs5q+Pq7aQNIP4icHxuttuFTmVq
-	 a09nImQorbgoLYZUfiMspNbbC6ltpkZpfsrWfU5I=
+	b=Rr0m4uZaGCPu5DZAuYTMN7mZztjw3gZZCoK/BBtsOiH0pEY3WbYe7ptMyWsNoHfGi
+	 n3wZDWpeqhAISouuOV8MxEYAIqzJrChruZvho+IJHeQvDyafORUyVy1mFyn6aZJmTO
+	 GkhMFZHmHg3m62SF+7/zDwmOf1d4bRJt47Q/h6eM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726142AbfCMPih (ORCPT
+        id S1726420AbfCMPit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 13 Mar 2019 11:38:37 -0400
-Received: from heliosphere.sirena.org.uk ([172.104.155.198]:48766 "EHLO
+        Wed, 13 Mar 2019 11:38:49 -0400
+Received: from heliosphere.sirena.org.uk ([172.104.155.198]:49152 "EHLO
         heliosphere.sirena.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725876AbfCMPig (ORCPT
+        with ESMTP id S1725876AbfCMPit (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 13 Mar 2019 11:38:36 -0400
+        Wed, 13 Mar 2019 11:38:49 -0400
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
         d=sirena.org.uk; s=20170815-heliosphere; h=Date:Message-Id:In-Reply-To:
         Subject:Cc:To:From:Sender:Reply-To:MIME-Version:Content-Type:
         Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
         Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:References:
         List-Id:List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:
-        List-Archive; bh=eZhWyqQol+vrYJvWxWlm0qhY9SPFdPCj01ErxB3vsLc=; b=obeZkEulmp9I
-        uhGzAW/dNUboIBXSsXtKWGhKREfp93UdXrPX/aZ9ZHwJ5NZBWjzagpNKgkvXr2qQuA1fbQqfpcgan
-        s4wa59fKztIV92d/cQzxqZKGu0UbzG7a+amThzGEoqGkUuJL5f06exCO8DlMF0C/igeuhQumGIn02
-        EaE0s=;
+        List-Archive; bh=xxoBDDb+U0bogJTA9ja4zKPg2TPimc+rGT8YeYDcVlw=; b=uaGgwototbQp
+        pkm2OZ5cLIe5EUACTWbPKwKMR2DRWPZNoda7g23oIOI32asyiE8PRQjWqtue9ObseSfPMMrjx0+fX
+        OjESTb6CTjOtJeX8D4MnVVPE0zKk7rAy4I0votd8mxeWE0prskSWwSVk4ypTA8Mxq6AuntWW/QqBu
+        PlRJQ=;
 Received: from cpc102320-sgyl38-2-0-cust46.18-2.cable.virginm.net ([82.37.168.47] helo=debutante.sirena.org.uk)
         by heliosphere.sirena.org.uk with esmtpa (Exim 4.89)
         (envelope-from <broonie@sirena.org.uk>)
-        id 1h45xf-0003Ps-Ln; Wed, 13 Mar 2019 15:38:31 +0000
+        id 1h45xo-0003QG-Dt; Wed, 13 Mar 2019 15:38:40 +0000
 Received: by debutante.sirena.org.uk (Postfix, from userid 1000)
-        id 2A84B1128B97; Wed, 13 Mar 2019 15:38:31 +0000 (GMT)
+        id CF7D11128B97; Wed, 13 Mar 2019 15:38:39 +0000 (GMT)
 From:   Mark Brown <broonie@kernel.org>
-To:     Sylwester Nawrocki <s.nawrocki@samsung.com>
-Cc:     JaeChul Lee <jcsing.lee@samsung.com>,
-        Mark Brown <broonie@kernel.org>, broonie@kernel.org,
-        lgirdwood@gmail.com, alsa-devel@alsa-project.org,
-        linux-samsung-soc@vger.kernel.org, b.zolnierkie@samsung.com,
-        sbkim73@samsung.com, jcsing.lee@samsung.com,
-        linux-kernel@vger.kernel.org, krzk@kernel.org,
-        m.szyprowski@samsung.com, alsa-devel@alsa-project.org
-Subject: Applied "ASoC: samsung: odroid: Fix clock configuration for 44100 sample rate" to the asoc tree
-In-Reply-To:  <20190312174006.32174-1-s.nawrocki@samsung.com>
+To:     Arnd Bergmann <arnd@arndb.de>
+Cc:     Peter Ujfalusi <peter.ujfalusi@ti.com>,
+        Mark Brown <broonie@kernel.org>,
+        Peter Ujfalusi <peter.ujfalusi@ti.com>,
+        Mark Brown <broonie@kernel.org>, alsa-devel@alsa-project.org,
+        Tony Lindgren <tony@atomide.com>,
+        Liam Girdwood <lgirdwood@gmail.com>,
+        linux-kernel@vger.kernel.org,
+        Jarkko Nikula <jarkko.nikula@bitmer.com>,
+        alsa-devel@alsa-project.org
+Subject: Applied "ASoC: ti: fix davinci_mcasp_probe dependencies" to the asoc tree
+In-Reply-To:  <20190304203114.1894822-1-arnd@arndb.de>
 X-Patchwork-Hint: ignore
-Message-Id: <20190313153831.2A84B1128B97@debutante.sirena.org.uk>
-Date:   Wed, 13 Mar 2019 15:38:31 +0000 (GMT)
+Message-Id: <20190313153839.CF7D11128B97@debutante.sirena.org.uk>
+Date:   Wed, 13 Mar 2019 15:38:39 +0000 (GMT)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
@@ -65,7 +67,7 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 The patch
 
-   ASoC: samsung: odroid: Fix clock configuration for 44100 sample rate
+   ASoC: ti: fix davinci_mcasp_probe dependencies
 
 has been applied to the asoc tree at
 
@@ -90,48 +92,54 @@ to this mail.
 Thanks,
 Mark
 
-From 2b13bee3884926cba22061efa75bd315e871de24 Mon Sep 17 00:00:00 2001
-From: Sylwester Nawrocki <s.nawrocki@samsung.com>
-Date: Tue, 12 Mar 2019 18:40:06 +0100
-Subject: [PATCH] ASoC: samsung: odroid: Fix clock configuration for 44100
- sample rate
+From 7d7b25d05ef1c5a1a9320190e1eeb55534847558 Mon Sep 17 00:00:00 2001
+From: Arnd Bergmann <arnd@arndb.de>
+Date: Mon, 4 Mar 2019 21:30:50 +0100
+Subject: [PATCH] ASoC: ti: fix davinci_mcasp_probe dependencies
 
-After commit fbeec965b8d1c ("ASoC: samsung: odroid: Fix 32000 sample rate
-handling") the audio root clock frequency is configured improperly for
-44100 sample rate. Due to clock rate rounding it's 20070401 Hz instead
-of 22579000 Hz. This results in a too low value of the PSR clock divider
-in the CPU DAI driver and too fast actual sample rate for fs=44100. E.g.
-1 kHz tone has actual 1780 Hz frequency (1 kHz * 20070401/22579000 * 2).
+The SND_SOC_DAVINCI_MCASP driver can use either edma or sdma as
+a back-end, and it takes the presence of the respective dma engine
+drivers in the configuration as an indication to which ones should be
+built. However, this is flawed in multiple ways:
 
-Fix this by increasing the correction passed to clk_set_rate() to take
-into account inaccuracy of the EPLL frequency properly.
+- With CONFIG_TI_EDMA=m and CONFIG_SND_SOC_DAVINCI_MCASP=y,
+  is enabled as =m, and we get a link error:
+  sound/soc/ti/davinci-mcasp.o: In function `davinci_mcasp_probe':
+  davinci-mcasp.c:(.text+0x930): undefined reference to `edma_pcm_platform_register'
 
-Fixes: fbeec965b8d1c ("ASoC: samsung: odroid: Fix 32000 sample rate handling")
-Reported-by: JaeChul Lee <jcsing.lee@samsung.com>
-Signed-off-by: Sylwester Nawrocki <s.nawrocki@samsung.com>
+- When CONFIG_SND_SOC_DAVINCI_MCASP=m has already been selected by
+  another driver, the same link error appears even if CONFIG_TI_EDMA
+  is disabled
+
+There are possibly other issues here, but it seems that the only reasonable
+solution is to always build both SND_SOC_TI_EDMA_PCM and
+SND_SOC_TI_SDMA_PCM as a dependency here. Both are fairly small and
+do not have any other compile-time dependencies, so the cost is
+very small, and makes the configuration stage much more consistent.
+
+Fixes: f2055e145f29 ("ASoC: ti: Merge davinci and omap directories")
+Signed-off-by: Arnd Bergmann <arnd@arndb.de>
+Acked-by: Peter Ujfalusi <peter.ujfalusi@ti.com>
 Signed-off-by: Mark Brown <broonie@kernel.org>
 ---
- sound/soc/samsung/odroid.c | 4 ++--
+ sound/soc/ti/Kconfig | 4 ++--
  1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/sound/soc/samsung/odroid.c b/sound/soc/samsung/odroid.c
-index 694512f980fd..1dc54c4206f0 100644
---- a/sound/soc/samsung/odroid.c
-+++ b/sound/soc/samsung/odroid.c
-@@ -91,11 +91,11 @@ static int odroid_card_be_hw_params(struct snd_pcm_substream *substream,
- 		return ret;
+diff --git a/sound/soc/ti/Kconfig b/sound/soc/ti/Kconfig
+index 4bf3c15d4e51..ee7c202c69b7 100644
+--- a/sound/soc/ti/Kconfig
++++ b/sound/soc/ti/Kconfig
+@@ -21,8 +21,8 @@ config SND_SOC_DAVINCI_ASP
  
- 	/*
--	 *  We add 1 to the rclk_freq value in order to avoid too low clock
-+	 *  We add 2 to the rclk_freq value in order to avoid too low clock
- 	 *  frequency values due to the EPLL output frequency not being exact
- 	 *  multiple of the audio sampling rate.
- 	 */
--	rclk_freq = params_rate(params) * rfs + 1;
-+	rclk_freq = params_rate(params) * rfs + 2;
- 
- 	ret = clk_set_rate(priv->sclk_i2s, rclk_freq);
- 	if (ret < 0)
+ config SND_SOC_DAVINCI_MCASP
+ 	tristate "Multichannel Audio Serial Port (McASP) support"
+-	select SND_SOC_TI_EDMA_PCM if TI_EDMA
+-	select SND_SOC_TI_SDMA_PCM if DMA_OMAP
++	select SND_SOC_TI_EDMA_PCM
++	select SND_SOC_TI_SDMA_PCM
+ 	help
+ 	  Say Y or M here if you want to have support for McASP IP found in
+ 	  various Texas Instruments SoCs like:
 -- 
 2.20.1
 
