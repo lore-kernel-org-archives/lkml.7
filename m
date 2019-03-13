@@ -2,109 +2,257 @@ Return-Path: <SRS0=dUEL=RQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_PASS autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,UNPARSEABLE_RELAY,
+	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 96382C10F03
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 Mar 2019 17:37:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 31382C43381
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 Mar 2019 17:39:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 61C142075C
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 Mar 2019 17:37:09 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="EzUgcSd1"
+	by mail.kernel.org (Postfix) with ESMTP id 00D312075C
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 Mar 2019 17:39:02 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727099AbfCMRhI (ORCPT
+        id S1726831AbfCMRjB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 13 Mar 2019 13:37:08 -0400
-Received: from hqemgate14.nvidia.com ([216.228.121.143]:4824 "EHLO
-        hqemgate14.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725876AbfCMRhH (ORCPT
+        Wed, 13 Mar 2019 13:39:01 -0400
+Received: from bhuna.collabora.co.uk ([46.235.227.227]:36924 "EHLO
+        bhuna.collabora.co.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726033AbfCMRjB (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 13 Mar 2019 13:37:07 -0400
-Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqemgate14.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
-        id <B5c893fc40001>; Wed, 13 Mar 2019 10:37:08 -0700
-Received: from hqmail.nvidia.com ([172.20.161.6])
-  by hqpgpgate101.nvidia.com (PGP Universal service);
-  Wed, 13 Mar 2019 10:37:07 -0700
-X-PGP-Universal: processed;
-        by hqpgpgate101.nvidia.com on Wed, 13 Mar 2019 10:37:07 -0700
-Received: from [10.21.132.148] (10.124.1.5) by HQMAIL101.nvidia.com
- (172.20.187.10) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Wed, 13 Mar
- 2019 17:37:04 +0000
-Subject: Re: [PATCH 5.0 00/25] 5.0.2-stable review
-To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        <linux-kernel@vger.kernel.org>
-CC:     <torvalds@linux-foundation.org>, <akpm@linux-foundation.org>,
-        <linux@roeck-us.net>, <shuah@kernel.org>, <patches@kernelci.org>,
-        <ben.hutchings@codethink.co.uk>, <lkft-triage@lists.linaro.org>,
-        <stable@vger.kernel.org>, linux-tegra <linux-tegra@vger.kernel.org>
-References: <20190312170403.643852550@linuxfoundation.org>
-From:   Jon Hunter <jonathanh@nvidia.com>
-Message-ID: <e11f7e58-eef8-89ae-8097-b20c3ec995b7@nvidia.com>
-Date:   Wed, 13 Mar 2019 17:37:02 +0000
+        Wed, 13 Mar 2019 13:39:01 -0400
+Received: from [127.0.0.1] (localhost [127.0.0.1])
+        (Authenticated sender: eballetbo)
+        with ESMTPSA id A021E281311
+Subject: Re: [PATCH V5] platform/chrome: mfd/cros_ec_dev: Add sysfile to force
+To:     RaviChandra Sadineni <ravisadineni@chromium.org>
+Cc:     Benson Leung <bleung@chromium.org>,
+        Guenter Roeck <groeck@chromium.org>,
+        linux-kernel@vger.kernel.org, Lee Jones <lee.jones@linaro.org>,
+        tbroch@google.com
+References: <404dd7fe-23de-e5c4-48c2-5cd77a14e72b@collabora.com>
+ <20190309014239.79938-1-ravisadineni@chromium.org>
+From:   Enric Balletbo i Serra <enric.balletbo@collabora.com>
+Message-ID: <56681289-e231-4d83-b6d4-1a05e7f91146@collabora.com>
+Date:   Wed, 13 Mar 2019 18:38:55 +0100
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
  Thunderbird/60.5.1
 MIME-Version: 1.0
-In-Reply-To: <20190312170403.643852550@linuxfoundation.org>
-X-Originating-IP: [10.124.1.5]
-X-ClientProxiedBy: HQMAIL105.nvidia.com (172.20.187.12) To
- HQMAIL101.nvidia.com (172.20.187.10)
-Content-Type: text/plain; charset="utf-8"
-Content-Language: en-US
+In-Reply-To: <20190309014239.79938-1-ravisadineni@chromium.org>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-GB
 Content-Transfer-Encoding: 7bit
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
-        t=1552498628; bh=xwtSui99yP4LLt4dcHXJkh+28p6wgml/rnuiWfXIrYI=;
-        h=X-PGP-Universal:Subject:To:CC:References:From:Message-ID:Date:
-         User-Agent:MIME-Version:In-Reply-To:X-Originating-IP:
-         X-ClientProxiedBy:Content-Type:Content-Language:
-         Content-Transfer-Encoding;
-        b=EzUgcSd1VQX8+WAKqLHT7Uz4QDCktUVGwkDlewYZ5IfElSIiso3yRkqoCis1p19C/
-         1YGnvlxKqBeZ6tGgOerhkGAMmj5XFOB3dSh+kKdVn6Kl+rFps0ORxhbpUxNyN4rZ5F
-         ZkXpl1c8gS/kNP872Ac5NwYjsoCwhvjGWnAEmurzMDLSG3PA0CoCXXd//OaXZWChJc
-         JA8S/PAE0h1lnB3yDqpAKg0yohyfkb8b5+EP9b+n64dK17X/VZi7aR3HoCeY1kT1+k
-         S1gK4FZsAT02oishkkWQYY1oeH4s5u24wuPeb+RWH6CmDE8mg6IsUQprBUXIMidbBY
-         bM3fwRHe+ueNA==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Hi RaviChandra,
 
-On 12/03/2019 17:08, Greg Kroah-Hartman wrote:
-> This is the start of the stable review cycle for the 5.0.2 release.
-> There are 25 patches in this series, all will be posted as a response
-> to this one.  If anyone has any issues with these being applied, please
-> let me know.
+Many thanks for pushing this upstream. Some more comments below.
+
+On 9/3/19 2:42, RaviChandra Sadineni wrote:
+> On chromebooks, power_manager daemon normally shuts down(S5) the device
+> when the battery charge falls below 4% threshold. ChromeOS EC then
+> normally spends an hour in S5 before hibernating. If the battery charge
+> falls below critical threshold in the mean time, EC does a battery cutoff
+> instead of hibernating. On some chromebooks, S5 is optimal enough
+> resulting in EC hibernating without battery cutoff. This results in
+> battery deep discharging. This is a bad user experience as battery
+> has to trickle charge before booting when the AC is plugged in the next
+> time.
 > 
-> Responses should be made by Thu Mar 14 17:03:43 UTC 2019.
-> Anything received after that time might be too late.
+> This patch exposes a sysfs file for an userland daemon to suggest EC if it
+> has to do a battery cutoff instead of hibernating when the system enters
+> S5 next time.
 > 
-> The whole patch series can be found in one patch at:
-> 	https://www.kernel.org/pub/linux/kernel/v5.x/stable-review/patch-5.0.2-rc1.gz
-> or in the git tree and branch at:
-> 	git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git linux-5.0.y
-> and the diffstat can be found below.
+> This attribute is present only if EC supports EC_FEATURE_BATTERY.
 > 
-> thanks,
+> Signed-off-by: RaviChandra Sadineni <ravisadineni@chromium.org>
+> ---
+> V5: Expose flag only when EC_FEATURE_BATTERY is supported.
+> V4: Addressed comments from Enric.
+> V3: Make battery-cutoff generic and expose 'at-shutdown' flag.
+> V2: Use kstrtobool() instead of kstrtou8() and add documentation.
 > 
-> greg k-h
+> .../ABI/testing/sysfs-class-chromeos          | 16 ++++++
+>  drivers/mfd/cros_ec_dev.c                     |  4 ++
+>  drivers/platform/chrome/cros_ec_sysfs.c       | 49 +++++++++++++++++++
+>  include/linux/mfd/cros_ec.h                   |  2 +
+>  4 files changed, 71 insertions(+)
+> 
+> diff --git a/Documentation/ABI/testing/sysfs-class-chromeos b/Documentation/ABI/testing/sysfs-class-chromeos
+> index 5819699d66ec..0927704d1629 100644
+> --- a/Documentation/ABI/testing/sysfs-class-chromeos
+> +++ b/Documentation/ABI/testing/sysfs-class-chromeos
+> @@ -30,3 +30,19 @@ Date:		August 2015
+>  KernelVersion:	4.2
+>  Description:
+>  		Show the information about the EC software and hardware.
+> +
+> +What:           /sys/class/chromeos/<ec-device-name>/battery_cuttoff
 
-All tests passing for Tegra ...
+Typo s/battery_cuttoff/battery_cutoff/
 
-Test results for stable-v5.0:
-    11 builds:	11 pass, 0 fail
-    22 boots:	22 pass, 0 fail
-    28 tests:	28 pass, 0 fail
+> +Date:           February 2019
+> +Contact:        Ravi Chandra Sadineni <ravisadineni@chromium.org>
+> +Description:
+> +                cros_ec battery cuttoff configuration. Only option
 
-Linux version:	5.0.2-rc1-gb799d04
-Boards tested:	tegra124-jetson-tk1, tegra186-p2771-0000,
-                tegra194-p2972-0000, tegra20-ventana,
-                tegra210-p2371-2180, tegra30-cardhu-a04
+Typo s/battery_cuttoff/battery_cutoff/
 
-Cheers
-Jon
+> +                currently exposed is 'at-shutdown'.
+> +
+> +                'at-shutdown' sends a host command to EC requesting
+> +                battery cutoff on next shutdown. If AC is plugged
+> +                in before next shutdown, EC ignores the request and
+> +                resets the flag.
+> +
+> +                Currently EC does not expose a host command to read
+> +                the status of battery cutoff configuration. Thus this
+> +                flag is write-only.
+> diff --git a/drivers/mfd/cros_ec_dev.c b/drivers/mfd/cros_ec_dev.c
+> index ed809fc97df8..7580be23dfb3 100644
+> --- a/drivers/mfd/cros_ec_dev.c
+> +++ b/drivers/mfd/cros_ec_dev.c
+> @@ -502,6 +502,10 @@ static int ec_device_probe(struct platform_device *pdev)
+>  				 retval);
+>  	}
+>  
+> +	/* check whether EC_FEATURE_BATTERY is supported. */
+> +	if (cros_ec_check_features(ec, EC_FEATURE_BATTERY))
+> +		ec->has_battery = true;
+> +
 
--- 
-nvpublic
+You can check in cros-ec-sysfs driver if the feature is supported, no need to do
+this here and add a new variable. See below.
+
+>  	return 0;
+>  
+>  failed:
+> diff --git a/drivers/platform/chrome/cros_ec_sysfs.c b/drivers/platform/chrome/cros_ec_sysfs.c
+> index fe0b7614ae1b..3d9ab55dddc0 100644
+> --- a/drivers/platform/chrome/cros_ec_sysfs.c
+> +++ b/drivers/platform/chrome/cros_ec_sysfs.c
+> @@ -308,14 +308,61 @@ static ssize_t kb_wake_angle_store(struct device *dev,
+>  	return count;
+>  }
+>  
+> +/* Battery cutoff control */
+> +static ssize_t battery_cutoff_store(struct device *dev,
+> +				    struct device_attribute *attr,
+> +				    const char *buf, size_t count)
+> +{
+> +	struct ec_params_battery_cutoff *param;
+> +	struct cros_ec_command *msg;
+> +	int ret;
+> +	struct cros_ec_dev *ec = to_cros_ec_dev(dev);
+> +	char *p;
+> +	int len;
+
+nit: Reversed X-mas tree order if you don't mind.
+
+> +
+> +	msg = kmalloc(sizeof(*msg) + EC_HOST_PARAM_SIZE, GFP_KERNEL);
+> +	if (!msg)
+> +		return -ENOMEM;
+> +
+> +	param = (struct ec_params_battery_cutoff *)msg->data;
+> +	msg->command = EC_CMD_BATTERY_CUT_OFF + ec->cmd_offset;
+> +	msg->version = 1;
+
+I looked at ectool cmd_battery_cut_off and if I understand correctly this
+command is also possible for protocol version 0. I am wondering if we should
+also handle this case. There is any reason to don't do that?
+
+> +	msg->outsize = sizeof(*param);
+> +	msg->insize = 0;
+> +
+> +	p = memchr(buf, '\n', count);
+> +	len = p ? p - buf : count;
+> +
+> +	if (len == 11 && !strncmp(buf, "at-shutdown", len)) {
+> +		param->flags = EC_BATTERY_CUTOFF_FLAG_AT_SHUTDOWN;
+
+Can you prepare this for future flags defining and array of strings and using
+sysfs_match_string helper?
+
+> +	} else {
+> +		count = -EINVAL;
+> +		goto exit;
+> +	}
+> +
+> +	ret = cros_ec_cmd_xfer_status(ec->ec_dev, msg);
+> +	if (ret < 0)
+> +		count = ret;
+> +exit:
+> +	kfree(msg);
+> +	return count;
+> +}
+> +
+>  /* Module initialization */
+>  
+>  static DEVICE_ATTR_RW(reboot);
+>  static DEVICE_ATTR_RO(version);
+>  static DEVICE_ATTR_RO(flashinfo);
+>  static DEVICE_ATTR_RW(kb_wake_angle);
+> +/*
+> + * Currently EC does not expose a host command to read the status of
+> + * battery cutoff configuration. Also there is no requirement to read
+> + * the flag from userland. So marking this attribute as write-only.
+> + */
+> +static DEVICE_ATTR_WO(battery_cutoff);
+>  
+>  static struct attribute *__ec_attrs[] = {
+> +	&dev_attr_battery_cutoff.attr,
+>  	&dev_attr_kb_wake_angle.attr,
+>  	&dev_attr_reboot.attr,
+>  	&dev_attr_version.attr,
+> @@ -331,6 +378,8 @@ static umode_t cros_ec_ctrl_visible(struct kobject *kobj,
+>  
+>  	if (a == &dev_attr_kb_wake_angle.attr && !ec->has_kb_wake_angle)
+>  		return 0;
+> +	if (a == &dev_attr_battery_cutoff.attr && !ec->has_battery)
+> +		return 0;
+>  
+
+You can check directly if the feature is available. i.e
+
+static int cros_ec_has_battery(struct cros_ec_dev *ec)
+{
+       return ec->features[EC_FEATURE_BATTERY / 32] &
+              EC_FEATURE_MASK_0(EC_FEATURE_BATTERY);
+}
+
+>  	return a->mode;
+>  }
+> diff --git a/include/linux/mfd/cros_ec.h b/include/linux/mfd/cros_ec.h
+> index 8f2a8918bfa3..de5280c96bd9 100644
+> --- a/include/linux/mfd/cros_ec.h
+> +++ b/include/linux/mfd/cros_ec.h
+> @@ -192,6 +192,7 @@ struct cros_ec_debugfs;
+>   * @has_kb_wake_angle: True if at least 2 accelerometer are connected to the EC.
+>   * @cmd_offset: Offset to apply for each command.
+>   * @features: Features supported by the EC.
+> + * @has_battery: True if EC supports EC_FEATURE_BATTERY.
+>   */
+>  struct cros_ec_dev {
+>  	struct device class_dev;
+> @@ -202,6 +203,7 @@ struct cros_ec_dev {
+>  	bool has_kb_wake_angle;
+>  	u16 cmd_offset;
+>  	u32 features[2];
+> +	bool has_battery;
+
+Not needed.
+
+Note that the reason why we have a has_kb_wake_angle is because there isn't an
+EC_FEATURE for the wake_angle propriety, but this is not the case here.
+features[2] has this info.
+
+>  };
+>  
+>  #define to_cros_ec_dev(dev)  container_of(dev, struct cros_ec_dev, class_dev)
+> 
+
+Thanks,
+ Enric
