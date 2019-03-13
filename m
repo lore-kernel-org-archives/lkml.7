@@ -2,106 +2,196 @@ Return-Path: <SRS0=dUEL=RQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,URIBL_BLOCKED
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B8F8FC43381
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 Mar 2019 10:59:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 322CBC43381
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 Mar 2019 10:59:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 858ED2070D
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 Mar 2019 10:59:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EDFF42177E
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 Mar 2019 10:59:34 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=nifty.com header.i=@nifty.com header.b="Fid0taOI"
+	dkim=pass (1024-bit key) header.d=mobiveil.co.in header.i=@mobiveil.co.in header.b="jHbxRFGF"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726125AbfCMK7V (ORCPT
+        id S1726316AbfCMK7d (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 13 Mar 2019 06:59:21 -0400
-Received: from conssluserg-05.nifty.com ([210.131.2.90]:21804 "EHLO
-        conssluserg-05.nifty.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725832AbfCMK7V (ORCPT
+        Wed, 13 Mar 2019 06:59:33 -0400
+Received: from mail-wr1-f65.google.com ([209.85.221.65]:43815 "EHLO
+        mail-wr1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725847AbfCMK7d (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 13 Mar 2019 06:59:21 -0400
-Received: from mail-vs1-f50.google.com (mail-vs1-f50.google.com [209.85.217.50]) (authenticated)
-        by conssluserg-05.nifty.com with ESMTP id x2DAxBCL001801;
-        Wed, 13 Mar 2019 19:59:12 +0900
-DKIM-Filter: OpenDKIM Filter v2.10.3 conssluserg-05.nifty.com x2DAxBCL001801
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nifty.com;
-        s=dec2015msa; t=1552474752;
-        bh=rMHVjtndHqP4BHp6Pe4r8RxHxG0dstPSziZBW6O0lY8=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=Fid0taOIgc3yuVgbqH2agY00H5nu5Ra9aIMilnNlGm6o1ZpjtKaGrZUdK1SmlQhlv
-         2SBI5H4177zxvKgrslxalImt34zN9USolZraMrtowEhUwlQXzVu19UWVXcRzCg80R9
-         q0JVYhKqdLtVm1FtnAwPsAcofjfd5Gw4LkJwQZsc/yQHHpBbY627U4dIgwPCTz55Wz
-         0Go8usGdcYOVcnhRI0IYtWXWDzfZ0852+eQ/wTuYyanFA+vrngmBYsjHEpT20EDUx9
-         k7My2yF2NShCkCJFd3iOE6T+M6M9W4sxksOKEJTG916s5GAvj9J1MOd2Y+E7a01Tgo
-         PPqDil4mVrKAQ==
-X-Nifty-SrcIP: [209.85.217.50]
-Received: by mail-vs1-f50.google.com with SMTP id y19so715688vsc.4;
-        Wed, 13 Mar 2019 03:59:12 -0700 (PDT)
-X-Gm-Message-State: APjAAAWlfp/kPp/BepDArh0RUGQ2MXshkvCBq9TwEp/NHVufUCD4KXh6
-        S5MnxgRutjPry4GhLvGk9jAXEmBPsbNVPMwx4N4=
-X-Google-Smtp-Source: APXvYqwywsr9BBuEpp4fMEDeuSnTfveaMMLv6B4m+d0AEXP8jtfGpvAbxT5VNxoaSE7EGcdjh/L+tQx0NuTDTR/u4vI=
-X-Received: by 2002:a05:6102:18f:: with SMTP id r15mr22429038vsq.215.1552474751208;
- Wed, 13 Mar 2019 03:59:11 -0700 (PDT)
+        Wed, 13 Mar 2019 06:59:33 -0400
+Received: by mail-wr1-f65.google.com with SMTP id d17so1447977wre.10
+        for <linux-kernel@vger.kernel.org>; Wed, 13 Mar 2019 03:59:31 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=mobiveil.co.in; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc:content-transfer-encoding;
+        bh=h4LFviQDP20Bf7IkpPDIpnlx1Y4FYEMNZGgLZoxCprA=;
+        b=jHbxRFGFdyci9bWQbeBNbGi9uoJUlqlqtvRH6d22tI80JqWTI4jJ7lWcjfCe4//WD9
+         A+y3CubwpsHLmF6UhyfVIt45Y4f27tzeEa3HMJDylpqIl3HZKfQavd4Iv6IPU8dFEoZo
+         789eGZMRAhKQBiuP9lJPabM+8OQfBdIriKAX4=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=h4LFviQDP20Bf7IkpPDIpnlx1Y4FYEMNZGgLZoxCprA=;
+        b=PAtS+99bIsllsHFwi/OGtsPmMW71K2S6fWtpwLx+J/RXHpK72LtuxjqC7AEv+KaeiF
+         JeqMQnYbx1wLshSNIbSPgAUKT+3ncnBOWm/uFKcXBb9DNGb1/STNm1Ec+JJsm+LGRS/D
+         qvSq4rP7NgUqjCIafqbqUuu6JsY762dReBJgWbJraRch8IGGMZHXSGteMZ8JybhxyiVc
+         6r1aoIvjaJfwZeOF1WZxpk5185Xha4MKz9CWbRu/SKqTRpmRFwaUxyS/UoevBOZZ7ZI/
+         CMxpVLks5lZuASdsXTzM2Nifg1vhM/Jr2RVBfM8LFwXHQkHDLxltjGqEglv7o/gktAUr
+         JC9g==
+X-Gm-Message-State: APjAAAXEquRln2Qo6lWQ9Y0SpCHdKwj0urKj32kn19nkoc7jQJx7hVWb
+        4Zu0uERYb6DlMeeBD2mFdIgdC6tmtKtsDZBo3Aw01Q==
+X-Google-Smtp-Source: APXvYqzbcTYdPInRskGseTIRoOuptxRn3sAUFqbKuRjSH8ewSjomsDWaGx4qORQVvlqJcNn/hg2UGyacKPFnbn4iFls=
+X-Received: by 2002:a5d:6b07:: with SMTP id v7mr26531406wrw.314.1552474770378;
+ Wed, 13 Mar 2019 03:59:30 -0700 (PDT)
 MIME-Version: 1.0
-References: <20190312215203.27643-1-natechancellor@gmail.com> <80fb5b7f-42f9-4fd1-00cf-bfa7965ff8f7@rasmusvillemoes.dk>
-In-Reply-To: <80fb5b7f-42f9-4fd1-00cf-bfa7965ff8f7@rasmusvillemoes.dk>
-From:   Masahiro Yamada <yamada.masahiro@socionext.com>
-Date:   Wed, 13 Mar 2019 19:58:35 +0900
-X-Gmail-Original-Message-ID: <CAK7LNAR0LGRXi+zUsf3gb_pOaE2U-LUtd8+QH30cqEuTWUokpg@mail.gmail.com>
-Message-ID: <CAK7LNAR0LGRXi+zUsf3gb_pOaE2U-LUtd8+QH30cqEuTWUokpg@mail.gmail.com>
-Subject: Re: [PATCH] Makefile: Add '-fno-builtin-bcmp' to CLANG_FLAGS
-To:     Rasmus Villemoes <linux@rasmusvillemoes.dk>
-Cc:     Nathan Chancellor <natechancellor@gmail.com>,
-        Michal Marek <michal.lkml@markovi.net>,
-        Linux Kbuild mailing list <linux-kbuild@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Nick Desaulniers <ndesaulniers@google.com>,
-        Arnd Bergmann <arnd@arndb.de>,
-        James Y Knight <jyknight@google.com>,
-        clang-built-linux@googlegroups.com, stable <stable@vger.kernel.org>
+References: <20190311093130.7209-1-Zhiqiang.Hou@nxp.com> <20190311093130.7209-12-Zhiqiang.Hou@nxp.com>
+ <20190311141401.GG214730@google.com> <AM6PR04MB5781498315C6B69EB2586B9D84490@AM6PR04MB5781.eurprd04.prod.outlook.com>
+In-Reply-To: <AM6PR04MB5781498315C6B69EB2586B9D84490@AM6PR04MB5781.eurprd04.prod.outlook.com>
+From:   Subrahmanya Lingappa <l.subrahmanya@mobiveil.co.in>
+Date:   Wed, 13 Mar 2019 16:29:18 +0530
+Message-ID: <CAFZiPx1+SDPLZ3CAAhSxbTUWdKrnx3UkF99nTxwqoNx3mdXDcA@mail.gmail.com>
+Subject: Re: [PATCHv4 11/28] PCI: mobiveil: only fix up the Class Code field
+To:     "Z.q. Hou" <zhiqiang.hou@nxp.com>
+Cc:     Bjorn Helgaas <helgaas@kernel.org>,
+        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>,
+        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "robh+dt@kernel.org" <robh+dt@kernel.org>,
+        "mark.rutland@arm.com" <mark.rutland@arm.com>,
+        "shawnguo@kernel.org" <shawnguo@kernel.org>,
+        Leo Li <leoyang.li@nxp.com>,
+        "lorenzo.pieralisi@arm.com" <lorenzo.pieralisi@arm.com>,
+        "catalin.marinas@arm.com" <catalin.marinas@arm.com>,
+        "will.deacon@arm.com" <will.deacon@arm.com>,
+        Mingkai Hu <mingkai.hu@nxp.com>,
+        "M.h. Lian" <minghuan.lian@nxp.com>,
+        Xiaowei Bao <xiaowei.bao@nxp.com>
 Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Mar 13, 2019 at 5:13 PM Rasmus Villemoes
-<linux@rasmusvillemoes.dk> wrote:
+Bjorn/ZQ,
+
+
+On Tue, Mar 12, 2019 at 2:48 PM Z.q. Hou <zhiqiang.hou@nxp.com> wrote:
 >
-> On 12/03/2019 22.52, Nathan Chancellor wrote:
-> > After LLVM revision r355672 [1], all known working kernel configurations
-> > fail to link [2]:
+> Hi Bjorn,
+>
+> Thanks a lot for your comments!
+>
+> > -----Original Message-----
+> > From: Bjorn Helgaas [mailto:helgaas@kernel.org]
+> > Sent: 2019=E5=B9=B43=E6=9C=8811=E6=97=A5 22:14
+> > To: Z.q. Hou <zhiqiang.hou@nxp.com>
+> > Cc: linux-pci@vger.kernel.org; linux-arm-kernel@lists.infradead.org;
+> > devicetree@vger.kernel.org; linux-kernel@vger.kernel.org;
+> > robh+dt@kernel.org; mark.rutland@arm.com; l.subrahmanya@mobiveil.co.in;
+> > shawnguo@kernel.org; Leo Li <leoyang.li@nxp.com>;
+> > lorenzo.pieralisi@arm.com; catalin.marinas@arm.com;
+> > will.deacon@arm.com; Mingkai Hu <mingkai.hu@nxp.com>; M.h. Lian
+> > <minghuan.lian@nxp.com>; Xiaowei Bao <xiaowei.bao@nxp.com>
+> > Subject: Re: [PATCHv4 11/28] PCI: mobiveil: only fix up the Class Code =
+field
 > >
-> > ld: init/do_mounts.o: in function `prepare_namespace':
-> > do_mounts.c:(.init.text+0x5ca): undefined reference to `bcmp'
-> > ld: do_mounts.c:(.init.text+0x5e6): undefined reference to `bcmp'
-> > ld: init/initramfs.o: in function `do_header':
-> > initramfs.c:(.init.text+0x6e0): undefined reference to `bcmp'
-> > ld: initramfs.c:(.init.text+0x6f8): undefined reference to `bcmp'
-> > ld: arch/x86/kernel/setup.o: in function `setup_arch':
-> > setup.c:(.init.text+0x21d): undefined reference to `bcmp'
+> > On Mon, Mar 11, 2019 at 09:31:23AM +0000, Z.q. Hou wrote:
+> > > From: Hou Zhiqiang <Zhiqiang.Hou@nxp.com>
+> > >
+> > > Fix up the Class Code to PCI bridge, do not change the Revision ID.
+> > > And move the fixup to mobiveil_host_init function.
 > >
-> > Commit 6edfba1b33c7 ("[PATCH] x86_64: Don't define string functions to
-> > builtin") removed '-ffreestanding' globally and the kernel doesn't
-> > provide a bcmp definition so the linker cannot find a reference to it.
+> > Add parens after function name.
+> >
+> > Please explain why this change is needed.  Does it fix a bug?
+> >
+> > Does this fix the problem that the PCI core didn't correctly identify t=
+he device
+> > as a bridge because it identified bridges by class code instead of head=
+er type?
+> >
+> > That problem *should* be fixed by b2fb5cc57469 ("PCI: Rely on config sp=
+ace
+> > header type, not class code"), which is now upstream.
+> >
+> > You might still want this class code change so that lspci shows the cor=
+rect
+> > thing.  That's fine, but the changelog should say why we're doing it.
 > >
 >
-> > Fix this by explicitly telling LLVM through Clang not to emit bcmp
-> > references. This flag does not need to be behind 'cc-option' because all
-> > working versions of Clang support this flag.
+> Subrahmanya's original patch is to fixup 'Class Code' field, but it also =
+fixed the 'Revision ID' field. This patch is patch is to remove the fixup o=
+f 'Revision ID' field.
+
+it was introduced during the test with 4.9 and 4.15 linux version,
+without this fix driver was not getting loaded.
+
+I belive it should be sufficient to mention in code comment:  "Fixing
+the class code as hardware is not reflecting the correct class code",
+And the changelog for this patch mentioning "avoid changing the
+revision ID  during the class code fix". Is that OK?
+
+Thanks,
+
 >
-> Wouldn't it be better to just define bcmp as an alias for memcmp? They
-> seem to have compatible prototypes, and then somebody might someday sit
-> down and implement some word-at-a-time version of bcmp making use of the
-> weaker guarantees about the return value to gain some performance. But I
-> suppose that can also be done later.
-
-
-I also thought of this.
-
-
--- 
-Best Regards
-Masahiro Yamada
+> > > Fixes: 9af6bcb11e12 ("PCI: mobiveil: Add Mobiveil PCIe Host Bridge IP
+> > > driver")
+> >
+> > Make this "Fixes:" line a single line again.
+> >
+> > > Signed-off-by: Hou Zhiqiang <Zhiqiang.Hou@nxp.com>
+> > > Reviewed-by: Minghuan Lian <Minghuan.Lian@nxp.com>
+> > > Reviewed-by: Subrahmanya Lingappa <l.subrahmanya@mobiveil.co.in>
+> > > ---
+> > > V4:
+> > >  - no change
+> > >
+> > >  drivers/pci/controller/pcie-mobiveil.c | 9 ++++++---
+> > >  1 file changed, 6 insertions(+), 3 deletions(-)
+> > >
+> > > diff --git a/drivers/pci/controller/pcie-mobiveil.c
+> > > b/drivers/pci/controller/pcie-mobiveil.c
+> > > index 78e575e71f4d..8eee1ab7ee24 100644
+> > > --- a/drivers/pci/controller/pcie-mobiveil.c
+> > > +++ b/drivers/pci/controller/pcie-mobiveil.c
+> > > @@ -653,6 +653,12 @@ static int mobiveil_host_init(struct mobiveil_pc=
+ie
+> > *pcie)
+> > >                                type, resource_size(win->res));
+> > >     }
+> > >
+> > > +   /* fixup for PCIe class register */
+> > > +   value =3D csr_readl(pcie, PAB_INTP_AXI_PIO_CLASS);
+> > > +   value &=3D 0xff;
+> > > +   value |=3D (PCI_CLASS_BRIDGE_PCI << 16);
+> > > +   csr_writel(pcie, value, PAB_INTP_AXI_PIO_CLASS);
+> > > +
+> > >     /* setup MSI hardware registers */
+> > >     mobiveil_pcie_enable_msi(pcie);
+> > >
+> > > @@ -896,9 +902,6 @@ static int mobiveil_pcie_probe(struct
+> > platform_device *pdev)
+> > >             goto error;
+> > >     }
+> > >
+> > > -   /* fixup for PCIe class register */
+> > > -   csr_writel(pcie, 0x060402ab, PAB_INTP_AXI_PIO_CLASS);
+> > > -
+> > >     /* initialize the IRQ domains */
+> > >     ret =3D mobiveil_pcie_init_irq_domain(pcie);
+> > >     if (ret) {
+> > > --
+> > > 2.17.1
+> > >
+>
+> Thanks,
+> Zhiqiang
