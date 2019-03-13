@@ -2,91 +2,91 @@ Return-Path: <SRS0=dUEL=RQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8A69EC43381
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 Mar 2019 20:28:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7FD9EC10F03
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 Mar 2019 20:31:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 57B4C20854
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 Mar 2019 20:28:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3F5F820854
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 Mar 2019 20:31:31 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel-dk.20150623.gappssmtp.com header.i=@kernel-dk.20150623.gappssmtp.com header.b="jqzwCNFH"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727253AbfCMU2T (ORCPT
+        id S1727123AbfCMUba (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 13 Mar 2019 16:28:19 -0400
-Received: from mail-ot1-f66.google.com ([209.85.210.66]:38772 "EHLO
-        mail-ot1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726892AbfCMU2S (ORCPT
+        Wed, 13 Mar 2019 16:31:30 -0400
+Received: from mail-io1-f65.google.com ([209.85.166.65]:45299 "EHLO
+        mail-io1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726889AbfCMUb3 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 13 Mar 2019 16:28:18 -0400
-Received: by mail-ot1-f66.google.com with SMTP id m1so3029794otf.5
-        for <linux-kernel@vger.kernel.org>; Wed, 13 Mar 2019 13:28:18 -0700 (PDT)
+        Wed, 13 Mar 2019 16:31:29 -0400
+Received: by mail-io1-f65.google.com with SMTP id x9so2904690iog.12
+        for <linux-kernel@vger.kernel.org>; Wed, 13 Mar 2019 13:31:28 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=kernel-dk.20150623.gappssmtp.com; s=20150623;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=9Gh+QeTa7YT8CNtbPYte6IOKqPwEGtOwA3aYp3OSRHY=;
+        b=jqzwCNFHe59vnBP7X5tMr2Vg2jc1A5dg66VTPO9/Dcg0hCYJvcIJ61rXVfsUM4f8x+
+         ewCQD4Pa5ybTCv0ohC9JqAxDwDwEWnUrnneCw8w1H7Bl9sxBns9m+A4G5+DMlDXAjhtJ
+         JT4s2rTYckFcQm5RGfgtXPvPLSSDsUZ+iD1TFDF75Ot8SwI+tA1oiLXiEDUpX/NqNlm9
+         AWTxgZO1NKsYJRbBM/kMdPhh+xmhaixdl4RVPfp88R+qvoJTDPDaKdq1mzo92j3Lt1KM
+         +79BZGytgZqAc+RbPF3M7YPL3EijfS2oj1s9SGlg+giVetl+1ht5YYaThOCji/UqJUYC
+         ECfw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=WRHo+Qx+bqiMtdNEIHck/pS93TyE205D50SsM/O6eVc=;
-        b=QwX8iHv3uVixF/GjTEpc/x0bWeppM2TGDmyPolaEsBFFuQbNU6Q1rE0kCbKCtd9CrW
-         JYgOmuaz3csQBsBQNz4+RPJ45jCSq4SzF0gbgq/qr3JzPiI+JLYVpWOu0DdqkY8KfsEm
-         Fih7I+nyH+F1W/CZQQ98Ao+W9au0va4NuwTjagrxt7S+5nlPQN6iztcN/JOMRVfb+Lrf
-         +WxUw7mrx0Ur597/67kmQVqsiWNu3M6NVgG2fXWlj/nlaW9OoWuuDvXaAp3jZwr3mAKl
-         pnq+EdRPLbIIRKUqJThQTTfN05eV8cOpJqaOVnumGCABfDa31xZ/SUj8rbc23wTYP+/K
-         KdIg==
-X-Gm-Message-State: APjAAAV8F9O1kDp1bK08/rSHO7LVP8NDiVMM+jTtmgGwFyLR3HdNmmW/
-        TrYasW5toCxQNq+Q+XhyP05eV8GUPssxF3RwQf8=
-X-Google-Smtp-Source: APXvYqyw6nvhEsMmj5VAYP2xAzA/a+5VN8gdNsYgKRRfsCrFfQK0k82tADaaTziKn7icMEjGfdezzwbGUcBKu2l6Yco=
-X-Received: by 2002:a9d:7841:: with SMTP id c1mr29683616otm.354.1552508897906;
- Wed, 13 Mar 2019 13:28:17 -0700 (PDT)
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=9Gh+QeTa7YT8CNtbPYte6IOKqPwEGtOwA3aYp3OSRHY=;
+        b=WvGbvXuY0HFJdcZm1akzQPt6U7fiNs9gNX7Ipute+NSjVlZVBhpaXCGNtiBkgTqyx4
+         GPDZRsO29FaixibruzRbsoTKiaEssKbhV/oaWYZsOp/RN17WvehXDVQb2lkCe54jXEO7
+         oL+YNaFWBgwxlYihlfxo2K2rIwujEe9/t3C0Eno9bV8kwseSMiB5B9CDv2e3acFqPzh4
+         Pvdgf5Df3nhXW4800TgdvAtC19FUi3lG8puqFfs5WhVXCms3m15tqL+3+VQzQz8zZtF8
+         e3hhEtPUVDFUdGYhXYpM8bKLJsGWqU1Pi2aQbstVCFPprMYWxrcyi0VNp+1B9QqdNHyS
+         jalg==
+X-Gm-Message-State: APjAAAVk1YZhZke3JY/xprR3LG64N+Vh+QG7EZTFVMLAhiCYKTN8//c9
+        m3FI4BE91CtdqZPW0VvN1BNNJCXWDSmekQ==
+X-Google-Smtp-Source: APXvYqwQXXuOqn05dtkey+iiO6JmOG4NTj8Hn1X7iR15nke6UNT/7Q/rbulumaSrA+kldjMLO9Ilug==
+X-Received: by 2002:a6b:e202:: with SMTP id z2mr1601943ioc.6.1552509088092;
+        Wed, 13 Mar 2019 13:31:28 -0700 (PDT)
+Received: from [192.168.1.158] ([216.160.245.98])
+        by smtp.gmail.com with ESMTPSA id y24sm4873242iol.8.2019.03.13.13.31.26
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Wed, 13 Mar 2019 13:31:27 -0700 (PDT)
+Subject: Re: [PATCH] blkcg: annotate implicit fall through
+To:     Mathieu Malaterre <malat@debian.org>
+Cc:     Steven Rostedt <rostedt@goodmis.org>,
+        Ingo Molnar <mingo@redhat.com>, linux-block@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+References: <20190114203113.16832-1-malat@debian.org>
+From:   Jens Axboe <axboe@kernel.dk>
+Message-ID: <f3d51852-0cab-b6d9-90fe-0834a4219539@kernel.dk>
+Date:   Wed, 13 Mar 2019 14:31:25 -0600
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.5.1
 MIME-Version: 1.0
-References: <20190114204241.21712-1-malat@debian.org>
-In-Reply-To: <20190114204241.21712-1-malat@debian.org>
-From:   Mathieu Malaterre <malat@debian.org>
-Date:   Wed, 13 Mar 2019 21:28:05 +0100
-Message-ID: <CA+7wUsxi7jMURYQrBp9cTnGCs_akLZV7cmLuk8UgkkaL6Wzd7A@mail.gmail.com>
-Subject: Re: [PATCH 1/2] firewire: annotate implicit fall through
-To:     Stefan Richter <stefanr@s5r6.in-berlin.de>
-Cc:     linux1394-devel@lists.sourceforge.net,
-        LKML <linux-kernel@vger.kernel.org>,
-        "Gustavo A. R. Silva" <gustavo@embeddedor.com>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <20190114203113.16832-1-malat@debian.org>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-ping ?
-
-On Mon, Jan 14, 2019 at 9:42 PM Mathieu Malaterre <malat@debian.org> wrote:
->
+On 1/14/19 1:31 PM, Mathieu Malaterre wrote:
 > There is a plan to build the kernel with -Wimplicit-fallthrough and
 > this place in the code produced a warning (W=1).
->
-> In this particular case rewrote the comment to start with the string "fall
-> through", so as to match the regular expression expected by GCC.
->
+> 
 > This commit remove the following warning:
->
->   drivers/firewire/core-iso.c:308:7: warning: this statement may fall through [-Wimplicit-fallthrough=]
->
-> Signed-off-by: Mathieu Malaterre <malat@debian.org>
-> ---
->  drivers/firewire/core-iso.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
->
-> diff --git a/drivers/firewire/core-iso.c b/drivers/firewire/core-iso.c
-> index 35e784cffc23..d2d50bda5a5f 100644
-> --- a/drivers/firewire/core-iso.c
-> +++ b/drivers/firewire/core-iso.c
-> @@ -308,7 +308,7 @@ static int manage_channel(struct fw_card *card, int irm_id, int generation,
->                         if ((data[0] & bit) == (data[1] & bit))
->                                 continue;
->
-> -                       /* 1394-1995 IRM, fall through to retry. */
-> +                       /* fall through - 1394-1995 IRM to retry. */
->                 default:
->                         if (retry) {
->                                 retry--;
-> --
-> 2.19.2
->
+> 
+>   kernel/trace/blktrace.c:725:9: warning: this statement may fall through [-Wimplicit-fallthrough=]
+
+Applied, thanks.
+
+-- 
+Jens Axboe
+
