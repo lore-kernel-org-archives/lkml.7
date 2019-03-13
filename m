@@ -2,93 +2,114 @@ Return-Path: <SRS0=dUEL=RQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.5 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,
-	USER_AGENT_MUTT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BBF5FC43381
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 Mar 2019 20:49:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9A4C4C43381
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 Mar 2019 20:51:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7C3332146E
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 Mar 2019 20:49:52 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1552510192;
-	bh=S6KKviiepQbPbMVswyJ4wpfTv4BiN3C/YKQ1VlddYjE=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=EkbZgg0v9n38G6wbkuy+P2T8b0vgy6Tr3kCZGIoBi0w/xNaD8Ixmvrej/pSsrp/j5
-	 Hz3VPnu+rdp+ndN+Lu3tBeHj7y0vOCAxXsosvddJc4QC1YIsrYhC5dF/VcCqw1z2Oi
-	 tk80nrHV9ucCkNImhze9PU6PxYd5TTW+XVSPbpEY=
+	by mail.kernel.org (Postfix) with ESMTP id 692B62146E
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 Mar 2019 20:51:37 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727271AbfCMUtv (ORCPT
+        id S1727286AbfCMUvf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 13 Mar 2019 16:49:51 -0400
-Received: from mail.kernel.org ([198.145.29.99]:50844 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725876AbfCMUtu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 13 Mar 2019 16:49:50 -0400
-Received: from localhost (unknown [12.27.65.221])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E8CC62077B;
-        Wed, 13 Mar 2019 20:49:49 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1552510190;
-        bh=S6KKviiepQbPbMVswyJ4wpfTv4BiN3C/YKQ1VlddYjE=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=BgBq523U3VIf1phHFZMF9uSKZj0rxgiLVbo/ynv/iTUXwNeIwQiL/+vlRcUXXwWL1
-         69EFEPJgMbcSqUjecnckTtLdO1XuZDiwEVjYYebKjv7Lr2g0lI9g0shxSDU5/x0PYX
-         0rXClwwYyM+uC7b2MZw1gYb0dH8cx4sLIcl98m/g=
-Date:   Wed, 13 Mar 2019 13:49:49 -0700
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     Guenter Roeck <linux@roeck-us.net>
-Cc:     linux-kernel@vger.kernel.org, torvalds@linux-foundation.org,
-        akpm@linux-foundation.org, shuah@kernel.org, patches@kernelci.org,
-        ben.hutchings@codethink.co.uk, lkft-triage@lists.linaro.org,
-        stable@vger.kernel.org
-Subject: Re: [PATCH 4.9 00/96] 4.9.163-stable review
-Message-ID: <20190313204949.GA1088@kroah.com>
-References: <20190312171034.530434962@linuxfoundation.org>
- <20190313203441.GA26634@roeck-us.net>
+        Wed, 13 Mar 2019 16:51:35 -0400
+Received: from mail-oi1-f195.google.com ([209.85.167.195]:45374 "EHLO
+        mail-oi1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725876AbfCMUvf (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 13 Mar 2019 16:51:35 -0400
+Received: by mail-oi1-f195.google.com with SMTP id t82so2603647oie.12
+        for <linux-kernel@vger.kernel.org>; Wed, 13 Mar 2019 13:51:34 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=O009ZFg1i+gNYh+2Z88bEKarH375verjGPvyoRxXQQ8=;
+        b=GGR3VzMom1C7PJEFpbdWHlTDKdJRGyfljnX/Xyz2K5ZUxt91+5cqH/u8kctTw7A585
+         EfrmdCGC2XCyKqaO8QEeA5ENxaAuEdm4UKIeyk1mhQx/XAz2APsgC4IVM1OQHYMPPc+S
+         gT+pVlre8gQOiW+SroUdAaa+uDiLkCo8aSNEmCwoBhFNam6u0Lku0HwCUk0aIbPzVDdW
+         9QO4JKffj91IzCvY/LeMv/JGn5XVmzTKzSXUUPAVg3N8fodOmR5ZAJr/4JFLbpl7bZZw
+         I+TjHcXobKXw+VvHRUtX5KW+o5XGCCYZQrg7at0dZI7pULu9DuiY1Nc7p1xEZMbO953o
+         syjw==
+X-Gm-Message-State: APjAAAUU9TULXf+HW7PEc3r11xmnASPhmjeEln5QxSOEJg3y5JyM1SnL
+        6Mo9LtLo06mu6R5NG9W1vDZjhNQL41t/a50cC99UDA==
+X-Google-Smtp-Source: APXvYqwG40U05f7MwLlNb5Re8jruRXoJy9J5trRENNcfVlxWKjhoaApC/P1qH/nFXP2YwKNRMmigstxUwI3O8FC2GH4=
+X-Received: by 2002:aca:4e13:: with SMTP id c19mr88170oib.96.1552510294260;
+ Wed, 13 Mar 2019 13:51:34 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190313203441.GA26634@roeck-us.net>
-User-Agent: Mutt/1.11.3 (2019-02-01)
+References: <20190114204241.21712-1-malat@debian.org> <CA+7wUsxi7jMURYQrBp9cTnGCs_akLZV7cmLuk8UgkkaL6Wzd7A@mail.gmail.com>
+ <7788fe13-5f8a-2ac7-6e1a-a56daf9952d2@embeddedor.com>
+In-Reply-To: <7788fe13-5f8a-2ac7-6e1a-a56daf9952d2@embeddedor.com>
+From:   Mathieu Malaterre <malat@debian.org>
+Date:   Wed, 13 Mar 2019 21:51:23 +0100
+Message-ID: <CA+7wUsxT7uOFgSyEkJF+rY1cQMMrfO9CAdJwvtqWMNnf-RE7iQ@mail.gmail.com>
+Subject: Re: [PATCH 1/2] firewire: annotate implicit fall through
+To:     "Gustavo A. R. Silva" <gustavo@embeddedor.com>
+Cc:     Stefan Richter <stefanr@s5r6.in-berlin.de>,
+        linux1394-devel@lists.sourceforge.net,
+        LKML <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Mar 13, 2019 at 01:34:41PM -0700, Guenter Roeck wrote:
-> On Tue, Mar 12, 2019 at 10:09:18AM -0700, Greg Kroah-Hartman wrote:
-> > This is the start of the stable review cycle for the 4.9.163 release.
-> > There are 96 patches in this series, all will be posted as a response
-> > to this one.  If anyone has any issues with these being applied, please
-> > let me know.
-> > 
-> > Responses should be made by Thu Mar 14 17:10:06 UTC 2019.
-> > Anything received after that time might be too late.
-> > 
-> 
-> Build results:
-> 	total: 172 pass: 170 fail: 2
-> Failed builds: 
-> 	i386:tools/perf 
-> 	x86_64:tools/perf 
-> Qemu test results:
-> 	total: 316 pass: 316 fail: 0
-> 
-> Culprit is commit 386ca5754fad ("perf trace: Support multiple "vfs_getname"
-> probes"), which introduces a call to strstarts() but not the necessary
-> include file or declaration. Unfortunately, fixing that is quite complex
-> (commit 8e99b6d4533c ("tools include: Adopt strstarts() from the kernel")
-> doesn't apply).
+On Wed, Mar 13, 2019 at 9:39 PM Gustavo A. R. Silva
+<gustavo@embeddedor.com> wrote:
+>
+> Mathieu,
+>
+> On 3/13/19 3:28 PM, Mathieu Malaterre wrote:
+> > ping ?
+> >
+>
+> I have sent the following patch to address all these warnings in
+> firewire:
+>
+> https://lore.kernel.org/patchwork/patch/1040737/
+>
+> and, as this is being ignored, I'll add it to my tree for 5.2.
 
-Thanks for tracking this down, I'm lost in a maze of gcc8 issues with
-perf on 4.9 and 4.4 at the moment trying to fix that.
+Good ! I was only starring at -next
 
-I'll go drop this patch from the 4.9 and 4.4 queues.
+Thanks
 
-thanks,
-
-greg k-h
+> Thanks
+> --
+> Gustavo
+>
+> > On Mon, Jan 14, 2019 at 9:42 PM Mathieu Malaterre <malat@debian.org> wrote:
+> >>
+> >> There is a plan to build the kernel with -Wimplicit-fallthrough and
+> >> this place in the code produced a warning (W=1).
+> >>
+> >> In this particular case rewrote the comment to start with the string "fall
+> >> through", so as to match the regular expression expected by GCC.
+> >>
+> >> This commit remove the following warning:
+> >>
+> >>   drivers/firewire/core-iso.c:308:7: warning: this statement may fall through [-Wimplicit-fallthrough=]
+> >>
+> >> Signed-off-by: Mathieu Malaterre <malat@debian.org>
+> >> ---
+> >>  drivers/firewire/core-iso.c | 2 +-
+> >>  1 file changed, 1 insertion(+), 1 deletion(-)
+> >>
+> >> diff --git a/drivers/firewire/core-iso.c b/drivers/firewire/core-iso.c
+> >> index 35e784cffc23..d2d50bda5a5f 100644
+> >> --- a/drivers/firewire/core-iso.c
+> >> +++ b/drivers/firewire/core-iso.c
+> >> @@ -308,7 +308,7 @@ static int manage_channel(struct fw_card *card, int irm_id, int generation,
+> >>                         if ((data[0] & bit) == (data[1] & bit))
+> >>                                 continue;
+> >>
+> >> -                       /* 1394-1995 IRM, fall through to retry. */
+> >> +                       /* fall through - 1394-1995 IRM to retry. */
+> >>                 default:
+> >>                         if (retry) {
+> >>                                 retry--;
+> >> --
+> >> 2.19.2
+> >>
