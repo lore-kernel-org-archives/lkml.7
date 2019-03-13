@@ -2,76 +2,109 @@ Return-Path: <SRS0=dUEL=RQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_NEOMUTT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A0B35C43381
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 Mar 2019 15:23:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E3D64C43381
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 Mar 2019 15:24:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 786F5213A2
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 Mar 2019 15:23:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9E80920643
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 Mar 2019 15:24:07 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726720AbfCMPXt (ORCPT
+        id S1726754AbfCMPYG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 13 Mar 2019 11:23:49 -0400
-Received: from mail.kernel.org ([198.145.29.99]:55094 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725893AbfCMPXt (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 13 Mar 2019 11:23:49 -0400
-Received: from gandalf.local.home (cpe-66-24-58-225.stny.res.rr.com [66.24.58.225])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D8EBB20643;
-        Wed, 13 Mar 2019 15:23:47 +0000 (UTC)
-Date:   Wed, 13 Mar 2019 11:23:46 -0400
-From:   Steven Rostedt <rostedt@goodmis.org>
-To:     Masami Hiramatsu <mhiramat@kernel.org>
-Cc:     Tom Zanussi <zanussi@kernel.org>, tglx@linutronix.de,
-        namhyung@kernel.org, bigeasy@linutronix.de, joel@joelfernandes.org,
-        linux-kernel@vger.kernel.org, linux-rt-users@vger.kernel.org
-Subject: Re: [RFC PATCH 4/7] tracing/probe: Check event/group naming rule at
- parsing
-Message-ID: <20190313112346.0b3fc25f@gandalf.local.home>
-In-Reply-To: <20190314000402.3b14693f9030e891648124f1@kernel.org>
-References: <155248005229.10815.334731901778152247.stgit@devnote2>
-        <155248009231.10815.12287201787254147977.stgit@devnote2>
-        <20190313092355.6f434c9f@gandalf.local.home>
-        <20190314000402.3b14693f9030e891648124f1@kernel.org>
-X-Mailer: Claws Mail 3.16.0 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+        Wed, 13 Mar 2019 11:24:06 -0400
+Received: from usa-sjc-mx-foss1.foss.arm.com ([217.140.101.70]:59128 "EHLO
+        foss.arm.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725868AbfCMPYF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 13 Mar 2019 11:24:05 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.72.51.249])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 3403D80D;
+        Wed, 13 Mar 2019 08:24:05 -0700 (PDT)
+Received: from e110439-lin (e110439-lin.cambridge.arm.com [10.1.194.43])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 3F8753F71D;
+        Wed, 13 Mar 2019 08:24:02 -0700 (PDT)
+Date:   Wed, 13 Mar 2019 15:23:59 +0000
+From:   Patrick Bellasi <patrick.bellasi@arm.com>
+To:     Peter Zijlstra <peterz@infradead.org>
+Cc:     linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org,
+        linux-api@vger.kernel.org, Ingo Molnar <mingo@redhat.com>,
+        Tejun Heo <tj@kernel.org>,
+        "Rafael J . Wysocki" <rafael.j.wysocki@intel.com>,
+        Vincent Guittot <vincent.guittot@linaro.org>,
+        Viresh Kumar <viresh.kumar@linaro.org>,
+        Paul Turner <pjt@google.com>,
+        Quentin Perret <quentin.perret@arm.com>,
+        Dietmar Eggemann <dietmar.eggemann@arm.com>,
+        Morten Rasmussen <morten.rasmussen@arm.com>,
+        Juri Lelli <juri.lelli@redhat.com>,
+        Todd Kjos <tkjos@google.com>,
+        Joel Fernandes <joelaf@google.com>,
+        Steve Muckle <smuckle@google.com>,
+        Suren Baghdasaryan <surenb@google.com>
+Subject: Re: [PATCH v7 01/15] sched/core: uclamp: Add CPU's clamp buckets
+ refcounting
+Message-ID: <20190313152359.lkyzel7fakjoi5hu@e110439-lin>
+References: <20190208100554.32196-1-patrick.bellasi@arm.com>
+ <20190208100554.32196-2-patrick.bellasi@arm.com>
+ <20190313140925.GE5922@hirez.programming.kicks-ass.net>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190313140925.GE5922@hirez.programming.kicks-ass.net>
+User-Agent: NeoMutt/20180716
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, 14 Mar 2019 00:04:02 +0900
-Masami Hiramatsu <mhiramat@kernel.org> wrote:
-
-> > >  		strlcpy(buf, event, slash - event + 1);
-> > > +		if (!is_good_name(buf)) {
-> > > +			pr_info("Group name must follow the rule of C identifier\n");  
-> > 
-> > What do you mean by "C identifier"?  
+On 13-Mar 15:09, Peter Zijlstra wrote:
+> On Fri, Feb 08, 2019 at 10:05:40AM +0000, Patrick Bellasi wrote:
+> > +static inline unsigned int uclamp_none(int clamp_id)
+> > +{
+> > +	if (clamp_id == UCLAMP_MIN)
+> > +		return 0;
+> > +	return SCHED_CAPACITY_SCALE;
+> > +}
+> > +
+> > +static inline void uclamp_rq_update(struct rq *rq, unsigned int clamp_id)
+> > +{
+> > +	struct uclamp_bucket *bucket = rq->uclamp[clamp_id].bucket;
+> > +	unsigned int max_value = uclamp_none(clamp_id);
 > 
-> I meant "the naming rules of C language identifiers". It means
-> that the name has to start with alphabet or "_" and only contain
-> alphanumeric characters and "_". Does it clear?
-> I couldn't think of a good word. maybe "naming convention"
-> does not fit...
-
-Ah, OK that now makes sense.
-
+> That's 1024 for uclamp_max
 > 
-> Would you have any idea?
+> > +	unsigned int bucket_id;
+> > +
+> > +	/*
+> > +	 * Both min and max clamps are MAX aggregated, thus the topmost
+> > +	 * bucket with some tasks defines the rq's clamp value.
+> > +	 */
+> > +	bucket_id = UCLAMP_BUCKETS;
+> > +	do {
+> > +		--bucket_id;
+> > +		if (!rq->uclamp[clamp_id].bucket[bucket_id].tasks)
+> > +			continue;
+> > +		max_value = bucket[bucket_id].value;
+> 
+> but this will then _lower_ it. That's not a MAX aggregate.
 
-I think I was more confused by the way it was stated. What about saying:
+For uclamp_max we want max_value=1024 when there are no active tasks,
+which means: no max clamp enforced on CFS/RT "idle" cpus.
 
-	"Group names must follow the same rules as C identifiers"
+If instead there are active RT/CFS tasks then we want the clamp value
+of the max group, which means: MAX aggregate active clamps.
 
-Saying "the rule of C identifiers" made me think more of "the rule of
-law", and thought that this had something to do with rules of C
-zealots, and those that identify with "C" ;-)
+That's what the code above does and the comment says.
 
--- Steve
+> > +		break;
+> > +	} while (bucket_id);
+> > +
+> > +	WRITE_ONCE(rq->uclamp[clamp_id].value, max_value);
+> > +}
+
+-- 
+#include <best/regards.h>
+
+Patrick Bellasi
