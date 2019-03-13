@@ -2,128 +2,206 @@ Return-Path: <SRS0=dUEL=RQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,UNPARSEABLE_RELAY
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E73ADC43381
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 Mar 2019 09:24:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 90075C43381
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 Mar 2019 09:25:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B65F62184C
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 Mar 2019 09:24:48 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="cgC+GG66"
+	by mail.kernel.org (Postfix) with ESMTP id 5B8812183F
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 Mar 2019 09:25:20 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727383AbfCMJYr (ORCPT
+        id S1727414AbfCMJZS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 13 Mar 2019 05:24:47 -0400
-Received: from mail-eopbgr80045.outbound.protection.outlook.com ([40.107.8.45]:55808
-        "EHLO EUR04-VI1-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726719AbfCMJYr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 13 Mar 2019 05:24:47 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=mb7iJ4TuJTkOfRAQ9vZzMQTDHUIh9K7zztGz/E9t+5Y=;
- b=cgC+GG66tWSY90G/yHDc9bWKzm5zFmUPbQ5WLi4XI3aVyi0vOglqYPJEY9PaKPNr909b0B5cAnlYBE2S22WMx3dNDBnqYE8B5uGlLMDvz5IdKBMrY2p/bK9VroOnbu5pb0XYlnserDZ4f4h0Xa3D0I6fX8/e2RLHYbkdx8QxX0E=
-Received: from AM0PR04MB4481.eurprd04.prod.outlook.com (52.135.147.15) by
- AM0PR04MB5828.eurprd04.prod.outlook.com (20.178.119.11) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.1709.13; Wed, 13 Mar 2019 09:24:42 +0000
-Received: from AM0PR04MB4481.eurprd04.prod.outlook.com
- ([fe80::a51f:134d:b530:f185]) by AM0PR04MB4481.eurprd04.prod.outlook.com
- ([fe80::a51f:134d:b530:f185%5]) with mapi id 15.20.1686.021; Wed, 13 Mar 2019
- 09:24:42 +0000
-From:   Peng Fan <peng.fan@nxp.com>
-To:     "robh+dt@kernel.org" <robh+dt@kernel.org>,
-        "mark.rutland@arm.com" <mark.rutland@arm.com>,
-        "shawnguo@kernel.org" <shawnguo@kernel.org>,
-        "s.hauer@pengutronix.de" <s.hauer@pengutronix.de>,
-        "kernel@pengutronix.de" <kernel@pengutronix.de>,
-        "festevam@gmail.com" <festevam@gmail.com>,
-        dl-linux-imx <linux-imx@nxp.com>,
-        Aisheng Dong <aisheng.dong@nxp.com>,
-        Anson Huang <anson.huang@nxp.com>,
-        Daniel Baluta <daniel.baluta@nxp.com>,
-        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
-        "linux-arm-kernel@lists.infradead.org" 
+        Wed, 13 Mar 2019 05:25:18 -0400
+Received: from Mailgw01.mediatek.com ([1.203.163.78]:60860 "EHLO
+        mailgw01.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1726719AbfCMJZS (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 13 Mar 2019 05:25:18 -0400
+X-UUID: a573d73afd474bb6b340500aec94ce18-20190313
+X-UUID: a573d73afd474bb6b340500aec94ce18-20190313
+Received: from mtkcas36.mediatek.inc [(172.27.4.253)] by mailgw01.mediatek.com
+        (envelope-from <yong.wu@mediatek.com>)
+        (mailgw01.mediatek.com ESMTP with TLS)
+        with ESMTP id 1622792869; Wed, 13 Mar 2019 17:25:09 +0800
+Received: from MTKCAS36.mediatek.inc (172.27.4.186) by MTKMBS31N2.mediatek.inc
+ (172.27.4.87) with Microsoft SMTP Server (TLS) id 15.0.1395.4; Wed, 13 Mar
+ 2019 17:25:07 +0800
+Received: from [10.17.3.153] (172.27.4.253) by MTKCAS36.mediatek.inc
+ (172.27.4.170) with Microsoft SMTP Server id 15.0.1395.4 via Frontend
+ Transport; Wed, 13 Mar 2019 17:25:06 +0800
+Message-ID: <1552469107.7433.21.camel@mhfsdcap03>
+Subject: Re: [PATCH v6 12/22] memory: mtk-smi: Add gals support
+From:   Yong Wu <yong.wu@mediatek.com>
+To:     Matthias Brugger <matthias.bgg@gmail.com>
+CC:     Joerg Roedel <joro@8bytes.org>,
+        Robin Murphy <robin.murphy@arm.com>,
+        "Rob Herring" <robh+dt@kernel.org>,
+        Evan Green <evgreen@chromium.org>,
+        "Tomasz Figa" <tfiga@google.com>,
+        Will Deacon <will.deacon@arm.com>,
+        <linux-mediatek@lists.infradead.org>,
+        <srv_heupstream@mediatek.com>, <devicetree@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>,
         <linux-arm-kernel@lists.infradead.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-CC:     "van.freenix@gmail.com" <van.freenix@gmail.com>,
-        Peng Fan <peng.fan@nxp.com>
-Subject: [PATCH] arm64: dts: imx8qxp: add lsio_mu2 node
-Thread-Topic: [PATCH] arm64: dts: imx8qxp: add lsio_mu2 node
-Thread-Index: AQHU2X6XfkrN9ckA80iUx9YseK0a4g==
-Date:   Wed, 13 Mar 2019 09:24:42 +0000
-Message-ID: <20190313093650.18693-1-peng.fan@nxp.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-mailer: git-send-email 2.16.4
-x-clientproxiedby: HK2PR02CA0149.apcprd02.prod.outlook.com
- (2603:1096:202:16::33) To AM0PR04MB4481.eurprd04.prod.outlook.com
- (2603:10a6:208:70::15)
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=peng.fan@nxp.com; 
-x-ms-exchange-messagesentrepresentingtype: 1
-x-originating-ip: [119.31.174.71]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: 8d67cfa2-1573-4aa8-7c02-08d6a795b94f
-x-ms-office365-filtering-ht: Tenant
-x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600127)(711020)(4605104)(4618075)(2017052603328)(7153060)(7193020);SRVR:AM0PR04MB5828;
-x-ms-traffictypediagnostic: AM0PR04MB5828:
-x-microsoft-antispam-prvs: <AM0PR04MB58281CEBE0761216A174F454884A0@AM0PR04MB5828.eurprd04.prod.outlook.com>
-x-forefront-prvs: 09752BC779
-x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(346002)(39860400002)(366004)(136003)(396003)(376002)(189003)(199004)(105586002)(25786009)(36756003)(2906002)(305945005)(4326008)(316002)(7736002)(486006)(2501003)(99286004)(256004)(86362001)(14444005)(6506007)(52116002)(386003)(102836004)(3846002)(6116002)(97736004)(2616005)(476003)(26005)(6512007)(14454004)(7416002)(71200400001)(6486002)(186003)(44832011)(6436002)(2201001)(71190400001)(106356001)(68736007)(54906003)(110136005)(8936002)(81156014)(4744005)(66066001)(8676002)(81166006)(53936002)(50226002)(1076003)(478600001)(5660300002)(32563001)(921003)(1121003);DIR:OUT;SFP:1101;SCL:1;SRVR:AM0PR04MB5828;H:AM0PR04MB4481.eurprd04.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
-received-spf: None (protection.outlook.com: nxp.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam-message-info: CfTl/tvh2TT1nmqRKR3zlBIB/5TUzmtQXSd04qOUIHQ+O8N1TZNp0P4iRNUArTx1zjQLylnUY75wdWyMZ13Bm4BR+7HVTiqLfwz4HGhM7E5CMkdKMeW7N2dmh272/XiwzqoJK4JupJrsjBO+IB95hv1ls7iH8HEjHK3/VN4T2QC+5aeCL+5+4yscnQXbTUxWJAOlxWRpNSUYhOKqlAuW/Je01I5egQd/AEbU5eaY7SE51Y6h8DPWn3aNLhQdH5bt6uRGQkSRtz0FQkn3rJPyHE3h+fS+PkMwqrK1uVbSSHROQveJnstNktEvNTK+zgrqFh2EjFUMlybjE3C8bwyUjy25AyBH/wWxr3cAIcnoCO1Cnad1rJR0P+sg96DhqXwq+g5izdTXIERM5k5OUsmRsZdnfU7Y3PUVrS8Ke5oupz4=
-Content-Type: text/plain; charset="iso-8859-1"
-Content-Transfer-Encoding: quoted-printable
+        <iommu@lists.linux-foundation.org>, <yingjoe.chen@mediatek.com>,
+        <youlin.pei@mediatek.com>, Nicolas Boichat <drinkcat@chromium.org>,
+        <anan.sun@mediatek.com>, Matthias Kaehlcke <mka@chromium.org>
+Date:   Wed, 13 Mar 2019 17:25:07 +0800
+In-Reply-To: <1550394300-17420-13-git-send-email-yong.wu@mediatek.com>
+References: <1550394300-17420-1-git-send-email-yong.wu@mediatek.com>
+         <1550394300-17420-13-git-send-email-yong.wu@mediatek.com>
+Content-Type: text/plain; charset="UTF-8"
+X-Mailer: Evolution 3.2.3-0ubuntu6 
+Content-Transfer-Encoding: 7bit
 MIME-Version: 1.0
-X-OriginatorOrg: nxp.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 8d67cfa2-1573-4aa8-7c02-08d6a795b94f
-X-MS-Exchange-CrossTenant-originalarrivaltime: 13 Mar 2019 09:24:42.5276
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: AM0PR04MB5828
+X-MTK:  N
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add lsio_mu2 node which could be used communicate with SCU.
+Hi Matthias,
 
-Signed-off-by: Peng Fan <peng.fan@nxp.com>
----
- arch/arm64/boot/dts/freescale/imx8qxp.dtsi | 8 ++++++++
- 1 file changed, 8 insertions(+)
+A gentle ping for all the smi part here.
+From Joerg, your review is expected before he apply.
 
-diff --git a/arch/arm64/boot/dts/freescale/imx8qxp.dtsi b/arch/arm64/boot/d=
-ts/freescale/imx8qxp.dtsi
-index 16766838ac77..64eecd6cb1e9 100644
---- a/arch/arm64/boot/dts/freescale/imx8qxp.dtsi
-+++ b/arch/arm64/boot/dts/freescale/imx8qxp.dtsi
-@@ -339,6 +339,14 @@
- 			#mbox-cells =3D <2>;
- 		};
-=20
-+		lsio_mu2: mailbox@5d1d0000 {
-+			compatible =3D "fsl,imx8qxp-mu", "fsl,imx6sx-mu";
-+			reg =3D <0x5d1d0000 0x10000>;
-+			interrupts =3D <GIC_SPI 178 IRQ_TYPE_LEVEL_HIGH>;
-+			#mbox-cells =3D <2>;
-+			status =3D "disabled";
-+		};
-+
- 		lsio_mu3: mailbox@5d1e0000 {
- 			compatible =3D "fsl,imx8qxp-mu", "fsl,imx6sx-mu";
- 			reg =3D <0x5d1e0000 0x10000>;
---=20
-2.16.4
+Thanks in advance.
+
+On Sun, 2019-02-17 at 17:04 +0800, Yong Wu wrote:
+> In some SoCs like mt8183, SMI add GALS(Global Async Local Sync) module
+> which can help synchronize for the modules in different clock frequency.
+> It can be seen as a "asynchronous fifo". This is a example diagram:
+> 
+>             M4U
+>              |
+>          ----------
+>          |        |
+>      gals0-rx   gals1-rx
+>          |        |
+>          |        |
+>      gals0-tx   gals1-tx
+>          |        |
+>         ------------
+>          SMI Common
+>         ------------
+>              |
+>   +-----+--------+-----+- ...
+>   |     |        |     |
+>   |  gals-rx  gals-rx  |
+>   |     |        |     |
+>   |     |        |     |
+>   |  gals-tx  gals-tx  |
+>   |     |        |     |
+> larb1 larb2   larb3  larb4
+> 
+> GALS only help transfer the command/data while it doesn't have the
+> configuring register, thus it has the special "smi" clock and doesn't
+> have the "apb" clock. From the diagram above, we add "gals0" and
+> "gals1" clocks for smi-common and add a "gals" clock for smi-larb.
+> 
+> This patch adds gals clock supporting in the SMI. Note that some larbs
+> may still don't have the "gals" clock like larb1 and larb4 above.
+> 
+> This is also a preparing patch for mt8183 which has GALS.
+> 
+> CC: Matthias Brugger <matthias.bgg@gmail.com>
+> Signed-off-by: Yong Wu <yong.wu@mediatek.com>
+> Reviewed-by: Evan Green <evgreen@chromium.org>
+> ---
+>  drivers/memory/mtk-smi.c | 36 ++++++++++++++++++++++++++++++++++++
+>  1 file changed, 36 insertions(+)
+> 
+> diff --git a/drivers/memory/mtk-smi.c b/drivers/memory/mtk-smi.c
+> index 8a2f968..91634d7 100644
+> --- a/drivers/memory/mtk-smi.c
+> +++ b/drivers/memory/mtk-smi.c
+> @@ -56,6 +56,7 @@ enum mtk_smi_gen {
+>  
+>  struct mtk_smi_common_plat {
+>  	enum mtk_smi_gen gen;
+> +	bool             has_gals;
+>  };
+>  
+>  struct mtk_smi_larb_gen {
+> @@ -63,11 +64,13 @@ struct mtk_smi_larb_gen {
+>  	int port_in_larb[MTK_LARB_NR_MAX + 1];
+>  	void (*config_port)(struct device *);
+>  	unsigned int larb_direct_to_common_mask;
+> +	bool             has_gals;
+>  };
+>  
+>  struct mtk_smi {
+>  	struct device			*dev;
+>  	struct clk			*clk_apb, *clk_smi;
+> +	struct clk			*clk_gals0, *clk_gals1;
+>  	struct clk			*clk_async; /*only needed by mt2701*/
+>  	void __iomem			*smi_ao_base;
+>  
+> @@ -99,8 +102,20 @@ static int mtk_smi_enable(const struct mtk_smi *smi)
+>  	if (ret)
+>  		goto err_disable_apb;
+>  
+> +	ret = clk_prepare_enable(smi->clk_gals0);
+> +	if (ret)
+> +		goto err_disable_smi;
+> +
+> +	ret = clk_prepare_enable(smi->clk_gals1);
+> +	if (ret)
+> +		goto err_disable_gals0;
+> +
+>  	return 0;
+>  
+> +err_disable_gals0:
+> +	clk_disable_unprepare(smi->clk_gals0);
+> +err_disable_smi:
+> +	clk_disable_unprepare(smi->clk_smi);
+>  err_disable_apb:
+>  	clk_disable_unprepare(smi->clk_apb);
+>  err_put_pm:
+> @@ -110,6 +125,8 @@ static int mtk_smi_enable(const struct mtk_smi *smi)
+>  
+>  static void mtk_smi_disable(const struct mtk_smi *smi)
+>  {
+> +	clk_disable_unprepare(smi->clk_gals1);
+> +	clk_disable_unprepare(smi->clk_gals0);
+>  	clk_disable_unprepare(smi->clk_smi);
+>  	clk_disable_unprepare(smi->clk_apb);
+>  	pm_runtime_put_sync(smi->dev);
+> @@ -310,6 +327,15 @@ static int mtk_smi_larb_probe(struct platform_device *pdev)
+>  	larb->smi.clk_smi = devm_clk_get(dev, "smi");
+>  	if (IS_ERR(larb->smi.clk_smi))
+>  		return PTR_ERR(larb->smi.clk_smi);
+> +
+> +	if (larb->larb_gen->has_gals) {
+> +		/* The larbs may still haven't gals even if the SoC support.*/
+> +		larb->smi.clk_gals0 = devm_clk_get(dev, "gals");
+> +		if (PTR_ERR(larb->smi.clk_gals0) == -ENOENT)
+> +			larb->smi.clk_gals0 = NULL;
+> +		else if (IS_ERR(larb->smi.clk_gals0))
+> +			return PTR_ERR(larb->smi.clk_gals0);
+> +	}
+>  	larb->smi.dev = dev;
+>  
+>  	if (larb->larb_gen->need_larbid) {
+> @@ -402,6 +428,16 @@ static int mtk_smi_common_probe(struct platform_device *pdev)
+>  	if (IS_ERR(common->clk_smi))
+>  		return PTR_ERR(common->clk_smi);
+>  
+> +	if (common->plat->has_gals) {
+> +		common->clk_gals0 = devm_clk_get(dev, "gals0");
+> +		if (IS_ERR(common->clk_gals0))
+> +			return PTR_ERR(common->clk_gals0);
+> +
+> +		common->clk_gals1 = devm_clk_get(dev, "gals1");
+> +		if (IS_ERR(common->clk_gals1))
+> +			return PTR_ERR(common->clk_gals1);
+> +	}
+> +
+>  	/*
+>  	 * for mtk smi gen 1, we need to get the ao(always on) base to config
+>  	 * m4u port, and we need to enable the aync clock for transform the smi
+
 
