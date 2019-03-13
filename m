@@ -2,173 +2,196 @@ Return-Path: <SRS0=dUEL=RQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0756EC43381
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 Mar 2019 22:29:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2AAB5C43381
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 Mar 2019 22:31:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C627620854
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 Mar 2019 22:29:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DB46020854
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 Mar 2019 22:31:14 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=hansenpartnership.com header.i=@hansenpartnership.com header.b="RQN7wUH8"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="HoH/ElsL"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727101AbfCMW3t (ORCPT
+        id S1727017AbfCMWbN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 13 Mar 2019 18:29:49 -0400
-Received: from bedivere.hansenpartnership.com ([66.63.167.143]:43780 "EHLO
-        bedivere.hansenpartnership.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1725883AbfCMW3p (ORCPT
+        Wed, 13 Mar 2019 18:31:13 -0400
+Received: from mail-wm1-f68.google.com ([209.85.128.68]:53795 "EHLO
+        mail-wm1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726442AbfCMWbN (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 13 Mar 2019 18:29:45 -0400
-Received: from localhost (localhost [127.0.0.1])
-        by bedivere.hansenpartnership.com (Postfix) with ESMTP id B025C8EE20E;
-        Wed, 13 Mar 2019 15:29:44 -0700 (PDT)
-Received: from bedivere.hansenpartnership.com ([127.0.0.1])
-        by localhost (bedivere.hansenpartnership.com [127.0.0.1]) (amavisd-new, port 10024)
-        with ESMTP id 48Q_u705JBQe; Wed, 13 Mar 2019 15:29:44 -0700 (PDT)
-Received: from [153.66.254.194] (unknown [50.35.68.20])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by bedivere.hansenpartnership.com (Postfix) with ESMTPSA id 051F18EE0D2;
-        Wed, 13 Mar 2019 15:29:43 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=hansenpartnership.com;
-        s=20151216; t=1552516184;
-        bh=r0qSgSWg4HhILQOi2XjlmRp+jCcS7oMGYg6ben2L3Is=;
-        h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
-        b=RQN7wUH8BcDHZNLfCFGRK4rCaJyJpSZlBTRdaCZzVul2OydBAOzVxN6BGg41deR/j
-         5FZbUkGTM2ZlBcuH1Tn3GErbtjSx4gCW/4FIFdM5/YyrR5L0q+IwF4x4LgO3LmmXLK
-         rw61OMYN1NjoWpqzA16jOmfEKREaTKzJeptO588g=
-Message-ID: <1552516183.2808.14.camel@HansenPartnership.com>
-Subject: Re: overlayfs vs. fscrypt
-From:   James Bottomley <James.Bottomley@HansenPartnership.com>
-To:     Eric Biggers <ebiggers@kernel.org>
-Cc:     Theodore Ts'o <tytso@mit.edu>, Amir Goldstein <amir73il@gmail.com>,
-        Richard Weinberger <richard@nod.at>,
-        Miklos Szeredi <miklos@szeredi.hu>,
-        linux-fsdevel <linux-fsdevel@vger.kernel.org>,
-        linux-fscrypt@vger.kernel.org,
-        overlayfs <linux-unionfs@vger.kernel.org>,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        Paul Lawrence <paullawrence@google.com>
-Date:   Wed, 13 Mar 2019 15:29:43 -0700
-In-Reply-To: <20190313221325.GE10169@gmail.com>
-References: <20190313151633.GA672@mit.edu>
-         <1552491394.3022.8.camel@HansenPartnership.com>
-         <20190313164439.GF672@mit.edu>
-         <1552499104.3022.44.camel@HansenPartnership.com>
-         <20190313185826.GA4685@mit.edu>
-         <1552504672.3022.59.camel@HansenPartnership.com>
-         <20190313195713.GC10169@gmail.com>
-         <1552507566.3022.65.camel@HansenPartnership.com>
-         <20190313202519.GD10169@gmail.com>
-         <1552511069.3022.77.camel@HansenPartnership.com>
-         <20190313221325.GE10169@gmail.com>
+        Wed, 13 Mar 2019 18:31:13 -0400
+Received: by mail-wm1-f68.google.com with SMTP id e74so902585wmg.3
+        for <linux-kernel@vger.kernel.org>; Wed, 13 Mar 2019 15:31:11 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=TmlIKVfFOkr+0DVdiaZ8qrs6XLjwcXZVokU38BGo0ok=;
+        b=HoH/ElsLa3slr0X2/xfcXBpo8hvUF2gnTUfnZnXh2sCFRuGIA30Vj32T4Vr68Y9EqH
+         1xcRMplxTKIGE3/INScSpB+SGqlLAs57j1dteZf72p6jMXRk+u/iko47PVYWLVAaZCCO
+         Au+0u5NjiV9TseQ6sJcIwTDwbn1vi+nZQtqRlVBBN5IO3ynOTmpd/ZrXMtuJptyBmska
+         qIz4Wa33X5x3SkS5qIbT2jX+ZbBp9mE4OcSQWHNmcxXmsSYrsn99qNMBFaHLiC7/yxRq
+         OZJhX5Oq5kKWkVzPvoHUoqc5LRG/TtJcpe9rjGZbxHmPsCxkAuGaDR2Fd7ZFWY2kh9t7
+         BYhQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=TmlIKVfFOkr+0DVdiaZ8qrs6XLjwcXZVokU38BGo0ok=;
+        b=JXOG7XYcbrgJKPAXxgyv0syXrdTLR97RfR5KgQx4VsZt6kPbxqszCz0QmB0pFKTJlS
+         3wgFBOp9On2GxPcPqXsdISs1DjS3mKov9XZjwzs5Q4s659dqrv1CYhmmy1bPn2zXb0je
+         GLwzDtqod8ZZoo7YEOgEWQLU6C21pji5b6DYlw4AG4QFpFw5TiU1KaAJHCZvOIon5SXK
+         x7gSPbQb7NEo3zD2g94cKMAC5JZbwUjJW3Pcmnmf5OdGRJFCBh1FUnRhmGxAwpuHSrVB
+         Blj4GPr+W8+XaIMhDW+FmKj0zic+FUtvQ8POQdZQ5eqRVWzMKU3TYdgKhvPSL5xZpWkW
+         4vNA==
+X-Gm-Message-State: APjAAAWpEkN1kHBoL/7lE4B5XQNAlrdoDWe1rCHGBoTEs0MOEqwHgVts
+        aakBK8WPi3Yp/3svPKmwbAO/hYIimNT3/mpby+bHMg==
+X-Google-Smtp-Source: APXvYqwFtlLyfnYQdT5v8iI0NRFF6Nvzcc3DOfId9LiETQFPAPOsvsI1JWyvltS5CNv26Qdw9lypmGH2viOLiZHr834=
+X-Received: by 2002:a1c:7311:: with SMTP id d17mr275911wmb.115.1552516270569;
+ Wed, 13 Mar 2019 15:31:10 -0700 (PDT)
+MIME-Version: 1.0
+References: <1551819273-640-1-git-send-email-john.stultz@linaro.org> <alpine.DEB.2.10.1903131309260.5023@lmark-linux.qualcomm.com>
+In-Reply-To: <alpine.DEB.2.10.1903131309260.5023@lmark-linux.qualcomm.com>
+From:   John Stultz <john.stultz@linaro.org>
+Date:   Wed, 13 Mar 2019 15:30:58 -0700
+Message-ID: <CALAqxLUkGME+K=0g5QSja4CvN0w9z0WV60djy+5rRC+Dg-jCGg@mail.gmail.com>
+Subject: Re: [RFC][PATCH 0/5 v2] DMA-BUF Heaps (destaging ION)
+To:     Liam Mark <lmark@codeaurora.org>
+Cc:     lkml <linux-kernel@vger.kernel.org>,
+        Laura Abbott <labbott@redhat.com>,
+        Benjamin Gaignard <benjamin.gaignard@linaro.org>,
+        Greg KH <gregkh@linuxfoundation.org>,
+        Sumit Semwal <sumit.semwal@linaro.org>,
+        Brian Starkey <Brian.Starkey@arm.com>,
+        "Andrew F . Davis" <afd@ti.com>, Chenbo Feng <fengc@google.com>,
+        Alistair Strachan <astrachan@google.com>,
+        dri-devel <dri-devel@lists.freedesktop.org>,
+        Vincent Donnefort <Vincent.Donnefort@arm.com>,
+        Marissa Wall <marissaw@google.com>
 Content-Type: text/plain; charset="UTF-8"
-X-Mailer: Evolution 3.26.6 
-Mime-Version: 1.0
-Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, 2019-03-13 at 15:13 -0700, Eric Biggers wrote:
-> On Wed, Mar 13, 2019 at 02:04:29PM -0700, James Bottomley wrote:
-> > On Wed, 2019-03-13 at 13:25 -0700, Eric Biggers wrote:
-> > > On Wed, Mar 13, 2019 at 01:06:06PM -0700, James Bottomley wrote:
-> > > > On Wed, 2019-03-13 at 12:57 -0700, Eric Biggers wrote:
-> > 
-> > [...]
-> > > > > fscrypt would allow the data to be stored encrypted on the
-> > > > > local disk, so it's protected against offline compromise of
-> > > > > the disk.
-> > > > 
-> > > > Container images are essentially tars of the overlays.  They
-> > > > only become actual filesystems when instantiated at
-> > > > runtime.  The current encrypted container image is an overlay
-> > > > or set of overlays which is tarred then encrypted.  So to
-> > > > instantiate it is decrypted then untarred.
-> > > > 
-> > > > The thing I was wondering about was whether instead of a tar
-> > > > encrypt we could instead produce an encrypted image from a
-> > > > fscrypt filesystem.
-> > > > 
-> > > 
-> > > Why do you care whether the container image is encrypted on the
-> > > local disk, when you're extracting it in plaintext onto the local
-> > > disk anyway each time it runs? Even after the runtime files are
-> > > "deleted", they may still be recoverable from the disk.  Are you
-> > > using shred and BLKSECDISCARD, and a non-COW filesystem?
-> > > 
-> > > Now, if you wanted to avoid writing the plaintext to disk
-> > > entirely (and thereby use encryption to actually achieve a useful
-> > > security property that can't be achieved through file
-> > > permissions), fscrypt is a good solution for that.
-> > 
-> > OK let's start with a cloud and container 101: A container is an
-> > exactly transportable IaaS environment containing an
-> > application.  The format for the exact transport is the "container
-> > image" I've been describing (layered tar file set deployed with
-> > overlays).  These images are usually stored in cloud based
-> > registries which may or may not have useful access controls.  I
-> > take it the reason for image encryption to protect confidentiality
-> > within the registry is obvious.
-> > 
-> > Because of the exact transport, the deployment may be on my laptop,
-> > on my test system or in some type of public or private cloud.  In
-> > all cases bar the laptop, I won't actually own the physical system
-> > which ends up deploying the container.  So in exchange for security
-> > guarantees from the physical system owner, I agree to turn over my
-> > decryption key and possibly a cash payment.  One of these
-> > guarantees is usually that they shred the key after use and that
-> > they deploy a useful key escrow system like vault or keyprotect to
-> > guard it even while the decryption is being done.
-> 
-> 
-> > Another is that all traces of the container be shredded after the
-> > execution is finished.
-> 
-> Well, sounds like that's not the case currently even with an
-> encrypted container image, because the actual runtime files are not
-> encrypted on disk.
+On Wed, Mar 13, 2019 at 1:11 PM Liam Mark <lmark@codeaurora.org> wrote:
+> On Tue, 5 Mar 2019, John Stultz wrote:
+> >
+> > Eventual TODOS:
+> > * Reimplement page-pool for system heap (working on this)
+> > * Add stats accounting to system/cma heaps
+> > * Make the kselftest actually useful
+> > * Add other heaps folks see as useful (would love to get
+> >   some help from actual carveout/chunk users)!
+>
+> We use a modified carveout heap for certain secure use cases.
 
-Shredding means destroying all trace including in the on-disk image. 
-However, one problem with the current implementation is there's a
-window between container run and container stop where the unencrypted
-files are in memory and on local disk.  Access or cockup in that window
-can leak confidential data.
+Cool! It would be great to see if you have any concerns about adding
+such a secure-carveout heap to this framework. I suspect it would be
+fairly similar to how its integrated into ION, but particularly I'd be
+interested in issues around the lack of private flags and other
+allocation arguments like alignment.
 
->   Encrypting the runtime files using fscrypt with an ephemeral key
-> would be useful here.  IOW, randomly generate an encryption key when
-> the container starts, never store it anywhere, and wipe it when the
-> container stops.
-> 
-> Note that this is separate from the container *image* encryption.
+> Although there would probably be some benefit in discssing how the dma-buf
+> heap framework may want to support
+> secure heaps in the future it is a large topic which I assume you don't
+> want to tackle now.
 
-Actually, that was my original thought: it needn't be.  If fscrypt can
-usefully add runtime security, then we could have the encrypted layer
-be simply an fscrypt image ... I presume without the key we can create
-a tar image of an fscrypt that is encrypted and would still be visible
-on untar if we did have the key?  So the encrypted layer would be a tar
-of the fscrypt filesystem without the key.
+So I suspect others (Benjamin?) would have a more informed opinion on
+the details, but the intent is to allow secure heap implementations.
+I'm not sure what areas of concern you have for this allocation
+framework in particular?
 
-> > considering is could I be protected against either cloud provider
-> > cockups that might leak the image (the misconfigured backup
-> > scenario I suggested) or malicious actions of other tenants.
-> 
-> If the container image is encrypted with a key not on the system,
-> then its confidentiality is protected from anything that may happen
-> on that system.
-> 
-> But if the container image encryption key *is* on the system, your
-> container image may be leaked either accidentally or maliciously.
+> We don't have any non-secure carveout heap use cases but the client use
+> case I have seen usually revolve around
+> wanting large allocations to succeed very quickly.
+> For example I have seen camera use cases which do very large allocations
+> on camera bootup from the carveout heap, these allocations would come from
+> the carveout heap and fallback to the system heap when the carveout heap
+> was full.
+> Actual non-secure carveout heap can perhaps provide more detail.
 
-Well, yes, but that's like saying if you don't want to pick up a virus
-from your network unplug it.  We have to look at ways of deploying the
-filesystem and the key such that it's hard to exfiltrate ... which
-seems to be similar to your android fscrypt use case.
+Yea, I'm aware that folks still see carveout as preferable to CMA due
+to more consistent/predictable allocation latency.  I think we still
+have the issue that we don't have bindings to establish/configure
+carveout regions w/ dts, and I'm not really wanting to hold up the
+allocation API on that issue.
 
-James
 
+> Since we are making some fundamental changes to how ION worked and since
+> Android is likely also be the largest user of the dma-buf heaps framework
+> I think it would be good
+> to have a path to resolve the issues which are currently preventing
+> commercial Android releases from moving to the upstream version of ION.
+
+Yea, I do see solving the cache management efficiency issues as
+critical for the dmabuf heaps to be actually usable (my previous
+version of this patchset accidentally had my hacks to improve
+performance rolled in!).  And there are discussions going on in
+various channels to try to figure out how to either change Android to
+use dma-bufs more in line with how upstream expects, or what more
+generic dma-buf changes we may need to allow Android to use dmabufs
+with the expected performance they need.
+
+> I can understand if you don't necessarily want to put all/any of these
+> changes into the dma-buf heaps framework as part of this series, but my
+> hope is we can get
+> the upstream community and the Android framework team to agree on what
+> upstreamable changes to dma-buf heaps framework, and/or the Android
+> framework, would be required in order for Android to move to the upstream
+> dma-buf heaps framework for commercial devices.
+
+Yes. Though I also don't want to get the bigger dma-buf usage
+discussion (which really affects all dmabuf exporters) too tied up
+with this patch sets attempt to provide a usable allocation interface.
+Part of the problem that I think we've seen with ION is that there is
+a nest of of related issues, and the entire thing is just too big to
+address at once, which I think is part of why ION has sat in staging
+for so long. This patchset just tries to provide an dmabuf allocation
+interface, and a few example exporter heap types.
+
+> I don't mean to make this specific to Android, but my assumption is that
+> many of the ION/dma-buf heaps issues which affect Android would likely
+> affect other new large users of the dma-buf heaps framework, so if we
+> resolve it for Android we would be helping these future users as well.
+> And I do understand that some the issues facing Android may need to be
+> resolved by making changes to Android framework.
+
+While true, I also think some of the assumptions in how the dma-bufs
+are used (pre-attachment of all devices, etc) are maybe not so
+realistic given how Android is using them.  I do want to explore if
+Android can change how they use dma-bufs, but I also worry that we
+need to think about how we could loosen the expectations for dma-bufs,
+as well as trying to figure out how to support things folks have
+brought up like partial cache maintenance.
+
+> I think it would be helpful to try and get as much of this agreed upon as
+> possible before the dma-buf heaps framework moves out of staging.
+>
+> As part of my review I will highlight some of the issues which would
+> affect Android.
+> In my comments I will apply them to the system heap since that is what
+> Android currently uses for a lot of its use cases.
+> I realize that this new framework provides more flexibility to heaps, so
+> perhaps some of these issues can be solved by creating a new type of
+> system heap which Android can use, but even if the solution involves
+> creating a new system heap I would like to make sure that this "new"
+> system heap is upstreamable.
+
+So yea, I do realize I'm dodging the hard problem here, but I think
+the cache-management/usage issue is far more generic.
+
+You're right that this implementation give a lot of flexibility to the
+exporter heaps in how they implement the dmabuf ops (just like how
+other device drivers that are dmabuf exporters have the same
+flexibility), but I very much agree we don't want to add a system and
+then later a "system-android" heap. So yea, a reasonable amount of
+caution is warranted here.
+
+Thanks so much for the review and feedback! I'll try to address things
+as I can as I'm traveling this week (so I may be a bit spotty).
+
+thanks
+-john
