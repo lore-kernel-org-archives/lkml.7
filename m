@@ -7,50 +7,51 @@ X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0F7B2C43381
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 Mar 2019 19:12:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 84653C43381
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 Mar 2019 19:12:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D11DF217F5
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 Mar 2019 19:12:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 44CD12075C
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 Mar 2019 19:12:28 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1552504343;
-	bh=nq9Bko9S1CKLAk3t+egy2xB9qjrwqSKS65N9awoqub4=;
+	s=default; t=1552504348;
+	bh=gt1xO1fXUxIGFTtSLn/yPkHH5X2bx3O/MM7lFrbAEbk=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=qXk7+bjSc0ntcozGG0fgzOUJ3/qXjl82zBnQrCab3f4zcNywOSM2UbNAotrBIZZms
-	 r6O/fnDpJ74V04h2FpgEAnBn09hka4ZuUL9VncoruiZHaESYENzPQ1rCoz3RkcZtDZ
-	 HqWoYnLahK6H73lVqDJJh8lqlmUezcMJFa/LxhN4=
+	b=EU5RlLAazuquyB1yUCAVc1vSSt6Z9THzzDu2bfCCtwZSORmcS89f+YlNEQ5fCviCP
+	 xmjB+HIlaBWHVrybxtZ0Y+Q/pTbNxJ+ehj9yEi4Xm2X7Qr/d08gVJGfTKymxME+wDc
+	 IJfWiVFVYj0NBAPNBSpWA7A0+EfsCK0zG7mk9nGw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727698AbfCMTMW (ORCPT
+        id S1727712AbfCMTM1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 13 Mar 2019 15:12:22 -0400
-Received: from mail.kernel.org ([198.145.29.99]:42934 "EHLO mail.kernel.org"
+        Wed, 13 Mar 2019 15:12:27 -0400
+Received: from mail.kernel.org ([198.145.29.99]:42966 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727177AbfCMTMV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 13 Mar 2019 15:12:21 -0400
+        id S1727177AbfCMTMY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 13 Mar 2019 15:12:24 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 2078620693;
-        Wed, 13 Mar 2019 19:12:18 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 65B3C2075C;
+        Wed, 13 Mar 2019 19:12:20 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1552504340;
-        bh=nq9Bko9S1CKLAk3t+egy2xB9qjrwqSKS65N9awoqub4=;
+        s=default; t=1552504343;
+        bh=gt1xO1fXUxIGFTtSLn/yPkHH5X2bx3O/MM7lFrbAEbk=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=W0bya6NbGbmo2Gd9nIiK6AHoz01maSGlsXqEqph1s2i5r/N1KJcynBqBXmTFyucaa
-         H71NNca/VeLiJy2xSGewT5TuCDNOObNOdMdJMYMAsjAgxUEQtJmmCdxlb14o3/diJ/
-         2kYZREGZuCRbh7Aj1aQHNmx9hujdsxoIyqzK5YBw=
+        b=cvMWqCgQf8NKn/lsI5hXGachLJNk3UPMIryvr3oVj9cqcsQ/y70MCIzdVOGyCO3zl
+         Xkj0hEGVhciKi2FRuHjJBResQZWLdq8Ut6vNiGvTYtTPNPvDZwDMbVPmOCOSQeHYgk
+         USBw6+PQ+FwchBjRX4TVZ0923wBPzyxv66rWPhS4=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Vineet Gupta <vgupta@synopsys.com>,
-        Sasha Levin <sashal@kernel.org>,
-        linux-snps-arc@lists.infradead.org
-Subject: [PATCH AUTOSEL 4.20 48/60] ARCv2: don't assume core 0x54 has dual issue
-Date:   Wed, 13 Mar 2019 15:10:09 -0400
-Message-Id: <20190313191021.158171-48-sashal@kernel.org>
+Cc:     Arnd Bergmann <arnd@arndb.de>,
+        "David S . Miller" <davem@davemloft.net>,
+        Sasha Levin <sashal@kernel.org>, netdev@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.20 49/60] phonet: fix building with clang
+Date:   Wed, 13 Mar 2019 15:10:10 -0400
+Message-Id: <20190313191021.158171-49-sashal@kernel.org>
 X-Mailer: git-send-email 2.19.1
 In-Reply-To: <20190313191021.158171-1-sashal@kernel.org>
 References: <20190313191021.158171-1-sashal@kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
@@ -58,82 +59,181 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Vineet Gupta <vgupta@synopsys.com>
+From: Arnd Bergmann <arnd@arndb.de>
 
-[ Upstream commit 7b2e932f633bcb7b190fc7031ce6dac75f8c3472 ]
+[ Upstream commit 6321aa197547da397753757bd84c6ce64b3e3d89 ]
 
-The first release of core4 (0x54) was dual issue only (HS4x).
-Newer releases allow hardware to be configured as single issue (HS3x)
-or dual issue.
+clang warns about overflowing the data[] member in the struct pnpipehdr:
 
-Prevent accessing a HS4x only aux register in HS3x, which otherwise
-leads to illegal instruction exceptions
+net/phonet/pep.c:295:8: warning: array index 4 is past the end of the array (which contains 1 element) [-Warray-bounds]
+                        if (hdr->data[4] == PEP_IND_READY)
+                            ^         ~
+include/net/phonet/pep.h:66:3: note: array 'data' declared here
+                u8              data[1];
 
-Signed-off-by: Vineet Gupta <vgupta@synopsys.com>
+Using a flexible array member at the end of the struct avoids the
+warning, but since we cannot have a flexible array member inside
+of the union, each index now has to be moved back by one, which
+makes it a little uglier.
+
+Signed-off-by: Arnd Bergmann <arnd@arndb.de>
+Acked-by: Rémi Denis-Courmont <remi@remlab.net>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/arc/include/asm/arcregs.h |  8 ++++++++
- arch/arc/kernel/setup.c        | 26 +++++++++++++++++++++-----
- 2 files changed, 29 insertions(+), 5 deletions(-)
+ include/net/phonet/pep.h |  5 +++--
+ net/phonet/pep.c         | 32 ++++++++++++++++----------------
+ 2 files changed, 19 insertions(+), 18 deletions(-)
 
-diff --git a/arch/arc/include/asm/arcregs.h b/arch/arc/include/asm/arcregs.h
-index 49bfbd879caa..bdbdaef902eb 100644
---- a/arch/arc/include/asm/arcregs.h
-+++ b/arch/arc/include/asm/arcregs.h
-@@ -151,6 +151,14 @@ struct bcr_isa_arcv2 {
- #endif
+diff --git a/include/net/phonet/pep.h b/include/net/phonet/pep.h
+index b669fe6dbc3b..98f31c7ea23d 100644
+--- a/include/net/phonet/pep.h
++++ b/include/net/phonet/pep.h
+@@ -63,10 +63,11 @@ struct pnpipehdr {
+ 		u8		state_after_reset;	/* reset request */
+ 		u8		error_code;		/* any response */
+ 		u8		pep_type;		/* status indication */
+-		u8		data[1];
++		u8		data0;			/* anything else */
+ 	};
++	u8			data[];
  };
+-#define other_pep_type		data[1]
++#define other_pep_type		data[0]
  
-+struct bcr_uarch_build_arcv2 {
-+#ifdef CONFIG_CPU_BIG_ENDIAN
-+	unsigned int pad:8, prod:8, maj:8, min:8;
-+#else
-+	unsigned int min:8, maj:8, prod:8, pad:8;
-+#endif
-+};
-+
- struct bcr_mpy {
- #ifdef CONFIG_CPU_BIG_ENDIAN
- 	unsigned int pad:8, x1616:8, dsp:4, cycles:2, type:2, ver:8;
-diff --git a/arch/arc/kernel/setup.c b/arch/arc/kernel/setup.c
-index 80dd1a716ca7..184a5d1bf28d 100644
---- a/arch/arc/kernel/setup.c
-+++ b/arch/arc/kernel/setup.c
-@@ -196,13 +196,29 @@ static void read_arc_build_cfg_regs(void)
- 		cpu->bpu.num_pred = 2048 << bpu.pte;
+ static inline struct pnpipehdr *pnp_hdr(struct sk_buff *skb)
+ {
+diff --git a/net/phonet/pep.c b/net/phonet/pep.c
+index 9fc76b19cd3c..db3473540303 100644
+--- a/net/phonet/pep.c
++++ b/net/phonet/pep.c
+@@ -132,7 +132,7 @@ static int pep_indicate(struct sock *sk, u8 id, u8 code,
+ 	ph->utid = 0;
+ 	ph->message_id = id;
+ 	ph->pipe_handle = pn->pipe_handle;
+-	ph->data[0] = code;
++	ph->error_code = code;
+ 	return pn_skb_send(sk, skb, NULL);
+ }
  
- 		if (cpu->core.family >= 0x54) {
--			unsigned int exec_ctrl;
+@@ -153,7 +153,7 @@ static int pipe_handler_request(struct sock *sk, u8 id, u8 code,
+ 	ph->utid = id; /* whatever */
+ 	ph->message_id = id;
+ 	ph->pipe_handle = pn->pipe_handle;
+-	ph->data[0] = code;
++	ph->error_code = code;
+ 	return pn_skb_send(sk, skb, NULL);
+ }
  
--			READ_BCR(AUX_EXEC_CTRL, exec_ctrl);
--			cpu->extn.dual_enb = !(exec_ctrl & 1);
-+			struct bcr_uarch_build_arcv2 uarch;
+@@ -208,7 +208,7 @@ static int pep_ctrlreq_error(struct sock *sk, struct sk_buff *oskb, u8 code,
+ 	struct pnpipehdr *ph;
+ 	struct sockaddr_pn dst;
+ 	u8 data[4] = {
+-		oph->data[0], /* PEP type */
++		oph->pep_type, /* PEP type */
+ 		code, /* error code, at an unusual offset */
+ 		PAD, PAD,
+ 	};
+@@ -221,7 +221,7 @@ static int pep_ctrlreq_error(struct sock *sk, struct sk_buff *oskb, u8 code,
+ 	ph->utid = oph->utid;
+ 	ph->message_id = PNS_PEP_CTRL_RESP;
+ 	ph->pipe_handle = oph->pipe_handle;
+-	ph->data[0] = oph->data[1]; /* CTRL id */
++	ph->data0 = oph->data[0]; /* CTRL id */
  
--			/* dual issue always present for this core */
--			cpu->extn.dual = 1;
-+			/*
-+			 * The first 0x54 core (uarch maj:min 0:1 or 0:2) was
-+			 * dual issue only (HS4x). But next uarch rev (1:0)
-+			 * allows it be configured for single issue (HS3x)
-+			 * Ensure we fiddle with dual issue only on HS4x
-+			 */
-+			READ_BCR(ARC_REG_MICRO_ARCH_BCR, uarch);
-+
-+			if (uarch.prod == 4) {
-+				unsigned int exec_ctrl;
-+
-+				/* dual issue hardware always present */
-+				cpu->extn.dual = 1;
-+
-+				READ_BCR(AUX_EXEC_CTRL, exec_ctrl);
-+
-+				/* dual issue hardware enabled ? */
-+				cpu->extn.dual_enb = !(exec_ctrl & 1);
-+
-+			}
- 		}
+ 	pn_skb_get_src_sockaddr(oskb, &dst);
+ 	return pn_skb_send(sk, skb, &dst);
+@@ -272,17 +272,17 @@ static int pipe_rcv_status(struct sock *sk, struct sk_buff *skb)
+ 		return -EINVAL;
+ 
+ 	hdr = pnp_hdr(skb);
+-	if (hdr->data[0] != PN_PEP_TYPE_COMMON) {
++	if (hdr->pep_type != PN_PEP_TYPE_COMMON) {
+ 		net_dbg_ratelimited("Phonet unknown PEP type: %u\n",
+-				    (unsigned int)hdr->data[0]);
++				    (unsigned int)hdr->pep_type);
+ 		return -EOPNOTSUPP;
  	}
  
+-	switch (hdr->data[1]) {
++	switch (hdr->data[0]) {
+ 	case PN_PEP_IND_FLOW_CONTROL:
+ 		switch (pn->tx_fc) {
+ 		case PN_LEGACY_FLOW_CONTROL:
+-			switch (hdr->data[4]) {
++			switch (hdr->data[3]) {
+ 			case PEP_IND_BUSY:
+ 				atomic_set(&pn->tx_credits, 0);
+ 				break;
+@@ -292,7 +292,7 @@ static int pipe_rcv_status(struct sock *sk, struct sk_buff *skb)
+ 			}
+ 			break;
+ 		case PN_ONE_CREDIT_FLOW_CONTROL:
+-			if (hdr->data[4] == PEP_IND_READY)
++			if (hdr->data[3] == PEP_IND_READY)
+ 				atomic_set(&pn->tx_credits, wake = 1);
+ 			break;
+ 		}
+@@ -301,12 +301,12 @@ static int pipe_rcv_status(struct sock *sk, struct sk_buff *skb)
+ 	case PN_PEP_IND_ID_MCFC_GRANT_CREDITS:
+ 		if (pn->tx_fc != PN_MULTI_CREDIT_FLOW_CONTROL)
+ 			break;
+-		atomic_add(wake = hdr->data[4], &pn->tx_credits);
++		atomic_add(wake = hdr->data[3], &pn->tx_credits);
+ 		break;
+ 
+ 	default:
+ 		net_dbg_ratelimited("Phonet unknown PEP indication: %u\n",
+-				    (unsigned int)hdr->data[1]);
++				    (unsigned int)hdr->data[0]);
+ 		return -EOPNOTSUPP;
+ 	}
+ 	if (wake)
+@@ -318,7 +318,7 @@ static int pipe_rcv_created(struct sock *sk, struct sk_buff *skb)
+ {
+ 	struct pep_sock *pn = pep_sk(sk);
+ 	struct pnpipehdr *hdr = pnp_hdr(skb);
+-	u8 n_sb = hdr->data[0];
++	u8 n_sb = hdr->data0;
+ 
+ 	pn->rx_fc = pn->tx_fc = PN_LEGACY_FLOW_CONTROL;
+ 	__skb_pull(skb, sizeof(*hdr));
+@@ -506,7 +506,7 @@ static int pep_connresp_rcv(struct sock *sk, struct sk_buff *skb)
+ 		return -ECONNREFUSED;
+ 
+ 	/* Parse sub-blocks */
+-	n_sb = hdr->data[4];
++	n_sb = hdr->data[3];
+ 	while (n_sb > 0) {
+ 		u8 type, buf[6], len = sizeof(buf);
+ 		const u8 *data = pep_get_sb(skb, &type, &len, buf);
+@@ -739,7 +739,7 @@ static int pipe_do_remove(struct sock *sk)
+ 	ph->utid = 0;
+ 	ph->message_id = PNS_PIPE_REMOVE_REQ;
+ 	ph->pipe_handle = pn->pipe_handle;
+-	ph->data[0] = PAD;
++	ph->data0 = PAD;
+ 	return pn_skb_send(sk, skb, NULL);
+ }
+ 
+@@ -817,7 +817,7 @@ static struct sock *pep_sock_accept(struct sock *sk, int flags, int *errp,
+ 	peer_type = hdr->other_pep_type << 8;
+ 
+ 	/* Parse sub-blocks (options) */
+-	n_sb = hdr->data[4];
++	n_sb = hdr->data[3];
+ 	while (n_sb > 0) {
+ 		u8 type, buf[1], len = sizeof(buf);
+ 		const u8 *data = pep_get_sb(skb, &type, &len, buf);
+@@ -1109,7 +1109,7 @@ static int pipe_skb_send(struct sock *sk, struct sk_buff *skb)
+ 	ph->utid = 0;
+ 	if (pn->aligned) {
+ 		ph->message_id = PNS_PIPE_ALIGNED_DATA;
+-		ph->data[0] = 0; /* padding */
++		ph->data0 = 0; /* padding */
+ 	} else
+ 		ph->message_id = PNS_PIPE_DATA;
+ 	ph->pipe_handle = pn->pipe_handle;
 -- 
 2.19.1
 
