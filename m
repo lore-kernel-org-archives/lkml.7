@@ -2,196 +2,160 @@ Return-Path: <SRS0=dUEL=RQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 322CBC43381
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 Mar 2019 10:59:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D5032C43381
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 Mar 2019 10:59:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EDFF42177E
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 Mar 2019 10:59:34 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=mobiveil.co.in header.i=@mobiveil.co.in header.b="jHbxRFGF"
+	by mail.kernel.org (Postfix) with ESMTP id A6F212177E
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 Mar 2019 10:59:53 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726316AbfCMK7d (ORCPT
+        id S1726424AbfCMK7v (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 13 Mar 2019 06:59:33 -0400
-Received: from mail-wr1-f65.google.com ([209.85.221.65]:43815 "EHLO
-        mail-wr1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725847AbfCMK7d (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 13 Mar 2019 06:59:33 -0400
-Received: by mail-wr1-f65.google.com with SMTP id d17so1447977wre.10
-        for <linux-kernel@vger.kernel.org>; Wed, 13 Mar 2019 03:59:31 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=mobiveil.co.in; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=h4LFviQDP20Bf7IkpPDIpnlx1Y4FYEMNZGgLZoxCprA=;
-        b=jHbxRFGFdyci9bWQbeBNbGi9uoJUlqlqtvRH6d22tI80JqWTI4jJ7lWcjfCe4//WD9
-         A+y3CubwpsHLmF6UhyfVIt45Y4f27tzeEa3HMJDylpqIl3HZKfQavd4Iv6IPU8dFEoZo
-         789eGZMRAhKQBiuP9lJPabM+8OQfBdIriKAX4=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=h4LFviQDP20Bf7IkpPDIpnlx1Y4FYEMNZGgLZoxCprA=;
-        b=PAtS+99bIsllsHFwi/OGtsPmMW71K2S6fWtpwLx+J/RXHpK72LtuxjqC7AEv+KaeiF
-         JeqMQnYbx1wLshSNIbSPgAUKT+3ncnBOWm/uFKcXBb9DNGb1/STNm1Ec+JJsm+LGRS/D
-         qvSq4rP7NgUqjCIafqbqUuu6JsY762dReBJgWbJraRch8IGGMZHXSGteMZ8JybhxyiVc
-         6r1aoIvjaJfwZeOF1WZxpk5185Xha4MKz9CWbRu/SKqTRpmRFwaUxyS/UoevBOZZ7ZI/
-         CMxpVLks5lZuASdsXTzM2Nifg1vhM/Jr2RVBfM8LFwXHQkHDLxltjGqEglv7o/gktAUr
-         JC9g==
-X-Gm-Message-State: APjAAAXEquRln2Qo6lWQ9Y0SpCHdKwj0urKj32kn19nkoc7jQJx7hVWb
-        4Zu0uERYb6DlMeeBD2mFdIgdC6tmtKtsDZBo3Aw01Q==
-X-Google-Smtp-Source: APXvYqzbcTYdPInRskGseTIRoOuptxRn3sAUFqbKuRjSH8ewSjomsDWaGx4qORQVvlqJcNn/hg2UGyacKPFnbn4iFls=
-X-Received: by 2002:a5d:6b07:: with SMTP id v7mr26531406wrw.314.1552474770378;
- Wed, 13 Mar 2019 03:59:30 -0700 (PDT)
+        Wed, 13 Mar 2019 06:59:51 -0400
+Received: from mx2.suse.de ([195.135.220.15]:34112 "EHLO mx1.suse.de"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1725868AbfCMK7v (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 13 Mar 2019 06:59:51 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx1.suse.de (Postfix) with ESMTP id 83F2FB0E5;
+        Wed, 13 Mar 2019 10:59:49 +0000 (UTC)
+Subject: Re: [PATCH] btrfs: raid56: properly unmap parity page in
+ finish_parity_scrub()
+To:     Andrea Righi <andrea.righi@canonical.com>,
+        Chris Mason <clm@fb.com>, Josef Bacik <josef@toxicpanda.com>,
+        David Sterba <dsterba@suse.com>
+Cc:     linux-btrfs@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <20190313101703.GA9155@xps-13>
+From:   Johannes Thumshirn <jthumshirn@suse.de>
+Openpgp: preference=signencrypt
+Autocrypt: addr=jthumshirn@suse.de; prefer-encrypt=mutual; keydata=
+ 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
+Message-ID: <34adab7d-6c71-c4d5-ac5b-9aa2187481ef@suse.de>
+Date:   Wed, 13 Mar 2019 11:59:48 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.3.0
 MIME-Version: 1.0
-References: <20190311093130.7209-1-Zhiqiang.Hou@nxp.com> <20190311093130.7209-12-Zhiqiang.Hou@nxp.com>
- <20190311141401.GG214730@google.com> <AM6PR04MB5781498315C6B69EB2586B9D84490@AM6PR04MB5781.eurprd04.prod.outlook.com>
-In-Reply-To: <AM6PR04MB5781498315C6B69EB2586B9D84490@AM6PR04MB5781.eurprd04.prod.outlook.com>
-From:   Subrahmanya Lingappa <l.subrahmanya@mobiveil.co.in>
-Date:   Wed, 13 Mar 2019 16:29:18 +0530
-Message-ID: <CAFZiPx1+SDPLZ3CAAhSxbTUWdKrnx3UkF99nTxwqoNx3mdXDcA@mail.gmail.com>
-Subject: Re: [PATCHv4 11/28] PCI: mobiveil: only fix up the Class Code field
-To:     "Z.q. Hou" <zhiqiang.hou@nxp.com>
-Cc:     Bjorn Helgaas <helgaas@kernel.org>,
-        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>,
-        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "robh+dt@kernel.org" <robh+dt@kernel.org>,
-        "mark.rutland@arm.com" <mark.rutland@arm.com>,
-        "shawnguo@kernel.org" <shawnguo@kernel.org>,
-        Leo Li <leoyang.li@nxp.com>,
-        "lorenzo.pieralisi@arm.com" <lorenzo.pieralisi@arm.com>,
-        "catalin.marinas@arm.com" <catalin.marinas@arm.com>,
-        "will.deacon@arm.com" <will.deacon@arm.com>,
-        Mingkai Hu <mingkai.hu@nxp.com>,
-        "M.h. Lian" <minghuan.lian@nxp.com>,
-        Xiaowei Bao <xiaowei.bao@nxp.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <20190313101703.GA9155@xps-13>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Bjorn/ZQ,
+On 13/03/2019 11:17, Andrea Righi wrote:
+> Parity page is incorrectly unmapped in finish_parity_scrub(), triggering
+> a reference counter bug on i386, i.e.:
+> 
+>  [ 157.662401] kernel BUG at mm/highmem.c:349!
+>  [ 157.666725] invalid opcode: 0000 [#1] SMP PTI
+> 
+> Steps to reproduce the bug:
+>  - create a raid5 btrfs filesystem:
+>    # mkfs.btrfs -m raid5 -d raid5 /dev/sdb /dev/sdc /dev/sdd /dev/sde
+> 
+>  - mount it:
+>    # mount /dev/sdb /mnt
+> 
+>  - run btrfs scrub in a loop:
+>    # while :; do btrfs scrub start -BR /mnt; done
+> 
+> BugLink: https://bugs.launchpad.net/bugs/1812845
+> Signed-off-by: Andrea Righi <andrea.righi@canonical.com>
+> ---
+>  fs/btrfs/raid56.c | 3 ++-
+>  1 file changed, 2 insertions(+), 1 deletion(-)
+> 
+> diff --git a/fs/btrfs/raid56.c b/fs/btrfs/raid56.c
+> index 1869ba8e5981..67a6f7d47402 100644
+> --- a/fs/btrfs/raid56.c
+> +++ b/fs/btrfs/raid56.c
+> @@ -2430,8 +2430,9 @@ static noinline void finish_parity_scrub(struct btrfs_raid_bio *rbio,
+>  			bitmap_clear(rbio->dbitmap, pagenr, 1);
+>  		kunmap(p);
+>  
+> -		for (stripe = 0; stripe < rbio->real_stripes; stripe++)
+> +		for (stripe = 0; stripe < nr_data; stripe++)
+>  			kunmap(page_in_rbio(rbio, stripe, pagenr, 0));
+> +		kunmap(p_page);
+>  	}
+>  
+>  	__free_page(p_page);
+> 
 
+Code wise this looks ok, but the changelog could really describe what
+you're changing and why it is correct.
 
-On Tue, Mar 12, 2019 at 2:48 PM Z.q. Hou <zhiqiang.hou@nxp.com> wrote:
->
-> Hi Bjorn,
->
-> Thanks a lot for your comments!
->
-> > -----Original Message-----
-> > From: Bjorn Helgaas [mailto:helgaas@kernel.org]
-> > Sent: 2019=E5=B9=B43=E6=9C=8811=E6=97=A5 22:14
-> > To: Z.q. Hou <zhiqiang.hou@nxp.com>
-> > Cc: linux-pci@vger.kernel.org; linux-arm-kernel@lists.infradead.org;
-> > devicetree@vger.kernel.org; linux-kernel@vger.kernel.org;
-> > robh+dt@kernel.org; mark.rutland@arm.com; l.subrahmanya@mobiveil.co.in;
-> > shawnguo@kernel.org; Leo Li <leoyang.li@nxp.com>;
-> > lorenzo.pieralisi@arm.com; catalin.marinas@arm.com;
-> > will.deacon@arm.com; Mingkai Hu <mingkai.hu@nxp.com>; M.h. Lian
-> > <minghuan.lian@nxp.com>; Xiaowei Bao <xiaowei.bao@nxp.com>
-> > Subject: Re: [PATCHv4 11/28] PCI: mobiveil: only fix up the Class Code =
-field
-> >
-> > On Mon, Mar 11, 2019 at 09:31:23AM +0000, Z.q. Hou wrote:
-> > > From: Hou Zhiqiang <Zhiqiang.Hou@nxp.com>
-> > >
-> > > Fix up the Class Code to PCI bridge, do not change the Revision ID.
-> > > And move the fixup to mobiveil_host_init function.
-> >
-> > Add parens after function name.
-> >
-> > Please explain why this change is needed.  Does it fix a bug?
-> >
-> > Does this fix the problem that the PCI core didn't correctly identify t=
-he device
-> > as a bridge because it identified bridges by class code instead of head=
-er type?
-> >
-> > That problem *should* be fixed by b2fb5cc57469 ("PCI: Rely on config sp=
-ace
-> > header type, not class code"), which is now upstream.
-> >
-> > You might still want this class code change so that lspci shows the cor=
-rect
-> > thing.  That's fine, but the changelog should say why we're doing it.
-> >
->
-> Subrahmanya's original patch is to fixup 'Class Code' field, but it also =
-fixed the 'Revision ID' field. This patch is patch is to remove the fixup o=
-f 'Revision ID' field.
+I.e. the kunmap(p_page) was completely left out, so we never did an
+unmap for the p_page and the loop unmapping the rbio page was iterating
+over the wrong number of stripes, the map is done with nr_data vs
+rbio->real_stripes for the unmap.
 
-it was introduced during the test with 4.9 and 4.15 linux version,
-without this fix driver was not getting loaded.
+With the above (roughly) placed in the changelog:
+Reviewed-by: Johannes Thumshirn <jthumshirn@suse.de>
 
-I belive it should be sufficient to mention in code comment:  "Fixing
-the class code as hardware is not reflecting the correct class code",
-And the changelog for this patch mentioning "avoid changing the
-revision ID  during the class code fix". Is that OK?
-
-Thanks,
-
->
-> > > Fixes: 9af6bcb11e12 ("PCI: mobiveil: Add Mobiveil PCIe Host Bridge IP
-> > > driver")
-> >
-> > Make this "Fixes:" line a single line again.
-> >
-> > > Signed-off-by: Hou Zhiqiang <Zhiqiang.Hou@nxp.com>
-> > > Reviewed-by: Minghuan Lian <Minghuan.Lian@nxp.com>
-> > > Reviewed-by: Subrahmanya Lingappa <l.subrahmanya@mobiveil.co.in>
-> > > ---
-> > > V4:
-> > >  - no change
-> > >
-> > >  drivers/pci/controller/pcie-mobiveil.c | 9 ++++++---
-> > >  1 file changed, 6 insertions(+), 3 deletions(-)
-> > >
-> > > diff --git a/drivers/pci/controller/pcie-mobiveil.c
-> > > b/drivers/pci/controller/pcie-mobiveil.c
-> > > index 78e575e71f4d..8eee1ab7ee24 100644
-> > > --- a/drivers/pci/controller/pcie-mobiveil.c
-> > > +++ b/drivers/pci/controller/pcie-mobiveil.c
-> > > @@ -653,6 +653,12 @@ static int mobiveil_host_init(struct mobiveil_pc=
-ie
-> > *pcie)
-> > >                                type, resource_size(win->res));
-> > >     }
-> > >
-> > > +   /* fixup for PCIe class register */
-> > > +   value =3D csr_readl(pcie, PAB_INTP_AXI_PIO_CLASS);
-> > > +   value &=3D 0xff;
-> > > +   value |=3D (PCI_CLASS_BRIDGE_PCI << 16);
-> > > +   csr_writel(pcie, value, PAB_INTP_AXI_PIO_CLASS);
-> > > +
-> > >     /* setup MSI hardware registers */
-> > >     mobiveil_pcie_enable_msi(pcie);
-> > >
-> > > @@ -896,9 +902,6 @@ static int mobiveil_pcie_probe(struct
-> > platform_device *pdev)
-> > >             goto error;
-> > >     }
-> > >
-> > > -   /* fixup for PCIe class register */
-> > > -   csr_writel(pcie, 0x060402ab, PAB_INTP_AXI_PIO_CLASS);
-> > > -
-> > >     /* initialize the IRQ domains */
-> > >     ret =3D mobiveil_pcie_init_irq_domain(pcie);
-> > >     if (ret) {
-> > > --
-> > > 2.17.1
-> > >
->
-> Thanks,
-> Zhiqiang
+-- 
+Johannes Thumshirn                            SUSE Labs Filesystems
+jthumshirn@suse.de                                +49 911 74053 689
+SUSE LINUX GmbH, Maxfeldstr. 5, 90409 Nürnberg
+GF: Felix Imendörffer, Jane Smithard, Graham Norton
+HRB 21284 (AG Nürnberg)
+Key fingerprint = EC38 9CAB C2C4 F25D 8600 D0D0 0393 969D 2D76 0850
