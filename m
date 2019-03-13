@@ -4,50 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 85F0FC43381
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 Mar 2019 19:29:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CECBDC43381
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 Mar 2019 19:29:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4BF002075C
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 Mar 2019 19:29:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 964862075C
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 Mar 2019 19:29:22 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1552505350;
-	bh=CI4eVSPweusS4UZeujFGsSvZul3yVTw+3cj7FSsLXEM=;
+	s=default; t=1552505362;
+	bh=Jy3XGxMvDqCtBEDBrzVHxJWYfu+Z9IGyAMQLqjs8jw0=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=zqpUYZLxGAAn6K1hJ2fCqn8AYmYZwMxLglpqE/DZ7ZVegkDued1Lau9pMx+2FwPZL
-	 n0gNNKUDQREGmK0EZcOD32Pp+8W7gRLymgkvI3JrO9fmpxoXLbR8QC4vqb9ALJJKHF
-	 JgruJfXm4XEnYE07l18eE9DhTcsL6n1AzN8eyZZo=
+	b=tDi4/t0NhQeiOWYAbFok7IyPkTQG2POuhOWuUR/ntxf3Z48MnzQf5C9+D2jFBKp7b
+	 MPYK7gkkYmTJOUeNq/b/7mdO5Gx12TnF++zqYe7OO052leM2O2B4dq3ca4nSrPle5x
+	 XZpMK4LpT74LwcQmYEkc3UW1r1VamsBztQO7CEeQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728253AbfCMT3J (ORCPT
+        id S1726627AbfCMTNB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 13 Mar 2019 15:29:09 -0400
-Received: from mail.kernel.org ([198.145.29.99]:43812 "EHLO mail.kernel.org"
+        Wed, 13 Mar 2019 15:13:01 -0400
+Received: from mail.kernel.org ([198.145.29.99]:43564 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727933AbfCMTNP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 13 Mar 2019 15:13:15 -0400
+        id S1727873AbfCMTM6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 13 Mar 2019 15:12:58 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 4461E20693;
-        Wed, 13 Mar 2019 19:13:13 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id A5011213A2;
+        Wed, 13 Mar 2019 19:12:56 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1552504394;
-        bh=CI4eVSPweusS4UZeujFGsSvZul3yVTw+3cj7FSsLXEM=;
+        s=default; t=1552504377;
+        bh=Jy3XGxMvDqCtBEDBrzVHxJWYfu+Z9IGyAMQLqjs8jw0=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=TOnLcynZdZQpHIprlQtNm5qxcBAhZNJEljl30G5nkJsYBdnmgzhE6ZcFRJ90EYW7i
-         /SLtn3bo1AqYPbrhcp78xW7QhSvoX+IBG/1dQmtVd0Ur6agu/XQH9xTwyWWwHyIhOq
-         fzAV5SW/c8bqeUODh2FV8+B0cgSc/z/1/BbBQOMA=
+        b=aWT2hFf1dk8vu1IcakTxSOOazioU7A8/XDrr9u+Yym7VrJxTILZssT+qcaICHKkV9
+         BbMl50Z02J9UTMd1m8tD4l5Q4EYPqXkzBL31yqBGJLqZfH/TVrjh3Og/Tr97rtY9eJ
+         oYNeW5VLTPScYmCqNM+8EI+5Kut2Udv4ZFFVkSpg=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Alexei Starovoitov <ast@kernel.org>,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        Sasha Levin <sashal@kernel.org>, netdev@vger.kernel.org,
-        bpf@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.19 07/48] bpf: fix lockdep false positive in stackmap
-Date:   Wed, 13 Mar 2019 15:12:09 -0400
-Message-Id: <20190313191250.158955-7-sashal@kernel.org>
+Cc:     Eugene Loh <eugene.loh@oracle.com>,
+        Masahiro Yamada <yamada.masahiro@socionext.com>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH AUTOSEL 4.19 02/48] kallsyms: Handle too long symbols in kallsyms.c
+Date:   Wed, 13 Mar 2019 15:12:04 -0400
+Message-Id: <20190313191250.158955-2-sashal@kernel.org>
 X-Mailer: git-send-email 2.19.1
 In-Reply-To: <20190313191250.158955-1-sashal@kernel.org>
 References: <20190313191250.158955-1-sashal@kernel.org>
@@ -59,64 +58,37 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Alexei Starovoitov <ast@kernel.org>
+From: Eugene Loh <eugene.loh@oracle.com>
 
-[ Upstream commit 3defaf2f15b2bfd86c6664181ac009e91985f8ac ]
+[ Upstream commit 6db2983cd8064808141ccefd75218f5b4345ffae ]
 
-Lockdep warns about false positive:
-[   11.211460] ------------[ cut here ]------------
-[   11.211936] DEBUG_LOCKS_WARN_ON(depth <= 0)
-[   11.211985] WARNING: CPU: 0 PID: 141 at ../kernel/locking/lockdep.c:3592 lock_release+0x1ad/0x280
-[   11.213134] Modules linked in:
-[   11.214954] RIP: 0010:lock_release+0x1ad/0x280
-[   11.223508] Call Trace:
-[   11.223705]  <IRQ>
-[   11.223874]  ? __local_bh_enable+0x7a/0x80
-[   11.224199]  up_read+0x1c/0xa0
-[   11.224446]  do_up_read+0x12/0x20
-[   11.224713]  irq_work_run_list+0x43/0x70
-[   11.225030]  irq_work_run+0x26/0x50
-[   11.225310]  smp_irq_work_interrupt+0x57/0x1f0
-[   11.225662]  irq_work_interrupt+0xf/0x20
+When checking for symbols with excessively long names,
+account for null terminating character.
 
-since rw_semaphore is released in a different task vs task that locked the sema.
-It is expected behavior.
-Fix the warning with up_read_non_owner() and rwsem_release() annotation.
-
-Fixes: bae77c5eb5b2 ("bpf: enable stackmap with build_id in nmi context")
-Signed-off-by: Alexei Starovoitov <ast@kernel.org>
-Signed-off-by: Daniel Borkmann <daniel@iogearbox.net>
+Fixes: f3462aa952cf ("Kbuild: Handle longer symbols in kallsyms.c")
+Signed-off-by: Eugene Loh <eugene.loh@oracle.com>
+Acked-by: Ard Biesheuvel <ard.biesheuvel@linaro.org>
+Signed-off-by: Masahiro Yamada <yamada.masahiro@socionext.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- kernel/bpf/stackmap.c | 8 +++++++-
- 1 file changed, 7 insertions(+), 1 deletion(-)
+ scripts/kallsyms.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/kernel/bpf/stackmap.c b/kernel/bpf/stackmap.c
-index 6a32933cae4f..7cb7a7f98a37 100644
---- a/kernel/bpf/stackmap.c
-+++ b/kernel/bpf/stackmap.c
-@@ -44,7 +44,7 @@ static void do_up_read(struct irq_work *entry)
- 	struct stack_map_irq_work *work;
- 
- 	work = container_of(entry, struct stack_map_irq_work, irq_work);
--	up_read(work->sem);
-+	up_read_non_owner(work->sem);
- 	work->sem = NULL;
- }
- 
-@@ -338,6 +338,12 @@ static void stack_map_get_build_id_offset(struct bpf_stack_build_id *id_offs,
- 	} else {
- 		work->sem = &current->mm->mmap_sem;
- 		irq_work_queue(&work->irq_work);
-+		/*
-+		 * The irq_work will release the mmap_sem with
-+		 * up_read_non_owner(). The rwsem_release() is called
-+		 * here to release the lock from lockdep's perspective.
-+		 */
-+		rwsem_release(&current->mm->mmap_sem.dep_map, 1, _RET_IP_);
+diff --git a/scripts/kallsyms.c b/scripts/kallsyms.c
+index a9186a98a37d..0c9c54b57515 100644
+--- a/scripts/kallsyms.c
++++ b/scripts/kallsyms.c
+@@ -120,8 +120,8 @@ static int read_symbol(FILE *in, struct sym_entry *s)
+ 			fprintf(stderr, "Read error or end of file.\n");
+ 		return -1;
  	}
- }
- 
+-	if (strlen(sym) > KSYM_NAME_LEN) {
+-		fprintf(stderr, "Symbol %s too long for kallsyms (%zu vs %d).\n"
++	if (strlen(sym) >= KSYM_NAME_LEN) {
++		fprintf(stderr, "Symbol %s too long for kallsyms (%zu >= %d).\n"
+ 				"Please increase KSYM_NAME_LEN both in kernel and kallsyms.c\n",
+ 			sym, strlen(sym), KSYM_NAME_LEN);
+ 		return -1;
 -- 
 2.19.1
 
