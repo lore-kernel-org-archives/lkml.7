@@ -2,204 +2,169 @@ Return-Path: <SRS0=dUEL=RQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FSL_HELO_FAKE,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_PASS,URIBL_BLOCKED,USER_AGENT_MUTT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-21.6 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT,USER_IN_DEF_DKIM_WL autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9E844C43381
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 Mar 2019 18:16:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 03428C43381
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 Mar 2019 18:17:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5A7732075C
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 Mar 2019 18:16:55 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1552501015;
-	bh=NBYWGtH9wtv5Jk1W5+17+1saO++Uar9ct/F9yhKpQZI=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=XLCtwvp7ykR9y/Su/Gd1nFjIR9dLPE44ufjfzAzEKWEFJT7osMSDiEIeD/ac2IeLS
-	 K0VH1KhuchNod2ADi7j5DKzJkp0cj7MFbX2zfZep9Vmjpnh8WDIuMwHXppt8LeEEcd
-	 temP90mEAJaVOWN1u2BPs8qZtDyVa/jbSuAAw/FQ=
+	by mail.kernel.org (Postfix) with ESMTP id BF2A02075C
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 Mar 2019 18:17:40 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="I6Qm7AcN"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726837AbfCMSQy (ORCPT
+        id S1726922AbfCMSRi (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 13 Mar 2019 14:16:54 -0400
-Received: from mail.kernel.org ([198.145.29.99]:43556 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726412AbfCMSQx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 13 Mar 2019 14:16:53 -0400
-Received: from gmail.com (unknown [104.132.1.77])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id ED92D21019;
-        Wed, 13 Mar 2019 18:16:51 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1552501012;
-        bh=NBYWGtH9wtv5Jk1W5+17+1saO++Uar9ct/F9yhKpQZI=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=URSa0zmoebEWbGHKSEkWGzRrbEVoDmXu2HYX/iZre+2OIfJ8Rf6ZF4hULmOBmCzx+
-         dy74dBbaK4VuhVexHIJ4umpIejOh8BVmW5+BNhz6omfDdr4ANQpGl2fOdpBKYGgRlo
-         MrjBkIn1xE6P5zCFYEdVXhM1b2i+eQ/vGeSNGcRo=
-Date:   Wed, 13 Mar 2019 11:16:50 -0700
-From:   Eric Biggers <ebiggers@kernel.org>
-To:     Dmitry Vyukov <dvyukov@google.com>
-Cc:     Andrew Morton <akpm@linux-foundation.org>,
-        syzbot <syzbot+fa11f9da42b46cea3b4a@syzkaller.appspotmail.com>,
-        Cgroups <cgroups@vger.kernel.org>,
-        Johannes Weiner <hannes@cmpxchg.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Linux-MM <linux-mm@kvack.org>, Michal Hocko <mhocko@kernel.org>,
-        Michal Hocko <mhocko@suse.com>,
-        Stephen Rothwell <sfr@canb.auug.org.au>,
-        Shakeel Butt <shakeelb@google.com>,
-        syzkaller-bugs <syzkaller-bugs@googlegroups.com>,
-        Vladimir Davydov <vdavydov.dev@gmail.com>
-Subject: Re: KASAN: null-ptr-deref Read in reclaim_high
-Message-ID: <20190313181649.GA10169@gmail.com>
-References: <0000000000001fd5780583d1433f@google.com>
- <20190311163747.f56cceebd9c2661e4519bdfc@linux-foundation.org>
- <CACT4Y+byKQSOCte3JS9XOnyr+aVSEFtBvLxG2-HUrZX3-82Hcg@mail.gmail.com>
- <20190311232541.db8571d2e3e0ca636785f31f@linux-foundation.org>
- <CACT4Y+Y0JdB-=yLLchw8icokn11iH2-XYoLJEOFKm6F88fJ3WQ@mail.gmail.com>
- <20190312225044.GB38846@gmail.com>
- <CACT4Y+a775wdkjQcsZTLG_Jr4k2gSXnOQF6ZTJDPOc-kvPG9Xw@mail.gmail.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CACT4Y+a775wdkjQcsZTLG_Jr4k2gSXnOQF6ZTJDPOc-kvPG9Xw@mail.gmail.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+        Wed, 13 Mar 2019 14:17:38 -0400
+Received: from mail-vs1-f74.google.com ([209.85.217.74]:43799 "EHLO
+        mail-vs1-f74.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726427AbfCMSRi (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 13 Mar 2019 14:17:38 -0400
+Received: by mail-vs1-f74.google.com with SMTP id y189so654851vsc.10
+        for <linux-kernel@vger.kernel.org>; Wed, 13 Mar 2019 11:17:37 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=date:in-reply-to:message-id:mime-version:references:subject:from:to
+         :cc;
+        bh=B7yTfa6bCcb9PKaV1iobsmMqwEGi32G0CcJNlnQFP78=;
+        b=I6Qm7AcNBeHZMAsjuo3XWkuLtTJ4JA8+Q0qxlyDLWNkFzprQS2A69hr/ummJwq2QbH
+         xp0gsFaqzX+fQR37P68lR3noqmZ5/xTj+hzOMbFlIT45v+jRAjlOweBXlRawUQVFbu4L
+         9T/yh1X5JYggBbP+R/dEZt8CluisI6ZAmvOfvdp4ASDBBj5RGEC4P9YS1/pxXZcGGnML
+         pQfP7f3UaG0FZVHp+QK2LA5W0qrTIfoEXEk5nWh3IyUvCGJBU2XIj/lp99ZPjJzQrWXd
+         qCAyTHICvPX8hh3bkTXcN6FkPwOO34DvkucXhUxWNXI65dLjPGk96Kh2uSm6nZ3pqxh5
+         43tA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:in-reply-to:message-id:mime-version
+         :references:subject:from:to:cc;
+        bh=B7yTfa6bCcb9PKaV1iobsmMqwEGi32G0CcJNlnQFP78=;
+        b=ggv0H1J72ID6TqqUJ7GGculb6Wc7N8YCPMOHBDqvaGEPEUjKI+u1EthdVD8x289dyC
+         fXdidn98CP+7iSVnS4tSEwkt+1ZmNX3CyppVKpUI2Q9/ArkJvO8HSQJy/OX0eM3+WaTH
+         jplHqD0iAJXN0ZIbQcna2pWhxdj2ORFizb33Q4mQrOuzV4vfOi4xH2lKduo87exT4d0C
+         pO+Rmn1N6iYlke1wKj+45IkVs4vGY7D8iH+N1rGQ/3xg6zN2iKGv8SAxFoWH6Kxq7qyd
+         IAXNq4HoWwUIAyKeyyLivaKHxlrTHbdXVKMKIdQeOGP4qpnjqf2tgnyKdYUeEpPOe35N
+         ohww==
+X-Gm-Message-State: APjAAAXJcWU5QMY6xrOHtSFgLYTaeKmYYl62sfkfCAFZoQ/0RcgJTr5Y
+        UQtwMJKuMbFTHbBVVUwy/xmzCeH6tbKX67otn+c=
+X-Google-Smtp-Source: APXvYqz2nsDqUdfhsOtch5ZQiudq9UOD5dUZVG0ip3q2xijQ7cgTgStrIA/vxW5Uvj7iAyAmsArK5wOVgdC3I4I6uOI=
+X-Received: by 2002:ab0:20d2:: with SMTP id z18mr7508106ual.24.1552501056981;
+ Wed, 13 Mar 2019 11:17:36 -0700 (PDT)
+Date:   Wed, 13 Mar 2019 11:17:15 -0700
+In-Reply-To: <CAKwvOdmdEH1U9vOmVKo2Fn+hMPF9AB1enZ2rkpJcU9XHgR8Wng@mail.gmail.com>
+Message-Id: <20190313181719.87859-1-ndesaulniers@google.com>
+Mime-Version: 1.0
+References: <CAKwvOdmdEH1U9vOmVKo2Fn+hMPF9AB1enZ2rkpJcU9XHgR8Wng@mail.gmail.com>
+X-Mailer: git-send-email 2.21.0.360.g471c308f928-goog
+Subject: [PATCH v2] lib/string.c: implement a basic bcmp
+From:   Nick Desaulniers <ndesaulniers@google.com>
+To:     akpm@linux-foundation.org
+Cc:     clang-built-linux@googlegroups.com, linux-kbuild@vger.kernel.org,
+        Nick Desaulniers <ndesaulniers@google.com>,
+        stable@vger.kernel.org,
+        Nathan Chancellor <natechancellor@gmail.com>,
+        Adhemerval Zanella <adhemerval.zanella@linaro.org>,
+        Arnd Bergmann <arnd@arndb.de>,
+        James Y Knight <jyknight@google.com>,
+        Masahiro Yamada <yamada.masahiro@socionext.com>,
+        Rasmus Villemoes <linux@rasmusvillemoes.dk>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Ingo Molnar <mingo@kernel.org>,
+        "Steven Rostedt (VMware)" <rostedt@goodmis.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Mar 13, 2019 at 09:24:21AM +0100, 'Dmitry Vyukov' via syzkaller-bugs wrote:
-> On Tue, Mar 12, 2019 at 11:50 PM Eric Biggers <ebiggers@kernel.org> wrote:
-> >
-> > On Tue, Mar 12, 2019 at 09:33:44AM +0100, 'Dmitry Vyukov' via syzkaller-bugs wrote:
-> > > On Tue, Mar 12, 2019 at 7:25 AM Andrew Morton <akpm@linux-foundation.org> wrote:
-> > > >
-> > > > On Tue, 12 Mar 2019 07:08:38 +0100 Dmitry Vyukov <dvyukov@google.com> wrote:
-> > > >
-> > > > > On Tue, Mar 12, 2019 at 12:37 AM Andrew Morton
-> > > > > <akpm@linux-foundation.org> wrote:
-> > > > > >
-> > > > > > On Mon, 11 Mar 2019 06:08:01 -0700 syzbot <syzbot+fa11f9da42b46cea3b4a@syzkaller.appspotmail.com> wrote:
-> > > > > >
-> > > > > > > syzbot has bisected this bug to:
-> > > > > > >
-> > > > > > > commit 29a4b8e275d1f10c51c7891362877ef6cffae9e7
-> > > > > > > Author: Shakeel Butt <shakeelb@google.com>
-> > > > > > > Date:   Wed Jan 9 22:02:21 2019 +0000
-> > > > > > >
-> > > > > > >      memcg: schedule high reclaim for remote memcgs on high_work
-> > > > > > >
-> > > > > > > bisection log:  https://syzkaller.appspot.com/x/bisect.txt?x=155bf5db200000
-> > > > > > > start commit:   29a4b8e2 memcg: schedule high reclaim for remote memcgs on..
-> > > > > > > git tree:       linux-next
-> > > > > > > final crash:    https://syzkaller.appspot.com/x/report.txt?x=175bf5db200000
-> > > > > > > console output: https://syzkaller.appspot.com/x/log.txt?x=135bf5db200000
-> > > > > > > kernel config:  https://syzkaller.appspot.com/x/.config?x=611f89e5b6868db
-> > > > > > > dashboard link: https://syzkaller.appspot.com/bug?extid=fa11f9da42b46cea3b4a
-> > > > > > > userspace arch: amd64
-> > > > > > > syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=14259017400000
-> > > > > > > C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=141630a0c00000
-> > > > > > >
-> > > > > > > Reported-by: syzbot+fa11f9da42b46cea3b4a@syzkaller.appspotmail.com
-> > > > > > > Fixes: 29a4b8e2 ("memcg: schedule high reclaim for remote memcgs on
-> > > > > > > high_work")
-> > > > > >
-> > > > > > The following patch
-> > > > > > memcg-schedule-high-reclaim-for-remote-memcgs-on-high_work-v3.patch
-> > > > > > might have fixed this.  Was it applied?
-> > > > >
-> > > > > Hi Andrew,
-> > > > >
-> > > > > You mean if the patch was applied during the bisection?
-> > > > > No, it wasn't. Bisection is very specifically done on the same tree
-> > > > > where the bug was hit. There are already too many factors that make
-> > > > > the result flaky/wrong/inconclusive without changing the tree state.
-> > > > > Now, if syzbot would know about any pending fix for this bug, then it
-> > > > > would not do the bisection at all. But it have not seen any patch in
-> > > > > upstream/linux-next with the Reported-by tag, nor it received any syz
-> > > > > fix commands for this bugs. Should have been it aware of the fix? How?
-> > > >
-> > > > memcg-schedule-high-reclaim-for-remote-memcgs-on-high_work-v3.patch was
-> > > > added to linux-next on Jan 10.  I take it that this bug was hit when
-> > > > testing the entire linux-next tree, so we can assume that
-> > > > memcg-schedule-high-reclaim-for-remote-memcgs-on-high_work-v3.patch
-> > > > does not fix it, correct?
-> > > > In which case, over to Shakeel!
-> > >
-> > > Jan 10 is exactly when this bug was reported:
-> > > https://groups.google.com/forum/#!msg/syzkaller-bugs/5YkhNUg2PFY/4-B5M7bDCAAJ
-> > > https://syzkaller.appspot.com/bug?extid=fa11f9da42b46cea3b4a
-> > >
-> > > We don't know if that patch fixed the bug or not because nobody tested
-> > > the reproducer with that patch.
-> > >
-> > > It seems that the problem here is that nobody associated the fix with
-> > > the bug report. So people looking at open bug reports will spend time
-> > > again and again debugging this just to find that this was fixed months
-> > > ago. syzbot also doesn't have a chance to realize that this is fixed
-> > > and bisection is not necessary anymore. It also won't confirm/disprove
-> > > that the fix actually fixes the bug because even if the crash will
-> > > continue to happen it will look like the old crash just continues to
-> > > happen, so nothing to notify about.
-> > >
-> > > Associating fixes with bug reports solves all these problems for
-> > > humans and bots.
-> > >
-> >
-> > I think syzbot needs to be more aggressive about invalidating old bug reports on
-> > linux-next, e.g. automatically invalidate linux-next bugs that no longer occur
-> > after a few weeks even if there is a reproducer.  Patches get added, changed,
-> > and removed in linux-next every day.  Bugs that syzbot runs into on linux-next
-> > are often obvious enough that they get reported by other people too, resulting
-> > in bugs being fixed or dropped without people ever seeing the syzbot report.
-> > How do you propose that people associate fixes with syzbot reports when they
-> > never saw the syzbot report in the first place?
-> >
-> > This is a problem on mainline too, of course.  But we *know* it's a more severe
-> > problem on linux-next, and that a bug like this that only ever happened on
-> > linux-next and stopped happening 2 months ago, is much less likely to be
-> > relevant than a bug in mainline.  Kernel developers don't have time to examine
-> > every single syzbot report so you need to help them out by reducing the noise.
-> 
-> Please file an issue for this at https://github.com/google/syzkaller/issues
+A recent optimization in Clang (r355672) lowers comparisons of the
+return value of memcmp against zero to comparisons of the return value
+of bcmp against zero.  This helps some platforms that implement bcmp
+more efficiently than memcmp. glibc simply aliases bcmp to memcmp, but
+an optimized implementation is in the works.
 
-I filed https://github.com/google/syzkaller/issues/1054
+This results in linkage failures for all targets with Clang due to the
+undefined symbol.  For now, just implement bcmp as a tailcail to memcmp
+to unbreak the build.  This routine can be further optimized in the
+future.
 
-> 
-> I also wonder how does this work for all other kernel bugs reports?
-> syzbot is not the only one reporting kernel bugs and we don't want to
-> invent new rules here.
+Other ideas discussed:
+* A weak alias was discussed, but breaks for architectures that define
+their own implementations of memcmp since aliases to declarations are
+not permitted (only definitions).  Arch-specific memcmp implementations
+typically declare memcmp in C headers, but implement them in assembly.
+* -ffreestanding also is used sporadically throughout the kernel.
+* -fno-builtin-bcmp doesn't work when doing LTO.
 
-Well, I think you already know the answer to that.  There's no unified bug
-tracking system for all kernel subsystems, so in the worst case bugs/features
-just get ignored until someone cares to bring it up again.  I know you want to
-change that, but the larger problem is that there aren't enough people able and
-funded to do the work.  For the kernel overall (some subsystems are better, OFC)
-there so many low-quality, duplicate, or irrelevant reports/requests that no one
-can keep up.  That means maintainers have to focus on the highest priority
-reports/requests, such as the ones that are clearly relevant and get continued
-discussion, vs. some random problem someone had 2 years ago.  Just putting stuff
-on a bug tracker does not magically make people work on it.
+Link: https://bugs.llvm.org/show_bug.cgi?id=41035
+Link: https://code.woboq.org/userspace/glibc/string/memcmp.c.html#bcmp
+Link: https://github.com/llvm/llvm-project/commit/8e16d73346f8091461319a7dfc4ddd18eedcff13
+Link: https://github.com/ClangBuiltLinux/linux/issues/416
+Cc: stable@vger.kernel.org
+Reported-by: Nathan Chancellor <natechancellor@gmail.com>
+Reported-by: Adhemerval Zanella <adhemerval.zanella@linaro.org>
+Suggested-by: Arnd Bergmann <arnd@arndb.de>
+Suggested-by: James Y Knight <jyknight@google.com>
+Suggested-by: Masahiro Yamada <yamada.masahiro@socionext.com>
+Suggested-by: Nathan Chancellor <natechancellor@gmail.com>
+Suggested-by: Rasmus Villemoes <linux@rasmusvillemoes.dk>
+Signed-off-by: Nick Desaulniers <ndesaulniers@google.com>
+---
+Changes V1 -> V2:
+* Add declaration to include/linux/string.h.
+* Reword comment above bcmp.
 
-I think the reality is that until people can actually be funded to immediately
-analyze every syzbot report, syzbot needs to be designed to help developers
-focus on the reports most likely to still be actual bugs.  That means
-automatically closing bugs where the crash is no longer occurring, especially if
-it was on linux-next; and sending reminders if the crash is still occurring.
+ include/linux/string.h |  3 +++
+ lib/string.c           | 15 +++++++++++++++
+ 2 files changed, 18 insertions(+)
 
-> 
-> Also note that what happens now may be not representative of what will
-> happen in a steady mode later. Now syzbot bisects old bugs accumulated
-> over 1+ year. Later if it reports a bug, it should bisect sooner. So
-> all of what happens in this bug report won't take place.
-> 
+diff --git a/include/linux/string.h b/include/linux/string.h
+index 7927b875f80c..6ab0a6fa512e 100644
+--- a/include/linux/string.h
++++ b/include/linux/string.h
+@@ -150,6 +150,9 @@ extern void * memscan(void *,int,__kernel_size_t);
+ #ifndef __HAVE_ARCH_MEMCMP
+ extern int memcmp(const void *,const void *,__kernel_size_t);
+ #endif
++#ifndef __HAVE_ARCH_BCMP
++extern int bcmp(const void *,const void *,__kernel_size_t);
++#endif
+ #ifndef __HAVE_ARCH_MEMCHR
+ extern void * memchr(const void *,int,__kernel_size_t);
+ #endif
+diff --git a/lib/string.c b/lib/string.c
+index 38e4ca08e757..b882692bac04 100644
+--- a/lib/string.c
++++ b/lib/string.c
+@@ -866,6 +866,21 @@ __visible int memcmp(const void *cs, const void *ct, size_t count)
+ EXPORT_SYMBOL(memcmp);
+ #endif
+ 
++#ifndef __HAVE_ARCH_BCMP
++/**
++ * bcmp - Like memcmp but a non-zero return code simply indicates a non-match.
++ * @cs: One area of memory.
++ * @ct: Another area of memory.
++ * @count: The size of the areas.
++ */
++#undef bcmp
++int bcmp(const void *cs, const void *ct, size_t count)
++{
++	return memcmp(cs, ct, count);
++}
++EXPORT_SYMBOL(bcmp);
++#endif
++
+ #ifndef __HAVE_ARCH_MEMSCAN
+ /**
+  * memscan - Find a character in an area of memory.
+-- 
+2.21.0.360.g471c308f928-goog
 
-Sure, but I think there will continue to be syzbot reports that the relevant
-people either don't see, or don't have time or expertise to look into.  This is
-especially true when the same bug is filed as many different bug reports.
-
-- Eric
