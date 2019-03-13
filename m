@@ -2,92 +2,131 @@ Return-Path: <SRS0=dUEL=RQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-12.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 25AE7C43381
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 Mar 2019 15:40:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 14767C43381
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 Mar 2019 15:40:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F2E3E20693
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 Mar 2019 15:40:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D4EFC20693
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 Mar 2019 15:40:07 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1552491607;
+	bh=9MViBI/7U+ijEtdQopBnK4+pprgCBKwBC0w9f2JcJBs=;
+	h=From:To:Cc:Subject:In-Reply-To:Date:List-ID:From;
+	b=bS7IV0ix/l7KkShloq+8zWIKiIDaZmZq2jkU37k1m6B9yPcG5JW/mKSBz3hqsKpAd
+	 8h1+nFmlU7WpCjGEdcy33054WVs5+XsL/o1pbPb3OXZSVo36COoIIfL6ZwiVDyMALU
+	 4bjT2VKQPYiwZqvwiY+hxrOyOseHtFL2WPgpOxBY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727291AbfCMPkB (ORCPT
+        id S1727311AbfCMPkG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 13 Mar 2019 11:40:01 -0400
-Received: from smtprz14.163.net ([106.3.154.247]:10438 "EHLO smtp.tom.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726465AbfCMPju (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 13 Mar 2019 11:39:50 -0400
-Received: from 172.25.16.147 (unknown [172.25.16.147])
-        by freemail02.tom.com (Postfix) with ESMTP id 35757B00D48
-        for <linux-kernel@vger.kernel.org>; Wed, 13 Mar 2019 21:46:02 +0800 (CST)
-Received: from 172.25.16.91 (HELO smtp.tom.com) ([172.25.16.91])
-          by localhost (TOM SMTP Server) with SMTP ID -1386801626
-          for <linux-kernel@vger.kernel.org>;
-          Wed, 13 Mar 2019 21:46:02 +0800 (CST)
-Received: from antispam2.tom.com (unknown [172.25.16.56])
-        by freemail02.tom.com (Postfix) with ESMTP id 7A495B00D36
-        for <linux-kernel@vger.kernel.org>; Wed, 13 Mar 2019 21:46:01 +0800 (CST)
-Received: from antispam2.tom.com (antispam2.tom.com [127.0.0.1])
-        by antispam2.tom.com (Postfix) with ESMTP id 76B2E816F5
-        for <linux-kernel@vger.kernel.org>; Wed, 13 Mar 2019 21:46:01 +0800 (CST)
-X-Virus-Scanned: Debian amavisd-new at antispam2.tom.com
-Received: from antispam2.tom.com ([127.0.0.1])
-        by antispam2.tom.com (antispam2.tom.com [127.0.0.1]) (amavisd-new, port 10024)
-        with ESMTP id wMxY7qjuTUQ9 for <linux-kernel@vger.kernel.org>;
-        Wed, 13 Mar 2019 21:45:59 +0800 (CST)
-Received: from localhost (unknown [110.184.152.196])
-        by antispam2.tom.com (Postfix) with ESMTPA id 9562B81067;
-        Wed, 13 Mar 2019 21:45:58 +0800 (CST)
-From:   Liu Xiang <liu.xiang6@zte.com.cn>
-To:     bbrezillon@kernel.org
-Cc:     marek.vasut@gmail.com, dwmw2@infradead.org,
-        computersforpeace@gmail.com, richard@nod.at,
-        linux-mtd@lists.infradead.org, linux-kernel@vger.kernel.org,
-        liuxiang_1999@126.com, Liu Xiang <liu.xiang6@zte.com.cn>
-Subject: [PATCH v2] mtd: spi-nor: Return error when nor->addr_width does not match the device size
-Date:   Wed, 13 Mar 2019 21:45:53 +0800
-Message-Id: <1552484753-3393-1-git-send-email-liu.xiang6@zte.com.cn>
-X-Mailer: git-send-email 1.9.1
+        Wed, 13 Mar 2019 11:40:06 -0400
+Received: from heliosphere.sirena.org.uk ([172.104.155.198]:51644 "EHLO
+        heliosphere.sirena.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727295AbfCMPkE (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 13 Mar 2019 11:40:04 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=sirena.org.uk; s=20170815-heliosphere; h=Date:Message-Id:In-Reply-To:
+        Subject:Cc:To:From:Sender:Reply-To:MIME-Version:Content-Type:
+        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:References:
+        List-Id:List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:
+        List-Archive; bh=mT5mK1CNPKvbZJvdJUcgtev/XZ45Ga6+qTbmebanZQo=; b=kaJuNuko5N7/
+        o1SfHeMCPfzMHpI4VXsunQuF99yEn2uJivBhAJzVmYqmmTpv8iuOwdb9zIZcjYvd7B4K+Ac4j9wF6
+        Y0C0PksAwk4Rg/dQQIrGjqQ4pRQHF+y8s4yC+nRRMjYsC8KLpG8JfBTR4euzLN6FvQtcxOLmK/cg0
+        +0roA=;
+Received: from cpc102320-sgyl38-2-0-cust46.18-2.cable.virginm.net ([82.37.168.47] helo=debutante.sirena.org.uk)
+        by heliosphere.sirena.org.uk with esmtpa (Exim 4.89)
+        (envelope-from <broonie@sirena.org.uk>)
+        id 1h45z6-0003VC-L0; Wed, 13 Mar 2019 15:40:00 +0000
+Received: by debutante.sirena.org.uk (Postfix, from userid 1000)
+        id 2E4131128B97; Wed, 13 Mar 2019 15:40:00 +0000 (GMT)
+From:   Mark Brown <broonie@kernel.org>
+To:     Arnd Bergmann <arnd@arndb.de>
+Cc:     Mark Brown <broonie@kernel.org>, Mark Brown <broonie@kernel.org>,
+        Rasmus Villemoes <linux@rasmusvillemoes.dk>,
+        Boris Brezillon <bbrezillon@kernel.org>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        linux-spi@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-spi@vger.kernel.org
+Subject: Applied "spi: work around clang bug in SPI_BPW_RANGE_MASK()" to the spi tree
+In-Reply-To:  <20190307155506.2993868-1-arnd@arndb.de>
+X-Patchwork-Hint: ignore
+Message-Id: <20190313154000.2E4131128B97@debutante.sirena.org.uk>
+Date:   Wed, 13 Mar 2019 15:40:00 +0000 (GMT)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-In some is25lp256, the DWORD1 of JEDEC Basic Flash Parameter Header
-is 0xfff920e5. So the DWORD1[18:17] Address Bytes bits are 0b00,
-means that 3-Byte only addressing. But the device size is larger
-than 16MB, nor->addr_width must be 4 to access the whole address.
-An error should be returned when nor->addr_width does not match
-the device size in spi_nor_parse_bfpt(). Then it can go back to
-use spi_nor_ids[] for setting the right addr_width.
+The patch
 
-Suggested-by: Boris Brezillon <boris.brezillon@bootlin.com>
-Signed-off-by: Liu Xiang <liu.xiang6@zte.com.cn>
+   spi: work around clang bug in SPI_BPW_RANGE_MASK()
+
+has been applied to the spi tree at
+
+   https://git.kernel.org/pub/scm/linux/kernel/git/broonie/spi.git 
+
+All being well this means that it will be integrated into the linux-next
+tree (usually sometime in the next 24 hours) and sent to Linus during
+the next merge window (or sooner if it is a bug fix), however if
+problems are discovered then the patch may be dropped or reverted.  
+
+You may get further e-mails resulting from automated or manual testing
+and review of the tree, please engage with people reporting problems and
+send followup patches addressing any issues that are reported if needed.
+
+If any updates are required or you are submitting further changes they
+should be sent as incremental updates against current git, existing
+patches will not be replaced.
+
+Please add any relevant lists and maintainers to the CCs when replying
+to this mail.
+
+Thanks,
+Mark
+
+From eefffb42f6659c9510105f3e4ebf2a8499d56936 Mon Sep 17 00:00:00 2001
+From: Arnd Bergmann <arnd@arndb.de>
+Date: Thu, 7 Mar 2019 16:54:21 +0100
+Subject: [PATCH] spi: work around clang bug in SPI_BPW_RANGE_MASK()
+
+Clang-8 evaluates both sides of a ?: expression to check for
+valid arithmetic even in the side that is never taken. This
+results in a build warning:
+
+drivers/spi/spi-sh-msiof.c:1052:24: error: shift count >= width of type [-Werror,-Wshift-count-overflow]
+        .bits_per_word_mask = SPI_BPW_RANGE_MASK(8, 32),
+                              ^~~~~~~~~~~~~~~~~~~~~~~~~
+
+Change the implementation to use the GENMASK() macro that does
+what we want here but does not have a problem with the shift
+count overflow.
+
+Link: https://bugs.llvm.org/show_bug.cgi?id=38789
+Signed-off-by: Arnd Bergmann <arnd@arndb.de>
+Signed-off-by: Mark Brown <broonie@kernel.org>
 ---
- drivers/mtd/spi-nor/spi-nor.c | 8 ++++++++
- 1 file changed, 8 insertions(+)
+ include/linux/spi/spi.h | 3 +--
+ 1 file changed, 1 insertion(+), 2 deletions(-)
 
-diff --git a/drivers/mtd/spi-nor/spi-nor.c b/drivers/mtd/spi-nor/spi-nor.c
-index 6e13bbd..63933c7 100644
---- a/drivers/mtd/spi-nor/spi-nor.c
-+++ b/drivers/mtd/spi-nor/spi-nor.c
-@@ -2811,6 +2811,14 @@ static int spi_nor_parse_bfpt(struct spi_nor *nor,
- 	}
- 	params->size >>= 3; /* Convert to bytes. */
+diff --git a/include/linux/spi/spi.h b/include/linux/spi/spi.h
+index 662b336aa2e4..b27386450089 100644
+--- a/include/linux/spi/spi.h
++++ b/include/linux/spi/spi.h
+@@ -444,8 +444,7 @@ struct spi_controller {
+ 	/* bitmask of supported bits_per_word for transfers */
+ 	u32			bits_per_word_mask;
+ #define SPI_BPW_MASK(bits) BIT((bits) - 1)
+-#define SPI_BIT_MASK(bits) (((bits) == 32) ? ~0U : (BIT(bits) - 1))
+-#define SPI_BPW_RANGE_MASK(min, max) (SPI_BIT_MASK(max) - SPI_BIT_MASK(min - 1))
++#define SPI_BPW_RANGE_MASK(min, max) GENMASK((min) - 1, (max) - 1)
  
-+	/*
-+	 * If the device exceeds 16MiB, addr_width must be 4.
-+	 * addr_width == 3 means the Address Bytes we are
-+	 * reading from BFPT is wrong.
-+	 */
-+	if (params->size > 0x1000000 && nor->addr_width == 3)
-+		return -EINVAL;
-+
- 	/* Fast Read settings. */
- 	for (i = 0; i < ARRAY_SIZE(sfdp_bfpt_reads); i++) {
- 		const struct sfdp_bfpt_read *rd = &sfdp_bfpt_reads[i];
+ 	/* limits on transfer speed */
+ 	u32			min_speed_hz;
 -- 
-1.9.1
+2.20.1
 
