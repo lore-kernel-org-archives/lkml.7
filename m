@@ -2,137 +2,88 @@ Return-Path: <SRS0=dUEL=RQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_PASS autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DC7EBC10F03
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 Mar 2019 19:12:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DCC16C43381
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 Mar 2019 19:12:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A399020693
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 Mar 2019 19:12:32 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1552504352;
-	bh=TY+zVZ/4klUEczISMX9gft6iMeeZS9G6MXrHEdH5kSg=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=mldckDA4/dIHnt8BGulRk6JgsGJdDDatmuwGiko0vNss1pRShIxSQDDc5xLxDdN2C
-	 Aor/OgRy5vWg4Hw36reVm0M3VSZWzfvBk3QTMLw9cZhXmMNAdjf4MUdHdYkq8HjlCR
-	 gBxnokPiV4W/0B3hTi2ELmFZpoEV3dsd6GdRSFGw=
+	by mail.kernel.org (Postfix) with ESMTP id BB14620693
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 Mar 2019 19:12:34 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727741AbfCMTMb (ORCPT
+        id S1727750AbfCMTMd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 13 Mar 2019 15:12:31 -0400
-Received: from mail.kernel.org ([198.145.29.99]:43034 "EHLO mail.kernel.org"
+        Wed, 13 Mar 2019 15:12:33 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:44140 "EHLO mx1.redhat.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727177AbfCMTM2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 13 Mar 2019 15:12:28 -0400
-Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        id S1727219AbfCMTMa (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 13 Mar 2019 15:12:30 -0400
+Received: from smtp.corp.redhat.com (int-mx04.intmail.prod.int.phx2.redhat.com [10.5.11.14])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id A99DF217F5;
-        Wed, 13 Mar 2019 19:12:25 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1552504347;
-        bh=TY+zVZ/4klUEczISMX9gft6iMeeZS9G6MXrHEdH5kSg=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=GfQBuXU2s0v4bkYhLta0hEVWQTyEdUdkGmzFEow47GtofnpcNYYeYSB+X+6uhyzkA
-         TINWA9I2Cq336D46wqeoPgSFloKGEkSYORYs90FOFaWLRCuKmxz1To5AUNfMNKSGp6
-         kEjOh+/ksEHkiH1oVD42bI81bZDLyCYkZBoSUrxc=
-From:   Sasha Levin <sashal@kernel.org>
-To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Alban Crequy <alban@kinvolk.io>, Craig Gallek <kraig@google.com>,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        Sasha Levin <sashal@kernel.org>, netdev@vger.kernel.org,
-        bpf@vger.kernel.org, linux-kselftest@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.20 51/60] bpf, lpm: fix lookup bug in map_delete_elem
-Date:   Wed, 13 Mar 2019 15:10:12 -0400
-Message-Id: <20190313191021.158171-51-sashal@kernel.org>
-X-Mailer: git-send-email 2.19.1
-In-Reply-To: <20190313191021.158171-1-sashal@kernel.org>
-References: <20190313191021.158171-1-sashal@kernel.org>
+        by mx1.redhat.com (Postfix) with ESMTPS id A331F3006030;
+        Wed, 13 Mar 2019 19:12:29 +0000 (UTC)
+Received: from colo-mx.corp.redhat.com (colo-mx01.intmail.prod.int.phx2.redhat.com [10.5.11.20])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id 694536591E;
+        Wed, 13 Mar 2019 19:12:29 +0000 (UTC)
+Received: from zmail18.collab.prod.int.phx2.redhat.com (zmail18.collab.prod.int.phx2.redhat.com [10.5.83.21])
+        by colo-mx.corp.redhat.com (Postfix) with ESMTP id 09413181A136;
+        Wed, 13 Mar 2019 19:12:29 +0000 (UTC)
+Date:   Wed, 13 Mar 2019 15:12:28 -0400 (EDT)
+From:   Paolo Bonzini <pbonzini@redhat.com>
+To:     Andrea Arcangeli <aarcange@redhat.com>
+Cc:     Peter Xu <peterx@redhat.com>,
+        Mike Kravetz <mike.kravetz@oracle.com>,
+        linux-kernel@vger.kernel.org, Hugh Dickins <hughd@google.com>,
+        Luis Chamberlain <mcgrof@kernel.org>,
+        Maxime Coquelin <maxime.coquelin@redhat.com>,
+        kvm@vger.kernel.org, Jerome Glisse <jglisse@redhat.com>,
+        Pavel Emelyanov <xemul@virtuozzo.com>,
+        Johannes Weiner <hannes@cmpxchg.org>,
+        Martin Cracauer <cracauer@cons.org>,
+        Denis Plotnikov <dplotnikov@virtuozzo.com>, linux-mm@kvack.org,
+        Marty McFadden <mcfadden8@llnl.gov>,
+        Maya Gokhale <gokhale2@llnl.gov>,
+        Mike Rapoport <rppt@linux.vnet.ibm.com>,
+        Kees Cook <keescook@chromium.org>,
+        Mel Gorman <mgorman@suse.de>,
+        "Kirill A . Shutemov" <kirill@shutemov.name>,
+        linux-fsdevel@vger.kernel.org,
+        "Dr . David Alan Gilbert" <dgilbert@redhat.com>,
+        Andrew Morton <akpm@linux-foundation.org>
+Message-ID: <1934896481.7779933.1552504348591.JavaMail.zimbra@redhat.com>
+In-Reply-To: <20190313185230.GH25147@redhat.com>
+References: <20190311093701.15734-1-peterx@redhat.com> <58e63635-fc1b-cb53-a4d1-237e6b8b7236@oracle.com> <20190313060023.GD2433@xz-x1> <3714d120-64e3-702e-6eef-4ef253bdb66d@redhat.com> <20190313185230.GH25147@redhat.com>
+Subject: Re: [PATCH 0/3] userfaultfd: allow to forbid unprivileged users
 MIME-Version: 1.0
-X-Patchwork-Hint: Ignore
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [93.56.166.5, 10.4.196.11, 10.5.101.130, 10.4.195.27]
+Thread-Topic: userfaultfd: allow to forbid unprivileged users
+Thread-Index: 6Xwu07wo6ALzDU1D4rR00nCA3NmgqQ==
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.14
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.40]); Wed, 13 Mar 2019 19:12:29 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Alban Crequy <alban@kinvolk.io>
 
-[ Upstream commit 7c0cdf0b3940f63d9777c3fcf250a2f83859ca54 ]
+> On Wed, Mar 13, 2019 at 09:22:31AM +0100, Paolo Bonzini wrote:
+> Unless somebody suggests a consistent way to make hugetlbfs "just
+> work" (like we could achieve clean with CRIU and KVM), I think Oracle
+> will need a one liner change in the Oracle setup to echo into that
+> file in addition of running the hugetlbfs mount.
 
-trie_delete_elem() was deleting an entry even though it was not matching
-if the prefixlen was correct. This patch adds a check on matchlen.
+Hi Andrea, can you explain more in detail the risks of enabling
+userfaultfd for unprivileged users?
 
-Reproducer:
+Paolo
 
-$ sudo bpftool map create /sys/fs/bpf/mylpm type lpm_trie key 8 value 1 entries 128 name mylpm flags 1
-$ sudo bpftool map update pinned /sys/fs/bpf/mylpm key hex 10 00 00 00 aa bb cc dd value hex 01
-$ sudo bpftool map dump pinned /sys/fs/bpf/mylpm
-key: 10 00 00 00 aa bb cc dd  value: 01
-Found 1 element
-$ sudo bpftool map delete pinned /sys/fs/bpf/mylpm key hex 10 00 00 00 ff ff ff ff
-$ echo $?
-0
-$ sudo bpftool map dump pinned /sys/fs/bpf/mylpm
-Found 0 elements
-
-A similar reproducer is added in the selftests.
-
-Without the patch:
-
-$ sudo ./tools/testing/selftests/bpf/test_lpm_map
-test_lpm_map: test_lpm_map.c:485: test_lpm_delete: Assertion `bpf_map_delete_elem(map_fd, key) == -1 && errno == ENOENT' failed.
-Aborted
-
-With the patch: test_lpm_map runs without errors.
-
-Fixes: e454cf595853 ("bpf: Implement map_delete_elem for BPF_MAP_TYPE_LPM_TRIE")
-Cc: Craig Gallek <kraig@google.com>
-Signed-off-by: Alban Crequy <alban@kinvolk.io>
-Acked-by: Craig Gallek <kraig@google.com>
-Signed-off-by: Daniel Borkmann <daniel@iogearbox.net>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
----
- kernel/bpf/lpm_trie.c                      |  1 +
- tools/testing/selftests/bpf/test_lpm_map.c | 10 ++++++++++
- 2 files changed, 11 insertions(+)
-
-diff --git a/kernel/bpf/lpm_trie.c b/kernel/bpf/lpm_trie.c
-index 9058317ba9de..4f3138e6ecb2 100644
---- a/kernel/bpf/lpm_trie.c
-+++ b/kernel/bpf/lpm_trie.c
-@@ -432,6 +432,7 @@ static int trie_delete_elem(struct bpf_map *map, void *_key)
- 	}
- 
- 	if (!node || node->prefixlen != key->prefixlen ||
-+	    node->prefixlen != matchlen ||
- 	    (node->flags & LPM_TREE_NODE_FLAG_IM)) {
- 		ret = -ENOENT;
- 		goto out;
-diff --git a/tools/testing/selftests/bpf/test_lpm_map.c b/tools/testing/selftests/bpf/test_lpm_map.c
-index 147e34cfceb7..02d7c871862a 100644
---- a/tools/testing/selftests/bpf/test_lpm_map.c
-+++ b/tools/testing/selftests/bpf/test_lpm_map.c
-@@ -474,6 +474,16 @@ static void test_lpm_delete(void)
- 	assert(bpf_map_lookup_elem(map_fd, key, &value) == -1 &&
- 		errno == ENOENT);
- 
-+	key->prefixlen = 30; // unused prefix so far
-+	inet_pton(AF_INET, "192.255.0.0", key->data);
-+	assert(bpf_map_delete_elem(map_fd, key) == -1 &&
-+		errno == ENOENT);
-+
-+	key->prefixlen = 16; // same prefix as the root node
-+	inet_pton(AF_INET, "192.255.0.0", key->data);
-+	assert(bpf_map_delete_elem(map_fd, key) == -1 &&
-+		errno == ENOENT);
-+
- 	/* assert initial lookup */
- 	key->prefixlen = 32;
- 	inet_pton(AF_INET, "192.168.0.1", key->data);
--- 
-2.19.1
-
+> Note that DPDK host bridge process will also need a one liner change
+> to do a dummy open/close of /dev/kvm to unblock the syscall.
+> 
+> Thanks,
+> Andrea
+> 
