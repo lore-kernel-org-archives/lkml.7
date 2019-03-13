@@ -2,81 +2,147 @@ Return-Path: <SRS0=dUEL=RQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_PASS autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 93751C43381
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 Mar 2019 13:00:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 106B2C43381
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 Mar 2019 13:03:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6BCB0214AE
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 Mar 2019 13:00:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C6D522183F
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 Mar 2019 13:03:55 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1552482235;
+	bh=6pBFmBhRit/lXvLI6vi8fHZSx5zQ44s0Fq4INl6nWZA=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
+	b=RzimQAkBKnxN8eqsYhs3dCiHCdT/s+OP6IorJ/T2OLvcJhCY4jg8JjcFjFetelOxd
+	 dO8IKlazp7oNud3kAfpIgBGpjwO8Xq6wMzNIk05Uea01kSD8eJqrQuu28fdsAn7uU4
+	 0bhe2jlQ1a6/aOu0vkDrWD6PN/Q77RSEz5+Nd3IE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726612AbfCMNAc convert rfc822-to-8bit (ORCPT
+        id S1726255AbfCMNDy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 13 Mar 2019 09:00:32 -0400
-Received: from lithops.sigma-star.at ([195.201.40.130]:42160 "EHLO
-        lithops.sigma-star.at" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725907AbfCMNAb (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 13 Mar 2019 09:00:31 -0400
-Received: from localhost (localhost [127.0.0.1])
-        by lithops.sigma-star.at (Postfix) with ESMTP id 0DA5B609184E;
-        Wed, 13 Mar 2019 14:00:30 +0100 (CET)
-Received: from lithops.sigma-star.at ([127.0.0.1])
-        by localhost (lithops.sigma-star.at [127.0.0.1]) (amavisd-new, port 10032)
-        with ESMTP id Rr70O0kMJH_J; Wed, 13 Mar 2019 14:00:29 +0100 (CET)
-Received: from localhost (localhost [127.0.0.1])
-        by lithops.sigma-star.at (Postfix) with ESMTP id 9C839609186C;
-        Wed, 13 Mar 2019 14:00:29 +0100 (CET)
-Received: from lithops.sigma-star.at ([127.0.0.1])
-        by localhost (lithops.sigma-star.at [127.0.0.1]) (amavisd-new, port 10026)
-        with ESMTP id KvybbR3tQ9HN; Wed, 13 Mar 2019 14:00:29 +0100 (CET)
-Received: from blindfold.localnet (unknown [82.150.214.1])
-        by lithops.sigma-star.at (Postfix) with ESMTPSA id E8121609184E;
-        Wed, 13 Mar 2019 14:00:28 +0100 (CET)
-From:   Richard Weinberger <richard@nod.at>
-To:     Miklos Szeredi <miklos@szeredi.hu>
-Cc:     linux-fsdevel@vger.kernel.org, linux-fscrypt@vger.kernel.org,
-        overlayfs <linux-unionfs@vger.kernel.org>,
-        linux-kernel@vger.kernel.org
-Subject: Re: overlayfs vs. fscrypt
-Date:   Wed, 13 Mar 2019 14:00:28 +0100
-Message-ID: <1854703.ve7plDhYWt@blindfold>
-In-Reply-To: <CAJfpegvrG4LfnuC62JNtdXpCf4vb+aEiDre5YCxe7xUSQP8yjw@mail.gmail.com>
-References: <4603533.ZIfxmiEf7K@blindfold> <1852545.qrIQg0rEWx@blindfold> <CAJfpegvrG4LfnuC62JNtdXpCf4vb+aEiDre5YCxe7xUSQP8yjw@mail.gmail.com>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8BIT
-Content-Type: text/plain; charset="iso-8859-1"
+        Wed, 13 Mar 2019 09:03:54 -0400
+Received: from mail.kernel.org ([198.145.29.99]:58532 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725832AbfCMNDy (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 13 Mar 2019 09:03:54 -0400
+Received: from devnote2 (NE2965lan1.rev.em-net.ne.jp [210.141.244.193])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 323072177E;
+        Wed, 13 Mar 2019 13:03:50 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1552482233;
+        bh=6pBFmBhRit/lXvLI6vi8fHZSx5zQ44s0Fq4INl6nWZA=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=mxZb5skCI62g94dwxg8F6BmNTSczq8mINcNicl/p73EpO2e3xLx+StIN4ah6B19FM
+         dstMZ5ckd+m2uie13hyiwCiHdFF1s8vxlUCx5A3huvlbEdmjWiGbSNnLPbP/3rYi70
+         WFt+YICBXNTeAhxZjWc7WKDHnVHFCLp2XZ0nFdqg=
+Date:   Wed, 13 Mar 2019 22:03:48 +0900
+From:   Masami Hiramatsu <mhiramat@kernel.org>
+To:     Tom Zanussi <zanussi@kernel.org>
+Cc:     rostedt@goodmis.org, tglx@linutronix.de, namhyung@kernel.org,
+        bigeasy@linutronix.de, joel@joelfernandes.org,
+        linux-kernel@vger.kernel.org, linux-rt-users@vger.kernel.org
+Subject: Re: [RFC PATCH v3 0/5] tracing: common error_log for ftrace
+Message-Id: <20190313220348.d0481a0a5ad7de91e90dbadc@kernel.org>
+In-Reply-To: <1552409351.4293.22.camel@kernel.org>
+References: <cover.1551741458.git.tom.zanussi@linux.intel.com>
+        <20190305230646.e7f99c46f86c0e099ac0cd30@kernel.org>
+        <20190312152605.00150aae7b781137005e9ebf@kernel.org>
+        <1552409351.4293.22.camel@kernel.org>
+X-Mailer: Sylpheed 3.5.1 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+Mime-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Am Mittwoch, 13. März 2019, 13:58:11 CET schrieb Miklos Szeredi:
-> On Wed, Mar 13, 2019 at 1:47 PM Richard Weinberger <richard@nod.at> wrote:
-> >
-> > Am Mittwoch, 13. März 2019, 13:36:02 CET schrieb Miklos Szeredi:
-> > > I don't get it.  Does fscrypt try to check permissions via
-> > > ->d_revalidate?  Why is it not doing that via ->permission()?
-> >
-> > Please let me explain. Suppose we have a fscrypto directory /mnt and
-> > I *don't* have the key.
-> >
-> > When reading the directory contents of /mnt will return an encrypted filename.
-> > e.g.
-> > # ls /mnt
-> > +mcQ46ne5Y8U6JMV9Wdq2C
+On Tue, 12 Mar 2019 11:49:11 -0500
+Tom Zanussi <zanussi@kernel.org> wrote:
+
+> Hi Masami,
 > 
-> Why does showing the encrypted contents make any sense?  It could just
-> return -EPERM on all operations?
+> On Tue, 2019-03-12 at 15:26 +0900, Masami Hiramatsu wrote:
+> > Hi Tom,
+> > 
+> > On Tue, 5 Mar 2019 23:06:46 +0900
+> > Masami Hiramatsu <mhiramat@kernel.org> wrote:
+> > 
+> > > On Mon,  4 Mar 2019 17:36:43 -0600
+> > > > Changes from v2:
+> > > > 
+> > > >   - Added [n] numbering as suggested by Masami
+> > 
+> > Hmm, this seems a bit different what I suggested.
+> > 
+> > I'm trying to port probe event's error report on
+> > your error log, and I found that the number is
+> > just shifted as below.
+> > 
+> > When I filled the log with errors.
+> > =============
+> > /sys/kernel/debug/tracing # cat error_log 
+> > [1] trace_kprobe: error: Invalid unsigned integer string
+> >   Command: r10aa00:foo/bar vfs
+> >             ^
+> > ...
+> > 
+> > [7] trace_kprobe: error: Group name must follow C naming convention
+> >   Command: p:a-b/bar vfs_read
+> >              ^
+> > [8] trace_kprobe: error: Event name is too long
+> >   Command:
+> > p:a/barrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrr
+> > rrrrrrrrrrr vfs_read
+> > =============
+> > 
+> > And do one more error, 
+> > 
+> > =============
+> > /sys/kernel/debug/tracing # cat error_log 
+> > [1] trace_kprobe: error: Maxactive is too big
+> >   Command: r0xaa00:foo/bar vfs
+> > 
+> > ....
+> > 
+> > [7] trace_kprobe: error: Event name is too long
+> >   Command:
+> > p:a/barrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrr
+> > rrrrrrrrrrr vfs_read
+> >                ^
+> > [8] trace_kprobe: error: Event name must follow C naming convention
+> >   Command: p:a/bar.c vfs_read
+> >                ^
+> > =============
+> > 
+> > The number of logs are changed :(  This can confuse users.
+> > I think it is better to keep the number as a unique number for
+> > each entry as below.
+> > 
+> 
+> Hmm, that makes sense, but I wonder if that will also confuse users,
+> when the log wraps around and no longer starts at [1] and there's no
+> way to retrieve the previous errors.
 
-The use case is that you can delete these files if the DAC/MAC permissions allow it.
-Just like on NTFS. If a user encrypts files, the admin cannot read them but can
-remove them if the user is gone or loses the key.
+It is OK, that is same as dmesg. If user needs to keep watching it,
+it should be dumped to disk by a daemon.
 
-Thanks,
-//richard
+> 
+> I took your suggestion as a way mainly to clearly delineate each error,
+> since without the [number] or something similar, they all kind of run
+> together.
+> 
+> Not sure what advantage numbering itself provides - would some other
+> non-numbered separator work?
+
+What about timestamp, similar to dmesg?
+
+Thank you,
 
 
 
+-- 
+Masami Hiramatsu <mhiramat@kernel.org>
