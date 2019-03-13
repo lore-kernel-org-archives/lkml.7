@@ -6,97 +6,87 @@ X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
 	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_MUTT
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 84E18C10F03
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 Mar 2019 20:34:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E42BFC10F03
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 Mar 2019 20:35:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 52673213A2
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 Mar 2019 20:34:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AEF50213A2
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 Mar 2019 20:35:15 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="SVd8p2Y0"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Bbadu+Q3"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727237AbfCMUep (ORCPT
+        id S1727303AbfCMUfO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 13 Mar 2019 16:34:45 -0400
-Received: from mail-pg1-f193.google.com ([209.85.215.193]:40486 "EHLO
+        Wed, 13 Mar 2019 16:35:14 -0400
+Received: from mail-pg1-f193.google.com ([209.85.215.193]:42619 "EHLO
         mail-pg1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726691AbfCMUeo (ORCPT
+        with ESMTP id S1726691AbfCMUfO (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 13 Mar 2019 16:34:44 -0400
-Received: by mail-pg1-f193.google.com with SMTP id u9so2331790pgo.7;
-        Wed, 13 Mar 2019 13:34:44 -0700 (PDT)
+        Wed, 13 Mar 2019 16:35:14 -0400
+Received: by mail-pg1-f193.google.com with SMTP id b2so2320345pgl.9;
+        Wed, 13 Mar 2019 13:35:13 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=sender:date:from:to:cc:subject:message-id:references:mime-version
          :content-disposition:in-reply-to:user-agent;
-        bh=H+oeoI15yRVnBZDYCM+QCa84QyRWEU+ZniMBcWSY5YU=;
-        b=SVd8p2Y0McMNOEUZDXaUgpIta8z/hmYgPRJUCPyxeimhJddgYCs8IB30MKeUoLzjcA
-         TDNosC4ybRrstjo20SDIV54lBvwHDlpv3lrFz5D4r+b8MmkjEViUV3pgDbPJ/oiTqvRo
-         rfqAcBrGzTHSFH+JyD1fZeIZP8sjeeYloxvksg3AQc78XKbGmF98zowehFsZmxfmewMk
-         RzT9GPMkF7oNhGCbuXMiFhOF2BtdOntjLfv1Mc9cnB1EHWlJH+99OaN5AGiT/ftiW8HA
-         fnPztaTAFIEfSa8JbqBgV0mP4BOZM2cJ5ibopzvCMCHsTxmpjYfQixcFSwJssTOpCDew
-         hFvA==
+        bh=QT+XHlb7R9PkN0kbGWlSurg93LJPDLkVjSk+/M9+1Ss=;
+        b=Bbadu+Q3mnX6WLUGc6DkDNqyBBBvyEV0tTVOmcAvLv/G3FMTm+tEF7vdi36i+0d+a/
+         pc62lP/F4JBjIFriC9nqQULUef/RiXmotTl6wJXgR5LTCjixnJRY0qd2GoCYqNmSS+NH
+         9kKGMYY1h5aa9w/8yDU247MpoHRSWHZ+fO/IIp3ePEVegOO6kr/lzRBB4NnWujpk+sce
+         C20zthm5BnvXs2ranY4O+Fc6qWykavgh3q/XYnIuw5boQ/aZjY5r2UDbo+bPZd9NkqQ1
+         zgKnK93rjU1Zu0ZGXlzZEfIiSEq+5kUdQ6nvb4hVwt9vFRi1OkbNpv9f6u+sZacqsX8K
+         3feQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
          :references:mime-version:content-disposition:in-reply-to:user-agent;
-        bh=H+oeoI15yRVnBZDYCM+QCa84QyRWEU+ZniMBcWSY5YU=;
-        b=AGBUVqUabHz6Tznfi3HTSMcS/q3dHdh/AKeSzT+pvxgVycy/vul4Hg7/vjbrwMR5se
-         fWKyBiNCDwziKVUyRCZNBwpIfoqui/VfM+opeovle+gisu6yUU5Xswnzdj5fMFhc0M6E
-         8fNQ52pfnZNppV/tErEdIqxqbiBpXXmUnhHFTX9CjFq25ovATA7+Y9sgzqF0nayXNIm/
-         7huNncj6jHJhmQpU5bBm3PKMfkBL0kmug4oK9vU1EyOdgJMFGIrfhtfySfuc/z6IoZ88
-         D4Hzu7lvfL+LJXa9/nZQ9doN9Ux+hJkZJkc5yp93ugpzX9FiGFzXbRU8gVSJgyEzhEz9
-         9DGg==
-X-Gm-Message-State: APjAAAU1cRiPZNiAfnEZNhLUxFhjvHHm0Kk3NjqH3LrOuJjxKZGM/mki
-        ovIsu8Kxhwp7VFwu1jQ6804=
-X-Google-Smtp-Source: APXvYqwCSMXyDaBcmDLrhDlYg6v2GC6Euu7e2eX0yxrBpaanZoHeBl3TN8EOWLV/8NTk6qSd+l7KTQ==
-X-Received: by 2002:aa7:928d:: with SMTP id j13mr46334366pfa.112.1552509284069;
-        Wed, 13 Mar 2019 13:34:44 -0700 (PDT)
+        bh=QT+XHlb7R9PkN0kbGWlSurg93LJPDLkVjSk+/M9+1Ss=;
+        b=Gue3G2Yqg6SWGiZzu1+WPTW2VTWsjTo1VwnGPM9iAgJeIgPTvJ5j0kIf3W4kiIb2bT
+         Tg+d8YI0IfqwYpV4Z/WeucX+fs3fK4Y5/Ek68PrxefqutHbJS6mAh8UUJqzSyVIGARnj
+         lX48vryjUbQLwzjCV78gLAX7Jq7pQyj+ATCenmd+QPx91XWB3IV13lDzxPxRXX7xJ+51
+         g1YKFkErbQKmRXnupKw2vkykYu5kEswEnvN3g6V/rFhhAE0mCPMvLDAbbqzZe15T2jsQ
+         CIV6TdYVBgracxx8CYCRmcr7nR4z7HbFIBHda9tk72GuRREqEBNqWAWdqlxdVvucId6n
+         3/ug==
+X-Gm-Message-State: APjAAAUUsCc5ymMov5Q+rvXbbmWOssabcXaqdS1vLHn3kVPyJpwpQ+EZ
+        zbTNOYBsri+gaY/E5VKva3UgU4zd
+X-Google-Smtp-Source: APXvYqydqKfqdHpDkzt6RoAvmGjLX95Xo22/MjI+xS3EOdiZIp/la73+KbmiDmGXOsTlCtSM5aFDZA==
+X-Received: by 2002:a63:f843:: with SMTP id v3mr13934530pgj.25.1552509313602;
+        Wed, 13 Mar 2019 13:35:13 -0700 (PDT)
 Received: from localhost ([2600:1700:e321:62f0:329c:23ff:fee3:9d7c])
-        by smtp.gmail.com with ESMTPSA id k189sm11248502pgk.21.2019.03.13.13.34.41
+        by smtp.gmail.com with ESMTPSA id f16sm3250702pga.71.2019.03.13.13.35.12
         (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Wed, 13 Mar 2019 13:34:42 -0700 (PDT)
-Date:   Wed, 13 Mar 2019 13:34:41 -0700
+        Wed, 13 Mar 2019 13:35:12 -0700 (PDT)
+Date:   Wed, 13 Mar 2019 13:35:12 -0700
 From:   Guenter Roeck <linux@roeck-us.net>
 To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 Cc:     linux-kernel@vger.kernel.org, torvalds@linux-foundation.org,
         akpm@linux-foundation.org, shuah@kernel.org, patches@kernelci.org,
         ben.hutchings@codethink.co.uk, lkft-triage@lists.linaro.org,
         stable@vger.kernel.org
-Subject: Re: [PATCH 4.9 00/96] 4.9.163-stable review
-Message-ID: <20190313203441.GA26634@roeck-us.net>
-References: <20190312171034.530434962@linuxfoundation.org>
+Subject: Re: [PATCH 4.14 000/135] 4.14.106-stable review
+Message-ID: <20190313203512.GB26634@roeck-us.net>
+References: <20190312170341.127810985@linuxfoundation.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20190312171034.530434962@linuxfoundation.org>
+In-Reply-To: <20190312170341.127810985@linuxfoundation.org>
 User-Agent: Mutt/1.5.24 (2015-08-30)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Mar 12, 2019 at 10:09:18AM -0700, Greg Kroah-Hartman wrote:
-> This is the start of the stable review cycle for the 4.9.163 release.
-> There are 96 patches in this series, all will be posted as a response
+On Tue, Mar 12, 2019 at 10:07:27AM -0700, Greg Kroah-Hartman wrote:
+> This is the start of the stable review cycle for the 4.14.106 release.
+> There are 135 patches in this series, all will be posted as a response
 > to this one.  If anyone has any issues with these being applied, please
 > let me know.
 > 
-> Responses should be made by Thu Mar 14 17:10:06 UTC 2019.
+> Responses should be made by Thu Mar 14 17:02:27 UTC 2019.
 > Anything received after that time might be too late.
 > 
-
 Build results:
-	total: 172 pass: 170 fail: 2
-Failed builds: 
-	i386:tools/perf 
-	x86_64:tools/perf 
+	total: 172 pass: 172 fail: 0
 Qemu test results:
-	total: 316 pass: 316 fail: 0
-
-Culprit is commit 386ca5754fad ("perf trace: Support multiple "vfs_getname"
-probes"), which introduces a call to strstarts() but not the necessary
-include file or declaration. Unfortunately, fixing that is quite complex
-(commit 8e99b6d4533c ("tools include: Adopt strstarts() from the kernel")
-doesn't apply).
+	total: 329 pass: 329 fail: 0
 
 Guenter
