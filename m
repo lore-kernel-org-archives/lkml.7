@@ -3,188 +3,120 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
 X-Spam-Status: No, score=-4.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_PASS,URIBL_BLOCKED autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3177CC10F03
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 Mar 2019 14:45:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B3AA0C43381
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 Mar 2019 14:49:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0B51B2177E
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 Mar 2019 14:45:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8A1D1214AE
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 Mar 2019 14:49:58 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726643AbfCMOpR (ORCPT
+        id S1726339AbfCMOt4 convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 13 Mar 2019 10:45:17 -0400
-Received: from mail-ua1-f68.google.com ([209.85.222.68]:35266 "EHLO
-        mail-ua1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725832AbfCMOpQ (ORCPT
+        Wed, 13 Mar 2019 10:49:56 -0400
+Received: from ms01.santannapisa.it ([193.205.80.98]:53901 "EHLO
+        mail.santannapisa.it" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725868AbfCMOt4 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 13 Mar 2019 10:45:16 -0400
-Received: by mail-ua1-f68.google.com with SMTP id f88so745610uaf.2;
-        Wed, 13 Mar 2019 07:45:15 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=63dkDYz52se4E5080eXzCZ9vNZBXRS9vr4q0KCO8Cy4=;
-        b=kL5mCFyxSv2Idhf5IdagVjq6n03T/S2IQP03G1EYV/o7XBfBFPsMSvgMTiuhltYD2i
-         4JzGwlasIFJVW+u8jqFh5Gf1kAs7UrJtQSaXuyrGT7WesH8tRJOnhTb6xbE4C+lrDlXq
-         RRWYA1zME9HbdQprbbWRahjNPbK8M9/u+K9WeXLxxw/vz9N15CTUEqDWbTlohhyZKfS6
-         GxT2FENbOWkErV6MW3kLgByJq5r1Xe1fimv4HkEJpMJwo55SLuTsvuaJTvB/LV5e/FiO
-         xr6mKwcniqLZdi0rusU+Y7WA9lRJEYoO0wIDFKSWZuFwOkc0OQCfpan4c8T7qRGY5ub5
-         mEtQ==
-X-Gm-Message-State: APjAAAWdJwjfkAy9KC8rAFE1Qhq7Q+aGB5k/4S3COReh4aEY6nI6ZXEJ
-        4v47gPURftwJVIKqtKl0gtfuy9SRrMwKTgX0Tlk=
-X-Google-Smtp-Source: APXvYqyEfu3Iegnjt5eiK9aoYhPNx4ak8DInz6UPgEF0pcBCsIACErDiJ7EkuOwnf1l+FgvaGN7fQDytKUngxHrHcrE=
-X-Received: by 2002:ab0:6419:: with SMTP id x25mr22757596uao.20.1552488314929;
- Wed, 13 Mar 2019 07:45:14 -0700 (PDT)
+        Wed, 13 Mar 2019 10:49:56 -0400
+Received: from [10.30.3.156] (account l.abeni@santannapisa.it HELO luca64)
+  by santannapisa.it (CommuniGate Pro SMTP 6.1.11)
+  with ESMTPSA id 137252577; Wed, 13 Mar 2019 15:49:52 +0100
+Date:   Wed, 13 Mar 2019 15:49:48 +0100
+From:   luca abeni <luca.abeni@santannapisa.it>
+To:     "chengjian (D)" <cj.chengjian@huawei.com>
+Cc:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Li Bin <huawei.libin@huawei.com>,
+        "Xiexiuqi (Xie XiuQi)" <xiexiuqi@huawei.com>, <mingo@redhat.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Juri Lelli <juri.lelli@redhat.com>
+Subject: Re: WARN ON at kernel/sched/deadline.c task_non_contending
+Message-ID: <20190313154948.773427d6@luca64>
+In-Reply-To: <dfb46874-3657-71c6-e068-9413ffe3f82e@huawei.com>
+References: <dfb46874-3657-71c6-e068-9413ffe3f82e@huawei.com>
+Organization: Scuola Superiore S. Anna
+X-Mailer: Claws Mail 3.17.1 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
 MIME-Version: 1.0
-References: <20190312065128.24994-1-jiada_wang@mentor.com>
-In-Reply-To: <20190312065128.24994-1-jiada_wang@mentor.com>
-From:   Geert Uytterhoeven <geert@linux-m68k.org>
-Date:   Wed, 13 Mar 2019 15:45:03 +0100
-Message-ID: <CAMuHMdUEnzgwAqBC=vTYWnrzC5HrqC5f5gDLWJFSJRYAu+DD1g@mail.gmail.com>
-Subject: Re: [PATCH 1/1] PM / Domains: Avoid a potential deadlock
-To:     Jiada Wang <jiada_wang@mentor.com>
-Cc:     "Rafael J. Wysocki" <rjw@rjwysocki.net>,
-        Kevin Hilman <khilman@kernel.org>,
-        Ulf Hansson <ulf.hansson@linaro.org>,
-        Len Brown <len.brown@intel.com>, Pavel Machek <pavel@ucw.cz>,
-        Greg KH <gregkh@linuxfoundation.org>,
-        Linux PM list <linux-pm@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>,
-        Marek Szyprowski <m.szyprowski@samsung.com>,
-        Jon Hunter <jonathanh@nvidia.com>,
-        Michael Turquette <mturquette@baylibre.com>,
-        Stephen Boyd <sboyd@kernel.org>,
-        linux-clk <linux-clk@vger.kernel.org>,
-        Linux-Renesas <linux-renesas-soc@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8BIT
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Jiada,
+Hi,
 
-CC Marek, Jon, Mike, Stephen, linux-clk, linux-renesas-soc
+(I added Juri in cc)
 
-On Tue, Mar 12, 2019 at 7:51 AM Jiada Wang <jiada_wang@mentor.com> wrote:
-> Lockdep warns that prepare_lock and genpd->mlock can cause a deadlock
-> the deadlock scenario is like following:
-> First thread is probing cs2000
-> cs2000_probe()
->   clk_register()
->     __clk_core_init()
->       clk_prepare_lock()                            ----> acquires prepare_lock
->         cs2000_recalc_rate()
->           i2c_smbus_read_byte_data()
->             rcar_i2c_master_xfer()
->               dma_request_chan()
->                 rcar_dmac_of_xlate()
->                   rcar_dmac_alloc_chan_resources()
->                     pm_runtime_get_sync()
->                       __pm_runtime_resume()
->                         rpm_resume()
->                           rpm_callback()
->                             genpd_runtime_resume()   ----> acquires genpd->mlock
->
-> Second thread is attaching any device to the same PM domain
-> genpd_add_device()
->   genpd_lock()                                       ----> acquires genpd->mlock
->     cpg_mssr_attach_dev()
->       of_clk_get_from_provider()
->         __of_clk_get_from_provider()
->           __clk_create_clk()
->             clk_prepare_lock()                       ----> acquires prepare_lock
->
-> Since currently no PM provider access genpd's critical section
-> in .attach_dev, and .detach_dev callbacks, so there is no need to protect
-> these two callbacks with genpd->mlock.
-> This patch avoids a potential deadlock by moving out .attach_dev and .detach_dev
-> from genpd->mlock, so that genpd->mlock won't be held when prepare_lock is acquired
-> in .attach_dev and .detach_dev
->
-> Signed-off-by: Jiada Wang <jiada_wang@mentor.com>
-
-Thanks a lot for your perseverance!
-I had tried putting each PM Domain in its own lockdep class, but that
-didn't help.
-
-Your patch fixes the lockdep warnings on my Salvator-X(S) boards.
-
-Tested-by: Geert Uytterhoeven <geert+renesas@glider.be>
-
-Your solution makes sense, as the .{at,de}tach_dev() callbacks are
-owned by the individual PM Domain drivers, and not by the genpd core.
-
-Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
-
-One thing I'm still wondering about: genpd_add_device() is always called
-with gpd_list_lock held.
-However, the same cannot be said about genpd_remove_device():
-  - pm_genpd_remove_device() does not take gpd_list_lock, unlike
-    pm_genpd_add_device(),
-  - genpd_dev_pm_detach() does not take gpd_list_lock, while
-    __genpd_dev_pm_attach() does take the lock for adding,
-    but not for removing (in the error patch)?
-
-> --- a/drivers/base/power/domain.c
-> +++ b/drivers/base/power/domain.c
-> @@ -1467,12 +1467,12 @@ static int genpd_add_device(struct generic_pm_domain *genpd, struct device *dev,
->         if (IS_ERR(gpd_data))
->                 return PTR_ERR(gpd_data);
->
-> -       genpd_lock(genpd);
-> -
->         ret = genpd->attach_dev ? genpd->attach_dev(genpd, dev) : 0;
->         if (ret)
->                 goto out;
->
-> +       genpd_lock(genpd);
+On Tue, 12 Mar 2019 10:03:12 +0800
+"chengjian (D)" <cj.chengjian@huawei.com> wrote:
+[...]
+> diff --git a/kernel/sched/deadline.c b/kernel/sched/deadline.c
+> index 31c050a0d0ce..d73cb033a06d 100644
+> --- a/kernel/sched/deadline.c
+> +++ b/kernel/sched/deadline.c
+> @@ -252,7 +252,6 @@ static void task_non_contending(struct
+> task_struct *p) if (dl_entity_is_special(dl_se))
+>                  return;
+> 
+> -       WARN_ON(hrtimer_active(&dl_se->inactive_timer));
+>          WARN_ON(dl_se->dl_non_contending);
+> 
+>          zerolag_time = dl_se->deadline -
+> @@ -287,7 +286,9 @@ static void task_non_contending(struct
+> task_struct *p) }
+> 
+>          dl_se->dl_non_contending = 1;
+> -       get_task_struct(p);
 > +
->         dev_pm_domain_set(dev, &genpd->domain);
->
->         genpd->device_count++;
-> @@ -1480,9 +1480,8 @@ static int genpd_add_device(struct generic_pm_domain *genpd, struct device *dev,
->
->         list_add_tail(&gpd_data->base.list_node, &genpd->dev_list);
->
-> - out:
->         genpd_unlock(genpd);
-> -
-> + out:
->         if (ret)
->                 genpd_free_dev_data(dev, gpd_data);
->         else
-> @@ -1531,15 +1530,15 @@ static int genpd_remove_device(struct generic_pm_domain *genpd,
->         genpd->device_count--;
->         genpd->max_off_time_changed = true;
->
-> -       if (genpd->detach_dev)
-> -               genpd->detach_dev(genpd, dev);
-> -
->         dev_pm_domain_set(dev, NULL);
->
->         list_del_init(&pdd->list_node);
->
->         genpd_unlock(genpd);
->
-> +       if (genpd->detach_dev)
-> +               genpd->detach_dev(genpd, dev);
-> +
->         genpd_free_dev_data(dev, gpd_data);
->
->         return 0;
+> +       if (!hrtimer_active(&dl_se->inactive_timer));
+> +               get_task_struct(p);
+>          hrtimer_start(timer, ns_to_ktime(zerolag_time),
+> HRTIMER_MODE_REL); }
 
-Gr{oetje,eeting}s,
+After looking at the patch a little bit more and running some tests,
+I suspect this solution might be racy:
+when the timer is already active, (and hrtimer_start() fails), it
+relies on its handler to decrease the running bw (by setting
+dl_non_contending to 1)... But inactive_task_timer() might have
+already checked dl_non_contending, finding it equal to 0 (so, it
+ends up doing nothing and the running bw is not decreased).
 
-                        Geert
 
---
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+So, I would prefer a different solution. I think this patch should work:
 
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
+diff --git a/kernel/sched/deadline.c b/kernel/sched/deadline.c
+index 6a73e41a2016..43901fa3f269 100644
+--- a/kernel/sched/deadline.c
++++ b/kernel/sched/deadline.c
+@@ -252,7 +252,6 @@ static void task_non_contending(struct task_struct *p)
+ 	if (dl_entity_is_special(dl_se))
+ 		return;
+ 
+-	WARN_ON(hrtimer_active(&dl_se->inactive_timer));
+ 	WARN_ON(dl_se->dl_non_contending);
+ 
+ 	zerolag_time = dl_se->deadline -
+@@ -269,7 +268,7 @@ static void task_non_contending(struct task_struct *p)
+ 	 * If the "0-lag time" already passed, decrease the active
+ 	 * utilization now, instead of starting a timer
+ 	 */
+-	if (zerolag_time < 0) {
++	if ((zerolag_time < 0) || hrtimer_active(&dl_se->inactive_timer)) {
+ 		if (dl_task(p))
+ 			sub_running_bw(dl_se, dl_rq);
+ 		if (!dl_task(p) || p->state == TASK_DEAD) {
+
+
+The idea is that if the timer is active, we leave dl_non_contending set to
+0 (so that the timer handler does nothing), and we immediately decrease the
+running bw.
+I think this is OK, because this situation can happen only if the task
+blocks, wakes up while the timer handler is running, and then immediately
+blocks again - while the timer handler is still running. So, the "zero lag
+time" cannot be too much in the future.
+
+
+			Thanks,
+				Luca
