@@ -2,127 +2,158 @@ Return-Path: <SRS0=dUEL=RQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_PASS autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E2816C43381
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 Mar 2019 09:35:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 72210C43381
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 Mar 2019 09:39:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B921D2173C
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 Mar 2019 09:35:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4A36C2173C
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 Mar 2019 09:39:14 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727393AbfCMJfl (ORCPT
+        id S1727406AbfCMJjM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 13 Mar 2019 05:35:41 -0400
-Received: from mga17.intel.com ([192.55.52.151]:60795 "EHLO mga17.intel.com"
+        Wed, 13 Mar 2019 05:39:12 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:54550 "EHLO mx1.redhat.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726510AbfCMJfl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 13 Mar 2019 05:35:41 -0400
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga003.jf.intel.com ([10.7.209.27])
-  by fmsmga107.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 13 Mar 2019 02:35:39 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.58,474,1544515200"; 
-   d="scan'208";a="133669908"
-Received: from irsmsx107.ger.corp.intel.com ([163.33.3.99])
-  by orsmga003.jf.intel.com with ESMTP; 13 Mar 2019 02:35:38 -0700
-Received: from irsmsx106.ger.corp.intel.com ([169.254.8.205]) by
- IRSMSX107.ger.corp.intel.com ([169.254.10.15]) with mapi id 14.03.0415.000;
- Wed, 13 Mar 2019 09:35:37 +0000
-From:   "Hunter, Adrian" <adrian.hunter@intel.com>
-To:     "Rizvi, Mohammad Faiz Abbas" <faiz_abbas@ti.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linux-mmc@vger.kernel.org" <linux-mmc@vger.kernel.org>,
-        "linux-omap@vger.kernel.org" <linux-omap@vger.kernel.org>
-CC:     "ulf.hansson@linaro.org" <ulf.hansson@linaro.org>,
-        "kishon@ti.com" <kishon@ti.com>
-Subject: RE: [PATCH v2 2/2] mmc: sdhci-omap: Don't finish_mrq() on a command
- error during tuning
-Thread-Topic: [PATCH v2 2/2] mmc: sdhci-omap: Don't finish_mrq() on a
- command error during tuning
-Thread-Index: AQHU0AnIPVR7LbB8hkOaAwjEX7p/iaX+irGAgAnJAYCAAQpoYA==
-Date:   Wed, 13 Mar 2019 09:35:36 +0000
-Message-ID: <363DA0ED52042842948283D2FC38E4649C48E550@IRSMSX106.ger.corp.intel.com>
-References: <20190301083824.23918-1-faiz_abbas@ti.com>
- <20190301083824.23918-3-faiz_abbas@ti.com>
- <0283e92e-9e01-227d-0987-7801dd88cf78@intel.com>
- <eb76397b-aa02-f1b8-ef0d-df7569275144@ti.com>
-In-Reply-To: <eb76397b-aa02-f1b8-ef0d-df7569275144@ti.com>
-Accept-Language: en-NZ, en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-dlp-product: dlpe-windows
-dlp-version: 11.0.400.15
-dlp-reaction: no-action
-x-ctpclassification: CTP_NT
-x-titus-metadata-40: eyJDYXRlZ29yeUxhYmVscyI6IiIsIk1ldGFkYXRhIjp7Im5zIjoiaHR0cDpcL1wvd3d3LnRpdHVzLmNvbVwvbnNcL0ludGVsMyIsImlkIjoiODIxMmUxYjktMWQ5YS00Njc3LTk1YTYtMmQwNDU2OWZlNjAxIiwicHJvcHMiOlt7Im4iOiJDVFBDbGFzc2lmaWNhdGlvbiIsInZhbHMiOlt7InZhbHVlIjoiQ1RQX05UIn1dfV19LCJTdWJqZWN0TGFiZWxzIjpbXSwiVE1DVmVyc2lvbiI6IjE3LjEwLjE4MDQuNDkiLCJUcnVzdGVkTGFiZWxIYXNoIjoiR2x5aHJlUURpZDBvbkdOUnBFcmZQcnQrcG95MlwvemdWcVdTdDJYRXJoT2dnTkVaTHdkblNmenB1eEJWSlFIb3UifQ==
-x-originating-ip: [163.33.239.181]
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+        id S1726891AbfCMJjM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 13 Mar 2019 05:39:12 -0400
+Received: from smtp.corp.redhat.com (int-mx05.intmail.prod.int.phx2.redhat.com [10.5.11.15])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id A2BCC301BE84;
+        Wed, 13 Mar 2019 09:39:11 +0000 (UTC)
+Received: from gondolin (dhcp-192-213.str.redhat.com [10.33.192.213])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 7C42B5D706;
+        Wed, 13 Mar 2019 09:39:03 +0000 (UTC)
+Date:   Wed, 13 Mar 2019 10:39:00 +0100
+From:   Cornelia Huck <cohuck@redhat.com>
+To:     Dongli Zhang <dongli.zhang@oracle.com>
+Cc:     virtualization@lists.linux-foundation.org,
+        linux-block@vger.kernel.org, axboe@kernel.dk,
+        linux-kernel@vger.kernel.org, mst@redhat.com
+Subject: Re: virtio-blk: should num_vqs be limited by num_possible_cpus()?
+Message-ID: <20190313103900.1ea7f996.cohuck@redhat.com>
+In-Reply-To: <173d19c9-24db-35f2-269f-0b9b83bd0ad6@oracle.com>
+References: <e4afe4c5-0262-4500-aeec-60f30734b4fc@default>
+        <20190312183351.74764f4f.cohuck@redhat.com>
+        <173d19c9-24db-35f2-269f-0b9b83bd0ad6@oracle.com>
+Organization: Red Hat GmbH
 MIME-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.15
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.47]); Wed, 13 Mar 2019 09:39:11 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-PiAtLS0tLU9yaWdpbmFsIE1lc3NhZ2UtLS0tLQ0KPiBGcm9tOiBSaXp2aSwgTW9oYW1tYWQgRmFp
-eiBBYmJhcyBbbWFpbHRvOmZhaXpfYWJiYXNAdGkuY29tXQ0KPiBTZW50OiBUdWVzZGF5LCBNYXJj
-aCAxMiwgMjAxOSA3OjM1IFBNDQo+IFRvOiBIdW50ZXIsIEFkcmlhbiA8YWRyaWFuLmh1bnRlckBp
-bnRlbC5jb20+OyBsaW51eC0NCj4ga2VybmVsQHZnZXIua2VybmVsLm9yZzsgbGludXgtbW1jQHZn
-ZXIua2VybmVsLm9yZzsgbGludXgtDQo+IG9tYXBAdmdlci5rZXJuZWwub3JnDQo+IENjOiB1bGYu
-aGFuc3NvbkBsaW5hcm8ub3JnOyBraXNob25AdGkuY29tDQo+IFN1YmplY3Q6IFJlOiBbUEFUQ0gg
-djIgMi8yXSBtbWM6IHNkaGNpLW9tYXA6IERvbid0IGZpbmlzaF9tcnEoKSBvbiBhDQo+IGNvbW1h
-bmQgZXJyb3IgZHVyaW5nIHR1bmluZw0KPiANCj4gSGkgQWRyaWFuLA0KPiANCj4gT24gMy82LzIw
-MTkgNTozOSBQTSwgQWRyaWFuIEh1bnRlciB3cm90ZToNCj4gPiBPbiAxLzAzLzE5IDEwOjM4IEFN
-LCBGYWl6IEFiYmFzIHdyb3RlOg0KPiA+PiBjb21taXQgNWIwZDYyMTA4YjQ2ICgibW1jOiBzZGhj
-aS1vbWFwOiBBZGQgcGxhdGZvcm0gc3BlY2lmaWMgcmVzZXQNCj4gPj4gY2FsbGJhY2siKSBza2lw
-cyBkYXRhIHJlc2V0cyBkdXJpbmcgdHVuaW5nIG9wZXJhdGlvbi4gQmVjYXVzZSBvZg0KPiA+PiB0
-aGlzLCBhIGRhdGEgZXJyb3Igb3IgZGF0YSBmaW5pc2ggaW50ZXJydXB0IG1pZ2h0IHN0aWxsIGFy
-cml2ZSBhZnRlcg0KPiA+PiBhIGNvbW1hbmQgZXJyb3IgaGFzIGJlZW4gaGFuZGxlZCBhbmQgdGhl
-IG1ycSBlbmRlZC4gVGhpcyBlbmRzIHVwIHdpdGgNCj4gPj4gYSAibW1jMDogR290IGRhdGEgaW50
-ZXJydXB0IDB4MDAwMDAwMDIgZXZlbiB0aG91Z2ggbm8gZGF0YSBvcGVyYXRpb24NCj4gd2FzIGlu
-IHByb2dyZXNzIg0KPiA+PiBlcnJvciBtZXNzYWdlLg0KPiA+Pg0KPiA+PiBGaXggdGhpcyBieSBh
-ZGRpbmcgYSBwbGF0Zm9ybSBzcGVjaWZpYyBjYWxsYmFjayBmb3IgY29tbWFuZCBlcnJvcnMuDQo+
-ID4+IE1hcmsgdGhlIG1ycSBhcyBhIGZhaWx1cmUgYnV0IHdhaXQgZm9yIGEgZGF0YSBpbnRlcnJ1
-cHQgaW5zdGVhZCBvZg0KPiA+PiBjYWxsaW5nIGZpbmlzaF9tcnEoKS4NCj4gPj4NCj4gPj4gRml4
-ZXM6IDViMGQ2MjEwOGI0NiAoIm1tYzogc2RoY2ktb21hcDogQWRkIHBsYXRmb3JtIHNwZWNpZmlj
-IHJlc2V0DQo+ID4+IGNhbGxiYWNrIikNCj4gPj4gU2lnbmVkLW9mZi1ieTogRmFpeiBBYmJhcyA8
-ZmFpel9hYmJhc0B0aS5jb20+DQo+ID4+IC0tLQ0KPiA+PiAgZHJpdmVycy9tbWMvaG9zdC9zZGhj
-aS1vbWFwLmMgfCAyNCArKysrKysrKysrKysrKysrKysrKysrKysNCj4gPj4gIDEgZmlsZSBjaGFu
-Z2VkLCAyNCBpbnNlcnRpb25zKCspDQo+ID4+DQo+ID4+IGRpZmYgLS1naXQgYS9kcml2ZXJzL21t
-Yy9ob3N0L3NkaGNpLW9tYXAuYw0KPiA+PiBiL2RyaXZlcnMvbW1jL2hvc3Qvc2RoY2ktb21hcC5j
-IGluZGV4IGIxYTY2Y2EzODIxYS4uNjdiMzYxYTQwM2JjDQo+ID4+IDEwMDY0NA0KPiA+PiAtLS0g
-YS9kcml2ZXJzL21tYy9ob3N0L3NkaGNpLW9tYXAuYw0KPiA+PiArKysgYi9kcml2ZXJzL21tYy9o
-b3N0L3NkaGNpLW9tYXAuYw0KPiA+PiBAQCAtNzk3LDYgKzc5NywyOSBAQCB2b2lkIHNkaGNpX29t
-YXBfcmVzZXQoc3RydWN0IHNkaGNpX2hvc3QgKmhvc3QsDQo+IHU4IG1hc2spDQo+ID4+ICAJc2Ro
-Y2lfcmVzZXQoaG9zdCwgbWFzayk7DQo+ID4+ICB9DQo+ID4+DQo+ID4+ICt2b2lkIHNkaGNpX29t
-YXBfY21kX2VycihzdHJ1Y3Qgc2RoY2lfaG9zdCAqaG9zdCwgdTMyIGludG1hc2ssIHUzMg0KPiA+
-PiArKmludG1hc2tfcCkgew0KPiA+PiArCXN0cnVjdCBzZGhjaV9wbHRmbV9ob3N0ICpwbHRmbV9o
-b3N0ID0gc2RoY2lfcHJpdihob3N0KTsNCj4gPj4gKwlzdHJ1Y3Qgc2RoY2lfb21hcF9ob3N0ICpv
-bWFwX2hvc3QgPQ0KPiBzZGhjaV9wbHRmbV9wcml2KHBsdGZtX2hvc3QpOw0KPiA+PiArDQo+ID4+
-ICsJaWYgKG9tYXBfaG9zdC0+aXNfdHVuaW5nKSB7DQo+ID4+ICsJCS8qDQo+ID4+ICsJCSAqIFNp
-bmNlIHdlIGFyZSBub3QgcmVzZXR0aW5nIGRhdGEgbGluZXMgZHVyaW5nIHR1bmluZw0KPiA+PiAr
-CQkgKiBvcGVyYXRpb24sIGRhdGEgZXJyb3Igb3IgZGF0YSBjb21wbGV0ZSBpbnRlcnJ1cHRzDQo+
-ID4+ICsJCSAqIG1pZ2h0IHN0aWxsIGFycml2ZS4gTWFyayB0aGlzIHJlcXVlc3QgYXMgYSBmYWls
-dXJlDQo+ID4+ICsJCSAqIGJ1dCBzdGlsbCB3YWl0IGZvciB0aGUgZGF0YSBpbnRlcnJ1cHQNCj4g
-Pj4gKwkJICovDQo+ID4+ICsJCWlmIChpbnRtYXNrICYgU0RIQ0lfSU5UX1RJTUVPVVQpDQo+ID4+
-ICsJCQlob3N0LT5jbWQtPmVycm9yID0gLUVUSU1FRE9VVDsNCj4gPj4gKwkJZWxzZQ0KPiA+PiAr
-CQkJaG9zdC0+Y21kLT5lcnJvciA9IC1FSUxTRVE7DQo+ID4+ICsNCj4gPj4gKwkJc2RoY2lfZmlu
-aXNoX2NvbW1hbmQoaG9zdCk7DQo+ID4+ICsJfSBlbHNlIHsNCj4gPj4gKwkJc2RoY2lfY21kX2Vy
-cihob3N0LCBpbnRtYXNrLCBpbnRtYXNrX3ApOw0KPiA+PiArCX0NCj4gPj4gK30NCj4gPg0KPiA+
-IENvdWxkIHRoaXMgYmUgZG9uZSBieSB0aGUgZXhpc3RpbmcgLT5pcnEoKSBjYWxsYmFjaz8gaS5l
-LiBtYXNrIHRoZQ0KPiA+IGVycm9yIGJpdHMgaW4gaW50bWFzayAoaGF2ZSB0byB3cml0ZSB0aGVt
-IGJhY2sgdG8gU0RIQ0lfSU5UX1NUQVRVUw0KPiA+IGFsc28pIGJ1dCBzZXQNCj4gPiBjbWQtPmVy
-cm9yLg0KPiA+DQo+IA0KPiBJdCBpcyBwb3NzaWJsZSBidXQgSSByZWFsbHkgZG9uJ3Qgd2FudCB0
-aGUgY2FsbGJhY2sgdG8gYmUgdW5uZWNlc3NhcmlseSBjYWxsZWQgZm9yDQo+IGV2ZXJ5IHNpbmds
-ZSBpbnRlcnJ1cHQgdGhhdCBoYXBwZW5zLiBJIHRoaW5rIHdlIHNob3VsZCBvbmx5IHVzZSB0aGUg
-Y2FsbGJhY2sgaW4NCj4gdGhlIGNhc2Ugb2YgYW4gYWN0dWFsIGVycm9yIGludGVycnVwdCA6LSkN
-Cg0KWW91IG1lYW4gZm9yIHBlcmZvcm1hbmNlIHJlYXNvbnM/ICBJIHdvdWxkIGhhdmUgdGhvdWdo
-dCBpdCB3b3VsZCBiZQ0Kb25seSBhIGhhbmRmdWwgb2YgY3ljbGVzIHRvIGNhbGwgaW50byBhIGZ1
-bmN0aW9uLCBmaW5kIG5vdGhpbmcgdG8gZG8sIGFuZCByZXR1cm4uDQpUaGF0IHNob3VsZCBiZSBu
-ZWdsaWdpYmxlIGNvbXBhcmVkIHRvIHRoZSByZXN0IG9mIHRoZSBpbnRlcnJ1cHQgaGFuZGxlci4N
-CklmIHRoYXQgaXMgdGhlIGNvbmNlcm4sIHRoZW4gaXQgbWlnaHQgYmUgd29ydGggbWVhc3VyaW5n
-IGl0Lg0KDQo=
+On Wed, 13 Mar 2019 11:26:04 +0800
+Dongli Zhang <dongli.zhang@oracle.com> wrote:
+
+> On 3/13/19 1:33 AM, Cornelia Huck wrote:
+> > On Tue, 12 Mar 2019 10:22:46 -0700 (PDT)
+> > Dongli Zhang <dongli.zhang@oracle.com> wrote:
+> >   
+> >> I observed that there is one msix vector for config and one shared vector
+> >> for all queues in below qemu cmdline, when the num-queues for virtio-blk
+> >> is more than the number of possible cpus:
+> >>
+> >> qemu: "-smp 4" while "-device virtio-blk-pci,drive=drive-0,id=virtblk0,num-queues=6"
+> >>
+> >> # cat /proc/interrupts 
+> >>            CPU0       CPU1       CPU2       CPU3
+> >> ... ...
+> >>  24:          0          0          0          0   PCI-MSI 65536-edge      virtio0-config
+> >>  25:          0          0          0         59   PCI-MSI 65537-edge      virtio0-virtqueues
+> >> ... ...
+> >>
+> >>
+> >> However, when num-queues is the same as number of possible cpus:
+> >>
+> >> qemu: "-smp 4" while "-device virtio-blk-pci,drive=drive-0,id=virtblk0,num-queues=4"
+> >>
+> >> # cat /proc/interrupts 
+> >>            CPU0       CPU1       CPU2       CPU3
+> >> ... ... 
+> >>  24:          0          0          0          0   PCI-MSI 65536-edge      virtio0-config
+> >>  25:          2          0          0          0   PCI-MSI 65537-edge      virtio0-req.0
+> >>  26:          0         35          0          0   PCI-MSI 65538-edge      virtio0-req.1
+> >>  27:          0          0         32          0   PCI-MSI 65539-edge      virtio0-req.2
+> >>  28:          0          0          0          0   PCI-MSI 65540-edge      virtio0-req.3
+> >> ... ...
+> >>
+> >> In above case, there is one msix vector per queue.  
+> > 
+> > Please note that this is pci-specific...
+> >   
+> >>
+> >>
+> >> This is because the max number of queues is not limited by the number of
+> >> possible cpus.
+> >>
+> >> By default, nvme (regardless about write_queues and poll_queues) and
+> >> xen-blkfront limit the number of queues with num_possible_cpus().  
+> > 
+> > ...and these are probably pci-specific as well.  
+> 
+> Not pci-specific, but per-cpu as well.
+
+Ah, I meant that those are pci devices.
+
+> 
+> >   
+> >>
+> >>
+> >> Is this by design on purpose, or can we fix with below?
+> >>
+> >>
+> >> diff --git a/drivers/block/virtio_blk.c b/drivers/block/virtio_blk.c
+> >> index 4bc083b..df95ce3 100644
+> >> --- a/drivers/block/virtio_blk.c
+> >> +++ b/drivers/block/virtio_blk.c
+> >> @@ -513,6 +513,8 @@ static int init_vq(struct virtio_blk *vblk)
+> >>  	if (err)
+> >>  		num_vqs = 1;
+> >>  
+> >> +	num_vqs = min(num_possible_cpus(), num_vqs);
+> >> +
+> >>  	vblk->vqs = kmalloc_array(num_vqs, sizeof(*vblk->vqs), GFP_KERNEL);
+> >>  	if (!vblk->vqs)
+> >>  		return -ENOMEM;  
+> > 
+> > virtio-blk, however, is not pci-specific.
+> > 
+> > If we are using the ccw transport on s390, a completely different
+> > interrupt mechanism is in use ('floating' interrupts, which are not
+> > per-cpu). A check like that should therefore not go into the generic
+> > driver.
+> >   
+> 
+> So far there seems two options.
+> 
+> The 1st option is to ask the qemu user to always specify "-num-queues" with the
+> same number of vcpus when running x86 guest with pci for virtio-blk or
+> virtio-scsi, in order to assign a vector for each queue.
+
+That does seem like an extra burden for the user: IIUC, things work
+even if you have too many queues, it's just not optimal. It sounds like
+something that can be done by a management layer (e.g. libvirt), though.
+
+> Or, is it fine for virtio folks to add a new hook to 'struct virtio_config_ops'
+> so that different platforms (e.g., pci or ccw) would use different ways to limit
+> the max number of queues in guest, with something like below?
+
+That sounds better, as both transports and drivers can opt-in here.
+
+However, maybe it would be even better to try to come up with a better
+strategy of allocating msix vectors in virtio-pci. More vectors in the
+num_queues > num_cpus case, even if they still need to be shared?
+Individual vectors for n-1 cpus and then a shared one for the remaining
+queues?
+
+It might even be device-specific: Have some low-traffic status queues
+share a vector, and provide an individual vector for high-traffic
+queues. Would need some device<->transport interface, obviously.
