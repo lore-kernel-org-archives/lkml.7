@@ -7,52 +7,57 @@ X-Spam-Status: No, score=-12.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 281B4C43381
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 Mar 2019 15:41:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 38B4EC43381
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 Mar 2019 15:41:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E29B120693
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 Mar 2019 15:41:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0730220693
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 Mar 2019 15:41:50 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1552491703;
-	bh=1iFZ1kNnYpc/aUxAOYZpMXVGTWQfaQQEEF6REnzieSk=;
+	s=default; t=1552491710;
+	bh=DjiO1uv5wtfLiCtW3MS3KigNGkKvj7KPiOgEezQR55A=;
 	h=From:To:Cc:Subject:In-Reply-To:Date:List-ID:From;
-	b=ztpmxjt1Odd24r8f0K6dhsCofzHFMkB9HbqbmHaNctqPYip0u5mI2vAgOxR7+xkfS
-	 aW/6GYzY5fwv6O27igoHN9czFslnPoKzK6iEf+r0YEFS45DUKbPB/3YHrFRqm6SPCx
-	 /oxvP/XmRK//2t78Z2TKuAcgX3+3uKsY0kDSycbk=
+	b=x+yxh71S6xu07vEZdh0Xk+VZoi+Bf3eqHMI2kQgp7SPuCA6QtcWm5/cMieD4T4wIc
+	 f07RXD/Y/jrmffb7uNkaXpCW2Ec+0WFz1PAzbRlpU4zpTaGCc3ENrz4zqJAJ5klwJ9
+	 0tDzgIjq/6yHUbQ+4pqSGNUWfquE40wbhH/lhOCA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727370AbfCMPlf (ORCPT
+        id S1726774AbfCMPjB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 13 Mar 2019 11:41:35 -0400
-Received: from heliosphere.sirena.org.uk ([172.104.155.198]:49942 "EHLO
+        Wed, 13 Mar 2019 11:39:01 -0400
+Received: from heliosphere.sirena.org.uk ([172.104.155.198]:49536 "EHLO
         heliosphere.sirena.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726688AbfCMPjK (ORCPT
+        with ESMTP id S1726616AbfCMPi6 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 13 Mar 2019 11:39:10 -0400
+        Wed, 13 Mar 2019 11:38:58 -0400
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
         d=sirena.org.uk; s=20170815-heliosphere; h=Date:Message-Id:In-Reply-To:
         Subject:Cc:To:From:Sender:Reply-To:MIME-Version:Content-Type:
         Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
         Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:References:
         List-Id:List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:
-        List-Archive; bh=vXVRXxL3rSCHYssJIDs839OhdVDn8xoOkDWc3SuQBew=; b=jBeTrvai4nx8
-        wH8xXpi4mZPvtv709PAVu3X/czm0dbaa6svsxXgVTjBZ3S6b6BHj8CMXwK5BXmd0oTUGoGpSLL2+F
-        Y6GmZBVmSKjN4L9MVv8a/2LyfNflCRHHIptV/0tGrL1mucB/yEA+avi45Ijh2+XyxnKAoZCQAoVvy
-        Gje5c=;
+        List-Archive; bh=sSklwvYpb7CkD8ts0EwPQfsh9N4juLaCReWG14ueJHo=; b=tliUN8Mc3avN
+        GEktNK8RvxrdejQRMnowgwNn0NxvzE0PLA+eSgCs9O0AygWO7LUUwRyaZ5pJYKbXVSwSogRlt/yIe
+        pkLTXy/CnuHpHCaNiC/Vq5OBDmSG7J6HV3XWO8GstOrvPtmp8F2xHrOnpy2KyGUtGlEQVvJRk1+9y
+        R3BFs=;
 Received: from cpc102320-sgyl38-2-0-cust46.18-2.cable.virginm.net ([82.37.168.47] helo=debutante.sirena.org.uk)
         by heliosphere.sirena.org.uk with esmtpa (Exim 4.89)
         (envelope-from <broonie@sirena.org.uk>)
-        id 1h45yD-0003S3-Uu; Wed, 13 Mar 2019 15:39:05 +0000
+        id 1h45xk-0003Q7-11; Wed, 13 Mar 2019 15:38:36 +0000
 Received: by debutante.sirena.org.uk (Postfix, from userid 1000)
-        id 6723D1128B97; Wed, 13 Mar 2019 15:39:05 +0000 (GMT)
+        id 7AA7C1128B97; Wed, 13 Mar 2019 15:38:35 +0000 (GMT)
 From:   Mark Brown <broonie@kernel.org>
-To:     Axel Lin <axel.lin@ingics.com>
-Cc:     Charles Keepax <ckeepax@opensource.cirrus.com>,
-        Mark Brown <broonie@kernel.org>, linux-kernel@vger.kernel.org
-Subject: Applied "regulator: wm8350: Convert to use regulator_set/get_current_limit_regmap" to the regulator tree
-In-Reply-To: 
+To:     Luca Ceresoli <luca@lucaceresoli.net>
+Cc:     Mark Brown <broonie@kernel.org>, alsa-devel@alsa-project.org,
+        devicetree@vger.kernel.org, Mark Rutland <mark.rutland@arm.com>,
+        Lars-Peter Clausen <lars@metafoo.de>,
+        linux-kernel@vger.kernel.org, Takashi Iwai <tiwai@suse.com>,
+        Liam Girdwood <lgirdwood@gmail.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Brown <broonie@kernel.org>, alsa-devel@alsa-project.org
+Subject: Applied "ASoC: axi-i2s: make both "rx" and "tx" optional" to the asoc tree
+In-Reply-To:  <20190307214456.16445-2-luca@lucaceresoli.net>
 X-Patchwork-Hint: ignore
-Message-Id: <20190313153905.6723D1128B97@debutante.sirena.org.uk>
-Date:   Wed, 13 Mar 2019 15:39:05 +0000 (GMT)
+Message-Id: <20190313153835.7AA7C1128B97@debutante.sirena.org.uk>
+Date:   Wed, 13 Mar 2019 15:38:35 +0000 (GMT)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
@@ -60,11 +65,11 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 The patch
 
-   regulator: wm8350: Convert to use regulator_set/get_current_limit_regmap
+   ASoC: axi-i2s: make both "rx" and "tx" optional
 
-has been applied to the regulator tree at
+has been applied to the asoc tree at
 
-   https://git.kernel.org/pub/scm/linux/kernel/git/broonie/regulator.git 
+   https://git.kernel.org/pub/scm/linux/kernel/git/broonie/sound.git 
 
 All being well this means that it will be integrated into the linux-next
 tree (usually sometime in the next 24 hours) and sent to Linus during
@@ -85,141 +90,45 @@ to this mail.
 Thanks,
 Mark
 
-From dfeb7a93bf3b26e6779e0b38b25877c0540652e6 Mon Sep 17 00:00:00 2001
-From: Axel Lin <axel.lin@ingics.com>
-Date: Wed, 13 Mar 2019 00:33:57 +0800
-Subject: [PATCH] regulator: wm8350: Convert to use
- regulator_set/get_current_limit_regmap
+From fa225400758dfc7ccddebf4d990f991a435f7921 Mon Sep 17 00:00:00 2001
+From: Luca Ceresoli <luca@lucaceresoli.net>
+Date: Thu, 7 Mar 2019 22:44:56 +0100
+Subject: [PATCH] ASoC: axi-i2s: make both "rx" and "tx" optional
 
-Use regulator_set/get_current_limit_regmap helpers to save some code.
+Both the capture and playback channels are optional in the axi_i2s IP
+block. Document how to tell the driver which channels are
+instantiated.
 
-Signed-off-by: Axel Lin <axel.lin@ingics.com>
-Acked-by: Charles Keepax <ckeepax@opensource.cirrus.com>
+Signed-off-by: Luca Ceresoli <luca@lucaceresoli.net>
 Signed-off-by: Mark Brown <broonie@kernel.org>
 ---
- drivers/regulator/wm8350-regulator.c | 81 ++++------------------------
- 1 file changed, 11 insertions(+), 70 deletions(-)
+ Documentation/devicetree/bindings/sound/adi,axi-i2s.txt | 7 +++++--
+ 1 file changed, 5 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/regulator/wm8350-regulator.c b/drivers/regulator/wm8350-regulator.c
-index d1758a2bc769..0eb3f3a33caa 100644
---- a/drivers/regulator/wm8350-regulator.c
-+++ b/drivers/regulator/wm8350-regulator.c
-@@ -28,7 +28,7 @@
- #define WM8350_DCDC_MAX_VSEL 0x66
+diff --git a/Documentation/devicetree/bindings/sound/adi,axi-i2s.txt b/Documentation/devicetree/bindings/sound/adi,axi-i2s.txt
+index 4248b662deff..229ad1392cdc 100644
+--- a/Documentation/devicetree/bindings/sound/adi,axi-i2s.txt
++++ b/Documentation/devicetree/bindings/sound/adi,axi-i2s.txt
+@@ -1,5 +1,8 @@
+ ADI AXI-I2S controller
  
- /* Microamps */
--static const int isink_cur[] = {
-+static const unsigned int isink_cur[] = {
- 	4,
- 	5,
- 	6,
-@@ -95,73 +95,6 @@ static const int isink_cur[] = {
- 	223191
- };
++The core can be generated with transmit (playback), only receive
++(capture) or both directions enabled.
++
+ Required properties:
+  - compatible : Must be "adi,axi-i2s-1.00.a"
+  - reg : Must contain I2S core's registers location and length
+@@ -9,8 +12,8 @@ Required properties:
+  - clock-names : "axi" for the clock to the AXI interface, "ref" for the sample
+    rate reference clock.
+  - dmas: Pairs of phandle and specifier for the DMA channels that are used by
+-   the core. The core expects two dma channels, one for transmit and one for
+-   receive.
++   the core. The core expects two dma channels if both transmit and receive are
++   enabled, one channel otherwise.
+  - dma-names : "tx" for the transmit channel, "rx" for the receive channel.
  
--static int get_isink_val(int min_uA, int max_uA, u16 *setting)
--{
--	int i;
--
--	for (i = ARRAY_SIZE(isink_cur) - 1; i >= 0; i--) {
--		if (min_uA <= isink_cur[i] && max_uA >= isink_cur[i]) {
--			*setting = i;
--			return 0;
--		}
--	}
--	return -EINVAL;
--}
--
--static int wm8350_isink_set_current(struct regulator_dev *rdev, int min_uA,
--	int max_uA)
--{
--	struct wm8350 *wm8350 = rdev_get_drvdata(rdev);
--	int isink = rdev_get_id(rdev);
--	u16 val, setting;
--	int ret;
--
--	ret = get_isink_val(min_uA, max_uA, &setting);
--	if (ret != 0)
--		return ret;
--
--	switch (isink) {
--	case WM8350_ISINK_A:
--		val = wm8350_reg_read(wm8350, WM8350_CURRENT_SINK_DRIVER_A) &
--		    ~WM8350_CS1_ISEL_MASK;
--		wm8350_reg_write(wm8350, WM8350_CURRENT_SINK_DRIVER_A,
--				 val | setting);
--		break;
--	case WM8350_ISINK_B:
--		val = wm8350_reg_read(wm8350, WM8350_CURRENT_SINK_DRIVER_B) &
--		    ~WM8350_CS1_ISEL_MASK;
--		wm8350_reg_write(wm8350, WM8350_CURRENT_SINK_DRIVER_B,
--				 val | setting);
--		break;
--	default:
--		return -EINVAL;
--	}
--
--	return 0;
--}
--
--static int wm8350_isink_get_current(struct regulator_dev *rdev)
--{
--	struct wm8350 *wm8350 = rdev_get_drvdata(rdev);
--	int isink = rdev_get_id(rdev);
--	u16 val;
--
--	switch (isink) {
--	case WM8350_ISINK_A:
--		val = wm8350_reg_read(wm8350, WM8350_CURRENT_SINK_DRIVER_A) &
--		    WM8350_CS1_ISEL_MASK;
--		break;
--	case WM8350_ISINK_B:
--		val = wm8350_reg_read(wm8350, WM8350_CURRENT_SINK_DRIVER_B) &
--		    WM8350_CS1_ISEL_MASK;
--		break;
--	default:
--		return 0;
--	}
--
--	return isink_cur[val];
--}
--
- /* turn on ISINK followed by DCDC */
- static int wm8350_isink_enable(struct regulator_dev *rdev)
- {
-@@ -982,8 +915,8 @@ static const struct regulator_ops wm8350_ldo_ops = {
- };
- 
- static const struct regulator_ops wm8350_isink_ops = {
--	.set_current_limit = wm8350_isink_set_current,
--	.get_current_limit = wm8350_isink_get_current,
-+	.set_current_limit = regulator_set_current_limit_regmap,
-+	.get_current_limit = regulator_get_current_limit_regmap,
- 	.enable = wm8350_isink_enable,
- 	.disable = wm8350_isink_disable,
- 	.is_enabled = wm8350_isink_is_enabled,
-@@ -1138,6 +1071,10 @@ static const struct regulator_desc wm8350_reg[NUM_WM8350_REGULATORS] = {
- 		.irq = WM8350_IRQ_CS1,
- 		.type = REGULATOR_CURRENT,
- 		.owner = THIS_MODULE,
-+		.curr_table = isink_cur,
-+		.n_current_limits = ARRAY_SIZE(isink_cur),
-+		.csel_reg = WM8350_CURRENT_SINK_DRIVER_A,
-+		.csel_mask = WM8350_CS1_ISEL_MASK,
- 	 },
- 	{
- 		.name = "ISINKB",
-@@ -1146,6 +1083,10 @@ static const struct regulator_desc wm8350_reg[NUM_WM8350_REGULATORS] = {
- 		.irq = WM8350_IRQ_CS2,
- 		.type = REGULATOR_CURRENT,
- 		.owner = THIS_MODULE,
-+		.curr_table = isink_cur,
-+		.n_current_limits = ARRAY_SIZE(isink_cur),
-+		.csel_reg = WM8350_CURRENT_SINK_DRIVER_B,
-+		.csel_mask = WM8350_CS2_ISEL_MASK,
- 	 },
- };
- 
+ For more details on the 'dma', 'dma-names', 'clock' and 'clock-names' properties
 -- 
 2.20.1
 
