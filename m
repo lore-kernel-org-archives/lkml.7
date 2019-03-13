@@ -2,108 +2,117 @@ Return-Path: <SRS0=dUEL=RQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8F8DDC43381
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 Mar 2019 04:11:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7605DC43381
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 Mar 2019 04:16:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5AEBB217F5
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 Mar 2019 04:11:29 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1552450289;
-	bh=Z7xZv2aUZrlVB9GQLuINbDjIpAF8GNZKenlIb9ZBBZM=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=lQ32O6UqdtGvNY3KDjjJUzFGPjwcnSTt/5fwe5y+fH3CvbqLSzfguH4Yr0DwML/kt
-	 /ONSOuhuVnJwYkB+Rjfh+uM2jdjIk0c/Yn2PnkHKFb9rR18T7V2hVYMDAYp3QpZCL2
-	 hLBJOqi6K3AA1eX8YN2CnjluKu1lIiPbBmS+fNIc=
+	by mail.kernel.org (Postfix) with ESMTP id 4B73A2070D
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 Mar 2019 04:16:17 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727399AbfCMEL2 (ORCPT
+        id S1726995AbfCMEQP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 13 Mar 2019 00:11:28 -0400
-Received: from wout2-smtp.messagingengine.com ([64.147.123.25]:41471 "EHLO
-        wout2-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727077AbfCMEKP (ORCPT
+        Wed, 13 Mar 2019 00:16:15 -0400
+Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:45614 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1725893AbfCMEQP (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 13 Mar 2019 00:10:15 -0400
-Received: from compute3.internal (compute3.nyi.internal [10.202.2.43])
-        by mailout.west.internal (Postfix) with ESMTP id 5CB9638B6;
-        Wed, 13 Mar 2019 00:10:14 -0400 (EDT)
-Received: from mailfrontend1 ([10.202.2.162])
-  by compute3.internal (MEProxy); Wed, 13 Mar 2019 00:10:14 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-        messagingengine.com; h=cc:content-transfer-encoding:date:from
-        :in-reply-to:message-id:mime-version:references:subject:to
-        :x-me-proxy:x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=
-        fm2; bh=QEqHkcumIRQAZueCEWrTfbmwetRcGmg8fFh7ub3TUqw=; b=7v6c3mIj
-        m1C/ENCFW8K2fDnYImc9/lthZVTHyB/5S6c0OnTBQizkGrYbgKozViwInHfof5+c
-        XlXj4EwaGR/mIfMnosN4yNcQ0VGyRBGhC2TRMgE17RfNhHqN5C1kGL1n4eGhgeDt
-        44VWFckf0Dm+2bCDwDjILIT2/RCzWaebHQxrIS3eRvNUPKArwIkmgX647WuTlYQL
-        Mr9+EwylcVeXsrklHLCwdLgBfMVEGjnoj7EY3zm26l4xteHWfiz3Gn8vn7G9myfO
-        iWY8x0UTrPsF4RpRKGGHOdnU4vJHAfCJFzKWH3ubM3UrFK3al1smm7h2I+b2pWnU
-        IK8zwon+DUrmlw==
-X-ME-Sender: <xms:pYKIXAEJGM3ljzzjY90NnEjNqa9mRJoGDpFjxk7nhPbVDAFoTphDEQ>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedutddrgeelgdeijecutefuodetggdotefrodftvf
-    curfhrohhfihhlvgemucfhrghsthforghilhdpqfgfvfdpuffrtefokffrpgfnqfghnecu
-    uegrihhlohhuthemuceftddtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenuc
-    fjughrpefhvffufffkofgjfhgggfestdekredtredttdenucfhrhhomhepfdfvohgsihhn
-    ucevrdcujfgrrhguihhnghdfuceothhosghinheskhgvrhhnvghlrdhorhhgqeenucfkph
-    epuddvgedrudeiledrvdefrddukeegnecurfgrrhgrmhepmhgrihhlfhhrohhmpehtohgs
-    ihhnsehkvghrnhgvlhdrohhrghenucevlhhushhtvghrufhiiigvpeef
-X-ME-Proxy: <xmx:pYKIXCFXZ7Mgcj2nZ4QFcuQteLA5J7etjL72mw8F-YobDJCTfmlXcg>
-    <xmx:pYKIXI3eUnYi3fY_Lv668TZWw01uLTqO1ra_sexW0FgsWYufaQ8Hgg>
-    <xmx:pYKIXEcHUqf2YkhYRH99eITvzmYLV0grC8erCfncE0RIj7XGFhO2Kg>
-    <xmx:pYKIXGH4AIz-iio5znCzmDHLAlPphyXFBbQPHGGGtoDhd6kqKUCR0g>
-Received: from eros.localdomain (124-169-23-184.dyn.iinet.net.au [124.169.23.184])
-        by mail.messagingengine.com (Postfix) with ESMTPA id 997AAE4583;
-        Wed, 13 Mar 2019 00:10:11 -0400 (EDT)
-From:   "Tobin C. Harding" <tobin@kernel.org>
-To:     Jonathan Corbet <corbet@lwn.net>
-Cc:     "Tobin C. Harding" <tobin@kernel.org>, linux-doc@vger.kernel.org,
-        linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH 06/13] docs: filesystems: vfs: Use SPDX identifier
-Date:   Wed, 13 Mar 2019 15:09:12 +1100
-Message-Id: <20190313040919.6937-7-tobin@kernel.org>
-X-Mailer: git-send-email 2.21.0
-In-Reply-To: <20190313040919.6937-1-tobin@kernel.org>
-References: <20190313040919.6937-1-tobin@kernel.org>
+        Wed, 13 Mar 2019 00:16:15 -0400
+Received: from pps.filterd (m0098414.ppops.net [127.0.0.1])
+        by mx0b-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x2D4FHTw041064
+        for <linux-kernel@vger.kernel.org>; Wed, 13 Mar 2019 00:16:14 -0400
+Received: from e06smtp05.uk.ibm.com (e06smtp05.uk.ibm.com [195.75.94.101])
+        by mx0b-001b2d01.pphosted.com with ESMTP id 2r6nmu3u28-1
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
+        for <linux-kernel@vger.kernel.org>; Wed, 13 Mar 2019 00:16:13 -0400
+Received: from localhost
+        by e06smtp05.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
+        for <linux-kernel@vger.kernel.org> from <alastair@au1.ibm.com>;
+        Wed, 13 Mar 2019 04:16:11 -0000
+Received: from b06cxnps3075.portsmouth.uk.ibm.com (9.149.109.195)
+        by e06smtp05.uk.ibm.com (192.168.101.135) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
+        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
+        Wed, 13 Mar 2019 04:16:09 -0000
+Received: from d06av21.portsmouth.uk.ibm.com (d06av21.portsmouth.uk.ibm.com [9.149.105.232])
+        by b06cxnps3075.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x2D4G87961145200
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Wed, 13 Mar 2019 04:16:08 GMT
+Received: from d06av21.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 2730852059;
+        Wed, 13 Mar 2019 04:16:08 +0000 (GMT)
+Received: from ozlabs.au.ibm.com (unknown [9.192.253.14])
+        by d06av21.portsmouth.uk.ibm.com (Postfix) with ESMTP id CB39C52054;
+        Wed, 13 Mar 2019 04:16:07 +0000 (GMT)
+Received: from adsilva.ozlabs.ibm.com (haven.au.ibm.com [9.192.254.114])
+        (using TLSv1.2 with cipher DHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by ozlabs.au.ibm.com (Postfix) with ESMTPSA id EBCA8A01B5;
+        Wed, 13 Mar 2019 15:16:04 +1100 (AEDT)
+From:   "Alastair D'Silva" <alastair@au1.ibm.com>
+Cc:     "Alastair D'Silva" <alastair@d-silva.org>,
+        Frederic Barrat <fbarrat@linux.ibm.com>,
+        Andrew Donnellan <andrew.donnellan@au1.ibm.com>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        linux-kernel@vger.kernel.org, linuxppc-dev@lists.ozlabs.org
+Subject: [PATCH 0/7] Refactor OCXL driver to allow external drivers to use it
+Date:   Wed, 13 Mar 2019 15:15:15 +1100
+X-Mailer: git-send-email 2.20.1
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
+X-TM-AS-GCONF: 00
+x-cbid: 19031304-0020-0000-0000-00000321E76C
+X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
+x-cbparentid: 19031304-0021-0000-0000-00002174163C
+Message-Id: <20190313041524.14644-1-alastair@au1.ibm.com>
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-03-13_02:,,
+ signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
+ malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
+ clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
+ mlxlogscore=708 adultscore=0 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.0.1-1810050000 definitions=main-1903130029
+To:     unlisted-recipients:; (no To-header on input)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Currently the licence is indicated via a custom string.  We have SPDX
-license identifiers now for this task.
+From: Alastair D'Silva <alastair@d-silva.org>
 
-Use SPDX license identifier matching current license string.
+This series reworks the OpenCAPI driver to split frontend
+(driver interactions) from backend (hardware interactions).
 
-Signed-off-by: Tobin C. Harding <tobin@kernel.org>
----
- Documentation/filesystems/vfs.txt | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+This allows external drivers to utilise the core of the
+generic OpenCAPI driver to communicate with specific
+OpenCAPI hardware.
 
-diff --git a/Documentation/filesystems/vfs.txt b/Documentation/filesystems/vfs.txt
-index 0bc45c3a33db..dcc1f66932e7 100644
---- a/Documentation/filesystems/vfs.txt
-+++ b/Documentation/filesystems/vfs.txt
-@@ -1,3 +1,5 @@
-+.. SPDX-License-Identifier: GPL-2.0
-+
- =========================================
- Overview of the Linux Virtual File System
- =========================================
-@@ -9,8 +11,6 @@ Overview of the Linux Virtual File System
-   Copyright (C) 1999 Richard Gooch
-   Copyright (C) 2005 Pekka Enberg
- 
--  This file is released under the GPLv2.
--
- 
- Introduction
- ============
+Alastair D'Silva (7):
+  ocxl: Provide global MMIO accessors for external drivers
+  ocxl: Allow external drivers to use OpenCAPI contexts
+  ocxl: Split pci.c
+  ocxl: Don't pass pci_dev around
+  ocxl: Create a clear delineation between ocxl backend & frontend
+  ocxl: afu_irq only deals with IRQ IDs, not offsets
+  ocxl: move event_fd handling to frontend
+
+ drivers/misc/ocxl/Makefile        |   3 +-
+ drivers/misc/ocxl/afu_irq.c       |  94 ++---
+ drivers/misc/ocxl/context.c       |  18 +-
+ drivers/misc/ocxl/core.c          | 578 ++++++++++++++++++++++++++++++
+ drivers/misc/ocxl/file.c          | 157 +++++---
+ drivers/misc/ocxl/mmio.c          | 234 ++++++++++++
+ drivers/misc/ocxl/ocxl_internal.h |  49 +--
+ drivers/misc/ocxl/pci.c           | 562 ++---------------------------
+ drivers/misc/ocxl/sysfs.c         |  58 +--
+ drivers/misc/ocxl/trace.h         |  12 +-
+ include/misc/ocxl.h               | 322 ++++++++++++++++-
+ 11 files changed, 1382 insertions(+), 705 deletions(-)
+ create mode 100644 drivers/misc/ocxl/core.c
+ create mode 100644 drivers/misc/ocxl/mmio.c
+
 -- 
-2.21.0
+2.20.1
 
