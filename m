@@ -7,51 +7,51 @@ X-Spam-Status: No, score=-12.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 22BBFC43381
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 Mar 2019 15:39:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0E79BC43381
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 Mar 2019 15:39:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E55892146E
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 Mar 2019 15:39:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D22CB20693
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 Mar 2019 15:39:57 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1552491593;
-	bh=iCcWqZTOFaYSDG0e8LMxOQo/0V0ET2PgvAmBTAxXx0A=;
+	s=default; t=1552491597;
+	bh=e5e7P5GHnOlqYNAT0tdxUQQzP57QGqgZpVyi71kOiAc=;
 	h=From:To:Cc:Subject:In-Reply-To:Date:List-ID:From;
-	b=f/2FWt5x6gCHvGTrR1gZ8bvJ3HlRV3tKQTTLuYpn+gzTHykr7Z5mb5NgSjIUWaTJA
-	 nSs7ZqtfXITQnE8hkeBulyZURX/KQNQU7UY3EjsdUenLs8UGZDQ+NcNsgYFIeofSo8
-	 /brz1ABKlSQElJluZ+WVwArMNpF16Rb8zsvqv8m4=
+	b=t8YlkxYNoXO/DpOu1LAOD/RYdmas5mR+FZEoHWx9iSwuwkKqDatJxPrArNie5d8et
+	 QWIR2mcmzA/hY0nV8ZaiEJUBii1ahtBKUuVRCfpDvSwXl2tISAzyJqHURtY625lINt
+	 L6EKa3yVgJl16pAvh5SMPwyHEGwBWPkqN+nM90AE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727250AbfCMPjv (ORCPT
+        id S1727264AbfCMPj4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 13 Mar 2019 11:39:51 -0400
-Received: from heliosphere.sirena.org.uk ([172.104.155.198]:51096 "EHLO
+        Wed, 13 Mar 2019 11:39:56 -0400
+Received: from heliosphere.sirena.org.uk ([172.104.155.198]:51306 "EHLO
         heliosphere.sirena.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727213AbfCMPjr (ORCPT
+        with ESMTP id S1727213AbfCMPjx (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 13 Mar 2019 11:39:47 -0400
+        Wed, 13 Mar 2019 11:39:53 -0400
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
         d=sirena.org.uk; s=20170815-heliosphere; h=Date:Message-Id:In-Reply-To:
         Subject:Cc:To:From:Sender:Reply-To:MIME-Version:Content-Type:
         Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
         Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:References:
         List-Id:List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:
-        List-Archive; bh=lhiq78Xx/BO7sCW6XVz8LaJ4YnKcUhnVlL/dlC/hRMk=; b=AqbfxFIloybS
-        PyhjAeWHQSIv1A7SuO2I2CkA7h+WMXijAa44N6c/Gy6s9JhTWDepP4ZvBMtlNz1e3hN7xbj/DutBg
-        vdZkYwLIVLT5LBKlUbUA4yK48hD57cHE/55ZZQbMayV9WgCQY79KZk17OLYNk++fWjXjBsEmZoNi2
-        SeRsg=;
+        List-Archive; bh=2U/nHxQb957iXFtrKt9XwjLATwUymYThlj8yuHq4mmg=; b=j/+cK1EKfIW2
+        fVoPntGmMqpOX+V2mB+nohU75HiXysY+yONQOcXY6n1/PgAqnBw7HClqHEWtmBRq6y5jre+jYiBXY
+        s0Xa1w74Lj39egEYBB8BHYcdQBxSp/anYgeCBIGbOX51P1uHNAYCcEq2iotJ75VTDJbwIMvWkOEPf
+        JXYkk=;
 Received: from cpc102320-sgyl38-2-0-cust46.18-2.cable.virginm.net ([82.37.168.47] helo=debutante.sirena.org.uk)
         by heliosphere.sirena.org.uk with esmtpa (Exim 4.89)
         (envelope-from <broonie@sirena.org.uk>)
-        id 1h45yl-0003UF-Mt; Wed, 13 Mar 2019 15:39:39 +0000
+        id 1h45ys-0003Ug-CN; Wed, 13 Mar 2019 15:39:46 +0000
 Received: by debutante.sirena.org.uk (Postfix, from userid 1000)
-        id 0C9641128B97; Wed, 13 Mar 2019 15:39:39 +0000 (GMT)
+        id C615F1128B97; Wed, 13 Mar 2019 15:39:45 +0000 (GMT)
 From:   Mark Brown <broonie@kernel.org>
 To:     Axel Lin <axel.lin@ingics.com>
 Cc:     Mark Brown <broonie@kernel.org>, linux-kernel@vger.kernel.org
-Subject: Applied "regulator: gpio: Convert to devm_regulator_register" to the regulator tree
+Subject: Applied "regulator: palmas: Remove *rdev[PALMAS_NUM_REGS] from struct palmas_pmic" to the regulator tree
 In-Reply-To: 
 X-Patchwork-Hint: ignore
-Message-Id: <20190313153939.0C9641128B97@debutante.sirena.org.uk>
-Date:   Wed, 13 Mar 2019 15:39:39 +0000 (GMT)
+Message-Id: <20190313153945.C615F1128B97@debutante.sirena.org.uk>
+Date:   Wed, 13 Mar 2019 15:39:45 +0000 (GMT)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
@@ -59,7 +59,7 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 The patch
 
-   regulator: gpio: Convert to devm_regulator_register
+   regulator: palmas: Remove *rdev[PALMAS_NUM_REGS] from struct palmas_pmic
 
 has been applied to the regulator tree at
 
@@ -84,76 +84,78 @@ to this mail.
 Thanks,
 Mark
 
-From 7cdc2ee7bf10705f737c22dcd4b002b87849badb Mon Sep 17 00:00:00 2001
+From 74b060d6845f09a5b2db6df653a3c0e90d4fa560 Mon Sep 17 00:00:00 2001
 From: Axel Lin <axel.lin@ingics.com>
-Date: Fri, 8 Mar 2019 14:15:28 +0800
-Subject: [PATCH] regulator: gpio: Convert to devm_regulator_register
+Date: Sun, 10 Mar 2019 23:06:09 +0800
+Subject: [PATCH] regulator: palmas: Remove *rdev[PALMAS_NUM_REGS] from struct
+ palmas_pmic
 
-Use devm_regulator_register to simplify the code.
+This driver is using devm_regulator_register() so it is not necessary
+to save *rdev for clean up. Actually the pmic->rdev[id] is not used now.
 
 Signed-off-by: Axel Lin <axel.lin@ingics.com>
 Signed-off-by: Mark Brown <broonie@kernel.org>
 ---
- drivers/regulator/gpio-regulator.c | 18 ++++--------------
- 1 file changed, 4 insertions(+), 14 deletions(-)
+ drivers/regulator/palmas-regulator.c | 12 ------------
+ include/linux/mfd/palmas.h           |  1 -
+ 2 files changed, 13 deletions(-)
 
-diff --git a/drivers/regulator/gpio-regulator.c b/drivers/regulator/gpio-regulator.c
-index 6157001df0a4..967338bf1dc1 100644
---- a/drivers/regulator/gpio-regulator.c
-+++ b/drivers/regulator/gpio-regulator.c
-@@ -36,7 +36,6 @@
+diff --git a/drivers/regulator/palmas-regulator.c b/drivers/regulator/palmas-regulator.c
+index 7fb9e8dd834e..f13c7c8b1061 100644
+--- a/drivers/regulator/palmas-regulator.c
++++ b/drivers/regulator/palmas-regulator.c
+@@ -991,9 +991,6 @@ static int palmas_ldo_registration(struct palmas_pmic *pmic,
+ 			return PTR_ERR(rdev);
+ 		}
  
- struct gpio_regulator_data {
- 	struct regulator_desc desc;
--	struct regulator_dev *dev;
+-		/* Save regulator for cleanup */
+-		pmic->rdev[id] = rdev;
+-
+ 		/* Initialise sleep/init values from platform data */
+ 		if (pdata) {
+ 			reg_init = pdata->reg_init[id];
+@@ -1101,9 +1098,6 @@ static int tps65917_ldo_registration(struct palmas_pmic *pmic,
+ 			return PTR_ERR(rdev);
+ 		}
  
- 	struct gpio_desc **gpiods;
- 	int nr_gpios;
-@@ -233,6 +232,7 @@ static int gpio_regulator_probe(struct platform_device *pdev)
- 	struct device_node *np = dev->of_node;
- 	struct gpio_regulator_data *drvdata;
- 	struct regulator_config cfg = { };
-+	struct regulator_dev *rdev;
- 	enum gpiod_flags gflags;
- 	int ptr, ret, state, i;
- 
-@@ -326,9 +326,9 @@ static int gpio_regulator_probe(struct platform_device *pdev)
- 	if (IS_ERR(cfg.ena_gpiod))
- 		return PTR_ERR(cfg.ena_gpiod);
- 
--	drvdata->dev = regulator_register(&drvdata->desc, &cfg);
--	if (IS_ERR(drvdata->dev)) {
--		ret = PTR_ERR(drvdata->dev);
-+	rdev = devm_regulator_register(dev, &drvdata->desc, &cfg);
-+	if (IS_ERR(rdev)) {
-+		ret = PTR_ERR(rdev);
- 		dev_err(dev, "Failed to register regulator: %d\n", ret);
- 		return ret;
+-		/* Save regulator for cleanup */
+-		pmic->rdev[id] = rdev;
+-
+ 		/* Initialise sleep/init values from platform data */
+ 		if (pdata) {
+ 			reg_init = pdata->reg_init[id];
+@@ -1288,9 +1282,6 @@ static int palmas_smps_registration(struct palmas_pmic *pmic,
+ 				pdev_name);
+ 			return PTR_ERR(rdev);
+ 		}
+-
+-		/* Save regulator for cleanup */
+-		pmic->rdev[id] = rdev;
  	}
-@@ -338,15 +338,6 @@ static int gpio_regulator_probe(struct platform_device *pdev)
+ 
  	return 0;
- }
+@@ -1395,9 +1386,6 @@ static int tps65917_smps_registration(struct palmas_pmic *pmic,
+ 				pdev_name);
+ 			return PTR_ERR(rdev);
+ 		}
+-
+-		/* Save regulator for cleanup */
+-		pmic->rdev[id] = rdev;
+ 	}
  
--static int gpio_regulator_remove(struct platform_device *pdev)
--{
--	struct gpio_regulator_data *drvdata = platform_get_drvdata(pdev);
--
--	regulator_unregister(drvdata->dev);
--
--	return 0;
--}
--
- #if defined(CONFIG_OF)
- static const struct of_device_id regulator_gpio_of_match[] = {
- 	{ .compatible = "regulator-gpio", },
-@@ -357,7 +348,6 @@ MODULE_DEVICE_TABLE(of, regulator_gpio_of_match);
+ 	return 0;
+diff --git a/include/linux/mfd/palmas.h b/include/linux/mfd/palmas.h
+index 75e5c8ff85fc..c34d5f0d34d7 100644
+--- a/include/linux/mfd/palmas.h
++++ b/include/linux/mfd/palmas.h
+@@ -553,7 +553,6 @@ struct palmas_pmic {
+ 	struct palmas *palmas;
+ 	struct device *dev;
+ 	struct regulator_desc desc[PALMAS_NUM_REGS];
+-	struct regulator_dev *rdev[PALMAS_NUM_REGS];
+ 	struct mutex mutex;
  
- static struct platform_driver gpio_regulator_driver = {
- 	.probe		= gpio_regulator_probe,
--	.remove		= gpio_regulator_remove,
- 	.driver		= {
- 		.name		= "gpio-regulator",
- 		.of_match_table = of_match_ptr(regulator_gpio_of_match),
+ 	int smps123;
 -- 
 2.20.1
 
