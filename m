@@ -4,49 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C1B50C43381
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 Mar 2019 19:13:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7EC40C10F03
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 Mar 2019 19:13:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 862942184D
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 Mar 2019 19:13:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4D48C2184D
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 Mar 2019 19:13:22 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1552504397;
-	bh=FzHvRoG17K54IWiQfe8Szt+YKIB6vt1cflLjm0hIFzA=;
+	s=default; t=1552504402;
+	bh=FKaYhBB/zZrnG1uUtZMifYIItmAabeW4lHxjAiVIZTM=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=GEDL94b4BXGinZA1Ckwjg7uhvLmnuQ88rABsvRkNs5OETVJyWGfbaKF5yv+vA4y++
-	 DJQ8lhuQsWx86bVtssKe/tdcwz9flY3ahYpgyRte/yXzUhCGQN5rqf4WUx1ntXoFox
-	 KwiVnXDtXLG68JBanGXtdszITVisRyjsjXkLCYvQ=
+	b=f0gpJDCQOQ4iVwRfaYDOFoJlM8F4aD9jcmooekLfKCP4ut3LwU2EOd2GLQaYgb0bv
+	 GTFndFRm3LegIKuGEzqi9YvBgNrYyr+evhJqgF9WWgw5SbfA+V8O2ciEVK4gD2L8WK
+	 mO0vWSsyxV2FpPWWbBOD77e+bZA9bpixZEu3WYf0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727944AbfCMTNQ (ORCPT
+        id S1727123AbfCMTNU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 13 Mar 2019 15:13:16 -0400
-Received: from mail.kernel.org ([198.145.29.99]:43754 "EHLO mail.kernel.org"
+        Wed, 13 Mar 2019 15:13:20 -0400
+Received: from mail.kernel.org ([198.145.29.99]:43824 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727921AbfCMTNN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 13 Mar 2019 15:13:13 -0400
+        id S1727921AbfCMTNR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 13 Mar 2019 15:13:17 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 472712075C;
-        Wed, 13 Mar 2019 19:13:11 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 53BD42075C;
+        Wed, 13 Mar 2019 19:13:15 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1552504392;
-        bh=FzHvRoG17K54IWiQfe8Szt+YKIB6vt1cflLjm0hIFzA=;
+        s=default; t=1552504396;
+        bh=FKaYhBB/zZrnG1uUtZMifYIItmAabeW4lHxjAiVIZTM=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=cW8wqD31hSMsfudA2yYZjbkf8/CZy/ms/SQKe0D6K+wrqxGUOz3WYkYIqze0Tn26O
-         39Jn6XPokMiNDbwDzx7QzO1qAw7UXwwkqsK3EPhZKp1RS+2f8ZXRQmR32fgiZ03MlX
-         GTxHbPxXR83/PL2oihf5WjKrCJnxD3yP4QtuEQDY=
+        b=jvBENr6AmVuyXJNVLQ2h/5g7bFO7UfgHPc23WUoS4WScE6VOFHXLKmeilQCjVspvg
+         PAYykWJfcRoF1tb24amFse4WWiS712nthhfyDQNuDNLjKiFd4qW2Jd8Uips1Y9VBVd
+         dvgonpVIvNEBqGz0b8qa9b8L6t+yAFPY/VQk9FbE=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Willem de Bruijn <willemb@google.com>,
-        Alexei Starovoitov <ast@kernel.org>,
-        Sasha Levin <sashal@kernel.org>, netdev@vger.kernel.org,
-        bpf@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.19 06/48] bpf: only adjust gso_size on bytestream protocols
-Date:   Wed, 13 Mar 2019 15:12:08 -0400
-Message-Id: <20190313191250.158955-6-sashal@kernel.org>
+Cc:     Sean Tranchetti <stranche@codeaurora.org>,
+        Steffen Klassert <steffen.klassert@secunet.com>,
+        Sasha Levin <sashal@kernel.org>, netdev@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.19 08/48] af_key: unconditionally clone on broadcast
+Date:   Wed, 13 Mar 2019 15:12:10 -0400
+Message-Id: <20190313191250.158955-8-sashal@kernel.org>
 X-Mailer: git-send-email 2.19.1
 In-Reply-To: <20190313191250.158955-1-sashal@kernel.org>
 References: <20190313191250.158955-1-sashal@kernel.org>
@@ -58,93 +58,130 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Willem de Bruijn <willemb@google.com>
+From: Sean Tranchetti <stranche@codeaurora.org>
 
-[ Upstream commit b90efd2258749e04e1b3f71ef0d716f2ac2337e0 ]
+[ Upstream commit fc2d5cfdcfe2ab76b263d91429caa22451123085 ]
 
-bpf_skb_change_proto and bpf_skb_adjust_room change skb header length.
-For GSO packets they adjust gso_size to maintain the same MTU.
+Attempting to avoid cloning the skb when broadcasting by inflating
+the refcount with sock_hold/sock_put while under RCU lock is dangerous
+and violates RCU principles. It leads to subtle race conditions when
+attempting to free the SKB, as we may reference sockets that have
+already been freed by the stack.
 
-The gso size can only be safely adjusted on bytestream protocols.
-Commit d02f51cbcf12 ("bpf: fix bpf_skb_adjust_net/bpf_skb_proto_xlat
-to deal with gso sctp skbs") excluded SKB_GSO_SCTP.
+Unable to handle kernel paging request at virtual address 6b6b6b6b6b6c4b
+[006b6b6b6b6b6c4b] address between user and kernel address ranges
+Internal error: Oops: 96000004 [#1] PREEMPT SMP
+task: fffffff78f65b380 task.stack: ffffff8049a88000
+pc : sock_rfree+0x38/0x6c
+lr : skb_release_head_state+0x6c/0xcc
+Process repro (pid: 7117, stack limit = 0xffffff8049a88000)
+Call trace:
+	sock_rfree+0x38/0x6c
+	skb_release_head_state+0x6c/0xcc
+	skb_release_all+0x1c/0x38
+	__kfree_skb+0x1c/0x30
+	kfree_skb+0xd0/0xf4
+	pfkey_broadcast+0x14c/0x18c
+	pfkey_sendmsg+0x1d8/0x408
+	sock_sendmsg+0x44/0x60
+	___sys_sendmsg+0x1d0/0x2a8
+	__sys_sendmsg+0x64/0xb4
+	SyS_sendmsg+0x34/0x4c
+	el0_svc_naked+0x34/0x38
+Kernel panic - not syncing: Fatal exception
 
-Since then type SKB_GSO_UDP_L4 has been added, whose contents are one
-gso_size unit per datagram. Also exclude these.
-
-Move from a blacklist to a whitelist check to future proof against
-additional such new GSO types, e.g., for fraglist based GRO.
-
-Fixes: bec1f6f69736 ("udp: generate gso with UDP_SEGMENT")
-Signed-off-by: Willem de Bruijn <willemb@google.com>
-Signed-off-by: Alexei Starovoitov <ast@kernel.org>
+Suggested-by: Eric Dumazet <eric.dumazet@gmail.com>
+Signed-off-by: Sean Tranchetti <stranche@codeaurora.org>
+Signed-off-by: Steffen Klassert <steffen.klassert@secunet.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- include/linux/skbuff.h |  6 ++++++
- net/core/filter.c      | 12 ++++--------
- 2 files changed, 10 insertions(+), 8 deletions(-)
+ net/key/af_key.c | 40 +++++++++++++++-------------------------
+ 1 file changed, 15 insertions(+), 25 deletions(-)
 
-diff --git a/include/linux/skbuff.h b/include/linux/skbuff.h
-index a404d475acee..3b0a25bb7c6f 100644
---- a/include/linux/skbuff.h
-+++ b/include/linux/skbuff.h
-@@ -4086,6 +4086,12 @@ static inline bool skb_is_gso_sctp(const struct sk_buff *skb)
- 	return skb_shinfo(skb)->gso_type & SKB_GSO_SCTP;
+diff --git a/net/key/af_key.c b/net/key/af_key.c
+index 9d61266526e7..7da629d59717 100644
+--- a/net/key/af_key.c
++++ b/net/key/af_key.c
+@@ -196,30 +196,22 @@ static int pfkey_release(struct socket *sock)
+ 	return 0;
  }
  
-+static inline bool skb_is_gso_tcp(const struct sk_buff *skb)
-+{
-+	return skb_is_gso(skb) &&
-+	       skb_shinfo(skb)->gso_type & (SKB_GSO_TCPV4 | SKB_GSO_TCPV6);
-+}
-+
- static inline void skb_gso_reset(struct sk_buff *skb)
+-static int pfkey_broadcast_one(struct sk_buff *skb, struct sk_buff **skb2,
+-			       gfp_t allocation, struct sock *sk)
++static int pfkey_broadcast_one(struct sk_buff *skb, gfp_t allocation,
++			       struct sock *sk)
  {
- 	skb_shinfo(skb)->gso_size = 0;
-diff --git a/net/core/filter.c b/net/core/filter.c
-index fb0080e84bd4..cb792b344b5e 100644
---- a/net/core/filter.c
-+++ b/net/core/filter.c
-@@ -2614,8 +2614,7 @@ static int bpf_skb_proto_4_to_6(struct sk_buff *skb)
- 	u32 off = skb_mac_header_len(skb);
- 	int ret;
+ 	int err = -ENOBUFS;
  
--	/* SCTP uses GSO_BY_FRAGS, thus cannot adjust it. */
--	if (skb_is_gso(skb) && unlikely(skb_is_gso_sctp(skb)))
-+	if (!skb_is_gso_tcp(skb))
- 		return -ENOTSUPP;
+-	sock_hold(sk);
+-	if (*skb2 == NULL) {
+-		if (refcount_read(&skb->users) != 1) {
+-			*skb2 = skb_clone(skb, allocation);
+-		} else {
+-			*skb2 = skb;
+-			refcount_inc(&skb->users);
+-		}
+-	}
+-	if (*skb2 != NULL) {
+-		if (atomic_read(&sk->sk_rmem_alloc) <= sk->sk_rcvbuf) {
+-			skb_set_owner_r(*skb2, sk);
+-			skb_queue_tail(&sk->sk_receive_queue, *skb2);
+-			sk->sk_data_ready(sk);
+-			*skb2 = NULL;
+-			err = 0;
+-		}
++	if (atomic_read(&sk->sk_rmem_alloc) > sk->sk_rcvbuf)
++		return err;
++
++	skb = skb_clone(skb, allocation);
++
++	if (skb) {
++		skb_set_owner_r(skb, sk);
++		skb_queue_tail(&sk->sk_receive_queue, skb);
++		sk->sk_data_ready(sk);
++		err = 0;
+ 	}
+-	sock_put(sk);
+ 	return err;
+ }
  
- 	ret = skb_cow(skb, len_diff);
-@@ -2656,8 +2655,7 @@ static int bpf_skb_proto_6_to_4(struct sk_buff *skb)
- 	u32 off = skb_mac_header_len(skb);
- 	int ret;
+@@ -234,7 +226,6 @@ static int pfkey_broadcast(struct sk_buff *skb, gfp_t allocation,
+ {
+ 	struct netns_pfkey *net_pfkey = net_generic(net, pfkey_net_id);
+ 	struct sock *sk;
+-	struct sk_buff *skb2 = NULL;
+ 	int err = -ESRCH;
  
--	/* SCTP uses GSO_BY_FRAGS, thus cannot adjust it. */
--	if (skb_is_gso(skb) && unlikely(skb_is_gso_sctp(skb)))
-+	if (!skb_is_gso_tcp(skb))
- 		return -ENOTSUPP;
+ 	/* XXX Do we need something like netlink_overrun?  I think
+@@ -253,7 +244,7 @@ static int pfkey_broadcast(struct sk_buff *skb, gfp_t allocation,
+ 		 * socket.
+ 		 */
+ 		if (pfk->promisc)
+-			pfkey_broadcast_one(skb, &skb2, GFP_ATOMIC, sk);
++			pfkey_broadcast_one(skb, GFP_ATOMIC, sk);
  
- 	ret = skb_unclone(skb, GFP_ATOMIC);
-@@ -2782,8 +2780,7 @@ static int bpf_skb_net_grow(struct sk_buff *skb, u32 len_diff)
- 	u32 off = skb_mac_header_len(skb) + bpf_skb_net_base_len(skb);
- 	int ret;
+ 		/* the exact target will be processed later */
+ 		if (sk == one_sk)
+@@ -268,7 +259,7 @@ static int pfkey_broadcast(struct sk_buff *skb, gfp_t allocation,
+ 				continue;
+ 		}
  
--	/* SCTP uses GSO_BY_FRAGS, thus cannot adjust it. */
--	if (skb_is_gso(skb) && unlikely(skb_is_gso_sctp(skb)))
-+	if (!skb_is_gso_tcp(skb))
- 		return -ENOTSUPP;
+-		err2 = pfkey_broadcast_one(skb, &skb2, GFP_ATOMIC, sk);
++		err2 = pfkey_broadcast_one(skb, GFP_ATOMIC, sk);
  
- 	ret = skb_cow(skb, len_diff);
-@@ -2812,8 +2809,7 @@ static int bpf_skb_net_shrink(struct sk_buff *skb, u32 len_diff)
- 	u32 off = skb_mac_header_len(skb) + bpf_skb_net_base_len(skb);
- 	int ret;
+ 		/* Error is cleared after successful sending to at least one
+ 		 * registered KM */
+@@ -278,9 +269,8 @@ static int pfkey_broadcast(struct sk_buff *skb, gfp_t allocation,
+ 	rcu_read_unlock();
  
--	/* SCTP uses GSO_BY_FRAGS, thus cannot adjust it. */
--	if (skb_is_gso(skb) && unlikely(skb_is_gso_sctp(skb)))
-+	if (!skb_is_gso_tcp(skb))
- 		return -ENOTSUPP;
+ 	if (one_sk != NULL)
+-		err = pfkey_broadcast_one(skb, &skb2, allocation, one_sk);
++		err = pfkey_broadcast_one(skb, allocation, one_sk);
  
- 	ret = skb_unclone(skb, GFP_ATOMIC);
+-	kfree_skb(skb2);
+ 	kfree_skb(skb);
+ 	return err;
+ }
 -- 
 2.19.1
 
