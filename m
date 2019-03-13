@@ -2,357 +2,483 @@ Return-Path: <SRS0=dUEL=RQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
+X-Spam-Status: No, score=-8.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8AB68C4360F
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 Mar 2019 07:02:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1167DC43381
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 Mar 2019 07:02:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 410482171F
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 Mar 2019 07:02:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BB5802171F
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 Mar 2019 07:02:42 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=c-s.fr header.i=@c-s.fr header.b="gMw8Uwaf"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="QnzXMv9D"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727215AbfCMHCH (ORCPT
+        id S1727231AbfCMHCl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 13 Mar 2019 03:02:07 -0400
-Received: from pegase1.c-s.fr ([93.17.236.30]:8400 "EHLO pegase1.c-s.fr"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725821AbfCMHCH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 13 Mar 2019 03:02:07 -0400
-Received: from localhost (mailhub1-int [192.168.12.234])
-        by localhost (Postfix) with ESMTP id 44K2p31RBkz9v0Nk;
-        Wed, 13 Mar 2019 08:02:03 +0100 (CET)
-Authentication-Results: localhost; dkim=pass
-        reason="1024-bit key; insecure key"
-        header.d=c-s.fr header.i=@c-s.fr header.b=gMw8Uwaf; dkim-adsp=pass;
-        dkim-atps=neutral
-X-Virus-Scanned: Debian amavisd-new at c-s.fr
-Received: from pegase1.c-s.fr ([192.168.12.234])
-        by localhost (pegase1.c-s.fr [192.168.12.234]) (amavisd-new, port 10024)
-        with ESMTP id Bfl16rsp6TDC; Wed, 13 Mar 2019 08:02:03 +0100 (CET)
-Received: from messagerie.si.c-s.fr (messagerie.si.c-s.fr [192.168.25.192])
-        by pegase1.c-s.fr (Postfix) with ESMTP id 44K2p30G10z9v0Nh;
-        Wed, 13 Mar 2019 08:02:03 +0100 (CET)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=c-s.fr; s=mail;
-        t=1552460523; bh=+7P6BYZrtYSLYvn/tWAWWa5/QIPpYRC8W2jSi7GUp8g=;
-        h=Subject:From:To:Cc:References:Date:In-Reply-To:From;
-        b=gMw8UwafRZUPwmSFu8FCCI5eFft21NocPR/vMKhT+2gqSGlOstIv+siEXI14XLV4b
-         tajBU8WReATbzO+rhkfPQh/7qyMz80QyE0jUmPeoCfVqpS4pP3LjbOReAUrRXjPuLm
-         sHJ3ISTmM87sgAqNyjuJbUUXA0dIF/8xdvYOktQc=
-Received: from localhost (localhost [127.0.0.1])
-        by messagerie.si.c-s.fr (Postfix) with ESMTP id D91F58B8E3;
-        Wed, 13 Mar 2019 08:02:03 +0100 (CET)
-X-Virus-Scanned: amavisd-new at c-s.fr
-Received: from messagerie.si.c-s.fr ([127.0.0.1])
-        by localhost (messagerie.si.c-s.fr [127.0.0.1]) (amavisd-new, port 10023)
-        with ESMTP id RZiVQZa30r00; Wed, 13 Mar 2019 08:02:03 +0100 (CET)
-Received: from PO15451 (unknown [192.168.4.90])
-        by messagerie.si.c-s.fr (Postfix) with ESMTP id A6A1C8B75A;
-        Wed, 13 Mar 2019 08:02:01 +0100 (CET)
-Subject: Re: [PATCH RFC v3 18/18] powerpc: KASAN for 64bit Book3E
-From:   Christophe Leroy <christophe.leroy@c-s.fr>
-To:     Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        Paul Mackerras <paulus@samba.org>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        Nicholas Piggin <npiggin@gmail.com>,
-        "Aneesh Kumar K.V" <aneesh.kumar@linux.ibm.com>,
-        Andrey Ryabinin <aryabinin@virtuozzo.com>,
-        Alexander Potapenko <glider@google.com>,
-        Dmitry Vyukov <dvyukov@google.com>,
-        Daniel Axtens <dja@axtens.net>
-Cc:     linux-mm@kvack.org, linuxppc-dev@lists.ozlabs.org,
-        linux-kernel@vger.kernel.org, kasan-dev@googlegroups.com
-References: <cover.1552428161.git.christophe.leroy@c-s.fr>
- <3e97aba429c769bd99ccd8d6f16eda98f7d378a7.1552428161.git.christophe.leroy@c-s.fr>
-Message-ID: <62ba1b83-cc75-82a4-a1c0-5a54464c963b@c-s.fr>
-Date:   Wed, 13 Mar 2019 08:02:01 +0100
-User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:60.0) Gecko/20100101
- Thunderbird/60.5.3
+        Wed, 13 Mar 2019 03:02:41 -0400
+Received: from mail-pg1-f194.google.com ([209.85.215.194]:33929 "EHLO
+        mail-pg1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725821AbfCMHCk (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 13 Mar 2019 03:02:40 -0400
+Received: by mail-pg1-f194.google.com with SMTP id v12so873279pgq.1
+        for <linux-kernel@vger.kernel.org>; Wed, 13 Mar 2019 00:02:40 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=qiyUmh6eh+ti93ZJ4vZQeMZZmW1IgaMJUaUuyRyiEtU=;
+        b=QnzXMv9DJOC9UxXp/lThFZ78yQhlXl/nfMy+LZzbahiV/HQ/JAjGrWfeff5n4yNtxf
+         17AbE3x8b7koZfk7vK7U7KLhkPp6eo7TzE8PLz/juaTYDF5V0SDhEoh6rodNQD4v3Q1K
+         YiJikhTHgrqP69mFM/2HlOooajIPKRwhO+GJ8wVj0zTts/bd+AwzRFd6Vny8v54b/B/V
+         T1oRwOsFYfipaIeSEFAc2oQ5qwqnVXGvu0dcLCAwK2ihvIy3mQiV+RmGnODb30wjOj1x
+         YF0b3WqgO+DGtr72v8QXAPHfBVGtlWNmrW9nVp0d+7IWZxgNYG0jq3hqvWBCeldYz1nm
+         OaLA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=qiyUmh6eh+ti93ZJ4vZQeMZZmW1IgaMJUaUuyRyiEtU=;
+        b=KzlaxcGaQjZvjl4E0S1vkBGyRp8HJ3c9Cz/bgoirYAvwr01/0lg3VkU0ZbNXJM+xHX
+         GvDee0yXVe0kJApWB19XQkoYKuzpzk+E/VCHT6S6T16cuoWQt0QaLlSs/NG3RQivk/NL
+         lEZHxZOugAYo3UOh8xlD5j+dyuLN+5korZ/e9/28Kes4s9vRvMWVyWG3Qh2KrQzLibOG
+         b1mMg2oI5pfyUsLLO/B9sW7XvEFAKOaWy/EerKbNt+div4mVnXyilrXx6Ks7fSdo7oIC
+         RdJjPbu9X/USxdG5nE8tlWT16K7OroD2aGDV+NwxWtaJQ9CH4RzODvDygIdCOwq5wC4M
+         cgDw==
+X-Gm-Message-State: APjAAAX/OJ6OPXkn/LexVPWaN5zmLxRF2RdSuFH0QjaXo5Yy9s+ITRYL
+        svq2HOO3SSHQsCL3hEcGNBU=
+X-Google-Smtp-Source: APXvYqySpFs0Jye901R3Z64Gl2za/wLKT3xfrXnhCE0uA7PocV3MCbnm/ua7c9kcYTbyCIGnxzt9ZQ==
+X-Received: by 2002:a63:35ce:: with SMTP id c197mr38594529pga.281.1552460559275;
+        Wed, 13 Mar 2019 00:02:39 -0700 (PDT)
+Received: from squirtle.lan (c-24-22-235-96.hsd1.wa.comcast.net. [24.22.235.96])
+        by smtp.gmail.com with ESMTPSA id u14sm14702176pfm.66.2019.03.13.00.02.37
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Wed, 13 Mar 2019 00:02:38 -0700 (PDT)
+From:   Andrey Smirnov <andrew.smirnov@gmail.com>
+To:     Shawn Guo <shawnguo@kernel.org>
+Cc:     Andrey Smirnov <andrew.smirnov@gmail.com>,
+        Chris Healy <cphealy@gmail.com>, Andrew Lunn <andrew@lunn.ch>,
+        Heiner Kallweit <hkallweit1@gmail.com>,
+        Fabio Estevam <festevam@gmail.com>,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        linux-imx@nxp.com
+Subject: [PATCH v2] ARM: dts: vf610: Add ZII SPB4 board
+Date:   Wed, 13 Mar 2019 00:02:24 -0700
+Message-Id: <20190313070224.30124-1-andrew.smirnov@gmail.com>
+X-Mailer: git-send-email 2.20.1
 MIME-Version: 1.0
-In-Reply-To: <3e97aba429c769bd99ccd8d6f16eda98f7d378a7.1552428161.git.christophe.leroy@c-s.fr>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: fr
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Why does snowpatch reports not being able to apply it to any branch ?
+Add Device Tree for VF610 based Zodiac Seat Power Box.
 
-I built the serie on top of merge branch, but it also cleanly applies on 
-next branch.
+Signed-off-by: Andrey Smirnov <andrew.smirnov@gmail.com>
+Cc: Shawn Guo <shawnguo@kernel.org>
+Cc: Chris Healy <cphealy@gmail.com>
+Cc: Andrew Lunn <andrew@lunn.ch>
+Cc: Heiner Kallweit <hkallweit1@gmail.com>
+Cc: Fabio Estevam <festevam@gmail.com>
+Cc: linux-arm-kernel@lists.infradead.org
+Cc: linux-kernel@vger.kernel.org
+Cc: linux-imx@nxp.com
+---
 
-Could it be because the begining of the series is names 'v10' while the 
-end of it is 'RFC v3' as it comes from Daniel's RFC v2 ?
+Changes since [v1]:
 
-Christophe
+    - Change Makefile diff to keep entries in alphabetical order
+    
+    - Various node name changes
 
-Le 12/03/2019 à 23:16, Christophe Leroy a écrit :
-> From: Daniel Axtens <dja@axtens.net>
-> 
-> Wire up KASAN. Only outline instrumentation is supported.
-> 
-> The KASAN shadow area is mapped into vmemmap space:
-> 0x8000 0400 0000 0000 to 0x8000 0600 0000 0000.
-> To do this we require that vmemmap be disabled. (This is the default
-> in the kernel config that QorIQ provides for the machine in their
-> SDK anyway - they use flat memory.)
-> 
-> Only the kernel linear mapping (0xc000...) is checked. The vmalloc and
-> ioremap areas (also in 0x800...) are all mapped to the zero page. As
-> with the Book3S hash series, this requires overriding the memory <->
-> shadow mapping.
-> 
-> Also, as with both previous 64-bit series, early instrumentation is not
-> supported.  It would allow us to drop the check_return_arch_not_ready()
-> hook in the KASAN core, but it's tricky to get it set up early enough:
-> we need it setup before the first call to instrumented code like printk().
-> Perhaps in the future.
-> 
-> Only KASAN_MINIMAL works.
-> 
-> Tested on e6500. KVM, kexec and xmon have not been tested.
-> 
-> The test_kasan module fires warnings as expected, except for the
-> following tests:
-> 
->   - Expected/by design:
-> kasan test: memcg_accounted_kmem_cache allocate memcg accounted object
-> 
->   - Due to only supporting KASAN_MINIMAL:
-> kasan test: kasan_stack_oob out-of-bounds on stack
-> kasan test: kasan_global_oob out-of-bounds global variable
-> kasan test: kasan_alloca_oob_left out-of-bounds to left on alloca
-> kasan test: kasan_alloca_oob_right out-of-bounds to right on alloca
-> kasan test: use_after_scope_test use-after-scope on int
-> kasan test: use_after_scope_test use-after-scope on array
-> 
-> Thanks to those who have done the heavy lifting over the past several
-> years:
->   - Christophe's 32 bit series: https://lists.ozlabs.org/pipermail/linuxppc-dev/2019-February/185379.html
->   - Aneesh's Book3S hash series: https://lwn.net/Articles/655642/
->   - Balbir's Book3S radix series: https://patchwork.ozlabs.org/patch/795211/
-> 
-> Cc: Christophe Leroy <christophe.leroy@c-s.fr>
-> Cc: Aneesh Kumar K.V <aneesh.kumar@linux.vnet.ibm.com>
-> Cc: Balbir Singh <bsingharora@gmail.com>
-> Signed-off-by: Daniel Axtens <dja@axtens.net>
-> [- Removed EXPORT_SYMBOL of the static key
->   - Fixed most checkpatch problems
->   - Replaced kasan_zero_page[] by kasan_early_shadow_page[]
->   - Reduced casting mess by using intermediate locals
->   - Fixed build failure on pmac32_defconfig]
-> Signed-off-by: Christophe Leroy <christophe.leroy@c-s.fr>
-> ---
->   arch/powerpc/Kconfig                         |  1 +
->   arch/powerpc/Kconfig.debug                   |  2 +-
->   arch/powerpc/include/asm/kasan.h             | 71 ++++++++++++++++++++++++++++
->   arch/powerpc/mm/Makefile                     |  2 +
->   arch/powerpc/mm/kasan/Makefile               |  1 +
->   arch/powerpc/mm/kasan/kasan_init_book3e_64.c | 50 ++++++++++++++++++++
->   6 files changed, 126 insertions(+), 1 deletion(-)
->   create mode 100644 arch/powerpc/mm/kasan/kasan_init_book3e_64.c
-> 
-> diff --git a/arch/powerpc/Kconfig b/arch/powerpc/Kconfig
-> index d9364368329b..51ef9fac6c5d 100644
-> --- a/arch/powerpc/Kconfig
-> +++ b/arch/powerpc/Kconfig
-> @@ -174,6 +174,7 @@ config PPC
->   	select HAVE_ARCH_AUDITSYSCALL
->   	select HAVE_ARCH_JUMP_LABEL
->   	select HAVE_ARCH_KASAN			if PPC32
-> +	select HAVE_ARCH_KASAN			if PPC_BOOK3E_64 && !SPARSEMEM_VMEMMAP
->   	select HAVE_ARCH_KGDB
->   	select HAVE_ARCH_MMAP_RND_BITS
->   	select HAVE_ARCH_MMAP_RND_COMPAT_BITS	if COMPAT
-> diff --git a/arch/powerpc/Kconfig.debug b/arch/powerpc/Kconfig.debug
-> index 61febbbdd02b..fc1f5fa7554e 100644
-> --- a/arch/powerpc/Kconfig.debug
-> +++ b/arch/powerpc/Kconfig.debug
-> @@ -369,5 +369,5 @@ config PPC_FAST_ENDIAN_SWITCH
->   
->   config KASAN_SHADOW_OFFSET
->   	hex
-> -	depends on KASAN
-> +	depends on KASAN && PPC32
->   	default 0xe0000000
-> diff --git a/arch/powerpc/include/asm/kasan.h b/arch/powerpc/include/asm/kasan.h
-> index 296e51c2f066..ae410f0e060d 100644
-> --- a/arch/powerpc/include/asm/kasan.h
-> +++ b/arch/powerpc/include/asm/kasan.h
-> @@ -21,12 +21,15 @@
->   #define KASAN_SHADOW_START	(KASAN_SHADOW_OFFSET + \
->   				 (PAGE_OFFSET >> KASAN_SHADOW_SCALE_SHIFT))
->   
-> +#ifdef CONFIG_PPC32
->   #define KASAN_SHADOW_OFFSET	ASM_CONST(CONFIG_KASAN_SHADOW_OFFSET)
->   
->   #define KASAN_SHADOW_END	0UL
->   
->   #define KASAN_SHADOW_SIZE	(KASAN_SHADOW_END - KASAN_SHADOW_START)
->   
-> +#endif /* CONFIG_PPC32 */
-> +
->   #ifdef CONFIG_KASAN
->   void kasan_early_init(void);
->   void kasan_mmu_init(void);
-> @@ -36,5 +39,73 @@ static inline void kasan_init(void) { }
->   static inline void kasan_mmu_init(void) { }
->   #endif
->   
-> +#ifdef CONFIG_PPC_BOOK3E_64
-> +#include <asm/pgtable.h>
-> +#include <linux/jump_label.h>
-> +
-> +/*
-> + * We don't put this in Kconfig as we only support KASAN_MINIMAL, and
-> + * that will be disabled if the symbol is available in Kconfig
-> + */
-> +#define KASAN_SHADOW_OFFSET	ASM_CONST(0x6800040000000000)
-> +
-> +#define KASAN_SHADOW_SIZE	(KERN_VIRT_SIZE >> KASAN_SHADOW_SCALE_SHIFT)
-> +
-> +extern struct static_key_false powerpc_kasan_enabled_key;
-> +extern unsigned char kasan_early_shadow_page[];
-> +
-> +static inline bool kasan_arch_is_ready_book3e(void)
-> +{
-> +	if (static_branch_likely(&powerpc_kasan_enabled_key))
-> +		return true;
-> +	return false;
-> +}
-> +#define kasan_arch_is_ready kasan_arch_is_ready_book3e
-> +
-> +static inline void *kasan_mem_to_shadow_book3e(const void *ptr)
-> +{
-> +	unsigned long addr = (unsigned long)ptr;
-> +
-> +	if (addr >= KERN_VIRT_START && addr < KERN_VIRT_START + KERN_VIRT_SIZE)
-> +		return kasan_early_shadow_page;
-> +
-> +	return (void *)(addr >> KASAN_SHADOW_SCALE_SHIFT) + KASAN_SHADOW_OFFSET;
-> +}
-> +#define kasan_mem_to_shadow kasan_mem_to_shadow_book3e
-> +
-> +static inline void *kasan_shadow_to_mem_book3e(const void *shadow_addr)
-> +{
-> +	/*
-> +	 * We map the entire non-linear virtual mapping onto the zero page so if
-> +	 * we are asked to map the zero page back just pick the beginning of that
-> +	 * area.
-> +	 */
-> +	if (shadow_addr >= (void *)kasan_early_shadow_page &&
-> +	    shadow_addr < (void *)(kasan_early_shadow_page + PAGE_SIZE))
-> +		return (void *)KERN_VIRT_START;
-> +
-> +	return (void *)(((unsigned long)shadow_addr - KASAN_SHADOW_OFFSET) <<
-> +			KASAN_SHADOW_SCALE_SHIFT);
-> +}
-> +#define kasan_shadow_to_mem kasan_shadow_to_mem_book3e
-> +
-> +static inline bool kasan_addr_has_shadow_book3e(const void *ptr)
-> +{
-> +	unsigned long addr = (unsigned long)ptr;
-> +
-> +	/*
-> +	 * We want to specifically assert that the addresses in the 0x8000...
-> +	 * region have a shadow, otherwise they are considered by the kasan
-> +	 * core to be wild pointers
-> +	 */
-> +	if (addr >= KERN_VIRT_START && addr < (KERN_VIRT_START + KERN_VIRT_SIZE))
-> +		return true;
-> +
-> +	return (ptr >= kasan_shadow_to_mem((void *)KASAN_SHADOW_START));
-> +}
-> +#define kasan_addr_has_shadow kasan_addr_has_shadow_book3e
-> +
-> +#endif /* CONFIG_PPC_BOOK3E_64 */
-> +
->   #endif /* __ASSEMBLY */
->   #endif
-> diff --git a/arch/powerpc/mm/Makefile b/arch/powerpc/mm/Makefile
-> index 80382a2d169b..fc49231f807c 100644
-> --- a/arch/powerpc/mm/Makefile
-> +++ b/arch/powerpc/mm/Makefile
-> @@ -8,9 +8,11 @@ ccflags-$(CONFIG_PPC64)	:= $(NO_MINIMAL_TOC)
->   CFLAGS_REMOVE_slb.o = $(CC_FLAGS_FTRACE)
->   
->   KASAN_SANITIZE_ppc_mmu_32.o := n
-> +KASAN_SANITIZE_fsl_booke_mmu.o := n
->   
->   ifdef CONFIG_KASAN
->   CFLAGS_ppc_mmu_32.o  		+= -DDISABLE_BRANCH_PROFILING
-> +CFLAGS_fsl_booke_mmu.o		+= -DDISABLE_BRANCH_PROFILING
->   endif
->   
->   obj-y				:= fault.o mem.o pgtable.o mmap.o \
-> diff --git a/arch/powerpc/mm/kasan/Makefile b/arch/powerpc/mm/kasan/Makefile
-> index 6577897673dd..f8f164ad8ade 100644
-> --- a/arch/powerpc/mm/kasan/Makefile
-> +++ b/arch/powerpc/mm/kasan/Makefile
-> @@ -3,3 +3,4 @@
->   KASAN_SANITIZE := n
->   
->   obj-$(CONFIG_PPC32)           += kasan_init_32.o
-> +obj-$(CONFIG_PPC_BOOK3E_64)   += kasan_init_book3e_64.o
-> diff --git a/arch/powerpc/mm/kasan/kasan_init_book3e_64.c b/arch/powerpc/mm/kasan/kasan_init_book3e_64.c
-> new file mode 100644
-> index 000000000000..f116c211d83c
-> --- /dev/null
-> +++ b/arch/powerpc/mm/kasan/kasan_init_book3e_64.c
-> @@ -0,0 +1,50 @@
-> +// SPDX-License-Identifier: GPL-2.0
-> +
-> +#define DISABLE_BRANCH_PROFILING
-> +
-> +#include <linux/kasan.h>
-> +#include <linux/printk.h>
-> +#include <linux/memblock.h>
-> +#include <linux/sched/task.h>
-> +#include <asm/pgalloc.h>
-> +
-> +DEFINE_STATIC_KEY_FALSE(powerpc_kasan_enabled_key);
-> +
-> +static void __init kasan_init_region(struct memblock_region *reg)
-> +{
-> +	void *start = __va(reg->base);
-> +	void *end = __va(reg->base + reg->size);
-> +	unsigned long k_start, k_end, k_cur;
-> +
-> +	if (start >= end)
-> +		return;
-> +
-> +	k_start = (unsigned long)kasan_mem_to_shadow(start);
-> +	k_end = (unsigned long)kasan_mem_to_shadow(end);
-> +
-> +	for (k_cur = k_start; k_cur < k_end; k_cur += PAGE_SIZE) {
-> +		void *va = memblock_alloc(PAGE_SIZE, PAGE_SIZE);
-> +
-> +		map_kernel_page(k_cur, __pa(va), PAGE_KERNEL);
-> +	}
-> +	flush_tlb_kernel_range(k_start, k_end);
-> +}
-> +
-> +void __init kasan_init(void)
-> +{
-> +	struct memblock_region *reg;
-> +
-> +	for_each_memblock(memory, reg)
-> +		kasan_init_region(reg);
-> +
-> +	/* map the zero page RO */
-> +	map_kernel_page((unsigned long)kasan_early_shadow_page,
-> +			__pa(kasan_early_shadow_page), PAGE_KERNEL_RO);
-> +
-> +	/* Turn on checking */
-> +	static_branch_inc(&powerpc_kasan_enabled_key);
-> +
-> +	/* Enable error messages */
-> +	init_task.kasan_depth = 0;
-> +	pr_info("KASAN init done (64-bit Book3E)\n");
-> +}
-> 
+[v1] lkml.kernel.org/r/20190311184928.25988-1-andrew.smirnov@gmail.com
+
+ arch/arm/boot/dts/Makefile           |   1 +
+ arch/arm/boot/dts/vf610-zii-spb4.dts | 359 +++++++++++++++++++++++++++
+ 2 files changed, 360 insertions(+)
+ create mode 100644 arch/arm/boot/dts/vf610-zii-spb4.dts
+
+diff --git a/arch/arm/boot/dts/Makefile b/arch/arm/boot/dts/Makefile
+index f4f5aeaf3298..efefce8efa05 100644
+--- a/arch/arm/boot/dts/Makefile
++++ b/arch/arm/boot/dts/Makefile
+@@ -606,6 +606,7 @@ dtb-$(CONFIG_SOC_VF610) += \
+ 	vf610-zii-dev-rev-b.dtb \
+ 	vf610-zii-dev-rev-c.dtb \
+ 	vf610-zii-scu4-aib.dtb \
++	vf610-zii-spb4.dtb \
+ 	vf610-zii-ssmb-dtu.dtb \
+ 	vf610-zii-ssmb-spu3.dtb
+ dtb-$(CONFIG_ARCH_MXS) += \
+diff --git a/arch/arm/boot/dts/vf610-zii-spb4.dts b/arch/arm/boot/dts/vf610-zii-spb4.dts
+new file mode 100644
+index 000000000000..3b0c003a9fcf
+--- /dev/null
++++ b/arch/arm/boot/dts/vf610-zii-spb4.dts
+@@ -0,0 +1,359 @@
++// SPDX-License-Identifier: (GPL-2.0 OR MIT)
++
++/*
++ * Device tree file for ZII's SPB4 board
++ *
++ * SPB - Seat Power Box
++ *
++ * Copyright (C) 2019 Zodiac Inflight Innovations
++ */
++
++/dts-v1/;
++#include "vf610.dtsi"
++
++/ {
++	model = "ZII VF610 SPB4 Board";
++	compatible = "zii,vf610spb4", "zii,vf610dev", "fsl,vf610";
++
++	chosen {
++		stdout-path = &uart0;
++	};
++
++	memory@80000000 {
++		device_type = "memory";
++		reg = <0x80000000 0x20000000>;
++	};
++
++	gpio-leds {
++		compatible = "gpio-leds";
++		pinctrl-0 = <&pinctrl_leds_debug>;
++		pinctrl-names = "default";
++
++		led-debug {
++			label = "zii:green:debug1";
++			gpios = <&gpio2 18 GPIO_ACTIVE_HIGH>;
++			linux,default-trigger = "heartbeat";
++		};
++	};
++
++	reg_vcc_3v3_mcu: regulator-vcc-3v3-mcu {
++		compatible = "regulator-fixed";
++		regulator-name = "vcc_3v3_mcu";
++		regulator-min-microvolt = <3300000>;
++		regulator-max-microvolt = <3300000>;
++	};
++};
++
++&adc0 {
++	vref-supply = <&reg_vcc_3v3_mcu>;
++	status = "okay";
++};
++
++&adc1 {
++	vref-supply = <&reg_vcc_3v3_mcu>;
++	status = "okay";
++};
++
++&dspi1 {
++	bus-num = <1>;
++	pinctrl-names = "default";
++	pinctrl-0 = <&pinctrl_dspi1>;
++	status = "okay";
++
++	flash@0 {
++		#address-cells = <1>;
++		#size-cells = <1>;
++		compatible = "m25p128", "jedec,spi-nor";
++		reg = <0>;
++		spi-max-frequency = <50000000>;
++	};
++};
++
++&edma0 {
++	status = "okay";
++};
++
++&edma1 {
++	status = "okay";
++};
++
++&esdhc0 {
++	pinctrl-names = "default";
++	pinctrl-0 = <&pinctrl_esdhc0>;
++	bus-width = <8>;
++	non-removable;
++	no-1-8-v;
++	keep-power-in-suspend;
++	no-sdio;
++	no-sd;
++	status = "okay";
++};
++
++&esdhc1 {
++	pinctrl-names = "default";
++	pinctrl-0 = <&pinctrl_esdhc1>;
++	bus-width = <4>;
++	no-sdio;
++	status = "okay";
++};
++
++&fec1 {
++	phy-mode = "rmii";
++	pinctrl-names = "default";
++	pinctrl-0 = <&pinctrl_fec1>;
++	status = "okay";
++
++	fixed-link {
++		speed = <100>;
++		full-duplex;
++	};
++
++	mdio1: mdio {
++		#address-cells = <1>;
++		#size-cells = <0>;
++		status = "okay";
++
++		switch0: switch0@0 {
++			compatible = "marvell,mv88e6190";
++			pinctrl-0 = <&pinctrl_gpio_switch0>;
++			pinctrl-names = "default";
++			reg = <0>;
++			eeprom-length = <65536>;
++			reset-gpios = <&gpio3 11 GPIO_ACTIVE_LOW>;
++			interrupt-parent = <&gpio3>;
++			interrupts = <2 IRQ_TYPE_LEVEL_LOW>;
++			interrupt-controller;
++			#interrupt-cells = <2>;
++
++			ports {
++				#address-cells = <1>;
++				#size-cells = <0>;
++
++				port@0 {
++					reg = <0>;
++					label = "cpu";
++					ethernet = <&fec1>;
++
++					fixed-link {
++						speed = <100>;
++						full-duplex;
++					};
++				};
++
++				port@1 {
++					reg = <1>;
++					label = "eth_cu_1000_1";
++				};
++
++				port@2 {
++					reg = <2>;
++					label = "eth_cu_1000_2";
++				};
++
++				port@3 {
++					reg = <3>;
++					label = "eth_cu_1000_3";
++				};
++
++				port@4 {
++					reg = <4>;
++					label = "eth_cu_1000_4";
++				};
++
++				port@5 {
++					reg = <5>;
++					label = "eth_cu_1000_5";
++				};
++
++				port@6 {
++					reg = <6>;
++					label = "eth_cu_1000_6";
++				};
++			};
++		};
++	};
++};
++
++&i2c0 {
++	clock-frequency = <100000>;
++	pinctrl-names = "default";
++	pinctrl-0 = <&pinctrl_i2c0>;
++	status = "okay";
++
++	io-expander@22 {
++		compatible = "nxp,pca9554";
++		reg = <0x22>;
++		gpio-controller;
++		#gpio-cells = <2>;
++	};
++
++	eeprom@50 {
++		compatible = "atmel,24c04";
++		reg = <0x50>;
++		label = "nameplate";
++	};
++
++	eeprom@52 {
++		compatible = "atmel,24c04";
++		reg = <0x52>;
++	};
++};
++
++&snvsrtc {
++	status = "disabled";
++};
++
++&uart0 {
++	pinctrl-names = "default";
++	pinctrl-0 = <&pinctrl_uart0>;
++	status = "okay";
++};
++
++&uart1 {
++	pinctrl-names = "default";
++	pinctrl-0 = <&pinctrl_uart1>;
++	status = "okay";
++};
++
++&uart2 {
++	pinctrl-names = "default";
++	pinctrl-0 = <&pinctrl_uart2>;
++	status = "okay";
++
++	rave-sp {
++		compatible = "zii,rave-sp-rdu2";
++		current-speed = <1000000>;
++		#address-cells = <1>;
++		#size-cells = <1>;
++
++		watchdog {
++			compatible = "zii,rave-sp-watchdog";
++		};
++
++		eeprom@a3 {
++			compatible = "zii,rave-sp-eeprom";
++			reg = <0xa3 0x4000>;
++			#address-cells = <1>;
++			#size-cells = <1>;
++			zii,eeprom-name = "main-eeprom";
++		};
++	};
++};
++
++&uart3 {
++	pinctrl-names = "default";
++	pinctrl-0 = <&pinctrl_uart3>;
++	status = "okay";
++};
++
++&wdoga5 {
++       status = "disabled";
++};
++
++&iomuxc {
++	pinctrl_dspi1: dspi1grp {
++		fsl,pins = <
++			VF610_PAD_PTD5__DSPI1_CS0		0x1182
++			VF610_PAD_PTD4__DSPI1_CS1		0x1182
++			VF610_PAD_PTC6__DSPI1_SIN		0x1181
++			VF610_PAD_PTC7__DSPI1_SOUT		0x1182
++			VF610_PAD_PTC8__DSPI1_SCK		0x1182
++		>;
++	};
++
++	pinctrl_esdhc0: esdhc0grp {
++		fsl,pins = <
++			VF610_PAD_PTC0__ESDHC0_CLK		0x31ef
++			VF610_PAD_PTC1__ESDHC0_CMD		0x31ef
++			VF610_PAD_PTC2__ESDHC0_DAT0		0x31ef
++			VF610_PAD_PTC3__ESDHC0_DAT1		0x31ef
++			VF610_PAD_PTC4__ESDHC0_DAT2		0x31ef
++			VF610_PAD_PTC5__ESDHC0_DAT3		0x31ef
++			VF610_PAD_PTD23__ESDHC0_DAT4		0x31ef
++			VF610_PAD_PTD22__ESDHC0_DAT5		0x31ef
++			VF610_PAD_PTD21__ESDHC0_DAT6		0x31ef
++			VF610_PAD_PTD20__ESDHC0_DAT7		0x31ef
++		>;
++	};
++
++	pinctrl_esdhc1: esdhc1grp {
++		fsl,pins = <
++			VF610_PAD_PTA24__ESDHC1_CLK		0x31ef
++			VF610_PAD_PTA25__ESDHC1_CMD		0x31ef
++			VF610_PAD_PTA26__ESDHC1_DAT0		0x31ef
++			VF610_PAD_PTA27__ESDHC1_DAT1		0x31ef
++			VF610_PAD_PTA28__ESDHC1_DATA2		0x31ef
++			VF610_PAD_PTA29__ESDHC1_DAT3		0x31ef
++		>;
++	};
++
++	pinctrl_fec1: fec1grp {
++		fsl,pins = <
++			VF610_PAD_PTA6__RMII_CLKIN		0x30d1
++			VF610_PAD_PTC9__ENET_RMII1_MDC		0x30d2
++			VF610_PAD_PTC10__ENET_RMII1_MDIO	0x30d3
++			VF610_PAD_PTC11__ENET_RMII1_CRS		0x30d1
++			VF610_PAD_PTC12__ENET_RMII1_RXD1	0x30d1
++			VF610_PAD_PTC13__ENET_RMII1_RXD0	0x30d1
++			VF610_PAD_PTC14__ENET_RMII1_RXER	0x30d1
++			VF610_PAD_PTC15__ENET_RMII1_TXD1	0x30d2
++			VF610_PAD_PTC16__ENET_RMII1_TXD0	0x30d2
++			VF610_PAD_PTC17__ENET_RMII1_TXEN	0x30d2
++		>;
++	};
++
++	pinctrl_gpio_switch0: pinctrl-gpio-switch0 {
++		fsl,pins = <
++			VF610_PAD_PTE2__GPIO_107		0x31c2
++			VF610_PAD_PTB28__GPIO_98		0x219d
++		>;
++	};
++
++	pinctrl_i2c0: i2c0grp {
++		fsl,pins = <
++			VF610_PAD_PTB14__I2C0_SCL		0x37ff
++			VF610_PAD_PTB15__I2C0_SDA		0x37ff
++		>;
++	};
++
++	pinctrl_i2c1: i2c1grp {
++		fsl,pins = <
++			VF610_PAD_PTB16__I2C1_SCL		0x37ff
++			VF610_PAD_PTB17__I2C1_SDA		0x37ff
++		>;
++	};
++
++	pinctrl_leds_debug: pinctrl-leds-debug {
++		fsl,pins = <
++			VF610_PAD_PTD3__GPIO_82			0x31c2
++		>;
++	};
++
++	pinctrl_uart0: uart0grp {
++		fsl,pins = <
++			VF610_PAD_PTB10__UART0_TX		0x21a2
++			VF610_PAD_PTB11__UART0_RX		0x21a1
++		>;
++	};
++
++	pinctrl_uart1: uart1grp {
++		fsl,pins = <
++			VF610_PAD_PTB23__UART1_TX		0x21a2
++			VF610_PAD_PTB24__UART1_RX		0x21a1
++		>;
++	};
++
++	pinctrl_uart2: uart2grp {
++		fsl,pins = <
++			VF610_PAD_PTD0__UART2_TX		0x21a2
++			VF610_PAD_PTD1__UART2_RX		0x21a1
++		>;
++	};
++
++	pinctrl_uart3: uart3grp {
++                fsl,pins = <
++                	VF610_PAD_PTA30__UART3_TX               0x21a2
++                	VF610_PAD_PTA31__UART3_RX               0x21a1
++                >;
++        };
++};
+-- 
+2.20.1
+
