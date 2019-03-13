@@ -2,86 +2,69 @@ Return-Path: <SRS0=dUEL=RQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-6.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_PASS
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6A8A0C43381
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 Mar 2019 16:48:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A5DDCC43381
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 Mar 2019 16:50:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 30DEE206DF
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 Mar 2019 16:48:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 73BCE2146E
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 Mar 2019 16:50:17 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1552495817;
+	bh=eAdn95cCqjaeFLQ0TI34rqGTA70dQ1KID/+McbH4CE8=;
+	h=Subject:From:In-Reply-To:References:Date:To:Cc:List-ID:From;
+	b=kNQNfIA/cgoPgD9Q6+WeSPxxZg+FbU01D6SNZpzFkLi5MnEGuBWumYqA/Hm01WiHW
+	 bj1r4hAOPzYIn5vO6ui6En0gKmmBl6n4CcENvDGhHWHzy32DNwo6+ePE2RVWjG08Rs
+	 +HyXA54llnGEyjg/oJ5ykisruU8+r6DfORUWuq8U=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726688AbfCMQsb (ORCPT
+        id S1726328AbfCMQuQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 13 Mar 2019 12:48:31 -0400
-Received: from relay9-d.mail.gandi.net ([217.70.183.199]:47255 "EHLO
-        relay9-d.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725856AbfCMQsa (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 13 Mar 2019 12:48:30 -0400
-X-Originating-IP: 81.250.144.103
-Received: from [10.30.1.20] (lneuilly-657-1-5-103.w81-250.abo.wanadoo.fr [81.250.144.103])
-        (Authenticated sender: alex@ghiti.fr)
-        by relay9-d.mail.gandi.net (Postfix) with ESMTPSA id 2A6EDFF822;
-        Wed, 13 Mar 2019 16:48:21 +0000 (UTC)
-Subject: Re: [PATCH v6 0/4] Fix free/allocation of runtime gigantic pages
-To:     Dave Hansen <dave.hansen@intel.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Vlastimil Babka <vbabka@suse.cz>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Will Deacon <will.deacon@arm.com>,
-        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        Paul Mackerras <paulus@samba.org>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        Martin Schwidefsky <schwidefsky@de.ibm.com>,
-        Heiko Carstens <heiko.carstens@de.ibm.com>,
-        Yoshinori Sato <ysato@users.sourceforge.jp>,
-        Rich Felker <dalias@libc.org>,
-        "David S . Miller" <davem@davemloft.net>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        "H . Peter Anvin" <hpa@zytor.com>, x86@kernel.org,
-        Dave Hansen <dave.hansen@linux.intel.com>,
-        Andy Lutomirski <luto@kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Mike Kravetz <mike.kravetz@oracle.com>,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        linuxppc-dev@lists.ozlabs.org, linux-s390@vger.kernel.org,
-        linux-sh@vger.kernel.org, sparclinux@vger.kernel.org,
-        linux-mm@kvack.org
-References: <20190307132015.26970-1-alex@ghiti.fr>
- <875e6287-9528-45ec-788c-9c785e548942@intel.com>
-From:   Alexandre Ghiti <alex@ghiti.fr>
-Message-ID: <de40e6f1-c520-bcae-2009-19c0abbcd5d5@ghiti.fr>
-Date:   Wed, 13 Mar 2019 17:48:21 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:52.0) Gecko/20100101
- Thunderbird/52.5.2
-MIME-Version: 1.0
-In-Reply-To: <875e6287-9528-45ec-788c-9c785e548942@intel.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
-Content-Language: fr
+        Wed, 13 Mar 2019 12:50:16 -0400
+Received: from mail.kernel.org ([198.145.29.99]:37058 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725888AbfCMQuP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 13 Mar 2019 12:50:15 -0400
+Subject: Re: [GIT PULL] libnvdimm updates for 5.1
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1552495815;
+        bh=eAdn95cCqjaeFLQ0TI34rqGTA70dQ1KID/+McbH4CE8=;
+        h=From:In-Reply-To:References:Date:To:Cc:From;
+        b=U4xqlsBTS+zE4G7uVI9loJnYDal6yw5WiQ1v48E115TLRBzIjHTOD7M9UNRmecuWs
+         dMBx747UMNeBu6/CtdR5qfZJ10VSXBz64AK/zwfqxmhhEieSqOmbH5UB75s20T50aR
+         Yc3aAUzJbbY3F8X/FnKQ87T9rqXy5mYGuSa1rgUE=
+From:   pr-tracker-bot@kernel.org
+In-Reply-To: <CAPcyv4hPv7b1FWUxuDvcx8+kFWh7Npgk92P+SEpSPWvT2cxheg@mail.gmail.com>
+References: <CAPcyv4hPv7b1FWUxuDvcx8+kFWh7Npgk92P+SEpSPWvT2cxheg@mail.gmail.com>
+X-PR-Tracked-List-Id: <linux-kernel.vger.kernel.org>
+X-PR-Tracked-Message-Id: <CAPcyv4hPv7b1FWUxuDvcx8+kFWh7Npgk92P+SEpSPWvT2cxheg@mail.gmail.com>
+X-PR-Tracked-Remote: git://git.kernel.org/pub/scm/linux/kernel/git/nvdimm/nvdimm
+ tags/libnvdimm-for-5.1
+X-PR-Tracked-Commit-Id: 4083014e32699af04a8e6eaa4855b08dba36a47a
+X-PR-Merge-Tree: torvalds/linux.git
+X-PR-Merge-Refname: refs/heads/master
+X-PR-Merge-Commit-Id: 5ea6718b1f1bb58825426e19a21cdba47075a954
+Message-Id: <155249581531.9487.8832163781314389778.pr-tracker-bot@kernel.org>
+Date:   Wed, 13 Mar 2019 16:50:15 +0000
+To:     Dan Williams <dan.j.williams@intel.com>
+Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        linux-nvdimm <linux-nvdimm@lists.01.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 03/13/2019 05:41 PM, Dave Hansen wrote:
-> On 3/7/19 5:20 AM, Alexandre Ghiti wrote:
->> This series fixes sh and sparc that did not advertise their gigantic page
->> support and then were not able to allocate and free those pages at runtime.
->> It renames MEMORY_ISOLATION && COMPACTION || CMA condition into the more
->> accurate CONTIG_ALLOC, since it allows the definition of alloc_contig_range
->> function.
->> Finally, it then fixes the wrong definition of ARCH_HAS_GIGANTIC_PAGE config
->> that, without MEMORY_ISOLATION && COMPACTION || CMA defined, did not allow
->> architectures to free boottime allocated gigantic pages although unrelated.
-> Looks good, thanks for all the changes.  For everything generic in the
-> set, plus the x86 bits:
->
-> Acked-by: Dave Hansen <dave.hansen@intel.com>
+The pull request you sent on Mon, 11 Mar 2019 14:54:47 -0700:
 
-Thanks Dave,
+> git://git.kernel.org/pub/scm/linux/kernel/git/nvdimm/nvdimm tags/libnvdimm-for-5.1
 
-Alex
+has been merged into torvalds/linux.git:
+https://git.kernel.org/torvalds/c/5ea6718b1f1bb58825426e19a21cdba47075a954
+
+Thank you!
+
+-- 
+Deet-doot-dot, I am a bot.
+https://korg.wiki.kernel.org/userdoc/prtracker
