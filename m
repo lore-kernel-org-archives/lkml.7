@@ -6,64 +6,64 @@ X-Spam-Status: No, score=-5.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_MUTT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4F645C43381
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 Mar 2019 14:05:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id ECEB3C43381
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 Mar 2019 14:05:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2521D2147C
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 Mar 2019 14:05:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C5CC12147C
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 Mar 2019 14:05:40 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726914AbfCMOFB (ORCPT
+        id S1726958AbfCMOFj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 13 Mar 2019 10:05:01 -0400
-Received: from mx0a-001ae601.pphosted.com ([67.231.149.25]:34144 "EHLO
-        mx0b-001ae601.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726772AbfCMOFB (ORCPT
+        Wed, 13 Mar 2019 10:05:39 -0400
+Received: from mx0b-001ae601.pphosted.com ([67.231.152.168]:37276 "EHLO
+        mx0b-001ae601.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726772AbfCMOFj (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 13 Mar 2019 10:05:01 -0400
-Received: from pps.filterd (m0077473.ppops.net [127.0.0.1])
-        by mx0a-001ae601.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x2DDxGhP029941;
-        Wed, 13 Mar 2019 09:04:58 -0500
+        Wed, 13 Mar 2019 10:05:39 -0400
+Received: from pps.filterd (m0077474.ppops.net [127.0.0.1])
+        by mx0b-001ae601.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x2DE5ac0021058;
+        Wed, 13 Mar 2019 09:05:36 -0500
 Authentication-Results: ppops.net;
         spf=none smtp.mailfrom=ckeepax@opensource.cirrus.com
-Received: from mail4.cirrus.com ([87.246.98.35])
-        by mx0a-001ae601.pphosted.com with ESMTP id 2r4bs77dat-1;
-        Wed, 13 Mar 2019 09:04:58 -0500
-Received: from EX17.ad.cirrus.com (unknown [172.20.9.81])
-        by mail4.cirrus.com (Postfix) with ESMTP id 3355D611C8B5;
-        Wed, 13 Mar 2019 09:05:55 -0500 (CDT)
+Received: from mail3.cirrus.com ([87.246.76.56])
+        by mx0b-001ae601.pphosted.com with ESMTP id 2r4asuq2ut-1;
+        Wed, 13 Mar 2019 09:05:35 -0500
+Received: from EX17.ad.cirrus.com (ex17.ad.cirrus.com [172.20.9.81])
+        by mail3.cirrus.com (Postfix) with ESMTP id 7D89B611C8AC;
+        Wed, 13 Mar 2019 09:05:52 -0500 (CDT)
 Received: from imbe.wolfsonmicro.main (198.61.95.81) by EX17.ad.cirrus.com
  (172.20.9.81) with Microsoft SMTP Server id 14.3.408.0; Wed, 13 Mar 2019
- 14:04:57 +0000
+ 14:05:33 +0000
 Received: from ediswmail.ad.cirrus.com (ediswmail.ad.cirrus.com
  [198.61.86.93])        by imbe.wolfsonmicro.main (8.14.4/8.14.4) with ESMTP id
- x2DE4vFX032549;        Wed, 13 Mar 2019 14:04:57 GMT
-Date:   Wed, 13 Mar 2019 14:04:57 +0000
+ x2DE5XYO032585;        Wed, 13 Mar 2019 14:05:33 GMT
+Date:   Wed, 13 Mar 2019 14:05:33 +0000
 From:   Charles Keepax <ckeepax@opensource.cirrus.com>
 To:     Axel Lin <axel.lin@ingics.com>
 CC:     Mark Brown <broonie@kernel.org>, <patches@opensource.cirrus.com>,
         Liam Girdwood <lgirdwood@gmail.com>,
         <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH 3/4] regulator: wm831x-isink: Convert to use
+Subject: Re: [PATCH 4/4] regulator: wm8350: Convert to use
  regulator_set/get_current_limit_regmap
-Message-ID: <20190313140457.GM46536@ediswmail.ad.cirrus.com>
+Message-ID: <20190313140533.GN46536@ediswmail.ad.cirrus.com>
 References: <20190312163357.27785-1-axel.lin@ingics.com>
- <20190312163357.27785-3-axel.lin@ingics.com>
+ <20190312163357.27785-4-axel.lin@ingics.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Disposition: inline
-In-Reply-To: <20190312163357.27785-3-axel.lin@ingics.com>
+In-Reply-To: <20190312163357.27785-4-axel.lin@ingics.com>
 User-Agent: Mutt/1.5.21 (2010-09-15)
 X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
  suspectscore=0 phishscore=0 bulkscore=0 spamscore=0 clxscore=1015
  lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=828 adultscore=0
  classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1810050000
- definitions=main-1903130101
+ definitions=main-1903130102
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Mar 13, 2019 at 12:33:56AM +0800, Axel Lin wrote:
+On Wed, Mar 13, 2019 at 12:33:57AM +0800, Axel Lin wrote:
 > Use regulator_set/get_current_limit_regmap helpers to save some code.
 > 
 > Signed-off-by: Axel Lin <axel.lin@ingics.com>
