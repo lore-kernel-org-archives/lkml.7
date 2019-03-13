@@ -2,101 +2,96 @@ Return-Path: <SRS0=dUEL=RQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_MUTT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4FD39C43381
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 Mar 2019 19:31:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BB2D6C43381
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 Mar 2019 19:31:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1C9E320657
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 Mar 2019 19:31:11 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="uesIYn0A"
+	by mail.kernel.org (Postfix) with ESMTP id 80B4C20657
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 Mar 2019 19:31:22 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1552505482;
+	bh=fLF7LLWhM6I6FDC6TJ5BUmFJNI9qeGU5OyBTcWlj/8k=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=EPmt4Q27uuDmkczqHYMdTTebrKi1iHhzBxI/vwJmcnXT8f/msPzHJEqU85DU3rC7U
+	 HSNEAOFCNTrihCBbCF2H5ZNReDqYPrlH5FrMgRgqKDgODK2IYh/S/pif2T99UqROtv
+	 ywFdBDZBiVSWXpJaPholqu42WDtTYgoHMHanZCOM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727914AbfCMTbK (ORCPT
+        id S1727282AbfCMTL4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 13 Mar 2019 15:31:10 -0400
-Received: from bombadil.infradead.org ([198.137.202.133]:33302 "EHLO
-        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727017AbfCMTbI (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 13 Mar 2019 15:31:08 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
-        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=eT5PPu8zGFQ87wtv0HuoZLW/3/b9KTRTD/vmD77hqHc=; b=uesIYn0AJYbI1o0Xkgi2upvC0
-        lN0PmaY8K4bKtrExQNwf6U00NkKS2Wx0bCWvL/XcsbaDTLb163slbHcbhna4KXC5hFcONKOnn4p3B
-        P1NV0DaKUh4MX6YaTR1ZokKd6Yh/vhb7Sa7FWaThoxZkgy6zN9FwWUuiiOSxdMBdomQvq+t869cgz
-        /ptvxcaTrFihZHXLPC/bGRYO3rRDLhHQwJIIkBiMUe1z9Rr/QmMg+kYjzlCV88PfyQzYdqTEYOI5g
-        d0hoNdHlXaCbbDkXHsaUL4zvtnJxsEz4rYWyqjfO2U1jaRlQwlNnAs2CrA6XGEesRQ1IUIKvgjxPc
-        rv+/NCH4w==;
-Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=worktop.programming.kicks-ass.net)
-        by bombadil.infradead.org with esmtpsa (Exim 4.90_1 #2 (Red Hat Linux))
-        id 1h49ae-0004wP-Gt; Wed, 13 Mar 2019 19:31:00 +0000
-Received: by worktop.programming.kicks-ass.net (Postfix, from userid 1000)
-        id B18879826C0; Wed, 13 Mar 2019 20:30:56 +0100 (CET)
-Date:   Wed, 13 Mar 2019 20:30:56 +0100
-From:   Peter Zijlstra <peterz@infradead.org>
-To:     Patrick Bellasi <patrick.bellasi@arm.com>
-Cc:     linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org,
-        linux-api@vger.kernel.org, Ingo Molnar <mingo@redhat.com>,
-        Tejun Heo <tj@kernel.org>,
-        "Rafael J . Wysocki" <rafael.j.wysocki@intel.com>,
-        Vincent Guittot <vincent.guittot@linaro.org>,
-        Viresh Kumar <viresh.kumar@linaro.org>,
-        Paul Turner <pjt@google.com>,
-        Quentin Perret <quentin.perret@arm.com>,
-        Dietmar Eggemann <dietmar.eggemann@arm.com>,
-        Morten Rasmussen <morten.rasmussen@arm.com>,
-        Juri Lelli <juri.lelli@redhat.com>,
-        Todd Kjos <tkjos@google.com>,
-        Joel Fernandes <joelaf@google.com>,
-        Steve Muckle <smuckle@google.com>,
-        Suren Baghdasaryan <surenb@google.com>
-Subject: Re: [PATCH v7 01/15] sched/core: uclamp: Add CPU's clamp buckets
- refcounting
-Message-ID: <20190313193056.GP2482@worktop.programming.kicks-ass.net>
-References: <20190208100554.32196-1-patrick.bellasi@arm.com>
- <20190208100554.32196-2-patrick.bellasi@arm.com>
- <20190313135238.GC5922@hirez.programming.kicks-ass.net>
- <20190313155954.jse2tyn5iqxm6wle@e110439-lin>
+        Wed, 13 Mar 2019 15:11:56 -0400
+Received: from mail.kernel.org ([198.145.29.99]:42550 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727584AbfCMTLw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 13 Mar 2019 15:11:52 -0400
+Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 582462173C;
+        Wed, 13 Mar 2019 19:11:50 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1552504311;
+        bh=fLF7LLWhM6I6FDC6TJ5BUmFJNI9qeGU5OyBTcWlj/8k=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=TDmh5Yw/HPCEWW+kKqwxklarO+qfO9PY20xArrKETOCYRVhqg6hzytyU6DTDooytt
+         FACWhG2Rk8T2d+zas5ETxBnLr4pv6oynKB6cvggk9A+tLNxbfrzofSNahstWqWvxr/
+         Jr/4oV7dxwODj/q38Iu8QqUgnzjJxq7DhtPKVwpw=
+From:   Sasha Levin <sashal@kernel.org>
+To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
+Cc:     Jeff Kirsher <jeffrey.t.kirsher@intel.com>,
+        Sasha Levin <sashal@kernel.org>, netdev@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.20 40/60] ixgbe: fix older devices that do not support IXGBE_MRQC_L3L4TXSWEN
+Date:   Wed, 13 Mar 2019 15:10:01 -0400
+Message-Id: <20190313191021.158171-40-sashal@kernel.org>
+X-Mailer: git-send-email 2.19.1
+In-Reply-To: <20190313191021.158171-1-sashal@kernel.org>
+References: <20190313191021.158171-1-sashal@kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190313155954.jse2tyn5iqxm6wle@e110439-lin>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+X-Patchwork-Hint: Ignore
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Mar 13, 2019 at 03:59:54PM +0000, Patrick Bellasi wrote:
-> On 13-Mar 14:52, Peter Zijlstra wrote:
-> > > +static inline void uclamp_rq_dec_id(struct task_struct *p, struct rq *rq,
-> > > +				    unsigned int clamp_id)
-> > > +{
-> > > +	unsigned int bucket_id = p->uclamp[clamp_id].bucket_id;
-> > > +	unsigned int rq_clamp, bkt_clamp;
-> > > +
-> > > +	SCHED_WARN_ON(!rq->uclamp[clamp_id].bucket[bucket_id].tasks);
-> > > +	if (likely(rq->uclamp[clamp_id].bucket[bucket_id].tasks))
-> > > +		rq->uclamp[clamp_id].bucket[bucket_id].tasks--;
-> > > +
-> > > +	/*
-> > > +	 * Keep "local clamping" simple and accept to (possibly) overboost
-> > > +	 * still RUNNABLE tasks in the same bucket.
-> > > +	 */
-> > > +	if (likely(rq->uclamp[clamp_id].bucket[bucket_id].tasks))
-> > > +		return;
-> > 
-> > (Oh man, I hope that generates semi sane code; long live CSE passes I
-> > suppose)
-> 
-> What do you mean ?
+From: Jeff Kirsher <jeffrey.t.kirsher@intel.com>
 
-that does: 'rq->uclamp[clamp_id].bucket[bucket_id].tasks' three times in
-a row. And yes the compiler _should_ dtrt, but....
+[ Upstream commit 156a67a9065e3339be85f811d1b13b920e50d73b ]
+
+The enabling L3/L4 filtering for transmit switched packets for all
+devices caused unforeseen issue on older devices when trying to send UDP
+traffic in an ordered sequence.  This bit was originally intended for X550
+devices, which supported this feature, so limit the scope of this bit to
+only X550 devices.
+
+Signed-off-by: Jeff Kirsher <jeffrey.t.kirsher@intel.com>
+Tested-by: Andrew Bowers <andrewx.bowers@intel.com>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
+---
+ drivers/net/ethernet/intel/ixgbe/ixgbe_main.c | 7 +++++--
+ 1 file changed, 5 insertions(+), 2 deletions(-)
+
+diff --git a/drivers/net/ethernet/intel/ixgbe/ixgbe_main.c b/drivers/net/ethernet/intel/ixgbe/ixgbe_main.c
+index 113b38e0defb..aed1890514d6 100644
+--- a/drivers/net/ethernet/intel/ixgbe/ixgbe_main.c
++++ b/drivers/net/ethernet/intel/ixgbe/ixgbe_main.c
+@@ -3952,8 +3952,11 @@ static void ixgbe_setup_mrqc(struct ixgbe_adapter *adapter)
+ 			else
+ 				mrqc = IXGBE_MRQC_VMDQRSS64EN;
+ 
+-			/* Enable L3/L4 for Tx Switched packets */
+-			mrqc |= IXGBE_MRQC_L3L4TXSWEN;
++			/* Enable L3/L4 for Tx Switched packets only for X550,
++			 * older devices do not support this feature
++			 */
++			if (hw->mac.type >= ixgbe_mac_X550)
++				mrqc |= IXGBE_MRQC_L3L4TXSWEN;
+ 		} else {
+ 			if (tcs > 4)
+ 				mrqc = IXGBE_MRQC_RTRSS8TCEN;
+-- 
+2.19.1
+
