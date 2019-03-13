@@ -7,54 +7,48 @@ X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 94583C43381
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 Mar 2019 19:31:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 541D3C4360F
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 Mar 2019 19:31:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 598AF21019
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 Mar 2019 19:31:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2578621019
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 Mar 2019 19:31:41 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1552505497;
-	bh=hNlX4NqqxVp9sR85/OPqvCCwSo47QbbfEdAOHK+6KN8=;
+	s=default; t=1552505501;
+	bh=/uP16jNlmCtvaeiTKwrjdK+zw3IfqialZn0qnVCqR9E=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=x351alG3OD1WbQuHoi9Z6hj70NJb1RP239cqPmas/SkD67zjMkAm9SdCKQAMDyxVN
-	 yl3F9KCD+ixlY3zHr2OKymnlZyJ1VziRmMLdyQSAFGmwXD1N2cMGCCfCEXhVvGOMGR
-	 MFnrM6eWhUdiaPVvy1bv9e145Lu7Q/b3pR24LekM=
+	b=eFx8lC0Vj66qIxIUt+hG2P5KBFEiSGCAAbOMt9Ubf8fSmxvxUsUCHmT1HpYu9qQGU
+	 CK2xWW5Yxut4fl2oUCR2hngzUE6qNhn0mPEBR/I3oCGfJcXBQBPAEC5TamnUdZP3+9
+	 xKeTUOYkaQ6K5PG71DbikY1FhqtjLKTIqwQS1ZAM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727822AbfCMTbg (ORCPT
+        id S1727564AbfCMTLq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 13 Mar 2019 15:31:36 -0400
-Received: from mail.kernel.org ([198.145.29.99]:42440 "EHLO mail.kernel.org"
+        Wed, 13 Mar 2019 15:11:46 -0400
+Received: from mail.kernel.org ([198.145.29.99]:42374 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727567AbfCMTLr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 13 Mar 2019 15:11:47 -0400
+        id S1726628AbfCMTLo (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 13 Mar 2019 15:11:44 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 4393C21852;
-        Wed, 13 Mar 2019 19:11:44 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 20AB9213A2;
+        Wed, 13 Mar 2019 19:11:41 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1552504306;
-        bh=hNlX4NqqxVp9sR85/OPqvCCwSo47QbbfEdAOHK+6KN8=;
+        s=default; t=1552504303;
+        bh=/uP16jNlmCtvaeiTKwrjdK+zw3IfqialZn0qnVCqR9E=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Y4Q/McMKyeCwApETgo2CJXOPTRK9JufNDdpY/YGIyi5QGJQvSeNJAYh5wcRzRUM0F
-         g75dKDB8dz/fEORAcqdAOyV/xTJDoYavJPIHze9TnIDaQjo/lsr510B5QxOkWEwKLJ
-         qWXDJ3Wrn+F2yT38wovYy2Pn36eM/T0Lfq/4iM1c=
+        b=wNnlPQ/wjJnsMM5pJPfKBIRyGgiKOF867/IQpbcFpJKyO2+RUXDRViHHlPQIDtn2H
+         aFP55Eog2AP47I+aSi7tAoC/Bx91NxpL+lVi0L0lXK1oo9/mn7mbFPbvYWVo6X4zma
+         PrbrLEF02TEYsEgN9oYoi19SyBPIGhqfPjXCYaOg=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Andrey Konovalov <andreyknvl@google.com>,
-        Alexander Potapenko <glider@google.com>,
-        Andrey Ryabinin <aryabinin@virtuozzo.com>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Dmitry Vyukov <dvyukov@google.com>,
-        Evgeniy Stepanov <eugenis@google.com>,
-        Kostya Serebryany <kcc@google.com>,
-        Vincenzo Frascino <vincenzo.frascino@arm.com>,
+Cc:     "Darrick J. Wong" <darrick.wong@oracle.com>,
+        Hugh Dickins <hughd@google.com>,
         Andrew Morton <akpm@linux-foundation.org>,
         Linus Torvalds <torvalds@linux-foundation.org>,
         Sasha Levin <sashal@kernel.org>, linux-mm@kvack.org
-Subject: [PATCH AUTOSEL 4.20 38/60] kasan, slab: fix conflicts with CONFIG_HARDENED_USERCOPY
-Date:   Wed, 13 Mar 2019 15:09:59 -0400
-Message-Id: <20190313191021.158171-38-sashal@kernel.org>
+Subject: [PATCH AUTOSEL 4.20 37/60] tmpfs: fix link accounting when a tmpfile is linked in
+Date:   Wed, 13 Mar 2019 15:09:58 -0400
+Message-Id: <20190313191021.158171-37-sashal@kernel.org>
 X-Mailer: git-send-email 2.19.1
 In-Reply-To: <20190313191021.158171-1-sashal@kernel.org>
 References: <20190313191021.158171-1-sashal@kernel.org>
@@ -66,44 +60,62 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Andrey Konovalov <andreyknvl@google.com>
+From: "Darrick J. Wong" <darrick.wong@oracle.com>
 
-[ Upstream commit 219667c23c68eb3dbc0d5662b9246f28477fe529 ]
+[ Upstream commit 1062af920c07f5b54cf5060fde3339da6df0cf6b ]
 
-Similarly to commit 96fedce27e13 ("kasan: make tag based mode work with
-CONFIG_HARDENED_USERCOPY"), we need to reset pointer tags in
-__check_heap_object() in mm/slab.c before doing any pointer math.
+tmpfs has a peculiarity of accounting hard links as if they were
+separate inodes: so that when the number of inodes is limited, as it is
+by default, a user cannot soak up an unlimited amount of unreclaimable
+dcache memory just by repeatedly linking a file.
 
-Link: http://lkml.kernel.org/r/9a5c0f958db10e69df5ff9f2b997866b56b7effc.1550602886.git.andreyknvl@google.com
-Signed-off-by: Andrey Konovalov <andreyknvl@google.com>
-Tested-by: Qian Cai <cai@lca.pw>
-Cc: Alexander Potapenko <glider@google.com>
-Cc: Andrey Ryabinin <aryabinin@virtuozzo.com>
-Cc: Catalin Marinas <catalin.marinas@arm.com>
-Cc: Dmitry Vyukov <dvyukov@google.com>
-Cc: Evgeniy Stepanov <eugenis@google.com>
-Cc: Kostya Serebryany <kcc@google.com>
-Cc: Vincenzo Frascino <vincenzo.frascino@arm.com>
+But when v3.11 added O_TMPFILE, and the ability to use linkat() on the
+fd, we missed accommodating this new case in tmpfs: "df -i" shows that
+an extra "inode" remains accounted after the file is unlinked and the fd
+closed and the actual inode evicted.  If a user repeatedly links
+tmpfiles into a tmpfs, the limit will be hit (ENOSPC) even after they
+are deleted.
+
+Just skip the extra reservation from shmem_link() in this case: there's
+a sense in which this first link of a tmpfile is then cheaper than a
+hard link of another file, but the accounting works out, and there's
+still good limiting, so no need to do anything more complicated.
+
+Link: http://lkml.kernel.org/r/alpine.LSU.2.11.1902182134370.7035@eggly.anvils
+Fixes: f4e0c30c191 ("allow the temp files created by open() to be linked to")
+Signed-off-by: Darrick J. Wong <darrick.wong@oracle.com>
+Signed-off-by: Hugh Dickins <hughd@google.com>
+Reported-by: Matej Kupljen <matej.kupljen@gmail.com>
+Acked-by: Al Viro <viro@zeniv.linux.org.uk>
 Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
 Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- mm/slab.c | 2 ++
- 1 file changed, 2 insertions(+)
+ mm/shmem.c | 10 +++++++---
+ 1 file changed, 7 insertions(+), 3 deletions(-)
 
-diff --git a/mm/slab.c b/mm/slab.c
-index 9d5de959d9d9..05f21f736be8 100644
---- a/mm/slab.c
-+++ b/mm/slab.c
-@@ -4421,6 +4421,8 @@ void __check_heap_object(const void *ptr, unsigned long n, struct page *page,
- 	unsigned int objnr;
- 	unsigned long offset;
+diff --git a/mm/shmem.c b/mm/shmem.c
+index 5d07e0b1352f..7872e3b75e57 100644
+--- a/mm/shmem.c
++++ b/mm/shmem.c
+@@ -2852,10 +2852,14 @@ static int shmem_link(struct dentry *old_dentry, struct inode *dir, struct dentr
+ 	 * No ordinary (disk based) filesystem counts links as inodes;
+ 	 * but each new link needs a new dentry, pinning lowmem, and
+ 	 * tmpfs dentries cannot be pruned until they are unlinked.
++	 * But if an O_TMPFILE file is linked into the tmpfs, the
++	 * first link must skip that, to get the accounting right.
+ 	 */
+-	ret = shmem_reserve_inode(inode->i_sb);
+-	if (ret)
+-		goto out;
++	if (inode->i_nlink) {
++		ret = shmem_reserve_inode(inode->i_sb);
++		if (ret)
++			goto out;
++	}
  
-+	ptr = kasan_reset_tag(ptr);
-+
- 	/* Find and validate object. */
- 	cachep = page->slab_cache;
- 	objnr = obj_to_index(cachep, page, (void *)ptr);
+ 	dir->i_size += BOGO_DIRENT_SIZE;
+ 	inode->i_ctime = dir->i_ctime = dir->i_mtime = current_time(inode);
 -- 
 2.19.1
 
