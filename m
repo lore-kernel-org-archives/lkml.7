@@ -1,155 +1,131 @@
 Return-Path: <SRS0=dUEL=RQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
-X-Spam-Level: 
-X-Spam-Status: No, score=-8.8 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Level: *
+X-Spam-Status: No, score=1.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FSL_HELO_FAKE,MAILING_LIST_MULTI,SPF_PASS,
+	USER_AGENT_MUTT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 39AEDC43381
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 Mar 2019 20:24:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6FBCBC43381
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 Mar 2019 20:25:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0310F206DF
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 Mar 2019 20:24:48 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="L+FoqXqj"
+	by mail.kernel.org (Postfix) with ESMTP id 32BDB2077B
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 Mar 2019 20:25:25 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1552508725;
+	bh=EXe+Ez5eFEmIkT8jEZDz6Y2InduzsahFDoJq2DbHfuM=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=diPGrVLZ++WZ/8iAvWyInU9ISu7/VRo836t8avbe+aN1FvE1z7EXGVCxL4nXGWZBa
+	 l1dT0pwVru/+C06CKN3tlMdAZK1w98ayXwWMD/GEHETMnJ0wklol8NXXxPFtGqitsW
+	 INJmofGT8nNONp8Lup0xoW2luD7uG2F55ERYSx5k=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727187AbfCMUYr (ORCPT
+        id S1727270AbfCMUZX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 13 Mar 2019 16:24:47 -0400
-Received: from mail-wr1-f66.google.com ([209.85.221.66]:33440 "EHLO
-        mail-wr1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726656AbfCMUYq (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 13 Mar 2019 16:24:46 -0400
-Received: by mail-wr1-f66.google.com with SMTP id i8so3468864wrm.0
-        for <linux-kernel@vger.kernel.org>; Wed, 13 Mar 2019 13:24:44 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=sender:from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=jTScBOdTsxFi9IV1z8i5dHwn22wCLDi4xhj5TO6bFt4=;
-        b=L+FoqXqjuMTIGtPakrePMuOlMatJZZr5kD0fGrUSUBF0IxSNmO70uAEWf7l/hmT/iR
-         XreW4scMoUu/vBm00sQ4jNhTvIfMtVSTFMjMkr/ABikExHqS/tY/PjWAndx25E9ej0Ck
-         AfyQsP52Bz4yVg5W9heU1oaAH3CpxOUXBSIGHYQGpgYR0xVFmPcKN8q7uDvvBrObQhp+
-         vJDt0E+V8+gvOZKTkjNU+vpQIZ8Fgv+8sZZpnUJaNoCpO1I3WwXoCs70FucVaqwllqy7
-         j4aaqWgAcdtRif9S28k1fXy8vZk6p0bFDZME6wBZcKHIromUAgW7QbFa58T+TEp5k/pJ
-         IAbg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:from:to:cc:subject:date:message-id
-         :in-reply-to:references:mime-version:content-transfer-encoding;
-        bh=jTScBOdTsxFi9IV1z8i5dHwn22wCLDi4xhj5TO6bFt4=;
-        b=silbBDA2qmKOW/0wmjjwTWYiLaqUTjgfV6oAevigqBcKoN8bKcKNZdoE+ZZi9xWcxe
-         4y1n2Y5zt6IBFOgWrw8z44u8BEa/Mq7M6tnnqpRWvF5MuagNBU2nHQ59sWNYVFmyun+l
-         6THgj/qyBJxJEU4cuvtn6Dwtc3Zoek/6bISUzAszLN3qxaPICAi3kzntw8J5fslc8W4C
-         cjXpzLFWeYyo71Ggs0/KDOxCzkMBRUihFkGnQ9ph4iwSdkoDsNIwba7Qv/SV7CIajogQ
-         hxMc9d9O6tLPbZfgQZmxtHwbWwhSLcPf3z+ruCC10d1/dHYxIoVPfvn5u8e8HrCUXfar
-         vvnw==
-X-Gm-Message-State: APjAAAUJwQ2Q805wpy16FRyyaj6AqXrH3CAa9w92Fu787XDzT+bNfPs/
-        gyhtdVKPaJQdqqQvjV6Wj7o=
-X-Google-Smtp-Source: APXvYqxZpl3GX0IYjhBsHwLKZQorMbDKiBlyYBFz/fnc+LSJugIiU+neOVcwVnE+F8+1WkVXQ/Z/pg==
-X-Received: by 2002:a5d:500e:: with SMTP id e14mr27993658wrt.219.1552508683877;
-        Wed, 13 Mar 2019 13:24:43 -0700 (PDT)
-Received: from macbookpro.malat.net ([2a01:e34:ee1e:860:6f23:82e6:aa2d:bbd1])
-        by smtp.gmail.com with ESMTPSA id y140sm32787wmd.18.2019.03.13.13.24.42
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Wed, 13 Mar 2019 13:24:43 -0700 (PDT)
-Received: by macbookpro.malat.net (Postfix, from userid 1000)
-        id 7072E1140A07; Wed, 13 Mar 2019 21:24:41 +0100 (CET)
-From:   Mathieu Malaterre <malat@debian.org>
-To:     "Jason A. Donenfeld" <Jason@zx2c4.com>
-Cc:     Mathieu Malaterre <malat@debian.org>,
-        "Gustavo A. R. Silva" <gustavo@embeddedor.com>,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH v2] lib/siphash.c: annotate implicit fall throughs
-Date:   Wed, 13 Mar 2019 21:24:29 +0100
-Message-Id: <20190313202429.20797-1-malat@debian.org>
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20190114201911.13725-1-malat@debian.org>
-References: <20190114201911.13725-1-malat@debian.org>
+        Wed, 13 Mar 2019 16:25:23 -0400
+Received: from mail.kernel.org ([198.145.29.99]:45394 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726656AbfCMUZX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 13 Mar 2019 16:25:23 -0400
+Received: from gmail.com (unknown [104.132.1.77])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 03F7A206DF;
+        Wed, 13 Mar 2019 20:25:21 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1552508722;
+        bh=EXe+Ez5eFEmIkT8jEZDz6Y2InduzsahFDoJq2DbHfuM=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=Mc2cEbLxEwfuk8GuRGfe6pBnrtYt1cyIjOu4ojK/xG20SsPAorOSVXaBW1+8vKeMF
+         NZXdXHZ0PtWDRk/VSj8lG+NxnPfL6NtIoYdaEeq4hFe42gT7Nh4Qp5hFu6u0eHNKBb
+         C37Cbd7CO/GuSb2/FDNr5EB4xl9z525UIDu2L2H4=
+Date:   Wed, 13 Mar 2019 13:25:20 -0700
+From:   Eric Biggers <ebiggers@kernel.org>
+To:     James Bottomley <James.Bottomley@HansenPartnership.com>
+Cc:     Theodore Ts'o <tytso@mit.edu>, Amir Goldstein <amir73il@gmail.com>,
+        Richard Weinberger <richard@nod.at>,
+        Miklos Szeredi <miklos@szeredi.hu>,
+        linux-fsdevel <linux-fsdevel@vger.kernel.org>,
+        linux-fscrypt@vger.kernel.org,
+        overlayfs <linux-unionfs@vger.kernel.org>,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        Paul Lawrence <paullawrence@google.com>
+Subject: Re: overlayfs vs. fscrypt
+Message-ID: <20190313202519.GD10169@gmail.com>
+References: <4066872.KGdO14EQMx@blindfold>
+ <CAOQ4uxhqQKzriL0An4Tvzc1E_LffL-z9q1otOW_RdD1ZdKWP3Q@mail.gmail.com>
+ <20190313151633.GA672@mit.edu>
+ <1552491394.3022.8.camel@HansenPartnership.com>
+ <20190313164439.GF672@mit.edu>
+ <1552499104.3022.44.camel@HansenPartnership.com>
+ <20190313185826.GA4685@mit.edu>
+ <1552504672.3022.59.camel@HansenPartnership.com>
+ <20190313195713.GC10169@gmail.com>
+ <1552507566.3022.65.camel@HansenPartnership.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <1552507566.3022.65.camel@HansenPartnership.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-There is a plan to build the kernel with -Wimplicit-fallthrough and
-these places in the code produced warnings (W=1). Fix them up.
+On Wed, Mar 13, 2019 at 01:06:06PM -0700, James Bottomley wrote:
+> On Wed, 2019-03-13 at 12:57 -0700, Eric Biggers wrote:
+> > On Wed, Mar 13, 2019 at 12:17:52PM -0700, James Bottomley wrote:
+> > > On Wed, 2019-03-13 at 14:58 -0400, Theodore Ts'o wrote:
+> > > > On Wed, Mar 13, 2019 at 10:45:04AM -0700, James Bottomley wrote:
+> > > > > >   If they can't break root, then the OS's user-id based
+> > > > > > access control checks (or SELinux checks if you are using
+> > > > > > SELinux) will still protect you.
+> > > > > 
+> > > > > Well, that's what one would think about the recent runc exploit
+> > > > > as well.  The thing I was looking to do was reduce the chances
+> > > > > that unencrypted data would be lying around to be
+> > > > > discovered.  I suppose the potentially biggest problem is
+> > > > > leaking the image after it's decrypted by admin means like a
+> > > > > badly configured backup, but unencryped data is potentially
+> > > > > discoverable by breakouts as well.
+> > > > 
+> > > > But while the container is running, the key is available and
+> > > > instantiated in the kernel, and the kernel is free to decrypt any
+> > > > encrypted file/block.
+> > > 
+> > > In the current encrypted tar file implementation, while the
+> > > container is running the decrypted tar file is extracted into the
+> > > container root and available for all to see.
+> > > 
+> > > The main security benefit of this implementation, as I said, is
+> > > security of at rest images and the runtime security is guaranteed
+> > > by other systems.
+> > 
+> > That's not security at rest, because you're decrypting the data and
+> > storing it onto the local disk.
+> 
+> I mean image at rest and image running.  The local disk untar only
+> happens for running image.
+> 
+> > fscrypt would allow the data to be stored encrypted on the local
+> > disk, so it's protected against offline compromise of the disk.
+> 
+> Container images are essentially tars of the overlays.  They only
+> become actual filesystems when instantiated at runtime.  The current
+> encrypted container image is an overlay or set of overlays which is
+> tarred then encrypted.  So to instantiate it is decrypted then
+> untarred.
+> 
+> The thing I was wondering about was whether instead of a tar encrypt we
+> could instead produce an encrypted image from a fscrypt filesystem.
+> 
 
-This commit remove the following warnings:
+Why do you care whether the container image is encrypted on the local disk, when
+you're extracting it in plaintext onto the local disk anyway each time it runs?
+Even after the runtime files are "deleted", they may still be recoverable from
+the disk.  Are you using shred and BLKSECDISCARD, and a non-COW filesystem?
 
-  lib/siphash.c:71:12: warning: this statement may fall through [-Wimplicit-fallthrough=]
-  lib/siphash.c:72:12: warning: this statement may fall through [-Wimplicit-fallthrough=]
-  lib/siphash.c:73:12: warning: this statement may fall through [-Wimplicit-fallthrough=]
-  lib/siphash.c:75:12: warning: this statement may fall through [-Wimplicit-fallthrough=]
-  lib/siphash.c:108:12: warning: this statement may fall through [-Wimplicit-fallthrough=]
-  lib/siphash.c:109:12: warning: this statement may fall through [-Wimplicit-fallthrough=]
-  lib/siphash.c:110:12: warning: this statement may fall through [-Wimplicit-fallthrough=]
-  lib/siphash.c:112:12: warning: this statement may fall through [-Wimplicit-fallthrough=]
-  lib/siphash.c:434:12: warning: this statement may fall through [-Wimplicit-fallthrough=]
-  lib/siphash.c:462:12: warning: this statement may fall through [-Wimplicit-fallthrough=]
+Now, if you wanted to avoid writing the plaintext to disk entirely (and thereby
+use encryption to actually achieve a useful security property that can't be
+achieved through file permissions), fscrypt is a good solution for that.
 
-Cc: "Gustavo A. R. Silva" <gustavo@embeddedor.com>
-Signed-off-by: Mathieu Malaterre <malat@debian.org>
----
-v2: some cases were missed in v1, update missing ones
-
- lib/siphash.c | 10 ++++++++++
- 1 file changed, 10 insertions(+)
-
-diff --git a/lib/siphash.c b/lib/siphash.c
-index 3ae58b4edad6..f4f778d28660 100644
---- a/lib/siphash.c
-+++ b/lib/siphash.c
-@@ -69,10 +69,14 @@ u64 __siphash_aligned(const void *data, size_t len, const siphash_key_t *key)
- #else
- 	switch (left) {
- 	case 7: b |= ((u64)end[6]) << 48;
-+		/* fall through */
- 	case 6: b |= ((u64)end[5]) << 40;
-+		/* fall through */
- 	case 5: b |= ((u64)end[4]) << 32;
-+		/* fall through */
- 	case 4: b |= le32_to_cpup(data); break;
- 	case 3: b |= ((u64)end[2]) << 16;
-+		/* fall through */
- 	case 2: b |= le16_to_cpup(data); break;
- 	case 1: b |= end[0];
- 	}
-@@ -102,10 +106,14 @@ u64 __siphash_unaligned(const void *data, size_t len, const siphash_key_t *key)
- #else
- 	switch (left) {
- 	case 7: b |= ((u64)end[6]) << 48;
-+		/* fall through */
- 	case 6: b |= ((u64)end[5]) << 40;
-+		/* fall through */
- 	case 5: b |= ((u64)end[4]) << 32;
-+		/* fall through */
- 	case 4: b |= get_unaligned_le32(end); break;
- 	case 3: b |= ((u64)end[2]) << 16;
-+		/* fall through */
- 	case 2: b |= get_unaligned_le16(end); break;
- 	case 1: b |= end[0];
- 	}
-@@ -432,6 +440,7 @@ u32 __hsiphash_aligned(const void *data, size_t len, const hsiphash_key_t *key)
- 	}
- 	switch (left) {
- 	case 3: b |= ((u32)end[2]) << 16;
-+		/* fall through */
- 	case 2: b |= le16_to_cpup(data); break;
- 	case 1: b |= end[0];
- 	}
-@@ -455,6 +464,7 @@ u32 __hsiphash_unaligned(const void *data, size_t len,
- 	}
- 	switch (left) {
- 	case 3: b |= ((u32)end[2]) << 16;
-+		/* fall through */
- 	case 2: b |= get_unaligned_le16(end); break;
- 	case 1: b |= end[0];
- 	}
--- 
-2.20.1
-
+- Eric
