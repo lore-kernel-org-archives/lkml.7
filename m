@@ -2,161 +2,145 @@ Return-Path: <SRS0=dUEL=RQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FROM_EXCESS_BASE64,HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
+X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIMWL_WL_MED,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 742BAC43381
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 Mar 2019 18:23:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6992FC43381
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 Mar 2019 18:25:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3E8702075C
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 Mar 2019 18:23:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3B46A2075C
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 Mar 2019 18:25:09 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="kViNUMkc"
+	dkim=pass (1024-bit key) header.d=fb.com header.i=@fb.com header.b="EFvJS0ay";
+	dkim=pass (1024-bit key) header.d=fb.onmicrosoft.com header.i=@fb.onmicrosoft.com header.b="iiNPnQaF"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726831AbfCMSXz (ORCPT
+        id S1726790AbfCMSZH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 13 Mar 2019 14:23:55 -0400
-Received: from mail-lj1-f194.google.com ([209.85.208.194]:39530 "EHLO
-        mail-lj1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726336AbfCMSXy (ORCPT
+        Wed, 13 Mar 2019 14:25:07 -0400
+Received: from mx0a-00082601.pphosted.com ([67.231.145.42]:51620 "EHLO
+        mx0a-00082601.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1725876AbfCMSZH (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 13 Mar 2019 14:23:54 -0400
-Received: by mail-lj1-f194.google.com with SMTP id y9so2211545ljk.6
-        for <linux-kernel@vger.kernel.org>; Wed, 13 Mar 2019 11:23:53 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=4GTls+Zv32EvF6vlpajRgSvLbqGR3r9e3OvYMfvjSMY=;
-        b=kViNUMkc2o0pWuvL13BOJC98kvLDhNa3zcbfSXx+70MW8u+xaEAO/UkkEmdoXLKp5W
-         vN4swx6xendVQjwpUwO3YSrcvf/gwTQviNGcUQHKwh+WPlb/5TO3MsocivmYhN4cNCxV
-         2cWxQ3VxnVvqT3YcFoJr9jYRoYvU9KxzHzBpGHYiU8MDmvRYkyCCTX+TFA1ACOzd3HkT
-         gAXgY5nsK/U69kNsOar6EQaFuL+NjLsarNdArmPahNWAM9TRrRvK/MG+ba5+rfoXaKWP
-         ex2vTuzSwjuhKMuPaOfkOaJZyY4OSI6PmqHAFVcrI3ThHY8qATZmvFskoskVzojr+DA+
-         b9zg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=4GTls+Zv32EvF6vlpajRgSvLbqGR3r9e3OvYMfvjSMY=;
-        b=Pe1yYv9MPUHN6l9cTHTGNSFeZ/qxhl5Qb/Hjw3TQR8yfvAbfN5G7Gy4O2ierfU4QA3
-         GCubPjQ746Cz59og1kC0niL+PEoTvBjtgNSgy/aXI7CYRsoPdYL37FKUCfUUhRv82RZq
-         +inXDRiAyPfbBxbuoO+gSXdF72HRQIzKqDzICXklpii+j0+pz0aTSixmX3AdIgK9/NsV
-         44XsHowP2zqP27bMlGVyLvgOkcov+JpidEfyzVWcqx/Rg6DUKVQ2ACX0m3cz0JEUKtNO
-         mICnTJ3jU0sDFzT2h6zHuxVj9ZaFeqwCf8HLzTfTz2nak25TWYnL+FnP8xR6K0T59fhi
-         1k6Q==
-X-Gm-Message-State: APjAAAX92YhlD0Z0qbNYOzGD+5KP7+6tcBGTszMc6bXezasYFunqXcRT
-        vDliNJOIL9/n/E5WD8JkN2WmTyTPZcGYL3/XOsW3sOXO8r0=
-X-Google-Smtp-Source: APXvYqz/82tvutr5oJvj7gLXQDBKzUtT/cXhRm7wwd4kDzNZs+9/hLcTVBaH5j/AWYIoUQR+A3TKOOCax5PCUo3Ux64=
-X-Received: by 2002:a05:651c:82:: with SMTP id 2mr5393014ljq.39.1552501432235;
- Wed, 13 Mar 2019 11:23:52 -0700 (PDT)
-MIME-Version: 1.0
-References: <20190312171034.530434962@linuxfoundation.org> <20190313144434.GA11117@roeck-us.net>
- <20190313151429.GB9719@kroah.com> <20190313175839.GA27267@kroah.com>
-In-Reply-To: <20190313175839.GA27267@kroah.com>
-From:   =?UTF-8?B?RGFuaWVsIETDrWF6?= <daniel.diaz@linaro.org>
-Date:   Wed, 13 Mar 2019 12:23:41 -0600
-Message-ID: <CAEUSe78M5sKMcXZAv1LfUVe4TRQS7s=XYD+kJxv7OS1mye5WAw@mail.gmail.com>
-Subject: Re: [PATCH 4.9 00/96] 4.9.163-stable review
-To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc:     Guenter Roeck <linux@roeck-us.net>,
-        open list <linux-kernel@vger.kernel.org>,
-        torvalds@linux-foundation.org,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Shuah Khan <shuah@kernel.org>, patches@kernelci.org,
-        Ben Hutchings <ben.hutchings@codethink.co.uk>,
-        lkft-triage@lists.linaro.org, stable@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+        Wed, 13 Mar 2019 14:25:07 -0400
+Received: from pps.filterd (m0148461.ppops.net [127.0.0.1])
+        by mx0a-00082601.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x2DIIdbO003908;
+        Wed, 13 Mar 2019 11:25:00 -0700
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=fb.com; h=from : to : cc : subject
+ : date : message-id : references : in-reply-to : content-type : content-id
+ : content-transfer-encoding : mime-version; s=facebook;
+ bh=aikG9yz0lcCeANUDQoaSydrOSD48pgBFE7UyJ3qbhh4=;
+ b=EFvJS0ayLUliwdpHarD7XqwO3TuwLTzzJz/ooI70TeJxS3TutTyBJxBycV7/foSpndlD
+ Wb/rPlX/RLtVLC5Lu4FK5SVl4rT16cErRt1S4nJDjfntgqF4VNgHYHFTmnYWt96z1n9T
+ Z9J90gkIFWKzcvhkqX73ilNistfag4d3nnQ= 
+Received: from mail.thefacebook.com ([199.201.64.23])
+        by mx0a-00082601.pphosted.com with ESMTP id 2r76fur7ru-17
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-SHA384 bits=256 verify=NOT);
+        Wed, 13 Mar 2019 11:25:00 -0700
+Received: from prn-hub06.TheFacebook.com (2620:10d:c081:35::130) by
+ prn-hub04.TheFacebook.com (2620:10d:c081:35::128) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA384) id
+ 15.1.1713.5; Wed, 13 Mar 2019 11:23:12 -0700
+Received: from NAM03-DM3-obe.outbound.protection.outlook.com (192.168.54.28)
+ by o365-in.thefacebook.com (192.168.16.30) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA384) id 15.1.1713.5
+ via Frontend Transport; Wed, 13 Mar 2019 11:23:12 -0700
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=fb.onmicrosoft.com;
+ s=selector1-fb-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=aikG9yz0lcCeANUDQoaSydrOSD48pgBFE7UyJ3qbhh4=;
+ b=iiNPnQaF3nJfclDdowMVP+eDNrMDAE1LvcFRwnLqbpRTUyFhkz471Oj7GlDWgwuqX29lsiSkAp/QOgQewecjEHG/sA6KePKPifBPiva0emzjADjgMFoif5WcDu9ybnSiU7HE8GqoXbeq/e2THx1vcq2swfrkaARMZg/+zUu9ee0=
+Received: from BYAPR15MB2631.namprd15.prod.outlook.com (20.179.156.24) by
+ BYAPR15MB3192.namprd15.prod.outlook.com (20.179.56.94) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.1709.13; Wed, 13 Mar 2019 18:23:09 +0000
+Received: from BYAPR15MB2631.namprd15.prod.outlook.com
+ ([fe80::790e:7294:b086:9ded]) by BYAPR15MB2631.namprd15.prod.outlook.com
+ ([fe80::790e:7294:b086:9ded%2]) with mapi id 15.20.1686.021; Wed, 13 Mar 2019
+ 18:23:09 +0000
+From:   Roman Gushchin <guro@fb.com>
+To:     Johannes Weiner <hannes@cmpxchg.org>
+CC:     Roman Gushchin <guroan@gmail.com>,
+        "linux-mm@kvack.org" <linux-mm@kvack.org>,
+        Kernel Team <Kernel-team@fb.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Tejun Heo <tj@kernel.org>, Rik van Riel <riel@surriel.com>,
+        Michal Hocko <mhocko@kernel.org>
+Subject: Re: [PATCH v2 5/6] mm: flush memcg percpu stats and events before
+ releasing
+Thread-Topic: [PATCH v2 5/6] mm: flush memcg percpu stats and events before
+ releasing
+Thread-Index: AQHU2SPIEdyFRN8G5UOFWOBkO8hY8aYJuWyAgAAn5QA=
+Date:   Wed, 13 Mar 2019 18:23:09 +0000
+Message-ID: <20190313182301.GA7336@castle.DHCP.thefacebook.com>
+References: <20190312223404.28665-1-guro@fb.com>
+ <20190312223404.28665-6-guro@fb.com> <20190313160017.GA31891@cmpxchg.org>
+In-Reply-To: <20190313160017.GA31891@cmpxchg.org>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-clientproxiedby: MWHPR21CA0041.namprd21.prod.outlook.com
+ (2603:10b6:300:129::27) To BYAPR15MB2631.namprd15.prod.outlook.com
+ (2603:10b6:a03:152::24)
+x-ms-exchange-messagesentrepresentingtype: 1
+x-originating-ip: [2620:10d:c090:180::f5e6]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: 41ecc687-2bbb-4fb6-7ac9-08d6a7e0f1f0
+x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600127)(711020)(4605104)(2017052603328)(7153060)(7193020);SRVR:BYAPR15MB3192;
+x-ms-traffictypediagnostic: BYAPR15MB3192:
+x-microsoft-antispam-prvs: <BYAPR15MB31926B4BD8449EEA55C2E948BE4A0@BYAPR15MB3192.namprd15.prod.outlook.com>
+x-forefront-prvs: 09752BC779
+x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(376002)(39860400002)(366004)(136003)(396003)(346002)(189003)(199004)(1076003)(6116002)(6486002)(256004)(86362001)(316002)(14444005)(6246003)(7736002)(305945005)(5660300002)(186003)(25786009)(229853002)(52116002)(4326008)(386003)(9686003)(6506007)(76176011)(6916009)(102836004)(81156014)(6436002)(71190400001)(478600001)(53936002)(8676002)(99286004)(97736004)(8936002)(446003)(46003)(14454004)(105586002)(106356001)(476003)(33656002)(11346002)(486006)(6512007)(81166006)(68736007)(2906002)(54906003)(71200400001);DIR:OUT;SFP:1102;SCL:1;SRVR:BYAPR15MB3192;H:BYAPR15MB2631.namprd15.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
+received-spf: None (protection.outlook.com: fb.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam-message-info: +7PeFCMLvN9IdE+TWAxqLlkLNg6kxDnNavxXpJVIxUHTzOs0Xph1jCxGT/12gQXDC1+CsbnQHVdfRzdPUlIIp1wWSnf08TcQpkYRw7pUOtNumlOLSUv8907C8Ron+gXL465kcvlHCOvoY3mYcdd7I1zxslykLrL5b/gNEnJEGowO+0rOX+1AUCodvyAQBHW5EEngFVMMjqHtHvi9M6SE89/GZ2zX7RgUrcLjkNOkfU7c6+5mVI9uLXedjqtPhL9tc8U8hTG5Q0dIJRcfwS317VeGzIOESE/yuVB+knyiSQGpH/rOQU6j0Fna6QWKfCRowvprBKC5Wa/G0aDooMCG4l9bI824EXq+nNdZJHNxewwgUhUEH81g+i8GId2vpvKTmK1oG381KiIq7y3Z3lr0mPPxGbfJmvH3tlLP0X7+4Rg=
+Content-Type: text/plain; charset="us-ascii"
+Content-ID: <3F987864893FA84898C6B92CCEE1853F@namprd15.prod.outlook.com>
 Content-Transfer-Encoding: quoted-printable
+MIME-Version: 1.0
+X-MS-Exchange-CrossTenant-Network-Message-Id: 41ecc687-2bbb-4fb6-7ac9-08d6a7e0f1f0
+X-MS-Exchange-CrossTenant-originalarrivaltime: 13 Mar 2019 18:23:09.6178
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 8ae927fe-1255-47a7-a2af-5f3a069daaa2
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: BYAPR15MB3192
+X-OriginatorOrg: fb.com
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-03-13_11:,,
+ signatures=0
+X-Proofpoint-Spam-Reason: safe
+X-FB-Internal: Safe
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hello!
+On Wed, Mar 13, 2019 at 12:00:17PM -0400, Johannes Weiner wrote:
+> On Tue, Mar 12, 2019 at 03:34:02PM -0700, Roman Gushchin wrote:
+> > Flush percpu stats and events data to corresponding before releasing
+> > percpu memory.
+> >=20
+> > Although per-cpu stats are never exactly precise, dropping them on
+> > floor regularly may lead to an accumulation of an error. So, it's
+> > safer to flush them before releasing.
+> >=20
+> > To minimize the number of atomic updates, let's sum all stats/events
+> > on all cpus locally, and then make a single update per entry.
+> >=20
+> > Signed-off-by: Roman Gushchin <guro@fb.com>
+>=20
+> Acked-by: Johannes Weiner <hannes@cmpxchg.org>
+>=20
+> Do you mind merging 6/6 into this one? That would make it easier to
+> verify that the code added in this patch and the code removed in 6/6
+> are indeed functionally equivalent.
+>=20
 
-On Wed, 13 Mar 2019 at 11:58, Greg Kroah-Hartman
-<gregkh@linuxfoundation.org> wrote:
->
-> On Wed, Mar 13, 2019 at 08:14:29AM -0700, Greg Kroah-Hartman wrote:
-> > On Wed, Mar 13, 2019 at 07:44:34AM -0700, Guenter Roeck wrote:
-> > > On Tue, Mar 12, 2019 at 10:09:18AM -0700, Greg Kroah-Hartman wrote:
-> > > > This is the start of the stable review cycle for the 4.9.163 releas=
-e.
-> > > > There are 96 patches in this series, all will be posted as a respon=
-se
-> > > > to this one.  If anyone has any issues with these being applied, pl=
-ease
-> > > > let me know.
-> > > >
-> > > > Responses should be made by Thu Mar 14 17:10:06 UTC 2019.
-> > > > Anything received after that time might be too late.
-> > > >
-> > >
-> > > Early results:
-> > >
-> > > Building x86_64:tools/perf ... failed
-> > > --------------
-> > > Error log:
-> > > Warning: arch/x86/include/asm/cpufeatures.h differs from kernel
-> > > Warning: arch/x86/include/uapi/asm/kvm.h differs from kernel
-> > >   PERF_VERSION =3D 4.9.162.g605129
-> > > builtin-trace.c: In function =E2=80=98perf_evlist__add_vfs_getname=E2=
-=80=99:
-> > > builtin-trace.c:2071:8: error: implicit declaration of function =E2=
-=80=98strstarts=E2=80=99 [-Werror=3Dimplicit-function-declaration]
-> > > builtin-trace.c:2071:3: error: nested extern declaration of =E2=80=98=
-strstarts=E2=80=99 [-Werror=3Dnested-externs]
-> > >
-> > > Also affects v4.4.y-queue.
-> >
-> > Hm, at first I was worried about my backport, but if it hit 4.4 as well=
-,
-> > that's not my fault :)
-> >
-> > I'll look at this after breakfast, thanks!
->
-> I can't even get perf to build without any stable queue patches for
-> 4.9.y at the moment, nor for 4.4.y, so something is odd, or I just have
-> too "new" of a system.  Let me go dig up a debian box to see if I can at
-> least find a way to start to reproduce this...
+I did try, but the result is the mess of added and removed lines,
+which are *almost* the same, but are slightly different (e.g. tabs).
+So it's much easier to review it as two separate patches.
 
-Interesting. To add to the fun, just yesterday I tried building the
-Perf recipe from OpenEmbedded and it failed for these combinations:
-* 4.4.176 and x86_64:
-|   CC       /srv/oe/build/tmp-lkft-glibc/work/intel_corei7_64-linaro-linux=
-/perf/1.0-r9/perf-1.0/bench/mem-memcpy-x86-64-asm.o
-| bench/mem-memcpy-x86-64-asm.S:4:10: fatal error:
-../../../arch/x86/lib/memcpy_64.S: No such file or directory
-|  #include "../../../arch/x86/lib/memcpy_64.S"
-|           ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-| compilation terminated.
-
-* 4.14.105 and i386:
-| In file included from util/libunwind/x86_32.c:33:0:
-| util/libunwind/../../arch/x86/util/unwind-libunwind.c: In function
-'libunwind__x86_reg_id':
-| util/libunwind/../../arch/x86/util/unwind-libunwind.c:110:11: error:
-'EINVAL' undeclared (first use in this function); did you mean
-'UNW_EINVAL'?
-|    return -EINVAL;
-|            ^~~~~~
-|            UNW_EINVAL
-
-Other combinations that worked:
-* 4.4.176 with arm, arm64, i386
-* 4.9.162 with arm, arm64, i386, x86_64
-* 4.14.105 with arm, arm64, x86_64
-* 4.19.28 with arm, arm64, i386, x86_64
-* 4.20.15 with arm, arm64, i386, x86_64
-* 5.0.1 with arm, arm64, i386, x86_64
-
-I'll try again the failing combos to discard a problem with the OE build it=
-self.
-
-Greetings!
-
-Daniel D=C3=ADaz
-daniel.diaz@linaro.org
+Thanks!
