@@ -4,50 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 90191C43381
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 Mar 2019 19:22:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B81FBC43381
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 Mar 2019 19:22:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 594012075C
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 Mar 2019 19:22:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8485E2075C
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 Mar 2019 19:22:39 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1552504939;
-	bh=zFMFDk7OKe90hZ5/EY71cK99Hut9zkZc9/BP7gtyeeI=;
+	s=default; t=1552504959;
+	bh=cMruLuTHffGShCUsZgPG1R/CKP0eN+ygbegnL/7eI8c=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=f9LrxU+2o2MdSy6vkcT6jwLpG3q9ex59sDbP3VMfGZiB04YuX6T8xesloUwVul6Km
-	 /M+/DPqrabP+pZGAcfMiVgVD4ImarscePbu7tCwbJ8UNZ8taFs+GuWVlg+oYLbZB1m
-	 nA+sbR1oxxc1XyZPq0RiUOm5B7A9lKdQxW+m/8kk=
+	b=KhI8R0sIGOiYlAJa0xiE+GjT5Iy9tek1/BcWOEg6lBT3cW5VNEO3AYzA1UuN5g0uo
+	 yP7mMPQA6RYEN6IfnPN/BueUqCRww1yhEAE3wKMrIIRAy6rV/zZLiFFe7EqPw2UaY0
+	 KSa3kpYCOqPbfYxZbNAMFYtB4eqFQtN1voUm6S4w=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729130AbfCMTWS (ORCPT
+        id S1728898AbfCMTRc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 13 Mar 2019 15:22:18 -0400
-Received: from mail.kernel.org ([198.145.29.99]:48244 "EHLO mail.kernel.org"
+        Wed, 13 Mar 2019 15:17:32 -0400
+Received: from mail.kernel.org ([198.145.29.99]:47862 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728950AbfCMTRq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 13 Mar 2019 15:17:46 -0400
+        id S1728399AbfCMTR2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 13 Mar 2019 15:17:28 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E22D32184E;
-        Wed, 13 Mar 2019 19:17:43 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id E59AB213A2;
+        Wed, 13 Mar 2019 19:17:25 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1552504665;
-        bh=zFMFDk7OKe90hZ5/EY71cK99Hut9zkZc9/BP7gtyeeI=;
+        s=default; t=1552504647;
+        bh=cMruLuTHffGShCUsZgPG1R/CKP0eN+ygbegnL/7eI8c=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=VKII9eEC1H83GlQtA/m9uUefie0RMOmGQWQkS3XjyA5E3Q/kyH/gEadE/Dfojeaj/
-         vTC9DvMl1cXuH1plDVUWzd/SNSZtZZNjpugTlV4izq5stzztAz3X55yzFA8sTOMMfA
-         jGzrtR9tBYTutiR8L8mROECg0tb69YGbNq+7m+68=
+        b=N0ZaUrPA1CmcgoCWyTQMGQnvnzVceLq7o+UdfMf3rfYq94viViY9pa2BEYRiWuYF9
+         7ZqJyGHcjXty8yoyPrVCqAdU+CPBn5HC/QUYKsTNcIm61mewwDta+vNxl4SDecHsIu
+         p9o2TvrbBCdjFFqErn1Sg6HpABIjZ5DERz9VFJcM=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Li RongQing <lirongqing@baidu.com>,
-        Johannes Berg <johannes.berg@intel.com>,
-        Sasha Levin <sashal@kernel.org>,
-        linux-wireless@vger.kernel.org, netdev@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.9 19/24] mac80211_hwsim: propagate genlmsg_reply return code
-Date:   Wed, 13 Mar 2019 15:16:42 -0400
-Message-Id: <20190313191647.160171-19-sashal@kernel.org>
+Cc:     "Darrick J. Wong" <darrick.wong@oracle.com>,
+        Hugh Dickins <hughd@google.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Sasha Levin <sashal@kernel.org>, linux-mm@kvack.org
+Subject: [PATCH AUTOSEL 4.9 13/24] tmpfs: fix link accounting when a tmpfile is linked in
+Date:   Wed, 13 Mar 2019 15:16:36 -0400
+Message-Id: <20190313191647.160171-13-sashal@kernel.org>
 X-Mailer: git-send-email 2.19.1
 In-Reply-To: <20190313191647.160171-1-sashal@kernel.org>
 References: <20190313191647.160171-1-sashal@kernel.org>
@@ -59,32 +60,62 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Li RongQing <lirongqing@baidu.com>
+From: "Darrick J. Wong" <darrick.wong@oracle.com>
 
-[ Upstream commit 17407715240456448e4989bee46ffc93991add83 ]
+[ Upstream commit 1062af920c07f5b54cf5060fde3339da6df0cf6b ]
 
-genlmsg_reply can fail, so propagate its return code
+tmpfs has a peculiarity of accounting hard links as if they were
+separate inodes: so that when the number of inodes is limited, as it is
+by default, a user cannot soak up an unlimited amount of unreclaimable
+dcache memory just by repeatedly linking a file.
 
-Signed-off-by: Li RongQing <lirongqing@baidu.com>
-Signed-off-by: Johannes Berg <johannes.berg@intel.com>
+But when v3.11 added O_TMPFILE, and the ability to use linkat() on the
+fd, we missed accommodating this new case in tmpfs: "df -i" shows that
+an extra "inode" remains accounted after the file is unlinked and the fd
+closed and the actual inode evicted.  If a user repeatedly links
+tmpfiles into a tmpfs, the limit will be hit (ENOSPC) even after they
+are deleted.
+
+Just skip the extra reservation from shmem_link() in this case: there's
+a sense in which this first link of a tmpfile is then cheaper than a
+hard link of another file, but the accounting works out, and there's
+still good limiting, so no need to do anything more complicated.
+
+Link: http://lkml.kernel.org/r/alpine.LSU.2.11.1902182134370.7035@eggly.anvils
+Fixes: f4e0c30c191 ("allow the temp files created by open() to be linked to")
+Signed-off-by: Darrick J. Wong <darrick.wong@oracle.com>
+Signed-off-by: Hugh Dickins <hughd@google.com>
+Reported-by: Matej Kupljen <matej.kupljen@gmail.com>
+Acked-by: Al Viro <viro@zeniv.linux.org.uk>
+Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
+Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/wireless/mac80211_hwsim.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ mm/shmem.c | 10 +++++++---
+ 1 file changed, 7 insertions(+), 3 deletions(-)
 
-diff --git a/drivers/net/wireless/mac80211_hwsim.c b/drivers/net/wireless/mac80211_hwsim.c
-index 780acf23fd19..e9ec1da9935d 100644
---- a/drivers/net/wireless/mac80211_hwsim.c
-+++ b/drivers/net/wireless/mac80211_hwsim.c
-@@ -3167,7 +3167,7 @@ static int hwsim_get_radio_nl(struct sk_buff *msg, struct genl_info *info)
- 			goto out_err;
- 		}
+diff --git a/mm/shmem.c b/mm/shmem.c
+index 9b17bd4cbc5e..214773472530 100644
+--- a/mm/shmem.c
++++ b/mm/shmem.c
+@@ -2902,10 +2902,14 @@ static int shmem_link(struct dentry *old_dentry, struct inode *dir, struct dentr
+ 	 * No ordinary (disk based) filesystem counts links as inodes;
+ 	 * but each new link needs a new dentry, pinning lowmem, and
+ 	 * tmpfs dentries cannot be pruned until they are unlinked.
++	 * But if an O_TMPFILE file is linked into the tmpfs, the
++	 * first link must skip that, to get the accounting right.
+ 	 */
+-	ret = shmem_reserve_inode(inode->i_sb);
+-	if (ret)
+-		goto out;
++	if (inode->i_nlink) {
++		ret = shmem_reserve_inode(inode->i_sb);
++		if (ret)
++			goto out;
++	}
  
--		genlmsg_reply(skb, info);
-+		res = genlmsg_reply(skb, info);
- 		break;
- 	}
- 
+ 	dir->i_size += BOGO_DIRENT_SIZE;
+ 	inode->i_ctime = dir->i_ctime = dir->i_mtime = current_time(inode);
 -- 
 2.19.1
 
