@@ -7,46 +7,46 @@ X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A1532C43381
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 Mar 2019 19:10:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A9188C43381
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 Mar 2019 19:10:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7423D217F5
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 Mar 2019 19:10:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 808062173C
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 Mar 2019 19:10:39 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1552504236;
-	bh=UK7dnFAL3VgAJLtFy0BBzLzHWgADj1ep/nc/+/bfCZE=;
+	s=default; t=1552504239;
+	bh=6Tq97tdil9VtO3y1H5xtH2kXYL50kpyBtSt5K0yW0Y0=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Qm8HXxItkaXw54mOpPSJbVyavaJWrH63RMGvQr6jtis/UvB00aJLKEj8KOCsS3Yc4
-	 Jrfkh0fVlTcucUQPQr5yXvQTklzJvvuqJ4YXszwU7YhUUqjccFg9JQGd0bxUnWf/JW
-	 PK9MCeYtOyutsuAKuqkB3lEgVc1HFzGl6XiUQ+mY=
+	b=hZ0WeMJbH5WjgShVYwdRdHOL5v8a3jviUYgFI38Di6+Z6p+cZhYvjetoGozyysJ/t
+	 FUBifH0A5od55UAVcTRIh2IsLWEkix0eUyLnjx6mE5NZ1SzJJUGpAVwisiVohdkTRP
+	 RZ/YJbZz5uWU6yBZKKt223/7PjqzMoMocTbpGleA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727092AbfCMTKf (ORCPT
+        id S1726442AbfCMTKi (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 13 Mar 2019 15:10:35 -0400
-Received: from mail.kernel.org ([198.145.29.99]:41094 "EHLO mail.kernel.org"
+        Wed, 13 Mar 2019 15:10:38 -0400
+Received: from mail.kernel.org ([198.145.29.99]:41178 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726937AbfCMTKb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 13 Mar 2019 15:10:31 -0400
+        id S1727085AbfCMTKf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 13 Mar 2019 15:10:35 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id C868A2075C;
-        Wed, 13 Mar 2019 19:10:29 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id A8B332147C;
+        Wed, 13 Mar 2019 19:10:32 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1552504230;
-        bh=UK7dnFAL3VgAJLtFy0BBzLzHWgADj1ep/nc/+/bfCZE=;
+        s=default; t=1552504234;
+        bh=6Tq97tdil9VtO3y1H5xtH2kXYL50kpyBtSt5K0yW0Y0=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=FN2to5G8rwpC0gpTsxmkNIx9mcpeyboiPgJeIo34mN2yQkFD+Bg2ZxOkKksmeW0sj
-         u0JSJW31dL5YyX+iGoCMKhwvF+cE0R5QG6n4BZTL12zG0wHcWiA7W2c9q5xObysV0d
-         IAsvdnGEiFPZwI0dKcZVN4sE+qUPtKrZMkCWCQME=
+        b=NhLTjyT0AmquwCMNbQ0NXMJ/ugZlnRoQb3pM/V5xZZhg46pU5JwBz+smbmIHMfBSn
+         phW2inJPq+9W7FDD1524ky0smdwXj0JcbfAedqah4inIac2agxfs47WlwrXglohJjO
+         yZYpxj0xa1rH5+C2AMQw9ecxBN3I/2fxZRAA4NlE=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Martin Willi <martin@strongswan.org>,
-        Steffen Klassert <steffen.klassert@secunet.com>,
+Cc:     Martin KaFai Lau <kafai@fb.com>, Joe Stringer <joe@wand.net.nz>,
+        Alexei Starovoitov <ast@kernel.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH AUTOSEL 4.20 04/60] esp: Skip TX bytes accounting when sending from a request socket
-Date:   Wed, 13 Mar 2019 15:09:25 -0400
-Message-Id: <20190313191021.158171-4-sashal@kernel.org>
+Subject: [PATCH AUTOSEL 4.20 06/60] bpf: Fix narrow load on a bpf_sock returned from sk_lookup()
+Date:   Wed, 13 Mar 2019 15:09:27 -0400
+Message-Id: <20190313191021.158171-6-sashal@kernel.org>
 X-Mailer: git-send-email 2.19.1
 In-Reply-To: <20190313191021.158171-1-sashal@kernel.org>
 References: <20190313191021.158171-1-sashal@kernel.org>
@@ -58,75 +58,117 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Martin Willi <martin@strongswan.org>
+From: Martin KaFai Lau <kafai@fb.com>
 
-[ Upstream commit 09db51241118aeb06e1c8cd393b45879ce099b36 ]
+[ Upstream commit d623876646be119439999a229a2c3ce30fd197fb ]
 
-On ESP output, sk_wmem_alloc is incremented for the added padding if a
-socket is associated to the skb. When replying with TCP SYNACKs over
-IPsec, the associated sk is a casted request socket, only. Increasing
-sk_wmem_alloc on a request socket results in a write at an arbitrary
-struct offset. In the best case, this produces the following WARNING:
+By adding this test to test_verifier:
+{
+	"reference tracking: access sk->src_ip4 (narrow load)",
+	.insns = {
+	BPF_SK_LOOKUP,
+	BPF_MOV64_REG(BPF_REG_6, BPF_REG_0),
+	BPF_JMP_IMM(BPF_JEQ, BPF_REG_0, 0, 3),
+	BPF_LDX_MEM(BPF_H, BPF_REG_2, BPF_REG_0, offsetof(struct bpf_sock, src_ip4) + 2),
+	BPF_MOV64_REG(BPF_REG_1, BPF_REG_6),
+	BPF_EMIT_CALL(BPF_FUNC_sk_release),
+	BPF_EXIT_INSN(),
+	},
+	.prog_type = BPF_PROG_TYPE_SCHED_CLS,
+	.result = ACCEPT,
+},
 
-WARNING: CPU: 1 PID: 0 at lib/refcount.c:102 esp_output_head+0x2e4/0x308 [esp4]
-refcount_t: addition on 0; use-after-free.
-CPU: 1 PID: 0 Comm: swapper/1 Not tainted 5.0.0-rc3 #2
-Hardware name: Marvell Armada 380/385 (Device Tree)
-[...]
-[<bf0ff354>] (esp_output_head [esp4]) from [<bf1006a4>] (esp_output+0xb8/0x180 [esp4])
-[<bf1006a4>] (esp_output [esp4]) from [<c05dee64>] (xfrm_output_resume+0x558/0x664)
-[<c05dee64>] (xfrm_output_resume) from [<c05d07b0>] (xfrm4_output+0x44/0xc4)
-[<c05d07b0>] (xfrm4_output) from [<c05956bc>] (tcp_v4_send_synack+0xa8/0xe8)
-[<c05956bc>] (tcp_v4_send_synack) from [<c0586ad8>] (tcp_conn_request+0x7f4/0x948)
-[<c0586ad8>] (tcp_conn_request) from [<c058c404>] (tcp_rcv_state_process+0x2a0/0xe64)
-[<c058c404>] (tcp_rcv_state_process) from [<c05958ac>] (tcp_v4_do_rcv+0xf0/0x1f4)
-[<c05958ac>] (tcp_v4_do_rcv) from [<c0598a4c>] (tcp_v4_rcv+0xdb8/0xe20)
-[<c0598a4c>] (tcp_v4_rcv) from [<c056eb74>] (ip_protocol_deliver_rcu+0x2c/0x2dc)
-[<c056eb74>] (ip_protocol_deliver_rcu) from [<c056ee6c>] (ip_local_deliver_finish+0x48/0x54)
-[<c056ee6c>] (ip_local_deliver_finish) from [<c056eecc>] (ip_local_deliver+0x54/0xec)
-[<c056eecc>] (ip_local_deliver) from [<c056efac>] (ip_rcv+0x48/0xb8)
-[<c056efac>] (ip_rcv) from [<c0519c2c>] (__netif_receive_skb_one_core+0x50/0x6c)
-[...]
+The above test loads 2 bytes from sk->src_ip4 where
+sk is obtained by bpf_sk_lookup_tcp().
 
-The issue triggers only when not using TCP syncookies, as for syncookies
-no socket is associated.
+It hits an internal verifier error from convert_ctx_accesses():
+[root@arch-fb-vm1 bpf]# ./test_verifier 665 665
+Failed to load prog 'Invalid argument'!
+0: (b7) r2 = 0
+1: (63) *(u32 *)(r10 -8) = r2
+2: (7b) *(u64 *)(r10 -16) = r2
+3: (7b) *(u64 *)(r10 -24) = r2
+4: (7b) *(u64 *)(r10 -32) = r2
+5: (7b) *(u64 *)(r10 -40) = r2
+6: (7b) *(u64 *)(r10 -48) = r2
+7: (bf) r2 = r10
+8: (07) r2 += -48
+9: (b7) r3 = 36
+10: (b7) r4 = 0
+11: (b7) r5 = 0
+12: (85) call bpf_sk_lookup_tcp#84
+13: (bf) r6 = r0
+14: (15) if r0 == 0x0 goto pc+3
+ R0=sock(id=1,off=0,imm=0) R6=sock(id=1,off=0,imm=0) R10=fp0,call_-1 fp-8=????0000 fp-16=0000mmmm fp-24=mmmmmmmm fp-32=mmmmmmmm fp-40=mmmmmmmm fp-48=mmmmmmmm refs=1
+15: (69) r2 = *(u16 *)(r0 +26)
+16: (bf) r1 = r6
+17: (85) call bpf_sk_release#86
+18: (95) exit
 
-Fixes: cac2661c53f3 ("esp4: Avoid skb_cow_data whenever possible")
-Fixes: 03e2a30f6a27 ("esp6: Avoid skb_cow_data whenever possible")
-Signed-off-by: Martin Willi <martin@strongswan.org>
-Signed-off-by: Steffen Klassert <steffen.klassert@secunet.com>
+from 14 to 18: safe
+processed 20 insns (limit 131072), stack depth 48
+bpf verifier is misconfigured
+Summary: 0 PASSED, 0 SKIPPED, 1 FAILED
+
+The bpf_sock_is_valid_access() is expecting src_ip4 can be narrowly
+loaded (meaning load any 1 or 2 bytes of the src_ip4) by
+marking info->ctx_field_size.  However, this marked
+ctx_field_size is not used.  This patch fixes it.
+
+Due to the recent refactoring in test_verifier,
+this new test will be added to the bpf-next branch
+(together with the bpf_tcp_sock patchset)
+to avoid merge conflict.
+
+Fixes: c64b7983288e ("bpf: Add PTR_TO_SOCKET verifier type")
+Cc: Joe Stringer <joe@wand.net.nz>
+Signed-off-by: Martin KaFai Lau <kafai@fb.com>
+Acked-by: Joe Stringer <joe@wand.net.nz>
+Signed-off-by: Alexei Starovoitov <ast@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- net/ipv4/esp4.c | 2 +-
- net/ipv6/esp6.c | 2 +-
- 2 files changed, 2 insertions(+), 2 deletions(-)
+ kernel/bpf/verifier.c | 11 +++++++----
+ 1 file changed, 7 insertions(+), 4 deletions(-)
 
-diff --git a/net/ipv4/esp4.c b/net/ipv4/esp4.c
-index 9e1c840596c5..11c66510949d 100644
---- a/net/ipv4/esp4.c
-+++ b/net/ipv4/esp4.c
-@@ -325,7 +325,7 @@ int esp_output_head(struct xfrm_state *x, struct sk_buff *skb, struct esp_info *
- 			skb->len += tailen;
- 			skb->data_len += tailen;
- 			skb->truesize += tailen;
--			if (sk)
-+			if (sk && sk_fullsock(sk))
- 				refcount_add(tailen, &sk->sk_wmem_alloc);
+diff --git a/kernel/bpf/verifier.c b/kernel/bpf/verifier.c
+index 63a9253679f2..c0fb76d1e771 100644
+--- a/kernel/bpf/verifier.c
++++ b/kernel/bpf/verifier.c
+@@ -1533,12 +1533,13 @@ static int check_flow_keys_access(struct bpf_verifier_env *env, int off,
+ 	return 0;
+ }
  
- 			goto out;
-diff --git a/net/ipv6/esp6.c b/net/ipv6/esp6.c
-index 63b2b66f9dfa..c053890a1d33 100644
---- a/net/ipv6/esp6.c
-+++ b/net/ipv6/esp6.c
-@@ -293,7 +293,7 @@ int esp6_output_head(struct xfrm_state *x, struct sk_buff *skb, struct esp_info
- 			skb->len += tailen;
- 			skb->data_len += tailen;
- 			skb->truesize += tailen;
--			if (sk)
-+			if (sk && sk_fullsock(sk))
- 				refcount_add(tailen, &sk->sk_wmem_alloc);
+-static int check_sock_access(struct bpf_verifier_env *env, u32 regno, int off,
+-			     int size, enum bpf_access_type t)
++static int check_sock_access(struct bpf_verifier_env *env, int insn_idx,
++			     u32 regno, int off, int size,
++			     enum bpf_access_type t)
+ {
+ 	struct bpf_reg_state *regs = cur_regs(env);
+ 	struct bpf_reg_state *reg = &regs[regno];
+-	struct bpf_insn_access_aux info;
++	struct bpf_insn_access_aux info = {};
  
- 			goto out;
+ 	if (reg->smin_value < 0) {
+ 		verbose(env, "R%d min value is negative, either use unsigned index or do a if (index >=0) check.\n",
+@@ -1552,6 +1553,8 @@ static int check_sock_access(struct bpf_verifier_env *env, u32 regno, int off,
+ 		return -EACCES;
+ 	}
+ 
++	env->insn_aux_data[insn_idx].ctx_field_size = info.ctx_field_size;
++
+ 	return 0;
+ }
+ 
+@@ -1948,7 +1951,7 @@ static int check_mem_access(struct bpf_verifier_env *env, int insn_idx, u32 regn
+ 			verbose(env, "cannot write into socket\n");
+ 			return -EACCES;
+ 		}
+-		err = check_sock_access(env, regno, off, size, t);
++		err = check_sock_access(env, insn_idx, regno, off, size, t);
+ 		if (!err && value_regno >= 0)
+ 			mark_reg_unknown(env, regs, value_regno);
+ 	} else {
 -- 
 2.19.1
 
