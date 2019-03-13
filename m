@@ -2,124 +2,305 @@ Return-Path: <SRS0=dUEL=RQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 85151C43381
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 Mar 2019 19:30:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 84357C43381
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 Mar 2019 19:30:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5668120657
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 Mar 2019 19:30:07 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1552505407;
-	bh=vi/vH8pyOAlrCZUrjN+SwGrbS8OfUm+zrqmnWIEMZxU=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=fflLcBXL3nHPWefitV8Bf/xaVyxR7yOM4rUqQD/WuNzJgqWdbsprRf5weoOzVCzlD
-	 RiKga/Zo4TuXzTdb0/pvYTtCNTw/ZOLPGVD9pUX/mUVRn/NNf+VwI2iacfGlSmjMlJ
-	 7p9pmzeanVKHeiveA0AiswNR2SchF2wwIvMhhXd4=
+	by mail.kernel.org (Postfix) with ESMTP id 5478B20657
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 Mar 2019 19:30:11 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727933AbfCMTaG (ORCPT
+        id S1728076AbfCMTaJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 13 Mar 2019 15:30:06 -0400
-Received: from mail.kernel.org ([198.145.29.99]:43114 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727743AbfCMTMc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 13 Mar 2019 15:12:32 -0400
-Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 1FEA62075C;
-        Wed, 13 Mar 2019 19:12:29 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1552504351;
-        bh=vi/vH8pyOAlrCZUrjN+SwGrbS8OfUm+zrqmnWIEMZxU=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=kTlE88xUTGMS2Pv+M9PzPfJQY+MiTpZafMj4zM83yI5uWNWsUhld/ViTM3N5kH0sO
-         1+0kwKmVndQsSFqZayqxheEZ489i8Uosvn0+jIOI9Pa5wDIlZk5dlq7oHSuc1YtZ6g
-         QUCNQ54GoiMxpmM2jC1GzWFPfbyCwgTumTn78lN0=
-From:   Sasha Levin <sashal@kernel.org>
-To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Vadim Lomovtsev <vlomovtsev@marvell.com>,
-        "David S . Miller" <davem@davemloft.net>,
-        Sasha Levin <sashal@kernel.org>, netdev@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.20 53/60] net: thunderx: add nicvf_send_msg_to_pf result check for set_rx_mode_task
-Date:   Wed, 13 Mar 2019 15:10:14 -0400
-Message-Id: <20190313191021.158171-53-sashal@kernel.org>
-X-Mailer: git-send-email 2.19.1
-In-Reply-To: <20190313191021.158171-1-sashal@kernel.org>
-References: <20190313191021.158171-1-sashal@kernel.org>
+        Wed, 13 Mar 2019 15:30:09 -0400
+Received: from ja.ssi.bg ([178.16.129.10]:33558 "EHLO ja.ssi.bg"
+        rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1727892AbfCMTaH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 13 Mar 2019 15:30:07 -0400
+X-Greylist: delayed 586 seconds by postgrey-1.27 at vger.kernel.org; Wed, 13 Mar 2019 15:30:06 EDT
+Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
+        by ja.ssi.bg (8.15.2/8.15.2) with ESMTP id x2DJJcZb003076;
+        Wed, 13 Mar 2019 21:19:38 +0200
+Date:   Wed, 13 Mar 2019 21:19:38 +0200 (EET)
+From:   Julian Anastasov <ja@ssi.bg>
+To:     Jacky Hu <hengqing.hu@gmail.com>
+cc:     jacky.hu@walmart.com, jason.niesz@walmart.com,
+        Wensong Zhang <wensong@linux-vs.org>,
+        Simon Horman <horms@verge.net.au>,
+        Pablo Neira Ayuso <pablo@netfilter.org>,
+        Jozsef Kadlecsik <kadlec@blackhole.kfki.hu>,
+        Florian Westphal <fw@strlen.de>,
+        "David S. Miller" <davem@davemloft.net>, netdev@vger.kernel.org,
+        lvs-devel@vger.kernel.org, linux-kernel@vger.kernel.org,
+        netfilter-devel@vger.kernel.org, coreteam@netfilter.org
+Subject: Re: [PATCH] ipvs: allow tunneling with gue encapsulation
+In-Reply-To: <20190312071218.21905-1-hengqing.hu@gmail.com>
+Message-ID: <alpine.LFD.2.21.1903132048350.2385@ja.home.ssi.bg>
+References: <20190312071218.21905-1-hengqing.hu@gmail.com>
+User-Agent: Alpine 2.21 (LFD 202 2017-01-01)
 MIME-Version: 1.0
-X-Patchwork-Hint: Ignore
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=US-ASCII
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Vadim Lomovtsev <vlomovtsev@marvell.com>
 
-[ Upstream commit 7db730d9d2f7b6af6aeac621b1890ea477a0cb8d ]
+	Hello,
 
-The rx_set_mode invokes number of messages to be send to PF for receive
-mode configuration. In case if there any issues we need to stop sending
-messages and release allocated memory.
+On Tue, 12 Mar 2019, Jacky Hu wrote:
 
-This commit is to implement check of nicvf_msg_send_to_pf() result.
+> ipip packets are blocked in some public cloud environments, this patch
+> allows gue encapsulation with the tunneling method, which would make
+> tunneling working in those environments.
+> 
+> Signed-off-by: Jacky Hu <hengqing.hu@gmail.com>
+> ---
+>  include/uapi/linux/ip_vs.h      | 17 +++++++-
+>  net/netfilter/ipvs/ip_vs_ctl.c  |  4 +-
+>  net/netfilter/ipvs/ip_vs_xmit.c | 71 ++++++++++++++++++++++++++++++++-
+>  3 files changed, 87 insertions(+), 5 deletions(-)
+> 
+> diff --git a/include/uapi/linux/ip_vs.h b/include/uapi/linux/ip_vs.h
+> index 1c916b2f89dc..6637e45b93f4 100644
+> --- a/include/uapi/linux/ip_vs.h
+> +++ b/include/uapi/linux/ip_vs.h
+> @@ -96,13 +96,25 @@
+>  #define IP_VS_CONN_F_TEMPLATE	0x1000		/* template, not connection */
+>  #define IP_VS_CONN_F_ONE_PACKET	0x2000		/* forward only one packet */
+>  
+> +/* tunneling with gue */
+> +#define IP_VS_CONN_F_GUE	0x0008
+> +
+> +/* gue destination port bit 0 */
+> +#define IP_VS_CONN_F_GUE_PORT_LSB	0x4000
+> +
+> +/* gue destination port bit 1-15 */
+> +#define IP_VS_CONN_F_GUE_PORT_MSB	0xFFFFE0000
+> +
+>  /* Initial bits allowed in backup server */
+>  #define IP_VS_CONN_F_BACKUP_MASK (IP_VS_CONN_F_FWD_MASK | \
+>  				  IP_VS_CONN_F_NOOUTPUT | \
+>  				  IP_VS_CONN_F_INACTIVE | \
+>  				  IP_VS_CONN_F_SEQ_MASK | \
+>  				  IP_VS_CONN_F_NO_CPORT | \
+> -				  IP_VS_CONN_F_TEMPLATE \
+> +				  IP_VS_CONN_F_TEMPLATE | \
+> +				  IP_VS_CONN_F_GUE | \
+> +				  IP_VS_CONN_F_GUE_PORT_MSB | \
+> +				  IP_VS_CONN_F_GUE_PORT_LSB \
+>  				 )
+>  
+>  /* Bits allowed to update in backup server */
+> @@ -116,6 +128,9 @@
+>  #define IP_VS_CONN_F_DEST_MASK (IP_VS_CONN_F_FWD_MASK | \
+>  				IP_VS_CONN_F_ONE_PACKET | \
+>  				IP_VS_CONN_F_NFCT | \
+> +				IP_VS_CONN_F_GUE | \
+> +				IP_VS_CONN_F_GUE_PORT_MSB | \
+> +				IP_VS_CONN_F_GUE_PORT_LSB | \
+>  				0)
 
-Signed-off-by: Vadim Lomovtsev <vlomovtsev@marvell.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
----
- drivers/net/ethernet/cavium/thunder/nicvf_main.c | 12 ++++++++----
- 1 file changed, 8 insertions(+), 4 deletions(-)
+	It would be better to not touch these flags. The backup
+sync server simply ignores the forwarding method by applying the
+IP_VS_CONN_F_BACKUP_UPD_MASK mask. The real server is found only
+by daddr+dport. It would be enough to provide any new non-default
+parameters as optional IPVS_DEST_ATTR_xxx attributes. By this way,
+we can later add more tunneling methods.
 
-diff --git a/drivers/net/ethernet/cavium/thunder/nicvf_main.c b/drivers/net/ethernet/cavium/thunder/nicvf_main.c
-index 4eb24e10ba4d..9800738448ec 100644
---- a/drivers/net/ethernet/cavium/thunder/nicvf_main.c
-+++ b/drivers/net/ethernet/cavium/thunder/nicvf_main.c
-@@ -1950,7 +1950,8 @@ static void __nicvf_set_rx_mode_task(u8 mode, struct xcast_addr_list *mc_addrs,
- 
- 	/* flush DMAC filters and reset RX mode */
- 	mbx.xcast.msg = NIC_MBOX_MSG_RESET_XCAST;
--	nicvf_send_msg_to_pf(nic, &mbx);
-+	if (nicvf_send_msg_to_pf(nic, &mbx) < 0)
-+		goto free_mc;
- 
- 	if (mode & BGX_XCAST_MCAST_FILTER) {
- 		/* once enabling filtering, we need to signal to PF to add
-@@ -1958,7 +1959,8 @@ static void __nicvf_set_rx_mode_task(u8 mode, struct xcast_addr_list *mc_addrs,
- 		 */
- 		mbx.xcast.msg = NIC_MBOX_MSG_ADD_MCAST;
- 		mbx.xcast.data.mac = 0;
--		nicvf_send_msg_to_pf(nic, &mbx);
-+		if (nicvf_send_msg_to_pf(nic, &mbx) < 0)
-+			goto free_mc;
- 	}
- 
- 	/* check if we have any specific MACs to be added to PF DMAC filter */
-@@ -1967,9 +1969,9 @@ static void __nicvf_set_rx_mode_task(u8 mode, struct xcast_addr_list *mc_addrs,
- 		for (idx = 0; idx < mc_addrs->count; idx++) {
- 			mbx.xcast.msg = NIC_MBOX_MSG_ADD_MCAST;
- 			mbx.xcast.data.mac = mc_addrs->mc[idx];
--			nicvf_send_msg_to_pf(nic, &mbx);
-+			if (nicvf_send_msg_to_pf(nic, &mbx) < 0)
-+				goto free_mc;
- 		}
--		kfree(mc_addrs);
- 	}
- 
- 	/* and finally set rx mode for PF accordingly */
-@@ -1977,6 +1979,8 @@ static void __nicvf_set_rx_mode_task(u8 mode, struct xcast_addr_list *mc_addrs,
- 	mbx.xcast.data.mode = mode;
- 
- 	nicvf_send_msg_to_pf(nic, &mbx);
-+free_mc:
-+	kfree(mc_addrs);
- }
- 
- static void nicvf_set_rx_mode_task(struct work_struct *work_arg)
--- 
-2.19.1
+>  #define IP_VS_SCHEDNAME_MAXLEN	16
+> diff --git a/net/netfilter/ipvs/ip_vs_ctl.c b/net/netfilter/ipvs/ip_vs_ctl.c
+> index 432141f04af3..cecfb52cdea4 100644
+> --- a/net/netfilter/ipvs/ip_vs_ctl.c
+> +++ b/net/netfilter/ipvs/ip_vs_ctl.c
+> @@ -3169,7 +3169,7 @@ static int ip_vs_genl_fill_dest(struct sk_buff *skb, struct ip_vs_dest *dest)
+>  	    nla_put_be16(skb, IPVS_DEST_ATTR_PORT, dest->port) ||
+>  	    nla_put_u32(skb, IPVS_DEST_ATTR_FWD_METHOD,
+>  			(atomic_read(&dest->conn_flags) &
+> -			 IP_VS_CONN_F_FWD_MASK)) ||
+> +			 IP_VS_CONN_F_DEST_MASK)) ||
+>  	    nla_put_u32(skb, IPVS_DEST_ATTR_WEIGHT,
+>  			atomic_read(&dest->weight)) ||
+>  	    nla_put_u32(skb, IPVS_DEST_ATTR_U_THRESH, dest->u_threshold) ||
 
+	We can add the new attributes in this function.
+
+> @@ -3305,7 +3305,7 @@ static int ip_vs_genl_parse_dest(struct ip_vs_dest_user_kern *udest,
+>  			return -EINVAL;
+>  
+>  		udest->conn_flags = nla_get_u32(nla_fwd)
+> -				    & IP_VS_CONN_F_FWD_MASK;
+> +				    & IP_VS_CONN_F_DEST_MASK;
+>  		udest->weight = nla_get_u32(nla_weight);
+>  		udest->u_threshold = nla_get_u32(nla_u_thresh);
+>  		udest->l_threshold = nla_get_u32(nla_l_thresh);
+
+	Here too.
+
+	Also, note that __ip_vs_update_dest() can update the forwarding
+methods, so we should be able to switch them between any method.
+
+> diff --git a/net/netfilter/ipvs/ip_vs_xmit.c b/net/netfilter/ipvs/ip_vs_xmit.c
+> index 473cce2a5231..2667b587b91d 100644
+> --- a/net/netfilter/ipvs/ip_vs_xmit.c
+> +++ b/net/netfilter/ipvs/ip_vs_xmit.c
+> @@ -32,6 +32,7 @@
+>  #include <linux/slab.h>
+>  #include <linux/tcp.h>                  /* for tcphdr */
+>  #include <net/ip.h>
+> +#include <net/gue.h>
+>  #include <net/tcp.h>                    /* for csum_tcpudp_magic */
+>  #include <net/udp.h>
+>  #include <net/icmp.h>                   /* for icmp_send */
+> @@ -989,6 +990,42 @@ static inline int __tun_gso_type_mask(int encaps_af, int orig_af)
+>  	}
+>  }
+>  
+> +static int
+> +__build_gue_header(struct net *net, struct sk_buff *skb,
+> +		   struct ip_vs_conn *cp, __u8 *next_protocol)
+> +{
+> +	__be16 dport;
+> +	__be16 sport;
+> +	struct udphdr  *udph;	/* Our new UDP header */
+> +	struct guehdr  *gueh;	/* Our new GUE header */
+> +
+> +	skb_push(skb, sizeof(struct guehdr));
+> +
+> +	gueh = (struct guehdr *)skb->data;
+> +
+> +	gueh->control = 0;
+> +	gueh->version = 0;
+> +	gueh->hlen = 0;
+> +	gueh->flags = 0;
+> +	gueh->proto_ctype = *next_protocol;
+> +
+> +	skb_push(skb, sizeof(struct udphdr));
+> +	skb_reset_transport_header(skb);
+> +
+> +	udph = udp_hdr(skb);
+> +
+> +	dport = htons(((cp->flags >> 16) & 0xFFFE) | ((cp->flags >> 14) & 1));
+> +	sport = udp_flow_src_port(net, skb, 0, 0, false);
+> +	udph->dest = dport;
+> +	udph->source = sport;
+> +	udph->len = htons(skb->len);
+> +	udph->check = 0;
+> +
+> +	*next_protocol = IPPROTO_UDP;
+> +
+> +	return 0;
+> +}
+> +
+>  /*
+>   *   IP Tunneling transmitter
+>   *
+> @@ -1025,6 +1062,8 @@ ip_vs_tunnel_xmit(struct sk_buff *skb, struct ip_vs_conn *cp,
+>  	struct iphdr  *iph;			/* Our new IP header */
+>  	unsigned int max_headroom;		/* The extra header space needed */
+>  	int ret, local;
+> +	bool gue = false;
+> +	int type;
+>  
+>  	EnterFunction(10);
+>  
+> @@ -1041,11 +1080,16 @@ ip_vs_tunnel_xmit(struct sk_buff *skb, struct ip_vs_conn *cp,
+>  	rt = skb_rtable(skb);
+>  	tdev = rt->dst.dev;
+>  
+
+	Then, in this func we should drop traffic when cp->dest is NULL
+because we will not know the actual tunneling method. But it can happen
+only on misconfigured backup servers, so this is not a big problem.
+
+	Now, the parameters should be available in cp->dest.
+
+> +	gue = (bool)(cp->flags & IP_VS_CONN_F_GUE);
+> +
+>  	/*
+>  	 * Okay, now see if we can stuff it in the buffer as-is.
+>  	 */
+>  	max_headroom = LL_RESERVED_SPACE(tdev) + sizeof(struct iphdr);
+>  
+> +	if (gue)
+> +		max_headroom += sizeof(struct udphdr) + sizeof(struct guehdr);
+> +
+>  	/* We only care about the df field if sysctl_pmtu_disc(ipvs) is set */
+>  	dfp = sysctl_pmtu_disc(ipvs) ? &df : NULL;
+>  	skb = ip_vs_prepare_tunneled_skb(skb, cp->af, max_headroom,
+> @@ -1054,11 +1098,19 @@ ip_vs_tunnel_xmit(struct sk_buff *skb, struct ip_vs_conn *cp,
+>  	if (IS_ERR(skb))
+>  		goto tx_error;
+>  
+> -	if (iptunnel_handle_offloads(skb, __tun_gso_type_mask(AF_INET, cp->af)))
+> +	if (gue)
+> +		type = SKB_GSO_UDP_TUNNEL;
+> +	else
+> +		type = __tun_gso_type_mask(AF_INET, cp->af);
+> +
+> +	if (iptunnel_handle_offloads(skb, type))
+>  		goto tx_error;
+>  
+>  	skb->transport_header = skb->network_header;
+>  
+> +	if (gue)
+> +		__build_gue_header(dev_net(tdev), skb, cp, &next_protocol);
+> +
+>  	skb_push(skb, sizeof(struct iphdr));
+>  	skb_reset_network_header(skb);
+>  	memset(&(IPCB(skb)->opt), 0, sizeof(IPCB(skb)->opt));
+> @@ -1112,6 +1164,8 @@ ip_vs_tunnel_xmit_v6(struct sk_buff *skb, struct ip_vs_conn *cp,
+>  	struct ipv6hdr  *iph;		/* Our new IP header */
+>  	unsigned int max_headroom;	/* The extra header space needed */
+>  	int ret, local;
+> +	bool gue = false;
+> +	int type;
+>  
+>  	EnterFunction(10);
+>  
+> @@ -1129,22 +1183,35 @@ ip_vs_tunnel_xmit_v6(struct sk_buff *skb, struct ip_vs_conn *cp,
+>  	rt = (struct rt6_info *) skb_dst(skb);
+>  	tdev = rt->dst.dev;
+>  
+> +	gue = (bool)(cp->flags & IP_VS_CONN_F_GUE);
+> +
+>  	/*
+>  	 * Okay, now see if we can stuff it in the buffer as-is.
+>  	 */
+>  	max_headroom = LL_RESERVED_SPACE(tdev) + sizeof(struct ipv6hdr);
+>  
+> +	if (gue)
+> +		max_headroom += sizeof(struct udphdr) + sizeof(struct guehdr);
+> +
+>  	skb = ip_vs_prepare_tunneled_skb(skb, cp->af, max_headroom,
+>  					 &next_protocol, &payload_len,
+>  					 &dsfield, &ttl, NULL);
+>  	if (IS_ERR(skb))
+>  		goto tx_error;
+>  
+> -	if (iptunnel_handle_offloads(skb, __tun_gso_type_mask(AF_INET6, cp->af)))
+> +	if (gue)
+> +		type = SKB_GSO_UDP_TUNNEL;
+> +	else
+> +		type = __tun_gso_type_mask(AF_INET6, cp->af);
+> +
+> +	if (iptunnel_handle_offloads(skb, type))
+>  		goto tx_error;
+>  
+>  	skb->transport_header = skb->network_header;
+>  
+> +	if (gue)
+> +		__build_gue_header(dev_net(tdev), skb, cp, &next_protocol);
+> +
+>  	skb_push(skb, sizeof(struct ipv6hdr));
+>  	skb_reset_network_header(skb);
+>  	memset(&(IPCB(skb)->opt), 0, sizeof(IPCB(skb)->opt));
+> -- 
+> 2.21.0
+
+Regards
+
+--
+Julian Anastasov <ja@ssi.bg>
