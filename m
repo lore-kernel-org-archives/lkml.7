@@ -7,46 +7,46 @@ X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 13174C43381
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 Mar 2019 19:13:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C2741C43381
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 Mar 2019 19:14:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DAD95213A2
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 Mar 2019 19:13:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9126A2075C
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 Mar 2019 19:14:00 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1552504437;
-	bh=KJYQwHA5LQTN/mrdT8k2cDairrT/Oqac4sMvz3SrSX0=;
+	s=default; t=1552504440;
+	bh=Vi7v90PZ29o3o8d9YBCN+xE51rbhe+JytYUkv4d26zA=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=dvbYRLu1+1K0dBOwINPtzjQ9MwhhZyQBsYjvhM5luSdk5amVob4dXyn/sMaEeC5i6
-	 nDnSb9D/iy56C9vhIlIK5G++io85maYYJ365yr+b+25BLpP4kC85SPnigFayj0q9ox
-	 YiofWCP0gKCNJdqKsjv0ITtUcJBPGfGoX0aOYHMg=
+	b=kZWlFJpfTMdLaGMKJfBuz5fZEoFaqgS4B22Ixg0/UI9N94lSwNxSYb8m26eGfwSIX
+	 f6H0h+B5VREmLSBwqywkIqKOXOt9vvcxLDEmYQoPmyJ6GcpDN0dY+OLYy2N8NErfst
+	 MQQFar0SrUKUfUq8t8tLe42ukrCb9E/dcaGsnwY4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728126AbfCMTN4 (ORCPT
+        id S1728140AbfCMTN7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 13 Mar 2019 15:13:56 -0400
-Received: from mail.kernel.org ([198.145.29.99]:44154 "EHLO mail.kernel.org"
+        Wed, 13 Mar 2019 15:13:59 -0400
+Received: from mail.kernel.org ([198.145.29.99]:44300 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728043AbfCMTNl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 13 Mar 2019 15:13:41 -0400
+        id S1728111AbfCMTNx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 13 Mar 2019 15:13:53 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 8B8162173C;
-        Wed, 13 Mar 2019 19:13:39 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 3A6E520693;
+        Wed, 13 Mar 2019 19:13:52 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1552504420;
-        bh=KJYQwHA5LQTN/mrdT8k2cDairrT/Oqac4sMvz3SrSX0=;
+        s=default; t=1552504433;
+        bh=Vi7v90PZ29o3o8d9YBCN+xE51rbhe+JytYUkv4d26zA=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=VRIZsbci447ZV9wHObz9D4o5ZpgOciY730Jz/GgfBYtNHeDKejT3PEkuPAFexZbVN
-         pxXeA4jn6EFXF8rVvuEVWWUoS3Oi8bZES887To3YpHh3E2XwrDkCEPL12IMd9upT3z
-         udrS0R89bITwFHjDsCl7+xXaUeCcfDKXB2ynETZY=
+        b=aWCf00S++atSidNZ8qIKQi28GRMuNjuq8BA/Uld0UCq2OSy7h7gjKyMvi47RkmItN
+         0NCe32/RdbSOzgjrzv5A9l2X+1KPTVMyBoVQxb+d+19SgFIJ4HMR/Ny7ObgyYO0wVs
+         0jm4mOzjXaVkNaNbNm068Ho6mjJBNSGjR7DVBHMY=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Tobias Brunner <tobias@strongswan.org>,
-        Steffen Klassert <steffen.klassert@secunet.com>,
-        Sasha Levin <sashal@kernel.org>, netdev@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.19 18/48] xfrm: Fix inbound traffic via XFRM interfaces across network namespaces
-Date:   Wed, 13 Mar 2019 15:12:20 -0400
-Message-Id: <20190313191250.158955-18-sashal@kernel.org>
+Cc:     Vladimir Murzin <vladimir.murzin@arm.com>,
+        Will Deacon <will.deacon@arm.com>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH AUTOSEL 4.19 24/48] arm64: Relax GIC version check during early boot
+Date:   Wed, 13 Mar 2019 15:12:26 -0400
+Message-Id: <20190313191250.158955-24-sashal@kernel.org>
 X-Mailer: git-send-email 2.19.1
 In-Reply-To: <20190313191250.158955-1-sashal@kernel.org>
 References: <20190313191250.158955-1-sashal@kernel.org>
@@ -58,64 +58,40 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Tobias Brunner <tobias@strongswan.org>
+From: Vladimir Murzin <vladimir.murzin@arm.com>
 
-[ Upstream commit 660899ddf06ae8bb5bbbd0a19418b739375430c5 ]
+[ Upstream commit 74698f6971f25d045301139413578865fc2bd8f9 ]
 
-After moving an XFRM interface to another namespace it stays associated
-with the original namespace (net in `struct xfrm_if` and the list keyed
-with `xfrmi_net_id`), allowing processes in the new namespace to use
-SAs/policies that were created in the original namespace.  For instance,
-this allows a keying daemon in one namespace to establish IPsec SAs for
-other namespaces without processes there having access to the keys or IKE
-credentials.
+Updates to the GIC architecture allow ID_AA64PFR0_EL1.GIC to have
+values other than 0 or 1. At the moment, Linux is quite strict in the
+way it handles this field at early boot stage (cpufeature is fine) and
+will refuse to use the system register CPU interface if it doesn't
+find the value 1.
 
-This worked fine for outbound traffic, however, for inbound traffic the
-lookup for the interfaces and the policies used the incorrect namespace
-(the one the XFRM interface was moved to).
-
-Fixes: f203b76d7809 ("xfrm: Add virtual xfrm interfaces")
-Signed-off-by: Tobias Brunner <tobias@strongswan.org>
-Signed-off-by: Steffen Klassert <steffen.klassert@secunet.com>
+Fixes: 021f653791ad17e03f98aaa7fb933816ae16f161 ("irqchip: gic-v3: Initial support for GICv3")
+Reported-by: Chase Conklin <Chase.Conklin@arm.com>
+Reviewed-by: Marc Zyngier <marc.zyngier@arm.com>
+Signed-off-by: Vladimir Murzin <vladimir.murzin@arm.com>
+Signed-off-by: Will Deacon <will.deacon@arm.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- net/xfrm/xfrm_interface.c | 4 ++--
- net/xfrm/xfrm_policy.c    | 4 +++-
- 2 files changed, 5 insertions(+), 3 deletions(-)
+ arch/arm64/kernel/head.S | 3 +--
+ 1 file changed, 1 insertion(+), 2 deletions(-)
 
-diff --git a/net/xfrm/xfrm_interface.c b/net/xfrm/xfrm_interface.c
-index 6f05e831a73e..82723ef44db3 100644
---- a/net/xfrm/xfrm_interface.c
-+++ b/net/xfrm/xfrm_interface.c
-@@ -76,10 +76,10 @@ static struct xfrm_if *xfrmi_decode_session(struct sk_buff *skb)
- 	int ifindex;
- 	struct xfrm_if *xi;
+diff --git a/arch/arm64/kernel/head.S b/arch/arm64/kernel/head.S
+index 651a06b1980f..77ca59598c8b 100644
+--- a/arch/arm64/kernel/head.S
++++ b/arch/arm64/kernel/head.S
+@@ -522,8 +522,7 @@ set_hcr:
+ 	/* GICv3 system register access */
+ 	mrs	x0, id_aa64pfr0_el1
+ 	ubfx	x0, x0, #24, #4
+-	cmp	x0, #1
+-	b.ne	3f
++	cbz	x0, 3f
  
--	if (!skb->dev)
-+	if (!secpath_exists(skb) || !skb->dev)
- 		return NULL;
- 
--	xfrmn = net_generic(dev_net(skb->dev), xfrmi_net_id);
-+	xfrmn = net_generic(xs_net(xfrm_input_state(skb)), xfrmi_net_id);
- 	ifindex = skb->dev->ifindex;
- 
- 	for_each_xfrmi_rcu(xfrmn->xfrmi[0], xi) {
-diff --git a/net/xfrm/xfrm_policy.c b/net/xfrm/xfrm_policy.c
-index 6ea8036fcdbe..bf5d59270f79 100644
---- a/net/xfrm/xfrm_policy.c
-+++ b/net/xfrm/xfrm_policy.c
-@@ -2340,8 +2340,10 @@ int __xfrm_policy_check(struct sock *sk, int dir, struct sk_buff *skb,
- 
- 	if (ifcb) {
- 		xi = ifcb->decode_session(skb);
--		if (xi)
-+		if (xi) {
- 			if_id = xi->p.if_id;
-+			net = xi->net;
-+		}
- 	}
- 	rcu_read_unlock();
- 
+ 	mrs_s	x0, SYS_ICC_SRE_EL2
+ 	orr	x0, x0, #ICC_SRE_EL2_SRE	// Set ICC_SRE_EL2.SRE==1
 -- 
 2.19.1
 
