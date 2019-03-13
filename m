@@ -4,61 +4,60 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-12.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_PASS autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_PASS autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A74F4C4360F
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 Mar 2019 15:39:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 54135C43381
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 Mar 2019 15:39:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 732E82147C
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 Mar 2019 15:39:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 135772147C
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 Mar 2019 15:39:13 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1552491550;
-	bh=uoyvcnHzjWrNWVVTPHX21c3p638QO8DLdQx7OyScl7c=;
+	s=default; t=1552491553;
+	bh=uU12uTsRPOGiYuB6QZAJ0LCrLtd9PFc1YKEa7hVAjeM=;
 	h=From:To:Cc:Subject:In-Reply-To:Date:List-ID:From;
-	b=z5GobhI/BKqGjvdMuJi912zuUkisLTJILAg7xr4Wc/VZFs8/6dHdZ5uZhYwsUMoWk
-	 kd4G643jUAU+OyZKw3DRn5LGZc0mVE45E/fHaPL45vZuIm4Ef23vomy1iFDs4uJiEb
-	 mpMNMxKZoUW5nmQBB4AwFSKXEA14r3hfpeft8GhU=
+	b=KnIAd6+e3gxHGldR2JirWSpEQavyvG40o9HvC6T/kZ4FeFmePmbcI4Trx01HuOx5Z
+	 OE7wbErHR5047nitnRFptf8tkeSczwx+rur/KhFNinPZU5hfON6azO6/WETcVfhtVw
+	 dp/yN8JiuLL9PsE8sDTJoNiXnoGe2Cd0GEUX1kUc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726805AbfCMPjE (ORCPT
+        id S1726861AbfCMPjL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 13 Mar 2019 11:39:04 -0400
-Received: from heliosphere.sirena.org.uk ([172.104.155.198]:49538 "EHLO
+        Wed, 13 Mar 2019 11:39:11 -0400
+Received: from heliosphere.sirena.org.uk ([172.104.155.198]:49708 "EHLO
         heliosphere.sirena.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726635AbfCMPi7 (ORCPT
+        with ESMTP id S1726783AbfCMPjE (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 13 Mar 2019 11:38:59 -0400
+        Wed, 13 Mar 2019 11:39:04 -0400
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
         d=sirena.org.uk; s=20170815-heliosphere; h=Date:Message-Id:In-Reply-To:
         Subject:Cc:To:From:Sender:Reply-To:MIME-Version:Content-Type:
         Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
         Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:References:
         List-Id:List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:
-        List-Archive; bh=BMelY5BHaMGtrKjDHAbn5iQmGhdPaeBVqHghbF2/TMU=; b=thYx6liZHxMK
-        kGDMp1RSAC6CypBvPxYEhwHnlYxLw0JAEBEzt6ueGMJVC+cSkpEMT4e864IE9yMzzvOkg5I0eqReF
-        HpVuc6BT8Ffj77btdysQ+7ULj9qcJQ5GRLApaVEJKbRVOmaVcXNVRbEni4dGbkuF/qWqfNie+Vgai
-        OnGW4=;
+        List-Archive; bh=hcxY13NOHnSFaaLSuZXOLFWv8u3iM3oCfS2F5I5URkg=; b=IsY8S4kw3rtA
+        K591YPRdJdNNJlYPkQPUcf4kb1n2uh9ObYmU4xOh1ZrVLHACs3pvYrEJpL7CclbqLycxUokOWxidq
+        6x+96LItswxCPLJw0Boo1EoyPVidtMP8KJ4Y7edNT7PhwmHez3/Q0EEgZ7Bre6bJDpeheBOoJ/5Mh
+        GRO48=;
 Received: from cpc102320-sgyl38-2-0-cust46.18-2.cable.virginm.net ([82.37.168.47] helo=debutante.sirena.org.uk)
         by heliosphere.sirena.org.uk with esmtpa (Exim 4.89)
         (envelope-from <broonie@sirena.org.uk>)
-        id 1h45xu-0003Qf-RN; Wed, 13 Mar 2019 15:38:46 +0000
+        id 1h45xm-0003QB-2p; Wed, 13 Mar 2019 15:38:38 +0000
 Received: by debutante.sirena.org.uk (Postfix, from userid 1000)
-        id 61BD01128B98; Wed, 13 Mar 2019 15:38:46 +0000 (GMT)
+        id A5BD01128B97; Wed, 13 Mar 2019 15:38:37 +0000 (GMT)
 From:   Mark Brown <broonie@kernel.org>
-To:     Olivier Moysan <olivier.moysan@st.com>
-Cc:     Mark Brown <broonie@kernel.org>, lgirdwood@gmail.com,
-        broonie@kernel.org, perex@perex.cz, tiwai@suse.com,
-        mcoquelin.stm32@gmail.com, alexandre.torgue@st.com,
-        alsa-devel@alsa-project.org, linux-arm-kernel@lists.infradead.org,
-        linux-stm32@st-md-mailman.stormreply.com,
-        linux-kernel@vger.kernel.org, olivier.moysan@st.com,
-        arnaud.pouliquen@st.com, benjamin.gaignard@st.com,
-        alsa-devel@alsa-project.org
-Subject: Applied "ASoC: stm32: i2s: use default dai name" to the asoc tree
-In-Reply-To:  <1552317990-24219-4-git-send-email-olivier.moysan@st.com>
+To:     Luca Ceresoli <luca@lucaceresoli.net>
+Cc:     Mark Brown <broonie@kernel.org>, alsa-devel@alsa-project.org,
+        devicetree@vger.kernel.org, Mark Rutland <mark.rutland@arm.com>,
+        Lars-Peter Clausen <lars@metafoo.de>,
+        linux-kernel@vger.kernel.org, Takashi Iwai <tiwai@suse.com>,
+        Liam Girdwood <lgirdwood@gmail.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Brown <broonie@kernel.org>, alsa-devel@alsa-project.org
+Subject: Applied "ASoC: axi-i2s: let both capture and playback be optional" to the asoc tree
+In-Reply-To:  <20190307214456.16445-1-luca@lucaceresoli.net>
 X-Patchwork-Hint: ignore
-Message-Id: <20190313153846.61BD01128B98@debutante.sirena.org.uk>
-Date:   Wed, 13 Mar 2019 15:38:46 +0000 (GMT)
+Message-Id: <20190313153837.A5BD01128B97@debutante.sirena.org.uk>
+Date:   Wed, 13 Mar 2019 15:38:37 +0000 (GMT)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
@@ -66,7 +65,7 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 The patch
 
-   ASoC: stm32: i2s: use default dai name
+   ASoC: axi-i2s: let both capture and playback be optional
 
 has been applied to the asoc tree at
 
@@ -91,60 +90,143 @@ to this mail.
 Thanks,
 Mark
 
-From fef050c88ce1cbec1ab9a0d981b5331a5ba40f15 Mon Sep 17 00:00:00 2001
-From: Olivier Moysan <olivier.moysan@st.com>
-Date: Mon, 11 Mar 2019 16:26:30 +0100
-Subject: [PATCH] ASoC: stm32: i2s: use default dai name
+From 7bf7d0554890c53478ec04d3d4bfced0c881f6c8 Mon Sep 17 00:00:00 2001
+From: Luca Ceresoli <luca@lucaceresoli.net>
+Date: Thu, 7 Mar 2019 22:44:55 +0100
+Subject: [PATCH] ASoC: axi-i2s: let both capture and playback be optional
 
-Use default DAI name based on dev_name function.
+Both the capture and playback channels are optional in the axi_i2s IP
+block. Reflect this in the driver by enabling only the channel(s) that
+have a DMA.
 
-Signed-off-by: Olivier Moysan <olivier.moysan@st.com>
+Signed-off-by: Luca Ceresoli <luca@lucaceresoli.net>
 Signed-off-by: Mark Brown <broonie@kernel.org>
 ---
- sound/soc/stm/stm32_i2s.c | 7 -------
- 1 file changed, 7 deletions(-)
+ sound/soc/adi/axi-i2s.c | 68 +++++++++++++++++++++++++++++------------
+ 1 file changed, 48 insertions(+), 20 deletions(-)
 
-diff --git a/sound/soc/stm/stm32_i2s.c b/sound/soc/stm/stm32_i2s.c
-index 06bbbef74b3a..c18e068c1a0d 100644
---- a/sound/soc/stm/stm32_i2s.c
-+++ b/sound/soc/stm/stm32_i2s.c
-@@ -179,7 +179,6 @@ enum i2s_datlen {
- 	I2S_I2SMOD_DATLEN_32,
+diff --git a/sound/soc/adi/axi-i2s.c b/sound/soc/adi/axi-i2s.c
+index 4c23381727a1..273c543e8ff3 100644
+--- a/sound/soc/adi/axi-i2s.c
++++ b/sound/soc/adi/axi-i2s.c
+@@ -43,6 +43,9 @@ struct axi_i2s {
+ 	struct clk *clk;
+ 	struct clk *clk_ref;
+ 
++	bool   has_capture;
++	bool   has_playback;
++
+ 	struct snd_soc_dai_driver dai_driver;
+ 
+ 	struct snd_dmaengine_dai_dma_data capture_dma_data;
+@@ -136,8 +139,10 @@ static int axi_i2s_dai_probe(struct snd_soc_dai *dai)
+ {
+ 	struct axi_i2s *i2s = snd_soc_dai_get_drvdata(dai);
+ 
+-	snd_soc_dai_init_dma_data(dai, &i2s->playback_dma_data,
+-		&i2s->capture_dma_data);
++	snd_soc_dai_init_dma_data(
++		dai,
++		i2s->has_playback ? &i2s->playback_dma_data : NULL,
++		i2s->has_capture  ? &i2s->capture_dma_data  : NULL);
+ 
+ 	return 0;
+ }
+@@ -151,18 +156,6 @@ static const struct snd_soc_dai_ops axi_i2s_dai_ops = {
+ 
+ static struct snd_soc_dai_driver axi_i2s_dai = {
+ 	.probe = axi_i2s_dai_probe,
+-	.playback = {
+-		.channels_min = 2,
+-		.channels_max = 2,
+-		.rates = SNDRV_PCM_RATE_KNOT,
+-		.formats = SNDRV_PCM_FMTBIT_S32_LE | SNDRV_PCM_FMTBIT_U32_LE,
+-	},
+-	.capture = {
+-		.channels_min = 2,
+-		.channels_max = 2,
+-		.rates = SNDRV_PCM_RATE_KNOT,
+-		.formats = SNDRV_PCM_FMTBIT_S32_LE | SNDRV_PCM_FMTBIT_U32_LE,
+-	},
+ 	.ops = &axi_i2s_dai_ops,
+ 	.symmetric_rates = 1,
+ };
+@@ -178,6 +171,19 @@ static const struct regmap_config axi_i2s_regmap_config = {
+ 	.max_register = AXI_I2S_REG_STATUS,
  };
  
--#define STM32_I2S_DAI_NAME_SIZE		20
- #define STM32_I2S_FIFO_SIZE		16
++static void axi_i2s_parse_of(struct axi_i2s *i2s, const struct device_node *np)
++{
++	struct property *dma_names;
++	const char *dma_name;
++
++	of_property_for_each_string(np, "dma-names", dma_names, dma_name) {
++		if (strcmp(dma_name, "rx") == 0)
++			i2s->has_capture = true;
++		if (strcmp(dma_name, "tx") == 0)
++			i2s->has_playback = true;
++	}
++}
++
+ static int axi_i2s_probe(struct platform_device *pdev)
+ {
+ 	struct resource *res;
+@@ -191,6 +197,8 @@ static int axi_i2s_probe(struct platform_device *pdev)
  
- #define STM32_I2S_IS_MASTER(x)		((x)->ms_flg == I2S_MS_MASTER)
-@@ -202,7 +201,6 @@ enum i2s_datlen {
-  * @phys_addr: I2S registers physical base address
-  * @lock_fd: lock to manage race conditions in full duplex mode
-  * @irq_lock: prevent race condition with IRQ
-- * @dais_name: DAI name
-  * @mclk_rate: master clock frequency (Hz)
-  * @fmt: DAI protocol
-  * @refcount: keep count of opened streams on I2S
-@@ -224,7 +222,6 @@ struct stm32_i2s_data {
- 	dma_addr_t phys_addr;
- 	spinlock_t lock_fd; /* Manage race conditions for full duplex */
- 	spinlock_t irq_lock; /* used to prevent race condition with IRQ */
--	char dais_name[STM32_I2S_DAI_NAME_SIZE];
- 	unsigned int mclk_rate;
- 	unsigned int fmt;
- 	int refcount;
-@@ -771,12 +768,8 @@ static int stm32_i2s_dais_init(struct platform_device *pdev,
- 	if (!dai_ptr)
- 		return -ENOMEM;
+ 	platform_set_drvdata(pdev, i2s);
  
--	snprintf(i2s->dais_name, STM32_I2S_DAI_NAME_SIZE,
--		 "%s", dev_name(&pdev->dev));
--
- 	dai_ptr->probe = stm32_i2s_dai_probe;
- 	dai_ptr->ops = &stm32_i2s_pcm_dai_ops;
--	dai_ptr->name = i2s->dais_name;
- 	dai_ptr->id = 1;
- 	stm32_i2s_dai_init(&dai_ptr->playback, "playback");
- 	stm32_i2s_dai_init(&dai_ptr->capture, "capture");
++	axi_i2s_parse_of(i2s, pdev->dev.of_node);
++
+ 	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
+ 	base = devm_ioremap_resource(&pdev->dev, res);
+ 	if (IS_ERR(base))
+@@ -213,13 +221,29 @@ static int axi_i2s_probe(struct platform_device *pdev)
+ 	if (ret)
+ 		return ret;
+ 
+-	i2s->playback_dma_data.addr = res->start + AXI_I2S_REG_TX_FIFO;
+-	i2s->playback_dma_data.addr_width = 4;
+-	i2s->playback_dma_data.maxburst = 1;
++	if (i2s->has_playback) {
++		axi_i2s_dai.playback.channels_min = 2;
++		axi_i2s_dai.playback.channels_max = 2;
++		axi_i2s_dai.playback.rates = SNDRV_PCM_RATE_KNOT;
++		axi_i2s_dai.playback.formats =
++			SNDRV_PCM_FMTBIT_S32_LE | SNDRV_PCM_FMTBIT_U32_LE;
++
++		i2s->playback_dma_data.addr = res->start + AXI_I2S_REG_TX_FIFO;
++		i2s->playback_dma_data.addr_width = 4;
++		i2s->playback_dma_data.maxburst = 1;
++	}
++
++	if (i2s->has_capture) {
++		axi_i2s_dai.capture.channels_min = 2;
++		axi_i2s_dai.capture.channels_max = 2;
++		axi_i2s_dai.capture.rates = SNDRV_PCM_RATE_KNOT;
++		axi_i2s_dai.capture.formats =
++			SNDRV_PCM_FMTBIT_S32_LE | SNDRV_PCM_FMTBIT_U32_LE;
+ 
+-	i2s->capture_dma_data.addr = res->start + AXI_I2S_REG_RX_FIFO;
+-	i2s->capture_dma_data.addr_width = 4;
+-	i2s->capture_dma_data.maxburst = 1;
++		i2s->capture_dma_data.addr = res->start + AXI_I2S_REG_RX_FIFO;
++		i2s->capture_dma_data.addr_width = 4;
++		i2s->capture_dma_data.maxburst = 1;
++	}
+ 
+ 	i2s->ratnum.num = clk_get_rate(i2s->clk_ref) / 2 / AXI_I2S_BITS_PER_FRAME;
+ 	i2s->ratnum.den_step = 1;
+@@ -240,6 +264,10 @@ static int axi_i2s_probe(struct platform_device *pdev)
+ 	if (ret)
+ 		goto err_clk_disable;
+ 
++	dev_info(&pdev->dev, "probed, capture %s, playback %s\n",
++		 i2s->has_capture ? "enabled" : "disabled",
++		 i2s->has_playback ? "enabled" : "disabled");
++
+ 	return 0;
+ 
+ err_clk_disable:
 -- 
 2.20.1
 
