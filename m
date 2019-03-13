@@ -2,84 +2,87 @@ Return-Path: <SRS0=dUEL=RQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,UNPARSEABLE_RELAY,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 50C8EC10F03
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 Mar 2019 13:49:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5F096C43381
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 Mar 2019 13:50:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1D6C92087C
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 Mar 2019 13:49:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 31CB82087C
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 Mar 2019 13:50:23 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726757AbfCMNtJ (ORCPT
+        id S1726787AbfCMNuW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 13 Mar 2019 09:49:09 -0400
-Received: from mail-qt1-f193.google.com ([209.85.160.193]:45792 "EHLO
-        mail-qt1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725868AbfCMNtI (ORCPT
+        Wed, 13 Mar 2019 09:50:22 -0400
+Received: from out30-42.freemail.mail.aliyun.com ([115.124.30.42]:57063 "EHLO
+        out30-42.freemail.mail.aliyun.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1725889AbfCMNuV (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 13 Mar 2019 09:49:08 -0400
-Received: by mail-qt1-f193.google.com with SMTP id v20so1885249qtv.12;
-        Wed, 13 Mar 2019 06:49:08 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=C3CKkB/7KlH0ZdcOwL1bvW5xkfXgNYTIAL9rR1eKEEc=;
-        b=f+1CjLYZgABM/Ya908laagsjwsXAoQTJU5Ty/O0FjDPvPbeF0rvK0gdgevUceuGtM+
-         zJSKJR0MG9NUuREsl1ZXp5ETX0LVcE1ZPdQklf+e8NyGZGxDOIom4NIGDmCSdigB3Ud5
-         1efv149BNz23mUj28R4Bmoh5jMelhbJugKpZvS99fFONwdnh4o1F5JuMAsAmhEJYEBn1
-         p7kjJcoQ2UAgZhK+nCrnFDGCmVfIjDtBT3A4HThlf08GerI2B3Su6WYWeH1zjuHJsSLe
-         RVUikr74l9eRnkdGZBmmNcRJ+v1Yqod0tYwQUBNqADXWSxFOheTPaPC3QweHOiDFhoRR
-         fuTw==
-X-Gm-Message-State: APjAAAU0mUVv6SZbmLjDTCjXvW7P91Jfbdy5T0avmx4OUOTxcY3ygu9F
-        0UlqiiSRJ69halk0BAM5tCnLcyAfZX3rugXto3MrpACY
-X-Google-Smtp-Source: APXvYqzVU8yksv0rJ++L4sJHQ0TCeBwnJwuFC607WzzWriTyZx+I4U7OJz7OITCjW4mdtXsE3ZE5sWjTY6Rtq2WZP7A=
-X-Received: by 2002:ac8:445a:: with SMTP id m26mr34013603qtn.212.1552484947562;
- Wed, 13 Mar 2019 06:49:07 -0700 (PDT)
+        Wed, 13 Mar 2019 09:50:21 -0400
+X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R301e4;CH=green;DM=||false|;FP=0|-1|-1|-1|0|-1|-1|-1;HT=e01f04396;MF=alex.shi@linux.alibaba.com;NM=1;PH=DS;RN=10;SR=0;TI=SMTPD_---0TMdk0r9_1552485014;
+Received: from localhost(mailfrom:alex.shi@linux.alibaba.com fp:SMTPD_---0TMdk0r9_1552485014)
+          by smtp.aliyun-inc.com(127.0.0.1);
+          Wed, 13 Mar 2019 21:50:14 +0800
+From:   Alex Shi <alex.shi@linux.alibaba.com>
+To:     corbet@lwn.net, harryxiyou@gmail.com, linux-doc@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Cc:     Alex Shi <alex.shi@linux.alibaba.com>,
+        Li Zefan <lizefan@huawei.com>,
+        Shawn Guo <shawn.guo@linaro.org>,
+        Fengguang Wu <fengguang.wu@intel.com>,
+        Coly Li <colyli@suse.de>,
+        Federico Vaga <federico.vaga@vaga.pv.it>
+Subject: [PATCH v5 01/31] docs/zh_CN: add disclaimer file
+Date:   Wed, 13 Mar 2019 21:49:31 +0800
+Message-Id: <20190313135001.260905-2-alex.shi@linux.alibaba.com>
+X-Mailer: git-send-email 2.19.1.856.g8858448bb
+In-Reply-To: <20190313135001.260905-1-alex.shi@linux.alibaba.com>
+References: <20190313135001.260905-1-alex.shi@linux.alibaba.com>
 MIME-Version: 1.0
-References: <20190312215203.27643-1-natechancellor@gmail.com>
- <80fb5b7f-42f9-4fd1-00cf-bfa7965ff8f7@rasmusvillemoes.dk> <20190313134447.GA19066@archlinux-ryzen>
-In-Reply-To: <20190313134447.GA19066@archlinux-ryzen>
-From:   Arnd Bergmann <arnd@arndb.de>
-Date:   Wed, 13 Mar 2019 14:48:49 +0100
-Message-ID: <CAK8P3a344k=MDAX-d21U4+H+mv7Vcd9YhAN4NPEJm1CXv76tkw@mail.gmail.com>
-Subject: Re: [PATCH] Makefile: Add '-fno-builtin-bcmp' to CLANG_FLAGS
-To:     Nathan Chancellor <natechancellor@gmail.com>
-Cc:     Rasmus Villemoes <linux@rasmusvillemoes.dk>,
-        Masahiro Yamada <yamada.masahiro@socionext.com>,
-        Michal Marek <michal.lkml@markovi.net>,
-        Linux Kbuild mailing list <linux-kbuild@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Nick Desaulniers <ndesaulniers@google.com>,
-        James Y Knight <jyknight@google.com>,
-        clang-built-linux@googlegroups.com,
-        "# 3.4.x" <stable@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Mar 13, 2019 at 2:44 PM Nathan Chancellor
-<natechancellor@gmail.com> wrote:
-> On Wed, Mar 13, 2019 at 09:13:11AM +0100, Rasmus Villemoes wrote:
-> > Wouldn't it be better to just define bcmp as an alias for memcmp? They
-> > seem to have compatible prototypes, and then somebody might someday sit
-> > down and implement some word-at-a-time version of bcmp making use of the
-> > weaker guarantees about the return value to gain some performance. But I
-> > suppose that can also be done later.
->
-> Thank you much for the review, I didn't even realize this was possible :)
->
-> I'd certainly like to explore it as that is what glibc does. How would
-> you suggest going about it here?
+This a disclaimer file which will be included in Chinese files
+as header. To reduce the same common contents copy.
 
-I suggested a possible implementation (likely contains bugs) and
-an alias for architectures that require strict alignment, see
-https://bugs.llvm.org/show_bug.cgi?id=41035#c11
+Part of contents quoted from Federico Vaga's file:
+    Documentation/translations/it_IT/disclaimer-ita.rst.
+Thanks a lot!
 
-We could start out with just the alias.
+Signed-off-by: Alex Shi <alex.shi@linux.alibaba.com>
+Cc: Harry Wei <harryxiyou@gmail.com>
+Cc: Jonathan Corbet <corbet@lwn.net>
+Cc: Li Zefan <lizefan@huawei.com>
+Cc: Shawn Guo <shawn.guo@linaro.org>
+Cc: Fengguang Wu <fengguang.wu@intel.com>
+Cc: Coly Li <colyli@suse.de>
+Cc: Federico Vaga <federico.vaga@vaga.pv.it>
+Signed-off-by: Weiwei Jia <harryxiyou@gmail.com>
+---
+ Documentation/translations/zh_CN/disclaimer-zh_CN.rst | 9 +++++++++
+ 1 file changed, 9 insertions(+)
+ create mode 100644 Documentation/translations/zh_CN/disclaimer-zh_CN.rst
 
-       Arnd
+diff --git a/Documentation/translations/zh_CN/disclaimer-zh_CN.rst b/Documentation/translations/zh_CN/disclaimer-zh_CN.rst
+new file mode 100644
+index 000000000000..5934369b2606
+--- /dev/null
++++ b/Documentation/translations/zh_CN/disclaimer-zh_CN.rst
+@@ -0,0 +1,9 @@
++:orphan:
++
++.. warning::
++     此文件的目的是为让中文读者更容易阅读和理解，而不是作为一个分支。 因此，如果
++     您对此文件有任何意见或更新，请先尝试更新原始英文文件。
++
++.. note::
++     如果您发现本文档与原始文件有任何不同或者有翻译问题，请联系该文件的维护者，
++     或者请求时奎亮的帮助：<alex.shi@linux.alibaba.com>。
+-- 
+2.19.1.856.g8858448bb
+
