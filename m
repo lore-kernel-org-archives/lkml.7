@@ -2,112 +2,143 @@ Return-Path: <SRS0=dUEL=RQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D548CC43381
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 Mar 2019 16:29:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5F7C7C43381
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 Mar 2019 16:31:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A1C7220854
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 Mar 2019 16:29:27 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=umn.edu header.i=@umn.edu header.b="G6Cil9Km"
+	by mail.kernel.org (Postfix) with ESMTP id 2B28C2087C
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 Mar 2019 16:31:13 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726797AbfCMQ3Z (ORCPT
+        id S1726606AbfCMQbL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 13 Mar 2019 12:29:25 -0400
-Received: from mta-p6.oit.umn.edu ([134.84.196.206]:36468 "EHLO
-        mta-p6.oit.umn.edu" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726074AbfCMQ3Z (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 13 Mar 2019 12:29:25 -0400
-Received: from localhost (unknown [127.0.0.1])
-        by mta-p6.oit.umn.edu (Postfix) with ESMTP id AB99C78
-        for <linux-kernel@vger.kernel.org>; Wed, 13 Mar 2019 16:29:23 +0000 (UTC)
-X-Virus-Scanned: amavisd-new at umn.edu
-Received: from mta-p6.oit.umn.edu ([127.0.0.1])
-        by localhost (mta-p6.oit.umn.edu [127.0.0.1]) (amavisd-new, port 10024)
-        with ESMTP id CY5Vl95cibl6 for <linux-kernel@vger.kernel.org>;
-        Wed, 13 Mar 2019 11:29:23 -0500 (CDT)
-Received: from mail-it1-f197.google.com (mail-it1-f197.google.com [209.85.166.197])
-        (using TLSv1.2 with cipher AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mta-p6.oit.umn.edu (Postfix) with ESMTPS id 7B42B9ED
-        for <linux-kernel@vger.kernel.org>; Wed, 13 Mar 2019 11:29:23 -0500 (CDT)
-Received: by mail-it1-f197.google.com with SMTP id v125so2003123itc.4
-        for <linux-kernel@vger.kernel.org>; Wed, 13 Mar 2019 09:29:23 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=umn.edu; s=google;
-        h=from:to:cc:subject:date:message-id;
-        bh=KRTpCYk3ZpgRgMJEbk91V+GgCIV1pfhGOWnDidwoEF0=;
-        b=G6Cil9KmM5eByjps3eEBI6fo2uGc9UUISJ6vBTJGCbMSUYCXsoIEf3iYzgRNvG/KAR
-         OPs3P4CmaAheCot+i25l3nlGAx0mvh2m70CayfC54sda6VrTgconnYKOBUNjmNJAP0rD
-         GDOd9X+BRuxowSqWKJyguX0K06tF9lSQ6TnKQBrEQjpDXLEGW+X49Pkf3fs11EiTJp0p
-         Y81n6s/m01QR4o9XSdFtX26Uf5J6c4SuvuWvsXYxAN1dL+7dbgrFMWzozIwMV09rYg0X
-         6QNCF2hbOPjVGwZXCX+BPLTKuv+XEv3TWIY3Eh54bKYJ97OMb9p3PX1eR2aNZfg04NH8
-         tXCg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id;
-        bh=KRTpCYk3ZpgRgMJEbk91V+GgCIV1pfhGOWnDidwoEF0=;
-        b=YarznoJN2PwKYWJDtg5U86RRnjaufCuyUO50DDDykkEVVpSI5rzyJX6aMiXPv/ZVEU
-         y0ns0UoBsgDvyz3hil++4yvSEG9HJgmOGoy/M3ZBIVXhrewcBBbd953SY6OGoHzlWTFU
-         F+ft2N1yWJwUBnzl1NuE+IoAbXhw3+IxWPuT/lCwbYSrWUL9UtoEdphVrCcXOup3Zi3q
-         8JkRAXoVXvsCkz863uLXpgzj/McXKTaYBODZfzXN2ToZ/xK7IpH+jf1TAXKNQBVKGW2Y
-         3RlLTwdPv1gNXDkjPo91+Dkki2EbKH7/4kMmgu3VLLTbBWHYZSeNZms6iisG4neH472E
-         XHBA==
-X-Gm-Message-State: APjAAAWtyPIbtEZzKOHlaliJCRFc8sQQVQsJLMeiudi51HyLNvvntRaD
-        YEMEItYFBPiH46d7MjJAB2RqePZj2iBVLQLc98teHaKMg71j9cLEJFq+UxdVt/tRonXhAyZ+X+M
-        nPC+zdl/ML/j0+TWkGAlIMMPL2mB1
-X-Received: by 2002:a6b:7701:: with SMTP id n1mr21787748iom.143.1552494563104;
-        Wed, 13 Mar 2019 09:29:23 -0700 (PDT)
-X-Google-Smtp-Source: APXvYqy34vhNZUrFcrODe/juOs8SukJIH0AZA3K3Lgw7obGkM0gIA/ObTlYCWUROW0KlNvWPdg4UsA==
-X-Received: by 2002:a6b:7701:: with SMTP id n1mr21787737iom.143.1552494562890;
-        Wed, 13 Mar 2019 09:29:22 -0700 (PDT)
-Received: from cs-u-syssec1.dtc.umn.edu (cs-u-syssec1.cs.umn.edu. [128.101.106.66])
-        by smtp.gmail.com with ESMTPSA id 143sm264710itw.43.2019.03.13.09.29.21
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Wed, 13 Mar 2019 09:29:22 -0700 (PDT)
-From:   Aditya Pakki <pakki001@umn.edu>
-To:     pakki001@umn.edu
-Cc:     kjlu@umn.edu, Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Sabin Mihai Rapan <sabin.rapan@gmail.com>,
-        Nathan Chancellor <natechancellor@gmail.com>,
-        devel@driverdev.osuosl.org, linux-kernel@vger.kernel.org
-Subject: [PATCH] staging: rtlwifi: Fix potential NULL pointer dereference
-Date:   Wed, 13 Mar 2019 11:29:12 -0500
-Message-Id: <20190313162914.20727-1-pakki001@umn.edu>
-X-Mailer: git-send-email 2.17.1
+        Wed, 13 Mar 2019 12:31:11 -0400
+Received: from usa-sjc-mx-foss1.foss.arm.com ([217.140.101.70]:60272 "EHLO
+        foss.arm.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726078AbfCMQbL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 13 Mar 2019 12:31:11 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.72.51.249])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 8C5E280D;
+        Wed, 13 Mar 2019 09:31:10 -0700 (PDT)
+Received: from [10.1.196.92] (usa-sjc-imap-foss1.foss.arm.com [10.72.51.249])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id B6D5C3F71D;
+        Wed, 13 Mar 2019 09:31:07 -0700 (PDT)
+Subject: Re: [PATCH] KVM: arm/arm64: Set ICH_HCR_EN in guest anyway when using
+ gicv4
+To:     Shameerali Kolothum Thodi <shameerali.kolothum.thodi@huawei.com>,
+        "Tangnianyao (ICT)" <tangnianyao@huawei.com>,
+        Christoffer Dall <christoffer.dall@arm.com>,
+        "james.morse@arm.com" <james.morse@arm.com>,
+        "julien.thierry@arm.com" <julien.thierry@arm.com>,
+        "suzuki.poulose@arm.com" <suzuki.poulose@arm.com>,
+        "catalin.marinas@arm.com" <catalin.marinas@arm.com>,
+        "will.deacon@arm.com" <will.deacon@arm.com>,
+        "alex.bennee@linaro.org" <alex.bennee@linaro.org>,
+        "mark.rutland@arm.com" <mark.rutland@arm.com>,
+        "andre.przywara@arm.com" <andre.przywara@arm.com>,
+        Zhangshaokun <zhangshaokun@hisilicon.com>,
+        "keescook@chromium.org" <keescook@chromium.org>,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>,
+        "kvmarm@lists.cs.columbia.edu" <kvmarm@lists.cs.columbia.edu>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Cc:     Linuxarm <linuxarm@huawei.com>
+References: <F348A9E21A573744858FF7E5D32E29D81FEFA462@DGGEMI529-MBX.china.huawei.com>
+ <3993685d-a78f-2e73-e22a-8ade3b6a6279@arm.com>
+ <d97bd073-8775-f0cf-637a-ea1b04afbd8f@arm.com>
+ <5FC3163CFD30C246ABAA99954A238FA839311C4F@lhreml524-mbs.china.huawei.com>
+From:   Marc Zyngier <marc.zyngier@arm.com>
+Openpgp: preference=signencrypt
+Autocrypt: addr=marc.zyngier@arm.com; prefer-encrypt=mutual; keydata=
+ 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
+Organization: ARM Ltd
+Message-ID: <09a615e5-9dce-d194-6290-b8897abd5d12@arm.com>
+Date:   Wed, 13 Mar 2019 16:31:05 +0000
+User-Agent: Mozilla/5.0 (X11; Linux aarch64; rv:60.0) Gecko/20100101
+ Thunderbird/60.5.1
+MIME-Version: 1.0
+In-Reply-To: <5FC3163CFD30C246ABAA99954A238FA839311C4F@lhreml524-mbs.china.huawei.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-skb allocated via dev_alloc_skb can fail and return a NULL pointer.
-This patch avoids such a scenario and returns, consistent with other
-invocations.
+On 13/03/2019 15:59, Shameerali Kolothum Thodi wrote:
 
-Signed-off-by: Aditya Pakki <pakki001@umn.edu>
----
- drivers/staging/rtlwifi/rtl8822be/fw.c | 3 +++
- 1 file changed, 3 insertions(+)
+Hi Shameer,
 
-diff --git a/drivers/staging/rtlwifi/rtl8822be/fw.c b/drivers/staging/rtlwifi/rtl8822be/fw.c
-index f061dd1382aa..8fab9c8d1dd0 100644
---- a/drivers/staging/rtlwifi/rtl8822be/fw.c
-+++ b/drivers/staging/rtlwifi/rtl8822be/fw.c
-@@ -743,6 +743,9 @@ void rtl8822be_set_fw_rsvdpagepkt(struct ieee80211_hw *hw, bool b_dl_finished)
- 		      u1_rsvd_page_loc, 3);
- 
- 	skb = dev_alloc_skb(totalpacketlen);
-+	if (!skb)
-+		return;
-+
- 	memcpy((u8 *)skb_put(skb, totalpacketlen), &reserved_page_packet,
- 	       totalpacketlen);
- 
+>> Can you please give the following patch a go? I can't test it, but hopefully
+>> you can.
+> 
+> Thanks for your quick response. I just did a quick test on one of our platforms
+> with VHE+GICv4 and it seems to fix the performance issue we were seeing
+> when GICv4 is enabled.
+> 
+> Test setup:
+> 
+> Host connected to a PC over a 10G port.
+> Launch Guest with an assigned vf dev.
+> Run iperf from Guest,
+> 
+> 5.0 kernel:
+> [ ID]  Interval       Transfer     Bandwidth
+> [  3]  0.0-10.0 sec  1.30 GBytes  1.12 Gbits/sec
+> 
+> +Patch:
+> 
+> [ ID] 	Interval       Transfer     Bandwidth
+> [  3]  0.0-10.0 sec  10.9 GBytes  9.39 Gbits/sec
+
+Ah, that looks much better! I'll try to write it properly, as I think
+what we have today is slightly bizarre (we write ICH_HCR_EL2 from too
+many paths, and I need to remember how the whole thing works).
+
+Thanks,
+
+	M.
 -- 
-2.17.1
-
+Jazz is not dead. It just smells funny...
