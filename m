@@ -1,99 +1,98 @@
 Return-Path: <SRS0=dUEL=RQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
-X-Spam-Level: *
-X-Spam-Status: No, score=1.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FSL_HELO_FAKE,MAILING_LIST_MULTI,SPF_PASS,
-	USER_AGENT_MUTT autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Level: 
+X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E0958C43381
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 Mar 2019 19:43:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CECE4C43381
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 Mar 2019 19:45:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AB98E213A2
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 Mar 2019 19:43:18 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1552506198;
-	bh=xBwVO4J7+eKGefYtgEY/HJuhWOaBPz4oCLZzazWEaIU=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=joaSge0MjU5MrwSBS/iGI53IamrUxMI60aqxe9IHKADf6XJDGXlsx/cBWmwzkZ5vh
-	 CPOhexQIyAmQJ1DVJAUgdwZrwKGxoSFdp4bXC3ql83pNTG5415vTi++gJ6K+oD5oaY
-	 T54XvH0Hg/v3l3COvQtRww7mMKHeDRWmvitUZdVw=
+	by mail.kernel.org (Postfix) with ESMTP id A38142146E
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 Mar 2019 19:45:15 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726995AbfCMTnR (ORCPT
+        id S1727017AbfCMTpO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 13 Mar 2019 15:43:17 -0400
-Received: from mail.kernel.org ([198.145.29.99]:60776 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726420AbfCMTnQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 13 Mar 2019 15:43:16 -0400
-Received: from gmail.com (unknown [104.132.1.77])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id C09612077B;
-        Wed, 13 Mar 2019 19:43:15 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1552506196;
-        bh=xBwVO4J7+eKGefYtgEY/HJuhWOaBPz4oCLZzazWEaIU=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=Lfao3a2yNDBGTn48W4IJg/exfnGDI0vjAZOTO7Xg9OJFsTg3p+1pvgDJlbEziB8Qy
-         IfrAQoOPFLsr0Z4s4pQ2l6Npw4PQWaCp+BgSQ66U959WHVAKxLpM8a/D9cNpRziHCo
-         F0qenrDxIXY5wYMtX4INBTFWG1AyF5URvxr2lQ0s=
-Date:   Wed, 13 Mar 2019 12:43:14 -0700
-From:   Eric Biggers <ebiggers@kernel.org>
-To:     Al Viro <viro@zeniv.linux.org.uk>
-Cc:     Theodore Ts'o <tytso@mit.edu>, Amir Goldstein <amir73il@gmail.com>,
-        Richard Weinberger <richard@nod.at>,
-        Miklos Szeredi <miklos@szeredi.hu>,
-        linux-fsdevel <linux-fsdevel@vger.kernel.org>,
-        linux-fscrypt@vger.kernel.org,
-        overlayfs <linux-unionfs@vger.kernel.org>,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        Paul Lawrence <paullawrence@google.com>
-Subject: Re: overlayfs vs. fscrypt
-Message-ID: <20190313194313.GB10169@gmail.com>
-References: <4603533.ZIfxmiEf7K@blindfold>
- <1854703.ve7plDhYWt@blindfold>
- <CAJfpegtgfuAkgv26QH6Ht25OeMiev-QvEf7ror4KAbud7FADgg@mail.gmail.com>
- <4066872.KGdO14EQMx@blindfold>
- <CAOQ4uxhqQKzriL0An4Tvzc1E_LffL-z9q1otOW_RdD1ZdKWP3Q@mail.gmail.com>
- <20190313151633.GA672@mit.edu>
- <20190313160616.GR2217@ZenIV.linux.org.uk>
- <20190313164432.GE703@sol.localdomain>
- <20190313191945.GT2217@ZenIV.linux.org.uk>
+        Wed, 13 Mar 2019 15:45:14 -0400
+Received: from mail-qt1-f194.google.com ([209.85.160.194]:36368 "EHLO
+        mail-qt1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726420AbfCMTpN (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 13 Mar 2019 15:45:13 -0400
+Received: by mail-qt1-f194.google.com with SMTP id b3so3387789qtj.3
+        for <linux-kernel@vger.kernel.org>; Wed, 13 Mar 2019 12:45:13 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=Ipyu9ybUUEPsU55tvzWzKOyy6kBr08ODEhyCDNc2yqQ=;
+        b=jmkQJxdSJB5SyRW8HV7g2SvlKs693KFoewD6NJkiqhz1Fzt7MCJ/Cxy6S0AqKdDfIs
+         kj3uJPmDjKKLnCQMEqk4aU9AKK70j0H4qQm1e3qlNpEiq0u9X73DP9ATDI+HakExg07L
+         ktfr9WSIR1hapsz+Kw4aasu8PVDDhG0KtTxn7WdtljRot1elrHytc8+FZCj56ZWJ7Gu/
+         jpi6RvxJlWbnSa0Jmutjp31za7U8/n3Lp6nDkhTPwDJwQR4WiqouhXRLs8I1Q57NYoge
+         GI5ckqa+JBOiC/GJwspddrcgrdsIJZgWQ8G/sAcrSnS31ELE266rfM2fQWDFhpewCS84
+         7RAQ==
+X-Gm-Message-State: APjAAAUKtbyYwMMPi+VoY19DLQqvsjXbdaP+trsbgwAE8Fp2jhjcxXy/
+        Jfqzc4Dek3RGIuIb+hoypNJg/PmdK+jz+hHcMgs=
+X-Google-Smtp-Source: APXvYqwj5Dockp3MIy2Mhy5XwkyjsVXJnrf8kcJnrnxJlHxeZEu/vvAg02KtEmpFIupkuGGLTFytnv8J8oBBMukeIvg=
+X-Received: by 2002:ac8:237b:: with SMTP id b56mr35713034qtb.343.1552506312212;
+ Wed, 13 Mar 2019 12:45:12 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190313191945.GT2217@ZenIV.linux.org.uk>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+References: <20190304195951.1118807-1-arnd@arndb.de> <b0b995a1-3211-870f-01af-ce837c18e8f9@arm.com>
+ <CAK8P3a2KQKTDQCQcFR7ZTFJ+_XhfKpy9W27r+YV=iD6hLVu2xg@mail.gmail.com>
+ <957e168a-2589-89c7-3a72-5071a7b6c65a@arm.com> <20190308152355.GA20230@lst.de>
+ <124f4e49-9eb1-99d9-35f4-c2ef3dff8415@arm.com> <20190313183254.GC4926@lst.de>
+In-Reply-To: <20190313183254.GC4926@lst.de>
+From:   Arnd Bergmann <arnd@arndb.de>
+Date:   Wed, 13 Mar 2019 20:44:55 +0100
+Message-ID: <CAK8P3a0yj5TqP95KNwM3uhYuhVSuiLkwYWQe-nLyyVd0j7sGtw@mail.gmail.com>
+Subject: Re: [Xen-devel] [PATCH] Revert "swiotlb: remove SWIOTLB_MAP_ERROR"
+To:     Christoph Hellwig <hch@lst.de>
+Cc:     Julien Grall <julien.grall@arm.com>,
+        Robin Murphy <robin.murphy@arm.com>,
+        Juergen Gross <jgross@suse.com>,
+        Stefano Stabellini <sstabellini@kernel.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Konrad Rzeszutek Wilk <konrad.wilk@oracle.com>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Mike Rapoport <rppt@linux.ibm.com>,
+        "open list:IOMMU DRIVERS" <iommu@lists.linux-foundation.org>,
+        Joerg Roedel <jroedel@suse.de>,
+        xen-devel <xen-devel@lists.xenproject.org>,
+        Boris Ostrovsky <boris.ostrovsky@oracle.com>,
+        Marek Szyprowski <m.szyprowski@samsung.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Mar 13, 2019 at 07:19:46PM +0000, Al Viro wrote:
-> On Wed, Mar 13, 2019 at 09:44:33AM -0700, Eric Biggers wrote:
-> 
-> > > Just to make sure - you do realize that ban on multiple dentries refering
-> > > to the same directory inode is *NOT* conditional upon those dentries being
-> > > hashed, right?
-> > 
-> > Isn't this handled by d_splice_alias() already, by moving the old dentry to the
-> > new name?
-> 
-> ... which means that if somebody without the key chdirs into subdirectory
-> they only see by encrypted name and waits for proper owner to look it up,
-> they suddenly see it by _un_encrypted name.  Or does O_PATH open, for
-> that matter, so exec permissions on that thing are not required.
+On Wed, Mar 13, 2019 at 7:33 PM Christoph Hellwig <hch@lst.de> wrote:
+> On Fri, Mar 08, 2019 at 05:25:57PM +0000, Julien Grall wrote:
+> > In the common case, Dom0 also contains the PV backend drivers. Those
+> > drivers may directly use the guest buffer in the DMA request (so a copy is
+> > avoided). To avoid using a bounce buffer too much, xen-swiotlb will find
+> > the host physical address associated to the guest buffer and will use it to
+> > compute the DMA address.
+> >
+> > While Dom0 kernel may only deal with 32-bit physical address, the
+> > hypervisor can still deal with up to 40-bit physical address. This means
+> > the guest memory can be allocated above the 4GB threshold. Hence why the
+> > dma_addr_t is always 64-bit with CONFIG_XEN=y.
+>
+> This at least makes some sense.  But is it really so much better to
+> avoid having a 64-bit phys_addr_t?
 
-Is there a real problem here?  After the key is added, the filenames are
-supposed to be shown in plaintext, not ciphertext.  This is intrinsic to the
-fact that we don't support both "views" at the same time.  Either the directory
-has the key or it does not.
+I like the way we tie phys_addr_t to the page table format, as it seems
+consistent to have phys_addr_t be whichever data type can be addressed
+through virtual memory.
 
-If someone is using ciphertext view (e.g. doing a directory traversal)
-concurrently with the key being added, that can certainly break things.  But the
-ciphertext view only allows a very restricted set of actions such as deleting
-files.  And if such actions are necessary, the system userspace is meant to be
-designed in such a way that adding the key can't race with it.
+The main practical advantage I see in allowing phys_addr_t and dma_addr_t
+to be independent rather than having both of them be the same and grow
+to as much as is needed is that most randconfig issues I found that
+result from a type mismatch are for real bugs, typically in driver code that
+is written under the assumption that both have not only the same size
+but also the same binary representation for a given memory address.
 
-- Eric
+      Arnd
