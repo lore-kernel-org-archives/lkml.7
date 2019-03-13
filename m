@@ -2,141 +2,92 @@ Return-Path: <SRS0=dUEL=RQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_NEOMUTT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9D018C43381
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 Mar 2019 10:08:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 82078C43381
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 Mar 2019 10:11:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 75B3C2184C
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 Mar 2019 10:08:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5BB962171F
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 Mar 2019 10:11:23 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726314AbfCMKIb (ORCPT
+        id S1726155AbfCMKLV convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 13 Mar 2019 06:08:31 -0400
-Received: from mx2.suse.de ([195.135.220.15]:51414 "EHLO mx1.suse.de"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1725870AbfCMKIa (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 13 Mar 2019 06:08:30 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx1.suse.de (Postfix) with ESMTP id B5543B009;
-        Wed, 13 Mar 2019 10:08:28 +0000 (UTC)
-Date:   Wed, 13 Mar 2019 11:08:27 +0100
-From:   Petr Mladek <pmladek@suse.com>
-To:     Calvin Owens <calvinowens@fb.com>
-Cc:     Sergey Senozhatsky <sergey.senozhatsky@gmail.com>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Jonathan Corbet <corbet@lwn.net>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linux-serial@vger.kernel.org" <linux-serial@vger.kernel.org>
-Subject: Re: [PATCH 3/4] printk: Add consoles to a virtual "console" bus
-Message-ID: <20190313100827.oqwoabkgsxfi4zde@pathway.suse.cz>
-References: <cover.1551486732.git.calvinowens@fb.com>
- <087b13f7812b32cc7c3f9efea71c9bcf324dd031.1551486732.git.calvinowens@fb.com>
- <20190311133341.vqcagdo4e4vy6dfu@pathway.suse.cz>
- <20190312215209.GD5982@Haydn>
+        Wed, 13 Mar 2019 06:11:21 -0400
+Received: from mail-ua1-f65.google.com ([209.85.222.65]:46719 "EHLO
+        mail-ua1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725856AbfCMKLV (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 13 Mar 2019 06:11:21 -0400
+Received: by mail-ua1-f65.google.com with SMTP id j8so441232uae.13
+        for <linux-kernel@vger.kernel.org>; Wed, 13 Mar 2019 03:11:20 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=w6c/sy5kIHwpmb/ad29lLtozgPvilF5ILnjRBOcqq6Y=;
+        b=Y9QT/R4t87bBXxfGR2Adkm8ujh5ht9t1Ymc37fpebw37d6W7HlgMvV6dKwATiHD4mH
+         V/AFgokA03dW6c7LAQQAn9ECgdQHIVextQhooZTUKEJttH7N0Ythu9bNjWBRcLpxXxgz
+         nwclFJWdhNiQhvjs4g1H0YGbp72Up1Dr/hcp7vTjFJxOu7iSIaaoTgTlObU77fgOcVen
+         qI2F9ww9w8JgXxXwr1352giNneCIP8MJcCIAIoDqcoLKBZpaXf5L/cGMJQQFSZf+NfpC
+         m1qnTMRsy4dFcM3U/Q7kH+ZNCCHfVFOoluhBO8CjwOGtYp4Jna5cis6iDvHh6re6J4F+
+         mNYg==
+X-Gm-Message-State: APjAAAV0fb5AkVtl8L+0mwAzpI8gDWjI06km9hlFaeY8F+NjskIbWN3r
+        ETZGx6XgGjjR3scTNKQ79MDuMNRssrQO4lBS5YBsERc7
+X-Google-Smtp-Source: APXvYqy+m1IP0Ho9eLUXkPptS/YqM3STxxnLLblA9jCLirklhGwIb+3GwfCloEznB7o+WLSHFOhAMg8Y9gOwZr9a6QU=
+X-Received: by 2002:ab0:7191:: with SMTP id l17mr21062310uao.28.1552471880343;
+ Wed, 13 Mar 2019 03:11:20 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190312215209.GD5982@Haydn>
-User-Agent: NeoMutt/20170912 (1.9.0)
+References: <20190312133047.16201-1-brgl@bgdev.pl> <56704758-ee74-0e9b-de1c-1dc94deda8d7@cambridgegreys.com>
+ <CAMRc=MdRKvM8ug_KNcwUGHv9J6OLFa1o_WaCbebxWUGyGVZtiw@mail.gmail.com>
+In-Reply-To: <CAMRc=MdRKvM8ug_KNcwUGHv9J6OLFa1o_WaCbebxWUGyGVZtiw@mail.gmail.com>
+From:   Geert Uytterhoeven <geert@linux-m68k.org>
+Date:   Wed, 13 Mar 2019 11:11:08 +0100
+Message-ID: <CAMuHMdXC5QffaOj479j3WCt5_GH2jeQnGrPoCrRPoFkHmFeDfw@mail.gmail.com>
+Subject: Re: [PATCH] um: remove uses of variable length arrays
+To:     Bartosz Golaszewski <brgl@bgdev.pl>
+Cc:     Anton Ivanov <anton.ivanov@cambridgegreys.com>,
+        Jeff Dike <jdike@addtoit.com>,
+        Richard Weinberger <richard@nod.at>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        linux-um@lists.infradead.org,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8BIT
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue 2019-03-12 21:52:13, Calvin Owens wrote:
-> On Monday 03/11 at 14:33 +0100, Petr Mladek wrote:
-> > On Fri 2019-03-01 16:48:19, Calvin Owens wrote:
-> > > This patch embeds a device struct in the console struct, and registers
-> > > them on a "console" bus so we can expose attributes in sysfs.
-> > > 
-> > > Currently, most drivers declare static console structs, and that is
-> > > incompatible with the dev refcount model. So we end up needing to patch
-> > > all of the console drivers to:
-> > > 
-> > > 	1. Dynamically allocate the console struct using a new helper
-> > > 	2. Handle the allocation in (1) possibly failing
-> > > 	3. Dispose of (1) with put_device()
-> > > 
-> > > Early console structures must still be static, since they're required
-> > > before we're able to allocate memory. The least ugly way I can come up
-> > > with to handle this is an "is_static" flag in the structure which makes
-> > > the gets and puts NOPs, and is checked in ->release() to catch mistakes.
-> > >
-> > > diff --git a/kernel/printk/printk.c b/kernel/printk/printk.c
-> > > index 2e0eb89f046c..67e1e993ab80 100644
-> > > --- a/kernel/printk/printk.c
-> > > +++ b/kernel/printk/printk.c
-> > > @@ -2706,6 +2770,8 @@ void register_console(struct console *newcon)
-> > >  		console_drivers->next = newcon;
-> > >  	}
-> > >  
-> > > +	get_console(newcon);
-> > > +
-> > >  	if (newcon->flags & CON_EXTENDED)
-> > >  		nr_ext_console_drivers++;
-> > >  
-> > > @@ -2730,6 +2796,7 @@ void register_console(struct console *newcon)
-> > >  		exclusive_console_stop_seq = console_seq;
-> > >  		logbuf_unlock_irqrestore(flags);
-> > >  	}
-> > > +	console_register_device(newcon);
-> > 
-> > This calls console_init_device() for the statically defined
-> > early consoles. I guess that it would invalidate the above
-> > get_console().
-> 
-> The get_console() macro checks for ->is_static and is a NOP if it's
-> set, which is definitely confusing. 
->  
-> > Also it is not symmetric with unregister_console(). We add it
-> > to the console_subsys here and did not remove it when
-> > the console is unregistered.
-> 
-> We do a put() in the unregister path, somebody could hold a reference
-> through sysfs so we can't just remove it. Or am I misunderstanding?
+Hi Bartosz,
 
-To be honest, I am not sure what the effect of get_device() and
-put_device() is. But they are called also in device_add().
-This suggests that the sysfs interface and struct device
-stay even when we call device_put() in unregister_console().
+On Wed, Mar 13, 2019 at 10:50 AM Bartosz Golaszewski <brgl@bgdev.pl> wrote:
+> śr., 13 mar 2019 o 10:45 Anton Ivanov
+> <anton.ivanov@cambridgegreys.com> napisał(a):
+> > PID can be more than 5 digits nowdays.
+>
+> Do we have a macro in the kernel that yields the minimum size of an
+> array to fit a number? I can't find it. I vagely remember seeing
+> something like this in systemd tree. If it doesn't exist in the kernel
+> then maybe we should copy it over.
 
-This is an asymmetry. The sysfs interface is created only
-for successfully registered console but it stays even
-after unregistration (if it works as I expect).
+1 + const_ilog2(n) / log2(10) = 1 + const_ilog2(n) / 3.321928
 
-Another problem is that register_console()/unregister_console()
-might get called repeatedly for the same console. But device_add()
-should get called only once.
+Using fixed point calculations, that can be approximated as
 
-I think that we could do better, see below.
+    1 + 19728 * const_ilog2(n) >> 16
+    1 + 77 * const_ilog2(n) >> 8
 
+(the factors might be one off)
 
-> > IMHO, this might be done already in allocate_console().
-> > And eventually in printk_late_init() for consoles that
-> > are allocated earlier.
-> > 
-> > I am not familiar with the device-related sysfs API.
-> > But I see that device_initialize() and device_add()
-> > can be done by device_register(). The separate
-> > calls are needed only when a special reference
-> > handling is needed. Are we special?
-> 
-> We're special: the console initcalls run before the device core is
-> initialized, initialize() lets us use the refcount.
+Gr{oetje,eeting}s,
 
-But console_init_device() is called later from printk_late_init()
-for the statically defined structures (early consoles). This
-would reset the refcount for these consoles.
+                        Geert
 
-I think that we should delay calling console_init_device() for
-all consoles until printk_late_done is set. Then it should
-be safe to call device_register() there.
+-- 
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
 
-Best Regards,
-Petr
-
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
