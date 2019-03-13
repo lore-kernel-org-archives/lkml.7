@@ -7,47 +7,46 @@ X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BDBA5C10F03
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 Mar 2019 19:18:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F0239C10F0B
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 Mar 2019 19:18:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8F3562075C
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 Mar 2019 19:18:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B5B972184D
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 Mar 2019 19:18:34 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1552504711;
-	bh=tkLBUB8TwBFiqM6DVArGARpdJhCkVyck+eWaIhaPaMc=;
+	s=default; t=1552504714;
+	bh=ozmxBsdvvPC3PGQtgj8vZI27NH8OlmyqwpbbU1wBmYQ=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=GoKeZgfq4GHkmkS1mKCidXIqi/aprM3l8GdAmG1T3sj0BXVENyH8Vi2eczyBvYq6u
-	 J+N25kZG5wsHt9tqhmEeOU9UEIBSZwf0JlXJHap3go7fuF/cUA38U7AkjNQ/a9Kv+e
-	 Vb6MrWBFYWsZT2J8tYROkzDh/iJ0q2rDNN6Im1FI=
+	b=uMvfvevTwVNNxn6mn+6S/2b6hhH6sXemXnHMvvWurMKdw29v71PquKzpWP2rKvkZj
+	 8yq9edR40PlOWsW19Ju9jmj5AiZeCiyvRP2oNyRknaqJVonjl9LpIPo7mSLvlYLF9g
+	 lpt+tZQHbnJMvrAP26FP9MsDfOnuXcIgGjhqg+DI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728663AbfCMTS3 (ORCPT
+        id S1729078AbfCMTSd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 13 Mar 2019 15:18:29 -0400
-Received: from mail.kernel.org ([198.145.29.99]:48896 "EHLO mail.kernel.org"
+        Wed, 13 Mar 2019 15:18:33 -0400
+Received: from mail.kernel.org ([198.145.29.99]:49050 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727871AbfCMTSX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 13 Mar 2019 15:18:23 -0400
+        id S1729073AbfCMTSa (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 13 Mar 2019 15:18:30 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 917662177E;
-        Wed, 13 Mar 2019 19:18:21 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id EC15B2171F;
+        Wed, 13 Mar 2019 19:18:28 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1552504703;
-        bh=tkLBUB8TwBFiqM6DVArGARpdJhCkVyck+eWaIhaPaMc=;
+        s=default; t=1552504710;
+        bh=ozmxBsdvvPC3PGQtgj8vZI27NH8OlmyqwpbbU1wBmYQ=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=lEaBUGHvfGofiC2hg03y3aDqibSnq6FNRmk6om5gV1+/BFEYO8ben55J6EcDwJ2pe
-         BTLXh7ihtFD7fd+2Mfej/dP34WlivK+/qXAwe1iZ21C+VZ+zOj44AC1r5f6Kcddyaw
-         q7ioOZx6SB7lLeci2uiXHDimeJx9GcPxfSvAWAKI=
+        b=LaDGrks9iGd1TbsI4aduEbhBGkjr5SC8JncH73HOPWMmwuK6kp3UqjZ9Exyt0BrGD
+         C/B9WLpOlzQYjvrwJD8rrmCI8IoKnTJEObPw8X5Ix/lJuvmsJDNKA62mn5GJRDUh9x
+         d25ldgk9/kPmsB9vElJqb8VQLZwcmSPkwUdtSkzc=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Martin Blumenstingl <martin.blumenstingl@googlemail.com>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Sasha Levin <sashal@kernel.org>, linux-gpio@vger.kernel.org,
-        linux-amlogic@lists.infradead.org
-Subject: [PATCH AUTOSEL 4.4 06/15] pinctrl: meson: meson8b: fix the sdxc_a data 1..3 pins
-Date:   Wed, 13 Mar 2019 15:17:52 -0400
-Message-Id: <20190313191806.160547-6-sashal@kernel.org>
+Cc:     Vladimir Murzin <vladimir.murzin@arm.com>,
+        Will Deacon <will.deacon@arm.com>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH AUTOSEL 4.4 09/15] arm64: Relax GIC version check during early boot
+Date:   Wed, 13 Mar 2019 15:17:55 -0400
+Message-Id: <20190313191806.160547-9-sashal@kernel.org>
 X-Mailer: git-send-email 2.19.1
 In-Reply-To: <20190313191806.160547-1-sashal@kernel.org>
 References: <20190313191806.160547-1-sashal@kernel.org>
@@ -59,36 +58,40 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Martin Blumenstingl <martin.blumenstingl@googlemail.com>
+From: Vladimir Murzin <vladimir.murzin@arm.com>
 
-[ Upstream commit c17abcfa93bf0be5e48bb011607d237ac2bfc839 ]
+[ Upstream commit 74698f6971f25d045301139413578865fc2bd8f9 ]
 
-Fix the mismatch between the "sdxc_d13_1_a" pin group definition from
-meson8b_cbus_groups and the entry in sdxc_a_groups ("sdxc_d0_13_1_a").
-This makes it possible to use "sdxc_d13_1_a" in device-tree files to
-route the MMC data 1..3 pins to GPIOX_1..3.
+Updates to the GIC architecture allow ID_AA64PFR0_EL1.GIC to have
+values other than 0 or 1. At the moment, Linux is quite strict in the
+way it handles this field at early boot stage (cpufeature is fine) and
+will refuse to use the system register CPU interface if it doesn't
+find the value 1.
 
-Fixes: 0fefcb6876d0d6 ("pinctrl: Add support for Meson8b")
-Signed-off-by: Martin Blumenstingl <martin.blumenstingl@googlemail.com>
-Signed-off-by: Linus Walleij <linus.walleij@linaro.org>
+Fixes: 021f653791ad17e03f98aaa7fb933816ae16f161 ("irqchip: gic-v3: Initial support for GICv3")
+Reported-by: Chase Conklin <Chase.Conklin@arm.com>
+Reviewed-by: Marc Zyngier <marc.zyngier@arm.com>
+Signed-off-by: Vladimir Murzin <vladimir.murzin@arm.com>
+Signed-off-by: Will Deacon <will.deacon@arm.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/pinctrl/meson/pinctrl-meson8b.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ arch/arm64/kernel/head.S | 3 +--
+ 1 file changed, 1 insertion(+), 2 deletions(-)
 
-diff --git a/drivers/pinctrl/meson/pinctrl-meson8b.c b/drivers/pinctrl/meson/pinctrl-meson8b.c
-index b505b87661f8..07c4153e6f3d 100644
---- a/drivers/pinctrl/meson/pinctrl-meson8b.c
-+++ b/drivers/pinctrl/meson/pinctrl-meson8b.c
-@@ -656,7 +656,7 @@ static const char * const sd_a_groups[] = {
+diff --git a/arch/arm64/kernel/head.S b/arch/arm64/kernel/head.S
+index 0382eba4bf7b..6299a8a361ee 100644
+--- a/arch/arm64/kernel/head.S
++++ b/arch/arm64/kernel/head.S
+@@ -478,8 +478,7 @@ CPU_LE(	bic	x0, x0, #(3 << 24)	)	// Clear the EE and E0E bits for EL1
+ 	/* GICv3 system register access */
+ 	mrs	x0, id_aa64pfr0_el1
+ 	ubfx	x0, x0, #24, #4
+-	cmp	x0, #1
+-	b.ne	3f
++	cbz	x0, 3f
  
- static const char * const sdxc_a_groups[] = {
- 	"sdxc_d0_0_a", "sdxc_d13_0_a", "sdxc_d47_a", "sdxc_clk_a",
--	"sdxc_cmd_a", "sdxc_d0_1_a", "sdxc_d0_13_1_a"
-+	"sdxc_cmd_a", "sdxc_d0_1_a", "sdxc_d13_1_a"
- };
- 
- static const char * const pcm_a_groups[] = {
+ 	mrs_s	x0, ICC_SRE_EL2
+ 	orr	x0, x0, #ICC_SRE_EL2_SRE	// Set ICC_SRE_EL2.SRE==1
 -- 
 2.19.1
 
