@@ -2,217 +2,312 @@ Return-Path: <SRS0=dUEL=RQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-6.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,
+	URIBL_SBL,URIBL_SBL_A autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 33A3CC43381
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 Mar 2019 09:06:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E802FC4360F
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 Mar 2019 09:07:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EA8BA2147C
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 Mar 2019 09:06:27 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=c-s.fr header.i=@c-s.fr header.b="VYwPvz2X"
+	by mail.kernel.org (Postfix) with ESMTP id AC7EF2183F
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 Mar 2019 09:07:58 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727361AbfCMJG0 (ORCPT
+        id S1727067AbfCMJH5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 13 Mar 2019 05:06:26 -0400
-Received: from pegase1.c-s.fr ([93.17.236.30]:31682 "EHLO pegase1.c-s.fr"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726163AbfCMJGZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 13 Mar 2019 05:06:25 -0400
-Received: from localhost (mailhub1-int [192.168.12.234])
-        by localhost (Postfix) with ESMTP id 44K5YV1MCZz9tyv3;
-        Wed, 13 Mar 2019 10:06:22 +0100 (CET)
-Authentication-Results: localhost; dkim=pass
-        reason="1024-bit key; insecure key"
-        header.d=c-s.fr header.i=@c-s.fr header.b=VYwPvz2X; dkim-adsp=pass;
-        dkim-atps=neutral
-X-Virus-Scanned: Debian amavisd-new at c-s.fr
-Received: from pegase1.c-s.fr ([192.168.12.234])
-        by localhost (pegase1.c-s.fr [192.168.12.234]) (amavisd-new, port 10024)
-        with ESMTP id b_ev4INDNGpo; Wed, 13 Mar 2019 10:06:22 +0100 (CET)
-Received: from messagerie.si.c-s.fr (messagerie.si.c-s.fr [192.168.25.192])
-        by pegase1.c-s.fr (Postfix) with ESMTP id 44K5YV04knz9tyv2;
-        Wed, 13 Mar 2019 10:06:22 +0100 (CET)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=c-s.fr; s=mail;
-        t=1552467982; bh=IoijEz6VoS+nWaaMU7l1D1g3qs+lq9pKu9xC1BONTnI=;
-        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
-        b=VYwPvz2XwhnNCS3aPMJ0N6RFw1Da5OQ3sOREb3csmha2HFej7bNieEFkQS49zdeaR
-         Bgyo+AwRe/DzAM5ZTiSkpbwXo0qSyOIUeNWR4PBJw6/sQ4jcQPUCN8DFYed5S47zMA
-         AAE8b4vZUFrN+jF4CcsifEhTodFOyBboVvpCxJhY=
-Received: from localhost (localhost [127.0.0.1])
-        by messagerie.si.c-s.fr (Postfix) with ESMTP id EA9348B8F9;
-        Wed, 13 Mar 2019 10:06:22 +0100 (CET)
-X-Virus-Scanned: amavisd-new at c-s.fr
-Received: from messagerie.si.c-s.fr ([127.0.0.1])
-        by localhost (messagerie.si.c-s.fr [127.0.0.1]) (amavisd-new, port 10023)
-        with ESMTP id PUXw9sD4EhAz; Wed, 13 Mar 2019 10:06:22 +0100 (CET)
-Received: from PO15451 (unknown [192.168.4.90])
-        by messagerie.si.c-s.fr (Postfix) with ESMTP id 8C1128B8EE;
-        Wed, 13 Mar 2019 10:06:21 +0100 (CET)
-Subject: Re: [PATCH 1/1] arch/powerpc: Rework local_paca to avoid LTO warnings
-To:     Alastair D'Silva <alastair@au1.ibm.com>
-Cc:     Alastair D'Silva <alastair@d-silva.org>,
-        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        Paul Mackerras <paulus@samba.org>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        Nicholas Piggin <npiggin@gmail.com>,
-        Mahesh Salgaonkar <mahesh@linux.vnet.ibm.com>,
-        "Naveen N. Rao" <naveen.n.rao@linux.vnet.ibm.com>,
-        Michal Hocko <mhocko@suse.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Mike Rapoport <rppt@linux.vnet.ibm.com>,
-        linuxppc-dev@lists.ozlabs.org, linux-kernel@vger.kernel.org
-References: <20190313034208.13134-1-alastair@au1.ibm.com>
-From:   Christophe Leroy <christophe.leroy@c-s.fr>
-Message-ID: <bd858b12-7fab-057d-0065-2ccb98cbf648@c-s.fr>
-Date:   Wed, 13 Mar 2019 10:06:21 +0100
-User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:60.0) Gecko/20100101
- Thunderbird/60.5.3
+        Wed, 13 Mar 2019 05:07:57 -0400
+Received: from 4.mo173.mail-out.ovh.net ([46.105.34.219]:57750 "EHLO
+        4.mo173.mail-out.ovh.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726163AbfCMJH4 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 13 Mar 2019 05:07:56 -0400
+X-Greylist: delayed 1801 seconds by postgrey-1.27 at vger.kernel.org; Wed, 13 Mar 2019 05:07:53 EDT
+Received: from player796.ha.ovh.net (unknown [10.109.143.72])
+        by mo173.mail-out.ovh.net (Postfix) with ESMTP id 7462FF9CD8
+        for <linux-kernel@vger.kernel.org>; Wed, 13 Mar 2019 09:29:00 +0100 (CET)
+Received: from kaod.org (lns-bzn-46-82-253-208-248.adsl.proxad.net [82.253.208.248])
+        (Authenticated sender: groug@kaod.org)
+        by player796.ha.ovh.net (Postfix) with ESMTPSA id 4F469384621D;
+        Wed, 13 Mar 2019 08:28:52 +0000 (UTC)
+Date:   Wed, 13 Mar 2019 09:28:51 +0100
+From:   Greg Kurz <groug@kaod.org>
+To:     "Alastair D'Silva" <alastair@au1.ibm.com>
+Cc:     Arnd Bergmann <arnd@arndb.de>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        linux-kernel@vger.kernel.org,
+        Andrew Donnellan <andrew.donnellan@au1.ibm.com>,
+        Alastair D'Silva <alastair@d-silva.org>,
+        Frederic Barrat <fbarrat@linux.ibm.com>,
+        linuxppc-dev@lists.ozlabs.org
+Subject: Re: [PATCH 4/5] ocxl: Remove superfluous 'extern' from headers
+Message-ID: <20190313092851.4ed5c485@bahia.lan>
+In-Reply-To: <20190313040702.14276-5-alastair@au1.ibm.com>
+References: <20190227045741.21412-1-alastair@au1.ibm.com>
+        <20190313040702.14276-1-alastair@au1.ibm.com>
+        <20190313040702.14276-5-alastair@au1.ibm.com>
+X-Mailer: Claws Mail 3.16.0 (GTK+ 2.24.32; x86_64-redhat-linux-gnu)
 MIME-Version: 1.0
-In-Reply-To: <20190313034208.13134-1-alastair@au1.ibm.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: fr
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
+X-Ovh-Tracer-Id: 13784392561733572939
+X-VR-SPAMSTATE: OK
+X-VR-SPAMSCORE: -100
+X-VR-SPAMCAUSE: gggruggvucftvghtrhhoucdtuddrgedutddrgeelgdduvddtucetufdoteggodetrfdotffvucfrrhhofhhilhgvmecuqfggjfdpvefjgfevmfevgfenuceurghilhhouhhtmecuhedttdenucesvcftvggtihhpihgvnhhtshculddquddttddm
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hello,
+On Wed, 13 Mar 2019 15:07:00 +1100
+"Alastair D'Silva" <alastair@au1.ibm.com> wrote:
 
-Le 13/03/2019 à 04:42, Alastair D'Silva a écrit :
 > From: Alastair D'Silva <alastair@d-silva.org>
 > 
-> When building an LTO kernel, the existing code generates warnings:
->      ./arch/powerpc/include/asm/paca.h:37:30: warning: register of
->          ‘local_paca’ used for multiple global register variables
->       register struct paca_struct *local_paca asm("r13");
->                                ^
->      ./arch/powerpc/include/asm/paca.h:37:30: note: conflicts with
->          ‘local_paca’
-
-How do you build a LTO kernel ?
-
-> 
-> This patch reworks local_paca into an inline getter & setter function,
-> which addresses the warning.
-
-This patch adds sparse warnings, see 
-https://patchwork.ozlabs.org/patch/1055875/
-
-> 
-> Generated ASM from this patch is broadly similar (addresses have
-> changed and the compiler uses different GPRs in some places).
-
-Your text might be confusion. When I read it the first time I thought 
-you were saying that the compiler was now using another GPR than r13.
-
+> The 'extern' keyword adds no value here.
 > 
 > Signed-off-by: Alastair D'Silva <alastair@d-silva.org>
-
-I guess the same has to be done for current, see 
-arch/powerpc/include/asm/current.h :
-
-/*
-  * We keep `current' in r2 for speed.
-  */
-register struct task_struct *current asm ("r2");
-
 > ---
->   arch/powerpc/include/asm/paca.h | 44 +++++++++++++++++++++++----------
->   arch/powerpc/kernel/paca.c      |  2 +-
->   2 files changed, 32 insertions(+), 14 deletions(-)
+
+Reviewed-by: Greg Kurz <groug@kaod.org>
+
+>  drivers/misc/ocxl/ocxl_internal.h | 54 +++++++++++++++----------------
+>  include/misc/ocxl.h               | 36 ++++++++++-----------
+>  2 files changed, 44 insertions(+), 46 deletions(-)
 > 
-> diff --git a/arch/powerpc/include/asm/paca.h b/arch/powerpc/include/asm/paca.h
-> index e843bc5d1a0f..9c9e2dea0f9b 100644
-> --- a/arch/powerpc/include/asm/paca.h
-> +++ b/arch/powerpc/include/asm/paca.h
-> @@ -34,19 +34,6 @@
->   #include <asm/cpuidle.h>
->   #include <asm/atomic.h>
->   
-> -register struct paca_struct *local_paca asm("r13");
+> diff --git a/drivers/misc/ocxl/ocxl_internal.h b/drivers/misc/ocxl/ocxl_internal.h
+> index a32f2151029f..321b29e77f45 100644
+> --- a/drivers/misc/ocxl/ocxl_internal.h
+> +++ b/drivers/misc/ocxl/ocxl_internal.h
+> @@ -16,7 +16,6 @@
+>  
+>  extern struct pci_driver ocxl_pci_driver;
+>  
 > -
-> -#if defined(CONFIG_DEBUG_PREEMPT) && defined(CONFIG_SMP)
-> -extern unsigned int debug_smp_processor_id(void); /* from linux/smp.h */
-> -/*
-> - * Add standard checks that preemption cannot occur when using get_paca():
-> - * otherwise the paca_struct it points to may be the wrong one just after.
-> - */
-> -#define get_paca()	((void) debug_smp_processor_id(), local_paca)
-> -#else
-> -#define get_paca()	local_paca
-> -#endif
+>  struct ocxl_fn {
+>  	struct device dev;
+>  	int bar_used[3];
+> @@ -92,41 +91,40 @@ struct ocxl_process_element {
+>  	__be32 software_state;
+>  };
+>  
+> +struct ocxl_afu *ocxl_afu_get(struct ocxl_afu *afu);
+> +void ocxl_afu_put(struct ocxl_afu *afu);
+>  
+> -extern struct ocxl_afu *ocxl_afu_get(struct ocxl_afu *afu);
+> -extern void ocxl_afu_put(struct ocxl_afu *afu);
 > -
->   #ifdef CONFIG_PPC_PSERIES
->   #define get_lppaca()	(get_paca()->lppaca_ptr)
->   #endif
-> @@ -266,6 +253,37 @@ struct paca_struct {
->   #endif
->   } ____cacheline_aligned;
->   
-> +#if defined(CONFIG_DEBUG_PREEMPT) && defined(CONFIG_SMP)
-> +extern unsigned int debug_smp_processor_id(void); /* from linux/smp.h */
-> +#endif
+> -extern int ocxl_create_cdev(struct ocxl_afu *afu);
+> -extern void ocxl_destroy_cdev(struct ocxl_afu *afu);
+> -extern int ocxl_register_afu(struct ocxl_afu *afu);
+> -extern void ocxl_unregister_afu(struct ocxl_afu *afu);
+> +int ocxl_create_cdev(struct ocxl_afu *afu);
+> +void ocxl_destroy_cdev(struct ocxl_afu *afu);
+> +int ocxl_register_afu(struct ocxl_afu *afu);
+> +void ocxl_unregister_afu(struct ocxl_afu *afu);
+>  
+> -extern int ocxl_file_init(void);
+> -extern void ocxl_file_exit(void);
+> +int ocxl_file_init(void);
+> +void ocxl_file_exit(void);
+>  
+> -extern int ocxl_pasid_afu_alloc(struct ocxl_fn *fn, u32 size);
+> -extern void ocxl_pasid_afu_free(struct ocxl_fn *fn, u32 start, u32 size);
+> -extern int ocxl_actag_afu_alloc(struct ocxl_fn *fn, u32 size);
+> -extern void ocxl_actag_afu_free(struct ocxl_fn *fn, u32 start, u32 size);
+> +int ocxl_pasid_afu_alloc(struct ocxl_fn *fn, u32 size);
+> +void ocxl_pasid_afu_free(struct ocxl_fn *fn, u32 start, u32 size);
+> +int ocxl_actag_afu_alloc(struct ocxl_fn *fn, u32 size);
+> +void ocxl_actag_afu_free(struct ocxl_fn *fn, u32 start, u32 size);
+>  
+> -extern struct ocxl_context *ocxl_context_alloc(void);
+> -extern int ocxl_context_init(struct ocxl_context *ctx, struct ocxl_afu *afu,
+> +struct ocxl_context *ocxl_context_alloc(void);
+> +int ocxl_context_init(struct ocxl_context *ctx, struct ocxl_afu *afu,
+>  			struct address_space *mapping);
+> -extern int ocxl_context_attach(struct ocxl_context *ctx, u64 amr);
+> -extern int ocxl_context_mmap(struct ocxl_context *ctx,
+> +int ocxl_context_attach(struct ocxl_context *ctx, u64 amr);
+> +int ocxl_context_mmap(struct ocxl_context *ctx,
+>  			struct vm_area_struct *vma);
+> -extern int ocxl_context_detach(struct ocxl_context *ctx);
+> -extern void ocxl_context_detach_all(struct ocxl_afu *afu);
+> -extern void ocxl_context_free(struct ocxl_context *ctx);
+> +int ocxl_context_detach(struct ocxl_context *ctx);
+> +void ocxl_context_detach_all(struct ocxl_afu *afu);
+> +void ocxl_context_free(struct ocxl_context *ctx);
+>  
+> -extern int ocxl_sysfs_add_afu(struct ocxl_afu *afu);
+> -extern void ocxl_sysfs_remove_afu(struct ocxl_afu *afu);
+> +int ocxl_sysfs_add_afu(struct ocxl_afu *afu);
+> +void ocxl_sysfs_remove_afu(struct ocxl_afu *afu);
+>  
+> -extern int ocxl_afu_irq_alloc(struct ocxl_context *ctx, u64 *irq_offset);
+> -extern int ocxl_afu_irq_free(struct ocxl_context *ctx, u64 irq_offset);
+> -extern void ocxl_afu_irq_free_all(struct ocxl_context *ctx);
+> -extern int ocxl_afu_irq_set_fd(struct ocxl_context *ctx, u64 irq_offset,
+> +int ocxl_afu_irq_alloc(struct ocxl_context *ctx, u64 *irq_offset);
+> +int ocxl_afu_irq_free(struct ocxl_context *ctx, u64 irq_offset);
+> +void ocxl_afu_irq_free_all(struct ocxl_context *ctx);
+> +int ocxl_afu_irq_set_fd(struct ocxl_context *ctx, u64 irq_offset,
+>  			int eventfd);
+> -extern u64 ocxl_afu_irq_get_addr(struct ocxl_context *ctx, u64 irq_offset);
+> +u64 ocxl_afu_irq_get_addr(struct ocxl_context *ctx, u64 irq_offset);
+>  
+>  #endif /* _OCXL_INTERNAL_H_ */
+> diff --git a/include/misc/ocxl.h b/include/misc/ocxl.h
+> index 9ff6ddc28e22..4544573cc93c 100644
+> --- a/include/misc/ocxl.h
+> +++ b/include/misc/ocxl.h
+> @@ -53,7 +53,7 @@ struct ocxl_fn_config {
+>   * Read the configuration space of a function and fill in a
+>   * ocxl_fn_config structure with all the function details
+>   */
+> -extern int ocxl_config_read_function(struct pci_dev *dev,
+> +int ocxl_config_read_function(struct pci_dev *dev,
+>  				struct ocxl_fn_config *fn);
+>  
+>  /*
+> @@ -62,14 +62,14 @@ extern int ocxl_config_read_function(struct pci_dev *dev,
+>   * AFU indexes can be sparse, so a driver should check all indexes up
+>   * to the maximum found in the function description
+>   */
+> -extern int ocxl_config_check_afu_index(struct pci_dev *dev,
+> +int ocxl_config_check_afu_index(struct pci_dev *dev,
+>  				struct ocxl_fn_config *fn, int afu_idx);
+>  
+>  /*
+>   * Read the configuration space of a function for the AFU specified by
+>   * the index 'afu_idx'. Fills in a ocxl_afu_config structure
+>   */
+> -extern int ocxl_config_read_afu(struct pci_dev *dev,
+> +int ocxl_config_read_afu(struct pci_dev *dev,
+>  				struct ocxl_fn_config *fn,
+>  				struct ocxl_afu_config *afu,
+>  				u8 afu_idx);
+> @@ -77,7 +77,7 @@ extern int ocxl_config_read_afu(struct pci_dev *dev,
+>  /*
+>   * Get the max PASID value that can be used by the function
+>   */
+> -extern int ocxl_config_get_pasid_info(struct pci_dev *dev, int *count);
+> +int ocxl_config_get_pasid_info(struct pci_dev *dev, int *count);
+>  
+>  /*
+>   * Tell an AFU, by writing in the configuration space, the PASIDs that
+> @@ -87,7 +87,7 @@ extern int ocxl_config_get_pasid_info(struct pci_dev *dev, int *count);
+>   * 'afu_control_offset' is the offset of the AFU control DVSEC which
+>   * can be found in the function configuration
+>   */
+> -extern void ocxl_config_set_afu_pasid(struct pci_dev *dev,
+> +void ocxl_config_set_afu_pasid(struct pci_dev *dev,
+>  				int afu_control_offset,
+>  				int pasid_base, u32 pasid_count_log);
+>  
+> @@ -98,7 +98,7 @@ extern void ocxl_config_set_afu_pasid(struct pci_dev *dev,
+>   * 'supported' is the total number of actags desired by all the AFUs
+>   *             of the function.
+>   */
+> -extern int ocxl_config_get_actag_info(struct pci_dev *dev,
+> +int ocxl_config_get_actag_info(struct pci_dev *dev,
+>  				u16 *base, u16 *enabled, u16 *supported);
+>  
+>  /*
+> @@ -108,7 +108,7 @@ extern int ocxl_config_get_actag_info(struct pci_dev *dev,
+>   * 'func_offset' is the offset of the Function DVSEC that can found in
+>   * the function configuration
+>   */
+> -extern void ocxl_config_set_actag(struct pci_dev *dev, int func_offset,
+> +void ocxl_config_set_actag(struct pci_dev *dev, int func_offset,
+>  				u32 actag_base, u32 actag_count);
+>  
+>  /*
+> @@ -118,7 +118,7 @@ extern void ocxl_config_set_actag(struct pci_dev *dev, int func_offset,
+>   * 'afu_control_offset' is the offset of the AFU control DVSEC for the
+>   * desired AFU. It can be found in the AFU configuration
+>   */
+> -extern void ocxl_config_set_afu_actag(struct pci_dev *dev,
+> +void ocxl_config_set_afu_actag(struct pci_dev *dev,
+>  				int afu_control_offset,
+>  				int actag_base, int actag_count);
+>  
+> @@ -128,7 +128,7 @@ extern void ocxl_config_set_afu_actag(struct pci_dev *dev,
+>   * 'afu_control_offset' is the offset of the AFU control DVSEC for the
+>   * desired AFU. It can be found in the AFU configuration
+>   */
+> -extern void ocxl_config_set_afu_state(struct pci_dev *dev,
+> +void ocxl_config_set_afu_state(struct pci_dev *dev,
+>  				int afu_control_offset, int enable);
+>  
+>  /*
+> @@ -139,7 +139,7 @@ extern void ocxl_config_set_afu_state(struct pci_dev *dev,
+>   * between the host and device, and set the Transaction Layer on both
+>   * accordingly.
+>   */
+> -extern int ocxl_config_set_TL(struct pci_dev *dev, int tl_dvsec);
+> +int ocxl_config_set_TL(struct pci_dev *dev, int tl_dvsec);
+>  
+>  /*
+>   * Request an AFU to terminate a PASID.
+> @@ -152,7 +152,7 @@ extern int ocxl_config_set_TL(struct pci_dev *dev, int tl_dvsec);
+>   * 'afu_control_offset' is the offset of the AFU control DVSEC for the
+>   * desired AFU. It can be found in the AFU configuration
+>   */
+> -extern int ocxl_config_terminate_pasid(struct pci_dev *dev,
+> +int ocxl_config_terminate_pasid(struct pci_dev *dev,
+>  				int afu_control_offset, int pasid);
+>  
+>  /*
+> @@ -165,13 +165,13 @@ extern int ocxl_config_terminate_pasid(struct pci_dev *dev,
+>   * Returns a 'link handle' that should be used for further calls for
+>   * the link
+>   */
+> -extern int ocxl_link_setup(struct pci_dev *dev, int PE_mask,
+> +int ocxl_link_setup(struct pci_dev *dev, int PE_mask,
+>  			void **link_handle);
+>  
+>  /*
+>   * Remove the association between the function and its link.
+>   */
+> -extern void ocxl_link_release(struct pci_dev *dev, void *link_handle);
+> +void ocxl_link_release(struct pci_dev *dev, void *link_handle);
+>  
+>  /*
+>   * Add a Process Element to the Shared Process Area for a link.
+> @@ -183,7 +183,7 @@ extern void ocxl_link_release(struct pci_dev *dev, void *link_handle);
+>   * 'xsl_err_data' is an argument passed to the above callback, if
+>   * defined
+>   */
+> -extern int ocxl_link_add_pe(void *link_handle, int pasid, u32 pidr, u32 tidr,
+> +int ocxl_link_add_pe(void *link_handle, int pasid, u32 pidr, u32 tidr,
+>  		u64 amr, struct mm_struct *mm,
+>  		void (*xsl_err_cb)(void *data, u64 addr, u64 dsisr),
+>  		void *xsl_err_data);
+> @@ -195,12 +195,12 @@ extern int ocxl_link_add_pe(void *link_handle, int pasid, u32 pidr, u32 tidr,
+>   * pasid: the PASID for the AFU context
+>   * tid: the new thread id for the process element
+>   */
+> -extern int ocxl_link_update_pe(void *link_handle, int pasid, __u16 tid);
+> +int ocxl_link_update_pe(void *link_handle, int pasid, __u16 tid);
+>  
+>  /*
+>   * Remove a Process Element from the Shared Process Area for a link
+>   */
+> -extern int ocxl_link_remove_pe(void *link_handle, int pasid);
+> +int ocxl_link_remove_pe(void *link_handle, int pasid);
+>  
+>  /*
+>   * Allocate an AFU interrupt associated to the link.
+> @@ -212,12 +212,12 @@ extern int ocxl_link_remove_pe(void *link_handle, int pasid);
+>   * interrupt. It is an MMIO address which needs to be remapped (one
+>   * page).
+>   */
+> -extern int ocxl_link_irq_alloc(void *link_handle, int *hw_irq,
+> +int ocxl_link_irq_alloc(void *link_handle, int *hw_irq,
+>  			u64 *obj_handle);
+>  
+>  /*
+>   * Free a previously allocated AFU interrupt
+>   */
+> -extern void ocxl_link_free_irq(void *link_handle, int hw_irq);
+> +void ocxl_link_free_irq(void *link_handle, int hw_irq);
+>  
+>  #endif /* _MISC_OCXL_H_ */
 
-Why moving this down, why not leaving at the same place as before ?
-
-If you really need to move it, you should remove the 'extern' at the 
-same time to make checkpatch happy.
-
-> +
-> +static inline struct paca_struct *get_paca_no_preempt_check(void)
-> +{
-> +	register struct paca_struct *paca asm("r13");
-
-Should be a blank line there.
-
-> +	return paca;
-> +}
-> +
-> +static inline struct paca_struct *get_paca(void)
-> +{
-> +#if defined(CONFIG_DEBUG_PREEMPT) && defined(CONFIG_SMP)
-> +	/*
-> +	 * Add standard checks that preemption cannot occur when using get_paca():
-> +	 * otherwise the paca_struct it points to may be the wrong one just after.
-> +	 */
-> +	debug_smp_processor_id();
-> +#endif
-> +	return get_paca_no_preempt_check();
-> +}
-> +
-> +#define local_paca	get_paca_no_preempt_check()
-> +
-> +static inline void set_paca(struct paca_struct *new)
-> +{
-> +	register struct paca_struct *paca asm("r13");
-
-Blank line should be added here.
-
-> +	paca = new;
-> +}
-> +
-> +
->   extern void copy_mm_to_paca(struct mm_struct *mm);
->   extern struct paca_struct **paca_ptrs;
->   extern void initialise_paca(struct paca_struct *new_paca, int cpu);
-> diff --git a/arch/powerpc/kernel/paca.c b/arch/powerpc/kernel/paca.c
-> index 913bfca09c4f..ae5c243f9d5a 100644
-> --- a/arch/powerpc/kernel/paca.c
-> +++ b/arch/powerpc/kernel/paca.c
-> @@ -172,7 +172,7 @@ void __init initialise_paca(struct paca_struct *new_paca, int cpu)
->   void setup_paca(struct paca_struct *new_paca)
->   {
->   	/* Setup r13 */
-> -	local_paca = new_paca;
-> +	set_paca(new_paca);
->   
->   #ifdef CONFIG_PPC_BOOK3E
->   	/* On Book3E, initialize the TLB miss exception frames */
-> 
-
-Christophe
