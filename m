@@ -7,25 +7,25 @@ X-Spam-Status: No, score=-12.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 181D7C43381
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 Mar 2019 15:41:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 281B4C43381
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 Mar 2019 15:41:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DDDF42146E
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 Mar 2019 15:41:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E29B120693
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 Mar 2019 15:41:42 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1552491698;
-	bh=d4UdD16OQq8BCqz38LiAC7H1j/rVITfCm0tW1YIvEhI=;
+	s=default; t=1552491703;
+	bh=1iFZ1kNnYpc/aUxAOYZpMXVGTWQfaQQEEF6REnzieSk=;
 	h=From:To:Cc:Subject:In-Reply-To:Date:List-ID:From;
-	b=fiWglTmrdSSJRbBjjRvHpdMFJrxnDi4+zRezj63feArVmMqw3Y3WCppcOV1cCxsEr
-	 IAAZK15BIpb7q9Nj4KdcY/0PoqF+1m8U0dNatFhjJNncGphSuA4E2wz/t67po/UxAF
-	 fH3QR0fG8k6pSSYHnjDnM6e5rRBT/Wm7YKXLk6KU=
+	b=ztpmxjt1Odd24r8f0K6dhsCofzHFMkB9HbqbmHaNctqPYip0u5mI2vAgOxR7+xkfS
+	 aW/6GYzY5fwv6O27igoHN9czFslnPoKzK6iEf+r0YEFS45DUKbPB/3YHrFRqm6SPCx
+	 /oxvP/XmRK//2t78Z2TKuAcgX3+3uKsY0kDSycbk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727382AbfCMPlh (ORCPT
+        id S1727370AbfCMPlf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 13 Mar 2019 11:41:37 -0400
-Received: from heliosphere.sirena.org.uk ([172.104.155.198]:49908 "EHLO
+        Wed, 13 Mar 2019 11:41:35 -0400
+Received: from heliosphere.sirena.org.uk ([172.104.155.198]:49942 "EHLO
         heliosphere.sirena.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726033AbfCMPjK (ORCPT
+        with ESMTP id S1726688AbfCMPjK (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Wed, 13 Mar 2019 11:39:10 -0400
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
@@ -34,34 +34,25 @@ DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
         Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
         Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:References:
         List-Id:List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:
-        List-Archive; bh=7WFL3W2M3ADq+FKR8oU8nBzoFiliH+Io6Beopa2Nrfg=; b=lTOWZh6UoKjP
-        ObrBt+LH7Y1TfJBTtKH+vOGI5RixS+7dmy4XU/KGgoah7LVf8/ZkX994MSHWSAxtJ+wfPOALbTXsQ
-        pzSR49nTHASMn16YbkkULlCuBzXM1KSE4GL/XOxDtOu+VA1mCfZfTbrLXOwoFRYcWtA5TMOXScEeT
-        sYeDs=;
+        List-Archive; bh=vXVRXxL3rSCHYssJIDs839OhdVDn8xoOkDWc3SuQBew=; b=jBeTrvai4nx8
+        wH8xXpi4mZPvtv709PAVu3X/czm0dbaa6svsxXgVTjBZ3S6b6BHj8CMXwK5BXmd0oTUGoGpSLL2+F
+        Y6GmZBVmSKjN4L9MVv8a/2LyfNflCRHHIptV/0tGrL1mucB/yEA+avi45Ijh2+XyxnKAoZCQAoVvy
+        Gje5c=;
 Received: from cpc102320-sgyl38-2-0-cust46.18-2.cable.virginm.net ([82.37.168.47] helo=debutante.sirena.org.uk)
         by heliosphere.sirena.org.uk with esmtpa (Exim 4.89)
         (envelope-from <broonie@sirena.org.uk>)
-        id 1h45y3-0003RL-KB; Wed, 13 Mar 2019 15:38:55 +0000
+        id 1h45yD-0003S3-Uu; Wed, 13 Mar 2019 15:39:05 +0000
 Received: by debutante.sirena.org.uk (Postfix, from userid 1000)
-        id 143DC1128B97; Wed, 13 Mar 2019 15:38:55 +0000 (GMT)
+        id 6723D1128B97; Wed, 13 Mar 2019 15:39:05 +0000 (GMT)
 From:   Mark Brown <broonie@kernel.org>
-To:     Arnd Bergmann <arnd@arndb.de>
-Cc:     Peter Ujfalusi <peter.ujfalusi@ti.com>,
-        Mark Brown <broonie@kernel.org>,
-        Peter Ujfalusi <peter.ujfalusi@ti.com>,
-        Mark Brown <broonie@kernel.org>, alsa-devel@alsa-project.org,
-        Kees Cook <keescook@chromium.org>,
-        Tony Lindgren <tony@atomide.com>, linux-kernel@vger.kernel.org,
-        Nick Desaulniers <ndesaulniers@google.com>,
-        Takashi Iwai <tiwai@suse.com>,
-        Liam Girdwood <lgirdwood@gmail.com>,
-        Vishal Thanki <vishalthanki@gmail.com>,
-        alsa-devel@alsa-project.org
-Subject: Applied "ASoC: davinci-mcasp: Fix clang warning without CONFIG_PM" to the asoc tree
-In-Reply-To:  <20190307101145.636705-1-arnd@arndb.de>
+To:     Axel Lin <axel.lin@ingics.com>
+Cc:     Charles Keepax <ckeepax@opensource.cirrus.com>,
+        Mark Brown <broonie@kernel.org>, linux-kernel@vger.kernel.org
+Subject: Applied "regulator: wm8350: Convert to use regulator_set/get_current_limit_regmap" to the regulator tree
+In-Reply-To: 
 X-Patchwork-Hint: ignore
-Message-Id: <20190313153855.143DC1128B97@debutante.sirena.org.uk>
-Date:   Wed, 13 Mar 2019 15:38:55 +0000 (GMT)
+Message-Id: <20190313153905.6723D1128B97@debutante.sirena.org.uk>
+Date:   Wed, 13 Mar 2019 15:39:05 +0000 (GMT)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
@@ -69,11 +60,11 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 The patch
 
-   ASoC: davinci-mcasp: Fix clang warning without CONFIG_PM
+   regulator: wm8350: Convert to use regulator_set/get_current_limit_regmap
 
-has been applied to the asoc tree at
+has been applied to the regulator tree at
 
-   https://git.kernel.org/pub/scm/linux/kernel/git/broonie/sound.git 
+   https://git.kernel.org/pub/scm/linux/kernel/git/broonie/regulator.git 
 
 All being well this means that it will be integrated into the linux-next
 tree (usually sometime in the next 24 hours) and sent to Linus during
@@ -94,49 +85,141 @@ to this mail.
 Thanks,
 Mark
 
-From 8ca5104715cfd14254ea5aecc390ae583b707607 Mon Sep 17 00:00:00 2001
-From: Arnd Bergmann <arnd@arndb.de>
-Date: Thu, 7 Mar 2019 11:11:30 +0100
-Subject: [PATCH] ASoC: davinci-mcasp: Fix clang warning without CONFIG_PM
+From dfeb7a93bf3b26e6779e0b38b25877c0540652e6 Mon Sep 17 00:00:00 2001
+From: Axel Lin <axel.lin@ingics.com>
+Date: Wed, 13 Mar 2019 00:33:57 +0800
+Subject: [PATCH] regulator: wm8350: Convert to use
+ regulator_set/get_current_limit_regmap
 
-Building with clang shows a variable that is only used by the
-suspend/resume functions but defined outside of their #ifdef block:
+Use regulator_set/get_current_limit_regmap helpers to save some code.
 
-sound/soc/ti/davinci-mcasp.c:48:12: error: variable 'context_regs' is not needed and will not be emitted
-
-We commonly fix these by marking the PM functions as __maybe_unused,
-but here that would grow the davinci_mcasp structure, so instead
-add another #ifdef here.
-
-Fixes: 1cc0c054f380 ("ASoC: davinci-mcasp: Convert the context save/restore to use array")
-Signed-off-by: Arnd Bergmann <arnd@arndb.de>
-Acked-by: Peter Ujfalusi <peter.ujfalusi@ti.com>
-Reviewed-by: Nathan Chancellor <natechancellor@gmail.com>
+Signed-off-by: Axel Lin <axel.lin@ingics.com>
+Acked-by: Charles Keepax <ckeepax@opensource.cirrus.com>
 Signed-off-by: Mark Brown <broonie@kernel.org>
 ---
- sound/soc/ti/davinci-mcasp.c | 2 ++
- 1 file changed, 2 insertions(+)
+ drivers/regulator/wm8350-regulator.c | 81 ++++------------------------
+ 1 file changed, 11 insertions(+), 70 deletions(-)
 
-diff --git a/sound/soc/ti/davinci-mcasp.c b/sound/soc/ti/davinci-mcasp.c
-index a3a67a8f0f54..9fbc759fdefe 100644
---- a/sound/soc/ti/davinci-mcasp.c
-+++ b/sound/soc/ti/davinci-mcasp.c
-@@ -45,6 +45,7 @@
+diff --git a/drivers/regulator/wm8350-regulator.c b/drivers/regulator/wm8350-regulator.c
+index d1758a2bc769..0eb3f3a33caa 100644
+--- a/drivers/regulator/wm8350-regulator.c
++++ b/drivers/regulator/wm8350-regulator.c
+@@ -28,7 +28,7 @@
+ #define WM8350_DCDC_MAX_VSEL 0x66
  
- #define MCASP_MAX_AFIFO_DEPTH	64
- 
-+#ifdef CONFIG_PM
- static u32 context_regs[] = {
- 	DAVINCI_MCASP_TXFMCTL_REG,
- 	DAVINCI_MCASP_RXFMCTL_REG,
-@@ -68,6 +69,7 @@ struct davinci_mcasp_context {
- 	u32	*xrsr_regs; /* for serializer configuration */
- 	bool	pm_state;
+ /* Microamps */
+-static const int isink_cur[] = {
++static const unsigned int isink_cur[] = {
+ 	4,
+ 	5,
+ 	6,
+@@ -95,73 +95,6 @@ static const int isink_cur[] = {
+ 	223191
  };
-+#endif
  
- struct davinci_mcasp_ruledata {
- 	struct davinci_mcasp *mcasp;
+-static int get_isink_val(int min_uA, int max_uA, u16 *setting)
+-{
+-	int i;
+-
+-	for (i = ARRAY_SIZE(isink_cur) - 1; i >= 0; i--) {
+-		if (min_uA <= isink_cur[i] && max_uA >= isink_cur[i]) {
+-			*setting = i;
+-			return 0;
+-		}
+-	}
+-	return -EINVAL;
+-}
+-
+-static int wm8350_isink_set_current(struct regulator_dev *rdev, int min_uA,
+-	int max_uA)
+-{
+-	struct wm8350 *wm8350 = rdev_get_drvdata(rdev);
+-	int isink = rdev_get_id(rdev);
+-	u16 val, setting;
+-	int ret;
+-
+-	ret = get_isink_val(min_uA, max_uA, &setting);
+-	if (ret != 0)
+-		return ret;
+-
+-	switch (isink) {
+-	case WM8350_ISINK_A:
+-		val = wm8350_reg_read(wm8350, WM8350_CURRENT_SINK_DRIVER_A) &
+-		    ~WM8350_CS1_ISEL_MASK;
+-		wm8350_reg_write(wm8350, WM8350_CURRENT_SINK_DRIVER_A,
+-				 val | setting);
+-		break;
+-	case WM8350_ISINK_B:
+-		val = wm8350_reg_read(wm8350, WM8350_CURRENT_SINK_DRIVER_B) &
+-		    ~WM8350_CS1_ISEL_MASK;
+-		wm8350_reg_write(wm8350, WM8350_CURRENT_SINK_DRIVER_B,
+-				 val | setting);
+-		break;
+-	default:
+-		return -EINVAL;
+-	}
+-
+-	return 0;
+-}
+-
+-static int wm8350_isink_get_current(struct regulator_dev *rdev)
+-{
+-	struct wm8350 *wm8350 = rdev_get_drvdata(rdev);
+-	int isink = rdev_get_id(rdev);
+-	u16 val;
+-
+-	switch (isink) {
+-	case WM8350_ISINK_A:
+-		val = wm8350_reg_read(wm8350, WM8350_CURRENT_SINK_DRIVER_A) &
+-		    WM8350_CS1_ISEL_MASK;
+-		break;
+-	case WM8350_ISINK_B:
+-		val = wm8350_reg_read(wm8350, WM8350_CURRENT_SINK_DRIVER_B) &
+-		    WM8350_CS1_ISEL_MASK;
+-		break;
+-	default:
+-		return 0;
+-	}
+-
+-	return isink_cur[val];
+-}
+-
+ /* turn on ISINK followed by DCDC */
+ static int wm8350_isink_enable(struct regulator_dev *rdev)
+ {
+@@ -982,8 +915,8 @@ static const struct regulator_ops wm8350_ldo_ops = {
+ };
+ 
+ static const struct regulator_ops wm8350_isink_ops = {
+-	.set_current_limit = wm8350_isink_set_current,
+-	.get_current_limit = wm8350_isink_get_current,
++	.set_current_limit = regulator_set_current_limit_regmap,
++	.get_current_limit = regulator_get_current_limit_regmap,
+ 	.enable = wm8350_isink_enable,
+ 	.disable = wm8350_isink_disable,
+ 	.is_enabled = wm8350_isink_is_enabled,
+@@ -1138,6 +1071,10 @@ static const struct regulator_desc wm8350_reg[NUM_WM8350_REGULATORS] = {
+ 		.irq = WM8350_IRQ_CS1,
+ 		.type = REGULATOR_CURRENT,
+ 		.owner = THIS_MODULE,
++		.curr_table = isink_cur,
++		.n_current_limits = ARRAY_SIZE(isink_cur),
++		.csel_reg = WM8350_CURRENT_SINK_DRIVER_A,
++		.csel_mask = WM8350_CS1_ISEL_MASK,
+ 	 },
+ 	{
+ 		.name = "ISINKB",
+@@ -1146,6 +1083,10 @@ static const struct regulator_desc wm8350_reg[NUM_WM8350_REGULATORS] = {
+ 		.irq = WM8350_IRQ_CS2,
+ 		.type = REGULATOR_CURRENT,
+ 		.owner = THIS_MODULE,
++		.curr_table = isink_cur,
++		.n_current_limits = ARRAY_SIZE(isink_cur),
++		.csel_reg = WM8350_CURRENT_SINK_DRIVER_B,
++		.csel_mask = WM8350_CS2_ISEL_MASK,
+ 	 },
+ };
+ 
 -- 
 2.20.1
 
