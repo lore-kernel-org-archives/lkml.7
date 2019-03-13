@@ -2,201 +2,421 @@ Return-Path: <SRS0=dUEL=RQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_MUTT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7E13BC10F03
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 Mar 2019 23:09:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F0CC3C43381
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 Mar 2019 23:12:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3F0F421019
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 Mar 2019 23:09:39 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="KSIOjLHj"
+	by mail.kernel.org (Postfix) with ESMTP id AA5A121019
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 Mar 2019 23:12:00 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726730AbfCMXJh (ORCPT
+        id S1727066AbfCMXL7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 13 Mar 2019 19:09:37 -0400
-Received: from merlin.infradead.org ([205.233.59.134]:55716 "EHLO
-        merlin.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725876AbfCMXJh (ORCPT
+        Wed, 13 Mar 2019 19:11:59 -0400
+Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:55518 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726078AbfCMXL6 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 13 Mar 2019 19:09:37 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=merlin.20170209; h=Content-Transfer-Encoding:Content-Type:
-        In-Reply-To:MIME-Version:Date:Message-ID:References:Cc:To:From:Subject:Sender
-        :Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
-        Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
-        List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-        bh=cRnRCzbuawIgAh21G+evH1q2P2gaMH7A3zUXEBHFv08=; b=KSIOjLHjJy82JByVXGHLLFEHvB
-        dTMhur+5lEPpZcc3V/ZGZg+5LHCog1fSPv3OdK9T/GIG3oC3VqP4AB88TtzQscpXgcvh1CEUs73of
-        dypo46x1pQ3MspA1i8GR5fcR0x2LTCUejDURd1k0resn/ArP8gQAn9p48lYe2yYyiVrwKfSfM4EWa
-        xU9DN4/kMXGchVQ1t0UGvo1K77KfKT6kLixHXll6vnTwNaq+6hIKTCDdGqNqeJWxY6Zwz7A0qYHvs
-        noABiXsQyZBAQuMytc4c4f75NOIF3OBiaXkhxRy0/KlHRAQpzg47otQ5KpRhgOvDRydt5tlsku9nV
-        /yWfXtdQ==;
-Received: from static-50-53-52-16.bvtn.or.frontiernet.net ([50.53.52.16] helo=dragon.dunlab)
-        by merlin.infradead.org with esmtpsa (Exim 4.90_1 #2 (Red Hat Linux))
-        id 1h4D07-0000t9-DS; Wed, 13 Mar 2019 23:09:32 +0000
-Subject: Re: paride/pf.c: blk-mq use-after-free (kernel v5.0)
-From:   Randy Dunlap <rdunlap@infradead.org>
-To:     linux-block <linux-block@vger.kernel.org>, axboe <axboe@kernel.dk>
-Cc:     LKML <linux-kernel@vger.kernel.org>, Tim Waugh <tim@cyberelk.net>,
-        linux-parport@lists.infradead.org
-References: <30c63b2d-92d2-51be-40f0-62cada110388@infradead.org>
- <7d24a06f-f219-e50a-e8f8-915a6cc1b796@infradead.org>
-Message-ID: <e2a66da2-5433-5b42-1ebe-9f1c135b5471@infradead.org>
-Date:   Wed, 13 Mar 2019 16:09:24 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.5.1
+        Wed, 13 Mar 2019 19:11:58 -0400
+Received: from pps.filterd (m0098421.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x2DN3RDT145936
+        for <linux-kernel@vger.kernel.org>; Wed, 13 Mar 2019 19:11:57 -0400
+Received: from e12.ny.us.ibm.com (e12.ny.us.ibm.com [129.33.205.202])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 2r78r5x4p3-1
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
+        for <linux-kernel@vger.kernel.org>; Wed, 13 Mar 2019 19:11:56 -0400
+Received: from localhost
+        by e12.ny.us.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
+        for <linux-kernel@vger.kernel.org> from <paulmck@linux.vnet.ibm.com>;
+        Wed, 13 Mar 2019 23:11:56 -0000
+Received: from b01cxnp23033.gho.pok.ibm.com (9.57.198.28)
+        by e12.ny.us.ibm.com (146.89.104.199) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
+        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
+        Wed, 13 Mar 2019 23:11:52 -0000
+Received: from b01ledav003.gho.pok.ibm.com (b01ledav003.gho.pok.ibm.com [9.57.199.108])
+        by b01cxnp23033.gho.pok.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x2DNBpUx17170480
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Wed, 13 Mar 2019 23:11:51 GMT
+Received: from b01ledav003.gho.pok.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 5EC62B2064;
+        Wed, 13 Mar 2019 23:11:51 +0000 (GMT)
+Received: from b01ledav003.gho.pok.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 3B4CDB2065;
+        Wed, 13 Mar 2019 23:11:51 +0000 (GMT)
+Received: from paulmck-ThinkPad-W541 (unknown [9.70.82.188])
+        by b01ledav003.gho.pok.ibm.com (Postfix) with ESMTP;
+        Wed, 13 Mar 2019 23:11:51 +0000 (GMT)
+Received: by paulmck-ThinkPad-W541 (Postfix, from userid 1000)
+        id 6F4D516C3573; Wed, 13 Mar 2019 16:11:55 -0700 (PDT)
+Date:   Wed, 13 Mar 2019 16:11:55 -0700
+From:   "Paul E. McKenney" <paulmck@linux.ibm.com>
+To:     Tejun Heo <tj@kernel.org>
+Cc:     Barret Rhoden <brho@google.com>,
+        Christopher Lameter <cl@linux.com>,
+        Dennis Zhou <dennis@kernel.org>,
+        Eial Czerwacki <eial@scalemp.com>,
+        linux-kernel@vger.kernel.org, Shai Fultheim <shai@scalemp.com>,
+        Oren Twaig <oren@scalemp.com>
+Subject: Re: [PATCH] percpu/module resevation: change resevation size iff
+ X86_VSMP is set
+Reply-To: paulmck@linux.ibm.com
+References: <1548071251-1849-1-git-send-email-eial@scalemp.com>
+ <a7eff2ed-0e80-edae-2a97-a3fdab2d05f5@google.com>
+ <20190301203455.GA97188@dennisz-mbp.dhcp.thefacebook.com>
+ <c72402f2-967e-cd56-99d8-9139c9e7f267@google.com>
+ <010001693b404440-248fa987-624c-4587-940b-56e2ed4226d9-000000@email.amazonses.com>
+ <85726648-82f3-6b6b-a749-03c4159e78f3@google.com>
+ <20190313202640.GJ50184@devbig004.ftw2.facebook.com>
+ <20190313212255.GY13351@linux.ibm.com>
+ <20190313212912.GK50184@devbig004.ftw2.facebook.com>
 MIME-Version: 1.0
-In-Reply-To: <7d24a06f-f219-e50a-e8f8-915a6cc1b796@infradead.org>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190313212912.GK50184@devbig004.ftw2.facebook.com>
+User-Agent: Mutt/1.5.21 (2010-09-15)
+X-TM-AS-GCONF: 00
+x-cbid: 19031323-0060-0000-0000-0000031BEB5E
+X-IBM-SpamModules-Scores: 
+X-IBM-SpamModules-Versions: BY=3.00010753; HX=3.00000242; KW=3.00000007;
+ PH=3.00000004; SC=3.00000281; SDB=6.01173969; UDB=6.00613841; IPR=6.00954633;
+ MB=3.00025968; MTD=3.00000008; XFM=3.00000015; UTC=2019-03-13 23:11:55
+X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
+x-cbparentid: 19031323-0061-0000-0000-00004899B998
+Message-Id: <20190313231155.GC13351@linux.ibm.com>
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-03-13_13:,,
+ signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
+ malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
+ clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
+ mlxlogscore=999 adultscore=0 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.0.1-1810050000 definitions=main-1903130158
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 3/11/19 6:34 PM, Randy Dunlap wrote:
-> On 3/11/19 6:25 PM, Randy Dunlap wrote:
->> [Has this already been addressed/fixed?]>>
+On Wed, Mar 13, 2019 at 02:29:12PM -0700, Tejun Heo wrote:
+> Hello,
 > 
-> Same bug occurs with paride/pcd.c driver.
-
-This still happens (in blk-mq) in v5.0-11053-gebc551f2b8f9 of Mar. 12, 2019,
-around 4pm PT.  [caused by paride: pf.c and pcd.c)
-
-
+> On Wed, Mar 13, 2019 at 02:22:55PM -0700, Paul E. McKenney wrote:
+> > Should I define DEFINE_SRCU() and DEFINE_STATIC_SRCU() only if
+> > !defined(MODULE)?
 > 
->>
->> [ 1688.055696] calling  pf_init+0x0/0x1000 [pf] @ 8572
->> [ 1688.058871] pf: pf version 1.04, major 47, cluster 64, nice 0
->> [ 1688.064381] pf: No ATAPI disk detected
->> [ 1688.064783] initcall pf_init+0x0/0x1000 [pf] returned -19 after 8827 usecs
->> [ 1688.322562] calling  pf_init+0x0/0x1000 [pf] @ 8582
->> [ 1688.323566] ==================================================================
->> [ 1688.323621] BUG: KASAN: use-after-free in __cpuhp_state_add_instance_cpuslocked+0x33f/0x430
->> [ 1688.323669] Write of size 8 at addr ffff888117051810 by task modprobe/8582
->>
->> [ 1688.323729] CPU: 3 PID: 8582 Comm: modprobe Not tainted 5.0.0mod #2
->> [ 1688.323767] Hardware name: TOSHIBA PORTEGE R835/Portable PC, BIOS Version 4.10   01/08/2013
->> [ 1688.323812] Call Trace:
->> [ 1688.323840]  dump_stack+0x7b/0xb5
->> [ 1688.323874]  print_address_description+0x6e/0x360
->> [ 1688.323916]  kasan_report+0x11a/0x198
->> [ 1688.323948]  ? __cpuhp_state_add_instance_cpuslocked+0x33f/0x430
->> [ 1688.323993]  ? __cpuhp_state_add_instance_cpuslocked+0x33f/0x430
->> [ 1688.324035]  __asan_report_store8_noabort+0x17/0x20
->> [ 1688.324070]  __cpuhp_state_add_instance_cpuslocked+0x33f/0x430
->> [ 1688.324108]  ? blk_mq_realloc_hw_ctxs+0x409/0xfb0
->> [ 1688.324142]  ? __might_sleep+0xa1/0x1b0
->> [ 1688.324178]  ? lockdep_init_map+0x115/0x5e0
->> [ 1688.324215]  __cpuhp_state_add_instance+0x78/0xf0
->> [ 1688.324249]  blk_mq_realloc_hw_ctxs+0x409/0xfb0
->> [ 1688.324279]  ? kasan_unpoison_shadow+0x35/0x50
->> [ 1688.324311]  ? __kasan_kmalloc.constprop.8+0xa7/0xd0
->> [ 1688.324362]  blk_mq_init_allocated_queue+0x404/0x1a00
->> [ 1688.324395]  ? blk_throtl_init+0x431/0x620
->> [ 1688.324430]  ? blkcg_init_queue+0x102/0x190
->> [ 1688.324475]  blk_mq_init_queue+0x56/0x80
->> [ 1688.324507]  blk_mq_init_sq_queue+0x144/0x1a0
->> [ 1688.324547]  pf_init+0x9f/0x1000 [pf]
->> [ 1688.324575]  ? 0xffffffffc0a48000
->> [ 1688.324605]  ? ktime_get+0xba/0x160
->> [ 1688.324634]  ? 0xffffffffc0a48000
->> [ 1688.324662]  do_one_initcall+0xab/0x2ad
->> [ 1688.324692]  ? initcall_blacklisted+0x190/0x190
->> [ 1688.324723]  ? kasan_unpoison_shadow+0x35/0x50
->> [ 1688.324759]  ? kasan_unpoison_shadow+0x35/0x50
->> [ 1688.324788]  ? kasan_unpoison_shadow+0x35/0x50
->> [ 1688.324819]  ? kasan_poison_shadow+0x2f/0x40
->> [ 1688.324849]  ? __asan_register_globals+0x5a/0x70
->> [ 1688.324888]  do_init_module+0x1c7/0x548
->> [ 1688.324926]  load_module+0x445d/0x5de0
->> [ 1688.324999]  ? layout_and_allocate+0x2d00/0x2d00
->> [ 1688.325035]  ? kernel_read+0x90/0x130
->> [ 1688.325074]  ? kasan_check_write+0x14/0x20
->> [ 1688.325105]  ? kernel_read_file+0x24a/0x640
->> [ 1688.325179]  __do_sys_finit_module+0x193/0x1b0
->> [ 1688.325209]  ? __do_sys_finit_module+0x193/0x1b0
->> [ 1688.325242]  ? __ia32_sys_init_module+0xa0/0xa0
->> [ 1688.325275]  ? vfs_statx_fd+0x45/0x80
->> [ 1688.325306]  ? kasan_check_write+0x14/0x20
->> [ 1688.325335]  ? fput+0x18/0x130
->> [ 1688.325363]  ? ksys_mmap_pgoff+0x3d9/0xb50
->> [ 1688.325416]  __x64_sys_finit_module+0x6e/0xb0
->> [ 1688.325442]  ? __x64_sys_newfstat+0x4f/0x70
->> [ 1688.325469]  do_syscall_64+0xaa/0x310
->> [ 1688.325501]  ? prepare_exit_to_usermode+0x8b/0x150
->> [ 1688.325536]  entry_SYSCALL_64_after_hwframe+0x44/0xa9
->> [ 1688.325567] RIP: 0033:0x7f17f52bd129
->> [ 1688.325595] Code: 00 f3 c3 66 2e 0f 1f 84 00 00 00 00 00 0f 1f 40 00 48 89 f8 48 89 f7 48 89 d6 48 89 ca 4d 89 c2 4d 89 c8 4c 8b 4c 24 08 0f 05 <48> 3d 01 f0 ff ff 73 01 c3 48 8b 0d 3f 0d 2c 00 f7 d8 64 89 01 48
->> [ 1688.325679] RSP: 002b:00007fff2e723e38 EFLAGS: 00000246 ORIG_RAX: 0000000000000139
->> [ 1688.325718] RAX: ffffffffffffffda RBX: 00005565f67c0b10 RCX: 00007f17f52bd129
->> [ 1688.325740] RDX: 0000000000000000 RSI: 00005565f65ae548 RDI: 0000000000000003
->> [ 1688.325762] RBP: 00005565f65ae548 R08: 0000000000000000 R09: 00005565f67c0400
->> [ 1688.325783] R10: 0000000000000003 R11: 0000000000000246 R12: 0000000000040000
->> [ 1688.325805] R13: 00005565f67c0c40 R14: 0000000000000000 R15: 00005565f67c0b10
->>
->> [ 1688.325848] Allocated by task 8572:
->> [ 1688.325864]  save_stack+0x43/0xd0
->> [ 1688.325879]  __kasan_kmalloc.constprop.8+0xa7/0xd0
->> [ 1688.325896]  kasan_kmalloc+0x9/0x10
->> [ 1688.325912]  blk_mq_realloc_hw_ctxs+0x18b/0xfb0
->> [ 1688.325929]  blk_mq_init_allocated_queue+0x404/0x1a00
->> [ 1688.325948]  blk_mq_init_queue+0x56/0x80
->> [ 1688.325964]  blk_mq_init_sq_queue+0x144/0x1a0
->> [ 1688.325983]  pf_init+0x9f/0x1000 [pf]
->> [ 1688.325998]  do_one_initcall+0xab/0x2ad
->> [ 1688.326013]  do_init_module+0x1c7/0x548
->> [ 1688.326028]  load_module+0x445d/0x5de0
->> [ 1688.326043]  __do_sys_finit_module+0x193/0x1b0
->> [ 1688.326059]  __x64_sys_finit_module+0x6e/0xb0
->> [ 1688.326075]  do_syscall_64+0xaa/0x310
->> [ 1688.326097]  entry_SYSCALL_64_after_hwframe+0x44/0xa9
->>
->> [ 1688.326142] Freed by task 2217:
->> [ 1688.326160]  save_stack+0x43/0xd0
->> [ 1688.326174]  __kasan_slab_free+0x137/0x190
->> [ 1688.326191]  kasan_slab_free+0xe/0x10
->> [ 1688.326206]  kfree+0xb0/0x1b0
->> [ 1688.326220]  blk_mq_hw_sysfs_release+0x6f/0x90
->> [ 1688.326237]  kobject_put+0x153/0x420
->> [ 1688.326252]  blk_mq_release+0xbc/0x160
->> [ 1688.326267]  __blk_release_queue+0x178/0x320
->> [ 1688.326284]  process_one_work+0x9fb/0x1710
->> [ 1688.326299]  worker_thread+0x85/0xee0
->> [ 1688.326315]  kthread+0x349/0x410
->> [ 1688.326329]  ret_from_fork+0x35/0x40
->>
->> [ 1688.326353] The buggy address belongs to the object at ffff888117051588
->>                 which belongs to the cache kmalloc-1k of size 1024
->> [ 1688.326388] The buggy address is located 648 bytes inside of
->>                 1024-byte region [ffff888117051588, ffff888117051988)
->> [ 1688.326421] The buggy address belongs to the page:
->> [ 1688.326439] page:ffffea00045c1400 count:1 mapcount:0 mapping:ffff888107c16940 index:0x0 compound_mapcount: 0
->> [ 1688.326469] flags: 0x17ffffc0010200(slab|head)
->> [ 1688.326488] raw: 0017ffffc0010200 ffffea0004502408 ffffea00042c6408 ffff888107c16940
->> [ 1688.326512] raw: 0000000000000000 0000000000170017 00000001ffffffff 0000000000000000
->> [ 1688.326535] page dumped because: kasan: bad access detected
->>
->> [ 1688.326562] Memory state around the buggy address:
->> [ 1688.326579]  ffff888117051700: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
->> [ 1688.326602]  ffff888117051780: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
->> [ 1688.326624] >ffff888117051800: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
->> [ 1688.326646]                          ^
->> [ 1688.326660]  ffff888117051880: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
->> [ 1688.326684]  ffff888117051900: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
->> [ 1688.326705] ==================================================================
->> [ 1688.326726] Disabling lock debugging due to kernel taint
->> [ 1688.328731] pf: pf version 1.04, major 47, cluster 64, nice 0
->> [ 1688.336493] pf: No ATAPI disk detected
->> [ 1688.336730] initcall pf_init+0x0/0x1000 [pf] returned -19 after 13791 usecs
->>
-> 
-> 
+> Yeah, that sounds like a great idea with comments explaining why it's
+> like that.
 
+Like this?
 
--- 
-~Randy
+ * Build-time srcu_struct definition is not allowed in modules because
+ * otherwise it is necessary to increase the size of the reserved region
+ * each time a DEFINE_SRCU() or DEFINE_STATIC_SRCU() are added to a
+ * kernel module.  Kernel modules should instead declare an srcu_struct
+ * and then invoke init_srcu_struct() from their module_init function and
+ * cleanup_srcu_struct() from their module_exit function.  Note that modules
+ * using call_srcu() will also need to invoke srcu_barrier() from their
+ * module_exit function.
+
+Also, it looks like Barret beat me to this suggestion.  ;-)
+
+In addition, rcutorture and rcuperf needed to be updated because
+they used to use DEFINE_STATIC_STRUCT() whether built in or built
+as a loadable module.
+
+How does the (very lightly tested) patch below look to you all?
+
+							Thanx, Paul
+
+------------------------------------------------------------------------
+
+commit 34f67df09cc0c6bf082a7cfca435373caeeb8d82
+Author: Paul E. McKenney <paulmck@linux.ibm.com>
+Date:   Wed Mar 13 16:06:22 2019 -0700
+
+    srcu: Forbid DEFINE{,_STATIC}_SRCU() from modules
+    
+    Adding DEFINE_SRCU() or DEFINE_STATIC_SRCU() to a loadable module
+    requires that the size of the reserved region be increased, which is
+    not something we want to be doing all that often.  Instead, loadable
+    modules should define an srcu_struct and invoke init_srcu_struct()
+    from their module_init function and cleanup_srcu_struct() from their
+    module_exit function.  Note that modules using call_srcu() will also
+    need to invoke srcu_barrier() from their module_exit function.
+    
+    This commit enforces this advice by refusing to define DEFINE_SRCU()
+    and DEFINE_STATIC_SRCU() within loadable modules.
+    
+    Suggested-by: Barret Rhoden <brho@google.com>
+    Signed-off-by: Paul E. McKenney <paulmck@linux.ibm.com>
+
+diff --git a/include/linux/srcutree.h b/include/linux/srcutree.h
+index 7f7c8c050f63..ac5ea1c72e97 100644
+--- a/include/linux/srcutree.h
++++ b/include/linux/srcutree.h
+@@ -105,6 +105,15 @@ struct srcu_struct {
+  * Define and initialize a srcu struct at build time.
+  * Do -not- call init_srcu_struct() nor cleanup_srcu_struct() on it.
+  *
++ * Build-time srcu_struct definition is not allowed in modules because
++ * otherwise it is necessary to increase the size of the reserved region
++ * each time a DEFINE_SRCU() or DEFINE_STATIC_SRCU() are added to a
++ * kernel module.  Kernel modules should instead declare an srcu_struct
++ * and then invoke init_srcu_struct() from their module_init function and
++ * cleanup_srcu_struct() from their module_exit function.  Note that modules
++ * using call_srcu() will also need to invoke srcu_barrier() from their
++ * module_exit function.
++ *
+  * Note that although DEFINE_STATIC_SRCU() hides the name from other
+  * files, the per-CPU variable rules nevertheless require that the
+  * chosen name be globally unique.  These rules also prohibit use of
+@@ -120,11 +129,13 @@ struct srcu_struct {
+  *
+  * See include/linux/percpu-defs.h for the rules on per-CPU variables.
+  */
+-#define __DEFINE_SRCU(name, is_static)					\
+-	static DEFINE_PER_CPU(struct srcu_data, name##_srcu_data);\
++#ifndef MODULE
++#  define __DEFINE_SRCU(name, is_static)				\
++	static DEFINE_PER_CPU(struct srcu_data, name##_srcu_data);	\
+ 	is_static struct srcu_struct name = __SRCU_STRUCT_INIT(name, name##_srcu_data)
+-#define DEFINE_SRCU(name)		__DEFINE_SRCU(name, /* not static */)
+-#define DEFINE_STATIC_SRCU(name)	__DEFINE_SRCU(name, static)
++#  define DEFINE_SRCU(name)		__DEFINE_SRCU(name, /* not static */)
++#  define DEFINE_STATIC_SRCU(name)	__DEFINE_SRCU(name, static)
++#endif
+ 
+ void synchronize_srcu_expedited(struct srcu_struct *ssp);
+ void srcu_barrier(struct srcu_struct *ssp);
+diff --git a/kernel/rcu/rcuperf.c b/kernel/rcu/rcuperf.c
+index c29761152874..b44208b3bf95 100644
+--- a/kernel/rcu/rcuperf.c
++++ b/kernel/rcu/rcuperf.c
+@@ -139,6 +139,7 @@ struct rcu_perf_ops {
+ 	void (*sync)(void);
+ 	void (*exp_sync)(void);
+ 	const char *name;
++	const char *altname;
+ };
+ 
+ static struct rcu_perf_ops *cur_ops;
+@@ -186,8 +187,16 @@ static struct rcu_perf_ops rcu_ops = {
+  * Definitions for srcu perf testing.
+  */
+ 
++static struct srcu_struct *srcu_ctlp;
++
++#ifndef MODULE
+ DEFINE_STATIC_SRCU(srcu_ctl_perf);
+-static struct srcu_struct *srcu_ctlp = &srcu_ctl_perf;
++
++static void srcu_sync_perf_init(void)
++{
++	srcu_ctlp = &srcu_ctl_perf
++}
++#endif
+ 
+ static int srcu_perf_read_lock(void) __acquires(srcu_ctlp)
+ {
+@@ -224,9 +233,10 @@ static void srcu_perf_synchronize_expedited(void)
+ 	synchronize_srcu_expedited(srcu_ctlp);
+ }
+ 
++#ifndef MODULE
+ static struct rcu_perf_ops srcu_ops = {
+ 	.ptype		= SRCU_FLAVOR,
+-	.init		= rcu_sync_perf_init,
++	.init		= srcu_sync_perf_init,
+ 	.readlock	= srcu_perf_read_lock,
+ 	.readunlock	= srcu_perf_read_unlock,
+ 	.get_gp_seq	= srcu_perf_completed,
+@@ -238,24 +248,25 @@ static struct rcu_perf_ops srcu_ops = {
+ 	.exp_sync	= srcu_perf_synchronize_expedited,
+ 	.name		= "srcu"
+ };
++#endif
+ 
+ static struct srcu_struct srcud;
+ 
+-static void srcu_sync_perf_init(void)
++static void srcud_sync_perf_init(void)
+ {
+ 	srcu_ctlp = &srcud;
+ 	init_srcu_struct(srcu_ctlp);
+ }
+ 
+-static void srcu_sync_perf_cleanup(void)
++static void srcud_sync_perf_cleanup(void)
+ {
+ 	cleanup_srcu_struct(srcu_ctlp);
+ }
+ 
+ static struct rcu_perf_ops srcud_ops = {
+ 	.ptype		= SRCU_FLAVOR,
+-	.init		= srcu_sync_perf_init,
+-	.cleanup	= srcu_sync_perf_cleanup,
++	.init		= srcud_sync_perf_init,
++	.cleanup	= srcud_sync_perf_cleanup,
+ 	.readlock	= srcu_perf_read_lock,
+ 	.readunlock	= srcu_perf_read_unlock,
+ 	.get_gp_seq	= srcu_perf_completed,
+@@ -265,7 +276,10 @@ static struct rcu_perf_ops srcud_ops = {
+ 	.gp_barrier	= srcu_rcu_barrier,
+ 	.sync		= srcu_perf_synchronize,
+ 	.exp_sync	= srcu_perf_synchronize_expedited,
+-	.name		= "srcud"
++	.name		= "srcud",
++#ifndef MODULE
++	.altname	= "srcu" /* Avoid breaking kbuild test robot. */
++#endif
+ };
+ 
+ /*
+@@ -594,7 +608,11 @@ rcu_perf_init(void)
+ 	long i;
+ 	int firsterr = 0;
+ 	static struct rcu_perf_ops *perf_ops[] = {
+-		&rcu_ops, &srcu_ops, &srcud_ops, &tasks_ops,
++		&rcu_ops,
++#ifndef MODULE
++		&srcu_ops,
++#endif
++		&srcud_ops, &tasks_ops,
+ 	};
+ 
+ 	if (!torture_init_begin(perf_type, verbose))
+@@ -605,6 +623,11 @@ rcu_perf_init(void)
+ 		cur_ops = perf_ops[i];
+ 		if (strcmp(perf_type, cur_ops->name) == 0)
+ 			break;
++		if (cur_ops->altname &&
++		    strcmp(perf_type, cur_ops->altname) == 0) {
++			pr_alert("rcu-perf: substituting perf type: \"%s\" for \"%s\"\n", cur_ops->name, perf_type);
++			break;
++		}
+ 	}
+ 	if (i == ARRAY_SIZE(perf_ops)) {
+ 		pr_alert("rcu-perf: invalid perf type: \"%s\"\n", perf_type);
+diff --git a/kernel/rcu/rcutorture.c b/kernel/rcu/rcutorture.c
+index 5ff797fd3715..e4674c550b0f 100644
+--- a/kernel/rcu/rcutorture.c
++++ b/kernel/rcu/rcutorture.c
+@@ -300,6 +300,7 @@ struct rcu_torture_ops {
+ 	int can_boost;
+ 	int extendables;
+ 	const char *name;
++	const char *altname;
+ };
+ 
+ static struct rcu_torture_ops *cur_ops;
+@@ -496,9 +497,18 @@ static struct rcu_torture_ops rcu_busted_ops = {
+  * Definitions for srcu torture testing.
+  */
+ 
+-DEFINE_STATIC_SRCU(srcu_ctl);
+ static struct srcu_struct srcu_ctld;
+-static struct srcu_struct *srcu_ctlp = &srcu_ctl;
++static struct srcu_struct *srcu_ctlp;
++
++#ifndef MODULE
++DEFINE_STATIC_SRCU(srcu_ctl);
++
++static void srcu_torture_init(void)
++{
++	rcu_sync_torture_init();
++	srcu_ctlp = &srcu_ctl;
++}
++#endif
+ 
+ static int srcu_torture_read_lock(void) __acquires(srcu_ctlp)
+ {
+@@ -565,9 +575,10 @@ static void srcu_torture_synchronize_expedited(void)
+ 	synchronize_srcu_expedited(srcu_ctlp);
+ }
+ 
++#ifndef MODULE
+ static struct rcu_torture_ops srcu_ops = {
+ 	.ttype		= SRCU_FLAVOR,
+-	.init		= rcu_sync_torture_init,
++	.init		= srcu_torture_init,
+ 	.readlock	= srcu_torture_read_lock,
+ 	.read_delay	= srcu_read_delay,
+ 	.readunlock	= srcu_torture_read_unlock,
+@@ -581,25 +592,25 @@ static struct rcu_torture_ops srcu_ops = {
+ 	.irq_capable	= 1,
+ 	.name		= "srcu"
+ };
++#endif
+ 
+-static void srcu_torture_init(void)
++static void srcud_torture_init(void)
+ {
+ 	rcu_sync_torture_init();
+ 	WARN_ON(init_srcu_struct(&srcu_ctld));
+ 	srcu_ctlp = &srcu_ctld;
+ }
+ 
+-static void srcu_torture_cleanup(void)
++static void srcud_torture_cleanup(void)
+ {
+ 	cleanup_srcu_struct(&srcu_ctld);
+-	srcu_ctlp = &srcu_ctl; /* In case of a later rcutorture run. */
+ }
+ 
+ /* As above, but dynamically allocated. */
+ static struct rcu_torture_ops srcud_ops = {
+ 	.ttype		= SRCU_FLAVOR,
+-	.init		= srcu_torture_init,
+-	.cleanup	= srcu_torture_cleanup,
++	.init		= srcud_torture_init,
++	.cleanup	= srcud_torture_cleanup,
+ 	.readlock	= srcu_torture_read_lock,
+ 	.read_delay	= srcu_read_delay,
+ 	.readunlock	= srcu_torture_read_unlock,
+@@ -611,14 +622,17 @@ static struct rcu_torture_ops srcud_ops = {
+ 	.cb_barrier	= srcu_torture_barrier,
+ 	.stats		= srcu_torture_stats,
+ 	.irq_capable	= 1,
+-	.name		= "srcud"
++	.name		= "srcud",
++#ifndef MODULE
++	.altname	= "srcu" /* Avoid breaking kbuild test robot. */
++#endif
+ };
+ 
+ /* As above, but broken due to inappropriate reader extension. */
+ static struct rcu_torture_ops busted_srcud_ops = {
+ 	.ttype		= SRCU_FLAVOR,
+-	.init		= srcu_torture_init,
+-	.cleanup	= srcu_torture_cleanup,
++	.init		= srcud_torture_init,
++	.cleanup	= srcud_torture_cleanup,
+ 	.readlock	= srcu_torture_read_lock,
+ 	.read_delay	= rcu_read_delay,
+ 	.readunlock	= srcu_torture_read_unlock,
+@@ -2235,7 +2249,11 @@ rcu_torture_init(void)
+ 	int cpu;
+ 	int firsterr = 0;
+ 	static struct rcu_torture_ops *torture_ops[] = {
+-		&rcu_ops, &rcu_busted_ops, &srcu_ops, &srcud_ops,
++		&rcu_ops, &rcu_busted_ops,
++#ifndef MODULE
++		&srcu_ops,
++#endif
++		&srcud_ops,
+ 		&busted_srcud_ops, &tasks_ops,
+ 	};
+ 
+@@ -2247,6 +2265,11 @@ rcu_torture_init(void)
+ 		cur_ops = torture_ops[i];
+ 		if (strcmp(torture_type, cur_ops->name) == 0)
+ 			break;
++		if (cur_ops->altname &&
++		    strcmp(torture_type, cur_ops->altname) == 0) {
++			pr_alert("rcu-torture: substituting torture type: \"%s\" for \"%s\"\n", cur_ops->name, torture_type);
++			break;
++		}
+ 	}
+ 	if (i == ARRAY_SIZE(torture_ops)) {
+ 		pr_alert("rcu-torture: invalid torture type: \"%s\"\n",
+
