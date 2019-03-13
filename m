@@ -2,97 +2,131 @@ Return-Path: <SRS0=dUEL=RQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_MUTT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CECE4C43381
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 Mar 2019 19:45:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1EF60C43381
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 Mar 2019 19:46:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A38142146E
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 Mar 2019 19:45:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CB105213A2
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 Mar 2019 19:46:42 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="2efAug8e"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727017AbfCMTpO (ORCPT
+        id S1727071AbfCMTql (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 13 Mar 2019 15:45:14 -0400
-Received: from mail-qt1-f194.google.com ([209.85.160.194]:36368 "EHLO
-        mail-qt1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726420AbfCMTpN (ORCPT
+        Wed, 13 Mar 2019 15:46:41 -0400
+Received: from merlin.infradead.org ([205.233.59.134]:54264 "EHLO
+        merlin.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726328AbfCMTql (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 13 Mar 2019 15:45:13 -0400
-Received: by mail-qt1-f194.google.com with SMTP id b3so3387789qtj.3
-        for <linux-kernel@vger.kernel.org>; Wed, 13 Mar 2019 12:45:13 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=Ipyu9ybUUEPsU55tvzWzKOyy6kBr08ODEhyCDNc2yqQ=;
-        b=jmkQJxdSJB5SyRW8HV7g2SvlKs693KFoewD6NJkiqhz1Fzt7MCJ/Cxy6S0AqKdDfIs
-         kj3uJPmDjKKLnCQMEqk4aU9AKK70j0H4qQm1e3qlNpEiq0u9X73DP9ATDI+HakExg07L
-         ktfr9WSIR1hapsz+Kw4aasu8PVDDhG0KtTxn7WdtljRot1elrHytc8+FZCj56ZWJ7Gu/
-         jpi6RvxJlWbnSa0Jmutjp31za7U8/n3Lp6nDkhTPwDJwQR4WiqouhXRLs8I1Q57NYoge
-         GI5ckqa+JBOiC/GJwspddrcgrdsIJZgWQ8G/sAcrSnS31ELE266rfM2fQWDFhpewCS84
-         7RAQ==
-X-Gm-Message-State: APjAAAUKtbyYwMMPi+VoY19DLQqvsjXbdaP+trsbgwAE8Fp2jhjcxXy/
-        Jfqzc4Dek3RGIuIb+hoypNJg/PmdK+jz+hHcMgs=
-X-Google-Smtp-Source: APXvYqwj5Dockp3MIy2Mhy5XwkyjsVXJnrf8kcJnrnxJlHxeZEu/vvAg02KtEmpFIupkuGGLTFytnv8J8oBBMukeIvg=
-X-Received: by 2002:ac8:237b:: with SMTP id b56mr35713034qtb.343.1552506312212;
- Wed, 13 Mar 2019 12:45:12 -0700 (PDT)
+        Wed, 13 Mar 2019 15:46:41 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=merlin.20170209; h=In-Reply-To:Content-Type:MIME-Version:
+        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=A6s9/htiIv/3TV7CEQdjo1YKJWC3g9qNU18XwRg5TLA=; b=2efAug8e0gqj0ZHi0kFbeRFS7
+        wLksMRNFYKBQ5tM+eWSqEc16UnHa8pW9oRehedJpjcuti/qi5w0pl31iF1bGNrpocz+Y1jkc6yUpi
+        x03AUVH4ZD9yrenvecQSvO9jJuV8DmnGCL69SBV6tyK4NhJeI996DcyzWM9XsI8jG1digvy6YFq0m
+        OCoArxcFX4z5cfU6zpSdRr3pTApbqhCYJ3H0/KLg+wsUDtEjGI0pEguZ9no9WGLXzKiuhV5g5Uzwa
+        FV7Z3zCGKy2iqSD6vX3spgCaWUwbleIaQmz7QHjyZ5jrjLj6ZNU672tYdheStSGIWLTRC7tJE42v+
+        QSjPJSkcw==;
+Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=worktop.programming.kicks-ass.net)
+        by merlin.infradead.org with esmtpsa (Exim 4.90_1 #2 (Red Hat Linux))
+        id 1h49pV-00085Z-Sr; Wed, 13 Mar 2019 19:46:22 +0000
+Received: by worktop.programming.kicks-ass.net (Postfix, from userid 1000)
+        id 2566E9826C0; Wed, 13 Mar 2019 20:46:19 +0100 (CET)
+Date:   Wed, 13 Mar 2019 20:46:19 +0100
+From:   Peter Zijlstra <peterz@infradead.org>
+To:     Patrick Bellasi <patrick.bellasi@arm.com>
+Cc:     linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org,
+        linux-api@vger.kernel.org, Ingo Molnar <mingo@redhat.com>,
+        Tejun Heo <tj@kernel.org>,
+        "Rafael J . Wysocki" <rafael.j.wysocki@intel.com>,
+        Vincent Guittot <vincent.guittot@linaro.org>,
+        Viresh Kumar <viresh.kumar@linaro.org>,
+        Paul Turner <pjt@google.com>,
+        Quentin Perret <quentin.perret@arm.com>,
+        Dietmar Eggemann <dietmar.eggemann@arm.com>,
+        Morten Rasmussen <morten.rasmussen@arm.com>,
+        Juri Lelli <juri.lelli@redhat.com>,
+        Todd Kjos <tkjos@google.com>,
+        Joel Fernandes <joelaf@google.com>,
+        Steve Muckle <smuckle@google.com>,
+        Suren Baghdasaryan <surenb@google.com>
+Subject: Re: [PATCH v7 01/15] sched/core: uclamp: Add CPU's clamp buckets
+ refcounting
+Message-ID: <20190313194619.GR2482@worktop.programming.kicks-ass.net>
+References: <20190208100554.32196-1-patrick.bellasi@arm.com>
+ <20190208100554.32196-2-patrick.bellasi@arm.com>
+ <20190313140925.GE5922@hirez.programming.kicks-ass.net>
+ <20190313152359.lkyzel7fakjoi5hu@e110439-lin>
 MIME-Version: 1.0
-References: <20190304195951.1118807-1-arnd@arndb.de> <b0b995a1-3211-870f-01af-ce837c18e8f9@arm.com>
- <CAK8P3a2KQKTDQCQcFR7ZTFJ+_XhfKpy9W27r+YV=iD6hLVu2xg@mail.gmail.com>
- <957e168a-2589-89c7-3a72-5071a7b6c65a@arm.com> <20190308152355.GA20230@lst.de>
- <124f4e49-9eb1-99d9-35f4-c2ef3dff8415@arm.com> <20190313183254.GC4926@lst.de>
-In-Reply-To: <20190313183254.GC4926@lst.de>
-From:   Arnd Bergmann <arnd@arndb.de>
-Date:   Wed, 13 Mar 2019 20:44:55 +0100
-Message-ID: <CAK8P3a0yj5TqP95KNwM3uhYuhVSuiLkwYWQe-nLyyVd0j7sGtw@mail.gmail.com>
-Subject: Re: [Xen-devel] [PATCH] Revert "swiotlb: remove SWIOTLB_MAP_ERROR"
-To:     Christoph Hellwig <hch@lst.de>
-Cc:     Julien Grall <julien.grall@arm.com>,
-        Robin Murphy <robin.murphy@arm.com>,
-        Juergen Gross <jgross@suse.com>,
-        Stefano Stabellini <sstabellini@kernel.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Konrad Rzeszutek Wilk <konrad.wilk@oracle.com>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Mike Rapoport <rppt@linux.ibm.com>,
-        "open list:IOMMU DRIVERS" <iommu@lists.linux-foundation.org>,
-        Joerg Roedel <jroedel@suse.de>,
-        xen-devel <xen-devel@lists.xenproject.org>,
-        Boris Ostrovsky <boris.ostrovsky@oracle.com>,
-        Marek Szyprowski <m.szyprowski@samsung.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190313152359.lkyzel7fakjoi5hu@e110439-lin>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Mar 13, 2019 at 7:33 PM Christoph Hellwig <hch@lst.de> wrote:
-> On Fri, Mar 08, 2019 at 05:25:57PM +0000, Julien Grall wrote:
-> > In the common case, Dom0 also contains the PV backend drivers. Those
-> > drivers may directly use the guest buffer in the DMA request (so a copy is
-> > avoided). To avoid using a bounce buffer too much, xen-swiotlb will find
-> > the host physical address associated to the guest buffer and will use it to
-> > compute the DMA address.
-> >
-> > While Dom0 kernel may only deal with 32-bit physical address, the
-> > hypervisor can still deal with up to 40-bit physical address. This means
-> > the guest memory can be allocated above the 4GB threshold. Hence why the
-> > dma_addr_t is always 64-bit with CONFIG_XEN=y.
->
-> This at least makes some sense.  But is it really so much better to
-> avoid having a 64-bit phys_addr_t?
+On Wed, Mar 13, 2019 at 03:23:59PM +0000, Patrick Bellasi wrote:
+> On 13-Mar 15:09, Peter Zijlstra wrote:
+> > On Fri, Feb 08, 2019 at 10:05:40AM +0000, Patrick Bellasi wrote:
 
-I like the way we tie phys_addr_t to the page table format, as it seems
-consistent to have phys_addr_t be whichever data type can be addressed
-through virtual memory.
+> > > +static inline void uclamp_rq_update(struct rq *rq, unsigned int clamp_id)
+> > > +{
+> > > +	struct uclamp_bucket *bucket = rq->uclamp[clamp_id].bucket;
+> > > +	unsigned int max_value = uclamp_none(clamp_id);
+> > 
+> > That's 1024 for uclamp_max
+> > 
+> > > +	unsigned int bucket_id;
+> > > +
+> > > +	/*
+> > > +	 * Both min and max clamps are MAX aggregated, thus the topmost
+> > > +	 * bucket with some tasks defines the rq's clamp value.
+> > > +	 */
+> > > +	bucket_id = UCLAMP_BUCKETS;
+> > > +	do {
+> > > +		--bucket_id;
+> > > +		if (!rq->uclamp[clamp_id].bucket[bucket_id].tasks)
+> > > +			continue;
+> > > +		max_value = bucket[bucket_id].value;
+> > 
+> > but this will then _lower_ it. That's not a MAX aggregate.
+> 
+> For uclamp_max we want max_value=1024 when there are no active tasks,
+> which means: no max clamp enforced on CFS/RT "idle" cpus.
+> 
+> If instead there are active RT/CFS tasks then we want the clamp value
+> of the max group, which means: MAX aggregate active clamps.
+> 
+> That's what the code above does and the comment says.
 
-The main practical advantage I see in allowing phys_addr_t and dma_addr_t
-to be independent rather than having both of them be the same and grow
-to as much as is needed is that most randconfig issues I found that
-result from a type mismatch are for real bugs, typically in driver code that
-is written under the assumption that both have not only the same size
-but also the same binary representation for a given memory address.
+That's (obviously) not how I read it... maybe something like:
 
-      Arnd
+static inline void uclamp_rq_update(struct rq *rq, unsigned int clamp_id)
+{
+	struct uclamp_bucket *bucket = rq->uclamp[clamp_id].bucket;
+	int i;
+
+	/*
+	 * Since both min and max clamps are max aggregated, find the
+	 * top most bucket with tasks in.
+	 */
+	for (i = UCLMAP_BUCKETS-1; i>=0; i--) {
+		if (!bucket[i].tasks)
+			continue;
+		return bucket[i].value;
+	}
+
+	/* No tasks -- default clamp values */
+	return uclamp_none(clamp_id);
+}
+
+would make it clearer?
