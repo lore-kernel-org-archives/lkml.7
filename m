@@ -2,144 +2,117 @@ Return-Path: <SRS0=dUEL=RQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_PASS,
-	URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_PASS,URIBL_BLOCKED,USER_IN_DEF_DKIM_WL autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B9CAFC4360F
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 Mar 2019 06:42:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 601FAC43381
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 Mar 2019 06:43:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8950B2070D
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 Mar 2019 06:42:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2603E2070D
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 Mar 2019 06:43:53 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="EEFjcIr+"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="YQV56QKL"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727076AbfCMGmi (ORCPT
+        id S1727140AbfCMGnv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 13 Mar 2019 02:42:38 -0400
-Received: from mail-yw1-f68.google.com ([209.85.161.68]:45721 "EHLO
-        mail-yw1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726089AbfCMGmh (ORCPT
+        Wed, 13 Mar 2019 02:43:51 -0400
+Received: from mail-it1-f194.google.com ([209.85.166.194]:36123 "EHLO
+        mail-it1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727080AbfCMGnv (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 13 Mar 2019 02:42:37 -0400
-Received: by mail-yw1-f68.google.com with SMTP id r188so539060ywb.12
-        for <linux-kernel@vger.kernel.org>; Tue, 12 Mar 2019 23:42:36 -0700 (PDT)
+        Wed, 13 Mar 2019 02:43:51 -0400
+Received: by mail-it1-f194.google.com with SMTP id v83so1112279itf.1
+        for <linux-kernel@vger.kernel.org>; Tue, 12 Mar 2019 23:43:50 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
+        d=google.com; s=20161025;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=ebpiJgvlhqvcNtW6hg58h6gWxH/SKgRPsgHGklpT0Qg=;
-        b=EEFjcIr+lwfd1Cx4pjnT1EtEi8PARJhMTqsIZKBxkN+m0X070i0faGadPIcZIKNafz
-         PoE8PEYBMme5n9glPItiAHV0BiNjSxTEWHLJP1JjpgdVUgP0qfyKwDUF20wlwciGfJl1
-         jPDtVtvEH7UIhx9gb3H3esJUXWOhu2X9vvW3ZIpKB1FGeJwHM5a5hM4vGSWxcwaWamjc
-         ojokiqD3oHRtf+7r74rguxyJ3zqFByHYyURp/a4rc0QIfNZ/5BjgOEB+HtttfJUmOmm4
-         /N4WF3xPNp7TsaoQyQEIfFFehqrjV8jcOzD7lmpc29N4vpjav6EZzJnSZm4z6ybd4dDF
-         iDFw==
+        bh=h35+BhMsBMD98Yt/fh5izfLu/YmzGEs8dSq2OS0pnco=;
+        b=YQV56QKLz9LNlTH4Ug+3k3c+IOs4iG7vFdBroESswQQBoy4vfRnM78qf3zYVm1+0uU
+         6841dHE6Sx2h86v/aIQc9gQl6zXpoYoqqQOs3qwbXbgj70RN99SvoRvep+pK1b5C9mOi
+         OGNO7HE5pIw3PRdjvXKe0j2u63sgtqsvGJAfnKgqMwWOVW9vnaVKpSkdMIiJVkiixEbR
+         NNT5jKzj8k+t9jU+7ztdka3n0SkDUJjtFYmyO+qiap50Th6YG4omtxr42JgskAscbcQe
+         u9TzSx9m/nyUHUpU4PUvecucTvaIGsIb3uePKjNfcxuddxBBMGtofMVHyc07VjiH9b3S
+         4Q1w==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=ebpiJgvlhqvcNtW6hg58h6gWxH/SKgRPsgHGklpT0Qg=;
-        b=ECMgvERvQ32MzAo5Q1KeVD4a5c5vXpbPt0zoTfCpuU0zWOMVN/k0j5LPgz4Wj9R9S2
-         TEgQMgCDx8YjZBRrkSXRkPonuJcnIGcOHFNXQ5qRn3n2TIsu6QOSfbAnOgST10uxArgs
-         sXB59kefsz/fYu/2Rr1BhiUUAB6wHbzNIwllYLFUtFfukUff9fTLlx6DfUGg5yCioEZW
-         TrPl9OCgkovoe7SbwCDSDl//zVO+CWJngr4DPh6m37eZNhPmhpEkFXqgEgKxFX8IImsE
-         Zk+s5S4uUMK8ZOJRNPDiYAlMLn+9OudVg5CP6Bp7PcI+GLtdgjJvNGimPAmLyEG6SCac
-         tlHQ==
-X-Gm-Message-State: APjAAAVvR96Kcrxt3qVIasGf09ZKH0yZkj0F+KTeHA/nltXgFknBwxXA
-        s+xN6NgJ6CFvO6kzSALxHHGmKAsENk7/LDlXbio=
-X-Google-Smtp-Source: APXvYqwQeGKKSYay1hQBMGZoL/nZ9eWqlMHPqwQLiC+Fn1ydNPDfN9i3J7vyKAUj2qiz70vUnuQGcP96J1k9gw+CS0k=
-X-Received: by 2002:a25:4643:: with SMTP id t64mr36139215yba.462.1552459356096;
- Tue, 12 Mar 2019 23:42:36 -0700 (PDT)
+        bh=h35+BhMsBMD98Yt/fh5izfLu/YmzGEs8dSq2OS0pnco=;
+        b=pRWLCrmH+6U12kgzpvzBc6eRSda13rwywy3BD2WeeOxals56pL5ucpiCABybtN8PAC
+         MKqSSYtte4X+IFIXP7xNtYi5vjGlUbI5UnuiryzniLI6MqrRqjJwQSA7M6+0SaRAcOKs
+         kw84isE03E1iKivMPt53lmk0JF8Ik1KHVIyv09osDZJpX0E5Upc8wYlL+LAa5P/218rz
+         LQzRRZsXh2+2LYGxXlzIRkSeqdGq+iWqKiv53N9fu4kzirGC4C5dOVS2l0EdnnH5YAcK
+         gKn0NKLlcydv+pWoW4HnmXMmwoMcwBEClA50v4hSRT+fLHR1Q0Lvun2g5mXeR8YHymH6
+         2tmA==
+X-Gm-Message-State: APjAAAUxtBsCigEXuH1jV5v56/BCeOareOlUaQWwnfaEeyD0t0nvYCWd
+        pVFOEXqAttVeG/b4VcXgbXaFycAoRXNpS86GcHF7XQ==
+X-Google-Smtp-Source: APXvYqy6v26PV8PtIJ7uAUrL6St2uiAD7oGOge30myrSpHkqPkTu5JAXqgMsA2233BMtrgYLmacj0bgPTUOr+beRU90=
+X-Received: by 2002:a24:3b01:: with SMTP id c1mr768525ita.144.1552459429517;
+ Tue, 12 Mar 2019 23:43:49 -0700 (PDT)
 MIME-Version: 1.0
-References: <00000000000016f7d40583d79bd9@google.com> <CAGXu5jKjWwYk5N3mOH1A8fXX_0BT3r1At_3MzN9M+Ckg5irKXg@mail.gmail.com>
-In-Reply-To: <CAGXu5jKjWwYk5N3mOH1A8fXX_0BT3r1At_3MzN9M+Ckg5irKXg@mail.gmail.com>
-From:   Amir Goldstein <amir73il@gmail.com>
-Date:   Wed, 13 Mar 2019 08:42:25 +0200
-Message-ID: <CAOQ4uxgQf=-swzH_D6cXofXSwXdnpEUsYZ-5q2a_fOZZJy5oRQ@mail.gmail.com>
-Subject: Re: WARNING: bad usercopy in fanotify_read
-To:     Kees Cook <keescook@chromium.org>
-Cc:     syzbot <syzbot+2c49971e251e36216d1f@syzkaller.appspotmail.com>,
-        Jan Kara <jack@suse.cz>,
-        Andrew Morton <akpm@linux-foundation.org>, cai@lca.pw,
-        Chris von Recklinghausen <crecklin@redhat.com>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Linux-MM <linux-mm@kvack.org>,
-        syzkaller-bugs <syzkaller-bugs@googlegroups.com>
+References: <00000000000010b2fc057fcdfaba@google.com> <0000000000008c75b50583ddb5f8@google.com>
+ <20190312040829.GQ2217@ZenIV.linux.org.uk> <491ff1c3-91d6-eaa7-f551-46a4f8b90f5a@i-love.sakura.ne.jp>
+ <CACT4Y+ahcZpJ1Q-TKkCJkyhzGc07XFusuwBcKjg_rfAeos8RWA@mail.gmail.com> <92a4e5e5-33ca-7b39-16c0-82c7fb742d18@i-love.sakura.ne.jp>
+In-Reply-To: <92a4e5e5-33ca-7b39-16c0-82c7fb742d18@i-love.sakura.ne.jp>
+From:   Dmitry Vyukov <dvyukov@google.com>
+Date:   Wed, 13 Mar 2019 07:43:38 +0100
+Message-ID: <CACT4Y+ZQD=raWY4Tp8nrUcpAAbwRt0D3sH65KrTP+JURtQ3n-Q@mail.gmail.com>
+Subject: Re: INFO: rcu detected stall in sys_sendfile64 (2)
+To:     Tetsuo Handa <penguin-kernel@i-love.sakura.ne.jp>
+Cc:     syzbot <syzbot+1505c80c74256c6118a5@syzkaller.appspotmail.com>,
+        syzkaller-bugs <syzkaller-bugs@googlegroups.com>,
+        Al Viro <viro@zeniv.linux.org.uk>,
+        LKML <linux-kernel@vger.kernel.org>
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Mar 13, 2019 at 8:26 AM Kees Cook <keescook@chromium.org> wrote:
+On Tue, Mar 12, 2019 at 10:11 PM Tetsuo Handa
+<penguin-kernel@i-love.sakura.ne.jp> wrote:
 >
-> On Mon, Mar 11, 2019 at 1:42 PM syzbot
-> <syzbot+2c49971e251e36216d1f@syzkaller.appspotmail.com> wrote:
-> > C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=17ee410b200000
-> > [...]
-> > ------------[ cut here ]------------
-> > Bad or missing usercopy whitelist? Kernel memory exposure attempt detected
-> > from SLAB object 'fanotify_event' (offset 40, size 8)!
-> > [...]
-> >   copy_to_user include/linux/uaccess.h:151 [inline]
-> >   copy_fid_to_user fs/notify/fanotify/fanotify_user.c:236 [inline]
-> >   copy_event_to_user fs/notify/fanotify/fanotify_user.c:294 [inline]
+> On 2019/03/13 2:15, Dmitry Vyukov wrote:
+> >> Also, this bisection is finding multiple different crash patterns, which
+> >> suggests that the crashed tests are not giving correct feedback to syzbot.
+> >
+> > Treating different crashes as just "crash" is intended. Kernel bugs
+> > can manifest in very different ways.
+> > Want fun, search for "bpf: sockhash, disallow bpf_tcp_close and update
+> > in parallel" in  https://syzkaller.appspot.com/?fixed=upstream
+> > It lead to 50+ different failure modes.
+> >
 >
-> Looks like this is the fh/ext_fh union in struct fanotify_fid, field
-> "fid" in struct fanotify_event. Given that "fid" is itself in a union
-> against a struct path, I think instead of a whitelist using
-> KMEM_CACHE_USERCOPY(), this should just use a bounce buffer to avoid
-> leaving a whitelist open for path or ext_fh exposure.
->
-> Maybe something like this (untested):
+> But syzbot already found a rather simple C reproducer
+> ( https://syzkaller.appspot.com/text?tag=ReproC&x=116fc7a8c00000 ) for this bug.
+> Was this reproducer used for bisection?
 
-I tested. Patch is fine by me with minor nit.
-You may add:
-Reviewed-by: Amir Goldstein <amir73il@gmail.com>
+The C reproducer used for bisection is provided as "C reproducer" in
+the bisection report.
 
+> I guess that if this reproducer was used,
+> syzbot did not hit "WARNING: ODEBUG bug in netdev_freemem" cases.
 
->
-> diff --git a/fs/notify/fanotify/fanotify_user.c
-> b/fs/notify/fanotify/fanotify_user.c
-> index 56992b32c6bb..b87da9580b3c 100644
-> --- a/fs/notify/fanotify/fanotify_user.c
-> +++ b/fs/notify/fanotify/fanotify_user.c
-> @@ -207,6 +207,7 @@ static int process_access_response(struct
-> fsnotify_group *group,
->  static int copy_fid_to_user(struct fanotify_event *event, char __user *buf)
->  {
->         struct fanotify_event_info_fid info = { };
-> +       unsigned char bounce[FANOTIFY_INLINE_FH_LEN], *fh;
->         struct file_handle handle = { };
->         size_t fh_len = event->fh_len;
->         size_t len = fanotify_event_info_len(event);
-> @@ -233,7 +234,18 @@ static int copy_fid_to_user(struct fanotify_event
-> *event, char __user *buf)
->
->         buf += sizeof(handle);
->         len -= sizeof(handle);
-> -       if (copy_to_user(buf, fanotify_event_fh(event), fh_len))
-> +
-> +       /*
-> +        * For an inline fh, copy through stack to exclude the copy from
-> +        * usercopy hardening protections.
-> +        */
-> +       fh = fanotify_event_fh(event);
-> +       if (fh_len <= sizeof(bounce)) {
+Maybe. But we won't have more than 1 in future. Currently syzbot
+bisects over a backlog of crashes, some of them accumulated multiple
+reproducers over weeks/months/years. When it will bisect newly
+reported bugs as they are found, there will be only 1 reproducer. E.g.
+these two for this bug were found within a month.
 
-Prefer <= FANOTIFY_INLINE_FH_LEN
+> Also, humans can sometimes find more simpler C reproducers from syzbot provided
+> reproducers. It would be nice if syzbot can accept and use a user defined C
+> reproducer for testing.
 
-> +               memcpy(bounce, fh, fh_len);
-> +               fh = bounce;
-> +       }
-> +
-> +       if (copy_to_user(buf, fh, fh_len))
->                 return -EFAULT;
->
->         /* Pad with 0's */
->
->
-> --
-> Kees Cook
+It would be more useful to accept patches that make syzkaller create
+better reproducers from these people. Manual work is not scalable. We
+would need 10 reproducers per day for a dozen of OSes (incl some
+private kernels/branches). Anybody is free to run syzkaller manually
+and do full manual (perfect) reporting. But for us it become clear
+very early that it won't work. Then see above, while that human is
+sleeping/on weekend/vacation, syzbot will already bisect own
+reproducer. Adding manual reproducer later won't help in any way.
+syzkaller already does lots of smart work for reproducers. Let's not
+give up on the last mile and switch back to all manual work.
