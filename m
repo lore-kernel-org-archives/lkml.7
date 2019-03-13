@@ -2,104 +2,189 @@ Return-Path: <SRS0=dUEL=RQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_MUTT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B6F2CC10F03
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 Mar 2019 14:44:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3177CC10F03
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 Mar 2019 14:45:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8A96A20657
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 Mar 2019 14:44:40 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="hNHt2qlh"
+	by mail.kernel.org (Postfix) with ESMTP id 0B51B2177E
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 Mar 2019 14:45:18 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726510AbfCMOoj (ORCPT
+        id S1726643AbfCMOpR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 13 Mar 2019 10:44:39 -0400
-Received: from mail-pf1-f194.google.com ([209.85.210.194]:46152 "EHLO
-        mail-pf1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725895AbfCMOoj (ORCPT
+        Wed, 13 Mar 2019 10:45:17 -0400
+Received: from mail-ua1-f68.google.com ([209.85.222.68]:35266 "EHLO
+        mail-ua1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725832AbfCMOpQ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 13 Mar 2019 10:44:39 -0400
-Received: by mail-pf1-f194.google.com with SMTP id s23so1514272pfe.13;
-        Wed, 13 Mar 2019 07:44:38 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=sender:date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:content-transfer-encoding:in-reply-to
-         :user-agent;
-        bh=pb8Ukn3x4UHgNJuV1iguvhCXesetEK3gfTBsu6j8XGw=;
-        b=hNHt2qlhPKXC2GNNa70WGBukHQa9et7m+7il/u176tOJTc/FHJEGYhmk5B63Bfbpd5
-         zbhyzVobt+K6k9zRPFNwQLL2JOMbU9fV5YPurIvtV9e6TrJUj6WPm5ubsof2I7+q7uqC
-         XPrGU7scDCCVh4T6qsGMSGGF86ZSvJ5kua0RVO1IKTfz6LXPqrUIMVLfR2R7xD/+vndr
-         BaP8YSiRF1GjPtKeuSlOTRvVccRSb5vNr/8sMPwKiao4P7yCexmXd8Y65wuYYmy/+uDg
-         ja0l87QNrEiiv91KowU3q0macP7DSqLN+uqcOmogEAzirwjT5pE6cDIRzT2rQP3f7jYz
-         fj7g==
+        Wed, 13 Mar 2019 10:45:16 -0400
+Received: by mail-ua1-f68.google.com with SMTP id f88so745610uaf.2;
+        Wed, 13 Mar 2019 07:45:15 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
-         :references:mime-version:content-disposition
-         :content-transfer-encoding:in-reply-to:user-agent;
-        bh=pb8Ukn3x4UHgNJuV1iguvhCXesetEK3gfTBsu6j8XGw=;
-        b=BdiMh8bdrwsmhKCCGwRXvnRzlICqO8LCKOXLfpNC+zFLEe1FEOP0Ykk4ltlobRcUC9
-         HkHu9wzUJvDcrO+q0YletGNNcYl0KYaLufnTiPnkAeR/QHxeBibfpNcovfL8U6P/yOYq
-         IS/czyyuwKGERtZkE4lkjWks64LD0E4WuOKGDH6gOaH2OrIt79tqvzKNXaYp3fCcsGuH
-         2tWUyQAXkmQhjw0Sb/I/qGGDWxlZJI/HESB8qHfHGLsph+fltLKdM5OjX3M3kKFZ0boV
-         Gu8/t7Yc7niVzkP+66YG6zXYujnDxRA/7taLTNgoxAhL7rB8CvXGdUYAMhAG8cPatuTe
-         UXkw==
-X-Gm-Message-State: APjAAAWE4kAaYTIjfr/DtJDs+CXhP3Tt3QHweESy582M0iK00hOInOFm
-        K+Q/nCGkx2f2kUVKYM/7BRU=
-X-Google-Smtp-Source: APXvYqzDs5yjW9R6FhGTpeFs/kieFGX5WrU61e2kyUpPOA9hoL3KTLzxcAsyeu6zvff8EZ47w9t0Hw==
-X-Received: by 2002:a63:234c:: with SMTP id u12mr41264116pgm.282.1552488277730;
-        Wed, 13 Mar 2019 07:44:37 -0700 (PDT)
-Received: from localhost ([2600:1700:e321:62f0:329c:23ff:fee3:9d7c])
-        by smtp.gmail.com with ESMTPSA id 17sm17369639pfj.80.2019.03.13.07.44.35
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Wed, 13 Mar 2019 07:44:36 -0700 (PDT)
-Date:   Wed, 13 Mar 2019 07:44:34 -0700
-From:   Guenter Roeck <linux@roeck-us.net>
-To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc:     linux-kernel@vger.kernel.org, torvalds@linux-foundation.org,
-        akpm@linux-foundation.org, shuah@kernel.org, patches@kernelci.org,
-        ben.hutchings@codethink.co.uk, lkft-triage@lists.linaro.org,
-        stable@vger.kernel.org
-Subject: Re: [PATCH 4.9 00/96] 4.9.163-stable review
-Message-ID: <20190313144434.GA11117@roeck-us.net>
-References: <20190312171034.530434962@linuxfoundation.org>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=63dkDYz52se4E5080eXzCZ9vNZBXRS9vr4q0KCO8Cy4=;
+        b=kL5mCFyxSv2Idhf5IdagVjq6n03T/S2IQP03G1EYV/o7XBfBFPsMSvgMTiuhltYD2i
+         4JzGwlasIFJVW+u8jqFh5Gf1kAs7UrJtQSaXuyrGT7WesH8tRJOnhTb6xbE4C+lrDlXq
+         RRWYA1zME9HbdQprbbWRahjNPbK8M9/u+K9WeXLxxw/vz9N15CTUEqDWbTlohhyZKfS6
+         GxT2FENbOWkErV6MW3kLgByJq5r1Xe1fimv4HkEJpMJwo55SLuTsvuaJTvB/LV5e/FiO
+         xr6mKwcniqLZdi0rusU+Y7WA9lRJEYoO0wIDFKSWZuFwOkc0OQCfpan4c8T7qRGY5ub5
+         mEtQ==
+X-Gm-Message-State: APjAAAWdJwjfkAy9KC8rAFE1Qhq7Q+aGB5k/4S3COReh4aEY6nI6ZXEJ
+        4v47gPURftwJVIKqtKl0gtfuy9SRrMwKTgX0Tlk=
+X-Google-Smtp-Source: APXvYqyEfu3Iegnjt5eiK9aoYhPNx4ak8DInz6UPgEF0pcBCsIACErDiJ7EkuOwnf1l+FgvaGN7fQDytKUngxHrHcrE=
+X-Received: by 2002:ab0:6419:: with SMTP id x25mr22757596uao.20.1552488314929;
+ Wed, 13 Mar 2019 07:45:14 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20190312171034.530434962@linuxfoundation.org>
-User-Agent: Mutt/1.5.24 (2015-08-30)
+References: <20190312065128.24994-1-jiada_wang@mentor.com>
+In-Reply-To: <20190312065128.24994-1-jiada_wang@mentor.com>
+From:   Geert Uytterhoeven <geert@linux-m68k.org>
+Date:   Wed, 13 Mar 2019 15:45:03 +0100
+Message-ID: <CAMuHMdUEnzgwAqBC=vTYWnrzC5HrqC5f5gDLWJFSJRYAu+DD1g@mail.gmail.com>
+Subject: Re: [PATCH 1/1] PM / Domains: Avoid a potential deadlock
+To:     Jiada Wang <jiada_wang@mentor.com>
+Cc:     "Rafael J. Wysocki" <rjw@rjwysocki.net>,
+        Kevin Hilman <khilman@kernel.org>,
+        Ulf Hansson <ulf.hansson@linaro.org>,
+        Len Brown <len.brown@intel.com>, Pavel Machek <pavel@ucw.cz>,
+        Greg KH <gregkh@linuxfoundation.org>,
+        Linux PM list <linux-pm@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>,
+        Marek Szyprowski <m.szyprowski@samsung.com>,
+        Jon Hunter <jonathanh@nvidia.com>,
+        Michael Turquette <mturquette@baylibre.com>,
+        Stephen Boyd <sboyd@kernel.org>,
+        linux-clk <linux-clk@vger.kernel.org>,
+        Linux-Renesas <linux-renesas-soc@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Mar 12, 2019 at 10:09:18AM -0700, Greg Kroah-Hartman wrote:
-> This is the start of the stable review cycle for the 4.9.163 release.
-> There are 96 patches in this series, all will be posted as a response
-> to this one.  If anyone has any issues with these being applied, please
-> let me know.
-> 
-> Responses should be made by Thu Mar 14 17:10:06 UTC 2019.
-> Anything received after that time might be too late.
-> 
+Hi Jiada,
 
-Early results:
+CC Marek, Jon, Mike, Stephen, linux-clk, linux-renesas-soc
 
-Building x86_64:tools/perf ... failed
---------------
-Error log:
-Warning: arch/x86/include/asm/cpufeatures.h differs from kernel
-Warning: arch/x86/include/uapi/asm/kvm.h differs from kernel
-  PERF_VERSION = 4.9.162.g605129
-builtin-trace.c: In function ‘perf_evlist__add_vfs_getname’:
-builtin-trace.c:2071:8: error: implicit declaration of function ‘strstarts’ [-Werror=implicit-function-declaration]
-builtin-trace.c:2071:3: error: nested extern declaration of ‘strstarts’ [-Werror=nested-externs]
+On Tue, Mar 12, 2019 at 7:51 AM Jiada Wang <jiada_wang@mentor.com> wrote:
+> Lockdep warns that prepare_lock and genpd->mlock can cause a deadlock
+> the deadlock scenario is like following:
+> First thread is probing cs2000
+> cs2000_probe()
+>   clk_register()
+>     __clk_core_init()
+>       clk_prepare_lock()                            ----> acquires prepare_lock
+>         cs2000_recalc_rate()
+>           i2c_smbus_read_byte_data()
+>             rcar_i2c_master_xfer()
+>               dma_request_chan()
+>                 rcar_dmac_of_xlate()
+>                   rcar_dmac_alloc_chan_resources()
+>                     pm_runtime_get_sync()
+>                       __pm_runtime_resume()
+>                         rpm_resume()
+>                           rpm_callback()
+>                             genpd_runtime_resume()   ----> acquires genpd->mlock
+>
+> Second thread is attaching any device to the same PM domain
+> genpd_add_device()
+>   genpd_lock()                                       ----> acquires genpd->mlock
+>     cpg_mssr_attach_dev()
+>       of_clk_get_from_provider()
+>         __of_clk_get_from_provider()
+>           __clk_create_clk()
+>             clk_prepare_lock()                       ----> acquires prepare_lock
+>
+> Since currently no PM provider access genpd's critical section
+> in .attach_dev, and .detach_dev callbacks, so there is no need to protect
+> these two callbacks with genpd->mlock.
+> This patch avoids a potential deadlock by moving out .attach_dev and .detach_dev
+> from genpd->mlock, so that genpd->mlock won't be held when prepare_lock is acquired
+> in .attach_dev and .detach_dev
+>
+> Signed-off-by: Jiada Wang <jiada_wang@mentor.com>
 
-Also affects v4.4.y-queue.
+Thanks a lot for your perseverance!
+I had tried putting each PM Domain in its own lockdep class, but that
+didn't help.
 
-Guenter
+Your patch fixes the lockdep warnings on my Salvator-X(S) boards.
+
+Tested-by: Geert Uytterhoeven <geert+renesas@glider.be>
+
+Your solution makes sense, as the .{at,de}tach_dev() callbacks are
+owned by the individual PM Domain drivers, and not by the genpd core.
+
+Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
+
+One thing I'm still wondering about: genpd_add_device() is always called
+with gpd_list_lock held.
+However, the same cannot be said about genpd_remove_device():
+  - pm_genpd_remove_device() does not take gpd_list_lock, unlike
+    pm_genpd_add_device(),
+  - genpd_dev_pm_detach() does not take gpd_list_lock, while
+    __genpd_dev_pm_attach() does take the lock for adding,
+    but not for removing (in the error patch)?
+
+> --- a/drivers/base/power/domain.c
+> +++ b/drivers/base/power/domain.c
+> @@ -1467,12 +1467,12 @@ static int genpd_add_device(struct generic_pm_domain *genpd, struct device *dev,
+>         if (IS_ERR(gpd_data))
+>                 return PTR_ERR(gpd_data);
+>
+> -       genpd_lock(genpd);
+> -
+>         ret = genpd->attach_dev ? genpd->attach_dev(genpd, dev) : 0;
+>         if (ret)
+>                 goto out;
+>
+> +       genpd_lock(genpd);
+> +
+>         dev_pm_domain_set(dev, &genpd->domain);
+>
+>         genpd->device_count++;
+> @@ -1480,9 +1480,8 @@ static int genpd_add_device(struct generic_pm_domain *genpd, struct device *dev,
+>
+>         list_add_tail(&gpd_data->base.list_node, &genpd->dev_list);
+>
+> - out:
+>         genpd_unlock(genpd);
+> -
+> + out:
+>         if (ret)
+>                 genpd_free_dev_data(dev, gpd_data);
+>         else
+> @@ -1531,15 +1530,15 @@ static int genpd_remove_device(struct generic_pm_domain *genpd,
+>         genpd->device_count--;
+>         genpd->max_off_time_changed = true;
+>
+> -       if (genpd->detach_dev)
+> -               genpd->detach_dev(genpd, dev);
+> -
+>         dev_pm_domain_set(dev, NULL);
+>
+>         list_del_init(&pdd->list_node);
+>
+>         genpd_unlock(genpd);
+>
+> +       if (genpd->detach_dev)
+> +               genpd->detach_dev(genpd, dev);
+> +
+>         genpd_free_dev_data(dev, gpd_data);
+>
+>         return 0;
+
+Gr{oetje,eeting}s,
+
+                        Geert
+
+--
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
