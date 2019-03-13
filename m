@@ -4,50 +4,48 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 59BBCC43381
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 Mar 2019 19:17:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 11DB4C43381
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 Mar 2019 19:17:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 21D80213A2
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 Mar 2019 19:17:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D2D162171F
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 Mar 2019 19:17:12 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1552504629;
-	bh=LC8+0NSKM2PdnlAhgKXO3km7DorsxRTeStsNSMrtj3U=;
+	s=default; t=1552504632;
+	bh=3Af50uxbS8WcAKOcNeKllC/MwfWsox+8hZYbP/315sI=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=t2kbmHm2qwA4s/sysWDbyGzyD6m0YJjuqvXV0gQIOVUvWiz8lQ7/n1j1udn2REAFa
-	 +AQ4QU9aJvw59WovBoxoyGZNJUWTDkT9qNlC5Vbb8QJyrX9No5WajwJx2Jc1zOD3Wc
-	 2Hrsr7P7sgWWlErE9uw3Yk898ibxthglJFF3FrwE=
+	b=cKq9s1xDkG8AS4rbTpxAIo4tTeqykUt8cHrvUg0XpwfOZFPNYm7OCIOoahcNX3cC5
+	 ZIU45l9jEYz09Gnr4F/+i5/WObwqJHfZkUij7Sf2HAC0RQBl/YddE1gSZpUAhESS29
+	 ffz+3KkfOoMTcelFay7LQre+o5aMcgcXlRfO1Rw0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728829AbfCMTRH (ORCPT
+        id S1728842AbfCMTRL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 13 Mar 2019 15:17:07 -0400
-Received: from mail.kernel.org ([198.145.29.99]:47452 "EHLO mail.kernel.org"
+        Wed, 13 Mar 2019 15:17:11 -0400
+Received: from mail.kernel.org ([198.145.29.99]:47480 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727545AbfCMTRE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 13 Mar 2019 15:17:04 -0400
+        id S1728823AbfCMTRG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 13 Mar 2019 15:17:06 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 661242075C;
-        Wed, 13 Mar 2019 19:17:01 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 7A80B2171F;
+        Wed, 13 Mar 2019 19:17:04 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1552504623;
-        bh=LC8+0NSKM2PdnlAhgKXO3km7DorsxRTeStsNSMrtj3U=;
+        s=default; t=1552504626;
+        bh=3Af50uxbS8WcAKOcNeKllC/MwfWsox+8hZYbP/315sI=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=uNIaHUlX1b3QYsPwPXzzdAfwAsIctkrij/pR01Y6ColAzOj3y2y+TZ7wVxjSu5yPH
-         i1xmAOZcx4olPkbaMAQkYTTpUiLcOGH1NmzFaPzKqTortfuzRN5jV/bnQDmQoIK8uP
-         IXbyd42KBYYWA0bw3/7Nom5IlMIVe6nOkalZByn0=
+        b=CWR6srhBMNc59iL7VrA3DuRxbw5yxrVggJ0BXmX6+RvsLdqf4VS4ZusGFrtnRkQg8
+         VrObkuIRRRXcHTuUq93KWzPf6/h98tNpGs1YYAll5zv3buVYSQwWhMf9s7i3HrS4If
+         r55jq8azRjy+b6YOpK6iD3+I+d6BXe+qLRPM6tvM=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Anoob Soman <anoob.soman@citrix.com>, Bob Liu <bob.liu@oracle.com>,
-        "Martin K . Petersen" <martin.petersen@oracle.com>,
-        Sasha Levin <sashal@kernel.org>, open-iscsi@googlegroups.com,
-        linux-scsi@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.9 04/24] scsi: libiscsi: Fix race between iscsi_xmit_task and iscsi_complete_task
-Date:   Wed, 13 Mar 2019 15:16:27 -0400
-Message-Id: <20190313191647.160171-4-sashal@kernel.org>
+Cc:     Florian Fainelli <f.fainelli@gmail.com>,
+        "David S . Miller" <davem@davemloft.net>,
+        Sasha Levin <sashal@kernel.org>, netdev@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.9 05/24] net: systemport: Fix reception of BPDUs
+Date:   Wed, 13 Mar 2019 15:16:28 -0400
+Message-Id: <20190313191647.160171-5-sashal@kernel.org>
 X-Mailer: git-send-email 2.19.1
 In-Reply-To: <20190313191647.160171-1-sashal@kernel.org>
 References: <20190313191647.160171-1-sashal@kernel.org>
@@ -59,109 +57,38 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Anoob Soman <anoob.soman@citrix.com>
+From: Florian Fainelli <f.fainelli@gmail.com>
 
-[ Upstream commit 79edd00dc6a96644d76b4a1cb97d94d49e026768 ]
+[ Upstream commit a40061ea2e39494104602b3048751341bda374a1 ]
 
-When a target sends Check Condition, whilst initiator is busy xmiting
-re-queued data, could lead to race between iscsi_complete_task() and
-iscsi_xmit_task() and eventually crashing with the following kernel
-backtrace.
+SYSTEMPORT has its RXCHK parser block that attempts to validate the
+packet structures, unfortunately setting the L2 header check bit will
+cause Bridge PDUs (BPDUs) to be incorrectly rejected because they look
+like LLC/SNAP packets with a non-IPv4 or non-IPv6 Ethernet Type.
 
-[3326150.987523] ALERT: BUG: unable to handle kernel NULL pointer dereference at 0000000000000078
-[3326150.987549] ALERT: IP: [<ffffffffa05ce70d>] iscsi_xmit_task+0x2d/0xc0 [libiscsi]
-[3326150.987571] WARN: PGD 569c8067 PUD 569c9067 PMD 0
-[3326150.987582] WARN: Oops: 0002 [#1] SMP
-[3326150.987593] WARN: Modules linked in: tun nfsv3 nfs fscache dm_round_robin
-[3326150.987762] WARN: CPU: 2 PID: 8399 Comm: kworker/u32:1 Tainted: G O 4.4.0+2 #1
-[3326150.987774] WARN: Hardware name: Dell Inc. PowerEdge R720/0W7JN5, BIOS 2.5.4 01/22/2016
-[3326150.987790] WARN: Workqueue: iscsi_q_13 iscsi_xmitworker [libiscsi]
-[3326150.987799] WARN: task: ffff8801d50f3800 ti: ffff8801f5458000 task.ti: ffff8801f5458000
-[3326150.987810] WARN: RIP: e030:[<ffffffffa05ce70d>] [<ffffffffa05ce70d>] iscsi_xmit_task+0x2d/0xc0 [libiscsi]
-[3326150.987825] WARN: RSP: e02b:ffff8801f545bdb0 EFLAGS: 00010246
-[3326150.987831] WARN: RAX: 00000000ffffffc3 RBX: ffff880282d2ab20 RCX: ffff88026b6ac480
-[3326150.987842] WARN: RDX: 0000000000000000 RSI: 00000000fffffe01 RDI: ffff880282d2ab20
-[3326150.987852] WARN: RBP: ffff8801f545bdc8 R08: 0000000000000000 R09: 0000000000000008
-[3326150.987862] WARN: R10: 0000000000000000 R11: 000000000000fe88 R12: 0000000000000000
-[3326150.987872] WARN: R13: ffff880282d2abe8 R14: ffff880282d2abd8 R15: ffff880282d2ac08
-[3326150.987890] WARN: FS: 00007f5a866b4840(0000) GS:ffff88028a640000(0000) knlGS:0000000000000000
-[3326150.987900] WARN: CS: e033 DS: 0000 ES: 0000 CR0: 0000000080050033
-[3326150.987907] WARN: CR2: 0000000000000078 CR3: 0000000070244000 CR4: 0000000000042660
-[3326150.987918] WARN: Stack:
-[3326150.987924] WARN: ffff880282d2ad58 ffff880282d2ab20 ffff880282d2abe8 ffff8801f545be18
-[3326150.987938] WARN: ffffffffa05cea90 ffff880282d2abf8 ffff88026b59cc80 ffff88026b59cc00
-[3326150.987951] WARN: ffff88022acf32c0 ffff880289491800 ffff880255a80800 0000000000000400
-[3326150.987964] WARN: Call Trace:
-[3326150.987975] WARN: [<ffffffffa05cea90>] iscsi_xmitworker+0x2f0/0x360 [libiscsi]
-[3326150.987988] WARN: [<ffffffff8108862c>] process_one_work+0x1fc/0x3b0
-[3326150.987997] WARN: [<ffffffff81088f95>] worker_thread+0x2a5/0x470
-[3326150.988006] WARN: [<ffffffff8159cad8>] ? __schedule+0x648/0x870
-[3326150.988015] WARN: [<ffffffff81088cf0>] ? rescuer_thread+0x300/0x300
-[3326150.988023] WARN: [<ffffffff8108ddf5>] kthread+0xd5/0xe0
-[3326150.988031] WARN: [<ffffffff8108dd20>] ? kthread_stop+0x110/0x110
-[3326150.988040] WARN: [<ffffffff815a0bcf>] ret_from_fork+0x3f/0x70
-[3326150.988048] WARN: [<ffffffff8108dd20>] ? kthread_stop+0x110/0x110
-[3326150.988127] ALERT: RIP [<ffffffffa05ce70d>] iscsi_xmit_task+0x2d/0xc0 [libiscsi]
-[3326150.988138] WARN: RSP <ffff8801f545bdb0>
-[3326150.988144] WARN: CR2: 0000000000000078
-[3326151.020366] WARN: ---[ end trace 1c60974d4678d81b ]---
-
-Commit 6f8830f5bbab ("scsi: libiscsi: add lock around task lists to fix
-list corruption regression") introduced "taskqueuelock" to fix list
-corruption during the race, but this wasn't enough.
-
-Re-setting of conn->task to NULL, could race with iscsi_xmit_task().
-iscsi_complete_task()
-{
-    ....
-    if (conn->task == task)
-        conn->task = NULL;
-}
-
-conn->task in iscsi_xmit_task() could be NULL and so will be task.
-__iscsi_get_task(task) will crash (NullPtr de-ref), trying to access
-refcount.
-
-iscsi_xmit_task()
-{
-    struct iscsi_task *task = conn->task;
-
-    __iscsi_get_task(task);
-}
-
-This commit will take extra conn->session->back_lock in iscsi_xmit_task()
-to ensure iscsi_xmit_task() waits for iscsi_complete_task(), if
-iscsi_complete_task() wins the race.  If iscsi_xmit_task() wins the race,
-iscsi_xmit_task() increments task->refcount
-(__iscsi_get_task) ensuring iscsi_complete_task() will not iscsi_free_task().
-
-Signed-off-by: Anoob Soman <anoob.soman@citrix.com>
-Signed-off-by: Bob Liu <bob.liu@oracle.com>
-Acked-by: Lee Duncan <lduncan@suse.com>
-Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
+Fixes: 4e8aedfe78c7 ("net: systemport: Turn on offloads by default")
+Signed-off-by: Florian Fainelli <f.fainelli@gmail.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/scsi/libiscsi.c | 6 ++++++
- 1 file changed, 6 insertions(+)
+ drivers/net/ethernet/broadcom/bcmsysport.c | 4 ++++
+ 1 file changed, 4 insertions(+)
 
-diff --git a/drivers/scsi/libiscsi.c b/drivers/scsi/libiscsi.c
-index c79743de48f9..2ffe10453e30 100644
---- a/drivers/scsi/libiscsi.c
-+++ b/drivers/scsi/libiscsi.c
-@@ -1448,7 +1448,13 @@ static int iscsi_xmit_task(struct iscsi_conn *conn)
- 	if (test_bit(ISCSI_SUSPEND_BIT, &conn->suspend_tx))
- 		return -ENODATA;
+diff --git a/drivers/net/ethernet/broadcom/bcmsysport.c b/drivers/net/ethernet/broadcom/bcmsysport.c
+index 53a506b0d790..95874c10c23b 100644
+--- a/drivers/net/ethernet/broadcom/bcmsysport.c
++++ b/drivers/net/ethernet/broadcom/bcmsysport.c
+@@ -104,6 +104,10 @@ static int bcm_sysport_set_rx_csum(struct net_device *dev,
  
-+	spin_lock_bh(&conn->session->back_lock);
-+	if (conn->task == NULL) {
-+		spin_unlock_bh(&conn->session->back_lock);
-+		return -ENODATA;
-+	}
- 	__iscsi_get_task(task);
-+	spin_unlock_bh(&conn->session->back_lock);
- 	spin_unlock_bh(&conn->session->frwd_lock);
- 	rc = conn->session->tt->xmit_task(task);
- 	spin_lock_bh(&conn->session->frwd_lock);
+ 	priv->rx_chk_en = !!(wanted & NETIF_F_RXCSUM);
+ 	reg = rxchk_readl(priv, RXCHK_CONTROL);
++	/* Clear L2 header checks, which would prevent BPDUs
++	 * from being received.
++	 */
++	reg &= ~RXCHK_L2_HDR_DIS;
+ 	if (priv->rx_chk_en)
+ 		reg |= RXCHK_EN;
+ 	else
 -- 
 2.19.1
 
