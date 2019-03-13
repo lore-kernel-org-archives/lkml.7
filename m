@@ -2,88 +2,92 @@ Return-Path: <SRS0=dUEL=RQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_MUTT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_MUTT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9A151C43381
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 Mar 2019 14:37:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E37C7C43381
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 Mar 2019 14:37:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6BBF02171F
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 Mar 2019 14:37:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B89E32147C
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 Mar 2019 14:37:15 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726855AbfCMOhI (ORCPT
+        id S1726891AbfCMOhO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 13 Mar 2019 10:37:08 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:34578 "EHLO mx1.redhat.com"
+        Wed, 13 Mar 2019 10:37:14 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:50602 "EHLO mx1.redhat.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725856AbfCMOhH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 13 Mar 2019 10:37:07 -0400
-Received: from smtp.corp.redhat.com (int-mx03.intmail.prod.int.phx2.redhat.com [10.5.11.13])
+        id S1725856AbfCMOhM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 13 Mar 2019 10:37:12 -0400
+Received: from smtp.corp.redhat.com (int-mx02.intmail.prod.int.phx2.redhat.com [10.5.11.12])
         (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id C194F300371C;
-        Wed, 13 Mar 2019 14:37:06 +0000 (UTC)
+        by mx1.redhat.com (Postfix) with ESMTPS id E0D794AD5;
+        Wed, 13 Mar 2019 14:37:11 +0000 (UTC)
 Received: from krava (unknown [10.43.17.124])
-        by smtp.corp.redhat.com (Postfix) with SMTP id 17D9818258;
-        Wed, 13 Mar 2019 14:37:04 +0000 (UTC)
-Date:   Wed, 13 Mar 2019 15:37:04 +0100
+        by smtp.corp.redhat.com (Postfix) with SMTP id 3518F610FF;
+        Wed, 13 Mar 2019 14:37:10 +0000 (UTC)
+Date:   Wed, 13 Mar 2019 15:37:09 +0100
 From:   Jiri Olsa <jolsa@redhat.com>
 To:     Alexey Budankov <alexey.budankov@linux.intel.com>
 Cc:     Arnaldo Carvalho de Melo <acme@kernel.org>,
         Namhyung Kim <namhyung@kernel.org>,
         Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Peter Zijlstra <peterz@infradead.org>,
         Ingo Molnar <mingo@redhat.com>,
+        Peter Zijlstra <peterz@infradead.org>,
         Andi Kleen <ak@linux.intel.com>,
         linux-kernel <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH v4 0/10] perf: enable compression of record mode trace to
- save storage space
-Message-ID: <20190313143704.GC6676@krava>
-References: <bb018a36-5249-ca6a-8e16-6afac442bae5@linux.intel.com>
+Subject: Re: [PATCH v7 06/12] perf util: introduce Zstd based streaming
+ compression API
+Message-ID: <20190313143709.GD6676@krava>
+References: <5f3a8326-58a0-816e-ad61-31c111232c7a@linux.intel.com>
+ <f9062f55-c37f-bf50-8566-a587bce30131@linux.intel.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <bb018a36-5249-ca6a-8e16-6afac442bae5@linux.intel.com>
+In-Reply-To: <f9062f55-c37f-bf50-8566-a587bce30131@linux.intel.com>
 User-Agent: Mutt/1.10.1 (2018-07-13)
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.13
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.47]); Wed, 13 Mar 2019 14:37:06 +0000 (UTC)
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.12
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.38]); Wed, 13 Mar 2019 14:37:12 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Feb 28, 2019 at 11:35:24AM +0300, Alexey Budankov wrote:
+On Tue, Mar 12, 2019 at 08:23:42AM +0300, Alexey Budankov wrote:
 > 
-> The patch set implements runtime trace compression (-z option) in 
-> record mode and trace auto decompression in report and inject modes. 
-> Streaming Zstandard (Zstd) API (zstd) is used for compression and 
-> decompression of data that come from kernel mmaped data buffers.
+> Implemented functions are based on Zstd streaming compression API.
+> The functions are used in runtime to compress data that come from
+> mmaped kernel buffer. zstd_init(), zstd_fini() are used for 
+> initialization and finalization to allocate and deallocate internal
+> zstd objects. zstd_compress_stream_to_records() is used to convert 
+> parts of mmaped kernel buffer into an array of PERF_RECORD_COMPRESSED 
+> records.
 > 
-> Usage of implemented -z,--compression_level=n option provides ~3-5x 
-> avg. trace file size reduction on variety of tested workloads what 
-> saves storage space on larger server systems where trace file size 
-> can easily reach several tens or even hundreds of GiBs, especially 
-> when profiling with dwarf-based stacks and tracing of context switches.
-> Implemented -f,--mmap-flush option can be used to avoid compressing 
-> every single byte of data and increase compression ratio at the same 
-> time lowering tool runtime overhead. Default option value is 1 what 
-> is equal to the current perf record implementation. The option is 
-> independent from -z setting and doesn't vary with compression level:
+> Signed-off-by: Alexey Budankov <alexey.budankov@linux.intel.com>
+> ---
+>  tools/perf/util/Build      |  2 +
+>  tools/perf/util/compress.h | 18 ++++++++
+>  tools/perf/util/zstd.c     | 95 ++++++++++++++++++++++++++++++++++++++
+>  3 files changed, 115 insertions(+)
+>  create mode 100644 tools/perf/util/zstd.c
 > 
->   $ tools/perf/perf record -z 1 -e cycles -- matrix.gcc
->   $ tools/perf/perf record --aio=1 -z 1 -e cycles -- matrix.gcc
->   $ tools/perf/perf record -z 1 -f 1024 -e cycles -- matrix.gcc
->   $ tools/perf/perf record --aio=1 -z 1 -f 1024 -e cycles -- matrix.gcc
+> diff --git a/tools/perf/util/Build b/tools/perf/util/Build
+> index 8dd3102301ea..920ee8bebd83 100644
+> --- a/tools/perf/util/Build
+> +++ b/tools/perf/util/Build
+> @@ -145,6 +145,8 @@ perf-y += scripting-engines/
+>  
+>  perf-$(CONFIG_ZLIB) += zlib.o
+>  perf-$(CONFIG_LZMA) += lzma.o
+> +perf-y += zstd.o
 
-please make the 'z' option to choose some default value,
-so it's possible just to run:
+we have CONFIG_ZSTD, so we can do:
 
-  perf record -z ...
+perf-$(CONFIG_ZSTD) += zstd.o
 
-to get comrpessed data.. not sure which strategy to use,
-probably the fastest '-z 1' as default
+and skip that #ifdef HAVE_ZSTD_SUPPORT in zstd.c
+and put stub inlines into compress.h
 
-with some warning about using that default value perhaps
-
+thanks,
 jirka
