@@ -2,158 +2,89 @@ Return-Path: <SRS0=dUEL=RQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.6 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SPF_PASS,URIBL_BLOCKED,USER_IN_DEF_DKIM_WL autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 79EC2C43381
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 Mar 2019 17:22:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F2E05C43381
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 Mar 2019 17:22:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4642221019
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 Mar 2019 17:22:01 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="nz6JrS0P"
+	by mail.kernel.org (Postfix) with ESMTP id C4D48213A2
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 Mar 2019 17:22:08 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726699AbfCMRWA (ORCPT
+        id S1726767AbfCMRWH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 13 Mar 2019 13:22:00 -0400
-Received: from mail-pf1-f193.google.com ([209.85.210.193]:38687 "EHLO
-        mail-pf1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725907AbfCMRV7 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 13 Mar 2019 13:21:59 -0400
-Received: by mail-pf1-f193.google.com with SMTP id n125so1845973pfn.5
-        for <linux-kernel@vger.kernel.org>; Wed, 13 Mar 2019 10:21:59 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=EVzpsJPsLWWRe8SdNEk77QGx3gE296uGMKc5cAQJywM=;
-        b=nz6JrS0PyR7mFqq2muQhn+E3oJy1ht9B4c8IKQbojqVUKaQd4agTplM3m9BUIssxJ2
-         +Mm7vJXmwwIRGsFcr65DwSf871v2R3LUwtsMsV7iRf2/tHGxgOJ2ntSJ+78BNhW6zz/4
-         4CGynfJXXXTjzlBnr04QFDnKz36A5svRFQtvlw4kw5qqOOPCkYoKdTeoSu1bkCwvwMM1
-         j9nh3+lx5pFO2WQfYpMuXqAw5bz1RLIY0h+r+efzWeSYD6I4F4f7Z6jF42CKq2Vp4f5o
-         fHGHsod9KjLaEH6Ld50foFT1jdnqr0xtPfTaQBwOgSyHiwlJh0x2v+aRqMVqGDgvERBw
-         X7mA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=EVzpsJPsLWWRe8SdNEk77QGx3gE296uGMKc5cAQJywM=;
-        b=Xbjk+OLUDlLCPkOHua9UF6wNBcLc377aMjUhAi77O31aeKmWAAXbmqIhIwSeEmNmcs
-         w+seAk93c2XM84UkaawvxhZnGN+ab/PBCPzrMtPiPbRwML5xMMO9cOqgGTG/ncswHRWb
-         yO//+OaS13qFWOSR8MzIkWGGzJvkOAfCQlks5mdk/JSACgkraVh5uW83+yWFavTPLbVa
-         UnOtrCz2vmrbfHyu5eTUtzDdkmX+ODEAQkFLD336JaTDiOLTwOJ2JWOPIcwd/8+WNqbT
-         yPOBy3KL9HoMqokIW7KVrWFIq67iAUXLkrUK5XmwdGjxci5FLIzPyX95NcBnI/qWfxkb
-         pWmg==
-X-Gm-Message-State: APjAAAUrmNlQ3B9eVbXFgDMd3OQzCzU09fO4rPQCKsUPTi4dEhZD+Kqv
-        mK1M9LaC+YVKQmxn43fSooPLax9CS/sRuf4nYBCS6g==
-X-Google-Smtp-Source: APXvYqx08CF7ho8zm3L2vL8drddu/W9Qnbk7vX5lOKgEPRp0gY9UKvqVA4+3rZdqAs4PJ9ofIijw6aanQpmyneBtMzg=
-X-Received: by 2002:a17:902:380c:: with SMTP id l12mr34998528plc.238.1552497718394;
- Wed, 13 Mar 2019 10:21:58 -0700 (PDT)
-MIME-Version: 1.0
-References: <20190312215203.27643-1-natechancellor@gmail.com>
- <80fb5b7f-42f9-4fd1-00cf-bfa7965ff8f7@rasmusvillemoes.dk> <20190313134447.GA19066@archlinux-ryzen>
- <CAK8P3a344k=MDAX-d21U4+H+mv7Vcd9YhAN4NPEJm1CXv76tkw@mail.gmail.com> <20190313153209.GA14098@archlinux-ryzen>
-In-Reply-To: <20190313153209.GA14098@archlinux-ryzen>
-From:   Nick Desaulniers <ndesaulniers@google.com>
-Date:   Wed, 13 Mar 2019 10:21:47 -0700
-Message-ID: <CAKwvOd=UYEtQC9T2K=O0rxrDKug4XzsA6dHjSKmogFa7whE7Zw@mail.gmail.com>
-Subject: Re: [PATCH] Makefile: Add '-fno-builtin-bcmp' to CLANG_FLAGS
-To:     Nathan Chancellor <natechancellor@gmail.com>
-Cc:     Arnd Bergmann <arnd@arndb.de>,
-        Rasmus Villemoes <linux@rasmusvillemoes.dk>,
-        Masahiro Yamada <yamada.masahiro@socionext.com>,
-        Michal Marek <michal.lkml@markovi.net>,
-        Linux Kbuild mailing list <linux-kbuild@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        James Y Knight <jyknight@google.com>,
-        clang-built-linux@googlegroups.com,
-        "# 3.4.x" <stable@vger.kernel.org>
+        Wed, 13 Mar 2019 13:22:07 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:58614 "EHLO mx1.redhat.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725895AbfCMRWH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 13 Mar 2019 13:22:07 -0400
+Received: from smtp.corp.redhat.com (int-mx04.intmail.prod.int.phx2.redhat.com [10.5.11.14])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id E0FF93007C36;
+        Wed, 13 Mar 2019 17:22:06 +0000 (UTC)
+Received: from ovpn-120-157.rdu2.redhat.com (ovpn-120-157.rdu2.redhat.com [10.10.120.157])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 2EE2D5DD84;
+        Wed, 13 Mar 2019 17:22:04 +0000 (UTC)
+Message-ID: <ab0f6cff1dd07ec42f13894d0833fbd506bdc10a.camel@redhat.com>
+Subject: Re: [PATCH 02/14] c6x: entry: Remove unneeded need_resched() loop
+From:   Mark Salter <msalter@redhat.com>
+To:     Valentin Schneider <valentin.schneider@arm.com>,
+        linux-kernel@vger.kernel.org
+Cc:     Aurelien Jacquiot <jacquiot.aurelien@gmail.com>,
+        linux-c6x-dev@linux-c6x.org
+Date:   Wed, 13 Mar 2019 13:21:58 -0400
+In-Reply-To: <20190311224752.8337-3-valentin.schneider@arm.com>
+References: <20190311224752.8337-1-valentin.schneider@arm.com>
+         <20190311224752.8337-3-valentin.schneider@arm.com>
+Organization: Red Hat, Inc
 Content-Type: text/plain; charset="UTF-8"
+User-Agent: Evolution 3.30.5 (3.30.5-1.fc29) 
+MIME-Version: 1.0
+Content-Transfer-Encoding: 7bit
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.14
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.40]); Wed, 13 Mar 2019 17:22:07 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Mar 13, 2019 at 8:32 AM Nathan Chancellor
-<natechancellor@gmail.com> wrote:
->
-> On Wed, Mar 13, 2019 at 02:48:49PM +0100, Arnd Bergmann wrote:
-> > On Wed, Mar 13, 2019 at 2:44 PM Nathan Chancellor
-> > <natechancellor@gmail.com> wrote:
-> > > On Wed, Mar 13, 2019 at 09:13:11AM +0100, Rasmus Villemoes wrote:
-> > > > Wouldn't it be better to just define bcmp as an alias for memcmp? They
-> > > > seem to have compatible prototypes, and then somebody might someday sit
-> > > > down and implement some word-at-a-time version of bcmp making use of the
-> > > > weaker guarantees about the return value to gain some performance. But I
-> > > > suppose that can also be done later.
-> > >
-> > > Thank you much for the review, I didn't even realize this was possible :)
-> > >
-> > > I'd certainly like to explore it as that is what glibc does. How would
-> > > you suggest going about it here?
-> >
-> > I suggested a possible implementation (likely contains bugs) and
-> > an alias for architectures that require strict alignment, see
-> > https://bugs.llvm.org/show_bug.cgi?id=41035#c11
-> >
-> > We could start out with just the alias.
-> >
-> >        Arnd
->
-> So I've been messing around with this for a bit (forgive me, I'm still
-> learning all of the intricacies around here) and this is what I came up
-> with for when __ARCH_HAVE_MEMCMP is unset (not particularly difficult
-> obviously). I can compile, link, and boot an x86 in QEMU.
->
-> However, I am not sure how to handle memcmp definitions that are written
-> in assembly like arm64, as the alias attribute only works when the alias
-> is defined in the same translation unit. Thoughts?
+On Mon, 2019-03-11 at 22:47 +0000, Valentin Schneider wrote:
+> Since the enabling and disabling of IRQs within preempt_schedule_irq()
+> is contained in a need_resched() loop, we don't need the outer arch
+> code loop.
+> 
+> Signed-off-by: Valentin Schneider <valentin.schneider@arm.com>
+> Cc: Mark Salter <msalter@redhat.com>
+> Cc: Aurelien Jacquiot <jacquiot.aurelien@gmail.com>
+> Cc: linux-c6x-dev@linux-c6x.org
+> ---
+>  arch/c6x/kernel/entry.S | 3 +--
+>  1 file changed, 1 insertion(+), 2 deletions(-)
+> 
+> diff --git a/arch/c6x/kernel/entry.S b/arch/c6x/kernel/entry.S
+> index 2721c90b0121..17926e942edb 100644
+> --- a/arch/c6x/kernel/entry.S
+> +++ b/arch/c6x/kernel/entry.S
+> @@ -567,7 +567,6 @@ resume_kernel:
+>  	NOP	4
+>   [A1]	BNOP	.S2	restore_all,5
+>  
+> -preempt_schedule:
+>  	GET_THREAD_INFO A2
+>  	LDW	.D1T1	*+A2(THREAD_INFO_FLAGS),A1
+>  #ifdef CONFIG_C6X_BIG_KERNEL
+> @@ -584,7 +583,7 @@ preempt_schedule:
+>  #else
+>  	B	.S2	preempt_schedule_irq
+>  #endif
+> -	ADDKPC	.S2	preempt_schedule,B3,4
+> +	ADDKPC	.S2	restore_all,B3,4
+>  #endif /* CONFIG_PREEMPT */
+>  
+>  ENTRY(enable_exception)
 
-I hit this, too:
-./arch/arm64/include/asm/string.h:40:15: error: alias must point to a
-defined variable
-      or function
-
-since memcmp is only declared (not defined) in that header, clang is
-not happy to alias to memcmp.  If __HAVE_ARCH_MEMCMP is defined, then
-we can just return a call to memcmp.  Thoughts (I need to add comments
-above bcmp, anything else)?  Do we like the typeof trick (stolen from
-glibc) or no?
-
-diff --git a/lib/string.c b/lib/string.c
-index 38e4ca08e757..e6c1954f2716 100644
---- a/lib/string.c
-+++ b/lib/string.c
-@@ -845,7 +845,13 @@ void *memmove(void *dest, const void *src, size_t count)
- EXPORT_SYMBOL(memmove);
- #endif
-
--#ifndef __HAVE_ARCH_MEMCMP
-+#ifdef __HAVE_ARCH_MEMCMP
-+int bcmp(const void *cs, const void *ct, size_t n)
-+{
-+       return memcmp(cs, ct, n);
-+}
-+EXPORT_SYMBOL(bcmp);
-+#else
- /**
-  * memcmp - Compare two areas of memory
-  * @cs: One area of memory
-@@ -864,6 +870,8 @@ __visible int memcmp(const void *cs, const void
-*ct, size_t count)
-        return res;
- }
- EXPORT_SYMBOL(memcmp);
-+__weak __alias(memcmp) typeof(memcmp) bcmp;
-+EXPORT_SYMBOL(bcmp);
- #endif
-
- #ifndef __HAVE_ARCH_MEMSCAN
+Acked-by: Mark Salter <msalter@redhat.com>
 
 
--- 
-Thanks,
-~Nick Desaulniers
