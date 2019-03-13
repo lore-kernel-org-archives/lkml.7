@@ -2,190 +2,382 @@ Return-Path: <SRS0=dUEL=RQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DE50AC43381
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 Mar 2019 23:16:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 17C09C10F03
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 Mar 2019 23:18:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B4A7F20854
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 Mar 2019 23:16:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BFC9821019
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 Mar 2019 23:18:23 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1552519103;
+	bh=i4OY5RNQjz/WlMtn/mb8Tlt185YWFZ86d5FdLQnkXFI=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=N4HlcAif1k1rZseSnVR8QJLT/BET8dcel9TCqYmrmTqQ+LyyKQo6lxZEfrGphdh9E
+	 KAp+8UGKfiDNWrKz4Es+R8onIzaZWz/9lnfK1UpaVAxfL6lxj9CjTyusCzFY1FgDTi
+	 +UJunCPlsikXez+zGCe2wQcYs3eYvLY/J3apXyG0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727177AbfCMXQh (ORCPT
+        id S1726971AbfCMXSW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 13 Mar 2019 19:16:37 -0400
-Received: from mx.sdf.org ([205.166.94.20]:63821 "EHLO mx.sdf.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726328AbfCMXQg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 13 Mar 2019 19:16:36 -0400
-Received: from sdf.org (IDENT:lkml@sdf.lonestar.org [205.166.94.16])
-        by mx.sdf.org (8.15.2/8.14.5) with ESMTPS id x2DNFGqv001230
-        (using TLSv1.2 with cipher DHE-RSA-AES256-GCM-SHA384 (256 bits) verified NO);
-        Wed, 13 Mar 2019 23:15:16 GMT
-Received: (from lkml@localhost)
-        by sdf.org (8.15.2/8.12.8/Submit) id x2DNFFg3026947;
-        Wed, 13 Mar 2019 23:15:15 GMT
-Date:   Wed, 13 Mar 2019 23:15:15 GMT
-From:   George Spelvin <lkml@sdf.org>
-Message-Id: <201903132315.x2DNFFg3026947@sdf.org>
-To:     linux-kernel@vger.kernel.org, linux@rasmusvillemoes.dk,
-        lkml@sdf.org
-Subject: Re: [PATCH 1/5] lib/sort: Make swap functions more generic
-Cc:     akpm@linux-foundation.org, andriy.shevchenko@linux.intel.com,
-        daniel.wagner@siemens.com, dchinner@redhat.com,
-        don.mullis@gmail.com, geert@linux-m68k.org, st5pub@yandex.ru
-In-Reply-To: <6e08375f-6960-546b-39a6-26ff24a0ce0e@rasmusvillemoes.dk>
-References: <cover.1552097842.git.lkml@sdf.org>,
-    <dc6cc09e71f8687ff2ef4cbfc2b11accc9aba8aa.1552097842.git.lkml@sdf.org>,
-    <6e08375f-6960-546b-39a6-26ff24a0ce0e@rasmusvillemoes.dk>
+        Wed, 13 Mar 2019 19:18:22 -0400
+Received: from mail-oi1-f193.google.com ([209.85.167.193]:33054 "EHLO
+        mail-oi1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726183AbfCMXSW (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 13 Mar 2019 19:18:22 -0400
+Received: by mail-oi1-f193.google.com with SMTP id z14so2922147oid.0;
+        Wed, 13 Mar 2019 16:18:21 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=f6SvYlx/F883vR+Z7/H0ZrIgNORsq0y2rNgyJLV3sLU=;
+        b=CW8dzJftdzDU814vhdf9yb3fWum2Ar7shEWk4osv7vEPKj4jt/b5yp5K113o6rJR0p
+         Rc2KxJHFeosh7bG5b4Xf+EYo9LZs7AgJUKbhVJAUbUksWE4AtY6QndKgTt4NTcYkFyfm
+         +3Zog4AwbqtEhPGcog6+l5nBFIqR2Gj6OGWzPFZ9aq86xfVChNe0u8DLsx5xFiVCRAqY
+         QqDugmJtBu95MOhcFyszRLHJFYGZf44t33OUaxMvZD9T+QpXbb8/Xy0XV42FeeBhxR0d
+         2UfrPF0xa01LyJhdExz0jfMe8zDsK8UYmMNeHv8x6eWuSZUBcSGtP9v1Ts+KPm9ZgatB
+         PMxA==
+X-Gm-Message-State: APjAAAWTngXNoE1w1FCHc5Vz362eKFiGEaDV2pfmfjGlTpJ7jEKtDE4l
+        W7/7sOnPrWc/IquRTC3Uxq3fO4+UMqFX3ERifUSNPA==
+X-Google-Smtp-Source: APXvYqzCExDtKDvNArYMQv0H+xCit2nQ8ryBNUAdxmAXIjCr+K0NST0v6WEB+YFkrY84UVuilo3iRuHLwl9wnaowSB8=
+X-Received: by 2002:aca:88b:: with SMTP id 133mr375365oii.95.1552519100857;
+ Wed, 13 Mar 2019 16:18:20 -0700 (PDT)
+MIME-Version: 1.0
+References: <20190311205606.11228-1-keith.busch@intel.com> <20190311205606.11228-7-keith.busch@intel.com>
+In-Reply-To: <20190311205606.11228-7-keith.busch@intel.com>
+From:   "Rafael J. Wysocki" <rafael@kernel.org>
+Date:   Thu, 14 Mar 2019 00:18:09 +0100
+Message-ID: <CAJZ5v0jsFoAxOvUjBx0w+-3v8Y5QhRgxGJEqcGQ38XoPmP=a_A@mail.gmail.com>
+Subject: Re: [PATCHv8 06/10] node: Add memory-side caching attributes
+To:     Keith Busch <keith.busch@intel.com>
+Cc:     Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        ACPI Devel Maling List <linux-acpi@vger.kernel.org>,
+        Linux Memory Management List <linux-mm@kvack.org>,
+        Linux API <linux-api@vger.kernel.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Rafael Wysocki <rafael@kernel.org>,
+        Dave Hansen <dave.hansen@intel.com>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Jonathan Cameron <jonathan.cameron@huawei.com>,
+        Brice Goglin <Brice.Goglin@inria.fr>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Thank you for your thoughtful comments!
-
-On Wed, 13 Mar 2019 at 23:23:44 +0100, Rasmus Villemoes wrote:
-> On 21/02/2019 07.30, George Spelvin wrote:
-> + * @align: required aignment (typically 4 or 8)
+On Mon, Mar 11, 2019 at 9:55 PM Keith Busch <keith.busch@intel.com> wrote:
 >
-> typo aLignment
-
-Thanks; fixed!
-
->> + * Returns true if elements can be copied using word loads and stores.
->> + * The size must be a multiple of the alignment, and the base address must
->> + * be if we do not have CONFIG_HAVE_EFFICIENT_UNALIGNED_ACCESS.
+> System memory may have caches to help improve access speed to frequently
+> requested address ranges. While the system provided cache is transparent
+> to the software accessing these memory ranges, applications can optimize
+> their own access based on cache attributes.
 >
-> I wonder if we shouldn't unconditionally require the base to be aligned.
-> It of course depends on what exactly 'efficient' means, but if the base
-> is not aligned, we know that every single load and store will be
-> unaligned, and we're doing lots of them. IIRC even on x86 it's usually
-> two cycles instead of one, and even more when we cross a cache line
-> boundary (which we do rather often - e.g. in your 40 byte example,
-> almost every swap will hit at least one). One could also have some data
-> that is naturally 4-byte aligned with an element size that happens to be
-> a multiple of 8 bytes; it would be a bit sad to use 8-byte accesses when
-> 4-byte would all have been aligned.
-
-Well, a 2-cycle unaligned access is still lots faster than 4 byte accesses.
-I think that's a decent interpretation of "EFFICIENT_UNALIGNED_ACCESS":
-faster than doing it a byte at a time.  So the change is a net win;
-we're just wondering if it could be optimized more.
-
-The 4/8 issue is similar, but not as extreme.  Is one unaligned 64-bit
-access faster than two aligned 32-bit accesses?  As you note, it's usually
-only twice the cost, so it's no slower, and there's less loop overhead.
-So I don't think it's a bad thing here, either.
-
-Re your comments on cache lines, ISTR that x86 can do an unaligned
-load with minimal penalty as long as it doesn't cross a cache line:
-https://software.intel.com/en-us/articles/reducing-the-impact-of-misaligned-memory-accesses/
-So you win on most of the accesses, hopefully enough to pay for the
-one unligned access.  Apparently in processors more recent than
-the P4 example Intel used above, it's even less:
-https://lemire.me/blog/2012/05/31/data-alignment-for-speed-myth-or-reality/
-
-On 32-bit machines, it's actually a 4-byte swap, unrolled twice;
-there are no 64-bit memory accesses.  So the concern is only about
-8-byte alignment on 64-bit machines.
-
-The great majority of call sites sort structures with pointer or
-long members, so are aligned and the question is moot.  I don't
-think it's worth overthinking the issue on behalf of the performance
-of some rare corner cases.
-
-I have considered doing away with the two word-copy loops and just
-having one machine-word-sized loop plus a byte fallback.
-
->> +	unsigned int lsbits = (unsigned int)size;
+> Provide a new API for the kernel to register these memory-side caches
+> under the memory node that provides it.
 >
-> Drop that cast.
-
-Actually, in response to an earlier comment, I changed it (and the
-type of lsbits) to (unsigned char), to emphasize that I *really* only
-care about a handful of low bits.
-
-I know gcc doesn't warn about implicit narrowing casts, but
-I prefer to make them explicit for documentation reasons.
-"Yes, I really mean to throw away the high bits."
-
-Compilers on machines without native byte operations are very good
-at using larger registers and optimizing away mask operations.
-(Remember that this is inlined, and "align" is a constant 4 or 8.)
+> The new sysfs representation is modeled from the existing cpu cacheinfo
+> attributes, as seen from /sys/devices/system/cpu/<cpu>/cache/.  Unlike CPU
+> cacheinfo though, the node cache level is reported from the view of the
+> memory. A higher level number is nearer to the CPU, while lower levels
+> are closer to the last level memory.
 >
->> +#ifdef CONFIG_HAVE_EFFICIENT_UNALIGNED_ACCESS
->> +	(void)base;
->> +#else
->> +	lsbits |= (unsigned int)(size_t)base;
+> The exported attributes are the cache size, the line size, associativity
+> indexing, and write back policy, and add the attributes for the system
+> memory caches to sysfs stable documentation.
 >
-> The kernel usually casts pointers to long or unsigned long. If some
-> oddball arch has size_t something other than unsigned long, this would
-> give a "warning: cast from pointer to integer of different size". So
-> just cast to unsigned long, and drop the cast to unsigned int.
+> Signed-off-by: Keith Busch <keith.busch@intel.com>
 
-I changed this to uintptr_t and called it good.
+Reviewed-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
 
->>  static void u32_swap(void *a, void *b, int size)
->>  {
->> -	u32 t = *(u32 *)a;
->> -	*(u32 *)a = *(u32 *)b;
->> -	*(u32 *)b = t;
->> +	size_t n = size;
->> +
+> ---
+>  Documentation/ABI/stable/sysfs-devices-node |  34 +++++++
+>  drivers/base/node.c                         | 151 ++++++++++++++++++++++++++++
+>  include/linux/node.h                        |  39 +++++++
+>  3 files changed, 224 insertions(+)
 >
-> Since the callback has int in its prototype (we should fix that globally
-> at some point...), might as well use a four-byte local variable, to
-> avoid rex prefix on x86-64. So just make that "unsigned" or "u32".
-
-Agreed about the eventual global fix.  If you care, the only places
-a non-NULL swap function is passed in are:
-- arch/arc/kernel/unwind.c
-- arch/powerpc/kernel/module_32.c
-- arch/powerpc/kernel/module_64.c
-! arch/x86/kernel/unwind_orc.c (2x)
-- fs/ocfs2/dir.c
-- fs/ocfs2/refcounttree.c (3x)
-- fs/ocfs2/xattr.c (3x)
-- fs/ubifs/find.c
-! kernel/jump_label.c
-! lib/extable.c
-
-The ones marked with "-" are simple memory swaps that could (should!)
-be replaced with NULL.  The ones marked with "!" actually do
-something non-trivial.
-
-
-Actually, I deliberately used a pointer-sized index, since the loop
-uses (a + n) addressing.  Hardware indexed addressing on 64-bit
-machines generally (I vaguely recall Aarch64 is an exception)
-requires a 64-bit index; using a smaller index requires some masking
-or sign-extending.
-
-I thought it was safer to bet that the compiler would figure out
-that a non-REX arithmetic operation could be used (cost if wrong,
-a 1-byte REX prefix) than to bet that it would feel safe promoting
-to 64 bits (cost if wrong: additional instructions).
-
-The problem in both cases is that I changed to a test-for-zero
-in the loop and the compiler doesn't know that size is a multiple
-of 4, so it may have trouble knowing that this doesn't wrap to
-2^64-1.
-
-I could tell it via
-	if (n % 4)
-		unreachable();
-
-One thing I should do is an intermediate cast through (unsigned int)
-so the compiler can avoid a sign extension.  That makes the REX-elision
-optimization easier.
-
-> Hm, are we absolutely sure there's no weird .config where some struct
-> ends up being empty, yet we still sort an array of them? It's far
-> fetched, of course, but perhaps an "if (unlikely(!size)) return;" at the
-> start of sort() would be in order. Dunno, I'll leave it to you.
-
-Well, the old generic_swap code also had a test at the bottom and
-so would misbehave somewhat, but yeah, this would be a good sanity
-check.  Sorting is expensive enough that the cost is trivial.
+> diff --git a/Documentation/ABI/stable/sysfs-devices-node b/Documentation/ABI/stable/sysfs-devices-node
+> index 735a40a3f9b2..f7ce68fbd4b9 100644
+> --- a/Documentation/ABI/stable/sysfs-devices-node
+> +++ b/Documentation/ABI/stable/sysfs-devices-node
+> @@ -142,3 +142,37 @@ Contact:   Keith Busch <keith.busch@intel.com>
+>  Description:
+>                 This node's write latency in nanoseconds when access
+>                 from nodes found in this class's linked initiators.
+> +
+> +What:          /sys/devices/system/node/nodeX/memory_side_cache/indexY/
+> +Date:          December 2018
+> +Contact:       Keith Busch <keith.busch@intel.com>
+> +Description:
+> +               The directory containing attributes for the memory-side cache
+> +               level 'Y'.
+> +
+> +What:          /sys/devices/system/node/nodeX/memory_side_cache/indexY/indexing
+> +Date:          December 2018
+> +Contact:       Keith Busch <keith.busch@intel.com>
+> +Description:
+> +               The caches associativity indexing: 0 for direct mapped,
+> +               non-zero if indexed.
+> +
+> +What:          /sys/devices/system/node/nodeX/memory_side_cache/indexY/line_size
+> +Date:          December 2018
+> +Contact:       Keith Busch <keith.busch@intel.com>
+> +Description:
+> +               The number of bytes accessed from the next cache level on a
+> +               cache miss.
+> +
+> +What:          /sys/devices/system/node/nodeX/memory_side_cache/indexY/size
+> +Date:          December 2018
+> +Contact:       Keith Busch <keith.busch@intel.com>
+> +Description:
+> +               The size of this memory side cache in bytes.
+> +
+> +What:          /sys/devices/system/node/nodeX/memory_side_cache/indexY/write_policy
+> +Date:          December 2018
+> +Contact:       Keith Busch <keith.busch@intel.com>
+> +Description:
+> +               The cache write policy: 0 for write-back, 1 for write-through,
+> +               other or unknown.
+> diff --git a/drivers/base/node.c b/drivers/base/node.c
+> index 2de546a040a5..8598fcbd2a17 100644
+> --- a/drivers/base/node.c
+> +++ b/drivers/base/node.c
+> @@ -205,6 +205,155 @@ void node_set_perf_attrs(unsigned int nid, struct node_hmem_attrs *hmem_attrs,
+>                 }
+>         }
+>  }
+> +
+> +/**
+> + * struct node_cache_info - Internal tracking for memory node caches
+> + * @dev:       Device represeting the cache level
+> + * @node:      List element for tracking in the node
+> + * @cache_attrs:Attributes for this cache level
+> + */
+> +struct node_cache_info {
+> +       struct device dev;
+> +       struct list_head node;
+> +       struct node_cache_attrs cache_attrs;
+> +};
+> +#define to_cache_info(device) container_of(device, struct node_cache_info, dev)
+> +
+> +#define CACHE_ATTR(name, fmt)                                          \
+> +static ssize_t name##_show(struct device *dev,                         \
+> +                          struct device_attribute *attr,               \
+> +                          char *buf)                                   \
+> +{                                                                      \
+> +       return sprintf(buf, fmt "\n", to_cache_info(dev)->cache_attrs.name);\
+> +}                                                                      \
+> +DEVICE_ATTR_RO(name);
+> +
+> +CACHE_ATTR(size, "%llu")
+> +CACHE_ATTR(line_size, "%u")
+> +CACHE_ATTR(indexing, "%u")
+> +CACHE_ATTR(write_policy, "%u")
+> +
+> +static struct attribute *cache_attrs[] = {
+> +       &dev_attr_indexing.attr,
+> +       &dev_attr_size.attr,
+> +       &dev_attr_line_size.attr,
+> +       &dev_attr_write_policy.attr,
+> +       NULL,
+> +};
+> +ATTRIBUTE_GROUPS(cache);
+> +
+> +static void node_cache_release(struct device *dev)
+> +{
+> +       kfree(dev);
+> +}
+> +
+> +static void node_cacheinfo_release(struct device *dev)
+> +{
+> +       struct node_cache_info *info = to_cache_info(dev);
+> +       kfree(info);
+> +}
+> +
+> +static void node_init_cache_dev(struct node *node)
+> +{
+> +       struct device *dev;
+> +
+> +       dev = kzalloc(sizeof(*dev), GFP_KERNEL);
+> +       if (!dev)
+> +               return;
+> +
+> +       dev->parent = &node->dev;
+> +       dev->release = node_cache_release;
+> +       if (dev_set_name(dev, "memory_side_cache"))
+> +               goto free_dev;
+> +
+> +       if (device_register(dev))
+> +               goto free_name;
+> +
+> +       pm_runtime_no_callbacks(dev);
+> +       node->cache_dev = dev;
+> +       return;
+> +free_name:
+> +       kfree_const(dev->kobj.name);
+> +free_dev:
+> +       kfree(dev);
+> +}
+> +
+> +/**
+> + * node_add_cache() - add cache attribute to a memory node
+> + * @nid: Node identifier that has new cache attributes
+> + * @cache_attrs: Attributes for the cache being added
+> + */
+> +void node_add_cache(unsigned int nid, struct node_cache_attrs *cache_attrs)
+> +{
+> +       struct node_cache_info *info;
+> +       struct device *dev;
+> +       struct node *node;
+> +
+> +       if (!node_online(nid) || !node_devices[nid])
+> +               return;
+> +
+> +       node = node_devices[nid];
+> +       list_for_each_entry(info, &node->cache_attrs, node) {
+> +               if (info->cache_attrs.level == cache_attrs->level) {
+> +                       dev_warn(&node->dev,
+> +                               "attempt to add duplicate cache level:%d\n",
+> +                               cache_attrs->level);
+> +                       return;
+> +               }
+> +       }
+> +
+> +       if (!node->cache_dev)
+> +               node_init_cache_dev(node);
+> +       if (!node->cache_dev)
+> +               return;
+> +
+> +       info = kzalloc(sizeof(*info), GFP_KERNEL);
+> +       if (!info)
+> +               return;
+> +
+> +       dev = &info->dev;
+> +       dev->parent = node->cache_dev;
+> +       dev->release = node_cacheinfo_release;
+> +       dev->groups = cache_groups;
+> +       if (dev_set_name(dev, "index%d", cache_attrs->level))
+> +               goto free_cache;
+> +
+> +       info->cache_attrs = *cache_attrs;
+> +       if (device_register(dev)) {
+> +               dev_warn(&node->dev, "failed to add cache level:%d\n",
+> +                        cache_attrs->level);
+> +               goto free_name;
+> +       }
+> +       pm_runtime_no_callbacks(dev);
+> +       list_add_tail(&info->node, &node->cache_attrs);
+> +       return;
+> +free_name:
+> +       kfree_const(dev->kobj.name);
+> +free_cache:
+> +       kfree(info);
+> +}
+> +
+> +static void node_remove_caches(struct node *node)
+> +{
+> +       struct node_cache_info *info, *next;
+> +
+> +       if (!node->cache_dev)
+> +               return;
+> +
+> +       list_for_each_entry_safe(info, next, &node->cache_attrs, node) {
+> +               list_del(&info->node);
+> +               device_unregister(&info->dev);
+> +       }
+> +       device_unregister(node->cache_dev);
+> +}
+> +
+> +static void node_init_caches(unsigned int nid)
+> +{
+> +       INIT_LIST_HEAD(&node_devices[nid]->cache_attrs);
+> +}
+> +#else
+> +static void node_init_caches(unsigned int nid) { }
+> +static void node_remove_caches(struct node *node) { }
+>  #endif
+>
+>  #define K(x) ((x) << (PAGE_SHIFT - 10))
+> @@ -489,6 +638,7 @@ void unregister_node(struct node *node)
+>  {
+>         hugetlb_unregister_node(node);          /* no-op, if memoryless node */
+>         node_remove_accesses(node);
+> +       node_remove_caches(node);
+>         device_unregister(&node->dev);
+>  }
+>
+> @@ -781,6 +931,7 @@ int __register_one_node(int nid)
+>         INIT_LIST_HEAD(&node_devices[nid]->access_list);
+>         /* initialize work queue for memory hot plug */
+>         init_node_hugetlb_work(nid);
+> +       node_init_caches(nid);
+>
+>         return error;
+>  }
+> diff --git a/include/linux/node.h b/include/linux/node.h
+> index 4139d728f8b3..1a557c589ecb 100644
+> --- a/include/linux/node.h
+> +++ b/include/linux/node.h
+> @@ -35,10 +35,45 @@ struct node_hmem_attrs {
+>         unsigned int write_latency;
+>  };
+>
+> +enum cache_indexing {
+> +       NODE_CACHE_DIRECT_MAP,
+> +       NODE_CACHE_INDEXED,
+> +       NODE_CACHE_OTHER,
+> +};
+> +
+> +enum cache_write_policy {
+> +       NODE_CACHE_WRITE_BACK,
+> +       NODE_CACHE_WRITE_THROUGH,
+> +       NODE_CACHE_WRITE_OTHER,
+> +};
+> +
+> +/**
+> + * struct node_cache_attrs - system memory caching attributes
+> + *
+> + * @indexing:          The ways memory blocks may be placed in cache
+> + * @write_policy:      Write back or write through policy
+> + * @size:              Total size of cache in bytes
+> + * @line_size:         Number of bytes fetched on a cache miss
+> + * @level:             The cache hierarchy level
+> + */
+> +struct node_cache_attrs {
+> +       enum cache_indexing indexing;
+> +       enum cache_write_policy write_policy;
+> +       u64 size;
+> +       u16 line_size;
+> +       u8 level;
+> +};
+> +
+>  #ifdef CONFIG_HMEM_REPORTING
+> +void node_add_cache(unsigned int nid, struct node_cache_attrs *cache_attrs);
+>  void node_set_perf_attrs(unsigned int nid, struct node_hmem_attrs *hmem_attrs,
+>                          unsigned access);
+>  #else
+> +static inline void node_add_cache(unsigned int nid,
+> +                                 struct node_cache_attrs *cache_attrs)
+> +{
+> +}
+> +
+>  static inline void node_set_perf_attrs(unsigned int nid,
+>                                        struct node_hmem_attrs *hmem_attrs,
+>                                        unsigned access)
+> @@ -53,6 +88,10 @@ struct node {
+>  #if defined(CONFIG_MEMORY_HOTPLUG_SPARSE) && defined(CONFIG_HUGETLBFS)
+>         struct work_struct      node_work;
+>  #endif
+> +#ifdef CONFIG_HMEM_REPORTING
+> +       struct list_head cache_attrs;
+> +       struct device *cache_dev;
+> +#endif
+>  };
+>
+>  struct memory_block;
+> --
+> 2.14.4
+>
