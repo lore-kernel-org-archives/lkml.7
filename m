@@ -4,57 +4,48 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 582D7C43381
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 Mar 2019 19:14:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A3982C43381
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 Mar 2019 19:14:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2E22E2184E
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 Mar 2019 19:14:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 75FD820693
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 Mar 2019 19:14:21 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1552504456;
-	bh=sl6/GXQRelWFsXQW/7BdboCO+QtKuHFRyTkajJnALtI=;
+	s=default; t=1552504461;
+	bh=f8kxqIfKg4iC1/wRfqqgLKw7xcPAJiTSsezw9Zm0ijw=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=OGqA8yY753nPqfkUD2Ec6U9HWNj3uwqPtQr4PpjWktVdLuCY1v2K2dnn0KC/W02/N
-	 /t1undQJ/ktpgTli7lQ6nD0ysR7KyHW/deZlmWrRvqMFGciMb2IsEi1piURLxZkCOv
-	 qZMn9OyhNSLN3nTeDdWvM4tAV88BKHVdfNuz5MM0=
+	b=SqFi0nJXr9VtZu2IoDD6FWGdqoR4NRbi/2Ufin4ewkCQ/XX4CMlvPdYo1fMzaNYAO
+	 0/A/9fXhZ8uUPfrGOquwPiZiUg5j1gyk+9jr/tPgSULdXjz36TqGSLY8AN+MN2jgPn
+	 sA+yZqCuf+Jd72eO12tg4sAod2oFvzpPOkgvW6lQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728183AbfCMTOO (ORCPT
+        id S1728213AbfCMTOT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 13 Mar 2019 15:14:14 -0400
-Received: from mail.kernel.org ([198.145.29.99]:44598 "EHLO mail.kernel.org"
+        Wed, 13 Mar 2019 15:14:19 -0400
+Received: from mail.kernel.org ([198.145.29.99]:44710 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728160AbfCMTOL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 13 Mar 2019 15:14:11 -0400
+        id S1728186AbfCMTOR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 13 Mar 2019 15:14:17 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 99DC22075C;
-        Wed, 13 Mar 2019 19:14:08 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 3DE312075C;
+        Wed, 13 Mar 2019 19:14:15 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1552504451;
-        bh=sl6/GXQRelWFsXQW/7BdboCO+QtKuHFRyTkajJnALtI=;
+        s=default; t=1552504456;
+        bh=f8kxqIfKg4iC1/wRfqqgLKw7xcPAJiTSsezw9Zm0ijw=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=GI3pnzsHlRP4YyRLrxXbG4tz+S55XhmiP3WLaCgsO0yoRGP49AId7Ngu4oPDozYTt
-         WVHHdLNYUIBAsLLTl7ri1rmWCRTk5w+ugLbqPWp5ZgQjnzuZdQu8SpgLnibn6JYGAk
-         jxAiLGai+d/EVCeCev8N2xDfueEqT7UbT4RldbeI=
+        b=AlVQFVR794eFD724xhAlBQclJo8winX/BS/oDxePpCUrjz76mFb2RkZ2jNO4UHO3j
+         3+p+2bhDQG3ccBsT7gAS6Wtzi/EIBvrEVNh5CD4HoySDyUi4NviEO2+oeN7bx+5b7j
+         N5ODBtbZ5Zcxck+iFTFwv39FxWzj/h2zvChyyhhg=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Andrey Konovalov <andreyknvl@google.com>,
-        Alexander Potapenko <glider@google.com>,
-        Andrey Ryabinin <aryabinin@virtuozzo.com>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Dmitry Vyukov <dvyukov@google.com>,
-        Evgeniy Stepanov <eugenis@google.com>,
-        Kostya Serebryany <kcc@google.com>,
-        Vincenzo Frascino <vincenzo.frascino@arm.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Sasha Levin <sashal@kernel.org>, linux-mm@kvack.org
-Subject: [PATCH AUTOSEL 4.19 30/48] kasan, slab: fix conflicts with CONFIG_HARDENED_USERCOPY
-Date:   Wed, 13 Mar 2019 15:12:32 -0400
-Message-Id: <20190313191250.158955-30-sashal@kernel.org>
+Cc:     Jeff Kirsher <jeffrey.t.kirsher@intel.com>,
+        Sasha Levin <sashal@kernel.org>, netdev@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.19 32/48] ixgbe: fix older devices that do not support IXGBE_MRQC_L3L4TXSWEN
+Date:   Wed, 13 Mar 2019 15:12:34 -0400
+Message-Id: <20190313191250.158955-32-sashal@kernel.org>
 X-Mailer: git-send-email 2.19.1
 In-Reply-To: <20190313191250.158955-1-sashal@kernel.org>
 References: <20190313191250.158955-1-sashal@kernel.org>
@@ -66,44 +57,41 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Andrey Konovalov <andreyknvl@google.com>
+From: Jeff Kirsher <jeffrey.t.kirsher@intel.com>
 
-[ Upstream commit 219667c23c68eb3dbc0d5662b9246f28477fe529 ]
+[ Upstream commit 156a67a9065e3339be85f811d1b13b920e50d73b ]
 
-Similarly to commit 96fedce27e13 ("kasan: make tag based mode work with
-CONFIG_HARDENED_USERCOPY"), we need to reset pointer tags in
-__check_heap_object() in mm/slab.c before doing any pointer math.
+The enabling L3/L4 filtering for transmit switched packets for all
+devices caused unforeseen issue on older devices when trying to send UDP
+traffic in an ordered sequence.  This bit was originally intended for X550
+devices, which supported this feature, so limit the scope of this bit to
+only X550 devices.
 
-Link: http://lkml.kernel.org/r/9a5c0f958db10e69df5ff9f2b997866b56b7effc.1550602886.git.andreyknvl@google.com
-Signed-off-by: Andrey Konovalov <andreyknvl@google.com>
-Tested-by: Qian Cai <cai@lca.pw>
-Cc: Alexander Potapenko <glider@google.com>
-Cc: Andrey Ryabinin <aryabinin@virtuozzo.com>
-Cc: Catalin Marinas <catalin.marinas@arm.com>
-Cc: Dmitry Vyukov <dvyukov@google.com>
-Cc: Evgeniy Stepanov <eugenis@google.com>
-Cc: Kostya Serebryany <kcc@google.com>
-Cc: Vincenzo Frascino <vincenzo.frascino@arm.com>
-Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
-Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
+Signed-off-by: Jeff Kirsher <jeffrey.t.kirsher@intel.com>
+Tested-by: Andrew Bowers <andrewx.bowers@intel.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- mm/slab.c | 2 ++
- 1 file changed, 2 insertions(+)
+ drivers/net/ethernet/intel/ixgbe/ixgbe_main.c | 7 +++++--
+ 1 file changed, 5 insertions(+), 2 deletions(-)
 
-diff --git a/mm/slab.c b/mm/slab.c
-index fad6839e8eab..813bd89c263b 100644
---- a/mm/slab.c
-+++ b/mm/slab.c
-@@ -4421,6 +4421,8 @@ void __check_heap_object(const void *ptr, unsigned long n, struct page *page,
- 	unsigned int objnr;
- 	unsigned long offset;
+diff --git a/drivers/net/ethernet/intel/ixgbe/ixgbe_main.c b/drivers/net/ethernet/intel/ixgbe/ixgbe_main.c
+index 6cdd58d9d461..410d5d3aa393 100644
+--- a/drivers/net/ethernet/intel/ixgbe/ixgbe_main.c
++++ b/drivers/net/ethernet/intel/ixgbe/ixgbe_main.c
+@@ -3924,8 +3924,11 @@ static void ixgbe_setup_mrqc(struct ixgbe_adapter *adapter)
+ 			else
+ 				mrqc = IXGBE_MRQC_VMDQRSS64EN;
  
-+	ptr = kasan_reset_tag(ptr);
-+
- 	/* Find and validate object. */
- 	cachep = page->slab_cache;
- 	objnr = obj_to_index(cachep, page, (void *)ptr);
+-			/* Enable L3/L4 for Tx Switched packets */
+-			mrqc |= IXGBE_MRQC_L3L4TXSWEN;
++			/* Enable L3/L4 for Tx Switched packets only for X550,
++			 * older devices do not support this feature
++			 */
++			if (hw->mac.type >= ixgbe_mac_X550)
++				mrqc |= IXGBE_MRQC_L3L4TXSWEN;
+ 		} else {
+ 			if (tcs > 4)
+ 				mrqc = IXGBE_MRQC_RTRSS8TCEN;
 -- 
 2.19.1
 
