@@ -4,48 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4CBD7C43381
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 Mar 2019 19:33:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DB1BDC43381
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 Mar 2019 19:33:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0E7AC2075C
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 Mar 2019 19:33:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9D26020657
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 Mar 2019 19:33:22 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1552505592;
-	bh=ognpR68lZ0ABQFK+IlI98eA9rIlTa1PHRDdPUtu5sAs=;
+	s=default; t=1552505602;
+	bh=a4KiKXTG1/UzRa91yURRT/g/ZTIxt7MghVNMKFEcJjg=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=zhJnbvYNaBJvyeHm11FJS+HNlMoMasGC3FjyLpEQlNVd56mvlu3pTlLqUPunhCY0E
-	 KSjl4Qpq4HlCTUxjVBkSi5q0GKROxy8t++2Fxt9DMlgM9tHqN+K8SJJ3MtPAGwGyCO
-	 VPz/lMJMG2wXdF1t/oRCSuH11eKPbO41NK9UIPg4=
+	b=D9CGBXAvqbvV/h2L1kgj4DdURHrdZvgXbECjuXKrdJN3rkfSsBxubiMgS8CHAMfJ0
+	 tqi7sJxU1hESgo1xG0/zeM/A8NzockkhfDMButCwn896/RCrut6q540gtXvo4eCa+t
+	 NR5vkmTqZbdvMx/+rIkgGMWGwA9zvDIojR+M3d6A=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727636AbfCMTdK (ORCPT
+        id S1727677AbfCMTdV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 13 Mar 2019 15:33:10 -0400
-Received: from mail.kernel.org ([198.145.29.99]:41550 "EHLO mail.kernel.org"
+        Wed, 13 Mar 2019 15:33:21 -0400
+Received: from mail.kernel.org ([198.145.29.99]:41492 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727260AbfCMTK6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 13 Mar 2019 15:10:58 -0400
+        id S1727235AbfCMTKy (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 13 Mar 2019 15:10:54 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id DAFB62184C;
-        Wed, 13 Mar 2019 19:10:55 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 999612183F;
+        Wed, 13 Mar 2019 19:10:51 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1552504257;
-        bh=ognpR68lZ0ABQFK+IlI98eA9rIlTa1PHRDdPUtu5sAs=;
+        s=default; t=1552504253;
+        bh=a4KiKXTG1/UzRa91yURRT/g/ZTIxt7MghVNMKFEcJjg=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=us+n4Crz1YjQdEUSlhUu1v6RgFLR++vw6Mue7n7GXgPVhYRAmXinceGrjjiD1UxH+
-         kvmrJWYsLA/I68X2dhLXCjtUExU5IprKvLAM8UA6RzTplveZx3BzAjdM+1AmxQaEbM
-         umXkcayHuUwHaDluiurX5gsE5ryAiaUwAmgmg2o0=
+        b=d08JmeBJK6DbEepIQZenBRFh4V0JD5+yZ2//yDMZnJmD40Fh567n2rnKa6QDWF/M6
+         rL0z3HX2HHpAwZm9rmrIznNLSZX+ngbdXTO2cWuRtHb9M9FHDNlpkjvjT22ONtUIf9
+         jvHM2tyb+LvoynvqZnwoLB1CzLVbH9f+JVhRNfKk=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Florian Fainelli <f.fainelli@gmail.com>,
-        "David S . Miller" <davem@davemloft.net>,
-        Sasha Levin <sashal@kernel.org>, netdev@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.20 16/60] net: dsa: bcm_sf2: Do not assume DSA master supports WoL
-Date:   Wed, 13 Mar 2019 15:09:37 -0400
-Message-Id: <20190313191021.158171-16-sashal@kernel.org>
+Cc:     Anoob Soman <anoob.soman@citrix.com>, Bob Liu <bob.liu@oracle.com>,
+        "Martin K . Petersen" <martin.petersen@oracle.com>,
+        Sasha Levin <sashal@kernel.org>, open-iscsi@googlegroups.com,
+        linux-scsi@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.20 14/60] scsi: libiscsi: Fix race between iscsi_xmit_task and iscsi_complete_task
+Date:   Wed, 13 Mar 2019 15:09:35 -0400
+Message-Id: <20190313191021.158171-14-sashal@kernel.org>
 X-Mailer: git-send-email 2.19.1
 In-Reply-To: <20190313191021.158171-1-sashal@kernel.org>
 References: <20190313191021.158171-1-sashal@kernel.org>
@@ -57,54 +59,109 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Florian Fainelli <f.fainelli@gmail.com>
+From: Anoob Soman <anoob.soman@citrix.com>
 
-[ Upstream commit c3152ec4c0691e351f35a2f63347a464b5f35151 ]
+[ Upstream commit 79edd00dc6a96644d76b4a1cb97d94d49e026768 ]
 
-We assume in the bcm_sf2 driver that the DSA master network device
-supports ethtool_ops::{get,set}_wol operations, which is not a given.
-Avoid de-referencing potentially non-existent function pointers and
-check them as we should.
+When a target sends Check Condition, whilst initiator is busy xmiting
+re-queued data, could lead to race between iscsi_complete_task() and
+iscsi_xmit_task() and eventually crashing with the following kernel
+backtrace.
 
-Fixes: 96e65d7f3f88 ("net: dsa: bcm_sf2: add support for Wake-on-LAN")
-Signed-off-by: Florian Fainelli <f.fainelli@gmail.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
+[3326150.987523] ALERT: BUG: unable to handle kernel NULL pointer dereference at 0000000000000078
+[3326150.987549] ALERT: IP: [<ffffffffa05ce70d>] iscsi_xmit_task+0x2d/0xc0 [libiscsi]
+[3326150.987571] WARN: PGD 569c8067 PUD 569c9067 PMD 0
+[3326150.987582] WARN: Oops: 0002 [#1] SMP
+[3326150.987593] WARN: Modules linked in: tun nfsv3 nfs fscache dm_round_robin
+[3326150.987762] WARN: CPU: 2 PID: 8399 Comm: kworker/u32:1 Tainted: G O 4.4.0+2 #1
+[3326150.987774] WARN: Hardware name: Dell Inc. PowerEdge R720/0W7JN5, BIOS 2.5.4 01/22/2016
+[3326150.987790] WARN: Workqueue: iscsi_q_13 iscsi_xmitworker [libiscsi]
+[3326150.987799] WARN: task: ffff8801d50f3800 ti: ffff8801f5458000 task.ti: ffff8801f5458000
+[3326150.987810] WARN: RIP: e030:[<ffffffffa05ce70d>] [<ffffffffa05ce70d>] iscsi_xmit_task+0x2d/0xc0 [libiscsi]
+[3326150.987825] WARN: RSP: e02b:ffff8801f545bdb0 EFLAGS: 00010246
+[3326150.987831] WARN: RAX: 00000000ffffffc3 RBX: ffff880282d2ab20 RCX: ffff88026b6ac480
+[3326150.987842] WARN: RDX: 0000000000000000 RSI: 00000000fffffe01 RDI: ffff880282d2ab20
+[3326150.987852] WARN: RBP: ffff8801f545bdc8 R08: 0000000000000000 R09: 0000000000000008
+[3326150.987862] WARN: R10: 0000000000000000 R11: 000000000000fe88 R12: 0000000000000000
+[3326150.987872] WARN: R13: ffff880282d2abe8 R14: ffff880282d2abd8 R15: ffff880282d2ac08
+[3326150.987890] WARN: FS: 00007f5a866b4840(0000) GS:ffff88028a640000(0000) knlGS:0000000000000000
+[3326150.987900] WARN: CS: e033 DS: 0000 ES: 0000 CR0: 0000000080050033
+[3326150.987907] WARN: CR2: 0000000000000078 CR3: 0000000070244000 CR4: 0000000000042660
+[3326150.987918] WARN: Stack:
+[3326150.987924] WARN: ffff880282d2ad58 ffff880282d2ab20 ffff880282d2abe8 ffff8801f545be18
+[3326150.987938] WARN: ffffffffa05cea90 ffff880282d2abf8 ffff88026b59cc80 ffff88026b59cc00
+[3326150.987951] WARN: ffff88022acf32c0 ffff880289491800 ffff880255a80800 0000000000000400
+[3326150.987964] WARN: Call Trace:
+[3326150.987975] WARN: [<ffffffffa05cea90>] iscsi_xmitworker+0x2f0/0x360 [libiscsi]
+[3326150.987988] WARN: [<ffffffff8108862c>] process_one_work+0x1fc/0x3b0
+[3326150.987997] WARN: [<ffffffff81088f95>] worker_thread+0x2a5/0x470
+[3326150.988006] WARN: [<ffffffff8159cad8>] ? __schedule+0x648/0x870
+[3326150.988015] WARN: [<ffffffff81088cf0>] ? rescuer_thread+0x300/0x300
+[3326150.988023] WARN: [<ffffffff8108ddf5>] kthread+0xd5/0xe0
+[3326150.988031] WARN: [<ffffffff8108dd20>] ? kthread_stop+0x110/0x110
+[3326150.988040] WARN: [<ffffffff815a0bcf>] ret_from_fork+0x3f/0x70
+[3326150.988048] WARN: [<ffffffff8108dd20>] ? kthread_stop+0x110/0x110
+[3326150.988127] ALERT: RIP [<ffffffffa05ce70d>] iscsi_xmit_task+0x2d/0xc0 [libiscsi]
+[3326150.988138] WARN: RSP <ffff8801f545bdb0>
+[3326150.988144] WARN: CR2: 0000000000000078
+[3326151.020366] WARN: ---[ end trace 1c60974d4678d81b ]---
+
+Commit 6f8830f5bbab ("scsi: libiscsi: add lock around task lists to fix
+list corruption regression") introduced "taskqueuelock" to fix list
+corruption during the race, but this wasn't enough.
+
+Re-setting of conn->task to NULL, could race with iscsi_xmit_task().
+iscsi_complete_task()
+{
+    ....
+    if (conn->task == task)
+        conn->task = NULL;
+}
+
+conn->task in iscsi_xmit_task() could be NULL and so will be task.
+__iscsi_get_task(task) will crash (NullPtr de-ref), trying to access
+refcount.
+
+iscsi_xmit_task()
+{
+    struct iscsi_task *task = conn->task;
+
+    __iscsi_get_task(task);
+}
+
+This commit will take extra conn->session->back_lock in iscsi_xmit_task()
+to ensure iscsi_xmit_task() waits for iscsi_complete_task(), if
+iscsi_complete_task() wins the race.  If iscsi_xmit_task() wins the race,
+iscsi_xmit_task() increments task->refcount
+(__iscsi_get_task) ensuring iscsi_complete_task() will not iscsi_free_task().
+
+Signed-off-by: Anoob Soman <anoob.soman@citrix.com>
+Signed-off-by: Bob Liu <bob.liu@oracle.com>
+Acked-by: Lee Duncan <lduncan@suse.com>
+Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/dsa/bcm_sf2.c | 10 ++++++----
- 1 file changed, 6 insertions(+), 4 deletions(-)
+ drivers/scsi/libiscsi.c | 6 ++++++
+ 1 file changed, 6 insertions(+)
 
-diff --git a/drivers/net/dsa/bcm_sf2.c b/drivers/net/dsa/bcm_sf2.c
-index 2eb68769562c..5c00dfb6684a 100644
---- a/drivers/net/dsa/bcm_sf2.c
-+++ b/drivers/net/dsa/bcm_sf2.c
-@@ -723,10 +723,11 @@ static void bcm_sf2_sw_get_wol(struct dsa_switch *ds, int port,
- {
- 	struct net_device *p = ds->ports[port].cpu_dp->master;
- 	struct bcm_sf2_priv *priv = bcm_sf2_to_priv(ds);
--	struct ethtool_wolinfo pwol;
-+	struct ethtool_wolinfo pwol = { };
+diff --git a/drivers/scsi/libiscsi.c b/drivers/scsi/libiscsi.c
+index f78d2e5c1471..4ad61cfa69c0 100644
+--- a/drivers/scsi/libiscsi.c
++++ b/drivers/scsi/libiscsi.c
+@@ -1449,7 +1449,13 @@ static int iscsi_xmit_task(struct iscsi_conn *conn)
+ 	if (test_bit(ISCSI_SUSPEND_BIT, &conn->suspend_tx))
+ 		return -ENODATA;
  
- 	/* Get the parent device WoL settings */
--	p->ethtool_ops->get_wol(p, &pwol);
-+	if (p->ethtool_ops->get_wol)
-+		p->ethtool_ops->get_wol(p, &pwol);
- 
- 	/* Advertise the parent device supported settings */
- 	wol->supported = pwol.supported;
-@@ -747,9 +748,10 @@ static int bcm_sf2_sw_set_wol(struct dsa_switch *ds, int port,
- 	struct net_device *p = ds->ports[port].cpu_dp->master;
- 	struct bcm_sf2_priv *priv = bcm_sf2_to_priv(ds);
- 	s8 cpu_port = ds->ports[port].cpu_dp->index;
--	struct ethtool_wolinfo pwol;
-+	struct ethtool_wolinfo pwol =  { };
- 
--	p->ethtool_ops->get_wol(p, &pwol);
-+	if (p->ethtool_ops->get_wol)
-+		p->ethtool_ops->get_wol(p, &pwol);
- 	if (wol->wolopts & ~pwol.supported)
- 		return -EINVAL;
- 
++	spin_lock_bh(&conn->session->back_lock);
++	if (conn->task == NULL) {
++		spin_unlock_bh(&conn->session->back_lock);
++		return -ENODATA;
++	}
+ 	__iscsi_get_task(task);
++	spin_unlock_bh(&conn->session->back_lock);
+ 	spin_unlock_bh(&conn->session->frwd_lock);
+ 	rc = conn->session->tt->xmit_task(task);
+ 	spin_lock_bh(&conn->session->frwd_lock);
 -- 
 2.19.1
 
