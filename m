@@ -6,33 +6,32 @@ X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,UNPARSEABLE_RELAY,
 	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1CDE7C43381
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 Mar 2019 13:50:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 07547C43381
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 Mar 2019 13:50:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EA8F22171F
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 Mar 2019 13:50:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D3CAE2177E
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 Mar 2019 13:50:46 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727069AbfCMNum (ORCPT
+        id S1727093AbfCMNup (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 13 Mar 2019 09:50:42 -0400
-Received: from out30-43.freemail.mail.aliyun.com ([115.124.30.43]:50953 "EHLO
-        out30-43.freemail.mail.aliyun.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726896AbfCMNuf (ORCPT
+        Wed, 13 Mar 2019 09:50:45 -0400
+Received: from out30-44.freemail.mail.aliyun.com ([115.124.30.44]:51378 "EHLO
+        out30-44.freemail.mail.aliyun.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726791AbfCMNug (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 13 Mar 2019 09:50:35 -0400
-X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R121e4;CH=green;DM=||false|;FP=0|-1|-1|-1|0|-1|-1|-1;HT=e01f04392;MF=alex.shi@linux.alibaba.com;NM=1;PH=DS;RN=7;SR=0;TI=SMTPD_---0TMdk0u1_1552485031;
-Received: from localhost(mailfrom:alex.shi@linux.alibaba.com fp:SMTPD_---0TMdk0u1_1552485031)
+        Wed, 13 Mar 2019 09:50:36 -0400
+X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R191e4;CH=green;DM=||false|;FP=0|-1|-1|-1|0|-1|-1|-1;HT=e01e07488;MF=alex.shi@linux.alibaba.com;NM=1;PH=DS;RN=7;SR=0;TI=SMTPD_---0TMdXUvO_1552485032;
+Received: from localhost(mailfrom:alex.shi@linux.alibaba.com fp:SMTPD_---0TMdXUvO_1552485032)
           by smtp.aliyun-inc.com(127.0.0.1);
-          Wed, 13 Mar 2019 21:50:31 +0800
+          Wed, 13 Mar 2019 21:50:32 +0800
 From:   Alex Shi <alex.shi@linux.alibaba.com>
 To:     corbet@lwn.net, harryxiyou@gmail.com, linux-doc@vger.kernel.org,
         linux-kernel@vger.kernel.org
 Cc:     Alex Shi <alex.shi@linux.alibaba.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Li Yang <leoyang.li@nxp.com>
-Subject: [PATCH v5 22/31] mailmap: update Li Yang's email address
-Date:   Wed, 13 Mar 2019 21:49:52 +0800
-Message-Id: <20190313135001.260905-23-alex.shi@linux.alibaba.com>
+        Zhang Wei <wezhang@outlook.com>, Li Yang <leoyang.li@nxp.com>
+Subject: [PATCH v5 23/31] docs/zh_CN: update Zhang Wei's email address
+Date:   Wed, 13 Mar 2019 21:49:53 +0800
+Message-Id: <20190313135001.260905-24-alex.shi@linux.alibaba.com>
 X-Mailer: git-send-email 2.19.1.856.g8858448bb
 In-Reply-To: <20190313135001.260905-1-alex.shi@linux.alibaba.com>
 References: <20190313135001.260905-1-alex.shi@linux.alibaba.com>
@@ -44,30 +43,29 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Update the obsolete email address leoli@freescale.com and
-leo@zh-kernel.org with leoyang.li@nxp.com.
+to replace the obsolete email address with new one.
 
 Signed-off-by: Alex Shi <alex.shi@linux.alibaba.com>
-Cc: Andrew Morton <akpm@linux-foundation.org>
+Cc: Zhang Wei <wezhang@outlook.com>
 Cc: Li Yang <leoyang.li@nxp.com>
 Signed-off-by: Weiwei Jia <harryxiyou@gmail.com>
 ---
- .mailmap | 2 ++
- 1 file changed, 2 insertions(+)
+ Documentation/translations/zh_CN/process/submitting-drivers.rst | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/.mailmap b/.mailmap
-index 37e1847c7988..705c4f11f1a3 100644
---- a/.mailmap
-+++ b/.mailmap
-@@ -117,6 +117,8 @@ Leonid I Ananiev <leonid.i.ananiev@intel.com>
- Linas Vepstas <linas@austin.ibm.com>
- Linus Lüssing <linus.luessing@c0d3.blue> <linus.luessing@web.de>
- Linus Lüssing <linus.luessing@c0d3.blue> <linus.luessing@ascom.ch>
-+Li Yang <leoyang.li@nxp.com> <leo@zh-kernel.org>
-+Li Yang <leoyang.li@nxp.com> <leoli@freescale.com>
- Maciej W. Rozycki <macro@mips.com> <macro@imgtec.com>
- Marcin Nowakowski <marcin.nowakowski@mips.com> <marcin.nowakowski@imgtec.com>
- Mark Brown <broonie@sirena.org.uk>
+diff --git a/Documentation/translations/zh_CN/process/submitting-drivers.rst b/Documentation/translations/zh_CN/process/submitting-drivers.rst
+index fade72515b04..43c0e4530362 100644
+--- a/Documentation/translations/zh_CN/process/submitting-drivers.rst
++++ b/Documentation/translations/zh_CN/process/submitting-drivers.rst
+@@ -13,7 +13,7 @@
+         中文版翻译者： 李阳  Li Yang <leoyang.li@nxp.com>
+         中文版校译者： 陈琦 Maggie Chen <chenqi@beyondsoft.com>
+                        王聪 Wang Cong <xiyou.wangcong@gmail.com>
+-                       张巍 Zhang Wei <Wei.Zhang@freescale.com>
++                       张巍 Zhang Wei <wezhang@outlook.com>
+ 
+ 如何向 Linux 内核提交驱动程序
+ =============================
 -- 
 2.19.1.856.g8858448bb
 
