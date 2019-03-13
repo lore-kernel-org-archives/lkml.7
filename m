@@ -2,96 +2,77 @@ Return-Path: <SRS0=dUEL=RQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 43172C43381
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 Mar 2019 21:53:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AE068C43381
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 Mar 2019 21:59:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E646620854
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 Mar 2019 21:53:38 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="rf/+WRrD"
+	by mail.kernel.org (Postfix) with ESMTP id 73A1A2087C
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 Mar 2019 21:59:47 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726938AbfCMVxh (ORCPT
+        id S1726656AbfCMV7q (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 13 Mar 2019 17:53:37 -0400
-Received: from mail-pg1-f171.google.com ([209.85.215.171]:45097 "EHLO
-        mail-pg1-f171.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726442AbfCMVxh (ORCPT
+        Wed, 13 Mar 2019 17:59:46 -0400
+Received: from mail-vs1-f66.google.com ([209.85.217.66]:38657 "EHLO
+        mail-vs1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725883AbfCMV7p (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 13 Mar 2019 17:53:37 -0400
-Received: by mail-pg1-f171.google.com with SMTP id 125so2440928pgc.12;
-        Wed, 13 Mar 2019 14:53:36 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:from:date:message-id:subject:to;
-        bh=6eCsmeoAoFlU+udQMKiADuIbR+nVv1uwRiLFljK6kSQ=;
-        b=rf/+WRrDGTv5SacBVVcd8F/3eaR0OTCDcwHl2sLDE81Jcu7/Sof/EToCQFg9l0kBHQ
-         giTqymVeFLqIVChlFpiyNVSk01W/OJyWOFbNpqiMF6UdOF7CpS97HEbcoVxgFvrHkI3A
-         qExWDbLY0x38C30P936ez3PWDnfbSHoMoG9wvNAK8wFjqyQ3ubUS6Ad3XtNt9Ezd55N6
-         fsdf+ImVWIeaKxB8QmXgnMPlh+htUxxw2lry8yn1aZ0NTi8x14Km9bhgMfER562l2uMU
-         YysLwCGO8dtGBcOrjpuKFyUTrcxp0OczFi1yOuEz4jWWFLtucD6iczh/u8MXhG7whvpv
-         UW2g==
+        Wed, 13 Mar 2019 17:59:45 -0400
+Received: by mail-vs1-f66.google.com with SMTP id h132so2020276vsd.5;
+        Wed, 13 Mar 2019 14:59:45 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:from:date:message-id:subject:to;
-        bh=6eCsmeoAoFlU+udQMKiADuIbR+nVv1uwRiLFljK6kSQ=;
-        b=GoiYaoyyq6wA5fmdQ6WfzUpKwX8RDpZnPNmhGtwa3OxRTz1Yp48gWdzD3FbB0zu3kk
-         d/RMqOHeue3qLVZTFjp2LL1YU6bPeefVhCGQlftZEu9kdHEvziJQLNOzmisQY5U39Ibp
-         R/aTse6V+xGO1uBTobWnVrlh1yQsYYT6yd14kIPTjWOYQVelhln+TOBKTNLEAb6BDU1Q
-         TnaIywPkTdAQd8NHOe0AXEbNZ2hZvDXd+YTBtGaE1y2tkUvS24MRZ42GwAdFdqYXzsln
-         xBbacxp1LqSyP/Z7DN4NjoPD+oFRPt1xo26//C9NAgHJMw0CX8c5ieoTYH9oeiBTeQNB
-         yUpA==
-X-Gm-Message-State: APjAAAVbND8hMeulKxJZtVTebLSRm8fvu5OkZ8/6JX1MtdWaBl6PmSW9
-        0TAKAzAkYfsLApfwkyEybcotkmKsqFc3fpAkQ48fjxRr
-X-Google-Smtp-Source: APXvYqyh9Bj35JCpeAhccUx6peGH1wax+N+fvUHrvvY+GBvZ0Do/9EKYFBKzXlHChCLZdSTF41irBnoU7ONc/s+VYyU=
-X-Received: by 2002:a63:2c50:: with SMTP id s77mr25188055pgs.440.1552514015827;
- Wed, 13 Mar 2019 14:53:35 -0700 (PDT)
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=lceU+y3Bfo27v0Ch861coZu7GL6x7dsXYtJWRpQdd9A=;
+        b=Tjt4dSpNe4vsFkF/kK6tlTOckJaffbxw46GNhb7hw2t3C3u8AnG2MsGcAxJ0HLx2Qq
+         JmjBrdJLXp3IPJLs0uSZFsA77VRcIFBFjK33arAcM9zlx2XZgxEWB3WV1KH7FsSEPmRR
+         xmJJ++xCZA14sHlGJtr8Q1gq7CNXGQLrnZbl4Ohv3OZeWD0bHSSkrWe6KVAZHCrkQG7C
+         iLez/9tYjAfAIV3I4qAX7uDKzRkg76Im47VbyKelMjUS+VQvBVS1SNxse5tXKgkPpDT/
+         PNYY6LKTTr8maYcXYLwiWsy/TmmpsJ9OhjKcQq23tKtYWwVnGmlsLBqyTUiq7kbVqn3M
+         dReQ==
+X-Gm-Message-State: APjAAAUVS4g+REubBRL+w/+qpc5kFR3+izqaypHPVlAKMd5q/ROM7f2S
+        y2/p7CL2AxjYGWBl8mPPAmeNHyhyr+B8rzPu7Q/IOmBw
+X-Google-Smtp-Source: APXvYqzdX/rw32Sc0T+CpWOmmUEGi2JC0YkteSTdjdtXZ05YUo+JCGL7mYq0V5WegBewnmmCJmv66ejGq2r410IvTjk=
+X-Received: by 2002:a67:ebcd:: with SMTP id y13mr2469898vso.152.1552514384582;
+ Wed, 13 Mar 2019 14:59:44 -0700 (PDT)
 MIME-Version: 1.0
-From:   Steve French <smfrench@gmail.com>
-Date:   Wed, 13 Mar 2019 16:53:24 -0500
-Message-ID: <CAH2r5muaceyqkrbXB7Bt-qv_vtVqZEmpafJa6B2+8kyRsK7ftQ@mail.gmail.com>
-Subject: [PATCH] [CIFS] Remove unneeded statements pointed out by Coverity
-To:     CIFS <linux-cifs@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>
+References: <20190313210118.3507256-1-arnd@arndb.de>
+In-Reply-To: <20190313210118.3507256-1-arnd@arndb.de>
+From:   Geert Uytterhoeven <geert@linux-m68k.org>
+Date:   Wed, 13 Mar 2019 22:59:33 +0100
+Message-ID: <CAMuHMdUBZRxE-E8T03C85B5-UeM+ofLSbZhyRKWHrcmQksQvag@mail.gmail.com>
+Subject: Re: [PATCH] spi: fix SPI_BPW_RANGE_MASK() regression
+To:     Arnd Bergmann <arnd@arndb.de>
+Cc:     Mark Brown <broonie@kernel.org>,
+        linux-spi <linux-spi@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-cifs: remove unused value pointed out by Coverity
+On Wed, Mar 13, 2019 at 10:01 PM Arnd Bergmann <arnd@arndb.de> wrote:
+> Geert points out that I confused the min/max arguments that are
+> reversed between SPI_BPW_RANGE_MASK() and GENMASK(). This time
+> I have verified the result of the macro after fixing the arguments.
+>
+> Cc: Geert Uytterhoeven <geert@linux-m68k.org>
+> Fixes: eefffb42f665 ("spi: work around clang bug in SPI_BPW_RANGE_MASK()")
+> Signed-off-by: Arnd Bergmann <arnd@arndb.de>
 
-Detected by CoverityScan CID#1438719 ("Unused Value")
+Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
 
-buf is reset again before being used so these two lines of code
-are useless.
+Gr{oetje,eeting}s,
 
-Signed-off-by: Steve French <stfrench@microsoft.com>
----
- fs/cifs/connect.c | 4 ----
- 1 file changed, 4 deletions(-)
-
-diff --git a/fs/cifs/connect.c b/fs/cifs/connect.c
-index b95db2b593cb..a8e9738db691 100644
---- a/fs/cifs/connect.c
-+++ b/fs/cifs/connect.c
-@@ -1191,10 +1191,6 @@ cifs_demultiplex_thread(void *p)
-             continue;
-         }
-
--        if (server->large_buf)
--            buf = server->bigbuf;
--
--
-         server->lstrp = jiffies;
-
-         for (i = 0; i < num_mids; i++) {
+                        Geert
 
 -- 
-Thanks,
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
 
-Steve
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
