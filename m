@@ -4,49 +4,61 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4000EC10F03
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 Mar 2019 19:14:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9DA9BC43381
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 Mar 2019 19:14:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1298E2184D
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 Mar 2019 19:14:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6698C2183F
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 Mar 2019 19:14:09 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1552504445;
-	bh=mMofaRByHjHV8jKqOEAERfdAx178lalRUCmPJoX82eo=;
+	s=default; t=1552504449;
+	bh=XHGEPbGuaK4DL9Q7qpktUVxi1JR42d6V4AQz9eyM60k=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=YmUNBKXGBjA+x675Mu9r0S8olJWDKsPuMRfZHZ45K1lpDMeZQ8Zh1ZWQbcLRkp5RD
-	 N7SMgr4SF061cvGP8xpfj8Vx0efxfI0MQSDOWT/vM1IDkcD00iZiq7EqdxdbiNvtDt
-	 i0yH8Tn5ZHSOpzo8l8Zl+EAAi9fHyGriwuR/WW2Y=
+	b=cwGudK+7rTBL3JIWOXQ4/EX7Ur/+GJwDVc60WBSwPH+E2QH+i2WyuAYt/14Upkzt0
+	 E5mcJvlD2VSl6ftxr44XN98GrRp9caDRestdEwYEbgVOWWoIq9+EmHqqFmx0lW3WzO
+	 3xNEQrx/wWUg+qEs+TR/ASS0ubC5rR+OzwKsz0pU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727656AbfCMTOD (ORCPT
+        id S1728161AbfCMTOI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 13 Mar 2019 15:14:03 -0400
-Received: from mail.kernel.org ([198.145.29.99]:44310 "EHLO mail.kernel.org"
+        Wed, 13 Mar 2019 15:14:08 -0400
+Received: from mail.kernel.org ([198.145.29.99]:44416 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727572AbfCMTN4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 13 Mar 2019 15:13:56 -0400
+        id S1728147AbfCMTOC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 13 Mar 2019 15:14:02 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id CDE71213A2;
-        Wed, 13 Mar 2019 19:13:53 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id A1FFC20693;
+        Wed, 13 Mar 2019 19:13:57 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1552504435;
-        bh=mMofaRByHjHV8jKqOEAERfdAx178lalRUCmPJoX82eo=;
+        s=default; t=1552504441;
+        bh=XHGEPbGuaK4DL9Q7qpktUVxi1JR42d6V4AQz9eyM60k=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=2cCKqmsfyP9x6w9zfdaXwED022hhvzgaHmGEuY1AARpvXAc+NBbsrHTHg4hN83c0p
-         kqrxZ8NAaWnRQKmppkpdLQoJW76GsYD732ZeuriI44RnGY2/mKr+WYKlaMbnTZA11A
-         dMZBJtjmw8aNtU/wcOAzhaSPrToPrQXqGsSRHLKI=
+        b=ftXOAe4IcT4USdQ9SXlqEU6H72A5aNLg9cb5/AJwhf949eYMmqK/tWHvutys/9AbW
+         xuzxAt4Uahu60/txNlrD9GCGyTdpM3+/nPbJ4/ZDWFCryaVxlfz68xEq6X9UJo6TGG
+         qisO51Ps9eOPvIGWRahlRyoXC7Zlm4GxuK6Ej1xw=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Thierry Reding <treding@nvidia.com>, Arnd Bergmann <arnd@arndb.de>,
-        Sasha Levin <sashal@kernel.org>, devicetree@vger.kernel.org,
-        linux-tegra@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.19 25/48] ARM: tegra: Restore DT ABI on Tegra124 Chromebooks
-Date:   Wed, 13 Mar 2019 15:12:27 -0400
-Message-Id: <20190313191250.158955-25-sashal@kernel.org>
+Cc:     Andrey Konovalov <andreyknvl@google.com>,
+        Alexander Potapenko <glider@google.com>,
+        Andrey Ryabinin <aryabinin@virtuozzo.com>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Christoph Lameter <cl@linux.com>,
+        David Rientjes <rientjes@google.com>,
+        Dmitry Vyukov <dvyukov@google.com>,
+        Evgeniy Stepanov <eugenis@google.com>,
+        Joonsoo Kim <iamjoonsoo.kim@lge.com>,
+        Kostya Serebryany <kcc@google.com>,
+        Pekka Enberg <penberg@kernel.org>, Qian Cai <cai@lca.pw>,
+        Vincenzo Frascino <vincenzo.frascino@arm.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Sasha Levin <sashal@kernel.org>, linux-mm@kvack.org
+Subject: [PATCH AUTOSEL 4.19 27/48] kasan, slub: move kasan_poison_slab hook before page_address
+Date:   Wed, 13 Mar 2019 15:12:29 -0400
+Message-Id: <20190313191250.158955-27-sashal@kernel.org>
 X-Mailer: git-send-email 2.19.1
 In-Reply-To: <20190313191250.158955-1-sashal@kernel.org>
 References: <20190313191250.158955-1-sashal@kernel.org>
@@ -58,67 +70,86 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Thierry Reding <treding@nvidia.com>
+From: Andrey Konovalov <andreyknvl@google.com>
 
-[ Upstream commit 94d9b9337d09bdd27735005b3251d97ab29f7273 ]
+[ Upstream commit a71012242837fe5e67d8c999cfc357174ed5dba0 ]
 
-Commit 482997699ef0 ("ARM: tegra: Fix unit_address_vs_reg DTC warnings
-for /memory") inadventently broke device tree ABI by adding a unit-
-address to the "/memory" node because the device tree compiler flagged
-the missing unit-address as a warning.
+With tag based KASAN page_address() looks at the page flags to see whether
+the resulting pointer needs to have a tag set.  Since we don't want to set
+a tag when page_address() is called on SLAB pages, we call
+page_kasan_tag_reset() in kasan_poison_slab().  However in allocate_slab()
+page_address() is called before kasan_poison_slab().  Fix it by changing
+the order.
 
-Tegra124 Chromebooks (a.k.a. Nyan) use a bootloader that relies on the
-full name of the memory node in device tree being exactly "/memory". It
-can be argued whether this was a good decision or not, and some other
-bootloaders (such as U-Boot) do accept a unit-address in the name of the
-node, but the device tree is an ABI and we can't break existing setups
-just because the device tree compiler considers it bad practice to omit
-the unit-address nowadays.
-
-This partially reverts the offending commit and restores device tree ABI
-compatibility.
-
-Fixes: 482997699ef0 ("ARM: tegra: Fix unit_address_vs_reg DTC warnings for /memory")
-Reported-by: Tristan Bastian <tristan-c.bastian@gmx.de>
-Signed-off-by: Thierry Reding <treding@nvidia.com>
-Tested-by: Tristan Bastian <tristan-c.bastian@gmx.de>
-Signed-off-by: Arnd Bergmann <arnd@arndb.de>
+[andreyknvl@google.com: fix compilation error when CONFIG_SLUB_DEBUG=n]
+  Link: http://lkml.kernel.org/r/ac27cc0bbaeb414ed77bcd6671a877cf3546d56e.1550066133.git.andreyknvl@google.com
+Link: http://lkml.kernel.org/r/cd895d627465a3f1c712647072d17f10883be2a1.1549921721.git.andreyknvl@google.com
+Signed-off-by: Andrey Konovalov <andreyknvl@google.com>
+Cc: Alexander Potapenko <glider@google.com>
+Cc: Andrey Ryabinin <aryabinin@virtuozzo.com>
+Cc: Catalin Marinas <catalin.marinas@arm.com>
+Cc: Christoph Lameter <cl@linux.com>
+Cc: David Rientjes <rientjes@google.com>
+Cc: Dmitry Vyukov <dvyukov@google.com>
+Cc: Evgeniy Stepanov <eugenis@google.com>
+Cc: Joonsoo Kim <iamjoonsoo.kim@lge.com>
+Cc: Kostya Serebryany <kcc@google.com>
+Cc: Pekka Enberg <penberg@kernel.org>
+Cc: Qian Cai <cai@lca.pw>
+Cc: Vincenzo Frascino <vincenzo.frascino@arm.com>
+Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
+Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/arm/boot/dts/tegra124-nyan.dtsi | 17 ++++++++++++++++-
- 1 file changed, 16 insertions(+), 1 deletion(-)
+ mm/slub.c | 19 +++++++++++++++----
+ 1 file changed, 15 insertions(+), 4 deletions(-)
 
-diff --git a/arch/arm/boot/dts/tegra124-nyan.dtsi b/arch/arm/boot/dts/tegra124-nyan.dtsi
-index d5f11d6d987e..bc85b6a166c7 100644
---- a/arch/arm/boot/dts/tegra124-nyan.dtsi
-+++ b/arch/arm/boot/dts/tegra124-nyan.dtsi
-@@ -13,10 +13,25 @@
- 		stdout-path = "serial0:115200n8";
- 	};
+diff --git a/mm/slub.c b/mm/slub.c
+index 8da34a8af53d..7666cff34bfb 100644
+--- a/mm/slub.c
++++ b/mm/slub.c
+@@ -1075,6 +1075,16 @@ static void setup_object_debug(struct kmem_cache *s, struct page *page,
+ 	init_tracking(s, object);
+ }
  
--	memory@80000000 {
-+	/*
-+	 * Note that recent version of the device tree compiler (starting with
-+	 * version 1.4.2) warn about this node containing a reg property, but
-+	 * missing a unit-address. However, the bootloader on these Chromebook
-+	 * devices relies on the full name of this node to be exactly /memory.
-+	 * Adding the unit-address causes the bootloader to create a /memory
-+	 * node and write the memory bank configuration to that node, which in
-+	 * turn leads the kernel to believe that the device has 2 GiB of
-+	 * memory instead of the amount detected by the bootloader.
-+	 *
-+	 * The name of this node is effectively ABI and must not be changed.
-+	 */
-+	memory {
-+		device_type = "memory";
- 		reg = <0x0 0x80000000 0x0 0x80000000>;
- 	};
- 
-+	/delete-node/ memory@80000000;
++static void setup_page_debug(struct kmem_cache *s, void *addr, int order)
++{
++	if (!(s->flags & SLAB_POISON))
++		return;
 +
- 	host1x@50000000 {
- 		hdmi@54280000 {
- 			status = "okay";
++	metadata_access_enable();
++	memset(addr, POISON_INUSE, PAGE_SIZE << order);
++	metadata_access_disable();
++}
++
+ static inline int alloc_consistency_checks(struct kmem_cache *s,
+ 					struct page *page,
+ 					void *object, unsigned long addr)
+@@ -1292,6 +1302,8 @@ slab_flags_t kmem_cache_flags(unsigned int object_size,
+ #else /* !CONFIG_SLUB_DEBUG */
+ static inline void setup_object_debug(struct kmem_cache *s,
+ 			struct page *page, void *object) {}
++static inline void setup_page_debug(struct kmem_cache *s,
++			void *addr, int order) {}
+ 
+ static inline int alloc_debug_processing(struct kmem_cache *s,
+ 	struct page *page, void *object, unsigned long addr) { return 0; }
+@@ -1602,12 +1614,11 @@ static struct page *allocate_slab(struct kmem_cache *s, gfp_t flags, int node)
+ 	if (page_is_pfmemalloc(page))
+ 		SetPageSlabPfmemalloc(page);
+ 
+-	start = page_address(page);
++	kasan_poison_slab(page);
+ 
+-	if (unlikely(s->flags & SLAB_POISON))
+-		memset(start, POISON_INUSE, PAGE_SIZE << order);
++	start = page_address(page);
+ 
+-	kasan_poison_slab(page);
++	setup_page_debug(s, start, order);
+ 
+ 	shuffle = shuffle_freelist(s, page);
+ 
 -- 
 2.19.1
 
