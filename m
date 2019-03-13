@@ -1,753 +1,197 @@
 Return-Path: <SRS0=dUEL=RQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
-X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Level: *
+X-Spam-Status: No, score=1.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FSL_HELO_FAKE,MAILING_LIST_MULTI,SPF_PASS,
+	USER_AGENT_MUTT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 93AB7C43381
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 Mar 2019 22:57:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2B2BEC43381
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 Mar 2019 22:58:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 21CD32146E
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 Mar 2019 22:57:53 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="MN2EJpar";
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="cDi48qdl"
+	by mail.kernel.org (Postfix) with ESMTP id E1D5521019
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 Mar 2019 22:58:21 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1552517902;
+	bh=2ahqxAgvfZGqlCeryB/iuAaGlSF0aUs1b7MGXuNWKyg=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=xcn/0lYeuTIEeBUKAuebsjpus+NvhE7w8PTkFPKKEyXdpBqbU7FDf1kWUowMLMddd
+	 gKeYFlvxud5kRZcozzhGY5pl4f6VRUbonpj2aCE8B2YWKisYK/dLYNMBEg+GAc2A2P
+	 EDKKJuZ1qRoQi9SCwISf9RqyuQa0N6xgiQ8Re4sw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727022AbfCMW5w (ORCPT
+        id S1727091AbfCMW6U (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 13 Mar 2019 18:57:52 -0400
-Received: from smtp.codeaurora.org ([198.145.29.96]:44046 "EHLO
-        smtp.codeaurora.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725883AbfCMW5v (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 13 Mar 2019 18:57:51 -0400
-Received: by smtp.codeaurora.org (Postfix, from userid 1000)
-        id CB52160909; Wed, 13 Mar 2019 22:57:49 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
-        s=default; t=1552517869;
-        bh=mbJ2bf6/4Rm8wOr8DreCAbfnizn/zjLprBJZFLnbG30=;
-        h=Date:From:To:cc:Subject:In-Reply-To:References:From;
-        b=MN2EJparbAbwJ0ItIIAEFBYfOIehtvyXbl5DMBD4s3S5qLIOnIaNOmVpOKIuJ1blK
-         mKwV35HSuArl8bTxu5EUQXCZHDwpOOLmnLNo6K/OqSteB4ysA3VxMcc3NEN+CFiFR9
-         DOtM5yI8LKl2g6peCQHRHR3nPHuqre+WPu8DtQ1E=
-Received: from lmark-linux.qualcomm.com (i-global254.qualcomm.com [199.106.103.254])
+        Wed, 13 Mar 2019 18:58:20 -0400
+Received: from mail.kernel.org ([198.145.29.99]:41264 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725883AbfCMW6U (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 13 Mar 2019 18:58:20 -0400
+Received: from gmail.com (unknown [104.132.1.77])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        (Authenticated sender: lmark@smtp.codeaurora.org)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id 2F759601CF;
-        Wed, 13 Mar 2019 22:57:46 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
-        s=default; t=1552517866;
-        bh=mbJ2bf6/4Rm8wOr8DreCAbfnizn/zjLprBJZFLnbG30=;
-        h=Date:From:To:cc:Subject:In-Reply-To:References:From;
-        b=cDi48qdlNQWSyhVshGLSPuGN1rX875n+RhWWWBjffoy/+sDZ925gVWz40S7lA4OUt
-         iDhcIP2Mrtr3tSnpjH1HKLkJlOoLB+KofBkn3dUHrl4Xk629svhVnJ+sboRVKXOM6L
-         cupsr6iRxoEKpDnak3mbK0iKdPY8B0P1Z2fgEKig=
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 2F759601CF
-Authentication-Results: pdx-caf-mail.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
-Authentication-Results: pdx-caf-mail.web.codeaurora.org; spf=none smtp.mailfrom=lmark@codeaurora.org
-Date:   Wed, 13 Mar 2019 15:57:45 -0700 (PDT)
-From:   Liam Mark <lmark@codeaurora.org>
-X-X-Sender: lmark@lmark-linux.qualcomm.com
-To:     "Andrew F. Davis" <afd@ti.com>
-cc:     John Stultz <john.stultz@linaro.org>,
-        lkml <linux-kernel@vger.kernel.org>,
-        Laura Abbott <labbott@redhat.com>,
-        Benjamin Gaignard <benjamin.gaignard@linaro.org>,
-        Greg KH <gregkh@linuxfoundation.org>,
-        Sumit Semwal <sumit.semwal@linaro.org>,
-        Brian Starkey <Brian.Starkey@arm.com>,
-        Chenbo Feng <fengc@google.com>,
-        Alistair Strachan <astrachan@google.com>,
-        dri-devel@lists.freedesktop.org
-Subject: Re: [RFC][PATCH 2/5 v2] dma-buf: heaps: Add heap helpers
-In-Reply-To: <f0575850-39a2-ce26-e5f5-0f183be3b347@ti.com>
-Message-ID: <alpine.DEB.2.10.1903131540190.32572@lmark-linux.qualcomm.com>
-References: <1551819273-640-1-git-send-email-john.stultz@linaro.org> <1551819273-640-3-git-send-email-john.stultz@linaro.org> <alpine.DEB.2.10.1903131312270.5023@lmark-linux.qualcomm.com> <f0575850-39a2-ce26-e5f5-0f183be3b347@ti.com>
-User-Agent: Alpine 2.10 (DEB 1266 2009-07-14)
+        by mail.kernel.org (Postfix) with ESMTPSA id 7CACE21019;
+        Wed, 13 Mar 2019 22:58:18 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1552517898;
+        bh=2ahqxAgvfZGqlCeryB/iuAaGlSF0aUs1b7MGXuNWKyg=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=lt9XB/wJKnFDwzyJHNljLPkyXxWz8LkXF96MbFZG/gZ6x32ToTzb8GypgszUxGLbs
+         +QInpBgBqyS0KkbXy23D6JpSs9dejuX7QCEFBNLMLCPc5DZO9nQ/l4091JqB0P1J9s
+         DwKnFZTZT9xJysxOp/wRmx0HZo2GOVz/9cKuEQuY=
+Date:   Wed, 13 Mar 2019 15:58:17 -0700
+From:   Eric Biggers <ebiggers@kernel.org>
+To:     James Bottomley <James.Bottomley@HansenPartnership.com>
+Cc:     Theodore Ts'o <tytso@mit.edu>, Amir Goldstein <amir73il@gmail.com>,
+        Richard Weinberger <richard@nod.at>,
+        Miklos Szeredi <miklos@szeredi.hu>,
+        linux-fsdevel <linux-fsdevel@vger.kernel.org>,
+        linux-fscrypt@vger.kernel.org,
+        overlayfs <linux-unionfs@vger.kernel.org>,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        Paul Lawrence <paullawrence@google.com>
+Subject: Re: overlayfs vs. fscrypt
+Message-ID: <20190313225816.GG10169@gmail.com>
+References: <20190313164439.GF672@mit.edu>
+ <1552499104.3022.44.camel@HansenPartnership.com>
+ <20190313185826.GA4685@mit.edu>
+ <1552504672.3022.59.camel@HansenPartnership.com>
+ <20190313195713.GC10169@gmail.com>
+ <1552507566.3022.65.camel@HansenPartnership.com>
+ <20190313202519.GD10169@gmail.com>
+ <1552511069.3022.77.camel@HansenPartnership.com>
+ <20190313221325.GE10169@gmail.com>
+ <1552516183.2808.14.camel@HansenPartnership.com>
 MIME-Version: 1.0
-Content-Type: TEXT/PLAIN; charset=US-ASCII
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <1552516183.2808.14.camel@HansenPartnership.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, 13 Mar 2019, Andrew F. Davis wrote:
+On Wed, Mar 13, 2019 at 03:29:43PM -0700, James Bottomley wrote:
+> On Wed, 2019-03-13 at 15:13 -0700, Eric Biggers wrote:
+> > On Wed, Mar 13, 2019 at 02:04:29PM -0700, James Bottomley wrote:
+> > > On Wed, 2019-03-13 at 13:25 -0700, Eric Biggers wrote:
+> > > > On Wed, Mar 13, 2019 at 01:06:06PM -0700, James Bottomley wrote:
+> > > > > On Wed, 2019-03-13 at 12:57 -0700, Eric Biggers wrote:
+> > > 
+> > > [...]
+> > > > > > fscrypt would allow the data to be stored encrypted on the
+> > > > > > local disk, so it's protected against offline compromise of
+> > > > > > the disk.
+> > > > > 
+> > > > > Container images are essentially tars of the overlays.  They
+> > > > > only become actual filesystems when instantiated at
+> > > > > runtime.  The current encrypted container image is an overlay
+> > > > > or set of overlays which is tarred then encrypted.  So to
+> > > > > instantiate it is decrypted then untarred.
+> > > > > 
+> > > > > The thing I was wondering about was whether instead of a tar
+> > > > > encrypt we could instead produce an encrypted image from a
+> > > > > fscrypt filesystem.
+> > > > > 
+> > > > 
+> > > > Why do you care whether the container image is encrypted on the
+> > > > local disk, when you're extracting it in plaintext onto the local
+> > > > disk anyway each time it runs? Even after the runtime files are
+> > > > "deleted", they may still be recoverable from the disk.  Are you
+> > > > using shred and BLKSECDISCARD, and a non-COW filesystem?
+> > > > 
+> > > > Now, if you wanted to avoid writing the plaintext to disk
+> > > > entirely (and thereby use encryption to actually achieve a useful
+> > > > security property that can't be achieved through file
+> > > > permissions), fscrypt is a good solution for that.
+> > > 
+> > > OK let's start with a cloud and container 101: A container is an
+> > > exactly transportable IaaS environment containing an
+> > > application.  The format for the exact transport is the "container
+> > > image" I've been describing (layered tar file set deployed with
+> > > overlays).  These images are usually stored in cloud based
+> > > registries which may or may not have useful access controls.  I
+> > > take it the reason for image encryption to protect confidentiality
+> > > within the registry is obvious.
+> > > 
+> > > Because of the exact transport, the deployment may be on my laptop,
+> > > on my test system or in some type of public or private cloud.  In
+> > > all cases bar the laptop, I won't actually own the physical system
+> > > which ends up deploying the container.  So in exchange for security
+> > > guarantees from the physical system owner, I agree to turn over my
+> > > decryption key and possibly a cash payment.  One of these
+> > > guarantees is usually that they shred the key after use and that
+> > > they deploy a useful key escrow system like vault or keyprotect to
+> > > guard it even while the decryption is being done.
+> > 
+> > 
+> > > Another is that all traces of the container be shredded after the
+> > > execution is finished.
+> > 
+> > Well, sounds like that's not the case currently even with an
+> > encrypted container image, because the actual runtime files are not
+> > encrypted on disk.
+> 
+> Shredding means destroying all trace including in the on-disk image. 
+> However, one problem with the current implementation is there's a
+> window between container run and container stop where the unencrypted
+> files are in memory and on local disk.  Access or cockup in that window
+> can leak confidential data.
 
-> On 3/13/19 3:18 PM, Liam Mark wrote:
-> > On Tue, 5 Mar 2019, John Stultz wrote:
+Well, another problem is that it almost certainly doesn't actually work, because
+some plaintext will still be recoverable from disk or the raw flash.  Actually
+erasing data on modern filesystems and storage devices is extremely difficult.
+To start, you'd have to run BLKSECDISCARD on every single block ever written to
+disk to prepare the container, or written by the container during its execution.
+
+That's one reason to use storage encryption: it reduces the secure deletion
+problem to just erasing the encryption key.
+
+> 
+> >   Encrypting the runtime files using fscrypt with an ephemeral key
+> > would be useful here.  IOW, randomly generate an encryption key when
+> > the container starts, never store it anywhere, and wipe it when the
+> > container stops.
 > > 
-> >> Add generic helper dmabuf ops for dma heaps, so we can reduce
-> >> the amount of duplicative code for the exported dmabufs.
-> >>
-> >> This code is an evolution of the Android ION implementation, so
-> >> thanks to its original authors and maintainters:
-> >>   Rebecca Schultz Zavin, Colin Cross, Laura Abbott, and others!
-> >>
-> >> Cc: Laura Abbott <labbott@redhat.com>
-> >> Cc: Benjamin Gaignard <benjamin.gaignard@linaro.org>
-> >> Cc: Greg KH <gregkh@linuxfoundation.org>
-> >> Cc: Sumit Semwal <sumit.semwal@linaro.org>
-> >> Cc: Liam Mark <lmark@codeaurora.org>
-> >> Cc: Brian Starkey <Brian.Starkey@arm.com>
-> >> Cc: Andrew F. Davis <afd@ti.com>
-> >> Cc: Chenbo Feng <fengc@google.com>
-> >> Cc: Alistair Strachan <astrachan@google.com>
-> >> Cc: dri-devel@lists.freedesktop.org
-> >> Signed-off-by: John Stultz <john.stultz@linaro.org>
-> >> ---
-> >> v2:
-> >> * Removed cache management performance hack that I had
-> >>   accidentally folded in.
-> >> * Removed stats code that was in helpers
-> >> * Lots of checkpatch cleanups
-> >> ---
-> >>  drivers/dma-buf/Makefile             |   1 +
-> >>  drivers/dma-buf/heaps/Makefile       |   2 +
-> >>  drivers/dma-buf/heaps/heap-helpers.c | 335 +++++++++++++++++++++++++++++++++++
-> >>  drivers/dma-buf/heaps/heap-helpers.h |  48 +++++
-> >>  4 files changed, 386 insertions(+)
-> >>  create mode 100644 drivers/dma-buf/heaps/Makefile
-> >>  create mode 100644 drivers/dma-buf/heaps/heap-helpers.c
-> >>  create mode 100644 drivers/dma-buf/heaps/heap-helpers.h
-> >>
-> >> diff --git a/drivers/dma-buf/Makefile b/drivers/dma-buf/Makefile
-> >> index b0332f1..09c2f2d 100644
-> >> --- a/drivers/dma-buf/Makefile
-> >> +++ b/drivers/dma-buf/Makefile
-> >> @@ -1,4 +1,5 @@
-> >>  obj-y := dma-buf.o dma-fence.o dma-fence-array.o reservation.o seqno-fence.o
-> >> +obj-$(CONFIG_DMABUF_HEAPS)	+= heaps/
-> >>  obj-$(CONFIG_DMABUF_HEAPS)	+= dma-heap.o
-> >>  obj-$(CONFIG_SYNC_FILE)		+= sync_file.o
-> >>  obj-$(CONFIG_SW_SYNC)		+= sw_sync.o sync_debug.o
-> >> diff --git a/drivers/dma-buf/heaps/Makefile b/drivers/dma-buf/heaps/Makefile
-> >> new file mode 100644
-> >> index 0000000..de49898
-> >> --- /dev/null
-> >> +++ b/drivers/dma-buf/heaps/Makefile
-> >> @@ -0,0 +1,2 @@
-> >> +# SPDX-License-Identifier: GPL-2.0
-> >> +obj-y					+= heap-helpers.o
-> >> diff --git a/drivers/dma-buf/heaps/heap-helpers.c b/drivers/dma-buf/heaps/heap-helpers.c
-> >> new file mode 100644
-> >> index 0000000..ae5e9d0
-> >> --- /dev/null
-> >> +++ b/drivers/dma-buf/heaps/heap-helpers.c
-> >> @@ -0,0 +1,335 @@
-> >> +// SPDX-License-Identifier: GPL-2.0
-> >> +#include <linux/device.h>
-> >> +#include <linux/dma-buf.h>
-> >> +#include <linux/err.h>
-> >> +#include <linux/idr.h>
-> >> +#include <linux/list.h>
-> >> +#include <linux/slab.h>
-> >> +#include <linux/uaccess.h>
-> >> +#include <uapi/linux/dma-heap.h>
-> >> +
-> >> +#include "heap-helpers.h"
-> >> +
-> >> +
-> >> +static void *dma_heap_map_kernel(struct heap_helper_buffer *buffer)
-> >> +{
-> >> +	struct scatterlist *sg;
-> >> +	int i, j;
-> >> +	void *vaddr;
-> >> +	pgprot_t pgprot;
-> >> +	struct sg_table *table = buffer->sg_table;
-> >> +	int npages = PAGE_ALIGN(buffer->heap_buffer.size) / PAGE_SIZE;
-> >> +	struct page **pages = vmalloc(array_size(npages,
-> >> +						 sizeof(struct page *)));
-> >> +	struct page **tmp = pages;
-> >> +
-> >> +	if (!pages)
-> >> +		return ERR_PTR(-ENOMEM);
-> >> +
-> >> +	pgprot = PAGE_KERNEL;
-> >> +
-> >> +	for_each_sg(table->sgl, sg, table->nents, i) {
-> >> +		int npages_this_entry = PAGE_ALIGN(sg->length) / PAGE_SIZE;
-> >> +		struct page *page = sg_page(sg);
-> >> +
-> >> +		WARN_ON(i >= npages);
-> >> +		for (j = 0; j < npages_this_entry; j++)
-> >> +			*(tmp++) = page++;
-> >> +	}
-> >> +	vaddr = vmap(pages, npages, VM_MAP, pgprot);
-> >> +	vfree(pages);
-> >> +
-> >> +	if (!vaddr)
-> >> +		return ERR_PTR(-ENOMEM);
-> >> +
-> >> +	return vaddr;
-> >> +}
-> >> +
-> >> +static int dma_heap_map_user(struct heap_helper_buffer *buffer,
-> >> +			 struct vm_area_struct *vma)
-> >> +{
-> >> +	struct sg_table *table = buffer->sg_table;
-> >> +	unsigned long addr = vma->vm_start;
-> >> +	unsigned long offset = vma->vm_pgoff * PAGE_SIZE;
-> >> +	struct scatterlist *sg;
-> >> +	int i;
-> >> +	int ret;
-> >> +
-> >> +	for_each_sg(table->sgl, sg, table->nents, i) {
-> >> +		struct page *page = sg_page(sg);
-> >> +		unsigned long remainder = vma->vm_end - addr;
-> >> +		unsigned long len = sg->length;
-> >> +
-> >> +		if (offset >= sg->length) {
-> >> +			offset -= sg->length;
-> >> +			continue;
-> >> +		} else if (offset) {
-> >> +			page += offset / PAGE_SIZE;
-> >> +			len = sg->length - offset;
-> >> +			offset = 0;
-> >> +		}
-> >> +		len = min(len, remainder);
-> >> +		ret = remap_pfn_range(vma, addr, page_to_pfn(page), len,
-> >> +				      vma->vm_page_prot);
-> >> +		if (ret)
-> >> +			return ret;
-> >> +		addr += len;
-> >> +		if (addr >= vma->vm_end)
-> >> +			return 0;
-> >> +	}
-> >> +
-> >> +	return 0;
-> >> +}
-> >> +
-> >> +
-> >> +void dma_heap_buffer_destroy(struct dma_heap_buffer *heap_buffer)
-> >> +{
-> >> +	struct heap_helper_buffer *buffer = to_helper_buffer(heap_buffer);
-> >> +
-> >> +	if (buffer->kmap_cnt > 0) {
-> >> +		pr_warn_once("%s: buffer still mapped in the kernel\n",
-> >> +			     __func__);
-> >> +		vunmap(buffer->vaddr);
-> >> +	}
-> >> +
-> >> +	buffer->free(buffer);
-> >> +}
-> >> +
-> >> +static void *dma_heap_buffer_kmap_get(struct dma_heap_buffer *heap_buffer)
-> >> +{
-> >> +	struct heap_helper_buffer *buffer = to_helper_buffer(heap_buffer);
-> >> +	void *vaddr;
-> >> +
-> >> +	if (buffer->kmap_cnt) {
-> >> +		buffer->kmap_cnt++;
-> >> +		return buffer->vaddr;
-> >> +	}
-> >> +	vaddr = dma_heap_map_kernel(buffer);
-> >> +	if (WARN_ONCE(!vaddr,
-> >> +		      "heap->ops->map_kernel should return ERR_PTR on error"))
-> >> +		return ERR_PTR(-EINVAL);
-> >> +	if (IS_ERR(vaddr))
-> >> +		return vaddr;
-> >> +	buffer->vaddr = vaddr;
-> >> +	buffer->kmap_cnt++;
-> >> +	return vaddr;
-> >> +}
-> >> +
-> >> +static void dma_heap_buffer_kmap_put(struct dma_heap_buffer *heap_buffer)
-> >> +{
-> >> +	struct heap_helper_buffer *buffer = to_helper_buffer(heap_buffer);
-> >> +
-> >> +	buffer->kmap_cnt--;
-> >> +	if (!buffer->kmap_cnt) {
-> >> +		vunmap(buffer->vaddr);
-> >> +		buffer->vaddr = NULL;
-> >> +	}
-> >> +}
-> >> +
-> >> +static struct sg_table *dup_sg_table(struct sg_table *table)
-> >> +{
-> >> +	struct sg_table *new_table;
-> >> +	int ret, i;
-> >> +	struct scatterlist *sg, *new_sg;
-> >> +
-> >> +	new_table = kzalloc(sizeof(*new_table), GFP_KERNEL);
-> >> +	if (!new_table)
-> >> +		return ERR_PTR(-ENOMEM);
-> >> +
-> >> +	ret = sg_alloc_table(new_table, table->nents, GFP_KERNEL);
-> >> +	if (ret) {
-> >> +		kfree(new_table);
-> >> +		return ERR_PTR(-ENOMEM);
-> >> +	}
-> >> +
-> >> +	new_sg = new_table->sgl;
-> >> +	for_each_sg(table->sgl, sg, table->nents, i) {
-> >> +		memcpy(new_sg, sg, sizeof(*sg));
-> >> +		new_sg->dma_address = 0;
-> >> +		new_sg = sg_next(new_sg);
-> >> +	}
-> >> +
-> >> +	return new_table;
-> >> +}
-> >> +
-> >> +static void free_duped_table(struct sg_table *table)
-> >> +{
-> >> +	sg_free_table(table);
-> >> +	kfree(table);
-> >> +}
-> >> +
-> >> +struct dma_heaps_attachment {
-> >> +	struct device *dev;
-> >> +	struct sg_table *table;
-> >> +	struct list_head list;
-> >> +};
-> >> +
-> >> +static int dma_heap_attach(struct dma_buf *dmabuf,
-> >> +			      struct dma_buf_attachment *attachment)
-> >> +{
-> >> +	struct dma_heaps_attachment *a;
-> >> +	struct sg_table *table;
-> >> +	struct dma_heap_buffer *heap_buffer = dmabuf->priv;
-> >> +	struct heap_helper_buffer *buffer = to_helper_buffer(heap_buffer);
-> >> +
-> >> +	a = kzalloc(sizeof(*a), GFP_KERNEL);
-> >> +	if (!a)
-> >> +		return -ENOMEM;
-> >> +
-> >> +	table = dup_sg_table(buffer->sg_table);
-> >> +	if (IS_ERR(table)) {
-> >> +		kfree(a);
-> >> +		return -ENOMEM;
-> >> +	}
-> >> +
-> >> +	a->table = table;
-> >> +	a->dev = attachment->dev;
-> >> +	INIT_LIST_HEAD(&a->list);
-> >> +
-> >> +	attachment->priv = a;
-> >> +
-> >> +	mutex_lock(&buffer->lock);
-> >> +	list_add(&a->list, &buffer->attachments);
-> >> +	mutex_unlock(&buffer->lock);
-> >> +
-> >> +	return 0;
-> >> +}
-> >> +
-> >> +static void dma_heap_detatch(struct dma_buf *dmabuf,
-> >> +				struct dma_buf_attachment *attachment)
-> >> +{
-> >> +	struct dma_heaps_attachment *a = attachment->priv;
-> >> +	struct dma_heap_buffer *heap_buffer = dmabuf->priv;
-> >> +	struct heap_helper_buffer *buffer = to_helper_buffer(heap_buffer);
-> >> +
-> >> +	mutex_lock(&buffer->lock);
-> >> +	list_del(&a->list);
-> >> +	mutex_unlock(&buffer->lock);
-> >> +	free_duped_table(a->table);
-> >> +
-> >> +	kfree(a);
-> >> +}
-> >> +
-> >> +static struct sg_table *dma_heap_map_dma_buf(
-> >> +					struct dma_buf_attachment *attachment,
-> >> +					enum dma_data_direction direction)
-> >> +{
-> >> +	struct dma_heaps_attachment *a = attachment->priv;
-> >> +	struct sg_table *table;
-> >> +
-> >> +	table = a->table;
-> >> +
-> >> +	if (!dma_map_sg(attachment->dev, table->sgl, table->nents,
-> >> +			direction))
-> > 
-> > Since this code is used for system heap and and as the reference.
-> > In multimedia uses cases very large buffers can be allocated from system 
-> > heap, and since system heap allocations have a cached kernel mapping it 
-> > has been difficult to support uncached allocations so clients will likely 
-> > allocate them as cached allocations.
-> > Most access to these buffers will occur from non IO-coherent devices, 
-> > however in frameworks such as Android these buffers will be dma mapped and 
-> > dma unmapped frequently, for every frame and for each device in the 
-> > "buffer pipeline", which leads to a lot of unnecessary cache maintenance 
-> > in the dma map and dma unmap calls.
-> > From previous discussions it doesn't seem like this could be optimized by 
-> > only making changes to dma-buf heaps framework.
-> > 
-> > So I think it would be helpful to try and agree on what types of changes 
-> > would be required to the Android framework and possibly the dma-buf heaps 
-> > framework to resolve this.
-> > Example
-> > 
-> > - Have Android framework keep buffers dma mapped for the whole use case
-> > 
-> > - Or perhaps have Android keep required devices attached to the buffer as 
-> > they are "pipelined" so that cache maintenance can be skipped in dma map 
-> > and dma umnap but reliably applied in begin/end_cpu_access.
-> > 
+> > Note that this is separate from the container *image* encryption.
 > 
-> I don't have a strong opinion on the solution here for Android, but from
-> kernel/hardware side I can see we don't have a good ownership model for
-> dma-buf and that looks to be causing your unneeded cache ops.
-> 
-> Let my give my vision for the model you request below.
-> 
-> 
-> >> +	 table = ERR_PTR(-ENOMEM); 
-> >> +	 return table; 
-> >> +} 
-> >> +
-> >> +static void dma_heap_unmap_dma_buf(struct dma_buf_attachment *attachment,
-> >> +			      struct sg_table *table,
-> >> +			      enum dma_data_direction direction)
-> >> +{
-> >> +	dma_unmap_sg(attachment->dev, table->sgl, table->nents, direction);
-> >> +}
-> >> +
-> >> +static int dma_heap_mmap(struct dma_buf *dmabuf, struct vm_area_struct *vma)
-> >> +{
-> >> +	struct dma_heap_buffer *heap_buffer = dmabuf->priv;
-> >> +	struct heap_helper_buffer *buffer = to_helper_buffer(heap_buffer);
-> >> +	int ret = 0;
-> >> +
-> >> +	mutex_lock(&buffer->lock);
-> >> +	/* now map it to userspace */
-> >> +	ret = dma_heap_map_user(buffer, vma);
-> > 
-> > Since this code is used for system heap and and as the reference.
-> > Currently in Android when a system heap buffer is moving down the 
-> > "pipeline" CPU access may occur and there may be no device attached.
-> > In the past people have raised concerns that this should perhaps not be 
-> > supported and that at least one device should be attached when CPU access 
-> > occurs.
-> > 
-> > Can we decide, from a dma-buf contract perspective, on whether CPU access 
-> > without a device attached should allowed and make it clear in the dma-buf 
-> > documentation either way?
-> > 
-> > If it should not be allowed we can try to work with Android to see how 
-> > they can change their framework to align with the dma-buf spec.
-> > 
-> 
-> As you say, right now DMA-BUF does not really provide guidelines for
-> "well behaved" heaps, and as such we all end up making different
-> assumptions. Although I don't think they below should be enforced for
-> all DMA-BUFs it should be used for our first set of reference heaps.
-> 
-> So from the start, lets looks at DMA-BUF buffer lifetimes. A buffer
-> begins by being allocated, at this point the backing resources (usually
-> some pages in physical CPU addressable RAM) have *not* been allocated
-> this is a core feature of DMA-BUF allowing smart allocations at map
-> time. At this point we should consider the buffer in a state "non-owned
-> non-backed".
-> 
-> Next we have three valid actions:
->  * CPU use
->  * device attachments
->  * free
-> 
-> CPU use starts with a call to begin_cpu_access(), the buffer will now
-> both become CPU owned and will pin it's backing buffer. This last part
-> can cause begin_cpu_access() to fail for some types of buffers that only
-> pick their backing resource based on the set of attached devices, which
-> at this point we have none. For heaps like "system" heap this should not
-> be a problem as the backing storage is already selected at allocation time.
-> 
-> Device attachments and mapping should behave as they do now. After
-> mapping, the buffer is now owned by the attached devices and backed. The
-> ownership can be transfered to the CPU and back as usual with
-> {begin,end}_cpu_access().
-> 
-> Free right after allocation without anyone taking ownership is trivial.
-> 
-> Now here is where things may get interesting, we can now be in the
-> following states:
-> 
-> CPU owned backed
-> Device owned backed
-> 
-> What should we do when CPU owned and end_cpu_access() is called or when
-> Device owned and all devices detach. What state do we go into? My
-> opinion would be to return to "non-owned non-backed" which means the
-> backing resource can be freed. The other option is to leave it backed. I
-> beleave this is what Android expects right now as it returns buffers to
-> a "BufferQueue" to later be dequeued and used again in the same way
-> without time consuming reallocations.
+> Actually, that was my original thought: it needn't be.  If fscrypt can
+> usefully add runtime security, then we could have the encrypted layer
+> be simply an fscrypt image ... I presume without the key we can create
+> a tar image of an fscrypt that is encrypted and would still be visible
+> on untar if we did have the key?  So the encrypted layer would be a tar
+> of the fscrypt filesystem without the key.
 > 
 
-I think the issue may be more serious with Android than allow improving 
-the performance of buffer re-allocation.
+fscrypt doesn't support backup and restore without the key, so no you can't do
+that.  But there wouldn't be much benefit for doing it that way anyway, since
+you'd still have to untar the container image each time the container is
+started, then re-tar it each time the container is stopped.
 
-In cases such as video playback:
-#1 video device reads and transforms the video data 
-#2 optionally there may be some software video post processing 
-#3 surface flinger 
-#4 HAL 
-#5 display device eventually gets the buffer
+The container image could be an ext4 filesystem image containing an encrypted
+directory, in which case the container could be run directly from the image.
+But in that case, dm-crypt would be a better choice.
 
-My understanding is the last device attached to the buffer (the video 
-device) can be detached before Android sends the buffer down the 
-"pipeline" where some software module may do CPU access and where 
-eventually a new device is attached when the buffer is going to be acceded 
-by a device. 
-
-So Android is counting on the contents of the buffer being retained while 
-it is "non-owned".
-
-> For "system" heaps the result is the same outside of the cache ops, if
-> we maintain a buffer state like the above we can always know when a
-> cache op or similar is needed (only when transitioning owners, not on
-> every map/unmap). 
-
-Assuming I understood your comments correctly, I agree that we will know 
-"when" to optimally apply the cache maintenance but the problem with 
-allowing CPU access to buffers that are now "non-owned" is that we can't 
-apply the cache maintenance when it is required (because there is no 
-longer a device available).
-
-
-> For more complex heaps we can do something similar
-> when transitioning from backed to non-backed (and vice-versa) such as
-> migrating the backing data to a more appropriate resource given the new
-> set of attaching/mapping devices.
+> > > considering is could I be protected against either cloud provider
+> > > cockups that might leak the image (the misconfigured backup
+> > > scenario I suggested) or malicious actions of other tenants.
+> > 
+> > If the container image is encrypted with a key not on the system,
+> > then its confidentiality is protected from anything that may happen
+> > on that system.
+> > 
+> > But if the container image encryption key *is* on the system, your
+> > container image may be leaked either accidentally or maliciously.
 > 
-> A more complete state transition map will probably be needed to fill out
-> what should be allowed and what to do when, and I agree it will be good
-> to have that for this first set of reference heaps. But all of this can
-> be done now with DMA-heaps, so I don't want to tie up the core
-> de-staging too much on getting every possible heap to behave just right
-> either..
-> 
-> >> +	mutex_unlock(&buffer->lock);
-> >> +
-> >> +	if (ret)
-> >> +		pr_err("%s: failure mapping buffer to userspace\n",
-> >> +		       __func__);
-> >> +
-> >> +	return ret;
-> >> +}
-> >> +
-> >> +static void dma_heap_dma_buf_release(struct dma_buf *dmabuf)
-> >> +{
-> >> +	struct dma_heap_buffer *buffer = dmabuf->priv;
-> >> +
-> >> +	dma_heap_buffer_destroy(buffer);
-> >> +}
-> >> +
-> >> +static void *dma_heap_dma_buf_kmap(struct dma_buf *dmabuf,
-> >> +					unsigned long offset)
-> >> +{
-> >> +	struct dma_heap_buffer *heap_buffer = dmabuf->priv;
-> >> +	struct heap_helper_buffer *buffer = to_helper_buffer(heap_buffer);
-> >> +
-> >> +	return buffer->vaddr + offset * PAGE_SIZE;
-> >> +}
-> >> +
-> >> +static void dma_heap_dma_buf_kunmap(struct dma_buf *dmabuf,
-> >> +					unsigned long offset,
-> >> +					void *ptr)
-> >> +{
-> >> +}
-> >> +
-> >> +static int dma_heap_dma_buf_begin_cpu_access(struct dma_buf *dmabuf,
-> >> +					enum dma_data_direction direction)
-> >> +{
-> >> +	struct dma_heap_buffer *heap_buffer = dmabuf->priv;
-> >> +	struct heap_helper_buffer *buffer = to_helper_buffer(heap_buffer);
-> >> +	void *vaddr;
-> >> +	struct dma_heaps_attachment *a;
-> >> +	int ret = 0;
-> >> +
-> >> +	mutex_lock(&buffer->lock);
-> >> +	vaddr = dma_heap_buffer_kmap_get(heap_buffer);
-> > 
-> > Since this code is used for system heap and and as the reference.
-> > As has been discussed in the past there are several disadvantages to 
-> > creating a kernel mapping on each call to begin_cpu_access.
-> > 
-> > The resulting call to alloc_vmap_area is expensive and can hurt client 
-> > KPIs
-> > 
-> > Allowing userspace clients to create and destroy kernel mappings can 
-> > provide opportunities to crash the kernel.
-> > 
-> > Can we look at removing the creation of a kernel mapping in 
-> > begin_cpu_access and either introduce support for dma_buf_vmap and have 
-> > clients use that instead or perahps change 
-> > the contract for dma_buf_kmap so that it doesn't always need to succeed?
-> > 
-> 
-> Agree, for this we should just fail (or succeed but perform no action?)
-> if there are no active mappings (neither in kernel (kmap, vmap) nor in
-> userspace (mmap)), forcing a new mapping just to keep
-> dma_sync_sg_for_cpu() happy is not the correct thing to do here.
-> 
-> >> +	if (IS_ERR(vaddr)) {
-> >> +		ret = PTR_ERR(vaddr);
-> >> +		goto unlock;
-> >> +	}
-> >> +	mutex_unlock(&buffer->lock);
-> >> +
-> >> +	mutex_lock(&buffer->lock);
-> >> +	list_for_each_entry(a, &buffer->attachments, list) {
-> >> +		dma_sync_sg_for_cpu(a->dev, a->table->sgl, a->table->nents,
-> >> +				    direction);
-> > 
-> > Since this code is used for system heap and and as the reference.
-> > Not a major issue for newer kernels but I still don't think it makes sense 
-> > to apply cache maintenance when the buffer is not dma mapped, it doesn't 
-> > makes sense to me from a logical perspective and from a performance 
-> > perspective.
-> > 
-> 
-> Agree again, this is only needed when we are transitioning out of state
-> "device owned" which we will not be in if we have no active
-> attached/mapped devices.
-> 
-> > 
-> >> +	}
-> >> +
-> >> +unlock:
-> >> +	mutex_unlock(&buffer->lock);
-> >> +	return ret;
-> >> +}
-> >> +
-> >> +static int dma_heap_dma_buf_end_cpu_access(struct dma_buf *dmabuf,
-> >> +				      enum dma_data_direction direction)
-> >> +{
-> >> +	struct dma_heap_buffer *heap_buffer = dmabuf->priv;
-> >> +	struct heap_helper_buffer *buffer = to_helper_buffer(heap_buffer);
-> >> +	struct dma_heaps_attachment *a;
-> >> +
-> >> +	mutex_lock(&buffer->lock);
-> >> +	dma_heap_buffer_kmap_put(heap_buffer);
-> >> +	mutex_unlock(&buffer->lock);
-> >> +
-> >> +	mutex_lock(&buffer->lock);
-> >> +	list_for_each_entry(a, &buffer->attachments, list) {
-> >> +		dma_sync_sg_for_device(a->dev, a->table->sgl, a->table->nents,
-> >> +				       direction);
-> > 
-> > There are use cases in Android which result in only small parts of a large 
-> > buffer are written do during of CPU access.
-> > 
-> 
-> We have the same requirements for some OpenCL use-cases
-> (clCreateSubBuffer), which allows for chunks of a larger buffer to have
-> different properties and therefor cache operations different from the
-> larger parrent buffer.
-> 
-> > Applying cache maintenance to the complete buffer results in a lot of 
-> > unnecessary cache maintenance that can affect KPIs.
-> > 
-> > I believe the Android team is wondering if there could be a way to support 
-> > partial maintenance in  where userspace could describe the buffer changes 
-> > they have made.
-> > 
-> 
-> The issue I have with that is it would require userspace to know about
-> the cache line size of all involved devices, otherwise you would have
-> users writing to the first 64B and invalidate to read the second 64B
-> written from a DMA device outside the cache, in a system with 128B
-> cache-lines you will always lose some data here.
+> Well, yes, but that's like saying if you don't want to pick up a virus
+> from your network unplug it.  We have to look at ways of deploying the
+> filesystem and the key such that it's hard to exfiltrate ... which
+> seems to be similar to your android fscrypt use case.
 > 
 
-Good point.
+I am just stating the facts.  Storage encryption only solves a specific set of
+problems, not every problem.  There has already been a huge amount of effort
+into developing OS-level access control mechanisms in Linux, so fscrypt does not
+duplicate that; it just does storage encryption.
 
-> > I think it would be useful to make sure that there is a least a path 
-> > forward with the current dma-buf heaps framework to solve this for system 
-> > heap allocations.
-> > 
-> 
-> DMA-BUF sync operations always act on the full buffer, changing this
-> would require changes to the core DMA-BUF framework (so outside the
-> scope of this set) :)
-> 
-> Andrew
-> 
-> > I can get more details on the specific use cases if required.
-> > 
-> >> +	}
-> >> +	mutex_unlock(&buffer->lock);
-> >> +
-> >> +	return 0;
-> >> +}
-> >> +
-> >> +const struct dma_buf_ops heap_helper_ops = {
-> >> +	.map_dma_buf = dma_heap_map_dma_buf,
-> >> +	.unmap_dma_buf = dma_heap_unmap_dma_buf,
-> >> +	.mmap = dma_heap_mmap,
-> >> +	.release = dma_heap_dma_buf_release,
-> >> +	.attach = dma_heap_attach,
-> >> +	.detach = dma_heap_detatch,
-> >> +	.begin_cpu_access = dma_heap_dma_buf_begin_cpu_access,
-> >> +	.end_cpu_access = dma_heap_dma_buf_end_cpu_access,
-> >> +	.map = dma_heap_dma_buf_kmap,
-> >> +	.unmap = dma_heap_dma_buf_kunmap,
-> >> +};
-> >> diff --git a/drivers/dma-buf/heaps/heap-helpers.h b/drivers/dma-buf/heaps/heap-helpers.h
-> >> new file mode 100644
-> >> index 0000000..0bd8643
-> >> --- /dev/null
-> >> +++ b/drivers/dma-buf/heaps/heap-helpers.h
-> >> @@ -0,0 +1,48 @@
-> >> +/* SPDX-License-Identifier: GPL-2.0 */
-> >> +/*
-> >> + * DMABUF Heaps helper code
-> >> + *
-> >> + * Copyright (C) 2011 Google, Inc.
-> >> + * Copyright (C) 2019 Linaro Ltd.
-> >> + */
-> >> +
-> >> +#ifndef _HEAP_HELPERS_H
-> >> +#define _HEAP_HELPERS_H
-> >> +
-> >> +#include <linux/dma-heap.h>
-> >> +#include <linux/list.h>
-> >> +
-> >> +struct heap_helper_buffer {
-> >> +	struct dma_heap_buffer heap_buffer;
-> >> +
-> >> +	unsigned long private_flags;
-> >> +	void *priv_virt;
-> >> +	struct mutex lock;
-> >> +	int kmap_cnt;
-> >> +	void *vaddr;
-> >> +	struct sg_table *sg_table;
-> >> +	struct list_head attachments;
-> >> +
-> >> +	void (*free)(struct heap_helper_buffer *buffer);
-> >> +
-> >> +};
-> >> +
-> >> +#define to_helper_buffer(x) \
-> >> +	container_of(x, struct heap_helper_buffer, heap_buffer)
-> >> +
-> >> +static inline void INIT_HEAP_HELPER_BUFFER(struct heap_helper_buffer *buffer,
-> >> +				 void (*free)(struct heap_helper_buffer *))
-> >> +{
-> >> +	buffer->private_flags = 0;
-> >> +	buffer->priv_virt = NULL;
-> >> +	mutex_init(&buffer->lock);
-> >> +	buffer->kmap_cnt = 0;
-> >> +	buffer->vaddr = NULL;
-> >> +	buffer->sg_table = NULL;
-> >> +	INIT_LIST_HEAD(&buffer->attachments);
-> >> +	buffer->free = free;
-> >> +}
-> >> +
-> >> +extern const struct dma_buf_ops heap_helper_ops;
-> >> +
-> >> +#endif /* _HEAP_HELPERS_H */
-> >> -- 
-> >> 2.7.4
-> >>
-> >>
-> > 
-> > Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum,
-> > a Linux Foundation Collaborative Project
-> > 
-> 
-
-Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum,
-a Linux Foundation Collaborative Project
+- Eric
