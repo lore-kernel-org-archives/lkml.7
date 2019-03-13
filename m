@@ -2,133 +2,118 @@ Return-Path: <SRS0=dUEL=RQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.8 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1907EC43381
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 Mar 2019 17:44:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7BD5AC43381
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 Mar 2019 17:45:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D8A6D2054F
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 Mar 2019 17:44:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 465A12054F
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 Mar 2019 17:45:10 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=nifty.com header.i=@nifty.com header.b="JGESc3LJ"
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=hansenpartnership.com header.i=@hansenpartnership.com header.b="Z/XLfabz"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727030AbfCMRoW (ORCPT
+        id S1727067AbfCMRpJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 13 Mar 2019 13:44:22 -0400
-Received: from conssluserg-03.nifty.com ([210.131.2.82]:21809 "EHLO
-        conssluserg-03.nifty.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725876AbfCMRoW (ORCPT
+        Wed, 13 Mar 2019 13:45:09 -0400
+Received: from bedivere.hansenpartnership.com ([66.63.167.143]:38136 "EHLO
+        bedivere.hansenpartnership.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1725876AbfCMRpI (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 13 Mar 2019 13:44:22 -0400
-Received: from mail-ua1-f44.google.com (mail-ua1-f44.google.com [209.85.222.44]) (authenticated)
-        by conssluserg-03.nifty.com with ESMTP id x2DHi93l008064;
-        Thu, 14 Mar 2019 02:44:09 +0900
-DKIM-Filter: OpenDKIM Filter v2.10.3 conssluserg-03.nifty.com x2DHi93l008064
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nifty.com;
-        s=dec2015msa; t=1552499049;
-        bh=E6WtDBVfsV3JHaMx/LpsSY73bCNZN/FcMnJlG85BnkM=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=JGESc3LJr0EWm8knjP4SfjNOfoNc3JE3v6Iefak6TF2uQw4SmaLBkkRERbIWwsiIo
-         IvZMLeN5BFoAGhAEPtjbzOY7vo/iLlKAC9F1B1hfrvuK9VFi7X/BlIa5/ZBVLeDHFY
-         WC+ftnd363rEWKFq1q+TxMK2VRx16Dib9I7jdgD441k788cahNArDvBwcba7LiE9Ss
-         sTYKQ5yOGr/3mT0StynSk+fJb40LF395VpNGH7KyGDeuBz2MSaFJM6jVunzhvN3Y4Z
-         +UF+bof04pB3njOvN+BFUNyZdGvN9FE7+uO/SaM9mUBmtTPzc1TJn2bT4OSqjfZHLV
-         cvbLV5Rl+vSEQ==
-X-Nifty-SrcIP: [209.85.222.44]
-Received: by mail-ua1-f44.google.com with SMTP id x1so963366uaj.4;
-        Wed, 13 Mar 2019 10:44:09 -0700 (PDT)
-X-Gm-Message-State: APjAAAW4rxNsyJrEebFiqU83Jqhr7EHxtyvCBDhy0MaLprNvRDLQXNi5
-        qqgMFIEME8rVEfI9YrSqHL6LWVARt1rjlqJmdmg=
-X-Google-Smtp-Source: APXvYqzUJkR35RYJ9kvNu7jL3DxH0GBp5isnGer2GUab97UkkTXcQ0OwhT3mJezoGv3DXcTKs8wwmtpb5N+rC/3f5ew=
-X-Received: by 2002:ab0:c07:: with SMTP id a7mr2648420uak.55.1552499048436;
- Wed, 13 Mar 2019 10:44:08 -0700 (PDT)
-MIME-Version: 1.0
-References: <1552411404-32271-1-git-send-email-yamada.masahiro@socionext.com>
-In-Reply-To: <1552411404-32271-1-git-send-email-yamada.masahiro@socionext.com>
-From:   Masahiro Yamada <yamada.masahiro@socionext.com>
-Date:   Thu, 14 Mar 2019 02:43:32 +0900
-X-Gmail-Original-Message-ID: <CAK7LNARXpg-LwbNnZMySGJHFFjUKes5tCcKx1=mpygpyX3GEJQ@mail.gmail.com>
-Message-ID: <CAK7LNARXpg-LwbNnZMySGJHFFjUKes5tCcKx1=mpygpyX3GEJQ@mail.gmail.com>
-Subject: Re: [PATCH] deb-pkg: generate correct build dependencies
-To:     Linux Kbuild mailing list <linux-kbuild@vger.kernel.org>
-Cc:     Ben Hutchings <ben@decadent.org.uk>,
-        Riku Voipio <riku.voipio@linaro.org>,
-        Michal Marek <michal.lkml@markovi.net>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+        Wed, 13 Mar 2019 13:45:08 -0400
+Received: from localhost (localhost [127.0.0.1])
+        by bedivere.hansenpartnership.com (Postfix) with ESMTP id DC7B08EE20E;
+        Wed, 13 Mar 2019 10:45:07 -0700 (PDT)
+Received: from bedivere.hansenpartnership.com ([127.0.0.1])
+        by localhost (bedivere.hansenpartnership.com [127.0.0.1]) (amavisd-new, port 10024)
+        with ESMTP id ulLIldqhNckc; Wed, 13 Mar 2019 10:45:07 -0700 (PDT)
+Received: from [153.66.254.194] (unknown [50.35.68.20])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by bedivere.hansenpartnership.com (Postfix) with ESMTPSA id 397668EE0D2;
+        Wed, 13 Mar 2019 10:45:06 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=hansenpartnership.com;
+        s=20151216; t=1552499107;
+        bh=LmtfLYAn+59FHlpuRFRBSu8OCz1zXslGcFf8/7qLQKM=;
+        h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
+        b=Z/XLfabzFJ9KHNLavr3JPlQPDJVgP7vYTmNlKQCwaHO7PWWjmMT1rWhOeMHCbRWf+
+         aROVbOjkDqzc4KA9XIFxLkhfZ4gRiAQh6iZ/IB+sWNXQwY/dMX+kvCFEWzyPYSuFbG
+         aDsrsu1/2g3Ypz7Eapxc3R9tP+pc8uQX0xI+7qXk=
+Message-ID: <1552499104.3022.44.camel@HansenPartnership.com>
+Subject: Re: overlayfs vs. fscrypt
+From:   James Bottomley <James.Bottomley@HansenPartnership.com>
+To:     Theodore Ts'o <tytso@mit.edu>
+Cc:     Amir Goldstein <amir73il@gmail.com>,
+        Richard Weinberger <richard@nod.at>,
+        Miklos Szeredi <miklos@szeredi.hu>,
+        linux-fsdevel <linux-fsdevel@vger.kernel.org>,
+        linux-fscrypt@vger.kernel.org,
+        overlayfs <linux-unionfs@vger.kernel.org>,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        Paul Lawrence <paullawrence@google.com>
+Date:   Wed, 13 Mar 2019 10:45:04 -0700
+In-Reply-To: <20190313164439.GF672@mit.edu>
+References: <4603533.ZIfxmiEf7K@blindfold> <1854703.ve7plDhYWt@blindfold>
+         <CAJfpegtgfuAkgv26QH6Ht25OeMiev-QvEf7ror4KAbud7FADgg@mail.gmail.com>
+         <4066872.KGdO14EQMx@blindfold>
+         <CAOQ4uxhqQKzriL0An4Tvzc1E_LffL-z9q1otOW_RdD1ZdKWP3Q@mail.gmail.com>
+         <20190313151633.GA672@mit.edu>
+         <1552491394.3022.8.camel@HansenPartnership.com>
+         <20190313164439.GF672@mit.edu>
 Content-Type: text/plain; charset="UTF-8"
+X-Mailer: Evolution 3.26.6 
+Mime-Version: 1.0
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Mar 13, 2019 at 2:24 AM Masahiro Yamada
-<yamada.masahiro@socionext.com> wrote:
->
-> From: Riku Voipio <riku.voipio@linaro.org>
->
-> bison/flex is now needed always for building for kconfig. Some build
-> dependencies depend on kernel configuration, enable them as needed:
->
-> - libelf-dev when UNWINDER_ORC is set
-> - libssl-dev for SYSTEM_TRUSTED_KEYRING
->
-> Since the libssl-dev is needed for extract_cert binary, denote with
-> :native to install the libssl-dev for the build machines architecture,
-> rather than for the architecture of the kernel being built.
->
-> Tested-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-> Signed-off-by: Riku Voipio <riku.voipio@linaro.org>
-> Reviewed-by: Ben Hutchings <ben@decadent.org.uk>
-> Acked-by: maximilian attems <maks@stro.at>
-> [masahiro.yamada: add change 'flex' to 'flex | flex:native' ]
-> Signed-off-by: Masahiro Yamada <yamada.masahiro@socionext.com>
-> ---
->
+On Wed, 2019-03-13 at 12:44 -0400, Theodore Ts'o wrote:
+> On Wed, Mar 13, 2019 at 08:36:34AM -0700, James Bottomley wrote:
+> > On Wed, 2019-03-13 at 11:16 -0400, Theodore Ts'o wrote:
+> > > So before we talk about how to make things work from a technical
+> > > perspective, we should consider what the use case happens to be,
+> > > and what are the security requirements.  *Why* are we trying to
+> > > use the combination of overlayfs and fscrypt, and what are the
+> > > security properties we are trying to provide to someone who is
+> > > relying on this combination?
+> > 
+> > I can give one: encrypted containers:
+> > 
+> > https://github.com/opencontainers/image-spec/issues/747
+> > 
+> > The current proposal imagines that the key would be delivered to
+> > the physical node and the physical node containerd would decrypt
+> > all the layers before handing them off to to the kubelet.  However,
+> > one could imagine a slightly more secure use case where the layers
+> > were constructed as an encrypted filesystem tar and so the key
+> > would go into the kernel and the layers would be constructed with
+> > encryption in place using fscrypt.
+> > 
+> > Most of the desired security properties are in image at rest but
+> > one can imagine that the running image wants some protection
+> > against containment breaches by other tenants and using fscrypt
+> > could provide that.
+> 
+> What kind of containment breaches?  If they can break root, it's all
+> over no matter what sort of encryption you are using.
 
+With me it's always unprivileged containers inside a user_ns, so
+containment breach means non-root.  I hope eventually this will be the
+norm for the container industry as well.
 
-Applied to linux-kbuild.
+>   If they can't break root, then the OS's user-id based access
+> control checks (or SELinux checks if you are using SELinux) will
+> still protect you.
 
+Well, that's what one would think about the recent runc exploit as
+well.  The thing I was looking to do was reduce the chances that
+unencrypted data would be lying around to be discovered.  I suppose the
+potentially biggest problem is leaking the image after it's decrypted
+by admin means like a badly configured backup, but unencryped data is
+potentially discoverable by breakouts as well.
 
-> Hi Riku,
->
-> I did not get your update, but anyway I changed
-> 'flex' to 'flex | flex:native'.
->
-> With this change, now I am able to cross-compile deb-pkg.
->
->
->  scripts/package/mkdebian | 4 +++-
->  1 file changed, 3 insertions(+), 1 deletion(-)
->
-> diff --git a/scripts/package/mkdebian b/scripts/package/mkdebian
-> index f030961..110cd8d 100755
-> --- a/scripts/package/mkdebian
-> +++ b/scripts/package/mkdebian
-> @@ -134,6 +134,8 @@ fi
->
->  mkdir -p debian/
->  echo $debarch > debian/arch
-> +extra_build_depends=", $(if_enabled_echo UNWINDER_ORC libelf-dev)"
-> +extra_build_depends="$extra_build_depends, $(if_enabled_echo SYSTEM_TRUSTED_KEYRING libssl-dev:native)"
->
->  # Generate a simple changelog template
->  cat <<EOF > debian/changelog
-> @@ -170,7 +172,7 @@ Source: $sourcename
->  Section: kernel
->  Priority: optional
->  Maintainer: $maintainer
-> -Build-Depends: bc, kmod, cpio
-> +Build-Depends: bc, kmod, cpio, bison, flex | flex:native $extra_build_depends
->  Homepage: http://www.kernel.org/
->
->  Package: $packagename
-> --
-> 2.7.4
->
+James
 
-
--- 
-Best Regards
-Masahiro Yamada
