@@ -2,132 +2,90 @@ Return-Path: <SRS0=dUEL=RQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_MUTT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,
+	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 202A9C43381
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 Mar 2019 16:33:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6546BC10F03
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 Mar 2019 16:33:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D70502087C
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 Mar 2019 16:33:04 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="bsjSBzTR"
+	by mail.kernel.org (Postfix) with ESMTP id 22FC02146E
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 Mar 2019 16:33:11 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1552494791;
+	bh=hYFUE8iHDOyLWviUyLA2jHLIqA4whqUBgLBlXPCuO/s=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
+	b=otxy2kwhWBZUtafSCz2sdW9BoB1Iei6FHf/Q8kAtUahAMMizLMjjzV0LO4WqHr0OK
+	 LvBMqLHM7ssn9C5YEts+dNDYMawJvALQyuDqnpAYR5GGhLligsX1pJzm3uxojFvslI
+	 v51n9358y3BGeynLIs8VTUTmX6FXpW4SObqwc51c=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726581AbfCMQdC (ORCPT
+        id S1726736AbfCMQdK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 13 Mar 2019 12:33:02 -0400
-Received: from mail-pg1-f196.google.com ([209.85.215.196]:37179 "EHLO
-        mail-pg1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726078AbfCMQdC (ORCPT
+        Wed, 13 Mar 2019 12:33:10 -0400
+Received: from mail.linuxfoundation.org ([140.211.169.12]:42250 "EHLO
+        mail.linuxfoundation.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725926AbfCMQdJ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 13 Mar 2019 12:33:02 -0400
-Received: by mail-pg1-f196.google.com with SMTP id q206so1903895pgq.4;
-        Wed, 13 Mar 2019 09:33:01 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=sender:date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:content-transfer-encoding:in-reply-to
-         :user-agent;
-        bh=NEVD3LxZ0XY5VCtKl3rjIcWwwq4X3avTTOHtLNiLHt4=;
-        b=bsjSBzTRBfa8Ow2ZP65tKLx+0GP/UK7PZw8yBpXvqTD9AZL98EFkn142tAFFv6hPnp
-         ZhXuCgcknhDYFkH/3OZGI2TcMoYrwtNTn4VoXN2eOwiCaaafMkpkxQlFaKWPFZ12p2Qa
-         SK7J7DvCAZy6nzKxUc+OC7GABE3dFupUESZB5FgN+CNFh1vhMfTgnAAP9sb7UFlHw2jw
-         DdT24ns+JD5f7afM7DAbbPLxVZVvgIKOMTOK2EJi/9+K/bHcvgbwfSbQ5da9umelSocH
-         f85W5uerrbSDWfopFukPO2l23O3NBFx1lLuIZYssmtt7veQ0UCAYPZpW9J/grOE3M9qc
-         CQsg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
-         :references:mime-version:content-disposition
-         :content-transfer-encoding:in-reply-to:user-agent;
-        bh=NEVD3LxZ0XY5VCtKl3rjIcWwwq4X3avTTOHtLNiLHt4=;
-        b=rdO0PVjZW5TMfoM/fXh0jy5MsUvFBUAFMQb/kgpvPOUJemclJxno9LEAlKJr6XoCcT
-         MbR9e8m/xSsf22LqH5ssx3AuiECUmBdD1+LLd3EkJHhuUqLDriENLSysUw9lh6tBMAAa
-         oHFuC5qkcsqeN6FNdQS9dmdHLXzk2YnRT6cI9O/Lcx7kypK0KIswxzPA3heYg8wGXidd
-         gjmxiClORiP4r6Jxn0Vdcx69ITo24AgCEMwqSqNgPTW5qulUOweoeiMyb3jftKnFG6qD
-         JOZM2yPtWnCAJm56dEwPtFTe7nmwGgTPyhOKRCIhOb/q53pIIorcp6EdrZ9Tl9ugA4++
-         4lUA==
-X-Gm-Message-State: APjAAAVBeQI9CRbdbQPhKpwFMf5f0owA9GBNVAxKCjahaK41k9Rly/tS
-        w2SUxwMIeLyIOL6mSTk0LrFVv/Uh
-X-Google-Smtp-Source: APXvYqyfCFNuwza3N+hbSYoViS1AQ/MGZ8xccbipdYdcDj53Ajc3l6mW3M+bAZfF/WeBgM5YpBFbXQ==
-X-Received: by 2002:aa7:85cc:: with SMTP id z12mr45072215pfn.196.1552494781228;
-        Wed, 13 Mar 2019 09:33:01 -0700 (PDT)
-Received: from localhost ([2600:1700:e321:62f0:329c:23ff:fee3:9d7c])
-        by smtp.gmail.com with ESMTPSA id b15sm26957599pfj.167.2019.03.13.09.33.00
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Wed, 13 Mar 2019 09:33:00 -0700 (PDT)
-Date:   Wed, 13 Mar 2019 09:32:59 -0700
-From:   Guenter Roeck <linux@roeck-us.net>
-To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc:     linux-kernel@vger.kernel.org, torvalds@linux-foundation.org,
-        akpm@linux-foundation.org, shuah@kernel.org, patches@kernelci.org,
-        ben.hutchings@codethink.co.uk, lkft-triage@lists.linaro.org,
-        stable@vger.kernel.org
-Subject: Re: [PATCH 4.9 00/96] 4.9.163-stable review
-Message-ID: <20190313163259.GC15451@roeck-us.net>
-References: <20190312171034.530434962@linuxfoundation.org>
- <20190313144434.GA11117@roeck-us.net>
- <20190313151429.GB9719@kroah.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20190313151429.GB9719@kroah.com>
-User-Agent: Mutt/1.5.24 (2015-08-30)
+        Wed, 13 Mar 2019 12:33:09 -0400
+Received: from localhost.localdomain (c-73-223-200-170.hsd1.ca.comcast.net [73.223.200.170])
+        by mail.linuxfoundation.org (Postfix) with ESMTPSA id 7739ECB7;
+        Wed, 13 Mar 2019 16:33:07 +0000 (UTC)
+Date:   Wed, 13 Mar 2019 09:33:06 -0700
+From:   Andrew Morton <akpm@linux-foundation.org>
+To:     Alexander Duyck <alexander.h.duyck@linux.intel.com>
+Cc:     Michal Hocko <mhocko@kernel.org>, linux-mm@kvack.org,
+        sparclinux@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-nvdimm@lists.01.org, davem@davemloft.net,
+        pavel.tatashin@microsoft.com, mingo@kernel.org,
+        kirill.shutemov@linux.intel.com, dan.j.williams@intel.com,
+        dave.jiang@intel.com, rppt@linux.vnet.ibm.com, willy@infradead.org,
+        vbabka@suse.cz, khalid.aziz@oracle.com, ldufour@linux.vnet.ibm.com,
+        mgorman@techsingularity.net, yi.z.zhang@linux.intel.com
+Subject: Re: [mm PATCH v6 6/7] mm: Add reserved flag setting to
+ set_page_links
+Message-Id: <20190313093306.c4b49c6d062f506a967f843d@linux-foundation.org>
+In-Reply-To: <4c72a04bb87e341ea7c747d509f42136a99a0716.camel@linux.intel.com>
+References: <154361452447.7497.1348692079883153517.stgit@ahduyck-desk1.amr.corp.intel.com>
+        <154361479877.7497.2824031260670152276.stgit@ahduyck-desk1.amr.corp.intel.com>
+        <20181205172225.GT1286@dhcp22.suse.cz>
+        <19c9f0fe83a857d5858c386a08ca2ddeba7cf27b.camel@linux.intel.com>
+        <20181205204247.GY1286@dhcp22.suse.cz>
+        <20190312150727.cb15cbc323a742e520b9a881@linux-foundation.org>
+        <4c72a04bb87e341ea7c747d509f42136a99a0716.camel@linux.intel.com>
+X-Mailer: Sylpheed 3.5.1 (GTK+ 2.24.31; x86_64-pc-linux-gnu)
+Mime-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Mar 13, 2019 at 08:14:29AM -0700, Greg Kroah-Hartman wrote:
-> On Wed, Mar 13, 2019 at 07:44:34AM -0700, Guenter Roeck wrote:
-> > On Tue, Mar 12, 2019 at 10:09:18AM -0700, Greg Kroah-Hartman wrote:
-> > > This is the start of the stable review cycle for the 4.9.163 release.
-> > > There are 96 patches in this series, all will be posted as a response
-> > > to this one.  If anyone has any issues with these being applied, please
-> > > let me know.
-> > > 
-> > > Responses should be made by Thu Mar 14 17:10:06 UTC 2019.
-> > > Anything received after that time might be too late.
-> > > 
+On Tue, 12 Mar 2019 15:50:36 -0700 Alexander Duyck <alexander.h.duyck@linux.intel.com> wrote:
+
+> On Tue, 2019-03-12 at 15:07 -0700, Andrew Morton wrote:
+> > On Wed, 5 Dec 2018 21:42:47 +0100 Michal Hocko <mhocko@kernel.org> wrote:
 > > 
-> > Early results:
+> > > > I got your explanation. However Andrew had already applied the patches
+> > > > and I had some outstanding issues in them that needed to be addressed.
+> > > > So I thought it best to send out this set of patches with those fixes
+> > > > before the code in mm became too stale. I am still working on what to
+> > > > do about the Reserved bit, and plan to submit it as a follow-up set.
+> > > > From my experience Andrew can drop patches between different versions of
+> > > the patchset. Things can change a lot while they are in mmotm and under
+> > > the discussion.
 > > 
-> > Building x86_64:tools/perf ... failed
-> > --------------
-> > Error log:
-> > Warning: arch/x86/include/asm/cpufeatures.h differs from kernel
-> > Warning: arch/x86/include/uapi/asm/kvm.h differs from kernel
-> >   PERF_VERSION = 4.9.162.g605129
-> > builtin-trace.c: In function ‘perf_evlist__add_vfs_getname’:
-> > builtin-trace.c:2071:8: error: implicit declaration of function ‘strstarts’ [-Werror=implicit-function-declaration]
-> > builtin-trace.c:2071:3: error: nested extern declaration of ‘strstarts’ [-Werror=nested-externs]
+> > It's been a while and everyone has forgotten everything, so I'll drop
+> > this version of the patchset.
 > > 
-> > Also affects v4.4.y-queue.
 > 
-> Hm, at first I was worried about my backport, but if it hit 4.4 as well,
-> that's not my fault :)
+> As far as getting to the reserved bit I probably won't have the time in
+> the near future. If I were to resubmit the first 4 patches as a
+> standalone patch set would that be acceptable, or would they be held up
+> as well until the reserved bit issues is addressed?
 > 
-Actually, it turns out the build failure in 4.4.y is different:
 
-Building x86_64:tools/perf ... failed
---------------
-Error log:
-  PERF_VERSION = 4.4.176.gbd5033
-  builtin-trace.c: In function ‘perf_evlist__add_vfs_getname’:
-  builtin-trace.c:2414:2: error: implicit declaration of function ‘evlist__for_each_entry_safe’; did you mean ‘hlist_for_each_entry_safe’? 
+Yes, I think that merging the first four will be OK.  As long as they
+don't add some bug which [5/5] corrects, which happens sometimes!
 
-builtin-trace.c:2414:2: error: nested extern declaration of
-‘evlist__for_each_entry_safe’ [-Werror=nested-externs]
-builtin-trace.c:2414:50: error: expected ‘;’ before ‘{’ token
-  evlist__for_each_entry_safe(evlist, evsel, tmp) {
-
-builtin-trace.c:2406:7: error: unused variable ‘found’ [-Werror=unused-variable]
-  bool found = false;
-       ^~~~~
-builtin-trace.c:2430:1: error: control reaches end of non-void function
-
-so you are not entirely off the hook ...
-
-Guenter
+Please redo, retest and resend sometime?
