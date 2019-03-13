@@ -7,47 +7,46 @@ X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AB811C43381
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 Mar 2019 19:25:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0E814C43381
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 Mar 2019 19:25:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7D24A2075C
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 Mar 2019 19:25:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D5E222075C
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 Mar 2019 19:25:08 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1552505106;
-	bh=yKpywNepKjKhTNsP8BUEKOwOyUEX8QbS7boyx3t/rhA=;
+	s=default; t=1552505108;
+	bh=QllgnOtBJRvt2YCHz5vYyGg+r0B8tQUtJ2pfuuSyyOM=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=odO2HSo3iVtAs3x2AcIX4IjO/MjWHpK+Jtee3nfVVR+dMwAUGYvUfAd2yXq2RWnIR
-	 ZA8d7n7XpWoLz6k6Zwh22MFxT/lL8ipHS3gYQTDnGop1UaYMEupBY6aoTmUb5KpecU
-	 dAxhOYERmtlVK1Ro2erzW7uYCkFZkypBvLHeYyDM=
+	b=gR5zEotSFHTIvBH94mTIwTZDEAJWOSq0S5n+NvYdfQmS1Od75I8QF1nct4rsXOUkl
+	 O+D2reMYhMIpdLx1RJ4EIRzPxCVHuHFSkRwLqgoHGpDnQ3pAN7Mc0/DAJQc6Dbr9V9
+	 sU0az8yZfxsqGXiICX7pNgECPM5+eGtrHRb4D4cs=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728485AbfCMTPu (ORCPT
+        id S1728217AbfCMTZG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 13 Mar 2019 15:15:50 -0400
-Received: from mail.kernel.org ([198.145.29.99]:45842 "EHLO mail.kernel.org"
+        Wed, 13 Mar 2019 15:25:06 -0400
+Received: from mail.kernel.org ([198.145.29.99]:46038 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728501AbfCMTPm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 13 Mar 2019 15:15:42 -0400
+        id S1728544AbfCMTPu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 13 Mar 2019 15:15:50 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 8222E21852;
-        Wed, 13 Mar 2019 19:15:39 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id D49792183F;
+        Wed, 13 Mar 2019 19:15:48 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1552504541;
-        bh=yKpywNepKjKhTNsP8BUEKOwOyUEX8QbS7boyx3t/rhA=;
+        s=default; t=1552504550;
+        bh=QllgnOtBJRvt2YCHz5vYyGg+r0B8tQUtJ2pfuuSyyOM=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=HI+UyUiFLo09SRl6qM5wNpqmi9IjxXQQ+8Zh1BW4Z1pZXoJ326j7xbyhh7Y3nwmYj
-         EQquzarGxm48ZNhDgW+f2an3VJdfXYDFFOdDdjVVjqn/s1K9uG/iHW78V1lOqcDRB3
-         qB+Q7p0h1ZMs2q8fD99BlrTjvSN566q+hNv+2kec=
+        b=Q3OBQ1xeDyympyKVnzilAfoTyJFVd+IJ0n6SLb5cgi4PtcYshSr9nFGWEURM6VLqI
+         qygkSpkbpv/0nwYlXSaqvWaMtl40A6lD19RShEhr/tOI9M4HMVCXD9kmz1rEJhWcfC
+         MmzPxQXkl3GWz9AHsIwwP/l7cXaCEQiDCrYaAJzk=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Martin Blumenstingl <martin.blumenstingl@googlemail.com>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Sasha Levin <sashal@kernel.org>, linux-gpio@vger.kernel.org,
-        linux-amlogic@lists.infradead.org
-Subject: [PATCH AUTOSEL 4.14 11/33] pinctrl: meson: meson8b: fix the sdxc_a data 1..3 pins
-Date:   Wed, 13 Mar 2019 15:14:44 -0400
-Message-Id: <20190313191506.159677-11-sashal@kernel.org>
+Cc:     Bard liao <yung-chuan.liao@linux.intel.com>,
+        Mark Brown <broonie@kernel.org>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH AUTOSEL 4.14 15/33] ASoC: topology: free created components in tplg load error
+Date:   Wed, 13 Mar 2019 15:14:48 -0400
+Message-Id: <20190313191506.159677-15-sashal@kernel.org>
 X-Mailer: git-send-email 2.19.1
 In-Reply-To: <20190313191506.159677-1-sashal@kernel.org>
 References: <20190313191506.159677-1-sashal@kernel.org>
@@ -59,36 +58,45 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Martin Blumenstingl <martin.blumenstingl@googlemail.com>
+From: Bard liao <yung-chuan.liao@linux.intel.com>
 
-[ Upstream commit c17abcfa93bf0be5e48bb011607d237ac2bfc839 ]
+[ Upstream commit 304017d31df36fb61eb2ed3ebf65fb6870b3c731 ]
 
-Fix the mismatch between the "sdxc_d13_1_a" pin group definition from
-meson8b_cbus_groups and the entry in sdxc_a_groups ("sdxc_d0_13_1_a").
-This makes it possible to use "sdxc_d13_1_a" in device-tree files to
-route the MMC data 1..3 pins to GPIOX_1..3.
+Topology resources are no longer needed if any element failed to load.
 
-Fixes: 0fefcb6876d0d6 ("pinctrl: Add support for Meson8b")
-Signed-off-by: Martin Blumenstingl <martin.blumenstingl@googlemail.com>
-Signed-off-by: Linus Walleij <linus.walleij@linaro.org>
+Signed-off-by: Bard liao <yung-chuan.liao@linux.intel.com>
+Signed-off-by: Mark Brown <broonie@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/pinctrl/meson/pinctrl-meson8b.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ sound/soc/soc-topology.c | 8 +++++++-
+ 1 file changed, 7 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/pinctrl/meson/pinctrl-meson8b.c b/drivers/pinctrl/meson/pinctrl-meson8b.c
-index a6fff215e60f..aafd39eba64f 100644
---- a/drivers/pinctrl/meson/pinctrl-meson8b.c
-+++ b/drivers/pinctrl/meson/pinctrl-meson8b.c
-@@ -668,7 +668,7 @@ static const char * const sd_a_groups[] = {
+diff --git a/sound/soc/soc-topology.c b/sound/soc/soc-topology.c
+index c1619860a5de..2d5cf263515b 100644
+--- a/sound/soc/soc-topology.c
++++ b/sound/soc/soc-topology.c
+@@ -2513,6 +2513,7 @@ int snd_soc_tplg_component_load(struct snd_soc_component *comp,
+ 	struct snd_soc_tplg_ops *ops, const struct firmware *fw, u32 id)
+ {
+ 	struct soc_tplg tplg;
++	int ret;
  
- static const char * const sdxc_a_groups[] = {
- 	"sdxc_d0_0_a", "sdxc_d13_0_a", "sdxc_d47_a", "sdxc_clk_a",
--	"sdxc_cmd_a", "sdxc_d0_1_a", "sdxc_d0_13_1_a"
-+	"sdxc_cmd_a", "sdxc_d0_1_a", "sdxc_d13_1_a"
- };
+ 	/* setup parsing context */
+ 	memset(&tplg, 0, sizeof(tplg));
+@@ -2526,7 +2527,12 @@ int snd_soc_tplg_component_load(struct snd_soc_component *comp,
+ 	tplg.bytes_ext_ops = ops->bytes_ext_ops;
+ 	tplg.bytes_ext_ops_count = ops->bytes_ext_ops_count;
  
- static const char * const pcm_a_groups[] = {
+-	return soc_tplg_load(&tplg);
++	ret = soc_tplg_load(&tplg);
++	/* free the created components if fail to load topology */
++	if (ret)
++		snd_soc_tplg_component_remove(comp, SND_SOC_TPLG_INDEX_ALL);
++
++	return ret;
+ }
+ EXPORT_SYMBOL_GPL(snd_soc_tplg_component_load);
+ 
 -- 
 2.19.1
 
