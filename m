@@ -6,167 +6,107 @@ X-Spam-Status: No, score=-7.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
 	SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2BB38C43381
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 Mar 2019 17:39:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3F4C7C43381
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 Mar 2019 17:42:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DFB802075C
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 Mar 2019 17:39:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 127882077B
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 Mar 2019 17:42:23 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=nifty.com header.i=@nifty.com header.b="tFGS8Adb"
+	dkim=pass (2048-bit key) header.d=nifty.com header.i=@nifty.com header.b="07hkHys1"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726897AbfCMRjG (ORCPT
+        id S1726865AbfCMRmV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 13 Mar 2019 13:39:06 -0400
-Received: from conssluserg-04.nifty.com ([210.131.2.83]:29183 "EHLO
-        conssluserg-04.nifty.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726033AbfCMRjE (ORCPT
+        Wed, 13 Mar 2019 13:42:21 -0400
+Received: from conssluserg-05.nifty.com ([210.131.2.90]:49036 "EHLO
+        conssluserg-05.nifty.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726336AbfCMRmV (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 13 Mar 2019 13:39:04 -0400
-Received: from mail-ua1-f51.google.com (mail-ua1-f51.google.com [209.85.222.51]) (authenticated)
-        by conssluserg-04.nifty.com with ESMTP id x2DHcs5C014255;
-        Thu, 14 Mar 2019 02:38:54 +0900
-DKIM-Filter: OpenDKIM Filter v2.10.3 conssluserg-04.nifty.com x2DHcs5C014255
+        Wed, 13 Mar 2019 13:42:21 -0400
+Received: from mail-ua1-f53.google.com (mail-ua1-f53.google.com [209.85.222.53]) (authenticated)
+        by conssluserg-05.nifty.com with ESMTP id x2DHgF7G004696;
+        Thu, 14 Mar 2019 02:42:16 +0900
+DKIM-Filter: OpenDKIM Filter v2.10.3 conssluserg-05.nifty.com x2DHgF7G004696
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nifty.com;
-        s=dec2015msa; t=1552498735;
-        bh=kOxq/SmZsWCGOCdDaFfVwweAG7CAulDEp/I2CLqOGPA=;
+        s=dec2015msa; t=1552498936;
+        bh=rB31vrSQRI+OCPHtNmN06TMRpdMt3bMz1Lx/B5eLOyQ=;
         h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=tFGS8AdbBNWhv8oIAB8/S/JxtMlFhUiaazqAoyyp68WADx6nNZr9TLkbKKADHGGku
-         5HJZbKXwSyxRAqS4z/Rol2WhhBkAQ9T0hlIH0jgsLPOJLEAd/xX3HVkdb6lH2Ubu0a
-         1VT3NLyliFlxVnpUtmkNXwi/Kg5XpmTFcNYrAIMHb4fTCrG8+MWm9bLRT1qSrXeyPl
-         GCIpCVDQFLPjGrxmnizldP6wGG+TewOjn/dEZ74C7km4C68fmI7VcvE9yeUbi7Odlc
-         aklgfQbzFsLdENFdmsyYj6ek/ofb8svQyb/UM3TpWoVSY5W+YmupGUmALrSA10VMqu
-         Q7MlGskwW+c9A==
-X-Nifty-SrcIP: [209.85.222.51]
-Received: by mail-ua1-f51.google.com with SMTP id a42so962321uad.1;
-        Wed, 13 Mar 2019 10:38:54 -0700 (PDT)
-X-Gm-Message-State: APjAAAU1afU8gvhyJ/AfwcdssIZ0yKX3yj1/bhmN9Qy+U2a8DFIy6x86
-        nlkYtxjiFTm5/P0YVkpkju1lQ3IeyW6yex0tslA=
-X-Google-Smtp-Source: APXvYqyjKM8oZ+Aeo9AOWpIEduG3QpFxA2PQp6wRBgPmr4ehpgC8QQ92vWpZxOKIPUNbZlxcO/VWlQ85TQbcFuEOFE4=
-X-Received: by 2002:ab0:648c:: with SMTP id p12mr23115060uam.93.1552498733629;
- Wed, 13 Mar 2019 10:38:53 -0700 (PDT)
+        b=07hkHys1fPfD1AtWF6TyZdZC0+3qdfqIymFf0LLLx0rOJeuJbvrubQtsrvyEh2oM5
+         zEtuKd5JHdg+M/ur/+fahGc4eRyMPFHCaH3M7UGBUj+5wlrCs3OuwhKZJRXtl5wv/W
+         GDhwtMITQ4s1oChJgkzTW4sQ/vhq2H5TFCYXtqAloGQjN47Pt4iH3U8y64FMRuqKyV
+         cPpVnH0YOkM5XHDHEb25PMhfRlyJMySMkbAxd75ahDrYfulvYUTgnswQngTf5BiJNY
+         QgSia/NxyCr9MzIBCJ8tVVFjCEjeFwoq9cWSxxmii+TuLiXsPBhoEtL6bE6mv/31ll
+         EbTOh4LpLMr9g==
+X-Nifty-SrcIP: [209.85.222.53]
+Received: by mail-ua1-f53.google.com with SMTP id j7so952438uak.8;
+        Wed, 13 Mar 2019 10:42:16 -0700 (PDT)
+X-Gm-Message-State: APjAAAW/paDlt14xoRoHlOxap87f34ybtzLylRfXSTr7Xa++uzH3ur5G
+        6foqVpx0M3hiqEjEVvzlu74eYMf2fa7M31TISLM=
+X-Google-Smtp-Source: APXvYqwkHZ4R5Ki/kSrcEaikko/FZVxlFbhjUnwzFLYir9CJscsJAH0N/cYxzbfEBn+6V/nWs9H6bqoyqjGMJcdu4uo=
+X-Received: by 2002:ab0:648c:: with SMTP id p12mr23123922uam.93.1552498935169;
+ Wed, 13 Mar 2019 10:42:15 -0700 (PDT)
 MIME-Version: 1.0
-References: <1548400703-27945-1-git-send-email-yamada.masahiro@socionext.com> <CAK7LNARf-P0Qjj2ScgQHk2yFw13h7zXk0VCB0MJe3W2ka3s40A@mail.gmail.com>
-In-Reply-To: <CAK7LNARf-P0Qjj2ScgQHk2yFw13h7zXk0VCB0MJe3W2ka3s40A@mail.gmail.com>
+References: <1552023035-29826-1-git-send-email-yamada.masahiro@socionext.com>
+In-Reply-To: <1552023035-29826-1-git-send-email-yamada.masahiro@socionext.com>
 From:   Masahiro Yamada <yamada.masahiro@socionext.com>
-Date:   Thu, 14 Mar 2019 02:38:17 +0900
-X-Gmail-Original-Message-ID: <CAK7LNAQES1uci6MucHCE2dN2bKV3grLzLi76Q=ycYqCAWzWwRw@mail.gmail.com>
-Message-ID: <CAK7LNAQES1uci6MucHCE2dN2bKV3grLzLi76Q=ycYqCAWzWwRw@mail.gmail.com>
-Subject: Re: [PATCH] ia64: prefix header search path with $(srctree)/
-To:     Tony Luck <tony.luck@intel.com>, Fenghua Yu <fenghua.yu@intel.com>,
-        linux-ia64@vger.kernel.org
-Cc:     Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Date:   Thu, 14 Mar 2019 02:41:39 +0900
+X-Gmail-Original-Message-ID: <CAK7LNATpy6aAKqhM3ef05Oi2zYHVM2A+7x5y7tx-Z1q6BA=bvg@mail.gmail.com>
+Message-ID: <CAK7LNATpy6aAKqhM3ef05Oi2zYHVM2A+7x5y7tx-Z1q6BA=bvg@mail.gmail.com>
+Subject: Re: [PATCH] unicore32: simplify linker script generation for decompressor
+To:     Linux Kbuild mailing list <linux-kbuild@vger.kernel.org>
+Cc:     Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Guan Xuetao <gxt@pku.edu.cn>
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Feb 18, 2019 at 1:54 PM Masahiro Yamada
+On Fri, Mar 8, 2019 at 2:31 PM Masahiro Yamada
 <yamada.masahiro@socionext.com> wrote:
 >
-> On Fri, Jan 25, 2019 at 4:21 PM Masahiro Yamada
-> <yamada.masahiro@socionext.com> wrote:
-> >
-> > Currently, the Kbuild core manipulates header search paths in a crazy
-> > way [1].
-> >
-> > To fix this mess, I want all Makefiles to add explicit $(srctree)/ to
-> > the search paths in the srctree. Some Makefiles are already written in
-> > that way, but not all. The goal of this work is to make the notation
-> > consistent, and finally get rid of the gross hacks.
-> >
-> > Having whitespaces after -I does not matter since commit 48f6e3cf5bc6
-> > ("kbuild: do not drop -I without parameter").
-> >
-> > I removed some header search paths because I was able to build ia64
-> > without them.
-> >
-> > [1]: https://patchwork.kernel.org/patch/9632347/
-> >
-> > Signed-off-by: Masahiro Yamada <yamada.masahiro@socionext.com>
-> > ---
+> When I was searching for unneeded $(KCONFIG_CONFIG) usages, I noticed
+> this strange build dependency.
 >
+> It can use $(call if_changed,...) in case ZTEXTADDR and ZBSSADDR are
+> changed, but even a simpler way is to use the pattern rule in
+> scripts/Makefile.build. This is what arch/arm/boot/compressed/Makefile
+> does.
 >
-> ia64 development is not very active these days.
+> I did only build test. I confirmed equivalent vmlinux.lds was generated.
 >
-> I will wait for response from the maintainers.
->
-> If they are silent, I want to pick up this to my kbuild tree.
+> Signed-off-by: Masahiro Yamada <yamada.masahiro@socionext.com>
+> ---
 
 
 Applied to linux-kbuild.
 
 
 
-
+>  arch/unicore32/boot/compressed/Makefile                          | 5 +----
+>  arch/unicore32/boot/compressed/{vmlinux.lds.in => vmlinux.lds.S} | 0
+>  2 files changed, 1 insertion(+), 4 deletions(-)
+>  rename arch/unicore32/boot/compressed/{vmlinux.lds.in => vmlinux.lds.S} (100%)
 >
-> Thanks.
+> diff --git a/arch/unicore32/boot/compressed/Makefile b/arch/unicore32/boot/compressed/Makefile
+> index 9aecdd3..150fafc 100644
+> --- a/arch/unicore32/boot/compressed/Makefile
+> +++ b/arch/unicore32/boot/compressed/Makefile
+> @@ -61,7 +61,4 @@ $(obj)/vmlinux: $(obj)/vmlinux.lds $(obj)/head.o $(obj)/piggy.o \
+>  ZTEXTADDR      := 0x03000000
+>  ZBSSADDR       := ALIGN(4)
 >
->
-> >  arch/ia64/sn/kernel/Makefile     | 2 +-
-> >  arch/ia64/sn/kernel/sn2/Makefile | 2 --
-> >  arch/ia64/sn/pci/Makefile        | 2 --
-> >  arch/ia64/sn/pci/pcibr/Makefile  | 2 +-
-> >  4 files changed, 2 insertions(+), 6 deletions(-)
-> >
-> > diff --git a/arch/ia64/sn/kernel/Makefile b/arch/ia64/sn/kernel/Makefile
-> > index d27df1d..9c349dd 100644
-> > --- a/arch/ia64/sn/kernel/Makefile
-> > +++ b/arch/ia64/sn/kernel/Makefile
-> > @@ -7,7 +7,7 @@
-> >  # Copyright (C) 1999,2001-2006,2008 Silicon Graphics, Inc.  All Rights Reserved.
-> >  #
-> >
-> > -ccflags-y := -Iarch/ia64/sn/include
-> > +ccflags-y := -I $(srctree)/arch/ia64/sn/include
-> >
-> >  obj-y                          += setup.o bte.o bte_error.o irq.o mca.o idle.o \
-> >                                    huberror.o io_acpi_init.o io_common.o \
-> > diff --git a/arch/ia64/sn/kernel/sn2/Makefile b/arch/ia64/sn/kernel/sn2/Makefile
-> > index 3d09108..170bde4 100644
-> > --- a/arch/ia64/sn/kernel/sn2/Makefile
-> > +++ b/arch/ia64/sn/kernel/sn2/Makefile
-> > @@ -9,7 +9,5 @@
-> >  # sn2 specific kernel files
-> >  #
-> >
-> > -ccflags-y := -Iarch/ia64/sn/include
-> > -
-> >  obj-y += cache.o io.o ptc_deadlock.o sn2_smp.o sn_proc_fs.o \
-> >          prominfo_proc.o timer.o timer_interrupt.o sn_hwperf.o
-> > diff --git a/arch/ia64/sn/pci/Makefile b/arch/ia64/sn/pci/Makefile
-> > index df2a901..321576b 100644
-> > --- a/arch/ia64/sn/pci/Makefile
-> > +++ b/arch/ia64/sn/pci/Makefile
-> > @@ -7,6 +7,4 @@
-> >  #
-> >  # Makefile for the sn pci general routines.
-> >
-> > -ccflags-y := -Iarch/ia64/sn/include
-> > -
-> >  obj-y := pci_dma.o tioca_provider.o tioce_provider.o pcibr/
-> > diff --git a/arch/ia64/sn/pci/pcibr/Makefile b/arch/ia64/sn/pci/pcibr/Makefile
-> > index 396bcae..712f6af 100644
-> > --- a/arch/ia64/sn/pci/pcibr/Makefile
-> > +++ b/arch/ia64/sn/pci/pcibr/Makefile
-> > @@ -7,7 +7,7 @@
-> >  #
-> >  # Makefile for the sn2 io routines.
-> >
-> > -ccflags-y := -Iarch/ia64/sn/include
-> > +ccflags-y := -I $(srctree)/arch/ia64/sn/include
-> >
-> >  obj-y                          +=  pcibr_dma.o pcibr_reg.o \
-> >                                     pcibr_ate.o pcibr_provider.o
-> > --
-> > 2.7.4
-> >
->
->
+> -SEDFLAGS_lds   = s/TEXT_START/$(ZTEXTADDR)/;s/BSS_START/$(ZBSSADDR)/
+> -$(obj)/vmlinux.lds: $(obj)/vmlinux.lds.in arch/unicore32/boot/Makefile $(KCONFIG_CONFIG)
+> -       @sed "$(SEDFLAGS_lds)" < $< > $@
+> -
+> +CPPFLAGS_vmlinux.lds = -DTEXT_START="$(ZTEXTADDR)" -DBSS_START="$(ZBSSADDR)"
+> diff --git a/arch/unicore32/boot/compressed/vmlinux.lds.in b/arch/unicore32/boot/compressed/vmlinux.lds.S
+> similarity index 100%
+> rename from arch/unicore32/boot/compressed/vmlinux.lds.in
+> rename to arch/unicore32/boot/compressed/vmlinux.lds.S
 > --
-> Best Regards
-> Masahiro Yamada
-
+> 2.7.4
+>
 
 
 -- 
