@@ -2,73 +2,62 @@ Return-Path: <SRS0=dUEL=RQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_NEOMUTT autolearn=ham
+X-Spam-Status: No, score=-4.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 06104C43381
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 Mar 2019 07:52:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 55759C43381
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 Mar 2019 07:54:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CB2022171F
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 Mar 2019 07:52:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 264E12171F
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 Mar 2019 07:54:39 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726937AbfCMHwS (ORCPT
+        id S1727018AbfCMHyh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 13 Mar 2019 03:52:18 -0400
-Received: from nat.nue.novell.com ([195.135.221.2]:50711 "EHLO suse.de"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1725888AbfCMHwS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 13 Mar 2019 03:52:18 -0400
-Received: by suse.de (Postfix, from userid 1000)
-        id AB5F84552; Wed, 13 Mar 2019 08:52:16 +0100 (CET)
-Date:   Wed, 13 Mar 2019 08:52:16 +0100
-From:   Oscar Salvador <osalvador@suse.de>
-To:     Qian Cai <cai@lca.pw>
-Cc:     akpm@linux-foundation.org, mhocko@kernel.org, vbabka@suse.cz,
-        linux-mm@kvack.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] mm/hotplug: fix offline undo_isolate_page_range()
-Message-ID: <20190313075212.wc3pbwixx3ppwxua@d104.suse.de>
-References: <20190313014216.36782-1-cai@lca.pw>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190313014216.36782-1-cai@lca.pw>
-User-Agent: NeoMutt/20170421 (1.8.2)
+        Wed, 13 Mar 2019 03:54:37 -0400
+Received: from coyote.holtmann.net ([212.227.132.17]:37328 "EHLO
+        mail.holtmann.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726733AbfCMHyh (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 13 Mar 2019 03:54:37 -0400
+Received: from marcel-macpro.fritz.box (p4FEFC449.dip0.t-ipconnect.de [79.239.196.73])
+        by mail.holtmann.org (Postfix) with ESMTPSA id 7AA1CCF358;
+        Wed, 13 Mar 2019 09:02:34 +0100 (CET)
+Content-Type: text/plain;
+        charset=us-ascii
+Mime-Version: 1.0 (Mac OS X Mail 12.2 \(3445.102.3\))
+Subject: Re: [PATCH] Bluetooth: btqca: Fix misspelling of 'baudrate'
+From:   Marcel Holtmann <marcel@holtmann.org>
+In-Reply-To: <CAG5bF+TdR-A8x9L5vxA9qQFFa46coHXWdbgCKJNnmK-k3mr9dw@mail.gmail.com>
+Date:   Wed, 13 Mar 2019 08:54:34 +0100
+Cc:     Johan Hedberg <johan.hedberg@gmail.com>,
+        linux-bluetooth@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Balakrishna Godavarthi <bgodavar@codeaurora.org>,
+        Hemantg <hemantg@codeaurora.org>,
+        Rocky Liao <rjliao@codeaurora.org>,
+        Harish Bandi <c-hbandi@codeaurora.org>
+Content-Transfer-Encoding: 7bit
+Message-Id: <742E6566-3AAD-4685-89FA-0CE14309BB07@holtmann.org>
+References: <CAG5bF+TdR-A8x9L5vxA9qQFFa46coHXWdbgCKJNnmK-k3mr9dw@mail.gmail.com>
+To:     Matthias Kaehlcke <mka@chromium.org>
+X-Mailer: Apple Mail (2.3445.102.3)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Mar 12, 2019 at 09:42:16PM -0400, Qian Cai wrote:
-> +
-> +	/*
-> +	 * Onlining will reset pagetype flags and makes migrate type
-> +	 * MOVABLE, so just need to decrease the number of isolated
-> +	 * pageblocks zone counter here.
-> +	 */
-> +	for (pfn = start_pfn; pfn < end_pfn; pfn += pageblock_nr_pages) {
-> +		int i;
-> +
-> +		for (i = 0; i < pageblock_nr_pages; i++)
-> +			if (pfn_valid_within(pfn + i)) {
-> +				zone->nr_isolate_pageblock--;
-> +				break;
-> +			}
-> +	}
-> +
+Hi Matthias,
 
-I do not really like this.
+> Rename the misspelled struct 'qca_bardrate' to 'qca_baudrate'
+> 
+> Signed-off-by: Matthias Kaehlcke <mka@chromium.org>
+> ---
+> drivers/bluetooth/btqca.h | 2 +-
+> 1 file changed, 1 insertion(+), 1 deletion(-)
 
-I first thought about saving the value before entering start_isolate_page_range,
-but that could race with alloc_contig_range for instance.
-So, why not make start_isolate_page_range to return the actual number of isolated
-pageblocks?
-Sure, that would mean to change a bit how we threat its return code, but
-I think that it is pretty simple.
-In that way, we would only have to substract the value start_isolate_page_range
-gave us at the end of __offline__pages() to set nr_isolate_pageblock back to
-its original value.
+patch has been applied to bluetooth-next tree.
 
--- 
-Oscar Salvador
-SUSE L3
+Regards
+
+Marcel
+
