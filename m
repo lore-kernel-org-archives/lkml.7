@@ -2,215 +2,76 @@ Return-Path: <SRS0=dUEL=RQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-6.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_PASS,URIBL_BLOCKED autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 08342C43381
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 Mar 2019 08:28:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1F375C43381
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 Mar 2019 08:29:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BE0112171F
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 Mar 2019 08:28:44 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=c-s.fr header.i=@c-s.fr header.b="Eea3DG5e"
+	by mail.kernel.org (Postfix) with ESMTP id E82BA2183F
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 Mar 2019 08:29:47 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727213AbfCMI2n (ORCPT
+        id S1727216AbfCMI3q convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 13 Mar 2019 04:28:43 -0400
-Received: from pegase1.c-s.fr ([93.17.236.30]:13206 "EHLO pegase1.c-s.fr"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726629AbfCMI2n (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 13 Mar 2019 04:28:43 -0400
-Received: from localhost (mailhub1-int [192.168.12.234])
-        by localhost (Postfix) with ESMTP id 44K4k00bp9z9tyrK;
-        Wed, 13 Mar 2019 09:28:40 +0100 (CET)
-Authentication-Results: localhost; dkim=pass
-        reason="1024-bit key; insecure key"
-        header.d=c-s.fr header.i=@c-s.fr header.b=Eea3DG5e; dkim-adsp=pass;
-        dkim-atps=neutral
-X-Virus-Scanned: Debian amavisd-new at c-s.fr
-Received: from pegase1.c-s.fr ([192.168.12.234])
-        by localhost (pegase1.c-s.fr [192.168.12.234]) (amavisd-new, port 10024)
-        with ESMTP id 2MO69eW5V_GA; Wed, 13 Mar 2019 09:28:40 +0100 (CET)
-Received: from messagerie.si.c-s.fr (messagerie.si.c-s.fr [192.168.25.192])
-        by pegase1.c-s.fr (Postfix) with ESMTP id 44K4jz6Qzcz9tyrD;
-        Wed, 13 Mar 2019 09:28:39 +0100 (CET)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=c-s.fr; s=mail;
-        t=1552465719; bh=W4K8HqPdmHDoyszFoA1g1FpkOszyeUQWUM9XwTCGzlQ=;
-        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
-        b=Eea3DG5e0dXFTOI9anDheYtALfiSEt/FIuN3uv4+fF8sNt4SGwPDAgqgZp9K5oACm
-         5Tk6QT+bqRBcRLZV7Kdoig6I/G/W3CFyJawgUOf5OSkhLiPMMFhcxQ/8PUmO9I5FbA
-         qUT+lzy785k18YpOqSGrsjNjj555FLJAI6HnWKTM=
+        Wed, 13 Mar 2019 04:29:46 -0400
+Received: from lithops.sigma-star.at ([195.201.40.130]:38186 "EHLO
+        lithops.sigma-star.at" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726630AbfCMI3p (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 13 Mar 2019 04:29:45 -0400
 Received: from localhost (localhost [127.0.0.1])
-        by messagerie.si.c-s.fr (Postfix) with ESMTP id C354E8B8F5;
-        Wed, 13 Mar 2019 09:28:40 +0100 (CET)
-X-Virus-Scanned: amavisd-new at c-s.fr
-Received: from messagerie.si.c-s.fr ([127.0.0.1])
-        by localhost (messagerie.si.c-s.fr [127.0.0.1]) (amavisd-new, port 10023)
-        with ESMTP id HLhckdp2oziU; Wed, 13 Mar 2019 09:28:40 +0100 (CET)
-Received: from PO15451 (unknown [192.168.4.90])
-        by messagerie.si.c-s.fr (Postfix) with ESMTP id 06C108B8EE;
-        Wed, 13 Mar 2019 09:28:39 +0100 (CET)
-Subject: Re: [PATCH v2] powerpc/mm: move warning from resize_hpt_for_hotplug()
-To:     Laurent Vivier <lvivier@redhat.com>, linux-kernel@vger.kernel.org
-Cc:     Michael Ellerman <mpe@ellerman.id.au>,
-        linuxppc-dev@lists.ozlabs.org,
-        David Gibson <david@gibson.dropbear.id.au>
-References: <20190308105413.4302-1-lvivier@redhat.com>
- <3db6b64d-02d3-8aa7-80ca-3e469ea743ff@c-s.fr>
- <1dfe1a2e-f6f9-2d5d-a38e-ba4517794bad@redhat.com>
-From:   Christophe Leroy <christophe.leroy@c-s.fr>
-Message-ID: <6f089371-29e6-6fa9-379d-76d3a87e2b8b@c-s.fr>
-Date:   Wed, 13 Mar 2019 09:28:39 +0100
-User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:60.0) Gecko/20100101
- Thunderbird/60.5.3
+        by lithops.sigma-star.at (Postfix) with ESMTP id 047BD608A380;
+        Wed, 13 Mar 2019 09:29:44 +0100 (CET)
+Received: from lithops.sigma-star.at ([127.0.0.1])
+        by localhost (lithops.sigma-star.at [127.0.0.1]) (amavisd-new, port 10032)
+        with ESMTP id AygfTiTM_92y; Wed, 13 Mar 2019 09:29:43 +0100 (CET)
+Received: from localhost (localhost [127.0.0.1])
+        by lithops.sigma-star.at (Postfix) with ESMTP id 769BB608A3A1;
+        Wed, 13 Mar 2019 09:29:43 +0100 (CET)
+Received: from lithops.sigma-star.at ([127.0.0.1])
+        by localhost (lithops.sigma-star.at [127.0.0.1]) (amavisd-new, port 10026)
+        with ESMTP id X01h783-jNPS; Wed, 13 Mar 2019 09:29:43 +0100 (CET)
+Received: from blindfold.localnet (unknown [82.150.214.1])
+        by lithops.sigma-star.at (Postfix) with ESMTPSA id 2F68D608A380;
+        Wed, 13 Mar 2019 09:29:43 +0100 (CET)
+From:   Richard Weinberger <richard@nod.at>
+To:     Linus Torvalds <torvalds@linux-foundation.org>
+Cc:     linux-mtd@lists.infradead.org,
+        Linux List Kernel Mailing <linux-kernel@vger.kernel.org>
+Subject: Re: [GIT PULL] UBI/UBIFS updates for 5.1-rc1
+Date:   Wed, 13 Mar 2019 09:29:42 +0100
+Message-ID: <1772218.nkLIIC4SQU@blindfold>
+In-Reply-To: <CAHk-=wiR64B3MY852L64auE8ZGBhfFoTNXG=F=h5TVEM5gxRtg@mail.gmail.com>
+References: <6283638.XALati16HY@blindfold> <CAHk-=wixZBzR5nbPZ3Y1=VahyVDsqVZhRfRhewJybx2-yA_FEQ@mail.gmail.com> <CAHk-=wiR64B3MY852L64auE8ZGBhfFoTNXG=F=h5TVEM5gxRtg@mail.gmail.com>
 MIME-Version: 1.0
-In-Reply-To: <1dfe1a2e-f6f9-2d5d-a38e-ba4517794bad@redhat.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: fr
-Content-Transfer-Encoding: 8bit
+Content-Transfer-Encoding: 8BIT
+Content-Type: text/plain; charset="iso-8859-1"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-
-
-Le 13/03/2019 à 09:01, Laurent Vivier a écrit :
-> On 13/03/2019 07:03, Christophe Leroy wrote:
->>
->>
->> Le 08/03/2019 à 11:54, Laurent Vivier a écrit :
->>> resize_hpt_for_hotplug() reports a warning when it cannot
->>> resize the hash page table ("Unable to resize hash page
->>> table to target order") but in some cases it's not a problem
->>> and can make user thinks something has not worked properly.
->>>
->>> This patch moves the warning to arch_remove_memory() to
->>> only report the problem when it is needed.
->>>
->>> Signed-off-by: Laurent Vivier <lvivier@redhat.com>
->>> ---
->>>    arch/powerpc/include/asm/sparsemem.h  |  4 ++--
->>>    arch/powerpc/mm/hash_utils_64.c       | 17 ++++++-----------
->>>    arch/powerpc/mm/mem.c                 |  3 ++-
->>>    arch/powerpc/platforms/pseries/lpar.c |  3 ++-
->>>    4 files changed, 12 insertions(+), 15 deletions(-)
->>>
->>> diff --git a/arch/powerpc/include/asm/sparsemem.h
->>> b/arch/powerpc/include/asm/sparsemem.h
->>> index 68da49320592..3192d454a733 100644
->>> --- a/arch/powerpc/include/asm/sparsemem.h
->>> +++ b/arch/powerpc/include/asm/sparsemem.h
->>> @@ -17,9 +17,9 @@ extern int create_section_mapping(unsigned long
->>> start, unsigned long end, int ni
->>>    extern int remove_section_mapping(unsigned long start, unsigned long
->>> end);
->>>      #ifdef CONFIG_PPC_BOOK3S_64
->>> -extern void resize_hpt_for_hotplug(unsigned long new_mem_size);
->>> +extern int resize_hpt_for_hotplug(unsigned long new_mem_size);
->>>    #else
->>> -static inline void resize_hpt_for_hotplug(unsigned long new_mem_size)
->>> { }
->>> +static inline int resize_hpt_for_hotplug(unsigned long new_mem_size)
->>> { return 0; }
->>>    #endif
->>>      #ifdef CONFIG_NUMA
->>> diff --git a/arch/powerpc/mm/hash_utils_64.c
->>> b/arch/powerpc/mm/hash_utils_64.c
->>> index 0cc7fbc3bd1c..40bb2a8326bb 100644
->>> --- a/arch/powerpc/mm/hash_utils_64.c
->>> +++ b/arch/powerpc/mm/hash_utils_64.c
->>> @@ -755,12 +755,12 @@ static unsigned long __init
->>> htab_get_table_size(void)
->>>    }
->>>      #ifdef CONFIG_MEMORY_HOTPLUG
->>> -void resize_hpt_for_hotplug(unsigned long new_mem_size)
->>> +int resize_hpt_for_hotplug(unsigned long new_mem_size)
->>>    {
->>>        unsigned target_hpt_shift;
->>>          if (!mmu_hash_ops.resize_hpt)
->>> -        return;
->>> +        return 0;
->>>          target_hpt_shift = htab_shift_for_mem_size(new_mem_size);
->>>    @@ -773,15 +773,10 @@ void resize_hpt_for_hotplug(unsigned long
->>> new_mem_size)
->>>         * current shift
->>>         */
->>>        if ((target_hpt_shift > ppc64_pft_size)
->>> -        || (target_hpt_shift < (ppc64_pft_size - 1))) {
->>> -        int rc;
->>> -
->>> -        rc = mmu_hash_ops.resize_hpt(target_hpt_shift);
->>> -        if (rc && (rc != -ENODEV))
->>> -            printk(KERN_WARNING
->>> -                   "Unable to resize hash page table to target order
->>> %d: %d\n",
->>> -                   target_hpt_shift, rc);
->>> -    }
->>> +        || (target_hpt_shift < (ppc64_pft_size - 1)))
->>
->> The || should go on the line above and the two (target_hpt... should be
->> aligned, and the () after the < are superflous.
->>
->> And indeed, we should (in another patch) rename 'target_hpt_shift' with
->> a shorter name, this would avoid multiple lines.
->>
->> Ref
->> https://www.kernel.org/doc/html/latest/process/coding-style.html#naming :
->>
->> LOCAL variable names should be short, and to the point. If you have some
->> random integer loop counter, it should probably be called i. Calling it
->> loop_counter is non-productive, if there is no chance of it being
->> mis-understood. Similarly, tmp can be just about any type of variable
->> that is used to hold a temporary value.
->>
->> If you are afraid to mix up your local variable names, you have another
->> problem, which is called the function-growth-hormone-imbalance syndrome.
->> See chapter 6 (Functions).
->>
+Am Mittwoch, 13. M�rz 2019, 00:40:33 CET schrieb Linus Torvalds:
+> On Tue, Mar 12, 2019 at 3:18 PM Linus Torvalds
+> <torvalds@linux-foundation.org> wrote:
+> >
+> > On Tue, Mar 12, 2019 at 8:13 AM Richard Weinberger <richard@nod.at> wrote:
+> > >
+> > >   git://git.infradead.org/linux-ubifs.git tags/upstream-5.1-rc1
+> >
+> > Pulling this thing is taking forever for me. I can _ping_ the site,
+> > but the "git pull" has been hanging for a while.
 > 
-> I'm only removing a warning. Do we really need to rewrite all the code
-> around for that?
-
-No, and that's the reason why I said it could be done in another 
-(future) patch.
-
-Anyway, your patch should be clean regarding checkpatch
-
-See https://patchwork.ozlabs.org/patch/1052984/
-And 
-https://openpower.xyz/job/snowpatch/job/snowpatch-linux-checkpatch/3298//artifact/linux/checkpatch.log
-
-CHECK:AVOID_EXTERNS: extern prototypes should be avoided in .h files
-#31: FILE: arch/powerpc/include/asm/sparsemem.h:20:
-+extern int resize_hpt_for_hotplug(unsigned long new_mem_size);
-
-CHECK:LOGICAL_CONTINUATIONS: Logical continuations should be on the 
-previous line
-#70: FILE: arch/powerpc/mm/hash_utils_64.c:776:
-  	if ((target_hpt_shift > ppc64_pft_size)
-+	    || (target_hpt_shift < (ppc64_pft_size - 1)))
-
-total: 0 errors, 0 warnings, 2 checks, 60 lines checked
-
-NOTE: For some of the reported defects, checkpatch may be able to
-       mechanically convert to the typical style using --fix or 
---fix-inplace.
-
-the.patch has style problems, please review.
-
-NOTE: Ignored message types: ARCH_INCLUDE_LINUX BIT_MACRO 
-COMPARISON_TO_NULL DT_SPLIT_BINDING_PATCH EMAIL_SUBJECT 
-FILE_PATH_CHANGES GLOBAL_INITIALISERS LINE_SPACING MULTIPLE_ASSIGNMENTS
-
-NOTE: If any of the errors are false positives, please report
-       them to the maintainer, see CHECKPATCH in MAINTAINERS.
-
-Christophe
-
+> Ok, after leaving it for an hour and a half I just gave up. It's not worth it.
 > 
-> Thanks,
-> Laurent
-> 
+> Put your repos on some other host, and re-send the pull requests,
+
+Will do. UML is on kernel.org since ever.
+UBIFS is on infradead.org because it was already there when I took over
+maintainership. So I will move UBIFS to kernel.org too.
+
+Thanks,
+//richard 
+
+
