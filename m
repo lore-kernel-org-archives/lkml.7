@@ -2,90 +2,91 @@ Return-Path: <SRS0=dUEL=RQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,
-	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_MUTT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6546BC10F03
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 Mar 2019 16:33:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E37DCC43381
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 Mar 2019 16:33:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 22FC02146E
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 Mar 2019 16:33:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A92062147C
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 Mar 2019 16:33:53 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1552494791;
-	bh=hYFUE8iHDOyLWviUyLA2jHLIqA4whqUBgLBlXPCuO/s=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
-	b=otxy2kwhWBZUtafSCz2sdW9BoB1Iei6FHf/Q8kAtUahAMMizLMjjzV0LO4WqHr0OK
-	 LvBMqLHM7ssn9C5YEts+dNDYMawJvALQyuDqnpAYR5GGhLligsX1pJzm3uxojFvslI
-	 v51n9358y3BGeynLIs8VTUTmX6FXpW4SObqwc51c=
+	s=default; t=1552494833;
+	bh=bn/1tJDwIetgrWZrMI9KrTdg30bcs0Isy2elXrxRawY=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=uFB+JGKemJ0cD3XH7C4rSl7Wgd8gNiWQMw9C7YiucpI8qLjqwvKYPh/TRqD06ZCYL
+	 e8s6ZuBBn6+mjRB8Rq5xLEAM9m4skEJZEI+hwJLvHvVtdx4c543hXk8INNIjmdVwT9
+	 rG7c9KyMGg0mrnrg7/HDmTirMQgx0//5uFMbZtJY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726736AbfCMQdK (ORCPT
+        id S1726805AbfCMQdw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 13 Mar 2019 12:33:10 -0400
-Received: from mail.linuxfoundation.org ([140.211.169.12]:42250 "EHLO
-        mail.linuxfoundation.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725926AbfCMQdJ (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 13 Mar 2019 12:33:09 -0400
-Received: from localhost.localdomain (c-73-223-200-170.hsd1.ca.comcast.net [73.223.200.170])
-        by mail.linuxfoundation.org (Postfix) with ESMTPSA id 7739ECB7;
-        Wed, 13 Mar 2019 16:33:07 +0000 (UTC)
-Date:   Wed, 13 Mar 2019 09:33:06 -0700
-From:   Andrew Morton <akpm@linux-foundation.org>
-To:     Alexander Duyck <alexander.h.duyck@linux.intel.com>
-Cc:     Michal Hocko <mhocko@kernel.org>, linux-mm@kvack.org,
-        sparclinux@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-nvdimm@lists.01.org, davem@davemloft.net,
-        pavel.tatashin@microsoft.com, mingo@kernel.org,
-        kirill.shutemov@linux.intel.com, dan.j.williams@intel.com,
-        dave.jiang@intel.com, rppt@linux.vnet.ibm.com, willy@infradead.org,
-        vbabka@suse.cz, khalid.aziz@oracle.com, ldufour@linux.vnet.ibm.com,
-        mgorman@techsingularity.net, yi.z.zhang@linux.intel.com
-Subject: Re: [mm PATCH v6 6/7] mm: Add reserved flag setting to
- set_page_links
-Message-Id: <20190313093306.c4b49c6d062f506a967f843d@linux-foundation.org>
-In-Reply-To: <4c72a04bb87e341ea7c747d509f42136a99a0716.camel@linux.intel.com>
-References: <154361452447.7497.1348692079883153517.stgit@ahduyck-desk1.amr.corp.intel.com>
-        <154361479877.7497.2824031260670152276.stgit@ahduyck-desk1.amr.corp.intel.com>
-        <20181205172225.GT1286@dhcp22.suse.cz>
-        <19c9f0fe83a857d5858c386a08ca2ddeba7cf27b.camel@linux.intel.com>
-        <20181205204247.GY1286@dhcp22.suse.cz>
-        <20190312150727.cb15cbc323a742e520b9a881@linux-foundation.org>
-        <4c72a04bb87e341ea7c747d509f42136a99a0716.camel@linux.intel.com>
-X-Mailer: Sylpheed 3.5.1 (GTK+ 2.24.31; x86_64-pc-linux-gnu)
-Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+        Wed, 13 Mar 2019 12:33:52 -0400
+Received: from mail.kernel.org ([198.145.29.99]:59322 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725926AbfCMQdw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 13 Mar 2019 12:33:52 -0400
+Received: from sol.localdomain (c-107-3-167-184.hsd1.ca.comcast.net [107.3.167.184])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 0A0F42146E;
+        Wed, 13 Mar 2019 16:33:51 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1552494831;
+        bh=bn/1tJDwIetgrWZrMI9KrTdg30bcs0Isy2elXrxRawY=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=XjQsbkzJIVcEUnMvHuRG548xvsi5Q4mifAx8aMHWHHFOf9+scooeDgFGPL5cmZPYn
+         e0wDs3MJFgR/BgL03oBWgCnsLbeKvsnH35fl7DMbl2y/jllR4kjcZnfZuXiQDr/y6s
+         7hEfvQCdz2bFzUK2M6zCgI3Hs8MCo2vOj6S1XSJ0=
+Date:   Wed, 13 Mar 2019 09:33:49 -0700
+From:   Eric Biggers <ebiggers@kernel.org>
+To:     Al Viro <viro@zeniv.linux.org.uk>
+Cc:     Miklos Szeredi <miklos@szeredi.hu>,
+        Richard Weinberger <richard@nod.at>,
+        linux-fsdevel@vger.kernel.org, linux-fscrypt@vger.kernel.org,
+        overlayfs <linux-unionfs@vger.kernel.org>,
+        linux-kernel@vger.kernel.org
+Subject: Re: overlayfs vs. fscrypt
+Message-ID: <20190313163348.GD703@sol.localdomain>
+References: <4603533.ZIfxmiEf7K@blindfold>
+ <1852545.qrIQg0rEWx@blindfold>
+ <CAJfpegvrG4LfnuC62JNtdXpCf4vb+aEiDre5YCxe7xUSQP8yjw@mail.gmail.com>
+ <1854703.ve7plDhYWt@blindfold>
+ <CAJfpegtgfuAkgv26QH6Ht25OeMiev-QvEf7ror4KAbud7FADgg@mail.gmail.com>
+ <20190313150126.GA703@sol.localdomain>
+ <20190313161147.GS2217@ZenIV.linux.org.uk>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190313161147.GS2217@ZenIV.linux.org.uk>
+User-Agent: Mutt/1.11.3 (2019-02-01)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, 12 Mar 2019 15:50:36 -0700 Alexander Duyck <alexander.h.duyck@linux.intel.com> wrote:
-
-> On Tue, 2019-03-12 at 15:07 -0700, Andrew Morton wrote:
-> > On Wed, 5 Dec 2018 21:42:47 +0100 Michal Hocko <mhocko@kernel.org> wrote:
-> > 
-> > > > I got your explanation. However Andrew had already applied the patches
-> > > > and I had some outstanding issues in them that needed to be addressed.
-> > > > So I thought it best to send out this set of patches with those fixes
-> > > > before the code in mm became too stale. I am still working on what to
-> > > > do about the Reserved bit, and plan to submit it as a follow-up set.
-> > > > From my experience Andrew can drop patches between different versions of
-> > > the patchset. Things can change a lot while they are in mmotm and under
-> > > the discussion.
-> > 
-> > It's been a while and everyone has forgotten everything, so I'll drop
-> > this version of the patchset.
-> > 
+On Wed, Mar 13, 2019 at 04:11:48PM +0000, Al Viro wrote:
+> On Wed, Mar 13, 2019 at 08:01:27AM -0700, Eric Biggers wrote:
 > 
-> As far as getting to the reserved bit I probably won't have the time in
-> the near future. If I were to resubmit the first 4 patches as a
-> standalone patch set would that be acceptable, or would they be held up
-> as well until the reserved bit issues is addressed?
+> > What do you think about this?
 > 
+> That fscrypt might have some very deep flaws.  I'll need to RTFS and
+> review its model, but what I've seen in this thread so far is not
+> promising anything good.
+> 
+> It's not just overlayfs - there are all kinds of interesting trouble
+> possible just with fscrypt, unless I'm misparsing what had been said
+> so far.
 
-Yes, I think that merging the first four will be OK.  As long as they
-don't add some bug which [5/5] corrects, which happens sometimes!
+FYI, there *is* a known bug I was very recently made aware of and am planning to
+fix.  When ->lookup() finds the plaintext name for a directory and the
+ciphertext name is already in the dcache, d_splice_alias() will __d_move() the
+existing dentry to the plaintext name.  But it doesn't set
+DCACHE_ENCRYPTED_WITH_KEY, so the dentry incorrectly is still marked as a
+ciphertext name and will be invalidated on the next lookup.  That's especially
+problematic if the lookup that caused the __d_move() came from sys_mount().
 
-Please redo, retest and resend sometime?
+I'm thinking the best fix is to have __d_move() propagate
+DCACHE_ENCRYPTED_WITH_KEY from 'target' to 'dentry'.
+
+- Eric
