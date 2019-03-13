@@ -7,45 +7,54 @@ X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BB2D6C43381
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 Mar 2019 19:31:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 94583C43381
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 Mar 2019 19:31:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 80B4C20657
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 Mar 2019 19:31:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 598AF21019
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 Mar 2019 19:31:37 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1552505482;
-	bh=fLF7LLWhM6I6FDC6TJ5BUmFJNI9qeGU5OyBTcWlj/8k=;
+	s=default; t=1552505497;
+	bh=hNlX4NqqxVp9sR85/OPqvCCwSo47QbbfEdAOHK+6KN8=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=EPmt4Q27uuDmkczqHYMdTTebrKi1iHhzBxI/vwJmcnXT8f/msPzHJEqU85DU3rC7U
-	 HSNEAOFCNTrihCBbCF2H5ZNReDqYPrlH5FrMgRgqKDgODK2IYh/S/pif2T99UqROtv
-	 ywFdBDZBiVSWXpJaPholqu42WDtTYgoHMHanZCOM=
+	b=x351alG3OD1WbQuHoi9Z6hj70NJb1RP239cqPmas/SkD67zjMkAm9SdCKQAMDyxVN
+	 yl3F9KCD+ixlY3zHr2OKymnlZyJ1VziRmMLdyQSAFGmwXD1N2cMGCCfCEXhVvGOMGR
+	 MFnrM6eWhUdiaPVvy1bv9e145Lu7Q/b3pR24LekM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727282AbfCMTL4 (ORCPT
+        id S1727822AbfCMTbg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 13 Mar 2019 15:11:56 -0400
-Received: from mail.kernel.org ([198.145.29.99]:42550 "EHLO mail.kernel.org"
+        Wed, 13 Mar 2019 15:31:36 -0400
+Received: from mail.kernel.org ([198.145.29.99]:42440 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727584AbfCMTLw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 13 Mar 2019 15:11:52 -0400
+        id S1727567AbfCMTLr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 13 Mar 2019 15:11:47 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 582462173C;
-        Wed, 13 Mar 2019 19:11:50 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 4393C21852;
+        Wed, 13 Mar 2019 19:11:44 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1552504311;
-        bh=fLF7LLWhM6I6FDC6TJ5BUmFJNI9qeGU5OyBTcWlj/8k=;
+        s=default; t=1552504306;
+        bh=hNlX4NqqxVp9sR85/OPqvCCwSo47QbbfEdAOHK+6KN8=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=TDmh5Yw/HPCEWW+kKqwxklarO+qfO9PY20xArrKETOCYRVhqg6hzytyU6DTDooytt
-         FACWhG2Rk8T2d+zas5ETxBnLr4pv6oynKB6cvggk9A+tLNxbfrzofSNahstWqWvxr/
-         Jr/4oV7dxwODj/q38Iu8QqUgnzjJxq7DhtPKVwpw=
+        b=Y4Q/McMKyeCwApETgo2CJXOPTRK9JufNDdpY/YGIyi5QGJQvSeNJAYh5wcRzRUM0F
+         g75dKDB8dz/fEORAcqdAOyV/xTJDoYavJPIHze9TnIDaQjo/lsr510B5QxOkWEwKLJ
+         qWXDJ3Wrn+F2yT38wovYy2Pn36eM/T0Lfq/4iM1c=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Jeff Kirsher <jeffrey.t.kirsher@intel.com>,
-        Sasha Levin <sashal@kernel.org>, netdev@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.20 40/60] ixgbe: fix older devices that do not support IXGBE_MRQC_L3L4TXSWEN
-Date:   Wed, 13 Mar 2019 15:10:01 -0400
-Message-Id: <20190313191021.158171-40-sashal@kernel.org>
+Cc:     Andrey Konovalov <andreyknvl@google.com>,
+        Alexander Potapenko <glider@google.com>,
+        Andrey Ryabinin <aryabinin@virtuozzo.com>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Dmitry Vyukov <dvyukov@google.com>,
+        Evgeniy Stepanov <eugenis@google.com>,
+        Kostya Serebryany <kcc@google.com>,
+        Vincenzo Frascino <vincenzo.frascino@arm.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Sasha Levin <sashal@kernel.org>, linux-mm@kvack.org
+Subject: [PATCH AUTOSEL 4.20 38/60] kasan, slab: fix conflicts with CONFIG_HARDENED_USERCOPY
+Date:   Wed, 13 Mar 2019 15:09:59 -0400
+Message-Id: <20190313191021.158171-38-sashal@kernel.org>
 X-Mailer: git-send-email 2.19.1
 In-Reply-To: <20190313191021.158171-1-sashal@kernel.org>
 References: <20190313191021.158171-1-sashal@kernel.org>
@@ -57,41 +66,44 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Jeff Kirsher <jeffrey.t.kirsher@intel.com>
+From: Andrey Konovalov <andreyknvl@google.com>
 
-[ Upstream commit 156a67a9065e3339be85f811d1b13b920e50d73b ]
+[ Upstream commit 219667c23c68eb3dbc0d5662b9246f28477fe529 ]
 
-The enabling L3/L4 filtering for transmit switched packets for all
-devices caused unforeseen issue on older devices when trying to send UDP
-traffic in an ordered sequence.  This bit was originally intended for X550
-devices, which supported this feature, so limit the scope of this bit to
-only X550 devices.
+Similarly to commit 96fedce27e13 ("kasan: make tag based mode work with
+CONFIG_HARDENED_USERCOPY"), we need to reset pointer tags in
+__check_heap_object() in mm/slab.c before doing any pointer math.
 
-Signed-off-by: Jeff Kirsher <jeffrey.t.kirsher@intel.com>
-Tested-by: Andrew Bowers <andrewx.bowers@intel.com>
+Link: http://lkml.kernel.org/r/9a5c0f958db10e69df5ff9f2b997866b56b7effc.1550602886.git.andreyknvl@google.com
+Signed-off-by: Andrey Konovalov <andreyknvl@google.com>
+Tested-by: Qian Cai <cai@lca.pw>
+Cc: Alexander Potapenko <glider@google.com>
+Cc: Andrey Ryabinin <aryabinin@virtuozzo.com>
+Cc: Catalin Marinas <catalin.marinas@arm.com>
+Cc: Dmitry Vyukov <dvyukov@google.com>
+Cc: Evgeniy Stepanov <eugenis@google.com>
+Cc: Kostya Serebryany <kcc@google.com>
+Cc: Vincenzo Frascino <vincenzo.frascino@arm.com>
+Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
+Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/ethernet/intel/ixgbe/ixgbe_main.c | 7 +++++--
- 1 file changed, 5 insertions(+), 2 deletions(-)
+ mm/slab.c | 2 ++
+ 1 file changed, 2 insertions(+)
 
-diff --git a/drivers/net/ethernet/intel/ixgbe/ixgbe_main.c b/drivers/net/ethernet/intel/ixgbe/ixgbe_main.c
-index 113b38e0defb..aed1890514d6 100644
---- a/drivers/net/ethernet/intel/ixgbe/ixgbe_main.c
-+++ b/drivers/net/ethernet/intel/ixgbe/ixgbe_main.c
-@@ -3952,8 +3952,11 @@ static void ixgbe_setup_mrqc(struct ixgbe_adapter *adapter)
- 			else
- 				mrqc = IXGBE_MRQC_VMDQRSS64EN;
+diff --git a/mm/slab.c b/mm/slab.c
+index 9d5de959d9d9..05f21f736be8 100644
+--- a/mm/slab.c
++++ b/mm/slab.c
+@@ -4421,6 +4421,8 @@ void __check_heap_object(const void *ptr, unsigned long n, struct page *page,
+ 	unsigned int objnr;
+ 	unsigned long offset;
  
--			/* Enable L3/L4 for Tx Switched packets */
--			mrqc |= IXGBE_MRQC_L3L4TXSWEN;
-+			/* Enable L3/L4 for Tx Switched packets only for X550,
-+			 * older devices do not support this feature
-+			 */
-+			if (hw->mac.type >= ixgbe_mac_X550)
-+				mrqc |= IXGBE_MRQC_L3L4TXSWEN;
- 		} else {
- 			if (tcs > 4)
- 				mrqc = IXGBE_MRQC_RTRSS8TCEN;
++	ptr = kasan_reset_tag(ptr);
++
+ 	/* Find and validate object. */
+ 	cachep = page->slab_cache;
+ 	objnr = obj_to_index(cachep, page, (void *)ptr);
 -- 
 2.19.1
 
