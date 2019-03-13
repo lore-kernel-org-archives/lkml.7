@@ -2,91 +2,94 @@ Return-Path: <SRS0=dUEL=RQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_MUTT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_PASS
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 86FADC43381
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 Mar 2019 20:35:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EDB45C43381
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 Mar 2019 20:35:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 31866213A2
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 Mar 2019 20:35:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BDDD5213A2
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 Mar 2019 20:35:59 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="nU9/LjVc"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="kuJlC1K0"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727349AbfCMUfy (ORCPT
+        id S1727407AbfCMUf6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 13 Mar 2019 16:35:54 -0400
-Received: from mail-pg1-f194.google.com ([209.85.215.194]:43934 "EHLO
-        mail-pg1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727154AbfCMUfx (ORCPT
+        Wed, 13 Mar 2019 16:35:58 -0400
+Received: from bombadil.infradead.org ([198.137.202.133]:54990 "EHLO
+        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727373AbfCMUf4 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 13 Mar 2019 16:35:53 -0400
-Received: by mail-pg1-f194.google.com with SMTP id l11so2321713pgq.10;
-        Wed, 13 Mar 2019 13:35:53 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=sender:date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=xGZc8fZyWf0nRylG1X1awWjyFMerbqwrnWMTdNshOak=;
-        b=nU9/LjVc9xgm4BofU7Q9X5oNOEBNkP9mCjOArjwmejmwVsyYQNChsS/v/JbX03V2i9
-         amIHe3aAb6v8WIuiIuW11TYZHxge3Nz58mvskb5yRY2P0Qu5AhDFw1FzprbbpBlyNZ9b
-         TrEzx2cfxNA3+X5yW1rIVHw0EkLJ5/mppNCBxR16bqsLTNAnAx7V60ClPujorFlFMIhB
-         K9UM83lWJCCrQs2+cNk452h+ynkFBGB9cNicOr4QYaRe1k+CEklbQaB3OtY1MthmHdiT
-         DZ5DLDYKNEhgAPPyhQrHj0PryfzEJMDDmqBdpNkHv+eveIxvAE6RrYGTAFeWMz6ITix6
-         mGZQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
-         :references:mime-version:content-disposition:in-reply-to:user-agent;
-        bh=xGZc8fZyWf0nRylG1X1awWjyFMerbqwrnWMTdNshOak=;
-        b=Ld+SBpMNwJ4WHYURZvqneqSereUP0nR5/M0MHgtsYHdUrk4KxaGcyMrF/3KLVm7uTs
-         vvOiCEdyBIiaeRx/0Ym1j/t0F0V2sdpm1UNqecplr/BSQl0xg36Ti2p1Y+q8olxsLr/v
-         F7FGDMYKSJL2KrZrbQ3Wr++wA/k42YjAbmM3kckqPr6d/DzmbfyHjl3nuUx8uthQwhVM
-         PXyI19iga67rqu5RLkQn3+9+2jQdIY9OQh5dMfX0mTFCJRlHyT6wpI8t3Yry+QlUCwJb
-         h6FXrhxUpUaOuUy9Y7CuJ4iX+XZ0jCuGzA3xfrAQda12n6rmlhsrTj5UUL18mD9psDBY
-         DOzg==
-X-Gm-Message-State: APjAAAVdpdLd2LvnNd2/27UG1oh6Go/WCATUsOv3Or/fntx5HEpTqdIy
-        lG6jAnRtOz7KM70h4Qiz7pk=
-X-Google-Smtp-Source: APXvYqyUSGTnJLCbuUGUxeb8NZYgplpj4fJFQJsq0rF8vnc6GvxPh+5iKW6w5g43XQlbJs3/rdd4tA==
-X-Received: by 2002:aa7:8b93:: with SMTP id r19mr7693090pfd.163.1552509352968;
-        Wed, 13 Mar 2019 13:35:52 -0700 (PDT)
-Received: from localhost ([2600:1700:e321:62f0:329c:23ff:fee3:9d7c])
-        by smtp.gmail.com with ESMTPSA id u13sm26946249pfa.169.2019.03.13.13.35.52
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Wed, 13 Mar 2019 13:35:52 -0700 (PDT)
-Date:   Wed, 13 Mar 2019 13:35:51 -0700
-From:   Guenter Roeck <linux@roeck-us.net>
-To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc:     linux-kernel@vger.kernel.org, torvalds@linux-foundation.org,
-        akpm@linux-foundation.org, shuah@kernel.org, patches@kernelci.org,
-        ben.hutchings@codethink.co.uk, lkft-triage@lists.linaro.org,
-        stable@vger.kernel.org
-Subject: Re: [PATCH 4.20 000/171] 4.20.16-stable review
-Message-ID: <20190313203551.GD26634@roeck-us.net>
-References: <20190312170347.868927101@linuxfoundation.org>
+        Wed, 13 Mar 2019 16:35:56 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20170209; h=Content-Transfer-Encoding:
+        Content-Type:In-Reply-To:MIME-Version:Date:Message-ID:From:References:Cc:To:
+        Subject:Sender:Reply-To:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=6hrYi8NEcU0I1WBfG9SubrvUs+kMLXFHyDHGSXABtkA=; b=kuJlC1K05clRxxGvTpMRKZl47
+        vlnszZLfYMees3kwC3fkxCtreS7brkzrDjOFcIScDkdkKbIvj8rcjvnQQnhhSznPay6/KDn7Vyyde
+        YIBaQ25b3b5IxtXscrOk3qjmiEugBw/dPdtk5G7H+zjzy7MdevNgg0H+RjlYCFvzDy6/pWg9VbGXB
+        I7WS+7NbDZBCs+auFHTXi33TMRnZgXyY50FublB3RZOmpdkyc2jlSGNCW1swQgO+Ng8TM2Mknaeay
+        k89k/4Y5bujWwU7p3rgg/VO2Ccc7oyyBNZXQB24Y8qbevUAqrKdidMqU8C5Fk+861IDb2G4paC1V7
+        H4GUlHpCg==;
+Received: from static-50-53-52-16.bvtn.or.frontiernet.net ([50.53.52.16] helo=midway.dunlab)
+        by bombadil.infradead.org with esmtpsa (Exim 4.90_1 #2 (Red Hat Linux))
+        id 1h4AbS-0002Qz-GL; Wed, 13 Mar 2019 20:35:54 +0000
+Subject: Re: [PATCHv14 3/3] ARM:drm ivip Intel FPGA Video and Image Processing
+ Suite
+To:     "Hean-Loong, Ong" <hean.loong.ong@intel.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Dinh Nguyen <dinguyen@kernel.org>,
+        Daniel Vetter <daniel.vetter@ffwll.ch>
+Cc:     devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org,
+        dri-devel@lists.freedesktop.org, chin.liang.see@intel.com,
+        Ong@vger.kernel.org
+References: <20190313202206.921-1-hean.loong.ong@intel.com>
+ <20190313202206.921-4-hean.loong.ong@intel.com>
+From:   Randy Dunlap <rdunlap@infradead.org>
+Message-ID: <fe101dca-2b39-fe0e-9bee-279abab9db8a@infradead.org>
+Date:   Wed, 13 Mar 2019 13:35:53 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.5.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190312170347.868927101@linuxfoundation.org>
-User-Agent: Mutt/1.5.24 (2015-08-30)
+In-Reply-To: <20190313202206.921-4-hean.loong.ong@intel.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Mar 12, 2019 at 10:06:20AM -0700, Greg Kroah-Hartman wrote:
-> This is the start of the stable review cycle for the 4.20.16 release.
-> There are 171 patches in this series, all will be posted as a response
-> to this one.  If anyone has any issues with these being applied, please
-> let me know.
-> 
-> Responses should be made by Thu Mar 14 17:02:23 UTC 2019.
-> Anything received after that time might be too late.
-> 
-Build results:
-	total: 159 pass: 159 fail: 0
-Qemu test results:
-	total: 345 pass: 345 fail: 0
+On 3/13/19 1:22 PM, Hean-Loong, Ong wrote:
+> diff --git a/drivers/gpu/drm/ivip/Kconfig b/drivers/gpu/drm/ivip/Kconfig
+> new file mode 100644
+> index 0000000..1d08b90
+> --- /dev/null
+> +++ b/drivers/gpu/drm/ivip/Kconfig
+> @@ -0,0 +1,14 @@
+> +config DRM_IVIP
+> +        tristate "Intel FGPA Video and Image Processing"
+> +        depends on DRM && OF
+> +        select DRM_GEM_CMA_HELPER
+> +        select DRM_KMS_HELPER
+> +        select DRM_KMS_FB_HELPER
+> +        select DRM_KMS_CMA_HELPER
+> +        help
+> +		  Choose this option if you have an Intel FPGA Arria 10 system
+> +		  and above with an Intel Display Port IP. This does not support
+> +		  legacy Intel FPGA Cyclone V display port. Currently only single
+> +		  frame buffer is supported. Note that ACPI and X_86 architecture
+> +		  is not supported for Arria10. If M is selected the module will be
+> +		  called ivip.
 
-Guenter
+Hi,
+If you make any changes to this series, the help text here is
+indented too much.  Just use one tab + 2 spaces, not 2 tabs + 2 spaces.
+
+thanks.
+-- 
+~Randy
