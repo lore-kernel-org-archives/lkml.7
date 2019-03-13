@@ -2,103 +2,161 @@ Return-Path: <SRS0=dUEL=RQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B00E0C43381
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 Mar 2019 23:52:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 409A2C43381
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 Mar 2019 23:54:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7A84F21019
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 Mar 2019 23:52:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EEFDC21019
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 Mar 2019 23:54:46 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="hT0cTPjX"
+	dkim=pass (1024-bit key) header.d=axtens.net header.i=@axtens.net header.b="q4tx4eEs"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727287AbfCMXw0 (ORCPT
+        id S1727160AbfCMXyp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 13 Mar 2019 19:52:26 -0400
-Received: from mail-yw1-f67.google.com ([209.85.161.67]:34822 "EHLO
-        mail-yw1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726435AbfCMXwW (ORCPT
+        Wed, 13 Mar 2019 19:54:45 -0400
+Received: from mail-pg1-f194.google.com ([209.85.215.194]:33322 "EHLO
+        mail-pg1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726326AbfCMXyp (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 13 Mar 2019 19:52:22 -0400
-Received: by mail-yw1-f67.google.com with SMTP id s204so2991113ywg.2
-        for <linux-kernel@vger.kernel.org>; Wed, 13 Mar 2019 16:52:21 -0700 (PDT)
+        Wed, 13 Mar 2019 19:54:45 -0400
+Received: by mail-pg1-f194.google.com with SMTP id h11so2674653pgl.0
+        for <linux-kernel@vger.kernel.org>; Wed, 13 Mar 2019 16:54:44 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=from:mime-version:date:message-id:subject:to:cc;
-        bh=f+t4V07aCemw8cZpkvomwq06lLcOjBQtHDVqyar9YBA=;
-        b=hT0cTPjXYGOkK0QYxz1vIbcPOencR1uY+jwZquNNLCpAS0wnZauC8/nIJDkVWriCU8
-         epif7zG1eX9SlCt6Z0Rsi55TK+GCQVV15X3qjJvRN9E/GE93nca2ZLtn0nqg/Ocwc3ZD
-         in9yC6edNVQ3ZeARWnwtLoUB9PtSIO1JwnQM8=
+        d=axtens.net; s=google;
+        h=from:to:cc:subject:in-reply-to:references:date:message-id
+         :mime-version:content-transfer-encoding;
+        bh=4r1t1dMqNtFks28Rn2JjRV6yw+6RsCTbtKIKKd7oQmA=;
+        b=q4tx4eEsEbYudnlQn7kAa8a/5AEE/S3NHEv3hQ0QWs0lqGoycQ1lImoPF4WG8bskUM
+         pDAjHTnDcv/Xc8GPNvHCU2V1zNhuroC6V39bEPgM0EWPMPsG3Vlj/Ha9VKqy6J7dQCkO
+         /xLGd7dVxzBER1NQ73UK+aBfy7qNwnjJ+xvAg=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:mime-version:date:message-id:subject:to:cc;
-        bh=f+t4V07aCemw8cZpkvomwq06lLcOjBQtHDVqyar9YBA=;
-        b=BD/uJzwE4k1SvJfxa2RRlbfTH1G8lDHWZblPMItvkOfcLfgN/Pq3z7OGQkSWNhMkXX
-         A+ZjCx0CtmVCWBcrDdxswWKSptrB4cJG7Mqn0DpBWDbCarIn8MYtpgEpvesuP6Ukplpe
-         VzCB2GyhI1GbiQR3xzQD7lofSj/8PSpN3oKkivAbRnVYUwTd0YRIIpt2DiTZOgz6Fhf0
-         tKEi6JjU9FfG00kQapPnAOd+FD6YWQyT6ThP/yphtIUatO4oy4rR7mUeAJqXsdUpJ94/
-         YoNOm5WwHu37CLVCHUkIzyryiRoPgs2u7KITTVqYazBEBYQYQGo5u82IGJYROND6J2hk
-         9mGQ==
-X-Gm-Message-State: APjAAAW/+fNHAvrJjkpdYxE9106SboQ7qM5f0yjpzYzazqxifQUkYnwn
-        V6AqQH73+irC1sI8l6HgGbyVnsuYQWEVCAT+PpiJZA==
-X-Google-Smtp-Source: APXvYqwh3mIabiSaIYbmTUO5xzXNp0J9huZbdniT74h4eblzaCj8E3NlWVfGYe7CWfT4K91Sll0tEsWNy4ivQ/yf/ug=
-X-Received: by 2002:a81:7a94:: with SMTP id v142mr16143111ywc.221.1552521140654;
- Wed, 13 Mar 2019 16:52:20 -0700 (PDT)
-Received: from 764776645087 named unknown by gmailapi.google.com with
- HTTPREST; Wed, 13 Mar 2019 16:52:19 -0700
-From:   Matthias Kaehlcke <mka@chromium.org>
-X-Mailer: git-send-email 2.21.0.360.g471c308f928-goog
+        h=x-gm-message-state:from:to:cc:subject:in-reply-to:references:date
+         :message-id:mime-version:content-transfer-encoding;
+        bh=4r1t1dMqNtFks28Rn2JjRV6yw+6RsCTbtKIKKd7oQmA=;
+        b=EMvExc9UMoS/KGUvTApJ4pdiHpCXnqNHLsTuH7I+IRotVfldvSuxdKpPBhicWdNLNk
+         xXA1GVPw3GN+OSfYx2mt4HL2Ym1J97JeAI0ooH0EsK8jxHejKJrNgFkSSbnkeWksO6jf
+         rqPysrqwCtu4NM6o5LGokvOXbXrHO89MzGHg2rGhIOzQtb/sOXTucQpT4TlFdAGnHscw
+         zdYB379+/AS20tzx+6K/lByQ6tBx4urqktrKSZHkPeHQVG13nU/lxRit06HfiAT3uTC/
+         AVHrpkUFSzxRkILwNpZsyRCb16ck/Qb7yHjM07jdiRuqgeXWAPhhb7IkhESQI2BnOvRy
+         Wdjg==
+X-Gm-Message-State: APjAAAXpnbW5PupBDYSW/Ec1nWU1WPtq/HP1Y2EB2B+E6ZsWsz4H2hZB
+        G+2aOOHTSNcRUJV5HUUctYekR6SCi1g/9Q==
+X-Google-Smtp-Source: APXvYqxYcxkGiP+q+kR2RNQ4sqFTC6V+SP1sQIio44bFpazQ8jfIUI+3D/TjuMQs2LtEgSIjEaPTVw==
+X-Received: by 2002:a63:1602:: with SMTP id w2mr13338023pgl.406.1552521283908;
+        Wed, 13 Mar 2019 16:54:43 -0700 (PDT)
+Received: from localhost (124-171-209-25.dyn.iinet.net.au. [124.171.209.25])
+        by smtp.gmail.com with ESMTPSA id l184sm19982642pfc.41.2019.03.13.16.54.42
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Wed, 13 Mar 2019 16:54:42 -0700 (PDT)
+From:   Daniel Axtens <dja@axtens.net>
+To:     Alastair D'Silva <alastair@au1.ibm.com>
+Cc:     Alastair D'Silva <alastair@d-silva.org>,
+        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        Paul Mackerras <paulus@samba.org>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Nicholas Piggin <npiggin@gmail.com>,
+        Mahesh Salgaonkar <mahesh@linux.vnet.ibm.com>,
+        "Naveen N. Rao" <naveen.n.rao@linux.vnet.ibm.com>,
+        Christophe Leroy <christophe.leroy@c-s.fr>,
+        Michal Hocko <mhocko@suse.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Mike Rapoport <rppt@linux.vnet.ibm.com>,
+        linuxppc-dev@lists.ozlabs.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 1/1] arch/powerpc: Rework local_paca to avoid LTO warnings
+In-Reply-To: <20190313034208.13134-1-alastair@au1.ibm.com>
+References: <20190313034208.13134-1-alastair@au1.ibm.com>
+Date:   Thu, 14 Mar 2019 10:54:39 +1100
+Message-ID: <87ef7atjnk.fsf@dja-thinkpad.axtens.net>
 MIME-Version: 1.0
-Date:   Wed, 13 Mar 2019 16:52:19 -0700
-Message-ID: <CAG5bF+TCPc=m_O33RHXHrt34T1Dz1zHLSkXfpxAoOTmrffGJ7w@mail.gmail.com>
-Subject: [PATCH] Bluetooth: hci_qca: Fix crash with non-serdev devices
-To:     Marcel Holtmann <marcel@holtmann.org>,
-        Johan Hedberg <johan.hedberg@gmail.com>
-Cc:     linux-bluetooth@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Balakrishna Godavarthi <bgodavar@codeaurora.org>,
-        Hemantg <hemantg@codeaurora.org>,
-        Rocky Liao <rjliao@codeaurora.org>,
-        Matthias Kaehlcke <mka@chromium.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-qca_set_baudrate() calls serdev_device_wait_until_sent() assuming that
-the HCI is always associated with a serdev device. This isn't true for
-ROME controllers instantiated through ldisc, where the call causes a
-crash due to a NULL pointer dereferentiation. Only call the function
-when we have a serdev device. The timeout for ROME devices at the end
-of qca_set_baudrate() is long enough to be reasonably sure that the
-command was sent.
+"Alastair D'Silva" <alastair@au1.ibm.com> writes:
 
-Fixes: fa9ad876b8e0 ("Bluetooth: hci_qca: Add support for Qualcomm
-Bluetooth chip wcn3990")
-Reported-by: Balakrishna Godavarthi <bgodavar@codeaurora.org>
-Reported-by: Rocky Liao <rjliao@codeaurora.org>
-Signed-off-by: Matthias Kaehlcke <mka@chromium.org>
----
- drivers/bluetooth/hci_qca.c | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+> From: Alastair D'Silva <alastair@d-silva.org>
+>
+> When building an LTO kernel, the existing code generates warnings:
+>     ./arch/powerpc/include/asm/paca.h:37:30: warning: register of
+>         =E2=80=98local_paca=E2=80=99 used for multiple global register va=
+riables
+>      register struct paca_struct *local_paca asm("r13");
+>                               ^
+>     ./arch/powerpc/include/asm/paca.h:37:30: note: conflicts with
+>         =E2=80=98local_paca=E2=80=99
+>
+> This patch reworks local_paca into an inline getter & setter function,
+> which addresses the warning.
+>
+> Generated ASM from this patch is broadly similar (addresses have
+> changed and the compiler uses different GPRs in some places).
 
-diff --git a/drivers/bluetooth/hci_qca.c b/drivers/bluetooth/hci_qca.c
-index 4ea995d610d2..714a6a16f9d5 100644
---- a/drivers/bluetooth/hci_qca.c
-+++ b/drivers/bluetooth/hci_qca.c
-@@ -1004,7 +1004,8 @@ static int qca_set_baudrate(struct hci_dev
-*hdev, uint8_t baudrate)
- 	while (!skb_queue_empty(&qca->txq))
- 		usleep_range(100, 200);
+Ditto to Christophe's comment; I'd love to know how to build this so I
+can actually see the differences. Perhaps you could bundle up all the
+required changes and send it as a patch series with a cover letter
+explaining this?
 
--	serdev_device_wait_until_sent(hu->serdev,
-+	if (hu->serdev)
-+		serdev_device_wait_until_sent(hu->serdev,
- 		      msecs_to_jiffies(CMD_TRANS_TIMEOUT_MS));
+> +static inline struct paca_struct *get_paca_no_preempt_check(void)
+> +{
+> +	register struct paca_struct *paca asm("r13");
+> +	return paca;
+> +}
 
- 	/* Give the controller time to process the request */
--- 
-2.21.0.360.g471c308f928-goog
+Isn't the convention to have the { on the same line as the function, or
+am I horrible mis-remembering things?
+
+Should these functions be __always_inline?
+
+Regards,
+Daniel
+
+> +
+> +static inline struct paca_struct *get_paca(void)
+> +{
+> +#if defined(CONFIG_DEBUG_PREEMPT) && defined(CONFIG_SMP)
+> +	/*
+> +	 * Add standard checks that preemption cannot occur when using get_paca=
+():
+> +	 * otherwise the paca_struct it points to may be the wrong one just aft=
+er.
+> +	 */
+> +	debug_smp_processor_id();
+> +#endif
+> +	return get_paca_no_preempt_check();
+> +}
+> +
+> +#define local_paca	get_paca_no_preempt_check()
+> +
+> +static inline void set_paca(struct paca_struct *new)
+> +{
+> +	register struct paca_struct *paca asm("r13");
+> +	paca =3D new;
+> +}
+> +
+> +
+>  extern void copy_mm_to_paca(struct mm_struct *mm);
+>  extern struct paca_struct **paca_ptrs;
+>  extern void initialise_paca(struct paca_struct *new_paca, int cpu);
+> diff --git a/arch/powerpc/kernel/paca.c b/arch/powerpc/kernel/paca.c
+> index 913bfca09c4f..ae5c243f9d5a 100644
+> --- a/arch/powerpc/kernel/paca.c
+> +++ b/arch/powerpc/kernel/paca.c
+> @@ -172,7 +172,7 @@ void __init initialise_paca(struct paca_struct *new_p=
+aca, int cpu)
+>  void setup_paca(struct paca_struct *new_paca)
+>  {
+>  	/* Setup r13 */
+> -	local_paca =3D new_paca;
+> +	set_paca(new_paca);
+>=20=20
+>  #ifdef CONFIG_PPC_BOOK3E
+>  	/* On Book3E, initialize the TLB miss exception frames */
+> --=20
+> 2.20.1
