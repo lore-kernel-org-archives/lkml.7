@@ -4,49 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A3DACC43381
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 Mar 2019 19:28:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1E3F2C43381
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 Mar 2019 19:28:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7172920657
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 Mar 2019 19:28:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D34CB20657
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 Mar 2019 19:28:57 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1552505329;
-	bh=a4KiKXTG1/UzRa91yURRT/g/ZTIxt7MghVNMKFEcJjg=;
+	s=default; t=1552505338;
+	bh=YuU+tpMYLs2+HSMmvQmAhcaGiUadX9QnrdpCKVNHpZI=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=ZkRgiC6EhqGVLUrD1JUqZjemyN8/Yw5EUSkrSeCtPiOuzQ1O2sJRZcK0zlgtMlEAM
-	 eekpa6sVjcaa2qXic9rIcl0eV8F6V386fmYGC0XXwsWjeoIkRXPFsBLPB8Rm33WxCV
-	 drTrHbuyFHtFPHMXmYYnPtGuhX8VTNj2O8TplvoU=
+	b=zHf6ztp9tmypOQoJaXgZ/fnDvpCqT6am9hQ8Hf1eVBhLIriosv6gmtsMXIratblk3
+	 SUmpAmkC9Y481zTfkuGmzUt9TwpaEyql/TbB/wyxqnJhP7+O40PjtAqKPHV5SSzIsS
+	 DFpazbn31Sjkz1OcF/PPrMRBYPGdrLNG1y+V8Xng=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727989AbfCMT2s (ORCPT
+        id S1728038AbfCMT24 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 13 Mar 2019 15:28:48 -0400
-Received: from mail.kernel.org ([198.145.29.99]:44012 "EHLO mail.kernel.org"
+        Wed, 13 Mar 2019 15:28:56 -0400
+Received: from mail.kernel.org ([198.145.29.99]:43866 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727974AbfCMTN3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 13 Mar 2019 15:13:29 -0400
+        id S1727951AbfCMTNU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 13 Mar 2019 15:13:20 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 2F18E217F5;
-        Wed, 13 Mar 2019 19:13:27 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 6CCFD2184D;
+        Wed, 13 Mar 2019 19:13:18 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1552504408;
-        bh=a4KiKXTG1/UzRa91yURRT/g/ZTIxt7MghVNMKFEcJjg=;
+        s=default; t=1552504399;
+        bh=YuU+tpMYLs2+HSMmvQmAhcaGiUadX9QnrdpCKVNHpZI=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=ddlC/E9rMIPHIIBFrYEfaoXrZqtOx84Ts40Ce86f0t4T+BCRwIQ5UuJbgETY3UCYk
-         kCzjNjLuVZL/dkZ36xdh4AQPV2QQffusrHQOIMkZD3Jxj/vD56vp3Ck+c32mLIkilH
-         5jY4QXDcEJKktHF/9RcSL5yRaCrrW1ErFSZonwIE=
+        b=zDVd/BD9zKkAnNMhqyd6x1QEcMn7UeKVNB0UNA35U3HE9gBD5aI++xhUk+hWMpKXE
+         ao8rUzsfnoMg7ZtokNhP6EHcShGPlS2urHp5FxdABUlTwUrhf+D4RGEb2u/8jOPrze
+         Jt4bmQZyXof11yopRm/P4UI09+TW1c/bHTS89z/o=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Anoob Soman <anoob.soman@citrix.com>, Bob Liu <bob.liu@oracle.com>,
-        "Martin K . Petersen" <martin.petersen@oracle.com>,
-        Sasha Levin <sashal@kernel.org>, open-iscsi@googlegroups.com,
-        linux-scsi@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.19 12/48] scsi: libiscsi: Fix race between iscsi_xmit_task and iscsi_complete_task
-Date:   Wed, 13 Mar 2019 15:12:14 -0400
-Message-Id: <20190313191250.158955-12-sashal@kernel.org>
+Cc:     Robin Murphy <robin.murphy@arm.com>,
+        Russell King <rmk+kernel@armlinux.org.uk>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH AUTOSEL 4.19 09/48] ARM: 8835/1: dma-mapping: Clear DMA ops on teardown
+Date:   Wed, 13 Mar 2019 15:12:11 -0400
+Message-Id: <20190313191250.158955-9-sashal@kernel.org>
 X-Mailer: git-send-email 2.19.1
 In-Reply-To: <20190313191250.158955-1-sashal@kernel.org>
 References: <20190313191250.158955-1-sashal@kernel.org>
@@ -58,109 +58,43 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Anoob Soman <anoob.soman@citrix.com>
+From: Robin Murphy <robin.murphy@arm.com>
 
-[ Upstream commit 79edd00dc6a96644d76b4a1cb97d94d49e026768 ]
+[ Upstream commit fc67e6f120a388b611d94cc40baf99a5cc56b283 ]
 
-When a target sends Check Condition, whilst initiator is busy xmiting
-re-queued data, could lead to race between iscsi_complete_task() and
-iscsi_xmit_task() and eventually crashing with the following kernel
-backtrace.
+Installing the appropriate non-IOMMU DMA ops in arm_iommu_detch_device()
+serves the case where IOMMU-aware drivers choose to control their own
+mapping but still make DMA API calls, however it also affects the case
+when the arch code itself tears down the mapping upon driver unbinding,
+where the ops now get left in place and can inhibit arch_setup_dma_ops()
+on subsequent re-probe attempts.
 
-[3326150.987523] ALERT: BUG: unable to handle kernel NULL pointer dereference at 0000000000000078
-[3326150.987549] ALERT: IP: [<ffffffffa05ce70d>] iscsi_xmit_task+0x2d/0xc0 [libiscsi]
-[3326150.987571] WARN: PGD 569c8067 PUD 569c9067 PMD 0
-[3326150.987582] WARN: Oops: 0002 [#1] SMP
-[3326150.987593] WARN: Modules linked in: tun nfsv3 nfs fscache dm_round_robin
-[3326150.987762] WARN: CPU: 2 PID: 8399 Comm: kworker/u32:1 Tainted: G O 4.4.0+2 #1
-[3326150.987774] WARN: Hardware name: Dell Inc. PowerEdge R720/0W7JN5, BIOS 2.5.4 01/22/2016
-[3326150.987790] WARN: Workqueue: iscsi_q_13 iscsi_xmitworker [libiscsi]
-[3326150.987799] WARN: task: ffff8801d50f3800 ti: ffff8801f5458000 task.ti: ffff8801f5458000
-[3326150.987810] WARN: RIP: e030:[<ffffffffa05ce70d>] [<ffffffffa05ce70d>] iscsi_xmit_task+0x2d/0xc0 [libiscsi]
-[3326150.987825] WARN: RSP: e02b:ffff8801f545bdb0 EFLAGS: 00010246
-[3326150.987831] WARN: RAX: 00000000ffffffc3 RBX: ffff880282d2ab20 RCX: ffff88026b6ac480
-[3326150.987842] WARN: RDX: 0000000000000000 RSI: 00000000fffffe01 RDI: ffff880282d2ab20
-[3326150.987852] WARN: RBP: ffff8801f545bdc8 R08: 0000000000000000 R09: 0000000000000008
-[3326150.987862] WARN: R10: 0000000000000000 R11: 000000000000fe88 R12: 0000000000000000
-[3326150.987872] WARN: R13: ffff880282d2abe8 R14: ffff880282d2abd8 R15: ffff880282d2ac08
-[3326150.987890] WARN: FS: 00007f5a866b4840(0000) GS:ffff88028a640000(0000) knlGS:0000000000000000
-[3326150.987900] WARN: CS: e033 DS: 0000 ES: 0000 CR0: 0000000080050033
-[3326150.987907] WARN: CR2: 0000000000000078 CR3: 0000000070244000 CR4: 0000000000042660
-[3326150.987918] WARN: Stack:
-[3326150.987924] WARN: ffff880282d2ad58 ffff880282d2ab20 ffff880282d2abe8 ffff8801f545be18
-[3326150.987938] WARN: ffffffffa05cea90 ffff880282d2abf8 ffff88026b59cc80 ffff88026b59cc00
-[3326150.987951] WARN: ffff88022acf32c0 ffff880289491800 ffff880255a80800 0000000000000400
-[3326150.987964] WARN: Call Trace:
-[3326150.987975] WARN: [<ffffffffa05cea90>] iscsi_xmitworker+0x2f0/0x360 [libiscsi]
-[3326150.987988] WARN: [<ffffffff8108862c>] process_one_work+0x1fc/0x3b0
-[3326150.987997] WARN: [<ffffffff81088f95>] worker_thread+0x2a5/0x470
-[3326150.988006] WARN: [<ffffffff8159cad8>] ? __schedule+0x648/0x870
-[3326150.988015] WARN: [<ffffffff81088cf0>] ? rescuer_thread+0x300/0x300
-[3326150.988023] WARN: [<ffffffff8108ddf5>] kthread+0xd5/0xe0
-[3326150.988031] WARN: [<ffffffff8108dd20>] ? kthread_stop+0x110/0x110
-[3326150.988040] WARN: [<ffffffff815a0bcf>] ret_from_fork+0x3f/0x70
-[3326150.988048] WARN: [<ffffffff8108dd20>] ? kthread_stop+0x110/0x110
-[3326150.988127] ALERT: RIP [<ffffffffa05ce70d>] iscsi_xmit_task+0x2d/0xc0 [libiscsi]
-[3326150.988138] WARN: RSP <ffff8801f545bdb0>
-[3326150.988144] WARN: CR2: 0000000000000078
-[3326151.020366] WARN: ---[ end trace 1c60974d4678d81b ]---
+Fix the latter case by making sure that arch_teardown_dma_ops() cleans
+up whenever the ops were automatically installed by its counterpart.
 
-Commit 6f8830f5bbab ("scsi: libiscsi: add lock around task lists to fix
-list corruption regression") introduced "taskqueuelock" to fix list
-corruption during the race, but this wasn't enough.
-
-Re-setting of conn->task to NULL, could race with iscsi_xmit_task().
-iscsi_complete_task()
-{
-    ....
-    if (conn->task == task)
-        conn->task = NULL;
-}
-
-conn->task in iscsi_xmit_task() could be NULL and so will be task.
-__iscsi_get_task(task) will crash (NullPtr de-ref), trying to access
-refcount.
-
-iscsi_xmit_task()
-{
-    struct iscsi_task *task = conn->task;
-
-    __iscsi_get_task(task);
-}
-
-This commit will take extra conn->session->back_lock in iscsi_xmit_task()
-to ensure iscsi_xmit_task() waits for iscsi_complete_task(), if
-iscsi_complete_task() wins the race.  If iscsi_xmit_task() wins the race,
-iscsi_xmit_task() increments task->refcount
-(__iscsi_get_task) ensuring iscsi_complete_task() will not iscsi_free_task().
-
-Signed-off-by: Anoob Soman <anoob.soman@citrix.com>
-Signed-off-by: Bob Liu <bob.liu@oracle.com>
-Acked-by: Lee Duncan <lduncan@suse.com>
-Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
+Reported-by: Tobias Jakobi <tjakobi@math.uni-bielefeld.de>
+Reported-by: Marek Szyprowski <m.szyprowski@samsung.com>
+Fixes: 1874619a7df4 "ARM: dma-mapping: Set proper DMA ops in arm_iommu_detach_device()"
+Tested-by: Tobias Jakobi <tjakobi@math.uni-bielefeld.de>
+Tested-by: Thierry Reding <treding@nvidia.com>
+Signed-off-by: Robin Murphy <robin.murphy@arm.com>
+Signed-off-by: Russell King <rmk+kernel@armlinux.org.uk>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/scsi/libiscsi.c | 6 ++++++
- 1 file changed, 6 insertions(+)
+ arch/arm/mm/dma-mapping.c | 2 ++
+ 1 file changed, 2 insertions(+)
 
-diff --git a/drivers/scsi/libiscsi.c b/drivers/scsi/libiscsi.c
-index f78d2e5c1471..4ad61cfa69c0 100644
---- a/drivers/scsi/libiscsi.c
-+++ b/drivers/scsi/libiscsi.c
-@@ -1449,7 +1449,13 @@ static int iscsi_xmit_task(struct iscsi_conn *conn)
- 	if (test_bit(ISCSI_SUSPEND_BIT, &conn->suspend_tx))
- 		return -ENODATA;
+diff --git a/arch/arm/mm/dma-mapping.c b/arch/arm/mm/dma-mapping.c
+index 1cb9c0f9b5d6..8211cf45ece1 100644
+--- a/arch/arm/mm/dma-mapping.c
++++ b/arch/arm/mm/dma-mapping.c
+@@ -2400,4 +2400,6 @@ void arch_teardown_dma_ops(struct device *dev)
+ 		return;
  
-+	spin_lock_bh(&conn->session->back_lock);
-+	if (conn->task == NULL) {
-+		spin_unlock_bh(&conn->session->back_lock);
-+		return -ENODATA;
-+	}
- 	__iscsi_get_task(task);
-+	spin_unlock_bh(&conn->session->back_lock);
- 	spin_unlock_bh(&conn->session->frwd_lock);
- 	rc = conn->session->tt->xmit_task(task);
- 	spin_lock_bh(&conn->session->frwd_lock);
+ 	arm_teardown_iommu_dma_ops(dev);
++	/* Let arch_setup_dma_ops() start again from scratch upon re-probe */
++	set_dma_ops(dev, NULL);
+ }
 -- 
 2.19.1
 
