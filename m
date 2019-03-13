@@ -2,104 +2,127 @@ Return-Path: <SRS0=dUEL=RQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_MUTT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 14B0EC43381
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 Mar 2019 21:29:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6E510C43381
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 Mar 2019 21:29:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C8F402077B
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 Mar 2019 21:29:18 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1552512558;
-	bh=U1m0N2wWN5MjZTBKOMKDNXJFnaOEuCkmX2T6yTqOBvg=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=SkeqcW+Clu7hckYg7JjZSc3sj2rVPlhvM96btYDgSsebSAghFF6xMUViA+Z/9RH9g
-	 h2Z/B+Xhv+D7wTw6ePtPSOtd+e3m+XsJd/c24MPk9sopGTP5/aUErdENi1Vhf7kMAY
-	 tSSgad6PxefJEZqpWfIquhRCgM1+8koAj1ikL87U=
+	by mail.kernel.org (Postfix) with ESMTP id 4444220449
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 Mar 2019 21:29:22 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727389AbfCMV3Q (ORCPT
+        id S1727469AbfCMV3V (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 13 Mar 2019 17:29:16 -0400
-Received: from mail-yw1-f48.google.com ([209.85.161.48]:43326 "EHLO
-        mail-yw1-f48.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726772AbfCMV3Q (ORCPT
+        Wed, 13 Mar 2019 17:29:21 -0400
+Received: from relay3-d.mail.gandi.net ([217.70.183.195]:57321 "EHLO
+        relay3-d.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726772AbfCMV3T (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 13 Mar 2019 17:29:16 -0400
-Received: by mail-yw1-f48.google.com with SMTP id j66so2708987ywc.10
-        for <linux-kernel@vger.kernel.org>; Wed, 13 Mar 2019 14:29:16 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=sender:date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=0L7Tct0ie94Qimc4ysdZmwZD4KVimpBhyMQ9obMNB/0=;
-        b=bWm7kAUpDA9DSGeyjB2MZpE9rUxL9/Lpk7ezR4ZTTii2x0udwnH337O8AYdhy+cAGJ
-         gsEteVNO11MjA1cvZLtq9BXHUcXPIgTz+GahOFHln/GjnTNH45+kgSJgYc8okO+Rtlo8
-         bkPusaLOq9ZYAwb1qGSVFdFLixHVLt4rMSweKNvEYaqnGhZ2xqPsCAQ7E/rTIMLh1Y4c
-         A6g65H4OqfaCzTq6tGJXQ2h9n6fYkX7txGZGNPgF4OWJnWhD0yZj1TG6vOJ3Vj5U8JXy
-         B94gQpRo9B3+NUhKaJyDUnUr5zhJa5ru4cfWt+Ojub28FM/EViKdJRUjN9rZMGuMuA8e
-         f2aQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
-         :references:mime-version:content-disposition:in-reply-to:user-agent;
-        bh=0L7Tct0ie94Qimc4ysdZmwZD4KVimpBhyMQ9obMNB/0=;
-        b=e6AnzGOPjRICPWZeALBn5HERsK/tDohovaokXO0rVQKvRHNJAUWFhGRu4KPn64fFu3
-         22mzMV3S/SLpsQSVXAw4ldDPtZBxV3Fu1fKGbd8ma4CVPrMbj7xzxIFwidv1GKkoZXMa
-         bYkMbVFDk5mvTs+QNwbY2DBRA6nDzp0epkm6nmCT5dDOU9ZeRF7xBfPfqsdmSik8GDge
-         3C8k+eojH6i79baKiaS1SwD44d1oPpo0EXNH+Hewo4kdUKTrjfN5KRdpJFvK7wFknieE
-         bAFrfTf7b2Pz/ALU7+h0c+IB5g/59cAusXREj4uZCRFY14Gsqr8/V/k36HxEZujx5q8E
-         KlYw==
-X-Gm-Message-State: APjAAAUW/4ITW78xig5mnBTpfuvITrkAHqUOIlHMRJd2ZyvhRpjWCvVw
-        cNy38kP+K1Nk/GGY4wA8FyI=
-X-Google-Smtp-Source: APXvYqxRJ5sFn9RxlNq8UlHOBHMwnTEX3aa+/kAvFoPVMHT9PI6yNkNSBwAc0x+f+LiOpCt/e8l3XQ==
-X-Received: by 2002:a25:4441:: with SMTP id r62mr22561226yba.187.1552512555541;
-        Wed, 13 Mar 2019 14:29:15 -0700 (PDT)
-Received: from localhost ([2620:10d:c091:200::90f5])
-        by smtp.gmail.com with ESMTPSA id 136sm4765262ywl.109.2019.03.13.14.29.14
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Wed, 13 Mar 2019 14:29:14 -0700 (PDT)
-Date:   Wed, 13 Mar 2019 14:29:12 -0700
-From:   Tejun Heo <tj@kernel.org>
-To:     "Paul E. McKenney" <paulmck@linux.ibm.com>
-Cc:     Barret Rhoden <brho@google.com>,
-        Christopher Lameter <cl@linux.com>,
-        Dennis Zhou <dennis@kernel.org>,
-        Eial Czerwacki <eial@scalemp.com>,
-        linux-kernel@vger.kernel.org, Shai Fultheim <shai@scalemp.com>,
-        Oren Twaig <oren@scalemp.com>
-Subject: Re: [PATCH] percpu/module resevation: change resevation size iff
- X86_VSMP is set
-Message-ID: <20190313212912.GK50184@devbig004.ftw2.facebook.com>
-References: <1548071251-1849-1-git-send-email-eial@scalemp.com>
- <a7eff2ed-0e80-edae-2a97-a3fdab2d05f5@google.com>
- <20190301203455.GA97188@dennisz-mbp.dhcp.thefacebook.com>
- <c72402f2-967e-cd56-99d8-9139c9e7f267@google.com>
- <010001693b404440-248fa987-624c-4587-940b-56e2ed4226d9-000000@email.amazonses.com>
- <85726648-82f3-6b6b-a749-03c4159e78f3@google.com>
- <20190313202640.GJ50184@devbig004.ftw2.facebook.com>
- <20190313212255.GY13351@linux.ibm.com>
+        Wed, 13 Mar 2019 17:29:19 -0400
+X-Originating-IP: 88.190.179.123
+Received: from localhost (unknown [88.190.179.123])
+        (Authenticated sender: repk@triplefau.lt)
+        by relay3-d.mail.gandi.net (Postfix) with ESMTPSA id 74E1860003;
+        Wed, 13 Mar 2019 21:29:16 +0000 (UTC)
+From:   Remi Pommarel <repk@triplefau.lt>
+To:     Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Bjorn Helgaas <bhelgaas@google.com>
+Cc:     linux-pci@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-kernel@vger.kernel.org,
+        Miquel Raynal <miquel.raynal@bootlin.com>,
+        Remi Pommarel <repk@triplefau.lt>
+Subject: [PATCH] pci: aardvark: Wait for endpoint to be ready before training link
+Date:   Wed, 13 Mar 2019 22:37:52 +0100
+Message-Id: <20190313213752.1246-1-repk@triplefau.lt>
+X-Mailer: git-send-email 2.20.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190313212255.GY13351@linux.ibm.com>
-User-Agent: Mutt/1.5.21 (2010-09-15)
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hello,
+When configuring pcie reset pin from gpio (e.g. initially set by
+u-boot) to pcie function this pin goes low for a brief moment
+asserting the PERST# signal. Thus connected device enters fundamental
+reset process and link configuration can only begin after a minimal
+100ms delay (see [1]).
 
-On Wed, Mar 13, 2019 at 02:22:55PM -0700, Paul E. McKenney wrote:
-> Should I define DEFINE_SRCU() and DEFINE_STATIC_SRCU() only if
-> !defined(MODULE)?
+This makes sure that link is configured after at least 100ms from
+beginning of probe() callback (shortly after the reset pin function
+configuration switch through pinctrl subsytem).
 
-Yeah, that sounds like a great idea with comments explaining why it's
-like that.
+[1] "PCI Express Base Specification", REV. 2.1
+        PCI Express, March 4 2009, 6.6.1 Conventional Reset
 
-Thanks.
+Signed-off-by: Remi Pommarel <repk@triplefau.lt>
+---
+ drivers/pci/controller/pci-aardvark.c | 17 ++++++++++++++---
+ 1 file changed, 14 insertions(+), 3 deletions(-)
 
+diff --git a/drivers/pci/controller/pci-aardvark.c b/drivers/pci/controller/pci-aardvark.c
+index a30ae7cf8e7e..70a1023d0ef1 100644
+--- a/drivers/pci/controller/pci-aardvark.c
++++ b/drivers/pci/controller/pci-aardvark.c
+@@ -177,6 +177,9 @@
+ 
+ #define PIO_TIMEOUT_MS			1
+ 
++/* Endpoint can take up to 100ms to be ready after a reset */
++#define ENDPOINT_RST_MS			100
++
+ #define LINK_WAIT_MAX_RETRIES		10
+ #define LINK_WAIT_USLEEP_MIN		90000
+ #define LINK_WAIT_USLEEP_MAX		100000
+@@ -242,8 +245,10 @@ static int advk_pcie_wait_for_link(struct advk_pcie *pcie)
+ 	return -ETIMEDOUT;
+ }
+ 
+-static void advk_pcie_setup_hw(struct advk_pcie *pcie)
++static void
++advk_pcie_setup_hw(struct advk_pcie *pcie, unsigned long ep_rdy_time)
+ {
++	unsigned long now;
+ 	u32 reg;
+ 
+ 	/* Set to Direct mode */
+@@ -327,9 +332,12 @@ static void advk_pcie_setup_hw(struct advk_pcie *pcie)
+ 	reg |= PIO_CTRL_ADDR_WIN_DISABLE;
+ 	advk_writel(pcie, reg, PIO_CTRL);
+ 
+-	/* Start link training */
++	/* Wait for endpoint to exit reset state and start link training */
+ 	reg = advk_readl(pcie, PCIE_CORE_LINK_CTRL_STAT_REG);
+ 	reg |= PCIE_CORE_LINK_TRAINING;
++	now = jiffies;
++	if (time_before(now, ep_rdy_time))
++		msleep(jiffies_to_msecs(ep_rdy_time - now));
+ 	advk_writel(pcie, reg, PCIE_CORE_LINK_CTRL_STAT_REG);
+ 
+ 	advk_pcie_wait_for_link(pcie);
+@@ -993,8 +1001,11 @@ static int advk_pcie_probe(struct platform_device *pdev)
+ 	struct advk_pcie *pcie;
+ 	struct resource *res;
+ 	struct pci_host_bridge *bridge;
++	unsigned long ep_rdy_time;
+ 	int ret, irq;
+ 
++	ep_rdy_time = jiffies + msecs_to_jiffies(ENDPOINT_RST_MS);
++
+ 	bridge = devm_pci_alloc_host_bridge(dev, sizeof(struct advk_pcie));
+ 	if (!bridge)
+ 		return -ENOMEM;
+@@ -1022,7 +1033,7 @@ static int advk_pcie_probe(struct platform_device *pdev)
+ 		return ret;
+ 	}
+ 
+-	advk_pcie_setup_hw(pcie);
++	advk_pcie_setup_hw(pcie, ep_rdy_time);
+ 
+ 	advk_sw_pci_bridge_init(pcie);
+ 
 -- 
-tejun
+2.20.1
+
