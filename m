@@ -4,28 +4,28 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-12.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED autolearn=ham
-	autolearn_force=no version=3.4.0
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 38B4EC43381
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 Mar 2019 15:41:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2D008C43381
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 Mar 2019 15:41:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0730220693
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 Mar 2019 15:41:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EF781206BA
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 Mar 2019 15:41:53 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1552491710;
-	bh=DjiO1uv5wtfLiCtW3MS3KigNGkKvj7KPiOgEezQR55A=;
+	s=default; t=1552491714;
+	bh=Pqe5qUPixoz51dE/iPu56iH0L7KMyaaRw9jdITC4IKM=;
 	h=From:To:Cc:Subject:In-Reply-To:Date:List-ID:From;
-	b=x+yxh71S6xu07vEZdh0Xk+VZoi+Bf3eqHMI2kQgp7SPuCA6QtcWm5/cMieD4T4wIc
-	 f07RXD/Y/jrmffb7uNkaXpCW2Ec+0WFz1PAzbRlpU4zpTaGCc3ENrz4zqJAJ5klwJ9
-	 0tDzgIjq/6yHUbQ+4pqSGNUWfquE40wbhH/lhOCA=
+	b=iIVA8w/zZAQRjMC3NuKWICMkKCUQWFlsLsWNutAM2oQConqLzstdWukF0LWPfUmiv
+	 4qFhIlWgE7e58r4V70q+5WrJg+/FGvTfpIcC2Ruy+4pFIsC4XNMlbW01nbEuhPrbOx
+	 f91DLQMG6yAMmugXT6tdK0+eIQRT1ww+N1OH5TzY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726774AbfCMPjB (ORCPT
+        id S1726743AbfCMPjA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 13 Mar 2019 11:39:01 -0400
-Received: from heliosphere.sirena.org.uk ([172.104.155.198]:49536 "EHLO
+        Wed, 13 Mar 2019 11:39:00 -0400
+Received: from heliosphere.sirena.org.uk ([172.104.155.198]:49506 "EHLO
         heliosphere.sirena.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726616AbfCMPi6 (ORCPT
+        with ESMTP id S1726255AbfCMPi6 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Wed, 13 Mar 2019 11:38:58 -0400
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
@@ -34,30 +34,31 @@ DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
         Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
         Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:References:
         List-Id:List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:
-        List-Archive; bh=sSklwvYpb7CkD8ts0EwPQfsh9N4juLaCReWG14ueJHo=; b=tliUN8Mc3avN
-        GEktNK8RvxrdejQRMnowgwNn0NxvzE0PLA+eSgCs9O0AygWO7LUUwRyaZ5pJYKbXVSwSogRlt/yIe
-        pkLTXy/CnuHpHCaNiC/Vq5OBDmSG7J6HV3XWO8GstOrvPtmp8F2xHrOnpy2KyGUtGlEQVvJRk1+9y
-        R3BFs=;
+        List-Archive; bh=e66MHKtgtjsKcdJyO3q9b1HmidwPpQhR0oda6cXIg6I=; b=HIs1orLJadXk
+        1bbg0mizKiQ0V1fQ7P61RBL1qRhqNWq0/1TjH8p9L49AcVCP8KkA8CvmVU+nE1zPvfw73vypGGPu0
+        nCgZBv8sJvMcXBsKsUx6QktOmZQue55K4Z6UT+krnpqfxb1g/a2UpuNg7z0P/ttHuRfXQCa3JqhaB
+        OY2zI=;
 Received: from cpc102320-sgyl38-2-0-cust46.18-2.cable.virginm.net ([82.37.168.47] helo=debutante.sirena.org.uk)
         by heliosphere.sirena.org.uk with esmtpa (Exim 4.89)
         (envelope-from <broonie@sirena.org.uk>)
-        id 1h45xk-0003Q7-11; Wed, 13 Mar 2019 15:38:36 +0000
+        id 1h45xx-0003Qq-2Q; Wed, 13 Mar 2019 15:38:49 +0000
 Received: by debutante.sirena.org.uk (Postfix, from userid 1000)
-        id 7AA7C1128B97; Wed, 13 Mar 2019 15:38:35 +0000 (GMT)
+        id 88A7B1128B97; Wed, 13 Mar 2019 15:38:48 +0000 (GMT)
 From:   Mark Brown <broonie@kernel.org>
-To:     Luca Ceresoli <luca@lucaceresoli.net>
-Cc:     Mark Brown <broonie@kernel.org>, alsa-devel@alsa-project.org,
-        devicetree@vger.kernel.org, Mark Rutland <mark.rutland@arm.com>,
-        Lars-Peter Clausen <lars@metafoo.de>,
-        linux-kernel@vger.kernel.org, Takashi Iwai <tiwai@suse.com>,
-        Liam Girdwood <lgirdwood@gmail.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Brown <broonie@kernel.org>, alsa-devel@alsa-project.org
-Subject: Applied "ASoC: axi-i2s: make both "rx" and "tx" optional" to the asoc tree
-In-Reply-To:  <20190307214456.16445-2-luca@lucaceresoli.net>
+To:     Olivier Moysan <olivier.moysan@st.com>
+Cc:     Mark Brown <broonie@kernel.org>, lgirdwood@gmail.com,
+        broonie@kernel.org, perex@perex.cz, tiwai@suse.com,
+        mcoquelin.stm32@gmail.com, alexandre.torgue@st.com,
+        alsa-devel@alsa-project.org, linux-arm-kernel@lists.infradead.org,
+        linux-stm32@st-md-mailman.stormreply.com,
+        linux-kernel@vger.kernel.org, olivier.moysan@st.com,
+        arnaud.pouliquen@st.com, benjamin.gaignard@st.com,
+        alsa-devel@alsa-project.org
+Subject: Applied "ASoC: stm32: i2s: improve channel capabilities handling" to the asoc tree
+In-Reply-To:  <1552317990-24219-3-git-send-email-olivier.moysan@st.com>
 X-Patchwork-Hint: ignore
-Message-Id: <20190313153835.7AA7C1128B97@debutante.sirena.org.uk>
-Date:   Wed, 13 Mar 2019 15:38:35 +0000 (GMT)
+Message-Id: <20190313153848.88A7B1128B97@debutante.sirena.org.uk>
+Date:   Wed, 13 Mar 2019 15:38:48 +0000 (GMT)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
@@ -65,7 +66,7 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 The patch
 
-   ASoC: axi-i2s: make both "rx" and "tx" optional
+   ASoC: stm32: i2s: improve channel capabilities handling
 
 has been applied to the asoc tree at
 
@@ -90,45 +91,49 @@ to this mail.
 Thanks,
 Mark
 
-From fa225400758dfc7ccddebf4d990f991a435f7921 Mon Sep 17 00:00:00 2001
-From: Luca Ceresoli <luca@lucaceresoli.net>
-Date: Thu, 7 Mar 2019 22:44:56 +0100
-Subject: [PATCH] ASoC: axi-i2s: make both "rx" and "tx" optional
+From c2dc8b2c114c22d7a04cf26a7c7d04faaa757143 Mon Sep 17 00:00:00 2001
+From: Olivier Moysan <olivier.moysan@st.com>
+Date: Mon, 11 Mar 2019 16:26:29 +0100
+Subject: [PATCH] ASoC: stm32: i2s: improve channel capabilities handling
 
-Both the capture and playback channels are optional in the axi_i2s IP
-block. Document how to tell the driver which channels are
-instantiated.
+Use alsa snd_pcm_hw_constraint_single service to manage
+channels restriction. This provides better status on driver
+limitations, to the application.
 
-Signed-off-by: Luca Ceresoli <luca@lucaceresoli.net>
+Signed-off-by: Olivier Moysan <olivier.moysan@st.com>
 Signed-off-by: Mark Brown <broonie@kernel.org>
 ---
- Documentation/devicetree/bindings/sound/adi,axi-i2s.txt | 7 +++++--
- 1 file changed, 5 insertions(+), 2 deletions(-)
+ sound/soc/stm/stm32_i2s.c | 10 ++++------
+ 1 file changed, 4 insertions(+), 6 deletions(-)
 
-diff --git a/Documentation/devicetree/bindings/sound/adi,axi-i2s.txt b/Documentation/devicetree/bindings/sound/adi,axi-i2s.txt
-index 4248b662deff..229ad1392cdc 100644
---- a/Documentation/devicetree/bindings/sound/adi,axi-i2s.txt
-+++ b/Documentation/devicetree/bindings/sound/adi,axi-i2s.txt
-@@ -1,5 +1,8 @@
- ADI AXI-I2S controller
+diff --git a/sound/soc/stm/stm32_i2s.c b/sound/soc/stm/stm32_i2s.c
+index 783b33497435..06bbbef74b3a 100644
+--- a/sound/soc/stm/stm32_i2s.c
++++ b/sound/soc/stm/stm32_i2s.c
+@@ -496,12 +496,6 @@ static int stm32_i2s_configure(struct snd_soc_dai *cpu_dai,
+ 	unsigned int fthlv;
+ 	int ret;
  
-+The core can be generated with transmit (playback), only receive
-+(capture) or both directions enabled.
+-	if ((params_channels(params) == 1) &&
+-	    ((i2s->fmt & SND_SOC_DAIFMT_FORMAT_MASK) != SND_SOC_DAIFMT_DSP_A)) {
+-		dev_err(cpu_dai->dev, "Mono mode supported only by DSP_A\n");
+-		return -EINVAL;
+-	}
+-
+ 	switch (format) {
+ 	case 16:
+ 		cfgr = I2S_CGFR_DATLEN_SET(I2S_I2SMOD_DATLEN_16);
+@@ -551,6 +545,10 @@ static int stm32_i2s_startup(struct snd_pcm_substream *substream,
+ 	i2s->substream = substream;
+ 	spin_unlock_irqrestore(&i2s->irq_lock, flags);
+ 
++	if ((i2s->fmt & SND_SOC_DAIFMT_FORMAT_MASK) != SND_SOC_DAIFMT_DSP_A)
++		snd_pcm_hw_constraint_single(substream->runtime,
++					     SNDRV_PCM_HW_PARAM_CHANNELS, 2);
 +
- Required properties:
-  - compatible : Must be "adi,axi-i2s-1.00.a"
-  - reg : Must contain I2S core's registers location and length
-@@ -9,8 +12,8 @@ Required properties:
-  - clock-names : "axi" for the clock to the AXI interface, "ref" for the sample
-    rate reference clock.
-  - dmas: Pairs of phandle and specifier for the DMA channels that are used by
--   the core. The core expects two dma channels, one for transmit and one for
--   receive.
-+   the core. The core expects two dma channels if both transmit and receive are
-+   enabled, one channel otherwise.
-  - dma-names : "tx" for the transmit channel, "rx" for the receive channel.
- 
- For more details on the 'dma', 'dma-names', 'clock' and 'clock-names' properties
+ 	ret = clk_prepare_enable(i2s->i2sclk);
+ 	if (ret < 0) {
+ 		dev_err(cpu_dai->dev, "Failed to enable clock: %d\n", ret);
 -- 
 2.20.1
 
