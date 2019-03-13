@@ -5,57 +5,57 @@ X-Spam-Level:
 X-Spam-Status: No, score=-8.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+	SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5568EC10F03
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 Mar 2019 18:40:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 77CE8C10F03
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 Mar 2019 18:40:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 27B552146E
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 Mar 2019 18:40:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 410D02147C
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 Mar 2019 18:40:16 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="hDD+JwIe"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="hjlmlrqo"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727082AbfCMSkK (ORCPT
+        id S1727140AbfCMSkP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 13 Mar 2019 14:40:10 -0400
-Received: from mail-pf1-f193.google.com ([209.85.210.193]:44860 "EHLO
-        mail-pf1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726983AbfCMSkF (ORCPT
+        Wed, 13 Mar 2019 14:40:15 -0400
+Received: from mail-pg1-f195.google.com ([209.85.215.195]:45945 "EHLO
+        mail-pg1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727066AbfCMSkK (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 13 Mar 2019 14:40:05 -0400
-Received: by mail-pf1-f193.google.com with SMTP id a3so1975355pff.11
-        for <linux-kernel@vger.kernel.org>; Wed, 13 Mar 2019 11:40:05 -0700 (PDT)
+        Wed, 13 Mar 2019 14:40:10 -0400
+Received: by mail-pg1-f195.google.com with SMTP id 125so2112655pgc.12
+        for <linux-kernel@vger.kernel.org>; Wed, 13 Mar 2019 11:40:09 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=WITBUxeGSIQmxb1SdGnY+GHNprTyqfSQ+9QDULNZwIA=;
-        b=hDD+JwIeip0gJspQJIlifBLo3RZkJBVwzeLhOJ71FgqywT6SXzvZP9DGDEs867pwdR
-         WO8p8O0KNF1rt/jZhEK7qRkFmJuWonuupzsv25wmsIUlubrGq2+uI/WUOazBl55WoERs
-         6UGSTlw8yD5nIom+ZJg9sOINX3RB3BWpRWxKCIaOMpU3i5NEQIlcg9w7rqfEpTjqevdR
-         Ld2PdY9k3jCJEkbbVafk5rGX8TJUQ4ZkcPAQoycBwKqG3ienRmFTdSplpjS6WxomRczi
-         beS9hglAoeVCRuUSVrSHU2CeKJUnBfeBNkiuJhuizLUdgu8x9wOBdrgC0POHx/euvdoo
-         Zy9Q==
+        bh=oYZ0d7IIZA63OVMPtucchTyEwGwVOr51nS/0GcejUsI=;
+        b=hjlmlrqoyNqh8ZMDotoW00L/DiwAFvmdzuVBO5qEwnjoMnFwBtqz2v/L+DOuv1yKgE
+         iFkL77zGQSG/AZc4wPNOQjIbqLrrRer/ITKaec1ZWBYULuL6i8fvKraEMqTdq1EMsv8o
+         AgEdc2tWHxo31TIgegeSeM41gD89bZ7OO0hFTWtANImVHQnQsv00bzuBSO/ER/bycJeG
+         ONJlxbJ8bQJwg2DEvUCj8jaI2x5boilM8pqZ2jIfebSy4iE4PwulXoZ7Hnt0r1zGorY4
+         BXUk1VJpzHHRIOLVSc1IxnGoKFjConEDOx+EayzAIzbbZPedYCaEE3HhZNC/mu7TT5QH
+         Yjpw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=WITBUxeGSIQmxb1SdGnY+GHNprTyqfSQ+9QDULNZwIA=;
-        b=lYMSYz/bHh75mlXFU6PC6khLz+lPpJSZXheDZJKUd3jqje37LjWc3rG7LD+yQsVCed
-         P5MUaTB3CKPIYjF0mOwQjc3LrllInNcQrTT1I2/KPNcVKEXJWzh0WsS5hha3mcN+SKLl
-         q3Saojy9UfHurRNxi45pfgiiAmIy9QmdBe+pSEBLpiSnPfsD6EzFP1OLzlsBT5X97Ixe
-         xZjMjPED066nCqI0r/s8FmgOANkYI509C/CU6taRJUN+SIb9pMCtcYt7PyDH0PDw3zg2
-         aNicudzfXp72pRC1CU5z9NoXnRDrzgjjPEvAQqUOQ8/+HBLdVHCLuOa60xWWrLUl1dsi
-         ckTg==
-X-Gm-Message-State: APjAAAWQJ9O1P48iQh+6U0EyyZ8V3L8H4bjbVrsvH/kFnyeNO/em2KYf
-        CUfRQxKYykwpgPWgNeKd/M0dcB3HD/Q=
-X-Google-Smtp-Source: APXvYqwpwjKd2OLLFUS/RUgUqKYXyrVqeFcG3DA+RFLUuCtoNO4f0ufr+hHUm2yNJIlTPoM2CaI/SQ==
-X-Received: by 2002:a63:cd02:: with SMTP id i2mr41652810pgg.111.1552502404731;
-        Wed, 13 Mar 2019 11:40:04 -0700 (PDT)
+        bh=oYZ0d7IIZA63OVMPtucchTyEwGwVOr51nS/0GcejUsI=;
+        b=qqaqwD0s4FMHCdnuL9ge7oKBjMD4jIErVp5MuiXNl10/hE0XJ45sMsYGJK6Cxd6QQx
+         gR+jnFtCNw4+uLYlGueCrBOpuTws6nyJVZf0xDzy2QYtw9/hlRfexACP9aSgRC9F0GtZ
+         218c49i9oHpKU5qK4zpC+/HQ6R7Fwjfo5FmG9f1YfYdi1YaPwRaczvT2Fjv+hxo/Pvdx
+         ORPyBh+QA6qP8fAPkrwrha2XjMWubm+Wma/F/OZYRbu4ijUqlHCPqj/KlJBruq0YPidf
+         EB+ARuWQkL5CfxXYXldyVLL+xmbTeFh0L1St7wgZ8vKkzFUVf3KDU18Xn9mlqN8Je7+c
+         aSDQ==
+X-Gm-Message-State: APjAAAUqb6Q94CvgSCqvZr/2cDWZvlhFjMZL+gTJcsdC7fRxmgMFMCS+
+        Dw3L0lkbi1/5mD11bCVa3A0=
+X-Google-Smtp-Source: APXvYqwURWhkADd+qAQLVQN9HsSZU8WAqPGG3lUQMz73aqvzLNksvY2rMWiMAIlB7c+cWIpmfqzD0A==
+X-Received: by 2002:a17:902:1621:: with SMTP id g30mr47029359plg.116.1552502408883;
+        Wed, 13 Mar 2019 11:40:08 -0700 (PDT)
 Received: from castle.hsd1.ca.comcast.net ([2603:3024:1704:3e00::d657])
-        by smtp.gmail.com with ESMTPSA id i13sm15792562pgq.17.2019.03.13.11.40.03
+        by smtp.gmail.com with ESMTPSA id i13sm15792562pgq.17.2019.03.13.11.40.07
         (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Wed, 13 Mar 2019 11:40:03 -0700 (PDT)
+        Wed, 13 Mar 2019 11:40:07 -0700 (PDT)
 From:   Roman Gushchin <guroan@gmail.com>
 X-Google-Original-From: Roman Gushchin <guro@fb.com>
 To:     linux-mm@kvack.org, kernel-team@fb.com
@@ -63,9 +63,9 @@ Cc:     linux-kernel@vger.kernel.org, Tejun Heo <tj@kernel.org>,
         Rik van Riel <riel@surriel.com>,
         Johannes Weiner <hannes@cmpxchg.org>,
         Michal Hocko <mhocko@kernel.org>, Roman Gushchin <guro@fb.com>
-Subject: [PATCH v3 3/6] mm: release memcg percpu data prematurely
-Date:   Wed, 13 Mar 2019 11:39:50 -0700
-Message-Id: <20190313183953.17854-4-guro@fb.com>
+Subject: [PATCH v3 6/6] mm: refactor memcg_hotplug_cpu_dead() to use memcg_flush_offline_percpu()
+Date:   Wed, 13 Mar 2019 11:39:53 -0700
+Message-Id: <20190313183953.17854-7-guro@fb.com>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190313183953.17854-1-guro@fb.com>
 References: <20190313183953.17854-1-guro@fb.com>
@@ -76,93 +76,148 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-To reduce the memory footprint of a dying memory cgroup, let's
-release massive percpu data (vmstats_percpu) as early as possible,
-and use atomic counterparts instead.
+It's possible to remove a big chunk of the redundant code by making
+memcg_flush_offline_percpu() to take cpumask as an argument and flush
+percpu data on all cpus belonging to the mask instead of all possible cpus.
 
-A dying cgroup can remain in the dying state for quite a long
-time, being pinned in memory by any reference. For example,
-if a page mlocked by some other cgroup, is charged to the dying
-cgroup, it won't go away until the page will be released.
+Then memcg_hotplug_cpu_dead() can call it with a single CPU bit set.
 
-A dying memory cgroup can have some memory activity (e.g. dirty
-pages can be flushed after cgroup removal), but in general it's
-not expected to be very active in comparison to living cgroups.
+This approach allows to remove all duplicated code, but safe the
+performance optimization made in memcg_flush_offline_percpu():
+only one atomic operation per data entry.
 
-So reducing the memory footprint by releasing percpu data
-and switching over to atomics seems to be a good trade off.
+for_each_data_entry()
+	for_each_cpu(cpu. cpumask)
+		sum_events()
+	flush()
+
+Otherwise it would be one atomic operation per data entry per cpu:
+for_each_cpu(cpu)
+	for_each_data_entry()
+		flush()
 
 Signed-off-by: Roman Gushchin <guro@fb.com>
-Acked-by: Johannes Weiner <hannes@cmpxchg.org>
 ---
- include/linux/memcontrol.h |  4 ++++
- mm/memcontrol.c            | 24 +++++++++++++++++++++++-
- 2 files changed, 27 insertions(+), 1 deletion(-)
+ mm/memcontrol.c | 61 ++++++++-----------------------------------------
+ 1 file changed, 9 insertions(+), 52 deletions(-)
 
-diff --git a/include/linux/memcontrol.h b/include/linux/memcontrol.h
-index 8ac04632002a..569337514230 100644
---- a/include/linux/memcontrol.h
-+++ b/include/linux/memcontrol.h
-@@ -275,6 +275,10 @@ struct mem_cgroup {
- 
- 	/* memory.stat */
- 	struct memcg_vmstats_percpu __rcu /* __percpu */ *vmstats_percpu;
-+	struct memcg_vmstats_percpu __percpu *vmstats_percpu_offlined;
-+
-+	/* used to release non-used percpu memory */
-+	struct rcu_head rcu;
- 
- 	MEMCG_PADDING(_pad2_);
- 
 diff --git a/mm/memcontrol.c b/mm/memcontrol.c
-index 5ef4098f3f8d..efd5bc131a38 100644
+index 0f18bf2afea8..5b6a2ea66774 100644
 --- a/mm/memcontrol.c
 +++ b/mm/memcontrol.c
-@@ -4470,7 +4470,7 @@ static void __mem_cgroup_free(struct mem_cgroup *memcg)
- 
- 	for_each_node(node)
- 		free_mem_cgroup_per_node_info(memcg, node);
--	free_percpu(memcg->vmstats_percpu);
-+	WARN_ON_ONCE(memcg->vmstats_percpu != NULL);
- 	kfree(memcg);
- }
- 
-@@ -4613,6 +4613,26 @@ static int mem_cgroup_css_online(struct cgroup_subsys_state *css)
- 	return 0;
- }
- 
-+static void percpu_rcu_free(struct rcu_head *rcu)
-+{
-+	struct mem_cgroup *memcg = container_of(rcu, struct mem_cgroup, rcu);
-+
-+	free_percpu(memcg->vmstats_percpu_offlined);
-+	WARN_ON_ONCE(memcg->vmstats_percpu);
-+
-+	css_put(&memcg->css);
-+}
-+
-+static void mem_cgroup_offline_percpu(struct mem_cgroup *memcg)
-+{
-+	memcg->vmstats_percpu_offlined = (struct memcg_vmstats_percpu __percpu*)
-+		rcu_dereference(memcg->vmstats_percpu);
-+	rcu_assign_pointer(memcg->vmstats_percpu, NULL);
-+
-+	css_get(&memcg->css);
-+	call_rcu(&memcg->rcu, percpu_rcu_free);
-+}
-+
- static void mem_cgroup_css_offline(struct cgroup_subsys_state *css)
+@@ -2122,11 +2122,12 @@ static void drain_all_stock(struct mem_cgroup *root_memcg)
+ /*
+  * Flush all per-cpu stats and events into atomics.
+  * Try to minimize the number of atomic writes by gathering data from
+- * all cpus locally, and then make one atomic update.
++ * all cpus in cpumask locally, and then make one atomic update.
+  * No locking is required, because no one has an access to
+  * the offlined percpu data.
+  */
+-static void memcg_flush_offline_percpu(struct mem_cgroup *memcg)
++static void memcg_flush_offline_percpu(struct mem_cgroup *memcg,
++				       const struct cpumask *cpumask)
  {
- 	struct mem_cgroup *memcg = mem_cgroup_from_css(css);
-@@ -4639,6 +4659,8 @@ static void mem_cgroup_css_offline(struct cgroup_subsys_state *css)
- 	drain_all_stock(memcg);
+ 	struct memcg_vmstats_percpu __percpu *vmstats_percpu;
+ 	struct lruvec_stat __percpu *lruvec_stat_cpu;
+@@ -2140,7 +2141,7 @@ static void memcg_flush_offline_percpu(struct mem_cgroup *memcg)
+ 		int nid;
  
- 	mem_cgroup_id_put(memcg);
-+
-+	mem_cgroup_offline_percpu(memcg);
- }
+ 		x = 0;
+-		for_each_possible_cpu(cpu)
++		for_each_cpu(cpu, cpumask)
+ 			x += per_cpu(vmstats_percpu->stat[i], cpu);
+ 		if (x)
+ 			atomic_long_add(x, &memcg->vmstats[i]);
+@@ -2153,7 +2154,7 @@ static void memcg_flush_offline_percpu(struct mem_cgroup *memcg)
+ 			lruvec_stat_cpu = pn->lruvec_stat_cpu_offlined;
  
- static void mem_cgroup_css_released(struct cgroup_subsys_state *css)
+ 			x = 0;
+-			for_each_possible_cpu(cpu)
++			for_each_cpu(cpu, cpumask)
+ 				x += per_cpu(lruvec_stat_cpu->count[i], cpu);
+ 			if (x)
+ 				atomic_long_add(x, &pn->lruvec_stat[i]);
+@@ -2162,7 +2163,7 @@ static void memcg_flush_offline_percpu(struct mem_cgroup *memcg)
+ 
+ 	for (i = 0; i < NR_VM_EVENT_ITEMS; i++) {
+ 		x = 0;
+-		for_each_possible_cpu(cpu)
++		for_each_cpu(cpu, cpumask)
+ 			x += per_cpu(vmstats_percpu->events[i], cpu);
+ 		if (x)
+ 			atomic_long_add(x, &memcg->vmevents[i]);
+@@ -2171,8 +2172,6 @@ static void memcg_flush_offline_percpu(struct mem_cgroup *memcg)
+ 
+ static int memcg_hotplug_cpu_dead(unsigned int cpu)
+ {
+-	struct memcg_vmstats_percpu __percpu *vmstats_percpu;
+-	struct lruvec_stat __percpu *lruvec_stat_cpu;
+ 	struct memcg_stock_pcp *stock;
+ 	struct mem_cgroup *memcg;
+ 
+@@ -2180,50 +2179,8 @@ static int memcg_hotplug_cpu_dead(unsigned int cpu)
+ 	drain_stock(stock);
+ 
+ 	rcu_read_lock();
+-	for_each_mem_cgroup(memcg) {
+-		int i;
+-
+-		vmstats_percpu = (struct memcg_vmstats_percpu __percpu *)
+-			rcu_dereference(memcg->vmstats_percpu);
+-
+-		for (i = 0; i < MEMCG_NR_STAT; i++) {
+-			int nid;
+-			long x;
+-
+-			if (vmstats_percpu) {
+-				x = this_cpu_xchg(vmstats_percpu->stat[i], 0);
+-				if (x)
+-					atomic_long_add(x, &memcg->vmstats[i]);
+-			}
+-
+-			if (i >= NR_VM_NODE_STAT_ITEMS)
+-				continue;
+-
+-			for_each_node(nid) {
+-				struct mem_cgroup_per_node *pn;
+-
+-				pn = mem_cgroup_nodeinfo(memcg, nid);
+-
+-				lruvec_stat_cpu = (struct lruvec_stat __percpu*)
+-					rcu_dereference(pn->lruvec_stat_cpu);
+-				if (!lruvec_stat_cpu)
+-					continue;
+-				x = this_cpu_xchg(lruvec_stat_cpu->count[i], 0);
+-				if (x)
+-					atomic_long_add(x, &pn->lruvec_stat[i]);
+-			}
+-		}
+-
+-		for (i = 0; i < NR_VM_EVENT_ITEMS; i++) {
+-			long x;
+-
+-			if (vmstats_percpu) {
+-				x = this_cpu_xchg(vmstats_percpu->events[i], 0);
+-				if (x)
+-					atomic_long_add(x, &memcg->vmevents[i]);
+-			}
+-		}
+-	}
++	for_each_mem_cgroup(memcg)
++		memcg_flush_offline_percpu(memcg, cpumask_of(cpu));
+ 	rcu_read_unlock();
+ 
+ 	return 0;
+@@ -4668,7 +4625,7 @@ static void percpu_rcu_free(struct rcu_head *rcu)
+ 	struct mem_cgroup *memcg = container_of(rcu, struct mem_cgroup, rcu);
+ 	int node;
+ 
+-	memcg_flush_offline_percpu(memcg);
++	memcg_flush_offline_percpu(memcg, cpu_possible_mask);
+ 
+ 	for_each_node(node) {
+ 		struct mem_cgroup_per_node *pn = memcg->nodeinfo[node];
 -- 
 2.20.1
 
