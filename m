@@ -3,136 +3,78 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
 X-Spam-Status: No, score=-4.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_PASS autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_PASS autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CC503C43381
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 Mar 2019 17:17:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 938ABC43381
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 Mar 2019 17:21:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 986BE213A2
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 Mar 2019 17:17:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 661EC21019
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 Mar 2019 17:21:34 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726349AbfCMRRU (ORCPT
+        id S1726442AbfCMRVd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 13 Mar 2019 13:17:20 -0400
-Received: from mail-wr1-f42.google.com ([209.85.221.42]:34576 "EHLO
-        mail-wr1-f42.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725876AbfCMRRT (ORCPT
+        Wed, 13 Mar 2019 13:21:33 -0400
+Received: from metis.ext.pengutronix.de ([85.220.165.71]:35691 "EHLO
+        metis.ext.pengutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725907AbfCMRVc (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 13 Mar 2019 13:17:19 -0400
-Received: by mail-wr1-f42.google.com with SMTP id k1so2350687wre.1
-        for <linux-kernel@vger.kernel.org>; Wed, 13 Mar 2019 10:17:18 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:in-reply-to:references:date
-         :message-id:mime-version;
-        bh=6sbUrWmoVzADBndVgqIFaX/kyLeylNsbfWUVFK0JOas=;
-        b=iPrhjolAVRCAvwApFZWwVAHl01KDeaxbsMq9rVT94tttsLt6clm3ISnue59vdzzpJM
-         xeWEYUI4XoLfUXNqrScfx+jm+0wrGWm82rOHvVIsPJ94dkqIuoBlasE6vMG8GlHj6upy
-         GavJLrhsIRHIfQwCCbnCCOzqxc8/P+2YXHrlNCryP74dyNoczXfO4UqdeKUYS5HdY2/v
-         2vtrYBTBXtKrQH4kxo8DvAjYb7PJ0GaLKALMhPEk18gzjNJc+/C0mzcWj9YULT7980rZ
-         Ubi1f8/DV38tYIPdSm665f0A3xhMsVjcQ3SLygXWCdpC3goQL6HYb3q5BQhwOQhQn0mZ
-         Ejrw==
-X-Gm-Message-State: APjAAAVNXHrajwugk7hv5SdMSiPM2iB3zlOrMr2Zv/ffMcvJUfX3NQ1N
-        Bq71o+QEWh/NTZxSpEpBOJ8uHw==
-X-Google-Smtp-Source: APXvYqzIWgqqr7I6BeG3SHBvFQCtTgEtoimYgAD4lYjkZn06Onr9bpAbHk2LdWUDLOnhMwZh7qhcyg==
-X-Received: by 2002:adf:efca:: with SMTP id i10mr28441362wrp.265.1552497437313;
-        Wed, 13 Mar 2019 10:17:17 -0700 (PDT)
-Received: from vitty.brq.redhat.com (nat-pool-brq-t.redhat.com. [213.175.37.10])
-        by smtp.gmail.com with ESMTPSA id o18sm39996168wrg.40.2019.03.13.10.17.15
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Wed, 13 Mar 2019 10:17:16 -0700 (PDT)
-From:   Vitaly Kuznetsov <vkuznets@redhat.com>
-To:     Michael Kelley <mikelley@microsoft.com>
-Cc:     "catalin.marinas\@arm.com" <catalin.marinas@arm.com>,
-        "mark.rutland\@arm.com" <mark.rutland@arm.com>,
-        "will.deacon\@arm.com" <will.deacon@arm.com>,
-        "marc.zyngier\@arm.com" <marc.zyngier@arm.com>,
-        "linux-arm-kernel\@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>,
-        "gregkh\@linuxfoundation.org" <gregkh@linuxfoundation.org>,
-        "linux-kernel\@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linux-hyperv\@vger.kernel.org" <linux-hyperv@vger.kernel.org>,
-        "olaf\@aepfle.de" <olaf@aepfle.de>,
-        "apw\@canonical.com" <apw@canonical.com>,
-        "jasowang\@redhat.com" <jasowang@redhat.com>,
-        "marcelo.cerri\@canonical.com" <marcelo.cerri@canonical.com>,
-        Sunil Muthuswamy <sunilmut@microsoft.com>,
-        KY Srinivasan <kys@microsoft.com>
-Subject: RE: [PATCH 1/2] Drivers: hv: Move Hyper-V clockevents code to new clocksource driver
-In-Reply-To: <DM5PR2101MB09180753D788F8587B19B993D74A0@DM5PR2101MB0918.namprd21.prod.outlook.com>
-References: <1552426813-9568-1-git-send-email-mikelley@microsoft.com> <1552426813-9568-2-git-send-email-mikelley@microsoft.com> <874l87tbz2.fsf@vitty.brq.redhat.com> <DM5PR2101MB091897108980449F12FDDB3DD74A0@DM5PR2101MB0918.namprd21.prod.outlook.com> <87pnqusvjq.fsf@vitty.brq.redhat.com> <DM5PR2101MB09180753D788F8587B19B993D74A0@DM5PR2101MB0918.namprd21.prod.outlook.com>
-Date:   Wed, 13 Mar 2019 18:17:15 +0100
-Message-ID: <87mulysnhg.fsf@vitty.brq.redhat.com>
-MIME-Version: 1.0
-Content-Type: text/plain
+        Wed, 13 Mar 2019 13:21:32 -0400
+Received: from kresse.hi.pengutronix.de ([2001:67c:670:100:1d::2a])
+        by metis.ext.pengutronix.de with esmtp (Exim 4.89)
+        (envelope-from <l.stach@pengutronix.de>)
+        id 1h47ZG-0007Gg-QX; Wed, 13 Mar 2019 18:21:26 +0100
+Message-ID: <1552497686.2453.49.camel@pengutronix.de>
+Subject: Re: [PATCH] regulator: Use of_node_name_eq for node name comparisons
+From:   Lucas Stach <l.stach@pengutronix.de>
+To:     Rob Herring <robh@kernel.org>, Mark Brown <broonie@kernel.org>
+Cc:     Liam Girdwood <lgirdwood@gmail.com>, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Date:   Wed, 13 Mar 2019 18:21:26 +0100
+In-Reply-To: <20181205195050.4759-21-robh@kernel.org>
+References: <20181205195050.4759-21-robh@kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+X-Mailer: Evolution 3.22.6-1+deb9u1 
+Mime-Version: 1.0
+Content-Transfer-Encoding: 8bit
+X-SA-Exim-Connect-IP: 2001:67c:670:100:1d::2a
+X-SA-Exim-Mail-From: l.stach@pengutronix.de
+X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
+X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Michael Kelley <mikelley@microsoft.com> writes:
+Hi Rob, hi Mark,
 
-> From: Vitaly Kuznetsov <vkuznets@redhat.com> Sent: Wednesday, March 13, 2019 7:23 AM
->
->> >> > diff --git a/drivers/clocksource/Makefile b/drivers/clocksource/Makefile
->> >> > index be6e0fb..a887955 100644
->> >> > --- a/drivers/clocksource/Makefile
->> >> > +++ b/drivers/clocksource/Makefile
->> >> > @@ -83,3 +83,4 @@ obj-$(CONFIG_ATCPIT100_TIMER)		+= timer-atcpit100.o
->> >> >  obj-$(CONFIG_RISCV_TIMER)		+= timer-riscv.o
->> >> >  obj-$(CONFIG_CSKY_MP_TIMER)		+= timer-mp-csky.o
->> >> >  obj-$(CONFIG_GX6605S_TIMER)		+= timer-gx6605s.o
->> >> > +obj-$(CONFIG_HYPERV)			+= hyperv_syntimer.o
->> >>
->> >> (just a couple of spare thoughs)
->> >>
->> >> CONFIG_HYPERV can also be a module, are we OK with that? (we'll have to
->> >> support module loading/unloading then and honestly I see no reason for
->> >> that. I would prefer everything but VMBus devices to be in
->> >> kernel.) If we don't want it to be a module we can create a hidden
->> >> CONFIG_HYPERV_STIMER or something like that - just like we already do
->> >> for CONFIG_HYPERV_TSCPAGE.
->> >>
->> >> There is, however, one additional dependency here: when running in
->> >> non-direct mode, Hyper-V clockevent devices require functional Hyper-V
->> >> messaging - which currently lives in VMBus code so that may explain why
->> >> you may want to keep stimer code in the same entity. Or, alternatively,
->> >> we can move Hyper-V messaging out of VMBus code (is it actually
->> >> architecture-agnostic?)
->> >>
->> >
->> > I thought about introducing CONFIG_HYPERV_STIMER, but in my
->> > judgment it was just unnecessary complexity.  The Hyper-V clocksource
->> > driver can't exist independent of Hyper-V, and vice versa.  When both the
->> > clocksource and clockevents code is considered, the VMbus driver and
->> > Hyper-V initialization code has to call directly into the driver since the
->> > Hyper-V synthetic timers and reference time counter aren't independently
->> > enumerated.  Even if we could get the Hyper-V messaging out of VMbus
->> > code, we would still need the clocksource initialization call directly from
->> > hyperv_init(), which is not in a module (see the 2nd patch of the series).
->> >
->> 
->> Right, so hv_init_clocksource() cannot live in hv_vmbus module and we
->> need to somehow prevent hyperv_syntimer.o from going in there. And
->> 
->> +obj-$(CONFIG_HYPERV)                      += hyperv_syntimer.o
->> 
->> will do exactly the opposite - put it in hv_vmbus module. Or am I
->> missing something? (I haven't tried to build your code yet, sorry).
->> 
->
-> That line just controls whether hyperv_syntimer.o is built.  It doesn't put
-> it in the hv_vmbus module.  All of the clocksource .o files that are built go
-> into the kernel, not in a module.  But thinking about it more, the above works
-> correctly when CONFIG_HYPERV=y, but not when CONFIG_HYPERV=m.
+Am Mittwoch, den 05.12.2018, 13:50 -0600 schrieb Rob Herring:
+> Convert string compares of DT node names to use of_node_name_eq helper
+> instead. This removes direct access to the node name pointer.
+> 
+> For instances using of_node_cmp, this has the side effect of now using
+> case sensitive comparisons. This should not matter for any FDT based
+> system which all of these are.
+[...]
+> diff --git a/drivers/regulator/mc13xxx-regulator-core.c b/drivers/regulator/mc13xxx-regulator-core.c
+> index 65eb1e0350cf..2243138d8a58 100644
+> --- a/drivers/regulator/mc13xxx-regulator-core.c
+> +++ b/drivers/regulator/mc13xxx-regulator-core.c
+> @@ -186,7 +186,7 @@ struct mc13xxx_regulator_init_data *mc13xxx_parse_regulators_dt(
+> >  		for (i = 0; i < num_regulators; i++) {
+> >  			if (!regulators[i].desc.name)
+> >  				continue;
+> > -			if (!of_node_cmp(child->name,
+> > +			if (of_node_name_eq(child,
+> >  					 regulators[i].desc.name))
+> > 
 
-Yes, that's what I meant.
+Unfortunately this change causes a regression on systems with MC13xxx
+regulators. The desc.name field is filled with an uppercase name of the
+regulator, while the existing DTs (as far as I know) all use lowercase
+node names, so the matching in the function above doesn't work anymore.
 
-> I'll have to introduce CONFIG_HYPERV_TIMER after all.  Will fix this in v2.  Thanks
-> for the discussion!
+Any opinions about how to proceed here?
 
-Thanks!
-
--- 
-Vitaly
+Regards,
+Lucas
