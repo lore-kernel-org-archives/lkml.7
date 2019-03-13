@@ -2,120 +2,110 @@ Return-Path: <SRS0=dUEL=RQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_PASS,URIBL_BLOCKED,USER_AGENT_MUTT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_PASS,URIBL_BLOCKED,USER_AGENT_MUTT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8EC64C4360F
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 Mar 2019 14:35:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6A401C43381
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 Mar 2019 14:36:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5ED3F2087C
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 Mar 2019 14:35:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 419A22087C
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 Mar 2019 14:36:05 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726655AbfCMOfF (ORCPT
+        id S1726661AbfCMOgE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 13 Mar 2019 10:35:05 -0400
-Received: from mx2.suse.de ([195.135.220.15]:46188 "EHLO mx1.suse.de"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726125AbfCMOfF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 13 Mar 2019 10:35:05 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx1.suse.de (Postfix) with ESMTP id 3427DAD55;
-        Wed, 13 Mar 2019 14:35:04 +0000 (UTC)
-Received: by quack2.suse.cz (Postfix, from userid 1000)
-        id 8490A1E3FE8; Wed, 13 Mar 2019 15:35:03 +0100 (CET)
-Date:   Wed, 13 Mar 2019 15:35:03 +0100
-From:   Jan Kara <jack@suse.cz>
-To:     Kees Cook <keescook@chromium.org>
-Cc:     syzbot <syzbot+2c49971e251e36216d1f@syzkaller.appspotmail.com>,
-        Amir Goldstein <amir73il@gmail.com>, Jan Kara <jack@suse.cz>,
-        Andrew Morton <akpm@linux-foundation.org>, cai@lca.pw,
-        Chris von Recklinghausen <crecklin@redhat.com>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Linux-MM <linux-mm@kvack.org>,
-        syzkaller-bugs <syzkaller-bugs@googlegroups.com>
-Subject: Re: WARNING: bad usercopy in fanotify_read
-Message-ID: <20190313143503.GD9108@quack2.suse.cz>
-References: <00000000000016f7d40583d79bd9@google.com>
- <CAGXu5jKjWwYk5N3mOH1A8fXX_0BT3r1At_3MzN9M+Ckg5irKXg@mail.gmail.com>
+        Wed, 13 Mar 2019 10:36:04 -0400
+Received: from foss.arm.com ([217.140.101.70]:58564 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725856AbfCMOgD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 13 Mar 2019 10:36:03 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.72.51.249])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 02F6280D;
+        Wed, 13 Mar 2019 07:36:03 -0700 (PDT)
+Received: from lakrids.cambridge.arm.com (usa-sjc-imap-foss1.foss.arm.com [10.72.51.249])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 9FD403F614;
+        Wed, 13 Mar 2019 07:36:01 -0700 (PDT)
+Date:   Wed, 13 Mar 2019 14:35:53 +0000
+From:   Mark Rutland <mark.rutland@arm.com>
+To:     Peter Zijlstra <peterz@infradead.org>
+Cc:     Arnd Bergmann <arnd@arndb.de>, Qian Cai <cai@lca.pw>,
+        Jason Gunthorpe <jgg@mellanox.com>,
+        "akpm@linux-foundation.org" <akpm@linux-foundation.org>,
+        "linux-mm@kvack.org" <linux-mm@kvack.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH] mm/debug: add a cast to u64 for atomic64_read()
+Message-ID: <20190313143552.GA39315@lakrids.cambridge.arm.com>
+References: <20190310183051.87303-1-cai@lca.pw>
+ <20190311035815.kq7ftc6vphy6vwen@linux-r8p5>
+ <20190311122100.GF22862@mellanox.com>
+ <1552312822.7087.11.camel@lca.pw>
+ <CAK8P3a0QB7+oPz4sfbW_g2EGZZmC=LMEnkMNLCW_FD=fEZoQPA@mail.gmail.com>
+ <20190313091844.GA24390@hirez.programming.kicks-ass.net>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <CAGXu5jKjWwYk5N3mOH1A8fXX_0BT3r1At_3MzN9M+Ckg5irKXg@mail.gmail.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <20190313091844.GA24390@hirez.programming.kicks-ass.net>
+User-Agent: Mutt/1.11.1+11 (2f07cb52) (2018-12-01)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue 12-03-19 23:26:22, Kees Cook wrote:
-> On Mon, Mar 11, 2019 at 1:42 PM syzbot
-> <syzbot+2c49971e251e36216d1f@syzkaller.appspotmail.com> wrote:
-> > C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=17ee410b200000
-> > [...]
-> > ------------[ cut here ]------------
-> > Bad or missing usercopy whitelist? Kernel memory exposure attempt detected
-> > from SLAB object 'fanotify_event' (offset 40, size 8)!
-> > [...]
-> >   copy_to_user include/linux/uaccess.h:151 [inline]
-> >   copy_fid_to_user fs/notify/fanotify/fanotify_user.c:236 [inline]
-> >   copy_event_to_user fs/notify/fanotify/fanotify_user.c:294 [inline]
+On Wed, Mar 13, 2019 at 10:18:44AM +0100, Peter Zijlstra wrote:
+> On Mon, Mar 11, 2019 at 03:20:04PM +0100, Arnd Bergmann wrote:
+> > On Mon, Mar 11, 2019 at 3:00 PM Qian Cai <cai@lca.pw> wrote:
+> > >
+> > > On Mon, 2019-03-11 at 12:21 +0000, Jason Gunthorpe wrote:
+> > > > On Sun, Mar 10, 2019 at 08:58:15PM -0700, Davidlohr Bueso wrote:
+> > > > > On Sun, 10 Mar 2019, Qian Cai wrote:
+> > > >
+> > > > Not saying this patch shouldn't go ahead..
+> > > >
+> > > > But is there a special reason the atomic64*'s on ppc don't use the u64
+> > > > type like other archs? Seems like a better thing to fix than adding
+> > > > casts all over the place.
 > 
-> Looks like this is the fh/ext_fh union in struct fanotify_fid, field
-> "fid" in struct fanotify_event. Given that "fid" is itself in a union
-> against a struct path, I think instead of a whitelist using
-> KMEM_CACHE_USERCOPY(), this should just use a bounce buffer to avoid
-> leaving a whitelist open for path or ext_fh exposure.
+> s64 if anything, atomic stuff is signed (although since we have -fwrapv
+> it doesn't matter one whit).
+> 
+> > > A bit of history here,
+> > >
+> > > https://patchwork.kernel.org/patch/7344011/#15495901
+> > 
+> > Ah, I had already forgotten about that discussion.
+> > 
+> > At least the atomic_long part we discussed there has been resolved now
+> > as part of commit b5d47ef9ea5c ("locking/atomics: Switch to generated
+> > atomic-long").
+> > 
+> > Adding Mark Rutland to Cc, maybe he has some ideas of how to use
+> > the infrastructure he added to use consistent types for atomic64()
+> > on the remaining 64-bit architectures.
+> 
+> A quick count shows there's only 5 definitions of atomic64_t in the
+> tree, it would be trivial to align them on type.
+> 
+> $ git grep "} atomic64_t"
+> arch/arc/include/asm/atomic.h:} atomic64_t;
+> arch/arm/include/asm/atomic.h:} atomic64_t;
+> arch/x86/include/asm/atomic64_32.h:} atomic64_t;
+> include/asm-generic/atomic64.h:} atomic64_t;
+> include/linux/types.h:} atomic64_t;
+> 
+> Note that the one used in _most_ cases, is the one from linux/types.h,
+> and that is using 'long'. The others, all typically on ILP32 platforms,
+> obviously must use long long.
+> 
+> I have no objection to changing the types.h one to long long or all of
+> them to s64. It really shouldn't matter at all.
 
-Do you mean to protect it from a situation when some other code (i.e. not
-copy_fid_to_user()) would be tricked into copying ext_fh containing slab
-pointer to userspace?
+I think that using s64 consistently (with any necessary alignment
+annotation) makes the most sense. That's unambigious, and what the
+common headers now use.
 
-								Honza
+Now that the scripted atomics are merged, I'd like to move arches over
+to arch_atomic_*(), so the argument and return types will become s64
+everywhere.
 
-> 
-> Maybe something like this (untested):
-> 
-> diff --git a/fs/notify/fanotify/fanotify_user.c
-> b/fs/notify/fanotify/fanotify_user.c
-> index 56992b32c6bb..b87da9580b3c 100644
-> --- a/fs/notify/fanotify/fanotify_user.c
-> +++ b/fs/notify/fanotify/fanotify_user.c
-> @@ -207,6 +207,7 @@ static int process_access_response(struct
-> fsnotify_group *group,
->  static int copy_fid_to_user(struct fanotify_event *event, char __user *buf)
->  {
->         struct fanotify_event_info_fid info = { };
-> +       unsigned char bounce[FANOTIFY_INLINE_FH_LEN], *fh;
->         struct file_handle handle = { };
->         size_t fh_len = event->fh_len;
->         size_t len = fanotify_event_info_len(event);
-> @@ -233,7 +234,18 @@ static int copy_fid_to_user(struct fanotify_event
-> *event, char __user *buf)
-> 
->         buf += sizeof(handle);
->         len -= sizeof(handle);
-> -       if (copy_to_user(buf, fanotify_event_fh(event), fh_len))
-> +
-> +       /*
-> +        * For an inline fh, copy through stack to exclude the copy from
-> +        * usercopy hardening protections.
-> +        */
-> +       fh = fanotify_event_fh(event);
-> +       if (fh_len <= sizeof(bounce)) {
-> +               memcpy(bounce, fh, fh_len);
-> +               fh = bounce;
-> +       }
-> +
-> +       if (copy_to_user(buf, fh, fh_len))
->                 return -EFAULT;
-> 
->         /* Pad with 0's */
-> 
-> 
-> -- 
-> Kees Cook
--- 
-Jan Kara <jack@suse.com>
-SUSE Labs, CR
+Thanks,
+Mark.
