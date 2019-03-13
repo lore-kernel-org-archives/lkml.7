@@ -6,47 +6,48 @@ X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3CBCAC43381
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 Mar 2019 20:27:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8A69EC43381
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 Mar 2019 20:28:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0BB26213A2
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 Mar 2019 20:27:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 57B4C20854
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 Mar 2019 20:28:20 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727436AbfCMU10 (ORCPT
+        id S1727253AbfCMU2T (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 13 Mar 2019 16:27:26 -0400
-Received: from mail-ot1-f68.google.com ([209.85.210.68]:44792 "EHLO
-        mail-ot1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726889AbfCMU10 (ORCPT
+        Wed, 13 Mar 2019 16:28:19 -0400
+Received: from mail-ot1-f66.google.com ([209.85.210.66]:38772 "EHLO
+        mail-ot1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726892AbfCMU2S (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 13 Mar 2019 16:27:26 -0400
-Received: by mail-ot1-f68.google.com with SMTP id g1so3002061otj.11
-        for <linux-kernel@vger.kernel.org>; Wed, 13 Mar 2019 13:27:25 -0700 (PDT)
+        Wed, 13 Mar 2019 16:28:18 -0400
+Received: by mail-ot1-f66.google.com with SMTP id m1so3029794otf.5
+        for <linux-kernel@vger.kernel.org>; Wed, 13 Mar 2019 13:28:18 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=NQh9oCty3X12wR6Qth9IqtpQXMvTmvN4B6jdIkdrfYY=;
-        b=AOLt3tcPGjgKESTo1eeKlzq3aSVG0/65OrObzJifiEdTSg0T2W0GiyfEq59zxZrugk
-         VskVHH9sKUwlMK9IkYfX8bKGX5zWQvrl6KAckjGYiGtZ4n++sTzBK85XLI1MqppfJJsZ
-         5W+Ch7dWnEBuIEI4/MwEo2YrduuDfFZgHquvNdeMaE4kNfqu8eukfighZgGW3JOGQnrm
-         4TlnqFy6J48k/oKMzVZP6VKsHtAosP4BSwEpldmt1TAIKNPs3JYucpQTwoqd6dL4YV91
-         qlgzceYsi6vXPv0uHY65DSrvpZU8laiEX3YD0yVffTMdYxgEIsyrTo51s/Iaodz9W5U2
-         8dLA==
-X-Gm-Message-State: APjAAAX5y6AnKRMLBH3vv82Y+ZMOLt7Z/4KP2TXnBPsTul9PXSIAOTEp
-        BYZqkXkiBDiuU0cO5yW2AAON95jda18iOZBK7EY=
-X-Google-Smtp-Source: APXvYqy5+Ay2WKjtEkX+oBlmASofYr/40FIyxSBRsL6BdzOH5mSPKmV27eZp6Me4ydRNXGN8002yqhEImcwpJJhFwaI=
-X-Received: by 2002:a9d:67d3:: with SMTP id c19mr1269743otn.300.1552508845231;
- Wed, 13 Mar 2019 13:27:25 -0700 (PDT)
+        bh=WRHo+Qx+bqiMtdNEIHck/pS93TyE205D50SsM/O6eVc=;
+        b=QwX8iHv3uVixF/GjTEpc/x0bWeppM2TGDmyPolaEsBFFuQbNU6Q1rE0kCbKCtd9CrW
+         JYgOmuaz3csQBsBQNz4+RPJ45jCSq4SzF0gbgq/qr3JzPiI+JLYVpWOu0DdqkY8KfsEm
+         Fih7I+nyH+F1W/CZQQ98Ao+W9au0va4NuwTjagrxt7S+5nlPQN6iztcN/JOMRVfb+Lrf
+         +WxUw7mrx0Ur597/67kmQVqsiWNu3M6NVgG2fXWlj/nlaW9OoWuuDvXaAp3jZwr3mAKl
+         pnq+EdRPLbIIRKUqJThQTTfN05eV8cOpJqaOVnumGCABfDa31xZ/SUj8rbc23wTYP+/K
+         KdIg==
+X-Gm-Message-State: APjAAAV8F9O1kDp1bK08/rSHO7LVP8NDiVMM+jTtmgGwFyLR3HdNmmW/
+        TrYasW5toCxQNq+Q+XhyP05eV8GUPssxF3RwQf8=
+X-Google-Smtp-Source: APXvYqyw6nvhEsMmj5VAYP2xAzA/a+5VN8gdNsYgKRRfsCrFfQK0k82tADaaTziKn7icMEjGfdezzwbGUcBKu2l6Yco=
+X-Received: by 2002:a9d:7841:: with SMTP id c1mr29683616otm.354.1552508897906;
+ Wed, 13 Mar 2019 13:28:17 -0700 (PDT)
 MIME-Version: 1.0
-References: <20190114203505.17875-1-malat@debian.org>
-In-Reply-To: <20190114203505.17875-1-malat@debian.org>
+References: <20190114204241.21712-1-malat@debian.org>
+In-Reply-To: <20190114204241.21712-1-malat@debian.org>
 From:   Mathieu Malaterre <malat@debian.org>
-Date:   Wed, 13 Mar 2019 21:27:14 +0100
-Message-ID: <CA+7wUswdVU=JuHPAVo9gxZJ8BYWhThnsLggVM5t9h--=AhCPPQ@mail.gmail.com>
-Subject: Re: [PATCH] signal: annotate implicit fall through
-To:     "Eric W. Biederman" <ebiederm@xmission.com>
-Cc:     LKML <linux-kernel@vger.kernel.org>,
+Date:   Wed, 13 Mar 2019 21:28:05 +0100
+Message-ID: <CA+7wUsxi7jMURYQrBp9cTnGCs_akLZV7cmLuk8UgkkaL6Wzd7A@mail.gmail.com>
+Subject: Re: [PATCH 1/2] firewire: annotate implicit fall through
+To:     Stefan Richter <stefanr@s5r6.in-berlin.de>
+Cc:     linux1394-devel@lists.sourceforge.net,
+        LKML <linux-kernel@vger.kernel.org>,
         "Gustavo A. R. Silva" <gustavo@embeddedor.com>
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
@@ -56,32 +57,36 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ping ?
 
-On Mon, Jan 14, 2019 at 9:35 PM Mathieu Malaterre <malat@debian.org> wrote:
+On Mon, Jan 14, 2019 at 9:42 PM Mathieu Malaterre <malat@debian.org> wrote:
 >
 > There is a plan to build the kernel with -Wimplicit-fallthrough and
 > this place in the code produced a warning (W=1).
 >
+> In this particular case rewrote the comment to start with the string "fall
+> through", so as to match the regular expression expected by GCC.
+>
 > This commit remove the following warning:
 >
->   kernel/signal.c:795:13: warning: this statement may fall through [-Wimplicit-fallthrough=]
+>   drivers/firewire/core-iso.c:308:7: warning: this statement may fall through [-Wimplicit-fallthrough=]
 >
 > Signed-off-by: Mathieu Malaterre <malat@debian.org>
 > ---
->  kernel/signal.c | 1 +
->  1 file changed, 1 insertion(+)
+>  drivers/firewire/core-iso.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
 >
-> diff --git a/kernel/signal.c b/kernel/signal.c
-> index e1d7ad8e6ab1..aa7a507757d7 100644
-> --- a/kernel/signal.c
-> +++ b/kernel/signal.c
-> @@ -794,6 +794,7 @@ static int check_kill_permission(int sig, struct kernel_siginfo *info,
->                          */
->                         if (!sid || sid == task_session(current))
->                                 break;
-> +                       /* fall through */
+> diff --git a/drivers/firewire/core-iso.c b/drivers/firewire/core-iso.c
+> index 35e784cffc23..d2d50bda5a5f 100644
+> --- a/drivers/firewire/core-iso.c
+> +++ b/drivers/firewire/core-iso.c
+> @@ -308,7 +308,7 @@ static int manage_channel(struct fw_card *card, int irm_id, int generation,
+>                         if ((data[0] & bit) == (data[1] & bit))
+>                                 continue;
+>
+> -                       /* 1394-1995 IRM, fall through to retry. */
+> +                       /* fall through - 1394-1995 IRM to retry. */
 >                 default:
->                         return -EPERM;
->                 }
+>                         if (retry) {
+>                                 retry--;
 > --
 > 2.19.2
 >
