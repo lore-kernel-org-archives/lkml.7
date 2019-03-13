@@ -2,144 +2,101 @@ Return-Path: <SRS0=dUEL=RQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED autolearn=ham
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A0DB0C43381
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 Mar 2019 04:59:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6CC45C43381
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 Mar 2019 05:00:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6C61A2070D
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 Mar 2019 04:59:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 383292077B
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 Mar 2019 05:00:54 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="vyzCDD3N"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="vQwipTpP"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726585AbfCME7O (ORCPT
+        id S1726646AbfCMFAw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 13 Mar 2019 00:59:14 -0400
-Received: from lelv0142.ext.ti.com ([198.47.23.249]:56000 "EHLO
-        lelv0142.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725773AbfCME7N (ORCPT
+        Wed, 13 Mar 2019 01:00:52 -0400
+Received: from mail-pf1-f169.google.com ([209.85.210.169]:35819 "EHLO
+        mail-pf1-f169.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725821AbfCMFAw (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 13 Mar 2019 00:59:13 -0400
-Received: from lelv0266.itg.ti.com ([10.180.67.225])
-        by lelv0142.ext.ti.com (8.15.2/8.15.2) with ESMTP id x2D4x9bL071590;
-        Tue, 12 Mar 2019 23:59:09 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1552453149;
-        bh=a4DlH7enMgD0Yt9tjUb6+jvt8aPoK6MGtZwtvhqLkxk=;
-        h=Subject:To:CC:References:From:Date:In-Reply-To;
-        b=vyzCDD3NS7FKugj7BliRtGkUFPbnp4GSX9ZN+9114sQnOgo5CMiAiK3Uk/2sfuq5p
-         H4QLoNRSuk+3b0+Q8gbRialMs+q3YCsNQ1OKH1cIbRnR721vVYVanwbGzuulPV4Kbt
-         zWPauNIYgSEusX2QQ6q2KQ+a6hade8zRMkjsBUsc=
-Received: from DFLE104.ent.ti.com (dfle104.ent.ti.com [10.64.6.25])
-        by lelv0266.itg.ti.com (8.15.2/8.15.2) with ESMTPS id x2D4x9Dr043429
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Tue, 12 Mar 2019 23:59:09 -0500
-Received: from DFLE107.ent.ti.com (10.64.6.28) by DFLE104.ent.ti.com
- (10.64.6.25) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1591.10; Tue, 12
- Mar 2019 23:59:09 -0500
-Received: from dlep33.itg.ti.com (157.170.170.75) by DFLE107.ent.ti.com
- (10.64.6.28) with Microsoft SMTP Server (version=TLS1_0,
- cipher=TLS_RSA_WITH_AES_256_CBC_SHA) id 15.1.1591.10 via Frontend Transport;
- Tue, 12 Mar 2019 23:59:09 -0500
-Received: from [172.24.191.45] (ileax41-snat.itg.ti.com [10.172.224.153])
-        by dlep33.itg.ti.com (8.14.3/8.13.8) with ESMTP id x2D4x56O023208;
-        Tue, 12 Mar 2019 23:59:06 -0500
-Subject: Re: [PATCH] regulator: palmas: Remove *rdev[PALMAS_NUM_REGS] from
- struct palmas_pmic
-To:     Axel Lin <axel.lin@ingics.com>, Mark Brown <broonie@kernel.org>
-CC:     Laxman Dewangan <ldewangan@nvidia.com>, Nishanth Menon <nm@ti.com>,
-        <linux-omap@vger.kernel.org>, Liam Girdwood <lgirdwood@gmail.com>,
-        <linux-kernel@vger.kernel.org>
-References: <20190310150609.5178-1-axel.lin@ingics.com>
-From:   Keerthy <j-keerthy@ti.com>
-Message-ID: <70f2fbf5-a2cd-3806-6b94-9ce857845616@ti.com>
-Date:   Wed, 13 Mar 2019 10:29:27 +0530
+        Wed, 13 Mar 2019 01:00:52 -0400
+Received: by mail-pf1-f169.google.com with SMTP id j5so521725pfa.2
+        for <linux-kernel@vger.kernel.org>; Tue, 12 Mar 2019 22:00:51 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=to:in-reply-to:cc:from:subject:message-id:date:user-agent
+         :mime-version:content-language:content-transfer-encoding;
+        bh=BSiY41WUZOTJX6QSlHgyNV/xoUIDQJyY1QmOU7z+YQ0=;
+        b=vQwipTpPuSmZ+uQerM950KEkfxBNYEIk3x1OXb0O4xCw9RSNf9QBAlUGX2dcxoXcAe
+         Avkq0M/kS3txNs2J8Ahc/JsUS/wbuydxNHEOSGV8Ja/mM0iN5gVI772NKRuLrZYxRJVi
+         ay+OSFJdigWpCxXijIsB3YoEvSUB71zE8tfTji+mpwnqihMOYcPNki2Kc4/BV9I8h+CI
+         /R+0LDT0tQo1K2CdVruzVbTrSgr4TiK/YZp5wune0lc4FJxUk1IxUPasSGmZ7MPE2i87
+         z4rYxP347OFHX4b7sN28sSiHWri2xnSk0ubNoGBwnp7JIh/OBmIsgJ/VjR4qz8I3CBCy
+         rz9g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:to:in-reply-to:cc:from:subject:message-id:date
+         :user-agent:mime-version:content-language:content-transfer-encoding;
+        bh=BSiY41WUZOTJX6QSlHgyNV/xoUIDQJyY1QmOU7z+YQ0=;
+        b=uTa/jemuT2MjRFNQ6b5oe9ZX7MS5Ml5D2pJfd1qkREOULKq+eYp0gpMl2f6p4j39ah
+         /Nrpgo40uEtWTp/WKt1LSr/Odcr7hp2WpB27K4/6rStw0DZop9mGGvVeSLC7Ri3tux9A
+         KDR9P4FqgSwkME6g+Xgq6JeXwrn2FUiNQcQwpEbCfDMOzo3HejTlPri+oIBUz8GZds62
+         JrIuOakHo1ytphPZlmq71SGQ5Z0l/AWvH2Dsx1I3dl5RbjMM3UbjEihkLG77XcjbuA1i
+         v6j+lxEPRrS+jdHzeiFnIdy/1S2ezJ5mV/qGHkwwC21EqM8OLPgySBf6qzOsJa6ZJRTB
+         xX+Q==
+X-Gm-Message-State: APjAAAUK8tY1N78yZV0jPiCL5AyBEQLbQLsvAALd2pncHiErsI1nNXsA
+        yDn4MYjAd7VS7RIn1fm6Ix0=
+X-Google-Smtp-Source: APXvYqx4i5GNl2fe0fQF1j1gnZ7657M+hVFY9b9o7vYXvS6mdbmecvuK0YNbY7X2r4DvDXyG98jFRQ==
+X-Received: by 2002:aa7:80c8:: with SMTP id a8mr43264095pfn.193.1552453251297;
+        Tue, 12 Mar 2019 22:00:51 -0700 (PDT)
+Received: from ?IPv6:2405:204:a4ad:ea32:8a86:7e8d:4ca:6fc7? ([2405:204:a4ad:ea32:8a86:7e8d:4ca:6fc7])
+        by smtp.gmail.com with ESMTPSA id o2sm24654602pfa.76.2019.03.12.22.00.47
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Tue, 12 Mar 2019 22:00:50 -0700 (PDT)
+To:     christian@brauner.io
+In-Reply-To: 
+Cc:     torvalds@linux-foundation.org, arnd@arndb.de,
+        linux-kernel@vger.kernel.org, x86@kernel.org, tglx@linuxtronix.de
+From:   Jonathon Kowalski <bl0pbl33p@gmail.com>
+Subject: [GIT PULL RESEND] pidfd changes for v5.1-rc1
+Message-ID: <d5a0a45e-77c3-afc7-fed2-8453d8e95bb4@gmail.com>
+Date:   Wed, 13 Mar 2019 05:00:57 +0000
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.4.0
+ Thunderbird/60.5.1
 MIME-Version: 1.0
-In-Reply-To: <20190310150609.5178-1-axel.lin@ingics.com>
-Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Type: text/plain; charset=utf-8; format=flowed
 Content-Language: en-US
 Content-Transfer-Encoding: 7bit
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Hi,
 
+Thanks for the work on this system call! I am interested in making use 
+of it in my process supervisor. It works pretty well and avoids the 
+long-standing issue of PID reuse.
 
-On 10/03/19 8:36 PM, Axel Lin wrote:
-> This driver is using devm_regulator_register() so it is not necessary
-> to save *rdev for clean up. Actually the pmic->rdev[id] is not used now.
+One thing that instantly came to mind is to be able to delegate killing 
+to some third process depending on the confguration. However, I don't 
+see that permissions are attached to the open file description, but 
+seemed to be checked when calling pidfd_send_signal as they are with 
+kill(2). Is there any particular reason this was avoided? For instance, 
+if a process with CAP_KILL opens the procfd, shouldn't any process that 
+uses a descriptor pointing to this same file description be permitted to 
+send signals? It would be a lot more useful that way.
 
-Reviewed-by: Keerthy <j-keerthy@ti.com>
+There doesn't seem to much benefit of using file descriptors for 
+processes otherwise if cannot use them that way, apart from PID reuse.
 
-> 
-> Signed-off-by: Axel Lin <axel.lin@ingics.com>
-> ---
->   drivers/regulator/palmas-regulator.c | 12 ------------
->   include/linux/mfd/palmas.h           |  1 -
->   2 files changed, 13 deletions(-)
-> 
-> diff --git a/drivers/regulator/palmas-regulator.c b/drivers/regulator/palmas-regulator.c
-> index 7fb9e8dd834e..f13c7c8b1061 100644
-> --- a/drivers/regulator/palmas-regulator.c
-> +++ b/drivers/regulator/palmas-regulator.c
-> @@ -991,9 +991,6 @@ static int palmas_ldo_registration(struct palmas_pmic *pmic,
->   			return PTR_ERR(rdev);
->   		}
->   
-> -		/* Save regulator for cleanup */
-> -		pmic->rdev[id] = rdev;
-> -
->   		/* Initialise sleep/init values from platform data */
->   		if (pdata) {
->   			reg_init = pdata->reg_init[id];
-> @@ -1101,9 +1098,6 @@ static int tps65917_ldo_registration(struct palmas_pmic *pmic,
->   			return PTR_ERR(rdev);
->   		}
->   
-> -		/* Save regulator for cleanup */
-> -		pmic->rdev[id] = rdev;
-> -
->   		/* Initialise sleep/init values from platform data */
->   		if (pdata) {
->   			reg_init = pdata->reg_init[id];
-> @@ -1288,9 +1282,6 @@ static int palmas_smps_registration(struct palmas_pmic *pmic,
->   				pdev_name);
->   			return PTR_ERR(rdev);
->   		}
-> -
-> -		/* Save regulator for cleanup */
-> -		pmic->rdev[id] = rdev;
->   	}
->   
->   	return 0;
-> @@ -1395,9 +1386,6 @@ static int tps65917_smps_registration(struct palmas_pmic *pmic,
->   				pdev_name);
->   			return PTR_ERR(rdev);
->   		}
-> -
-> -		/* Save regulator for cleanup */
-> -		pmic->rdev[id] = rdev;
->   	}
->   
->   	return 0;
-> diff --git a/include/linux/mfd/palmas.h b/include/linux/mfd/palmas.h
-> index 75e5c8ff85fc..c34d5f0d34d7 100644
-> --- a/include/linux/mfd/palmas.h
-> +++ b/include/linux/mfd/palmas.h
-> @@ -553,7 +553,6 @@ struct palmas_pmic {
->   	struct palmas *palmas;
->   	struct device *dev;
->   	struct regulator_desc desc[PALMAS_NUM_REGS];
-> -	struct regulator_dev *rdev[PALMAS_NUM_REGS];
->   	struct mutex mutex;
->   
->   	int smps123;
-> 
+So, is something like this on the roadmap in the future, and if not, 
+what was the reason it was avoided? I don't see a problem with using 
+CAP_KILL to not check permissions at call time, otherwise I can see why 
+it would be a problem in general (because processes can change credentials).
+
+Regards,
+Jonathon Kowalski
