@@ -4,54 +4,54 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-12.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED autolearn=ham
-	autolearn_force=no version=3.4.0
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_PASS autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 83588C43381
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 Mar 2019 15:39:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8900BC43381
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 Mar 2019 15:39:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 512962171F
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 Mar 2019 15:39:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5960F206BA
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 Mar 2019 15:39:44 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1552491580;
-	bh=GWp+XMOG3nz+SgIvr8m1htApixWbtNGRkkkizOMuXII=;
+	s=default; t=1552491584;
+	bh=qE46AxFgc/L1JsLm3s/DLmpoCA1qTDT8zeqiMLm0DnY=;
 	h=From:To:Cc:Subject:In-Reply-To:Date:List-ID:From;
-	b=L551gWNipcYBZj9VfBZ1XOC4dch/ZczgVGteTRwsWXWnvxEOCw960/Ds4xlq6fHZW
-	 FiSPyk9dOCvfsk5l4M2jD9S3PDLF56fhPa+5Wxo8Xa7YFMPIC0XvfC5SOlN7Ai4+a2
-	 0pogkGgqvK3U+zA/xYKz8PLnD6xYdN3iVgGRZMXM=
+	b=0R8L7djWSd6D7cSOzNFPz/HDyUF+cUqQGd16XnwEBaOaz7L6aoVwF4Nebna7TSWEr
+	 DqaKg7oz7j5byVzrzMUW+DMzPCItgGG/0HKXIetHxAu8p1uZWXCmMCyxPj9kdXgkV+
+	 /2UjThr0BccTFCc2OeivhR1QDBf3K6ob+DBlJz88=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727175AbfCMPji (ORCPT
+        id S1727194AbfCMPjm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 13 Mar 2019 11:39:38 -0400
-Received: from heliosphere.sirena.org.uk ([172.104.155.198]:50750 "EHLO
+        Wed, 13 Mar 2019 11:39:42 -0400
+Received: from heliosphere.sirena.org.uk ([172.104.155.198]:50812 "EHLO
         heliosphere.sirena.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727145AbfCMPjg (ORCPT
+        with ESMTP id S1727167AbfCMPji (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 13 Mar 2019 11:39:36 -0400
+        Wed, 13 Mar 2019 11:39:38 -0400
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
         d=sirena.org.uk; s=20170815-heliosphere; h=Date:Message-Id:In-Reply-To:
         Subject:Cc:To:From:Sender:Reply-To:MIME-Version:Content-Type:
         Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
         Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:References:
         List-Id:List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:
-        List-Archive; bh=au3dvNXzmjYN1ENUgBg2PdRM6Yahivow2cEMYRREeAM=; b=I/qLp8KIsoru
-        lWwkzuQmD9th/v79O2RZjnT8ggBsjhRLSfCjh1C0JcbZJVXQUa6hlCm47eOkREQ0a6eLmaJx/xZL4
-        PRZh9AYxQSFZHih/ZY4UUpVfXaFBR2GwPeKEuByr5RrmYgy/hmhq5rWCa8RdvJF4zefB1u7wUDYB8
-        eaW0o=;
+        List-Archive; bh=vpqKQbtWAfkfjLyV/A9ZwEba1FnCfh+7G/9WCz/3iIg=; b=RFJxkPJL7ANa
+        EQAmh9gUPCEhVmUtrK2qRJTcMUNiGH5+wA4x2CM/4wSCWpk1IkBCKquurzc3Lxq2MqpsSXynydqdr
+        f+yZq5cNjpb2RKK7R/NB8zVoXW8IaaWErgIT7m2GE8E2wGA9pr88JLiLa1sfd84IOdWMYKYrgB6ar
+        5DPxo=;
 Received: from cpc102320-sgyl38-2-0-cust46.18-2.cable.virginm.net ([82.37.168.47] helo=debutante.sirena.org.uk)
         by heliosphere.sirena.org.uk with esmtpa (Exim 4.89)
         (envelope-from <broonie@sirena.org.uk>)
-        id 1h45ye-0003Tp-Pi; Wed, 13 Mar 2019 15:39:32 +0000
+        id 1h45yg-0003Tv-IU; Wed, 13 Mar 2019 15:39:34 +0000
 Received: by debutante.sirena.org.uk (Postfix, from userid 1000)
-        id 4BD671128B97; Wed, 13 Mar 2019 15:39:32 +0000 (GMT)
+        id 0DAB71128B97; Wed, 13 Mar 2019 15:39:34 +0000 (GMT)
 From:   Mark Brown <broonie@kernel.org>
 To:     Steve Twiss <stwiss.opensource@diasemi.com>
 Cc:     Mark Brown <broonie@kernel.org>, linux-kernel@vger.kernel.org
-Subject: Applied "regulator: pv88080: Fix notifier mutex lock warning" to the regulator tree
+Subject: Applied "regulator: da9062: Fix notifier mutex lock warning" to the regulator tree
 In-Reply-To: 
 X-Patchwork-Hint: ignore
-Message-Id: <20190313153932.4BD671128B97@debutante.sirena.org.uk>
-Date:   Wed, 13 Mar 2019 15:39:32 +0000 (GMT)
+Message-Id: <20190313153934.0DAB71128B97@debutante.sirena.org.uk>
+Date:   Wed, 13 Mar 2019 15:39:34 +0000 (GMT)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
@@ -59,7 +59,7 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 The patch
 
-   regulator: pv88080: Fix notifier mutex lock warning
+   regulator: da9062: Fix notifier mutex lock warning
 
 has been applied to the regulator tree at
 
@@ -84,10 +84,10 @@ to this mail.
 Thanks,
 Mark
 
-From 1867af94cfdf37fc70fe67b3d522e78352800196 Mon Sep 17 00:00:00 2001
+From 978995def0f6030aa6b3b494682f673aca13881b Mon Sep 17 00:00:00 2001
 From: Steve Twiss <stwiss.opensource@diasemi.com>
-Date: Tue, 26 Feb 2019 15:44:54 +0000
-Subject: [PATCH] regulator: pv88080: Fix notifier mutex lock warning
+Date: Tue, 26 Feb 2019 15:19:34 +0000
+Subject: [PATCH] regulator: da9062: Fix notifier mutex lock warning
 
 The mutex for the regulator_dev must be controlled by the caller of
 the regulator_notifier_call_chain(), as described in the comment
@@ -98,42 +98,29 @@ in a kernel WARN_ON_ONCE() which will dump a backtrace for the
 regulator_notifier_call_chain() when that function call is first made.
 The mutex can be controlled using the regulator_lock/unlock() API.
 
-Fixes: 99cf3af5e2d5 ("regulator: pv88080: new regulator driver")
+Fixes: 4068e5182ada ("regulator: da9062: DA9062 regulator driver")
 Suggested-by: Adam Thomson <Adam.Thomson.Opensource@diasemi.com>
 Signed-off-by: Steve Twiss <stwiss.opensource@diasemi.com>
 Signed-off-by: Mark Brown <broonie@kernel.org>
 ---
- drivers/regulator/pv88080-regulator.c | 4 ++++
- 1 file changed, 4 insertions(+)
+ drivers/regulator/da9062-regulator.c | 2 ++
+ 1 file changed, 2 insertions(+)
 
-diff --git a/drivers/regulator/pv88080-regulator.c b/drivers/regulator/pv88080-regulator.c
-index bdddacdbeb99..6279216fb254 100644
---- a/drivers/regulator/pv88080-regulator.c
-+++ b/drivers/regulator/pv88080-regulator.c
-@@ -345,9 +345,11 @@ static irqreturn_t pv88080_irq_handler(int irq, void *data)
- 	if (reg_val & PV88080_E_VDD_FLT) {
- 		for (i = 0; i < PV88080_MAX_REGULATORS; i++) {
- 			if (chip->rdev[i] != NULL) {
-+			        regulator_lock(chip->rdev[i]);
- 				regulator_notifier_call_chain(chip->rdev[i],
- 					REGULATOR_EVENT_UNDER_VOLTAGE,
- 					NULL);
-+			        regulator_unlock(chip->rdev[i]);
- 			}
- 		}
+diff --git a/drivers/regulator/da9062-regulator.c b/drivers/regulator/da9062-regulator.c
+index b064d8a19d4c..bab88ddfc509 100644
+--- a/drivers/regulator/da9062-regulator.c
++++ b/drivers/regulator/da9062-regulator.c
+@@ -974,8 +974,10 @@ static irqreturn_t da9062_ldo_lim_event(int irq, void *data)
+ 			continue;
  
-@@ -362,9 +364,11 @@ static irqreturn_t pv88080_irq_handler(int irq, void *data)
- 	if (reg_val & PV88080_E_OVER_TEMP) {
- 		for (i = 0; i < PV88080_MAX_REGULATORS; i++) {
- 			if (chip->rdev[i] != NULL) {
-+			        regulator_lock(chip->rdev[i]);
- 				regulator_notifier_call_chain(chip->rdev[i],
- 					REGULATOR_EVENT_OVER_TEMP,
- 					NULL);
-+			        regulator_unlock(chip->rdev[i]);
- 			}
+ 		if (BIT(regl->info->oc_event.lsb) & bits) {
++			regulator_lock(regl->rdev);
+ 			regulator_notifier_call_chain(regl->rdev,
+ 					REGULATOR_EVENT_OVER_CURRENT, NULL);
++			regulator_unlock(regl->rdev);
+ 			handled = IRQ_HANDLED;
  		}
- 
+ 	}
 -- 
 2.20.1
 
