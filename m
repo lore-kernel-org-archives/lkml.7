@@ -2,115 +2,68 @@ Return-Path: <SRS0=dUEL=RQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+X-Spam-Status: No, score=-4.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 042AAC43381
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 Mar 2019 10:28:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AE302C43381
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 Mar 2019 10:29:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B6AB12171F
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 Mar 2019 10:28:58 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="HL9rGE7x"
+	by mail.kernel.org (Postfix) with ESMTP id 81E01214AE
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 Mar 2019 10:29:04 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726336AbfCMK24 (ORCPT
+        id S1726442AbfCMK3D (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 13 Mar 2019 06:28:56 -0400
-Received: from hqemgate14.nvidia.com ([216.228.121.143]:15543 "EHLO
-        hqemgate14.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725868AbfCMK24 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 13 Mar 2019 06:28:56 -0400
-Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqemgate14.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
-        id <B5c88db690000>; Wed, 13 Mar 2019 03:28:57 -0700
-Received: from hqmail.nvidia.com ([172.20.161.6])
-  by hqpgpgate101.nvidia.com (PGP Universal service);
-  Wed, 13 Mar 2019 03:28:55 -0700
-X-PGP-Universal: processed;
-        by hqpgpgate101.nvidia.com on Wed, 13 Mar 2019 03:28:55 -0700
-Received: from [10.21.132.148] (172.20.13.39) by HQMAIL101.nvidia.com
- (172.20.187.10) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Wed, 13 Mar
- 2019 10:28:53 +0000
-Subject: Re: [PATCH v2 2/2] dmaengine: tegra210-adma: update system sleep
- callbacks
-To:     Sameer Pujar <spujar@nvidia.com>, <dan.j.williams@intel.com>,
-        <vkoul@kernel.org>
-CC:     <treding@nvidia.com>, <dmaengine@vger.kernel.org>,
-        <linux-tegra@vger.kernel.org>, <linux-kernel@vger.kernel.org>
-References: <1552455794-24946-1-git-send-email-spujar@nvidia.com>
- <1552455794-24946-2-git-send-email-spujar@nvidia.com>
-From:   Jon Hunter <jonathanh@nvidia.com>
-Message-ID: <c4d0a061-e435-8a60-0dfc-f8e66c0a9f0b@nvidia.com>
-Date:   Wed, 13 Mar 2019 10:28:48 +0000
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.5.1
-MIME-Version: 1.0
-In-Reply-To: <1552455794-24946-2-git-send-email-spujar@nvidia.com>
-X-Originating-IP: [172.20.13.39]
-X-ClientProxiedBy: HQMAIL107.nvidia.com (172.20.187.13) To
- HQMAIL101.nvidia.com (172.20.187.10)
-Content-Type: text/plain; charset="utf-8"
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
-        t=1552472937; bh=9L47mzIz/JWL/GdEVp3KauTmKtbHttUFwbx+26/cj+A=;
-        h=X-PGP-Universal:Subject:To:CC:References:From:Message-ID:Date:
-         User-Agent:MIME-Version:In-Reply-To:X-Originating-IP:
-         X-ClientProxiedBy:Content-Type:Content-Language:
-         Content-Transfer-Encoding;
-        b=HL9rGE7xkE8Karf/jZ1QpBLcI3lHvUvjS11ueRFH1R0UnbJyRtJd53cjQsDkk0wGg
-         hRF4JuKxHXe/Nfx0cgp7QaIJa4j5e2lzcQMYmNXUwCJeVJb55It6hrIa84f3mGP68Z
-         RBckGl09e2MiVUp3+526S47XRr/nxMdDI0ekQy5hpjrrLdoSzkYlavjKqS2jKr6FC0
-         EfS8KDQrBaK/j2ZgO2e/U/FqExfkhX9fdDISvrzXgp+U3hlNersD++L0b+9hIWf/fy
-         FwItqm61GBY7rq6MLynDEU+222Vp7gHtV0Kvq2bx79j5SZBI5sCbQqtXXwehIZsUnZ
-         kYsN98R31PTpw==
+        Wed, 13 Mar 2019 06:29:03 -0400
+Received: from mx2.suse.de ([195.135.220.15]:56116 "EHLO mx1.suse.de"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1725868AbfCMK3B (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 13 Mar 2019 06:29:01 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx1.suse.de (Postfix) with ESMTP id 72DF7B0BE;
+        Wed, 13 Mar 2019 10:29:00 +0000 (UTC)
+Date:   Wed, 13 Mar 2019 11:29:00 +0100
+Message-ID: <s5hr2bbukyb.wl-tiwai@suse.de>
+From:   Takashi Iwai <tiwai@suse.de>
+To:     "Arnd Bergmann" <arnd@arndb.de>
+Cc:     "Thierry Reding" <thierry.reding@gmail.com>,
+        "Jonathan Hunter" <jonathanh@nvidia.com>,
+        "Jaroslav Kysela" <perex@perex.cz>, <alsa-devel@alsa-project.org>,
+        "Pierre-Louis Bossart" <pierre-louis.bossart@linux.intel.com>,
+        "Mohan Kumar D" <mkumard@nvidia.com>,
+        "Ravindra Lokhande" <rlokhande@nvidia.com>,
+        "Sameer Pujar" <spujar@nvidia.com>, <linux-kernel@vger.kernel.org>,
+        <linux-tegra@vger.kernel.org>
+Subject: Re: [PATCH] ALSA: hda/tegra: avoid build error without CONFIG_PM
+In-Reply-To: <20190304203337.1968705-1-arnd@arndb.de>
+References: <20190304203337.1968705-1-arnd@arndb.de>
+User-Agent: Wanderlust/2.15.9 (Almost Unreal) SEMI/1.14.6 (Maruoka)
+ FLIM/1.14.9 (=?UTF-8?B?R29qxY0=?=) APEL/10.8 Emacs/25.3
+ (x86_64-suse-linux-gnu) MULE/6.0 (HANACHIRUSATO)
+MIME-Version: 1.0 (generated by SEMI 1.14.6 - "Maruoka")
+Content-Type: text/plain; charset=US-ASCII
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-
-On 13/03/2019 05:43, Sameer Pujar wrote:
-> If the driver is active till late suspend, where runtime PM cannot run,
-> force suspend is essential in such case to put the device in low power
-> state. Thus pm_runtime_force_suspend and pm_runtime_force_resume are
-> used as system sleep callbacks during system wide PM transitions.
+On Mon, 04 Mar 2019 21:33:25 +0100,
+Arnd Bergmann wrote:
 > 
-> Signed-off-by: Sameer Pujar <spujar@nvidia.com>
-> ---
->  drivers/dma/tegra210-adma.c | 10 ++--------
->  1 file changed, 2 insertions(+), 8 deletions(-)
+> The #ifdef protection around the PM functions is wrong, leading to
+> a failed reference in some configurations:
 > 
-> diff --git a/drivers/dma/tegra210-adma.c b/drivers/dma/tegra210-adma.c
-> index 650cd9c..be29171 100644
-> --- a/drivers/dma/tegra210-adma.c
-> +++ b/drivers/dma/tegra210-adma.c
-> @@ -796,17 +796,11 @@ static int tegra_adma_remove(struct platform_device *pdev)
->  	return 0;
->  }
->  
-> -#ifdef CONFIG_PM_SLEEP
-> -static int tegra_adma_pm_suspend(struct device *dev)
-> -{
-> -	return pm_runtime_suspended(dev) == false;
-> -}
-> -#endif
-> -
->  static const struct dev_pm_ops tegra_adma_dev_pm_ops = {
->  	SET_RUNTIME_PM_OPS(tegra_adma_runtime_suspend,
->  			   tegra_adma_runtime_resume, NULL)
-> -	SET_SYSTEM_SLEEP_PM_OPS(tegra_adma_pm_suspend, NULL)
-> +	SET_SYSTEM_SLEEP_PM_OPS(pm_runtime_force_suspend,
-> +				pm_runtime_force_resume)
->  };
+> sound/pci/hda/hda_tegra.c: In function 'hda_tegra_runtime_suspend':
+> sound/pci/hda/hda_tegra.c:273:2: error: implicit declaration of function 'hda_tegra_disable_clocks'; did you mean 'hda_tegra_enable_clocks'? [-Werror=implicit-function-declaration]
+> 
+> Better remove the #ifdefs entirely and rely on the compiler silently
+> dropping unused functions marked __maybe_unused.
+> 
+> Fixes: 707e0759f2f4 ("ALSA: hda/tegra: implement runtime suspend/resume")
+> Signed-off-by: Arnd Bergmann <arnd@arndb.de>
 
-Looking at our downstream kernel we use LATE_SYSTEM_SLEEP for these. Any
-reason why you changed this?
+Applied now.  Thanks.
 
-Cheers
-Jon
 
--- 
-nvpublic
+Takashi
