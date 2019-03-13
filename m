@@ -2,132 +2,136 @@ Return-Path: <SRS0=dUEL=RQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_PASS,URIBL_BLOCKED,USER_AGENT_NEOMUTT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 629E8C43381
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 Mar 2019 15:31:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D3D03C43381
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 Mar 2019 15:32:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3852B20693
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 Mar 2019 15:31:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 95BA120651
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 Mar 2019 15:32:16 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="mmbRvoln"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726418AbfCMPbh (ORCPT
+        id S1726539AbfCMPcP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 13 Mar 2019 11:31:37 -0400
-Received: from relay7-d.mail.gandi.net ([217.70.183.200]:41917 "EHLO
-        relay7-d.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725856AbfCMPbg (ORCPT
+        Wed, 13 Mar 2019 11:32:15 -0400
+Received: from mail-ed1-f68.google.com ([209.85.208.68]:46697 "EHLO
+        mail-ed1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726039AbfCMPcO (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 13 Mar 2019 11:31:36 -0400
-X-Originating-IP: 90.88.22.102
-Received: from localhost (aaubervilliers-681-1-80-102.w90-88.abo.wanadoo.fr [90.88.22.102])
-        (Authenticated sender: maxime.ripard@bootlin.com)
-        by relay7-d.mail.gandi.net (Postfix) with ESMTPSA id 188DB2001C;
-        Wed, 13 Mar 2019 15:31:30 +0000 (UTC)
-Date:   Wed, 13 Mar 2019 16:31:30 +0100
-From:   Maxime Ripard <maxime.ripard@bootlin.com>
-To:     Tomasz Figa <tfiga@chromium.org>
-Cc:     Hans Verkuil <hans.verkuil@cisco.com>,
-        Alexandre Courbot <acourbot@chromium.org>,
-        Sakari Ailus <sakari.ailus@linux.intel.com>,
-        Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
-        Pawel Osciak <posciak@chromium.org>,
-        Paul Kocialkowski <paul.kocialkowski@bootlin.com>,
-        Chen-Yu Tsai <wens@csie.org>,
+        Wed, 13 Mar 2019 11:32:14 -0400
+Received: by mail-ed1-f68.google.com with SMTP id n17so1882379edt.13;
+        Wed, 13 Mar 2019 08:32:13 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=tPjSieS9N7Htn4thMkvSJHNcvBAxRvs2RxTfwm4JqWQ=;
+        b=mmbRvolnfsQc+sT5nkEuxvgC0skD1C7xtwcfHxMTU5wB/ufxgfV5kOVcdqTkTwv9rX
+         /t+w0BVQAAo14CI/5YbbceZijdvUZzXbAcpinZvLTsjQiprqNan/vUoMou9+myoC3lKU
+         e155B7j01K8eYgltGfB5omx9vMTxweJ7x9E+b5BNoCyfH/GLWOotBcQ/EStmUFO0XIP6
+         Tnbn6pjzuO3I8j8HyIhjQ9nH35I//o7YXXYfPAyDYLHlrcFdKHrEewhyot9E3o5KXTrS
+         bzhbIjsFLg6OhYB7hvzLZN2qJVnqSTNYXfXhC/lZ/zdZexnsL0K6/Uwrj6EbAc/hLknO
+         rTPA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=tPjSieS9N7Htn4thMkvSJHNcvBAxRvs2RxTfwm4JqWQ=;
+        b=gask5WgJGs6SKO3iMoilxtE8v956JAMEwwyYPGCCME+w9HPkGdyLOPi+pIGDesIjDZ
+         RWfMBPMqZ/H3SjHRTyNJRDDSBVpJ4JZ+Uvka3tAudsxggAtgxy7hgprLEkV8M0m6qrUO
+         QVhA78GNKiBvDrt38faLQPOCcyp7Rtz0Rg/0CisCMgs5FyOqysbIqpSFSSYcGi5t7EKo
+         mtEqbR/0zdGLVt4s9O8AUKmEJsXeW8eki9CnTcfgEO3kU1K5Ipor0RlkpJfVkosmoerw
+         rNK+hXi2WnRXU50bYGMTB3GpZg4ujWut1Hn5ZmyWc1e0NtJjjRPciiV5IB8PHBcdpmUy
+         Dz/w==
+X-Gm-Message-State: APjAAAVIqc187sOVd3Lw+vqx5oxI2Nokeo0+xtbgAyBHFwFlCykoR3I5
+        lEbDkEDUmwoqMtqAWuJV+7g=
+X-Google-Smtp-Source: APXvYqykbRGBQZCWQLHLS0ZtNnLbO9kBJb2NagpDhSVg16TVqXrmfWdjYstE39hXSnPTG0c3uFpznQ==
+X-Received: by 2002:aa7:ccce:: with SMTP id y14mr8384798edt.160.1552491132325;
+        Wed, 13 Mar 2019 08:32:12 -0700 (PDT)
+Received: from archlinux-ryzen ([2a01:4f9:2a:1fae::2])
+        by smtp.gmail.com with ESMTPSA id cd11sm494406ejb.61.2019.03.13.08.32.10
+        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
+        Wed, 13 Mar 2019 08:32:11 -0700 (PDT)
+Date:   Wed, 13 Mar 2019 08:32:09 -0700
+From:   Nathan Chancellor <natechancellor@gmail.com>
+To:     Arnd Bergmann <arnd@arndb.de>
+Cc:     Rasmus Villemoes <linux@rasmusvillemoes.dk>,
+        Masahiro Yamada <yamada.masahiro@socionext.com>,
+        Michal Marek <michal.lkml@markovi.net>,
+        Linux Kbuild mailing list <linux-kbuild@vger.kernel.org>,
         Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        "list@263.net:IOMMU DRIVERS <iommu@lists.linux-foundation.org>, Joerg
-        Roedel <joro@8bytes.org>," <linux-arm-kernel@lists.infradead.org>,
-        Linux Media Mailing List <linux-media@vger.kernel.org>,
-        Nicolas Dufresne <nicolas.dufresne@collabora.com>,
-        jenskuske@gmail.com, Jernej Skrabec <jernej.skrabec@gmail.com>,
-        Jonas Karlman <jonas@kwiboo.se>,
-        Ezequiel Garcia <ezequiel@collabora.com>,
-        linux-sunxi@googlegroups.com,
-        Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
-        Guenter Roeck <groeck@chromium.org>
-Subject: Re: [PATCH v5 1/2] media: uapi: Add H264 low-level decoder API
- compound controls.
-Message-ID: <20190313153130.hnp5eybcgjm34i4n@flea>
-References: <cover.f011581516bfe7650c9d4c6054bb828e6227e309.1551964740.git-series.maxime.ripard@bootlin.com>
- <1d374e71ffcc396b71461ea916cac3d957f8d86c.1551964740.git-series.maxime.ripard@bootlin.com>
- <CAAFQd5AKXz5QmqnSEkChf8DqPkhEuUQg--q9dZKPmB1kBR1hzA@mail.gmail.com>
+        Nick Desaulniers <ndesaulniers@google.com>,
+        James Y Knight <jyknight@google.com>,
+        clang-built-linux@googlegroups.com,
+        "# 3.4.x" <stable@vger.kernel.org>
+Subject: Re: [PATCH] Makefile: Add '-fno-builtin-bcmp' to CLANG_FLAGS
+Message-ID: <20190313153209.GA14098@archlinux-ryzen>
+References: <20190312215203.27643-1-natechancellor@gmail.com>
+ <80fb5b7f-42f9-4fd1-00cf-bfa7965ff8f7@rasmusvillemoes.dk>
+ <20190313134447.GA19066@archlinux-ryzen>
+ <CAK8P3a344k=MDAX-d21U4+H+mv7Vcd9YhAN4NPEJm1CXv76tkw@mail.gmail.com>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="ajdvt5cmol7qlvjq"
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <CAAFQd5AKXz5QmqnSEkChf8DqPkhEuUQg--q9dZKPmB1kBR1hzA@mail.gmail.com>
-User-Agent: NeoMutt/20180716
+In-Reply-To: <CAK8P3a344k=MDAX-d21U4+H+mv7Vcd9YhAN4NPEJm1CXv76tkw@mail.gmail.com>
+User-Agent: Mutt/1.11.4 (2019-03-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Wed, Mar 13, 2019 at 02:48:49PM +0100, Arnd Bergmann wrote:
+> On Wed, Mar 13, 2019 at 2:44 PM Nathan Chancellor
+> <natechancellor@gmail.com> wrote:
+> > On Wed, Mar 13, 2019 at 09:13:11AM +0100, Rasmus Villemoes wrote:
+> > > Wouldn't it be better to just define bcmp as an alias for memcmp? They
+> > > seem to have compatible prototypes, and then somebody might someday sit
+> > > down and implement some word-at-a-time version of bcmp making use of the
+> > > weaker guarantees about the return value to gain some performance. But I
+> > > suppose that can also be done later.
+> >
+> > Thank you much for the review, I didn't even realize this was possible :)
+> >
+> > I'd certainly like to explore it as that is what glibc does. How would
+> > you suggest going about it here?
+> 
+> I suggested a possible implementation (likely contains bugs) and
+> an alias for architectures that require strict alignment, see
+> https://bugs.llvm.org/show_bug.cgi?id=41035#c11
+> 
+> We could start out with just the alias.
+> 
+>        Arnd
 
---ajdvt5cmol7qlvjq
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+So I've been messing around with this for a bit (forgive me, I'm still
+learning all of the intricacies around here) and this is what I came up
+with for when __ARCH_HAVE_MEMCMP is unset (not particularly difficult
+obviously). I can compile, link, and boot an x86 in QEMU.
 
-Hi Tomasz,
+However, I am not sure how to handle memcmp definitions that are written
+in assembly like arm64, as the alias attribute only works when the alias
+is defined in the same translation unit. Thoughts?
 
-On Fri, Mar 08, 2019 at 03:12:18PM +0900, Tomasz Figa wrote:
-> > +.. _v4l2-mpeg-h264:
-> > +
-> > +``V4L2_CID_MPEG_VIDEO_H264_SPS (struct)``
-> > +    Specifies the sequence parameter set (as extracted from the
-> > +    bitstream) for the associated H264 slice data. This includes the
-> > +    necessary parameters for configuring a stateless hardware decoding
-> > +    pipeline for H264.  The bitstream parameters are defined according
-> > +    to :ref:`h264`. Unless there's a specific comment, refer to the
-> > +    specification for the documentation of these fields, section 7.4.2=
-=2E1.1
-> > +    "Sequence Parameter Set Data Semantics".
->=20
-> I don't see this section being added by this patch. Where does it come fr=
-om?
+Cheers,
+Nathan
 
-This is referring to the the H264 spec itself, as I was trying to
-point out with the reference in that paragraph. How would you write
-this down to make it more obvious?
+========================================
 
-> > +.. c:type:: v4l2_ctrl_h264_decode_param
-> > +
-> > +.. cssclass:: longtable
-> > +
-> > +.. flat-table:: struct v4l2_ctrl_h264_decode_param
-> > +    :header-rows:  0
-> > +    :stub-columns: 0
-> > +    :widths:       1 1 2
-> > +
-> > +    * - __u32
-> > +      - ``num_slices``
-> > +      - Number of slices needed to decode the current frame
-> > +    * - __u16
-> > +      - ``idr_pic_flag``
-> > +      - Is the picture an IDR picture?
->=20
-> Sounds like this could be made a flag to be consistent with how this
-> kind of fields are represented in the other structs.
-
-I'll change that, thanks!
-
-Maxime
-
---=20
-Maxime Ripard, Bootlin
-Embedded Linux and Kernel engineering
-https://bootlin.com
-
---ajdvt5cmol7qlvjq
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iHUEABYIAB0WIQRcEzekXsqa64kGDp7j7w1vZxhRxQUCXIkiUgAKCRDj7w1vZxhR
-xavfAP9bhwdJ2wUQuKw5TknAoBpc78H/fFPXVIjzIJB9zLWosAD+LGJ77nFYbr6A
-GbMjIdwf9GK8AmGTtx8y3/M3koyr9A4=
-=AolL
------END PGP SIGNATURE-----
-
---ajdvt5cmol7qlvjq--
+diff --git a/lib/string.c b/lib/string.c
+index 38e4ca08e757..69a9daca9179 100644
+--- a/lib/string.c
++++ b/lib/string.c
+@@ -864,6 +864,9 @@ __visible int memcmp(const void *cs, const void *ct, size_t count)
+        return res;
+ }
+ EXPORT_SYMBOL(memcmp);
++
++int bcmp(const void *cs, const void *ct, size_t count) __weak __alias(memcmp);
++EXPORT_SYMBOL(bcmp);
+ #endif
+ 
+ #ifndef __HAVE_ARCH_MEMSCAN
