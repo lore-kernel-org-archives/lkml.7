@@ -2,170 +2,137 @@ Return-Path: <SRS0=dUEL=RQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,URIBL_BLOCKED
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 35B80C43381
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 Mar 2019 23:28:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0DF2BC43381
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 Mar 2019 23:29:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E76FA2087C
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 Mar 2019 23:28:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CBEB42087C
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 Mar 2019 23:29:12 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=rasmusvillemoes.dk header.i=@rasmusvillemoes.dk header.b="XxqLZEba"
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="AQsMoKDF";
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="JUYmFiFn"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726628AbfCMX2U (ORCPT
+        id S1726969AbfCMX3K (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 13 Mar 2019 19:28:20 -0400
-Received: from mail-ed1-f68.google.com ([209.85.208.68]:39580 "EHLO
-        mail-ed1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726336AbfCMX2U (ORCPT
+        Wed, 13 Mar 2019 19:29:10 -0400
+Received: from smtp.codeaurora.org ([198.145.29.96]:49380 "EHLO
+        smtp.codeaurora.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726336AbfCMX3K (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 13 Mar 2019 19:28:20 -0400
-Received: by mail-ed1-f68.google.com with SMTP id p27so3030361edc.6
-        for <linux-kernel@vger.kernel.org>; Wed, 13 Mar 2019 16:28:19 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=rasmusvillemoes.dk; s=google;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=4k6ca2BfjKX4cdU55N5XKX7uRcWT27OEntt1eDMFXwA=;
-        b=XxqLZEba2eS2T7PlFU/uIcx+Ju9tR+qaVvPWHgwh92M8T1Ym4SHolBh+b5Bw8hNWn8
-         v5Ggp/ELWyjkmgfJ+tbYA6pOYwaZX+jMgi6C2rbeO/CAUPAKyKUKIFrErbindmsbhGMU
-         nxH5tTyXe6qZ4RKqdiPyFXIherhIybG3ZdLJM=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=4k6ca2BfjKX4cdU55N5XKX7uRcWT27OEntt1eDMFXwA=;
-        b=LE3l9hsbWMZya5yijfDxxlelHJRD32AeO5Y+1rr4kPzrdlDen/AXyyc/hrF5DM+an1
-         qGb9lAqte4tTDoDWWoF5kxyNa7pAPCOtIVJat/T+oAxr1kgaVDl1FVICmBK2xJfN/M+9
-         PExqbXU9wF4E/qSbLEpErO/8v13yIyQuFvgIJCYUr0tEynUqiNvIl/Q/6H5Fa2z+/dTu
-         j28z4NA6OChanmcA6sgWGFFkwoBM/Cyci0ZGt5EmtWhXlqbBv7zxU7NNnie1JNzlj4jl
-         aQr6vN4Hkf+bLeh8o09q65bPSToZ7OFpevQMCxgUfy4b9FIFk3d15NKvC7ehh2Ap2en3
-         f5og==
-X-Gm-Message-State: APjAAAU3SpHN1KFUfNI+FMMLkQPpsaHoQcwaulTx1yi9uX6bR38XjKE0
-        jbqv1A1/Cw16ndaSDJ4+4v9YTg==
-X-Google-Smtp-Source: APXvYqx03ESCauP2yN0WEbcB5CTLHMTOPLpZBqwMdM4lrYY56OdL/Vg25XVOp2rttjHMRa5QnQX4bw==
-X-Received: by 2002:a17:906:3c5:: with SMTP id c5mr30767697eja.24.1552519698668;
-        Wed, 13 Mar 2019 16:28:18 -0700 (PDT)
-Received: from [192.168.1.149] (ip-5-186-119-202.cgn.fibianet.dk. [5.186.119.202])
-        by smtp.gmail.com with ESMTPSA id o8sm735964eju.0.2019.03.13.16.28.17
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Wed, 13 Mar 2019 16:28:18 -0700 (PDT)
-Subject: Re: [PATCH 5/5] lib/list_sort: Optimize number of calls to comparison
- function
-To:     George Spelvin <lkml@sdf.org>, linux-kernel@vger.kernel.org
-Cc:     Andrew Morton <akpm@linux-foundation.org>,
-        Andrey Abramov <st5pub@yandex.ru>,
-        Geert Uytterhoeven <geert@linux-m68k.org>,
-        Daniel Wagner <daniel.wagner@siemens.com>,
-        Don Mullis <don.mullis@gmail.com>,
-        Dave Chinner <dchinner@redhat.com>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-References: <cover.1552097842.git.lkml@sdf.org>
- <b36187f091acc1b3a8fc1fc3e9dbb6eca56231a9.1552097842.git.lkml@sdf.org>
-From:   Rasmus Villemoes <linux@rasmusvillemoes.dk>
-Message-ID: <dd8924c1-07a9-4317-bfa8-23271b138a62@rasmusvillemoes.dk>
-Date:   Thu, 14 Mar 2019 00:28:16 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.4.0
+        Wed, 13 Mar 2019 19:29:10 -0400
+Received: by smtp.codeaurora.org (Postfix, from userid 1000)
+        id BF63A60208; Wed, 13 Mar 2019 23:29:08 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
+        s=default; t=1552519748;
+        bh=T8PsrD7XA4Tb3EIysYmAPhdyov1ZVqCygym2gTSDMSA=;
+        h=Date:From:To:cc:Subject:In-Reply-To:References:From;
+        b=AQsMoKDFLuQvbjcob36IGa2jib35wCaEz0wdZWTfG25meRwXuqd8k6KMVI4l3zlHX
+         BFemf4bL1vCUgZ9zgXeeEsP2g6jXDJt2+KcGV8KqOD3E9ggWoKcoz7uwFUtYfOrMVX
+         l49IdgSR3J2QxU1l46ULkTRg9UnJqX3//0nVNaVI=
+Received: from lmark-linux.qualcomm.com (i-global254.qualcomm.com [199.106.103.254])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        (Authenticated sender: lmark@smtp.codeaurora.org)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id 1B00760208;
+        Wed, 13 Mar 2019 23:29:07 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
+        s=default; t=1552519747;
+        bh=T8PsrD7XA4Tb3EIysYmAPhdyov1ZVqCygym2gTSDMSA=;
+        h=Date:From:To:cc:Subject:In-Reply-To:References:From;
+        b=JUYmFiFneCQrnqa+qZ6xnrWQbeHu3Wzh3u4ZVJphmT8LSUm6m94gNELDQSMbhYjS1
+         +Uf1/jPXcjRFa0exK2LW+CUFkZoC/cArBpeKIU4g3O3IP25u4hqQ6yUwRL+fOfELnZ
+         fenEolHViz5Xeo984LP3m9pAUBV2BDE4ebEsTQuc=
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 1B00760208
+Authentication-Results: pdx-caf-mail.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
+Authentication-Results: pdx-caf-mail.web.codeaurora.org; spf=none smtp.mailfrom=lmark@codeaurora.org
+Date:   Wed, 13 Mar 2019 16:29:06 -0700 (PDT)
+From:   Liam Mark <lmark@codeaurora.org>
+X-X-Sender: lmark@lmark-linux.qualcomm.com
+To:     John Stultz <john.stultz@linaro.org>
+cc:     lkml <linux-kernel@vger.kernel.org>,
+        Laura Abbott <labbott@redhat.com>,
+        Benjamin Gaignard <benjamin.gaignard@linaro.org>,
+        Greg KH <gregkh@linuxfoundation.org>,
+        Sumit Semwal <sumit.semwal@linaro.org>,
+        Brian Starkey <Brian.Starkey@arm.com>,
+        "Andrew F . Davis" <afd@ti.com>, Chenbo Feng <fengc@google.com>,
+        Alistair Strachan <astrachan@google.com>,
+        dri-devel <dri-devel@lists.freedesktop.org>,
+        Vincent Donnefort <Vincent.Donnefort@arm.com>,
+        Marissa Wall <marissaw@google.com>
+Subject: Re: [RFC][PATCH 0/5 v2] DMA-BUF Heaps (destaging ION)
+In-Reply-To: <CALAqxLUkGME+K=0g5QSja4CvN0w9z0WV60djy+5rRC+Dg-jCGg@mail.gmail.com>
+Message-ID: <alpine.DEB.2.10.1903131627160.5462@lmark-linux.qualcomm.com>
+References: <1551819273-640-1-git-send-email-john.stultz@linaro.org> <alpine.DEB.2.10.1903131309260.5023@lmark-linux.qualcomm.com> <CALAqxLUkGME+K=0g5QSja4CvN0w9z0WV60djy+5rRC+Dg-jCGg@mail.gmail.com>
+User-Agent: Alpine 2.10 (DEB 1266 2009-07-14)
 MIME-Version: 1.0
-In-Reply-To: <b36187f091acc1b3a8fc1fc3e9dbb6eca56231a9.1552097842.git.lkml@sdf.org>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: TEXT/PLAIN; charset=US-ASCII
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 05/03/2019 06.58, George Spelvin wrote:
-> CONFIG_RETPOLINE has severely degraded indirect function call
-> performance, so it's worth putting some effort into reducing
-> the number of times cmp() is called.
+On Wed, 13 Mar 2019, John Stultz wrote:
+
+> On Wed, Mar 13, 2019 at 1:11 PM Liam Mark <lmark@codeaurora.org> wrote:
+> > On Tue, 5 Mar 2019, John Stultz wrote:
+> > >
+> > > Eventual TODOS:
+> > > * Reimplement page-pool for system heap (working on this)
+> > > * Add stats accounting to system/cma heaps
+> > > * Make the kselftest actually useful
+> > > * Add other heaps folks see as useful (would love to get
+> > >   some help from actual carveout/chunk users)!
+> >
+> > We use a modified carveout heap for certain secure use cases.
 > 
-> This patch avoids badly unbalanced merges on unlucky input sizes.
-> It slightly increases the code size, but saves an average of 0.2*n
-> calls to cmp().
+> Cool! It would be great to see if you have any concerns about adding
+> such a secure-carveout heap to this framework. I suspect it would be
+> fairly similar to how its integrated into ION, but particularly I'd be
+> interested in issues around the lack of private flags and other
+> allocation arguments like alignment.
 > 
-[snip]
+
+We are actively working to drop our secure careveout heap in order to 
+improve memory utilization so I don't think there would be a good case for 
+upstreaming it.
+
+Our other secure heaps are CMA based and system heap based.
+Because people have had difficulty designing a generic secure heap which 
+would satisfy enough of everybody's use cases to be upstreamable we have 
+been looking into moving away from having local secure heap changes and 
+instead have been looking at how to instead have a separate driver be 
+responsible for making an ION buffer memory secure. The idea was to do 
+this in order to remove a lot of our local ION changes, but if a secure 
+heap was upstreamed that supported our secure use cases I am sure we would 
+be interested in using that.
+
+The local change the ION API to support these heaps is the addition of all 
+the VMID flags so that the client can specify where the client wants the 
+memory assigned.
+
+
+> > Although there would probably be some benefit in discssing how the dma-buf
+> > heap framework may want to support
+> > secure heaps in the future it is a large topic which I assume you don't
+> > want to tackle now.
 > 
-> (I confess to being more than a little bit proud of how clean this
-> code turned out.  It took a lot of thinking, but the resultant inner
-> loop is very simple and efficient.)
+> So I suspect others (Benjamin?) would have a more informed opinion on
+> the details, but the intent is to allow secure heap implementations.
+> I'm not sure what areas of concern you have for this allocation
+> framework in particular?
 > 
-> Refs:
->   Bottom-up Mergesort: A Detailed Analysis
->   Wolfgang Panny, Helmut Prodinger
->   Algorithmica 14(4):340--354, October 1995
->   https://doi.org/10.1007/BF01294131
->   https://citeseerx.ist.psu.edu/viewdoc/summary?doi=10.1.1.6.5260
-> 
->   The cost distribution of queue-mergesort, optimal mergesorts, and
->   power-of-two rules
->   Wei-Mei Chen, Hsien-Kuei Hwang, Gen-Huey Chen
->   Journal of Algorithms 30(2); Pages 423--448, February 1999
->   https://doi.org/10.1006/jagm.1998.0986
->   https://citeseerx.ist.psu.edu/viewdoc/summary?doi=10.1.1.4.5380
-> 
->   Queue-Mergesort
->   Mordecai J. Golin, Robert Sedgewick
->   Information Processing Letters, 48(5):253--259, 10 December 1993
->   https://doi.org/10.1016/0020-0190(93)90088-q
->   https://sci-hub.tw/10.1016/0020-0190(93)90088-Q
 
-This is beautiful. So no comments on the patch itself. One thing that
-might be nice would be to see the reduction in number of cmp callbacks
-explicitly; it should be trivial to use the priv element for that in the
-list_sort_test module. But to really see it one would of course have to
-extend that test to do a lot more different sizes of lists.
+I don't have any areas of concern, my thought was just that flushing out a 
+potential design for an upstreamable secure heap would allow us catch 
+early on if there is anything fundamental that would need to change 
+dma-buf heaps framework (such as the allocation API).
+I don't think this is a necessary task at this point. 
 
-And looking at the actual cmp functions used made me think we might do
-something similar to what you did for the swap functions for sort(),
-though it will require updating call sites. Suppose we have some
+Liam
 
-struct foo {
-   ...
-   struct list_head list;
-   ...
-   some_integer_type key;
-   ...
-};
-
-and a trivial cmp function that just compares the ->key members. What if
-we do something like
-
-#define LIST_SORT_SIMPLE_CMP(type, list, key) ({ \
-  /* encode the size and signedness of type.key along with
-   offsetof(type, key) - offsetof(type, list) into the low, say,
-   24 bits - a signed 20 bit number should be sufficient for the
-   offsetof diff, and we can bail at compile time if too big */
-})
-
-then do
-
-int do_cmp(void *priv, list_head *a, list_head *b, cmp_func cmp)
-{
-   if ((long)cmp & high_bits) /* it's a kernel pointer */
-      return cmp(priv, a, b);
-   int diff = extract_diff(cmp);
-   int type = extract_type(cmp);
-   void *keya = (void*)a + diff;
-   void *keyb = (void*)b + diff;
-   if (type == s32)
-      return *(s32*)keya > *(s32*)keyb;
-   if (type == u32)
-       return *(u32*)keya > *(u32*)keyb;
-   ...
-
-in practice, we'd probably only have to support 4- and 8-byte signed and
-unsigned versions (and we can check at compile time whether key has a
-supported type).
-
-Similarly one could do a SORT_SIMPLE_CMP() for when sorting an array of
-structs according to a single numeric member. That sort is not stable,
-so the comparison functions would have to do a full -1,0,1 return, of
-course, but we'd still avoid indirect calls.
-
-Rasmus
+Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum,
+a Linux Foundation Collaborative Project
