@@ -4,49 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9EED6C43381
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 Mar 2019 19:18:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A7307C43381
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 Mar 2019 19:18:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 55D30217F5
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 Mar 2019 19:18:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6AF92217F5
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 Mar 2019 19:18:09 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1552504684;
-	bh=svVQhPxqBprpXsoxUWbttgR8p0Bnq+DKrydFKKbSwrk=;
+	s=default; t=1552504689;
+	bh=1ksWpowktPFU9b+CbANnhXbA8OZTnbVrxRVwq2jrdCo=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=SRbARPKSfMM/cd+ECK90eczB6PQpoK5uTPJm6PI+IDA/UlyVvtY16CCuYzNp/FbV5
-	 noSFVMWHsiD/E8tcTlGgQZqvRipVD8BKsRzNIJ2lmOfgmP2UqBsTMn5mkRmRS0vlpp
-	 IAgbxvbOAKQeQwHXTRpAZf1iQF2aSNRc1oatlsuQ=
+	b=r1erUBX0Iw3FCS4Tiqm2i1rf5C7nJxKdh8NF0H0m/iDgFmTq91GEY7CTKuXpPAEjl
+	 itXhr2Nd88h/TfYJPbxXTU7Mw+HVfxx1dUyVhu07O1/IzqCQiCsRkEfEjDKY4Imd0z
+	 vYCdbuMSxzwaY0NMFxQwM/d151jzs73NvbRwSrQA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729006AbfCMTSC (ORCPT
+        id S1729017AbfCMTSI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 13 Mar 2019 15:18:02 -0400
-Received: from mail.kernel.org ([198.145.29.99]:48456 "EHLO mail.kernel.org"
+        Wed, 13 Mar 2019 15:18:08 -0400
+Received: from mail.kernel.org ([198.145.29.99]:48512 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728985AbfCMTR6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 13 Mar 2019 15:17:58 -0400
+        id S1728997AbfCMTSB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 13 Mar 2019 15:18:01 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id C4801217F5;
-        Wed, 13 Mar 2019 19:17:55 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 689312184E;
+        Wed, 13 Mar 2019 19:17:59 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1552504677;
-        bh=svVQhPxqBprpXsoxUWbttgR8p0Bnq+DKrydFKKbSwrk=;
+        s=default; t=1552504680;
+        bh=1ksWpowktPFU9b+CbANnhXbA8OZTnbVrxRVwq2jrdCo=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=uyngXMF+Gwf+4OA3Gn6y0S3ZhKGrWe09WZ0vFv4CjtAC+cE3BvRPKjq6os89DFL8P
-         d8wHMda5g99og5O65r5w8157t8TaseZOt8hMVXk3iuw4cLSMSH0mPdKUY7LCIdr0j9
-         3VkhBuQnEtvYgkNhaCJsbDSqkdtdWzeU0SBLZ3TI=
+        b=Qi6cq4itz/4ML7dzA1Qx5gjnl8PdoCR6T3LhXmiZtQ8JVo+s8qkOsMwsLNAEOwLOx
+         L7wUR4GM2a+zJNHC/2wVKzCLH6/R+w507YW4N+WYijkjE5+iugv6s0+Ap9M+uCtbgD
+         XerDxXDIQakwElkd0Jetbm6luk3N6iCEjxfG0N4o=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     YueHaibing <yuehaibing@huawei.com>,
+Cc:     Mao Wenan <maowenan@huawei.com>,
         "David S . Miller" <davem@davemloft.net>,
         Sasha Levin <sashal@kernel.org>, netdev@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.9 23/24] mdio_bus: Fix use-after-free on device_register fails
-Date:   Wed, 13 Mar 2019 15:16:46 -0400
-Message-Id: <20190313191647.160171-23-sashal@kernel.org>
+Subject: [PATCH AUTOSEL 4.9 24/24] net: set static variable an initial value in atl2_probe()
+Date:   Wed, 13 Mar 2019 15:16:47 -0400
+Message-Id: <20190313191647.160171-24-sashal@kernel.org>
 X-Mailer: git-send-email 2.19.1
 In-Reply-To: <20190313191647.160171-1-sashal@kernel.org>
 References: <20190313191647.160171-1-sashal@kernel.org>
@@ -58,128 +58,40 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: YueHaibing <yuehaibing@huawei.com>
+From: Mao Wenan <maowenan@huawei.com>
 
-[ Upstream commit 6ff7b060535e87c2ae14dd8548512abfdda528fb ]
+[ Upstream commit 4593403fa516a5a4cffe6883c5062d60932cbfbe ]
 
-KASAN has found use-after-free in fixed_mdio_bus_init,
-commit 0c692d07842a ("drivers/net/phy/mdio_bus.c: call
-put_device on device_register() failure") call put_device()
-while device_register() fails,give up the last reference
-to the device and allow mdiobus_release to be executed
-,kfreeing the bus. However in most drives, mdiobus_free
-be called to free the bus while mdiobus_register fails.
-use-after-free occurs when access bus again, this patch
-revert it to let mdiobus_free free the bus.
+cards_found is a static variable, but when it enters atl2_probe(),
+cards_found is set to zero, the value is not consistent with last probe,
+so next behavior is not our expect.
 
-KASAN report details as below:
-
-BUG: KASAN: use-after-free in mdiobus_free+0x85/0x90 drivers/net/phy/mdio_bus.c:482
-Read of size 4 at addr ffff8881dc824d78 by task syz-executor.0/3524
-
-CPU: 1 PID: 3524 Comm: syz-executor.0 Not tainted 5.0.0-rc7+ #45
-Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS 1.10.2-1ubuntu1 04/01/2014
-Call Trace:
- __dump_stack lib/dump_stack.c:77 [inline]
- dump_stack+0xfa/0x1ce lib/dump_stack.c:113
- print_address_description+0x65/0x270 mm/kasan/report.c:187
- kasan_report+0x149/0x18d mm/kasan/report.c:317
- mdiobus_free+0x85/0x90 drivers/net/phy/mdio_bus.c:482
- fixed_mdio_bus_init+0x283/0x1000 [fixed_phy]
- ? 0xffffffffc0e40000
- ? 0xffffffffc0e40000
- ? 0xffffffffc0e40000
- do_one_initcall+0xfa/0x5ca init/main.c:887
- do_init_module+0x204/0x5f6 kernel/module.c:3460
- load_module+0x66b2/0x8570 kernel/module.c:3808
- __do_sys_finit_module+0x238/0x2a0 kernel/module.c:3902
- do_syscall_64+0x147/0x600 arch/x86/entry/common.c:290
- entry_SYSCALL_64_after_hwframe+0x49/0xbe
-RIP: 0033:0x462e99
-Code: f7 d8 64 89 02 b8 ff ff ff ff c3 66 0f 1f 44 00 00 48 89 f8 48 89 f7 48 89 d6 48 89 ca 4d 89 c2 4d 89 c8 4c 8b 4c 24 08 0f 05 <48> 3d 01 f0 ff ff 73 01 c3 48 c7 c1 bc ff ff ff f7 d8 64 89 01 48
-RSP: 002b:00007f6215c19c58 EFLAGS: 00000246 ORIG_RAX: 0000000000000139
-RAX: ffffffffffffffda RBX: 000000000073bf00 RCX: 0000000000462e99
-RDX: 0000000000000000 RSI: 0000000020000080 RDI: 0000000000000003
-RBP: 00007f6215c19c70 R08: 0000000000000000 R09: 0000000000000000
-R10: 0000000000000000 R11: 0000000000000246 R12: 00007f6215c1a6bc
-R13: 00000000004bcefb R14: 00000000006f7030 R15: 0000000000000004
-
-Allocated by task 3524:
- set_track mm/kasan/common.c:85 [inline]
- __kasan_kmalloc.constprop.3+0xa0/0xd0 mm/kasan/common.c:496
- kmalloc include/linux/slab.h:545 [inline]
- kzalloc include/linux/slab.h:740 [inline]
- mdiobus_alloc_size+0x54/0x1b0 drivers/net/phy/mdio_bus.c:143
- fixed_mdio_bus_init+0x163/0x1000 [fixed_phy]
- do_one_initcall+0xfa/0x5ca init/main.c:887
- do_init_module+0x204/0x5f6 kernel/module.c:3460
- load_module+0x66b2/0x8570 kernel/module.c:3808
- __do_sys_finit_module+0x238/0x2a0 kernel/module.c:3902
- do_syscall_64+0x147/0x600 arch/x86/entry/common.c:290
- entry_SYSCALL_64_after_hwframe+0x49/0xbe
-
-Freed by task 3524:
- set_track mm/kasan/common.c:85 [inline]
- __kasan_slab_free+0x130/0x180 mm/kasan/common.c:458
- slab_free_hook mm/slub.c:1409 [inline]
- slab_free_freelist_hook mm/slub.c:1436 [inline]
- slab_free mm/slub.c:2986 [inline]
- kfree+0xe1/0x270 mm/slub.c:3938
- device_release+0x78/0x200 drivers/base/core.c:919
- kobject_cleanup lib/kobject.c:662 [inline]
- kobject_release lib/kobject.c:691 [inline]
- kref_put include/linux/kref.h:67 [inline]
- kobject_put+0x146/0x240 lib/kobject.c:708
- put_device+0x1c/0x30 drivers/base/core.c:2060
- __mdiobus_register+0x483/0x560 drivers/net/phy/mdio_bus.c:382
- fixed_mdio_bus_init+0x26b/0x1000 [fixed_phy]
- do_one_initcall+0xfa/0x5ca init/main.c:887
- do_init_module+0x204/0x5f6 kernel/module.c:3460
- load_module+0x66b2/0x8570 kernel/module.c:3808
- __do_sys_finit_module+0x238/0x2a0 kernel/module.c:3902
- do_syscall_64+0x147/0x600 arch/x86/entry/common.c:290
- entry_SYSCALL_64_after_hwframe+0x49/0xbe
-
-The buggy address belongs to the object at ffff8881dc824c80
- which belongs to the cache kmalloc-2k of size 2048
-The buggy address is located 248 bytes inside of
- 2048-byte region [ffff8881dc824c80, ffff8881dc825480)
-The buggy address belongs to the page:
-page:ffffea0007720800 count:1 mapcount:0 mapping:ffff8881f6c02800 index:0x0 compound_mapcount: 0
-flags: 0x2fffc0000010200(slab|head)
-raw: 02fffc0000010200 0000000000000000 0000000500000001 ffff8881f6c02800
-raw: 0000000000000000 00000000800f000f 00000001ffffffff 0000000000000000
-page dumped because: kasan: bad access detected
-
-Memory state around the buggy address:
- ffff8881dc824c00: fc fc fc fc fc fc fc fc fc fc fc fc fc fc fc fc
- ffff8881dc824c80: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
->ffff8881dc824d00: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
-                                                                ^
- ffff8881dc824d80: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
- ffff8881dc824e00: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
-
-Fixes: 0c692d07842a ("drivers/net/phy/mdio_bus.c: call put_device on device_register() failure")
-Signed-off-by: YueHaibing <yuehaibing@huawei.com>
-Reviewed-by: Andrew Lunn <andrew@lunn.ch>
+Signed-off-by: Mao Wenan <maowenan@huawei.com>
 Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/phy/mdio_bus.c | 1 -
- 1 file changed, 1 deletion(-)
+ drivers/net/ethernet/atheros/atlx/atl2.c | 4 +---
+ 1 file changed, 1 insertion(+), 3 deletions(-)
 
-diff --git a/drivers/net/phy/mdio_bus.c b/drivers/net/phy/mdio_bus.c
-index 09deef4bed09..a9bbdcec0bad 100644
---- a/drivers/net/phy/mdio_bus.c
-+++ b/drivers/net/phy/mdio_bus.c
-@@ -319,7 +319,6 @@ int __mdiobus_register(struct mii_bus *bus, struct module *owner)
- 	err = device_register(&bus->dev);
- 	if (err) {
- 		pr_err("mii_bus %s failed to register\n", bus->id);
--		put_device(&bus->dev);
- 		return -EINVAL;
- 	}
+diff --git a/drivers/net/ethernet/atheros/atlx/atl2.c b/drivers/net/ethernet/atheros/atlx/atl2.c
+index 2ff465848b65..097a0bf592ab 100644
+--- a/drivers/net/ethernet/atheros/atlx/atl2.c
++++ b/drivers/net/ethernet/atheros/atlx/atl2.c
+@@ -1338,13 +1338,11 @@ static int atl2_probe(struct pci_dev *pdev, const struct pci_device_id *ent)
+ {
+ 	struct net_device *netdev;
+ 	struct atl2_adapter *adapter;
+-	static int cards_found;
++	static int cards_found = 0;
+ 	unsigned long mmio_start;
+ 	int mmio_len;
+ 	int err;
  
+-	cards_found = 0;
+-
+ 	err = pci_enable_device(pdev);
+ 	if (err)
+ 		return err;
 -- 
 2.19.1
 
