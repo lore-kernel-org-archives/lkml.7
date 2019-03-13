@@ -2,137 +2,101 @@ Return-Path: <SRS0=dUEL=RQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_PASS,URIBL_BLOCKED,USER_AGENT_MUTT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 09438C43381
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 Mar 2019 15:52:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DEF85C43381
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 Mar 2019 15:55:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CDC3F206DF
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 Mar 2019 15:52:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B1668206DF
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 Mar 2019 15:55:36 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726935AbfCMPwB (ORCPT
+        id S1726167AbfCMPze (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 13 Mar 2019 11:52:01 -0400
-Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:51974 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1725868AbfCMPv7 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 13 Mar 2019 11:51:59 -0400
-Received: from pps.filterd (m0098421.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x2DFj3Ka033958
-        for <linux-kernel@vger.kernel.org>; Wed, 13 Mar 2019 11:51:57 -0400
-Received: from e12.ny.us.ibm.com (e12.ny.us.ibm.com [129.33.205.202])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 2r749a9w7a-1
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
-        for <linux-kernel@vger.kernel.org>; Wed, 13 Mar 2019 11:51:57 -0400
-Received: from localhost
-        by e12.ny.us.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
-        for <linux-kernel@vger.kernel.org> from <paulmck@linux.vnet.ibm.com>;
-        Wed, 13 Mar 2019 15:51:57 -0000
-Received: from b01cxnp23034.gho.pok.ibm.com (9.57.198.29)
-        by e12.ny.us.ibm.com (146.89.104.199) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
-        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
-        Wed, 13 Mar 2019 15:51:53 -0000
-Received: from b01ledav003.gho.pok.ibm.com (b01ledav003.gho.pok.ibm.com [9.57.199.108])
-        by b01cxnp23034.gho.pok.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x2DFpqJa24051758
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Wed, 13 Mar 2019 15:51:52 GMT
-Received: from b01ledav003.gho.pok.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 0ED67B2067;
-        Wed, 13 Mar 2019 15:51:52 +0000 (GMT)
-Received: from b01ledav003.gho.pok.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id E57B3B2064;
-        Wed, 13 Mar 2019 15:51:51 +0000 (GMT)
-Received: from paulmck-ThinkPad-W541 (unknown [9.70.82.188])
-        by b01ledav003.gho.pok.ibm.com (Postfix) with ESMTP;
-        Wed, 13 Mar 2019 15:51:51 +0000 (GMT)
-Received: by paulmck-ThinkPad-W541 (Postfix, from userid 1000)
-        id E99F816C196D; Wed, 13 Mar 2019 08:51:55 -0700 (PDT)
-Date:   Wed, 13 Mar 2019 08:51:55 -0700
-From:   "Paul E. McKenney" <paulmck@linux.ibm.com>
-To:     Steven Rostedt <rostedt@goodmis.org>
-Cc:     Joel Fernandes <joel@joelfernandes.org>,
-        linux-kernel@vger.kernel.org, rcu@vger.kernel.org,
-        jiangshanlai@gmail.com, dipankar@in.ibm.com,
-        mathieu.desnoyers@efficios.com, josh@joshtriplett.org,
-        luto@kernel.org, byungchul.park@lge.com
-Subject: Re: [PATCH tip/core/rcu 06/19] rcu: Add warning to detect
- half-interrupts
-Reply-To: paulmck@linux.ibm.com
-References: <20180829222021.GA29944@linux.vnet.ibm.com>
- <20180829222047.319-6-paulmck@linux.vnet.ibm.com>
- <20190311133939.GA29747@google.com>
- <20190311222903.GR13351@linux.ibm.com>
- <20190312150514.GB249405@google.com>
- <20190312152034.GZ13351@linux.ibm.com>
- <20190313150948.GA84821@google.com>
- <20190313112726.01d974fc@gandalf.local.home>
+        Wed, 13 Mar 2019 11:55:34 -0400
+Received: from mga04.intel.com ([192.55.52.120]:24148 "EHLO mga04.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725856AbfCMPze (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 13 Mar 2019 11:55:34 -0400
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga003.fm.intel.com ([10.253.24.29])
+  by fmsmga104.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 13 Mar 2019 08:55:33 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.58,474,1544515200"; 
+   d="scan'208";a="140462137"
+Received: from linux.intel.com ([10.54.29.200])
+  by FMSMGA003.fm.intel.com with ESMTP; 13 Mar 2019 08:55:33 -0700
+Received: from [10.252.18.45] (abudanko-mobl.ccr.corp.intel.com [10.252.18.45])
+        by linux.intel.com (Postfix) with ESMTP id 22CCE58046D;
+        Wed, 13 Mar 2019 08:55:30 -0700 (PDT)
+Subject: Re: [PATCH v7 10/12] perf report: implement record trace
+ decompression
+To:     Jiri Olsa <jolsa@redhat.com>
+Cc:     Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Ingo Molnar <mingo@redhat.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Andi Kleen <ak@linux.intel.com>,
+        linux-kernel <linux-kernel@vger.kernel.org>
+References: <5f3a8326-58a0-816e-ad61-31c111232c7a@linux.intel.com>
+ <54b3c3c8-2b7e-e7ba-d55e-d15cc5983ced@linux.intel.com>
+ <20190313143719.GF6676@krava>
+From:   Alexey Budankov <alexey.budankov@linux.intel.com>
+Organization: Intel Corp.
+Message-ID: <fee1ca34-eaa4-75c4-60bb-72a7b18fdd1a@linux.intel.com>
+Date:   Wed, 13 Mar 2019 18:55:29 +0300
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
+ Thunderbird/60.5.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190313112726.01d974fc@gandalf.local.home>
-User-Agent: Mutt/1.5.21 (2010-09-15)
-X-TM-AS-GCONF: 00
-x-cbid: 19031315-0060-0000-0000-0000031BB8D4
-X-IBM-SpamModules-Scores: 
-X-IBM-SpamModules-Versions: BY=3.00010751; HX=3.00000242; KW=3.00000007;
- PH=3.00000004; SC=3.00000281; SDB=6.01173822; UDB=6.00613753; IPR=6.00954486;
- MB=3.00025961; MTD=3.00000008; XFM=3.00000015; UTC=2019-03-13 15:51:56
-X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
-x-cbparentid: 19031315-0061-0000-0000-00004898D22E
-Message-Id: <20190313155155.GN13351@linux.ibm.com>
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-03-13_09:,,
- signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
- malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
- clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
- mlxlogscore=999 adultscore=0 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.0.1-1810050000 definitions=main-1903130112
+In-Reply-To: <20190313143719.GF6676@krava>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Mar 13, 2019 at 11:27:26AM -0400, Steven Rostedt wrote:
-> On Wed, 13 Mar 2019 11:09:48 -0400
-> Joel Fernandes <joel@joelfernandes.org> wrote:
+
+On 13.03.2019 17:37, Jiri Olsa wrote:
+> On Tue, Mar 12, 2019 at 08:36:18AM +0300, Alexey Budankov wrote:
 > 
-> > AFAICS, lockdep does not specifically track when we enter an interrupt, but
-> > rather only tracks when interrupts are enabled/disabled.
+> SBIP
 > 
-> It does:
+>> +#ifdef HAVE_ZSTD_SUPPORT
+>> +static int perf_session__process_compressed_event(struct perf_session *session,
+>> +					union perf_event *event, u64 file_offset)
+>> +{
+>> +	void *src;
+>> +	size_t decomp_size, src_size;
+>> +	u64 decomp_last_rem = 0;
+>> +	size_t decomp_len = session->header.env.comp_mmap_len;
+>> +	struct decomp *decomp, *decomp_last = session->decomp_last;
+>> +
+>> +	decomp = mmap(NULL, sizeof(struct decomp) + decomp_len, PROT_READ|PROT_WRITE,
+>> +		      MAP_ANONYMOUS|MAP_PRIVATE, -1, 0);
+>> +	if (decomp == MAP_FAILED) {
+>> +		pr_err("Couldn't allocate memory for decompression\n");
+>> +		return -1;
+>> +	}
 > 
-> #define __irq_enter()					\
-> 	do {						\
-> 		account_irq_enter_time(current);	\
-> 		preempt_count_add(HARDIRQ_OFFSET);	\
-> 		trace_hardirq_enter();			\
-> 	} while (0)
+> ok, I see the need to keep this decomp around, we need the event
+> to be there the whole time, like the mmap for the standard events
 > 
-> # define trace_hardirq_enter()			\
-> do {						\
-> 	current->hardirq_context++;		\
-> } while (0)
+> we know the total uncompressed size when record is done, right?
+> could we save it in the COMPRESSED feature and alloc all the
+> needed uncompressed data in single mmap?
+
+It can be not that good idea. The required contiguous memory 
+region can be really huge to be allocated. Plain malloc()'s are 
+also not good. I was observing OOM in perf report process when 
+loading traces of several GiBs. So smaller, page size granularity,
+linked memory regions performed the best in my experiments.
+
+~Alexey
+
 > 
+> jirka
 > 
-> And if the hardirq_context ever does not match "in_irq()" lockdep will
-> complain loudly.
-
-Good to know, thank you!
-
-Does this mean that there is a better approach that Joel's suggestion?
-I believe he would end up with something like this:
-
-	WARN_ON_ONCE(IS_ENABLED(CONFIG_PROVE_RCU) && !in_irq());
-
-It would be nice if there is something like this:
-
-	lockdep_assert_in_irq_handler();
-
-But I haven't seen this.  (Not that I have looked particularly hard for
-such a thing, mind you!)
-
-							Thanx, Paul
-
