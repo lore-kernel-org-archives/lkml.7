@@ -2,112 +2,110 @@ Return-Path: <SRS0=dUEL=RQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D3B39C43381
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 Mar 2019 17:11:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6E40DC43381
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 Mar 2019 17:13:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9E9CB213A2
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 Mar 2019 17:11:45 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=umn.edu header.i=@umn.edu header.b="VmooRa7k"
+	by mail.kernel.org (Postfix) with ESMTP id 424AD21019
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 Mar 2019 17:13:48 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726809AbfCMRLn (ORCPT
+        id S1726581AbfCMRNq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 13 Mar 2019 13:11:43 -0400
-Received: from mta-p7.oit.umn.edu ([134.84.196.207]:49318 "EHLO
-        mta-p7.oit.umn.edu" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725876AbfCMRLn (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 13 Mar 2019 13:11:43 -0400
-Received: from localhost (unknown [127.0.0.1])
-        by mta-p7.oit.umn.edu (Postfix) with ESMTP id 853E973B
-        for <linux-kernel@vger.kernel.org>; Wed, 13 Mar 2019 17:11:41 +0000 (UTC)
-X-Virus-Scanned: amavisd-new at umn.edu
-Received: from mta-p7.oit.umn.edu ([127.0.0.1])
-        by localhost (mta-p7.oit.umn.edu [127.0.0.1]) (amavisd-new, port 10024)
-        with ESMTP id b4dZrjKsl74O for <linux-kernel@vger.kernel.org>;
-        Wed, 13 Mar 2019 12:11:41 -0500 (CDT)
-Received: from mail-io1-f69.google.com (mail-io1-f69.google.com [209.85.166.69])
-        (using TLSv1.2 with cipher AES128-GCM-SHA256 (128/128 bits))
+        Wed, 13 Mar 2019 13:13:46 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:52368 "EHLO mx1.redhat.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725876AbfCMRNq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 13 Mar 2019 13:13:46 -0400
+Received: from smtp.corp.redhat.com (int-mx08.intmail.prod.int.phx2.redhat.com [10.5.11.23])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        by mta-p7.oit.umn.edu (Postfix) with ESMTPS id 4D29DB67
-        for <linux-kernel@vger.kernel.org>; Wed, 13 Mar 2019 12:11:41 -0500 (CDT)
-Received: by mail-io1-f69.google.com with SMTP id n15so2083050ioc.0
-        for <linux-kernel@vger.kernel.org>; Wed, 13 Mar 2019 10:11:41 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=umn.edu; s=google;
-        h=from:to:cc:subject:date:message-id;
-        bh=0tTUa8FUUdELgiORXzwOG0CWuGm825H00lI4rsbun2M=;
-        b=VmooRa7kDLo7sc814RzDr123GARCVKEkKcSA1lQebp2UpG1SQfxUPoutDQwb3Dw4QS
-         mXMTXvTaPs6RkLVcDWN9PMHzhLj3Vur4GVVDOJUwEfC3OGmpZR4M7yyiJaZ+duZRHwh/
-         o+DiUkU1XkpEUFgt+fB8Nk3/sCGgZ7lFiddoydFow62r9RRnmtJ7484zqCh73U11h+tQ
-         /m7FE8UDrzWNbG18EU748c1JeMBPSmELDL5Y7on+hqSl/1sQOO8tP2hJMxtOXTW+okdx
-         O2/IEx7WZYG+XNgjwXMDRQKjk4GBNohsp2oxjXDI87iIj9oiaxnCeIb3j60lH7nmUcYp
-         4ZkQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id;
-        bh=0tTUa8FUUdELgiORXzwOG0CWuGm825H00lI4rsbun2M=;
-        b=OkrI/ajw7BJsXp1NTLudc875LzhPYlgTOctsgnH9OWJOBKWOSV9MWUS00bxCuem+kJ
-         o0MwMuAzyEb8ex4y5iNTuizUDS0Uc2QWYHeqiNlJELWfyCiLkw66o/vIiBE2QHHt75YS
-         bWAZTa0EmKXwnRxJKbaQwnXBocDkdlVNtW3iAVbYs51ywSsw62/5F+zVzxSceyMuHlNM
-         aJxoIgI9nAYz3Lxaup8GvBzU+1WMhKarIVDisbFLZgDa2U4ynFIlEsn10Ra/qxW2FVke
-         NVFTbMmIB302795kNfca+SkluE7IXH76+HsAu45Z8CMmNTOgWogL4eEBsRV2hPYTr3jX
-         Aolw==
-X-Gm-Message-State: APjAAAXG+afzd+qQd7KNoLzqboP+rJcDXXX0Pt9jPGtRnpMpKpfFD8V9
-        gLDrUrRykwK+rf1W5x+GWiEcAUWxqQPFLQC3jLTssP2j932RTEwnU9us4+OBL0Y3tQ5801l5e+A
-        KtjmqhjpdYJoSCGzuePYOvbQy+/12
-X-Received: by 2002:a5e:da0b:: with SMTP id x11mr8328676ioj.200.1552497100762;
-        Wed, 13 Mar 2019 10:11:40 -0700 (PDT)
-X-Google-Smtp-Source: APXvYqzTKUuxsBWd6LMAp56rBfjm3+cvGYI5C6MtMIAJizKHyW/Si0897CqC66WoUoXvun1YI03phw==
-X-Received: by 2002:a5e:da0b:: with SMTP id x11mr8328660ioj.200.1552497100547;
-        Wed, 13 Mar 2019 10:11:40 -0700 (PDT)
-Received: from cs-u-syssec1.dtc.umn.edu (cs-u-syssec1.cs.umn.edu. [128.101.106.66])
-        by smtp.gmail.com with ESMTPSA id d135sm1430958itd.43.2019.03.13.10.11.39
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Wed, 13 Mar 2019 10:11:40 -0700 (PDT)
-From:   Aditya Pakki <pakki001@umn.edu>
-To:     pakki001@umn.edu
-Cc:     kjlu@umn.edu, Larry Finger <Larry.Finger@lwfinger.net>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Michael Straube <straube.linux@gmail.com>,
-        devel@driverdev.osuosl.org, linux-kernel@vger.kernel.org
-Subject: [PATCH] staging: rtl8188eu: Fix potential NULL pointer dereference
-Date:   Wed, 13 Mar 2019 12:11:30 -0500
-Message-Id: <20190313171132.23052-1-pakki001@umn.edu>
-X-Mailer: git-send-email 2.17.1
+        by mx1.redhat.com (Postfix) with ESMTPS id 3AF4730F8DBB;
+        Wed, 13 Mar 2019 17:13:46 +0000 (UTC)
+Received: from vitty.brq.redhat.com (unknown [10.43.2.155])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id AB9F419C65;
+        Wed, 13 Mar 2019 17:13:44 +0000 (UTC)
+From:   Vitaly Kuznetsov <vkuznets@redhat.com>
+To:     kvm@vger.kernel.org
+Cc:     Paolo Bonzini <pbonzini@redhat.com>,
+        =?UTF-8?q?Radim=20Kr=C4=8Dm=C3=A1=C5=99?= <rkrcmar@redhat.com>,
+        Roman Kagan <rkagan@virtuozzo.com>,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH] x86/kvm/hyper-v: avoid spurious pending stimer on vCPU init
+Date:   Wed, 13 Mar 2019 18:13:42 +0100
+Message-Id: <20190313171342.12814-1-vkuznets@redhat.com>
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
+X-Scanned-By: MIMEDefang 2.84 on 10.5.11.23
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.49]); Wed, 13 Mar 2019 17:13:46 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-hwxmits is allocated via kcalloc and not checked for failure before its
-dereference. The patch fixes this problem similar to rtl8723bs.
+When userspace initializes guest vCPUs it may want to zero all supported
+MSRs including Hyper-V related ones including HV_X64_MSR_STIMERn_CONFIG/
+HV_X64_MSR_STIMERn_COUNT. With commit f3b138c5d89a ("kvm/x86: Update SynIC
+timers on guest entry only") we began doing stimer_mark_pending()
+unconditionally on every config change.
 
-Signed-off-by: Aditya Pakki <pakki001@umn.edu>
+The issue I'm observing manifests itself as following:
+- Qemu writes 0 to STIMERn_{CONFIG,COUNT} MSRs and marks all stimers as
+  pending in stimer_pending_bitmap, arms KVM_REQ_HV_STIMER;
+- kvm_hv_has_stimer_pending() starts returning true;
+- kvm_vcpu_has_events() starts returning true;
+- kvm_arch_vcpu_runnable() starts returning true;
+- when kvm_arch_vcpu_ioctl_run() gets into
+  (vcpu->arch.mp_state == KVM_MP_STATE_UNINITIALIZED) case:
+  - kvm_vcpu_block() gets in 'kvm_vcpu_check_block(vcpu) < 0' and returns
+    immediately, avoiding normal wait path;
+  - -EAGAIN is returned from kvm_arch_vcpu_ioctl_run() immediately forcing
+    userspace to retry.
+
+So instead of normal wait path we get a busy loop on all secondary vCPUs
+before they get INIT signal. This seems to be undesirable, especially given
+that this happens even when Hyper-V extensions are not used.
+
+Generally, it seems to be pointless to mark an stimer as pending in
+stimer_pending_bitmap and arm KVM_REQ_HV_STIMER as the only thing
+kvm_hv_process_stimers() will do is clear the corresponding bit. We may
+just not mark disabled timers as pending instead.
+
+Fixes: f3b138c5d89a ("kvm/x86: Update SynIC timers on guest entry only")
+Signed-off-by: Vitaly Kuznetsov <vkuznets@redhat.com>
 ---
- drivers/staging/rtl8188eu/core/rtw_xmit.c | 4 ++++
- 1 file changed, 4 insertions(+)
+ arch/x86/kvm/hyperv.c | 9 +++++++--
+ 1 file changed, 7 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/staging/rtl8188eu/core/rtw_xmit.c b/drivers/staging/rtl8188eu/core/rtw_xmit.c
-index 1723a47a96b4..a557ed37923a 100644
---- a/drivers/staging/rtl8188eu/core/rtw_xmit.c
-+++ b/drivers/staging/rtl8188eu/core/rtw_xmit.c
-@@ -1512,6 +1512,10 @@ void rtw_alloc_hwxmits(struct adapter *padapter)
+diff --git a/arch/x86/kvm/hyperv.c b/arch/x86/kvm/hyperv.c
+index 89d20ed1d2e8..371c669696d7 100644
+--- a/arch/x86/kvm/hyperv.c
++++ b/arch/x86/kvm/hyperv.c
+@@ -526,7 +526,9 @@ static int stimer_set_config(struct kvm_vcpu_hv_stimer *stimer, u64 config,
+ 		new_config.enable = 0;
+ 	stimer->config.as_uint64 = new_config.as_uint64;
  
- 	pxmitpriv->hwxmits = kcalloc(pxmitpriv->hwxmit_entry,
- 				     sizeof(struct hw_xmit), GFP_KERNEL);
-+	if (!pxmitpriv->hwxmits) {
-+		DBG_88E("alloc hwxmits fail!...\n");
-+		return;
-+	}
+-	stimer_mark_pending(stimer, false);
++	if (stimer->config.enable)
++		stimer_mark_pending(stimer, false);
++
+ 	return 0;
+ }
  
- 	hwxmits = pxmitpriv->hwxmits;
+@@ -542,7 +544,10 @@ static int stimer_set_count(struct kvm_vcpu_hv_stimer *stimer, u64 count,
+ 		stimer->config.enable = 0;
+ 	else if (stimer->config.auto_enable)
+ 		stimer->config.enable = 1;
+-	stimer_mark_pending(stimer, false);
++
++	if (stimer->config.enable)
++		stimer_mark_pending(stimer, false);
++
+ 	return 0;
+ }
  
 -- 
-2.17.1
+2.20.1
 
