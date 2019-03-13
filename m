@@ -2,168 +2,211 @@ Return-Path: <SRS0=dUEL=RQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_MUTT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8F378C43381
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 Mar 2019 04:19:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 12A06C43381
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 Mar 2019 04:28:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5BF2B2183E
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 Mar 2019 04:19:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D11F92177E
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 Mar 2019 04:28:30 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="BHXBa8LI"
+	dkim=pass (1024-bit key) header.d=gibson.dropbear.id.au header.i=@gibson.dropbear.id.au header.b="pwrunOu1"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726747AbfCMETu (ORCPT
+        id S1726912AbfCME23 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 13 Mar 2019 00:19:50 -0400
-Received: from mail-pf1-f193.google.com ([209.85.210.193]:45263 "EHLO
-        mail-pf1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725785AbfCMETu (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 13 Mar 2019 00:19:50 -0400
-Received: by mail-pf1-f193.google.com with SMTP id v21so424950pfm.12
-        for <linux-kernel@vger.kernel.org>; Tue, 12 Mar 2019 21:19:49 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id;
-        bh=sqag+3/hCSAk4WAl1oE69ZNRhwtloHC+nzkdZ2w98Es=;
-        b=BHXBa8LIzscAukrgQntabTAbIQd8zJxbdIEfC4sXBrJdVwbSJWqcV9cL5IQNNK0jVo
-         fDslTimcZlJs67sN/n6ni8qCiT/zj9slg0o7prdVVQQ3xrmXu57NzRmTPQ6lEKSxtCF+
-         9uWSLVV5BU2SRmG3iJJuSMmoVpnYcgf+T/qIPRFY2+mfSJ4DXD0svGdz12qgSXc2yWXa
-         Y6GLX1zVoBakGkasH3qslbpkpj5sJ0dygIG6YiU5JwZ8iEfyKzSZ5R8KZmOrLZ+OhDIO
-         0Zf87PKXkqjY2TnIOyDToyrOvYY8TX7/v99p58L9hbCViThFKAhSNrlMBI6Ha3yL2nWI
-         3MYQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id;
-        bh=sqag+3/hCSAk4WAl1oE69ZNRhwtloHC+nzkdZ2w98Es=;
-        b=grPnERxMfC++YupJhrAhZotTBrq1fu7lD0dnMN1P6VProOuZ5fc+wB5mZA2XvH49Wc
-         i5VuxtrdUFLiRr20xbRY/vRqDXQxQpVT8fEeqZ6WIoverYMNMr4riNh6MwiSVbcEcgKJ
-         4gaKfInBadVNKZcETb/a/Cdp+UyPhQX+q3NG5Ti7oPJzDxxW1Eh8xeiC+wJ6d4gXax2I
-         orFO44Brg82ItfWUrLCI8s2ONqRbSmNbH3Ez4+iGl+7OmNaVXsD3XTm9rUu/z6PLfmxe
-         0teNoxbeYzrOPsaG0l1IOIpIJpu8ctYKwFwIWP0l0hFBJbMoAzrcDWx9fbjp/8XZtSOs
-         u3WA==
-X-Gm-Message-State: APjAAAWIm+CQqDzrI8kWk8YmoFk03WPz4tXJp7LvwdykezFi/f81fqf1
-        JHfzba/rIb7BAvwUQnLdiQ==
-X-Google-Smtp-Source: APXvYqzpem14Ep3Mnv3mu76GA+zdpag2SlrYVmIRk4tY2ngUz8H9fTc/tTrVa6U2FP15xo6rRLV+lA==
-X-Received: by 2002:a63:cd02:: with SMTP id i2mr38511849pgg.111.1552450789057;
-        Tue, 12 Mar 2019 21:19:49 -0700 (PDT)
-Received: from mylaptop.nay.redhat.com ([209.132.188.80])
-        by smtp.gmail.com with ESMTPSA id h2sm12962933pfo.163.2019.03.12.21.19.44
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Tue, 12 Mar 2019 21:19:48 -0700 (PDT)
-From:   Pingfan Liu <kernelfans@gmail.com>
-To:     x86@kernel.org
-Cc:     Pingfan Liu <kernelfans@gmail.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        "H. Peter Anvin" <hpa@zytor.com>, Baoquan He <bhe@redhat.com>,
-        Will Deacon <will.deacon@arm.com>,
-        Nicolas Pitre <nico@linaro.org>,
-        Chao Fan <fanc.fnst@cn.fujitsu.com>,
-        "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>,
-        Ard Biesheuvel <ard.biesheuvel@linaro.org>,
-        linux-kernel@vger.kernel.org
-Subject: [PATCHv2] x86/boot/KASLR: skip the specified crashkernel reserved region
-Date:   Wed, 13 Mar 2019 12:19:31 +0800
-Message-Id: <1552450771-8360-1-git-send-email-kernelfans@gmail.com>
-X-Mailer: git-send-email 2.7.4
+        Wed, 13 Mar 2019 00:28:29 -0400
+Received: from ozlabs.org ([203.11.71.1]:55265 "EHLO ozlabs.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726573AbfCME21 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 13 Mar 2019 00:28:27 -0400
+Received: by ozlabs.org (Postfix, from userid 1007)
+        id 44JzNl5nPpz9sDB; Wed, 13 Mar 2019 15:28:23 +1100 (AEDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+        d=gibson.dropbear.id.au; s=201602; t=1552451303;
+        bh=YwQ5f+H3Ru8vCsfwi5Jh+JuQ9ZKtgXRwSwkRtI2CsaQ=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=pwrunOu1PWfR6fRj9TQpUxRRlZMt3BsM1hkutfBn91MxkbFMfuBUjKxfIeqNzZEUL
+         xhjJxQ02+SUGIvbH4Af9Bivy+mqBFDeGoxWVVPZc+Ibn2uUUkLEy5BHnx3y0JIiJw6
+         m6I0cn+/SPL/FpY6XC6IqqjyGQuRGRClqYBRStpA=
+Date:   Wed, 13 Mar 2019 15:27:37 +1100
+From:   David Gibson <david@gibson.dropbear.id.au>
+To:     Laurent Vivier <lvivier@redhat.com>
+Cc:     linux-kernel@vger.kernel.org,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        linuxppc-dev@lists.ozlabs.org,
+        Christophe Leroy <christophe.leroy@c-s.fr>
+Subject: Re: [PATCH v2] powerpc/mm: move warning from resize_hpt_for_hotplug()
+Message-ID: <20190313042737.GR9881@umbus.fritz.box>
+References: <20190308105413.4302-1-lvivier@redhat.com>
+MIME-Version: 1.0
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature"; boundary="jcwRHPSxFqmwpRFb"
+Content-Disposition: inline
+In-Reply-To: <20190308105413.4302-1-lvivier@redhat.com>
+User-Agent: Mutt/1.11.3 (2019-02-01)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-crashkernel=x@y option may fail to reserve the required memory region if
-KASLR puts kernel into the region. To avoid this uncertainty, making KASLR
-skip the required region.
 
-Signed-off-by: Pingfan Liu <kernelfans@gmail.com>
-Cc: Thomas Gleixner <tglx@linutronix.de>
-Cc: Ingo Molnar <mingo@redhat.com>
-Cc: Borislav Petkov <bp@alien8.de>
-Cc: "H. Peter Anvin" <hpa@zytor.com>
-Cc: Baoquan He <bhe@redhat.com>
-Cc: Will Deacon <will.deacon@arm.com>
-Cc: Nicolas Pitre <nico@linaro.org>
-Cc: Pingfan Liu <kernelfans@gmail.com>
-Cc: Chao Fan <fanc.fnst@cn.fujitsu.com>
-Cc: "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>
-Cc: Ard Biesheuvel <ard.biesheuvel@linaro.org>
-Cc: linux-kernel@vger.kernel.org
----
-v1 -> v2: fix some trival format
+--jcwRHPSxFqmwpRFb
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
- arch/x86/boot/compressed/kaslr.c | 26 ++++++++++++++++++++++++--
- 1 file changed, 24 insertions(+), 2 deletions(-)
+On Fri, Mar 08, 2019 at 11:54:13AM +0100, Laurent Vivier wrote:
+> resize_hpt_for_hotplug() reports a warning when it cannot
+> resize the hash page table ("Unable to resize hash page
+> table to target order") but in some cases it's not a problem
+> and can make user thinks something has not worked properly.
+>=20
+> This patch moves the warning to arch_remove_memory() to
+> only report the problem when it is needed.
+>=20
+> Signed-off-by: Laurent Vivier <lvivier@redhat.com>
 
-diff --git a/arch/x86/boot/compressed/kaslr.c b/arch/x86/boot/compressed/kaslr.c
-index 9ed9709..e185318 100644
---- a/arch/x86/boot/compressed/kaslr.c
-+++ b/arch/x86/boot/compressed/kaslr.c
-@@ -109,6 +109,7 @@ enum mem_avoid_index {
- 	MEM_AVOID_BOOTPARAMS,
- 	MEM_AVOID_MEMMAP_BEGIN,
- 	MEM_AVOID_MEMMAP_END = MEM_AVOID_MEMMAP_BEGIN + MAX_MEMMAP_REGIONS - 1,
-+	MEM_AVOID_CRASHKERNEL,
- 	MEM_AVOID_MAX,
- };
- 
-@@ -240,6 +241,25 @@ static void parse_gb_huge_pages(char *param, char *val)
- 	}
- }
- 
-+/* parse crashkernel=x@y option */
-+static void mem_avoid_crashkernel_simple(char *option)
-+{
-+	unsigned long long crash_size, crash_base;
-+	char *cur = option;
-+
-+	crash_size = memparse(option, &cur);
-+	if (option == cur)
-+		return;
-+
-+	if (*cur == '@') {
-+		option = cur + 1;
-+		crash_base = memparse(option, &cur);
-+		if (option == cur)
-+			return;
-+		mem_avoid[MEM_AVOID_CRASHKERNEL].start = crash_base;
-+		mem_avoid[MEM_AVOID_CRASHKERNEL].size = crash_size;
-+	}
-+}
- 
- static void handle_mem_options(void)
- {
-@@ -250,7 +270,7 @@ static void handle_mem_options(void)
- 	u64 mem_size;
- 
- 	if (!strstr(args, "memmap=") && !strstr(args, "mem=") &&
--		!strstr(args, "hugepages"))
-+		!strstr(args, "hugepages") && !strstr(args, "crashkernel="))
- 		return;
- 
- 	tmp_cmdline = malloc(len + 1);
-@@ -286,6 +306,8 @@ static void handle_mem_options(void)
- 				goto out;
- 
- 			mem_limit = mem_size;
-+		} else if (strstr(param, "crashkernel")) {
-+			mem_avoid_crashkernel_simple(val);
- 		}
- 	}
- 
-@@ -414,7 +436,7 @@ static void mem_avoid_init(unsigned long input, unsigned long input_size,
- 
- 	/* We don't need to set a mapping for setup_data. */
- 
--	/* Mark the memmap regions we need to avoid */
-+	/* Mark the regions we need to avoid */
- 	handle_mem_options();
- 
- #ifdef CONFIG_X86_VERBOSE_BOOTUP
--- 
-2.7.4
+Reviewed-by: David Gibson <david@gibson.dropbear.id.au>
 
+> ---
+>  arch/powerpc/include/asm/sparsemem.h  |  4 ++--
+>  arch/powerpc/mm/hash_utils_64.c       | 17 ++++++-----------
+>  arch/powerpc/mm/mem.c                 |  3 ++-
+>  arch/powerpc/platforms/pseries/lpar.c |  3 ++-
+>  4 files changed, 12 insertions(+), 15 deletions(-)
+>=20
+> diff --git a/arch/powerpc/include/asm/sparsemem.h b/arch/powerpc/include/=
+asm/sparsemem.h
+> index 68da49320592..3192d454a733 100644
+> --- a/arch/powerpc/include/asm/sparsemem.h
+> +++ b/arch/powerpc/include/asm/sparsemem.h
+> @@ -17,9 +17,9 @@ extern int create_section_mapping(unsigned long start, =
+unsigned long end, int ni
+>  extern int remove_section_mapping(unsigned long start, unsigned long end=
+);
+> =20
+>  #ifdef CONFIG_PPC_BOOK3S_64
+> -extern void resize_hpt_for_hotplug(unsigned long new_mem_size);
+> +extern int resize_hpt_for_hotplug(unsigned long new_mem_size);
+>  #else
+> -static inline void resize_hpt_for_hotplug(unsigned long new_mem_size) { }
+> +static inline int resize_hpt_for_hotplug(unsigned long new_mem_size) { r=
+eturn 0; }
+>  #endif
+> =20
+>  #ifdef CONFIG_NUMA
+> diff --git a/arch/powerpc/mm/hash_utils_64.c b/arch/powerpc/mm/hash_utils=
+_64.c
+> index 0cc7fbc3bd1c..40bb2a8326bb 100644
+> --- a/arch/powerpc/mm/hash_utils_64.c
+> +++ b/arch/powerpc/mm/hash_utils_64.c
+> @@ -755,12 +755,12 @@ static unsigned long __init htab_get_table_size(voi=
+d)
+>  }
+> =20
+>  #ifdef CONFIG_MEMORY_HOTPLUG
+> -void resize_hpt_for_hotplug(unsigned long new_mem_size)
+> +int resize_hpt_for_hotplug(unsigned long new_mem_size)
+>  {
+>  	unsigned target_hpt_shift;
+> =20
+>  	if (!mmu_hash_ops.resize_hpt)
+> -		return;
+> +		return 0;
+> =20
+>  	target_hpt_shift =3D htab_shift_for_mem_size(new_mem_size);
+> =20
+> @@ -773,15 +773,10 @@ void resize_hpt_for_hotplug(unsigned long new_mem_s=
+ize)
+>  	 * current shift
+>  	 */
+>  	if ((target_hpt_shift > ppc64_pft_size)
+> -	    || (target_hpt_shift < (ppc64_pft_size - 1))) {
+> -		int rc;
+> -
+> -		rc =3D mmu_hash_ops.resize_hpt(target_hpt_shift);
+> -		if (rc && (rc !=3D -ENODEV))
+> -			printk(KERN_WARNING
+> -			       "Unable to resize hash page table to target order %d: %d\n",
+> -			       target_hpt_shift, rc);
+> -	}
+> +	    || (target_hpt_shift < (ppc64_pft_size - 1)))
+> +		return mmu_hash_ops.resize_hpt(target_hpt_shift);
+> +
+> +	return 0;
+>  }
+> =20
+>  int hash__create_section_mapping(unsigned long start, unsigned long end,=
+ int nid)
+> diff --git a/arch/powerpc/mm/mem.c b/arch/powerpc/mm/mem.c
+> index 33cc6f676fa6..0d40d970cf4a 100644
+> --- a/arch/powerpc/mm/mem.c
+> +++ b/arch/powerpc/mm/mem.c
+> @@ -169,7 +169,8 @@ int __meminit arch_remove_memory(int nid, u64 start, =
+u64 size,
+>  	 */
+>  	vm_unmap_aliases();
+> =20
+> -	resize_hpt_for_hotplug(memblock_phys_mem_size());
+> +	if (resize_hpt_for_hotplug(memblock_phys_mem_size()) =3D=3D -ENOSPC)
+> +		pr_warn("Hash collision while resizing HPT\n");
+> =20
+>  	return ret;
+>  }
+> diff --git a/arch/powerpc/platforms/pseries/lpar.c b/arch/powerpc/platfor=
+ms/pseries/lpar.c
+> index f2a9f0adc2d3..1034ef1fe2b4 100644
+> --- a/arch/powerpc/platforms/pseries/lpar.c
+> +++ b/arch/powerpc/platforms/pseries/lpar.c
+> @@ -901,8 +901,10 @@ static int pseries_lpar_resize_hpt(unsigned long shi=
+ft)
+>  		break;
+> =20
+>  	case H_PARAMETER:
+> +		pr_warn("Invalid argument from H_RESIZE_HPT_PREPARE\n");
+>  		return -EINVAL;
+>  	case H_RESOURCE:
+> +		pr_warn("Operation not permitted from H_RESIZE_HPT_PREPARE\n");
+>  		return -EPERM;
+>  	default:
+>  		pr_warn("Unexpected error %d from H_RESIZE_HPT_PREPARE\n", rc);
+> @@ -918,7 +920,6 @@ static int pseries_lpar_resize_hpt(unsigned long shif=
+t)
+>  	if (rc !=3D 0) {
+>  		switch (state.commit_rc) {
+>  		case H_PTEG_FULL:
+> -			pr_warn("Hash collision while resizing HPT\n");
+>  			return -ENOSPC;
+> =20
+>  		default:
+
+--=20
+David Gibson			| I'll have my music baroque, and my code
+david AT gibson.dropbear.id.au	| minimalist, thank you.  NOT _the_ _other_
+				| _way_ _around_!
+http://www.ozlabs.org/~dgibson
+
+--jcwRHPSxFqmwpRFb
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAEBCAAdFiEEdfRlhq5hpmzETofcbDjKyiDZs5IFAlyIhrgACgkQbDjKyiDZ
+s5L0exAAymSOpxCfriMb6Npbikc1b9QnS8txmrdxAbX6Jiq0wt3FLblYSVY6RGau
+/jacSHypqEXMspnISemTjIImA+BPtDgCBIeuiVuF0eGCZ71I9Vlq4mhnc2lOmP7d
+HIrvJ7IlWiqJ50WIlnGER4iypjCW3Mg+I+Z+XyILw+7x03O6GFV6wppit82E9Io3
+jZKtXgnEjM/JIMZi1FhPTbM/E42T9D7XdNkwGX1VHzxyMBnKoP+KRSDkRheU1HKv
+GlZLCGmeHTvYn3RAOFyIobXPuBKIIZNuOh/jbZ3j9kKbngwElSJ+CaTsqzOWTppf
+qdVeOp80P6oehC/PdyjI1Jy3madGIDK/VRzDv9kurK0RVJyltuN+s+PU7V1+o5b9
+JE1xGq9mSNFcAewYDEl2UiXAaJVvQ1Jb9b1xIGzTGu9dUl8DtDUfkAE3KeIFWBtA
+/UjrjKHGLZIm6YQHeBtCjnEBpF6SJDPYORF5O9JL0p+tNwUIL2cm4RvjyM+Rv5As
+DvbIEUryQ0x/Jph1MeNWIpyEDYCINwVh17mKGxSLQlUWg0RcjBDMQEIUe32Mar/V
+BLz+iK/D3zmS4Bi7mMR1Cw9+JMbtg63WIx3VGv9NvxJA5Ht4fK/3qJyLrZPgobwi
+R0XDc0QKMBZnvVq0xJVUivFOLRWus4vKHmCICLw0aEUGF0apNw0=
+=wCLS
+-----END PGP SIGNATURE-----
+
+--jcwRHPSxFqmwpRFb--
