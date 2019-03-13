@@ -6,80 +6,146 @@ X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_MUTT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8CF0EC43381
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 Mar 2019 14:37:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9DCEBC43381
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 Mar 2019 14:37:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 59D852087C
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 Mar 2019 14:37:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6C14D2087C
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 Mar 2019 14:37:31 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726958AbfCMOhY (ORCPT
+        id S1727002AbfCMOha (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 13 Mar 2019 10:37:24 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:38270 "EHLO mx1.redhat.com"
+        Wed, 13 Mar 2019 10:37:30 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:47480 "EHLO mx1.redhat.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726581AbfCMOhW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 13 Mar 2019 10:37:22 -0400
-Received: from smtp.corp.redhat.com (int-mx04.intmail.prod.int.phx2.redhat.com [10.5.11.14])
+        id S1725889AbfCMOh3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 13 Mar 2019 10:37:29 -0400
+Received: from smtp.corp.redhat.com (int-mx02.intmail.prod.int.phx2.redhat.com [10.5.11.12])
         (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id 6269581E1D;
-        Wed, 13 Mar 2019 14:37:22 +0000 (UTC)
+        by mx1.redhat.com (Postfix) with ESMTPS id DD21B7E436;
+        Wed, 13 Mar 2019 14:37:28 +0000 (UTC)
 Received: from krava (unknown [10.43.17.124])
-        by smtp.corp.redhat.com (Postfix) with SMTP id ABF045DD84;
-        Wed, 13 Mar 2019 14:37:20 +0000 (UTC)
-Date:   Wed, 13 Mar 2019 15:37:19 +0100
+        by smtp.corp.redhat.com (Postfix) with SMTP id 3582D619CC;
+        Wed, 13 Mar 2019 14:37:27 +0000 (UTC)
+Date:   Wed, 13 Mar 2019 15:37:26 +0100
 From:   Jiri Olsa <jolsa@redhat.com>
 To:     Alexey Budankov <alexey.budankov@linux.intel.com>
 Cc:     Arnaldo Carvalho de Melo <acme@kernel.org>,
         Namhyung Kim <namhyung@kernel.org>,
         Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Ingo Molnar <mingo@redhat.com>,
         Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>,
         Andi Kleen <ak@linux.intel.com>,
         linux-kernel <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH v7 10/12] perf report: implement record trace
- decompression
-Message-ID: <20190313143719.GF6676@krava>
-References: <5f3a8326-58a0-816e-ad61-31c111232c7a@linux.intel.com>
- <54b3c3c8-2b7e-e7ba-d55e-d15cc5983ced@linux.intel.com>
+Subject: Re: [PATCH v4 0/10] perf: enable compression of record mode trace to
+ save storage space
+Message-ID: <20190313143726.GG6676@krava>
+References: <bb018a36-5249-ca6a-8e16-6afac442bae5@linux.intel.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <54b3c3c8-2b7e-e7ba-d55e-d15cc5983ced@linux.intel.com>
+In-Reply-To: <bb018a36-5249-ca6a-8e16-6afac442bae5@linux.intel.com>
 User-Agent: Mutt/1.10.1 (2018-07-13)
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.14
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.25]); Wed, 13 Mar 2019 14:37:22 +0000 (UTC)
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.12
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.27]); Wed, 13 Mar 2019 14:37:29 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Mar 12, 2019 at 08:36:18AM +0300, Alexey Budankov wrote:
+On Thu, Feb 28, 2019 at 11:35:24AM +0300, Alexey Budankov wrote:
+> 
+> The patch set implements runtime trace compression (-z option) in 
+> record mode and trace auto decompression in report and inject modes. 
+> Streaming Zstandard (Zstd) API (zstd) is used for compression and 
+> decompression of data that come from kernel mmaped data buffers.
+> 
+> Usage of implemented -z,--compression_level=n option provides ~3-5x 
+> avg. trace file size reduction on variety of tested workloads what 
+> saves storage space on larger server systems where trace file size 
+> can easily reach several tens or even hundreds of GiBs, especially 
+> when profiling with dwarf-based stacks and tracing of context switches.
+> Implemented -f,--mmap-flush option can be used to avoid compressing 
+> every single byte of data and increase compression ratio at the same 
+> time lowering tool runtime overhead. Default option value is 1 what 
+> is equal to the current perf record implementation. The option is 
+> independent from -z setting and doesn't vary with compression level:
+> 
+>   $ tools/perf/perf record -z 1 -e cycles -- matrix.gcc
+>   $ tools/perf/perf record --aio=1 -z 1 -e cycles -- matrix.gcc
+>   $ tools/perf/perf record -z 1 -f 1024 -e cycles -- matrix.gcc
+>   $ tools/perf/perf record --aio=1 -z 1 -f 1024 -e cycles -- matrix.gcc
+> 
+> Runtime compression overhead has been measured for serial and AIO 
+> trace writing modes when profiling matrix multiplication workload 
+> with the following results:
+> 
+>     -------------------------------------------------------------
+>     | SERIAL			  | AIO-1                       |
+> -----------------------------------------------------------------
+> |-z | OVH(x) | ratio(x) size(MiB) | OVH(x) | ratio(x) size(MiB) |
+> |----------------------------------------------------------------
+> | 0 | 1,00   | 1,000    179,424   | 1,00   | 1,000    187,527   |
+> | 1 | 1,04   | 8,427    181,148   | 1,01   | 8,474    188,562   |
+> | 2 | 1,07   | 8,055    186,953   | 1,03   | 7,912    191,773   |
+> | 3 | 1,04   | 8,283    181,908   | 1,03   | 8,220    191,078   |
+> | 5 | 1,09   | 8,101    187,705   | 1,05   | 7,780    190,065   |
+> | 8 | 1,05   | 9,217    179,191   | 1,12   | 6,111    193,024   |
+> -----------------------------------------------------------------
+> 
+> OVH = (Execution time with -z N) / (Execution time with -z 0)
+> 
+> ratio - compression ratio
+> size  - number of bytes that was compressed
+> 
+> size ~= trace file x ratio
+> 
+> See complete description of measurement conditions with details below.
+> 
+> Introduced compression functionality can be disabled or configured from 
+> the command line using NO_LIBZSTD and LIBZSTD_DIR defines:
+> 
+>   $ make -C tools/perf NO_LIBZSTD=1 clean all
+>   $ make -C tools/perf LIBZSTD_DIR=/path/to/zstd/sources/ clean all
+> 
+> If your system has some version of the zstd package preinstalled then 
+> the build system finds and uses it during the build. Auto detection 
+> feature status is reported just before compilation starts, as usual.
+> If you still prefer to compile with some version of zstd that is not 
+> preinstalled you have capability to refer the compilation to that 
+> version using LIBZSTD_DIR define.
+> 
+> See 'perf test' results below for enabled and disabled (NO_LIBZSTD=1)
+> feature configurations.
+> 
+> ---
+> Alexey Budankov (10):
+>   feature: implement libzstd check, LIBZSTD_DIR and NO_LIBZSTD defines
+>   perf record: implement -f,--mmap-flush=<threshold> option
+>   perf session: define bytes_transferred and bytes_compressed metrics
+>   perf record: implement COMPRESSED event record and its attributes
+>   perf mmap: implement dedicated memory buffer for data compression
+>   perf util: introduce Zstd based streaming compression API
+>   perf record: implement -z,--compression_level=n option and compression
+>   perf report: implement record trace decompression
+>   perf inject: enable COMPRESSED records decompression
+>   perf tests: implement Zstd comp/decomp integration test
 
-SBIP
+the record messages disappeared totaly:
 
-> +#ifdef HAVE_ZSTD_SUPPORT
-> +static int perf_session__process_compressed_event(struct perf_session *session,
-> +					union perf_event *event, u64 file_offset)
-> +{
-> +	void *src;
-> +	size_t decomp_size, src_size;
-> +	u64 decomp_last_rem = 0;
-> +	size_t decomp_len = session->header.env.comp_mmap_len;
-> +	struct decomp *decomp, *decomp_last = session->decomp_last;
-> +
-> +	decomp = mmap(NULL, sizeof(struct decomp) + decomp_len, PROT_READ|PROT_WRITE,
-> +		      MAP_ANONYMOUS|MAP_PRIVATE, -1, 0);
-> +	if (decomp == MAP_FAILED) {
-> +		pr_err("Couldn't allocate memory for decompression\n");
-> +		return -1;
-> +	}
+[jolsa@krava perf]$ ./perf record -z 1 ls
+[jolsa@krava perf]$ ./perf record -z 22 ls
+[jolsa@krava perf]$ ./perf record ls
+[jolsa@krava perf]$
 
-ok, I see the need to keep this decomp around, we need the event
-to be there the whole time, like the mmap for the standard events
 
-we know the total uncompressed size when record is done, right?
-could we save it in the COMPRESSED feature and alloc all the
-needed uncompressed data in single mmap?
+seems like we bail out for some reason with no message:
+
+[jolsa@krava perf]$ ./perf record ls
+[jolsa@krava perf]$ ./perf report --stat
+WARNING: The perf.data file's data size field is 0 which is unexpected.
+Was the 'perf record' command properly terminated?
+Error:
+failed to process sample
 
 jirka
