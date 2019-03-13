@@ -2,115 +2,76 @@ Return-Path: <SRS0=dUEL=RQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_PASS,URIBL_BLOCKED
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 19132C43381
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 Mar 2019 20:15:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CAC91C43381
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 Mar 2019 20:16:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BD9E42146E
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 Mar 2019 20:15:09 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1552508109;
-	bh=j5OUZFoSXRITy87q/qwgDKqVDBBqBzqeAy0BpiIzXvI=;
-	h=Subject:From:To:Cc:Date:In-Reply-To:References:List-ID:From;
-	b=beK5BptYDtuv+rc8S/nRdXhNr7o4nXSy3FqYbWdwgG2JStllzyIUhFYaU4WQYoGNp
-	 pV0sRCEFgVSVXuo/qaE2ylV3N+YiWwpExtI4HPonuSq07UwyHvWQ/rjfVP8lAoVKWY
-	 eL4DUxu8m9EkIu6SGH70trL085MDbYJh7dxMCAaE=
+	by mail.kernel.org (Postfix) with ESMTP id 9F9822146E
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 Mar 2019 20:16:36 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727167AbfCMUPI (ORCPT
+        id S1727192AbfCMUQf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 13 Mar 2019 16:15:08 -0400
-Received: from mail.kernel.org ([198.145.29.99]:42072 "EHLO mail.kernel.org"
+        Wed, 13 Mar 2019 16:16:35 -0400
+Received: from mga04.intel.com ([192.55.52.120]:44044 "EHLO mga04.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726686AbfCMUPH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 13 Mar 2019 16:15:07 -0400
-Received: from tzanussi-mobl (c-98-220-238-81.hsd1.il.comcast.net [98.220.238.81])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 337C920693;
-        Wed, 13 Mar 2019 20:15:06 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1552508106;
-        bh=j5OUZFoSXRITy87q/qwgDKqVDBBqBzqeAy0BpiIzXvI=;
-        h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
-        b=BzF63iBE39OoHtb3tFTblgH63veaxbqR8Pxgt1HkQSlPKebedkHR1Rn6jVzEGAmAb
-         mmfAEqaCXluEscCw0yISAZrpxjZ6HeS2P+3WleMW5l3+2GE9taoUGZka9pD7zpxvMU
-         uDOTBlJ89PLN0Sg21oLm7VLpjqgwDZinB9Wo1ubY=
-Message-ID: <1552508104.4293.31.camel@kernel.org>
-Subject: Re: [RFC PATCH 0/7] tracing: Use common error_log with probe events
-From:   Tom Zanussi <zanussi@kernel.org>
-To:     Masami Hiramatsu <mhiramat@kernel.org>,
-        Steven Rostedt <rostedt@goodmis.org>
-Cc:     tglx@linutronix.de, namhyung@kernel.org, bigeasy@linutronix.de,
-        joel@joelfernandes.org, linux-kernel@vger.kernel.org,
-        linux-rt-users@vger.kernel.org
-Date:   Wed, 13 Mar 2019 15:15:04 -0500
-In-Reply-To: <155248005229.10815.334731901778152247.stgit@devnote2>
-References: <155248005229.10815.334731901778152247.stgit@devnote2>
-Content-Type: text/plain; charset="UTF-8"
-X-Mailer: Evolution 3.26.1-1 
-Mime-Version: 1.0
-Content-Transfer-Encoding: 7bit
+        id S1726686AbfCMUQe (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 13 Mar 2019 16:16:34 -0400
+X-Amp-Result: UNKNOWN
+X-Amp-Original-Verdict: FILE UNKNOWN
+X-Amp-File-Uploaded: False
+Received: from orsmga007.jf.intel.com ([10.7.209.58])
+  by fmsmga104.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 13 Mar 2019 13:16:34 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.58,475,1544515200"; 
+   d="scan'208";a="122435730"
+Received: from sjchrist-coffee.jf.intel.com (HELO linux.intel.com) ([10.54.74.181])
+  by orsmga007.jf.intel.com with ESMTP; 13 Mar 2019 13:16:33 -0700
+Date:   Wed, 13 Mar 2019 13:16:33 -0700
+From:   Sean Christopherson <sean.j.christopherson@intel.com>
+To:     Paolo Bonzini <pbonzini@redhat.com>,
+        Radim =?utf-8?B?S3LEjW3DocWZ?= <rkrcmar@redhat.com>
+Cc:     kvm@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] MAINTAINERS: Add KVM selftests to existing KVM entry
+Message-ID: <20190313201633.GE4409@linux.intel.com>
+References: <20190313195555.6198-1-sean.j.christopherson@intel.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190313195555.6198-1-sean.j.christopherson@intel.com>
+User-Agent: Mutt/1.5.24 (2015-08-30)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Masami,
-
-On Wed, 2019-03-13 at 21:27 +0900, Masami Hiramatsu wrote:
-> Hi Tom,
+On Wed, Mar 13, 2019 at 12:55:55PM -0700, Sean Christopherson wrote:
+> It's safe to assume Paolo and Radim are maintaining the KVM selftests
+> given that the vast majority of commits have their SOBs.  Play nice
+> with get_maintainers and make it official.
 > 
-> Here is a series of patches which applies common error_log framework
-> to
-> probe events. While applying it, I found I missed to check some
-> errors
-> in parser. Also, I made a testcase for this feature (only for kprobe
-> event side, please make your test for the hist errors too).
-
-Yep, will update the hist errors case too.
-
-> Thus I made this as a series which contains some bugfixes (a kind of
-> hardening), cleanups, and a test besides of the main patch.
-> 
-> Please feel free to pick this series to your series. I think some
-> bugfixes might be better to push Steve's urgent branch.
-> Let's talk with Steve.
-> 
-
-Thanks for doing this!  I'll try them out and pick up anything Steve
-doesn't.
-
-Tom
-
-> Oh, note that this series can be applied on your v3 series, except
-> for [4/5] :)
-> 
-> Thank you,
-> 
+> Signed-off-by: Sean Christopherson <sean.j.christopherson@intel.com>
 > ---
+>  MAINTAINERS | 1 +
+>  1 file changed, 1 insertion(+)
 > 
-> Masami Hiramatsu (7):
->       tracing/probe: Check maxactive error cases
->       tracing/probe: Check event name length correctly
->       tracing/probe: Check the size of argument name and body
->       tracing/probe: Check event/group naming rule at parsing
->       tracing/probe: Verify alloc_trace_*probe() result
->       tracing: Use tracing error_log with probe events
->       selftests/ftrace: Add error_log testcase for kprobe errors
+> diff --git a/MAINTAINERS b/MAINTAINERS
+> index 8347269aa386..b95f5b69e5be 100644
+> --- a/MAINTAINERS
+> +++ b/MAINTAINERS
+> @@ -8295,6 +8295,7 @@ F:	include/linux/kvm*
+>  F:	include/kvm/iodev.h
+>  F:	virt/kvm/*
+>  F:	tools/kvm/
+> +F:	tools/testing/selftests/kvm/
+
+Gah, this also needs: tools/testing/selftests/kvm/*/
+
+>  
+>  KERNEL VIRTUAL MACHINE FOR AMD-V (KVM/amd)
+>  M:	Joerg Roedel <joro@8bytes.org>
+> -- 
+> 2.21.0
 > 
-> 
->  kernel/trace/trace_kprobe.c                        |   90 ++++--
->  kernel/trace/trace_probe.c                         |  280
-> +++++++++++++++-----
->  kernel/trace/trace_probe.h                         |   76 +++++
->  kernel/trace/trace_uprobe.c                        |   43 ++-
->  .../ftrace/test.d/kprobe/kprobe_syntax_errors.tc   |   91 +++++++
->  5 files changed, 449 insertions(+), 131 deletions(-)
->  create mode 100644
-> tools/testing/selftests/ftrace/test.d/kprobe/kprobe_syntax_errors.tc
-> 
-> --
-> Masami Hiramatsu <mhiramat@kernel.org>
