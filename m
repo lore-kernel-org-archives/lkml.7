@@ -2,162 +2,149 @@ Return-Path: <SRS0=dUEL=RQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_PASS,URIBL_BLOCKED,USER_AGENT_MUTT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,
+	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 25C50C43381
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 Mar 2019 01:01:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 84789C43381
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 Mar 2019 01:03:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E72AB217D9
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 Mar 2019 01:01:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 46C482063F
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 Mar 2019 01:03:25 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=armh.onmicrosoft.com header.i=@armh.onmicrosoft.com header.b="k03hwOCz"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726719AbfCMBBB (ORCPT
+        id S1726562AbfCMBDY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 12 Mar 2019 21:01:01 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:38378 "EHLO mx1.redhat.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725917AbfCMBBA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 12 Mar 2019 21:01:00 -0400
-Received: from smtp.corp.redhat.com (int-mx06.intmail.prod.int.phx2.redhat.com [10.5.11.16])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id 0A9133082E71;
-        Wed, 13 Mar 2019 01:01:00 +0000 (UTC)
-Received: from redhat.com (ovpn-116-53.phx2.redhat.com [10.3.116.53])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id 2447217184;
-        Wed, 13 Mar 2019 01:00:59 +0000 (UTC)
-Date:   Tue, 12 Mar 2019 21:00:57 -0400
-From:   Jerome Glisse <jglisse@redhat.com>
-To:     Dan Williams <dan.j.williams@intel.com>
-Cc:     Andrew Morton <akpm@linux-foundation.org>,
-        Linux MM <linux-mm@kvack.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Ralph Campbell <rcampbell@nvidia.com>,
-        John Hubbard <jhubbard@nvidia.com>,
-        linux-fsdevel <linux-fsdevel@vger.kernel.org>
-Subject: Re: [PATCH 09/10] mm/hmm: allow to mirror vma of a file on a DAX
- backed filesystem
-Message-ID: <20190313010056.GA3402@redhat.com>
-References: <20190307094654.35391e0066396b204d133927@linux-foundation.org>
- <20190307185623.GD3835@redhat.com>
- <CAPcyv4gkxmmkB0nofVOvkmV7HcuBDb+1VLR9CSsp+m-QLX_mxA@mail.gmail.com>
- <20190312152551.GA3233@redhat.com>
- <CAPcyv4iYzTVpP+4iezH1BekawwPwJYiMvk2GZDzfzFLUnO+RgA@mail.gmail.com>
- <20190312190606.GA15675@redhat.com>
- <CAPcyv4g-z8nkM1B65oR-3PT_RFQbmQMsM-J-P0-nzyvvJ8gVog@mail.gmail.com>
- <20190312145214.9c8f0381cf2ff2fc2904e2d8@linux-foundation.org>
- <20190313001018.GA3312@redhat.com>
- <CAPcyv4huAHnWoLQHhVRC_U6c-1DG2joOktA-ZWa-TQ1=KaTQLA@mail.gmail.com>
+        Tue, 12 Mar 2019 21:03:24 -0400
+Received: from mail-eopbgr50080.outbound.protection.outlook.com ([40.107.5.80]:48261
+        "EHLO EUR03-VE1-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1725917AbfCMBDX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 12 Mar 2019 21:03:23 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=armh.onmicrosoft.com;
+ s=selector1-arm-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=rHPSJU/XM4yra3LCjA7ISzyT4r4mmuSIFSb51ZqYjfw=;
+ b=k03hwOCzCV16jrfU88sbL00LCOKNJkdZkSaNpCm9N1dnHqfmdWCbyJApf103ZS1ASPtVXGZbHs0qwZ5DpzW0+7aqZAvM+zWCWwPFD6kFINFu8YbR+HowYk29hLHoEaPv/58veWGpPhbFFrHNzpoozQIlY21YMFGyp1AuomLZP0E=
+Received: from AM4PR08MB2929.eurprd08.prod.outlook.com (10.171.190.138) by
+ AM4PR08MB0786.eurprd08.prod.outlook.com (10.164.82.152) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.1686.18; Wed, 13 Mar 2019 01:03:18 +0000
+Received: from AM4PR08MB2929.eurprd08.prod.outlook.com
+ ([fe80::e522:c03f:3d0c:f4ce]) by AM4PR08MB2929.eurprd08.prod.outlook.com
+ ([fe80::e522:c03f:3d0c:f4ce%4]) with mapi id 15.20.1686.021; Wed, 13 Mar 2019
+ 01:03:18 +0000
+From:   "Haibo Xu (Arm Technology China)" <Haibo.Xu@arm.com>
+To:     Sudeep Holla <Sudeep.Holla@arm.com>,
+        Andy Lutomirski <luto@kernel.org>
+CC:     "x86@kernel.org" <x86@kernel.org>,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "linuxppc-dev@lists.ozlabs.org" <linuxppc-dev@lists.ozlabs.org>,
+        Catalin Marinas <Catalin.Marinas@arm.com>,
+        Will Deacon <Will.Deacon@arm.com>,
+        Oleg Nesterov <oleg@redhat.com>,
+        Paul Mackerras <paulus@samba.org>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>,
+        Richard Weinberger <richard@nod.at>,
+        "jdike@addtoit.com" <jdike@addtoit.com>,
+        Steve Capper <Steve.Capper@arm.com>,
+        "Bin Lu (Arm Technology China)" <Bin.Lu@arm.com>,
+        Borislav Petkov <bp@alien8.de>
+Subject: Re: [PATCH 3/6] x86: clean up _TIF_SYSCALL_EMU handling using
+ ptrace_syscall_enter hook
+Thread-Topic: [PATCH 3/6] x86: clean up _TIF_SYSCALL_EMU handling using
+ ptrace_syscall_enter hook
+Thread-Index: AQHUz5P9ZKULSdDQbEW1h9vbYNE6xaX7KHCAgAAd14CAAQzrgIAKf6aAgAD7mAD//5MRgIAAmEsAgADYE4A=
+Date:   Wed, 13 Mar 2019 01:03:18 +0000
+Message-ID: <5750cfac-14a7-8eed-09f4-0d53419bea6b@arm.com>
+References: <20190228183220.15626-1-sudeep.holla@arm.com>
+ <20190228183220.15626-4-sudeep.holla@arm.com>
+ <eb9ef619-4af8-71e1-5aee-0b6294ac488b@arm.com>
+ <20190304101205.GA1504@e107155-lin>
+ <96d59a68-e5e2-86d9-c707-a79aad438b76@arm.com>
+ <20190311183403.GA31062@e107155-lin>
+ <65b00ea1-f784-4fb4-2a98-49fa44d9fa8f@arm.com>
+ <CALCETrWiF5FKUTmt4jOZJxJr6B_66NFj9TaA3Tnv1uorfkwTMg@mail.gmail.com>
+ <20190312120944.GB13825@e107155-lin>
+In-Reply-To: <20190312120944.GB13825@e107155-lin>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-clientproxiedby: HK0PR03CA0037.apcprd03.prod.outlook.com
+ (2603:1096:203:2f::25) To AM4PR08MB2929.eurprd08.prod.outlook.com
+ (2603:10a6:205:c::10)
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=Haibo.Xu@arm.com; 
+x-ms-exchange-messagesentrepresentingtype: 1
+x-originating-ip: [113.29.88.7]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: c83c4c13-ba38-4f2a-42b0-08d6a74fadc0
+x-ms-office365-filtering-ht: Tenant
+x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(7168020)(4627221)(201703031133081)(201702281549075)(8990200)(5600127)(711020)(4605104)(4618075)(2017052603328)(7153060)(7193020);SRVR:AM4PR08MB0786;
+x-ms-traffictypediagnostic: AM4PR08MB0786:
+x-microsoft-exchange-diagnostics: 1;AM4PR08MB0786;20:BdnkpVSfCDkpLkBV+T6J2k0rcndxex7JXa+uwH45ZBNk380ZfiQH1rO9TtxRN8v/ezTB0cjUVdR0/3MAUA/69+PwYs+MShEEu/Mh16pTmu4V+rGxDhlAN5Q2q5siQM08K18CJ05RagcF42XAeXky9j6axLrlraXVVWIS6e0Uhlk=
+x-microsoft-antispam-prvs: <AM4PR08MB07869B621F2C0FC4CDB68EB7854A0@AM4PR08MB0786.eurprd08.prod.outlook.com>
+x-forefront-prvs: 09752BC779
+x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(346002)(366004)(396003)(39860400002)(136003)(376002)(40434004)(199004)(189003)(31696002)(36756003)(72206003)(478600001)(52116002)(3846002)(6116002)(256004)(14454004)(7416002)(86362001)(2616005)(55236004)(68736007)(11346002)(8936002)(106356001)(53936002)(93886005)(6512007)(81166006)(105586002)(446003)(2906002)(8676002)(110136005)(6436002)(6486002)(486006)(5660300002)(102836004)(31686004)(66066001)(14444005)(54906003)(229853002)(5024004)(25786009)(26005)(53546011)(6506007)(386003)(186003)(305945005)(7736002)(76176011)(97736004)(99286004)(316002)(476003)(6246003)(71190400001)(71200400001)(4326008)(81156014);DIR:OUT;SFP:1101;SCL:1;SRVR:AM4PR08MB0786;H:AM4PR08MB2929.eurprd08.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
+received-spf: None (protection.outlook.com: arm.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam-message-info: k7CsVhxf5HY7vdzqIrg41lC1rUfVJhf92HGfQKD5HcKnTy2yc4SQlqetE+3D7DweBede0vFABBUSFDbL8/+jzZVz4d3GUW1A6Cbm1xgEVMPpkh4DsGh51HLFVGzmG2os46WzYWEk2R5epzGbpH5yLtIVJQ7t5w6jQMb6+hKnQGAwleZgDccFuZI6pHxv7OK7Bdlnda5PdHrxfp4wivQlnRT92ezcXhmjkmBXhy9U7DOwPuqkbtNw/EPKwXXRJodETQgKL41/0BE3yQXWIJOqwhq9cSq9rnnqyuclYMm7kY3Hh71bP36JEX7LCxeniTvdbLTkioFgVbooYqy5RH3pQD1f6WbfO4AtpFMf5tuJj2oT7vqD43lhEV7jXJtQmI9URG43k2GqrUeSGHnsGdB8K/8M0kKFg1+NlqtaoTF62lo=
+Content-Type: text/plain; charset="utf-8"
+Content-ID: <C5B417A193AEF34B962ED5DF32A4EFB2@eurprd08.prod.outlook.com>
+Content-Transfer-Encoding: base64
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAPcyv4huAHnWoLQHhVRC_U6c-1DG2joOktA-ZWa-TQ1=KaTQLA@mail.gmail.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.16
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.46]); Wed, 13 Mar 2019 01:01:00 +0000 (UTC)
+X-OriginatorOrg: arm.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: c83c4c13-ba38-4f2a-42b0-08d6a74fadc0
+X-MS-Exchange-CrossTenant-originalarrivaltime: 13 Mar 2019 01:03:18.1409
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: f34e5979-57d9-4aaa-ad4d-b122a662184d
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: AM4PR08MB0786
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Mar 12, 2019 at 05:46:51PM -0700, Dan Williams wrote:
-> On Tue, Mar 12, 2019 at 5:10 PM Jerome Glisse <jglisse@redhat.com> wrote:
-> >
-> > On Tue, Mar 12, 2019 at 02:52:14PM -0700, Andrew Morton wrote:
-> > > On Tue, 12 Mar 2019 12:30:52 -0700 Dan Williams <dan.j.williams@intel.com> wrote:
-> > >
-> > > > On Tue, Mar 12, 2019 at 12:06 PM Jerome Glisse <jglisse@redhat.com> wrote:
-> > > > > On Tue, Mar 12, 2019 at 09:06:12AM -0700, Dan Williams wrote:
-> > > > > > On Tue, Mar 12, 2019 at 8:26 AM Jerome Glisse <jglisse@redhat.com> wrote:
-> > > > [..]
-> > > > > > > Spirit of the rule is better than blind application of rule.
-> > > > > >
-> > > > > > Again, I fail to see why HMM is suddenly unable to make forward
-> > > > > > progress when the infrastructure that came before it was merged with
-> > > > > > consumers in the same development cycle.
-> > > > > >
-> > > > > > A gate to upstream merge is about the only lever a reviewer has to
-> > > > > > push for change, and these requests to uncouple the consumer only
-> > > > > > serve to weaken that review tool in my mind.
-> > > > >
-> > > > > Well let just agree to disagree and leave it at that and stop
-> > > > > wasting each other time
-> > > >
-> > > > I'm fine to continue this discussion if you are. Please be specific
-> > > > about where we disagree and what aspect of the proposed rules about
-> > > > merge staging are either acceptable, painful-but-doable, or
-> > > > show-stoppers. Do you agree that HMM is doing something novel with
-> > > > merge staging, am I off base there?
-> > >
-> > > You're correct.  We chose to go this way because the HMM code is so
-> > > large and all-over-the-place that developing it in a standalone tree
-> > > seemed impractical - better to feed it into mainline piecewise.
-> > >
-> > > This decision very much assumed that HMM users would definitely be
-> > > merged, and that it would happen soon.  I was skeptical for a long time
-> > > and was eventually persuaded by quite a few conversations with various
-> > > architecture and driver maintainers indicating that these HMM users
-> > > would be forthcoming.
-> > >
-> > > In retrospect, the arrival of HMM clients took quite a lot longer than
-> > > was anticipated and I'm not sure that all of the anticipated usage
-> > > sites will actually be using it.  I wish I'd kept records of
-> > > who-said-what, but I didn't and the info is now all rather dissipated.
-> > >
-> > > So the plan didn't really work out as hoped.  Lesson learned, I would
-> > > now very much prefer that new HMM feature work's changelogs include
-> > > links to the driver patchsets which will be using those features and
-> > > acks and review input from the developers of those driver patchsets.
-> >
-> > This is what i am doing now and this patchset falls into that. I did
-> > post the ODP and nouveau bits to use the 2 new functions (dma map and
-> > unmap). I expect to merge both ODP and nouveau bits for that during
-> > the next merge window.
-> >
-> > Also with 5.1 everything that is upstream is use by nouveau at least.
-> > They are posted patches to use HMM for AMD, Intel, Radeon, ODP, PPC.
-> > Some are going through several revisions so i do not know exactly when
-> > each will make it upstream but i keep working on all this.
-> >
-> > So the guideline we agree on:
-> >     - no new infrastructure without user
-> >     - device driver maintainer for which new infrastructure is done
-> >       must either sign off or review of explicitly say that they want
-> >       the feature I do not expect all driver maintainer will have
-> >       the bandwidth to do proper review of the mm part of the infra-
-> >       structure and it would not be fair to ask that from them. They
-> >       can still provide feedback on the API expose to the device
-> >       driver.
-> >     - driver bits must be posted at the same time as the new infra-
-> >       structure even if they target the next release cycle to avoid
-> >       inter-tree dependency
-> >     - driver bits must be merge as soon as possible
-> 
-> What about EXPORT_SYMBOL_GPL?
-
-I explained why i do not see value in changing export, but i will not
-oppose that change either.
-
-
-> > Thing we do not agree on:
-> >     - If driver bits miss for any reason the +1 target directly
-> >       revert the new infra-structure. I think it should not be black
-> >       and white and the reasons why the driver bit missed the merge
-> >       window should be taken into account. If the feature is still
-> >       wanted and the driver bits missed the window for simple reasons
-> >       then it means that we push everything by 2 release ie the
-> >       revert is done in +1 then we reupload the infra-structure in
-> >       +2 and finaly repush the driver bit in +3 so we loose 1 cycle.
-> 
-> I think that pain is reasonable.
-> 
-> >       Hence why i would rather that the revert would only happen if
-> >       it is clear that the infrastructure is not ready or can not
-> >       be use in timely (over couple kernel release) fashion by any
-> >       drivers.
-> 
-> This seems too generous to me, but in the interest of moving this
-> discussion forward let's cross that bridge if/when it happens.
-> Hopefully the threat of this debate recurring means consumers put in
-> the due diligence to get things merged at infrastructure + 1 time.
+T24gMjAxOS8zLzEyIDIwOjA5LCBTdWRlZXAgSG9sbGEgd3JvdGU6DQo+IE9uIE1vbiwgTWFyIDEx
+LCAyMDE5IGF0IDA4OjA0OjM5UE0gLTA3MDAsIEFuZHkgTHV0b21pcnNraSB3cm90ZToNCj4+IE9u
+IE1vbiwgTWFyIDExLCAyMDE5IGF0IDY6MzUgUE0gSGFpYm8gWHUgKEFybSBUZWNobm9sb2d5IENo
+aW5hKQ0KPj4gPEhhaWJvLlh1QGFybS5jb20+IHdyb3RlOg0KPj4+DQo+DQo+IFsuLi5dDQo+DQo+
+Pj4gRm9yIHRoZSBQVFJBQ0VfU1lTRU1VX1NJTkdMRVNURVAgcmVxdWVzdCwgcHRyYWNlIG9ubHkg
+bmVlZCB0byByZXBvcnQoc2VuZA0KPj4+IFNJR1RSQVApIGF0IHRoZSBlbnRyeSBvZiBhIHN5c3Rl
+bSBjYWxsLCBubyBuZWVkIHRvIHJlcG9ydCBhdCB0aGUgZXhpdCBvZiBhDQo+Pj4gc3lzdGVtIGNh
+bGwuVGhhdCdzIHdoeSB0aGUgb2xkIGxvZ2ljLXtzdGVwID0gKChmbGFncyAmIChfVElGX1NJTkdM
+RVNURVAgfA0KPj4+IF9USUZfU1lTQ0FMTF9FTVUpKSA9PSBfVElGX1NJTkdMRVNURVApfSBoZXJl
+IHRyeSB0byBmaWx0ZXIgb3V0IHRoZSBzcGVjaWFsDQo+Pj4gY2FzZShQVFJBQ0VfU1lTRU1VX1NJ
+TkdMRVNURVApLg0KPj4+DQo+Pj4gQW5vdGhlciB3YXkgdG8gbWFrZSBzdXJlIHRoZSBsb2dpYyBp
+cyBmaW5lLCB5b3UgY2FuIHJ1biBzb21lIHRlc3RzIHdpdGgNCj4+PiByZXNwZWN0IHRvIGJvdGgg
+bG9naWMsIGFuZCB0byBjaGVjayB3aGV0aGVyIHRoZXkgaGF2ZSB0aGUgc2FtZSBiZWhhdmlvci4N
+Cj4+DQo+PiB0b29scy90ZXN0aW5nL3NlbGZ0ZXN0cy94ODYvcHRyYWNlX3N5c2NhbGwuYyBoYXMg
+YSB0ZXN0IGludGVuZGVkIHRvDQo+PiBleGVyY2lzZSB0aGlzLiAgQ2FuIG9uZSBvZiB5b3UgZWl0
+aGVyIGNvbmZpcm0gdGhhdCBpdCBkb2VzIGV4ZXJjaXNlIGl0DQo+PiBhbmQgdGhhdCBpdCBzdGls
+bCBwYXNzZXMgb3IgY2FuIHlvdSBpbXByb3ZlIHRoZSB0ZXN0Pw0KPj4NCj4gSSBkaWQgcnVuIHRo
+ZSB0ZXN0cyB3aGljaCBkaWRuJ3QgZmxhZyBhbnl0aGluZy4gSSBoYXZlbid0IGxvb2tlZCBhdCB0
+aGUNCj4gZGV0YWlscyBvZiB0ZXN0IGltcGxlbWVudGF0aW9uLCBidXQgc2VlbSB0byBtaXNzIHRo
+aXMgY2FzZS4gSSB3aWxsIHNlZQ0KPiB3aGF0IGNhbiBiZSBpbXByb3ZlZChpZiBpdCdzIHBvc3Np
+YmxlKS4gQWxzbyBJIHRoaW5rIHNpbmdsZV9zdGVwX3N5c2NhbGwNCj4gaXMgdGhlIG9uZSBJIG5l
+ZWQgdG8gbG9vayBmb3IgdGhpcyBwYXJ0aWN1bGFyIG9uZS4gQm90aCBzaW5nbGVfc3RlcF9zeXNj
+YWxsDQo+IHB0cmFjZV9zeXNjYWxsIHJlcG9ydGVkIG5vIGVycm9ycy4NCj4NCj4gLS0NCj4gUmVn
+YXJkcywNCj4gU3VkZWVwDQo+DQoNClNpbmNlIHB0cmFjZSgpIHN5c3RlbSBjYWxsIGRvIGhhdmUg
+c28gbWFueSByZXF1ZXN0IHR5cGUsIEknbSBub3Qgc3VyZSB3aGV0aGVyIHRoZQ0KdGVzdCBjYXNl
+cyBoYXZlIGNvdmVyZWQgYWxsIG9mIHRoYXQuIEJ1dCBoZXJlIHdlJ2QgYmV0dGVyIG1ha2Ugc3Vy
+ZSB0aGUgUFRSQUNFX1NZU0VNVQ0KYW5kIFBUUkFDRV9TWVNFTVVfU0lOR0xFU1RFUCByZXF1ZXN0
+cyBhcmUgd29yayBjb3JyZWN0bHkuIE1heSBiZSB5b3UgY2FuIHZlcmlmeSB0aGVtIHdpdGgNCnRl
+c3RzIGZyb20gQmluIEx1KGJpbi5sdUBhcm0uY29tKS4NCg0KUmVnYXJkcywNCkhhaWJvDQpJTVBP
+UlRBTlQgTk9USUNFOiBUaGUgY29udGVudHMgb2YgdGhpcyBlbWFpbCBhbmQgYW55IGF0dGFjaG1l
+bnRzIGFyZSBjb25maWRlbnRpYWwgYW5kIG1heSBhbHNvIGJlIHByaXZpbGVnZWQuIElmIHlvdSBh
+cmUgbm90IHRoZSBpbnRlbmRlZCByZWNpcGllbnQsIHBsZWFzZSBub3RpZnkgdGhlIHNlbmRlciBp
+bW1lZGlhdGVseSBhbmQgZG8gbm90IGRpc2Nsb3NlIHRoZSBjb250ZW50cyB0byBhbnkgb3RoZXIg
+cGVyc29uLCB1c2UgaXQgZm9yIGFueSBwdXJwb3NlLCBvciBzdG9yZSBvciBjb3B5IHRoZSBpbmZv
+cm1hdGlvbiBpbiBhbnkgbWVkaXVtLiBUaGFuayB5b3UuDQo=
