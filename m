@@ -2,52 +2,54 @@ Return-Path: <SRS0=dUEL=RQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9353BC43381
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 Mar 2019 12:27:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 67DF8C43381
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 Mar 2019 12:27:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5DA3D2183F
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 Mar 2019 12:27:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2B2F12184D
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 Mar 2019 12:27:49 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1552480060;
-	bh=I9t5tejiHd9/lcIsk8SWy6NnurkuYArSRJZW8bqXfOs=;
-	h=From:To:Cc:Subject:Date:List-ID:From;
-	b=xaoaaRcmc7fvsrT4XAEZD+8o9qFSZwiJ1XEfadVLn+u7eAArgETTvbP3b36mUCl5n
-	 7NpqN2X6ALj1G28WPAjx/j1FOxvA/3W5IoWC2cHeHS73j0XlCKd6Q4QR5jg3cPJL/m
-	 mUyj37W8yrkcbdRK2JnRsI4E6jISP3NRXxq2iels=
+	s=default; t=1552480069;
+	bh=p8QHokGfUN0dEUoC1u5w2h/05pXuzMCIlQ+v/4PbFN8=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=IHHTRBVNZbZ0r8f0epzdZY0sGsgqbP20lFsSvRR/hUmLUtDgoFw037nUIYI75Srwx
+	 x9YzaLAXrado/FLVWuRFODz/PwoMVWXKYQdCh9WfhOFbLkMmDA+WWgjljEuVblb6e/
+	 KL3/P4R7wf/n9wxe8XCuKnnLwuhajW/7pXaSYvcI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726575AbfCMM1i (ORCPT
+        id S1726686AbfCMM1s (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 13 Mar 2019 08:27:38 -0400
-Received: from mail.kernel.org ([198.145.29.99]:41490 "EHLO mail.kernel.org"
+        Wed, 13 Mar 2019 08:27:48 -0400
+Received: from mail.kernel.org ([198.145.29.99]:41548 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726263AbfCMM1i (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 13 Mar 2019 08:27:38 -0400
+        id S1726130AbfCMM1r (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 13 Mar 2019 08:27:47 -0400
 Received: from localhost.localdomain (NE2965lan1.rev.em-net.ne.jp [210.141.244.193])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 1734D214AE;
-        Wed, 13 Mar 2019 12:27:34 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 379992183F;
+        Wed, 13 Mar 2019 12:27:45 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1552480057;
-        bh=I9t5tejiHd9/lcIsk8SWy6NnurkuYArSRJZW8bqXfOs=;
-        h=From:To:Cc:Subject:Date:From;
-        b=iMfTr9cMsl2rFtJOiXmJbYRh4LS+utU0tAshLuc94ZvZrCvKAIIUkPc86khO4iF8E
-         7/iNpw7+r9MLtzr14VptT/ky+TXwTKbx/bTSGzKO7Lzc63KHB+mKMvHfNJKP8wBeSf
-         7h3RsPOtCpS8yi9DR4gvqXkgTx0N3BzzNPkyQu40=
+        s=default; t=1552480067;
+        bh=p8QHokGfUN0dEUoC1u5w2h/05pXuzMCIlQ+v/4PbFN8=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=OLCSPnf5ptJKRCx9aJIrtp4K6WsbJCtyMHyvcrU6Gd2e3dZ50FyIc2pHagCZuCH59
+         zGcapucb2A3pSCR96rWSTWyc7HhirXLFBgnadKRrVHBqA4xEFlR+ppbullxB8fhDe7
+         3w5EYWgSMwEnNhe3gUEj7WKjUymVo8Z6B6xWVgGE=
 From:   Masami Hiramatsu <mhiramat@kernel.org>
 To:     Tom Zanussi <zanussi@kernel.org>,
         Steven Rostedt <rostedt@goodmis.org>
 Cc:     tglx@linutronix.de, mhiramat@kernel.org, namhyung@kernel.org,
         bigeasy@linutronix.de, joel@joelfernandes.org,
         linux-kernel@vger.kernel.org, linux-rt-users@vger.kernel.org
-Subject: [RFC PATCH 0/7] tracing: Use common error_log with probe events
-Date:   Wed, 13 Mar 2019 21:27:32 +0900
-Message-Id: <155248005229.10815.334731901778152247.stgit@devnote2>
+Subject: [RFC PATCH 1/7] tracing/probe: Check maxactive error cases
+Date:   Wed, 13 Mar 2019 21:27:42 +0900
+Message-Id: <155248006270.10815.14600382508884855084.stgit@devnote2>
 X-Mailer: git-send-email 2.17.1
+In-Reply-To: <155248005229.10815.334731901778152247.stgit@devnote2>
+References: <155248005229.10815.334731901778152247.stgit@devnote2>
 User-Agent: StGit/0.17.1-dirty
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
@@ -57,43 +59,41 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Tom,
+Check maxactive on kprobe error case, because maxactive
+is only for kretprobe, not for kprobe. Also, maxactive
+should not be 0, it should be at least 1.
 
-Here is a series of patches which applies common error_log framework to
-probe events. While applying it, I found I missed to check some errors
-in parser. Also, I made a testcase for this feature (only for kprobe
-event side, please make your test for the hist errors too).
-Thus I made this as a series which contains some bugfixes (a kind of
-hardening), cleanups, and a test besides of the main patch.
-
-Please feel free to pick this series to your series. I think some
-bugfixes might be better to push Steve's urgent branch.
-Let's talk with Steve.
-
-Oh, note that this series can be applied on your v3 series, except
-for [4/5] :)
-
-Thank you,
-
+Signed-off-by: Masami Hiramatsu <mhiramat@kernel.org>
 ---
+ kernel/trace/trace_kprobe.c |   10 +++++++---
+ 1 file changed, 7 insertions(+), 3 deletions(-)
 
-Masami Hiramatsu (7):
-      tracing/probe: Check maxactive error cases
-      tracing/probe: Check event name length correctly
-      tracing/probe: Check the size of argument name and body
-      tracing/probe: Check event/group naming rule at parsing
-      tracing/probe: Verify alloc_trace_*probe() result
-      tracing: Use tracing error_log with probe events
-      selftests/ftrace: Add error_log testcase for kprobe errors
+diff --git a/kernel/trace/trace_kprobe.c b/kernel/trace/trace_kprobe.c
+index d5fb09ebba8b..d47e12596f12 100644
+--- a/kernel/trace/trace_kprobe.c
++++ b/kernel/trace/trace_kprobe.c
+@@ -624,7 +624,11 @@ static int trace_kprobe_create(int argc, const char *argv[])
+ 	if (event)
+ 		event++;
+ 
+-	if (is_return && isdigit(argv[0][1])) {
++	if (isdigit(argv[0][1])) {
++		if (!is_return) {
++			pr_info("Maxactive is not for kprobe");
++			return -EINVAL;
++		}
+ 		if (event)
+ 			len = event - &argv[0][1] - 1;
+ 		else
+@@ -634,8 +638,8 @@ static int trace_kprobe_create(int argc, const char *argv[])
+ 		memcpy(buf, &argv[0][1], len);
+ 		buf[len] = '\0';
+ 		ret = kstrtouint(buf, 0, &maxactive);
+-		if (ret) {
+-			pr_info("Failed to parse maxactive.\n");
++		if (ret || !maxactive) {
++			pr_info("Invalid maxactive number\n");
+ 			return ret;
+ 		}
+ 		/* kretprobes instances are iterated over via a list. The
 
-
- kernel/trace/trace_kprobe.c                        |   90 ++++--
- kernel/trace/trace_probe.c                         |  280 +++++++++++++++-----
- kernel/trace/trace_probe.h                         |   76 +++++
- kernel/trace/trace_uprobe.c                        |   43 ++-
- .../ftrace/test.d/kprobe/kprobe_syntax_errors.tc   |   91 +++++++
- 5 files changed, 449 insertions(+), 131 deletions(-)
- create mode 100644 tools/testing/selftests/ftrace/test.d/kprobe/kprobe_syntax_errors.tc
-
---
-Masami Hiramatsu <mhiramat@kernel.org>
