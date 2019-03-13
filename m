@@ -7,55 +7,51 @@ X-Spam-Status: No, score=-12.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B9E07C43381
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 Mar 2019 15:40:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C580EC43381
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 Mar 2019 15:40:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8795020693
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 Mar 2019 15:40:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 91A2C20693
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 Mar 2019 15:40:22 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1552491609;
-	bh=e/GGHQ5mHwp0DNbD7E7CEtBDaVOrWkrapBRjqOEDHGE=;
+	s=default; t=1552491622;
+	bh=Z7gSD1cfhfeWzy9eFF6aNew+iatyRPjZC7Lzg4yYYKk=;
 	h=From:To:Cc:Subject:In-Reply-To:Date:List-ID:From;
-	b=IXWDbIPS1Fgizk/sJAVXCC5ftLo7VpuMOUlYD0vUmdBW6fcq3uILt4ltdVsEmYn3d
-	 /DUhMYZ8soLxKAV4PfNkoXc6DyPaxo7G7AhygQS6JpLsK77oWB+4GzMmINXRGFeOKb
-	 h0TF1+BnvfHINgTIsRtnSTN3ZPyQ3BdXcGeITNOk=
+	b=E+Q67SfSDWDcLVv+q/kGBkuzK7+Hy0iEQTgQUzXyLQwXzkeZjylMFGNWUB+5tFHmH
+	 FetqWcSkdFqKdd3miJYXonv4zouvK9jwpwaeSl0vfSPx6cw5DwMi4YqJGaDLJo4CKN
+	 zifRSuVXWLMY/GJT9pd1Ykg7++kYiWPOe3PIS0nc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727326AbfCMPkI (ORCPT
+        id S1727332AbfCMPkV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 13 Mar 2019 11:40:08 -0400
-Received: from heliosphere.sirena.org.uk ([172.104.155.198]:51642 "EHLO
+        Wed, 13 Mar 2019 11:40:21 -0400
+Received: from heliosphere.sirena.org.uk ([172.104.155.198]:51062 "EHLO
         heliosphere.sirena.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726465AbfCMPkE (ORCPT
+        with ESMTP id S1726581AbfCMPjq (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 13 Mar 2019 11:40:04 -0400
+        Wed, 13 Mar 2019 11:39:46 -0400
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
         d=sirena.org.uk; s=20170815-heliosphere; h=Date:Message-Id:In-Reply-To:
         Subject:Cc:To:From:Sender:Reply-To:MIME-Version:Content-Type:
         Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
         Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:References:
         List-Id:List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:
-        List-Archive; bh=CA1F94kA2URfqK2hxWf2nTYGSDQuAaGx2MuHdOUEU3A=; b=r1Ro0oqEWDot
-        FMT4bQPVLuPWLqdB59171hTS2zZVDqi8oENK2ieGfkhwZAjBPVTIcIhEowkv21W05fEXULGxZv/Wh
-        QKlnM2Gnp/OdkLeaaXvxA6fjnfkMkmCrMSWt98cw/n11it2e4R7UgNNnL1n0IiAHAnwm2QmZHJdS+
-        9ogL4=;
+        List-Archive; bh=vwg+fTsjOHRkwc6pYQ+QdK2eEly5aPzVudr4+tuAEPE=; b=Qf4Bid7RBULH
+        OP1XP4cADJuyxaxSA9x3IRNCH75DF089IaN9UIgg9a2xMBqNGrt9yoie1HrzT5ExZAxGU3mSV/RPr
+        kTzKAMiGX+/WcrLs47IbcX19Ojs/V/b+qtXhYTF8fgzQqwUZ7O+vmWt5vYFHK8wiYgS4JEFErhcxe
+        iVoD8=;
 Received: from cpc102320-sgyl38-2-0-cust46.18-2.cable.virginm.net ([82.37.168.47] helo=debutante.sirena.org.uk)
         by heliosphere.sirena.org.uk with esmtpa (Exim 4.89)
         (envelope-from <broonie@sirena.org.uk>)
-        id 1h45z5-0003Ut-3g; Wed, 13 Mar 2019 15:39:59 +0000
+        id 1h45yq-0003UW-Hh; Wed, 13 Mar 2019 15:39:44 +0000
 Received: by debutante.sirena.org.uk (Postfix, from userid 1000)
-        id A52781128B97; Wed, 13 Mar 2019 15:39:53 +0000 (GMT)
+        id 186B61128B97; Wed, 13 Mar 2019 15:39:44 +0000 (GMT)
 From:   Mark Brown <broonie@kernel.org>
-To:     Volker Haspel <volker.haspel@linutronix.de>
-Cc:     John Ogness <john.ogness@linutronix.de>,
-        Mark Brown <broonie@kernel.org>, broonie@kernel.org,
-        linux-kernel@vger.kernel.org, linux-spi@vger.kernel.org,
-        han.xu@nxp.com, volker.haspel@linutronix.de,
-        john.ogness@linutronix.de, linux-spi@vger.kernel.org
-Subject: Applied "spi: spi-fsl-qspi: use devm_spi_register_controller" to the spi tree
-In-Reply-To:  <20190312101203.14207-2-volker.haspel@linutronix.de>
+To:     Axel Lin <axel.lin@ingics.com>
+Cc:     Mark Brown <broonie@kernel.org>, linux-kernel@vger.kernel.org
+Subject: Applied "regulator: ab3100: Remove ab3100_regulators_remove function" to the regulator tree
+In-Reply-To: 
 X-Patchwork-Hint: ignore
-Message-Id: <20190313153953.A52781128B97@debutante.sirena.org.uk>
-Date:   Wed, 13 Mar 2019 15:39:53 +0000 (GMT)
+Message-Id: <20190313153944.186B61128B97@debutante.sirena.org.uk>
+Date:   Wed, 13 Mar 2019 15:39:44 +0000 (GMT)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
@@ -63,11 +59,11 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 The patch
 
-   spi: spi-fsl-qspi: use devm_spi_register_controller
+   regulator: ab3100: Remove ab3100_regulators_remove function
 
-has been applied to the spi tree at
+has been applied to the regulator tree at
 
-   https://git.kernel.org/pub/scm/linux/kernel/git/broonie/spi.git 
+   https://git.kernel.org/pub/scm/linux/kernel/git/broonie/regulator.git 
 
 All being well this means that it will be integrated into the linux-next
 tree (usually sometime in the next 24 hours) and sent to Linus during
@@ -88,38 +84,94 @@ to this mail.
 Thanks,
 Mark
 
-From 8fcb830a00f0980ffe38d223cdd9a4d2d24da476 Mon Sep 17 00:00:00 2001
-From: Volker Haspel <volker.haspel@linutronix.de>
-Date: Tue, 12 Mar 2019 11:12:03 +0100
-Subject: [PATCH] spi: spi-fsl-qspi: use devm_spi_register_controller
+From 5b60ee576a02cb6b2371dec085ef2623a7df77b9 Mon Sep 17 00:00:00 2001
+From: Axel Lin <axel.lin@ingics.com>
+Date: Thu, 7 Mar 2019 21:53:56 +0800
+Subject: [PATCH] regulator: ab3100: Remove ab3100_regulators_remove function
 
-The driver does not clearly unregister the spi controller.
-Therefore calling an unbind and bind again will end up in a
-Kernel crash.
+Current code is using devm_regulator_register() so it is not necessary
+to save reg->rdev for clean up. Remove *rdev from struct ab3100_regulator,
+then ab3100_regulators_remove() can be removed as well.
 
-The function devm_spi_register_controller will automatically
-be unregister the SPI device.
-
-Signed-off-by: Volker Haspel <volker.haspel@linutronix.de>
-Signed-off-by: John Ogness <john.ogness@linutronix.de>
+Signed-off-by: Axel Lin <axel.lin@ingics.com>
+Reviewed-by: Linus Walleij <linus.walleij@linaro.org>
 Signed-off-by: Mark Brown <broonie@kernel.org>
 ---
- drivers/spi/spi-fsl-qspi.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/regulator/ab3100.c | 24 ++----------------------
+ 1 file changed, 2 insertions(+), 22 deletions(-)
 
-diff --git a/drivers/spi/spi-fsl-qspi.c b/drivers/spi/spi-fsl-qspi.c
-index 6a713f78a62e..41a49b93ca60 100644
---- a/drivers/spi/spi-fsl-qspi.c
-+++ b/drivers/spi/spi-fsl-qspi.c
-@@ -882,7 +882,7 @@ static int fsl_qspi_probe(struct platform_device *pdev)
+diff --git a/drivers/regulator/ab3100.c b/drivers/regulator/ab3100.c
+index de2644490f0d..c92966a79a7e 100644
+--- a/drivers/regulator/ab3100.c
++++ b/drivers/regulator/ab3100.c
+@@ -48,7 +48,6 @@
+  * @regreg: regulator register number in the AB3100
+  */
+ struct ab3100_regulator {
+-	struct regulator_dev *rdev;
+ 	struct device *dev;
+ 	struct ab3100_platform_data *plfdata;
+ 	u8 regreg;
+@@ -545,8 +544,6 @@ static int ab3100_regulator_register(struct platform_device *pdev,
+ 		return err;
+ 	}
  
- 	ctlr->dev.of_node = np;
+-	/* Then set a pointer back to the registered regulator */
+-	reg->rdev = rdev;
+ 	return 0;
+ }
  
--	ret = spi_register_controller(ctlr);
-+	ret = devm_spi_register_controller(dev, ctlr);
- 	if (ret)
- 		goto err_destroy_mutex;
+@@ -609,18 +606,6 @@ static const u8 ab3100_reg_initvals[] = {
+ 	LDO_D_SETTING,
+ };
  
+-static int ab3100_regulators_remove(struct platform_device *pdev)
+-{
+-	int i;
+-
+-	for (i = 0; i < AB3100_NUM_REGULATORS; i++) {
+-		struct ab3100_regulator *reg = &ab3100_regulators[i];
+-
+-		reg->rdev = NULL;
+-	}
+-	return 0;
+-}
+-
+ static int
+ ab3100_regulator_of_probe(struct platform_device *pdev, struct device_node *np)
+ {
+@@ -647,10 +632,8 @@ ab3100_regulator_of_probe(struct platform_device *pdev, struct device_node *np)
+ 			pdev, NULL, ab3100_regulator_matches[i].init_data,
+ 			ab3100_regulator_matches[i].of_node,
+ 			(unsigned long)ab3100_regulator_matches[i].driver_data);
+-		if (err) {
+-			ab3100_regulators_remove(pdev);
++		if (err)
+ 			return err;
+-		}
+ 	}
+ 
+ 	return 0;
+@@ -709,10 +692,8 @@ static int ab3100_regulators_probe(struct platform_device *pdev)
+ 
+ 		err = ab3100_regulator_register(pdev, plfdata, NULL, NULL,
+ 						desc->id);
+-		if (err) {
+-			ab3100_regulators_remove(pdev);
++		if (err)
+ 			return err;
+-		}
+ 	}
+ 
+ 	return 0;
+@@ -723,7 +704,6 @@ static struct platform_driver ab3100_regulators_driver = {
+ 		.name  = "ab3100-regulators",
+ 	},
+ 	.probe = ab3100_regulators_probe,
+-	.remove = ab3100_regulators_remove,
+ };
+ 
+ static __init int ab3100_regulators_init(void)
 -- 
 2.20.1
 
