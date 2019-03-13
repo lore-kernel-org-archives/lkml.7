@@ -2,150 +2,119 @@ Return-Path: <SRS0=dUEL=RQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_MUTT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9DCEBC43381
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 Mar 2019 14:37:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6F1A9C43381
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 Mar 2019 14:37:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6C14D2087C
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 Mar 2019 14:37:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 33B0C2147C
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 Mar 2019 14:37:46 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1552487866;
+	bh=qkfTDZ//14cTqXpCbQMorCnPESzMrW1yNqpkwcTR8BE=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
+	b=mr3dP/0gh6xEjcR0qIPSvTGh6s0rCSSSbcJR2mMH/5lx72nZdzusLudQvRdgmBekd
+	 xHA9/yS0qIa8zklSdcOlJybvUlUVnMNCBygskQ6PRLD7cX5OVnXmwljsqF/z/msT+f
+	 6D535whxF5AL/a3cTpcRDevMkU6gmEKv1yxrPFpQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727002AbfCMOha (ORCPT
+        id S1727047AbfCMOhp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 13 Mar 2019 10:37:30 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:47480 "EHLO mx1.redhat.com"
+        Wed, 13 Mar 2019 10:37:45 -0400
+Received: from mail.kernel.org ([198.145.29.99]:44400 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725889AbfCMOh3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 13 Mar 2019 10:37:29 -0400
-Received: from smtp.corp.redhat.com (int-mx02.intmail.prod.int.phx2.redhat.com [10.5.11.12])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        id S1726349AbfCMOho (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 13 Mar 2019 10:37:44 -0400
+Received: from devnote2 (NE2965lan1.rev.em-net.ne.jp [210.141.244.193])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id DD21B7E436;
-        Wed, 13 Mar 2019 14:37:28 +0000 (UTC)
-Received: from krava (unknown [10.43.17.124])
-        by smtp.corp.redhat.com (Postfix) with SMTP id 3582D619CC;
-        Wed, 13 Mar 2019 14:37:27 +0000 (UTC)
-Date:   Wed, 13 Mar 2019 15:37:26 +0100
-From:   Jiri Olsa <jolsa@redhat.com>
-To:     Alexey Budankov <alexey.budankov@linux.intel.com>
-Cc:     Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Andi Kleen <ak@linux.intel.com>,
-        linux-kernel <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH v4 0/10] perf: enable compression of record mode trace to
- save storage space
-Message-ID: <20190313143726.GG6676@krava>
-References: <bb018a36-5249-ca6a-8e16-6afac442bae5@linux.intel.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <bb018a36-5249-ca6a-8e16-6afac442bae5@linux.intel.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.12
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.27]); Wed, 13 Mar 2019 14:37:29 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 765372087C;
+        Wed, 13 Mar 2019 14:37:41 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1552487863;
+        bh=qkfTDZ//14cTqXpCbQMorCnPESzMrW1yNqpkwcTR8BE=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=K9DH7LQqXrktyi6vmBNjaeTVAIYRKgQmNibZ71/S3TnwuFvdbJlXWVuB6B6i8bGmT
+         z+rkIkwJ9xumC/m4czUGytSK9OgHIHUVQS5vqIvYgLdeAY14Nb3Cg1+OWxCVfGUEMd
+         st2osd0GbLyjM1OkUGqND/1VRyelMgBYhoE99QxI=
+Date:   Wed, 13 Mar 2019 23:37:39 +0900
+From:   Masami Hiramatsu <mhiramat@kernel.org>
+To:     Steven Rostedt <rostedt@goodmis.org>
+Cc:     Tom Zanussi <zanussi@kernel.org>, tglx@linutronix.de,
+        namhyung@kernel.org, bigeasy@linutronix.de, joel@joelfernandes.org,
+        linux-kernel@vger.kernel.org, linux-rt-users@vger.kernel.org
+Subject: Re: [RFC PATCH 1/7] tracing/probe: Check maxactive error cases
+Message-Id: <20190313233739.09f58a0c5762d9a43470046b@kernel.org>
+In-Reply-To: <20190313092051.77d04675@gandalf.local.home>
+References: <155248005229.10815.334731901778152247.stgit@devnote2>
+        <155248006270.10815.14600382508884855084.stgit@devnote2>
+        <20190313092051.77d04675@gandalf.local.home>
+X-Mailer: Sylpheed 3.5.1 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+Mime-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Feb 28, 2019 at 11:35:24AM +0300, Alexey Budankov wrote:
-> 
-> The patch set implements runtime trace compression (-z option) in 
-> record mode and trace auto decompression in report and inject modes. 
-> Streaming Zstandard (Zstd) API (zstd) is used for compression and 
-> decompression of data that come from kernel mmaped data buffers.
-> 
-> Usage of implemented -z,--compression_level=n option provides ~3-5x 
-> avg. trace file size reduction on variety of tested workloads what 
-> saves storage space on larger server systems where trace file size 
-> can easily reach several tens or even hundreds of GiBs, especially 
-> when profiling with dwarf-based stacks and tracing of context switches.
-> Implemented -f,--mmap-flush option can be used to avoid compressing 
-> every single byte of data and increase compression ratio at the same 
-> time lowering tool runtime overhead. Default option value is 1 what 
-> is equal to the current perf record implementation. The option is 
-> independent from -z setting and doesn't vary with compression level:
-> 
->   $ tools/perf/perf record -z 1 -e cycles -- matrix.gcc
->   $ tools/perf/perf record --aio=1 -z 1 -e cycles -- matrix.gcc
->   $ tools/perf/perf record -z 1 -f 1024 -e cycles -- matrix.gcc
->   $ tools/perf/perf record --aio=1 -z 1 -f 1024 -e cycles -- matrix.gcc
-> 
-> Runtime compression overhead has been measured for serial and AIO 
-> trace writing modes when profiling matrix multiplication workload 
-> with the following results:
-> 
->     -------------------------------------------------------------
->     | SERIAL			  | AIO-1                       |
-> -----------------------------------------------------------------
-> |-z | OVH(x) | ratio(x) size(MiB) | OVH(x) | ratio(x) size(MiB) |
-> |----------------------------------------------------------------
-> | 0 | 1,00   | 1,000    179,424   | 1,00   | 1,000    187,527   |
-> | 1 | 1,04   | 8,427    181,148   | 1,01   | 8,474    188,562   |
-> | 2 | 1,07   | 8,055    186,953   | 1,03   | 7,912    191,773   |
-> | 3 | 1,04   | 8,283    181,908   | 1,03   | 8,220    191,078   |
-> | 5 | 1,09   | 8,101    187,705   | 1,05   | 7,780    190,065   |
-> | 8 | 1,05   | 9,217    179,191   | 1,12   | 6,111    193,024   |
-> -----------------------------------------------------------------
-> 
-> OVH = (Execution time with -z N) / (Execution time with -z 0)
-> 
-> ratio - compression ratio
-> size  - number of bytes that was compressed
-> 
-> size ~= trace file x ratio
-> 
-> See complete description of measurement conditions with details below.
-> 
-> Introduced compression functionality can be disabled or configured from 
-> the command line using NO_LIBZSTD and LIBZSTD_DIR defines:
-> 
->   $ make -C tools/perf NO_LIBZSTD=1 clean all
->   $ make -C tools/perf LIBZSTD_DIR=/path/to/zstd/sources/ clean all
-> 
-> If your system has some version of the zstd package preinstalled then 
-> the build system finds and uses it during the build. Auto detection 
-> feature status is reported just before compilation starts, as usual.
-> If you still prefer to compile with some version of zstd that is not 
-> preinstalled you have capability to refer the compilation to that 
-> version using LIBZSTD_DIR define.
-> 
-> See 'perf test' results below for enabled and disabled (NO_LIBZSTD=1)
-> feature configurations.
-> 
-> ---
-> Alexey Budankov (10):
->   feature: implement libzstd check, LIBZSTD_DIR and NO_LIBZSTD defines
->   perf record: implement -f,--mmap-flush=<threshold> option
->   perf session: define bytes_transferred and bytes_compressed metrics
->   perf record: implement COMPRESSED event record and its attributes
->   perf mmap: implement dedicated memory buffer for data compression
->   perf util: introduce Zstd based streaming compression API
->   perf record: implement -z,--compression_level=n option and compression
->   perf report: implement record trace decompression
->   perf inject: enable COMPRESSED records decompression
->   perf tests: implement Zstd comp/decomp integration test
+On Wed, 13 Mar 2019 09:20:51 -0400
+Steven Rostedt <rostedt@goodmis.org> wrote:
 
-the record messages disappeared totaly:
+> On Wed, 13 Mar 2019 21:27:42 +0900
+> Masami Hiramatsu <mhiramat@kernel.org> wrote:
+> 
+> > Check maxactive on kprobe error case, because maxactive
+> > is only for kretprobe, not for kprobe. Also, maxactive
+> > should not be 0, it should be at least 1.
+> > 
+> > Signed-off-by: Masami Hiramatsu <mhiramat@kernel.org>
+> > ---
+> >  kernel/trace/trace_kprobe.c |   10 +++++++---
+> >  1 file changed, 7 insertions(+), 3 deletions(-)
+> > 
+> > diff --git a/kernel/trace/trace_kprobe.c b/kernel/trace/trace_kprobe.c
+> > index d5fb09ebba8b..d47e12596f12 100644
+> > --- a/kernel/trace/trace_kprobe.c
+> > +++ b/kernel/trace/trace_kprobe.c
+> > @@ -624,7 +624,11 @@ static int trace_kprobe_create(int argc, const char *argv[])
+> >  	if (event)
+> >  		event++;
+> >  
+> > -	if (is_return && isdigit(argv[0][1])) {
+> > +	if (isdigit(argv[0][1])) {
+> > +		if (!is_return) {
+> > +			pr_info("Maxactive is not for kprobe");
+> 
+> So now 'p1:..." will error out and not just be ignored?
 
-[jolsa@krava perf]$ ./perf record -z 1 ls
-[jolsa@krava perf]$ ./perf record -z 22 ls
-[jolsa@krava perf]$ ./perf record ls
-[jolsa@krava perf]$
+Yes, I think it is better to tell user "your command has a
+meaningless option, maybe you made a mistake" than ignore that.
+
+Thank you,
+
+> 
+> -- Steve
+> 
+> > +			return -EINVAL;
+> > +		}
+> >  		if (event)
+> >  			len = event - &argv[0][1] - 1;
+> >  		else
+> > @@ -634,8 +638,8 @@ static int trace_kprobe_create(int argc, const char *argv[])
+> >  		memcpy(buf, &argv[0][1], len);
+> >  		buf[len] = '\0';
+> >  		ret = kstrtouint(buf, 0, &maxactive);
+> > -		if (ret) {
+> > -			pr_info("Failed to parse maxactive.\n");
+> > +		if (ret || !maxactive) {
+> > +			pr_info("Invalid maxactive number\n");
+> >  			return ret;
+> >  		}
+> >  		/* kretprobes instances are iterated over via a list. The
+> 
 
 
-seems like we bail out for some reason with no message:
-
-[jolsa@krava perf]$ ./perf record ls
-[jolsa@krava perf]$ ./perf report --stat
-WARNING: The perf.data file's data size field is 0 which is unexpected.
-Was the 'perf record' command properly terminated?
-Error:
-failed to process sample
-
-jirka
+-- 
+Masami Hiramatsu <mhiramat@kernel.org>
