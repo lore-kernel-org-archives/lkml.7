@@ -2,382 +2,291 @@ Return-Path: <SRS0=dUEL=RQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 17C09C10F03
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 Mar 2019 23:18:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 547EBC43381
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 Mar 2019 23:19:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BFC9821019
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 Mar 2019 23:18:23 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1552519103;
-	bh=i4OY5RNQjz/WlMtn/mb8Tlt185YWFZ86d5FdLQnkXFI=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=N4HlcAif1k1rZseSnVR8QJLT/BET8dcel9TCqYmrmTqQ+LyyKQo6lxZEfrGphdh9E
-	 KAp+8UGKfiDNWrKz4Es+R8onIzaZWz/9lnfK1UpaVAxfL6lxj9CjTyusCzFY1FgDTi
-	 +UJunCPlsikXez+zGCe2wQcYs3eYvLY/J3apXyG0=
+	by mail.kernel.org (Postfix) with ESMTP id 1646721019
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 Mar 2019 23:19:06 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726971AbfCMXSW (ORCPT
+        id S1727139AbfCMXTF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 13 Mar 2019 19:18:22 -0400
-Received: from mail-oi1-f193.google.com ([209.85.167.193]:33054 "EHLO
-        mail-oi1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726183AbfCMXSW (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 13 Mar 2019 19:18:22 -0400
-Received: by mail-oi1-f193.google.com with SMTP id z14so2922147oid.0;
-        Wed, 13 Mar 2019 16:18:21 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=f6SvYlx/F883vR+Z7/H0ZrIgNORsq0y2rNgyJLV3sLU=;
-        b=CW8dzJftdzDU814vhdf9yb3fWum2Ar7shEWk4osv7vEPKj4jt/b5yp5K113o6rJR0p
-         Rc2KxJHFeosh7bG5b4Xf+EYo9LZs7AgJUKbhVJAUbUksWE4AtY6QndKgTt4NTcYkFyfm
-         +3Zog4AwbqtEhPGcog6+l5nBFIqR2Gj6OGWzPFZ9aq86xfVChNe0u8DLsx5xFiVCRAqY
-         QqDugmJtBu95MOhcFyszRLHJFYGZf44t33OUaxMvZD9T+QpXbb8/Xy0XV42FeeBhxR0d
-         2UfrPF0xa01LyJhdExz0jfMe8zDsK8UYmMNeHv8x6eWuSZUBcSGtP9v1Ts+KPm9ZgatB
-         PMxA==
-X-Gm-Message-State: APjAAAWTngXNoE1w1FCHc5Vz362eKFiGEaDV2pfmfjGlTpJ7jEKtDE4l
-        W7/7sOnPrWc/IquRTC3Uxq3fO4+UMqFX3ERifUSNPA==
-X-Google-Smtp-Source: APXvYqzCExDtKDvNArYMQv0H+xCit2nQ8ryBNUAdxmAXIjCr+K0NST0v6WEB+YFkrY84UVuilo3iRuHLwl9wnaowSB8=
-X-Received: by 2002:aca:88b:: with SMTP id 133mr375365oii.95.1552519100857;
- Wed, 13 Mar 2019 16:18:20 -0700 (PDT)
+        Wed, 13 Mar 2019 19:19:05 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:43690 "EHLO mx1.redhat.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726183AbfCMXTE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 13 Mar 2019 19:19:04 -0400
+Received: from smtp.corp.redhat.com (int-mx07.intmail.prod.int.phx2.redhat.com [10.5.11.22])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id 27F7E3092650;
+        Wed, 13 Mar 2019 23:19:03 +0000 (UTC)
+Received: from [10.36.116.76] (ovpn-116-76.ams2.redhat.com [10.36.116.76])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 98C60100164A;
+        Wed, 13 Mar 2019 23:18:52 +0000 (UTC)
+Subject: Re: [RFC][Patch v9 2/6] KVM: Enables the kernel to isolate guest free
+ pages
+To:     Alexander Duyck <alexander.duyck@gmail.com>
+Cc:     Nitesh Narayan Lal <nitesh@redhat.com>,
+        "Michael S. Tsirkin" <mst@redhat.com>,
+        kvm list <kvm@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        linux-mm <linux-mm@kvack.org>,
+        Paolo Bonzini <pbonzini@redhat.com>, lcapitulino@redhat.com,
+        pagupta@redhat.com, wei.w.wang@intel.com,
+        Yang Zhang <yang.zhang.wz@gmail.com>,
+        Rik van Riel <riel@surriel.com>, dodgen@google.com,
+        Konrad Rzeszutek Wilk <konrad.wilk@oracle.com>,
+        dhildenb@redhat.com, Andrea Arcangeli <aarcange@redhat.com>
+References: <20190306155048.12868-1-nitesh@redhat.com>
+ <78b604be-2129-a716-a7a6-f5b382c9fb9c@redhat.com>
+ <CAKgT0Uc_z9Vi+JhQcJYX+J9c4J56RRSkzzegbb2=9xO-NY3dgw@mail.gmail.com>
+ <20190307212845-mutt-send-email-mst@kernel.org>
+ <CAKgT0Ucu3EMsYBfdKtEiprrn-VBZy3Y+0HdEp5b4PO2SQgGsRw@mail.gmail.com>
+ <17d2afa6-556e-ec73-40dc-beac536b3f20@redhat.com>
+ <CAKgT0UcdQZwHjmMBkSWmy_ZdShJCagjwomn13g+r7ZNJBRn1LQ@mail.gmail.com>
+ <8f692047-4750-6827-1ee0-d3d354788f09@redhat.com>
+ <CAKgT0UddT9CKg1uZo6ZODs9ARti-6XGm9Zvo+8QRZKUPSwzWMQ@mail.gmail.com>
+ <41ae8afe-72c9-58e6-0cbb-9375c91ce37a@redhat.com>
+ <CAKgT0Uftff+JVRW-sQ6u8DeVg4Fq9b-pgE6Ojr+XqQFn13JmGw@mail.gmail.com>
+ <1ae522f1-1e98-9eef-324c-29585fe574d6@redhat.com>
+ <8826829a-973d-8117-3fe3-8e33170acfb8@redhat.com>
+ <CAKgT0UdGhFFR=SN8rdT5QMk-QF0LuWz0Xh2pp9abrfc3FgKmVQ@mail.gmail.com>
+ <71d0bd98-ff97-7ed1-1f95-c0d134d0b2a1@redhat.com>
+ <CAKgT0Uef=O3bSQLc6-JY8jLmmtOPFwVWSAsY+sHL=BocSGp8BQ@mail.gmail.com>
+From:   David Hildenbrand <david@redhat.com>
+Openpgp: preference=signencrypt
+Autocrypt: addr=david@redhat.com; prefer-encrypt=mutual; keydata=
+ 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
+ SE+xAvmumFBY
+Organization: Red Hat GmbH
+Message-ID: <02775cba-3d66-ddbe-f0dd-eb293ad3d7d7@redhat.com>
+Date:   Thu, 14 Mar 2019 00:18:51 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.4.0
 MIME-Version: 1.0
-References: <20190311205606.11228-1-keith.busch@intel.com> <20190311205606.11228-7-keith.busch@intel.com>
-In-Reply-To: <20190311205606.11228-7-keith.busch@intel.com>
-From:   "Rafael J. Wysocki" <rafael@kernel.org>
-Date:   Thu, 14 Mar 2019 00:18:09 +0100
-Message-ID: <CAJZ5v0jsFoAxOvUjBx0w+-3v8Y5QhRgxGJEqcGQ38XoPmP=a_A@mail.gmail.com>
-Subject: Re: [PATCHv8 06/10] node: Add memory-side caching attributes
-To:     Keith Busch <keith.busch@intel.com>
-Cc:     Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        ACPI Devel Maling List <linux-acpi@vger.kernel.org>,
-        Linux Memory Management List <linux-mm@kvack.org>,
-        Linux API <linux-api@vger.kernel.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Rafael Wysocki <rafael@kernel.org>,
-        Dave Hansen <dave.hansen@intel.com>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Jonathan Cameron <jonathan.cameron@huawei.com>,
-        Brice Goglin <Brice.Goglin@inria.fr>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <CAKgT0Uef=O3bSQLc6-JY8jLmmtOPFwVWSAsY+sHL=BocSGp8BQ@mail.gmail.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
+X-Scanned-By: MIMEDefang 2.84 on 10.5.11.22
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.43]); Wed, 13 Mar 2019 23:19:04 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Mar 11, 2019 at 9:55 PM Keith Busch <keith.busch@intel.com> wrote:
->
-> System memory may have caches to help improve access speed to frequently
-> requested address ranges. While the system provided cache is transparent
-> to the software accessing these memory ranges, applications can optimize
-> their own access based on cache attributes.
->
-> Provide a new API for the kernel to register these memory-side caches
-> under the memory node that provides it.
->
-> The new sysfs representation is modeled from the existing cpu cacheinfo
-> attributes, as seen from /sys/devices/system/cpu/<cpu>/cache/.  Unlike CPU
-> cacheinfo though, the node cache level is reported from the view of the
-> memory. A higher level number is nearer to the CPU, while lower levels
-> are closer to the last level memory.
->
-> The exported attributes are the cache size, the line size, associativity
-> indexing, and write back policy, and add the attributes for the system
-> memory caches to sysfs stable documentation.
->
-> Signed-off-by: Keith Busch <keith.busch@intel.com>
+On 13.03.19 23:54, Alexander Duyck wrote:
+> On Wed, Mar 13, 2019 at 9:39 AM David Hildenbrand <david@redhat.com> wrote:
+>>
+>> On 13.03.19 17:37, Alexander Duyck wrote:
+>>> On Wed, Mar 13, 2019 at 5:18 AM David Hildenbrand <david@redhat.com> wrote:
+>>>>
+>>>> On 13.03.19 12:54, Nitesh Narayan Lal wrote:
+>>>>>
+>>>>> On 3/12/19 5:13 PM, Alexander Duyck wrote:
+>>>>>> On Tue, Mar 12, 2019 at 12:46 PM Nitesh Narayan Lal <nitesh@redhat.com> wrote:
+>>>>>>> On 3/8/19 4:39 PM, Alexander Duyck wrote:
+>>>>>>>> On Fri, Mar 8, 2019 at 11:39 AM Nitesh Narayan Lal <nitesh@redhat.com> wrote:
+>>>>>>>>> On 3/8/19 2:25 PM, Alexander Duyck wrote:
+>>>>>>>>>> On Fri, Mar 8, 2019 at 11:10 AM Nitesh Narayan Lal <nitesh@redhat.com> wrote:
+>>>>>>>>>>> On 3/8/19 1:06 PM, Alexander Duyck wrote:
+>>>>>>>>>>>> On Thu, Mar 7, 2019 at 6:32 PM Michael S. Tsirkin <mst@redhat.com> wrote:
+>>>>>>>>>>>>> On Thu, Mar 07, 2019 at 02:35:53PM -0800, Alexander Duyck wrote:
+>>>>>>>>>>>>>> The only other thing I still want to try and see if I can do is to add
+>>>>>>>>>>>>>> a jiffies value to the page private data in the case of the buddy
+>>>>>>>>>>>>>> pages.
+>>>>>>>>>>>>> Actually there's one extra thing I think we should do, and that is make
+>>>>>>>>>>>>> sure we do not leave less than X% off the free memory at a time.
+>>>>>>>>>>>>> This way chances of triggering an OOM are lower.
+>>>>>>>>>>>> If nothing else we could probably look at doing a watermark of some
+>>>>>>>>>>>> sort so we have to have X amount of memory free but not hinted before
+>>>>>>>>>>>> we will start providing the hints. It would just be a matter of
+>>>>>>>>>>>> tracking how much memory we have hinted on versus the amount of memory
+>>>>>>>>>>>> that has been pulled from that pool.
+>>>>>>>>>>> This is to avoid false OOM in the guest?
+>>>>>>>>>> Partially, though it would still be possible. Basically it would just
+>>>>>>>>>> be a way of determining when we have hinted "enough". Basically it
+>>>>>>>>>> doesn't do us much good to be hinting on free memory if the guest is
+>>>>>>>>>> already constrained and just going to reallocate the memory shortly
+>>>>>>>>>> after we hinted on it. The idea is with a watermark we can avoid
+>>>>>>>>>> hinting until we start having pages that are actually going to stay
+>>>>>>>>>> free for a while.
+>>>>>>>>>>
+>>>>>>>>>>>>  It is another reason why we
+>>>>>>>>>>>> probably want a bit in the buddy pages somewhere to indicate if a page
+>>>>>>>>>>>> has been hinted or not as we can then use that to determine if we have
+>>>>>>>>>>>> to account for it in the statistics.
+>>>>>>>>>>> The one benefit which I can see of having an explicit bit is that it
+>>>>>>>>>>> will help us to have a single hook away from the hot path within buddy
+>>>>>>>>>>> merging code (just like your arch_merge_page) and still avoid duplicate
+>>>>>>>>>>> hints while releasing pages.
+>>>>>>>>>>>
+>>>>>>>>>>> I still have to check PG_idle and PG_young which you mentioned but I
+>>>>>>>>>>> don't think we can reuse any existing bits.
+>>>>>>>>>> Those are bits that are already there for 64b. I think those exist in
+>>>>>>>>>> the page extension for 32b systems. If I am not mistaken they are only
+>>>>>>>>>> used in VMA mapped memory. What I was getting at is that those are the
+>>>>>>>>>> bits we could think about reusing.
+>>>>>>>>>>
+>>>>>>>>>>> If we really want to have something like a watermark, then can't we use
+>>>>>>>>>>> zone->free_pages before isolating to see how many free pages are there
+>>>>>>>>>>> and put a threshold on it? (__isolate_free_page() does a similar thing
+>>>>>>>>>>> but it does that on per request basis).
+>>>>>>>>>> Right. That is only part of it though since that tells you how many
+>>>>>>>>>> free pages are there. But how many of those free pages are hinted?
+>>>>>>>>>> That is the part we would need to track separately and then then
+>>>>>>>>>> compare to free_pages to determine if we need to start hinting on more
+>>>>>>>>>> memory or not.
+>>>>>>>>> Only pages which are isolated will be hinted, and once a page is
+>>>>>>>>> isolated it will not be counted in the zone free pages.
+>>>>>>>>> Feel free to correct me if I am wrong.
+>>>>>>>> You are correct up to here. When we isolate the page it isn't counted
+>>>>>>>> against the free pages. However after we complete the hint we end up
+>>>>>>>> taking it out of isolation and returning it to the "free" state, so it
+>>>>>>>> will be counted against the free pages.
+>>>>>>>>
+>>>>>>>>> If I am understanding it correctly you only want to hint the idle pages,
+>>>>>>>>> is that right?
+>>>>>>>> Getting back to the ideas from our earlier discussion, we had 3 stages
+>>>>>>>> for things. Free but not hinted, isolated due to hinting, and free and
+>>>>>>>> hinted. So what we would need to do is identify the size of the first
+>>>>>>>> pool that is free and not hinted by knowing the total number of free
+>>>>>>>> pages, and then subtract the size of the pages that are hinted and
+>>>>>>>> still free.
+>>>>>>> To summarize, for now, I think it makes sense to stick with the current
+>>>>>>> approach as this way we can avoid any locking in the allocation path and
+>>>>>>> reduce the number of hypercalls for a bunch of MAX_ORDER - 1 page.
+>>>>>> I'm not sure what you are talking about by "avoid any locking in the
+>>>>>> allocation path". Are you talking about the spin on idle bit, if so
+>>>>>> then yes.
+>>>>> Yeap!
+>>>>>> However I have been testing your patches and I was correct
+>>>>>> in the assumption that you forgot to handle the zone lock when you
+>>>>>> were freeing __free_one_page.
+>>>>> Yes, these are the steps other than the comments you provided in the
+>>>>> code. (One of them is to fix release_buddy_page())
+>>>>>>  I just did a quick copy/paste from your
+>>>>>> zone lock handling from the guest_free_page_hinting function into the
+>>>>>> release_buddy_pages function and then I was able to enable multiple
+>>>>>> CPUs without any issues.
+>>>>>>
+>>>>>>> For the next step other than the comments received in the code and what
+>>>>>>> I mentioned in the cover email, I would like to do the following:
+>>>>>>> 1. Explore the watermark idea suggested by Alex and bring down memhog
+>>>>>>> execution time if possible.
+>>>>>> So there are a few things that are hurting us on the memhog test:
+>>>>>> 1. The current QEMU patch is only madvising 4K pages at a time, this
+>>>>>> is disabling THP and hurts the test.
+>>>>> Makes sense, thanks for pointing this out.
+>>>>>>
+>>>>>> 2. The fact that we madvise the pages away makes it so that we have to
+>>>>>> fault the page back in in order to use it for the memhog test. In
+>>>>>> order to avoid that penalty we may want to see if we can introduce
+>>>>>> some sort of "timeout" on the pages so that we are only hinting away
+>>>>>> old pages that have not been used for some period of time.
+>>>>>
+>>>>> Possibly using MADVISE_FREE should also help in this, I will try this as
+>>>>> well.
+>>>>
+>>>> I was asking myself some time ago how MADVISE_FREE will be handled in
+>>>> case of THP. Please let me know your findings :)
+>>>
+>>> The problem with MADVISE_FREE is that it will add additional
+>>> complication to the QEMU portion of all this as it only applies to
+>>> anonymous memory if I am not mistaken.
+>>
+>> Just as MADV_DONTNEED. So nothing new. Future work.
+> 
+> I'm pretty sure you can use MADV_DONTNEED to free up file backed
+> memory, I don't believe this is the case for MADV_FREE, but maybe I am
+> mistaken.
 
-Reviewed-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
+"MADV_DONTNEED cannot be applied to locked pages, Huge TLB pages, or
+VM_PFNMAP pages."
 
-> ---
->  Documentation/ABI/stable/sysfs-devices-node |  34 +++++++
->  drivers/base/node.c                         | 151 ++++++++++++++++++++++++++++
->  include/linux/node.h                        |  39 +++++++
->  3 files changed, 224 insertions(+)
->
-> diff --git a/Documentation/ABI/stable/sysfs-devices-node b/Documentation/ABI/stable/sysfs-devices-node
-> index 735a40a3f9b2..f7ce68fbd4b9 100644
-> --- a/Documentation/ABI/stable/sysfs-devices-node
-> +++ b/Documentation/ABI/stable/sysfs-devices-node
-> @@ -142,3 +142,37 @@ Contact:   Keith Busch <keith.busch@intel.com>
->  Description:
->                 This node's write latency in nanoseconds when access
->                 from nodes found in this class's linked initiators.
-> +
-> +What:          /sys/devices/system/node/nodeX/memory_side_cache/indexY/
-> +Date:          December 2018
-> +Contact:       Keith Busch <keith.busch@intel.com>
-> +Description:
-> +               The directory containing attributes for the memory-side cache
-> +               level 'Y'.
-> +
-> +What:          /sys/devices/system/node/nodeX/memory_side_cache/indexY/indexing
-> +Date:          December 2018
-> +Contact:       Keith Busch <keith.busch@intel.com>
-> +Description:
-> +               The caches associativity indexing: 0 for direct mapped,
-> +               non-zero if indexed.
-> +
-> +What:          /sys/devices/system/node/nodeX/memory_side_cache/indexY/line_size
-> +Date:          December 2018
-> +Contact:       Keith Busch <keith.busch@intel.com>
-> +Description:
-> +               The number of bytes accessed from the next cache level on a
-> +               cache miss.
-> +
-> +What:          /sys/devices/system/node/nodeX/memory_side_cache/indexY/size
-> +Date:          December 2018
-> +Contact:       Keith Busch <keith.busch@intel.com>
-> +Description:
-> +               The size of this memory side cache in bytes.
-> +
-> +What:          /sys/devices/system/node/nodeX/memory_side_cache/indexY/write_policy
-> +Date:          December 2018
-> +Contact:       Keith Busch <keith.busch@intel.com>
-> +Description:
-> +               The cache write policy: 0 for write-back, 1 for write-through,
-> +               other or unknown.
-> diff --git a/drivers/base/node.c b/drivers/base/node.c
-> index 2de546a040a5..8598fcbd2a17 100644
-> --- a/drivers/base/node.c
-> +++ b/drivers/base/node.c
-> @@ -205,6 +205,155 @@ void node_set_perf_attrs(unsigned int nid, struct node_hmem_attrs *hmem_attrs,
->                 }
->         }
->  }
-> +
-> +/**
-> + * struct node_cache_info - Internal tracking for memory node caches
-> + * @dev:       Device represeting the cache level
-> + * @node:      List element for tracking in the node
-> + * @cache_attrs:Attributes for this cache level
-> + */
-> +struct node_cache_info {
-> +       struct device dev;
-> +       struct list_head node;
-> +       struct node_cache_attrs cache_attrs;
-> +};
-> +#define to_cache_info(device) container_of(device, struct node_cache_info, dev)
-> +
-> +#define CACHE_ATTR(name, fmt)                                          \
-> +static ssize_t name##_show(struct device *dev,                         \
-> +                          struct device_attribute *attr,               \
-> +                          char *buf)                                   \
-> +{                                                                      \
-> +       return sprintf(buf, fmt "\n", to_cache_info(dev)->cache_attrs.name);\
-> +}                                                                      \
-> +DEVICE_ATTR_RO(name);
-> +
-> +CACHE_ATTR(size, "%llu")
-> +CACHE_ATTR(line_size, "%u")
-> +CACHE_ATTR(indexing, "%u")
-> +CACHE_ATTR(write_policy, "%u")
-> +
-> +static struct attribute *cache_attrs[] = {
-> +       &dev_attr_indexing.attr,
-> +       &dev_attr_size.attr,
-> +       &dev_attr_line_size.attr,
-> +       &dev_attr_write_policy.attr,
-> +       NULL,
-> +};
-> +ATTRIBUTE_GROUPS(cache);
-> +
-> +static void node_cache_release(struct device *dev)
-> +{
-> +       kfree(dev);
-> +}
-> +
-> +static void node_cacheinfo_release(struct device *dev)
-> +{
-> +       struct node_cache_info *info = to_cache_info(dev);
-> +       kfree(info);
-> +}
-> +
-> +static void node_init_cache_dev(struct node *node)
-> +{
-> +       struct device *dev;
-> +
-> +       dev = kzalloc(sizeof(*dev), GFP_KERNEL);
-> +       if (!dev)
-> +               return;
-> +
-> +       dev->parent = &node->dev;
-> +       dev->release = node_cache_release;
-> +       if (dev_set_name(dev, "memory_side_cache"))
-> +               goto free_dev;
-> +
-> +       if (device_register(dev))
-> +               goto free_name;
-> +
-> +       pm_runtime_no_callbacks(dev);
-> +       node->cache_dev = dev;
-> +       return;
-> +free_name:
-> +       kfree_const(dev->kobj.name);
-> +free_dev:
-> +       kfree(dev);
-> +}
-> +
-> +/**
-> + * node_add_cache() - add cache attribute to a memory node
-> + * @nid: Node identifier that has new cache attributes
-> + * @cache_attrs: Attributes for the cache being added
-> + */
-> +void node_add_cache(unsigned int nid, struct node_cache_attrs *cache_attrs)
-> +{
-> +       struct node_cache_info *info;
-> +       struct device *dev;
-> +       struct node *node;
-> +
-> +       if (!node_online(nid) || !node_devices[nid])
-> +               return;
-> +
-> +       node = node_devices[nid];
-> +       list_for_each_entry(info, &node->cache_attrs, node) {
-> +               if (info->cache_attrs.level == cache_attrs->level) {
-> +                       dev_warn(&node->dev,
-> +                               "attempt to add duplicate cache level:%d\n",
-> +                               cache_attrs->level);
-> +                       return;
-> +               }
-> +       }
-> +
-> +       if (!node->cache_dev)
-> +               node_init_cache_dev(node);
-> +       if (!node->cache_dev)
-> +               return;
-> +
-> +       info = kzalloc(sizeof(*info), GFP_KERNEL);
-> +       if (!info)
-> +               return;
-> +
-> +       dev = &info->dev;
-> +       dev->parent = node->cache_dev;
-> +       dev->release = node_cacheinfo_release;
-> +       dev->groups = cache_groups;
-> +       if (dev_set_name(dev, "index%d", cache_attrs->level))
-> +               goto free_cache;
-> +
-> +       info->cache_attrs = *cache_attrs;
-> +       if (device_register(dev)) {
-> +               dev_warn(&node->dev, "failed to add cache level:%d\n",
-> +                        cache_attrs->level);
-> +               goto free_name;
-> +       }
-> +       pm_runtime_no_callbacks(dev);
-> +       list_add_tail(&info->node, &node->cache_attrs);
-> +       return;
-> +free_name:
-> +       kfree_const(dev->kobj.name);
-> +free_cache:
-> +       kfree(info);
-> +}
-> +
-> +static void node_remove_caches(struct node *node)
-> +{
-> +       struct node_cache_info *info, *next;
-> +
-> +       if (!node->cache_dev)
-> +               return;
-> +
-> +       list_for_each_entry_safe(info, next, &node->cache_attrs, node) {
-> +               list_del(&info->node);
-> +               device_unregister(&info->dev);
-> +       }
-> +       device_unregister(node->cache_dev);
-> +}
-> +
-> +static void node_init_caches(unsigned int nid)
-> +{
-> +       INIT_LIST_HEAD(&node_devices[nid]->cache_attrs);
-> +}
-> +#else
-> +static void node_init_caches(unsigned int nid) { }
-> +static void node_remove_caches(struct node *node) { }
->  #endif
->
->  #define K(x) ((x) << (PAGE_SHIFT - 10))
-> @@ -489,6 +638,7 @@ void unregister_node(struct node *node)
->  {
->         hugetlb_unregister_node(node);          /* no-op, if memoryless node */
->         node_remove_accesses(node);
-> +       node_remove_caches(node);
->         device_unregister(&node->dev);
->  }
->
-> @@ -781,6 +931,7 @@ int __register_one_node(int nid)
->         INIT_LIST_HEAD(&node_devices[nid]->access_list);
->         /* initialize work queue for memory hot plug */
->         init_node_hugetlb_work(nid);
-> +       node_init_caches(nid);
->
->         return error;
->  }
-> diff --git a/include/linux/node.h b/include/linux/node.h
-> index 4139d728f8b3..1a557c589ecb 100644
-> --- a/include/linux/node.h
-> +++ b/include/linux/node.h
-> @@ -35,10 +35,45 @@ struct node_hmem_attrs {
->         unsigned int write_latency;
->  };
->
-> +enum cache_indexing {
-> +       NODE_CACHE_DIRECT_MAP,
-> +       NODE_CACHE_INDEXED,
-> +       NODE_CACHE_OTHER,
-> +};
-> +
-> +enum cache_write_policy {
-> +       NODE_CACHE_WRITE_BACK,
-> +       NODE_CACHE_WRITE_THROUGH,
-> +       NODE_CACHE_WRITE_OTHER,
-> +};
-> +
-> +/**
-> + * struct node_cache_attrs - system memory caching attributes
-> + *
-> + * @indexing:          The ways memory blocks may be placed in cache
-> + * @write_policy:      Write back or write through policy
-> + * @size:              Total size of cache in bytes
-> + * @line_size:         Number of bytes fetched on a cache miss
-> + * @level:             The cache hierarchy level
-> + */
-> +struct node_cache_attrs {
-> +       enum cache_indexing indexing;
-> +       enum cache_write_policy write_policy;
-> +       u64 size;
-> +       u16 line_size;
-> +       u8 level;
-> +};
-> +
->  #ifdef CONFIG_HMEM_REPORTING
-> +void node_add_cache(unsigned int nid, struct node_cache_attrs *cache_attrs);
->  void node_set_perf_attrs(unsigned int nid, struct node_hmem_attrs *hmem_attrs,
->                          unsigned access);
->  #else
-> +static inline void node_add_cache(unsigned int nid,
-> +                                 struct node_cache_attrs *cache_attrs)
-> +{
-> +}
-> +
->  static inline void node_set_perf_attrs(unsigned int nid,
->                                        struct node_hmem_attrs *hmem_attrs,
->                                        unsigned access)
-> @@ -53,6 +88,10 @@ struct node {
->  #if defined(CONFIG_MEMORY_HOTPLUG_SPARSE) && defined(CONFIG_HUGETLBFS)
->         struct work_struct      node_work;
->  #endif
-> +#ifdef CONFIG_HMEM_REPORTING
-> +       struct list_head cache_attrs;
-> +       struct device *cache_dev;
-> +#endif
->  };
->
->  struct memory_block;
-> --
-> 2.14.4
->
+For shmem, hugetlbfs and friends one has to use FALLOC_FL_PUNCH_HOLE as
+far as I remember (e.g. QEMU postcopy migration has to use it).
+
+So effectively, virtio-balloon can as of now only really deal with
+anonymous memory. And it is the same case for free page hinting.
+
+> 
+> On a side note I was just reviewing some stuff related to the reserved
+> bit and on-lining hotplug memory, and it just occurred to me that most
+> the PG_offline bit would be a good means to indicate that we hinted
+> away a page out of the buddy allocator, especially since it is already
+> used by the balloon drivers anyway.  We would just have to add a call
+> to make sure we clear it when we call __ClearPageBuddy. It looks like
+> that would currently be in del_page_from_free_area, at least for
+> linux-next.
+
+Hmm, if we only knew who came up with PG_offline ... ;)
+
+Unfortunately PG_offline is not a bit, it is mapcount value just like
+PG_buddy. Well okay, it is a bit in the mapcount value - but as of now,
+a page can only have one such "page type" at a time as far as I recall.
+
+> 
+> I just wanted to get your thoughts on that as it seems like it might
+> be a good fit.
+
+It would be if we could have multiple page types at a time. I haven't
+had a look yet how realistic that would be. As you correctly noted,
+balloon drivers use that bit as of now to mark pages that are logically
+offline (here: "inflated").
+
+> 
+> Thanks.
+> 
+> - Alex
+> 
+
+
+-- 
+
+Thanks,
+
+David / dhildenb
