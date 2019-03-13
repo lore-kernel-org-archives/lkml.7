@@ -7,58 +7,47 @@ X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 666EBC4360F
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 Mar 2019 19:11:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 76303C43381
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 Mar 2019 19:11:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 39AEA21871
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 Mar 2019 19:11:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4A12F21852
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 Mar 2019 19:11:43 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1552504302;
-	bh=BFMiFCb16F7+mfsZq3oOVj05LTsKXjadZiB9F30QfHA=;
+	s=default; t=1552504303;
+	bh=jxkikg5QHx//0IM4ZsTVNLsYhaj12DfblrWwOmRjxp8=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=qvbwhOeRGq/i7WlIUZ+9Mf7GCmWhMFrYcUdRmMN5dnFJTx/TekZ9Ux96MrVeBdcPx
-	 qjuD6we5vBG02WvN4KuhyS696wq0sLsDS4+qv/+YEgKrklkfba9VcpLL+zJiwG+dUF
-	 Wgi4MHEZ/h+BxvkYxbi1lLvmNAE+Kz9YHOV4nS8Q=
+	b=G/IoeWdwnww0J9iyrVzVSD4lmVmBY0hrWQsWWUYKtX9WI6/0HPZzn9gnty9ZXGLk/
+	 7K6UcJs6AvDHEXQ/KA2RWBxy17SSQzXsu0ApQ0eneqmAG694GQz+nxGnYvDR/zpor0
+	 FNH0uaqbd2nni6Z5X3slKyyrzRi00MeYIZVciJqE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727536AbfCMTLl (ORCPT
+        id S1727548AbfCMTLl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
         Wed, 13 Mar 2019 15:11:41 -0400
-Received: from mail.kernel.org ([198.145.29.99]:42164 "EHLO mail.kernel.org"
+Received: from mail.kernel.org ([198.145.29.99]:42260 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727515AbfCMTLg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 13 Mar 2019 15:11:36 -0400
+        id S1726628AbfCMTLk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 13 Mar 2019 15:11:40 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 76C2D2075C;
-        Wed, 13 Mar 2019 19:11:31 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 72385213A2;
+        Wed, 13 Mar 2019 19:11:37 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1552504295;
-        bh=BFMiFCb16F7+mfsZq3oOVj05LTsKXjadZiB9F30QfHA=;
+        s=default; t=1552504299;
+        bh=jxkikg5QHx//0IM4ZsTVNLsYhaj12DfblrWwOmRjxp8=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=bOU2LxVplTTdlxMQHlWHeAlHxhN5R6qO2fIcr3vsy8RO3Y1bcfgPqGYhoKOfVpHAE
-         PtqdDKHxsJUKoixTdPU9WpRPlQPduL21gJRXuRulOd64wMobb9gKPMiVpqee7aevkS
-         VbXBHuQOBcUAG8QGXOH1LBtXSpD3pW8uvxe1vPi8=
+        b=mZKNr6LSCcahl+kNRMGJFPNgnCEjY6H6QB5zTBRhSt0Opp8KoYEjdD/SkRHdOi3Yt
+         5f3J52iaY3jy+7XqJfZwIWGnBJOx2TvMx55sBWeBfdRtXfcaFLFhCDl/nNScB3x4dU
+         0FKlKmCwvlo/inOsAqLjefaENTjFdWwayEuXF3Ao=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Andrey Konovalov <andreyknvl@google.com>,
-        Alexander Potapenko <glider@google.com>,
-        Andrey Ryabinin <aryabinin@virtuozzo.com>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Christoph Lameter <cl@linux.com>,
-        David Rientjes <rientjes@google.com>,
-        Dmitry Vyukov <dvyukov@google.com>,
-        Evgeniy Stepanov <eugenis@google.com>,
-        Joonsoo Kim <iamjoonsoo.kim@lge.com>,
-        Kostya Serebryany <kcc@google.com>,
-        Pekka Enberg <penberg@kernel.org>, Qian Cai <cai@lca.pw>,
-        Vincenzo Frascino <vincenzo.frascino@arm.com>,
+Cc:     Michal Hocko <mhocko@suse.com>, Tejun Heo <tj@kernel.org>,
         Andrew Morton <akpm@linux-foundation.org>,
         Linus Torvalds <torvalds@linux-foundation.org>,
         Sasha Levin <sashal@kernel.org>, linux-mm@kvack.org
-Subject: [PATCH AUTOSEL 4.20 34/60] kasan, slub: move kasan_poison_slab hook before page_address
-Date:   Wed, 13 Mar 2019 15:09:55 -0400
-Message-Id: <20190313191021.158171-34-sashal@kernel.org>
+Subject: [PATCH AUTOSEL 4.20 35/60] mm: handle lru_add_drain_all for UP properly
+Date:   Wed, 13 Mar 2019 15:09:56 -0400
+Message-Id: <20190313191021.158171-35-sashal@kernel.org>
 X-Mailer: git-send-email 2.19.1
 In-Reply-To: <20190313191021.158171-1-sashal@kernel.org>
 References: <20190313191021.158171-1-sashal@kernel.org>
@@ -70,86 +59,84 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Andrey Konovalov <andreyknvl@google.com>
+From: Michal Hocko <mhocko@suse.com>
 
-[ Upstream commit a71012242837fe5e67d8c999cfc357174ed5dba0 ]
+[ Upstream commit 6ea183d60c469560e7b08a83c9804299e84ec9eb ]
 
-With tag based KASAN page_address() looks at the page flags to see whether
-the resulting pointer needs to have a tag set.  Since we don't want to set
-a tag when page_address() is called on SLAB pages, we call
-page_kasan_tag_reset() in kasan_poison_slab().  However in allocate_slab()
-page_address() is called before kasan_poison_slab().  Fix it by changing
-the order.
+Since for_each_cpu(cpu, mask) added by commit 2d3854a37e8b767a
+("cpumask: introduce new API, without changing anything") did not
+evaluate the mask argument if NR_CPUS == 1 due to CONFIG_SMP=n,
+lru_add_drain_all() is hitting WARN_ON() at __flush_work() added by
+commit 4d43d395fed12463 ("workqueue: Try to catch flush_work() without
+INIT_WORK().") by unconditionally calling flush_work() [1].
 
-[andreyknvl@google.com: fix compilation error when CONFIG_SLUB_DEBUG=n]
-  Link: http://lkml.kernel.org/r/ac27cc0bbaeb414ed77bcd6671a877cf3546d56e.1550066133.git.andreyknvl@google.com
-Link: http://lkml.kernel.org/r/cd895d627465a3f1c712647072d17f10883be2a1.1549921721.git.andreyknvl@google.com
-Signed-off-by: Andrey Konovalov <andreyknvl@google.com>
-Cc: Alexander Potapenko <glider@google.com>
-Cc: Andrey Ryabinin <aryabinin@virtuozzo.com>
-Cc: Catalin Marinas <catalin.marinas@arm.com>
-Cc: Christoph Lameter <cl@linux.com>
-Cc: David Rientjes <rientjes@google.com>
-Cc: Dmitry Vyukov <dvyukov@google.com>
-Cc: Evgeniy Stepanov <eugenis@google.com>
-Cc: Joonsoo Kim <iamjoonsoo.kim@lge.com>
-Cc: Kostya Serebryany <kcc@google.com>
-Cc: Pekka Enberg <penberg@kernel.org>
-Cc: Qian Cai <cai@lca.pw>
-Cc: Vincenzo Frascino <vincenzo.frascino@arm.com>
+Workaround this issue by using CONFIG_SMP=n specific lru_add_drain_all
+implementation.  There is no real need to defer the implementation to
+the workqueue as the draining is going to happen on the local cpu.  So
+alias lru_add_drain_all to lru_add_drain which does all the necessary
+work.
+
+[akpm@linux-foundation.org: fix various build warnings]
+[1] https://lkml.kernel.org/r/18a30387-6aa5-6123-e67c-57579ecc3f38@roeck-us.net
+Link: http://lkml.kernel.org/r/20190213124334.GH4525@dhcp22.suse.cz
+Signed-off-by: Michal Hocko <mhocko@suse.com>
+Reported-by: Guenter Roeck <linux@roeck-us.net>
+Debugged-by: Tetsuo Handa <penguin-kernel@I-love.SAKURA.ne.jp>
+Cc: Tejun Heo <tj@kernel.org>
 Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
 Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- mm/slub.c | 19 +++++++++++++++----
- 1 file changed, 15 insertions(+), 4 deletions(-)
+ mm/swap.c | 17 ++++++++++-------
+ 1 file changed, 10 insertions(+), 7 deletions(-)
 
-diff --git a/mm/slub.c b/mm/slub.c
-index e3629cd7aff1..d1e053d48f46 100644
---- a/mm/slub.c
-+++ b/mm/slub.c
-@@ -1075,6 +1075,16 @@ static void setup_object_debug(struct kmem_cache *s, struct page *page,
- 	init_tracking(s, object);
+diff --git a/mm/swap.c b/mm/swap.c
+index aa483719922e..e99ef3dcdfd5 100644
+--- a/mm/swap.c
++++ b/mm/swap.c
+@@ -320,11 +320,6 @@ static inline void activate_page_drain(int cpu)
+ {
  }
  
-+static void setup_page_debug(struct kmem_cache *s, void *addr, int order)
+-static bool need_activate_page_drain(int cpu)
+-{
+-	return false;
+-}
+-
+ void activate_page(struct page *page)
+ {
+ 	struct zone *zone = page_zone(page);
+@@ -653,13 +648,15 @@ void lru_add_drain(void)
+ 	put_cpu();
+ }
+ 
++#ifdef CONFIG_SMP
++
++static DEFINE_PER_CPU(struct work_struct, lru_add_drain_work);
++
+ static void lru_add_drain_per_cpu(struct work_struct *dummy)
+ {
+ 	lru_add_drain();
+ }
+ 
+-static DEFINE_PER_CPU(struct work_struct, lru_add_drain_work);
+-
+ /*
+  * Doesn't need any cpu hotplug locking because we do rely on per-cpu
+  * kworkers being shut down before our page_alloc_cpu_dead callback is
+@@ -702,6 +699,12 @@ void lru_add_drain_all(void)
+ 
+ 	mutex_unlock(&lock);
+ }
++#else
++void lru_add_drain_all(void)
 +{
-+	if (!(s->flags & SLAB_POISON))
-+		return;
-+
-+	metadata_access_enable();
-+	memset(addr, POISON_INUSE, PAGE_SIZE << order);
-+	metadata_access_disable();
++	lru_add_drain();
 +}
-+
- static inline int alloc_consistency_checks(struct kmem_cache *s,
- 					struct page *page,
- 					void *object, unsigned long addr)
-@@ -1330,6 +1340,8 @@ slab_flags_t kmem_cache_flags(unsigned int object_size,
- #else /* !CONFIG_SLUB_DEBUG */
- static inline void setup_object_debug(struct kmem_cache *s,
- 			struct page *page, void *object) {}
-+static inline void setup_page_debug(struct kmem_cache *s,
-+			void *addr, int order) {}
++#endif
  
- static inline int alloc_debug_processing(struct kmem_cache *s,
- 	struct page *page, void *object, unsigned long addr) { return 0; }
-@@ -1640,12 +1652,11 @@ static struct page *allocate_slab(struct kmem_cache *s, gfp_t flags, int node)
- 	if (page_is_pfmemalloc(page))
- 		SetPageSlabPfmemalloc(page);
- 
--	start = page_address(page);
-+	kasan_poison_slab(page);
- 
--	if (unlikely(s->flags & SLAB_POISON))
--		memset(start, POISON_INUSE, PAGE_SIZE << order);
-+	start = page_address(page);
- 
--	kasan_poison_slab(page);
-+	setup_page_debug(s, start, order);
- 
- 	shuffle = shuffle_freelist(s, page);
- 
+ /**
+  * release_pages - batched put_page()
 -- 
 2.19.1
 
