@@ -6,38 +6,38 @@ X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6D03CC43381
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 Mar 2019 23:52:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 38652C43381
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 Mar 2019 23:52:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 464F42146E
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 Mar 2019 23:52:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D4E2621019
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 Mar 2019 23:52:26 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727253AbfCMXwU (ORCPT
+        id S1726473AbfCMXwY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 13 Mar 2019 19:52:20 -0400
-Received: from anholt.net ([50.246.234.109]:53754 "EHLO anholt.net"
+        Wed, 13 Mar 2019 19:52:24 -0400
+Received: from anholt.net ([50.246.234.109]:53760 "EHLO anholt.net"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726435AbfCMXwR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 13 Mar 2019 19:52:17 -0400
+        id S1726078AbfCMXwW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 13 Mar 2019 19:52:22 -0400
 Received: from localhost (localhost [127.0.0.1])
-        by anholt.net (Postfix) with ESMTP id E1F5710A2CC1;
-        Wed, 13 Mar 2019 16:52:16 -0700 (PDT)
+        by anholt.net (Postfix) with ESMTP id A901810A2C74;
+        Wed, 13 Mar 2019 16:52:20 -0700 (PDT)
 X-Virus-Scanned: Debian amavisd-new at anholt.net
 Received: from anholt.net ([127.0.0.1])
         by localhost (kingsolver.anholt.net [127.0.0.1]) (amavisd-new, port 10024)
-        with LMTP id B0Mea7-s4rhI; Wed, 13 Mar 2019 16:52:14 -0700 (PDT)
+        with LMTP id ixBGvtfYXoR4; Wed, 13 Mar 2019 16:52:12 -0700 (PDT)
 Received: from eliezer.anholt.net (localhost [127.0.0.1])
-        by anholt.net (Postfix) with ESMTP id 9105610A2C74;
+        by anholt.net (Postfix) with ESMTP id 78F2C10A1128;
         Wed, 13 Mar 2019 16:52:12 -0700 (PDT)
 Received: by eliezer.anholt.net (Postfix, from userid 1000)
-        id 8014F2FE1FEB; Wed, 13 Mar 2019 16:52:11 -0700 (PDT)
+        id 87A582FE4656; Wed, 13 Mar 2019 16:52:11 -0700 (PDT)
 From:   Eric Anholt <eric@anholt.net>
 To:     dri-devel@lists.freedesktop.org
 Cc:     linux-kernel@vger.kernel.org, david.emett@broadcom.com,
         thomas.spurden@broadcom.com, Eric Anholt <eric@anholt.net>
-Subject: [PATCH 2/4] drm/v3d: Rename the fence signaled from IRQs to "irq_fence".
-Date:   Wed, 13 Mar 2019 16:52:09 -0700
-Message-Id: <20190313235211.28995-2-eric@anholt.net>
+Subject: [PATCH 4/4] drm/v3d: Add support for compute shader dispatch.
+Date:   Wed, 13 Mar 2019 16:52:11 -0700
+Message-Id: <20190313235211.28995-4-eric@anholt.net>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190313235211.28995-1-eric@anholt.net>
 References: <20190313235211.28995-1-eric@anholt.net>
@@ -48,125 +48,915 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-We have another thing called the "done fence" that tracks when the
-scheduler considers the job done, and having the shared name was
-confusing.
+The compute shader dispatch interface is pretty simple -- just pass in
+the regs that userspace has passed us, with no CLs to run.  However,
+with no CL to run it means that we need to do manual cache flushing of
+the L2 after the HW execution completes (for SSBO, atomic, and
+image_load_store writes that are the output of compute shaders).
+
+This doesn't yet expose the L2 cache's ability to have a region of the
+address space not write back to memory (which could be used for
+shared_var storage).
+
+So far, the Mesa side has been tested on V3D v4.2 simpenrose (passing
+the ES31 tests), and on the kernel side on 7278 (failing atomic
+compswap tests in a way that doesn't reproduce on simpenrose).
 
 Signed-off-by: Eric Anholt <eric@anholt.net>
 ---
- drivers/gpu/drm/v3d/v3d_drv.h   |  4 ++--
- drivers/gpu/drm/v3d/v3d_gem.c   |  6 +++---
- drivers/gpu/drm/v3d/v3d_irq.c   |  6 +++---
- drivers/gpu/drm/v3d/v3d_sched.c | 12 ++++++------
- 4 files changed, 14 insertions(+), 14 deletions(-)
+ drivers/gpu/drm/v3d/v3d_debugfs.c |  22 +++++
+ drivers/gpu/drm/v3d/v3d_drv.c     |  10 +-
+ drivers/gpu/drm/v3d/v3d_drv.h     |  28 +++++-
+ drivers/gpu/drm/v3d/v3d_fence.c   |   2 +
+ drivers/gpu/drm/v3d/v3d_gem.c     | 157 ++++++++++++++++++++++++++++--
+ drivers/gpu/drm/v3d/v3d_irq.c     |  16 ++-
+ drivers/gpu/drm/v3d/v3d_regs.h    |  73 ++++++++++++++
+ drivers/gpu/drm/v3d/v3d_sched.c   | 121 +++++++++++++++++++++--
+ drivers/gpu/drm/v3d/v3d_trace.h   |  94 ++++++++++++++++++
+ include/uapi/drm/v3d_drm.h        |  28 ++++++
+ 10 files changed, 531 insertions(+), 20 deletions(-)
 
+diff --git a/drivers/gpu/drm/v3d/v3d_debugfs.c b/drivers/gpu/drm/v3d/v3d_debugfs.c
+index a24af2d2f574..a2dc4262955e 100644
+--- a/drivers/gpu/drm/v3d/v3d_debugfs.c
++++ b/drivers/gpu/drm/v3d/v3d_debugfs.c
+@@ -58,6 +58,17 @@ static const struct v3d_reg_def v3d_core_reg_defs[] = {
+ 	REGDEF(V3D_GMP_VIO_ADDR),
+ };
+ 
++static const struct v3d_reg_def v3d_csd_reg_defs[] = {
++	REGDEF(V3D_CSD_STATUS),
++	REGDEF(V3D_CSD_CURRENT_CFG0),
++	REGDEF(V3D_CSD_CURRENT_CFG1),
++	REGDEF(V3D_CSD_CURRENT_CFG2),
++	REGDEF(V3D_CSD_CURRENT_CFG3),
++	REGDEF(V3D_CSD_CURRENT_CFG4),
++	REGDEF(V3D_CSD_CURRENT_CFG5),
++	REGDEF(V3D_CSD_CURRENT_CFG6),
++};
++
+ static int v3d_v3d_debugfs_regs(struct seq_file *m, void *unused)
+ {
+ 	struct drm_info_node *node = (struct drm_info_node *)m->private;
+@@ -89,6 +100,17 @@ static int v3d_v3d_debugfs_regs(struct seq_file *m, void *unused)
+ 				   V3D_CORE_READ(core,
+ 						 v3d_core_reg_defs[i].reg));
+ 		}
++
++		if (v3d_has_csd(v3d)) {
++			for (i = 0; i < ARRAY_SIZE(v3d_csd_reg_defs); i++) {
++				seq_printf(m, "core %d %s (0x%04x): 0x%08x\n",
++					   core,
++					   v3d_csd_reg_defs[i].name,
++					   v3d_csd_reg_defs[i].reg,
++					   V3D_CORE_READ(core,
++							 v3d_csd_reg_defs[i].reg));
++			}
++		}
+ 	}
+ 
+ 	return 0;
+diff --git a/drivers/gpu/drm/v3d/v3d_drv.c b/drivers/gpu/drm/v3d/v3d_drv.c
+index 61ddbd3621cf..6d6c0d02dd78 100644
+--- a/drivers/gpu/drm/v3d/v3d_drv.c
++++ b/drivers/gpu/drm/v3d/v3d_drv.c
+@@ -7,9 +7,9 @@
+  * This driver supports the Broadcom V3D 3.3 and 4.1 OpenGL ES GPUs.
+  * For V3D 2.x support, see the VC4 driver.
+  *
+- * Currently only single-core rendering using the binner and renderer,
+- * along with TFU (texture formatting unit) rendering is supported.
+- * V3D 4.x's CSD (compute shader dispatch) is not yet supported.
++ * The V3D GPU includes a tiled render (composed of a bin and render
++ * pipelines), the TFU (texture formatting unit), and the CSD (compute
++ * shader dispatch).
+  */
+ 
+ #include <linux/clk.h>
+@@ -191,6 +191,9 @@ static int v3d_get_param_ioctl(struct drm_device *dev, void *data,
+ 	case DRM_V3D_PARAM_SUPPORTS_TFU:
+ 		args->value = 1;
+ 		return 0;
++	case DRM_V3D_PARAM_SUPPORTS_CSD:
++		args->value = v3d_has_csd(v3d);
++		return 0;
+ 	default:
+ 		DRM_DEBUG("Unknown parameter %d\n", args->param);
+ 		return -EINVAL;
+@@ -250,6 +253,7 @@ static const struct drm_ioctl_desc v3d_drm_ioctls[] = {
+ 	DRM_IOCTL_DEF_DRV(V3D_GET_PARAM, v3d_get_param_ioctl, DRM_RENDER_ALLOW),
+ 	DRM_IOCTL_DEF_DRV(V3D_GET_BO_OFFSET, v3d_get_bo_offset_ioctl, DRM_RENDER_ALLOW),
+ 	DRM_IOCTL_DEF_DRV(V3D_SUBMIT_TFU, v3d_submit_tfu_ioctl, DRM_RENDER_ALLOW | DRM_AUTH),
++	DRM_IOCTL_DEF_DRV(V3D_SUBMIT_CSD, v3d_submit_csd_ioctl, DRM_RENDER_ALLOW | DRM_AUTH),
+ };
+ 
+ static int v3d_dumb_create(struct drm_file *file_priv,
 diff --git a/drivers/gpu/drm/v3d/v3d_drv.h b/drivers/gpu/drm/v3d/v3d_drv.h
-index a128cd5ee6ea..284ced85ff02 100644
+index 04cad5a62191..66f776a07cf2 100644
 --- a/drivers/gpu/drm/v3d/v3d_drv.h
 +++ b/drivers/gpu/drm/v3d/v3d_drv.h
-@@ -169,7 +169,7 @@ struct v3d_job {
- 	struct dma_fence *in_fence;
+@@ -17,9 +17,11 @@ enum v3d_queue {
+ 	V3D_BIN,
+ 	V3D_RENDER,
+ 	V3D_TFU,
++	V3D_CSD,
++	V3D_CACHE_CLEAN,
+ };
  
- 	/* v3d fence to be signaled by IRQ handler when the job is complete. */
--	struct dma_fence *done_fence;
-+	struct dma_fence *irq_fence;
+-#define V3D_MAX_QUEUES (V3D_TFU + 1)
++#define V3D_MAX_QUEUES (V3D_CACHE_CLEAN + 1)
  
- 	/* GPU virtual addresses of the start/end of the CL job. */
- 	u32 start, end;
-@@ -216,7 +216,7 @@ struct v3d_tfu_job {
- 	struct dma_fence *in_fence;
+ struct v3d_queue_state {
+ 	struct drm_gpu_scheduler sched;
+@@ -76,6 +78,7 @@ struct v3d_dev {
+ 	struct v3d_bin_job *bin_job;
+ 	struct v3d_render_job *render_job;
+ 	struct v3d_tfu_job *tfu_job;
++	struct v3d_csd_job *csd_job;
  
- 	/* v3d fence to be signaled by IRQ handler when the job is complete. */
--	struct dma_fence *done_fence;
-+	struct dma_fence *irq_fence;
+ 	struct v3d_queue_state queue[V3D_MAX_QUEUES];
  
+@@ -98,6 +101,12 @@ struct v3d_dev {
+ 	 */
+ 	struct mutex sched_lock;
+ 
++	/* Lock taken during a cache clean and when initiating an L2
++	 * flush, to keep L2 flushes from interfering with the
++	 * synchronous L2 cleans.
++	 */
++	struct mutex cache_clean_lock;
++
+ 	struct {
+ 		u32 num_allocated;
+ 		u32 pages_allocated;
+@@ -110,6 +119,12 @@ to_v3d_dev(struct drm_device *dev)
+ 	return (struct v3d_dev *)dev->dev_private;
+ }
+ 
++static inline bool
++v3d_has_csd(struct v3d_dev *v3d)
++{
++	return v3d->ver >= 41;
++}
++
+ /* The per-fd struct, which tracks the MMU mappings. */
+ struct v3d_file_priv {
  	struct v3d_dev *v3d;
+@@ -228,6 +243,14 @@ struct v3d_tfu_job {
+ 	struct drm_v3d_submit_tfu args;
+ };
  
++struct v3d_csd_job {
++	struct v3d_job base;
++
++	u32 timedout_batches;
++
++	struct drm_v3d_submit_csd args;
++};
++
+ /**
+  * _wait_for - magic (register) wait macro
+  *
+@@ -289,11 +312,14 @@ int v3d_submit_cl_ioctl(struct drm_device *dev, void *data,
+ 			struct drm_file *file_priv);
+ int v3d_submit_tfu_ioctl(struct drm_device *dev, void *data,
+ 			 struct drm_file *file_priv);
++int v3d_submit_csd_ioctl(struct drm_device *dev, void *data,
++			 struct drm_file *file_priv);
+ int v3d_wait_bo_ioctl(struct drm_device *dev, void *data,
+ 		      struct drm_file *file_priv);
+ void v3d_job_put(struct v3d_job *job);
+ void v3d_reset(struct v3d_dev *v3d);
+ void v3d_invalidate_caches(struct v3d_dev *v3d);
++void v3d_clean_caches(struct v3d_dev *v3d);
+ 
+ /* v3d_irq.c */
+ int v3d_irq_init(struct v3d_dev *v3d);
+diff --git a/drivers/gpu/drm/v3d/v3d_fence.c b/drivers/gpu/drm/v3d/v3d_fence.c
+index b0a2a1ae2eb1..89840ed212c0 100644
+--- a/drivers/gpu/drm/v3d/v3d_fence.c
++++ b/drivers/gpu/drm/v3d/v3d_fence.c
+@@ -36,6 +36,8 @@ static const char *v3d_fence_get_timeline_name(struct dma_fence *fence)
+ 		return "v3d-render";
+ 	case V3D_TFU:
+ 		return "v3d-tfu";
++	case V3D_CSD:
++		return "v3d-csd";
+ 	default:
+ 		return NULL;
+ 	}
 diff --git a/drivers/gpu/drm/v3d/v3d_gem.c b/drivers/gpu/drm/v3d/v3d_gem.c
-index 8ebbc544c61e..b06bed0835c9 100644
+index 2cdc914d477e..7db4706f99e6 100644
 --- a/drivers/gpu/drm/v3d/v3d_gem.c
 +++ b/drivers/gpu/drm/v3d/v3d_gem.c
-@@ -339,8 +339,8 @@ v3d_exec_cleanup(struct kref *ref)
- 	dma_fence_put(exec->bin.in_fence);
- 	dma_fence_put(exec->render.in_fence);
+@@ -162,10 +162,52 @@ v3d_flush_l2t(struct v3d_dev *v3d, int core)
+ 	/* While there is a busy bit (V3D_L2TCACTL_L2TFLS), we don't
+ 	 * need to wait for completion before dispatching the job --
+ 	 * L2T accesses will be stalled until the flush has completed.
++	 * However, we do need to make sure we don't try to trigger a
++	 * new flush while the L2_CLEAN queue is trying to
++	 * synchronously clean after a job.
+ 	 */
++	mutex_lock(&v3d->cache_clean_lock);
+ 	V3D_CORE_WRITE(core, V3D_CTL_L2TCACTL,
+ 		       V3D_L2TCACTL_L2TFLS |
+ 		       V3D_SET_FIELD(V3D_L2TCACTL_FLM_FLUSH, V3D_L2TCACTL_FLM));
++	mutex_unlock(&v3d->cache_clean_lock);
++}
++
++/* Cleans texture L1 and L2 cachelines (writing back dirty data).
++ *
++ * For cleaning, which happens from the CACHE_CLEAN queue after CSD has
++ * executed, we need to make sure that the clean is done before
++ * signaling job completion.  So, we synchronously wait before
++ * returning, and we make sure that L2 invalidates don't happen in the
++ * meantime to confuse our are-we-done checks.
++ */
++void
++v3d_clean_caches(struct v3d_dev *v3d)
++{
++	struct drm_device *dev = &v3d->drm;
++	int core = 0;
++
++	trace_v3d_cache_clean_begin(dev);
++
++	V3D_CORE_WRITE(core, V3D_CTL_L2TCACTL, V3D_L2TCACTL_TMUWCF);
++	if (wait_for(!(V3D_CORE_READ(core, V3D_CTL_L2TCACTL) &
++		       V3D_L2TCACTL_L2TFLS), 100)) {
++		DRM_ERROR("Timeout waiting for L1T write combiner flush\n");
++	}
++
++	mutex_lock(&v3d->cache_clean_lock);
++	V3D_CORE_WRITE(core, V3D_CTL_L2TCACTL,
++		       V3D_L2TCACTL_L2TFLS |
++		       V3D_SET_FIELD(V3D_L2TCACTL_FLM_CLEAN, V3D_L2TCACTL_FLM));
++
++	if (wait_for(!(V3D_CORE_READ(core, V3D_CTL_L2TCACTL) &
++		       V3D_L2TCACTL_L2TFLS), 100)) {
++		DRM_ERROR("Timeout waiting for L2T clean\n");
++	}
++
++	mutex_unlock(&v3d->cache_clean_lock);
++
++	trace_v3d_cache_clean_end(dev);
+ }
  
--	dma_fence_put(exec->bin.done_fence);
--	dma_fence_put(exec->render.done_fence);
-+	dma_fence_put(exec->bin.irq_fence);
-+	dma_fence_put(exec->render.irq_fence);
+ /* Invalidates the slice caches.  These are read-only caches. */
+@@ -452,17 +494,18 @@ static void
+ v3d_attach_fences_and_unlock_reservation(struct drm_file *file_priv,
+ 					 struct v3d_job *job,
+ 					 struct ww_acquire_ctx *acquire_ctx,
+-					 u32 out_sync)
++					 u32 out_sync,
++					 struct dma_fence *done_fence)
+ {
+ 	struct drm_syncobj *sync_out;
  
- 	dma_fence_put(exec->bin_done_fence);
- 	dma_fence_put(exec->render_done_fence);
-@@ -373,7 +373,7 @@ v3d_tfu_job_cleanup(struct kref *ref)
- 	unsigned int i;
+-	v3d_attach_object_fences(job->bo, job->bo_count, job->done_fence);
++	v3d_attach_object_fences(job->bo, job->bo_count, done_fence);
+ 	v3d_unlock_bo_reservations(job->bo, job->bo_count, acquire_ctx);
  
- 	dma_fence_put(job->in_fence);
--	dma_fence_put(job->done_fence);
-+	dma_fence_put(job->irq_fence);
+ 	/* Update the return sync object for the job */
+ 	sync_out = drm_syncobj_find(file_priv, out_sync);
+ 	if (sync_out) {
+-		drm_syncobj_replace_fence(sync_out, job->done_fence);
++		drm_syncobj_replace_fence(sync_out, done_fence);
+ 		drm_syncobj_put(sync_out);
+ 	}
+ }
+@@ -558,8 +601,10 @@ v3d_submit_cl_ioctl(struct drm_device *dev, void *data,
+ 	mutex_unlock(&v3d->sched_lock);
  
- 	for (i = 0; i < ARRAY_SIZE(job->bo); i++) {
- 		if (job->bo[i])
+ 	v3d_attach_fences_and_unlock_reservation(file_priv,
+-						 &render->base, &acquire_ctx,
+-						 args->out_sync);
++						 &render->base,
++						 &acquire_ctx,
++						 args->out_sync,
++						 render->base.done_fence);
+ 
+ 	if (bin)
+ 		v3d_job_put(&bin->base);
+@@ -653,9 +698,107 @@ v3d_submit_tfu_ioctl(struct drm_device *dev, void *data,
+ 
+ 	v3d_attach_fences_and_unlock_reservation(file_priv,
+ 						 &job->base, &acquire_ctx,
+-						 args->out_sync);
++						 args->out_sync,
++						 job->base.done_fence);
++
++	v3d_job_put(&job->base);
++
++	return 0;
++
++fail_unreserve:
++	mutex_unlock(&v3d->sched_lock);
++	v3d_unlock_bo_reservations(job->base.bo, job->base.bo_count,
++				   &acquire_ctx);
++fail:
++	v3d_job_put(&job->base);
++
++	return ret;
++}
++
++/**
++ * v3d_submit_csd_ioctl() - Submits a CSD (texture formatting) job to the V3D.
++ * @dev: DRM device
++ * @data: ioctl argument
++ * @file_priv: DRM file for this fd
++ *
++ * Userspace provides the register setup for the CSD, which we don't
++ * need to validate since the CSD is behind the MMU.
++ */
++int
++v3d_submit_csd_ioctl(struct drm_device *dev, void *data,
++		     struct drm_file *file_priv)
++{
++	struct v3d_dev *v3d = to_v3d_dev(dev);
++	struct v3d_file_priv *v3d_priv = file_priv->driver_priv;
++	struct drm_v3d_submit_csd *args = data;
++	struct v3d_csd_job *job;
++	struct v3d_job *clean_job;
++	struct ww_acquire_ctx acquire_ctx;
++	int ret;
++
++	trace_v3d_submit_csd_ioctl(&v3d->drm, args->cfg[5], args->cfg[6]);
++
++	if (!v3d_has_csd(v3d)) {
++		DRM_DEBUG("Attempting CSD submit on non-CSD hardware\n");
++		return -EINVAL;
++	}
++
++	job = kcalloc(1, sizeof(*job), GFP_KERNEL);
++	if (!job)
++		return -ENOMEM;
++
++	ret = v3d_job_init(v3d, file_priv, &job->base,
++			   v3d_job_free, args->in_sync);
++	if (ret) {
++		kfree(job);
++		return ret;
++	}
++
++	clean_job = kcalloc(1, sizeof(*job), GFP_KERNEL);
++	if (!clean_job) {
++		v3d_job_put(&job->base);
++		kfree(job);
++		return -ENOMEM;
++	}
++
++	ret = v3d_job_init(v3d, file_priv, clean_job, v3d_job_free, 0);
++	if (ret) {
++		v3d_job_put(&job->base);
++		kfree(clean_job);
++		return ret;
++	}
++
++	job->args = *args;
++
++	ret = v3d_lookup_bos(dev, file_priv, &job->base,
++			     args->bo_handles, args->bo_handle_count);
++	if (ret)
++		goto fail;
++
++	ret = v3d_lock_bo_reservations(job->base.bo, job->base.bo_count,
++				       &acquire_ctx);
++	if (ret)
++		goto fail;
++
++	mutex_lock(&v3d->sched_lock);
++	ret = v3d_push_job(v3d_priv, &job->base, V3D_CSD);
++	if (ret)
++		goto fail_unreserve;
++
++	clean_job->in_fence = dma_fence_get(job->base.done_fence);
++	ret = v3d_push_job(v3d_priv, clean_job, V3D_CACHE_CLEAN);
++	if (ret)
++		goto fail_unreserve;
++	mutex_unlock(&v3d->sched_lock);
++
++	v3d_attach_fences_and_unlock_reservation(file_priv,
++						 &job->base,
++						 &acquire_ctx,
++						 args->out_sync,
++						 clean_job->done_fence);
+ 
+ 	v3d_job_put(&job->base);
++	v3d_job_put(clean_job);
+ 
+ 	return 0;
+ 
+@@ -665,6 +808,7 @@ v3d_submit_tfu_ioctl(struct drm_device *dev, void *data,
+ 				   &acquire_ctx);
+ fail:
+ 	v3d_job_put(&job->base);
++	v3d_job_put(clean_job);
+ 
+ 	return ret;
+ }
+@@ -684,6 +828,7 @@ v3d_gem_init(struct drm_device *dev)
+ 	mutex_init(&v3d->bo_lock);
+ 	mutex_init(&v3d->reset_lock);
+ 	mutex_init(&v3d->sched_lock);
++	mutex_init(&v3d->cache_clean_lock);
+ 
+ 	/* Note: We don't allocate address 0.  Various bits of HW
+ 	 * treat 0 as special, such as the occlusion query counters
 diff --git a/drivers/gpu/drm/v3d/v3d_irq.c b/drivers/gpu/drm/v3d/v3d_irq.c
-index a09442ec7297..044062607577 100644
+index 480ba6666a4d..71c861d3ff1c 100644
 --- a/drivers/gpu/drm/v3d/v3d_irq.c
 +++ b/drivers/gpu/drm/v3d/v3d_irq.c
-@@ -96,7 +96,7 @@ v3d_irq(int irq, void *arg)
+@@ -4,9 +4,9 @@
+ /**
+  * DOC: Interrupt management for the V3D engine
+  *
+- * When we take a bin, render, or TFU done interrupt, we need to
+- * signal the fence for that job so that the scheduler can queue up
+- * the next one and unblock any waiters.
++ * When we take a bin, render, TFU done, or CSD done interrupt, we
++ * need to signal the fence for that job so that the scheduler can
++ * queue up the next one and unblock any waiters.
+  *
+  * When we take the binner out of memory interrupt, we need to
+  * allocate some new memory and pass it to the binner so that the
+@@ -20,6 +20,7 @@
+ #define V3D_CORE_IRQS ((u32)(V3D_INT_OUTOMEM |	\
+ 			     V3D_INT_FLDONE |	\
+ 			     V3D_INT_FRDONE |	\
++			     V3D_INT_CSDDONE |	\
+ 			     V3D_INT_GMPV))
  
- 	if (intsts & V3D_INT_FLDONE) {
- 		struct v3d_fence *fence =
--			to_v3d_fence(v3d->bin_job->bin.done_fence);
-+			to_v3d_fence(v3d->bin_job->bin.irq_fence);
+ #define V3D_HUB_IRQS ((u32)(V3D_HUB_INT_MMU_WRV |	\
+@@ -112,6 +113,15 @@ v3d_irq(int irq, void *arg)
+ 		status = IRQ_HANDLED;
+ 	}
  
- 		trace_v3d_bcl_irq(&v3d->drm, fence->seqno);
- 		dma_fence_signal(&fence->base);
-@@ -105,7 +105,7 @@ v3d_irq(int irq, void *arg)
++	if (intsts & V3D_INT_CSDDONE) {
++		struct v3d_fence *fence =
++			to_v3d_fence(v3d->csd_job->base.irq_fence);
++
++		trace_v3d_csd_irq(&v3d->drm, fence->seqno);
++		dma_fence_signal(&fence->base);
++		status = IRQ_HANDLED;
++	}
++
+ 	/* We shouldn't be triggering these if we have GMP in
+ 	 * always-allowed mode.
+ 	 */
+diff --git a/drivers/gpu/drm/v3d/v3d_regs.h b/drivers/gpu/drm/v3d/v3d_regs.h
+index 8e88af237610..9a8ff0ce648e 100644
+--- a/drivers/gpu/drm/v3d/v3d_regs.h
++++ b/drivers/gpu/drm/v3d/v3d_regs.h
+@@ -238,8 +238,11 @@
+ #define V3D_CTL_L2TCACTL                               0x00030
+ # define V3D_L2TCACTL_TMUWCF                           BIT(8)
+ # define V3D_L2TCACTL_L2T_NO_WM                        BIT(4)
++/* Invalidates cache lines. */
+ # define V3D_L2TCACTL_FLM_FLUSH                        0
++/* Removes cachelines without writing dirty lines back. */
+ # define V3D_L2TCACTL_FLM_CLEAR                        1
++/* Writes out dirty cachelines and marks them clean, but doesn't invalidate. */
+ # define V3D_L2TCACTL_FLM_CLEAN                        2
+ # define V3D_L2TCACTL_FLM_MASK                         V3D_MASK(2, 1)
+ # define V3D_L2TCACTL_FLM_SHIFT                        1
+@@ -255,6 +258,8 @@
+ #define V3D_CTL_INT_MSK_CLR                            0x00064
+ # define V3D_INT_QPU_MASK                              V3D_MASK(27, 16)
+ # define V3D_INT_QPU_SHIFT                             16
++# define V3D_INT_CSDDONE                               BIT(7)
++# define V3D_INT_PCTR                                  BIT(6)
+ # define V3D_INT_GMPV                                  BIT(5)
+ # define V3D_INT_TRFB                                  BIT(4)
+ # define V3D_INT_SPILLUSE                              BIT(3)
+@@ -374,4 +379,72 @@
+ #define V3D_GMP_PRESERVE_LOAD                          0x00818
+ #define V3D_GMP_VALID_LINES                            0x00820
  
- 	if (intsts & V3D_INT_FRDONE) {
- 		struct v3d_fence *fence =
--			to_v3d_fence(v3d->render_job->render.done_fence);
-+			to_v3d_fence(v3d->render_job->render.irq_fence);
- 
- 		trace_v3d_rcl_irq(&v3d->drm, fence->seqno);
- 		dma_fence_signal(&fence->base);
-@@ -141,7 +141,7 @@ v3d_hub_irq(int irq, void *arg)
- 
- 	if (intsts & V3D_HUB_INT_TFUC) {
- 		struct v3d_fence *fence =
--			to_v3d_fence(v3d->tfu_job->done_fence);
-+			to_v3d_fence(v3d->tfu_job->irq_fence);
- 
- 		trace_v3d_tfu_irq(&v3d->drm, fence->seqno);
- 		dma_fence_signal(&fence->base);
++#define V3D_CSD_STATUS                                 0x00900
++# define V3D_CSD_STATUS_NUM_COMPLETED_MASK             V3D_MASK(11, 4)
++# define V3D_CSD_STATUS_NUM_COMPLETED_SHIFT            4
++# define V3D_CSD_STATUS_NUM_ACTIVE_MASK                V3D_MASK(3, 2)
++# define V3D_CSD_STATUS_NUM_ACTIVE_SHIFT               2
++# define V3D_CSD_STATUS_HAVE_CURRENT_DISPATCH          BIT(1)
++# define V3D_CSD_STATUS_HAVE_QUEUED_DISPATCH           BIT(0)
++
++#define V3D_CSD_QUEUED_CFG0                            0x00904
++# define V3D_CSD_QUEUED_CFG0_NUM_WGS_X_MASK            V3D_MASK(31, 16)
++# define V3D_CSD_QUEUED_CFG0_NUM_WGS_X_SHIFT           16
++# define V3D_CSD_QUEUED_CFG0_WG_X_OFFSET_MASK          V3D_MASK(15, 0)
++# define V3D_CSD_QUEUED_CFG0_WG_X_OFFSET_SHIFT         0
++
++#define V3D_CSD_QUEUED_CFG1                            0x00908
++# define V3D_CSD_QUEUED_CFG1_NUM_WGS_Y_MASK            V3D_MASK(31, 16)
++# define V3D_CSD_QUEUED_CFG1_NUM_WGS_Y_SHIFT           16
++# define V3D_CSD_QUEUED_CFG1_WG_Y_OFFSET_MASK          V3D_MASK(15, 0)
++# define V3D_CSD_QUEUED_CFG1_WG_Y_OFFSET_SHIFT         0
++
++#define V3D_CSD_QUEUED_CFG2                            0x0090c
++# define V3D_CSD_QUEUED_CFG2_NUM_WGS_Z_MASK            V3D_MASK(31, 16)
++# define V3D_CSD_QUEUED_CFG2_NUM_WGS_Z_SHIFT           16
++# define V3D_CSD_QUEUED_CFG2_WG_Z_OFFSET_MASK          V3D_MASK(15, 0)
++# define V3D_CSD_QUEUED_CFG2_WG_Z_OFFSET_SHIFT         0
++
++#define V3D_CSD_QUEUED_CFG3                            0x00910
++# define V3D_CSD_QUEUED_CFG3_OVERLAP_WITH_PREV         BIT(26)
++# define V3D_CSD_QUEUED_CFG3_MAX_SG_ID_MASK            V3D_MASK(25, 20)
++# define V3D_CSD_QUEUED_CFG3_MAX_SG_ID_SHIFT           20
++# define V3D_CSD_QUEUED_CFG3_BATCHES_PER_SG_M1_MASK    V3D_MASK(19, 12)
++# define V3D_CSD_QUEUED_CFG3_BATCHES_PER_SG_M1_SHIFT   12
++# define V3D_CSD_QUEUED_CFG3_WGS_PER_SG_MASK           V3D_MASK(11, 8)
++# define V3D_CSD_QUEUED_CFG3_WGS_PER_SG_SHIFT          8
++# define V3D_CSD_QUEUED_CFG3_WG_SIZE_MASK              V3D_MASK(7, 0)
++# define V3D_CSD_QUEUED_CFG3_WG_SIZE_SHIFT             0
++
++/* Number of batches, minus 1 */
++#define V3D_CSD_QUEUED_CFG4                            0x00914
++
++/* Shader address, pnan, singleseg, threading, like a shader record. */
++#define V3D_CSD_QUEUED_CFG5                            0x00918
++
++/* Uniforms address (4 byte aligned) */
++#define V3D_CSD_QUEUED_CFG6                            0x0091c
++
++#define V3D_CSD_CURRENT_CFG0                          0x00920
++#define V3D_CSD_CURRENT_CFG1                          0x00924
++#define V3D_CSD_CURRENT_CFG2                          0x00928
++#define V3D_CSD_CURRENT_CFG3                          0x0092c
++#define V3D_CSD_CURRENT_CFG4                          0x00930
++#define V3D_CSD_CURRENT_CFG5                          0x00934
++#define V3D_CSD_CURRENT_CFG6                          0x00938
++
++#define V3D_CSD_CURRENT_ID0                            0x0093c
++# define V3D_CSD_CURRENT_ID0_WG_X_MASK                 V3D_MASK(31, 16)
++# define V3D_CSD_CURRENT_ID0_WG_X_SHIFT                16
++# define V3D_CSD_CURRENT_ID0_WG_IN_SG_MASK             V3D_MASK(11, 8)
++# define V3D_CSD_CURRENT_ID0_WG_IN_SG_SHIFT            8
++# define V3D_CSD_CURRENT_ID0_L_IDX_MASK                V3D_MASK(7, 0)
++# define V3D_CSD_CURRENT_ID0_L_IDX_SHIFT               0
++
++#define V3D_CSD_CURRENT_ID1                            0x00940
++# define V3D_CSD_CURRENT_ID0_WG_Z_MASK                 V3D_MASK(31, 16)
++# define V3D_CSD_CURRENT_ID0_WG_Z_SHIFT                16
++# define V3D_CSD_CURRENT_ID0_WG_Y_MASK                 V3D_MASK(15, 0)
++# define V3D_CSD_CURRENT_ID0_WG_Y_SHIFT                0
++
+ #endif /* V3D_REGS_H */
 diff --git a/drivers/gpu/drm/v3d/v3d_sched.c b/drivers/gpu/drm/v3d/v3d_sched.c
-index d0c68b7c8b41..e740f3b99aa5 100644
+index 884f00f5edf4..9cb3e1b3a024 100644
 --- a/drivers/gpu/drm/v3d/v3d_sched.c
 +++ b/drivers/gpu/drm/v3d/v3d_sched.c
-@@ -156,9 +156,9 @@ static struct dma_fence *v3d_job_run(struct drm_sched_job *sched_job)
- 	if (IS_ERR(fence))
- 		return NULL;
+@@ -48,6 +48,12 @@ to_tfu_job(struct drm_sched_job *sched_job)
+ 	return container_of(sched_job, struct v3d_tfu_job, base.base);
+ }
  
--	if (job->done_fence)
--		dma_fence_put(job->done_fence);
--	job->done_fence = dma_fence_get(fence);
-+	if (job->irq_fence)
-+		dma_fence_put(job->irq_fence);
-+	job->irq_fence = dma_fence_get(fence);
++static struct v3d_csd_job *
++to_csd_job(struct drm_sched_job *sched_job)
++{
++	return container_of(sched_job, struct v3d_csd_job, base.base);
++}
++
+ static void
+ v3d_job_free(struct drm_sched_job *sched_job)
+ {
+@@ -243,6 +249,48 @@ v3d_tfu_job_run(struct drm_sched_job *sched_job)
+ 	return fence;
+ }
  
- 	trace_v3d_submit_cl(dev, q == V3D_RENDER, to_v3d_fence(fence)->seqno,
- 			    job->start, job->end);
-@@ -199,9 +199,9 @@ v3d_tfu_job_run(struct drm_sched_job *sched_job)
- 		return NULL;
++static struct dma_fence *
++v3d_csd_job_run(struct drm_sched_job *sched_job)
++{
++	struct v3d_csd_job *job = to_csd_job(sched_job);
++	struct v3d_dev *v3d = job->base.v3d;
++	struct drm_device *dev = &v3d->drm;
++	struct dma_fence *fence;
++	int i;
++
++	v3d->csd_job = job;
++
++	v3d_invalidate_caches(v3d);
++
++	fence = v3d_fence_create(v3d, V3D_CSD);
++	if (IS_ERR(fence))
++		return NULL;
++
++	if (job->base.irq_fence)
++		dma_fence_put(job->base.irq_fence);
++	job->base.irq_fence = dma_fence_get(fence);
++
++	trace_v3d_submit_csd(dev, to_v3d_fence(fence)->seqno);
++
++	for (i = 1; i <= 6; i++)
++		V3D_CORE_WRITE(0, V3D_CSD_QUEUED_CFG0 + 4 * i, job->args.cfg[i]);
++	/* CFG0 write kicks off the job. */
++	V3D_CORE_WRITE(0, V3D_CSD_QUEUED_CFG0, job->args.cfg[0]);
++
++	return fence;
++}
++
++static struct dma_fence *
++v3d_cache_clean_job_run(struct drm_sched_job *sched_job)
++{
++	struct v3d_job *job = to_v3d_job(sched_job);
++	struct v3d_dev *v3d = job->v3d;
++
++	v3d_clean_caches(v3d);
++
++	return NULL;
++}
++
+ static void
+ v3d_gpu_reset_for_timeout(struct v3d_dev *v3d, struct drm_sched_job *sched_job)
+ {
+@@ -313,13 +361,31 @@ v3d_render_job_timedout(struct drm_sched_job *sched_job)
+ }
  
- 	v3d->tfu_job = job;
--	if (job->done_fence)
--		dma_fence_put(job->done_fence);
--	job->done_fence = dma_fence_get(fence);
-+	if (job->irq_fence)
-+		dma_fence_put(job->irq_fence);
-+	job->irq_fence = dma_fence_get(fence);
+ static void
+-v3d_tfu_job_timedout(struct drm_sched_job *sched_job)
++v3d_generic_job_timedout(struct drm_sched_job *sched_job)
+ {
+ 	struct v3d_job *job = to_v3d_job(sched_job);
  
- 	trace_v3d_submit_tfu(dev, to_v3d_fence(fence)->seqno);
+ 	v3d_gpu_reset_for_timeout(job->v3d, sched_job);
+ }
  
++static void
++v3d_csd_job_timedout(struct drm_sched_job *sched_job)
++{
++	struct v3d_csd_job *job = to_csd_job(sched_job);
++	struct v3d_dev *v3d = job->base.v3d;
++	u32 batches = V3D_CORE_READ(0, V3D_CSD_CURRENT_CFG4);
++
++	/* If we've made progress, skip reset and let the timer get
++	 * rearmed.
++	 */
++	if (job->timedout_batches != batches) {
++		job->timedout_batches = batches;
++		return;
++	}
++
++	v3d_gpu_reset_for_timeout(v3d, sched_job);
++}
++
+ static const struct drm_sched_backend_ops v3d_bin_sched_ops = {
+ 	.dependency = v3d_job_dependency,
+ 	.run_job = v3d_bin_job_run,
+@@ -337,10 +403,24 @@ static const struct drm_sched_backend_ops v3d_render_sched_ops = {
+ static const struct drm_sched_backend_ops v3d_tfu_sched_ops = {
+ 	.dependency = v3d_job_dependency,
+ 	.run_job = v3d_tfu_job_run,
+-	.timedout_job = v3d_tfu_job_timedout,
++	.timedout_job = v3d_generic_job_timedout,
+ 	.free_job = v3d_job_free,
+ };
+ 
++static const struct drm_sched_backend_ops v3d_csd_sched_ops = {
++	.dependency = v3d_job_dependency,
++	.run_job = v3d_csd_job_run,
++	.timedout_job = v3d_csd_job_timedout,
++	.free_job = v3d_job_free
++};
++
++static const struct drm_sched_backend_ops v3d_cache_clean_sched_ops = {
++	.dependency = v3d_job_dependency,
++	.run_job = v3d_cache_clean_job_run,
++	.timedout_job = v3d_generic_job_timedout,
++	.free_job = v3d_job_free
++};
++
+ int
+ v3d_sched_init(struct v3d_dev *v3d)
+ {
+@@ -367,7 +447,7 @@ v3d_sched_init(struct v3d_dev *v3d)
+ 	if (ret) {
+ 		dev_err(v3d->dev, "Failed to create render scheduler: %d.",
+ 			ret);
+-		drm_sched_fini(&v3d->queue[V3D_BIN].sched);
++		v3d_sched_fini(v3d);
+ 		return ret;
+ 	}
+ 
+@@ -379,11 +459,36 @@ v3d_sched_init(struct v3d_dev *v3d)
+ 	if (ret) {
+ 		dev_err(v3d->dev, "Failed to create TFU scheduler: %d.",
+ 			ret);
+-		drm_sched_fini(&v3d->queue[V3D_RENDER].sched);
+-		drm_sched_fini(&v3d->queue[V3D_BIN].sched);
++		v3d_sched_fini(v3d);
+ 		return ret;
+ 	}
+ 
++	if (v3d_has_csd(v3d)) {
++		ret = drm_sched_init(&v3d->queue[V3D_CSD].sched,
++				     &v3d_csd_sched_ops,
++				     hw_jobs_limit, job_hang_limit,
++				     msecs_to_jiffies(hang_limit_ms),
++				     "v3d_csd");
++		if (ret) {
++			dev_err(v3d->dev, "Failed to create CSD scheduler: %d.",
++				ret);
++			v3d_sched_fini(v3d);
++			return ret;
++		}
++
++		ret = drm_sched_init(&v3d->queue[V3D_CACHE_CLEAN].sched,
++				     &v3d_cache_clean_sched_ops,
++				     hw_jobs_limit, job_hang_limit,
++				     msecs_to_jiffies(hang_limit_ms),
++				     "v3d_cache_clean");
++		if (ret) {
++			dev_err(v3d->dev, "Failed to create CACHE_CLEAN scheduler: %d.",
++				ret);
++			v3d_sched_fini(v3d);
++			return ret;
++		}
++	}
++
+ 	return 0;
+ }
+ 
+@@ -392,6 +497,8 @@ v3d_sched_fini(struct v3d_dev *v3d)
+ {
+ 	enum v3d_queue q;
+ 
+-	for (q = 0; q < V3D_MAX_QUEUES; q++)
+-		drm_sched_fini(&v3d->queue[q].sched);
++	for (q = 0; q < V3D_MAX_QUEUES; q++) {
++		if (v3d->queue[q].sched.ready)
++			drm_sched_fini(&v3d->queue[q].sched);
++	}
+ }
+diff --git a/drivers/gpu/drm/v3d/v3d_trace.h b/drivers/gpu/drm/v3d/v3d_trace.h
+index edd984afa33f..7aa8dc356e54 100644
+--- a/drivers/gpu/drm/v3d/v3d_trace.h
++++ b/drivers/gpu/drm/v3d/v3d_trace.h
+@@ -124,6 +124,26 @@ TRACE_EVENT(v3d_tfu_irq,
+ 		      __entry->seqno)
+ );
+ 
++TRACE_EVENT(v3d_csd_irq,
++	    TP_PROTO(struct drm_device *dev,
++		     uint64_t seqno),
++	    TP_ARGS(dev, seqno),
++
++	    TP_STRUCT__entry(
++			     __field(u32, dev)
++			     __field(u64, seqno)
++			     ),
++
++	    TP_fast_assign(
++			   __entry->dev = dev->primary->index;
++			   __entry->seqno = seqno;
++			   ),
++
++	    TP_printk("dev=%u, seqno=%llu",
++		      __entry->dev,
++		      __entry->seqno)
++);
++
+ TRACE_EVENT(v3d_submit_tfu_ioctl,
+ 	    TP_PROTO(struct drm_device *dev, u32 iia),
+ 	    TP_ARGS(dev, iia),
+@@ -163,6 +183,80 @@ TRACE_EVENT(v3d_submit_tfu,
+ 		      __entry->seqno)
+ );
+ 
++TRACE_EVENT(v3d_submit_csd_ioctl,
++	    TP_PROTO(struct drm_device *dev, u32 cfg5, u32 cfg6),
++	    TP_ARGS(dev, cfg5, cfg6),
++
++	    TP_STRUCT__entry(
++			     __field(u32, dev)
++			     __field(u32, cfg5)
++			     __field(u32, cfg6)
++			     ),
++
++	    TP_fast_assign(
++			   __entry->dev = dev->primary->index;
++			   __entry->cfg5 = cfg5;
++			   __entry->cfg6 = cfg6;
++			   ),
++
++	    TP_printk("dev=%u, CFG5 0x%08x, CFG6 0x%08x",
++		      __entry->dev,
++		      __entry->cfg5,
++		      __entry->cfg6)
++);
++
++TRACE_EVENT(v3d_submit_csd,
++	    TP_PROTO(struct drm_device *dev,
++		     uint64_t seqno),
++	    TP_ARGS(dev, seqno),
++
++	    TP_STRUCT__entry(
++			     __field(u32, dev)
++			     __field(u64, seqno)
++			     ),
++
++	    TP_fast_assign(
++			   __entry->dev = dev->primary->index;
++			   __entry->seqno = seqno;
++			   ),
++
++	    TP_printk("dev=%u, seqno=%llu",
++		      __entry->dev,
++		      __entry->seqno)
++);
++
++TRACE_EVENT(v3d_cache_clean_begin,
++	    TP_PROTO(struct drm_device *dev),
++	    TP_ARGS(dev),
++
++	    TP_STRUCT__entry(
++			     __field(u32, dev)
++			     ),
++
++	    TP_fast_assign(
++			   __entry->dev = dev->primary->index;
++			   ),
++
++	    TP_printk("dev=%u",
++		      __entry->dev)
++);
++
++TRACE_EVENT(v3d_cache_clean_end,
++	    TP_PROTO(struct drm_device *dev),
++	    TP_ARGS(dev),
++
++	    TP_STRUCT__entry(
++			     __field(u32, dev)
++			     ),
++
++	    TP_fast_assign(
++			   __entry->dev = dev->primary->index;
++			   ),
++
++	    TP_printk("dev=%u",
++		      __entry->dev)
++);
++
+ TRACE_EVENT(v3d_reset_begin,
+ 	    TP_PROTO(struct drm_device *dev),
+ 	    TP_ARGS(dev),
+diff --git a/include/uapi/drm/v3d_drm.h b/include/uapi/drm/v3d_drm.h
+index ea70669d2138..58fbe48c91e9 100644
+--- a/include/uapi/drm/v3d_drm.h
++++ b/include/uapi/drm/v3d_drm.h
+@@ -37,6 +37,7 @@ extern "C" {
+ #define DRM_V3D_GET_PARAM                         0x04
+ #define DRM_V3D_GET_BO_OFFSET                     0x05
+ #define DRM_V3D_SUBMIT_TFU                        0x06
++#define DRM_V3D_SUBMIT_CSD                        0x07
+ 
+ #define DRM_IOCTL_V3D_SUBMIT_CL           DRM_IOWR(DRM_COMMAND_BASE + DRM_V3D_SUBMIT_CL, struct drm_v3d_submit_cl)
+ #define DRM_IOCTL_V3D_WAIT_BO             DRM_IOWR(DRM_COMMAND_BASE + DRM_V3D_WAIT_BO, struct drm_v3d_wait_bo)
+@@ -45,6 +46,7 @@ extern "C" {
+ #define DRM_IOCTL_V3D_GET_PARAM           DRM_IOWR(DRM_COMMAND_BASE + DRM_V3D_GET_PARAM, struct drm_v3d_get_param)
+ #define DRM_IOCTL_V3D_GET_BO_OFFSET       DRM_IOWR(DRM_COMMAND_BASE + DRM_V3D_GET_BO_OFFSET, struct drm_v3d_get_bo_offset)
+ #define DRM_IOCTL_V3D_SUBMIT_TFU          DRM_IOW(DRM_COMMAND_BASE + DRM_V3D_SUBMIT_TFU, struct drm_v3d_submit_tfu)
++#define DRM_IOCTL_V3D_SUBMIT_CSD          DRM_IOW(DRM_COMMAND_BASE + DRM_V3D_SUBMIT_CSD, struct drm_v3d_submit_csd)
+ 
+ /**
+  * struct drm_v3d_submit_cl - ioctl argument for submitting commands to the 3D
+@@ -190,6 +192,7 @@ enum drm_v3d_param {
+ 	DRM_V3D_PARAM_V3D_CORE0_IDENT1,
+ 	DRM_V3D_PARAM_V3D_CORE0_IDENT2,
+ 	DRM_V3D_PARAM_SUPPORTS_TFU,
++	DRM_V3D_PARAM_SUPPORTS_CSD,
+ };
+ 
+ struct drm_v3d_get_param {
+@@ -230,6 +233,31 @@ struct drm_v3d_submit_tfu {
+ 	__u32 out_sync;
+ };
+ 
++/* Submits a compute shader for dispatch.  This job will block on any
++ * previous compute shaders submitted on this fd, and any other
++ * synchronization must be performed with in_sync/out_sync.
++ */
++struct drm_v3d_submit_csd {
++	__u32 cfg[7];
++	__u32 coef[4];
++
++	/* Pointer to a u32 array of the BOs that are referenced by the job.
++	 */
++	__u64 bo_handles;
++
++	/* Number of BO handles passed in (size is that times 4). */
++	__u32 bo_handle_count;
++
++	/* sync object to block on before running the CSD job.  Each
++	 * CSD job will execute in the order submitted to its FD.
++	 * Synchronization against rendering/TFU jobs or CSD from
++	 * other fds requires using sync objects.
++	 */
++	__u32 in_sync;
++	/* Sync object to signal when the CSD job is done. */
++	__u32 out_sync;
++};
++
+ #if defined(__cplusplus)
+ }
+ #endif
 -- 
 2.20.1
 
