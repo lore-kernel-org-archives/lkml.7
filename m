@@ -2,106 +2,109 @@ Return-Path: <SRS0=dUEL=RQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_PASS,URIBL_BLOCKED
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 84379C43381
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 Mar 2019 22:47:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A9B52C43381
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 Mar 2019 22:49:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3CB312146E
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 Mar 2019 22:47:35 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1552517255;
-	bh=jOM7YFbP7b87c9/WtmjV6Nv0aLqZCF7mhZK4c23ri4Y=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
-	b=ukb2cPppCVq8TdkPrcShgGRkXCtdjJHmnM/oEGkDueA/XXBOQ89XDwhMSA89lFQEP
-	 1DJCMTZVZgD03Tu8ockZTp7AQAMjmdcXTinhcLrLys8Lis6TpROiuGhmKxAGsqHoFp
-	 rcIjTXrkM9RSc4JP8EWPXjwEMW//5Xj+O0s0D1OE=
+	by mail.kernel.org (Postfix) with ESMTP id 74AC32087C
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 Mar 2019 22:49:29 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="eruK4Wf2"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726846AbfCMWre (ORCPT
+        id S1726746AbfCMWt2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 13 Mar 2019 18:47:34 -0400
-Received: from mail.kernel.org ([198.145.29.99]:35708 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726405AbfCMWrd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 13 Mar 2019 18:47:33 -0400
-Received: from devnote2 (NE2965lan1.rev.em-net.ne.jp [210.141.244.193])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id C3F532087C;
-        Wed, 13 Mar 2019 22:47:30 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1552517252;
-        bh=jOM7YFbP7b87c9/WtmjV6Nv0aLqZCF7mhZK4c23ri4Y=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=bFO5argsAfj9TDcDPgTKQMx6NHVKLYeMHGnK1r0ZYk+j5qkzGVU1oWbzpwCjl8bci
-         PY0Dm/aUnfdTd+W2v5yOdf3LjgqrLvDr20edP75PG6krf6weuhaiUv2TYYWyvBeavs
-         j3SCsQNrUIE5e2FEmWcrNxHnYVsqFNFxm5kw74ag=
-Date:   Thu, 14 Mar 2019 07:47:28 +0900
-From:   Masami Hiramatsu <mhiramat@kernel.org>
-To:     Steven Rostedt <rostedt@goodmis.org>
-Cc:     Tom Zanussi <zanussi@kernel.org>, tglx@linutronix.de,
-        namhyung@kernel.org, bigeasy@linutronix.de, joel@joelfernandes.org,
-        linux-kernel@vger.kernel.org, linux-rt-users@vger.kernel.org
-Subject: Re: [RFC PATCH 4/7] tracing/probe: Check event/group naming rule at
- parsing
-Message-Id: <20190314074728.2e58af676503c2fe05d1f485@kernel.org>
-In-Reply-To: <20190313112346.0b3fc25f@gandalf.local.home>
-References: <155248005229.10815.334731901778152247.stgit@devnote2>
-        <155248009231.10815.12287201787254147977.stgit@devnote2>
-        <20190313092355.6f434c9f@gandalf.local.home>
-        <20190314000402.3b14693f9030e891648124f1@kernel.org>
-        <20190313112346.0b3fc25f@gandalf.local.home>
-X-Mailer: Sylpheed 3.5.1 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
-Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+        Wed, 13 Mar 2019 18:49:28 -0400
+Received: from mail-wr1-f66.google.com ([209.85.221.66]:34428 "EHLO
+        mail-wr1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725876AbfCMWt1 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 13 Mar 2019 18:49:27 -0400
+Received: by mail-wr1-f66.google.com with SMTP id k1so3259039wre.1
+        for <linux-kernel@vger.kernel.org>; Wed, 13 Mar 2019 15:49:26 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=7sVDFBaIQhzREzD4UMOpyS3ufb1/45XxaV18h6y6nQA=;
+        b=eruK4Wf27cRmeMabnfyvDcUhCW0XWq21wj1xjH+Ywtb4g4YbsqevTP+AJc1uZCa2AS
+         Wf0FwcRcPXea+31Xe65mjVAmyefsYkQAu/oWUoVDV/kbCJIaDusqm8ldw4pLs0Tac6tS
+         IS13rSAgMD9OTCCzmfrGhATxSYOVrfW9CIsoJf3VqDMgtkhR1LmMl1x+1AmPgiK0wHAG
+         imxIayDtbAr4v8LyGAsWo5eeA5GQt0NfyFcyt/Ibkv6wbJlbKb26vSIoVu9WYaMBo8Xw
+         G/rdSybsH+UKCUQbDXgA5+2MA/0zF7XnijwtccYtUBE1Ho1+r8tjkCwbSZxHNq16l8jV
+         nN5A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=7sVDFBaIQhzREzD4UMOpyS3ufb1/45XxaV18h6y6nQA=;
+        b=cZTUK9akydMnBwF80dLkR51otGSQX1fehz5BrlrCauThKEPgttiuCO9QtAsg8ksN3n
+         uM+ncR26gif2zp1dK3Cu7ZiWCNNCWAjP+Kp+xaEDJBiOj3au0rAH+TgdsY0d0hEfWVpT
+         Lmv9rivgcnqmwed6fefTUM12kPe71gKBkpi1FKTpG7F/v6epbklDbmsd4CwJXtFA8rZl
+         ozBbijxzQVyyy3Q5FEITD8E2sTqnediuigXkPA0NYeuHYYmWAG17SVZh5xmUHI6i0tEm
+         laY9aFbpTpi6Qagvy8ac7OALkBQ+QFf/AaFtYpVozXRVK1kCEoy/ki+2AGB3oByoXy1R
+         68NA==
+X-Gm-Message-State: APjAAAVp3HxUYx1pflrLqB8o2sZ8H+0Pq3zRxnrvpPSXXNM4FsPLlbPF
+        oAnSReDuulIX9dKyPZ9IwGYYLwVlY9mphzHz7bRQYQ==
+X-Google-Smtp-Source: APXvYqwBo0pXWCoadO898OyK5lWEDGoogD89kc2FXgG55wCxjBUujFUKlRctYSfgj62tq2XFb+x2KUapMqClR/+qEoE=
+X-Received: by 2002:adf:a2cc:: with SMTP id t12mr29668241wra.253.1552517365925;
+ Wed, 13 Mar 2019 15:49:25 -0700 (PDT)
+MIME-Version: 1.0
+References: <1551819273-640-1-git-send-email-john.stultz@linaro.org>
+ <1551819273-640-4-git-send-email-john.stultz@linaro.org> <alpine.DEB.2.10.1903131318300.5023@lmark-linux.qualcomm.com>
+In-Reply-To: <alpine.DEB.2.10.1903131318300.5023@lmark-linux.qualcomm.com>
+From:   John Stultz <john.stultz@linaro.org>
+Date:   Wed, 13 Mar 2019 15:49:13 -0700
+Message-ID: <CALAqxLU35HJJYukMzYuHpPpPToeKs=ceCR7mGBNj9bnSwcJzMg@mail.gmail.com>
+Subject: Re: [RFC][PATCH 3/5 v2] dma-buf: heaps: Add system heap to dmabuf heaps
+To:     Liam Mark <lmark@codeaurora.org>
+Cc:     lkml <linux-kernel@vger.kernel.org>,
+        Laura Abbott <labbott@redhat.com>,
+        Benjamin Gaignard <benjamin.gaignard@linaro.org>,
+        Greg KH <gregkh@linuxfoundation.org>,
+        Sumit Semwal <sumit.semwal@linaro.org>,
+        Brian Starkey <Brian.Starkey@arm.com>,
+        "Andrew F . Davis" <afd@ti.com>, Chenbo Feng <fengc@google.com>,
+        Alistair Strachan <astrachan@google.com>,
+        dri-devel <dri-devel@lists.freedesktop.org>,
+        Vincent Donnefort <Vincent.Donnefort@arm.com>,
+        Marissa Wall <marissaw@google.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, 13 Mar 2019 11:23:46 -0400
-Steven Rostedt <rostedt@goodmis.org> wrote:
+On Wed, Mar 13, 2019 at 1:20 PM Liam Mark <lmark@codeaurora.org> wrote:
+> On Tue, 5 Mar 2019, John Stultz wrote:
+> > +
+> > +             page = alloc_page(GFP_KERNEL);
+>
+> Need to zero the allocation (add __GFP_ZERO)
 
-> On Thu, 14 Mar 2019 00:04:02 +0900
-> Masami Hiramatsu <mhiramat@kernel.org> wrote:
-> 
-> > > >  		strlcpy(buf, event, slash - event + 1);
-> > > > +		if (!is_good_name(buf)) {
-> > > > +			pr_info("Group name must follow the rule of C identifier\n");  
-> > > 
-> > > What do you mean by "C identifier"?  
-> > 
-> > I meant "the naming rules of C language identifiers". It means
-> > that the name has to start with alphabet or "_" and only contain
-> > alphanumeric characters and "_". Does it clear?
-> > I couldn't think of a good word. maybe "naming convention"
-> > does not fit...
-> 
-> Ah, OK that now makes sense.
-> 
-> > 
-> > Would you have any idea?
-> 
-> I think I was more confused by the way it was stated. What about saying:
-> 
-> 	"Group names must follow the same rules as C identifiers"
+Ah! Thanks! Fixed now.
 
-OK, I will update it.
+> > +             if (!page)
+> > +                     goto err2;
+> > +             sg_set_page(sg, page, PAGE_SIZE, 0);
+> > +     }
+> > +
+>
+> Can always be done later, but it may be helpful to also move this common
+> code from here (and from the cma heap) to the heap helpers file as it
+> reduces code but will also make it easier to introduce future debug
+> features such as making the dma buf names unique
+> to help make it easier to track down the source of memory leaks.
 
-> Saying "the rule of C identifiers" made me think more of "the rule of
-> law", and thought that this had something to do with rules of C
-> zealots, and those that identify with "C" ;-)
+I think this is a good suggestion, but I do want to be careful to try
+to make sure we add debugging tools to the larger dmabuf
+infrastructure, rather then just the heap code (though having some
+heap specific usage info would still be good). I think there's a
+separate patchset to dmabufs originally from Greg Hackmann that
+provides names that is supposed to help with what your suggesting.
+  https://lists.freedesktop.org/archives/dri-devel/2019-February/208759.html
 
-Oh, I got it. :-)
-
-Thank you!
-
-> 
-> -- Steve
-
-
--- 
-Masami Hiramatsu <mhiramat@kernel.org>
+thanks!
+-john
