@@ -7,37 +7,37 @@ X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9B38EC10F03
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 Mar 2019 21:46:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CB6E0C4360F
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 Mar 2019 21:46:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 67B1E217F5
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 Mar 2019 21:46:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 98F9221872
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 Mar 2019 21:46:14 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="RHmLd9bv"
+	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="YDDE86ef"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727622AbfCMVqH (ORCPT
+        id S1727637AbfCMVqM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 13 Mar 2019 17:46:07 -0400
-Received: from hqemgate15.nvidia.com ([216.228.121.64]:19143 "EHLO
+        Wed, 13 Mar 2019 17:46:12 -0400
+Received: from hqemgate15.nvidia.com ([216.228.121.64]:19159 "EHLO
         hqemgate15.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727586AbfCMVqD (ORCPT
+        with ESMTP id S1727454AbfCMVqD (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Wed, 13 Mar 2019 17:46:03 -0400
 Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqemgate15.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
-        id <B5c897a0d0000>; Wed, 13 Mar 2019 14:45:49 -0700
+        id <B5c897a0e0000>; Wed, 13 Mar 2019 14:45:50 -0700
 Received: from hqmail.nvidia.com ([172.20.161.6])
   by hqpgpgate101.nvidia.com (PGP Universal service);
-  Wed, 13 Mar 2019 14:46:01 -0700
+  Wed, 13 Mar 2019 14:46:02 -0700
 X-PGP-Universal: processed;
-        by hqpgpgate101.nvidia.com on Wed, 13 Mar 2019 14:46:01 -0700
-Received: from HQMAIL104.nvidia.com (172.18.146.11) by HQMAIL108.nvidia.com
- (172.18.146.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Wed, 13 Mar
- 2019 21:46:01 +0000
-Received: from hqnvemgw02.nvidia.com (172.16.227.111) by HQMAIL104.nvidia.com
- (172.18.146.11) with Microsoft SMTP Server (TLS) id 15.0.1473.3 via Frontend
- Transport; Wed, 13 Mar 2019 21:46:01 +0000
+        by hqpgpgate101.nvidia.com on Wed, 13 Mar 2019 14:46:02 -0700
+Received: from HQMAIL101.nvidia.com (172.20.187.10) by HQMAIL106.nvidia.com
+ (172.18.146.12) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Wed, 13 Mar
+ 2019 21:46:02 +0000
+Received: from hqnvemgw02.nvidia.com (172.16.227.111) by HQMAIL101.nvidia.com
+ (172.20.187.10) with Microsoft SMTP Server (TLS) id 15.0.1473.3 via Frontend
+ Transport; Wed, 13 Mar 2019 21:46:02 +0000
 Received: from skomatineni-linux.nvidia.com (Not Verified[10.110.103.74]) by hqnvemgw02.nvidia.com with Trustwave SEG (v7,5,8,10121)
-        id <B5c897a190000>; Wed, 13 Mar 2019 14:46:01 -0700
+        id <B5c897a1a0000>; Wed, 13 Mar 2019 14:46:02 -0700
 From:   Sowjanya Komatineni <skomatineni@nvidia.com>
 To:     <adrian.hunter@intel.com>, <ulf.hansson@linaro.org>,
         <robh+dt@kernel.org>, <mark.rutland@arm.com>,
@@ -46,9 +46,9 @@ CC:     <skomatineni@nvidia.com>, <thierry.reding@gmail.com>,
         <jonathanh@nvidia.com>, <anrao@nvidia.com>,
         <linux-tegra@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
         <linux-mmc@vger.kernel.org>, <devicetree@vger.kernel.org>
-Subject: [PATCH V3 09/10] mmc: tegra: fix CQE enable and resume sequence
-Date:   Wed, 13 Mar 2019 14:45:51 -0700
-Message-ID: <1552513552-23423-9-git-send-email-skomatineni@nvidia.com>
+Subject: [PATCH V3 10/10] arm64: tegra: enable command queue for tegra186 sdmmc4
+Date:   Wed, 13 Mar 2019 14:45:52 -0700
+Message-ID: <1552513552-23423-10-git-send-email-skomatineni@nvidia.com>
 X-Mailer: git-send-email 2.7.4
 In-Reply-To: <1552513552-23423-1-git-send-email-skomatineni@nvidia.com>
 References: <1552513552-23423-1-git-send-email-skomatineni@nvidia.com>
@@ -56,146 +56,41 @@ X-NVConfidentiality: public
 MIME-Version: 1.0
 Content-Type: text/plain
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
-        t=1552513550; bh=DguQa0ntN9xE9Z540e0bu31/uO1/gabW7rA3OEYVaGk=;
+        t=1552513550; bh=XRJSPEMXnOfGmyWHXqCKDR2X7Tf9RwugO0JR03NUVwg=;
         h=X-PGP-Universal:From:To:CC:Subject:Date:Message-ID:X-Mailer:
          In-Reply-To:References:X-NVConfidentiality:MIME-Version:
          Content-Type;
-        b=RHmLd9bvwACB4Ht4fksECbDkCRmhoKz/fs//dH1NmwOk0y/j2lHLc7hg6YIc5Y6Pb
-         M5eJe2bPJysRluhQzNEGvRS3O6Ihsnn8Jrhph2G6BpTqDNJUplc9l4Mc8rmuRacGdm
-         oAng6upvJVmq67VP7XN53rxF8B+o1zqe/qoQTExnT4cARLFN3Yp9pQMNaWffcg9xfK
-         7PnO3facpAm+rhWt79GvTpuCwLb6QOaoGA7qnqZ3fAv47XqKXmCVF1vkziBj9Caqom
-         aQJ7AczPVpdy93me6TH2s6Qg94BAefKyrS3dWMwzUareBrUssxGaxMqSfxHlr4wY0b
-         nJ/Jr0kHUB0dg==
+        b=YDDE86efA2HDCcR+HoPpGCTRV0wQOC29U5pj42J1szKaazqaaRzwH7dv/smtH+K8g
+         DZTINmPTKw7kFjg+Q3JWrwXU1z/zWvwHBG8752a0XGU5ThvjU6+Wp5sc6zlED4hCLE
+         EFMtN+ylD9A6TNl7pILODckQjFSqKSiTQP/RznX1/kVuCe7RZCVwCz5hQeX57wjBMD
+         1XX7Xx1w/oRQF2GhdTBa/ig78DWgC/+4S3IbMp9RGGKlPO7xBnPOmplmMzO5325NLp
+         fgzee7GQiAxG9emx+eqJU/ZFyfdplcj07pJ64VNOMLIxBPfR1N7FCq7aNgsetNHar3
+         nTXH/NNxAPcQw==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Tegra CQHCI/SDHCI design prevents write access to SDHCI block size
-register when CQE is enabled and unhalted.
-
-CQHCI driver enables CQE prior to invoking sdhci_cqe_enable which
-violates this Tegra specific host requirement.
-
-This patch fixes this by configuring sdhci block registers prior
-to CQE unhalt.
-
-This patch also has a fix for retry of unhalt due to known Tegra
-specific CQE resume bug where first unhalt might not succeed when
-clear all tasks is performed prior to resume and need a second unhalt.
-
-This patch also includes CQE enable fix for CMD CRC errors that
-happen with the specific sandisk emmc device when status command
-is sent during the transfer of last data block due to marginal timing.
+This patch enables command queue support for Tegra186 SDMMC4.
 
 Tested-by: Jon Hunter <jonathanh@nvidia.com>
-Acked-by: Adrian Hunter <adrian.hunter@intel.com>
 Signed-off-by: Sowjanya Komatineni <skomatineni@nvidia.com>
 ---
- drivers/mmc/host/sdhci-tegra.c | 72 ++++++++++++++++++++++++++++++++++++------
- 1 file changed, 62 insertions(+), 10 deletions(-)
+ arch/arm64/boot/dts/nvidia/tegra186.dtsi | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/drivers/mmc/host/sdhci-tegra.c b/drivers/mmc/host/sdhci-tegra.c
-index 2f08b6e480df..eafaaefab4a6 100644
---- a/drivers/mmc/host/sdhci-tegra.c
-+++ b/drivers/mmc/host/sdhci-tegra.c
-@@ -1124,6 +1124,43 @@ static void tegra_sdhci_voltage_switch(struct sdhci_host *host)
- 		tegra_host->pad_calib_required = true;
- }
+diff --git a/arch/arm64/boot/dts/nvidia/tegra186.dtsi b/arch/arm64/boot/dts/nvidia/tegra186.dtsi
+index 472f55fe9488..6e2b6ce99df2 100644
+--- a/arch/arm64/boot/dts/nvidia/tegra186.dtsi
++++ b/arch/arm64/boot/dts/nvidia/tegra186.dtsi
+@@ -321,6 +321,7 @@
+ 		nvidia,default-trim = <0x5>;
+ 		nvidia,dqs-trim = <63>;
+ 		mmc-hs400-1_8v;
++		supports-cqe;
+ 		status = "disabled";
+ 	};
  
-+static void tegra_cqhci_writel(struct cqhci_host *cq_host, u32 val, int reg)
-+{
-+	struct mmc_host *mmc = cq_host->mmc;
-+	u8 ctrl;
-+	ktime_t timeout;
-+	bool timed_out;
-+
-+	/*
-+	 * During CQE resume/unhalt, CQHCI driver unhalts CQE prior to
-+	 * cqhci_host_ops enable where SDHCI DMA and BLOCK_SIZE registers need
-+	 * to be re-configured.
-+	 * Tegra CQHCI/SDHCI prevents write access to block size register when
-+	 * CQE is unhalted. So handling CQE resume sequence here to configure
-+	 * SDHCI block registers prior to exiting CQE halt state.
-+	 */
-+	if (reg == CQHCI_CTL && !(val & CQHCI_HALT) &&
-+	    cqhci_readl(cq_host, CQHCI_CTL) & CQHCI_HALT) {
-+		sdhci_cqe_enable(mmc);
-+		writel(val, cq_host->mmio + reg);
-+		timeout = ktime_add_us(ktime_get(), 50);
-+		while (1) {
-+			timed_out = ktime_compare(ktime_get(), timeout) > 0;
-+			ctrl = cqhci_readl(cq_host, CQHCI_CTL);
-+			if (!(ctrl & CQHCI_HALT) || timed_out)
-+				break;
-+		}
-+		/*
-+		 * CQE usually resumes very quick, but incase if Tegra CQE
-+		 * doesn't resume retry unhalt.
-+		 */
-+		if (timed_out)
-+			writel(val, cq_host->mmio + reg);
-+	} else {
-+		writel(val, cq_host->mmio + reg);
-+	}
-+}
-+
- static void sdhci_tegra_update_dcmd_desc(struct mmc_host *mmc,
- 					 struct mmc_request *mrq, u64 *data)
- {
-@@ -1139,20 +1176,34 @@ static void sdhci_tegra_update_dcmd_desc(struct mmc_host *mmc,
- static void sdhci_tegra_cqe_enable(struct mmc_host *mmc)
- {
- 	struct cqhci_host *cq_host = mmc->cqe_private;
--	u32 cqcfg = 0;
-+	u32 val;
- 
- 	/*
--	 * Tegra SDMMC Controller design prevents write access to BLOCK_COUNT
--	 * registers when CQE is enabled.
-+	 * Tegra CQHCI/SDMMC design prevents write access to sdhci block size
-+	 * register when CQE is enabled and unhalted.
-+	 * CQHCI driver enables CQE prior to activation, so disable CQE before
-+	 * programming block size in sdhci controller and enable it back.
- 	 */
--	cqcfg = cqhci_readl(cq_host, CQHCI_CFG);
--	if (cqcfg & CQHCI_ENABLE)
--		cqhci_writel(cq_host, (cqcfg & ~CQHCI_ENABLE), CQHCI_CFG);
--
--	sdhci_cqe_enable(mmc);
-+	if (!cq_host->activated) {
-+		val = cqhci_readl(cq_host, CQHCI_CFG);
-+		if (val & CQHCI_ENABLE)
-+			cqhci_writel(cq_host, (val & ~CQHCI_ENABLE),
-+				     CQHCI_CFG);
-+		sdhci_cqe_enable(mmc);
-+		if (val & CQHCI_ENABLE)
-+			cqhci_writel(cq_host, val, CQHCI_CFG);
-+	}
- 
--	if (cqcfg & CQHCI_ENABLE)
--		cqhci_writel(cq_host, cqcfg, CQHCI_CFG);
-+	/*
-+	 * CMD CRC errors are seen sometimes with some eMMC devices when status
-+	 * command is sent during transfer of last data block which is the
-+	 * default case as send status command block counter (CBC) is 1.
-+	 * Recommended fix to set CBC to 0 allowing send status command only
-+	 * when data lines are idle.
-+	 */
-+	val = cqhci_readl(cq_host, CQHCI_SSC1);
-+	val &= ~CQHCI_SSC1_CBC_MASK;
-+	cqhci_writel(cq_host, val, CQHCI_SSC1);
- }
- 
- static void sdhci_tegra_dumpregs(struct mmc_host *mmc)
-@@ -1174,6 +1225,7 @@ static u32 sdhci_tegra_cqhci_irq(struct sdhci_host *host, u32 intmask)
- }
- 
- static const struct cqhci_host_ops sdhci_tegra_cqhci_ops = {
-+	.write_l    = tegra_cqhci_writel,
- 	.enable	= sdhci_tegra_cqe_enable,
- 	.disable = sdhci_cqe_disable,
- 	.dumpregs = sdhci_tegra_dumpregs,
 -- 
 2.7.4
 
