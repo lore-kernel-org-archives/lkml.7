@@ -4,49 +4,61 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BBEEFC10F03
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 Mar 2019 19:11:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 666EBC4360F
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 Mar 2019 19:11:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8FCC12184D
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 Mar 2019 19:11:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 39AEA21871
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 Mar 2019 19:11:42 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1552504298;
-	bh=zj0IyhfXSFQ4GA6SIDlaRCo1ldpq3ns5AjhM8nul7mU=;
+	s=default; t=1552504302;
+	bh=BFMiFCb16F7+mfsZq3oOVj05LTsKXjadZiB9F30QfHA=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Gv2BvLAM81D+hEOhYxml4xMCVmnOAvLLwUcX1ok0EOvTE2UaqOREAVhSo43/9k8SV
-	 rf2XHPOsZ4R7wU+RKhqvMDIG5whnt7wbtgUa85R1P+TQ5irFPxvkDgLhZyIWlX4ZLn
-	 osZqiHfmOQKeDT06qFjKB+EZcf+NF1jKv6eCi9Ew=
+	b=qvbwhOeRGq/i7WlIUZ+9Mf7GCmWhMFrYcUdRmMN5dnFJTx/TekZ9Ux96MrVeBdcPx
+	 qjuD6we5vBG02WvN4KuhyS696wq0sLsDS4+qv/+YEgKrklkfba9VcpLL+zJiwG+dUF
+	 Wgi4MHEZ/h+BxvkYxbi1lLvmNAE+Kz9YHOV4nS8Q=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727522AbfCMTLh (ORCPT
+        id S1727536AbfCMTLl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 13 Mar 2019 15:11:37 -0400
-Received: from mail.kernel.org ([198.145.29.99]:42098 "EHLO mail.kernel.org"
+        Wed, 13 Mar 2019 15:11:41 -0400
+Received: from mail.kernel.org ([198.145.29.99]:42164 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726845AbfCMTLc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 13 Mar 2019 15:11:32 -0400
+        id S1727515AbfCMTLg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 13 Mar 2019 15:11:36 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D7E3721855;
-        Wed, 13 Mar 2019 19:11:29 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 76C2D2075C;
+        Wed, 13 Mar 2019 19:11:31 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1552504291;
-        bh=zj0IyhfXSFQ4GA6SIDlaRCo1ldpq3ns5AjhM8nul7mU=;
+        s=default; t=1552504295;
+        bh=BFMiFCb16F7+mfsZq3oOVj05LTsKXjadZiB9F30QfHA=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=witSWkmG8CibGexarurRlg4NpdbWt4Gp8ocu5xASm6wdSTrIWA6O2KYj/G5gtD88E
-         X6YYtV4ltIE8aEVDDE3DqbZWcuSWm3rQpiVxAL7yKYU21IOZNotaG4+ZxBdGtxwpEK
-         UF2IcJ8k12cvXKR2Il8YrOPZfEK9A7GISkLWcIq0=
+        b=bOU2LxVplTTdlxMQHlWHeAlHxhN5R6qO2fIcr3vsy8RO3Y1bcfgPqGYhoKOfVpHAE
+         PtqdDKHxsJUKoixTdPU9WpRPlQPduL21gJRXuRulOd64wMobb9gKPMiVpqee7aevkS
+         VbXBHuQOBcUAG8QGXOH1LBtXSpD3pW8uvxe1vPi8=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Russell King <rmk+kernel@armlinux.org.uk>,
-        "David S . Miller" <davem@davemloft.net>,
-        Sasha Levin <sashal@kernel.org>, netdev@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.20 33/60] net: marvell: mvneta: fix DMA debug warning
-Date:   Wed, 13 Mar 2019 15:09:54 -0400
-Message-Id: <20190313191021.158171-33-sashal@kernel.org>
+Cc:     Andrey Konovalov <andreyknvl@google.com>,
+        Alexander Potapenko <glider@google.com>,
+        Andrey Ryabinin <aryabinin@virtuozzo.com>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Christoph Lameter <cl@linux.com>,
+        David Rientjes <rientjes@google.com>,
+        Dmitry Vyukov <dvyukov@google.com>,
+        Evgeniy Stepanov <eugenis@google.com>,
+        Joonsoo Kim <iamjoonsoo.kim@lge.com>,
+        Kostya Serebryany <kcc@google.com>,
+        Pekka Enberg <penberg@kernel.org>, Qian Cai <cai@lca.pw>,
+        Vincenzo Frascino <vincenzo.frascino@arm.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Sasha Levin <sashal@kernel.org>, linux-mm@kvack.org
+Subject: [PATCH AUTOSEL 4.20 34/60] kasan, slub: move kasan_poison_slab hook before page_address
+Date:   Wed, 13 Mar 2019 15:09:55 -0400
+Message-Id: <20190313191021.158171-34-sashal@kernel.org>
 X-Mailer: git-send-email 2.19.1
 In-Reply-To: <20190313191021.158171-1-sashal@kernel.org>
 References: <20190313191021.158171-1-sashal@kernel.org>
@@ -58,58 +70,86 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Russell King <rmk+kernel@armlinux.org.uk>
+From: Andrey Konovalov <andreyknvl@google.com>
 
-[ Upstream commit a8fef9ba58c9966ddb1fec916d8d8137c9d8bc89 ]
+[ Upstream commit a71012242837fe5e67d8c999cfc357174ed5dba0 ]
 
-Booting 4.20 on SolidRun Clearfog issues this warning with DMA API
-debug enabled:
+With tag based KASAN page_address() looks at the page flags to see whether
+the resulting pointer needs to have a tag set.  Since we don't want to set
+a tag when page_address() is called on SLAB pages, we call
+page_kasan_tag_reset() in kasan_poison_slab().  However in allocate_slab()
+page_address() is called before kasan_poison_slab().  Fix it by changing
+the order.
 
-WARNING: CPU: 0 PID: 555 at kernel/dma/debug.c:1230 check_sync+0x514/0x5bc
-mvneta f1070000.ethernet: DMA-API: device driver tries to sync DMA memory it has not allocated [device address=0x000000002dd7dc00] [size=240 bytes]
-Modules linked in: ahci mv88e6xxx dsa_core xhci_plat_hcd xhci_hcd devlink armada_thermal marvell_cesa des_generic ehci_orion phy_armada38x_comphy mcp3021 spi_orion evbug sfp mdio_i2c ip_tables x_tables
-CPU: 0 PID: 555 Comm: bridge-network- Not tainted 4.20.0+ #291
-Hardware name: Marvell Armada 380/385 (Device Tree)
-[<c0019638>] (unwind_backtrace) from [<c0014888>] (show_stack+0x10/0x14)
-[<c0014888>] (show_stack) from [<c07f54e0>] (dump_stack+0x9c/0xd4)
-[<c07f54e0>] (dump_stack) from [<c00312bc>] (__warn+0xf8/0x124)
-[<c00312bc>] (__warn) from [<c00313b0>] (warn_slowpath_fmt+0x38/0x48)
-[<c00313b0>] (warn_slowpath_fmt) from [<c00b0370>] (check_sync+0x514/0x5bc)
-[<c00b0370>] (check_sync) from [<c00b04f8>] (debug_dma_sync_single_range_for_cpu+0x6c/0x74)
-[<c00b04f8>] (debug_dma_sync_single_range_for_cpu) from [<c051bd14>] (mvneta_poll+0x298/0xf58)
-[<c051bd14>] (mvneta_poll) from [<c0656194>] (net_rx_action+0x128/0x424)
-[<c0656194>] (net_rx_action) from [<c000a230>] (__do_softirq+0xf0/0x540)
-[<c000a230>] (__do_softirq) from [<c00386e0>] (irq_exit+0x124/0x144)
-[<c00386e0>] (irq_exit) from [<c009b5e0>] (__handle_domain_irq+0x58/0xb0)
-[<c009b5e0>] (__handle_domain_irq) from [<c03a63c4>] (gic_handle_irq+0x48/0x98)
-[<c03a63c4>] (gic_handle_irq) from [<c0009a10>] (__irq_svc+0x70/0x98)
-...
-
-This appears to be caused by mvneta_rx_hwbm() calling
-dma_sync_single_range_for_cpu() with the wrong struct device pointer,
-as the buffer manager device pointer is used to map and unmap the
-buffer.  Fix this.
-
-Signed-off-by: Russell King <rmk+kernel@armlinux.org.uk>
-Signed-off-by: David S. Miller <davem@davemloft.net>
+[andreyknvl@google.com: fix compilation error when CONFIG_SLUB_DEBUG=n]
+  Link: http://lkml.kernel.org/r/ac27cc0bbaeb414ed77bcd6671a877cf3546d56e.1550066133.git.andreyknvl@google.com
+Link: http://lkml.kernel.org/r/cd895d627465a3f1c712647072d17f10883be2a1.1549921721.git.andreyknvl@google.com
+Signed-off-by: Andrey Konovalov <andreyknvl@google.com>
+Cc: Alexander Potapenko <glider@google.com>
+Cc: Andrey Ryabinin <aryabinin@virtuozzo.com>
+Cc: Catalin Marinas <catalin.marinas@arm.com>
+Cc: Christoph Lameter <cl@linux.com>
+Cc: David Rientjes <rientjes@google.com>
+Cc: Dmitry Vyukov <dvyukov@google.com>
+Cc: Evgeniy Stepanov <eugenis@google.com>
+Cc: Joonsoo Kim <iamjoonsoo.kim@lge.com>
+Cc: Kostya Serebryany <kcc@google.com>
+Cc: Pekka Enberg <penberg@kernel.org>
+Cc: Qian Cai <cai@lca.pw>
+Cc: Vincenzo Frascino <vincenzo.frascino@arm.com>
+Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
+Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/ethernet/marvell/mvneta.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ mm/slub.c | 19 +++++++++++++++----
+ 1 file changed, 15 insertions(+), 4 deletions(-)
 
-diff --git a/drivers/net/ethernet/marvell/mvneta.c b/drivers/net/ethernet/marvell/mvneta.c
-index 61b23497f836..b7218dd7b4b6 100644
---- a/drivers/net/ethernet/marvell/mvneta.c
-+++ b/drivers/net/ethernet/marvell/mvneta.c
-@@ -2146,7 +2146,7 @@ err_drop_frame:
- 			if (unlikely(!skb))
- 				goto err_drop_frame_ret_pool;
+diff --git a/mm/slub.c b/mm/slub.c
+index e3629cd7aff1..d1e053d48f46 100644
+--- a/mm/slub.c
++++ b/mm/slub.c
+@@ -1075,6 +1075,16 @@ static void setup_object_debug(struct kmem_cache *s, struct page *page,
+ 	init_tracking(s, object);
+ }
  
--			dma_sync_single_range_for_cpu(dev->dev.parent,
-+			dma_sync_single_range_for_cpu(&pp->bm_priv->pdev->dev,
- 			                              rx_desc->buf_phys_addr,
- 			                              MVNETA_MH_SIZE + NET_SKB_PAD,
- 			                              rx_bytes,
++static void setup_page_debug(struct kmem_cache *s, void *addr, int order)
++{
++	if (!(s->flags & SLAB_POISON))
++		return;
++
++	metadata_access_enable();
++	memset(addr, POISON_INUSE, PAGE_SIZE << order);
++	metadata_access_disable();
++}
++
+ static inline int alloc_consistency_checks(struct kmem_cache *s,
+ 					struct page *page,
+ 					void *object, unsigned long addr)
+@@ -1330,6 +1340,8 @@ slab_flags_t kmem_cache_flags(unsigned int object_size,
+ #else /* !CONFIG_SLUB_DEBUG */
+ static inline void setup_object_debug(struct kmem_cache *s,
+ 			struct page *page, void *object) {}
++static inline void setup_page_debug(struct kmem_cache *s,
++			void *addr, int order) {}
+ 
+ static inline int alloc_debug_processing(struct kmem_cache *s,
+ 	struct page *page, void *object, unsigned long addr) { return 0; }
+@@ -1640,12 +1652,11 @@ static struct page *allocate_slab(struct kmem_cache *s, gfp_t flags, int node)
+ 	if (page_is_pfmemalloc(page))
+ 		SetPageSlabPfmemalloc(page);
+ 
+-	start = page_address(page);
++	kasan_poison_slab(page);
+ 
+-	if (unlikely(s->flags & SLAB_POISON))
+-		memset(start, POISON_INUSE, PAGE_SIZE << order);
++	start = page_address(page);
+ 
+-	kasan_poison_slab(page);
++	setup_page_debug(s, start, order);
+ 
+ 	shuffle = shuffle_freelist(s, page);
+ 
 -- 
 2.19.1
 
