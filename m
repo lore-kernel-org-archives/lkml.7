@@ -7,57 +7,52 @@ X-Spam-Status: No, score=-12.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_PASS autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 54135C43381
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 Mar 2019 15:39:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 28EB9C43381
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 Mar 2019 15:39:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 135772147C
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 Mar 2019 15:39:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E0D41206DF
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 Mar 2019 15:39:17 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1552491553;
-	bh=uU12uTsRPOGiYuB6QZAJ0LCrLtd9PFc1YKEa7hVAjeM=;
+	s=default; t=1552491558;
+	bh=dsFHWKjXC3Fj8Lrp7SfA7lg3l+hNLm8msdUZd5d+esI=;
 	h=From:To:Cc:Subject:In-Reply-To:Date:List-ID:From;
-	b=KnIAd6+e3gxHGldR2JirWSpEQavyvG40o9HvC6T/kZ4FeFmePmbcI4Trx01HuOx5Z
-	 OE7wbErHR5047nitnRFptf8tkeSczwx+rur/KhFNinPZU5hfON6azO6/WETcVfhtVw
-	 dp/yN8JiuLL9PsE8sDTJoNiXnoGe2Cd0GEUX1kUc=
+	b=ODeRv4dO6QV8QxvQi381JYUwnA7779pfm/rFWgM9pRPkGb33DYMvxGNpGvDmSHcRe
+	 uaQjjiOYIfExRrHtb2/v/vaHMM73mPhoEQuV9MbE5/GfQ01JsIjZWwRGlakIucRS1a
+	 rhxLU2r/K4XLLO2ezfYBoGS8K9dx8AkCYNSUiPi8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726861AbfCMPjL (ORCPT
+        id S1726915AbfCMPjQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 13 Mar 2019 11:39:11 -0400
-Received: from heliosphere.sirena.org.uk ([172.104.155.198]:49708 "EHLO
+        Wed, 13 Mar 2019 11:39:16 -0400
+Received: from heliosphere.sirena.org.uk ([172.104.155.198]:49976 "EHLO
         heliosphere.sirena.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726783AbfCMPjE (ORCPT
+        with ESMTP id S1726855AbfCMPjM (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 13 Mar 2019 11:39:04 -0400
+        Wed, 13 Mar 2019 11:39:12 -0400
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
         d=sirena.org.uk; s=20170815-heliosphere; h=Date:Message-Id:In-Reply-To:
         Subject:Cc:To:From:Sender:Reply-To:MIME-Version:Content-Type:
         Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
         Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:References:
         List-Id:List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:
-        List-Archive; bh=hcxY13NOHnSFaaLSuZXOLFWv8u3iM3oCfS2F5I5URkg=; b=IsY8S4kw3rtA
-        K591YPRdJdNNJlYPkQPUcf4kb1n2uh9ObYmU4xOh1ZrVLHACs3pvYrEJpL7CclbqLycxUokOWxidq
-        6x+96LItswxCPLJw0Boo1EoyPVidtMP8KJ4Y7edNT7PhwmHez3/Q0EEgZ7Bre6bJDpeheBOoJ/5Mh
-        GRO48=;
+        List-Archive; bh=SbFjb5Q5OX3/DtwV0XY2ZVhiipH9DMsQHZFXhqU8CnM=; b=VTRD9E+geVz4
+        Zag6Og1qBDWqHg4NBcTKoA+EEbtWpnZpzImneHvArcynbp6cZMwlHfrnZF2v3iwNa+H0T4XfbbV0g
+        B4lkeUguEylQEkBJIlHbWWReK27Qrlxh67ZYYfkdARpSLmJrg8TR1fyJuccttbC3Yb2wym17jgJmP
+        uDl98=;
 Received: from cpc102320-sgyl38-2-0-cust46.18-2.cable.virginm.net ([82.37.168.47] helo=debutante.sirena.org.uk)
         by heliosphere.sirena.org.uk with esmtpa (Exim 4.89)
         (envelope-from <broonie@sirena.org.uk>)
-        id 1h45xm-0003QB-2p; Wed, 13 Mar 2019 15:38:38 +0000
+        id 1h45yF-0003S9-P1; Wed, 13 Mar 2019 15:39:07 +0000
 Received: by debutante.sirena.org.uk (Postfix, from userid 1000)
-        id A5BD01128B97; Wed, 13 Mar 2019 15:38:37 +0000 (GMT)
+        id 28D4C1128B97; Wed, 13 Mar 2019 15:39:07 +0000 (GMT)
 From:   Mark Brown <broonie@kernel.org>
-To:     Luca Ceresoli <luca@lucaceresoli.net>
-Cc:     Mark Brown <broonie@kernel.org>, alsa-devel@alsa-project.org,
-        devicetree@vger.kernel.org, Mark Rutland <mark.rutland@arm.com>,
-        Lars-Peter Clausen <lars@metafoo.de>,
-        linux-kernel@vger.kernel.org, Takashi Iwai <tiwai@suse.com>,
-        Liam Girdwood <lgirdwood@gmail.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Brown <broonie@kernel.org>, alsa-devel@alsa-project.org
-Subject: Applied "ASoC: axi-i2s: let both capture and playback be optional" to the asoc tree
-In-Reply-To:  <20190307214456.16445-1-luca@lucaceresoli.net>
+To:     Axel Lin <axel.lin@ingics.com>
+Cc:     Charles Keepax <ckeepax@opensource.cirrus.com>,
+        Mark Brown <broonie@kernel.org>, linux-kernel@vger.kernel.org
+Subject: Applied "regulator: wm831x-isink: Convert to use regulator_set/get_current_limit_regmap" to the regulator tree
+In-Reply-To: 
 X-Patchwork-Hint: ignore
-Message-Id: <20190313153837.A5BD01128B97@debutante.sirena.org.uk>
-Date:   Wed, 13 Mar 2019 15:38:37 +0000 (GMT)
+Message-Id: <20190313153907.28D4C1128B97@debutante.sirena.org.uk>
+Date:   Wed, 13 Mar 2019 15:39:07 +0000 (GMT)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
@@ -65,11 +60,11 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 The patch
 
-   ASoC: axi-i2s: let both capture and playback be optional
+   regulator: wm831x-isink: Convert to use regulator_set/get_current_limit_regmap
 
-has been applied to the asoc tree at
+has been applied to the regulator tree at
 
-   https://git.kernel.org/pub/scm/linux/kernel/git/broonie/sound.git 
+   https://git.kernel.org/pub/scm/linux/kernel/git/broonie/regulator.git 
 
 All being well this means that it will be integrated into the linux-next
 tree (usually sometime in the next 24 hours) and sent to Linus during
@@ -90,143 +85,119 @@ to this mail.
 Thanks,
 Mark
 
-From 7bf7d0554890c53478ec04d3d4bfced0c881f6c8 Mon Sep 17 00:00:00 2001
-From: Luca Ceresoli <luca@lucaceresoli.net>
-Date: Thu, 7 Mar 2019 22:44:55 +0100
-Subject: [PATCH] ASoC: axi-i2s: let both capture and playback be optional
+From d48acfd0377f901f348b6c48bdcc03723f19d9e7 Mon Sep 17 00:00:00 2001
+From: Axel Lin <axel.lin@ingics.com>
+Date: Wed, 13 Mar 2019 00:33:56 +0800
+Subject: [PATCH] regulator: wm831x-isink: Convert to use
+ regulator_set/get_current_limit_regmap
 
-Both the capture and playback channels are optional in the axi_i2s IP
-block. Reflect this in the driver by enabling only the channel(s) that
-have a DMA.
+Use regulator_set/get_current_limit_regmap helpers to save some code.
 
-Signed-off-by: Luca Ceresoli <luca@lucaceresoli.net>
+Signed-off-by: Axel Lin <axel.lin@ingics.com>
+Acked-by: Charles Keepax <ckeepax@opensource.cirrus.com>
 Signed-off-by: Mark Brown <broonie@kernel.org>
 ---
- sound/soc/adi/axi-i2s.c | 68 +++++++++++++++++++++++++++++------------
- 1 file changed, 48 insertions(+), 20 deletions(-)
+ drivers/mfd/wm831x-core.c            |  2 +-
+ drivers/regulator/wm831x-isink.c     | 45 +++++-----------------------
+ include/linux/mfd/wm831x/regulator.h |  2 +-
+ 3 files changed, 9 insertions(+), 40 deletions(-)
 
-diff --git a/sound/soc/adi/axi-i2s.c b/sound/soc/adi/axi-i2s.c
-index 4c23381727a1..273c543e8ff3 100644
---- a/sound/soc/adi/axi-i2s.c
-+++ b/sound/soc/adi/axi-i2s.c
-@@ -43,6 +43,9 @@ struct axi_i2s {
- 	struct clk *clk;
- 	struct clk *clk_ref;
- 
-+	bool   has_capture;
-+	bool   has_playback;
-+
- 	struct snd_soc_dai_driver dai_driver;
- 
- 	struct snd_dmaengine_dai_dma_data capture_dma_data;
-@@ -136,8 +139,10 @@ static int axi_i2s_dai_probe(struct snd_soc_dai *dai)
- {
- 	struct axi_i2s *i2s = snd_soc_dai_get_drvdata(dai);
- 
--	snd_soc_dai_init_dma_data(dai, &i2s->playback_dma_data,
--		&i2s->capture_dma_data);
-+	snd_soc_dai_init_dma_data(
-+		dai,
-+		i2s->has_playback ? &i2s->playback_dma_data : NULL,
-+		i2s->has_capture  ? &i2s->capture_dma_data  : NULL);
- 
- 	return 0;
+diff --git a/drivers/mfd/wm831x-core.c b/drivers/mfd/wm831x-core.c
+index e70d35ef5c6d..e865a1fd4bd5 100644
+--- a/drivers/mfd/wm831x-core.c
++++ b/drivers/mfd/wm831x-core.c
+@@ -33,7 +33,7 @@
+ /* Current settings - values are 2*2^(reg_val/4) microamps.  These are
+  * exported since they are used by multiple drivers.
+  */
+-int wm831x_isinkv_values[WM831X_ISINK_MAX_ISEL + 1] = {
++const unsigned int wm831x_isinkv_values[WM831X_ISINK_MAX_ISEL + 1] = {
+ 	2,
+ 	2,
+ 	3,
+diff --git a/drivers/regulator/wm831x-isink.c b/drivers/regulator/wm831x-isink.c
+index 5611890a724b..bdc521a6f048 100644
+--- a/drivers/regulator/wm831x-isink.c
++++ b/drivers/regulator/wm831x-isink.c
+@@ -92,48 +92,12 @@ static int wm831x_isink_is_enabled(struct regulator_dev *rdev)
+ 		return 0;
  }
-@@ -151,18 +156,6 @@ static const struct snd_soc_dai_ops axi_i2s_dai_ops = {
  
- static struct snd_soc_dai_driver axi_i2s_dai = {
- 	.probe = axi_i2s_dai_probe,
--	.playback = {
--		.channels_min = 2,
--		.channels_max = 2,
--		.rates = SNDRV_PCM_RATE_KNOT,
--		.formats = SNDRV_PCM_FMTBIT_S32_LE | SNDRV_PCM_FMTBIT_U32_LE,
--	},
--	.capture = {
--		.channels_min = 2,
--		.channels_max = 2,
--		.rates = SNDRV_PCM_RATE_KNOT,
--		.formats = SNDRV_PCM_FMTBIT_S32_LE | SNDRV_PCM_FMTBIT_U32_LE,
--	},
- 	.ops = &axi_i2s_dai_ops,
- 	.symmetric_rates = 1,
+-static int wm831x_isink_set_current(struct regulator_dev *rdev,
+-				    int min_uA, int max_uA)
+-{
+-	struct wm831x_isink *isink = rdev_get_drvdata(rdev);
+-	struct wm831x *wm831x = isink->wm831x;
+-	int ret, i;
+-
+-	for (i = ARRAY_SIZE(wm831x_isinkv_values) - 1; i >= 0; i--) {
+-		int val = wm831x_isinkv_values[i];
+-		if (min_uA <= val && val <= max_uA) {
+-			ret = wm831x_set_bits(wm831x, isink->reg,
+-					      WM831X_CS1_ISEL_MASK, i);
+-			return ret;
+-		}
+-	}
+-
+-	return -EINVAL;
+-}
+-
+-static int wm831x_isink_get_current(struct regulator_dev *rdev)
+-{
+-	struct wm831x_isink *isink = rdev_get_drvdata(rdev);
+-	struct wm831x *wm831x = isink->wm831x;
+-	int ret;
+-
+-	ret = wm831x_reg_read(wm831x, isink->reg);
+-	if (ret < 0)
+-		return ret;
+-
+-	ret &= WM831X_CS1_ISEL_MASK;
+-	if (ret > WM831X_ISINK_MAX_ISEL)
+-		ret = WM831X_ISINK_MAX_ISEL;
+-
+-	return wm831x_isinkv_values[ret];
+-}
+-
+ static const struct regulator_ops wm831x_isink_ops = {
+ 	.is_enabled = wm831x_isink_is_enabled,
+ 	.enable = wm831x_isink_enable,
+ 	.disable = wm831x_isink_disable,
+-	.set_current_limit = wm831x_isink_set_current,
+-	.get_current_limit = wm831x_isink_get_current,
++	.set_current_limit = regulator_set_current_limit_regmap,
++	.get_current_limit = regulator_get_current_limit_regmap,
  };
-@@ -178,6 +171,19 @@ static const struct regmap_config axi_i2s_regmap_config = {
- 	.max_register = AXI_I2S_REG_STATUS,
- };
  
-+static void axi_i2s_parse_of(struct axi_i2s *i2s, const struct device_node *np)
-+{
-+	struct property *dma_names;
-+	const char *dma_name;
-+
-+	of_property_for_each_string(np, "dma-names", dma_names, dma_name) {
-+		if (strcmp(dma_name, "rx") == 0)
-+			i2s->has_capture = true;
-+		if (strcmp(dma_name, "tx") == 0)
-+			i2s->has_playback = true;
-+	}
-+}
-+
- static int axi_i2s_probe(struct platform_device *pdev)
- {
- 	struct resource *res;
-@@ -191,6 +197,8 @@ static int axi_i2s_probe(struct platform_device *pdev)
+ static irqreturn_t wm831x_isink_irq(int irq, void *data)
+@@ -189,10 +153,15 @@ static int wm831x_isink_probe(struct platform_device *pdev)
+ 	isink->desc.ops = &wm831x_isink_ops;
+ 	isink->desc.type = REGULATOR_CURRENT;
+ 	isink->desc.owner = THIS_MODULE;
++	isink->desc.curr_table = wm831x_isinkv_values,
++	isink->desc.n_current_limits = ARRAY_SIZE(wm831x_isinkv_values),
++	isink->desc.csel_reg = isink->reg,
++	isink->desc.csel_mask = WM831X_CS1_ISEL_MASK,
  
- 	platform_set_drvdata(pdev, i2s);
+ 	config.dev = pdev->dev.parent;
+ 	config.init_data = pdata->isink[id];
+ 	config.driver_data = isink;
++	config.regmap = wm831x->regmap;
  
-+	axi_i2s_parse_of(i2s, pdev->dev.of_node);
-+
- 	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
- 	base = devm_ioremap_resource(&pdev->dev, res);
- 	if (IS_ERR(base))
-@@ -213,13 +221,29 @@ static int axi_i2s_probe(struct platform_device *pdev)
- 	if (ret)
- 		return ret;
+ 	isink->regulator = devm_regulator_register(&pdev->dev, &isink->desc,
+ 						   &config);
+diff --git a/include/linux/mfd/wm831x/regulator.h b/include/linux/mfd/wm831x/regulator.h
+index 955d30fc6a27..30c587a0624c 100644
+--- a/include/linux/mfd/wm831x/regulator.h
++++ b/include/linux/mfd/wm831x/regulator.h
+@@ -1213,6 +1213,6 @@
+ #define WM831X_LDO1_OK_WIDTH                         1  /* LDO1_OK */
  
--	i2s->playback_dma_data.addr = res->start + AXI_I2S_REG_TX_FIFO;
--	i2s->playback_dma_data.addr_width = 4;
--	i2s->playback_dma_data.maxburst = 1;
-+	if (i2s->has_playback) {
-+		axi_i2s_dai.playback.channels_min = 2;
-+		axi_i2s_dai.playback.channels_max = 2;
-+		axi_i2s_dai.playback.rates = SNDRV_PCM_RATE_KNOT;
-+		axi_i2s_dai.playback.formats =
-+			SNDRV_PCM_FMTBIT_S32_LE | SNDRV_PCM_FMTBIT_U32_LE;
-+
-+		i2s->playback_dma_data.addr = res->start + AXI_I2S_REG_TX_FIFO;
-+		i2s->playback_dma_data.addr_width = 4;
-+		i2s->playback_dma_data.maxburst = 1;
-+	}
-+
-+	if (i2s->has_capture) {
-+		axi_i2s_dai.capture.channels_min = 2;
-+		axi_i2s_dai.capture.channels_max = 2;
-+		axi_i2s_dai.capture.rates = SNDRV_PCM_RATE_KNOT;
-+		axi_i2s_dai.capture.formats =
-+			SNDRV_PCM_FMTBIT_S32_LE | SNDRV_PCM_FMTBIT_U32_LE;
+ #define WM831X_ISINK_MAX_ISEL 55
+-extern int wm831x_isinkv_values[WM831X_ISINK_MAX_ISEL + 1];
++extern const unsigned int wm831x_isinkv_values[WM831X_ISINK_MAX_ISEL + 1];
  
--	i2s->capture_dma_data.addr = res->start + AXI_I2S_REG_RX_FIFO;
--	i2s->capture_dma_data.addr_width = 4;
--	i2s->capture_dma_data.maxburst = 1;
-+		i2s->capture_dma_data.addr = res->start + AXI_I2S_REG_RX_FIFO;
-+		i2s->capture_dma_data.addr_width = 4;
-+		i2s->capture_dma_data.maxburst = 1;
-+	}
- 
- 	i2s->ratnum.num = clk_get_rate(i2s->clk_ref) / 2 / AXI_I2S_BITS_PER_FRAME;
- 	i2s->ratnum.den_step = 1;
-@@ -240,6 +264,10 @@ static int axi_i2s_probe(struct platform_device *pdev)
- 	if (ret)
- 		goto err_clk_disable;
- 
-+	dev_info(&pdev->dev, "probed, capture %s, playback %s\n",
-+		 i2s->has_capture ? "enabled" : "disabled",
-+		 i2s->has_playback ? "enabled" : "disabled");
-+
- 	return 0;
- 
- err_clk_disable:
+ #endif
 -- 
 2.20.1
 
