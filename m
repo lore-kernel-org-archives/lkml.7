@@ -2,59 +2,60 @@ Return-Path: <SRS0=dUEL=RQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_MUTT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3EB5AC43381
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 Mar 2019 16:11:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D8D49C43381
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 Mar 2019 16:11:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 173D1206DF
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 Mar 2019 16:11:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id ADA962184E
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 Mar 2019 16:11:54 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726699AbfCMQLa (ORCPT
+        id S1726766AbfCMQLx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 13 Mar 2019 12:11:30 -0400
-Received: from mga02.intel.com ([134.134.136.20]:43972 "EHLO mga02.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725889AbfCMQL3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 13 Mar 2019 12:11:29 -0400
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga001.fm.intel.com ([10.253.24.23])
-  by orsmga101.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 13 Mar 2019 09:11:29 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.58,474,1544515200"; 
-   d="scan'208";a="154682159"
-Received: from jnikula-mobl3.fi.intel.com (HELO localhost) ([10.237.66.172])
-  by fmsmga001.fm.intel.com with ESMTP; 13 Mar 2019 09:11:26 -0700
-From:   Jani Nikula <jani.nikula@linux.intel.com>
-To:     Thomas Preston <thomas.preston@codethink.co.uk>,
-        joonas.lahtinen@linux.intel.com, rodrigo.vivi@intel.com,
-        airlied@linux.ie, intel-gfx@lists.freedesktop.org,
-        dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] drm/i915/ddi: Fix default eDP detection on port A
-In-Reply-To: <87sgvyly1h.fsf@intel.com>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
-References: <20190306200618.17405-1-thomas.preston@codethink.co.uk> <874l8fm72f.fsf@intel.com> <a1434319-daba-756f-34c7-3ea653a9d2eb@codethink.co.uk> <87va0vkm6e.fsf@intel.com> <1bc46e12-5cee-e3d0-83db-2feee4fe5210@codethink.co.uk> <87sgvyly1h.fsf@intel.com>
-Date:   Wed, 13 Mar 2019 18:13:17 +0200
-Message-ID: <87k1h2iwgy.fsf@intel.com>
+        Wed, 13 Mar 2019 12:11:53 -0400
+Received: from zeniv.linux.org.uk ([195.92.253.2]:60774 "EHLO
+        ZenIV.linux.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726011AbfCMQLv (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 13 Mar 2019 12:11:51 -0400
+Received: from viro by ZenIV.linux.org.uk with local (Exim 4.92 #3 (Red Hat Linux))
+        id 1h46Ts-0000bl-2x; Wed, 13 Mar 2019 16:11:48 +0000
+Date:   Wed, 13 Mar 2019 16:11:48 +0000
+From:   Al Viro <viro@zeniv.linux.org.uk>
+To:     Eric Biggers <ebiggers@kernel.org>
+Cc:     Miklos Szeredi <miklos@szeredi.hu>,
+        Richard Weinberger <richard@nod.at>,
+        linux-fsdevel@vger.kernel.org, linux-fscrypt@vger.kernel.org,
+        overlayfs <linux-unionfs@vger.kernel.org>,
+        linux-kernel@vger.kernel.org
+Subject: Re: overlayfs vs. fscrypt
+Message-ID: <20190313161147.GS2217@ZenIV.linux.org.uk>
+References: <4603533.ZIfxmiEf7K@blindfold>
+ <1852545.qrIQg0rEWx@blindfold>
+ <CAJfpegvrG4LfnuC62JNtdXpCf4vb+aEiDre5YCxe7xUSQP8yjw@mail.gmail.com>
+ <1854703.ve7plDhYWt@blindfold>
+ <CAJfpegtgfuAkgv26QH6Ht25OeMiev-QvEf7ror4KAbud7FADgg@mail.gmail.com>
+ <20190313150126.GA703@sol.localdomain>
 MIME-Version: 1.0
-Content-Type: text/plain
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190313150126.GA703@sol.localdomain>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, 07 Mar 2019, Jani Nikula <jani.nikula@linux.intel.com> wrote:
-> On Thu, 07 Mar 2019, Thomas Preston <thomas.preston@codethink.co.uk> wrote:
->> Would you like me to resubmit with the suggested changes?
->
-> Nah, we can tweak the commit message while applying.
+On Wed, Mar 13, 2019 at 08:01:27AM -0700, Eric Biggers wrote:
 
-Pushed to dinq, thanks for the patch.
+> What do you think about this?
 
-BR,
-Jani.
+That fscrypt might have some very deep flaws.  I'll need to RTFS and
+review its model, but what I've seen in this thread so far is not
+promising anything good.
 
--- 
-Jani Nikula, Intel Open Source Graphics Center
+It's not just overlayfs - there are all kinds of interesting trouble
+possible just with fscrypt, unless I'm misparsing what had been said
+so far.
