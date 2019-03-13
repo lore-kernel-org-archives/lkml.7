@@ -4,50 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AFBCAC43381
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 Mar 2019 19:12:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0F7B2C43381
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 Mar 2019 19:12:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6E80F213A2
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 Mar 2019 19:12:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D11DF217F5
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 Mar 2019 19:12:23 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1552504340;
-	bh=WddH+or7KxxhUfkW8V+8x1zLcdH6jgiEi3Y72pPxG8k=;
+	s=default; t=1552504343;
+	bh=nq9Bko9S1CKLAk3t+egy2xB9qjrwqSKS65N9awoqub4=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Cgpc0F3t2PGZTcYvhcqtHw5dNUUYAy5WYs8hqbqOI6cs9C2wFXHOdgWpXU9H87Pfd
-	 B+BngrJuDx3jl5C6ZXqZX8eHrdR0tbOizWES6rexQqyN6IlOO1MWfULb6iqtXUkcK3
-	 58nuUn2r3YwbjvdlWeFG6sxE3JDAapbZdwdDujR4=
+	b=qXk7+bjSc0ntcozGG0fgzOUJ3/qXjl82zBnQrCab3f4zcNywOSM2UbNAotrBIZZms
+	 r6O/fnDpJ74V04h2FpgEAnBn09hka4ZuUL9VncoruiZHaESYENzPQ1rCoz3RkcZtDZ
+	 HqWoYnLahK6H73lVqDJJh8lqlmUezcMJFa/LxhN4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727688AbfCMTMS (ORCPT
+        id S1727698AbfCMTMW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 13 Mar 2019 15:12:18 -0400
-Received: from mail.kernel.org ([198.145.29.99]:42884 "EHLO mail.kernel.org"
+        Wed, 13 Mar 2019 15:12:22 -0400
+Received: from mail.kernel.org ([198.145.29.99]:42934 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727177AbfCMTMP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 13 Mar 2019 15:12:15 -0400
+        id S1727177AbfCMTMV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 13 Mar 2019 15:12:21 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 0480C20693;
-        Wed, 13 Mar 2019 19:12:12 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 2078620693;
+        Wed, 13 Mar 2019 19:12:18 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1552504334;
-        bh=WddH+or7KxxhUfkW8V+8x1zLcdH6jgiEi3Y72pPxG8k=;
+        s=default; t=1552504340;
+        bh=nq9Bko9S1CKLAk3t+egy2xB9qjrwqSKS65N9awoqub4=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=IO9zPFFm6sxvkCZ+DrgyFmWMyQIsQlUNG5Q7xUc8cvirM/mOm+xFyWBXNtgnY9shq
-         LugGFSZ2XLIMbwJbI0TCZKcKZNQNsZKCdBX65QRSGKbMxP/eiD2oD3Suj2pj+oTSO4
-         7Xx4Pte+fDE5mXngoARr6jxzxPKzsxPyrXvLp75U=
+        b=W0bya6NbGbmo2Gd9nIiK6AHoz01maSGlsXqEqph1s2i5r/N1KJcynBqBXmTFyucaa
+         H71NNca/VeLiJy2xSGewT5TuCDNOObNOdMdJMYMAsjAgxUEQtJmmCdxlb14o3/diJ/
+         2kYZREGZuCRbh7Aj1aQHNmx9hujdsxoIyqzK5YBw=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Jan Sokolowski <jan.sokolowski@intel.com>,
-        Jeff Kirsher <jeffrey.t.kirsher@intel.com>,
-        Sasha Levin <sashal@kernel.org>, netdev@vger.kernel.org,
-        xdp-newbies@vger.kernel.org, bpf@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.20 47/60] ixgbe: don't do any AF_XDP zero-copy transmit if netif is not OK
-Date:   Wed, 13 Mar 2019 15:10:08 -0400
-Message-Id: <20190313191021.158171-47-sashal@kernel.org>
+Cc:     Vineet Gupta <vgupta@synopsys.com>,
+        Sasha Levin <sashal@kernel.org>,
+        linux-snps-arc@lists.infradead.org
+Subject: [PATCH AUTOSEL 4.20 48/60] ARCv2: don't assume core 0x54 has dual issue
+Date:   Wed, 13 Mar 2019 15:10:09 -0400
+Message-Id: <20190313191021.158171-48-sashal@kernel.org>
 X-Mailer: git-send-email 2.19.1
 In-Reply-To: <20190313191021.158171-1-sashal@kernel.org>
 References: <20190313191021.158171-1-sashal@kernel.org>
@@ -59,40 +58,82 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Jan Sokolowski <jan.sokolowski@intel.com>
+From: Vineet Gupta <vgupta@synopsys.com>
 
-[ Upstream commit c685c69fba71462c3f9f6a1fb6151cded6c74d42 ]
+[ Upstream commit 7b2e932f633bcb7b190fc7031ce6dac75f8c3472 ]
 
-An issue has been found while testing zero-copy XDP that
-causes a reset to be triggered. As it takes some time to
-turn the carrier on after setting zc, and we already
-start trying to transmit some packets, watchdog considers
-this as an erroneous state and triggers a reset.
+The first release of core4 (0x54) was dual issue only (HS4x).
+Newer releases allow hardware to be configured as single issue (HS3x)
+or dual issue.
 
-Don't do any work if netif carrier is not OK.
+Prevent accessing a HS4x only aux register in HS3x, which otherwise
+leads to illegal instruction exceptions
 
-Fixes: 8221c5eba8c13 (ixgbe: add AF_XDP zero-copy Tx support)
-Signed-off-by: Jan Sokolowski <jan.sokolowski@intel.com>
-Signed-off-by: Jeff Kirsher <jeffrey.t.kirsher@intel.com>
+Signed-off-by: Vineet Gupta <vgupta@synopsys.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/ethernet/intel/ixgbe/ixgbe_xsk.c | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+ arch/arc/include/asm/arcregs.h |  8 ++++++++
+ arch/arc/kernel/setup.c        | 26 +++++++++++++++++++++-----
+ 2 files changed, 29 insertions(+), 5 deletions(-)
 
-diff --git a/drivers/net/ethernet/intel/ixgbe/ixgbe_xsk.c b/drivers/net/ethernet/intel/ixgbe/ixgbe_xsk.c
-index 654ae92342ea..36a8879536a4 100644
---- a/drivers/net/ethernet/intel/ixgbe/ixgbe_xsk.c
-+++ b/drivers/net/ethernet/intel/ixgbe/ixgbe_xsk.c
-@@ -642,7 +642,8 @@ static bool ixgbe_xmit_zc(struct ixgbe_ring *xdp_ring, unsigned int budget)
- 	dma_addr_t dma;
+diff --git a/arch/arc/include/asm/arcregs.h b/arch/arc/include/asm/arcregs.h
+index 49bfbd879caa..bdbdaef902eb 100644
+--- a/arch/arc/include/asm/arcregs.h
++++ b/arch/arc/include/asm/arcregs.h
+@@ -151,6 +151,14 @@ struct bcr_isa_arcv2 {
+ #endif
+ };
  
- 	while (budget-- > 0) {
--		if (unlikely(!ixgbe_desc_unused(xdp_ring))) {
-+		if (unlikely(!ixgbe_desc_unused(xdp_ring)) ||
-+		    !netif_carrier_ok(xdp_ring->netdev)) {
- 			work_done = false;
- 			break;
++struct bcr_uarch_build_arcv2 {
++#ifdef CONFIG_CPU_BIG_ENDIAN
++	unsigned int pad:8, prod:8, maj:8, min:8;
++#else
++	unsigned int min:8, maj:8, prod:8, pad:8;
++#endif
++};
++
+ struct bcr_mpy {
+ #ifdef CONFIG_CPU_BIG_ENDIAN
+ 	unsigned int pad:8, x1616:8, dsp:4, cycles:2, type:2, ver:8;
+diff --git a/arch/arc/kernel/setup.c b/arch/arc/kernel/setup.c
+index 80dd1a716ca7..184a5d1bf28d 100644
+--- a/arch/arc/kernel/setup.c
++++ b/arch/arc/kernel/setup.c
+@@ -196,13 +196,29 @@ static void read_arc_build_cfg_regs(void)
+ 		cpu->bpu.num_pred = 2048 << bpu.pte;
+ 
+ 		if (cpu->core.family >= 0x54) {
+-			unsigned int exec_ctrl;
+ 
+-			READ_BCR(AUX_EXEC_CTRL, exec_ctrl);
+-			cpu->extn.dual_enb = !(exec_ctrl & 1);
++			struct bcr_uarch_build_arcv2 uarch;
+ 
+-			/* dual issue always present for this core */
+-			cpu->extn.dual = 1;
++			/*
++			 * The first 0x54 core (uarch maj:min 0:1 or 0:2) was
++			 * dual issue only (HS4x). But next uarch rev (1:0)
++			 * allows it be configured for single issue (HS3x)
++			 * Ensure we fiddle with dual issue only on HS4x
++			 */
++			READ_BCR(ARC_REG_MICRO_ARCH_BCR, uarch);
++
++			if (uarch.prod == 4) {
++				unsigned int exec_ctrl;
++
++				/* dual issue hardware always present */
++				cpu->extn.dual = 1;
++
++				READ_BCR(AUX_EXEC_CTRL, exec_ctrl);
++
++				/* dual issue hardware enabled ? */
++				cpu->extn.dual_enb = !(exec_ctrl & 1);
++
++			}
  		}
+ 	}
+ 
 -- 
 2.19.1
 
