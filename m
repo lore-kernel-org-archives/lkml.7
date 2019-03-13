@@ -4,49 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 260C5C43381
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 Mar 2019 19:13:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C1B50C43381
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 Mar 2019 19:13:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F10AD21850
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 Mar 2019 19:13:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 862942184D
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 Mar 2019 19:13:17 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1552504394;
-	bh=LC2URIPpCtzTyxzhiQDPe2V6NNFhOQfqu6By0KbhVVU=;
+	s=default; t=1552504397;
+	bh=FzHvRoG17K54IWiQfe8Szt+YKIB6vt1cflLjm0hIFzA=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=sXNWYAOvlJXozuDJxOeIC6w+QsxyiWchYtYK2veBuP4OwaR/BTGliSs84cXnP8mAq
-	 gdl1v4sAGngAekgb1IYjiGX+qhhM66jTFtgOqHlWCiU+SJ9u+vKs6xURV6JZ8cY7Pl
-	 VBs1pAXEgbdhbrXAAslWwfXeTLWy8yNdrZg8dJzQ=
+	b=GEDL94b4BXGinZA1Ckwjg7uhvLmnuQ88rABsvRkNs5OETVJyWGfbaKF5yv+vA4y++
+	 DJQ8lhuQsWx86bVtssKe/tdcwz9flY3ahYpgyRte/yXzUhCGQN5rqf4WUx1ntXoFox
+	 KwiVnXDtXLG68JBanGXtdszITVisRyjsjXkLCYvQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727923AbfCMTNN (ORCPT
+        id S1727944AbfCMTNQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 13 Mar 2019 15:13:13 -0400
-Received: from mail.kernel.org ([198.145.29.99]:43720 "EHLO mail.kernel.org"
+        Wed, 13 Mar 2019 15:13:16 -0400
+Received: from mail.kernel.org ([198.145.29.99]:43754 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727388AbfCMTNK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 13 Mar 2019 15:13:10 -0400
+        id S1727921AbfCMTNN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 13 Mar 2019 15:13:13 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 885DA20693;
-        Wed, 13 Mar 2019 19:13:07 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 472712075C;
+        Wed, 13 Mar 2019 19:13:11 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1552504388;
-        bh=LC2URIPpCtzTyxzhiQDPe2V6NNFhOQfqu6By0KbhVVU=;
+        s=default; t=1552504392;
+        bh=FzHvRoG17K54IWiQfe8Szt+YKIB6vt1cflLjm0hIFzA=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=TspA9ecGttfG3r9yQDba6YUnkgmID9YOWFJJBDgJEJ/rRaQ+7noibKfgnedQjOCz6
-         p2XXFCIk1sCRX0DXwWsa+Gz3sLoLbaG/5mf4VkgpaSGz22Cbqe2su68gLRMABW/FfX
-         aiK9155NdsdP2RNkP3ePI5ZkAxh8Dv+Wh4ukJCMU=
+        b=cW8wqD31hSMsfudA2yYZjbkf8/CZy/ms/SQKe0D6K+wrqxGUOz3WYkYIqze0Tn26O
+         39Jn6XPokMiNDbwDzx7QzO1qAw7UXwwkqsK3EPhZKp1RS+2f8ZXRQmR32fgiZ03MlX
+         GTxHbPxXR83/PL2oihf5WjKrCJnxD3yP4QtuEQDY=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Dietmar Eggemann <dietmar.eggemann@arm.com>,
-        Russell King <rmk+kernel@armlinux.org.uk>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH AUTOSEL 4.19 05/48] ARM: 8824/1: fix a migrating irq bug when hotplug cpu
-Date:   Wed, 13 Mar 2019 15:12:07 -0400
-Message-Id: <20190313191250.158955-5-sashal@kernel.org>
+Cc:     Willem de Bruijn <willemb@google.com>,
+        Alexei Starovoitov <ast@kernel.org>,
+        Sasha Levin <sashal@kernel.org>, netdev@vger.kernel.org,
+        bpf@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.19 06/48] bpf: only adjust gso_size on bytestream protocols
+Date:   Wed, 13 Mar 2019 15:12:08 -0400
+Message-Id: <20190313191250.158955-6-sashal@kernel.org>
 X-Mailer: git-send-email 2.19.1
 In-Reply-To: <20190313191250.158955-1-sashal@kernel.org>
 References: <20190313191250.158955-1-sashal@kernel.org>
@@ -58,156 +58,93 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Dietmar Eggemann <dietmar.eggemann@arm.com>
+From: Willem de Bruijn <willemb@google.com>
 
-[ Upstream commit 1b5ba350784242eb1f899bcffd95d2c7cff61e84 ]
+[ Upstream commit b90efd2258749e04e1b3f71ef0d716f2ac2337e0 ]
 
-Arm TC2 fails cpu hotplug stress test.
+bpf_skb_change_proto and bpf_skb_adjust_room change skb header length.
+For GSO packets they adjust gso_size to maintain the same MTU.
 
-This issue was tracked down to a missing copy of the new affinity
-cpumask for the vexpress-spc interrupt into struct
-irq_common_data.affinity when the interrupt is migrated in
-migrate_one_irq().
+The gso size can only be safely adjusted on bytestream protocols.
+Commit d02f51cbcf12 ("bpf: fix bpf_skb_adjust_net/bpf_skb_proto_xlat
+to deal with gso sctp skbs") excluded SKB_GSO_SCTP.
 
-Fix it by replacing the arm specific hotplug cpu migration with the
-generic irq code.
+Since then type SKB_GSO_UDP_L4 has been added, whose contents are one
+gso_size unit per datagram. Also exclude these.
 
-This is the counterpart implementation to commit 217d453d473c ("arm64:
-fix a migrating irq bug when hotplug cpu").
+Move from a blacklist to a whitelist check to future proof against
+additional such new GSO types, e.g., for fraglist based GRO.
 
-Tested with cpu hotplug stress test on Arm TC2 (multi_v7_defconfig plus
-CONFIG_ARM_BIG_LITTLE_CPUFREQ=y and CONFIG_ARM_VEXPRESS_SPC_CPUFREQ=y).
-The vexpress-spc interrupt (irq=22) on this board is affine to CPU0.
-Its affinity cpumask now changes correctly e.g. from 0 to 1-4 when
-CPU0 is hotplugged out.
-
-Suggested-by: Marc Zyngier <marc.zyngier@arm.com>
-Signed-off-by: Dietmar Eggemann <dietmar.eggemann@arm.com>
-Acked-by: Marc Zyngier <marc.zyngier@arm.com>
-Reviewed-by: Linus Walleij <linus.walleij@linaro.org>
-Signed-off-by: Russell King <rmk+kernel@armlinux.org.uk>
+Fixes: bec1f6f69736 ("udp: generate gso with UDP_SEGMENT")
+Signed-off-by: Willem de Bruijn <willemb@google.com>
+Signed-off-by: Alexei Starovoitov <ast@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/arm/Kconfig           |  1 +
- arch/arm/include/asm/irq.h |  1 -
- arch/arm/kernel/irq.c      | 62 --------------------------------------
- arch/arm/kernel/smp.c      |  2 +-
- 4 files changed, 2 insertions(+), 64 deletions(-)
+ include/linux/skbuff.h |  6 ++++++
+ net/core/filter.c      | 12 ++++--------
+ 2 files changed, 10 insertions(+), 8 deletions(-)
 
-diff --git a/arch/arm/Kconfig b/arch/arm/Kconfig
-index e8cd55a5b04c..cd4c74daf71e 100644
---- a/arch/arm/Kconfig
-+++ b/arch/arm/Kconfig
-@@ -1444,6 +1444,7 @@ config NR_CPUS
- config HOTPLUG_CPU
- 	bool "Support for hot-pluggable CPUs"
- 	depends on SMP
-+	select GENERIC_IRQ_MIGRATION
- 	help
- 	  Say Y here to experiment with turning CPUs off and on.  CPUs
- 	  can be controlled through /sys/devices/system/cpu.
-diff --git a/arch/arm/include/asm/irq.h b/arch/arm/include/asm/irq.h
-index c883fcbe93b6..46d41140df27 100644
---- a/arch/arm/include/asm/irq.h
-+++ b/arch/arm/include/asm/irq.h
-@@ -25,7 +25,6 @@
- #ifndef __ASSEMBLY__
- struct irqaction;
- struct pt_regs;
--extern void migrate_irqs(void);
- 
- extern void asm_do_IRQ(unsigned int, struct pt_regs *);
- void handle_IRQ(unsigned int, struct pt_regs *);
-diff --git a/arch/arm/kernel/irq.c b/arch/arm/kernel/irq.c
-index 9908dacf9229..844861368cd5 100644
---- a/arch/arm/kernel/irq.c
-+++ b/arch/arm/kernel/irq.c
-@@ -31,7 +31,6 @@
- #include <linux/smp.h>
- #include <linux/init.h>
- #include <linux/seq_file.h>
--#include <linux/ratelimit.h>
- #include <linux/errno.h>
- #include <linux/list.h>
- #include <linux/kallsyms.h>
-@@ -109,64 +108,3 @@ int __init arch_probe_nr_irqs(void)
- 	return nr_irqs;
+diff --git a/include/linux/skbuff.h b/include/linux/skbuff.h
+index a404d475acee..3b0a25bb7c6f 100644
+--- a/include/linux/skbuff.h
++++ b/include/linux/skbuff.h
+@@ -4086,6 +4086,12 @@ static inline bool skb_is_gso_sctp(const struct sk_buff *skb)
+ 	return skb_shinfo(skb)->gso_type & SKB_GSO_SCTP;
  }
- #endif
--
--#ifdef CONFIG_HOTPLUG_CPU
--static bool migrate_one_irq(struct irq_desc *desc)
--{
--	struct irq_data *d = irq_desc_get_irq_data(desc);
--	const struct cpumask *affinity = irq_data_get_affinity_mask(d);
--	struct irq_chip *c;
--	bool ret = false;
--
--	/*
--	 * If this is a per-CPU interrupt, or the affinity does not
--	 * include this CPU, then we have nothing to do.
--	 */
--	if (irqd_is_per_cpu(d) || !cpumask_test_cpu(smp_processor_id(), affinity))
--		return false;
--
--	if (cpumask_any_and(affinity, cpu_online_mask) >= nr_cpu_ids) {
--		affinity = cpu_online_mask;
--		ret = true;
--	}
--
--	c = irq_data_get_irq_chip(d);
--	if (!c->irq_set_affinity)
--		pr_debug("IRQ%u: unable to set affinity\n", d->irq);
--	else if (c->irq_set_affinity(d, affinity, false) == IRQ_SET_MASK_OK && ret)
--		cpumask_copy(irq_data_get_affinity_mask(d), affinity);
--
--	return ret;
--}
--
--/*
-- * The current CPU has been marked offline.  Migrate IRQs off this CPU.
-- * If the affinity settings do not allow other CPUs, force them onto any
-- * available CPU.
-- *
-- * Note: we must iterate over all IRQs, whether they have an attached
-- * action structure or not, as we need to get chained interrupts too.
-- */
--void migrate_irqs(void)
--{
--	unsigned int i;
--	struct irq_desc *desc;
--	unsigned long flags;
--
--	local_irq_save(flags);
--
--	for_each_irq_desc(i, desc) {
--		bool affinity_broken;
--
--		raw_spin_lock(&desc->lock);
--		affinity_broken = migrate_one_irq(desc);
--		raw_spin_unlock(&desc->lock);
--
--		if (affinity_broken)
--			pr_warn_ratelimited("IRQ%u no longer affine to CPU%u\n",
--				i, smp_processor_id());
--	}
--
--	local_irq_restore(flags);
--}
--#endif /* CONFIG_HOTPLUG_CPU */
-diff --git a/arch/arm/kernel/smp.c b/arch/arm/kernel/smp.c
-index 3bf82232b1be..1d6f5ea522f4 100644
---- a/arch/arm/kernel/smp.c
-+++ b/arch/arm/kernel/smp.c
-@@ -254,7 +254,7 @@ int __cpu_disable(void)
- 	/*
- 	 * OK - migrate IRQs away from this CPU
- 	 */
--	migrate_irqs();
-+	irq_migrate_all_off_this_cpu();
  
- 	/*
- 	 * Flush user cache and TLB mappings, and then remove this CPU
++static inline bool skb_is_gso_tcp(const struct sk_buff *skb)
++{
++	return skb_is_gso(skb) &&
++	       skb_shinfo(skb)->gso_type & (SKB_GSO_TCPV4 | SKB_GSO_TCPV6);
++}
++
+ static inline void skb_gso_reset(struct sk_buff *skb)
+ {
+ 	skb_shinfo(skb)->gso_size = 0;
+diff --git a/net/core/filter.c b/net/core/filter.c
+index fb0080e84bd4..cb792b344b5e 100644
+--- a/net/core/filter.c
++++ b/net/core/filter.c
+@@ -2614,8 +2614,7 @@ static int bpf_skb_proto_4_to_6(struct sk_buff *skb)
+ 	u32 off = skb_mac_header_len(skb);
+ 	int ret;
+ 
+-	/* SCTP uses GSO_BY_FRAGS, thus cannot adjust it. */
+-	if (skb_is_gso(skb) && unlikely(skb_is_gso_sctp(skb)))
++	if (!skb_is_gso_tcp(skb))
+ 		return -ENOTSUPP;
+ 
+ 	ret = skb_cow(skb, len_diff);
+@@ -2656,8 +2655,7 @@ static int bpf_skb_proto_6_to_4(struct sk_buff *skb)
+ 	u32 off = skb_mac_header_len(skb);
+ 	int ret;
+ 
+-	/* SCTP uses GSO_BY_FRAGS, thus cannot adjust it. */
+-	if (skb_is_gso(skb) && unlikely(skb_is_gso_sctp(skb)))
++	if (!skb_is_gso_tcp(skb))
+ 		return -ENOTSUPP;
+ 
+ 	ret = skb_unclone(skb, GFP_ATOMIC);
+@@ -2782,8 +2780,7 @@ static int bpf_skb_net_grow(struct sk_buff *skb, u32 len_diff)
+ 	u32 off = skb_mac_header_len(skb) + bpf_skb_net_base_len(skb);
+ 	int ret;
+ 
+-	/* SCTP uses GSO_BY_FRAGS, thus cannot adjust it. */
+-	if (skb_is_gso(skb) && unlikely(skb_is_gso_sctp(skb)))
++	if (!skb_is_gso_tcp(skb))
+ 		return -ENOTSUPP;
+ 
+ 	ret = skb_cow(skb, len_diff);
+@@ -2812,8 +2809,7 @@ static int bpf_skb_net_shrink(struct sk_buff *skb, u32 len_diff)
+ 	u32 off = skb_mac_header_len(skb) + bpf_skb_net_base_len(skb);
+ 	int ret;
+ 
+-	/* SCTP uses GSO_BY_FRAGS, thus cannot adjust it. */
+-	if (skb_is_gso(skb) && unlikely(skb_is_gso_sctp(skb)))
++	if (!skb_is_gso_tcp(skb))
+ 		return -ENOTSUPP;
+ 
+ 	ret = skb_unclone(skb, GFP_ATOMIC);
 -- 
 2.19.1
 
