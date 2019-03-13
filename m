@@ -2,312 +2,151 @@ Return-Path: <SRS0=dUEL=RQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,
-	URIBL_SBL,URIBL_SBL_A autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,UNPARSEABLE_RELAY,URIBL_BLOCKED
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E802FC4360F
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 Mar 2019 09:07:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 132EDC43381
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 Mar 2019 09:08:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AC7EF2183F
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 Mar 2019 09:07:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E19672147C
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 Mar 2019 09:08:31 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727067AbfCMJH5 (ORCPT
+        id S1727335AbfCMJIa (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 13 Mar 2019 05:07:57 -0400
-Received: from 4.mo173.mail-out.ovh.net ([46.105.34.219]:57750 "EHLO
-        4.mo173.mail-out.ovh.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726163AbfCMJH4 (ORCPT
+        Wed, 13 Mar 2019 05:08:30 -0400
+Received: from Mailgw01.mediatek.com ([1.203.163.78]:13728 "EHLO
+        mailgw01.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1726163AbfCMJIa (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 13 Mar 2019 05:07:56 -0400
-X-Greylist: delayed 1801 seconds by postgrey-1.27 at vger.kernel.org; Wed, 13 Mar 2019 05:07:53 EDT
-Received: from player796.ha.ovh.net (unknown [10.109.143.72])
-        by mo173.mail-out.ovh.net (Postfix) with ESMTP id 7462FF9CD8
-        for <linux-kernel@vger.kernel.org>; Wed, 13 Mar 2019 09:29:00 +0100 (CET)
-Received: from kaod.org (lns-bzn-46-82-253-208-248.adsl.proxad.net [82.253.208.248])
-        (Authenticated sender: groug@kaod.org)
-        by player796.ha.ovh.net (Postfix) with ESMTPSA id 4F469384621D;
-        Wed, 13 Mar 2019 08:28:52 +0000 (UTC)
-Date:   Wed, 13 Mar 2019 09:28:51 +0100
-From:   Greg Kurz <groug@kaod.org>
-To:     "Alastair D'Silva" <alastair@au1.ibm.com>
-Cc:     Arnd Bergmann <arnd@arndb.de>,
+        Wed, 13 Mar 2019 05:08:30 -0400
+X-UUID: 6ab37ab9377f46f4a1e5c820377e028a-20190313
+X-UUID: 6ab37ab9377f46f4a1e5c820377e028a-20190313
+Received: from mtkcas35.mediatek.inc [(172.27.4.253)] by mailgw01.mediatek.com
+        (envelope-from <yong.wu@mediatek.com>)
+        (mailgw01.mediatek.com ESMTP with TLS)
+        with ESMTP id 2093687650; Wed, 13 Mar 2019 17:08:25 +0800
+Received: from MTKCAS32.mediatek.inc (172.27.4.184) by MTKMBS31N2.mediatek.inc
+ (172.27.4.87) with Microsoft SMTP Server (TLS) id 15.0.1395.4; Wed, 13 Mar
+ 2019 17:08:23 +0800
+Received: from [10.17.3.153] (172.27.4.253) by MTKCAS32.mediatek.inc
+ (172.27.4.170) with Microsoft SMTP Server id 15.0.1395.4 via Frontend
+ Transport; Wed, 13 Mar 2019 17:08:23 +0800
+Message-ID: <1552468103.7433.11.camel@mhfsdcap03>
+Subject: Re: [PATCH 02/13] driver core: Remove the link if there is no
+ driver with AUTO flag
+From:   Yong Wu <yong.wu@mediatek.com>
+To:     Evan Green <evgreen@chromium.org>
+CC:     Matthias Brugger <matthias.bgg@gmail.com>,
+        Joerg Roedel <joro@8bytes.org>,
         Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        linux-kernel@vger.kernel.org,
-        Andrew Donnellan <andrew.donnellan@au1.ibm.com>,
-        Alastair D'Silva <alastair@d-silva.org>,
-        Frederic Barrat <fbarrat@linux.ibm.com>,
-        linuxppc-dev@lists.ozlabs.org
-Subject: Re: [PATCH 4/5] ocxl: Remove superfluous 'extern' from headers
-Message-ID: <20190313092851.4ed5c485@bahia.lan>
-In-Reply-To: <20190313040702.14276-5-alastair@au1.ibm.com>
-References: <20190227045741.21412-1-alastair@au1.ibm.com>
-        <20190313040702.14276-1-alastair@au1.ibm.com>
-        <20190313040702.14276-5-alastair@au1.ibm.com>
-X-Mailer: Claws Mail 3.16.0 (GTK+ 2.24.32; x86_64-redhat-linux-gnu)
-MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+        "Rob Herring" <robh+dt@kernel.org>,
+        Robin Murphy <robin.murphy@arm.com>,
+        "Tomasz Figa" <tfiga@google.com>,
+        Will Deacon <will.deacon@arm.com>,
+        <linux-mediatek@lists.infradead.org>,
+        <srv_heupstream@mediatek.com>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>, LKML <linux-kernel@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <iommu@lists.linux-foundation.org>, Arnd Bergmann <arnd@arndb.de>,
+        <yingjoe.chen@mediatek.com>, <youlin.pei@mediatek.com>,
+        Nicolas Boichat <drinkcat@chromium.org>
+Date:   Wed, 13 Mar 2019 17:08:23 +0800
+In-Reply-To: <CAE=gft47TODOqKUxCvd+kDKfGbkQC1OVBarb1MaU3KrptcXiNw@mail.gmail.com>
+References: <1546318276-18993-1-git-send-email-yong.wu@mediatek.com>
+         <1546318276-18993-3-git-send-email-yong.wu@mediatek.com>
+         <CAE=gft7mWs1jc+KQQcPuuhcmxpFRnRBTt35+uC3F20N6R554bQ@mail.gmail.com>
+         <1551278000.17917.50.camel@mhfsdcap03>
+         <CAE=gft4iHRo8VQot26dH2NaRNLtxxRYWBmSpjkoL2BE_i6eXQw@mail.gmail.com>
+         <e15e94be-3eb9-dc7b-2073-4163f91f0259@gmail.com>
+         <CAE=gft47TODOqKUxCvd+kDKfGbkQC1OVBarb1MaU3KrptcXiNw@mail.gmail.com>
+Content-Type: text/plain; charset="UTF-8"
+X-Mailer: Evolution 3.2.3-0ubuntu6 
 Content-Transfer-Encoding: 7bit
-X-Ovh-Tracer-Id: 13784392561733572939
-X-VR-SPAMSTATE: OK
-X-VR-SPAMSCORE: -100
-X-VR-SPAMCAUSE: gggruggvucftvghtrhhoucdtuddrgedutddrgeelgdduvddtucetufdoteggodetrfdotffvucfrrhhofhhilhgvmecuqfggjfdpvefjgfevmfevgfenuceurghilhhouhhtmecuhedttdenucesvcftvggtihhpihgvnhhtshculddquddttddm
+MIME-Version: 1.0
+X-MTK:  N
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, 13 Mar 2019 15:07:00 +1100
-"Alastair D'Silva" <alastair@au1.ibm.com> wrote:
+On Tue, 2019-03-12 at 16:17 -0700, Evan Green wrote:
+> On Tue, Mar 12, 2019 at 7:21 AM Matthias Brugger <matthias.bgg@gmail.com> wrote:
+> >
+> >
+> >
+> > On 05/03/2019 20:03, Evan Green wrote:
+> > > On Wed, Feb 27, 2019 at 6:33 AM Yong Wu <yong.wu@mediatek.com> wrote:
+> > >>
+> > >> On Mon, 2019-02-25 at 15:53 -0800, Evan Green wrote:
+> > >>> On Mon, Dec 31, 2018 at 8:52 PM Yong Wu <yong.wu@mediatek.com> wrote:
+> > >>>>
+> > >>>> DL_FLAG_AUTOREMOVE_CONSUMER/SUPPLIER means "Remove the link
+> > >>>> automatically on consumer/supplier driver unbind", that means we should
+> > >>>> remove whole the device_link when there is no this driver no matter what
+> > >>>> the ref_count of the link is.
+> > >>>>
+> > >>>> CC: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+> > >>>> Signed-off-by: Yong Wu <yong.wu@mediatek.com>
+> > >>>> ---
+> > >>>> The ref_count of our device_link normally is over 1. When the consumer
+> > >>>> device driver is removed, whole the device_link should be removed.
+> > >>>> Thus, I add this patch.
+> > >>>> ---
+> > >>>
+> > >>> I will admit to reading about device links for the first time while
+> > >>> reviewing this patch, but I don't really get this. Why use a kref at
+> > >>> all if we're just going to ignore its value? For instance, I see that
+> > >>> if you call device_link_add() with the same supplier and consumer, it
+> > >>> uses the kref to return the same link. That machinery is broken with
+> > >>> your change. Although I don't see any uses of it, you might also
+> > >>> expect a supplier or consumer could do a kref_get() on the link it got
+> > >>> back from device_link_add(), and have a reasonable expectation that
+> > >>> the link wouldn't be freed out from under it. This would also be
+> > >>> broken.
+> > >>>
+> > >>> Can you explain why your device_links normally have a reference count
+> > >>>> 1,
+> > >>
+> > >> I use device link between the smi-larb device and the iommu-consumer
+> > >> device. Take a example, smi-larb1 have 4 VDEC ports. From 4/13 in this
+> > >> patchset, we use device_link to link the VDEC device and the smi-larb1
+> > >> device in the function(mtk_iommu_config). since there are 4 ports, it
+> > >> will call device_link_add 4 times.
+> > >>
+> > >>>
+> > >>> and why those additional references can't be cleaned up in an
+> > >>> orderly fashion?
+> > >>
+> > >> If the iommu-consume device(like VDEC above) is removed, It should enter
+> > >> device_links_driver_cleanup which only ref_put one time. I guess whole
+> > >> the link should be removed at that time.
+> > >
+> > > It seems like Robin had some suggestions about using
+> > > mtk_iommu_add_device() rather than the attach_dev() to set the links
+> > > up, and then track them for removal in the corresponding
+> > > remove_device() callback. Then you wouldn't need this change, right?
 
-> From: Alastair D'Silva <alastair@d-silva.org>
-> 
-> The 'extern' keyword adds no value here.
-> 
-> Signed-off-by: Alastair D'Silva <alastair@d-silva.org>
-> ---
+Hi Evan,  sorry for reply you so late. I have not got time to try
+this(Put it in the add_device), But I guess it works.
+At that time the ref_cnt here should be 1, then this patch is
+unnecessary.
 
-Reviewed-by: Greg Kurz <groug@kaod.org>
-
->  drivers/misc/ocxl/ocxl_internal.h | 54 +++++++++++++++----------------
->  include/misc/ocxl.h               | 36 ++++++++++-----------
->  2 files changed, 44 insertions(+), 46 deletions(-)
+> > >
+> >
+> > FYI, Evan the patch is queued for v5.1-rc1 as
+> > 0fe6f7874d46 ("driver core: Remove the link if there is no driver with AUTO flag")
+> >
+> > So if you think there is something wrong with it, then please provide a fix or
+> > raise awareness :)
 > 
-> diff --git a/drivers/misc/ocxl/ocxl_internal.h b/drivers/misc/ocxl/ocxl_internal.h
-> index a32f2151029f..321b29e77f45 100644
-> --- a/drivers/misc/ocxl/ocxl_internal.h
-> +++ b/drivers/misc/ocxl/ocxl_internal.h
-> @@ -16,7 +16,6 @@
->  
->  extern struct pci_driver ocxl_pci_driver;
->  
-> -
->  struct ocxl_fn {
->  	struct device dev;
->  	int bar_used[3];
-> @@ -92,41 +91,40 @@ struct ocxl_process_element {
->  	__be32 software_state;
->  };
->  
-> +struct ocxl_afu *ocxl_afu_get(struct ocxl_afu *afu);
-> +void ocxl_afu_put(struct ocxl_afu *afu);
->  
-> -extern struct ocxl_afu *ocxl_afu_get(struct ocxl_afu *afu);
-> -extern void ocxl_afu_put(struct ocxl_afu *afu);
-> -
-> -extern int ocxl_create_cdev(struct ocxl_afu *afu);
-> -extern void ocxl_destroy_cdev(struct ocxl_afu *afu);
-> -extern int ocxl_register_afu(struct ocxl_afu *afu);
-> -extern void ocxl_unregister_afu(struct ocxl_afu *afu);
-> +int ocxl_create_cdev(struct ocxl_afu *afu);
-> +void ocxl_destroy_cdev(struct ocxl_afu *afu);
-> +int ocxl_register_afu(struct ocxl_afu *afu);
-> +void ocxl_unregister_afu(struct ocxl_afu *afu);
->  
-> -extern int ocxl_file_init(void);
-> -extern void ocxl_file_exit(void);
-> +int ocxl_file_init(void);
-> +void ocxl_file_exit(void);
->  
-> -extern int ocxl_pasid_afu_alloc(struct ocxl_fn *fn, u32 size);
-> -extern void ocxl_pasid_afu_free(struct ocxl_fn *fn, u32 start, u32 size);
-> -extern int ocxl_actag_afu_alloc(struct ocxl_fn *fn, u32 size);
-> -extern void ocxl_actag_afu_free(struct ocxl_fn *fn, u32 start, u32 size);
-> +int ocxl_pasid_afu_alloc(struct ocxl_fn *fn, u32 size);
-> +void ocxl_pasid_afu_free(struct ocxl_fn *fn, u32 start, u32 size);
-> +int ocxl_actag_afu_alloc(struct ocxl_fn *fn, u32 size);
-> +void ocxl_actag_afu_free(struct ocxl_fn *fn, u32 start, u32 size);
->  
-> -extern struct ocxl_context *ocxl_context_alloc(void);
-> -extern int ocxl_context_init(struct ocxl_context *ctx, struct ocxl_afu *afu,
-> +struct ocxl_context *ocxl_context_alloc(void);
-> +int ocxl_context_init(struct ocxl_context *ctx, struct ocxl_afu *afu,
->  			struct address_space *mapping);
-> -extern int ocxl_context_attach(struct ocxl_context *ctx, u64 amr);
-> -extern int ocxl_context_mmap(struct ocxl_context *ctx,
-> +int ocxl_context_attach(struct ocxl_context *ctx, u64 amr);
-> +int ocxl_context_mmap(struct ocxl_context *ctx,
->  			struct vm_area_struct *vma);
-> -extern int ocxl_context_detach(struct ocxl_context *ctx);
-> -extern void ocxl_context_detach_all(struct ocxl_afu *afu);
-> -extern void ocxl_context_free(struct ocxl_context *ctx);
-> +int ocxl_context_detach(struct ocxl_context *ctx);
-> +void ocxl_context_detach_all(struct ocxl_afu *afu);
-> +void ocxl_context_free(struct ocxl_context *ctx);
->  
-> -extern int ocxl_sysfs_add_afu(struct ocxl_afu *afu);
-> -extern void ocxl_sysfs_remove_afu(struct ocxl_afu *afu);
-> +int ocxl_sysfs_add_afu(struct ocxl_afu *afu);
-> +void ocxl_sysfs_remove_afu(struct ocxl_afu *afu);
->  
-> -extern int ocxl_afu_irq_alloc(struct ocxl_context *ctx, u64 *irq_offset);
-> -extern int ocxl_afu_irq_free(struct ocxl_context *ctx, u64 irq_offset);
-> -extern void ocxl_afu_irq_free_all(struct ocxl_context *ctx);
-> -extern int ocxl_afu_irq_set_fd(struct ocxl_context *ctx, u64 irq_offset,
-> +int ocxl_afu_irq_alloc(struct ocxl_context *ctx, u64 *irq_offset);
-> +int ocxl_afu_irq_free(struct ocxl_context *ctx, u64 irq_offset);
-> +void ocxl_afu_irq_free_all(struct ocxl_context *ctx);
-> +int ocxl_afu_irq_set_fd(struct ocxl_context *ctx, u64 irq_offset,
->  			int eventfd);
-> -extern u64 ocxl_afu_irq_get_addr(struct ocxl_context *ctx, u64 irq_offset);
-> +u64 ocxl_afu_irq_get_addr(struct ocxl_context *ctx, u64 irq_offset);
->  
->  #endif /* _OCXL_INTERNAL_H_ */
-> diff --git a/include/misc/ocxl.h b/include/misc/ocxl.h
-> index 9ff6ddc28e22..4544573cc93c 100644
-> --- a/include/misc/ocxl.h
-> +++ b/include/misc/ocxl.h
-> @@ -53,7 +53,7 @@ struct ocxl_fn_config {
->   * Read the configuration space of a function and fill in a
->   * ocxl_fn_config structure with all the function details
->   */
-> -extern int ocxl_config_read_function(struct pci_dev *dev,
-> +int ocxl_config_read_function(struct pci_dev *dev,
->  				struct ocxl_fn_config *fn);
->  
->  /*
-> @@ -62,14 +62,14 @@ extern int ocxl_config_read_function(struct pci_dev *dev,
->   * AFU indexes can be sparse, so a driver should check all indexes up
->   * to the maximum found in the function description
->   */
-> -extern int ocxl_config_check_afu_index(struct pci_dev *dev,
-> +int ocxl_config_check_afu_index(struct pci_dev *dev,
->  				struct ocxl_fn_config *fn, int afu_idx);
->  
->  /*
->   * Read the configuration space of a function for the AFU specified by
->   * the index 'afu_idx'. Fills in a ocxl_afu_config structure
->   */
-> -extern int ocxl_config_read_afu(struct pci_dev *dev,
-> +int ocxl_config_read_afu(struct pci_dev *dev,
->  				struct ocxl_fn_config *fn,
->  				struct ocxl_afu_config *afu,
->  				u8 afu_idx);
-> @@ -77,7 +77,7 @@ extern int ocxl_config_read_afu(struct pci_dev *dev,
->  /*
->   * Get the max PASID value that can be used by the function
->   */
-> -extern int ocxl_config_get_pasid_info(struct pci_dev *dev, int *count);
-> +int ocxl_config_get_pasid_info(struct pci_dev *dev, int *count);
->  
->  /*
->   * Tell an AFU, by writing in the configuration space, the PASIDs that
-> @@ -87,7 +87,7 @@ extern int ocxl_config_get_pasid_info(struct pci_dev *dev, int *count);
->   * 'afu_control_offset' is the offset of the AFU control DVSEC which
->   * can be found in the function configuration
->   */
-> -extern void ocxl_config_set_afu_pasid(struct pci_dev *dev,
-> +void ocxl_config_set_afu_pasid(struct pci_dev *dev,
->  				int afu_control_offset,
->  				int pasid_base, u32 pasid_count_log);
->  
-> @@ -98,7 +98,7 @@ extern void ocxl_config_set_afu_pasid(struct pci_dev *dev,
->   * 'supported' is the total number of actags desired by all the AFUs
->   *             of the function.
->   */
-> -extern int ocxl_config_get_actag_info(struct pci_dev *dev,
-> +int ocxl_config_get_actag_info(struct pci_dev *dev,
->  				u16 *base, u16 *enabled, u16 *supported);
->  
->  /*
-> @@ -108,7 +108,7 @@ extern int ocxl_config_get_actag_info(struct pci_dev *dev,
->   * 'func_offset' is the offset of the Function DVSEC that can found in
->   * the function configuration
->   */
-> -extern void ocxl_config_set_actag(struct pci_dev *dev, int func_offset,
-> +void ocxl_config_set_actag(struct pci_dev *dev, int func_offset,
->  				u32 actag_base, u32 actag_count);
->  
->  /*
-> @@ -118,7 +118,7 @@ extern void ocxl_config_set_actag(struct pci_dev *dev, int func_offset,
->   * 'afu_control_offset' is the offset of the AFU control DVSEC for the
->   * desired AFU. It can be found in the AFU configuration
->   */
-> -extern void ocxl_config_set_afu_actag(struct pci_dev *dev,
-> +void ocxl_config_set_afu_actag(struct pci_dev *dev,
->  				int afu_control_offset,
->  				int actag_base, int actag_count);
->  
-> @@ -128,7 +128,7 @@ extern void ocxl_config_set_afu_actag(struct pci_dev *dev,
->   * 'afu_control_offset' is the offset of the AFU control DVSEC for the
->   * desired AFU. It can be found in the AFU configuration
->   */
-> -extern void ocxl_config_set_afu_state(struct pci_dev *dev,
-> +void ocxl_config_set_afu_state(struct pci_dev *dev,
->  				int afu_control_offset, int enable);
->  
->  /*
-> @@ -139,7 +139,7 @@ extern void ocxl_config_set_afu_state(struct pci_dev *dev,
->   * between the host and device, and set the Transaction Layer on both
->   * accordingly.
->   */
-> -extern int ocxl_config_set_TL(struct pci_dev *dev, int tl_dvsec);
-> +int ocxl_config_set_TL(struct pci_dev *dev, int tl_dvsec);
->  
->  /*
->   * Request an AFU to terminate a PASID.
-> @@ -152,7 +152,7 @@ extern int ocxl_config_set_TL(struct pci_dev *dev, int tl_dvsec);
->   * 'afu_control_offset' is the offset of the AFU control DVSEC for the
->   * desired AFU. It can be found in the AFU configuration
->   */
-> -extern int ocxl_config_terminate_pasid(struct pci_dev *dev,
-> +int ocxl_config_terminate_pasid(struct pci_dev *dev,
->  				int afu_control_offset, int pasid);
->  
->  /*
-> @@ -165,13 +165,13 @@ extern int ocxl_config_terminate_pasid(struct pci_dev *dev,
->   * Returns a 'link handle' that should be used for further calls for
->   * the link
->   */
-> -extern int ocxl_link_setup(struct pci_dev *dev, int PE_mask,
-> +int ocxl_link_setup(struct pci_dev *dev, int PE_mask,
->  			void **link_handle);
->  
->  /*
->   * Remove the association between the function and its link.
->   */
-> -extern void ocxl_link_release(struct pci_dev *dev, void *link_handle);
-> +void ocxl_link_release(struct pci_dev *dev, void *link_handle);
->  
->  /*
->   * Add a Process Element to the Shared Process Area for a link.
-> @@ -183,7 +183,7 @@ extern void ocxl_link_release(struct pci_dev *dev, void *link_handle);
->   * 'xsl_err_data' is an argument passed to the above callback, if
->   * defined
->   */
-> -extern int ocxl_link_add_pe(void *link_handle, int pasid, u32 pidr, u32 tidr,
-> +int ocxl_link_add_pe(void *link_handle, int pasid, u32 pidr, u32 tidr,
->  		u64 amr, struct mm_struct *mm,
->  		void (*xsl_err_cb)(void *data, u64 addr, u64 dsisr),
->  		void *xsl_err_data);
-> @@ -195,12 +195,12 @@ extern int ocxl_link_add_pe(void *link_handle, int pasid, u32 pidr, u32 tidr,
->   * pasid: the PASID for the AFU context
->   * tid: the new thread id for the process element
->   */
-> -extern int ocxl_link_update_pe(void *link_handle, int pasid, __u16 tid);
-> +int ocxl_link_update_pe(void *link_handle, int pasid, __u16 tid);
->  
->  /*
->   * Remove a Process Element from the Shared Process Area for a link
->   */
-> -extern int ocxl_link_remove_pe(void *link_handle, int pasid);
-> +int ocxl_link_remove_pe(void *link_handle, int pasid);
->  
->  /*
->   * Allocate an AFU interrupt associated to the link.
-> @@ -212,12 +212,12 @@ extern int ocxl_link_remove_pe(void *link_handle, int pasid);
->   * interrupt. It is an MMIO address which needs to be remapped (one
->   * page).
->   */
-> -extern int ocxl_link_irq_alloc(void *link_handle, int *hw_irq,
-> +int ocxl_link_irq_alloc(void *link_handle, int *hw_irq,
->  			u64 *obj_handle);
->  
->  /*
->   * Free a previously allocated AFU interrupt
->   */
-> -extern void ocxl_link_free_irq(void *link_handle, int hw_irq);
-> +void ocxl_link_free_irq(void *link_handle, int hw_irq);
->  
->  #endif /* _MISC_OCXL_H_ */
+> Oh. Thanks for the heads-up Matthias. It's pretty weird that we have
+> the kref there whose count we just completely ignore. I'll try to find
+> some time to submit a patch.
+
+Thanks very much if you improve this.
+
+> -Evan
+
 
