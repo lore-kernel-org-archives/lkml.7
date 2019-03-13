@@ -4,49 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1B7EDC43381
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 Mar 2019 19:32:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C159AC10F03
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 Mar 2019 19:32:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DBF3720657
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 Mar 2019 19:32:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9642B20657
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 Mar 2019 19:32:36 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1552505539;
-	bh=cDoCzvKMYVJaHbEs2UZyyXf+MUS7wuGz0oKLbeBVYNU=;
+	s=default; t=1552505556;
+	bh=mv8Xmg/kQinWCCXmWb1GB2gyOCpwrhAdqjD2MOgWSas=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=wWzfO62wjyGc5jo8Xooxrga1ww5tSgYvJON84EOZcn7OxLacJzsvtEtK3dTKvLqh/
-	 ohB1wEMT/7+23gKPqmqUL819gEOQCieOldCQmLA4FT3KWhwrAjhpN3eIQA0EXi5xuA
-	 xdzu+ofhm6ZKVJ24JLjhHgnje9p5v27BsXoPapFw=
+	b=B/JEZDLRzm1GJ4IUfIWmi2VxcGhMVsb39ULkiQ21wRXwTWmB6T8MrZVCZ/DlGz6Cc
+	 f+3YD71hl/gVCXHpzO7RckcaiqZtcqtl46/fcqi2z2AMvIXoY+KEUTLsw6iKns7eU5
+	 mErebogmbTyfuPYvEuFmzQpQ+y24jIQg9dkW5T1Q=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727722AbfCMTcS (ORCPT
+        id S1727343AbfCMTLI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 13 Mar 2019 15:32:18 -0400
-Received: from mail.kernel.org ([198.145.29.99]:41798 "EHLO mail.kernel.org"
+        Wed, 13 Mar 2019 15:11:08 -0400
+Received: from mail.kernel.org ([198.145.29.99]:41646 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727383AbfCMTLO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 13 Mar 2019 15:11:14 -0400
+        id S1727284AbfCMTLF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 13 Mar 2019 15:11:05 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 567112173C;
-        Wed, 13 Mar 2019 19:11:12 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 369502173C;
+        Wed, 13 Mar 2019 19:11:03 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1552504273;
-        bh=cDoCzvKMYVJaHbEs2UZyyXf+MUS7wuGz0oKLbeBVYNU=;
+        s=default; t=1552504264;
+        bh=mv8Xmg/kQinWCCXmWb1GB2gyOCpwrhAdqjD2MOgWSas=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=sMeLt5E3yfN9sNkpyGTPrBMMvaJYsEsu5OSLr6GYjhpccluR/qHb1/OnyzA0Qgxg0
-         1BrUP4hV2vNSJpGGiWXh7OV9MX7wmCYCJT87/QrMQwWkxjbndeilc9nP4ehgag6FX+
-         gpklPdIbyVMB8Z46QRA9RFn4lvy/kLogDQr5x+J8=
+        b=Pb04sNMVA9g4cTE/G+7o7NdZHPT4hq1z8A8U2AOhh5vfTRa8aAdPfBxNgmPdxsrIA
+         0HPR0NaaZoG9WkreowPHZeQsTklxhZaFNPOcAsZfCHe2TANWC0eoc03uSM+a8YJ5HK
+         UjJFuA3jbiZ1hEYNiYTDSknnfwYTNFWGSA1QkXes=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Michal Kalderon <michal.kalderon@marvell.com>,
-        Ariel Elior <ariel.elior@marvell.com>,
-        "David S . Miller" <davem@davemloft.net>,
+Cc:     Tobias Brunner <tobias@strongswan.org>,
+        Steffen Klassert <steffen.klassert@secunet.com>,
         Sasha Levin <sashal@kernel.org>, netdev@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.20 25/60] qed: Fix iWARP buffer size provided for syn packet processing.
-Date:   Wed, 13 Mar 2019 15:09:46 -0400
-Message-Id: <20190313191021.158171-25-sashal@kernel.org>
+Subject: [PATCH AUTOSEL 4.20 20/60] xfrm: Fix inbound traffic via XFRM interfaces across network namespaces
+Date:   Wed, 13 Mar 2019 15:09:41 -0400
+Message-Id: <20190313191021.158171-20-sashal@kernel.org>
 X-Mailer: git-send-email 2.19.1
 In-Reply-To: <20190313191021.158171-1-sashal@kernel.org>
 References: <20190313191021.158171-1-sashal@kernel.org>
@@ -58,90 +58,64 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Michal Kalderon <michal.kalderon@marvell.com>
+From: Tobias Brunner <tobias@strongswan.org>
 
-[ Upstream commit 9addc92730df55e2c05e8d3f69267a89d65bcba8 ]
+[ Upstream commit 660899ddf06ae8bb5bbbd0a19418b739375430c5 ]
 
-The assumption that the maximum size of a syn packet is 128 bytes
-is wrong. Tunneling headers were not accounted for.
-Allocate buffers large enough for mtu.
+After moving an XFRM interface to another namespace it stays associated
+with the original namespace (net in `struct xfrm_if` and the list keyed
+with `xfrmi_net_id`), allowing processes in the new namespace to use
+SAs/policies that were created in the original namespace.  For instance,
+this allows a keying daemon in one namespace to establish IPsec SAs for
+other namespaces without processes there having access to the keys or IKE
+credentials.
 
-Signed-off-by: Ariel Elior <ariel.elior@marvell.com>
-Signed-off-by: Michal Kalderon <michal.kalderon@marvell.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
+This worked fine for outbound traffic, however, for inbound traffic the
+lookup for the interfaces and the policies used the incorrect namespace
+(the one the XFRM interface was moved to).
+
+Fixes: f203b76d7809 ("xfrm: Add virtual xfrm interfaces")
+Signed-off-by: Tobias Brunner <tobias@strongswan.org>
+Signed-off-by: Steffen Klassert <steffen.klassert@secunet.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/ethernet/qlogic/qed/qed_iwarp.c | 12 ++++++------
- drivers/net/ethernet/qlogic/qed/qed_iwarp.h |  1 -
- 2 files changed, 6 insertions(+), 7 deletions(-)
+ net/xfrm/xfrm_interface.c | 4 ++--
+ net/xfrm/xfrm_policy.c    | 4 +++-
+ 2 files changed, 5 insertions(+), 3 deletions(-)
 
-diff --git a/drivers/net/ethernet/qlogic/qed/qed_iwarp.c b/drivers/net/ethernet/qlogic/qed/qed_iwarp.c
-index beb8e5d6401a..e84fb01b91fd 100644
---- a/drivers/net/ethernet/qlogic/qed/qed_iwarp.c
-+++ b/drivers/net/ethernet/qlogic/qed/qed_iwarp.c
-@@ -2605,7 +2605,7 @@ qed_iwarp_ll2_start(struct qed_hwfn *p_hwfn,
- 	struct qed_iwarp_info *iwarp_info;
- 	struct qed_ll2_acquire_data data;
- 	struct qed_ll2_cbs cbs;
--	u32 mpa_buff_size;
-+	u32 buff_size;
- 	u16 n_ooo_bufs;
- 	int rc = 0;
- 	int i;
-@@ -2632,7 +2632,7 @@ qed_iwarp_ll2_start(struct qed_hwfn *p_hwfn,
+diff --git a/net/xfrm/xfrm_interface.c b/net/xfrm/xfrm_interface.c
+index d679fa0f44b3..fcf3c714f4ff 100644
+--- a/net/xfrm/xfrm_interface.c
++++ b/net/xfrm/xfrm_interface.c
+@@ -76,10 +76,10 @@ static struct xfrm_if *xfrmi_decode_session(struct sk_buff *skb)
+ 	int ifindex;
+ 	struct xfrm_if *xi;
  
- 	memset(&data, 0, sizeof(data));
- 	data.input.conn_type = QED_LL2_TYPE_IWARP;
--	data.input.mtu = QED_IWARP_MAX_SYN_PKT_SIZE;
-+	data.input.mtu = params->max_mtu;
- 	data.input.rx_num_desc = QED_IWARP_LL2_SYN_RX_SIZE;
- 	data.input.tx_num_desc = QED_IWARP_LL2_SYN_TX_SIZE;
- 	data.input.tx_max_bds_per_packet = 1;	/* will never be fragmented */
-@@ -2654,9 +2654,10 @@ qed_iwarp_ll2_start(struct qed_hwfn *p_hwfn,
- 		goto err;
+-	if (!skb->dev)
++	if (!secpath_exists(skb) || !skb->dev)
+ 		return NULL;
+ 
+-	xfrmn = net_generic(dev_net(skb->dev), xfrmi_net_id);
++	xfrmn = net_generic(xs_net(xfrm_input_state(skb)), xfrmi_net_id);
+ 	ifindex = skb->dev->ifindex;
+ 
+ 	for_each_xfrmi_rcu(xfrmn->xfrmi[0], xi) {
+diff --git a/net/xfrm/xfrm_policy.c b/net/xfrm/xfrm_policy.c
+index 6ea8036fcdbe..bf5d59270f79 100644
+--- a/net/xfrm/xfrm_policy.c
++++ b/net/xfrm/xfrm_policy.c
+@@ -2340,8 +2340,10 @@ int __xfrm_policy_check(struct sock *sk, int dir, struct sk_buff *skb,
+ 
+ 	if (ifcb) {
+ 		xi = ifcb->decode_session(skb);
+-		if (xi)
++		if (xi) {
+ 			if_id = xi->p.if_id;
++			net = xi->net;
++		}
  	}
+ 	rcu_read_unlock();
  
-+	buff_size = QED_IWARP_MAX_BUF_SIZE(params->max_mtu);
- 	rc = qed_iwarp_ll2_alloc_buffers(p_hwfn,
- 					 QED_IWARP_LL2_SYN_RX_SIZE,
--					 QED_IWARP_MAX_SYN_PKT_SIZE,
-+					 buff_size,
- 					 iwarp_info->ll2_syn_handle);
- 	if (rc)
- 		goto err;
-@@ -2710,10 +2711,9 @@ qed_iwarp_ll2_start(struct qed_hwfn *p_hwfn,
- 	if (rc)
- 		goto err;
- 
--	mpa_buff_size = QED_IWARP_MAX_BUF_SIZE(params->max_mtu);
- 	rc = qed_iwarp_ll2_alloc_buffers(p_hwfn,
- 					 data.input.rx_num_desc,
--					 mpa_buff_size,
-+					 buff_size,
- 					 iwarp_info->ll2_mpa_handle);
- 	if (rc)
- 		goto err;
-@@ -2726,7 +2726,7 @@ qed_iwarp_ll2_start(struct qed_hwfn *p_hwfn,
- 
- 	iwarp_info->max_num_partial_fpdus = (u16)p_hwfn->p_rdma_info->num_qps;
- 
--	iwarp_info->mpa_intermediate_buf = kzalloc(mpa_buff_size, GFP_KERNEL);
-+	iwarp_info->mpa_intermediate_buf = kzalloc(buff_size, GFP_KERNEL);
- 	if (!iwarp_info->mpa_intermediate_buf)
- 		goto err;
- 
-diff --git a/drivers/net/ethernet/qlogic/qed/qed_iwarp.h b/drivers/net/ethernet/qlogic/qed/qed_iwarp.h
-index b8f612d00241..7ac959038324 100644
---- a/drivers/net/ethernet/qlogic/qed/qed_iwarp.h
-+++ b/drivers/net/ethernet/qlogic/qed/qed_iwarp.h
-@@ -46,7 +46,6 @@ enum qed_iwarp_qp_state qed_roce2iwarp_state(enum qed_roce_qp_state state);
- 
- #define QED_IWARP_LL2_SYN_TX_SIZE       (128)
- #define QED_IWARP_LL2_SYN_RX_SIZE       (256)
--#define QED_IWARP_MAX_SYN_PKT_SIZE      (128)
- 
- #define QED_IWARP_LL2_OOO_DEF_TX_SIZE   (256)
- #define QED_IWARP_MAX_OOO		(16)
 -- 
 2.19.1
 
