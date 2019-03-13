@@ -4,64 +4,64 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-12.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED autolearn=ham
-	autolearn_force=no version=3.4.0
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_PASS autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8D9DDC43381
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 Mar 2019 15:38:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E82D6C4360F
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 Mar 2019 15:39:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5CEB52177E
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 Mar 2019 15:38:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B6DBD206DF
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 Mar 2019 15:39:06 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1552491535;
-	bh=iKPbDtV2ehekjU9FuKSCg2EQ6eqNnVdLo/DiPYX5xOU=;
+	s=default; t=1552491546;
+	bh=wPtCKCMhCQ/Eyhh/9zkkUwa2ahTKJz+xvyI0JuaeucQ=;
 	h=From:To:Cc:Subject:In-Reply-To:Date:List-ID:From;
-	b=IqUWtVqYEIDnBSXXrfEwuMqg7PiVkZu+D0YFnJjQZCh+E652lYAp1s/pRGvWkYM8i
-	 Teic1547GgHTR1SgysNNc8I/BYt2+o1FkDxr/mmMMZItql+IaVZbL5W1uV8yH78WTF
-	 WCu+uerhJ67tz6MDiGVLaFTjkbS//ZZxNT7q+qbo=
+	b=FU23ojM+2w2hrSHzpa9GuICq55f9GpGnQn47UpKjV410cOiUg3Tra5D9zHLzROvMe
+	 DZaSvtp5yysaTCeSu/h4FrdShv2O/tD16gHR91KItIfArtLJTbdgQO1SIS4BM7ogrP
+	 ZTZzpRU01LB2x9fMXDxvZ1haAXEe+7irNWyu7ed0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726606AbfCMPix (ORCPT
+        id S1726833AbfCMPjF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 13 Mar 2019 11:38:53 -0400
-Received: from heliosphere.sirena.org.uk ([172.104.155.198]:49244 "EHLO
+        Wed, 13 Mar 2019 11:39:05 -0400
+Received: from heliosphere.sirena.org.uk ([172.104.155.198]:49616 "EHLO
         heliosphere.sirena.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725876AbfCMPiv (ORCPT
+        with ESMTP id S1726688AbfCMPjA (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 13 Mar 2019 11:38:51 -0400
+        Wed, 13 Mar 2019 11:39:00 -0400
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
         d=sirena.org.uk; s=20170815-heliosphere; h=Date:Message-Id:In-Reply-To:
         Subject:Cc:To:From:Sender:Reply-To:MIME-Version:Content-Type:
         Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
         Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:References:
         List-Id:List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:
-        List-Archive; bh=Lnj13rR0ecnnQ8FeiqxHVUJkOqCrxg3GN407eFSZnH4=; b=McvgXiK8KURP
-        w/m4iIQZvEIQ8trBHbc9ukMyZcCuEVsWfjYyJx78+EmIrQiF9tsQVQg3t3BRu+uGtURdwePycRlH7
-        UaKDB2iIQGSTn9HwCKxDNwtHHwcpYK6YX1xcovEBgtZJd0r8ZrTKVfY5jKktM9rpcWuZ/5tnlyWdI
-        bgsMU=;
+        List-Archive; bh=IyZ1aIEkaAhiOlWzkTbi3AeQ3U09TOy2g7vmarIUVNM=; b=ov1uhR2YZHBh
+        8Z3t+sVIeJNF+ZlLvM+fRxNeGzBzK2jkMhb1t4zhDp4OVWL5bZSKCR8SJZeVE0glRZOtKZSoCgk3E
+        kL7iSyA2i1Vianys+yVEnWdAVMm79KVIF3OS+gJKmm5b0sAfq3LIbcqo40Ychw5U9//DTQbW3l5pM
+        AOteU=;
 Received: from cpc102320-sgyl38-2-0-cust46.18-2.cable.virginm.net ([82.37.168.47] helo=debutante.sirena.org.uk)
         by heliosphere.sirena.org.uk with esmtpa (Exim 4.89)
         (envelope-from <broonie@sirena.org.uk>)
-        id 1h45xs-0003QR-P0; Wed, 13 Mar 2019 15:38:44 +0000
+        id 1h45y1-0003RE-BW; Wed, 13 Mar 2019 15:38:53 +0000
 Received: by debutante.sirena.org.uk (Postfix, from userid 1000)
-        id 311A31128B98; Wed, 13 Mar 2019 15:38:44 +0000 (GMT)
+        id DF31C1128B97; Wed, 13 Mar 2019 15:38:52 +0000 (GMT)
 From:   Mark Brown <broonie@kernel.org>
 To:     Arnd Bergmann <arnd@arndb.de>
-Cc:     Peter Ujfalusi <peter.ujfalusi@ti.com>,
+Cc:     Cheng-Yi Chiang <cychiang@chromium.org>,
         Mark Brown <broonie@kernel.org>,
+        Patrick Lai <plai@codeaurora.org>,
+        Banajit Goswami <bgoswami@codeaurora.org>,
         Mark Brown <broonie@kernel.org>, alsa-devel@alsa-project.org,
-        Tony Lindgren <tony@atomide.com>,
+        linux-kernel@vger.kernel.org, Takashi Iwai <tiwai@suse.com>,
         Liam Girdwood <lgirdwood@gmail.com>,
-        linux-kernel@vger.kernel.org,
-        Peter Ujfalusi <peter.ujfalusi@ti.com>,
-        Vinod Koul <vkoul@kernel.org>, dmaengine@vger.kernel.org,
-        linux-omap@vger.kernel.org,
-        Jarkko Nikula <jarkko.nikula@bitmer.com>,
+        Rohit kumar <rohitkr@codeaurora.org>,
+        Srinivas Kandagatla <srinivas.kandagatla@linaro.org>,
+        Cheng-Yi Chiang <cychiang@chromium.org>,
         alsa-devel@alsa-project.org
-Subject: Applied "ASoC: ti: remove compat dma probing" to the asoc tree
-In-Reply-To:  <20190307151646.1016966-1-arnd@arndb.de>
+Subject: Applied "ASoC: qcom: add i2c dependency for SND_SOC_SDM845" to the asoc tree
+In-Reply-To:  <20190304203114.1894822-3-arnd@arndb.de>
 X-Patchwork-Hint: ignore
-Message-Id: <20190313153844.311A31128B98@debutante.sirena.org.uk>
-Date:   Wed, 13 Mar 2019 15:38:44 +0000 (GMT)
+Message-Id: <20190313153852.DF31C1128B97@debutante.sirena.org.uk>
+Date:   Wed, 13 Mar 2019 15:38:52 +0000 (GMT)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
@@ -69,7 +69,7 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 The patch
 
-   ASoC: ti: remove compat dma probing
+   ASoC: qcom: add i2c dependency for SND_SOC_SDM845
 
 has been applied to the asoc tree at
 
@@ -94,101 +94,39 @@ to this mail.
 Thanks,
 Mark
 
-From 642aafea8889b712fe8e57aaa706d6c05d295059 Mon Sep 17 00:00:00 2001
+From 686174a0989b1c33698b26523a1e4ccdcc84cf22 Mon Sep 17 00:00:00 2001
 From: Arnd Bergmann <arnd@arndb.de>
-Date: Thu, 7 Mar 2019 16:16:08 +0100
-Subject: [PATCH] ASoC: ti: remove compat dma probing
+Date: Mon, 4 Mar 2019 21:30:52 +0100
+Subject: [PATCH] ASoC: qcom: add i2c dependency for SND_SOC_SDM845
 
-After running into a link error:
+We must not select SND_SOC_MAX98927 unless CONFIG_I2C
+is also enabled:
 
-sound/soc/ti/edma-pcm.o:(.rodata+0x18): undefined reference to `edma_filter_fn'
+WARNING: unmet direct dependencies detected for SND_SOC_MAX98927
+  Depends on [n]: SOUND [=y] && !UML && SND [=y] && SND_SOC [=y] && I2C [=n]
+  Selected by [y]:
+  - SND_SOC_SDM845 [=y] && SOUND [=y] && !UML && SND [=y] && SND_SOC [=y] && QCOM_APR [=y] && MFD_CROS_EC [=y]
 
-I checked all users of this, and they have new-style 'dma_slave_map' tables,
-so none of them should still need it. Removing the associated lines
-simplifies the code and avoids the build-time dependency on the
-respective dmaengine drivers.
-
-Acked-by: Peter Ujfalusi <peter.ujfalusi@ti.com>
 Signed-off-by: Arnd Bergmann <arnd@arndb.de>
+Acked-by: Cheng-Yi Chiang <cychiang@chromium.org>
 Signed-off-by: Mark Brown <broonie@kernel.org>
 ---
- sound/soc/ti/edma-pcm.c | 5 +----
- sound/soc/ti/sdma-pcm.c | 9 +++------
- 2 files changed, 4 insertions(+), 10 deletions(-)
+ sound/soc/qcom/Kconfig | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/sound/soc/ti/edma-pcm.c b/sound/soc/ti/edma-pcm.c
-index 59e588abe54b..fdffb801b185 100644
---- a/sound/soc/ti/edma-pcm.c
-+++ b/sound/soc/ti/edma-pcm.c
-@@ -23,7 +23,6 @@
- #include <sound/pcm_params.h>
- #include <sound/soc.h>
- #include <sound/dmaengine_pcm.h>
--#include <linux/edma.h>
+diff --git a/sound/soc/qcom/Kconfig b/sound/soc/qcom/Kconfig
+index 75ceb04d8bf0..b1764af858ba 100644
+--- a/sound/soc/qcom/Kconfig
++++ b/sound/soc/qcom/Kconfig
+@@ -98,7 +98,7 @@ config SND_SOC_MSM8996
  
- #include "edma-pcm.h"
- 
-@@ -43,14 +42,12 @@ static const struct snd_pcm_hardware edma_pcm_hardware = {
- static const struct snd_dmaengine_pcm_config edma_dmaengine_pcm_config = {
- 	.pcm_hardware = &edma_pcm_hardware,
- 	.prepare_slave_config = snd_dmaengine_pcm_prepare_slave_config,
--	.compat_filter_fn = edma_filter_fn,
- 	.prealloc_buffer_size = 128 * 1024,
- };
- 
- int edma_pcm_platform_register(struct device *dev)
- {
--	return devm_snd_dmaengine_pcm_register(dev, &edma_dmaengine_pcm_config,
--					SND_DMAENGINE_PCM_FLAG_COMPAT);
-+	return devm_snd_dmaengine_pcm_register(dev, &edma_dmaengine_pcm_config, 0);
- }
- EXPORT_SYMBOL_GPL(edma_pcm_platform_register);
- 
-diff --git a/sound/soc/ti/sdma-pcm.c b/sound/soc/ti/sdma-pcm.c
-index 21a9c2499d48..a236350beb10 100644
---- a/sound/soc/ti/sdma-pcm.c
-+++ b/sound/soc/ti/sdma-pcm.c
-@@ -11,7 +11,6 @@
- #include <sound/pcm_params.h>
- #include <sound/soc.h>
- #include <sound/dmaengine_pcm.h>
--#include <linux/omap-dmaengine.h>
- 
- #include "sdma-pcm.h"
- 
-@@ -31,7 +30,6 @@ static const struct snd_pcm_hardware sdma_pcm_hardware = {
- static const struct snd_dmaengine_pcm_config sdma_dmaengine_pcm_config = {
- 	.pcm_hardware = &sdma_pcm_hardware,
- 	.prepare_slave_config = snd_dmaengine_pcm_prepare_slave_config,
--	.compat_filter_fn = omap_dma_filter_fn,
- 	.prealloc_buffer_size = 128 * 1024,
- };
- 
-@@ -39,13 +37,12 @@ int sdma_pcm_platform_register(struct device *dev,
- 			       char *txdmachan, char *rxdmachan)
- {
- 	struct snd_dmaengine_pcm_config *config;
--	unsigned int flags = SND_DMAENGINE_PCM_FLAG_COMPAT;
-+	unsigned int flags = 0;
- 
- 	/* Standard names for the directions: 'tx' and 'rx' */
- 	if (!txdmachan && !rxdmachan)
- 		return devm_snd_dmaengine_pcm_register(dev,
--						&sdma_dmaengine_pcm_config,
--						flags);
-+						&sdma_dmaengine_pcm_config, 0);
- 
- 	config = devm_kzalloc(dev, sizeof(*config), GFP_KERNEL);
- 	if (!config)
-@@ -65,7 +62,7 @@ int sdma_pcm_platform_register(struct device *dev,
- 	config->chan_names[0] = txdmachan;
- 	config->chan_names[1] = rxdmachan;
- 
--	return devm_snd_dmaengine_pcm_register(dev, config, flags);
-+	return devm_snd_dmaengine_pcm_register(dev, config, 0);
- }
- EXPORT_SYMBOL_GPL(sdma_pcm_platform_register);
- 
+ config SND_SOC_SDM845
+ 	tristate "SoC Machine driver for SDM845 boards"
+-	depends on QCOM_APR && MFD_CROS_EC
++	depends on QCOM_APR && MFD_CROS_EC && I2C
+ 	select SND_SOC_QDSP6
+ 	select SND_SOC_QCOM_COMMON
+ 	select SND_SOC_RT5663
 -- 
 2.20.1
 
