@@ -7,37 +7,37 @@ X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 75B40C43381
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9B38EC10F03
 	for <linux-kernel@archiver.kernel.org>; Wed, 13 Mar 2019 21:46:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 25D3C2177E
+	by mail.kernel.org (Postfix) with ESMTP id 67B1E217F5
 	for <linux-kernel@archiver.kernel.org>; Wed, 13 Mar 2019 21:46:12 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="GW+iWdnE"
+	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="RHmLd9bv"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727577AbfCMVqB (ORCPT
+        id S1727622AbfCMVqH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 13 Mar 2019 17:46:01 -0400
-Received: from hqemgate15.nvidia.com ([216.228.121.64]:19118 "EHLO
+        Wed, 13 Mar 2019 17:46:07 -0400
+Received: from hqemgate15.nvidia.com ([216.228.121.64]:19143 "EHLO
         hqemgate15.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727501AbfCMVp7 (ORCPT
+        with ESMTP id S1727586AbfCMVqD (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 13 Mar 2019 17:45:59 -0400
+        Wed, 13 Mar 2019 17:46:03 -0400
 Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqemgate15.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
-        id <B5c897a080000>; Wed, 13 Mar 2019 14:45:45 -0700
+        id <B5c897a0d0000>; Wed, 13 Mar 2019 14:45:49 -0700
 Received: from hqmail.nvidia.com ([172.20.161.6])
   by hqpgpgate101.nvidia.com (PGP Universal service);
-  Wed, 13 Mar 2019 14:45:57 -0700
+  Wed, 13 Mar 2019 14:46:01 -0700
 X-PGP-Universal: processed;
-        by hqpgpgate101.nvidia.com on Wed, 13 Mar 2019 14:45:57 -0700
-Received: from HQMAIL103.nvidia.com (172.20.187.11) by HQMAIL103.nvidia.com
- (172.20.187.11) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Wed, 13 Mar
- 2019 21:45:56 +0000
-Received: from hqnvemgw02.nvidia.com (172.16.227.111) by HQMAIL103.nvidia.com
- (172.20.187.11) with Microsoft SMTP Server (TLS) id 15.0.1473.3 via Frontend
- Transport; Wed, 13 Mar 2019 21:45:56 +0000
+        by hqpgpgate101.nvidia.com on Wed, 13 Mar 2019 14:46:01 -0700
+Received: from HQMAIL104.nvidia.com (172.18.146.11) by HQMAIL108.nvidia.com
+ (172.18.146.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Wed, 13 Mar
+ 2019 21:46:01 +0000
+Received: from hqnvemgw02.nvidia.com (172.16.227.111) by HQMAIL104.nvidia.com
+ (172.18.146.11) with Microsoft SMTP Server (TLS) id 15.0.1473.3 via Frontend
+ Transport; Wed, 13 Mar 2019 21:46:01 +0000
 Received: from skomatineni-linux.nvidia.com (Not Verified[10.110.103.74]) by hqnvemgw02.nvidia.com with Trustwave SEG (v7,5,8,10121)
-        id <B5c897a140000>; Wed, 13 Mar 2019 14:45:56 -0700
+        id <B5c897a190000>; Wed, 13 Mar 2019 14:46:01 -0700
 From:   Sowjanya Komatineni <skomatineni@nvidia.com>
 To:     <adrian.hunter@intel.com>, <ulf.hansson@linaro.org>,
         <robh+dt@kernel.org>, <mark.rutland@arm.com>,
@@ -46,9 +46,9 @@ CC:     <skomatineni@nvidia.com>, <thierry.reding@gmail.com>,
         <jonathanh@nvidia.com>, <anrao@nvidia.com>,
         <linux-tegra@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
         <linux-mmc@vger.kernel.org>, <devicetree@vger.kernel.org>
-Subject: [PATCH V3 03/10] mmc: tegra: update hw tuning process
-Date:   Wed, 13 Mar 2019 14:45:45 -0700
-Message-ID: <1552513552-23423-3-git-send-email-skomatineni@nvidia.com>
+Subject: [PATCH V3 09/10] mmc: tegra: fix CQE enable and resume sequence
+Date:   Wed, 13 Mar 2019 14:45:51 -0700
+Message-ID: <1552513552-23423-9-git-send-email-skomatineni@nvidia.com>
 X-Mailer: git-send-email 2.7.4
 In-Reply-To: <1552513552-23423-1-git-send-email-skomatineni@nvidia.com>
 References: <1552513552-23423-1-git-send-email-skomatineni@nvidia.com>
@@ -56,387 +56,146 @@ X-NVConfidentiality: public
 MIME-Version: 1.0
 Content-Type: text/plain
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
-        t=1552513545; bh=LAabiUSvh2LcbCYOoVNC2GRN1XL5TaQgZbKNl3K5mus=;
+        t=1552513550; bh=DguQa0ntN9xE9Z540e0bu31/uO1/gabW7rA3OEYVaGk=;
         h=X-PGP-Universal:From:To:CC:Subject:Date:Message-ID:X-Mailer:
          In-Reply-To:References:X-NVConfidentiality:MIME-Version:
          Content-Type;
-        b=GW+iWdnE4kVvh/Mm3pWouGSIsq/FL4uFaABf1zb5WIYvnRErrpAFU14FTgv20qQt6
-         gDufC7KxMXC6q/bkER9IzSRC7j1CCdfcOwFLXeaSt8X63IIX0SwBg5gMyFCaRbw9Y6
-         j6IqMcICLq8+U8oeXwh0fBp5qOUirooLFdqHzmYS/YuHJdD3FgfzhORFimpcEBOVLO
-         YOhhhZT/t/PI23yOQKizulTFohJUFGASBQO23NmRO8DEPLvOed7RS+6Oav3YlWdEJf
-         DZwDc53q5BKwH0YyyIFzKV+jL9IRO8snJ7ISD56xjb4YqCASBdmXRRGecyUDTqs6jg
-         ICM0juRq9YJ8Q==
+        b=RHmLd9bvwACB4Ht4fksECbDkCRmhoKz/fs//dH1NmwOk0y/j2lHLc7hg6YIc5Y6Pb
+         M5eJe2bPJysRluhQzNEGvRS3O6Ihsnn8Jrhph2G6BpTqDNJUplc9l4Mc8rmuRacGdm
+         oAng6upvJVmq67VP7XN53rxF8B+o1zqe/qoQTExnT4cARLFN3Yp9pQMNaWffcg9xfK
+         7PnO3facpAm+rhWt79GvTpuCwLb6QOaoGA7qnqZ3fAv47XqKXmCVF1vkziBj9Caqom
+         aQJ7AczPVpdy93me6TH2s6Qg94BAefKyrS3dWMwzUareBrUssxGaxMqSfxHlr4wY0b
+         nJ/Jr0kHUB0dg==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This patch includes below HW tuning related fixes.
-    configures tuning parameters as per Tegra TRM
-    WAR fix for manual tap change
-    HW auto-tuning post process
+Tegra CQHCI/SDHCI design prevents write access to SDHCI block size
+register when CQE is enabled and unhalted.
 
-As per Tegra TRM, SDR50 mode tuning execution takes upto maximum
-of 256 tuning iterations and SDR104/HS200/HS400 modes tuning
-execution takes upto maximum of 128 tuning iterations.
+CQHCI driver enables CQE prior to invoking sdhci_cqe_enable which
+violates this Tegra specific host requirement.
 
-This patch programs tuning control register with maximum tuning
-iterations needed based on the timing along with the start tap,
-multiplier, and step size used by the HW tuning.
+This patch fixes this by configuring sdhci block registers prior
+to CQE unhalt.
 
-Tegra210 has a known issue of glitch on trimmer output when the
-tap value is changed with the trimmer input clock running and the
-WAR is to disable card clock before sending tuning command and
-after sending tuning command wait for 1usec and issue SW reset
-followed by enabling card clock.
+This patch also has a fix for retry of unhalt due to known Tegra
+specific CQE resume bug where first unhalt might not succeed when
+clear all tasks is performed prior to resume and need a second unhalt.
 
-This WAR is applicable when changing tap value manually as well.
-Tegra SDHCI driver has this implemented correctly for manual tap
-change but missing SW reset before enabling card clock during
-sending tuning command.
-
-Issuing SW reset during tuning command as a part of WAR and is
-applicable in cases where tuning is performed with single step size
-for more iterations. This patch includes this fix.
-
-HW auto-tuning finds the best largest passing window and sets the
-tap at the middle of the window. With some devices like sandisk
-eMMC driving fast edges and due to high tap to tap delay in the
-Tegra chipset, auto-tuning does not detect falling tap between the
-valid windows resulting in a parital window or a merged window and
-the best tap is set at the signal transition which is actually the
-worst tap location.
-
-Recommended SW solution is to detect if the best passing window
-picked by the HW tuning is a partial or a merged window based on
-min and max tap delays found from chip characterization across
-PVT and perform tuning correction to pick the best tap.
-
-This patch has implementation of this post HW tuning process for
-the tegra hosts that support HW tuning through the callback function
-tegra_sdhci_execute_hw_tuning and uses the tuned tap delay.
+This patch also includes CQE enable fix for CMD CRC errors that
+happen with the specific sandisk emmc device when status command
+is sent during the transfer of last data block due to marginal timing.
 
 Tested-by: Jon Hunter <jonathanh@nvidia.com>
+Acked-by: Adrian Hunter <adrian.hunter@intel.com>
 Signed-off-by: Sowjanya Komatineni <skomatineni@nvidia.com>
 ---
- drivers/mmc/host/sdhci-tegra.c | 216 ++++++++++++++++++++++++++++++++++++++++-
- 1 file changed, 215 insertions(+), 1 deletion(-)
+ drivers/mmc/host/sdhci-tegra.c | 72 ++++++++++++++++++++++++++++++++++++------
+ 1 file changed, 62 insertions(+), 10 deletions(-)
 
 diff --git a/drivers/mmc/host/sdhci-tegra.c b/drivers/mmc/host/sdhci-tegra.c
-index 46086dd43bfb..f1aa0591112a 100644
+index 2f08b6e480df..eafaaefab4a6 100644
 --- a/drivers/mmc/host/sdhci-tegra.c
 +++ b/drivers/mmc/host/sdhci-tegra.c
-@@ -66,6 +66,22 @@
- 
- #define SDHCI_VNDR_TUN_CTRL0_0				0x1c0
- #define SDHCI_VNDR_TUN_CTRL0_TUN_HW_TAP			0x20000
-+#define SDHCI_VNDR_TUN_CTRL0_START_TAP_VAL_MASK		0x03fc0000
-+#define SDHCI_VNDR_TUN_CTRL0_START_TAP_VAL_SHIFT	18
-+#define SDHCI_VNDR_TUN_CTRL0_MUL_M_MASK			0x00001fc0
-+#define SDHCI_VNDR_TUN_CTRL0_MUL_M_SHIFT		6
-+#define SDHCI_VNDR_TUN_CTRL0_TUN_ITER_MASK		0x000e000
-+#define SDHCI_VNDR_TUN_CTRL0_TUN_ITER_SHIFT		13
-+#define TRIES_128					2
-+#define TRIES_256					4
-+#define SDHCI_VNDR_TUN_CTRL0_TUN_WORD_SEL_MASK		0x7
-+
-+#define SDHCI_TEGRA_VNDR_TUN_CTRL1_0			0x1c4
-+#define SDHCI_TEGRA_VNDR_TUN_STATUS0			0x1C8
-+#define SDHCI_TEGRA_VNDR_TUN_STATUS1			0x1CC
-+#define SDHCI_TEGRA_VNDR_TUN_STATUS1_TAP_MASK		0xFF
-+#define SDHCI_TEGRA_VNDR_TUN_STATUS1_END_TAP_SHIFT	0x8
-+#define TUNING_WORD_BIT_SIZE				32
- 
- #define SDHCI_TEGRA_AUTO_CAL_CONFIG			0x1e4
- #define SDHCI_AUTO_CAL_START				BIT(31)
-@@ -97,6 +113,8 @@
- struct sdhci_tegra_soc_data {
- 	const struct sdhci_pltfm_data *pdata;
- 	u32 nvquirks;
-+	u8 min_tap_delay;
-+	u8 max_tap_delay;
- };
- 
- /* Magic pull up and pull down pad calibration offsets */
-@@ -136,6 +154,8 @@ struct sdhci_tegra {
- 	u32 default_trim;
- 	u32 dqs_trim;
- 	bool enable_hwcq;
-+	unsigned long curr_clk_rate;
-+	u8 tuned_tap_delay;
- };
- 
- static u16 tegra_sdhci_readw(struct sdhci_host *host, int reg)
-@@ -241,6 +261,7 @@ static void tegra210_sdhci_writew(struct sdhci_host *host, u16 val, int reg)
- 
- 	if (is_tuning_cmd) {
- 		udelay(1);
-+		sdhci_reset(host, SDHCI_RESET_CMD | SDHCI_RESET_DATA);
- 		tegra_sdhci_configure_card_clk(host, clk_enabled);
- 	}
- }
-@@ -722,6 +743,7 @@ static void tegra_sdhci_set_clock(struct sdhci_host *host, unsigned int clock)
- 	 */
- 	host_clk = tegra_host->ddr_signaling ? clock * 2 : clock;
- 	clk_set_rate(pltfm_host->clk, host_clk);
-+	tegra_host->curr_clk_rate = host_clk;
- 	if (tegra_host->ddr_signaling)
- 		host->max_clk = host_clk;
- 	else
-@@ -770,6 +792,159 @@ static void tegra_sdhci_hs400_dll_cal(struct sdhci_host *host)
- 			"HS400 delay line calibration timed out\n");
+@@ -1124,6 +1124,43 @@ static void tegra_sdhci_voltage_switch(struct sdhci_host *host)
+ 		tegra_host->pad_calib_required = true;
  }
  
-+static void tegra_sdhci_tap_correction(struct sdhci_host *host, u8 thd_up,
-+				       u8 thd_low, u8 fixed_tap)
++static void tegra_cqhci_writel(struct cqhci_host *cq_host, u32 val, int reg)
 +{
-+	struct sdhci_pltfm_host *pltfm_host = sdhci_priv(host);
-+	struct sdhci_tegra *tegra_host = sdhci_pltfm_priv(pltfm_host);
-+	u32 val, tun_status;
-+	u8 word, bit, edge1, tap, window;
-+	bool tap_result;
-+	bool start_fail = false;
-+	bool start_pass = false;
-+	bool end_pass = false;
-+	bool first_fail = false;
-+	bool first_pass = false;
-+	u8 start_pass_tap = 0;
-+	u8 end_pass_tap = 0;
-+	u8 first_fail_tap = 0;
-+	u8 first_pass_tap = 0;
-+	u8 total_tuning_words = host->tuning_loop_count / TUNING_WORD_BIT_SIZE;
++	struct mmc_host *mmc = cq_host->mmc;
++	u8 ctrl;
++	ktime_t timeout;
++	bool timed_out;
 +
 +	/*
-+	 * Read auto-tuned results and extract good valid passing window by
-+	 * filtering out un-wanted bubble/partial/merged windows.
++	 * During CQE resume/unhalt, CQHCI driver unhalts CQE prior to
++	 * cqhci_host_ops enable where SDHCI DMA and BLOCK_SIZE registers need
++	 * to be re-configured.
++	 * Tegra CQHCI/SDHCI prevents write access to block size register when
++	 * CQE is unhalted. So handling CQE resume sequence here to configure
++	 * SDHCI block registers prior to exiting CQE halt state.
 +	 */
-+	for (word = 0; word < total_tuning_words; word++) {
-+		val = sdhci_readl(host, SDHCI_VNDR_TUN_CTRL0_0);
-+		val &= ~SDHCI_VNDR_TUN_CTRL0_TUN_WORD_SEL_MASK;
-+		val |= word;
-+		sdhci_writel(host, val, SDHCI_VNDR_TUN_CTRL0_0);
-+		tun_status = sdhci_readl(host, SDHCI_TEGRA_VNDR_TUN_STATUS0);
-+		bit = 0;
-+		while (bit < TUNING_WORD_BIT_SIZE) {
-+			tap = word * TUNING_WORD_BIT_SIZE + bit;
-+			tap_result = tun_status & (1 << bit);
-+			if (!tap_result && !start_fail) {
-+				start_fail = true;
-+				if (!first_fail) {
-+					first_fail_tap = tap;
-+					first_fail = true;
-+				}
-+
-+			} else if (tap_result && start_fail && !start_pass) {
-+				start_pass_tap = tap;
-+				start_pass = true;
-+				if (!first_pass) {
-+					first_pass_tap = tap;
-+					first_pass = true;
-+				}
-+
-+			} else if (!tap_result && start_fail && start_pass &&
-+				   !end_pass) {
-+				end_pass_tap = tap - 1;
-+				end_pass = true;
-+			} else if (tap_result && start_pass && start_fail &&
-+				   end_pass) {
-+				window = end_pass_tap - start_pass_tap;
-+				/* discard merged window and bubble window */
-+				if (window >= thd_up || window < thd_low) {
-+					start_pass_tap = tap;
-+					end_pass = false;
-+				} else {
-+					/* set tap at middle of valid window */
-+					tap = start_pass_tap + window / 2;
-+					tegra_host->tuned_tap_delay = tap;
-+					return;
-+				}
-+			}
-+
-+			bit++;
++	if (reg == CQHCI_CTL && !(val & CQHCI_HALT) &&
++	    cqhci_readl(cq_host, CQHCI_CTL) & CQHCI_HALT) {
++		sdhci_cqe_enable(mmc);
++		writel(val, cq_host->mmio + reg);
++		timeout = ktime_add_us(ktime_get(), 50);
++		while (1) {
++			timed_out = ktime_compare(ktime_get(), timeout) > 0;
++			ctrl = cqhci_readl(cq_host, CQHCI_CTL);
++			if (!(ctrl & CQHCI_HALT) || timed_out)
++				break;
 +		}
-+	}
-+
-+	if (!first_fail) {
-+		WARN_ON("no edge detected, continue with hw tuned delay.\n");
-+	} else if (first_pass) {
-+		/* set tap location at fixed tap relative to the first edge */
-+		edge1 = first_fail_tap + (first_pass_tap - first_fail_tap) / 2;
-+		if (edge1 - 1 > fixed_tap)
-+			tegra_host->tuned_tap_delay = edge1 - fixed_tap;
-+		else
-+			tegra_host->tuned_tap_delay = edge1 + fixed_tap;
++		/*
++		 * CQE usually resumes very quick, but incase if Tegra CQE
++		 * doesn't resume retry unhalt.
++		 */
++		if (timed_out)
++			writel(val, cq_host->mmio + reg);
++	} else {
++		writel(val, cq_host->mmio + reg);
 +	}
 +}
 +
-+static void tegra_sdhci_post_tuning(struct sdhci_host *host)
-+{
-+	struct sdhci_pltfm_host *pltfm_host = sdhci_priv(host);
-+	struct sdhci_tegra *tegra_host = sdhci_pltfm_priv(pltfm_host);
-+	const struct sdhci_tegra_soc_data *soc_data = tegra_host->soc_data;
-+	u32 avg_tap_dly, val, min_tap_dly, max_tap_dly;
-+	u8 fixed_tap, start_tap, end_tap, window_width;
-+	u8 thdupper, thdlower;
-+	u8 num_iter;
-+	u32 clk_rate_mhz, period_ps, bestcase, worstcase;
-+
-+	/* retain HW tuned tap to use incase if no correction is needed */
-+	val = sdhci_readl(host, SDHCI_TEGRA_VENDOR_CLOCK_CTRL);
-+	tegra_host->tuned_tap_delay = (val & SDHCI_CLOCK_CTRL_TAP_MASK) >>
-+				      SDHCI_CLOCK_CTRL_TAP_SHIFT;
-+	if (soc_data->min_tap_delay && soc_data->max_tap_delay) {
-+		min_tap_dly = soc_data->min_tap_delay;
-+		max_tap_dly = soc_data->max_tap_delay;
-+		clk_rate_mhz = tegra_host->curr_clk_rate / USEC_PER_SEC;
-+		period_ps = USEC_PER_SEC / clk_rate_mhz;
-+		bestcase = period_ps / min_tap_dly;
-+		worstcase = period_ps / max_tap_dly;
-+		/*
-+		 * Upper and Lower bound thresholds used to detect merged and
-+		 * bubble windows
-+		 */
-+		thdupper = (2 * worstcase + bestcase) / 2;
-+		thdlower = worstcase / 4;
-+		/*
-+		 * fixed tap is used when HW tuning result contains single edge
-+		 * and tap is set at fixed tap delay relative to the first edge
-+		 */
-+		avg_tap_dly = (period_ps * 2) / (min_tap_dly + max_tap_dly);
-+		fixed_tap = avg_tap_dly / 2;
-+
-+		val = sdhci_readl(host, SDHCI_TEGRA_VNDR_TUN_STATUS1);
-+		start_tap = val & SDHCI_TEGRA_VNDR_TUN_STATUS1_TAP_MASK;
-+		end_tap = (val >> SDHCI_TEGRA_VNDR_TUN_STATUS1_END_TAP_SHIFT) &
-+			  SDHCI_TEGRA_VNDR_TUN_STATUS1_TAP_MASK;
-+		window_width = end_tap - start_tap;
-+		num_iter = host->tuning_loop_count;
-+		/*
-+		 * partial window includes edges of the tuning range.
-+		 * merged window includes more taps so window width is higher
-+		 * than upper threshold.
-+		 */
-+		if (start_tap == 0 || (end_tap == (num_iter - 1)) ||
-+		    (end_tap == num_iter - 2) || window_width >= thdupper) {
-+			pr_debug("%s: Apply tuning correction\n",
-+				 mmc_hostname(host->mmc));
-+			tegra_sdhci_tap_correction(host, thdupper, thdlower,
-+						   fixed_tap);
-+		}
-+	}
-+
-+	tegra_sdhci_set_tap(host, tegra_host->tuned_tap_delay);
-+}
-+
-+static int tegra_sdhci_execute_hw_tuning(struct mmc_host *mmc, u32 opcode)
-+{
-+	struct sdhci_host *host = mmc_priv(mmc);
-+	int err;
-+
-+	err = sdhci_execute_tuning(mmc, opcode);
-+	if (!err && !host->tuning_err)
-+		tegra_sdhci_post_tuning(host);
-+
-+	return err;
-+}
-+
- static void tegra_sdhci_set_uhs_signaling(struct sdhci_host *host,
- 					  unsigned timing)
+ static void sdhci_tegra_update_dcmd_desc(struct mmc_host *mmc,
+ 					 struct mmc_request *mrq, u64 *data)
  {
-@@ -778,17 +953,22 @@ static void tegra_sdhci_set_uhs_signaling(struct sdhci_host *host,
- 	bool set_default_tap = false;
- 	bool set_dqs_trim = false;
- 	bool do_hs400_dll_cal = false;
-+	u8 iter = TRIES_256;
+@@ -1139,20 +1176,34 @@ static void sdhci_tegra_update_dcmd_desc(struct mmc_host *mmc,
+ static void sdhci_tegra_cqe_enable(struct mmc_host *mmc)
+ {
+ 	struct cqhci_host *cq_host = mmc->cqe_private;
+-	u32 cqcfg = 0;
 +	u32 val;
  
- 	tegra_host->ddr_signaling = false;
- 	switch (timing) {
- 	case MMC_TIMING_UHS_SDR50:
-+		break;
- 	case MMC_TIMING_UHS_SDR104:
- 	case MMC_TIMING_MMC_HS200:
- 		/* Don't set default tap on tunable modes. */
-+		iter = TRIES_128;
- 		break;
- 	case MMC_TIMING_MMC_HS400:
- 		set_dqs_trim = true;
- 		do_hs400_dll_cal = true;
-+		iter = TRIES_128;
- 		break;
- 	case MMC_TIMING_MMC_DDR52:
- 	case MMC_TIMING_UHS_DDR50:
-@@ -800,11 +980,25 @@ static void tegra_sdhci_set_uhs_signaling(struct sdhci_host *host,
- 		break;
- 	}
+ 	/*
+-	 * Tegra SDMMC Controller design prevents write access to BLOCK_COUNT
+-	 * registers when CQE is enabled.
++	 * Tegra CQHCI/SDMMC design prevents write access to sdhci block size
++	 * register when CQE is enabled and unhalted.
++	 * CQHCI driver enables CQE prior to activation, so disable CQE before
++	 * programming block size in sdhci controller and enable it back.
+ 	 */
+-	cqcfg = cqhci_readl(cq_host, CQHCI_CFG);
+-	if (cqcfg & CQHCI_ENABLE)
+-		cqhci_writel(cq_host, (cqcfg & ~CQHCI_ENABLE), CQHCI_CFG);
+-
+-	sdhci_cqe_enable(mmc);
++	if (!cq_host->activated) {
++		val = cqhci_readl(cq_host, CQHCI_CFG);
++		if (val & CQHCI_ENABLE)
++			cqhci_writel(cq_host, (val & ~CQHCI_ENABLE),
++				     CQHCI_CFG);
++		sdhci_cqe_enable(mmc);
++		if (val & CQHCI_ENABLE)
++			cqhci_writel(cq_host, val, CQHCI_CFG);
++	}
  
-+	val = sdhci_readl(host, SDHCI_VNDR_TUN_CTRL0_0);
-+	val &= ~(SDHCI_VNDR_TUN_CTRL0_TUN_ITER_MASK |
-+		 SDHCI_VNDR_TUN_CTRL0_START_TAP_VAL_MASK |
-+		 SDHCI_VNDR_TUN_CTRL0_MUL_M_MASK);
-+	val |= (iter << SDHCI_VNDR_TUN_CTRL0_TUN_ITER_SHIFT |
-+		0 << SDHCI_VNDR_TUN_CTRL0_START_TAP_VAL_SHIFT |
-+		1 << SDHCI_VNDR_TUN_CTRL0_MUL_M_SHIFT);
-+	sdhci_writel(host, val, SDHCI_VNDR_TUN_CTRL0_0);
-+	sdhci_writel(host, 0, SDHCI_TEGRA_VNDR_TUN_CTRL1_0);
-+
-+	host->tuning_loop_count = (iter == TRIES_128) ? 128 : 256;
-+
- 	sdhci_set_uhs_signaling(host, timing);
+-	if (cqcfg & CQHCI_ENABLE)
+-		cqhci_writel(cq_host, cqcfg, CQHCI_CFG);
++	/*
++	 * CMD CRC errors are seen sometimes with some eMMC devices when status
++	 * command is sent during transfer of last data block which is the
++	 * default case as send status command block counter (CBC) is 1.
++	 * Recommended fix to set CBC to 0 allowing send status command only
++	 * when data lines are idle.
++	 */
++	val = cqhci_readl(cq_host, CQHCI_SSC1);
++	val &= ~CQHCI_SSC1_CBC_MASK;
++	cqhci_writel(cq_host, val, CQHCI_SSC1);
+ }
  
- 	tegra_sdhci_pad_autocalib(host);
+ static void sdhci_tegra_dumpregs(struct mmc_host *mmc)
+@@ -1174,6 +1225,7 @@ static u32 sdhci_tegra_cqhci_irq(struct sdhci_host *host, u32 intmask)
+ }
  
--	if (set_default_tap)
-+	if (tegra_host->tuned_tap_delay && !set_default_tap)
-+		tegra_sdhci_set_tap(host, tegra_host->tuned_tap_delay);
-+	else
- 		tegra_sdhci_set_tap(host, tegra_host->default_tap);
- 
- 	if (set_dqs_trim)
-@@ -1110,6 +1304,8 @@ static const struct sdhci_tegra_soc_data soc_data_tegra210 = {
- 		    NVQUIRK_DIS_CARD_CLK_CONFIG_TAP |
- 		    NVQUIRK_ENABLE_SDR50 |
- 		    NVQUIRK_ENABLE_SDR104,
-+	.min_tap_delay = 106,
-+	.max_tap_delay = 185,
- };
- 
- static const struct sdhci_ops tegra186_sdhci_ops = {
-@@ -1150,9 +1346,23 @@ static const struct sdhci_tegra_soc_data soc_data_tegra186 = {
- 		    NVQUIRK_DIS_CARD_CLK_CONFIG_TAP |
- 		    NVQUIRK_ENABLE_SDR50 |
- 		    NVQUIRK_ENABLE_SDR104,
-+	.min_tap_delay = 84,
-+	.max_tap_delay = 136,
-+};
-+
-+static const struct sdhci_tegra_soc_data soc_data_tegra194 = {
-+	.pdata = &sdhci_tegra186_pdata,
-+	.nvquirks = NVQUIRK_NEEDS_PAD_CONTROL |
-+		    NVQUIRK_HAS_PADCALIB |
-+		    NVQUIRK_DIS_CARD_CLK_CONFIG_TAP |
-+		    NVQUIRK_ENABLE_SDR50 |
-+		    NVQUIRK_ENABLE_SDR104,
-+	.min_tap_delay = 96,
-+	.max_tap_delay = 139,
- };
- 
- static const struct of_device_id sdhci_tegra_dt_match[] = {
-+	{ .compatible = "nvidia,tegra194-sdhci", .data = &soc_data_tegra194 },
- 	{ .compatible = "nvidia,tegra186-sdhci", .data = &soc_data_tegra186 },
- 	{ .compatible = "nvidia,tegra210-sdhci", .data = &soc_data_tegra210 },
- 	{ .compatible = "nvidia,tegra124-sdhci", .data = &soc_data_tegra124 },
-@@ -1251,6 +1461,10 @@ static int sdhci_tegra_probe(struct platform_device *pdev)
- 	host->mmc_host_ops.hs400_enhanced_strobe =
- 			tegra_sdhci_hs400_enhanced_strobe;
- 
-+	if (!host->ops->platform_execute_tuning)
-+		host->mmc_host_ops.execute_tuning =
-+				tegra_sdhci_execute_hw_tuning;
-+
- 	rc = mmc_of_parse(host->mmc);
- 	if (rc)
- 		goto err_parse_dt;
+ static const struct cqhci_host_ops sdhci_tegra_cqhci_ops = {
++	.write_l    = tegra_cqhci_writel,
+ 	.enable	= sdhci_tegra_cqe_enable,
+ 	.disable = sdhci_cqe_disable,
+ 	.dumpregs = sdhci_tegra_dumpregs,
 -- 
 2.7.4
 
