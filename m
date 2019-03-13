@@ -2,113 +2,103 @@ Return-Path: <SRS0=dUEL=RQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_MUTT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 30250C10F03
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 Mar 2019 22:06:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 24728C43381
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 Mar 2019 22:08:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F0C792087C
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 Mar 2019 22:06:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D13A72146E
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 Mar 2019 22:08:11 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="uLOw/x4R"
+	dkim=pass (2048-bit key) header.d=netronome-com.20150623.gappssmtp.com header.i=@netronome-com.20150623.gappssmtp.com header.b="b99hvL0t"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726799AbfCMWGh (ORCPT
+        id S1727057AbfCMWIK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 13 Mar 2019 18:06:37 -0400
-Received: from mail-pf1-f194.google.com ([209.85.210.194]:33663 "EHLO
-        mail-pf1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726556AbfCMWGh (ORCPT
+        Wed, 13 Mar 2019 18:08:10 -0400
+Received: from mail-qk1-f171.google.com ([209.85.222.171]:43284 "EHLO
+        mail-qk1-f171.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726689AbfCMWIK (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 13 Mar 2019 18:06:37 -0400
-Received: by mail-pf1-f194.google.com with SMTP id i19so2357431pfd.0;
-        Wed, 13 Mar 2019 15:06:36 -0700 (PDT)
+        Wed, 13 Mar 2019 18:08:10 -0400
+Received: by mail-qk1-f171.google.com with SMTP id s26so2131622qkm.10
+        for <linux-kernel@vger.kernel.org>; Wed, 13 Mar 2019 15:08:09 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=sender:date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=FnfITYU7y5bBOIxlrIvn104WKZ6R1s6DCeo0qJsrhdI=;
-        b=uLOw/x4R+0NafddNQ3K4rsO6vl318WxEsBPHBcgYBca8FDVWWkOVvHP26ityYQV+I+
-         ibpDkmdI+59g6sQ5CEh1IKoSbZgJtWMlI7Y1EK7lbI/6FvWptxcz5ewvEp8YdE+Hdq5P
-         cwkOn0XXT9XfjtwDABxYolCwNqoIMf5FbLQKDxW6jd4lKSWTTpsIIEGUQ2W9OPnkNWdL
-         OoQN6mrQqHCPHw1Q9s5Zo+QCWuTXb7WN85GgBdyiBB5AH4RdgKjbScAzSBzUx4ljP9Zy
-         Q3bC8+6c3HSYrHCkbsR+hJ3iqi09rLfzO1V3CkoNu8oiHlfqzTYbiy0q89/2JzF8tuaN
-         E3vw==
+        d=netronome-com.20150623.gappssmtp.com; s=20150623;
+        h=date:from:to:cc:subject:message-id:in-reply-to:references
+         :organization:mime-version:content-transfer-encoding;
+        bh=/qDGw5+rgwnGlzkiXKqOACIK+wIaTMx7JRkJ7TcmLUw=;
+        b=b99hvL0tzD+2RlQ79OplublQQ/cMZaaXhiwaJrSjCMvzGrV0npbUMGtjVrbo5pCSgP
+         OmBfahqrdAvKNo8Th5waf3rszuqWtW3Oipd/0o1MwWPtatAKOyrD0mgVlCpNAfUlXzqD
+         azlqNDvLpBz0tehnobs7HED0+gMwNyRlzYiYtVdtEt1rJGU6DMQtOPKkO6Hxmcggz++4
+         COBiMaN73xbtLXWHM8x0do/G+lBHp+osRiJ+duwAWwUY3VzOFa81qK9JDCygYPIhsJ1y
+         umWBtPqUZ98axNe0wnKBXdyLDlyC5dmzcTAgd7Py6ZX9WUqbsCrmsuY1P5HmuV4QoDvO
+         x9MA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
-         :references:mime-version:content-disposition:in-reply-to:user-agent;
-        bh=FnfITYU7y5bBOIxlrIvn104WKZ6R1s6DCeo0qJsrhdI=;
-        b=Nu8hNaC25aYsfmly3Z48G8doXduCiCsbVuivR6zgmwSUiJI60T5FEHXNenGPjt30sJ
-         ctCWDhNvxV6rVbwBBcjigCx0tN7dNwRjocH4XQzRqKP8zf9CxVjMJ/JaxxG2KJl9tCAU
-         PmZ0BwKTmPbOzdnWnav+J14by7OtjN6kAjbWveVLp9zENGqjWq2DcCZ/uxsy1vv7f7s6
-         m9m/DnXv1wIn0JXaobcsHvXaAQsfCFx0V/uURqGq1ZTnHu5PbXzaza23BYmclgEW/NcH
-         0ZrzhP63/dwVAzfegvRiNgqjeXM+jIjI7Sy0fRMf4V5vnmUfSJ5UQgKERtcVuhfiZ31o
-         BJGg==
-X-Gm-Message-State: APjAAAXXfQlom6etLjdUxz4ZCEhY3JXbkj5NESOJO2oMsZeS7H66fVZm
-        EKCn2EVxjuKheqfz4lG+ELk=
-X-Google-Smtp-Source: APXvYqwvxtsYZre2Rum3rQOVSMMfRk1mhllDE+gg+OpG5fIMsi+NF8yeNM3oWIHyaGxLdXdBWU+acw==
-X-Received: by 2002:a65:5c01:: with SMTP id u1mr42339708pgr.197.1552514796130;
-        Wed, 13 Mar 2019 15:06:36 -0700 (PDT)
-Received: from localhost ([2600:1700:e321:62f0:329c:23ff:fee3:9d7c])
-        by smtp.gmail.com with ESMTPSA id h126sm34339877pfc.135.2019.03.13.15.06.34
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Wed, 13 Mar 2019 15:06:34 -0700 (PDT)
-Date:   Wed, 13 Mar 2019 15:06:33 -0700
-From:   Guenter Roeck <linux@roeck-us.net>
-To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc:     linux-kernel@vger.kernel.org, torvalds@linux-foundation.org,
-        akpm@linux-foundation.org, shuah@kernel.org, patches@kernelci.org,
-        ben.hutchings@codethink.co.uk, lkft-triage@lists.linaro.org,
-        stable@vger.kernel.org
-Subject: Re: [PATCH 4.9 00/96] 4.9.163-stable review
-Message-ID: <20190313220633.GA1613@roeck-us.net>
-References: <20190312171034.530434962@linuxfoundation.org>
- <20190313203441.GA26634@roeck-us.net>
- <20190313204949.GA1088@kroah.com>
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:in-reply-to
+         :references:organization:mime-version:content-transfer-encoding;
+        bh=/qDGw5+rgwnGlzkiXKqOACIK+wIaTMx7JRkJ7TcmLUw=;
+        b=hBNg4ltl5/EXTwNcnuBzRBvInXb+MKmW+Q22iVS1VxX6aE37iTfAeZMiknGjo/HDub
+         q3CZwdJSSxbe7hGtPuZ0Z+W5iKRcA9PTsGPNbN2aRVjw38PQSuqhyRdrEI5vYl40c2SC
+         5Y3RcrCumBSSoXqwEMt5oxachNrRIfT26v7pnDcfY0eT+BIGnft9Fo8djPgXT+nzeacr
+         R28EtyCIdEA5hk4Z2yUFIcfLRz8s7m0tCFiXJalXXlgdulpGcsqX64bUf/cjAa6n63Lz
+         TjLOPJ7mA79YBmr2LZwwvIxBn9VxTsQoeZoIxBubrhOcxgD48rDpS9Ktp9DAdS7ln4P4
+         xKIg==
+X-Gm-Message-State: APjAAAV18ww5Dtv8IuneJ2jUATWCGLcyJCNez5YiFL6ejqB1VPu0L/bj
+        8kjdjcVTh9Tx0/A4//1ZzivYYQ==
+X-Google-Smtp-Source: APXvYqxihLjxDhrF9y4NHQO0Ldz2sxWpX6ruLQFUyXXhrexIVeftFHMj3ab+nVvvCMhDcGf3HdxQLg==
+X-Received: by 2002:a37:c6d0:: with SMTP id s77mr15011864qkl.116.1552514888756;
+        Wed, 13 Mar 2019 15:08:08 -0700 (PDT)
+Received: from cakuba.netronome.com ([66.60.152.14])
+        by smtp.gmail.com with ESMTPSA id w29sm1920517qtk.72.2019.03.13.15.08.07
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Wed, 13 Mar 2019 15:08:08 -0700 (PDT)
+Date:   Wed, 13 Mar 2019 15:08:04 -0700
+From:   Jakub Kicinski <jakub.kicinski@netronome.com>
+To:     Parav Pandit <parav@mellanox.com>
+Cc:     netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
+        michal.lkml@markovi.net, davem@davemloft.net,
+        gregkh@linuxfoundation.org, jiri@mellanox.com,
+        kwankhede@nvidia.com, alex.williamson@redhat.com,
+        vuhuong@mellanox.com, yuvalav@mellanox.com, kvm@vger.kernel.org
+Subject: Re: [RFC net-next v1 0/3] Support mlx5 mediated devices in host
+Message-ID: <20190313150804.3702ae47@cakuba.netronome.com>
+In-Reply-To: <1552082876-60228-1-git-send-email-parav@mellanox.com>
+References: <1552082876-60228-1-git-send-email-parav@mellanox.com>
+Organization: Netronome Systems, Ltd.
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190313204949.GA1088@kroah.com>
-User-Agent: Mutt/1.5.24 (2015-08-30)
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Mar 13, 2019 at 01:49:49PM -0700, Greg Kroah-Hartman wrote:
-> On Wed, Mar 13, 2019 at 01:34:41PM -0700, Guenter Roeck wrote:
-> > On Tue, Mar 12, 2019 at 10:09:18AM -0700, Greg Kroah-Hartman wrote:
-> > > This is the start of the stable review cycle for the 4.9.163 release.
-> > > There are 96 patches in this series, all will be posted as a response
-> > > to this one.  If anyone has any issues with these being applied, please
-> > > let me know.
-> > > 
-> > > Responses should be made by Thu Mar 14 17:10:06 UTC 2019.
-> > > Anything received after that time might be too late.
-> > > 
-> > 
-> > Build results:
-> > 	total: 172 pass: 170 fail: 2
-> > Failed builds: 
-> > 	i386:tools/perf 
-> > 	x86_64:tools/perf 
-> > Qemu test results:
-> > 	total: 316 pass: 316 fail: 0
-> > 
-> > Culprit is commit 386ca5754fad ("perf trace: Support multiple "vfs_getname"
-> > probes"), which introduces a call to strstarts() but not the necessary
-> > include file or declaration. Unfortunately, fixing that is quite complex
-> > (commit 8e99b6d4533c ("tools include: Adopt strstarts() from the kernel")
-> > doesn't apply).
+On Fri,  8 Mar 2019 16:07:53 -0600, Parav Pandit wrote:
+> Use case:
+> ---------
+> A user wants to create/delete hardware linked sub devices without
+> using SR-IOV.
+> These devices for a pci device can be netdev (optional rdma device)
+> or other devices. Such sub devices share some of the PCI device
+> resources and also have their own dedicated resources.
+> A user wants to use this device in a host where PF PCI device exist.
+> (not in a guest VM.) A user may want to use such sub device in future
+> in guest VM.
 > 
-> Thanks for tracking this down, I'm lost in a maze of gcc8 issues with
-> perf on 4.9 and 4.4 at the moment trying to fix that.
-> 
-> I'll go drop this patch from the 4.9 and 4.4 queues.
-> 
-Agreed; the same patch also introduces a call to evlist__for_each_entry_safe(),
-which does not exist in v4.4.y.
+> Few examples are:
+> 1. netdev having its own txq(s), rq(s) and/or hw offload parameters.
+> 2. netdev with switchdev mode using netdev representor
 
-Guenter
+Hi Parav!
+
+Sorry for going quiet, I'm hoping to clarify the use cases and
+the devlink part on the other thread with Jiri, and then come back 
+to implementation details.
+
+> 3. rdma device with IB link layer and IPoIB netdev
+> 4. rdma/RoCE device and a netdev
+> 5. rdma device with multiple ports
+
