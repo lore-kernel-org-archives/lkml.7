@@ -2,119 +2,69 @@ Return-Path: <SRS0=dUEL=RQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,UNPARSEABLE_RELAY,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 48545C43381
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 Mar 2019 13:52:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0BEB4C43381
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 Mar 2019 13:52:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 12A0C2087C
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 Mar 2019 13:52:23 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="ad/otPZ1"
+	by mail.kernel.org (Postfix) with ESMTP id D4E562087C
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 Mar 2019 13:52:29 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727359AbfCMNwV (ORCPT
+        id S1727375AbfCMNw2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 13 Mar 2019 09:52:21 -0400
-Received: from hqemgate16.nvidia.com ([216.228.121.65]:16562 "EHLO
-        hqemgate16.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726971AbfCMNuh (ORCPT
+        Wed, 13 Mar 2019 09:52:28 -0400
+Received: from out30-54.freemail.mail.aliyun.com ([115.124.30.54]:46899 "EHLO
+        out30-54.freemail.mail.aliyun.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726868AbfCMNuf (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 13 Mar 2019 09:50:37 -0400
-Received: from hqpgpgate102.nvidia.com (Not Verified[216.228.121.13]) by hqemgate16.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
-        id <B5c890aab0001>; Wed, 13 Mar 2019 06:50:35 -0700
-Received: from hqmail.nvidia.com ([172.20.161.6])
-  by hqpgpgate102.nvidia.com (PGP Universal service);
-  Wed, 13 Mar 2019 06:50:36 -0700
-X-PGP-Universal: processed;
-        by hqpgpgate102.nvidia.com on Wed, 13 Mar 2019 06:50:36 -0700
-Received: from [10.25.74.242] (10.124.1.5) by HQMAIL101.nvidia.com
- (172.20.187.10) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Wed, 13 Mar
- 2019 13:50:28 +0000
-Subject: Re: [PATCH 1/5] irqchip/gic-pm: add driver remove support
-To:     Marc Zyngier <marc.zyngier@arm.com>, <tglx@linutronix.de>,
-        <jason@lakedaemon.net>, <catalin.marinas@arm.com>,
-        <heiko@sntech.de>, <horms+renesas@verge.net.au>,
-        <maxime.ripard@bootlin.com>, <andy.gross@linaro.org>,
-        <olof@lixom.net>, <bjorn.andersson@linaro.org>,
-        <jagan@amarulasolutions.com>, <enric.balletbo@collabora.com>,
-        <stefan.wahren@i2se.com>, <ezequiel@collabora.com>,
-        <marc.w.gonzalez@free.fr>, <christoffer.dall@arm.com>,
-        <drjones@redhat.com>, <julien.thierry@arm.com>
-CC:     <will.deacon@arm.com>, <treding@nvidia.com>,
-        <jonathanh@nvidia.com>, <linux-arm-kernel@lists.infradead.org>,
-        <linux-kernel@vger.kernel.org>, <linux-tegra@vger.kernel.org>
-References: <1552474956-25513-1-git-send-email-spujar@nvidia.com>
- <0cd78fb7-4bcb-b735-54ca-24a179b9ff72@arm.com>
-From:   Sameer Pujar <spujar@nvidia.com>
-Message-ID: <bc00b804-2248-4f8b-1537-3e3db151d74d@nvidia.com>
-Date:   Wed, 13 Mar 2019 19:20:24 +0530
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
- Thunderbird/60.5.3
+        Wed, 13 Mar 2019 09:50:35 -0400
+X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R211e4;CH=green;DM=||false|;FP=0|-1|-1|-1|0|-1|-1|-1;HT=e01f04446;MF=alex.shi@linux.alibaba.com;NM=1;PH=DS;RN=10;SR=0;TI=SMTPD_---0TMdk0th_1552485029;
+Received: from localhost(mailfrom:alex.shi@linux.alibaba.com fp:SMTPD_---0TMdk0th_1552485029)
+          by smtp.aliyun-inc.com(127.0.0.1);
+          Wed, 13 Mar 2019 21:50:29 +0800
+From:   Alex Shi <alex.shi@linux.alibaba.com>
+To:     corbet@lwn.net, harryxiyou@gmail.com, linux-doc@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Cc:     Alex Shi <alex.shi@linux.alibaba.com>,
+        TripleX Chung <xxx.phy@gmail.com>,
+        Li Zefan <lizefan@huawei.com>,
+        Shawn Guo <shawn.guo@linaro.org>,
+        Fengguang Wu <fengguang.wu@intel.com>, Coly Li <colyli@suse.de>
+Subject: [PATCH v5 19/31] docs/zh_CN: rename stable_api_nonsense.txt as stable-api-nonsense.rst
+Date:   Wed, 13 Mar 2019 21:49:49 +0800
+Message-Id: <20190313135001.260905-20-alex.shi@linux.alibaba.com>
+X-Mailer: git-send-email 2.19.1.856.g8858448bb
+In-Reply-To: <20190313135001.260905-1-alex.shi@linux.alibaba.com>
+References: <20190313135001.260905-1-alex.shi@linux.alibaba.com>
 MIME-Version: 1.0
-In-Reply-To: <0cd78fb7-4bcb-b735-54ca-24a179b9ff72@arm.com>
-X-Originating-IP: [10.124.1.5]
-X-ClientProxiedBy: HQMAIL105.nvidia.com (172.20.187.12) To
- HQMAIL101.nvidia.com (172.20.187.10)
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Transfer-Encoding: 7bit
-Content-Language: en-GB
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
-        t=1552485035; bh=3SwpHPghf1PqiRkFu6VgQya4xF3Yy7DP0MzigPG3dio=;
-        h=X-PGP-Universal:Subject:To:CC:References:From:Message-ID:Date:
-         User-Agent:MIME-Version:In-Reply-To:X-Originating-IP:
-         X-ClientProxiedBy:Content-Type:Content-Transfer-Encoding:
-         Content-Language;
-        b=ad/otPZ1oUlxT2cHsukFKIZALv39qKjqcA9njbns5fadavCS99yAgDjBckBtwy9dN
-         TGzRjXd6V9izsLnxsnpAtLmqhRY/IrSTj2RP4oPlGQRN/7htED4JGoRUt+BJccJyd9
-         0THPYzNGWqwJbxtM4jVXXr11sI/cLsIxKEA5pIZNXMB7HCeqADxm/JQxdxNFYGSYKq
-         CqsUcPaHkYOYLVKEUGN1byAdKdhsIkoOMAYiNLl9Mt+dzAZIf1cLvW76h+H28qjvdZ
-         zM6zyGj+P8U3QjbiqxmN6/3WjiU/1UCPsAaGqiarbEXDCdRIQdcSm+NW5Xksmq+RWH
-         R2sSxPEKjwB2Q==
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+make it available in html etc doc making
 
-On 3/13/2019 4:52 PM, Marc Zyngier wrote:
-> First things first:
->
-> - Where is the cover letter?
-> - This series should be flagged as v2, as it not the same as the one you
-> sent last week.
-I had the dilemma whether to name this series as v2 or not, thought the 
-commits
-in the series are different and v2 may not be necessary.
-Also felt commit messages are descriptive enough and all belong to 
-irq-gic-pm,
-hence did not send cover letter.
-If you suggest so, I will send a cover letter next patch version(v2)
->
-> On 13/03/2019 11:02, Sameer Pujar wrote:
->> This is a preparatory patch for using irq-gic-pm driver as module and thus
->> implement remove() call for the driver. Details of remove() are as below,
->>
->>   * pm_runtime_force_suspend() is added to balance runtime PM, otherwise
->>     following is seen: "agic-controller: Unbalanced pm_runtime_enable!"
->>   * Function gic_teardown() is exported from gic driver and called in remove
->>     to perform io unmap.
->>   * pm_clk_destroy() to free clock resources
->>   * irq is unmapped and freed with irq_dispose_mapping()
->>
-> Let's be clear, I have no desire to export any GIC symbol at all. Why
-> should we do this? This "driver" is the tiniest thing, and making it
-> modular doesn't get us anything.
->
-> So what's the rational for doing so?
-Reason for this was, the driver gets used for AGIC block and audio is not
-boot critical and hence module option was preferred.
+Signed-off-by: Alex Shi <alex.shi@linux.alibaba.com>
+Cc: Harry Wei <harryxiyou@gmail.com>
+Cc: Jonathan Corbet <corbet@lwn.net>
+Cc: TripleX Chung <xxx.phy@gmail.com>
+Cc: Li Zefan <lizefan@huawei.com>
+Cc: Shawn Guo <shawn.guo@linaro.org>
+Cc: Fengguang Wu <fengguang.wu@intel.com>
+Cc: Coly Li <colyli@suse.de>
+Signed-off-by: Weiwei Jia <harryxiyou@gmail.com>
+---
+ .../process/{stable_api_nonsense.txt => stable-api-nonsense.rst}  | 0
+ 1 file changed, 0 insertions(+), 0 deletions(-)
+ rename Documentation/translations/zh_CN/process/{stable_api_nonsense.txt => stable-api-nonsense.rst} (100%)
 
-Thanks,
-Sameer.
+diff --git a/Documentation/translations/zh_CN/process/stable_api_nonsense.txt b/Documentation/translations/zh_CN/process/stable-api-nonsense.rst
+similarity index 100%
+rename from Documentation/translations/zh_CN/process/stable_api_nonsense.txt
+rename to Documentation/translations/zh_CN/process/stable-api-nonsense.rst
+-- 
+2.19.1.856.g8858448bb
 
->
-> Thanks,
->
-> 	M.
