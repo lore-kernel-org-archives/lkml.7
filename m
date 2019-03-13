@@ -2,212 +2,128 @@ Return-Path: <SRS0=dUEL=RQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_PASS
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C2B2AC43381
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 Mar 2019 07:30:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1B359C43381
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 Mar 2019 07:31:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8327C2087C
-	for <linux-kernel@archiver.kernel.org>; Wed, 13 Mar 2019 07:30:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D7B082087C
+	for <linux-kernel@archiver.kernel.org>; Wed, 13 Mar 2019 07:31:08 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=scalemp.com header.i=@scalemp.com header.b="1xK3uATZ"
+	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="NjW30bZw"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727008AbfCMHaL (ORCPT
+        id S1727106AbfCMHbH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 13 Mar 2019 03:30:11 -0400
-Received: from www.scalemp.com ([169.44.78.149]:41742 "EHLO scalemp.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725876AbfCMHaK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 13 Mar 2019 03:30:10 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=scalemp.com
-        ; s=default; h=Content-Transfer-Encoding:Content-Type:In-Reply-To:
-        MIME-Version:Date:Message-ID:From:References:Cc:To:Subject:Sender:Reply-To:
-        Content-ID:Content-Description:Resent-Date:Resent-From:Resent-Sender:
-        Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:
-        List-Subscribe:List-Post:List-Owner:List-Archive;
-        bh=0Iblm/3i7hHJ0/qgglLyRtd3BIr8HICbygeY7e8SqgU=; b=1xK3uATZ2j/At0IP9EaX0rwGPv
-        96bYfAafs04+N9YDIMXOLPiqMA6XxyNH7fCZk1sjewZ8J1cO76HI0+k+DA4mt2oiZuWcE0ihMDJSb
-        6z0xq81+7HmCdXoQI4f9gxeEM6ReK6x5oUIZCuJ8gtOnj4C9RVaRJDu0m+xVaVfFyWas=;
-Received: from bzq-80-45-146.red.bezeqint.net ([82.80.45.146]:22843 helo=[10.100.0.166])
-        by hosting.virtualsmp.com with esmtpsa (TLSv1.2:ECDHE-RSA-AES128-GCM-SHA256:128)
-        (Exim 4.91)
-        (envelope-from <oren@scalemp.com>)
-        id 1h3yL2-000Gh2-Ov; Wed, 13 Mar 2019 03:30:08 -0400
-Subject: Re: [PATCH] svm: Fix AVIC incomplete IPI emulation
-To:     "Suthikulpanit, Suravee" <Suravee.Suthikulpanit@amd.com>
-Cc:     "kvm@vger.kernel.org" <kvm@vger.kernel.org>,
-        "x86@kernel.org" <x86@kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-References: <d53d2240-d1f1-da04-9126-9eb3518d0047@scalemp.com>
- <ab2b29ac-adcf-12ab-7c53-cc427995e94c@amd.com>
-From:   Oren Twaig <oren@scalemp.com>
-Message-ID: <752f5b0a-381c-d559-ec8a-dc41b1e36010@scalemp.com>
-Date:   Wed, 13 Mar 2019 09:30:06 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:52.0) Gecko/20100101
- Thunderbird/52.9.1
-MIME-Version: 1.0
-In-Reply-To: <ab2b29ac-adcf-12ab-7c53-cc427995e94c@amd.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 8bit
+        Wed, 13 Mar 2019 03:31:07 -0400
+Received: from mail-eopbgr130080.outbound.protection.outlook.com ([40.107.13.80]:32070
+        "EHLO EUR01-HE1-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726646AbfCMHbH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 13 Mar 2019 03:31:07 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=11oFbbhShcbiewhjMrv5WpTncCm0AuyC1+FZeJYNfjM=;
+ b=NjW30bZwTJNKj+4XmDD3ihP8VO4qoa6SVFni4HhwNZS+d8tq52lrHsGet4R6PASnvnlIntp3hl96NA5ADvuD9XODQ05jmijaCycGFdAogzxiRli+O63nQsmjbLEz5Msi9ySO9q0QArr3Ms4e/EqcyPsW8Y5MC7ES0qoXTZmI8Wo=
+Received: from AM6PR0402MB3911.eurprd04.prod.outlook.com (52.133.30.10) by
+ AM6PR0402MB3768.eurprd04.prod.outlook.com (52.133.30.15) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.1709.13; Wed, 13 Mar 2019 07:31:02 +0000
+Received: from AM6PR0402MB3911.eurprd04.prod.outlook.com
+ ([fe80::e052:f2d5:93f2:5f52]) by AM6PR0402MB3911.eurprd04.prod.outlook.com
+ ([fe80::e052:f2d5:93f2:5f52%4]) with mapi id 15.20.1686.021; Wed, 13 Mar 2019
+ 07:31:02 +0000
+From:   Anson Huang <anson.huang@nxp.com>
+To:     "thierry.reding@gmail.com" <thierry.reding@gmail.com>,
+        "robh+dt@kernel.org" <robh+dt@kernel.org>,
+        "mark.rutland@arm.com" <mark.rutland@arm.com>,
+        "shawnguo@kernel.org" <shawnguo@kernel.org>,
+        "s.hauer@pengutronix.de" <s.hauer@pengutronix.de>,
+        "kernel@pengutronix.de" <kernel@pengutronix.de>,
+        "festevam@gmail.com" <festevam@gmail.com>,
+        "linux@armlinux.org.uk" <linux@armlinux.org.uk>,
+        "stefan@agner.ch" <stefan@agner.ch>,
+        "otavio@ossystems.com.br" <otavio@ossystems.com.br>,
+        Leonard Crestez <leonard.crestez@nxp.com>,
+        "schnitzeltony@gmail.com" <schnitzeltony@gmail.com>,
+        "jan.tuerk@emtrion.com" <jan.tuerk@emtrion.com>,
+        Robin Gong <yibin.gong@nxp.com>,
+        "linux-pwm@vger.kernel.org" <linux-pwm@vger.kernel.org>,
+        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "u.kleine-koenig@pengutronix.de" <u.kleine-koenig@pengutronix.de>
+CC:     dl-linux-imx <linux-imx@nxp.com>
+Subject: [PATCH V2 0/5] Add i.MX7ULP EVK PWM backlight support
+Thread-Topic: [PATCH V2 0/5] Add i.MX7ULP EVK PWM backlight support
+Thread-Index: AQHU2W61/TCUufuB/UWaQS7A32Spuw==
+Date:   Wed, 13 Mar 2019 07:31:02 +0000
+Message-ID: <1552461970-20813-1-git-send-email-Anson.Huang@nxp.com>
+Accept-Language: en-US
 Content-Language: en-US
-X-AntiAbuse: This header was added to track abuse, please include it with any abuse report
-X-AntiAbuse: Primary Hostname - hosting.virtualsmp.com
-X-AntiAbuse: Original Domain - vger.kernel.org
-X-AntiAbuse: Originator/Caller UID/GID - [47 12] / [47 12]
-X-AntiAbuse: Sender Address Domain - scalemp.com
-X-Get-Message-Sender-Via: hosting.virtualsmp.com: authenticated_id: oren@scalemp.com
-X-Authenticated-Sender: hosting.virtualsmp.com: oren@scalemp.com
-X-Source: 
-X-Source-Args: 
-X-Source-Dir: 
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-mailer: git-send-email 2.7.4
+x-clientproxiedby: HK2PR04CA0076.apcprd04.prod.outlook.com
+ (2603:1096:202:15::20) To AM6PR0402MB3911.eurprd04.prod.outlook.com
+ (2603:10a6:209:1c::10)
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=anson.huang@nxp.com; 
+x-ms-exchange-messagesentrepresentingtype: 1
+x-originating-ip: [119.31.174.66]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: 63200582-c411-4c55-996d-08d6a785d81d
+x-ms-office365-filtering-ht: Tenant
+x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600127)(711020)(4605104)(4618075)(2017052603328)(7153060)(7193020);SRVR:AM6PR0402MB3768;
+x-ms-traffictypediagnostic: AM6PR0402MB3768:
+x-microsoft-antispam-prvs: <AM6PR0402MB376891B8521F2579DFEE20DEF54A0@AM6PR0402MB3768.eurprd04.prod.outlook.com>
+x-forefront-prvs: 09752BC779
+x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(39860400002)(376002)(396003)(346002)(366004)(136003)(189003)(199004)(2501003)(26005)(102836004)(6486002)(110136005)(316002)(478600001)(186003)(4326008)(71200400001)(71190400001)(4744005)(53936002)(8936002)(50226002)(2201001)(81156014)(8676002)(81166006)(97736004)(7416002)(68736007)(386003)(6506007)(52116002)(14454004)(305945005)(7736002)(486006)(256004)(476003)(86362001)(2616005)(66066001)(106356001)(2906002)(25786009)(6116002)(3846002)(99286004)(6512007)(5660300002)(6436002)(105586002)(36756003)(921003)(1121003);DIR:OUT;SFP:1101;SCL:1;SRVR:AM6PR0402MB3768;H:AM6PR0402MB3911.eurprd04.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
+received-spf: None (protection.outlook.com: nxp.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam-message-info: 8x/C7EH8b9tx9RqcpQW3cTGRIMyjqbwerc5WVX56ThH/dBj6sA7MwJJmw2imBHkKs7pSZ9QsCE8FRaor2/FBCAFKAJWZPeBibTVk8AYq09icninEsga8fueDyYGayu+4NLoXMWJH9+rdBpOPh/ryYq90+t/bqI1i7scVgvDLQcAXkJGHBNZNDKk3/2vwRbO4UFzsFEQKKLQLkaYU6Nkytqn6wpHLR9RvaWOZJGoZQ6SwokYTCTIP0He5V64HGo5rYduVz4+jvmJSboiLOYNQ821+I+ZRwkFm69a9/hx8xrwC2p+lgCEnkgB3lZJpiiuD810uMALIqf2ljYYsxjIjoGVTEjxc5CvCTc3uCjIYu5+qwLhN8q8Osdo9FllDxKRdgjUZVp4HIVGX+JMNtm+tH5otx7yHbajPIL0k04vTqYA=
+Content-Type: text/plain; charset="iso-8859-1"
+Content-Transfer-Encoding: quoted-printable
+MIME-Version: 1.0
+X-OriginatorOrg: nxp.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 63200582-c411-4c55-996d-08d6a785d81d
+X-MS-Exchange-CrossTenant-originalarrivaltime: 13 Mar 2019 07:31:02.3695
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: AM6PR0402MB3768
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Suravee,
+i.MX7ULP EVK board has MIPI-DSI display, its backlight is supplied
+by TPM PWM module, this patch set enables i.MX7ULP TPM PWM driver
+support and also add backlight support for MIPI-DSI display.
 
-Please see below..
+Anson Huang (5):
+  dt-bindings: pwm: Add i.MX TPM PWM binding
+  pwm: Add i.MX TPM PWM driver support
+  ARM: imx_v6_v7_defconfig: Add TPM PWM support by default
+  ARM: dts: imx7ulp: Add pwm0 support
+  ARM: dts: imx7ulp-evk: Add backlight support
 
-On 03/11/2019 01:38 PM, Suthikulpanit, Suravee wrote:
-> Hi Oren,
->
-> Sorry for delay response.
->
-> On 3/5/19 1:15 AM, Oren Twaig wrote:
->> Hello Suravee,
->>
->> According to AMD's SDM, the target-not-running incomplete
->> ipi exit is only received if any of the destination cpus had the
->> not-running bit set in the avic backing page.
-> I believe you are referring to the "isRunning" (IR) bit is in the
-> AVIC physical APIC ID table entry.
-I meant cause ID=1 in IPI Delivery Failure Cause (SDM rev 3.30, sep 
-2018, Table 15-28):
+ .../devicetree/bindings/pwm/imx-tpm-pwm.txt        |  23 ++
+ arch/arm/boot/dts/imx7ulp-evk.dts                  |  20 ++
+ arch/arm/boot/dts/imx7ulp.dtsi                     |  11 +
+ arch/arm/configs/imx_v6_v7_defconfig               |   1 +
+ drivers/pwm/Kconfig                                |   9 +
+ drivers/pwm/Makefile                               |   1 +
+ drivers/pwm/pwm-imx-tpm.c                          | 277 +++++++++++++++++=
+++++
+ 7 files changed, 342 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/pwm/imx-tpm-pwm.txt
+ create mode 100644 drivers/pwm/pwm-imx-tpm.c
 
-"
-1: IPI Target Not Running:
-
-IsRunning bit of the target for a
-Singlecast/Broadcast/Multicast IPI is not set in
-the physical APIC ID table.
-
-"
-
->
->> However, not before the CPU _already_ set the relevant IRR bit
->> in all these cpus.
-> Not sure what you meant here.
-
-Here is the full snippet from the specifications:
-"
-5.For every valid destination:
-- Atomically set the appropriate IRR bit in each of the destinations’
-   vAPIC backing page.
-- Check the IsRunning status of each destination.
-- If the destination IsRunning bit is set, send a doorbell message
-   using the host physical core number from the Physical APIC ID table.
-
-6. If any destinations are identified as not currently scheduled on
-  a physical core (i.e., the IsRunning
-  bit for that virtual processor is not set), cause a #VMEXIT.
-"
-
-According to the specification above, the HW should first
-set the appropriate bit in the IRR (Interrupt Request Register)
-_before_ causing VMEXIT of IPI-delivery-not-completed
-with  ID=1 (Target not running).
-
->
->> In this change, the patch forces KVM to send another interrupt
->> to the vcpu whether SVM already did that or not. Which means
->> the vcpu/s, under some conditions, can get an EXTRA interrupt
->> it never intended to get >> Example:
->>     1. vcpu B: Is in "not-running" state.
->>     2. vcpu A: Writes to the ICR to send vector 80 to vcpu B
->>     3. vcpu A: SVM updates vcpu B IRR with bit 80
->>     4. vcpu A: SVM exits on incomplete IPI target-not-running exit.
->>     5. vcpu A: Now stops executing any code @ hypervisor level.
->>     6. vcpu B: Due to another interrupt (like lapic timer)
->>        resumes running the guest. While handling interrupts,
->>        it also handles interrupt vector 80 (as it's in his IRR)
->>     7. vcpu A: resumes executing the below code and sends
->>        an _additional_interrupt to vcpu B.
->>
->> Overall, vcpu B got two interrupts. The second is unwanted and
->> not documented in the system architecture.
->>
->> Can you please elaborate more to why the implementation
->> below conflict with the specifications (which was the code
->> before this commit) ?
-> This patch was introduced to fix an issue where the SVM driver tries to
-> handle the step 5 above by scheduling vcpu B into _running_ state to handle
-> the IPI from vcpu A. However, prior to this patch, vcpu B was never get
-> scheduled to run unless there are other interrupts (e.g. timer).
-Exactly. Only what needed here is *only* to wakeup the vcpu B. Why ? because
-the apic of vcpu B _already_ contains the interrupt in the pending
-IRR. Than, once vcpu B will run it will process the IRR which contains
-the vector placed by the HW and will deliver it.
-> This should not be the case as Vcpu B should have been running regardless
-> of other interrupts. So, I don't think step 6 and 7 above are correct.
-The example of vcpu A that stops executing is just to highlight that
-the code can't depend on that the kvm code of vcpu A will finish the
-ICR "fake" call before vcpu B runs (beacuse of any interrupt) and process
-that IRR request placed by the HW.
->
-> The issue was caused by the apic->irr_pending not set to true when trying to
-> get vcpu B scheduled. This flag is checked in apic_find_highest_irr() before
-> searching for the highest bit.
->
-> To fix the issue, I decided to leverage the existing emulation code for
-> ICR and ICR2, which in turn calls apic_send_ipi() to deliver interrupt to vpu B.
->
-> However, looking a bit more closely, I notice the logic in svm_deliver_avic_intr()
-> should also have been changed from kvm_vcpu_wake_up() to kvm_vcpu_kick()
-> since the latter will result in clearing the IRR bit for the IPI vector
-> when trying to send IPI as part of the following call path.
->
->     vcpu_enter_guest()
->       |-- inject_pending_event()
->         |-- kvm_cpu_get_interrupt()
->           |--  kvm_get_apic_interrupt()
->             |-- apic_clear_irr()
->             |-- apic_set_isr()
->             |-- apic_update_ppr() ....
->
-> Please see the patch below.
->
-> Not sure if this would address the problem you are seeing.
-I still think there a bug here where vcpu B will get two interrupts
-instead of one.
-
-Thanks,
-Oren
->
-> Thanks,
-> Suravee
->
-> diff --git a/arch/x86/kvm/svm.c b/arch/x86/kvm/svm.c
-> index 24dfa6a93711..d2841c3dbc04 100644
-> --- a/arch/x86/kvm/svm.c
-> +++ b/arch/x86/kvm/svm.c
-> @@ -5219,11 +5256,13 @@ static void svm_deliver_avic_intr(struct kvm_vcpu *vcpu, int vec)
->           kvm_lapic_set_irr(vec, vcpu->arch.apic);
->           smp_mb__after_atomic();
->
-> -       if (avic_vcpu_is_running(vcpu))
-> +       if (avic_vcpu_is_running(vcpu)) {
->                   wrmsrl(SVM_AVIC_DOORBELL,
->                          kvm_cpu_get_apicid(vcpu->cpu));
-> -       else
-> -               kvm_vcpu_wake_up(vcpu);
-> +       } else {
-> +               kvm_make_request(KVM_REQ_EVENT, vcpu);
-> +               kvm_vcpu_kick(vcpu);
-> +       }
->    }
->
->    static void svm_ir_list_del(struct vcpu_svm *svm, struct amd_iommu_pi_data *pi)
+--=20
+2.7.4
 
